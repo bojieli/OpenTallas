@@ -1,0 +1,5363 @@
+[
+ {
+  "path": "dut.u_cap.$expr1:or",
+  "kind": "expression",
+  "operation": "or",
+  "source_loc": "bk,56,24,56,25",
+  "input_bits": 97,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_wfc.$expr2:or",
+  "kind": "expression",
+  "operation": "or",
+  "source_loc": "bl,140,88,140,89",
+  "input_bits": 560,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_xio.$always2",
+  "kind": "always",
+  "source_loc": "bm,41,5,41,11",
+  "physical_home": null,
+  "exact_mapping": false,
+  "write_vars": {
+   "dut.u_xio.rq": 2
+  },
+  "read_vars": {
+   "dut.u_xio.ck_control_t": 1,
+   "dut.u_xio.rss_control_t": 1,
+   "dut.u_xio.rq": 2
+  },
+  "output_dependencies": {
+   "dut.u_xio.rq": [
+    "dut.u_xio.rq",
+    "dut.u_xio.rss_control_t"
+   ]
+  },
+  "note": "Conservative variable-level dependencies; exact dynamic bit mapping pending. Not a hard tile."
+ },
+ {
+  "path": "dut.u_xio.$always3",
+  "kind": "always",
+  "source_loc": "bm,45,5,45,11",
+  "physical_home": null,
+  "exact_mapping": false,
+  "write_vars": {
+   "dut.u_xio.tp": 2
+  },
+  "read_vars": {
+   "dut.u_xio.ck_control_t": 1,
+   "dut.u_xio.rss_control_t": 1,
+   "dut.u_xio.tp": 2
+  },
+  "output_dependencies": {
+   "dut.u_xio.tp": [
+    "dut.u_xio.rss_control_t",
+    "dut.u_xio.tp"
+   ]
+  },
+  "note": "Conservative variable-level dependencies; exact dynamic bit mapping pending. Not a hard tile."
+ },
+ {
+  "path": "dut.u_xio.$always4",
+  "kind": "always",
+  "source_loc": "bm,59,5,59,11",
+  "physical_home": null,
+  "exact_mapping": false,
+  "write_vars": {
+   "dut.u_xio.p_go.u": 32,
+   "dut.u_xio.go": 3,
+   "dut.u_xio.gl": 6
+  },
+  "read_vars": {
+   "dut.u_xio.p_go.u": 32,
+   "dut.u_xio.f_crq": 15,
+   "dut.u_xio.act": 3,
+   "dut.u_xio.tn": 2,
+   "dut.u_xio.go": 3,
+   "dut.u_xio.u_row": 42,
+   "dut.u_xio.gl": 6
+  },
+  "output_dependencies": {
+   "dut.u_xio.p_go.u": [
+    "dut.u_xio.p_go.u"
+   ],
+   "dut.u_xio.go": [
+    "dut.u_xio.act",
+    "dut.u_xio.f_crq",
+    "dut.u_xio.p_go.u",
+    "dut.u_xio.tn"
+   ],
+   "dut.u_xio.gl": [
+    "dut.u_xio.f_crq",
+    "dut.u_xio.p_go.u",
+    "dut.u_xio.u_row"
+   ]
+  },
+  "note": "Conservative variable-level dependencies; exact dynamic bit mapping pending. Not a hard tile."
+ },
+ {
+  "path": "dut.u_xio.$always5",
+  "kind": "always",
+  "source_loc": "bm,67,5,67,11",
+  "physical_home": null,
+  "exact_mapping": false,
+  "write_vars": {
+   "dut.u_xio.lane_bad": 1,
+   "dut.u_xio.go_ok": 3
+  },
+  "read_vars": {
+   "dut.u_xio.lane_bad": 1,
+   "dut.u_xio.go": 3,
+   "dut.u_xio.go_ok": 3,
+   "dut.u_xio.gl": 6
+  },
+  "output_dependencies": {
+   "dut.u_xio.lane_bad": [
+    "dut.u_xio.gl",
+    "dut.u_xio.go",
+    "dut.u_xio.go_ok"
+   ],
+   "dut.u_xio.go_ok": [
+    "dut.u_xio.gl",
+    "dut.u_xio.go",
+    "dut.u_xio.go_ok"
+   ]
+  },
+  "note": "Conservative variable-level dependencies; exact dynamic bit mapping pending. Not a hard tile."
+ },
+ {
+  "path": "dut.u_xio.$always6",
+  "kind": "always",
+  "source_loc": "bm,73,5,73,11",
+  "physical_home": null,
+  "exact_mapping": false,
+  "write_vars": {
+   "dut.u_xio.a_v": 4,
+   "dut.u_xio.a_row": 56,
+   "dut.u_xio.f_crq": 15
+  },
+  "read_vars": {
+   "dut.u_xio.stream_av": 4,
+   "dut.u_xio.a_v": 4,
+   "dut.u_xio.stream_ar": 56,
+   "dut.u_xio.a_row": 56,
+   "dut.u_xio.f_crq": 15
+  },
+  "output_dependencies": {
+   "dut.u_xio.a_v": [
+    "dut.u_xio.f_crq",
+    "dut.u_xio.stream_av"
+   ],
+   "dut.u_xio.a_row": [
+    "dut.u_xio.f_crq",
+    "dut.u_xio.stream_ar"
+   ]
+  },
+  "note": "Conservative variable-level dependencies; exact dynamic bit mapping pending. Not a hard tile."
+ },
+ {
+  "path": "dut.u_xio.$always7",
+  "kind": "always",
+  "source_loc": "bm,82,5,82,11",
+  "physical_home": null,
+  "exact_mapping": false,
+  "write_vars": {
+   "dut.u_xio.p_iss.av": 4,
+   "dut.u_xio.p_iss.u": 32,
+   "dut.u_xio.gl": 6,
+   "dut.u_xio.stream_av": 4,
+   "dut.u_xio.u_row": 42,
+   "dut.u_xio.act": 3,
+   "dut.u_xio.u_n": 15,
+   "dut.u_xio.f_iss": 3,
+   "dut.u_xio.dC": 15,
+   "dut.u_xio.dQ": 16,
+   "dut.u_xio.dG": 16,
+   "dut.u_xio.n_d": 84,
+   "dut.u_xio.p_iss.k": 32,
+   "dut.u_xio.stream_ar": 56,
+   "dut.u_xio.dlC": 30,
+   "dut.u_xio.dlQ": 32,
+   "dut.u_xio.dlG": 32
+  },
+  "read_vars": {
+   "dut.u_xio.ck_control_t": 1,
+   "dut.u_xio.rn": 1,
+   "dut.u_xio.p_iss.av": 4,
+   "dut.u_xio.p_iss.u": 32,
+   "dut.u_xio.go_ok": 3,
+   "dut.u_xio.gl": 6,
+   "dut.u_xio.stream_av": 4,
+   "dut.u_xio.go": 3,
+   "dut.u_xio.u_row": 42,
+   "dut.u_xio.u_n": 15,
+   "dut.u_xio.act": 3,
+   "dut.u_xio.lane_bad": 1,
+   "dut.u_xio.f_iss": 3,
+   "dut.u_xio.dC": 15,
+   "dut.u_xio.f_crq": 15,
+   "dut.u_xio.dQ": 16,
+   "dut.u_xio.dG": 16,
+   "dut.u_xio.is_cp": 1,
+   "dut.u_xio.is_cf": 1,
+   "dut.u_xio.is_cl": 1,
+   "dut.u_xio.is_st": 1,
+   "dut.u_xio.n_d": 84,
+   "dut.u_xio.p_iss.k": 32,
+   "dut.u_xio.stream_ar": 56,
+   "dut.u_xio.dlC": 30,
+   "dut.u_xio.dlQ": 32,
+   "dut.u_xio.dlG": 32
+  },
+  "output_dependencies": {
+   "dut.u_xio.p_iss.av": [
+    "dut.u_xio.gl",
+    "dut.u_xio.go_ok",
+    "dut.u_xio.p_iss.u",
+    "dut.u_xio.rn"
+   ],
+   "dut.u_xio.p_iss.u": [
+    "dut.u_xio.p_iss.u",
+    "dut.u_xio.rn"
+   ],
+   "dut.u_xio.stream_av": [
+    "dut.u_xio.p_iss.av",
+    "dut.u_xio.rn"
+   ],
+   "dut.u_xio.u_row": [
+    "dut.u_xio.go",
+    "dut.u_xio.is_st",
+    "dut.u_xio.n_d",
+    "dut.u_xio.p_iss.u",
+    "dut.u_xio.rn",
+    "dut.u_xio.u_row"
+   ],
+   "dut.u_xio.act": [
+    "dut.u_xio.go",
+    "dut.u_xio.is_st",
+    "dut.u_xio.n_d",
+    "dut.u_xio.p_iss.u",
+    "dut.u_xio.rn",
+    "dut.u_xio.u_n"
+   ],
+   "dut.u_xio.u_n": [
+    "dut.u_xio.go",
+    "dut.u_xio.is_st",
+    "dut.u_xio.n_d",
+    "dut.u_xio.p_iss.u",
+    "dut.u_xio.rn",
+    "dut.u_xio.u_n"
+   ],
+   "dut.u_xio.f_iss": [
+    "dut.u_xio.act",
+    "dut.u_xio.f_crq",
+    "dut.u_xio.go",
+    "dut.u_xio.is_cf",
+    "dut.u_xio.is_cl",
+    "dut.u_xio.is_cp",
+    "dut.u_xio.is_st",
+    "dut.u_xio.lane_bad",
+    "dut.u_xio.n_d",
+    "dut.u_xio.rn",
+    "dut.u_xio.stream_av",
+    "dut.u_xio.u_n"
+   ],
+   "dut.u_xio.dC": [
+    "dut.u_xio.dC",
+    "dut.u_xio.f_crq",
+    "dut.u_xio.rn"
+   ],
+   "dut.u_xio.dQ": [
+    "dut.u_xio.dQ",
+    "dut.u_xio.go_ok",
+    "dut.u_xio.rn"
+   ],
+   "dut.u_xio.dG": [
+    "dut.u_xio.dG",
+    "dut.u_xio.go_ok",
+    "dut.u_xio.rn"
+   ],
+   "dut.u_xio.p_iss.k": [
+    "dut.u_xio.p_iss.k"
+   ],
+   "dut.u_xio.stream_ar": [
+    "dut.u_xio.gl",
+    "dut.u_xio.go_ok",
+    "dut.u_xio.p_iss.k",
+    "dut.u_xio.u_row"
+   ],
+   "dut.u_xio.dlC": [
+    "dut.u_xio.dlC",
+    "dut.u_xio.f_crq",
+    "dut.u_xio.p_iss.k"
+   ],
+   "dut.u_xio.dlQ": [
+    "dut.u_xio.dlQ",
+    "dut.u_xio.gl",
+    "dut.u_xio.p_iss.k"
+   ],
+   "dut.u_xio.dlG": [
+    "dut.u_xio.dlG",
+    "dut.u_xio.gl",
+    "dut.u_xio.p_iss.k"
+   ]
+  },
+  "note": "Conservative variable-level dependencies; exact dynamic bit mapping pending. Not a hard tile."
+ },
+ {
+  "path": "dut.u_xio.$always8",
+  "kind": "always",
+  "source_loc": "bm,124,20,124,26",
+  "physical_home": null,
+  "exact_mapping": false,
+  "write_vars": {
+   "dut.u_xio.xq": 11
+  },
+  "read_vars": {
+   "dut.u_xio.ck_control_t": 1,
+   "dut.u_xio.rn": 1,
+   "dut.u_xio.f_xgo": 11,
+   "dut.u_xio.xq": 11
+  },
+  "output_dependencies": {
+   "dut.u_xio.xq": [
+    "dut.u_xio.f_xgo",
+    "dut.u_xio.rn"
+   ]
+  },
+  "note": "Conservative variable-level dependencies; exact dynamic bit mapping pending. Not a hard tile."
+ },
+ {
+  "path": "dut.u_xio.$always9",
+  "kind": "always",
+  "source_loc": "bm,125,5,125,11",
+  "physical_home": null,
+  "exact_mapping": false,
+  "write_vars": {
+   "dut.u_xio.f3": 1,
+   "dut.u_xio.q_v": 1,
+   "dut.u_xio.q_d": 512,
+   "dut.u_xio.g_v": 1,
+   "dut.u_xio.g_d": 511,
+   "dut.u_xio.p_ret.push": 1,
+   "dut.u_xio.p_ret.pop": 1,
+   "dut.u_xio.gph": 40,
+   "dut.u_xio.gw": 2,
+   "dut.u_xio.f9": 1,
+   "dut.u_xio.gr": 2,
+   "dut.u_xio.gn": 3,
+   "dut.u_xio.f10": 1
+  },
+  "read_vars": {
+   "dut.u_xio.ck_control_t": 1,
+   "dut.u_xio.rn": 1,
+   "dut.u_xio.e_v": 4,
+   "dut.u_xio.e_exp": 4,
+   "dut.u_xio.f3": 1,
+   "dut.u_xio.rQ": 1,
+   "dut.u_xio.q_v": 1,
+   "dut.u_xio.dQw": 512,
+   "dut.u_xio.q_d": 512,
+   "dut.u_xio.rG": 1,
+   "dut.u_xio.g_v": 1,
+   "dut.u_xio.dGw": 512,
+   "dut.u_xio.g_d": 511,
+   "dut.u_xio.p_ret.push": 1,
+   "dut.u_xio.xq": 11,
+   "dut.u_xio.p_ret.pop": 1,
+   "dut.u_xio.gph": 40,
+   "dut.u_xio.gw": 2,
+   "dut.u_xio.gn": 3,
+   "dut.u_xio.f9": 1,
+   "dut.u_xio.gr": 2,
+   "dut.u_xio.f10": 1
+  },
+  "output_dependencies": {
+   "dut.u_xio.f3": [
+    "dut.u_xio.e_exp",
+    "dut.u_xio.e_v",
+    "dut.u_xio.rn"
+   ],
+   "dut.u_xio.q_v": [
+    "dut.u_xio.rQ",
+    "dut.u_xio.rn"
+   ],
+   "dut.u_xio.q_d": [
+    "dut.u_xio.dQw",
+    "dut.u_xio.rn"
+   ],
+   "dut.u_xio.g_v": [
+    "dut.u_xio.rG",
+    "dut.u_xio.rn"
+   ],
+   "dut.u_xio.g_d": [
+    "dut.u_xio.dGw",
+    "dut.u_xio.rn"
+   ],
+   "dut.u_xio.p_ret.push": [
+    "dut.u_xio.dGw",
+    "dut.u_xio.rG",
+    "dut.u_xio.rn"
+   ],
+   "dut.u_xio.p_ret.pop": [
+    "dut.u_xio.rn",
+    "dut.u_xio.xq"
+   ],
+   "dut.u_xio.gph": [
+    "dut.u_xio.dGw",
+    "dut.u_xio.gw",
+    "dut.u_xio.p_ret.push",
+    "dut.u_xio.rn"
+   ],
+   "dut.u_xio.gw": [
+    "dut.u_xio.gw",
+    "dut.u_xio.p_ret.push",
+    "dut.u_xio.rn"
+   ],
+   "dut.u_xio.f9": [
+    "dut.u_xio.gn",
+    "dut.u_xio.gph",
+    "dut.u_xio.gr",
+    "dut.u_xio.p_ret.pop",
+    "dut.u_xio.p_ret.push",
+    "dut.u_xio.rn",
+    "dut.u_xio.xq"
+   ],
+   "dut.u_xio.gr": [
+    "dut.u_xio.gr",
+    "dut.u_xio.p_ret.pop",
+    "dut.u_xio.rn"
+   ],
+   "dut.u_xio.gn": [
+    "dut.u_xio.gn",
+    "dut.u_xio.p_ret.pop",
+    "dut.u_xio.p_ret.push",
+    "dut.u_xio.rn"
+   ],
+   "dut.u_xio.f10": [
+    "dut.u_xio.gn",
+    "dut.u_xio.p_ret.pop",
+    "dut.u_xio.p_ret.push",
+    "dut.u_xio.rn"
+   ]
+  },
+  "note": "Conservative variable-level dependencies; exact dynamic bit mapping pending. Not a hard tile."
+ },
+ {
+  "path": "dut.u_xio.$always10",
+  "kind": "always",
+  "source_loc": "bm,170,19,170,25",
+  "physical_home": null,
+  "exact_mapping": false,
+  "write_vars": {
+   "dut.u_xio.sq": 2
+  },
+  "read_vars": {
+   "dut.u_xio.ck_control_s": 1,
+   "dut.u_xio.rst_control_s": 1,
+   "dut.u_xio.sq": 2
+  },
+  "output_dependencies": {
+   "dut.u_xio.sq": [
+    "dut.u_xio.rst_control_s",
+    "dut.u_xio.sq"
+   ]
+  },
+  "note": "Conservative variable-level dependencies; exact dynamic bit mapping pending. Not a hard tile."
+ },
+ {
+  "path": "dut.u_xio.$always11",
+  "kind": "always",
+  "source_loc": "bm,172,5,172,11",
+  "physical_home": null,
+  "exact_mapping": false,
+  "write_vars": {
+   "dut.u_xio.qs_q": 3,
+   "dut.u_xio.qs_bad": 1
+  },
+  "read_vars": {
+   "dut.u_xio.ck_control_s": 1,
+   "dut.u_xio.qSWs": 3,
+   "dut.u_xio.qs_q": 3,
+   "dut.u_xio.sq": 2,
+   "dut.u_xio.qo_v": 1,
+   "dut.u_xio.qs_bad": 1
+  },
+  "output_dependencies": {
+   "dut.u_xio.qs_q": [
+    "dut.u_xio.qSWs"
+   ],
+   "dut.u_xio.qs_bad": [
+    "dut.u_xio.qo_v",
+    "dut.u_xio.qs_q",
+    "dut.u_xio.sq"
+   ]
+  },
+  "note": "Conservative variable-level dependencies; exact dynamic bit mapping pending. Not a hard tile."
+ },
+ {
+  "path": "dut.u_xio.$always12",
+  "kind": "always",
+  "source_loc": "bm,176,5,176,11",
+  "physical_home": null,
+  "exact_mapping": false,
+  "write_vars": {
+   "dut.u_xio.f_s": 2
+  },
+  "read_vars": {
+   "dut.u_xio.ck_control_t": 1,
+   "dut.u_xio.rn": 1,
+   "dut.u_xio.qs_bad": 1,
+   "dut.u_xio.f_s": 2,
+   "dut.u_xio.qf": 1,
+   "dut.u_xio.gf": 1
+  },
+  "output_dependencies": {
+   "dut.u_xio.f_s": [
+    "dut.u_xio.gf",
+    "dut.u_xio.qf",
+    "dut.u_xio.qs_bad",
+    "dut.u_xio.rn"
+   ]
+  },
+  "note": "Conservative variable-level dependencies; exact dynamic bit mapping pending. Not a hard tile."
+ },
+ {
+  "path": "dut.u_xio.$expr3:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "bm,52,51,52,53",
+  "input_bits": 4,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_xio.$expr4:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "bm,52,80,52,82",
+  "input_bits": 4,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_xio.$expr5:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "bm,53,22,53,24",
+  "input_bits": 88,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_xio.$expr6:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "bm,52,22,52,24",
+  "input_bits": 4,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_xio.$expr7:sel",
+  "kind": "expression",
+  "operation": "sel",
+  "source_loc": "bm,120,27,120,28",
+  "input_bits": 2078,
+  "output_bits": 512,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_xio.$expr8:or",
+  "kind": "expression",
+  "operation": "or",
+  "source_loc": "bm,119,51,119,52",
+  "input_bits": 97,
+  "output_bits": 4,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_xio.$expr9:sel",
+  "kind": "expression",
+  "operation": "sel",
+  "source_loc": "bm,120,53,120,54",
+  "input_bits": 2080,
+  "output_bits": 512,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_xio.$expr10:sel",
+  "kind": "expression",
+  "operation": "sel",
+  "source_loc": "bm,120,79,120,80",
+  "input_bits": 2080,
+  "output_bits": 512,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_xio.$expr11:or",
+  "kind": "expression",
+  "operation": "or",
+  "source_loc": "bm,177,20,177,21",
+  "input_bits": 8,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_xio.$expr12:add",
+  "kind": "expression",
+  "operation": "add",
+  "source_loc": "bm,46,24,46,25",
+  "input_bits": 2,
+  "output_bits": 2,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.$expr13:redor",
+  "kind": "expression",
+  "operation": "redor",
+  "source_loc": "cf,156,20,156,21",
+  "input_bits": 16,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_slice.$expr14:redor",
+  "kind": "expression",
+  "operation": "redor",
+  "source_loc": "ce,48,18,48,19",
+  "input_bits": 4,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$always25",
+  "kind": "always",
+  "source_loc": "p,14,3,14,9",
+  "physical_home": null,
+  "exact_mapping": false,
+  "write_vars": {
+   "dut.u_core.u_mem.slice[0].u_native.port_map[0].d": 128,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[0].valid": 1,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[0].legal": 1,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[0].k": 32
+  },
+  "read_vars": {
+   "dut.u_core.u_mem.slice[0].u_native.port_map[0].d": 128,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[0].valid": 1,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[0].legal": 1,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[0].k": 32,
+   "dut.u_core.u_mem.slice[0].u_native.release_slot": 90,
+   "dut.u_core.u_mem.slice[0].u_native.i_data": 4096,
+   "dut.u_core.u_mem.slice[0].u_native.i_v": 32
+  },
+  "output_dependencies": {
+   "dut.u_core.u_mem.slice[0].u_native.port_map[0].d": [
+    "dut.u_core.u_mem.slice[0].u_native.i_data",
+    "dut.u_core.u_mem.slice[0].u_native.port_map[0].d",
+    "dut.u_core.u_mem.slice[0].u_native.port_map[0].k",
+    "dut.u_core.u_mem.slice[0].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[0].u_native.port_map[0].valid": [
+    "dut.u_core.u_mem.slice[0].u_native.i_v",
+    "dut.u_core.u_mem.slice[0].u_native.port_map[0].k",
+    "dut.u_core.u_mem.slice[0].u_native.port_map[0].valid",
+    "dut.u_core.u_mem.slice[0].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[0].u_native.port_map[0].legal": [
+    "dut.u_core.u_mem.slice[0].u_native.port_map[0].k",
+    "dut.u_core.u_mem.slice[0].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[0].u_native.port_map[0].k": [
+    "dut.u_core.u_mem.slice[0].u_native.port_map[0].k"
+   ]
+  },
+  "note": "Conservative variable-level dependencies; exact dynamic bit mapping pending. Not a hard tile."
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr15:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,28,63,28,65",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr16:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,29,30,29,32",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$always28",
+  "kind": "always",
+  "source_loc": "p,14,3,14,9",
+  "physical_home": null,
+  "exact_mapping": false,
+  "write_vars": {
+   "dut.u_core.u_mem.slice[0].u_native.port_map[1].d": 128,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[1].valid": 1,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[1].legal": 1,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[1].k": 32
+  },
+  "read_vars": {
+   "dut.u_core.u_mem.slice[0].u_native.port_map[1].d": 128,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[1].valid": 1,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[1].legal": 1,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[1].k": 32,
+   "dut.u_core.u_mem.slice[0].u_native.release_slot": 90,
+   "dut.u_core.u_mem.slice[0].u_native.i_data": 4096,
+   "dut.u_core.u_mem.slice[0].u_native.i_v": 32
+  },
+  "output_dependencies": {
+   "dut.u_core.u_mem.slice[0].u_native.port_map[1].d": [
+    "dut.u_core.u_mem.slice[0].u_native.i_data",
+    "dut.u_core.u_mem.slice[0].u_native.port_map[1].d",
+    "dut.u_core.u_mem.slice[0].u_native.port_map[1].k",
+    "dut.u_core.u_mem.slice[0].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[0].u_native.port_map[1].valid": [
+    "dut.u_core.u_mem.slice[0].u_native.i_v",
+    "dut.u_core.u_mem.slice[0].u_native.port_map[1].k",
+    "dut.u_core.u_mem.slice[0].u_native.port_map[1].valid",
+    "dut.u_core.u_mem.slice[0].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[0].u_native.port_map[1].legal": [
+    "dut.u_core.u_mem.slice[0].u_native.port_map[1].k",
+    "dut.u_core.u_mem.slice[0].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[0].u_native.port_map[1].k": [
+    "dut.u_core.u_mem.slice[0].u_native.port_map[1].k"
+   ]
+  },
+  "note": "Conservative variable-level dependencies; exact dynamic bit mapping pending. Not a hard tile."
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr17:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,28,63,28,65",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr18:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,29,30,29,32",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$always31",
+  "kind": "always",
+  "source_loc": "p,14,3,14,9",
+  "physical_home": null,
+  "exact_mapping": false,
+  "write_vars": {
+   "dut.u_core.u_mem.slice[0].u_native.port_map[2].d": 128,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[2].valid": 1,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[2].legal": 1,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[2].k": 32
+  },
+  "read_vars": {
+   "dut.u_core.u_mem.slice[0].u_native.port_map[2].d": 128,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[2].valid": 1,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[2].legal": 1,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[2].k": 32,
+   "dut.u_core.u_mem.slice[0].u_native.release_slot": 90,
+   "dut.u_core.u_mem.slice[0].u_native.i_data": 4096,
+   "dut.u_core.u_mem.slice[0].u_native.i_v": 32
+  },
+  "output_dependencies": {
+   "dut.u_core.u_mem.slice[0].u_native.port_map[2].d": [
+    "dut.u_core.u_mem.slice[0].u_native.i_data",
+    "dut.u_core.u_mem.slice[0].u_native.port_map[2].d",
+    "dut.u_core.u_mem.slice[0].u_native.port_map[2].k",
+    "dut.u_core.u_mem.slice[0].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[0].u_native.port_map[2].valid": [
+    "dut.u_core.u_mem.slice[0].u_native.i_v",
+    "dut.u_core.u_mem.slice[0].u_native.port_map[2].k",
+    "dut.u_core.u_mem.slice[0].u_native.port_map[2].valid",
+    "dut.u_core.u_mem.slice[0].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[0].u_native.port_map[2].legal": [
+    "dut.u_core.u_mem.slice[0].u_native.port_map[2].k",
+    "dut.u_core.u_mem.slice[0].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[0].u_native.port_map[2].k": [
+    "dut.u_core.u_mem.slice[0].u_native.port_map[2].k"
+   ]
+  },
+  "note": "Conservative variable-level dependencies; exact dynamic bit mapping pending. Not a hard tile."
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr19:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,28,63,28,65",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr20:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,29,30,29,32",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$always34",
+  "kind": "always",
+  "source_loc": "p,14,3,14,9",
+  "physical_home": null,
+  "exact_mapping": false,
+  "write_vars": {
+   "dut.u_core.u_mem.slice[0].u_native.port_map[3].d": 128,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[3].valid": 1,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[3].legal": 1,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[3].k": 32
+  },
+  "read_vars": {
+   "dut.u_core.u_mem.slice[0].u_native.port_map[3].d": 128,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[3].valid": 1,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[3].legal": 1,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[3].k": 32,
+   "dut.u_core.u_mem.slice[0].u_native.release_slot": 90,
+   "dut.u_core.u_mem.slice[0].u_native.i_data": 4096,
+   "dut.u_core.u_mem.slice[0].u_native.i_v": 32
+  },
+  "output_dependencies": {
+   "dut.u_core.u_mem.slice[0].u_native.port_map[3].d": [
+    "dut.u_core.u_mem.slice[0].u_native.i_data",
+    "dut.u_core.u_mem.slice[0].u_native.port_map[3].d",
+    "dut.u_core.u_mem.slice[0].u_native.port_map[3].k",
+    "dut.u_core.u_mem.slice[0].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[0].u_native.port_map[3].valid": [
+    "dut.u_core.u_mem.slice[0].u_native.i_v",
+    "dut.u_core.u_mem.slice[0].u_native.port_map[3].k",
+    "dut.u_core.u_mem.slice[0].u_native.port_map[3].valid",
+    "dut.u_core.u_mem.slice[0].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[0].u_native.port_map[3].legal": [
+    "dut.u_core.u_mem.slice[0].u_native.port_map[3].k",
+    "dut.u_core.u_mem.slice[0].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[0].u_native.port_map[3].k": [
+    "dut.u_core.u_mem.slice[0].u_native.port_map[3].k"
+   ]
+  },
+  "note": "Conservative variable-level dependencies; exact dynamic bit mapping pending. Not a hard tile."
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr21:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,28,63,28,65",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr22:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,29,30,29,32",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$always37",
+  "kind": "always",
+  "source_loc": "p,14,3,14,9",
+  "physical_home": null,
+  "exact_mapping": false,
+  "write_vars": {
+   "dut.u_core.u_mem.slice[0].u_native.port_map[4].d": 128,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[4].valid": 1,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[4].legal": 1,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[4].k": 32
+  },
+  "read_vars": {
+   "dut.u_core.u_mem.slice[0].u_native.port_map[4].d": 128,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[4].valid": 1,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[4].legal": 1,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[4].k": 32,
+   "dut.u_core.u_mem.slice[0].u_native.release_slot": 90,
+   "dut.u_core.u_mem.slice[0].u_native.i_data": 4096,
+   "dut.u_core.u_mem.slice[0].u_native.i_v": 32
+  },
+  "output_dependencies": {
+   "dut.u_core.u_mem.slice[0].u_native.port_map[4].d": [
+    "dut.u_core.u_mem.slice[0].u_native.i_data",
+    "dut.u_core.u_mem.slice[0].u_native.port_map[4].d",
+    "dut.u_core.u_mem.slice[0].u_native.port_map[4].k",
+    "dut.u_core.u_mem.slice[0].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[0].u_native.port_map[4].valid": [
+    "dut.u_core.u_mem.slice[0].u_native.i_v",
+    "dut.u_core.u_mem.slice[0].u_native.port_map[4].k",
+    "dut.u_core.u_mem.slice[0].u_native.port_map[4].valid",
+    "dut.u_core.u_mem.slice[0].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[0].u_native.port_map[4].legal": [
+    "dut.u_core.u_mem.slice[0].u_native.port_map[4].k",
+    "dut.u_core.u_mem.slice[0].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[0].u_native.port_map[4].k": [
+    "dut.u_core.u_mem.slice[0].u_native.port_map[4].k"
+   ]
+  },
+  "note": "Conservative variable-level dependencies; exact dynamic bit mapping pending. Not a hard tile."
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr23:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,28,63,28,65",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr24:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,29,30,29,32",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$always40",
+  "kind": "always",
+  "source_loc": "p,14,3,14,9",
+  "physical_home": null,
+  "exact_mapping": false,
+  "write_vars": {
+   "dut.u_core.u_mem.slice[0].u_native.port_map[5].d": 128,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[5].valid": 1,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[5].legal": 1,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[5].k": 32
+  },
+  "read_vars": {
+   "dut.u_core.u_mem.slice[0].u_native.port_map[5].d": 128,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[5].valid": 1,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[5].legal": 1,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[5].k": 32,
+   "dut.u_core.u_mem.slice[0].u_native.release_slot": 90,
+   "dut.u_core.u_mem.slice[0].u_native.i_data": 4096,
+   "dut.u_core.u_mem.slice[0].u_native.i_v": 32
+  },
+  "output_dependencies": {
+   "dut.u_core.u_mem.slice[0].u_native.port_map[5].d": [
+    "dut.u_core.u_mem.slice[0].u_native.i_data",
+    "dut.u_core.u_mem.slice[0].u_native.port_map[5].d",
+    "dut.u_core.u_mem.slice[0].u_native.port_map[5].k",
+    "dut.u_core.u_mem.slice[0].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[0].u_native.port_map[5].valid": [
+    "dut.u_core.u_mem.slice[0].u_native.i_v",
+    "dut.u_core.u_mem.slice[0].u_native.port_map[5].k",
+    "dut.u_core.u_mem.slice[0].u_native.port_map[5].valid",
+    "dut.u_core.u_mem.slice[0].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[0].u_native.port_map[5].legal": [
+    "dut.u_core.u_mem.slice[0].u_native.port_map[5].k",
+    "dut.u_core.u_mem.slice[0].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[0].u_native.port_map[5].k": [
+    "dut.u_core.u_mem.slice[0].u_native.port_map[5].k"
+   ]
+  },
+  "note": "Conservative variable-level dependencies; exact dynamic bit mapping pending. Not a hard tile."
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr25:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,28,63,28,65",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr26:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,29,30,29,32",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$always43",
+  "kind": "always",
+  "source_loc": "p,14,3,14,9",
+  "physical_home": null,
+  "exact_mapping": false,
+  "write_vars": {
+   "dut.u_core.u_mem.slice[0].u_native.port_map[6].d": 128,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[6].valid": 1,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[6].legal": 1,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[6].k": 32
+  },
+  "read_vars": {
+   "dut.u_core.u_mem.slice[0].u_native.port_map[6].d": 128,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[6].valid": 1,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[6].legal": 1,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[6].k": 32,
+   "dut.u_core.u_mem.slice[0].u_native.release_slot": 90,
+   "dut.u_core.u_mem.slice[0].u_native.i_data": 4096,
+   "dut.u_core.u_mem.slice[0].u_native.i_v": 32
+  },
+  "output_dependencies": {
+   "dut.u_core.u_mem.slice[0].u_native.port_map[6].d": [
+    "dut.u_core.u_mem.slice[0].u_native.i_data",
+    "dut.u_core.u_mem.slice[0].u_native.port_map[6].d",
+    "dut.u_core.u_mem.slice[0].u_native.port_map[6].k",
+    "dut.u_core.u_mem.slice[0].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[0].u_native.port_map[6].valid": [
+    "dut.u_core.u_mem.slice[0].u_native.i_v",
+    "dut.u_core.u_mem.slice[0].u_native.port_map[6].k",
+    "dut.u_core.u_mem.slice[0].u_native.port_map[6].valid",
+    "dut.u_core.u_mem.slice[0].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[0].u_native.port_map[6].legal": [
+    "dut.u_core.u_mem.slice[0].u_native.port_map[6].k",
+    "dut.u_core.u_mem.slice[0].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[0].u_native.port_map[6].k": [
+    "dut.u_core.u_mem.slice[0].u_native.port_map[6].k"
+   ]
+  },
+  "note": "Conservative variable-level dependencies; exact dynamic bit mapping pending. Not a hard tile."
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr27:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,28,63,28,65",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr28:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,29,30,29,32",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$always46",
+  "kind": "always",
+  "source_loc": "p,14,3,14,9",
+  "physical_home": null,
+  "exact_mapping": false,
+  "write_vars": {
+   "dut.u_core.u_mem.slice[0].u_native.port_map[7].d": 128,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[7].valid": 1,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[7].legal": 1,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[7].k": 32
+  },
+  "read_vars": {
+   "dut.u_core.u_mem.slice[0].u_native.port_map[7].d": 128,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[7].valid": 1,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[7].legal": 1,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[7].k": 32,
+   "dut.u_core.u_mem.slice[0].u_native.release_slot": 90,
+   "dut.u_core.u_mem.slice[0].u_native.i_data": 4096,
+   "dut.u_core.u_mem.slice[0].u_native.i_v": 32
+  },
+  "output_dependencies": {
+   "dut.u_core.u_mem.slice[0].u_native.port_map[7].d": [
+    "dut.u_core.u_mem.slice[0].u_native.i_data",
+    "dut.u_core.u_mem.slice[0].u_native.port_map[7].d",
+    "dut.u_core.u_mem.slice[0].u_native.port_map[7].k",
+    "dut.u_core.u_mem.slice[0].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[0].u_native.port_map[7].valid": [
+    "dut.u_core.u_mem.slice[0].u_native.i_v",
+    "dut.u_core.u_mem.slice[0].u_native.port_map[7].k",
+    "dut.u_core.u_mem.slice[0].u_native.port_map[7].valid",
+    "dut.u_core.u_mem.slice[0].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[0].u_native.port_map[7].legal": [
+    "dut.u_core.u_mem.slice[0].u_native.port_map[7].k",
+    "dut.u_core.u_mem.slice[0].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[0].u_native.port_map[7].k": [
+    "dut.u_core.u_mem.slice[0].u_native.port_map[7].k"
+   ]
+  },
+  "note": "Conservative variable-level dependencies; exact dynamic bit mapping pending. Not a hard tile."
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr29:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,28,63,28,65",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr30:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,29,30,29,32",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$always49",
+  "kind": "always",
+  "source_loc": "p,14,3,14,9",
+  "physical_home": null,
+  "exact_mapping": false,
+  "write_vars": {
+   "dut.u_core.u_mem.slice[0].u_native.port_map[8].d": 128,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[8].valid": 1,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[8].legal": 1,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[8].k": 32
+  },
+  "read_vars": {
+   "dut.u_core.u_mem.slice[0].u_native.port_map[8].d": 128,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[8].valid": 1,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[8].legal": 1,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[8].k": 32,
+   "dut.u_core.u_mem.slice[0].u_native.release_slot": 90,
+   "dut.u_core.u_mem.slice[0].u_native.i_data": 4096,
+   "dut.u_core.u_mem.slice[0].u_native.i_v": 32
+  },
+  "output_dependencies": {
+   "dut.u_core.u_mem.slice[0].u_native.port_map[8].d": [
+    "dut.u_core.u_mem.slice[0].u_native.i_data",
+    "dut.u_core.u_mem.slice[0].u_native.port_map[8].d",
+    "dut.u_core.u_mem.slice[0].u_native.port_map[8].k",
+    "dut.u_core.u_mem.slice[0].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[0].u_native.port_map[8].valid": [
+    "dut.u_core.u_mem.slice[0].u_native.i_v",
+    "dut.u_core.u_mem.slice[0].u_native.port_map[8].k",
+    "dut.u_core.u_mem.slice[0].u_native.port_map[8].valid",
+    "dut.u_core.u_mem.slice[0].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[0].u_native.port_map[8].legal": [
+    "dut.u_core.u_mem.slice[0].u_native.port_map[8].k",
+    "dut.u_core.u_mem.slice[0].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[0].u_native.port_map[8].k": [
+    "dut.u_core.u_mem.slice[0].u_native.port_map[8].k"
+   ]
+  },
+  "note": "Conservative variable-level dependencies; exact dynamic bit mapping pending. Not a hard tile."
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr31:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,28,63,28,65",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr32:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,29,30,29,32",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$always52",
+  "kind": "always",
+  "source_loc": "p,14,3,14,9",
+  "physical_home": null,
+  "exact_mapping": false,
+  "write_vars": {
+   "dut.u_core.u_mem.slice[0].u_native.port_map[9].d": 128,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[9].valid": 1,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[9].legal": 1,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[9].k": 32
+  },
+  "read_vars": {
+   "dut.u_core.u_mem.slice[0].u_native.port_map[9].d": 128,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[9].valid": 1,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[9].legal": 1,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[9].k": 32,
+   "dut.u_core.u_mem.slice[0].u_native.release_slot": 90,
+   "dut.u_core.u_mem.slice[0].u_native.i_data": 4096,
+   "dut.u_core.u_mem.slice[0].u_native.i_v": 32
+  },
+  "output_dependencies": {
+   "dut.u_core.u_mem.slice[0].u_native.port_map[9].d": [
+    "dut.u_core.u_mem.slice[0].u_native.i_data",
+    "dut.u_core.u_mem.slice[0].u_native.port_map[9].d",
+    "dut.u_core.u_mem.slice[0].u_native.port_map[9].k",
+    "dut.u_core.u_mem.slice[0].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[0].u_native.port_map[9].valid": [
+    "dut.u_core.u_mem.slice[0].u_native.i_v",
+    "dut.u_core.u_mem.slice[0].u_native.port_map[9].k",
+    "dut.u_core.u_mem.slice[0].u_native.port_map[9].valid",
+    "dut.u_core.u_mem.slice[0].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[0].u_native.port_map[9].legal": [
+    "dut.u_core.u_mem.slice[0].u_native.port_map[9].k",
+    "dut.u_core.u_mem.slice[0].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[0].u_native.port_map[9].k": [
+    "dut.u_core.u_mem.slice[0].u_native.port_map[9].k"
+   ]
+  },
+  "note": "Conservative variable-level dependencies; exact dynamic bit mapping pending. Not a hard tile."
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr33:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,28,63,28,65",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr34:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,29,30,29,32",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$always55",
+  "kind": "always",
+  "source_loc": "p,14,3,14,9",
+  "physical_home": null,
+  "exact_mapping": false,
+  "write_vars": {
+   "dut.u_core.u_mem.slice[0].u_native.port_map[10].d": 128,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[10].valid": 1,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[10].legal": 1,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[10].k": 32
+  },
+  "read_vars": {
+   "dut.u_core.u_mem.slice[0].u_native.port_map[10].d": 128,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[10].valid": 1,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[10].legal": 1,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[10].k": 32,
+   "dut.u_core.u_mem.slice[0].u_native.release_slot": 90,
+   "dut.u_core.u_mem.slice[0].u_native.i_data": 4096,
+   "dut.u_core.u_mem.slice[0].u_native.i_v": 32
+  },
+  "output_dependencies": {
+   "dut.u_core.u_mem.slice[0].u_native.port_map[10].d": [
+    "dut.u_core.u_mem.slice[0].u_native.i_data",
+    "dut.u_core.u_mem.slice[0].u_native.port_map[10].d",
+    "dut.u_core.u_mem.slice[0].u_native.port_map[10].k",
+    "dut.u_core.u_mem.slice[0].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[0].u_native.port_map[10].valid": [
+    "dut.u_core.u_mem.slice[0].u_native.i_v",
+    "dut.u_core.u_mem.slice[0].u_native.port_map[10].k",
+    "dut.u_core.u_mem.slice[0].u_native.port_map[10].valid",
+    "dut.u_core.u_mem.slice[0].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[0].u_native.port_map[10].legal": [
+    "dut.u_core.u_mem.slice[0].u_native.port_map[10].k",
+    "dut.u_core.u_mem.slice[0].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[0].u_native.port_map[10].k": [
+    "dut.u_core.u_mem.slice[0].u_native.port_map[10].k"
+   ]
+  },
+  "note": "Conservative variable-level dependencies; exact dynamic bit mapping pending. Not a hard tile."
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr35:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,28,63,28,65",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr36:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,29,30,29,32",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$always58",
+  "kind": "always",
+  "source_loc": "p,14,3,14,9",
+  "physical_home": null,
+  "exact_mapping": false,
+  "write_vars": {
+   "dut.u_core.u_mem.slice[0].u_native.port_map[11].d": 128,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[11].valid": 1,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[11].legal": 1,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[11].k": 32
+  },
+  "read_vars": {
+   "dut.u_core.u_mem.slice[0].u_native.port_map[11].d": 128,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[11].valid": 1,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[11].legal": 1,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[11].k": 32,
+   "dut.u_core.u_mem.slice[0].u_native.release_slot": 90,
+   "dut.u_core.u_mem.slice[0].u_native.i_data": 4096,
+   "dut.u_core.u_mem.slice[0].u_native.i_v": 32
+  },
+  "output_dependencies": {
+   "dut.u_core.u_mem.slice[0].u_native.port_map[11].d": [
+    "dut.u_core.u_mem.slice[0].u_native.i_data",
+    "dut.u_core.u_mem.slice[0].u_native.port_map[11].d",
+    "dut.u_core.u_mem.slice[0].u_native.port_map[11].k",
+    "dut.u_core.u_mem.slice[0].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[0].u_native.port_map[11].valid": [
+    "dut.u_core.u_mem.slice[0].u_native.i_v",
+    "dut.u_core.u_mem.slice[0].u_native.port_map[11].k",
+    "dut.u_core.u_mem.slice[0].u_native.port_map[11].valid",
+    "dut.u_core.u_mem.slice[0].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[0].u_native.port_map[11].legal": [
+    "dut.u_core.u_mem.slice[0].u_native.port_map[11].k",
+    "dut.u_core.u_mem.slice[0].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[0].u_native.port_map[11].k": [
+    "dut.u_core.u_mem.slice[0].u_native.port_map[11].k"
+   ]
+  },
+  "note": "Conservative variable-level dependencies; exact dynamic bit mapping pending. Not a hard tile."
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr37:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,28,63,28,65",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr38:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,29,30,29,32",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$always61",
+  "kind": "always",
+  "source_loc": "p,14,3,14,9",
+  "physical_home": null,
+  "exact_mapping": false,
+  "write_vars": {
+   "dut.u_core.u_mem.slice[0].u_native.port_map[12].d": 128,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[12].valid": 1,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[12].legal": 1,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[12].k": 32
+  },
+  "read_vars": {
+   "dut.u_core.u_mem.slice[0].u_native.port_map[12].d": 128,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[12].valid": 1,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[12].legal": 1,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[12].k": 32,
+   "dut.u_core.u_mem.slice[0].u_native.release_slot": 90,
+   "dut.u_core.u_mem.slice[0].u_native.i_data": 4096,
+   "dut.u_core.u_mem.slice[0].u_native.i_v": 32
+  },
+  "output_dependencies": {
+   "dut.u_core.u_mem.slice[0].u_native.port_map[12].d": [
+    "dut.u_core.u_mem.slice[0].u_native.i_data",
+    "dut.u_core.u_mem.slice[0].u_native.port_map[12].d",
+    "dut.u_core.u_mem.slice[0].u_native.port_map[12].k",
+    "dut.u_core.u_mem.slice[0].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[0].u_native.port_map[12].valid": [
+    "dut.u_core.u_mem.slice[0].u_native.i_v",
+    "dut.u_core.u_mem.slice[0].u_native.port_map[12].k",
+    "dut.u_core.u_mem.slice[0].u_native.port_map[12].valid",
+    "dut.u_core.u_mem.slice[0].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[0].u_native.port_map[12].legal": [
+    "dut.u_core.u_mem.slice[0].u_native.port_map[12].k",
+    "dut.u_core.u_mem.slice[0].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[0].u_native.port_map[12].k": [
+    "dut.u_core.u_mem.slice[0].u_native.port_map[12].k"
+   ]
+  },
+  "note": "Conservative variable-level dependencies; exact dynamic bit mapping pending. Not a hard tile."
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr39:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,28,63,28,65",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr40:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,29,30,29,32",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$always64",
+  "kind": "always",
+  "source_loc": "p,14,3,14,9",
+  "physical_home": null,
+  "exact_mapping": false,
+  "write_vars": {
+   "dut.u_core.u_mem.slice[0].u_native.port_map[13].d": 128,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[13].valid": 1,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[13].legal": 1,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[13].k": 32
+  },
+  "read_vars": {
+   "dut.u_core.u_mem.slice[0].u_native.port_map[13].d": 128,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[13].valid": 1,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[13].legal": 1,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[13].k": 32,
+   "dut.u_core.u_mem.slice[0].u_native.release_slot": 90,
+   "dut.u_core.u_mem.slice[0].u_native.i_data": 4096,
+   "dut.u_core.u_mem.slice[0].u_native.i_v": 32
+  },
+  "output_dependencies": {
+   "dut.u_core.u_mem.slice[0].u_native.port_map[13].d": [
+    "dut.u_core.u_mem.slice[0].u_native.i_data",
+    "dut.u_core.u_mem.slice[0].u_native.port_map[13].d",
+    "dut.u_core.u_mem.slice[0].u_native.port_map[13].k",
+    "dut.u_core.u_mem.slice[0].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[0].u_native.port_map[13].valid": [
+    "dut.u_core.u_mem.slice[0].u_native.i_v",
+    "dut.u_core.u_mem.slice[0].u_native.port_map[13].k",
+    "dut.u_core.u_mem.slice[0].u_native.port_map[13].valid",
+    "dut.u_core.u_mem.slice[0].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[0].u_native.port_map[13].legal": [
+    "dut.u_core.u_mem.slice[0].u_native.port_map[13].k",
+    "dut.u_core.u_mem.slice[0].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[0].u_native.port_map[13].k": [
+    "dut.u_core.u_mem.slice[0].u_native.port_map[13].k"
+   ]
+  },
+  "note": "Conservative variable-level dependencies; exact dynamic bit mapping pending. Not a hard tile."
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr41:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,28,63,28,65",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr42:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,29,30,29,32",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$always67",
+  "kind": "always",
+  "source_loc": "p,14,3,14,9",
+  "physical_home": null,
+  "exact_mapping": false,
+  "write_vars": {
+   "dut.u_core.u_mem.slice[0].u_native.port_map[14].d": 128,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[14].valid": 1,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[14].legal": 1,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[14].k": 32
+  },
+  "read_vars": {
+   "dut.u_core.u_mem.slice[0].u_native.port_map[14].d": 128,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[14].valid": 1,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[14].legal": 1,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[14].k": 32,
+   "dut.u_core.u_mem.slice[0].u_native.release_slot": 90,
+   "dut.u_core.u_mem.slice[0].u_native.i_data": 4096,
+   "dut.u_core.u_mem.slice[0].u_native.i_v": 32
+  },
+  "output_dependencies": {
+   "dut.u_core.u_mem.slice[0].u_native.port_map[14].d": [
+    "dut.u_core.u_mem.slice[0].u_native.i_data",
+    "dut.u_core.u_mem.slice[0].u_native.port_map[14].d",
+    "dut.u_core.u_mem.slice[0].u_native.port_map[14].k",
+    "dut.u_core.u_mem.slice[0].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[0].u_native.port_map[14].valid": [
+    "dut.u_core.u_mem.slice[0].u_native.i_v",
+    "dut.u_core.u_mem.slice[0].u_native.port_map[14].k",
+    "dut.u_core.u_mem.slice[0].u_native.port_map[14].valid",
+    "dut.u_core.u_mem.slice[0].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[0].u_native.port_map[14].legal": [
+    "dut.u_core.u_mem.slice[0].u_native.port_map[14].k",
+    "dut.u_core.u_mem.slice[0].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[0].u_native.port_map[14].k": [
+    "dut.u_core.u_mem.slice[0].u_native.port_map[14].k"
+   ]
+  },
+  "note": "Conservative variable-level dependencies; exact dynamic bit mapping pending. Not a hard tile."
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr43:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,28,63,28,65",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr44:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,29,30,29,32",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$always70",
+  "kind": "always",
+  "source_loc": "p,14,3,14,9",
+  "physical_home": null,
+  "exact_mapping": false,
+  "write_vars": {
+   "dut.u_core.u_mem.slice[0].u_native.port_map[15].d": 128,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[15].valid": 1,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[15].legal": 1,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[15].k": 32
+  },
+  "read_vars": {
+   "dut.u_core.u_mem.slice[0].u_native.port_map[15].d": 128,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[15].valid": 1,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[15].legal": 1,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[15].k": 32,
+   "dut.u_core.u_mem.slice[0].u_native.release_slot": 90,
+   "dut.u_core.u_mem.slice[0].u_native.i_data": 4096,
+   "dut.u_core.u_mem.slice[0].u_native.i_v": 32
+  },
+  "output_dependencies": {
+   "dut.u_core.u_mem.slice[0].u_native.port_map[15].d": [
+    "dut.u_core.u_mem.slice[0].u_native.i_data",
+    "dut.u_core.u_mem.slice[0].u_native.port_map[15].d",
+    "dut.u_core.u_mem.slice[0].u_native.port_map[15].k",
+    "dut.u_core.u_mem.slice[0].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[0].u_native.port_map[15].valid": [
+    "dut.u_core.u_mem.slice[0].u_native.i_v",
+    "dut.u_core.u_mem.slice[0].u_native.port_map[15].k",
+    "dut.u_core.u_mem.slice[0].u_native.port_map[15].valid",
+    "dut.u_core.u_mem.slice[0].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[0].u_native.port_map[15].legal": [
+    "dut.u_core.u_mem.slice[0].u_native.port_map[15].k",
+    "dut.u_core.u_mem.slice[0].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[0].u_native.port_map[15].k": [
+    "dut.u_core.u_mem.slice[0].u_native.port_map[15].k"
+   ]
+  },
+  "note": "Conservative variable-level dependencies; exact dynamic bit mapping pending. Not a hard tile."
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr45:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,28,63,28,65",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr46:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,29,30,29,32",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$always73",
+  "kind": "always",
+  "source_loc": "p,14,3,14,9",
+  "physical_home": null,
+  "exact_mapping": false,
+  "write_vars": {
+   "dut.u_core.u_mem.slice[0].u_native.port_map[16].d": 128,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[16].valid": 1,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[16].legal": 1,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[16].k": 32
+  },
+  "read_vars": {
+   "dut.u_core.u_mem.slice[0].u_native.port_map[16].d": 128,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[16].valid": 1,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[16].legal": 1,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[16].k": 32,
+   "dut.u_core.u_mem.slice[0].u_native.release_slot": 90,
+   "dut.u_core.u_mem.slice[0].u_native.i_data": 4096,
+   "dut.u_core.u_mem.slice[0].u_native.i_v": 32
+  },
+  "output_dependencies": {
+   "dut.u_core.u_mem.slice[0].u_native.port_map[16].d": [
+    "dut.u_core.u_mem.slice[0].u_native.i_data",
+    "dut.u_core.u_mem.slice[0].u_native.port_map[16].d",
+    "dut.u_core.u_mem.slice[0].u_native.port_map[16].k",
+    "dut.u_core.u_mem.slice[0].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[0].u_native.port_map[16].valid": [
+    "dut.u_core.u_mem.slice[0].u_native.i_v",
+    "dut.u_core.u_mem.slice[0].u_native.port_map[16].k",
+    "dut.u_core.u_mem.slice[0].u_native.port_map[16].valid",
+    "dut.u_core.u_mem.slice[0].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[0].u_native.port_map[16].legal": [
+    "dut.u_core.u_mem.slice[0].u_native.port_map[16].k",
+    "dut.u_core.u_mem.slice[0].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[0].u_native.port_map[16].k": [
+    "dut.u_core.u_mem.slice[0].u_native.port_map[16].k"
+   ]
+  },
+  "note": "Conservative variable-level dependencies; exact dynamic bit mapping pending. Not a hard tile."
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr47:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,28,63,28,65",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr48:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,29,30,29,32",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$always76",
+  "kind": "always",
+  "source_loc": "p,14,3,14,9",
+  "physical_home": null,
+  "exact_mapping": false,
+  "write_vars": {
+   "dut.u_core.u_mem.slice[0].u_native.port_map[17].d": 128,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[17].valid": 1,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[17].legal": 1,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[17].k": 32
+  },
+  "read_vars": {
+   "dut.u_core.u_mem.slice[0].u_native.port_map[17].d": 128,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[17].valid": 1,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[17].legal": 1,
+   "dut.u_core.u_mem.slice[0].u_native.port_map[17].k": 32,
+   "dut.u_core.u_mem.slice[0].u_native.release_slot": 90,
+   "dut.u_core.u_mem.slice[0].u_native.i_data": 4096,
+   "dut.u_core.u_mem.slice[0].u_native.i_v": 32
+  },
+  "output_dependencies": {
+   "dut.u_core.u_mem.slice[0].u_native.port_map[17].d": [
+    "dut.u_core.u_mem.slice[0].u_native.i_data",
+    "dut.u_core.u_mem.slice[0].u_native.port_map[17].d",
+    "dut.u_core.u_mem.slice[0].u_native.port_map[17].k",
+    "dut.u_core.u_mem.slice[0].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[0].u_native.port_map[17].valid": [
+    "dut.u_core.u_mem.slice[0].u_native.i_v",
+    "dut.u_core.u_mem.slice[0].u_native.port_map[17].k",
+    "dut.u_core.u_mem.slice[0].u_native.port_map[17].valid",
+    "dut.u_core.u_mem.slice[0].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[0].u_native.port_map[17].legal": [
+    "dut.u_core.u_mem.slice[0].u_native.port_map[17].k",
+    "dut.u_core.u_mem.slice[0].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[0].u_native.port_map[17].k": [
+    "dut.u_core.u_mem.slice[0].u_native.port_map[17].k"
+   ]
+  },
+  "note": "Conservative variable-level dependencies; exact dynamic bit mapping pending. Not a hard tile."
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr49:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,28,63,28,65",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr50:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,29,30,29,32",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[0].u_native.$expr51:redor",
+  "kind": "expression",
+  "operation": "redor",
+  "source_loc": "p,31,15,31,16",
+  "input_bits": 18,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_slice.$expr52:redor",
+  "kind": "expression",
+  "operation": "redor",
+  "source_loc": "ce,48,18,48,19",
+  "input_bits": 4,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$always81",
+  "kind": "always",
+  "source_loc": "p,14,3,14,9",
+  "physical_home": null,
+  "exact_mapping": false,
+  "write_vars": {
+   "dut.u_core.u_mem.slice[1].u_native.port_map[0].d": 128,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[0].valid": 1,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[0].legal": 1,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[0].k": 32
+  },
+  "read_vars": {
+   "dut.u_core.u_mem.slice[1].u_native.port_map[0].d": 128,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[0].valid": 1,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[0].legal": 1,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[0].k": 32,
+   "dut.u_core.u_mem.slice[1].u_native.release_slot": 90,
+   "dut.u_core.u_mem.slice[1].u_native.i_data": 4096,
+   "dut.u_core.u_mem.slice[1].u_native.i_v": 32
+  },
+  "output_dependencies": {
+   "dut.u_core.u_mem.slice[1].u_native.port_map[0].d": [
+    "dut.u_core.u_mem.slice[1].u_native.i_data",
+    "dut.u_core.u_mem.slice[1].u_native.port_map[0].d",
+    "dut.u_core.u_mem.slice[1].u_native.port_map[0].k",
+    "dut.u_core.u_mem.slice[1].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[1].u_native.port_map[0].valid": [
+    "dut.u_core.u_mem.slice[1].u_native.i_v",
+    "dut.u_core.u_mem.slice[1].u_native.port_map[0].k",
+    "dut.u_core.u_mem.slice[1].u_native.port_map[0].valid",
+    "dut.u_core.u_mem.slice[1].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[1].u_native.port_map[0].legal": [
+    "dut.u_core.u_mem.slice[1].u_native.port_map[0].k",
+    "dut.u_core.u_mem.slice[1].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[1].u_native.port_map[0].k": [
+    "dut.u_core.u_mem.slice[1].u_native.port_map[0].k"
+   ]
+  },
+  "note": "Conservative variable-level dependencies; exact dynamic bit mapping pending. Not a hard tile."
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr53:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,28,63,28,65",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr54:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,29,30,29,32",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$always84",
+  "kind": "always",
+  "source_loc": "p,14,3,14,9",
+  "physical_home": null,
+  "exact_mapping": false,
+  "write_vars": {
+   "dut.u_core.u_mem.slice[1].u_native.port_map[1].d": 128,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[1].valid": 1,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[1].legal": 1,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[1].k": 32
+  },
+  "read_vars": {
+   "dut.u_core.u_mem.slice[1].u_native.port_map[1].d": 128,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[1].valid": 1,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[1].legal": 1,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[1].k": 32,
+   "dut.u_core.u_mem.slice[1].u_native.release_slot": 90,
+   "dut.u_core.u_mem.slice[1].u_native.i_data": 4096,
+   "dut.u_core.u_mem.slice[1].u_native.i_v": 32
+  },
+  "output_dependencies": {
+   "dut.u_core.u_mem.slice[1].u_native.port_map[1].d": [
+    "dut.u_core.u_mem.slice[1].u_native.i_data",
+    "dut.u_core.u_mem.slice[1].u_native.port_map[1].d",
+    "dut.u_core.u_mem.slice[1].u_native.port_map[1].k",
+    "dut.u_core.u_mem.slice[1].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[1].u_native.port_map[1].valid": [
+    "dut.u_core.u_mem.slice[1].u_native.i_v",
+    "dut.u_core.u_mem.slice[1].u_native.port_map[1].k",
+    "dut.u_core.u_mem.slice[1].u_native.port_map[1].valid",
+    "dut.u_core.u_mem.slice[1].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[1].u_native.port_map[1].legal": [
+    "dut.u_core.u_mem.slice[1].u_native.port_map[1].k",
+    "dut.u_core.u_mem.slice[1].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[1].u_native.port_map[1].k": [
+    "dut.u_core.u_mem.slice[1].u_native.port_map[1].k"
+   ]
+  },
+  "note": "Conservative variable-level dependencies; exact dynamic bit mapping pending. Not a hard tile."
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr55:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,28,63,28,65",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr56:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,29,30,29,32",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$always87",
+  "kind": "always",
+  "source_loc": "p,14,3,14,9",
+  "physical_home": null,
+  "exact_mapping": false,
+  "write_vars": {
+   "dut.u_core.u_mem.slice[1].u_native.port_map[2].d": 128,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[2].valid": 1,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[2].legal": 1,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[2].k": 32
+  },
+  "read_vars": {
+   "dut.u_core.u_mem.slice[1].u_native.port_map[2].d": 128,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[2].valid": 1,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[2].legal": 1,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[2].k": 32,
+   "dut.u_core.u_mem.slice[1].u_native.release_slot": 90,
+   "dut.u_core.u_mem.slice[1].u_native.i_data": 4096,
+   "dut.u_core.u_mem.slice[1].u_native.i_v": 32
+  },
+  "output_dependencies": {
+   "dut.u_core.u_mem.slice[1].u_native.port_map[2].d": [
+    "dut.u_core.u_mem.slice[1].u_native.i_data",
+    "dut.u_core.u_mem.slice[1].u_native.port_map[2].d",
+    "dut.u_core.u_mem.slice[1].u_native.port_map[2].k",
+    "dut.u_core.u_mem.slice[1].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[1].u_native.port_map[2].valid": [
+    "dut.u_core.u_mem.slice[1].u_native.i_v",
+    "dut.u_core.u_mem.slice[1].u_native.port_map[2].k",
+    "dut.u_core.u_mem.slice[1].u_native.port_map[2].valid",
+    "dut.u_core.u_mem.slice[1].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[1].u_native.port_map[2].legal": [
+    "dut.u_core.u_mem.slice[1].u_native.port_map[2].k",
+    "dut.u_core.u_mem.slice[1].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[1].u_native.port_map[2].k": [
+    "dut.u_core.u_mem.slice[1].u_native.port_map[2].k"
+   ]
+  },
+  "note": "Conservative variable-level dependencies; exact dynamic bit mapping pending. Not a hard tile."
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr57:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,28,63,28,65",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr58:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,29,30,29,32",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$always90",
+  "kind": "always",
+  "source_loc": "p,14,3,14,9",
+  "physical_home": null,
+  "exact_mapping": false,
+  "write_vars": {
+   "dut.u_core.u_mem.slice[1].u_native.port_map[3].d": 128,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[3].valid": 1,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[3].legal": 1,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[3].k": 32
+  },
+  "read_vars": {
+   "dut.u_core.u_mem.slice[1].u_native.port_map[3].d": 128,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[3].valid": 1,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[3].legal": 1,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[3].k": 32,
+   "dut.u_core.u_mem.slice[1].u_native.release_slot": 90,
+   "dut.u_core.u_mem.slice[1].u_native.i_data": 4096,
+   "dut.u_core.u_mem.slice[1].u_native.i_v": 32
+  },
+  "output_dependencies": {
+   "dut.u_core.u_mem.slice[1].u_native.port_map[3].d": [
+    "dut.u_core.u_mem.slice[1].u_native.i_data",
+    "dut.u_core.u_mem.slice[1].u_native.port_map[3].d",
+    "dut.u_core.u_mem.slice[1].u_native.port_map[3].k",
+    "dut.u_core.u_mem.slice[1].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[1].u_native.port_map[3].valid": [
+    "dut.u_core.u_mem.slice[1].u_native.i_v",
+    "dut.u_core.u_mem.slice[1].u_native.port_map[3].k",
+    "dut.u_core.u_mem.slice[1].u_native.port_map[3].valid",
+    "dut.u_core.u_mem.slice[1].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[1].u_native.port_map[3].legal": [
+    "dut.u_core.u_mem.slice[1].u_native.port_map[3].k",
+    "dut.u_core.u_mem.slice[1].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[1].u_native.port_map[3].k": [
+    "dut.u_core.u_mem.slice[1].u_native.port_map[3].k"
+   ]
+  },
+  "note": "Conservative variable-level dependencies; exact dynamic bit mapping pending. Not a hard tile."
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr59:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,28,63,28,65",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr60:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,29,30,29,32",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$always93",
+  "kind": "always",
+  "source_loc": "p,14,3,14,9",
+  "physical_home": null,
+  "exact_mapping": false,
+  "write_vars": {
+   "dut.u_core.u_mem.slice[1].u_native.port_map[4].d": 128,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[4].valid": 1,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[4].legal": 1,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[4].k": 32
+  },
+  "read_vars": {
+   "dut.u_core.u_mem.slice[1].u_native.port_map[4].d": 128,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[4].valid": 1,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[4].legal": 1,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[4].k": 32,
+   "dut.u_core.u_mem.slice[1].u_native.release_slot": 90,
+   "dut.u_core.u_mem.slice[1].u_native.i_data": 4096,
+   "dut.u_core.u_mem.slice[1].u_native.i_v": 32
+  },
+  "output_dependencies": {
+   "dut.u_core.u_mem.slice[1].u_native.port_map[4].d": [
+    "dut.u_core.u_mem.slice[1].u_native.i_data",
+    "dut.u_core.u_mem.slice[1].u_native.port_map[4].d",
+    "dut.u_core.u_mem.slice[1].u_native.port_map[4].k",
+    "dut.u_core.u_mem.slice[1].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[1].u_native.port_map[4].valid": [
+    "dut.u_core.u_mem.slice[1].u_native.i_v",
+    "dut.u_core.u_mem.slice[1].u_native.port_map[4].k",
+    "dut.u_core.u_mem.slice[1].u_native.port_map[4].valid",
+    "dut.u_core.u_mem.slice[1].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[1].u_native.port_map[4].legal": [
+    "dut.u_core.u_mem.slice[1].u_native.port_map[4].k",
+    "dut.u_core.u_mem.slice[1].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[1].u_native.port_map[4].k": [
+    "dut.u_core.u_mem.slice[1].u_native.port_map[4].k"
+   ]
+  },
+  "note": "Conservative variable-level dependencies; exact dynamic bit mapping pending. Not a hard tile."
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr61:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,28,63,28,65",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr62:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,29,30,29,32",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$always96",
+  "kind": "always",
+  "source_loc": "p,14,3,14,9",
+  "physical_home": null,
+  "exact_mapping": false,
+  "write_vars": {
+   "dut.u_core.u_mem.slice[1].u_native.port_map[5].d": 128,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[5].valid": 1,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[5].legal": 1,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[5].k": 32
+  },
+  "read_vars": {
+   "dut.u_core.u_mem.slice[1].u_native.port_map[5].d": 128,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[5].valid": 1,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[5].legal": 1,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[5].k": 32,
+   "dut.u_core.u_mem.slice[1].u_native.release_slot": 90,
+   "dut.u_core.u_mem.slice[1].u_native.i_data": 4096,
+   "dut.u_core.u_mem.slice[1].u_native.i_v": 32
+  },
+  "output_dependencies": {
+   "dut.u_core.u_mem.slice[1].u_native.port_map[5].d": [
+    "dut.u_core.u_mem.slice[1].u_native.i_data",
+    "dut.u_core.u_mem.slice[1].u_native.port_map[5].d",
+    "dut.u_core.u_mem.slice[1].u_native.port_map[5].k",
+    "dut.u_core.u_mem.slice[1].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[1].u_native.port_map[5].valid": [
+    "dut.u_core.u_mem.slice[1].u_native.i_v",
+    "dut.u_core.u_mem.slice[1].u_native.port_map[5].k",
+    "dut.u_core.u_mem.slice[1].u_native.port_map[5].valid",
+    "dut.u_core.u_mem.slice[1].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[1].u_native.port_map[5].legal": [
+    "dut.u_core.u_mem.slice[1].u_native.port_map[5].k",
+    "dut.u_core.u_mem.slice[1].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[1].u_native.port_map[5].k": [
+    "dut.u_core.u_mem.slice[1].u_native.port_map[5].k"
+   ]
+  },
+  "note": "Conservative variable-level dependencies; exact dynamic bit mapping pending. Not a hard tile."
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr63:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,28,63,28,65",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr64:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,29,30,29,32",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$always99",
+  "kind": "always",
+  "source_loc": "p,14,3,14,9",
+  "physical_home": null,
+  "exact_mapping": false,
+  "write_vars": {
+   "dut.u_core.u_mem.slice[1].u_native.port_map[6].d": 128,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[6].valid": 1,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[6].legal": 1,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[6].k": 32
+  },
+  "read_vars": {
+   "dut.u_core.u_mem.slice[1].u_native.port_map[6].d": 128,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[6].valid": 1,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[6].legal": 1,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[6].k": 32,
+   "dut.u_core.u_mem.slice[1].u_native.release_slot": 90,
+   "dut.u_core.u_mem.slice[1].u_native.i_data": 4096,
+   "dut.u_core.u_mem.slice[1].u_native.i_v": 32
+  },
+  "output_dependencies": {
+   "dut.u_core.u_mem.slice[1].u_native.port_map[6].d": [
+    "dut.u_core.u_mem.slice[1].u_native.i_data",
+    "dut.u_core.u_mem.slice[1].u_native.port_map[6].d",
+    "dut.u_core.u_mem.slice[1].u_native.port_map[6].k",
+    "dut.u_core.u_mem.slice[1].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[1].u_native.port_map[6].valid": [
+    "dut.u_core.u_mem.slice[1].u_native.i_v",
+    "dut.u_core.u_mem.slice[1].u_native.port_map[6].k",
+    "dut.u_core.u_mem.slice[1].u_native.port_map[6].valid",
+    "dut.u_core.u_mem.slice[1].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[1].u_native.port_map[6].legal": [
+    "dut.u_core.u_mem.slice[1].u_native.port_map[6].k",
+    "dut.u_core.u_mem.slice[1].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[1].u_native.port_map[6].k": [
+    "dut.u_core.u_mem.slice[1].u_native.port_map[6].k"
+   ]
+  },
+  "note": "Conservative variable-level dependencies; exact dynamic bit mapping pending. Not a hard tile."
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr65:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,28,63,28,65",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr66:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,29,30,29,32",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$always102",
+  "kind": "always",
+  "source_loc": "p,14,3,14,9",
+  "physical_home": null,
+  "exact_mapping": false,
+  "write_vars": {
+   "dut.u_core.u_mem.slice[1].u_native.port_map[7].d": 128,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[7].valid": 1,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[7].legal": 1,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[7].k": 32
+  },
+  "read_vars": {
+   "dut.u_core.u_mem.slice[1].u_native.port_map[7].d": 128,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[7].valid": 1,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[7].legal": 1,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[7].k": 32,
+   "dut.u_core.u_mem.slice[1].u_native.release_slot": 90,
+   "dut.u_core.u_mem.slice[1].u_native.i_data": 4096,
+   "dut.u_core.u_mem.slice[1].u_native.i_v": 32
+  },
+  "output_dependencies": {
+   "dut.u_core.u_mem.slice[1].u_native.port_map[7].d": [
+    "dut.u_core.u_mem.slice[1].u_native.i_data",
+    "dut.u_core.u_mem.slice[1].u_native.port_map[7].d",
+    "dut.u_core.u_mem.slice[1].u_native.port_map[7].k",
+    "dut.u_core.u_mem.slice[1].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[1].u_native.port_map[7].valid": [
+    "dut.u_core.u_mem.slice[1].u_native.i_v",
+    "dut.u_core.u_mem.slice[1].u_native.port_map[7].k",
+    "dut.u_core.u_mem.slice[1].u_native.port_map[7].valid",
+    "dut.u_core.u_mem.slice[1].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[1].u_native.port_map[7].legal": [
+    "dut.u_core.u_mem.slice[1].u_native.port_map[7].k",
+    "dut.u_core.u_mem.slice[1].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[1].u_native.port_map[7].k": [
+    "dut.u_core.u_mem.slice[1].u_native.port_map[7].k"
+   ]
+  },
+  "note": "Conservative variable-level dependencies; exact dynamic bit mapping pending. Not a hard tile."
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr67:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,28,63,28,65",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr68:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,29,30,29,32",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$always105",
+  "kind": "always",
+  "source_loc": "p,14,3,14,9",
+  "physical_home": null,
+  "exact_mapping": false,
+  "write_vars": {
+   "dut.u_core.u_mem.slice[1].u_native.port_map[8].d": 128,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[8].valid": 1,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[8].legal": 1,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[8].k": 32
+  },
+  "read_vars": {
+   "dut.u_core.u_mem.slice[1].u_native.port_map[8].d": 128,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[8].valid": 1,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[8].legal": 1,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[8].k": 32,
+   "dut.u_core.u_mem.slice[1].u_native.release_slot": 90,
+   "dut.u_core.u_mem.slice[1].u_native.i_data": 4096,
+   "dut.u_core.u_mem.slice[1].u_native.i_v": 32
+  },
+  "output_dependencies": {
+   "dut.u_core.u_mem.slice[1].u_native.port_map[8].d": [
+    "dut.u_core.u_mem.slice[1].u_native.i_data",
+    "dut.u_core.u_mem.slice[1].u_native.port_map[8].d",
+    "dut.u_core.u_mem.slice[1].u_native.port_map[8].k",
+    "dut.u_core.u_mem.slice[1].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[1].u_native.port_map[8].valid": [
+    "dut.u_core.u_mem.slice[1].u_native.i_v",
+    "dut.u_core.u_mem.slice[1].u_native.port_map[8].k",
+    "dut.u_core.u_mem.slice[1].u_native.port_map[8].valid",
+    "dut.u_core.u_mem.slice[1].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[1].u_native.port_map[8].legal": [
+    "dut.u_core.u_mem.slice[1].u_native.port_map[8].k",
+    "dut.u_core.u_mem.slice[1].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[1].u_native.port_map[8].k": [
+    "dut.u_core.u_mem.slice[1].u_native.port_map[8].k"
+   ]
+  },
+  "note": "Conservative variable-level dependencies; exact dynamic bit mapping pending. Not a hard tile."
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr69:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,28,63,28,65",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr70:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,29,30,29,32",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$always108",
+  "kind": "always",
+  "source_loc": "p,14,3,14,9",
+  "physical_home": null,
+  "exact_mapping": false,
+  "write_vars": {
+   "dut.u_core.u_mem.slice[1].u_native.port_map[9].d": 128,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[9].valid": 1,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[9].legal": 1,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[9].k": 32
+  },
+  "read_vars": {
+   "dut.u_core.u_mem.slice[1].u_native.port_map[9].d": 128,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[9].valid": 1,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[9].legal": 1,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[9].k": 32,
+   "dut.u_core.u_mem.slice[1].u_native.release_slot": 90,
+   "dut.u_core.u_mem.slice[1].u_native.i_data": 4096,
+   "dut.u_core.u_mem.slice[1].u_native.i_v": 32
+  },
+  "output_dependencies": {
+   "dut.u_core.u_mem.slice[1].u_native.port_map[9].d": [
+    "dut.u_core.u_mem.slice[1].u_native.i_data",
+    "dut.u_core.u_mem.slice[1].u_native.port_map[9].d",
+    "dut.u_core.u_mem.slice[1].u_native.port_map[9].k",
+    "dut.u_core.u_mem.slice[1].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[1].u_native.port_map[9].valid": [
+    "dut.u_core.u_mem.slice[1].u_native.i_v",
+    "dut.u_core.u_mem.slice[1].u_native.port_map[9].k",
+    "dut.u_core.u_mem.slice[1].u_native.port_map[9].valid",
+    "dut.u_core.u_mem.slice[1].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[1].u_native.port_map[9].legal": [
+    "dut.u_core.u_mem.slice[1].u_native.port_map[9].k",
+    "dut.u_core.u_mem.slice[1].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[1].u_native.port_map[9].k": [
+    "dut.u_core.u_mem.slice[1].u_native.port_map[9].k"
+   ]
+  },
+  "note": "Conservative variable-level dependencies; exact dynamic bit mapping pending. Not a hard tile."
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr71:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,28,63,28,65",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr72:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,29,30,29,32",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$always111",
+  "kind": "always",
+  "source_loc": "p,14,3,14,9",
+  "physical_home": null,
+  "exact_mapping": false,
+  "write_vars": {
+   "dut.u_core.u_mem.slice[1].u_native.port_map[10].d": 128,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[10].valid": 1,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[10].legal": 1,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[10].k": 32
+  },
+  "read_vars": {
+   "dut.u_core.u_mem.slice[1].u_native.port_map[10].d": 128,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[10].valid": 1,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[10].legal": 1,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[10].k": 32,
+   "dut.u_core.u_mem.slice[1].u_native.release_slot": 90,
+   "dut.u_core.u_mem.slice[1].u_native.i_data": 4096,
+   "dut.u_core.u_mem.slice[1].u_native.i_v": 32
+  },
+  "output_dependencies": {
+   "dut.u_core.u_mem.slice[1].u_native.port_map[10].d": [
+    "dut.u_core.u_mem.slice[1].u_native.i_data",
+    "dut.u_core.u_mem.slice[1].u_native.port_map[10].d",
+    "dut.u_core.u_mem.slice[1].u_native.port_map[10].k",
+    "dut.u_core.u_mem.slice[1].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[1].u_native.port_map[10].valid": [
+    "dut.u_core.u_mem.slice[1].u_native.i_v",
+    "dut.u_core.u_mem.slice[1].u_native.port_map[10].k",
+    "dut.u_core.u_mem.slice[1].u_native.port_map[10].valid",
+    "dut.u_core.u_mem.slice[1].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[1].u_native.port_map[10].legal": [
+    "dut.u_core.u_mem.slice[1].u_native.port_map[10].k",
+    "dut.u_core.u_mem.slice[1].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[1].u_native.port_map[10].k": [
+    "dut.u_core.u_mem.slice[1].u_native.port_map[10].k"
+   ]
+  },
+  "note": "Conservative variable-level dependencies; exact dynamic bit mapping pending. Not a hard tile."
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr73:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,28,63,28,65",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr74:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,29,30,29,32",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$always114",
+  "kind": "always",
+  "source_loc": "p,14,3,14,9",
+  "physical_home": null,
+  "exact_mapping": false,
+  "write_vars": {
+   "dut.u_core.u_mem.slice[1].u_native.port_map[11].d": 128,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[11].valid": 1,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[11].legal": 1,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[11].k": 32
+  },
+  "read_vars": {
+   "dut.u_core.u_mem.slice[1].u_native.port_map[11].d": 128,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[11].valid": 1,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[11].legal": 1,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[11].k": 32,
+   "dut.u_core.u_mem.slice[1].u_native.release_slot": 90,
+   "dut.u_core.u_mem.slice[1].u_native.i_data": 4096,
+   "dut.u_core.u_mem.slice[1].u_native.i_v": 32
+  },
+  "output_dependencies": {
+   "dut.u_core.u_mem.slice[1].u_native.port_map[11].d": [
+    "dut.u_core.u_mem.slice[1].u_native.i_data",
+    "dut.u_core.u_mem.slice[1].u_native.port_map[11].d",
+    "dut.u_core.u_mem.slice[1].u_native.port_map[11].k",
+    "dut.u_core.u_mem.slice[1].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[1].u_native.port_map[11].valid": [
+    "dut.u_core.u_mem.slice[1].u_native.i_v",
+    "dut.u_core.u_mem.slice[1].u_native.port_map[11].k",
+    "dut.u_core.u_mem.slice[1].u_native.port_map[11].valid",
+    "dut.u_core.u_mem.slice[1].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[1].u_native.port_map[11].legal": [
+    "dut.u_core.u_mem.slice[1].u_native.port_map[11].k",
+    "dut.u_core.u_mem.slice[1].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[1].u_native.port_map[11].k": [
+    "dut.u_core.u_mem.slice[1].u_native.port_map[11].k"
+   ]
+  },
+  "note": "Conservative variable-level dependencies; exact dynamic bit mapping pending. Not a hard tile."
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr75:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,28,63,28,65",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr76:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,29,30,29,32",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$always117",
+  "kind": "always",
+  "source_loc": "p,14,3,14,9",
+  "physical_home": null,
+  "exact_mapping": false,
+  "write_vars": {
+   "dut.u_core.u_mem.slice[1].u_native.port_map[12].d": 128,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[12].valid": 1,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[12].legal": 1,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[12].k": 32
+  },
+  "read_vars": {
+   "dut.u_core.u_mem.slice[1].u_native.port_map[12].d": 128,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[12].valid": 1,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[12].legal": 1,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[12].k": 32,
+   "dut.u_core.u_mem.slice[1].u_native.release_slot": 90,
+   "dut.u_core.u_mem.slice[1].u_native.i_data": 4096,
+   "dut.u_core.u_mem.slice[1].u_native.i_v": 32
+  },
+  "output_dependencies": {
+   "dut.u_core.u_mem.slice[1].u_native.port_map[12].d": [
+    "dut.u_core.u_mem.slice[1].u_native.i_data",
+    "dut.u_core.u_mem.slice[1].u_native.port_map[12].d",
+    "dut.u_core.u_mem.slice[1].u_native.port_map[12].k",
+    "dut.u_core.u_mem.slice[1].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[1].u_native.port_map[12].valid": [
+    "dut.u_core.u_mem.slice[1].u_native.i_v",
+    "dut.u_core.u_mem.slice[1].u_native.port_map[12].k",
+    "dut.u_core.u_mem.slice[1].u_native.port_map[12].valid",
+    "dut.u_core.u_mem.slice[1].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[1].u_native.port_map[12].legal": [
+    "dut.u_core.u_mem.slice[1].u_native.port_map[12].k",
+    "dut.u_core.u_mem.slice[1].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[1].u_native.port_map[12].k": [
+    "dut.u_core.u_mem.slice[1].u_native.port_map[12].k"
+   ]
+  },
+  "note": "Conservative variable-level dependencies; exact dynamic bit mapping pending. Not a hard tile."
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr77:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,28,63,28,65",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr78:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,29,30,29,32",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$always120",
+  "kind": "always",
+  "source_loc": "p,14,3,14,9",
+  "physical_home": null,
+  "exact_mapping": false,
+  "write_vars": {
+   "dut.u_core.u_mem.slice[1].u_native.port_map[13].d": 128,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[13].valid": 1,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[13].legal": 1,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[13].k": 32
+  },
+  "read_vars": {
+   "dut.u_core.u_mem.slice[1].u_native.port_map[13].d": 128,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[13].valid": 1,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[13].legal": 1,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[13].k": 32,
+   "dut.u_core.u_mem.slice[1].u_native.release_slot": 90,
+   "dut.u_core.u_mem.slice[1].u_native.i_data": 4096,
+   "dut.u_core.u_mem.slice[1].u_native.i_v": 32
+  },
+  "output_dependencies": {
+   "dut.u_core.u_mem.slice[1].u_native.port_map[13].d": [
+    "dut.u_core.u_mem.slice[1].u_native.i_data",
+    "dut.u_core.u_mem.slice[1].u_native.port_map[13].d",
+    "dut.u_core.u_mem.slice[1].u_native.port_map[13].k",
+    "dut.u_core.u_mem.slice[1].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[1].u_native.port_map[13].valid": [
+    "dut.u_core.u_mem.slice[1].u_native.i_v",
+    "dut.u_core.u_mem.slice[1].u_native.port_map[13].k",
+    "dut.u_core.u_mem.slice[1].u_native.port_map[13].valid",
+    "dut.u_core.u_mem.slice[1].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[1].u_native.port_map[13].legal": [
+    "dut.u_core.u_mem.slice[1].u_native.port_map[13].k",
+    "dut.u_core.u_mem.slice[1].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[1].u_native.port_map[13].k": [
+    "dut.u_core.u_mem.slice[1].u_native.port_map[13].k"
+   ]
+  },
+  "note": "Conservative variable-level dependencies; exact dynamic bit mapping pending. Not a hard tile."
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr79:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,28,63,28,65",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr80:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,29,30,29,32",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$always123",
+  "kind": "always",
+  "source_loc": "p,14,3,14,9",
+  "physical_home": null,
+  "exact_mapping": false,
+  "write_vars": {
+   "dut.u_core.u_mem.slice[1].u_native.port_map[14].d": 128,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[14].valid": 1,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[14].legal": 1,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[14].k": 32
+  },
+  "read_vars": {
+   "dut.u_core.u_mem.slice[1].u_native.port_map[14].d": 128,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[14].valid": 1,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[14].legal": 1,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[14].k": 32,
+   "dut.u_core.u_mem.slice[1].u_native.release_slot": 90,
+   "dut.u_core.u_mem.slice[1].u_native.i_data": 4096,
+   "dut.u_core.u_mem.slice[1].u_native.i_v": 32
+  },
+  "output_dependencies": {
+   "dut.u_core.u_mem.slice[1].u_native.port_map[14].d": [
+    "dut.u_core.u_mem.slice[1].u_native.i_data",
+    "dut.u_core.u_mem.slice[1].u_native.port_map[14].d",
+    "dut.u_core.u_mem.slice[1].u_native.port_map[14].k",
+    "dut.u_core.u_mem.slice[1].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[1].u_native.port_map[14].valid": [
+    "dut.u_core.u_mem.slice[1].u_native.i_v",
+    "dut.u_core.u_mem.slice[1].u_native.port_map[14].k",
+    "dut.u_core.u_mem.slice[1].u_native.port_map[14].valid",
+    "dut.u_core.u_mem.slice[1].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[1].u_native.port_map[14].legal": [
+    "dut.u_core.u_mem.slice[1].u_native.port_map[14].k",
+    "dut.u_core.u_mem.slice[1].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[1].u_native.port_map[14].k": [
+    "dut.u_core.u_mem.slice[1].u_native.port_map[14].k"
+   ]
+  },
+  "note": "Conservative variable-level dependencies; exact dynamic bit mapping pending. Not a hard tile."
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr81:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,28,63,28,65",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr82:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,29,30,29,32",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$always126",
+  "kind": "always",
+  "source_loc": "p,14,3,14,9",
+  "physical_home": null,
+  "exact_mapping": false,
+  "write_vars": {
+   "dut.u_core.u_mem.slice[1].u_native.port_map[15].d": 128,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[15].valid": 1,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[15].legal": 1,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[15].k": 32
+  },
+  "read_vars": {
+   "dut.u_core.u_mem.slice[1].u_native.port_map[15].d": 128,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[15].valid": 1,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[15].legal": 1,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[15].k": 32,
+   "dut.u_core.u_mem.slice[1].u_native.release_slot": 90,
+   "dut.u_core.u_mem.slice[1].u_native.i_data": 4096,
+   "dut.u_core.u_mem.slice[1].u_native.i_v": 32
+  },
+  "output_dependencies": {
+   "dut.u_core.u_mem.slice[1].u_native.port_map[15].d": [
+    "dut.u_core.u_mem.slice[1].u_native.i_data",
+    "dut.u_core.u_mem.slice[1].u_native.port_map[15].d",
+    "dut.u_core.u_mem.slice[1].u_native.port_map[15].k",
+    "dut.u_core.u_mem.slice[1].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[1].u_native.port_map[15].valid": [
+    "dut.u_core.u_mem.slice[1].u_native.i_v",
+    "dut.u_core.u_mem.slice[1].u_native.port_map[15].k",
+    "dut.u_core.u_mem.slice[1].u_native.port_map[15].valid",
+    "dut.u_core.u_mem.slice[1].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[1].u_native.port_map[15].legal": [
+    "dut.u_core.u_mem.slice[1].u_native.port_map[15].k",
+    "dut.u_core.u_mem.slice[1].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[1].u_native.port_map[15].k": [
+    "dut.u_core.u_mem.slice[1].u_native.port_map[15].k"
+   ]
+  },
+  "note": "Conservative variable-level dependencies; exact dynamic bit mapping pending. Not a hard tile."
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr83:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,28,63,28,65",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr84:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,29,30,29,32",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$always129",
+  "kind": "always",
+  "source_loc": "p,14,3,14,9",
+  "physical_home": null,
+  "exact_mapping": false,
+  "write_vars": {
+   "dut.u_core.u_mem.slice[1].u_native.port_map[16].d": 128,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[16].valid": 1,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[16].legal": 1,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[16].k": 32
+  },
+  "read_vars": {
+   "dut.u_core.u_mem.slice[1].u_native.port_map[16].d": 128,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[16].valid": 1,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[16].legal": 1,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[16].k": 32,
+   "dut.u_core.u_mem.slice[1].u_native.release_slot": 90,
+   "dut.u_core.u_mem.slice[1].u_native.i_data": 4096,
+   "dut.u_core.u_mem.slice[1].u_native.i_v": 32
+  },
+  "output_dependencies": {
+   "dut.u_core.u_mem.slice[1].u_native.port_map[16].d": [
+    "dut.u_core.u_mem.slice[1].u_native.i_data",
+    "dut.u_core.u_mem.slice[1].u_native.port_map[16].d",
+    "dut.u_core.u_mem.slice[1].u_native.port_map[16].k",
+    "dut.u_core.u_mem.slice[1].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[1].u_native.port_map[16].valid": [
+    "dut.u_core.u_mem.slice[1].u_native.i_v",
+    "dut.u_core.u_mem.slice[1].u_native.port_map[16].k",
+    "dut.u_core.u_mem.slice[1].u_native.port_map[16].valid",
+    "dut.u_core.u_mem.slice[1].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[1].u_native.port_map[16].legal": [
+    "dut.u_core.u_mem.slice[1].u_native.port_map[16].k",
+    "dut.u_core.u_mem.slice[1].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[1].u_native.port_map[16].k": [
+    "dut.u_core.u_mem.slice[1].u_native.port_map[16].k"
+   ]
+  },
+  "note": "Conservative variable-level dependencies; exact dynamic bit mapping pending. Not a hard tile."
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr85:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,28,63,28,65",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr86:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,29,30,29,32",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$always132",
+  "kind": "always",
+  "source_loc": "p,14,3,14,9",
+  "physical_home": null,
+  "exact_mapping": false,
+  "write_vars": {
+   "dut.u_core.u_mem.slice[1].u_native.port_map[17].d": 128,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[17].valid": 1,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[17].legal": 1,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[17].k": 32
+  },
+  "read_vars": {
+   "dut.u_core.u_mem.slice[1].u_native.port_map[17].d": 128,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[17].valid": 1,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[17].legal": 1,
+   "dut.u_core.u_mem.slice[1].u_native.port_map[17].k": 32,
+   "dut.u_core.u_mem.slice[1].u_native.release_slot": 90,
+   "dut.u_core.u_mem.slice[1].u_native.i_data": 4096,
+   "dut.u_core.u_mem.slice[1].u_native.i_v": 32
+  },
+  "output_dependencies": {
+   "dut.u_core.u_mem.slice[1].u_native.port_map[17].d": [
+    "dut.u_core.u_mem.slice[1].u_native.i_data",
+    "dut.u_core.u_mem.slice[1].u_native.port_map[17].d",
+    "dut.u_core.u_mem.slice[1].u_native.port_map[17].k",
+    "dut.u_core.u_mem.slice[1].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[1].u_native.port_map[17].valid": [
+    "dut.u_core.u_mem.slice[1].u_native.i_v",
+    "dut.u_core.u_mem.slice[1].u_native.port_map[17].k",
+    "dut.u_core.u_mem.slice[1].u_native.port_map[17].valid",
+    "dut.u_core.u_mem.slice[1].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[1].u_native.port_map[17].legal": [
+    "dut.u_core.u_mem.slice[1].u_native.port_map[17].k",
+    "dut.u_core.u_mem.slice[1].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[1].u_native.port_map[17].k": [
+    "dut.u_core.u_mem.slice[1].u_native.port_map[17].k"
+   ]
+  },
+  "note": "Conservative variable-level dependencies; exact dynamic bit mapping pending. Not a hard tile."
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr87:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,28,63,28,65",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr88:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,29,30,29,32",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[1].u_native.$expr89:redor",
+  "kind": "expression",
+  "operation": "redor",
+  "source_loc": "p,31,15,31,16",
+  "input_bits": 18,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_slice.$expr90:redor",
+  "kind": "expression",
+  "operation": "redor",
+  "source_loc": "ce,48,18,48,19",
+  "input_bits": 4,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$always137",
+  "kind": "always",
+  "source_loc": "p,14,3,14,9",
+  "physical_home": null,
+  "exact_mapping": false,
+  "write_vars": {
+   "dut.u_core.u_mem.slice[2].u_native.port_map[0].d": 128,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[0].valid": 1,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[0].legal": 1,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[0].k": 32
+  },
+  "read_vars": {
+   "dut.u_core.u_mem.slice[2].u_native.port_map[0].d": 128,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[0].valid": 1,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[0].legal": 1,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[0].k": 32,
+   "dut.u_core.u_mem.slice[2].u_native.release_slot": 90,
+   "dut.u_core.u_mem.slice[2].u_native.i_data": 4096,
+   "dut.u_core.u_mem.slice[2].u_native.i_v": 32
+  },
+  "output_dependencies": {
+   "dut.u_core.u_mem.slice[2].u_native.port_map[0].d": [
+    "dut.u_core.u_mem.slice[2].u_native.i_data",
+    "dut.u_core.u_mem.slice[2].u_native.port_map[0].d",
+    "dut.u_core.u_mem.slice[2].u_native.port_map[0].k",
+    "dut.u_core.u_mem.slice[2].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[2].u_native.port_map[0].valid": [
+    "dut.u_core.u_mem.slice[2].u_native.i_v",
+    "dut.u_core.u_mem.slice[2].u_native.port_map[0].k",
+    "dut.u_core.u_mem.slice[2].u_native.port_map[0].valid",
+    "dut.u_core.u_mem.slice[2].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[2].u_native.port_map[0].legal": [
+    "dut.u_core.u_mem.slice[2].u_native.port_map[0].k",
+    "dut.u_core.u_mem.slice[2].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[2].u_native.port_map[0].k": [
+    "dut.u_core.u_mem.slice[2].u_native.port_map[0].k"
+   ]
+  },
+  "note": "Conservative variable-level dependencies; exact dynamic bit mapping pending. Not a hard tile."
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr91:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,28,63,28,65",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr92:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,29,30,29,32",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$always140",
+  "kind": "always",
+  "source_loc": "p,14,3,14,9",
+  "physical_home": null,
+  "exact_mapping": false,
+  "write_vars": {
+   "dut.u_core.u_mem.slice[2].u_native.port_map[1].d": 128,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[1].valid": 1,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[1].legal": 1,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[1].k": 32
+  },
+  "read_vars": {
+   "dut.u_core.u_mem.slice[2].u_native.port_map[1].d": 128,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[1].valid": 1,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[1].legal": 1,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[1].k": 32,
+   "dut.u_core.u_mem.slice[2].u_native.release_slot": 90,
+   "dut.u_core.u_mem.slice[2].u_native.i_data": 4096,
+   "dut.u_core.u_mem.slice[2].u_native.i_v": 32
+  },
+  "output_dependencies": {
+   "dut.u_core.u_mem.slice[2].u_native.port_map[1].d": [
+    "dut.u_core.u_mem.slice[2].u_native.i_data",
+    "dut.u_core.u_mem.slice[2].u_native.port_map[1].d",
+    "dut.u_core.u_mem.slice[2].u_native.port_map[1].k",
+    "dut.u_core.u_mem.slice[2].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[2].u_native.port_map[1].valid": [
+    "dut.u_core.u_mem.slice[2].u_native.i_v",
+    "dut.u_core.u_mem.slice[2].u_native.port_map[1].k",
+    "dut.u_core.u_mem.slice[2].u_native.port_map[1].valid",
+    "dut.u_core.u_mem.slice[2].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[2].u_native.port_map[1].legal": [
+    "dut.u_core.u_mem.slice[2].u_native.port_map[1].k",
+    "dut.u_core.u_mem.slice[2].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[2].u_native.port_map[1].k": [
+    "dut.u_core.u_mem.slice[2].u_native.port_map[1].k"
+   ]
+  },
+  "note": "Conservative variable-level dependencies; exact dynamic bit mapping pending. Not a hard tile."
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr93:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,28,63,28,65",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr94:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,29,30,29,32",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$always143",
+  "kind": "always",
+  "source_loc": "p,14,3,14,9",
+  "physical_home": null,
+  "exact_mapping": false,
+  "write_vars": {
+   "dut.u_core.u_mem.slice[2].u_native.port_map[2].d": 128,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[2].valid": 1,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[2].legal": 1,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[2].k": 32
+  },
+  "read_vars": {
+   "dut.u_core.u_mem.slice[2].u_native.port_map[2].d": 128,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[2].valid": 1,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[2].legal": 1,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[2].k": 32,
+   "dut.u_core.u_mem.slice[2].u_native.release_slot": 90,
+   "dut.u_core.u_mem.slice[2].u_native.i_data": 4096,
+   "dut.u_core.u_mem.slice[2].u_native.i_v": 32
+  },
+  "output_dependencies": {
+   "dut.u_core.u_mem.slice[2].u_native.port_map[2].d": [
+    "dut.u_core.u_mem.slice[2].u_native.i_data",
+    "dut.u_core.u_mem.slice[2].u_native.port_map[2].d",
+    "dut.u_core.u_mem.slice[2].u_native.port_map[2].k",
+    "dut.u_core.u_mem.slice[2].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[2].u_native.port_map[2].valid": [
+    "dut.u_core.u_mem.slice[2].u_native.i_v",
+    "dut.u_core.u_mem.slice[2].u_native.port_map[2].k",
+    "dut.u_core.u_mem.slice[2].u_native.port_map[2].valid",
+    "dut.u_core.u_mem.slice[2].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[2].u_native.port_map[2].legal": [
+    "dut.u_core.u_mem.slice[2].u_native.port_map[2].k",
+    "dut.u_core.u_mem.slice[2].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[2].u_native.port_map[2].k": [
+    "dut.u_core.u_mem.slice[2].u_native.port_map[2].k"
+   ]
+  },
+  "note": "Conservative variable-level dependencies; exact dynamic bit mapping pending. Not a hard tile."
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr95:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,28,63,28,65",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr96:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,29,30,29,32",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$always146",
+  "kind": "always",
+  "source_loc": "p,14,3,14,9",
+  "physical_home": null,
+  "exact_mapping": false,
+  "write_vars": {
+   "dut.u_core.u_mem.slice[2].u_native.port_map[3].d": 128,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[3].valid": 1,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[3].legal": 1,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[3].k": 32
+  },
+  "read_vars": {
+   "dut.u_core.u_mem.slice[2].u_native.port_map[3].d": 128,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[3].valid": 1,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[3].legal": 1,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[3].k": 32,
+   "dut.u_core.u_mem.slice[2].u_native.release_slot": 90,
+   "dut.u_core.u_mem.slice[2].u_native.i_data": 4096,
+   "dut.u_core.u_mem.slice[2].u_native.i_v": 32
+  },
+  "output_dependencies": {
+   "dut.u_core.u_mem.slice[2].u_native.port_map[3].d": [
+    "dut.u_core.u_mem.slice[2].u_native.i_data",
+    "dut.u_core.u_mem.slice[2].u_native.port_map[3].d",
+    "dut.u_core.u_mem.slice[2].u_native.port_map[3].k",
+    "dut.u_core.u_mem.slice[2].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[2].u_native.port_map[3].valid": [
+    "dut.u_core.u_mem.slice[2].u_native.i_v",
+    "dut.u_core.u_mem.slice[2].u_native.port_map[3].k",
+    "dut.u_core.u_mem.slice[2].u_native.port_map[3].valid",
+    "dut.u_core.u_mem.slice[2].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[2].u_native.port_map[3].legal": [
+    "dut.u_core.u_mem.slice[2].u_native.port_map[3].k",
+    "dut.u_core.u_mem.slice[2].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[2].u_native.port_map[3].k": [
+    "dut.u_core.u_mem.slice[2].u_native.port_map[3].k"
+   ]
+  },
+  "note": "Conservative variable-level dependencies; exact dynamic bit mapping pending. Not a hard tile."
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr97:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,28,63,28,65",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr98:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,29,30,29,32",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$always149",
+  "kind": "always",
+  "source_loc": "p,14,3,14,9",
+  "physical_home": null,
+  "exact_mapping": false,
+  "write_vars": {
+   "dut.u_core.u_mem.slice[2].u_native.port_map[4].d": 128,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[4].valid": 1,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[4].legal": 1,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[4].k": 32
+  },
+  "read_vars": {
+   "dut.u_core.u_mem.slice[2].u_native.port_map[4].d": 128,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[4].valid": 1,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[4].legal": 1,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[4].k": 32,
+   "dut.u_core.u_mem.slice[2].u_native.release_slot": 90,
+   "dut.u_core.u_mem.slice[2].u_native.i_data": 4096,
+   "dut.u_core.u_mem.slice[2].u_native.i_v": 32
+  },
+  "output_dependencies": {
+   "dut.u_core.u_mem.slice[2].u_native.port_map[4].d": [
+    "dut.u_core.u_mem.slice[2].u_native.i_data",
+    "dut.u_core.u_mem.slice[2].u_native.port_map[4].d",
+    "dut.u_core.u_mem.slice[2].u_native.port_map[4].k",
+    "dut.u_core.u_mem.slice[2].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[2].u_native.port_map[4].valid": [
+    "dut.u_core.u_mem.slice[2].u_native.i_v",
+    "dut.u_core.u_mem.slice[2].u_native.port_map[4].k",
+    "dut.u_core.u_mem.slice[2].u_native.port_map[4].valid",
+    "dut.u_core.u_mem.slice[2].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[2].u_native.port_map[4].legal": [
+    "dut.u_core.u_mem.slice[2].u_native.port_map[4].k",
+    "dut.u_core.u_mem.slice[2].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[2].u_native.port_map[4].k": [
+    "dut.u_core.u_mem.slice[2].u_native.port_map[4].k"
+   ]
+  },
+  "note": "Conservative variable-level dependencies; exact dynamic bit mapping pending. Not a hard tile."
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr99:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,28,63,28,65",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr100:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,29,30,29,32",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$always152",
+  "kind": "always",
+  "source_loc": "p,14,3,14,9",
+  "physical_home": null,
+  "exact_mapping": false,
+  "write_vars": {
+   "dut.u_core.u_mem.slice[2].u_native.port_map[5].d": 128,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[5].valid": 1,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[5].legal": 1,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[5].k": 32
+  },
+  "read_vars": {
+   "dut.u_core.u_mem.slice[2].u_native.port_map[5].d": 128,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[5].valid": 1,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[5].legal": 1,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[5].k": 32,
+   "dut.u_core.u_mem.slice[2].u_native.release_slot": 90,
+   "dut.u_core.u_mem.slice[2].u_native.i_data": 4096,
+   "dut.u_core.u_mem.slice[2].u_native.i_v": 32
+  },
+  "output_dependencies": {
+   "dut.u_core.u_mem.slice[2].u_native.port_map[5].d": [
+    "dut.u_core.u_mem.slice[2].u_native.i_data",
+    "dut.u_core.u_mem.slice[2].u_native.port_map[5].d",
+    "dut.u_core.u_mem.slice[2].u_native.port_map[5].k",
+    "dut.u_core.u_mem.slice[2].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[2].u_native.port_map[5].valid": [
+    "dut.u_core.u_mem.slice[2].u_native.i_v",
+    "dut.u_core.u_mem.slice[2].u_native.port_map[5].k",
+    "dut.u_core.u_mem.slice[2].u_native.port_map[5].valid",
+    "dut.u_core.u_mem.slice[2].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[2].u_native.port_map[5].legal": [
+    "dut.u_core.u_mem.slice[2].u_native.port_map[5].k",
+    "dut.u_core.u_mem.slice[2].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[2].u_native.port_map[5].k": [
+    "dut.u_core.u_mem.slice[2].u_native.port_map[5].k"
+   ]
+  },
+  "note": "Conservative variable-level dependencies; exact dynamic bit mapping pending. Not a hard tile."
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr101:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,28,63,28,65",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr102:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,29,30,29,32",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$always155",
+  "kind": "always",
+  "source_loc": "p,14,3,14,9",
+  "physical_home": null,
+  "exact_mapping": false,
+  "write_vars": {
+   "dut.u_core.u_mem.slice[2].u_native.port_map[6].d": 128,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[6].valid": 1,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[6].legal": 1,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[6].k": 32
+  },
+  "read_vars": {
+   "dut.u_core.u_mem.slice[2].u_native.port_map[6].d": 128,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[6].valid": 1,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[6].legal": 1,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[6].k": 32,
+   "dut.u_core.u_mem.slice[2].u_native.release_slot": 90,
+   "dut.u_core.u_mem.slice[2].u_native.i_data": 4096,
+   "dut.u_core.u_mem.slice[2].u_native.i_v": 32
+  },
+  "output_dependencies": {
+   "dut.u_core.u_mem.slice[2].u_native.port_map[6].d": [
+    "dut.u_core.u_mem.slice[2].u_native.i_data",
+    "dut.u_core.u_mem.slice[2].u_native.port_map[6].d",
+    "dut.u_core.u_mem.slice[2].u_native.port_map[6].k",
+    "dut.u_core.u_mem.slice[2].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[2].u_native.port_map[6].valid": [
+    "dut.u_core.u_mem.slice[2].u_native.i_v",
+    "dut.u_core.u_mem.slice[2].u_native.port_map[6].k",
+    "dut.u_core.u_mem.slice[2].u_native.port_map[6].valid",
+    "dut.u_core.u_mem.slice[2].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[2].u_native.port_map[6].legal": [
+    "dut.u_core.u_mem.slice[2].u_native.port_map[6].k",
+    "dut.u_core.u_mem.slice[2].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[2].u_native.port_map[6].k": [
+    "dut.u_core.u_mem.slice[2].u_native.port_map[6].k"
+   ]
+  },
+  "note": "Conservative variable-level dependencies; exact dynamic bit mapping pending. Not a hard tile."
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr103:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,28,63,28,65",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr104:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,29,30,29,32",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$always158",
+  "kind": "always",
+  "source_loc": "p,14,3,14,9",
+  "physical_home": null,
+  "exact_mapping": false,
+  "write_vars": {
+   "dut.u_core.u_mem.slice[2].u_native.port_map[7].d": 128,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[7].valid": 1,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[7].legal": 1,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[7].k": 32
+  },
+  "read_vars": {
+   "dut.u_core.u_mem.slice[2].u_native.port_map[7].d": 128,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[7].valid": 1,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[7].legal": 1,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[7].k": 32,
+   "dut.u_core.u_mem.slice[2].u_native.release_slot": 90,
+   "dut.u_core.u_mem.slice[2].u_native.i_data": 4096,
+   "dut.u_core.u_mem.slice[2].u_native.i_v": 32
+  },
+  "output_dependencies": {
+   "dut.u_core.u_mem.slice[2].u_native.port_map[7].d": [
+    "dut.u_core.u_mem.slice[2].u_native.i_data",
+    "dut.u_core.u_mem.slice[2].u_native.port_map[7].d",
+    "dut.u_core.u_mem.slice[2].u_native.port_map[7].k",
+    "dut.u_core.u_mem.slice[2].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[2].u_native.port_map[7].valid": [
+    "dut.u_core.u_mem.slice[2].u_native.i_v",
+    "dut.u_core.u_mem.slice[2].u_native.port_map[7].k",
+    "dut.u_core.u_mem.slice[2].u_native.port_map[7].valid",
+    "dut.u_core.u_mem.slice[2].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[2].u_native.port_map[7].legal": [
+    "dut.u_core.u_mem.slice[2].u_native.port_map[7].k",
+    "dut.u_core.u_mem.slice[2].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[2].u_native.port_map[7].k": [
+    "dut.u_core.u_mem.slice[2].u_native.port_map[7].k"
+   ]
+  },
+  "note": "Conservative variable-level dependencies; exact dynamic bit mapping pending. Not a hard tile."
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr105:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,28,63,28,65",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr106:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,29,30,29,32",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$always161",
+  "kind": "always",
+  "source_loc": "p,14,3,14,9",
+  "physical_home": null,
+  "exact_mapping": false,
+  "write_vars": {
+   "dut.u_core.u_mem.slice[2].u_native.port_map[8].d": 128,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[8].valid": 1,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[8].legal": 1,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[8].k": 32
+  },
+  "read_vars": {
+   "dut.u_core.u_mem.slice[2].u_native.port_map[8].d": 128,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[8].valid": 1,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[8].legal": 1,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[8].k": 32,
+   "dut.u_core.u_mem.slice[2].u_native.release_slot": 90,
+   "dut.u_core.u_mem.slice[2].u_native.i_data": 4096,
+   "dut.u_core.u_mem.slice[2].u_native.i_v": 32
+  },
+  "output_dependencies": {
+   "dut.u_core.u_mem.slice[2].u_native.port_map[8].d": [
+    "dut.u_core.u_mem.slice[2].u_native.i_data",
+    "dut.u_core.u_mem.slice[2].u_native.port_map[8].d",
+    "dut.u_core.u_mem.slice[2].u_native.port_map[8].k",
+    "dut.u_core.u_mem.slice[2].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[2].u_native.port_map[8].valid": [
+    "dut.u_core.u_mem.slice[2].u_native.i_v",
+    "dut.u_core.u_mem.slice[2].u_native.port_map[8].k",
+    "dut.u_core.u_mem.slice[2].u_native.port_map[8].valid",
+    "dut.u_core.u_mem.slice[2].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[2].u_native.port_map[8].legal": [
+    "dut.u_core.u_mem.slice[2].u_native.port_map[8].k",
+    "dut.u_core.u_mem.slice[2].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[2].u_native.port_map[8].k": [
+    "dut.u_core.u_mem.slice[2].u_native.port_map[8].k"
+   ]
+  },
+  "note": "Conservative variable-level dependencies; exact dynamic bit mapping pending. Not a hard tile."
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr107:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,28,63,28,65",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr108:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,29,30,29,32",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$always164",
+  "kind": "always",
+  "source_loc": "p,14,3,14,9",
+  "physical_home": null,
+  "exact_mapping": false,
+  "write_vars": {
+   "dut.u_core.u_mem.slice[2].u_native.port_map[9].d": 128,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[9].valid": 1,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[9].legal": 1,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[9].k": 32
+  },
+  "read_vars": {
+   "dut.u_core.u_mem.slice[2].u_native.port_map[9].d": 128,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[9].valid": 1,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[9].legal": 1,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[9].k": 32,
+   "dut.u_core.u_mem.slice[2].u_native.release_slot": 90,
+   "dut.u_core.u_mem.slice[2].u_native.i_data": 4096,
+   "dut.u_core.u_mem.slice[2].u_native.i_v": 32
+  },
+  "output_dependencies": {
+   "dut.u_core.u_mem.slice[2].u_native.port_map[9].d": [
+    "dut.u_core.u_mem.slice[2].u_native.i_data",
+    "dut.u_core.u_mem.slice[2].u_native.port_map[9].d",
+    "dut.u_core.u_mem.slice[2].u_native.port_map[9].k",
+    "dut.u_core.u_mem.slice[2].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[2].u_native.port_map[9].valid": [
+    "dut.u_core.u_mem.slice[2].u_native.i_v",
+    "dut.u_core.u_mem.slice[2].u_native.port_map[9].k",
+    "dut.u_core.u_mem.slice[2].u_native.port_map[9].valid",
+    "dut.u_core.u_mem.slice[2].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[2].u_native.port_map[9].legal": [
+    "dut.u_core.u_mem.slice[2].u_native.port_map[9].k",
+    "dut.u_core.u_mem.slice[2].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[2].u_native.port_map[9].k": [
+    "dut.u_core.u_mem.slice[2].u_native.port_map[9].k"
+   ]
+  },
+  "note": "Conservative variable-level dependencies; exact dynamic bit mapping pending. Not a hard tile."
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr109:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,28,63,28,65",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr110:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,29,30,29,32",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$always167",
+  "kind": "always",
+  "source_loc": "p,14,3,14,9",
+  "physical_home": null,
+  "exact_mapping": false,
+  "write_vars": {
+   "dut.u_core.u_mem.slice[2].u_native.port_map[10].d": 128,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[10].valid": 1,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[10].legal": 1,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[10].k": 32
+  },
+  "read_vars": {
+   "dut.u_core.u_mem.slice[2].u_native.port_map[10].d": 128,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[10].valid": 1,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[10].legal": 1,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[10].k": 32,
+   "dut.u_core.u_mem.slice[2].u_native.release_slot": 90,
+   "dut.u_core.u_mem.slice[2].u_native.i_data": 4096,
+   "dut.u_core.u_mem.slice[2].u_native.i_v": 32
+  },
+  "output_dependencies": {
+   "dut.u_core.u_mem.slice[2].u_native.port_map[10].d": [
+    "dut.u_core.u_mem.slice[2].u_native.i_data",
+    "dut.u_core.u_mem.slice[2].u_native.port_map[10].d",
+    "dut.u_core.u_mem.slice[2].u_native.port_map[10].k",
+    "dut.u_core.u_mem.slice[2].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[2].u_native.port_map[10].valid": [
+    "dut.u_core.u_mem.slice[2].u_native.i_v",
+    "dut.u_core.u_mem.slice[2].u_native.port_map[10].k",
+    "dut.u_core.u_mem.slice[2].u_native.port_map[10].valid",
+    "dut.u_core.u_mem.slice[2].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[2].u_native.port_map[10].legal": [
+    "dut.u_core.u_mem.slice[2].u_native.port_map[10].k",
+    "dut.u_core.u_mem.slice[2].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[2].u_native.port_map[10].k": [
+    "dut.u_core.u_mem.slice[2].u_native.port_map[10].k"
+   ]
+  },
+  "note": "Conservative variable-level dependencies; exact dynamic bit mapping pending. Not a hard tile."
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr111:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,28,63,28,65",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr112:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,29,30,29,32",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$always170",
+  "kind": "always",
+  "source_loc": "p,14,3,14,9",
+  "physical_home": null,
+  "exact_mapping": false,
+  "write_vars": {
+   "dut.u_core.u_mem.slice[2].u_native.port_map[11].d": 128,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[11].valid": 1,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[11].legal": 1,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[11].k": 32
+  },
+  "read_vars": {
+   "dut.u_core.u_mem.slice[2].u_native.port_map[11].d": 128,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[11].valid": 1,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[11].legal": 1,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[11].k": 32,
+   "dut.u_core.u_mem.slice[2].u_native.release_slot": 90,
+   "dut.u_core.u_mem.slice[2].u_native.i_data": 4096,
+   "dut.u_core.u_mem.slice[2].u_native.i_v": 32
+  },
+  "output_dependencies": {
+   "dut.u_core.u_mem.slice[2].u_native.port_map[11].d": [
+    "dut.u_core.u_mem.slice[2].u_native.i_data",
+    "dut.u_core.u_mem.slice[2].u_native.port_map[11].d",
+    "dut.u_core.u_mem.slice[2].u_native.port_map[11].k",
+    "dut.u_core.u_mem.slice[2].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[2].u_native.port_map[11].valid": [
+    "dut.u_core.u_mem.slice[2].u_native.i_v",
+    "dut.u_core.u_mem.slice[2].u_native.port_map[11].k",
+    "dut.u_core.u_mem.slice[2].u_native.port_map[11].valid",
+    "dut.u_core.u_mem.slice[2].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[2].u_native.port_map[11].legal": [
+    "dut.u_core.u_mem.slice[2].u_native.port_map[11].k",
+    "dut.u_core.u_mem.slice[2].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[2].u_native.port_map[11].k": [
+    "dut.u_core.u_mem.slice[2].u_native.port_map[11].k"
+   ]
+  },
+  "note": "Conservative variable-level dependencies; exact dynamic bit mapping pending. Not a hard tile."
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr113:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,28,63,28,65",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr114:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,29,30,29,32",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$always173",
+  "kind": "always",
+  "source_loc": "p,14,3,14,9",
+  "physical_home": null,
+  "exact_mapping": false,
+  "write_vars": {
+   "dut.u_core.u_mem.slice[2].u_native.port_map[12].d": 128,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[12].valid": 1,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[12].legal": 1,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[12].k": 32
+  },
+  "read_vars": {
+   "dut.u_core.u_mem.slice[2].u_native.port_map[12].d": 128,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[12].valid": 1,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[12].legal": 1,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[12].k": 32,
+   "dut.u_core.u_mem.slice[2].u_native.release_slot": 90,
+   "dut.u_core.u_mem.slice[2].u_native.i_data": 4096,
+   "dut.u_core.u_mem.slice[2].u_native.i_v": 32
+  },
+  "output_dependencies": {
+   "dut.u_core.u_mem.slice[2].u_native.port_map[12].d": [
+    "dut.u_core.u_mem.slice[2].u_native.i_data",
+    "dut.u_core.u_mem.slice[2].u_native.port_map[12].d",
+    "dut.u_core.u_mem.slice[2].u_native.port_map[12].k",
+    "dut.u_core.u_mem.slice[2].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[2].u_native.port_map[12].valid": [
+    "dut.u_core.u_mem.slice[2].u_native.i_v",
+    "dut.u_core.u_mem.slice[2].u_native.port_map[12].k",
+    "dut.u_core.u_mem.slice[2].u_native.port_map[12].valid",
+    "dut.u_core.u_mem.slice[2].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[2].u_native.port_map[12].legal": [
+    "dut.u_core.u_mem.slice[2].u_native.port_map[12].k",
+    "dut.u_core.u_mem.slice[2].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[2].u_native.port_map[12].k": [
+    "dut.u_core.u_mem.slice[2].u_native.port_map[12].k"
+   ]
+  },
+  "note": "Conservative variable-level dependencies; exact dynamic bit mapping pending. Not a hard tile."
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr115:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,28,63,28,65",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr116:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,29,30,29,32",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$always176",
+  "kind": "always",
+  "source_loc": "p,14,3,14,9",
+  "physical_home": null,
+  "exact_mapping": false,
+  "write_vars": {
+   "dut.u_core.u_mem.slice[2].u_native.port_map[13].d": 128,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[13].valid": 1,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[13].legal": 1,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[13].k": 32
+  },
+  "read_vars": {
+   "dut.u_core.u_mem.slice[2].u_native.port_map[13].d": 128,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[13].valid": 1,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[13].legal": 1,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[13].k": 32,
+   "dut.u_core.u_mem.slice[2].u_native.release_slot": 90,
+   "dut.u_core.u_mem.slice[2].u_native.i_data": 4096,
+   "dut.u_core.u_mem.slice[2].u_native.i_v": 32
+  },
+  "output_dependencies": {
+   "dut.u_core.u_mem.slice[2].u_native.port_map[13].d": [
+    "dut.u_core.u_mem.slice[2].u_native.i_data",
+    "dut.u_core.u_mem.slice[2].u_native.port_map[13].d",
+    "dut.u_core.u_mem.slice[2].u_native.port_map[13].k",
+    "dut.u_core.u_mem.slice[2].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[2].u_native.port_map[13].valid": [
+    "dut.u_core.u_mem.slice[2].u_native.i_v",
+    "dut.u_core.u_mem.slice[2].u_native.port_map[13].k",
+    "dut.u_core.u_mem.slice[2].u_native.port_map[13].valid",
+    "dut.u_core.u_mem.slice[2].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[2].u_native.port_map[13].legal": [
+    "dut.u_core.u_mem.slice[2].u_native.port_map[13].k",
+    "dut.u_core.u_mem.slice[2].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[2].u_native.port_map[13].k": [
+    "dut.u_core.u_mem.slice[2].u_native.port_map[13].k"
+   ]
+  },
+  "note": "Conservative variable-level dependencies; exact dynamic bit mapping pending. Not a hard tile."
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr117:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,28,63,28,65",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr118:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,29,30,29,32",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$always179",
+  "kind": "always",
+  "source_loc": "p,14,3,14,9",
+  "physical_home": null,
+  "exact_mapping": false,
+  "write_vars": {
+   "dut.u_core.u_mem.slice[2].u_native.port_map[14].d": 128,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[14].valid": 1,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[14].legal": 1,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[14].k": 32
+  },
+  "read_vars": {
+   "dut.u_core.u_mem.slice[2].u_native.port_map[14].d": 128,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[14].valid": 1,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[14].legal": 1,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[14].k": 32,
+   "dut.u_core.u_mem.slice[2].u_native.release_slot": 90,
+   "dut.u_core.u_mem.slice[2].u_native.i_data": 4096,
+   "dut.u_core.u_mem.slice[2].u_native.i_v": 32
+  },
+  "output_dependencies": {
+   "dut.u_core.u_mem.slice[2].u_native.port_map[14].d": [
+    "dut.u_core.u_mem.slice[2].u_native.i_data",
+    "dut.u_core.u_mem.slice[2].u_native.port_map[14].d",
+    "dut.u_core.u_mem.slice[2].u_native.port_map[14].k",
+    "dut.u_core.u_mem.slice[2].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[2].u_native.port_map[14].valid": [
+    "dut.u_core.u_mem.slice[2].u_native.i_v",
+    "dut.u_core.u_mem.slice[2].u_native.port_map[14].k",
+    "dut.u_core.u_mem.slice[2].u_native.port_map[14].valid",
+    "dut.u_core.u_mem.slice[2].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[2].u_native.port_map[14].legal": [
+    "dut.u_core.u_mem.slice[2].u_native.port_map[14].k",
+    "dut.u_core.u_mem.slice[2].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[2].u_native.port_map[14].k": [
+    "dut.u_core.u_mem.slice[2].u_native.port_map[14].k"
+   ]
+  },
+  "note": "Conservative variable-level dependencies; exact dynamic bit mapping pending. Not a hard tile."
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr119:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,28,63,28,65",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr120:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,29,30,29,32",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$always182",
+  "kind": "always",
+  "source_loc": "p,14,3,14,9",
+  "physical_home": null,
+  "exact_mapping": false,
+  "write_vars": {
+   "dut.u_core.u_mem.slice[2].u_native.port_map[15].d": 128,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[15].valid": 1,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[15].legal": 1,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[15].k": 32
+  },
+  "read_vars": {
+   "dut.u_core.u_mem.slice[2].u_native.port_map[15].d": 128,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[15].valid": 1,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[15].legal": 1,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[15].k": 32,
+   "dut.u_core.u_mem.slice[2].u_native.release_slot": 90,
+   "dut.u_core.u_mem.slice[2].u_native.i_data": 4096,
+   "dut.u_core.u_mem.slice[2].u_native.i_v": 32
+  },
+  "output_dependencies": {
+   "dut.u_core.u_mem.slice[2].u_native.port_map[15].d": [
+    "dut.u_core.u_mem.slice[2].u_native.i_data",
+    "dut.u_core.u_mem.slice[2].u_native.port_map[15].d",
+    "dut.u_core.u_mem.slice[2].u_native.port_map[15].k",
+    "dut.u_core.u_mem.slice[2].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[2].u_native.port_map[15].valid": [
+    "dut.u_core.u_mem.slice[2].u_native.i_v",
+    "dut.u_core.u_mem.slice[2].u_native.port_map[15].k",
+    "dut.u_core.u_mem.slice[2].u_native.port_map[15].valid",
+    "dut.u_core.u_mem.slice[2].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[2].u_native.port_map[15].legal": [
+    "dut.u_core.u_mem.slice[2].u_native.port_map[15].k",
+    "dut.u_core.u_mem.slice[2].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[2].u_native.port_map[15].k": [
+    "dut.u_core.u_mem.slice[2].u_native.port_map[15].k"
+   ]
+  },
+  "note": "Conservative variable-level dependencies; exact dynamic bit mapping pending. Not a hard tile."
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr121:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,28,63,28,65",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr122:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,29,30,29,32",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$always185",
+  "kind": "always",
+  "source_loc": "p,14,3,14,9",
+  "physical_home": null,
+  "exact_mapping": false,
+  "write_vars": {
+   "dut.u_core.u_mem.slice[2].u_native.port_map[16].d": 128,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[16].valid": 1,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[16].legal": 1,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[16].k": 32
+  },
+  "read_vars": {
+   "dut.u_core.u_mem.slice[2].u_native.port_map[16].d": 128,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[16].valid": 1,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[16].legal": 1,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[16].k": 32,
+   "dut.u_core.u_mem.slice[2].u_native.release_slot": 90,
+   "dut.u_core.u_mem.slice[2].u_native.i_data": 4096,
+   "dut.u_core.u_mem.slice[2].u_native.i_v": 32
+  },
+  "output_dependencies": {
+   "dut.u_core.u_mem.slice[2].u_native.port_map[16].d": [
+    "dut.u_core.u_mem.slice[2].u_native.i_data",
+    "dut.u_core.u_mem.slice[2].u_native.port_map[16].d",
+    "dut.u_core.u_mem.slice[2].u_native.port_map[16].k",
+    "dut.u_core.u_mem.slice[2].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[2].u_native.port_map[16].valid": [
+    "dut.u_core.u_mem.slice[2].u_native.i_v",
+    "dut.u_core.u_mem.slice[2].u_native.port_map[16].k",
+    "dut.u_core.u_mem.slice[2].u_native.port_map[16].valid",
+    "dut.u_core.u_mem.slice[2].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[2].u_native.port_map[16].legal": [
+    "dut.u_core.u_mem.slice[2].u_native.port_map[16].k",
+    "dut.u_core.u_mem.slice[2].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[2].u_native.port_map[16].k": [
+    "dut.u_core.u_mem.slice[2].u_native.port_map[16].k"
+   ]
+  },
+  "note": "Conservative variable-level dependencies; exact dynamic bit mapping pending. Not a hard tile."
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr123:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,28,63,28,65",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr124:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,29,30,29,32",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$always188",
+  "kind": "always",
+  "source_loc": "p,14,3,14,9",
+  "physical_home": null,
+  "exact_mapping": false,
+  "write_vars": {
+   "dut.u_core.u_mem.slice[2].u_native.port_map[17].d": 128,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[17].valid": 1,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[17].legal": 1,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[17].k": 32
+  },
+  "read_vars": {
+   "dut.u_core.u_mem.slice[2].u_native.port_map[17].d": 128,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[17].valid": 1,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[17].legal": 1,
+   "dut.u_core.u_mem.slice[2].u_native.port_map[17].k": 32,
+   "dut.u_core.u_mem.slice[2].u_native.release_slot": 90,
+   "dut.u_core.u_mem.slice[2].u_native.i_data": 4096,
+   "dut.u_core.u_mem.slice[2].u_native.i_v": 32
+  },
+  "output_dependencies": {
+   "dut.u_core.u_mem.slice[2].u_native.port_map[17].d": [
+    "dut.u_core.u_mem.slice[2].u_native.i_data",
+    "dut.u_core.u_mem.slice[2].u_native.port_map[17].d",
+    "dut.u_core.u_mem.slice[2].u_native.port_map[17].k",
+    "dut.u_core.u_mem.slice[2].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[2].u_native.port_map[17].valid": [
+    "dut.u_core.u_mem.slice[2].u_native.i_v",
+    "dut.u_core.u_mem.slice[2].u_native.port_map[17].k",
+    "dut.u_core.u_mem.slice[2].u_native.port_map[17].valid",
+    "dut.u_core.u_mem.slice[2].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[2].u_native.port_map[17].legal": [
+    "dut.u_core.u_mem.slice[2].u_native.port_map[17].k",
+    "dut.u_core.u_mem.slice[2].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[2].u_native.port_map[17].k": [
+    "dut.u_core.u_mem.slice[2].u_native.port_map[17].k"
+   ]
+  },
+  "note": "Conservative variable-level dependencies; exact dynamic bit mapping pending. Not a hard tile."
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr125:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,28,63,28,65",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr126:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,29,30,29,32",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[2].u_native.$expr127:redor",
+  "kind": "expression",
+  "operation": "redor",
+  "source_loc": "p,31,15,31,16",
+  "input_bits": 18,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_slice.$expr128:redor",
+  "kind": "expression",
+  "operation": "redor",
+  "source_loc": "ce,48,18,48,19",
+  "input_bits": 4,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$always193",
+  "kind": "always",
+  "source_loc": "p,14,3,14,9",
+  "physical_home": null,
+  "exact_mapping": false,
+  "write_vars": {
+   "dut.u_core.u_mem.slice[3].u_native.port_map[0].d": 128,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[0].valid": 1,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[0].legal": 1,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[0].k": 32
+  },
+  "read_vars": {
+   "dut.u_core.u_mem.slice[3].u_native.port_map[0].d": 128,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[0].valid": 1,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[0].legal": 1,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[0].k": 32,
+   "dut.u_core.u_mem.slice[3].u_native.release_slot": 90,
+   "dut.u_core.u_mem.slice[3].u_native.i_data": 4096,
+   "dut.u_core.u_mem.slice[3].u_native.i_v": 32
+  },
+  "output_dependencies": {
+   "dut.u_core.u_mem.slice[3].u_native.port_map[0].d": [
+    "dut.u_core.u_mem.slice[3].u_native.i_data",
+    "dut.u_core.u_mem.slice[3].u_native.port_map[0].d",
+    "dut.u_core.u_mem.slice[3].u_native.port_map[0].k",
+    "dut.u_core.u_mem.slice[3].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[3].u_native.port_map[0].valid": [
+    "dut.u_core.u_mem.slice[3].u_native.i_v",
+    "dut.u_core.u_mem.slice[3].u_native.port_map[0].k",
+    "dut.u_core.u_mem.slice[3].u_native.port_map[0].valid",
+    "dut.u_core.u_mem.slice[3].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[3].u_native.port_map[0].legal": [
+    "dut.u_core.u_mem.slice[3].u_native.port_map[0].k",
+    "dut.u_core.u_mem.slice[3].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[3].u_native.port_map[0].k": [
+    "dut.u_core.u_mem.slice[3].u_native.port_map[0].k"
+   ]
+  },
+  "note": "Conservative variable-level dependencies; exact dynamic bit mapping pending. Not a hard tile."
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr129:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,28,63,28,65",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr130:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,29,30,29,32",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$always196",
+  "kind": "always",
+  "source_loc": "p,14,3,14,9",
+  "physical_home": null,
+  "exact_mapping": false,
+  "write_vars": {
+   "dut.u_core.u_mem.slice[3].u_native.port_map[1].d": 128,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[1].valid": 1,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[1].legal": 1,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[1].k": 32
+  },
+  "read_vars": {
+   "dut.u_core.u_mem.slice[3].u_native.port_map[1].d": 128,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[1].valid": 1,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[1].legal": 1,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[1].k": 32,
+   "dut.u_core.u_mem.slice[3].u_native.release_slot": 90,
+   "dut.u_core.u_mem.slice[3].u_native.i_data": 4096,
+   "dut.u_core.u_mem.slice[3].u_native.i_v": 32
+  },
+  "output_dependencies": {
+   "dut.u_core.u_mem.slice[3].u_native.port_map[1].d": [
+    "dut.u_core.u_mem.slice[3].u_native.i_data",
+    "dut.u_core.u_mem.slice[3].u_native.port_map[1].d",
+    "dut.u_core.u_mem.slice[3].u_native.port_map[1].k",
+    "dut.u_core.u_mem.slice[3].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[3].u_native.port_map[1].valid": [
+    "dut.u_core.u_mem.slice[3].u_native.i_v",
+    "dut.u_core.u_mem.slice[3].u_native.port_map[1].k",
+    "dut.u_core.u_mem.slice[3].u_native.port_map[1].valid",
+    "dut.u_core.u_mem.slice[3].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[3].u_native.port_map[1].legal": [
+    "dut.u_core.u_mem.slice[3].u_native.port_map[1].k",
+    "dut.u_core.u_mem.slice[3].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[3].u_native.port_map[1].k": [
+    "dut.u_core.u_mem.slice[3].u_native.port_map[1].k"
+   ]
+  },
+  "note": "Conservative variable-level dependencies; exact dynamic bit mapping pending. Not a hard tile."
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr131:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,28,63,28,65",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr132:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,29,30,29,32",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$always199",
+  "kind": "always",
+  "source_loc": "p,14,3,14,9",
+  "physical_home": null,
+  "exact_mapping": false,
+  "write_vars": {
+   "dut.u_core.u_mem.slice[3].u_native.port_map[2].d": 128,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[2].valid": 1,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[2].legal": 1,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[2].k": 32
+  },
+  "read_vars": {
+   "dut.u_core.u_mem.slice[3].u_native.port_map[2].d": 128,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[2].valid": 1,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[2].legal": 1,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[2].k": 32,
+   "dut.u_core.u_mem.slice[3].u_native.release_slot": 90,
+   "dut.u_core.u_mem.slice[3].u_native.i_data": 4096,
+   "dut.u_core.u_mem.slice[3].u_native.i_v": 32
+  },
+  "output_dependencies": {
+   "dut.u_core.u_mem.slice[3].u_native.port_map[2].d": [
+    "dut.u_core.u_mem.slice[3].u_native.i_data",
+    "dut.u_core.u_mem.slice[3].u_native.port_map[2].d",
+    "dut.u_core.u_mem.slice[3].u_native.port_map[2].k",
+    "dut.u_core.u_mem.slice[3].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[3].u_native.port_map[2].valid": [
+    "dut.u_core.u_mem.slice[3].u_native.i_v",
+    "dut.u_core.u_mem.slice[3].u_native.port_map[2].k",
+    "dut.u_core.u_mem.slice[3].u_native.port_map[2].valid",
+    "dut.u_core.u_mem.slice[3].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[3].u_native.port_map[2].legal": [
+    "dut.u_core.u_mem.slice[3].u_native.port_map[2].k",
+    "dut.u_core.u_mem.slice[3].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[3].u_native.port_map[2].k": [
+    "dut.u_core.u_mem.slice[3].u_native.port_map[2].k"
+   ]
+  },
+  "note": "Conservative variable-level dependencies; exact dynamic bit mapping pending. Not a hard tile."
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr133:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,28,63,28,65",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr134:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,29,30,29,32",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$always202",
+  "kind": "always",
+  "source_loc": "p,14,3,14,9",
+  "physical_home": null,
+  "exact_mapping": false,
+  "write_vars": {
+   "dut.u_core.u_mem.slice[3].u_native.port_map[3].d": 128,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[3].valid": 1,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[3].legal": 1,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[3].k": 32
+  },
+  "read_vars": {
+   "dut.u_core.u_mem.slice[3].u_native.port_map[3].d": 128,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[3].valid": 1,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[3].legal": 1,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[3].k": 32,
+   "dut.u_core.u_mem.slice[3].u_native.release_slot": 90,
+   "dut.u_core.u_mem.slice[3].u_native.i_data": 4096,
+   "dut.u_core.u_mem.slice[3].u_native.i_v": 32
+  },
+  "output_dependencies": {
+   "dut.u_core.u_mem.slice[3].u_native.port_map[3].d": [
+    "dut.u_core.u_mem.slice[3].u_native.i_data",
+    "dut.u_core.u_mem.slice[3].u_native.port_map[3].d",
+    "dut.u_core.u_mem.slice[3].u_native.port_map[3].k",
+    "dut.u_core.u_mem.slice[3].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[3].u_native.port_map[3].valid": [
+    "dut.u_core.u_mem.slice[3].u_native.i_v",
+    "dut.u_core.u_mem.slice[3].u_native.port_map[3].k",
+    "dut.u_core.u_mem.slice[3].u_native.port_map[3].valid",
+    "dut.u_core.u_mem.slice[3].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[3].u_native.port_map[3].legal": [
+    "dut.u_core.u_mem.slice[3].u_native.port_map[3].k",
+    "dut.u_core.u_mem.slice[3].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[3].u_native.port_map[3].k": [
+    "dut.u_core.u_mem.slice[3].u_native.port_map[3].k"
+   ]
+  },
+  "note": "Conservative variable-level dependencies; exact dynamic bit mapping pending. Not a hard tile."
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr135:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,28,63,28,65",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr136:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,29,30,29,32",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$always205",
+  "kind": "always",
+  "source_loc": "p,14,3,14,9",
+  "physical_home": null,
+  "exact_mapping": false,
+  "write_vars": {
+   "dut.u_core.u_mem.slice[3].u_native.port_map[4].d": 128,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[4].valid": 1,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[4].legal": 1,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[4].k": 32
+  },
+  "read_vars": {
+   "dut.u_core.u_mem.slice[3].u_native.port_map[4].d": 128,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[4].valid": 1,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[4].legal": 1,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[4].k": 32,
+   "dut.u_core.u_mem.slice[3].u_native.release_slot": 90,
+   "dut.u_core.u_mem.slice[3].u_native.i_data": 4096,
+   "dut.u_core.u_mem.slice[3].u_native.i_v": 32
+  },
+  "output_dependencies": {
+   "dut.u_core.u_mem.slice[3].u_native.port_map[4].d": [
+    "dut.u_core.u_mem.slice[3].u_native.i_data",
+    "dut.u_core.u_mem.slice[3].u_native.port_map[4].d",
+    "dut.u_core.u_mem.slice[3].u_native.port_map[4].k",
+    "dut.u_core.u_mem.slice[3].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[3].u_native.port_map[4].valid": [
+    "dut.u_core.u_mem.slice[3].u_native.i_v",
+    "dut.u_core.u_mem.slice[3].u_native.port_map[4].k",
+    "dut.u_core.u_mem.slice[3].u_native.port_map[4].valid",
+    "dut.u_core.u_mem.slice[3].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[3].u_native.port_map[4].legal": [
+    "dut.u_core.u_mem.slice[3].u_native.port_map[4].k",
+    "dut.u_core.u_mem.slice[3].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[3].u_native.port_map[4].k": [
+    "dut.u_core.u_mem.slice[3].u_native.port_map[4].k"
+   ]
+  },
+  "note": "Conservative variable-level dependencies; exact dynamic bit mapping pending. Not a hard tile."
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr137:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,28,63,28,65",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr138:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,29,30,29,32",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$always208",
+  "kind": "always",
+  "source_loc": "p,14,3,14,9",
+  "physical_home": null,
+  "exact_mapping": false,
+  "write_vars": {
+   "dut.u_core.u_mem.slice[3].u_native.port_map[5].d": 128,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[5].valid": 1,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[5].legal": 1,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[5].k": 32
+  },
+  "read_vars": {
+   "dut.u_core.u_mem.slice[3].u_native.port_map[5].d": 128,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[5].valid": 1,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[5].legal": 1,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[5].k": 32,
+   "dut.u_core.u_mem.slice[3].u_native.release_slot": 90,
+   "dut.u_core.u_mem.slice[3].u_native.i_data": 4096,
+   "dut.u_core.u_mem.slice[3].u_native.i_v": 32
+  },
+  "output_dependencies": {
+   "dut.u_core.u_mem.slice[3].u_native.port_map[5].d": [
+    "dut.u_core.u_mem.slice[3].u_native.i_data",
+    "dut.u_core.u_mem.slice[3].u_native.port_map[5].d",
+    "dut.u_core.u_mem.slice[3].u_native.port_map[5].k",
+    "dut.u_core.u_mem.slice[3].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[3].u_native.port_map[5].valid": [
+    "dut.u_core.u_mem.slice[3].u_native.i_v",
+    "dut.u_core.u_mem.slice[3].u_native.port_map[5].k",
+    "dut.u_core.u_mem.slice[3].u_native.port_map[5].valid",
+    "dut.u_core.u_mem.slice[3].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[3].u_native.port_map[5].legal": [
+    "dut.u_core.u_mem.slice[3].u_native.port_map[5].k",
+    "dut.u_core.u_mem.slice[3].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[3].u_native.port_map[5].k": [
+    "dut.u_core.u_mem.slice[3].u_native.port_map[5].k"
+   ]
+  },
+  "note": "Conservative variable-level dependencies; exact dynamic bit mapping pending. Not a hard tile."
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr139:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,28,63,28,65",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr140:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,29,30,29,32",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$always211",
+  "kind": "always",
+  "source_loc": "p,14,3,14,9",
+  "physical_home": null,
+  "exact_mapping": false,
+  "write_vars": {
+   "dut.u_core.u_mem.slice[3].u_native.port_map[6].d": 128,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[6].valid": 1,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[6].legal": 1,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[6].k": 32
+  },
+  "read_vars": {
+   "dut.u_core.u_mem.slice[3].u_native.port_map[6].d": 128,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[6].valid": 1,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[6].legal": 1,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[6].k": 32,
+   "dut.u_core.u_mem.slice[3].u_native.release_slot": 90,
+   "dut.u_core.u_mem.slice[3].u_native.i_data": 4096,
+   "dut.u_core.u_mem.slice[3].u_native.i_v": 32
+  },
+  "output_dependencies": {
+   "dut.u_core.u_mem.slice[3].u_native.port_map[6].d": [
+    "dut.u_core.u_mem.slice[3].u_native.i_data",
+    "dut.u_core.u_mem.slice[3].u_native.port_map[6].d",
+    "dut.u_core.u_mem.slice[3].u_native.port_map[6].k",
+    "dut.u_core.u_mem.slice[3].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[3].u_native.port_map[6].valid": [
+    "dut.u_core.u_mem.slice[3].u_native.i_v",
+    "dut.u_core.u_mem.slice[3].u_native.port_map[6].k",
+    "dut.u_core.u_mem.slice[3].u_native.port_map[6].valid",
+    "dut.u_core.u_mem.slice[3].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[3].u_native.port_map[6].legal": [
+    "dut.u_core.u_mem.slice[3].u_native.port_map[6].k",
+    "dut.u_core.u_mem.slice[3].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[3].u_native.port_map[6].k": [
+    "dut.u_core.u_mem.slice[3].u_native.port_map[6].k"
+   ]
+  },
+  "note": "Conservative variable-level dependencies; exact dynamic bit mapping pending. Not a hard tile."
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr141:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,28,63,28,65",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr142:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,29,30,29,32",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$always214",
+  "kind": "always",
+  "source_loc": "p,14,3,14,9",
+  "physical_home": null,
+  "exact_mapping": false,
+  "write_vars": {
+   "dut.u_core.u_mem.slice[3].u_native.port_map[7].d": 128,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[7].valid": 1,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[7].legal": 1,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[7].k": 32
+  },
+  "read_vars": {
+   "dut.u_core.u_mem.slice[3].u_native.port_map[7].d": 128,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[7].valid": 1,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[7].legal": 1,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[7].k": 32,
+   "dut.u_core.u_mem.slice[3].u_native.release_slot": 90,
+   "dut.u_core.u_mem.slice[3].u_native.i_data": 4096,
+   "dut.u_core.u_mem.slice[3].u_native.i_v": 32
+  },
+  "output_dependencies": {
+   "dut.u_core.u_mem.slice[3].u_native.port_map[7].d": [
+    "dut.u_core.u_mem.slice[3].u_native.i_data",
+    "dut.u_core.u_mem.slice[3].u_native.port_map[7].d",
+    "dut.u_core.u_mem.slice[3].u_native.port_map[7].k",
+    "dut.u_core.u_mem.slice[3].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[3].u_native.port_map[7].valid": [
+    "dut.u_core.u_mem.slice[3].u_native.i_v",
+    "dut.u_core.u_mem.slice[3].u_native.port_map[7].k",
+    "dut.u_core.u_mem.slice[3].u_native.port_map[7].valid",
+    "dut.u_core.u_mem.slice[3].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[3].u_native.port_map[7].legal": [
+    "dut.u_core.u_mem.slice[3].u_native.port_map[7].k",
+    "dut.u_core.u_mem.slice[3].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[3].u_native.port_map[7].k": [
+    "dut.u_core.u_mem.slice[3].u_native.port_map[7].k"
+   ]
+  },
+  "note": "Conservative variable-level dependencies; exact dynamic bit mapping pending. Not a hard tile."
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr143:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,28,63,28,65",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr144:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,29,30,29,32",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$always217",
+  "kind": "always",
+  "source_loc": "p,14,3,14,9",
+  "physical_home": null,
+  "exact_mapping": false,
+  "write_vars": {
+   "dut.u_core.u_mem.slice[3].u_native.port_map[8].d": 128,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[8].valid": 1,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[8].legal": 1,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[8].k": 32
+  },
+  "read_vars": {
+   "dut.u_core.u_mem.slice[3].u_native.port_map[8].d": 128,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[8].valid": 1,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[8].legal": 1,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[8].k": 32,
+   "dut.u_core.u_mem.slice[3].u_native.release_slot": 90,
+   "dut.u_core.u_mem.slice[3].u_native.i_data": 4096,
+   "dut.u_core.u_mem.slice[3].u_native.i_v": 32
+  },
+  "output_dependencies": {
+   "dut.u_core.u_mem.slice[3].u_native.port_map[8].d": [
+    "dut.u_core.u_mem.slice[3].u_native.i_data",
+    "dut.u_core.u_mem.slice[3].u_native.port_map[8].d",
+    "dut.u_core.u_mem.slice[3].u_native.port_map[8].k",
+    "dut.u_core.u_mem.slice[3].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[3].u_native.port_map[8].valid": [
+    "dut.u_core.u_mem.slice[3].u_native.i_v",
+    "dut.u_core.u_mem.slice[3].u_native.port_map[8].k",
+    "dut.u_core.u_mem.slice[3].u_native.port_map[8].valid",
+    "dut.u_core.u_mem.slice[3].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[3].u_native.port_map[8].legal": [
+    "dut.u_core.u_mem.slice[3].u_native.port_map[8].k",
+    "dut.u_core.u_mem.slice[3].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[3].u_native.port_map[8].k": [
+    "dut.u_core.u_mem.slice[3].u_native.port_map[8].k"
+   ]
+  },
+  "note": "Conservative variable-level dependencies; exact dynamic bit mapping pending. Not a hard tile."
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr145:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,28,63,28,65",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr146:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,29,30,29,32",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$always220",
+  "kind": "always",
+  "source_loc": "p,14,3,14,9",
+  "physical_home": null,
+  "exact_mapping": false,
+  "write_vars": {
+   "dut.u_core.u_mem.slice[3].u_native.port_map[9].d": 128,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[9].valid": 1,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[9].legal": 1,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[9].k": 32
+  },
+  "read_vars": {
+   "dut.u_core.u_mem.slice[3].u_native.port_map[9].d": 128,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[9].valid": 1,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[9].legal": 1,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[9].k": 32,
+   "dut.u_core.u_mem.slice[3].u_native.release_slot": 90,
+   "dut.u_core.u_mem.slice[3].u_native.i_data": 4096,
+   "dut.u_core.u_mem.slice[3].u_native.i_v": 32
+  },
+  "output_dependencies": {
+   "dut.u_core.u_mem.slice[3].u_native.port_map[9].d": [
+    "dut.u_core.u_mem.slice[3].u_native.i_data",
+    "dut.u_core.u_mem.slice[3].u_native.port_map[9].d",
+    "dut.u_core.u_mem.slice[3].u_native.port_map[9].k",
+    "dut.u_core.u_mem.slice[3].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[3].u_native.port_map[9].valid": [
+    "dut.u_core.u_mem.slice[3].u_native.i_v",
+    "dut.u_core.u_mem.slice[3].u_native.port_map[9].k",
+    "dut.u_core.u_mem.slice[3].u_native.port_map[9].valid",
+    "dut.u_core.u_mem.slice[3].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[3].u_native.port_map[9].legal": [
+    "dut.u_core.u_mem.slice[3].u_native.port_map[9].k",
+    "dut.u_core.u_mem.slice[3].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[3].u_native.port_map[9].k": [
+    "dut.u_core.u_mem.slice[3].u_native.port_map[9].k"
+   ]
+  },
+  "note": "Conservative variable-level dependencies; exact dynamic bit mapping pending. Not a hard tile."
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr147:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,28,63,28,65",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr148:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,29,30,29,32",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$always223",
+  "kind": "always",
+  "source_loc": "p,14,3,14,9",
+  "physical_home": null,
+  "exact_mapping": false,
+  "write_vars": {
+   "dut.u_core.u_mem.slice[3].u_native.port_map[10].d": 128,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[10].valid": 1,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[10].legal": 1,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[10].k": 32
+  },
+  "read_vars": {
+   "dut.u_core.u_mem.slice[3].u_native.port_map[10].d": 128,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[10].valid": 1,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[10].legal": 1,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[10].k": 32,
+   "dut.u_core.u_mem.slice[3].u_native.release_slot": 90,
+   "dut.u_core.u_mem.slice[3].u_native.i_data": 4096,
+   "dut.u_core.u_mem.slice[3].u_native.i_v": 32
+  },
+  "output_dependencies": {
+   "dut.u_core.u_mem.slice[3].u_native.port_map[10].d": [
+    "dut.u_core.u_mem.slice[3].u_native.i_data",
+    "dut.u_core.u_mem.slice[3].u_native.port_map[10].d",
+    "dut.u_core.u_mem.slice[3].u_native.port_map[10].k",
+    "dut.u_core.u_mem.slice[3].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[3].u_native.port_map[10].valid": [
+    "dut.u_core.u_mem.slice[3].u_native.i_v",
+    "dut.u_core.u_mem.slice[3].u_native.port_map[10].k",
+    "dut.u_core.u_mem.slice[3].u_native.port_map[10].valid",
+    "dut.u_core.u_mem.slice[3].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[3].u_native.port_map[10].legal": [
+    "dut.u_core.u_mem.slice[3].u_native.port_map[10].k",
+    "dut.u_core.u_mem.slice[3].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[3].u_native.port_map[10].k": [
+    "dut.u_core.u_mem.slice[3].u_native.port_map[10].k"
+   ]
+  },
+  "note": "Conservative variable-level dependencies; exact dynamic bit mapping pending. Not a hard tile."
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr149:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,28,63,28,65",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr150:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,29,30,29,32",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$always226",
+  "kind": "always",
+  "source_loc": "p,14,3,14,9",
+  "physical_home": null,
+  "exact_mapping": false,
+  "write_vars": {
+   "dut.u_core.u_mem.slice[3].u_native.port_map[11].d": 128,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[11].valid": 1,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[11].legal": 1,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[11].k": 32
+  },
+  "read_vars": {
+   "dut.u_core.u_mem.slice[3].u_native.port_map[11].d": 128,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[11].valid": 1,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[11].legal": 1,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[11].k": 32,
+   "dut.u_core.u_mem.slice[3].u_native.release_slot": 90,
+   "dut.u_core.u_mem.slice[3].u_native.i_data": 4096,
+   "dut.u_core.u_mem.slice[3].u_native.i_v": 32
+  },
+  "output_dependencies": {
+   "dut.u_core.u_mem.slice[3].u_native.port_map[11].d": [
+    "dut.u_core.u_mem.slice[3].u_native.i_data",
+    "dut.u_core.u_mem.slice[3].u_native.port_map[11].d",
+    "dut.u_core.u_mem.slice[3].u_native.port_map[11].k",
+    "dut.u_core.u_mem.slice[3].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[3].u_native.port_map[11].valid": [
+    "dut.u_core.u_mem.slice[3].u_native.i_v",
+    "dut.u_core.u_mem.slice[3].u_native.port_map[11].k",
+    "dut.u_core.u_mem.slice[3].u_native.port_map[11].valid",
+    "dut.u_core.u_mem.slice[3].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[3].u_native.port_map[11].legal": [
+    "dut.u_core.u_mem.slice[3].u_native.port_map[11].k",
+    "dut.u_core.u_mem.slice[3].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[3].u_native.port_map[11].k": [
+    "dut.u_core.u_mem.slice[3].u_native.port_map[11].k"
+   ]
+  },
+  "note": "Conservative variable-level dependencies; exact dynamic bit mapping pending. Not a hard tile."
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr151:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,28,63,28,65",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr152:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,29,30,29,32",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$always229",
+  "kind": "always",
+  "source_loc": "p,14,3,14,9",
+  "physical_home": null,
+  "exact_mapping": false,
+  "write_vars": {
+   "dut.u_core.u_mem.slice[3].u_native.port_map[12].d": 128,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[12].valid": 1,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[12].legal": 1,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[12].k": 32
+  },
+  "read_vars": {
+   "dut.u_core.u_mem.slice[3].u_native.port_map[12].d": 128,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[12].valid": 1,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[12].legal": 1,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[12].k": 32,
+   "dut.u_core.u_mem.slice[3].u_native.release_slot": 90,
+   "dut.u_core.u_mem.slice[3].u_native.i_data": 4096,
+   "dut.u_core.u_mem.slice[3].u_native.i_v": 32
+  },
+  "output_dependencies": {
+   "dut.u_core.u_mem.slice[3].u_native.port_map[12].d": [
+    "dut.u_core.u_mem.slice[3].u_native.i_data",
+    "dut.u_core.u_mem.slice[3].u_native.port_map[12].d",
+    "dut.u_core.u_mem.slice[3].u_native.port_map[12].k",
+    "dut.u_core.u_mem.slice[3].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[3].u_native.port_map[12].valid": [
+    "dut.u_core.u_mem.slice[3].u_native.i_v",
+    "dut.u_core.u_mem.slice[3].u_native.port_map[12].k",
+    "dut.u_core.u_mem.slice[3].u_native.port_map[12].valid",
+    "dut.u_core.u_mem.slice[3].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[3].u_native.port_map[12].legal": [
+    "dut.u_core.u_mem.slice[3].u_native.port_map[12].k",
+    "dut.u_core.u_mem.slice[3].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[3].u_native.port_map[12].k": [
+    "dut.u_core.u_mem.slice[3].u_native.port_map[12].k"
+   ]
+  },
+  "note": "Conservative variable-level dependencies; exact dynamic bit mapping pending. Not a hard tile."
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr153:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,28,63,28,65",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr154:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,29,30,29,32",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$always232",
+  "kind": "always",
+  "source_loc": "p,14,3,14,9",
+  "physical_home": null,
+  "exact_mapping": false,
+  "write_vars": {
+   "dut.u_core.u_mem.slice[3].u_native.port_map[13].d": 128,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[13].valid": 1,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[13].legal": 1,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[13].k": 32
+  },
+  "read_vars": {
+   "dut.u_core.u_mem.slice[3].u_native.port_map[13].d": 128,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[13].valid": 1,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[13].legal": 1,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[13].k": 32,
+   "dut.u_core.u_mem.slice[3].u_native.release_slot": 90,
+   "dut.u_core.u_mem.slice[3].u_native.i_data": 4096,
+   "dut.u_core.u_mem.slice[3].u_native.i_v": 32
+  },
+  "output_dependencies": {
+   "dut.u_core.u_mem.slice[3].u_native.port_map[13].d": [
+    "dut.u_core.u_mem.slice[3].u_native.i_data",
+    "dut.u_core.u_mem.slice[3].u_native.port_map[13].d",
+    "dut.u_core.u_mem.slice[3].u_native.port_map[13].k",
+    "dut.u_core.u_mem.slice[3].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[3].u_native.port_map[13].valid": [
+    "dut.u_core.u_mem.slice[3].u_native.i_v",
+    "dut.u_core.u_mem.slice[3].u_native.port_map[13].k",
+    "dut.u_core.u_mem.slice[3].u_native.port_map[13].valid",
+    "dut.u_core.u_mem.slice[3].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[3].u_native.port_map[13].legal": [
+    "dut.u_core.u_mem.slice[3].u_native.port_map[13].k",
+    "dut.u_core.u_mem.slice[3].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[3].u_native.port_map[13].k": [
+    "dut.u_core.u_mem.slice[3].u_native.port_map[13].k"
+   ]
+  },
+  "note": "Conservative variable-level dependencies; exact dynamic bit mapping pending. Not a hard tile."
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr155:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,28,63,28,65",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr156:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,29,30,29,32",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$always235",
+  "kind": "always",
+  "source_loc": "p,14,3,14,9",
+  "physical_home": null,
+  "exact_mapping": false,
+  "write_vars": {
+   "dut.u_core.u_mem.slice[3].u_native.port_map[14].d": 128,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[14].valid": 1,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[14].legal": 1,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[14].k": 32
+  },
+  "read_vars": {
+   "dut.u_core.u_mem.slice[3].u_native.port_map[14].d": 128,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[14].valid": 1,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[14].legal": 1,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[14].k": 32,
+   "dut.u_core.u_mem.slice[3].u_native.release_slot": 90,
+   "dut.u_core.u_mem.slice[3].u_native.i_data": 4096,
+   "dut.u_core.u_mem.slice[3].u_native.i_v": 32
+  },
+  "output_dependencies": {
+   "dut.u_core.u_mem.slice[3].u_native.port_map[14].d": [
+    "dut.u_core.u_mem.slice[3].u_native.i_data",
+    "dut.u_core.u_mem.slice[3].u_native.port_map[14].d",
+    "dut.u_core.u_mem.slice[3].u_native.port_map[14].k",
+    "dut.u_core.u_mem.slice[3].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[3].u_native.port_map[14].valid": [
+    "dut.u_core.u_mem.slice[3].u_native.i_v",
+    "dut.u_core.u_mem.slice[3].u_native.port_map[14].k",
+    "dut.u_core.u_mem.slice[3].u_native.port_map[14].valid",
+    "dut.u_core.u_mem.slice[3].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[3].u_native.port_map[14].legal": [
+    "dut.u_core.u_mem.slice[3].u_native.port_map[14].k",
+    "dut.u_core.u_mem.slice[3].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[3].u_native.port_map[14].k": [
+    "dut.u_core.u_mem.slice[3].u_native.port_map[14].k"
+   ]
+  },
+  "note": "Conservative variable-level dependencies; exact dynamic bit mapping pending. Not a hard tile."
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr157:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,28,63,28,65",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr158:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,29,30,29,32",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$always238",
+  "kind": "always",
+  "source_loc": "p,14,3,14,9",
+  "physical_home": null,
+  "exact_mapping": false,
+  "write_vars": {
+   "dut.u_core.u_mem.slice[3].u_native.port_map[15].d": 128,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[15].valid": 1,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[15].legal": 1,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[15].k": 32
+  },
+  "read_vars": {
+   "dut.u_core.u_mem.slice[3].u_native.port_map[15].d": 128,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[15].valid": 1,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[15].legal": 1,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[15].k": 32,
+   "dut.u_core.u_mem.slice[3].u_native.release_slot": 90,
+   "dut.u_core.u_mem.slice[3].u_native.i_data": 4096,
+   "dut.u_core.u_mem.slice[3].u_native.i_v": 32
+  },
+  "output_dependencies": {
+   "dut.u_core.u_mem.slice[3].u_native.port_map[15].d": [
+    "dut.u_core.u_mem.slice[3].u_native.i_data",
+    "dut.u_core.u_mem.slice[3].u_native.port_map[15].d",
+    "dut.u_core.u_mem.slice[3].u_native.port_map[15].k",
+    "dut.u_core.u_mem.slice[3].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[3].u_native.port_map[15].valid": [
+    "dut.u_core.u_mem.slice[3].u_native.i_v",
+    "dut.u_core.u_mem.slice[3].u_native.port_map[15].k",
+    "dut.u_core.u_mem.slice[3].u_native.port_map[15].valid",
+    "dut.u_core.u_mem.slice[3].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[3].u_native.port_map[15].legal": [
+    "dut.u_core.u_mem.slice[3].u_native.port_map[15].k",
+    "dut.u_core.u_mem.slice[3].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[3].u_native.port_map[15].k": [
+    "dut.u_core.u_mem.slice[3].u_native.port_map[15].k"
+   ]
+  },
+  "note": "Conservative variable-level dependencies; exact dynamic bit mapping pending. Not a hard tile."
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr159:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,28,63,28,65",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr160:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,29,30,29,32",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$always241",
+  "kind": "always",
+  "source_loc": "p,14,3,14,9",
+  "physical_home": null,
+  "exact_mapping": false,
+  "write_vars": {
+   "dut.u_core.u_mem.slice[3].u_native.port_map[16].d": 128,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[16].valid": 1,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[16].legal": 1,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[16].k": 32
+  },
+  "read_vars": {
+   "dut.u_core.u_mem.slice[3].u_native.port_map[16].d": 128,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[16].valid": 1,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[16].legal": 1,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[16].k": 32,
+   "dut.u_core.u_mem.slice[3].u_native.release_slot": 90,
+   "dut.u_core.u_mem.slice[3].u_native.i_data": 4096,
+   "dut.u_core.u_mem.slice[3].u_native.i_v": 32
+  },
+  "output_dependencies": {
+   "dut.u_core.u_mem.slice[3].u_native.port_map[16].d": [
+    "dut.u_core.u_mem.slice[3].u_native.i_data",
+    "dut.u_core.u_mem.slice[3].u_native.port_map[16].d",
+    "dut.u_core.u_mem.slice[3].u_native.port_map[16].k",
+    "dut.u_core.u_mem.slice[3].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[3].u_native.port_map[16].valid": [
+    "dut.u_core.u_mem.slice[3].u_native.i_v",
+    "dut.u_core.u_mem.slice[3].u_native.port_map[16].k",
+    "dut.u_core.u_mem.slice[3].u_native.port_map[16].valid",
+    "dut.u_core.u_mem.slice[3].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[3].u_native.port_map[16].legal": [
+    "dut.u_core.u_mem.slice[3].u_native.port_map[16].k",
+    "dut.u_core.u_mem.slice[3].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[3].u_native.port_map[16].k": [
+    "dut.u_core.u_mem.slice[3].u_native.port_map[16].k"
+   ]
+  },
+  "note": "Conservative variable-level dependencies; exact dynamic bit mapping pending. Not a hard tile."
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr161:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,28,63,28,65",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr162:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,29,30,29,32",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$always244",
+  "kind": "always",
+  "source_loc": "p,14,3,14,9",
+  "physical_home": null,
+  "exact_mapping": false,
+  "write_vars": {
+   "dut.u_core.u_mem.slice[3].u_native.port_map[17].d": 128,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[17].valid": 1,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[17].legal": 1,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[17].k": 32
+  },
+  "read_vars": {
+   "dut.u_core.u_mem.slice[3].u_native.port_map[17].d": 128,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[17].valid": 1,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[17].legal": 1,
+   "dut.u_core.u_mem.slice[3].u_native.port_map[17].k": 32,
+   "dut.u_core.u_mem.slice[3].u_native.release_slot": 90,
+   "dut.u_core.u_mem.slice[3].u_native.i_data": 4096,
+   "dut.u_core.u_mem.slice[3].u_native.i_v": 32
+  },
+  "output_dependencies": {
+   "dut.u_core.u_mem.slice[3].u_native.port_map[17].d": [
+    "dut.u_core.u_mem.slice[3].u_native.i_data",
+    "dut.u_core.u_mem.slice[3].u_native.port_map[17].d",
+    "dut.u_core.u_mem.slice[3].u_native.port_map[17].k",
+    "dut.u_core.u_mem.slice[3].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[3].u_native.port_map[17].valid": [
+    "dut.u_core.u_mem.slice[3].u_native.i_v",
+    "dut.u_core.u_mem.slice[3].u_native.port_map[17].k",
+    "dut.u_core.u_mem.slice[3].u_native.port_map[17].valid",
+    "dut.u_core.u_mem.slice[3].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[3].u_native.port_map[17].legal": [
+    "dut.u_core.u_mem.slice[3].u_native.port_map[17].k",
+    "dut.u_core.u_mem.slice[3].u_native.release_slot"
+   ],
+   "dut.u_core.u_mem.slice[3].u_native.port_map[17].k": [
+    "dut.u_core.u_mem.slice[3].u_native.port_map[17].k"
+   ]
+  },
+  "note": "Conservative variable-level dependencies; exact dynamic bit mapping pending. Not a hard tile."
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr163:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,28,63,28,65",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr164:and",
+  "kind": "expression",
+  "operation": "and",
+  "source_loc": "p,29,30,29,32",
+  "input_bits": 20,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.u_mem.slice[3].u_native.$expr165:redor",
+  "kind": "expression",
+  "operation": "redor",
+  "source_loc": "p,31,15,31,16",
+  "input_bits": 18,
+  "output_bits": 1,
+  "physical_home": null,
+  "exact_mapping": false
+ },
+ {
+  "path": "dut.u_core.bounded_read.l14.u_read.$initial248",
+  "kind": "initial",
+  "source_loc": "n,595,50,595,51",
+  "physical_home": null,
+  "exact_mapping": false,
+  "write_vars": {
+   "dut.u_core.bounded_read.l14.u_read.sel6": 20
+  },
+  "read_vars": {
+   "dut.u_core.bounded_read.l14.u_read.sel6": 20
+  },
+  "output_dependencies": {
+   "dut.u_core.bounded_read.l14.u_read.sel6": []
+  },
+  "note": "Conservative variable-level dependencies; exact dynamic bit mapping pending. Not a hard tile."
+ },
+ {
+  "path": "dut.u_core.bounded_read.l14.u_read.$initial249",
+  "kind": "initial",
+  "source_loc": "n,662,50,662,51",
+  "physical_home": null,
+  "exact_mapping": false,
+  "write_vars": {
+   "dut.u_core.bounded_read.l14.u_read.sel7": 20
+  },
+  "read_vars": {
+   "dut.u_core.bounded_read.l14.u_read.sel7": 20
+  },
+  "output_dependencies": {
+   "dut.u_core.bounded_read.l14.u_read.sel7": []
+  },
+  "note": "Conservative variable-level dependencies; exact dynamic bit mapping pending. Not a hard tile."
+ }
+]

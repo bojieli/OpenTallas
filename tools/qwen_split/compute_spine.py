@@ -158,7 +158,8 @@ def _link_words(m, rec):
           for b, c, n, e in nb]
     m['buses'] = nb
     ties = m.setdefault('ties', [])
-    have_tt = {i for b, c, n, e in m['buses'] for i, p in e if p == 'tt'}
+    from qwen_split.tt_input_binding import connected_bands
+    have_tt = connected_bands(m, bands)
     for x in bands:
         k = int(x.rsplit('_', 1)[1])
         ties.append((x, 'b0', 1, 1 if k == 0 else 0))

@@ -1,0 +1,62 @@
+{
+  "schema": "opentallas.s81.payload33-legal-face-capacity.v1",
+  "scope": "Exact source-bound legal pin capacity; not minimum physical outline qualification",
+  "pin_json": "physical/s81_vm_a2f_parent_0310/payload33/s81_a2_w0_payload33.pins.json",
+  "pin_json_sha256": "9595e9ab7ab127ef1f6a2eea05b78d59e41133a18473ccf2eb39c95d7847523f",
+  "generator": "tools/s81_vm/build_a2f_parent_kits.py:sites",
+  "generator_sha256": "a041b4584a7d46e0d9ce9494faedd201a978da68ff3f6a665e81538c33d8ef8e",
+  "M5_rule": {
+    "track_pitch_um": 0.048,
+    "track_offset_um": 0.012,
+    "minimum_signal_center_pitch_um": 0.144,
+    "end_margin_um": 4.32,
+    "PG_exclusion_period_um": 5.4,
+    "PG_exclusion_closed_um": [
+      0.18,
+      0.74
+    ]
+  },
+  "faces": {
+    "N": {
+      "pins": 1700,
+      "layer": "M5",
+      "minimum_actual_pitch_um": 0.144,
+      "first_center_um": 4.332,
+      "last_center_um": 287.244
+    },
+    "S": {
+      "pins": 1696,
+      "layer": "M5",
+      "minimum_actual_pitch_um": 0.144,
+      "first_center_um": 4.332,
+      "last_center_um": 287.244
+    },
+    "W": {
+      "pins": 107,
+      "layer": "M4",
+      "minimum_actual_pitch_um": 0.144,
+      "first_center_um": 4.332,
+      "last_center_um": 27.948
+    }
+  },
+  "candidate_M5_sites": {
+    "194.4": 1168,
+    "216": 1304,
+    "237.6": 1440,
+    "248.4": 1508,
+    "259.2": 1576,
+    "270": 1644,
+    "280.8": 1712,
+    "291.6": 1780
+  },
+  "required_N": 1700,
+  "required_S": 1696,
+  "minimum_pin_only_width_on_0p27_grid_um": 278.64,
+  "minimum_pin_only_width_on_10p8_grid_um": 280.8,
+  "rejected_hypothesis": "194.4x32.4 cannot fit1700 N or1696 S pins at existing legal pitch/margins/PG exclusions; do not generate/gate by assuming generic10.5pins/um.",
+  "current_outline_um": [
+    291.6,
+    32.4
+  ],
+  "current_vs_first_regular_width_overhead_percent": 3.8461538461538547
+}

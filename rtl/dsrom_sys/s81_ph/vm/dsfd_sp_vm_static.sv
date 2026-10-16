@@ -53,9 +53,13 @@ module dsfd_sp_vm #(parameter integer CAP_PIPE=0, parameter integer READ_PIPE=0,
     input  wire          ck_cap_control_s, rst_cap_control_s,
     input  wire [15:0]   ck_cap_lane_s, ck_cap_x34_s, ck_cap_x34_t,
     input  wire [15:0]   rst_cap_x34_s, rss_cap_x34_t,
-    input  wire          ck_wfc_control_s, ck_wfc_control_t, ck_wfc_x34_s, ck_wfc_x34_t, ck_wfc_x43_s, ck_wfc_x43_t,
-    input  wire          rst_wfc_control_s, rss_wfc_control_t, rst_wfc_x34_s, rss_wfc_x34_t, rst_wfc_x43_s, rss_wfc_x43_t,
+    input  wire          ck_wfc_control_s, ck_wfc_control_t, ck_wfc_fault_s, ck_wfc_fault_t, ck_wfc_return_t,
+                         ck_wfc_fault_x34_s,ck_wfc_fault_x34_t,ck_wfc_fault_x43_t,ck_wfc_fault_x43_s, ck_wfc_x34_s, ck_wfc_x34_t, ck_wfc_x43_s, ck_wfc_x43_t,
+    input  wire          rst_wfc_control_s, rss_wfc_control_t, rst_wfc_fault_s, rss_wfc_fault_t, rss_wfc_return_t,
+                         rst_wfc_fault_x34_s,rss_wfc_fault_x34_t,rss_wfc_fault_x43_t,rst_wfc_fault_x43_s, rst_wfc_x34_s, rss_wfc_x34_t, rst_wfc_x43_s, rss_wfc_x43_t,
     input  wire          ck_xio_control_s, ck_xio_control_t, rst_xio_control_s, rss_xio_control_t,
+    input  wire          ck_xio_return_t, rss_xio_return_t, ck_xio_fault_t, ck_xio_fault_s,
+                         rss_xio_fault_t, rst_xio_fault_s, ck_xio_fault_join_t, rss_xio_fault_join_t,
     input  wire [1:0]    ck_xio_x43_s, ck_xio_x43_t, rst_xio_x43_s, rss_xio_x43_t,
     input  wire [63:0]   ck_read_data_t, rss_read_data_t,
     input  wire [7:0]    ck_read_valid_t, rss_read_valid_t,
@@ -94,20 +98,31 @@ module dsfd_sp_vm #(parameter integer CAP_PIPE=0, parameter integer READ_PIPE=0,
     // ---------------------------------------------------------------- edge services
     wire [15:0] cp_v; wire [223:0] cp_row; wire [255:0] cp_m; wire [8191:0] cp_d; wire cap_f;
     dsfd_vm_static_cap #(.CAP_PIPE(CAP_PIPE)) u_cap (
+        .ck_fault_s(ck_cap_control_s),.rst_fault_s(rst_cap_control_s),.ck_fault_t(ck_cap_x34_t[0]),.rss_fault_t(rss_cap_x34_t[0]),
         .ck_control_s(ck_cap_control_s), .rst_control_s(rst_cap_control_s), .ck_lane_s(ck_cap_lane_s),
         .ck_x34_s(ck_cap_x34_s), .ck_x34_t(ck_cap_x34_t), .rst_x34_s(rst_cap_x34_s), .rss_x34_t(rss_cap_x34_t), .f_capture(f_capture),
-        .w_v(cp_v), .w_row(cp_row), .w_m(cp_m), .w_d(cp_d), .fault(cap_f));
+        .w_v(cp_v), .w_row(cp_row), .w_m(cp_m), .w_d(cp_d), .fault(cap_f),.fault_core());
     wire wf_v; wire [13:0] wf_row; wire [511:0] wf_d; wire [3:0] wa_v; wire [55:0] wa_row; wire wfc_f;
     wire [7:0] x_rv; wire [4095:0] x_rd; wire [3:0] xa_v; wire [55:0] xa_row; wire xio_f; wire vm_fault;
     wire n_v; wire [83:0] n_d;
     wire [3:0] cl_v; wire [55:0] cl_row; wire [2047:0] cl_d; wire [63:0] cl_m; wire [31:0] cl_t;
     dsfd_vm_static_wfc #(.RLAT(13+READ_PIPE), .RESPONSE_PAD((4-READ_PIPE%4)%4)) u_wfc (
-        .ck_control_s(ck_wfc_control_s), .ck_control_t(ck_wfc_control_t), .ck_x34_s(ck_wfc_x34_s), .ck_x34_t(ck_wfc_x34_t),
+        .ck_control_s(ck_wfc_control_s), .ck_control_t(ck_wfc_control_t),
+        .ck_fault_s(ck_wfc_fault_s), .ck_fault_t(ck_wfc_fault_t),
+        .ck_return_t(ck_wfc_return_t),.rss_return_t(rss_wfc_return_t),
+        .ck_fault_x34_s(ck_wfc_fault_x34_s),.ck_fault_x34_t(ck_wfc_fault_x34_t),
+        .ck_fault_x43_t(ck_wfc_fault_x43_t),.ck_fault_x43_s(ck_wfc_fault_x43_s),
+        .rst_fault_x34_s(rst_wfc_fault_x34_s),.rss_fault_x34_t(rss_wfc_fault_x34_t),
+        .rss_fault_x43_t(rss_wfc_fault_x43_t),.rst_fault_x43_s(rst_wfc_fault_x43_s),
+        .rst_fault_s(rst_wfc_fault_s), .rss_fault_t(rss_wfc_fault_t), .ck_x34_s(ck_wfc_x34_s), .ck_x34_t(ck_wfc_x34_t),
         .ck_x43_s(ck_wfc_x43_s), .ck_x43_t(ck_wfc_x43_t), .rst_control_s(rst_wfc_control_s), .rss_control_t(rss_wfc_control_t),
         .rst_x34_s(rst_wfc_x34_s), .rss_x34_t(rss_wfc_x34_t), .rst_x43_s(rst_wfc_x43_s), .rss_x43_t(rss_wfc_x43_t), .f_wfc(f_wfc), .t_wfc(t_wfc),
         .w_v(wf_v), .w_row(wf_row), .w_d(wf_d), .a_v(wa_v), .a_row(wa_row), .e_v(x_rv[7:4]), .e_d(x_rd[4095:2048]),
         .vm_fault(vm_fault), .fault(wfc_f));
     dsfd_vm_static_xio #(.RLAT(13+READ_PIPE)) u_xio (
+        .ck_return_t(ck_xio_return_t), .rss_return_t(rss_xio_return_t),
+        .ck_fault_t(ck_xio_fault_t), .ck_fault_s(ck_xio_fault_s), .rss_fault_t(rss_xio_fault_t), .rst_fault_s(rst_xio_fault_s),
+        .ck_fault_join_t(ck_xio_fault_join_t), .rss_fault_join_t(rss_xio_fault_join_t),
         .ck_control_s(ck_xio_control_s), .ck_control_t(ck_xio_control_t), .ck_x43_s(ck_xio_x43_s), .ck_x43_t(ck_xio_x43_t),
         .rst_control_s(rst_xio_control_s), .rss_control_t(rss_xio_control_t), .rst_x43_s(rst_xio_x43_s), .rss_x43_t(rss_xio_x43_t), .n_v(n_v), .n_d(n_d),
         .a_v(xa_v), .a_row(xa_row), .e_v(x_rv[3:0]), .e_d(x_rd[2047:0]),

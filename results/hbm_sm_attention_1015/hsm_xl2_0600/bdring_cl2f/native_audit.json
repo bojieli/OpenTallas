@@ -1,0 +1,32 @@
+{
+ "cell": "ot_hgi_sm_xload_cl2_bdring",
+ "view": "physical/ref_tile/hgi_sm_xl2_bdring/views/ot_hgi_sm_xload_cl2_bdring",
+ "lib_cell": "ot_hgi_sm_xload_cl2_bdring",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 242.0,
+ "spread_ps": 25.4,
+ "outputs": 2048,
+ "inputs": 638,
+ "launch_ps": 202.9,
+ "launch_pin": "bq_d[1241]",
+ "capture_ps": 153.7,
+ "capture_pin": "qq_lo[141]",
+ "launch_over": 0,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pass": true,
+ "fail_why": "",
+ "job": "hgi_sm_xl2_bdring-cl2f-9c846fd17",
+ "verdict": "CLOSED TT +48.29 / FF +22.86 / DRC 0",
+ "view_commit": "a37bc20ca",
+ "limits": {
+  "launch_ps": 220.0,
+  "capture_ps": 190.0
+ },
+ "predecessor": "cl2d launch 489.6 ps on 25 bq_d pins (results/hbm_sm_attention_1015/takeover_2330/bdring_cl2d/native_audit.json)",
+ "layout_inspection": "route floorplan+density viewed 10-16 06:0x: outputs bq_d on E face, inputs N, clock W mid; density peaks (red) only in the E output-flop column next to the pins; no slivers/empty wrapper regions; fill 0.405"
+}

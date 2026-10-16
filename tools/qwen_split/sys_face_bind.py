@@ -66,6 +66,8 @@ EDGES = [
     # fault / status sources
     ('io_cmd_free', 'io_collective', 'cmd_free'), ('io_fault', 'io_collective', 'fault'),
     ('io_shared_fault', 'io_collective', 'shared_fault'), ('res_issue_fault', 'res_train_issue', 'fault'),
+    # run anchor: the forwarded epoch strobe bump (static_link_bind's bump_fwd_epoch, net lnk_fwd_epoch)
+    ('fwd_epoch', 'bump_fwd_epoch', 'o'),
 ]
 
 
@@ -84,7 +86,7 @@ def _bus_of(model, by, inst, port):
 
 def apply(model):
     by = {i.name: i for i in model['insts']}
-    for need in ('d2d_rom', 'seq_su', 'tt_ctlm', 'native59', 'embed_prov', 'io_collective', 'res_train_issue'):
+    for need in ('d2d_rom', 'seq_su', 'tt_ctlm', 'native59', 'embed_prov', 'io_collective', 'res_train_issue', 'bump_fwd_epoch'):
         if need not in by:
             raise ValueError(f'sys face bind: die instance {need} missing')
     if by['d2d_rom'].master != 'qfd_d2d_static':
@@ -167,7 +169,8 @@ def _src_of(model, inst):
     return dict(d2d_rom='rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies.sv',
                 tt_ctlm='rtl/qwen_sys/static_schedule_20261014/qfd_tt_ctlm_static_s.sv',
                 io_collective='rtl/physical/ot_qfd_collective_static_io_production.sv',
-                res_train_issue='rtl/qwen_split/qfd_res_train_issue.sv')[inst]
+                res_train_issue='rtl/qwen_split/qfd_res_train_issue.sv',
+                bump_fwd_epoch='rtl/qwen_split/qfd_link_slots.sv')[inst]
 
 
 def place(model, homes_named=()):

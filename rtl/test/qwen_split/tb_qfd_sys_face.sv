@@ -11,7 +11,8 @@
 // accepted by the real KV-side witness receiver with the compiler digest; (3) every compiled event (T/L/E) reaches its
 // consumer pin on exactly its compiled cycle and no other event fires; (4) the embedding row lands bit-exact in the
 // provider SRAM and scale register; (5) RESULT carries the sequencer's argmax and the token loop feeds it to dh;
-// (6) no fault anywhere.  MUT 1/2/3 (face parameter) must FAIL.
+// (6) no fault anywhere.  MUT 1/2/3 (face parameter) and 4 (D2D sequencer layer-5 start +1: the face must flag the
+// calendar disagreement) must FAIL.
 module tb_qfd_sys_face;
     parameter integer MUT = 0;
     parameter IMG = "img";
@@ -46,9 +47,10 @@ module tb_qfd_sys_face;
     wire qs, kvs, vis, cpl; wire [4:0] qb; wire [1:0] kvi;
     wire ew_v, ew_s, ex_s, ex_sc, fb; wire [511:0] ew_d; wire [17:0] ew_t, ex_t, f_t; wire [5:0] ew_i, ex_w; wire [15:0] ew_e, ex_e, f_e, c_e;
     wire face_fault;
-    qfd_sys_face #(.MUT(MUT), .ROM_VIAMAP({IMG, "/sys_face_cfg.viamap.hex"})) u_dut (
+    reg fwd_epoch = 0;
+    qfd_sys_face #(.MUT(MUT == 4 ? 0 : MUT), .GO_OFS(GO_OFS), .START_ADJ(MUT == 4 ? (720'd1 << (20 * 5)) : 720'd0), .ROM_VIAMAP({IMG, "/sys_face_cfg.viamap.hex"})) u_dut (
         .ck(ck), .rst_n(rst_n),
-        .cfg_tx_we(cfg_tx_we), .cfg_rx_we(cfg_rx_we), .cfg_addr(cfg_addr), .cfg_data(cfg_data), .cal_start(cal_start), .cal_seg(cal_seg),
+        .cfg_tx_we(cfg_tx_we), .cfg_rx_we(cfg_rx_we), .cfg_addr(cfg_addr), .cfg_data(cfg_data), .cal_start(cal_start), .cal_seg(cal_seg), .fwd_epoch(fwd_epoch),
         .rx_payload(rx_payload), .prog_rx_v(prog_rx_v), .prog_witness_slot(prog_witness_slot), .prog_auth_slot(prog_auth_slot),
         .prog_context_slot(prog_context_slot), .prog_tx_observed_v(prog_tx_ov), .prog_tx_record(prog_tx_rec),
         .emb_rx_v(emb_rx_v), .emb_rx_slot(emb_rx_v), .d2d_fault(1'b0), .d2d_epoch_abort(1'b0),
@@ -79,13 +81,15 @@ module tb_qfd_sys_face;
     always @(posedge ck) if (rst_n) begin : boot_mon
         reg [3:0] t; reg [7:0] a; reg [31:0] d; reg any;
         any = 1; t = 0; a = 0; d = 0;
-        if (cfg_tx_we) begin t = 1; a = {cfg_addr[5], 2'b0, cfg_addr[4:0]}; d = cfg_data; end
-        else if (cfg_rx_we) begin t = 2; a = {cfg_addr[5], 2'b0, cfg_addr[4:0]}; d = cfg_data; end
-        else if (u_dut.t_we) begin t = 3; a = u_dut.c_addr; d = u_dut.c_data; end
+        if (u_dut.t_we) begin t = 3; a = u_dut.c_addr; d = u_dut.c_data; end
         else if (u_dut.l_we) begin t = 4; a = u_dut.c_addr; d = u_dut.c_data; end
         else if (u_dut.e_we) begin t = 5; a = u_dut.c_addr; d = u_dut.c_data; end
         else any = 0;
         if (any) begin
+            while (wi < nexp && wexp[wi][43:40] == 4'd6) begin           // first-token offset: a register, checked below
+                if (u_dut.first_ofs !== wexp[wi][31:0] && u_dut.boot_done) err("first-token offset");
+                wi = wi + 1;
+            end
             if (wi >= nexp || {t, a, d} !== wexp[wi]) err("boot record mismatch");
             wi = wi + 1;
         end
@@ -141,7 +145,7 @@ module tb_qfd_sys_face;
     // set, hence cyc - t0 - 1); L / E events relative to the pin edge of the T STAGE event that starts them.  The list is
     // generated from the same events JSON as the ROM image (run_sys_face_bench.sh), with LEVEL events kept only where
     // the kok / kwd level changes.
-    integer t0 = -1, n_ev = 0, ev_t [0:1023], ev_k [0:1023], ev_a [0:1023], ev_seen [0:1023];
+    integer t0 = -1, n_ev = 0, ev_t [0:4095], ev_k [0:4095], ev_a [0:4095], ev_seen [0:4095];
     integer i, j;
     task automatic add(input integer t, input integer k, input integer a);
         begin ev_t[n_ev] = t; ev_k[n_ev] = k; ev_a[n_ev] = a; ev_seen[n_ev] = 0; n_ev = n_ev + 1; end
@@ -156,14 +160,29 @@ module tb_qfd_sys_face;
             if (!hit) begin $display("  unexpected event class %0d arg %0d at T+%0d", k, a, cyc - t0 - 1); err("event off its compiled cycle"); end
         end
     endtask
-    reg kok_q = 0, kwd_q = 0, trace_on = 0; integer t1 = -1;
+    reg kok_q = 0, kwd_q = 0, trace_on = 0; integer t1 = -1, ep_cyc = -1;
+    always @(posedge ck) if (fwd_epoch && ep_cyc < 0) ep_cyc = cyc;
+    // admission (sequencer layer 63) and first-token D2D starts: the same compiled distance as the KV sequencer's
+    integer adm_cyc = -1, tok_cyc = -1;
+    always @(posedge ck) if (rst_n && cal_start) begin
+        if (u_dut.cs_layer == 6'd63 && adm_cyc < 0) adm_cyc = cyc;
+        else if (cal_seg && tok_cyc < 0) begin
+            tok_cyc = cyc;
+            if (adm_cyc < 0 || tok_cyc - adm_cyc != ADM_TO_TOKEN) begin
+                $display("  admission->token %0d, compiled %0d", tok_cyc - adm_cyc, ADM_TO_TOKEN); err("first token off D2D_FIRST_TOKEN");
+            end
+        end
+    end
     always @(posedge ck) if (rst_n) begin
-        if (u_dut.t_go && t0 < 0) t0 = cyc;
+        if (u_dut.t_go && t0 < 0) begin
+            t0 = cyc;
+            if (t0 - ep_cyc != u_dut.first_ofs) err("first token not first_token edges after the epoch strobe");
+        end
         else if (u_dut.t_go && t0 >= 0 && t1 < 0) t1 = cyc;            // second token start
         if (t1 >= 0 && cyc > t1 + 1) trace_on = 0;                       // first token's pins complete
         if (trace_on) begin
-            if (dh[42]) seen(0, dh[41:36] | (cal_start && !cal_seg ? 64 : 0) | (cal_start && cal_seg ? 128 : 0));
-            else if (cal_start) err("cal_start without a STAGE event");
+            if (dh[42]) seen(0, dh[41:36]);
+            if (cal_start) seen(10, cal_seg);
             if (rv) seen(9, 0);
             if (qs) seen(2, qb);
             if (kvs) seen(3, kvi);
@@ -188,7 +207,10 @@ module tb_qfd_sys_face;
         footer = prog[1023];
         repeat (4) @(negedge ck); rst_n = 1;
         wait (u_dut.boot_done); repeat (4) @(negedge ck);
+        while (wi < nexp && wexp[wi][43:40] == 4'd6) begin if (u_dut.first_ofs !== wexp[wi][31:0]) err("first-token offset"); wi = wi + 1; end
         if (wi != nexp) err("boot record count");
+        // epoch strobe (forwarded bump): the first token starts first_token edges later
+        fwd_epoch = 1; @(negedge ck); fwd_epoch = 0;
         // BEGIN, AUTH
         a_begin = 1; @(negedge ck); a_begin = 0; a_auth = 1; @(negedge ck); a_auth = 0;
         a_type = 1; a_send = 1; @(negedge ck); a_send = 0; repeat (3) @(negedge ck);
@@ -230,16 +252,18 @@ module tb_qfd_sys_face;
         if (!rows_read) err("row not read back before RESULT");
         if (rtok != 18'd777 || rval != 32'habcd || !rd || rf || rt != htag) err("RESULT record fields");
         // next token: back-to-back, its token is the argmax result, position + 1
-        wait (t1 >= 0); wait (dh[42]);
-        if (dh[35:18] != 18'd777 || dh[17:0] != POS0 + 1) err("token loop did not take the RESULT token");
+        wait (t1 >= 0); repeat (4) @(negedge ck);
+        if (u_dut.tok != 18'd777 || u_dut.pos != POS0 + 1) err("token loop did not take the RESULT token");
+        if (t1 - t0 != TOKEN_PERIOD) err("token period differs from the compiled END cycle");
         for (i = 0; i < n_ev; i = i + 1) if (!ev_seen[i]) begin
             $display("  missing event class %0d arg %0d at T+%0d", ev_k[i], ev_a[i], ev_t[i]); err("compiled event missing"); end
         if (face_fault || prov_fault || a_f || c_f || w_f || fab) err("fault raised");
+        if (adm_cyc < 0 || tok_cyc < 0) err("admission / first-token D2D start not seen");
         if (errs == 0) $display("SYS_FACE_PASS MUT=%0d boot %0d records, PW %0d DW %0d, %0d events exact, row 64+scale exact",
                                 MUT, wi, pw_seen, dw_seen, n_ev);
         else $display("SYS_FACE_FAIL MUT=%0d errors %0d (face_fault %0d prov_fault %0d)", MUT, errs, face_fault, prov_fault);
         $finish;
     end
     reg pf_q = 0; always @(posedge ck) begin pf_q <= prov_fault; if (prov_fault && !pf_q) $display("  provider fault @%0d (T+%0d) face %b store %b", cyc, cyc - t0 - 1, u_prov.ff, u_prov.sf); end
-    initial begin #20000; $display("SYS_FACE_FAIL MUT=%0d timeout", MUT); $finish; end
+    initial begin #450000; $display("SYS_FACE_FAIL MUT=%0d timeout (errors %0d, face_fault %0d cal_fault %0d)", MUT, errs, face_fault, u_dut.cal_fault); $finish; end
 endmodule

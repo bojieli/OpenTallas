@@ -1,0 +1,25 @@
+{
+  "source_sha256": {
+    "tests/s81/tb_s81_pq_qb_pipe_readroot.sv": "f957c74c89b701251dbe002528c1149722e952d553195b2c1a39a4d04afc5d71",
+    "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_qb_pipe_native.sv": "8bbde3ed38fd6d94ae99821c11d73e0f009881e084a35476206990a98c2294d1",
+    "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_qb_readroot_candidate.sv": "d83eb3c4ead41961d10347dba1df6964215e0b6046da827a3c52359eca120da2",
+    "physical/s81_pq_hier/pinned/rtl/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "d9801653d16576f40306c1fb1d01928e88e7371a3897b616e31d3e3df917cb2d",
+    "physical/s81_pq_hier/pinned/rtl/v41die/ot_v41_pqc_tiles.sv": "f6c45bff4f75c10441765ecff25aba83e800c8c9ec72e48b493a9eba2f74a78a",
+    "rtl/v41rom/ot_v41_kreg.sv": "e4e16decaed5dc98f811ad0bc3769633a6a6546865194fddab2d9d98beeffeca",
+    "rtl/common/ot_prefix.sv": "01de55a0d8c474008eb4446e41e00788d466b5dfb2e2e8d85a0b70ff931f8cfc"
+  },
+  "cases": [
+    {
+      "name": "positive",
+      "returncode": 0,
+      "expected_outcome": true
+    },
+    {
+      "name": "stopped_read_root",
+      "returncode": 1,
+      "expected_outcome": true
+    }
+  ],
+  "physical_qualified": false
+}

@@ -39,6 +39,21 @@ foreach ot_bt [$ot_blk getBTerms] {
     lappend ot_mv $ot_ff
     set ot_ff [$ot_drv getInst]; set ot_pn [[$ot_drv getMTerm] getName]
   }
+  # OT_IOF_FOLLOW_AND=1 (H-SM 2026-10-16, VM strap5 q3 native capture 493 ps on 818 pins): an input pin captured with its
+  # source valid (RTL `d_q <= v ? d : 0`, mapped pin -> AND2 -> DFF D) is anchored like a plain pin flop: follow one
+  # single-load AND2 whose output net feeds exactly one DFF D; the AND sits beside its flop toward the pin.
+  if {$ot_dir eq "INPUT" && [info exists ::env(OT_IOF_FOLLOW_AND)] && $::env(OT_IOF_FOLLOW_AND) eq "1"
+      && [regexp {^AND2} [[$ot_ff getMaster] getName]]} {
+    set ot_y ""
+    foreach t [$ot_ff getITerms] { if {[$t isOutputSignal]} { set ot_y $t } }
+    if {$ot_y eq ""} continue
+    set ot_n2 [$ot_y getNet]
+    if {$ot_n2 eq "NULL" || $ot_n2 eq "" || [llength [$ot_n2 getITerms]] != 2 || [llength [$ot_n2 getBTerms]] != 0} continue
+    set ot_ld ""
+    foreach t [$ot_n2 getITerms] { if {$t ne $ot_y} { set ot_ld $t } }
+    lappend ot_mv $ot_ff
+    set ot_ff [$ot_ld getInst]; set ot_pn [[$ot_ld getMTerm] getName]
+  }
   if {![string match "DFF*" [[$ot_ff getMaster] getName]]} continue
   if {!(($ot_dir eq "INPUT" && $ot_pn eq "D") || ($ot_dir eq "OUTPUT" && ($ot_pn eq "Q" || $ot_pn eq "QN")))} continue
   if {[$ot_ff getPlacementStatus] in {FIRM LOCKED COVER}} continue
@@ -61,7 +76,7 @@ foreach ot_bt [$ot_blk getBTerms] {
   $ot_ff setPlacementStatus FIRM
   lappend ot_list [$ot_ff getName]
   foreach ot_b $ot_mv {
-    # the output inverter / buffer sits beside its flop, toward the pin
+    # the output inverter / buffer (or the input AND of OT_IOF_FOLLOW_AND) sits beside its flop, toward the pin
     set bx [expr {$side eq "L" ? $x - double([[$ot_b getMaster] getWidth]) / $ot_dbu : ($side eq "R" ? $x + $w : $x + $w)}]
     set bx [expr {max($ot_x0, min($bx, $ot_x1 - double([[$ot_b getMaster] getWidth]) / $ot_dbu))}]
     $ot_b setLocation [expr {round($bx * $ot_dbu)}] [expr {round($y * $ot_dbu)}]

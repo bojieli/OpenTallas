@@ -1,0 +1,171 @@
+
+
+1. Executing Verilog-2005 frontend: /srv/opentallas-scratch/claude/s81issuer-make-boundary3/rtl/dsrom_sys/s81_static_control/ot_s81_fixed_issue.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch/claude/s81issuer-make-boundary3/rtl/dsrom_sys/s81_static_control/ot_s81_fixed_issue.sv' to AST representation.
+Generating RTLIL representation for module `\ot_s81_fixed_issue'.
+Warning: Replacing memory \mem with list of registers. See /srv/opentallas-scratch/claude/s81issuer-make-boundary3/rtl/dsrom_sys/s81_static_control/ot_s81_fixed_issue.sv:82
+Warning: Replacing memory \pending with list of registers. See /srv/opentallas-scratch/claude/s81issuer-make-boundary3/rtl/dsrom_sys/s81_static_control/ot_s81_fixed_issue.sv:58
+Warning: Replacing memory \completion_age with list of registers. See /srv/opentallas-scratch/claude/s81issuer-make-boundary3/rtl/dsrom_sys/s81_static_control/ot_s81_fixed_issue.sv:58
+Warning: Replacing memory \age with list of registers. See /srv/opentallas-scratch/claude/s81issuer-make-boundary3/rtl/dsrom_sys/s81_static_control/ot_s81_fixed_issue.sv:58
+Warning: Replacing memory \tokens with list of registers. See /srv/opentallas-scratch/claude/s81issuer-make-boundary3/rtl/dsrom_sys/s81_static_control/ot_s81_fixed_issue.sv:58
+Warning: Replacing memory \positions with list of registers. See /srv/opentallas-scratch/claude/s81issuer-make-boundary3/rtl/dsrom_sys/s81_static_control/ot_s81_fixed_issue.sv:58
+Warning: Replacing memory \users with list of registers. See /srv/opentallas-scratch/claude/s81issuer-make-boundary3/rtl/dsrom_sys/s81_static_control/ot_s81_fixed_issue.sv:58
+Warning: Replacing memory \loaded with list of registers. See /srv/opentallas-scratch/claude/s81issuer-make-boundary3/rtl/dsrom_sys/s81_static_control/ot_s81_fixed_issue.sv:57
+Successfully finished Verilog frontend.
+
+2. Executing Verilog-2005 frontend: /srv/opentallas-scratch/claude/s81issuer-make-boundary3/rtl/dsrom_sys/s81_static_control/ot_s81_fixed_mailbox.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch/claude/s81issuer-make-boundary3/rtl/dsrom_sys/s81_static_control/ot_s81_fixed_mailbox.sv' to AST representation.
+Generating RTLIL representation for module `\ot_s81_fixed_mailbox'.
+Warning: Replacing memory \b2 with list of registers. See /srv/opentallas-scratch/claude/s81issuer-make-boundary3/rtl/dsrom_sys/s81_static_control/ot_s81_fixed_mailbox.sv:18
+Warning: Replacing memory \b1 with list of registers. See /srv/opentallas-scratch/claude/s81issuer-make-boundary3/rtl/dsrom_sys/s81_static_control/ot_s81_fixed_mailbox.sv:18
+Warning: Replacing memory \box with list of registers. See /srv/opentallas-scratch/claude/s81issuer-make-boundary3/rtl/dsrom_sys/s81_static_control/ot_s81_fixed_mailbox.sv:14
+Successfully finished Verilog frontend.
+
+3. Executing Verilog-2005 frontend: /srv/opentallas-scratch/claude/s81issuer-make-boundary3/rtl/dsrom_sys/s81_static_control/dsfd_stage_seq_static_c.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch/claude/s81issuer-make-boundary3/rtl/dsrom_sys/s81_static_control/dsfd_stage_seq_static_c.sv' to AST representation.
+Generating RTLIL representation for module `\dsfd_stage_seq_static_c'.
+Successfully finished Verilog frontend.
+
+4. Executing Verilog-2005 frontend: /srv/opentallas-scratch/claude/s81issuer-make-boundary3/rtl/dsrom_sys/s81_static_control/dsfd_stage_seq_static_c10.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch/claude/s81issuer-make-boundary3/rtl/dsrom_sys/s81_static_control/dsfd_stage_seq_static_c10.sv' to AST representation.
+Generating RTLIL representation for module `\dsfd_stage_seq_static_c10'.
+Successfully finished Verilog frontend.
+
+5. Executing Verilog-2005 frontend: /srv/opentallas-scratch/claude/s81issuer-make-boundary3/rtl/dsrom_sys/s81_static_control/ot_s81_pq_boot_control.sv
+Parsing SystemVerilog input from `/srv/opentallas-scratch/claude/s81issuer-make-boundary3/rtl/dsrom_sys/s81_static_control/ot_s81_pq_boot_control.sv' to AST representation.
+Generating RTLIL representation for module `\ot_s81_pq_boot_control'.
+Successfully finished Verilog frontend.
+Renaming module \dsfd_stage_seq_static_c10 to \dsfd_stage_seq_static_c10__ot_pr_core.
+
+6. Executing Verilog-2005 frontend: /srv/opentallas-scratch/claude/s81issuer-make-boundary3/proof/c10/ot_pin_regs_wrapper.v
+Parsing SystemVerilog input from `/srv/opentallas-scratch/claude/s81issuer-make-boundary3/proof/c10/ot_pin_regs_wrapper.v' to AST representation.
+Generating RTLIL representation for module `\dsfd_stage_seq_static_c10'.
+Successfully finished Verilog frontend.
+
+7. Executing HIERARCHY pass (managing design hierarchy).
+
+7.1. Analyzing design hierarchy..
+Top module:  \dsfd_stage_seq_static_c10
+Used module:     \dsfd_stage_seq_static_c10__ot_pr_core
+Used module:         \dsfd_stage_seq_static_c
+Used module:             \ot_s81_fixed_mailbox
+Used module:             \ot_s81_fixed_issue
+Used module:         \ot_s81_pq_boot_control
+Parameter \W = 21
+
+7.2. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s81_fixed_mailbox'.
+Parameter \W = 21
+Generating RTLIL representation for module `$paramod\ot_s81_fixed_mailbox\W=s32'00000000000000000000000000010101'.
+Warning: Replacing memory \b2 with list of registers. See /srv/opentallas-scratch/claude/s81issuer-make-boundary3/rtl/dsrom_sys/s81_static_control/ot_s81_fixed_mailbox.sv:18
+Warning: Replacing memory \b1 with list of registers. See /srv/opentallas-scratch/claude/s81issuer-make-boundary3/rtl/dsrom_sys/s81_static_control/ot_s81_fixed_mailbox.sv:18
+Warning: Replacing memory \box with list of registers. See /srv/opentallas-scratch/claude/s81issuer-make-boundary3/rtl/dsrom_sys/s81_static_control/ot_s81_fixed_mailbox.sv:14
+Parameter \NOPS = 128
+Parameter \NENG = 14
+Parameter \STAGE = 0
+Parameter \ENG_PRESENT = 14'01111111111111
+Parameter \MUT = 0
+
+7.3. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s81_fixed_issue'.
+Parameter \NOPS = 128
+Parameter \NENG = 14
+Parameter \STAGE = 0
+Parameter \ENG_PRESENT = 14'01111111111111
+Parameter \MUT = 0
+Generating RTLIL representation for module `$paramod$64afc8caf8e0e263838f6c0566e5b229c4ba52bc\ot_s81_fixed_issue'.
+Warning: Replacing memory \mem with list of registers. See /srv/opentallas-scratch/claude/s81issuer-make-boundary3/rtl/dsrom_sys/s81_static_control/ot_s81_fixed_issue.sv:82
+Warning: Replacing memory \pending with list of registers. See /srv/opentallas-scratch/claude/s81issuer-make-boundary3/rtl/dsrom_sys/s81_static_control/ot_s81_fixed_issue.sv:58
+Warning: Replacing memory \completion_age with list of registers. See /srv/opentallas-scratch/claude/s81issuer-make-boundary3/rtl/dsrom_sys/s81_static_control/ot_s81_fixed_issue.sv:58
+Warning: Replacing memory \age with list of registers. See /srv/opentallas-scratch/claude/s81issuer-make-boundary3/rtl/dsrom_sys/s81_static_control/ot_s81_fixed_issue.sv:58
+Warning: Replacing memory \tokens with list of registers. See /srv/opentallas-scratch/claude/s81issuer-make-boundary3/rtl/dsrom_sys/s81_static_control/ot_s81_fixed_issue.sv:58
+Warning: Replacing memory \positions with list of registers. See /srv/opentallas-scratch/claude/s81issuer-make-boundary3/rtl/dsrom_sys/s81_static_control/ot_s81_fixed_issue.sv:58
+Warning: Replacing memory \users with list of registers. See /srv/opentallas-scratch/claude/s81issuer-make-boundary3/rtl/dsrom_sys/s81_static_control/ot_s81_fixed_issue.sv:58
+Warning: Replacing memory \loaded with list of registers. See /srv/opentallas-scratch/claude/s81issuer-make-boundary3/rtl/dsrom_sys/s81_static_control/ot_s81_fixed_issue.sv:57
+Parameter \W = 35
+
+7.4. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s81_fixed_mailbox'.
+Parameter \W = 35
+Generating RTLIL representation for module `$paramod\ot_s81_fixed_mailbox\W=s32'00000000000000000000000000100011'.
+Warning: Replacing memory \b2 with list of registers. See /srv/opentallas-scratch/claude/s81issuer-make-boundary3/rtl/dsrom_sys/s81_static_control/ot_s81_fixed_mailbox.sv:18
+Warning: Replacing memory \b1 with list of registers. See /srv/opentallas-scratch/claude/s81issuer-make-boundary3/rtl/dsrom_sys/s81_static_control/ot_s81_fixed_mailbox.sv:18
+Warning: Replacing memory \box with list of registers. See /srv/opentallas-scratch/claude/s81issuer-make-boundary3/rtl/dsrom_sys/s81_static_control/ot_s81_fixed_mailbox.sv:14
+Parameter \W = 52
+
+7.5. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s81_fixed_mailbox'.
+Parameter \W = 52
+Generating RTLIL representation for module `$paramod\ot_s81_fixed_mailbox\W=s32'00000000000000000000000000110100'.
+Warning: Replacing memory \b2 with list of registers. See /srv/opentallas-scratch/claude/s81issuer-make-boundary3/rtl/dsrom_sys/s81_static_control/ot_s81_fixed_mailbox.sv:18
+Warning: Replacing memory \b1 with list of registers. See /srv/opentallas-scratch/claude/s81issuer-make-boundary3/rtl/dsrom_sys/s81_static_control/ot_s81_fixed_mailbox.sv:18
+Warning: Replacing memory \box with list of registers. See /srv/opentallas-scratch/claude/s81issuer-make-boundary3/rtl/dsrom_sys/s81_static_control/ot_s81_fixed_mailbox.sv:14
+Parameter \NOPS = 128
+Parameter \STAGE = 0
+Parameter \ENG_PRESENT = 14'11010011111111
+
+7.6. Executing AST frontend in derive mode using pre-parsed AST for module `\dsfd_stage_seq_static_c'.
+Parameter \NOPS = 128
+Parameter \STAGE = 0
+Parameter \ENG_PRESENT = 14'11010011111111
+Generating RTLIL representation for module `$paramod$979825a60ea2f3c106502f7abcef476d2505aab7\dsfd_stage_seq_static_c'.
+Parameter \W = 35
+Found cached RTLIL representation for module `$paramod\ot_s81_fixed_mailbox\W=s32'00000000000000000000000000100011'.
+
+7.7. Analyzing design hierarchy..
+Top module:  \dsfd_stage_seq_static_c10
+Used module:     \dsfd_stage_seq_static_c10__ot_pr_core
+Used module:         $paramod$979825a60ea2f3c106502f7abcef476d2505aab7\dsfd_stage_seq_static_c
+Used module:             \ot_s81_fixed_mailbox
+Used module:             \ot_s81_fixed_issue
+Used module:         \ot_s81_pq_boot_control
+Used module:         $paramod\ot_s81_fixed_mailbox\W=s32'00000000000000000000000000100011
+Parameter \W = 21
+Found cached RTLIL representation for module `$paramod\ot_s81_fixed_mailbox\W=s32'00000000000000000000000000010101'.
+Parameter \NOPS = 128
+Parameter \NENG = 14
+Parameter \STAGE = 0
+Parameter \ENG_PRESENT = 14'11010011111111
+Parameter \MUT = 0
+
+7.8. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s81_fixed_issue'.
+Parameter \NOPS = 128
+Parameter \NENG = 14
+Parameter \STAGE = 0
+Parameter \ENG_PRESENT = 14'11010011111111
+Parameter \MUT = 0
+Generating RTLIL representation for module `$paramod$d00f5976f556492ab200197b159584a0bf050d1f\ot_s81_fixed_issue'.
+Warning: Replacing memory \mem with list of registers. See /srv/opentallas-scratch/claude/s81issuer-make-boundary3/rtl/dsrom_sys/s81_static_control/ot_s81_fixed_issue.sv:82
+Warning: Replacing memory \pending with list of registers. See /srv/opentallas-scratch/claude/s81issuer-make-boundary3/rtl/dsrom_sys/s81_static_control/ot_s81_fixed_issue.sv:58
+Warning: Replacing memory \completion_age with list of registers. See /srv/opentallas-scratch/claude/s81issuer-make-boundary3/rtl/dsrom_sys/s81_static_control/ot_s81_fixed_issue.sv:58
+Warning: Replacing memory \age with list of registers. See /srv/opentallas-scratch/claude/s81issuer-make-boundary3/rtl/dsrom_sys/s81_static_control/ot_s81_fixed_issue.sv:58
+Warning: Replacing memory \tokens with list of registers. See /srv/opentallas-scratch/claude/s81issuer-make-boundary3/rtl/dsrom_sys/s81_static_control/ot_s81_fixed_issue.sv:58
+Warning: Replacing memory \positions with list of registers. See /srv/opentallas-scratch/claude/s81issuer-make-boundary3/rtl/dsrom_sys/s81_static_control/ot_s81_fixed_issue.sv:58
+Warning: Replacing memory \users with list of registers. See /srv/opentallas-scratch/claude/s81issuer-make-boundary3/rtl/dsrom_sys/s81_static_control/ot_s81_fixed_issue.sv:58
+Warning: Replacing memory \loaded with list of registers. See /srv/opentallas-scratch/claude/s81issuer-make-boundary3/rtl/dsrom_sys/s81_static_control/ot_s81_fixed_issue.sv:57
+Parameter \W = 35
+Found cached RTLIL representation for module `$paramod\ot_s81_fixed_mailbox\W=s32'00000000000000000000000000100011'.
+Parameter \W = 52
+Found cached RTLIL representation for module `$paramod\ot_s81_fixed_mailbox\W=s32'00000000000000000000000000110100'.
+
+7.9. Analyzing design hierarchy..
+Top module:  \dsfd_stage_seq_static_c10
+Used module:     \dsfd_stage_seq_static_c10__ot_pr_core
+Used module:         $paramod$979825a60ea2f3c106502f7abcef476d2505aab7\dsfd_stage_seq_static_c
+Used module:             $paramod\ot_s81_fixed_mailbox\W=s32'00000000000000000000000000010101
+Used module:             $paramod$d00f5976f556492ab200197b159584a0bf050d1f\ot_s81_fixed_issue
+Used module:             $paramod\ot_s81_fixed_mailbox\W=s32'00000000000000000000000000100011
+Used module:             $paramod\ot_s81_fixed_mailbox\W=s32'00000000000000000000000000110100
+Used module:         \ot_s81_pq_boot_control
+
+7.10. Analyzing design hierarchy..
+Top module:  \dsfd_stage_seq_static_c10
+Used module:     \dsfd_stage_seq_static_c10__ot_pr_core
+Used module:         $paramod$979825a60ea2f3c106502f7abcef476d2505aab7\dsfd_stage_seq_static_c
+Used module:             $paramod\ot_s81_fixed_mailbox\W=s32'00000000000000000000000000010101
+Used module:             $paramod$d00f5976f556492ab200197b159584a0bf050d1f\ot_s81_fixed_issue
+Used module:             $paramod\ot_s81_fixed_mailbox\W=s32'00000000000000000000000000100011
+Used module:             $paramod\ot_s81_fixed_mailbox\W=s32'00000000000000000000000000110100
+Used module:         \ot_s81_pq_boot_control
+Removing unused module `$paramod$64afc8caf8e0e263838f6c0566e5b229c4ba52bc\ot_s81_fixed_issue'.
+Removing unused module `\dsfd_stage_seq_static_c'.
+Removing unused module `\ot_s81_fixed_mailbox'.
+Removing unused module `\ot_s81_fixed_issue'.
+Removed 4 unused modules.
+OT_PIN_REGS dsfd_stage_seq_static_c10: 42 of 51 ports registered at the pin (clock ck); table /srv/opentallas-scratch/claude/s81issuer-make-boundary3/proof/c10/ot_pin_regs.tsv

@@ -1,0 +1,54 @@
+{
+ "schema": "opentallas.actual-gate-odb-pg-audit.v1",
+ "verdict": "PASS_PG_METAL_CAP_M5",
+ "scope": "Actual CTS ODB special-wire PG metal rectangles, not a substitute for final routed/exported signal cap and strict child lint. Vias skipped; final full cap M5 audits remain required.",
+ "execution_host": "ot-agidock128",
+ "admission_unit": "oth-ubuntu-1089565-1792145783",
+ "records": [
+  {
+   "kit": "s81_a2_w0_header_native_0310_r2",
+   "pg_shapes_by_net_layer": {
+    "VDD/M1": 32,
+    "VDD/M2": 32,
+    "VDD/M3": 1280,
+    "VDD/M5": 40,
+    "VSS/M1": 33,
+    "VSS/M2": 33,
+    "VSS/M3": 1320,
+    "VSS/M5": 40
+   },
+   "pg_max_layer": "M5",
+   "above_cap_shapes": 0
+  },
+  {
+   "kit": "s81_a2f_fault_join4_native_0310_r1",
+   "pg_shapes_by_net_layer": {
+    "VDD/M1": 32,
+    "VDD/M2": 32,
+    "VDD/M3": 128,
+    "VDD/M5": 4,
+    "VSS/M1": 33,
+    "VSS/M2": 33,
+    "VSS/M3": 132,
+    "VSS/M5": 4
+   },
+   "pg_max_layer": "M5",
+   "above_cap_shapes": 0
+  },
+  {
+   "kit": "dsfd_vm_a2f_rsched_p_native_0310_r1",
+   "pg_shapes_by_net_layer": {
+    "VDD/M1": 210,
+    "VDD/M2": 210,
+    "VDD/M3": 4410,
+    "VDD/M5": 21,
+    "VSS/M1": 211,
+    "VSS/M2": 211,
+    "VSS/M3": 4431,
+    "VSS/M5": 21
+   },
+   "pg_max_layer": "M5",
+   "above_cap_shapes": 0
+  }
+ ]
+}
