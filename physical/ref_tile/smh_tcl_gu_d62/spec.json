@@ -133,5 +133,10 @@
  "pin_regs": {
   "enable": false,
   "reason": "density re-harden of the CLOSED master smh_tcl_gu_ref (same RTL, ports, faces and latency; recipe 2 as closed): a recipe-3 wrapper would add +1 cycle on every leaf port inside the SM tile, whose pins are already registered (OT_SMH_PINREG); leaf ports are internal SM tile seams"
+ },
+ "slot_change_request": "v8 SM column trial (OWNER 22:30, H-DIE smcol_v8b): smh_tcl_gu_ref re-hardened at a denser outline (86.4 x 120.024 -> 86.4 x 108.0 (-10.0 %)) so the 1036.8-um SM column shrinks; the closed view stays as the fallback",
+ "reroute_reason": {
+  "kind": "slot_change",
+  "slot_change_request": "v8 SM column trial (OWNER 22:30, H-DIE smcol_v8b): smh_tcl_gu_ref re-hardened at a denser outline (86.4 x 120.024 -> 86.4 x 108.0 (-10.0 %)) so the 1036.8-um SM column shrinks; the closed view stays as the fallback"
  }
 }

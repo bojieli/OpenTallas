@@ -35,6 +35,9 @@ def main(names):
             f"density re-harden of the CLOSED master {src} (same RTL, ports, faces and latency; recipe 2 as closed): a "
             "recipe-3 wrapper would add +1 cycle on every leaf port inside the SM tile, whose pins are already registered "
             "(OT_SMH_PINREG); leaf ports are internal SM tile seams")}
+        s["slot_change_request"] = (f"v8 SM column trial (OWNER 22:30, H-DIE smcol_v8b): {src} re-hardened at a denser outline "
+                                    f"({note}) so the 1036.8-um SM column shrinks; the closed view stays as the fallback")
+        s["reroute_reason"] = {"kind": "slot_change", "slot_change_request": s["slot_change_request"]}
         j = s.setdefault("job", {})
         j.update({"owner": "Claude H-SM", "branch": "claude/hbm-sm-repack-1015", "tag": "d62",
                   "structural_change": (f"[H-SM v8 SM column, OWNER 22:30] density re-harden of {src} "
