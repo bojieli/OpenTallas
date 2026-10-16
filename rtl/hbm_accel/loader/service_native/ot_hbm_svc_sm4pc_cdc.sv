@@ -8,7 +8,11 @@
 // Variable waits are entirely on the HBM side. Delivery begins only after a
 // whole block is resident and then emits ceil(total/8) fixed stream cycles.
 // Performance, routing, and physical CDC timing remain unqualified.
-module ot_hbm_svc_sm4pc_cdc #(parameter [1:0] STACK=0, parameter integer SM=0, OWNER_AW=5, parameter integer RESPONSE_DEPTH=8)(
+// H-DIE 2026-10-15: OVERLAP=1 (default) issues the next block once every owner has issued the current block's commands
+// (ot_hbm_svc_prefetch_overlap_owner), counting returns per landing bank; OVERLAP=0 = the Codex 14:47 behaviour (the next
+// descriptor only after the whole block has RETURNED), kept for the measured ablation.  Steady 64-row stream at
+// OVERLAP=0: 139.3 ns/epoch = 52 B/cycle/SM vs the 99 B/cycle/SM price (tb_hbm_svc_sm_stack_steady).
+module ot_hbm_svc_sm4pc_cdc #(parameter [1:0] STACK=0, parameter integer SM=0, OWNER_AW=5, parameter integer RESPONSE_DEPTH=8, parameter integer OVERLAP=1)(
  input wire stream_clk,stream_rst_n,hbm_clk,hbm_rst_n,
  input wire [1:0] stream_bank_clk,input wire [1:0] hbm_fifo_clk,input wire [3:0] hbm_pc_clk,
  input wire [14:0] reserve_row_base,
@@ -58,16 +62,30 @@ module ot_hbm_svc_sm4pc_cdc #(parameter [1:0] STACK=0, parameter integer SM=0, O
  assign block_ready=ready_q;
  reg h_active,h_bank;reg [15:0] h_epoch;reg [29:0] h_base;
  reg [11:0] h_total,h_received;reg [19:0] h_pcs;reg [14:0] h_row_base;
+ reg [11:0] rx_left[0:1];reg h_fresh;wire [3:0] issue_done;
  wire [3:0] pc_fault,response_ok,response_bank;
  wire [10:0] response_ordinal[0:3];wire [15:0] response_epoch[0:3];
  reg [3:0] response_accepted;
  wire descriptor_fire=desc_rd_valid&&desc_rd_ready;
- assign desc_rd_ready=!h_active&&!hbm_fault&&hrst&&desc_rd_valid;
+ assign desc_rd_ready=!h_active&&!hbm_fault&&hrst&&desc_rd_valid&&(OVERLAP==0||rx_left[desc_data[16]]==0);
  assign k_we=0;assign k_wdata=0;assign k_wstrb=0;
  wire [7:0] fifo_wr_ready,fifo_ov;
  reg [7:0] fifo_wr_valid;reg [283:0] fifo_wr_data[0:7];
  genvar pc,g;
  generate for(pc=0;pc<4;pc=pc+1)begin:pc_owner
+  if(OVERLAP!=0)begin:ov
+  ot_hbm_svc_prefetch_overlap_owner #(.PC(PC_BASE+pc),.OWNER_AW(OWNER_AW)) u_owner(
+   .clk(hbm_pc_clk[pc]),.rst_n(hrst),.descriptor_v(descriptor_fire),
+   .descriptor_base(desc_data[58:29]),.descriptor_pcs(desc_data[95:76]),.descriptor_row_base(desc_data[75:61]),.descriptor_total(desc_data[28:17]),
+   .descriptor_bank(desc_data[16]),.descriptor_epoch(desc_data[15:0]),
+   .block_active(h_active),.block_base(h_base),.block_pcs(h_pcs),.block_row_base(h_row_base),.block_total(h_total),
+   .block_bank(h_bank),.block_epoch(h_epoch),.stop(hbm_fault),
+   .k_ready(k_rdy[pc]),.kr_v(kr_v[pc]),.kr_tag(kr_tag[17*pc+:17]),
+   .kr_beat(kr_beat[4*pc+:4]),.response_take(response_accepted[pc]),
+   .k_v(k_v[pc]),.k_addr(k_addr[30*pc+:30]),.k_len(k_len[4*pc+:4]),.k_tag(k_tag[17*pc+:17]),
+   .response_ok(response_ok[pc]),.response_ordinal(response_ordinal[pc]),
+   .response_epoch(response_epoch[pc]),.response_bank(response_bank[pc]),.fault(pc_fault[pc]),.issue_done(issue_done[pc]));
+  end else begin:seq
   ot_hbm_svc_prefetch_mapped4_owner #(.PC(PC_BASE+pc),.OWNER_AW(OWNER_AW)) u_owner(
    .clk(hbm_pc_clk[pc]),.rst_n(hrst),.descriptor_v(descriptor_fire),
    .descriptor_base(desc_data[58:29]),.descriptor_pcs(desc_data[95:76]),.descriptor_row_base(desc_data[75:61]),.descriptor_total(desc_data[28:17]),
@@ -79,6 +97,8 @@ module ot_hbm_svc_sm4pc_cdc #(parameter [1:0] STACK=0, parameter integer SM=0, O
    .k_v(k_v[pc]),.k_addr(k_addr[30*pc+:30]),.k_len(k_len[4*pc+:4]),.k_tag(k_tag[17*pc+:17]),
    .response_ok(response_ok[pc]),.response_ordinal(response_ordinal[pc]),
    .response_epoch(response_epoch[pc]),.response_bank(response_bank[pc]),.fault(pc_fault[pc]));
+  assign issue_done[pc]=1'b1;
+  end
  end endgenerate
  reg [1:0] arb_cursor[0:7];
  reg [1:0] arb_selected[0:7];
@@ -88,15 +108,16 @@ module ot_hbm_svc_sm4pc_cdc #(parameter [1:0] STACK=0, parameter integer SM=0, O
    else if(fifo_wr_valid[g])arb_cursor[g]<=arb_selected[g]+1'b1;
   end
  end endgenerate
- integer h_take,p,l,offset;
+ integer h_take,h_take_b0,h_take_b1,p,l,offset;
  always @*begin
-  kr_rdy=0;fifo_wr_valid=0;response_accepted=0;h_take=0;
+  kr_rdy=0;fifo_wr_valid=0;response_accepted=0;h_take=0;h_take_b0=0;h_take_b1=0;
   for(l=0;l<8;l=l+1)begin
    fifo_wr_data[l]=0;arb_selected[l]=0;
    for(offset=0;offset<4;offset=offset+1)begin
     p=(arb_cursor[l]+offset)&3;
     if(response_ok[p]&&response_ordinal[p][2:0]==l&&!fifo_wr_valid[l]&&fifo_wr_ready[l])begin
      kr_rdy[p]=1;fifo_wr_valid[l]=1;arb_selected[l]=p;response_accepted[p]=1;h_take=h_take+1;
+     if(response_bank[p])h_take_b1=h_take_b1+1;else h_take_b0=h_take_b0+1;
      fifo_wr_data[l]={response_ordinal[p],response_bank[p],response_epoch[p],kr_data[256*p+:256]};
     end
    end
@@ -105,6 +126,7 @@ module ot_hbm_svc_sm4pc_cdc #(parameter [1:0] STACK=0, parameter integer SM=0, O
  always @(posedge hbm_clk or negedge hrst)begin
   if(!hrst)begin
    h_active<=0;h_bank<=0;h_epoch<=0;h_base<=0;h_total<=0;h_received<=0;h_pcs<=0;h_row_base<=0;
+   rx_left[0]<=0;rx_left[1]<=0;h_fresh<=0;
    hbm_fault<=0;stf1<=0;stf2<=0;
   end else begin
    stf1<=stream_fault;stf2<=stf1;
@@ -115,10 +137,21 @@ module ot_hbm_svc_sm4pc_cdc #(parameter [1:0] STACK=0, parameter integer SM=0, O
     else begin h_active<=1;h_base<=desc_data[58:29];h_pcs<=desc_data[95:76];h_row_base<=desc_data[75:61];h_total<=desc_data[28:17];
      h_bank<=desc_data[16];h_epoch<=desc_data[15:0];h_received<=0;end
    end
-   if(h_active)begin
-    h_received<=h_received+h_take;
-    if(h_received+h_take==h_total)h_active<=0;
-   end else if(|kr_v)hbm_fault<=1;
+   if(OVERLAP==0)begin
+    if(h_active)begin
+     h_received<=h_received+h_take;
+     if(h_received+h_take==h_total)h_active<=0;
+    end else if(|kr_v)hbm_fault<=1;
+   end else begin
+    // issue phase ends when every owner has issued the block; returns are counted per landing bank
+    h_fresh<=descriptor_fire;
+    if(h_active&&!descriptor_fire&&!h_fresh&&(&issue_done))h_active<=0;
+    if(descriptor_fire&&rx_left[desc_data[16]]!=0)hbm_fault<=1;
+    rx_left[0]<=(descriptor_fire&&!desc_data[16]?desc_data[28:17]:rx_left[0])-12'(h_take_b0);
+    rx_left[1]<=(descriptor_fire&& desc_data[16]?desc_data[28:17]:rx_left[1])-12'(h_take_b1);
+    if((h_take_b0!=0&&rx_left[0]==0)||(h_take_b1!=0&&rx_left[1]==0))hbm_fault<=1;
+    if(|kr_v&&rx_left[0]==0&&rx_left[1]==0&&!descriptor_fire)hbm_fault<=1;
+   end
   end
  end
  reg draining,drain_bank;reg [10:0] drain_ordinal;reg [10:0] read_ordinal_q;reg [2:0] drain_phase;
