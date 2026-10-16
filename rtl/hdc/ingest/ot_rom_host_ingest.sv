@@ -246,7 +246,9 @@ module ot_rom_host_ingest #(
         if (!rn_i) begin hov_s <= 0; rov_s <= 0; end
         else begin hov_s <= {hov_s[0], hx_ovf_seam}; rov_s <= {rov_s[0], rx_ovf_seam}; end
 
-    ot_link_afifo #(.W(AW + 257), .AW(OFA)) u_ox (
+    // Actual mapped HOST native leaf: the output FIFO rbin[1] drove4631
+    // mux loads. Kept local read selectors preserve the same head/cycle.
+    ot_link_afifo #(.W(AW + 257), .AW(OFA), .RCOPY(32)) u_ox (
         .wclk(clk_i), .wrst_n(rn_i), .wr(ox_wr), .wdata(ox_w), .wfull(ox_full), .wfreed(ox_freed), .ovf(ox_ovf),
         .rclk(ck), .rrst_n(rn_c), .rd(ox_pop), .rempty(ox_empty), .rdata(ox_head), .rcount(ox_cnt));
     ot_link_afifo #(.W(256), .AW(RFA)) u_rx (
