@@ -281,11 +281,12 @@
   "reason": "hfd_ep_static registers every input and every output at its pin in RTL (hfd_ep_static.sv: p_* input pin registers for tx_v/tx_frame/rx_* controls/sd_rx/sd_st; sd_tx = the TX beat register; rx_pin_v/rx_pin_flit = the pingpong merge registers; rx_block_ready/phy_up/fault/fault_cause output registers); a recipe-3 wrapper would add a second +1-cycle stage on 2,450 pins"
  },
  "reroute_reason": {
-  "kind": "slot_change",
+  "kind": "pin_register",
   "cell": "hfd_ep_static",
-  "slot_change_request": "H-LKEP 10-16: hfd_ep_static pin windows move (route-4 native FAIL launch 259.7 / capture 221.3 in the SW corner): W sd_tx 21.6-99.36, sd_rx 101.52-169.56, sd_st 170.64-172.8; S pins +19.44 um except rx_pin_v/rx_pin_flit; outline 434.72 x 315.36 unchanged; results/arch/hep_static_1015/slot_request.json",
   "source": "results/arch/hep_static_1015/native_audit_route4.json",
   "launch_ps": 259.7,
-  "capture_ps": 221.3
+  "capture_ps": 221.3,
+  "fix": "route-4 pin flops at the SW corner (sd_tx W y 2-10, tx_frame S x 16-19) are crowded where the W SerDes and S COLL pin-flop fields meet: 19.44 um corner keep-out on both faces, sd_tx spread over 77.8 um (6.6/um, was 7.5); same RTL/outline/faces",
+  "slot_change_request": "H-LKEP 10-16: hfd_ep_static pin windows move (route-4 native FAIL launch 259.7 / capture 221.3 in the SW corner): W sd_tx 21.6-99.36, sd_rx 101.52-169.56, sd_st 170.64-172.8; S pins +19.44 um except rx_pin_v/rx_pin_flit; outline 434.72 x 315.36 unchanged; results/arch/hep_static_1015/slot_request.json"
  }
 }
