@@ -36,7 +36,8 @@
 module dsfd_wfc_vmx_w #(
     parameter integer FLIT = 512, parameter integer NW = 21, parameter integer USER_W = 10, parameter integer VWA = 15,
     parameter integer DEPTH = 8, parameter integer PRE = 4, parameter integer LAG = 0, parameter integer WOUTW = 8,
-    parameter integer POSTED = 1, parameter bit VM_LINK = 1
+    parameter integer POSTED = 1, parameter bit VM_LINK = 1,
+    parameter integer START_DELAY_S = 1 // fixed serial edges from outgoing doorbell to t_ks
 ) (
     input  wire [0:0]        ck, ckv, rst, rsv,
     input  wire [VWA+FLIT:0] f_vw,           // {we, waddr, wdata} from the WFC (flops there)
@@ -45,7 +46,7 @@ module dsfd_wfc_vmx_w #(
     output wire [0:0]        t_swv, output wire [VWA+FLIT-1:0] t_swd, input wire [0:0] f_swr,   // VM write {addr, data}
     input  wire [0:0]        f_swa,          // VM write ACK (POSTED: sticky error level)
     input  wire [0:0]        f_kdv,          // the stage core's done pulse (f_kd[NW+32], shared with dsfd_wfc_vmx_r)
-    output wire [USER_W+2*NW:0] t_ks,        // {start, user, token, pos} (dead under POSTED)
+    output wire [USER_W+2*NW:0] t_ks,        // {start, user, token, pos}; POSTED derives from outgoing doorbell
     output wire [USER_W+NW:0] t_hks,         // {start, user, pos} per stage start, from a flop (to dsfd_wfc_hep_t)
     input  wire [0:0]        f_pf, f_lf, f_rf,   // faults of the WFC, dsfd_wfc_lnk and dsfd_wfc_vmx_r (from flops)
     output wire [3:0]        t_ft            // the kit's {proto, lnk, 0, vmx}
@@ -132,7 +133,7 @@ module dsfd_wfc_vmx_w #(
             end
             if (sw_fire && !(POSTED && s_mark)) wcnt_s <= wcnt_s + 1'b1;
             if (s_go) begin
-                k_start <= !POSTED; busy <= 1'b1;                 // POSTED: the VM endpoint starts the core
+                k_start <= !POSTED; busy <= 1'b1;                 // POSTED uses the fixed outgoing-doorbell pipeline below
                 {k_user, k_token, k_pos} <= s_d[SP-1:0];
             end
             if (k_done) begin
@@ -142,7 +143,6 @@ module dsfd_wfc_vmx_w #(
             end
         end
     end
-    assign t_ks = {k_start, k_user, k_token, k_pos};
     // write skid, then (VM_LINK) the registered grant link to the VM
     wire x_swv, x_swr; wire [VWA+FLIT-1:0] x_swd;
     ot_dsrom_mtp_skid #(.W(VWA + FLIT)) u_sw (.clk(sclk), .rst_n(srst_n), .in_valid(sw_valid), .in_ready(sw_ready),
@@ -152,6 +152,34 @@ module dsfd_wfc_vmx_w #(
             .c_data(x_swd), .l_valid(t_swv[0]), .l_ready(f_swr[0]), .l_data(t_swd));
     end else begin : g_vm_direct
         assign t_swv = x_swv; assign t_swd = x_swd; assign x_swr = f_swr;
+    end endgenerate
+    // POSTED writes do not receive a normal completion ACK.  The VM deliberately
+    // ignores the reserved doorbell row; it cannot launch the stage sequencer.
+    // Emit the complete sequencer payload from the actual outgoing link instead.
+    // START_DELAY_S is a compiler constant, separate from the compiler's spacing
+    // after the last data write. Availability faults never move the launch edge.
+    wire posted_doorbell = t_swv[0] && (&t_swd[FLIT +: VWA]);
+    reg posted_fault;
+    generate if (POSTED) begin : g_posted_start
+        reg [SP:0] start_pipe [0:START_DELAY_S-1];
+        integer pi;
+        initial begin
+            if (START_DELAY_S < 1) $fatal(1, "START_DELAY_S must be positive");
+        end
+        always @(posedge sclk) begin
+            if (!srst_n) begin
+                posted_fault <= 1'b0;
+                for (pi=0; pi<START_DELAY_S; pi=pi+1) start_pipe[pi] <= '0;
+            end else begin
+                start_pipe[0] <= {posted_doorbell, t_swd[SP-1:0]};
+                for (pi=1; pi<START_DELAY_S; pi=pi+1) start_pipe[pi] <= start_pipe[pi-1];
+                if (t_swv[0] && !f_swr[0]) posted_fault <= 1'b1;
+            end
+        end
+        assign t_ks = start_pipe[START_DELAY_S-1];
+    end else begin : g_nonposted_start
+        always @(posedge sclk) posted_fault <= 1'b0;
+        assign t_ks = {k_start, k_user, k_token, k_pos};
     end endgenerate
     // the stage start HEP counts (POSTED: the accepted START doorbell; else k_start), registered for the HEP tile
     reg [USER_W+NW:0] hq;
@@ -164,7 +192,7 @@ module dsfd_wfc_vmx_w #(
     // faults: this leaf's and dsfd_wfc_vmx_r's make the one-tile vmx fault; then the kit's fault register
     reg fs_f, fa; reg [3:0] ft_q;
     always @(posedge fclk) begin
-        fs_f <= fault_s; fa <= fault_f || fs_f;
+        fs_f <= fault_s || posted_fault; fa <= fault_f || fs_f;
         ft_q <= {f_pf[0], f_lf[0], 1'b0, fa || f_rf[0]};
     end
     assign t_ft = ft_q;

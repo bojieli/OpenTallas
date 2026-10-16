@@ -36,7 +36,7 @@ def main():
  p.add_argument('--wfc-sha256',required=True);p.add_argument('--out',type=Path,required=True)
  p.add_argument('--jobs',type=int,default=8);p.add_argument('--max-gap',type=int,default=10)
  a=p.parse_args();a.source=a.source.resolve();a.out=a.out.resolve();a.out.mkdir(parents=True,exist_ok=True)
- manifest=json.loads(a.manifest.read_text());files=[];pins={}
+ package=json.loads(a.manifest.read_text());manifest={i['path']:i['sha256']for i in package['files']}if 'files'in package else package;files=[];pins={}
  for rel,expected in manifest.items():
   file=a.source/Path(rel).name
   if file.name.startswith('tb_'):continue
@@ -58,7 +58,7 @@ def main():
  with(a.out/'build.log').open('w')as log:r=subprocess.run(cmd,stdout=log,stderr=subprocess.STDOUT)
  if r.returncode:raise RuntimeError('build failed; inspect '+str(a.out/'build.log'))
  rows=[];minima={}
- for phase in range(3):
+ for phase in range(8):
   for gap in range(a.max_gap+1):
    r=subprocess.run([str(a.out/'obj/sim'),f'+PHASE={phase}',f'+GAP={gap}'],capture_output=True,text=True)
    (a.out/f'phase{phase}_gap{gap}.log').write_text(r.stdout+r.stderr)
