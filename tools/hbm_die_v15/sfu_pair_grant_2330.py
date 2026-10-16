@@ -8,7 +8,7 @@ from collections import defaultdict
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
-REF = 'a62be42dc'
+REF = 'f8a9ca970'
 
 
 def blob(path):
@@ -18,6 +18,7 @@ def blob(path):
 def main():
     path = 'physical/hbm_sfu_pair_2330/assignment.json'
     a = json.loads(blob(path))
+    width, height = a['outline_um']
     src = 'rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_leaf.sv'
     assert hashlib.sha256(blob(src)).hexdigest() == a['source_sha256']
     assert len(a['pins']) == 2226
@@ -28,7 +29,7 @@ def main():
         assert abs((coord - .012) / .048 - round((coord - .012) / .048)) < 1e-6
         assert (p['face'], coord) not in occupied
         occupied.add((p['face'], coord))
-        extent = 43.2 if p['face'] in 'NS' else 129.6
+        extent = width if p['face'] in 'NS' else height
         assert .012 < coord < extent - .012
         if p['layer'] == 'M5':
             for lo, hi in a['pdn_template']['M5_VDD_VSS_stripes']:
@@ -54,16 +55,16 @@ def main():
         if s.get('grant') != 'compact_sfu_pair_candidate_2330':
             s['reservation_216_2330'] = dict(origin=dict(s['origin']), outline=dict(s['outline']))
         r = s['reservation_216_2330']
-        s['origin'] = dict(x=round(r['origin']['x'] + (216 - 43.2) / 2, 6),
-                          y=round(r['origin']['y'] + (216 - 129.6) / 2, 6), orient='R0')
-        s.update(outline=dict(w=43.2, h=129.6), params=dict(PIN_RST=1),
+        s['origin'] = dict(x=round(r['origin']['x'] + (216 - width) / 2, 6),
+                          y=round(r['origin']['y'] + (216 - height) / 2, 6), orient='R0')
+        s.update(outline=dict(w=width, h=height), params=dict(PIN_RST=1),
             grant='compact_sfu_pair_candidate_2330', source=src,
             source_prerequisite=REF, source_sha256=a['source_sha256'],
             assigned_pins_file=path,
             assigned_pins_sha256=hashlib.sha256(blob(path)).hexdigest(),
             assigned_io_tcl='physical/hbm_sfu_pair_2330/io.tcl',
             assigned_io_tcl_sha256=hashlib.sha256(blob('physical/hbm_sfu_pair_2330/io.tcl')).hexdigest(),
-            clock_entry=dict(pin='clk', face='N', layer='M5', offset=21.612),
+            clock_entry=dict(pin='clk', face='N', layer='M5', offset=a['clock_entry']['offset_um']),
             pins=pins, qualified=False,
             normal_edges_each_direction=1, reset_initialization_edges=2,
             notes='Compact actual1112dataFF+1resetFF boundary leaf within old216sq reservation. '
