@@ -189,6 +189,7 @@ module ot_qfd_sp_vector_memory_bv #(
     parameter integer USE_NATIVE_CLOCKS = 0,
     parameter integer READ_CONTROL_LEAVES = 0,
     parameter integer RETURN_LEAVES = 0, // opt-in: existing E6/E7/E8 registers in 32 standard bit-plane leaves per copy
+    parameter integer RETURN_PIN_INPUT = 0, // actual local input-pin stage, +1 SU answer edge only
     parameter integer RETURN_CLOCKS = 0, // 1: independent return_ck pin per leaf; 0: component equivalence on clk
     // Q-VMWB 0030: 1 = the resetless region relays (u_id RV, u_rr / u_sr RO, u_rb) built from the CLOSED 256-bit register
     // master qvm_data256_native (padded; D>1 chains fold through the same tiles), zero added edges.  Needs VMT 1 (any RV / RO).
@@ -1335,10 +1336,17 @@ module ot_qfd_sp_vector_memory_bv #(
                 for (genvar elem = 0; elem < NRBS*16; elem = elem + 1) begin : g_unpack
                     assign pd[elem] = scap[elem*32 + plane];
                 end
+                if (RETURN_PIN_INPUT != 0) begin : g_pin_input
+                qvm_return_plane_pin_native #(.ELEMS(ELEMS), .AW(AW), .SW(SW), .NRBS(NRBS), .MUT(MUT)) u_plane (
+                    .ck((RETURN_CLOCKS != 0) ? return_ck[gc*32+plane] : clk),
+                    .v5(d5_v), .v6(d6_v), .v7(d7_v), .a5(d5_a0), .a6(d6_a0), .a7(d7_a0),
+                    .stride1(d7_si), .d(pd), .q(pq));
+                end else begin : g_existing
                 ot_qfd_vm_su_return_plane #(.ELEMS(ELEMS), .AW(AW), .SW(SW), .NRBS(NRBS), .MUT(MUT)) u_plane (
                     .ck((RETURN_CLOCKS != 0) ? return_ck[gc*32+plane] : clk),
                     .v5(d5_v), .v6(d6_v), .v7(d7_v), .a5(d5_a0), .a6(d6_a0), .a7(d7_a0),
                     .stride1(d7_si), .d(pd), .q(pq));
+                end
                 for (genvar lane = 0; lane < SW; lane = lane + 1) begin : g_pack
                     assign s_q[(gc*SW+lane)*32+plane] = pq[lane];
                 end
