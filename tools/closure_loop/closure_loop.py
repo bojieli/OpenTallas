@@ -3378,6 +3378,23 @@ def remote_ok(j, cmd, timeout=300):
     return r.returncode == 0, (r.stdout + r.stderr)[-400:]
 
 
+def bench_input_error(full):
+    """A simulator may warn about missing memory images and still exit zero.
+
+    HBM PC proof 2026-10-15 falsely compared zero-filled actual/expected arrays
+    after '$readmem file not found'. Missing stimuli prove neither a positive
+    nor a detected mutant. Ignore ordinary readmem messages and short images
+    that a bench may intentionally load into a larger memory.
+    """
+    for line in full.splitlines():
+        if re.search(r"\b(?:FATAL|ERROR)\b.*(?:required image unavailable|incomplete (?:records|backing) image|duplicate backing sector address)", line, re.I):
+            return line.strip()[:500]
+        if re.search(r"\breadmem(?:[hb]|\s+file)?\b", line, re.I) and re.search(
+                r"file\s+not\s+found|(?:unable|cannot|could\s+not|can't)\s+(?:to\s+)?open|no\s+such\s+file", line, re.I):
+            return line.strip()[:500]
+    return ""
+
+
 def bench_outcome(j, st, rc, ok_extra=True):
     """pass: rc 0 (+ ok, + pass_regex); fail: rc != 0 (+ fail_regex).  Regexes are MULTILINE over the whole stage log
     (last 20000 lines), so ^FAIL matches any line."""
@@ -3385,7 +3402,11 @@ def bench_outcome(j, st, rc, ok_extra=True):
     for _ in range(4):  # an ssh hiccup returns an empty log and mis-judged benches (code-pair 10-07); fetch until it reads
         # drive-resume 2026-10-09: a bench that prints nothing (qkd_d2d *_record: a python -c exit-code check) left an
         # EMPTY log, read as an ssh hiccup 10x -> NEEDS_HUMAN.  A marker line proves the file was read: empty is valid.
-        r = ssh(j["host"], f"f={j['run']}/cl/{j['stage_tag']}.log; [ -f $f ] && echo OT_BENCH_LOG_READ && tail -n 20000 $f",
+        # Initialization warnings may precede more than 20,000 comparison
+        # lines. Scan the whole log for missing readmem inputs before its tail.
+        errors = r"readmem.*(file[[:space:]]+not[[:space:]]+found|unable.*open|cannot.*open|could[[:space:]]+not.*open|no[[:space:]]+such[[:space:]]+file)|((FATAL|ERROR).*(required image unavailable|incomplete (records|backing) image|duplicate backing sector address))"
+        r = ssh(j["host"], f"f={j['run']}/cl/{j['stage_tag']}.log; [ -f $f ] && {{ echo OT_BENCH_LOG_READ; "
+                f"LC_ALL=C grep -i -m 3 -E {shlex.quote(errors)} \"$f\" || true; tail -n 20000 \"$f\"; }}",
                 timeout=180)
         if r.returncode == 0 and r.stdout.startswith("OT_BENCH_LOG_READ"):
             full = r.stdout.split("\n", 1)[1] if "\n" in r.stdout else ""
@@ -3393,6 +3414,10 @@ def bench_outcome(j, st, rc, ok_extra=True):
         time.sleep(15)
     else:
         raise RuntimeError(f"bench log unreadable on {j['host']}: {j['run']}/cl/{j['stage_tag']}.log")
+    input_error = bench_input_error(full)
+    if input_error:
+        j.setdefault("bench_work", {})[st["key"]] = "input error: " + input_error
+        return False
     if st["expect"] == "pass":
         ok = rc == 0 and ok_extra and (not st.get("pass_regex") or re.search(st["pass_regex"], full, re.M) is not None)
         if ok:
@@ -3408,11 +3433,13 @@ def bench_why(j, st, rc, ok_extra=True):
     """Why a bench with expect PASS was judged not passed, for the verdict reason.  rc=0 alone read as 'expected PASS
     but rc=0' (5 jobs 2026-10-15: pass_regex not matching the bench's actual verdict line, or a min_count_regex the
     bench never prints) and was triaged as a flow bug."""
+    note = (j.get("bench_work") or {}).get(st["key"], "")
+    if note.startswith("input error:"):
+        return f" ({note})"
     if st.get("expect") != "pass" or rc != 0:
         return ""
     if not ok_extra:
         return " (ok check failed)"
-    note = (j.get("bench_work") or {}).get(st["key"], "")
     if note.startswith("vacuous"):
         return f" ({note})"
     if st.get("pass_regex"):
@@ -3424,6 +3451,8 @@ def expected_fail_seen(st, rc, full):
     """expect FAIL (negative control): the log's own verdict decides, regardless of rc -- a mutant bench that prints
     FAIL but exits 0 was read as "expected FAIL but rc=0" (LOOP-GAPS 2026-10-08).  With fail_regex: it must match (a
     crash with rc != 0 and no FAIL verdict is not a detected mutant).  Without: rc != 0 or a conventional ^FAIL line."""
+    if bench_input_error(full):
+        return False
     if st.get("fail_regex"):
         return re.search(st["fail_regex"], full, re.M) is not None
     return rc != 0 or re.search(r"^FAIL\b", full, re.M) is not None

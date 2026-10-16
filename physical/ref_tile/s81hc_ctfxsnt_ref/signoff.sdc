@@ -313,6 +313,20 @@ proc ot_ce_apply {} {
   # Wires-only parents have no CTS tree to set this flag for us.
   # Ideal clocks silently report zero network arrival despite real entry wires.
   set_propagated_clock [get_clocks ot_entry_*]
+  # Before CTS, a standard-cell root is still one unbuffered high-fanout
+  # net. Propagating that net invents multi-ns skew and clock-pin slew;
+  # its delay is not the tree that CTS will build. Keep only these declared
+  # CTS roots ideal during the explicit pre-CTS diagnostic. Raw macro and
+  # hardened-child entries retain actual entry-wire propagation. Routed
+  # require-wire checks always propagate and measure every physical root.
+  if {[info exists ::ot_ref_pre_cts] && $::ot_ref_pre_cts &&
+      (![info exists ::ot_ce_require_wire] || !$::ot_ce_require_wire)} {
+    foreach name $::ot_ce_cts_roots {
+      set clock [get_clocks ot_entry_[lsearch -exact $::ot_ce_ports $name]]
+      unset_propagated_clock $clock
+      puts "OT_ENTRIES PRE_CTS_IDEAL_CTS_ROOT $name"
+    }
+  }
   set sources {}; set names {}
   foreach c [get_clocks ot_entry_*] {
     foreach p [get_property $c sources] { lappend sources $p; lappend names [get_full_name $p] }
@@ -439,16 +453,26 @@ proc ot_ce_apply {} {
   }
   # Every entry is synchronous and related. Reserve die skew on internal hops;
   # no asynchronous groups, false paths or ETM insertion add-back.
-  set_clock_uncertainty -setup 150 -from [get_clocks ot_entry_*] -to [get_clocks ot_entry_*]
-  # H1 authoritative pair_check.HOLD_TREE =50ps hold margin+50ps die skew.
-  # Tile-local25ps uncertainty is not the composed pair margin.
-  set_clock_uncertainty -hold 100 -from [get_clocks ot_entry_*] -to [get_clocks ot_entry_*]
+  # H1 authoritative pair_check.HOLD_TREE =50ps hold margin+50ps die skew (hold 100, setup 150).
   # Each deep tile has its own earlier trunk tap. The authoritative TREE
   # pair budget uses150ps die skew when either reference exceeds300ps,
-  # including deep-to-deep pairs (pair_check.SKEW_DEEP).
-  if {[llength $highclocks]} {
-    set_clock_uncertainty -setup 210 -from $highclocks -to [get_clocks ot_entry_*]
-    set_clock_uncertainty -setup 210 -from [get_clocks ot_entry_*] -to $highclocks
+  # including deep-to-deep pairs (pair_check.SKEW_DEEP) (setup 210).
+  # S-ELEM-PQ 2026-10-15: a register pair on ONE glue CTS root of this tile shares one die tap and one
+  # propagated standard-cell tree whose real skew STA already sees, so it is timed like every single-root
+  # tile (base uncertainty); the die-skew reserve applies to every pair of DIFFERENT entries and to hard-
+  # child entries (dsfd_bf_front_static: the uniform rule put hold 100 / setup 210 on all 12,276 core-root
+  # paths -> 15,826 hold endpoints, 119k buffers).
+  set ot_ce_glue {}
+  foreach name $::ot_ce_cts_roots { lappend ot_ce_glue [get_full_name [get_clocks ot_entry_[lsearch -exact $::ot_ce_ports $name]]] }
+  set ot_ce_high {}
+  foreach c $highclocks { lappend ot_ce_high [get_full_name $c] }
+  foreach a [get_clocks ot_entry_*] {
+    foreach b [get_clocks ot_entry_*] {
+      set an [get_full_name $a]; set bn [get_full_name $b]
+      if {$an eq $bn && $an in $ot_ce_glue} { continue }
+      set_clock_uncertainty -setup [expr {($an in $ot_ce_high || $bn in $ot_ce_high) ? 210 : 150}] -from $a -to $b
+      set_clock_uncertainty -hold 100 -from $a -to $b
+    }
   }
   # Preserve measured boundary spread: balancing the mean does not erase the
   # earliest/latest physical boundary arrivals or change ETM setup/hold arcs.

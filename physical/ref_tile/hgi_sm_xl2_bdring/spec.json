@@ -35,9 +35,8 @@
    "r_wsel",
    "zlo",
    "zhi",
-   "ea",
-   "eb2",
-   "lane_en_i"
+   "lane_en_i",
+   "bsel"
   ],
   "N": [
    "qq_lo",
@@ -55,7 +54,7 @@
  "job": {
   "owner": "Claude H-SM",
   "branch": "claude/hbm-sm-attention-1015",
-  "tag": "cl2a",
+  "tag": "cl2c",
   "purpose": "x-load cl2 leaf (H-SM 2026-10-15): the flat clock-leaf cl failed its --cts gate (multiple_cts_roots source on 32 SRAMs; bs_a 8,642 / md 5,635 / bq_v 4,125-load nets; bw->rq 21 levels). cl2 = cluster of hardened leaves (ctl, 4 x BF quarter of one master, 2 x the CLOSED tree13 quantiser tile, BD ring), one clock root each < 15k sinks, every leaf pin registered (owner 19:50), running issue-word registers (no multiply), replicated selects; +2 fixed edges on every xw beat (lock bench vs cl shifted 2).",
   "structural_change": "x-load cl2 leaf (H-SM 2026-10-15): the flat clock-leaf cl failed its --cts gate (multiple_cts_roots source on 32 SRAMs; bs_a 8,642 / md 5,635 / bq_v 4,125-load nets; bw->rq 21 levels). cl2 = cluster of hardened leaves (ctl, 4 x BF quarter of one master, 2 x the CLOSED tree13 quantiser tile, BD ring), one clock root each < 15k sinks, every leaf pin registered (owner 19:50), running issue-word registers (no multiply), replicated selects; +2 fixed edges on every xw beat (lock bench vs cl shifted 2).",
   "extra_paths": [
@@ -120,5 +119,6 @@
  "pin_regs": {
   "enable": false,
   "reason": "OWNER RULE 19:50 met in RTL (rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv, x-load cl2 rewritten for this rule; +2 edges accepted by the coordinator): inputs land in flops (ring enable flops on r_wsel/wd, wr_lo/wr_hi quantiser words, bsa/bsb select replicas, lane_en copy); output bq_d is a register; a recipe-3 register would add a second stage on every port."
- }
+ },
+ "floorplan_note": "cl2c: BD beat select exported one-hot from ctl (bdring cl2a TT -78.67: bsb replica -> 13-way decode -> 2,048-b mux, 292-ps slew buffer tree); ring leaf keeps 64 pin-register replicas of the 26-b one-hot, AND-OR select; same edges."
 }

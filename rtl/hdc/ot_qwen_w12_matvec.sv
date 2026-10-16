@@ -234,10 +234,12 @@ module ot_qwen_w12_matvec_part #(
     parameter integer LRR = 0,            // el1011-q-tile h3: one reset relay flop per hardened leaf (1-cycle later leaf release)
     parameter integer XTX = 0,            // el1011-q-tile r3 (HIER_HARD): XTX registered transmit rungs in front of every hardened
                                           // leaf (v/first/split/w and the ROUNDED x), one kept copy per leaf; +XTX cycles of latency
+    parameter integer LOCAL_ROOTS = 0, // physical clock ownership only; no data edge change
     parameter integer CHILD_CLOCKS = 0,
     parameter integer ANR = 0            // hardcore-1010 D: lane / tree adders as ot_hdc_fp32_add_lat_nr (0 = unchanged)
 ) (
     input wire [7:0] ck_lsl,
+    input wire [7:0] ck_tx,
     input  wire              clk,
     input  wire              rst_n,
     input  wire              go,
@@ -855,7 +857,7 @@ end endgenerate
                 wire rst_l;
                 if (LRR != 0) begin : g_lrr
                     (* keep *) reg rq;
-                    always @(posedge clk or negedge rst_n) if (!rst_n) rq <= 1'b0; else rq <= 1'b1;
+                    always @(posedge ((LOCAL_ROOTS != 0 && CHILD_CLOCKS != 0) ? ck_tx[g] : clk) or negedge rst_n) if (!rst_n) rq <= 1'b0; else rq <= 1'b1;
                     assign rst_l = rq;
                 end else begin : g_lrn
                     assign rst_l = rst_n;
@@ -872,7 +874,7 @@ end endgenerate
                     assign tc[XW-1:0] = tx_d;
                     genvar rr;
                     for (rr = 0; rr < XTX; rr = rr + 1) begin : g_r
-                        ot_qwen_tx_ff #(.W(XW)) u_tx (.clk(clk), .rst_n(rst_l), .d(tc[XW*rr +: XW]), .q(tc[XW*(rr+1) +: XW]));
+                        ot_qwen_tx_ff #(.W(XW)) u_tx (.clk((LOCAL_ROOTS != 0 && CHILD_CLOCKS != 0) ? ck_tx[g] : clk), .rst_n(rst_l), .d(tc[XW*rr +: XW]), .q(tc[XW*(rr+1) +: XW]));
                     end
                     assign tx_q = tc[XW*XTX +: XW];
                 end else begin : g_ntx

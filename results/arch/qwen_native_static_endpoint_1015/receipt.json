@@ -1,0 +1,77 @@
+{
+  "scope": "actual descriptor/controller/codec component with declared external service stimulus",
+  "native_full_layer": false,
+  "native_full_token": false,
+  "results": [
+    {
+      "mutant": 0,
+      "mode": 0,
+      "returncode": 0,
+      "output": "PASS mode0 fault0 req1 Q32 TX33"
+    },
+    {
+      "mutant": 0,
+      "mode": 1,
+      "returncode": 0,
+      "output": "PASS mode1 fault1 req1 Q31 TX0"
+    },
+    {
+      "mutant": 0,
+      "mode": 2,
+      "returncode": 0,
+      "output": "PASS mode2 fault1 req0 Q0 TX0"
+    },
+    {
+      "mutant": 0,
+      "mode": 3,
+      "returncode": 0,
+      "output": "PASS mode3 fault1 req0 Q0 TX0"
+    },
+    {
+      "mutant": 0,
+      "mode": 4,
+      "returncode": 0,
+      "output": "PASS mode4 fault1 req0 Q0 TX0"
+    },
+    {
+      "mutant": 0,
+      "mode": 5,
+      "returncode": 0,
+      "output": "PASS mode5 fault1 req0 Q0 TX0"
+    },
+    {
+      "mutant": 0,
+      "mode": 6,
+      "returncode": 0,
+      "output": "PASS mode6 fault1 req1 Q32 TX8"
+    },
+    {
+      "mutant": 0,
+      "mode": 7,
+      "returncode": 0,
+      "output": "PASS mode7 fault1 req1 Q32 TX0"
+    },
+    {
+      "mutant": 0,
+      "mode": 8,
+      "returncode": 0,
+      "output": "PASS mode8 fault1 req1 Q32 TX8"
+    },
+    {
+      "mutant": 1,
+      "mode": 1,
+      "returncode": 1,
+      "output": "FATAL: /home/ubuntu/wt/codex-qwen-static-endpoint-2116/rtl/test/qwen_split/tb_native_attention_static_ctl.sv:51: missing producer or schedule mismatch went undetected\n       Time: 1550000 Scope: tb_native_attention_static_ctl"
+    }
+  ],
+  "compiled_programmes": 216,
+  "service_8192_edges": 1566,
+  "sources": {
+    "rtl/qwen_sys/split_20261014/qkd_native_attention_programme.sv": "bb89cd9a6f38ffa8243bf363e1faf1085901ad9390c889f9158dde4cc378dd76",
+    "rtl/qwen_sys/split_20261014/qkd_native_attention_static_ctl.sv": "2fcfac5cc25798e897f4f271a4e2e3624267292c9d20e7b58e1b8abd0a86f70b",
+    "rtl/qwen_sys/split_20261014/qkd_native_attention_record.sv": "8822195c0d888cd132e9a828fc7367d3d3c1eddc28dfcfab01f905d9c881abfd",
+    "rtl/qwen_sys/split_20261014/qkd_native59_command_guard.sv": "d0d111ef6d9ab4d99722279fad879e1e31089a6a553ea9b4dd3863c27348baf9",
+    "rtl/qwen_sys/split_20261014/qkd_native59_descriptor_producer.sv": "ae0e6f50c68e316271c344f225eb2730bcf54f05fa3d4df4343d684379ca8495",
+    "rtl/test/qwen_split/tb_native_attention_static_ctl.sv": "7da4472db0bd7175c3e603620b020b69dd2d9576bc68b6b19398456b812ef492"
+  }
+}

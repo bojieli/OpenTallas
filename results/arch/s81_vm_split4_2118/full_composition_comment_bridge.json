@@ -1,0 +1,12 @@
+{
+ "schema": "opentallas.source-comment-bridge.v1",
+ "scope": "Only parent root-count comment changed; immutable full-composition receipt is preserved.",
+ "source": "tools/s81_vm/area_a2f_split4_composed.sv",
+ "receipt": "results/arch/s81_vm_split4_2118/full_composition_proof.json",
+ "receipt_sha256": "e5c60f4711fef9eee17f24840dafc83ed6c676ced1251e57f1c93401c8b07d43",
+ "matching_proven_source_commit": "4ea8603cc",
+ "proven_source_sha256": "aaf555a3790e55465ce60ba60664bf533551091970fdf6e2eaa31d452eaf19b6",
+ "current_source_sha256": "f421e767407431ed2ef1743eae7e2bf967a6bf15f4335fa1fddb755b82a5d59a",
+ "verification": "Removing line comments leaves byte-identical RTL; no executable text changed.",
+ "not_claimed": "No extension to threshold-control composition, real parent binding or native physical qualification."
+}
