@@ -88,16 +88,17 @@
       "tangent_um": 148.044
     }
   ],
-  "clock_roots": 13,
+  "clock_roots": 14,
   "old_ck": {
     "face": "W",
     "tangent_um": 107.964
   },
-  "scope": "Die lead MIX4 guarded native-CTS grant. Restore all662 original rectangle coordinates afterPPL with direct FIRM BPin shapes, preservePG, add12Nclockpins. Actual final674pins/PG/nativeclockandparentbindingstillmandatory beforeadoption.",
+  "scope": "Exact674 mapped pins including14 actual clock roots. Source-pinned die grant accepts the Tcl pin rectangles without coordinate/layer changes; native launch/capture/spread, FFhold, PG/child_lint and current parent binding remain open.",
   "required_phase": "Actual phase-related1:1/phase0 internal roots with full min/max crossings, delivered phi-R using measured references.",
   "grant_from": "/root/s_die/mix4_sizing message20261015",
   "old_rectangles_preserved": 662,
-  "authority": "CANDIDATE: needs S-DIE grant (v22 662+13 rectangles otherwise unchanged; ck_seed grant still pending)",
+  "authority": "GRANTED pin geometry only: results/physical/die_iter_1012/s81/grants/sdie_0030_engram_mix4.json; exact674-pin Yosys/Tcl census discharges inherited count/prose defect, no native qualification inherited.",
   "derived_from": "v22_engram_14roots_candidate",
-  "change": "static form: removed win_cred, rel[3:0] (rel[0..2] positions reused for win_slot[2:0]), hq_cred (position reused for hr_slot[0]), o_cred; added hr_slot[1..2] at S M5 x 81.084/81.180"
+  "change": "static form: removed win_cred, rel[3:0] (rel[0..2] positions reused for win_slot[2:0]), hq_cred (position reused for hr_slot[0]), o_cred; added hr_slot[1..2] at S M5 x 81.084/81.180",
+  "grant_record": "results/physical/die_iter_1012/s81/grants/sdie_0030_engram_mix4.json"
 }

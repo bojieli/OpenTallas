@@ -1,4 +1,4 @@
-# v28 STATIC candidate (S-ENGRAM+NORM 2210): v22 rectangles minus credit/release pins, plus win_slot/hr_slot; S81 die-lead guarded grant: exact original 662 pin rectangles plus 13 real clock entries; additional seed pin grant pending.
+# v28 STATIC candidate: S-DIE grants exact674 mapped pins including14 clock roots; all rectangle coordinates/layers unchanged. Native/PG/child_lint/current parent qualification remains open.
 # Post-IO only. Does not alter clocks, nets, delays, exceptions or PG shapes.
 set s81_ep_block [ord::get_db_block]
 set s81_ep_tech [ord::get_db_tech]

@@ -1,4 +1,4 @@
-# v28 STATIC candidate (S-ENGRAM+NORM 2210) for dsfd_engram_lkp_static14, derived from v22 14-root candidate:
+# v28 STATIC dsfd_engram_lkp_static14: exact674 mapped pins/14 roots; source-pinned S-DIE pin-geometry grant, native/PG/parent proof open.
 # credit/release pins removed (win_cred, rel[3], o_cred); rel[0..2] -> win_slot[0..2] (N, beside the window);
 # hq_cred -> hr_slot[0], hr_slot[1..2] at the next two S M5 tracks (beside the response group). All other rectangles unchanged.
 place_pin -pin_name {ck} -layer M4 -location {0.096 107.964} -force_to_die_boundary

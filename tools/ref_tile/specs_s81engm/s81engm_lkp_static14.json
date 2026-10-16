@@ -284,14 +284,14 @@
  "keep_pin_regs": true,
  "pin_reg_split": true,
  "slot_change_request": {
-  "contract": "S81 Engram lookup static14 candidate",
-  "version": "20261015-2210",
-  "why": "STATIC form (owner 10-14 no credits): v22 674-signal rectangles minus win_cred/rel/hq_cred/o_cred plus win_slot[2:0] (rel[0..2] positions) and hr_slot[2:0] (hq_cred position + 2 S tracks); ck_seed (N M5 x148.044) grant still pending. Same 324x216 outline."
+  "contract": "S81 Engram static14 exact pin plan",
+  "version": "20261016-0409",
+  "why": "Source-pinned S-DIE grant results/physical/die_iter_1012/s81/grants/sdie_0030_engram_mix4.json accepts exact674 mapped pins including14 clock roots (ck, ck_seed, six hash, six rows). Same324x216 outline and all674 Tcl rectangles/layers unchanged. Native timing, child_lint and current parent GEN binding remain required."
  },
  "job": {
-  "owner": "Claude:s81-engnorm-2210",
-  "branch": "claude/s81-engnorm-2210",
-  "tag": "st1",
+  "owner": "Codex:S81-Engram-recovery",
+  "branch": "codex/s81-static14-current-0409",
+  "tag": "st2-current0409",
   "purpose": "S81 Engram lookup element, STATIC 14-root form dsfd_engram_lkp_static14 (no ready/credit/release; fixed RETURN_AGE return, poison on missing/late atoms)",
   "structural_change": "Static successor of the credit wrapper dsfd_engram_lkp_14roots: ot_s81_engram_lookup_static (Codex 05:03 draft, preserved 257284f61) behind one input and one output pin register; win_cred/rel/hq_cred/o_cred removed, win_slot/hr_slot added. Element proof: STATIC PASS 16 windows/96 requests/768 beats/96 statuses vs ot_dsrom_engram_lookup reference, 7 mutants rejected.",
   "extra_paths": [
@@ -303,7 +303,8 @@
    "tools/s81_ph",
    "tools/s81_ph/run_engram_hash_static_equiv.sh",
    "tools/s81_ph/run_engram_lkp_static14.sh",
-   "tools/s81_ph/run_engram_static_1015.sh"
+   "tools/s81_ph/run_engram_static_1015.sh",
+   "results/physical/die_iter_1012/s81/grants/sdie_0030_engram_mix4.json"
   ],
   "benches": [
    {
@@ -385,11 +386,11 @@
    }
   ],
   "slot_change_request": {
-   "contract": "S81 Engram lookup14root candidate",
-   "version": "20261015",
-   "why": "Candidate exact675pin contract: original662 rectangles, existing12clock grant preserved, additional seed N/M5 x148.044 pending guarded MIX4 grant. Actual14root native/mapped/PG proof required; source generic count is not budget qualification."
+   "contract": "S81 Engram static14 exact pin plan",
+   "version": "20261016-0409",
+   "why": "Source-pinned S-DIE grant results/physical/die_iter_1012/s81/grants/sdie_0030_engram_mix4.json accepts exact674 mapped pins including14 clock roots (ck, ck_seed, six hash, six rows). Same324x216 outline and all674 Tcl rectangles/layers unchanged. Native timing, child_lint and current parent GEN binding remain required."
   },
-  "hold_merge": "S81 Engram static14: ck_seed pin + win_slot/hr_slot pins need S-DIE grant; compiler RETURN_AGE (HBM service bound at the pins = RETURN_AGE+2) needs S-FUNC"
+  "hold_merge": "Component candidate only. Exact674pin/14root die grant accepted; current-source native launch/capture/spread, FFhold, child_lint, current parent GEN binding and external HBM RETURN_AGE bound remain unqualified."
  },
  "orfs_vars": {
   "POST_IO_PLACEMENT_TCL": "physical/s81_die_pins/v28_engram_static14_candidate/restore_native_rectangles.tcl"
