@@ -26,7 +26,7 @@ module tb_bf_static_front;
   task cfg(input [4:0] a,input [47:0] d);begin cv=1;ca=a;cd=d;tick();end endtask
   always @(posedge clk) begin
     sampled=prog;
-    #1;
+    #9;   // end of cycle (clk low): a seam latch without its CPIN register is transparent here and fails
     if(rst) begin
       for(integer z=0;z<3;z=z+1) begin
         if(c0[z][0] !== prev2_prog[0] || c1[z][0] !== prev2_prog[0])
