@@ -597,6 +597,10 @@ def check_kit(g: Gate, kd: Path, job: dict | None, commit=None):
     return spec
 
 
+# GATE STEP CAP (ROOT 2026-10-15): seconds one capped gate step (CTS run, trial GRT) may take before it is a stall
+GATE_STEP_CAP_S = int(os.environ.get("OT_GATE_STEP_CAP_S", "14400"))
+
+
 # --------------------------------------------------------------------------------------------- remote
 REMOTE_SH = r"""set -uo pipefail
 R={R}; mkdir -p $R/src $R/bin
@@ -612,6 +616,15 @@ for e in ${{PATH//:/ }}; do if [ -x "$e/docker" ] && ! [ "$e/docker" -ef "$0" ];
   exec "$e/docker" "$@"; fi; done; exit 127
 EOS
 chmod +x $R/bin/docker; export PATH=$R/bin:$PATH
+# GATE STEP CAP (ROOT 2026-10-15): a CTS / trial-GRT step that has not finished in {STEP_CAP} s is a stall (a 15 h
+# dsfd_vm_write_dispatch_b24 gate sat in the DPL negotiation legalizer at 150k illegal cells after repair_design tripled
+# the instance count); kill the named container and report GATE_STALL instead of holding a fleet slot for days
+ot_capped() {{  # ot_capped NAME docker run --name NAME ...
+  local n=$1 t0=$(date +%s) rc; shift
+  timeout -k 60 {STEP_CAP} "$@"; rc=$?
+  if [ $(( $(date +%s) - t0 )) -ge {STEP_CAP} ]; then docker kill "$n" >/dev/null 2>&1; echo "GATE_STALL $n exceeded {STEP_CAP} s"; fi
+  return $rc
+}}
 docker image inspect --format 'GATE_TOOL_IMAGE_ID={{{{.Id}}}} GATE_TOOL_IMAGE_DIGESTS={{{{json .RepoDigests}}}}' {IMG} 2>/dev/null
 printf 'GATE_TOOL_CTS_MACRO_CLUSTER=%s\n' "${{OT_CTS_MACRO_CLUSTER:-}}"
 cd $R/src && echo {COMMIT} > SOURCE_COMMIT
@@ -649,7 +662,7 @@ print("GATE_PORTS "+json.dumps(ports))
 EOP
 grep -h "Chip area\|chip area" $C/reports/asap7/*/base/synth_stat.txt 2>/dev/null | tail -1 | sed 's/^/GATE_AREA /'
 if [ "{CTS}" = 1 ]; then
-  docker run --rm -v $R/src:/src:ro -v $C:/work -w /OpenROAD-flow-scripts/flow {IMG} bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; python3 /src/tools/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts >/dev/null && make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base cts" > $R/cts.log 2>&1; echo "GATE_CTS_RC=$?"
+  ot_capped gate_cts_${{R##*/}} docker run --rm --name gate_cts_${{R##*/}} -v $R/src:/src:ro -v $C:/work -w /OpenROAD-flow-scripts/flow {IMG} bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; python3 /src/tools/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts >/dev/null && make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base cts" > $R/cts.log 2>&1; echo "GATE_CTS_RC=$?"
   grep -h "\[ERROR" $R/cts.log | head -3 | sed 's/^/GATE_CTSERR /'
   grep -h "^OT_SPINE iter\|^REF_TILE spine" $R/cts.log | tail -2 | sed 's/^/GATE_SPINE /'
   grep -h "OT_SPINE done port" $R/cts.log $C/logs/asap7/*/base/4_1_cts.log 2>/dev/null | head -1 | sed 's/^/GATE_SPINE_DONE /'
@@ -664,7 +677,7 @@ fi
 # TRIAL ROUTE (owner rule 20:45 10-15): parent / cluster kits (hardened children or >= 4 macros) place + global-route
 # here (no detailed route): overflow, per-layer usage and the congestion hotspots come back; overflow > 0 refuses the kit
 if [ "{TRIAL}" = 1 ]; then
-  docker run --rm -v $R/src:/src:ro -v $C:/work -w /OpenROAD-flow-scripts/flow {IMG} bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; python3 /src/tools/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts >/dev/null && make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base GLOBAL_ROUTE_ARGS='-allow_congestion -verbose' GENERATE_ARTIFACTS_ON_FAILURE=1 grt" > $R/grt.log 2>&1; echo "GATE_GRT_RC=$?"
+  ot_capped gate_grt_${{R##*/}} docker run --rm --name gate_grt_${{R##*/}} -v $R/src:/src:ro -v $C:/work -w /OpenROAD-flow-scripts/flow {IMG} bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; python3 /src/tools/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts >/dev/null && make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base GLOBAL_ROUTE_ARGS='-allow_congestion -verbose' GENERATE_ARTIFACTS_ON_FAILURE=1 grt" > $R/grt.log 2>&1; echo "GATE_GRT_RC=$?"
   GL=$(ls $C/logs/asap7/*/base/5_1_grt.log 2>/dev/null | head -1)
   [ -n "$GL" ] && grep -E "^(M[0-9]+|Total) +[0-9]+ +[0-9]+ +[0-9.]+%" $GL | tail -12 | sed 's/^/GATE_GRT_LAYER /'
   [ -n "$GL" ] && grep -hE "GRT-0116|Total overflow|overflow" $GL | tail -3 | sed 's/^/GATE_GRT_NOTE /'
@@ -900,7 +913,7 @@ def remote(g: Gate, kd: Path, spec: dict, host: str, cap: int, mem: int, cts: bo
     sh = REMOTE_SH.format(R=R, COMMIT=commit, CAP=(cap if cap > 0 else "unlimited"), KIT=kd.relative_to(ROOT), IMG="openroad/orfs:latest",
                           RC=",".join(GATE_REFUSE), TOP=spec["top"], CTS=1 if cts else 0, PGM=PF.ROUTE_PIN_GROUP_MAX,
                           TRIAL=1 if is_parent_kit(spec) else 0, CLKS=",".join(RT.clock_ports(spec)),
-                          CLK=spec["clock_port"], ARCHIVE_SHA256=binding["archive_sha256"])   # ck_insertion (9f48f5ed8): --clock = clock name or its source port; the default 'ck' failed every kit whose port is 'clk'
+                          CLK=spec["clock_port"], ARCHIVE_SHA256=binding["archive_sha256"], STEP_CAP=GATE_STEP_CAP_S)   # ck_insertion (9f48f5ed8): --clock = clock name or its source port; the default 'ck' failed every kit whose port is 'clk'
     sh = gate_route_clock_hooks(sh, spec)
     sh = gate_route_hold_context(sh, spec, str(kd.relative_to(ROOT)))
     binding["route_hold_context"] = RT.route_hold_context(spec, str(kd.relative_to(ROOT)))
@@ -1129,6 +1142,10 @@ def analyse_remote(g: Gate, kd: Path, spec: dict, out: str, cts: bool, binding: 
             g.add("INFO", "textbook", line[len("textbook_lint: "):][:300])
             continue
         g.add("FAIL" if tag == "REFUSE" else "WARN", f"textbook.{chk}", msg[:500], TEXTBOOK_FIX.get(chk, ""))
+    for stall in re.findall(r"^GATE_STALL (.*)$", out, re.M):
+        g.add("FAIL", "gate_stall", f"{stall[:200]} (step cap; repair/legalizer blow-up or GRT stall)",
+              "read the remote cts.log / grt.log tail: the route would stall the same way; reduce density / fix the "
+              "floorplan or the repair_design fan-out cause before routing")
     if cts and kv.get("GATE_CTS_RC") not in (None, "0"):
         g.add("FAIL", "cts_run", "placement / CTS of the kit failed: " + "; ".join(re.findall(r"^GATE_CTSERR (.*)$", out, re.M))[:500],
               "the route would fail the same way (DPL-0033 / GPL-0305 / CTS-*): fix the floorplan / density before routing")

@@ -92,6 +92,8 @@ RESOURCE_RE = re.compile(r"Cannot allocate memory|[Oo]ut of memory|\bOOM\b|oom-k
                          r"Resource temporarily unavailable|Killed\b|signal 9|exit code 137|MemoryError|"
                          r"admission (?:timed out|refused)|[Bb]us error|SIGBUS|Segmentation fault|internal compiler error|"
                          r"g\+\+: fatal error|cc1plus: .*(?:killed|error)", re.M)
+# DETERMINISTIC-NO-RETRY 2026-10-15: route first errors that never passed on a same-input retry (see crash())
+DETERMINISTIC_ROUTE_ERR_RE = re.compile(r"\b(?:DPL-0033|GPL-0305|PPL-0093|PPL-0111|ANT-0008|PDN-0233|MPL-0020|STA-0340)\b")
 # a bench whose TOOLS crashed (compiler bus error, segfault, OOM) is not a verdict on the RTL (hbm_su_red_slice_6f2d14e36:
 # g++ bus error on EPYC2 -> NEEDS_RTL although the bench never ran): crash -> retry once on another host -> NEEDS_HUMAN
 BENCH_CRASH_RC = (124, 126, 127, 134, 135, 137, 139, 143)   # 126/127: cannot execute / not found (a truncated
@@ -4250,7 +4252,7 @@ def crash(j, st, fleet, why):
     if err:
         why = re.sub(r"ok-check failed: *(;|$)", "ok-check failed;", why)
         why = f"{why}; first error: {err}"
-    if st["kind"] == "route" and "GRT-0116" in (err + tail) and not why.startswith("LOST"):
+    if st["kind"] == "route" and re.search(r"GRT-0116|GRT-0232", err + tail) and not why.startswith("LOST"):
         # stuckscan 2026-10-08: GRT gave up with congestion -- deterministic for this floorplan; a retry re-spends the
         # whole route (hbm_coll_port_big/rows, s81b-vm_bgh-grid: 'retry once on the same host')
         finish(j, "EARLY_FAIL_CONGESTION", f"global route finished with congestion (GRT-0116): {err[:200]}",
@@ -4260,6 +4262,15 @@ def crash(j, st, fleet, why):
     resource = bool(RESOURCE_RE.search(tail + " " + err)) or why.startswith(("LOST", "bench tool crash"))
     j.setdefault("crashes", []).append(dict(stage=st["key"], host=j["host"], attempt=j["attempt"], why=why,
                                             resource=resource, tail=tail[-1500:], first_error=err))
+    det = DETERMINISTIC_ROUTE_ERR_RE.search(err) if st["kind"] == "route" and not resource else None
+    if det:
+        # DETERMINISTIC-NO-RETRY 2026-10-15 (ROOT): daemon.log 10-06..10-15, every same-input retry of these first
+        # errors failed again with the same error (DPL-0033 30/30+, GPL-0305 15/15, PPL-0093 14/14, ANT-0008 11/11,
+        # PDN-0233 9/9, MPL-0020 7/7, PPL-0111 6/6, STA-0340 5/5): a retry re-spent the whole route for nothing.
+        finish(j, "NEEDS_HUMAN", f"{st['key']} failed deterministically ({det.group(0)}), not retried: {err[:300]}",
+               f"NEEDS_HUMAN: {st['key']} first error {det.group(0)} is deterministic for these inputs (measured: every "
+               f"same-input retry failed again); fix the kit/floorplan and resubmit.\n{err[:300]}")
+        return
     if j["retries_used"] >= 1:
         finish(j, "NEEDS_HUMAN", f"{st['key']} crashed twice ({why}; resource={resource})"[:600],
                f"NEEDS_HUMAN: {st['key']} crashed twice ({why}); last log tail:\n" +
