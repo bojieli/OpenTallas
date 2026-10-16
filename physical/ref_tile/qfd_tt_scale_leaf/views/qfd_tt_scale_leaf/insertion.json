@@ -1,0 +1,322 @@
+{
+ "schema": "opentallas.closure_loop.ck_insertion.v1",
+ "base": "/srv/opentallas-scratch2/claude/closure-loop/qfd_tt_scale_leaf-tc1-f9c257836/routes/qfd_tt_scale_leaf_tc1_f9c257836/work/orfs/results/asap7/opentallas_qfd_tt_scale_leaf_asap7_ref_qfd_tt_scale_leaf_tc1_f9c257836/base",
+ "db": "6_final.odb",
+ "sdc": "6_final.sdc",
+ "clock": "core_clk",
+ "parasitics": "spef",
+ "raw_source": true,
+ "ss": {
+  "boundary": {
+   "n": 1013,
+   "mean": 475.1,
+   "min": 445.5,
+   "max": 498.8
+  },
+  "all": {
+   "n": 3683,
+   "mean": 470.8,
+   "min": 445.0,
+   "max": 510.2
+  },
+  "errors": [],
+  "macros": {
+   "n": 2,
+   "nets": 2,
+   "max_per_net": 1,
+   "reg_mean": 470.8,
+   "max_slew": 26.4,
+   "max_late": 30.4,
+   "pins": [
+    {
+     "pin": "u_ot_pr_core.u_scale.g_sca.u_pretag.g_mem.g_b[0].g_m[0].u_m/clk",
+     "arr": 501.2,
+     "slew": 26.2,
+     "late": 30.4,
+     "net": "clknet_1_0__leaf_clk[0]"
+    },
+    {
+     "pin": "u_ot_pr_core.u_scale.g_sca.u_pretag.g_mem.g_b[1].g_m[0].u_m/clk",
+     "arr": 500.7,
+     "slew": 26.4,
+     "late": 29.9,
+     "net": "clknet_1_1__leaf_clk[0]"
+    }
+   ]
+  },
+  "macro_libs": 1
+ },
+ "tt": {
+  "boundary": {
+   "n": 1013,
+   "mean": 368.7,
+   "min": 341.4,
+   "max": 390.2
+  },
+  "all": {
+   "n": 3683,
+   "mean": 364.6,
+   "min": 340.8,
+   "max": 401.3
+  },
+  "errors": [],
+  "macros": {
+   "n": 2,
+   "nets": 2,
+   "max_per_net": 1,
+   "reg_mean": 364.6,
+   "max_slew": 22.3,
+   "max_late": -0.2,
+   "pins": [
+    {
+     "pin": "u_ot_pr_core.u_scale.g_sca.u_pretag.g_mem.g_b[0].g_m[0].u_m/clk",
+     "arr": 364.4,
+     "slew": 22.2,
+     "late": -0.2,
+     "net": "clknet_1_0__leaf_clk[0]"
+    },
+    {
+     "pin": "u_ot_pr_core.u_scale.g_sca.u_pretag.g_mem.g_b[1].g_m[0].u_m/clk",
+     "arr": 363.8,
+     "slew": 22.3,
+     "late": -0.8,
+     "net": "clknet_1_1__leaf_clk[0]"
+    }
+   ]
+  },
+  "macro_libs": 1
+ },
+ "ff": {
+  "boundary": {
+   "n": 1013,
+   "mean": 303.5,
+   "min": 277.8,
+   "max": 322.9
+  },
+  "all": {
+   "n": 3683,
+   "mean": 299.3,
+   "min": 277.1,
+   "max": 333.6
+  },
+  "errors": [],
+  "macros": {
+   "n": 2,
+   "nets": 2,
+   "max_per_net": 1,
+   "reg_mean": 299.3,
+   "max_slew": 21.3,
+   "max_late": -14.5,
+   "pins": [
+    {
+     "pin": "u_ot_pr_core.u_scale.g_sca.u_pretag.g_mem.g_b[0].g_m[0].u_m/clk",
+     "arr": 284.8,
+     "slew": 21.3,
+     "late": -14.5,
+     "net": "clknet_1_0__leaf_clk[0]"
+    },
+    {
+     "pin": "u_ot_pr_core.u_scale.g_sca.u_pretag.g_mem.g_b[1].g_m[0].u_m/clk",
+     "arr": 284.2,
+     "slew": 21.2,
+     "late": -15.1,
+     "net": "clknet_1_1__leaf_clk[0]"
+    }
+   ]
+  },
+  "macro_libs": 1
+ },
+ "route_corner": null,
+ "macro_clk": {
+  "n": 2,
+  "slew_ps": 120.0,
+  "late_ps": 30.0,
+  "flag": false,
+  "outliers": []
+ },
+ "env": {
+  "CK_SS_MEAN": 475,
+  "CK_SS_ALL_MEAN": 471,
+  "CK_SS_MIN": 446,
+  "CK_SS_ALL_MIN": 445,
+  "CK_SS_MAX": 499,
+  "CK_SS_ALL_MAX": 510,
+  "CK_TT_MEAN": 369,
+  "CK_TT_ALL_MEAN": 365,
+  "CK_TT_MIN": 341,
+  "CK_TT_ALL_MIN": 341,
+  "CK_TT_MAX": 390,
+  "CK_TT_ALL_MAX": 401,
+  "CK_FF_MEAN": 304,
+  "CK_FF_ALL_MEAN": 299,
+  "CK_FF_MIN": 278,
+  "CK_FF_ALL_MIN": 277,
+  "CK_FF_MAX": 323,
+  "CK_FF_ALL_MAX": 334,
+  "CK_ROUTE_REF": "SS"
+ },
+ "lib_clock_pin": "clk[0]",
+ "clock_mapping_basis": "6_final.sdc create_clock -name core_clk [get_ports {clk[0]}]",
+ "clock_measurements": {
+  "clk[0]": {
+   "schema": "opentallas.closure_loop.ck_insertion.v1",
+   "base": "/srv/opentallas-scratch2/claude/closure-loop/qfd_tt_scale_leaf-tc1-f9c257836/routes/qfd_tt_scale_leaf_tc1_f9c257836/work/orfs/results/asap7/opentallas_qfd_tt_scale_leaf_asap7_ref_qfd_tt_scale_leaf_tc1_f9c257836/base",
+   "db": "6_final.odb",
+   "sdc": "6_final.sdc",
+   "clock": "core_clk",
+   "parasitics": "spef",
+   "raw_source": true,
+   "ss": {
+    "boundary": {
+     "n": 1013,
+     "mean": 475.1,
+     "min": 445.5,
+     "max": 498.8
+    },
+    "all": {
+     "n": 3683,
+     "mean": 470.8,
+     "min": 445.0,
+     "max": 510.2
+    },
+    "errors": [],
+    "macros": {
+     "n": 2,
+     "nets": 2,
+     "max_per_net": 1,
+     "reg_mean": 470.8,
+     "max_slew": 26.4,
+     "max_late": 30.4,
+     "pins": [
+      {
+       "pin": "u_ot_pr_core.u_scale.g_sca.u_pretag.g_mem.g_b[0].g_m[0].u_m/clk",
+       "arr": 501.2,
+       "slew": 26.2,
+       "late": 30.4,
+       "net": "clknet_1_0__leaf_clk[0]"
+      },
+      {
+       "pin": "u_ot_pr_core.u_scale.g_sca.u_pretag.g_mem.g_b[1].g_m[0].u_m/clk",
+       "arr": 500.7,
+       "slew": 26.4,
+       "late": 29.9,
+       "net": "clknet_1_1__leaf_clk[0]"
+      }
+     ]
+    },
+    "macro_libs": 1
+   },
+   "tt": {
+    "boundary": {
+     "n": 1013,
+     "mean": 368.7,
+     "min": 341.4,
+     "max": 390.2
+    },
+    "all": {
+     "n": 3683,
+     "mean": 364.6,
+     "min": 340.8,
+     "max": 401.3
+    },
+    "errors": [],
+    "macros": {
+     "n": 2,
+     "nets": 2,
+     "max_per_net": 1,
+     "reg_mean": 364.6,
+     "max_slew": 22.3,
+     "max_late": -0.2,
+     "pins": [
+      {
+       "pin": "u_ot_pr_core.u_scale.g_sca.u_pretag.g_mem.g_b[0].g_m[0].u_m/clk",
+       "arr": 364.4,
+       "slew": 22.2,
+       "late": -0.2,
+       "net": "clknet_1_0__leaf_clk[0]"
+      },
+      {
+       "pin": "u_ot_pr_core.u_scale.g_sca.u_pretag.g_mem.g_b[1].g_m[0].u_m/clk",
+       "arr": 363.8,
+       "slew": 22.3,
+       "late": -0.8,
+       "net": "clknet_1_1__leaf_clk[0]"
+      }
+     ]
+    },
+    "macro_libs": 1
+   },
+   "ff": {
+    "boundary": {
+     "n": 1013,
+     "mean": 303.5,
+     "min": 277.8,
+     "max": 322.9
+    },
+    "all": {
+     "n": 3683,
+     "mean": 299.3,
+     "min": 277.1,
+     "max": 333.6
+    },
+    "errors": [],
+    "macros": {
+     "n": 2,
+     "nets": 2,
+     "max_per_net": 1,
+     "reg_mean": 299.3,
+     "max_slew": 21.3,
+     "max_late": -14.5,
+     "pins": [
+      {
+       "pin": "u_ot_pr_core.u_scale.g_sca.u_pretag.g_mem.g_b[0].g_m[0].u_m/clk",
+       "arr": 284.8,
+       "slew": 21.3,
+       "late": -14.5,
+       "net": "clknet_1_0__leaf_clk[0]"
+      },
+      {
+       "pin": "u_ot_pr_core.u_scale.g_sca.u_pretag.g_mem.g_b[1].g_m[0].u_m/clk",
+       "arr": 284.2,
+       "slew": 21.2,
+       "late": -15.1,
+       "net": "clknet_1_1__leaf_clk[0]"
+      }
+     ]
+    },
+    "macro_libs": 1
+   },
+   "route_corner": null,
+   "macro_clk": {
+    "n": 2,
+    "slew_ps": 120.0,
+    "late_ps": 30.0,
+    "flag": false,
+    "outliers": []
+   },
+   "env": {
+    "CK_SS_MEAN": 475,
+    "CK_SS_ALL_MEAN": 471,
+    "CK_SS_MIN": 446,
+    "CK_SS_ALL_MIN": 445,
+    "CK_SS_MAX": 499,
+    "CK_SS_ALL_MAX": 510,
+    "CK_TT_MEAN": 369,
+    "CK_TT_ALL_MEAN": 365,
+    "CK_TT_MIN": 341,
+    "CK_TT_ALL_MIN": 341,
+    "CK_TT_MAX": 390,
+    "CK_TT_ALL_MAX": 401,
+    "CK_FF_MEAN": 304,
+    "CK_FF_ALL_MEAN": 299,
+    "CK_FF_MIN": 278,
+    "CK_FF_ALL_MIN": 277,
+    "CK_FF_MAX": 323,
+    "CK_FF_ALL_MAX": 334,
+    "CK_ROUTE_REF": "SS"
+   },
+   "lib_clock_pin": "clk[0]",
+   "clock_mapping_basis": "6_final.sdc create_clock -name core_clk [get_ports {clk[0]}]"
+  }
+ }
+}

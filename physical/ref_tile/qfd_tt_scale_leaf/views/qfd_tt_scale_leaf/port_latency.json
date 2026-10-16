@@ -1,0 +1,55 @@
+{
+  "evidence": {
+    "ot_pin_regs.tsv": "f75789e6657c6a84ae0d89b0d33b7cfeaa5dd966206dafd243452f4a0279dcc9",
+    "ot_pin_regs_wrapper.v": "4fd128996a728f09acd713c72306c098a8160ae6eaba4ef2a7ebc80f79dd3795"
+  },
+  "job": "qfd_tt_scale_leaf-tc1-f9c257836",
+  "ports": {
+    "clk": {
+      "dir": "input",
+      "reason": "clock",
+      "register_edges": 0,
+      "width": 1
+    },
+    "rst_n": {
+      "dir": "input",
+      "reason": "reset",
+      "register_edges": 0,
+      "width": 1
+    },
+    "s3_v": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 1
+    },
+    "scale_addr": {
+      "dir": "output",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 576
+    },
+    "scale_gre": {
+      "dir": "output",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 24
+    },
+    "scale_re": {
+      "dir": "output",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 1
+    },
+    "tag_payload": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 91
+    }
+  },
+  "schema": "opentallas.ref_tile.port_latency.v1",
+  "scope": "Additional generic wrapper edges only; core RTL stages remain in measured core duration; no physical qualification",
+  "source_commit": "f9c257836b1f3770ab4ae000556bd354d3f30187",
+  "top": "qfd_tt_scale_leaf"
+}
