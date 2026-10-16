@@ -65,24 +65,28 @@ module tb_dsfd_sp_vm_a2f;
     dsfd_sp_vm_a2f #(.CAP_PIPE(CAP_PIPE), .READ_PIPE(READ_PIPE), .HOP1(HOP1)) dut (
         .ck_read_data_t({64{t_ck}}), .ck_read_valid_t({8{t_ck}}), .rss_read_data_t({64{rss}}), .rss_read_valid_t({8{rss}}),
         .ck_core_t(t_ck), .ck_rsched_t(t_ck), .ck_seq_t(t_ck), .ck_landing_t({5{t_ck}}),
-        .ck_mem_fsr_t({16{t_ck}}), .ck_mem_return_t({16{t_ck}}), .ck_mem_bank_t({128{t_ck}}),
+        .ck_write_summary_t(t_ck), .rss_write_summary_t(rss), .ck_mem_native_diag_t({4{t_ck}}), .rss_mem_native_diag_t({4{rss}}), .ck_mem_fsr_t({16{t_ck}}), .ck_mem_return_t({16{t_ck}}), .ck_mem_bank_t({128{t_ck}}),
         .ck_mem_wscatter_t({16{t_ck}}),
         .ck_mem_relay_req_t({NRL{t_ck}}), .ck_mem_relay_rsp_t({NRL{t_ck}}),
-        .ck_write_header_t(t_ck), .ck_write_payload_t({4{t_ck}}), .ck_write_control_t({4{t_ck}}), .ck_write_fault_t({4{t_ck}}),
+        .ck_write_header_t(t_ck), .ck_write_payload_t({16{t_ck}}), .ck_write_control_t({4{t_ck}}), .ck_write_fault_t({4{t_ck}}),
         .ck_write_meta_t({28{t_ck}}), .ck_write_data_t({128{t_ck}}),
         .ck_landing_x34_s({3{s_ck}}), .ck_landing_x34_t({3{t_ck}}),
         .rss_core_t(rss), .rss_rsched_t(rss), .rss_seq_t(rss), .rss_landing_t(rss),
         .rss_mem_fsr_t({16{rss}}), .rss_mem_return_t({4{rss}}), .rss_mem_bank_t({128{rss}}),
         .rss_mem_wscatter_t({16{rss}}), .rss_mem_relay_t({NRL{rss}}),
-        .rss_write_header_t(rss), .rss_write_payload_t({4{rss}}), .rss_write_control_t({4{rss}}), .rss_write_fault_t({4{rss}}),
+        .rss_write_header_t(rss), .rss_write_payload_t({16{rss}}), .rss_write_control_t({4{rss}}), .rss_write_fault_t({4{rss}}),
         .rss_write_meta_t({28{rss}}), .rss_write_data_t({128{rss}}),
         .rst_landing_x34_s({3{rst}}), .rss_landing_x34_t({3{rss}}),
         .ck_cap_control_s(s_ck), .rst_cap_control_s(rst), .ck_cap_lane_s({16{s_ck}}),
         .ck_cap_x34_s({16{s_ck}}), .ck_cap_x34_t({16{t_ck}}), .rst_cap_x34_s({16{rst}}), .rss_cap_x34_t({16{rss}}),
         .ck_wfc_fault_s(s_ck), .ck_wfc_fault_t(t_ck), .rst_wfc_fault_s(rst), .rss_wfc_fault_t(rss),
         .ck_wfc_return_t(t_ck), .rss_wfc_return_t(rss),
+        .ck_wfc_fault_x34_s(s_ck), .ck_wfc_fault_x34_t(t_ck), .ck_wfc_fault_x43_t(t_ck), .ck_wfc_fault_x43_s(s_ck),
+        .rst_wfc_fault_x34_s(rst), .rss_wfc_fault_x34_t(rss), .rss_wfc_fault_x43_t(rss), .rst_wfc_fault_x43_s(rst),
         .ck_wfc_control_s(s_ck), .ck_wfc_control_t(t_ck), .ck_wfc_x34_s(s_ck), .ck_wfc_x34_t(t_ck), .ck_wfc_x43_s(s_ck), .ck_wfc_x43_t(t_ck),
         .rst_wfc_control_s(rst), .rss_wfc_control_t(rss), .rst_wfc_x34_s(rst), .rss_wfc_x34_t(rss), .rst_wfc_x43_s(rst), .rss_wfc_x43_t(rss),
+        .ck_xio_return_t(t_ck), .rss_xio_return_t(rss), .ck_xio_fault_t(t_ck), .ck_xio_fault_s(s_ck),
+        .rss_xio_fault_t(rss), .rst_xio_fault_s(rst), .ck_xio_fault_join_t(t_ck), .rss_xio_fault_join_t(rss),
         .ck_xio_control_s(s_ck), .ck_xio_control_t(t_ck), .ck_xio_x43_s({2{s_ck}}), .ck_xio_x43_t({2{t_ck}}),
         .rst_xio_control_s(rst), .rss_xio_control_t(rss), .rst_xio_x43_s({2{rst}}), .rss_xio_x43_t({2{rss}}), .c_cmd(c_cmd), .c_done(c_done), .c_st(c_st),
         .t_inp_su(t_inp_su), .t_inp_hc(t_inp_hc),
@@ -133,8 +137,8 @@ module tb_dsfd_sp_vm_a2f;
             for (k = 0; k < n; k = k + 1) begin
                 while (I % 4 == ((2-RPE)%4+4)%4) I = I + 1;
                 d = mem[base + k];
-                if (dest == 0) e_q[x43_serial(I + 15+RPE)] = {d, 1'b1};
-                else e_g[x43_serial(I + 15+RPE)] = {d[510:0], 1'b1};
+                if (dest == 0) e_q[x43_serial(I + 19+RPE)] = {d, 1'b1};
+                else e_g[x43_serial(I + 19+RPE)] = {d[510:0], 1'b1};
                 I = I + 1;
             end
         end
@@ -179,7 +183,7 @@ module tb_dsfd_sp_vm_a2f;
         end
         if (tk >= 300 && tk < 332) begin
             r = 1024 + tk - 300; crq = {14'(r), 1'b1};
-            e_tc[tk + 1 + 12+RPE] = {mem[r], 1'b1};
+            e_tc[tk + 1 + 16+RPE] = {mem[r], 1'b1};
         end
         // Invalid STREAM destination is a schedule-fault witness.
         if (mode == 1 && tk == 360) issue(3'd4, {2'd2, 14'd1024, 5'd0});
@@ -313,11 +317,11 @@ module tb_dsfd_sp_vm_a2f;
         end else begin : fw reg ok;
             ok = 1'b0;
             case (mode)
-                1: ok = dut.u_xio.f_iss[2];
-                2: ok = dut.u_xio.f9;
-                3: ok = dut.u_xio.f_s[0];
-                4: ok = dut.u_xio.f_iss[2];
-                5: ok = dut.u_xio.f_iss[1];
+                1: ok = dut.u_xio.u_req.f_iss[2];
+                2: ok = dut.u_xio.u_ret.fault;
+                3: ok = dut.u_xio.u_serial.fault;
+                4: ok = dut.u_xio.u_req.f_iss[2];
+                5: ok = dut.u_xio.u_req.f_iss[1];
                 6: ok = dut.u_wfc.u_req.err && twfc[1028];
                 7: ok = dut.u_wfc.u_req.err && twfc[1028];
                 8: ok = |dut.u_cap.lf;

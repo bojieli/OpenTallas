@@ -23,6 +23,8 @@ module dsfd_vm_a2f_core #(parameter integer READ_PIPE=4, parameter integer HOP1=
     input  wire          cks, rss,
     input  wire          ck_rsched, ck_seq,
     input  wire [4:0]    ck_landing,
+    input  wire [3:0]    ck_mem_native_diag, rst_mem_native_diag_n,
+    input  wire          ck_write_summary, rst_write_summary_n,
     input  wire [15:0]   ck_mem_fsr,
     input  wire [15:0]   ck_mem_return,
     input  wire [127:0]  ck_mem_bank,
@@ -30,7 +32,8 @@ module dsfd_vm_a2f_core #(parameter integer READ_PIPE=4, parameter integer HOP1=
     input  wire [(HOP1?16:48)-1:0] ck_mem_relay_req, ck_mem_relay_rsp,
     // A2-F write front roots (replace the legacy write control / dispatch / stage / capture roots)
     input  wire          ck_write_header,
-    input  wire [3:0]    ck_write_payload, ck_write_control, ck_write_fault,
+    input  wire [15:0]   ck_write_payload,
+    input  wire [3:0]    ck_write_control, ck_write_fault,
     input  wire [27:0]   ck_write_meta,
     input  wire [127:0]  ck_write_data,
     input  wire          rst_rsched_n, rst_seq_n, rst_landing_n,
@@ -40,7 +43,8 @@ module dsfd_vm_a2f_core #(parameter integer READ_PIPE=4, parameter integer HOP1=
     input  wire [15:0]   rst_mem_wscatter_n,
     input  wire [(HOP1?16:48)-1:0] rst_mem_relay_n,
     input  wire          rst_write_header_n,
-    input  wire [3:0]    rst_write_payload_n, rst_write_control_n, rst_write_fault_n,
+    input  wire [15:0]   rst_write_payload_n,
+    input  wire [3:0]    rst_write_control_n, rst_write_fault_n,
     input  wire [27:0]   rst_write_meta_n,
     input  wire [127:0]  rst_write_data_n,
     input  wire [63:0]   ck_read_data, rst_read_data_n,
@@ -154,12 +158,16 @@ module dsfd_vm_a2f_core #(parameter integer READ_PIPE=4, parameter integer HOP1=
     // A2-F front + hop-1 storage: the 53 sources enter the front's W0 header / payload pin registers directly (s_t = the
     // legacy tags: source index, collective tag); compact source-ID capture replaces wdispatch / wstage / write capture.
     wire w_flt; wire [15:0] wf_flt;
-    assign w_flt = |wf_flt;                     // registered sticky quarter faults (fault_join4), re-registered in the seq tile
+    dsfd_vm_native_valid_diag u_write_summary (
+        .ck(ck_write_summary), .rst_n(rst_write_summary_n),
+        .i_v(32'd0), .expected_v(18'd0), .release_slot(90'd0),
+        .i_fault(wf_flt), .fault(w_flt));
 
     // ---------------------------------------------------------------- native memory
     wire [71:0] nat_v; wire [9215:0] nat_d; wire [127:0] grp_v; wire [16383:0] grp_d; wire [11:0] grp_id;
     wire [127:0] cm_v; wire [1151:0] cm_a; wire [511:0] cm_m; wire [1023:0] cm_t; wire [39:0] m_flt;
     dsfd_vm_a2f_mem #(.RET_PINREG(READ_PIPE >= 4), .HOP1(HOP1)) u_mem (
+        .ck_native_diag(ck_mem_native_diag), .rst_native_diag_n(rst_mem_native_diag_n),
         .ck_wf_header(ck_write_header), .ck_wf_payload(ck_write_payload), .ck_wf_control(ck_write_control),
         .ck_wf_fault(ck_write_fault), .ck_wf_meta(ck_write_meta), .ck_wf_data(ck_write_data),
         .rst_wf_header_n(rst_write_header_n), .rst_wf_payload_n(rst_write_payload_n), .rst_wf_control_n(rst_write_control_n),

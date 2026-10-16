@@ -113,9 +113,10 @@ endmodule
 
 module dsfd_vm_a2f_mem #(parameter integer RET_PINREG=0, parameter integer HOP1=1)(
  // A2-F write front roots
- input wire ck_wf_header,input wire [3:0] ck_wf_payload,ck_wf_control,ck_wf_fault,
+ input wire [3:0] ck_native_diag,rst_native_diag_n,
+ input wire ck_wf_header,input wire [15:0] ck_wf_payload,input wire [3:0] ck_wf_control,ck_wf_fault,
  input wire [27:0] ck_wf_meta,input wire [127:0] ck_wf_data,
- input wire rst_wf_header_n,input wire [3:0] rst_wf_payload_n,rst_wf_control_n,rst_wf_fault_n,
+ input wire rst_wf_header_n,input wire [15:0] rst_wf_payload_n,input wire [3:0] rst_wf_control_n,rst_wf_fault_n,
  input wire [27:0] rst_wf_meta_n,input wire [127:0] rst_wf_data_n,
  // storage roots
  input wire [15:0] ck_rscatter,input wire [15:0] ck_return,input wire [15:0] ck_wscatter,input wire [127:0] ck_bank,
@@ -140,7 +141,7 @@ module dsfd_vm_a2f_mem #(parameter integer RET_PINREG=0, parameter integer HOP1=
 );
  localparam integer NR = HOP1 ? 4 : 12;   // relay roots per slice
  wire [127:0] fv;wire [1791:0] fr;wire [1023:0] ft;wire [511:0] fm;wire [16383:0] fd;
- s81_a2f_controlled_split4m u_front(
+ s81_a2f_controlled_split4m_payload33 u_front(
   .ck_header(ck_wf_header),.ck_payload(ck_wf_payload),.ck_control(ck_wf_control),.ck_fault(ck_wf_fault),
   .ck_meta(ck_wf_meta),.ck_data(ck_wf_data),
   .rst_header_n(rst_wf_header_n),.rst_payload_n(rst_wf_payload_n),.rst_control_n(rst_wf_control_n),
@@ -175,7 +176,10 @@ module dsfd_vm_a2f_mem #(parameter integer RET_PINREG=0, parameter integer HOP1=
   assign group_id[3*s+:3]=lane_group[2:0];
   dsfd_vm_static_suhc_return_map u_native(.i_v(group_v[32*s+:32]),.i_data(gd),
    .expected_v(native_expected_v),.release_slot(native_release_slot),
-   .o_v(native_v[18*s+:18]),.o_data(nd),.fault(fault[10*s+9]));
+   .o_v(native_v[18*s+:18]),.o_data(nd),.fault());
+  dsfd_vm_native_valid_diag u_native_diag(.i_fault(16'd0),.ck(ck_native_diag[s]),.rst_n(rst_native_diag_n[s]),
+   .i_v(group_v[32*s+:32]),.expected_v(native_expected_v),.release_slot(native_release_slot),
+   .fault(fault[10*s+9]));
   for(q=0;q<18;q=q+1)begin:native_rows
    assign native_data[512*q+128*s+:128]=nd[128*q+:128];
   end

@@ -85,11 +85,15 @@ DISPOSITION = {
     'ck_wfc_control_s': ('NO_SINK', 'r6 serial control/grant now in independent fault leaf ck_wfc_fault_s; retained source ABI port has no sink'),
     'ck_wfc_control_t': ('LEAF_IN_FLIGHT', 'r6 request leaf dsfd_vm_wfc_request own root ck; native gate pending'),
     'ck_wfc_return_t': ('LEAF_IN_FLIGHT', 'r6 return leaf dsfd_vm_wfc_return own root ck; native gate pending'),
-    'ck_xio_control_s': ('OPEN_GLUE', 'dsfd_vm_static_xio control flops are parent glue; a native leaf needs the three '
+    'ck_xio_control_s': ('SUPERSEDED_PREDECESSOR', 'dsfd_vm_static_xio control flops are parent glue; a native leaf needs the three '
                          'combinational pin paths cut (f_crq -> aux a_v/a_row merge, e_d -> t_crs mux; f_collective -> w_* '
                          'is pure wiring and stays in the parent): registering them = +1 collective request / +1 t_crs '
                          'edge (L12 -> L14), needs S-FUNC + static-collective sign-off (owed, S-VM)'),
-    'ck_xio_control_t': ('OPEN_GLUE', 'as ck_xio_control_s'),
+    'ck_xio_control_t': ('LEAF_IN_FLIGHT', 'True pin-captured XIO request, request +2core; total collective +4core, Q/G +4core/+3serial. Exact native qualification pending'),
+    'ck_xio_return_t': ('LEAF_IN_FLIGHT', 'Actual XIO return leaf; native qualification pending'),
+    'ck_xio_fault_t': ('LEAF_IN_FLIGHT', 'W1 diagnostic x34 receiving core root; native qualification pending'),
+    'ck_xio_fault_s': ('LEAF_IN_FLIGHT', 'W1 diagnostic x34 sending serial root; native qualification pending'),
+    'ck_xio_fault_join_t': ('LEAF_IN_FLIGHT', 'Actual captured fault join with fixed warm-reset flush; qualification pending'),
 }
 
 
@@ -109,7 +113,9 @@ DISPOSITION_A2F = {
     'ck_rsched_t': ('VIEW_OWED', 'dsfd_vm_a2f_rsched_p (REL 8, hop-1 release) is a new netlist: the closed '
                     'dsfd_vm_static_rsched_p_native_1015_l16 view is REL 10 and does not bind; build a kit from the same recipe'),
     'ck_write_header_t': ('VIEW_OWED', 's81_a2_w0_header (53 x {v, row 14, tag 8} pin register + epoch): no hard view'),
-    'ck_write_payload_t': ('VIEW_OWED', 's81_a2_w0_payload x4 (53 x {mask 4, data 128} per slice + epoch): no hard view'),
+    'ck_write_payload_t': ('LEAF_IN_FLIGHT', 's81_a2_w0_payload33 x16 (53 x {mask1,data32}); same normal data age, all16 roots epoch-checked; CTS native PASS, actual route pending'),
+    'ck_mem_native_diag_t': ('LEAF_IN_FLIGHT', 'Four live return-map valid/slot diagnostic leaves with real boundary capture; +2 diagnostic edges, zero normal data edges; native physical qualification pending'),
+    'ck_write_summary_t': ('LEAF_IN_FLIGHT', 'One captured 16-input write fault summary using same diagnostic master; +2 diagnostic edges, no normal data edges; physical qualification pending'),
     'ck_write_fault_t': ('VIEW_OWED', 's81_a2f_fault_join4 x4 (40 pin flops + 4 sticky): no hard view'),
 }
 
