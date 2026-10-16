@@ -144,14 +144,14 @@
  "job": {
   "owner": "Claude:Q-COLL",
   "branch": "claude/qwen-coll-io-1014",
-  "tag": "r10",
-  "purpose": "Harden the r10 block-stage UCIe gearbox leaf; measure area and TT/FF at the conservative common 833.333 ps envelope.",
+  "tag": "r11",
+  "purpose": "Harden the r11 UCIe gearbox leaf (r10 block stage + half-cycle fast-root negedge registers on every wide cross-root crossing; r10 a534fb815 EARLY_FAIL_HOLD -104 ps / 16,901 endpoints); TT/FF at 833.333 ps.",
   "benches": [
    {
     "name": "gearbox_r10_component",
     "cmd": "python3 tools/qwen_ucie_six_five_bench.py --out {RUN}/gearbox_r10",
     "expect": "pass",
-    "pass_regex": "PASS qfd_ucie_six_five r10 block-stage component",
+    "pass_regex": "PASS qfd_ucie_six_five r11 half-cycle crossings: 30 positive phase-0 cases, 6 mutants rejected",
     "threads": 4,
     "peak_ram_gb": 8
    },
