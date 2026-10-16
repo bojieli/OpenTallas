@@ -1,0 +1,92 @@
+{
+ "kind": "tile",
+ "clock_port": "sk",
+ "reset_ports": [
+  "srs_pin"
+ ],
+ "recipe": 3,
+ "children": [],
+ "inter": [],
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "orfs_vars": {
+  "OT_OUTHOLD_FREE": "1"
+ },
+ "name": "s81hc_ccfbp_s_ref",
+ "top": "ot_s81_hc_ccf_bankpipe_control",
+ "sources": [
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_ccf_bankpipe.sv",
+  "rtl/link/ot_fifo_sram_fwft.sv"
+ ],
+ "params": {
+  "PINREG": 1
+ },
+ "std_area_um2": 5200,
+ "outline": {
+  "w": 492.48,
+  "h": 43.2,
+  "exact": true
+ },
+ "macros": [],
+ "pins": {
+  "N": [
+   "sk",
+   "srs_pin",
+   "fv_pin",
+   "fd_pin",
+   "n_yacc_pin",
+   "bank_heads_pin"
+  ],
+  "S": [
+   "ch_rst",
+   "ch_fv",
+   "ch_fd"
+  ]
+ },
+ "refglob": "*ch_fd*",
+ "pin_regs": {
+  "enable": false,
+  "reason": "HC-COMB 2026-10-16: leaf of the CCF successor ot_s81_hc_ccf_bankpipe PINREG=1 (branch claude/s81hc-comb-ccfbp-0700): the RTL registers every data input and output at the pin (PINREG closes the two remaining unregistered inputs); a second register would move the uniform +3 public shift that the comb's forward pad trim 3 absorbs (exact HC composition, CCF_BP=3)."
+ },
+ "job": {
+  "owner": "Claude:S-ENGRAM+NORM/HC-COMB",
+  "branch": "claude/s81hc-comb-ccfbp-0700",
+  "tag": "v1",
+  "purpose": "CCF bankpipe S controller leaf (u_cf.u_s): metadata pipe + per-128-bit pop select of the bank heads into ch_fd; PINREG 1",
+  "benches": [
+   {
+    "name": "ccf_bankpipe_component",
+    "cmd": "bash tools/s81_suhc/ccf_bankpipe_gate.sh {RUN}/bench/ccfbp 3",
+    "expect": "pass",
+    "pass_regex": "^CCF_BANKPIPE_COMPONENT_GATE PASS$",
+    "threads": 1,
+    "peak_ram_gb": 8,
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ],
+  "extra_paths": [
+   "rtl/dsrom_sys/s81_suhc",
+   "tools/s81_suhc",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2"
+  ]
+ },
+ "io_tcl": "physical/ref_tile/s81hc_ccfbp_s_ref/io_spread.tcl"
+}
