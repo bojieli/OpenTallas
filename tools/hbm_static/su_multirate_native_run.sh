@@ -27,7 +27,7 @@ sources=(
  "$S/data_store/ot_hbm_su_static_data_store.sv" "$S/data_store/ot_hbm_su_static_pinned_bank.sv"
  "$S/register_file/ot_hbm_su_static_rf.sv" "$S/reduction/ot_hbm_su_reduce_static.sv" "$S/ot_hbm_su_static_vm_ports.sv"
  "$S/top/ot_hbm_su_static_pgslice.sv" "$S/top/ot_hbm_su_static_qcore.sv" "$S/top/ot_hbm_su_static_quarter.sv" "$S/top/ot_hbm_su_static_top.sv"
- "$S/native_vm/ot_hbm_su_native_vm.sv" "$S/programme/ot_hbm_su_programme.sv" "$S/programme/multirate_bridge.sv" "$S/programme/tb_hbm_su_native_multirate_top.sv"
+ "$S/native_vm/ot_hbm_su_native_vm.sv" "$S/programme/ot_hbm_su_programme.sv" "$S/programme/multirate_bridge.sv" "$S/top/ot_hbm_su_bridge_release.sv" "$S/programme/tb_hbm_su_native_multirate_top.sv"
  rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_split.sv rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv rtl/hbm_accel/generic/vm/static/ot_vms_bank_static.sv
  rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv rtl/hdc/v41x/ot_hdc_v41x_sfu.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv
  rtl/proto/ot_fp32_add_rne_pipe.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fastfp_lat.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv
@@ -73,4 +73,7 @@ for mut in DATA ADDR RF RED CAL EPOCH;do
  set -e
  if [ "$rc" = 0 ] || ! grep -q 'SU_NATIVE_MULTIRATE_TOP FAIL' "$out/mut_$mut.log";then exit 1;fi
 done
+# H-NETLIST 10-15: the die bridge release leaf must reproduce the ideal phase-zero release exactly
+"$bin" +DIR="$out/vec" +BRIDGE_LEAF > "$out/bridge_leaf.log" 2>&1
+grep -q 'SU_NATIVE_MULTIRATE_TOP PASS' "$out/bridge_leaf.log"
 echo SU_NATIVE_MULTIRATE_TOP_GATE_PASS
