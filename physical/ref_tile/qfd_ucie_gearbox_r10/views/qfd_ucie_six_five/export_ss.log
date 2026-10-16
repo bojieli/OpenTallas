@@ -24,42 +24,42 @@ Components of this program may be licensed under more restrictive licenses which
 [WARNING STA-0450] virtual clock ot_io_fdirx can not be propagated.
 [WARNING STA-0450] virtual clock ot_io_blktx can not be propagated.
 [WARNING STA-0450] virtual clock ot_io_blkrx can not be propagated.
-OT_HYBRID CTS_MEASURE ss core_ck sinks=8423 reference_scope=boundary boundary_sinks=1198 min=286.2978754407824 mean=292.38818840189145 max=309.9714108896399 all_mean=291.9608828712552
-OT_HYBRID CTS_MEASURE ss fdi_ck sinks=2133 reference_scope=boundary boundary_sinks=1047 min=236.62166765039944 mean=251.5338028576174 max=270.6797019571584 all_mean=249.68240708377832
-OT_HYBRID CTS_MEASURE ss fdi_rx_ck sinks=7791 reference_scope=boundary boundary_sinks=1043 min=250.05891901573526 mean=260.7632268246641 max=277.6666685459504 all_mean=262.5447245711159
-OT_HYBRID CTS_MEASURE ss blk_tx_ck sinks=3591 reference_scope=boundary boundary_sinks=2 min=252.11910437961302 mean=252.19319788901498 max=252.26729139841697 all_mean=254.1267856934097
-OT_HYBRID CTS_MEASURE ss blk_rx_ck sinks=3588 reference_scope=all_internal_only boundary_sinks=3588 min=243.28636424943068 mean=252.35823382640535 max=263.58562660163767 all_mean=252.35823382640535
+OT_HYBRID CTS_MEASURE ss core_ck sinks=8424 reference_scope=boundary boundary_sinks=1199 min=282.9804735187955 mean=291.91694614321295 max=318.4746923359483 all_mean=292.0908426402401
+OT_HYBRID CTS_MEASURE ss fdi_ck sinks=2134 reference_scope=boundary boundary_sinks=1048 min=243.94114603639537 mean=254.67535767987096 max=265.26955738096655 all_mean=257.3298447708099
+OT_HYBRID CTS_MEASURE ss fdi_rx_ck sinks=7791 reference_scope=boundary boundary_sinks=1043 min=248.32633271215778 mean=265.36746172817993 max=278.7328434763338 all_mean=265.1143360319434
+OT_HYBRID CTS_MEASURE ss blk_tx_ck sinks=3591 reference_scope=boundary boundary_sinks=2 min=241.9249810156199 mean=241.93308564373206 max=241.9411902718442 all_mean=241.03642918287576
+OT_HYBRID CTS_MEASURE ss blk_rx_ck sinks=3588 reference_scope=all_internal_only boundary_sinks=3588 min=251.8809337843036 mean=262.9820654940686 max=272.4363523448908 all_mean=262.9820654940686
 OT_ENTRIES LEVEL core_ck deep=1 basis=TT wire level not measured in this scene; conservative210ps setup
-OT_ENTRIES COMP ss core_ck -> core_fault$_DFFE_PN0P_/CLK wire=0 R=292.38818840189145 latency=0.0 phi=292.38818840189145
+OT_ENTRIES COMP ss core_ck -> ot_prs_00000_ff/CLK wire=0 R=291.91694614321295 latency=0.0 phi=291.91694614321295
 OT_ENTRIES LEVEL fdi_ck deep=1 basis=TT wire level not measured in this scene; conservative210ps setup
-OT_ENTRIES COMP ss fdi_ck -> fdi_fault$_DFFE_PN0P_/CLK wire=0 R=251.5338028576174 latency=40.854385544274066 phi=292.38818840189145
+OT_ENTRIES COMP ss fdi_ck -> ot_prs_00001_ff/CLK wire=0 R=254.67535767987096 latency=37.241588463342 phi=291.91694614321295
 OT_ENTRIES LEVEL fdi_rx_ck deep=1 basis=TT wire level not measured in this scene; conservative210ps setup
-OT_ENTRIES COMP ss fdi_rx_ck -> padbad$_DFF_PN0_/CLK wire=0 R=260.7632268246641 latency=31.62496157722734 phi=292.38818840189145
+OT_ENTRIES COMP ss fdi_rx_ck -> padbad$_DFF_PN0_/CLK wire=0 R=265.36746172817993 latency=26.54948441503302 phi=291.91694614321295
 OT_ENTRIES LEVEL blk_tx_ck deep=1 basis=TT wire level not measured in this scene; conservative210ps setup
-OT_ENTRIES COMP ss blk_tx_ck -> bt$_DFF_PN0_/CLK wire=0 R=252.19319788901498 latency=40.19499051287647 phi=292.38818840189145
+OT_ENTRIES COMP ss blk_tx_ck -> bt$_DFF_PN0_/CLK wire=0 R=241.93308564373206 latency=49.9838604994809 phi=291.91694614321295
 OT_ENTRIES LEVEL blk_rx_ck deep=1 basis=TT wire level not measured in this scene; conservative210ps setup
-OT_ENTRIES COMP ss blk_rx_ck -> rxblk[0]$_DFF_P_/CLK wire=0 R=252.35823382640535 latency=40.0299545754861 phi=292.38818840189145
-OT_ENTRIES DOMAIN core 833.333008ps IO599/599 boundary=286.2978754407823..309.9714108896399
-OT_ENTRIES DOMAIN fdi 833.333008ps IO1/1045 boundary=277.47605319467345..311.5340875014325
-OT_ENTRIES DOMAIN fdirx 833.333008ps IO1043/0 boundary=281.6838805929626..309.2916301231778
-OT_ENTRIES DOMAIN blktx 833.333008ps IO0/0 boundary=292.3140948924895..292.4622819112934
-OT_ENTRIES DOMAIN blkrx 833.333008ps IO0/0 boundary=283.3163188249167..303.6155811771238
-OT_MULTI_ROOT RELATED_PATH blktx -> core max slack=182.361740 (ordinary synchronous timing retained)
-OT_MULTI_ROOT RELATED_PATH blktx -> core min slack=189.269211 (ordinary synchronous timing retained)
-OT_MULTI_ROOT RELATED_PATH blktx -> fdi max slack=-24.735659 (ordinary synchronous timing retained)
-OT_MULTI_ROOT RELATED_PATH blktx -> fdi min slack=197.692978 (ordinary synchronous timing retained)
-OT_MULTI_ROOT RELATED_PATH fdirx -> fdi max slack=188.869751 (ordinary synchronous timing retained)
-OT_MULTI_ROOT RELATED_PATH fdirx -> fdi min slack=195.169266 (ordinary synchronous timing retained)
-OT_MULTI_ROOT RELATED_PATH blkrx -> core max slack=-51.592175 (ordinary synchronous timing retained)
-OT_MULTI_ROOT RELATED_PATH blkrx -> core min slack=367.640594 (ordinary synchronous timing retained)
-OT_MULTI_ROOT RELATED_PATH fdi -> fdirx max slack=114.519089 (ordinary synchronous timing retained)
-OT_MULTI_ROOT RELATED_PATH fdi -> fdirx min slack=217.190186 (ordinary synchronous timing retained)
-OT_MULTI_ROOT RELATED_PATH fdirx -> blkrx max slack=-64.658447 (ordinary synchronous timing retained)
-OT_MULTI_ROOT RELATED_PATH fdirx -> blkrx min slack=377.983521 (ordinary synchronous timing retained)
-OT_MULTI_ROOT RELATED_PATH core -> blktx max slack=-75.077553 (ordinary synchronous timing retained)
-OT_MULTI_ROOT RELATED_PATH core -> blktx min slack=374.287872 (ordinary synchronous timing retained)
-OT_MULTI_ROOT OWNERSHIP PASS roots=5 registers=25526 inputs=1643 outputs=1644 async_control_pins=238
-OT_ENTRIES COMP DONE ss 5 entries phi=292.38818840189145 boundary=277.47605319467345..311.5340875014325
+OT_ENTRIES COMP ss blk_rx_ck -> rxblk[0]$_DFF_P_/CLK wire=0 R=262.9820654940686 latency=28.93488064914436 phi=291.91694614321295
+OT_ENTRIES DOMAIN core 833.333008ps IO599/599 boundary=282.9804735187955..318.47469233594825
+OT_ENTRIES DOMAIN fdi 833.333008ps IO1/1045 boundary=281.18273449973736..302.5111458443085
+OT_ENTRIES DOMAIN fdirx 833.333008ps IO1043/0 boundary=274.87581712719077..305.2823278913668
+OT_ENTRIES DOMAIN blktx 833.333008ps IO0/0 boundary=291.9088415151008..291.9250507713251
+OT_ENTRIES DOMAIN blkrx 833.333008ps IO0/0 boundary=280.81581443344794..301.37123299403515
+OT_MULTI_ROOT RELATED_PATH blktx -> core max slack=60.751293 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH blktx -> core min slack=221.366318 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH blktx -> fdi max slack=-57.401638 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH blktx -> fdi min slack=202.378525 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH fdirx -> fdi max slack=181.378082 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH fdirx -> fdi min slack=214.191635 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH blkrx -> core max slack=-24.158398 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH blkrx -> core min slack=372.460815 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH fdi -> fdirx max slack=97.835793 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH fdi -> fdirx min slack=183.704865 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH fdirx -> blkrx max slack=-38.199444 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH fdirx -> blkrx min slack=376.567413 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH core -> blktx max slack=-42.315151 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH core -> blktx min slack=383.896118 (ordinary synchronous timing retained)
+OT_MULTI_ROOT OWNERSHIP PASS roots=5 registers=25528 inputs=1643 outputs=1644 async_control_pins=242
+OT_ENTRIES COMP DONE ss 5 entries phi=291.91694614321295 boundary=274.87581712719077..318.47469233594825
 [WARNING STA-0450] virtual clock core_clk can not be propagated.
 [WARNING STA-0450] virtual clock ot_io_fdi can not be propagated.
 [WARNING STA-0450] virtual clock ot_io_fdirx can not be propagated.
@@ -70,8 +70,8 @@ OT_IOREF clock-port fdi_ck (ot_entry_1): data input delays dropped
 OT_IOREF clock-port fdi_rx_ck (ot_entry_2): data input delays dropped
 OT_IOREF clock-port blk_tx_ck (ot_entry_3): data input delays dropped
 OT_IOREF clock-port blk_rx_ck (ot_entry_4): data input delays dropped
-OT_IOREF_EDGE ot_entry_0 boundary 1198 negedge 0 noarc 0 inverted 0
-OT_IOREF_EDGE ot_entry_1 boundary 1047 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_0 boundary 1199 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_1 boundary 1048 negedge 0 noarc 0 inverted 0
 OT_IOREF_EDGE ot_entry_2 boundary 1043 negedge 0 noarc 0 inverted 0
 OT_IOREF_EDGE ot_entry_3 boundary 2 negedge 0 noarc 0 inverted 0
 OT_IOREF_EDGE ot_entry_4 boundary 0 negedge 0 noarc 0 inverted 0
@@ -80,5 +80,20 @@ OT_IOREF keep ot_io_fdi (not an insertion-reference clock)
 OT_IOREF keep ot_io_fdirx (not an insertion-reference clock)
 OT_IOREF keep ot_io_blktx (not an insertion-reference clock)
 OT_IOREF keep ot_io_blkrx (not an insertion-reference clock)
-OT_WS max -1.238243951817708e-10 min 7.232608956186937e-11
+OT_IOREF clock-port core_ck (ot_entry_0): data input delays dropped
+OT_IOREF clock-port fdi_ck (ot_entry_1): data input delays dropped
+OT_IOREF clock-port fdi_rx_ck (ot_entry_2): data input delays dropped
+OT_IOREF clock-port blk_tx_ck (ot_entry_3): data input delays dropped
+OT_IOREF clock-port blk_rx_ck (ot_entry_4): data input delays dropped
+OT_IOREF_EDGE ot_entry_0 boundary 1199 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_1 boundary 1048 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_2 boundary 1043 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_3 boundary 2 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_4 boundary 0 negedge 0 noarc 0 inverted 0
+OT_IOREF keep core_clk (not an insertion-reference clock)
+OT_IOREF keep ot_io_fdi (not an insertion-reference clock)
+OT_IOREF keep ot_io_fdirx (not an insertion-reference clock)
+OT_IOREF keep ot_io_blktx (not an insertion-reference clock)
+OT_IOREF keep ot_io_blkrx (not an insertion-reference clock)
+OT_WS max -1.769797641770765e-10 min 7.269246315999567e-11
 OT_EXPORT_DONE

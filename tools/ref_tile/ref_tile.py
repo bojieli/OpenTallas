@@ -30,6 +30,7 @@ import json
 import math
 import os
 import re
+import shlex
 import sys
 from pathlib import Path
 
@@ -47,6 +48,7 @@ import clock_entry_constraints  # noqa: E402
 
 KIT_ROOT = "physical/ref_tile"
 QDM = "physical/qwen_die_masters"
+ASSIGNED_PIN_EXACT_TCL = "physical/common_flow/assigned_pin_exact.tcl"
 # floorplan lattice: die / core / macro origins snap to these (um).  2.16 = lcm(row 0.27, M4 track 0.048, site 0.054)
 GRID_Y = 2.16
 GRID_X = 0.432          # lcm(site 0.054, M5 track 0.048)
@@ -180,12 +182,24 @@ def pin_regs_plan(s: dict) -> dict | None:
         return {"enable": False, "reason": pr["reason"]}
     if pr.get("exclude") and not str(pr.get("reason", "")).strip():
         raise SpecError("spec: pin_regs.exclude needs a recorded reason")
-    cks = clock_ports(s)
+    declared = s.get("clock_ports", [])
+    resets = s.get("reset_ports", [])
+    literal = r"[A-Za-z_][A-Za-z0-9_$]*(?:\[\d+\])?"
+    if not isinstance(declared, list) or not isinstance(resets, list):
+        raise SpecError("spec: clock/reset role declarations must be literal lists")
+    roles = [s["clock_port"]] + declared + resets
+    if any(not isinstance(p, str) or not re.fullmatch(literal, p) for p in roles):
+        raise SpecError("spec: clock/reset roles require explicit literal port names or bits")
+    cks = declared_clock_ports(s)
+    if set(cks) & set(resets):
+        raise SpecError("spec: clock/reset roles conflict; clocks must not be listed as reset_ports")
     ck = pr.get("clock") or (cks[0] if len(cks) == 1 else None)
     if not ck:
         raise SpecError(f"spec: multi-clock tile ({', '.join(cks)}): name the data clock in pin_regs.clock, or opt out "
                         "with a reason")
-    return {"enable": True, "clock": ck, "clock_ports": cks, "exclude": pr.get("exclude", ""),
+    if ck not in cks:
+        raise SpecError("spec: pin_regs.clock must name a declared clock port or bit")
+    return {"enable": True, "clock": ck, "clock_ports": cks, "reset_ports": resets, "exclude": pr.get("exclude", ""),
             "reset": pr.get("reset", ""), "reason": pr.get("reason", ""),
             "latency_cycles": {"input": 1, "output": 1}, "rule": PIN_REGS_RULE,
             "per_port_table": "$RESULTS_DIR/ot_pin_regs.tsv (route synthesis: port dir width cycles why)"}
@@ -195,7 +209,8 @@ def pin_regs_vars(s: dict) -> list:
     plan = pin_regs_plan(s)
     if not plan or not plan["enable"]:
         return []
-    out = ["--orfs-var OT_PIN_REGS=1", f"--orfs-var OT_PIN_REGS_CLOCK={','.join([plan['clock']] + [c for c in plan['clock_ports'] if c != plan['clock']])}"]
+    out = ["--orfs-var OT_PIN_REGS=1", f"--orfs-var OT_PIN_REGS_CLOCK={shq(','.join([plan['clock']] + [c for c in plan['clock_ports'] if c != plan['clock']]))}"]
+    out.append(f"--orfs-var OT_PIN_REGS_RESET_PORTS={shq(','.join(plan['reset_ports']))}")
     if plan["exclude"]:
         out.append(f"--orfs-var OT_PIN_REGS_EXCLUDE={shq(plan['exclude'])}")
     if plan["reset"]:
@@ -358,26 +373,145 @@ def load_spec(path: str) -> dict:
     elif s.get("clock_cts_roots") is not None:
         raise SpecError("clock_cts_roots requires hybrid_entries")
     elif s.get("clock_ports"):
-        raise SpecError('spec: "clock_ports" requires entries or hybrid_entries')
+        cps = s["clock_ports"]
+        if not isinstance(cps, list) or not cps or len(set(cps)) != len(cps) or s["clock_port"] not in cps:
+            raise SpecError("spec: clock_ports role declarations must be distinct and include clock_port")
     if s["pins"] == "auto":   # inputs S, outputs N, clock + resets W (a starting plan; set real faces per the die contract)
         import textbook_lint as TL  # noqa: E402
         mods = TL.rtl_modules([(ROOT / f).read_text(errors="replace") for f in s["sources"] if (ROOT / f).exists()])
         if s["top"] not in mods:
             raise SpecError(f"pins auto: top {s['top']} not found in the sources")
         dirs = TL.module_port_dirs(mods[s["top"]])
-        side = set(clock_ports(s) + list(s["reset_ports"]))
+        side = set(declared_clock_ports(s) + list(s["reset_ports"]))
         s["pins"] = {"S": [p for p, d in dirs.items() if d == "input" and p not in side],
                      "N": [p for p, d in dirs.items() if d != "input" and p not in side],
                      "W": [p for p in dirs if p in side]}
     bad = [f for f in s["pins"] if f not in FACES and f != "ANY"]
     if bad:
         raise SpecError(f"spec: pins faces must be N/S/E/W (or ANY: placer's choice, all faces), got {bad}")
-    for f, names in s["pins"].items():
-        for n in names:
-            if re.search(r"\[\s*\d+\s*(:\s*\d+\s*)?\]", n):
-                raise SpecError(f"spec: pin plan names a bit/range '{n}' on {f}: name ports by base name only (a 1-bit "
-                                f"[0:0] port is a scalar after synthesis: PPL-0061 'Pins {{ck[0]}} not found')")
+    if literal_pin_bits(s):
+        validate_literal_pin_plan(s)
     return s
+
+
+def literal_pin_bits(s: dict) -> bool:
+    return any("[" in n or "]" in n for ns in s.get("pins", {}).values() for n in ns)
+
+
+def validate_literal_pin_plan(s: dict, ports=None, root=None) -> dict:
+    """Narrow exact-bit admission: real widths + exhaustive IO Tcl + named M6 grant.
+
+    Base-only plans retain the existing path. Scalar [0] aliases and ranges stay
+    forbidden. The post-synthesis caller supplies the measured port bounds too;
+    raw-DEF/LEF geometry, PG/vias and native timing still need their normal gates.
+    """
+    root = Path(root or ROOT)
+    if not s.get("io_tcl") or not s.get("m6_pin_grant"):
+        raise SpecError("literal pin bits require exact io_tcl and a named M6 contact grant; scalar [0] aliases remain forbidden")
+    import m6_pin_grant as M6
+    try:
+        granted = M6.validate(s["m6_pin_grant"], s["top"])
+    except ValueError as e:
+        raise SpecError(f"literal pin grant: {e}") from e
+    if ports is None:
+        if s.get("defines"):
+            raise SpecError("literal pin plan needs resolved actual port widths; conditional interfaces are not admitted by this parser")
+        sys.path.insert(0, str(HERE.parent / "closure_loop"))
+        import submit_lint as SL
+        decl = None
+        for f in s["sources"]:
+            p = root / f
+            if p.suffix not in (".sv", ".v") or not p.is_file():
+                continue
+            text = p.read_text()
+            if re.search(r"\bmodule\s+(?:automatic\s+)?" + re.escape(s["top"]) + r"\b", text):
+                try:
+                    decl = SL.top_ports(text, s["top"], s.get("params"))
+                except Exception as e:
+                    raise SpecError(f"literal pin actual RTL widths unresolved: {e}") from e
+                break
+        if not decl:
+            raise SpecError("literal pin actual RTL top/widths not found")
+        bounds = {n: [lsb, lsb+w-1] if lsb >= 0 else None for n,w,lsb in decl}
+        widths = {n: (w, lsb >= 0) for n,w,lsb in decl}
+    else:
+        bounds = getattr(ports, "ranges", {})
+        widths = {}
+        for n, (w, vec) in ports.items():
+            # A synthesized parameterized header may retain a symbolic range.
+            # The separate GATE_PORT_RANGES record contains its evaluated bounds.
+            b = bounds.get(n)
+            if w is None and vec:
+                if not (isinstance(b, (list, tuple)) and len(b) == 2
+                        and all(isinstance(i, int) for i in b) and b[1] >= b[0]):
+                    raise SpecError(f"literal pin actual synthesized width unresolved for {n}")
+                w = b[1] - b[0] + 1
+            if not isinstance(w, int) or w < 1:
+                raise SpecError(f"literal pin actual synthesized width invalid for {n}")
+            widths[n] = (w, vec)
+    expected = set()
+    for n,(w,vec) in widths.items():
+        if vec and w > 1:
+            b = bounds.get(n)
+            if not b or b[1]-b[0]+1 != w:
+                raise SpecError(f"literal pin actual index bounds unresolved for {n}")
+            expected.update(f"{n}[{i}]" for i in range(b[0], b[1]+1))
+        else:
+            expected.add(n)  # [0:0] is a scalar after synthesis
+    actual = {}
+    for face,names in s["pins"].items():
+        if face not in FACES:
+            raise SpecError("literal pin plan requires a fixed face for every pin")
+        for n in names:
+            bit = re.fullmatch(r"([A-Za-z_]\w*)\[(\d+)\]", n)
+            if bit:
+                base,index=bit[1],int(bit[2]); info=widths.get(base); b=bounds.get(base)
+                if not info or not info[1] or info[0] <= 1 or not b or not b[0] <= index <= b[1]:
+                    raise SpecError(f"literal pin {n} is not an actual multi-bit port index (scalar [0] forbidden)")
+                expanded=[n]
+            elif n in widths:
+                w,vec=widths[n];b=bounds.get(n)
+                expanded=[f"{n}[{i}]" for i in range(b[0],b[1]+1)] if vec and w>1 else [n]
+            else:
+                raise SpecError(f"literal pin {n} is not an actual port; ranges/wildcards are forbidden")
+            for pin in expanded:
+                if pin in actual:
+                    raise SpecError(f"duplicate literal pin assignment {pin}")
+                actual[pin]=face
+    if set(actual) != expected:
+        raise SpecError(f"literal pin coverage mismatch: missing {sorted(expected-set(actual))[:8]}, excess {sorted(set(actual)-expected)[:8]}")
+    rel=Path(s["io_tcl"])
+    if rel.is_absolute() or ".." in rel.parts or not (root/rel).is_file():
+        raise SpecError("literal pin io_tcl must be an existing safe repo path")
+    canonical = root / ASSIGNED_PIN_EXACT_TCL
+    if not canonical.is_file():
+        raise SpecError("literal pin canonical placement helper is missing from the source archive")
+    prefix = canonical.read_text()
+    text = (root/rel).read_text()
+    if not text.startswith(prefix):
+        raise SpecError("literal pin IO Tcl must inline the byte-exact canonical placement helper")
+    commands={}
+    for line in text[len(prefix):].splitlines():
+        if line.endswith("\\"):
+            raise SpecError("literal pin IO Tcl continuations are forbidden")
+        line = line.strip()
+        if not line or line.startswith("#"):
+            continue
+        m=re.fullmatch(r"ot_assigned_pin_exact \{([^}]+)\} (M[1-6]) ([NSEW]) ([0-9]+(?:\.[0-9]+)?)",line)
+        if not m or m[1] in commands:
+            raise SpecError("literal pin IO Tcl has malformed or duplicate exact assignment")
+        n,layer,face,c=m[1],m[2],m[3],float(m[4]);commands[n]=(layer,face,c)
+        if n not in actual or actual[n]!=face:
+            raise SpecError(f"literal pin IO Tcl face/name mismatch for {n}")
+        if layer=="M6":
+            g=granted.get(n)
+            if not g or g["face"]!=face or not g["span_um"][0]<=c<=g["span_um"][1]:
+                raise SpecError(f"literal pin IO Tcl has ungranted M6 centre {n}")
+    if set(commands)!=expected:
+        raise SpecError("literal pin IO Tcl is not exhaustive for the actual RTL pins")
+    if {n for n,(layer,face,c) in commands.items() if layer=="M6"}!=set(granted):
+        raise SpecError("literal pin IO Tcl M6 contacts differ from exact named grant")
+    return actual
 
 
 def contract_slot(s: dict) -> dict | None:
@@ -701,6 +835,10 @@ def outline(s: dict, slot: dict | None, area_um2: float | None, blocks: list) ->
 
 
 PG_MIN_STRIPES, PG_MIN_SPREAD = 2, 0.50     # child_lint (b): MIN_STRIPES per net, first..last stripe >= MIN_SPREAD of the span
+# PG-MARGIN (ROOT 2026-10-16, qkd_rlys_1 10.8 um at m5_pg_pitch 2.7): the model predicted exactly 0.500 and the routed
+# view measured just under it (stripe snapping / width), so the export failed after a clean route.  gen and the gate
+# require MIN_SPREAD + PG_SPREAD_MARGIN; child_lint itself keeps 0.50.
+PG_SPREAD_MARGIN = 0.02
 
 
 def pg_stripe_spread(s: dict, lc: dict, W: float, H: float):
@@ -756,7 +894,7 @@ def fill_check(s: dict, W: float, H: float, blocks: list, std_area) -> tuple | N
 
 
 def pg_spread_ok(rec) -> bool:
-    return rec is None or (rec[1] >= PG_MIN_STRIPES and rec[2] + 1e-9 >= PG_MIN_SPREAD)
+    return rec is None or (rec[1] >= PG_MIN_STRIPES and rec[2] >= PG_MIN_SPREAD + PG_SPREAD_MARGIN)
 
 
 def blocks_of(s: dict) -> list:
@@ -806,6 +944,33 @@ def abutted_stack(a: dict, b: dict, gx: float, gy: float) -> bool:
             for _layer, (x0, y0, x1, y1) in pin["rects"]:
                 on_w_e = x0 <= 200 or x1 >= tm["W"] - 200          # nm: a W / E face pin reaches the side edge
                 if (y1 >= tm["H"] - 200 if edge == "top" else y0 <= 200) and not on_w_e:
+                    return False
+    return True
+
+
+def abutted_row(a: dict, b: dict, gx: float, gy: float) -> bool:
+    """two blocks (macros OR hard children) side by side E-W with no cell row between them (0 <= gap <= ABUT_UM,
+    overlapping in y) whose touching faces are BARE: no pin of any use (signal, clock, power, ground) within 200 nm of
+    either touching face.  A bare face needs no channel -- no pin to reach, no strap to land, no glue to place (Q-TILE45
+    r4 2026-10-16: the qfd_tile LSL master carries all 465 signal pins and the clock on its E face and keeps its PG rails
+    2.16 um inside, so a MY column and an R0 column abut back to back and give their 20 um to the two pin gutters).
+    Any pin on a touching face keeps the channel rule.  R0 / MX keep the LEF's W / E faces, MY / R180 swap them;
+    rotated (R90 / R270 ...) blocks keep the channel rule."""
+    flip = {"R0": False, "MX": False, "MY": True, "R180": True}
+    if a.get("orient", "R0") not in flip or b.get("orient", "R0") not in flip:
+        return False
+    if not (-1e-6 <= gx <= ABUT_UM + 1e-6 and gy < -1e-6):
+        return False
+    lo, hi = (a, b) if a["x"] < b["x"] else (b, a)
+    for blk, edge in ((lo, "E"), (hi, "W")):
+        if blk.get("_tm") is None:
+            blk["_tm"] = track_macro(blk["view"])
+        tm = blk["_tm"]
+        if flip[blk.get("orient", "R0")]:                       # the LEF face that ends up touching the neighbour
+            edge = "W" if edge == "E" else "E"
+        for pin in tm["pins"]:
+            for _layer, (x0, _y0, x1, _y1) in pin["rects"]:
+                if (x1 >= tm["W"] - 200) if edge == "E" else (x0 <= 200):
                     return False
     return True
 
@@ -933,12 +1098,14 @@ def floorplan_checks(s: dict, W: float, H: float, blocks: list, std_area: float 
             gap = max(gx, gy)
             if gap < CHANNEL_UM - 1e-6 and abutted_stack(a, b, gx, gy):
                 continue    # the deliberate abutment this check names as its fix: one macro stack, no cells between
+            if gap < CHANNEL_UM - 1e-6 and abutted_row(a, b, gx, gy):
+                continue    # side-by-side abutment of two bare faces (no pin of any use on either): no channel needed
             if ab is not None and ch_min - 1e-6 <= gap < CHANNEL_UM - 1e-6:
                 ab_n["channel"] += 1
                 continue
             if gap < CHANNEL_UM - 1e-6:
                 out.append(("FAIL", "channel", f"{a['master']}#{a['idx']} / {b['master']}#{b['idx']} channel {gap:.1f} um "
-                            f"(< {CHANNEL_UM:.0f} um)", "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack)"))
+                            f"(< {CHANNEL_UM:.0f} um)", "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack), or two blocks E-W with bare touching faces (no pin of any use: abutted_row)"))
     if ab is not None and (ab_n["channel"] or ab_n["macro_edge"]):
         out.append(("WARN", "abut_plan", f"PROBE: {ab_n['channel']} tile-tile channels in [{ch_min:g}, {CHANNEL_UM:g}) um and "
                     f"{ab_n['macro_edge']} tile-edge distances >= {edge_min:g} um admitted by abut_plan ({ab['why'][:160]})",
@@ -962,6 +1129,11 @@ def floorplan_checks(s: dict, W: float, H: float, blocks: list, std_area: float 
 def clock_ports(s: dict) -> list:
     """the clock source ports: every entry of a "clock": "entries" cluster, else the one clock_port"""
     return list(s["clock_ports"]) if s.get("clock") in ("entries", "hybrid_entries", "multiple_cts_roots") else [s["clock_port"]]
+
+
+def declared_clock_ports(s: dict) -> list:
+    """Literal control roles, independent of the policy generating CTS/SDC."""
+    return list(dict.fromkeys([s["clock_port"]] + list(s.get("clock_ports", []))))
 
 
 def clock_ports_sdc(s: dict) -> str:
@@ -1268,6 +1440,11 @@ def shq(v: str) -> str:
     return "'" + v.replace("'", "'\"'\"'") + "'"
 
 
+def shell_array(fragments: list[str]) -> str:
+    """Serialize intended argument fragments as inert, separately quoted words."""
+    return " ".join(shq(word) for fragment in fragments for word in shlex.split(fragment))
+
+
 def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str:
     r = s["route"]
     ph, pv = pin_layers(s, lc)
@@ -1332,7 +1509,7 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
             # ... and post_iop.tcl re-applies them after place_pins (el1013-smh-r11, see the kit file below)
             if "POST_IO_PLACEMENT_TCL" not in s.get("orfs_vars", {}):
                 extra.append(f"--orfs-var POST_IO_PLACEMENT_TCL=/src/{kd}/post_iop.tcl")
-        extra.append(f"--orfs-var {k}={vv}")
+        extra.append("--orfs-var " + shq(f"{k}={vv}"))
     # spec "post_synth_tcl": a repo POST_SYNTH hook, e.g. physical/hbm_accel_die_views/common/inout_retype_post_synth.tcl
     # for a top with inout terminals (ORFS never buffers an inout: the post-GRT repair stops with RSZ-0074 "found route to
     # 2 pins, expected 1" and CTS misbehaves; the closed die-view routes ran it by default through route_view.sh POSTSYN)
@@ -1429,7 +1606,7 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
         f"PD={r.get('pd', 0.55)}", f"NC={r.get('threads', 8)}", f"PIN_H={shq(ph)}", f"PIN_V={shq(pv)}", f"PIN_MIN_TRACKS={r.get('pin_min_tracks', 2)}", "STAGES=pnr",
         f"RLAYERS={shq(' '.join(lc['rlayers']))}", f"ROUTE_PERIOD_NS={r.get('period_ps', 770) / 1000.0}",
         *([f"CLOCK_RLAYERS={shq(' '.join(clock_rlayers(lc)))}"] if clock_rlayers(lc) else []),
-        f"KIT=/src/{kd}", f"MACROS=({' '.join(views)})", f"EXTRA=({' '.join(extra)})", *pin_balance_env(r, lc),
+        f"KIT=/src/{kd}", f"MACROS=({' '.join(views)})", f"EXTRA=({shell_array(extra)})", *pin_balance_env(r, lc),
         *([f"export OT_PIN_GROUP_MAX={pin_group_max(s)}"] if "pin_group_max" in r else []),
         *cts_sink_env(r), *([f"RECIPE={int(s['recipe'])}"] if s.get("recipe", 1) >= 2 else []), ""])
 
@@ -1528,6 +1705,8 @@ def referenced_paths(s: dict, kd: str) -> list:
         out.append("physical/hbm_w2_rb_station_20261006/forwarded_subtree.tcl")
     if s.get("io_tcl"):
         out.append(s["io_tcl"])
+    if literal_pin_bits(s):
+        out.append(ASSIGNED_PIN_EXACT_TCL)
     out += sorted(str(v) for v in s.get("orfs_vars", {}).values() if not str(v).startswith("/") and os.path.isfile(str(v)))
     if s.get("io_flop_at_pins"):
         out += ["physical/qwen_die_masters/io_flop_at_pins.tcl", "physical/qwen_die_masters/out_flop_release.tcl"]

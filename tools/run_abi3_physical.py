@@ -2211,6 +2211,17 @@ def io_constraints_tcl(pin_regions: list[dict[str, str]], exhaustive: bool = Fal
             dx0, dy0, dx1, dy1 = die_area_um
             edge = region["edge"]
             lo, hi = region.get("range_um", (dy0, dy1) if edge in ("left", "right") else (dx0, dx1))
+            # CORNER AVOIDANCE (ROOT 2026-10-16, H-SM ot_hgi_sm_xload_cl2_ctl cl2d DRC 4): place_pin bypasses place_pins
+            # -corner_avoidance, so a balanced full face put its first/last pin 0.04 um from the tile corner, where it
+            # met the perpendicular face's corner pin (M5 spacing x4).  Balanced positions stay inside
+            # [d0 + C, d1 - C] of the edge, C = OT_PIN_CORNER_UM (default 1.0 um, 0 = off).  Only a FULL-FACE region
+            # is clipped: an explicit range is the author's placement (b2_dma_mv_*_wface 0.2-0.82 um, qfd_xcst_* corner
+            # windows; 27 ranges on main sit inside 1 um of a corner) and stays as written.
+            corner = float(os.environ.get("OT_PIN_CORNER_UM", "1.0"))
+            if corner < 0:
+                raise ValueError("OT_PIN_CORNER_UM must be nonnegative")
+            if "range_um" not in region and hi - lo > 2 * corner:
+                lo, hi = lo + corner, hi - corner
             layers = balanced_h if edge in ("left", "right") else balanced_v
             location = (f"[list {dx1 if edge == 'right' else dx0:g} $ot_pos]"
                         if edge in ("left", "right") else
@@ -2366,6 +2377,26 @@ def corner_lib_lines(corners: list[str], memory_macros: dict[str, Any] | None) -
     return lines
 
 
+def orfs_config_value(key: str, value: Any) -> str:
+    """Preserve literal control names/patterns across Make's export expansion.
+
+    Other ORFS options retain their Make expressions, notably corner-library
+    references. These options are consumed as literal Tcl names or regexes;
+    Make must not consume anchors such as ``$|`` before synthesis sees them.
+    """
+    value = str(value)
+    literal = (key.startswith("OT_PIN_REGS_") or key.endswith(("_RE", "_REGEX", "_PATTERN"))
+               or key in {"RESET_INCLUDE", "RESET_EXCLUDE", "SYNTH_RESET_INCLUDE", "SYNTH_RESET_EXCLUDE"})
+    if not literal:
+        return value
+    if "\n" in value or "\r" in value:
+        raise FlowError(f"literal ORFS option {key} must occupy one config.mk line")
+    # Make strips comments before expanding dollars. Preserve both the hash
+    # and any literal backslashes immediately before it.
+    value = re.sub(r"(\\*)#", lambda m: "\\" * (2 * len(m[1]) + 1) + "#", value)
+    return value.replace("$", "$$")
+
+
 def orfs_config_lines(
     nickname: str,
     block: dict[str, Any],
@@ -2438,7 +2469,7 @@ def orfs_config_lines(
     if pnr["corner_env"]:
         config.append(f"export CORNER = {pnr['corner_env']}")
     for key, value in sorted(pnr["extra_config"].items()):
-        config.append(f"export {key} = {value}")
+        config.append(f"export {key} = {orfs_config_value(key, value)}")
     if pnr["extra_config"].get("OT_MULTI_VT"):
         # MULTI-VT (OT_MULTI_VT=lvt|lvt+slvt): synthesis maps RVT only (the platform reads ASAP7_USE_VT for the
         # synthesis make goals, including the recursive do-yosys* ones), so the netlist ABC produces is the RVT

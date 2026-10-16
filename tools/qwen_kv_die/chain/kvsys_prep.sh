@@ -47,10 +47,19 @@ if [ "${OT_KV_EXPAND:-all}" != none ]; then
   python3 tools/qwen_kv_die/kv_expand.py --run $O $( [ "${OT_KV_EXPAND:-all}" = all ] || echo --only ${OT_KV_EXPAND} ) > $O/expand.log
   EXP="--expanded $O/expand.json"
 fi
+# Q-KVSYS-RLY 2026-10-16 (OT_KV_RLY_STD=1, also read by kv_die.py / kv_pin_repair.py for the frame size): every
+# qkd_rly_<W> relay stage -> replicas of the closed relay standards qkd_rlys_1/36/296/528 (declared pads die.v.pads.json)
+if [ "${OT_KV_RLY_STD:-0}" = 1 ]; then
+  # OT_KV_RLY_STD_NETLIST_ONLY=1: port-bind checks before the standards' views close (never a physical die run)
+  python3 tools/qwen_kv_die/kv_rly_std.py --run $O ${OT_KV_RLY_STD_NETLIST_ONLY:+--netlist-only} > $O/rly_std.log
+  EXP="--expanded $O/expand.json"
+fi
 # v1.4: the host SerDes and the UCIe PHY bind their native ports (tx_up / tx_v / tx_flit / rx_v / rx_flit): SerDes <-> root core phy_*, UCIe <-> qkd_d2d_static fdi_* (583 b)
 [ -n "$H14" ] && python3 tools/qwen_kv_die/kv_native_phy.py --case $O/case_kv > $O/native_phy.log \
   && python3 tools/qwen_kv_die/kv_native_phy.py --case $O/case_kv --libs $O/libs >> $O/native_phy.log
 python3 tools/qwen_kv_die/kvsys_clocks.py --case $O/case_kv --views $O/libs/views.json --out $O/libs > $O/clocks.log
 python3 tools/qwen_kv_die/die_port_bind_kv.py $O/case_kv/die.v --split --relay-rtl $O/case_kv/qkd_kv_relays.sv $EXP --out $O/port_bind.json > $O/port_bind.log
+# Q-KVSYS-NETLIST 2026-10-16: the STRICT bit-level bind (die_port_bind v2 on the BINDINGS-bound netlist), recorded
+bash tools/qwen_kv_die/kv_port_bind_v2.sh $O/case_kv/die.v $O/port_bind_v2 $O/case_kv/qkd_kv_relays.sv $O/expand.json > $O/port_bind_v2.log 2>&1 || true
 python3 tools/qwen_kv_die/kvsys_window.py --split $H14 --out $O/window.json > $O/window.log
 echo "prep done: $(cat $O/case_kv/SOURCE_COMMIT) $(tail -1 $O/bind.log | head -c 300)"

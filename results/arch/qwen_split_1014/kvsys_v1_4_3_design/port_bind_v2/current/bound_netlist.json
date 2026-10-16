@@ -1,0 +1,8143 @@
+{
+ "schema": "opentallas.qwen_kv_bound_netlist.v1",
+ "die_v": "/home/ubuntu/scratch/qkvsys-netlist-0045/kvs13/case_kv/die.v",
+ "die_sha256": "756447571e7eba2298e05e334af928853a550e782895f38db7d0d36966e7567c",
+ "top": "qfd_die",
+ "masters": {
+  "qkd_cdc_wleaf": {
+   "instances": 128,
+   "how": "bound",
+   "module": "ot_qwen_stream4_cdc_pc",
+   "bundles": {
+    "ho": {
+     "die_ports": [
+      "ho"
+     ],
+     "die_bits": 319,
+     "rtl_bits": 319,
+     "rtl_ports": [
+      "h_cred",
+      "h_wv",
+      "h_wsec",
+      "h_cv",
+      "h_csec",
+      "h_cdata",
+      "h_ctag",
+      "h_fault"
+     ]
+    },
+    "hi": {
+     "die_ports": [
+      "hi"
+     ],
+     "die_bits": 294,
+     "rtl_bits": 294,
+     "rtl_ports": [
+      "h_lv",
+      "h_lsec",
+      "h_lrow",
+      "h_ldata",
+      "h_hand",
+      "h_wcon",
+      "h_av",
+      "h_atag"
+     ]
+    },
+    "co": {
+     "die_ports": [
+      "co"
+     ],
+     "die_bits": 283,
+     "rtl_bits": 283,
+     "rtl_ports": [
+      "l_v",
+      "l_sec",
+      "l_row",
+      "l_data",
+      "l_pop"
+     ]
+    },
+    "wi": {
+     "die_ports": [
+      "wi"
+     ],
+     "die_bits": 290,
+     "rtl_bits": 290,
+     "rtl_ports": [
+      "w_v",
+      "w_sec",
+      "w_data",
+      "w_tag"
+     ]
+    },
+    "wr": {
+     "die_ports": [
+      "wr"
+     ],
+     "die_bits": 11,
+     "rtl_bits": 11,
+     "rtl_ports": [
+      "w_room",
+      "wd_v",
+      "wd_tag"
+     ]
+    },
+    "cf": {
+     "die_ports": [
+      "cf"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "c_fault"
+     ]
+    },
+    "hclk": {
+     "die_ports": [
+      "hclk"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "hclk"
+     ]
+    },
+    "clk": {
+     "die_ports": [
+      "clk"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "clk"
+     ]
+    },
+    "c_arst_n": {
+     "die_ports": [
+      "c_arst_n"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "c_arst_n"
+     ]
+    },
+    "h_arst_n": {
+     "die_ports": [
+      "h_arst_n"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "h_arst_n"
+     ]
+    }
+   },
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 0,
+   "file": "rtl/hdc/kv/ot_qwen_stream4_cdc_pc.sv",
+   "parameters": {}
+  },
+  "qkd_ctrl_kc": {
+   "instances": 4,
+   "how": "expanded_leaf",
+   "module": "qkd_ctrl_kc",
+   "bundles": {},
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 0
+  },
+  "qkd_ctrl_pc": {
+   "instances": 128,
+   "how": "expanded_leaf",
+   "module": "qkd_ctrl_pc",
+   "bundles": {},
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 644
+  },
+  "qkd_hbm3e_phy_pc": {
+   "instances": 4,
+   "how": "hard_model",
+   "module": "qkd_hbm3e_phy_pc",
+   "bundles": {},
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 0
+  },
+  "qkd_land": {
+   "instances": 2,
+   "how": "bound",
+   "module": "qkd_land_strip_s",
+   "bundles": {
+    "c0i": {
+     "die_ports": [
+      "c0i"
+     ],
+     "die_bits": 283,
+     "rtl_bits": 283,
+     "rtl_ports": [
+      "li0",
+      "lp0"
+     ]
+    },
+    "cf0": {
+     "die_ports": [
+      "cf0"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "cf0"
+     ]
+    },
+    "c1i": {
+     "die_ports": [
+      "c1i"
+     ],
+     "die_bits": 283,
+     "rtl_bits": 283,
+     "rtl_ports": [
+      "li1",
+      "lp1"
+     ]
+    },
+    "cf1": {
+     "die_ports": [
+      "cf1"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "cf1"
+     ]
+    },
+    "c2i": {
+     "die_ports": [
+      "c2i"
+     ],
+     "die_bits": 283,
+     "rtl_bits": 283,
+     "rtl_ports": [
+      "li2",
+      "lp2"
+     ]
+    },
+    "cf2": {
+     "die_ports": [
+      "cf2"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "cf2"
+     ]
+    },
+    "c3i": {
+     "die_ports": [
+      "c3i"
+     ],
+     "die_bits": 283,
+     "rtl_bits": 283,
+     "rtl_ports": [
+      "li3",
+      "lp3"
+     ]
+    },
+    "cf3": {
+     "die_ports": [
+      "cf3"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "cf3"
+     ]
+    },
+    "c4i": {
+     "die_ports": [
+      "c4i"
+     ],
+     "die_bits": 283,
+     "rtl_bits": 283,
+     "rtl_ports": [
+      "li4",
+      "lp4"
+     ]
+    },
+    "cf4": {
+     "die_ports": [
+      "cf4"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "cf4"
+     ]
+    },
+    "c5i": {
+     "die_ports": [
+      "c5i"
+     ],
+     "die_bits": 283,
+     "rtl_bits": 283,
+     "rtl_ports": [
+      "li5",
+      "lp5"
+     ]
+    },
+    "cf5": {
+     "die_ports": [
+      "cf5"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "cf5"
+     ]
+    },
+    "c6i": {
+     "die_ports": [
+      "c6i"
+     ],
+     "die_bits": 283,
+     "rtl_bits": 283,
+     "rtl_ports": [
+      "li6",
+      "lp6"
+     ]
+    },
+    "cf6": {
+     "die_ports": [
+      "cf6"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "cf6"
+     ]
+    },
+    "c7i": {
+     "die_ports": [
+      "c7i"
+     ],
+     "die_bits": 283,
+     "rtl_bits": 283,
+     "rtl_ports": [
+      "li7",
+      "lp7"
+     ]
+    },
+    "cf7": {
+     "die_ports": [
+      "cf7"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "cf7"
+     ]
+    },
+    "c8i": {
+     "die_ports": [
+      "c8i"
+     ],
+     "die_bits": 283,
+     "rtl_bits": 283,
+     "rtl_ports": [
+      "li8",
+      "lp8"
+     ]
+    },
+    "cf8": {
+     "die_ports": [
+      "cf8"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "cf8"
+     ]
+    },
+    "c9i": {
+     "die_ports": [
+      "c9i"
+     ],
+     "die_bits": 283,
+     "rtl_bits": 283,
+     "rtl_ports": [
+      "li9",
+      "lp9"
+     ]
+    },
+    "cf9": {
+     "die_ports": [
+      "cf9"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "cf9"
+     ]
+    },
+    "c10i": {
+     "die_ports": [
+      "c10i"
+     ],
+     "die_bits": 283,
+     "rtl_bits": 283,
+     "rtl_ports": [
+      "li10",
+      "lp10"
+     ]
+    },
+    "cf10": {
+     "die_ports": [
+      "cf10"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "cf10"
+     ]
+    },
+    "c11i": {
+     "die_ports": [
+      "c11i"
+     ],
+     "die_bits": 283,
+     "rtl_bits": 283,
+     "rtl_ports": [
+      "li11",
+      "lp11"
+     ]
+    },
+    "cf11": {
+     "die_ports": [
+      "cf11"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "cf11"
+     ]
+    },
+    "c12i": {
+     "die_ports": [
+      "c12i"
+     ],
+     "die_bits": 283,
+     "rtl_bits": 283,
+     "rtl_ports": [
+      "li12",
+      "lp12"
+     ]
+    },
+    "cf12": {
+     "die_ports": [
+      "cf12"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "cf12"
+     ]
+    },
+    "c13i": {
+     "die_ports": [
+      "c13i"
+     ],
+     "die_bits": 283,
+     "rtl_bits": 283,
+     "rtl_ports": [
+      "li13",
+      "lp13"
+     ]
+    },
+    "cf13": {
+     "die_ports": [
+      "cf13"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "cf13"
+     ]
+    },
+    "c14i": {
+     "die_ports": [
+      "c14i"
+     ],
+     "die_bits": 283,
+     "rtl_bits": 283,
+     "rtl_ports": [
+      "li14",
+      "lp14"
+     ]
+    },
+    "cf14": {
+     "die_ports": [
+      "cf14"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "cf14"
+     ]
+    },
+    "c15i": {
+     "die_ports": [
+      "c15i"
+     ],
+     "die_bits": 283,
+     "rtl_bits": 283,
+     "rtl_ports": [
+      "li15",
+      "lp15"
+     ]
+    },
+    "cf15": {
+     "die_ports": [
+      "cf15"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "cf15"
+     ]
+    },
+    "c16i": {
+     "die_ports": [
+      "c16i"
+     ],
+     "die_bits": 283,
+     "rtl_bits": 283,
+     "rtl_ports": [
+      "li16",
+      "lp16"
+     ]
+    },
+    "cf16": {
+     "die_ports": [
+      "cf16"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "cf16"
+     ]
+    },
+    "c17i": {
+     "die_ports": [
+      "c17i"
+     ],
+     "die_bits": 283,
+     "rtl_bits": 283,
+     "rtl_ports": [
+      "li17",
+      "lp17"
+     ]
+    },
+    "cf17": {
+     "die_ports": [
+      "cf17"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "cf17"
+     ]
+    },
+    "c18i": {
+     "die_ports": [
+      "c18i"
+     ],
+     "die_bits": 283,
+     "rtl_bits": 283,
+     "rtl_ports": [
+      "li18",
+      "lp18"
+     ]
+    },
+    "cf18": {
+     "die_ports": [
+      "cf18"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "cf18"
+     ]
+    },
+    "c19i": {
+     "die_ports": [
+      "c19i"
+     ],
+     "die_bits": 283,
+     "rtl_bits": 283,
+     "rtl_ports": [
+      "li19",
+      "lp19"
+     ]
+    },
+    "cf19": {
+     "die_ports": [
+      "cf19"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "cf19"
+     ]
+    },
+    "c20i": {
+     "die_ports": [
+      "c20i"
+     ],
+     "die_bits": 283,
+     "rtl_bits": 283,
+     "rtl_ports": [
+      "li20",
+      "lp20"
+     ]
+    },
+    "cf20": {
+     "die_ports": [
+      "cf20"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "cf20"
+     ]
+    },
+    "c21i": {
+     "die_ports": [
+      "c21i"
+     ],
+     "die_bits": 283,
+     "rtl_bits": 283,
+     "rtl_ports": [
+      "li21",
+      "lp21"
+     ]
+    },
+    "cf21": {
+     "die_ports": [
+      "cf21"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "cf21"
+     ]
+    },
+    "c22i": {
+     "die_ports": [
+      "c22i"
+     ],
+     "die_bits": 283,
+     "rtl_bits": 283,
+     "rtl_ports": [
+      "li22",
+      "lp22"
+     ]
+    },
+    "cf22": {
+     "die_ports": [
+      "cf22"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "cf22"
+     ]
+    },
+    "c23i": {
+     "die_ports": [
+      "c23i"
+     ],
+     "die_bits": 283,
+     "rtl_bits": 283,
+     "rtl_ports": [
+      "li23",
+      "lp23"
+     ]
+    },
+    "cf23": {
+     "die_ports": [
+      "cf23"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "cf23"
+     ]
+    },
+    "c24i": {
+     "die_ports": [
+      "c24i"
+     ],
+     "die_bits": 283,
+     "rtl_bits": 283,
+     "rtl_ports": [
+      "li24",
+      "lp24"
+     ]
+    },
+    "cf24": {
+     "die_ports": [
+      "cf24"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "cf24"
+     ]
+    },
+    "c25i": {
+     "die_ports": [
+      "c25i"
+     ],
+     "die_bits": 283,
+     "rtl_bits": 283,
+     "rtl_ports": [
+      "li25",
+      "lp25"
+     ]
+    },
+    "cf25": {
+     "die_ports": [
+      "cf25"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "cf25"
+     ]
+    },
+    "c26i": {
+     "die_ports": [
+      "c26i"
+     ],
+     "die_bits": 283,
+     "rtl_bits": 283,
+     "rtl_ports": [
+      "li26",
+      "lp26"
+     ]
+    },
+    "cf26": {
+     "die_ports": [
+      "cf26"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "cf26"
+     ]
+    },
+    "c27i": {
+     "die_ports": [
+      "c27i"
+     ],
+     "die_bits": 283,
+     "rtl_bits": 283,
+     "rtl_ports": [
+      "li27",
+      "lp27"
+     ]
+    },
+    "cf27": {
+     "die_ports": [
+      "cf27"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "cf27"
+     ]
+    },
+    "c28i": {
+     "die_ports": [
+      "c28i"
+     ],
+     "die_bits": 283,
+     "rtl_bits": 283,
+     "rtl_ports": [
+      "li28",
+      "lp28"
+     ]
+    },
+    "cf28": {
+     "die_ports": [
+      "cf28"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "cf28"
+     ]
+    },
+    "c29i": {
+     "die_ports": [
+      "c29i"
+     ],
+     "die_bits": 283,
+     "rtl_bits": 283,
+     "rtl_ports": [
+      "li29",
+      "lp29"
+     ]
+    },
+    "cf29": {
+     "die_ports": [
+      "cf29"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "cf29"
+     ]
+    },
+    "c30i": {
+     "die_ports": [
+      "c30i"
+     ],
+     "die_bits": 283,
+     "rtl_bits": 283,
+     "rtl_ports": [
+      "li30",
+      "lp30"
+     ]
+    },
+    "cf30": {
+     "die_ports": [
+      "cf30"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "cf30"
+     ]
+    },
+    "c31i": {
+     "die_ports": [
+      "c31i"
+     ],
+     "die_bits": 283,
+     "rtl_bits": 283,
+     "rtl_ports": [
+      "li31",
+      "lp31"
+     ]
+    },
+    "cf31": {
+     "die_ports": [
+      "cf31"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "cf31"
+     ]
+    },
+    "ck_p0": {
+     "die_ports": [
+      "ck_p0",
+      "ck_p1",
+      "ck_p2",
+      "ck_p3",
+      "ck_p4",
+      "ck_p5",
+      "ck_p6",
+      "ck_p7",
+      "ck_p8",
+      "ck_p9",
+      "ck_p10",
+      "ck_p11",
+      "ck_p12",
+      "ck_p13",
+      "ck_p14",
+      "ck_p15",
+      "ck_p16",
+      "ck_p17",
+      "ck_p18",
+      "ck_p19",
+      "ck_p20",
+      "ck_p21",
+      "ck_p22",
+      "ck_p23",
+      "ck_p24",
+      "ck_p25",
+      "ck_p26",
+      "ck_p27",
+      "ck_p28",
+      "ck_p29",
+      "ck_p30",
+      "ck_p31"
+     ],
+     "die_bits": 32,
+     "rtl_bits": 32,
+     "rtl_ports": [
+      "ck_p"
+     ]
+    },
+    "ck_g0": {
+     "die_ports": [
+      "ck_g0",
+      "ck_g1",
+      "ck_g2",
+      "ck_g3",
+      "ck_g4",
+      "ck_g5",
+      "ck_g6",
+      "ck_g7"
+     ],
+     "die_bits": 8,
+     "rtl_bits": 8,
+     "rtl_ports": [
+      "ck_g"
+     ]
+    },
+    "ck_e": {
+     "die_ports": [
+      "ck_e"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_e"
+     ]
+    },
+    "ck_r": {
+     "die_ports": [
+      "ck_r"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_r"
+     ]
+    },
+    "st": {
+     "die_ports": [
+      "st"
+     ],
+     "die_bits": 2,
+     "rtl_bits": 2,
+     "rtl_ports": [
+      "st"
+     ]
+    },
+    "lt": {
+     "die_ports": [
+      "lt"
+     ],
+     "die_bits": 21,
+     "rtl_bits": 21,
+     "rtl_ports": [
+      "lt"
+     ]
+    },
+    "rq0": {
+     "die_ports": [
+      "rq0"
+     ],
+     "die_bits": 17,
+     "rtl_bits": 17,
+     "rtl_ports": [
+      "rq0"
+     ]
+    },
+    "rs0": {
+     "die_ports": [
+      "rs0"
+     ],
+     "die_bits": 1025,
+     "rtl_bits": 1025,
+     "rtl_ports": [
+      "rs0"
+     ]
+    },
+    "rq1": {
+     "die_ports": [
+      "rq1"
+     ],
+     "die_bits": 17,
+     "rtl_bits": 17,
+     "rtl_ports": [
+      "rq1"
+     ]
+    },
+    "rs1": {
+     "die_ports": [
+      "rs1"
+     ],
+     "die_bits": 1025,
+     "rtl_bits": 1025,
+     "rtl_ports": [
+      "rs1"
+     ]
+    },
+    "rq2": {
+     "die_ports": [
+      "rq2"
+     ],
+     "die_bits": 17,
+     "rtl_bits": 17,
+     "rtl_ports": [
+      "rq2"
+     ]
+    },
+    "rs2": {
+     "die_ports": [
+      "rs2"
+     ],
+     "die_bits": 1025,
+     "rtl_bits": 1025,
+     "rtl_ports": [
+      "rs2"
+     ]
+    },
+    "rq3": {
+     "die_ports": [
+      "rq3"
+     ],
+     "die_bits": 17,
+     "rtl_bits": 17,
+     "rtl_ports": [
+      "rq3"
+     ]
+    },
+    "rs3": {
+     "die_ports": [
+      "rs3"
+     ],
+     "die_bits": 1025,
+     "rtl_bits": 1025,
+     "rtl_ports": [
+      "rs3"
+     ]
+    },
+    "rq4": {
+     "die_ports": [
+      "rq4"
+     ],
+     "die_bits": 17,
+     "rtl_bits": 17,
+     "rtl_ports": [
+      "rq4"
+     ]
+    },
+    "rs4": {
+     "die_ports": [
+      "rs4"
+     ],
+     "die_bits": 1025,
+     "rtl_bits": 1025,
+     "rtl_ports": [
+      "rs4"
+     ]
+    },
+    "rq5": {
+     "die_ports": [
+      "rq5"
+     ],
+     "die_bits": 17,
+     "rtl_bits": 17,
+     "rtl_ports": [
+      "rq5"
+     ]
+    },
+    "rs5": {
+     "die_ports": [
+      "rs5"
+     ],
+     "die_bits": 1025,
+     "rtl_bits": 1025,
+     "rtl_ports": [
+      "rs5"
+     ]
+    },
+    "rq6": {
+     "die_ports": [
+      "rq6"
+     ],
+     "die_bits": 17,
+     "rtl_bits": 17,
+     "rtl_ports": [
+      "rq6"
+     ]
+    },
+    "rs6": {
+     "die_ports": [
+      "rs6"
+     ],
+     "die_bits": 1025,
+     "rtl_bits": 1025,
+     "rtl_ports": [
+      "rs6"
+     ]
+    },
+    "rq7": {
+     "die_ports": [
+      "rq7"
+     ],
+     "die_bits": 17,
+     "rtl_bits": 17,
+     "rtl_ports": [
+      "rq7"
+     ]
+    },
+    "rs7": {
+     "die_ports": [
+      "rs7"
+     ],
+     "die_bits": 1025,
+     "rtl_bits": 1025,
+     "rtl_ports": [
+      "rs7"
+     ]
+    },
+    "kvn": {
+     "die_ports": [
+      "kvn"
+     ],
+     "die_bits": 1048,
+     "rtl_bits": 1048,
+     "rtl_ports": [
+      "kvi",
+      "kvi_cr"
+     ]
+    },
+    "kvo": {
+     "die_ports": [
+      "kvo"
+     ],
+     "die_bits": 1048,
+     "rtl_bits": 1048,
+     "rtl_ports": [
+      "kvo",
+      "kvo_cr"
+     ]
+    },
+    "emf": {
+     "die_ports": [
+      "emf"
+     ],
+     "die_bits": 289,
+     "rtl_bits": 289,
+     "rtl_ports": [
+      "emf",
+      "emf_cr"
+     ]
+    },
+    "emr": {
+     "die_ports": [
+      "emr"
+     ],
+     "die_bits": 521,
+     "rtl_bits": 521,
+     "rtl_ports": [
+      "emr",
+      "emr_cr"
+     ]
+    },
+    "kf": {
+     "die_ports": [
+      "kf"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "kf"
+     ]
+    },
+    "mf": {
+     "die_ports": [
+      "mf"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "mf"
+     ]
+    },
+    "wfault": {
+     "die_ports": [
+      "wfault"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "wf"
+     ]
+    },
+    "es0": {
+     "die_ports": [
+      "es0"
+     ],
+     "die_bits": 288,
+     "rtl_bits": 288,
+     "rtl_ports": [
+      "es0"
+     ]
+    },
+    "er0": {
+     "die_ports": [
+      "er0"
+     ],
+     "die_bits": 261,
+     "rtl_bits": 261,
+     "rtl_ports": [
+      "er0"
+     ]
+    },
+    "es1": {
+     "die_ports": [
+      "es1"
+     ],
+     "die_bits": 288,
+     "rtl_bits": 288,
+     "rtl_ports": [
+      "es1"
+     ]
+    },
+    "er1": {
+     "die_ports": [
+      "er1"
+     ],
+     "die_bits": 261,
+     "rtl_bits": 261,
+     "rtl_ports": [
+      "er1"
+     ]
+    },
+    "es2": {
+     "die_ports": [
+      "es2"
+     ],
+     "die_bits": 288,
+     "rtl_bits": 288,
+     "rtl_ports": [
+      "es2"
+     ]
+    },
+    "er2": {
+     "die_ports": [
+      "er2"
+     ],
+     "die_bits": 261,
+     "rtl_bits": 261,
+     "rtl_ports": [
+      "er2"
+     ]
+    },
+    "es3": {
+     "die_ports": [
+      "es3"
+     ],
+     "die_bits": 288,
+     "rtl_bits": 288,
+     "rtl_ports": [
+      "es3"
+     ]
+    },
+    "er3": {
+     "die_ports": [
+      "er3"
+     ],
+     "die_bits": 261,
+     "rtl_bits": 261,
+     "rtl_ports": [
+      "er3"
+     ]
+    },
+    "es4": {
+     "die_ports": [
+      "es4"
+     ],
+     "die_bits": 288,
+     "rtl_bits": 288,
+     "rtl_ports": [
+      "es4"
+     ]
+    },
+    "er4": {
+     "die_ports": [
+      "er4"
+     ],
+     "die_bits": 261,
+     "rtl_bits": 261,
+     "rtl_ports": [
+      "er4"
+     ]
+    },
+    "es5": {
+     "die_ports": [
+      "es5"
+     ],
+     "die_bits": 288,
+     "rtl_bits": 288,
+     "rtl_ports": [
+      "es5"
+     ]
+    },
+    "er5": {
+     "die_ports": [
+      "er5"
+     ],
+     "die_bits": 261,
+     "rtl_bits": 261,
+     "rtl_ports": [
+      "er5"
+     ]
+    },
+    "es6": {
+     "die_ports": [
+      "es6"
+     ],
+     "die_bits": 288,
+     "rtl_bits": 288,
+     "rtl_ports": [
+      "es6"
+     ]
+    },
+    "er6": {
+     "die_ports": [
+      "er6"
+     ],
+     "die_bits": 261,
+     "rtl_bits": 261,
+     "rtl_ports": [
+      "er6"
+     ]
+    },
+    "es7": {
+     "die_ports": [
+      "es7"
+     ],
+     "die_bits": 288,
+     "rtl_bits": 288,
+     "rtl_ports": [
+      "es7"
+     ]
+    },
+    "er7": {
+     "die_ports": [
+      "er7"
+     ],
+     "die_bits": 261,
+     "rtl_bits": 261,
+     "rtl_ports": [
+      "er7"
+     ]
+    },
+    "es8": {
+     "die_ports": [
+      "es8"
+     ],
+     "die_bits": 288,
+     "rtl_bits": 288,
+     "rtl_ports": [
+      "es8"
+     ]
+    },
+    "er8": {
+     "die_ports": [
+      "er8"
+     ],
+     "die_bits": 261,
+     "rtl_bits": 261,
+     "rtl_ports": [
+      "er8"
+     ]
+    },
+    "es9": {
+     "die_ports": [
+      "es9"
+     ],
+     "die_bits": 288,
+     "rtl_bits": 288,
+     "rtl_ports": [
+      "es9"
+     ]
+    },
+    "er9": {
+     "die_ports": [
+      "er9"
+     ],
+     "die_bits": 261,
+     "rtl_bits": 261,
+     "rtl_ports": [
+      "er9"
+     ]
+    },
+    "es10": {
+     "die_ports": [
+      "es10"
+     ],
+     "die_bits": 288,
+     "rtl_bits": 288,
+     "rtl_ports": [
+      "es10"
+     ]
+    },
+    "er10": {
+     "die_ports": [
+      "er10"
+     ],
+     "die_bits": 261,
+     "rtl_bits": 261,
+     "rtl_ports": [
+      "er10"
+     ]
+    },
+    "es11": {
+     "die_ports": [
+      "es11"
+     ],
+     "die_bits": 288,
+     "rtl_bits": 288,
+     "rtl_ports": [
+      "es11"
+     ]
+    },
+    "er11": {
+     "die_ports": [
+      "er11"
+     ],
+     "die_bits": 261,
+     "rtl_bits": 261,
+     "rtl_ports": [
+      "er11"
+     ]
+    },
+    "es12": {
+     "die_ports": [
+      "es12"
+     ],
+     "die_bits": 288,
+     "rtl_bits": 288,
+     "rtl_ports": [
+      "es12"
+     ]
+    },
+    "er12": {
+     "die_ports": [
+      "er12"
+     ],
+     "die_bits": 261,
+     "rtl_bits": 261,
+     "rtl_ports": [
+      "er12"
+     ]
+    },
+    "es13": {
+     "die_ports": [
+      "es13"
+     ],
+     "die_bits": 288,
+     "rtl_bits": 288,
+     "rtl_ports": [
+      "es13"
+     ]
+    },
+    "er13": {
+     "die_ports": [
+      "er13"
+     ],
+     "die_bits": 261,
+     "rtl_bits": 261,
+     "rtl_ports": [
+      "er13"
+     ]
+    },
+    "es14": {
+     "die_ports": [
+      "es14"
+     ],
+     "die_bits": 288,
+     "rtl_bits": 288,
+     "rtl_ports": [
+      "es14"
+     ]
+    },
+    "er14": {
+     "die_ports": [
+      "er14"
+     ],
+     "die_bits": 261,
+     "rtl_bits": 261,
+     "rtl_ports": [
+      "er14"
+     ]
+    },
+    "es15": {
+     "die_ports": [
+      "es15"
+     ],
+     "die_bits": 288,
+     "rtl_bits": 288,
+     "rtl_ports": [
+      "es15"
+     ]
+    },
+    "er15": {
+     "die_ports": [
+      "er15"
+     ],
+     "die_bits": 261,
+     "rtl_bits": 261,
+     "rtl_ports": [
+      "er15"
+     ]
+    },
+    "es16": {
+     "die_ports": [
+      "es16"
+     ],
+     "die_bits": 288,
+     "rtl_bits": 288,
+     "rtl_ports": [
+      "es16"
+     ]
+    },
+    "er16": {
+     "die_ports": [
+      "er16"
+     ],
+     "die_bits": 261,
+     "rtl_bits": 261,
+     "rtl_ports": [
+      "er16"
+     ]
+    },
+    "es17": {
+     "die_ports": [
+      "es17"
+     ],
+     "die_bits": 288,
+     "rtl_bits": 288,
+     "rtl_ports": [
+      "es17"
+     ]
+    },
+    "er17": {
+     "die_ports": [
+      "er17"
+     ],
+     "die_bits": 261,
+     "rtl_bits": 261,
+     "rtl_ports": [
+      "er17"
+     ]
+    },
+    "es18": {
+     "die_ports": [
+      "es18"
+     ],
+     "die_bits": 288,
+     "rtl_bits": 288,
+     "rtl_ports": [
+      "es18"
+     ]
+    },
+    "er18": {
+     "die_ports": [
+      "er18"
+     ],
+     "die_bits": 261,
+     "rtl_bits": 261,
+     "rtl_ports": [
+      "er18"
+     ]
+    },
+    "es19": {
+     "die_ports": [
+      "es19"
+     ],
+     "die_bits": 288,
+     "rtl_bits": 288,
+     "rtl_ports": [
+      "es19"
+     ]
+    },
+    "er19": {
+     "die_ports": [
+      "er19"
+     ],
+     "die_bits": 261,
+     "rtl_bits": 261,
+     "rtl_ports": [
+      "er19"
+     ]
+    },
+    "es20": {
+     "die_ports": [
+      "es20"
+     ],
+     "die_bits": 288,
+     "rtl_bits": 288,
+     "rtl_ports": [
+      "es20"
+     ]
+    },
+    "er20": {
+     "die_ports": [
+      "er20"
+     ],
+     "die_bits": 261,
+     "rtl_bits": 261,
+     "rtl_ports": [
+      "er20"
+     ]
+    },
+    "es21": {
+     "die_ports": [
+      "es21"
+     ],
+     "die_bits": 288,
+     "rtl_bits": 288,
+     "rtl_ports": [
+      "es21"
+     ]
+    },
+    "er21": {
+     "die_ports": [
+      "er21"
+     ],
+     "die_bits": 261,
+     "rtl_bits": 261,
+     "rtl_ports": [
+      "er21"
+     ]
+    },
+    "es22": {
+     "die_ports": [
+      "es22"
+     ],
+     "die_bits": 288,
+     "rtl_bits": 288,
+     "rtl_ports": [
+      "es22"
+     ]
+    },
+    "er22": {
+     "die_ports": [
+      "er22"
+     ],
+     "die_bits": 261,
+     "rtl_bits": 261,
+     "rtl_ports": [
+      "er22"
+     ]
+    },
+    "es23": {
+     "die_ports": [
+      "es23"
+     ],
+     "die_bits": 288,
+     "rtl_bits": 288,
+     "rtl_ports": [
+      "es23"
+     ]
+    },
+    "er23": {
+     "die_ports": [
+      "er23"
+     ],
+     "die_bits": 261,
+     "rtl_bits": 261,
+     "rtl_ports": [
+      "er23"
+     ]
+    },
+    "es24": {
+     "die_ports": [
+      "es24"
+     ],
+     "die_bits": 288,
+     "rtl_bits": 288,
+     "rtl_ports": [
+      "es24"
+     ]
+    },
+    "er24": {
+     "die_ports": [
+      "er24"
+     ],
+     "die_bits": 261,
+     "rtl_bits": 261,
+     "rtl_ports": [
+      "er24"
+     ]
+    },
+    "es25": {
+     "die_ports": [
+      "es25"
+     ],
+     "die_bits": 288,
+     "rtl_bits": 288,
+     "rtl_ports": [
+      "es25"
+     ]
+    },
+    "er25": {
+     "die_ports": [
+      "er25"
+     ],
+     "die_bits": 261,
+     "rtl_bits": 261,
+     "rtl_ports": [
+      "er25"
+     ]
+    },
+    "es26": {
+     "die_ports": [
+      "es26"
+     ],
+     "die_bits": 288,
+     "rtl_bits": 288,
+     "rtl_ports": [
+      "es26"
+     ]
+    },
+    "er26": {
+     "die_ports": [
+      "er26"
+     ],
+     "die_bits": 261,
+     "rtl_bits": 261,
+     "rtl_ports": [
+      "er26"
+     ]
+    },
+    "es27": {
+     "die_ports": [
+      "es27"
+     ],
+     "die_bits": 288,
+     "rtl_bits": 288,
+     "rtl_ports": [
+      "es27"
+     ]
+    },
+    "er27": {
+     "die_ports": [
+      "er27"
+     ],
+     "die_bits": 261,
+     "rtl_bits": 261,
+     "rtl_ports": [
+      "er27"
+     ]
+    },
+    "es28": {
+     "die_ports": [
+      "es28"
+     ],
+     "die_bits": 288,
+     "rtl_bits": 288,
+     "rtl_ports": [
+      "es28"
+     ]
+    },
+    "er28": {
+     "die_ports": [
+      "er28"
+     ],
+     "die_bits": 261,
+     "rtl_bits": 261,
+     "rtl_ports": [
+      "er28"
+     ]
+    },
+    "es29": {
+     "die_ports": [
+      "es29"
+     ],
+     "die_bits": 288,
+     "rtl_bits": 288,
+     "rtl_ports": [
+      "es29"
+     ]
+    },
+    "er29": {
+     "die_ports": [
+      "er29"
+     ],
+     "die_bits": 261,
+     "rtl_bits": 261,
+     "rtl_ports": [
+      "er29"
+     ]
+    },
+    "es30": {
+     "die_ports": [
+      "es30"
+     ],
+     "die_bits": 288,
+     "rtl_bits": 288,
+     "rtl_ports": [
+      "es30"
+     ]
+    },
+    "er30": {
+     "die_ports": [
+      "er30"
+     ],
+     "die_bits": 261,
+     "rtl_bits": 261,
+     "rtl_ports": [
+      "er30"
+     ]
+    },
+    "es31": {
+     "die_ports": [
+      "es31"
+     ],
+     "die_bits": 288,
+     "rtl_bits": 288,
+     "rtl_ports": [
+      "es31"
+     ]
+    },
+    "er31": {
+     "die_ports": [
+      "er31"
+     ],
+     "die_bits": 261,
+     "rtl_bits": 261,
+     "rtl_ports": [
+      "er31"
+     ]
+    },
+    "rst_n": {
+     "die_ports": [
+      "rst_n"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "rst_n"
+     ]
+    }
+   },
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 4,
+   "file": "rtl/qwen_sys/split_20261014/qkd_strips_s.sv",
+   "parameters": {}
+  },
+  "qkd_astk": {
+   "instances": 2,
+   "how": "bound",
+   "module": "qkd_astk_strip_s",
+   "bundles": {
+    "ck_c": {
+     "die_ports": [
+      "ck_c"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_c"
+     ]
+    },
+    "ck_z0": {
+     "die_ports": [
+      "ck_z0",
+      "ck_z1",
+      "ck_z2",
+      "ck_z3"
+     ],
+     "die_bits": 4,
+     "rtl_bits": 4,
+     "rtl_ports": [
+      "ck_z"
+     ]
+    },
+    "ck_v0": {
+     "die_ports": [
+      "ck_v0",
+      "ck_v1",
+      "ck_v2",
+      "ck_v3",
+      "ck_v4",
+      "ck_v5",
+      "ck_v6",
+      "ck_v7",
+      "ck_v8",
+      "ck_v9",
+      "ck_v10",
+      "ck_v11",
+      "ck_v12",
+      "ck_v13",
+      "ck_v14",
+      "ck_v15",
+      "ck_v16",
+      "ck_v17",
+      "ck_v18",
+      "ck_v19",
+      "ck_v20",
+      "ck_v21",
+      "ck_v22",
+      "ck_v23",
+      "ck_v24",
+      "ck_v25",
+      "ck_v26",
+      "ck_v27",
+      "ck_v28",
+      "ck_v29",
+      "ck_v30",
+      "ck_v31",
+      "ck_v32",
+      "ck_v33",
+      "ck_v34",
+      "ck_v35",
+      "ck_v36",
+      "ck_v37",
+      "ck_v38",
+      "ck_v39",
+      "ck_v40",
+      "ck_v41",
+      "ck_v42",
+      "ck_v43",
+      "ck_v44",
+      "ck_v45",
+      "ck_v46",
+      "ck_v47",
+      "ck_v48",
+      "ck_v49",
+      "ck_v50",
+      "ck_v51",
+      "ck_v52",
+      "ck_v53",
+      "ck_v54",
+      "ck_v55",
+      "ck_v56",
+      "ck_v57",
+      "ck_v58",
+      "ck_v59",
+      "ck_v60",
+      "ck_v61",
+      "ck_v62",
+      "ck_v63"
+     ],
+     "die_bits": 64,
+     "rtl_bits": 64,
+     "rtl_ports": [
+      "ck_v"
+     ]
+    },
+    "ck_x0": {
+     "die_ports": [
+      "ck_x0",
+      "ck_x1",
+      "ck_x2",
+      "ck_x3",
+      "ck_x4",
+      "ck_x5",
+      "ck_x6",
+      "ck_x7",
+      "ck_x8",
+      "ck_x9",
+      "ck_x10",
+      "ck_x11",
+      "ck_x12",
+      "ck_x13",
+      "ck_x14",
+      "ck_x15",
+      "ck_x16",
+      "ck_x17",
+      "ck_x18",
+      "ck_x19",
+      "ck_x20",
+      "ck_x21",
+      "ck_x22",
+      "ck_x23",
+      "ck_x24",
+      "ck_x25",
+      "ck_x26",
+      "ck_x27",
+      "ck_x28",
+      "ck_x29",
+      "ck_x30",
+      "ck_x31"
+     ],
+     "die_bits": 32,
+     "rtl_bits": 32,
+     "rtl_ports": [
+      "ck_x"
+     ]
+    },
+    "ck_e0": {
+     "die_ports": [
+      "ck_e0",
+      "ck_e1",
+      "ck_e2",
+      "ck_e3",
+      "ck_e4",
+      "ck_e5",
+      "ck_e6",
+      "ck_e7"
+     ],
+     "die_bits": 8,
+     "rtl_bits": 8,
+     "rtl_ports": [
+      "ck_e"
+     ]
+    },
+    "ck_r": {
+     "die_ports": [
+      "ck_r"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_r"
+     ]
+    },
+    "st": {
+     "die_ports": [
+      "st"
+     ],
+     "die_bits": 2,
+     "rtl_bits": 2,
+     "rtl_ports": [
+      "st"
+     ]
+    },
+    "aq": {
+     "die_ports": [
+      "aq"
+     ],
+     "die_bits": 540,
+     "rtl_bits": 540,
+     "rtl_ports": [
+      "aq"
+     ]
+    },
+    "lt": {
+     "die_ports": [
+      "lt"
+     ],
+     "die_bits": 21,
+     "rtl_bits": 21,
+     "rtl_ports": [
+      "lt"
+     ]
+    },
+    "ap": {
+     "die_ports": [
+      "ap"
+     ],
+     "die_bits": 563,
+     "rtl_bits": 563,
+     "rtl_ports": [
+      "ap"
+     ]
+    },
+    "am": {
+     "die_ports": [
+      "am"
+     ],
+     "die_bits": 36,
+     "rtl_bits": 36,
+     "rtl_ports": [
+      "am"
+     ]
+    },
+    "e0o": {
+     "die_ports": [
+      "e0o"
+     ],
+     "die_bits": 634,
+     "rtl_bits": 634,
+     "rtl_ports": [
+      "si0"
+     ]
+    },
+    "e0i": {
+     "die_ports": [
+      "e0i"
+     ],
+     "die_bits": 425,
+     "rtl_bits": 425,
+     "rtl_ports": [
+      "so0"
+     ]
+    },
+    "f00": {
+     "die_ports": [
+      "f00"
+     ],
+     "die_bits": 1024,
+     "rtl_bits": 1024,
+     "rtl_ports": [
+      "nb0_0"
+     ]
+    },
+    "f01": {
+     "die_ports": [
+      "f01"
+     ],
+     "die_bits": 1024,
+     "rtl_bits": 1024,
+     "rtl_ports": [
+      "nb0_1"
+     ]
+    },
+    "f02": {
+     "die_ports": [
+      "f02"
+     ],
+     "die_bits": 1024,
+     "rtl_bits": 1024,
+     "rtl_ports": [
+      "nb0_2"
+     ]
+    },
+    "f03": {
+     "die_ports": [
+      "f03"
+     ],
+     "die_bits": 1024,
+     "rtl_bits": 1024,
+     "rtl_ports": [
+      "nb0_3"
+     ]
+    },
+    "e1o": {
+     "die_ports": [
+      "e1o"
+     ],
+     "die_bits": 634,
+     "rtl_bits": 634,
+     "rtl_ports": [
+      "si1"
+     ]
+    },
+    "e1i": {
+     "die_ports": [
+      "e1i"
+     ],
+     "die_bits": 425,
+     "rtl_bits": 425,
+     "rtl_ports": [
+      "so1"
+     ]
+    },
+    "f10": {
+     "die_ports": [
+      "f10"
+     ],
+     "die_bits": 1024,
+     "rtl_bits": 1024,
+     "rtl_ports": [
+      "nb1_0"
+     ]
+    },
+    "f11": {
+     "die_ports": [
+      "f11"
+     ],
+     "die_bits": 1024,
+     "rtl_bits": 1024,
+     "rtl_ports": [
+      "nb1_1"
+     ]
+    },
+    "f12": {
+     "die_ports": [
+      "f12"
+     ],
+     "die_bits": 1024,
+     "rtl_bits": 1024,
+     "rtl_ports": [
+      "nb1_2"
+     ]
+    },
+    "f13": {
+     "die_ports": [
+      "f13"
+     ],
+     "die_bits": 1024,
+     "rtl_bits": 1024,
+     "rtl_ports": [
+      "nb1_3"
+     ]
+    },
+    "e2o": {
+     "die_ports": [
+      "e2o"
+     ],
+     "die_bits": 634,
+     "rtl_bits": 634,
+     "rtl_ports": [
+      "si2"
+     ]
+    },
+    "e2i": {
+     "die_ports": [
+      "e2i"
+     ],
+     "die_bits": 425,
+     "rtl_bits": 425,
+     "rtl_ports": [
+      "so2"
+     ]
+    },
+    "f20": {
+     "die_ports": [
+      "f20"
+     ],
+     "die_bits": 1024,
+     "rtl_bits": 1024,
+     "rtl_ports": [
+      "nb2_0"
+     ]
+    },
+    "f21": {
+     "die_ports": [
+      "f21"
+     ],
+     "die_bits": 1024,
+     "rtl_bits": 1024,
+     "rtl_ports": [
+      "nb2_1"
+     ]
+    },
+    "f22": {
+     "die_ports": [
+      "f22"
+     ],
+     "die_bits": 1024,
+     "rtl_bits": 1024,
+     "rtl_ports": [
+      "nb2_2"
+     ]
+    },
+    "f23": {
+     "die_ports": [
+      "f23"
+     ],
+     "die_bits": 1024,
+     "rtl_bits": 1024,
+     "rtl_ports": [
+      "nb2_3"
+     ]
+    },
+    "e3o": {
+     "die_ports": [
+      "e3o"
+     ],
+     "die_bits": 634,
+     "rtl_bits": 634,
+     "rtl_ports": [
+      "si3"
+     ]
+    },
+    "e3i": {
+     "die_ports": [
+      "e3i"
+     ],
+     "die_bits": 425,
+     "rtl_bits": 425,
+     "rtl_ports": [
+      "so3"
+     ]
+    },
+    "f30": {
+     "die_ports": [
+      "f30"
+     ],
+     "die_bits": 1024,
+     "rtl_bits": 1024,
+     "rtl_ports": [
+      "nb3_0"
+     ]
+    },
+    "f31": {
+     "die_ports": [
+      "f31"
+     ],
+     "die_bits": 1024,
+     "rtl_bits": 1024,
+     "rtl_ports": [
+      "nb3_1"
+     ]
+    },
+    "f32": {
+     "die_ports": [
+      "f32"
+     ],
+     "die_bits": 1024,
+     "rtl_bits": 1024,
+     "rtl_ports": [
+      "nb3_2"
+     ]
+    },
+    "f33": {
+     "die_ports": [
+      "f33"
+     ],
+     "die_bits": 1024,
+     "rtl_bits": 1024,
+     "rtl_ports": [
+      "nb3_3"
+     ]
+    },
+    "e4o": {
+     "die_ports": [
+      "e4o"
+     ],
+     "die_bits": 634,
+     "rtl_bits": 634,
+     "rtl_ports": [
+      "si4"
+     ]
+    },
+    "e4i": {
+     "die_ports": [
+      "e4i"
+     ],
+     "die_bits": 425,
+     "rtl_bits": 425,
+     "rtl_ports": [
+      "so4"
+     ]
+    },
+    "f40": {
+     "die_ports": [
+      "f40"
+     ],
+     "die_bits": 1024,
+     "rtl_bits": 1024,
+     "rtl_ports": [
+      "nb4_0"
+     ]
+    },
+    "f41": {
+     "die_ports": [
+      "f41"
+     ],
+     "die_bits": 1024,
+     "rtl_bits": 1024,
+     "rtl_ports": [
+      "nb4_1"
+     ]
+    },
+    "f42": {
+     "die_ports": [
+      "f42"
+     ],
+     "die_bits": 1024,
+     "rtl_bits": 1024,
+     "rtl_ports": [
+      "nb4_2"
+     ]
+    },
+    "f43": {
+     "die_ports": [
+      "f43"
+     ],
+     "die_bits": 1024,
+     "rtl_bits": 1024,
+     "rtl_ports": [
+      "nb4_3"
+     ]
+    },
+    "e5o": {
+     "die_ports": [
+      "e5o"
+     ],
+     "die_bits": 634,
+     "rtl_bits": 634,
+     "rtl_ports": [
+      "si5"
+     ]
+    },
+    "e5i": {
+     "die_ports": [
+      "e5i"
+     ],
+     "die_bits": 425,
+     "rtl_bits": 425,
+     "rtl_ports": [
+      "so5"
+     ]
+    },
+    "f50": {
+     "die_ports": [
+      "f50"
+     ],
+     "die_bits": 1024,
+     "rtl_bits": 1024,
+     "rtl_ports": [
+      "nb5_0"
+     ]
+    },
+    "f51": {
+     "die_ports": [
+      "f51"
+     ],
+     "die_bits": 1024,
+     "rtl_bits": 1024,
+     "rtl_ports": [
+      "nb5_1"
+     ]
+    },
+    "f52": {
+     "die_ports": [
+      "f52"
+     ],
+     "die_bits": 1024,
+     "rtl_bits": 1024,
+     "rtl_ports": [
+      "nb5_2"
+     ]
+    },
+    "f53": {
+     "die_ports": [
+      "f53"
+     ],
+     "die_bits": 1024,
+     "rtl_bits": 1024,
+     "rtl_ports": [
+      "nb5_3"
+     ]
+    },
+    "e6o": {
+     "die_ports": [
+      "e6o"
+     ],
+     "die_bits": 634,
+     "rtl_bits": 634,
+     "rtl_ports": [
+      "si6"
+     ]
+    },
+    "e6i": {
+     "die_ports": [
+      "e6i"
+     ],
+     "die_bits": 425,
+     "rtl_bits": 425,
+     "rtl_ports": [
+      "so6"
+     ]
+    },
+    "f60": {
+     "die_ports": [
+      "f60"
+     ],
+     "die_bits": 1024,
+     "rtl_bits": 1024,
+     "rtl_ports": [
+      "nb6_0"
+     ]
+    },
+    "f61": {
+     "die_ports": [
+      "f61"
+     ],
+     "die_bits": 1024,
+     "rtl_bits": 1024,
+     "rtl_ports": [
+      "nb6_1"
+     ]
+    },
+    "f62": {
+     "die_ports": [
+      "f62"
+     ],
+     "die_bits": 1024,
+     "rtl_bits": 1024,
+     "rtl_ports": [
+      "nb6_2"
+     ]
+    },
+    "f63": {
+     "die_ports": [
+      "f63"
+     ],
+     "die_bits": 1024,
+     "rtl_bits": 1024,
+     "rtl_ports": [
+      "nb6_3"
+     ]
+    },
+    "e7o": {
+     "die_ports": [
+      "e7o"
+     ],
+     "die_bits": 634,
+     "rtl_bits": 634,
+     "rtl_ports": [
+      "si7"
+     ]
+    },
+    "e7i": {
+     "die_ports": [
+      "e7i"
+     ],
+     "die_bits": 425,
+     "rtl_bits": 425,
+     "rtl_ports": [
+      "so7"
+     ]
+    },
+    "f70": {
+     "die_ports": [
+      "f70"
+     ],
+     "die_bits": 1024,
+     "rtl_bits": 1024,
+     "rtl_ports": [
+      "nb7_0"
+     ]
+    },
+    "f71": {
+     "die_ports": [
+      "f71"
+     ],
+     "die_bits": 1024,
+     "rtl_bits": 1024,
+     "rtl_ports": [
+      "nb7_1"
+     ]
+    },
+    "f72": {
+     "die_ports": [
+      "f72"
+     ],
+     "die_bits": 1024,
+     "rtl_bits": 1024,
+     "rtl_ports": [
+      "nb7_2"
+     ]
+    },
+    "f73": {
+     "die_ports": [
+      "f73"
+     ],
+     "die_bits": 1024,
+     "rtl_bits": 1024,
+     "rtl_ports": [
+      "nb7_3"
+     ]
+    },
+    "af": {
+     "die_ports": [
+      "af"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "af"
+     ]
+    },
+    "rst_n": {
+     "die_ports": [
+      "rst_n"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "rst_n"
+     ]
+    }
+   },
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 4,
+   "file": "rtl/qwen_sys/split_20261014/qkd_strips_s.sv",
+   "parameters": {}
+  },
+  "ot_qkh_head_frontq_native": {
+   "instances": 512,
+   "how": "expanded_leaf",
+   "module": "ot_qkh_head_frontq_native",
+   "bundles": {},
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 1024
+  },
+  "ot_qkh_lane8": {
+   "instances": 2048,
+   "how": "expanded_leaf",
+   "module": "ot_qkh_lane8",
+   "bundles": {},
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 4096
+  },
+  "ot_qkh_head_nb_native": {
+   "instances": 4096,
+   "how": "expanded_leaf",
+   "module": "ot_qkh_head_nb_native",
+   "bundles": {},
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 0
+  },
+  "ot_qkh_head_stin_native": {
+   "instances": 2048,
+   "how": "expanded_leaf",
+   "module": "ot_qkh_head_stin_native",
+   "bundles": {},
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 0
+  },
+  "ot_qkh_head_stk_native": {
+   "instances": 2048,
+   "how": "expanded_leaf",
+   "module": "ot_qkh_head_stk_native",
+   "bundles": {},
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 0
+  },
+  "ot_qkh_ktree": {
+   "instances": 128,
+   "how": "expanded_leaf",
+   "module": "ot_qkh_ktree",
+   "bundles": {},
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 0
+  },
+  "ot_qkh_head_score4_native": {
+   "instances": 128,
+   "how": "expanded_leaf",
+   "module": "ot_qkh_head_score4_native",
+   "bundles": {},
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 0
+  },
+  "qkh_head_gather_stage": {
+   "instances": 64,
+   "how": "expanded_leaf",
+   "module": "qkh_head_gather_stage",
+   "bundles": {},
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 0
+  },
+  "qkh_head_sstage": {
+   "instances": 64,
+   "how": "expanded_leaf",
+   "module": "qkh_head_sstage",
+   "bundles": {},
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 0
+  },
+  "qkd_ectl_a_tp8_epoch_direct": {
+   "instances": 32,
+   "how": "expanded_leaf",
+   "module": "qkd_ectl_a_tp8_epoch_direct",
+   "bundles": {},
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 160
+  },
+  "qkd_ectl_b_tp8_direct": {
+   "instances": 32,
+   "how": "expanded_leaf",
+   "module": "qkd_ectl_b_tp8_direct",
+   "bundles": {},
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 160
+  },
+  "qkd_ectl_c_tp8_direct": {
+   "instances": 32,
+   "how": "expanded_leaf",
+   "module": "qkd_ectl_c_tp8_direct",
+   "bundles": {},
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 160
+  },
+  "qkd_hgs": {
+   "instances": 320,
+   "how": "bound",
+   "module": "qkh_head_gather_stage",
+   "bundles": {
+    "ck": {
+     "die_ports": [
+      "ck"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck"
+     ]
+    },
+    "ti_a": {
+     "die_ports": [
+      "ti_a"
+     ],
+     "die_bits": 1559,
+     "rtl_bits": 1559,
+     "rtl_ports": [
+      "ti_a"
+     ]
+    },
+    "e_a": {
+     "die_ports": [
+      "e_a"
+     ],
+     "die_bits": 16,
+     "rtl_bits": 16,
+     "rtl_ports": [
+      "e_a"
+     ]
+    },
+    "ti_b": {
+     "die_ports": [
+      "ti_b"
+     ],
+     "die_bits": 1559,
+     "rtl_bits": 1559,
+     "rtl_ports": [
+      "ti_b"
+     ]
+    },
+    "e_b": {
+     "die_ports": [
+      "e_b"
+     ],
+     "die_bits": 16,
+     "rtl_bits": 16,
+     "rtl_ports": [
+      "e_b"
+     ]
+    }
+   },
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 0,
+   "file": "rtl/qwen_sys/split_20261014/qkh_head_gather_stage.sv",
+   "parameters": {}
+  },
+  "qkd_hss": {
+   "instances": 192,
+   "how": "bound",
+   "module": "qkh_head_sstage",
+   "bundles": {
+    "ck": {
+     "die_ports": [
+      "ck"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck"
+     ]
+    },
+    "s_a": {
+     "die_ports": [
+      "s_a"
+     ],
+     "die_bits": 34,
+     "rtl_bits": 34,
+     "rtl_ports": [
+      "s_a"
+     ]
+    },
+    "s_b": {
+     "die_ports": [
+      "s_b"
+     ],
+     "die_bits": 34,
+     "rtl_bits": 34,
+     "rtl_ports": [
+      "s_b"
+     ]
+    }
+   },
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 0,
+   "file": "rtl/qwen_sys/split_20261014/qkh_head_stages.sv",
+   "parameters": {}
+  },
+  "qkd_land_n": {
+   "instances": 2,
+   "how": "bound",
+   "module": "qkd_land_strip_s",
+   "bundles": {
+    "c0i": {
+     "die_ports": [
+      "c0i"
+     ],
+     "die_bits": 283,
+     "rtl_bits": 283,
+     "rtl_ports": [
+      "li0",
+      "lp0"
+     ]
+    },
+    "cf0": {
+     "die_ports": [
+      "cf0"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "cf0"
+     ]
+    },
+    "c1i": {
+     "die_ports": [
+      "c1i"
+     ],
+     "die_bits": 283,
+     "rtl_bits": 283,
+     "rtl_ports": [
+      "li1",
+      "lp1"
+     ]
+    },
+    "cf1": {
+     "die_ports": [
+      "cf1"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "cf1"
+     ]
+    },
+    "c2i": {
+     "die_ports": [
+      "c2i"
+     ],
+     "die_bits": 283,
+     "rtl_bits": 283,
+     "rtl_ports": [
+      "li2",
+      "lp2"
+     ]
+    },
+    "cf2": {
+     "die_ports": [
+      "cf2"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "cf2"
+     ]
+    },
+    "c3i": {
+     "die_ports": [
+      "c3i"
+     ],
+     "die_bits": 283,
+     "rtl_bits": 283,
+     "rtl_ports": [
+      "li3",
+      "lp3"
+     ]
+    },
+    "cf3": {
+     "die_ports": [
+      "cf3"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "cf3"
+     ]
+    },
+    "c4i": {
+     "die_ports": [
+      "c4i"
+     ],
+     "die_bits": 283,
+     "rtl_bits": 283,
+     "rtl_ports": [
+      "li4",
+      "lp4"
+     ]
+    },
+    "cf4": {
+     "die_ports": [
+      "cf4"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "cf4"
+     ]
+    },
+    "c5i": {
+     "die_ports": [
+      "c5i"
+     ],
+     "die_bits": 283,
+     "rtl_bits": 283,
+     "rtl_ports": [
+      "li5",
+      "lp5"
+     ]
+    },
+    "cf5": {
+     "die_ports": [
+      "cf5"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "cf5"
+     ]
+    },
+    "c6i": {
+     "die_ports": [
+      "c6i"
+     ],
+     "die_bits": 283,
+     "rtl_bits": 283,
+     "rtl_ports": [
+      "li6",
+      "lp6"
+     ]
+    },
+    "cf6": {
+     "die_ports": [
+      "cf6"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "cf6"
+     ]
+    },
+    "c7i": {
+     "die_ports": [
+      "c7i"
+     ],
+     "die_bits": 283,
+     "rtl_bits": 283,
+     "rtl_ports": [
+      "li7",
+      "lp7"
+     ]
+    },
+    "cf7": {
+     "die_ports": [
+      "cf7"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "cf7"
+     ]
+    },
+    "c8i": {
+     "die_ports": [
+      "c8i"
+     ],
+     "die_bits": 283,
+     "rtl_bits": 283,
+     "rtl_ports": [
+      "li8",
+      "lp8"
+     ]
+    },
+    "cf8": {
+     "die_ports": [
+      "cf8"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "cf8"
+     ]
+    },
+    "c9i": {
+     "die_ports": [
+      "c9i"
+     ],
+     "die_bits": 283,
+     "rtl_bits": 283,
+     "rtl_ports": [
+      "li9",
+      "lp9"
+     ]
+    },
+    "cf9": {
+     "die_ports": [
+      "cf9"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "cf9"
+     ]
+    },
+    "c10i": {
+     "die_ports": [
+      "c10i"
+     ],
+     "die_bits": 283,
+     "rtl_bits": 283,
+     "rtl_ports": [
+      "li10",
+      "lp10"
+     ]
+    },
+    "cf10": {
+     "die_ports": [
+      "cf10"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "cf10"
+     ]
+    },
+    "c11i": {
+     "die_ports": [
+      "c11i"
+     ],
+     "die_bits": 283,
+     "rtl_bits": 283,
+     "rtl_ports": [
+      "li11",
+      "lp11"
+     ]
+    },
+    "cf11": {
+     "die_ports": [
+      "cf11"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "cf11"
+     ]
+    },
+    "c12i": {
+     "die_ports": [
+      "c12i"
+     ],
+     "die_bits": 283,
+     "rtl_bits": 283,
+     "rtl_ports": [
+      "li12",
+      "lp12"
+     ]
+    },
+    "cf12": {
+     "die_ports": [
+      "cf12"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "cf12"
+     ]
+    },
+    "c13i": {
+     "die_ports": [
+      "c13i"
+     ],
+     "die_bits": 283,
+     "rtl_bits": 283,
+     "rtl_ports": [
+      "li13",
+      "lp13"
+     ]
+    },
+    "cf13": {
+     "die_ports": [
+      "cf13"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "cf13"
+     ]
+    },
+    "c14i": {
+     "die_ports": [
+      "c14i"
+     ],
+     "die_bits": 283,
+     "rtl_bits": 283,
+     "rtl_ports": [
+      "li14",
+      "lp14"
+     ]
+    },
+    "cf14": {
+     "die_ports": [
+      "cf14"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "cf14"
+     ]
+    },
+    "c15i": {
+     "die_ports": [
+      "c15i"
+     ],
+     "die_bits": 283,
+     "rtl_bits": 283,
+     "rtl_ports": [
+      "li15",
+      "lp15"
+     ]
+    },
+    "cf15": {
+     "die_ports": [
+      "cf15"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "cf15"
+     ]
+    },
+    "c16i": {
+     "die_ports": [
+      "c16i"
+     ],
+     "die_bits": 283,
+     "rtl_bits": 283,
+     "rtl_ports": [
+      "li16",
+      "lp16"
+     ]
+    },
+    "cf16": {
+     "die_ports": [
+      "cf16"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "cf16"
+     ]
+    },
+    "c17i": {
+     "die_ports": [
+      "c17i"
+     ],
+     "die_bits": 283,
+     "rtl_bits": 283,
+     "rtl_ports": [
+      "li17",
+      "lp17"
+     ]
+    },
+    "cf17": {
+     "die_ports": [
+      "cf17"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "cf17"
+     ]
+    },
+    "c18i": {
+     "die_ports": [
+      "c18i"
+     ],
+     "die_bits": 283,
+     "rtl_bits": 283,
+     "rtl_ports": [
+      "li18",
+      "lp18"
+     ]
+    },
+    "cf18": {
+     "die_ports": [
+      "cf18"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "cf18"
+     ]
+    },
+    "c19i": {
+     "die_ports": [
+      "c19i"
+     ],
+     "die_bits": 283,
+     "rtl_bits": 283,
+     "rtl_ports": [
+      "li19",
+      "lp19"
+     ]
+    },
+    "cf19": {
+     "die_ports": [
+      "cf19"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "cf19"
+     ]
+    },
+    "c20i": {
+     "die_ports": [
+      "c20i"
+     ],
+     "die_bits": 283,
+     "rtl_bits": 283,
+     "rtl_ports": [
+      "li20",
+      "lp20"
+     ]
+    },
+    "cf20": {
+     "die_ports": [
+      "cf20"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "cf20"
+     ]
+    },
+    "c21i": {
+     "die_ports": [
+      "c21i"
+     ],
+     "die_bits": 283,
+     "rtl_bits": 283,
+     "rtl_ports": [
+      "li21",
+      "lp21"
+     ]
+    },
+    "cf21": {
+     "die_ports": [
+      "cf21"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "cf21"
+     ]
+    },
+    "c22i": {
+     "die_ports": [
+      "c22i"
+     ],
+     "die_bits": 283,
+     "rtl_bits": 283,
+     "rtl_ports": [
+      "li22",
+      "lp22"
+     ]
+    },
+    "cf22": {
+     "die_ports": [
+      "cf22"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "cf22"
+     ]
+    },
+    "c23i": {
+     "die_ports": [
+      "c23i"
+     ],
+     "die_bits": 283,
+     "rtl_bits": 283,
+     "rtl_ports": [
+      "li23",
+      "lp23"
+     ]
+    },
+    "cf23": {
+     "die_ports": [
+      "cf23"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "cf23"
+     ]
+    },
+    "c24i": {
+     "die_ports": [
+      "c24i"
+     ],
+     "die_bits": 283,
+     "rtl_bits": 283,
+     "rtl_ports": [
+      "li24",
+      "lp24"
+     ]
+    },
+    "cf24": {
+     "die_ports": [
+      "cf24"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "cf24"
+     ]
+    },
+    "c25i": {
+     "die_ports": [
+      "c25i"
+     ],
+     "die_bits": 283,
+     "rtl_bits": 283,
+     "rtl_ports": [
+      "li25",
+      "lp25"
+     ]
+    },
+    "cf25": {
+     "die_ports": [
+      "cf25"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "cf25"
+     ]
+    },
+    "c26i": {
+     "die_ports": [
+      "c26i"
+     ],
+     "die_bits": 283,
+     "rtl_bits": 283,
+     "rtl_ports": [
+      "li26",
+      "lp26"
+     ]
+    },
+    "cf26": {
+     "die_ports": [
+      "cf26"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "cf26"
+     ]
+    },
+    "c27i": {
+     "die_ports": [
+      "c27i"
+     ],
+     "die_bits": 283,
+     "rtl_bits": 283,
+     "rtl_ports": [
+      "li27",
+      "lp27"
+     ]
+    },
+    "cf27": {
+     "die_ports": [
+      "cf27"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "cf27"
+     ]
+    },
+    "c28i": {
+     "die_ports": [
+      "c28i"
+     ],
+     "die_bits": 283,
+     "rtl_bits": 283,
+     "rtl_ports": [
+      "li28",
+      "lp28"
+     ]
+    },
+    "cf28": {
+     "die_ports": [
+      "cf28"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "cf28"
+     ]
+    },
+    "c29i": {
+     "die_ports": [
+      "c29i"
+     ],
+     "die_bits": 283,
+     "rtl_bits": 283,
+     "rtl_ports": [
+      "li29",
+      "lp29"
+     ]
+    },
+    "cf29": {
+     "die_ports": [
+      "cf29"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "cf29"
+     ]
+    },
+    "c30i": {
+     "die_ports": [
+      "c30i"
+     ],
+     "die_bits": 283,
+     "rtl_bits": 283,
+     "rtl_ports": [
+      "li30",
+      "lp30"
+     ]
+    },
+    "cf30": {
+     "die_ports": [
+      "cf30"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "cf30"
+     ]
+    },
+    "c31i": {
+     "die_ports": [
+      "c31i"
+     ],
+     "die_bits": 283,
+     "rtl_bits": 283,
+     "rtl_ports": [
+      "li31",
+      "lp31"
+     ]
+    },
+    "cf31": {
+     "die_ports": [
+      "cf31"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "cf31"
+     ]
+    },
+    "ck_p0": {
+     "die_ports": [
+      "ck_p0",
+      "ck_p1",
+      "ck_p2",
+      "ck_p3",
+      "ck_p4",
+      "ck_p5",
+      "ck_p6",
+      "ck_p7",
+      "ck_p8",
+      "ck_p9",
+      "ck_p10",
+      "ck_p11",
+      "ck_p12",
+      "ck_p13",
+      "ck_p14",
+      "ck_p15",
+      "ck_p16",
+      "ck_p17",
+      "ck_p18",
+      "ck_p19",
+      "ck_p20",
+      "ck_p21",
+      "ck_p22",
+      "ck_p23",
+      "ck_p24",
+      "ck_p25",
+      "ck_p26",
+      "ck_p27",
+      "ck_p28",
+      "ck_p29",
+      "ck_p30",
+      "ck_p31"
+     ],
+     "die_bits": 32,
+     "rtl_bits": 32,
+     "rtl_ports": [
+      "ck_p"
+     ]
+    },
+    "ck_g0": {
+     "die_ports": [
+      "ck_g0",
+      "ck_g1",
+      "ck_g2",
+      "ck_g3",
+      "ck_g4",
+      "ck_g5",
+      "ck_g6",
+      "ck_g7"
+     ],
+     "die_bits": 8,
+     "rtl_bits": 8,
+     "rtl_ports": [
+      "ck_g"
+     ]
+    },
+    "ck_e": {
+     "die_ports": [
+      "ck_e"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_e"
+     ]
+    },
+    "ck_r": {
+     "die_ports": [
+      "ck_r"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_r"
+     ]
+    },
+    "st": {
+     "die_ports": [
+      "st"
+     ],
+     "die_bits": 2,
+     "rtl_bits": 2,
+     "rtl_ports": [
+      "st"
+     ]
+    },
+    "lt": {
+     "die_ports": [
+      "lt"
+     ],
+     "die_bits": 21,
+     "rtl_bits": 21,
+     "rtl_ports": [
+      "lt"
+     ]
+    },
+    "rq0": {
+     "die_ports": [
+      "rq0"
+     ],
+     "die_bits": 17,
+     "rtl_bits": 17,
+     "rtl_ports": [
+      "rq0"
+     ]
+    },
+    "rs0": {
+     "die_ports": [
+      "rs0"
+     ],
+     "die_bits": 1025,
+     "rtl_bits": 1025,
+     "rtl_ports": [
+      "rs0"
+     ]
+    },
+    "rq1": {
+     "die_ports": [
+      "rq1"
+     ],
+     "die_bits": 17,
+     "rtl_bits": 17,
+     "rtl_ports": [
+      "rq1"
+     ]
+    },
+    "rs1": {
+     "die_ports": [
+      "rs1"
+     ],
+     "die_bits": 1025,
+     "rtl_bits": 1025,
+     "rtl_ports": [
+      "rs1"
+     ]
+    },
+    "rq2": {
+     "die_ports": [
+      "rq2"
+     ],
+     "die_bits": 17,
+     "rtl_bits": 17,
+     "rtl_ports": [
+      "rq2"
+     ]
+    },
+    "rs2": {
+     "die_ports": [
+      "rs2"
+     ],
+     "die_bits": 1025,
+     "rtl_bits": 1025,
+     "rtl_ports": [
+      "rs2"
+     ]
+    },
+    "rq3": {
+     "die_ports": [
+      "rq3"
+     ],
+     "die_bits": 17,
+     "rtl_bits": 17,
+     "rtl_ports": [
+      "rq3"
+     ]
+    },
+    "rs3": {
+     "die_ports": [
+      "rs3"
+     ],
+     "die_bits": 1025,
+     "rtl_bits": 1025,
+     "rtl_ports": [
+      "rs3"
+     ]
+    },
+    "rq4": {
+     "die_ports": [
+      "rq4"
+     ],
+     "die_bits": 17,
+     "rtl_bits": 17,
+     "rtl_ports": [
+      "rq4"
+     ]
+    },
+    "rs4": {
+     "die_ports": [
+      "rs4"
+     ],
+     "die_bits": 1025,
+     "rtl_bits": 1025,
+     "rtl_ports": [
+      "rs4"
+     ]
+    },
+    "rq5": {
+     "die_ports": [
+      "rq5"
+     ],
+     "die_bits": 17,
+     "rtl_bits": 17,
+     "rtl_ports": [
+      "rq5"
+     ]
+    },
+    "rs5": {
+     "die_ports": [
+      "rs5"
+     ],
+     "die_bits": 1025,
+     "rtl_bits": 1025,
+     "rtl_ports": [
+      "rs5"
+     ]
+    },
+    "rq6": {
+     "die_ports": [
+      "rq6"
+     ],
+     "die_bits": 17,
+     "rtl_bits": 17,
+     "rtl_ports": [
+      "rq6"
+     ]
+    },
+    "rs6": {
+     "die_ports": [
+      "rs6"
+     ],
+     "die_bits": 1025,
+     "rtl_bits": 1025,
+     "rtl_ports": [
+      "rs6"
+     ]
+    },
+    "rq7": {
+     "die_ports": [
+      "rq7"
+     ],
+     "die_bits": 17,
+     "rtl_bits": 17,
+     "rtl_ports": [
+      "rq7"
+     ]
+    },
+    "rs7": {
+     "die_ports": [
+      "rs7"
+     ],
+     "die_bits": 1025,
+     "rtl_bits": 1025,
+     "rtl_ports": [
+      "rs7"
+     ]
+    },
+    "kvn": {
+     "die_ports": [
+      "kvn"
+     ],
+     "die_bits": 1048,
+     "rtl_bits": 1048,
+     "rtl_ports": [
+      "kvi",
+      "kvi_cr"
+     ]
+    },
+    "kvo": {
+     "die_ports": [
+      "kvo"
+     ],
+     "die_bits": 1048,
+     "rtl_bits": 1048,
+     "rtl_ports": [
+      "kvo",
+      "kvo_cr"
+     ]
+    },
+    "emf": {
+     "die_ports": [
+      "emf"
+     ],
+     "die_bits": 289,
+     "rtl_bits": 289,
+     "rtl_ports": [
+      "emf",
+      "emf_cr"
+     ]
+    },
+    "emr": {
+     "die_ports": [
+      "emr"
+     ],
+     "die_bits": 521,
+     "rtl_bits": 521,
+     "rtl_ports": [
+      "emr",
+      "emr_cr"
+     ]
+    },
+    "kf": {
+     "die_ports": [
+      "kf"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "kf"
+     ]
+    },
+    "mf": {
+     "die_ports": [
+      "mf"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "mf"
+     ]
+    },
+    "wfault": {
+     "die_ports": [
+      "wfault"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "wf"
+     ]
+    },
+    "es0": {
+     "die_ports": [
+      "es0"
+     ],
+     "die_bits": 288,
+     "rtl_bits": 288,
+     "rtl_ports": [
+      "es0"
+     ]
+    },
+    "er0": {
+     "die_ports": [
+      "er0"
+     ],
+     "die_bits": 261,
+     "rtl_bits": 261,
+     "rtl_ports": [
+      "er0"
+     ]
+    },
+    "es1": {
+     "die_ports": [
+      "es1"
+     ],
+     "die_bits": 288,
+     "rtl_bits": 288,
+     "rtl_ports": [
+      "es1"
+     ]
+    },
+    "er1": {
+     "die_ports": [
+      "er1"
+     ],
+     "die_bits": 261,
+     "rtl_bits": 261,
+     "rtl_ports": [
+      "er1"
+     ]
+    },
+    "es2": {
+     "die_ports": [
+      "es2"
+     ],
+     "die_bits": 288,
+     "rtl_bits": 288,
+     "rtl_ports": [
+      "es2"
+     ]
+    },
+    "er2": {
+     "die_ports": [
+      "er2"
+     ],
+     "die_bits": 261,
+     "rtl_bits": 261,
+     "rtl_ports": [
+      "er2"
+     ]
+    },
+    "es3": {
+     "die_ports": [
+      "es3"
+     ],
+     "die_bits": 288,
+     "rtl_bits": 288,
+     "rtl_ports": [
+      "es3"
+     ]
+    },
+    "er3": {
+     "die_ports": [
+      "er3"
+     ],
+     "die_bits": 261,
+     "rtl_bits": 261,
+     "rtl_ports": [
+      "er3"
+     ]
+    },
+    "es4": {
+     "die_ports": [
+      "es4"
+     ],
+     "die_bits": 288,
+     "rtl_bits": 288,
+     "rtl_ports": [
+      "es4"
+     ]
+    },
+    "er4": {
+     "die_ports": [
+      "er4"
+     ],
+     "die_bits": 261,
+     "rtl_bits": 261,
+     "rtl_ports": [
+      "er4"
+     ]
+    },
+    "es5": {
+     "die_ports": [
+      "es5"
+     ],
+     "die_bits": 288,
+     "rtl_bits": 288,
+     "rtl_ports": [
+      "es5"
+     ]
+    },
+    "er5": {
+     "die_ports": [
+      "er5"
+     ],
+     "die_bits": 261,
+     "rtl_bits": 261,
+     "rtl_ports": [
+      "er5"
+     ]
+    },
+    "es6": {
+     "die_ports": [
+      "es6"
+     ],
+     "die_bits": 288,
+     "rtl_bits": 288,
+     "rtl_ports": [
+      "es6"
+     ]
+    },
+    "er6": {
+     "die_ports": [
+      "er6"
+     ],
+     "die_bits": 261,
+     "rtl_bits": 261,
+     "rtl_ports": [
+      "er6"
+     ]
+    },
+    "es7": {
+     "die_ports": [
+      "es7"
+     ],
+     "die_bits": 288,
+     "rtl_bits": 288,
+     "rtl_ports": [
+      "es7"
+     ]
+    },
+    "er7": {
+     "die_ports": [
+      "er7"
+     ],
+     "die_bits": 261,
+     "rtl_bits": 261,
+     "rtl_ports": [
+      "er7"
+     ]
+    },
+    "es8": {
+     "die_ports": [
+      "es8"
+     ],
+     "die_bits": 288,
+     "rtl_bits": 288,
+     "rtl_ports": [
+      "es8"
+     ]
+    },
+    "er8": {
+     "die_ports": [
+      "er8"
+     ],
+     "die_bits": 261,
+     "rtl_bits": 261,
+     "rtl_ports": [
+      "er8"
+     ]
+    },
+    "es9": {
+     "die_ports": [
+      "es9"
+     ],
+     "die_bits": 288,
+     "rtl_bits": 288,
+     "rtl_ports": [
+      "es9"
+     ]
+    },
+    "er9": {
+     "die_ports": [
+      "er9"
+     ],
+     "die_bits": 261,
+     "rtl_bits": 261,
+     "rtl_ports": [
+      "er9"
+     ]
+    },
+    "es10": {
+     "die_ports": [
+      "es10"
+     ],
+     "die_bits": 288,
+     "rtl_bits": 288,
+     "rtl_ports": [
+      "es10"
+     ]
+    },
+    "er10": {
+     "die_ports": [
+      "er10"
+     ],
+     "die_bits": 261,
+     "rtl_bits": 261,
+     "rtl_ports": [
+      "er10"
+     ]
+    },
+    "es11": {
+     "die_ports": [
+      "es11"
+     ],
+     "die_bits": 288,
+     "rtl_bits": 288,
+     "rtl_ports": [
+      "es11"
+     ]
+    },
+    "er11": {
+     "die_ports": [
+      "er11"
+     ],
+     "die_bits": 261,
+     "rtl_bits": 261,
+     "rtl_ports": [
+      "er11"
+     ]
+    },
+    "es12": {
+     "die_ports": [
+      "es12"
+     ],
+     "die_bits": 288,
+     "rtl_bits": 288,
+     "rtl_ports": [
+      "es12"
+     ]
+    },
+    "er12": {
+     "die_ports": [
+      "er12"
+     ],
+     "die_bits": 261,
+     "rtl_bits": 261,
+     "rtl_ports": [
+      "er12"
+     ]
+    },
+    "es13": {
+     "die_ports": [
+      "es13"
+     ],
+     "die_bits": 288,
+     "rtl_bits": 288,
+     "rtl_ports": [
+      "es13"
+     ]
+    },
+    "er13": {
+     "die_ports": [
+      "er13"
+     ],
+     "die_bits": 261,
+     "rtl_bits": 261,
+     "rtl_ports": [
+      "er13"
+     ]
+    },
+    "es14": {
+     "die_ports": [
+      "es14"
+     ],
+     "die_bits": 288,
+     "rtl_bits": 288,
+     "rtl_ports": [
+      "es14"
+     ]
+    },
+    "er14": {
+     "die_ports": [
+      "er14"
+     ],
+     "die_bits": 261,
+     "rtl_bits": 261,
+     "rtl_ports": [
+      "er14"
+     ]
+    },
+    "es15": {
+     "die_ports": [
+      "es15"
+     ],
+     "die_bits": 288,
+     "rtl_bits": 288,
+     "rtl_ports": [
+      "es15"
+     ]
+    },
+    "er15": {
+     "die_ports": [
+      "er15"
+     ],
+     "die_bits": 261,
+     "rtl_bits": 261,
+     "rtl_ports": [
+      "er15"
+     ]
+    },
+    "es16": {
+     "die_ports": [
+      "es16"
+     ],
+     "die_bits": 288,
+     "rtl_bits": 288,
+     "rtl_ports": [
+      "es16"
+     ]
+    },
+    "er16": {
+     "die_ports": [
+      "er16"
+     ],
+     "die_bits": 261,
+     "rtl_bits": 261,
+     "rtl_ports": [
+      "er16"
+     ]
+    },
+    "es17": {
+     "die_ports": [
+      "es17"
+     ],
+     "die_bits": 288,
+     "rtl_bits": 288,
+     "rtl_ports": [
+      "es17"
+     ]
+    },
+    "er17": {
+     "die_ports": [
+      "er17"
+     ],
+     "die_bits": 261,
+     "rtl_bits": 261,
+     "rtl_ports": [
+      "er17"
+     ]
+    },
+    "es18": {
+     "die_ports": [
+      "es18"
+     ],
+     "die_bits": 288,
+     "rtl_bits": 288,
+     "rtl_ports": [
+      "es18"
+     ]
+    },
+    "er18": {
+     "die_ports": [
+      "er18"
+     ],
+     "die_bits": 261,
+     "rtl_bits": 261,
+     "rtl_ports": [
+      "er18"
+     ]
+    },
+    "es19": {
+     "die_ports": [
+      "es19"
+     ],
+     "die_bits": 288,
+     "rtl_bits": 288,
+     "rtl_ports": [
+      "es19"
+     ]
+    },
+    "er19": {
+     "die_ports": [
+      "er19"
+     ],
+     "die_bits": 261,
+     "rtl_bits": 261,
+     "rtl_ports": [
+      "er19"
+     ]
+    },
+    "es20": {
+     "die_ports": [
+      "es20"
+     ],
+     "die_bits": 288,
+     "rtl_bits": 288,
+     "rtl_ports": [
+      "es20"
+     ]
+    },
+    "er20": {
+     "die_ports": [
+      "er20"
+     ],
+     "die_bits": 261,
+     "rtl_bits": 261,
+     "rtl_ports": [
+      "er20"
+     ]
+    },
+    "es21": {
+     "die_ports": [
+      "es21"
+     ],
+     "die_bits": 288,
+     "rtl_bits": 288,
+     "rtl_ports": [
+      "es21"
+     ]
+    },
+    "er21": {
+     "die_ports": [
+      "er21"
+     ],
+     "die_bits": 261,
+     "rtl_bits": 261,
+     "rtl_ports": [
+      "er21"
+     ]
+    },
+    "es22": {
+     "die_ports": [
+      "es22"
+     ],
+     "die_bits": 288,
+     "rtl_bits": 288,
+     "rtl_ports": [
+      "es22"
+     ]
+    },
+    "er22": {
+     "die_ports": [
+      "er22"
+     ],
+     "die_bits": 261,
+     "rtl_bits": 261,
+     "rtl_ports": [
+      "er22"
+     ]
+    },
+    "es23": {
+     "die_ports": [
+      "es23"
+     ],
+     "die_bits": 288,
+     "rtl_bits": 288,
+     "rtl_ports": [
+      "es23"
+     ]
+    },
+    "er23": {
+     "die_ports": [
+      "er23"
+     ],
+     "die_bits": 261,
+     "rtl_bits": 261,
+     "rtl_ports": [
+      "er23"
+     ]
+    },
+    "es24": {
+     "die_ports": [
+      "es24"
+     ],
+     "die_bits": 288,
+     "rtl_bits": 288,
+     "rtl_ports": [
+      "es24"
+     ]
+    },
+    "er24": {
+     "die_ports": [
+      "er24"
+     ],
+     "die_bits": 261,
+     "rtl_bits": 261,
+     "rtl_ports": [
+      "er24"
+     ]
+    },
+    "es25": {
+     "die_ports": [
+      "es25"
+     ],
+     "die_bits": 288,
+     "rtl_bits": 288,
+     "rtl_ports": [
+      "es25"
+     ]
+    },
+    "er25": {
+     "die_ports": [
+      "er25"
+     ],
+     "die_bits": 261,
+     "rtl_bits": 261,
+     "rtl_ports": [
+      "er25"
+     ]
+    },
+    "es26": {
+     "die_ports": [
+      "es26"
+     ],
+     "die_bits": 288,
+     "rtl_bits": 288,
+     "rtl_ports": [
+      "es26"
+     ]
+    },
+    "er26": {
+     "die_ports": [
+      "er26"
+     ],
+     "die_bits": 261,
+     "rtl_bits": 261,
+     "rtl_ports": [
+      "er26"
+     ]
+    },
+    "es27": {
+     "die_ports": [
+      "es27"
+     ],
+     "die_bits": 288,
+     "rtl_bits": 288,
+     "rtl_ports": [
+      "es27"
+     ]
+    },
+    "er27": {
+     "die_ports": [
+      "er27"
+     ],
+     "die_bits": 261,
+     "rtl_bits": 261,
+     "rtl_ports": [
+      "er27"
+     ]
+    },
+    "es28": {
+     "die_ports": [
+      "es28"
+     ],
+     "die_bits": 288,
+     "rtl_bits": 288,
+     "rtl_ports": [
+      "es28"
+     ]
+    },
+    "er28": {
+     "die_ports": [
+      "er28"
+     ],
+     "die_bits": 261,
+     "rtl_bits": 261,
+     "rtl_ports": [
+      "er28"
+     ]
+    },
+    "es29": {
+     "die_ports": [
+      "es29"
+     ],
+     "die_bits": 288,
+     "rtl_bits": 288,
+     "rtl_ports": [
+      "es29"
+     ]
+    },
+    "er29": {
+     "die_ports": [
+      "er29"
+     ],
+     "die_bits": 261,
+     "rtl_bits": 261,
+     "rtl_ports": [
+      "er29"
+     ]
+    },
+    "es30": {
+     "die_ports": [
+      "es30"
+     ],
+     "die_bits": 288,
+     "rtl_bits": 288,
+     "rtl_ports": [
+      "es30"
+     ]
+    },
+    "er30": {
+     "die_ports": [
+      "er30"
+     ],
+     "die_bits": 261,
+     "rtl_bits": 261,
+     "rtl_ports": [
+      "er30"
+     ]
+    },
+    "es31": {
+     "die_ports": [
+      "es31"
+     ],
+     "die_bits": 288,
+     "rtl_bits": 288,
+     "rtl_ports": [
+      "es31"
+     ]
+    },
+    "er31": {
+     "die_ports": [
+      "er31"
+     ],
+     "die_bits": 261,
+     "rtl_bits": 261,
+     "rtl_ports": [
+      "er31"
+     ]
+    },
+    "rst_n": {
+     "die_ports": [
+      "rst_n"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "rst_n"
+     ]
+    }
+   },
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 4,
+   "file": "rtl/qwen_sys/split_20261014/qkd_strips_s.sv",
+   "parameters": {}
+  },
+  "qkd_astk_n": {
+   "instances": 2,
+   "how": "bound",
+   "module": "qkd_astk_strip_s",
+   "bundles": {
+    "ck_c": {
+     "die_ports": [
+      "ck_c"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_c"
+     ]
+    },
+    "ck_z0": {
+     "die_ports": [
+      "ck_z0",
+      "ck_z1",
+      "ck_z2",
+      "ck_z3"
+     ],
+     "die_bits": 4,
+     "rtl_bits": 4,
+     "rtl_ports": [
+      "ck_z"
+     ]
+    },
+    "ck_v0": {
+     "die_ports": [
+      "ck_v0",
+      "ck_v1",
+      "ck_v2",
+      "ck_v3",
+      "ck_v4",
+      "ck_v5",
+      "ck_v6",
+      "ck_v7",
+      "ck_v8",
+      "ck_v9",
+      "ck_v10",
+      "ck_v11",
+      "ck_v12",
+      "ck_v13",
+      "ck_v14",
+      "ck_v15",
+      "ck_v16",
+      "ck_v17",
+      "ck_v18",
+      "ck_v19",
+      "ck_v20",
+      "ck_v21",
+      "ck_v22",
+      "ck_v23",
+      "ck_v24",
+      "ck_v25",
+      "ck_v26",
+      "ck_v27",
+      "ck_v28",
+      "ck_v29",
+      "ck_v30",
+      "ck_v31",
+      "ck_v32",
+      "ck_v33",
+      "ck_v34",
+      "ck_v35",
+      "ck_v36",
+      "ck_v37",
+      "ck_v38",
+      "ck_v39",
+      "ck_v40",
+      "ck_v41",
+      "ck_v42",
+      "ck_v43",
+      "ck_v44",
+      "ck_v45",
+      "ck_v46",
+      "ck_v47",
+      "ck_v48",
+      "ck_v49",
+      "ck_v50",
+      "ck_v51",
+      "ck_v52",
+      "ck_v53",
+      "ck_v54",
+      "ck_v55",
+      "ck_v56",
+      "ck_v57",
+      "ck_v58",
+      "ck_v59",
+      "ck_v60",
+      "ck_v61",
+      "ck_v62",
+      "ck_v63"
+     ],
+     "die_bits": 64,
+     "rtl_bits": 64,
+     "rtl_ports": [
+      "ck_v"
+     ]
+    },
+    "ck_x0": {
+     "die_ports": [
+      "ck_x0",
+      "ck_x1",
+      "ck_x2",
+      "ck_x3",
+      "ck_x4",
+      "ck_x5",
+      "ck_x6",
+      "ck_x7",
+      "ck_x8",
+      "ck_x9",
+      "ck_x10",
+      "ck_x11",
+      "ck_x12",
+      "ck_x13",
+      "ck_x14",
+      "ck_x15",
+      "ck_x16",
+      "ck_x17",
+      "ck_x18",
+      "ck_x19",
+      "ck_x20",
+      "ck_x21",
+      "ck_x22",
+      "ck_x23",
+      "ck_x24",
+      "ck_x25",
+      "ck_x26",
+      "ck_x27",
+      "ck_x28",
+      "ck_x29",
+      "ck_x30",
+      "ck_x31"
+     ],
+     "die_bits": 32,
+     "rtl_bits": 32,
+     "rtl_ports": [
+      "ck_x"
+     ]
+    },
+    "ck_e0": {
+     "die_ports": [
+      "ck_e0",
+      "ck_e1",
+      "ck_e2",
+      "ck_e3",
+      "ck_e4",
+      "ck_e5",
+      "ck_e6",
+      "ck_e7"
+     ],
+     "die_bits": 8,
+     "rtl_bits": 8,
+     "rtl_ports": [
+      "ck_e"
+     ]
+    },
+    "ck_r": {
+     "die_ports": [
+      "ck_r"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_r"
+     ]
+    },
+    "st": {
+     "die_ports": [
+      "st"
+     ],
+     "die_bits": 2,
+     "rtl_bits": 2,
+     "rtl_ports": [
+      "st"
+     ]
+    },
+    "aq": {
+     "die_ports": [
+      "aq"
+     ],
+     "die_bits": 540,
+     "rtl_bits": 540,
+     "rtl_ports": [
+      "aq"
+     ]
+    },
+    "lt": {
+     "die_ports": [
+      "lt"
+     ],
+     "die_bits": 21,
+     "rtl_bits": 21,
+     "rtl_ports": [
+      "lt"
+     ]
+    },
+    "ap": {
+     "die_ports": [
+      "ap"
+     ],
+     "die_bits": 563,
+     "rtl_bits": 563,
+     "rtl_ports": [
+      "ap"
+     ]
+    },
+    "am": {
+     "die_ports": [
+      "am"
+     ],
+     "die_bits": 36,
+     "rtl_bits": 36,
+     "rtl_ports": [
+      "am"
+     ]
+    },
+    "e0o": {
+     "die_ports": [
+      "e0o"
+     ],
+     "die_bits": 634,
+     "rtl_bits": 634,
+     "rtl_ports": [
+      "si0"
+     ]
+    },
+    "e0i": {
+     "die_ports": [
+      "e0i"
+     ],
+     "die_bits": 425,
+     "rtl_bits": 425,
+     "rtl_ports": [
+      "so0"
+     ]
+    },
+    "f00": {
+     "die_ports": [
+      "f00"
+     ],
+     "die_bits": 1024,
+     "rtl_bits": 1024,
+     "rtl_ports": [
+      "nb0_0"
+     ]
+    },
+    "f01": {
+     "die_ports": [
+      "f01"
+     ],
+     "die_bits": 1024,
+     "rtl_bits": 1024,
+     "rtl_ports": [
+      "nb0_1"
+     ]
+    },
+    "f02": {
+     "die_ports": [
+      "f02"
+     ],
+     "die_bits": 1024,
+     "rtl_bits": 1024,
+     "rtl_ports": [
+      "nb0_2"
+     ]
+    },
+    "f03": {
+     "die_ports": [
+      "f03"
+     ],
+     "die_bits": 1024,
+     "rtl_bits": 1024,
+     "rtl_ports": [
+      "nb0_3"
+     ]
+    },
+    "e1o": {
+     "die_ports": [
+      "e1o"
+     ],
+     "die_bits": 634,
+     "rtl_bits": 634,
+     "rtl_ports": [
+      "si1"
+     ]
+    },
+    "e1i": {
+     "die_ports": [
+      "e1i"
+     ],
+     "die_bits": 425,
+     "rtl_bits": 425,
+     "rtl_ports": [
+      "so1"
+     ]
+    },
+    "f10": {
+     "die_ports": [
+      "f10"
+     ],
+     "die_bits": 1024,
+     "rtl_bits": 1024,
+     "rtl_ports": [
+      "nb1_0"
+     ]
+    },
+    "f11": {
+     "die_ports": [
+      "f11"
+     ],
+     "die_bits": 1024,
+     "rtl_bits": 1024,
+     "rtl_ports": [
+      "nb1_1"
+     ]
+    },
+    "f12": {
+     "die_ports": [
+      "f12"
+     ],
+     "die_bits": 1024,
+     "rtl_bits": 1024,
+     "rtl_ports": [
+      "nb1_2"
+     ]
+    },
+    "f13": {
+     "die_ports": [
+      "f13"
+     ],
+     "die_bits": 1024,
+     "rtl_bits": 1024,
+     "rtl_ports": [
+      "nb1_3"
+     ]
+    },
+    "e2o": {
+     "die_ports": [
+      "e2o"
+     ],
+     "die_bits": 634,
+     "rtl_bits": 634,
+     "rtl_ports": [
+      "si2"
+     ]
+    },
+    "e2i": {
+     "die_ports": [
+      "e2i"
+     ],
+     "die_bits": 425,
+     "rtl_bits": 425,
+     "rtl_ports": [
+      "so2"
+     ]
+    },
+    "f20": {
+     "die_ports": [
+      "f20"
+     ],
+     "die_bits": 1024,
+     "rtl_bits": 1024,
+     "rtl_ports": [
+      "nb2_0"
+     ]
+    },
+    "f21": {
+     "die_ports": [
+      "f21"
+     ],
+     "die_bits": 1024,
+     "rtl_bits": 1024,
+     "rtl_ports": [
+      "nb2_1"
+     ]
+    },
+    "f22": {
+     "die_ports": [
+      "f22"
+     ],
+     "die_bits": 1024,
+     "rtl_bits": 1024,
+     "rtl_ports": [
+      "nb2_2"
+     ]
+    },
+    "f23": {
+     "die_ports": [
+      "f23"
+     ],
+     "die_bits": 1024,
+     "rtl_bits": 1024,
+     "rtl_ports": [
+      "nb2_3"
+     ]
+    },
+    "e3o": {
+     "die_ports": [
+      "e3o"
+     ],
+     "die_bits": 634,
+     "rtl_bits": 634,
+     "rtl_ports": [
+      "si3"
+     ]
+    },
+    "e3i": {
+     "die_ports": [
+      "e3i"
+     ],
+     "die_bits": 425,
+     "rtl_bits": 425,
+     "rtl_ports": [
+      "so3"
+     ]
+    },
+    "f30": {
+     "die_ports": [
+      "f30"
+     ],
+     "die_bits": 1024,
+     "rtl_bits": 1024,
+     "rtl_ports": [
+      "nb3_0"
+     ]
+    },
+    "f31": {
+     "die_ports": [
+      "f31"
+     ],
+     "die_bits": 1024,
+     "rtl_bits": 1024,
+     "rtl_ports": [
+      "nb3_1"
+     ]
+    },
+    "f32": {
+     "die_ports": [
+      "f32"
+     ],
+     "die_bits": 1024,
+     "rtl_bits": 1024,
+     "rtl_ports": [
+      "nb3_2"
+     ]
+    },
+    "f33": {
+     "die_ports": [
+      "f33"
+     ],
+     "die_bits": 1024,
+     "rtl_bits": 1024,
+     "rtl_ports": [
+      "nb3_3"
+     ]
+    },
+    "e4o": {
+     "die_ports": [
+      "e4o"
+     ],
+     "die_bits": 634,
+     "rtl_bits": 634,
+     "rtl_ports": [
+      "si4"
+     ]
+    },
+    "e4i": {
+     "die_ports": [
+      "e4i"
+     ],
+     "die_bits": 425,
+     "rtl_bits": 425,
+     "rtl_ports": [
+      "so4"
+     ]
+    },
+    "f40": {
+     "die_ports": [
+      "f40"
+     ],
+     "die_bits": 1024,
+     "rtl_bits": 1024,
+     "rtl_ports": [
+      "nb4_0"
+     ]
+    },
+    "f41": {
+     "die_ports": [
+      "f41"
+     ],
+     "die_bits": 1024,
+     "rtl_bits": 1024,
+     "rtl_ports": [
+      "nb4_1"
+     ]
+    },
+    "f42": {
+     "die_ports": [
+      "f42"
+     ],
+     "die_bits": 1024,
+     "rtl_bits": 1024,
+     "rtl_ports": [
+      "nb4_2"
+     ]
+    },
+    "f43": {
+     "die_ports": [
+      "f43"
+     ],
+     "die_bits": 1024,
+     "rtl_bits": 1024,
+     "rtl_ports": [
+      "nb4_3"
+     ]
+    },
+    "e5o": {
+     "die_ports": [
+      "e5o"
+     ],
+     "die_bits": 634,
+     "rtl_bits": 634,
+     "rtl_ports": [
+      "si5"
+     ]
+    },
+    "e5i": {
+     "die_ports": [
+      "e5i"
+     ],
+     "die_bits": 425,
+     "rtl_bits": 425,
+     "rtl_ports": [
+      "so5"
+     ]
+    },
+    "f50": {
+     "die_ports": [
+      "f50"
+     ],
+     "die_bits": 1024,
+     "rtl_bits": 1024,
+     "rtl_ports": [
+      "nb5_0"
+     ]
+    },
+    "f51": {
+     "die_ports": [
+      "f51"
+     ],
+     "die_bits": 1024,
+     "rtl_bits": 1024,
+     "rtl_ports": [
+      "nb5_1"
+     ]
+    },
+    "f52": {
+     "die_ports": [
+      "f52"
+     ],
+     "die_bits": 1024,
+     "rtl_bits": 1024,
+     "rtl_ports": [
+      "nb5_2"
+     ]
+    },
+    "f53": {
+     "die_ports": [
+      "f53"
+     ],
+     "die_bits": 1024,
+     "rtl_bits": 1024,
+     "rtl_ports": [
+      "nb5_3"
+     ]
+    },
+    "e6o": {
+     "die_ports": [
+      "e6o"
+     ],
+     "die_bits": 634,
+     "rtl_bits": 634,
+     "rtl_ports": [
+      "si6"
+     ]
+    },
+    "e6i": {
+     "die_ports": [
+      "e6i"
+     ],
+     "die_bits": 425,
+     "rtl_bits": 425,
+     "rtl_ports": [
+      "so6"
+     ]
+    },
+    "f60": {
+     "die_ports": [
+      "f60"
+     ],
+     "die_bits": 1024,
+     "rtl_bits": 1024,
+     "rtl_ports": [
+      "nb6_0"
+     ]
+    },
+    "f61": {
+     "die_ports": [
+      "f61"
+     ],
+     "die_bits": 1024,
+     "rtl_bits": 1024,
+     "rtl_ports": [
+      "nb6_1"
+     ]
+    },
+    "f62": {
+     "die_ports": [
+      "f62"
+     ],
+     "die_bits": 1024,
+     "rtl_bits": 1024,
+     "rtl_ports": [
+      "nb6_2"
+     ]
+    },
+    "f63": {
+     "die_ports": [
+      "f63"
+     ],
+     "die_bits": 1024,
+     "rtl_bits": 1024,
+     "rtl_ports": [
+      "nb6_3"
+     ]
+    },
+    "e7o": {
+     "die_ports": [
+      "e7o"
+     ],
+     "die_bits": 634,
+     "rtl_bits": 634,
+     "rtl_ports": [
+      "si7"
+     ]
+    },
+    "e7i": {
+     "die_ports": [
+      "e7i"
+     ],
+     "die_bits": 425,
+     "rtl_bits": 425,
+     "rtl_ports": [
+      "so7"
+     ]
+    },
+    "f70": {
+     "die_ports": [
+      "f70"
+     ],
+     "die_bits": 1024,
+     "rtl_bits": 1024,
+     "rtl_ports": [
+      "nb7_0"
+     ]
+    },
+    "f71": {
+     "die_ports": [
+      "f71"
+     ],
+     "die_bits": 1024,
+     "rtl_bits": 1024,
+     "rtl_ports": [
+      "nb7_1"
+     ]
+    },
+    "f72": {
+     "die_ports": [
+      "f72"
+     ],
+     "die_bits": 1024,
+     "rtl_bits": 1024,
+     "rtl_ports": [
+      "nb7_2"
+     ]
+    },
+    "f73": {
+     "die_ports": [
+      "f73"
+     ],
+     "die_bits": 1024,
+     "rtl_bits": 1024,
+     "rtl_ports": [
+      "nb7_3"
+     ]
+    },
+    "af": {
+     "die_ports": [
+      "af"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "af"
+     ]
+    },
+    "rst_n": {
+     "die_ports": [
+      "rst_n"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "rst_n"
+     ]
+    }
+   },
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 4,
+   "file": "rtl/qwen_sys/split_20261014/qkd_strips_s.sv",
+   "parameters": {}
+  },
+  "ot_qkvd_ucie_x64_phy": {
+   "instances": 1,
+   "how": "by_name",
+   "module": "ot_qkvd_ucie_x64_phy",
+   "bundles": {},
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 0
+  },
+  "qkd_d2ds": {
+   "instances": 1,
+   "how": "bound",
+   "module": "qkd_d2d_static",
+   "bundles": {
+    "ck0": {
+     "die_ports": [
+      "ck0"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck"
+     ]
+    },
+    "fdi": {
+     "die_ports": [
+      "fdi"
+     ],
+     "die_bits": 1169,
+     "rtl_bits": 1169,
+     "rtl_ports": [
+      "fdi_tx_up",
+      "fdi_tx_v",
+      "fdi_tx_flit",
+      "fdi_rx_v",
+      "fdi_rx_flit"
+     ]
+    },
+    "phy_rst_n": {
+     "die_ports": [
+      "phy_rst_n"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "phy_rst_n"
+     ]
+    },
+    "svc": {
+     "die_ports": [
+      "svc"
+     ],
+     "die_bits": 174,
+     "rtl_bits": 174,
+     "rtl_ports": [
+      "transport_fault",
+      "native_links_drained",
+      "native_link_reset_seen",
+      "native_retrained",
+      "abort_drained",
+      "native_kv_drained",
+      "native_vm_drained",
+      "native_collective_drained",
+      "native_host_drained",
+      "native_collective_busy",
+      "native_kv_flush",
+      "native_admit_ready",
+      "crom_fault",
+      "execution_active",
+      "engine_result_v",
+      "engine_result_done",
+      "engine_result_fault",
+      "engine_result_cause",
+      "engine_result_tag",
+      "engine_result_gen",
+      "engine_result_token",
+      "engine_result_value",
+      "engine_result_cycles"
+     ]
+    },
+    "lup": {
+     "die_ports": [
+      "lup"
+     ],
+     "die_bits": 2,
+     "rtl_bits": 2,
+     "rtl_ports": [
+      "link_up"
+     ]
+    },
+    "rec_tx": {
+     "die_ports": [
+      "rec_tx"
+     ],
+     "die_bits": 549,
+     "rtl_bits": 549,
+     "rtl_ports": [
+      "record_tx_observed_v",
+      "record_tx"
+     ]
+    },
+    "rec_rx": {
+     "die_ports": [
+      "rec_rx"
+     ],
+     "die_bits": 552,
+     "rtl_bits": 552,
+     "rtl_ports": [
+      "record_send_kind",
+      "record_witness_slot",
+      "record_rx_v",
+      "record_rx"
+     ]
+    },
+    "lrc": {
+     "die_ports": [
+      "lrc"
+     ],
+     "die_bits": 2,
+     "rtl_bits": 2,
+     "rtl_ports": [
+      "host_link_reset_req",
+      "host_recovery_clear"
+     ]
+    },
+    "status_epoch16": {
+     "die_ports": [
+      "status_epoch16"
+     ],
+     "die_bits": 16,
+     "rtl_bits": 16,
+     "rtl_ports": [
+      "status_epoch16"
+     ]
+    },
+    "host_drained_local": {
+     "die_ports": [
+      "host_drained_local"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "host_drained_local"
+     ]
+    },
+    "lpf": {
+     "die_ports": [
+      "lpf"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "fault"
+     ]
+    },
+    "fwd_epoch": {
+     "die_ports": [
+      "fwd_epoch"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "fwd_epoch"
+     ]
+    },
+    "fwd_link_rst_n": {
+     "die_ports": [
+      "fwd_link_rst_n"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "fwd_link_rst_n"
+     ]
+    },
+    "rst_n": {
+     "die_ports": [
+      "rst_n"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "rst_n"
+     ]
+    },
+    "host_boot_begin": {
+     "die_ports": [
+      "host_boot_begin"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "host_boot_begin"
+     ]
+    },
+    "serdes_up": {
+     "die_ports": [
+      "serdes_up"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "serdes_up"
+     ]
+    }
+   },
+   "unassigned_bits": 0,
+   "classed_inputs": {
+    "por_n": "by_design: package POR pad (off-chip signal)"
+   },
+   "constants_folded": 0,
+   "file": "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies.sv",
+   "parameters": {
+    "NL": 2
+   }
+  },
+  "qkd_seq": {
+   "instances": 1,
+   "how": "bound",
+   "module": "qkd_seq",
+   "bundles": {
+    "ck": {
+     "die_ports": [
+      "ck"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck"
+     ]
+    },
+    "aq_WS": {
+     "die_ports": [
+      "aq_WS"
+     ],
+     "die_bits": 540,
+     "rtl_bits": 540,
+     "rtl_ports": [
+      "aq_WS"
+     ]
+    },
+    "kvn_WS": {
+     "die_ports": [
+      "kvn_WS"
+     ],
+     "die_bits": 1048,
+     "rtl_bits": 1048,
+     "rtl_ports": [
+      "kvn_WS_d",
+      "kvn_WS_cr"
+     ]
+    },
+    "kc_WS": {
+     "die_ports": [
+      "kc_WS"
+     ],
+     "die_bits": 33,
+     "rtl_bits": 33,
+     "rtl_ports": [
+      "kc_WS"
+     ]
+    },
+    "aq_WN": {
+     "die_ports": [
+      "aq_WN"
+     ],
+     "die_bits": 540,
+     "rtl_bits": 540,
+     "rtl_ports": [
+      "aq_WN"
+     ]
+    },
+    "kvn_WN": {
+     "die_ports": [
+      "kvn_WN"
+     ],
+     "die_bits": 1048,
+     "rtl_bits": 1048,
+     "rtl_ports": [
+      "kvn_WN_d",
+      "kvn_WN_cr"
+     ]
+    },
+    "kc_WN": {
+     "die_ports": [
+      "kc_WN"
+     ],
+     "die_bits": 33,
+     "rtl_bits": 33,
+     "rtl_ports": [
+      "kc_WN"
+     ]
+    },
+    "aq_ES": {
+     "die_ports": [
+      "aq_ES"
+     ],
+     "die_bits": 540,
+     "rtl_bits": 540,
+     "rtl_ports": [
+      "aq_ES"
+     ]
+    },
+    "kvn_ES": {
+     "die_ports": [
+      "kvn_ES"
+     ],
+     "die_bits": 1048,
+     "rtl_bits": 1048,
+     "rtl_ports": [
+      "kvn_ES_d",
+      "kvn_ES_cr"
+     ]
+    },
+    "kc_ES": {
+     "die_ports": [
+      "kc_ES"
+     ],
+     "die_bits": 33,
+     "rtl_bits": 33,
+     "rtl_ports": [
+      "kc_ES"
+     ]
+    },
+    "aq_EN": {
+     "die_ports": [
+      "aq_EN"
+     ],
+     "die_bits": 540,
+     "rtl_bits": 540,
+     "rtl_ports": [
+      "aq_EN"
+     ]
+    },
+    "kvn_EN": {
+     "die_ports": [
+      "kvn_EN"
+     ],
+     "die_bits": 1048,
+     "rtl_bits": 1048,
+     "rtl_ports": [
+      "kvn_EN_d",
+      "kvn_EN_cr"
+     ]
+    },
+    "kc_EN": {
+     "die_ports": [
+      "kc_EN"
+     ],
+     "die_bits": 33,
+     "rtl_bits": 33,
+     "rtl_ports": [
+      "kc_EN"
+     ]
+    },
+    "ar": {
+     "die_ports": [
+      "ar"
+     ],
+     "die_bits": 520,
+     "rtl_bits": 520,
+     "rtl_ports": [
+      "ar"
+     ]
+    },
+    "hs": {
+     "die_ports": [
+      "hs"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "hs"
+     ]
+    },
+    "kst": {
+     "die_ports": [
+      "kst"
+     ],
+     "die_bits": 10,
+     "rtl_bits": 10,
+     "rtl_ports": [
+      "kst"
+     ]
+    },
+    "hf": {
+     "die_ports": [
+      "hf"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "hf"
+     ]
+    },
+    "af_WS": {
+     "die_ports": [
+      "af_WS"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "af_WS"
+     ]
+    },
+    "mf_WS": {
+     "die_ports": [
+      "mf_WS"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "mf_WS"
+     ]
+    },
+    "af_WN": {
+     "die_ports": [
+      "af_WN"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "af_WN"
+     ]
+    },
+    "mf_WN": {
+     "die_ports": [
+      "mf_WN"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "mf_WN"
+     ]
+    },
+    "af_ES": {
+     "die_ports": [
+      "af_ES"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "af_ES"
+     ]
+    },
+    "mf_ES": {
+     "die_ports": [
+      "mf_ES"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "mf_ES"
+     ]
+    },
+    "af_EN": {
+     "die_ports": [
+      "af_EN"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "af_EN"
+     ]
+    },
+    "mf_EN": {
+     "die_ports": [
+      "mf_EN"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "mf_EN"
+     ]
+    },
+    "hc": {
+     "die_ports": [
+      "hc"
+     ],
+     "die_bits": 182,
+     "rtl_bits": 182,
+     "rtl_ports": [
+      "hc"
+     ]
+    },
+    "tk": {
+     "die_ports": [
+      "tk"
+     ],
+     "die_bits": 93,
+     "rtl_bits": 93,
+     "rtl_ports": [
+      "tk"
+     ]
+    },
+    "rst_n": {
+     "die_ports": [
+      "rst_n"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "rst_n"
+     ]
+    }
+   },
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 0,
+   "file": "rtl/physical/ot_qwen_kv_centre_slots.sv",
+   "parameters": {
+    "HEADS": 1,
+    "Q_FP32": 1
+   }
+  },
+  "qkd_embgw": {
+   "instances": 1,
+   "how": "bound",
+   "module": "qkd_embgw",
+   "bundles": {
+    "ck": {
+     "die_ports": [
+      "ck"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck"
+     ]
+    },
+    "emf_WS": {
+     "die_ports": [
+      "emf_WS"
+     ],
+     "die_bits": 289,
+     "rtl_bits": 289,
+     "rtl_ports": [
+      "emf_WS",
+      "emr_WS_cr"
+     ]
+    },
+    "emr_WS": {
+     "die_ports": [
+      "emr_WS"
+     ],
+     "die_bits": 521,
+     "rtl_bits": 521,
+     "rtl_ports": [
+      "emr_WS",
+      "emf_WS_cr"
+     ]
+    },
+    "emf_WN": {
+     "die_ports": [
+      "emf_WN"
+     ],
+     "die_bits": 289,
+     "rtl_bits": 289,
+     "rtl_ports": [
+      "emf_WN",
+      "emr_WN_cr"
+     ]
+    },
+    "emr_WN": {
+     "die_ports": [
+      "emr_WN"
+     ],
+     "die_bits": 521,
+     "rtl_bits": 521,
+     "rtl_ports": [
+      "emr_WN",
+      "emf_WN_cr"
+     ]
+    },
+    "emf_ES": {
+     "die_ports": [
+      "emf_ES"
+     ],
+     "die_bits": 289,
+     "rtl_bits": 289,
+     "rtl_ports": [
+      "emf_ES",
+      "emr_ES_cr"
+     ]
+    },
+    "emr_ES": {
+     "die_ports": [
+      "emr_ES"
+     ],
+     "die_bits": 521,
+     "rtl_bits": 521,
+     "rtl_ports": [
+      "emr_ES",
+      "emf_ES_cr"
+     ]
+    },
+    "emf_EN": {
+     "die_ports": [
+      "emf_EN"
+     ],
+     "die_bits": 289,
+     "rtl_bits": 289,
+     "rtl_ports": [
+      "emf_EN",
+      "emr_EN_cr"
+     ]
+    },
+    "emr_EN": {
+     "die_ports": [
+      "emr_EN"
+     ],
+     "die_bits": 521,
+     "rtl_bits": 521,
+     "rtl_ports": [
+      "emr_EN",
+      "emf_EN_cr"
+     ]
+    },
+    "hb": {
+     "die_ports": [
+      "hb"
+     ],
+     "die_bits": 284,
+     "rtl_bits": 284,
+     "rtl_ports": [
+      "hb",
+      "hb_cr"
+     ]
+    },
+    "est": {
+     "die_ports": [
+      "est"
+     ],
+     "die_bits": 13,
+     "rtl_bits": 13,
+     "rtl_ports": [
+      "est"
+     ]
+    },
+    "rst_n": {
+     "die_ports": [
+      "rst_n"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "rst_n"
+     ]
+    }
+   },
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 0,
+   "file": "rtl/physical/ot_qwen_kv_gwhost_slots.sv",
+   "parameters": {}
+  },
+  "qkd_ckbump": {
+   "instances": 1,
+   "how": "hard_model",
+   "module": "qkd_ckbump",
+   "bundles": {},
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 0
+  },
+  "qkd_pllm": {
+   "instances": 1,
+   "how": "bound",
+   "module": "qkd_pll_analog_model",
+   "bundles": {
+    "pll_hbm_WS": {
+     "die_ports": [
+      "pll_hbm_WS"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "pll_hbm_WS"
+     ]
+    },
+    "pll_hbm_WN": {
+     "die_ports": [
+      "pll_hbm_WN"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "pll_hbm_WN"
+     ]
+    },
+    "pll_hbm_ES": {
+     "die_ports": [
+      "pll_hbm_ES"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "pll_hbm_ES"
+     ]
+    },
+    "pll_hbm_EN": {
+     "die_ports": [
+      "pll_hbm_EN"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "pll_hbm_EN"
+     ]
+    },
+    "pll_WS": {
+     "die_ports": [
+      "pll_WS"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "pll_WS"
+     ]
+    },
+    "pll_WN": {
+     "die_ports": [
+      "pll_WN"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "pll_WN"
+     ]
+    },
+    "pll_ES": {
+     "die_ports": [
+      "pll_ES"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "pll_ES"
+     ]
+    },
+    "pll_EN": {
+     "die_ports": [
+      "pll_EN"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "pll_EN"
+     ]
+    },
+    "pll_c": {
+     "die_ports": [
+      "pll_c"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "pll_c"
+     ]
+    },
+    "pll_fwd": {
+     "die_ports": [
+      "pll_fwd"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "pll_fwd"
+     ]
+    },
+    "locked": {
+     "die_ports": [
+      "locked"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "locked"
+     ]
+    },
+    "pll_host": {
+     "die_ports": [
+      "pll_host"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "pll_host"
+     ]
+    },
+    "pll_ingest": {
+     "die_ports": [
+      "pll_ingest"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "pll_ingest"
+     ]
+    },
+    "pll_phy": {
+     "die_ports": [
+      "pll_phy"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "pll_phy"
+     ]
+    }
+   },
+   "unassigned_bits": 0,
+   "classed_inputs": {
+    "refclk": "by_design: package reference-clock pad (off-chip signal)",
+    "por_n": "by_design: package POR pad (off-chip signal)"
+   },
+   "constants_folded": 0,
+   "file": "rtl/qwen_sys/split_20261014/qkd_pll_analog_model.sv",
+   "parameters": {}
+  },
+  "qkd_ahub": {
+   "instances": 1,
+   "how": "bound",
+   "module": "ot_qkd_ahub_die",
+   "bundles": {
+    "ck_c": {
+     "die_ports": [
+      "ck_c"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_core"
+     ]
+    },
+    "ck_z0": {
+     "die_ports": [
+      "ck_z0",
+      "ck_z1",
+      "ck_z2",
+      "ck_z3"
+     ],
+     "die_bits": 4,
+     "rtl_bits": 4,
+     "rtl_ports": [
+      "ck_zh"
+     ]
+    },
+    "ck_r": {
+     "die_ports": [
+      "ck_r"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_recip"
+     ]
+    },
+    "ck_p0": {
+     "die_ports": [
+      "ck_p0",
+      "ck_p1",
+      "ck_p2",
+      "ck_p3"
+     ],
+     "die_bits": 4,
+     "rtl_bits": 4,
+     "rtl_ports": [
+      "ck_pbst"
+     ]
+    },
+    "ck_v0": {
+     "die_ports": [
+      "ck_v0",
+      "ck_v1",
+      "ck_v2",
+      "ck_v3"
+     ],
+     "die_bits": 4,
+     "rtl_bits": 4,
+     "rtl_ports": [
+      "ck_pvlg"
+     ]
+    },
+    "ap_WS": {
+     "die_ports": [
+      "ap_WS",
+      "ap_EN",
+      "ap_ES",
+      "ap_WN"
+     ],
+     "die_bits": 2252,
+     "rtl_bits": 2252,
+     "rtl_ports": [
+      "si_valid",
+      "si_type",
+      "si_g",
+      "si_hh",
+      "si_k",
+      "si_any",
+      "si_data",
+      "pi_valid",
+      "pi_g",
+      "pi_beat",
+      "pi_data"
+     ]
+    },
+    "am_WS": {
+     "die_ports": [
+      "am_WS",
+      "am_EN",
+      "am_ES",
+      "am_WN"
+     ],
+     "die_bits": 144,
+     "rtl_bits": 144,
+     "rtl_ports": [
+      "am"
+     ]
+    },
+    "ao": {
+     "die_ports": [
+      "ao"
+     ],
+     "die_bits": 520,
+     "rtl_bits": 520,
+     "rtl_ports": [
+      "out_valid",
+      "out_g",
+      "out_beat",
+      "out_data"
+     ]
+    },
+    "hs": {
+     "die_ports": [
+      "hs"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "start"
+     ]
+    },
+    "hf": {
+     "die_ports": [
+      "hf"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "fault"
+     ]
+    },
+    "rst_n": {
+     "die_ports": [
+      "rst_n"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "rst_n"
+     ]
+    }
+   },
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 0,
+   "file": "rtl/hdc/nearhbm/ot_qkd_ahub_core.sv",
+   "parameters": {}
+  },
+  "ot_qfd_serdes_112g_x12_phy": {
+   "instances": 1,
+   "how": "by_name",
+   "module": "ot_qfd_serdes_112g_x12_phy",
+   "bundles": {},
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 0
+  },
+  "qkd_host_rt": {
+   "instances": 1,
+   "how": "bound",
+   "module": "qkd_host_root_pt",
+   "bundles": {
+    "ck_axi": {
+     "die_ports": [
+      "ck_axi"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_axi"
+     ]
+    },
+    "ck_bootbarrier": {
+     "die_ports": [
+      "ck_bootbarrier"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_bootbarrier"
+     ]
+    },
+    "ck_coordinator_codec": {
+     "die_ports": [
+      "ck_coordinator_codec"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_coordinator_codec"
+     ]
+    },
+    "ck_coordinator_lifecycle": {
+     "die_ports": [
+      "ck_coordinator_lifecycle"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_coordinator_lifecycle"
+     ]
+    },
+    "ck_coordinator_post": {
+     "die_ports": [
+      "ck_coordinator_post"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_coordinator_post"
+     ]
+    },
+    "ck_csr": {
+     "die_ports": [
+      "ck_csr"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_csr"
+     ]
+    },
+    "ck_ctl": {
+     "die_ports": [
+      "ck_ctl"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_ctl"
+     ]
+    },
+    "ck_ctrl": {
+     "die_ports": [
+      "ck_ctrl"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_ctrl"
+     ]
+    },
+    "ck_dispatch": {
+     "die_ports": [
+      "ck_dispatch"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_dispatch"
+     ]
+    },
+    "ck_fence_core": {
+     "die_ports": [
+      "ck_fence_core"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_fence_core"
+     ]
+    },
+    "ck_guard": {
+     "die_ports": [
+      "ck_guard"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_guard"
+     ]
+    },
+    "ck_hc": {
+     "die_ports": [
+      "ck_hc"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_hc"
+     ]
+    },
+    "ck_host": {
+     "die_ports": [
+      "ck_host"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_host"
+     ]
+    },
+    "ck_map": {
+     "die_ports": [
+      "ck_map"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_map"
+     ]
+    },
+    "ck_native": {
+     "die_ports": [
+      "ck_native"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_native"
+     ]
+    },
+    "ck_order": {
+     "die_ports": [
+      "ck_order"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_order"
+     ]
+    },
+    "ck_phy_rx_r": {
+     "die_ports": [
+      "ck_phy_rx_r"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_phy_rx_r"
+     ]
+    },
+    "ck_phy_tx_w": {
+     "die_ports": [
+      "ck_phy_tx_w"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_phy_tx_w"
+     ]
+    },
+    "ck_program_loader": {
+     "die_ports": [
+      "ck_program_loader"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_program_loader"
+     ]
+    },
+    "ck_program_rx": {
+     "die_ports": [
+      "ck_program_rx"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_program_rx"
+     ]
+    },
+    "ck_prompt": {
+     "die_ports": [
+      "ck_prompt"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_prompt"
+     ]
+    },
+    "ck_qm_core": {
+     "die_ports": [
+      "ck_qm_core"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_qm_core"
+     ]
+    },
+    "ck_qm_done_r": {
+     "die_ports": [
+      "ck_qm_done_r"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_qm_done_r"
+     ]
+    },
+    "ck_qm_ing_w": {
+     "die_ports": [
+      "ck_qm_ing_w"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_qm_ing_w"
+     ]
+    },
+    "ck_qm_queue": {
+     "die_ports": [
+      "ck_qm_queue"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_qm_queue"
+     ]
+    },
+    "ck_records": {
+     "die_ports": [
+      "ck_records"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_records"
+     ]
+    },
+    "ck_retire": {
+     "die_ports": [
+      "ck_retire"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_retire"
+     ]
+    },
+    "ck_rst": {
+     "die_ports": [
+      "ck_rst"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_rst"
+     ]
+    },
+    "ck_rx": {
+     "die_ports": [
+      "ck_rx"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_rx"
+     ]
+    },
+    "ck_sum": {
+     "die_ports": [
+      "ck_sum"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_sum"
+     ]
+    },
+    "ck_tx": {
+     "die_ports": [
+      "ck_tx"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_tx"
+     ]
+    },
+    "kst": {
+     "die_ports": [
+      "kst"
+     ],
+     "die_bits": 10,
+     "rtl_bits": 10,
+     "rtl_ports": [
+      "local_kst"
+     ]
+    },
+    "hb": {
+     "die_ports": [
+      "hb"
+     ],
+     "die_bits": 284,
+     "rtl_bits": 284,
+     "rtl_ports": [
+      "hb",
+      "hb_cr"
+     ]
+    },
+    "est": {
+     "die_ports": [
+      "est"
+     ],
+     "die_bits": 13,
+     "rtl_bits": 13,
+     "rtl_ports": [
+      "est"
+     ]
+    },
+    "hc": {
+     "die_ports": [
+      "hc"
+     ],
+     "die_bits": 182,
+     "rtl_bits": 182,
+     "rtl_ports": [
+      "hc"
+     ]
+    },
+    "tk": {
+     "die_ports": [
+      "tk"
+     ],
+     "die_bits": 93,
+     "rtl_bits": 93,
+     "rtl_ports": [
+      "local_tk"
+     ]
+    },
+    "fdi": {
+     "die_ports": [
+      "fdi"
+     ],
+     "die_bits": 2089,
+     "rtl_bits": 2089,
+     "rtl_ports": [
+      "phy_up",
+      "phy_tx_v",
+      "phy_tx_flit",
+      "phy_rx_v",
+      "phy_rx_flit"
+     ]
+    },
+    "svc": {
+     "die_ports": [
+      "svc"
+     ],
+     "die_bits": 174,
+     "rtl_bits": 174,
+     "rtl_ports": [
+      "transport_fault",
+      "native_links_drained",
+      "native_link_reset_seen",
+      "native_retrained",
+      "abort_drained",
+      "native_kv_drained",
+      "native_vm_drained",
+      "native_collective_drained",
+      "native_host_drained",
+      "native_collective_busy",
+      "native_kv_flush",
+      "native_admit_ready",
+      "crom_fault",
+      "execution_active",
+      "engine_result_v",
+      "engine_result_done",
+      "engine_result_fault",
+      "engine_result_cause",
+      "engine_result_tag",
+      "engine_result_gen",
+      "engine_result_token",
+      "engine_result_value",
+      "engine_result_cycles"
+     ]
+    },
+    "lup": {
+     "die_ports": [
+      "lup"
+     ],
+     "die_bits": 2,
+     "rtl_bits": 2,
+     "rtl_ports": [
+      "link_up"
+     ]
+    },
+    "rec_tx": {
+     "die_ports": [
+      "rec_tx"
+     ],
+     "die_bits": 549,
+     "rtl_bits": 549,
+     "rtl_ports": [
+      "record_tx_observed_v",
+      "record_tx"
+     ]
+    },
+    "rec_rx": {
+     "die_ports": [
+      "rec_rx"
+     ],
+     "die_bits": 552,
+     "rtl_bits": 552,
+     "rtl_ports": [
+      "record_send_kind",
+      "record_witness_slot",
+      "record_rx_v",
+      "record_rx"
+     ]
+    },
+    "lrc": {
+     "die_ports": [
+      "lrc"
+     ],
+     "die_bits": 2,
+     "rtl_bits": 2,
+     "rtl_ports": [
+      "host_link_reset_req",
+      "host_recovery_clear"
+     ]
+    },
+    "token_epoch": {
+     "die_ports": [
+      "token_epoch"
+     ],
+     "die_bits": 16,
+     "rtl_bits": 16,
+     "rtl_ports": [
+      "token_epoch"
+     ]
+    },
+    "host_drained_local": {
+     "die_ports": [
+      "host_drained_local"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "host_drained_local"
+     ]
+    },
+    "link_physical_fault": {
+     "die_ports": [
+      "link_physical_fault"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "link_physical_fault"
+     ]
+    },
+    "pll_locked": {
+     "die_ports": [
+      "pll_locked"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "pll_locked"
+     ]
+    },
+    "ck_fence_host": {
+     "die_ports": [
+      "ck_fence_host"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_fence_host"
+     ]
+    },
+    "ck_peer": {
+     "die_ports": [
+      "ck_peer"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_peer"
+     ]
+    },
+    "ck_qm_credit": {
+     "die_ports": [
+      "ck_qm_credit"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_qm_credit"
+     ]
+    },
+    "ck_qm_done_w": {
+     "die_ports": [
+      "ck_qm_done_w"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_qm_done_w"
+     ]
+    },
+    "ck_qm_host": {
+     "die_ports": [
+      "ck_qm_host"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_qm_host"
+     ]
+    },
+    "ck_qm_ing_r": {
+     "die_ports": [
+      "ck_qm_ing_r"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_qm_ing_r"
+     ]
+    },
+    "ck_root_mux": {
+     "die_ports": [
+      "ck_root_mux"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_root_mux"
+     ]
+    },
+    "ck_qm_bank0": {
+     "die_ports": [
+      "ck_qm_bank0",
+      "ck_qm_bank1"
+     ],
+     "die_bits": 2,
+     "rtl_bits": 2,
+     "rtl_ports": [
+      "ck_qm_bank"
+     ]
+    },
+    "ck_qm_ingest": {
+     "die_ports": [
+      "ck_qm_ingest"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_qm_ingest"
+     ]
+    },
+    "ck_qm_out": {
+     "die_ports": [
+      "ck_qm_out"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_qm_out"
+     ]
+    },
+    "ck_pad": {
+     "die_ports": [
+      "ck_pad"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_pad"
+     ]
+    },
+    "ck_phy0": {
+     "die_ports": [
+      "ck_phy0",
+      "ck_phy1",
+      "ck_phy2",
+      "ck_phy3",
+      "ck_phy4",
+      "ck_phy5",
+      "ck_phy6",
+      "ck_phy7"
+     ],
+     "die_bits": 8,
+     "rtl_bits": 8,
+     "rtl_ports": [
+      "ck_phy"
+     ]
+    },
+    "ck_phy_rx_w": {
+     "die_ports": [
+      "ck_phy_rx_w"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_phy_rx_w"
+     ]
+    },
+    "ck_phy_tx_r": {
+     "die_ports": [
+      "ck_phy_tx_r"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_phy_tx_r"
+     ]
+    },
+    "chf0": {
+     "die_ports": [
+      "chf0",
+      "chf1",
+      "chf2",
+      "chf3"
+     ],
+     "die_bits": 1164,
+     "rtl_bits": 1164,
+     "rtl_ports": [
+      "chain_f"
+     ]
+    },
+    "chc0": {
+     "die_ports": [
+      "chc0",
+      "chc1",
+      "chc2",
+      "chc3"
+     ],
+     "die_bits": 128,
+     "rtl_bits": 128,
+     "rtl_ports": [
+      "chain_c"
+     ]
+    },
+    "cha0": {
+     "die_ports": [
+      "cha0",
+      "cha1",
+      "cha2",
+      "cha3"
+     ],
+     "die_bits": 128,
+     "rtl_bits": 128,
+     "rtl_ports": [
+      "chain_a"
+     ]
+    },
+    "chx0": {
+     "die_ports": [
+      "chx0",
+      "chx1",
+      "chx2",
+      "chx3"
+     ],
+     "die_bits": 4,
+     "rtl_bits": 4,
+     "rtl_ports": [
+      "chain_fault_i"
+     ]
+    },
+    "sak0": {
+     "die_ports": [
+      "sak0",
+      "sak1",
+      "sak2",
+      "sak3"
+     ],
+     "die_bits": 128,
+     "rtl_bits": 128,
+     "rtl_ports": [
+      "slice_ack"
+     ]
+    },
+    "sbd0": {
+     "die_ports": [
+      "sbd0",
+      "sbd1",
+      "sbd2",
+      "sbd3"
+     ],
+     "die_bits": 128,
+     "rtl_bits": 128,
+     "rtl_ports": [
+      "slice_boot_done"
+     ]
+    },
+    "sbo0": {
+     "die_ports": [
+      "sbo0",
+      "sbo1",
+      "sbo2",
+      "sbo3"
+     ],
+     "die_bits": 128,
+     "rtl_bits": 128,
+     "rtl_ports": [
+      "slice_boot_ok"
+     ]
+    },
+    "sbf0": {
+     "die_ports": [
+      "sbf0",
+      "sbf1",
+      "sbf2",
+      "sbf3"
+     ],
+     "die_bits": 128,
+     "rtl_bits": 128,
+     "rtl_ports": [
+      "slice_boot_fault"
+     ]
+    },
+    "die_rst_n": {
+     "die_ports": [
+      "die_rst_n"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "die_rst_n"
+     ]
+    },
+    "hbm_rst_n": {
+     "die_ports": [
+      "hbm_rst_n"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "hbm_rst_n"
+     ]
+    },
+    "link_rst_n": {
+     "die_ports": [
+      "link_rst_n"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "link_rst_n"
+     ]
+    },
+    "host_rst_n": {
+     "die_ports": [
+      "host_rst_n"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "host_rst_n"
+     ]
+    },
+    "boot_go": {
+     "die_ports": [
+      "boot_go"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "boot_go"
+     ]
+    }
+   },
+   "unassigned_bits": 0,
+   "classed_inputs": {
+    "die_id": "by_design: package strap (tie cells), role = 2 PKG + DIE, set at package assembly",
+    "por_n": "by_design: package POR pad (off-chip signal)"
+   },
+   "constants_folded": 0,
+   "file": "rtl/qwen_sys/split_20261014/qkd_host_root_pt.sv",
+   "parameters": {
+    "ENABLE_SERVICE": 1,
+    "ENABLE_NATIVE": 1,
+    "ENABLE_TOKEN": 1,
+    "NL": 2
+   }
+  },
+  "qkd_kvwq_leaf_s_w129_m": {
+   "instances": 128,
+   "how": "identity",
+   "module": "qkd_kvwq_leaf_s_w129_m",
+   "bundles": {
+    "w": {
+     "die_ports": [
+      "w"
+     ],
+     "die_bits": 290,
+     "rtl_bits": 290,
+     "rtl_ports": [
+      "w"
+     ]
+    },
+    "wr": {
+     "die_ports": [
+      "wr"
+     ],
+     "die_bits": 11,
+     "rtl_bits": 11,
+     "rtl_ports": [
+      "wr"
+     ]
+    },
+    "ck": {
+     "die_ports": [
+      "ck"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck"
+     ]
+    },
+    "c": {
+     "die_ports": [
+      "c"
+     ],
+     "die_bits": 293,
+     "rtl_bits": 293,
+     "rtl_ports": [
+      "c"
+     ]
+    },
+    "dp": {
+     "die_ports": [
+      "dp"
+     ],
+     "die_bits": 2,
+     "rtl_bits": 2,
+     "rtl_ports": [
+      "dp"
+     ]
+    },
+    "n": {
+     "die_ports": [
+      "n"
+     ],
+     "die_bits": 293,
+     "rtl_bits": 293,
+     "rtl_ports": [
+      "n"
+     ]
+    },
+    "dn": {
+     "die_ports": [
+      "dn"
+     ],
+     "die_bits": 2,
+     "rtl_bits": 2,
+     "rtl_ports": [
+      "dn"
+     ]
+    },
+    "lane": {
+     "die_ports": [
+      "lane"
+     ],
+     "die_bits": 3,
+     "rtl_bits": 3,
+     "rtl_ports": [
+      "lane"
+     ]
+    },
+    "rst_n": {
+     "die_ports": [
+      "rst_n"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "rst_n"
+     ]
+    }
+   },
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 416,
+   "file": "rtl/qwen_sys/kv_die_20261009/qkd_kvwq_leaf_slot.sv",
+   "parameters": {}
+  },
+  "qkd_kvwq_ctl_bin": {
+   "instances": 4,
+   "how": "bound",
+   "module": "qkd_kvwq_ctl_bin",
+   "bundles": {
+    "ck": {
+     "die_ports": [
+      "ck"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck"
+     ]
+    },
+    "kvn": {
+     "die_ports": [
+      "kvn"
+     ],
+     "die_bits": 1048,
+     "rtl_bits": 1048,
+     "rtl_ports": [
+      "kvn_d",
+      "kvn_cr"
+     ]
+    },
+    "fault": {
+     "die_ports": [
+      "fault"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "fault"
+     ]
+    },
+    "f0": {
+     "die_ports": [
+      "f0"
+     ],
+     "die_bits": 293,
+     "rtl_bits": 293,
+     "rtl_ports": [
+      "f0"
+     ]
+    },
+    "r0": {
+     "die_ports": [
+      "r0"
+     ],
+     "die_bits": 2,
+     "rtl_bits": 2,
+     "rtl_ports": [
+      "r0"
+     ]
+    },
+    "f1": {
+     "die_ports": [
+      "f1"
+     ],
+     "die_bits": 293,
+     "rtl_bits": 293,
+     "rtl_ports": [
+      "f1"
+     ]
+    },
+    "r1": {
+     "die_ports": [
+      "r1"
+     ],
+     "die_bits": 2,
+     "rtl_bits": 2,
+     "rtl_ports": [
+      "r1"
+     ]
+    },
+    "f2": {
+     "die_ports": [
+      "f2"
+     ],
+     "die_bits": 293,
+     "rtl_bits": 293,
+     "rtl_ports": [
+      "f2"
+     ]
+    },
+    "r2": {
+     "die_ports": [
+      "r2"
+     ],
+     "die_bits": 2,
+     "rtl_bits": 2,
+     "rtl_ports": [
+      "r2"
+     ]
+    },
+    "f3": {
+     "die_ports": [
+      "f3"
+     ],
+     "die_bits": 293,
+     "rtl_bits": 293,
+     "rtl_ports": [
+      "f3"
+     ]
+    },
+    "r3": {
+     "die_ports": [
+      "r3"
+     ],
+     "die_bits": 2,
+     "rtl_bits": 2,
+     "rtl_ports": [
+      "r3"
+     ]
+    },
+    "rst_n": {
+     "die_ports": [
+      "rst_n"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "rst_n"
+     ]
+    }
+   },
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 0,
+   "file": "rtl/physical/ot_qwen_kv_slot_wrappers.sv",
+   "parameters": {}
+  },
+  "qkd_hslice": {
+   "instances": 64,
+   "how": "bound",
+   "module": "qkd_host_pc_slice_die",
+   "bundles": {
+    "ck_station": {
+     "die_ports": [
+      "ck_station"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_station"
+     ]
+    },
+    "ck_static": {
+     "die_ports": [
+      "ck_static"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_static"
+     ]
+    },
+    "ck_boot": {
+     "die_ports": [
+      "ck_boot"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_boot"
+     ]
+    },
+    "ck_boot_test": {
+     "die_ports": [
+      "ck_boot_test"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_boot_test"
+     ]
+    },
+    "land_es": {
+     "die_ports": [
+      "land_es"
+     ],
+     "die_bits": 288,
+     "rtl_bits": 288,
+     "rtl_ports": [
+      "land_es"
+     ]
+    },
+    "ctrl_es": {
+     "die_ports": [
+      "ctrl_es"
+     ],
+     "die_bits": 288,
+     "rtl_bits": 288,
+     "rtl_ports": [
+      "ctrl_es"
+     ]
+    },
+    "ctrl_er": {
+     "die_ports": [
+      "ctrl_er"
+     ],
+     "die_bits": 261,
+     "rtl_bits": 261,
+     "rtl_ports": [
+      "ctrl_er"
+     ]
+    },
+    "land_er": {
+     "die_ports": [
+      "land_er"
+     ],
+     "die_bits": 261,
+     "rtl_bits": 261,
+     "rtl_ports": [
+      "land_er"
+     ]
+    },
+    "lpc": {
+     "die_ports": [
+      "lpc"
+     ],
+     "die_bits": 5,
+     "rtl_bits": 5,
+     "rtl_ports": [
+      "lpc"
+     ]
+    },
+    "fo": {
+     "die_ports": [
+      "fo"
+     ],
+     "die_bits": 291,
+     "rtl_bits": 291,
+     "rtl_ports": [
+      "fo"
+     ]
+    },
+    "bgo": {
+     "die_ports": [
+      "bgo"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "bgo"
+     ]
+    },
+    "ci": {
+     "die_ports": [
+      "ci"
+     ],
+     "die_bits": 32,
+     "rtl_bits": 32,
+     "rtl_ports": [
+      "ci"
+     ]
+    },
+    "ai": {
+     "die_ports": [
+      "ai"
+     ],
+     "die_bits": 32,
+     "rtl_bits": 32,
+     "rtl_ports": [
+      "ai"
+     ]
+    },
+    "fault_i": {
+     "die_ports": [
+      "fault_i"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "fault_i"
+     ]
+    },
+    "ski": {
+     "die_ports": [
+      "ski"
+     ],
+     "die_bits": 32,
+     "rtl_bits": 32,
+     "rtl_ports": [
+      "ski"
+     ]
+    },
+    "sdi": {
+     "die_ports": [
+      "sdi"
+     ],
+     "die_bits": 32,
+     "rtl_bits": 32,
+     "rtl_ports": [
+      "sdi"
+     ]
+    },
+    "soi": {
+     "die_ports": [
+      "soi"
+     ],
+     "die_bits": 32,
+     "rtl_bits": 32,
+     "rtl_ports": [
+      "soi"
+     ]
+    },
+    "sfi": {
+     "die_ports": [
+      "sfi"
+     ],
+     "die_bits": 32,
+     "rtl_bits": 32,
+     "rtl_ports": [
+      "sfi"
+     ]
+    },
+    "fi": {
+     "die_ports": [
+      "fi"
+     ],
+     "die_bits": 291,
+     "rtl_bits": 291,
+     "rtl_ports": [
+      "fi"
+     ]
+    },
+    "co": {
+     "die_ports": [
+      "co"
+     ],
+     "die_bits": 32,
+     "rtl_bits": 32,
+     "rtl_ports": [
+      "co"
+     ]
+    },
+    "ao": {
+     "die_ports": [
+      "ao"
+     ],
+     "die_bits": 32,
+     "rtl_bits": 32,
+     "rtl_ports": [
+      "ao"
+     ]
+    },
+    "fault_o": {
+     "die_ports": [
+      "fault_o"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "fault_o"
+     ]
+    },
+    "sko": {
+     "die_ports": [
+      "sko"
+     ],
+     "die_bits": 32,
+     "rtl_bits": 32,
+     "rtl_ports": [
+      "sko"
+     ]
+    },
+    "sdo": {
+     "die_ports": [
+      "sdo"
+     ],
+     "die_bits": 32,
+     "rtl_bits": 32,
+     "rtl_ports": [
+      "sdo"
+     ]
+    },
+    "soo": {
+     "die_ports": [
+      "soo"
+     ],
+     "die_bits": 32,
+     "rtl_bits": 32,
+     "rtl_ports": [
+      "soo"
+     ]
+    },
+    "sfo": {
+     "die_ports": [
+      "sfo"
+     ],
+     "die_bits": 32,
+     "rtl_bits": 32,
+     "rtl_ports": [
+      "sfo"
+     ]
+    },
+    "hbm_rst_n": {
+     "die_ports": [
+      "hbm_rst_n"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "hbm_rst_n"
+     ]
+    },
+    "host_rst_n": {
+     "die_ports": [
+      "host_rst_n"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "host_rst_n"
+     ]
+    },
+    "bgi": {
+     "die_ports": [
+      "bgi"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "bgi"
+     ]
+    }
+   },
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 706,
+   "file": "rtl/qwen_sys/split_20261014/qkd_host_pc_slice_die.sv",
+   "parameters": {}
+  },
+  "qkd_hslice_dn": {
+   "instances": 64,
+   "how": "bound",
+   "module": "qkd_host_pc_slice_die",
+   "bundles": {
+    "ck_station": {
+     "die_ports": [
+      "ck_station"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_station"
+     ]
+    },
+    "ck_static": {
+     "die_ports": [
+      "ck_static"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_static"
+     ]
+    },
+    "ck_boot": {
+     "die_ports": [
+      "ck_boot"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_boot"
+     ]
+    },
+    "ck_boot_test": {
+     "die_ports": [
+      "ck_boot_test"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck_boot_test"
+     ]
+    },
+    "land_es": {
+     "die_ports": [
+      "land_es"
+     ],
+     "die_bits": 288,
+     "rtl_bits": 288,
+     "rtl_ports": [
+      "land_es"
+     ]
+    },
+    "ctrl_es": {
+     "die_ports": [
+      "ctrl_es"
+     ],
+     "die_bits": 288,
+     "rtl_bits": 288,
+     "rtl_ports": [
+      "ctrl_es"
+     ]
+    },
+    "ctrl_er": {
+     "die_ports": [
+      "ctrl_er"
+     ],
+     "die_bits": 261,
+     "rtl_bits": 261,
+     "rtl_ports": [
+      "ctrl_er"
+     ]
+    },
+    "land_er": {
+     "die_ports": [
+      "land_er"
+     ],
+     "die_bits": 261,
+     "rtl_bits": 261,
+     "rtl_ports": [
+      "land_er"
+     ]
+    },
+    "lpc": {
+     "die_ports": [
+      "lpc"
+     ],
+     "die_bits": 5,
+     "rtl_bits": 5,
+     "rtl_ports": [
+      "lpc"
+     ]
+    },
+    "ci": {
+     "die_ports": [
+      "ci"
+     ],
+     "die_bits": 32,
+     "rtl_bits": 32,
+     "rtl_ports": [
+      "ci"
+     ]
+    },
+    "ai": {
+     "die_ports": [
+      "ai"
+     ],
+     "die_bits": 32,
+     "rtl_bits": 32,
+     "rtl_ports": [
+      "ai"
+     ]
+    },
+    "fault_i": {
+     "die_ports": [
+      "fault_i"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "fault_i"
+     ]
+    },
+    "ski": {
+     "die_ports": [
+      "ski"
+     ],
+     "die_bits": 32,
+     "rtl_bits": 32,
+     "rtl_ports": [
+      "ski"
+     ]
+    },
+    "sdi": {
+     "die_ports": [
+      "sdi"
+     ],
+     "die_bits": 32,
+     "rtl_bits": 32,
+     "rtl_ports": [
+      "sdi"
+     ]
+    },
+    "soi": {
+     "die_ports": [
+      "soi"
+     ],
+     "die_bits": 32,
+     "rtl_bits": 32,
+     "rtl_ports": [
+      "soi"
+     ]
+    },
+    "sfi": {
+     "die_ports": [
+      "sfi"
+     ],
+     "die_bits": 32,
+     "rtl_bits": 32,
+     "rtl_ports": [
+      "sfi"
+     ]
+    },
+    "fi": {
+     "die_ports": [
+      "fi"
+     ],
+     "die_bits": 291,
+     "rtl_bits": 291,
+     "rtl_ports": [
+      "fi"
+     ]
+    },
+    "bgi": {
+     "die_ports": [
+      "bgi"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "bgi"
+     ]
+    },
+    "co": {
+     "die_ports": [
+      "co"
+     ],
+     "die_bits": 32,
+     "rtl_bits": 32,
+     "rtl_ports": [
+      "co"
+     ]
+    },
+    "ao": {
+     "die_ports": [
+      "ao"
+     ],
+     "die_bits": 32,
+     "rtl_bits": 32,
+     "rtl_ports": [
+      "ao"
+     ]
+    },
+    "fault_o": {
+     "die_ports": [
+      "fault_o"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "fault_o"
+     ]
+    },
+    "sko": {
+     "die_ports": [
+      "sko"
+     ],
+     "die_bits": 32,
+     "rtl_bits": 32,
+     "rtl_ports": [
+      "sko"
+     ]
+    },
+    "sdo": {
+     "die_ports": [
+      "sdo"
+     ],
+     "die_bits": 32,
+     "rtl_bits": 32,
+     "rtl_ports": [
+      "sdo"
+     ]
+    },
+    "soo": {
+     "die_ports": [
+      "soo"
+     ],
+     "die_bits": 32,
+     "rtl_bits": 32,
+     "rtl_ports": [
+      "soo"
+     ]
+    },
+    "sfo": {
+     "die_ports": [
+      "sfo"
+     ],
+     "die_bits": 32,
+     "rtl_bits": 32,
+     "rtl_ports": [
+      "sfo"
+     ]
+    },
+    "hbm_rst_n": {
+     "die_ports": [
+      "hbm_rst_n"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "hbm_rst_n"
+     ]
+    },
+    "host_rst_n": {
+     "die_ports": [
+      "host_rst_n"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "host_rst_n"
+     ]
+    },
+    "fo": {
+     "die_ports": [
+      "fo"
+     ],
+     "die_bits": 291,
+     "rtl_bits": 291,
+     "rtl_ports": [
+      "fo"
+     ]
+    },
+    "bgo": {
+     "die_ports": [
+      "bgo"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "bgo"
+     ]
+    }
+   },
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 706,
+   "file": "rtl/qwen_sys/split_20261014/qkd_host_pc_slice_die.sv",
+   "parameters": {}
+  },
+  "qkd_fwdbump": {
+   "instances": 2,
+   "how": "hard_model",
+   "module": "qkd_fwdbump",
+   "bundles": {},
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 0
+  },
+  "qkd_rly_540": {
+   "instances": 67,
+   "how": "relay",
+   "module": "qkd_rly_540",
+   "bundles": {},
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 0
+  },
+  "qkd_rly_21": {
+   "instances": 12,
+   "how": "relay",
+   "module": "qkd_rly_21",
+   "bundles": {},
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 0
+  },
+  "qkd_rly_563": {
+   "instances": 16,
+   "how": "relay",
+   "module": "qkd_rly_563",
+   "bundles": {},
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 0
+  },
+  "qkd_rly_36": {
+   "instances": 14,
+   "how": "relay",
+   "module": "qkd_rly_36",
+   "bundles": {},
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 0
+  },
+  "qkd_rly_17": {
+   "instances": 228,
+   "how": "relay",
+   "module": "qkd_rly_17",
+   "bundles": {},
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 0
+  },
+  "qkd_rly_1025": {
+   "instances": 252,
+   "how": "relay",
+   "module": "qkd_rly_1025",
+   "bundles": {},
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 0
+  },
+  "qkd_rly_1048": {
+   "instances": 82,
+   "how": "relay_dir_split",
+   "module": "qkd_rly_1048__dir",
+   "bundles": {},
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 0
+  },
+  "qkd_rly_33": {
+   "instances": 162,
+   "how": "relay",
+   "module": "qkd_rly_33",
+   "bundles": {},
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 0
+  },
+  "qkd_rly_289": {
+   "instances": 86,
+   "how": "relay_dir_split",
+   "module": "qkd_rly_289__dir",
+   "bundles": {},
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 0
+  },
+  "qkd_rly_521": {
+   "instances": 85,
+   "how": "relay_dir_split",
+   "module": "qkd_rly_521__dir",
+   "bundles": {},
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 0
+  },
+  "qkd_rly_1": {
+   "instances": 438,
+   "how": "relay",
+   "module": "qkd_rly_1",
+   "bundles": {},
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 0
+  },
+  "qkd_rly_520": {
+   "instances": 23,
+   "how": "relay",
+   "module": "qkd_rly_520",
+   "bundles": {},
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 0
+  },
+  "qkd_rly_284": {
+   "instances": 2,
+   "how": "relay_dir_split",
+   "module": "qkd_rly_284__dir",
+   "bundles": {},
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 0
+  },
+  "qkd_rly_13": {
+   "instances": 3,
+   "how": "relay",
+   "module": "qkd_rly_13",
+   "bundles": {},
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 0
+  },
+  "qkd_rly_93": {
+   "instances": 1,
+   "how": "relay",
+   "module": "qkd_rly_93",
+   "bundles": {},
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 0
+  },
+  "qkd_rly_2089": {
+   "instances": 61,
+   "how": "relay_dir_split",
+   "module": "qkd_rly_2089__dir",
+   "bundles": {},
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 0
+  },
+  "qkd_rly_293": {
+   "instances": 124,
+   "how": "relay",
+   "module": "qkd_rly_293",
+   "bundles": {},
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 0
+  },
+  "qkd_rly_2": {
+   "instances": 118,
+   "how": "relay",
+   "module": "qkd_rly_2",
+   "bundles": {},
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 0
+  },
+  "qkd_rly_291": {
+   "instances": 155,
+   "how": "relay",
+   "module": "qkd_rly_291",
+   "bundles": {},
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 0
+  },
+  "qkd_rly_32": {
+   "instances": 934,
+   "how": "relay",
+   "module": "qkd_rly_32",
+   "bundles": {},
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 0
+  },
+  "qkd_rly_t1": {
+   "instances": 5418,
+   "how": "relay",
+   "module": "qkd_rly_t1",
+   "bundles": {},
+   "unassigned_bits": 0,
+   "classed_inputs": {},
+   "constants_folded": 0
+  },
+  "qkd_rst_region": {
+   "instances": 42,
+   "how": "bound",
+   "module": "qkd_rst_region",
+   "bundles": {
+    "ck": {
+     "die_ports": [
+      "ck"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "ck"
+     ]
+    },
+    "a": {
+     "die_ports": [
+      "a"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "a"
+     ]
+    },
+    "b": {
+     "die_ports": [
+      "b"
+     ],
+     "die_bits": 1,
+     "rtl_bits": 1,
+     "rtl_ports": [
+      "b"
+     ]
+    },
+    "dly": {
+     "die_ports": [
+      "dly"
+     ],
+     "die_bits": 8,
+     "rtl_bits": 8,
+     "rtl_ports": [
+      "dly"
+     ]
+    }
+   },
+   "unassigned_bits": 0,
+   "classed_inputs": {
+    "por_n": "by_design: package POR pad (off-chip signal), async assert, synchronised inside the root"
+   },
+   "constants_folded": 336,
+   "file": "rtl/qwen_sys/split_20261014/qkd_rst_region.sv",
+   "parameters": {}
+  }
+ },
+ "hard_model_dirs": {
+  "qkd_hbm3e_phy_pc": {
+   "clk": "input",
+   "po0": "input",
+   "pi0": "output",
+   "po1": "input",
+   "pi1": "output",
+   "po2": "input",
+   "pi2": "output",
+   "po3": "input",
+   "pi3": "output",
+   "po4": "input",
+   "pi4": "output",
+   "po5": "input",
+   "pi5": "output",
+   "po6": "input",
+   "pi6": "output",
+   "po7": "input",
+   "pi7": "output",
+   "po8": "input",
+   "pi8": "output",
+   "po9": "input",
+   "pi9": "output",
+   "po10": "input",
+   "pi10": "output",
+   "po11": "input",
+   "pi11": "output",
+   "po12": "input",
+   "pi12": "output",
+   "po13": "input",
+   "pi13": "output",
+   "po14": "input",
+   "pi14": "output",
+   "po15": "input",
+   "pi15": "output",
+   "po16": "input",
+   "pi16": "output",
+   "po17": "input",
+   "pi17": "output",
+   "po18": "input",
+   "pi18": "output",
+   "po19": "input",
+   "pi19": "output",
+   "po20": "input",
+   "pi20": "output",
+   "po21": "input",
+   "pi21": "output",
+   "po22": "input",
+   "pi22": "output",
+   "po23": "input",
+   "pi23": "output",
+   "po24": "input",
+   "pi24": "output",
+   "po25": "input",
+   "pi25": "output",
+   "po26": "input",
+   "pi26": "output",
+   "po27": "input",
+   "pi27": "output",
+   "po28": "input",
+   "pi28": "output",
+   "po29": "input",
+   "pi29": "output",
+   "po30": "input",
+   "pi30": "output",
+   "po31": "input",
+   "pi31": "output",
+   "rst_n": "input"
+  },
+  "qkd_ckbump": {
+   "pll_ck": "input",
+   "rs": "input"
+  },
+  "qkd_fwdbump": {
+   "a": "input"
+  }
+ },
+ "off_chip_inputs": [
+  "die_id",
+  "por_n",
+  "refclk"
+ ],
+ "constant_bits": 6456,
+ "constant_nets_by_class": {
+  "rtl_literal": 4090,
+  "kv_expand_strap": 186,
+  "lane_strap": 384,
+  "chain_terminator": 804,
+  "unclassified": 16,
+  "host_strap": 640,
+  "reset_delay_strap": 336
+ },
+ "straps": 20
+}

@@ -1,0 +1,58 @@
+{
+ "schema": "opentallas.hsu.su_slice_band_v6.v1",
+ "author": "Claude H-SU",
+ "date": "2026-10-16",
+ "slot_w": 1797.12,
+ "v6b_slot_h": 2671.92,
+ "clean_band_slot_h": 2825.28,
+ "delta_h_per_band": 153.36,
+ "die_height_delta_two_bands_um": 306.72,
+ "outlines": {
+  "bank_r12": [
+   369.36,
+   151.2
+  ],
+  "light_kind0_leaf": [
+   151.2,
+   151.2
+  ],
+  "heavy_planned": [
+   166.32,
+   330.48
+  ],
+  "channel": 20.0,
+  "edge": 20.0
+ },
+ "basis": "heavy outline 166.32x330.48 planned from KIND1 synth 22,528 um2 at the measured kind0 0.416 synth:outline ratio; bank r12 CLOSED, kind0 leaf CLOSED; balanced 8-heavy/PG remap (Codex B) avoids growth but needs an atomic RTL+compiler LID remap, so the band grows instead (owner 10-16 02:15: die may grow)",
+ "slices": {
+  "heavy_G0G1": {
+   "counts": {
+    "bank": 32,
+    "heavy": 16,
+    "light": 16
+   },
+   "array_w": 1322.56,
+   "array_h": 2803.84,
+   "slot_h_needed": 2825.28,
+   "fits_v6b_2671_92": false,
+   "hard_mm2": 3.0323,
+   "service_column_w": 434.56,
+   "slot_mm2": 5.0774
+  },
+  "light_G2G3": {
+   "counts": {
+    "bank": 32,
+    "heavy": 0,
+    "light": 32
+   },
+   "array_w": 1681.68,
+   "array_h": 2054.4,
+   "slot_h_needed": 2075.76,
+   "fits_v6b_2671_92": true,
+   "hard_mm2": 2.5187,
+   "service_column_w": 75.44,
+   "slot_mm2": 4.8018
+  }
+ },
+ "status": "PLANNING geometry: rectangles only, no standard-cell placement, pins, GRT or timing"
+}

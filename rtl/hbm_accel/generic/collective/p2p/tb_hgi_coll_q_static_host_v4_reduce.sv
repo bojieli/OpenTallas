@@ -1,6 +1,10 @@
 `timescale 1ns/1ps
 module tb_hgi_coll_q_static_host_v4_reduce;
  parameter integer MUT=0;
+ // INJLAT (H-NETLIST/coll 2026-10-16): the DUT's SU inject latency; every compiled row from the inject
+ // capture (row 12 at INJLAT 12) onwards shifts by D=INJLAT-12. MUT 3: the SU answers one edge early.
+ parameter integer INJLAT=12;
+ localparam integer D=INJLAT-12, NR=36+D, SUL=(MUT==3)?INJLAT-2:INJLAT-1;
  reg clk=0;always #5 clk=~clk;
  reg rst_n=0,cv=0,dv_cfg=0,launch=0;
  reg [11:0] cfg_addr=0;reg [255:0] cfg_data=0;
@@ -12,25 +16,26 @@ module tb_hgi_coll_q_static_host_v4_reduce;
  wire [1:0] txv,retry;wire [1223:0] txd;
  wire [279:0] cwo,ccwo;wire [135:0] rq;wire [2247:0] kq;
  wire rv;wire [2:0] rt;wire [255:0] rdata;wire [31:0] cycles;
- reg [1535:0] code[0:35];reg [54:0] ar;
- reg [15:0] source_index[0:10];
+ reg [1535:0] code[0:NR-1];reg [54:0] ar;
+ reg [15:0] source_index[0:SUL-1];
+ reg source_rd[0:SUL-1];  // the SU drives data only for an issued request (0 otherwise)
  integer outputs=0,done_count=0;
  // Declared external SU boundary: requests are observed at P+1 and data is
  // stable before P+12. It supplies input vectors, never an internal DUT result.
  always @(posedge clk)begin
-  source_index[0]<=inj_idx[15:0];
-  for(integer p=1;p<11;p=p+1)source_index[p]<=source_index[p-1];
+  source_index[0]<=inj_idx[15:0];source_rd[0]<=inj_rd[0];
+  for(integer p=1;p<SUL;p=p+1)begin source_index[p]<=source_index[p-1];source_rd[p]<=source_rd[p-1];end
  end
  function automatic [511:0] source_word(input [15:0] index);
   begin
    for(integer l=0;l<16;l=l+1)source_word[l*32+:32]=(index==0?32'h3f800000:32'h40000000)+32'(l<<23);
   end
  endfunction
- assign inj_data={512'd0,source_word(source_index[10])};
- ot_hfd_coll_q2_static_host_v4 #(.QID(2'd1)) dut(.rst_n(rst_n),.clk_program(clk),.clk_control(clk),.clk_issue({4{clk}}),
+ assign inj_data={512'd0,source_rd[SUL-1]?source_word(source_index[SUL-1]):512'd0};
+ ot_hfd_coll_q2_static_host_v4 #(.QID(2'd1),.INJLAT(INJLAT)) dut(.rst_n(rst_n),.clk_program(clk),.clk_control(clk),.clk_issue({4{clk}}),
   .clk_qslots({2{clk}}),.clk_ring({17{clk}}),.clk_reduce({33{clk}}),.clk_vmwrite(clk),.clk_link({10{clk}}),
    .cfg_v(cv),.cfg_target(8'd53),.cfg_addr(cfg_addr),.cfg_data(cfg_data),
-  .desc_v(dv_cfg),.desc_base(12'd0),.desc_limit(13'd36),.desc_loops(16'd1),.launch_v(launch),
+  .desc_v(dv_cfg),.desc_base(12'd0),.desc_limit(13'(NR)),.desc_loops(16'd1),.launch_v(launch),
   .program_configured(configured),.program_init_busy(init_busy),.program_fault(program_fault),.hgi_busy(busy),.hgi_done(done),.hgi_fault(),
   .inj_rd(inj_rd),.inj_idx(inj_idx),.hgi_inj_addr(inj_addr),.inj_d(inj_data),
   .del_valid(dv),.del_flit(dd),.hgi_del_obase(ob),.rc_v(1'b0),.rc_tag(3'd0),.rc_d(256'd0),
@@ -45,23 +50,23 @@ module tb_hgi_coll_q_static_host_v4_reduce;
   begin code[row][1505+:31]=control[30:0];code[row][688+:24]=control[54:31];end
  endtask
  initial begin
-  for(integer n=0;n<36;n=n+1)code[n]=0;
+  for(integer n=0;n<NR;n=n+1)code[n]=0;
   code[0][90]=1;code[0][284+:33]={1'b1,8'hff,8'd0,16'd0};
   code[1][90]=1;code[1][92+:16]=16'd1;code[1][284+:33]={1'b1,8'hff,8'd1,16'd1};
-  code[12][0]=1;code[13][0]=1;
-  code[13][10+14]=1;code[13][26+14*4+:4]=0;
-  code[14][10+14]=1;code[14][26+14*4+:4]=0;
-  ar=0;ar[0]=1;ar[1+:4]=0;pack_ar(15,ar);
-  ar=0;ar[5]=1;ar[6+:4]=0;pack_ar(16,ar);
-  ar=0;ar[10]=1;pack_ar(MUT==2?18:17,ar);
-  ar=0;ar[11]=1;ar[12+:4]=0;ar[21]=1;ar[23+:8]=8'd7;ar[31+:16]=16'd13;pack_ar(26,ar);
-  ar=0;ar[22]=1;pack_ar(27,ar);
-  code[28][8]=1;
-  code[29][10+2]=1;code[29][26+2*4+:4]=(MUT==1?4'd7:4'd8);
+  code[12+D][0]=1;code[13+D][0]=1;
+  code[13+D][10+14]=1;code[13+D][26+14*4+:4]=0;
+  code[14+D][10+14]=1;code[14+D][26+14*4+:4]=0;
+  ar=0;ar[0]=1;ar[1+:4]=0;pack_ar(15+D,ar);
+  ar=0;ar[5]=1;ar[6+:4]=0;pack_ar(16+D,ar);
+  ar=0;ar[10]=1;pack_ar(MUT==2?18+D:17+D,ar);
+  ar=0;ar[11]=1;ar[12+:4]=0;ar[21]=1;ar[23+:8]=8'd7;ar[31+:16]=16'd13;pack_ar(26+D,ar);
+  ar=0;ar[22]=1;pack_ar(27+D,ar);
+  code[28+D][8]=1;
+  code[29+D][10+2]=1;code[29+D][26+2*4+:4]=(MUT==1?4'd7:4'd8);
   repeat(4)@(negedge clk);rst_n=1;
-  for(integer row=0;row<36;row=row+1)begin
+  for(integer row=0;row<NR;row=row+1)begin
    reg [63:0] metadata;
-   metadata=64'(row+1);if(row==35)metadata[44]=1;
+   metadata=64'(row+1);if(row==NR-1)metadata[44]=1;
    for(integer segment=0;segment<6;segment=segment+1)
     host_frame(row,segment,code[row][segment*256+:256]);
    host_frame(row,6,{192'b0,metadata});
@@ -74,20 +79,20 @@ module tb_hgi_coll_q_static_host_v4_reduce;
   @(negedge clk);dv_cfg=0;repeat(66)@(negedge clk);
   if(!configured || program_fault)$fatal(1,"descriptor did not validate");
   @(negedge clk);launch=1;@(posedge clk);#1;
-  for(integer c=1;c<47;c=c+1)begin
+  for(integer c=1;c<47+D;c=c+1)begin
    @(negedge clk);launch=0;@(posedge clk);#1;
    if(fault)$fatal(1,"native host V4 parent fault at compiled cycle%0d",c);
-   if(dv!==(c==36?4'b0001:4'b0000))$fatal(1,"native reduction publication cycle%0d got%h",c,dv);
-   if(c==36)begin
+   if(dv!==(c==36+D?4'b0001:4'b0000))$fatal(1,"native reduction publication cycle%0d got%h",c,dv);
+   if(c==36+D)begin
     if(dd[544:512]!=={1'b1,8'hff,8'd7,16'd13})$fatal(1,"native reduce metadata");
     for(integer l=0;l<16;l=l+1)if(dd[l*32+:32]!==32'h40400000+32'(l<<23))$fatal(1,"native FP32 sum lane%0d",l);
     outputs=outputs+1;
    end
-   if(done!==(c==40))$fatal(1,"native issuer halt cycle%0d",c);
+   if(done!==(c==40+D))$fatal(1,"native issuer halt cycle%0d",c);
    if(done)done_count=done_count+1;
   end
   if(outputs!=1||done_count!=1)$fatal(1,"coverage");
-  $display("HCOLL_Q2_HOST_V4_NATIVE_REDUCE PASS lanes16 FP32_TX2 sum_at_hostlaunch36 halt40 actual_host_target53 issuer1 native_program_SRAM3 reduce33roots ring17roots links2x612_TX6_RX2_idle");
+  $display("HCOLL_Q2_HOST_V4_NATIVE_REDUCE PASS INJLAT%0d lanes16 FP32_TX2 sum_at_hostlaunch36 halt40 actual_host_target53 issuer1 native_program_SRAM3 reduce33roots ring17roots links2x612_TX6_RX2_idle",INJLAT);
   $finish;
  end
 endmodule

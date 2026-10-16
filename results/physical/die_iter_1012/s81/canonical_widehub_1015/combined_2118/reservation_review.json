@@ -1,0 +1,81 @@
+{
+  "status": "HELD_RESERVATION_GEOMETRY_ONLY_NOT_GLOBAL_PHYSICAL_FIT",
+  "source_inputs": {
+    "results/arch/s81_vm_split4_2118/slot_grant_request.json": {
+      "commit": "6740cb4f60631f0668efd670449a77ce0a2bcd5f",
+      "sha256": "31b9955b6291c47dea34a334e3c1a924c76ec232d5f4c625ce080642ddd6683c"
+    },
+    "results/arch/s81_hc_takeover_1015/nt_parent/placement.json": {
+      "commit": "13a0759161d0a6724dfd7e7629e817a3cc7a1fc1",
+      "sha256": "1574edd2218e19c9a268ca16d11007f1c6904106d77f481da2f262ac5ab2b701"
+    }
+  },
+  "boxes": 160,
+  "overlap": [],
+  "outside": [],
+  "geometry": {
+    "hub_um": [
+      9850.032,
+      21941.712
+    ],
+    "hub_width_um": 12091.68,
+    "s14w_um": 661.824,
+    "s14e_um": 552.12,
+    "vch_um": 1296.0,
+    "top_um": 23759.976,
+    "su_top": 14528.136,
+    "vm_top": 12633.84,
+    "mix4_top": 13977.36,
+    "hc_corridor": [
+      12800.136,
+      13599.336
+    ],
+    "w_corridor": [
+      14549.76,
+      15348.96
+    ]
+  },
+  "channels": {
+    "su_vm_channel": [
+      12401.832,
+      7989.84,
+      12423.456,
+      12633.84
+    ],
+    "vm_capture_channel": [
+      16527.456,
+      7989.84,
+      16549.056,
+      12633.84
+    ]
+  },
+  "clearance_um": {
+    "mix4_to_upper_approach": 572.3999999999996,
+    "su_to_upper_approach": 21.624000000001615,
+    "hc_to_hcp": 864.0240000000013
+  },
+  "clock_budget": {
+    "vm_front_roots_old": 49,
+    "vm_front_roots_new": 145,
+    "extra_roots": 96,
+    "per_field4_ff": 2532,
+    "delivery": "phi-R EACH child, routed insertion/spread/hold required",
+    "global_tree_measurement": null
+  },
+  "cuts": {
+    "vm_internal_screen": "source-pinned request0.595 worst,0>0.60; planning only",
+    "whole_connected_die_graph": null,
+    "complete_global_cut_check": false
+  },
+  "pg": {
+    "preserved": "M7/M8 parent PG convention unchanged; no additional parent signal layers requested",
+    "actual_combined_IR_EM": null
+  },
+  "open": [
+    "HC literal835.92 parent has40 per-pair TT analytic failures; remains rejected until structural row/relay fix",
+    "VM resetlocal control composition not yet re-proved at full combined source",
+    "VM89,272 leaf links>500um require real relay count/reach/compiler cost",
+    "Actual die peer pins/phase/cuts/GRT/STA/IR and source-complete parent binding missing"
+  ],
+  "adopted": false
+}

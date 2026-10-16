@@ -60,7 +60,7 @@ def land_ports():
     for e in range(NENG):
         p[f'rq{e}'] = [f'rq{e}']
         p[f'rs{e}'] = [f'rs{e}']
-    p.update(lt=['lt'], kvn=['kvi', 'kvi_cr'], kvo=['kvo', 'kvo_cr'], emf=['emf', 'emf_cr'], emr=['emr', 'emr_cr'], mf=['mf'],
+    p.update(st=['st'], lt=['lt'], kvn=['kvi', 'kvi_cr'], kvo=['kvo', 'kvo_cr'], emf=['emf', 'emf_cr'], emr=['emr', 'emr_cr'], mf=['mf'],
              wfault=['wf'], kf=['kf'], rst_n=['rst_n'])
     return p
 
@@ -78,11 +78,11 @@ def land_binding():
     ports.update(ck_p0=['ck_p'], ck_g0=['ck_g'], ck_e=['ck_e'], ck_r=['ck_r'])
     return dict(module='qkd_land_strip_s', file='rtl/qwen_sys/split_20261014/qkd_strips_s.sv', ports=ports,
                 sliced={**{f'ck_p{k}': 'ck_p0' for k in range(1, NPC)}, **{f'ck_g{i}': 'ck_g0' for i in range(1, NGRP)}},
-                classed={'st': 'by_design: die-top strap, the stack index (tie cells)'})
+                classed={})
 
 
 def astk_binding():
-    ports = dict(aq=['aq'], am=['am'], ap=['ap'], af=['af'], lt=['lt'], rst_n=['rst_n'],
+    ports = dict(st=['st'], aq=['aq'], am=['am'], ap=['ap'], af=['af'], lt=['lt'], rst_n=['rst_n'],
                  **{f'e{e}i': [f'so{e}'] for e in range(NENG)}, **{f'e{e}o': [f'si{e}'] for e in range(NENG)},
                  **{f'f{e}{h}': [f'nb{e}_{h}'] for e in range(NENG) for h in range(4)},
                  ck_c=['ck_c'], ck_z0=['ck_z'], ck_v0=['ck_v'], ck_x0=['ck_x'], ck_e0=['ck_e'], ck_r=['ck_r'])
@@ -90,8 +90,7 @@ def astk_binding():
     for base, n in (('ck_z', 4), ('ck_v', 64), ('ck_x', 32), ('ck_e', NENG)):
         sl.update({f'{base}{j}': f'{base}0' for j in range(1, n)})
     return dict(module='qkd_astk_strip_s', file='rtl/qwen_sys/split_20261014/qkd_strips_s.sv', ports=ports, sliced=sl,
-                classed={'st': 'by_design: die-top strap, the stack index (tie cells)',
-                         'pv_done': 'by_design: the aggregator P.V done pair, not a hub input (the die ap word is 563 b)'})
+                classed={'pv_done': 'by_design: the aggregator P.V done pair, not a hub input (the die ap word is 563 b)'})
 
 
 def ctrl_binding(rev=False):

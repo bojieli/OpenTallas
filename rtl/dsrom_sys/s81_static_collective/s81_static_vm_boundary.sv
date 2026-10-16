@@ -2,17 +2,18 @@
 // Actual VM-facing hardening boundary: registered request/write pins, explicit
 // gather/reduce/raw ownership checks and fixed destination-row metadata pipe.
 // This extraction preserves every edge of the combined 29-root component gate.
-module s81_static_vm_boundary #(parameter integer MUT=0,parameter integer PINCAP=0)(
+module s81_static_vm_boundary #(parameter integer MUT=0,parameter integer PINCAP=0,parameter integer NARROW=0,
+ parameter integer TW=NARROW?8:32,parameter integer HW=NARROW?2:516)(   // TW/HW derived: set NARROW only
  input wire clk,rst_n,read_slot,input wire[13:0]read_row,
  output wire[14:0]t_crq,output wire[2203:0]t_vm,
  input wire commit_gather,hc_reduce_slot,
- input wire[3:0]gather_we,input wire[59:0]gather_rows,input wire[2047:0]gather_data,input wire[31:0]gather_tag,
+ input wire[3:0]gather_we,input wire[59:0]gather_rows,input wire[2047:0]gather_data,input wire[TW-1:0]gather_tag,
  input wire hc_write_slot,reduced_valid,reduced_error,reduced_last,
  input wire[15:0]reduced_seq,hc_expect_seq,input wire hc_expect_last,
- input wire[511:0]reduced_data,input wire[31:0]reduced_tag,input wire[1101:0]raw_sources,
+ input wire[511:0]reduced_data,input wire[TW-1:0]reduced_tag,input wire[1101:0]raw_sources,
  input wire[7:0]phy_rx_fault,phy_rx_valid,phy_rx_live,
  input wire issue_slot,raw_capture,raw_capture_payload_slot,raw_capture_meta_slot,
- input wire[2:0]raw_tx_count,input wire[515:0]host_rx,
+ input wire[2:0]raw_tx_count,input wire[HW-1:0]host_rx,
  output wire pack_bad_out,output reg fault
 );
  // PINCAP=1 (S-ELEM-B 10-15, CTS gate of the first kit: in->reg -62 ps through the pack/valid logic, pack_bad_out
@@ -21,11 +22,14 @@ module s81_static_vm_boundary #(parameter integer MUT=0,parameter integer PINCAP
  // request t_crq is unchanged: read_slot/read_row are already pin->flop and the read response timing must not move).
  // pack_bad_out is registered (+1, fault diagnosis only). Only valid bits / t_crq valid / fault carry the reset.
  wire c_commit_gather,c_hc_reduce_slot,c_hc_write_slot,c_reduced_valid,c_reduced_error,c_reduced_last,c_hc_expect_last;
- wire[3:0]c_gather_we;wire[59:0]c_gather_rows;wire[2047:0]c_gather_data;wire[31:0]c_gather_tag;
- wire[15:0]c_reduced_seq,c_hc_expect_seq;wire[511:0]c_reduced_data;wire[31:0]c_reduced_tag;wire[1101:0]c_raw_sources;
+ // NARROW=1 (S-ELEM-PQ/COLL 10-16, VIS-ROM S81H-04 + native audit of b7): only gather_tag[7:0], reduced_tag[7:0] and
+ // host_rx bits 0 / 515 (the historical credit bit) are read here; the 562 other pins were dead inputs (S face 1,651 ->
+ // 1,137 pins). host_rx = {host_rx_515, host_rx_0}. Same logic, same edges; NARROW=0 keeps the b7 ports.
+ wire[3:0]c_gather_we;wire[59:0]c_gather_rows;wire[2047:0]c_gather_data;wire[TW-1:0]c_gather_tag;
+ wire[15:0]c_reduced_seq,c_hc_expect_seq;wire[511:0]c_reduced_data;wire[TW-1:0]c_reduced_tag;wire[1101:0]c_raw_sources;
  wire[7:0]c_phy_rx_fault,c_phy_rx_valid,c_phy_rx_live;wire c_issue_slot,c_raw_capture,c_raw_capture_payload_slot,c_raw_capture_meta_slot;
- wire[2:0]c_raw_tx_count;wire[515:0]c_host_rx;
- localparam integer CW=1+1+1+1+1+1+1+4+60+2048+32+16+16+512+32+1102+8+8+8+1+1+1+1+3+516;
+ wire[2:0]c_raw_tx_count;wire[HW-1:0]c_host_rx;
+ localparam integer CW=1+1+1+1+1+1+1+4+60+2048+TW+16+16+512+TW+1102+8+8+8+1+1+1+1+3+HW;
  wire[CW-1:0]cin={commit_gather,hc_reduce_slot,hc_write_slot,reduced_valid,reduced_error,reduced_last,hc_expect_last,
   gather_we,gather_rows,gather_data,gather_tag,reduced_seq,hc_expect_seq,reduced_data,reduced_tag,raw_sources,
   phy_rx_fault,phy_rx_valid,phy_rx_live,issue_slot,raw_capture,raw_capture_payload_slot,raw_capture_meta_slot,raw_tx_count,host_rx};
@@ -94,7 +98,7 @@ module s81_static_vm_boundary #(parameter integer MUT=0,parameter integer PINCAP
    vm_full<=next_vm;
    if(pack_bad||(|c_phy_rx_fault)||(c_issue_slot&&c_raw_capture)||
       (c_raw_capture_payload_slot&&c_raw_capture_meta_slot)||c_raw_tx_count>1||
-      (c_host_rx[0]&&c_host_rx[515]))fault<=1;
+      (c_host_rx[0]&&c_host_rx[HW-1]))fault<=1;
    for(integer j=0;j<8;j=j+1)if(c_phy_rx_valid[j]&&!c_phy_rx_live[j])fault<=1;
   end
  end

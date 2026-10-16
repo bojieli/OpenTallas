@@ -192,6 +192,26 @@ module tb_hgi_fused_unit;
     integer k, nf, hce_cyc = 0, mv_cyc = 0;
     always @(posedge clk) begin if (rst_n && u.st == 5'd9) hce_cyc <= hce_cyc + 1; if (rst_n && u.st == 5'd3) mv_cyc <= mv_cyc + 1; end
     always @(posedge clk) begin if (rst_n && done) k = k + 1; if (rst_n && fault) nf = nf + 1; end
+`ifdef HTRACE
+    // H-MTP2: engine event trace (HCE HLL build): record accept / job / lane 0 phase edges / top tail / retire
+    always @(posedge clk) if (rst_n) begin
+        if (rec_v && rec_rdy) $display("T %0d rec_accept", cyc);
+        if (u.ne_v) $display("T %0d ne_job", cyc);
+        if (u.mv_v && u.mv_rdy) $display("T %0d gain_move_issued", cyc);
+        if (u.in_mvd) $display("T %0d gain_move_done", cyc);
+        if (u.g_hce.u_hce.g_ll.u_ll.u_ctl.g_ln[0].u_l.c_go) $display("T %0d lane0 GO", cyc);
+        if (u.g_hce.u_hce.g_ll.u_ll.u_ctl.g_ln[0].u_l.c_grdy) $display("T %0d lane0 GRDY", cyc);
+        if (u.g_hce.u_hce.g_ll.u_ll.u_ctl.g_ln[0].u_l.c_rstd) $display("T %0d lane0 RSTD", cyc);
+        if (u.g_hce.u_hce.g_ll.u_ll.u_ctl.g_ln[0].u_l.cs_v) $display("T %0d lane0 chunk_up", cyc);
+        if (u.g_hce.u_hce.g_ll.u_ll.u_ctl.g_ln[0].u_l.y_v) $display("T %0d lane0 y", cyc);
+        if (u.g_hce.u_hce.g_ll.u_ll.u_ctl.g_ln[0].u_l.iss) $display("T %0d lane0 read_issue ph_b=%0d", cyc, u.g_hce.u_hce.g_ll.u_ll.u_ctl.g_ln[0].u_l.ph_b);
+        if (u.g_hce.u_hce.g_ll.u_ll.u_ctl.g_ln[0].u_l.fin) $display("T %0d lane0 fin", cyc);
+        if (u.g_hce.u_hce.g_ll.u_ll.u_ctl.ss_v) $display("T %0d top ss", cyc);
+        if (u.g_hce.u_hce.g_ll.u_ll.u_ctl.rr_v) $display("T %0d top rsqrt", cyc);
+        if (u.g_hce.u_hce.g_ll.u_ll.u_ctl.st != $past(u.g_hce.u_hce.g_ll.u_ll.u_ctl.st)) $display("T %0d top st %0d", cyc, u.g_hce.u_hce.g_ll.u_ll.u_ctl.st);
+        if (done) $display("T %0d rec_done", cyc);
+    end
+`endif
     integer c, j, t, kind, r0, nr, vi0, nvi, ve0, nve, h0, nh, words = 0, cases = 0, t0;
     reg [31:0] qd;
     initial begin

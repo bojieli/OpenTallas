@@ -594,7 +594,11 @@ def apply(v, m, G):
     # qwen-split compute die (2026-10-14): no PLL on this die; the KV/system die forwards clock + reset over the D2D bump
     # pair (r22k ckb_rom / rs_bump), so the compute reset leaf qfd_rstseq takes rst_fwd_s from the bump synchroniser
     pll, ck = by.get('pll'), by['clk_rx']
-    rr = v.Inst('rstseq_rom', 'qfd_rstseq', round(v.up(ck.x + ck.w + 4.32, v.GX), 4), ck.y, 54.0 - S, 54.0 - S,
+    # Q-NETLIST 10-16: the slot takes the CLOSED hard leaf's outline (21.6 x 21.6 view) instead of the historical 54 x 54 frame
+    from qwen_split.closed_view import view_frame as _vf
+    _rsq = _vf('qfd_rstseq') if _os.environ.get('OT_SPLIT_VIEW_FRAMES', '1') != '0' else None
+    _rwh = (_rsq[0], _rsq[1]) if _rsq else (54.0 - S, 54.0 - S)
+    rr = v.Inst('rstseq_rom', 'qfd_rstseq', round(v.up(ck.x + ck.w + 4.32, v.GX), 4), ck.y, _rwh[0], _rwh[1],
                 kind='ctl', region='hub', domain='stream_1p2')
     if pll is not None:
         # r9: qkd_rstseq is the CLOSED leaf (qkd_rstseq-kc1-b4a0a3156, 21.6 x 21.6); its reset input is por_n (PLL lock)
@@ -1509,6 +1513,9 @@ def _wrap(v, m, G, peers):
         rr.face('rsi', 1, 'W', 'M4', 27.0, 1)
         for j, p in enumerate(('rso_seq', 'rso_ctlm', 'rso_f', 'rso_s', 'rso_io')):
             rr.face(p, 1, 'E' if j % 2 else 'S', 'M4' if j % 2 else 'M5', 12.0 + 8.0 * j, 1)
+        from qwen_split.closed_view import view_frame as _vf, apply as _vapply
+        if _os.environ.get('OT_SPLIT_VIEW_FRAMES', '1') != '0' and _vf('qfd_rstseq'):
+            _vapply(rr, _vf('qfd_rstseq'))               # Q-NETLIST 10-16: the closed leaf's abstract outline + pins
         M['qfd_rstseq'] = rr
         q = M.get('qkd_pll')
         if q is not None and 'lock' not in q.ports:
@@ -1882,6 +1889,10 @@ def _wrap(v, m, G, peers):
                 from qwen_split.res_train_bind import install_masters as install_res_train
                 from qwen_split.direct_up4 import partition_master as _pm2
                 install_res_train(M, model, Master, _pm2)
+            if model.get('sys_face_bind'):
+                from qwen_split.sys_face_bind import install_masters as install_sys_face
+                from qwen_split.direct_up4 import partition_master as _pm3
+                install_sys_face(M, model, Master, _pm3)
             # An added source tap can fragment already-connected non-native
             # consumers (slab tc and X tap gi). Preserve their exact real pin
             # rectangles while exposing the same numeric aliases on every peer.

@@ -259,7 +259,11 @@ module ot_s81_pq_core_native (
     wire [255:0] hq0, hq1;
     wire [9:0] he0, he1;
 `ifdef OT_PQ_QB_PHYS_SPLIT
-`ifdef OT_PQ_QB_PIPE
+`ifdef OT_PQ_QB_PINREAD
+    // PQN 10-16: production QB = P10 pin-registered head (ot_s81_pq_qb_headpc_native, read delta 4) + the same 4 bank
+    // leaves; the pipe head (headp, delta 2) failed native launch 309.6 / capture 308.7 ps. Requires OT_PQ_QB_PIPE.
+    ot_s81_pq_qb_pinread_native u_qb (.clk(ck_qb),.clk_bank(ck_qb_aux),
+`elsif OT_PQ_QB_PIPE
     ot_s81_pq_qb_pipe_native u_qb (.clk(ck_qb),.clk_bank(ck_qb_aux),
 `elsif OT_PQ_QB_ONE_BANK
     ot_s81_pq_qb_split1_native u_qb (.clk(ck_qb),.clk_bank(ck_qb_aux),
@@ -312,8 +316,18 @@ module ot_s81_pq_core_native (
     wire [1633:0] bc [0:4];
 `ifdef OT_PQ_QB_PIPE
     wire[609:0] bc_hr_q;wire[1023:0] bt_d_q;
+`ifdef OT_PQ_QB_PINREAD
+    // The P10 head returns hq/he 2 edges later than headp: a second instance of the SAME closed 2-stage align master
+    // (no new tile) in series gives the 4 fixed edges; both share the ck_qb_align entry.
+    wire[609:0] bc_hr_m;wire[1023:0] bt_d_m;
+    ot_s81_pq_qb_align_native u_qb_align0 (.clk(ck_qb_align),.rst_n(rst_n),.bc_hr(bc_hr),.bt_d(bt_d),
+      .bc_hr_q(bc_hr_m),.bt_d_q(bt_d_m));
+    ot_s81_pq_qb_align_native u_qb_align (.clk(ck_qb_align),.rst_n(rst_n),.bc_hr(bc_hr_m),.bt_d(bt_d_m),
+      .bc_hr_q(bc_hr_q),.bt_d_q(bt_d_q));
+`else
     ot_s81_pq_qb_align_native u_qb_align (.clk(ck_qb_align),.rst_n(rst_n),.bc_hr(bc_hr),.bt_d(bt_d),
       .bc_hr_q(bc_hr_q),.bt_d_q(bt_d_q));
+`endif
     assign bc[0] = {bc_hr_q[609:578], hq0, he0, hq1, he1, bc_hr_q[45:0], bt_d_q};
 `else
     assign bc[0] = {bc_hr[609:578], hq0, he0, hq1, he1, bc_hr[45:0], bt_d};

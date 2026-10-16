@@ -49,6 +49,7 @@ module tb_hbm_vm_hbm_path_q;
    .c_k_we(ck_we[4*k+:4]),.c_k_wdata(),.c_k_wstrb(),.c_k_wr_done(4'b0),
    .c_kr_v(ckr_v[4*k+:4]),.c_kr_rdy(ckr_rdy[4*k+:4]),.c_kr_tag(ckr_tag[68*k+:68]),.c_kr_beat(ckr_beat[16*k+:16]),.c_kr_data(ckr_data[1024*k+:1024]),
    .vm_v(cal[52]),.vm_bank(cal[53]),.vm_epoch(cal[69:54]),.vm_row(cal[84:70]),.vm_col(cal[88:85]),
+   .wbw_v(1'b0),.wbw_base(30'd0),.wbw_total(12'd0),.w_k_v(4'b0),.w_k_rdy(),.w_k_addr(120'd0),.w_k_wdata(1024'd0),.w_k_wr_done(),
    .fill_v(fv[4*k+:4]),.fill_bank(fb[4*k+:4]),.fill_slot(fs[24*k+:24]),.fill_epoch(fe[64*k+:64]),.fill_data(fd[1024*k+:1024]),.fault(sfault[k]));
  end endgenerate
  function automatic [255:0] f(input [29:0] a, input [3:0] bt);

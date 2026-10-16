@@ -37,12 +37,15 @@ module ot_hgi_sfu_split_engine #(
  input wire [7:0] local_w_done,
  output wire [15:0] vi_re,
  output wire [383:0] vi_addr,
- input wire [511:0] vi_q,side_y,
- output wire [15:0] ro_v,side_v,kv_we,
- output wire [511:0] ro_x,side_x,kv_wdata,
+ input wire [511:0] vi_q,
+ output wire [15:0] ro_v,kv_we,
+ output wire [511:0] ro_x,kv_wdata,
  output wire [383:0] kv_waddr,
  output wire fault
 );
+ // side_v/side_x/side_y REMOVED (H-NETLIST/suport 2026-10-16, H-SU agreed): ot_su12_sfu binds its lane with .side_v(), .side_x(),
+ // .side_y(32'd0) (rtl/hdc/v41x/phys/ot_hdc_v41x_su_c12_phys.sv:152), so these pins were undriven / ignored; KIND1 side
+ // opcodes still fault (ot_hgi_sfu_static_engine).
  wire [135:0] c_rq;
  wire [2055:0] c_rr;
  wire [2247:0] c_wq;
@@ -56,8 +59,8 @@ module ot_hgi_sfu_split_engine #(
   .io_start_v(io_start_v),.io_start_base(io_start_base),.io_start_limit(io_start_limit),.io_start_loops(io_start_loops),
   .io_active(io_active),.io_done(io_done),.io_ordinal(io_ordinal),
   .local_rq(c_rq),.local_rr(c_rr),.local_wq(c_wq),.local_w_done(c_done),
-  .vi_re(vi_re),.vi_addr(vi_addr),.vi_q(vi_q),.side_y(side_y),.ro_v(ro_v),.side_v(side_v),.kv_we(kv_we),
-  .ro_x(ro_x),.side_x(side_x),.kv_wdata(kv_wdata),.kv_waddr(kv_waddr),.fault(fault));
+  .vi_re(vi_re),.vi_addr(vi_addr),.vi_q(vi_q),.ro_v(ro_v),.kv_we(kv_we),
+  .ro_x(ro_x),.kv_wdata(kv_wdata),.kv_waddr(kv_waddr),.fault(fault));
  for(genvar g=0;g<4;g=g+1)begin:g_pair
   wire [33:0] m_rq;
   wire [561:0] m_wq;

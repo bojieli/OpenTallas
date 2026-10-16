@@ -3,7 +3,7 @@
 // Physical face omits duplicate buses and full-mask/native constants.
 // Native full-sector intent is a semantic property of this master, checked
 // against the underlying source at every physical write in its bench.
-module qkd_kv_static_writer_native #(parameter integer MUT = 0) (
+module qkd_kv_static_writer_native #(parameter integer MUT = 0, parameter integer VMAP = 0) (
     input wire ck, rst_n,
     input wire word_valid, input wire [10:0] word_tag,
     input wire [511:0] word_data,
@@ -21,7 +21,7 @@ module qkd_kv_static_writer_native #(parameter integer MUT = 0) (
 );
     // r3: RST_RELAY=1 -> 12 regional reset relays (rst_n port loads only the relay flops);
     // first word slot >= 3 edges after rst_n release (compiler boot schedule).
-    qkd_kv_static_writer #(.MUT(MUT), .RST_RELAY(1)) u_writer (
+    qkd_kv_static_writer #(.MUT(MUT), .RST_RELAY(1), .VMAP(VMAP)) u_writer (
         .ck(ck),
         .rst_n(rst_n),
         .word_valid(word_valid),

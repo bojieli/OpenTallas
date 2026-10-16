@@ -34,7 +34,16 @@ module tb_qfd_vm_bv_ports;
     parameter integer MEE = 0, VMT = 0, RV = 1, RO = 2;   // el1011-q-sp: me_en one edge early / hardened bank tiles
                                                            // (VMT: pass XVM + RV + RO + 7 and VL = 7 + RV + RO + 5)
     parameter integer USE_NATIVE_CLOCKS=0, RETURN_CLOCKS=0;
+    parameter integer RETURN_PIN_INPUT=0;
     parameter integer RETURN_LEAVES=0, READ_CONTROL_LEAVES=0, NATIVE_BANKS=0, USE_MACRO=0;
+    parameter integer RELAY_TILES=0, RELAY_NCK=1;
+    parameter integer EXPECT_RL=0; // opt-in exact row-response calendar, independent of DUT localparams
+    localparam integer ERL=(EXPECT_RL>0)?EXPECT_RL:1;
+    reg [ERL-1:0] expected_rv;
+    integer row_calendar_checks=0;
+    always @(posedge clk)
+        if (!rst_n) expected_rv <= 0;
+        else expected_rv <= (expected_rv << 1) | (r_v && r_rdy);
     parameter integer XQT = 0;                 // ot_qfd_sp_vector_memory_bv XQT (fe-push-qwen-1010)
     parameter integer XPR = 0;                 // bit-plane x transport (qwen-tp8-vm 1013): pass XVM + XPR + 1 - RO
     // qwen-tp8-vm-rtl 1013: registered control trees (XTK levels), me tree (XMK levels: me_en_t is me_en XMK + 1 edges
@@ -92,10 +101,10 @@ module tb_qfd_vm_bv_ports;
     end endgenerate
     ot_qfd_sp_vector_memory_bv #(.XQT(XQT), .ELEMS(ELEMS), .NRB(NRB), .AW(AW), .SMIN(SMIN), .SMAX(SMAX), .XVM(XVM), .BMAX(BMAX),
         .ND(ND), .DSET(DSET), .SW(SW), .NSU(3), .NB(NB), .CRB(CRB), .MUT(MUT), .MEE(MEE), .VMT(VMT), .RV(RV), .RO(RO), .XPR(XPR),
-        .XTK(XTK), .XMK(XMK), .XMF(XMF), .XLO(XLO), .XQR(XQR), .SQD(SQD), .NRBS(NRBS), .RETURN_LEAVES(RETURN_LEAVES), .RETURN_CLOCKS(RETURN_CLOCKS), .READ_CONTROL_LEAVES(READ_CONTROL_LEAVES), .NATIVE_BANKS(NATIVE_BANKS), .USE_NATIVE_CLOCKS(USE_NATIVE_CLOCKS), .USE_MACRO(USE_MACRO)) dut (
+        .XTK(XTK), .XMK(XMK), .XMF(XMF), .XLO(XLO), .XQR(XQR), .SQD(SQD), .NRBS(NRBS), .RETURN_LEAVES(RETURN_LEAVES),.RETURN_PIN_INPUT(RETURN_PIN_INPUT), .RETURN_CLOCKS(RETURN_CLOCKS), .READ_CONTROL_LEAVES(READ_CONTROL_LEAVES), .NATIVE_BANKS(NATIVE_BANKS), .USE_NATIVE_CLOCKS(USE_NATIVE_CLOCKS), .USE_MACRO(USE_MACRO), .RELAY_TILES(RELAY_TILES), .RELAY_NCK(RELAY_NCK)) dut (
         .clk(clk),
 `ifdef OT_QFD_VM_PARTITIONED_CLOCKS
-        .return_ck({96{clk}}), .read_control_ck({3{clk}}),
+        .return_ck({96{clk}}), .read_control_ck({3{clk}}), .relay_ck({RELAY_NCK{clk}}),
 `ifdef OT_QFD_VM_NOX
         .native_ck({(NRB+3*NRBS)*9{clk}}),
 `endif
@@ -248,6 +257,10 @@ module tb_qfd_vm_bv_ports;
     end
     // ---- checks ----
     always @(posedge clk) if (rst_n) begin
+        if (EXPECT_RL>0) begin
+            row_calendar_checks = row_calendar_checks+1;
+            if (r_qv !== expected_rv[ERL-1]) bad_r = bad_r+1;
+        end
         if (r_qv) begin
             if (r_q !== rexp[rr_p]) bad_r = bad_r + 1;
             rr_p <= rr_p + 1'b1; n_r = n_r + 1;
@@ -505,6 +518,7 @@ module tb_qfd_vm_bv_ports;
         $display("WQ SQD=%0d max_waiting mx=%0d rd=%0d seq=%0d waits=%0d model_overflow=%0d dut_overflow=%0d WDIR=%0d",
                  SQD, mo_max[0], mo_max[1], mo_max[2], m_waits, m_ovf, d_ovf, WDIR);
         if (m_ovf != d_ovf) $display("skid capacity rule: the memory overflowed %0d times, the rule's model %0d", d_ovf, m_ovf);
+        if (EXPECT_RL>0) $display("ROW_CALENDAR rl=%0d checked_edges=%0d",EXPECT_RL,row_calendar_checks);
         if (tree_vac) $display("FAIL qfd_vm_bv_ports TREE-VACUOUS x=%0d", bad_x);
         else
         if (m_ovf == d_ovf && (WDIR != 1 || mo_max[2] == SQD) && bad_me == 0 && bad_x == 0 && bad_s == 0 && bad_r == 0 && bad_land == 0 && bad_img == 0 && !x_fault && !x_hazard && !w_fault &&
