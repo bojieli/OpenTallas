@@ -1,0 +1,5 @@
+Current A2F candidate diagnostic hard boundaries
+
+Four live return-map diagnostic cones and the global 16-quarter write-fault reduction now use dsfd_vm_native_valid_diag. Each captures all incoming pins and contributes a sticky fault after two clock edges; no normal data age or initiation interval changes. The original production return-map RTL is the independent valid/slot oracle; all 18 ports,32 selectors,present/absent states,16 one-hot write faults and500 random edges are tested. Gold passes11144 observed edges. VALID,SLOT,DROP and EXTRA mutants all fail observably. Reset clears sticky fault and captured inputs drain during reset.
+
+Both parents now bind the corrected XIO leaves and typed WFC diagnostic transports. A2F alone binds payload16 roots and diagnostic5 roots. This is source integration evidence only. Physical diagnostic kit, connected graph homes and source-current full mapped-memory parent proof remain pending. Actual POSTED1 START producer/link repair is required before production completion.

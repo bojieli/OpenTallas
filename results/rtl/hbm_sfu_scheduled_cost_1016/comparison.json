@@ -1,0 +1,47 @@
+{
+  "scope": "canonical3072-word component invocation, actualS sources + additive13x48/reset relays; not native/physical/whole-die/token throughput adoption",
+  "source": "a89a10d1fc2200a6f6d556dda2efc905cecbac77",
+  "functional_qualification_commit": "2060b07d5",
+  "rows": [
+    {
+      "R": 11,
+      "LG_PATH": 12,
+      "IO_rows": 824,
+      "io_done_delta": 827,
+      "last_bank_delta": 828,
+      "last_ack_delta": 844,
+      "sector_commits": 384
+    },
+    {
+      "R": 23,
+      "LG_PATH": 24,
+      "IO_rows": 848,
+      "io_done_delta": 851,
+      "last_bank_delta": 864,
+      "last_ack_delta": 892,
+      "sector_commits": 384
+    }
+  ],
+  "successor_added_stream_edges": {
+    "IO_rows": 24,
+    "io_done_delta": 24,
+    "last_bank_delta": 36,
+    "last_ack_delta": 48
+  },
+  "successor_added_ns_at_1p2GHz": {
+    "IO_done": 20,
+    "last_macro_commit": 30,
+    "last_core_ack": 40
+  },
+  "observation": "last_bank_delta uses actual ot_vms_bank_static wq_done, asserted on exactly the edge mapped SRAM writes (m_wB=s2w_v); last_ack_delta observes core internal c_done after full relay return",
+  "limits": [
+    "R23 functional proof does not establish geometric reach; far-home geometry exceeds even24x500um",
+    "Native48 payload leaves do not qualify composed reset-tree/clock/parent routing",
+    "S actual352 R11 cells remain unchanged; candidate736 R23 stations unadopted",
+    "No fulltoken invocation/start census, no schedule cost inheritance"
+  ],
+  "resources": {
+    "r11": "EPYC4 oth-ubuntu-2064140-1792148092 RAN0 fullpositive+twoactualmutantsreject",
+    "r23": "EPYC4 oth-ubuntu-2087509-1792148166 RAN0 positivecostprobe; fullmutants in2060b07d5"
+  }
+}
