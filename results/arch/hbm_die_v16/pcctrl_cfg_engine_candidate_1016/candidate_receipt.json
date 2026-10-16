@@ -1307,5 +1307,9 @@
       "view": "physical/ref_tile/hdie_pc_ctrl_cfg/views/ot_hbm_svc_pc_ctrl_leaf_cfg"
     }
   },
-  "qualification": "OPEN: H6 route/native plus final insertion.json compensation and source-bound view proof required"
+  "qualification": "OPEN: H6 route/native plus final insertion.json compensation and source-bound view proof required",
+  "excluded_canonical_definitions": [
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg.sv"
+  ],
+  "SRAM_consumption": "Select exactly one functional or blackbox definition for the SRAM master; both pinned alternatives are provenance only"
 }
