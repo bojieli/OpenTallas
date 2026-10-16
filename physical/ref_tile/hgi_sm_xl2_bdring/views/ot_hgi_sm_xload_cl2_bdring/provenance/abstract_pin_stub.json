@@ -1,0 +1,102 @@
+{
+  "schema": 1,
+  "kind": "abstract_pin_stub",
+  "status": "PASS",
+  "input": {
+    "path": "provenance/raw/ot_hgi_sm_xload_cl2_bdring.lef",
+    "sha256": "a2ffcbbe589af254ce87f5e1ada9cb922c7ce6636708383a0b3bb2dd95503402"
+  },
+  "environment": {
+    "OT_OBS_CLOSE": null,
+    "OT_OBS_CLOSE_UM": null
+  },
+  "helper": {
+    "path": "/srv/opentallas-scratch/claude/closure-loop/hgi_sm_xl2_bdring-cl2f-9c846fd17/src/tools/hier_contract/abstract_pin_stub.py",
+    "sha256": "c3cae85e3aa1a8da5374284fe57418b2230ceb208aa76eff4567c6993bbe0c05"
+  },
+  "command": [
+    "/usr/bin/python3",
+    "/srv/opentallas-scratch/claude/closure-loop/hgi_sm_xl2_bdring-cl2f-9c846fd17/src/tools/hier_contract/abstract_pin_stub.py",
+    "/srv/opentallas-scratch/claude/closure-loop/hgi_sm_xl2_bdring-cl2f-9c846fd17/record/views/ot_hgi_sm_xload_cl2_bdring/provenance/raw/ot_hgi_sm_xload_cl2_bdring.lef",
+    "/srv/opentallas-scratch/claude/closure-loop/hgi_sm_xl2_bdring-cl2f-9c846fd17/record/views/ot_hgi_sm_xload_cl2_bdring/provenance/ot_hgi_sm_xload_cl2_bdring.candidate.lef"
+  ],
+  "returncode": 0,
+  "stdout": "pinstub: 0 OBS rects moved into 0 pins: ; pockets: 199 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
+  "stderr": "",
+  "invariants": {
+    "macro_outline": "PASS",
+    "pin_names_directions_uses": "PASS",
+    "original_pin_rectangles_retained": "PASS"
+  },
+  "child_lint": {
+    "schema": "opentallas.hier_contract.child_lint.v1",
+    "lef": "/srv/opentallas-scratch/claude/closure-loop/hgi_sm_xl2_bdring-cl2f-9c846fd17/record/views/ot_hgi_sm_xload_cl2_bdring/provenance/ot_hgi_sm_xload_cl2_bdring.candidate.lef",
+    "verdict": "PASS",
+    "fails": [],
+    "warns": [],
+    "summary": "ot_hgi_sm_xload_cl2_bdring 86.4 x 302.4: PG M5 VDD 16 stripes (94% spread, 100% cov) / VSS 16 stripes (94% spread, 100% cov); strap M6; face pins 2689 blocked-above 0 blocked-same 0; clock clk insertion 274 ps; pockets M5 0 (closed)",
+    "info": {
+      "cell": "ot_hgi_sm_xload_cl2_bdring",
+      "W": 86.4,
+      "H": 302.4,
+      "pg": {
+        "nets": {
+          "VDD": {
+            "top_layer": "M5",
+            "stripes": 16,
+            "dir": "V",
+            "spread": 0.938,
+            "coverage": 1.0,
+            "shapes_on_top": 16
+          },
+          "VSS": {
+            "top_layer": "M5",
+            "stripes": 16,
+            "dir": "V",
+            "spread": 0.938,
+            "coverage": 1.0,
+            "shapes_on_top": 16
+          }
+        },
+        "top_layer": "M5",
+        "ok": true,
+        "why": []
+      },
+      "pg_layer": "M5",
+      "strap_layer": "M6",
+      "cap": null,
+      "face": {
+        "face_pins": 2689,
+        "blocked_above": 0,
+        "covered_below": 719,
+        "examples": [],
+        "blocked_same": 0,
+        "same_examples": [],
+        "band_same": 0,
+        "band_examples": []
+      },
+      "clock_insertion": {
+        "clk": {
+          "max_ps": 273.67,
+          "min_ps": 216.73
+        }
+      },
+      "pockets": {
+        "layer": "M5",
+        "d_um": 1.536,
+        "marker": {
+          "layer": "M5",
+          "d_um": 1.536,
+          "added": 199
+        },
+        "count": 0,
+        "area_um2": 0,
+        "examples": []
+      }
+    }
+  },
+  "output": {
+    "path": "ot_hgi_sm_xload_cl2_bdring.lef",
+    "sha256": "b409b974f348e382096e073f70dbc16e727302a7c179039e848634d45eb29b5e"
+  }
+}
