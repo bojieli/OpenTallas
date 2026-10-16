@@ -103,28 +103,31 @@ def make():
             m = re.search(r"\[(\d+):(\d+)\]", p["name"])
             n = int(m[1]) + 1 if m else 1
             assert not m or int(m[2]) == 0
+            centres = p["bit_centres_um"]
+            assert len(centres) == n, (p["name"], len(centres), n)
             for bit in range(n):
-                offset = p["span_um"][0] + (bit + .5) * p["bit_pitch_um"]
-                expected.append((f"{stem}[{bit}]" if m else stem, p["face"], p["layer"], round(offset, 9)))
-        io = ["# Source-exact die bit grant; PG BTerms are preserved.",
+                expected.append((f"{stem}[{bit}]" if m else stem, p["face"], p["layer"], round(centres[bit], 9)))
+        io = ["# Source-exact die bit grant (explicit per-bit actual-track, PG-clear centres); PG BTerms are preserved.",
+              "# Each pin is constructed at its granted centre by the shared exact helper (no place_pin snapping).",
+              "source /src/physical/common_flow/assigned_pin_exact.tcl",
               "set vm_expected {", *[" {%s %s %s %.9f}" % row for row in expected], "}",
               f"set vm_w {w};set vm_h {h}",
               "set vm_block [ord::get_db_block]",
               "foreach bt [$vm_block getBTerms] {if {[$bt getSigType] in {POWER GROUND}} continue;foreach bp [$bt getBPins] {odb::dbBPin_destroy $bp}}",
               "foreach item $vm_expected {",
               " lassign $item name face layer along",
-              ' set x [expr {$face eq "W"?0.0:($face eq "E"?$vm_w:$along)}]',
-              ' set y [expr {$face eq "S"?0.0:($face eq "N"?$vm_h:$along)}]',
-              " place_pin -pin_name $name -layer $layer -location [list $x $y] -force_to_die_boundary", "}"]
+              " ot_assigned_pin_exact $name $layer $face $along", "}"]
         (hd / "io.tcl").write_text("\n".join(io) + "\n")
         (hd / "post_iop.tcl").write_text(f"source /src/{hd_rel}/io.tcl\n" + AUDIT)
         purpose = ("Source-specialized bank from actual literal quadrant/slice identity; identity ports and FFs removed, "
                    "no static-input timing waiver. CE status gains one registered carry edge; data calendars unchanged. "
-                   "New die-owned spread pins and actual ODB coordinate/track/PG readback. Diagnostic child only; "
+                   "Die grant r2: every bit on an actual M4/M5 track, M5 centres clear of PG stripe projections (q1 identity1 gate: "
+                   "3068 off-track centres + 95 PG projections), placed by the shared exact-pin helper; actual ODB coordinate/track/PG readback. Diagnostic child only; "
                    "no parent/die binding or physical qualification claimed.")
-        s["job"] = {"owner": "Codex H-ELEM-A VM", "branch": "codex/hbm-vm-local-status-pub-1427", "tag": "identity1",
+        s["job"] = {"owner": "Claude H-SM", "branch": "claude/hbm-sm-attention-1015", "tag": "identity2",
                     "purpose": purpose, "structural_change": purpose,
-                    "extra_paths": ["rtl/hbm_accel/generic/vm/static", hd_rel, GRANT],
+                    "extra_paths": ["rtl/hbm_accel/generic/vm/static", hd_rel, GRANT,
+                                    "physical/common_flow/assigned_pin_exact.tcl"],
                     "record_to": f"results/rtl/ref_tile/{name}", "views_to": f"physical/ref_tile/{name}/views",
                     "benches": [{"name": "literal_banks_and_wrong_compiled_identity",
                                  "cmd": f"bash rtl/hbm_accel/generic/vm/static/identity/run_identity_wrappers.sh {{RUN}}/bench/literal {q} && bash rtl/hbm_accel/generic/vm/static/identity/run_identity.sh {{RUN}}/bench/identity {q}",
