@@ -4,14 +4,18 @@ from pathlib import Path
 
 SOURCE = 'rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_qb_pipe_native.sv'
 SOURCE_SHA256 = '8bbde3ed38fd6d94ae99821c11d73e0f009881e084a35476206990a98c2294d1'
+P10_SOURCE = 'rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_qb_pinread_native.sv'
+P10_SHA256 = 'b1b2142eef1ad0da73bf3c363bc8084231e43f08d9b03ba7ab312067c8e9ff03'
 
 
 def model(root=None):
     root = Path(root) if root else Path(__file__).resolve().parent.parent
     if hashlib.sha256((root / SOURCE).read_bytes()).hexdigest() != SOURCE_SHA256:
         raise ValueError('QB source changed: regenerate the actual clock-root census')
+    if hashlib.sha256((root / P10_SOURCE).read_bytes()).hexdigest() != P10_SHA256:
+        raise ValueError('QB P10 parent changed: regenerate actual proof and graph')
     return dict(schema='opentallas.s81.qb-read-root-candidate.v1', enabled_by_default=False,
-      source=dict(path=SOURCE, sha256=SOURCE_SHA256), replicas=4, macs_per_cycle=0,
+      source=dict(path=SOURCE, sha256=SOURCE_SHA256, current_parent_path=P10_SOURCE,current_parent_sha256=P10_SHA256), replicas=4, macs_per_cycle=0,
       storage=dict(macros_per_replica=1, words=128, bits_per_word=256,
                    physical_bytes_per_replica=4096, production_words_per_replica=96),
       memory_ports_per_replica=dict(read_bytes_per_cycle=32, write_bytes_per_cycle=32,
@@ -22,9 +26,9 @@ def model(root=None):
             same_ideal_period_ps=833.333333333, ideal_phase_ps=0,
             delivery='real separate N-centre read clock; phi-R per measured physical root',
             cross_root_checks='ordinary related-root setup and hold retained, including SRAM->read FF'),
-      calendar=dict(added_cycles=0, unchanged_bank_read_stages=2,
+      calendar=dict(added_cycles=0, unchanged_bank_read_stages=2, unchanged_current_P10_read_latency_delta=4,
                     token_latency_delta_cycles=0, bandwidth_delta_bytes_per_cycle=0,
-                    proof='actual128row256bit1030check lockstep PASS; stoppedreadclock mutant FAILcheck513; fullparent fourbank native QB PASS345800bitchecks/384words and stoppedreadroot FAILcycle623'),
+                    proof='actual128row256bit1030check lockstep PASS; stoppedreadclock mutant FAILcheck513; currentP10 fourbank native QB PASS345800bitchecks/384words and stoppedreadroot FAILcycle623; oldpipefixture separate'),
       floorplan=dict(historical_outline_um=[142.56,86.4], candidate_outline_um=None,
             area_delta_um2=None, pg_derating=None, assigned_die_slots=None),
       routing=dict(N_output_bits=256, S_input_bits=512, W_control_bits=50,

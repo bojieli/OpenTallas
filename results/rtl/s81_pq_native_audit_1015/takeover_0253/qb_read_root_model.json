@@ -3,7 +3,9 @@
   "enabled_by_default": false,
   "source": {
     "path": "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_qb_pipe_native.sv",
-    "sha256": "8bbde3ed38fd6d94ae99821c11d73e0f009881e084a35476206990a98c2294d1"
+    "sha256": "8bbde3ed38fd6d94ae99821c11d73e0f009881e084a35476206990a98c2294d1",
+    "current_parent_path": "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_qb_pinread_native.sv",
+    "current_parent_sha256": "b1b2142eef1ad0da73bf3c363bc8084231e43f08d9b03ba7ab312067c8e9ff03"
   },
   "replicas": 4,
   "macs_per_cycle": 0,
@@ -42,9 +44,10 @@
   "calendar": {
     "added_cycles": 0,
     "unchanged_bank_read_stages": 2,
+    "unchanged_current_P10_read_latency_delta": 4,
     "token_latency_delta_cycles": 0,
     "bandwidth_delta_bytes_per_cycle": 0,
-    "proof": "actual128row256bit1030check lockstep PASS; stoppedreadclock mutant FAILcheck513; fullparent fourbank native QB PASS345800bitchecks/384words and stoppedreadroot FAILcycle623"
+    "proof": "actual128row256bit1030check lockstep PASS; stoppedreadclock mutant FAILcheck513; currentP10 fourbank native QB PASS345800bitchecks/384words and stoppedreadroot FAILcycle623; oldpipefixture separate"
   },
   "floorplan": {
     "historical_outline_um": [
