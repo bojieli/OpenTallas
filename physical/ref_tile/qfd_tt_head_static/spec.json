@@ -249,11 +249,11 @@
   "OT_CHANNEL_BLOCK_UM": "20",
   "OT_ROW_MIN_UM": "6"
  },
- "structural_change": "h3 (Q-COMPUTE-ELEM r14): h2 CTS refused by the strict multiple-CTS profile (ck_head drove 4,831 std FF + 2 raw SRAM clock pins: mixed source). The two program SRAMs now take explicit raw-macro clock entries ck_pm0/ck_pm1 (qfd_tt_ctlm_head_static_rk, derived by tools/qwen_split/derive_tt_head_rawck.py; shared source unchanged), W-face pins at the SRAM clk heights; std roots ck_head / ck_me_sched unchanged (clock hybrid_entries, flow 891a5f188). Parent delivers ck_pm0/1 from the same PLL phase as ck_head (same_pll_fixed_phase 0 ps). Logic, edges and outline unchanged. NEW head-side leaf of the selected static TT controller: exact original parent body minus the ROM tree (u_head + native route + resident relocation + loaded stage), formally equivalent regrouping (physical/qwen_tt_static_cluster_1015). Roots ck_head (4,813+route) / ck_me_sched (877), related phase-0; 2 SRAM 64x512; no ICG.",
+ "structural_change": "h8 (Q-ELEM 1315): h7 gate placement TT reg->reg -470.7 ps over 2,648 flops: u_issue.cycle -> 32-bit cycle==head compare (~410 ps OR tree) -> controller fan-out (~650 ps incl. cross-tile buffering) -> kvd fields / pin regs. Fix: SREG=1 (ot_qwen_fixed_issue): 'scheduled' is a register loaded with the exact next-state value; bit-identical every cycle (sim self-check + regroup bench vs ref), 0 edges. h3 (Q-COMPUTE-ELEM r14): h2 CTS refused by the strict multiple-CTS profile (ck_head drove 4,831 std FF + 2 raw SRAM clock pins: mixed source). The two program SRAMs now take explicit raw-macro clock entries ck_pm0/ck_pm1 (qfd_tt_ctlm_head_static_rk, derived by tools/qwen_split/derive_tt_head_rawck.py; shared source unchanged), W-face pins at the SRAM clk heights; std roots ck_head / ck_me_sched unchanged (clock hybrid_entries, flow 891a5f188). Parent delivers ck_pm0/1 from the same PLL phase as ck_head (same_pll_fixed_phase 0 ps). Logic, edges and outline unchanged. NEW head-side leaf of the selected static TT controller: exact original parent body minus the ROM tree (u_head + native route + resident relocation + loaded stage), formally equivalent regrouping (physical/qwen_tt_static_cluster_1015). Roots ck_head (4,813+route) / ck_me_sched (877), related phase-0; 2 SRAM 64x512; no ICG.",
  "job": {
   "owner": "Claude:Q-ELEM-TTH",
   "branch": "claude/qelem-tth-1016",
-  "tag": "h7",
+  "tag": "h8",
   "purpose": "Static TT head-side leaf, raw SRAM clock entries (h3) for the qfd_tt_ctlm_static_s cluster",
   "extra_paths": [
    "physical/qwen_tt_static_cluster_1015",
@@ -303,9 +303,20 @@
      "verilator"
     ],
     "fail_regex": "REGROUP_FAIL"
+   },
+   {
+    "name": "bench_tt_sreg_mut",
+    "cmd": "RG_OBJ={RUN}/bench/rg_sm RG_DEFS=-DOT_SREG_MUT bash physical/qwen_tt_static_cluster_1015/run_regroup.sh 0 60000",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "OT_SREG_MISMATCH"
    }
   ],
-  "structural_change": "h7 (Q-ELEM-TTH 2026-10-16) after h6 gate (c20527ec4 receipt): ck_head boundary spread 73.7 ps OK with -no_obstruction_aware, but placement TT setup sched->core -429 ps / core->sched -301 ps: separate std entries carry the die-skew reserve (setup 150/210, hold 100) on every hop between them (210 because ck_head mean 303 > 300), and the die already feeds ck_me_sched and ck_head from one tap. ck_me_sched entry merged into ck_head (one standard-cell root, 5,402+877 sinks < 15k); hr port ck_me_sched removed (parent port retained until the die netlist drops it, as Q-ELEM-TTP 1c99b5f52). Raw program-SRAM entries ck_pm0/ck_pm1 unchanged (coordinator requirement). Logic, edges, outline, macros unchanged. Keeps h6: reset station (RSTN=1, release +1 edge, 0 token cycles) and -no_obstruction_aware.",
+  "structural_change": "h8 (Q-ELEM 1315): h7 gate placement TT reg->reg -470.7 ps over 2,648 flops: u_issue.cycle -> 32-bit cycle==head compare (~410 ps OR tree) -> controller fan-out (~650 ps incl. cross-tile buffering) -> kvd fields / pin regs. Fix: SREG=1 (ot_qwen_fixed_issue): 'scheduled' is a register loaded with the exact next-state value; bit-identical every cycle (sim self-check + regroup bench vs ref), 0 edges. h7 (Q-ELEM-TTH 2026-10-16) after h6 gate (c20527ec4 receipt): ck_head boundary spread 73.7 ps OK with -no_obstruction_aware, but placement TT setup sched->core -429 ps / core->sched -301 ps: separate std entries carry the die-skew reserve (setup 150/210, hold 100) on every hop between them (210 because ck_head mean 303 > 300), and the die already feeds ck_me_sched and ck_head from one tap. ck_me_sched entry merged into ck_head (one standard-cell root, 5,402+877 sinks < 15k); hr port ck_me_sched removed (parent port retained until the die netlist drops it, as Q-ELEM-TTP 1c99b5f52). Raw program-SRAM entries ck_pm0/ck_pm1 unchanged (coordinator requirement). Logic, edges, outline, macros unchanged. Keeps h6: reset station (RSTN=1, release +1 edge, 0 token cycles) and -no_obstruction_aware.",
   "cycles_added": 1
  },
  "children": [],
