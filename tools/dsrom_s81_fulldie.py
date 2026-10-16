@@ -11401,16 +11401,16 @@ def die_options(ap):
                     'adopt with a regenerated pin set')
     ap.add_argument('--wfc-priced', action='store_true', help='contract v16: WFC kit die pins of the PRICED kit (RD2 1: '
                     't_srd 31, f_srq 1026; t_ft 4 to the host fault collector)')
-    ap.add_argument('--rly-face-pins', action='store_true', help='S-DIE-RELAYFACE 10-16 (VIS-ROM S81F-01/06/07/08): every '
+    ap.add_argument('--rly-face-pins', action=argparse.BooleanOptionalAction, default=True, help='DEFAULT ON since S-DIE 10-16 0600 (--no-rly-face-pins to disable). S-DIE-RELAYFACE 10-16 (VIS-ROM S81F-01/06/07/08): every '
                     'relay takes its (in, out) faces from driver / load PIN positions (closed masters of its width only; '
                     'better non-closed variants are recorded as kit requests), not from instance centres')
-    ap.add_argument('--col-reset-tree', type=int, default=0, metavar='G', help='S-DIE-RELAYFACE 10-16 (VIS-ROM D-S81-02): '
+    ap.add_argument('--col-reset-tree', type=int, default=32, metavar='G', help='DEFAULT 32 since S-DIE 10-16 0600 (0 = one net per column, disabled). S-DIE-RELAYFACE 10-16 (VIS-ROM D-S81-02): '
                     'registered equal-depth column reset tree, <= G sinks per stage register (1-bit relay masters)')
     ap.add_argument('--col-reset-span', type=float, default=0.0, help='--col-reset-tree: also split leaf groups wider than this half-perimeter (um; 0 = count only)')
-    ap.add_argument('--stn-pin-pitch2', action='store_true', help='VIS-ROM S81F-10 (S-NET+FILL 10-16): one-lane forwarded '
+    ap.add_argument('--stn-pin-pitch2', action=argparse.BooleanOptionalAction, default=True, help='DEFAULT ON since S-DIE 10-16 0600 (--no-stn-pin-pitch2 to disable). VIS-ROM S81F-10 (S-NET+FILL 10-16): one-lane forwarded '
                     'stations (stnh/stnv_86x1) lay fi0 + di0 / fo0 + do0 at a uniform 2-track (0.096 um) pitch centred on '
                     'the face; the abutting link-end ports take the same pitch')
-    ap.add_argument('--lef-pin-dir', action='store_true', help='S-DIE-RELAYFACE 10-16 (VIS-ROM D-S81-02): generated '
+    ap.add_argument('--lef-pin-dir', action=argparse.BooleanOptionalAction, default=True, help='DEFAULT ON since S-DIE 10-16 0600 (--no-lef-pin-dir to disable). S-DIE-RELAYFACE 10-16 (VIS-ROM D-S81-02): generated '
                     'abstracts declare DIRECTION INPUT / OUTPUT from the die netlist (were all INOUT)')
     ap.add_argument('--rly-face-reach', type=float, default=0.0, help='s81-die v16: the last column relay of a net takes '
                     'the out face nearest its worst load when the default face centre is > UM from a load pin (straight '
@@ -11784,11 +11784,11 @@ def apply_options(a):
     RLY_REAL_DIMS = bool(getattr(a, "rly_real_dims", False))
     RLY_FACE_REACH = float(getattr(a, 'rly_face_reach', 0.0) or 0.0)
     global RLY_FACE_PINS, COL_RESET_TREE, COL_RESET_SPAN_UM, LEF_PIN_DIR, STN_PIN_PITCH2
-    STN_PIN_PITCH2 = bool(getattr(a, 'stn_pin_pitch2', False))
-    RLY_FACE_PINS = bool(getattr(a, 'rly_face_pins', False))
-    COL_RESET_TREE = int(getattr(a, 'col_reset_tree', 0) or 0)
+    STN_PIN_PITCH2 = bool(getattr(a, 'stn_pin_pitch2', True))
+    RLY_FACE_PINS = bool(getattr(a, 'rly_face_pins', True))
+    COL_RESET_TREE = int(getattr(a, 'col_reset_tree', 32) or 0)
     COL_RESET_SPAN_UM = float(getattr(a, 'col_reset_span', 0.0) or 0.0)
-    LEF_PIN_DIR = bool(getattr(a, 'lef_pin_dir', False))
+    LEF_PIN_DIR = bool(getattr(a, 'lef_pin_dir', True))
     HOP_GATE_UM = getattr(a, 'hop_gate', None)
     CTRL_SVC_ALIGN = bool(getattr(a, 'ctrl_svc_align', False))
     FWD_IFACE = bool(getattr(a, 'fwd_iface', False))
