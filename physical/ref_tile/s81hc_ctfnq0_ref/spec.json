@@ -54,9 +54,9 @@
  },
  "slot_change_request": "Replace held n3 flat FN slot by4data leaves+resetleaf in576.72x34.56(+8.64um),5clockentries; exact x pins preserved; data banks N flush, output parentwires8.64um; full actual peer/clock/reset/cost proof beforeadoption.",
  "job": {
-  "owner": "Codex:S81-HC-takeover",
-  "branch": "codex/s81-hc-takeover-2116",
-  "tag": "bank-native",
+  "owner": "Codex:S81-HC-2330",
+  "branch": "codex/s81-hc-2330",
+  "tag": "bank-native2330",
   "purpose": "Held local-clock CTFN structural component; full HC source/static/physical qualification open.",
   "structural_change": "4 independent data roots (max1615logicalFF) replace one5856-sink full576um root; exact2data stages andperbitx preserved,reset inreal separate leaf,bankvalidresetcaptured+1INITedge. Actual benchmarkquiescence4edges afterrelease. Native per-bit hops must be remeasured; no unchanged timingretry.",
   "hold_merge": "Candidate component only. All CTS/native/route/peer/reset/staticcalendar/fullHC gates required; no physicalview inheritance or production adoption.",

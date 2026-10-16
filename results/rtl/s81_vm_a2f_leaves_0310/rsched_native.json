@@ -1,0 +1,24 @@
+{
+ "cell": "dsfd_vm_a2f_rsched_p",
+ "view": "physical/ref_tile/dsfd_vm_a2f_rsched_p_native_0310_r1/views/dsfd_vm_a2f_rsched_p",
+ "lib_cell": "dsfd_vm_a2f_rsched_p",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 211.3,
+ "spread_ps": 38.3,
+ "outputs": 1054,
+ "inputs": 751,
+ "launch_ps": 151.8,
+ "launch_pin": "obs_row[362]",
+ "capture_ps": 151.4,
+ "capture_pin": "aux_v[11]",
+ "launch_over": 0,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pass": true,
+ "fail_why": "",
+ "audit_input_artifact": "/home/ubuntu/artifacts/s81-vm-parent-leaves-0310/rsched_closed/views/dsfd_vm_a2f_rsched_p"
+}

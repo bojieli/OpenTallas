@@ -23,6 +23,9 @@ module dsfd_host_sd #(
     parameter integer KVS = 1,          // bit s: stack s holds KV / RoPE
     parameter integer ENG = 1,          // Engram client stack (-1: none)
     parameter integer SCRED = 8,
+    // Static on-chip service: a missing reserved return faults; it never
+    // postpones the head service edge. Legacy init-boundary mode is default.
+    parameter integer STATIC = 0,
     parameter integer MUT = 0
 ) (
     input  wire              ck,
@@ -84,7 +87,7 @@ module dsfd_host_sd #(
     reg [4:0] cr [0:NS-1]; reg [6:0] crn;
     reg ok;
     always @* begin ok = 1'b1; for (s = 0; s < NS; s = s + 1) if (dst[s] && cr[s] == 0) ok = 1'b0; end
-    wire pop = (n != 0) && (bad || ok);
+    wire pop = (n != 0) && (STATIC != 0 || bad || ok);
     reg [8:0] asum;
     always @* begin asum = 9'd0; for (s = 0; s < NS; s = s + 1) asum = asum + hc_q[9*s + 1 +: 8]; end
     always @(posedge ck or negedge rn)
@@ -96,7 +99,7 @@ module dsfd_host_sd #(
             if (pop) rp <= rp + 1'b1;
             n <= n + iv - pop;
             o_cr <= pop;
-            if (pop && bad) fault <= 1'b1;
+            if (pop && (bad || (STATIC != 0 && !ok))) fault <= 1'b1;
             for (s = 0; s < NS; s = s + 1) begin
                 hw[292*s] <= pop && dst[s];
                 cr[s] <= cr[s] - (pop && dst[s]) + (hc_q[9*s] && !(MUT == 2 && crn == 49 && s == 0));

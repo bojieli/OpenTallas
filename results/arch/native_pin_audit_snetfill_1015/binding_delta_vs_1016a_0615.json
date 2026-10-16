@@ -1,0 +1,651 @@
+{
+ "schema": "s81-view-binding-delta-v1",
+ "scope": "S-NET+FILL masters whose CURRENT origin/main view differs from results/arch/s81_native_20261013/view_binding_closed_1016a.json (LEF sha256 mismatch: 1016a points at superseded closed jobs). Each row: current CLOSED job, file hashes, native pin audit and strict export_fix on the files on disk. For S-DIE to merge into the next binding (view_binding_closed.py) before the next S81 GEN; no die fit check run here.",
+ "bind_notes": {
+  "dsfd_stnh_86x1/dsfd_stnv_86x1": "f10 2-track pins: bind only with --stn-pin-pitch2 (gen26b has it)",
+  "dsfd_node_*": "43.2 x 77.76 strip: --node-strip 43.2 --node-rstreg (gen26b has both); LLd/LLfd/LLfu ab1 put a/b on the E face (S-DIE approved S81F-03, pins physical/s81_die_pins/snet_node43_ab)",
+  "dsfd_r2l_vr_1024x1__ha_SW": "n7 preserves the forwarded clock (b51239333)"
+ },
+ "bound": {
+  "dsfd_node_LLd": {
+   "verdict": "QUALIFIED",
+   "export_dir": "physical/ref_tile/s81net_node_lld/views/dsfd_node_LLd",
+   "job": "s81net_node_lld-ab1-13d5be1a9",
+   "files": {
+    "lef": {
+     "path": "physical/ref_tile/s81net_node_lld/views/dsfd_node_LLd/dsfd_node_LLd.lef",
+     "sha256": "7515e8aedaff164377c59b4b9c352ef2ff1e438b61a86e08da26e7f0be3641e8"
+    },
+    "tt": {
+     "path": "physical/ref_tile/s81net_node_lld/views/dsfd_node_LLd/dsfd_node_LLd_tt.lib",
+     "sha256": "f222b3f7f007ca0e2eaaee698af332955ec773a79509b253fe573a3685cf86a5"
+    },
+    "ff": {
+     "path": "physical/ref_tile/s81net_node_lld/views/dsfd_node_LLd/dsfd_node_LLd_ff.lib",
+     "sha256": "afe933f9d96b9249c36025ce48716ec6b1cb166155ff062abf360d1846d04917"
+    },
+    "ss": {
+     "path": "physical/ref_tile/s81net_node_lld/views/dsfd_node_LLd/dsfd_node_LLd_ss.lib",
+     "sha256": "121d44fdc2bbbb2ea49edebbb4855f9a7b63abe7372b7fa6fa9eef3634c594a5"
+    }
+   },
+   "closure": "TT +95.22 / FF +23.29 DRC 0",
+   "supersedes_1016a_job": "s81net_node_lld-n5-aad069240",
+   "native": {
+    "pass": true,
+    "launch_ps": 177.7,
+    "capture_ps": 132.2,
+    "spread_ps": 12.8,
+    "R_ps": 104.6
+   },
+   "export_fix": true
+  },
+  "dsfd_node_LLfd": {
+   "verdict": "QUALIFIED",
+   "export_dir": "physical/ref_tile/s81net_node_llfd/views/dsfd_node_LLfd",
+   "job": "s81net_node_llfd-ab1-13d5be1a9",
+   "files": {
+    "lef": {
+     "path": "physical/ref_tile/s81net_node_llfd/views/dsfd_node_LLfd/dsfd_node_LLfd.lef",
+     "sha256": "6dd0ecaebebfc88aa62753c7e54a46cda8306e69227d54c7fb351cbcc43a1dca"
+    },
+    "tt": {
+     "path": "physical/ref_tile/s81net_node_llfd/views/dsfd_node_LLfd/dsfd_node_LLfd_tt.lib",
+     "sha256": "ff044f19c0b3c785dda9e3058e6ef0c91e2e0c67bcec5273f36081ee6eee821b"
+    },
+    "ff": {
+     "path": "physical/ref_tile/s81net_node_llfd/views/dsfd_node_LLfd/dsfd_node_LLfd_ff.lib",
+     "sha256": "266a9f3bd7eea5c4308c3390772c147ebff3cf2b31664d1d7f922d2319a185e8"
+    },
+    "ss": {
+     "path": "physical/ref_tile/s81net_node_llfd/views/dsfd_node_LLfd/dsfd_node_LLfd_ss.lib",
+     "sha256": "9397a5c70dcbee5a61b4bd875052d205e087f18f7f8bdb432db58aadbb8a3839"
+    }
+   },
+   "closure": "TT +89.29 / FF +18.49 DRC 0",
+   "supersedes_1016a_job": "s81net_node_llfd-n5-4ff0e837d",
+   "native": {
+    "pass": true,
+    "launch_ps": 176.6,
+    "capture_ps": 137.9,
+    "spread_ps": 13.1,
+    "R_ps": 106.5
+   },
+   "export_fix": true
+  },
+  "dsfd_node_LLfu": {
+   "verdict": "QUALIFIED",
+   "export_dir": "physical/ref_tile/s81net_node_llfu/views/dsfd_node_LLfu",
+   "job": "s81net_node_llfu-ab1-13d5be1a9",
+   "files": {
+    "lef": {
+     "path": "physical/ref_tile/s81net_node_llfu/views/dsfd_node_LLfu/dsfd_node_LLfu.lef",
+     "sha256": "7c874fd7cae5d56089b626938d9a06d1e43c9d67dac4160454d397f065847d2f"
+    },
+    "tt": {
+     "path": "physical/ref_tile/s81net_node_llfu/views/dsfd_node_LLfu/dsfd_node_LLfu_tt.lib",
+     "sha256": "309d75cac3dd885d25feb69134d56f5177fc2a4fcc890fd8790a6736afabcffe"
+    },
+    "ff": {
+     "path": "physical/ref_tile/s81net_node_llfu/views/dsfd_node_LLfu/dsfd_node_LLfu_ff.lib",
+     "sha256": "4a0024a738baca41a08dfe92f5ca919a85695e6c67500ea0e0d5be55aa174856"
+    },
+    "ss": {
+     "path": "physical/ref_tile/s81net_node_llfu/views/dsfd_node_LLfu/dsfd_node_LLfu_ss.lib",
+     "sha256": "d184ac8b20c002beee817b20feecc03ae928e4dad704e186db23ab313fe28598"
+    }
+   },
+   "closure": "TT +84.29 / FF +22.89 DRC 0",
+   "supersedes_1016a_job": "s81net_node_llfu-n5-ed7bf6a6b",
+   "native": {
+    "pass": true,
+    "launch_ps": 176.3,
+    "capture_ps": 143.4,
+    "spread_ps": 16.3,
+    "R_ps": 109.7
+   },
+   "export_fix": true
+  },
+  "dsfd_node_NNfd": {
+   "verdict": "QUALIFIED",
+   "export_dir": "physical/ref_tile/s81net_node_nnfd/views/dsfd_node_NNfd",
+   "job": "s81net_node_nnfd-n6-13d6772ae",
+   "files": {
+    "lef": {
+     "path": "physical/ref_tile/s81net_node_nnfd/views/dsfd_node_NNfd/dsfd_node_NNfd.lef",
+     "sha256": "240fb5cd7c053a7fa2323a3fe0052f712d10636af362aadc57b07e886af21fed"
+    },
+    "tt": {
+     "path": "physical/ref_tile/s81net_node_nnfd/views/dsfd_node_NNfd/dsfd_node_NNfd_tt.lib",
+     "sha256": "c11f07659bc7be7fb9ccf6948e1eece461f6c35dda63dcebfd50dc6b28a2b447"
+    },
+    "ff": {
+     "path": "physical/ref_tile/s81net_node_nnfd/views/dsfd_node_NNfd/dsfd_node_NNfd_ff.lib",
+     "sha256": "6b23045ee77ac4a2c27e7181b582c7c68b28b90db246cad9ccd6efb6d4b41f4a"
+    },
+    "ss": {
+     "path": "physical/ref_tile/s81net_node_nnfd/views/dsfd_node_NNfd/dsfd_node_NNfd_ss.lib",
+     "sha256": "99836f61069298f306fc228957223340e75af1044b31678f2d6e920731c54879"
+    }
+   },
+   "closure": "TT +100.18 / FF +16.83 DRC 0",
+   "supersedes_1016a_job": "s81net_node_nnfd-n5-51b910e65",
+   "native": {
+    "pass": true,
+    "launch_ps": 178.7,
+    "capture_ps": 143.9,
+    "spread_ps": 14.2,
+    "R_ps": 110.5
+   },
+   "export_fix": true
+  },
+  "dsfd_node_NNfu": {
+   "verdict": "QUALIFIED",
+   "export_dir": "physical/ref_tile/s81net_node_nnfu/views/dsfd_node_NNfu",
+   "job": "s81net_node_nnfu-n6-13d6772ae",
+   "files": {
+    "lef": {
+     "path": "physical/ref_tile/s81net_node_nnfu/views/dsfd_node_NNfu/dsfd_node_NNfu.lef",
+     "sha256": "3643fa258169f5313070e99dd10893edeee5a90e1b23f2a9d1fc3f8f71dbbdcb"
+    },
+    "tt": {
+     "path": "physical/ref_tile/s81net_node_nnfu/views/dsfd_node_NNfu/dsfd_node_NNfu_tt.lib",
+     "sha256": "bec6295084ace80e9a516f1699f35ba1e5b549b6a1fe85f248d6c223a9e681f8"
+    },
+    "ff": {
+     "path": "physical/ref_tile/s81net_node_nnfu/views/dsfd_node_NNfu/dsfd_node_NNfu_ff.lib",
+     "sha256": "e0aeabeaf1b946bf495d28c9d07de01e147f1b249faa084f9be22190d9f3e716"
+    },
+    "ss": {
+     "path": "physical/ref_tile/s81net_node_nnfu/views/dsfd_node_NNfu/dsfd_node_NNfu_ss.lib",
+     "sha256": "e18f910f07672b8149d32627a8a2c4e359efef2901aa899c0aa936481f5571d3"
+    }
+   },
+   "closure": "TT +90.08 / FF +12.49 DRC 0",
+   "supersedes_1016a_job": "s81net_node_nnfu-n5-ed7bf6a6b",
+   "native": {
+    "pass": true,
+    "launch_ps": 178.8,
+    "capture_ps": 158.5,
+    "spread_ps": 25.1,
+    "R_ps": 112.0
+   },
+   "export_fix": true
+  },
+  "dsfd_r2l_vr_1024x1__ha_SW": {
+   "verdict": "QUALIFIED",
+   "export_dir": "physical/ref_tile/s81net_r2l_vr_1024x1__ha_sw/views/dsfd_r2l_vr_1024x1__ha_SW",
+   "job": "s81net_r2l_vr_1024x1__ha_sw-n7-b51239333",
+   "files": {
+    "lef": {
+     "path": "physical/ref_tile/s81net_r2l_vr_1024x1__ha_sw/views/dsfd_r2l_vr_1024x1__ha_SW/dsfd_r2l_vr_1024x1__ha_SW.lef",
+     "sha256": "67160dde28fd92ab5b0493c73e14b8750d07c97891764e99fa9fbac3afa22793"
+    },
+    "tt": {
+     "path": "physical/ref_tile/s81net_r2l_vr_1024x1__ha_sw/views/dsfd_r2l_vr_1024x1__ha_SW/dsfd_r2l_vr_1024x1__ha_SW_tt.lib",
+     "sha256": "e450e47fd391d48f27de57379777635cbeda9f2aaf022fce647a5633da78e790"
+    },
+    "ff": {
+     "path": "physical/ref_tile/s81net_r2l_vr_1024x1__ha_sw/views/dsfd_r2l_vr_1024x1__ha_SW/dsfd_r2l_vr_1024x1__ha_SW_ff.lib",
+     "sha256": "7d12125bd9615651ae057cda68b7afbf8ce80e77944f91cf600ca441c776bdf7"
+    },
+    "ss": {
+     "path": "physical/ref_tile/s81net_r2l_vr_1024x1__ha_sw/views/dsfd_r2l_vr_1024x1__ha_SW/dsfd_r2l_vr_1024x1__ha_SW_ss.lib",
+     "sha256": "3f9bbf90c2a718855a4dcc4c87fe41a308310e71371bb6049a05159867c37032"
+    }
+   },
+   "closure": "TT +45.57 / FF +10.54 DRC 0",
+   "supersedes_1016a_job": "s81net_r2l_vr_1024x1__ha_sw-n6-1ec9e0154",
+   "native": {
+    "pass": true,
+    "launch_ps": 130.4,
+    "capture_ps": 138.7,
+    "spread_ps": 26.1,
+    "R_ps": 183.0
+   },
+   "export_fix": true
+  },
+  "dsfd_rly_283_EW": {
+   "verdict": "QUALIFIED",
+   "export_dir": "physical/ref_tile/s81_rly_283_ew/views/dsfd_rly_283_EW",
+   "job": "s81_rly_283_ew-r4-1480fbbb1",
+   "files": {
+    "lef": {
+     "path": "physical/ref_tile/s81_rly_283_ew/views/dsfd_rly_283_EW/dsfd_rly_283_EW.lef",
+     "sha256": "521895706188c983a7a3ee2dbdbc5be89dede63e87a4cb63003facbb75d0c219"
+    },
+    "tt": {
+     "path": "physical/ref_tile/s81_rly_283_ew/views/dsfd_rly_283_EW/dsfd_rly_283_EW_tt.lib",
+     "sha256": "4eb48c939fea5d1a94e7385b1afb0d293830ce09f87ee89a326df669ccacaf59"
+    },
+    "ff": {
+     "path": "physical/ref_tile/s81_rly_283_ew/views/dsfd_rly_283_EW/dsfd_rly_283_EW_ff.lib",
+     "sha256": "6de80fc5e0b7eb9e28fd61c510ab2cdfc71ea0619a1b5f72db431599568286f2"
+    },
+    "ss": {
+     "path": "physical/ref_tile/s81_rly_283_ew/views/dsfd_rly_283_EW/dsfd_rly_283_EW_ss.lib",
+     "sha256": "b45975ff2e2a7938b8f6ef253c69552f996958fb5cc7b1bbac7939b7486cd4c7"
+    }
+   },
+   "closure": "TT +320.86 / FF +27.64 DRC 0",
+   "supersedes_1016a_job": "s81_rly_283_ew-v3-b79442de6",
+   "native": {
+    "pass": true,
+    "launch_ps": 199.0,
+    "capture_ps": 124.1,
+    "spread_ps": 7.7,
+    "R_ps": 83.5
+   },
+   "export_fix": true
+  },
+  "dsfd_rly_283_SN": {
+   "verdict": "QUALIFIED",
+   "export_dir": "physical/ref_tile/s81_rly_283_sn/views/dsfd_rly_283_SN",
+   "job": "s81_rly_283_sn-r4-1480fbbb1",
+   "files": {
+    "lef": {
+     "path": "physical/ref_tile/s81_rly_283_sn/views/dsfd_rly_283_SN/dsfd_rly_283_SN.lef",
+     "sha256": "53e150e159aa396d9a1aa2f122f9e37a43d59b7da8a30992a41bf28b3f3dddb6"
+    },
+    "tt": {
+     "path": "physical/ref_tile/s81_rly_283_sn/views/dsfd_rly_283_SN/dsfd_rly_283_SN_tt.lib",
+     "sha256": "672162b2f3764728f809587ae87f31cc7a5f1347eabb9b9ca3e35665aa996926"
+    },
+    "ff": {
+     "path": "physical/ref_tile/s81_rly_283_sn/views/dsfd_rly_283_SN/dsfd_rly_283_SN_ff.lib",
+     "sha256": "a06d736a91a9da4a1441b16d739b9a14b369fdd99524d94a1cf9254d9d2034da"
+    },
+    "ss": {
+     "path": "physical/ref_tile/s81_rly_283_sn/views/dsfd_rly_283_SN/dsfd_rly_283_SN_ss.lib",
+     "sha256": "8c9e6a0eee6f8c85d0bdfe314d44bc49e9e27d33050eea119d8f5919c1cf4c75"
+    }
+   },
+   "closure": "TT +313.37 / FF +7.44 DRC 0",
+   "supersedes_1016a_job": "s81_rly_283_sn-v1-05805dc84",
+   "native": {
+    "pass": true,
+    "launch_ps": 203.1,
+    "capture_ps": 104.7,
+    "spread_ps": 4.5,
+    "R_ps": 85.3
+   },
+   "export_fix": true
+  },
+  "dsfd_rly_283_WE": {
+   "verdict": "QUALIFIED",
+   "export_dir": "physical/ref_tile/s81_rly_283_we/views/dsfd_rly_283_WE",
+   "job": "s81_rly_283_we-r4-1480fbbb1",
+   "files": {
+    "lef": {
+     "path": "physical/ref_tile/s81_rly_283_we/views/dsfd_rly_283_WE/dsfd_rly_283_WE.lef",
+     "sha256": "f3d128d9788119f11178c80460c9e7bd55b5f2aa54fae232df19538eec9f674d"
+    },
+    "tt": {
+     "path": "physical/ref_tile/s81_rly_283_we/views/dsfd_rly_283_WE/dsfd_rly_283_WE_tt.lib",
+     "sha256": "7974312d7f07025b9d40d81a028c33859fb611624932e754722074eb1095f3e1"
+    },
+    "ff": {
+     "path": "physical/ref_tile/s81_rly_283_we/views/dsfd_rly_283_WE/dsfd_rly_283_WE_ff.lib",
+     "sha256": "4db4fe4d93a85c38851242f6779769de76f3c95ce1226f594fedebe14e396382"
+    },
+    "ss": {
+     "path": "physical/ref_tile/s81_rly_283_we/views/dsfd_rly_283_WE/dsfd_rly_283_WE_ss.lib",
+     "sha256": "a9f78a4307fcf0d4c70a0ef9d7db6aa67459c37c780d88dfa1942925f357560d"
+    }
+   },
+   "closure": "TT +325.07 / FF +8.53 DRC 0",
+   "supersedes_1016a_job": "s81_rly_283_we-v1-05805dc84",
+   "native": {
+    "pass": true,
+    "launch_ps": 193.1,
+    "capture_ps": 103.3,
+    "spread_ps": 3.4,
+    "R_ps": 83.7
+   },
+   "export_fix": true
+  },
+  "dsfd_rly_63_SE": {
+   "verdict": "QUALIFIED",
+   "export_dir": "physical/ref_tile/s81_rly_63_se/views/dsfd_rly_63_SE",
+   "job": "s81_rly_63_se-r4-1480fbbb1",
+   "files": {
+    "lef": {
+     "path": "physical/ref_tile/s81_rly_63_se/views/dsfd_rly_63_SE/dsfd_rly_63_SE.lef",
+     "sha256": "e5c8e4a51464ffad2bcfe3edb1d4d13ce8680dda3b0a923de67a07926a145c8b"
+    },
+    "tt": {
+     "path": "physical/ref_tile/s81_rly_63_se/views/dsfd_rly_63_SE/dsfd_rly_63_SE_tt.lib",
+     "sha256": "d09fe415eba9e50843cc7aec4495975af01d13491bdb12e1732461989f727c4d"
+    },
+    "ff": {
+     "path": "physical/ref_tile/s81_rly_63_se/views/dsfd_rly_63_SE/dsfd_rly_63_SE_ff.lib",
+     "sha256": "d63675999a04843a709c7d8a356ed0d6f516c6cd0dea76085faeacc05a9a2dd3"
+    },
+    "ss": {
+     "path": "physical/ref_tile/s81_rly_63_se/views/dsfd_rly_63_SE/dsfd_rly_63_SE_ss.lib",
+     "sha256": "a8ecd18cdfba43a81ab937f428b8f24522ca7268d920d835091095cbf3058bb0"
+    }
+   },
+   "closure": "TT +336.11 / FF +9.90 DRC 0",
+   "supersedes_1016a_job": "s81_rly_63_se-v2-88e22fcbf",
+   "native": {
+    "pass": true,
+    "launch_ps": 182.8,
+    "capture_ps": 102.5,
+    "spread_ps": 2.8,
+    "R_ps": 59.8
+   },
+   "export_fix": true
+  },
+  "dsfd_rly_63_WE": {
+   "verdict": "QUALIFIED",
+   "export_dir": "physical/ref_tile/s81_rly_63_we/views/dsfd_rly_63_WE",
+   "job": "s81_rly_63_we-r4-1480fbbb1",
+   "files": {
+    "lef": {
+     "path": "physical/ref_tile/s81_rly_63_we/views/dsfd_rly_63_WE/dsfd_rly_63_WE.lef",
+     "sha256": "f6f4398071a7464f852641967c340a0696a919ec8bb1d9ca1cefe585fd0dbdda"
+    },
+    "tt": {
+     "path": "physical/ref_tile/s81_rly_63_we/views/dsfd_rly_63_WE/dsfd_rly_63_WE_tt.lib",
+     "sha256": "716162b360b25b2c1549ef3d852be46b68a9f58141c0d34de4c276870ffc3f8a"
+    },
+    "ff": {
+     "path": "physical/ref_tile/s81_rly_63_we/views/dsfd_rly_63_WE/dsfd_rly_63_WE_ff.lib",
+     "sha256": "25c0f6693c91efa122210d289207a2c80deb647d80583d8075e965c162e12d4c"
+    },
+    "ss": {
+     "path": "physical/ref_tile/s81_rly_63_we/views/dsfd_rly_63_WE/dsfd_rly_63_WE_ss.lib",
+     "sha256": "f1a5c4c1669af3f574c986e720401bdb0a383dff73e8e66671b8bcb786046cab"
+    }
+   },
+   "closure": "TT +335.70 / FF +13.06 DRC 0",
+   "supersedes_1016a_job": "s81_rly_63_we-v2-88e22fcbf",
+   "native": {
+    "pass": true,
+    "launch_ps": 182.8,
+    "capture_ps": 99.3,
+    "spread_ps": 1.3,
+    "R_ps": 60.8
+   },
+   "export_fix": true
+  },
+  "dsfd_rly_63_WN": {
+   "verdict": "QUALIFIED",
+   "export_dir": "physical/ref_tile/s81_rly_63_wn/views/dsfd_rly_63_WN",
+   "job": "s81_rly_63_wn-r4-1480fbbb1",
+   "files": {
+    "lef": {
+     "path": "physical/ref_tile/s81_rly_63_wn/views/dsfd_rly_63_WN/dsfd_rly_63_WN.lef",
+     "sha256": "3afe5d30ba8e08f0122dd8e68a58f88e06d21fb0e4049db17c586e047a50097f"
+    },
+    "tt": {
+     "path": "physical/ref_tile/s81_rly_63_wn/views/dsfd_rly_63_WN/dsfd_rly_63_WN_tt.lib",
+     "sha256": "9c65ef14cb922a623d1eaab039c99fcba9402f42710f137117dde1ce1f80ca85"
+    },
+    "ff": {
+     "path": "physical/ref_tile/s81_rly_63_wn/views/dsfd_rly_63_WN/dsfd_rly_63_WN_ff.lib",
+     "sha256": "5f33b69e4e05e7b7ef482c3dd5d05ec1e862fda8db10580975d23114f82a197d"
+    },
+    "ss": {
+     "path": "physical/ref_tile/s81_rly_63_wn/views/dsfd_rly_63_WN/dsfd_rly_63_WN_ss.lib",
+     "sha256": "faa43b5bffae5c6c310b7615f898dd1a60fbfe92c137be8380826afbf9d57e52"
+    }
+   },
+   "closure": "TT +333.23 / FF +14.31 DRC 0",
+   "supersedes_1016a_job": "s81_rly_63_wn-v2-88e22fcbf",
+   "native": {
+    "pass": true,
+    "launch_ps": 185.5,
+    "capture_ps": 98.6,
+    "spread_ps": 2.7,
+    "R_ps": 60.7
+   },
+   "export_fix": true
+  },
+  "dsfd_rly_63_WS": {
+   "verdict": "QUALIFIED",
+   "export_dir": "physical/ref_tile/s81_rly_63_ws/views/dsfd_rly_63_WS",
+   "job": "s81_rly_63_ws-r4-1480fbbb1",
+   "files": {
+    "lef": {
+     "path": "physical/ref_tile/s81_rly_63_ws/views/dsfd_rly_63_WS/dsfd_rly_63_WS.lef",
+     "sha256": "42f03bc313c33f949df9c3dfe56d0b52eac917e72f68dbe375c55cf8433dea3b"
+    },
+    "tt": {
+     "path": "physical/ref_tile/s81_rly_63_ws/views/dsfd_rly_63_WS/dsfd_rly_63_WS_tt.lib",
+     "sha256": "3e835e73c726e44a02b532836ee8dce7168f2dbff5b1820f399991c4ce351d76"
+    },
+    "ff": {
+     "path": "physical/ref_tile/s81_rly_63_ws/views/dsfd_rly_63_WS/dsfd_rly_63_WS_ff.lib",
+     "sha256": "bd702fbb1e0dcd2507931566dda7e9d4b51757c0df3fb862382c02915b6191f4"
+    },
+    "ss": {
+     "path": "physical/ref_tile/s81_rly_63_ws/views/dsfd_rly_63_WS/dsfd_rly_63_WS_ss.lib",
+     "sha256": "59ee5e09ddf250ae0ac5b766297fcc99ca6af735d7649106e98429af270f1489"
+    }
+   },
+   "closure": "TT +336.98 / FF +12.95 DRC 0",
+   "supersedes_1016a_job": "s81_rly_63_ws-v2-88e22fcbf",
+   "native": {
+    "pass": true,
+    "launch_ps": 182.6,
+    "capture_ps": 100.3,
+    "spread_ps": 2.0,
+    "R_ps": 60.9
+   },
+   "export_fix": true
+  },
+  "dsfd_rly_66_ES": {
+   "verdict": "QUALIFIED",
+   "export_dir": "physical/ref_tile/s81_rly_66_es/views/dsfd_rly_66_ES",
+   "job": "s81_rly_66_es-r4-1480fbbb1",
+   "files": {
+    "lef": {
+     "path": "physical/ref_tile/s81_rly_66_es/views/dsfd_rly_66_ES/dsfd_rly_66_ES.lef",
+     "sha256": "6c8cfed9fe139b9cd58b664538d7b0375f8702559bbf08e8666a0dd71a055712"
+    },
+    "tt": {
+     "path": "physical/ref_tile/s81_rly_66_es/views/dsfd_rly_66_ES/dsfd_rly_66_ES_tt.lib",
+     "sha256": "67e8638cce2f2572ff01f69cffcd5b7efdd0982320ce82e748f38af55cbbd20a"
+    },
+    "ff": {
+     "path": "physical/ref_tile/s81_rly_66_es/views/dsfd_rly_66_ES/dsfd_rly_66_ES_ff.lib",
+     "sha256": "fd89ecc70a1b2ac8cd25ba73a4ac92c50025f6e94c9a9c202b126283793fcd96"
+    },
+    "ss": {
+     "path": "physical/ref_tile/s81_rly_66_es/views/dsfd_rly_66_ES/dsfd_rly_66_ES_ss.lib",
+     "sha256": "971b00b439a4612924cf3b92cee63bd97f819e45716c6448ff56126eab7ef296"
+    }
+   },
+   "closure": "TT +339.76 / FF +30.10 DRC 0",
+   "supersedes_1016a_job": "s81_rly_66_es-g18-8a9388ce8",
+   "native": {
+    "pass": true,
+    "launch_ps": 178.1,
+    "capture_ps": 109.4,
+    "spread_ps": 1.4,
+    "R_ps": 60.2
+   },
+   "export_fix": true
+  },
+  "dsfd_rly_66_WS": {
+   "verdict": "QUALIFIED",
+   "export_dir": "physical/ref_tile/s81_rly_66_ws/views/dsfd_rly_66_WS",
+   "job": "s81_rly_66_ws-r4-1480fbbb1",
+   "files": {
+    "lef": {
+     "path": "physical/ref_tile/s81_rly_66_ws/views/dsfd_rly_66_WS/dsfd_rly_66_WS.lef",
+     "sha256": "e594a218d102ce7897779bc9477b664743a120ad7006270a0f6682a2b27bcde7"
+    },
+    "tt": {
+     "path": "physical/ref_tile/s81_rly_66_ws/views/dsfd_rly_66_WS/dsfd_rly_66_WS_tt.lib",
+     "sha256": "a64d4ec6b21b6527396cdf39b32bf3410f1255370701cd24950dbae68906cb80"
+    },
+    "ff": {
+     "path": "physical/ref_tile/s81_rly_66_ws/views/dsfd_rly_66_WS/dsfd_rly_66_WS_ff.lib",
+     "sha256": "e08411a4d4a0435e40ddd42912cba2ecc7984c1d5665ceb7a1c20af9226f10f7"
+    },
+    "ss": {
+     "path": "physical/ref_tile/s81_rly_66_ws/views/dsfd_rly_66_WS/dsfd_rly_66_WS_ss.lib",
+     "sha256": "9ae0a544e18a3176012381d833154da86237f879d4ed77eeacbeaddf85960c3a"
+    }
+   },
+   "closure": "TT +336.86 / FF +29.23 DRC 0",
+   "supersedes_1016a_job": "s81_rly_66_ws-g18-8a9388ce8",
+   "native": {
+    "pass": true,
+    "launch_ps": 181.9,
+    "capture_ps": 120.3,
+    "spread_ps": 1.0,
+    "R_ps": 60.7
+   },
+   "export_fix": true
+  },
+  "dsfd_sstn_e0c0sinf": {
+   "verdict": "QUALIFIED",
+   "export_dir": "physical/ref_tile/s81net_sstn_e0c0sinf/views/dsfd_sstn_e0c0sinf",
+   "job": "s81net_sstn_e0c0sinf-n6-596b117fb",
+   "files": {
+    "lef": {
+     "path": "physical/ref_tile/s81net_sstn_e0c0sinf/views/dsfd_sstn_e0c0sinf/dsfd_sstn_e0c0sinf.lef",
+     "sha256": "7e7958170150cfd63f670f44690a6930f13756c55586b58478b4149526dad4b0"
+    },
+    "tt": {
+     "path": "physical/ref_tile/s81net_sstn_e0c0sinf/views/dsfd_sstn_e0c0sinf/dsfd_sstn_e0c0sinf_tt.lib",
+     "sha256": "c08cd0692fd1800a96cadf03898dac4bf447b4034a7e2e5876459228d4338ab7"
+    },
+    "ff": {
+     "path": "physical/ref_tile/s81net_sstn_e0c0sinf/views/dsfd_sstn_e0c0sinf/dsfd_sstn_e0c0sinf_ff.lib",
+     "sha256": "31698f3a05dc2bc7f296476edfc7959cfee6468594db4b5c8b8f6da832ff2983"
+    },
+    "ss": {
+     "path": "physical/ref_tile/s81net_sstn_e0c0sinf/views/dsfd_sstn_e0c0sinf/dsfd_sstn_e0c0sinf_ss.lib",
+     "sha256": "1baf9847d6dc0ccbc13ba2a73a10191104495a8057e6e63eb1ccce2a1a6f6c7f"
+    }
+   },
+   "closure": "TT +334.26 / FF +21.40 DRC 0",
+   "supersedes_1016a_job": "s81net_sstn_e0c0sinf-n5-779bcd4be",
+   "native": {
+    "pass": true,
+    "launch_ps": 180.7,
+    "capture_ps": 172.5,
+    "spread_ps": 16.4,
+    "R_ps": 114.3
+   },
+   "export_fix": true
+  },
+  "dsfd_stnh_86x1": {
+   "verdict": "QUALIFIED",
+   "export_dir": "physical/ref_tile/s81fill_stnh_86x1/views/dsfd_stnh_86x1",
+   "job": "s81fill_stnh_86x1-f10-884a902b1",
+   "files": {
+    "lef": {
+     "path": "physical/ref_tile/s81fill_stnh_86x1/views/dsfd_stnh_86x1/dsfd_stnh_86x1.lef",
+     "sha256": "487b496d83b310979fb0bc4624639207fdc419a937da52b4b9708b757e3ed8f9"
+    },
+    "tt": {
+     "path": "physical/ref_tile/s81fill_stnh_86x1/views/dsfd_stnh_86x1/dsfd_stnh_86x1_tt.lib",
+     "sha256": "406acd906124f47ba84a5b81a29e51990ccfeda73fe4f40e0c9de27fe0b1365e"
+    },
+    "ff": {
+     "path": "physical/ref_tile/s81fill_stnh_86x1/views/dsfd_stnh_86x1/dsfd_stnh_86x1_ff.lib",
+     "sha256": "4b5585e38601927fb4bc565ad76e36eaa62b41b939713db2510338809d5cde6a"
+    },
+    "ss": {
+     "path": "physical/ref_tile/s81fill_stnh_86x1/views/dsfd_stnh_86x1/dsfd_stnh_86x1_ss.lib",
+     "sha256": "63c66d025e938650ce193733e90cc92f629f0af8513509a0155d56b9e3a2bfc1"
+    }
+   },
+   "closure": "TT +36.86 / FF +387.84 DRC 0",
+   "supersedes_1016a_job": "s81fill_stnh_86x1-f4-d00852275",
+   "native": {
+    "pass": true,
+    "launch_ps": 167.6,
+    "capture_ps": 114.8,
+    "spread_ps": 1.6,
+    "R_ps": 66.5
+   },
+   "export_fix": true
+  },
+  "dsfd_stnv_86x1": {
+   "verdict": "QUALIFIED",
+   "export_dir": "physical/ref_tile/s81fill_stnv_86x1/views/dsfd_stnv_86x1",
+   "job": "s81fill_stnv_86x1-f10-ae282bdde",
+   "files": {
+    "lef": {
+     "path": "physical/ref_tile/s81fill_stnv_86x1/views/dsfd_stnv_86x1/dsfd_stnv_86x1.lef",
+     "sha256": "d3c165481f03c99024d2b2c315a90eb24d803149821f17d4e68db5ec5e4accee"
+    },
+    "tt": {
+     "path": "physical/ref_tile/s81fill_stnv_86x1/views/dsfd_stnv_86x1/dsfd_stnv_86x1_tt.lib",
+     "sha256": "474229864770c66e0641c44958465f6ece18648274a8422f192fda07cb9796d7"
+    },
+    "ff": {
+     "path": "physical/ref_tile/s81fill_stnv_86x1/views/dsfd_stnv_86x1/dsfd_stnv_86x1_ff.lib",
+     "sha256": "b647481841b0b45b063f67987e02baf111329badb355a5b225198e56210fcbaf"
+    },
+    "ss": {
+     "path": "physical/ref_tile/s81fill_stnv_86x1/views/dsfd_stnv_86x1/dsfd_stnv_86x1_ss.lib",
+     "sha256": "f26cddd5a5cc89e621a4d1b0762e497dc8aec33199a67590da067f11bbf4fafd"
+    }
+   },
+   "closure": "TT +29.41 / FF +387.66 DRC 0",
+   "supersedes_1016a_job": "s81fill_stnv_86x1-f4-d00852275",
+   "native": {
+    "pass": true,
+    "launch_ps": 174.5,
+    "capture_ps": 116.5,
+    "spread_ps": 1.8,
+    "R_ps": 67.5
+   },
+   "export_fix": true
+  },
+  "dsfd_xstg_515": {
+   "verdict": "QUALIFIED",
+   "export_dir": "physical/ref_tile/s81net_xstg_515/views/dsfd_xstg_515",
+   "job": "s81net_xstg_515-n4refclk-bbc0958a4",
+   "files": {
+    "lef": {
+     "path": "physical/ref_tile/s81net_xstg_515/views/dsfd_xstg_515/dsfd_xstg_515.lef",
+     "sha256": "28664e4897fda0d5b11ba56501556c5c7a293210b5b38106d87063ef4e9569e8"
+    },
+    "tt": {
+     "path": "physical/ref_tile/s81net_xstg_515/views/dsfd_xstg_515/dsfd_xstg_515_tt.lib",
+     "sha256": "9d4f1570a0aa615089d734dedf8817a1702a3d6d87ad84d31026b6c0bf3166ce"
+    },
+    "ff": {
+     "path": "physical/ref_tile/s81net_xstg_515/views/dsfd_xstg_515/dsfd_xstg_515_ff.lib",
+     "sha256": "57e49388f3b61363187144de9dd47ab7598f2207ccdf004091c25207526bd728"
+    },
+    "ss": {
+     "path": "physical/ref_tile/s81net_xstg_515/views/dsfd_xstg_515/dsfd_xstg_515_ss.lib",
+     "sha256": "d46292be162fade901a6f9aa5f8d1ae2548fd4c9f20ae0412a56e8585741a508"
+    }
+   },
+   "closure": "TT +178.14 / FF +20.84 DRC 0",
+   "supersedes_1016a_job": "s81net_xstg_515-n3-61a4164c1",
+   "native": {
+    "pass": true,
+    "launch_ps": 115.1,
+    "capture_ps": 126.4,
+    "spread_ps": 13.5,
+    "R_ps": 133.4
+   },
+   "export_fix": true
+  }
+ },
+ "vs_gen26b_binding_0030b": {
+  "binding": "results/arch/s81_native_20261013/view_binding_closed_0030b.json (gen26b --view-binding, 373 masters)",
+  "changed": {
+   "dsfd_node_LLd": "n6-13d6772ae -> ab1-13d5be1a9",
+   "dsfd_node_LLfd": "n6-13d6772ae -> ab1-13d5be1a9",
+   "dsfd_node_LLfu": "n6-13d6772ae -> ab1-13d5be1a9"
+  },
+  "changed_note": "ab1 = same 43.2 x 77.76 outline and RTL as n6, a/b inputs moved W -> E face (S81F-03, S-DIE approved); rows in \"bound\" above",
+  "newly_bindable": {
+   "dsfd_r2l_vr_1024x1__ha_SW": "0030b excluded_masters; n7 (s81net_r2l_vr_1024x1__ha_sw-n7-b51239333) now native PASS + export_fix PASS (row in \"bound\" above)"
+  },
+  "unchanged": "all other S-NET masters in 0030b (relays r4, stn86 f10, sstn n6, xstg n4, NN nodes n6) equal the current main files"
+ }
+}

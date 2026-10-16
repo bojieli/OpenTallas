@@ -62,7 +62,7 @@
    "source": "rtl/hbm_accel/host_static_20261015/ot_hbm_host_static_ingress.sv",
    "params": {
     "MUT": 0,
-    "TARGET_MASK": "256'hffffffff0000000f000000f001f1ffffffffffff0ff1000000000000"
+    "TARGET_MASK": "256'hffffffff0000003f000000f001f1ffffffffffff0ff1000000000000"
    },
    "slot": "host_cp_ingress",
    "owner": "host owner",

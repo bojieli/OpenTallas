@@ -1,0 +1,24 @@
+{
+ "cell": "s81_a2_w0_header",
+ "view": "physical/ref_tile/s81_a2_w0_header_native_0310_r3/views/s81_a2_w0_header",
+ "lib_cell": "s81_a2_w0_header",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 199.6,
+ "spread_ps": 40.9,
+ "outputs": 1222,
+ "inputs": 1220,
+ "launch_ps": 172.6,
+ "launch_pin": "o_tag[258]",
+ "capture_ps": 159.3,
+ "capture_pin": "i_tag[395]",
+ "launch_over": 0,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pass": true,
+ "fail_why": "",
+ "audit_input_artifact": "/home/ubuntu/artifacts/s81-vm-parent-leaves-0310/header_closed/views/s81_a2_w0_header"
+}

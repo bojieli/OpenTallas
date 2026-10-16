@@ -68,8 +68,8 @@
  "job": {
   "owner": "Claude:Q-ELEM-0030",
   "branch": "claude/qelem-ectl-a-2215",
-  "tag": "mc3",
-  "purpose": "Four actual independent phase-aligned pll_hbm_data storage roots: fixed bit slices replace a single >15k storage root; no clock gating, no timing exception between same-phase roots, no normal-cycle delta. Front width259.2 removes measured66.4% utilization failure.",
+  "tag": "mc3b",
+  "purpose": "Four actual independent phase-aligned pll_hbm_data storage roots: fixed bit slices replace a single >15k storage root; no clock gating, no timing exception between same-phase roots, no normal-cycle delta. Front width259.2 removes measured66.4% utilization failure. | mc3b (Q-ELEM 10-16): mc3-9196b2eb1 EARLY_FAIL_HOLD at CTS: the only failing endpoint was idle_hbm (setup -527 / hold -90 ps): raw controller_co[0]/compiled_hbm_put pins fed the idle compare, and idle_hbm was constrained as a core_clk output. Fix: idle_hbm from registered pin captures only (+1 pll_hbm edge on the drain observation, no schedule use) and idle_hbm in the hclk output set.",
   "benches": [
    {
     "name": "return_slots_exact_two_phases_and_mutants",
@@ -119,7 +119,7 @@
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
  },
- "structural_change": "Four actual independent phase-aligned pll_hbm_data storage roots: fixed bit slices replace a single >15k storage root; no clock gating, no timing exception between same-phase roots, no normal-cycle delta. Front width259.2 removes measured66.4% utilization failure.",
+ "structural_change": "Four actual independent phase-aligned pll_hbm_data storage roots: fixed bit slices replace a single >15k storage root; no clock gating, no timing exception between same-phase roots, no normal-cycle delta. Front width259.2 removes measured66.4% utilization failure. | mc3b (Q-ELEM 10-16): mc3-9196b2eb1 EARLY_FAIL_HOLD at CTS: the only failing endpoint was idle_hbm (setup -527 / hold -90 ps): raw controller_co[0]/compiled_hbm_put pins fed the idle compare, and idle_hbm was constrained as a core_clk output. Fix: idle_hbm from registered pin captures only (+1 pll_hbm edge on the drain observation, no schedule use) and idle_hbm in the hclk output set.",
  "pin_regs": {
   "enable": false,
   "reason": "Actual RTL captures the data boundary in each original domain; explicit four phase-aligned storage clock inputs split sink count without any normal-cycle delta. The component production bench accounts every existing register. Clock/reset ports are domain controls."
