@@ -86,8 +86,9 @@ MUT={'positive':[],
  'unrelayed_own_y':[('assign yb_all[16*n +:16]=yb_r[16*K +:16];','assign yb_all[16*n +:16]=yb_loc[16*K +:16];')],
  'missing_fv_stage':[('assign e_rst=rst_q; assign e_tid=tid_q; assign e_last=last_q; assign e_fv=fv_q;','assign e_rst=rst_q; assign e_tid=tid_q; assign e_last=last_q; assign e_fv=fv;')],
  'relay_lane_order':[('assign yb_rel[16*(c+4*k) +:16]=yb_fwd[16*k +:16];','assign yb_rel[16*(c+4*k) +:16]=yb_fwd[16*(3-k) +:16];')],
- 'bad_lane':[('hrq_n[64*SH*(c+4*bank) +:64*SH]','hrq_n[64*SH*((c+1)%4+4*bank) +:64*SH]')]}
-HALVES={'positive':('a','b','rel'),'unrelayed_own_y':('a',),'missing_fv_stage':('a',),'relay_lane_order':('rel',),'bad_lane':('a','b')}
+ 'bad_lane':[('hrq_n[64*SH*(c+4*bank) +:64*SH]','hrq_n[64*SH*((c+1)%4+4*bank) +:64*SH]')],
+ 'cs_unrelayed':[('assign e_cs=(COLUMN==3) ? cs_q : cs_rel;','assign e_cs=(COLUMN==3) ? cs_q : cs;')]}
+HALVES={'positive':('a','b','rel'),'unrelayed_own_y':('a',),'missing_fv_stage':('a',),'relay_lane_order':('rel',),'bad_lane':('a','b'),'cs_unrelayed':('a',)}
 for variant,subs in MUT.items():
  x=dut
  for o,n_ in subs:

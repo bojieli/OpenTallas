@@ -26,6 +26,10 @@ module ot_s81_hc_ctra_column #(
     input  wire [63:0]            yb_loc,           // YB_STAGE: own x-column lanes {n=COLUMN+12,+8,+4,COLUMN} 16 b each
     output wire [63:0]            yb_fwd,           // YB_STAGE: the relayed yb_loc (one cycle) for the peers / ctrb
     input  wire [191:0]           yb_peer,          // YB_STAGE: the other three columns' yb_fwd, ascending column
+    output wire [127:0]           cs_fwd,           // YB_STAGE: COLUMN3 relays cs (ctnl column-3 accumulators) for columns 0..2
+    input  wire [127:0]           cs_rel,
+    output wire                   hov_fwd,          // YB_STAGE: COLUMN0 relays hov_d (ctpl m0) for columns 1..3
+    input  wire                   hov_rel,
 
     output wire [128*SH-1:0]      rdm,
     output wire [16*S_RT-1:0]     rq_q,
@@ -77,11 +81,13 @@ module ot_s81_hc_ctra_column #(
             end
         end
         assign {e_yb_s,e_yb_n}=yb_all;
-        assign e_rst=rst_q; assign e_tid=tid_q; assign e_last=last_q; assign e_fv=fv_q; assign e_fdx=fdx_q; assign e_cs=cs_q;
-        assign e_hov=hov_q; assign e_nflt_n=nflt_nq; assign e_nflt_s=nflt_sq; assign e_hnz_n=hnz_nq; assign e_hnz_s=hnz_sq;
+        assign e_rst=rst_q; assign e_tid=tid_q; assign e_last=last_q; assign e_fv=fv_q; assign e_fdx=fdx_q;
+        // cs / hov_d: one relay per row (no second register in the consuming column), same +1 as every fv-domain pin
+        assign e_cs=(COLUMN==3) ? cs_q : cs_rel;   assign cs_fwd=(COLUMN==3) ? cs_q : '0;
+        assign e_hov=(COLUMN==0) ? hov_q : hov_rel; assign hov_fwd=(COLUMN==0) ? hov_q : 1'b0; assign e_nflt_n=nflt_nq; assign e_nflt_s=nflt_sq; assign e_hnz_n=hnz_nq; assign e_hnz_s=hnz_sq;
         assign e_pflt_n=pflt_nq; assign e_pflt_s=pflt_sq;
     end else begin : g_direct
-        assign yb_fwd='0;
+        assign yb_fwd='0; assign cs_fwd='0; assign hov_fwd=1'b0;
         assign e_rst=rst_in; assign e_tid=tid; assign e_last=last; assign e_fv=fv; assign e_fdx=fdx; assign e_cs=cs;
         assign e_hov=hov_d; assign e_nflt_n=nflt_n; assign e_nflt_s=nflt_s; assign e_hnz_n=hnz_n; assign e_hnz_s=hnz_s;
         assign e_pflt_n=pflt_n; assign e_pflt_s=pflt_s; assign e_yb_n=yb_n; assign e_yb_s=yb_s;
@@ -284,6 +290,10 @@ module ot_s81_hc_ctra_columns #(
             .yb_loc(yb_loc),
             .yb_fwd(yb_fwd),
             .yb_peer(yb_peer),
+            .cs_fwd(),
+            .cs_rel(g_column[3].u.cs_fwd),
+            .hov_fwd(),
+            .hov_rel(g_column[0].u.hov_fwd),
             .rdm(col_data),
             .rq_q(local_rq_q),
             .hs_run(local_hs_run),
