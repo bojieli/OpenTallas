@@ -21,7 +21,8 @@ module qkd_pv16_vport #(parameter integer MUT = 0) (
     // group {lane, 0} (even q) and group {lane, 1} (odd q): per quarter Q a ring word valid, tag (row t), sector
     input wire [3:0] in_v0, input wire [4*14-1:0] in_t0, input wire [4*256-1:0] in_d0,
     input wire [3:0] in_v1, input wire [4*14-1:0] in_t1, input wire [4*256-1:0] in_d1,
-    output reg out_valid, output reg [13:0] out_t, output reg [1023:0] out_v,
+    output reg out_valid, output reg [13:0] out_t,
+    output reg [511:0] out_v_lo, output reg [511:0] out_v_hi,     // V row dims 0-63 (quarters 0-1) / 64-127 (2-3)
     output reg fault
 );
     // ---- input pin registers (every port registered) ----
@@ -49,5 +50,5 @@ module qkd_pv16_vport #(parameter integer MUT = 0) (
     always @(posedge ck or negedge rst_n)
         if (!rst_n) begin out_valid <= 1'b0; fault <= 1'b0; end
         else begin out_valid <= slot_q; if (bad) fault <= 1'b1; end
-    always @(posedge ck) begin out_t <= t0; out_v <= row; end
+    always @(posedge ck) begin out_t <= t0; {out_v_hi, out_v_lo} <= row; end
 endmodule
