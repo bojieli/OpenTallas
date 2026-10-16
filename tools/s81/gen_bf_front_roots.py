@@ -5,7 +5,8 @@ The previous single IO root spans all four faces. Native pass1 has 117 capture
 failures (reset329.5ps, data up to210ps). This candidate separates primary north
 capture and west/east seam flops from the south capture/lockup bank. All clocks
 are synchronous phase-zero roots, with ordinary setup/hold on every crossing.
-Five real reset relays add one boot release edge, not a payload pipeline edge.
+Four real reset relays add one boot release edge, not a payload pipeline edge.
+The north data bank is intentionally unreset, as in the original source.
 """
 import hashlib
 import json
@@ -29,13 +30,11 @@ def main():
     head,body=s[:pos],s[pos:]
     body=re.sub(r'(?<!\.)\brst_n\b','core_rst',body)
     relay='''    // Async assert, one real synchronous boot-release edge at each root.
-    wire core_rst,south_rst,north_rst,west_rst,east_rst;
+    wire core_rst,south_rst,west_rst,east_rst;
     ot_v41_kreg #(.W(1),.AR(1),.RV(1'b0)) u_core_reset
       (.clk(clk),.arst_n(rst_n),.d(1'b1),.q(core_rst));
     ot_v41_kreg #(.W(1),.AR(1),.RV(1'b0)) u_south_reset
       (.clk(io_clk),.arst_n(rst_n),.d(1'b1),.q(south_rst));
-    ot_v41_kreg #(.W(1),.AR(1),.RV(1'b0)) u_north_reset
-      (.clk(io_n),.arst_n(rst_n),.d(1'b1),.q(north_rst));
     ot_v41_kreg #(.W(1),.AR(1),.RV(1'b0)) u_west_reset
       (.clk(io_w),.arst_n(rst_n),.d(1'b1),.q(west_rst));
     ot_v41_kreg #(.W(1),.AR(1),.RV(1'b0)) u_east_reset
@@ -58,16 +57,15 @@ def main():
             if (!core_rst) begin r_cfg_v <= 1'b0; r_go <= 1'b0; r_xs_v <= 1'b0; r_xb_v <= 1'b0; end
             else begin r_cfg_v <= cfg_v; r_go <= go; r_xs_v <= xs_v; r_xb_v <= xb_v; end"""
     new="""        always @(posedge pin_clk or negedge south_rst)
-            if (!south_rst) begin r_cfg_v <= 1'b0; r_go <= 1'b0; r_xs_v <= 1'b0; end
-            else begin r_cfg_v <= cfg_v; r_go <= go; r_xs_v <= xs_v; end
-        always @(posedge north_clk or negedge north_rst)
-            if (!north_rst) r_xb_v <= 1'b0; else r_xb_v <= xb_v;"""
+            if (!south_rst) begin r_cfg_v <= 1'b0; r_go <= 1'b0; r_xs_v <= 1'b0; r_xb_v <= 1'b0; end
+            else begin r_cfg_v <= cfg_v; r_go <= go; r_xs_v <= xs_v; r_xb_v <= xb_v; end"""
     body=once(body,old,new)
     start=body.index('        always @(posedge pin_clk) begin\n            r_cfg_a')
     end=body.index('        end',start)+len('        end')
     block=body[start:end]
-    north=[line for line in block.splitlines() if re.search(r'\br_xb_\w+ <=',line)]
-    assert len(north)==5,north
+    # Only xb[1023:0] is on N. Its44 metadata/control bits are actually on S.
+    north=[line for line in block.splitlines() if re.search(r'\br_xb_d <=',line)]
+    assert len(north)==1,north
     south='\n'.join(line for line in block.splitlines() if line not in north)
     body=body[:start]+south+'\n        always @(posedge north_clk) begin\n'+'\n'.join(north)+'\n        end'+body[end:]
     body=once(body,'u_seam0 (.clk(pin_clk), .rst_n(core_rst),','u_seam0 (.clk(io_w), .rst_n(west_rst),')
@@ -81,8 +79,8 @@ def main():
     w=once(w,'    ot_s81_bf_front #(','    ot_s81_bf_front_roots #(')
     w=once(w,'.io_clk(io_clk)', '.io_clk(io_clk), .io_n(io_n), .io_w(io_w), .io_e(io_e)')
     wo=ROOT/'rtl/dsrom_sys/s81_die_bind/dsfd_bf_front_roots.sv';wo.write_text(w)
-    record=dict(status='SOURCE_CANDIDATE_UNPROVEN',payload_cycles_added=0,boot_reset_release_edges_added=1,
-      roots={'ck':'existing core and core-source seam lockup','io_clk':'south primary capture/status/programme and IO-source lockups','io_n':'north xb primary capture','io_w':'west c0 seam flops','io_e':'east c1 seam flops'},
+    record=dict(status='SOURCE_CANDIDATE_UNPROVEN',payload_cycles_added=0,boot_reset_release_edges_added=1,real_reset_relays=4,north_data_reset=False,
+      roots={'ck':'existing core and core-source seam lockup','io_clk':'south primary capture/status/programme, xb metadata/control, and IO-source lockups','io_n':'north xb[1023:0] data primary capture only','io_w':'west c0 seam flops','io_e':'east c1 seam flops'},
       inputs={str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in [fp,wp]},
       outputs={str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in [out,wo]},
       physical_qualification=False,clock_pins_homes_and_slot_grant='PENDING',native_capture='PENDING')

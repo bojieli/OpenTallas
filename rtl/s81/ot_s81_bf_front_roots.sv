@@ -146,13 +146,11 @@ module ot_s81_bf_front_roots #(
 );
 
     // Async assert, one real synchronous boot-release edge at each root.
-    wire core_rst,south_rst,north_rst,west_rst,east_rst;
+    wire core_rst,south_rst,west_rst,east_rst;
     ot_v41_kreg #(.W(1),.AR(1),.RV(1'b0)) u_core_reset
       (.clk(clk),.arst_n(rst_n),.d(1'b1),.q(core_rst));
     ot_v41_kreg #(.W(1),.AR(1),.RV(1'b0)) u_south_reset
       (.clk(io_clk),.arst_n(rst_n),.d(1'b1),.q(south_rst));
-    ot_v41_kreg #(.W(1),.AR(1),.RV(1'b0)) u_north_reset
-      (.clk(io_n),.arst_n(rst_n),.d(1'b1),.q(north_rst));
     ot_v41_kreg #(.W(1),.AR(1),.RV(1'b0)) u_west_reset
       (.clk(io_w),.arst_n(rst_n),.d(1'b1),.q(west_rst));
     ot_v41_kreg #(.W(1),.AR(1),.RV(1'b0)) u_east_reset
@@ -282,10 +280,8 @@ module ot_s81_bf_front_roots #(
             if (!south_rst) begin r_busy <= 1'b0; r_fault <= 1'b0; end
             else begin r_busy <= busy_pin_d; r_fault <= fault_pin_d; end
         always @(posedge pin_clk or negedge south_rst)
-            if (!south_rst) begin r_cfg_v <= 1'b0; r_go <= 1'b0; r_xs_v <= 1'b0; end
-            else begin r_cfg_v <= cfg_v; r_go <= go; r_xs_v <= xs_v; end
-        always @(posedge north_clk or negedge north_rst)
-            if (!north_rst) r_xb_v <= 1'b0; else r_xb_v <= xb_v;
+            if (!south_rst) begin r_cfg_v <= 1'b0; r_go <= 1'b0; r_xs_v <= 1'b0; r_xb_v <= 1'b0; end
+            else begin r_cfg_v <= cfg_v; r_go <= go; r_xs_v <= xs_v; r_xb_v <= xb_v; end
         always @(posedge pin_clk) begin
             r_cfg_a <= cfg_a;
             r_cfg_d <= cfg_d;
@@ -298,12 +294,12 @@ module ot_s81_bf_front_roots #(
             r_xs_q1 <= xs_q1;
             r_xs_e1 <= xs_e1;
             r_xs_pos <= xs_pos;
-        end
-        always @(posedge north_clk) begin
             r_xb_pos <= xb_pos;
             r_xb_b <= xb_b;
             r_xb_sv <= xb_sv;
             r_xb_u <= xb_u;
+        end
+        always @(posedge north_clk) begin
             r_xb_d <= xb_d;
         end
         // PINLAT: the latched data copies (r_l* names: the pin-group CTS hook clocks them with the g_pin.r_* registers)
