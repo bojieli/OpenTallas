@@ -14,5 +14,12 @@
   "physical_output_bits_added": 5,
   "flops_added_per_controller": 5,
   "instances": 128,
-  "new_physical_gate_or_adoption": false
+  "new_physical_gate_or_adoption": false,
+  "parent_master": "ot_hbm_svc_stack_fault_split",
+  "parent_input_flops_added_each": 160,
+  "parent_instances": 4,
+  "parent_fault_observation_edges_added": 0,
+  "total_declared_flops_added": 1280,
+  "legacy_parent_source_unchanged": true,
+  "parent_candidate_sha256": "1ef80b574f382be3f6fd3b4ea4c2269de42fdb5ad7552023ae377bc657a57595"
 }
