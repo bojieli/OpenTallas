@@ -31,16 +31,15 @@
  "pins": {
   "S": [
    "bc_hr",
+   "clk",
+   "rst_n",
    "bt_d"
   ],
   "N": [
    "bc_hr_q",
    "bt_d_q"
   ],
-  "W": [
-   "clk",
-   "rst_n"
-  ],
+  "W": [],
   "E": []
  },
  "clock_port": "clk",
