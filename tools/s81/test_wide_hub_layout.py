@@ -117,6 +117,27 @@ class WideHubLayout(unittest.TestCase):
         self.assertGreater(x2-x0,104)
         self.assertGreater(x3-x2,157)
 
+    def test_combined_native_parent_reservations_do_not_squeeze_upper_road(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            out=Path(tmp)/'combined.json'
+            subprocess.run([sys.executable,str(ROOT/'tools/s81/wide_hub_layout.py'),'--canonical',CAP,
+                '--block','vm=4104,4644','--block','hc_s=1816.536,9583.896',
+                '--block','hc_t=1816.536,10160.616','--column-gap','21.6','--out',str(out)],check=True,capture_output=True)
+            r=json.loads(out.read_text())
+        b=r['blocks'];mix=r['mix4_slot'];wide=r['wide']
+        self.assertGreaterEqual(wide['corr_w'][0]-(mix[1]+mix[3]),21.6)
+        self.assertGreaterEqual(wide['corr_w'][0]-(b['sp_su_s'][1]+b['sp_su_s'][3]),21.6)
+        for key in ('su_vm_channel','vm_capture_channel'):
+            x0,y0,x1,y1=wide[key]
+            self.assertGreaterEqual(x1-x0,21.6-.001)
+            self.assertGreater(y1,y0)
+        self.assertGreaterEqual(wide['s14e'][1]-wide['s14e'][0],399)
+        self.assertGreaterEqual(24624-(b['sp_hc_t'][1]+b['sp_hc_t'][3]),800)
+        # The source helper top-anchors VM to capture; growing its height
+        # therefore moves its SOUTH edge, without moving MIX4 north.
+        self.assertLess(mix[1]+mix[3],14000)
+        self.assertGreater(b['sp_vm'][1],7900)
+
     def test_render_preserves_all_six_hcp_homes(self):
         sys.path.insert(0,str(ROOT/'tools'))
         from die_layout_render import from_s81

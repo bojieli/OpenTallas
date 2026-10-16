@@ -48,6 +48,7 @@ def main():
     ap.add_argument('--band-top', type=float, default=3041.256, help='SW PHY/CTRL/SVC band top (um)')
     ap.add_argument('--spine-gap', type=float, default=172.8)
     ap.add_argument('--abut', type=float, default=21.6)
+    ap.add_argument('--column-gap', type=float, default=0.0, help='explicit SU|VM and VM|capture interface channels (um)')
     ap.add_argument('--seam', type=float, default=43.2, help='capture | gather seam (pq-cnt leaves)')
     ap.add_argument('--su-channel', type=float, default=604.8, help='service channel under the SU (VM S-face ends -> SW service)')
     ap.add_argument('--mix4-west', type=float, default=875.0, help='MIX4 overhangs the SU top by this much (widens the W strip)')
@@ -68,8 +69,9 @@ def main():
     hx0, hx1 = cap['wide_hub']['hub_x_um']
     # ---- x
     su_x = up(hx0 + a.s14w, GX)
-    vm_x = up(su_x + B['su_s'][0], GX)
-    x_sp = up(vm_x + B['vm'][0], GX)
+    assert a.column_gap >= 0, 'column gap must be nonnegative'
+    vm_x = up(su_x + B['su_s'][0] + a.column_gap, GX)
+    x_sp = up(vm_x + B['vm'][0] + a.column_gap, GX)
     x_vch = up(x_sp + a.cw, GX)
     x_spe = up(x_vch + a.vch, GX)
     x_fe = up(x_sp + 2 * a.cw + a.vch, GX)
@@ -136,6 +138,10 @@ def main():
                     s14e_um=round(s14e, 3), vch_um=a.vch, top_um=round(top, 3), su_top=round(su_top, 3),
                     vm_top=round(vm_top, 3), mix4_top=round(mix4_top, 3), hc_corridor=[round(c0, 3), round(c1, 3)],
                     w_corridor=[wc0, round(wc1, 3)]))
+    if a.column_gap:
+        rec['wide']['column_gap_um'] = a.column_gap
+        rec['wide']['su_vm_channel'] = [su_x+B['su_s'][0], max(su_y,vm_y), vm_x, min(su_top,vm_top)]
+        rec['wide']['vm_capture_channel'] = [vm_x+B['vm'][0],vm_y,x_sp,vm_top]
     a.out.parent.mkdir(parents=True, exist_ok=True)
     a.out.write_text(json.dumps(rec, indent=1) + '\n')
     print(json.dumps(rec['checks']))
