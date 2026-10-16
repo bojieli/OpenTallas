@@ -1206,7 +1206,10 @@ def _late_pin_grant(v):
 
     def masters(model, k=1, port_bits=None):
         out = base(model, k, port_bits)
+        from qwen_kv_die import tp8b_v5 as _V5
         for mname, ports in late.items():
+            if mname in _V5.VIEWS:
+                raise ValueError(f'OT_SPLIT_PIN_GRANT late_masters: {mname} has a closed view; its pins are not re-assignable here')
             M_ = out.get(mname)
             if M_ is None:
                 raise ValueError(f'OT_SPLIT_PIN_GRANT late_masters: master {mname} not on this die')
@@ -1218,6 +1221,9 @@ def _late_pin_grant(v):
                 f = g['face']
                 pos = [round(float(z), 4) for z in g['positions']]
                 lays = list(g['layers'])
+                legal = ('M2', 'M4', 'M6') if f in ('W', 'E') else ('M3', 'M5', 'M7')
+                if f not in ('W', 'E', 'N', 'S') or len(lays) != len(pos) or not lays or any(L not in legal for L in lays):
+                    raise ValueError(f'OT_SPLIT_PIN_GRANT late_masters: {mname}.{pn} invalid face/layers {f}/{lays}')
                 if min(pos) < 0.1 or max(pos) > (M_.h if f in 'WE' else M_.w) - 0.1:
                     raise ValueError(f'OT_SPLIT_PIN_GRANT late_masters: {mname}.{pn} outside its {f} face')
                 M_.ports[pn] = ('pins', sp[1], f, max(set(lays), key=lays.count), pos, 1)
