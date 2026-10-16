@@ -210,5 +210,15 @@
  "slot_change_request": "qkd_ectl slot unchanged (647.976 x 129.576, three abutting leaves A 254.88 | B 254.88 | C 138.24); parent becomes rtl/qwen_sys/split_20261014/qkd_ectl3_direct_s.sv (wires only, ck[2:0]); C.x_a (W 94-106) -> A.x_i (E 112-124) and A.rs_o[0] -> C.rsv_i are parent nets over the B slot on M6+ (<= 255 um).",
  "children": [],
  "inter": [],
- "purpose": "Q-VMWB/Q-ATTN r3 2026-10-15: native static ECTL leaf C at the production binding of ot_qwen_tp8_attention_native_stack (STATIC_QK 1, QK_ISSUE_AGE 34, ROW_RETURN_LAT 21 = K_EXT+5, HXK 8 = hierarchical head score skew). Same outline/pins as closed qkd_ectl_c_tp8_direct; K-pass tag delay +8 stages (13 b x 8 flops). Evidence of the binding: tools/qwen_attention_native/minparent_1015/fix_r3/receipt.json (T8192 EXACT, rejecting mutants)."
+ "purpose": "Q-VMWB/Q-ATTN r3 2026-10-15: native static ECTL leaf C at the production binding of ot_qwen_tp8_attention_native_stack (STATIC_QK 1, QK_ISSUE_AGE 34, ROW_RETURN_LAT 21 = K_EXT+5, HXK 8 = hierarchical head score skew). Same outline/pins as closed qkd_ectl_c_tp8_direct; K-pass tag delay +8 stages (13 b x 8 flops). Evidence of the binding: tools/qwen_attention_native/minparent_1015/fix_r3/receipt.json (T8192 EXACT, rejecting mutants).",
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "why": "static native binding of ECTL leaf C: STATIC_QK 1, ROW_RETURN_LAT 21 (was one edge early, age-99 fault), HXK 8 (tag delay plumbed through qkd_ectl_native_direct_tp8 / ot_qkd_ectl_parts); the closed qkd_ectl_c_tp8_direct view is the credit-era default (STATIC_QK 0, RL 9, HXK 0) and does not implement this schedule",
+  "params": {
+   "STATIC_QK": 1,
+   "QK_ISSUE_AGE": 34,
+   "ROW_RETURN_LAT": 21,
+   "HXK": 8
+  }
+ }
 }

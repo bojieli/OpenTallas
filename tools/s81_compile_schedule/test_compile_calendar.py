@@ -189,6 +189,21 @@ class CompileTest(unittest.TestCase):
         self.binding['jobs']['su']['pipeline_abi']=dict(rec)
         self.assertTrue(self.run_compile()['dispatch_eligible'])
 
+    def test_fld_record_carries_the_static_return_node_r2_pipeline(self):
+        # S-NET r2 node: +3 edges per node level (PIPE_C 10); field durations measured on the 7-edge node are refused
+        import importlib.util
+        spec=importlib.util.spec_from_file_location('src',ROOT/'tools/s81/static_return_calendar.py')
+        src=importlib.util.module_from_spec(spec); spec.loader.exec_module(src)
+        rec=PIPELINE_ABI['fld']
+        self.assertEqual(rec['return_node_exit_edges'],src.PIPE_C)
+        self.assertEqual(rec['return_node_levels_max'],6)
+        good=self.binding['jobs']['field']['pipeline_abi']
+        self.binding['jobs']['field']['pipeline_abi']=dict(good,return_node_exit_edges=7)
+        self.assertFalse(self.run_compile()['dispatch_eligible'])
+        with self.assertRaises(ValueError): schedule_jobs(self.program,self.binding)
+        self.binding['jobs']['field']['pipeline_abi']=good
+        self.assertTrue(self.run_compile()['dispatch_eligible'])
+
     def test_sa2x2rp_floorplan_stages_require_remeasured_durations(self):
         # SA_2x2_RP: SU-VM link +3 relay edges, field round trip 140 -> 118: old measurements are refused
         self.assertEqual(PIPELINE_ABI['su']['vm_link_relay_extra_edges'],3)

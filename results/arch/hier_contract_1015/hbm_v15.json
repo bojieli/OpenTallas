@@ -66428,7 +66428,7 @@
    "strap_layer": "M8",
    "signal_max_layer": "M6",
    "layer_cap": "M6",
-   "version": 1,
+   "version": 7,
    "pins": [
     {
      "name": "clk_ctl",
@@ -66493,72 +66493,6 @@
      "span_um": [
       1463.304,
       1512.456
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "rst_n",
-     "face": "E",
-     "layer": "M4",
-     "offset": 1512.504,
-     "span_um": [
-      1512.456,
-      1512.552
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "rank[6:0]",
-     "face": "E",
-     "layer": "M4",
-     "offset": 1512.888,
-     "span_um": [
-      1512.552,
-      1513.224
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "first_ord[10:0]",
-     "face": "E",
-     "layer": "M4",
-     "offset": 1513.752,
-     "span_um": [
-      1513.224,
-      1514.28
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "nkeys[11:0]",
-     "face": "E",
-     "layer": "M4",
-     "offset": 1514.856,
-     "span_um": [
-      1514.28,
-      1515.432
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "keep_en",
-     "face": "E",
-     "layer": "M4",
-     "offset": 1515.48,
-     "span_um": [
-      1515.432,
-      1515.528
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "keep_bitmap[341:0]",
-     "face": "E",
-     "layer": "M4",
-     "offset": 1531.944,
-     "span_um": [
-      1515.528,
-      1548.36
      ],
      "pins_per_um": 10.417
     },
@@ -66669,6 +66603,72 @@
      "span_um": [
       1498.224,
       2342.256
+     ],
+     "pins_per_um": 10.417
+    },
+    {
+     "name": "rst_n",
+     "face": "W",
+     "layer": "M4",
+     "offset": 1561.656,
+     "span_um": [
+      1561.608,
+      1561.704
+     ],
+     "pins_per_um": 10.417
+    },
+    {
+     "name": "rank[6:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 1562.04,
+     "span_um": [
+      1561.704,
+      1562.376
+     ],
+     "pins_per_um": 10.417
+    },
+    {
+     "name": "first_ord[10:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 1562.904,
+     "span_um": [
+      1562.376,
+      1563.432
+     ],
+     "pins_per_um": 10.417
+    },
+    {
+     "name": "nkeys[11:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 1564.008,
+     "span_um": [
+      1563.432,
+      1564.584
+     ],
+     "pins_per_um": 10.417
+    },
+    {
+     "name": "keep_en",
+     "face": "W",
+     "layer": "M4",
+     "offset": 1564.632,
+     "span_um": [
+      1564.584,
+      1564.68
+     ],
+     "pins_per_um": 10.417
+    },
+    {
+     "name": "keep_bitmap[341:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 1581.096,
+     "span_um": [
+      1564.68,
+      1597.512
      ],
      "pins_per_um": 10.417
     }
@@ -66759,7 +66759,7 @@
    "strap_layer": "M8",
    "signal_max_layer": "M6",
    "layer_cap": "M6",
-   "version": 1,
+   "version": 7,
    "pins": [
     {
      "name": "clk_ctl",
@@ -66824,72 +66824,6 @@
      "span_um": [
       1463.304,
       1512.456
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "rst_n",
-     "face": "E",
-     "layer": "M4",
-     "offset": 1512.504,
-     "span_um": [
-      1512.456,
-      1512.552
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "rank[6:0]",
-     "face": "E",
-     "layer": "M4",
-     "offset": 1512.888,
-     "span_um": [
-      1512.552,
-      1513.224
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "first_ord[10:0]",
-     "face": "E",
-     "layer": "M4",
-     "offset": 1513.752,
-     "span_um": [
-      1513.224,
-      1514.28
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "nkeys[11:0]",
-     "face": "E",
-     "layer": "M4",
-     "offset": 1514.856,
-     "span_um": [
-      1514.28,
-      1515.432
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "keep_en",
-     "face": "E",
-     "layer": "M4",
-     "offset": 1515.48,
-     "span_um": [
-      1515.432,
-      1515.528
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "keep_bitmap[341:0]",
-     "face": "E",
-     "layer": "M4",
-     "offset": 1531.944,
-     "span_um": [
-      1515.528,
-      1548.36
      ],
      "pins_per_um": 10.417
     },
@@ -67000,6 +66934,72 @@
      "span_um": [
       1498.224,
       2342.256
+     ],
+     "pins_per_um": 10.417
+    },
+    {
+     "name": "rst_n",
+     "face": "W",
+     "layer": "M4",
+     "offset": 1561.656,
+     "span_um": [
+      1561.608,
+      1561.704
+     ],
+     "pins_per_um": 10.417
+    },
+    {
+     "name": "rank[6:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 1562.04,
+     "span_um": [
+      1561.704,
+      1562.376
+     ],
+     "pins_per_um": 10.417
+    },
+    {
+     "name": "first_ord[10:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 1562.904,
+     "span_um": [
+      1562.376,
+      1563.432
+     ],
+     "pins_per_um": 10.417
+    },
+    {
+     "name": "nkeys[11:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 1564.008,
+     "span_um": [
+      1563.432,
+      1564.584
+     ],
+     "pins_per_um": 10.417
+    },
+    {
+     "name": "keep_en",
+     "face": "W",
+     "layer": "M4",
+     "offset": 1564.632,
+     "span_um": [
+      1564.584,
+      1564.68
+     ],
+     "pins_per_um": 10.417
+    },
+    {
+     "name": "keep_bitmap[341:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 1581.096,
+     "span_um": [
+      1564.68,
+      1597.512
      ],
      "pins_per_um": 10.417
     }
@@ -67090,7 +67090,7 @@
    "strap_layer": "M8",
    "signal_max_layer": "M6",
    "layer_cap": "M6",
-   "version": 1,
+   "version": 7,
    "pins": [
     {
      "name": "clk_ctl",
@@ -67155,72 +67155,6 @@
      "span_um": [
       1463.304,
       1512.456
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "rst_n",
-     "face": "E",
-     "layer": "M4",
-     "offset": 1512.504,
-     "span_um": [
-      1512.456,
-      1512.552
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "rank[6:0]",
-     "face": "E",
-     "layer": "M4",
-     "offset": 1512.888,
-     "span_um": [
-      1512.552,
-      1513.224
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "first_ord[10:0]",
-     "face": "E",
-     "layer": "M4",
-     "offset": 1513.752,
-     "span_um": [
-      1513.224,
-      1514.28
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "nkeys[11:0]",
-     "face": "E",
-     "layer": "M4",
-     "offset": 1514.856,
-     "span_um": [
-      1514.28,
-      1515.432
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "keep_en",
-     "face": "E",
-     "layer": "M4",
-     "offset": 1515.48,
-     "span_um": [
-      1515.432,
-      1515.528
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "keep_bitmap[341:0]",
-     "face": "E",
-     "layer": "M4",
-     "offset": 1531.944,
-     "span_um": [
-      1515.528,
-      1548.36
      ],
      "pins_per_um": 10.417
     },
@@ -67331,6 +67265,72 @@
      "span_um": [
       1498.224,
       2342.256
+     ],
+     "pins_per_um": 10.417
+    },
+    {
+     "name": "rst_n",
+     "face": "W",
+     "layer": "M4",
+     "offset": 1561.656,
+     "span_um": [
+      1561.608,
+      1561.704
+     ],
+     "pins_per_um": 10.417
+    },
+    {
+     "name": "rank[6:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 1562.04,
+     "span_um": [
+      1561.704,
+      1562.376
+     ],
+     "pins_per_um": 10.417
+    },
+    {
+     "name": "first_ord[10:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 1562.904,
+     "span_um": [
+      1562.376,
+      1563.432
+     ],
+     "pins_per_um": 10.417
+    },
+    {
+     "name": "nkeys[11:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 1564.008,
+     "span_um": [
+      1563.432,
+      1564.584
+     ],
+     "pins_per_um": 10.417
+    },
+    {
+     "name": "keep_en",
+     "face": "W",
+     "layer": "M4",
+     "offset": 1564.632,
+     "span_um": [
+      1564.584,
+      1564.68
+     ],
+     "pins_per_um": 10.417
+    },
+    {
+     "name": "keep_bitmap[341:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 1581.096,
+     "span_um": [
+      1564.68,
+      1597.512
      ],
      "pins_per_um": 10.417
     }
@@ -67421,7 +67421,7 @@
    "strap_layer": "M8",
    "signal_max_layer": "M6",
    "layer_cap": "M6",
-   "version": 1,
+   "version": 7,
    "pins": [
     {
      "name": "clk_ctl",
@@ -67486,72 +67486,6 @@
      "span_um": [
       1463.304,
       1512.456
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "rst_n",
-     "face": "E",
-     "layer": "M4",
-     "offset": 1512.504,
-     "span_um": [
-      1512.456,
-      1512.552
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "rank[6:0]",
-     "face": "E",
-     "layer": "M4",
-     "offset": 1512.888,
-     "span_um": [
-      1512.552,
-      1513.224
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "first_ord[10:0]",
-     "face": "E",
-     "layer": "M4",
-     "offset": 1513.752,
-     "span_um": [
-      1513.224,
-      1514.28
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "nkeys[11:0]",
-     "face": "E",
-     "layer": "M4",
-     "offset": 1514.856,
-     "span_um": [
-      1514.28,
-      1515.432
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "keep_en",
-     "face": "E",
-     "layer": "M4",
-     "offset": 1515.48,
-     "span_um": [
-      1515.432,
-      1515.528
-     ],
-     "pins_per_um": 10.417
-    },
-    {
-     "name": "keep_bitmap[341:0]",
-     "face": "E",
-     "layer": "M4",
-     "offset": 1531.944,
-     "span_um": [
-      1515.528,
-      1548.36
      ],
      "pins_per_um": 10.417
     },
@@ -67662,6 +67596,72 @@
      "span_um": [
       1498.224,
       2342.256
+     ],
+     "pins_per_um": 10.417
+    },
+    {
+     "name": "rst_n",
+     "face": "W",
+     "layer": "M4",
+     "offset": 1561.656,
+     "span_um": [
+      1561.608,
+      1561.704
+     ],
+     "pins_per_um": 10.417
+    },
+    {
+     "name": "rank[6:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 1562.04,
+     "span_um": [
+      1561.704,
+      1562.376
+     ],
+     "pins_per_um": 10.417
+    },
+    {
+     "name": "first_ord[10:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 1562.904,
+     "span_um": [
+      1562.376,
+      1563.432
+     ],
+     "pins_per_um": 10.417
+    },
+    {
+     "name": "nkeys[11:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 1564.008,
+     "span_um": [
+      1563.432,
+      1564.584
+     ],
+     "pins_per_um": 10.417
+    },
+    {
+     "name": "keep_en",
+     "face": "W",
+     "layer": "M4",
+     "offset": 1564.632,
+     "span_um": [
+      1564.584,
+      1564.68
+     ],
+     "pins_per_um": 10.417
+    },
+    {
+     "name": "keep_bitmap[341:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 1581.096,
+     "span_um": [
+      1564.68,
+      1597.512
      ],
      "pins_per_um": 10.417
     }
@@ -69782,15 +69782,14 @@
      "offset_pending_view": true
     },
     {
-     "name": "tkw_d[567:0]",
+     "name": "tkw_d[283:0]",
      "face": "S",
      "layer": "M5",
-     "offset": 51.888,
      "span_um": [
       24.624,
-      79.152
+      51.888
      ],
-     "offset_pending_view": true
+     "offset": 38.256
     },
     {
      "name": "clk",
@@ -69857,9 +69856,19 @@
       54.192
      ],
      "offset_pending_view": true
+    },
+    {
+     "name": "tkw_d[567:284]",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      24.576,
+      51.84
+     ],
+     "offset": 38.208
     }
    ],
-   "version": 2,
+   "version": 7,
    "leaf_grant_1103": true,
    "qualification_scope": "Typed independent source-v2 leaf at unchanged dimensions/faces. RoutedTT/FF/DRC/native export and fullparent incidentclock/registeredpaths remain OPEN; no prior view inherited.",
    "reservation_basis": "registered VM writer at parent VM-facing edge; qslots/TKM/control placements and seams not yet qualified",
@@ -69997,15 +70006,14 @@
      "offset_pending_view": true
     },
     {
-     "name": "tkw_d[567:0]",
+     "name": "tkw_d[283:0]",
      "face": "S",
      "layer": "M5",
-     "offset": 51.888,
      "span_um": [
       24.624,
-      79.152
+      51.888
      ],
-     "offset_pending_view": true
+     "offset": 38.256
     },
     {
      "name": "clk",
@@ -70072,9 +70080,19 @@
       54.192
      ],
      "offset_pending_view": true
+    },
+    {
+     "name": "tkw_d[567:284]",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      24.576,
+      51.84
+     ],
+     "offset": 38.208
     }
    ],
-   "version": 2,
+   "version": 7,
    "leaf_grant_1103": true,
    "qualification_scope": "Typed independent source-v2 leaf at unchanged dimensions/faces. RoutedTT/FF/DRC/native export and fullparent incidentclock/registeredpaths remain OPEN; no prior view inherited.",
    "reservation_basis": "registered VM writer at parent VM-facing edge; qslots/TKM/control placements and seams not yet qualified",
@@ -70212,15 +70230,14 @@
      "offset_pending_view": true
     },
     {
-     "name": "tkw_d[567:0]",
+     "name": "tkw_d[283:0]",
      "face": "S",
      "layer": "M5",
-     "offset": 51.888,
      "span_um": [
       24.624,
-      79.152
+      51.888
      ],
-     "offset_pending_view": true
+     "offset": 38.256
     },
     {
      "name": "clk",
@@ -70287,9 +70304,19 @@
       54.192
      ],
      "offset_pending_view": true
+    },
+    {
+     "name": "tkw_d[567:284]",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      24.576,
+      51.84
+     ],
+     "offset": 38.208
     }
    ],
-   "version": 2,
+   "version": 7,
    "leaf_grant_1103": true,
    "qualification_scope": "Typed independent source-v2 leaf at unchanged dimensions/faces. RoutedTT/FF/DRC/native export and fullparent incidentclock/registeredpaths remain OPEN; no prior view inherited.",
    "reservation_basis": "registered VM writer at parent VM-facing edge; qslots/TKM/control placements and seams not yet qualified",
@@ -70427,15 +70454,14 @@
      "offset_pending_view": true
     },
     {
-     "name": "tkw_d[567:0]",
+     "name": "tkw_d[283:0]",
      "face": "S",
      "layer": "M5",
-     "offset": 51.888,
      "span_um": [
       24.624,
-      79.152
+      51.888
      ],
-     "offset_pending_view": true
+     "offset": 38.256
     },
     {
      "name": "clk",
@@ -70502,9 +70528,19 @@
       54.192
      ],
      "offset_pending_view": true
+    },
+    {
+     "name": "tkw_d[567:284]",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      24.576,
+      51.84
+     ],
+     "offset": 38.208
     }
    ],
-   "version": 2,
+   "version": 7,
    "leaf_grant_1103": true,
    "qualification_scope": "Typed independent source-v2 leaf at unchanged dimensions/faces. RoutedTT/FF/DRC/native export and fullparent incidentclock/registeredpaths remain OPEN; no prior view inherited.",
    "reservation_basis": "registered VM writer at parent VM-facing edge; qslots/TKM/control placements and seams not yet qualified",
@@ -111921,9 +111957,9 @@
   },
   {
    "name": "coll_SW_state0",
-   "cell": "ot_hgi_coll_pring_static_state_lane",
-   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static.sv",
-   "source_sha256": "c827fb8dc971baca5e155b88a3381eab218999b127e3a4b9f419f3f28e77d514",
+   "cell": "ot_hgi_coll_pring_static_state_capture_lane",
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static_state_capture.sv",
+   "source_sha256": "9ffba061514f1f2fc150a38da9706c8a53c22dd38d077cbc3c7e24a7fb096857",
    "source_prerequisite": "3729cb8fc",
    "params": {},
    "kind": "tile",
@@ -112254,7 +112290,7 @@
    "signal_max_layer": "M5",
    "layer_cap": "M5",
    "layer_rule": "tile",
-   "version": 1,
+   "version": 7,
    "grant": "independent_state_leaf_margin_1417",
    "collective_state_grant_1319": true,
    "measured_std_um2": 1058.95998,
@@ -112263,13 +112299,14 @@
    "assigned_pin_file_sha256": "dc837bc252d426f7d739b892d33819772e1446fb194fdaa48e5d83a73bbbc173",
    "qualification_scope": "independent actual 293-port state leaf; no parent clock/pin/reach/packing/timing qualification inherited",
    "reroute_reason": "die_window: measured new-state CTS density/route margin; native C1472 remains separate structural failure",
-   "notes": "Source-exact independent diagnostic child only: 64.8 square, 293 pins, same groups/layers with +6.48 um local offset; unchanged state logic does not qualify native capture or parent. Parent registered peer topology/packing/clock remain OPEN."
+   "notes": "Source-exact independent diagnostic child only: 64.8 square, 293 pins, same groups/layers with +6.48 um local offset; unchanged state logic does not qualify native capture or parent. Parent registered peer topology/packing/clock remain OPEN.",
+   "view": "physical/ref_tile/hcoll_ring_state_capture_1417/views/ot_hgi_coll_pring_static_state_capture_lane"
   },
   {
    "name": "coll_SW_state1",
-   "cell": "ot_hgi_coll_pring_static_state_lane",
-   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static.sv",
-   "source_sha256": "c827fb8dc971baca5e155b88a3381eab218999b127e3a4b9f419f3f28e77d514",
+   "cell": "ot_hgi_coll_pring_static_state_capture_lane",
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static_state_capture.sv",
+   "source_sha256": "9ffba061514f1f2fc150a38da9706c8a53c22dd38d077cbc3c7e24a7fb096857",
    "source_prerequisite": "3729cb8fc",
    "params": {},
    "kind": "tile",
@@ -112600,7 +112637,7 @@
    "signal_max_layer": "M5",
    "layer_cap": "M5",
    "layer_rule": "tile",
-   "version": 1,
+   "version": 7,
    "grant": "independent_state_leaf_margin_1417",
    "collective_state_grant_1319": true,
    "measured_std_um2": 1058.95998,
@@ -112609,13 +112646,14 @@
    "assigned_pin_file_sha256": "dc837bc252d426f7d739b892d33819772e1446fb194fdaa48e5d83a73bbbc173",
    "qualification_scope": "independent actual 293-port state leaf; no parent clock/pin/reach/packing/timing qualification inherited",
    "reroute_reason": "die_window: measured new-state CTS density/route margin; native C1472 remains separate structural failure",
-   "notes": "Source-exact independent diagnostic child only: 64.8 square, 293 pins, same groups/layers with +6.48 um local offset; unchanged state logic does not qualify native capture or parent. Parent registered peer topology/packing/clock remain OPEN."
+   "notes": "Source-exact independent diagnostic child only: 64.8 square, 293 pins, same groups/layers with +6.48 um local offset; unchanged state logic does not qualify native capture or parent. Parent registered peer topology/packing/clock remain OPEN.",
+   "view": "physical/ref_tile/hcoll_ring_state_capture_1417/views/ot_hgi_coll_pring_static_state_capture_lane"
   },
   {
    "name": "coll_SW_state2",
-   "cell": "ot_hgi_coll_pring_static_state_lane",
-   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static.sv",
-   "source_sha256": "c827fb8dc971baca5e155b88a3381eab218999b127e3a4b9f419f3f28e77d514",
+   "cell": "ot_hgi_coll_pring_static_state_capture_lane",
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static_state_capture.sv",
+   "source_sha256": "9ffba061514f1f2fc150a38da9706c8a53c22dd38d077cbc3c7e24a7fb096857",
    "source_prerequisite": "3729cb8fc",
    "params": {},
    "kind": "tile",
@@ -112946,7 +112984,7 @@
    "signal_max_layer": "M5",
    "layer_cap": "M5",
    "layer_rule": "tile",
-   "version": 1,
+   "version": 7,
    "grant": "independent_state_leaf_margin_1417",
    "collective_state_grant_1319": true,
    "measured_std_um2": 1058.95998,
@@ -112955,13 +112993,14 @@
    "assigned_pin_file_sha256": "dc837bc252d426f7d739b892d33819772e1446fb194fdaa48e5d83a73bbbc173",
    "qualification_scope": "independent actual 293-port state leaf; no parent clock/pin/reach/packing/timing qualification inherited",
    "reroute_reason": "die_window: measured new-state CTS density/route margin; native C1472 remains separate structural failure",
-   "notes": "Source-exact independent diagnostic child only: 64.8 square, 293 pins, same groups/layers with +6.48 um local offset; unchanged state logic does not qualify native capture or parent. Parent registered peer topology/packing/clock remain OPEN."
+   "notes": "Source-exact independent diagnostic child only: 64.8 square, 293 pins, same groups/layers with +6.48 um local offset; unchanged state logic does not qualify native capture or parent. Parent registered peer topology/packing/clock remain OPEN.",
+   "view": "physical/ref_tile/hcoll_ring_state_capture_1417/views/ot_hgi_coll_pring_static_state_capture_lane"
   },
   {
    "name": "coll_SW_state3",
-   "cell": "ot_hgi_coll_pring_static_state_lane",
-   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static.sv",
-   "source_sha256": "c827fb8dc971baca5e155b88a3381eab218999b127e3a4b9f419f3f28e77d514",
+   "cell": "ot_hgi_coll_pring_static_state_capture_lane",
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static_state_capture.sv",
+   "source_sha256": "9ffba061514f1f2fc150a38da9706c8a53c22dd38d077cbc3c7e24a7fb096857",
    "source_prerequisite": "3729cb8fc",
    "params": {},
    "kind": "tile",
@@ -113292,7 +113331,7 @@
    "signal_max_layer": "M5",
    "layer_cap": "M5",
    "layer_rule": "tile",
-   "version": 1,
+   "version": 7,
    "grant": "independent_state_leaf_margin_1417",
    "collective_state_grant_1319": true,
    "measured_std_um2": 1058.95998,
@@ -113301,13 +113340,14 @@
    "assigned_pin_file_sha256": "dc837bc252d426f7d739b892d33819772e1446fb194fdaa48e5d83a73bbbc173",
    "qualification_scope": "independent actual 293-port state leaf; no parent clock/pin/reach/packing/timing qualification inherited",
    "reroute_reason": "die_window: measured new-state CTS density/route margin; native C1472 remains separate structural failure",
-   "notes": "Source-exact independent diagnostic child only: 64.8 square, 293 pins, same groups/layers with +6.48 um local offset; unchanged state logic does not qualify native capture or parent. Parent registered peer topology/packing/clock remain OPEN."
+   "notes": "Source-exact independent diagnostic child only: 64.8 square, 293 pins, same groups/layers with +6.48 um local offset; unchanged state logic does not qualify native capture or parent. Parent registered peer topology/packing/clock remain OPEN.",
+   "view": "physical/ref_tile/hcoll_ring_state_capture_1417/views/ot_hgi_coll_pring_static_state_capture_lane"
   },
   {
    "name": "coll_SW_state4",
-   "cell": "ot_hgi_coll_pring_static_state_lane",
-   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static.sv",
-   "source_sha256": "c827fb8dc971baca5e155b88a3381eab218999b127e3a4b9f419f3f28e77d514",
+   "cell": "ot_hgi_coll_pring_static_state_capture_lane",
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static_state_capture.sv",
+   "source_sha256": "9ffba061514f1f2fc150a38da9706c8a53c22dd38d077cbc3c7e24a7fb096857",
    "source_prerequisite": "3729cb8fc",
    "params": {},
    "kind": "tile",
@@ -113638,7 +113678,7 @@
    "signal_max_layer": "M5",
    "layer_cap": "M5",
    "layer_rule": "tile",
-   "version": 1,
+   "version": 7,
    "grant": "independent_state_leaf_margin_1417",
    "collective_state_grant_1319": true,
    "measured_std_um2": 1058.95998,
@@ -113647,13 +113687,14 @@
    "assigned_pin_file_sha256": "dc837bc252d426f7d739b892d33819772e1446fb194fdaa48e5d83a73bbbc173",
    "qualification_scope": "independent actual 293-port state leaf; no parent clock/pin/reach/packing/timing qualification inherited",
    "reroute_reason": "die_window: measured new-state CTS density/route margin; native C1472 remains separate structural failure",
-   "notes": "Source-exact independent diagnostic child only: 64.8 square, 293 pins, same groups/layers with +6.48 um local offset; unchanged state logic does not qualify native capture or parent. Parent registered peer topology/packing/clock remain OPEN."
+   "notes": "Source-exact independent diagnostic child only: 64.8 square, 293 pins, same groups/layers with +6.48 um local offset; unchanged state logic does not qualify native capture or parent. Parent registered peer topology/packing/clock remain OPEN.",
+   "view": "physical/ref_tile/hcoll_ring_state_capture_1417/views/ot_hgi_coll_pring_static_state_capture_lane"
   },
   {
    "name": "coll_SW_state5",
-   "cell": "ot_hgi_coll_pring_static_state_lane",
-   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static.sv",
-   "source_sha256": "c827fb8dc971baca5e155b88a3381eab218999b127e3a4b9f419f3f28e77d514",
+   "cell": "ot_hgi_coll_pring_static_state_capture_lane",
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static_state_capture.sv",
+   "source_sha256": "9ffba061514f1f2fc150a38da9706c8a53c22dd38d077cbc3c7e24a7fb096857",
    "source_prerequisite": "3729cb8fc",
    "params": {},
    "kind": "tile",
@@ -113984,7 +114025,7 @@
    "signal_max_layer": "M5",
    "layer_cap": "M5",
    "layer_rule": "tile",
-   "version": 1,
+   "version": 7,
    "grant": "independent_state_leaf_margin_1417",
    "collective_state_grant_1319": true,
    "measured_std_um2": 1058.95998,
@@ -113993,13 +114034,14 @@
    "assigned_pin_file_sha256": "dc837bc252d426f7d739b892d33819772e1446fb194fdaa48e5d83a73bbbc173",
    "qualification_scope": "independent actual 293-port state leaf; no parent clock/pin/reach/packing/timing qualification inherited",
    "reroute_reason": "die_window: measured new-state CTS density/route margin; native C1472 remains separate structural failure",
-   "notes": "Source-exact independent diagnostic child only: 64.8 square, 293 pins, same groups/layers with +6.48 um local offset; unchanged state logic does not qualify native capture or parent. Parent registered peer topology/packing/clock remain OPEN."
+   "notes": "Source-exact independent diagnostic child only: 64.8 square, 293 pins, same groups/layers with +6.48 um local offset; unchanged state logic does not qualify native capture or parent. Parent registered peer topology/packing/clock remain OPEN.",
+   "view": "physical/ref_tile/hcoll_ring_state_capture_1417/views/ot_hgi_coll_pring_static_state_capture_lane"
   },
   {
    "name": "coll_SW_state6",
-   "cell": "ot_hgi_coll_pring_static_state_lane",
-   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static.sv",
-   "source_sha256": "c827fb8dc971baca5e155b88a3381eab218999b127e3a4b9f419f3f28e77d514",
+   "cell": "ot_hgi_coll_pring_static_state_capture_lane",
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static_state_capture.sv",
+   "source_sha256": "9ffba061514f1f2fc150a38da9706c8a53c22dd38d077cbc3c7e24a7fb096857",
    "source_prerequisite": "3729cb8fc",
    "params": {},
    "kind": "tile",
@@ -114330,7 +114372,7 @@
    "signal_max_layer": "M5",
    "layer_cap": "M5",
    "layer_rule": "tile",
-   "version": 1,
+   "version": 7,
    "grant": "independent_state_leaf_margin_1417",
    "collective_state_grant_1319": true,
    "measured_std_um2": 1058.95998,
@@ -114339,13 +114381,14 @@
    "assigned_pin_file_sha256": "dc837bc252d426f7d739b892d33819772e1446fb194fdaa48e5d83a73bbbc173",
    "qualification_scope": "independent actual 293-port state leaf; no parent clock/pin/reach/packing/timing qualification inherited",
    "reroute_reason": "die_window: measured new-state CTS density/route margin; native C1472 remains separate structural failure",
-   "notes": "Source-exact independent diagnostic child only: 64.8 square, 293 pins, same groups/layers with +6.48 um local offset; unchanged state logic does not qualify native capture or parent. Parent registered peer topology/packing/clock remain OPEN."
+   "notes": "Source-exact independent diagnostic child only: 64.8 square, 293 pins, same groups/layers with +6.48 um local offset; unchanged state logic does not qualify native capture or parent. Parent registered peer topology/packing/clock remain OPEN.",
+   "view": "physical/ref_tile/hcoll_ring_state_capture_1417/views/ot_hgi_coll_pring_static_state_capture_lane"
   },
   {
    "name": "coll_SW_state7",
-   "cell": "ot_hgi_coll_pring_static_state_lane",
-   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static.sv",
-   "source_sha256": "c827fb8dc971baca5e155b88a3381eab218999b127e3a4b9f419f3f28e77d514",
+   "cell": "ot_hgi_coll_pring_static_state_capture_lane",
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static_state_capture.sv",
+   "source_sha256": "9ffba061514f1f2fc150a38da9706c8a53c22dd38d077cbc3c7e24a7fb096857",
    "source_prerequisite": "3729cb8fc",
    "params": {},
    "kind": "tile",
@@ -114676,7 +114719,7 @@
    "signal_max_layer": "M5",
    "layer_cap": "M5",
    "layer_rule": "tile",
-   "version": 1,
+   "version": 7,
    "grant": "independent_state_leaf_margin_1417",
    "collective_state_grant_1319": true,
    "measured_std_um2": 1058.95998,
@@ -114685,13 +114728,14 @@
    "assigned_pin_file_sha256": "dc837bc252d426f7d739b892d33819772e1446fb194fdaa48e5d83a73bbbc173",
    "qualification_scope": "independent actual 293-port state leaf; no parent clock/pin/reach/packing/timing qualification inherited",
    "reroute_reason": "die_window: measured new-state CTS density/route margin; native C1472 remains separate structural failure",
-   "notes": "Source-exact independent diagnostic child only: 64.8 square, 293 pins, same groups/layers with +6.48 um local offset; unchanged state logic does not qualify native capture or parent. Parent registered peer topology/packing/clock remain OPEN."
+   "notes": "Source-exact independent diagnostic child only: 64.8 square, 293 pins, same groups/layers with +6.48 um local offset; unchanged state logic does not qualify native capture or parent. Parent registered peer topology/packing/clock remain OPEN.",
+   "view": "physical/ref_tile/hcoll_ring_state_capture_1417/views/ot_hgi_coll_pring_static_state_capture_lane"
   },
   {
    "name": "coll_SE_state0",
-   "cell": "ot_hgi_coll_pring_static_state_lane",
-   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static.sv",
-   "source_sha256": "c827fb8dc971baca5e155b88a3381eab218999b127e3a4b9f419f3f28e77d514",
+   "cell": "ot_hgi_coll_pring_static_state_capture_lane",
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static_state_capture.sv",
+   "source_sha256": "9ffba061514f1f2fc150a38da9706c8a53c22dd38d077cbc3c7e24a7fb096857",
    "source_prerequisite": "3729cb8fc",
    "params": {},
    "kind": "tile",
@@ -115022,7 +115066,7 @@
    "signal_max_layer": "M5",
    "layer_cap": "M5",
    "layer_rule": "tile",
-   "version": 1,
+   "version": 7,
    "grant": "independent_state_leaf_margin_1417",
    "collective_state_grant_1319": true,
    "measured_std_um2": 1058.95998,
@@ -115031,13 +115075,14 @@
    "assigned_pin_file_sha256": "dc837bc252d426f7d739b892d33819772e1446fb194fdaa48e5d83a73bbbc173",
    "qualification_scope": "independent actual 293-port state leaf; no parent clock/pin/reach/packing/timing qualification inherited",
    "reroute_reason": "die_window: measured new-state CTS density/route margin; native C1472 remains separate structural failure",
-   "notes": "Source-exact independent diagnostic child only: 64.8 square, 293 pins, same groups/layers with +6.48 um local offset; unchanged state logic does not qualify native capture or parent. Parent registered peer topology/packing/clock remain OPEN."
+   "notes": "Source-exact independent diagnostic child only: 64.8 square, 293 pins, same groups/layers with +6.48 um local offset; unchanged state logic does not qualify native capture or parent. Parent registered peer topology/packing/clock remain OPEN.",
+   "view": "physical/ref_tile/hcoll_ring_state_capture_1417/views/ot_hgi_coll_pring_static_state_capture_lane"
   },
   {
    "name": "coll_SE_state1",
-   "cell": "ot_hgi_coll_pring_static_state_lane",
-   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static.sv",
-   "source_sha256": "c827fb8dc971baca5e155b88a3381eab218999b127e3a4b9f419f3f28e77d514",
+   "cell": "ot_hgi_coll_pring_static_state_capture_lane",
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static_state_capture.sv",
+   "source_sha256": "9ffba061514f1f2fc150a38da9706c8a53c22dd38d077cbc3c7e24a7fb096857",
    "source_prerequisite": "3729cb8fc",
    "params": {},
    "kind": "tile",
@@ -115368,7 +115413,7 @@
    "signal_max_layer": "M5",
    "layer_cap": "M5",
    "layer_rule": "tile",
-   "version": 1,
+   "version": 7,
    "grant": "independent_state_leaf_margin_1417",
    "collective_state_grant_1319": true,
    "measured_std_um2": 1058.95998,
@@ -115377,13 +115422,14 @@
    "assigned_pin_file_sha256": "dc837bc252d426f7d739b892d33819772e1446fb194fdaa48e5d83a73bbbc173",
    "qualification_scope": "independent actual 293-port state leaf; no parent clock/pin/reach/packing/timing qualification inherited",
    "reroute_reason": "die_window: measured new-state CTS density/route margin; native C1472 remains separate structural failure",
-   "notes": "Source-exact independent diagnostic child only: 64.8 square, 293 pins, same groups/layers with +6.48 um local offset; unchanged state logic does not qualify native capture or parent. Parent registered peer topology/packing/clock remain OPEN."
+   "notes": "Source-exact independent diagnostic child only: 64.8 square, 293 pins, same groups/layers with +6.48 um local offset; unchanged state logic does not qualify native capture or parent. Parent registered peer topology/packing/clock remain OPEN.",
+   "view": "physical/ref_tile/hcoll_ring_state_capture_1417/views/ot_hgi_coll_pring_static_state_capture_lane"
   },
   {
    "name": "coll_SE_state2",
-   "cell": "ot_hgi_coll_pring_static_state_lane",
-   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static.sv",
-   "source_sha256": "c827fb8dc971baca5e155b88a3381eab218999b127e3a4b9f419f3f28e77d514",
+   "cell": "ot_hgi_coll_pring_static_state_capture_lane",
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static_state_capture.sv",
+   "source_sha256": "9ffba061514f1f2fc150a38da9706c8a53c22dd38d077cbc3c7e24a7fb096857",
    "source_prerequisite": "3729cb8fc",
    "params": {},
    "kind": "tile",
@@ -115714,7 +115760,7 @@
    "signal_max_layer": "M5",
    "layer_cap": "M5",
    "layer_rule": "tile",
-   "version": 1,
+   "version": 7,
    "grant": "independent_state_leaf_margin_1417",
    "collective_state_grant_1319": true,
    "measured_std_um2": 1058.95998,
@@ -115723,13 +115769,14 @@
    "assigned_pin_file_sha256": "dc837bc252d426f7d739b892d33819772e1446fb194fdaa48e5d83a73bbbc173",
    "qualification_scope": "independent actual 293-port state leaf; no parent clock/pin/reach/packing/timing qualification inherited",
    "reroute_reason": "die_window: measured new-state CTS density/route margin; native C1472 remains separate structural failure",
-   "notes": "Source-exact independent diagnostic child only: 64.8 square, 293 pins, same groups/layers with +6.48 um local offset; unchanged state logic does not qualify native capture or parent. Parent registered peer topology/packing/clock remain OPEN."
+   "notes": "Source-exact independent diagnostic child only: 64.8 square, 293 pins, same groups/layers with +6.48 um local offset; unchanged state logic does not qualify native capture or parent. Parent registered peer topology/packing/clock remain OPEN.",
+   "view": "physical/ref_tile/hcoll_ring_state_capture_1417/views/ot_hgi_coll_pring_static_state_capture_lane"
   },
   {
    "name": "coll_SE_state3",
-   "cell": "ot_hgi_coll_pring_static_state_lane",
-   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static.sv",
-   "source_sha256": "c827fb8dc971baca5e155b88a3381eab218999b127e3a4b9f419f3f28e77d514",
+   "cell": "ot_hgi_coll_pring_static_state_capture_lane",
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static_state_capture.sv",
+   "source_sha256": "9ffba061514f1f2fc150a38da9706c8a53c22dd38d077cbc3c7e24a7fb096857",
    "source_prerequisite": "3729cb8fc",
    "params": {},
    "kind": "tile",
@@ -116060,7 +116107,7 @@
    "signal_max_layer": "M5",
    "layer_cap": "M5",
    "layer_rule": "tile",
-   "version": 1,
+   "version": 7,
    "grant": "independent_state_leaf_margin_1417",
    "collective_state_grant_1319": true,
    "measured_std_um2": 1058.95998,
@@ -116069,13 +116116,14 @@
    "assigned_pin_file_sha256": "dc837bc252d426f7d739b892d33819772e1446fb194fdaa48e5d83a73bbbc173",
    "qualification_scope": "independent actual 293-port state leaf; no parent clock/pin/reach/packing/timing qualification inherited",
    "reroute_reason": "die_window: measured new-state CTS density/route margin; native C1472 remains separate structural failure",
-   "notes": "Source-exact independent diagnostic child only: 64.8 square, 293 pins, same groups/layers with +6.48 um local offset; unchanged state logic does not qualify native capture or parent. Parent registered peer topology/packing/clock remain OPEN."
+   "notes": "Source-exact independent diagnostic child only: 64.8 square, 293 pins, same groups/layers with +6.48 um local offset; unchanged state logic does not qualify native capture or parent. Parent registered peer topology/packing/clock remain OPEN.",
+   "view": "physical/ref_tile/hcoll_ring_state_capture_1417/views/ot_hgi_coll_pring_static_state_capture_lane"
   },
   {
    "name": "coll_SE_state4",
-   "cell": "ot_hgi_coll_pring_static_state_lane",
-   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static.sv",
-   "source_sha256": "c827fb8dc971baca5e155b88a3381eab218999b127e3a4b9f419f3f28e77d514",
+   "cell": "ot_hgi_coll_pring_static_state_capture_lane",
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static_state_capture.sv",
+   "source_sha256": "9ffba061514f1f2fc150a38da9706c8a53c22dd38d077cbc3c7e24a7fb096857",
    "source_prerequisite": "3729cb8fc",
    "params": {},
    "kind": "tile",
@@ -116406,7 +116454,7 @@
    "signal_max_layer": "M5",
    "layer_cap": "M5",
    "layer_rule": "tile",
-   "version": 1,
+   "version": 7,
    "grant": "independent_state_leaf_margin_1417",
    "collective_state_grant_1319": true,
    "measured_std_um2": 1058.95998,
@@ -116415,13 +116463,14 @@
    "assigned_pin_file_sha256": "dc837bc252d426f7d739b892d33819772e1446fb194fdaa48e5d83a73bbbc173",
    "qualification_scope": "independent actual 293-port state leaf; no parent clock/pin/reach/packing/timing qualification inherited",
    "reroute_reason": "die_window: measured new-state CTS density/route margin; native C1472 remains separate structural failure",
-   "notes": "Source-exact independent diagnostic child only: 64.8 square, 293 pins, same groups/layers with +6.48 um local offset; unchanged state logic does not qualify native capture or parent. Parent registered peer topology/packing/clock remain OPEN."
+   "notes": "Source-exact independent diagnostic child only: 64.8 square, 293 pins, same groups/layers with +6.48 um local offset; unchanged state logic does not qualify native capture or parent. Parent registered peer topology/packing/clock remain OPEN.",
+   "view": "physical/ref_tile/hcoll_ring_state_capture_1417/views/ot_hgi_coll_pring_static_state_capture_lane"
   },
   {
    "name": "coll_SE_state5",
-   "cell": "ot_hgi_coll_pring_static_state_lane",
-   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static.sv",
-   "source_sha256": "c827fb8dc971baca5e155b88a3381eab218999b127e3a4b9f419f3f28e77d514",
+   "cell": "ot_hgi_coll_pring_static_state_capture_lane",
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static_state_capture.sv",
+   "source_sha256": "9ffba061514f1f2fc150a38da9706c8a53c22dd38d077cbc3c7e24a7fb096857",
    "source_prerequisite": "3729cb8fc",
    "params": {},
    "kind": "tile",
@@ -116752,7 +116801,7 @@
    "signal_max_layer": "M5",
    "layer_cap": "M5",
    "layer_rule": "tile",
-   "version": 1,
+   "version": 7,
    "grant": "independent_state_leaf_margin_1417",
    "collective_state_grant_1319": true,
    "measured_std_um2": 1058.95998,
@@ -116761,13 +116810,14 @@
    "assigned_pin_file_sha256": "dc837bc252d426f7d739b892d33819772e1446fb194fdaa48e5d83a73bbbc173",
    "qualification_scope": "independent actual 293-port state leaf; no parent clock/pin/reach/packing/timing qualification inherited",
    "reroute_reason": "die_window: measured new-state CTS density/route margin; native C1472 remains separate structural failure",
-   "notes": "Source-exact independent diagnostic child only: 64.8 square, 293 pins, same groups/layers with +6.48 um local offset; unchanged state logic does not qualify native capture or parent. Parent registered peer topology/packing/clock remain OPEN."
+   "notes": "Source-exact independent diagnostic child only: 64.8 square, 293 pins, same groups/layers with +6.48 um local offset; unchanged state logic does not qualify native capture or parent. Parent registered peer topology/packing/clock remain OPEN.",
+   "view": "physical/ref_tile/hcoll_ring_state_capture_1417/views/ot_hgi_coll_pring_static_state_capture_lane"
   },
   {
    "name": "coll_SE_state6",
-   "cell": "ot_hgi_coll_pring_static_state_lane",
-   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static.sv",
-   "source_sha256": "c827fb8dc971baca5e155b88a3381eab218999b127e3a4b9f419f3f28e77d514",
+   "cell": "ot_hgi_coll_pring_static_state_capture_lane",
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static_state_capture.sv",
+   "source_sha256": "9ffba061514f1f2fc150a38da9706c8a53c22dd38d077cbc3c7e24a7fb096857",
    "source_prerequisite": "3729cb8fc",
    "params": {},
    "kind": "tile",
@@ -117098,7 +117148,7 @@
    "signal_max_layer": "M5",
    "layer_cap": "M5",
    "layer_rule": "tile",
-   "version": 1,
+   "version": 7,
    "grant": "independent_state_leaf_margin_1417",
    "collective_state_grant_1319": true,
    "measured_std_um2": 1058.95998,
@@ -117107,13 +117157,14 @@
    "assigned_pin_file_sha256": "dc837bc252d426f7d739b892d33819772e1446fb194fdaa48e5d83a73bbbc173",
    "qualification_scope": "independent actual 293-port state leaf; no parent clock/pin/reach/packing/timing qualification inherited",
    "reroute_reason": "die_window: measured new-state CTS density/route margin; native C1472 remains separate structural failure",
-   "notes": "Source-exact independent diagnostic child only: 64.8 square, 293 pins, same groups/layers with +6.48 um local offset; unchanged state logic does not qualify native capture or parent. Parent registered peer topology/packing/clock remain OPEN."
+   "notes": "Source-exact independent diagnostic child only: 64.8 square, 293 pins, same groups/layers with +6.48 um local offset; unchanged state logic does not qualify native capture or parent. Parent registered peer topology/packing/clock remain OPEN.",
+   "view": "physical/ref_tile/hcoll_ring_state_capture_1417/views/ot_hgi_coll_pring_static_state_capture_lane"
   },
   {
    "name": "coll_SE_state7",
-   "cell": "ot_hgi_coll_pring_static_state_lane",
-   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static.sv",
-   "source_sha256": "c827fb8dc971baca5e155b88a3381eab218999b127e3a4b9f419f3f28e77d514",
+   "cell": "ot_hgi_coll_pring_static_state_capture_lane",
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static_state_capture.sv",
+   "source_sha256": "9ffba061514f1f2fc150a38da9706c8a53c22dd38d077cbc3c7e24a7fb096857",
    "source_prerequisite": "3729cb8fc",
    "params": {},
    "kind": "tile",
@@ -117444,7 +117495,7 @@
    "signal_max_layer": "M5",
    "layer_cap": "M5",
    "layer_rule": "tile",
-   "version": 1,
+   "version": 7,
    "grant": "independent_state_leaf_margin_1417",
    "collective_state_grant_1319": true,
    "measured_std_um2": 1058.95998,
@@ -117453,13 +117504,14 @@
    "assigned_pin_file_sha256": "dc837bc252d426f7d739b892d33819772e1446fb194fdaa48e5d83a73bbbc173",
    "qualification_scope": "independent actual 293-port state leaf; no parent clock/pin/reach/packing/timing qualification inherited",
    "reroute_reason": "die_window: measured new-state CTS density/route margin; native C1472 remains separate structural failure",
-   "notes": "Source-exact independent diagnostic child only: 64.8 square, 293 pins, same groups/layers with +6.48 um local offset; unchanged state logic does not qualify native capture or parent. Parent registered peer topology/packing/clock remain OPEN."
+   "notes": "Source-exact independent diagnostic child only: 64.8 square, 293 pins, same groups/layers with +6.48 um local offset; unchanged state logic does not qualify native capture or parent. Parent registered peer topology/packing/clock remain OPEN.",
+   "view": "physical/ref_tile/hcoll_ring_state_capture_1417/views/ot_hgi_coll_pring_static_state_capture_lane"
   },
   {
    "name": "coll_NW_state0",
-   "cell": "ot_hgi_coll_pring_static_state_lane",
-   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static.sv",
-   "source_sha256": "c827fb8dc971baca5e155b88a3381eab218999b127e3a4b9f419f3f28e77d514",
+   "cell": "ot_hgi_coll_pring_static_state_capture_lane",
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static_state_capture.sv",
+   "source_sha256": "9ffba061514f1f2fc150a38da9706c8a53c22dd38d077cbc3c7e24a7fb096857",
    "source_prerequisite": "3729cb8fc",
    "params": {},
    "kind": "tile",
@@ -117790,7 +117842,7 @@
    "signal_max_layer": "M5",
    "layer_cap": "M5",
    "layer_rule": "tile",
-   "version": 1,
+   "version": 7,
    "grant": "independent_state_leaf_margin_1417",
    "collective_state_grant_1319": true,
    "measured_std_um2": 1058.95998,
@@ -117799,13 +117851,14 @@
    "assigned_pin_file_sha256": "dc837bc252d426f7d739b892d33819772e1446fb194fdaa48e5d83a73bbbc173",
    "qualification_scope": "independent actual 293-port state leaf; no parent clock/pin/reach/packing/timing qualification inherited",
    "reroute_reason": "die_window: measured new-state CTS density/route margin; native C1472 remains separate structural failure",
-   "notes": "Source-exact independent diagnostic child only: 64.8 square, 293 pins, same groups/layers with +6.48 um local offset; unchanged state logic does not qualify native capture or parent. Parent registered peer topology/packing/clock remain OPEN."
+   "notes": "Source-exact independent diagnostic child only: 64.8 square, 293 pins, same groups/layers with +6.48 um local offset; unchanged state logic does not qualify native capture or parent. Parent registered peer topology/packing/clock remain OPEN.",
+   "view": "physical/ref_tile/hcoll_ring_state_capture_1417/views/ot_hgi_coll_pring_static_state_capture_lane"
   },
   {
    "name": "coll_NW_state1",
-   "cell": "ot_hgi_coll_pring_static_state_lane",
-   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static.sv",
-   "source_sha256": "c827fb8dc971baca5e155b88a3381eab218999b127e3a4b9f419f3f28e77d514",
+   "cell": "ot_hgi_coll_pring_static_state_capture_lane",
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static_state_capture.sv",
+   "source_sha256": "9ffba061514f1f2fc150a38da9706c8a53c22dd38d077cbc3c7e24a7fb096857",
    "source_prerequisite": "3729cb8fc",
    "params": {},
    "kind": "tile",
@@ -118136,7 +118189,7 @@
    "signal_max_layer": "M5",
    "layer_cap": "M5",
    "layer_rule": "tile",
-   "version": 1,
+   "version": 7,
    "grant": "independent_state_leaf_margin_1417",
    "collective_state_grant_1319": true,
    "measured_std_um2": 1058.95998,
@@ -118145,13 +118198,14 @@
    "assigned_pin_file_sha256": "dc837bc252d426f7d739b892d33819772e1446fb194fdaa48e5d83a73bbbc173",
    "qualification_scope": "independent actual 293-port state leaf; no parent clock/pin/reach/packing/timing qualification inherited",
    "reroute_reason": "die_window: measured new-state CTS density/route margin; native C1472 remains separate structural failure",
-   "notes": "Source-exact independent diagnostic child only: 64.8 square, 293 pins, same groups/layers with +6.48 um local offset; unchanged state logic does not qualify native capture or parent. Parent registered peer topology/packing/clock remain OPEN."
+   "notes": "Source-exact independent diagnostic child only: 64.8 square, 293 pins, same groups/layers with +6.48 um local offset; unchanged state logic does not qualify native capture or parent. Parent registered peer topology/packing/clock remain OPEN.",
+   "view": "physical/ref_tile/hcoll_ring_state_capture_1417/views/ot_hgi_coll_pring_static_state_capture_lane"
   },
   {
    "name": "coll_NW_state2",
-   "cell": "ot_hgi_coll_pring_static_state_lane",
-   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static.sv",
-   "source_sha256": "c827fb8dc971baca5e155b88a3381eab218999b127e3a4b9f419f3f28e77d514",
+   "cell": "ot_hgi_coll_pring_static_state_capture_lane",
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static_state_capture.sv",
+   "source_sha256": "9ffba061514f1f2fc150a38da9706c8a53c22dd38d077cbc3c7e24a7fb096857",
    "source_prerequisite": "3729cb8fc",
    "params": {},
    "kind": "tile",
@@ -118482,7 +118536,7 @@
    "signal_max_layer": "M5",
    "layer_cap": "M5",
    "layer_rule": "tile",
-   "version": 1,
+   "version": 7,
    "grant": "independent_state_leaf_margin_1417",
    "collective_state_grant_1319": true,
    "measured_std_um2": 1058.95998,
@@ -118491,13 +118545,14 @@
    "assigned_pin_file_sha256": "dc837bc252d426f7d739b892d33819772e1446fb194fdaa48e5d83a73bbbc173",
    "qualification_scope": "independent actual 293-port state leaf; no parent clock/pin/reach/packing/timing qualification inherited",
    "reroute_reason": "die_window: measured new-state CTS density/route margin; native C1472 remains separate structural failure",
-   "notes": "Source-exact independent diagnostic child only: 64.8 square, 293 pins, same groups/layers with +6.48 um local offset; unchanged state logic does not qualify native capture or parent. Parent registered peer topology/packing/clock remain OPEN."
+   "notes": "Source-exact independent diagnostic child only: 64.8 square, 293 pins, same groups/layers with +6.48 um local offset; unchanged state logic does not qualify native capture or parent. Parent registered peer topology/packing/clock remain OPEN.",
+   "view": "physical/ref_tile/hcoll_ring_state_capture_1417/views/ot_hgi_coll_pring_static_state_capture_lane"
   },
   {
    "name": "coll_NW_state3",
-   "cell": "ot_hgi_coll_pring_static_state_lane",
-   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static.sv",
-   "source_sha256": "c827fb8dc971baca5e155b88a3381eab218999b127e3a4b9f419f3f28e77d514",
+   "cell": "ot_hgi_coll_pring_static_state_capture_lane",
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static_state_capture.sv",
+   "source_sha256": "9ffba061514f1f2fc150a38da9706c8a53c22dd38d077cbc3c7e24a7fb096857",
    "source_prerequisite": "3729cb8fc",
    "params": {},
    "kind": "tile",
@@ -118828,7 +118883,7 @@
    "signal_max_layer": "M5",
    "layer_cap": "M5",
    "layer_rule": "tile",
-   "version": 1,
+   "version": 7,
    "grant": "independent_state_leaf_margin_1417",
    "collective_state_grant_1319": true,
    "measured_std_um2": 1058.95998,
@@ -118837,13 +118892,14 @@
    "assigned_pin_file_sha256": "dc837bc252d426f7d739b892d33819772e1446fb194fdaa48e5d83a73bbbc173",
    "qualification_scope": "independent actual 293-port state leaf; no parent clock/pin/reach/packing/timing qualification inherited",
    "reroute_reason": "die_window: measured new-state CTS density/route margin; native C1472 remains separate structural failure",
-   "notes": "Source-exact independent diagnostic child only: 64.8 square, 293 pins, same groups/layers with +6.48 um local offset; unchanged state logic does not qualify native capture or parent. Parent registered peer topology/packing/clock remain OPEN."
+   "notes": "Source-exact independent diagnostic child only: 64.8 square, 293 pins, same groups/layers with +6.48 um local offset; unchanged state logic does not qualify native capture or parent. Parent registered peer topology/packing/clock remain OPEN.",
+   "view": "physical/ref_tile/hcoll_ring_state_capture_1417/views/ot_hgi_coll_pring_static_state_capture_lane"
   },
   {
    "name": "coll_NW_state4",
-   "cell": "ot_hgi_coll_pring_static_state_lane",
-   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static.sv",
-   "source_sha256": "c827fb8dc971baca5e155b88a3381eab218999b127e3a4b9f419f3f28e77d514",
+   "cell": "ot_hgi_coll_pring_static_state_capture_lane",
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static_state_capture.sv",
+   "source_sha256": "9ffba061514f1f2fc150a38da9706c8a53c22dd38d077cbc3c7e24a7fb096857",
    "source_prerequisite": "3729cb8fc",
    "params": {},
    "kind": "tile",
@@ -119174,7 +119230,7 @@
    "signal_max_layer": "M5",
    "layer_cap": "M5",
    "layer_rule": "tile",
-   "version": 1,
+   "version": 7,
    "grant": "independent_state_leaf_margin_1417",
    "collective_state_grant_1319": true,
    "measured_std_um2": 1058.95998,
@@ -119183,13 +119239,14 @@
    "assigned_pin_file_sha256": "dc837bc252d426f7d739b892d33819772e1446fb194fdaa48e5d83a73bbbc173",
    "qualification_scope": "independent actual 293-port state leaf; no parent clock/pin/reach/packing/timing qualification inherited",
    "reroute_reason": "die_window: measured new-state CTS density/route margin; native C1472 remains separate structural failure",
-   "notes": "Source-exact independent diagnostic child only: 64.8 square, 293 pins, same groups/layers with +6.48 um local offset; unchanged state logic does not qualify native capture or parent. Parent registered peer topology/packing/clock remain OPEN."
+   "notes": "Source-exact independent diagnostic child only: 64.8 square, 293 pins, same groups/layers with +6.48 um local offset; unchanged state logic does not qualify native capture or parent. Parent registered peer topology/packing/clock remain OPEN.",
+   "view": "physical/ref_tile/hcoll_ring_state_capture_1417/views/ot_hgi_coll_pring_static_state_capture_lane"
   },
   {
    "name": "coll_NW_state5",
-   "cell": "ot_hgi_coll_pring_static_state_lane",
-   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static.sv",
-   "source_sha256": "c827fb8dc971baca5e155b88a3381eab218999b127e3a4b9f419f3f28e77d514",
+   "cell": "ot_hgi_coll_pring_static_state_capture_lane",
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static_state_capture.sv",
+   "source_sha256": "9ffba061514f1f2fc150a38da9706c8a53c22dd38d077cbc3c7e24a7fb096857",
    "source_prerequisite": "3729cb8fc",
    "params": {},
    "kind": "tile",
@@ -119520,7 +119577,7 @@
    "signal_max_layer": "M5",
    "layer_cap": "M5",
    "layer_rule": "tile",
-   "version": 1,
+   "version": 7,
    "grant": "independent_state_leaf_margin_1417",
    "collective_state_grant_1319": true,
    "measured_std_um2": 1058.95998,
@@ -119529,13 +119586,14 @@
    "assigned_pin_file_sha256": "dc837bc252d426f7d739b892d33819772e1446fb194fdaa48e5d83a73bbbc173",
    "qualification_scope": "independent actual 293-port state leaf; no parent clock/pin/reach/packing/timing qualification inherited",
    "reroute_reason": "die_window: measured new-state CTS density/route margin; native C1472 remains separate structural failure",
-   "notes": "Source-exact independent diagnostic child only: 64.8 square, 293 pins, same groups/layers with +6.48 um local offset; unchanged state logic does not qualify native capture or parent. Parent registered peer topology/packing/clock remain OPEN."
+   "notes": "Source-exact independent diagnostic child only: 64.8 square, 293 pins, same groups/layers with +6.48 um local offset; unchanged state logic does not qualify native capture or parent. Parent registered peer topology/packing/clock remain OPEN.",
+   "view": "physical/ref_tile/hcoll_ring_state_capture_1417/views/ot_hgi_coll_pring_static_state_capture_lane"
   },
   {
    "name": "coll_NW_state6",
-   "cell": "ot_hgi_coll_pring_static_state_lane",
-   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static.sv",
-   "source_sha256": "c827fb8dc971baca5e155b88a3381eab218999b127e3a4b9f419f3f28e77d514",
+   "cell": "ot_hgi_coll_pring_static_state_capture_lane",
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static_state_capture.sv",
+   "source_sha256": "9ffba061514f1f2fc150a38da9706c8a53c22dd38d077cbc3c7e24a7fb096857",
    "source_prerequisite": "3729cb8fc",
    "params": {},
    "kind": "tile",
@@ -119866,7 +119924,7 @@
    "signal_max_layer": "M5",
    "layer_cap": "M5",
    "layer_rule": "tile",
-   "version": 1,
+   "version": 7,
    "grant": "independent_state_leaf_margin_1417",
    "collective_state_grant_1319": true,
    "measured_std_um2": 1058.95998,
@@ -119875,13 +119933,14 @@
    "assigned_pin_file_sha256": "dc837bc252d426f7d739b892d33819772e1446fb194fdaa48e5d83a73bbbc173",
    "qualification_scope": "independent actual 293-port state leaf; no parent clock/pin/reach/packing/timing qualification inherited",
    "reroute_reason": "die_window: measured new-state CTS density/route margin; native C1472 remains separate structural failure",
-   "notes": "Source-exact independent diagnostic child only: 64.8 square, 293 pins, same groups/layers with +6.48 um local offset; unchanged state logic does not qualify native capture or parent. Parent registered peer topology/packing/clock remain OPEN."
+   "notes": "Source-exact independent diagnostic child only: 64.8 square, 293 pins, same groups/layers with +6.48 um local offset; unchanged state logic does not qualify native capture or parent. Parent registered peer topology/packing/clock remain OPEN.",
+   "view": "physical/ref_tile/hcoll_ring_state_capture_1417/views/ot_hgi_coll_pring_static_state_capture_lane"
   },
   {
    "name": "coll_NW_state7",
-   "cell": "ot_hgi_coll_pring_static_state_lane",
-   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static.sv",
-   "source_sha256": "c827fb8dc971baca5e155b88a3381eab218999b127e3a4b9f419f3f28e77d514",
+   "cell": "ot_hgi_coll_pring_static_state_capture_lane",
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static_state_capture.sv",
+   "source_sha256": "9ffba061514f1f2fc150a38da9706c8a53c22dd38d077cbc3c7e24a7fb096857",
    "source_prerequisite": "3729cb8fc",
    "params": {},
    "kind": "tile",
@@ -120212,7 +120271,7 @@
    "signal_max_layer": "M5",
    "layer_cap": "M5",
    "layer_rule": "tile",
-   "version": 1,
+   "version": 7,
    "grant": "independent_state_leaf_margin_1417",
    "collective_state_grant_1319": true,
    "measured_std_um2": 1058.95998,
@@ -120221,13 +120280,14 @@
    "assigned_pin_file_sha256": "dc837bc252d426f7d739b892d33819772e1446fb194fdaa48e5d83a73bbbc173",
    "qualification_scope": "independent actual 293-port state leaf; no parent clock/pin/reach/packing/timing qualification inherited",
    "reroute_reason": "die_window: measured new-state CTS density/route margin; native C1472 remains separate structural failure",
-   "notes": "Source-exact independent diagnostic child only: 64.8 square, 293 pins, same groups/layers with +6.48 um local offset; unchanged state logic does not qualify native capture or parent. Parent registered peer topology/packing/clock remain OPEN."
+   "notes": "Source-exact independent diagnostic child only: 64.8 square, 293 pins, same groups/layers with +6.48 um local offset; unchanged state logic does not qualify native capture or parent. Parent registered peer topology/packing/clock remain OPEN.",
+   "view": "physical/ref_tile/hcoll_ring_state_capture_1417/views/ot_hgi_coll_pring_static_state_capture_lane"
   },
   {
    "name": "coll_NE_state0",
-   "cell": "ot_hgi_coll_pring_static_state_lane",
-   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static.sv",
-   "source_sha256": "c827fb8dc971baca5e155b88a3381eab218999b127e3a4b9f419f3f28e77d514",
+   "cell": "ot_hgi_coll_pring_static_state_capture_lane",
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static_state_capture.sv",
+   "source_sha256": "9ffba061514f1f2fc150a38da9706c8a53c22dd38d077cbc3c7e24a7fb096857",
    "source_prerequisite": "3729cb8fc",
    "params": {},
    "kind": "tile",
@@ -120558,7 +120618,7 @@
    "signal_max_layer": "M5",
    "layer_cap": "M5",
    "layer_rule": "tile",
-   "version": 1,
+   "version": 7,
    "grant": "independent_state_leaf_margin_1417",
    "collective_state_grant_1319": true,
    "measured_std_um2": 1058.95998,
@@ -120567,13 +120627,14 @@
    "assigned_pin_file_sha256": "dc837bc252d426f7d739b892d33819772e1446fb194fdaa48e5d83a73bbbc173",
    "qualification_scope": "independent actual 293-port state leaf; no parent clock/pin/reach/packing/timing qualification inherited",
    "reroute_reason": "die_window: measured new-state CTS density/route margin; native C1472 remains separate structural failure",
-   "notes": "Source-exact independent diagnostic child only: 64.8 square, 293 pins, same groups/layers with +6.48 um local offset; unchanged state logic does not qualify native capture or parent. Parent registered peer topology/packing/clock remain OPEN."
+   "notes": "Source-exact independent diagnostic child only: 64.8 square, 293 pins, same groups/layers with +6.48 um local offset; unchanged state logic does not qualify native capture or parent. Parent registered peer topology/packing/clock remain OPEN.",
+   "view": "physical/ref_tile/hcoll_ring_state_capture_1417/views/ot_hgi_coll_pring_static_state_capture_lane"
   },
   {
    "name": "coll_NE_state1",
-   "cell": "ot_hgi_coll_pring_static_state_lane",
-   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static.sv",
-   "source_sha256": "c827fb8dc971baca5e155b88a3381eab218999b127e3a4b9f419f3f28e77d514",
+   "cell": "ot_hgi_coll_pring_static_state_capture_lane",
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static_state_capture.sv",
+   "source_sha256": "9ffba061514f1f2fc150a38da9706c8a53c22dd38d077cbc3c7e24a7fb096857",
    "source_prerequisite": "3729cb8fc",
    "params": {},
    "kind": "tile",
@@ -120904,7 +120965,7 @@
    "signal_max_layer": "M5",
    "layer_cap": "M5",
    "layer_rule": "tile",
-   "version": 1,
+   "version": 7,
    "grant": "independent_state_leaf_margin_1417",
    "collective_state_grant_1319": true,
    "measured_std_um2": 1058.95998,
@@ -120913,13 +120974,14 @@
    "assigned_pin_file_sha256": "dc837bc252d426f7d739b892d33819772e1446fb194fdaa48e5d83a73bbbc173",
    "qualification_scope": "independent actual 293-port state leaf; no parent clock/pin/reach/packing/timing qualification inherited",
    "reroute_reason": "die_window: measured new-state CTS density/route margin; native C1472 remains separate structural failure",
-   "notes": "Source-exact independent diagnostic child only: 64.8 square, 293 pins, same groups/layers with +6.48 um local offset; unchanged state logic does not qualify native capture or parent. Parent registered peer topology/packing/clock remain OPEN."
+   "notes": "Source-exact independent diagnostic child only: 64.8 square, 293 pins, same groups/layers with +6.48 um local offset; unchanged state logic does not qualify native capture or parent. Parent registered peer topology/packing/clock remain OPEN.",
+   "view": "physical/ref_tile/hcoll_ring_state_capture_1417/views/ot_hgi_coll_pring_static_state_capture_lane"
   },
   {
    "name": "coll_NE_state2",
-   "cell": "ot_hgi_coll_pring_static_state_lane",
-   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static.sv",
-   "source_sha256": "c827fb8dc971baca5e155b88a3381eab218999b127e3a4b9f419f3f28e77d514",
+   "cell": "ot_hgi_coll_pring_static_state_capture_lane",
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static_state_capture.sv",
+   "source_sha256": "9ffba061514f1f2fc150a38da9706c8a53c22dd38d077cbc3c7e24a7fb096857",
    "source_prerequisite": "3729cb8fc",
    "params": {},
    "kind": "tile",
@@ -121250,7 +121312,7 @@
    "signal_max_layer": "M5",
    "layer_cap": "M5",
    "layer_rule": "tile",
-   "version": 1,
+   "version": 7,
    "grant": "independent_state_leaf_margin_1417",
    "collective_state_grant_1319": true,
    "measured_std_um2": 1058.95998,
@@ -121259,13 +121321,14 @@
    "assigned_pin_file_sha256": "dc837bc252d426f7d739b892d33819772e1446fb194fdaa48e5d83a73bbbc173",
    "qualification_scope": "independent actual 293-port state leaf; no parent clock/pin/reach/packing/timing qualification inherited",
    "reroute_reason": "die_window: measured new-state CTS density/route margin; native C1472 remains separate structural failure",
-   "notes": "Source-exact independent diagnostic child only: 64.8 square, 293 pins, same groups/layers with +6.48 um local offset; unchanged state logic does not qualify native capture or parent. Parent registered peer topology/packing/clock remain OPEN."
+   "notes": "Source-exact independent diagnostic child only: 64.8 square, 293 pins, same groups/layers with +6.48 um local offset; unchanged state logic does not qualify native capture or parent. Parent registered peer topology/packing/clock remain OPEN.",
+   "view": "physical/ref_tile/hcoll_ring_state_capture_1417/views/ot_hgi_coll_pring_static_state_capture_lane"
   },
   {
    "name": "coll_NE_state3",
-   "cell": "ot_hgi_coll_pring_static_state_lane",
-   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static.sv",
-   "source_sha256": "c827fb8dc971baca5e155b88a3381eab218999b127e3a4b9f419f3f28e77d514",
+   "cell": "ot_hgi_coll_pring_static_state_capture_lane",
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static_state_capture.sv",
+   "source_sha256": "9ffba061514f1f2fc150a38da9706c8a53c22dd38d077cbc3c7e24a7fb096857",
    "source_prerequisite": "3729cb8fc",
    "params": {},
    "kind": "tile",
@@ -121596,7 +121659,7 @@
    "signal_max_layer": "M5",
    "layer_cap": "M5",
    "layer_rule": "tile",
-   "version": 1,
+   "version": 7,
    "grant": "independent_state_leaf_margin_1417",
    "collective_state_grant_1319": true,
    "measured_std_um2": 1058.95998,
@@ -121605,13 +121668,14 @@
    "assigned_pin_file_sha256": "dc837bc252d426f7d739b892d33819772e1446fb194fdaa48e5d83a73bbbc173",
    "qualification_scope": "independent actual 293-port state leaf; no parent clock/pin/reach/packing/timing qualification inherited",
    "reroute_reason": "die_window: measured new-state CTS density/route margin; native C1472 remains separate structural failure",
-   "notes": "Source-exact independent diagnostic child only: 64.8 square, 293 pins, same groups/layers with +6.48 um local offset; unchanged state logic does not qualify native capture or parent. Parent registered peer topology/packing/clock remain OPEN."
+   "notes": "Source-exact independent diagnostic child only: 64.8 square, 293 pins, same groups/layers with +6.48 um local offset; unchanged state logic does not qualify native capture or parent. Parent registered peer topology/packing/clock remain OPEN.",
+   "view": "physical/ref_tile/hcoll_ring_state_capture_1417/views/ot_hgi_coll_pring_static_state_capture_lane"
   },
   {
    "name": "coll_NE_state4",
-   "cell": "ot_hgi_coll_pring_static_state_lane",
-   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static.sv",
-   "source_sha256": "c827fb8dc971baca5e155b88a3381eab218999b127e3a4b9f419f3f28e77d514",
+   "cell": "ot_hgi_coll_pring_static_state_capture_lane",
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static_state_capture.sv",
+   "source_sha256": "9ffba061514f1f2fc150a38da9706c8a53c22dd38d077cbc3c7e24a7fb096857",
    "source_prerequisite": "3729cb8fc",
    "params": {},
    "kind": "tile",
@@ -121942,7 +122006,7 @@
    "signal_max_layer": "M5",
    "layer_cap": "M5",
    "layer_rule": "tile",
-   "version": 1,
+   "version": 7,
    "grant": "independent_state_leaf_margin_1417",
    "collective_state_grant_1319": true,
    "measured_std_um2": 1058.95998,
@@ -121951,13 +122015,14 @@
    "assigned_pin_file_sha256": "dc837bc252d426f7d739b892d33819772e1446fb194fdaa48e5d83a73bbbc173",
    "qualification_scope": "independent actual 293-port state leaf; no parent clock/pin/reach/packing/timing qualification inherited",
    "reroute_reason": "die_window: measured new-state CTS density/route margin; native C1472 remains separate structural failure",
-   "notes": "Source-exact independent diagnostic child only: 64.8 square, 293 pins, same groups/layers with +6.48 um local offset; unchanged state logic does not qualify native capture or parent. Parent registered peer topology/packing/clock remain OPEN."
+   "notes": "Source-exact independent diagnostic child only: 64.8 square, 293 pins, same groups/layers with +6.48 um local offset; unchanged state logic does not qualify native capture or parent. Parent registered peer topology/packing/clock remain OPEN.",
+   "view": "physical/ref_tile/hcoll_ring_state_capture_1417/views/ot_hgi_coll_pring_static_state_capture_lane"
   },
   {
    "name": "coll_NE_state5",
-   "cell": "ot_hgi_coll_pring_static_state_lane",
-   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static.sv",
-   "source_sha256": "c827fb8dc971baca5e155b88a3381eab218999b127e3a4b9f419f3f28e77d514",
+   "cell": "ot_hgi_coll_pring_static_state_capture_lane",
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static_state_capture.sv",
+   "source_sha256": "9ffba061514f1f2fc150a38da9706c8a53c22dd38d077cbc3c7e24a7fb096857",
    "source_prerequisite": "3729cb8fc",
    "params": {},
    "kind": "tile",
@@ -122288,7 +122353,7 @@
    "signal_max_layer": "M5",
    "layer_cap": "M5",
    "layer_rule": "tile",
-   "version": 1,
+   "version": 7,
    "grant": "independent_state_leaf_margin_1417",
    "collective_state_grant_1319": true,
    "measured_std_um2": 1058.95998,
@@ -122297,13 +122362,14 @@
    "assigned_pin_file_sha256": "dc837bc252d426f7d739b892d33819772e1446fb194fdaa48e5d83a73bbbc173",
    "qualification_scope": "independent actual 293-port state leaf; no parent clock/pin/reach/packing/timing qualification inherited",
    "reroute_reason": "die_window: measured new-state CTS density/route margin; native C1472 remains separate structural failure",
-   "notes": "Source-exact independent diagnostic child only: 64.8 square, 293 pins, same groups/layers with +6.48 um local offset; unchanged state logic does not qualify native capture or parent. Parent registered peer topology/packing/clock remain OPEN."
+   "notes": "Source-exact independent diagnostic child only: 64.8 square, 293 pins, same groups/layers with +6.48 um local offset; unchanged state logic does not qualify native capture or parent. Parent registered peer topology/packing/clock remain OPEN.",
+   "view": "physical/ref_tile/hcoll_ring_state_capture_1417/views/ot_hgi_coll_pring_static_state_capture_lane"
   },
   {
    "name": "coll_NE_state6",
-   "cell": "ot_hgi_coll_pring_static_state_lane",
-   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static.sv",
-   "source_sha256": "c827fb8dc971baca5e155b88a3381eab218999b127e3a4b9f419f3f28e77d514",
+   "cell": "ot_hgi_coll_pring_static_state_capture_lane",
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static_state_capture.sv",
+   "source_sha256": "9ffba061514f1f2fc150a38da9706c8a53c22dd38d077cbc3c7e24a7fb096857",
    "source_prerequisite": "3729cb8fc",
    "params": {},
    "kind": "tile",
@@ -122634,7 +122700,7 @@
    "signal_max_layer": "M5",
    "layer_cap": "M5",
    "layer_rule": "tile",
-   "version": 1,
+   "version": 7,
    "grant": "independent_state_leaf_margin_1417",
    "collective_state_grant_1319": true,
    "measured_std_um2": 1058.95998,
@@ -122643,13 +122709,14 @@
    "assigned_pin_file_sha256": "dc837bc252d426f7d739b892d33819772e1446fb194fdaa48e5d83a73bbbc173",
    "qualification_scope": "independent actual 293-port state leaf; no parent clock/pin/reach/packing/timing qualification inherited",
    "reroute_reason": "die_window: measured new-state CTS density/route margin; native C1472 remains separate structural failure",
-   "notes": "Source-exact independent diagnostic child only: 64.8 square, 293 pins, same groups/layers with +6.48 um local offset; unchanged state logic does not qualify native capture or parent. Parent registered peer topology/packing/clock remain OPEN."
+   "notes": "Source-exact independent diagnostic child only: 64.8 square, 293 pins, same groups/layers with +6.48 um local offset; unchanged state logic does not qualify native capture or parent. Parent registered peer topology/packing/clock remain OPEN.",
+   "view": "physical/ref_tile/hcoll_ring_state_capture_1417/views/ot_hgi_coll_pring_static_state_capture_lane"
   },
   {
    "name": "coll_NE_state7",
-   "cell": "ot_hgi_coll_pring_static_state_lane",
-   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static.sv",
-   "source_sha256": "c827fb8dc971baca5e155b88a3381eab218999b127e3a4b9f419f3f28e77d514",
+   "cell": "ot_hgi_coll_pring_static_state_capture_lane",
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static_state_capture.sv",
+   "source_sha256": "9ffba061514f1f2fc150a38da9706c8a53c22dd38d077cbc3c7e24a7fb096857",
    "source_prerequisite": "3729cb8fc",
    "params": {},
    "kind": "tile",
@@ -122980,7 +123047,7 @@
    "signal_max_layer": "M5",
    "layer_cap": "M5",
    "layer_rule": "tile",
-   "version": 1,
+   "version": 7,
    "grant": "independent_state_leaf_margin_1417",
    "collective_state_grant_1319": true,
    "measured_std_um2": 1058.95998,
@@ -122989,7 +123056,8 @@
    "assigned_pin_file_sha256": "dc837bc252d426f7d739b892d33819772e1446fb194fdaa48e5d83a73bbbc173",
    "qualification_scope": "independent actual 293-port state leaf; no parent clock/pin/reach/packing/timing qualification inherited",
    "reroute_reason": "die_window: measured new-state CTS density/route margin; native C1472 remains separate structural failure",
-   "notes": "Source-exact independent diagnostic child only: 64.8 square, 293 pins, same groups/layers with +6.48 um local offset; unchanged state logic does not qualify native capture or parent. Parent registered peer topology/packing/clock remain OPEN."
+   "notes": "Source-exact independent diagnostic child only: 64.8 square, 293 pins, same groups/layers with +6.48 um local offset; unchanged state logic does not qualify native capture or parent. Parent registered peer topology/packing/clock remain OPEN.",
+   "view": "physical/ref_tile/hcoll_ring_state_capture_1417/views/ot_hgi_coll_pring_static_state_capture_lane"
   },
   {
    "name": "hb_ckgen",
@@ -127672,5 +127740,15 @@
    "host": "host_cp static ingress child granted 1319 (98ca51cf9); parent loader RTL pending"
   },
   "new_overlaps": 0
+ },
+ "grants_v7_1900": {
+  "date": "2026-10-15",
+  "owner": "H-DIE",
+  "requests": "H-COLL+IDX via coordinator",
+  "changes": [
+   "writer x4: tkw_d[567:284] -> W M4 [24.576, 51.84]; tkw_d[283:0] S M5 [24.624, 51.888]",
+   "state x32: cell ot_hgi_coll_pring_static_state_capture_lane (same ports/outline), cost accepted",
+   "idx_s0..s3: 374 control bits local E -> local W [1561.608, 1597.512] next to ql_*/score; clocks stay E"
+  ]
  }
 }

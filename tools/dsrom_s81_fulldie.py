@@ -3063,6 +3063,11 @@ SUHC_V2_BUSES = tuple(
 SU_E = 0.0                     # --su-e MM2: su_n in the E column above hc_n (W column: su_s + centre)
 COLL_SLAB_H = None             # --coll-slab-h H (s81die-1011 hier contract v1): collective slab height at full hub column width
 VM_SLAB = None                 # --vm-slab W,H (s81-vm-1011): VM master outline in um
+HUB_ABUT = False               # --hub-abut (S-DIE 2026-10-15, A2 fit): every W-column centre-stack gap = RTL_ABUT_GAP (21.6) instead of
+                                # the 172.8-um SPINE_GAP channel (inter-block lanes leave through the VCH / roads, not the gaps)
+VM_SPAN_VCH = False            # --vm-span-vch W,H (S-DIE 2026-10-15, coordinator 18:40): A2 VM reservation spans W column + VCH
+SU_GROW_EAST = False           # --su-outline W,H[,XOFF] (S-DIE 2026-10-15): su_s outline override, W edge XOFF um west of the
+SU_WEST_OVERHANG = 0.0          # column (default 0); the rest of a wider SU grows EAST into the VCH
 ECOL_SLABS = ()               # --ecol-slabs (ds-1010/s81die): W-column centre slabs moved to an E-column sub-column
 ECOL_W = 518.4
 CTRL_SVC_ALIGN = False         # --ctrl-svc-align (s81-die v14): stack client pins at their controller bits' x
@@ -4298,7 +4303,9 @@ def build_r8(variant=None):
         # 972.4 x 423.4 + ce parent + ct) at full column width; the W column has ~5.8 mm free height above the host
         centre_area['collective'] = max(centre_area['collective'], up(COLL_SLAB_H, GY) * cw / 1e6)
     if VM_SLAB:   # --vm-slab W,H (s81-vm-1011): the VM master outline (NP24 bgq tiles), centred in the hub column
-        assert VM_SLAB[0] <= cw + 1e-6, ('--vm-slab wider than the hub column', VM_SLAB, cw)
+        # --vm-span-vch (S-DIE 2026-10-15, A2 fit closure a): the VM is W column + VCH wide (W edge on the column's W edge);
+        # the VCH is blocked over the VM height, its lanes there use S14W / S14E or the HC corridor
+        assert VM_SLAB[0] <= (cw + VCH8 if VM_SPAN_VCH else cw) + 1e-6, ('--vm-slab wider than the hub column', VM_SLAB, cw)
         slab_w['vm'] = up(VM_SLAB[0], GX)
         centre_area['vm'] = slab_w['vm'] * up(VM_SLAB[1], GY) / 1e6
     if CONTRACT_SLABS:
@@ -4384,6 +4391,10 @@ def build_r8(variant=None):
             for j, rn1_ in enumerate(rn_):
                 insts.append(Inst(rn1_, rc_['name'], x_sp + wc_ + 8.64, yy + 8.64 + j * pit_,
                                   rc_['w'], rc_['h'], 'R0', kind='pqrom', region='spine', domain='stream_1p2'))
+        elif n == 'vm' and VM_SPAN_VCH:
+            slab(n, centre_area[n], x0_, yy, slab_w[n], dom='serial_0p9')
+            notes.append('--vm-span-vch: sp_vm %.1f x %.1f um spans the W column + VCH (x %.1f..%.1f)' % (
+                slab_w[n], centre_area[n] * 1e6 / slab_w[n], x0_, x0_ + slab_w[n]))
         else:
             slab(n, centre_area[n], up(x0_ + (w0_ - slab_w.get(n, w0_)) / 2, GX), yy, slab_w.get(n, w0_), dom='serial_0p9' if n == 'vm' else 'stream_1p2',
                  master='dsfd_host' if n == 'host' else None)
@@ -4393,7 +4404,7 @@ def build_r8(variant=None):
     # --contract (s81-die-iter, contract v4): a v2 SU wider than the hub column grows WEST (E edge on the column's E edge,
     # clear of the xE trunk / sseq stations by the VCH); the free strip W of the column holds it (10.5 um to the xW stations)
     su_w_ = up(SU_V2_UM[0], GX) if (SUHC_V2 and SU_V2_UM[0] > cw + 1e-6) else cw
-    su_x_ = x_sp - (su_w_ - cw)
+    su_x_ = x_sp - SU_WEST_OVERHANG if SU_GROW_EAST else x_sp - (su_w_ - cw)
     if SU_E:
         # --su-e MM2 (ds-1010/s81die 2026-10-11): su_n (MM2) moves to the E column above hc_n; su_s (the rest) sits at the
         # W column floor with the centre stack right above it (the 2.42 mm VM of s81-vm-1011 overflowed the W column)
@@ -4413,7 +4424,7 @@ def build_r8(variant=None):
         nx_ = centre[i_ + 1] if i_ + 1 < len(centre) else None
         # --rtl-hub-widths: the face-to-face wide pairs (VM <- capture 13,376 b, capture <- gather 6,947 b) sit RTL_ABUT_GAP
         # apart so their buses are direct register-to-register wires (SPINE_GAP 172.8 > the 155 um direct-hop limit)
-        gap_ = RTL_ABUT_GAP if RTL_HUB_WIDTHS and {n, nx_} in ({'vm', 'capture'}, {'capture', 'gather'}) else SPINE_GAP
+        gap_ = RTL_ABUT_GAP if (RTL_HUB_WIDTHS and {n, nx_} in ({'vm', 'capture'}, {'capture', 'gather'})) or HUB_ABUT else SPINE_GAP
         if PQ_CNT and {n, nx_} == {'capture', 'gather'}:
             gap_ = PQ_CNT_SEAM       # --pq-cnt: the count leaves tile the gather | capture seam
         yy += up(centre_area[n] * 1e6 / slab_w.get(n, cw), GY) + gap_
@@ -8932,6 +8943,10 @@ def _assigned_record(master):
             if conflicts:
                 raise ValueError('assigned pins have no common track origin: '
                                  + str(path) + ': ' + json.dumps(conflicts, sort_keys=True))
+        if rec and rec.get('released'):
+            # S-DIE 2026-10-15: a 'released' record in an earlier overlay directory withdraws the later assigned pins of a
+            # master whose outline changed (A2 VM reservation, reshaped su_s): the generator lays its face pins (top-down)
+            rec = None
         _ASSIGNED_PIN_CACHE[master] = rec
     return _ASSIGNED_PIN_CACHE[master]
 
@@ -10390,6 +10405,9 @@ def die_options(ap):
     ap.add_argument('--bf-static-prog', action='store_true', help='S-BIND 2026-10-15: BF pairs run their compiled '
                     'programme (dsfd_bf_front_static + ot_s81_cfg7_seq_bfp; descriptor in the cfg ROM spare columns)')
     ap.add_argument('--bf-x2-pair', action='store_true', help='S-BIND r6 (needs --bf-x2-static): the x tree carries the packed word as two equal-station forwarded lanes (566-b legacy + 538-b x2) with one static ingress each at the column')
+    ap.add_argument('--hub-abut', action='store_true', help='S-DIE 2026-10-15: W-column centre-stack gaps 21.6 um (RTL_ABUT_GAP) instead of 172.8')
+    ap.add_argument('--vm-span-vch', help='S-DIE 2026-10-15 (coordinator 18:40, A2 VM): VM reservation W,H um spanning the W column + VCH (overrides the contract VM outline)')
+    ap.add_argument('--su-outline', help='S-DIE 2026-10-15: su_s outline W,H um (overrides the contract); wider than the column grows EAST into the VCH')
     ap.add_argument('--pin-lattice', action='store_true', help='S-DIE 2026-10-15: move off-lattice generated/assigned pins the least distance onto one legal site-grid origin per axis (die PLACE snap rule); report in <lef>.lattice.json')
     ap.add_argument('--relay-wide-oriented', action='store_true', help='S-DIE r3: >= 1,000-b relays reserve only the hop-direction outline (depth >= 36.72 um), not the two-orientation square')
     ap.add_argument('--stn70-across-fallback', action='store_true', help='S-DIE r3: with --stn70-split, a 70xK group with no along-flow spot retries stacked across the flow')
@@ -10703,6 +10721,17 @@ def apply_options(a):
     HROW_TX = bool(getattr(a, 'hrow_tx', False))
     assert not HROW_TX or (SUHC_1011 and SU_E), '--hrow-tx needs --suhc-1011 --su-e (h resident in HC, E-column slot)'
     VM_SLAB = tuple(float(x) for x in a.vm_slab.split(',')) if getattr(a, 'vm_slab', None) else None
+    global VM_SPAN_VCH, SU_GROW_EAST, HUB_ABUT
+    HUB_ABUT = bool(getattr(a, 'hub_abut', False))
+    if getattr(a, 'vm_span_vch', None):
+        VM_SLAB = tuple(float(x) for x in a.vm_span_vch.split(','))
+        VM_SPAN_VCH = True
+    if getattr(a, 'su_outline', None):
+        global SU_WEST_OVERHANG
+        v_ = [float(x) for x in a.su_outline.split(',')]
+        SU_V2_UM = tuple(v_[:2])
+        SU_WEST_OVERHANG = v_[2] if len(v_) > 2 else 0.0
+        SU_GROW_EAST = True
     global ECOL_SLABS, ECOL_W
     ECOL_SLABS = tuple(x for x in (getattr(a, 'ecol_slabs', None) or '').split(',') if x)
     assert set(ECOL_SLABS) <= {'wfc', 'host', 'capture', 'seedl', 'p2'}, ('--ecol-slabs: wfc / host / capture / seedl / p2', ECOL_SLABS)
