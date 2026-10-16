@@ -48,6 +48,7 @@ import clock_entry_constraints  # noqa: E402
 
 KIT_ROOT = "physical/ref_tile"
 QDM = "physical/qwen_die_masters"
+ASSIGNED_PIN_EXACT_TCL = "physical/common_flow/assigned_pin_exact.tcl"
 # floorplan lattice: die / core / macro origins snap to these (um).  2.16 = lcm(row 0.27, M4 track 0.048, site 0.054)
 GRID_Y = 2.16
 GRID_X = 0.432          # lcm(site 0.054, M5 track 0.048)
@@ -373,12 +374,117 @@ def load_spec(path: str) -> dict:
     bad = [f for f in s["pins"] if f not in FACES and f != "ANY"]
     if bad:
         raise SpecError(f"spec: pins faces must be N/S/E/W (or ANY: placer's choice, all faces), got {bad}")
-    for f, names in s["pins"].items():
-        for n in names:
-            if re.search(r"\[\s*\d+\s*(:\s*\d+\s*)?\]", n):
-                raise SpecError(f"spec: pin plan names a bit/range '{n}' on {f}: name ports by base name only (a 1-bit "
-                                f"[0:0] port is a scalar after synthesis: PPL-0061 'Pins {{ck[0]}} not found')")
+    if literal_pin_bits(s):
+        validate_literal_pin_plan(s)
     return s
+
+
+def literal_pin_bits(s: dict) -> bool:
+    return any("[" in n or "]" in n for ns in s.get("pins", {}).values() for n in ns)
+
+
+def validate_literal_pin_plan(s: dict, ports=None, root=None) -> dict:
+    """Narrow exact-bit admission: real widths + exhaustive IO Tcl + named M6 grant.
+
+    Base-only plans retain the existing path. Scalar [0] aliases and ranges stay
+    forbidden. The post-synthesis caller supplies the measured port bounds too;
+    raw-DEF/LEF geometry, PG/vias and native timing still need their normal gates.
+    """
+    root = Path(root or ROOT)
+    if not s.get("io_tcl") or not s.get("m6_pin_grant"):
+        raise SpecError("literal pin bits require exact io_tcl and a named M6 contact grant; scalar [0] aliases remain forbidden")
+    import m6_pin_grant as M6
+    try:
+        granted = M6.validate(s["m6_pin_grant"], s["top"])
+    except ValueError as e:
+        raise SpecError(f"literal pin grant: {e}") from e
+    if ports is None:
+        if s.get("defines"):
+            raise SpecError("literal pin plan needs resolved actual port widths; conditional interfaces are not admitted by this parser")
+        sys.path.insert(0, str(HERE.parent / "closure_loop"))
+        import submit_lint as SL
+        decl = None
+        for f in s["sources"]:
+            p = root / f
+            if p.suffix not in (".sv", ".v") or not p.is_file():
+                continue
+            text = p.read_text()
+            if re.search(r"\bmodule\s+(?:automatic\s+)?" + re.escape(s["top"]) + r"\b", text):
+                try:
+                    decl = SL.top_ports(text, s["top"], s.get("params"))
+                except Exception as e:
+                    raise SpecError(f"literal pin actual RTL widths unresolved: {e}") from e
+                break
+        if not decl:
+            raise SpecError("literal pin actual RTL top/widths not found")
+        bounds = {n: [lsb, lsb+w-1] if lsb >= 0 else None for n,w,lsb in decl}
+        widths = {n: (w, lsb >= 0) for n,w,lsb in decl}
+    else:
+        widths = ports
+        bounds = getattr(ports, "ranges", {})
+    expected = set()
+    for n,(w,vec) in widths.items():
+        if vec and w > 1:
+            b = bounds.get(n)
+            if not b or b[1]-b[0]+1 != w:
+                raise SpecError(f"literal pin actual index bounds unresolved for {n}")
+            expected.update(f"{n}[{i}]" for i in range(b[0], b[1]+1))
+        else:
+            expected.add(n)  # [0:0] is a scalar after synthesis
+    actual = {}
+    for face,names in s["pins"].items():
+        if face not in FACES:
+            raise SpecError("literal pin plan requires a fixed face for every pin")
+        for n in names:
+            bit = re.fullmatch(r"([A-Za-z_]\w*)\[(\d+)\]", n)
+            if bit:
+                base,index=bit[1],int(bit[2]); info=widths.get(base); b=bounds.get(base)
+                if not info or not info[1] or info[0] <= 1 or not b or not b[0] <= index <= b[1]:
+                    raise SpecError(f"literal pin {n} is not an actual multi-bit port index (scalar [0] forbidden)")
+                expanded=[n]
+            elif n in widths:
+                w,vec=widths[n];b=bounds.get(n)
+                expanded=[f"{n}[{i}]" for i in range(b[0],b[1]+1)] if vec and w>1 else [n]
+            else:
+                raise SpecError(f"literal pin {n} is not an actual port; ranges/wildcards are forbidden")
+            for pin in expanded:
+                if pin in actual:
+                    raise SpecError(f"duplicate literal pin assignment {pin}")
+                actual[pin]=face
+    if set(actual) != expected:
+        raise SpecError(f"literal pin coverage mismatch: missing {sorted(expected-set(actual))[:8]}, excess {sorted(set(actual)-expected)[:8]}")
+    rel=Path(s["io_tcl"])
+    if rel.is_absolute() or ".." in rel.parts or not (root/rel).is_file():
+        raise SpecError("literal pin io_tcl must be an existing safe repo path")
+    canonical = root / ASSIGNED_PIN_EXACT_TCL
+    if not canonical.is_file():
+        raise SpecError("literal pin canonical placement helper is missing from the source archive")
+    prefix = canonical.read_text()
+    text = (root/rel).read_text()
+    if not text.startswith(prefix):
+        raise SpecError("literal pin IO Tcl must inline the byte-exact canonical placement helper")
+    commands={}
+    for line in text[len(prefix):].splitlines():
+        if line.endswith("\\"):
+            raise SpecError("literal pin IO Tcl continuations are forbidden")
+        line = line.strip()
+        if not line or line.startswith("#"):
+            continue
+        m=re.fullmatch(r"ot_assigned_pin_exact \{([^}]+)\} (M[1-6]) ([NSEW]) ([0-9]+(?:\.[0-9]+)?)",line)
+        if not m or m[1] in commands:
+            raise SpecError("literal pin IO Tcl has malformed or duplicate exact assignment")
+        n,layer,face,c=m[1],m[2],m[3],float(m[4]);commands[n]=(layer,face,c)
+        if n not in actual or actual[n]!=face:
+            raise SpecError(f"literal pin IO Tcl face/name mismatch for {n}")
+        if layer=="M6":
+            g=granted.get(n)
+            if not g or g["face"]!=face or not g["span_um"][0]<=c<=g["span_um"][1]:
+                raise SpecError(f"literal pin IO Tcl has ungranted M6 centre {n}")
+    if set(commands)!=expected:
+        raise SpecError("literal pin IO Tcl is not exhaustive for the actual RTL pins")
+    if {n for n,(layer,face,c) in commands.items() if layer=="M6"}!=set(granted):
+        raise SpecError("literal pin IO Tcl M6 contacts differ from exact named grant")
+    return actual
 
 
 def contract_slot(s: dict) -> dict | None:
@@ -1567,6 +1673,8 @@ def referenced_paths(s: dict, kd: str) -> list:
         out.append("physical/hbm_w2_rb_station_20261006/forwarded_subtree.tcl")
     if s.get("io_tcl"):
         out.append(s["io_tcl"])
+    if literal_pin_bits(s):
+        out.append(ASSIGNED_PIN_EXACT_TCL)
     out += sorted(str(v) for v in s.get("orfs_vars", {}).values() if not str(v).startswith("/") and os.path.isfile(str(v)))
     if s.get("io_flop_at_pins"):
         out += ["physical/qwen_die_masters/io_flop_at_pins.tcl", "physical/qwen_die_masters/out_flop_release.tcl"]
