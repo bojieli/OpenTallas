@@ -51,10 +51,11 @@ class TieLocal(unittest.TestCase):
         self.assertIn('add_pdn_connect -grid core -layers {M1 M2}\nadd_pdn_connect -grid core -layers {M2 M9}', out)
         self.assertIn('-layer M2 -width .018 -followpins', out)
         self.assertIn('add_pdn_connect -grid pg_m8_0 -layers {M7 M8}', out)       # macro grids keep their M7->M8 vias
+        self.assertIn('add_pdn_connect -grid pg_m8_0 -layers {M5 M8}', out)       # M5-top masters reach M8
         self.assertEqual(r['r8_tie_local']['dropped_ladder_lines'], 11)
         run = (d / 'run_pdn.tcl').read_text()
         self.assertLess(run.index('ot_tie_rows 8.640 0.48 9.091 0.480'), run.index('source /work/pdn.tcl'))
-        self.assertIn('pdngen; ot_tie_rows_verify 8.640 0.48;', run)
+        self.assertIn('pdngen; ot_tie_rows_verify 8.640 0.48; source /work/die_constant_pg_check.tcl', run)
         self.assertTrue((d / 'die_tie_rows.tcl').is_file())
         # idempotent run_pdn patch
         (d / 'pdn.tcl').write_text(PDN)
@@ -65,7 +66,17 @@ class TieLocal(unittest.TestCase):
         d = self.case()
         pdn_regroup.regroup(d, 8.64, 'pdn.tcl', pos_json=d / 'pos.json')
         self.assertIn('-grid core -layer M3 ', (d / 'pdn.tcl').read_text())
+        self.assertNotIn('{M5 M8}', (d / 'pdn.tcl').read_text())
         self.assertNotIn('ot_tie_rows', (d / 'run_pdn.tcl').read_text())
+
+    def test_bbox_form_run_pdn(self):
+        bbox = RUN.replace('if {[catch {source /work/pdn.tcl; pdngen; source /work/die_constant_pg_check.tcl} err]} { error $err }',
+                           'if {[catch {\n  try {source /work/pdn.tcl; pdngen} finally {}\n  source /work/die_constant_pg_check.tcl\n} err]} { error $err }')
+        d = self.case(run=bbox)
+        pdn_regroup.regroup(d, 8.64, 'pdn.tcl', pos_json=d / 'pos.json', tie_local_pg=True)
+        run = (d / 'run_pdn.tcl').read_text()
+        self.assertIn('ot_tie_rows_verify 8.640 0.48; source /work/die_constant_pg_check.tcl', run)
+        self.assertLess(run.index('pdngen'), run.index('ot_tie_rows_verify'))
 
     def test_mutant_missing_hook_refuses(self):
         d = self.case(run=RUN.replace('mem read\n', ''))

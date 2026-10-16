@@ -8,6 +8,7 @@ is transactional: malformed or overlapping candidates leave the model intact.
 import hashlib
 import json
 import math
+import os
 from pathlib import Path
 
 ORIENTS = ('R0', 'MX', 'MY', 'R180')
@@ -58,15 +59,30 @@ def _overlaps(rects, eps=1e-3):
 def apply(model, path):
     raw = Path(path).read_bytes()
     d = json.loads(raw)
-    if d.get('schema') != 'opentallas.qwen.globalfp-homes.v1':
+    if d.get('schema') not in ('opentallas.qwen.globalfp-homes.v1', 'opentallas.qwen.globalfp-q-homes.1705.v1'):
         raise ValueError('OT_SPLIT_HOMES: unexpected schema')
+    if isinstance(d.get('reserve'), list):
+        # GLOBAL-FP-Q 1705 homes name their reserved channels (slab vertical channels) without rectangles: they are
+        # the gaps the homes leave free, so there is nothing extra to reserve here; the names stay in the receipt
+        d['reserve_names'] = d.pop('reserve')
     digest = source_fingerprint(model)
-    if d.get('source_model_sha256') != digest:
-        raise ValueError('OT_SPLIT_HOMES: stale or missing source_model_sha256')
     homes = d.get('homes')
     if not isinstance(homes, dict) or not homes:
         raise ValueError('OT_SPLIT_HOMES: nonempty homes object required')
     by = {i.name: i for i in model['insts']}
+    rebase = None
+    if d.get('source_model_sha256') != digest:
+        # OT_SPLIT_HOMES_REBASE=1 (Q-COMPUTE-DIE, coordinator-adopted fpq_s6 on a newer graph): the homes still apply
+        # only if EVERY current instance has a home with its exact master and outline; homes of instances the current
+        # graph no longer has are dropped and recorded. The overlap/outside checks below stay.
+        if os.environ.get('OT_SPLIT_HOMES_REBASE') != '1':
+            raise ValueError('OT_SPLIT_HOMES: stale or missing source_model_sha256')
+        missing = sorted(set(by) - set(homes))
+        if missing:
+            raise ValueError(f'OT_SPLIT_HOMES rebase: {len(missing)} current instances without a home, e.g. {missing[:4]}')
+        dropped = sorted(set(homes) - set(by))
+        homes = {n: h for n, h in homes.items() if n in by}
+        rebase = dict(homes_fingerprint=d.get('source_model_sha256'), current_fingerprint=digest, dropped=dropped)
     if len(by) != len(model['insts']) or set(homes)-set(by):
         raise ValueError('OT_SPLIT_HOMES: duplicate or unknown instance')
     proposed = {n: dict(x=i.x, y=i.y, w=i.w, h=i.h, o=i.orient) for n, i in by.items()}
@@ -95,6 +111,6 @@ def apply(model, path):
         by[n].x, by[n].y, by[n].orient = h['x'], h['y'], h['o']
     return dict(path=str(path), sha256=hashlib.sha256(raw).hexdigest(), source_model_sha256=digest,
                 candidate=d.get('candidate'), moved=len(moved), moved_names=moved,
-                reserve=reserve, qualified=False,
+                reserve=reserve, reserve_names=d.get('reserve_names', []), rebase=rebase, qualified=False,
                 open=['actual pins and legal orientations', 'relay allocation and cut capacity',
                       'clock/reset delivery', 'compiler fixed-cycle calendar', 'GRT/TT/FF/DRC'])
