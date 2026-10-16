@@ -26,6 +26,8 @@ pass)
   prog; (cd $T && iverilog -g2012 -s tb_s81_fixed_issue -o sim $S/ot_s81_fixed_issue.sv $S/test/tb_s81_fixed_issue.sv) || { echo "C8 BENCH BUILD_FAIL"; exit 1; }
   for mode in 0 1 2 3 4 5 6 7 8 9; do (cd $T && vvp -n sim +mode=$mode) > $OUT/issue_m$mode.log 2>&1 || { tail -2 $OUT/issue_m$mode.log; echo "C8 BENCH FAIL issuer mode $mode"; exit 1; }
     grep -q "FATAL" $OUT/issue_m$mode.log && { grep -m1 FATAL $OUT/issue_m$mode.log; echo "C8 BENCH FAIL issuer mode $mode"; exit 1; }; done
+  (cd $T && iverilog -g2012 -s tb_s81_fixed_issue_fault_tree -o ft $S/ot_s81_fixed_issue.sv $S/test/tb_s81_fixed_issue_fault_tree.sv) || { echo "C8 BENCH BUILD_FAIL faulttree"; exit 1; }
+  for fm in 0 1 2 3 4; do (cd $T && vvp -n ft +mode=$fm) > $OUT/fault_tree_m$fm.log 2>&1 || { cat $OUT/fault_tree_m$fm.log; echo "C8 BENCH FAIL faulttree mode $fm"; exit 1; }; done
   tail -1 $OUT/issue_m0.log; echo "C8 BENCH PASS (c8 wrapper 3 modes + 128-row issuer 10 modes)"; exit 0 ;;
 mut_vm_absent)
   (cd $T && iverilog -g2012 -DOT_SSEQS_MUT_VM_ABSENT -s tb_s81_static_c8 -o m $S/ot_s81_fixed_issue.sv $S/ot_s81_fixed_mailbox.sv $S/dsfd_stage_seq_static_c.sv $S/dsfd_stage_seq_static_c8.sv $S/test/tb_s81_static_c8.sv && \
