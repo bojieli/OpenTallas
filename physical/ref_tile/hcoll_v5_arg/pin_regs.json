@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hgi_coll_argmax_m",
+ "enable": false,
+ "reason": "The hard_v5 q3 lockstep bench (tb_hgi_coll_q_hard_v5 vs production host_v4) fixes the argmax edges (compiled flush_slot / publish_slot = flush+6): out_v/out_flit/fault are flop Q (argmax_static pin register), every input lands in the amerge stage-1 / control flops through the leaf's mode gate. A synthesis pin stage would add +1/+1 edges the static schedule and bench do not carry."
+}

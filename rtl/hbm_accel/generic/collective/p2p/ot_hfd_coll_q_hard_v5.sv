@@ -263,10 +263,18 @@ endmodule
 
 // ---------------------------------------------------------------------------------------------------------------
 // q3 engines with the V4 parent's arg/tkm mode gating inside the hardened child.
+// COLL-CTL 1045: the leaf takes only the delivery bits the engine reads -- per lane the FP32 key + index word
+// (flit[63:0], ot_hgi_coll_amerge stage 1) and the 33b meta (flit[544:512], argmax_static source/order checks).
+// flit[511:64] has no load in either module (amerge runs with en=1, so its pass-through o_f never reaches out_flit);
+// dropping those 1,792 pins changes no edge or value (lockstep bench) and removes a pin-bound 2,180-bit face.
 module ot_hgi_coll_argmax_m(
  input wire clk,rst_n,start,mode,input wire [7:0] cfg_g,cfg_gbase,cfg_rank,
- input wire [3:0] in_slot,in_v,input wire [2179:0] in_flit,input wire flush_slot,publish_slot,
+ input wire [3:0] in_slot,in_v,input wire [255:0] in_key,input wire [131:0] in_meta,input wire flush_slot,publish_slot,
  output wire out_v,output wire [544:0] out_flit,output wire fault);
+ wire [2179:0] in_flit;
+ for(genvar l=0;l<4;l=l+1)begin:g_lane
+  assign in_flit[l*545+:545]={in_meta[l*33+:33],448'd0,in_key[l*64+:64]};
+ end
  ot_hgi_coll_argmax_static u(.clk(clk),.rst_n(rst_n),.start(start),.cfg_g(cfg_g),.cfg_gbase(cfg_gbase),
   .cfg_rank(cfg_rank),.in_slot(in_slot & {4{mode}}),.in_v(in_v & {4{mode}}),.in_flit(in_flit),
   .flush_slot(flush_slot),.publish_slot(publish_slot),.out_v(out_v),.out_flit(out_flit),.fault(fault));
@@ -409,7 +417,9 @@ module ot_hfd_coll_q_hard_v5_body #(
    .protocol_fault(protocol_fault),.cycles(stat_cycles));
   ot_hgi_coll_argmax_m u_arg(.clk(clk_arg),.rst_n(rst_n),.start(a_arg_start),.mode(a_arg_mode),
    .cfg_g(p_tkm_cfg_g),.cfg_gbase(p_tkm_cfg_gbase),.cfg_rank(a_pub_src),
-   .in_slot(a_arg_in_slot),.in_v(dest_v[NPT+8+:4]),.in_flit(dest_d[(NPT+8)*PWT+:4*PWT]),
+   .in_slot(a_arg_in_slot),.in_v(dest_v[NPT+8+:4]),
+   .in_key({dest_d[(NPT+11)*PWT+:64],dest_d[(NPT+10)*PWT+:64],dest_d[(NPT+9)*PWT+:64],dest_d[(NPT+8)*PWT+:64]}),
+   .in_meta({dest_d[(NPT+11)*PWT+512+:33],dest_d[(NPT+10)*PWT+512+:33],dest_d[(NPT+9)*PWT+512+:33],dest_d[(NPT+8)*PWT+512+:33]}),
    .flush_slot(a_arg_flush),.publish_slot(a_arg_publish),.out_v(arg_out_v),.out_flit(arg_out_data),.fault(arg_fault));
   ot_hgi_coll_tkm_m u_tkm(.clk(clk_tkm[33]),.tile_clk(clk_tkm[31:0]),.buffer_clk(clk_tkm[32]),.rst_n(rst_n),
    .start(p_tkm_start),.arg_mode(a_arg_mode),.cfg_n(p_tkm_cfg_n),.cfg_k(p_tkm_cfg_k),.cfg_nout(p_tkm_cfg_nout),
