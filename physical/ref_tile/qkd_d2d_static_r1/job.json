@@ -1,5 +1,5 @@
 {
- "name": "qkd_d2d_static_r1-r1-COMMIT",
+ "name": "qkd_d2d_static_r1-r1-87cafef19",
  "block": "qkd_d2d_static",
  "ref_tile": true,
  "owner": "Claude:q-link",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 48,
  "source": {
   "branch": "claude/qwen-link-1015",
-  "commit": "COMMIT",
+  "commit": "87cafef19",
   "extra_paths": [
    "rtl/qwen_sys",
    "rtl/qwen_split",
@@ -96,7 +96,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qkd_d2d_static_r1/qkd_d2d_static_r1-r1-COMMIT"
+   "to": "results/rtl/ref_tile/qkd_d2d_static_r1/qkd_d2d_static_r1-r1-87cafef19"
   }
  ],
  "cycles_added": 0,
