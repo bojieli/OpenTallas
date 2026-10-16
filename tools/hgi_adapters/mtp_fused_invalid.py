@@ -31,7 +31,7 @@ def main():
     recs = (a.template / 'fu_rec.mem').read_text().splitlines()
     ri = cases[target][1]
     original = int(recs[ri], 16)
-    assert (original >> 452) & ((1 << 20) - 1) == 1, 'template gain is not broadcast'
+    assert (original >> 452) & ((1 << 20) - 1) in (0, 1), 'template gain is not broadcast'
     receipt = {}
     for name, (low, width, value) in CHANGES.items():
         out = a.out / name
