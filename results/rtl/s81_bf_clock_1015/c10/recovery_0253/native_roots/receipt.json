@@ -1,0 +1,47 @@
+{
+  "status": "PASS_COMPONENT_EXACTNESS",
+  "source_commit": "ea1b0c30b794aacaa897b3416f90c4824b3617fb",
+  "candidate": "actual dsfd_bf_front_static + two dsfd_bf_col_roots with all ten same-PLL/phase clocks, real mapped4096x274 ROM functional models and immutable offline via masks",
+  "golden": "historical external numerical/reference comparator only; candidate memory read callbacks replaced by the actual mapped macro model",
+  "actual_onchip_arithmetic": "real reviewed RTL; no generated numerical arithmetic inside candidate",
+  "positive": {
+    "returncode": 0,
+    "rows": 456,
+    "values": 912,
+    "config_checks": 448,
+    "cycles": 124422,
+    "compiled_phases": 13,
+    "lag_ns": [
+      6.664,
+      15.827,
+      9.923
+    ],
+    "TXN": "MATCH"
+  },
+  "negative": {
+    "define": "BF_ROOT_MUTANT_STOP",
+    "result": "FAIL_AS_REQUIRED",
+    "first_diff_transaction": 16
+  },
+  "cycles_added": 0,
+  "native_physical_qualification": false,
+  "production_throughput_qualification": false,
+  "open": [
+    "local physical leaf extraction/hardening",
+    "all group clock pins, actual CTS R/spread and TT/FF/DRC0/native220/190",
+    "all incident parent cuts/routes and full token composition"
+  ],
+  "execution": {
+    "host": "ot-epyc4",
+    "run": "/srv/opentallas-scratch2/codex/bf-roots-0253/native2",
+    "positive_compile": "unit731778 completed build; legacy relative work-path runner error preserved in takeover log; same binary then admitted unit764550 and exit0",
+    "negative": "unit766033 exit0 because intended failing mutant detected"
+  },
+  "hashes": {
+    "build_sources_sha256.txt": "d174c225adaa3f79fdd20b2d7e69e374554d622d99ecacfdbbc37af6eec75f2d",
+    "positive.log": "fbeba0f5760ddea1b2542724d6572a134cb79f3e1c1258f77c8bc5f28485f204",
+    "mapped_image_manifest.json": "c49677a04639b663fbffebe1ef9bb6b9eb56803bcbd992fa4df8b3ffa24a8d79",
+    "mutant_terminal.json": "0883303582456d32132716eef70cfbc2a1d74817309bda9e31d1d4cbe579f9c3",
+    "root_stop.log": "bc5a30137f1b89cae7b8be67d0f944ca8d39db565a5a4a9d055832d76e40b707"
+  }
+}

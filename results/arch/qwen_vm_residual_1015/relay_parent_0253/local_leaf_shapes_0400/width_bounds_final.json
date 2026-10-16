@@ -1,0 +1,32 @@
+{
+  "scope": "Actual CLOSED6_report stdcell areas supersede earlier CTS-only sizing floors. No new sizing grant, no inherited route, no global fill assumption.",
+  "final_area_um2": {
+    "return_plane": 843.176,
+    "read_control_ro6": 596.759
+  },
+  "height_um": 58.32,
+  "core_total_inset_um": 4.32,
+  "width_floors_um": {
+    "return_plane": {
+      "0.6": 30.343950617283955,
+      "0.5": 35.54874074074074
+    },
+    "read_control_ro6": {
+      "0.6": 22.738487654320988,
+      "0.5": 26.422185185185185
+    }
+  },
+  "rejected_previous_CTS_only_control_width_um": 17.28,
+  "later_conservative_contact_screen": {
+    "return_plane_um": [
+      36.72,
+      58.32
+    ],
+    "read_control_ro6_um": [
+      30.24,
+      58.32
+    ]
+  },
+  "clock_PG_detail": "Area-only control width28.08 has centered M5clock14.028 too near PG13.992. Choose30.24 midpoint15.132 or explicitly reassign clock to legal14.124 before any grant. No inferred clock contact acceptance.",
+  "limitations": "Final route/hold buffer area may change under reshaping. Every incident source pin, cut, PG and native timing must be measured again; current336 remains CLOSED unchanged."
+}

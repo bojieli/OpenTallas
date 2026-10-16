@@ -43,7 +43,7 @@ reg init=0;
  .prefetch_v(readback?8'd0:pf_v),.prefetch_scalar(pf_scalar),.prefetch_sector(pf_sec),.prefetch_group(pf_group),.prefetch_local_addr(pf_addr),
  .prefetch_word(24'd0),.scalar_addr({48'd0,24'd12672,24'd0}),.scalar_enable(4'b0010),
  .local_rq(rq),.local_rr(rr),.local_wq(wq),.local_w_done(done),
- .vi_q(512'd0),.side_y(512'd0),.drain_round_bf16(2'd0),.drain_v(drain_v),.drain_addr(drain_addr),.drain_vm_sector(drain_sector),.fault(fault));
+ .vi_q(512'd0),.drain_round_bf16(2'd0),.drain_v(drain_v),.drain_addr(drain_addr),.drain_vm_sector(drain_sector),.fault(fault));
  ot_hbm_vm_lg_static_tap #(.READ_RETURN(14),.WRITE_RETURN(11)) mid(.clk(clk),.rst_n(rst_n),.local_rq(readback?136'd0:rq),.far_rq(136'd0),
  .local_wq(wq),.far_wq(2248'd0),.local_read(readback?8'd0:pf_v),.local_write({wq[2247],wq[1966],wq[1685],wq[1404],wq[1123],wq[842],wq[561],wq[280]}),
  .near_rq(nrq1),.near_wq(nwq1),.near_rr(frr0),.near_w_done(fdone0),.local_rr(rr),.local_w_done(done),.fault(t1f));

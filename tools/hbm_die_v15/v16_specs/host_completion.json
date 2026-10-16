@@ -3503,6 +3503,91 @@
   },
   {
    "src": [
+    "calendar_NW",
+    "client_seq",
+    0,
+    8
+   ],
+   "dst": [
+    "hb_vms_NW",
+    "client_seq",
+    0,
+    8
+   ],
+   "bits": 8,
+   "clock": "stream",
+   "basis": "Universal W187 field contains zero-extended original per-quadrant packed value (tools/hbm_vm_static_calendar.py pack); exact low-field slice preserves all original client lane bits."
+  },
+  {
+   "src": [
+    "calendar_NW",
+    "response_enable",
+    0,
+    4
+   ],
+   "dst": [
+    "hb_vms_NW",
+    "response_enable",
+    0,
+    4
+   ],
+   "bits": 4,
+   "clock": "stream",
+   "basis": "Universal W187 field contains zero-extended original per-quadrant packed value (tools/hbm_vm_static_calendar.py pack); exact low-field slice preserves all original client lane bits."
+  },
+  {
+   "src": [
+    "calendar_NW",
+    "response_seq",
+    0,
+    8
+   ],
+   "dst": [
+    "hb_vms_NW",
+    "response_seq",
+    0,
+    8
+   ],
+   "bits": 8,
+   "clock": "stream",
+   "basis": "Universal W187 field contains zero-extended original per-quadrant packed value (tools/hbm_vm_static_calendar.py pack); exact low-field slice preserves all original client lane bits."
+  },
+  {
+   "src": [
+    "calendar_NW",
+    "bank_client",
+    0,
+    16
+   ],
+   "dst": [
+    "hb_vms_NW",
+    "bank_client",
+    0,
+    16
+   ],
+   "bits": 16,
+   "clock": "stream",
+   "basis": "Universal W187 field contains zero-extended original per-quadrant packed value (tools/hbm_vm_static_calendar.py pack); exact low-field slice preserves all original client lane bits."
+  },
+  {
+   "src": [
+    "calendar_NW",
+    "hub_ring_client",
+    0,
+    4
+   ],
+   "dst": [
+    "hb_vms_NW",
+    "hub_ring_client",
+    0,
+    4
+   ],
+   "bits": 4,
+   "clock": "stream",
+   "basis": "Universal W187 field contains zero-extended original per-quadrant packed value (tools/hbm_vm_static_calendar.py pack); exact low-field slice preserves all original client lane bits."
+  },
+  {
+   "src": [
     "calendar_NE",
     "client_seq",
     0,
@@ -3625,6 +3710,18 @@
    "kind": "clock"
   },
   {
+   "inst": "epcal_SW",
+   "port": "clk_cap",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "epcal_SW",
+   "port": "clk_mem",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
    "inst": "cp_ep_SE",
    "port": "clk",
    "domain": "stream",
@@ -3633,6 +3730,18 @@
   {
    "inst": "epcal_SE",
    "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "epcal_SE",
+   "port": "clk_cap",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "epcal_SE",
+   "port": "clk_mem",
    "domain": "stream",
    "kind": "clock"
   },
@@ -3649,6 +3758,18 @@
    "kind": "clock"
   },
   {
+   "inst": "epcal_NW",
+   "port": "clk_cap",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "epcal_NW",
+   "port": "clk_mem",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
    "inst": "cp_ep_NE",
    "port": "clk",
    "domain": "stream",
@@ -3657,42 +3778,6 @@
   {
    "inst": "epcal_NE",
    "port": "clk",
-   "domain": "stream",
-   "kind": "clock"
-  },
-  {
-   "inst": "epcal_SW",
-   "port": "clk_cap",
-   "domain": "stream",
-   "kind": "clock"
-  },
-  {
-   "inst": "epcal_SW",
-   "port": "clk_mem",
-   "domain": "stream",
-   "kind": "clock"
-  },
-  {
-   "inst": "epcal_SE",
-   "port": "clk_cap",
-   "domain": "stream",
-   "kind": "clock"
-  },
-  {
-   "inst": "epcal_SE",
-   "port": "clk_mem",
-   "domain": "stream",
-   "kind": "clock"
-  },
-  {
-   "inst": "epcal_NW",
-   "port": "clk_cap",
-   "domain": "stream",
-   "kind": "clock"
-  },
-  {
-   "inst": "epcal_NW",
-   "port": "clk_mem",
    "domain": "stream",
    "kind": "clock"
   },
@@ -3733,6 +3818,11 @@
   "calendar_SE_response_seq",
   "calendar_SE_bank_client",
   "calendar_SE_hub_ring_client",
+  "calendar_NW_client_seq",
+  "calendar_NW_response_enable",
+  "calendar_NW_response_seq",
+  "calendar_NW_bank_client",
+  "calendar_NW_hub_ring_client",
   "calendar_NE_client_seq",
   "calendar_NE_response_enable",
   "calendar_NE_response_seq",

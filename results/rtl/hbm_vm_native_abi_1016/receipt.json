@@ -1,0 +1,167 @@
+{
+  "schema": "opentallas.hbm.native_vm_abi_component.v1",
+  "source_commit": "de69efd23b98aa66e76f094be515625c713c72e3",
+  "host": "ot-agidock128",
+  "otrun_unit": "oth-ubuntu-1069128-1792145516",
+  "otrun_exit": 0,
+  "scope": "Actual new four quadrant leaf shapes, each8banks and24real physically mapped SRAM functional models. Standalone component source/shape evidence only; no die/native/fullSM qualification. Full quadrant wires modified but parent functional composition still needs its exact test.",
+  "actual_write_count_total": 4096,
+  "actual_read_count_total": 19456,
+  "positive_runs": 4,
+  "mutant_rejections": 12,
+  "unchanged_data_latency": {
+    "write_edges": 3,
+    "read_edges": 6
+  },
+  "files": {
+    "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static.sv": "0403a44dccd1b9da4b0e1a21784fc046f2904dbc28e2ad34f48e692de7686a5c",
+    "rtl/hbm_accel/generic/vm/static/ot_vms_slice_static.sv": "66b30d9aac8ae69d429156cac7930a43905d7fada7bdf3840c8061a610ea2cef",
+    "rtl/hbm_accel/generic/vm/static/ot_vms_bank_native_physical.sv": "41d8da982f483194cf3fd02a01e66c195ca0a59779b43d0b1e85e8585051fe46",
+    "rtl/hbm_accel/generic/vm/static/ot_vms_bank_static_strap.sv": "23da38206654758ee3375c155ed166e853769f1e030ddf3c02ee91f2962aee31",
+    "rtl/hbm_accel/generic/vm/static/ot_vms_ce_counter_pipe.sv": "de10f3eea0f6b8bb0a652ec30621ba4d919b64f7a96651dbc94a4fc7b7ff09fa",
+    "rtl/hbm_accel/generic/vm/static/native_abi_1016/run.sh": "1c0dbd0cc1a9f4fc0db9f427153044f42fe56688699e382eb7913e6a85da6d2a",
+    "rtl/hbm_accel/generic/vm/static/native_abi_1016/tb_hbm_vm_native_abi.sv": "20e90a2bb9ca22caab78c78063a7904087c7eeea2a32aeaa689ae4a520011cc7",
+    "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q0.sv": "1fb7ddb4177c4f5b05a696f96ab6659c93c16baee7c1f084577301e239142dea",
+    "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q1.sv": "0d0053515c28fcb5d646f418b340ba1ba94298603e9bcdb0bd425fbd2bfa839d",
+    "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q2.sv": "cc3eb322616ab22cc86484a3b7cda591d3352a697cbab8e7e8bd93e2fe436604",
+    "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q3.sv": "2c2de0917998b9cf25b6d6c2e2f375d910c21bab2752b83fd987cade4f1bb5d6",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v": "25ca11845381ce089cc5f2fbab82a90672d8704fe6c66f4445814b33b4b7d51e"
+  },
+  "runs": [
+    {
+      "quadrant": 0,
+      "RG": 5,
+      "WG": 2,
+      "mutant": 0,
+      "result": "PASS",
+      "sha256": "6c546f3fc32a901ea90bbf716ab97e4359c39f5f50e93e2b3220d4fada3987ef"
+    },
+    {
+      "quadrant": 0,
+      "RG": 5,
+      "WG": 2,
+      "mutant": 1,
+      "result": "REJECTED",
+      "sha256": "3f0971b349a3aa513e15da19f1f3e93f5d7b4e180385a11cf1bc4c122ad78e6b"
+    },
+    {
+      "quadrant": 0,
+      "RG": 5,
+      "WG": 2,
+      "mutant": 3,
+      "result": "REJECTED",
+      "sha256": "6b03f580848603afaea564c11530a45e72cf8e5e68a4cbc4c13ae666378c9adf"
+    },
+    {
+      "quadrant": 0,
+      "RG": 5,
+      "WG": 2,
+      "mutant": 4,
+      "result": "REJECTED",
+      "sha256": "6b03f580848603afaea564c11530a45e72cf8e5e68a4cbc4c13ae666378c9adf"
+    },
+    {
+      "quadrant": 1,
+      "RG": 4,
+      "WG": 2,
+      "mutant": 0,
+      "result": "PASS",
+      "sha256": "69355201f15f36222d7fbcc7a1763707ba610615a51765069b20d33424c4bea2"
+    },
+    {
+      "quadrant": 1,
+      "RG": 4,
+      "WG": 2,
+      "mutant": 1,
+      "result": "REJECTED",
+      "sha256": "ec03977bc47fe67341ad809af2f640bc4e74637c1681c75a96f175766f4bfc00"
+    },
+    {
+      "quadrant": 1,
+      "RG": 4,
+      "WG": 2,
+      "mutant": 3,
+      "result": "REJECTED",
+      "sha256": "d541829c289208974021a70e7cc5c97e09548679c6f380352bc0a032a7bcf3ba"
+    },
+    {
+      "quadrant": 1,
+      "RG": 4,
+      "WG": 2,
+      "mutant": 4,
+      "result": "REJECTED",
+      "sha256": "d541829c289208974021a70e7cc5c97e09548679c6f380352bc0a032a7bcf3ba"
+    },
+    {
+      "quadrant": 2,
+      "RG": 5,
+      "WG": 3,
+      "mutant": 0,
+      "result": "PASS",
+      "sha256": "2cd69285eca820e7e9989153049dbd97f4c3edfa39d71b2a4eb0069ff8239999"
+    },
+    {
+      "quadrant": 2,
+      "RG": 5,
+      "WG": 3,
+      "mutant": 1,
+      "result": "REJECTED",
+      "sha256": "3f0971b349a3aa513e15da19f1f3e93f5d7b4e180385a11cf1bc4c122ad78e6b"
+    },
+    {
+      "quadrant": 2,
+      "RG": 5,
+      "WG": 3,
+      "mutant": 3,
+      "result": "REJECTED",
+      "sha256": "6b03f580848603afaea564c11530a45e72cf8e5e68a4cbc4c13ae666378c9adf"
+    },
+    {
+      "quadrant": 2,
+      "RG": 5,
+      "WG": 3,
+      "mutant": 4,
+      "result": "REJECTED",
+      "sha256": "6b03f580848603afaea564c11530a45e72cf8e5e68a4cbc4c13ae666378c9adf"
+    },
+    {
+      "quadrant": 3,
+      "RG": 5,
+      "WG": 3,
+      "mutant": 0,
+      "result": "PASS",
+      "sha256": "2cd69285eca820e7e9989153049dbd97f4c3edfa39d71b2a4eb0069ff8239999"
+    },
+    {
+      "quadrant": 3,
+      "RG": 5,
+      "WG": 3,
+      "mutant": 1,
+      "result": "REJECTED",
+      "sha256": "3f0971b349a3aa513e15da19f1f3e93f5d7b4e180385a11cf1bc4c122ad78e6b"
+    },
+    {
+      "quadrant": 3,
+      "RG": 5,
+      "WG": 3,
+      "mutant": 3,
+      "result": "REJECTED",
+      "sha256": "6b03f580848603afaea564c11530a45e72cf8e5e68a4cbc4c13ae666378c9adf"
+    },
+    {
+      "quadrant": 3,
+      "RG": 5,
+      "WG": 3,
+      "mutant": 4,
+      "result": "REJECTED",
+      "sha256": "6b03f580848603afaea564c11530a45e72cf8e5e68a4cbc4c13ae666378c9adf"
+    }
+  ],
+  "open": [
+    "Newbankmaster physical gates/routes/nativeaudit",
+    "ChangedNWNC3 hub physicalmaster",
+    "Sourcehelper compileridentity remap and typedrange mapping",
+    "NWcq0..2 actualowners unbound",
+    "SMfullshape includingattention fixedcyclequalification"
+  ]
+}

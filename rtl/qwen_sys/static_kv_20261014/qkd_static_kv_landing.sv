@@ -5,8 +5,11 @@
 // One real aligned-v2 128x256 1R1W SRAM per physical pseudo-channel. Metadata
 // names the consumer ordinal, not the physical HBM order. V permutes its ordinal
 // so its low/high-64-row alternation has the same bounded ring lifetime as K.
+// VMAP (Q-ATTN-RATE 2026-10-16, PV16 V layout = qkd_kv_static_writer VMAP=1): a V row t lives in group {t[5:4],t[0]}
+// at PC sector {1,0,t[6],t[12:9],t[3:1]}; its ordinal {t[12:9],t[6],t[3:1]} is then the w16 pair's consumption order.
+// K (get_v 0) is unchanged.  0 = the historical t[2:0] group / t[5:3] sector layout.
 module qkd_static_kv_landing_pc #(
-    parameter integer MUT=0
+    parameter integer MUT=0, parameter integer VMAP=0
 )(
     input wire ck, rst_n,
     input wire [1:0] cfg_stack,input wire [2:0] cfg_group,
@@ -56,7 +59,9 @@ module qkd_static_kv_landing_pc #(
     function automatic [7:0] ordinal(input [9:0] sec);
         ordinal=sec[9]?{sec[6:3],sec[7],sec[2:0]}:sec[7:0];
     endfunction
-    wire [9:0] get_sector={gv_q,1'b0,gt_q[6],gt_q[12:9],gt_q[5:3]};
+    wire gvm=(VMAP!=0)&&gv_q;
+    wire [9:0] get_sector={gv_q,1'b0,gt_q[6],gt_q[12:9],gvm?gt_q[3:1]:gt_q[5:3]};
+    wire [2:0] get_group=gvm?{gt_q[5:4],gt_q[0]}:gt_q[2:0];
     wire [7:0] put_ord=ordinal(ps_q),get_ord=ordinal(get_sector);
     wire [8:0] put_ticket={ps_q[9],put_ord},get_ticket={gv_q,get_ord};
     wire [6:0] wa=put_ord[6:0],ra=get_ord[6:0];
@@ -97,7 +102,7 @@ module qkd_static_kv_landing_pc #(
         end
         if(get_q)begin
           if(!armed||!valid[ra]||ticket[ra]!=get_ticket||ge_q!=active_epoch||gl_q!=active_layer||
-             gt_q[13]||gt_q[2:0]!=group_q||gt_q[8:7]!=stack_q)fault<=1;
+             gt_q[13]||get_group!=group_q||gt_q[8:7]!=stack_q)fault<=1;
           if(!(put_q&&wa==ra))valid[ra]<=0;
         end
       end
@@ -150,7 +155,7 @@ endmodule
 // No physical relay latency is claimed here: a routed parent must insert its
 // actual balanced request/return relays and compile their fixed calendar.
 module qkd_static_kv_landing_grp #(
-    parameter integer STACK=0,GROUP=0,MUT=0
+    parameter integer STACK=0,GROUP=0,MUT=0,VMAP=0
 )(
     input wire ck,input wire [3:0] ck_pc,input wire rst_n,
     input wire arm,input wire [15:0] epoch,input wire [5:0] layer,
@@ -174,7 +179,7 @@ module qkd_static_kv_landing_grp #(
       .rsp_valid(rsp_valid),.rsp_data(rsp_data),.rsp_t(rsp_t),.rsp_v(rsp_v),.rsp_epoch(rsp_epoch),.rsp_layer(rsp_layer),.fault(fault));
     genvar q;
     generate for(q=0;q<4;q=q+1)begin:g_pc
-      qkd_static_kv_landing_pc #(.MUT(MUT))u_pc(
+      qkd_static_kv_landing_pc #(.MUT(MUT),.VMAP(VMAP))u_pc(
        .ck(ck_pc[q]),.rst_n(rst_n),.cfg_stack(2'(STACK)),.cfg_group(3'(GROUP)),.arm(arm),.epoch(epoch),.layer(layer),
        .expected_put(expected_put[q]),.expected_sector(expected_sector[10*q+:10]),
        .actual_valid(actual_valid[q]),.actual_sector(actual_sector[10*q+:10]),

@@ -13,6 +13,10 @@
 // latency (port pipeline + rq register + the die's assigned relay edges; -1 = unassigned: refuses elaboration, as the
 // other native route ages).  Queue overflow / underflow or an instruction outside the train contract is a sticky
 // fault; the serializers check every capture against the calendar (off-calendar = their fault).
+// Reset (Q-ELEM-CMP 2026-10-16, die master hardening): rst_n is captured by ONE station flop at the pin (asynchronous
+// assert, release on the next ck edge) that drives the internal clear tree, so the raw reset pin loads one flop (native
+// capture <= 190 ps; the TT scale leaf failed at 357 ps with a raw 322-flop reset).  Cold init only: the issuer leaves
+// reset one edge later and is idle until the first me_go, which the static schedule issues long after the release.
 // MUT (bench): 1 = start one edge late (negative control); 2 = slot_count always 8 (no row compression: the measured
 // 3-lane/8-slot option, legal); 3 = slot_count halved (negative control: real rows outside the reserved slots).
 module qfd_res_train_issue #(parameter integer TRAIN_EDGES=-1, MUT=0)(
@@ -28,6 +32,9 @@ module qfd_res_train_issue #(parameter integer TRAIN_EDGES=-1, MUT=0)(
   ns_of=(MUT==2||sp<=7)?4'd8:(sp==8)?4'd4:(sp==9)?4'd2:4'd1;
   if(MUT==3&&ns_of>1)ns_of=ns_of>>1;
  endfunction
+ reg rs_q;
+ always @(posedge ck or negedge rst_n) if(!rst_n) rs_q<=1'b0; else rs_q<=1'b1;
+ wire rs=rs_q;
  reg[DW-1:0]q[0:3];reg[1:0]wp,rp;reg[2:0]n;
  reg[6:0]left;          // tags of the current instruction still to come
  wire tag=tag_v&&tag_last;
@@ -35,8 +42,8 @@ module qfd_res_train_issue #(parameter integer TRAIN_EDGES=-1, MUT=0)(
  wire push=me_go;
  wire[DW-1:0]din={me_tiles[3:0],(me_ts<24'd8)?32'd8:32'(me_ts),me_oen,ns_of(me_split)};
  reg launch;reg[DW-1:0]ldesc;
- always @(posedge ck or negedge rst_n)begin
-  if(!rst_n)begin wp<=0;rp<=0;n<=0;left<=0;launch<=0;ldesc<=0;fault<=0;end
+ always @(posedge ck or negedge rs)begin
+  if(!rs)begin wp<=0;rp<=0;n<=0;left<=0;launch<=0;ldesc<=0;fault<=0;end
   else begin
    launch<=pop&&n!=0;
    if(push)begin q[wp]<=din;wp<=wp+1'b1;end
@@ -49,8 +56,8 @@ module qfd_res_train_issue #(parameter integer TRAIN_EDGES=-1, MUT=0)(
  // fixed delay: launch is one edge after the tag edge; TE - 1 more edges to the serializer capture edge
  localparam integer LD=TE-1+((MUT==1)?1:0);
  reg[DW:0]dl[0:LD];
- always @(posedge ck or negedge rst_n)
-  if(!rst_n)begin for(integer i=0;i<=LD;i=i+1)dl[i]<=0;end
+ always @(posedge ck or negedge rs)
+  if(!rs)begin for(integer i=0;i<=LD;i=i+1)dl[i]<=0;end
   else begin dl[0]<={launch,ldesc};for(integer i=1;i<=LD;i=i+1)dl[i]<=dl[i-1];end
  wire[DW:0]o=(LD==0)?{launch,ldesc}:dl[LD-1];
  assign {train_start,train_count,capture_stride,payload_write,slot_count}=o;

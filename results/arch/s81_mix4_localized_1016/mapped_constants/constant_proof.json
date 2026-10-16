@@ -1,0 +1,4027 @@
+{
+ "status": "ACTUAL_ODB_AND_LIBERTY_CONSTANT_DRIVER_PROOF",
+ "image": "openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+ "cells": [
+  {
+   "cell": "ot_s81_engram_mixq_shcol",
+   "record": "117bf9beb53d304d22ca93c263805fec3254f22a",
+   "source": "dfd1e697a939b56c8500397487addc98d1f73918",
+   "job": "s81engm_shcol-bankv1benchfix-1421-dfd1e697a",
+   "source_host": "ot-epyc4",
+   "source_run": "/srv/opentallas-scratch2/claude/closure-loop/s81engm_shcol-bankv1benchfix-1421-dfd1e697a",
+   "odb": "/srv/opentallas-scratch2/claude/closure-loop/s81engm_shcol-bankv1benchfix-1421-dfd1e697a/routes/s81engm_shcol_bankv1benchfix_1421_dfd1e697a/work/orfs/results/asap7/opentallas_ot_s81_engram_mixq_shcol_asap7_ref_s81engm_shcol_bankv1benchfix_1421_dfd1e697a/base/6_final.odb",
+   "pins": [
+    "h[0]",
+    "h[1]",
+    "h[2]",
+    "h[3]",
+    "h[4]",
+    "h[5]",
+    "h[6]",
+    "h[7]",
+    "h[8]",
+    "h[9]",
+    "h[10]",
+    "h[11]",
+    "h[12]",
+    "h[13]",
+    "h[14]",
+    "h[15]",
+    "h[32]",
+    "h[33]",
+    "h[34]",
+    "h[35]",
+    "h[36]",
+    "h[37]",
+    "h[38]",
+    "h[39]",
+    "h[40]",
+    "h[41]",
+    "h[42]",
+    "h[43]",
+    "h[44]",
+    "h[45]",
+    "h[46]",
+    "h[47]",
+    "h[64]",
+    "h[65]",
+    "h[66]",
+    "h[67]",
+    "h[68]",
+    "h[69]",
+    "h[70]",
+    "h[71]",
+    "h[72]",
+    "h[73]",
+    "h[74]",
+    "h[75]",
+    "h[76]",
+    "h[77]",
+    "h[78]",
+    "h[79]",
+    "h[96]",
+    "h[97]",
+    "h[98]",
+    "h[99]",
+    "h[100]",
+    "h[101]",
+    "h[102]",
+    "h[103]",
+    "h[104]",
+    "h[105]",
+    "h[106]",
+    "h[107]",
+    "h[108]",
+    "h[109]",
+    "h[110]",
+    "h[111]",
+    "h[128]",
+    "h[129]",
+    "h[130]",
+    "h[131]",
+    "h[132]",
+    "h[133]",
+    "h[134]",
+    "h[135]",
+    "h[136]",
+    "h[137]",
+    "h[138]",
+    "h[139]",
+    "h[140]",
+    "h[141]",
+    "h[142]",
+    "h[143]",
+    "h[160]",
+    "h[161]",
+    "h[162]",
+    "h[163]",
+    "h[164]",
+    "h[165]",
+    "h[166]",
+    "h[167]",
+    "h[168]",
+    "h[169]",
+    "h[170]",
+    "h[171]",
+    "h[172]",
+    "h[173]",
+    "h[174]",
+    "h[175]",
+    "h[192]",
+    "h[193]",
+    "h[194]",
+    "h[195]",
+    "h[196]",
+    "h[197]",
+    "h[198]",
+    "h[199]",
+    "h[200]",
+    "h[201]",
+    "h[202]",
+    "h[203]",
+    "h[204]",
+    "h[205]",
+    "h[206]",
+    "h[207]",
+    "h[224]",
+    "h[225]",
+    "h[226]",
+    "h[227]",
+    "h[228]",
+    "h[229]",
+    "h[230]",
+    "h[231]",
+    "h[232]",
+    "h[233]",
+    "h[234]",
+    "h[235]",
+    "h[236]",
+    "h[237]",
+    "h[238]",
+    "h[239]"
+   ],
+   "odb_sha256": "81c3269ef2d37173483c121b4201166bd955031c17cec1a1b9dfabcf0b24eedd",
+   "actual_block": "ot_s81_engram_mixq_shcol",
+   "rows": [
+    {
+     "port": "h[0]",
+     "net": "h[0]",
+     "drivers": [
+      {
+       "inst": "_11604__1",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[1]",
+     "net": "h[1]",
+     "drivers": [
+      {
+       "inst": "_11605__2",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[2]",
+     "net": "h[2]",
+     "drivers": [
+      {
+       "inst": "_11606__3",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[3]",
+     "net": "h[3]",
+     "drivers": [
+      {
+       "inst": "_11607__4",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[4]",
+     "net": "h[4]",
+     "drivers": [
+      {
+       "inst": "_11608__5",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[5]",
+     "net": "h[5]",
+     "drivers": [
+      {
+       "inst": "_11609__6",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[6]",
+     "net": "h[6]",
+     "drivers": [
+      {
+       "inst": "_11610__7",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[7]",
+     "net": "h[7]",
+     "drivers": [
+      {
+       "inst": "_11611__8",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[8]",
+     "net": "h[8]",
+     "drivers": [
+      {
+       "inst": "_11612__9",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[9]",
+     "net": "h[9]",
+     "drivers": [
+      {
+       "inst": "_11613__10",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[10]",
+     "net": "h[10]",
+     "drivers": [
+      {
+       "inst": "_11614__11",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[11]",
+     "net": "h[11]",
+     "drivers": [
+      {
+       "inst": "_11615__12",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[12]",
+     "net": "h[12]",
+     "drivers": [
+      {
+       "inst": "_11616__13",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[13]",
+     "net": "h[13]",
+     "drivers": [
+      {
+       "inst": "_11617__14",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[14]",
+     "net": "h[14]",
+     "drivers": [
+      {
+       "inst": "_11618__15",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[15]",
+     "net": "h[15]",
+     "drivers": [
+      {
+       "inst": "_11619__16",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[32]",
+     "net": "h[32]",
+     "drivers": [
+      {
+       "inst": "_11620__17",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[33]",
+     "net": "h[33]",
+     "drivers": [
+      {
+       "inst": "_11621__18",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[34]",
+     "net": "h[34]",
+     "drivers": [
+      {
+       "inst": "_11622__19",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[35]",
+     "net": "h[35]",
+     "drivers": [
+      {
+       "inst": "_11623__20",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[36]",
+     "net": "h[36]",
+     "drivers": [
+      {
+       "inst": "_11624__21",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[37]",
+     "net": "h[37]",
+     "drivers": [
+      {
+       "inst": "_11625__22",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[38]",
+     "net": "h[38]",
+     "drivers": [
+      {
+       "inst": "_11626__23",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[39]",
+     "net": "h[39]",
+     "drivers": [
+      {
+       "inst": "_11627__24",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[40]",
+     "net": "h[40]",
+     "drivers": [
+      {
+       "inst": "_11628__25",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[41]",
+     "net": "h[41]",
+     "drivers": [
+      {
+       "inst": "_11629__26",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[42]",
+     "net": "h[42]",
+     "drivers": [
+      {
+       "inst": "_11630__27",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[43]",
+     "net": "h[43]",
+     "drivers": [
+      {
+       "inst": "_11631__28",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[44]",
+     "net": "h[44]",
+     "drivers": [
+      {
+       "inst": "_11632__29",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[45]",
+     "net": "h[45]",
+     "drivers": [
+      {
+       "inst": "_11633__30",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[46]",
+     "net": "h[46]",
+     "drivers": [
+      {
+       "inst": "_11634__31",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[47]",
+     "net": "h[47]",
+     "drivers": [
+      {
+       "inst": "_11635__32",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[64]",
+     "net": "h[64]",
+     "drivers": [
+      {
+       "inst": "_11636__33",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[65]",
+     "net": "h[65]",
+     "drivers": [
+      {
+       "inst": "_11637__34",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[66]",
+     "net": "h[66]",
+     "drivers": [
+      {
+       "inst": "_11638__35",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[67]",
+     "net": "h[67]",
+     "drivers": [
+      {
+       "inst": "_11639__36",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[68]",
+     "net": "h[68]",
+     "drivers": [
+      {
+       "inst": "_11640__37",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[69]",
+     "net": "h[69]",
+     "drivers": [
+      {
+       "inst": "_11641__38",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[70]",
+     "net": "h[70]",
+     "drivers": [
+      {
+       "inst": "_11642__39",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[71]",
+     "net": "h[71]",
+     "drivers": [
+      {
+       "inst": "_11643__40",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[72]",
+     "net": "h[72]",
+     "drivers": [
+      {
+       "inst": "_11644__41",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[73]",
+     "net": "h[73]",
+     "drivers": [
+      {
+       "inst": "_11645__42",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[74]",
+     "net": "h[74]",
+     "drivers": [
+      {
+       "inst": "_11646__43",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[75]",
+     "net": "h[75]",
+     "drivers": [
+      {
+       "inst": "_11647__44",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[76]",
+     "net": "h[76]",
+     "drivers": [
+      {
+       "inst": "_11648__45",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[77]",
+     "net": "h[77]",
+     "drivers": [
+      {
+       "inst": "_11649__46",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[78]",
+     "net": "h[78]",
+     "drivers": [
+      {
+       "inst": "_11650__47",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[79]",
+     "net": "h[79]",
+     "drivers": [
+      {
+       "inst": "_11651__48",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[96]",
+     "net": "h[96]",
+     "drivers": [
+      {
+       "inst": "_11652__49",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[97]",
+     "net": "h[97]",
+     "drivers": [
+      {
+       "inst": "_11653__50",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[98]",
+     "net": "h[98]",
+     "drivers": [
+      {
+       "inst": "_11654__51",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[99]",
+     "net": "h[99]",
+     "drivers": [
+      {
+       "inst": "_11655__52",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[100]",
+     "net": "h[100]",
+     "drivers": [
+      {
+       "inst": "_11656__53",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[101]",
+     "net": "h[101]",
+     "drivers": [
+      {
+       "inst": "_11657__54",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[102]",
+     "net": "h[102]",
+     "drivers": [
+      {
+       "inst": "_11658__55",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[103]",
+     "net": "h[103]",
+     "drivers": [
+      {
+       "inst": "_11659__56",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[104]",
+     "net": "h[104]",
+     "drivers": [
+      {
+       "inst": "_11660__57",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[105]",
+     "net": "h[105]",
+     "drivers": [
+      {
+       "inst": "_11661__58",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[106]",
+     "net": "h[106]",
+     "drivers": [
+      {
+       "inst": "_11662__59",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[107]",
+     "net": "h[107]",
+     "drivers": [
+      {
+       "inst": "_11663__60",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[108]",
+     "net": "h[108]",
+     "drivers": [
+      {
+       "inst": "_11664__61",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[109]",
+     "net": "h[109]",
+     "drivers": [
+      {
+       "inst": "_11665__62",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[110]",
+     "net": "h[110]",
+     "drivers": [
+      {
+       "inst": "_11666__63",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[111]",
+     "net": "h[111]",
+     "drivers": [
+      {
+       "inst": "_11667__64",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[128]",
+     "net": "h[128]",
+     "drivers": [
+      {
+       "inst": "_11668__65",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[129]",
+     "net": "h[129]",
+     "drivers": [
+      {
+       "inst": "_11669__66",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[130]",
+     "net": "h[130]",
+     "drivers": [
+      {
+       "inst": "_11670__67",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[131]",
+     "net": "h[131]",
+     "drivers": [
+      {
+       "inst": "_11671__68",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[132]",
+     "net": "h[132]",
+     "drivers": [
+      {
+       "inst": "_11672__69",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[133]",
+     "net": "h[133]",
+     "drivers": [
+      {
+       "inst": "_11673__70",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[134]",
+     "net": "h[134]",
+     "drivers": [
+      {
+       "inst": "_11674__71",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[135]",
+     "net": "h[135]",
+     "drivers": [
+      {
+       "inst": "_11675__72",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[136]",
+     "net": "h[136]",
+     "drivers": [
+      {
+       "inst": "_11676__73",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[137]",
+     "net": "h[137]",
+     "drivers": [
+      {
+       "inst": "_11677__74",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[138]",
+     "net": "h[138]",
+     "drivers": [
+      {
+       "inst": "_11678__75",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[139]",
+     "net": "h[139]",
+     "drivers": [
+      {
+       "inst": "_11679__76",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[140]",
+     "net": "h[140]",
+     "drivers": [
+      {
+       "inst": "_11680__77",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[141]",
+     "net": "h[141]",
+     "drivers": [
+      {
+       "inst": "_11681__78",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[142]",
+     "net": "h[142]",
+     "drivers": [
+      {
+       "inst": "_11682__79",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[143]",
+     "net": "h[143]",
+     "drivers": [
+      {
+       "inst": "_11683__80",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[160]",
+     "net": "h[160]",
+     "drivers": [
+      {
+       "inst": "_11684__81",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[161]",
+     "net": "h[161]",
+     "drivers": [
+      {
+       "inst": "_11685__82",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[162]",
+     "net": "h[162]",
+     "drivers": [
+      {
+       "inst": "_11686__83",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[163]",
+     "net": "h[163]",
+     "drivers": [
+      {
+       "inst": "_11687__84",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[164]",
+     "net": "h[164]",
+     "drivers": [
+      {
+       "inst": "_11688__85",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[165]",
+     "net": "h[165]",
+     "drivers": [
+      {
+       "inst": "_11689__86",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[166]",
+     "net": "h[166]",
+     "drivers": [
+      {
+       "inst": "_11690__87",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[167]",
+     "net": "h[167]",
+     "drivers": [
+      {
+       "inst": "_11691__88",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[168]",
+     "net": "h[168]",
+     "drivers": [
+      {
+       "inst": "_11692__89",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[169]",
+     "net": "h[169]",
+     "drivers": [
+      {
+       "inst": "_11693__90",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[170]",
+     "net": "h[170]",
+     "drivers": [
+      {
+       "inst": "_11694__91",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[171]",
+     "net": "h[171]",
+     "drivers": [
+      {
+       "inst": "_11695__92",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[172]",
+     "net": "h[172]",
+     "drivers": [
+      {
+       "inst": "_11696__93",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[173]",
+     "net": "h[173]",
+     "drivers": [
+      {
+       "inst": "_11697__94",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[174]",
+     "net": "h[174]",
+     "drivers": [
+      {
+       "inst": "_11698__95",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[175]",
+     "net": "h[175]",
+     "drivers": [
+      {
+       "inst": "_11699__96",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[192]",
+     "net": "h[192]",
+     "drivers": [
+      {
+       "inst": "_11700__97",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[193]",
+     "net": "h[193]",
+     "drivers": [
+      {
+       "inst": "_11701__98",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[194]",
+     "net": "h[194]",
+     "drivers": [
+      {
+       "inst": "_11702__99",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[195]",
+     "net": "h[195]",
+     "drivers": [
+      {
+       "inst": "_11703__100",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[196]",
+     "net": "h[196]",
+     "drivers": [
+      {
+       "inst": "_11704__101",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[197]",
+     "net": "h[197]",
+     "drivers": [
+      {
+       "inst": "_11705__102",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[198]",
+     "net": "h[198]",
+     "drivers": [
+      {
+       "inst": "_11706__103",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[199]",
+     "net": "h[199]",
+     "drivers": [
+      {
+       "inst": "_11707__104",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[200]",
+     "net": "h[200]",
+     "drivers": [
+      {
+       "inst": "_11708__105",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[201]",
+     "net": "h[201]",
+     "drivers": [
+      {
+       "inst": "_11709__106",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[202]",
+     "net": "h[202]",
+     "drivers": [
+      {
+       "inst": "_11710__107",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[203]",
+     "net": "h[203]",
+     "drivers": [
+      {
+       "inst": "_11711__108",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[204]",
+     "net": "h[204]",
+     "drivers": [
+      {
+       "inst": "_11712__109",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[205]",
+     "net": "h[205]",
+     "drivers": [
+      {
+       "inst": "_11713__110",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[206]",
+     "net": "h[206]",
+     "drivers": [
+      {
+       "inst": "_11714__111",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[207]",
+     "net": "h[207]",
+     "drivers": [
+      {
+       "inst": "_11715__112",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[224]",
+     "net": "h[224]",
+     "drivers": [
+      {
+       "inst": "_11716__113",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[225]",
+     "net": "h[225]",
+     "drivers": [
+      {
+       "inst": "_11717__114",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[226]",
+     "net": "h[226]",
+     "drivers": [
+      {
+       "inst": "_11718__115",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[227]",
+     "net": "h[227]",
+     "drivers": [
+      {
+       "inst": "_11719__116",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[228]",
+     "net": "h[228]",
+     "drivers": [
+      {
+       "inst": "_11720__117",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[229]",
+     "net": "h[229]",
+     "drivers": [
+      {
+       "inst": "_11721__118",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[230]",
+     "net": "h[230]",
+     "drivers": [
+      {
+       "inst": "_11722__119",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[231]",
+     "net": "h[231]",
+     "drivers": [
+      {
+       "inst": "_11723__120",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[232]",
+     "net": "h[232]",
+     "drivers": [
+      {
+       "inst": "_11724__121",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[233]",
+     "net": "h[233]",
+     "drivers": [
+      {
+       "inst": "_11725__122",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[234]",
+     "net": "h[234]",
+     "drivers": [
+      {
+       "inst": "_11726__123",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[235]",
+     "net": "h[235]",
+     "drivers": [
+      {
+       "inst": "_11727__124",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[236]",
+     "net": "h[236]",
+     "drivers": [
+      {
+       "inst": "_11728__125",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[237]",
+     "net": "h[237]",
+     "drivers": [
+      {
+       "inst": "_11729__126",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[238]",
+     "net": "h[238]",
+     "drivers": [
+      {
+       "inst": "_11730__127",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "h[239]",
+     "net": "h[239]",
+     "drivers": [
+      {
+       "inst": "_11731__128",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    }
+   ],
+   "proved": 128,
+   "expected": 128
+  },
+  {
+   "cell": "ot_s81_engram_mul4",
+   "record": "892399f17d0523f6722fc452a49648aa5812c9ee",
+   "source": "2e57a7a75708ffaabf18f0c714b01998cb0fecf1",
+   "job": "s81engm_mul4-boundary810-0852-2e57a7a75",
+   "source_host": "ot-epyc4",
+   "source_run": "/srv/opentallas-scratch2/claude/closure-loop/s81engm_mul4-boundary810-0852-2e57a7a75",
+   "odb": "/srv/opentallas-scratch2/claude/closure-loop/s81engm_mul4-boundary810-0852-2e57a7a75/routes/s81engm_mul4_boundary810_0852_2e57a7a75/work/orfs/results/asap7/opentallas_ot_s81_engram_mul4_asap7_ref_s81engm_mul4_boundary810_0852_2e57a7a75/base/6_final.odb",
+   "pins": [
+    "hh[31]",
+    "hh[63]",
+    "hh[95]",
+    "hh[127]",
+    "kk[31]",
+    "kk[63]",
+    "kk[95]",
+    "kk[127]"
+   ],
+   "odb_sha256": "adf429b0b376fa2019414a470228837e6fe71031c0bab6b89fc08baf4c79de7e",
+   "actual_block": "ot_s81_engram_mul4",
+   "rows": [
+    {
+     "port": "hh[31]",
+     "net": "hh[31]",
+     "drivers": [
+      {
+       "inst": "_148327__1",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "hh[63]",
+     "net": "hh[63]",
+     "drivers": [
+      {
+       "inst": "_148328__2",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "hh[95]",
+     "net": "hh[95]",
+     "drivers": [
+      {
+       "inst": "_148329__3",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "hh[127]",
+     "net": "hh[127]",
+     "drivers": [
+      {
+       "inst": "_148330__4",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "kk[31]",
+     "net": "kk[31]",
+     "drivers": [
+      {
+       "inst": "_148333__5",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "kk[63]",
+     "net": "kk[63]",
+     "drivers": [
+      {
+       "inst": "_148334__6",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "kk[95]",
+     "net": "kk[95]",
+     "drivers": [
+      {
+       "inst": "_148335__7",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "kk[127]",
+     "net": "kk[127]",
+     "drivers": [
+      {
+       "inst": "_148336__8",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    }
+   ],
+   "proved": 8,
+   "expected": 8
+  },
+  {
+   "cell": "ot_s81_engram_add8",
+   "record": "ff40f74511d6ff8f0b3abb6f422d5f17679b4a7c",
+   "source": "bf044b7f6cf54ea28cef4128b1ee2cbff22e965f",
+   "job": "s81engm_add8-v21-bf044b7f6",
+   "source_host": "ot-epyc1tb",
+   "source_run": "/srv/opentallas/claude/closure-loop/s81engm_add8-v21-bf044b7f6",
+   "odb": "/srv/opentallas-scratch/codex/s81-mix4-constant-0341/add8.odb",
+   "pins": [
+    "y[0]",
+    "y[1]",
+    "y[2]",
+    "y[3]",
+    "y[4]",
+    "y[5]",
+    "y[6]",
+    "y[7]",
+    "y[8]",
+    "y[9]",
+    "y[10]",
+    "y[11]",
+    "y[12]",
+    "y[13]",
+    "y[14]",
+    "y[15]",
+    "y[32]",
+    "y[33]",
+    "y[34]",
+    "y[35]",
+    "y[36]",
+    "y[37]",
+    "y[38]",
+    "y[39]",
+    "y[40]",
+    "y[41]",
+    "y[42]",
+    "y[43]",
+    "y[44]",
+    "y[45]",
+    "y[46]",
+    "y[47]",
+    "y[64]",
+    "y[65]",
+    "y[66]",
+    "y[67]",
+    "y[68]",
+    "y[69]",
+    "y[70]",
+    "y[71]",
+    "y[72]",
+    "y[73]",
+    "y[74]",
+    "y[75]",
+    "y[76]",
+    "y[77]",
+    "y[78]",
+    "y[79]",
+    "y[96]",
+    "y[97]",
+    "y[98]",
+    "y[99]",
+    "y[100]",
+    "y[101]",
+    "y[102]",
+    "y[103]",
+    "y[104]",
+    "y[105]",
+    "y[106]",
+    "y[107]",
+    "y[108]",
+    "y[109]",
+    "y[110]",
+    "y[111]",
+    "y[128]",
+    "y[129]",
+    "y[130]",
+    "y[131]",
+    "y[132]",
+    "y[133]",
+    "y[134]",
+    "y[135]",
+    "y[136]",
+    "y[137]",
+    "y[138]",
+    "y[139]",
+    "y[140]",
+    "y[141]",
+    "y[142]",
+    "y[143]",
+    "y[160]",
+    "y[161]",
+    "y[162]",
+    "y[163]",
+    "y[164]",
+    "y[165]",
+    "y[166]",
+    "y[167]",
+    "y[168]",
+    "y[169]",
+    "y[170]",
+    "y[171]",
+    "y[172]",
+    "y[173]",
+    "y[174]",
+    "y[175]",
+    "y[192]",
+    "y[193]",
+    "y[194]",
+    "y[195]",
+    "y[196]",
+    "y[197]",
+    "y[198]",
+    "y[199]",
+    "y[200]",
+    "y[201]",
+    "y[202]",
+    "y[203]",
+    "y[204]",
+    "y[205]",
+    "y[206]",
+    "y[207]",
+    "y[224]",
+    "y[225]",
+    "y[226]",
+    "y[227]",
+    "y[228]",
+    "y[229]",
+    "y[230]",
+    "y[231]",
+    "y[232]",
+    "y[233]",
+    "y[234]",
+    "y[235]",
+    "y[236]",
+    "y[237]",
+    "y[238]",
+    "y[239]"
+   ],
+   "odb_sha256": "547f89c37cebf665cca1781e824ae8ca81ed72637c5d1cf3c7498dfdcd19f522",
+   "actual_block": "ot_s81_engram_add8",
+   "rows": [
+    {
+     "port": "y[0]",
+     "net": "y[0]",
+     "drivers": [
+      {
+       "inst": "_120345__1",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[1]",
+     "net": "y[1]",
+     "drivers": [
+      {
+       "inst": "_120346__2",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[2]",
+     "net": "y[2]",
+     "drivers": [
+      {
+       "inst": "_120347__3",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[3]",
+     "net": "y[3]",
+     "drivers": [
+      {
+       "inst": "_120348__4",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[4]",
+     "net": "y[4]",
+     "drivers": [
+      {
+       "inst": "_120349__5",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[5]",
+     "net": "y[5]",
+     "drivers": [
+      {
+       "inst": "_120350__6",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[6]",
+     "net": "y[6]",
+     "drivers": [
+      {
+       "inst": "_120351__7",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[7]",
+     "net": "y[7]",
+     "drivers": [
+      {
+       "inst": "_120352__8",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[8]",
+     "net": "y[8]",
+     "drivers": [
+      {
+       "inst": "_120353__9",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[9]",
+     "net": "y[9]",
+     "drivers": [
+      {
+       "inst": "_120354__10",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[10]",
+     "net": "y[10]",
+     "drivers": [
+      {
+       "inst": "_120355__11",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[11]",
+     "net": "y[11]",
+     "drivers": [
+      {
+       "inst": "_120356__12",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[12]",
+     "net": "y[12]",
+     "drivers": [
+      {
+       "inst": "_120357__13",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[13]",
+     "net": "y[13]",
+     "drivers": [
+      {
+       "inst": "_120358__14",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[14]",
+     "net": "y[14]",
+     "drivers": [
+      {
+       "inst": "_120359__15",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[15]",
+     "net": "y[15]",
+     "drivers": [
+      {
+       "inst": "_120360__16",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[32]",
+     "net": "y[32]",
+     "drivers": [
+      {
+       "inst": "_120361__17",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[33]",
+     "net": "y[33]",
+     "drivers": [
+      {
+       "inst": "_120362__18",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[34]",
+     "net": "y[34]",
+     "drivers": [
+      {
+       "inst": "_120363__19",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[35]",
+     "net": "y[35]",
+     "drivers": [
+      {
+       "inst": "_120364__20",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[36]",
+     "net": "y[36]",
+     "drivers": [
+      {
+       "inst": "_120365__21",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[37]",
+     "net": "y[37]",
+     "drivers": [
+      {
+       "inst": "_120366__22",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[38]",
+     "net": "y[38]",
+     "drivers": [
+      {
+       "inst": "_120367__23",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[39]",
+     "net": "y[39]",
+     "drivers": [
+      {
+       "inst": "_120368__24",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[40]",
+     "net": "y[40]",
+     "drivers": [
+      {
+       "inst": "_120369__25",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[41]",
+     "net": "y[41]",
+     "drivers": [
+      {
+       "inst": "_120370__26",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[42]",
+     "net": "y[42]",
+     "drivers": [
+      {
+       "inst": "_120371__27",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[43]",
+     "net": "y[43]",
+     "drivers": [
+      {
+       "inst": "_120372__28",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[44]",
+     "net": "y[44]",
+     "drivers": [
+      {
+       "inst": "_120373__29",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[45]",
+     "net": "y[45]",
+     "drivers": [
+      {
+       "inst": "_120374__30",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[46]",
+     "net": "y[46]",
+     "drivers": [
+      {
+       "inst": "_120375__31",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[47]",
+     "net": "y[47]",
+     "drivers": [
+      {
+       "inst": "_120376__32",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[64]",
+     "net": "y[64]",
+     "drivers": [
+      {
+       "inst": "_120377__33",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[65]",
+     "net": "y[65]",
+     "drivers": [
+      {
+       "inst": "_120378__34",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[66]",
+     "net": "y[66]",
+     "drivers": [
+      {
+       "inst": "_120379__35",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[67]",
+     "net": "y[67]",
+     "drivers": [
+      {
+       "inst": "_120380__36",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[68]",
+     "net": "y[68]",
+     "drivers": [
+      {
+       "inst": "_120381__37",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[69]",
+     "net": "y[69]",
+     "drivers": [
+      {
+       "inst": "_120382__38",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[70]",
+     "net": "y[70]",
+     "drivers": [
+      {
+       "inst": "_120383__39",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[71]",
+     "net": "y[71]",
+     "drivers": [
+      {
+       "inst": "_120384__40",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[72]",
+     "net": "y[72]",
+     "drivers": [
+      {
+       "inst": "_120385__41",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[73]",
+     "net": "y[73]",
+     "drivers": [
+      {
+       "inst": "_120386__42",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[74]",
+     "net": "y[74]",
+     "drivers": [
+      {
+       "inst": "_120387__43",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[75]",
+     "net": "y[75]",
+     "drivers": [
+      {
+       "inst": "_120388__44",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[76]",
+     "net": "y[76]",
+     "drivers": [
+      {
+       "inst": "_120389__45",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[77]",
+     "net": "y[77]",
+     "drivers": [
+      {
+       "inst": "_120390__46",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[78]",
+     "net": "y[78]",
+     "drivers": [
+      {
+       "inst": "_120391__47",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[79]",
+     "net": "y[79]",
+     "drivers": [
+      {
+       "inst": "_120392__48",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[96]",
+     "net": "y[96]",
+     "drivers": [
+      {
+       "inst": "_120393__49",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[97]",
+     "net": "y[97]",
+     "drivers": [
+      {
+       "inst": "_120394__50",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[98]",
+     "net": "y[98]",
+     "drivers": [
+      {
+       "inst": "_120395__51",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[99]",
+     "net": "y[99]",
+     "drivers": [
+      {
+       "inst": "_120396__52",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[100]",
+     "net": "y[100]",
+     "drivers": [
+      {
+       "inst": "_120397__53",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[101]",
+     "net": "y[101]",
+     "drivers": [
+      {
+       "inst": "_120398__54",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[102]",
+     "net": "y[102]",
+     "drivers": [
+      {
+       "inst": "_120399__55",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[103]",
+     "net": "y[103]",
+     "drivers": [
+      {
+       "inst": "_120400__56",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[104]",
+     "net": "y[104]",
+     "drivers": [
+      {
+       "inst": "_120401__57",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[105]",
+     "net": "y[105]",
+     "drivers": [
+      {
+       "inst": "_120402__58",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[106]",
+     "net": "y[106]",
+     "drivers": [
+      {
+       "inst": "_120403__59",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[107]",
+     "net": "y[107]",
+     "drivers": [
+      {
+       "inst": "_120404__60",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[108]",
+     "net": "y[108]",
+     "drivers": [
+      {
+       "inst": "_120405__61",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[109]",
+     "net": "y[109]",
+     "drivers": [
+      {
+       "inst": "_120406__62",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[110]",
+     "net": "y[110]",
+     "drivers": [
+      {
+       "inst": "_120407__63",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[111]",
+     "net": "y[111]",
+     "drivers": [
+      {
+       "inst": "_120408__64",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[128]",
+     "net": "y[128]",
+     "drivers": [
+      {
+       "inst": "_120409__65",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[129]",
+     "net": "y[129]",
+     "drivers": [
+      {
+       "inst": "_120410__66",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[130]",
+     "net": "y[130]",
+     "drivers": [
+      {
+       "inst": "_120411__67",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[131]",
+     "net": "y[131]",
+     "drivers": [
+      {
+       "inst": "_120412__68",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[132]",
+     "net": "y[132]",
+     "drivers": [
+      {
+       "inst": "_120413__69",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[133]",
+     "net": "y[133]",
+     "drivers": [
+      {
+       "inst": "_120414__70",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[134]",
+     "net": "y[134]",
+     "drivers": [
+      {
+       "inst": "_120415__71",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[135]",
+     "net": "y[135]",
+     "drivers": [
+      {
+       "inst": "_120416__72",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[136]",
+     "net": "y[136]",
+     "drivers": [
+      {
+       "inst": "_120417__73",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[137]",
+     "net": "y[137]",
+     "drivers": [
+      {
+       "inst": "_120418__74",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[138]",
+     "net": "y[138]",
+     "drivers": [
+      {
+       "inst": "_120419__75",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[139]",
+     "net": "y[139]",
+     "drivers": [
+      {
+       "inst": "_120420__76",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[140]",
+     "net": "y[140]",
+     "drivers": [
+      {
+       "inst": "_120421__77",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[141]",
+     "net": "y[141]",
+     "drivers": [
+      {
+       "inst": "_120422__78",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[142]",
+     "net": "y[142]",
+     "drivers": [
+      {
+       "inst": "_120423__79",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[143]",
+     "net": "y[143]",
+     "drivers": [
+      {
+       "inst": "_120424__80",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[160]",
+     "net": "y[160]",
+     "drivers": [
+      {
+       "inst": "_120425__81",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[161]",
+     "net": "y[161]",
+     "drivers": [
+      {
+       "inst": "_120426__82",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[162]",
+     "net": "y[162]",
+     "drivers": [
+      {
+       "inst": "_120427__83",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[163]",
+     "net": "y[163]",
+     "drivers": [
+      {
+       "inst": "_120428__84",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[164]",
+     "net": "y[164]",
+     "drivers": [
+      {
+       "inst": "_120429__85",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[165]",
+     "net": "y[165]",
+     "drivers": [
+      {
+       "inst": "_120430__86",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[166]",
+     "net": "y[166]",
+     "drivers": [
+      {
+       "inst": "_120431__87",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[167]",
+     "net": "y[167]",
+     "drivers": [
+      {
+       "inst": "_120432__88",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[168]",
+     "net": "y[168]",
+     "drivers": [
+      {
+       "inst": "_120433__89",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[169]",
+     "net": "y[169]",
+     "drivers": [
+      {
+       "inst": "_120434__90",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[170]",
+     "net": "y[170]",
+     "drivers": [
+      {
+       "inst": "_120435__91",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[171]",
+     "net": "y[171]",
+     "drivers": [
+      {
+       "inst": "_120436__92",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[172]",
+     "net": "y[172]",
+     "drivers": [
+      {
+       "inst": "_120437__93",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[173]",
+     "net": "y[173]",
+     "drivers": [
+      {
+       "inst": "_120438__94",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[174]",
+     "net": "y[174]",
+     "drivers": [
+      {
+       "inst": "_120439__95",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[175]",
+     "net": "y[175]",
+     "drivers": [
+      {
+       "inst": "_120440__96",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[192]",
+     "net": "y[192]",
+     "drivers": [
+      {
+       "inst": "_120441__97",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[193]",
+     "net": "y[193]",
+     "drivers": [
+      {
+       "inst": "_120442__98",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[194]",
+     "net": "y[194]",
+     "drivers": [
+      {
+       "inst": "_120443__99",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[195]",
+     "net": "y[195]",
+     "drivers": [
+      {
+       "inst": "_120444__100",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[196]",
+     "net": "y[196]",
+     "drivers": [
+      {
+       "inst": "_120445__101",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[197]",
+     "net": "y[197]",
+     "drivers": [
+      {
+       "inst": "_120446__102",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[198]",
+     "net": "y[198]",
+     "drivers": [
+      {
+       "inst": "_120447__103",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[199]",
+     "net": "y[199]",
+     "drivers": [
+      {
+       "inst": "_120448__104",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[200]",
+     "net": "y[200]",
+     "drivers": [
+      {
+       "inst": "_120449__105",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[201]",
+     "net": "y[201]",
+     "drivers": [
+      {
+       "inst": "_120450__106",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[202]",
+     "net": "y[202]",
+     "drivers": [
+      {
+       "inst": "_120451__107",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[203]",
+     "net": "y[203]",
+     "drivers": [
+      {
+       "inst": "_120452__108",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[204]",
+     "net": "y[204]",
+     "drivers": [
+      {
+       "inst": "_120453__109",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[205]",
+     "net": "y[205]",
+     "drivers": [
+      {
+       "inst": "_120454__110",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[206]",
+     "net": "y[206]",
+     "drivers": [
+      {
+       "inst": "_120455__111",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[207]",
+     "net": "y[207]",
+     "drivers": [
+      {
+       "inst": "_120456__112",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[224]",
+     "net": "y[224]",
+     "drivers": [
+      {
+       "inst": "_120457__113",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[225]",
+     "net": "y[225]",
+     "drivers": [
+      {
+       "inst": "_120458__114",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[226]",
+     "net": "y[226]",
+     "drivers": [
+      {
+       "inst": "_120459__115",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[227]",
+     "net": "y[227]",
+     "drivers": [
+      {
+       "inst": "_120460__116",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[228]",
+     "net": "y[228]",
+     "drivers": [
+      {
+       "inst": "_120461__117",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[229]",
+     "net": "y[229]",
+     "drivers": [
+      {
+       "inst": "_120462__118",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[230]",
+     "net": "y[230]",
+     "drivers": [
+      {
+       "inst": "_120463__119",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[231]",
+     "net": "y[231]",
+     "drivers": [
+      {
+       "inst": "_120464__120",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[232]",
+     "net": "y[232]",
+     "drivers": [
+      {
+       "inst": "_120465__121",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[233]",
+     "net": "y[233]",
+     "drivers": [
+      {
+       "inst": "_120466__122",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[234]",
+     "net": "y[234]",
+     "drivers": [
+      {
+       "inst": "_120467__123",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[235]",
+     "net": "y[235]",
+     "drivers": [
+      {
+       "inst": "_120468__124",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[236]",
+     "net": "y[236]",
+     "drivers": [
+      {
+       "inst": "_120469__125",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[237]",
+     "net": "y[237]",
+     "drivers": [
+      {
+       "inst": "_120470__126",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[238]",
+     "net": "y[238]",
+     "drivers": [
+      {
+       "inst": "_120471__127",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    },
+    {
+     "port": "y[239]",
+     "net": "y[239]",
+     "drivers": [
+      {
+       "inst": "_120472__128",
+       "master": "TIELOx1_ASAP7_75t_R",
+       "master_type": "CORE_TIELOW",
+       "pin": "L",
+       "constant_lib_function": 0
+      }
+     ],
+     "constant_zero_proved": true
+    }
+   ],
+   "proved": 128,
+   "expected": 128
+  }
+ ],
+ "constant_liberty_evidence": {
+  "TIELOx1_ASAP7_75t_R.L": {
+   "lib": "/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz",
+   "lib_sha256": "073ac4b6b08f272b6953b0ad54d1d9743767a7d15a0e2964ed86cf44c3dbe00e",
+   "cell": "TIELOx1_ASAP7_75t_R",
+   "output_pin": "L",
+   "function": "0"
+  }
+ },
+ "scope": "Actual final routed ODB output nets have one mapped driver with an actual standard-cell Liberty constant0 function. No data timing arc is fabricated. Only these exact ports/ODB identities are discharged."
+}

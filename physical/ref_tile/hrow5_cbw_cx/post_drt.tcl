@@ -2,3 +2,4 @@
 source /src/physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl
 source /src/physical/qwen_die_masters/post_plain.tcl
 source /src/physical/hrow_cx/sram_edge_access.tcl
+source /src/physical/qwen_die_masters/sram_edge_guard.tcl
