@@ -9,7 +9,16 @@
 // die configuration, so the resident-row preload/fill inputs (dead under EXTERNAL_EMBED=1: no row SRAM is instantiated)
 // are not ports of this die master any more (strict port-bind: no unconnected functional input).  The resident variant
 // stays available in ot_qfd_sp_su64_static_entries (EXTERNAL_EMBED=0) for the historical benches.
-module qfd_sp_su64_sfu #(parameter integer CBUF_EDGES=5,COPY_DATA_MUT=0,EXTERNAL_EMBED=1)(
+// Q-ELEM-SUC 2026-10-16: PINREG = 1 (opt-in; the hardened sp_su64_sfu view's configuration) registers every
+// remaining unregistered pin: va (VM requests/writes, behind the copy mux and the seq_su embedding mask), ca0..7
+// (constant-ROM request + cb_stage), xsw, sd and the cp command input.  The SU's own VM / constant-ROM requests, VM
+// lane writes and reducer writes keep their far-pin edge (lane request relays RD - 1, ot_qfd_sp_su64_static_entries
+// PINREG); seq_su sees the embedding requests (external_a_re/addr) one edge earlier (answers are aligned + 1);
+// status sd + 1; copy: start + 1 (cp register), VM reads + 2, VM writes / xsw copy beats + 3, cp_done + 2, cp_active + 1.
+// Schedule deltas: results/rtl/qwen_su64_pinreg_1016/schedule_delta.json.  PRMUT (bench mutants only): 1 = va/ca
+// registers without the internal relay compensation (the old edge), 2 = copy read latency not compensated,
+// 3 = sd not registered (the old status edge), 4 = cp not registered (the old copy-start edge).
+module qfd_sp_su64_sfu #(parameter integer CBUF_EDGES=5,COPY_DATA_MUT=0,EXTERNAL_EMBED=1,PINREG=0,PRMUT=0)(
     input wire ck,rst_n,
     output wire [63:0] external_a_re,
     output wire [1535:0] external_a_addr,
@@ -408,26 +417,44 @@ module qfd_sp_su64_sfu #(parameter integer CBUF_EDGES=5,COPY_DATA_MUT=0,EXTERNAL
   (.clk(ck),.rst_n(rst_n),.d(copy_active_internal),.q(cp_active));
  wire embed_epoch_fault=1'b0;   // epoch identity is checked by the external provider (preload face + core store)
  wire[2366:0] arithmetic_va;
- assign sd={su_fault|wrom_fault|copy_fault|embed_epoch_fault,rows,progress,kv_we,idle&&!copy_active_internal,ready&&!copy_active_internal,inflight,active|copy_active_internal};
- assign ca0={si[481:476],crom_addr[0+:192],crom_re[0+:8]};
+ wire[107:0] sd_c={su_fault|wrom_fault|copy_fault|embed_epoch_fault,rows,progress,kv_we,idle&&!copy_active_internal,ready&&!copy_active_internal,inflight,active|copy_active_internal};
+ wire[205:0] ca_c[0:7];
+ wire[2366:0] va_c;wire[2136:0] xsw_c;wire[55:0] cp_c;
+ assign ca_c[0]={si[481:476],crom_addr[0+:192],crom_re[0+:8]};
  assign crom_q[0+:512]=cq0;
- assign ca1={si[481:476],crom_addr[192+:192],crom_re[8+:8]};
+ assign ca_c[1]={si[481:476],crom_addr[192+:192],crom_re[8+:8]};
  assign crom_q[512+:512]=cq1;
- assign ca2={si[481:476],crom_addr[384+:192],crom_re[16+:8]};
+ assign ca_c[2]={si[481:476],crom_addr[384+:192],crom_re[16+:8]};
  assign crom_q[1024+:512]=cq2;
- assign ca3={si[481:476],crom_addr[576+:192],crom_re[24+:8]};
+ assign ca_c[3]={si[481:476],crom_addr[576+:192],crom_re[24+:8]};
  assign crom_q[1536+:512]=cq3;
- assign ca4={si[481:476],crom_addr[768+:192],crom_re[32+:8]};
+ assign ca_c[4]={si[481:476],crom_addr[768+:192],crom_re[32+:8]};
  assign crom_q[2048+:512]=cq4;
- assign ca5={si[481:476],crom_addr[960+:192],crom_re[40+:8]};
+ assign ca_c[5]={si[481:476],crom_addr[960+:192],crom_re[40+:8]};
  assign crom_q[2560+:512]=cq5;
- assign ca6={si[481:476],crom_addr[1152+:192],crom_re[48+:8]};
+ assign ca_c[6]={si[481:476],crom_addr[1152+:192],crom_re[48+:8]};
  assign crom_q[3072+:512]=cq6;
- assign ca7={si[481:476],crom_addr[1344+:192],crom_re[56+:8]};
+ assign ca_c[7]={si[481:476],crom_addr[1344+:192],crom_re[56+:8]};
  assign crom_q[3584+:512]=cq7;
  qfd_su_vm_pack u_pack(.s_re0(re0),.s_re1(re1),.s_a0(a0),.s_a1(a1),.sw_mask(sw_mask),.sw_a0(sw_a0),.sw_a1(sw_a1),.sw_data(sw_data),.red_we(red_we),.red_addr(red_addr),.red_data(red_data),.va(arithmetic_va));
- qfd_su_static_copy #(.READ_EDGES(15),.DATA_MUT(COPY_DATA_MUT)) u_copy(.ck(ck),.rst_n(rst_n),.cp(cp),.su_va(arithmetic_va),.vq(vq),.va(va),.xsw(xsw),.cp_active(copy_active_internal),.cp_done(cp_done),.fault(copy_fault));
- ot_qfd_sp_su64_static_entries #(.EXTERNAL_EMBED(EXTERNAL_EMBED),.VL(14),.CRX(CBUF_EDGES-1),.LMIN(15)) u_su(
+ qfd_su_static_copy #(.READ_EDGES(15+((PINREG!=0&&PRMUT!=2)?1:0)),.DATA_MUT(COPY_DATA_MUT)) u_copy(.ck(ck),.rst_n(rst_n),.cp(cp_c),.su_va(arithmetic_va),.vq(vq),.va(va_c),.xsw(xsw_c),.cp_active(copy_active_internal),.cp_done(cp_done),.fault(copy_fault));
+ // ---- pin registers (PINREG): one flop per pin, no logic between the flop and the pin ----
+ generate if(PINREG!=0)begin:g_pinreg
+  reg[2366:0] va_r;reg[2136:0] xsw_r;reg[107:0] sd_r;reg[55:0] cp_r;reg[205:0] ca_r[0:7];
+  integer k;
+  // async-assert reset on every pin register (strobes / valid bits are mixed into the packed faces)
+  always @(posedge ck or negedge rst_n)
+   if(!rst_n)begin va_r<=0;xsw_r<=0;sd_r<=0;cp_r<=0;for(k=0;k<8;k=k+1)ca_r[k]<=0;end
+   else begin va_r<=va_c;xsw_r<=xsw_c;sd_r<=sd_c;cp_r<=cp;for(k=0;k<8;k=k+1)ca_r[k]<=ca_c[k];end
+  assign va=va_r;assign xsw=xsw_r;assign sd=(PRMUT==3)?sd_c:sd_r;assign cp_c=(PRMUT==4)?cp:cp_r;
+  assign ca0=ca_r[0];assign ca1=ca_r[1];assign ca2=ca_r[2];assign ca3=ca_r[3];
+  assign ca4=ca_r[4];assign ca5=ca_r[5];assign ca6=ca_r[6];assign ca7=ca_r[7];
+ end else begin:g_pinwire
+  assign va=va_c;assign xsw=xsw_c;assign sd=sd_c;assign cp_c=cp;
+  assign ca0=ca_c[0];assign ca1=ca_c[1];assign ca2=ca_c[2];assign ca3=ca_c[3];
+  assign ca4=ca_c[4];assign ca5=ca_c[5];assign ca6=ca_c[6];assign ca7=ca_c[7];
+ end endgenerate
+ ot_qfd_sp_su64_static_entries #(.EXTERNAL_EMBED(EXTERNAL_EMBED),.VL(14),.CRX(CBUF_EDGES-1),.LMIN(15),.PINREG((PINREG!=0&&PRMUT!=1)?1:0)) u_su(
  .external_a_re(external_a_re),.external_a_addr(external_a_addr),.external_a_q(external_a_q),
  .external_vm_a_re(external_vm_a_re),.external_vm_a_addr(external_vm_a_addr),.external_embed_fault(external_embed_fault),
  .clk(ck),.rst_n(rst_n),.go(si[0]),.accepted_ops(acc),.ready(ready),.idle(idle),.obs_active(active),.obs_inflight(inflight),

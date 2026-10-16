@@ -42,7 +42,12 @@ module ot_qfd_sp_su64_static_entries #(
     parameter integer LMIN = 15,
     parameter integer RED_ENTRIES = 1,
     parameter integer ALIGN_ENTRIES = 1,
-    parameter integer EXTERNAL_EMBED = 0
+    parameter integer EXTERNAL_EMBED = 0,
+    // Q-ELEM-SUC 2026-10-16 (opt-in, default 0 = unchanged): PINREG = 1 for a parent that registers its VM (va) and
+    // constant-ROM (ca) faces: lane request/write relays RD - 1 (ot_hdc_vstream_static_entries ORS) and the embedding /
+    // VM-mask alignment + 1 (ot_qfd_su_align_group4 EML), so every VM / constant-ROM request, VM write and reducer
+    // write reaches the far pin on the same edge as PINREG = 0.  Needs ALIGN_ENTRIES = 1, LT = 1.
+    parameter integer PINREG = 0
 ) (
     // Selected controller owns the exact INT8 decoder in this mode. These
     // are actual registered lane requests, not reconstructed compact requests.
@@ -177,6 +182,7 @@ module ot_qfd_sp_su64_static_entries #(
     wire [3*SW-1:0] vm_mk;
     wire [3*SW*32-1:0] vq_eff;
     genvar gl;
+    initial if (PINREG!=0 && ALIGN_ENTRIES==0) $error("PINREG needs ALIGN_ENTRIES = 1");
     generate if (ALIGN_ENTRIES == 0) begin : g_legacy_align
         ot_hdc_delay #(.W(SW*64), .D(ML-MC)) u_crl (.clk(clk),.rst_n(rst_n),.d(crq_q0),.q(crq_q));
         ot_hdc_delay #(.W(SW+SW*32), .D(ML)) u_eml (.clk(clk),.rst_n(rst_n),.d({emb_sel,e_va_q}),.q({emb_sel_m,emb_m}));
@@ -189,6 +195,7 @@ module ot_qfd_sp_su64_static_entries #(
         always @(posedge clk) vq_hold<=vq_eff;
     end else begin:g_align_children
         initial if (SW%4!=0 || ML<VL || ML<MC) $error("ALIGN_ENTRIES needs four-lane groups and nonnegative delays");
+        initial if (PINREG!=0 && (LT==0 || RD<2)) $error("PINREG needs the lane tiles (LT = 1) and RD >= 2");
         // Functional composition ties the independently clocked children to clk.
         // The physical parent uses separate entries and needs actual phi/RC proof.
         for(gl=0;gl<SW/4;gl=gl+1) begin:g_group
@@ -199,7 +206,7 @@ module ot_qfd_sp_su64_static_entries #(
                 assign mk[o*4+:4]=vm_m1[o*SW+gl*4+:4];
                 assign vq_eff[o*SW*32+gl*128+:128]=ve[o*128+:128];
             end
-            ot_qfd_su_align_group4 #(.ML(ML),.VL(VL),.MC(MC)) u_align (
+            ot_qfd_su_align_group4 #(.ML(ML),.VL(VL),.MC(MC),.EML(PINREG)) u_align (
                 .clk(ck_align[gl]),.rst_n(rst_n),.vm_q(vq),.vm_mask(mk),.vm_eff(ve),
                 .crom_q(crq_q0[gl*256+:256]),.crom_m(crq_q[gl*256+:256]),
                 .emb_q(e_va_q[gl*128+:128]),.emb_m(emb_m[gl*128+:128]),
@@ -230,7 +237,7 @@ module ot_qfd_sp_su64_static_entries #(
     assign sw_a0 = vm_waddr[0 +: AW];
     assign sw_a1 = vm_waddr[AW +: AW];
     wire [15:0] s_progress, s_rows;
-    ot_hdc_vstream_static_entries #(.SW(SW), .LV(LV), .WR(W), .AW(AW), .NW(NW), .KV_FP8(KV_FP8), .ML(ML), .LT(LT), .LOFF(LOFF), .RD(RD), .RED_ENTRIES(RED_ENTRIES)) u_su (
+    ot_hdc_vstream_static_entries #(.SW(SW), .LV(LV), .WR(W), .AW(AW), .NW(NW), .KV_FP8(KV_FP8), .ML(ML), .LT(LT), .LOFF(LOFF), .RD(RD), .RED_ENTRIES(RED_ENTRIES), .ORS(PINREG)) u_su (
         .ck_head(ck_head),.ck_exp(ck_exp),.ck_rcp(ck_rcp),.ck_rsq(ck_rsq),.ck_lane(ck_lane),.ck_red(ck_red),.clk(clk), .rst_n(rs), .go(go_s), .ready(s_ready), .idle(s_idle),
         .i_nout(q_nout), .i_nin(q_nin),
         .i_asrc(q_asrc), .i_abase(q_abase), .i_aso(q_aso), .i_asi(q_asi),

@@ -1,0 +1,185 @@
+{
+ "name": "qfd_sp_su64_sfu_pr-pr1-COMMIT",
+ "block": "qfd_sp_su64_sfu",
+ "ref_tile": true,
+ "owner": "Claude:Q-ELEM-SUC",
+ "purpose": "Hardened SU parent qfd_sp_su64_sfu (PINREG=1) from native lane heads/SFUs, interior clock entries",
+ "threads": 32,
+ "peak_ram_gb": 160,
+ "source": {
+  "branch": "claude/qelem-suc-1016",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/test/qwen_split"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qfd_sp_su64_sfu #(.PINREG(1)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS -DOT_SU_LANE_HARD --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/qwen_split/qfd_sp_su64_sfu.sv rtl/qwen_sys/static_schedule_20261014/ot_qfd_sp_su64_static_entries.sv rtl/hdc/ot_hdc_delay.sv rtl/qwen_sys/static_schedule_20261014/ot_hdc_vstream_static_entries.sv rtl/physical/ot_hdc_vred_pending_guard.sv rtl/physical/ot_hdc_vreduce_entries64.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_vreduce.sv rtl/physical/ot_hdc_vstream_lane_clock_entries_candidate.sv rtl/hdc/ot_hdc_vstream_lane.sv rtl/hdc/ot_hdc_sfu_q.sv rtl/physical/ot_qfd_su_align_entries64.sv rtl/qwen_sys/static_embedding_20261014/ot_qfd_su_embed_static.sv rtl/hdc/ot_hdc_qwen_int8_embed_decode.sv rtl/qwen_sys/missing_masters_20261007/ot_qfd_spine_masters.sv rtl/qwen_split/qfd_su_static_copy.sv rtl/qwen_split/qfd_su_vm_pack.sv rtl/physical/qfd_su64_native_children_bind.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "lint_parent_hard",
+    "cmd": "verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -DSYNTHESIS -DOT_SU_LANE_HARD -GPINREG=1 --top-module qfd_sp_su64_sfu rtl/qwen_split/qfd_sp_su64_sfu.sv rtl/qwen_sys/static_schedule_20261014/ot_qfd_sp_su64_static_entries.sv rtl/hdc/ot_hdc_delay.sv rtl/qwen_sys/static_schedule_20261014/ot_hdc_vstream_static_entries.sv rtl/physical/ot_hdc_vred_pending_guard.sv rtl/physical/ot_hdc_vreduce_entries64.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_vreduce.sv rtl/physical/ot_hdc_vstream_lane_clock_entries_candidate.sv rtl/hdc/ot_hdc_vstream_lane.sv rtl/hdc/ot_hdc_sfu_q.sv rtl/physical/ot_qfd_su_align_entries64.sv rtl/qwen_sys/static_embedding_20261014/ot_qfd_su_embed_static.sv rtl/hdc/ot_hdc_qwen_int8_embed_decode.sv rtl/qwen_sys/missing_masters_20261007/ot_qfd_spine_masters.sv rtl/qwen_split/qfd_su_static_copy.sv rtl/qwen_split/qfd_su_vm_pack.sv rtl/physical/qfd_su64_native_children_bind.sv rtl/test/qwen_split/su64_native_views_bb.v",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "pinreg_su_ops",
+    "cmd": "bash tools/qwen_split/run_su64_pinreg_bench.sh {RUN}/bench/pinreg_su_ops 0 0",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS qfd_su64_pinreg"
+   },
+   {
+    "name": "pinreg_copy",
+    "cmd": "bash tools/qwen_split/run_su64_pinreg_bench.sh {RUN}/bench/pinreg_copy 1 0",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS qfd_su64_pinreg"
+   },
+   {
+    "name": "pinreg_mut_old_vm_edge",
+    "cmd": "bash tools/qwen_split/run_su64_pinreg_bench.sh {RUN}/bench/pinreg_mut_old_vm_edge 0 1",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^FAIL qfd_su64_pinreg"
+   },
+   {
+    "name": "pinreg_mut_copy_latency",
+    "cmd": "bash tools/qwen_split/run_su64_pinreg_bench.sh {RUN}/bench/pinreg_mut_copy_latency 1 2",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^FAIL qfd_su64_pinreg"
+   },
+   {
+    "name": "pinreg_mut_sd_old_edge",
+    "cmd": "bash tools/qwen_split/run_su64_pinreg_bench.sh {RUN}/bench/pinreg_mut_sd_old_edge 0 3",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^FAIL qfd_su64_pinreg"
+   },
+   {
+    "name": "pinreg_mut_cp_old_edge",
+    "cmd": "bash tools/qwen_split/run_su64_pinreg_bench.sh {RUN}/bench/pinreg_mut_cp_old_edge 1 4",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^FAIL qfd_su64_pinreg"
+   },
+   {
+    "name": "copy_module_gate",
+    "cmd": "bash tools/qwen_split/run_su_static_copy_gate.sh {RUN}/bench/copy_module_gate",
+    "expect": "pass",
+    "pass_regex": "^PASS raw4096words",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/qfd_sp_su64_sfu_pr/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/qfd_sp_su64_sfu_pr/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 32,
+   "peak_ram_gb": 160
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/qfd_sp_su64_sfu_pr --out {RUN}/record/views/qfd_sp_su64_sfu --macro-view physical/ref_tile/qfd_su_lane_h_native_crom5_f/views/qfd_su_lane_h_native_crom5 --macro-view physical/ref_tile/qfd_su_sfu_exp_native45/views/qfd_su_sfu_exp_native45 --macro-view physical/ref_tile/qfd_su_sfu_rcp_native45/views/qfd_su_sfu_rcp_native45 --macro-view physical/ref_tile/qfd_su_sfu_rsq_native45/views/qfd_su_sfu_rsq_native45 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/qfd_sp_su64_sfu_pr/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/ref_tile/qfd_su_lane_h_native_crom5_f/views/qfd_su_lane_h_native_crom5",
+   "physical/ref_tile/qfd_su_sfu_exp_native45/views/qfd_su_sfu_exp_native45",
+   "physical/ref_tile/qfd_su_sfu_rcp_native45/views/qfd_su_sfu_rcp_native45",
+   "physical/ref_tile/qfd_su_sfu_rsq_native45/views/qfd_su_sfu_rsq_native45"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/qfd_sp_su64_sfu_pr/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/qfd_sp_su64_sfu_pr/qfd_sp_su64_sfu_pr-pr1-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "Hardened qfd_sp_su64_sfu (die master, PINREG=1): 64 x (CROM5 lane head crom5_f + exp/rcp/rsq native45), every pin registered (va/ca/xsw/sd/cp pin registers; SU requests/writes keep their far-pin edge via RD-1 lane request relays + align EML 1), 256 hard-child clock entries as interior M7 pins over each child clock pin, 90 standard-cell CTS roots (ck, ck_lane x64, ck_align x16, ck_red x9; vred soft, its closed views fail the native audit).  Schedule deltas: results/rtl/qwen_su64_pinreg_1016/schedule_delta.json.",
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "source": "results/rtl/qwen_su64_pinreg_1016/schedule_delta.json",
+  "cell": "qfd_sp_su64_sfu",
+  "why": "First hardened SU parent; replaces the generated q2o1 frame. PINREG removes the comb pin->pin arcs (external_vm_a->va, si stage->ca) and registers va/xsw/sd/cp."
+ }
+}

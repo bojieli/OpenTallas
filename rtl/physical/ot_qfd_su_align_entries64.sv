@@ -3,7 +3,11 @@
 // Payload delay/hold state is deliberately unreset, as in ot_hdc_delay RESET=0.
 // Read masks retain the original asynchronous reset. No latency change.
 module ot_qfd_su_align_group4 #(
-    parameter integer ML=15, VL=7, MC=4
+    parameter integer ML=15, VL=7, MC=4,
+    // Q-ELEM-SUC 2026-10-16 (opt-in, default 0 = unchanged): EML extra edges on the embedding answer / select and the VM
+    // read masks, for a parent whose lane requests leave EML edges earlier than its VM-face pin register
+    // (qfd_sp_su64_sfu PINREG: request relays RD - 1, va pin register +1).
+    parameter integer EML=0
 ) (
     input wire clk, rst_n,
     input wire [383:0] vm_q,
@@ -21,8 +25,8 @@ module ot_qfd_su_align_group4 #(
     reg [383:0] vm_hold;
     ot_hdc_delay #(.W(384),.D(ML-VL)) u_vm (.clk(clk),.rst_n(rst_n),.d(vm_q),.q(vm_new));
     ot_hdc_delay #(.W(256),.D(ML-MC)) u_cr (.clk(clk),.rst_n(rst_n),.d(crom_q),.q(crom_m));
-    ot_hdc_delay #(.W(132),.D(ML)) u_em (.clk(clk),.rst_n(rst_n),.d({emb_sel,emb_q}),.q({emb_sel_m,emb_m}));
-    ot_hdc_delay #(.W(12),.D(ML),.RESET(1)) u_mk (.clk(clk),.rst_n(rst_n),.d(vm_mask),.q(mask_m));
+    ot_hdc_delay #(.W(132),.D(ML+EML)) u_em (.clk(clk),.rst_n(rst_n),.d({emb_sel,emb_q}),.q({emb_sel_m,emb_m}));
+    ot_hdc_delay #(.W(12),.D(ML+EML),.RESET(1)) u_mk (.clk(clk),.rst_n(rst_n),.d(vm_mask),.q(mask_m));
     genvar j;
     generate for(j=0;j<12;j=j+1) begin:g_hold
         assign vm_eff[j*32+:32]=mask_m[j]?vm_new[j*32+:32]:vm_hold[j*32+:32];
