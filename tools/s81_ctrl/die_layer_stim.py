@@ -521,6 +521,16 @@ def main():
                 add(nm, SUX_PORT, o['dur'], preds, eng='sux', order=i)
         else:
             add(nm, o['port'], o['dur'], preds, eng=o['eng'], order=i)
+    if a.hcx_real:
+        # HC POST rewrites private HC SRAM. FFN HCX reads the VM, so its
+        # producer must explicitly export the actual updated residual first.
+        # The fixed HCX issue age does not wait for this store: the runtime H
+        # input equality check exposes a late/missing export as a diagnostic
+        # failure, and the production compiler must bind its exact commit fence.
+        store = f'{L}.attn.hc.h_store_for_hcx'
+        order = [x['id'] for x in src].index(f'{L}.attn.hc_post') + 0.5
+        add(store, HC_PORT, 0, [f'{L}.attn.hc_post'], hc_arg(1, hl_base), eng='hc', order=order)
+        nodes[f'{L}.ffn.hc_pre']['preds'].append(store)
     add(f'{L}.hc.h_store', HC_PORT, 0, [f'{L}.ffn.hc_post'], hc_arg(1, S_BASE), eng='hc', order=1e9)
     hcx_meta = None
     if a.hcx_real:
@@ -557,6 +567,11 @@ def main():
         hcx_meta = dict(members=hcx_members, rom_set=hset, issue=iss, issue_phase=hcx_phase, pin_to_pin=a.hcx_p2p, h_base=hl_base,
                         coef_rows=[C_BASE, C_BASE + 1, C_BASE + COEF_STRIDE, C_BASE + COEF_STRIDE + 1],
                         golden_coefficient_injection=False, native_qualified=False,
+                        ffn_h_producer=dict(job=f'{L}.attn.hc.h_store_for_hcx',
+                            rtl='ot_s81_hc_core K_HSTORE', base_row=hl_base,
+                            rows=640, payload_bytes=40960, write_ports=8, minimum_write_issue_edges=80,
+                            exact_commit_calendar_bound=False,
+                            admission='fixed HCX command must find actual updated H; never wait for readiness'),
                         declared_boundaries=['ideal bench VM', 'TP4 raw gather bench transport (collective glue)',
                                              'peer ranks read die-0 H rows (replicated residual)',
                                              'incoming pre quartet from the preceding layer boundary'])
