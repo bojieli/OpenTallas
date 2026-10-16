@@ -1,0 +1,122 @@
+{
+  "schema": "opentallas.s81.capture_split_slot_request.v1",
+  "candidate": true,
+  "adopted": false,
+  "request_to": "S-DIE current reviewed hub candidate",
+  "parent": "dsfd_sp_capture_split_candidate",
+  "normal_edges_added": 0,
+  "clock_entry_bits": 70,
+  "parent_logic_cells": 0,
+  "masters": {
+    "dsfd_capt_x8_data": {
+      "count": 16,
+      "requested_outline_um": [
+        123.12,
+        136.08
+      ],
+      "outline_status": "candidate, actual synth/CTS/physical gate required",
+      "clocks": [
+        "ck",
+        "ckv"
+      ],
+      "source": "rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_capt_split.sv",
+      "source_sha256": "ea64587376f4c4c31a05c30ec01ca02c0c5410089cd48b120059c1b366d653e5",
+      "pin_proposal": "Retain existing x8_dual data/fault/clock/reset pins on same outline; omit f_sn/t_st ports, no data-stage change."
+    },
+    "dsfd_capt_g2_dualho": {
+      "count": 8,
+      "requested_outline_um": [
+        118.8,
+        162
+      ],
+      "outline_status": "candidate, actual synth/CTS/physical gate required",
+      "clocks": [
+        "ck"
+      ],
+      "source": "rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_capt_split.sv",
+      "source_sha256": "ea64587376f4c4c31a05c30ec01ca02c0c5410089cd48b120059c1b366d653e5",
+      "pin_proposal": "Retain original g2 data/control/clock/reset pins; replace f_ho[0] with two adjacent actual half fault pins at the original f_ho face."
+    },
+    "dsfd_capt_status_dual": {
+      "count": 1,
+      "requested_outline_um": [
+        43.2,
+        86.4
+      ],
+      "outline_status": "candidate, actual synth/CTS/physical gate required",
+      "clocks": [
+        "ck",
+        "ckv"
+      ],
+      "source": "rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_capt_split.sv",
+      "source_sha256": "ea64587376f4c4c31a05c30ec01ca02c0c5410089cd48b120059c1b366d653e5",
+      "pin_proposal": "f_sn[63:0] N/M5, t_st[63:0] S/M5, ck/rst N/M5, ckv/rsv S/M5; local used status cone between ctl/status relay and u_cd + VMstatus seam."
+    },
+    "dsfd_capt_rly_31_EW": {
+      "count": 4,
+      "requested_outline_um": [
+        15.12,
+        17.28
+      ],
+      "outline_status": "candidate, actual synth/CTS/physical gate required",
+      "clocks": [
+        "ck"
+      ],
+      "source": "rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_capt_split.sv",
+      "source_sha256": "ea64587376f4c4c31a05c30ec01ca02c0c5410089cd48b120059c1b366d653e5"
+    },
+    "dsfd_capt_rly_36_WE": {
+      "count": 4,
+      "requested_outline_um": [
+        15.12,
+        17.28
+      ],
+      "outline_status": "candidate, actual synth/CTS/physical gate required",
+      "clocks": [
+        "ck"
+      ],
+      "source": "rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_capt_split.sv",
+      "source_sha256": "ea64587376f4c4c31a05c30ec01ca02c0c5410089cd48b120059c1b366d653e5"
+    },
+    "dsfd_capt_rly_64_EW": {
+      "count": 1,
+      "requested_outline_um": [
+        17.28,
+        19.44
+      ],
+      "outline_status": "candidate, actual synth/CTS/physical gate required",
+      "clocks": [
+        "ck"
+      ],
+      "source": "rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_capt_split.sv",
+      "source_sha256": "ea64587376f4c4c31a05c30ec01ca02c0c5410089cd48b120059c1b366d653e5"
+    },
+    "dsfd_capt_rly_12_SN": {
+      "count": 1,
+      "requested_outline_um": [
+        12.96,
+        12.96
+      ],
+      "outline_status": "candidate, actual synth/CTS/physical gate required",
+      "clocks": [
+        "ck"
+      ],
+      "source": "rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_capt_split.sv",
+      "source_sha256": "ea64587376f4c4c31a05c30ec01ca02c0c5410089cd48b120059c1b366d653e5"
+    }
+  },
+  "clock_change": {
+    "add": [
+      "ck_status",
+      "ckv_status"
+    ],
+    "old_entries_preserved": 68,
+    "delivery": "actual measured per-leaf per-clock phi-R; no inherited insertion"
+  },
+  "current_native_gaps": [
+    "x8_dual historical status outputs q269.7>220 (status cone extracted)",
+    "g2/ctl M5 views recovered from archive lineage but pre-corrected export; cannot bind until reexport/native audit",
+    "cd reset capture207.2>190 needs native repair"
+  ],
+  "no_adoption_note": "Existing die/place topology retained until owner reviews new hub candidate. No parent hardened against old geometry."
+}
