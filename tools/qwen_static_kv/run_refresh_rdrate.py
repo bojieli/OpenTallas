@@ -3,6 +3,7 @@
 import argparse
 import hashlib
 import json
+import os
 import re
 import subprocess
 from pathlib import Path
@@ -34,7 +35,8 @@ def main():
     vlt.write_text('`verilator_config\nhier_block -module "ot_qkd_static_kv_timing"\n')
     def build(tag, profile, mutated=False):
         obj = out/('obj_'+tag)
-        cmd = ['verilator', '--binary', '--timing', '--hierarchical', '-j', '2',
+        compiler = os.environ.get('VERILATOR', str(Path.home()/'.local/opentallas-tools/verilator-5.050/bin/verilator'))
+        cmd = [compiler, '--binary', '--timing', '--hierarchical', '-j', '2',
                '--build-jobs', '16', '--output-groups', '16', '-Wno-fatal',
                '--top-module', 'tb_kv_refresh_rdrate', f'-GPROFILE={profile}',
                '--Mdir', str(obj), str(vlt),
