@@ -54,8 +54,12 @@ def compile_program(pins='registered', gap=100):
             events.append((t[0], tile, f))
         t[0] += 1
 
-    def wait(n):
-        t[0] += n
+    def wait(n, selector_pass=None):
+        if selector_pass is None:
+            t[0] += n
+        else:
+            for _ in range(n):
+                emit('sel', ps=selector_pass)
 
     emit('vmq', weight=1)
     events.append((0, 'sel', dict(op=1)))                         # clear frame (selector) in the first slot
@@ -83,7 +87,9 @@ def compile_program(pins='registered', gap=100):
         emit('sel', op=3, ps=ps)
         for a in range(171):
             emit('sel', op=4, ps=ps, addr=a)
-        wait(2)
+        # The final synchronous SRAM result is consumed on the first drain edge.
+        # Its histogram decode uses the live pass field, even while op is idle.
+        wait(2, selector_pass=ps)
         for b in range(63 if ps == 2 else 31, -1, -1):
             emit('sel', op=5, ps=ps, addr=b)
         wait(1)
