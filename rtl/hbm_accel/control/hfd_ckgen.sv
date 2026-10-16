@@ -16,15 +16,17 @@ module hfd_ckgen (
     wire locked;
     ot_hbm_pll_bb u_pll (.refclk(refclk), .reset_n(por_n), .clk_stream(pll_stream), .clk_serial(pll_serial),
                          .clk_hbm(pll_hbm), .clk_link(pll_link), .locked(locked));
-    wire arm_n = por_n & locked;
-    hfd_ckgen_rel u_rs (.ck(pll_stream), .arm_n(arm_n), .rst_n(por_stream));
-    hfd_ckgen_rel u_rr (.ck(pll_serial), .arm_n(arm_n), .rst_n(por_serial));
-    hfd_ckgen_rel u_rh (.ck(pll_hbm),    .arm_n(arm_n), .rst_n(por_hbm));
-    hfd_ckgen_rel u_rl (.ck(pll_link),   .arm_n(arm_n), .rst_n(por_link));
+    // One hardened release leaf per domain (H-HARDEN 10-15): each takes por_n and the PLL lock itself, so the
+    // hb_ckgen group is the PLL hard macro + four identical leaves and wires only (no glue gate in the parent).
+    hfd_ckgen_rel u_rs (.ck(pll_stream), .por_n(por_n), .locked(locked), .rst_n(por_stream));
+    hfd_ckgen_rel u_rr (.ck(pll_serial), .por_n(por_n), .locked(locked), .rst_n(por_serial));
+    hfd_ckgen_rel u_rh (.ck(pll_hbm),    .por_n(por_n), .locked(locked), .rst_n(por_hbm));
+    hfd_ckgen_rel u_rl (.ck(pll_link),   .por_n(por_n), .locked(locked), .rst_n(por_link));
 endmodule
 
 // asynchronous assert, two-flop synchronous release in the domain clock
-module hfd_ckgen_rel (input wire ck, input wire arm_n, output wire rst_n);
+module hfd_ckgen_rel (input wire ck, input wire por_n, input wire locked, output wire rst_n);
+    wire arm_n = por_n & locked;
     reg [1:0] s;
     always @(posedge ck or negedge arm_n)
         if (!arm_n) s <= 2'b00;

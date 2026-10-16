@@ -55,7 +55,18 @@ def region(points):
     return [(x0,y0),(x1,y0),(x0,y1),(x1,y1)]
 
 
-def plan(closed_pins=None):
+def plan(closed_pins=None, channel=None):
+    """channel (kvsys v1.4.3 near-head feed-through, KV die lead 2026-10-15): (dy, x0, x1) opens a free horizontal channel
+    between lane rows 0 and 1 by moving lane rows >= 1 up by dy (outline H + dy) and reserving the channel rectangle
+    x0..x1 (full channel height) against every stin/stk/nb placement; the neighbour head's feed-through stages live there."""
+    global H
+    H0=H
+    if channel:H=round(H0+channel[0],6)
+    try:return _plan(closed_pins,channel)
+    finally:H=H0
+
+
+def _plan(closed_pins=None, channel=None):
     root=Path(__file__).resolve().parents[2]
     views={'lane':('qkh_lane8_ref_b','ot_qkh_lane8'), 'ktree':('qkh_ktree_ref','ot_qkh_ktree'),
            'score':('qkh_native_score_1014','ot_qkh_head_score_native')}
@@ -66,10 +77,18 @@ def plan(closed_pins=None):
     def at(kind,r,names):return region([(r[0]+pins[kind][n][0],r[1]+pins[kind][n][1]) for n in names])
 
     fronts_q={g:(216.+135.*g,5.4,129.6,43.2) for g in range(4)};kt=(388.8,54.,*SHAPES['ktree']);score=(550.8,54.,*SHAPES['score'])
-    grid=[(43.2+172.8*c,54.+151.2*r,*SHAPES['lane']) for c in range(6) for r in range(3)
+    dy=channel[0] if channel else 0.
+    grid=[(43.2+172.8*c,54.+151.2*r+(dy if r>=1 else 0.),*SHAPES['lane']) for c in range(6) for r in range(3)
           if not (r==0 and c in (2,3))]
     lanes={i:r for i,r in enumerate(grid)}
     placed=list(fronts_q.values())+[kt,score]+list(lanes.values())
+    keep=None
+    if channel:
+        # the channel's stage zone: row-0 lane top + CLEAR .. row-1 lane bottom - CLEAR (overlap() keeps every other child
+        # CLEAR away from the zone, as from any child)
+        y0=54.+129.6+CLEAR;y1=54.+151.2+dy-CLEAR
+        keep=(channel[1],y0,channel[2]-channel[1],y1-y0)
+        placed.append(keep)
     free={k:list(candidates(SHAPES[k],placed)) for k in ['stin','stk','nb']}
     rows=[];children={**{f'front{g}':r for g,r in fronts_q.items()},'ktree':kt,'score':score};hops=[]
     front_order=list(range(16))
@@ -155,6 +174,7 @@ def plan(closed_pins=None):
                  ('score4->die_s',bound(face(score,'E'),score_target)),
                  ('score4.kt_rst_n->ktree',bound(face(score,'W'),at('ktree',kt,['rst_n'])))])
     ov=[(a,b) for a,b in itertools.combinations(children,2) if overlap(children[a],children[b])]
+    if keep:ov+=[('channel',n) for n in children if overlap(keep,children[n])]
     outside=[n for n,r in children.items() if r[0]<0 or r[1]<0 or r[0]+r[2]>W+1e-6 or r[1]+r[3]>H+1e-6]
     clocks=[dict(child=n,rtl_clock=('ck_score' if n=='score' else 'ck_kt' if n=='ktree' else
              f"ck_{'nb1' if n.startswith('nb1_') else 'nb2' if n.startswith('nb2_') else ''.join(c for c in n if not c.isdigit())}[{n.split('_')[-1] if '_' in n else ''.join(c for c in n if c.isdigit())}]"),
@@ -182,10 +202,14 @@ def plan(closed_pins=None):
         front_capture_pins=capture_pins,
         closed_pin_sources={k:dict(path=str(p),sha256=hashlib.sha256(p.read_bytes()).hexdigest()) for k,p in paths.items()},
         hops=[dict(name=n,um=round(d,3)) for n,d in hops],
-        qualification='exact proposed per-bit input pins and closed leaf pins; fresh front/score4 views, physical pin replay and native pair reach required before qualification')
+        qualification='exact proposed per-bit input pins and closed leaf pins; fresh front/score4 views, physical pin replay and native pair reach required before qualification',
+        feedthrough_channel=(dict(dy_um=dy,rect_um=list(keep),purpose='kvsys v1.4.3 near-head feed-through: the far neighbour head T1 / S2 stages')
+                             if keep else None))
 
 def main():
-    a=argparse.ArgumentParser();a.add_argument('out',type=Path);a.add_argument('--closed-pins',type=Path);args=a.parse_args();r=plan(args.closed_pins)
+    a=argparse.ArgumentParser();a.add_argument('out',type=Path);a.add_argument('--closed-pins',type=Path)
+    a.add_argument('--channel',help='v1.4.3 feed-through channel DY,X0,X1 (um)');args=a.parse_args()
+    r=plan(args.closed_pins,tuple(map(float,args.channel.split(','))) if args.channel else None)
     args.out.parent.mkdir(parents=True,exist_ok=True);args.out.write_text(json.dumps(r,indent=2)+'\n')
     print(json.dumps({k:r[k] for k in ['valid','clock_entries_per_head','worst_hop','overlaps','outside']}))
     return 0 if r['valid'] else 1

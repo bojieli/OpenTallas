@@ -79,6 +79,7 @@ def make():
         if not slot["cell"].endswith("_b0"):
             continue
         q = int(re.search(r"_q(\d)_", slot["cell"])[1])
+        rg, wg = {0: (5, 1), 1: (4, 1), 2: (6, 3), 3: (6, 3)}[q]          # run_identity.sh shapes (SID:RG:WG)
         for rel, digest in slot["source_dependencies_sha256"].items():
             assert hashlib.sha256((ROOT / rel).read_bytes()).hexdigest() == digest, rel
         name = f"vm_identity_q{q}_b0_ref"
@@ -132,7 +133,14 @@ def make():
                     "benches": [{"name": "literal_banks_and_wrong_compiled_identity",
                                  "cmd": f"bash rtl/hbm_accel/generic/vm/static/identity/run_identity_wrappers.sh {{RUN}}/bench/literal {q} && bash rtl/hbm_accel/generic/vm/static/identity/run_identity.sh {{RUN}}/bench/identity {q}",
                                  "expect": "pass", "threads": 1, "peak_ram_gb": 2,
-                                 "min_count_regex": r"eachgroup_reads=(\d+)"}]}
+                                 "min_count_regex": r"eachgroup_reads=(\d+)"},
+                                {"name": "wrong_compiled_identity_mutant",
+                                 "cmd": (f"cd rtl/hbm_accel/generic/vm/static/identity && iverilog -g2012 -s tb_hbm_vm_identity "
+                                         f"-Ptb_hbm_vm_identity.SID={q} -Ptb_hbm_vm_identity.RG={rg} -Ptb_hbm_vm_identity.WG={wg} "
+                                         "-Ptb_hbm_vm_identity.MUT=3 -o {RUN}/mut3.vvp ../ot_vms_ce_counter_pipe.sv "
+                                         "../ot_vms_bank_static_identity.sv ../../../../../../physical/asap7_memory_macros_v2/"
+                                         "ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v tb_hbm_vm_identity.sv && vvp {RUN}/mut3.vvp"),
+                                 "expect": "fail", "fail_regex": r"FATAL: .*bank fault", "threads": 1, "peak_ram_gb": 2}]}
         kd.mkdir(parents=True, exist_ok=True)
         (kd / "spec.json").write_text(json.dumps(s, indent=1) + "\n")
         print(json.dumps(RT.gen(str(kd / "spec.json"))))

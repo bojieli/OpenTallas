@@ -1,0 +1,70 @@
+{
+  "schema": "hcoll-captured-stream-native-proof-v1",
+  "source_commit": "4586f221fd17dfd95b8a6f207e36bd186f6c2434",
+  "parent_base": "3c2077274",
+  "imported_parent": "40ba854ba:RTL only",
+  "functional_verdict": "PASS",
+  "host": "ot-epyc1tb",
+  "unit": "oth-ubuntu-2730891-1792101339",
+  "ot_run_exit": 0,
+  "mem_request_GB": 8,
+  "threads": 4,
+  "source_inventory": "final/source.sha256",
+  "outputs_FP32": 1024,
+  "batches": 128,
+  "reset_pulses": 1,
+  "first_output": 174,
+  "last_output": 11350,
+  "steady_batch_period": 88,
+  "programme_last": 11352,
+  "wave_stride": 44,
+  "ring_read_lead": 2,
+  "tag_lifetime": 42,
+  "local_start": 94,
+  "local_phase_edges": [
+    29,
+    21,
+    17,
+    15
+  ],
+  "actual_ring_landing_writes": 2048,
+  "actual_local_capture_writes": 1792,
+  "actual_scratch_reads": 3840,
+  "measured_ring_write_local_read_overlap": 509,
+  "measured_ring_write_local_write_overlap": 0,
+  "measured_ring_write_reducer_overlap": 953,
+  "native_SRAM_banks": 2,
+  "controls": {
+    "localfirst": "data mismatch174; all faults0",
+    "earlypub": "native local cause0c172",
+    "one_edge_read": "native ring5 fault3",
+    "MUT_CARRY": "data mismatch174; all faults0",
+    "MUT_BANK": "native scratch fault128",
+    "MUT_TAG": "native ringa identity fault5"
+  },
+  "component_cost": {
+    "old_period": 82,
+    "new_period": 88,
+    "period_ratio": 1.0731707317073171,
+    "old_last_output": 10579,
+    "new_last_output": 11350,
+    "extra_full_shape_edges": 771
+  },
+  "physical_qualification": {
+    "binding_scope": "complete captured PV component remains OPEN; individual captured-state leaf reference only",
+    "TT_setup": "OPEN",
+    "FF_hold": "OPEN",
+    "DRC": "OPEN",
+    "child_lint": "OPEN",
+    "SS": "not a binding gate; state leaf sensitivity retained by its owner",
+    "captured_state_leaf_closed_reference": "032575a64"
+  },
+  "scope": "actual4 captured ring parents,32 captured-state masters,unchanged actual old LAT8 add leaves,actual16tag reducer,two actual64x512 SRAM functional models; canonical128-row SM boundary",
+  "open": [
+    "actual SM stager LP data seam",
+    "full SM production arithmetic/availability",
+    "complete parent physical slot/pins/clocks/TT/FF/DRC",
+    "whole v15 production ISA binding",
+    "end-to-end throughput/price"
+  ]
+}
