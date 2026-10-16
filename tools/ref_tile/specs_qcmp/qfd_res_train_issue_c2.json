@@ -1,5 +1,5 @@
 {
- "name": "qfd_res_train_issue_c1",
+ "name": "qfd_res_train_issue_c2",
  "top": "qfd_res_train_issue",
  "kind": "tile",
  "sources": [
@@ -14,8 +14,8 @@
   "rst_n"
  ],
  "outline": {
-  "w": 129.6,
-  "h": 129.6,
+  "w": 30.24,
+  "h": 30.24,
   "exact": true
  },
  "layer_cap": "M5",
@@ -42,10 +42,9 @@
    "fault"
   ]
  },
- "io_tcl": "physical/qwen_compute_cmp_0140/qfd_res_train_issue.pins.tcl",
  "assigned_pin_source": {
   "file": "physical/qwen_compute_cmp_0140/qfd_res_train_issue.die_pins.json",
-  "note": "die-assigned pins: Qwen compute die v1.4 netlist_0030 g2 elements.lef sha256 09bb809ec33bec02 (E4 /srv/opentallas-scratch/claude/q-netlist-0030/g2/out/case), extracted to physical/qwen_compute_cmp_0140/<master>.die_pins.json",
+  "note": "die-assigned pins: Qwen compute die v1.4 netlist_0030 g2 elements.lef sha256 09bb809ec33bec02 (E4 /srv/opentallas-scratch/claude/q-netlist-0030/g2/out/case), extracted to physical/qwen_compute_cmp_0140/<master>.die_pins.json; faces kept, positions re-placed by the flow in the 30.24 frame",
   "owner": "Q-COMPUTE-DIE / Q-NETLIST"
  },
  "inter": [
@@ -73,8 +72,8 @@
  "job": {
   "owner": "Claude:Q-ELEM-CMP",
   "branch": "claude/qelem-cmp-0140",
-  "tag": "c1",
-  "purpose": "Qwen compute die v1.4 master qfd_res_train_issue (x1): result-train command issuer, exact die frame 129.6 um square, exact die-assigned pins; recipe 3 pin registers on every input/output (+1 edge in, +1 out: the compiler TRAIN_EDGES absorbs them); rst_n captured by one station flop (cold init only). TRAIN_EDGES 11 = the last computed die value (globalfp_q_1705 te-fpq_s6.json); the die netlist_0030 instance carries no TRAIN_EDGES (RTL default -1 refuses elaboration) -> Q-COMPUTE-DIE must confirm/assign the r2h value incl. the 2 pin-register edges (re-route of this 129.6 tile if it differs).",
+  "tag": "c2",
+  "purpose": "Qwen compute die v1.4 master qfd_res_train_issue (x1): result-train command issuer, 30.24 um square frame (die 129.6 frame measured util 2%: slot change requested), die faces; recipe 3 pin registers on every input/output (+1 edge in, +1 out: the compiler TRAIN_EDGES absorbs them); rst_n captured by one station flop (cold init only). TRAIN_EDGES 11 = the last computed die value (globalfp_q_1705 te-fpq_s6.json); the die netlist_0030 instance carries no TRAIN_EDGES (RTL default -1 refuses elaboration) -> Q-COMPUTE-DIE must confirm/assign the r2h value incl. the 2 pin-register edges (re-route of this 129.6 tile if it differs).",
   "benches": [
    {
     "name": "rti_exact_400_instructions",
@@ -115,8 +114,8 @@
    "tools/qwen_split",
    "rtl/test/qwen_split"
   ],
-  "views_to": "physical/ref_tile/qfd_res_train_issue_c1/views",
-  "record_to": "results/rtl/ref_tile/qfd_res_train_issue_c1"
+  "views_to": "physical/ref_tile/qfd_res_train_issue_c2/views",
+  "record_to": "results/rtl/ref_tile/qfd_res_train_issue_c2"
  },
  "recipe": 3,
  "io_flop_at_pins": {
@@ -127,5 +126,6 @@
  "pin_reg_split": true,
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
- }
+ },
+ "slot_change_request": "Die frame 129.6 x 129.6 -> 30.24 x 30.24 um: c1 CTS gate (c5ab86ca3) measured 607 FF / 315 um2 std = util 2.0% in the 129.6 frame (one huge empty region, owner 20:45 reject) and the die-assigned pins sat in the N-W corner. Same faces (me_*/ck/rst_n N, train_*/tag_* W, fault E), pins placed by the flow along the face; the die adopts the view's frame and pins."
 }
