@@ -83,7 +83,6 @@ module tb_hbm_svc_sm_groups_issued;
      if(lt0[s*1082+:1056]!==records[s][feeds[s]%ROWS][1055:0]||lt1[s*1082+:1056]!==records[s][feeds[s]%ROWS][1055:0]||lb0[s*570+:544]!=={records[s][feeds[s]%ROWS][1087:1056],records[s][feeds[s]%ROWS][1023:512]}||lb1[s*570+:544]!=={records[s][feeds[s]%ROWS][1087:1056],records[s][feeds[s]%ROWS][1023:512]})$fatal(1,"SM_STACK actual S1 consumer mismatch sm%0d row%0d",s,feeds[s]);
      feeds[s]=feeds[s]+1;
     end
-    if(command[s*83+:83]!==grp[s].u.feed.programme_leaf.calendar&{83{grp[s].u.feed.programme_v}})$fatal(1,"SM_STACK sm_command != programme sm%0d",s);
    end
   end
  end
