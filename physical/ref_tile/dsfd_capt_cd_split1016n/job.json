@@ -3,25 +3,24 @@
  "block": "dsfd_capt_cd",
  "ref_tile": true,
  "owner": "claude:S-VM-CAPT-CD",
- "purpose": "Native-capture successor of the closed split1016 dsfd_capt_cd view (zero-cycle enable restructure).",
+ "purpose": "Native-capture successor of the closed split1016 dsfd_capt_cd view (zero-cycle enable restructure). Tile-local benches only (the shared capture-split cluster bench is mid-change by S-VM-CAPT-X8; this leaf's oracle is the frozen 2314b2b4d module).",
  "threads": 8,
  "peak_ram_gb": 16,
  "source": {
   "branch": "codex/s81-hub-parents-0811",
   "commit": "COMMIT",
   "extra_paths": [
-   "tools/s81_ph",
-   "rtl/dsrom_sys/s81_ph",
-   "rtl/common",
-   "rtl/dsrom_sys/s81_glue",
-   "physical/s81_die_pins/capture_split_1016"
+   "tools/s81_ph/capcd_eq_bench.sh",
+   "rtl/dsrom_sys/s81_ph/test/dsfd_capt_cd_ref1013.sv",
+   "rtl/dsrom_sys/s81_ph/test/tb_dsfd_capt_cd_eq.sv",
+   "physical/s81_die_pins/capture_split_1016/dsfd_capt_cd.tcl"
   ]
  },
  "stages": {
   "bench": [
    {
     "name": "lint",
-    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; dsfd_capt_cd u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_capt_split.sv rtl/hdc/ot_hdc_prefix.sv rtl/dsrom_sys/s81_ph/ot_s81ph_cap_tile.sv rtl/common/ot_ratio_cdc_fifo.sv rtl/dsrom_sys/s81_glue/ot_s81_rly.sv rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_capt_cd.sv && echo lint-ok",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; dsfd_capt_cd u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_capt_cd.sv && echo lint-ok",
     "expect": "pass",
     "threads": 1,
     "peak_ram_gb": 4,
@@ -44,22 +43,6 @@
     "fail_regex": "CAPCD_EQ .*mismatches=[1-9][0-9]* EQ_FAIL",
     "threads": 1,
     "peak_ram_gb": 2
-   },
-   {
-    "name": "capture_split_exact",
-    "cmd": "bash tools/s81_ph/capc_split_bench.sh {RUN}/bench eq 'mix mix11 mix12 mix13 trace err over range rreq'",
-    "expect": "pass",
-    "pass_regex": "^CAPC_BENCH PASS cases=9$",
-    "threads": 8,
-    "peak_ram_gb": 16
-   },
-   {
-    "name": "capture_split_mutant",
-    "cmd": "bash tools/s81_ph/capc_split_bench.sh {RUN}/mut mut 'mix' S81PH_CAPS_MUT_STATUS",
-    "expect": "fail",
-    "fail_regex": "CAPC_EQ mismatches=[1-9][0-9]*.*EQ_FAIL",
-    "threads": 8,
-    "peak_ram_gb": 16
    }
   ],
   "calibrate": {
