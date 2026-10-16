@@ -78,7 +78,7 @@ foreach target $targets {
     $clock disconnect;$clock connect $leaf;$input connect $source_net;$output connect $leaf
     dict set free $ri [ot_anchor_pack::cut [dict get $free $ri] $x [expr {$x+$width}]]
     lappend added $cell
-    puts "LOCAL_MACRO_CLK bank$bank pin=[$clock getInst]/clk station=[$cell getName] xy=($x,$y) orient=$orient reach_dbu=$score source=[$source_net getName]"
+    puts "LOCAL_MACRO_CLK bank$bank pin=[[$clock getInst] getName]/clk station=[$cell getName] xy=($x,$y) orient=$orient reach_dbu=$score source=[$source_net getName]"
 }
 global_connect
 foreach cell $added {
