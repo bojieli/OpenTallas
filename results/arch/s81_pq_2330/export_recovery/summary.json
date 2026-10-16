@@ -1,0 +1,23 @@
+{
+  "status": "PASS",
+  "count": 1,
+  "scope": "Historical export lineage only; parent adoption requires separate review.",
+  "bundles": [
+    {
+      "job": "s81pq_qb_headpc_native-p10-wcap-elaunch-15f4db476",
+      "record_commit": "cc20e64762de91c6f516249e098627df48bc7d4b",
+      "source_commit": "15f4db476308291035405860c90e755b6d5a25ef",
+      "view": "physical/ref_tile/s81pq_qb_headpc_native/views/ot_s81_pq_qb_headpc_native",
+      "status": "PASS",
+      "raw_sha256": "7a312b1d72b57ed5c5f55646415f5e85b47ba884e7f9a256e9cebeac060f3171",
+      "final_sha256": "4202a9cf860cf4009178b024b33ee6ae8644c00b30380cd9777d78aa85918cfd",
+      "invariants": {
+        "macro_outline": "PASS",
+        "pin_names_directions_uses": "PASS",
+        "original_pin_rectangles_retained": "PASS"
+      },
+      "current_child_lint": "PASS",
+      "preserved_all_original_files_except_manifest": true
+    }
+  ]
+}

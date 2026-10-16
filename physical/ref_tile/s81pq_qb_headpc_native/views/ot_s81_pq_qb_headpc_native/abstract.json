@@ -177,11 +177,18 @@
   },
   "macro_views": [],
   "files": {
-    "ot_s81_pq_qb_headpc_native.lef": "7a312b1d72b57ed5c5f55646415f5e85b47ba884e7f9a256e9cebeac060f3171",
+    "ot_s81_pq_qb_headpc_native.lef": "4202a9cf860cf4009178b024b33ee6ae8644c00b30380cd9777d78aa85918cfd",
     "ot_s81_pq_qb_headpc_native_ff.lib": "6a2dc82ddab6d95781a66c139427191fa53a5b14937fb252132f9be04e26c7e7",
     "ot_s81_pq_qb_headpc_native_ss.lib": "ef6222cf0d1cbc32c294f5f73f9443a9f2c5ee7166de1492227169995810dfcd",
     "ot_s81_pq_qb_headpc_native_tt.lib": "74ce8aead2f3af58f25540ba56ae7935ca27a291326a9a26174790f37396de71"
   },
   "ok": true,
-  "checked": true
+  "checked": true,
+  "export_provenance": {
+    "schema": 1,
+    "raw_manifest": "provenance/view_export.abstract.json",
+    "raw_manifest_sha256": "f536efd5dca8face58ba2af5ad6b38e7a7ee1e4f764dcc56f4214a0d26b607b9",
+    "transformation": "provenance/abstract_pin_stub.json",
+    "transformation_sha256": "2d40e5d6821177489b1356f1b853d648c53a5fb1902f45cb4e9006acd25aac80"
+  }
 }
