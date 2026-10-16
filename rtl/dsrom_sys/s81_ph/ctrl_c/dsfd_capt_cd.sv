@@ -18,7 +18,19 @@
 //   * fire = f_st[2] & !f_st[0] & ok_q is the ENA of ONE ICG; the 11 t_cd[9:0]/t_cd[11] flops are plain registers on
 //     its gated clock (as ot_s81_vm_x34 NAT=1), so f_st[13:4] reach their D pins without a mux.
 // Every t_cd bit changes on exactly the same ckv edge as before (bit-exact, 0 cycles added).
-module dsfd_capt_cd (
+//
+// PINREG=1 (S-VM-CAPT-CD2 2026-10-16, opt-in; default 0 keeps every existing view/bench byte-for-byte in behaviour):
+// the routed split1016n view (0c30c32f2, CLOSED TT +319.07/FF +30.18) still fails the native audit: f_st[2] capture
+// 203.7 ps > 190 (R 90.0) because the ICG ENA samples on the un-inserted clock at the ICG, so no input->ENA path meets
+// 190.  Every used f_st bit ([0],[2],[3],[13:4]; [1] is unused) now lands on a pin-register D pin directly (fs_q, no
+// reset: the reset-synchronised state behind it ignores it until rv_s[1] rises), and the ok_q/armed/ICG structure
+// above runs on fs_q.  Exactly equivalent to PINREG=0 fed with f_st delayed by one ckv edge:
+//     COST: capture DONE toggle +1 ckv (every t_cd bit changes one serial edge later; f_st -> t_cd 1 -> 2 edges).
+// A zero-cycle form cannot exist with registered outputs: the 10 phase flops must hold between completions, so
+// f_st[2]/f_st[0] must select (mux or ENA) on the same edge.
+module dsfd_capt_cd #(
+    parameter integer PINREG = 0
+) (
     input  wire        ckv,
     input  wire        rsv,
     input  wire [13:0] f_st,
@@ -28,14 +40,23 @@ module dsfd_capt_cd (
     assign t_cd = {tg_q, ft_q, ph_q};
     reg [1:0] rv_s;
     always @(posedge ckv or negedge rsv) if (!rsv) rv_s <= 2'b00; else rv_s <= {rv_s[0], 1'b1};
+    // f_st as seen by the logic: the pins (PINREG=0) or the pin registers (PINREG=1)
+    wire [13:0] fs;
+    generate if (PINREG != 0) begin : g_pr
+        reg [13:0] fs_q;
+        always @(posedge ckv) fs_q <= {f_st[13:2], 1'b0, f_st[0]};
+        assign fs = fs_q;
+    end else begin : g_np
+        assign fs = f_st;
+    end endgenerate
     reg ok_q, armed;
-    wire fire = f_st[2] & ~f_st[0] & ok_q;
+    wire fire = fs[2] & ~fs[0] & ok_q;
     always @(posedge ckv or negedge rv_s[1])
         if (!rv_s[1]) begin ok_q <= 1'b0; armed <= 1'b0; ft_q <= 1'b0; end
         else begin
-            ok_q <= ~f_st[2] & (f_st[0] | armed);
-            armed <= f_st[0] | (armed & ~fire);
-            ft_q <= f_st[3];
+            ok_q <= ~fs[2] & (fs[0] | armed);
+            armed <= fs[0] | (armed & ~fire);
+            ft_q <= fs[3];
         end
 `ifdef S81PH_CAPCD_MUT_NOTOG
     wire tog_d = tg_q;
@@ -47,11 +68,11 @@ module dsfd_capt_cd (
     ICGx2_ASAP7_75t_R u_g (.CLK(ckv), .ENA(fire), .SE(1'b0), .GCLK(gck));
     always @(posedge gck or negedge rv_s[1])
         if (!rv_s[1]) begin ph_q <= 10'd0; tg_q <= 1'b0; end
-        else begin ph_q <= f_st[13:4]; tg_q <= tog_d; end
+        else begin ph_q <= fs[13:4]; tg_q <= tog_d; end
 `else
     // simulation model: the ICG as its enable (same edges; no derived-clock race, cf. ot_s81_vm_x34 BAL=1 note)
     always @(posedge ckv or negedge rv_s[1])
         if (!rv_s[1]) begin ph_q <= 10'd0; tg_q <= 1'b0; end
-        else if (fire) begin ph_q <= f_st[13:4]; tg_q <= tog_d; end
+        else if (fire) begin ph_q <= fs[13:4]; tg_q <= tog_d; end
 `endif
 endmodule
