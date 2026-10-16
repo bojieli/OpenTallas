@@ -40,7 +40,7 @@ module s81_a2f_slice_split4(
  s81_a2f_fault_join4 u_fault(ck_fault,rst_fault_n,fj,fault);
 endmodule
 
-// Wires-only parent: five W0 roots (unchanged A2 header/payload leaves) and four slice fronts (11 roots each).
+// Wires-only parent: five W0 roots (unchanged A2 header/payload leaves) and four slice fronts (35 roots each: 32 data + control + meta + fault).
 module s81_a2f_controlled_split4(
  input wire ck_header,input wire [3:0] ck_payload,
  input wire [3:0] ck_control,ck_meta,ck_fault,input wire [127:0] ck_data,

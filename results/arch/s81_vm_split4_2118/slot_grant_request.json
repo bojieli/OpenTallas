@@ -43,7 +43,7 @@
    "meta4",
    "fault4"
   ],
-  "control_master": "s81_a2f_control4_resetlocal x4 replaces oldcontrol4 without newroot",
+  "control_master": "Reserve s81_a2f_control4_resetlocal x4, with no additional roots; this separately proven control is not yet instantiated in the current full-composition receipt.",
   "each_data_master": "s81_a2f_field4 (2532FF) x128, independent pin clock/reset per leaf",
   "clock_rule": "Die must deliver phi-R at EACH child clock pin using its final routed insertion.json; current CTS R168.1/spread23.8ps diagnostic only",
   "reset_rule": "Same release pipelines; hold/phase startup must align all child epochs before compiler fixed programme, production delivery not yet proven"
@@ -53,25 +53,52 @@
   "extra_diagnostic_cycles": 0,
   "actual_programme_adoption": false
  },
- "live_proof": "Full16384-bit field4 composition3seed x267edge PASS, all5mutants observedFAIL; originalcontrol4 in this snapshot. Separate resetlocal threshold-control exact proof/gate required before composition adoption.",
+ "live_proof": "Full 16,384-bit field4 composition passed three seeds times 267 edges and rejected all five mutants, using original control4. Threshold control separately passed three seeds times 1,500 edges plus ID-bit and lane-bad-drop mutants. The combined threshold-control composition and actual parent binding remain OPEN.",
  "open": [
   "89272 leaflinks over500um; real relay reach/count and schedule cost",
-  "Full-composition exact/mutant receipt",
+  "Integrate threshold control into the full composition and prove the combined snapshot; the existing full receipt uses original control4.",
   "All final routed native launch/capture/TT setup/FFhold/DRC0",
   "Real parentGRT/DRT and actualpeer/pinrouting",
   "Per-child clock/reset delivery and phase-R",
   "PG connectivity/IR/EM",
   "Unmeasured meta26 hardening",
   "W0 proposed re-outline hardening",
-  "Production compiler/price/adoption"
+  "Production compiler/price/adoption",
+  "Resolve actual capture-to-VM face orientation and incident external track cuts; the internal VM screen does not close the peer connection."
  ],
  "sources": {
   "tools/s81_vm/area_a2f_field4.sv": "3e21f264b0a2bf36efcb5b3f5a3f8df2185ea19d9b158e4174b8e44a4279f86d",
-  "tools/s81_vm/area_a2f_split4_composed.sv": "aaf555a3790e55465ce60ba60664bf533551091970fdf6e2eaa31d452eaf19b6",
+  "tools/s81_vm/area_a2f_split4_composed.sv": "f421e767407431ed2ef1743eae7e2bf967a6bf15f4335fa1fddb755b82a5d59a",
   "tools/s81_vm/area_a2f_control_resetlocal.sv": "59907c651f325341ec872da56ae3fa965ae01eac3a2fb8d40ade35aa73841d62",
   "tools/s81_vm/a2f_split4_route_plan.py": "9e0ac2667c436bfa8c546b92303e1997d97093f289daa982eb57911a51876fb8",
   "physical/s81_vm_a2f_split4_2118/s81_a2f_field4.pins.json": "933535b948fec16030b10a2df009d7c6341f10ce4a97fd2059976dcf619e0839",
   "physical/s81_vm_a2f_control_resetlocal_2118/s81_a2f_control4_resetlocal.pins.json": "a695800014135678dca90afd18397c109d5843f4df54761a35e8dc7d4a91a3d2",
   "results/arch/s81_vm_split4_2118/route_plan.json": "2aa6593193dc04ed319935b938d79688c75fbc04ad47663754ff63493efb5957"
- }
+ },
+ "actual_parent_binding": "OPEN",
+ "proofs": {
+  "full_field_composition": {
+   "receipt": "results/arch/s81_vm_split4_2118/full_composition_proof.json",
+   "sha256": "e5c60f4711fef9eee17f24840dafc83ed6c676ced1251e57f1c93401c8b07d43",
+   "status": "PASS_ORIGINAL_CONTROL4_SNAPSHOT",
+   "comment_bridge": "results/arch/s81_vm_split4_2118/full_composition_comment_bridge.json"
+  },
+  "threshold_control": {
+   "receipt": "results/arch/s81_vm_split4_2118/control_threshold_proof.json",
+   "sha256": "ae3c4f98fa1499ea1b47676986612c8d6eab990056d155ed997b8f11a20e9d7f",
+   "status": "PASS_SEPARATE_COMPONENT"
+  }
+ },
+ "requested_outer_faces": {
+  "W": "SU",
+  "E": "Capture and CDC: aSW, sel, col, f_wfc, t_wfc, qSW, t_gather at band height",
+  "N": "MIX4",
+  "S": "HC, pq and remaining c_* ports",
+  "status": "Confirmed by S-DIE as a held 4104 x 4644 planning reservation only; no native, assigned outer-pin or incident peer-fit adoption."
+ },
+ "external_binding_blockers": [
+  "S-DIE reports current capture t_vm (13,376 bits) is assigned S, not W. Its 21.624 um gap above WFC cannot turn that bus into VM E; the internal port screen does not prove this incident external connection.",
+  "S-DIE measures capture H561.6 with M4 pitch48 nm plus M6 pitch64 nm at cut0.653 >0.60. Candidate repair is wires-only parent W reface plus child-local relays, or taller/repartitioned capture with every incident cut checked; H691.2 is a planning candidate for >=667 um at0.55. Closed capture leaves stand.",
+  "No additional VM signal-layer pair is granted. Internal PathFinder values retain the prior over-tile capacity convention and PG deductions; actual DEF tracks, outer pins and global/detailed routing must establish physical capacity."
+ ]
 }
