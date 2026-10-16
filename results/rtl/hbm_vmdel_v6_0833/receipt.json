@@ -1,0 +1,91 @@
+{
+  "schema": "opentallas.hbm_delivery_v6_additive_component_receipt.v1",
+  "source_commit": "387d904de",
+  "candidate_source_sha256": "05d548534244a9c6e726a0a089f73cda97918e3607a72f0b9f7644b4717ed2fe",
+  "transform": "c758f0f17 candidate body exact, only new module names; legacy split/lane/native and production bench restored byte-exact985e70198",
+  "qualification": "COMPONENT_TYPED_PROTOCOL_AND_EXACT_CONSUMER_NONINTERFERENCE_ONLY",
+  "same_interface": {
+    "normal_latency_edges": 2,
+    "cross_lane_status_edges": 2,
+    "delivery_ii": 1,
+    "normal_cycles_added": 0
+  },
+  "fresh_exact_additive_proof": {
+    "unit": "oth-ubuntu-15180-1792167173",
+    "host": "ot-epyc4",
+    "exit": 0,
+    "tool": "Icarus12.0",
+    "cycles_per_seed": 20000,
+    "input_seeds": [
+      11,
+      23
+    ],
+    "seed11": {
+      "checks": 19982,
+      "starts": 76,
+      "valid_lanes": 148528,
+      "fault_cycles": 120,
+      "warm_resets": 4
+    },
+    "seed23": {
+      "checks": 19991,
+      "starts": 77,
+      "valid_lanes": 154376,
+      "fault_cycles": 40,
+      "warm_resets": 1
+    },
+    "clock_ownership_checks": 128,
+    "semantic_and_clock_mutants_rejected": 7,
+    "production": {
+      "sectors": 2048,
+      "slots": 256,
+      "II": 1,
+      "aperture_fault_detected": true
+    },
+    "compare": "Every control and DQ metadata bit every qualified edge, every256-bit payload on valid; unknowncontrol/valid/validpayload fails closed."
+  },
+  "exact_nat2_consumer": {
+    "capsule_commit": "6676233dd",
+    "unit": "oth-ubuntu-4091748-1792165913",
+    "host": "ot-epyc4",
+    "exit": 0,
+    "checks": 21632,
+    "writes": 4096,
+    "reads": 4096,
+    "invalid_samples": 17728,
+    "actual_recipe3_banks": 64,
+    "actual_SRAMs": 192,
+    "current_SIDs": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "invalid_noise": "independent payload/address/mask under valid0; completed writes/readbacks/status unchanged; reset retainsmemory",
+    "negative_controls": [
+      "validpayloadflip runtime mismatchcycle551",
+      "falsevalidonidle runtime statusmismatchcycle9"
+    ]
+  },
+  "historical_strict_all_bits": {
+    "status": "FAIL_RETAINED",
+    "candidate": "c758f0f17",
+    "Icarus12_cycle": 1219,
+    "valid": 0,
+    "fault": 0,
+    "reason": "only unqualified valid0payload differs; deliberately not called strict bit-exact",
+    "authority": "main782dca30d typedprotocol plus actualconsumer invalidpayload noninterference policy",
+    "evidence": [
+      "strict_diagtrace_r3.log",
+      "strict_r3_iv12.log"
+    ]
+  },
+  "open": {
+    "native_physical": true,
+    "new_clk_cap_grant": true,
+    "all32_future_bindings": true,
+    "whole_die": true,
+    "production_rate": true
+  },
+  "frozen_current_d4": "unchanged0dc313220"
+}

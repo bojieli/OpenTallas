@@ -1,0 +1,42 @@
+ot-run: ot-epyc4       admits   292 GB (avail 528, growth 188, headroom 48, waiters 0/0 GB) load 54/128 running 34 disk 883 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/vmdel-v6-add0915
+ot-run: ot-agidock128  admits    31 GB (avail 84, growth 46, headroom 24, waiters 0/0 GB) load 20/64 running 11 disk 284 GB 
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-15180-1792167173 after 0 s
+ROW mutant=0 rc=0
+rtl/hbm_accel/loader/service_native/split/tb_hbm_svc_vmdel_v6_clock_ownership.sv:29: $finish called at 176000 (1ps)
+V6_PROTOCOL PASS LAT=2 SLAT=2 seed=1920676617 cycles=20000 checks=19982 starts=76 dq_valid_lanes=148528 fault_cycles=120 resets=4
+rtl/hbm_accel/loader/service_native/split/tb_hbm_svc_vmdel_v6_protocol_equiv.sv:100: $finish called at 200000000 (1ps)
+V6_PROTOCOL PASS LAT=2 SLAT=2 seed=883088759 cycles=20000 checks=19991 starts=77 dq_valid_lanes=154376 fault_cycles=40 resets=1
+rtl/hbm_accel/loader/service_native/split/tb_hbm_svc_vmdel_v6_protocol_equiv.sv:100: $finish called at 200000000 (1ps)
+DELIVERY_V6_PROTOCOL_GATE PASS mutant=0
+ROW mutant=1 rc=1
+V6_CLOCK_OWNERSHIP PASS checks=128
+rtl/hbm_accel/loader/service_native/split/tb_hbm_svc_vmdel_v6_clock_ownership.sv:29: $finish called at 176000 (1ps)
+FATAL: rtl/hbm_accel/loader/service_native/split/tb_hbm_svc_vmdel_v6_protocol_equiv.sv:49: V6_PROTOCOL beat mismatch cycle=237 lane=0 valid=1/1
+       Time: 2371000  Scope: tb_hbm_svc_vmdel_v6_protocol_equiv.$ivl_for_loop0.OBSERVE_DQ
+ROW mutant=2 rc=1
+V6_CLOCK_OWNERSHIP PASS checks=128
+rtl/hbm_accel/loader/service_native/split/tb_hbm_svc_vmdel_v6_clock_ownership.sv:29: $finish called at 176000 (1ps)
+FATAL: rtl/hbm_accel/loader/service_native/split/tb_hbm_svc_vmdel_v6_protocol_equiv.sv:49: V6_PROTOCOL beat mismatch cycle=237 lane=0 valid=1/1
+       Time: 2371000  Scope: tb_hbm_svc_vmdel_v6_protocol_equiv.$ivl_for_loop0.OBSERVE_DQ
+ROW mutant=3 rc=1
+FATAL: rtl/hbm_accel/loader/service_native/split/tb_hbm_svc_vmdel_v6_clock_ownership.sv:24: clock owner b=0 k=0 owned=00
+       Time: 22000  Scope: tb_hbm_svc_vmdel_v6_clock_ownership
+ROW mutant=4 rc=1
+V6_CLOCK_OWNERSHIP PASS checks=128
+rtl/hbm_accel/loader/service_native/split/tb_hbm_svc_vmdel_v6_clock_ownership.sv:29: $finish called at 176000 (1ps)
+FATAL: rtl/hbm_accel/loader/service_native/split/tb_hbm_svc_vmdel_v6_protocol_equiv.sv:42: V6_PROTOCOL control mismatch cycle=234
+       Time: 2341000  Scope: tb_hbm_svc_vmdel_v6_protocol_equiv
+ROW mutant=5 rc=1
+FATAL: rtl/hbm_accel/loader/service_native/split/tb_hbm_svc_vmdel_v6_clock_ownership.sv:24: clock owner b=0 k=0 owned=xx
+       Time: 22000  Scope: tb_hbm_svc_vmdel_v6_clock_ownership
+ROW mutant=6 rc=1
+FATAL: rtl/hbm_accel/loader/service_native/split/tb_hbm_svc_vmdel_v6_clock_ownership.sv:24: clock owner b=0 k=0 owned=xx
+       Time: 22000  Scope: tb_hbm_svc_vmdel_v6_clock_ownership
+ROW mutant=7 rc=1
+FATAL: rtl/hbm_accel/loader/service_native/split/tb_hbm_svc_vmdel_v6_clock_ownership.sv:24: clock owner b=0 k=0 owned=00
+       Time: 22000  Scope: tb_hbm_svc_vmdel_v6_clock_ownership
+STATIC_VM_DELIVERY PASS LAT=2 SLAT=2 sectors=2048 slots=256 II=1 dq_bits=2248 aperture_fault=1
+rtl/hbm_accel/loader/service_native/tb_hbm_svc_static_vm_delivery.sv:41: $finish called at 3317000 (1ps)
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-15180-1792167173): exit 0
