@@ -731,6 +731,30 @@ def pg_stripe_spread(s: dict, lc: dict, W: float, H: float):
     return pg, n_min, spread_min
 
 
+FILL_WARN, FILL_FAIL = 0.50, 0.35       # OWNER RULE 20:45 PT 2026-10-15: parent / cluster kits
+
+
+def fill_check(s: dict, W: float, H: float, blocks: list, std_area) -> tuple | None:
+    """(severity, 'fill', message, fix) for a parent / cluster kit (kind cluster, hardened children, or >= 4 macros):
+    fill = (hard macro + child area + synthesized std-cell area) / outline.  WARN < 50 %, FAIL < 35 % unless the spec
+    records "fill_reason": {"pin_bound": "..."} (the pre-route gate prints the measured pin demand per face)."""
+    if not (s.get("kind") == "cluster" or s.get("children") or len(s.get("macros") or []) >= 4):
+        return None
+    if not std_area:
+        return ("WARN", "fill", "parent kit without std_area_um2: fill not computed at gen (the gate measures it)",
+                "pass --area-um2 / std_area_um2 from the synthesis smoke")
+    mac = sum(b["w"] * b["h"] for b in blocks)
+    fill = (mac + float(std_area)) / (W * H)
+    reason = str((s.get("fill_reason") or {}).get("pin_bound", "")).strip()
+    msg = f"fill {fill:.0%} = (macros/children {mac:.0f} + std {float(std_area):.0f}) / outline {W * H:.0f} um2"
+    if fill < FILL_FAIL and not reason:
+        return ("FAIL", "fill", msg + f" < {FILL_FAIL:.0%}",
+                "shrink the outline / regroup macros, or record fill_reason.pin_bound with the measured pin demand")
+    if fill < FILL_WARN:
+        return ("WARN", "fill", msg + (f" (pin-bound: {reason})" if reason else f" < {FILL_WARN:.0%}"), "")
+    return None
+
+
 def pg_spread_ok(rec) -> bool:
     return rec is None or (rec[1] >= PG_MIN_STRIPES and rec[2] + 1e-9 >= PG_MIN_SPREAD)
 
@@ -1694,6 +1718,9 @@ def gen(spec_path: str, area_um2: float | None = None, commit: str | None = None
     place_blocks(s, W, H, blocks)
     std = area_um2 or s.get("std_area_um2")
     findings = floorplan_checks(s, W, H, blocks, std)
+    fills = fill_check(s, W, H, blocks, std)
+    if fills:
+        findings.append(fills)
     pgs = pg_stripe_spread(s, lc, W, H)
     if not pg_spread_ok(pgs):
         findings.append(("FAIL", "pg_spread",
