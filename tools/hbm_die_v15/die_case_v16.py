@@ -673,7 +673,7 @@ def main():
     p_ = 9.6 / 15.0
     plc = [f'place_inst -name {n} -location {{{v["x"]:.3f} {v["y"]:.3f}}} -orientation {v["o"]} -status FIRM' for n, v in sorted(pl.items())]
     for t in trees.values():
-        plc += [f'place_inst -name {b} -location {{{x:.3f} {y:.3f}}} -orientation R0 -status FIRM' for b, c_, x, y in t['buffers']]
+        plc += [f'place_inst -name {b} -location {{{x:.3f} {y:.3f}}} -orientation {clock_sites.orientation(y)} -status FIRM' for b, c_, x, y in t['buffers']]
     cks = '\n'.join(f'place_pin -pin_name clk_{d} -layer M9 -location {{{ck["origin"]["x"] + ck["outline"]["w"] * (0.2 + 0.3 * i):.3f} '
                     f'{ck["origin"]["y"] + ck["outline"]["h"] / 2:.3f}}} -pin_size {{0.4 0.4}}' for i, d in enumerate(sorted(trees)))
     clocks = '\n'.join(f'create_clock -name {d} -period {PERIOD[d]} [get_ports clk_{d}]' for d in sorted(trees))
