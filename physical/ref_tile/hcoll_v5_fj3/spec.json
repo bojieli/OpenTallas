@@ -96,7 +96,7 @@
     "pass_regex": "HCOLL_Q_HARD_V5_POS_PASS",
     "min_count_regex": "PASS q3 scen0 checks(\\d+)",
     "threads": 16,
-    "peak_ram_gb": 40,
+    "peak_ram_gb": 128,
     "needs": [
      "verilator"
     ]
@@ -106,7 +106,7 @@
     "cmd": "bash rtl/hbm_accel/generic/collective/p2p/run_q_hard_v5_bench.sh {RUN}/bench/mut_droplink q3 droplink",
     "expect": "fail",
     "threads": 16,
-    "peak_ram_gb": 40,
+    "peak_ram_gb": 128,
     "needs": [
      "verilator"
     ]
@@ -116,7 +116,7 @@
     "cmd": "bash rtl/hbm_accel/generic/collective/p2p/run_q_hard_v5_bench.sh {RUN}/bench/mut_causeswap q3 causeswap",
     "expect": "fail",
     "threads": 16,
-    "peak_ram_gb": 40,
+    "peak_ram_gb": 128,
     "needs": [
      "verilator"
     ]
