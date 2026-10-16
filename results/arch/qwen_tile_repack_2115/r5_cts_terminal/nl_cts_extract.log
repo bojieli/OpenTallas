@@ -1,0 +1,340 @@
+21:OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /work/results/asap7/opentallas_qfd_tile_nl_rp2_45_asap7_ref_gate/base/2_floorplan.sdc
+25:INHOLD: 287 input hold cells (HB2xp67_ASAP7_75t_R; 0 strong pads by OT_HOLD_PAD_STRONG_RE, dont_touch; driver 'BUFx4f_ASAP7_75t_R', 574 FIRM for GPL), 279 inputs skipped (clock / reset-only / non-DFF)
+26:OUTHOLD: 514 output hold stages (BUF + HB2xp67_ASAP7_75t_R + BUF FIRM at the pin, 0 with the strong pad by OT_HOLD_PAD_STRONG_RE, hold cell dont_touch), 2 outputs skipped (not flop-driven)
+27:Q45_REGION ck FF=4909 exclusive=8853 shared=1 area=2185.556579999888 capacity=5437.7567999999965 fill=0.4019224581724378
+28:Q45_REGION ck_rp0 FF=2201 NO_FENCE unfenced: one macro per root, sinks cluster at its pins; relay stages free to spread to consumers
+29:Q45_REGION ck_rp5 FF=2197 NO_FENCE unfenced: one macro per root, sinks cluster at its pins; relay stages free to spread to consumers
+30:Q45_REGION ck_rp1 FF=2201 NO_FENCE unfenced: one macro per root, sinks cluster at its pins; relay stages free to spread to consumers
+31:Q45_REGION ck_rp6 FF=2197 NO_FENCE unfenced: one macro per root, sinks cluster at its pins; relay stages free to spread to consumers
+32:Q45_REGION ck_rp2 FF=2201 NO_FENCE unfenced: one macro per root, sinks cluster at its pins; relay stages free to spread to consumers
+33:Q45_REGION ck_rp7 FF=2197 NO_FENCE unfenced: one macro per root, sinks cluster at its pins; relay stages free to spread to consumers
+34:Q45_REGION ck_rp3 FF=2201 NO_FENCE unfenced: one macro per root, sinks cluster at its pins; relay stages free to spread to consumers
+35:Q45_REGION ck_rp8 FF=2197 NO_FENCE unfenced: one macro per root, sinks cluster at its pins; relay stages free to spread to consumers
+36:Q45_REGION ck_rp4 FF=2201 NO_FENCE unfenced: one macro per root, sinks cluster at its pins; relay stages free to spread to consumers
+37:Q45_REGION ck_rp9 FF=2197 NO_FENCE unfenced: one macro per root, sinks cluster at its pins; relay stages free to spread to consumers
+38:Q45_REGION ck_rqr0 FF=1024 exclusive=2048 shared=0 area=432.96768000004073 capacity=1499.057280000004 fill=0.2888266417678446
+39:Q45_REGION ck_rqr1 FF=1024 exclusive=1024 shared=0 area=388.1779200000265 capacity=1119.7439999999983 fill=0.3466666666666909
+40:Q45_REGION ck_tx0 FF=781 NO_FENCE unfenced: sinks are one LSL face register bank wired only to that LSL face; 5-11 um fences broke DPO (DPL-0200)
+41:Q45_REGION ck_tx1 FF=781 NO_FENCE unfenced: sinks are one LSL face register bank wired only to that LSL face; 5-11 um fences broke DPO (DPL-0200)
+42:Q45_REGION ck_tx2 FF=781 NO_FENCE unfenced: sinks are one LSL face register bank wired only to that LSL face; 5-11 um fences broke DPO (DPL-0200)
+43:Q45_REGION ck_tx3 FF=781 NO_FENCE unfenced: sinks are one LSL face register bank wired only to that LSL face; 5-11 um fences broke DPO (DPL-0200)
+44:Q45_REGION ck_tx4 FF=781 NO_FENCE unfenced: sinks are one LSL face register bank wired only to that LSL face; 5-11 um fences broke DPO (DPL-0200)
+45:Q45_REGION ck_tx5 FF=781 NO_FENCE unfenced: sinks are one LSL face register bank wired only to that LSL face; 5-11 um fences broke DPO (DPL-0200)
+46:Q45_REGION ck_tx6 FF=781 NO_FENCE unfenced: sinks are one LSL face register bank wired only to that LSL face; 5-11 um fences broke DPO (DPL-0200)
+47:Q45_REGION ck_tx7 FF=781 NO_FENCE unfenced: sinks are one LSL face register bank wired only to that LSL face; 5-11 um fences broke DPO (DPL-0200)
+48:Q45_REGION ck_fa2 FF=514 NO_FENCE pin_anchored: every sink is an output launch flop fixed FIRM at its pin by io_flop_at_pins (OT_OFLOP)
+49:Q45_REGION ck_fa4 FF=287 NO_FENCE pin_anchored: every sink is an input pin flop fixed FIRM at its pin by io_flop_at_pins
+50:Q45_LOCALIZE_PASS roots23 all_actual_mapped_FF_owned exclusive_data_cones_fenced capacity_checked
+2322:Elapsed time: 13:56.87[h:]min:sec. CPU time: user 1909.61 sys 236.01 (256%). Peak memory: 3816532KB.
+2323:Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+2345:OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /work/results/asap7/opentallas_qfd_tile_nl_rp2_45_asap7_ref_gate/base/2_floorplan.sdc
+2487:Elapsed time: 2:37.32[h:]min:sec. CPU time: user 224.68 sys 50.21 (174%). Peak memory: 1051144KB.
+2488:Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+2510:OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /work/results/asap7/opentallas_qfd_tile_nl_rp2_45_asap7_ref_gate/base/2_floorplan.sdc
+2513:INHOLD released 2116 FIRM hold cells / drivers for DPL
+2520:[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+2522:[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+2524:	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+2545:[WARNING DPL-0700] Negotiation phase 1: violations stuck at 1014 for 3 consecutive iterations.
+2632:[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+2634:[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+2636:	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+2663:Elapsed time: 2:50.23[h:]min:sec. CPU time: user 191.86 sys 14.97 (121%). Peak memory: 2285968KB.
+2664:Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+2687:OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /work/results/asap7/opentallas_qfd_tile_nl_rp2_45_asap7_ref_gate/base/3_place.sdc
+2719:[INFO CTS-0010]  Clock net "ck" has 4909 sinks.
+2721:[INFO CTS-0010]  Clock net "ck_fa2" has 514 sinks.
+2723:[INFO CTS-0010]  Clock net "ck_fa4" has 287 sinks.
+2725:[INFO CTS-0010]  Clock net "ck_rp0" has 2201 sinks.
+2727:[INFO CTS-0010]  Clock net "ck_rp1" has 2201 sinks.
+2729:[INFO CTS-0010]  Clock net "ck_rp2" has 2201 sinks.
+2731:[INFO CTS-0010]  Clock net "ck_rp3" has 2201 sinks.
+2733:[INFO CTS-0010]  Clock net "ck_rp4" has 2201 sinks.
+2735:[INFO CTS-0010]  Clock net "ck_rp5" has 2197 sinks.
+2737:[INFO CTS-0010]  Clock net "ck_rp6" has 2197 sinks.
+2739:[INFO CTS-0010]  Clock net "ck_rp7" has 2197 sinks.
+2741:[INFO CTS-0010]  Clock net "ck_rp8" has 2197 sinks.
+2743:[INFO CTS-0010]  Clock net "ck_rp9" has 2197 sinks.
+2745:[INFO CTS-0010]  Clock net "ck_rqr0" has 1024 sinks.
+2747:[INFO CTS-0010]  Clock net "ck_rqr1" has 1024 sinks.
+2749:[INFO CTS-0010]  Clock net "ck_tx0" has 781 sinks.
+2751:[INFO CTS-0010]  Clock net "ck_tx1" has 781 sinks.
+2753:[INFO CTS-0010]  Clock net "ck_tx2" has 781 sinks.
+2755:[INFO CTS-0010]  Clock net "ck_tx3" has 781 sinks.
+2757:[INFO CTS-0010]  Clock net "ck_tx4" has 781 sinks.
+2759:[INFO CTS-0010]  Clock net "ck_tx5" has 781 sinks.
+2761:[INFO CTS-0010]  Clock net "ck_tx6" has 781 sinks.
+2763:[INFO CTS-0010]  Clock net "ck_tx7" has 781 sinks.
+3666:[INFO CTS-0098] Clock net "ck"
+3667:[INFO CTS-0099]  Sinks 5069
+3669:[INFO CTS-0101]  Average sink wire length 179.63 um
+3670:[INFO CTS-0102]  Path depth 3 - 4
+3672:[INFO CTS-0098] Clock net "ck_fa2"
+3673:[INFO CTS-0099]  Sinks 523
+3675:[INFO CTS-0101]  Average sink wire length 53.08 um
+3676:[INFO CTS-0102]  Path depth 2 - 3
+3678:[INFO CTS-0098] Clock net "ck_fa4"
+3679:[INFO CTS-0099]  Sinks 297
+3681:[INFO CTS-0101]  Average sink wire length 63.86 um
+3682:[INFO CTS-0102]  Path depth 2 - 3
+3684:[INFO CTS-0098] Clock net "ck_rp0"
+3685:[INFO CTS-0099]  Sinks 2309
+3687:[INFO CTS-0101]  Average sink wire length 268.45 um
+3688:[INFO CTS-0102]  Path depth 4 - 5
+3690:[INFO CTS-0098] Clock net "ck_rp1"
+3691:[INFO CTS-0099]  Sinks 2311
+3693:[INFO CTS-0101]  Average sink wire length 327.30 um
+3694:[INFO CTS-0102]  Path depth 5 - 6
+3696:[INFO CTS-0098] Clock net "ck_rp2"
+3697:[INFO CTS-0099]  Sinks 2322
+3699:[INFO CTS-0101]  Average sink wire length 400.92 um
+3700:[INFO CTS-0102]  Path depth 5 - 6
+3702:[INFO CTS-0098] Clock net "ck_rp3"
+3703:[INFO CTS-0099]  Sinks 2317
+3705:[INFO CTS-0101]  Average sink wire length 473.62 um
+3706:[INFO CTS-0102]  Path depth 6 - 7
+3708:[INFO CTS-0098] Clock net "ck_rp4"
+3709:[INFO CTS-0099]  Sinks 2226
+3711:[INFO CTS-0101]  Average sink wire length 492.88 um
+3712:[INFO CTS-0102]  Path depth 6 - 9
+3714:[INFO CTS-0098] Clock net "ck_rp5"
+3715:[INFO CTS-0099]  Sinks 2304
+3717:[INFO CTS-0101]  Average sink wire length 267.03 um
+3718:[INFO CTS-0102]  Path depth 3 - 4
+3720:[INFO CTS-0098] Clock net "ck_rp6"
+3721:[INFO CTS-0099]  Sinks 2328
+3723:[INFO CTS-0101]  Average sink wire length 364.49 um
+3724:[INFO CTS-0102]  Path depth 5 - 6
+3726:[INFO CTS-0098] Clock net "ck_rp7"
+3727:[INFO CTS-0099]  Sinks 2240
+3729:[INFO CTS-0101]  Average sink wire length 506.13 um
+3730:[INFO CTS-0102]  Path depth 7 - 10
+3732:[INFO CTS-0098] Clock net "ck_rp8"
+3733:[INFO CTS-0099]  Sinks 2296
+3735:[INFO CTS-0101]  Average sink wire length 312.77 um
+3736:[INFO CTS-0102]  Path depth 4 - 5
+3738:[INFO CTS-0098] Clock net "ck_rp9"
+3739:[INFO CTS-0099]  Sinks 2308
+3741:[INFO CTS-0101]  Average sink wire length 344.89 um
+3742:[INFO CTS-0102]  Path depth 4 - 5
+3744:[INFO CTS-0098] Clock net "ck_rqr0"
+3745:[INFO CTS-0099]  Sinks 1054
+3747:[INFO CTS-0101]  Average sink wire length 277.93 um
+3748:[INFO CTS-0102]  Path depth 2 - 3
+3750:[INFO CTS-0098] Clock net "ck_rqr1"
+3751:[INFO CTS-0099]  Sinks 1031
+3753:[INFO CTS-0101]  Average sink wire length 59.44 um
+3754:[INFO CTS-0102]  Path depth 2 - 3
+3756:[INFO CTS-0098] Clock net "ck_tx0"
+3757:[INFO CTS-0099]  Sinks 816
+3759:[INFO CTS-0101]  Average sink wire length 256.81 um
+3760:[INFO CTS-0102]  Path depth 5 - 6
+3762:[INFO CTS-0098] Clock net "ck_tx1"
+3763:[INFO CTS-0099]  Sinks 803
+3765:[INFO CTS-0101]  Average sink wire length 447.82 um
+3766:[INFO CTS-0102]  Path depth 5 - 7
+3768:[INFO CTS-0098] Clock net "ck_tx2"
+3769:[INFO CTS-0099]  Sinks 856
+3771:[INFO CTS-0101]  Average sink wire length 660.28 um
+3772:[INFO CTS-0102]  Path depth 7 - 8
+3774:[INFO CTS-0098] Clock net "ck_tx3"
+3775:[INFO CTS-0099]  Sinks 827
+3777:[INFO CTS-0101]  Average sink wire length 216.78 um
+3778:[INFO CTS-0102]  Path depth 3 - 4
+3780:[INFO CTS-0098] Clock net "ck_tx4"
+3781:[INFO CTS-0099]  Sinks 819
+3783:[INFO CTS-0101]  Average sink wire length 255.23 um
+3784:[INFO CTS-0102]  Path depth 3 - 4
+3786:[INFO CTS-0098] Clock net "ck_tx5"
+3787:[INFO CTS-0099]  Sinks 821
+3789:[INFO CTS-0101]  Average sink wire length 442.00 um
+3790:[INFO CTS-0102]  Path depth 6 - 6
+3792:[INFO CTS-0098] Clock net "ck_tx6"
+3793:[INFO CTS-0099]  Sinks 822
+3795:[INFO CTS-0101]  Average sink wire length 502.36 um
+3796:[INFO CTS-0102]  Path depth 8 - 9
+3798:[INFO CTS-0098] Clock net "ck_tx7"
+3799:[INFO CTS-0099]  Sinks 797
+3801:[INFO CTS-0101]  Average sink wire length 471.71 um
+3802:[INFO CTS-0102]  Path depth 7 - 9
+3811:QDM PINFLOP reference: 287 input pin flops, median arrival 251.972992 (range 248.549179 .. 253.530777)
+3812:QDM reference pin tap_q[472]$_DFF_P_/CLK clock arrival max 251.972992 min 231.088074 skew 90 hold 50
+3814:QDM boundary referenced to the propagated tree
+3826:OT_HYBRID CTS_MEASURE tt ck sinks=4909 reference_scope=all_internal_only boundary_sinks=4909 min=155.80210794924025 mean=165.66600639397572 max=174.24410595170616 all_mean=165.66600639397572
+3827:OT_HYBRID CTS_MEASURE tt ck_rp0 sinks=2201 reference_scope=all_internal_only boundary_sinks=2201 min=205.50083938932528 mean=215.1818106894085 max=234.29461242591105 all_mean=215.1818106894085
+3828:OT_HYBRID CTS_MEASURE tt ck_rp1 sinks=2201 reference_scope=all_internal_only boundary_sinks=2201 min=243.58465342176376 mean=257.8050850023148 max=328.3738849522712 all_mean=257.8050850023148
+3829:OT_HYBRID CTS_MEASURE tt ck_rp2 sinks=2201 reference_scope=all_internal_only boundary_sinks=2201 min=267.8539900591671 mean=287.25818576293614 max=376.9880811486298 all_mean=287.25818576293614
+3830:OT_HYBRID CTS_MEASURE tt ck_rp3 sinks=2201 reference_scope=all_internal_only boundary_sinks=2201 min=276.3817519232662 mean=348.82622811930656 max=406.9924136205284 all_mean=348.82622811930656
+3831:OT_HYBRID CTS_MEASURE tt ck_rp4 sinks=2201 reference_scope=all_internal_only boundary_sinks=2201 min=358.5225464179478 mean=369.1439094170917 max=524.1817001417703 all_mean=369.1439094170917
+3832:OT_HYBRID CTS_MEASURE tt ck_rp5 sinks=2197 reference_scope=all_internal_only boundary_sinks=2197 min=197.15930356056333 mean=215.26092488170977 max=247.86023332898208 all_mean=215.26092488170977
+3833:OT_HYBRID CTS_MEASURE tt ck_rp6 sinks=2197 reference_scope=all_internal_only boundary_sinks=2197 min=252.56399850293363 mean=268.54196300457795 max=371.0041455554433 all_mean=268.54196300457795
+3834:OT_HYBRID CTS_MEASURE tt ck_rp7 sinks=2197 reference_scope=all_internal_only boundary_sinks=2197 min=372.06593510486186 mean=383.7741526402795 max=460.65468290772617 all_mean=383.7741526402795
+3835:OT_HYBRID CTS_MEASURE tt ck_rp8 sinks=2197 reference_scope=all_internal_only boundary_sinks=2197 min=214.70715569099892 mean=260.66260738200157 max=334.97510454961593 all_mean=260.66260738200157
+3836:OT_HYBRID CTS_MEASURE tt ck_rp9 sinks=2197 reference_scope=all_internal_only boundary_sinks=2197 min=222.64562504906016 mean=262.94974349396136 max=336.71274236797564 all_mean=262.94974349396136
+3837:OT_HYBRID CTS_MEASURE tt ck_tx0 sinks=781 reference_scope=all_internal_only boundary_sinks=781 min=194.49072985454777 mean=214.162080553559 max=295.10177752778486 all_mean=214.162080553559
+3838:OT_HYBRID CTS_MEASURE tt ck_tx1 sinks=781 reference_scope=all_internal_only boundary_sinks=781 min=281.0996446852626 mean=308.80469502888417 max=370.9640942596699 all_mean=308.80469502888417
+3839:OT_HYBRID CTS_MEASURE tt ck_tx2 sinks=781 reference_scope=all_internal_only boundary_sinks=781 min=368.1400754517979 mean=440.0368091486705 max=543.9971828090637 all_mean=440.0368091486705
+3840:OT_HYBRID CTS_MEASURE tt ck_tx3 sinks=781 reference_scope=all_internal_only boundary_sinks=781 min=160.78004270021853 mean=184.7717076182008 max=215.03723887532672 all_mean=184.7717076182008
+3841:OT_HYBRID CTS_MEASURE tt ck_tx4 sinks=781 reference_scope=all_internal_only boundary_sinks=781 min=181.1333312805772 mean=200.3254095549567 max=225.6285722835423 all_mean=200.3254095549567
+3842:OT_HYBRID CTS_MEASURE tt ck_tx5 sinks=781 reference_scope=all_internal_only boundary_sinks=781 min=280.458657419434 mean=294.41388287697754 max=313.8835870438707 all_mean=294.41388287697754
+3843:OT_HYBRID CTS_MEASURE tt ck_tx6 sinks=781 reference_scope=all_internal_only boundary_sinks=781 min=323.972849842769 mean=355.0629262053244 max=401.29458250193096 all_mean=355.0629262053244
+3844:OT_HYBRID CTS_MEASURE tt ck_tx7 sinks=781 reference_scope=all_internal_only boundary_sinks=781 min=328.15436610385007 mean=340.99589140904897 max=407.1522857367132 all_mean=340.99589140904897
+3845:OT_HYBRID CTS_MEASURE tt ck_rqr0 sinks=1024 reference_scope=all_internal_only boundary_sinks=1024 min=176.78267254101863 mean=183.28132035116874 max=187.92231734771187 all_mean=183.28132035116874
+3846:OT_HYBRID CTS_MEASURE tt ck_rqr1 sinks=1024 reference_scope=all_internal_only boundary_sinks=1024 min=88.62261654414459 mean=95.73710565127378 max=102.65340007971055 all_mean=95.73710565127378
+3847:OT_HYBRID CTS_MEASURE tt ck_fa2 sinks=514 reference_scope=boundary boundary_sinks=514 min=85.34746554730742 mean=89.68003828932973 max=93.64490470513387 all_mean=89.68003828932976
+3848:OT_HYBRID CTS_MEASURE tt ck_fa4 sinks=287 reference_scope=boundary boundary_sinks=271 min=82.84920699284383 mean=85.9472275128399 max=87.83077078534835 all_mean=85.93600084352293
+3984:[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+3986:[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+3988:	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+4009:[WARNING DPL-0700] Negotiation phase 1: violations stuck at 4792 for 3 consecutive iterations.
+4071:OT_HOLD_MM: ff mode reads /src/physical/ref_tile/qfd_tile_nl_rp2_45_a2/signoff.sdc
+4126:OT_HYBRID CTS_MEASURE ff ck sinks=4909 reference_scope=all_internal_only boundary_sinks=4909 min=122.31977979420108 mean=137.7350854623468 max=159.07042413555476 all_mean=137.7350854623468
+4129:OT_HYBRID CTS_MEASURE ff ck_rp0 sinks=2201 reference_scope=all_internal_only boundary_sinks=2201 min=169.67792516663104 mean=178.01902148377096 max=197.01386434375627 all_mean=178.01902148377096
+4132:OT_HYBRID CTS_MEASURE ff ck_rp1 sinks=2201 reference_scope=all_internal_only boundary_sinks=2201 min=205.8318385076521 mean=219.4987147207318 max=277.2760365731752 all_mean=219.4987147207318
+4135:OT_HYBRID CTS_MEASURE ff ck_rp2 sinks=2201 reference_scope=all_internal_only boundary_sinks=2201 min=230.04009900066916 mean=246.49414040524726 max=306.59552796959724 all_mean=246.49414040524726
+4138:OT_HYBRID CTS_MEASURE ff ck_rp3 sinks=2201 reference_scope=all_internal_only boundary_sinks=2201 min=233.9956016086091 mean=302.35110046155467 max=356.4222820027209 all_mean=302.35110046155467
+4141:OT_HYBRID CTS_MEASURE ff ck_rp4 sinks=2201 reference_scope=all_internal_only boundary_sinks=2201 min=294.2990862777735 mean=305.2580174313123 max=443.34255888193604 all_mean=305.2580174313123
+4144:OT_HYBRID CTS_MEASURE ff ck_rp5 sinks=2197 reference_scope=all_internal_only boundary_sinks=2197 min=157.4587272420542 mean=176.15155876854348 max=205.28236137499388 all_mean=176.15155876854348
+4147:OT_HYBRID CTS_MEASURE ff ck_rp6 sinks=2197 reference_scope=all_internal_only boundary_sinks=2197 min=211.69711901460767 mean=226.62218320477047 max=316.0456908818163 all_mean=226.62218320477047
+4150:OT_HYBRID CTS_MEASURE ff ck_rp7 sinks=2197 reference_scope=all_internal_only boundary_sinks=2197 min=301.6875095138741 mean=313.08291819876865 max=379.2151330337755 all_mean=313.08291819876865
+4153:OT_HYBRID CTS_MEASURE ff ck_rp8 sinks=2197 reference_scope=all_internal_only boundary_sinks=2197 min=176.3270508876797 mean=218.21564411454182 max=289.00176811690994 all_mean=218.21564411454182
+4156:OT_HYBRID CTS_MEASURE ff ck_rp9 sinks=2197 reference_scope=all_internal_only boundary_sinks=2197 min=183.4901959933959 mean=221.37028897649355 max=294.013731203729 all_mean=221.37028897649355
+4159:OT_HYBRID CTS_MEASURE ff ck_tx0 sinks=781 reference_scope=all_internal_only boundary_sinks=781 min=155.56769823444182 mean=174.42915118453493 max=281.14413687315226 all_mean=174.42915118453493
+4162:OT_HYBRID CTS_MEASURE ff ck_tx1 sinks=781 reference_scope=all_internal_only boundary_sinks=781 min=230.10286823517472 mean=256.72078699819923 max=313.7758398989003 all_mean=256.72078699819923
+4165:OT_HYBRID CTS_MEASURE ff ck_tx2 sinks=781 reference_scope=all_internal_only boundary_sinks=781 min=302.7292317820424 mean=368.8517934844367 max=457.57439686917104 all_mean=368.8517934844367
+4168:OT_HYBRID CTS_MEASURE ff ck_tx3 sinks=781 reference_scope=all_internal_only boundary_sinks=781 min=132.07267277086947 mean=154.75612177073194 max=183.04589861495342 all_mean=154.75612177073194
+4171:OT_HYBRID CTS_MEASURE ff ck_tx4 sinks=781 reference_scope=all_internal_only boundary_sinks=781 min=149.07117266873763 mean=167.87178084790898 max=192.13469780900087 all_mean=167.87178084790898
+4174:OT_HYBRID CTS_MEASURE ff ck_tx5 sinks=781 reference_scope=all_internal_only boundary_sinks=781 min=227.63600817575178 mean=243.58815661254405 max=261.13347699734976 all_mean=243.58815661254405
+4177:OT_HYBRID CTS_MEASURE ff ck_tx6 sinks=781 reference_scope=all_internal_only boundary_sinks=781 min=259.1603331189504 mean=292.56018215125204 max=334.7217794099598 all_mean=292.56018215125204
+4180:OT_HYBRID CTS_MEASURE ff ck_tx7 sinks=781 reference_scope=all_internal_only boundary_sinks=781 min=264.74417208803897 mean=278.39447987265794 max=345.3430610843843 all_mean=278.39447987265794
+4183:OT_HYBRID CTS_MEASURE ff ck_rqr0 sinks=1024 reference_scope=all_internal_only boundary_sinks=1024 min=148.0583717104764 mean=158.25257876132503 max=165.18476930129242 all_mean=158.25257876132503
+4186:OT_HYBRID CTS_MEASURE ff ck_rqr1 sinks=1024 reference_scope=all_internal_only boundary_sinks=1024 min=72.20724741450307 mean=78.90521378054575 max=89.18452817472829 all_mean=78.90521378054575
+4189:OT_HYBRID CTS_MEASURE ff ck_fa2 sinks=514 reference_scope=boundary boundary_sinks=514 min=66.59059441601184 mean=71.1367224186151 max=75.73194185380358 all_mean=71.13672241861515
+4192:OT_HYBRID CTS_MEASURE ff ck_fa4 sinks=287 reference_scope=boundary boundary_sinks=271 min=65.19473875714868 mean=68.6850848009253 max=70.61878887677956 all_mean=68.66137244875684
+4319:OT_HOLD_MM virtual period: ot_lb_v_ot_entry_0 770.000000 -> 833.333008 (reference ot_entry_0)
+4320:OT_HOLD_MM virtual period: ot_lb_v_ot_entry_1 770.000000 -> 833.333008 (reference ot_entry_1)
+4321:OT_HOLD_MM virtual period: ot_lb_v_ot_entry_2 770.000000 -> 833.333008 (reference ot_entry_2)
+4322:OT_HOLD_MM virtual period: ot_lb_v_ot_entry_3 770.000000 -> 833.333008 (reference ot_entry_3)
+4323:OT_HOLD_MM virtual period: ot_lb_v_ot_entry_4 770.000000 -> 833.333008 (reference ot_entry_4)
+4324:OT_HOLD_MM virtual period: ot_lb_v_ot_entry_5 770.000000 -> 833.333008 (reference ot_entry_5)
+4325:OT_HOLD_MM virtual period: ot_lb_v_ot_entry_6 770.000000 -> 833.333008 (reference ot_entry_6)
+4326:OT_HOLD_MM virtual period: ot_lb_v_ot_entry_7 770.000000 -> 833.333008 (reference ot_entry_7)
+4327:OT_HOLD_MM virtual period: ot_lb_v_ot_entry_8 770.000000 -> 833.333008 (reference ot_entry_8)
+4328:OT_HOLD_MM virtual period: ot_lb_v_ot_entry_9 770.000000 -> 833.333008 (reference ot_entry_9)
+4329:OT_HOLD_MM virtual period: ot_lb_v_ot_entry_10 770.000000 -> 833.333008 (reference ot_entry_10)
+4330:OT_HOLD_MM virtual period: ot_lb_v_ot_entry_11 770.000000 -> 833.333008 (reference ot_entry_11)
+4331:OT_HOLD_MM virtual period: ot_lb_v_ot_entry_12 770.000000 -> 833.333008 (reference ot_entry_12)
+4332:OT_HOLD_MM virtual period: ot_lb_v_ot_entry_13 770.000000 -> 833.333008 (reference ot_entry_13)
+4333:OT_HOLD_MM virtual period: ot_lb_v_ot_entry_14 770.000000 -> 833.333008 (reference ot_entry_14)
+4334:OT_HOLD_MM virtual period: ot_lb_v_ot_entry_15 770.000000 -> 833.333008 (reference ot_entry_15)
+4335:OT_HOLD_MM virtual period: ot_lb_v_ot_entry_16 770.000000 -> 833.333008 (reference ot_entry_16)
+4336:OT_HOLD_MM virtual period: ot_lb_v_ot_entry_17 770.000000 -> 833.333008 (reference ot_entry_17)
+4337:OT_HOLD_MM virtual period: ot_lb_v_ot_entry_18 770.000000 -> 833.333008 (reference ot_entry_18)
+4338:OT_HOLD_MM virtual period: ot_lb_v_ot_entry_19 770.000000 -> 833.333008 (reference ot_entry_19)
+4339:OT_HOLD_MM virtual period: ot_lb_v_ot_entry_20 770.000000 -> 833.333008 (reference ot_entry_20)
+4340:OT_HOLD_MM virtual period: ot_lb_v_ot_entry_21 770.000000 -> 833.333008 (reference ot_entry_21)
+4341:OT_HOLD_MM virtual period: ot_lb_v_ot_entry_22 770.000000 -> 833.333008 (reference ot_entry_22)
+4342:OT_HOLD_MM virtual period: ot_lb_v_ot_entry_23 770.000000 -> 833.333008 (reference ot_entry_23)
+4343:OT_HOLD_MM virtual period: ot_lb_v_ot_entry_24 770.000000 -> 833.333008 (reference ot_entry_24)
+4344:OT_HOLD_MM virtual period: ot_lb_v_ot_entry_25 770.000000 -> 833.333008 (reference ot_entry_25)
+4345:OT_HOLD_MM virtual period: ot_lb_v_ot_entry_26 770.000000 -> 833.333008 (reference ot_entry_26)
+4346:OT_HOLD_MM virtual period: ot_lb_v_ot_entry_27 770.000000 -> 833.333008 (reference ot_entry_27)
+4347:OT_HOLD_MM virtual period: ot_lb_v_ot_entry_28 770.000000 -> 833.333008 (reference ot_entry_28)
+4348:OT_HOLD_MM virtual period: ot_lb_v_ot_entry_29 770.000000 -> 833.333008 (reference ot_entry_29)
+4349:OT_HOLD_MM virtual period: ot_lb_v_ot_entry_30 770.000000 -> 833.333008 (reference ot_entry_30)
+4350:OT_HOLD_MM virtual period: ot_lb_v_ot_entry_31 770.000000 -> 833.333008 (reference ot_entry_31)
+4351:OT_HOLD_MM virtual period: ot_lb_v_ot_entry_32 770.000000 -> 833.333008 (reference ot_entry_32)
+4352:OT_HOLD_MM virtual period: ot_lb_v_ot_entry_33 770.000000 -> 833.333008 (reference ot_entry_33)
+4353:OT_HOLD_MM virtual period: ot_lb_v_ot_entry_34 770.000000 -> 833.333008 (reference ot_entry_34)
+4354:OT_HOLD_MM virtual period: ot_lb_v_ot_entry_35 770.000000 -> 833.333008 (reference ot_entry_35)
+4355:OT_HOLD_MM virtual period: ot_lb_v_ot_entry_36 770.000000 -> 833.333008 (reference ot_entry_36)
+4356:OT_HOLD_MM virtual period: ot_lb_v_ot_entry_37 770.000000 -> 833.333008 (reference ot_entry_37)
+4357:OT_HOLD_MM virtual period: ot_lb_v_ot_entry_38 770.000000 -> 833.333008 (reference ot_entry_38)
+4358:OT_HOLD_MM virtual period: ot_lb_v_ot_entry_39 770.000000 -> 833.333008 (reference ot_entry_39)
+4359:OT_HOLD_MM virtual period: ot_lb_v_ot_entry_40 770.000000 -> 833.333008 (reference ot_entry_40)
+4360:OT_HOLD_MM sync: SS setup ws -229.17 / FF hold ws -138.62 ps
+6051:OT_HOLD_GUARD start: hold ws -138.62 tns -191945.4 viol 5090 (margin 30, chunk 1000 it)
+6053:[INFO RSZ-0046] Found 19101 endpoints with hold violations.
+7969:[WARNING RSZ-0064] Unable to repair all hold checks within margin.
+7970:[INFO RSZ-0032] Inserted 37493 hold buffers.
+7973:OT_HOLD_GUARD chunk 1: hold ws -117.22 (+21.40) tns -111208.1 (+42.1%) viol 3205, 2144 s
+7975:[INFO RSZ-0046] Found 13399 endpoints with hold violations.
+9320:[WARNING RSZ-0064] Unable to repair all hold checks within margin.
+9321:[INFO RSZ-0032] Inserted 25144 hold buffers.
+9324:OT_HOLD_GUARD chunk 2: hold ws -72.41 (+44.81) tns -29354.9 (+73.6%) viol 969, 3523 s
+9326:[INFO RSZ-0046] Found 2410 endpoints with hold violations.
+9573:[WARNING RSZ-0064] Unable to repair all hold checks within margin.
+9574:[INFO RSZ-0032] Inserted 8964 hold buffers.
+9577:OT_HOLD_GUARD chunk 3: hold ws -13.11 (+59.30) tns -205.9 (+99.3%) viol 44, 4032 s
+9579:[INFO RSZ-0046] Found 461 endpoints with hold violations.
+9631:[INFO RSZ-0032] Inserted 1268 hold buffers.
+9634:OT_HOLD_GUARD chunk 4: hold ws 30.00 (+43.11) tns 0.0 (+100.0%) viol 0, 4108 s
+9635:OT_HOLD_MM after repair: SS setup ws -229.17 / FF hold ws 30.00 ps
+9641:[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+9643:[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+9645:	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+9806:[WARNING DPL-0701] NegotiationLegalizer did not fully converge. Violations remain: 16533
+20702:[ERROR DPL-0033] detailed placement checks failed during check placement.
+20703:Error: cts.tcl, 83 DPL-0033
+20704:Elapsed time: 1:57:15.91[h:]min:sec. CPU time: user 7864.95 sys 373.65 (117%). Peak memory: 4309136KB.
+---TAIL
+ hold99798
+ hold99813
+ hold99823
+ hold99834
+ hold99865
+ hold99897
+ hold99910
+ hold99919
+ hold99932
+ hold99940
+ hold99946
+ hold99965
+ hold99973
+ hold99991
+ hold99997
+ rebuffer41440
+ u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[3\].g_sf.u_rp.g_pair\[0\].g\[170\]$_DFF_P_
+ u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[3\].g_sf.u_rp.g_pair\[0\].g_bank.g_capx2.cap2x\[220\]$_SDFF_PN0_
+ u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[3\].g_sf.u_rp.g_pair\[0\].g_bank.g_capx2.xa_m\[57\]$_DFF_P_
+ u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[3\].g_sf.u_rp.g_pair\[0\].r\[121\]$_DFF_P_
+ u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[3\].g_sf.u_rp.g_pair\[0\].r\[170\]$_DFF_P_
+ u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[3\].g_sf.u_rp.g_pair\[0\].r\[174\]$_DFF_P_
+ u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[3\].g_sf.u_rp.g_pair\[0\].r\[46\]$_DFF_P_
+ u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[3\].g_sf.u_rp.g_pair\[0\].r\[85\]$_DFF_P_
+ u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[3\].g_sf.u_rp.g_pair\[1\].g\[237\]$_DFF_P_
+ u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[3\].g_sf.u_rp.g_pair\[1\].g\[409\]$_DFF_P_
+ u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[3\].g_sf.u_rp.g_pair\[1\].g_bank.g_capx2.cap2x\[237\]$_SDFF_PN0_
+ u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[3\].g_sf.u_rp.g_pair\[1\].r\[101\]$_DFF_P_
+ u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[3\].g_sf.u_rp.g_pair\[1\].r\[407\]$_DFF_P_
+ u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[3\].g_sf.u_rp.g_pair\[1\].r\[494\]$_DFF_P_
+ u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[4\].g_sf.u_rp.g_pair\[0\].r\[176\]$_DFF_P_
+ u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[4\].g_sf.u_rp.g_pair\[1\].g\[69\]$_DFF_P_
+ u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[4\].g_sf.u_rp.g_pair\[1\].g\[90\]$_DFF_P_
+ u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[4\].g_sf.u_rp.g_pair\[1\].g_bank.g_capx2.cap2x\[122\]$_SDFF_PN0_
+ u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[4\].g_sf.u_rp.g_pair\[1\].r\[104\]$_DFF_P_
+ u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[4\].g_sf.u_rp.g_pair\[1\].r\[111\]$_DFF_P_
+ u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[4\].g_sf.u_rp.g_pair\[1\].r\[120\]$_DFF_P_
+ u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[4\].g_sf.u_rp.g_pair\[1\].r\[161\]$_DFF_P_
+ u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[4\].g_sf.u_rp.g_pair\[1\].r\[181\]$_DFF_P_
+ u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[4\].g_sf.u_rp.g_pair\[1\].r\[227\]$_DFF_P_
+ u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[4\].g_sf.u_rp.g_pair\[1\].r\[232\]$_DFF_P_
+ u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[4\].g_sf.u_rp.g_pair\[1\].r\[409\]$_DFF_P_
+ u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[4\].g_sf.u_rp.g_pair\[1\].r\[6\]$_DFF_P_
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[2\].g_hd.g_tx.g_r\[0\].u_tx/hold106243
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/hold50317
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/hold86533
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/hold87407
+ u_tile.u_tile.u_logic.u_me.g_hier.g_sl\[3\].g_hd.g_tx.g_r\[0\].u_tx/hold90433
+ wire39704
+ wire40053
+ wire40089
+ wire40176
+ wire40321
+ wire40537
+ wire40605
+[ERROR DPL-0033] detailed placement checks failed during check placement.
+Error: cts.tcl, 83 DPL-0033
+Elapsed time: 1:57:15.91[h:]min:sec. CPU time: user 7864.95 sys 373.65 (117%). Peak memory: 4309136KB.
+make[1]: *** [Makefile:548: do-4_1_cts] Error 1
+make: *** [Makefile:548: /work/results/asap7/opentallas_qfd_tile_nl_rp2_45_asap7_ref_gate/base/4_1_cts.odb] Error 2
