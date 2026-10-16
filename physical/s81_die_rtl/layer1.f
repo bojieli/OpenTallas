@@ -207,3 +207,11 @@ rtl/dsrom_sys/s81_die_bind/ot_s81_bf_prog_seq.sv
 rtl/dsrom_sys/engram/mix/dsfd_engram_mix4_c.sv
 rtl/dsrom_sys/engram/mix/ot_s81_engram_mix.sv
 rtl/dsrom_sys/s81_ctrl/ot_s81_slab_ep.sv
+# Opt-in source-current hardened capture import (--capture-source-packet).
+# Default parent remains unchanged; these definitions supply the imported leaves.
+rtl/dsrom_sys/s81_ph/ot_s81ph_cap_tile.sv
+rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_capt_split.sv
+rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_capt_cd.sv
+rtl/dsrom_sys/s81_glue/dsfd_rly_masters.sv
+rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_capt_x8_x43.sv
+rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_capt_status_x43.sv
