@@ -1124,8 +1124,8 @@
    "missing_rtl": "no static producer of COLL inj_d[1023:0] (2 x 512-b SU-quarter inject words answered INJLAT=12 edges after inj_rd/inj_idx/hgi_inj_addr, ot_hfd_coll_q_static_v4.sv:201-217) exists among the v16 SU/sucore masters known to this region; v15 also unbound (\"actual VM programme SRAM calendar issuer\")",
    "affects": [
     [
-     "hb_coll_SW",
-     "inj_d",
+     "cij_SW",
+     "su_inj_d",
      0,
      1024
     ],
@@ -1146,24 +1146,6 @@
      "inj_d",
      0,
      1024
-    ],
-    [
-     "hb_coll_SW",
-     "inj_rd",
-     0,
-     2
-    ],
-    [
-     "hb_coll_SW",
-     "inj_idx",
-     0,
-     32
-    ],
-    [
-     "hb_coll_SW",
-     "hgi_inj_addr",
-     0,
-     160
     ],
     [
      "hb_coll_SE",
@@ -1220,7 +1202,7 @@
      160
     ]
    ],
-   "note": "coordinator: if region H-SU exposes an inject-answer port of 1024 b keyed by inj_rd/inj_idx/hgi_inj_addr, bind it; outputs listed are unconsumed"
+   "note": "coordinator: if region H-SU exposes an inject-answer port of 1024 b keyed by inj_rd/inj_idx/hgi_inj_addr, bind it; outputs listed are unconsumed | coll_0030: SW inj_d now driven by cij_SW (ot_hgi_coll_inj_idx_join, IDX staging + SU mux); the SU answer enters cij_SW.su_inj_d (SU reg at P+9). SU-side ports implemented by H-NETLIST/suport (sucx_<q>, contract agreed 2026-10-16)."
   },
   {
    "id": "G-CIL-RC",
@@ -1877,26 +1859,6 @@
     ]
    ],
    "note": "v15 unbound_ports \"actual INDEX programme loader / CP\" (same list). rank[6:0] is the die TP rank (same value as argmax die_id[6:0]) -> could become a die top strap pin, see G-CIL-RANK | idxcoll 2026-10-15: hb_idx.rank moved to G-CIL-RANK (die identity strap pin, idxcoll.json)"
-  },
-  {
-   "id": "G-CIL-IDXTX",
-   "owner": "H-COLL+IDX",
-   "missing_rtl": "COLL TopK injection: hb_idx.tx_v[4]/tx[2180] (topk link frames) has no input on any COLL master (q3 host_v4 TKM del_flit is internal: ot_hfd_coll_q_static_v4.sv:291). compact.graph.json link idx_link>coll_SW:IDX_COLL names \"COLL del_flit\", which is an OUTPUT. ot_hgi_coll_idx_tkm_join / ot_hgi_coll_vm_idx_ingress (idx_d input) exist but are only used in benches",
-   "affects": [
-    [
-     "hb_idx",
-     "tx_v",
-     0,
-     4
-    ],
-    [
-     "hb_idx",
-     "tx",
-     0,
-     2180
-    ]
-   ],
-   "note": "outputs only; needs an SW COLL master variant exposing an idx ingress port | idxcoll 2026-10-15: REQUIRED RTL (H-COLL): ot_hfd_coll_q3_static_host_v4 (SW, SOLO; the only IDX) gains inputs idx_v[3:0]/idx_d[2179:0] (pin-registered) and places ot_hgi_coll_vm_idx_ingress (exists, bench PASS: run_vm_idx_ingress_bench.sh) on the four VM-assembled qslots source faces 2+NPT+j (vm face = vm_assembled, idx face = IDX tx), with mode_idx/expected_v[3:0] from a NEW instruction field: the 1536-b q_static_v4 instruction is fully packed (p_ar_low ends at 1535), so the ISA widens or an existing field is re-encoded. Latency per IDX_TKM_NATIVE_JOIN.md: IDX emit E -> ingress E+2/E+3 -> qslots E+4/E+6 -> TKM E+7 (TKM start E-2). Then edges hb_idx.tx_v/tx -> hb_coll_SW.idx_v/idx_d. Alternative without a COLL port: IDX link writes its 64 flits per rank to VM through its record client and COLL reads them as VM-assembled sources (an IDX RTL change instead)."
   },
   {
    "id": "G-CIL-AMCP",
