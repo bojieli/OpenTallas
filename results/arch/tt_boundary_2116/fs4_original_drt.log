@@ -1,0 +1,1040 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 8 thread(s).
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty /src/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_tt.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_liberty /src/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_ff.lib
+read_db /work/results/asap7/opentallas_qfd_tt_scale_leaf_asap7_ref_qfd_tt_scale_leaf_fs4_0d82da4ab/base/5_1_grt.odb
+read_sdc -mode ss /work/results/asap7/opentallas_qfd_tt_scale_leaf_asap7_ref_qfd_tt_scale_leaf_fs4_0d82da4ab/base/5_1_grt.sdc
+read_sdc -mode ff /work/results/asap7/opentallas_qfd_tt_scale_leaf_asap7_ref_qfd_tt_scale_leaf_fs4_0d82da4ab/base/5_1_grt.sdc
+OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /work/results/asap7/opentallas_qfd_tt_scale_leaf_asap7_ref_qfd_tt_scale_leaf_fs4_0d82da4ab/base/5_1_grt.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+source /work/hooks/pre_detail_route_pre_drt.tcl
+QDM reference pin s3_v__ot_q$_DFF_P_/CLK clock arrival max 382.626617 min 301.189148 skew 90 hold 50
+OT_IO_INTER 0 inputs 0 outputs at 150 ps
+QDM boundary referenced to the propagated tree
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+detailed_route -output_drc /work/reports/asap7/opentallas_qfd_tt_scale_leaf_asap7_ref_qfd_tt_scale_leaf_fs4_0d82da4ab/base/5_route_drc.rpt -output_maze /work/results/asap7/opentallas_qfd_tt_scale_leaf_asap7_ref_qfd_tt_scale_leaf_fs4_0d82da4ab/base/maze.log -droute_end_iter 64 -verbose 1 -drc_report_iter_step 5
+[INFO DRT-0149] Reading tech and libs.
+
+Units:                1000
+Number of layers:     21
+Number of macros:     213
+Number of vias:       15
+Number of viarulegen: 11
+
+[INFO DRT-0150] Reading design.
+
+Design:                   qfd_tt_scale_leaf
+Die area:                 ( 0 0 ) ( 345600 216000 )
+Number of track patterns: 32
+Number of DEF vias:       0
+Number of components:     30755
+Number of terminals:      697
+Number of snets:          2
+Number of nets:           24412
+
+[WARNING DRT-0422] No routing tracks pass through the center of Term clk[0].
+[WARNING DRT-0422] No routing tracks pass through the center of Term rst_n[0].
+[WARNING DRT-0422] No routing tracks pass through the center of Term s3_v[0].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[0].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[100].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[101].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[102].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[103].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[104].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[105].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[106].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[107].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[108].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[109].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[10].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[110].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[111].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[112].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[113].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[114].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[115].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[116].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[117].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[118].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[119].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[11].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[120].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[121].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[122].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[123].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[124].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[125].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[126].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[127].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[128].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[129].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[12].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[130].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[131].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[132].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[133].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[134].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[135].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[136].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[137].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[138].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[139].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[13].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[140].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[141].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[142].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[143].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[144].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[145].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[146].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[147].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[148].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[149].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[14].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[150].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[151].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[152].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[153].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[154].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[155].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[156].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[157].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[158].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[159].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[15].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[160].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[161].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[162].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[163].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[164].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[165].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[166].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[167].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[168].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[169].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[16].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[170].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[171].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[172].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[173].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[174].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[175].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[176].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[177].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[178].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[179].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[17].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[180].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[181].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[182].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[183].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[184].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[185].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[186].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[187].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[188].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[189].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[18].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[190].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[191].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[192].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[193].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[194].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[195].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[196].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[197].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[198].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[199].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[19].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[1].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[200].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[201].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[202].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[203].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[204].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[205].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[206].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[207].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[208].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[209].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[20].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[210].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[211].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[212].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[213].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[214].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[215].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[216].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[217].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[218].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[219].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[21].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[220].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[221].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[222].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[223].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[224].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[225].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[226].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[227].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[228].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[229].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[22].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[230].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[231].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[232].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[233].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[234].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[235].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[236].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[237].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[238].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[239].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[23].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[240].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[241].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[242].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[243].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[244].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[245].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[246].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[247].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[248].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[249].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[24].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[250].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[251].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[252].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[253].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[254].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[255].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[256].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[257].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[258].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[259].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[25].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[260].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[261].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[262].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[263].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[264].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[265].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[266].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[267].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[268].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[269].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[26].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[270].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[271].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[272].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[273].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[274].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[275].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[276].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[277].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[278].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[279].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[27].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[280].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[281].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[282].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[283].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[284].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[285].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[286].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[287].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[288].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[289].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[28].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[290].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[291].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[292].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[293].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[294].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[295].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[296].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[297].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[298].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[299].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[29].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[2].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[300].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[301].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[302].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[303].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[304].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[305].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[306].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[307].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[308].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[309].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[30].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[310].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[311].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[312].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[313].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[314].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[315].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[316].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[317].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[318].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[319].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[31].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[320].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[321].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[322].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[323].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[324].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[325].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[326].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[327].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[328].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[329].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[32].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[330].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[331].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[332].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[333].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[334].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[335].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[336].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[337].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[338].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[339].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[33].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[340].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[341].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[342].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[343].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[344].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[345].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[346].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[347].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[348].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[349].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[34].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[350].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[351].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[352].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[353].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[354].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[355].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[356].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[357].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[358].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[359].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[35].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[360].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[361].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[362].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[363].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[364].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[365].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[366].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[367].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[368].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[369].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[36].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[370].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[371].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[372].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[373].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[374].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[375].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[376].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[377].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[378].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[379].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[37].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[380].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[381].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[382].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[383].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[384].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[385].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[386].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[387].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[388].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[389].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[38].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[390].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[391].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[392].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[393].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[394].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[395].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[396].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[397].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[398].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[399].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[39].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[3].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[400].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[401].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[402].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[403].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[404].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[405].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[406].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[407].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[408].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[409].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[40].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[410].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[411].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[412].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[413].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[414].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[415].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[416].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[417].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[418].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[419].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[41].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[420].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[421].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[422].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[423].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[424].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[425].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[426].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[427].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[428].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[429].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[42].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[430].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[431].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[432].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[433].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[434].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[435].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[436].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[437].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[438].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[439].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[43].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[440].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[441].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[442].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[443].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[444].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[445].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[446].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[447].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[448].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[449].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[44].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[450].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[451].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[452].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[453].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[454].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[455].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[456].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[457].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[458].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[459].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[45].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[460].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[461].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[462].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[463].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[464].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[465].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[466].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[467].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[468].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[469].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[46].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[470].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[471].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[472].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[473].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[474].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[475].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[476].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[477].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[478].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[479].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[47].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[480].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[481].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[482].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[483].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[484].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[485].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[486].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[487].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[488].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[489].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[48].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[490].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[491].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[492].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[493].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[494].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[495].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[496].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[497].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[498].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[499].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[49].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[4].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[500].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[501].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[502].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[503].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[504].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[505].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[506].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[507].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[508].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[509].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[50].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[510].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[511].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[512].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[513].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[514].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[515].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[516].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[517].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[518].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[519].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[51].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[520].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[521].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[522].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[523].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[524].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[525].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[526].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[527].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[528].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[529].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[52].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[530].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[531].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[532].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[533].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[534].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[535].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[536].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[537].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[538].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[539].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[53].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[540].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[541].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[542].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[543].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[544].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[545].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[546].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[547].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[548].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[549].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[54].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[550].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[551].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[552].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[553].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[554].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[555].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[556].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[557].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[558].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[559].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[55].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[560].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[561].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[562].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[563].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[564].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[565].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[566].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[567].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[568].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[569].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[56].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[570].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[571].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[572].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[573].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[574].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[575].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[57].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[58].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[59].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[5].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[60].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[61].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[62].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[63].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[64].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[65].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[66].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[67].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[68].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[69].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[6].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[70].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[71].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[72].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[73].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[74].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[75].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[76].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[77].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[78].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[79].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[7].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[80].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[81].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[82].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[83].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[84].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[85].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[86].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[87].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[88].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[89].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[8].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[90].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[91].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[92].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[93].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[94].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[95].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[96].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[97].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[98].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[99].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_addr[9].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_gre[0].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_gre[10].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_gre[11].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_gre[12].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_gre[13].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_gre[14].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_gre[15].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_gre[16].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_gre[17].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_gre[18].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_gre[19].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_gre[1].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_gre[20].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_gre[21].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_gre[22].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_gre[23].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_gre[2].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_gre[3].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_gre[4].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_gre[5].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_gre[6].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_gre[7].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_gre[8].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_gre[9].
+[WARNING DRT-0422] No routing tracks pass through the center of Term scale_re[0].
+[WARNING DRT-0422] No routing tracks pass through the center of Term tag_payload[0].
+[WARNING DRT-0422] No routing tracks pass through the center of Term tag_payload[10].
+[WARNING DRT-0422] No routing tracks pass through the center of Term tag_payload[11].
+[WARNING DRT-0422] No routing tracks pass through the center of Term tag_payload[12].
+[WARNING DRT-0422] No routing tracks pass through the center of Term tag_payload[13].
+[WARNING DRT-0422] No routing tracks pass through the center of Term tag_payload[14].
+[WARNING DRT-0422] No routing tracks pass through the center of Term tag_payload[15].
+[WARNING DRT-0422] No routing tracks pass through the center of Term tag_payload[16].
+[WARNING DRT-0422] No routing tracks pass through the center of Term tag_payload[17].
+[WARNING DRT-0422] No routing tracks pass through the center of Term tag_payload[18].
+[WARNING DRT-0422] No routing tracks pass through the center of Term tag_payload[19].
+[WARNING DRT-0422] No routing tracks pass through the center of Term tag_payload[1].
+[WARNING DRT-0422] No routing tracks pass through the center of Term tag_payload[20].
+[WARNING DRT-0422] No routing tracks pass through the center of Term tag_payload[21].
+[WARNING DRT-0422] No routing tracks pass through the center of Term tag_payload[22].
+[WARNING DRT-0422] No routing tracks pass through the center of Term tag_payload[23].
+[WARNING DRT-0422] No routing tracks pass through the center of Term tag_payload[24].
+[WARNING DRT-0422] No routing tracks pass through the center of Term tag_payload[25].
+[WARNING DRT-0422] No routing tracks pass through the center of Term tag_payload[26].
+[WARNING DRT-0422] No routing tracks pass through the center of Term tag_payload[27].
+[WARNING DRT-0422] No routing tracks pass through the center of Term tag_payload[28].
+[WARNING DRT-0422] No routing tracks pass through the center of Term tag_payload[29].
+[WARNING DRT-0422] No routing tracks pass through the center of Term tag_payload[2].
+[WARNING DRT-0422] No routing tracks pass through the center of Term tag_payload[30].
+[WARNING DRT-0422] No routing tracks pass through the center of Term tag_payload[31].
+[WARNING DRT-0422] No routing tracks pass through the center of Term tag_payload[32].
+[WARNING DRT-0422] No routing tracks pass through the center of Term tag_payload[33].
+[WARNING DRT-0422] No routing tracks pass through the center of Term tag_payload[34].
+[WARNING DRT-0422] No routing tracks pass through the center of Term tag_payload[35].
+[WARNING DRT-0422] No routing tracks pass through the center of Term tag_payload[36].
+[WARNING DRT-0422] No routing tracks pass through the center of Term tag_payload[37].
+[WARNING DRT-0422] No routing tracks pass through the center of Term tag_payload[38].
+[WARNING DRT-0422] No routing tracks pass through the center of Term tag_payload[39].
+[WARNING DRT-0422] No routing tracks pass through the center of Term tag_payload[3].
+[WARNING DRT-0422] No routing tracks pass through the center of Term tag_payload[40].
+[WARNING DRT-0422] No routing tracks pass through the center of Term tag_payload[41].
+[WARNING DRT-0422] No routing tracks pass through the center of Term tag_payload[42].
+[WARNING DRT-0422] No routing tracks pass through the center of Term tag_payload[43].
+[WARNING DRT-0422] No routing tracks pass through the center of Term tag_payload[44].
+[WARNING DRT-0422] No routing tracks pass through the center of Term tag_payload[45].
+[WARNING DRT-0422] No routing tracks pass through the center of Term tag_payload[46].
+[WARNING DRT-0422] No routing tracks pass through the center of Term tag_payload[47].
+[WARNING DRT-0422] No routing tracks pass through the center of Term tag_payload[48].
+[WARNING DRT-0422] No routing tracks pass through the center of Term tag_payload[49].
+[WARNING DRT-0422] No routing tracks pass through the center of Term tag_payload[4].
+[WARNING DRT-0422] No routing tracks pass through the center of Term tag_payload[50].
+[WARNING DRT-0422] No routing tracks pass through the center of Term tag_payload[51].
+[WARNING DRT-0422] No routing tracks pass through the center of Term tag_payload[52].
+[WARNING DRT-0422] No routing tracks pass through the center of Term tag_payload[53].
+[WARNING DRT-0422] No routing tracks pass through the center of Term tag_payload[54].
+[WARNING DRT-0422] No routing tracks pass through the center of Term tag_payload[55].
+[WARNING DRT-0422] No routing tracks pass through the center of Term tag_payload[56].
+[WARNING DRT-0422] No routing tracks pass through the center of Term tag_payload[57].
+[WARNING DRT-0422] No routing tracks pass through the center of Term tag_payload[58].
+[WARNING DRT-0422] No routing tracks pass through the center of Term tag_payload[59].
+[WARNING DRT-0422] No routing tracks pass through the center of Term tag_payload[5].
+[WARNING DRT-0422] No routing tracks pass through the center of Term tag_payload[60].
+[WARNING DRT-0422] No routing tracks pass through the center of Term tag_payload[61].
+[WARNING DRT-0422] No routing tracks pass through the center of Term tag_payload[62].
+[WARNING DRT-0422] No routing tracks pass through the center of Term tag_payload[63].
+[WARNING DRT-0422] No routing tracks pass through the center of Term tag_payload[64].
+[WARNING DRT-0422] No routing tracks pass through the center of Term tag_payload[65].
+[WARNING DRT-0422] No routing tracks pass through the center of Term tag_payload[66].
+[WARNING DRT-0422] No routing tracks pass through the center of Term tag_payload[67].
+[WARNING DRT-0422] No routing tracks pass through the center of Term tag_payload[68].
+[WARNING DRT-0422] No routing tracks pass through the center of Term tag_payload[69].
+[WARNING DRT-0422] No routing tracks pass through the center of Term tag_payload[6].
+[WARNING DRT-0422] No routing tracks pass through the center of Term tag_payload[70].
+[WARNING DRT-0422] No routing tracks pass through the center of Term tag_payload[71].
+[WARNING DRT-0422] No routing tracks pass through the center of Term tag_payload[72].
+[WARNING DRT-0422] No routing tracks pass through the center of Term tag_payload[73].
+[WARNING DRT-0422] No routing tracks pass through the center of Term tag_payload[74].
+[WARNING DRT-0422] No routing tracks pass through the center of Term tag_payload[75].
+[WARNING DRT-0422] No routing tracks pass through the center of Term tag_payload[76].
+[WARNING DRT-0422] No routing tracks pass through the center of Term tag_payload[77].
+[WARNING DRT-0422] No routing tracks pass through the center of Term tag_payload[78].
+[WARNING DRT-0422] No routing tracks pass through the center of Term tag_payload[79].
+[WARNING DRT-0422] No routing tracks pass through the center of Term tag_payload[7].
+[WARNING DRT-0422] No routing tracks pass through the center of Term tag_payload[80].
+[WARNING DRT-0422] No routing tracks pass through the center of Term tag_payload[81].
+[WARNING DRT-0422] No routing tracks pass through the center of Term tag_payload[82].
+[WARNING DRT-0422] No routing tracks pass through the center of Term tag_payload[83].
+[WARNING DRT-0422] No routing tracks pass through the center of Term tag_payload[84].
+[WARNING DRT-0422] No routing tracks pass through the center of Term tag_payload[85].
+[WARNING DRT-0422] No routing tracks pass through the center of Term tag_payload[86].
+[WARNING DRT-0422] No routing tracks pass through the center of Term tag_payload[87].
+[WARNING DRT-0422] No routing tracks pass through the center of Term tag_payload[88].
+[WARNING DRT-0422] No routing tracks pass through the center of Term tag_payload[89].
+[WARNING DRT-0422] No routing tracks pass through the center of Term tag_payload[8].
+[WARNING DRT-0422] No routing tracks pass through the center of Term tag_payload[90].
+[WARNING DRT-0422] No routing tracks pass through the center of Term tag_payload[9].
+[INFO DRT-0167] List of default vias:
+  Layer V2
+    default via: VIA23
+  Layer V3
+    default via: VIA34
+  Layer V4
+    default via: VIA45
+  Layer V5
+    default via: VIA56
+  Layer V6
+    default via: VIA67
+  Layer V7
+    default via: VIA78
+  Layer V8
+    default via: VIA89
+  Layer V9
+    default via: VIA9Pad
+[INFO DRT-0162] Library cell analysis.
+[INFO DRT-0163] Instance analysis.
+[INFO DRT-0164] Number of unique instances = 274.
+[INFO DRT-0168] Init region query.
+[INFO DRT-0024]   Complete Active.
+[INFO DRT-0024]   Complete V0.
+[INFO DRT-0024]   Complete M1.
+[INFO DRT-0024]   Complete V1.
+[INFO DRT-0024]   Complete M2.
+[INFO DRT-0024]   Complete V2.
+[INFO DRT-0024]   Complete M3.
+[INFO DRT-0024]   Complete V3.
+[INFO DRT-0024]   Complete M4.
+[INFO DRT-0024]   Complete V4.
+[INFO DRT-0024]   Complete M5.
+[INFO DRT-0024]   Complete V5.
+[INFO DRT-0024]   Complete M6.
+[INFO DRT-0024]   Complete V6.
+[INFO DRT-0024]   Complete M7.
+[INFO DRT-0024]   Complete V7.
+[INFO DRT-0024]   Complete M8.
+[INFO DRT-0024]   Complete V8.
+[INFO DRT-0024]   Complete M9.
+[INFO DRT-0024]   Complete V9.
+[INFO DRT-0024]   Complete Pad.
+[INFO DRT-0033] Active shape region query size = 0.
+[INFO DRT-0033] V0 shape region query size = 0.
+[INFO DRT-0033] M1 shape region query size = 460873.
+[INFO DRT-0033] V1 shape region query size = 6560945.
+[INFO DRT-0033] M2 shape region query size = 59115.
+[INFO DRT-0033] V2 shape region query size = 132684.
+[INFO DRT-0033] M3 shape region query size = 132686.
+[INFO DRT-0033] V3 shape region query size = 88456.
+[INFO DRT-0033] M4 shape region query size = 94726.
+[INFO DRT-0033] V4 shape region query size = 96088.
+[INFO DRT-0033] M5 shape region query size = 48397.
+[INFO DRT-0033] V5 shape region query size = 0.
+[INFO DRT-0033] M6 shape region query size = 0.
+[INFO DRT-0033] V6 shape region query size = 0.
+[INFO DRT-0033] M7 shape region query size = 0.
+[INFO DRT-0033] V7 shape region query size = 0.
+[INFO DRT-0033] M8 shape region query size = 0.
+[INFO DRT-0033] V8 shape region query size = 0.
+[INFO DRT-0033] M9 shape region query size = 0.
+[INFO DRT-0033] V9 shape region query size = 0.
+[INFO DRT-0033] Pad shape region query size = 0.
+[INFO DRT-0165] Start pin access.
+[INFO DRT-0076]   Complete 1000 pins.
+[INFO DRT-0076]   Complete 2000 pins.
+[INFO DRT-0078]   Complete 2278 pins.
+[INFO DRT-0079]   Complete 100 unique inst patterns.
+[INFO DRT-0079]   Complete 200 unique inst patterns.
+[INFO DRT-0081]   Complete 273 unique inst patterns.
+[INFO DRT-0082]   Complete 10000 groups.
+[INFO DRT-0082]   Complete 20000 groups.
+[INFO DRT-0084]   Complete 21037 groups.
+#scanned instances     = 30755
+#unique  instances     = 274
+#stdCellGenAp          = 7407
+#stdCellValidPlanarAp  = 30
+#stdCellValidViaAp     = 6257
+#stdCellPinNoAp        = 0
+#stdCellPinCnt         = 61421
+#instTermValidViaApCnt = 0
+#macroGenAp            = 819
+#macroValidPlanarAp    = 819
+#macroValidViaAp       = 0
+#macroNoAp             = 0
+[INFO DRT-0166] Complete pin access.
+[INFO DRT-0267] cpu time = 00:00:57, elapsed time = 00:00:07, memory = 1095.71 (MB), peak = 1321.02 (MB)
+[INFO DRT-0156] guideIn read 100000 guides.
+[INFO DRT-0156] guideIn read 200000 guides.
+
+[INFO DRT-0157] Number of guides:     205486
+
+[INFO DRT-0169] Post process guides.
+[INFO DRT-0176] GCELLGRID X 0 DO 606 STEP 570 ;
+[INFO DRT-0177] GCELLGRID Y 0 DO 378 STEP 570 ;
+[INFO DRT-0026]   Complete 100000 origin guides.
+[INFO DRT-0026]   Complete 200000 origin guides.
+[INFO DRT-0028]   Complete Active.
+[INFO DRT-0028]   Complete V0.
+[INFO DRT-0028]   Complete M1.
+[INFO DRT-0028]   Complete V1.
+[INFO DRT-0028]   Complete M2.
+[INFO DRT-0028]   Complete V2.
+[INFO DRT-0028]   Complete M3.
+[INFO DRT-0028]   Complete V3.
+[INFO DRT-0028]   Complete M4.
+[INFO DRT-0028]   Complete V4.
+[INFO DRT-0028]   Complete M5.
+[INFO DRT-0028]   Complete V5.
+[INFO DRT-0028]   Complete M6.
+[INFO DRT-0028]   Complete V6.
+[INFO DRT-0028]   Complete M7.
+[INFO DRT-0028]   Complete V7.
+[INFO DRT-0028]   Complete M8.
+[INFO DRT-0028]   Complete V8.
+[INFO DRT-0028]   Complete M9.
+[INFO DRT-0028]   Complete V9.
+[INFO DRT-0028]   Complete Pad.
+[INFO DRT-0178] Init guide query.
+[INFO DRT-0035]   Complete Active (guide).
+[INFO DRT-0035]   Complete V0 (guide).
+[INFO DRT-0035]   Complete M1 (guide).
+[INFO DRT-0035]   Complete V1 (guide).
+[INFO DRT-0035]   Complete M2 (guide).
+[INFO DRT-0035]   Complete V2 (guide).
+[INFO DRT-0035]   Complete M3 (guide).
+[INFO DRT-0035]   Complete V3 (guide).
+[INFO DRT-0035]   Complete M4 (guide).
+[INFO DRT-0035]   Complete V4 (guide).
+[INFO DRT-0035]   Complete M5 (guide).
+[INFO DRT-0035]   Complete V5 (guide).
+[INFO DRT-0035]   Complete M6 (guide).
+[INFO DRT-0035]   Complete V6 (guide).
+[INFO DRT-0035]   Complete M7 (guide).
+[INFO DRT-0035]   Complete V7 (guide).
+[INFO DRT-0035]   Complete M8 (guide).
+[INFO DRT-0035]   Complete V8 (guide).
+[INFO DRT-0035]   Complete M9 (guide).
+[INFO DRT-0035]   Complete V9 (guide).
+[INFO DRT-0035]   Complete Pad (guide).
+[INFO DRT-0036] Active guide region query size = 0.
+[INFO DRT-0036] V0 guide region query size = 0.
+[INFO DRT-0036] M1 guide region query size = 58304.
+[INFO DRT-0036] V1 guide region query size = 0.
+[INFO DRT-0036] M2 guide region query size = 54238.
+[INFO DRT-0036] V2 guide region query size = 0.
+[INFO DRT-0036] M3 guide region query size = 32891.
+[INFO DRT-0036] V3 guide region query size = 0.
+[INFO DRT-0036] M4 guide region query size = 14975.
+[INFO DRT-0036] V4 guide region query size = 0.
+[INFO DRT-0036] M5 guide region query size = 7423.
+[INFO DRT-0036] V5 guide region query size = 0.
+[INFO DRT-0036] M6 guide region query size = 0.
+[INFO DRT-0036] V6 guide region query size = 0.
+[INFO DRT-0036] M7 guide region query size = 0.
+[INFO DRT-0036] V7 guide region query size = 0.
+[INFO DRT-0036] M8 guide region query size = 0.
+[INFO DRT-0036] V8 guide region query size = 0.
+[INFO DRT-0036] M9 guide region query size = 0.
+[INFO DRT-0036] V9 guide region query size = 0.
+[INFO DRT-0036] Pad guide region query size = 0.
+[INFO DRT-0179] Init gr pin query.
+[INFO DRT-0267] cpu time = 00:00:00, elapsed time = 00:00:00, memory = 1162.06 (MB), peak = 1321.02 (MB)
+[INFO DRT-0245] skipped writing guide updates to database.
+[INFO DRT-0181] Start track assignment.
+[INFO DRT-0184] Done with 98618 vertical wires in 13 frboxes and 69213 horizontal wires in 8 frboxes.
+[INFO DRT-0186] Done with 3537 vertical wires in 13 frboxes and 11806 horizontal wires in 8 frboxes.
+[INFO DRT-0182] Complete track assignment.
+[INFO DRT-0267] cpu time = 00:00:13, elapsed time = 00:00:03, memory = 1923.21 (MB), peak = 1907.02 (MB)
+[INFO DRT-0187] Start routing data preparation.
+[INFO DRT-0267] cpu time = 00:00:00, elapsed time = 00:00:00, memory = 1974.76 (MB), peak = 1958.02 (MB)
+[INFO DRT-0194] Start detail routing.
+[INFO DRT-0195] Start 0th optimization iteration.
+Failed to find a path between pin tag_payload[2] and source aps:
+( 154 143 0 ) (Idx) / ( 112797 2241 ) (coords)
+( 154 148 0 ) (Idx) / ( 112797 2349 ) (coords)
+( 153 143 0 ) (Idx) / ( 112779 2241 ) (coords)
+( 153 145 0 ) (Idx) / ( 112779 2277 ) (coords)
+( 153 146 0 ) (Idx) / ( 112779 2313 ) (coords)
+( 153 148 0 ) (Idx) / ( 112779 2349 ) (coords)
+extBBox (xDim, yDim, zDim) = (406, 382, 5)
+[ERROR DRT-0255] Maze Route cannot find path of net tag_payload[2] in worker of routeBox ( 111720 0 ) ( 115710 3990 ).
+Failed to find a path between pin tag_payload[10] and source aps:
+( 275 143 0 ) (Idx) / ( 123093 2241 ) (coords)
+( 275 145 0 ) (Idx) / ( 123093 2277 ) (coords)
+( 275 146 0 ) (Idx) / ( 123093 2313 ) (coords)
+( 275 148 0 ) (Idx) / ( 123093 2349 ) (coords)
+extBBox (xDim, yDim, zDim) = (408, 382, 5)
+[ERROR DRT-0255] Maze Route cannot find path of net tag_payload[10] in worker of routeBox ( 119700 0 ) ( 123690 3990 ).
+Failed to find a path between pin tag_payload[14] and source aps:
+( 140 143 0 ) (Idx) / ( 128493 2241 ) (coords)
+( 140 145 0 ) (Idx) / ( 128493 2277 ) (coords)
+( 140 146 0 ) (Idx) / ( 128493 2313 ) (coords)
+( 140 148 0 ) (Idx) / ( 128493 2349 ) (coords)
+extBBox (xDim, yDim, zDim) = (405, 382, 5)
+[ERROR DRT-0255] Maze Route cannot find path of net tag_payload[14] in worker of routeBox ( 127680 0 ) ( 131670 3990 ).
+Failed to find a path between pin tag_payload[19] and source aps:
+( 111 143 0 ) (Idx) / ( 135909 2241 ) (coords)
+( 111 148 0 ) (Idx) / ( 135909 2349 ) (coords)
+( 109 143 0 ) (Idx) / ( 135891 2241 ) (coords)
+( 109 145 0 ) (Idx) / ( 135891 2277 ) (coords)
+( 109 146 0 ) (Idx) / ( 135891 2313 ) (coords)
+( 109 148 0 ) (Idx) / ( 135891 2349 ) (coords)
+extBBox (xDim, yDim, zDim) = (410, 382, 5)
+[ERROR DRT-0255] Maze Route cannot find path of net tag_payload[19] in worker of routeBox ( 135660 0 ) ( 139650 3990 ).
+    Completing 10% with 0 violations.
+    elapsed time = 00:00:12, memory = 4898.71 (MB).
+Failed to find a path between pin tag_payload[25] and source aps:
+( 98 8 3 ) (Idx) / ( 143640 108 ) (coords)
+extBBox (xDim, yDim, zDim) = (409, 382, 5)
+[ERROR DRT-0255] Maze Route cannot find path of net tag_payload[25] in worker of routeBox ( 143640 0 ) ( 147630 3990 ).
+Failed to find a path between pin tag_payload[31] and source aps:
+( 124 143 0 ) (Idx) / ( 152109 2241 ) (coords)
+( 124 148 0 ) (Idx) / ( 152109 2349 ) (coords)
+( 123 143 0 ) (Idx) / ( 152091 2241 ) (coords)
+( 123 145 0 ) (Idx) / ( 152091 2277 ) (coords)
+( 123 146 0 ) (Idx) / ( 152091 2313 ) (coords)
+( 123 148 0 ) (Idx) / ( 152091 2349 ) (coords)
+extBBox (xDim, yDim, zDim) = (408, 382, 5)
+[ERROR DRT-0255] Maze Route cannot find path of net tag_payload[31] in worker of routeBox ( 151620 0 ) ( 155610 3990 ).
+Failed to find a path between pin tag_payload[37] and source aps:
+( 152 143 0 ) (Idx) / ( 160677 2241 ) (coords)
+( 152 145 0 ) (Idx) / ( 160677 2277 ) (coords)
+( 152 146 0 ) (Idx) / ( 160677 2313 ) (coords)
+( 152 148 0 ) (Idx) / ( 160677 2349 ) (coords)
+extBBox (xDim, yDim, zDim) = (404, 382, 5)
+[ERROR DRT-0255] Maze Route cannot find path of net tag_payload[37] in worker of routeBox ( 159600 0 ) ( 163590 3990 ).
+Failed to find a path between pin tag_payload[43] and source aps:
+( 131 143 0 ) (Idx) / ( 168237 2241 ) (coords)
+( 131 145 0 ) (Idx) / ( 168237 2277 ) (coords)
+( 131 146 0 ) (Idx) / ( 168237 2313 ) (coords)
+( 131 148 0 ) (Idx) / ( 168237 2349 ) (coords)
+extBBox (xDim, yDim, zDim) = (409, 382, 5)
+[ERROR DRT-0255] Maze Route cannot find path of net tag_payload[43] in worker of routeBox ( 167580 0 ) ( 171570 3990 ).
+Failed to find a path between pin tag_payload[49] and source aps:
+( 125 143 0 ) (Idx) / ( 176013 2241 ) (coords)
+( 125 145 0 ) (Idx) / ( 176013 2277 ) (coords)
+( 125 146 0 ) (Idx) / ( 176013 2313 ) (coords)
+( 125 148 0 ) (Idx) / ( 176013 2349 ) (coords)
+extBBox (xDim, yDim, zDim) = (408, 382, 5)
+[ERROR DRT-0255] Maze Route cannot find path of net tag_payload[49] in worker of routeBox ( 175560 0 ) ( 179550 3990 ).
+Failed to find a path between pin tag_payload[55] and source aps:
+( 147 143 0 ) (Idx) / ( 184437 2241 ) (coords)
+( 147 145 0 ) (Idx) / ( 184437 2277 ) (coords)
+( 147 146 0 ) (Idx) / ( 184437 2313 ) (coords)
+( 147 148 0 ) (Idx) / ( 184437 2349 ) (coords)
+extBBox (xDim, yDim, zDim) = (411, 382, 5)
+[ERROR DRT-0255] Maze Route cannot find path of net tag_payload[55] in worker of routeBox ( 183540 0 ) ( 187530 3990 ).
+Failed to find a path between pin tag_payload[61] and source aps:
+( 134 143 0 ) (Idx) / ( 192177 2241 ) (coords)
+( 134 148 0 ) (Idx) / ( 192177 2349 ) (coords)
+( 133 143 0 ) (Idx) / ( 192159 2241 ) (coords)
+( 133 145 0 ) (Idx) / ( 192159 2277 ) (coords)
+( 133 146 0 ) (Idx) / ( 192159 2313 ) (coords)
+( 133 148 0 ) (Idx) / ( 192159 2349 ) (coords)
+extBBox (xDim, yDim, zDim) = (404, 382, 5)
+[ERROR DRT-0255] Maze Route cannot find path of net tag_payload[61] in worker of routeBox ( 191520 0 ) ( 195510 3990 ).
+Failed to find a path between pin tag_payload[67] and source aps:
+( 162 143 0 ) (Idx) / ( 200745 2241 ) (coords)
+( 162 145 0 ) (Idx) / ( 200745 2277 ) (coords)
+( 162 146 0 ) (Idx) / ( 200745 2313 ) (coords)
+( 162 148 0 ) (Idx) / ( 200745 2349 ) (coords)
+extBBox (xDim, yDim, zDim) = (410, 382, 5)
+[ERROR DRT-0255] Maze Route cannot find path of net tag_payload[67] in worker of routeBox ( 199500 0 ) ( 203490 3990 ).
+Failed to find a path between pin tag_payload[73] and source aps:
+( 144 143 0 ) (Idx) / ( 208377 2241 ) (coords)
+( 144 148 0 ) (Idx) / ( 208377 2349 ) (coords)
+( 143 143 0 ) (Idx) / ( 208359 2241 ) (coords)
+( 143 145 0 ) (Idx) / ( 208359 2277 ) (coords)
+( 143 146 0 ) (Idx) / ( 208359 2313 ) (coords)
+( 143 148 0 ) (Idx) / ( 208359 2349 ) (coords)
+extBBox (xDim, yDim, zDim) = (407, 382, 5)
+[ERROR DRT-0255] Maze Route cannot find path of net tag_payload[73] in worker of routeBox ( 207480 0 ) ( 211470 3990 ).
+Failed to find a path between pin tag_payload[79] and source aps:
+( 170 143 0 ) (Idx) / ( 216909 2241 ) (coords)
+( 170 148 0 ) (Idx) / ( 216909 2349 ) (coords)
+( 169 143 0 ) (Idx) / ( 216891 2241 ) (coords)
+( 169 145 0 ) (Idx) / ( 216891 2277 ) (coords)
+( 169 146 0 ) (Idx) / ( 216891 2313 ) (coords)
+( 169 148 0 ) (Idx) / ( 216891 2349 ) (coords)
+extBBox (xDim, yDim, zDim) = (403, 382, 5)
+[ERROR DRT-0255] Maze Route cannot find path of net tag_payload[79] in worker of routeBox ( 215460 0 ) ( 219450 3990 ).
+Failed to find a path between pin tag_payload[84] and source aps:
+( 98 8 3 ) (Idx) / ( 223440 108 ) (coords)
+extBBox (xDim, yDim, zDim) = (404, 382, 5)
+[ERROR DRT-0255] Maze Route cannot find path of net tag_payload[84] in worker of routeBox ( 223440 0 ) ( 227430 3990 ).
+Failed to find a path between pin rst_n[0] and source aps:
+( 254 143 0 ) (Idx) / ( 234549 2241 ) (coords)
+( 254 145 0 ) (Idx) / ( 234549 2277 ) (coords)
+( 254 146 0 ) (Idx) / ( 234549 2313 ) (coords)
+( 254 148 0 ) (Idx) / ( 234549 2349 ) (coords)
+extBBox (xDim, yDim, zDim) = (397, 382, 5)
+[ERROR DRT-0255] Maze Route cannot find path of net rst_n[0] in worker of routeBox ( 231420 0 ) ( 235410 3990 ).
+    Completing 20% with 0 violations.
+    elapsed time = 00:00:21, memory = 10025.59 (MB).
+Error: detail_route.tcl, 83 DRT-0255
+Elapsed time: 0:45.29[h:]min:sec. CPU time: user 260.85 sys 5.63 (588%). Peak memory: 10881040KB.
