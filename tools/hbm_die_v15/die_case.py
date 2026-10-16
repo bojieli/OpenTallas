@@ -170,6 +170,9 @@ def main():
     ap.add_argument('--sm-view', required=True, type=Path, help='dir: smh netlist + <SM_M>_synth_{tt,ff}.lib')
     ap.add_argument('--stn-view', type=Path, help='dir with hfd_stn_v15_cc1182_synth_{tt,ff}.lib: insert SM_HBM relay '
                     'stages (<= 480 um reach) on every service group -> SM link')
+    ap.add_argument('--die-repeaters', action='store_true',
+                    help='die-level repeaters on the inter-block signal nets (repair_design -max_wire_length 400 on '
+                         'placement parasitics before GRT): the die buffering every block-to-block wire needs; not legalised')
     ap.add_argument('--paths', type=int, default=200000)
     ap.add_argument('--clock-pads', type=Path)
     ap.add_argument('--ckgen', default='hb_ckgen')
@@ -590,6 +593,7 @@ set_wire_rc -signal -layer M6
 set_routing_layers -signal M4-M9 -clock M7-M9
 set_global_routing_layer_adjustment M4-M5 0.30
 set_global_routing_layer_adjustment M6-M9 0.146
+{REPEAT}
 set t0 [clock seconds]
 global_route -congestion_iterations 30 -allow_congestion -verbose -congestion_report_file /work/out/grt_congestion.rpt
 puts "OT_GRT_S [expr {{[clock seconds]-$t0}}]"
@@ -627,6 +631,15 @@ foreach c {{tt ff}} {{
 }}
 puts OT_DONE
 '''
+    rep = '' if not a.die_repeaters else f'''create_clock -name hbm -period {PERIOD['hbm']} [get_ports clk_hbm]
+create_clock -name stream -period {PERIOD['stream']} [get_ports clk_stream]
+set_clock_groups -asynchronous -group hbm -group stream
+estimate_parasitics -placement
+set_dont_touch [get_nets -quiet {{dk?_* n_dk?_* clk_*}}]
+set r0 [clock seconds]
+repair_design -max_wire_length 400 -buffer_gain 4.0
+puts "OT_REPAIR_S [expr {{[clock seconds]-$r0}}] insts [llength [get_cells *]]"'''
+    tcl = tcl.replace('{REPEAT}', rep)
     (out / 'run.tcl').write_text(tcl)
     (out / 'run.sh').write_text('''#!/bin/bash
 # OpenROAD in the pinned ORFS image; writes out/run.log, out/run.exit
