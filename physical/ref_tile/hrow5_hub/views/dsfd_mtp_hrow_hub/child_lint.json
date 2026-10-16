@@ -1,12 +1,10 @@
 {
  "schema": "opentallas.hier_contract.child_lint.v1",
- "lef": "/srv/opentallas/claude/closure-loop/hrow5_hub-r5d-1a91bcdd1/record/views/dsfd_mtp_hrow_hub/dsfd_mtp_hrow_hub.lef",
+ "lef": "/srv/opentallas-scratch/claude/closure-loop/hrow5_hub-n1-0030-0a700187e/record/views/dsfd_mtp_hrow_hub/provenance/dsfd_mtp_hrow_hub.candidate.lef",
  "verdict": "PASS",
  "fails": [],
- "warns": [
-  "(f) face-pin access: 4256 of 4256 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. ck M4 (0.060,57.552), f_clr[0] M4 (0.060,57.552), f_clr[10] M4 (0.060,57.552))"
- ],
- "summary": "dsfd_mtp_hrow_hub 216.0 x 216.0: PG M5 VDD 40 stripes (98% spread, 100% cov) / VSS 40 stripes (98% spread, 100% cov); strap M6; face pins 4256 blocked-above 0 blocked-same 0; clock ck insertion 272 ps",
+ "warns": [],
+ "summary": "dsfd_mtp_hrow_hub 216.0 x 216.0: PG M5 VDD 40 stripes (98% spread, 100% cov) / VSS 40 stripes (98% spread, 100% cov); strap M6; face pins 4256 blocked-above 0 blocked-same 0; clock ck insertion 317 ps; pockets M5 0 (closed)",
  "info": {
   "cell": "dsfd_mtp_hrow_hub",
   "W": 216.0,
@@ -40,25 +38,30 @@
   "face": {
    "face_pins": 4256,
    "blocked_above": 0,
-   "covered_below": 153,
+   "covered_below": 26,
    "examples": [],
    "blocked_same": 0,
    "same_examples": [],
-   "band_same": 4256,
-   "band_examples": [
-    "ck M4 (0.060,57.552)",
-    "f_clr[0] M4 (0.060,57.552)",
-    "f_clr[10] M4 (0.060,57.552)",
-    "f_clr[1] M4 (0.060,57.552)",
-    "f_clr[2] M4 (0.060,57.552)",
-    "f_clr[3] M4 (0.060,57.552)"
-   ]
+   "band_same": 0,
+   "band_examples": []
   },
   "clock_insertion": {
    "ck": {
-    "max_ps": 271.85,
-    "min_ps": 199.31
+    "max_ps": 317.4,
+    "min_ps": 247.81
    }
+  },
+  "pockets": {
+   "layer": "M5",
+   "d_um": 1.536,
+   "marker": {
+    "layer": "M5",
+    "d_um": 1.536,
+    "added": 1986
+   },
+   "count": 0,
+   "area_um2": 0,
+   "examples": []
   }
  }
 }
