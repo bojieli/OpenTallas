@@ -48,6 +48,7 @@ import clock_entry_constraints  # noqa: E402
 
 KIT_ROOT = "physical/ref_tile"
 QDM = "physical/qwen_die_masters"
+ASSIGNED_PIN_EXACT_TCL = "physical/common_flow/assigned_pin_exact.tcl"
 # floorplan lattice: die / core / macro origins snap to these (um).  2.16 = lcm(row 0.27, M4 track 0.048, site 0.054)
 GRID_Y = 2.16
 GRID_X = 0.432          # lcm(site 0.054, M5 track 0.048)
@@ -455,9 +456,19 @@ def validate_literal_pin_plan(s: dict, ports=None, root=None) -> dict:
     rel=Path(s["io_tcl"])
     if rel.is_absolute() or ".." in rel.parts or not (root/rel).is_file():
         raise SpecError("literal pin io_tcl must be an existing safe repo path")
+    canonical = root / ASSIGNED_PIN_EXACT_TCL
+    if not canonical.is_file():
+        raise SpecError("literal pin canonical placement helper is missing from the source archive")
+    prefix = canonical.read_text().rstrip() + "\n"
+    text = (root/rel).read_text()
+    if not text.startswith(prefix):
+        raise SpecError("literal pin IO Tcl must inline the byte-exact canonical placement helper")
     commands={}
-    for line in (root/rel).read_text().splitlines():
-        if not line.startswith("ot_assigned_pin_exact "):
+    for line in text[len(prefix):].splitlines():
+        if line.endswith("\\"):
+            raise SpecError("literal pin IO Tcl continuations are forbidden")
+        line = line.strip()
+        if not line or line.startswith("#"):
             continue
         m=re.fullmatch(r"ot_assigned_pin_exact \{([^}]+)\} (M[1-6]) ([NSEW]) ([0-9]+(?:\.[0-9]+)?)",line)
         if not m or m[1] in commands:
@@ -1662,6 +1673,8 @@ def referenced_paths(s: dict, kd: str) -> list:
         out.append("physical/hbm_w2_rb_station_20261006/forwarded_subtree.tcl")
     if s.get("io_tcl"):
         out.append(s["io_tcl"])
+    if literal_pin_bits(s):
+        out.append(ASSIGNED_PIN_EXACT_TCL)
     out += sorted(str(v) for v in s.get("orfs_vars", {}).values() if not str(v).startswith("/") and os.path.isfile(str(v)))
     if s.get("io_flop_at_pins"):
         out += ["physical/qwen_die_masters/io_flop_at_pins.tcl", "physical/qwen_die_masters/out_flop_release.tcl"]

@@ -8,7 +8,9 @@ class LiteralPinPlan(unittest.TestCase):
         self.tmp=tempfile.TemporaryDirectory();self.root=Path(self.tmp.name)
         (self.root/'dut.sv').write_text('module dut #(parameter N=4, BASE=4)(input wire clk, input wire [BASE+N-1:BASE] d, output wire [0:0] one); assign one=^d; endmodule')
         names=['clk','d[4]','d[5]','d[6]','d[7]','one'];faces=['S','N','N','W','W','S'];layers=['M4','M5','M5','M6','M6','M4']
-        self.io='\n'.join(f'ot_assigned_pin_exact {{{n}}} {l} {f} {i+1}.000000' for i,(n,l,f) in enumerate(zip(names,layers,faces)))+'\n'
+        canonical=(RT.ROOT/RT.ASSIGNED_PIN_EXACT_TCL).read_text().rstrip()+'\n'
+        helper=self.root/RT.ASSIGNED_PIN_EXACT_TCL;helper.parent.mkdir(parents=True);helper.write_text(canonical)
+        self.io=canonical+'\n'.join(f'ot_assigned_pin_exact {{{n}}} {l} {f} {i+1}.000000' for i,(n,l,f) in enumerate(zip(names,layers,faces)))+'\n'
         (self.root/'pins.tcl').write_text(self.io)
         self.s={'name':'dut','top':'dut','sources':['dut.sv'],'clock_port':'clk','pins':{'S':['clk','one'],'N':['d[4]','d[5]'],'W':['d[6]','d[7]']},'io_tcl':'pins.tcl','m6_pin_grant':{'schema':'opentallas.m6_pin_grant.v1','master':'dut','granted_by':'test die lead','reason':'exact local contacts','source_commit':'1'*40,'source_spec_sha256':'2'*64,'ports':[{'name':n,'face':'W','span_um':[i+.9,i+1.1],'max_depth_um':.384,'max_area_um2':.024576}for i,n in [(3,'d[6]'),(4,'d[7]')]]}}
     def tearDown(self):self.tmp.cleanup()
@@ -41,6 +43,18 @@ class LiteralPinPlan(unittest.TestCase):
         for bad in [self.io.replace('M6 W 4.000000','M6 E 4.000000'),self.io.replace('ot_assigned_pin_exact {d[7]} M6 W 5.000000\n',''),self.io+'ot_assigned_pin_exact {clk} M4 S 1.000000\n',self.io.replace('{clk} M4','{clk} M6')]:
             (self.root/'pins.tcl').write_text(bad)
             with self.subTest(io=bad),self.assertRaises(RT.SpecError):self.valid()
+    def test_no_tcl_after_canonical_helper_except_literal_calls_or_comments(self):
+        for extra in ['place_pin -pin_name d -layer M6', 'proc ot_assigned_pin_exact {} {}', 'set value 1', 'eval {puts bad}', '# comment \\']:
+            (self.root/'pins.tcl').write_text(self.io+extra+'\n')
+            with self.subTest(extra=extra),self.assertRaises(RT.SpecError):self.valid()
+        (self.root/'pins.tcl').write_text(self.io.replace('proc ot_assigned_pin_exact','proc changed_helper',1))
+        with self.assertRaises(RT.SpecError):self.valid()
+    def test_canonical_helper_is_a_required_source_dependency(self):
+        (self.root/RT.ASSIGNED_PIN_EXACT_TCL).unlink()
+        with self.assertRaises(RT.SpecError):self.valid()
+        s=copy.deepcopy(self.s);s.update(kind='tile',route={},macros=[],children=[])
+        self.assertIn(RT.ASSIGNED_PIN_EXACT_TCL,RT.referenced_paths(s,'physical/ref_tile/dut'))
+
     def test_synthesized_gate_uses_actual_index_bounds(self):
         import pre_route_gate as PG
         old=PG.ROOT;PG.ROOT=self.root
