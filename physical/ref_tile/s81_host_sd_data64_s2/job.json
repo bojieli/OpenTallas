@@ -21,7 +21,7 @@
   "bench": [
    {
     "name": "lint",
-    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; dsfd_host_sd_data64 #(.NS(1), .KVS(1), .ENG(-1), .SLICE(2)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/dsrom_sys/s81_ingest/dsfd_host_sd_sliced.sv rtl/dsrom_sys/s81_ingest/dsfd_host_sd.sv rtl/lib/ot_reset_sync.sv rtl/lib/ot_rst_relay.sv && echo lint-ok",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; dsfd_host_sd_data64 #(.NS(1), .KVS(1), .SLICE(2)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/dsrom_sys/s81_ingest/dsfd_host_sd_sliced.sv rtl/dsrom_sys/s81_ingest/dsfd_host_sd.sv rtl/lib/ot_reset_sync.sv rtl/lib/ot_rst_relay.sv && echo lint-ok",
     "expect": "pass",
     "threads": 1,
     "peak_ram_gb": 4,
