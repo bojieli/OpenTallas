@@ -1,0 +1,60 @@
+{
+  "scope": "native static controller component; die integration remains unqualified",
+  "clock": "core, 1.2 GHz; physical phase not yet bound",
+  "operations": {
+    "descriptor": "qkd_native59_command_guard actual source; fixed descriptor + authoritative HOST tag",
+    "records": "qkd_native_attention_record actual source; CMD1/Q2 and RESULT3/STATUS4",
+    "service": "external actual ot_qwen_tp8_attention_native_service_w16; no substitute provided"
+  },
+  "storage": {
+    "query_delay_bits": 518,
+    "calendar_bits": 176,
+    "result_buffer_bits": 0,
+    "programme_capacity": 1
+  },
+  "throughput": {
+    "query_bits_per_edge": 512,
+    "result_bits_per_edge": 512,
+    "query_beats": 32,
+    "result_beats": 32
+  },
+  "latency": {
+    "record_rx_edges": 1,
+    "query_extra_edges": 1,
+    "record_tx_edges": 1,
+    "service_8192_edges": 1566
+  },
+  "resources": {
+    "macs_per_cycle": 0,
+    "memory_ports": 0,
+    "dynamic_credits": 0,
+    "arbiters": 0
+  },
+  "physical": {
+    "assigned_die_home": null,
+    "pins": null,
+    "area_um2": null,
+    "launch_allowed": false,
+    "area_model": "No assigned slot: 2x sequential-bit cell area plus combinational area is a required pre-physical estimate; no mapped area claim."
+  },
+  "missing_producers": [
+    "HOST authority/context",
+    "compiler programme load/run",
+    "native service result and fault",
+    "all actual K/V memory ports",
+    "physical clock phase/pins"
+  ],
+  "qualification": {
+    "native_full_layer": false,
+    "native_full_token": false
+  },
+  "synthesis_census": {
+    "top": "qkd_native_attention_programme",
+    "generic_flop_bits": 3530,
+    "generic_cells": 286,
+    "port_bits": {
+      "input": 1390,
+      "output": 1303
+    }
+  }
+}
