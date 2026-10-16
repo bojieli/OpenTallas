@@ -1,0 +1,47 @@
+{
+  "schema": "opentallas.pc_cfg_h8_model.v1",
+  "status": "candidate_not_adopted",
+  "instances": 128,
+  "exact_views_before": 32,
+  "exact_views_after_if_qualified": 1,
+  "static_strap_bits": 13,
+  "static_strap_joins": 256,
+  "static_strap_bit_joins": 1664,
+  "added_registers_vs_h7": 0,
+  "added_cycles_vs_h7": 0,
+  "fixed_input_calendar": true,
+  "slot": {
+    "old_um": [
+      170.64,
+      170.64
+    ],
+    "candidate_um": [
+      185.76,
+      164.16
+    ],
+    "strip_um": 237.6,
+    "per_instance_outline_delta_um2": 1376.3520000000026,
+    "die_outline_delta_mm2": 0.17617305600000033,
+    "grant_status": "await_current_die_owner_confirmation",
+    "old_grant": "aeabab04f"
+  },
+  "closure_cause": {
+    "h6_route_tt_ps": -50.14,
+    "h6_ff_ps": 16.39,
+    "h6_drc": 0,
+    "h7_cts_tt_ps": -26.912694,
+    "h7_cts_hold_ps": 38.31235,
+    "h7_clock_sinks": 9541,
+    "h7_clock_boundary_mean_ps": 386.1,
+    "h7_clock_boundary_spread_ps": 28.5,
+    "limiter": "pending_identity write enable traverses command validity/legality cone"
+  },
+  "structural_change": "Refresh pending_wp free slot from registered command head every edge when pending_count<32. Live entries protected. Column read writes same data on same edge as H7; remove validity/legality from 672 identity-flop write enables. Independent full-word SRAM payload remains actual mapped macro.",
+  "gaps": [
+    "Actual H8 positive and identity mutant pending",
+    "Actual generic synth area/pins pending",
+    "Current slot grant pending",
+    "CTS/native launch capture insertion and true TT/FF route pending",
+    "H8 issue/return throughput is only cycle-identical if actual miter passes; no new die throughput claim"
+  ]
+}
