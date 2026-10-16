@@ -241,7 +241,7 @@ def build(a):
                 log('tree', t['name'], 'has no sinks; skipped')
                 continue
             leaves = rt.cluster(sinks)
-            b_ = rt.Builder(g, 'dc_' + t['name'])
+            b_ = rt.Builder(g, 'dc_' + t['name'], r_of=lambda key: (target(*key.rsplit('/', 1)) or [0, 0, 0])[2])
             model = b_.build(root, rxy, leaves)
             for s in sinks:
                 sink_pins[s[0]] = dict(tree=t['name'], master=s[1], x=round(s[2], 3), y=round(s[3], 3),
@@ -302,7 +302,7 @@ def build(a):
     pad_ps = rt.PAD_PS
     leaf_pads = defaultdict(int)
     pad_n = 0
-    prev_added, prev_mean = {}, {}
+    chains = []
     for it_ in range(a.iters + 1):
         arr = D.measure(sorted(sink_pins), out / f'arr_iter{it_}.tsv')
         flop = {}
@@ -351,21 +351,27 @@ def build(a):
             'col trees', len(cols), 'col flop spread max', max(cols, default=None))
         if it_ == a.iters or worst <= a.tol:
             break
-        # calibrate the pad delay on the previous iteration's padded leaves
-        if it_ and prev_added:
-            ratios = []
-            for lb, k in prev_added.items():
-                v = [flop[p] for p in rec['leaves'][lb]['pins'] if p in flop]
-                if v and k:
-                    ratios.append((statistics.mean(v) - prev_mean[lb]) / k)
+        # calibrate the pad delay on chains inserted last iteration, measured DIRECTLY (arrival at the chain's last pad
+        # output minus its driver's output), so a common-path shift of the whole tree cannot pollute it
+        if chains:
+            pm = []
+            for first, last, k, drv in chains:
+                pm += [f'{last}/Y', f'{drv}/Y' if drv in insts else drv]
+            ca = D.measure(pm, out / f'pads_iter{it_}.tsv')
+            ratios = [(ca[f'{last}/Y'][0] - ca[f'{drv}/Y' if drv in insts else drv][0]) / k for first, last, k, drv in chains
+                      if ca.get(f'{last}/Y', (None,))[0] is not None and ca.get(f'{drv}/Y' if drv in insts else drv, (None,))[0] is not None]
             if len(ratios) >= 3:
                 pad_ps = max(5.0, statistics.median(ratios))
-        prev_added, prev_mean = {}, {}
+                log('pad_ps measured on', len(ratios), 'chains:', round(pad_ps, 2))
+        chains = []
+
         def pad_before(bname, k, tree, tag):
             ai = insts[bname].findITerm('A')
             drv_net = ai.getNet()
             ai.disconnect()
             x, y = cell_xy[bname]
+            orig = rec['parent'][bname]
+            first = None
             for j in range(k):
                 leaf_pads[bname] += 1
                 pn = f'{bname}_{tag}{leaf_pads[bname]}'
@@ -379,23 +385,41 @@ def build(a):
                 rec['parent'][pn] = rec['parent'][bname]
                 rec['parent'][bname] = pn
                 drv_net = nn
+                first = first or pn
             ai.connect(drv_net)
+            if k >= 3 and len(chains) < 400:
+                chains.append((first, pn, k, orig))
 
-        for lb, d in deficit.items():
-            k = int(d / pad_ps + 0.5)
-            if k <= 0:
-                continue
-            pad_before(lb, k, rec['leaves'][lb]['tree'], 'tp')
-            pad_n += k
-            prev_added[lb] = k
-            v = [flop[p] for p in rec['leaves'][lb]['pins'] if p in flop]
-            prev_mean[lb] = statistics.mean(v) if v else 0.0
-        for tn, d in root_deficit.items():
-            k = int(d / pad_ps + 0.5)
+        # HIERARCHICAL TRIM: each leaf needs round(deficit / pad) pads between the root and itself (deficit = its
+        # balance group's target - its flop arrival).  The part every leaf below a node needs goes ONCE at that node's
+        # input (min over its leaves minus what its parent already carries), so a group offset lands on the tree's
+        # common path at the root, a subtree offset at its branch point, and only the residual at the leaves.
+        units, par_of = {}, {}
+        for tn, lv in by_tree.items():
+            T = gT[tree_group.get(tn, tn)]
+            for lb, m in lv.items():
+                u_ = int((T - m) / pad_ps + 0.5)
+                x, prev = lb, None
+                while True:
+                    if x not in units or u_ < units[x]:
+                        units[x] = u_
+                    if prev is not None:
+                        par_of[prev] = x
+                    px = rec['parent'].get(x)
+                    if px not in insts:
+                        par_of.setdefault(x, None)
+                        break
+                    prev, x = x, px
+        added = 0
+        for x, u_ in units.items():
+            pu = units[par_of[x]] if par_of.get(x) else 0
+            k = u_ - pu
             if k > 0:
-                pad_before(rec['trees'][tn]['model']['top'], k, tn, 'gp')
-                pad_n += k
-                rec['trees'][tn]['group_pads'] = rec['trees'][tn].get('group_pads', 0) + k
+                pad_before(x, k, rec['cell_tree'].get(x, ''), 'hp')
+                added += k
+        pad_n += added
+        log('iter', it_, 'hierarchical trim inserted', added, 'pads at', sum(1 for x, u_ in units.items()
+            if u_ - (units[par_of[x]] if par_of.get(x) else 0) > 0), 'nodes')
     # final: arrivals at every sink and every clock-cell output, slews, DRV
     allpins = sorted(sink_pins) + [f'{c[0]}/Y' for c in rec['cells']]
     D.measure(allpins, out / f'arrivals_{a.corner}.tsv')
