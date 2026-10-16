@@ -4,7 +4,7 @@
  "top": "hbm_v16_die",
  "generated_by": "tools/hbm_die_v15/full_die_v16.py",
  "basis": {
-  "commit": "af22cc9d1",
+  "commit": "fe16eb854",
   "v15_contract": "results/arch/hbm_die_v15/source_contract/contract.json",
   "v15_contract_sha256": "eac5bff7d49473de7a7d8f0b993e427d4d004991e56670c8552f35e2b9a6b6cd",
   "grants": "results/arch/hier_contract_1015/hbm_v15.json",
@@ -102,10 +102,20 @@
     "author": "Codex typed ABI integration",
     "basis_commit": null
    },
+   "vm_retire_0600": {
+    "file": "tools/hbm_die_v15/v16_specs/vm_retire_0600.json",
+    "author": "Claude H-NETLIST 0600",
+    "basis_commit": null
+   },
    "vmsm": {
     "file": "tools/hbm_die_v15/v16_specs/vmsm.json",
     "author": "H-NETLIST/vmsm (Claude) 2026-10-15",
     "basis_commit": "4b43cd77c"
+   },
+   "target_id_straps": {
+    "file": "engine (in tool)",
+    "author": null,
+    "basis_commit": null
    }
   }
  },
@@ -119,15 +129,15 @@
   "instances": 1506,
   "masters": 62,
   "edges": 11716,
-  "edge_bits": 1233867,
+  "edge_bits": 1233837,
   "clock_reset_ports": 3518,
-  "straps": 94,
+  "straps": 188,
   "die_pins": 43,
-  "exposed_input_ports": 4,
-  "exposed_input_bits": 3736,
+  "exposed_input_ports": 0,
+  "exposed_input_bits": 0,
   "exposed_unassigned_ports": 0,
-  "gaps": 31,
-  "open_output_ports": 1129,
+  "gaps": 30,
+  "open_output_ports": 1128,
   "problems": 0,
   "before_v15": {
    "instances": 83,
@@ -233,23 +243,23 @@
     },
     "cq": {
      "direction": "input",
-     "bits": 1014
+     "bits": 676
     },
     "cr": {
      "direction": "output",
-     "bits": 822
+     "bits": 548
     },
     "client_seq": {
      "direction": "input",
-     "bits": 8
+     "bits": 6
     },
     "response_enable": {
      "direction": "input",
-     "bits": 4
+     "bits": 3
     },
     "response_seq": {
      "direction": "input",
-     "bits": 8
+     "bits": 6
     },
     "bank_enable": {
      "direction": "input",
@@ -557,25 +567,17 @@
      "direction": "input",
      "bits": 1
     },
-    "cq": {
-     "direction": "input",
-     "bits": 1014
-    },
-    "cr": {
-     "direction": "output",
-     "bits": 822
-    },
     "client_seq": {
      "direction": "input",
-     "bits": 8
+     "bits": 2
     },
     "response_enable": {
      "direction": "input",
-     "bits": 4
+     "bits": 1
     },
     "response_seq": {
      "direction": "input",
-     "bits": 8
+     "bits": 2
     },
     "bank_enable": {
      "direction": "input",
@@ -583,7 +585,7 @@
     },
     "bank_client": {
      "direction": "input",
-     "bits": 16
+     "bits": 8
     },
     "hub_ring_enable": {
      "direction": "input",
@@ -591,7 +593,7 @@
     },
     "hub_ring_client": {
      "direction": "input",
-     "bits": 4
+     "bits": 2
     },
     "rslot_v": {
      "direction": "input",
@@ -770,19 +772,19 @@
     },
     "rq": {
      "direction": "input",
-     "bits": 680
+     "bits": 544
     },
     "rr": {
      "direction": "output",
-     "bits": 10280
+     "bits": 8224
     },
     "wq": {
      "direction": "input",
-     "bits": 6744
+     "bits": 4496
     },
     "wq_done": {
      "direction": "output",
-     "bits": 24
+     "bits": 16
     },
     "dq": {
      "direction": "input",
@@ -37042,14 +37044,14 @@
    "master": "ot_static_cmd_target",
    "source": "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
    "params": {
-    "TARGET": "8'd192",
     "MODE": 0,
     "AWA": 10,
     "AWB": 0,
     "RBW": 1,
     "RCW": 1,
     "NA": 1,
-    "NF": 1
+    "NF": 1,
+    "TGT_PIN": 1
    },
    "slot": "pc_SW0",
    "owner": "H-NETLIST/attn (host control plane)",
@@ -37064,6 +37066,10 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
     },
     "cfg_v": {
      "direction": "input",
@@ -37253,14 +37259,14 @@
    "master": "ot_static_cmd_target",
    "source": "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
    "params": {
-    "TARGET": "8'd193",
     "MODE": 0,
     "AWA": 10,
     "AWB": 0,
     "RBW": 1,
     "RCW": 1,
     "NA": 1,
-    "NF": 1
+    "NF": 1,
+    "TGT_PIN": 1
    },
    "slot": "pc_SW1",
    "owner": "H-NETLIST/attn (host control plane)",
@@ -37275,6 +37281,10 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
     },
     "cfg_v": {
      "direction": "input",
@@ -37464,14 +37474,14 @@
    "master": "ot_static_cmd_target",
    "source": "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
    "params": {
-    "TARGET": "8'd194",
     "MODE": 0,
     "AWA": 10,
     "AWB": 0,
     "RBW": 1,
     "RCW": 1,
     "NA": 1,
-    "NF": 1
+    "NF": 1,
+    "TGT_PIN": 1
    },
    "slot": "pc_SW2",
    "owner": "H-NETLIST/attn (host control plane)",
@@ -37486,6 +37496,10 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
     },
     "cfg_v": {
      "direction": "input",
@@ -37675,14 +37689,14 @@
    "master": "ot_static_cmd_target",
    "source": "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
    "params": {
-    "TARGET": "8'd195",
     "MODE": 0,
     "AWA": 10,
     "AWB": 0,
     "RBW": 1,
     "RCW": 1,
     "NA": 1,
-    "NF": 1
+    "NF": 1,
+    "TGT_PIN": 1
    },
    "slot": "pc_SW3",
    "owner": "H-NETLIST/attn (host control plane)",
@@ -37697,6 +37711,10 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
     },
     "cfg_v": {
      "direction": "input",
@@ -37886,14 +37904,14 @@
    "master": "ot_static_cmd_target",
    "source": "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
    "params": {
-    "TARGET": "8'd196",
     "MODE": 0,
     "AWA": 10,
     "AWB": 0,
     "RBW": 1,
     "RCW": 1,
     "NA": 1,
-    "NF": 1
+    "NF": 1,
+    "TGT_PIN": 1
    },
    "slot": "pc_SW4",
    "owner": "H-NETLIST/attn (host control plane)",
@@ -37908,6 +37926,10 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
     },
     "cfg_v": {
      "direction": "input",
@@ -38097,14 +38119,14 @@
    "master": "ot_static_cmd_target",
    "source": "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
    "params": {
-    "TARGET": "8'd197",
     "MODE": 0,
     "AWA": 10,
     "AWB": 0,
     "RBW": 1,
     "RCW": 1,
     "NA": 1,
-    "NF": 1
+    "NF": 1,
+    "TGT_PIN": 1
    },
    "slot": "pc_SW5",
    "owner": "H-NETLIST/attn (host control plane)",
@@ -38119,6 +38141,10 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
     },
     "cfg_v": {
      "direction": "input",
@@ -38308,14 +38334,14 @@
    "master": "ot_static_cmd_target",
    "source": "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
    "params": {
-    "TARGET": "8'd198",
     "MODE": 0,
     "AWA": 10,
     "AWB": 0,
     "RBW": 1,
     "RCW": 1,
     "NA": 1,
-    "NF": 1
+    "NF": 1,
+    "TGT_PIN": 1
    },
    "slot": "pc_SW6",
    "owner": "H-NETLIST/attn (host control plane)",
@@ -38330,6 +38356,10 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
     },
     "cfg_v": {
      "direction": "input",
@@ -38519,14 +38549,14 @@
    "master": "ot_static_cmd_target",
    "source": "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
    "params": {
-    "TARGET": "8'd199",
     "MODE": 0,
     "AWA": 10,
     "AWB": 0,
     "RBW": 1,
     "RCW": 1,
     "NA": 1,
-    "NF": 1
+    "NF": 1,
+    "TGT_PIN": 1
    },
    "slot": "pc_SW7",
    "owner": "H-NETLIST/attn (host control plane)",
@@ -38541,6 +38571,10 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
     },
     "cfg_v": {
      "direction": "input",
@@ -38730,14 +38764,14 @@
    "master": "ot_static_cmd_target",
    "source": "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
    "params": {
-    "TARGET": "8'd200",
     "MODE": 0,
     "AWA": 10,
     "AWB": 0,
     "RBW": 1,
     "RCW": 1,
     "NA": 1,
-    "NF": 1
+    "NF": 1,
+    "TGT_PIN": 1
    },
    "slot": "pc_SE0",
    "owner": "H-NETLIST/attn (host control plane)",
@@ -38752,6 +38786,10 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
     },
     "cfg_v": {
      "direction": "input",
@@ -38941,14 +38979,14 @@
    "master": "ot_static_cmd_target",
    "source": "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
    "params": {
-    "TARGET": "8'd201",
     "MODE": 0,
     "AWA": 10,
     "AWB": 0,
     "RBW": 1,
     "RCW": 1,
     "NA": 1,
-    "NF": 1
+    "NF": 1,
+    "TGT_PIN": 1
    },
    "slot": "pc_SE1",
    "owner": "H-NETLIST/attn (host control plane)",
@@ -38963,6 +39001,10 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
     },
     "cfg_v": {
      "direction": "input",
@@ -39152,14 +39194,14 @@
    "master": "ot_static_cmd_target",
    "source": "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
    "params": {
-    "TARGET": "8'd202",
     "MODE": 0,
     "AWA": 10,
     "AWB": 0,
     "RBW": 1,
     "RCW": 1,
     "NA": 1,
-    "NF": 1
+    "NF": 1,
+    "TGT_PIN": 1
    },
    "slot": "pc_SE2",
    "owner": "H-NETLIST/attn (host control plane)",
@@ -39174,6 +39216,10 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
     },
     "cfg_v": {
      "direction": "input",
@@ -39363,14 +39409,14 @@
    "master": "ot_static_cmd_target",
    "source": "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
    "params": {
-    "TARGET": "8'd203",
     "MODE": 0,
     "AWA": 10,
     "AWB": 0,
     "RBW": 1,
     "RCW": 1,
     "NA": 1,
-    "NF": 1
+    "NF": 1,
+    "TGT_PIN": 1
    },
    "slot": "pc_SE3",
    "owner": "H-NETLIST/attn (host control plane)",
@@ -39385,6 +39431,10 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
     },
     "cfg_v": {
      "direction": "input",
@@ -39574,14 +39624,14 @@
    "master": "ot_static_cmd_target",
    "source": "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
    "params": {
-    "TARGET": "8'd204",
     "MODE": 0,
     "AWA": 10,
     "AWB": 0,
     "RBW": 1,
     "RCW": 1,
     "NA": 1,
-    "NF": 1
+    "NF": 1,
+    "TGT_PIN": 1
    },
    "slot": "pc_SE4",
    "owner": "H-NETLIST/attn (host control plane)",
@@ -39596,6 +39646,10 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
     },
     "cfg_v": {
      "direction": "input",
@@ -39785,14 +39839,14 @@
    "master": "ot_static_cmd_target",
    "source": "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
    "params": {
-    "TARGET": "8'd205",
     "MODE": 0,
     "AWA": 10,
     "AWB": 0,
     "RBW": 1,
     "RCW": 1,
     "NA": 1,
-    "NF": 1
+    "NF": 1,
+    "TGT_PIN": 1
    },
    "slot": "pc_SE5",
    "owner": "H-NETLIST/attn (host control plane)",
@@ -39807,6 +39861,10 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
     },
     "cfg_v": {
      "direction": "input",
@@ -39996,14 +40054,14 @@
    "master": "ot_static_cmd_target",
    "source": "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
    "params": {
-    "TARGET": "8'd206",
     "MODE": 0,
     "AWA": 10,
     "AWB": 0,
     "RBW": 1,
     "RCW": 1,
     "NA": 1,
-    "NF": 1
+    "NF": 1,
+    "TGT_PIN": 1
    },
    "slot": "pc_SE6",
    "owner": "H-NETLIST/attn (host control plane)",
@@ -40018,6 +40076,10 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
     },
     "cfg_v": {
      "direction": "input",
@@ -40207,14 +40269,14 @@
    "master": "ot_static_cmd_target",
    "source": "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
    "params": {
-    "TARGET": "8'd207",
     "MODE": 0,
     "AWA": 10,
     "AWB": 0,
     "RBW": 1,
     "RCW": 1,
     "NA": 1,
-    "NF": 1
+    "NF": 1,
+    "TGT_PIN": 1
    },
    "slot": "pc_SE7",
    "owner": "H-NETLIST/attn (host control plane)",
@@ -40229,6 +40291,10 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
     },
     "cfg_v": {
      "direction": "input",
@@ -40418,14 +40484,14 @@
    "master": "ot_static_cmd_target",
    "source": "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
    "params": {
-    "TARGET": "8'd208",
     "MODE": 0,
     "AWA": 10,
     "AWB": 0,
     "RBW": 1,
     "RCW": 1,
     "NA": 1,
-    "NF": 1
+    "NF": 1,
+    "TGT_PIN": 1
    },
    "slot": "pc_NW0",
    "owner": "H-NETLIST/attn (host control plane)",
@@ -40440,6 +40506,10 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
     },
     "cfg_v": {
      "direction": "input",
@@ -40629,14 +40699,14 @@
    "master": "ot_static_cmd_target",
    "source": "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
    "params": {
-    "TARGET": "8'd209",
     "MODE": 0,
     "AWA": 10,
     "AWB": 0,
     "RBW": 1,
     "RCW": 1,
     "NA": 1,
-    "NF": 1
+    "NF": 1,
+    "TGT_PIN": 1
    },
    "slot": "pc_NW1",
    "owner": "H-NETLIST/attn (host control plane)",
@@ -40651,6 +40721,10 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
     },
     "cfg_v": {
      "direction": "input",
@@ -40840,14 +40914,14 @@
    "master": "ot_static_cmd_target",
    "source": "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
    "params": {
-    "TARGET": "8'd210",
     "MODE": 0,
     "AWA": 10,
     "AWB": 0,
     "RBW": 1,
     "RCW": 1,
     "NA": 1,
-    "NF": 1
+    "NF": 1,
+    "TGT_PIN": 1
    },
    "slot": "pc_NW2",
    "owner": "H-NETLIST/attn (host control plane)",
@@ -40862,6 +40936,10 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
     },
     "cfg_v": {
      "direction": "input",
@@ -41051,14 +41129,14 @@
    "master": "ot_static_cmd_target",
    "source": "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
    "params": {
-    "TARGET": "8'd211",
     "MODE": 0,
     "AWA": 10,
     "AWB": 0,
     "RBW": 1,
     "RCW": 1,
     "NA": 1,
-    "NF": 1
+    "NF": 1,
+    "TGT_PIN": 1
    },
    "slot": "pc_NW3",
    "owner": "H-NETLIST/attn (host control plane)",
@@ -41073,6 +41151,10 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
     },
     "cfg_v": {
      "direction": "input",
@@ -41262,14 +41344,14 @@
    "master": "ot_static_cmd_target",
    "source": "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
    "params": {
-    "TARGET": "8'd212",
     "MODE": 0,
     "AWA": 10,
     "AWB": 0,
     "RBW": 1,
     "RCW": 1,
     "NA": 1,
-    "NF": 1
+    "NF": 1,
+    "TGT_PIN": 1
    },
    "slot": "pc_NW4",
    "owner": "H-NETLIST/attn (host control plane)",
@@ -41284,6 +41366,10 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
     },
     "cfg_v": {
      "direction": "input",
@@ -41473,14 +41559,14 @@
    "master": "ot_static_cmd_target",
    "source": "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
    "params": {
-    "TARGET": "8'd213",
     "MODE": 0,
     "AWA": 10,
     "AWB": 0,
     "RBW": 1,
     "RCW": 1,
     "NA": 1,
-    "NF": 1
+    "NF": 1,
+    "TGT_PIN": 1
    },
    "slot": "pc_NW5",
    "owner": "H-NETLIST/attn (host control plane)",
@@ -41495,6 +41581,10 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
     },
     "cfg_v": {
      "direction": "input",
@@ -41684,14 +41774,14 @@
    "master": "ot_static_cmd_target",
    "source": "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
    "params": {
-    "TARGET": "8'd214",
     "MODE": 0,
     "AWA": 10,
     "AWB": 0,
     "RBW": 1,
     "RCW": 1,
     "NA": 1,
-    "NF": 1
+    "NF": 1,
+    "TGT_PIN": 1
    },
    "slot": "pc_NW6",
    "owner": "H-NETLIST/attn (host control plane)",
@@ -41706,6 +41796,10 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
     },
     "cfg_v": {
      "direction": "input",
@@ -41895,14 +41989,14 @@
    "master": "ot_static_cmd_target",
    "source": "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
    "params": {
-    "TARGET": "8'd215",
     "MODE": 0,
     "AWA": 10,
     "AWB": 0,
     "RBW": 1,
     "RCW": 1,
     "NA": 1,
-    "NF": 1
+    "NF": 1,
+    "TGT_PIN": 1
    },
    "slot": "pc_NW7",
    "owner": "H-NETLIST/attn (host control plane)",
@@ -41917,6 +42011,10 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
     },
     "cfg_v": {
      "direction": "input",
@@ -42106,14 +42204,14 @@
    "master": "ot_static_cmd_target",
    "source": "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
    "params": {
-    "TARGET": "8'd216",
     "MODE": 0,
     "AWA": 10,
     "AWB": 0,
     "RBW": 1,
     "RCW": 1,
     "NA": 1,
-    "NF": 1
+    "NF": 1,
+    "TGT_PIN": 1
    },
    "slot": "pc_NE0",
    "owner": "H-NETLIST/attn (host control plane)",
@@ -42128,6 +42226,10 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
     },
     "cfg_v": {
      "direction": "input",
@@ -42317,14 +42419,14 @@
    "master": "ot_static_cmd_target",
    "source": "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
    "params": {
-    "TARGET": "8'd217",
     "MODE": 0,
     "AWA": 10,
     "AWB": 0,
     "RBW": 1,
     "RCW": 1,
     "NA": 1,
-    "NF": 1
+    "NF": 1,
+    "TGT_PIN": 1
    },
    "slot": "pc_NE1",
    "owner": "H-NETLIST/attn (host control plane)",
@@ -42339,6 +42441,10 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
     },
     "cfg_v": {
      "direction": "input",
@@ -42528,14 +42634,14 @@
    "master": "ot_static_cmd_target",
    "source": "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
    "params": {
-    "TARGET": "8'd218",
     "MODE": 0,
     "AWA": 10,
     "AWB": 0,
     "RBW": 1,
     "RCW": 1,
     "NA": 1,
-    "NF": 1
+    "NF": 1,
+    "TGT_PIN": 1
    },
    "slot": "pc_NE2",
    "owner": "H-NETLIST/attn (host control plane)",
@@ -42550,6 +42656,10 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
     },
     "cfg_v": {
      "direction": "input",
@@ -42739,14 +42849,14 @@
    "master": "ot_static_cmd_target",
    "source": "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
    "params": {
-    "TARGET": "8'd219",
     "MODE": 0,
     "AWA": 10,
     "AWB": 0,
     "RBW": 1,
     "RCW": 1,
     "NA": 1,
-    "NF": 1
+    "NF": 1,
+    "TGT_PIN": 1
    },
    "slot": "pc_NE3",
    "owner": "H-NETLIST/attn (host control plane)",
@@ -42761,6 +42871,10 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
     },
     "cfg_v": {
      "direction": "input",
@@ -42950,14 +43064,14 @@
    "master": "ot_static_cmd_target",
    "source": "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
    "params": {
-    "TARGET": "8'd220",
     "MODE": 0,
     "AWA": 10,
     "AWB": 0,
     "RBW": 1,
     "RCW": 1,
     "NA": 1,
-    "NF": 1
+    "NF": 1,
+    "TGT_PIN": 1
    },
    "slot": "pc_NE4",
    "owner": "H-NETLIST/attn (host control plane)",
@@ -42972,6 +43086,10 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
     },
     "cfg_v": {
      "direction": "input",
@@ -43161,14 +43279,14 @@
    "master": "ot_static_cmd_target",
    "source": "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
    "params": {
-    "TARGET": "8'd221",
     "MODE": 0,
     "AWA": 10,
     "AWB": 0,
     "RBW": 1,
     "RCW": 1,
     "NA": 1,
-    "NF": 1
+    "NF": 1,
+    "TGT_PIN": 1
    },
    "slot": "pc_NE5",
    "owner": "H-NETLIST/attn (host control plane)",
@@ -43183,6 +43301,10 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
     },
     "cfg_v": {
      "direction": "input",
@@ -43372,14 +43494,14 @@
    "master": "ot_static_cmd_target",
    "source": "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
    "params": {
-    "TARGET": "8'd222",
     "MODE": 0,
     "AWA": 10,
     "AWB": 0,
     "RBW": 1,
     "RCW": 1,
     "NA": 1,
-    "NF": 1
+    "NF": 1,
+    "TGT_PIN": 1
    },
    "slot": "pc_NE6",
    "owner": "H-NETLIST/attn (host control plane)",
@@ -43394,6 +43516,10 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
     },
     "cfg_v": {
      "direction": "input",
@@ -43583,14 +43709,14 @@
    "master": "ot_static_cmd_target",
    "source": "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
    "params": {
-    "TARGET": "8'd223",
     "MODE": 0,
     "AWA": 10,
     "AWB": 0,
     "RBW": 1,
     "RCW": 1,
     "NA": 1,
-    "NF": 1
+    "NF": 1,
+    "TGT_PIN": 1
    },
    "slot": "pc_NE7",
    "owner": "H-NETLIST/attn (host control plane)",
@@ -43605,6 +43731,10 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
     },
     "cfg_v": {
      "direction": "input",
@@ -44250,14 +44380,14 @@
    "master": "ot_static_cmd_target",
    "source": "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
    "params": {
-    "TARGET": "8'd64",
     "MODE": 0,
     "AWA": 10,
     "AWB": 7,
     "RBW": 7,
     "RCW": 8,
     "NA": 2,
-    "NF": 1
+    "NF": 1,
+    "TGT_PIN": 1
    },
    "slot": "svg_SW0",
    "owner": "H-NETLIST/cp1 (host control plane)",
@@ -44272,6 +44402,10 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
     },
     "cfg_v": {
      "direction": "input",
@@ -44383,14 +44517,14 @@
    "master": "ot_static_cmd_target",
    "source": "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
    "params": {
-    "TARGET": "8'd65",
     "MODE": 0,
     "AWA": 10,
     "AWB": 7,
     "RBW": 7,
     "RCW": 8,
     "NA": 2,
-    "NF": 1
+    "NF": 1,
+    "TGT_PIN": 1
    },
    "slot": "svg_SW1",
    "owner": "H-NETLIST/cp1 (host control plane)",
@@ -44405,6 +44539,10 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
     },
     "cfg_v": {
      "direction": "input",
@@ -44516,14 +44654,14 @@
    "master": "ot_static_cmd_target",
    "source": "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
    "params": {
-    "TARGET": "8'd66",
     "MODE": 0,
     "AWA": 10,
     "AWB": 7,
     "RBW": 7,
     "RCW": 8,
     "NA": 2,
-    "NF": 1
+    "NF": 1,
+    "TGT_PIN": 1
    },
    "slot": "svg_SW2",
    "owner": "H-NETLIST/cp1 (host control plane)",
@@ -44538,6 +44676,10 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
     },
     "cfg_v": {
      "direction": "input",
@@ -44649,14 +44791,14 @@
    "master": "ot_static_cmd_target",
    "source": "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
    "params": {
-    "TARGET": "8'd67",
     "MODE": 0,
     "AWA": 10,
     "AWB": 7,
     "RBW": 7,
     "RCW": 8,
     "NA": 2,
-    "NF": 1
+    "NF": 1,
+    "TGT_PIN": 1
    },
    "slot": "svg_SW3",
    "owner": "H-NETLIST/cp1 (host control plane)",
@@ -44671,6 +44813,10 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
     },
     "cfg_v": {
      "direction": "input",
@@ -44782,14 +44928,14 @@
    "master": "ot_static_cmd_target",
    "source": "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
    "params": {
-    "TARGET": "8'd68",
     "MODE": 0,
     "AWA": 10,
     "AWB": 7,
     "RBW": 7,
     "RCW": 8,
     "NA": 2,
-    "NF": 1
+    "NF": 1,
+    "TGT_PIN": 1
    },
    "slot": "svg_SW4",
    "owner": "H-NETLIST/cp1 (host control plane)",
@@ -44804,6 +44950,10 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
     },
     "cfg_v": {
      "direction": "input",
@@ -44915,14 +45065,14 @@
    "master": "ot_static_cmd_target",
    "source": "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
    "params": {
-    "TARGET": "8'd69",
     "MODE": 0,
     "AWA": 10,
     "AWB": 7,
     "RBW": 7,
     "RCW": 8,
     "NA": 2,
-    "NF": 1
+    "NF": 1,
+    "TGT_PIN": 1
    },
    "slot": "svg_SW5",
    "owner": "H-NETLIST/cp1 (host control plane)",
@@ -44937,6 +45087,10 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
     },
     "cfg_v": {
      "direction": "input",
@@ -45048,14 +45202,14 @@
    "master": "ot_static_cmd_target",
    "source": "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
    "params": {
-    "TARGET": "8'd70",
     "MODE": 0,
     "AWA": 10,
     "AWB": 7,
     "RBW": 7,
     "RCW": 8,
     "NA": 2,
-    "NF": 1
+    "NF": 1,
+    "TGT_PIN": 1
    },
    "slot": "svg_SW6",
    "owner": "H-NETLIST/cp1 (host control plane)",
@@ -45070,6 +45224,10 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
     },
     "cfg_v": {
      "direction": "input",
@@ -45181,14 +45339,14 @@
    "master": "ot_static_cmd_target",
    "source": "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
    "params": {
-    "TARGET": "8'd71",
     "MODE": 0,
     "AWA": 10,
     "AWB": 7,
     "RBW": 7,
     "RCW": 8,
     "NA": 2,
-    "NF": 1
+    "NF": 1,
+    "TGT_PIN": 1
    },
    "slot": "svg_SW7",
    "owner": "H-NETLIST/cp1 (host control plane)",
@@ -45203,6 +45361,10 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
     },
     "cfg_v": {
      "direction": "input",
@@ -45314,8 +45476,8 @@
    "master": "ot_static_program_target",
    "source": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
    "params": {
-    "TARGET": "8'd96",
-    "PCW": 10
+    "PCW": 10,
+    "TGT_PIN": 1
    },
    "slot": "calendar_SW",
    "owner": "H-NETLIST/cp1 (host control plane)",
@@ -45330,6 +45492,10 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
     },
     "cfg_v": {
      "direction": "input",
@@ -45413,12 +45579,12 @@
    "master": "ot_static_cmd_target",
    "source": "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
    "params": {
-    "TARGET": "8'd100",
     "MODE": 1,
     "CW": 108,
     "RELF": 0,
     "NA": 1,
-    "NF": 1
+    "NF": 1,
+    "TGT_PIN": 1
    },
    "slot": "xl_SW",
    "owner": "H-NETLIST/cp1 (host control plane)",
@@ -45433,6 +45599,10 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
     },
     "cfg_v": {
      "direction": "input",
@@ -45544,12 +45714,12 @@
    "master": "ot_static_cmd_target",
    "source": "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
    "params": {
-    "TARGET": "8'd104",
     "MODE": 1,
     "CW": 308,
     "RELF": 2,
     "NA": 1,
-    "NF": 1
+    "NF": 1,
+    "TGT_PIN": 1
    },
    "slot": "dbk_SW",
    "owner": "H-NETLIST/cp1 (host control plane)",
@@ -45564,6 +45734,10 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
     },
     "cfg_v": {
      "direction": "input",
@@ -45675,14 +45849,14 @@
    "master": "ot_static_cmd_target",
    "source": "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
    "params": {
-    "TARGET": "8'd72",
     "MODE": 0,
     "AWA": 10,
     "AWB": 7,
     "RBW": 7,
     "RCW": 8,
     "NA": 2,
-    "NF": 1
+    "NF": 1,
+    "TGT_PIN": 1
    },
    "slot": "svg_SE0",
    "owner": "H-NETLIST/cp1 (host control plane)",
@@ -45697,6 +45871,10 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
     },
     "cfg_v": {
      "direction": "input",
@@ -45808,14 +45986,14 @@
    "master": "ot_static_cmd_target",
    "source": "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
    "params": {
-    "TARGET": "8'd73",
     "MODE": 0,
     "AWA": 10,
     "AWB": 7,
     "RBW": 7,
     "RCW": 8,
     "NA": 2,
-    "NF": 1
+    "NF": 1,
+    "TGT_PIN": 1
    },
    "slot": "svg_SE1",
    "owner": "H-NETLIST/cp1 (host control plane)",
@@ -45830,6 +46008,10 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
     },
     "cfg_v": {
      "direction": "input",
@@ -45941,14 +46123,14 @@
    "master": "ot_static_cmd_target",
    "source": "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
    "params": {
-    "TARGET": "8'd74",
     "MODE": 0,
     "AWA": 10,
     "AWB": 7,
     "RBW": 7,
     "RCW": 8,
     "NA": 2,
-    "NF": 1
+    "NF": 1,
+    "TGT_PIN": 1
    },
    "slot": "svg_SE2",
    "owner": "H-NETLIST/cp1 (host control plane)",
@@ -45963,6 +46145,10 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
     },
     "cfg_v": {
      "direction": "input",
@@ -46074,14 +46260,14 @@
    "master": "ot_static_cmd_target",
    "source": "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
    "params": {
-    "TARGET": "8'd75",
     "MODE": 0,
     "AWA": 10,
     "AWB": 7,
     "RBW": 7,
     "RCW": 8,
     "NA": 2,
-    "NF": 1
+    "NF": 1,
+    "TGT_PIN": 1
    },
    "slot": "svg_SE3",
    "owner": "H-NETLIST/cp1 (host control plane)",
@@ -46096,6 +46282,10 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
     },
     "cfg_v": {
      "direction": "input",
@@ -46207,14 +46397,14 @@
    "master": "ot_static_cmd_target",
    "source": "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
    "params": {
-    "TARGET": "8'd76",
     "MODE": 0,
     "AWA": 10,
     "AWB": 7,
     "RBW": 7,
     "RCW": 8,
     "NA": 2,
-    "NF": 1
+    "NF": 1,
+    "TGT_PIN": 1
    },
    "slot": "svg_SE4",
    "owner": "H-NETLIST/cp1 (host control plane)",
@@ -46229,6 +46419,10 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
     },
     "cfg_v": {
      "direction": "input",
@@ -46340,14 +46534,14 @@
    "master": "ot_static_cmd_target",
    "source": "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
    "params": {
-    "TARGET": "8'd77",
     "MODE": 0,
     "AWA": 10,
     "AWB": 7,
     "RBW": 7,
     "RCW": 8,
     "NA": 2,
-    "NF": 1
+    "NF": 1,
+    "TGT_PIN": 1
    },
    "slot": "svg_SE5",
    "owner": "H-NETLIST/cp1 (host control plane)",
@@ -46362,6 +46556,10 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
     },
     "cfg_v": {
      "direction": "input",
@@ -46473,14 +46671,14 @@
    "master": "ot_static_cmd_target",
    "source": "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
    "params": {
-    "TARGET": "8'd78",
     "MODE": 0,
     "AWA": 10,
     "AWB": 7,
     "RBW": 7,
     "RCW": 8,
     "NA": 2,
-    "NF": 1
+    "NF": 1,
+    "TGT_PIN": 1
    },
    "slot": "svg_SE6",
    "owner": "H-NETLIST/cp1 (host control plane)",
@@ -46495,6 +46693,10 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
     },
     "cfg_v": {
      "direction": "input",
@@ -46606,14 +46808,14 @@
    "master": "ot_static_cmd_target",
    "source": "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
    "params": {
-    "TARGET": "8'd79",
     "MODE": 0,
     "AWA": 10,
     "AWB": 7,
     "RBW": 7,
     "RCW": 8,
     "NA": 2,
-    "NF": 1
+    "NF": 1,
+    "TGT_PIN": 1
    },
    "slot": "svg_SE7",
    "owner": "H-NETLIST/cp1 (host control plane)",
@@ -46628,6 +46830,10 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
     },
     "cfg_v": {
      "direction": "input",
@@ -46739,8 +46945,8 @@
    "master": "ot_static_program_target",
    "source": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
    "params": {
-    "TARGET": "8'd97",
-    "PCW": 10
+    "PCW": 10,
+    "TGT_PIN": 1
    },
    "slot": "calendar_SE",
    "owner": "H-NETLIST/cp1 (host control plane)",
@@ -46755,6 +46961,10 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
     },
     "cfg_v": {
      "direction": "input",
@@ -46838,12 +47048,12 @@
    "master": "ot_static_cmd_target",
    "source": "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
    "params": {
-    "TARGET": "8'd101",
     "MODE": 1,
     "CW": 108,
     "RELF": 0,
     "NA": 1,
-    "NF": 1
+    "NF": 1,
+    "TGT_PIN": 1
    },
    "slot": "xl_SE",
    "owner": "H-NETLIST/cp1 (host control plane)",
@@ -46858,6 +47068,10 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
     },
     "cfg_v": {
      "direction": "input",
@@ -46969,12 +47183,12 @@
    "master": "ot_static_cmd_target",
    "source": "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
    "params": {
-    "TARGET": "8'd105",
     "MODE": 1,
     "CW": 308,
     "RELF": 2,
     "NA": 1,
-    "NF": 1
+    "NF": 1,
+    "TGT_PIN": 1
    },
    "slot": "dbk_SE",
    "owner": "H-NETLIST/cp1 (host control plane)",
@@ -46989,6 +47203,10 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
     },
     "cfg_v": {
      "direction": "input",
@@ -47100,14 +47318,14 @@
    "master": "ot_static_cmd_target",
    "source": "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
    "params": {
-    "TARGET": "8'd80",
     "MODE": 0,
     "AWA": 10,
     "AWB": 7,
     "RBW": 7,
     "RCW": 8,
     "NA": 2,
-    "NF": 1
+    "NF": 1,
+    "TGT_PIN": 1
    },
    "slot": "svg_NW0",
    "owner": "H-NETLIST/cp1 (host control plane)",
@@ -47122,6 +47340,10 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
     },
     "cfg_v": {
      "direction": "input",
@@ -47233,14 +47455,14 @@
    "master": "ot_static_cmd_target",
    "source": "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
    "params": {
-    "TARGET": "8'd81",
     "MODE": 0,
     "AWA": 10,
     "AWB": 7,
     "RBW": 7,
     "RCW": 8,
     "NA": 2,
-    "NF": 1
+    "NF": 1,
+    "TGT_PIN": 1
    },
    "slot": "svg_NW1",
    "owner": "H-NETLIST/cp1 (host control plane)",
@@ -47255,6 +47477,10 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
     },
     "cfg_v": {
      "direction": "input",
@@ -47366,14 +47592,14 @@
    "master": "ot_static_cmd_target",
    "source": "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
    "params": {
-    "TARGET": "8'd82",
     "MODE": 0,
     "AWA": 10,
     "AWB": 7,
     "RBW": 7,
     "RCW": 8,
     "NA": 2,
-    "NF": 1
+    "NF": 1,
+    "TGT_PIN": 1
    },
    "slot": "svg_NW2",
    "owner": "H-NETLIST/cp1 (host control plane)",
@@ -47388,6 +47614,10 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
     },
     "cfg_v": {
      "direction": "input",
@@ -47499,14 +47729,14 @@
    "master": "ot_static_cmd_target",
    "source": "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
    "params": {
-    "TARGET": "8'd83",
     "MODE": 0,
     "AWA": 10,
     "AWB": 7,
     "RBW": 7,
     "RCW": 8,
     "NA": 2,
-    "NF": 1
+    "NF": 1,
+    "TGT_PIN": 1
    },
    "slot": "svg_NW3",
    "owner": "H-NETLIST/cp1 (host control plane)",
@@ -47521,6 +47751,10 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
     },
     "cfg_v": {
      "direction": "input",
@@ -47632,14 +47866,14 @@
    "master": "ot_static_cmd_target",
    "source": "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
    "params": {
-    "TARGET": "8'd84",
     "MODE": 0,
     "AWA": 10,
     "AWB": 7,
     "RBW": 7,
     "RCW": 8,
     "NA": 2,
-    "NF": 1
+    "NF": 1,
+    "TGT_PIN": 1
    },
    "slot": "svg_NW4",
    "owner": "H-NETLIST/cp1 (host control plane)",
@@ -47654,6 +47888,10 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
     },
     "cfg_v": {
      "direction": "input",
@@ -47765,14 +48003,14 @@
    "master": "ot_static_cmd_target",
    "source": "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
    "params": {
-    "TARGET": "8'd85",
     "MODE": 0,
     "AWA": 10,
     "AWB": 7,
     "RBW": 7,
     "RCW": 8,
     "NA": 2,
-    "NF": 1
+    "NF": 1,
+    "TGT_PIN": 1
    },
    "slot": "svg_NW5",
    "owner": "H-NETLIST/cp1 (host control plane)",
@@ -47787,6 +48025,10 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
     },
     "cfg_v": {
      "direction": "input",
@@ -47898,14 +48140,14 @@
    "master": "ot_static_cmd_target",
    "source": "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
    "params": {
-    "TARGET": "8'd86",
     "MODE": 0,
     "AWA": 10,
     "AWB": 7,
     "RBW": 7,
     "RCW": 8,
     "NA": 2,
-    "NF": 1
+    "NF": 1,
+    "TGT_PIN": 1
    },
    "slot": "svg_NW6",
    "owner": "H-NETLIST/cp1 (host control plane)",
@@ -47920,6 +48162,10 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
     },
     "cfg_v": {
      "direction": "input",
@@ -48031,14 +48277,14 @@
    "master": "ot_static_cmd_target",
    "source": "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
    "params": {
-    "TARGET": "8'd87",
     "MODE": 0,
     "AWA": 10,
     "AWB": 7,
     "RBW": 7,
     "RCW": 8,
     "NA": 2,
-    "NF": 1
+    "NF": 1,
+    "TGT_PIN": 1
    },
    "slot": "svg_NW7",
    "owner": "H-NETLIST/cp1 (host control plane)",
@@ -48053,6 +48299,10 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
     },
     "cfg_v": {
      "direction": "input",
@@ -48164,8 +48414,8 @@
    "master": "ot_static_program_target",
    "source": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
    "params": {
-    "TARGET": "8'd98",
-    "PCW": 10
+    "PCW": 10,
+    "TGT_PIN": 1
    },
    "slot": "calendar_NW",
    "owner": "H-NETLIST/cp1 (host control plane)",
@@ -48180,6 +48430,10 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
     },
     "cfg_v": {
      "direction": "input",
@@ -48263,12 +48517,12 @@
    "master": "ot_static_cmd_target",
    "source": "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
    "params": {
-    "TARGET": "8'd102",
     "MODE": 1,
     "CW": 108,
     "RELF": 0,
     "NA": 1,
-    "NF": 1
+    "NF": 1,
+    "TGT_PIN": 1
    },
    "slot": "xl_NW",
    "owner": "H-NETLIST/cp1 (host control plane)",
@@ -48283,6 +48537,10 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
     },
     "cfg_v": {
      "direction": "input",
@@ -48394,12 +48652,12 @@
    "master": "ot_static_cmd_target",
    "source": "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
    "params": {
-    "TARGET": "8'd106",
     "MODE": 1,
     "CW": 308,
     "RELF": 2,
     "NA": 1,
-    "NF": 1
+    "NF": 1,
+    "TGT_PIN": 1
    },
    "slot": "dbk_NW",
    "owner": "H-NETLIST/cp1 (host control plane)",
@@ -48414,6 +48672,10 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
     },
     "cfg_v": {
      "direction": "input",
@@ -48525,14 +48787,14 @@
    "master": "ot_static_cmd_target",
    "source": "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
    "params": {
-    "TARGET": "8'd88",
     "MODE": 0,
     "AWA": 10,
     "AWB": 7,
     "RBW": 7,
     "RCW": 8,
     "NA": 2,
-    "NF": 1
+    "NF": 1,
+    "TGT_PIN": 1
    },
    "slot": "svg_NE0",
    "owner": "H-NETLIST/cp1 (host control plane)",
@@ -48547,6 +48809,10 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
     },
     "cfg_v": {
      "direction": "input",
@@ -48658,14 +48924,14 @@
    "master": "ot_static_cmd_target",
    "source": "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
    "params": {
-    "TARGET": "8'd89",
     "MODE": 0,
     "AWA": 10,
     "AWB": 7,
     "RBW": 7,
     "RCW": 8,
     "NA": 2,
-    "NF": 1
+    "NF": 1,
+    "TGT_PIN": 1
    },
    "slot": "svg_NE1",
    "owner": "H-NETLIST/cp1 (host control plane)",
@@ -48680,6 +48946,10 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
     },
     "cfg_v": {
      "direction": "input",
@@ -48791,14 +49061,14 @@
    "master": "ot_static_cmd_target",
    "source": "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
    "params": {
-    "TARGET": "8'd90",
     "MODE": 0,
     "AWA": 10,
     "AWB": 7,
     "RBW": 7,
     "RCW": 8,
     "NA": 2,
-    "NF": 1
+    "NF": 1,
+    "TGT_PIN": 1
    },
    "slot": "svg_NE2",
    "owner": "H-NETLIST/cp1 (host control plane)",
@@ -48813,6 +49083,10 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
     },
     "cfg_v": {
      "direction": "input",
@@ -48924,14 +49198,14 @@
    "master": "ot_static_cmd_target",
    "source": "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
    "params": {
-    "TARGET": "8'd91",
     "MODE": 0,
     "AWA": 10,
     "AWB": 7,
     "RBW": 7,
     "RCW": 8,
     "NA": 2,
-    "NF": 1
+    "NF": 1,
+    "TGT_PIN": 1
    },
    "slot": "svg_NE3",
    "owner": "H-NETLIST/cp1 (host control plane)",
@@ -48946,6 +49220,10 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
     },
     "cfg_v": {
      "direction": "input",
@@ -49057,14 +49335,14 @@
    "master": "ot_static_cmd_target",
    "source": "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
    "params": {
-    "TARGET": "8'd92",
     "MODE": 0,
     "AWA": 10,
     "AWB": 7,
     "RBW": 7,
     "RCW": 8,
     "NA": 2,
-    "NF": 1
+    "NF": 1,
+    "TGT_PIN": 1
    },
    "slot": "svg_NE4",
    "owner": "H-NETLIST/cp1 (host control plane)",
@@ -49079,6 +49357,10 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
     },
     "cfg_v": {
      "direction": "input",
@@ -49190,14 +49472,14 @@
    "master": "ot_static_cmd_target",
    "source": "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
    "params": {
-    "TARGET": "8'd93",
     "MODE": 0,
     "AWA": 10,
     "AWB": 7,
     "RBW": 7,
     "RCW": 8,
     "NA": 2,
-    "NF": 1
+    "NF": 1,
+    "TGT_PIN": 1
    },
    "slot": "svg_NE5",
    "owner": "H-NETLIST/cp1 (host control plane)",
@@ -49212,6 +49494,10 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
     },
     "cfg_v": {
      "direction": "input",
@@ -49323,14 +49609,14 @@
    "master": "ot_static_cmd_target",
    "source": "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
    "params": {
-    "TARGET": "8'd94",
     "MODE": 0,
     "AWA": 10,
     "AWB": 7,
     "RBW": 7,
     "RCW": 8,
     "NA": 2,
-    "NF": 1
+    "NF": 1,
+    "TGT_PIN": 1
    },
    "slot": "svg_NE6",
    "owner": "H-NETLIST/cp1 (host control plane)",
@@ -49345,6 +49631,10 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
     },
     "cfg_v": {
      "direction": "input",
@@ -49456,14 +49746,14 @@
    "master": "ot_static_cmd_target",
    "source": "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
    "params": {
-    "TARGET": "8'd95",
     "MODE": 0,
     "AWA": 10,
     "AWB": 7,
     "RBW": 7,
     "RCW": 8,
     "NA": 2,
-    "NF": 1
+    "NF": 1,
+    "TGT_PIN": 1
    },
    "slot": "svg_NE7",
    "owner": "H-NETLIST/cp1 (host control plane)",
@@ -49478,6 +49768,10 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
     },
     "cfg_v": {
      "direction": "input",
@@ -49589,8 +49883,8 @@
    "master": "ot_static_program_target",
    "source": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
    "params": {
-    "TARGET": "8'd99",
-    "PCW": 10
+    "PCW": 10,
+    "TGT_PIN": 1
    },
    "slot": "calendar_NE",
    "owner": "H-NETLIST/cp1 (host control plane)",
@@ -49605,6 +49899,10 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
     },
     "cfg_v": {
      "direction": "input",
@@ -49688,12 +49986,12 @@
    "master": "ot_static_cmd_target",
    "source": "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
    "params": {
-    "TARGET": "8'd103",
     "MODE": 1,
     "CW": 108,
     "RELF": 0,
     "NA": 1,
-    "NF": 1
+    "NF": 1,
+    "TGT_PIN": 1
    },
    "slot": "xl_NE",
    "owner": "H-NETLIST/cp1 (host control plane)",
@@ -49708,6 +50006,10 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
     },
     "cfg_v": {
      "direction": "input",
@@ -49819,12 +50121,12 @@
    "master": "ot_static_cmd_target",
    "source": "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
    "params": {
-    "TARGET": "8'd107",
     "MODE": 1,
     "CW": 308,
     "RELF": 2,
     "NA": 1,
-    "NF": 1
+    "NF": 1,
+    "TGT_PIN": 1
    },
    "slot": "dbk_NE",
    "owner": "H-NETLIST/cp1 (host control plane)",
@@ -49839,6 +50141,10 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
     },
     "cfg_v": {
      "direction": "input",
@@ -51237,8 +51543,8 @@
    "master": "ot_static_program_target",
    "source": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
    "params": {
-    "TARGET": "8'd108",
-    "PCW": 10
+    "PCW": 10,
+    "TGT_PIN": 1
    },
    "slot": null,
    "owner": "HC owner (H-NETLIST hc)",
@@ -51253,6 +51559,10 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
     },
     "cfg_v": {
      "direction": "input",
@@ -51670,8 +51980,8 @@
    "master": "ot_static_program_target",
    "source": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
    "params": {
-    "TARGET": "8'd109",
-    "PCW": 10
+    "PCW": 10,
+    "TGT_PIN": 1
    },
    "slot": null,
    "owner": "HC owner (H-NETLIST hc)",
@@ -51686,6 +51996,10 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
     },
     "cfg_v": {
      "direction": "input",
@@ -52103,8 +52417,8 @@
    "master": "ot_static_program_target",
    "source": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
    "params": {
-    "TARGET": "8'd110",
-    "PCW": 10
+    "PCW": 10,
+    "TGT_PIN": 1
    },
    "slot": null,
    "owner": "HC owner (H-NETLIST hc)",
@@ -52119,6 +52433,10 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
     },
     "cfg_v": {
      "direction": "input",
@@ -52536,8 +52854,8 @@
    "master": "ot_static_program_target",
    "source": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
    "params": {
-    "TARGET": "8'd111",
-    "PCW": 10
+    "PCW": 10,
+    "TGT_PIN": 1
    },
    "slot": null,
    "owner": "HC owner (H-NETLIST hc)",
@@ -52552,6 +52870,10 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
     },
     "cfg_v": {
      "direction": "input",
@@ -53103,8 +53425,8 @@
    "master": "ot_static_program_target",
    "source": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
    "params": {
-    "TARGET": "8'd164",
-    "PCW": 10
+    "PCW": 10,
+    "TGT_PIN": 1
    },
    "slot": null,
    "owner": "HC owner (H-NETLIST hceng)",
@@ -53119,6 +53441,10 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
     },
     "cfg_v": {
      "direction": "input",
@@ -53202,8 +53528,8 @@
    "master": "ot_static_program_target",
    "source": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
    "params": {
-    "TARGET": "8'd165",
-    "PCW": 10
+    "PCW": 10,
+    "TGT_PIN": 1
    },
    "slot": null,
    "owner": "HC owner (H-NETLIST hceng)",
@@ -53218,6 +53544,10 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
     },
     "cfg_v": {
      "direction": "input",
@@ -53301,8 +53631,8 @@
    "master": "ot_static_program_target",
    "source": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
    "params": {
-    "TARGET": "8'd56",
-    "PCW": 10
+    "PCW": 10,
+    "TGT_PIN": 1
    },
    "slot": null,
    "owner": "H-NETLIST",
@@ -53317,6 +53647,10 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
     },
     "cfg_v": {
      "direction": "input",
@@ -53400,8 +53734,8 @@
    "master": "ot_static_program_target",
    "source": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
    "params": {
-    "TARGET": "8'd57",
-    "PCW": 10
+    "PCW": 10,
+    "TGT_PIN": 1
    },
    "slot": null,
    "owner": "H-NETLIST",
@@ -53416,6 +53750,10 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
     },
     "cfg_v": {
      "direction": "input",
@@ -53499,8 +53837,8 @@
    "master": "ot_static_program_target",
    "source": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
    "params": {
-    "TARGET": "8'd58",
-    "PCW": 10
+    "PCW": 10,
+    "TGT_PIN": 1
    },
    "slot": null,
    "owner": "H-NETLIST",
@@ -53515,6 +53853,10 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
     },
     "cfg_v": {
      "direction": "input",
@@ -53598,8 +53940,8 @@
    "master": "ot_static_program_target",
    "source": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
    "params": {
-    "TARGET": "8'd59",
-    "PCW": 10
+    "PCW": 10,
+    "TGT_PIN": 1
    },
    "slot": null,
    "owner": "H-NETLIST",
@@ -53614,6 +53956,10 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
     },
     "cfg_v": {
      "direction": "input",
@@ -53697,8 +54043,8 @@
    "master": "ot_static_program_target",
    "source": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
    "params": {
-    "TARGET": "8'd132",
-    "PCW": 10
+    "PCW": 10,
+    "TGT_PIN": 1
    },
    "slot": null,
    "owner": "H-NETLIST",
@@ -53713,6 +54059,10 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
     },
     "cfg_v": {
      "direction": "input",
@@ -53940,8 +54290,8 @@
    "master": "ot_static_program_target",
    "source": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
    "params": {
-    "TARGET": "8'd133",
-    "PCW": 10
+    "PCW": 10,
+    "TGT_PIN": 1
    },
    "slot": null,
    "owner": "H-NETLIST",
@@ -53956,6 +54306,10 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
     },
     "cfg_v": {
      "direction": "input",
@@ -54183,8 +54537,8 @@
    "master": "ot_static_program_target",
    "source": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
    "params": {
-    "TARGET": "8'd134",
-    "PCW": 10
+    "PCW": 10,
+    "TGT_PIN": 1
    },
    "slot": null,
    "owner": "H-NETLIST",
@@ -54199,6 +54553,10 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
     },
     "cfg_v": {
      "direction": "input",
@@ -54426,8 +54784,8 @@
    "master": "ot_static_program_target",
    "source": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
    "params": {
-    "TARGET": "8'd135",
-    "PCW": 10
+    "PCW": 10,
+    "TGT_PIN": 1
    },
    "slot": null,
    "owner": "H-NETLIST",
@@ -54442,6 +54800,10 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
     },
     "cfg_v": {
      "direction": "input",
@@ -58311,12 +58673,12 @@
    "master": "ot_static_cmd_target",
    "source": "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
    "params": {
-    "TARGET": "8'd160",
     "MODE": 1,
     "CW": 26,
     "RELF": 0,
     "NA": 1,
-    "NF": 1
+    "NF": 1,
+    "TGT_PIN": 1
    },
    "slot": "vmh_SW",
    "owner": "H-NETLIST/smvm",
@@ -58331,6 +58693,10 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
     },
     "cfg_v": {
      "direction": "input",
@@ -58505,12 +58871,12 @@
    "master": "ot_static_cmd_target",
    "source": "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
    "params": {
-    "TARGET": "8'd161",
     "MODE": 1,
     "CW": 26,
     "RELF": 0,
     "NA": 1,
-    "NF": 1
+    "NF": 1,
+    "TGT_PIN": 1
    },
    "slot": "vmh_SE",
    "owner": "H-NETLIST/smvm",
@@ -58525,6 +58891,10 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
     },
     "cfg_v": {
      "direction": "input",
@@ -58699,12 +59069,12 @@
    "master": "ot_static_cmd_target",
    "source": "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
    "params": {
-    "TARGET": "8'd162",
     "MODE": 1,
     "CW": 26,
     "RELF": 0,
     "NA": 1,
-    "NF": 1
+    "NF": 1,
+    "TGT_PIN": 1
    },
    "slot": "vmh_NW",
    "owner": "H-NETLIST/smvm",
@@ -58719,6 +59089,10 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
     },
     "cfg_v": {
      "direction": "input",
@@ -58893,12 +59267,12 @@
    "master": "ot_static_cmd_target",
    "source": "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
    "params": {
-    "TARGET": "8'd163",
     "MODE": 1,
     "CW": 26,
     "RELF": 0,
     "NA": 1,
-    "NF": 1
+    "NF": 1,
+    "TGT_PIN": 1
    },
    "slot": "vmh_NE",
    "owner": "H-NETLIST/smvm",
@@ -58913,6 +59287,10 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "tgt": {
+     "direction": "input",
+     "bits": 8
     },
     "cfg_v": {
      "direction": "input",
@@ -78974,12 +79352,12 @@
     "PAGE_AW": 1,
     "AW": 11,
     "LWB": 15,
-    "LG_PATH": 12
+    "LG_PATH": 24
    },
    "slot": null,
    "owner": "H-SU",
    "region": "su_sfu",
-   "note": "SFU core = the scheduled engine with LG_PATH=1+R (ot_hgi_sfu_split_engine.sv header: \"the core is the unchanged scheduled engine with LG_PATH = 1 + R\"; leaves + relays are die instances). R=11 padded (sfu_core_request_v7). NO slot: core box PROPOSED (4000x400 strip, needs H-SM shrink) -> placement gap H-DIE/H-SM.",
+   "note": "SFU core = the scheduled engine with LG_PATH=1+R (ot_hgi_sfu_split_engine.sv header: \"the core is the unchanged scheduled engine with LG_PATH = 1 + R\"; leaves + relays are die instances). R=11 padded (sfu_core_request_v7). NO slot: core box PROPOSED (4000x400 strip, needs H-SM shrink) -> placement gap H-DIE/H-SM. | H-NETLIST 0600: LG_PATH 12 -> 24 = 1+R23 (accepted R23 sfucore homes, H-SU receipt d6d9a0ce2).",
    "replaces_v15": null,
    "ports": {
     "clk": {
@@ -81831,12 +82209,12 @@
     "PAGE_AW": 1,
     "AW": 11,
     "LWB": 15,
-    "LG_PATH": 12
+    "LG_PATH": 24
    },
    "slot": null,
    "owner": "H-SU",
    "region": "su_sfu",
-   "note": "SFU core = the scheduled engine with LG_PATH=1+R (ot_hgi_sfu_split_engine.sv header: \"the core is the unchanged scheduled engine with LG_PATH = 1 + R\"; leaves + relays are die instances). R=11 padded (sfu_core_request_v7). NO slot: core box PROPOSED (4000x400 strip, needs H-SM shrink) -> placement gap H-DIE/H-SM.",
+   "note": "SFU core = the scheduled engine with LG_PATH=1+R (ot_hgi_sfu_split_engine.sv header: \"the core is the unchanged scheduled engine with LG_PATH = 1 + R\"; leaves + relays are die instances). R=11 padded (sfu_core_request_v7). NO slot: core box PROPOSED (4000x400 strip, needs H-SM shrink) -> placement gap H-DIE/H-SM. | H-NETLIST 0600: LG_PATH 12 -> 24 = 1+R23 (accepted R23 sfucore homes, H-SU receipt d6d9a0ce2).",
    "replaces_v15": null,
    "ports": {
     "clk": {
@@ -84688,12 +85066,12 @@
     "PAGE_AW": 1,
     "AW": 11,
     "LWB": 15,
-    "LG_PATH": 12
+    "LG_PATH": 24
    },
    "slot": null,
    "owner": "H-SU",
    "region": "su_sfu",
-   "note": "SFU core = the scheduled engine with LG_PATH=1+R (ot_hgi_sfu_split_engine.sv header: \"the core is the unchanged scheduled engine with LG_PATH = 1 + R\"; leaves + relays are die instances). R=11 padded (sfu_core_request_v7). NO slot: core box PROPOSED (4000x400 strip, needs H-SM shrink) -> placement gap H-DIE/H-SM.",
+   "note": "SFU core = the scheduled engine with LG_PATH=1+R (ot_hgi_sfu_split_engine.sv header: \"the core is the unchanged scheduled engine with LG_PATH = 1 + R\"; leaves + relays are die instances). R=11 padded (sfu_core_request_v7). NO slot: core box PROPOSED (4000x400 strip, needs H-SM shrink) -> placement gap H-DIE/H-SM. | H-NETLIST 0600: LG_PATH 12 -> 24 = 1+R23 (accepted R23 sfucore homes, H-SU receipt d6d9a0ce2).",
    "replaces_v15": null,
    "ports": {
     "clk": {
@@ -87545,12 +87923,12 @@
     "PAGE_AW": 1,
     "AW": 11,
     "LWB": 15,
-    "LG_PATH": 12
+    "LG_PATH": 24
    },
    "slot": null,
    "owner": "H-SU",
    "region": "su_sfu",
-   "note": "SFU core = the scheduled engine with LG_PATH=1+R (ot_hgi_sfu_split_engine.sv header: \"the core is the unchanged scheduled engine with LG_PATH = 1 + R\"; leaves + relays are die instances). R=11 padded (sfu_core_request_v7). NO slot: core box PROPOSED (4000x400 strip, needs H-SM shrink) -> placement gap H-DIE/H-SM.",
+   "note": "SFU core = the scheduled engine with LG_PATH=1+R (ot_hgi_sfu_split_engine.sv header: \"the core is the unchanged scheduled engine with LG_PATH = 1 + R\"; leaves + relays are die instances). R=11 padded (sfu_core_request_v7). NO slot: core box PROPOSED (4000x400 strip, needs H-SM shrink) -> placement gap H-DIE/H-SM. | H-NETLIST 0600: LG_PATH 12 -> 24 = 1+R23 (accepted R23 sfucore homes, H-SU receipt d6d9a0ce2).",
    "replaces_v15": null,
    "ports": {
     "clk": {
@@ -97604,48 +97982,6 @@
     "vm_rr",
     0,
     2056
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "v15.1 source contract",
-   "region": "v15"
-  },
-  {
-   "name": "idx_cq",
-   "bits": 338,
-   "source": [
-    "hb_idx",
-    "cq",
-    0,
-    338
-   ],
-   "sink": [
-    "hb_vms_SW",
-    "cq",
-    676,
-    1014
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "v15.1 source contract",
-   "region": "v15"
-  },
-  {
-   "name": "idx_cr",
-   "bits": 274,
-   "source": [
-    "hb_vms_SW",
-    "cr",
-    548,
-    822
-   ],
-   "sink": [
-    "hb_idx",
-    "cr",
-    0,
-    274
    ],
    "clock": "stream",
    "ready_or_credit": false,
@@ -241085,18 +241421,18 @@
   },
   {
    "name": "host_completion_220",
-   "bits": 8,
+   "bits": 6,
    "source": [
     "calendar_SW",
     "client_seq",
     0,
-    8
+    6
    ],
    "sink": [
     "hb_vms_SW",
     "client_seq",
     0,
-    8
+    6
    ],
    "clock": "stream",
    "ready_or_credit": false,
@@ -241106,18 +241442,18 @@
   },
   {
    "name": "host_completion_221",
-   "bits": 4,
+   "bits": 3,
    "source": [
     "calendar_SW",
     "response_enable",
     0,
-    4
+    3
    ],
    "sink": [
     "hb_vms_SW",
     "response_enable",
     0,
-    4
+    3
    ],
    "clock": "stream",
    "ready_or_credit": false,
@@ -241127,18 +241463,18 @@
   },
   {
    "name": "host_completion_222",
-   "bits": 8,
+   "bits": 6,
    "source": [
     "calendar_SW",
     "response_seq",
     0,
-    8
+    6
    ],
    "sink": [
     "hb_vms_SW",
     "response_seq",
     0,
-    8
+    6
    ],
    "clock": "stream",
    "ready_or_credit": false,
@@ -241295,18 +241631,18 @@
   },
   {
    "name": "host_completion_230",
-   "bits": 8,
+   "bits": 2,
    "source": [
     "calendar_NW",
     "client_seq",
     0,
-    8
+    2
    ],
    "sink": [
     "hb_vms_NW",
     "client_seq",
     0,
-    8
+    2
    ],
    "clock": "stream",
    "ready_or_credit": false,
@@ -241316,18 +241652,18 @@
   },
   {
    "name": "host_completion_231",
-   "bits": 4,
+   "bits": 1,
    "source": [
     "calendar_NW",
     "response_enable",
     0,
-    4
+    1
    ],
    "sink": [
     "hb_vms_NW",
     "response_enable",
     0,
-    4
+    1
    ],
    "clock": "stream",
    "ready_or_credit": false,
@@ -241337,18 +241673,18 @@
   },
   {
    "name": "host_completion_232",
-   "bits": 8,
+   "bits": 2,
    "source": [
     "calendar_NW",
     "response_seq",
     0,
-    8
+    2
    ],
    "sink": [
     "hb_vms_NW",
     "response_seq",
     0,
-    8
+    2
    ],
    "clock": "stream",
    "ready_or_credit": false,
@@ -241358,18 +241694,18 @@
   },
   {
    "name": "host_completion_233",
-   "bits": 16,
+   "bits": 8,
    "source": [
     "calendar_NW",
     "bank_client",
     0,
-    16
+    8
    ],
    "sink": [
     "hb_vms_NW",
     "bank_client",
     0,
-    16
+    8
    ],
    "clock": "stream",
    "ready_or_credit": false,
@@ -241379,18 +241715,18 @@
   },
   {
    "name": "host_completion_234",
-   "bits": 4,
+   "bits": 2,
    "source": [
     "calendar_NW",
     "hub_ring_client",
     0,
-    4
+    2
    ],
    "sink": [
     "hb_vms_NW",
     "hub_ring_client",
     0,
-    4
+    2
    ],
    "clock": "stream",
    "ready_or_credit": false,
@@ -292293,13 +292629,13 @@
    "sink": [
     "hb_vms_NE",
     "rq",
-    544,
-    680
+    408,
+    544
    ],
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "Exact live endpoint group mapping after deleting unused group3; baseline coll_vm_rq_NE",
+   "basis": "H-NETLIST 0600: NE RG5->4 (legacy HC group3 retired); COLL is read group 3",
    "region": "vm_compact_0253"
   },
   {
@@ -292308,8 +292644,8 @@
    "source": [
     "hb_vms_NE",
     "rr",
-    8224,
-    10280
+    6168,
+    8224
    ],
    "sink": [
     "hb_coll_NE",
@@ -292320,7 +292656,7 @@
    "clock": "stream",
    "ready_or_credit": false,
    "allowed_exception": null,
-   "basis": "Exact live endpoint group mapping after deleting unused group3; baseline coll_vm_rr_NE",
+   "basis": "H-NETLIST 0600: NE RG5->4 (legacy HC group3 retired); COLL is read group 3",
    "region": "vm_compact_0253"
   },
   {
@@ -292364,6 +292700,48 @@
    "allowed_exception": null,
    "basis": "Exact live endpoint group mapping after deleting unused group3; baseline quant_vm_rr",
    "region": "vm_compact_0253"
+  },
+  {
+   "name": "vm_retire_0600_0",
+   "bits": 338,
+   "source": [
+    "hb_idx",
+    "cq",
+    0,
+    338
+   ],
+   "sink": [
+    "hb_vms_SW",
+    "cq",
+    338,
+    676
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "H-NETLIST 0600 VM client retirement: SW local client IDX moved from client 2 to client 1 (NC 3->2)",
+   "region": "vm_retire_0600"
+  },
+  {
+   "name": "vm_retire_0600_1",
+   "bits": 274,
+   "source": [
+    "hb_vms_SW",
+    "cr",
+    274,
+    548
+   ],
+   "sink": [
+    "hb_idx",
+    "cr",
+    0,
+    274
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "H-NETLIST 0600 VM client retirement: SW local client IDX moved from client 2 to client 1 (NC 3->2)",
+   "region": "vm_retire_0600"
   },
   {
    "name": "vmsm_0",
@@ -380464,6 +380842,852 @@
    "value": 7,
    "reason": "IDENTITY: VM bank index of this delivery lane (declared die constant per instance, ot_hbm_svc_static_vm_delivery_split.sv:16-17 / :31 .bank_id(b))",
    "master": "ot_hbm_svc_vmdel_lane"
+  },
+  {
+   "inst": "cpx_SW0",
+   "port": "tgt",
+   "value": 192,
+   "reason": "identity: F20 target id 192 of this target instance",
+   "lo": 0,
+   "hi": 8,
+   "master": "ot_static_cmd_target"
+  },
+  {
+   "inst": "cpx_SW1",
+   "port": "tgt",
+   "value": 193,
+   "reason": "identity: F20 target id 193 of this target instance",
+   "lo": 0,
+   "hi": 8,
+   "master": "ot_static_cmd_target"
+  },
+  {
+   "inst": "cpx_SW2",
+   "port": "tgt",
+   "value": 194,
+   "reason": "identity: F20 target id 194 of this target instance",
+   "lo": 0,
+   "hi": 8,
+   "master": "ot_static_cmd_target"
+  },
+  {
+   "inst": "cpx_SW3",
+   "port": "tgt",
+   "value": 195,
+   "reason": "identity: F20 target id 195 of this target instance",
+   "lo": 0,
+   "hi": 8,
+   "master": "ot_static_cmd_target"
+  },
+  {
+   "inst": "cpx_SW4",
+   "port": "tgt",
+   "value": 196,
+   "reason": "identity: F20 target id 196 of this target instance",
+   "lo": 0,
+   "hi": 8,
+   "master": "ot_static_cmd_target"
+  },
+  {
+   "inst": "cpx_SW5",
+   "port": "tgt",
+   "value": 197,
+   "reason": "identity: F20 target id 197 of this target instance",
+   "lo": 0,
+   "hi": 8,
+   "master": "ot_static_cmd_target"
+  },
+  {
+   "inst": "cpx_SW6",
+   "port": "tgt",
+   "value": 198,
+   "reason": "identity: F20 target id 198 of this target instance",
+   "lo": 0,
+   "hi": 8,
+   "master": "ot_static_cmd_target"
+  },
+  {
+   "inst": "cpx_SW7",
+   "port": "tgt",
+   "value": 199,
+   "reason": "identity: F20 target id 199 of this target instance",
+   "lo": 0,
+   "hi": 8,
+   "master": "ot_static_cmd_target"
+  },
+  {
+   "inst": "cpx_SE0",
+   "port": "tgt",
+   "value": 200,
+   "reason": "identity: F20 target id 200 of this target instance",
+   "lo": 0,
+   "hi": 8,
+   "master": "ot_static_cmd_target"
+  },
+  {
+   "inst": "cpx_SE1",
+   "port": "tgt",
+   "value": 201,
+   "reason": "identity: F20 target id 201 of this target instance",
+   "lo": 0,
+   "hi": 8,
+   "master": "ot_static_cmd_target"
+  },
+  {
+   "inst": "cpx_SE2",
+   "port": "tgt",
+   "value": 202,
+   "reason": "identity: F20 target id 202 of this target instance",
+   "lo": 0,
+   "hi": 8,
+   "master": "ot_static_cmd_target"
+  },
+  {
+   "inst": "cpx_SE3",
+   "port": "tgt",
+   "value": 203,
+   "reason": "identity: F20 target id 203 of this target instance",
+   "lo": 0,
+   "hi": 8,
+   "master": "ot_static_cmd_target"
+  },
+  {
+   "inst": "cpx_SE4",
+   "port": "tgt",
+   "value": 204,
+   "reason": "identity: F20 target id 204 of this target instance",
+   "lo": 0,
+   "hi": 8,
+   "master": "ot_static_cmd_target"
+  },
+  {
+   "inst": "cpx_SE5",
+   "port": "tgt",
+   "value": 205,
+   "reason": "identity: F20 target id 205 of this target instance",
+   "lo": 0,
+   "hi": 8,
+   "master": "ot_static_cmd_target"
+  },
+  {
+   "inst": "cpx_SE6",
+   "port": "tgt",
+   "value": 206,
+   "reason": "identity: F20 target id 206 of this target instance",
+   "lo": 0,
+   "hi": 8,
+   "master": "ot_static_cmd_target"
+  },
+  {
+   "inst": "cpx_SE7",
+   "port": "tgt",
+   "value": 207,
+   "reason": "identity: F20 target id 207 of this target instance",
+   "lo": 0,
+   "hi": 8,
+   "master": "ot_static_cmd_target"
+  },
+  {
+   "inst": "cpx_NW0",
+   "port": "tgt",
+   "value": 208,
+   "reason": "identity: F20 target id 208 of this target instance",
+   "lo": 0,
+   "hi": 8,
+   "master": "ot_static_cmd_target"
+  },
+  {
+   "inst": "cpx_NW1",
+   "port": "tgt",
+   "value": 209,
+   "reason": "identity: F20 target id 209 of this target instance",
+   "lo": 0,
+   "hi": 8,
+   "master": "ot_static_cmd_target"
+  },
+  {
+   "inst": "cpx_NW2",
+   "port": "tgt",
+   "value": 210,
+   "reason": "identity: F20 target id 210 of this target instance",
+   "lo": 0,
+   "hi": 8,
+   "master": "ot_static_cmd_target"
+  },
+  {
+   "inst": "cpx_NW3",
+   "port": "tgt",
+   "value": 211,
+   "reason": "identity: F20 target id 211 of this target instance",
+   "lo": 0,
+   "hi": 8,
+   "master": "ot_static_cmd_target"
+  },
+  {
+   "inst": "cpx_NW4",
+   "port": "tgt",
+   "value": 212,
+   "reason": "identity: F20 target id 212 of this target instance",
+   "lo": 0,
+   "hi": 8,
+   "master": "ot_static_cmd_target"
+  },
+  {
+   "inst": "cpx_NW5",
+   "port": "tgt",
+   "value": 213,
+   "reason": "identity: F20 target id 213 of this target instance",
+   "lo": 0,
+   "hi": 8,
+   "master": "ot_static_cmd_target"
+  },
+  {
+   "inst": "cpx_NW6",
+   "port": "tgt",
+   "value": 214,
+   "reason": "identity: F20 target id 214 of this target instance",
+   "lo": 0,
+   "hi": 8,
+   "master": "ot_static_cmd_target"
+  },
+  {
+   "inst": "cpx_NW7",
+   "port": "tgt",
+   "value": 215,
+   "reason": "identity: F20 target id 215 of this target instance",
+   "lo": 0,
+   "hi": 8,
+   "master": "ot_static_cmd_target"
+  },
+  {
+   "inst": "cpx_NE0",
+   "port": "tgt",
+   "value": 216,
+   "reason": "identity: F20 target id 216 of this target instance",
+   "lo": 0,
+   "hi": 8,
+   "master": "ot_static_cmd_target"
+  },
+  {
+   "inst": "cpx_NE1",
+   "port": "tgt",
+   "value": 217,
+   "reason": "identity: F20 target id 217 of this target instance",
+   "lo": 0,
+   "hi": 8,
+   "master": "ot_static_cmd_target"
+  },
+  {
+   "inst": "cpx_NE2",
+   "port": "tgt",
+   "value": 218,
+   "reason": "identity: F20 target id 218 of this target instance",
+   "lo": 0,
+   "hi": 8,
+   "master": "ot_static_cmd_target"
+  },
+  {
+   "inst": "cpx_NE3",
+   "port": "tgt",
+   "value": 219,
+   "reason": "identity: F20 target id 219 of this target instance",
+   "lo": 0,
+   "hi": 8,
+   "master": "ot_static_cmd_target"
+  },
+  {
+   "inst": "cpx_NE4",
+   "port": "tgt",
+   "value": 220,
+   "reason": "identity: F20 target id 220 of this target instance",
+   "lo": 0,
+   "hi": 8,
+   "master": "ot_static_cmd_target"
+  },
+  {
+   "inst": "cpx_NE5",
+   "port": "tgt",
+   "value": 221,
+   "reason": "identity: F20 target id 221 of this target instance",
+   "lo": 0,
+   "hi": 8,
+   "master": "ot_static_cmd_target"
+  },
+  {
+   "inst": "cpx_NE6",
+   "port": "tgt",
+   "value": 222,
+   "reason": "identity: F20 target id 222 of this target instance",
+   "lo": 0,
+   "hi": 8,
+   "master": "ot_static_cmd_target"
+  },
+  {
+   "inst": "cpx_NE7",
+   "port": "tgt",
+   "value": 223,
+   "reason": "identity: F20 target id 223 of this target instance",
+   "lo": 0,
+   "hi": 8,
+   "master": "ot_static_cmd_target"
+  },
+  {
+   "inst": "cp_svg_SW0",
+   "port": "tgt",
+   "value": 64,
+   "reason": "identity: F20 target id 64 of this target instance",
+   "lo": 0,
+   "hi": 8,
+   "master": "ot_static_cmd_target"
+  },
+  {
+   "inst": "cp_svg_SW1",
+   "port": "tgt",
+   "value": 65,
+   "reason": "identity: F20 target id 65 of this target instance",
+   "lo": 0,
+   "hi": 8,
+   "master": "ot_static_cmd_target"
+  },
+  {
+   "inst": "cp_svg_SW2",
+   "port": "tgt",
+   "value": 66,
+   "reason": "identity: F20 target id 66 of this target instance",
+   "lo": 0,
+   "hi": 8,
+   "master": "ot_static_cmd_target"
+  },
+  {
+   "inst": "cp_svg_SW3",
+   "port": "tgt",
+   "value": 67,
+   "reason": "identity: F20 target id 67 of this target instance",
+   "lo": 0,
+   "hi": 8,
+   "master": "ot_static_cmd_target"
+  },
+  {
+   "inst": "cp_svg_SW4",
+   "port": "tgt",
+   "value": 68,
+   "reason": "identity: F20 target id 68 of this target instance",
+   "lo": 0,
+   "hi": 8,
+   "master": "ot_static_cmd_target"
+  },
+  {
+   "inst": "cp_svg_SW5",
+   "port": "tgt",
+   "value": 69,
+   "reason": "identity: F20 target id 69 of this target instance",
+   "lo": 0,
+   "hi": 8,
+   "master": "ot_static_cmd_target"
+  },
+  {
+   "inst": "cp_svg_SW6",
+   "port": "tgt",
+   "value": 70,
+   "reason": "identity: F20 target id 70 of this target instance",
+   "lo": 0,
+   "hi": 8,
+   "master": "ot_static_cmd_target"
+  },
+  {
+   "inst": "cp_svg_SW7",
+   "port": "tgt",
+   "value": 71,
+   "reason": "identity: F20 target id 71 of this target instance",
+   "lo": 0,
+   "hi": 8,
+   "master": "ot_static_cmd_target"
+  },
+  {
+   "inst": "cp_cal_SW",
+   "port": "tgt",
+   "value": 96,
+   "reason": "identity: F20 target id 96 of this target instance",
+   "lo": 0,
+   "hi": 8,
+   "master": "ot_static_program_target"
+  },
+  {
+   "inst": "cp_xl_SW",
+   "port": "tgt",
+   "value": 100,
+   "reason": "identity: F20 target id 100 of this target instance",
+   "lo": 0,
+   "hi": 8,
+   "master": "ot_static_cmd_target"
+  },
+  {
+   "inst": "cp_dma_SW",
+   "port": "tgt",
+   "value": 104,
+   "reason": "identity: F20 target id 104 of this target instance",
+   "lo": 0,
+   "hi": 8,
+   "master": "ot_static_cmd_target"
+  },
+  {
+   "inst": "cp_svg_SE0",
+   "port": "tgt",
+   "value": 72,
+   "reason": "identity: F20 target id 72 of this target instance",
+   "lo": 0,
+   "hi": 8,
+   "master": "ot_static_cmd_target"
+  },
+  {
+   "inst": "cp_svg_SE1",
+   "port": "tgt",
+   "value": 73,
+   "reason": "identity: F20 target id 73 of this target instance",
+   "lo": 0,
+   "hi": 8,
+   "master": "ot_static_cmd_target"
+  },
+  {
+   "inst": "cp_svg_SE2",
+   "port": "tgt",
+   "value": 74,
+   "reason": "identity: F20 target id 74 of this target instance",
+   "lo": 0,
+   "hi": 8,
+   "master": "ot_static_cmd_target"
+  },
+  {
+   "inst": "cp_svg_SE3",
+   "port": "tgt",
+   "value": 75,
+   "reason": "identity: F20 target id 75 of this target instance",
+   "lo": 0,
+   "hi": 8,
+   "master": "ot_static_cmd_target"
+  },
+  {
+   "inst": "cp_svg_SE4",
+   "port": "tgt",
+   "value": 76,
+   "reason": "identity: F20 target id 76 of this target instance",
+   "lo": 0,
+   "hi": 8,
+   "master": "ot_static_cmd_target"
+  },
+  {
+   "inst": "cp_svg_SE5",
+   "port": "tgt",
+   "value": 77,
+   "reason": "identity: F20 target id 77 of this target instance",
+   "lo": 0,
+   "hi": 8,
+   "master": "ot_static_cmd_target"
+  },
+  {
+   "inst": "cp_svg_SE6",
+   "port": "tgt",
+   "value": 78,
+   "reason": "identity: F20 target id 78 of this target instance",
+   "lo": 0,
+   "hi": 8,
+   "master": "ot_static_cmd_target"
+  },
+  {
+   "inst": "cp_svg_SE7",
+   "port": "tgt",
+   "value": 79,
+   "reason": "identity: F20 target id 79 of this target instance",
+   "lo": 0,
+   "hi": 8,
+   "master": "ot_static_cmd_target"
+  },
+  {
+   "inst": "cp_cal_SE",
+   "port": "tgt",
+   "value": 97,
+   "reason": "identity: F20 target id 97 of this target instance",
+   "lo": 0,
+   "hi": 8,
+   "master": "ot_static_program_target"
+  },
+  {
+   "inst": "cp_xl_SE",
+   "port": "tgt",
+   "value": 101,
+   "reason": "identity: F20 target id 101 of this target instance",
+   "lo": 0,
+   "hi": 8,
+   "master": "ot_static_cmd_target"
+  },
+  {
+   "inst": "cp_dma_SE",
+   "port": "tgt",
+   "value": 105,
+   "reason": "identity: F20 target id 105 of this target instance",
+   "lo": 0,
+   "hi": 8,
+   "master": "ot_static_cmd_target"
+  },
+  {
+   "inst": "cp_svg_NW0",
+   "port": "tgt",
+   "value": 80,
+   "reason": "identity: F20 target id 80 of this target instance",
+   "lo": 0,
+   "hi": 8,
+   "master": "ot_static_cmd_target"
+  },
+  {
+   "inst": "cp_svg_NW1",
+   "port": "tgt",
+   "value": 81,
+   "reason": "identity: F20 target id 81 of this target instance",
+   "lo": 0,
+   "hi": 8,
+   "master": "ot_static_cmd_target"
+  },
+  {
+   "inst": "cp_svg_NW2",
+   "port": "tgt",
+   "value": 82,
+   "reason": "identity: F20 target id 82 of this target instance",
+   "lo": 0,
+   "hi": 8,
+   "master": "ot_static_cmd_target"
+  },
+  {
+   "inst": "cp_svg_NW3",
+   "port": "tgt",
+   "value": 83,
+   "reason": "identity: F20 target id 83 of this target instance",
+   "lo": 0,
+   "hi": 8,
+   "master": "ot_static_cmd_target"
+  },
+  {
+   "inst": "cp_svg_NW4",
+   "port": "tgt",
+   "value": 84,
+   "reason": "identity: F20 target id 84 of this target instance",
+   "lo": 0,
+   "hi": 8,
+   "master": "ot_static_cmd_target"
+  },
+  {
+   "inst": "cp_svg_NW5",
+   "port": "tgt",
+   "value": 85,
+   "reason": "identity: F20 target id 85 of this target instance",
+   "lo": 0,
+   "hi": 8,
+   "master": "ot_static_cmd_target"
+  },
+  {
+   "inst": "cp_svg_NW6",
+   "port": "tgt",
+   "value": 86,
+   "reason": "identity: F20 target id 86 of this target instance",
+   "lo": 0,
+   "hi": 8,
+   "master": "ot_static_cmd_target"
+  },
+  {
+   "inst": "cp_svg_NW7",
+   "port": "tgt",
+   "value": 87,
+   "reason": "identity: F20 target id 87 of this target instance",
+   "lo": 0,
+   "hi": 8,
+   "master": "ot_static_cmd_target"
+  },
+  {
+   "inst": "cp_cal_NW",
+   "port": "tgt",
+   "value": 98,
+   "reason": "identity: F20 target id 98 of this target instance",
+   "lo": 0,
+   "hi": 8,
+   "master": "ot_static_program_target"
+  },
+  {
+   "inst": "cp_xl_NW",
+   "port": "tgt",
+   "value": 102,
+   "reason": "identity: F20 target id 102 of this target instance",
+   "lo": 0,
+   "hi": 8,
+   "master": "ot_static_cmd_target"
+  },
+  {
+   "inst": "cp_dma_NW",
+   "port": "tgt",
+   "value": 106,
+   "reason": "identity: F20 target id 106 of this target instance",
+   "lo": 0,
+   "hi": 8,
+   "master": "ot_static_cmd_target"
+  },
+  {
+   "inst": "cp_svg_NE0",
+   "port": "tgt",
+   "value": 88,
+   "reason": "identity: F20 target id 88 of this target instance",
+   "lo": 0,
+   "hi": 8,
+   "master": "ot_static_cmd_target"
+  },
+  {
+   "inst": "cp_svg_NE1",
+   "port": "tgt",
+   "value": 89,
+   "reason": "identity: F20 target id 89 of this target instance",
+   "lo": 0,
+   "hi": 8,
+   "master": "ot_static_cmd_target"
+  },
+  {
+   "inst": "cp_svg_NE2",
+   "port": "tgt",
+   "value": 90,
+   "reason": "identity: F20 target id 90 of this target instance",
+   "lo": 0,
+   "hi": 8,
+   "master": "ot_static_cmd_target"
+  },
+  {
+   "inst": "cp_svg_NE3",
+   "port": "tgt",
+   "value": 91,
+   "reason": "identity: F20 target id 91 of this target instance",
+   "lo": 0,
+   "hi": 8,
+   "master": "ot_static_cmd_target"
+  },
+  {
+   "inst": "cp_svg_NE4",
+   "port": "tgt",
+   "value": 92,
+   "reason": "identity: F20 target id 92 of this target instance",
+   "lo": 0,
+   "hi": 8,
+   "master": "ot_static_cmd_target"
+  },
+  {
+   "inst": "cp_svg_NE5",
+   "port": "tgt",
+   "value": 93,
+   "reason": "identity: F20 target id 93 of this target instance",
+   "lo": 0,
+   "hi": 8,
+   "master": "ot_static_cmd_target"
+  },
+  {
+   "inst": "cp_svg_NE6",
+   "port": "tgt",
+   "value": 94,
+   "reason": "identity: F20 target id 94 of this target instance",
+   "lo": 0,
+   "hi": 8,
+   "master": "ot_static_cmd_target"
+  },
+  {
+   "inst": "cp_svg_NE7",
+   "port": "tgt",
+   "value": 95,
+   "reason": "identity: F20 target id 95 of this target instance",
+   "lo": 0,
+   "hi": 8,
+   "master": "ot_static_cmd_target"
+  },
+  {
+   "inst": "cp_cal_NE",
+   "port": "tgt",
+   "value": 99,
+   "reason": "identity: F20 target id 99 of this target instance",
+   "lo": 0,
+   "hi": 8,
+   "master": "ot_static_program_target"
+  },
+  {
+   "inst": "cp_xl_NE",
+   "port": "tgt",
+   "value": 103,
+   "reason": "identity: F20 target id 103 of this target instance",
+   "lo": 0,
+   "hi": 8,
+   "master": "ot_static_cmd_target"
+  },
+  {
+   "inst": "cp_dma_NE",
+   "port": "tgt",
+   "value": 107,
+   "reason": "identity: F20 target id 107 of this target instance",
+   "lo": 0,
+   "hi": 8,
+   "master": "ot_static_cmd_target"
+  },
+  {
+   "inst": "hc_tgt_SW",
+   "port": "tgt",
+   "value": 108,
+   "reason": "identity: F20 target id 108 of this target instance",
+   "lo": 0,
+   "hi": 8,
+   "master": "ot_static_program_target"
+  },
+  {
+   "inst": "hc_tgt_SE",
+   "port": "tgt",
+   "value": 109,
+   "reason": "identity: F20 target id 109 of this target instance",
+   "lo": 0,
+   "hi": 8,
+   "master": "ot_static_program_target"
+  },
+  {
+   "inst": "hc_tgt_NW",
+   "port": "tgt",
+   "value": 110,
+   "reason": "identity: F20 target id 110 of this target instance",
+   "lo": 0,
+   "hi": 8,
+   "master": "ot_static_program_target"
+  },
+  {
+   "inst": "hc_tgt_NE",
+   "port": "tgt",
+   "value": 111,
+   "reason": "identity: F20 target id 111 of this target instance",
+   "lo": 0,
+   "hi": 8,
+   "master": "ot_static_program_target"
+  },
+  {
+   "inst": "hc_eng_tgt",
+   "port": "tgt",
+   "value": 164,
+   "reason": "identity: F20 target id 164 of this target instance",
+   "lo": 0,
+   "hi": 8,
+   "master": "ot_static_program_target"
+  },
+  {
+   "inst": "hc_tbl_tgt",
+   "port": "tgt",
+   "value": 165,
+   "reason": "identity: F20 target id 165 of this target instance",
+   "lo": 0,
+   "hi": 8,
+   "master": "ot_static_program_target"
+  },
+  {
+   "inst": "cp_fill_SW",
+   "port": "tgt",
+   "value": 56,
+   "reason": "identity: F20 target id 56 of this target instance",
+   "lo": 0,
+   "hi": 8,
+   "master": "ot_static_program_target"
+  },
+  {
+   "inst": "cp_fill_SE",
+   "port": "tgt",
+   "value": 57,
+   "reason": "identity: F20 target id 57 of this target instance",
+   "lo": 0,
+   "hi": 8,
+   "master": "ot_static_program_target"
+  },
+  {
+   "inst": "cp_fill_NW",
+   "port": "tgt",
+   "value": 58,
+   "reason": "identity: F20 target id 58 of this target instance",
+   "lo": 0,
+   "hi": 8,
+   "master": "ot_static_program_target"
+  },
+  {
+   "inst": "cp_fill_NE",
+   "port": "tgt",
+   "value": 59,
+   "reason": "identity: F20 target id 59 of this target instance",
+   "lo": 0,
+   "hi": 8,
+   "master": "ot_static_program_target"
+  },
+  {
+   "inst": "cp_ep_SW",
+   "port": "tgt",
+   "value": 132,
+   "reason": "identity: F20 target id 132 of this target instance",
+   "lo": 0,
+   "hi": 8,
+   "master": "ot_static_program_target"
+  },
+  {
+   "inst": "cp_ep_SE",
+   "port": "tgt",
+   "value": 133,
+   "reason": "identity: F20 target id 133 of this target instance",
+   "lo": 0,
+   "hi": 8,
+   "master": "ot_static_program_target"
+  },
+  {
+   "inst": "cp_ep_NW",
+   "port": "tgt",
+   "value": 134,
+   "reason": "identity: F20 target id 134 of this target instance",
+   "lo": 0,
+   "hi": 8,
+   "master": "ot_static_program_target"
+  },
+  {
+   "inst": "cp_ep_NE",
+   "port": "tgt",
+   "value": 135,
+   "reason": "identity: F20 target id 135 of this target instance",
+   "lo": 0,
+   "hi": 8,
+   "master": "ot_static_program_target"
+  },
+  {
+   "inst": "cp_smw_SW",
+   "port": "tgt",
+   "value": 160,
+   "reason": "identity: F20 target id 160 of this target instance",
+   "lo": 0,
+   "hi": 8,
+   "master": "ot_static_cmd_target"
+  },
+  {
+   "inst": "cp_smw_SE",
+   "port": "tgt",
+   "value": 161,
+   "reason": "identity: F20 target id 161 of this target instance",
+   "lo": 0,
+   "hi": 8,
+   "master": "ot_static_cmd_target"
+  },
+  {
+   "inst": "cp_smw_NW",
+   "port": "tgt",
+   "value": 162,
+   "reason": "identity: F20 target id 162 of this target instance",
+   "lo": 0,
+   "hi": 8,
+   "master": "ot_static_cmd_target"
+  },
+  {
+   "inst": "cp_smw_NE",
+   "port": "tgt",
+   "value": 163,
+   "reason": "identity: F20 target id 163 of this target instance",
+   "lo": 0,
+   "hi": 8,
+   "master": "ot_static_cmd_target"
   }
  ],
  "die_pins": [
@@ -384426,47 +385650,6 @@
    "undriven_bits": 0
   },
   {
-   "id": "G-SMVM-VMCLIENT",
-   "owner": "see note per range (not SM)",
-   "missing_rtl": "static client source migration for VM ports outside RG2: no static producer on main for these client slots",
-   "affects": [
-    [
-     "hb_vms_SW",
-     "cq",
-     338,
-     676
-    ],
-    [
-     "hb_vms_NW",
-     "cq",
-     0,
-     1352
-    ],
-    [
-     "hb_vms_NW",
-     "rq",
-     408,
-     544
-    ],
-    [
-     "hb_vms_NE",
-     "rq",
-     408,
-     680
-    ],
-    [
-     "hb_vms_NE",
-     "wq",
-     4496,
-     6744
-    ]
-   ],
-   "note": "Listed for accounting (H-SM 1705 list, 8 ports); owners: SW cq client1 = record \"1\" DMA owner (PENDING); NW cq (records cp/fmv/fused/quant) + rq3/wq1 \"CP\" = host/CP owner; NE rq3/wq1 = ATT RETIRE (VM ABI change H-ELEM-A, verdict B); NE rq4/wq2 = HC engine owner. The RG2 range [272,408) of every hb_vms rq IS bound here (x-load). Coordinator: drop duplicates if another region claims them. vmsm 2026-10-15: none of these ranges is an SM/VM-path port: SW cq client1 = DMA owner (G-DMA), NW cq 0..3 + rq3/wq1 = host/CP owner, NE rq4/wq2 = HC engine (G-HC), NE rq3/wq1 = retired ATT slot: H-ELEM-A must either remove it from hfd_hgi_vms_static_NE (VM ABI change) or assign it (candidate: the SM result writer of G-SMVM-SMOUT option B for NE). The HBM->VM path (dq) is closed by vmsm.json and does not use these slots. | smvm 0030: NW wq1 (CP) and NE wq1 (retired ATT) now bound to the static SM writer smw_<q> (smvm_0030.json); NE wq2 (HC) remains; retirement of NW cq / NW rq3 / NE rq3 requested from H-SM.",
-   "region": "sm_vm",
-   "undriven_ports": 4,
-   "undriven_bits": 4074
-  },
-  {
    "id": "G-SMVM-KEYSTAGE",
    "owner": "H-COLL+IDX (with H-SM for attention-on-SM KV)",
    "missing_rtl": "service key staging producer of hb_idx key_lines[35167:0] (consumes key_slot/key_index): no module on main outputs key_lines (only ot_hbm_idx_* inputs); ot_hbm_svc_sm_group has no key-line output.",
@@ -385004,60 +386187,10 @@
   }
  ],
  "exposed_inputs": {
-  "ports": 4,
-  "bits": 3736,
-  "by_owner": {
-   "see note per range (not SM)": {
-    "ports": 4,
-    "bits": 3736
-   }
-  },
-  "list": [
-   {
-    "instance": "hb_vms_SW",
-    "master": "hfd_hgi_vms_static_SW",
-    "port": "cq",
-    "bits": 338,
-    "port_bits": 1014,
-    "gaps": [
-     "G-SMVM-VMCLIENT"
-    ],
-    "owner": null
-   },
-   {
-    "instance": "hb_vms_NW",
-    "master": "hfd_hgi_vms_static_NW",
-    "port": "cq",
-    "bits": 1014,
-    "port_bits": 1014,
-    "gaps": [
-     "G-SMVM-VMCLIENT"
-    ],
-    "owner": null
-   },
-   {
-    "instance": "hb_vms_NE",
-    "master": "hfd_hgi_vms_static_NE",
-    "port": "rq",
-    "bits": 136,
-    "port_bits": 680,
-    "gaps": [
-     "G-SMVM-VMCLIENT"
-    ],
-    "owner": null
-   },
-   {
-    "instance": "hb_vms_NE",
-    "master": "hfd_hgi_vms_static_NE",
-    "port": "wq",
-    "bits": 2248,
-    "port_bits": 6744,
-    "gaps": [
-     "G-SMVM-VMCLIENT"
-    ],
-    "owner": null
-   }
-  ]
+  "ports": 0,
+  "bits": 0,
+  "by_owner": {},
+  "list": []
  },
  "open_outputs": [
   [
@@ -385119,11 +386252,6 @@
    "hb_vms_SE",
    "ring_fault",
    3
-  ],
-  [
-   "hb_vms_NW",
-   "cr",
-   822
   ],
   [
    "hb_vms_NW",
@@ -390802,6 +391930,10 @@
   "vm_compact_0253": [
    "NW/NE readgroups0,1,2,4,5 ->0,1,2,3,4. No ties or missing producers added. Calendar packed offsets remain actualW187 source. Updated wrapper/bank physical views are UNQUALIFIED until source-bound gates."
   ],
-  "vmsm": "HBM -> VM WRITE PATH (G-VM-HBM-PATH, static successor of ot_hbm_svc_static_vm_delivery fed by the retired svc bands). Decision: COMPILER-WINDOWED K-PORT SHARE of all 32 PCs per quadrant (option 1 of grants_v7_1925 (3); no dedicated PCs, so SM weight bandwidth is lost only inside compiler-placed VM windows). Per quadrant: (a) vmks_<q><k> = ot_hbm_svc_vm_kshare #(SM=k) between svg_<q><k> and its 4 controllers (engine region, full_die_v16.engine_region): NORM passes the group K traffic; a window command (vm_*) holds new group requests at the K boundary (the allowed HBM flow-control boundary), drains the group beats in flight, issues 16 x len-4 reads per PC (64 slots, address {row,j[2:0],{col,j[3]},P^col^{row[1:0],j[2:0]},00}), steers the 64 returning beats by phase into a Gray SPSC FIFO to stream_clk and emits delivery fills; (b) vmdel_<q><b> = ot_hbm_svc_vmdel_lane x8 (the existing hardened v3 delivery lane, wires-only split parent flattened): landing (begin / fill / block_ready) and the compiler start -> 256 cycles of dq to VM bank b (sector = base + slot*32 + P); (c) vmfc_<q> = ot_vms_calendar_static #(W=89): one programme word per stream edge, fields begin_v[0:1), begin_bank[1:2), begin_epoch[2:18), start[18:19), start_bank[19:20), start_epoch[20:36), start_base_sector[36:52), vm_v[52:53), vm_bank[53:54), vm_epoch[54:70), vm_row[70:85), vm_col[85:89). Compiler rules: begin(bank,epoch) at or before the window command of the same bank/epoch; start no earlier than the bound on window drain + HBM return + CDC (landing start_ok checks block_ready and faults otherwise -- a schedule error is detected, never waited on); calendar_<q> reserves wslot WG+4 (dq) on all 8 banks for the 256 readout edges from start + 3 (lane pin registers). Fixed latencies added by the new leaf: group K request +1 hbm edge, group K response +1 hbm edge (II=1); VM beat -> fill_v: CDC 2 sync + 2 edges. Same window cost on every PC of the quadrant. (d) sfault_<q> = ot_hbm_svc_stack_fault: the channel-pair CA check + sticky fault join of controllers, groups, share leaves, delivery lanes and the calendar (status out to the host status consumer, G-STATUS). Write-back (VM -> HBM, G-DMA) can use the same window: ot_hbm_svc_vm_kshare passes group writes now; a VM write window is the natural extension, not built here."
+  "vm_retire_0600": [
+   "H-NETLIST 0600 2026-10-16: retire VM client/group ports that have no static producer on the v16 die.\n\nRTL (rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static.sv):\n  SW  NC 3->2   former client1 (DMA record \"1\") retired; clients 0 ARGMAX, 1 IDX (was 2); replay code 3->2\n  NW  NC 3->0   former CP/FMV/FUSED record clients retired (no cq/cr ports); replay code 3->0\n  NE  RG 5->4, WG 3->2   legacy HC read group3 / write group2 retired (hc_NE uses its LG pair slots);\n                         COLL read group 4->3; bank master = SE shape (hfd_vms_bank_native_q1, sid port)\nSpec edits (idempotent): new region vm_retire_0600.json (re-states the SW IDX client edges), NE COLL group in\nvm_compact_0253.json, calendar field widths in complete_host_targets_2330.py (run it after this script).\nCompiler: tools/hbm_static/vm_abi_remap_0600.py maps native-compact-0253 calendars to this ABI (cycles unchanged).\n"
+  ],
+  "vmsm": "HBM -> VM WRITE PATH (G-VM-HBM-PATH, static successor of ot_hbm_svc_static_vm_delivery fed by the retired svc bands). Decision: COMPILER-WINDOWED K-PORT SHARE of all 32 PCs per quadrant (option 1 of grants_v7_1925 (3); no dedicated PCs, so SM weight bandwidth is lost only inside compiler-placed VM windows). Per quadrant: (a) vmks_<q><k> = ot_hbm_svc_vm_kshare #(SM=k) between svg_<q><k> and its 4 controllers (engine region, full_die_v16.engine_region): NORM passes the group K traffic; a window command (vm_*) holds new group requests at the K boundary (the allowed HBM flow-control boundary), drains the group beats in flight, issues 16 x len-4 reads per PC (64 slots, address {row,j[2:0],{col,j[3]},P^col^{row[1:0],j[2:0]},00}), steers the 64 returning beats by phase into a Gray SPSC FIFO to stream_clk and emits delivery fills; (b) vmdel_<q><b> = ot_hbm_svc_vmdel_lane x8 (the existing hardened v3 delivery lane, wires-only split parent flattened): landing (begin / fill / block_ready) and the compiler start -> 256 cycles of dq to VM bank b (sector = base + slot*32 + P); (c) vmfc_<q> = ot_vms_calendar_static #(W=89): one programme word per stream edge, fields begin_v[0:1), begin_bank[1:2), begin_epoch[2:18), start[18:19), start_bank[19:20), start_epoch[20:36), start_base_sector[36:52), vm_v[52:53), vm_bank[53:54), vm_epoch[54:70), vm_row[70:85), vm_col[85:89). Compiler rules: begin(bank,epoch) at or before the window command of the same bank/epoch; start no earlier than the bound on window drain + HBM return + CDC (landing start_ok checks block_ready and faults otherwise -- a schedule error is detected, never waited on); calendar_<q> reserves wslot WG+4 (dq) on all 8 banks for the 256 readout edges from start + 3 (lane pin registers). Fixed latencies added by the new leaf: group K request +1 hbm edge, group K response +1 hbm edge (II=1); VM beat -> fill_v: CDC 2 sync + 2 edges. Same window cost on every PC of the quadrant. (d) sfault_<q> = ot_hbm_svc_stack_fault: the channel-pair CA check + sticky fault join of controllers, groups, share leaves, delivery lanes and the calendar (status out to the host status consumer, G-STATUS). Write-back (VM -> HBM, G-DMA) can use the same window: ot_hbm_svc_vm_kshare passes group writes now; a VM write window is the natural extension, not built here.",
+  "target_id_straps": null
  }
 }

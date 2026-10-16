@@ -5660,44 +5660,6 @@
    "note": "H-SM 1705 list also contains the hb_coll_<q>/lg_<q>_2 calendar-issuer inputs (owners H-COLL+IDX / LG) -- not repeated here."
   },
   {
-   "id": "G-SMVM-VMCLIENT",
-   "owner": "see note per range (not SM)",
-   "missing_rtl": "static client source migration for VM ports outside RG2: no static producer on main for these client slots",
-   "affects": [
-    [
-     "hb_vms_SW",
-     "cq",
-     338,
-     676
-    ],
-    [
-     "hb_vms_NW",
-     "cq",
-     0,
-     1352
-    ],
-    [
-     "hb_vms_NW",
-     "rq",
-     408,
-     544
-    ],
-    [
-     "hb_vms_NE",
-     "rq",
-     408,
-     680
-    ],
-    [
-     "hb_vms_NE",
-     "wq",
-     4496,
-     6744
-    ]
-   ],
-   "note": "Listed for accounting (H-SM 1705 list, 8 ports); owners: SW cq client1 = record \"1\" DMA owner (PENDING); NW cq (records cp/fmv/fused/quant) + rq3/wq1 \"CP\" = host/CP owner; NE rq3/wq1 = ATT RETIRE (VM ABI change H-ELEM-A, verdict B); NE rq4/wq2 = HC engine owner. The RG2 range [272,408) of every hb_vms rq IS bound here (x-load). Coordinator: drop duplicates if another region claims them. vmsm 2026-10-15: none of these ranges is an SM/VM-path port: SW cq client1 = DMA owner (G-DMA), NW cq 0..3 + rq3/wq1 = host/CP owner, NE rq4/wq2 = HC engine (G-HC), NE rq3/wq1 = retired ATT slot: H-ELEM-A must either remove it from hfd_hgi_vms_static_NE (VM ABI change) or assign it (candidate: the SM result writer of G-SMVM-SMOUT option B for NE). The HBM->VM path (dq) is closed by vmsm.json and does not use these slots. | smvm 0030: NW wq1 (CP) and NE wq1 (retired ATT) now bound to the static SM writer smw_<q> (smvm_0030.json); NE wq2 (HC) remains; retirement of NW cq / NW rq3 / NE rq3 requested from H-SM."
-  },
-  {
    "id": "G-SMVM-KEYSTAGE",
    "owner": "H-COLL+IDX (with H-SM for attention-on-SM KV)",
    "missing_rtl": "service key staging producer of hb_idx key_lines[35167:0] (consumes key_slot/key_index): no module on main outputs key_lines (only ot_hbm_idx_* inputs); ot_hbm_svc_sm_group has no key-line output.",

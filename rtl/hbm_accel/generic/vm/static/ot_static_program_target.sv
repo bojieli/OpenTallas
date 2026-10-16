@@ -8,8 +8,11 @@
 // scans the exact [base,limit) range before configured can rise; descriptor-only
 // reuse of the same resident range reuses its proof. All scanning and
 // write-commit latency is initialization; an early launch faults without replay.
-module ot_static_program_target #(parameter [7:0] TARGET=8'd48,parameter integer PCW=10)(
+// TGT_PIN=1 (H-NETLIST 0600): the target id comes from the identity strap pin tgt (die constant), so one hardened master
+// serves every target id; TGT_PIN=0 keeps the TARGET parameter (tgt unused).
+module ot_static_program_target #(parameter [7:0] TARGET=8'd48,parameter integer PCW=10,parameter integer TGT_PIN=0)(
     input wire clk,rst_n,
+    input wire [7:0] tgt,
     input wire cfg_v,
     input wire [7:0] cfg_target,
     input wire [11:0] cfg_addr,
@@ -38,6 +41,8 @@ module ot_static_program_target #(parameter [7:0] TARGET=8'd48,parameter integer
         else begin reset_meta<=1;reset_live<=reset_meta;end
     reg cv,dv,lv;
     reg [7:0] target;
+    reg [7:0] tgt_q; always @(posedge clk) tgt_q<=tgt;
+    wire [7:0] tid=(TGT_PIN!=0)?tgt_q:TARGET;
     reg [11:0] address,base;
     reg [PCW-1:0] stored_base;
     reg [255:0] data_q;
@@ -62,7 +67,7 @@ module ot_static_program_target #(parameter [7:0] TARGET=8'd48,parameter integer
         end else begin
             cv<=cfg_v;dv<=desc_v;lv<=launch_v;
             program_cfg_we<=0;program_start_v<=0;
-            configured<=launch_ready&&!lv&&!((cv||dv)&&target==TARGET);
+            configured<=launch_ready&&!lv&&!((cv||dv)&&target==tid);
             // Observe the real registered programme-write pins. The neighbour's
             // capture and SRAM write consume two further edges; commit masks both.
             commit<={commit[0],program_cfg_we};
@@ -71,13 +76,13 @@ module ot_static_program_target #(parameter [7:0] TARGET=8'd48,parameter integer
                 else installed[program_cfg_addr]<=1'b1;
                 install_open<=1;
             end
-            if(cv && target==TARGET)begin
+            if(cv && target==tid)begin
                 armed<=0;validated<=0;configured<=0;
                 if(program_active || scanning || lv || {1'b0,address}>=(13'd1<<PCW) ||
                    data_q[255:240]!=16'hc7a1 || data_q[239:224]!={4'b0,address})fault<=1;
                 else begin program_cfg_we<=1;program_cfg_addr<=address[PCW-1:0];program_cfg_data<=data_q;end
             end
-            if(dv && target==TARGET)begin
+            if(dv && target==tid)begin
                 armed<=0;validated<=0;configured<=0;install_open<=0;
                 if(program_active || scanning || lv || cv || loops==0 || limit<={1'b0,base} || limit>(13'd1<<PCW))fault<=1;
                 else begin

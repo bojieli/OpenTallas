@@ -104,19 +104,40 @@ VIEWS_A2F = {
     'ck_write_data_t': ('s81_a2f_field4 (data: bit 32*slice + 4*field + nibble)', 'ck', 's81_a2f_field4_pilot_2118_r3c'),
     'ck_write_meta_t': ('s81_a2f_field4 (metadata: bit 7*slice + nibble; same master as data)', 'ck', 's81_a2f_field4_pilot_2118_r3c'),
     'ck_write_control_t': ('s81_a2f_control4_resetlocal (bit = slice)', 'ck_control', 's81_a2f_control4_resetlocal_pilot_2118_r3'),
+    # S-VM 10-16 06:05: routed CLOSED + strict routed native PASS (receipts results/rtl/s81_vm_a2f_leaves_0310,
+    # results/physical/s81_vm_native_0300/wfc_routed_native_partial.json, results/physical/s81_xio_native_0253/routed_native.json)
+    'ck_rsched_t': ('dsfd_vm_a2f_rsched_p (REL 8, hop-1 release)', 'ck', 'dsfd_vm_a2f_rsched_p_native_0310_r1'),
+    'ck_write_header_t': ('s81_a2_w0_header', 'ck', 's81_a2_w0_header_native_0310_r3'),
+    'ck_write_payload_t': ('s81_a2_w0_payload33 x16', 'ck', 's81_a2_w0_payload33_native_0330_r1'),
+    'ck_write_fault_t': ('s81_a2f_fault_join4 x4', 'ck', 's81_a2f_fault_join4_native_0310_r1'),
+    'ck_write_summary_t': ('dsfd_vm_native_valid_diag (write fault summary)', 'ck', 'dsfd_vm_native_valid_diag_native_0400_r2'),
+    'ck_mem_native_diag_t': ('dsfd_vm_native_valid_diag x4 (return-map valid/slot diagnostics)', 'ck', 'dsfd_vm_native_valid_diag_native_0400_r2'),
+    'ck_cap_fault_s': ('dsfd_vm_capture_fault_serial (81 serial inputs)', 'ck', 'dsfd_vm_capture_fault_serial_native_0415_r1'),
+    'ck_cap_fault_t': ('dsfd_vm_native_valid_diag (core 16 x34 faults)', 'ck', 'dsfd_vm_native_valid_diag_native_0400_r2'),
+    'ck_wfc_control_t': ('dsfd_vm_wfc_request RLAT15 (hop-1)', 'ck', 'dsfd_vm_wfc_request_hop1_native_1016_r1'),
+    'ck_wfc_fault_s': ('dsfd_vm_wfc_fault_serial', 'ck', 'dsfd_vm_wfc_fault_serial_native_1016_r1'),
+    'ck_wfc_fault_t': ('dsfd_vm_wfc_fault_core', 'ck', 'dsfd_vm_wfc_fault_core_native_1016_r1'),
+    'ck_wfc_fault_x34_s': ('ot_s81_vm_fault_x34_s_w1', 's_ck', 'ot_s81_vm_fault_x34_s_w1_native_1016_r1'),
+    'ck_wfc_fault_x34_t': ('ot_s81_vm_fault_x34_t_w1', 't_ck', 'ot_s81_vm_fault_x34_t_w1_native_1016_r1'),
+    'ck_wfc_fault_x43_s': ('ot_s81_vm_fault_x43_s_w1', 's_ck', 'ot_s81_vm_fault_x43_s_w1_native_1016_r2'),
+    'ck_wfc_fault_x43_t': ('ot_s81_vm_fault_x43_t_w1', 't_ck', 'ot_s81_vm_fault_x43_t_w1_native_1016_r1'),
+    'ck_xio_control_s': ('dsfd_vm_xio_serial', 'ck', 'dsfd_vm_xio_serial_native_1016_r2'),
+    'ck_xio_control_t': ('dsfd_vm_xio_request', 'ck', 'dsfd_vm_xio_request_native_1016_r2'),
+    'ck_xio_fault_s': ('ot_s81_vm_fault_x34_s_w1 (same master as WFC)', 's_ck', 'ot_s81_vm_fault_x34_s_w1_native_1016_r1'),
+    'ck_xio_fault_t': ('ot_s81_vm_fault_x34_t_w1 (same master as WFC)', 't_ck', 'ot_s81_vm_fault_x34_t_w1_native_1016_r1'),
+    'ck_xio_fault_join_t': ('dsfd_vm_xio_fault_join', 'ck', 'dsfd_vm_xio_fault_join_native_1016_r2'),
 }
 DISPOSITION_A2F = {
-    'ck_cap_fault_s': ('LEAF_IN_FLIGHT', 'Serial81-input captured sticky diagnostic summary; no normaldata edges. Native/source phase proof pending'),
-    'ck_cap_fault_t': ('LEAF_IN_FLIGHT', 'Core16x34 fault captured summary through existing seq m_flt[4]; no normaldata edges. End-to-end fault age proof pending'),
-    'ck_landing_t': ('BOUND_NATIVE_COMPONENT', 'Five native source-identical hard leaves adopted in A2F source; data age2/II1, diagnostic flags +2 edges; full new parent gate and die binding still required'),
-    'ck_rsched_t': ('VIEW_OWED', 'dsfd_vm_a2f_rsched_p (REL 8, hop-1 release) is a new netlist: the closed '
-                    'dsfd_vm_static_rsched_p_native_1015_l16 view is REL 10 and does not bind; build a kit from the same recipe'),
-    'ck_write_header_t': ('VIEW_OWED', 's81_a2_w0_header (53 x {v, row 14, tag 8} pin register + epoch): no hard view'),
-    'ck_write_payload_t': ('LEAF_IN_FLIGHT', 's81_a2_w0_payload33 x16 (53 x {mask1,data32}); same normal data age, all16 roots epoch-checked; CTS native PASS, actual route pending'),
-    'ck_mem_native_diag_t': ('LEAF_IN_FLIGHT', 'Four live return-map valid/slot diagnostic leaves with real boundary capture; +2 diagnostic edges, zero normal data edges; native physical qualification pending'),
-    'ck_write_summary_t': ('LEAF_IN_FLIGHT', 'One captured 16-input write fault summary using same diagnostic master; +2 diagnostic edges, no normal data edges; physical qualification pending'),
-    'ck_write_fault_t': ('VIEW_OWED', 's81_a2f_fault_join4 x4 (40 pin flops + 4 sticky): no hard view'),
+    'ck_landing_t': ('BOUND_NATIVE_COMPONENT', 'Five native source-identical hard leaves adopted in A2F source; data age2/II1, diagnostic flags +2 edges; full new parent gate PASS bc297977c; die binding still required'),
+    'ck_wfc_return_t': ('FIX_IN_FLIGHT', 'dsfd_vm_wfc_return RESPONSE_PAD 2: r2 gate WARN (194.4x324, util 5 %, W clock 150 um from sinks) not routed; right-sized r3 kit in flight (S-VM 10-16)'),
+    'ck_write_control_t': ('BOUND', 'A2-F front control4 roots (s81_a2f_control4_resetlocal r3, routed CLOSED, native PASS)'),
+    'ck_xio_return_t': ('FIX_IN_FLIGHT', 'dsfd_vm_xio_return r2 routed CLOSED TT+119.18/FF+16.74 but routed native FAIL capture 220.0 ps on e_v[0]; structural r3 in flight (S-VM 10-16)'),
 }
+for _k in ('ck_rsched_t', 'ck_write_header_t', 'ck_write_payload_t', 'ck_write_fault_t', 'ck_write_summary_t', 'ck_mem_native_diag_t',
+           'ck_cap_fault_s', 'ck_cap_fault_t', 'ck_wfc_control_t', 'ck_wfc_fault_s', 'ck_wfc_fault_t', 'ck_wfc_fault_x34_s',
+           'ck_wfc_fault_x34_t', 'ck_wfc_fault_x43_s', 'ck_wfc_fault_x43_t', 'ck_xio_control_s', 'ck_xio_control_t',
+           'ck_xio_fault_s', 'ck_xio_fault_t', 'ck_xio_fault_join_t'):
+    DISPOSITION_A2F[_k] = ('BOUND', 'routed CLOSED, strict routed native PASS (S-VM 10-16 06:05)')
 
 
 def insertion_r(kit, pin):
@@ -135,9 +156,6 @@ def main():
     src_path = SRC_A2F if a2f else SRC
     views = dict(VIEWS, **VIEWS_A2F) if a2f else VIEWS
     disposition = dict(DISPOSITION, **DISPOSITION_A2F) if a2f else DISPOSITION
-    if a2f:
-        for k in ('ck_rsched_t',):
-            views.pop(k)
     src = (ROOT / src_path).read_text()
     mod = next(m for m in bind.parse_modules(bind.preprocess(src, {'DSFD_SP_VM_MIX4': ''}), src_path)
                if m.name == ('dsfd_sp_vm_a2f' if a2f else 'dsfd_sp_vm'))

@@ -19,7 +19,7 @@ def walk(name,mp,path,in_pin=False):
   t=c['type'];base=basename(t);cp=path+'.'+n;cc={k:[mapbit(b,mp,path) for b in v] for k,v in c['connections'].items()}
   if t in ['$dff','$adff','$sdff','$dffe','$adffe','$sdffe','$aldff','$dffsr']:
    count=len(c['connections']['Q']);ff[cc['CLK'][0]]+=count;owned[basename(name)]+=count
-  if base in physical or (base=='ot_qfd_vm_su_return_plane'and not in_pin)or base in ['ot_qfd_vm_su_read_control','qvm_return_plane_pin_native','ot_qfd_vm_write_control_t']:
+  if base in physical or (base=='ot_qfd_vm_su_return_plane'and not in_pin)or base in ['ot_qfd_vm_su_read_control','qvm_return_plane_pin_native','ot_qfd_vm_write_control_t','qvm_wctl27','qvm_wctl26']:
    leaf_counts[base]+=1
    pins=roles if base in ['qvm_bank_banked_native','qvm_su_bank_native'] else (['ck'] if base.startswith('ot_qfd_vm_su_return') or base in ['ot_qfd_vm_su_read_control','qfd_vm_qcommit','qvm_return_plane_pin_native'] else ['clk'])
    for pin in pins:
@@ -40,13 +40,13 @@ write_index_errors=[]
 if e3:
  for r in clock_rows:
   if not r['parent_clock_port'].startswith('write_ck['):continue
-  m=re.search(r'\.g_(bw|ws)\[(\d+)\]\.g_write_leaf\.u_write\.(u_lo|u_hi|u_control)$',r['instance'])
+  m=re.search(r'\.g_(bw|ws)\[(\d+)\]\.g_write_leaf\.u_write\.(u_lo|u_hi|u_control|g_c2[67]\.u_control|g_cw\.u_control)$',r['instance'])
   if not m:write_index_errors.append(dict(r,expected='recognized E3 bank/role'));continue
-  bank=int(m[2])+(64 if m[1]=='ws'else 0);role={'u_lo':0,'u_hi':1,'u_control':2}[m[3]];want=f'write_ck[{3*bank+role}]'
+  bank=int(m[2])+(64 if m[1]=='ws'else 0);role={'u_lo':0,'u_hi':1}.get(m[3],2);want=f'write_ck[{3*bank+role}]'
   if r['parent_clock_port']!=want:write_index_errors.append(dict(r,expected=want))
 actual['E3_write_clock_index_errors']=write_index_errors
 checks['E3_exact_bank_role_clocks']=not write_index_errors
-checks['E3_control_count']=leaf_counts['ot_qfd_vm_write_control_t']==80*e3
+checks['E3_control_count']=sum(leaf_counts[k] for k in ('ot_qfd_vm_write_control_t','qvm_wctl27','qvm_wctl26'))==80*e3
 if e3: checks['E3_parent_ff_residual']=ff['ck']==12198
 checks.update({'unique_leaf_clocks':actual['unique_physical_leaf_clock_inputs']==1482+relay_clocks+240*e3,'active_clocks':actual['all_active_clock_inputs_including_residual']==1483+relay_clocks+240*e3,'all_retained_legacy_pins_used':not actual['legacy_unused_pins'],'no_constant_clock':all(not r['parent_clock_port'].startswith('constant:') for r in clock_rows)})
 actual['checks']=checks;actual['passed']=all(checks.values())
