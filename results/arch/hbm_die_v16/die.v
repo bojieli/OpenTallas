@@ -16694,9 +16694,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .done(xc_SW0__done),
     .fault(xc_SW0__fault)
   );
-  ot_static_cmd_target #(.TARGET(8'd192), .MODE(0), .AWA(10), .AWB(0), .RBW(1), .RCW(1), .NA(1), .NF(1)) cpx_SW0 (
+  ot_static_cmd_target #(.MODE(0), .AWA(10), .AWB(0), .RBW(1), .RCW(1), .NA(1), .NF(1), .TGT_PIN(1)) cpx_SW0 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .tgt(8'd192),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -16742,9 +16743,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .done(xc_SW1__done),
     .fault(xc_SW1__fault)
   );
-  ot_static_cmd_target #(.TARGET(8'd193), .MODE(0), .AWA(10), .AWB(0), .RBW(1), .RCW(1), .NA(1), .NF(1)) cpx_SW1 (
+  ot_static_cmd_target #(.MODE(0), .AWA(10), .AWB(0), .RBW(1), .RCW(1), .NA(1), .NF(1), .TGT_PIN(1)) cpx_SW1 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .tgt(8'd193),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -16790,9 +16792,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .done(xc_SW2__done),
     .fault(xc_SW2__fault)
   );
-  ot_static_cmd_target #(.TARGET(8'd194), .MODE(0), .AWA(10), .AWB(0), .RBW(1), .RCW(1), .NA(1), .NF(1)) cpx_SW2 (
+  ot_static_cmd_target #(.MODE(0), .AWA(10), .AWB(0), .RBW(1), .RCW(1), .NA(1), .NF(1), .TGT_PIN(1)) cpx_SW2 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .tgt(8'd194),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -16838,9 +16841,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .done(xc_SW3__done),
     .fault(xc_SW3__fault)
   );
-  ot_static_cmd_target #(.TARGET(8'd195), .MODE(0), .AWA(10), .AWB(0), .RBW(1), .RCW(1), .NA(1), .NF(1)) cpx_SW3 (
+  ot_static_cmd_target #(.MODE(0), .AWA(10), .AWB(0), .RBW(1), .RCW(1), .NA(1), .NF(1), .TGT_PIN(1)) cpx_SW3 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .tgt(8'd195),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -16886,9 +16890,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .done(xc_SW4__done),
     .fault(xc_SW4__fault)
   );
-  ot_static_cmd_target #(.TARGET(8'd196), .MODE(0), .AWA(10), .AWB(0), .RBW(1), .RCW(1), .NA(1), .NF(1)) cpx_SW4 (
+  ot_static_cmd_target #(.MODE(0), .AWA(10), .AWB(0), .RBW(1), .RCW(1), .NA(1), .NF(1), .TGT_PIN(1)) cpx_SW4 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .tgt(8'd196),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -16934,9 +16939,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .done(xc_SW5__done),
     .fault(xc_SW5__fault)
   );
-  ot_static_cmd_target #(.TARGET(8'd197), .MODE(0), .AWA(10), .AWB(0), .RBW(1), .RCW(1), .NA(1), .NF(1)) cpx_SW5 (
+  ot_static_cmd_target #(.MODE(0), .AWA(10), .AWB(0), .RBW(1), .RCW(1), .NA(1), .NF(1), .TGT_PIN(1)) cpx_SW5 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .tgt(8'd197),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -16982,9 +16988,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .done(xc_SW6__done),
     .fault(xc_SW6__fault)
   );
-  ot_static_cmd_target #(.TARGET(8'd198), .MODE(0), .AWA(10), .AWB(0), .RBW(1), .RCW(1), .NA(1), .NF(1)) cpx_SW6 (
+  ot_static_cmd_target #(.MODE(0), .AWA(10), .AWB(0), .RBW(1), .RCW(1), .NA(1), .NF(1), .TGT_PIN(1)) cpx_SW6 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .tgt(8'd198),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -17030,9 +17037,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .done(xc_SW7__done),
     .fault(xc_SW7__fault)
   );
-  ot_static_cmd_target #(.TARGET(8'd199), .MODE(0), .AWA(10), .AWB(0), .RBW(1), .RCW(1), .NA(1), .NF(1)) cpx_SW7 (
+  ot_static_cmd_target #(.MODE(0), .AWA(10), .AWB(0), .RBW(1), .RCW(1), .NA(1), .NF(1), .TGT_PIN(1)) cpx_SW7 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .tgt(8'd199),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -17078,9 +17086,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .done(xc_SE0__done),
     .fault(xc_SE0__fault)
   );
-  ot_static_cmd_target #(.TARGET(8'd200), .MODE(0), .AWA(10), .AWB(0), .RBW(1), .RCW(1), .NA(1), .NF(1)) cpx_SE0 (
+  ot_static_cmd_target #(.MODE(0), .AWA(10), .AWB(0), .RBW(1), .RCW(1), .NA(1), .NF(1), .TGT_PIN(1)) cpx_SE0 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .tgt(8'd200),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -17126,9 +17135,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .done(xc_SE1__done),
     .fault(xc_SE1__fault)
   );
-  ot_static_cmd_target #(.TARGET(8'd201), .MODE(0), .AWA(10), .AWB(0), .RBW(1), .RCW(1), .NA(1), .NF(1)) cpx_SE1 (
+  ot_static_cmd_target #(.MODE(0), .AWA(10), .AWB(0), .RBW(1), .RCW(1), .NA(1), .NF(1), .TGT_PIN(1)) cpx_SE1 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .tgt(8'd201),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -17174,9 +17184,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .done(xc_SE2__done),
     .fault(xc_SE2__fault)
   );
-  ot_static_cmd_target #(.TARGET(8'd202), .MODE(0), .AWA(10), .AWB(0), .RBW(1), .RCW(1), .NA(1), .NF(1)) cpx_SE2 (
+  ot_static_cmd_target #(.MODE(0), .AWA(10), .AWB(0), .RBW(1), .RCW(1), .NA(1), .NF(1), .TGT_PIN(1)) cpx_SE2 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .tgt(8'd202),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -17222,9 +17233,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .done(xc_SE3__done),
     .fault(xc_SE3__fault)
   );
-  ot_static_cmd_target #(.TARGET(8'd203), .MODE(0), .AWA(10), .AWB(0), .RBW(1), .RCW(1), .NA(1), .NF(1)) cpx_SE3 (
+  ot_static_cmd_target #(.MODE(0), .AWA(10), .AWB(0), .RBW(1), .RCW(1), .NA(1), .NF(1), .TGT_PIN(1)) cpx_SE3 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .tgt(8'd203),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -17270,9 +17282,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .done(xc_SE4__done),
     .fault(xc_SE4__fault)
   );
-  ot_static_cmd_target #(.TARGET(8'd204), .MODE(0), .AWA(10), .AWB(0), .RBW(1), .RCW(1), .NA(1), .NF(1)) cpx_SE4 (
+  ot_static_cmd_target #(.MODE(0), .AWA(10), .AWB(0), .RBW(1), .RCW(1), .NA(1), .NF(1), .TGT_PIN(1)) cpx_SE4 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .tgt(8'd204),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -17318,9 +17331,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .done(xc_SE5__done),
     .fault(xc_SE5__fault)
   );
-  ot_static_cmd_target #(.TARGET(8'd205), .MODE(0), .AWA(10), .AWB(0), .RBW(1), .RCW(1), .NA(1), .NF(1)) cpx_SE5 (
+  ot_static_cmd_target #(.MODE(0), .AWA(10), .AWB(0), .RBW(1), .RCW(1), .NA(1), .NF(1), .TGT_PIN(1)) cpx_SE5 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .tgt(8'd205),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -17366,9 +17380,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .done(xc_SE6__done),
     .fault(xc_SE6__fault)
   );
-  ot_static_cmd_target #(.TARGET(8'd206), .MODE(0), .AWA(10), .AWB(0), .RBW(1), .RCW(1), .NA(1), .NF(1)) cpx_SE6 (
+  ot_static_cmd_target #(.MODE(0), .AWA(10), .AWB(0), .RBW(1), .RCW(1), .NA(1), .NF(1), .TGT_PIN(1)) cpx_SE6 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .tgt(8'd206),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -17414,9 +17429,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .done(xc_SE7__done),
     .fault(xc_SE7__fault)
   );
-  ot_static_cmd_target #(.TARGET(8'd207), .MODE(0), .AWA(10), .AWB(0), .RBW(1), .RCW(1), .NA(1), .NF(1)) cpx_SE7 (
+  ot_static_cmd_target #(.MODE(0), .AWA(10), .AWB(0), .RBW(1), .RCW(1), .NA(1), .NF(1), .TGT_PIN(1)) cpx_SE7 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .tgt(8'd207),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -17462,9 +17478,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .done(xc_NW0__done),
     .fault(xc_NW0__fault)
   );
-  ot_static_cmd_target #(.TARGET(8'd208), .MODE(0), .AWA(10), .AWB(0), .RBW(1), .RCW(1), .NA(1), .NF(1)) cpx_NW0 (
+  ot_static_cmd_target #(.MODE(0), .AWA(10), .AWB(0), .RBW(1), .RCW(1), .NA(1), .NF(1), .TGT_PIN(1)) cpx_NW0 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .tgt(8'd208),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -17510,9 +17527,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .done(xc_NW1__done),
     .fault(xc_NW1__fault)
   );
-  ot_static_cmd_target #(.TARGET(8'd209), .MODE(0), .AWA(10), .AWB(0), .RBW(1), .RCW(1), .NA(1), .NF(1)) cpx_NW1 (
+  ot_static_cmd_target #(.MODE(0), .AWA(10), .AWB(0), .RBW(1), .RCW(1), .NA(1), .NF(1), .TGT_PIN(1)) cpx_NW1 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .tgt(8'd209),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -17558,9 +17576,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .done(xc_NW2__done),
     .fault(xc_NW2__fault)
   );
-  ot_static_cmd_target #(.TARGET(8'd210), .MODE(0), .AWA(10), .AWB(0), .RBW(1), .RCW(1), .NA(1), .NF(1)) cpx_NW2 (
+  ot_static_cmd_target #(.MODE(0), .AWA(10), .AWB(0), .RBW(1), .RCW(1), .NA(1), .NF(1), .TGT_PIN(1)) cpx_NW2 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .tgt(8'd210),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -17606,9 +17625,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .done(xc_NW3__done),
     .fault(xc_NW3__fault)
   );
-  ot_static_cmd_target #(.TARGET(8'd211), .MODE(0), .AWA(10), .AWB(0), .RBW(1), .RCW(1), .NA(1), .NF(1)) cpx_NW3 (
+  ot_static_cmd_target #(.MODE(0), .AWA(10), .AWB(0), .RBW(1), .RCW(1), .NA(1), .NF(1), .TGT_PIN(1)) cpx_NW3 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .tgt(8'd211),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -17654,9 +17674,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .done(xc_NW4__done),
     .fault(xc_NW4__fault)
   );
-  ot_static_cmd_target #(.TARGET(8'd212), .MODE(0), .AWA(10), .AWB(0), .RBW(1), .RCW(1), .NA(1), .NF(1)) cpx_NW4 (
+  ot_static_cmd_target #(.MODE(0), .AWA(10), .AWB(0), .RBW(1), .RCW(1), .NA(1), .NF(1), .TGT_PIN(1)) cpx_NW4 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .tgt(8'd212),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -17702,9 +17723,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .done(xc_NW5__done),
     .fault(xc_NW5__fault)
   );
-  ot_static_cmd_target #(.TARGET(8'd213), .MODE(0), .AWA(10), .AWB(0), .RBW(1), .RCW(1), .NA(1), .NF(1)) cpx_NW5 (
+  ot_static_cmd_target #(.MODE(0), .AWA(10), .AWB(0), .RBW(1), .RCW(1), .NA(1), .NF(1), .TGT_PIN(1)) cpx_NW5 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .tgt(8'd213),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -17750,9 +17772,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .done(xc_NW6__done),
     .fault(xc_NW6__fault)
   );
-  ot_static_cmd_target #(.TARGET(8'd214), .MODE(0), .AWA(10), .AWB(0), .RBW(1), .RCW(1), .NA(1), .NF(1)) cpx_NW6 (
+  ot_static_cmd_target #(.MODE(0), .AWA(10), .AWB(0), .RBW(1), .RCW(1), .NA(1), .NF(1), .TGT_PIN(1)) cpx_NW6 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .tgt(8'd214),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -17798,9 +17821,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .done(xc_NW7__done),
     .fault(xc_NW7__fault)
   );
-  ot_static_cmd_target #(.TARGET(8'd215), .MODE(0), .AWA(10), .AWB(0), .RBW(1), .RCW(1), .NA(1), .NF(1)) cpx_NW7 (
+  ot_static_cmd_target #(.MODE(0), .AWA(10), .AWB(0), .RBW(1), .RCW(1), .NA(1), .NF(1), .TGT_PIN(1)) cpx_NW7 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .tgt(8'd215),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -17846,9 +17870,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .done(xc_NE0__done),
     .fault(xc_NE0__fault)
   );
-  ot_static_cmd_target #(.TARGET(8'd216), .MODE(0), .AWA(10), .AWB(0), .RBW(1), .RCW(1), .NA(1), .NF(1)) cpx_NE0 (
+  ot_static_cmd_target #(.MODE(0), .AWA(10), .AWB(0), .RBW(1), .RCW(1), .NA(1), .NF(1), .TGT_PIN(1)) cpx_NE0 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .tgt(8'd216),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -17894,9 +17919,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .done(xc_NE1__done),
     .fault(xc_NE1__fault)
   );
-  ot_static_cmd_target #(.TARGET(8'd217), .MODE(0), .AWA(10), .AWB(0), .RBW(1), .RCW(1), .NA(1), .NF(1)) cpx_NE1 (
+  ot_static_cmd_target #(.MODE(0), .AWA(10), .AWB(0), .RBW(1), .RCW(1), .NA(1), .NF(1), .TGT_PIN(1)) cpx_NE1 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .tgt(8'd217),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -17942,9 +17968,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .done(xc_NE2__done),
     .fault(xc_NE2__fault)
   );
-  ot_static_cmd_target #(.TARGET(8'd218), .MODE(0), .AWA(10), .AWB(0), .RBW(1), .RCW(1), .NA(1), .NF(1)) cpx_NE2 (
+  ot_static_cmd_target #(.MODE(0), .AWA(10), .AWB(0), .RBW(1), .RCW(1), .NA(1), .NF(1), .TGT_PIN(1)) cpx_NE2 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .tgt(8'd218),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -17990,9 +18017,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .done(xc_NE3__done),
     .fault(xc_NE3__fault)
   );
-  ot_static_cmd_target #(.TARGET(8'd219), .MODE(0), .AWA(10), .AWB(0), .RBW(1), .RCW(1), .NA(1), .NF(1)) cpx_NE3 (
+  ot_static_cmd_target #(.MODE(0), .AWA(10), .AWB(0), .RBW(1), .RCW(1), .NA(1), .NF(1), .TGT_PIN(1)) cpx_NE3 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .tgt(8'd219),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -18038,9 +18066,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .done(xc_NE4__done),
     .fault(xc_NE4__fault)
   );
-  ot_static_cmd_target #(.TARGET(8'd220), .MODE(0), .AWA(10), .AWB(0), .RBW(1), .RCW(1), .NA(1), .NF(1)) cpx_NE4 (
+  ot_static_cmd_target #(.MODE(0), .AWA(10), .AWB(0), .RBW(1), .RCW(1), .NA(1), .NF(1), .TGT_PIN(1)) cpx_NE4 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .tgt(8'd220),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -18086,9 +18115,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .done(xc_NE5__done),
     .fault(xc_NE5__fault)
   );
-  ot_static_cmd_target #(.TARGET(8'd221), .MODE(0), .AWA(10), .AWB(0), .RBW(1), .RCW(1), .NA(1), .NF(1)) cpx_NE5 (
+  ot_static_cmd_target #(.MODE(0), .AWA(10), .AWB(0), .RBW(1), .RCW(1), .NA(1), .NF(1), .TGT_PIN(1)) cpx_NE5 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .tgt(8'd221),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -18134,9 +18164,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .done(xc_NE6__done),
     .fault(xc_NE6__fault)
   );
-  ot_static_cmd_target #(.TARGET(8'd222), .MODE(0), .AWA(10), .AWB(0), .RBW(1), .RCW(1), .NA(1), .NF(1)) cpx_NE6 (
+  ot_static_cmd_target #(.MODE(0), .AWA(10), .AWB(0), .RBW(1), .RCW(1), .NA(1), .NF(1), .TGT_PIN(1)) cpx_NE6 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .tgt(8'd222),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -18182,9 +18213,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .done(xc_NE7__done),
     .fault(xc_NE7__fault)
   );
-  ot_static_cmd_target #(.TARGET(8'd223), .MODE(0), .AWA(10), .AWB(0), .RBW(1), .RCW(1), .NA(1), .NF(1)) cpx_NE7 (
+  ot_static_cmd_target #(.MODE(0), .AWA(10), .AWB(0), .RBW(1), .RCW(1), .NA(1), .NF(1), .TGT_PIN(1)) cpx_NE7 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .tgt(8'd223),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -18334,9 +18366,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .pma_rx(host_N__pma_rx[512:0]),
     .pma_rck(host_N__pma_rck[0])
   );
-  ot_static_cmd_target #(.TARGET(8'd64), .MODE(0), .AWA(10), .AWB(7), .RBW(7), .RCW(8), .NA(2), .NF(1)) cp_svg_SW0 (
+  ot_static_cmd_target #(.MODE(0), .AWA(10), .AWB(7), .RBW(7), .RCW(8), .NA(2), .NF(1), .TGT_PIN(1)) cp_svg_SW0 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .tgt(8'd64),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -18364,9 +18397,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .fault(cp_svg_SW0__fault),
     .active(cp_svg_SW0__active)
   );
-  ot_static_cmd_target #(.TARGET(8'd65), .MODE(0), .AWA(10), .AWB(7), .RBW(7), .RCW(8), .NA(2), .NF(1)) cp_svg_SW1 (
+  ot_static_cmd_target #(.MODE(0), .AWA(10), .AWB(7), .RBW(7), .RCW(8), .NA(2), .NF(1), .TGT_PIN(1)) cp_svg_SW1 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .tgt(8'd65),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -18394,9 +18428,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .fault(cp_svg_SW1__fault),
     .active(cp_svg_SW1__active)
   );
-  ot_static_cmd_target #(.TARGET(8'd66), .MODE(0), .AWA(10), .AWB(7), .RBW(7), .RCW(8), .NA(2), .NF(1)) cp_svg_SW2 (
+  ot_static_cmd_target #(.MODE(0), .AWA(10), .AWB(7), .RBW(7), .RCW(8), .NA(2), .NF(1), .TGT_PIN(1)) cp_svg_SW2 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .tgt(8'd66),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -18424,9 +18459,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .fault(cp_svg_SW2__fault),
     .active(cp_svg_SW2__active)
   );
-  ot_static_cmd_target #(.TARGET(8'd67), .MODE(0), .AWA(10), .AWB(7), .RBW(7), .RCW(8), .NA(2), .NF(1)) cp_svg_SW3 (
+  ot_static_cmd_target #(.MODE(0), .AWA(10), .AWB(7), .RBW(7), .RCW(8), .NA(2), .NF(1), .TGT_PIN(1)) cp_svg_SW3 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .tgt(8'd67),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -18454,9 +18490,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .fault(cp_svg_SW3__fault),
     .active(cp_svg_SW3__active)
   );
-  ot_static_cmd_target #(.TARGET(8'd68), .MODE(0), .AWA(10), .AWB(7), .RBW(7), .RCW(8), .NA(2), .NF(1)) cp_svg_SW4 (
+  ot_static_cmd_target #(.MODE(0), .AWA(10), .AWB(7), .RBW(7), .RCW(8), .NA(2), .NF(1), .TGT_PIN(1)) cp_svg_SW4 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .tgt(8'd68),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -18484,9 +18521,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .fault(cp_svg_SW4__fault),
     .active(cp_svg_SW4__active)
   );
-  ot_static_cmd_target #(.TARGET(8'd69), .MODE(0), .AWA(10), .AWB(7), .RBW(7), .RCW(8), .NA(2), .NF(1)) cp_svg_SW5 (
+  ot_static_cmd_target #(.MODE(0), .AWA(10), .AWB(7), .RBW(7), .RCW(8), .NA(2), .NF(1), .TGT_PIN(1)) cp_svg_SW5 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .tgt(8'd69),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -18514,9 +18552,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .fault(cp_svg_SW5__fault),
     .active(cp_svg_SW5__active)
   );
-  ot_static_cmd_target #(.TARGET(8'd70), .MODE(0), .AWA(10), .AWB(7), .RBW(7), .RCW(8), .NA(2), .NF(1)) cp_svg_SW6 (
+  ot_static_cmd_target #(.MODE(0), .AWA(10), .AWB(7), .RBW(7), .RCW(8), .NA(2), .NF(1), .TGT_PIN(1)) cp_svg_SW6 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .tgt(8'd70),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -18544,9 +18583,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .fault(cp_svg_SW6__fault),
     .active(cp_svg_SW6__active)
   );
-  ot_static_cmd_target #(.TARGET(8'd71), .MODE(0), .AWA(10), .AWB(7), .RBW(7), .RCW(8), .NA(2), .NF(1)) cp_svg_SW7 (
+  ot_static_cmd_target #(.MODE(0), .AWA(10), .AWB(7), .RBW(7), .RCW(8), .NA(2), .NF(1), .TGT_PIN(1)) cp_svg_SW7 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .tgt(8'd71),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -18574,9 +18614,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .fault(cp_svg_SW7__fault),
     .active(cp_svg_SW7__active)
   );
-  ot_static_program_target #(.TARGET(8'd96), .PCW(10)) cp_cal_SW (
+  ot_static_program_target #(.PCW(10), .TGT_PIN(1)) cp_cal_SW (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .tgt(8'd96),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -18597,9 +18638,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .configured(cp_cal_SW__configured),
     .fault(cp_cal_SW__fault)
   );
-  ot_static_cmd_target #(.TARGET(8'd100), .MODE(1), .CW(108), .RELF(0), .NA(1), .NF(1)) cp_xl_SW (
+  ot_static_cmd_target #(.MODE(1), .CW(108), .RELF(0), .NA(1), .NF(1), .TGT_PIN(1)) cp_xl_SW (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .tgt(8'd100),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -18627,9 +18669,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .fault(cp_xl_SW__fault),
     .active(cp_xl_SW__active)
   );
-  ot_static_cmd_target #(.TARGET(8'd104), .MODE(1), .CW(308), .RELF(2), .NA(1), .NF(1)) cp_dma_SW (
+  ot_static_cmd_target #(.MODE(1), .CW(308), .RELF(2), .NA(1), .NF(1), .TGT_PIN(1)) cp_dma_SW (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .tgt(8'd104),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -18657,9 +18700,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .fault(cp_dma_SW__fault),
     .active(cp_dma_SW__active)
   );
-  ot_static_cmd_target #(.TARGET(8'd72), .MODE(0), .AWA(10), .AWB(7), .RBW(7), .RCW(8), .NA(2), .NF(1)) cp_svg_SE0 (
+  ot_static_cmd_target #(.MODE(0), .AWA(10), .AWB(7), .RBW(7), .RCW(8), .NA(2), .NF(1), .TGT_PIN(1)) cp_svg_SE0 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .tgt(8'd72),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -18687,9 +18731,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .fault(cp_svg_SE0__fault),
     .active(cp_svg_SE0__active)
   );
-  ot_static_cmd_target #(.TARGET(8'd73), .MODE(0), .AWA(10), .AWB(7), .RBW(7), .RCW(8), .NA(2), .NF(1)) cp_svg_SE1 (
+  ot_static_cmd_target #(.MODE(0), .AWA(10), .AWB(7), .RBW(7), .RCW(8), .NA(2), .NF(1), .TGT_PIN(1)) cp_svg_SE1 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .tgt(8'd73),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -18717,9 +18762,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .fault(cp_svg_SE1__fault),
     .active(cp_svg_SE1__active)
   );
-  ot_static_cmd_target #(.TARGET(8'd74), .MODE(0), .AWA(10), .AWB(7), .RBW(7), .RCW(8), .NA(2), .NF(1)) cp_svg_SE2 (
+  ot_static_cmd_target #(.MODE(0), .AWA(10), .AWB(7), .RBW(7), .RCW(8), .NA(2), .NF(1), .TGT_PIN(1)) cp_svg_SE2 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .tgt(8'd74),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -18747,9 +18793,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .fault(cp_svg_SE2__fault),
     .active(cp_svg_SE2__active)
   );
-  ot_static_cmd_target #(.TARGET(8'd75), .MODE(0), .AWA(10), .AWB(7), .RBW(7), .RCW(8), .NA(2), .NF(1)) cp_svg_SE3 (
+  ot_static_cmd_target #(.MODE(0), .AWA(10), .AWB(7), .RBW(7), .RCW(8), .NA(2), .NF(1), .TGT_PIN(1)) cp_svg_SE3 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .tgt(8'd75),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -18777,9 +18824,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .fault(cp_svg_SE3__fault),
     .active(cp_svg_SE3__active)
   );
-  ot_static_cmd_target #(.TARGET(8'd76), .MODE(0), .AWA(10), .AWB(7), .RBW(7), .RCW(8), .NA(2), .NF(1)) cp_svg_SE4 (
+  ot_static_cmd_target #(.MODE(0), .AWA(10), .AWB(7), .RBW(7), .RCW(8), .NA(2), .NF(1), .TGT_PIN(1)) cp_svg_SE4 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .tgt(8'd76),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -18807,9 +18855,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .fault(cp_svg_SE4__fault),
     .active(cp_svg_SE4__active)
   );
-  ot_static_cmd_target #(.TARGET(8'd77), .MODE(0), .AWA(10), .AWB(7), .RBW(7), .RCW(8), .NA(2), .NF(1)) cp_svg_SE5 (
+  ot_static_cmd_target #(.MODE(0), .AWA(10), .AWB(7), .RBW(7), .RCW(8), .NA(2), .NF(1), .TGT_PIN(1)) cp_svg_SE5 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .tgt(8'd77),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -18837,9 +18886,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .fault(cp_svg_SE5__fault),
     .active(cp_svg_SE5__active)
   );
-  ot_static_cmd_target #(.TARGET(8'd78), .MODE(0), .AWA(10), .AWB(7), .RBW(7), .RCW(8), .NA(2), .NF(1)) cp_svg_SE6 (
+  ot_static_cmd_target #(.MODE(0), .AWA(10), .AWB(7), .RBW(7), .RCW(8), .NA(2), .NF(1), .TGT_PIN(1)) cp_svg_SE6 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .tgt(8'd78),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -18867,9 +18917,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .fault(cp_svg_SE6__fault),
     .active(cp_svg_SE6__active)
   );
-  ot_static_cmd_target #(.TARGET(8'd79), .MODE(0), .AWA(10), .AWB(7), .RBW(7), .RCW(8), .NA(2), .NF(1)) cp_svg_SE7 (
+  ot_static_cmd_target #(.MODE(0), .AWA(10), .AWB(7), .RBW(7), .RCW(8), .NA(2), .NF(1), .TGT_PIN(1)) cp_svg_SE7 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .tgt(8'd79),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -18897,9 +18948,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .fault(cp_svg_SE7__fault),
     .active(cp_svg_SE7__active)
   );
-  ot_static_program_target #(.TARGET(8'd97), .PCW(10)) cp_cal_SE (
+  ot_static_program_target #(.PCW(10), .TGT_PIN(1)) cp_cal_SE (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .tgt(8'd97),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -18920,9 +18972,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .configured(cp_cal_SE__configured),
     .fault(cp_cal_SE__fault)
   );
-  ot_static_cmd_target #(.TARGET(8'd101), .MODE(1), .CW(108), .RELF(0), .NA(1), .NF(1)) cp_xl_SE (
+  ot_static_cmd_target #(.MODE(1), .CW(108), .RELF(0), .NA(1), .NF(1), .TGT_PIN(1)) cp_xl_SE (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .tgt(8'd101),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -18950,9 +19003,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .fault(cp_xl_SE__fault),
     .active(cp_xl_SE__active)
   );
-  ot_static_cmd_target #(.TARGET(8'd105), .MODE(1), .CW(308), .RELF(2), .NA(1), .NF(1)) cp_dma_SE (
+  ot_static_cmd_target #(.MODE(1), .CW(308), .RELF(2), .NA(1), .NF(1), .TGT_PIN(1)) cp_dma_SE (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .tgt(8'd105),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -18980,9 +19034,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .fault(cp_dma_SE__fault),
     .active(cp_dma_SE__active)
   );
-  ot_static_cmd_target #(.TARGET(8'd80), .MODE(0), .AWA(10), .AWB(7), .RBW(7), .RCW(8), .NA(2), .NF(1)) cp_svg_NW0 (
+  ot_static_cmd_target #(.MODE(0), .AWA(10), .AWB(7), .RBW(7), .RCW(8), .NA(2), .NF(1), .TGT_PIN(1)) cp_svg_NW0 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .tgt(8'd80),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -19010,9 +19065,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .fault(cp_svg_NW0__fault),
     .active(cp_svg_NW0__active)
   );
-  ot_static_cmd_target #(.TARGET(8'd81), .MODE(0), .AWA(10), .AWB(7), .RBW(7), .RCW(8), .NA(2), .NF(1)) cp_svg_NW1 (
+  ot_static_cmd_target #(.MODE(0), .AWA(10), .AWB(7), .RBW(7), .RCW(8), .NA(2), .NF(1), .TGT_PIN(1)) cp_svg_NW1 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .tgt(8'd81),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -19040,9 +19096,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .fault(cp_svg_NW1__fault),
     .active(cp_svg_NW1__active)
   );
-  ot_static_cmd_target #(.TARGET(8'd82), .MODE(0), .AWA(10), .AWB(7), .RBW(7), .RCW(8), .NA(2), .NF(1)) cp_svg_NW2 (
+  ot_static_cmd_target #(.MODE(0), .AWA(10), .AWB(7), .RBW(7), .RCW(8), .NA(2), .NF(1), .TGT_PIN(1)) cp_svg_NW2 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .tgt(8'd82),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -19070,9 +19127,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .fault(cp_svg_NW2__fault),
     .active(cp_svg_NW2__active)
   );
-  ot_static_cmd_target #(.TARGET(8'd83), .MODE(0), .AWA(10), .AWB(7), .RBW(7), .RCW(8), .NA(2), .NF(1)) cp_svg_NW3 (
+  ot_static_cmd_target #(.MODE(0), .AWA(10), .AWB(7), .RBW(7), .RCW(8), .NA(2), .NF(1), .TGT_PIN(1)) cp_svg_NW3 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .tgt(8'd83),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -19100,9 +19158,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .fault(cp_svg_NW3__fault),
     .active(cp_svg_NW3__active)
   );
-  ot_static_cmd_target #(.TARGET(8'd84), .MODE(0), .AWA(10), .AWB(7), .RBW(7), .RCW(8), .NA(2), .NF(1)) cp_svg_NW4 (
+  ot_static_cmd_target #(.MODE(0), .AWA(10), .AWB(7), .RBW(7), .RCW(8), .NA(2), .NF(1), .TGT_PIN(1)) cp_svg_NW4 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .tgt(8'd84),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -19130,9 +19189,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .fault(cp_svg_NW4__fault),
     .active(cp_svg_NW4__active)
   );
-  ot_static_cmd_target #(.TARGET(8'd85), .MODE(0), .AWA(10), .AWB(7), .RBW(7), .RCW(8), .NA(2), .NF(1)) cp_svg_NW5 (
+  ot_static_cmd_target #(.MODE(0), .AWA(10), .AWB(7), .RBW(7), .RCW(8), .NA(2), .NF(1), .TGT_PIN(1)) cp_svg_NW5 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .tgt(8'd85),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -19160,9 +19220,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .fault(cp_svg_NW5__fault),
     .active(cp_svg_NW5__active)
   );
-  ot_static_cmd_target #(.TARGET(8'd86), .MODE(0), .AWA(10), .AWB(7), .RBW(7), .RCW(8), .NA(2), .NF(1)) cp_svg_NW6 (
+  ot_static_cmd_target #(.MODE(0), .AWA(10), .AWB(7), .RBW(7), .RCW(8), .NA(2), .NF(1), .TGT_PIN(1)) cp_svg_NW6 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .tgt(8'd86),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -19190,9 +19251,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .fault(cp_svg_NW6__fault),
     .active(cp_svg_NW6__active)
   );
-  ot_static_cmd_target #(.TARGET(8'd87), .MODE(0), .AWA(10), .AWB(7), .RBW(7), .RCW(8), .NA(2), .NF(1)) cp_svg_NW7 (
+  ot_static_cmd_target #(.MODE(0), .AWA(10), .AWB(7), .RBW(7), .RCW(8), .NA(2), .NF(1), .TGT_PIN(1)) cp_svg_NW7 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .tgt(8'd87),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -19220,9 +19282,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .fault(cp_svg_NW7__fault),
     .active(cp_svg_NW7__active)
   );
-  ot_static_program_target #(.TARGET(8'd98), .PCW(10)) cp_cal_NW (
+  ot_static_program_target #(.PCW(10), .TGT_PIN(1)) cp_cal_NW (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .tgt(8'd98),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -19243,9 +19306,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .configured(cp_cal_NW__configured),
     .fault(cp_cal_NW__fault)
   );
-  ot_static_cmd_target #(.TARGET(8'd102), .MODE(1), .CW(108), .RELF(0), .NA(1), .NF(1)) cp_xl_NW (
+  ot_static_cmd_target #(.MODE(1), .CW(108), .RELF(0), .NA(1), .NF(1), .TGT_PIN(1)) cp_xl_NW (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .tgt(8'd102),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -19273,9 +19337,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .fault(cp_xl_NW__fault),
     .active(cp_xl_NW__active)
   );
-  ot_static_cmd_target #(.TARGET(8'd106), .MODE(1), .CW(308), .RELF(2), .NA(1), .NF(1)) cp_dma_NW (
+  ot_static_cmd_target #(.MODE(1), .CW(308), .RELF(2), .NA(1), .NF(1), .TGT_PIN(1)) cp_dma_NW (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .tgt(8'd106),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -19303,9 +19368,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .fault(cp_dma_NW__fault),
     .active(cp_dma_NW__active)
   );
-  ot_static_cmd_target #(.TARGET(8'd88), .MODE(0), .AWA(10), .AWB(7), .RBW(7), .RCW(8), .NA(2), .NF(1)) cp_svg_NE0 (
+  ot_static_cmd_target #(.MODE(0), .AWA(10), .AWB(7), .RBW(7), .RCW(8), .NA(2), .NF(1), .TGT_PIN(1)) cp_svg_NE0 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .tgt(8'd88),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -19333,9 +19399,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .fault(cp_svg_NE0__fault),
     .active(cp_svg_NE0__active)
   );
-  ot_static_cmd_target #(.TARGET(8'd89), .MODE(0), .AWA(10), .AWB(7), .RBW(7), .RCW(8), .NA(2), .NF(1)) cp_svg_NE1 (
+  ot_static_cmd_target #(.MODE(0), .AWA(10), .AWB(7), .RBW(7), .RCW(8), .NA(2), .NF(1), .TGT_PIN(1)) cp_svg_NE1 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .tgt(8'd89),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -19363,9 +19430,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .fault(cp_svg_NE1__fault),
     .active(cp_svg_NE1__active)
   );
-  ot_static_cmd_target #(.TARGET(8'd90), .MODE(0), .AWA(10), .AWB(7), .RBW(7), .RCW(8), .NA(2), .NF(1)) cp_svg_NE2 (
+  ot_static_cmd_target #(.MODE(0), .AWA(10), .AWB(7), .RBW(7), .RCW(8), .NA(2), .NF(1), .TGT_PIN(1)) cp_svg_NE2 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .tgt(8'd90),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -19393,9 +19461,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .fault(cp_svg_NE2__fault),
     .active(cp_svg_NE2__active)
   );
-  ot_static_cmd_target #(.TARGET(8'd91), .MODE(0), .AWA(10), .AWB(7), .RBW(7), .RCW(8), .NA(2), .NF(1)) cp_svg_NE3 (
+  ot_static_cmd_target #(.MODE(0), .AWA(10), .AWB(7), .RBW(7), .RCW(8), .NA(2), .NF(1), .TGT_PIN(1)) cp_svg_NE3 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .tgt(8'd91),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -19423,9 +19492,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .fault(cp_svg_NE3__fault),
     .active(cp_svg_NE3__active)
   );
-  ot_static_cmd_target #(.TARGET(8'd92), .MODE(0), .AWA(10), .AWB(7), .RBW(7), .RCW(8), .NA(2), .NF(1)) cp_svg_NE4 (
+  ot_static_cmd_target #(.MODE(0), .AWA(10), .AWB(7), .RBW(7), .RCW(8), .NA(2), .NF(1), .TGT_PIN(1)) cp_svg_NE4 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .tgt(8'd92),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -19453,9 +19523,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .fault(cp_svg_NE4__fault),
     .active(cp_svg_NE4__active)
   );
-  ot_static_cmd_target #(.TARGET(8'd93), .MODE(0), .AWA(10), .AWB(7), .RBW(7), .RCW(8), .NA(2), .NF(1)) cp_svg_NE5 (
+  ot_static_cmd_target #(.MODE(0), .AWA(10), .AWB(7), .RBW(7), .RCW(8), .NA(2), .NF(1), .TGT_PIN(1)) cp_svg_NE5 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .tgt(8'd93),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -19483,9 +19554,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .fault(cp_svg_NE5__fault),
     .active(cp_svg_NE5__active)
   );
-  ot_static_cmd_target #(.TARGET(8'd94), .MODE(0), .AWA(10), .AWB(7), .RBW(7), .RCW(8), .NA(2), .NF(1)) cp_svg_NE6 (
+  ot_static_cmd_target #(.MODE(0), .AWA(10), .AWB(7), .RBW(7), .RCW(8), .NA(2), .NF(1), .TGT_PIN(1)) cp_svg_NE6 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .tgt(8'd94),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -19513,9 +19585,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .fault(cp_svg_NE6__fault),
     .active(cp_svg_NE6__active)
   );
-  ot_static_cmd_target #(.TARGET(8'd95), .MODE(0), .AWA(10), .AWB(7), .RBW(7), .RCW(8), .NA(2), .NF(1)) cp_svg_NE7 (
+  ot_static_cmd_target #(.MODE(0), .AWA(10), .AWB(7), .RBW(7), .RCW(8), .NA(2), .NF(1), .TGT_PIN(1)) cp_svg_NE7 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .tgt(8'd95),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -19543,9 +19616,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .fault(cp_svg_NE7__fault),
     .active(cp_svg_NE7__active)
   );
-  ot_static_program_target #(.TARGET(8'd99), .PCW(10)) cp_cal_NE (
+  ot_static_program_target #(.PCW(10), .TGT_PIN(1)) cp_cal_NE (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .tgt(8'd99),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -19566,9 +19640,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .configured(cp_cal_NE__configured),
     .fault(cp_cal_NE__fault)
   );
-  ot_static_cmd_target #(.TARGET(8'd103), .MODE(1), .CW(108), .RELF(0), .NA(1), .NF(1)) cp_xl_NE (
+  ot_static_cmd_target #(.MODE(1), .CW(108), .RELF(0), .NA(1), .NF(1), .TGT_PIN(1)) cp_xl_NE (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .tgt(8'd103),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -19596,9 +19671,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .fault(cp_xl_NE__fault),
     .active(cp_xl_NE__active)
   );
-  ot_static_cmd_target #(.TARGET(8'd107), .MODE(1), .CW(308), .RELF(2), .NA(1), .NF(1)) cp_dma_NE (
+  ot_static_cmd_target #(.MODE(1), .CW(308), .RELF(2), .NA(1), .NF(1), .TGT_PIN(1)) cp_dma_NE (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .tgt(8'd107),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -19918,9 +19994,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .w_k_wr_done({vmks_NE7__w_k_wr_done[3:0], vmks_NE6__w_k_wr_done[3:0], vmks_NE5__w_k_wr_done[3:0], vmks_NE4__w_k_wr_done[3:0], vmks_NE3__w_k_wr_done[3:0], vmks_NE2__w_k_wr_done[3:0], vmks_NE1__w_k_wr_done[3:0], vmks_NE0__w_k_wr_done[3:0]}),
     .fault(wbk_NE__fault)
   );
-  ot_static_program_target #(.TARGET(8'd108), .PCW(10)) hc_tgt_SW (
+  ot_static_program_target #(.PCW(10), .TGT_PIN(1)) hc_tgt_SW (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .tgt(8'd108),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -20019,9 +20096,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .lg_rr(lg_SW_2__local_rr[2055:1542]),
     .lg_w_done(lg_SW_2__local_w_done[7:6])
   );
-  ot_static_program_target #(.TARGET(8'd109), .PCW(10)) hc_tgt_SE (
+  ot_static_program_target #(.PCW(10), .TGT_PIN(1)) hc_tgt_SE (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .tgt(8'd109),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -20120,9 +20198,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .lg_rr(lg_SE_2__local_rr[2055:1542]),
     .lg_w_done(lg_SE_2__local_w_done[7:6])
   );
-  ot_static_program_target #(.TARGET(8'd110), .PCW(10)) hc_tgt_NW (
+  ot_static_program_target #(.PCW(10), .TGT_PIN(1)) hc_tgt_NW (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .tgt(8'd110),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -20221,9 +20300,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .lg_rr(lg_NW_2__local_rr[2055:1542]),
     .lg_w_done(lg_NW_2__local_w_done[7:6])
   );
-  ot_static_program_target #(.TARGET(8'd111), .PCW(10)) hc_tgt_NE (
+  ot_static_program_target #(.PCW(10), .TGT_PIN(1)) hc_tgt_NE (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .tgt(8'd111),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -20349,9 +20429,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .program_done(hc_eng__program_done),
     .fault(hc_eng__fault)
   );
-  ot_static_program_target #(.TARGET(8'd164), .PCW(10)) hc_eng_tgt (
+  ot_static_program_target #(.PCW(10), .TGT_PIN(1)) hc_eng_tgt (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .tgt(8'd164),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -20372,9 +20453,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .configured(hc_eng_tgt__configured),
     .fault(hc_eng_tgt__fault)
   );
-  ot_static_program_target #(.TARGET(8'd165), .PCW(10)) hc_tbl_tgt (
+  ot_static_program_target #(.PCW(10), .TGT_PIN(1)) hc_tbl_tgt (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .tgt(8'd165),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -20395,9 +20477,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .configured(hc_tbl_tgt__configured),
     .fault(hc_tbl_tgt__fault)
   );
-  ot_static_program_target #(.TARGET(8'd56), .PCW(10)) cp_fill_SW (
+  ot_static_program_target #(.PCW(10), .TGT_PIN(1)) cp_fill_SW (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .tgt(8'd56),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -20418,9 +20501,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .configured(cp_fill_SW__configured),
     .fault(cp_fill_SW__fault)
   );
-  ot_static_program_target #(.TARGET(8'd57), .PCW(10)) cp_fill_SE (
+  ot_static_program_target #(.PCW(10), .TGT_PIN(1)) cp_fill_SE (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .tgt(8'd57),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -20441,9 +20525,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .configured(cp_fill_SE__configured),
     .fault(cp_fill_SE__fault)
   );
-  ot_static_program_target #(.TARGET(8'd58), .PCW(10)) cp_fill_NW (
+  ot_static_program_target #(.PCW(10), .TGT_PIN(1)) cp_fill_NW (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .tgt(8'd58),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -20464,9 +20549,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .configured(cp_fill_NW__configured),
     .fault(cp_fill_NW__fault)
   );
-  ot_static_program_target #(.TARGET(8'd59), .PCW(10)) cp_fill_NE (
+  ot_static_program_target #(.PCW(10), .TGT_PIN(1)) cp_fill_NE (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .tgt(8'd59),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -20487,9 +20573,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .configured(cp_fill_NE__configured),
     .fault(cp_fill_NE__fault)
   );
-  ot_static_program_target #(.TARGET(8'd132), .PCW(10)) cp_ep_SW (
+  ot_static_program_target #(.PCW(10), .TGT_PIN(1)) cp_ep_SW (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .tgt(8'd132),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -20545,9 +20632,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .lg_local_read(epcal_SW__lg_local_read),
     .lg_local_write(epcal_SW__lg_local_write)
   );
-  ot_static_program_target #(.TARGET(8'd133), .PCW(10)) cp_ep_SE (
+  ot_static_program_target #(.PCW(10), .TGT_PIN(1)) cp_ep_SE (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .tgt(8'd133),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -20603,9 +20691,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .lg_local_read(epcal_SE__lg_local_read),
     .lg_local_write(epcal_SE__lg_local_write)
   );
-  ot_static_program_target #(.TARGET(8'd134), .PCW(10)) cp_ep_NW (
+  ot_static_program_target #(.PCW(10), .TGT_PIN(1)) cp_ep_NW (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .tgt(8'd134),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -20661,9 +20750,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .lg_local_read(epcal_NW__lg_local_read),
     .lg_local_write(epcal_NW__lg_local_write)
   );
-  ot_static_program_target #(.TARGET(8'd135), .PCW(10)) cp_ep_NE (
+  ot_static_program_target #(.PCW(10), .TGT_PIN(1)) cp_ep_NE (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .tgt(8'd135),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -21559,9 +21649,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .busy(smw_SW__busy),
     .fault(smw_SW__fault)
   );
-  ot_static_cmd_target #(.TARGET(8'd160), .MODE(1), .CW(26), .RELF(0), .NA(1), .NF(1)) cp_smw_SW (
+  ot_static_cmd_target #(.MODE(1), .CW(26), .RELF(0), .NA(1), .NF(1), .TGT_PIN(1)) cp_smw_SW (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .tgt(8'd160),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -21603,9 +21694,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .busy(smw_SE__busy),
     .fault(smw_SE__fault)
   );
-  ot_static_cmd_target #(.TARGET(8'd161), .MODE(1), .CW(26), .RELF(0), .NA(1), .NF(1)) cp_smw_SE (
+  ot_static_cmd_target #(.MODE(1), .CW(26), .RELF(0), .NA(1), .NF(1), .TGT_PIN(1)) cp_smw_SE (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .tgt(8'd161),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -21647,9 +21739,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .busy(smw_NW__busy),
     .fault(smw_NW__fault)
   );
-  ot_static_cmd_target #(.TARGET(8'd162), .MODE(1), .CW(26), .RELF(0), .NA(1), .NF(1)) cp_smw_NW (
+  ot_static_cmd_target #(.MODE(1), .CW(26), .RELF(0), .NA(1), .NF(1), .TGT_PIN(1)) cp_smw_NW (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .tgt(8'd162),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -21691,9 +21784,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .busy(smw_NE__busy),
     .fault(smw_NE__fault)
   );
-  ot_static_cmd_target #(.TARGET(8'd163), .MODE(1), .CW(26), .RELF(0), .NA(1), .NF(1)) cp_smw_NE (
+  ot_static_cmd_target #(.MODE(1), .CW(26), .RELF(0), .NA(1), .NF(1), .TGT_PIN(1)) cp_smw_NE (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .tgt(8'd163),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -26038,7 +26132,7 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .i(rfr_NE_NE_34__o[47:0]),
     .o(rfr_NE_NE_35__o)
   );
-  ot_hgi_sfu_scheduled_engine #(.PAGE_AW(1), .AW(11), .LWB(15), .LG_PATH(12)) sfucore_SW (
+  ot_hgi_sfu_scheduled_engine #(.PAGE_AW(1), .AW(11), .LWB(15), .LG_PATH(24)) sfucore_SW (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
     .clk_lg({4{hb_ckgen__pll_stream[0]}}),
@@ -26658,7 +26752,7 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .i(sfr_SW3_b09__o[623:0]),
     .o(sfr_SW3_b10__o)
   );
-  ot_hgi_sfu_scheduled_engine #(.PAGE_AW(1), .AW(11), .LWB(15), .LG_PATH(12)) sfucore_SE (
+  ot_hgi_sfu_scheduled_engine #(.PAGE_AW(1), .AW(11), .LWB(15), .LG_PATH(24)) sfucore_SE (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
     .clk_lg({4{hb_ckgen__pll_stream[0]}}),
@@ -27278,7 +27372,7 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .i(sfr_SE3_b09__o[623:0]),
     .o(sfr_SE3_b10__o)
   );
-  ot_hgi_sfu_scheduled_engine #(.PAGE_AW(1), .AW(11), .LWB(15), .LG_PATH(12)) sfucore_NW (
+  ot_hgi_sfu_scheduled_engine #(.PAGE_AW(1), .AW(11), .LWB(15), .LG_PATH(24)) sfucore_NW (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
     .clk_lg({4{hb_ckgen__pll_stream[0]}}),
@@ -27898,7 +27992,7 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .i(sfr_NW3_b09__o[623:0]),
     .o(sfr_NW3_b10__o)
   );
-  ot_hgi_sfu_scheduled_engine #(.PAGE_AW(1), .AW(11), .LWB(15), .LG_PATH(12)) sfucore_NE (
+  ot_hgi_sfu_scheduled_engine #(.PAGE_AW(1), .AW(11), .LWB(15), .LG_PATH(24)) sfucore_NE (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
     .clk_lg({4{hb_ckgen__pll_stream[0]}}),

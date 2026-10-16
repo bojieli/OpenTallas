@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.die_port_bind.v2",
- "die_v": "/tmp/claude-1000/hnl0600/g3/die.v",
+ "die_v": "/tmp/claude-1000/hnl0600/g6/die.v",
  "top": "hbm_v16_die",
  "verdict": "PASS",
  "failing": [],
@@ -20,7 +20,7 @@
   "multi_driven_net_bits": 0,
   "top_assigns": 0,
   "params_not_in_rtl": 0,
-  "strap_ports": 4,
+  "strap_ports": 6,
   "pad_bits": 2288
  },
  "masters": {
@@ -1361,7 +1361,7 @@
     "sfucore_NW"
    ],
    "param_sets": {
-    "{\"AW\": \"11\", \"LG_PATH\": \"12\", \"LWB\": \"15\", \"PAGE_AW\": \"1\"}": 4
+    "{\"AW\": \"11\", \"LG_PATH\": \"24\", \"LWB\": \"15\", \"PAGE_AW\": \"1\"}": 4
    },
    "die_port_not_in_rtl": [],
    "input_unconnected": [],
@@ -1509,19 +1509,18 @@
     "cpx_SW2"
    ],
    "param_sets": {
-    "{\"AWA\": \"10\", \"AWB\": \"0\", \"MODE\": \"0\", \"NA\": \"1\", \"NF\": \"1\", \"RBW\": \"1\", \"RCW\": \"1\", \"TARGET\": \"8'd192\"}": 1,
-    "{\"AWA\": \"10\", \"AWB\": \"0\", \"MODE\": \"0\", \"NA\": \"1\", \"NF\": \"1\", \"RBW\": \"1\", \"RCW\": \"1\", \"TARGET\": \"8'd193\"}": 1,
-    "{\"AWA\": \"10\", \"AWB\": \"0\", \"MODE\": \"0\", \"NA\": \"1\", \"NF\": \"1\", \"RBW\": \"1\", \"RCW\": \"1\", \"TARGET\": \"8'd194\"}": 1,
-    "{\"AWA\": \"10\", \"AWB\": \"0\", \"MODE\": \"0\", \"NA\": \"1\", \"NF\": \"1\", \"RBW\": \"1\", \"RCW\": \"1\", \"TARGET\": \"8'd195\"}": 1,
-    "{\"AWA\": \"10\", \"AWB\": \"0\", \"MODE\": \"0\", \"NA\": \"1\", \"NF\": \"1\", \"RBW\": \"1\", \"RCW\": \"1\", \"TARGET\": \"8'd196\"}": 1,
-    "{\"AWA\": \"10\", \"AWB\": \"0\", \"MODE\": \"0\", \"NA\": \"1\", \"NF\": \"1\", \"RBW\": \"1\", \"RCW\": \"1\", \"TARGET\": \"8'd197\"}": 1,
-    "{\"AWA\": \"10\", \"AWB\": \"0\", \"MODE\": \"0\", \"NA\": \"1\", \"NF\": \"1\", \"RBW\": \"1\", \"RCW\": \"1\", \"TARGET\": \"8'd198\"}": 1,
-    "{\"AWA\": \"10\", \"AWB\": \"0\", \"MODE\": \"0\", \"NA\": \"1\", \"NF\": \"1\", \"RBW\": \"1\", \"RCW\": \"1\", \"TARGET\": \"8'd199\"}": 1
+    "{\"AWA\": \"10\", \"AWB\": \"0\", \"MODE\": \"0\", \"NA\": \"1\", \"NF\": \"1\", \"RBW\": \"1\", \"RCW\": \"1\", \"TGT_PIN\": \"1\"}": 32,
+    "{\"AWA\": \"10\", \"AWB\": \"7\", \"MODE\": \"0\", \"NA\": \"2\", \"NF\": \"1\", \"RBW\": \"7\", \"RCW\": \"8\", \"TGT_PIN\": \"1\"}": 32,
+    "{\"CW\": \"108\", \"MODE\": \"1\", \"NA\": \"1\", \"NF\": \"1\", \"RELF\": \"0\", \"TGT_PIN\": \"1\"}": 4,
+    "{\"CW\": \"308\", \"MODE\": \"1\", \"NA\": \"1\", \"NF\": \"1\", \"RELF\": \"2\", \"TGT_PIN\": \"1\"}": 4,
+    "{\"CW\": \"26\", \"MODE\": \"1\", \"NA\": \"1\", \"NF\": \"1\", \"RELF\": \"0\", \"TGT_PIN\": \"1\"}": 4
    },
    "die_port_not_in_rtl": [],
    "input_unconnected": [],
    "input_tied": [],
-   "straps": [],
+   "straps": [
+    "tgt"
+   ],
    "pad_bits": {},
    "output_open": [],
    "width_mismatch": {},
@@ -1541,19 +1540,14 @@
     "cp_cal_NW"
    ],
    "param_sets": {
-    "{\"PCW\": \"10\", \"TARGET\": \"8'd96\"}": 1,
-    "{\"PCW\": \"10\", \"TARGET\": \"8'd97\"}": 1,
-    "{\"PCW\": \"10\", \"TARGET\": \"8'd98\"}": 1,
-    "{\"PCW\": \"10\", \"TARGET\": \"8'd99\"}": 1,
-    "{\"PCW\": \"10\", \"TARGET\": \"8'd108\"}": 1,
-    "{\"PCW\": \"10\", \"TARGET\": \"8'd109\"}": 1,
-    "{\"PCW\": \"10\", \"TARGET\": \"8'd110\"}": 1,
-    "{\"PCW\": \"10\", \"TARGET\": \"8'd111\"}": 1
+    "{\"PCW\": \"10\", \"TGT_PIN\": \"1\"}": 18
    },
    "die_port_not_in_rtl": [],
    "input_unconnected": [],
    "input_tied": [],
-   "straps": [],
+   "straps": [
+    "tgt"
+   ],
    "pad_bits": {},
    "output_open": [],
    "width_mismatch": {},
@@ -1623,12 +1617,14 @@
   "hbfd_rly_624_SN:i",
   "hbfd_rly_624_WE:i"
  ],
- "die_sha256": "c038f43c83d8d3700dff69d72b506115107e562b842a68f8c242afcc499e6e2c",
+ "die_sha256": "86cfa5d3de621243a11fcccf6624d0df680c09e86a5a617bf2f7ef7ac1d45e2e",
  "straps_declared": [
   "ot_hbm_static_cfg_collar:tgt",
   "ot_hbm_svc_vmdel_lane:bank_id",
   "ot_hbm_svc_wb_kport:stk",
-  "ot_hgi_dma_back_static_vp4_banks:stk"
+  "ot_hgi_dma_back_static_vp4_banks:stk",
+  "ot_static_cmd_target:tgt",
+  "ot_static_program_target:tgt"
  ],
  "params_file": null,
  "rtl_roots": [
