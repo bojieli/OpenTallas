@@ -16,6 +16,10 @@ module dsfd_sp_su_c #(
     parameter integer S_RD = 16, S_WR = 16, MUT = 0, AMUT = 0
 ) (
     input  wire [0:0]          ck,
+`ifdef OT_S81_CP_LEAF_CLOCKS
+    input wire ck_cp_bridge,rs_cp_bridge,ck_cp_tap,rs_cp_tap,ck_cp_ctl,
+    input wire [1:0] ck_cp_mem,input wire [3:0] ck_cp_lane,
+`endif
     input  wire [0:0]          rst,                    // async die reset (active low)
     input  wire [84:0]         c_cmd,
     output reg  [8:0]          c_done,
@@ -44,8 +48,22 @@ module dsfd_sp_su_c #(
     always @(posedge ck[0]) cd_q <= c_cmd[83:0];
     wire dv, flt, onl;
     wire [7:0] dt;
-    dsfd_sp_su #(.QN_N(QN_N), .KV_N(KV_N), .QB_NB(QB_NB), .SW_W(SW_W), .SM_H(SM_H), .SM_LPH(SM_LPH),
+    // Keep the production command/VM pins and u_su identity while selecting
+    // the diagnostic hierarchical implementation. Its hctl descriptor/ready
+    // waits still require replacement by the native fixed global schedule.
+`ifdef DSFD_SUHC_HIER
+    dsfd_sp_su_h #(
+`else
+    dsfd_sp_su #(
+`endif
+        .QN_N(QN_N), .KV_N(KV_N), .QB_NB(QB_NB), .SW_W(SW_W), .SM_H(SM_H), .SM_LPH(SM_LPH),
                  .SM_NVMAX(SM_NVMAX), .S_RD(S_RD), .S_WR(S_WR), .MUT(MUT), .AMUT(AMUT)) u_su (
+`ifdef DSFD_SUHC_HIER
+`ifdef OT_S81_CP_LEAF_CLOCKS
+        .ck_cp_bridge(ck_cp_bridge),.rs_cp_bridge(rs_cp_bridge),.ck_cp_tap(ck_cp_tap),.rs_cp_tap(rs_cp_tap),
+        .ck_cp_ctl(ck_cp_ctl),.ck_cp_mem(ck_cp_mem),.ck_cp_lane(ck_cp_lane),
+`endif
+`endif
         .cck(ck[0]), .crs(rn), .sk(ck[0]), .srs(rn), .c_cmd_v(cv_q), .c_cmd_d(cd_q), .c_done_v(dv), .c_done_tag(dt),
         .inp(`ifdef DSFD_SUHC_STATIC_ISSUE 1'b1 `else f_inp[0] `endif), .rq_v(rq_v), .rq_row(rq_row), .rs_v(rs_v), .rs_d(rs_d), .wq_v(wq_v), .wq_row(wq_row),
         .wq_mask(wq_mask), .wq_d(wq_d), .flt(flt), .online(onl), .fcode(fcode));
