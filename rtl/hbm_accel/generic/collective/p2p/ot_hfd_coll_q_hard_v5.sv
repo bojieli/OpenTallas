@@ -171,6 +171,13 @@ endmodule
 // same output pin, so separate clk_mem entries would give every uop bit two launch domains (multiple_cts_roots
 // refuses a port owned by two roots). The leaf's own CTS tree clocks the control flops, the 3 macro clock pins and
 // the 1536 bank face flops: same logical edge as host_v4's related clk_issue[3:0] (lockstep bench unchanged).
+// V6b: the 2 x 1,536-b delay banks of the issue stream (d2 to the protocol leaf, d3 to every other child) in their own
+// leaf: the issuer leaf keeps the macros, the programme state and one output bank (gate 15f52eabd: 12.3k sinks, TT
+// insertion 516 ps / spread 103 in 315x324). Pin flop = d2, second bank = d3; both outputs flop Q.
+module ot_hgi_coll_uop_pipe(input wire clk,input wire [1535:0] uop_d1,output reg [1535:0] uop_d2,output reg [1535:0] uop_d3);
+ always @(posedge clk)begin uop_d2<=uop_d1;uop_d3<=uop_d2;end
+endmodule
+
 module ot_hgi_coll_issuer_m(
  input wire clk_control,input wire rst_n,
  input wire [36:0] cfg,input wire start,input wire [5:0] start_pc,
@@ -180,15 +187,14 @@ module ot_hgi_coll_issuer_m(
  // carries iteration and the six step fields at the raw edge for the protocol leaf's pipelined products.
  // V6 (+1 issue edge): the protocol leaf pin-captures the d2 taps (its flop = the d3 edge); every other child and
  // the parent outputs take the d3 stream.
- output reg [1535:0] uop_d3,
- output reg [1535:0] uop_d2,
+ output reg [1535:0] uop_d1,                 // V6b: d2/d3 live in the uop pipe leaf ot_hgi_coll_uop_pipe
  output reg busy_d3,done_d3,start_d3,
  output reg busy_d2,start_d2,
  output wire [31:0] tap_iteration,
  output wire [87:0] tap_steps                // {lk8, rgx16, del16, iaddr16, vm16, idx16}
 );
  wire [1535:0] raw,uop;wire [31:0] iteration;
- ot_hgi_coll_static_issuer_v5 u_issuer(.clk_control(clk_control),.clk_mem({3{clk_control}}),.rst_n(rst_n),
+ ot_hgi_coll_static_issuer_v6 u_issuer(.clk_control(clk_control),.clk_mem({3{clk_control}}),.rst_n(rst_n),
   .cfg(cfg),.start(start),.start_pc(start_pc),.busy(busy),.done(done),.fault(fault),
   .uop_v(uop_v),.uop(raw),.iteration(iteration),.uop_pc(uop_pc));
 `ifdef OT_COLL_V5_MUT_NOMASK
@@ -198,8 +204,8 @@ module ot_hgi_coll_issuer_m(
 `endif
  assign tap_iteration=iteration;
  assign tap_steps={uop[1407+:8],uop[1318+:16],uop[1350+:16],uop[1366+:16],uop[1302+:16],uop[1334+:16]};
- reg [1535:0] uop_d1;reg busy_d1,done_d1,done_d2,start_d1;
- always @(posedge clk_control)begin uop_d1<=uop;uop_d2<=uop_d1;uop_d3<=uop_d2;end
+ reg busy_d1,done_d1,done_d2,start_d1;
+ always @(posedge clk_control)uop_d1<=uop;
  always @(posedge clk_control or negedge rst_n)
   if(!rst_n)begin busy_d1<=0;busy_d2<=0;busy_d3<=0;done_d1<=0;done_d2<=0;done_d3<=0;start_d1<=0;start_d2<=0;start_d3<=0;end
   else begin busy_d1<=busy;busy_d2<=busy_d1;busy_d3<=busy_d2;done_d1<=done;done_d2<=done_d1;done_d3<=done_d2;
@@ -405,6 +411,7 @@ module ot_hfd_coll_q_hard_v5_body #(
  input wire [1:0] qid,
  input wire clk_program,clk_control,
  input wire clk_vmasm,                  // V6: VM read-data assembly leaf entry
+ input wire clk_upipe,                  // V6b: issue-stream delay leaf entry
  input wire clk_issue,
  input wire [NCK-1:0] clk_qslots,       // [NS-1:0] capture leaves, [NCK-1:NS] switch slices
  input wire [16:0] clk_ring,
@@ -431,12 +438,13 @@ module ot_hfd_coll_q_hard_v5_body #(
  localparam integer PWT=545,SELW=4;
  // ---- issuer + programme target + fault join
  wire [36:0] program_cfg;wire hgi_start;wire [5:0] hgi_start_pc;
- wire issue_fault,issue_done,uop_v;wire [1535:0] inst,inst_d2;wire [5:0] uop_pc;wire busy_d2,start_d3;
+ wire issue_fault,issue_done,uop_v;wire [1535:0] inst,inst_d1,inst_d2;wire [5:0] uop_pc;wire busy_d2,start_d3;
  wire issue_busy_raw,issue_done_raw,start_d2;wire [31:0] tap_iteration;wire [87:0] tap_steps;
  ot_hgi_coll_issuer_m u_issuer(.clk_control(clk_issue),.rst_n(rst_n),
   .cfg(program_cfg),.start(hgi_start),.start_pc(hgi_start_pc),.busy(issue_busy_raw),.done(issue_done_raw),
-  .fault(issue_fault),.uop_v(uop_v),.uop_pc(uop_pc),.uop_d3(inst),.uop_d2(inst_d2),.busy_d3(hgi_busy),.done_d3(issue_done),
+  .fault(issue_fault),.uop_v(uop_v),.uop_pc(uop_pc),.uop_d1(inst_d1),.busy_d3(hgi_busy),.done_d3(issue_done),
   .start_d3(start_d3),.busy_d2(busy_d2),.start_d2(start_d2),.tap_iteration(tap_iteration),.tap_steps(tap_steps));
+ ot_hgi_coll_uop_pipe u_upipe(.clk(clk_upipe),.uop_d1(inst_d1),.uop_d2(inst_d2),.uop_d3(inst));
  assign hgi_done=issue_done;assign done=issue_done;assign hgi_fault=fault;
  // ---- ISA fields (wires; identical positions to ot_hfd_coll_q_static_v4)
  wire [9:0] p_capture_slot=inst[0+:10];
@@ -657,10 +665,10 @@ endmodule
 // ---------------------------------------------------------------------------------------------------------------
 // Die-facing masters. Ports equal host_v4 except: QID parameter -> `qid` strap input; clk_qslots 2 -> NS+18;
 // clk_vmwrite 1 -> 16; clk_issue 4 -> 1 (issuer leaf has one CTS root, COLL-CTL 1045); new output fault_cause[15:0];
-// V6: + clk_vmasm (VM read-data assembly leaf); issue path +4 vs host_v4 (was +3).
+// V6: + clk_vmasm (VM read-data assembly leaf), + clk_upipe (issue-stream delay leaf); issue path +4 vs host_v4 (was +3).
 module ot_hfd_coll_q3_hard_v5(
  input wire rst_n,input wire [1:0] qid,
- input wire clk_program,clk_control,clk_vmasm,input wire clk_issue,input wire [28:0] clk_qslots,
+ input wire clk_program,clk_control,clk_vmasm,clk_upipe,input wire clk_issue,input wire [28:0] clk_qslots,
  input wire [16:0] clk_ring,input wire [32:0] clk_reduce,input wire clk_arg,input wire [33:0] clk_tkm,
  input wire [15:0] clk_vmwrite,input wire [14:0] clk_link,
  input wire cfg_v,input wire [7:0] cfg_target,input wire [11:0] cfg_addr,input wire [255:0] cfg_data,
@@ -682,7 +690,7 @@ endmodule
 
 module ot_hfd_coll_q2_hard_v5(
  input wire rst_n,input wire [1:0] qid,
- input wire clk_program,clk_control,clk_vmasm,input wire clk_issue,input wire [26:0] clk_qslots,
+ input wire clk_program,clk_control,clk_vmasm,clk_upipe,input wire clk_issue,input wire [26:0] clk_qslots,
  input wire [16:0] clk_ring,input wire [32:0] clk_reduce,
  input wire [15:0] clk_vmwrite,input wire [9:0] clk_link,
  input wire cfg_v,input wire [7:0] cfg_target,input wire [11:0] cfg_addr,input wire [255:0] cfg_data,

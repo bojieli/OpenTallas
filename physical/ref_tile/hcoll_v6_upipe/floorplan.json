@@ -1,0 +1,79 @@
+{
+ "schema": "opentallas.ref_tile.floorplan.v1",
+ "name": "hcoll_v6_upipe",
+ "top": "ot_hgi_coll_uop_pipe",
+ "kind": "tile",
+ "die": [
+  0,
+  0,
+  259.2,
+  259.2
+ ],
+ "core": [
+  2.16,
+  2.16,
+  257.03999999999996,
+  257.03999999999996
+ ],
+ "why": "spec outline",
+ "std_area_um2": null,
+ "layer_contract": {
+  "children": {},
+  "pg_layer": "M5",
+  "rlayers": [
+   "M2",
+   "M5"
+  ],
+  "strap_layer": "M6",
+  "layer_cap": "M5",
+  "cap_basis": "contract"
+ },
+ "pins": {
+  "W": [
+   "clk",
+   "uop_d1"
+  ],
+  "S": [
+   "uop_d2"
+  ],
+  "E": [
+   "uop_d3"
+  ]
+ },
+ "clock_port": "clk",
+ "blocks": [],
+ "findings": [],
+ "referenced": [
+  "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_hard_v5.sv",
+  "physical/ref_tile/hcoll_v6_upipe/kit.env",
+  "physical/ref_tile/hcoll_v6_upipe/clock.sdc",
+  "physical/ref_tile/hcoll_v6_upipe/signoff.sdc",
+  "physical/ref_tile/hcoll_v6_upipe/pdn.tcl",
+  "physical/ref_tile/hcoll_v6_upipe/pre_cts.tcl",
+  "physical/ref_tile/hcoll_v6_upipe/post_cts.tcl",
+  "physical/ref_tile/hcoll_v6_upipe/post_grt.tcl",
+  "physical/ref_tile/hcoll_v6_upipe/pre_drt.tcl",
+  "physical/ref_tile/hcoll_v6_upipe/pre_fill.tcl",
+  "physical/ref_tile/hcoll_v6_upipe/post_fill.tcl",
+  "physical/ref_tile/hcoll_v6_upipe/pre_grt.tcl",
+  "physical/ref_tile/hcoll_v6_upipe/post_drt.tcl",
+  "tools/ref_tile/ref_route.sh",
+  "physical/qwen_die_masters/io_ref_skew.sdc",
+  "physical/qwen_die_masters/io_plain.sdc",
+  "physical/qwen_die_masters/repair_budget.tcl",
+  "physical/qwen_die_masters/pre_cts_skew.tcl",
+  "physical/qwen_die_masters/pre_ref_skew.tcl",
+  "physical/qwen_die_masters/post_plain.tcl",
+  "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
+  "physical/common_flow/grt_macro_top_layer.tcl",
+  "physical/qwen_die_masters/io_flop_at_pins.tcl",
+  "physical/qwen_die_masters/out_flop_release.tcl",
+  "physical/dsrom_window_source/leaf_iohold.tcl",
+  "physical/dsrom_window_source/leaf_inhold_release.tcl",
+  "physical/dsrom_window_source/leaf_inhold.tcl",
+  "physical/dsrom_window_source/leaf_inhold_release.tcl",
+  "physical/ref_tile/hcoll_v6_upipe/pre_gpl.tcl",
+  "physical/ref_tile/hcoll_v6_upipe/pre_dpl.tcl",
+  "physical/common_flow/pin_reg_split.tcl"
+ ]
+}
