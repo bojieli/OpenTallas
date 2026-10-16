@@ -1,5 +1,5 @@
 {
- "name": "s81hc_ctfxcap_pinpipe_ref-ncap-slaunch-COMMIT",
+ "name": "s81hc_ctfxcap_pinpipe_ref-ncap-slaunch-caps-COMMIT",
  "block": "ot_s81_hc_ctfx_cap_pinpipe",
  "ref_tile": true,
  "owner": "Codex:S81-HC-takeover",
@@ -32,8 +32,7 @@
     "threads": 1,
     "peak_ram_gb": 2,
     "needs": [
-     "iverilog",
-     "vvp"
+     "iverilog"
     ]
    },
    {
@@ -44,8 +43,7 @@
     "threads": 1,
     "peak_ram_gb": 2,
     "needs": [
-     "iverilog",
-     "vvp"
+     "iverilog"
     ]
    }
   ],
@@ -97,7 +95,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81hc_ctfxcap_pinpipe_ref/s81hc_ctfxcap_pinpipe_ref-ncap-slaunch-COMMIT"
+   "to": "results/rtl/ref_tile/s81hc_ctfxcap_pinpipe_ref/s81hc_ctfxcap_pinpipe_ref-ncap-slaunch-caps-COMMIT"
   }
  ],
  "cycles_added": 1,
