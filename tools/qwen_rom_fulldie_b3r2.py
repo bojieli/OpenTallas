@@ -1877,6 +1877,12 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
     for it in m['insts']:
         add_rect((it.x, it.y, it.x + it.w, it.y + it.h))
     die_top = g['y_io']
+    # Re-packed tile rows expose real horizontal channels. Derive them from
+    # actual placed tile bodies, not the historical TILE_SLOT height. free()
+    # below still checks every macro and every previously reserved relay.
+    from qwen_split.relay_row_gaps import row_gaps, contains_frame
+    legal_row_gaps = row_gaps((it.y, it.y + it.h) for it in m['insts']
+                             if re.fullmatch(r't_\d+_\d+', it.name))
 
     def corr_of(x):
         j = min(range(COLS), key=lambda c: abs(cx_list[c] - x))
@@ -1903,7 +1909,8 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             for dx, dy in sorted(cands, key=lambda t: abs(t[0]) + abs(t[1])):
                 x0 = v.dn(x - w / 2 + dx, v.GX)
                 y0 = v.dn(y - h / 2 + dy, v.GY)
-                if in_field(x0 + w / 2, y0 + h / 2) and corr_of(x0 + w / 2) is None and not (cur_tight[0] or cur_gapok[0]):
+                if in_field(x0 + w / 2, y0 + h / 2) and corr_of(x0 + w / 2) is None and not (cur_tight[0] or cur_gapok[0] or
+                                contains_frame(legal_row_gaps, y0, h)):
                     continue           # never over a tile body (it4: a KV row-run relay may sit in a row gap; free()
                     #                    still refuses any tile overlap)
                 if free((x0, y0, x0 + w, y0 + h)):
@@ -6436,7 +6443,9 @@ write_db /work/floorplan_pdn.odb
 """)
     # Explicit modeled-PHY candidate revision, before any floorplan ODB exists.
     from phy_pg.apply_case import maybe_apply as _assumed_phy_pg
-    phy_access = _assumed_phy_pg(work)
+    # Compute PHY abstracts arrive in bind_real, after this frame-only case.
+    # Its chain applies the same contract after binding and final PDN regroup.
+    phy_access = None if m.get('split_compute') else _assumed_phy_pg(work)
     if phy_access:
         man['assumed_phy_pg_access'] = 'assumed_phy_pg_access.json'
     man.update(case='a_pdn', bump_um=bump_um, macro_grids=len(meta), producer=__file__, die=m['die'],
