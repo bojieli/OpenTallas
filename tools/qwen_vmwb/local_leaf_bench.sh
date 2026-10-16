@@ -1,0 +1,15 @@
+#!/bin/bash
+set -euo pipefail
+out=${1:?output directory};kind=${2:?return or control};mkdir -p "$out"
+if [ "$kind" = return ]; then top=tb_return_plane; else top=tb_read_control_ro6; fi
+for mutant in 0 1; do
+  iverilog -g2012 -s "$top" -P"$top.MUT=$mutant" -o "$out/m$mutant.vvp" rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv "rtl/test/qwen_vm_residual/$top.sv" > "$out/m$mutant.build.log" 2>&1
+  sha256sum "$out/m$mutant.vvp" > "$out/m$mutant.binary.sha256"
+  if vvp "$out/m$mutant.vvp" > "$out/m$mutant.run.log" 2>&1; then
+    test "$mutant" = 0;grep -q '^PASS' "$out/m$mutant.run.log"
+  else
+    test "$mutant" = 1;grep -q 'FAIL' "$out/m$mutant.run.log"
+  fi
+done
+sha256sum rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv "rtl/test/qwen_vm_residual/$top.sv" > "$out/source.sha256"
+echo "PASS exact local $kind positive and observed hardware mutant"
