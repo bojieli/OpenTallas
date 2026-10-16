@@ -70,7 +70,7 @@ module qkd_static_kv_return_slots_mc #(parameter integer DEPTH=8)(
  genvar bank;
  generate for(bank=0;bank<4;bank=bank+1)begin:g_storage
   reg [71:0] bank_data[0:DEPTH-1];
-  assign read_data[bank*72+:72]=bank_read_data;
+  assign read_data[bank*72+:72]=bank_data[ra];
   always @(posedge pll_hbm_data[bank])
    if(hr && write_slot)bank_data[wa]<=hd[bank*72+:72];
  end endgenerate
