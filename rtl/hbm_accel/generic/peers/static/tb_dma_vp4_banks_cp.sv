@@ -38,7 +38,7 @@ module tb_dma_vp4_banks_cp;
   .wb_reserve_bank(banka),.wb_fill_bank(fillbanka),.wb_reserve_epoch(epocha),.wb_fill_epoch(fillepocha),
   .wb_reserve_sectors(sectorsa),.wb_reserve_base(basea),.wb_fill_start(filla),.wb_ready(1'b1),.wd(wda),.wa(wa));
  // ---- DUT: the folded parent
- ot_hgi_dma_back_static_vp4_banks_cp #(.CP_MUT(`CP_MUT)) dut(.clk(clk),.rst_n(rst_n),.stk(2'd0),.tgt(8'd104),.clk_bank({8{clk}}),
+ ot_hgi_dma_back_static_vp4_banks_cp #(.CP_MUT(`CP_MUT)) dut(.clk(clk),.clk_cp(clk),.clk_tab({2{clk}}),.rst_n(rst_n),.stk(2'd0),.tgt(8'd104),.clk_bank({8{clk}}),
   .cfg_v(cfg_v),.cfg_target(cfg_target),.cfg_addr(cfg_addr),.cfg_data(cfg_data),.desc_v(desc_v),.desc_base(desc_base),
   .desc_limit(desc_limit),.desc_loops(desc_loops),.launch_v(launch_v),.cp_configured(d_cfgd),.cp_fault(d_flt),.cp_active(d_act),
   .mv_src(srcb),.mv_done(doneb),.mv_fault(faultb),.quiet(quietb),.busy(busyb),.rq(rqb),.rr(rr),.wb_reserve_v(reserveb),

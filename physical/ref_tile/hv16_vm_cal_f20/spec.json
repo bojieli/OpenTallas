@@ -50,6 +50,7 @@
   ],
   "S": [
    "clk",
+   "clk_tgt",
    "calendar_v",
    "active",
    "done",
@@ -180,10 +181,6 @@
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
  },
- "outline": {
-  "w": 259.2,
-  "h": 151.2
- },
  "pin_regs": {
   "enable": false,
   "reason": "RTL registers every input at the pin (ot_static_program_target cv/dv/lv/target/address/data_q/base/limit/loops/tgt_q on clk_cap) and every output is a flop (calendar word fields, calendar_v, ordinal, active, done, fault, configured, target fault); rst_n drives only local synchronisers; a wrapper stage would add +1/+1 for nothing"
@@ -192,7 +189,8 @@
  "clock_ports": [
   "clk",
   "clk_cap",
-  "clk_mem"
+  "clk_mem",
+  "clk_tgt"
  ],
  "clock_entry_domains": {
   "core": {
@@ -251,10 +249,7 @@
     "desc_loops",
     "launch_v"
    ],
-   "outputs": [
-    "tgt_configured",
-    "tgt_fault"
-   ]
+   "outputs": []
   },
   "mem": {
    "ratio": [
@@ -266,6 +261,20 @@
    ],
    "inputs": [],
    "outputs": []
+  },
+  "tgt": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_tgt"
+   ],
+   "inputs": [],
+   "outputs": [
+    "tgt_configured",
+    "tgt_fault"
+   ]
   }
  },
  "clock_data_paths": "related_same_frequency",
@@ -279,12 +288,17 @@
  },
  "clock_cts_roots": [
   "clk",
-  "clk_cap"
+  "clk_cap",
+  "clk_tgt"
  ],
  "slot_change_request": "H-NETLIST 0600: the 12 die calendars (calendar_<q>, epcal_<q>, vmfc_<q>) bind this folded master; W face takes the F20 bus + tgt strap instead of the collar programme pins; outline grows 220.32x116.64 -> 259.2x151.2 (target bitmap + data regs); H-DIE homes.",
  "reroute_reason": {
   "kind": "rtl_change",
   "why": "H-DIE option A collar fold: the F20 programme target (standalone ~630-pin ot_static_program_target, pin-bound below 30% util) is folded into the closed universal calendar hv15_vm_cal_x-xcap0030-cce3264d2 as pin-registered soft logic on clk_cap; equivalence vs the two-tile composition every edge (rtl/hbm_accel/generic/vm/static/fill_universal_0600/run_calendar_f20_eq.sh)",
   "source": "results/rtl/hbm_fill_universal_0600/f20_run0.log"
+ },
+ "outline": {
+  "w": 220.32,
+  "h": 140.4
  }
 }

@@ -209,11 +209,12 @@ FOLD_RULES = [
          wrapper='hfd_hgi_vm_calendar_f20', source=UNIV_CAL_DIR + 'hfd_hgi_vm_calendar_f20.sv',
          deps=[UNIV_CAL_DIR + 'ot_vms_calendar_static_xcap.sv', UNIV_CAL_DIR + 'hfd_hgi_vm_calendar.sv',
                UNIV_CAL_DIR + 'ot_static_program_target.sv'],
-         status={'configured': 'tgt_configured', 'fault': 'tgt_fault'}),
+         status={'configured': 'tgt_configured', 'fault': 'tgt_fault'}, clocks=('clk_tgt',)),
     dict(target='ot_static_cmd_target', detect='cmd', consumers=('ot_hgi_dma_back_static_vp4_banks',),
          wrapper='ot_hgi_dma_back_static_vp4_banks_cp', source=_DBK + 'ot_hgi_dma_back_static_vp4_banks_cp.sv',
          deps=[_DBK + 'ot_hgi_dma_back_static_vp4_banks.sv', 'rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv'],
-         status={'configured': 'cp_configured', 'fault': 'cp_fault', 'active': 'cp_active'}),
+         status={'configured': 'cp_configured', 'fault': 'cp_fault', 'active': 'cp_active'},
+         clocks=('clk_cp', 'clk_tab')),   # H-HARDEN 1f18141cb: collar CTS root + raw table-SRAM entries
     dict(target='ot_static_cmd_target', detect='a_we', consumers=('ot_hbm_svc_sm_xcal',),
          wrapper='ot_hbm_svc_sm_xcal_t', source='rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_xcal_t.sv',
          deps=['rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_xcal.sv', 'rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv'],
@@ -227,6 +228,11 @@ FOLD_RULES = [
          params={'DEPTH': 4}, param_straps={'QUAD': 'quad'},
          status={'configured': 'configured', 'fault': 'fault', 'active': 'active'}),
 ]
+FOLD_RULES.append(dict(target='ot_static_cmd_target', detect='cmd_v', consumers=('ot_hgi_sm_xload_cl2_ctl',),
+     wrapper='ot_hgi_sm_xload_cl2_ctlw', source='rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv',
+     deps=['rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv'],
+     params={'PMAX': 8, 'RD_LAT': 6, 'NR': 32, 'LEAD': 8},   # H-SM xl2 8146db7ac: issuer MODE1 CW108 folded (option A)
+     status={'configured': 'configured', 'fault': 'fault', 'active': 'active'}))
 # parameters that became identity strap pins (H-SM DEDUPE 2026-10-16): one hardened master for every value
 PARAM_STRAPS = {'ot_hbm_svc_vm_kshare': {'SM': 'sm'}}
 # H-NETLIST 0600: logical array wrappers whose RTL is "physically N independently hardened leaves" are FLATTENED in the
@@ -349,7 +355,8 @@ def build(specs_dir, out):
                 x['inst'] = c
         del insts[t]
     specs.append(dict(region='fill_calendar_universal', edges=[], instances=[], gaps=[], straps=[],
-                      clocks=[dict(inst=n, port=p, domain='stream', kind='clock') for n in univ_cal for p in ('clk_cap', 'clk_mem')]))
+                      clocks=[dict(inst=n, port=p, domain='stream', kind='clock') for n in univ_cal for p in ('clk_cap', 'clk_mem')]
+                             + [dict(inst=c, port=p, domain='stream', kind='clock') for t, c in folded.items() for p in fold_rule[t].get('clocks', ())]))
     flat = {}
     for n in list(insts):
         r = FLATTEN.get(insts[n]['master'])

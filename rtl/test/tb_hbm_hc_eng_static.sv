@@ -6,6 +6,10 @@
 // a schedule entry on x_wave in cycle t == T + 4n (t = the engine programme's edge counter), exactly the hc_<q> reader
 // cadence (one 32-sector wave every 4 edges). Checks: every projection mix (o_valid) and every result pin word
 // against the golden; any engine fault is fatal. Prints the measured event times.
+// 0600: the programme and the table are installed through the engine's folded F20 targets (strap tgt = 164: programme
+// 164, table 165; F20 cfg rows, descriptor, launch); the x_wave link is XW_BEATS (default 4): beat b of wave n sits on
+// the pins at t == T + 4n - 3 + b (the whole wave at T + 4n in the XW_BEATS=1 form). Sources are driven at negedge
+// from the programme edge counter t (equivalent to a combinational function of t, no array sensitivity).
 module tb_hbm_hc_eng_static;
     localparam integer K = 20480;
     reg clk = 0; always #1 clk = ~clk;
@@ -16,42 +20,50 @@ module tb_hbm_hc_eng_static;
     integer sq [0:63], sT [0:63], scnt [0:63], skind [0:63], ssrc [0:63], sword [0:63];
     integer gq [0:63], gT [0:63], gpos [0:63], grow [0:63]; reg [31:0] gdat [0:63];
     integer fd, rc, i, n;
-    reg cfg_we = 0; reg [9:0] cfg_addr = 0; reg [255:0] cfg_data = 0;
-    reg start_v = 0; reg tbl_we = 0; reg [9:0] tbl_addr = 0; reg [255:0] tbl_data = 0;
-    reg [3:0] x_wave_v; reg [39:0] x_wave_word; reg [32767:0] x_wave;
-    reg [3:0] gm_v; reg [19:0] gm_row; reg [11:0] gm_pos; reg [127:0] gm_data;
+`ifdef XWB
+    localparam integer XWB = `XWB;
+`else
+    localparam integer XWB = 4;
+`endif
+    localparam integer BW = 8192 / XWB;
+    reg cfg_v = 0, desc_v = 0, launch_v = 0; reg [7:0] cfg_target = 0; reg [11:0] cfg_addr = 0, desc_base = 0;
+    reg [255:0] cfg_data = 0; reg [12:0] desc_limit = 0; reg [15:0] desc_loops = 0; wire configured;
+    reg [3:0] x_wave_v = 0; reg [39:0] x_wave_word = 0; reg [4*BW-1:0] x_wave = 0; reg [7:0] x_wave_beat = 0;
+    reg [3:0] gm_v = 0; reg [19:0] gm_row = 0; reg [11:0] gm_pos = 0; reg [127:0] gm_data = 0;
     wire [3:0] result_v; wire [11:0] result_position; wire [3071:0] result; wire pa, pd, fault;
 `ifdef MUT
     localparam integer MUTP = `MUT;
 `else
     localparam integer MUTP = 0;
 `endif
-    ot_hbm_hc_eng_static #(.MUT(MUTP)) dut (.clk(clk), .rst_n(rst_n), .cfg_we(cfg_we), .cfg_addr(cfg_addr),
-        .cfg_data(cfg_data), .start_v(start_v), .start_base(10'd0), .start_limit(11'(nwords)), .start_loops(16'd1),
-        .tbl_we(tbl_we), .tbl_addr(tbl_addr), .tbl_data(tbl_data),
-        .x_wave_v(x_wave_v), .x_wave_word(x_wave_word), .x_wave(x_wave),
+    ot_hbm_hc_eng_static #(.MUT(MUTP), .XW_BEATS(XWB)) dut (.clk(clk), .rst_n(rst_n), .tgt(8'd164), .cfg_v(cfg_v),
+        .cfg_target(cfg_target), .cfg_addr(cfg_addr), .cfg_data(cfg_data), .desc_v(desc_v), .desc_base(desc_base),
+        .desc_limit(desc_limit), .desc_loops(desc_loops), .launch_v(launch_v), .configured(configured),
+        .x_wave_v(x_wave_v), .x_wave_word(x_wave_word), .x_wave(x_wave), .x_wave_beat(x_wave_beat),
         .gathered_mix_v(gm_v), .gathered_mix_row(gm_row), .gathered_mix_pos(gm_pos), .gathered_mix_data(gm_data),
         .result_v(result_v), .result_position(result_position), .result(result),
         .program_active(pa), .program_done(pd), .fault(fault));
     wire busy = dut.u_seq.busy;
     wire [19:0] t = dut.u_seq.t;
-    // ---- quadrant wave sources and gathered-mix words (functions of the programme edge counter)
-    always @* begin
-        x_wave_v = 0; x_wave_word = 0; x_wave = 0; gm_v = 0; gm_row = 0; gm_pos = 0; gm_data = 0;
+    // ---- quadrant wave sources and gathered-mix words (functions of the programme edge counter t)
+    always @(negedge clk) begin
+        x_wave_v <= 0; x_wave_beat <= 0; gm_v <= 0;
         if (busy) begin
             for (integer s = 0; s < nsched; s = s + 1)
-                if (t >= sT[s] && (t - sT[s]) % 4 == 0 && (t - sT[s]) / 4 < scnt[s]) begin : src
-                    integer m, q;
-                    m = (t - sT[s]) / 4; q = sq[s];
-                    x_wave_v[q] = 1'b1;
-                    x_wave_word[q*10 +: 10] = 10'(sword[s] + m);
-                    for (integer l = 0; l < 256; l = l + 1)
-                        x_wave[q*8192 + l*32 +: 32] = skind[s] ? wmem[(ssrc[s] + m)*256 + l] : xmem[(ssrc[s] + m)*256 + l];
+                if (t + 3 >= sT[s] && (t + 3 - sT[s]) / 4 < scnt[s] && (XWB == 4 || (t - sT[s]) % 4 == 0)) begin : src
+                    integer m, q, b, w0;
+                    q = sq[s]; m = (t + 3 - sT[s]) / 4; b = (XWB == 4) ? (t + 3 - sT[s]) % 4 : 0;
+                    x_wave_v[q] <= 1'b1;
+                    x_wave_beat[q*2 +: 2] <= 2'(b);
+                    x_wave_word[q*10 +: 10] <= 10'(sword[s] + m);
+                    w0 = (ssrc[s] + m) * 256 + b * (BW / 32);
+                    for (integer l = 0; l < BW / 32; l = l + 1)
+                        x_wave[q*BW + l*32 +: 32] <= skind[s] ? wmem[w0 + l] : xmem[w0 + l];
                 end
             for (integer g = 0; g < ngm; g = g + 1)
                 if (t == gT[g]) begin
-                    gm_v[gq[g]] = 1'b1; gm_row[gq[g]*5 +: 5] = 5'(grow[g]); gm_pos[gq[g]*3 +: 3] = 3'(gpos[g]);
-                    gm_data[gq[g]*32 +: 32] = gdat[g];
+                    gm_v[gq[g]] <= 1'b1; gm_row[gq[g]*5 +: 5] <= 5'(grow[g]); gm_pos[gq[g]*3 +: 3] <= 3'(gpos[g]);
+                    gm_data[gq[g]*32 +: 32] <= gdat[g];
                 end
         end
     end
@@ -101,14 +113,21 @@ module tb_hbm_hc_eng_static;
         for (i = 0; i < ngm; i = i + 1) rc = $fscanf(fd, "%d %d %d %d %d\n", gq[i], gT[i], gpos[i], grow[i], gdat[i]);
         $fclose(fd);
         repeat (5) @(posedge clk); rst_n = 1; repeat (3) @(posedge clk);
-        for (i = 0; i < nwords; i = i + 1) begin
-            @(negedge clk); cfg_we = 1; cfg_addr = 10'(i); cfg_data = prog[i];
-        end
+        // table rows -> target 165 (F20 header {c7a1, row}), programme rows -> target 164 (header written by the tool)
         for (i = 0; i < 12; i = i + 1) begin
-            @(negedge clk); cfg_we = 0; tbl_we = 1; tbl_addr = 10'(i); tbl_data = tbl[i];
+            @(posedge clk); #0.5 cfg_v = 1; cfg_target = 8'd165; cfg_addr = 12'(i);
+            cfg_data = {16'hc7a1, 4'd0, 12'(i), tbl[i][223:0]};
         end
-        @(negedge clk); cfg_we = 0; tbl_we = 0; repeat (4) @(negedge clk);
-        start_v = 1; @(negedge clk); start_v = 0;
+        for (i = 0; i < nwords; i = i + 1) begin
+            @(posedge clk); #0.5 cfg_v = 1; cfg_target = 8'd164; cfg_addr = 12'(i); cfg_data = prog[i];
+        end
+        @(posedge clk); #0.5 cfg_v = 0;
+        repeat (4) @(posedge clk); #0.5 desc_v = 1; cfg_target = 8'd164; desc_base = 0; desc_limit = 13'(nwords);
+        desc_loops = 16'd1;
+        @(posedge clk); #0.5 desc_v = 0;
+        for (i = 0; i < nwords + 16 && !configured; i = i + 1) @(posedge clk);
+        if (!configured) $fatal(1, "HC programme target not configured");
+        @(posedge clk); #0.5 launch_v = 1; @(posedge clk); #0.5 launch_v = 0;
         wait (busy);
         wait (!busy);
         repeat (40) @(posedge clk);

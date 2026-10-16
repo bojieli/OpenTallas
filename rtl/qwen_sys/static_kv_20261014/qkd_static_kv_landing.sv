@@ -16,6 +16,7 @@ module qkd_static_kv_landing_pc #(
     input wire arm,
     input wire [15:0] epoch,
     input wire [5:0] layer,
+    input wire [13:0] ctx_t,          // Q-VMWB 10-16: context T of the armed layer (with arm), K row addressing
     input wire expected_put,
     input wire [9:0] expected_sector,
     input wire actual_valid,
@@ -48,8 +49,9 @@ module qkd_static_kv_landing_pc #(
     (* keep *) reg [255:0] ad_q;
     (* keep *) reg [13:0] gt_q;
     (* keep *) reg gv_q;
+    (* keep *) reg [13:0] ctx_q;
     always @(posedge ck) begin
-        epoch_q<=epoch;layer_q<=layer;ae_q<=actual_epoch;al_q<=actual_layer;
+        ctx_q<=ctx_t;epoch_q<=epoch;layer_q<=layer;ae_q<=actual_epoch;al_q<=actual_layer;
         ge_q<=get_epoch;gl_q<=get_layer;ps_q<=expected_sector;as_q<=actual_sector;
         ad_q<=actual_data;gt_q<=get_t;gv_q<=get_v;
     end
@@ -64,7 +66,22 @@ module qkd_static_kv_landing_pc #(
     wire [2:0] get_group=gvm?{gt_q[5:4],gt_q[0]}:gt_q[2:0];
     wire [7:0] put_ord=ordinal(ps_q),get_ord=ordinal(get_sector);
     wire [8:0] put_ticket={ps_q[9],put_ord},get_ticket={gv_q,get_ord};
-    wire [6:0] wa=put_ord[6:0],ra=get_ord[6:0];
+    // K row addressing by STREAM POSITION (Q-VMWB 10-16).  A group's K rows < T arrive as ordinals [0, n0) then
+    // [128, 128 + n1); with n0 < 128 (T < ~7.7k) ordinal 128 + i used to land on row i while i was still unread
+    // (kv_calendar: T 2048 / 4096 slack -4 / -19 core edges).  Row = position in the stream mod 128: o for o < 128,
+    // else n0 + o - 128, n0 = this group's half-0 rows at T (closed form, latched at arm).  With <= 64 rows
+    // outstanding (ring bound) no two live rows share a row.  V rows < T are a gap-free ordinal prefix: unchanged.
+    reg [7:0] k_n0;
+    wire signed [15:0] n0_x = $signed({2'b0, ctx_q}) - $signed({7'b0, stack_q, 7'b0}) - $signed({13'b0, group_q});
+    wire [6:0] n0_q = n0_x[15:9];
+    wire [8:0] n0_r = n0_x[8:0];
+    wire [3:0] n0_c = (n0_r >= 9'd57) ? 4'd8 : 4'((n0_r + 9'd7) >> 3);
+    wire [7:0] n0_now = (n0_x <= 0) ? 8'd0 : (n0_q >= 7'd16) ? 8'd128 : {n0_q[4:0], 3'b0} + {4'b0, n0_c};
+    function automatic [6:0] kpos(input [7:0] ord, input [7:0] n0);
+        reg [7:0] pv;
+        begin pv = (ord[7] && MUT != 3) ? (n0 + {1'b0, ord[6:0]}) : ord; kpos = pv[6:0]; end   // MUT 3: old ordinal rows
+    endfunction
+    wire [6:0] wa=ps_q[9]?put_ord[6:0]:kpos(put_ord,k_n0),ra=gv_q?get_ord[6:0]:kpos(get_ord,k_n0);
     reg [127:0] valid;
     reg [8:0] ticket[0:127];
     reg [15:0] active_epoch;
@@ -87,12 +104,12 @@ module qkd_static_kv_landing_pc #(
       if(put_q)ticket[wa]<=(MUT==1)?(put_ticket^9'b1):put_ticket;
     end
     always @(posedge ck or negedge rn)
-      if(!rn)begin valid<=0;fault<=0;active_epoch<=0;active_layer<=0;armed<=0;read_q<=0;out_valid<=0;end
+      if(!rn)begin valid<=0;fault<=0;active_epoch<=0;active_layer<=0;armed<=0;read_q<=0;out_valid<=0;k_n0<=0;end
       else begin
         read_q<=get_q;out_valid<=read_q;
         if(arm_q)begin
           if((|valid)||put_q||get_q)fault<=1;
-          active_epoch<=epoch_q;active_layer<=layer_q;armed<=1;valid<=0;
+          active_epoch<=epoch_q;active_layer<=layer_q;armed<=1;valid<=0;k_n0<=n0_now;
         end
         if(put_q!=actual_q)fault<=1;
         if(put_q)begin
@@ -183,7 +200,7 @@ module qkd_static_kv_landing_grp #(
     parameter integer STACK=0,GROUP=0,MUT=0,VMAP=0,VREQ=0
 )(
     input wire ck,input wire [3:0] ck_pc,input wire rst_n,
-    input wire arm,input wire [15:0] epoch,input wire [5:0] layer,
+    input wire arm,input wire [15:0] epoch,input wire [5:0] layer,input wire [13:0] ctx_t,
     input wire [3:0] expected_put,input wire [39:0] expected_sector,
     input wire [3:0] actual_valid,input wire [39:0] actual_sector,
     input wire [63:0] actual_epoch,input wire [23:0] actual_layer,input wire [1023:0] actual_data,
@@ -206,7 +223,7 @@ module qkd_static_kv_landing_grp #(
     genvar q;
     generate for(q=0;q<4;q=q+1)begin:g_pc
       qkd_static_kv_landing_pc #(.MUT(MUT),.VMAP(VMAP))u_pc(
-       .ck(ck_pc[q]),.rst_n(rst_n),.cfg_stack(2'(STACK)),.cfg_group(3'(GROUP)),.arm(arm),.epoch(epoch),.layer(layer),
+       .ck(ck_pc[q]),.rst_n(rst_n),.cfg_stack(2'(STACK)),.cfg_group(3'(GROUP)),.arm(arm),.epoch(epoch),.layer(layer),.ctx_t(ctx_t),
        .expected_put(expected_put[q]),.expected_sector(expected_sector[10*q+:10]),
        .actual_valid(actual_valid[q]),.actual_sector(actual_sector[10*q+:10]),
        .actual_epoch(actual_epoch[16*q+:16]),.actual_layer(actual_layer[6*q+:6]),.actual_data(actual_data[256*q+:256]),

@@ -6,14 +6,14 @@
  "die": [
   0,
   0,
-  259.2,
-  151.2
+  220.32,
+  140.4
  ],
  "core": [
   2.16,
   2.16,
-  257.03999999999996,
-  149.04
+  218.16,
+  138.24
  ],
  "why": "spec outline",
  "std_area_um2": null,
@@ -65,6 +65,7 @@
   ],
   "S": [
    "clk",
+   "clk_tgt",
    "calendar_v",
    "active",
    "done",
@@ -78,11 +79,13 @@
  "clock_ports": [
   "clk",
   "clk_cap",
-  "clk_mem"
+  "clk_mem",
+  "clk_tgt"
  ],
  "clock_cts_roots": [
   "clk",
-  "clk_cap"
+  "clk_cap",
+  "clk_tgt"
  ],
  "blocks": [
   {
@@ -91,8 +94,8 @@
    "master": "ot_sram_1r1w_1024x256_m2_r2c2",
    "inst": "u_calendar.u_programme.u_program",
    "idx": 0,
-   "x": 42.336,
-   "y": 41.04,
+   "x": 22.896,
+   "y": 34.56,
    "w": 174.744,
    "h": 70.488,
    "orient": "R0",

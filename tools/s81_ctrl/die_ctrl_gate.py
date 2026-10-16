@@ -28,7 +28,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 BIND = ROOT / 'physical/s81_ctrl/die_ctrl_bindings.json'
 PROGS = ROOT / 'results/rtl/s81_ctrl_20261008/programs/index.json'
-ENG = dict(fld=0, su=1, hc=2, coll=3, svc=4, sel=5, col=6, hop=7, head=8, emb=9, eng=10, spare=11, vm=12)
+ENG = dict(fld=0, su=1, hc=2, coll=3, svc=4, sel=5, col=6, hop=7, head=8, emb=9, eng=10, spare=11, vm=12, pq=13)
 _PSL = re.compile(r'^(.+)\[(\d+):(\d+)\]$')
 
 
@@ -134,6 +134,14 @@ def gate(m, role, bindings=None, used=None):
         return out
     sq = seqs[0].name
     absent = set(bindings['role_absent'].get(role, []))
+    # S-DIE-NETLIST 2026-10-16: engines the die kind's hardware binds (role_bound: PQ producer engine 13, MIX4 engine 10)
+    # are checked like used engines when the die's sequencer drives their command port; otherwise they stay absent
+    for e in (bindings.get('role_bound') or {}).get(role, []):
+        if _bits_of(m, sq, f'c{ENG[e]}'):
+            used = set(used) | {e}
+            absent.discard(e)
+        else:
+            absent.add(e)
     for e, k in ENG.items():
         rec = dict(port=k)
         out['engines'][e] = rec
