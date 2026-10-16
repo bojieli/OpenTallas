@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qkd_static_kv_landing_seg",
+ "enable": false,
+ "reason": "Every pin is already a flop in RTL: inputs land on the landing_pc input registers (ps_q/as_q/ae_q/al_q/ad_q/arm_q/epoch_q/layer_q/put_q/actual_q) and the rowctl request registers (rq/tq/vq/eq/lq, vrq/vtq); outputs leave the rowctl rsp_* / fault registers; cfg straps are registered in each PC (stack_q/group_q). A synthesis pin-register stage would add a second, redundant edge."
+}
