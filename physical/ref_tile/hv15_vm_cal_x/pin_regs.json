@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "hfd_hgi_vm_calendar",
+ "enable": false,
+ "reason": "RTL registers every data input at the pin (ot_vms_calendar_static_xcap cfg_we_q/cfg_addr_q/cfg_data_q/start_*_q) and every output is a flop (calendar word, calendar_v, ordinal, active, done, fault); rst_n drives only a local 2-flop synchroniser (async assert, 2-edge release); a wrapper stage would duplicate them (+1/+1 for nothing); clk_cap is a clock root, not data"
+}

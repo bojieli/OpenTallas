@@ -22,11 +22,11 @@ for line in Path('results/arch/hbm_vm_lg_split_1015/programme/NE_812.hex').read_
 Path(sys.argv[1], 'NE_812.hex').write_text('\n'.join(out) + '\n')
 print('repacked', len(out), 'words NE ->', U['bits'], 'bit universal layout')
 PY
-sed -e 's/hfd_hgi_vm_calendar_NE controller(/hfd_hgi_vm_calendar controller(/' -e 's/repeat(8)tick();rst_n=1;/repeat(8)tick();rst_n=1;tick();tick();/' \
+sed -e 's/hfd_hgi_vm_calendar_NE controller(.clk(clk),/hfd_hgi_vm_calendar controller(.clk(clk),.clk_cap(clk),/' -e 's/repeat(8)tick();rst_n=1;/repeat(8)tick();rst_n=1;tick();tick();/' \
     $d/tb_hbm_vm_lg_static_programmed.sv > "$out/tb.sv"
-grep -q 'hfd_hgi_vm_calendar controller(' "$out/tb.sv" && grep -q 'rst_n=1;tick();tick();' "$out/tb.sv"
+grep -q 'hfd_hgi_vm_calendar controller(.clk(clk),.clk_cap(clk),' "$out/tb.sv" && grep -q 'rst_n=1;tick();tick();' "$out/tb.sv"
 srcs=("$PWD/$d/ot_hbm_vm_lg_static_bank.sv" "$PWD/$d/ot_hbm_vm_lg_static_split.sv" "$PWD/$d/ot_vms_bank_static.sv"
-      "$PWD/$d/ot_vms_calendar_static.sv" "$PWD/$d/hfd_hgi_vm_calendar.sv"
+      "$PWD/$d/ot_vms_calendar_static_xcap.sv" "$PWD/$d/hfd_hgi_vm_calendar.sv"
       "$PWD/physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v" "$out/tb.sv")
 cd "$out"
 iverilog -g2012 -s tb_hbm_vm_lg_static_programmed -Ptb_hbm_vm_lg_static_programmed.MUT=$mut -o sim "${srcs[@]}"
