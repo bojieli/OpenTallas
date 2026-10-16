@@ -1,0 +1,39 @@
+{
+  "scope": "full native arithmetic lint only; no numerical/static cycle/physical claim",
+  "lint_files": {
+    "dsfd_sp_hc_comb_roots20.log": {
+      "sha256": "b82f644a25227226c9b14fd93e8f3493dbee6e721e582735e377a7152ba1b113",
+      "final_lines": [
+        "      |                                     ^",
+        "- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050",
+        "- Verilator: Built from 17.345 MB sources in 167 modules, into 43.504 MB in 44 C++ files needing 0.000 MB",
+        "- Verilator: Walltime 11.330 s (elab=0.516, cvt=10.066, bld=0.000); cpu 11.330 s on 1 threads; allocated 919.879 MB"
+      ]
+    },
+    "dsfd_sp_hc_comb_calendar20.log": {
+      "sha256": "399c5ad415d4d7f2964094383cafcb2b38e1e6b842e27261d3af836ee8c8613c",
+      "final_lines": [
+        "      |                                     ^",
+        "- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050",
+        "- Verilator: Built from 17.345 MB sources in 167 modules, into 43.695 MB in 44 C++ files needing 0.000 MB",
+        "- Verilator: Walltime 10.961 s (elab=0.496, cvt=9.753, bld=0.000); cpu 10.961 s on 1 threads; allocated 934.875 MB"
+      ]
+    }
+  },
+  "runner_failures": [
+    {
+      "phase": "first lint packaging",
+      "cause": "AST literal evaluator rejected dict() and shell continued; remote job had no script",
+      "remote_unit": "oth-ubuntu-4069954-1792165645",
+      "terminal": 2,
+      "no_design_test_ran": true
+    }
+  ],
+  "successful_units": {
+    "pad_component": "oth-ubuntu-4066166-1792165609",
+    "native_lint": "oth-ubuntu-4071623-1792165659"
+  },
+  "host": "ot-epyc4",
+  "remote": "/srv/opentallas-scratch/codex/s81-hc-static-0850",
+  "pad_scope": "actual current pad split FWD_TRIM3 equality;4real stopped root mutants; no CCR/full HC numerical proof"
+}

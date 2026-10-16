@@ -1,0 +1,97 @@
+{
+  "generator_inputs": {
+    "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_pad_split.sv": "974a6f37e1825ba319dcb7cba2a58197a9035016dfda22920d9926b10ec4d5d0",
+    "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_comb.sv": "73209624bb432b4c29e8a5c49482de1621f7f85ea1b4f120a0c8a8bb017ff2cb",
+    "20d2499482ce04930ad8bee9bb269ac52fafe5b9:rtl/dsrom_sys/s81_suhc/static/ot_s81_hc_cseq_static.sv": "c00da87c8539d5d928d496a3ce854c55f37c1afd833074af0f0eed5e6a88deb0"
+  },
+  "static_controller_origin": "20d2499482ce04930ad8bee9bb269ac52fafe5b9",
+  "status": "source candidate; static allkind profile/full composition/physical qualification OPEN",
+  "clock_map": [
+    {
+      "index": 0,
+      "path": "u_seq"
+    },
+    {
+      "index": 1,
+      "path": "u_rx"
+    },
+    {
+      "index": 2,
+      "path": "u_nt"
+    },
+    {
+      "index": 3,
+      "path": "g_aq[0].u_caq"
+    },
+    {
+      "index": 4,
+      "path": "g_aq[1].u_caq"
+    },
+    {
+      "index": 5,
+      "path": "g_aq[2].u_caq"
+    },
+    {
+      "index": 6,
+      "path": "g_aq[3].u_caq"
+    },
+    {
+      "index": 7,
+      "path": "u_cr.u_core"
+    },
+    {
+      "index": 8,
+      "path": "u_cr.g_meta.u_m"
+    },
+    {
+      "index": 9,
+      "path": "g_cf_bp.u_pd.u_f8"
+    },
+    {
+      "index": 10,
+      "path": "g_cf_bp.u_pd.u_f5r1"
+    },
+    {
+      "index": 11,
+      "path": "g_cf_bp.u_pd.u_r6"
+    },
+    {
+      "index": 12,
+      "path": "g_cf_bp.u_pd.u_r5"
+    },
+    {
+      "index": 13,
+      "path": "g_cf_bp.u_cf.u_n"
+    },
+    {
+      "index": 14,
+      "path": "g_cf_bp.u_cf.u_s"
+    },
+    {
+      "index": 15,
+      "path": "g_cf_bp.u_cf.g_bank[0].u_b"
+    },
+    {
+      "index": 16,
+      "path": "g_cf_bp.u_cf.g_bank[1].u_b"
+    },
+    {
+      "index": 17,
+      "path": "g_cf_bp.u_cf.g_bank[2].u_b"
+    },
+    {
+      "index": 18,
+      "path": "g_cf_bp.u_cf.g_bank[3].u_b"
+    },
+    {
+      "index": 19,
+      "path": "g_cf_bp.u_cf.g_bank[4].u_b"
+    }
+  ],
+  "generated_files": {
+    "rtl/dsrom_sys/s81_suhc/static/ot_s81_hc_pad_roots20.sv": "f70635472a6b533ea0c7dd8a3400cf8b55ad71f7255e1a58197f03bc3879c904",
+    "rtl/dsrom_sys/s81_suhc/static/dsfd_sp_hc_comb_roots20.sv": "3f59d7a08438ede558d30ec7b7a67f66c34b77b1242c7482172df329dc6c8c14",
+    "rtl/dsrom_sys/s81_suhc/static/dsfd_sp_hc_comb_calendar20.sv": "2822ad19013020ad28a64560be99af31e0d16de8adfa9e0b01b8a25ffaab374c",
+    "rtl/dsrom_sys/s81_suhc/static/ot_s81_hc_cseq_static.sv": "c00da87c8539d5d928d496a3ce854c55f37c1afd833074af0f0eed5e6a88deb0"
+  }
+}
