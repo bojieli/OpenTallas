@@ -224,6 +224,8 @@ def main():
             # TC/IB outputs, eliminating their old multi-sink tapped nets.
             for f,n in (('me_go',1),('me_tiles',18),('me_ts',24),('me_split',4),('me_oen',1),('tag_v',1),('tag_last',1)):
                 newdata.append(add(f'b2_source_{f}',n,('tt_ctlm','rsi_'+f),('res_train_issue',f)))
+            m.setdefault('relay_equal_groups',{})['b2_source_me']=[f'b2_source_{f}'for f in ('me_go','me_tiles','me_ts','me_split','me_oen')]
+            m.setdefault('relay_equal_groups',{})['b2_source_tag']=['b2_source_tag_v','b2_source_tag_last']
             # Status compares actual six native valid/fault producers; it is
             # a diagnostic fault producer, never a scheduler or data substitute.
             st=copy.copy(by['tt_ctlm']);st.name='b2_word_status';st.master='qfd_b2_word_status';st.w=st.h=43.2;st.orient='R0'
@@ -414,13 +416,13 @@ def main():
                     b=incoming[0];path.insert(0,b[0]);src=tuple(b[3][0])
                     if src[0].startswith(prefix+'_fork_'):endpoint=(src[0],'a_'+field)
                     else:endpoint=src
-                paths[sink+'.'+field]=dict(buses=path,stages=[S(b)for b in path],transport_capture_edges=sum(S(b)for b in path))
+                paths[sink+'.'+field]=dict(buses=path,stages=[S(b)for b in path],transport_capture_edges=sum(S(b)for b in path),additional_external_register_edges=sum(S(b)for b in path)-1)
         distribution_ages[prefix]=paths
     round_trip=[]
     if a.production:
-        R=max(S(f'b2_return_{kind}{u}')for u in range(NUP)for kind in('l','use','v'))
+        R=max(S(f'b2_return_{kind}{u}')-1 for u in range(NUP)for kind in('l','use','v'))
         for hb in range(6):
-            F=max(S(f'b2_pword_{hb}_{kind}{u}')for u in range(NUP)for kind in('l','v'))
+            F=max(S(f'b2_pword_{hb}_{kind}{u}')-1 for u in range(NUP)for kind in('l','v'))
             total=F+R
             round_trip.append(dict(halfband=hb,forward_external_edges=F,actual_return_external_edges=R if hb==0 else None,
                 HB0_roundtrip_edges=total if hb==0 else None,parent_lnk=total//2 if hb==0 and total%2==0 else None,
