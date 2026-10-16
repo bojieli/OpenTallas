@@ -11,14 +11,20 @@ files=ns['RTL']+ns['FP']['rtl']+[
  'rtl/dsrom_sys/s81_suhc/static/ot_s81_hc_pad_roots20.sv',
  'rtl/dsrom_sys/s81_suhc/static/ot_s81_hc_cseq_static.sv',
  'rtl/dsrom_sys/s81_suhc/static/dsfd_sp_hc_comb_roots20.sv',
- 'rtl/dsrom_sys/s81_suhc/static/dsfd_sp_hc_comb_calendar20.sv']
+ 'rtl/dsrom_sys/s81_suhc/static/dsfd_sp_hc_comb_calendar20.sv',
+ 'rtl/dsrom_sys/s81_suhc/static/ot_s81_hc_croot_roots.sv',
+ 'rtl/dsrom_sys/s81_suhc/static/ot_s81_hc_cpin_calendar.sv',
+ 'rtl/dsrom_sys/s81_suhc/static/ot_s81_hc_ccf_bankpipe128.sv']
 if len(sys.argv)>1 and sys.argv[1]=='--files':
  print('\n'.join(files));sys.exit()
 out=pathlib.Path(sys.argv[1]);out.mkdir(parents=True,exist_ok=True)
 vl=pathlib.Path.home()/'.local/opentallas-tools/verilator-5.050/bin/verilator'
 if not vl.exists():vl=pathlib.Path('/usr/bin/verilator')
-for top in ('dsfd_sp_hc_comb_roots20','dsfd_sp_hc_comb_calendar20'):
+tops=[('ot_s81_hc_crooty_roots',0),('ot_s81_hc_crooty_roots',2),('ot_s81_hc_crootr_roots',0),('ot_s81_hc_crootr_roots',2),('ot_s81_hc_cpin_calendar',None)] if '--outer-only' in sys.argv else [('dsfd_sp_hc_comb_roots20',None),('dsfd_sp_hc_comb_calendar20',None)]
+for top,c in tops:
  cmd=[str(vl),'--lint-only','--timing','-Wno-fatal','-DSYNTHESIS','--top-module',top,*files]
- with (out/(top+'.log')).open('w') as f:r=subprocess.run(cmd,cwd=root,stdout=f,stderr=subprocess.STDOUT)
+ if c is not None:cmd.append('-GC='+str(c))
+ label=top+('' if c is None else '_C'+str(c))
+ with (out/(label+'.log')).open('w') as f:r=subprocess.run(cmd,cwd=root,stdout=f,stderr=subprocess.STDOUT)
  if r.returncode:sys.exit(r.returncode)
- print(top+' NATIVE_LINT_PASS',flush=True)
+ print(label+' NATIVE_LINT_PASS',flush=True)

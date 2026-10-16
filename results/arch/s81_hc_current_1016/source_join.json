@@ -3,7 +3,9 @@
     "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_pad_split.sv": "974a6f37e1825ba319dcb7cba2a58197a9035016dfda22920d9926b10ec4d5d0",
     "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_comb.sv": "73209624bb432b4c29e8a5c49482de1621f7f85ea1b4f120a0c8a8bb017ff2cb",
     "20d2499482ce04930ad8bee9bb269ac52fafe5b9:rtl/dsrom_sys/s81_suhc/static/ot_s81_hc_cseq_static.sv": "c00da87c8539d5d928d496a3ce854c55f37c1afd833074af0f0eed5e6a88deb0",
-    "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_cpin.sv": "d2ee87b179974d16fdcd582a2e3c2f915d18cf9a52783aeedc777b0cdca92d2a"
+    "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_cpin.sv": "d2ee87b179974d16fdcd582a2e3c2f915d18cf9a52783aeedc777b0cdca92d2a",
+    "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_crootr.sv": "fbd99cf13a7f7c16a575343a3757530d11cb075f8dddfb174c1c223de52743c4",
+    "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_crooty.sv": "2050ea22b9676a5f262f3deb04c0eac712502c02c978d471f59d0f15d119b19e"
   },
   "static_controller_origin": "20d2499482ce04930ad8bee9bb269ac52fafe5b9",
   "status": "source candidate; static allkind profile/full composition/physical qualification OPEN",
@@ -94,6 +96,7 @@
     "rtl/dsrom_sys/s81_suhc/static/dsfd_sp_hc_comb_roots20.sv": "3f59d7a08438ede558d30ec7b7a67f66c34b77b1242c7482172df329dc6c8c14",
     "rtl/dsrom_sys/s81_suhc/static/dsfd_sp_hc_comb_calendar20.sv": "2822ad19013020ad28a64560be99af31e0d16de8adfa9e0b01b8a25ffaab374c",
     "rtl/dsrom_sys/s81_suhc/static/ot_s81_hc_cseq_static.sv": "c00da87c8539d5d928d496a3ce854c55f37c1afd833074af0f0eed5e6a88deb0",
-    "rtl/dsrom_sys/s81_suhc/static/ot_s81_hc_cpin_calendar.sv": "db8cacc52e2951b3ddd53f284abeffa5c2d0e3073bdc984bd2f69b556a35ed42"
+    "rtl/dsrom_sys/s81_suhc/static/ot_s81_hc_cpin_calendar.sv": "db8cacc52e2951b3ddd53f284abeffa5c2d0e3073bdc984bd2f69b556a35ed42",
+    "rtl/dsrom_sys/s81_suhc/static/ot_s81_hc_croot_roots.sv": "bcb030738874cda5f37622c38273462c4472025d4c6036f77f1d1cc740ff9dd3"
   }
 }

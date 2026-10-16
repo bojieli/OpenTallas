@@ -73,5 +73,24 @@ cp=once(cp,"y_rdy <= 1'b0; cnt <= 0; pop <= 1'b0;", "y_rdy <= 1'b0;")
 cp=once(cp,'            pop <= n_ypop;\n            cnt <= cnt + acc - pop;\n            y_rdy <= (cnt + acc - pop) < TH;',"            y_rdy <= 1'b1; // compatibility/status only; not an execution enable")
 cp=once(cp,'endmodule',"    always @(posedge sk) begin\n        n_y_tag <= y_tag; n_y_row <= y_row;\n        n_command_y_tag <= command_y_tag; n_command_done_age <= command_done_age;\n        n_command_ss_age <= command_ss_age; n_command_scalar_age <= command_scalar_age;\n    end\nendmodule")
 (O/'ot_s81_hc_cpin_calendar.sv').write_text('// Candidate only: all command/Y/calendar inputs already in this serial clock domain.\n// No inherited physical view or fixed phase bridge; output y_rdy is compatibility status only.\n'+cp)
-receipt={'generator_inputs':inputs,'static_controller_origin':ref,'status':'source candidate; static allkind profile/full composition/physical qualification OPEN','clock_map':[{'index':i,'path':path} for i,path in enumerate(['u_seq','u_rx','u_nt',*[f'g_aq[{i}].u_caq' for i in range(4)],'u_cr.u_core','u_cr.g_meta.u_m','g_cf_bp.u_pd.u_f8','g_cf_bp.u_pd.u_f5r1','g_cf_bp.u_pd.u_r6','g_cf_bp.u_pd.u_r5','g_cf_bp.u_cf.u_n','g_cf_bp.u_cf.u_s',*[f'g_cf_bp.u_cf.g_bank[{i}].u_b' for i in range(5)]])], 'generated_files':{str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in [O/'ot_s81_hc_pad_roots20.sv',O/'dsfd_sp_hc_comb_roots20.sv',O/'dsfd_sp_hc_comb_calendar20.sv',O/'ot_s81_hc_cseq_static.sv',O/'ot_s81_hc_cpin_calendar.sv']}}
+# Actual outer root assemblies retain every leaf and stage, exposing real roots.
+rsource=read('ot_s81_hc_crootr.sv')
+r=rsource[:rsource.index('// ---------------------------------------------------------------------------------------------------------------------\n// T_fwd:')]
+r=once(r,'module ot_s81_hc_crootr #','module ot_s81_hc_crootr_roots #')
+r=once(r,'input  wire                 sk,','input  wire                 sk,\n    input wire [3:0] sk_leaf,')
+for i in range(4):r=r.replace('.sk(sk)',f'.sk(sk_leaf[{i}])',1)
+y=read('ot_s81_hc_crooty.sv')
+ytop=y[:y.index('// ---------------------------------------------------------------------------------------------------------------------\n// ot_s81_hc_crooty_y:')]
+ytop=once(ytop,'module ot_s81_hc_crooty #','module ot_s81_hc_crooty_roots #')
+ytop=once(ytop,'input  wire                 sk,','input  wire                 sk,\n    input wire [LC:0] sk_leaf,')
+ytop=once(ytop,'ot_s81_hc_crooty_yl #','ot_s81_hc_crooty_yl_roots #')
+ytop=ytop.replace(') u_y (.sk(sk)',') u_y (.sk_leaf(sk_leaf[LC:1]),.sk(sk)',1)
+ytop=once(ytop,') u_w (.sk(sk)',') u_w (.sk(sk_leaf[0])')
+ytop=once(ytop,'endmodule','    initial if(YLEAF!=1 || NG!=256 || GS!=8 || (C!=0 && C!=2))\n        $fatal(1,"outer root requires actual eleven Y leaves and writer");\nendmodule')
+yl=y[y.index('module ot_s81_hc_crooty_yl #'):y.index('// ---------------------------------------------------------------------------------------------------------------------\n// ot_s81_hc_crooty_w:')]
+yl=once(yl,'module ot_s81_hc_crooty_yl #','module ot_s81_hc_crooty_yl_roots #')
+yl=once(yl,'input  wire                 sk,','input  wire                 sk,\n    input wire [LC-1:0] sk_leaf,')
+yl=yl.replace('u_s (.sk(sk)','u_s (.sk(sk_leaf[f])')
+(O/'ot_s81_hc_croot_roots.sv').write_text('// Source-current candidate only; unchanged real arithmetic/storage, no parent state.\n'+r+'\n'+ytop+'\n'+yl)
+receipt={'generator_inputs':inputs,'static_controller_origin':ref,'status':'source candidate; static allkind profile/full composition/physical qualification OPEN','clock_map':[{'index':i,'path':path} for i,path in enumerate(['u_seq','u_rx','u_nt',*[f'g_aq[{i}].u_caq' for i in range(4)],'u_cr.u_core','u_cr.g_meta.u_m','g_cf_bp.u_pd.u_f8','g_cf_bp.u_pd.u_f5r1','g_cf_bp.u_pd.u_r6','g_cf_bp.u_pd.u_r5','g_cf_bp.u_cf.u_n','g_cf_bp.u_cf.u_s',*[f'g_cf_bp.u_cf.g_bank[{i}].u_b' for i in range(5)]])], 'generated_files':{str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in [O/'ot_s81_hc_pad_roots20.sv',O/'dsfd_sp_hc_comb_roots20.sv',O/'dsfd_sp_hc_comb_calendar20.sv',O/'ot_s81_hc_cseq_static.sv',O/'ot_s81_hc_cpin_calendar.sv',O/'ot_s81_hc_croot_roots.sv']}}
 (ROOT/'results/arch/s81_hc_current_1016/source_join.json').write_text(json.dumps(receipt,indent=2)+'\n')
