@@ -1,0 +1,49 @@
+{
+ "schema": "opentallas.s81.host_output_select.v1",
+ "scope": "Initialization ingress component; no physical/normal-token qualification",
+ "change": "u_ox RCOPY32 replaces one high-fanout read mux address with equal local replicas; no payload, ACK, FIFO depth or cycle change",
+ "source_sha256": {
+  "rtl/hdc/ingest/ot_rom_host_ingest.sv": "7d6602326b8bddee7054df7fcb720d0406dac1ef6c5939b086546aa1d6222b40",
+  "rtl/link/ot_link_afifo.sv": "fd295cdf0e41d47ebd9a231b4ee505bb21da72cae8efd2de35af96d123816a68",
+  "tests/s81/tb_link_afifo_rcopy.sv": "1d91506d59b0ef7380d2cac3d71873ef538171313ddc7f1f21a7a44b4a662d9d"
+ },
+ "actual_configuration": {
+  "W": 289,
+  "AW": 4,
+  "RCOPY": 32,
+  "added_pointer_bits": 128,
+  "fifo_data_bits_unchanged": 4624,
+  "latency_edge_delta": 0
+ },
+ "proof": {
+  "independent_R0_vs_R32": {
+   "read_edges": 20000,
+   "pops": 9983,
+   "result": "PASS"
+  },
+  "stalled_selector_mutant": {
+   "result": "observed FAIL",
+   "first_edge": 8
+  },
+  "actual_HOST_mixed_CSR_IKEY": "59989 exact edges,1093 packets,544 sectors,1 physical completion; payload/filter bypass and boot-kind mutants fail"
+ },
+ "prior_source_measurement": {
+  "commit": "bb4ea307a",
+  "mapped_native_STD_um2": 14527.92024,
+  "sequential_area_um2": 5709.84876,
+  "sequential_cells": 20708,
+  "roots": {
+   "ck_core": 10096,
+   "ck_host": 9351,
+   "ck_write": 745,
+   "ck_launch": 516
+  },
+  "failure_cause": "u_ox.rbin[1] drives4631 combinational mux loads",
+  "qualification": "sizing only; fresh changed-source gate and measured area remain OPEN"
+ },
+ "other_native_gaps": [
+  "host_ack_n -> fence.commits32 unregistered arithmetic endpoints,15logic levels; pin stage +fixed latency needs own exact phase proof",
+  "u_eng ap0_stk -> ap1_rbase25levels estimated878.5ps needs actualtiming classification",
+  "actual slots/PG/cuts/clocks/TTsetup/FFhold/DRC0 and normalcompiledcalendar OPEN"
+ ]
+}
