@@ -1,0 +1,141 @@
+{
+  "status": "REQUESTED_NOT_GRANTED",
+  "new_master": "ot_hgi_coll_static_vmwrite_roots_v6",
+  "die_instances": "coll_*_writer0",
+  "outline_um": [
+    103.68,
+    388.8
+  ],
+  "clock_mode": "multiple_cts_roots",
+  "clock_relationship": "related_same_frequency phase0; ordinary full setup/hold across all roots; per-root actual phi-R at die entry",
+  "ports": [
+    {
+      "port": "clk_rgx_ctrl",
+      "face_requested": "W",
+      "approx_center_um": 18.09,
+      "old_mapped_ff_count": 164,
+      "register_ownership": "a0[159:0],v0[3:0]; m0[63:0] constant"
+    },
+    {
+      "port": "clk_tkw",
+      "face_requested": "S",
+      "approx_center_um": 51.84,
+      "old_mapped_ff_count": 569,
+      "register_ownership": "a0[199:160],d0[2559:2048],m0[79:64],v0[4]"
+    },
+    {
+      "port": "clk_body",
+      "face_requested": "N",
+      "approx_center_um": 80,
+      "old_mapped_ff_count": 4169,
+      "register_ownership": "v1,a1,d1,m1,sel/sector/payload/mask relay,check state,fault,launch_done"
+    },
+    {
+      "port": "clk_rgx_data0",
+      "face_requested": "W",
+      "approx_center_um": 80.46,
+      "old_mapped_ff_count": 512,
+      "register_ownership": "d0[511:0]"
+    },
+    {
+      "port": "clk_rgx_data1",
+      "face_requested": "W",
+      "approx_center_um": 166.5,
+      "old_mapped_ff_count": 512,
+      "register_ownership": "d0[1023:512]"
+    },
+    {
+      "port": "clk_rgx_data2",
+      "face_requested": "W",
+      "approx_center_um": 252.045,
+      "old_mapped_ff_count": 512,
+      "register_ownership": "d0[1535:1024]"
+    },
+    {
+      "port": "clk_rgx_data3",
+      "face_requested": "W",
+      "approx_center_um": 340.74,
+      "old_mapped_ff_count": 512,
+      "register_ownership": "d0[2047:1536]"
+    },
+    {
+      "port": "clk_meta",
+      "face_requested": "N",
+      "approx_center_um": 51.84,
+      "old_mapped_ff_count": 49,
+      "register_ownership": "sid_q,islot_q,sv_q,so_q,vm_q,rst_q"
+    },
+    {
+      "port": "clk_bank0",
+      "face_requested": "E",
+      "approx_center_um": 28.62,
+      "old_mapped_ff_count": 281,
+      "register_ownership": "kq[280:0]"
+    },
+    {
+      "port": "clk_bank3",
+      "face_requested": "E",
+      "approx_center_um": 170.235,
+      "old_mapped_ff_count": 281,
+      "register_ownership": "kq[1123:843]"
+    },
+    {
+      "port": "clk_bank4",
+      "face_requested": "E",
+      "approx_center_um": 217.485,
+      "old_mapped_ff_count": 281,
+      "register_ownership": "kq[1404:1124]"
+    },
+    {
+      "port": "clk_bank5",
+      "face_requested": "E",
+      "approx_center_um": 264.06,
+      "old_mapped_ff_count": 281,
+      "register_ownership": "kq[1685:1405]"
+    },
+    {
+      "port": "clk_bank6",
+      "face_requested": "E",
+      "approx_center_um": 312.525,
+      "old_mapped_ff_count": 281,
+      "register_ownership": "kq[1966:1686]"
+    },
+    {
+      "port": "clk_bank7",
+      "face_requested": "E",
+      "approx_center_um": 359.91,
+      "old_mapped_ff_count": 281,
+      "register_ownership": "kq[2247:1967]"
+    },
+    {
+      "port": "clk_bank1",
+      "face_requested": "E",
+      "approx_center_um": 75.6,
+      "old_mapped_ff_count": 281,
+      "register_ownership": "kq[561:281]"
+    },
+    {
+      "port": "clk_bank2",
+      "face_requested": "E",
+      "approx_center_um": 123.39,
+      "old_mapped_ff_count": 281,
+      "register_ownership": "kq[842:562]"
+    }
+  ],
+  "pin_changes": [
+    "Remove old clk; restore rgx_data[942] from N52.044 to original W194.412; new16clockports require die-owned exact PG-clear track assignments and data pin rebalance.",
+    "Proposed centers are placement targets, not assigned legal tracks or an approved grant."
+  ],
+  "normal_cycles_added": 0,
+  "declared_state_bits_added": 0,
+  "new_mapped_count": "OPEN; old mapped9247FF classified only",
+  "proof": {
+    "sameedge_v4_miter": 4096,
+    "scheduled_production": "83check transactions, 23full-bank cycles, 6explicit fault timing cases, lowC+2/highC+3/faultC+1",
+    "clock_mapping_checks": 19,
+    "negative_controls": "5semantic+16rootdrop+1mapping-swap all reject"
+  },
+  "physical_gates": "OPEN actualsource CTS/per-root insertion+spread, phi-R crossing STA, layout inspection, routeTT/FF/DRC, native220/190/80; no submission before grant",
+  "adoption": "Additive source candidate only; no production netlist/calendar update or existing view alias.",
+  "top_ports_scalar": true
+}

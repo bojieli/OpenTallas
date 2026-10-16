@@ -1,0 +1,45 @@
+{
+  "classification": {
+    "host": "ot-epyc4",
+    "run": "/srv/opentallas-scratch/codex/writer6_classify_0324",
+    "unit": "oth-ubuntu-784018-1792146292",
+    "memory_gb": 16,
+    "threads": 1,
+    "exit": 0,
+    "original_odb_sha256": "88d3bf85a5d806eb3a1059395b9249ad0de56ec043d924ce238bdff72dc5e6d8",
+    "raw_source_latency_zero": true,
+    "total_exact_mapped_ff": 9247,
+    "full_classification_log": "/home/ubuntu/artifacts/hbm-harden-0253/writer5/classify.log",
+    "full_classification_json_sha256": "fa15ccc5b34bf96d5a8e709fd2de9273aa2606b432940026f41c6d0b68edf029",
+    "source_files_sha256": {
+      "6_final.sdc": "8cd01a1b496c4db23d907c7712df4cc447db577bfcc4da1f662684e21193cc2a",
+      "6_final.spef": "7385c596376737663145c34926fe7a7487f12500670c560945e93e45dd938833",
+      "6_final.odb": "88d3bf85a5d806eb3a1059395b9249ad0de56ec043d924ce238bdff72dc5e6d8"
+    }
+  },
+  "functional": {
+    "host": "ot-epyc4",
+    "run": "/srv/opentallas-scratch/codex/writer6_proof_0324",
+    "unit": "oth-ubuntu-808451-1792146586",
+    "memory_gb": 4,
+    "threads": 1,
+    "exit": 0,
+    "all25_rows_pass": true,
+    "source_dir": "src_scalar",
+    "proof_dir": "proof_scalar",
+    "top_clock_ports": "16 scalar",
+    "production_counts": {
+      "checked": 83,
+      "full_bank_cycles": 23,
+      "fault_timing_checks": 6
+    },
+    "normal_edges": {
+      "low_sector": "C+2",
+      "high_sector": "C+3",
+      "fault": "C+1"
+    },
+    "miter_edges": 4096,
+    "clock_mapping_checks": 19
+  },
+  "scope": "Component source equivalence and clock ownership only; all physical grant/phase/native gates OPEN"
+}
