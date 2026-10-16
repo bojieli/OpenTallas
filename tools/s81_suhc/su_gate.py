@@ -342,6 +342,24 @@ class Run:
         self.jexp[len(self.prog)-1]=(out,8)
         return dict(qdq_base=out,raw_base=out+4)
 
+    def cp_bind(self, kv_base, score_base, output_base, descriptor_base, context, slot, pool=False):
+        """Bind native producers by row address; never populate their operands.
+
+        The compiler owns the first-slot store and history context lifetime.
+        This emits one real descriptor/command and no expected numerical data.
+        """
+        if any(type(x) is not int or not 0<=x<=16352 for x in (kv_base,score_base,output_base)):
+            raise ValueError('CP512 operand/output row bounds')
+        if type(descriptor_base) is not int or not 0<=descriptor_base<16384:
+            raise ValueError('CP descriptor row bounds')
+        if type(context) is not int or not 0<=context<2**32 or type(slot) is not int or slot not in (0,1):
+            raise ValueError('CP requires uint32 context and physical slot0/1')
+        if descriptor_base in set(range(kv_base,kv_base+32))|set(range(score_base,score_base+32))|set(range(output_base,output_base+32)):
+            raise ValueError('CP descriptor overlaps operands/output')
+        self.vm[descriptor_base]=pack([output_base,kv_base,512,score_base,context,slot+2*bool(pool)]+[0]*10,32)
+        self.job('CP',0,descriptor_base)
+        return dict(output_base=output_base,kv_base=kv_base,score_base=score_base,descriptor_base=descriptor_base,context=context,slot=slot,pool=bool(pool))
+
     def cp_slot(self, kv, score, context, slot, pool=False, previous=None):
         """One actual CP512 store/pool command, explicit finite history identity.
 
@@ -354,18 +372,19 @@ class Run:
             raise ValueError('CP requires two finite512-dimensional FP32 FIELD outputs')
         if type(context) is not int or not 0<=context<2**32 or type(slot) is not int or slot not in (0,1):
             raise ValueError('CP requires uint32 context and physical slot0/1')
-        kb=self.put(rows_of(kv));sb=self.put(rows_of(score));out=self.alloc(32)
-        db=self.desc(out,kb,512,sb,context,extra=[slot+2*bool(pool)])
-        self.job('CP',0,db)
         if pool:
             if previous is None:raise ValueError('CP pooling oracle needs prior kv/score')
             pk,ps=(np.asarray(x,F) for x in previous)
             if pk.shape!=(512,) or ps.shape!=(512,):raise ValueError('CP history shape')
+        kb=self.put(rows_of(kv));sb=self.put(rows_of(score));out=self.alloc(32)
+        db=self.alloc(1)
+        binding=self.cp_bind(kb,sb,out,db,context,slot,pool)
+        if pool:
             m=np.maximum(ps,score);e0=V.exp(V.add(ps,V.neg(m)));e1=V.exp(V.add(score,V.neg(m)))
             den=V.add(e0,e1)
             y=V.to_bf16(V.add(V.mul(pk,V.div(e0,den)),V.mul(kv,V.div(e1,den))))
             self.expect(out,rows_of(y))
-        return dict(output_base=out,kv_base=kb,score_base=sb,descriptor_base=db,context=context,slot=slot,pool=bool(pool))
+        return binding
 
     def write(self, d, meta):
         d.mkdir(parents=True, exist_ok=True)

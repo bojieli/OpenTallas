@@ -33,6 +33,33 @@ LAYOUT={
 }
 
 
+def cp_binding(layer, context, slot, *, pool):
+    """Literal CP14 row/pin ABI for real current all-gather producers.
+
+    Store and pool reuse the same current rows on separate command epochs.
+    No previous-token tensor is fabricated: physical CP history must already
+    belong to this context, or first be filled by a real store/restore command.
+    """
+    if type(layer) is not int or layer not in (2,8,14):
+        raise ValueError('CP512 ratio-two source layer must be2,8,14')
+    if type(context) is not int or not 0<=context<2**32 or type(slot) is not int or slot not in (0,1) or type(pool) is not bool:
+        raise ValueError('CP requires uint32 context, physical slot0/1 and bool pool')
+    kv,score,out=(LAYOUT[n]['base_row']for n in ('compressor_kv','compressor_score','compressor_pool'))
+    words=[out,kv,512,score,context,slot+2*pool]+[0]*10
+    bank=lambda row:(row&31)^(((row>>5)&7)<<2)
+    reads=[dict(relative_issue_cycle=4*j,slots=[0,1],rows=[kv+j,score+j],banks=[bank(kv+j),bank(score+j)])for j in range(32)]
+    if any(r['banks'][0]==r['banks'][1]for r in reads):raise ValueError('CP paired reads collide on native XOR banks')
+    return dict(kind='CP',opcode=14,descriptor_row=12336,descriptor_words=words,
+                command_arg24=(14<<20)|12336,read_requests=reads,
+                source_producers=[f'L{layer}.attn.a_allgather']*2,
+                input_formats=['512 FP32 compressor.wkv values','512 FP32 compressor.wgate values'],
+                output_rows=list(range(out,out+32))if pool else [],
+                output_format='512 BF16 values widened to FP32',
+                persistent_context=context,physical_slot=slot,pool=pool,
+                actual_producer_write_edges_bound=False,history_lifetime_bound=False,
+                dispatch_eligible=False,required='native allgather commit fence; real first-slot store/restore and one-context lifetime; measured command-pin and VM service edges')
+
+
 def scalar_destination(matrix,rank,global_row):
     """Map one *actual source tensor row* to physical 16x32-bit VM storage.
 
