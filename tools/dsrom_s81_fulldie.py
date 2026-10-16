@@ -5292,6 +5292,18 @@ def buses_r8(m):
             allowed = list(allowed) + [cor['hub_w']]
         elif wide_hub() and side == 'W':   # wide hub: the gather / PQ W faces open onto the W strip and the W approach
             allowed = list(allowed) + [wide_return_strip(cor), cor['hub_w']]
+        if HEND_BOUND_FOOTPRINT:
+            # --hend-bound-footprint (S-NET+FILL 2026-10-16): reserve the CLOSED view's real outline of this hub end
+            # (finalize_r8 names it <master>__<name>) before the neighbour search; c26b left all 37 hub end views
+            # unbound as OT_VIEW_MISFIT 'real > slot' (end_spec's estimate is 0.02-1.75 um short of the demand-sized kits)
+            v_ = bound_views().get(f'{master}__{name}')
+            if v_ is not None:
+                if side == 'W':
+                    xx += w - v_['w']        # keep the W-side block's E edge (the face toward the slab)
+                w, h = v_['w'], v_['h']
+                m.setdefault('hend_bound_footprints', {})[name] = dict(
+                    master=f'{master}__{name}', reserved_um=[w, h],
+                    status='GEOMETRY_CANDIDATE_NOT_CLOCK_OR_ROUTE_QUALIFICATION')
         pl = P.near(xx + w / 2, y_c, w, h, allowed, horiz=False, span=1600.0, rows=6)
         assert pl, name
         it = P.add(Inst(name, master, pl[0], pl[1], w, h, 'MY' if side == 'W' else 'R0', kind=kind, region='hub'))
@@ -6233,6 +6245,7 @@ MESO_D8 = False                 # --meso-d8 (v6, default off): meso FIFOs DEPTH 
 HC_XFACE = False                # --hc-xface (S81-RERUN v7, default off): hc_s <-> hc_n exchange face to face across
                                 #   the corridor inside the HC column (out of the VCH-edge lane)
 SEL_XSTG = False                # --sel-xstg (S81-RERUN v8, default off): d8g1 meso crossing stage (1.5 T arcs + low guard)
+HEND_BOUND_FOOTPRINT = False    # --hend-bound-footprint: reserve each hub end's verified view outline before placement
                                 #   on the 8 end block -> selector / collector buses; +6 cycles
 LINK_SPLIT = False              # --link-split (S81-RERUN v8, default off; needs --link-fix): SerDes tx / rx through two
                                 #   256-b half-span stations (port slices), last hop <= 281 um; +1 cycle each way
@@ -11210,6 +11223,9 @@ def die_options(ap):
                     '(r3 GRT: hop relays 776-906 um from their load, TT -244 on ck_col relay paths)')
     ap.add_argument('--pin-relay', action='store_true', help='r9: relay station abutting every hardened-block pin on '
                     'die interfaces (last segment <= 100 um; needs --hop-fix; default off)')
+    ap.add_argument('--hend-bound-footprint', action='store_true', help='S-NET+FILL: reserve the verified binding-table '
+                    'SIZE of every hub end / start block (<master>__<inst>) before placement (c26b: 37 hub end views '
+                    'OT_VIEW_MISFIT real > slot by 0.02-1.75 um); geometry only, does not qualify clocks or routes')
     ap.add_argument('--sel-xstg', action='store_true', help='r9: registered crossing stage on the end block -> '
                     'selector / collector buses (+1 cycle; default off)')
     ap.add_argument('--link-split', action='store_true', help='r9: SerDes tx / rx through two 256-b half-span '
@@ -11532,6 +11548,8 @@ def apply_options(a):
     HC_XFACE = bool(getattr(a, 'hc_xface', False))
     global LINK_SPLIT, SEL_XSTG
     SEL_XSTG = bool(getattr(a, 'sel_xstg', False))
+    global HEND_BOUND_FOOTPRINT
+    HEND_BOUND_FOOTPRINT = bool(getattr(a, 'hend_bound_footprint', False))
     global PIN_RELAY, NXT_REACH, CHS, VCH8, HC_CORR, SPINE_W8
     PIN_RELAY = bool(getattr(a, 'pin_relay', False))
     NXT_REACH = bool(getattr(a, 'nxt_reach', False))
