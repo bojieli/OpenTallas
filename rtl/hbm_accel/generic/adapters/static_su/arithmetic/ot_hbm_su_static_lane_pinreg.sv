@@ -12,7 +12,12 @@
 // in-slice loop with no lane-side slack, so KIND 2 keeps its side pins combinational (side pipe sits beside it).
 module ot_hbm_su_static_lane_pinreg #(
     parameter integer FETCH_EXTRA_EDGES = 2, AW = 24, CW = 24, LN = 3, KIND = 0, KVT_SH = 9, LEAF = 0,
-    parameter integer MLAT = 3, ALAT = 3
+    parameter integer MLAT = 3, ALAT = 3,
+    // PIN_RST 1 (H-SU 10-15 r2 kit): rst_n is registered at its pin like every other input (rst_q, command root);
+    // the command strobes s_q gate on rst_n synchronously (the first command after release is taken on the same edge),
+    // and the lane plus the output valid registers reset from rst_q (one register, no pin-to-506-flop async fan-out:
+    // the kind0 r1 gate counted 506 rst_n loads). Requires >= 2 command-root edges in reset.
+    parameter integer PIN_RST = 0
 ) (
     input wire [7:0] clk_stage,
     input wire [3:0] clk_insert,
@@ -80,7 +85,16 @@ module ot_hbm_su_static_lane_pinreg #(
     reg [DW-1:0] d_q;
     reg [3:0] s_q;                                   // ld, ld_bank, emit, bank
     always @(posedge c0) d_q <= d_in;
-    always @(posedge c0 or negedge rst_n) if (!rst_n) s_q <= 4'd0; else s_q <= {ld, ld_bank, emit, bank};
+    wire rst_i;                                      // reset seen by the lane and the output registers
+    if (PIN_RST != 0) begin : g_pin_rst
+        reg rst_q;
+        always @(posedge c0) rst_q <= rst_n;
+        always @(posedge c0) s_q <= rst_n ? {ld, ld_bank, emit, bank} : 4'd0;
+        assign rst_i = rst_q;
+    end else begin : g_async_rst
+        always @(posedge c0 or negedge rst_n) if (!rst_n) s_q <= 4'd0; else s_q <= {ld, ld_bank, emit, bank};
+        assign rst_i = rst_n;
+    end
     wire [10:0] q_lane_id; wire [5*LN*AW-1:0] q_ld_c; wire [CW-1:0] q_o_v, q_i_v, q_no, q_ni; wire [3:0] q_ls, q_lvw;
     wire [5*AW-1:0] q_vb; wire [AW-1:0] q_krow, q_obase, q_aibase; wire [1:0] q_aind, q_dst; wire [4:0] q_gsh;
     wire q_cpair; wire [7:0] q_srcs, q_cx_srcs; wire [31:0] q_vi_q; wire [127:0] q_rd_q;
@@ -97,7 +111,7 @@ module ot_hbm_su_static_lane_pinreg #(
     wire [31:0] l_vm_wdata, l_kv_wdata, l_ro_x, l_side_x;
     ot_hbm_su_static_lane #(.FETCH_EXTRA_EDGES(FETCH_EXTRA_EDGES + 2), .AW(AW), .CW(CW), .LN(LN), .KIND(KIND),
                             .KVT_SH(KVT_SH), .LEAF(LEAF), .MLAT(MLAT), .ALAT(ALAT)) u_lane (
-        .clk_stage(clk_stage), .clk_insert(clk_insert), .rst_n(rst_n), .lane_id(q_lane_id),
+        .clk_stage(clk_stage), .clk_insert(clk_insert), .rst_n(rst_i), .lane_id(q_lane_id),
         .ld(s_q[3]), .ld_bank(s_q[2]), .ld_c(q_ld_c), .emit(s_q[1]), .bank(s_q[0]), .o_v(q_o_v), .i_v(q_i_v), .no(q_no),
         .ni(q_ni), .ls(q_ls), .lvw(q_lvw), .vb(q_vb), .krow(q_krow), .obase(q_obase), .aibase(q_aibase), .aind(q_aind),
         .gsh(q_gsh), .cpair(q_cpair), .dst(q_dst), .srcs(q_srcs),
@@ -111,11 +125,11 @@ module ot_hbm_su_static_lane_pinreg #(
         .kv_wdata(l_kv_wdata), .ro_v(l_ro_v), .ro_x(l_ro_x), .fault(l_fault), .coll(l_coll));
     // ---- output pin registers
     reg r_vi_re; reg [3:0] r_rd_re; reg [AW-1:0] r_vi_addr; reg [4*AW-1:0] r_rd_addr; reg [7:0] r_rd_src;
-    always @(posedge c0 or negedge rst_n) if (!rst_n) begin r_vi_re <= 1'b0; r_rd_re <= 4'd0; end
+    always @(posedge c0 or negedge rst_i) if (!rst_i) begin r_vi_re <= 1'b0; r_rd_re <= 4'd0; end
                                           else begin r_vi_re <= l_vi_re; r_rd_re <= l_rd_re; end
     always @(posedge c0) begin r_vi_addr <= l_vi_addr; r_rd_addr <= l_rd_addr; r_rd_src <= l_rd_src; end
     reg r_vm_we, r_kv_we, r_ro_v, r_fault, r_coll; reg [AW-1:0] r_vm_waddr, r_kv_waddr; reg [31:0] r_vm_wdata, r_kv_wdata, r_ro_x;
-    always @(posedge c7 or negedge rst_n) if (!rst_n) {r_vm_we, r_kv_we, r_ro_v, r_fault, r_coll} <= 5'd0;
+    always @(posedge c7 or negedge rst_i) if (!rst_i) {r_vm_we, r_kv_we, r_ro_v, r_fault, r_coll} <= 5'd0;
                                           else {r_vm_we, r_kv_we, r_ro_v, r_fault, r_coll} <= {l_vm_we, l_kv_we, l_ro_v, l_fault, l_coll};
     always @(posedge c7) begin r_vm_waddr <= l_vm_waddr; r_kv_waddr <= l_kv_waddr; r_vm_wdata <= l_vm_wdata;
                                r_kv_wdata <= l_kv_wdata; r_ro_x <= l_ro_x; end
@@ -126,7 +140,7 @@ module ot_hbm_su_static_lane_pinreg #(
         assign side_v = l_side_v; assign side_x = l_side_x;
     end else begin : g_side_reg
         reg r_side_v; reg [31:0] r_side_x;
-        always @(posedge c0 or negedge rst_n) if (!rst_n) r_side_v <= 1'b0; else r_side_v <= l_side_v;
+        always @(posedge c0 or negedge rst_i) if (!rst_i) r_side_v <= 1'b0; else r_side_v <= l_side_v;
         always @(posedge c0) r_side_x <= l_side_x;
         assign side_v = r_side_v; assign side_x = r_side_x;
     end
