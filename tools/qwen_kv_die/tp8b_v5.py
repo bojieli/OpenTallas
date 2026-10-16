@@ -1000,9 +1000,70 @@ def _tear_overlapped(v, m, over=()):
 DEOVERLAP_PARENTS = ('qfd_sp_vector_memory_par',)
 
 
+def _apply_assigned_pins(q, path):
+    """Q-DIEPLAN2r 2026-10-16 (q2o2): an UNCLOSED master whose hardened kit has published its exact pin plan
+    (opentallas.qwen-tp8.assigned-pins.v1 with per-bit positions, e.g. physical/ref_tile/qfd_sp_su64_sfu_pr) is drawn
+    with exactly those pins: every face bit at its kit position and layer, every interior pin ('xy') at its kit xy.
+    The die frame keeps its own (shaved) outline; a kit pin outside it, a port set / width mismatch or a pin off its
+    face fails closed."""
+    p_ = Path(path)
+    d = json.loads((p_ if p_.is_absolute() else ROOT / p_).read_text())
+    if d.get('schema') != 'opentallas.qwen-tp8.assigned-pins.v1' or d.get('master') != q.name:
+        raise ValueError(f'assigned pins {path}: not an assigned-pins.v1 plan of {q.name}')
+    W, H = float(d['outline']['w']), float(d['outline']['h'])
+    if abs(W - q.w) > 0.05 or abs(H - q.h) > 0.05:
+        raise ValueError(f'assigned pins {path}: kit outline {W} x {H} vs die frame {q.w} x {q.h}')
+    P = d['ports']
+    if set(P) != set(q.ports):
+        raise ValueError(f'assigned pins {path}: port sets differ: kit-only {sorted(set(P) - set(q.ports))[:6]}, '
+                         f'die-only {sorted(set(q.ports) - set(P))[:6]}')
+    lays_all = getattr(q, 'view_pin_layers', None) or {}
+    for pn, r in P.items():
+        pos = r['positions_xy_um']
+        n = q.ports[pn][1]
+        if len(pos) != n or r['bits'] != n:
+            raise ValueError(f'assigned pins {path}: {q.name}.{pn} has {len(pos)} kit pins for {n} die bits')
+        if r.get('interior'):
+            lays = {z[2] for z in pos}
+            if len(lays) != 1:
+                raise ValueError(f'assigned pins {path}: interior {pn} on several layers {lays}')
+            if any(not (0.5 < x < q.w - 0.5 and 0.5 < y < q.h - 0.5) for x, y, _ in pos):
+                raise ValueError(f'assigned pins {path}: interior {pn} outside the frame')
+            q.ports[pn] = ('xy', n, pos[0][2], [(float(x), float(y)) for x, y, _ in pos], 1)
+            lays_all.pop(pn, None)
+            continue
+        f = r['face']
+        at = {'W': lambda x, y: abs(x) < 1e-3, 'E': lambda x, y: abs(x - W) < 1e-3,
+              'S': lambda x, y: abs(y) < 1e-3, 'N': lambda x, y: abs(y - H) < 1e-3}[f]
+        if not all(at(x, y) for x, y, _ in pos):
+            raise ValueError(f'assigned pins {path}: {pn} pins not on its {f} face')
+        along = [float(y if f in 'WE' else x) for x, y, _ in pos]
+        lim = q.h if f in 'WE' else q.w
+        if min(along) < 0.1 or max(along) > lim - 0.1:
+            raise ValueError(f'assigned pins {path}: {pn} pins outside the die frame face')
+        lays = [z[2] for z in pos]
+        main = max(set(lays), key=lays.count)
+        q.ports[pn] = ('pins', n, f, main, along, 1)
+        if len(set(lays)) > 1:
+            lays_all[pn] = lays
+        else:
+            lays_all.pop(pn, None)
+    q.view_pin_layers = lays_all
+    return dict(plan=str(path), ports=len(P), interior=sum(1 for r in P.values() if r.get('interior')),
+                mixed_layer_ports=len(lays_all))
+
+
 def _apply_pin_grant(M, grant):
-    """Move named port groups of unclosed masters to a granted face (and optional centre); returns touched masters."""
+    """Move named port groups of unclosed masters to a granted face (and optional centre); returns touched masters.
+    'assigned_pins': {master: plan.json} draws an unclosed master on its hardened kit's exact pin plan first."""
     touched = []
+    for mname, path in grant.get('assigned_pins', {}).items():
+        q = M.get(mname)
+        if q is None:
+            raise ValueError(f'OT_SPLIT_PIN_GRANT: master {mname} not on this die')
+        if mname in VIEWS:
+            raise ValueError(f'OT_SPLIT_PIN_GRANT: {mname} has a closed view; its pins are not re-assignable here')
+        _apply_assigned_pins(q, path)
     for mname, ports in grant.get('masters', {}).items():
         q = M.get(mname)
         if q is None:
