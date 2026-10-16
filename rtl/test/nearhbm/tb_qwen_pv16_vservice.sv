@@ -10,8 +10,11 @@
 // r4 port ABI: each vport side is a landing group's rsp face {valid, v, t, data quad} (the landing rowctl merges the four
 // quarter PCs).  KINT=1 (default): every side that carries no V word on an edge carries a K response (v = 0, random
 // tag/data) -- the K traffic sharing the landing rsp bus; the vport must ignore it (VMUT=3 ignores the flag: FAIL).
+// r5: the vport is the V issuer.  The pair's req_valid/req_t reach the port WP edges later (relay model); the port
+// sends each V get to group {lane, t[0]}; the landing model answers a get RT edges after the port's vq register with
+// the HEAD of that group's rings and checks the head is the requested row (a static stream never re-orders).
 module tb_qwen_pv16_vservice;
- parameter integer PAIR=0, MUT=0, VMUT=0, KINT=1, RL=19, LEAF_RESET_PIN=0, CTL_RESET_PIN=0;
+ parameter integer PAIR=0, MUT=0, VMUT=0, KINT=1, WP=2, RT=8, RL=19, LEAF_RESET_PIN=0, CTL_RESET_PIN=0;
  reg clk=0,rst_n=0;always #1 clk=~clk;
  reg start=0;integer CTX;string vec,mode;
  wire [7:0] in_valid;wire [8191:0] in_v;reg [511:0] in_e=0;wire [111:0] in_t;reg [127:0] in_epoch={8{16'd23}};
@@ -22,12 +25,13 @@ module tb_qwen_pv16_vservice;
   .in_epoch(in_epoch),.req_valid(req_valid),.req_t(req_t),.out_valid(out_valid),.out_leaf(out_leaf),.out_epoch(out_epoch),
   .fault(fault),.busy(busy),.out_age(out_age));
  // ---- KV die: 8 V ports (stack PAIR lanes 0-3, stack PAIR+2 lanes 0-3) ----
- reg [7:0] p_slot=0,p_sel=0;reg [15:0] p_val=0,p_vf=0;reg [16*14-1:0] p_t=0;reg [16*1024-1:0] p_d=0;integer kw=0;
- wire [7:0] vfault;
+ reg [7:0] p_prv=0;reg [111:0] p_prt=0;reg [15:0] p_val=0,p_vf=0;reg [16*14-1:0] p_t=0;reg [16*1024-1:0] p_d=0;integer kw=0;
+ wire [7:0] vfault;wire [15:0] vqv;wire [16*14-1:0] vqt;
  genvar g;
  generate for(g=0;g<8;g=g+1)begin:g_port
-  qkd_pv16_vport #(.MUT(VMUT)) u_vp(.ck(clk),.rst_n(rst_n),
-   .slot(p_slot[g]),.sel(p_sel[g]),
+  qkd_pv16_vport #(.MUT(VMUT),.RL(RL),.WP(WP),.RT(RT)) u_vp(.ck(clk),.rst_n(rst_n),
+   .pr_valid(p_prv[g]),.pr_t(p_prt[14*g+:14]),
+   .vq0_valid(vqv[2*g]),.vq0_t(vqt[14*(2*g)+:14]),.vq1_valid(vqv[2*g+1]),.vq1_t(vqt[14*(2*g+1)+:14]),
    .in0_valid(p_val[2*g]),.in0_vflag(p_vf[2*g]),.in0_t(p_t[14*(2*g)+:14]),.in0_d(p_d[1024*(2*g)+:1024]),
    .in1_valid(p_val[2*g+1]),.in1_vflag(p_vf[2*g+1]),.in1_t(p_t[14*(2*g+1)+:14]),.in1_d(p_d[1024*(2*g+1)+:1024]),
    .out_valid(in_valid[g]),.out_t(in_t[14*g+:14]),.out_v_lo(in_v[1024*g+:512]),.out_v_hi(in_v[1024*g+512+:512]),.fault(vfault[g]));
@@ -35,7 +39,7 @@ module tb_qwen_pv16_vservice;
  reg [1023:0] vr[0:8191];reg [63:0] er[0:8191];reg [31:0] gold[0:511];
  // rings: [port][group bit][quarter] FIFO of row ids in ordinal order (quarter rings of one group hold the same rows)
  integer ring[0:7][0:1][0:255],rlen[0:7][0:1],rhead[0:7][0:1][0:3];
- integer due[0:7][0:63],dsel[0:7][0:63],wp[0:7],rp[0:7];
+ integer rdue[0:15][0:63],rtag[0:15][0:63],rwp[0:15],rrp[0:15];reg [7:0] hv[0:63];reg [111:0] ht[0:63];
  integer cyc=0,scyc=-1,ocyc=-1,q0=-1,errors=0,words=0,nreq=0,pops=0,i,k,n,t,s,o,gq,qq,ln,ord;reg[7:0] seen;
  always @(posedge clk)cyc<=cyc+1;
  function automatic integer ordinal(input integer t, input integer legacy);
@@ -69,20 +73,22 @@ module tb_qwen_pv16_vservice;
    ln=0;for(o=0;o<256;o=o+1)if(ring[k][gq][o]!=-1)begin ring[k][gq][ln]=ring[k][gq][o];ln=ln+1;end
    rlen[k][gq]=ln;
   end
-  for(k=0;k<8;k=k+1)begin wp[k]=0;rp[k]=0;end
+  for(k=0;k<16;k=k+1)begin rwp[k]=0;rrp[k]=0;end for(k=0;k<64;k=k+1)hv[k]=0;
   repeat(5)@(negedge clk);rst_n=1;repeat(3)@(negedge clk);
   start=1;scyc=cyc;@(negedge clk);start=0;
  end
- // compiled pops: the request slot X of port k (static, a pure function of T) -> pop group {k&3, q[0]} at X+RL-2
+ // landing model: a get seen on side i of port k (= 2k+i) at the vq register of cycle c answers in cycle c+RT with the head of
+ // group {lane, i}'s four quarter rings (merged by the landing rowctl); the head must be the requested row
  always @(negedge clk)if(rst_n)begin
-  p_slot=0;p_val=0;p_vf=0;
-  for(k=0;k<8;k=k+1)if(rp[k]!=wp[k]&&due[k][rp[k]%64]==cyc)begin
-   gq=dsel[k][rp[k]%64];rp[k]=rp[k]+1;p_slot[k]=1;p_sel[k]=gq[0];
-   for(qq=0;qq<4;qq=qq+1)begin   // the 4 quarter rings pop together; the landing rowctl merges them into one word
+  p_val=0;p_vf=0;
+  for(i=0;i<16;i=i+1)if(rrp[i]!=rwp[i]&&rdue[i][rrp[i]%64]==cyc)begin
+   k=i>>1;gq=i&1;n=rtag[i][rrp[i]%64];rrp[i]=rrp[i]+1;p_val[i]=1;p_vf[i]=1;p_t[14*i+:14]=14'(n);
+   for(qq=0;qq<4;qq=qq+1)begin
     if(rhead[k][gq][qq]>=rlen[k][gq])begin $display("RING_EMPTY port%0d g%0d q%0d",k,gq,qq);errors=errors+1;end
     else begin
-     n=ring[k][gq][rhead[k][gq][qq]];rhead[k][gq][qq]=rhead[k][gq][qq]+1;pops=pops+1;
-     p_val[2*k+gq]=1;p_vf[2*k+gq]=1;p_t[14*(2*k+gq)+:14]=14'(n);p_d[1024*(2*k+gq)+256*qq+:256]=vr[n][256*qq+:256];
+     o=ring[k][gq][rhead[k][gq][qq]];rhead[k][gq][qq]=rhead[k][gq][qq]+1;pops=pops+1;
+     if(o!=n)begin if(errors<6)$display("ORDER port%0d g%0d asked t%0d ring head t%0d",k,gq,n,o);errors=errors+1;end
+     p_d[1024*i+256*qq+:256]=vr[o][256*qq+:256];
     end
    end
   end
@@ -93,9 +99,12 @@ module tb_qwen_pv16_vservice;
   #0.25;for(k=0;k<8;k=k+1)if(in_valid[k])in_e[64*k+:64]=er[in_t[14*k+:14]];
   #0.25;
   if(req_valid!=0&&q0<0)q0=cyc;
-  for(k=0;k<8;k=k+1)if(req_valid[k])begin
-   due[k][wp[k]%64]=cyc+RL-2;dsel[k][wp[k]%64]=(cyc-q0)&1;wp[k]=wp[k]+1;nreq=nreq+1;
-  end
+  for(k=0;k<8;k=k+1)if(req_valid[k])nreq=nreq+1;
+  // pair -> port request relays (WP edges)
+  hv[cyc%64]=req_valid;ht[cyc%64]=req_t;
+  if(cyc>=WP)begin p_prv=hv[(cyc-WP)%64];p_prt=ht[(cyc-WP)%64];end else p_prv=0;
+  // the ports' V gets (vq registers of this cycle) -> landing answers
+  for(i=0;i<16;i=i+1)if(vqv[i])begin rdue[i][rwp[i]%64]=cyc+RT;rtag[i][rwp[i]%64]=vqt[14*i+:14];rwp[i]=rwp[i]+1;end
  end
  always @(posedge clk)if(rst_n&&out_valid)begin
   ocyc=cyc;
