@@ -1,0 +1,68 @@
+{
+ "schema": "opentallas.ref_tile.gate_result.v1",
+ "kit": "s81hc_pad_fv4fd5r2_ref",
+ "verdict": "WARN",
+ "generated": "2026-10-14T00:38:30-0700",
+ "host": "ot-epyc1tb",
+ "cts": true,
+ "commit": "e044281cb",
+ "clock": {
+  "max_root_sinks": 9982,
+  "root": "port:sk",
+  "cts": true,
+  "tt_insertion_ps": 203.4,
+  "tt_spread_ps": 16.2,
+  "declared_clock": null,
+  "limits": {
+   "sinks": 15000,
+   "insertion_ps": 300.0,
+   "spread_ps": 80.0
+  },
+  "clock_measurements": [
+   {
+    "source": "sk",
+    "clock": "core_clk",
+    "tt": {
+     "boundary": {
+      "n": 6583,
+      "mean": 196.8,
+      "min": 187.2,
+      "max": 203.4
+     },
+     "all": {
+      "n": 9982,
+      "mean": 196.6,
+      "min": 187.2,
+      "max": 203.4
+     },
+     "errors": [],
+     "macros": null,
+     "macro_libs": 0
+    }
+   }
+  ],
+  "measured_clock": "core_clk",
+  "verdict": "PASS",
+  "text": "9,982 sinks on the largest root <= 15,000; measured TT insertion 203.4 ps, leaf spread 16.2 ps"
+ },
+ "items": [
+  {
+   "severity": "WARN",
+   "check": "util",
+   "message": "utilisation 28% outside 45%-60% (std 3590 + macro 0 in core 12728 um2)",
+   "fix": "resize the outline to util 0.50-0.55 (drop 'outline', set util)"
+  },
+  {
+   "severity": "WARN",
+   "check": "util",
+   "message": "synthesized std area 3590 um2 + macros 0 in core 12728: util 28%",
+   "fix": "set \"std_area_um2\": 3590 and drop 'outline' (gen sizes to util 0.52)"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.util_channel",
+   "message": "utilisation 28.6% outside 45%-65% (std 3639 + macro 0 um2 in 12728 um2): shrink the outline (long wires / sparse placement)",
+   "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
+  }
+ ]
+}

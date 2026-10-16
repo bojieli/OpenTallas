@@ -2,16 +2,16 @@
  "schema": "opentallas.ref_tile.gate_result.v1",
  "kit": "s81hc_ccfh2_ref",
  "verdict": "WARN",
- "generated": "2026-10-13T21:40:04-0700",
+ "generated": "2026-10-14T01:58:28-0700",
  "host": "ot-epyc4",
  "cts": true,
- "commit": "674580d80",
+ "commit": "6d1b2da6c",
  "clock": {
-  "max_root_sinks": 14196,
+  "max_root_sinks": 14197,
   "root": "port:sk",
   "cts": true,
-  "tt_insertion_ps": 708.4,
-  "tt_spread_ps": 32.1,
+  "tt_insertion_ps": 658.4,
+  "tt_spread_ps": 31.5,
   "declared_clock": "spine",
   "limits": {
    "sinks": 15000,
@@ -25,59 +25,59 @@
     "tt": {
      "boundary": {
       "n": 6370,
-      "mean": 689.8,
-      "min": 676.5,
-      "max": 708.4
+      "mean": 640.2,
+      "min": 626.9,
+      "max": 658.4
      },
      "all": {
-      "n": 14194,
-      "mean": 688.8,
-      "min": 676.3,
-      "max": 708.4
+      "n": 14195,
+      "mean": 640.3,
+      "min": 626.9,
+      "max": 658.4
      },
      "errors": [],
      "macros": {
       "n": 5,
       "nets": 5,
       "max_per_net": 1,
-      "reg_mean": 688.8,
-      "max_slew": 14.4,
-      "max_late": 5.0,
+      "reg_mean": 640.3,
+      "max_slew": 14.1,
+      "max_late": 8.7,
       "pins": [
        {
         "pin": "g_yf.g_slice.g_f[0].u_yf.g_tile[0].g_m0.u_m/clk",
-        "arr": 683.5,
-        "slew": 14.4,
-        "late": -5.3,
-        "net": "clkbuf_sp_L1406_net"
+        "arr": 644.2,
+        "slew": 13.7,
+        "late": 3.9,
+        "net": "clkbuf_sp_L1370_net"
        },
        {
         "pin": "g_yf.g_slice.g_f[1].u_yf.g_tile[0].g_m0.u_m/clk",
-        "arr": 693.8,
-        "slew": 14.0,
-        "late": 5.0,
-        "net": "clkbuf_sp_L1206_net"
+        "arr": 648.2,
+        "slew": 13.8,
+        "late": 7.9,
+        "net": "clkbuf_sp_L1159_net"
        },
        {
         "pin": "g_yf.g_slice.g_f[2].u_yf.g_tile[0].g_m0.u_m/clk",
-        "arr": 683.1,
-        "slew": 13.9,
-        "late": -5.7,
-        "net": "clkbuf_sp_L1111_net"
+        "arr": 633.8,
+        "slew": 13.8,
+        "late": -6.5,
+        "net": "clkbuf_sp_L1083_net"
        },
        {
         "pin": "g_yf.g_slice.g_f[3].u_yf.g_tile[0].g_m0.u_m/clk",
-        "arr": 685.3,
-        "slew": 13.8,
-        "late": -3.5,
-        "net": "clkbuf_sp_L779_net"
+        "arr": 649.0,
+        "slew": 14.1,
+        "late": 8.7,
+        "net": "clkbuf_sp_L812_net"
        },
        {
         "pin": "g_yf.g_slice.g_f[4].u_yf.g_tile[0].g_m0.u_m/clk",
-        "arr": 688.9,
+        "arr": 642.1,
         "slew": 14.0,
-        "late": 0.1,
-        "net": "clkbuf_sp_L662_net"
+        "late": 1.8,
+        "net": "clkbuf_sp_L757_net"
        }
       ]
      },
@@ -87,25 +87,25 @@
   ],
   "measured_clock": "core_clk",
   "verdict": "PASS",
-  "text": "14,196 sinks on the largest root <= 15,000; measured TT insertion 708.4 ps, leaf spread 32.1 ps"
+  "text": "14,197 sinks on the largest root <= 15,000; measured TT insertion 658.4 ps, leaf spread 31.5 ps"
  },
  "items": [
   {
    "severity": "WARN",
    "check": "util",
-   "message": "utilisation 34% outside 45%-60% (std 7212 + macro 66617 in core 218406 um2)",
+   "message": "utilisation 34% outside 45%-60% (std 6855 + macro 66617 in core 218406 um2)",
    "fix": "resize the outline to util 0.50-0.55 (drop 'outline', set util)"
   },
   {
    "severity": "WARN",
    "check": "util",
-   "message": "synthesized std area 6855 um2 + macros 66617 in core 218406: util 34%",
-   "fix": "set \"std_area_um2\": 6855 and drop 'outline' (gen sizes to util 0.52)"
+   "message": "synthesized std area 6851 um2 + macros 66617 in core 218406: util 34%",
+   "fix": "set \"std_area_um2\": 6851 and drop 'outline' (gen sizes to util 0.52)"
   },
   {
    "severity": "WARN",
    "check": "textbook.util_channel",
-   "message": "utilisation 33.7% outside 45%-65% (std 6988 + macro 66617 um2 in 218406 um2): shrink the outline (long wires / sparse placement)",
+   "message": "utilisation 33.7% outside 45%-65% (std 6984 + macro 66617 um2 in 218406 um2): shrink the outline (long wires / sparse placement)",
    "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
   }
  ]
