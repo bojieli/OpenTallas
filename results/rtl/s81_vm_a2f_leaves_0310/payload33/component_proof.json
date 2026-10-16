@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.payload33-exact-composition.v1",
- "status": "PASS_PAYLOAD_AND_PARENT_VISIBLE_OR_COMPONENTS_FULL_NORMAL_FRONT_STILL_RUNNING",
+ "status": "PASS_PAYLOAD_FULL_NORMAL_FRONT_AND_PARENT_VISIBLE_OR_COMPONENTS",
  "source_commit": "e01535e80",
  "source_sha256": {
   "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_a2f_payload33.sv": "62cd34802bcb72928c369ecc12c548e6913ebd62bee383d8476a3c02b25b2eb0",
@@ -41,7 +41,7 @@
  "full_front": {
   "module": "s81_a2f_controlled_split4m_payload33",
   "elaboration": "PASS Verilator5.032,38modules,2.147GB",
-  "normal_differential": "LIVE unit oth-ubuntu-1150760-1792146742, source99b7ba5e5,3seeds against actual A2,16384outputs/53sources/3slots",
+  "normal_differential": "PASS all3seeds,267edges each, actual A2 reference; record full_front/record.json",
   "production_parent": "S-VM owns combined WFC/XIO/payload33 integration and expensive real128SRAM full-parent proof"
  },
  "physical_scope": "Compact291.6x32.4um leaf diagnostic CTS passes, fresh501be7692 clock-edge gate live. No full parent native/physical adoption claimed."
