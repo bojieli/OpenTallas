@@ -1,0 +1,68 @@
+{
+ "schema": "opentallas.s81.vm-leaf-home-proposal.v1",
+ "status": "PROPOSAL_FOR_S_VM_NOT_ADOPTED",
+ "source": {
+  "placement": "origin/main results/arch/s81_vm_current_0815/homes538/read_mid.json",
+  "sha256": "1bd3284f97eb0a423b1a518cdef9d028265e8dc057905aeeb20e8a7df7387810",
+  "case": "read_mid",
+  "status": "OWNER_PREVIEW_ONLY_NO_PLACEMENT_ADOPTION"
+ },
+ "replaces": {
+  "instance": "dut.u_wfc.u_ret",
+  "master": "dsfd_vm_wfc_return",
+  "x_um": 4096.32,
+  "y_um": 1760.4,
+  "w_um": 108.0,
+  "h_um": 237.6,
+  "flip_x": true
+ },
+ "option": "A (S-VM 10-16): two return256 slices side by side (129.6 x 129.6), diag above with a 21.6 um gap; envelope 129.6 x 172.8, extended 21.6 um WEST, old east edge kept (21.6 um gap to u_req stays)",
+ "placement": {
+  "dut.u_wfc.split_return.u_ret.lo": {
+   "master": "dsfd_vm_wfc_return256",
+   "kit": "dsfd_vm_wfc_return256_native_1016_r2",
+   "x_um": 4074.72,
+   "y_um": 1760.4,
+   "w_um": 64.8,
+   "h_um": 129.6,
+   "flip_x": true,
+   "flip_y": false,
+   "clock": "ck_wfc_return_t[0]"
+  },
+  "dut.u_wfc.split_return.u_ret.hi": {
+   "master": "dsfd_vm_wfc_return256",
+   "kit": "dsfd_vm_wfc_return256_native_1016_r2",
+   "x_um": 4139.52,
+   "y_um": 1760.4,
+   "w_um": 64.8,
+   "h_um": 129.6,
+   "flip_x": true,
+   "flip_y": false,
+   "clock": "ck_wfc_return_t[1]"
+  },
+  "dut.u_wfc.split_return.u_ret.diag": {
+   "master": "dsfd_vm_native_valid_diag",
+   "kit": "dsfd_vm_native_valid_diag_native_0400_r2",
+   "x_um": 4128.72,
+   "y_um": 1911.6,
+   "w_um": 21.6,
+   "h_um": 21.6,
+   "flip_x": true,
+   "flip_y": false,
+   "clock": "ck_wfc_return_t[2]"
+  }
+ },
+ "envelope_um": [
+  4074.72,
+  1760.4,
+  4204.32,
+  1933.2
+ ],
+ "checks": {
+  "overlaps_with_other_537_leaves": 0,
+  "inside_outline": true,
+  "east_gap_to_u_req_um": 21.6,
+  "note": "geometry only: face pins unchanged (E e_d toward request/X-IO, N s_d toward x43); native/PG/clock/route not implied"
+ },
+ "die_scope": "The S81 die GEN instantiates the VM as ONE dsfd_sp_vm; this home lives in the S-VM child floorplan, not in tools/dsrom_s81_fulldie.py"
+}
