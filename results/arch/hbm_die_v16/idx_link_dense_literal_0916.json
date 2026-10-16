@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.hbm.literal_pin_supplemental_grant.v1",
- "status": "PROVISIONAL_ISOLATED_SUCCESSOR_MEASUREMENT_ONLY",
+ "status": "HOLD_FOR_ACTUAL_CURRENT_GENERATOR_TRACK_READBACK",
  "base_grant_commit": "9c662b7a2",
  "base_grant": "results/arch/hbm_die_v16/idx_link_dense_provisional_0913.json",
  "base_grant_sha256": "729d89b8181bd2b3593e84682685b756b3252030d11d00b748d6aa1d6f22d8cc",
@@ -31,5 +31,6 @@
   "E": 0.00064412,
   "W": 0.29545894
  },
- "native_requirements": "Fresh actual dense-master source-param-bound CTS/native R/phase/slew/TTFFDRC and actual placed rectangle/PG check remain required. No parent/default/d4 flip or old-view alias; preserve old link gate."
+ "native_requirements": "Fresh actual dense-master source-param-bound CTS/native R/phase/slew/TTFFDRC and actual placed rectangle/PG check remain required. No parent/default/d4 flip or old-view alias; preserve old link gate.",
+ "actual_grid_requirement": "Canonical spread_face_pins.OFF is not evidence of a generated ODB track grid. Actual H7/F20 readback showed M4 phase0.012, contrary to helper0.036. Before routing, read actual current-generator floorplan ODB tracks, compare every literal pin centre by layer, and issue a source-pinned supplemental grant. No new duplicate heavy gate. Existing useful jobs preserved."
 }

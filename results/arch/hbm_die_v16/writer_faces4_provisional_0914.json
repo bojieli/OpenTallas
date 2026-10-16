@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.hbm.provisional_native_child_grant.v1",
- "status": "PROVISIONAL_ISOLATED_SUCCESSOR_MEASUREMENT_ONLY",
+ "status": "HOLD_FOR_ACTUAL_CURRENT_GENERATOR_TRACK_READBACK",
  "cell": "ot_hbm_sm_vm_wr_q_t_faces4",
  "source_snapshot": "49133eccd",
  "params": {
@@ -265,5 +265,6 @@
   "Preserve actual macro, PG rules and literal pin locations; no clock/source/Liberty alias or hidden normal-data edge added."
  ],
  "adoption": "No frozen d4/default flip or full four-parent homes adopted; actual parent clock entries/source/port wiring and packing required before native admission.",
- "supersedes": "9aad2c81e had incorrect common0.012 phase for M4; NEVER submit its old pinfile. Source/bench unchanged, literal M4 plan corrected before gate."
+ "supersedes": "9aad2c81e had incorrect common0.012 phase for M4; NEVER submit its old pinfile. Source/bench unchanged, literal M4 plan corrected before gate.",
+ "actual_grid_requirement": "Canonical spread_face_pins.OFF is not evidence of a generated ODB track grid. Actual H7/F20 readback showed M4 phase0.012, contrary to helper0.036. Before routing, read actual current-generator floorplan ODB tracks, compare every literal pin centre by layer, and issue a source-pinned supplemental grant. No new duplicate heavy gate. Existing useful jobs preserved."
 }
