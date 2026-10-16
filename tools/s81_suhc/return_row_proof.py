@@ -122,10 +122,11 @@ endmodule
 (out/'check.sv').write_text(bench)
 MUT={'positive':[],
  'partner_c1':[('localparam integer B = RBW * c, PC = (c + 2) % 4;','localparam integer B = RBW * c, PC = (c + 1) % 4;'),('PC = (COLUMN + 2) % 4,','PC = (COLUMN + 1) % 4,')],
- 'header_from_peer':[('.rv_c(rvm), .hdr_c(hdr),','.rv_c(rvm), .hdr_c(g_col[(c + 1) % 4].hdr ^ {107\'d0, g_col[(c + 1) % 4].rvm[0]}),')],
+ 'header_from_peer':[('.flg_hnz(flg_hnz), .hdr_c(hdr),','.flg_hnz(flg_hnz), .hdr_c(g_col[(c + 1) % 4].hdr ^ {107\'d0, g_col[(c + 1) % 4].rvm[0]}),')],
  'no_par_ctrb':[(".a_par(g_col[PC].a_rdm), .b_par(g_col[PC].b_rdm),",".a_par(g_col[PC].a_rdm), .b_par(b_rdm),")],
  'cs_relay_skipped':[('.cs_in(c == 3 ? cs : cs_net), .cs_fwd(csf),','.cs_in(cs), .cs_fwd(csf),')],
- 'unrelayed_own_y':[('assign yb_all[16*n +:16]=yb_r[16*K +:16];','assign yb_all[16*n +:16]=yb_loc[16*K +:16];')]}
+ 'unrelayed_own_y':[('assign yb_all[16*n +:16]=yb_r[16*K +:16];','assign yb_all[16*n +:16]=yb_loc[16*K +:16];')],
+ 'slice_flag_merge_dropped':[('rv_c[S_RT+2] | (|flg_fault)','rv_c[S_RT+2]')]}
 res=[]
 verilator=shutil.which('verilator') or str(Path.home()/'.local/opentallas-tools/verilator-5.050/bin/verilator')
 variants=list(MUT)
