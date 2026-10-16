@@ -1,13 +1,15 @@
 #!/usr/bin/env bash
 # H-NETLIST/COLL 1045: hard-hierarchy COLL quadrant lockstep + aggregate fault ABI gate (Verilator 5.050).
-#   run_q_hard_v5_bench.sh OUT [q2|q3]
+#   run_q_hard_v5_bench.sh OUT [q2|q3] [all|pos|droplink|nomask|causeswap|droptkm]
+# pos = positive scenarios only (exit 0 on PASS); a mutant name = that mutant only, run as a POSITIVE claim (exit
+# non-zero when the mutant is correctly rejected, i.e. a loop bench with expect "fail"); all = gate (default).
 # Positive: every scenario PASSes (lockstep identical non-fault outputs every cycle; documented fault edge delta;
 # fault_cause names the child). Mutants (each must FAIL): DROP_LINK (scen1), DROP_TKM (q2 scen3), NOMASK (scen0),
 # CAUSE_SWAP (scen4).
 set -euo pipefail
 HERE=$(cd -- "$(dirname -- "$0")" && pwd)
 ROOT=${HCOLL_ROOT:-$(cd "$HERE/../../../../.." && pwd)}
-OUT=$(realpath -m "${1:?output directory}"); Q=${2:-q2}; mkdir -p "$OUT"
+OUT=$(realpath -m "${1:?output directory}"); Q=${2:-q2}; MODE=${3:-all}; mkdir -p "$OUT"
 V=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}; [ -x "$V" ] || V=verilator
 p=$ROOT/rtl/hbm_accel/generic/collective/p2p; t=$ROOT/rtl/hbm_accel/generic/collective/tkm
 src=("$p/tb_hgi_coll_q_hard_v5.sv" "$p/ot_hfd_coll_q_hard_v5.sv" "$p/ot_hfd_coll_q3_static_host_v4.sv"
@@ -39,9 +41,16 @@ run(){ # name scen expect
  else { [ $rc != 0 ] && ! grep -q '^HCOLL_Q_HARD_V5 PASS' "$OUT/${n}_s$s.log"; } && echo "MUTANT $n scen$s rejected" || { echo "MUTANT $n scen$s SURVIVED"; fail=1; }; fi
 }
 fail=0
+declare -A MS=([droplink]="OT_COLL_V5_MUT_DROP_LINK 1" [nomask]="OT_COLL_V5_MUT_NOMASK 0" [causeswap]="OT_COLL_V5_MUT_CAUSE_SWAP 4" [droptkm]="OT_COLL_V5_MUT_DROP_TKM 3")
+if [ "$MODE" != all ] && [ "$MODE" != pos ]; then
+ set -- ${MS[$MODE]:?unknown mode $MODE}
+ build "m_$MODE" -D$1; run "m_$MODE" $2 pass; rm -rf "$OUT/obj_m_$MODE"
+ [ $fail = 0 ] && { echo "HCOLL_Q_HARD_V5_MUTANT_SURVIVED $MODE"; exit 0; } || { echo "HCOLL_Q_HARD_V5_MUTANT_REJECTED $MODE"; exit 1; }
+fi
 build base
 if [ "$Q" = q3 ]; then SC="0 1 2 4 6"; else SC="0 1 2 3 4 5 6"; fi
 for s in $SC; do run base $s pass; done
+if [ "$MODE" = pos ]; then [ $fail = 0 ] && { echo "HCOLL_Q_HARD_V5_POS_PASS $Q"; exit 0; } || { echo "HCOLL_Q_HARD_V5_POS_FAIL $Q"; exit 1; }; fi
 build mut_droplink -DOT_COLL_V5_MUT_DROP_LINK; run mut_droplink 1 fail
 build mut_nomask -DOT_COLL_V5_MUT_NOMASK; run mut_nomask 0 fail
 build mut_causeswap -DOT_COLL_V5_MUT_CAUSE_SWAP; run mut_causeswap 4 fail
