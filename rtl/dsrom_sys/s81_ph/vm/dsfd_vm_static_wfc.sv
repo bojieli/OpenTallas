@@ -102,7 +102,13 @@ module dsfd_vm_static_wfc_ctl #(parameter integer RLAT = 13, parameter integer R
     end endgenerate
     reg [1:0] sq; always @(posedge ck_control_s or negedge rst_control_s) if (!rst_control_s) sq <= 2'b00; else sq <= {sq[0], 1'b1};
     wire own = err | r_bad | x34f;
-    always @(posedge ck_control_s) begin g_q <= sq[1]; e_q <= sq[1] && (own | x43f | vm_fault); end
+    // S-VM 0030 (VIS-ROM S81H-14 / OT_MULTI_ROOT): the serial-domain error bit no longer samples core-domain INPUT
+    // pins (x34f via own, x43f, vm_fault) combinationally; the sticky fault level is registered once on the core clock
+    // (pre_e, an owned core-domain register) and the serial flop samples that register (same-PLL related 4:3 path).
+    // Fault report latency +1 core edge; no data/schedule edge changes.
+    reg pre_e;
+    always @(posedge ck_control_t) pre_e <= own | x43f | vm_fault;
+    always @(posedge ck_control_s) begin g_q <= sq[1]; e_q <= sq[1] && pre_e; end
 `ifdef OT_VM_WFC_CTL_MUT_FAULT
     always @(posedge ck_control_t) if (!tn) fault <= 1'b0; else fault <= err | x34f | x43f;   // MUTANT: return-slot fault dropped
 `else

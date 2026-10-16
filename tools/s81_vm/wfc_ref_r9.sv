@@ -115,7 +115,13 @@ module dsfd_vm_static_wfc_ref #(parameter integer RLAT = 13, parameter integer R
     reg [1:0] sq; always @(posedge ck_control_s or negedge rst_control_s) if (!rst_control_s) sq <= 2'b00; else sq <= {sq[0], 1'b1};
     reg g_q, e_q;
     wire own = err | r_bad | x34f;
+`ifdef OT_WFC_EQ_PREREG
+    // reference for the S-VM 0030 CDC fix: identical except the sticky fault level is registered on the core clock first
+    reg pre_e; always @(posedge ck_control_t) pre_e <= own | x43f | vm_fault;
+    always @(posedge ck_control_s) begin g_q <= sq[1]; e_q <= sq[1] && pre_e; end
+`else
     always @(posedge ck_control_s) begin g_q <= sq[1]; e_q <= sq[1] && (own | x43f | vm_fault); end
+`endif
     assign t_wfc = {e_q, od, g_q, g_q};
     assign fault = own | x43f;
 endmodule
