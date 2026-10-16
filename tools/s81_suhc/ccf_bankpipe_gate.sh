@@ -1,0 +1,47 @@
+#!/bin/bash
+set -euo pipefail
+out=${1:?output directory required}
+mkdir -p "$out"
+root=$(pwd)
+old=rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_ccf.sv
+new=rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_ccf_bankpipe.sv
+fifo=rtl/link/ot_fifo_sram_fwft.sv
+macro=physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v
+tb=rtl/dsrom_sys/s81_suhc/test/tb_ccf_bankpipe.sv
+compile() {
+  iverilog -g2012 -s tb_ccf_bankpipe -o "$out/$1.vvp" "$old" "$2" "$fifo" "$macro" "$tb" > "$out/$1.build.log" 2>&1
+}
+compile positive "$new"
+for seed in 1 17 91; do
+  vvp "$out/positive.vvp" +MODE=0 +SEED="$seed" > "$out/positive_seed$seed.log" 2>&1
+  grep -q '^CCF_BANKPIPE_PASS' "$out/positive_seed$seed.log"
+  echo "CCF_POSITIVE seed=$seed PASS"
+done
+for mode in 1 2 3 4 5 6 7; do
+  set +e
+  vvp "$out/positive.vvp" +MODE="$mode" +SEED=17 > "$out/clockstop$mode.log" 2>&1
+  neg_rc=$?
+  set -e
+  test "$neg_rc" -ne 0
+  grep -q 'CCF_BANKPIPE_FAIL' "$out/clockstop$mode.log"
+  echo "CCF_CLOCKSTOP root=$mode OBSERVED_FAIL"
+done
+python3 - "$new" "$out" <<'PY'
+from pathlib import Path
+import sys
+s=Path(sys.argv[1]).read_text();out=Path(sys.argv[2])
+for name,old,new in [('wrongpop','.pop(pop_q)',".pop(1'b0)"),('wronghead','head_o<=head;',"head_o<=head ^ 512'b1;"),('earlymetadata','fd_p <= fd_mid;','fd_p <= fd_i;')]:
+ assert s.count(old)==1,(name,s.count(old))
+ (out/(name+'.sv')).write_text(s.replace(old,new))
+PY
+for mutant in wrongpop wronghead earlymetadata; do
+  compile "$mutant" "$out/$mutant.sv"
+  set +e
+  vvp "$out/$mutant.vvp" +MODE=0 +SEED=17 > "$out/$mutant.log" 2>&1
+  neg_rc=$?
+  set -e
+  test "$neg_rc" -ne 0
+  grep -q 'CCF_BANKPIPE_FAIL' "$out/$mutant.log"
+  echo "CCF_MUTANT $mutant OBSERVED_FAIL"
+done
+echo 'CCF_BANKPIPE_COMPONENT_GATE PASS'
