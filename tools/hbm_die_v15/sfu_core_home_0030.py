@@ -47,3 +47,28 @@ p.write_text(json.dumps(res, indent=1) + '\n')
 for n, h in out.items():
     print(n, h['origin'], h['area_mm2'], 'conflicts', h['conflicts'], {k: v['R'] for k, v in h['leaf_R'].items()})
 print('R_padded', rmax, 'vs v7', res['v7_request_R_padded'])
+
+
+def write_slots():
+    """H-SU ACCEPTED 01:3x 10-16: write the four sfucore_<q> slots into the v15 grants (outline/origin/faces; exact pins are
+    assigned top-down from the RTL ports by the pin tools when the kit is made)."""
+    gp = ROOT / 'results/arch/hier_contract_1015/hbm_v15.json'
+    g = json.loads(gp.read_text())
+    homes = json.loads(p.read_text())['homes']
+    g['slots'] = [s for s in g['slots'] if not s['name'].startswith('sfucore_')]
+    for n, h in homes.items():
+        g['slots'].append(dict(
+            name=n, cell=h['cell'], kind='tile', parent='die', outline=h['outline'], origin=h['origin'],
+            clock_entry=dict(pin='clk', face='N', layer='M5', offset=round(W / 2, 3)), pg_layer='M5', strap_layer='M6',
+            signal_max_layer='M5', layer_cap='M5', io_budget=dict(in_delay_frac=0.2, out_delay_frac=0.2), version=1,
+            grant='sfu_core_home_0030', rtl_owner='H-SU: ot_hgi_sfu_scheduled_engine',
+            faces=dict(W='SU qcore / SFU leaf LG paths (band)', E='COLL / DMA-back stack', N='clock + reset', S='band channel'),
+            notes='SFU engine core home in the band gap sucore<->COLL/DBK (H-DIE 0030, H-SU accepted); one outline for all 4; '
+                  'LG path R_padded 23; every pin registered (owner rule 19:50)', pins=[], pin_status='FACES_ONLY'))
+    g['sfu_core_home_0030'] = dict(source='results/arch/hbm_die_v15/sfu_core_home_0030/homes.json', status='GRANTED',
+                                   supersedes='sfu_core_request_v7 (PROPOSED strip, needed SM shrink)')
+    gp.write_text(json.dumps(g, indent=1) + '\n')
+
+
+if __name__ == '__main__' and __import__('sys').argv[1:] == ['--write-slots']:
+    write_slots()
