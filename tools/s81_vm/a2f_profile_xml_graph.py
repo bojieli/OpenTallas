@@ -71,7 +71,7 @@ def main():
   if t in ('extend','extends'):
    x=expr(cs[0],path);return (x+[x[-1] if t=='extends' else ('CONST','0',0)]*width(n))[:width(n)]
   exprseq+=1;label=f'{path}.$expr{exprseq}:{t}';outs=[(label,'out',b) for b in range(width(n))]
-  rs=refs(n,path);logic.append(dict(path=label,kind='expression',operation=t,source_loc=n.get('loc'),input_bits=len(rs),output_bits=len(outs),physical_home=None,exact_mapping=False))
+  rs=list(dict.fromkeys(v for c in cs for v in expr(c,path)));logic.append(dict(path=label,kind='expression',operation=t,source_loc=n.get('loc'),input_bits=len(rs),output_bits=len(outs),physical_home=None,exact_mapping=False))
   idx=-(len(logic)+1)
   for b,v in enumerate(rs):pending.append((v,(idx,'in',b,'INPUT')))
   for b,v in enumerate(outs):pending.append((v,(idx,'out',b,'OUTPUT')))
@@ -119,7 +119,7 @@ def main():
    v=number(n);return [('CONST',str((v>>b)&1),0) for b in range(width(n))]
   def run(n):
    t=n.tag;cs=list(n)
-   if t in ('begin','always'):
+   if t in ('begin','always','initial'):
     for c in cs:run(c)
    elif t=='assign':
     rhs,lhs=cs
@@ -179,12 +179,12 @@ def main():
    if n.tag=='contassign':
     rhs,lhs=list(n);join(expr(lhs,path),expr(rhs,path),path+':contassign')
    elif n.tag in ('always','initial','final'):
-    if n.tag=='always' and n.find('sentree') is None:
+    if n.tag=='initial' or(n.tag=='always' and n.find('sentree') is None):
      try:aliases=static_alias(n,path)
      except (ValueError,KeyError,IndexError):aliases=None
-     if aliases is not None:
+     if aliases is not None and(n.tag!='initial' or all(y[0]=='CONST'for y in aliases.values())):
       for x,y in aliases.items():union(x,y)
-      alias_blocks.append(dict(path=path,source_loc=n.get('loc'),assigned_bits=len(aliases)))
+      alias_blocks.append(dict(path=path,kind=n.tag,source_loc=n.get('loc'),assigned_bits=len(aliases)))
       continue
     writes={};reads={}
     for assign in n.iter():

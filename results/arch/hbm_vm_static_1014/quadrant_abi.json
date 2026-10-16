@@ -6,7 +6,7 @@
       "params": {
         "NC": 3,
         "RG": 5,
-        "WG": 1,
+        "WG": 2,
         "CW": 2,
         "RB": 3,
         "WB": 3
@@ -116,12 +116,12 @@
         {
           "name": "wq",
           "direction": "input",
-          "bits": 2248
+          "bits": 4496
         },
         {
           "name": "wq_done",
           "direction": "output",
-          "bits": 8
+          "bits": 16
         },
         {
           "name": "dq",
@@ -215,7 +215,7 @@
       "params": {
         "NC": 0,
         "RG": 4,
-        "WG": 1,
+        "WG": 2,
         "CW": 1,
         "RB": 3,
         "WB": 3
@@ -315,12 +315,12 @@
         {
           "name": "wq",
           "direction": "input",
-          "bits": 2248
+          "bits": 4496
         },
         {
           "name": "wq_done",
           "direction": "output",
-          "bits": 8
+          "bits": 16
         },
         {
           "name": "dq",
@@ -412,10 +412,10 @@
     "NW": {
       "master": "hfd_hgi_vms_static_NW",
       "params": {
-        "NC": 4,
-        "RG": 6,
+        "NC": 3,
+        "RG": 5,
         "WG": 3,
-        "CW": 3,
+        "CW": 2,
         "RB": 3,
         "WB": 3
       },
@@ -449,27 +449,27 @@
         {
           "name": "cq",
           "direction": "input",
-          "bits": 1352
+          "bits": 1014
         },
         {
           "name": "cr",
           "direction": "output",
-          "bits": 1096
+          "bits": 822
         },
         {
           "name": "client_seq",
           "direction": "input",
-          "bits": 10
+          "bits": 8
         },
         {
           "name": "response_enable",
           "direction": "input",
-          "bits": 5
+          "bits": 4
         },
         {
           "name": "response_seq",
           "direction": "input",
-          "bits": 10
+          "bits": 8
         },
         {
           "name": "bank_enable",
@@ -479,7 +479,7 @@
         {
           "name": "bank_client",
           "direction": "input",
-          "bits": 24
+          "bits": 16
         },
         {
           "name": "hub_ring_enable",
@@ -489,7 +489,7 @@
         {
           "name": "hub_ring_client",
           "direction": "input",
-          "bits": 6
+          "bits": 4
         },
         {
           "name": "rslot_v",
@@ -514,12 +514,12 @@
         {
           "name": "rq",
           "direction": "input",
-          "bits": 816
+          "bits": 680
         },
         {
           "name": "rr",
           "direction": "output",
-          "bits": 12336
+          "bits": 10280
         },
         {
           "name": "wq",
@@ -622,7 +622,7 @@
       "master": "hfd_hgi_vms_static_NE",
       "params": {
         "NC": 0,
-        "RG": 6,
+        "RG": 5,
         "WG": 3,
         "CW": 1,
         "RB": 3,
@@ -713,12 +713,12 @@
         {
           "name": "rq",
           "direction": "input",
-          "bits": 816
+          "bits": 680
         },
         {
           "name": "rr",
           "direction": "output",
-          "bits": 12336
+          "bits": 10280
         },
         {
           "name": "wq",
@@ -847,7 +847,8 @@
         "IDX"
       ],
       "write": [
-        "SU/SFU/HC group"
+        "SU/SFU/HC group",
+        "SM result writer"
       ],
       "records": [
         "argmax",
@@ -863,7 +864,8 @@
         "COLL"
       ],
       "write": [
-        "SU/SFU/HC group"
+        "SU/SFU/HC group",
+        "SM result writer"
       ],
       "records": []
     },
@@ -872,20 +874,18 @@
         "SU/SFU/HC group",
         "DMA back",
         "SM xload",
-        "CP",
         "quant",
         "COLL"
       ],
       "write": [
         "SU/SFU/HC group",
-        "CP",
+        "SM result writer",
         "quant"
       ],
       "records": [
         "cp",
         "fmv",
-        "fused",
-        "quant"
+        "fused"
       ]
     },
     "NE": {
@@ -893,18 +893,83 @@
         "SU/SFU/HC group",
         "DMA back",
         "SM xload",
-        "attention",
         "HC engine",
         "COLL"
       ],
       "write": [
         "SU/SFU/HC group",
-        "attention",
+        "SM result writer",
         "HC engine"
       ],
       "records": []
     }
   },
   "client_status": "Declared allocation; each real client source migration must be proved separately. SU F2 native path is at owner.",
-  "qualification": "Actual RTL composition; unit gates do not establish physical closure or full native token execution."
+  "qualification": "Typed structural successor ABI only. Component source-exact bench and mutant evidence tracked separately; new bank/hub shapes physically UNQUALIFIED. Never alias prior CLOSED child views to changed source.",
+  "native_abi_1016": {
+    "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static.sv",
+    "source_sha256": "0403a44dccd1b9da4b0e1a21784fc046f2904dbc28e2ad34f48e692de7686a5c",
+    "per_quadrant_params": {
+      "SW": [
+        3,
+        5,
+        2
+      ],
+      "SE": [
+        0,
+        4,
+        2
+      ],
+      "NW": [
+        3,
+        5,
+        3
+      ],
+      "NE": [
+        0,
+        5,
+        3
+      ]
+    },
+    "old_to_new_read_groups": {
+      "NW": {
+        "0": 0,
+        "1": 1,
+        "2": 2,
+        "3": "RETIRED",
+        "4": 3,
+        "5": 4
+      },
+      "NE": {
+        "0": 0,
+        "1": 1,
+        "2": 2,
+        "3": "RETIRED",
+        "4": 3,
+        "5": 4
+      }
+    },
+    "NW_packet_clients": {
+      "0": 0,
+      "1": 1,
+      "2": 2,
+      "3": "RETIRED",
+      "4_replay": 3
+    },
+    "SW_SE_write_slots": {
+      "old_wide0": 0,
+      "new_SM": 1,
+      "old1_COLL": 2,
+      "old2_CW": 3,
+      "old3_PACKET": 4,
+      "old4_CCW": 5,
+      "old5_DMA": 6
+    },
+    "open": [
+      "NW cq0..2 genuine input owners remain unbound, do not tie",
+      "Compiler mapping must use this new identity ABI; source helper owns universalW187 packing preservation",
+      "All4 new bankmasters need own gates/routes/native audits; oldstrapclosed views stand historical only",
+      "FullSM result-to-VM staticcalendar compiler timing remains required"
+    ]
+  }
 }

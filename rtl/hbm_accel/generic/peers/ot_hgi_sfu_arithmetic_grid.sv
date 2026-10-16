@@ -7,15 +7,18 @@ module ot_hgi_sfu_arithmetic_grid #(
 ) (
  input wire [15:0] clk_lane, clk_map, rst_lane_n, rst_map_n,
  input wire [1741:0] control,
- input wire [511:0] vi_q, side_y,
+ input wire [511:0] vi_q,
  input wire [2047:0] rd_q,
- output wire [15:0] vi_re, vm_we, kv_we, ro_v, fault, coll, side_v,
+ output wire [15:0] vi_re, vm_we, kv_we, ro_v, fault, coll,
  output wire [383:0] vi_addr, vm_waddr, kv_waddr,
  output wire [1535:0] rd_addr,
  output wire [63:0] rd_re,
  output wire [127:0] rd_src,
- output wire [511:0] vm_wdata, kv_wdata, ro_x, side_x
+ output wire [511:0] vm_wdata, kv_wdata, ro_x
 );
+ // side_v/side_x/side_y REMOVED (H-NETLIST/suport 2026-10-16, H-SU agreed): ot_su12_sfu leaves its lane's side pins
+ // open / 0 (rtl/hdc/v41x/phys/ot_hdc_v41x_su_c12_phys.sv:152): its own side_v/side_x outputs are undriven and side_y is
+ // ignored, so they are left unconnected here.
  wire [0:0] r_ld;
  wire [0:0] r_ld_bank;
  wire [1199:0] r_ld_c;
@@ -180,14 +183,14 @@ module ot_hgi_sfu_arithmetic_grid #(
 .co_dst(m_co_dst),
 .vi_q(vi_q[j*32+:32]),
 .rd_q(rd_q[j*128+:128]),
-.side_y(side_y[j*32+:32]),
+.side_y(),
 .vi_re(vi_re[j]),
 .vm_we(vm_we[j]),
 .kv_we(kv_we[j]),
 .ro_v(ro_v[j]),
 .fault(fault[j]),
 .coll(coll[j]),
-.side_v(side_v[j]),
+.side_v(),
 .vi_addr(vi_addr[j*24+:24]),
 .vm_waddr(vm_waddr[j*24+:24]),
 .kv_waddr(kv_waddr[j*24+:24]),
@@ -197,7 +200,7 @@ module ot_hgi_sfu_arithmetic_grid #(
 .vm_wdata(vm_wdata[j*32+:32]),
 .kv_wdata(kv_wdata[j*32+:32]),
 .ro_x(ro_x[j*32+:32]),
-.side_x(side_x[j*32+:32]));
+.side_x());
  end
 endmodule
 `default_nettype wire

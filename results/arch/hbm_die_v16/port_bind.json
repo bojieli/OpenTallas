@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.die_port_bind.v2",
- "die_v": "/tmp/claude-1000/hnl0030/int1/g/die.v",
+ "die_v": "/tmp/claude-1000/hnl0600/g2/die.v",
  "top": "hbm_v16_die",
  "verdict": "FAIL",
  "failing": [
@@ -8,21 +8,21 @@
   "undriven_net_bits"
  ],
  "summary": {
-  "masters": 58,
-  "instances": 1491,
+  "masters": 62,
+  "instances": 1506,
   "unbound_masters": 0,
   "stub_masters": 0,
   "ambiguous_masters": 0,
   "port_not_in_rtl": 0,
   "width_mismatch": 0,
-  "input_unconnected": 16,
+  "input_unconnected": 1,
   "input_tied": 0,
   "unparsed_connections": 0,
-  "undriven_net_bits": 2994,
+  "undriven_net_bits": 2722,
   "multi_driven_net_bits": 0,
   "top_assigns": 0,
   "params_not_in_rtl": 0,
-  "strap_ports": 3,
+  "strap_ports": 4,
   "pad_bits": 2288
  },
  "masters": {
@@ -484,11 +484,31 @@
    "width_mismatch": {},
    "unparsed_conn": []
   },
-  "ot_hbm_hc_q_static": {
-   "verdict": "FAIL",
-   "fails": [
-    "INPUT_UNCONNECTED"
+  "ot_hbm_hc_eng_static": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_eng_static.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "hc_eng"
    ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "ot_hbm_hc_q_static": {
+   "verdict": "PASS",
+   "fails": [],
    "instances": 4,
    "rtl": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv",
    "kind": "real",
@@ -502,11 +522,7 @@
     "{\"MUT\": \"0\"}": 4
    },
    "die_port_not_in_rtl": [],
-   "input_unconnected": [
-    "result",
-    "result_position",
-    "result_v"
-   ],
+   "input_unconnected": [],
    "input_tied": [],
    "straps": [],
    "pad_bits": {},
@@ -591,7 +607,7 @@
     "host_cp_ingress"
    ],
    "param_sets": {
-    "{\"MUT\": \"0\", \"TARGET_MASK\": \"256'hffffffff0000000f000000f001f1ffffffffffff0ff1000000000000\"}": 1
+    "{\"MUT\": \"0\", \"TARGET_MASK\": \"256'hffffffff0000003f000000f001f1ffffffffffff0ff1000000000000\"}": 1
    },
    "die_port_not_in_rtl": [],
    "input_unconnected": [],
@@ -712,7 +728,7 @@
     "host_status"
    ],
    "param_sets": {
-    "{\"NF\": \"136\", \"NH\": \"6\", \"NT\": \"103\", \"TGTS\": \"824'hdfdedddcdbdad9d8d7d6d5d4d3d2d1d0cfcecdcccbcac9c8c7c6c5c4c3c2c1c0a3a2a1a0878685846f6e6d6c6b6a696867666564636261605f5e5d5c5b5a595857565554535251504f4e4d4c4b4a494847464544434241403b3a39387877767574703736353430\"}": 1
+    "{\"NF\": \"151\", \"NH\": \"6\", \"NT\": \"105\", \"TGTS\": \"840'hdfdedddcdbdad9d8d7d6d5d4d3d2d1d0cfcecdcccbcac9c8c7c6c5c4c3c2c1c0a5a4a3a2a1a0878685846f6e6d6c6b6a696867666564636261605f5e5d5c5b5a595857565554535251504f4e4d4c4b4a494847464544434241403b3a39387877767574703736353430\"}": 1
    },
    "die_port_not_in_rtl": [],
    "input_unconnected": [],
@@ -758,7 +774,34 @@
     "su_prog"
    ],
    "param_sets": {
-    "{\"COLS\": \"38\", \"DICT_BANKS\": \"'{3,10,9,13,2,1,1,1,1,1,2,10,9,2,1,1,1,1,1,3,10,9,13,1,1,1,1,1,3,2,10,1,2,1,1,1,1,1}\", \"EDGES\": \"7116\", \"INDEX_PACK\": \"1\", \"LINE_BITS\": \"9688\", \"MACROS\": \"301\"}": 1
+    "{\"COLS\": \"38\", \"DICT_BANKS\": \"{32'd1,32'd1,32'd1,32'd1,32'd1,32'd2,32'd1,32'd10,32'd2,32'd3,32'd1,32'd1,32'd1,32'd1,32'd1,32'd13,32'd9,32'd10,32'd3,32'd1,32'd1,32'd1,32'd1,32'd1,32'd2,32'd9,32'd10,32'd2,32'd1,32'd1,32'd1,32'd1,32'd1,32'd2,32'd13,32'd9,32'd10,32'd3}\", \"EDGES\": \"7116\", \"INDEX_PACK\": \"1\", \"LINE_BITS\": \"9688\", \"MACROS\": \"301\"}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "ot_hbm_su_static_cxport": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 4,
+   "rtl": "rtl/hbm_accel/generic/adapters/static_su/collport/ot_hbm_su_static_cxport.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "sucx_SW",
+    "sucx_SE",
+    "sucx_NW"
+   ],
+   "param_sets": {
+    "{\"B39_NOOP\": \"1\", \"INJ_RET\": \"9\", \"QID\": \"0\"}": 1,
+    "{\"B39_NOOP\": \"0\", \"INJ_RET\": \"11\", \"QID\": \"1\"}": 1,
+    "{\"B39_NOOP\": \"0\", \"INJ_RET\": \"11\", \"QID\": \"2\"}": 1,
+    "{\"B39_NOOP\": \"0\", \"INJ_RET\": \"11\", \"QID\": \"3\"}": 1
    },
    "die_port_not_in_rtl": [],
    "input_unconnected": [],
@@ -782,14 +825,14 @@
     "su_SW2"
    ],
    "param_sets": {
-    "{\"ALAT\": \"3\", \"FETCH_EXTRA_EDGES\": \"2\", \"G\": \"0\", \"LEAF\": \"1\", \"MLAT\": \"4\", \"MULTIRATE\": \"1\", \"MUT\": \"0\", \"QID\": \"0\", \"READ_RETURN\": \"10\", \"WRITE_RETURN\": \"7\"}": 1,
-    "{\"ALAT\": \"3\", \"FETCH_EXTRA_EDGES\": \"2\", \"G\": \"1\", \"LEAF\": \"1\", \"MLAT\": \"4\", \"MULTIRATE\": \"1\", \"MUT\": \"0\", \"QID\": \"0\", \"READ_RETURN\": \"10\", \"WRITE_RETURN\": \"7\"}": 1,
-    "{\"ALAT\": \"3\", \"FETCH_EXTRA_EDGES\": \"2\", \"G\": \"2\", \"LEAF\": \"1\", \"MLAT\": \"4\", \"MULTIRATE\": \"1\", \"MUT\": \"0\", \"QID\": \"0\", \"READ_RETURN\": \"10\", \"WRITE_RETURN\": \"7\"}": 1,
-    "{\"ALAT\": \"3\", \"FETCH_EXTRA_EDGES\": \"2\", \"G\": \"3\", \"LEAF\": \"1\", \"MLAT\": \"4\", \"MULTIRATE\": \"1\", \"MUT\": \"0\", \"QID\": \"0\", \"READ_RETURN\": \"10\", \"WRITE_RETURN\": \"7\"}": 1,
-    "{\"ALAT\": \"3\", \"FETCH_EXTRA_EDGES\": \"2\", \"G\": \"0\", \"LEAF\": \"1\", \"MLAT\": \"4\", \"MULTIRATE\": \"1\", \"MUT\": \"0\", \"QID\": \"1\", \"READ_RETURN\": \"10\", \"WRITE_RETURN\": \"7\"}": 1,
-    "{\"ALAT\": \"3\", \"FETCH_EXTRA_EDGES\": \"2\", \"G\": \"1\", \"LEAF\": \"1\", \"MLAT\": \"4\", \"MULTIRATE\": \"1\", \"MUT\": \"0\", \"QID\": \"1\", \"READ_RETURN\": \"10\", \"WRITE_RETURN\": \"7\"}": 1,
-    "{\"ALAT\": \"3\", \"FETCH_EXTRA_EDGES\": \"2\", \"G\": \"2\", \"LEAF\": \"1\", \"MLAT\": \"4\", \"MULTIRATE\": \"1\", \"MUT\": \"0\", \"QID\": \"1\", \"READ_RETURN\": \"10\", \"WRITE_RETURN\": \"7\"}": 1,
-    "{\"ALAT\": \"3\", \"FETCH_EXTRA_EDGES\": \"2\", \"G\": \"3\", \"LEAF\": \"1\", \"MLAT\": \"4\", \"MULTIRATE\": \"1\", \"MUT\": \"0\", \"QID\": \"1\", \"READ_RETURN\": \"10\", \"WRITE_RETURN\": \"7\"}": 1
+    "{\"ALAT\": \"3\", \"COLLPORT\": \"1\", \"FETCH_EXTRA_EDGES\": \"2\", \"G\": \"0\", \"LEAF\": \"1\", \"MLAT\": \"4\", \"MULTIRATE\": \"1\", \"MUT\": \"0\", \"QID\": \"0\", \"READ_RETURN\": \"10\", \"WRITE_RETURN\": \"7\"}": 1,
+    "{\"ALAT\": \"3\", \"COLLPORT\": \"1\", \"FETCH_EXTRA_EDGES\": \"2\", \"G\": \"1\", \"LEAF\": \"1\", \"MLAT\": \"4\", \"MULTIRATE\": \"1\", \"MUT\": \"0\", \"QID\": \"0\", \"READ_RETURN\": \"10\", \"WRITE_RETURN\": \"7\"}": 1,
+    "{\"ALAT\": \"3\", \"COLLPORT\": \"1\", \"FETCH_EXTRA_EDGES\": \"2\", \"G\": \"2\", \"LEAF\": \"1\", \"MLAT\": \"4\", \"MULTIRATE\": \"1\", \"MUT\": \"0\", \"QID\": \"0\", \"READ_RETURN\": \"10\", \"WRITE_RETURN\": \"7\"}": 1,
+    "{\"ALAT\": \"3\", \"COLLPORT\": \"1\", \"FETCH_EXTRA_EDGES\": \"2\", \"G\": \"3\", \"LEAF\": \"1\", \"MLAT\": \"4\", \"MULTIRATE\": \"1\", \"MUT\": \"0\", \"QID\": \"0\", \"READ_RETURN\": \"10\", \"WRITE_RETURN\": \"7\"}": 1,
+    "{\"ALAT\": \"3\", \"COLLPORT\": \"1\", \"FETCH_EXTRA_EDGES\": \"2\", \"G\": \"0\", \"LEAF\": \"1\", \"MLAT\": \"4\", \"MULTIRATE\": \"1\", \"MUT\": \"0\", \"QID\": \"1\", \"READ_RETURN\": \"10\", \"WRITE_RETURN\": \"7\"}": 1,
+    "{\"ALAT\": \"3\", \"COLLPORT\": \"1\", \"FETCH_EXTRA_EDGES\": \"2\", \"G\": \"1\", \"LEAF\": \"1\", \"MLAT\": \"4\", \"MULTIRATE\": \"1\", \"MUT\": \"0\", \"QID\": \"1\", \"READ_RETURN\": \"10\", \"WRITE_RETURN\": \"7\"}": 1,
+    "{\"ALAT\": \"3\", \"COLLPORT\": \"1\", \"FETCH_EXTRA_EDGES\": \"2\", \"G\": \"2\", \"LEAF\": \"1\", \"MLAT\": \"4\", \"MULTIRATE\": \"1\", \"MUT\": \"0\", \"QID\": \"1\", \"READ_RETURN\": \"10\", \"WRITE_RETURN\": \"7\"}": 1,
+    "{\"ALAT\": \"3\", \"COLLPORT\": \"1\", \"FETCH_EXTRA_EDGES\": \"2\", \"G\": \"3\", \"LEAF\": \"1\", \"MLAT\": \"4\", \"MULTIRATE\": \"1\", \"MUT\": \"0\", \"QID\": \"1\", \"READ_RETURN\": \"10\", \"WRITE_RETURN\": \"7\"}": 1
    },
    "die_port_not_in_rtl": [],
    "input_unconnected": [],
@@ -813,7 +856,34 @@
     "sucore_NW"
    ],
    "param_sets": {
-    "{\"MUT\": \"0\"}": 4
+    "{\"COLLPORT\": \"1\", \"MUT\": \"0\"}": 4
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "ot_hbm_su_static_sfustore": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 4,
+   "rtl": "rtl/hbm_accel/generic/adapters/static_su/collport/ot_hbm_su_static_sfustore.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "sfus_SW",
+    "sfus_SE",
+    "sfus_NW"
+   ],
+   "param_sets": {
+    "{\"QID\": \"0\"}": 1,
+    "{\"QID\": \"1\"}": 1,
+    "{\"QID\": \"2\"}": 1,
+    "{\"QID\": \"3\"}": 1
    },
    "die_port_not_in_rtl": [],
    "input_unconnected": [],
@@ -991,6 +1061,32 @@
    "width_mismatch": {},
    "unparsed_conn": []
   },
+  "ot_hbm_svc_wb_kport": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 4,
+   "rtl": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_wb_kport.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "wbk_SW",
+    "wbk_SE",
+    "wbk_NW"
+   ],
+   "param_sets": {
+    "{\"MUT\": \"0\", \"WOPEN\": \"0\"}": 4
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [
+    "stk"
+   ],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
   "ot_hbm_vm_lg_static_split": {
    "verdict": "PASS",
    "fails": [],
@@ -1065,10 +1161,8 @@
    "unparsed_conn": []
   },
   "ot_hfd_coll_q2_static_host_v4": {
-   "verdict": "FAIL",
-   "fails": [
-    "INPUT_UNCONNECTED"
-   ],
+   "verdict": "PASS",
+   "fails": [],
    "instances": 3,
    "rtl": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q2_static_host_v4.sv",
    "kind": "real",
@@ -1084,12 +1178,7 @@
     "{\"QID\": \"2'd3\"}": 1
    },
    "die_port_not_in_rtl": [],
-   "input_unconnected": [
-    "inj_d",
-    "rc_d",
-    "rc_tag",
-    "rc_v"
-   ],
+   "input_unconnected": [],
    "input_tied": [],
    "straps": [],
    "pad_bits": {},
@@ -1098,10 +1187,8 @@
    "unparsed_conn": []
   },
   "ot_hfd_coll_q3_static_host_v4": {
-   "verdict": "FAIL",
-   "fails": [
-    "INPUT_UNCONNECTED"
-   ],
+   "verdict": "PASS",
+   "fails": [],
    "instances": 1,
    "rtl": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q3_static_host_v4.sv",
    "kind": "real",
@@ -1113,11 +1200,7 @@
     "{\"QID\": \"2'd0\"}": 1
    },
    "die_port_not_in_rtl": [],
-   "input_unconnected": [
-    "rc_d",
-    "rc_tag",
-    "rc_v"
-   ],
+   "input_unconnected": [],
    "input_tied": [],
    "straps": [],
    "pad_bits": {},
@@ -1126,10 +1209,8 @@
    "unparsed_conn": []
   },
   "ot_hgi_coll_inj_idx_join": {
-   "verdict": "FAIL",
-   "fails": [
-    "INPUT_UNCONNECTED"
-   ],
+   "verdict": "PASS",
+   "fails": [],
    "instances": 1,
    "rtl": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_inj_idx_join.sv",
    "kind": "real",
@@ -1141,9 +1222,7 @@
     "{\"INJLAT\": \"12\"}": 1
    },
    "die_port_not_in_rtl": [],
-   "input_unconnected": [
-    "su_inj_d"
-   ],
+   "input_unconnected": [],
    "input_tied": [],
    "straps": [],
    "pad_bits": {},
@@ -1152,10 +1231,8 @@
    "unparsed_conn": []
   },
   "ot_hgi_dma_back_static_vp4_banks": {
-   "verdict": "FAIL",
-   "fails": [
-    "INPUT_UNCONNECTED"
-   ],
+   "verdict": "PASS",
+   "fails": [],
    "instances": 4,
    "rtl": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks.sv",
    "kind": "real",
@@ -1169,10 +1246,7 @@
     "{}": 4
    },
    "die_port_not_in_rtl": [],
-   "input_unconnected": [
-    "wa",
-    "wb_ready"
-   ],
+   "input_unconnected": [],
    "input_tied": [],
    "straps": [
     "stk"
@@ -1229,10 +1303,8 @@
    "unparsed_conn": []
   },
   "ot_hgi_sfu_scheduled_engine": {
-   "verdict": "FAIL",
-   "fails": [
-    "INPUT_UNCONNECTED"
-   ],
+   "verdict": "PASS",
+   "fails": [],
    "instances": 4,
    "rtl": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_scheduled_engine.sv",
    "kind": "real",
@@ -1246,10 +1318,7 @@
     "{\"AW\": \"11\", \"LG_PATH\": \"12\", \"LWB\": \"15\", \"PAGE_AW\": \"1\"}": 4
    },
    "die_port_not_in_rtl": [],
-   "input_unconnected": [
-    "side_y",
-    "vi_q"
-   ],
+   "input_unconnected": [],
    "input_tied": [],
    "straps": [],
    "pad_bits": {},
@@ -1409,7 +1478,7 @@
   "ot_static_program_target": {
    "verdict": "PASS",
    "fails": [],
-   "instances": 16,
+   "instances": 18,
    "rtl": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
    "kind": "real",
    "ambiguous_defs": null,
@@ -1487,8 +1556,7 @@
  "undriven_nets": {
   "nc__hb_vms_NE__wq": 2248,
   "nc__hb_vms_SW__cq": 338,
-  "nc__hb_vms_NE__rq": 272,
-  "nc__hb_vms_NW__rq": 136
+  "nc__hb_vms_NE__rq": 136
  },
  "undriven_classes": {
   "nc__hb_vms_NE__wq": {
@@ -1502,14 +1570,9 @@
    "example": "nc__hb_vms_SW__cq"
   },
   "nc__hb_vms_NE__rq": {
-   "bits": 272,
-   "nets": 1,
-   "example": "nc__hb_vms_NE__rq"
-  },
-  "nc__hb_vms_NW__rq": {
    "bits": 136,
    "nets": 1,
-   "example": "nc__hb_vms_NW__rq"
+   "example": "nc__hb_vms_NE__rq"
   }
  },
  "multi_driven_classes": {},
@@ -1524,10 +1587,11 @@
   "hbfd_rly_624_SN:i",
   "hbfd_rly_624_WE:i"
  ],
- "die_sha256": "28ee065edaa307f7cbdf3e4fb6c24e2868929e7e77d012df91a9edf33a9d133a",
+ "die_sha256": "a77358c1abd44fe6d7cc6f3c09332abea162769787b41337dfc86c4950855a99",
  "straps_declared": [
   "ot_hbm_static_cfg_collar:tgt",
   "ot_hbm_svc_vmdel_lane:bank_id",
+  "ot_hbm_svc_wb_kport:stk",
   "ot_hgi_dma_back_static_vp4_banks:stk"
  ],
  "params_file": null,
@@ -1657,6 +1721,8 @@
  ],
  "rtl_files": [
   "physical/asap7_memory_macros/ot_hbm3e_phy_rc_e8p5/ot_hbm3e_phy_rc_e8p5_bb.v",
+  "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v",
+  "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v",
   "physical/hbm_xp_aq_tree13_1014/ot_hbm_xp_aq_tree13.sv"
  ],
  "defines": [
