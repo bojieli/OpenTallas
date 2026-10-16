@@ -1169,8 +1169,8 @@
    "child_pin": null,
    "routed_R": null,
    "delivery": "OPEN: no closed native view; parent leaf/CTS root pending",
-   "disposition": "SUPERSEDED_PREDECESSOR",
-   "disposition_why": "dsfd_vm_static_xio control flops are parent glue; a native leaf needs the three combinational pin paths cut (f_crq -> aux a_v/a_row merge, e_d -> t_crs mux; f_collective -> w_* is pure wiring and stays in the parent): registering them = +1 collective request / +1 t_crs edge (L12 -> L14), needs S-FUNC + static-collective sign-off (owed, S-VM)"
+   "disposition": "LEAF_IN_FLIGHT",
+   "disposition_why": "Actual dsfd_vm_xio_serial native leaf captures serial diagnostic pins; strict CTS PASS, routed qualification pending"
   },
   "ck_xio_control_t": {
    "dir": "input",

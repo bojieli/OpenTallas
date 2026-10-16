@@ -85,10 +85,7 @@ DISPOSITION = {
     'ck_wfc_control_s': ('NO_SINK', 'r6 serial control/grant now in independent fault leaf ck_wfc_fault_s; retained source ABI port has no sink'),
     'ck_wfc_control_t': ('LEAF_IN_FLIGHT', 'r6 request leaf dsfd_vm_wfc_request own root ck; native gate pending'),
     'ck_wfc_return_t': ('LEAF_IN_FLIGHT', 'r6 return leaf dsfd_vm_wfc_return own root ck; native gate pending'),
-    'ck_xio_control_s': ('SUPERSEDED_PREDECESSOR', 'dsfd_vm_static_xio control flops are parent glue; a native leaf needs the three '
-                         'combinational pin paths cut (f_crq -> aux a_v/a_row merge, e_d -> t_crs mux; f_collective -> w_* '
-                         'is pure wiring and stays in the parent): registering them = +1 collective request / +1 t_crs '
-                         'edge (L12 -> L14), needs S-FUNC + static-collective sign-off (owed, S-VM)'),
+    'ck_xio_control_s': ('LEAF_IN_FLIGHT', 'Actual dsfd_vm_xio_serial native leaf captures serial diagnostic pins; strict CTS PASS, routed qualification pending'),
     'ck_xio_control_t': ('LEAF_IN_FLIGHT', 'True pin-captured XIO request, request +2core; total collective +4core, Q/G +4core/+3serial. Exact native qualification pending'),
     'ck_xio_return_t': ('LEAF_IN_FLIGHT', 'Actual XIO return leaf; native qualification pending'),
     'ck_xio_fault_t': ('LEAF_IN_FLIGHT', 'W1 diagnostic x34 receiving core root; native qualification pending'),
