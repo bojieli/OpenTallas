@@ -1,5 +1,5 @@
 {
- "name": "s81pq_qb_headpc_native-p9-pinload-1705-COMMIT",
+ "name": "s81pq_qb_headpc_native-p9-pinload-1705-a71cd9050",
  "block": "ot_s81_pq_qb_headpc_native",
  "ref_tile": true,
  "owner": "Claude:S-ELEM-PQ",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 24,
  "source": {
   "branch": "claude/s81-elempq-1705",
-  "commit": "COMMIT",
+  "commit": "a71cd9050",
   "extra_paths": [
    "rtl/dsrom_sys",
    "rtl/test/dsrom_sys",
@@ -130,7 +130,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81pq_qb_headpc_native/s81pq_qb_headpc_native-p9-pinload-1705-COMMIT"
+   "to": "results/rtl/ref_tile/s81pq_qb_headpc_native/s81pq_qb_headpc_native-p9-pinload-1705-a71cd9050"
   }
  ],
  "cycles_added": 0,
