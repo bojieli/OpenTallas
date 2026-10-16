@@ -1,14 +1,14 @@
 {
- "name": "qfd_tt_scale_leaf-fs1-COMMIT",
+ "name": "qfd_tt_scale_leaf-fs1-64efb1755",
  "block": "qfd_tt_scale_leaf",
  "ref_tile": true,
- "owner": "Codex:Q-COMPUTE-ELEM1417",
+ "owner": "claude:Q-ELEM 1705",
  "purpose": "TT real functional partition candidate, native clocks/pins unqualified until measured",
  "threads": 8,
  "peak_ram_gb": 16,
  "source": {
-  "branch": "codex/qwen-compute-elements-1417",
-  "commit": "COMMIT",
+  "branch": "claude/qelem-tt-1705",
+  "commit": "64efb1755675d23d30d58c8b232390b2d8350234",
   "extra_paths": [
    "rtl/qwen_sys/tt_tree_partition_20261015",
    "physical/qwen_tt_partition_1015",
@@ -111,7 +111,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qfd_tt_scale_leaf/qfd_tt_scale_leaf-fs1-COMMIT"
+   "to": "results/rtl/ref_tile/qfd_tt_scale_leaf/qfd_tt_scale_leaf-fs1-64efb1755"
   }
  ],
  "cycles_added": 0,
