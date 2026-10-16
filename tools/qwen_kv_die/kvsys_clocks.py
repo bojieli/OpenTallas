@@ -65,7 +65,8 @@ def main(argv=None):
             continue
         vd = ROOT / r['view']
         # v1.3: a die-placed leaf (kv_expand.py) is instantiated under its own module name with its RTL pins: identity
-        b = K.BINDINGS[mst] if not r.get('expanded_from') else None
+        # OT_KV_RLY_STD: the relay standards (qkd_rlys_*) are bound by kv_rly_std.py under their RTL pin names: identity
+        b = K.BINDINGS[mst] if not r.get('expanded_from') and not mst.startswith('qkd_rlys_') else None
         per = {}
         for c in CORNERS:
             lib = next(vd.glob(f'*_{c}.lib'), None)
