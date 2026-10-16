@@ -23,6 +23,7 @@ module tb_wfc_pipeline;
    evd<=ev;edd<=ed;
    #1;
    if(n>40)begin
+    if(fd!==1'b0 || td[1028]!==1'b0)$fatal(1,"spurious fault under legal fixed schedule %0d",n);
     if({wd,ad,dd}!==whist)$fatal(1,"request +1 write mismatch %0d",n);
     if({vd,rd}!==ahist)$fatal(1,"request +1 read mismatch %0d",n);
     if(dut.sd!==shist[3] || dut.sv!==vhist[3])$fatal(1,"return +4 mismatch %0d",n);

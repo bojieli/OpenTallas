@@ -354,5 +354,13 @@
    }
   }
  },
- "child_lint_scope": "Independent cap=M5 strict-pockets audit matches promised floorplan cap; default exporter lint passed by inferred PG=M6 but violates promised PG=M5/strap=M6."
+ "child_lint_scope": "Independent cap=M5 strict-pockets audit matches promised floorplan cap; default exporter lint passed by inferred PG=M6 but violates promised PG=M5/strap=M6.",
+ "runtime_kit_failure": {
+  "command": "bash -n /srv/opentallas-scratch/claude/closure-loop/dsfd_vm_static_wfc_ctl_native_1015_r5-split5-d0344ba3f/src/physical/ref_tile/dsfd_vm_static_wfc_ctl_native_1015_r5/kit.env",
+  "rc": 1,
+  "output": "/srv/opentallas-scratch/claude/closure-loop/dsfd_vm_static_wfc_ctl_native_1015_r5-split5-d0344ba3f/src/physical/ref_tile/dsfd_vm_static_wfc_ctl_native_1015_r5/kit.env: line 22: syntax error near unexpected token `('\n/srv/opentallas-scratch/claude/closure-loop/dsfd_vm_static_wfc_ctl_native_1015_r5-split5-d0344ba3f/src/physical/ref_tile/dsfd_vm_static_wfc_ctl_native_1015_r5/kit.env: line 22: `EXTRA=(--orfs-var ADDER_MAP_FILE= --orfs-var PDN_TCL=/src/physical/ref_tile/dsfd_vm_static_wfc_ctl_native_1015_r5/pdn.tcl --orfs-var OT_PK_FRAC=0.5 --orfs-var OT_PK_ABOVE_ONLY=1 --orfs-var IO_CONSTRAINTS=/src/physical/s81_vm_ctl_native_1015/dsfd_vm_static_wfc_ctl_edil.tcl --orfs-var GPL_ROUTABILITY_DRIVEN=0 --orfs-var OT_OFLOP_PORT_RE=^(xv|xd|e_v|x34f|vm_fault|x43f) --orfs-var PLACE_DENSITY_LB_ADDON= --step-tcl PRE_GLOBAL_PLACE=physical/ref_tile/dsfd_vm_static_wfc_ctl_native_1015_r5/pre_gpl.tcl --step-tcl PRE_DETAIL_PLACE=physical/ref_tile/dsfd_vm_static_wfc_ctl_native_1015_r5/pre_dpl.tcl --orfs-var OT_OFLOP_HOPS=8 --orfs-var OT_OFLOP_ALLOW_NONE=1 --orfs-var OT_OFLOP_COLS=4 --orfs-var OT_IOHOLD_IN=1 --orfs-var OT_INHOLD_DRV=BUFx4f_ASAP7_75t_R --orfs-var OT_INHOLD_MASTER=HB2xp67_ASAP7_75t_R --orfs-var OT_KEEP_PIN_REGS=1)'\n",
+  "cause": "Unquoted regex containing ( and | breaks EXTRA bash array assignment. ref_route does not fail when source fails, so route continues without PDN_TCL, IO_CONSTRAINTS, GPL and IO-flop settings; runtime config lacks those variables. Actual M6 PG is present in routed DEF, not introduced by export.",
+  "shared_fix": "Root owns shell quoting every generated kit argument and failing immediately on invalid kit sourcing; no clipping/relabeling actual route or cap relaxation.",
+  "implication": "R5 route did not implement requested physical kit. Native failures are real but cannot alone quantify the intended pin-plan topology. Serial diagnostic regression is independently a real source error and split successor remains justified by actual band height."
+ }
 }
