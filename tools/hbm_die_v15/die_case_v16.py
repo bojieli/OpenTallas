@@ -222,7 +222,7 @@ def main():
                          'beyond the strip; the die grows by 2x. Room for the per-PC kshare + xcal_t row (d4a overflow).')
     ap.add_argument('--compact-pins', action='store_true',
                     help='d4b (H-DIE 10-16): SYNTH abstracts pack each bus at 0.096 um centred toward its peers '
-                         '(direction averaged over all instances of the master) instead of spreading over 90 % of the face')
+                         '(direction averaged over all instances of the master) instead of spreading over 90 percent of the face')
     ap.add_argument('--d4b-homes', action='store_true',
                     help='d4b (H-DIE 10-16): LG banks beside their user (pgslice / lg_pair / hc_q), not inside VM plan '
                          'blocks; xload ctlw at the Manhattan minimax point of its SM peers')
