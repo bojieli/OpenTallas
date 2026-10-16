@@ -6,6 +6,7 @@ lead must collision-check the translated R0 frames and preserve zero extra
 relay edges on all control bits and on epoch_go before using EP_SKEW unchanged.
 """
 import argparse
+import copy
 import hashlib
 import json
 import sys
@@ -42,17 +43,31 @@ def propose(packet):
     yoff=round(round(((low+high-size)/2)/2.16)*2.16,6)
     if not 1.0<=low-yoff<=high-yoff<=size-1.0:
         raise ValueError('actual pin span needs a taller sequencer slot')
+    # The actual captured geometry is a baseline, not a closure claim.
+    # New sequencer pins use >=3 M4 tracks even
+    # when the old link's control cluster uses2; monotone local spreading
+    # costs <1um of wire, never an extra scheduled edge.
+    target_y={n:round(pp[n]['center_um'][1]-yoff,6) for n in names}
+    ordered=sorted(names,key=lambda n:target_y[n]);clusters=[]
+    for n in ordered:
+        if clusters and target_y[n]-target_y[clusters[-1][-1]]<.144-1e-6:
+            clusters[-1].append(n)
+        else:clusters.append([n])
+    for ns in clusters:
+        mid=(target_y[ns[0]]+target_y[ns[-1]])/2
+        first=.012+round((mid-.144*(len(ns)-1)/2-.012)/.048)*.048
+        for i,n in enumerate(ns):target_y[n]=round(first+.144*i,6)
     pinlist=[]; edges=[]
     for n in names:
         sn={'fwd_epoch':'epoch_go','epoch_abort':'halt'}.get(n,n)
-        y=round(pp[n]['center_um'][1]-yoff,6)
+        y=target_y[n]
         if abs((y-.012)/.048-round((y-.012)/.048))>1e-6:
             raise ValueError(f'actual {n} cannot mirror on the sequencer M4 track lattice')
         pinlist.append(dict(name=sn,layer='M4',face='W',center_um=[.072,y],size_um=[.144,.024]))
-        delta=[round(w+gap+.072-pp[n]['center_um'][0],6),0.0]
+        delta=[round(w+gap+.072-pp[n]['center_um'][0],6),round(y+yoff-pp[n]['center_um'][1],6)]
         edges.append(dict(link_pin=n,seq_pin=sn,control_bit=bits.index(n) if n in bits else None,
                           direction='seq_to_link' if n in bits else 'link_to_seq',
-                          delta_um=delta,manhattan_um=delta[0],extra_relay_edges=0))
+                          delta_um=delta,manhattan_um=round(abs(delta[0])+abs(delta[1]),6),extra_relay_edges=0))
     for i,n in enumerate(('ck','rst_n','reload','tok_go')):
         pinlist.append(dict(name=n,layer='M5',face='S',center_um=[round(4.332+8.64*i,6),.072],size_um=[.024,.144]))
     status=['cal_ready','running']+[f'layer[{i}]' for i in range(6)]+['adm_done','tok_start','fault']
@@ -83,14 +98,15 @@ def propose(packet):
                 link_interface_source=LINK_SOURCE,link_interface_sha256=hashlib.sha256((ROOT/LINK_SOURCE).read_bytes()).hexdigest(),
                 link_packet=packet,outline_um=[size,size],orient='R0',
                 relative_to_link_R0_origin_um=[w+gap,yoff],link_gap_um=gap,
-                link_matched_pin_span_um=[low,high],pins=pinlist,edges=edges,
+                link_matched_pin_span_um=[low,high],new_face_min_pitch_um=.144,pins=pinlist,edges=edges,
                 control_bundle_lsb_first=bits,
                 binding_template=dict(module=TOP,file=SOURCE,ports=dieports,sliced={'cfg_data_hi':'cfg_data_lo'},classed={}),
                 required_binding_parameters=['EP_SKEW'],die_master_face_ports=faces,
                 face_model_note='Regular-pitch kv_die frame groups; cfg_data split20/12 preserves the actual gap. Requested Tcl pin shapes are authoritative before actual routed readback.',
                 compiler=dict(extra_control_relay_edges=0,extra_epoch_relay_edges=0,
                               EP_SKEW='package_epoch_edges - extra_epoch_relay_edges - extra_control_relay_edges',
-                              no_implicit_package_skew=True),
+                              no_implicit_package_skew=True,local_epoch_capture_edges=(1 if TOP.endswith('_pin') else 0),
+                              local_compensation='EP_SKEW-1 internally' if TOP.endswith('_pin') else 'raw source'),
                 remaining=['die lead actual home/collision/all-incident-port assignment','clock phase-minus-insertion and pair reach TT/FF',
                            'sequencer source synthesis/CTS/route/native audit','route final DEF readback and exact matched-pin proof',
                            'HOST reload/rst/status/fault producer-consumer wiring','physical package_epoch_edges'],
@@ -118,7 +134,7 @@ def draw(r,out):
     axes[0].set_xlim(-10,sx+sw+10);axes[0].set_ylim(-10,lh+10)
     axes[0].set_title('R0 relative frames; die home not assigned')
     axes[1].set_xlim(lw-5,sx+8);axes[1].set_ylim(147,174)
-    axes[1].set_title('42 control + 2 epoch/abort matched pins\n21.714 um requested centre-to-centre hops',fontsize=10)
+    axes[1].set_title(f'42 control + 2 epoch/abort requested paths\n{max(e["manhattan_um"] for e in r["edges"]):.3f} um worst requested hop',fontsize=10)
     axes[1].text((lw+sx)/2,148,'21.6 um gap',ha='center',fontsize=8)
     fig.suptitle('Source-exact calendar pin proposal: geometry only; clock/STA/route OPEN',fontsize=12)
     fig.tight_layout();fig.savefig(out/'pin_proposal.png',dpi=160);plt.close(fig)
@@ -127,7 +143,54 @@ def draw(r,out):
 def main():
     ap=argparse.ArgumentParser(description=__doc__)
     ap.add_argument('packet',type=Path);ap.add_argument('out',type=Path)
-    a=ap.parse_args();r=propose(json.loads(a.packet.read_text()));a.out.mkdir(parents=True,exist_ok=True)
+    ap.add_argument('--consumer-e-packet',type=Path,help='all actual Eface pins; propose a coherent monotone3track repair of the unclosed consumer')
+    ap.add_argument('--pin-capture',action='store_true',help='actual captured-input successor; raw source stays historical')
+    a=ap.parse_args()
+    global SOURCE,TOP
+    if a.pin_capture:
+        SOURCE='rtl/qwen_sys/d2d_static_20261015/qkd_d2d_cal_seq_pin.sv';TOP='qkd_d2d_cal_seq_pin'
+    original=json.loads(a.packet.read_text());packet=original
+    full=None;target=None
+    if a.consumer_e_packet:
+        full=json.loads(a.consumer_e_packet.read_text())
+        if full['source_def_sha256']!=original['source_def_sha256'] or full['outline_um']!=original['outline_um']:
+            raise ValueError('consumer packet provenance/outline does not match actual link44 packet')
+        if any(full['pins'].get(n)!=p and full['pins'][n]['center_um']!=p['center_um'] for n,p in original['pins'].items()):
+            raise ValueError('actual consumer pin coordinates disagree between packets')
+        target={};last=-1
+        for n,p in sorted(full['pins'].items(),key=lambda np:np[1]['center_um'][1]):
+            if p['layer']!='M4' or n in ('VDD','VSS'):
+                raise ValueError('consumer Eface packet includes a nonfunctional/nonM4 pin')
+            y=max(p['center_um'][1],last+.144)
+            y=round(.012+round((y-.012)/.048)*.048,6);last=y
+            q=copy.deepcopy(p);dy=y-p['center_um'][1]
+            q['center_um'][1]=y;q['rect_um'][1]=round(q['rect_um'][1]+dy,6);q['rect_um'][3]=round(q['rect_um'][3]+dy,6)
+            q['requested_shift_y_um']=round(dy,6);target[n]=q
+        if last>=full['outline_um'][1]-1:
+            raise ValueError('consumer3track pins do not fit original outline')
+        ys=sorted(p['center_um'][1] for p in target.values())
+        if min(b-a for a,b in zip(ys,ys[1:]))<.144-1e-6:
+            raise ValueError('consumer3track repair retains a local pin collision')
+        packet=copy.deepcopy(original)
+        packet['scope']='REQUESTED consumer successor pin coordinates; NOT actual routed pins. Immutable original packet retained separately.'
+        packet['basis_source_def_sha256']=packet.pop('source_def_sha256')
+        packet['basis_source_commit']=packet.pop('source_commit')
+        packet['pins']={n:target[n] for n in original['pins']}
+    r=propose(packet);a.out.mkdir(parents=True,exist_ok=True)
+    if full:
+        r['actual_link_pin_packet']=original
+        r['consumer_e_packet_sha256']=hashlib.sha256(a.consumer_e_packet.read_bytes()).hexdigest()
+        r['consumer_target']=dict(scope='REQUESTED_ALL_EFACE_SUCCESSOR_PINS_ONLY',pins=target,
+             count=len(target),minimum_center_pitch_um=.144,minimum_edge_spacing_um=.120,
+             all_pairs_same_layer_overlap=0,max_shift_y_um=max(p['requested_shift_y_um'] for p in target.values()),
+             source_def_sha256=full['source_def_sha256'],source_commit=full['source_commit'],
+             source_order_preserved=True,footprint_changed=False,physical_qualified=False)
+        lines=['# REQUESTED all-Eface3track pin successor; NOT an actual routed view.',
+               '# Basis actual DEF sha256 '+full['source_def_sha256']]
+        for n,p in target.items():
+            x,y=p['center_um'];x0,y0,x1,y1=p['rect_um']
+            lines.append(f'place_pin -pin_name {{{n}}} -layer M4 -location {{{x:.6f} {y:.6f}}} -pin_size {{{x1-x0:.6f} {y1-y0:.6f}}}')
+        (a.out/'qkd_d2d_static_e_3track.tcl').write_text('\n'.join(lines)+'\n')
     r['packet_sha256']=hashlib.sha256(a.packet.read_bytes()).hexdigest()
     (a.out/'plan.json').write_text(json.dumps(r,indent=2)+'\n')
     lines=['# PROPOSED die-driven calendar pins; actual link DEF packet sha256 '+r['packet_sha256'],
