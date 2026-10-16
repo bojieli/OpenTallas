@@ -2909,6 +2909,13 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         def _try(c, tol):
             w, h = frame(c)
             sp = place(c[1], c[2], w + v.SHAVE, h + v.SHAVE, None if wide else c[3], tol)
+            # A head macro can occupy the entire vertical corridor through a
+            # deliberately widened horizontal channel. Search that actual empty
+            # row channel instead of requiring a frame to overlap the head.
+            if sp is None and not wide and c[3] is not None:
+                alt = place(c[1], c[2], w + v.SHAVE, h + v.SHAVE, None, tol)
+                if alt is not None and contains_frame(legal_row_gaps, alt[1], h + v.SHAVE):
+                    sp = alt
             return None if sp is None else (sp[0], sp[1], w, h)
         def _chain(path):
             cands, L = candidates(path)
@@ -2945,6 +2952,21 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                     c = reach[-1]
                     sp = _try(c, None)
                     if sp is None:
+                        # Immutable local failure receipt, never a relaxed gate.
+                        if _os.environ.get('OT_RELAY_SITE_FAILURE'):
+                            w_, h_ = frame(c)
+                            near = set()
+                            for gx_ in range(int((c[1]-1000)//BK), int((c[1]+1000)//BK)+1):
+                                for gy_ in range(int((c[2]-1000)//BK), int((c[2]+1000)//BK)+1):
+                                    near.update(grid.get((gx_, gy_), ()))
+                            named = {tuple((it.x,it.y,it.x+it.w,it.y+it.h)):it.name for it in m['insts']}
+                            for pn_, pl_ in plans.items():
+                                for fk_, f_ in enumerate(pl_['frames']):
+                                    named[(f_[0],f_[1],f_[0]+f_[2]+v.SHAVE,f_[1]+f_[3]+v.SHAVE)] = str(pl_.get('bid',pn_))+':'+str(fk_)
+                            json.dump(dict(bid=bid, bits=bits, cls=cl, candidate=c, frame=[w_,h_],
+                                           path=path, legal_row_gaps=legal_row_gaps,
+                                           nearby=[dict(rect=r_, owner=named.get(r_,'reserved relay/pad')) for r_ in sorted(near)]),
+                                      open(_os.environ['OT_RELAY_SITE_FAILURE'],'w'),indent=2)
                         raise ValueError(f'relays: no free spot for {bid} near ({c[1]:.0f}, {c[2]:.0f})')
                     got = (c, sp)
                 x0, y0, w, h = got[1]
