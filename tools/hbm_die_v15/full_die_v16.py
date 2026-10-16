@@ -233,7 +233,7 @@ PARAM_STRAPS = {'ot_hbm_svc_vm_kshare': {'SM': 'sm'}}
 # die netlist into their N leaf instances <inst>_b<k> (one hardened leaf master, bit-sliced edges, same clock root bit).
 _VMS = 'rtl/hbm_accel/generic/vm/static/'
 FLATTEN = {
-    'ot_hbm_vm_lg_static_split': dict(leaf='ot_hbm_vm_lg_static_bank', source=_VMS + 'ot_hbm_vm_lg_static_bank.sv', n=8,
+    'ot_hbm_vm_lg_static_split': dict(leaf='ot_hbm_vm_lg_static_bank', source=_VMS + 'ot_hbm_vm_lg_static_bank.sv', n=8, ret_pin=True,
         ports=dict(clk=1, local_rq=17, far_rq=17, local_wq=281, far_wq=281, local_read=1, local_write=1, near_rq=17,
                    near_wq=281, near_rr=257, near_w_done=1, local_rr=257, far_rr=257, local_w_done=1, far_w_done=1,
                    bank_fault=('fault', 1)), shared=('rst_n',)),
@@ -358,8 +358,14 @@ def build(specs_dir, out):
         i = insts.pop(n)
         flat[n] = r
         for k in range(r['n']):
-            insts[f'{n}_b{k}'] = dict(i, master=r['leaf'], source=r['source'], rtl_deps=[],
+            insts[f'{n}_b{k}'] = dict(i, master=r['leaf'], source=r['source'], rtl_deps=[], params=dict(i['params']),
                                      note=(i.get('note') or '') + f' | H-NETLIST 0600: leaf {k} of flattened {n} ({i["master"]})')
+            if r.get('ret_pin'):
+                # one hardened leaf for every tap: return edges on identity straps (RET_PIN=1, depth 18/15)
+                pr = insts[f'{n}_b{k}']['params']
+                tgt_straps.append(dict(inst=f'{n}_b{k}', port='rret', value=int(pr.pop('READ_RETURN')), reason='identity: tap read return edge'))
+                tgt_straps.append(dict(inst=f'{n}_b{k}', port='wret', value=int(pr.pop('WRITE_RETURN')), reason='identity: tap write return edge'))
+                pr.update(READ_RETURN=18, WRITE_RETURN=15, RET_PIN=1)
     for s_ in specs:
         for c_ in list(s_.get('clocks', [])):
             if c_['inst'] in flat:

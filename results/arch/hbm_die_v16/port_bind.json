@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.die_port_bind.v2",
- "die_v": "/tmp/claude-1000/hnl0600/g11/die.v",
+ "die_v": "/tmp/claude-1000/hnl0600/g12/die.v",
  "top": "hbm_v16_die",
  "verdict": "PASS",
  "failing": [],
@@ -20,7 +20,7 @@
   "multi_driven_net_bits": 0,
   "top_assigns": 0,
   "params_not_in_rtl": 0,
-  "strap_ports": 12,
+  "strap_ports": 14,
   "pad_bits": 2288
  },
  "masters": {
@@ -1136,13 +1136,15 @@
     "lg_SW_0_b2"
    ],
    "param_sets": {
-    "{\"READ_RETURN\": \"10\", \"WRITE_RETURN\": \"7\"}": 32,
-    "{\"READ_RETURN\": \"14\", \"WRITE_RETURN\": \"11\"}": 32
+    "{\"READ_RETURN\": \"18\", \"RET_PIN\": \"1\", \"WRITE_RETURN\": \"15\"}": 64
    },
    "die_port_not_in_rtl": [],
    "input_unconnected": [],
    "input_tied": [],
-   "straps": [],
+   "straps": [
+    "rret",
+    "wret"
+   ],
    "pad_bits": {},
    "output_open": [],
    "width_mismatch": {},
@@ -1589,7 +1591,7 @@
   "hbfd_rly_624_SN:i",
   "hbfd_rly_624_WE:i"
  ],
- "die_sha256": "416e2aacf1df7933d3b436a8a255a6612f01fec7b893f03a1e0c1e1e344f687e",
+ "die_sha256": "42d663218752d2819ca2b45f9f4ceea4a2acd2cee2c5926d3e6883194cd7452b",
  "straps_declared": [
   "hfd_hgi_vm_calendar_f20:tgt",
   "ot_hbm_sm_vm_wr_q_t:quad",
@@ -1599,6 +1601,8 @@
   "ot_hbm_svc_vm_kshare:sm",
   "ot_hbm_svc_vmdel_lane:bank_id",
   "ot_hbm_svc_wb_kport:stk",
+  "ot_hbm_vm_lg_static_bank:rret",
+  "ot_hbm_vm_lg_static_bank:wret",
   "ot_hgi_dma_back_static_vp4_banks_cp:stk",
   "ot_hgi_dma_back_static_vp4_banks_cp:tgt",
   "ot_static_cmd_target:tgt",
