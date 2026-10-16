@@ -73,6 +73,32 @@ class WideHubLayout(unittest.TestCase):
         finally:
             G.HUB_LAYOUT=old;G.VCH8=old_vch
 
+    def test_band_receivers_route_below_collective(self):
+        sys.path.insert(0,str(ROOT/'tools'))
+        import dsrom_s81_fulldie as G
+        r=json.loads((ROOT/'results/physical/die_iter_1012/s81/canonical_widehub_1015/hub_layout_rm5.json').read_text())
+        old,vch=G.HUB_LAYOUT,G.VCH8
+        try:
+            G.HUB_LAYOUT=r;G.VCH8=r['wide']['vch']
+            m={'x_vch':r['wide']['x_vch']}
+            cor={'su_under':r['wide']['su_under']}
+            sink=(14342.4,7992.0) # exact first GEN24w selector failure
+            cases=[('sel',(16800.2,1786.3),3460.3),('col',(16800.2,23654.16),22539.7)]
+            for name,src,by in cases:
+                path=G._wide_vm_band_path(m,cor,name,src,sink,by)
+                self.assertEqual(path[0],src);self.assertEqual(path[-1],sink)
+                for p,q in zip(path,path[1:]):
+                    for n,(x,y,w,h,*_) in r['blocks'].items():
+                        if p[1]==q[1]:
+                            cross=y+.001<p[1]<y+h-.001 and min(max(p[0],q[0]),x+w)-max(min(p[0],q[0]),x)>.001
+                        else:
+                            cross=x+.001<p[0]<x+w-.001 and min(max(p[1],q[1]),y+h)-max(min(p[1],q[1]),y)>.001
+                        self.assertFalse(cross,(name,n,p,q))
+            G.HUB_LAYOUT=None
+            self.assertIsNone(G._wide_vm_band_path(m,cor,'sel',cases[0][1],sink,3460.3))
+        finally:
+            G.HUB_LAYOUT=old;G.VCH8=vch
+
     def test_render_preserves_all_six_hcp_homes(self):
         sys.path.insert(0,str(ROOT/'tools'))
         from die_layout_render import from_s81

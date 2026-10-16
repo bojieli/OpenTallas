@@ -7508,6 +7508,26 @@ def _wide_hub_path(m, A, Bk):
     return p_ if wb is A else p_[::-1]
 
 
+
+def _wide_vm_band_path(m, cor, name, source, sink, band_y):
+    """Route selector/collector to the VM S-face receiver without crossing collective.
+
+    The wide VM S face shares its E half with the collective. Its service
+    receivers occupy the clear W half. Reach them from below the collective,
+    using the reserved SU service floor; a VCH horizontal tail at receiver
+    height would cut through the collective's full rectangle.
+    """
+    if not wide_hub() or name not in ('sel', 'col'):
+        return None
+    su = cor['su_under']
+    y = su[1] + (su[3] - su[1]) * (0.4 if name == 'sel' else 0.6)
+    if name == 'sel':
+        return _dedup([source, (source[0], y), (sink[0], y), sink])
+    vx = vch_x(m, name)
+    return _dedup([source, (source[0], band_y), (vx, band_y),
+                   (vx, y), (sink[0], y), sink])
+
+
 def vch_x(m, tag):
     """per-chain x track inside the VCH (spreads the vertical chains over its width instead of one centre line)"""
     d = m.setdefault('_vch_lane', {})
@@ -7882,9 +7902,12 @@ def _svc_chains(m, CH8, P, cor, end_spec, hub_block):
         he = P.add(_hub_at(P, f'h{name}', nm, w, h, vm, 'E', vy, cor))
         bx = blk.x + blk.w / 2 + 300.0
         by_ = blk.y + blk.h if name == 'sel' else blk.y
-        single(name, 512, 'vr', (blk.name, 'vf', 'vd'), (bx, by_),
-               [(bx, by_), (bx, yo), (vch_x(m, name), yo), (vch_x(m, name), he.y + he.h / 2),
-                (he.x + he.w / 2, he.y + he.h / 2)], he)
+        endpoint = (he.x + he.w / 2, he.y + he.h / 2)
+        path = _wide_vm_band_path(m, cor, name, (bx, by_), endpoint, yo)
+        if path is None:
+            path = [(bx, by_), (bx, yo), (vch_x(m, name), yo),
+                    (vch_x(m, name), endpoint[1]), endpoint]
+        single(name, 512, 'vr', (blk.name, 'vf', 'vd'), (bx, by_), path, he)
         CH8.bus(f'h{name}_o', 'local', 515, [(he.name, 'o'), (vm.name, name)])
     if FWD_IFACE:
         _fwd_ifaces(m, CH8, P, cor, end_spec, single, beside_svc, face_pt, strip_y, spine_x, vmy)
