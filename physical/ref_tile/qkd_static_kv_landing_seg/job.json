@@ -1,5 +1,5 @@
 {
- "name": "qkd_static_kv_landing_seg-ls4-COMMIT",
+ "name": "qkd_static_kv_landing_seg-ls5-COMMIT",
  "block": "qkd_static_kv_landing_seg",
  "ref_tile": true,
  "owner": "Claude:Q-KVSYS-STRIP",
@@ -103,14 +103,15 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qkd_static_kv_landing_seg/qkd_static_kv_landing_seg-ls4-COMMIT"
+   "to": "results/rtl/ref_tile/qkd_static_kv_landing_seg/qkd_static_kv_landing_seg-ls5-COMMIT"
   }
  ],
  "cycles_added": {
   "hop_reset_deassert_edges": 1,
   "fault_report_edges": 1,
+  "sram_write_edges": 1,
   "traffic_edges": 0,
-  "note": "reset guard +1 and fault visibility +1 edge; data/landing latency 8 unchanged"
+  "note": "row written one edge later inside the PC; request->response latency 8 unchanged"
  },
  "route_hold_corners": "mm",
  "route_hold_margin_ns": 0.03,
@@ -120,6 +121,6 @@
  "structural_change": "ls2: rebased on the landing alias fix (main 35a278613: K row ordinal = stream position; rowctl VREQ takes arm/epoch/layer); bench over 4 contexts. ls1 (1a68fa5b0) was never submitted.",
  "reroute_reason": {
   "kind": "rtl_change",
-  "why": "parallel structural variant of ls3 (ls2 EARLY_FAIL_HOLD reset-removal fix kept): ls3 exact gate placement repair shows TT setup -105.5 ps at 770 ps on g_pc[*].u_pc.fault/D (ticket[ra]/valid[ra] compare cone into the sticky fault OR; ls2 gate -93.5). ls4: landing_pc FAULT_PIPE=1 registers the put/get fault conditions (fq) one edge before fault."
+  "why": "parallel variant of ls4 from the ls3 exact gate TT classes (signoff 833, placement RC): reg->reg 598 paths worst -43.3 ps ticket[*]/D (wa decode), reg->macro -36.3 ps u_rows/w_addr_in; no in/out class in the worst 300 (rsp face not limiting). ls5 = ls4 + landing_pc WRITE_PIPE=1: SRAM write ce/addr/data and ticket write registered once more beside the array."
  }
 }

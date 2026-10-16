@@ -13,7 +13,12 @@ module qkd_static_kv_landing_pc #(
     // FAULT_PIPE 1 (KVELEM 2026-10-16, landing_seg ls4): the fault conditions are registered once (fq) before the sticky
     // fault flop: the ticket[ra]/valid[ra] compare cone no longer ends in the fault OR (gate: -105 ps at 770 ps on
     // u_pc.fault/D).  Fault reports one edge later; no slot or data edge moves.  0 = historical single-edge fault.
-    parameter integer FAULT_PIPE=0
+    parameter integer FAULT_PIPE=0,
+    // WRITE_PIPE 1 (KVELEM 2026-10-16, landing_seg ls5): the put side (SRAM write ce/addr/data and the ticket write) is
+    // registered once more (put_d/wa_d/tk_d/ad_d) beside the SRAM and the ticket array: ls3 gate TT -43.3 ps on
+    // ticket[*]/D (wa decode from the face pin register) and -36.3 ps on u_rows/w_addr_in.  The row is written one edge
+    // later; valid[] and every fault check keep the put_q edge.  0 = historical.
+    parameter integer WRITE_PIPE=0
 )(
     input wire ck, rst_n,
     input wire [1:0] cfg_stack,input wire [2:0] cfg_group,
@@ -81,9 +86,19 @@ module qkd_static_kv_landing_pc #(
     reg [5:0] active_layer;
     reg armed;
     wire [255:0] mem_q;
+    (* keep *) reg put_d;
+    (* keep *) reg [6:0] wa_d;
+    (* keep *) reg [8:0] tk_d;
+    (* keep *) reg [255:0] ad_d;
+    always @(posedge ck) begin wa_d<=wa;tk_d<=(MUT==1)?(put_ticket^9'b1):put_ticket;ad_d<=ad_q; end
+    always @(posedge ck or negedge rn) if(!rn)put_d<=0; else put_d<=(WRITE_PIPE!=0)&&put_q;
+    wire w_ce=(WRITE_PIPE!=0)?put_d:put_q;
+    wire [6:0] w_a=(WRITE_PIPE!=0)?wa_d:wa;
+    wire [255:0] w_d=(WRITE_PIPE!=0)?ad_d:ad_q;
+    wire [8:0] w_tk=(WRITE_PIPE!=0)?tk_d:((MUT==1)?(put_ticket^9'b1):put_ticket);
     ot_sram_1r1w_128x256_m1_r2c2 u_rows(
       .clk(ck),.r_ce_in(get_q),.r_addr_in(ra),.rd_out(mem_q),
-      .w_ce_in(put_q),.w_addr_in(wa),.wd_in(ad_q),.w_mask_in({256{1'b1}}),
+      .w_ce_in(w_ce),.w_addr_in(w_a),.wd_in(w_d),.w_mask_in({256{1'b1}}),
       .rr_en(2'b0),.rr_addr(14'b0),.cr_en(2'b0),.cr_sel(16'b0));
     reg read_q;
     reg [13:0] rt_q;
@@ -94,7 +109,7 @@ module qkd_static_kv_landing_pc #(
       rt_q<=gt_q;rv_q<=gv_q;re_q<=ge_q;rl_q<=gl_q;
       out_t<=rt_q;out_v<=rv_q;out_epoch<=re_q;out_layer<=rl_q;
       out_data<=(MUT==2)?(mem_q^256'b1):mem_q;
-      if(put_q)ticket[wa]<=(MUT==1)?(put_ticket^9'b1):put_ticket;
+      if(w_ce)ticket[w_a]<=w_tk;
     end
     // registered fault conditions (FAULT_PIPE 1): the same put/get checks as below, captured one edge before fault
     (* keep *) reg fq;
