@@ -245,11 +245,11 @@ module ot_s81_bf_front #(
         reg [31:0] r_xb_u;
         reg [1023:0] r_xb_d;
         // Core -> boundary status uses the same physical lockup protection as
-        // the payload seams. The destination-low latch preserves sampled edges.
+        // the payload seams. The source-low latch preserves sampled edges.
         wire busy_pin_d, fault_pin_d;
         if (STATIC_PROGRAM != 0) begin : g_static_status_lockup
             reg busy_l, fault_l;
-            always_latch if (!pin_clk) begin busy_l <= busy_e; fault_l <= fault_e; end
+            always_latch if (!clk) begin busy_l <= busy_e; fault_l <= fault_e; end
             assign busy_pin_d = busy_l;
             assign fault_pin_d = fault_l;
         end else begin : g_status_direct
