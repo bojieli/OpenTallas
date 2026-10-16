@@ -51,6 +51,9 @@ PERIOD = dict(stream=833.333, hbm=1024.0, serial=1111.111)
 CKGEN = 'hb_ckgen'
 CELL = 5.4      # occupancy grid (um)
 HALO = 10.8
+# closed views bound although their native audit fails (H-DIE 10-16): results through them are diagnostic
+DIAGNOSTIC = {'ot_hbm_svc_vmdel_lane': 'hv15_vmdel_lane closed TT +49.22/FF +10.13/DRC 0 (985e70198) but native audit FAIL: '
+                                       'R 286.7 / spread 96.4 / launch 346.6 ps; v6 pending'}
 SM_CARVE = 'ot_hbm_accel_smh'      # SYNTH SM abstracts carve their grant's reserved feedthrough channels
 PHY_M, CTL_M, SVG_M = 'ot_hbm3e_phy_rc_e8p5', 'ot_hbm_svc_pc_ctrl_leaf', 'ot_hbm_svc_sm_group'
 Q = ('SW', 'SE', 'NW', 'NE')
@@ -162,6 +165,8 @@ def main():
             shutil.copy(ROOT / e['lef'], vd / f'{c}.lef')
             shutil.copy(ROOT / e['tt'], vd / f'{c}_tt.lib'); shutil.copy(ROOT / e['ff'], vd / f'{c}_ff.lib')
             kinds[c] = 'ROUTED_UNBOUND' + (' (TT abstract used at FF: modelled off-die PHY macro)' if e['tt'] == e['ff'] else '')
+            if e['master'] in DIAGNOSTIC:
+                kinds[c] += f" DIAGNOSTIC ({DIAGNOSTIC[e['master']]})"
             size[c] = lef_size(vd / f'{c}.lef')
         else:
             sd = a.views / 'synth' / c
@@ -270,6 +275,7 @@ def main():
         homes[n] = dict(rule=tag, target=[round(cx, 1), round(cy, 1)], at=[r[0], r[1]],
                         dist_um=round(abs(r[0] + w / 2 - cx) + abs(r[1] + h / 2 - cy), 1))
 
+    sm_mx = {}
     # 1a PHY + controllers + service groups (d2 rule)
     phy_xy = lef_xy(vd / f'{cell_of["phy_SW"]}.lef')
     per = [('row_v', 1), ('row_op', 3), ('row_bank', 5), ('row_row', 19), ('col_v', 1), ('col_we', 1), ('col_bank', 5),
@@ -305,7 +311,15 @@ def main():
         if len(users) != 1 or users[0] in pl or users[0] in ph:
             continue
         n = users[0]; sl = slots[s]
-        put(n, sl['origin']['x'], sl['origin']['y'], sl['origin'].get('orient', 'R0'), f'grant slot {s}')
+        x_, y_, o_ = sl['origin']['x'], sl['origin']['y'], sl['origin'].get('orient', 'R0')
+        if re.fullmatch(r'sm_S[WE]\d+', n) and o_ == 'R0':
+            # H-DIE/V790 10-16: the H-SM frame has its SM_HBM window on N; the die grant puts the packet face toward the PC
+            # band (S for the S quadrants) -> S-quadrant SM frames placed MX (carve row + XC at the S edge); H-SM: an MX'd
+            # frame's y origin must be 0.024 mod 0.048 um so the M4 W/E pins stay on track
+            y2 = round(round((y_ - 0.024) / 0.048) * 0.048 + 0.024, 3)
+            sm_mx[n] = dict(slot_y=y_, y=y2, shift_um=round(y2 - y_, 3))
+            y_, o_ = y2, 'MX'
+        put(n, x_, y_, o_, f'grant slot {s}' + (' (MX: SM_HBM face to the PC band)' if n in sm_mx else ''))
     # 2 shared grant slots / plan regions
     for n in inst:
         if n in pl:
@@ -585,7 +599,7 @@ def main():
                     signal_nets=len(nets), die_ports=len(die_ports),
                     synth_clock_entry=dict(rule='SYNTH ETM clock pins re-capped to one 2 fF entry buffer', pins_recapped=ecap),
                     routed_view_qualification='All routed candidates are source/native UNBOUND; matching ports alone cannot qualify them.',
-                    placement=pl, carved_feedthrough=carved, in_carved_channel=in_channel, corners='setup TT, hold FF (owner option B); SS not run')
+                    placement=pl, sm_mx_s_quadrant=sm_mx, carved_feedthrough=carved, in_carved_channel=in_channel, corners='setup TT, hold FF (owner option B); SS not run')
     # Pin the actual consumed bytes, including generated abstracts and recapped SYNTH ETMs.
     # A source path alone cannot establish lineage after another branch changes a view.
     digest = lambda p: hashlib.sha256(Path(p).read_bytes()).hexdigest()
