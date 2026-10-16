@@ -24,7 +24,7 @@ module tb_s81_fixed_issue_fault_tree;
   row(1,mode==1?0:mode==2?12:13,mode==1?0:1,5);
   row(2,15,8,0);
   write(0,{2'd3,1'b1,8'd0,8'd3,2'd1,7'd7});
-  repeat(130)@(negedge clk);
+  repeat(132)@(negedge clk); // issuer v2b boot: seal -> armed 131 edges (initialization only)
   if(mode==2)begin if(!fault||dut.sealed)$fatal(1,"absent-engine boot did not fail closed");$display("FAULT_TREE absent PASS");$finish;end
   while(phase!=0)@(negedge clk);
   job_v=1;@(negedge clk);job_v=0;

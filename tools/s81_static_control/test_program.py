@@ -27,7 +27,7 @@ class ProgramTest(unittest.TestCase):
         rows=[dict(engine=i%13,arg=(0x654321+i)&0xffffff,issue=i,done=i+3)for i in range(126)]
         rows += [dict(engine=14,arg=0,issue=129,done=0),dict(engine=15,arg=0,issue=130,done=0)]
         r=encode_program(rows,127,3)
-        self.assertEqual(len(r['writes']),386);self.assertFalse(r['qualified']);self.assertEqual(r['seal_to_arm_stream_cycles'],131)
+        self.assertEqual(len(r['writes']),386);self.assertFalse(r['qualified']);self.assertEqual(r['seal_to_arm_stream_cycles'],132)
         for i,row in enumerate(rows):
             triplet=r['writes'][1+3*i:4+3*i]
             packed=sum((w['data']&0x3ffffff)<<(26*j)for j,w in enumerate(triplet))

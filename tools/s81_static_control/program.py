@@ -52,7 +52,7 @@ def encode_program(rows,stage,phase):
     return dict(length=len(rows),stage=stage,start_phase=phase,rows=rows,
                 writes=[dict(address=a,data=d,word=(a<<28)|d) for a,d in writes],
                 command_abi='opentallas.s81.cmd84.v1',pw_abi='opentallas.s81.fixed-pw36.v1',
-                pin_origin='one stream clock after sampled job_v',seal_to_arm_stream_cycles=131,qualified=False)
+                pin_origin='one stream clock after sampled job_v',seal_to_arm_stream_cycles=132,qualified=False)
 
 
 def validate_launches(rows,launches):

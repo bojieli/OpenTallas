@@ -23,8 +23,9 @@
 // (age+1 compare; identical issue edges), and one completion expectation per
 // engine per context replaces 256 per-row completion comparators. The PW row
 // write is registered one edge after its unchanged accept/fault decision, and
-// the boot scan registers each row before accumulating (seal -> armed 130
-// edges, was 128). Command/KIT/END/fault edges of every legal calendar are
+// the boot scan reads each row in two registered stages before accumulating
+// (seal -> armed 131 edges, was 128). v2b: row hits two edges ahead and the
+// tree result registered, so the issue edge only decodes the engine. Command/KIT/END/fault edges of every legal calendar are
 // unchanged.
 module ot_s81_fixed_issue #(
  parameter integer NOPS=128, NENG=13, STAGE=0, OP_BASE=0,
@@ -53,14 +54,17 @@ module ot_s81_fixed_issue #(
  // Boot-only scan pipeline: the addressed row and its loaded tag are captured
  // first, accumulated one edge later; final bounds use a separate flush edge.
  reg[75:0]scan_row_q;reg[2:0]scan_loaded_q;reg scan_active_q,scan_row_valid;
+ localparam integer NG=(NOPS+15)/16;
+ reg[75:0]grp_q[0:NG-1];reg[2:0]grp_ld_q[0:NG-1];reg[6:0]scan_i1;reg scan_v1,scan_a1;integer g;
  // PW row write, registered after the unchanged accept / fault decision.
  reg wr_q;reg[6:0]wr_a_q;reg[1:0]wr_p_q;reg[25:0]wr_d_q;
  reg[1:0]active;reg next_slot;
  reg[9:0]users[0:1];reg[20:0]positions[0:1],tokens[0:1];
- reg[23:0]age[0:1],age_n[0:1];
+ reg[23:0]age[0:1],age_n[0:1],age_p2[0:1];
+ reg[23:0]end_q;reg[1:0]end_a,end_b;reg busy_q;reg[1:0]act_nx;
  wire[NOPS-1:0]hit0,hit1;
  reg[NENG-1:0]dv_q;reg[NENG*8-1:0]dt_q;
- assign busy=|active;assign job_rdy=!active[next_slot];
+ assign busy=busy_q;assign job_rdy=!active[next_slot];
  assign fault=cfg_fault|run_fault;assign phase=phase_q;
  integer i,s,e,n,issued,max_done,end_count,kit_count;
  reg bad,accept;reg[23:0]end_cycle,kit_cycle;
@@ -93,9 +97,14 @@ module ot_s81_fixed_issue #(
    assign t_mult[gt]=t_mult[2*gt]|t_mult[2*gt+1]|(t_any[2*gt]&t_any[2*gt+1]);
    assign t_pay[PW_ROW*gt+:PW_ROW]=t_pay[PW_ROW*2*gt+:PW_ROW]|t_pay[PW_ROW*(2*gt+1)+:PW_ROW];
   end
-  assign sel_any[gs]=t_any[1]&active[gs];
-  assign sel_mult[gs]=t_mult[1]&active[gs];
-  assign sel_row[gs]=t_pay[PW_ROW+:PW_ROW];
+  // Tree result registered: the issue edge only decodes {engine} and loads.
+  reg any_q,mult_q;reg[PW_ROW-1:0]pay_q;
+  always @(posedge clk or negedge rst_n)
+   if(!rst_n)begin any_q<=0;mult_q<=0;pay_q<=0;end
+   else begin any_q<=t_any[1];mult_q<=t_mult[1];pay_q<=t_pay[PW_ROW+:PW_ROW];end
+  assign sel_any[gs]=any_q&active[gs];
+  assign sel_mult[gs]=mult_q&active[gs];
+  assign sel_row[gs]=pay_q;
  end endgenerate
  wire[6:0]sel_op[0:1];wire[23:0]sel_done[0:1],sel_arg[0:1];wire[3:0]sel_eng[0:1];
  assign {sel_op[0],sel_done[0],sel_eng[0],sel_arg[0]}=sel_row[0];
@@ -150,19 +159,30 @@ module ot_s81_fixed_issue #(
  always @*begin
   accept=!(!sealed||cfg_fault||active[next_slot]||prog_len!=length_q||((phase_q+2'd1)!=start_phase_q)||pw_v||wr_q);
  end
+ // Static per-row launch flags (calendar is immutable once sealed): rows of age 0 / age 1.
+ wire[NOPS-1:0]z0w,z1w;
+ generate for(gr=0;gr<NOPS;gr=gr+1)begin:g_z
+  wire[3:0]re=mem[gr][27:24];wire[23:0]ri=mem[gr][51:28];
+  wire late=(MUT==1&&re<14);   // MUT=1 (negative bench witness): native commands one edge late
+  reg z0,z1;
+  always @(posedge clk or negedge rst_n)
+   if(!rst_n)begin z0<=0;z1<=0;end
+   else begin z0<=gr<length_q&&!late&&ri==24'd0;z1<=gr<length_q&&(late?ri==24'd0:ri==24'd1);end
+  assign z0w[gr]=z0;assign z1w[gr]=z1;
+ end endgenerate
+ // Row hits two edges ahead of the issue edge (tree registered in between). An idle context holds its age-0
+ // rows so a launch issues them on the next edge; the launch edge loads the age-1 rows.
  generate for(gs=0;gs<2;gs=gs+1)begin:g_hit
   for(gr=0;gr<NOPS;gr=gr+1)begin:g_row
    wire[3:0]re=mem[gr][27:24];wire[23:0]ri=mem[gr][51:28];
    wire live=gr<length_q;
    wire start=job_v&&accept&&next_slot==gs;
-   // MUT=1 (negative bench witness): native commands one edge late.
    wire late=(MUT==1&&re<14);
-   wire nxt=late?(ri==age[gs]):(ri==age_n[gs]);
-   wire first=late?1'b0:(ri==24'd0);
+   wire nxt=late?(ri==age_n[gs]):(ri==age_p2[gs]);
    reg h;
    always @(posedge clk or negedge rst_n)
     if(!rst_n)h<=1'b0;
-    else h<=live&&(start?first:(active[gs]&&nxt));
+    else h<=start?z1w[gr]:(active[gs]&&!end_b[gs])?(live&&nxt):z0w[gr];
    if(gs==0)begin:g0 assign hit0[gr]=h;end else begin:g1 assign hit1[gr]=h;end
   end
  end endgenerate
@@ -176,7 +196,9 @@ module ot_s81_fixed_issue #(
    active<=0;next_slot<=0;has_kit<=0;job_done<=0;job_kdone<=0;done_slot<=0;kit_tok<=0;
    fault_code<=0;st_jobs<=0;st_cmds<=0;dv_q<=0;dt_q<=0;
    for(i=0;i<NOPS;i=i+1)loaded[i]<=0;
-   for(s=0;s<2;s=s+1)begin users[s]<=0;positions[s]<=0;tokens[s]<=0;age[s]<=0;age_n[s]<=0;end
+   for(s=0;s<2;s=s+1)begin users[s]<=0;positions[s]<=0;tokens[s]<=0;age[s]<=0;age_n[s]<=0;age_p2[s]<=0;end
+   end_q<=0;end_a<=0;end_b<=0;busy_q<=0;scan_i1<=0;scan_v1<=0;scan_a1<=0;
+   for(g=0;g<NG;g=g+1)begin grp_q[g]<=0;grp_ld_q[g]<=0;end
   end else begin
    phase_q<=phase_q+1'b1;dv_q<=dn_v;dt_q<=dn_tag;
    job_done<=0;job_kdone<=0;issued=0;wr_q<=0;
@@ -202,7 +224,7 @@ module ot_s81_fixed_issue #(
      end else begin
       // Fixed boot scan: one row per stream edge, independent of data.
       validating<=1;sealed<=0;scan_index<=0;scan_native<=0;scan_ends<=0;scan_kits<=0;
-      scan_max_done<=0;scan_end_cycle<=0;scan_kit_cycle<=0;scan_row_valid<=0;
+      scan_max_done<=0;scan_end_cycle<=0;scan_kit_cycle<=0;scan_row_valid<=0;scan_v1<=0;
       scan_bad<=!begun||length_q!=pw_d[16:9]||start_phase_q!=pw_d[8:7]||prog_len!=length_q;
      end
     end else if(!begun||pw_a>=NOPS)begin cfg_fault<=1;if(fault_code==0)fault_code<=4;end
@@ -212,10 +234,14 @@ module ot_s81_fixed_issue #(
     end
    end
    if(validating)begin
-    if(scan_index<NOPS)begin
-     scan_row_q<=mem[scan_index];scan_loaded_q<=loaded[scan_index];
-     scan_active_q<=scan_index<length_q;scan_row_valid<=1;
-    end else scan_row_valid<=0;
+    // Two-stage row read: 16:1 inside each 16-row group, then 8:1 across the registered groups.
+    for(g=0;g<NG;g=g+1)begin
+     grp_q[g]<=(g*16+scan_index[3:0]<NOPS)?mem[g*16+scan_index[3:0]]:76'd0;
+     grp_ld_q[g]<=(g*16+scan_index[3:0]<NOPS)?loaded[g*16+scan_index[3:0]]:3'd0;
+    end
+    scan_i1<=scan_index[6:0];scan_v1<=scan_index<NOPS;scan_a1<=scan_index<length_q;
+    scan_row_q<=grp_q[scan_i1[6:4]];scan_loaded_q<=grp_ld_q[scan_i1[6:4]];
+    scan_active_q<=scan_a1;scan_row_valid<=scan_v1;
     scan_index<=scan_index+1'b1;
     bad=scan_bad;end_count=scan_ends;kit_count=scan_kits;n=scan_native;
     max_done=scan_max_done;end_cycle=scan_end_cycle;kit_cycle=scan_kit_cycle;
@@ -232,13 +258,13 @@ module ot_s81_fixed_issue #(
     end
     scan_bad<=bad;scan_native<=8'(n);scan_ends<=end_count>2?2'd3:2'(end_count);scan_kits<=kit_count>2?2'd3:2'(kit_count);
     scan_max_done<=24'(max_done);scan_end_cycle<=end_cycle;scan_kit_cycle<=kit_cycle;
-    if(scan_index==NOPS+1)begin
+    if(scan_index==NOPS+2)begin
      validating<=0;
      // Every row result has committed; final 24-bit bounds stay out of the
      // 128-row read / accumulate cone.
      bad=scan_bad||scan_ends!=1||scan_kits>1||scan_native==0||scan_end_cycle<=scan_max_done||
          (scan_kits==1&&scan_kit_cycle>=scan_end_cycle);
-     sealed<=!bad&&!cfg_fault;has_kit<=scan_kits==1;
+     sealed<=!bad&&!cfg_fault;has_kit<=scan_kits==1;end_q<=scan_end_cycle;
      if(bad)begin cfg_fault<=1;if(fault_code==0)fault_code<=3;end
     end
    end
@@ -246,13 +272,13 @@ module ot_s81_fixed_issue #(
     if(!accept)begin
      run_fault<=1;if(fault_code==0)fault_code<=5;
     end else begin
-     active[next_slot]<=1;age[next_slot]<=0;age_n[next_slot]<=24'd1;
+     active[next_slot]<=1;age[next_slot]<=0;age_n[next_slot]<=24'd1;age_p2[next_slot]<=24'd2;
      users[next_slot]<=job_user;positions[next_slot]<=job_pos;tokens[next_slot]<=job_tok;
      next_slot<=~next_slot;st_jobs<=st_jobs+1;
     end
    end
    for(s=0;s<2;s=s+1)if(active[s])begin
-    age[s]<=age[s]+1'b1;age_n[s]<=age_n[s]+1'b1;
+    age[s]<=age[s]+1'b1;age_n[s]<=age_n[s]+1'b1;age_p2[s]<=age_p2[s]+1'b1;
     if(sel_end[s])begin active[s]<=0;job_done<=1;done_slot<=1'(s);if(!has_kit)begin job_kdone<=1;kit_tok<=tokens[s];end end
     else if(sel_kit[s])begin job_kdone<=1;kit_tok<=tokens[s];end
    end
@@ -268,6 +294,16 @@ module ot_s81_fixed_issue #(
     end
    end
    st_cmds<=st_cmds+issued;
+   // END two edges ahead (age+2 == sealed END row) gates the context's hits back to its age-0 rows.
+   for(s=0;s<2;s=s+1)begin
+    end_a[s]<=active[s]&&!end_b[s]&&age_p2[s]==end_q&&!(job_v&&accept&&next_slot==s);
+    end_b[s]<=end_a[s];
+   end
+   // busy is an exact registered copy of |active (same next state), local to its consumers.
+   act_nx=active;
+   if(job_v&&accept)act_nx[next_slot]=1'b1;
+   for(s=0;s<2;s=s+1)if(active[s]&&sel_end[s])act_nx[s]=1'b0;
+   busy_q<=|act_nx;
   end
  end
  // MUT=3 suppresses runtime diagnostic capture as a negative bench witness.
