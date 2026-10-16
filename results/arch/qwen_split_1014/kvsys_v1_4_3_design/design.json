@@ -83,5 +83,28 @@
   "tools/qwen_kv_die/v143_feasibility.py": "03e632001b88f1434f36cd221d11c13bace0f1b7c41a764e61f3e53c881754d5",
   "tools/qwen_kv_die/head_native_plan_r4.py": "ab55b3afd4119b177fbf5725c744c062119ac3cec265bebe24766f1e080b17ae",
   "results/arch/qwen_split_1014/kvsys_v1_4_3_design/head_ft_plan.json": "720b4532f420b0c20bb1d09f3dedd2410504e971a7da31ae1b70091b928e80fe"
+ },
+ "composition_bench": {
+  "source_commit": "c8d494a56",
+  "host": "ot-epyc1tb",
+  "unit": "oth-ubuntu-3608816-1792112901",
+  "runner": "HEAD_G3S2=1 rtl/test/qwen_split/run_qkh_head_native.sh (Verilator 5.050)",
+  "positive": "HEAD_NATIVE_PASS checks=3515 score_changes=1716 node_changes=128 resets=2 (near AND far head vs reference at score +5 / nb +3)",
+  "mutants": {
+   "31 far T1 bypass": "FAIL (HEAD_G3S2_FAR_MISMATCH)",
+   "32 far S2 bypass": "FAIL",
+   "33 near T2 bypass": "FAIL (HEAD_NATIVE_MISMATCH)"
+  },
+  "logs": "g3s2_bench/"
+ },
+ "generator_status": {
+  "flag": "kv_die.py plan --split --host-v14 --host-north --host-trees --v143 (OT_KV_V143_NDROP sweep knob)",
+  "default_path": "v1.4.2 plan byte-identical (insts.json, kv_die.v, plan.json except generator sha)",
+  "done": [
+   "G3S2 tile geometry (+328.3 um/group; S groups keep bottom, N groups keep top: both grow into the middle channel, die outline unchanged)",
+   "qkd_rhead_ft near heads, 1024 die-level qkd_hgs/qkd_hss stage instances, staged t/e/s buses (no stage bus violates the 500-um pin reach)",
+   "stage clocks on the stack core trunk, no stage resets, closed-view pin abstracts"
+  ],
+  "blocked": "relay allocation: pass 1 completes with 66-67 pin-hop violations (same set as v1.4.2 pass 1: host slice chains, kc, lkf, hfwd), but the pin-hinted re-plan pass corners a reset-tree / HOST slice chain (rst_die_t11 -> ckb_kv at the top apron, rst_die_t2 into the WS head column, or hsbd/hsbo/hsbf ES) or exceeds RELAY_FLUSH 128 (rst_die depth 144-148) in every N-drop variant 0..302.4 um; pin repair leaves hfwd_link_rst_n / hfwd_epoch at 1205.7 um. Next: give the reset/boot trees homes inside the grown groups (tree leaders per group band) or reserve relay spots in the ECTL bands, then rerun."
  }
 }
