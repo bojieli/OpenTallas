@@ -1,0 +1,83 @@
+{
+  "schema": "qwen.static_writer_ingress.proof.v1",
+  "tested_source_commit": "9d4b7505b",
+  "all_current_source_bytes_match_actual_remote": true,
+  "actual_source_sha256": {
+    "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+    "rtl/physical/ot_qkd_kv_static_writer_native.sv": "5211b852aed6049fdf8793e151ed5eb4061002bced26a25728c9e28b8476ca12",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv": "2746da49b5f099afea24f6752b63b55a916c53cdb6abc542fc60cdbb4091383c",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv": "43dbe53dbaf8aef2a2051ed6b2f27edfd48af8dfde379eb59b7f101288aadd7e",
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_writer_ingress.sv": "8f816e05cd3e214bf8c8f5ceab28e77b5a355f2bdbbd48b2672b0b86a81db1ee",
+    "rtl/test/qwen_static_kv/tb_qkd_static_writer_ingress.sv": "489d3b6c4916200ac9c7cc45ef68feed6461d7165006e3ac72f7941ffcbc65c7",
+    "tools/qwen_static_kv/run_writer_ingress.sh": "f0271c88db3611467099b6f450b9558ef4268ad16ad08f972e3550b1f0004515"
+  },
+  "host": "ot-pve1",
+  "bench_unit": "oth-ubuntu-2127577-1792167005",
+  "profiles_unit": "oth-ubuntu-2128522-1792167076",
+  "ot_run_terminal": "bothRANexit0",
+  "components": [
+    "actual qkd_kv_native_programme VMAP1 MUT0 with bootsealed36rowtable",
+    "actual qkd_kv_static_writer_native VMAP1 (original body/wrapper unchanged)",
+    "qkd_static_writer_group actual pin capture+local distribution",
+    "four actual qkd_static_writer_pc_mux ownership/return-isolation paths"
+  ],
+  "normal": {
+    "layers": 36,
+    "tokens": 2,
+    "positions_per_layer": 135,
+    "cohorts": 9720,
+    "word_slots": 38880,
+    "global_sectors": 77760,
+    "local_transfers": 10368,
+    "normal_group_fault": 0,
+    "native_core_edges_added": 3,
+    "normal_PC_mux_faults": 0,
+    "HOST_exception": "nativecontext0,expectedvalid0,registeredHOSTpayload/credit/completion preserved",
+    "invalid_ownership": "both native/HOST valids suppressed and local fault asserted; exceptional abort test only",
+    "native_K_V_controller_face_intervals_component_profile": [
+      10,
+      12
+    ],
+    "native_high_half_intervals_component_profile": [
+      5,
+      7
+    ],
+    "actual_source_producer_burst_spacing_edges": 2
+  },
+  "faults": {
+    "actual_destination_corrupt": "groupfault1;independent expectedtarget and10368fixedlocaltransfers unchanged",
+    "actual_identity_corrupt": "groupfault1;actualcorruptidentitycarried,independent programmeidentity unchanged",
+    "quarter_swap": "real transport mismatchFAIL",
+    "route_by_actual_destination": "fixed expectedtargetmissingFAIL",
+    "echo_expected_identity": "actual context changed/echoedFAIL",
+    "context_mask_flip": "actual context/maskFAIL",
+    "actual_native_writer_mask_MUT3": "omitted-native-fieldsemanticcontractFAIL"
+  },
+  "fullsize_source_lint": {
+    "groups": 32,
+    "PC_muxes": 128,
+    "strict_verilator_exit": 0,
+    "warnings": 0,
+    "physical_qualified": false
+  },
+  "runtime_strap_profiles": {
+    "source": "9d4b7505b",
+    "binary_sha256": "08a251e23248de739663bc79d7187611e7aec9b9a75a4c2cb1d25ddad80161e1",
+    "profiles": 32,
+    "layer_runs": 2304,
+    "cohorts": 311040,
+    "global_sectors": 2488320,
+    "local_transported": 298944,
+    "all128_destination_PC_faces_exercised": true,
+    "production_qualified": false
+  },
+  "source_role_binding": {
+    "actual_context": "writer.identity/generation,source-provedactual native fullmask",
+    "expected_context": "independentprogramme.expected_* only; writer.expected_* never used by adapter",
+    "selection": "independent programme stack/PC,never actualwriterdest",
+    "normal_issue": "fixedslots, no ready/credit inputs",
+    "ownership": "real parent native_mode/ownership_valid; validity0 exceptionalfaultstop only"
+  },
+  "qualification_scope": "Actual on-chip producer/transport component and allstrap witness; declared input word stimuli, clock/reset and ownership/drain boundary stimuli only. Actual controller/HBM/physical/whole-token joins remain OPEN; no physical master or performance acceptance.",
+  "compiler": "tools/qwen_static_kv/writer_ingress_calendar.py; fixed3localedges plus only explicitly measured physical relay edges; current fixture component-only"
+}

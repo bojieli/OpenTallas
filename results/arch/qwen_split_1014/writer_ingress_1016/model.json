@@ -10,7 +10,7 @@
       "PCs_each": 4,
       "fixed_edges": 2,
       "macros": 0,
-      "estimated_registers_each": 2800,
+      "estimated_registers_each": 2688,
       "payload_in_bits": 1152,
       "actual_metadata_bits": 83,
       "independent_expected_bits": 116,
@@ -19,7 +19,8 @@
       "expected_metadata_output_bits": 116,
       "route": "independent programme stack/group target; never actual dest",
       "qualification": "no physical home or view yet",
-      "reason_for_two_edges": "explicit pin capture before local target/identity comparisons and output-flop placement"
+      "reason_for_two_edges": "explicit pin capture before local target/identity comparisons and output-flop placement",
+      "register_count_basis": "pre-synthesis explicit RTL bits including pin capture/control; actual hardening not measured"
     },
     "controller_face_mux": {
       "name": "qkd_static_writer_pc_mux",
@@ -27,11 +28,12 @@
       "clock_roots": 128,
       "fixed_forward_edges": 1,
       "fixed_HOST_return_edges": 1,
-      "estimated_registers_each": 720,
+      "estimated_registers_each": 970,
       "native_es_bits": 288,
       "host_es_bits": 288,
       "context_bits": 318,
-      "route": "compiled native_mode+ownership_valid; ownership_valid low is exceptional fault-stop, never normal rescheduling"
+      "route": "compiled native_mode+ownership_valid; ownership_valid low is exceptional fault-stop, never normal rescheduling",
+      "register_count_basis": "704 forward bits +261 HOST return +2 completion +mode/reset/fault3"
     }
   },
   "throughput": {
@@ -65,5 +67,21 @@
     "actual x/y, pins, clock compensation, relays, TT/FF/DRC0 and sustained layer/token cost not measured"
   ],
   "no_physical_area_claim": true,
-  "accepted_cost": null
+  "accepted_cost": null,
+  "total_added_register_bits_before_synthesis": 210176,
+  "pin_geometry_requirement": {
+    "group_ports": {
+      "input_bits_with_clock_reset_and_straps": 1358,
+      "output_bits_with_fault": 1587
+    },
+    "PC_mux_ports": {
+      "input_bits_with_mode_clock_reset": 1259,
+      "output_bits_with_fault": 968
+    },
+    "conservative_track_capacity_per_um": 7,
+    "max_cut": 0.6,
+    "minimum_group_output_face_height_um": 377.85714285714283,
+    "minimum_mux_input_face_height_um": 299.76190476190476,
+    "status": "traffic/capacity lower bounds only; final faces/homes/constant-pin semantic reductions and actual relays remain ungranted; do not fit at minimum clearance"
+  }
 }
