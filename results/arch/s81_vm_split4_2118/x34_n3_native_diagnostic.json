@@ -1,0 +1,40 @@
+{
+ "cell": "ot_s81_vm_x34_s",
+ "view": "x34_n3",
+ "lib_cell": "ot_s81_vm_x34_s",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 238.6,
+ "spread_ps": 42.7,
+ "outputs": 3085,
+ "inputs": 1028,
+ "launch_ps": 233.9,
+ "launch_pin": "b0[697]",
+ "capture_ps": 150.8,
+ "capture_pin": "s_d[49]",
+ "launch_over": 59,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pass": false,
+ "fail_why": "launch 233.86219 > 220 (59 pins)",
+ "status": "NATIVE_FAIL_CLOSED_SIGNOFF_VIEW_NOT_BOUND",
+ "source_view": "physical/ref_tile/ot_s81_vm_x34_s_w1026_1015_n3/views/ot_s81_vm_x34_s",
+ "source_lib_sha256": "ba4edeefb99fa9dae96de4c83d95b1acc8d90cb2e967831acb4bba1d03b4ddec",
+ "source_insertion_sha256": "26b4102bf31e5aae50fe02a6754e4b5c3cf9617972c72cedcb96d78bbafbcf40",
+ "diagnostic": {
+  "method": "Read-only original routed TT/FF ODB/SPEF/SDC replay; no source/constraints modified",
+  "pin": "b0[697]",
+  "TT_clock_arrival_ps": 236.0,
+  "TT_clkQ_ps": 63.95,
+  "TT_data_arrival_ps": 470.66,
+  "FF_hold_slack_ps": 71.94,
+  "hold_BUFx2_count": 7,
+  "other_cells": "INVx1 and output BUFx2",
+  "cause": "Surplus output hold buffer chain consumes native launch budget; no need to guess that clockroot count or pin reach causes it",
+  "next": "Tight native output budget and controlled boundary hold repair with unchanged TT/FF/DRC signoff; prove actual recipe3 wrapper cycle additions before binding",
+  "not_claimed": "No successor physical qualification or adoption"
+ }
+}
