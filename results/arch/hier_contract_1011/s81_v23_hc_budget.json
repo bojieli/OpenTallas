@@ -165,7 +165,8 @@
   "v20 HC native geometry: ctnl row pitch99.36; hc_s/t grow down172.8/207.36; crootr_f bottom345.6 and252.72 y-wire channel.",
   "v21 GEN18 candidate (S-DIE r11 2026-10-15): sp_gather +241.92 N (v21 transverse RE), static VM/collective seam, HC y_tag slot; screen only.",
   "v22 candidate: HC four-column return (ctra 4x144.18x30.24, ctrb 4x144.18x25.92), cth +12.96, hc_s +129.6 / hc_t +155.52 from the hc_corridor (1226.88).",
-  "v23 candidate: HC corridor budget = return columns + NORM NT strips; cth 790.56, hc_s +194.4 / hc_t +233.28, hc_corridor 799.20."
+  "v23 candidate: HC corridor budget = return columns + NORM NT strips; cth 790.56, hc_s +194.4 / hc_t +233.28, hc_corridor 799.20.",
+  "S-DIE-NETLIST 2026-10-16: 14 sp_hc_s/comb/* leaf slots (ot_s81_hc_caq x4, ccf, ccr, cntree, crx, cseq, pad_f8, pad_fv4fd5r2 (= RTL ot_s81_hc_pad_f5r1), pad_meta2, pad_r5 x2) had no parent field and read as die masters; parent = sp_hc_s/comb (they are leaves of dsfd_sp_hc_c: results/arch/s81_netlist_0030/leaf_reach_c21h.json)"
  ],
  "slots": [
   {
@@ -12957,7 +12958,9 @@
    "provisional_source_commit": "e0cae3a4a",
    "route_admission": false,
    "current_physical_source_commit": "16ee5be7a",
-   "current_physical_gate": "ot-epyc4:.../s81hc_ccfh2_ref-20261014-014144 live54337"
+   "current_physical_gate": "ot-epyc4:.../s81hc_ccfh2_ref-20261014-014144 live54337",
+   "parent": "sp_hc_s/comb",
+   "kind": "tile"
   },
   {
    "name": "sp_hc_s/comb/u_pd.u_f5r1",
@@ -13025,7 +13028,9 @@
     }
    },
    "provisional_source_commit": "6aabed703",
-   "route_admission": false
+   "route_admission": false,
+   "parent": "sp_hc_s/comb",
+   "kind": "tile"
   },
   {
    "name": "sp_hc_s/comb/u_pd.u_f8",
@@ -13066,7 +13071,9 @@
      "boundary_spread_ps": 17.39999999999999
     }
    },
-   "route_admission": false
+   "route_admission": false,
+   "parent": "sp_hc_s/comb",
+   "kind": "tile"
   },
   {
    "name": "sp_hc_s/comb/u_seq",
@@ -13137,7 +13144,9 @@
    },
    "controller_clock_source_debt": "actual controller source/net relation and per-corner phase distribution remain unqualified",
    "controller_boundary_registers": 41,
-   "route_admission": false
+   "route_admission": false,
+   "parent": "sp_hc_s/comb",
+   "kind": "tile"
   },
   {
    "name": "sp_hc_s/comb/u_cr.u_core",
@@ -13183,7 +13192,9 @@
      "boundary_spread_ps": 22.19999999999999
     }
    },
-   "route_admission": false
+   "route_admission": false,
+   "parent": "sp_hc_s/comb",
+   "kind": "tile"
   },
   {
    "name": "sp_hc_s/comb/u_pd.u_r6",
@@ -13234,7 +13245,9 @@
     "w": 138.24,
     "h": 114.48
    },
-   "route_admission": false
+   "route_admission": false,
+   "parent": "sp_hc_s/comb",
+   "kind": "tile"
   },
   {
    "name": "sp_hc_s/comb/u_pd.u_r5",
@@ -13275,7 +13288,9 @@
      "boundary_spread_ps": 12.400000000000006
     }
    },
-   "route_admission": false
+   "route_admission": false,
+   "parent": "sp_hc_s/comb",
+   "kind": "tile"
   },
   {
    "name": "sp_hc_s/comb/u_rx",
@@ -13321,7 +13336,9 @@
      "boundary_spread_ps": 31.200000000000017
     }
    },
-   "route_admission": false
+   "route_admission": false,
+   "parent": "sp_hc_s/comb",
+   "kind": "tile"
   },
   {
    "name": "sp_hc_s/comb/u_cr.g_meta.u_m",
@@ -13362,7 +13379,9 @@
      "boundary_spread_ps": 19.400000000000006
     }
    },
-   "route_admission": false
+   "route_admission": false,
+   "parent": "sp_hc_s/comb",
+   "kind": "tile"
   },
   {
    "name": "sp_hc_s/comb/u_nt",
@@ -13408,7 +13427,9 @@
      "boundary_spread_ps": 22.899999999999977
     }
    },
-   "route_admission": false
+   "route_admission": false,
+   "parent": "sp_hc_s/comb",
+   "kind": "tile"
   },
   {
    "name": "sp_hc_s/comb/g_aq[0].u_caq",
@@ -13449,7 +13470,9 @@
      "boundary_spread_ps": 21.099999999999994
     }
    },
-   "route_admission": false
+   "route_admission": false,
+   "parent": "sp_hc_s/comb",
+   "kind": "tile"
   },
   {
    "name": "sp_hc_s/comb/g_aq[1].u_caq",
@@ -13490,7 +13513,9 @@
      "boundary_spread_ps": 21.099999999999994
     }
    },
-   "route_admission": false
+   "route_admission": false,
+   "parent": "sp_hc_s/comb",
+   "kind": "tile"
   },
   {
    "name": "sp_hc_s/comb/g_aq[2].u_caq",
@@ -13531,7 +13556,9 @@
      "boundary_spread_ps": 21.099999999999994
     }
    },
-   "route_admission": false
+   "route_admission": false,
+   "parent": "sp_hc_s/comb",
+   "kind": "tile"
   },
   {
    "name": "sp_hc_s/comb/g_aq[3].u_caq",
@@ -13572,7 +13599,9 @@
      "boundary_spread_ps": 21.099999999999994
     }
    },
-   "route_admission": false
+   "route_admission": false,
+   "parent": "sp_hc_s/comb",
+   "kind": "tile"
   },
   {
    "name": "sp_embed_expand",
