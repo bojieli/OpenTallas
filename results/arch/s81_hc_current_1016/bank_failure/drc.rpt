@@ -1,0 +1,6 @@
+violation type: Short
+	srcs: inst:u_fifo.g_tile\[0\].g_m0.u_m net:clkbuf_sp_N329_net
+	bbox = (192.4210, 36.6720) - (193.6800, 36.6960) on Layer M4
+violation type: Short
+	srcs: inst:u_fifo.g_tile\[0\].g_m0.u_m net:clkbuf_sp_N327_net
+	bbox = (192.4210, 55.1040) - (193.6800, 55.1280) on Layer M4

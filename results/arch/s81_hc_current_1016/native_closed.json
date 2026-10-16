@@ -1,0 +1,98 @@
+[
+  {
+    "cell": "ot_s81_hc_ccf_bankpipe_control",
+    "view": "physical/ref_tile/s81hc_ccfbp_s_ref/views/ot_s81_hc_ccf_bankpipe_control",
+    "lib_cell": "ot_s81_hc_ccf_bankpipe_control",
+    "insertion": true,
+    "ref_src": [
+      "insertion.json boundary mean"
+    ],
+    "R_ps": 233.4,
+    "spread_ps": 64.6,
+    "outputs": 2672,
+    "inputs": 3696,
+    "launch_ps": 194.1,
+    "launch_pin": "ch_fv[5]",
+    "capture_ps": 173.2,
+    "capture_pin": "fd_pin[554]",
+    "launch_over": 0,
+    "capture_over": 0,
+    "comb_pins": 0,
+    "comb_first": [],
+    "pass": true,
+    "fail_why": "",
+    "hashes": {
+      "abstract.json": "a032e2e14c39aa19e8537656bace3bd9429e848aa8929aa5b2d4061914ee03cf",
+      "insertion.json": "4e690c506125f6dc7232631caf52076ea77b902833bf46419fd2742338d2d196",
+      "ot_s81_hc_ccf_bankpipe_control_tt.lib": "f1e17e7c409fcf1df77180fd07c9789d3efa568158f1480bbcd2cf6787f93849",
+      "ot_s81_hc_ccf_bankpipe_control_ss.lib": "707d82c069f27d6b5e2b3a9bd136ac4671640d20bff6ce6eb1c63893a8989396",
+      "ot_s81_hc_ccf_bankpipe_control.lef": "16638e795c685a3ce24f532a484e74a0af372532886cb79f50bd78589bcf8cda",
+      "ot_s81_hc_ccf_bankpipe_control_ff.lib": "8b2d596b23df805fc72b601cd337d0c0d14448ae7d2bcab33fe3334d57c264a8",
+      "child_lint.json": "1a09b2fbaf91ccdd1747a2ee79e6021fc420f208fad1ef040325cac82a317407"
+    }
+  },
+  {
+    "cell": "ot_s81_hc_ccf_bankpipe_capture",
+    "view": "physical/ref_tile/s81hc_ccfbp_n_ref/views/ot_s81_hc_ccf_bankpipe_capture",
+    "lib_cell": "ot_s81_hc_ccf_bankpipe_capture",
+    "insertion": true,
+    "ref_src": [
+      "insertion.json boundary mean"
+    ],
+    "R_ps": 222.6,
+    "spread_ps": 51.2,
+    "outputs": 3698,
+    "inputs": 3707,
+    "launch_ps": 206.5,
+    "launch_pin": "fd_q[127]",
+    "capture_ps": 171.1,
+    "capture_pin": "fd[14]",
+    "launch_over": 0,
+    "capture_over": 0,
+    "comb_pins": 0,
+    "comb_first": [],
+    "pass": true,
+    "fail_why": "",
+    "hashes": {
+      "abstract.json": "fb38b8c43cf0a6a58d425f30cdce0f06491990370c38477c5e568876009f951b",
+      "ot_s81_hc_ccf_bankpipe_capture_tt.lib": "104d9fb93e4478eaa73ac1590dcf7fad864f181972ceed1f7f6db4ad09635677",
+      "insertion.json": "96cb8c786faa02777d1a60c233719a606601b71a88b193b32c6aea8d78ee41d7",
+      "ot_s81_hc_ccf_bankpipe_capture_ss.lib": "f5d67f0f976e05342aeff39b9ead12015e77be1bccc4f8ceb2b99692a5ef830f",
+      "ot_s81_hc_ccf_bankpipe_capture.lef": "56ade09c633e6918599dee7e500486b4c56e46294212db9fb67c347a13139d0b",
+      "ot_s81_hc_ccf_bankpipe_capture_ff.lib": "e5ef5e70a4d4befb3cc98a1308c257940cffdd6253766cba72987588a399104e",
+      "child_lint.json": "7e2fc7f0fcc324f858fc186a0b3ee7305d65814b8a0b472c0a59d1d840bfb320"
+    }
+  },
+  {
+    "cell": "ot_s81_hc_ccr",
+    "view": "physical/ref_tile/s81hc_ccrh2_ref/views/ot_s81_hc_ccr",
+    "lib_cell": "ot_s81_hc_ccr",
+    "insertion": true,
+    "ref_src": [
+      "insertion.json boundary mean"
+    ],
+    "R_ps": 222.2,
+    "spread_ps": 49.5,
+    "outputs": 2684,
+    "inputs": 2165,
+    "launch_ps": 279.7,
+    "launch_pin": "crd_o[1659]",
+    "capture_ps": 257.1,
+    "capture_pin": "ch_rd[537]",
+    "launch_over": 501,
+    "capture_over": 716,
+    "comb_pins": 0,
+    "comb_first": [],
+    "pass": false,
+    "fail_why": "launch 279.65663 > 220 (501 pins); capture 257.10307 > 190 (716 pins)",
+    "hashes": {
+      "abstract.json": "d49cb6bb93cf081b4f27f57b3dcc66ab13b14116c7e037e68c942722b5471dcb",
+      "ot_s81_hc_ccr.lef": "674168a7e4cf0e712382d376289a6dc0dbd6f6d24fbba3d17d4b5f613acf9eaa",
+      "ot_s81_hc_ccr_ss.lib": "e630f6983c7633e21247f4f98a09faaf73955b27e20fce85990b813adc8ca1cf",
+      "insertion.json": "f9aba9f4579678bafe4047a5b3dd653ae01a0e25b3444fb67a2f4617b1e112bc",
+      "ot_s81_hc_ccr_ff.lib": "d5c4f4526fb945122987d3f601e0bc5091abdf7ea7d5c72f108093c446413fb4",
+      "child_lint.json": "aab19e0630daa1eb55f1407c034dc7a137ac3c8ae87d9600777bb0e16bd050dd",
+      "ot_s81_hc_ccr_tt.lib": "0ee4718698e362be71dda00ca0cedf642cba1fbfdc7f0853ef7f327ccde274a9"
+    }
+  }
+]

@@ -1,0 +1,94 @@
+{
+  "scope": "full native arithmetic lint only; no numerical/static cycle/physical claim",
+  "lint_files": {
+    "dsfd_sp_hc_comb_roots20.log": {
+      "sha256": "b82f644a25227226c9b14fd93e8f3493dbee6e721e582735e377a7152ba1b113",
+      "final_lines": [
+        "      |                                     ^",
+        "- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050",
+        "- Verilator: Built from 17.345 MB sources in 167 modules, into 43.504 MB in 44 C++ files needing 0.000 MB",
+        "- Verilator: Walltime 11.330 s (elab=0.516, cvt=10.066, bld=0.000); cpu 11.330 s on 1 threads; allocated 919.879 MB"
+      ]
+    },
+    "dsfd_sp_hc_comb_calendar20.log": {
+      "sha256": "399c5ad415d4d7f2964094383cafcb2b38e1e6b842e27261d3af836ee8c8613c",
+      "final_lines": [
+        "      |                                     ^",
+        "- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050",
+        "- Verilator: Built from 17.345 MB sources in 167 modules, into 43.695 MB in 44 C++ files needing 0.000 MB",
+        "- Verilator: Walltime 10.961 s (elab=0.496, cvt=9.753, bld=0.000); cpu 10.961 s on 1 threads; allocated 934.875 MB"
+      ]
+    }
+  },
+  "runner_failures": [
+    {
+      "phase": "first lint packaging",
+      "cause": "AST literal evaluator rejected dict() and shell continued; remote job had no script",
+      "remote_unit": "oth-ubuntu-4069954-1792165645",
+      "terminal": 2,
+      "no_design_test_ran": true
+    }
+  ],
+  "successful_units": {
+    "pad_component": "oth-ubuntu-4066166-1792165609",
+    "native_lint": "oth-ubuntu-4071623-1792165659",
+    "static_pin_transport": "oth-ubuntu-4117953-1792166103",
+    "bank128": "oth-ubuntu-4127232-1792166188",
+    "crooty12roots": "oth-ubuntu-4174669-1792166856",
+    "outer_native_lint": "oth-ubuntu-4182576-1792166964"
+  },
+  "host": "ot-epyc4",
+  "remote": "/srv/opentallas-scratch/codex/s81-hc-static-0850",
+  "pad_scope": "actual current pad split FWD_TRIM3 equality;4real stopped root mutants; no CCR/full HC numerical proof",
+  "additional_source_archives": {
+    "cpin_inputs.tar.gz": "2edcb212986485a2b9fec6a9189cd27bc2022ed02ee2ea7a9ef103de005f6d78",
+    "bank128_inputs.tar.gz": "db9c965212ba1aed7524c28dce645a6364d9b9b3c69b64a0f29054c2b44ba5c1",
+    "crooty_inputs.tar.gz": "b97f400d75bb82ecd0bcdaa7e6b0654c390747988e863922be504c7698ed1a0c"
+  },
+  "outer_lint": {
+    "ot_s81_hc_crooty_roots_C0.log": {
+      "sha256": "fbf6e3e6059d6dcd717f864d76e30909fbfd41740063d79d1f0cda0eb69d33d9",
+      "tail": [
+        "      |                                                       ^~",
+        "- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050",
+        "- Verilator: Built from 19.159 MB sources in 173 modules, into 0.290 MB in 6 C++ files needing 0.000 MB",
+        "- Verilator: Walltime 0.151 s (elab=0.042, cvt=0.026, bld=0.000); cpu 0.151 s on 1 threads; allocated 71.703 MB"
+      ]
+    },
+    "ot_s81_hc_crooty_roots_C2.log": {
+      "sha256": "92ee615a6ef6cf93154119303851bcd9cdbf120e77e9ccdd74adcbeec3e5ae14",
+      "tail": [
+        "      |                                                       ^~",
+        "- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050",
+        "- Verilator: Built from 19.159 MB sources in 173 modules, into 0.290 MB in 6 C++ files needing 0.000 MB",
+        "- Verilator: Walltime 0.169 s (elab=0.057, cvt=0.030, bld=0.000); cpu 0.169 s on 1 threads; allocated 71.703 MB"
+      ]
+    },
+    "ot_s81_hc_crootr_roots_C0.log": {
+      "sha256": "eb3e9b76d3586225daf227ff81db32c06ffb90c75b35310a4e3df29b211de937",
+      "tail": [
+        "      |              ^~",
+        "- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050",
+        "- Verilator: Built from 19.159 MB sources in 173 modules, into 16.155 MB in 16 C++ files needing 0.000 MB",
+        "- Verilator: Walltime 4.753 s (elab=0.366, cvt=4.091, bld=0.000); cpu 4.752 s on 1 threads; allocated 412.840 MB"
+      ]
+    },
+    "ot_s81_hc_crootr_roots_C2.log": {
+      "sha256": "20456d1f30b1c140750ed90a4fef021738f65dc63775480a98a5b2c58aff334d",
+      "tail": [
+        "      |              ^~",
+        "- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050",
+        "- Verilator: Built from 19.159 MB sources in 173 modules, into 16.157 MB in 16 C++ files needing 0.000 MB",
+        "- Verilator: Walltime 4.579 s (elab=0.389, cvt=3.898, bld=0.000); cpu 4.579 s on 1 threads; allocated 413.844 MB"
+      ]
+    },
+    "ot_s81_hc_cpin_calendar.log": {
+      "sha256": "86064e47b76cd4a2be3e005701d220da829c332e2d42aa6ae140dd8219ea216a",
+      "tail": [
+        "- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050",
+        "- Verilator: Built from 19.159 MB sources in 173 modules, into 0.011 MB in 3 C++ files needing 0.000 MB",
+        "- Verilator: Walltime 0.116 s (elab=0.037, cvt=0.002, bld=0.000); cpu 0.116 s on 1 threads; allocated 71.707 MB"
+      ]
+    }
+  }
+}
