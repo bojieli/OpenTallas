@@ -4,7 +4,7 @@
  "top": "hbm_v16_die",
  "generated_by": "tools/hbm_die_v15/full_die_v16.py",
  "basis": {
-  "commit": "aa54435c7",
+  "commit": "c7df43318",
   "v15_contract": "results/arch/hbm_die_v15/source_contract/contract.json",
   "v15_contract_sha256": "eac5bff7d49473de7a7d8f0b993e427d4d004991e56670c8552f35e2b9a6b6cd",
   "grants": "results/arch/hier_contract_1015/hbm_v15.json",
@@ -131,11 +131,11 @@
   "off-die pins (SerDes/UCIe PMA, refclk, por_n) are die top-level ports"
  ],
  "summary": {
-  "instances": 1532,
-  "masters": 60,
-  "edges": 12145,
-  "edge_bits": 1184417,
-  "clock_reset_ports": 3578,
+  "instances": 1536,
+  "masters": 61,
+  "edges": 12157,
+  "edge_bits": 1193273,
+  "clock_reset_ports": 3594,
   "straps": 351,
   "die_pins": 43,
   "exposed_input_ports": 0,
@@ -204,8 +204,9 @@
   "ot_hgi_coll_inj_idx_join": 1,
   "ot_hgi_dma_back_static_vp4_banks_cp": 4,
   "ot_hgi_qdq_host_static": 1,
+  "ot_hgi_sfu_core_split": 4,
   "ot_hgi_sfu_lg_pair_leaf": 32,
-  "ot_hgi_sfu_scheduled_engine": 4,
+  "ot_hgi_sfu_programme_store": 4,
   "ot_hgi_sm_xload_cl2_bdring": 4,
   "ot_hgi_sm_xload_cl2_bfq": 16,
   "ot_hgi_sm_xload_cl2_ctl": 4,
@@ -2568,6 +2569,14 @@
      "direction": "input",
      "bits": 1
     },
+    "clk_cp": {
+     "direction": "input",
+     "bits": 1
+    },
+    "clk_tab": {
+     "direction": "input",
+     "bits": 2
+    },
     "stk": {
      "direction": "input",
      "bits": 2
@@ -2727,6 +2736,14 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "clk_cp": {
+     "direction": "input",
+     "bits": 1
+    },
+    "clk_tab": {
+     "direction": "input",
+     "bits": 2
     },
     "stk": {
      "direction": "input",
@@ -2888,6 +2905,14 @@
      "direction": "input",
      "bits": 1
     },
+    "clk_cp": {
+     "direction": "input",
+     "bits": 1
+    },
+    "clk_tab": {
+     "direction": "input",
+     "bits": 2
+    },
     "stk": {
      "direction": "input",
      "bits": 2
@@ -3047,6 +3072,14 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "clk_cp": {
+     "direction": "input",
+     "bits": 1
+    },
+    "clk_tab": {
+     "direction": "input",
+     "bits": 2
     },
     "stk": {
      "direction": "input",
@@ -45526,7 +45559,7 @@
    "source": "rtl/hbm_accel/host_static_20261015/ot_hbm_status_join.sv",
    "params": {
     "NT": 105,
-    "NF": 145,
+    "NF": 149,
     "NH": 6,
     "TGTS": "840'hdfdedddcdbdad9d8d7d6d5d4d3d2d1d0cfcecdcccbcac9c8c7c6c5c4c3c2c1c0a5a4a3a2a1a0878685846f6e6d6c6b6a696867666564636261605f5e5d5c5b5a595857565554535251504f4e4d4c4b4a494847464544434241403b3a39387877767574703736353430"
    },
@@ -45570,7 +45603,7 @@
     },
     "t_fault": {
      "direction": "input",
-     "bits": 145
+     "bits": 149
     },
     "h_fault": {
      "direction": "input",
@@ -72291,18 +72324,16 @@
    }
   },
   "sfucore_SW": {
-   "master": "ot_hgi_sfu_scheduled_engine",
-   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_scheduled_engine.sv",
+   "master": "ot_hgi_sfu_core_split",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_core_split.sv",
    "params": {
-    "PAGE_AW": 1,
-    "AW": 11,
     "LWB": 15,
     "LG_PATH": 24
    },
    "slot": null,
    "owner": "H-SU",
    "region": "su_sfu",
-   "note": "SFU core = the scheduled engine with LG_PATH=1+R (ot_hgi_sfu_split_engine.sv header: \"the core is the unchanged scheduled engine with LG_PATH = 1 + R\"; leaves + relays are die instances). R=11 padded (sfu_core_request_v7). NO slot: core box PROPOSED (4000x400 strip, needs H-SM shrink) -> placement gap H-DIE/H-SM. | H-NETLIST 0600: LG_PATH 12 -> 24 = 1+R23 (accepted R23 sfucore homes, H-SU receipt d6d9a0ce2).",
+   "note": "SFU core minus both calendars (16 closed ot_su12_sfu lanes + 80 operand SRAMs); H-NETLIST 0600 SFU split (H-SU 697997629, receipt results/rtl/hbm_sfu_split_1016/receipt.json)",
    "replaces_v15": null,
    "ports": {
     "clk": {
@@ -72337,89 +72368,13 @@
      "direction": "input",
      "bits": 16
     },
-    "cfg_we": {
+    "io_word": {
      "direction": "input",
-     "bits": 1
+     "bits": 471
     },
-    "cfg_stripe": {
+    "compiler_control": {
      "direction": "input",
-     "bits": 3
-    },
-    "cfg_addr": {
-     "direction": "input",
-     "bits": 11
-    },
-    "cfg_data": {
-     "direction": "input",
-     "bits": 256
-    },
-    "start_base": {
-     "direction": "input",
-     "bits": 11
-    },
-    "start_limit": {
-     "direction": "input",
-     "bits": 12
-    },
-    "start_loops": {
-     "direction": "input",
-     "bits": 16
-    },
-    "programme_active": {
-     "direction": "output",
-     "bits": 1
-    },
-    "programme_done": {
-     "direction": "output",
-     "bits": 1
-    },
-    "programme_ordinal": {
-     "direction": "output",
-     "bits": 32
-    },
-    "io_cfg_we": {
-     "direction": "input",
-     "bits": 1
-    },
-    "io_cfg_stripe": {
-     "direction": "input",
-     "bits": 2
-    },
-    "io_cfg_addr": {
-     "direction": "input",
-     "bits": 11
-    },
-    "io_cfg_data": {
-     "direction": "input",
-     "bits": 256
-    },
-    "io_start_v": {
-     "direction": "input",
-     "bits": 1
-    },
-    "io_start_base": {
-     "direction": "input",
-     "bits": 11
-    },
-    "io_start_limit": {
-     "direction": "input",
-     "bits": 12
-    },
-    "io_start_loops": {
-     "direction": "input",
-     "bits": 16
-    },
-    "io_active": {
-     "direction": "output",
-     "bits": 1
-    },
-    "io_done": {
-     "direction": "output",
-     "bits": 1
-    },
-    "io_ordinal": {
-     "direction": "output",
-     "bits": 32
+     "bits": 1742
     },
     "local_rq": {
      "direction": "output",
@@ -75148,18 +75103,16 @@
    }
   },
   "sfucore_SE": {
-   "master": "ot_hgi_sfu_scheduled_engine",
-   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_scheduled_engine.sv",
+   "master": "ot_hgi_sfu_core_split",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_core_split.sv",
    "params": {
-    "PAGE_AW": 1,
-    "AW": 11,
     "LWB": 15,
     "LG_PATH": 24
    },
    "slot": null,
    "owner": "H-SU",
    "region": "su_sfu",
-   "note": "SFU core = the scheduled engine with LG_PATH=1+R (ot_hgi_sfu_split_engine.sv header: \"the core is the unchanged scheduled engine with LG_PATH = 1 + R\"; leaves + relays are die instances). R=11 padded (sfu_core_request_v7). NO slot: core box PROPOSED (4000x400 strip, needs H-SM shrink) -> placement gap H-DIE/H-SM. | H-NETLIST 0600: LG_PATH 12 -> 24 = 1+R23 (accepted R23 sfucore homes, H-SU receipt d6d9a0ce2).",
+   "note": "SFU core minus both calendars (16 closed ot_su12_sfu lanes + 80 operand SRAMs); H-NETLIST 0600 SFU split (H-SU 697997629, receipt results/rtl/hbm_sfu_split_1016/receipt.json)",
    "replaces_v15": null,
    "ports": {
     "clk": {
@@ -75194,89 +75147,13 @@
      "direction": "input",
      "bits": 16
     },
-    "cfg_we": {
+    "io_word": {
      "direction": "input",
-     "bits": 1
+     "bits": 471
     },
-    "cfg_stripe": {
+    "compiler_control": {
      "direction": "input",
-     "bits": 3
-    },
-    "cfg_addr": {
-     "direction": "input",
-     "bits": 11
-    },
-    "cfg_data": {
-     "direction": "input",
-     "bits": 256
-    },
-    "start_base": {
-     "direction": "input",
-     "bits": 11
-    },
-    "start_limit": {
-     "direction": "input",
-     "bits": 12
-    },
-    "start_loops": {
-     "direction": "input",
-     "bits": 16
-    },
-    "programme_active": {
-     "direction": "output",
-     "bits": 1
-    },
-    "programme_done": {
-     "direction": "output",
-     "bits": 1
-    },
-    "programme_ordinal": {
-     "direction": "output",
-     "bits": 32
-    },
-    "io_cfg_we": {
-     "direction": "input",
-     "bits": 1
-    },
-    "io_cfg_stripe": {
-     "direction": "input",
-     "bits": 2
-    },
-    "io_cfg_addr": {
-     "direction": "input",
-     "bits": 11
-    },
-    "io_cfg_data": {
-     "direction": "input",
-     "bits": 256
-    },
-    "io_start_v": {
-     "direction": "input",
-     "bits": 1
-    },
-    "io_start_base": {
-     "direction": "input",
-     "bits": 11
-    },
-    "io_start_limit": {
-     "direction": "input",
-     "bits": 12
-    },
-    "io_start_loops": {
-     "direction": "input",
-     "bits": 16
-    },
-    "io_active": {
-     "direction": "output",
-     "bits": 1
-    },
-    "io_done": {
-     "direction": "output",
-     "bits": 1
-    },
-    "io_ordinal": {
-     "direction": "output",
-     "bits": 32
+     "bits": 1742
     },
     "local_rq": {
      "direction": "output",
@@ -78005,18 +77882,16 @@
    }
   },
   "sfucore_NW": {
-   "master": "ot_hgi_sfu_scheduled_engine",
-   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_scheduled_engine.sv",
+   "master": "ot_hgi_sfu_core_split",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_core_split.sv",
    "params": {
-    "PAGE_AW": 1,
-    "AW": 11,
     "LWB": 15,
     "LG_PATH": 24
    },
    "slot": null,
    "owner": "H-SU",
    "region": "su_sfu",
-   "note": "SFU core = the scheduled engine with LG_PATH=1+R (ot_hgi_sfu_split_engine.sv header: \"the core is the unchanged scheduled engine with LG_PATH = 1 + R\"; leaves + relays are die instances). R=11 padded (sfu_core_request_v7). NO slot: core box PROPOSED (4000x400 strip, needs H-SM shrink) -> placement gap H-DIE/H-SM. | H-NETLIST 0600: LG_PATH 12 -> 24 = 1+R23 (accepted R23 sfucore homes, H-SU receipt d6d9a0ce2).",
+   "note": "SFU core minus both calendars (16 closed ot_su12_sfu lanes + 80 operand SRAMs); H-NETLIST 0600 SFU split (H-SU 697997629, receipt results/rtl/hbm_sfu_split_1016/receipt.json)",
    "replaces_v15": null,
    "ports": {
     "clk": {
@@ -78051,89 +77926,13 @@
      "direction": "input",
      "bits": 16
     },
-    "cfg_we": {
+    "io_word": {
      "direction": "input",
-     "bits": 1
+     "bits": 471
     },
-    "cfg_stripe": {
+    "compiler_control": {
      "direction": "input",
-     "bits": 3
-    },
-    "cfg_addr": {
-     "direction": "input",
-     "bits": 11
-    },
-    "cfg_data": {
-     "direction": "input",
-     "bits": 256
-    },
-    "start_base": {
-     "direction": "input",
-     "bits": 11
-    },
-    "start_limit": {
-     "direction": "input",
-     "bits": 12
-    },
-    "start_loops": {
-     "direction": "input",
-     "bits": 16
-    },
-    "programme_active": {
-     "direction": "output",
-     "bits": 1
-    },
-    "programme_done": {
-     "direction": "output",
-     "bits": 1
-    },
-    "programme_ordinal": {
-     "direction": "output",
-     "bits": 32
-    },
-    "io_cfg_we": {
-     "direction": "input",
-     "bits": 1
-    },
-    "io_cfg_stripe": {
-     "direction": "input",
-     "bits": 2
-    },
-    "io_cfg_addr": {
-     "direction": "input",
-     "bits": 11
-    },
-    "io_cfg_data": {
-     "direction": "input",
-     "bits": 256
-    },
-    "io_start_v": {
-     "direction": "input",
-     "bits": 1
-    },
-    "io_start_base": {
-     "direction": "input",
-     "bits": 11
-    },
-    "io_start_limit": {
-     "direction": "input",
-     "bits": 12
-    },
-    "io_start_loops": {
-     "direction": "input",
-     "bits": 16
-    },
-    "io_active": {
-     "direction": "output",
-     "bits": 1
-    },
-    "io_done": {
-     "direction": "output",
-     "bits": 1
-    },
-    "io_ordinal": {
-     "direction": "output",
-     "bits": 32
+     "bits": 1742
     },
     "local_rq": {
      "direction": "output",
@@ -80862,18 +80661,16 @@
    }
   },
   "sfucore_NE": {
-   "master": "ot_hgi_sfu_scheduled_engine",
-   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_scheduled_engine.sv",
+   "master": "ot_hgi_sfu_core_split",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_core_split.sv",
    "params": {
-    "PAGE_AW": 1,
-    "AW": 11,
     "LWB": 15,
     "LG_PATH": 24
    },
    "slot": null,
    "owner": "H-SU",
    "region": "su_sfu",
-   "note": "SFU core = the scheduled engine with LG_PATH=1+R (ot_hgi_sfu_split_engine.sv header: \"the core is the unchanged scheduled engine with LG_PATH = 1 + R\"; leaves + relays are die instances). R=11 padded (sfu_core_request_v7). NO slot: core box PROPOSED (4000x400 strip, needs H-SM shrink) -> placement gap H-DIE/H-SM. | H-NETLIST 0600: LG_PATH 12 -> 24 = 1+R23 (accepted R23 sfucore homes, H-SU receipt d6d9a0ce2).",
+   "note": "SFU core minus both calendars (16 closed ot_su12_sfu lanes + 80 operand SRAMs); H-NETLIST 0600 SFU split (H-SU 697997629, receipt results/rtl/hbm_sfu_split_1016/receipt.json)",
    "replaces_v15": null,
    "ports": {
     "clk": {
@@ -80908,89 +80705,13 @@
      "direction": "input",
      "bits": 16
     },
-    "cfg_we": {
+    "io_word": {
      "direction": "input",
-     "bits": 1
+     "bits": 471
     },
-    "cfg_stripe": {
+    "compiler_control": {
      "direction": "input",
-     "bits": 3
-    },
-    "cfg_addr": {
-     "direction": "input",
-     "bits": 11
-    },
-    "cfg_data": {
-     "direction": "input",
-     "bits": 256
-    },
-    "start_base": {
-     "direction": "input",
-     "bits": 11
-    },
-    "start_limit": {
-     "direction": "input",
-     "bits": 12
-    },
-    "start_loops": {
-     "direction": "input",
-     "bits": 16
-    },
-    "programme_active": {
-     "direction": "output",
-     "bits": 1
-    },
-    "programme_done": {
-     "direction": "output",
-     "bits": 1
-    },
-    "programme_ordinal": {
-     "direction": "output",
-     "bits": 32
-    },
-    "io_cfg_we": {
-     "direction": "input",
-     "bits": 1
-    },
-    "io_cfg_stripe": {
-     "direction": "input",
-     "bits": 2
-    },
-    "io_cfg_addr": {
-     "direction": "input",
-     "bits": 11
-    },
-    "io_cfg_data": {
-     "direction": "input",
-     "bits": 256
-    },
-    "io_start_v": {
-     "direction": "input",
-     "bits": 1
-    },
-    "io_start_base": {
-     "direction": "input",
-     "bits": 11
-    },
-    "io_start_limit": {
-     "direction": "input",
-     "bits": 12
-    },
-    "io_start_loops": {
-     "direction": "input",
-     "bits": 16
-    },
-    "io_active": {
-     "direction": "output",
-     "bits": 1
-    },
-    "io_done": {
-     "direction": "output",
-     "bits": 1
-    },
-    "io_ordinal": {
-     "direction": "output",
-     "bits": 32
+     "bits": 1742
     },
     "local_rq": {
      "direction": "output",
@@ -83715,6 +83436,478 @@
     "o": {
      "direction": "output",
      "bits": 624
+    }
+   }
+  },
+  "sfup_SW": {
+   "master": "ot_hgi_sfu_programme_store",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_programme_store.sv",
+   "params": {
+    "PAGE_AW": 1
+   },
+   "slot": "sfus_SW",
+   "owner": "H-SU",
+   "region": "su_sfu",
+   "note": "SFU programme + IO calendars (22 1024x256 SRAMs), pin-registered; H-NETLIST 0600 SFU split (H-SU 697997629, receipt results/rtl/hbm_sfu_split_1016/receipt.json)",
+   "replaces_v15": null,
+   "ports": {
+    "clk": {
+     "direction": "input",
+     "bits": 1
+    },
+    "rst_n": {
+     "direction": "input",
+     "bits": 1
+    },
+    "cfg_we": {
+     "direction": "input",
+     "bits": 1
+    },
+    "cfg_stripe": {
+     "direction": "input",
+     "bits": 3
+    },
+    "cfg_addr": {
+     "direction": "input",
+     "bits": 11
+    },
+    "cfg_data": {
+     "direction": "input",
+     "bits": 256
+    },
+    "start_base": {
+     "direction": "input",
+     "bits": 11
+    },
+    "start_limit": {
+     "direction": "input",
+     "bits": 12
+    },
+    "start_loops": {
+     "direction": "input",
+     "bits": 16
+    },
+    "programme_active": {
+     "direction": "output",
+     "bits": 1
+    },
+    "programme_done": {
+     "direction": "output",
+     "bits": 1
+    },
+    "programme_ordinal": {
+     "direction": "output",
+     "bits": 32
+    },
+    "io_cfg_we": {
+     "direction": "input",
+     "bits": 1
+    },
+    "io_cfg_stripe": {
+     "direction": "input",
+     "bits": 2
+    },
+    "io_cfg_addr": {
+     "direction": "input",
+     "bits": 11
+    },
+    "io_cfg_data": {
+     "direction": "input",
+     "bits": 256
+    },
+    "io_start_v": {
+     "direction": "input",
+     "bits": 1
+    },
+    "io_start_base": {
+     "direction": "input",
+     "bits": 11
+    },
+    "io_start_limit": {
+     "direction": "input",
+     "bits": 12
+    },
+    "io_start_loops": {
+     "direction": "input",
+     "bits": 16
+    },
+    "io_active": {
+     "direction": "output",
+     "bits": 1
+    },
+    "io_done": {
+     "direction": "output",
+     "bits": 1
+    },
+    "io_ordinal": {
+     "direction": "output",
+     "bits": 32
+    },
+    "io_word": {
+     "direction": "output",
+     "bits": 471
+    },
+    "compiler_control": {
+     "direction": "output",
+     "bits": 1742
+    },
+    "fault": {
+     "direction": "output",
+     "bits": 1
+    }
+   }
+  },
+  "sfup_SE": {
+   "master": "ot_hgi_sfu_programme_store",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_programme_store.sv",
+   "params": {
+    "PAGE_AW": 1
+   },
+   "slot": "sfus_SE",
+   "owner": "H-SU",
+   "region": "su_sfu",
+   "note": "SFU programme + IO calendars (22 1024x256 SRAMs), pin-registered; H-NETLIST 0600 SFU split (H-SU 697997629, receipt results/rtl/hbm_sfu_split_1016/receipt.json)",
+   "replaces_v15": null,
+   "ports": {
+    "clk": {
+     "direction": "input",
+     "bits": 1
+    },
+    "rst_n": {
+     "direction": "input",
+     "bits": 1
+    },
+    "cfg_we": {
+     "direction": "input",
+     "bits": 1
+    },
+    "cfg_stripe": {
+     "direction": "input",
+     "bits": 3
+    },
+    "cfg_addr": {
+     "direction": "input",
+     "bits": 11
+    },
+    "cfg_data": {
+     "direction": "input",
+     "bits": 256
+    },
+    "start_base": {
+     "direction": "input",
+     "bits": 11
+    },
+    "start_limit": {
+     "direction": "input",
+     "bits": 12
+    },
+    "start_loops": {
+     "direction": "input",
+     "bits": 16
+    },
+    "programme_active": {
+     "direction": "output",
+     "bits": 1
+    },
+    "programme_done": {
+     "direction": "output",
+     "bits": 1
+    },
+    "programme_ordinal": {
+     "direction": "output",
+     "bits": 32
+    },
+    "io_cfg_we": {
+     "direction": "input",
+     "bits": 1
+    },
+    "io_cfg_stripe": {
+     "direction": "input",
+     "bits": 2
+    },
+    "io_cfg_addr": {
+     "direction": "input",
+     "bits": 11
+    },
+    "io_cfg_data": {
+     "direction": "input",
+     "bits": 256
+    },
+    "io_start_v": {
+     "direction": "input",
+     "bits": 1
+    },
+    "io_start_base": {
+     "direction": "input",
+     "bits": 11
+    },
+    "io_start_limit": {
+     "direction": "input",
+     "bits": 12
+    },
+    "io_start_loops": {
+     "direction": "input",
+     "bits": 16
+    },
+    "io_active": {
+     "direction": "output",
+     "bits": 1
+    },
+    "io_done": {
+     "direction": "output",
+     "bits": 1
+    },
+    "io_ordinal": {
+     "direction": "output",
+     "bits": 32
+    },
+    "io_word": {
+     "direction": "output",
+     "bits": 471
+    },
+    "compiler_control": {
+     "direction": "output",
+     "bits": 1742
+    },
+    "fault": {
+     "direction": "output",
+     "bits": 1
+    }
+   }
+  },
+  "sfup_NW": {
+   "master": "ot_hgi_sfu_programme_store",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_programme_store.sv",
+   "params": {
+    "PAGE_AW": 1
+   },
+   "slot": "sfus_NW",
+   "owner": "H-SU",
+   "region": "su_sfu",
+   "note": "SFU programme + IO calendars (22 1024x256 SRAMs), pin-registered; H-NETLIST 0600 SFU split (H-SU 697997629, receipt results/rtl/hbm_sfu_split_1016/receipt.json)",
+   "replaces_v15": null,
+   "ports": {
+    "clk": {
+     "direction": "input",
+     "bits": 1
+    },
+    "rst_n": {
+     "direction": "input",
+     "bits": 1
+    },
+    "cfg_we": {
+     "direction": "input",
+     "bits": 1
+    },
+    "cfg_stripe": {
+     "direction": "input",
+     "bits": 3
+    },
+    "cfg_addr": {
+     "direction": "input",
+     "bits": 11
+    },
+    "cfg_data": {
+     "direction": "input",
+     "bits": 256
+    },
+    "start_base": {
+     "direction": "input",
+     "bits": 11
+    },
+    "start_limit": {
+     "direction": "input",
+     "bits": 12
+    },
+    "start_loops": {
+     "direction": "input",
+     "bits": 16
+    },
+    "programme_active": {
+     "direction": "output",
+     "bits": 1
+    },
+    "programme_done": {
+     "direction": "output",
+     "bits": 1
+    },
+    "programme_ordinal": {
+     "direction": "output",
+     "bits": 32
+    },
+    "io_cfg_we": {
+     "direction": "input",
+     "bits": 1
+    },
+    "io_cfg_stripe": {
+     "direction": "input",
+     "bits": 2
+    },
+    "io_cfg_addr": {
+     "direction": "input",
+     "bits": 11
+    },
+    "io_cfg_data": {
+     "direction": "input",
+     "bits": 256
+    },
+    "io_start_v": {
+     "direction": "input",
+     "bits": 1
+    },
+    "io_start_base": {
+     "direction": "input",
+     "bits": 11
+    },
+    "io_start_limit": {
+     "direction": "input",
+     "bits": 12
+    },
+    "io_start_loops": {
+     "direction": "input",
+     "bits": 16
+    },
+    "io_active": {
+     "direction": "output",
+     "bits": 1
+    },
+    "io_done": {
+     "direction": "output",
+     "bits": 1
+    },
+    "io_ordinal": {
+     "direction": "output",
+     "bits": 32
+    },
+    "io_word": {
+     "direction": "output",
+     "bits": 471
+    },
+    "compiler_control": {
+     "direction": "output",
+     "bits": 1742
+    },
+    "fault": {
+     "direction": "output",
+     "bits": 1
+    }
+   }
+  },
+  "sfup_NE": {
+   "master": "ot_hgi_sfu_programme_store",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_programme_store.sv",
+   "params": {
+    "PAGE_AW": 1
+   },
+   "slot": "sfus_NE",
+   "owner": "H-SU",
+   "region": "su_sfu",
+   "note": "SFU programme + IO calendars (22 1024x256 SRAMs), pin-registered; H-NETLIST 0600 SFU split (H-SU 697997629, receipt results/rtl/hbm_sfu_split_1016/receipt.json)",
+   "replaces_v15": null,
+   "ports": {
+    "clk": {
+     "direction": "input",
+     "bits": 1
+    },
+    "rst_n": {
+     "direction": "input",
+     "bits": 1
+    },
+    "cfg_we": {
+     "direction": "input",
+     "bits": 1
+    },
+    "cfg_stripe": {
+     "direction": "input",
+     "bits": 3
+    },
+    "cfg_addr": {
+     "direction": "input",
+     "bits": 11
+    },
+    "cfg_data": {
+     "direction": "input",
+     "bits": 256
+    },
+    "start_base": {
+     "direction": "input",
+     "bits": 11
+    },
+    "start_limit": {
+     "direction": "input",
+     "bits": 12
+    },
+    "start_loops": {
+     "direction": "input",
+     "bits": 16
+    },
+    "programme_active": {
+     "direction": "output",
+     "bits": 1
+    },
+    "programme_done": {
+     "direction": "output",
+     "bits": 1
+    },
+    "programme_ordinal": {
+     "direction": "output",
+     "bits": 32
+    },
+    "io_cfg_we": {
+     "direction": "input",
+     "bits": 1
+    },
+    "io_cfg_stripe": {
+     "direction": "input",
+     "bits": 2
+    },
+    "io_cfg_addr": {
+     "direction": "input",
+     "bits": 11
+    },
+    "io_cfg_data": {
+     "direction": "input",
+     "bits": 256
+    },
+    "io_start_v": {
+     "direction": "input",
+     "bits": 1
+    },
+    "io_start_base": {
+     "direction": "input",
+     "bits": 11
+    },
+    "io_start_limit": {
+     "direction": "input",
+     "bits": 12
+    },
+    "io_start_loops": {
+     "direction": "input",
+     "bits": 16
+    },
+    "io_active": {
+     "direction": "output",
+     "bits": 1
+    },
+    "io_done": {
+     "direction": "output",
+     "bits": 1
+    },
+    "io_ordinal": {
+     "direction": "output",
+     "bits": 32
+    },
+    "io_word": {
+     "direction": "output",
+     "bits": 471
+    },
+    "compiler_control": {
+     "direction": "output",
+     "bits": 1742
+    },
+    "fault": {
+     "direction": "output",
+     "bits": 1
     }
    }
   },
@@ -217493,7 +217686,7 @@
     1
    ],
    "sink": [
-    "sfucore_SW",
+    "sfup_SW",
     "cfg_we",
     0,
     1
@@ -217514,7 +217707,7 @@
     14
    ],
    "sink": [
-    "sfucore_SW",
+    "sfup_SW",
     "cfg_stripe",
     0,
     3
@@ -217535,7 +217728,7 @@
     11
    ],
    "sink": [
-    "sfucore_SW",
+    "sfup_SW",
     "cfg_addr",
     0,
     11
@@ -217556,7 +217749,7 @@
     256
    ],
    "sink": [
-    "sfucore_SW",
+    "sfup_SW",
     "cfg_data",
     0,
     256
@@ -217577,7 +217770,7 @@
     11
    ],
    "sink": [
-    "sfucore_SW",
+    "sfup_SW",
     "start_base",
     0,
     11
@@ -217598,7 +217791,7 @@
     23
    ],
    "sink": [
-    "sfucore_SW",
+    "sfup_SW",
     "start_limit",
     0,
     12
@@ -217619,7 +217812,7 @@
     39
    ],
    "sink": [
-    "sfucore_SW",
+    "sfup_SW",
     "start_loops",
     0,
     16
@@ -217640,7 +217833,7 @@
     2
    ],
    "sink": [
-    "sfucore_SW",
+    "sfup_SW",
     "io_cfg_we",
     0,
     1
@@ -217661,7 +217854,7 @@
     13
    ],
    "sink": [
-    "sfucore_SW",
+    "sfup_SW",
     "io_cfg_stripe",
     0,
     2
@@ -217682,7 +217875,7 @@
     11
    ],
    "sink": [
-    "sfucore_SW",
+    "sfup_SW",
     "io_cfg_addr",
     0,
     11
@@ -217703,7 +217896,7 @@
     256
    ],
    "sink": [
-    "sfucore_SW",
+    "sfup_SW",
     "io_cfg_data",
     0,
     256
@@ -217724,7 +217917,7 @@
     1
    ],
    "sink": [
-    "sfucore_SW",
+    "sfup_SW",
     "io_start_v",
     0,
     1
@@ -217745,7 +217938,7 @@
     50
    ],
    "sink": [
-    "sfucore_SW",
+    "sfup_SW",
     "io_start_base",
     0,
     11
@@ -217766,7 +217959,7 @@
     62
    ],
    "sink": [
-    "sfucore_SW",
+    "sfup_SW",
     "io_start_limit",
     0,
     12
@@ -217787,7 +217980,7 @@
     78
    ],
    "sink": [
-    "sfucore_SW",
+    "sfup_SW",
     "io_start_loops",
     0,
     16
@@ -217802,7 +217995,7 @@
    "name": "cp2_61",
    "bits": 1,
    "source": [
-    "sfucore_SW",
+    "sfup_SW",
     "programme_active",
     0,
     1
@@ -217823,7 +218016,7 @@
    "name": "cp2_62",
    "bits": 1,
    "source": [
-    "sfucore_SW",
+    "sfup_SW",
     "io_active",
     0,
     1
@@ -217844,7 +218037,7 @@
    "name": "cp2_63",
    "bits": 1,
    "source": [
-    "sfucore_SW",
+    "sfup_SW",
     "io_done",
     0,
     1
@@ -217892,7 +218085,7 @@
     1
    ],
    "sink": [
-    "sfucore_SE",
+    "sfup_SE",
     "cfg_we",
     0,
     1
@@ -217913,7 +218106,7 @@
     14
    ],
    "sink": [
-    "sfucore_SE",
+    "sfup_SE",
     "cfg_stripe",
     0,
     3
@@ -217934,7 +218127,7 @@
     11
    ],
    "sink": [
-    "sfucore_SE",
+    "sfup_SE",
     "cfg_addr",
     0,
     11
@@ -217955,7 +218148,7 @@
     256
    ],
    "sink": [
-    "sfucore_SE",
+    "sfup_SE",
     "cfg_data",
     0,
     256
@@ -217976,7 +218169,7 @@
     11
    ],
    "sink": [
-    "sfucore_SE",
+    "sfup_SE",
     "start_base",
     0,
     11
@@ -217997,7 +218190,7 @@
     23
    ],
    "sink": [
-    "sfucore_SE",
+    "sfup_SE",
     "start_limit",
     0,
     12
@@ -218018,7 +218211,7 @@
     39
    ],
    "sink": [
-    "sfucore_SE",
+    "sfup_SE",
     "start_loops",
     0,
     16
@@ -218039,7 +218232,7 @@
     2
    ],
    "sink": [
-    "sfucore_SE",
+    "sfup_SE",
     "io_cfg_we",
     0,
     1
@@ -218060,7 +218253,7 @@
     13
    ],
    "sink": [
-    "sfucore_SE",
+    "sfup_SE",
     "io_cfg_stripe",
     0,
     2
@@ -218081,7 +218274,7 @@
     11
    ],
    "sink": [
-    "sfucore_SE",
+    "sfup_SE",
     "io_cfg_addr",
     0,
     11
@@ -218102,7 +218295,7 @@
     256
    ],
    "sink": [
-    "sfucore_SE",
+    "sfup_SE",
     "io_cfg_data",
     0,
     256
@@ -218123,7 +218316,7 @@
     1
    ],
    "sink": [
-    "sfucore_SE",
+    "sfup_SE",
     "io_start_v",
     0,
     1
@@ -218144,7 +218337,7 @@
     50
    ],
    "sink": [
-    "sfucore_SE",
+    "sfup_SE",
     "io_start_base",
     0,
     11
@@ -218165,7 +218358,7 @@
     62
    ],
    "sink": [
-    "sfucore_SE",
+    "sfup_SE",
     "io_start_limit",
     0,
     12
@@ -218186,7 +218379,7 @@
     78
    ],
    "sink": [
-    "sfucore_SE",
+    "sfup_SE",
     "io_start_loops",
     0,
     16
@@ -218201,7 +218394,7 @@
    "name": "cp2_80",
    "bits": 1,
    "source": [
-    "sfucore_SE",
+    "sfup_SE",
     "programme_active",
     0,
     1
@@ -218222,7 +218415,7 @@
    "name": "cp2_81",
    "bits": 1,
    "source": [
-    "sfucore_SE",
+    "sfup_SE",
     "io_active",
     0,
     1
@@ -218243,7 +218436,7 @@
    "name": "cp2_82",
    "bits": 1,
    "source": [
-    "sfucore_SE",
+    "sfup_SE",
     "io_done",
     0,
     1
@@ -218291,7 +218484,7 @@
     1
    ],
    "sink": [
-    "sfucore_NW",
+    "sfup_NW",
     "cfg_we",
     0,
     1
@@ -218312,7 +218505,7 @@
     14
    ],
    "sink": [
-    "sfucore_NW",
+    "sfup_NW",
     "cfg_stripe",
     0,
     3
@@ -218333,7 +218526,7 @@
     11
    ],
    "sink": [
-    "sfucore_NW",
+    "sfup_NW",
     "cfg_addr",
     0,
     11
@@ -218354,7 +218547,7 @@
     256
    ],
    "sink": [
-    "sfucore_NW",
+    "sfup_NW",
     "cfg_data",
     0,
     256
@@ -218375,7 +218568,7 @@
     11
    ],
    "sink": [
-    "sfucore_NW",
+    "sfup_NW",
     "start_base",
     0,
     11
@@ -218396,7 +218589,7 @@
     23
    ],
    "sink": [
-    "sfucore_NW",
+    "sfup_NW",
     "start_limit",
     0,
     12
@@ -218417,7 +218610,7 @@
     39
    ],
    "sink": [
-    "sfucore_NW",
+    "sfup_NW",
     "start_loops",
     0,
     16
@@ -218438,7 +218631,7 @@
     2
    ],
    "sink": [
-    "sfucore_NW",
+    "sfup_NW",
     "io_cfg_we",
     0,
     1
@@ -218459,7 +218652,7 @@
     13
    ],
    "sink": [
-    "sfucore_NW",
+    "sfup_NW",
     "io_cfg_stripe",
     0,
     2
@@ -218480,7 +218673,7 @@
     11
    ],
    "sink": [
-    "sfucore_NW",
+    "sfup_NW",
     "io_cfg_addr",
     0,
     11
@@ -218501,7 +218694,7 @@
     256
    ],
    "sink": [
-    "sfucore_NW",
+    "sfup_NW",
     "io_cfg_data",
     0,
     256
@@ -218522,7 +218715,7 @@
     1
    ],
    "sink": [
-    "sfucore_NW",
+    "sfup_NW",
     "io_start_v",
     0,
     1
@@ -218543,7 +218736,7 @@
     50
    ],
    "sink": [
-    "sfucore_NW",
+    "sfup_NW",
     "io_start_base",
     0,
     11
@@ -218564,7 +218757,7 @@
     62
    ],
    "sink": [
-    "sfucore_NW",
+    "sfup_NW",
     "io_start_limit",
     0,
     12
@@ -218585,7 +218778,7 @@
     78
    ],
    "sink": [
-    "sfucore_NW",
+    "sfup_NW",
     "io_start_loops",
     0,
     16
@@ -218600,7 +218793,7 @@
    "name": "cp2_99",
    "bits": 1,
    "source": [
-    "sfucore_NW",
+    "sfup_NW",
     "programme_active",
     0,
     1
@@ -218621,7 +218814,7 @@
    "name": "cp2_100",
    "bits": 1,
    "source": [
-    "sfucore_NW",
+    "sfup_NW",
     "io_active",
     0,
     1
@@ -218642,7 +218835,7 @@
    "name": "cp2_101",
    "bits": 1,
    "source": [
-    "sfucore_NW",
+    "sfup_NW",
     "io_done",
     0,
     1
@@ -218690,7 +218883,7 @@
     1
    ],
    "sink": [
-    "sfucore_NE",
+    "sfup_NE",
     "cfg_we",
     0,
     1
@@ -218711,7 +218904,7 @@
     14
    ],
    "sink": [
-    "sfucore_NE",
+    "sfup_NE",
     "cfg_stripe",
     0,
     3
@@ -218732,7 +218925,7 @@
     11
    ],
    "sink": [
-    "sfucore_NE",
+    "sfup_NE",
     "cfg_addr",
     0,
     11
@@ -218753,7 +218946,7 @@
     256
    ],
    "sink": [
-    "sfucore_NE",
+    "sfup_NE",
     "cfg_data",
     0,
     256
@@ -218774,7 +218967,7 @@
     11
    ],
    "sink": [
-    "sfucore_NE",
+    "sfup_NE",
     "start_base",
     0,
     11
@@ -218795,7 +218988,7 @@
     23
    ],
    "sink": [
-    "sfucore_NE",
+    "sfup_NE",
     "start_limit",
     0,
     12
@@ -218816,7 +219009,7 @@
     39
    ],
    "sink": [
-    "sfucore_NE",
+    "sfup_NE",
     "start_loops",
     0,
     16
@@ -218837,7 +219030,7 @@
     2
    ],
    "sink": [
-    "sfucore_NE",
+    "sfup_NE",
     "io_cfg_we",
     0,
     1
@@ -218858,7 +219051,7 @@
     13
    ],
    "sink": [
-    "sfucore_NE",
+    "sfup_NE",
     "io_cfg_stripe",
     0,
     2
@@ -218879,7 +219072,7 @@
     11
    ],
    "sink": [
-    "sfucore_NE",
+    "sfup_NE",
     "io_cfg_addr",
     0,
     11
@@ -218900,7 +219093,7 @@
     256
    ],
    "sink": [
-    "sfucore_NE",
+    "sfup_NE",
     "io_cfg_data",
     0,
     256
@@ -218921,7 +219114,7 @@
     1
    ],
    "sink": [
-    "sfucore_NE",
+    "sfup_NE",
     "io_start_v",
     0,
     1
@@ -218942,7 +219135,7 @@
     50
    ],
    "sink": [
-    "sfucore_NE",
+    "sfup_NE",
     "io_start_base",
     0,
     11
@@ -218963,7 +219156,7 @@
     62
    ],
    "sink": [
-    "sfucore_NE",
+    "sfup_NE",
     "io_start_limit",
     0,
     12
@@ -218984,7 +219177,7 @@
     78
    ],
    "sink": [
-    "sfucore_NE",
+    "sfup_NE",
     "io_start_loops",
     0,
     16
@@ -218999,7 +219192,7 @@
    "name": "cp2_118",
    "bits": 1,
    "source": [
-    "sfucore_NE",
+    "sfup_NE",
     "programme_active",
     0,
     1
@@ -219020,7 +219213,7 @@
    "name": "cp2_119",
    "bits": 1,
    "source": [
-    "sfucore_NE",
+    "sfup_NE",
     "io_active",
     0,
     1
@@ -219041,7 +219234,7 @@
    "name": "cp2_120",
    "bits": 1,
    "source": [
-    "sfucore_NE",
+    "sfup_NE",
     "io_done",
     0,
     1
@@ -227913,6 +228106,90 @@
     "t_fault",
     144,
     145
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "Actual static component sticky fault observation; never reschedules execution",
+   "region": "cp2"
+  },
+  {
+   "name": "cp2_543",
+   "bits": 1,
+   "source": [
+    "sfup_SW",
+    "fault",
+    0,
+    1
+   ],
+   "sink": [
+    "host_status",
+    "t_fault",
+    145,
+    146
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "Actual static component sticky fault observation; never reschedules execution",
+   "region": "cp2"
+  },
+  {
+   "name": "cp2_544",
+   "bits": 1,
+   "source": [
+    "sfup_SE",
+    "fault",
+    0,
+    1
+   ],
+   "sink": [
+    "host_status",
+    "t_fault",
+    146,
+    147
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "Actual static component sticky fault observation; never reschedules execution",
+   "region": "cp2"
+  },
+  {
+   "name": "cp2_545",
+   "bits": 1,
+   "source": [
+    "sfup_NW",
+    "fault",
+    0,
+    1
+   ],
+   "sink": [
+    "host_status",
+    "t_fault",
+    147,
+    148
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "Actual static component sticky fault observation; never reschedules execution",
+   "region": "cp2"
+  },
+  {
+   "name": "cp2_546",
+   "bits": 1,
+   "source": [
+    "sfup_NE",
+    "fault",
+    0,
+    1
+   ],
+   "sink": [
+    "host_status",
+    "t_fault",
+    148,
+    149
    ],
    "clock": "stream",
    "ready_or_credit": false,
@@ -296906,6 +297183,174 @@
    "region": "su_sfu"
   },
   {
+   "name": "su_sfu_1368",
+   "bits": 471,
+   "source": [
+    "sfup_SW",
+    "io_word",
+    0,
+    471
+   ],
+   "sink": [
+    "sfucore_SW",
+    "io_word",
+    0,
+    471
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "H-NETLIST 0600 SFU split (H-SU 697997629, receipt results/rtl/hbm_sfu_split_1016/receipt.json)",
+   "region": "su_sfu"
+  },
+  {
+   "name": "su_sfu_1369",
+   "bits": 1742,
+   "source": [
+    "sfup_SW",
+    "compiler_control",
+    0,
+    1742
+   ],
+   "sink": [
+    "sfucore_SW",
+    "compiler_control",
+    0,
+    1742
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "H-NETLIST 0600 SFU split (H-SU 697997629, receipt results/rtl/hbm_sfu_split_1016/receipt.json)",
+   "region": "su_sfu"
+  },
+  {
+   "name": "su_sfu_1370",
+   "bits": 471,
+   "source": [
+    "sfup_SE",
+    "io_word",
+    0,
+    471
+   ],
+   "sink": [
+    "sfucore_SE",
+    "io_word",
+    0,
+    471
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "H-NETLIST 0600 SFU split (H-SU 697997629, receipt results/rtl/hbm_sfu_split_1016/receipt.json)",
+   "region": "su_sfu"
+  },
+  {
+   "name": "su_sfu_1371",
+   "bits": 1742,
+   "source": [
+    "sfup_SE",
+    "compiler_control",
+    0,
+    1742
+   ],
+   "sink": [
+    "sfucore_SE",
+    "compiler_control",
+    0,
+    1742
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "H-NETLIST 0600 SFU split (H-SU 697997629, receipt results/rtl/hbm_sfu_split_1016/receipt.json)",
+   "region": "su_sfu"
+  },
+  {
+   "name": "su_sfu_1372",
+   "bits": 471,
+   "source": [
+    "sfup_NW",
+    "io_word",
+    0,
+    471
+   ],
+   "sink": [
+    "sfucore_NW",
+    "io_word",
+    0,
+    471
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "H-NETLIST 0600 SFU split (H-SU 697997629, receipt results/rtl/hbm_sfu_split_1016/receipt.json)",
+   "region": "su_sfu"
+  },
+  {
+   "name": "su_sfu_1373",
+   "bits": 1742,
+   "source": [
+    "sfup_NW",
+    "compiler_control",
+    0,
+    1742
+   ],
+   "sink": [
+    "sfucore_NW",
+    "compiler_control",
+    0,
+    1742
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "H-NETLIST 0600 SFU split (H-SU 697997629, receipt results/rtl/hbm_sfu_split_1016/receipt.json)",
+   "region": "su_sfu"
+  },
+  {
+   "name": "su_sfu_1374",
+   "bits": 471,
+   "source": [
+    "sfup_NE",
+    "io_word",
+    0,
+    471
+   ],
+   "sink": [
+    "sfucore_NE",
+    "io_word",
+    0,
+    471
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "H-NETLIST 0600 SFU split (H-SU 697997629, receipt results/rtl/hbm_sfu_split_1016/receipt.json)",
+   "region": "su_sfu"
+  },
+  {
+   "name": "su_sfu_1375",
+   "bits": 1742,
+   "source": [
+    "sfup_NE",
+    "compiler_control",
+    0,
+    1742
+   ],
+   "sink": [
+    "sfucore_NE",
+    "compiler_control",
+    0,
+    1742
+   ],
+   "clock": "stream",
+   "ready_or_credit": false,
+   "allowed_exception": null,
+   "basis": "H-NETLIST 0600 SFU split (H-SU 697997629, receipt results/rtl/hbm_sfu_split_1016/receipt.json)",
+   "region": "su_sfu"
+  },
+  {
    "name": "vm_compact_0253_0",
    "bits": 136,
    "source": [
@@ -355993,6 +356438,28 @@
   },
   {
    "instance": "hb_dbk_NE",
+   "port": "clk_cp",
+   "bits": 1,
+   "domain": "stream",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ]
+  },
+  {
+   "instance": "hb_dbk_NE",
+   "port": "clk_tab",
+   "bits": 2,
+   "domain": "stream",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ]
+  },
+  {
+   "instance": "hb_dbk_NE",
    "port": "rst_n",
    "bits": 1,
    "domain": "stream",
@@ -356026,6 +356493,28 @@
   },
   {
    "instance": "hb_dbk_NW",
+   "port": "clk_cp",
+   "bits": 1,
+   "domain": "stream",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ]
+  },
+  {
+   "instance": "hb_dbk_NW",
+   "port": "clk_tab",
+   "bits": 2,
+   "domain": "stream",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ]
+  },
+  {
+   "instance": "hb_dbk_NW",
    "port": "rst_n",
    "bits": 1,
    "domain": "stream",
@@ -356050,6 +356539,28 @@
    "instance": "hb_dbk_SE",
    "port": "clk_bank",
    "bits": 8,
+   "domain": "stream",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ]
+  },
+  {
+   "instance": "hb_dbk_SE",
+   "port": "clk_cp",
+   "bits": 1,
+   "domain": "stream",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ]
+  },
+  {
+   "instance": "hb_dbk_SE",
+   "port": "clk_tab",
+   "bits": 2,
    "domain": "stream",
    "kind": "clock",
    "source": [
@@ -356083,6 +356594,28 @@
    "instance": "hb_dbk_SW",
    "port": "clk_bank",
    "bits": 8,
+   "domain": "stream",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ]
+  },
+  {
+   "instance": "hb_dbk_SW",
+   "port": "clk_cp",
+   "bits": 1,
+   "domain": "stream",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ]
+  },
+  {
+   "instance": "hb_dbk_SW",
+   "port": "clk_tab",
+   "bits": 2,
    "domain": "stream",
    "kind": "clock",
    "source": [
@@ -379895,6 +380428,94 @@
    ]
   },
   {
+   "instance": "sfup_NE",
+   "port": "clk",
+   "bits": 1,
+   "domain": "stream",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ]
+  },
+  {
+   "instance": "sfup_NE",
+   "port": "rst_n",
+   "bits": 1,
+   "domain": "stream",
+   "kind": "reset",
+   "source": [
+    "hb_ckgen",
+    "por_stream"
+   ]
+  },
+  {
+   "instance": "sfup_NW",
+   "port": "clk",
+   "bits": 1,
+   "domain": "stream",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ]
+  },
+  {
+   "instance": "sfup_NW",
+   "port": "rst_n",
+   "bits": 1,
+   "domain": "stream",
+   "kind": "reset",
+   "source": [
+    "hb_ckgen",
+    "por_stream"
+   ]
+  },
+  {
+   "instance": "sfup_SE",
+   "port": "clk",
+   "bits": 1,
+   "domain": "stream",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ]
+  },
+  {
+   "instance": "sfup_SE",
+   "port": "rst_n",
+   "bits": 1,
+   "domain": "stream",
+   "kind": "reset",
+   "source": [
+    "hb_ckgen",
+    "por_stream"
+   ]
+  },
+  {
+   "instance": "sfup_SW",
+   "port": "clk",
+   "bits": 1,
+   "domain": "stream",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ]
+  },
+  {
+   "instance": "sfup_SW",
+   "port": "rst_n",
+   "bits": 1,
+   "domain": "stream",
+   "kind": "reset",
+   "source": [
+    "hb_ckgen",
+    "por_stream"
+   ]
+  },
+  {
    "instance": "sfus_NE",
    "port": "clk",
    "bits": 1,
@@ -397832,91 +398453,91 @@
    "missing_rtl": "SFU programme / IO-calendar loader and start issuer (cfg_*, start_*, io_cfg_*, io_start_*); no producer on main (v15 unbound \"actual SFU programme loader / CP\")",
    "affects": [
     [
-     "sfucore_SW",
+     "sfup_SW",
      "cfg_we",
      0,
      1
     ],
     [
-     "sfucore_SW",
+     "sfup_SW",
      "cfg_stripe",
      0,
      3
     ],
     [
-     "sfucore_SW",
+     "sfup_SW",
      "cfg_addr",
      0,
      11
     ],
     [
-     "sfucore_SW",
+     "sfup_SW",
      "cfg_data",
      0,
      256
     ],
     [
-     "sfucore_SW",
+     "sfup_SW",
      "start_base",
      0,
      11
     ],
     [
-     "sfucore_SW",
+     "sfup_SW",
      "start_limit",
      0,
      12
     ],
     [
-     "sfucore_SW",
+     "sfup_SW",
      "start_loops",
      0,
      16
     ],
     [
-     "sfucore_SW",
+     "sfup_SW",
      "io_cfg_we",
      0,
      1
     ],
     [
-     "sfucore_SW",
+     "sfup_SW",
      "io_cfg_stripe",
      0,
      2
     ],
     [
-     "sfucore_SW",
+     "sfup_SW",
      "io_cfg_addr",
      0,
      11
     ],
     [
-     "sfucore_SW",
+     "sfup_SW",
      "io_cfg_data",
      0,
      256
     ],
     [
-     "sfucore_SW",
+     "sfup_SW",
      "io_start_v",
      0,
      1
     ],
     [
-     "sfucore_SW",
+     "sfup_SW",
      "io_start_base",
      0,
      11
     ],
     [
-     "sfucore_SW",
+     "sfup_SW",
      "io_start_limit",
      0,
      12
     ],
     [
-     "sfucore_SW",
+     "sfup_SW",
      "io_start_loops",
      0,
      16
@@ -397950,91 +398571,91 @@
    "missing_rtl": "SFU programme / IO-calendar loader and start issuer (cfg_*, start_*, io_cfg_*, io_start_*); no producer on main (v15 unbound \"actual SFU programme loader / CP\")",
    "affects": [
     [
-     "sfucore_SE",
+     "sfup_SE",
      "cfg_we",
      0,
      1
     ],
     [
-     "sfucore_SE",
+     "sfup_SE",
      "cfg_stripe",
      0,
      3
     ],
     [
-     "sfucore_SE",
+     "sfup_SE",
      "cfg_addr",
      0,
      11
     ],
     [
-     "sfucore_SE",
+     "sfup_SE",
      "cfg_data",
      0,
      256
     ],
     [
-     "sfucore_SE",
+     "sfup_SE",
      "start_base",
      0,
      11
     ],
     [
-     "sfucore_SE",
+     "sfup_SE",
      "start_limit",
      0,
      12
     ],
     [
-     "sfucore_SE",
+     "sfup_SE",
      "start_loops",
      0,
      16
     ],
     [
-     "sfucore_SE",
+     "sfup_SE",
      "io_cfg_we",
      0,
      1
     ],
     [
-     "sfucore_SE",
+     "sfup_SE",
      "io_cfg_stripe",
      0,
      2
     ],
     [
-     "sfucore_SE",
+     "sfup_SE",
      "io_cfg_addr",
      0,
      11
     ],
     [
-     "sfucore_SE",
+     "sfup_SE",
      "io_cfg_data",
      0,
      256
     ],
     [
-     "sfucore_SE",
+     "sfup_SE",
      "io_start_v",
      0,
      1
     ],
     [
-     "sfucore_SE",
+     "sfup_SE",
      "io_start_base",
      0,
      11
     ],
     [
-     "sfucore_SE",
+     "sfup_SE",
      "io_start_limit",
      0,
      12
     ],
     [
-     "sfucore_SE",
+     "sfup_SE",
      "io_start_loops",
      0,
      16
@@ -398068,91 +398689,91 @@
    "missing_rtl": "SFU programme / IO-calendar loader and start issuer (cfg_*, start_*, io_cfg_*, io_start_*); no producer on main (v15 unbound \"actual SFU programme loader / CP\")",
    "affects": [
     [
-     "sfucore_NW",
+     "sfup_NW",
      "cfg_we",
      0,
      1
     ],
     [
-     "sfucore_NW",
+     "sfup_NW",
      "cfg_stripe",
      0,
      3
     ],
     [
-     "sfucore_NW",
+     "sfup_NW",
      "cfg_addr",
      0,
      11
     ],
     [
-     "sfucore_NW",
+     "sfup_NW",
      "cfg_data",
      0,
      256
     ],
     [
-     "sfucore_NW",
+     "sfup_NW",
      "start_base",
      0,
      11
     ],
     [
-     "sfucore_NW",
+     "sfup_NW",
      "start_limit",
      0,
      12
     ],
     [
-     "sfucore_NW",
+     "sfup_NW",
      "start_loops",
      0,
      16
     ],
     [
-     "sfucore_NW",
+     "sfup_NW",
      "io_cfg_we",
      0,
      1
     ],
     [
-     "sfucore_NW",
+     "sfup_NW",
      "io_cfg_stripe",
      0,
      2
     ],
     [
-     "sfucore_NW",
+     "sfup_NW",
      "io_cfg_addr",
      0,
      11
     ],
     [
-     "sfucore_NW",
+     "sfup_NW",
      "io_cfg_data",
      0,
      256
     ],
     [
-     "sfucore_NW",
+     "sfup_NW",
      "io_start_v",
      0,
      1
     ],
     [
-     "sfucore_NW",
+     "sfup_NW",
      "io_start_base",
      0,
      11
     ],
     [
-     "sfucore_NW",
+     "sfup_NW",
      "io_start_limit",
      0,
      12
     ],
     [
-     "sfucore_NW",
+     "sfup_NW",
      "io_start_loops",
      0,
      16
@@ -398186,91 +398807,91 @@
    "missing_rtl": "SFU programme / IO-calendar loader and start issuer (cfg_*, start_*, io_cfg_*, io_start_*); no producer on main (v15 unbound \"actual SFU programme loader / CP\")",
    "affects": [
     [
-     "sfucore_NE",
+     "sfup_NE",
      "cfg_we",
      0,
      1
     ],
     [
-     "sfucore_NE",
+     "sfup_NE",
      "cfg_stripe",
      0,
      3
     ],
     [
-     "sfucore_NE",
+     "sfup_NE",
      "cfg_addr",
      0,
      11
     ],
     [
-     "sfucore_NE",
+     "sfup_NE",
      "cfg_data",
      0,
      256
     ],
     [
-     "sfucore_NE",
+     "sfup_NE",
      "start_base",
      0,
      11
     ],
     [
-     "sfucore_NE",
+     "sfup_NE",
      "start_limit",
      0,
      12
     ],
     [
-     "sfucore_NE",
+     "sfup_NE",
      "start_loops",
      0,
      16
     ],
     [
-     "sfucore_NE",
+     "sfup_NE",
      "io_cfg_we",
      0,
      1
     ],
     [
-     "sfucore_NE",
+     "sfup_NE",
      "io_cfg_stripe",
      0,
      2
     ],
     [
-     "sfucore_NE",
+     "sfup_NE",
      "io_cfg_addr",
      0,
      11
     ],
     [
-     "sfucore_NE",
+     "sfup_NE",
      "io_cfg_data",
      0,
      256
     ],
     [
-     "sfucore_NE",
+     "sfup_NE",
      "io_start_v",
      0,
      1
     ],
     [
-     "sfucore_NE",
+     "sfup_NE",
      "io_start_base",
      0,
      11
     ],
     [
-     "sfucore_NE",
+     "sfup_NE",
      "io_start_limit",
      0,
      12
     ],
     [
-     "sfucore_NE",
+     "sfup_NE",
      "io_start_loops",
      0,
      16
@@ -401607,62 +402228,62 @@
    1
   ],
   [
-   "sfucore_SW",
+   "sfup_SW",
    "programme_done",
    1
   ],
   [
-   "sfucore_SW",
+   "sfup_SW",
    "programme_ordinal",
    32
   ],
   [
-   "sfucore_SW",
+   "sfup_SW",
    "io_ordinal",
    32
   ],
   [
-   "sfucore_SE",
+   "sfup_SE",
    "programme_done",
    1
   ],
   [
-   "sfucore_SE",
+   "sfup_SE",
    "programme_ordinal",
    32
   ],
   [
-   "sfucore_SE",
+   "sfup_SE",
    "io_ordinal",
    32
   ],
   [
-   "sfucore_NW",
+   "sfup_NW",
    "programme_done",
    1
   ],
   [
-   "sfucore_NW",
+   "sfup_NW",
    "programme_ordinal",
    32
   ],
   [
-   "sfucore_NW",
+   "sfup_NW",
    "io_ordinal",
    32
   ],
   [
-   "sfucore_NE",
+   "sfup_NE",
    "programme_done",
    1
   ],
   [
-   "sfucore_NE",
+   "sfup_NE",
    "programme_ordinal",
    32
   ],
   [
-   "sfucore_NE",
+   "sfup_NE",
    "io_ordinal",
    32
   ],

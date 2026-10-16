@@ -1,12 +1,12 @@
 {
  "schema": "opentallas.die_port_bind.v2",
- "die_v": "/tmp/claude-1000/hnl0600/g13/die.v",
+ "die_v": "/tmp/claude-1000/hnl0600/g15/die.v",
  "top": "hbm_v16_die",
  "verdict": "PASS",
  "failing": [],
  "summary": {
-  "masters": 60,
-  "instances": 1532,
+  "masters": 61,
+  "instances": 1536,
   "unbound_masters": 0,
   "stub_masters": 0,
   "ambiguous_masters": 0,
@@ -757,7 +757,7 @@
     "host_status"
    ],
    "param_sets": {
-    "{\"NF\": \"145\", \"NH\": \"6\", \"NT\": \"105\", \"TGTS\": \"840'hdfdedddcdbdad9d8d7d6d5d4d3d2d1d0cfcecdcccbcac9c8c7c6c5c4c3c2c1c0a5a4a3a2a1a0878685846f6e6d6c6b6a696867666564636261605f5e5d5c5b5a595857565554535251504f4e4d4c4b4a494847464544434241403b3a39387877767574703736353430\"}": 1
+    "{\"NF\": \"149\", \"NH\": \"6\", \"NT\": \"105\", \"TGTS\": \"840'hdfdedddcdbdad9d8d7d6d5d4d3d2d1d0cfcecdcccbcac9c8c7c6c5c4c3c2c1c0a5a4a3a2a1a0878685846f6e6d6c6b6a696867666564636261605f5e5d5c5b5a595857565554535251504f4e4d4c4b4a494847464544434241403b3a39387877767574703736353430\"}": 1
    },
    "die_port_not_in_rtl": [],
    "input_unconnected": [],
@@ -1329,6 +1329,31 @@
    "unparsed_conn": [],
    "duplicate_port": []
   },
+  "ot_hgi_sfu_core_split": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 4,
+   "rtl": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_core_split.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "sfucore_SW",
+    "sfucore_SE",
+    "sfucore_NW"
+   ],
+   "param_sets": {
+    "{\"LG_PATH\": \"24\", \"LWB\": \"15\"}": 4
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
   "ot_hgi_sfu_lg_pair_leaf": {
    "verdict": "PASS",
    "fails": [],
@@ -1354,20 +1379,20 @@
    "unparsed_conn": [],
    "duplicate_port": []
   },
-  "ot_hgi_sfu_scheduled_engine": {
+  "ot_hgi_sfu_programme_store": {
    "verdict": "PASS",
    "fails": [],
    "instances": 4,
-   "rtl": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_scheduled_engine.sv",
+   "rtl": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_programme_store.sv",
    "kind": "real",
    "ambiguous_defs": null,
    "examples": [
-    "sfucore_SW",
-    "sfucore_SE",
-    "sfucore_NW"
+    "sfup_SW",
+    "sfup_SE",
+    "sfup_NW"
    ],
    "param_sets": {
-    "{\"AW\": \"11\", \"LG_PATH\": \"24\", \"LWB\": \"15\", \"PAGE_AW\": \"1\"}": 4
+    "{\"PAGE_AW\": \"1\"}": 4
    },
    "die_port_not_in_rtl": [],
    "input_unconnected": [],
@@ -1568,7 +1593,7 @@
   "hbfd_rly_624_SN:i",
   "hbfd_rly_624_WE:i"
  ],
- "die_sha256": "f1430a2fb2becbee5cd63e99d376798a512208b2baaf5991e3fddaed78c436fb",
+ "die_sha256": "1d259907b17dd885d9da7fc50227c2c2459e1fbfab799e55ee683d000e6f79de",
  "straps_declared": [
   "hfd_hgi_vm_calendar_f20:tgt",
   "ot_hbm_hc_eng_static:tgt",

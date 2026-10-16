@@ -213,7 +213,8 @@ FOLD_RULES = [
     dict(target='ot_static_cmd_target', detect='cmd', consumers=('ot_hgi_dma_back_static_vp4_banks',),
          wrapper='ot_hgi_dma_back_static_vp4_banks_cp', source=_DBK + 'ot_hgi_dma_back_static_vp4_banks_cp.sv',
          deps=[_DBK + 'ot_hgi_dma_back_static_vp4_banks.sv', 'rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv'],
-         status={'configured': 'cp_configured', 'fault': 'cp_fault', 'active': 'cp_active'}),
+         status={'configured': 'cp_configured', 'fault': 'cp_fault', 'active': 'cp_active'},
+         clocks=('clk_cp', 'clk_tab')),   # H-HARDEN 1f18141cb: collar CTS root + raw table-SRAM entries
     dict(target='ot_static_cmd_target', detect='a_we', consumers=('ot_hbm_svc_sm_xcal',),
          wrapper='ot_hbm_svc_sm_xcal_t', source='rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_xcal_t.sv',
          deps=['rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_xcal.sv', 'rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv'],
@@ -349,7 +350,8 @@ def build(specs_dir, out):
                 x['inst'] = c
         del insts[t]
     specs.append(dict(region='fill_calendar_universal', edges=[], instances=[], gaps=[], straps=[],
-                      clocks=[dict(inst=n, port=p, domain='stream', kind='clock') for n in univ_cal for p in ('clk_cap', 'clk_mem')]))
+                      clocks=[dict(inst=n, port=p, domain='stream', kind='clock') for n in univ_cal for p in ('clk_cap', 'clk_mem')]
+                             + [dict(inst=c, port=p, domain='stream', kind='clock') for t, c in folded.items() for p in fold_rule[t].get('clocks', ())]))
     flat = {}
     for n in list(insts):
         r = FLATTEN.get(insts[n]['master'])
