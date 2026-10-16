@@ -61,6 +61,8 @@ module tb_qkd_static_k_issuer;
             if(MUT==1&&cyc==20)rsp_valid=0;
             if(MUT==2&&cyc==20)rsp_t=rsp_t^14'd1;
             if(MUT==3&&cyc==20)rsp_layer=layer_cur^6'd1;
+            if(MUT==6&&cyc>=340&&cyc<356)begin rsp_valid=1;rsp_v=1;rsp_t=14'(cyc-340);end
+            if(MUT==7&&cyc==20)rsp_v=1;
             @(posedge ck);
             if(dut.u_c.u.start)startcyc=cyc;
             if(layer_idx==0 && cyc<16 && (rq[0] || dut.u_a.u.u.row_slot || dut.u_c.u.start))
@@ -83,15 +85,15 @@ module tb_qkd_static_k_issuer;
             if(dut.u_a.u.u.k_issue)begin
                 if(firstconsume<0)firstconsume=cyc;
                 if(cyc!=startcyc+34+esc[nconsume])$fatal(1,"consume slot %0d at %0d S%0d",nconsume,cyc,startcyc);
-                if((MUT==0||MUT==4) && {dut.u_b.u.row,dut.u_a.u.u.row}!==rowf(nconsume))$fatal(1,"SRAM row mismatch %0d at%0d got%h expected%h",nconsume,cyc,dut.u_a.u.u.row[31:0],rowf(nconsume));
+                if((MUT==0||MUT==4||MUT==6) && {dut.u_b.u.row,dut.u_a.u.u.row}!==rowf(nconsume))$fatal(1,"SRAM row mismatch %0d at%0d got%h expected%h",nconsume,cyc,dut.u_a.u.u.row[31:0],rowf(nconsume));
                 nconsume=nconsume+1;
             end
             @(negedge ck);
         end
         if(nreq!=nexpected||nconsume!=nexpected||!so[422])$fatal(1,"shape req%0d consume%0d done%0d",nreq,nconsume,so[422]);
-        if(MUT==0 && (so[424]||bridge_fault))$fatal(1,"unexpected normal fault ECTL%0d bridge%0d",so[424],bridge_fault);
-        if(MUT>=1&&MUT<=3&&!bridge_fault)$fatal(1,"missing bridge identity/slot fault");
-        if(nbridge!=nexpected||(MUT==0&&nrs!=nexpected))$fatal(1,"bridge shape");
+        if((MUT==0||MUT==6) && (so[424]||bridge_fault))$fatal(1,"unexpected normal fault ECTL%0d bridge%0d",so[424],bridge_fault);
+        if(((MUT>=1&&MUT<=3)||MUT==7)&&!bridge_fault)$fatal(1,"missing bridge identity/slot fault");
+        if(nbridge!=nexpected||((MUT==0||MUT==6)&&nrs!=nexpected))$fatal(1,"bridge shape");
         $display("STATIC_K PASS layer=%0d mutant=%0d req=%0d consume=%0d bridge=%0d rs=%0d firstreq=%0d localstart=%0d firstconsume=%0d bridgefault=%0d",layer_cur,MUT,nreq,nconsume,nbridge,nrs,firstreq,startcyc,firstconsume,bridge_fault);
         end
         $finish;

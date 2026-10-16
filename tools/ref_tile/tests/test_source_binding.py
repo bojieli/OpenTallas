@@ -117,8 +117,11 @@ class SourceBindingTest(unittest.TestCase):
                 self.assertTrue(g.source_binding['remote_archive_verified'])
                 self.assertEqual(g.clock['tt_insertion_ps'], 280.)
                 self.assertEqual(g.clock['tt_spread_ps'], 70.)
-                # the mocked remote returns no layout dump (owner rule 20:45 WARN); everything else must be INFO
-                self.assertEqual([i['check'] for i in g.items if i['severity'] != 'INFO'], ['layout_images'])
+                # An old remote log lacks actual pin-geometry proof: its clock
+                # numbers remain diagnostic and cannot qualify a gate PASS.
+                self.assertEqual(g.verdict, 'FAIL')
+                self.assertEqual([i['check'] for i in g.items if i['severity'] != 'INFO'],
+                                 ['floorplan.pin_geometry', 'layout_images'])
 
     def test_recovery_requires_full_manifest_log_script_and_staged_bytes(self):
         import hashlib

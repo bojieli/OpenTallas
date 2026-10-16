@@ -9,7 +9,7 @@ A fleet row is never dropped: a host that cannot be reached keeps its last contr
 """
 import json, math, os, subprocess, sys
 
-HOSTS = ["ot-epyc1tb", "ot-epyc4", "ot-pve1", "ot-agidock128"]
+HOSTS = ["ot-epyc4", "ot-pve1", "ot-agidock128"]
 D = "/var/tmp/ot-heavy"
 SSH = ["ssh", "-o", "ControlPath=none", "-o", "ConnectTimeout=8", "-o", "BatchMode=yes"]
 

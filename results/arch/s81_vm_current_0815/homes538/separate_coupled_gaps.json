@@ -1,0 +1,51 @@
+{
+  "scope": "Separate unresolved physical groups; honest preview, no native reach or cut claim.",
+  "source_commit": "0ca4b7f37",
+  "rectangle_overlaps": 0,
+  "out_of_frame_count": 16,
+  "out_of_frame_max_um": 0.02400000000034197,
+  "captured_to_payload": {
+    "source_master": "ot_s81_vm_x34_t",
+    "source_port": "o_d",
+    "target_master": "s81_a2_w0_payload33",
+    "target_port": "i_data",
+    "bit_pairs": 8192,
+    "star_bit_um": 29678537.27999988,
+    "max_um": 5799.233999999999,
+    "over400um": 8192
+  },
+  "control_to_fields": {
+    "source_master": "s81_a2f_control4_resetlocal",
+    "source_port": "ids",
+    "target_master": "s81_a2f_field4",
+    "target_port": "i_sel",
+    "bit_pairs": 104832,
+    "star_bit_um": 79629314.1120012,
+    "max_um": 1686.5040000000001,
+    "over400um": 88208
+  },
+  "payload_to_fields": {
+    "source_master": "s81_a2_w0_payload33",
+    "source_port": "o_data",
+    "target_master": "s81_a2f_field4",
+    "target_port": "i_data",
+    "bit_pairs": 27136,
+    "star_bit_um": 22458245.37600004,
+    "max_um": 1324.2720000000006,
+    "over400um": 27136
+  },
+  "field_to_scatter": {
+    "source_master": "s81_a2f_field4",
+    "source_port": "o_data",
+    "target_master": "dsfd_vm_static_scatter_b8_out",
+    "target_port": "i_data",
+    "bit_pairs": 16384,
+    "star_bit_um": 16497268.60800006,
+    "max_um": 2118.0960000000005,
+    "over400um": 15236
+  },
+  "maximum_internal_um": 6488.058,
+  "soft_hf_home": "One observable hf[1:0] reduction; opt-in source9418c0559 removes it with param4 seq but new view/compiler proof not yet complete.",
+  "external_grants": "ALL unresolved in this preview; top capture/SU south/HC-collective adjacency are owner-review constraints, not assigned native pins.",
+  "next_structural": "Control copies local to field clusters, and actual registered capture distribution from real outer CAP producer grant. Moving first capture behind 6mm input wire does not fix reach. Every incident leg, real pin tracks, relay cycle/compiler budget and phi-minus-R must be remeasured."
+}

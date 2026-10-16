@@ -52,8 +52,11 @@ module ot_hbm_svc_sm4pc_cdc #(parameter [1:0] STACK=0, parameter integer SM=0, O
  reg [7:0] completed_q[0:LBANKS-1];reg stream_fault,hbm_fault;
  wire [7:0] bank_complete,bank_fault;wire [LB-1:0] bank_complete_bank[0:7];
  reg [7:0] complete_event[0:LBANKS-1];
- (* async_reg="true" *)reg hbf1,hbf2;
- (* async_reg="true" *)reg stf1,stf2;
+ wire hbf2,stf2;
+ ot_hbm_svc_fault_cdc u_hbm_fault_cdc(.wr_clk(hbm_clk),.wr_rst_n(hrst),
+  .rd_clk(stream_clk),.rd_rst_n(srst),.src_fault(hbm_fault),.dst_fault(hbf2),.wr_overflow(),.rd_underflow());
+ ot_hbm_svc_fault_cdc u_stream_fault_cdc(.wr_clk(stream_clk),.wr_rst_n(srst),
+  .rd_clk(hbm_clk),.rd_rst_n(hrst),.src_fault(stream_fault),.dst_fault(stf2),.wr_overflow(),.rd_underflow());
  wire desc_wr_ready,desc_rd_valid,desc_rd_ready,desc_ov,desc_un;
  wire [DW-1:0] desc_data;
  assign reserve_ready=srst&&!allocated[reserve_bank]&&desc_wr_ready&&!fault;
@@ -132,9 +135,9 @@ module ot_hbm_svc_sm4pc_cdc #(parameter [1:0] STACK=0, parameter integer SM=0, O
   if(!hrst)begin
    h_active<=0;h_bank<=0;h_epoch<=0;h_base<=0;h_total<=0;h_received<=0;h_pcs<=0;h_row_base<=0;
    for(rb=0;rb<LBANKS;rb=rb+1)rx_left[rb]<=0;h_fresh<=0;
-   hbm_fault<=0;stf1<=0;stf2<=0;
+   hbm_fault<=0;
   end else begin
-   stf1<=stream_fault;stf2<=stf1;
+   
    if(stf2||desc_un||(|fifo_ov)||(|k_wr_done)||(|pc_fault))hbm_fault<=1;
    if(descriptor_fire)begin
     if(desc_data[S0+1:S0]!=STACK||desc_data[T0+11:T0]==0||desc_data[T0+11:T0]>512||
@@ -183,13 +186,13 @@ module ot_hbm_svc_sm4pc_cdc #(parameter [1:0] STACK=0, parameter integer SM=0, O
  integer si,sb;
  always @(posedge stream_clk or negedge srst)begin
   if(!srst)begin
-   allocated<=0;ready_q<=0;announced<=0;stream_fault<=0;hbf1<=0;hbf2<=0;
+   allocated<=0;ready_q<=0;announced<=0;stream_fault<=0;
    block_ready_v<=0;block_ready_bank<=0;block_ready_epoch<=0;
    draining<=0;drain_bank<=0;drain_ordinal<=0;read_ordinal_q<=0;drain_phase<=0;
    out_v<=0;out_mask<=0;out_ordinal<=0;out_bank<=0;out_epoch<=0;out_last<=0;
    for(sb=0;sb<LBANKS;sb=sb+1)begin bank_epoch[sb]<=0;bank_total[sb]<=0;completed_q[sb]<=0;end
   end else begin
-   hbf1<=hbm_fault;hbf2<=hbf1;block_ready_v<=0;out_v<=0;out_last<=0;out_mask<=0;
+   block_ready_v<=0;out_v<=0;out_last<=0;out_mask<=0;
    if(reserve_v)begin
     if(!reserve_ready||!descriptor_ok)stream_fault<=1;
     else begin
