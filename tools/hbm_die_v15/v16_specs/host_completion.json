@@ -3666,7 +3666,7 @@
   {
    "id": "G-HOST-PROGRAM-INSTALL",
    "owner": "H-NETLIST / host programme targets",
-   "missing_rtl": "Programme-target configured proves descriptor bounds and one-launch arm only; no actual loaded-row completeness check is integrated for cp_cal/cp_fill/cp_ep/hc_tgt. Status aggregation PASS does not prove installation readiness. Integrate the actual loaded-row checker and compiled full-image evidence before native qualification.",
+   "missing_rtl": "Basic programme targets now track actual registered write pins, protect header/PC, scan referenced rows and invalidate stale image generations. Their component proof does not close MODE0 SVG programme+descriptor references, MODE1 striped command tables, or all required full production image/operation coverage. These typed loader installation checks remain native completeness gaps.",
    "affects": [],
    "note": "Semantic installation-safety gap; no input tie or fake producer closes it."
   }
