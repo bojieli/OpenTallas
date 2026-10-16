@@ -156,8 +156,9 @@ def ckgen_pin_xy(slot, pin):
 
 
 def build(W, H, obstacles, root_xy, sinks, quadrant_of, leaf_pads=None, quad_pads=None, root_search_um=3000.0,
-          mode='htree', bin_um=1600.0):
+          mode='htree', bin_um=1600.0, pairs=None):
     """sinks: [(inst, pin, x, y)]; quadrant_of(inst) -> 'SW'|'SE'|'NW'|'NE'.
+    pairs (mode 'graph'): [(inst_a, inst_b)] tile pairs that exchange data in this domain (the clock follows them).
     leaf_pads {inst: n} / quad_pads {quadrant: n}: measured skew corrections (STA feedback), outside the model."""
     leaf_pads = leaf_pads or {}
     quad_pads = quad_pads or {}
@@ -246,6 +247,8 @@ def build(W, H, obstacles, root_xy, sinks, quadrant_of, leaf_pads=None, quad_pad
                 out[inst] = dl + v + n * PAD_PS
         return out
 
+    if mode == 'graph':
+        return _graph(W, H, g, root_xy, sinks, bufs, nets, newbuf, chain, pairs or [])
     if mode == 'lane':
         return _lane(W, H, g, root_xy, sinks, bufs, nets, newbuf, chain, pad)
     if mode == 'htree':
@@ -458,3 +461,160 @@ def _lane(W, H, g, root_xy, sinks, bufs, nets, newbuf, chain, pad):
                  grid_um=GRID, span_um=SPAN, max_run_over_blocks_um=MAX_RUN, pad_ps_model=PAD_PS,
                  free_cells_frac=round(1 - sum(g.blk) / len(g.blk), 4))
     return dict(buffers=bufs, nets=merged, model=model)
+
+
+def _graph(W, H, g, root_xy, sinks, bufs, nets, newbuf, chain, pairs, fanout=4):
+    """H-DIE 0730 (OWNER 07:30 10-16: low-skew die clock, clock follows data).  General form of 'lane': the clock tree IS
+    a spanning tree of the domain's communication graph.  Kruskal MST over the communicating tile pairs (edge weight =
+    Manhattan distance; components joined by their nearest sinks), rooted at the tree centre (minimum eccentricity, so
+    the deepest sink is as shallow as the graph allows), driven from the ckgen pin to the root; every tree edge is a
+    buffered routed spine hop parent -> child, so two tiles adjacent in the tree share the whole clock path except that
+    one hop.  No balance pads: skew between neighbours is the hop delay by construction (STA/clock check measure it).
+    A parent with more than `fanout` children drives them through local fan-out buffers at the parent."""
+    import heapq as _hq
+    pos = {s[0]: (s[2], s[3]) for s in sinks}
+    pins = defaultdict(list)
+    for s in sinks:
+        pins[s[0]].append(s[1])
+    names = sorted(pos)
+    idx = {n: i for i, n in enumerate(names)}
+    par = list(range(len(names)))
+
+    def find(a):
+        while par[a] != a:
+            par[a] = par[par[a]]; a = par[a]
+        return a
+    dist = lambda a, b: abs(pos[a][0] - pos[b][0]) + abs(pos[a][1] - pos[b][1])
+    E = sorted({(dist(a, b), min(a, b), max(a, b)) for a, b in pairs if a in pos and b in pos and a != b})
+    adj = defaultdict(list)
+
+    def link(a, b):
+        ra, rb = find(idx[a]), find(idx[b])
+        if ra == rb:
+            return False
+        par[ra] = rb
+        adj[a].append(b); adj[b].append(a)
+        return True
+    for _, a, b in E:
+        link(a, b)
+    # components = groups of tiles that exchange data in this domain; a sink with no communicating partner is its own
+    # component.  Each component gets its own tree (rooted at its centre) fed from the ckgen pin by a direct routed
+    # trunk: components do not exchange data, so they need no common path (and no pads) between them.
+    comps = defaultdict(list)
+    for n in names:
+        comps[find(idx[n])].append(n)
+
+    def far(src):
+        d = {src: 0.0}; st = [src]
+        while st:
+            u = st.pop()
+            for v in adj[u]:
+                if v not in d:
+                    d[v] = d[u] + dist(u, v); st.append(v)
+        return max(d, key=d.get), d
+    rc = g.nearest_free(*root_xy)
+    starts = []
+    for members in comps.values():
+        a, _ = far(members[0])
+        b, da = far(a)
+        _, db = far(b)
+        root = min(members, key=lambda n: max(da[n], db[n]))
+        tc = g.nearest_free(*pos[root])
+        d0, dl0 = chain(('port', 'clk_hbm'), rc, tc, 'g')
+        R = newbuf('yR', tc)
+        nets.append(('n_' + R, d0, [('buf', R)]))
+        starts.append((root, ('buf', R), tc, dl0))
+    ins, hops = {}, []
+    seen = {st[0] for st in starts}
+    stack = list(starts)
+    while stack:
+        u, drv, dc, t = stack.pop()
+        leaf = newbuf('yL', dc)
+        nets.append((f'n_{leaf}', drv, [('buf', leaf)]))
+        nets.append((f'n_{leaf}_o', ('buf', leaf), [('pin', u, p) for p in pins[u]]))
+        ins[u] = t + stage_ps(10.0)
+        kids = [v for v in adj[u] if v not in seen]
+        for k0 in range(0, len(kids), fanout):
+            grp = kids[k0:k0 + fanout]
+            src = drv
+            if len(kids) > fanout:
+                fb = newbuf('yF', dc)
+                nets.append((f'n_{fb}', drv, [('buf', fb)]))
+                src = ('buf', fb)
+            for v in grp:
+                seen.add(v)
+                vc = g.nearest_free(*pos[v])
+                dd, dlh = chain(src, dc, vc, 'yS')
+                sb = newbuf('yT', vc)
+                nets.append((f'n_{sb}', dd, [('buf', sb)]))
+                hops.append(dlh + stage_ps(10.0))
+                stack.append((v, ('buf', sb), vc, t + dlh + stage_ps(10.0) + (stage_ps(10.0) if len(kids) > fanout else 0)))
+    by = defaultdict(list)
+    for n_, d_, loads in nets:
+        by[d_].append((n_, loads))
+    merged = [(lst[0][0], d_, [l for _, ls in lst for l in ls]) for d_, lst in by.items()]
+    v = list(ins.values())
+    hops.sort()
+    model = dict(mode='graph', sinks=len(names), tree_edges=sum(len(x) for x in adj.values()) // 2,
+                 communicating_pairs=len(E), components=len(comps), buffers=len(bufs),
+                 model_insertion_ps=[round(min(v), 1), round(max(v), 1)],
+                 tree_hop_ps=dict(median=round(hops[len(hops) // 2], 1), max=round(hops[-1], 1)) if hops else None,
+                 grid_um=GRID, span_um=SPAN, max_run_over_blocks_um=MAX_RUN, free_cells_frac=round(1 - sum(g.blk) / len(g.blk), 4))
+    return dict(buffers=bufs, nets=merged, model=model)
+
+
+def clock_check(tree, pairs, port_xy=None):
+    """Die-level clock check (OWNER 07:30 10-16): per communicating tile pair, the model NON-COMMON clock path (the
+    later of the two sink arrivals minus the arrival at their deepest common tree node) -- the part of the clock that
+    OCV / variation can move between launch and capture -- plus the domain insertion.  tree = build() output (buffers
+    with xy, nets driver -> loads); stage model = stage_ps(Manhattan driver->load).  Returns dict(summary, worst)."""
+    xy = {('buf', b[0]): (b[2], b[3]) for b in tree['buffers']}
+    parent, sink_drv = {}, {}
+    for _, d, loads in tree['nets']:
+        for ld in loads:
+            if ld[0] == 'pin':
+                sink_drv.setdefault(ld[1], d)
+            else:
+                parent[(ld[0], ld[1])] = d
+    arr = {}
+
+    def A(node):
+        if node in arr:
+            return arr[node]
+        chain_, n = [], node
+        while n not in arr:
+            p = parent.get(n)
+            if p is None or p[0] == 'port':
+                arr[n] = 0.0
+                break
+            chain_.append(n); n = p
+        for n in reversed(chain_):
+            p = parent[n]
+            a, b = xy.get(p, xy.get(n)), xy[n]
+            arr[n] = A(p) + stage_ps(min(420.0, abs(a[0] - b[0]) + abs(a[1] - b[1]))) * max(1.0, (abs(a[0] - b[0]) + abs(a[1] - b[1])) / 420.0)
+        return arr[node]
+
+    def anc(n):
+        out = []
+        while n is not None and n[0] != 'port':
+            out.append(n); n = parent.get(n)
+        return out
+    res = []
+    for a, b in pairs:
+        if a not in sink_drv or b not in sink_drv:
+            continue
+        la, lb = sink_drv[a], sink_drv[b]
+        sb = set(anc(lb))
+        lca = next((n for n in anc(la) if n in sb), None)
+        ta, tb = A(la), A(lb)
+        base = A(lca) if lca is not None else 0.0
+        res.append((max(ta, tb) - base, a, b, round(abs(ta - tb), 1)))
+    res.sort(reverse=True)
+    ins = [A(d) for d in sink_drv.values()]
+    nc = [r[0] for r in res]
+    summ = dict(pairs=len(res), noncommon_ps=dict(median=round(nc[len(nc) // 2], 1) if nc else None,
+                                                  p90=round(nc[int(len(nc) * 0.1)], 1) if nc else None,
+                                                  max=round(nc[0], 1) if nc else None),
+                ocv_10pct_max_ps=round(0.1 * nc[0], 1) if nc else None,
+                insertion_ps=[round(min(ins), 1), round(max(ins), 1)] if ins else None)
+    return dict(summary=summ, worst=[dict(noncommon_ps=round(r[0], 1), a=r[1], b=r[2], skew_ps=r[3]) for r in res[:20]])

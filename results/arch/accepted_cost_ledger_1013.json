@@ -431,7 +431,7 @@
    "evidence_grade": "committed_bench",
    "date": "2026-10-16",
    "status": "proposed",
-   "note": "S-ELEM-PQ 10-16: view closed s81coll_cfg7_seq_bfp_pr-pr1-ef2866774 (native PASS), bound by S-DIE gen26d; exact gate tools/s81/cfg7_bfp_bench.sh pr. Charged +4 (lc->go_e) on every FIELD matrix job of the token path (upper bound: assumes lc cannot be issued under the previous phase; status +5 is off the data path). Compiler: field_cfg7_stage emits --layout il7 for this view."
+   "note": "S-ELEM-PQ 10-16: view closed s81coll_cfg7_seq_bfp_pr-pr1-ef2866774 (native PASS), bound by S-DIE gen26d; exact gate tools/s81/cfg7_bfp_bench.sh pr. Charged +4 (lc->go_e) on every FIELD matrix job of the token path (upper bound: assumes lc cannot be issued under the previous phase; status +5 is off the data path). Compiler: field_cfg7_stage emits --layout il7 for this view.  S-ELEM-PQ 10-16 ~09:00: PINREG 1 = PINREG 0 shifted in time (inputs +1, cfg/go_e/st/go_tag +3; lockstep proof tools/s81/fill2_cfg7_bench.sh pr_pq1/pr_bf and cfg7_bfp_bench.sh pr). Cost is 0 when the issuer presents lc 4 edges earlier WITHOUT entering the loader window (cfg_go >= 40 edges before go and after the previous programme ends; a cfg_go during a pending load is the second-broadcast fault). Kept at +4 until the compiled 89-stage FIELD calendar shows >= 4 edges of slack before every cfg_go (no native 89-stage programmes exist yet)."
   },
   {
    "design": "s81",
