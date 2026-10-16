@@ -1,0 +1,387 @@
+[
+  {
+    "cell": "ot_s81_hc_cncla",
+    "view": "/home/ubuntu/artifacts/s81-hc-static-0850/bottom_views/s81hc_cncla0_ref",
+    "lib_cell": "ot_s81_hc_cncla",
+    "insertion": true,
+    "ref_src": [
+      "insertion.json boundary mean"
+    ],
+    "R_ps": 231.1,
+    "spread_ps": 12.9,
+    "outputs": 197,
+    "inputs": 154,
+    "launch_ps": 179.2,
+    "launch_pin": "ex[88]",
+    "capture_ps": 142.5,
+    "capture_pin": "dl[87]",
+    "launch_over": 0,
+    "capture_over": 0,
+    "comb_pins": 0,
+    "comb_first": [],
+    "pass": true,
+    "fail_why": "",
+    "original_view": "physical/ref_tile/s81hc_cncla0_ref/views/ot_s81_hc_cncla",
+    "clock_pin": {
+      "name": "sk",
+      "layer": "M4",
+      "rect_um": [
+        0.0,
+        4.032,
+        0.192,
+        4.056
+      ],
+      "center_um": [
+        0.096,
+        4.0440000000000005
+      ],
+      "declared_use": "SIGNAL"
+    },
+    "outline_um": [
+      138.24,
+      151.2
+    ],
+    "lef_sha256": "4342b29ba56e3255864c959a1f352df8ad5a21ae51b5218c8fa48cb1279f6f16",
+    "spec_params": {
+      "C": 0
+    },
+    "qualification": "historical real view native screen only; current source-binding and all incident tuple/pin joins remain open"
+  },
+  {
+    "cell": "ot_s81_hc_cncla",
+    "view": "/home/ubuntu/artifacts/s81-hc-static-0850/bottom_views/s81hc_cncla1_ref",
+    "lib_cell": "ot_s81_hc_cncla",
+    "insertion": true,
+    "ref_src": [
+      "insertion.json boundary mean"
+    ],
+    "R_ps": 218.6,
+    "spread_ps": 17.1,
+    "outputs": 261,
+    "inputs": 154,
+    "launch_ps": 181.1,
+    "launch_pin": "ex[187]",
+    "capture_ps": 148.7,
+    "capture_pin": "srs",
+    "launch_over": 0,
+    "capture_over": 0,
+    "comb_pins": 0,
+    "comb_first": [],
+    "pass": true,
+    "fail_why": "",
+    "original_view": "physical/ref_tile/s81hc_cncla1_ref/views/ot_s81_hc_cncla",
+    "clock_pin": {
+      "name": "sk",
+      "layer": "M4",
+      "rect_um": [
+        0.0,
+        4.032,
+        0.192,
+        4.056
+      ],
+      "center_um": [
+        0.096,
+        4.0440000000000005
+      ],
+      "declared_use": "SIGNAL"
+    },
+    "outline_um": [
+      138.24,
+      151.2
+    ],
+    "lef_sha256": "2319bc76795fffeec975574aa72c9ac75440377afc4d7eed1ea1a7d1cb80805a",
+    "spec_params": {
+      "C": 1
+    },
+    "qualification": "historical real view native screen only; current source-binding and all incident tuple/pin joins remain open"
+  },
+  {
+    "cell": "ot_s81_hc_cncla",
+    "view": "/home/ubuntu/artifacts/s81-hc-static-0850/bottom_views/s81hc_cncla2_ref",
+    "lib_cell": "ot_s81_hc_cncla",
+    "insertion": true,
+    "ref_src": [
+      "insertion.json boundary mean"
+    ],
+    "R_ps": 227.0,
+    "spread_ps": 12.1,
+    "outputs": 197,
+    "inputs": 154,
+    "launch_ps": 184.8,
+    "launch_pin": "ex[81]",
+    "capture_ps": 144.8,
+    "capture_pin": "dl[48]",
+    "launch_over": 0,
+    "capture_over": 0,
+    "comb_pins": 0,
+    "comb_first": [],
+    "pass": true,
+    "fail_why": "",
+    "original_view": "physical/ref_tile/s81hc_cncla2_ref/views/ot_s81_hc_cncla",
+    "clock_pin": {
+      "name": "sk",
+      "layer": "M4",
+      "rect_um": [
+        0.0,
+        4.032,
+        0.192,
+        4.056
+      ],
+      "center_um": [
+        0.096,
+        4.0440000000000005
+      ],
+      "declared_use": "SIGNAL"
+    },
+    "outline_um": [
+      138.24,
+      151.2
+    ],
+    "lef_sha256": "4e8bcb0e3a7e52b080fffcadbf7ebd2211dea6caac2dbf18464571f038abdc7c",
+    "spec_params": {
+      "C": 2
+    },
+    "qualification": "historical real view native screen only; current source-binding and all incident tuple/pin joins remain open"
+  },
+  {
+    "cell": "ot_s81_hc_cnclb",
+    "view": "/home/ubuntu/artifacts/s81-hc-static-0850/bottom_views/s81hc_cnclb0_ref",
+    "lib_cell": "ot_s81_hc_cnclb",
+    "insertion": true,
+    "ref_src": [
+      "insertion.json boundary mean"
+    ],
+    "R_ps": 226.2,
+    "spread_ps": 17.4,
+    "outputs": 193,
+    "inputs": 152,
+    "launch_ps": 181.6,
+    "launch_pin": "ex[128]",
+    "capture_ps": 151.7,
+    "capture_pin": "dl[29]",
+    "launch_over": 0,
+    "capture_over": 0,
+    "comb_pins": 0,
+    "comb_first": [],
+    "pass": true,
+    "fail_why": "",
+    "original_view": "physical/ref_tile/s81hc_cnclb0_ref/views/ot_s81_hc_cnclb",
+    "clock_pin": {
+      "name": "sk",
+      "layer": "M4",
+      "rect_um": [
+        138.048,
+        4.032,
+        138.24,
+        4.056
+      ],
+      "center_um": [
+        138.144,
+        4.0440000000000005
+      ],
+      "declared_use": "SIGNAL"
+    },
+    "outline_um": [
+      138.24,
+      151.2
+    ],
+    "lef_sha256": "1d7d1fab1317934fdb69306c0626a32d3019720622c6386e58ea69822d14cad1",
+    "spec_params": {
+      "C": 0
+    },
+    "qualification": "historical real view native screen only; current source-binding and all incident tuple/pin joins remain open"
+  },
+  {
+    "cell": "ot_s81_hc_cnclb",
+    "view": "/home/ubuntu/artifacts/s81-hc-static-0850/bottom_views/s81hc_cnclb1_ref",
+    "lib_cell": "ot_s81_hc_cnclb",
+    "insertion": true,
+    "ref_src": [
+      "insertion.json boundary mean"
+    ],
+    "R_ps": 223.0,
+    "spread_ps": 21.7,
+    "outputs": 257,
+    "inputs": 152,
+    "launch_ps": 197.4,
+    "launch_pin": "ex[68]",
+    "capture_ps": 146.6,
+    "capture_pin": "dl[99]",
+    "launch_over": 0,
+    "capture_over": 0,
+    "comb_pins": 0,
+    "comb_first": [],
+    "pass": true,
+    "fail_why": "",
+    "original_view": "physical/ref_tile/s81hc_cnclb1_ref/views/ot_s81_hc_cnclb",
+    "clock_pin": {
+      "name": "sk",
+      "layer": "M4",
+      "rect_um": [
+        138.048,
+        4.032,
+        138.24,
+        4.056
+      ],
+      "center_um": [
+        138.144,
+        4.0440000000000005
+      ],
+      "declared_use": "SIGNAL"
+    },
+    "outline_um": [
+      138.24,
+      151.2
+    ],
+    "lef_sha256": "10f0f87578600b8a640262b8e5d9208c073597362f573f6ee35ff23ec2b6bfd5",
+    "spec_params": {
+      "C": 1
+    },
+    "qualification": "historical real view native screen only; current source-binding and all incident tuple/pin joins remain open"
+  },
+  {
+    "cell": "ot_s81_hc_cnclb",
+    "view": "/home/ubuntu/artifacts/s81-hc-static-0850/bottom_views/s81hc_cnclb2_ref",
+    "lib_cell": "ot_s81_hc_cnclb",
+    "insertion": true,
+    "ref_src": [
+      "insertion.json boundary mean"
+    ],
+    "R_ps": 225.1,
+    "spread_ps": 11.0,
+    "outputs": 193,
+    "inputs": 152,
+    "launch_ps": 185.7,
+    "launch_pin": "ex[26]",
+    "capture_ps": 141.8,
+    "capture_pin": "dl[37]",
+    "launch_over": 0,
+    "capture_over": 0,
+    "comb_pins": 0,
+    "comb_first": [],
+    "pass": true,
+    "fail_why": "",
+    "original_view": "physical/ref_tile/s81hc_cnclb2_ref/views/ot_s81_hc_cnclb",
+    "clock_pin": {
+      "name": "sk",
+      "layer": "M4",
+      "rect_um": [
+        138.048,
+        4.032,
+        138.24,
+        4.056
+      ],
+      "center_um": [
+        138.144,
+        4.0440000000000005
+      ],
+      "declared_use": "SIGNAL"
+    },
+    "outline_um": [
+      138.24,
+      151.2
+    ],
+    "lef_sha256": "a73d694d3dba20322155f410d69035a8b05b029f774b9c556cb58df4326f828f",
+    "spec_params": {
+      "C": 2
+    },
+    "qualification": "historical real view native screen only; current source-binding and all incident tuple/pin joins remain open"
+  },
+  {
+    "cell": "ot_s81_hc_cnrsq",
+    "view": "/home/ubuntu/artifacts/s81-hc-static-0850/bottom_views/s81hc_cnrsq_ref",
+    "lib_cell": "ot_s81_hc_cnrsq",
+    "insertion": true,
+    "ref_src": [
+      "insertion.json boundary mean"
+    ],
+    "R_ps": 205.1,
+    "spread_ps": 18.7,
+    "outputs": 101,
+    "inputs": 141,
+    "launch_ps": 191.7,
+    "launch_pin": "ul[41]",
+    "capture_ps": 170.8,
+    "capture_pin": "f_fv[3]",
+    "launch_over": 0,
+    "capture_over": 0,
+    "comb_pins": 0,
+    "comb_first": [],
+    "pass": true,
+    "fail_why": "",
+    "original_view": "physical/ref_tile/s81hc_cnrsq_ref/views/ot_s81_hc_cnrsq",
+    "clock_pin": {
+      "name": "sk",
+      "layer": "M4",
+      "rect_um": [
+        0.0,
+        4.032,
+        0.192,
+        4.056
+      ],
+      "center_um": [
+        0.096,
+        4.0440000000000005
+      ],
+      "declared_use": "SIGNAL"
+    },
+    "outline_um": [
+      138.24,
+      138.24
+    ],
+    "lef_sha256": "13f08a91767e00593833448fbe08bdb6f579116e66a9dc59bcae95331fe80728",
+    "spec_params": {},
+    "qualification": "historical real view native screen only; current source-binding and all incident tuple/pin joins remain open"
+  },
+  {
+    "cell": "ot_s81_hc_cntree",
+    "view": "/home/ubuntu/artifacts/s81-hc-static-0850/bottom_views/s81hc_cntreeh2_ref",
+    "lib_cell": "ot_s81_hc_cntree",
+    "insertion": true,
+    "ref_src": [
+      "insertion.json boundary mean"
+    ],
+    "R_ps": 230.8,
+    "spread_ps": 33.0,
+    "outputs": 34,
+    "inputs": 1309,
+    "launch_ps": 149.5,
+    "launch_pin": "ss[7]",
+    "capture_ps": 128.6,
+    "capture_pin": "c_ex[479]",
+    "launch_over": 0,
+    "capture_over": 0,
+    "comb_pins": 0,
+    "comb_first": [],
+    "pass": true,
+    "fail_why": "",
+    "original_view": "physical/ref_tile/s81hc_cntreeh2_ref/views/ot_s81_hc_cntree",
+    "clock_pin": {
+      "name": "sk",
+      "layer": "M4",
+      "rect_um": [
+        0.0,
+        27.888,
+        0.084,
+        27.912
+      ],
+      "center_um": [
+        0.042,
+        27.9
+      ],
+      "declared_use": "SIGNAL"
+    },
+    "outline_um": [
+      181.44,
+      181.44
+    ],
+    "lef_sha256": "a0d3e06cf450106fce0290ce3317bb836c199bd637ea5a4edb5db6ce15379e7d",
+    "spec_params": {
+      "HALF": 1,
+      "RLY": 2,
+      "RF": 4,
+      "DW": 6
+    },
+    "qualification": "historical real view native screen only; current source-binding and all incident tuple/pin joins remain open"
+  }
+]
