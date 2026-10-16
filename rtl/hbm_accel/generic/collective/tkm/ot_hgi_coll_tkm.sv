@@ -74,7 +74,7 @@ module ot_hgi_coll_tkm #(
 );
     localparam integer W  = 4;
     localparam integer C  = KMAX / W;
-    localparam integer EW = 84;
+    localparam integer EW = 85;               // {region, valid, okey, ~id, ~q, ~j, nz}
     localparam integer KW = 83;
     localparam integer CB = $clog2(C + 1);
     localparam integer QW = 8 * EW;            // FIFO word: 8 elements
@@ -95,8 +95,14 @@ module ot_hgi_coll_tkm #(
     function automatic [KW-1:0] ikey(input [EW-1:0] e);
         ikey = {e[83], e[50:19], e[82:51], e[18:1]};
     endfunction
-    function automatic [KW-1:0] mkey(input [EW-1:0] e, input idm);
-        mkey = idm ? ikey(e) : vkey(e);
+    // insertion key (84 bits): {valid, ~region, body}: region 0 = the value order (selection phase), region 1 = the id
+    // order (re-insertion phase, always below region 0); an invalid element is 0 (the lowest)
+    function automatic [KW:0] key2(input [EW-1:0] e);
+        reg [KW-1:0] b_;
+        begin
+            b_ = e[84] ? ikey(e) : vkey(e);
+            key2 = e[83] ? {1'b1, ~e[84], b_[KW-2:0]} : {(KW+1){1'b0}};
+        end
     endfunction
     // ---------------------------------------------------------------- configuration
     reg [11:0] n_q; reg [7:0] g_q, gb_q; reg [15:0] pf_q; reg [12:0] nout_q; reg [39:0] ob_q, rb_q; reg hr_q;
@@ -104,7 +110,7 @@ module ot_hgi_coll_tkm #(
     reg [CB-1:0] cact_q;                       // ceil(nout / 4) active cells
     reg [CB-1:0] tc_q; reg [1:0] ts_q;         // tau position (nout - 1) -> cell, slot
     // ---------------------------------------------------------------- phases
-    localparam [3:0] P_IDLE = 4'd0, P_INS = 4'd1, P_DRAIN = 4'd2, P_INV = 4'd3, P_RS = 4'd4, P_OETS = 4'd5,
+    localparam [3:0] P_IDLE = 4'd0, P_INS = 4'd1, P_DRAIN = 4'd2, P_INV = 4'd3, P_REINS = 4'd4, P_RDRAIN = 4'd5,
                      P_OUT = 4'd6, P_FLUSH = 4'd7, P_DONE = 4'd8;
     reg [3:0] ph;
     assign busy = (ph != P_IDLE);
@@ -146,60 +152,9 @@ module ot_hgi_coll_tkm #(
     localparam integer BG = 32, NB = (KMAX + BG - 1) / BG, P = KMAX;
     reg [EW-1:0] bk [0:NB-1][0:3];
     reg          bv;
-    reg [CB:0]   rnd;                          // OETS rounds done
-    reg          par;                          // OETS parity: 0 pairs (2i, 2i+1), 1 pairs (2i+1, 2i+2)
-    // merge network outputs, per cell
-    reg [EW-1:0] mt [0:C-1][0:3];
-    reg [EW-1:0] mb [0:C-1][0:3];
-    wire idm = (ph == P_RS) || (ph == P_OETS);
+    reg [CB:0]   shn;                          // re-insertion: top cells shifted out so far
+    wire         rsh = (ph == P_REINS) && (shn < (CB+1)'(cact_q));   // this edge shifts the top cell out
     integer c, s, a, b, l, i;
-    always @* begin : merge
-        reg [EW-1:0] A_ [0:3]; reg [EW-1:0] B_ [0:3];
-        reg ge [0:3][0:3];
-        reg [2:0] ra [0:3]; reg [2:0] rb [0:3];
-        reg [EW-1:0] m [0:7];
-        for (c = 0; c < C; c = c + 1) begin
-            for (s = 0; s < 4; s = s + 1) begin
-                A_[s] = X[c][s];
-                B_[s] = (c > 0) ? X[(c > 0) ? c - 1 : 0][s] : {EW{1'b0}};     // OETS: the cell above
-            end
-            for (a = 0; a < 4; a = a + 1) for (b = 0; b < 4; b = b + 1)
-                ge[a][b] = (ikey(A_[a]) >= ikey(B_[b]));        // the merge network serves the id phase only
-            for (a = 0; a < 4; a = a + 1) begin
-                ra[a] = 3'(a);
-                for (b = 0; b < 4; b = b + 1) if (!ge[a][b]) ra[a] = ra[a] + 3'd1;
-            end
-            for (b = 0; b < 4; b = b + 1) begin
-                rb[b] = 3'(b);
-                for (a = 0; a < 4; a = a + 1) if (ge[a][b]) rb[b] = rb[b] + 3'd1;
-            end
-            for (i = 0; i < 8; i = i + 1) begin
-                m[i] = {EW{1'b0}};
-                for (a = 0; a < 4; a = a + 1) if (ra[a] == 3'(i)) m[i] = m[i] | A_[a];
-                for (b = 0; b < 4; b = b + 1) if (rb[b] == 3'(i)) m[i] = m[i] | B_[b];
-            end
-            for (s = 0; s < 4; s = s + 1) begin mt[c][s] = m[s]; mb[c][s] = m[4 + s]; end
-        end
-    end
-    // rank sort of a block by the id key (P_RS)
-    function automatic [4*EW-1:0] rsort(input [4*EW-1:0] blk);
-        reg [EW-1:0] e_ [0:3]; reg [1:0] r_ [0:3]; reg [4*EW-1:0] o_;
-        begin
-            for (integer x = 0; x < 4; x = x + 1) e_[x] = blk[EW*x +: EW];
-            for (integer x = 0; x < 4; x = x + 1) begin
-                r_[x] = 2'd0;
-                for (integer y = 0; y < 4; y = y + 1)
-                    if (y != x && (ikey(e_[y]) > ikey(e_[x]) || (ikey(e_[y]) == ikey(e_[x]) && y < x))) r_[x] = r_[x] + 2'd1;
-            end
-            o_ = '0;
-            for (integer x = 0; x < 4; x = x + 1) o_[EW*r_[x] +: EW] = o_[EW*r_[x] +: EW] | e_[x];
-            rsort = o_;
-        end
-    endfunction
-    // lower cell of an OETS round
-    function automatic lowc(input integer cc, input pp);
-        lowc = (cc >= 1) && ((cc & 1) == (pp ? 0 : 1));
-    endfunction
     // ---------------------------------------------------------------- tau tap (gated OR tree, registered every 16:1)
     localparam integer NG = (C + 15) / 16;
     reg [KW-1:0] tau_a [0:NG-1];
@@ -226,20 +181,24 @@ module ot_hgi_coll_tkm #(
     // X[p / 4][p % 4], sorted by the value key, larger first) moves to p + c_p, c_p = the block elements greater than A_p
     // (monotone in p); position q takes A_{q-i} when c_{q-i} = i (i = 0 .. 4), else block element j where
     // c_{q-j} > j and c_{q-j-1} <= j.  Positions >= KMAX fall off (the smallest: KMAX >= k better ones remain).
+    // (re-insertion phase: the array is first shifted up one cell -- the top block leaves -- in the same edge: SX)
     reg [2:0] cp [0:P-1];
     reg [EW-1:0] ins [0:P-1];
+    reg [EW-1:0] SX [0:P-1];
     always @* begin : bcins
+        for (integer p_ = 0; p_ < P; p_ = p_ + 1)
+            SX[p_] = rsh ? ((p_ + 4 < P) ? X[((p_ + 4 < P) ? p_ + 4 : 0) / 4][((p_ + 4 < P) ? p_ + 4 : 0) % 4] : {EW{1'b0}}) : X[p_ / 4][p_ % 4];
         for (integer p_ = 0; p_ < P; p_ = p_ + 1) begin
             cp[p_] = 3'd0;
             for (integer j = 0; j < 4; j = j + 1)
-                if (vkey(bk[p_ / BG][j]) > vkey(X[p_ / 4][p_ % 4])) cp[p_] = cp[p_] + 3'd1;
+                if (bv && key2(bk[p_ / BG][j]) > key2(SX[p_])) cp[p_] = cp[p_] + 3'd1;
         end
         for (integer q = 0; q < P; q = q + 1) begin
             ins[q] = {EW{1'b0}};
             for (integer i = 0; i <= 4; i = i + 1)
-                if (q - i >= 0 && cp[(q - i >= 0) ? q - i : 0] == 3'(i)) ins[q] = ins[q] | X[((q - i >= 0) ? q - i : 0) / 4][((q - i >= 0) ? q - i : 0) % 4];
+                if (q - i >= 0 && cp[(q - i >= 0) ? q - i : 0] == 3'(i)) ins[q] = ins[q] | SX[(q - i >= 0) ? q - i : 0];
             for (integer j = 0; j < 4; j = j + 1)
-                if (q - j >= 0 && cp[(q - j >= 0) ? q - j : 0] > 3'(j) && (q - j - 1 < 0 || cp[(q - j - 1 >= 0) ? q - j - 1 : 0] <= 3'(j)))
+                if (bv && q - j >= 0 && cp[(q - j >= 0) ? q - j : 0] > 3'(j) && (q - j - 1 < 0 || cp[(q - j - 1 >= 0) ? q - j - 1 : 0] <= 3'(j)))
                     ins[q] = ins[q] | bk[q / BG][j];
         end
     end
@@ -274,14 +233,16 @@ module ot_hgi_coll_tkm #(
             n_q <= 12'd1; k_q <= 13'd1; nel <= 19'd0; g_q <= 8'd1; gb_q <= 8'd0; pf_q <= 16'd1; nout_q <= 13'd1; ob_q <= 40'd0; rb_q <= 40'd0; hr_q <= 1'b0;
             tot_q <= 24'd0; cact_q <= '0; tc_q <= '0; ts_q <= 2'd0; rcv <= 24'd0; tau <= '0;
             d1_v <= '0; d2_v <= '0; fpop_q <= '0; ld_v <= '0; e1_v <= 1'b0; e2_v <= 1'b0;
-            rnd <= '0; par <= 1'b0; outn <= 13'd0; wrn <= 13'd0; line <= 9'd0; lq_n <= 3'd0; lq_h <= 2'd0; lq_t <= 2'd0;
+            shn <= '0; outn <= 13'd0; wrn <= 13'd0; line <= 9'd0; lq_n <= 3'd0; lq_h <= 2'd0; lq_t <= 2'd0;
             for (l = 0; l < DEL; l = l + 1) begin cr[l] <= 8'(CAP); st_n[l] <= 2'd0; dn[l] <= 8'd0; occ[l] <= 8'd0; end
             bv <= 1'b0;
         end else begin
             done <= 1'b0;
             if (busy) stat_cycles <= stat_cycles + 32'd1;
             fpop_q <= fpop;
-            tot_q <= 24'(g_q) * 24'(pf_q);           // from the registered configuration (no input -> multiplier path)
+            tot_q <= 24'(g_q) * 24'(pf_q);           // from the registered configuration (no input -> logic paths)
+            cact_q <= CB'((nout_q + 13'd3) >> 2);
+            tc_q <= CB'((nout_q - 13'd1) >> 2); ts_q <= 2'(nout_q - 13'd1);
             // ---- credits: reserve at dispatch, return one edge after a FIFO pop
             for (l = 0; l < DEL; l = l + 1) begin
                 cr[l] <= cr[l] - ((MUT == 3) ? 8'd0 : 8'(del_reserve[l])) + 8'(fpop_q[l]);
@@ -348,17 +309,19 @@ module ot_hgi_coll_tkm #(
                 end
             end
             // ---- entry: select -> e1 -> (compares) e2 -> rank-sorted block -> broadcast insertion
-            e1_v <= ins_live && (sel_n != 3'd0);
-            for (s = 0; s < 4; s = s + 1) e1[s] <= sel_e[s];
+            // (re-insertion: the top cell, tagged region 1 -- the id order)
+            e1_v <= (ins_live && (sel_n != 3'd0)) || rsh;
+            for (s = 0; s < 4; s = s + 1) e1[s] <= rsh ? (X[0][s] | {X[0][s][83], {(EW-1){1'b0}}}) : sel_e[s];
+            if (rsh) shn <= shn + 1'b1;
             if (ins_live && sel_n != 3'd0) stat_surv <= stat_surv + 32'(sel_n);
             e2_v <= e1_v;
             for (s = 0; s < 4; s = s + 1) e2[s] <= e1[s];
-            e2_ge[0] <= vkey(e1[0]) >= vkey(e1[1]); e2_ge[1] <= vkey(e1[0]) >= vkey(e1[2]); e2_ge[2] <= vkey(e1[0]) >= vkey(e1[3]);
-            e2_ge[3] <= vkey(e1[1]) >= vkey(e1[2]); e2_ge[4] <= vkey(e1[1]) >= vkey(e1[3]); e2_ge[5] <= vkey(e1[2]) >= vkey(e1[3]);
+            e2_ge[0] <= key2(e1[0]) >= key2(e1[1]); e2_ge[1] <= key2(e1[0]) >= key2(e1[2]); e2_ge[2] <= key2(e1[0]) >= key2(e1[3]);
+            e2_ge[3] <= key2(e1[1]) >= key2(e1[2]); e2_ge[4] <= key2(e1[1]) >= key2(e1[3]); e2_ge[5] <= key2(e1[2]) >= key2(e1[3]);
             // ---- the array (X / bk: reset-free data flops in their own block below)
-            if (ph == P_INS || ph == P_DRAIN) begin
+            if (ph == P_INS || ph == P_DRAIN || ph == P_REINS || ph == P_RDRAIN) begin
                 bv <= e2_v;
-                if (e2_v) stat_ins <= stat_ins + 32'd1;
+                if (e2_v && (ph == P_INS || ph == P_DRAIN)) stat_ins <= stat_ins + 32'd1;
             end
             // ---- output (P_OUT): cells 0 .. 3 -> one O line (+ one R line) an edge
             begin : pk
@@ -387,15 +350,9 @@ module ot_hgi_coll_tkm #(
                     n_q <= cfg_n; k_q <= cfg_k; nel <= 19'd0; g_q <= cfg_g; gb_q <= cfg_gbase; pf_q <= cfg_pf; nout_q <= cfg_nout;
                     ob_q <= cfg_obase; rb_q <= cfg_rbase; hr_q <= cfg_has_r;
                     rcv <= 24'd0;
-                    cact_q <= CB'((cfg_nout + 13'd3) >> 2);
-                    begin : tp
-                        reg [12:0] p_;
-                        p_ = cfg_nout - 13'd1;
-                        tc_q <= CB'(p_ >> 2); ts_q <= p_[1:0];
-                    end
                     bv <= 1'b0;
                     stat_ins <= 32'd0; stat_surv <= 32'd0; stat_cycles <= 32'd0;
-                    outn <= 13'd0; wrn <= 13'd0; line <= 9'd0; rnd <= '0; par <= 1'b0;
+                    outn <= 13'd0; wrn <= 13'd0; line <= 9'd0;
                     ph <= P_INS;
                 end
                 P_INS: if (rcv == tot_q && d1_v == '0 && d2_v == '0 && occ[0] == 8'd0 && occ[1] == 8'd0 && occ[2] == 8'd0 && occ[3] == 8'd0 && ld_v == '0 &&
@@ -406,12 +363,9 @@ module ot_hgi_coll_tkm #(
                     // O.n must be min(k, the group's elements): a record whose O.n disagrees faults (E_RANGE)
                     if (19'(nout_q) != ((19'(k_q) < nel) ? 19'(k_q) : nel)) fault <= 1'b1;
                 end
-                P_INV: ph <= (MUT == 4) ? P_OUT : P_RS;
-                P_RS: begin ph <= P_OETS; rnd <= '0; par <= 1'b0; end
-                P_OETS: begin
-                    par <= ~par; rnd <= rnd + 1'b1;
-                    if (rnd + 1'b1 >= (CB+1)'(cact_q)) ph <= P_OUT;
-                end
+                P_INV: begin ph <= (MUT == 4) ? P_OUT : P_REINS; shn <= '0; end
+                P_REINS: if (!rsh) ph <= P_RDRAIN;
+                P_RDRAIN: if (!e1_v && !e2_v && !bv) ph <= P_OUT;
                 P_OUT: if (outn == nout_q && lq_n == 3'd0) ph <= P_FLUSH;
                 P_FLUSH: if (!w_v) begin ph <= P_IDLE; done <= 1'b1; end
                 default: ph <= P_IDLE;
@@ -425,7 +379,7 @@ module ot_hgi_coll_tkm #(
             if (start) for (c = 0; c < C; c = c + 1) for (s = 0; s < 4; s = s + 1) X[c][s] <= {EW{1'b0}};
         end else begin
             case (ph)
-                P_INS, P_DRAIN: begin
+                P_INS, P_DRAIN, P_REINS, P_RDRAIN: begin
                     begin : entry
                         reg [1:0] r0, r1, r2, r3;
                         r0 = 2'(!e2_ge[0]) + 2'(!e2_ge[1]) + 2'(!e2_ge[2]);
@@ -437,24 +391,11 @@ module ot_hgi_coll_tkm #(
                                 bk[g][s] <= ((r0 == 2'(s)) ? e2[0] : {EW{1'b0}}) | ((r1 == 2'(s)) ? e2[1] : {EW{1'b0}}) |
                                             ((r2 == 2'(s)) ? e2[2] : {EW{1'b0}}) | ((r3 == 2'(s)) ? e2[3] : {EW{1'b0}});
                     end
-                    if (bv) for (c = 0; c < C; c = c + 1) for (s = 0; s < 4; s = s + 1) X[c][s] <= ins[c * 4 + s];
+                    if (bv || rsh) for (c = 0; c < C; c = c + 1) for (s = 0; s < 4; s = s + 1) X[c][s] <= ins[c * 4 + s];
                 end
                 P_INV: begin
                     for (c = 0; c < C; c = c + 1) for (s = 0; s < 4; s = s + 1)
                         if (13'(c * 4 + s) >= nout_q) X[c][s] <= {EW{1'b0}};
-                end
-                P_RS: begin
-                    for (c = 0; c < C; c = c + 1) begin : rs
-                        reg [4*EW-1:0] o_;
-                        o_ = rsort({X[c][3], X[c][2], X[c][1], X[c][0]});
-                        for (s = 0; s < 4; s = s + 1) X[c][s] <= o_[EW*s +: EW];
-                    end
-                end
-                P_OETS: begin
-                    for (c = 0; c < C; c = c + 1) begin
-                        if (lowc(c, par)) for (s = 0; s < 4; s = s + 1) X[c][s] <= mb[c][s];
-                        else if (c + 1 < C && lowc(c + 1, par)) for (s = 0; s < 4; s = s + 1) X[c][s] <= mt[(c + 1 < C) ? c + 1 : c][s];
-                    end
                 end
                 P_OUT: if (pgo) begin
                     for (c = 0; c < C; c = c + 1) for (s = 0; s < 4; s = s + 1) X[c][s] <= (c + 4 < C) ? X[(c + 4 < C) ? c + 4 : c][s] : {EW{1'b0}};
