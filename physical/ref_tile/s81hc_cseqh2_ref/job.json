@@ -106,12 +106,13 @@
  "no_bench_reason": "bit-exactness is gated on the wires-only wrapper ot_s81_hc_comb in the slab bench (tools/s81_suhc/hc_gate.py NG64 HIER=2 (and 1) m0 PASS + m1/m3 FAIL, NG256 HIER=1 m0 PASS; el1011-s81-suhc-hier-1011.log [hc-split]); the tile alone has no golden",
  "reroute_reason": {
   "kind": "native_launch",
-  "source": "results/rtl/s81_pq_native_audit_1015/pq_0600/hc_cseq_v1.json (main c6b476cd1)",
+  "source": "results/rtl/s81_pq_native_audit_1015/pq_0600/hc_cseq_v1.json",
   "cell": "ot_s81_hc_cseq",
   "closed_job": "s81hc_cseqh2_ref-v1-70eafa55c",
   "launch_ps": 305.3,
   "capture_ps": 141.6,
   "launch_over": 88,
-  "fix": "even per-face pin plan (w_fd/e_fd were clumped into the top 45 um of W/E at ~25 pins/um next to FIRM output hold stacks) + OT_OUTHOLD_FREE=1 output stage; slot growth 190.08x190.08 GRANTED by S-DIE (results/physical/die_iter_1012/s81/grants/sdie_codex_hc3_slot_growth_1016.json)"
+  "fix": "even per-face pin plan (w_fd/e_fd were clumped into the top 45 um of W/E at ~25 pins/um next to FIRM output hold stacks) + OT_OUTHOLD_FREE=1 output stage; slot growth 190.08x190.08 GRANTED by S-DIE (results/physical/die_iter_1012/s81/grants/sdie_codex_hc3_slot_growth_1016.json)",
+  "receipt_commit": "c6b476cd1 (main)"
  }
 }
