@@ -1,0 +1,10 @@
+{
+  "scope": "independent required actual E3 upper/lower data wiring mutant; positive3611 uninterrupted",
+  "mutation": "actual qvm_data256_native u_hi D is lower256 instead of upper256",
+  "exit": 1,
+  "output": "FAIL bw_data cycle0\nFATAL: /tmp/qvm-bv-write-e3/m1_early.sv:383: \n       Time: 5 Scope: tb",
+  "source_sha256": "3c9b02cfefdc8178e5c89e693490b1995175d264e2d6f35dc92e7eebf05f6baf",
+  "binary_sha256": "b629fcabed532ce4602813be6772773ca8f311568107962cbf496d2dcafcc98d",
+  "candidate_source_commit": "8dca81d98",
+  "observed_FAIL": true
+}
