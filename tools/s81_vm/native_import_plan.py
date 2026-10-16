@@ -12,13 +12,54 @@ import hashlib
 import json
 from pathlib import Path
 import sys
+import xml.etree.ElementTree as ET
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'hier_contract'))
 import child_lint as CL
+import pinreg_audit as PA
 
 
 def sha(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def verify_flat_sources(manifest, source):
+    basenames=[Path(e['path']).name for e in manifest['files']]
+    if len(basenames)!=len(set(basenames)):
+        raise ValueError('duplicate basename in flat source manifest')
+    for entry in manifest['files']:
+        if sha(source/Path(entry['path']).name)!=entry['sha256']:
+            raise ValueError('source manifest drift: '+entry['path'])
+
+
+def canonical_clocks(names, physical):
+    result=set()
+    for name in names:
+        name=name.replace('\\','')
+        actual=name if name in physical['pins'] else name+'[0]'
+        if actual not in physical['pins']:
+            raise ValueError('clock annotation lacks actual terminal: '+name)
+        if actual in result:
+            raise ValueError('duplicate literal clock annotation: '+name)
+        result.add(actual)
+    return result
+
+
+def clock_contract(directory, physical):
+    libs=list(directory.glob('*_tt.lib'))
+    if len(libs)!=1:
+        raise ValueError('requires one actual TT Liberty clock annotation: '+str(directory))
+    parsed=PA.parse_lib(libs[0])
+    clocks=canonical_clocks([p for p,v in parsed['pins'].items() if v['clock']],physical)
+    insertion=directory/'insertion.json'
+    measured=json.loads(insertion.read_text())
+    names=list(measured.get('clock_measurements',{}))
+    if not names and measured.get('lib_clock_pin'):
+        names=[measured['lib_clock_pin']]
+    if not clocks or clocks!=canonical_clocks(names,physical):
+        raise ValueError('Liberty/insertion literal clock set differs: '+str(directory))
+    return clocks,dict(liberty_sha256=sha(libs[0]),insertion_sha256=sha(insertion),
+                       physical_clock_pins=sorted(clocks))
 
 
 def select_binding(leaf, old):
@@ -85,35 +126,55 @@ def build(inputs, source):
     graph = json.loads((inputs/'graph_summary.json').read_text())
     if graph['hard_leaves'] != 540 or sha(inputs/'parent.xml') != graph['xml_sha256']:
         raise ValueError('graph XML/count provenance mismatch')
-    for entry in manifest['files']:
-        if sha(source/Path(entry['path']).name) != entry['sha256']:
-            raise ValueError('source manifest drift: ' + entry['path'])
+    verify_flat_sources(manifest,source)
     inventory = json.loads((inputs/'inventory.json').read_text())['leaves']
     if len(inventory) != 540 or len({r['path'] for r in inventory}) != 540:
         raise ValueError('candidate requires exactly 540 distinct actual leaves')
     old = {r['path']: r for r in json.loads((inputs/'old_leaves.json').read_text())['leaves']}
     homes = json.loads((inputs/'homes.json').read_text())['placement']
-    models, rows, missing_homes, changed_shapes, clocks = {}, [], [], [], []
+    xml_modules={m.get('name'):m for m in ET.parse(inputs/'parent.xml').getroot().find('netlist').findall('module')}
+    models, rows, missing_homes, changed_shapes, clocks, contracts = {}, [], [], [], [], {}
     for leaf in inventory:
         kit = select_binding(leaf, old)
         if kit not in models:
             if kit == 'dsfd_vm_seq_tile_hf4_native_1016_r1':
                 models[kit] = model(inputs/'hf4_floorplan.json', gate=True)
+                gate=json.loads((inputs/'hf4_floorplan.json').read_text())
+                cp=canonical_clocks(gate['clocks'],models[kit])
+                module=xml_modules[leaf['elaborated_module']]
+                primary_edges=set()
+                for tree in module.iter('sentree'):
+                    first=tree.find('senitem')
+                    if first is not None and first.get('edgeType') in ('POS','NEG'):
+                        refs=list(first.iter('varref'))
+                        if len(refs)!=1:raise ValueError('ambiguous HF4 source clock expression')
+                        primary_edges.add(refs[0].get('name'))
+                if cp!=canonical_clocks(primary_edges,models[kit]):
+                    raise ValueError('HF4 source edge/gate clock annotations differ')
+                contracts[kit]=dict(physical_clock_pins=sorted(cp),
+                                    source='actual gate clock annotations; HF4 Liberty/insertion pending',
+                                    gate_sha256=sha(inputs/'hf4_floorplan.json'))
             else:
                 files = list((inputs/'closed_lefs'/kit).glob('*.lef'))
                 if len(files) != 1:
                     raise ValueError('requires one actual published LEF: ' + kit)
                 models[kit] = model(files[0])
+                _,contracts[kit]=clock_contract(inputs/'closed_lefs'/kit,models[kit])
         physical = models[kit]
         mapping = require_pins(leaf, physical)
-        for port, spec in leaf['ports'].items():
-            if port in ('ck', 'ck_control', 'ck_req', 'ck_rsp', 's_ck', 't_ck'):
-                for bit in range(spec['bits']):
-                    pin = f'{port}[{bit}]' if spec['bits']>1 else port
-                    actual = mapping[pin]
-                    clocks.append(dict(child=leaf['path'], port=pin, physical_pin=actual,
-                                       local_xy_um=physical['pins'][actual]['anchor_um'],
-                                       layer=physical['pins'][actual]['anchor_layer']))
+        required=set(contracts[kit]['physical_clock_pins'])
+        found=set()
+        for pin,actual in mapping.items():
+            if actual not in required:continue
+            base=pin.split('[')[0]
+            if leaf['ports'][base]['direction']!='input':
+                raise ValueError('annotated clock is not a source input: '+leaf['path']+'/'+pin)
+            found.add(actual)
+            clocks.append(dict(child=leaf['path'], port=pin, physical_pin=actual,
+                               local_xy_um=physical['pins'][actual]['anchor_um'],
+                               layer=physical['pins'][actual]['anchor_layer']))
+        if found!=required:
+            raise ValueError('source ABI omits annotated literal clocks: '+leaf['path'])
         home = homes.get(leaf['path'])
         if home is None:
             missing_homes.append(leaf['path'])
@@ -131,6 +192,7 @@ def build(inputs, source):
                   input_sha256={p.name:sha(p) for p in inputs.iterdir() if p.is_file()},
                   missing_homes=missing_homes, changed_outline_homes=changed_shapes,
                   literal_clock_contacts=clocks,
+                  clock_contracts=contracts,
                   blockers=['HF4 param4 route/native verdict pending; param3 cannot substitute',
                             'All published LEFs still require their source-exact native/clock receipts',
                             '540 actual child homes and incident joins need die allocation and reach/cut proof',
