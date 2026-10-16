@@ -102,6 +102,10 @@
  "pin_hook_before_flops": [
   "physical/hbm_hc/HC_residual_half_exact_source_audit.tcl"
  ],
+ "pin_regs": {
+  "enable": false,
+  "reason": "RTL already registers every pin: write_v/write_word/write_data captured in first-pin flops (priced +1 write edge), read_v/read_word land on the synchronous SRAM input latch (TML3 read latency priced), residual_data/read_valid/fault leave from flops; synthesis pin registers would add an unpriced stage to the HC engine schedule."
+ },
  "params": {},
  "children": [],
  "inter": [],
