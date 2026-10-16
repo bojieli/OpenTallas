@@ -15,6 +15,8 @@ def main():
     ap.add_argument('--source-root',required=True,type=Path)
     ap.add_argument('--mode',choices=['baseline','b2'],required=True)
     ap.add_argument('--out',required=True,type=Path)
+    ap.add_argument('--prepare-only',action='store_true')
+    ap.add_argument('--production',action='store_true',help='actual banked halftrain/controller/NB6VM interfaces; still unqualified candidate frames')
     a=ap.parse_args(); a.out.mkdir(parents=True,exist_ok=True)
     import die_top_lint as D
     import qwen_rom_fulldie_b3r2 as G
@@ -55,13 +57,14 @@ def main():
     def alias(master,name,real,indices):aliases.setdefault(master,{})[name]=(real,list(indices));return name
     def add(name,n,src,dst):return(name,'tree_spine',n,[src,dst])
     if a.mode=='b2':
-        pm='qfd_port_half_b2';lm='qfd_sp_halfband_lanes';um='qfd_band_upper_b2';sm='qfd_res_ser_half_b2'
+        pm='qfd_port_half_b2';lm='qfd_sp_halfband_lanes';um='qfd_band_upper_b2'
+        sm='qfd_res_train_half_b2'if a.production else'qfd_res_ser_half_b2'
         frame(pm,'rtl/qwen_split/qfd_port_half_b2.sv',1036.8,2462.4,
               lambda p:'W'if p.startswith('bw')else'S'if p in('cw0','ty')else'N'if p.startswith('ck')or p in('rst_n','rq')else'E')
         frame(lm,'rtl/physical/ot_qwen_halfband_lanes_slots.sv',881.28,648.,
               lambda p:'N'if p in('tw','ty')else'S'if p in('ck','rst_n')or p.startswith('ck_l')else'E')
-        frame(sm,'rtl/qwen_split/qfd_res_ser_half_b2.sv',777.6,324.,
-              lambda p:'S'if p=='rq'else'N'if p in('ck','rst_n')else'E')
+        frame(sm,'rtl/qwen_split/qfd_res_train_half_b2.sv'if a.production else'rtl/qwen_split/qfd_res_ser_half_b2.sv',777.6,518.4 if a.production else 324.,
+              lambda p:'S'if p=='rq'else'N'if p.startswith('ck')or p=='rst_n'else'E')
         frame(um,'rtl/qwen_split/qfd_band_upper_b2.sv',86.4,410.4,
               lambda p:'W'if p in('pw','pw_v','lf')else'N'if p in('clk','rst_n')else'E')
         # Exact numeric aliases; no centroid stand-ins for missing pin groups.
@@ -81,7 +84,7 @@ def main():
             p.orient=('R180'if flip else'MY')if h else('MX'if flip else'R0')
             l=copy.copy(by[f'sp_band_lanes_{b}']);l.name=f'sp_halfband_{hb}';l.master=lm;l.w,l.h=881.28,648.
             l.x=p.x+(p.w-l.w)/2;l.y=p.y+p.h+43.2 if flip else p.y-43.2-l.h;l.orient=p.orient
-            s=copy.copy(by[f'sp_res_ser_{b}']);s.name=f'sp_halfres_{hb}';s.master=sm;s.w,s.h=777.6,324.
+            s=copy.copy(by[f'sp_res_ser_{b}']);s.name=f'sp_halfres_{hb}';s.master=sm;s.w,s.h=777.6,518.4 if a.production else 324.
             s.x=p.x+(p.w-s.w)/2;s.y=p.y-86.4-s.h if flip else p.y+p.h+86.4;s.orient=p.orient
             port_by[hb]=p;lane_by[hb]=l;ser_by[hb]=s;new.extend((p,l,s))
         # Wider/taller upper outlines must find real free homes, not overlap peers.
@@ -133,7 +136,7 @@ def main():
                 if i in lanes:
                     b=int(i.rsplit('_',1)[1]);ee.extend((lane_by[2*b+h].name,pn)for h in range(2))
                 elif i in sers:
-                    b=int(i.rsplit('_',1)[1]);ee.extend((ser_by[2*b+h].name,'rst_n'if cl=='reset'else'ck')for h in range(2))
+                    b=int(i.rsplit('_',1)[1]);ee.extend((ser_by[2*b+h].name,'rst_n'if cl=='reset'else(pn if a.production else'ck'))for h in range(2))
                 else:ee.append((i,pn))
             cc.append((bid,cl,n,list(dict.fromkeys(ee))))
         control=cc
@@ -143,6 +146,104 @@ def main():
                'tc/am/rb/LC and serializer command paths await actual new controller/VM source interfaces; excluded from partial price',
                'all macro obstacles retained; other data-bus relay reservations excluded',
                'new outlines and pins are explicit candidate grants, not closed views']
+
+        if a.production:
+            cm='qfd_tt_ctlm_b2';vm='qfd_sp_vector_memory_b2_partitioned_ro6_pin_e3';im='qfd_res_train_issue_b2'
+            oldcm=by['tt_ctlm'].master;oldvm=by['sp_vector_memory'].master;oldim=by['res_train_issue'].master
+            cmold=M[oldcm];vmold=M[oldvm];imold=M[oldim]
+            def side(p,old,clock=False):
+                if p.startswith(('ck','native_ck','return_ck','read_control_ck','write_ck','relay_ck'))or p in('rst_n','rsi'):return'N'
+                if old and p in old.ports and old.ports[p][0]in('face','pins'):return old.ports[p][2]
+                return'E'
+            def cside(p):
+                mm=re.fullmatch(r'(tc|am|lc|rf|mer)([0-5])',p)
+                return('E'if int(mm[2])%2 else'W')if mm else side(p,cmold)
+            frame(cm,'rtl/qwen_sys/static_schedule_20261014/qfd_tt_ctlm_b2.sv',by['tt_ctlm'].w,by['tt_ctlm'].h,cside)
+            frame(vm,'rtl/qwen_sys/vm_nox_20261014/qfd_sp_vector_memory_b2_partitioned_ro6_pin_e3.sv',by['sp_vector_memory'].w,by['sp_vector_memory'].h,
+                  lambda p:('S'if re.fullmatch(r'rb[0-5]',p)else side(p,vmold)))
+            frame(im,'rtl/qwen_split/qfd_res_train_issue_b2.sv',by['res_train_issue'].w,by['res_train_issue'].h,lambda p:side(p,imold))
+            by['tt_ctlm'].master=cm;by['sp_vector_memory'].master=vm;by['res_train_issue'].master=im
+            # Preserve every existing real numeric fragment of unchanged ports;
+            # controller c0/c1/c2 are now W-side tc0/tc2/tc4 copies.
+            for old,newmn in ((oldcm,cm),(oldvm,vm),(oldim,im)):
+                for an,(real,idx)in oldjoins.get(old,{}).items():
+                    mm=re.fullmatch(r'c([0-2])',real)
+                    if old==oldcm and mm:real='tc'+str(2*int(mm[1]))
+                    if real in M[newmn].ports:alias(newmn,an,real,idx)
+            def map_endpoint(ep):
+                i,p=ep
+                if i=='tt_ctlm':
+                    mm=re.fullmatch(r'c([0-2])',p)
+                    if mm:p='tc'+str(2*int(mm[1]))
+                return(i,p)
+            # Current producer command outputs are real fields; explicitly
+            # fan them out here, then replace with the actual registered tree.
+            for hb in range(6):
+                p,l,r=port_by[hb],lane_by[hb],ser_by[hb]
+                newdata.extend([
+                  add(f'b2_tc_{hb}',341,('tt_ctlm',f'tc{hb}'),(p.name,'tc')),
+                  add(f'b2_am_{hb}',52,(p.name,'am'),('tt_ctlm',f'am{hb}')),
+                  add(f'b2_lc_{hb}',26,('tt_ctlm',f'lc{hb}'),(l.name,'c')),
+                  add(f'b2_rb_{hb}',551,(r.name,'rb'),('sp_vector_memory',f'rb{hb}')),
+                  add(f'b2_rf_{hb}',1,(r.name,'fault'),('tt_ctlm',f'rf{hb}'))])
+            from qwen_split.command_distribution import FIELDS
+            for f,n in FIELDS:
+                newdata.append((f'b2_rsi_{f}','spine_local',n,[('res_train_issue',f)]+[(ser_by[hb].name,f)for hb in range(6)]))
+            # Actual independent registered producer copies preserve full
+            # TC/IB outputs, eliminating their old multi-sink tapped nets.
+            for f,n in (('me_go',1),('me_tiles',18),('me_ts',24),('me_split',4),('me_oen',1),('tag_v',1),('tag_last',1)):
+                newdata.append(add(f'b2_source_{f}',n,('tt_ctlm','rsi_'+f),('res_train_issue',f)))
+            # Status compares actual six native valid/fault producers; it is
+            # a diagnostic fault producer, never a scheduler or data substitute.
+            st=copy.copy(by['tt_ctlm']);st.name='b2_word_status';st.master='qfd_b2_word_status';st.w=st.h=43.2;st.orient='R0'
+            st.x=round(by['tt_ctlm'].x-64.8,3);st.y=round(by['tt_ctlm'].y+by['tt_ctlm'].h/2,3)
+            if any(i.x<st.x+st.w and i.x+i.w>st.x and i.y<st.y+st.h and i.y+i.h>st.y for i in m['insts']):
+                raise ValueError('actual status candidate home overlaps; assign a real free home')
+            m['insts'].append(st)
+            frame(st.master,'rtl/qwen_split/qfd_b2_word_status.sv',43.2,43.2,
+                  lambda p:'W'if p in('word_v','word_fault')else'N'if p in('ck','rst_n')else'E')
+            for hb in range(6):
+                alias(pm,'cw_valid','cw0',[2048]);alias(pm,'cw_fault','cw0',[2049])
+                alias(st.master,f'valid{hb}','word_v',[hb]);alias(st.master,f'fault{hb}','word_fault',[hb])
+                newdata.extend([add(f'b2_status_v{hb}',1,(port_by[hb].name,'cw_valid'),(st.name,f'valid{hb}')),
+                                add(f'b2_status_f{hb}',1,(port_by[hb].name,'cw_fault'),(st.name,f'fault{hb}'))])
+            newdata.append(add('b2_status_fault',1,(st.name,'fault'),('tt_ctlm','b2_status_fault')))
+            m.setdefault('relay_equal_groups',{})['b2_status']=[f'b2_status_{kind}{hb}'for hb in range(6)for kind in('v','f')]
+            status_clock_added=status_reset_added=False
+            cc=[]
+            for bid,cl,n,es in control:
+                ee=list(es)
+                if cl=='clock_trunk'and('tt_ctlm','ck_tree')in es:
+                    ee.append((st.name,'ck'));status_clock_added=True
+                if cl=='reset'and any(i=='tt_ctlm'for i,p in es):
+                    ee.append((st.name,'rst_n'));status_reset_added=True
+                cc.append((bid,cl,n,ee))
+            if not(status_clock_added and status_reset_added):raise ValueError('status requires actual controller clock/reset source')
+            control=cc
+            notes=['actual banked halftrain/controller/NB6VM source ABI, NEW candidate pin/outline grants only',
+                   'all macro obstacles retained; other data-bus relay reservations excluded',
+                   'native sourcecopy/fanout/AM arithmetic stage calibration and actual leaf clocks remain OPEN']
+            # Old sources of LD/ME enable/faults that are not retired targets
+            # remain outside this subsystem price; enumerate them explicitly.
+            notes.append('NEW native VM leaf clock XY/insertion witness OPEN; provisional boundary clock pin assignment is not timing evidence')
+            # Every actual VM/controller/issuer clock bit gets an explicit
+            # endpoint on its former source clock net, never an old448 alias.
+            cc=[];expanded_vectors=set()
+            for bid,cl,n,es in control:
+                ee=[]
+                for i,p in es:
+                    if cl=='clock_trunk'and i in('tt_ctlm','sp_vector_memory','res_train_issue'):
+                        mn={'tt_ctlm':cm,'sp_vector_memory':vm,'res_train_issue':im}[i]
+                        if p in M[mn].ports:ee.append((i,p))
+                        if p=='ck'and i not in expanded_vectors:
+                            expanded_vectors.add(i)
+                            for cp,sp in list(M[mn].ports.items()):
+                                if sp[1]==1 or not cp.startswith(('native_ck','return_ck','read_control_ck','write_ck','relay_ck')):continue
+                                for k in range(sp[1]):
+                                    apn=f'{cp}_entry{k}';alias(mn,apn,cp,[k]);ee.append((i,apn))
+                    else:ee.append(map_endpoint((i,p)))
+                cc.append((bid,cl,n,list(dict.fromkeys(ee))))
+            control=cc
         data=newdata
         # Existing selector bundle is a wire concatenation of two distinct
         # source ports, not a new unregistered control input.
@@ -158,9 +259,15 @@ def main():
             q=M[mn];rects=v.pin_rects(q,1,{p:sp[1]for p,sp in q.ports.items()})
             # Overlapping aliases are only used by disconnected outputs/returns;
             # one alias per connected physical bit is required below.
-            aa={k:val for k,val in aa.items()if k not in('uv','uv_pair','tt_uv')}
+            active={p for bid,cl,n,es in data+control for i,p in es if next((q.master for q in m['insts']if q.name==i),None)==mn}
+            aa={k:val for k,val in aa.items()if k not in('uv','uv_pair','tt_uv')and k in active}
             partition_master(q,aa,rects)
     m['buses']=data+control
+    if a.mode=='b2'and a.production:
+        from qwen_split.command_distribution import apply as distribute,install_master as install_fork
+        distribute(m,[ser_by[hb].name for hb in range(6)])
+        install_fork(M,m,v.Master,v.pin_rects)
+        data=[bb for bb in m['buses']if bb[1]not in('clock_trunk','reset')]
     original_bids={b[0] for b in m['buses']}
     groups={k:list(bs) for k,bs in m.get('relay_equal_groups',{}).items()
             if set(bs)<=original_bids}
@@ -181,7 +288,10 @@ def main():
             if p not in q.ports:raise ValueError(f'{bid}: missing actual pin {i}.{p}')
             if q.ports[p][1]!=n:raise ValueError(f'{bid}: {i}.{p} width {q.ports[p][1]} !={n}')
     before=[dict(n=i.name,m=i.master,x=i.x,y=i.y,w=i.w,h=i.h,o=i.orient)for i in m['insts']]
-    (a.out/'input.json').write_text(json.dumps(dict(insts=before,buses=data,source_receipts=source_receipts,frames=frames,notes=notes),indent=1)+'\n')
+    (a.out/'input.json').write_text(json.dumps(dict(insts=before,buses=data,source_receipts=source_receipts,frames=frames,notes=notes,command_distribution=m.get('command_distribution')),indent=1)+'\n')
+    if a.prepare_only:
+        print(json.dumps(dict(status='SOURCE_GRAPH_PREPARED_UNQUALIFIED',instances=len(before),data_buses=len(data),equal_groups=len(groups),production=a.production)))
+        return
     os.environ.pop('OT_RELAY_SKIP');os.environ['OT_RELAY_GATE']='warn'
     os.environ['OT_RELAY_DUMP']=str(a.out/'allocator_dump.json')
     G._relays(v,m)
@@ -204,12 +314,12 @@ def main():
         if any(k not in original for k in chain):raise ValueError(f'price chain missing exact bus {chain}')
         prices.append(dict(bword=bid,halfband=hb,buses=chain,stages=[S(k)for k in chain],transport_hops=sum(S(k)for k in chain)))
     prices.sort(key=lambda x:-x['transport_hops'])
-    result=dict(mode=a.mode,status='PARTIAL_REAL_ALLOCATOR_DIAGNOSTIC_NOT_NATIVE_DIE',source_receipts=source_receipts,
+    result=dict(mode=a.mode,production_interfaces=a.production,status='PARTIAL_REAL_ALLOCATOR_DIAGNOSTIC_NOT_NATIVE_DIE',source_receipts=source_receipts,
                 notes=notes,equal_groups=groups,stage_of=st,relays=m.get('r21_relays',{}),
                 unequal_groups={k:{bb:st.get(bb,1)for bb in bs}for k,bs in groups.items()if len({st.get(bb,1)for bb in bs})!=1},
                 reduction_transport_paths=prices,
                 measured_scope='registered wire hops from bword producer to upper input only; excludes source arithmetic latencies and incomplete native result/control paths',
-                omitted='tc/am/rb/LC/new controller and VM source interfaces and other data relay contention')
+                omitted=('other data relay contention, source arithmetic/sourcecopy/AM calibration, actual leaf clock homes and physical/native qualification'if a.production else'tc/am/rb/LC/new controller and VM source interfaces and other data relay contention'))
     (a.out/'result.json').write_text(json.dumps(result,indent=1)+'\n')
     print(json.dumps({k:val for k,val in result.items()if k not in('source_receipts','stage_of')},indent=1))
 if __name__=='__main__':main()
