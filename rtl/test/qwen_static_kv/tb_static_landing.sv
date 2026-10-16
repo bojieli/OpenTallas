@@ -8,7 +8,8 @@
 // ascending ordinal, loaded 64 ordinals ahead.
 module tb_static_landing;
  parameter integer VMAP=0;
- parameter integer DUT_VMAP=VMAP;   // negative control: DUT_VMAP != VMAP must FAIL reg ck=0;always #0.416667 ck=~ck;
+ parameter integer DUT_VMAP=VMAP;   // negative control: DUT_VMAP != VMAP must FAIL
+ reg ck=0;always #0.416667 ck=~ck;
  reg rst=0,arm=0;
  reg [31:0] put=0,av=0,rq=0;
  reg [31:0] vv=0;

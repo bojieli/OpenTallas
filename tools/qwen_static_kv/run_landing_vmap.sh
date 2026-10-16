@@ -12,7 +12,7 @@ build(){ $VL --binary --timing -O1 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCAL
 rc=0
 run(){ # vmap dut_vmap faultmode expect
  l=$("$O/obj_$1_$2/Vtb_static_landing" +faultmode=$3 2>&1 | grep -E "^(PASS|FAIL) staticlanding" | tail -1)
- case "$l" in PASS*) got=pass;; *) got=fail;; esac
+ case "$l" in PASS*) got=pass;; FAIL*) got=fail;; *) got=noresult;; esac   # a run without a result line never counts as an expected FAIL
  [ "$got" = "$4" ] && ok=OK || { ok=UNEXPECTED; rc=1; }
  echo "RESULT $ok vmap=$1 dut_vmap=$2 faultmode=$3 expect=$4 :: ${l:-no result line}"; }
 build 0 0 && run 0 0 0 pass
