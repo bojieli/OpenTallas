@@ -5,7 +5,7 @@ module qkd_static_kv_landing_physical_grp #(
     parameter integer STACK=0,GROUP=0,MUT=0,HOP_MUT=0,VMAP=0,VREQ=0   // VREQ=1: V get face (+1 edge: 8)
 )(
     input wire ck,input wire [3:0] ck_pc,input wire [3:0] ck_req_rly,ck_rsp_rly,input wire rst_n,
-    input wire arm,input wire [15:0] epoch,input wire [5:0] layer,
+    input wire arm,input wire [15:0] epoch,input wire [5:0] layer,input wire [13:0] ctx_t,
     input wire [3:0] expected_put,input wire [39:0] expected_sector,
     input wire [3:0] actual_valid,input wire [39:0] actual_sector,
     input wire [63:0] actual_epoch,input wire [23:0] actual_layer,input wire [1023:0] actual_data,
@@ -44,7 +44,7 @@ module qkd_static_kv_landing_physical_grp #(
     genvar q;
     generate for(q=0;q<4;q=q+1)begin:g_pc
       qkd_static_kv_landing_pc #(.MUT(MUT),.VMAP(VMAP))u_pc(
-       .ck(ck_pc[q]),.rst_n(rst_n),.cfg_stack(2'(STACK)),.cfg_group(3'(GROUP)),.arm(arm),.epoch(epoch),.layer(layer),
+       .ck(ck_pc[q]),.rst_n(rst_n),.cfg_stack(2'(STACK)),.cfg_group(3'(GROUP)),.arm(arm),.epoch(epoch),.layer(layer),.ctx_t(ctx_t),
        .expected_put(expected_put[q]),.expected_sector(expected_sector[10*q+:10]),
        .actual_valid(actual_valid[q]),.actual_sector(actual_sector[10*q+:10]),
        .actual_epoch(actual_epoch[16*q+:16]),.actual_layer(actual_layer[6*q+:6]),.actual_data(actual_data[256*q+:256]),

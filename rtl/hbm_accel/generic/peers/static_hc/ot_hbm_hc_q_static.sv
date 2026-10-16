@@ -15,10 +15,14 @@
 //   [21] gather_phase (LG owned by the gathered reader for the whole window, incl. its return edges)
 //   [22] gather_launch [26:23] gather_npos [42:27] gather_base_sector [58:43] gather_stride_sector
 //   [59] store_slot [75:60] result_base_sector [78:76] store_position
+// COLLAR FOLD (H-DIE option A, 0600): the F20 programme target (ot_static_program_target TGT_PIN=1, id from the
+// identity strap tgt = 108+q) is inside this master; it takes the F20 broadcast directly and exposes configured.
+// X_WAVE LINK (0600): XW_BEATS=4 sends each 8,192-b wave as 4 beats of 2,048 b on consecutive edges, beat 3 on the
+// BEATS=1 wave edge (receiver ot_hbm_hc_xw_rx_static in hc_eng presents the wave at the same pin-level edge: +0).
 // No ready, credit, grant, queue or wait: a missing/unsolicited return, a write-done off its reserved edge,
 // an rq from the reader that does not own the phase, or a store without its result raises fault; nothing moves.
 // Pin registers: lg_rq out (+1), lg_rr/lg_w_done in (+1), result in (+1); lg_wq, x_wave, gathered mix,
-// status are leaf output registers; cfg/start are sampled by the programme leaf's first rung.
+// status are leaf output registers; the F20 bus lands in the folded target's pin flops (tgt strap included).
 // Fixed latencies with the hc_<q><k> pair leaves (ot_hgi_sfu_lg_pair_leaf, +1 each way) and the 18/15 tap:
 //   residual capture = issue +23 (codex direct-tap value 19, +4 register edges), gathered response phase 23,
 //   write-done = store output edge +DONE_LAT (measured by tb_hbm_hc_q_static).
@@ -26,23 +30,30 @@ module ot_hbm_hc_q_static #(
     parameter integer RD_CAPTURE=23,
     parameter integer GATHER_PHASE=23,
     parameter integer DONE_LAT=19,
-    parameter integer MUT=0 // 1 residual wave word mutant, 2 result store one sector late, 3 capture edge early
+    parameter integer XW_BEATS=4,
+    parameter integer MUT=0 // 1 residual wave word mutant, 2 result store one sector late, 3 capture edge early,
+                            // 4 x_wave beats 1/2 sent swapped, 5 x_wave beat 3 one edge late
 )(
     input wire clk,rst_n,
-    input wire cfg_we,
-    input wire [9:0] cfg_addr,
+    input wire [7:0] tgt,              // identity strap: F20 target id (108+q)
+    input wire cfg_v,
+    input wire [7:0] cfg_target,
+    input wire [11:0] cfg_addr,
     input wire [255:0] cfg_data,
-    input wire start_v,
-    input wire [9:0] start_base,
-    input wire [10:0] start_limit,
-    input wire [15:0] start_loops,
+    input wire desc_v,
+    input wire [11:0] desc_base,
+    input wire [12:0] desc_limit,
+    input wire [15:0] desc_loops,
+    input wire launch_v,
+    output wire configured,
     output reg [135:0] lg_rq,
     output wire [2247:0] lg_wq,
     input wire [2055:0] lg_rr,
     input wire [7:0] lg_w_done,
     output wire x_wave_v,
     output wire [9:0] x_wave_word,
-    output wire [8191:0] x_wave,
+    output wire [8192/XW_BEATS-1:0] x_wave,
+    output wire [1:0] x_wave_beat,
     output wire residual_done,
     output wire gathered_mix_v,
     output wire [4:0] gathered_mix_row,
@@ -66,11 +77,23 @@ module ot_hbm_hc_q_static #(
     always @(posedge clk or negedge rst_n)
         if(!rst_n)begin w_done_q<=0;result_v_q<=0;end
         else begin w_done_q<=lg_w_done;result_v_q<=result_v;end
+    // ---- F20 programme target (folded collar, pin-registered soft logic)
+    wire cfg_we,start_v,tgt_fault;
+    wire [9:0] p_addr,start_base;
+    wire [255:0] p_data;
+    wire [10:0] start_limit;
+    wire [15:0] start_loops;
+    ot_static_program_target #(.PCW(10),.TGT_PIN(1)) target(
+        .clk(clk),.rst_n(rst_n),.tgt(tgt),.cfg_v(cfg_v),.cfg_target(cfg_target),.cfg_addr(cfg_addr),.cfg_data(cfg_data),
+        .desc_v(desc_v),.desc_base(desc_base),.desc_limit(desc_limit),.desc_loops(desc_loops),.launch_v(launch_v),
+        .program_active(program_active),.program_cfg_we(cfg_we),.program_cfg_addr(p_addr),.program_cfg_data(p_data),
+        .program_start_v(start_v),.program_start_base(start_base),.program_start_limit(start_limit),
+        .program_start_loops(start_loops),.configured(configured),.fault(tgt_fault));
     // ---- programme issuer
     wire [78:0] c;
     wire cal_v,cal_fault;
     ot_vms_calendar_static #(.W(79)) programme(
-        .clk(clk),.rst_n(rst_n),.cfg_we(cfg_we),.cfg_addr(cfg_addr),.cfg_data(cfg_data),
+        .clk(clk),.rst_n(rst_n),.cfg_we(cfg_we),.cfg_addr(p_addr),.cfg_data(p_data),
         .start_v(start_v),.start_base(start_base),.start_limit(start_limit),.start_loops(start_loops),
         .calendar(c),.calendar_v(cal_v),.ordinal(),.active(program_active),.done(program_done),.fault(cal_fault));
     wire residual_launch=c[0];
@@ -87,10 +110,11 @@ module ot_hbm_hc_q_static #(
     wire [135:0] res_rq,gat_rq;
     wire [7:0] res_read,gat_read,write_sel;
     wire res_fault,gat_fault,wr_fault;
-    ot_hgi_hc_residual_vm_static #(.CAPTURE_LAT(RD_CAPTURE-((MUT==3)?1:0)),.MUT_POSITION((MUT==1)?1:0)) residual(
+    ot_hgi_hc_residual_vm_static #(.CAPTURE_LAT(RD_CAPTURE-((MUT==3)?1:0)),.MUT_POSITION((MUT==1)?1:0),.BEATS(XW_BEATS),
+        .MUT_BEAT((MUT==4)?1:(MUT==5)?2:0)) residual(
         .clk(clk),.rst_n(rst_n),.launch(residual_launch),.npos(residual_npos),.base_sector(residual_base),
         .local_rq(res_rq),.local_read(res_read),.local_rr(gather_phase?2056'd0:rr_q),
-        .x_wave_v(x_wave_v),.x_wave_word(x_wave_word),.x_wave(x_wave),.done(residual_done),.fault(res_fault));
+        .x_wave_v(x_wave_v),.x_wave_word(x_wave_word),.x_wave(x_wave),.x_wave_beat(x_wave_beat),.done(residual_done),.fault(res_fault));
     ot_hgi_hc_gathered_mix_reader_static #(.RESP_PHASE(GATHER_PHASE)) gather(
         .clk(clk),.rst_n(rst_n),.launch(gather_launch),.npos(gather_npos),
         .base_sector(gather_base),.position_stride_sector(gather_stride),
@@ -122,7 +146,7 @@ module ot_hbm_hc_q_static #(
             for(integer i=1;i<DONE_LAT;i=i+1)done_cal[i]<=done_cal[i-1];
             if(w_done_q!=done_cal[DONE_LAT-1])own_fault<=1;
             if((gather_phase&&res_any)||(!gather_phase&&gat_any))own_fault<=1;
-            fault<=own_fault|cal_fault|res_fault|gat_fault|wr_fault;
+            fault<=own_fault|cal_fault|res_fault|gat_fault|wr_fault|tgt_fault;
         end
 endmodule
 `default_nettype wire
