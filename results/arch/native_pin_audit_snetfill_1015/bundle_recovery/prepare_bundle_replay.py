@@ -40,7 +40,23 @@ def main():
         else: raise ValueError('no read_db in original export Tcl')
         lines+=['write_abstract_lef /out/raw.lef','exit']
         files[job+'/raw.tcl']=('\n'.join(lines)+'\n').encode()
-        files[job+'/helper.py']=show(j['commit_full'],'tools/hier_contract/abstract_pin_stub.py')
+        helpers=[entry for entry in j.get('route_overlay_plan',{}).get('files',[])
+                 if entry['path']=='tools/hier_contract/abstract_pin_stub.py']
+        if helpers:
+            plan=j['route_overlay_plan']; verification=j.get('helper_overlay_verification',{})
+            if (verification.get('status')!='verified_original' or
+                verification.get('content_sha256')!=plan.get('content_sha256')):
+                raise ValueError('effective helper overlay is not verified_original: '+job)
+            helper=helpers[0]; data=subprocess.check_output(['git','-C',str(root),'cat-file','blob',helper['git_blob']])
+            if sha(data)!=helper['sha256']: raise ValueError('effective helper Git blob SHA mismatch: '+job)
+            row['effective_helper']=dict(basis='verified_original_frozen_overlay',
+                git_blob=helper['git_blob'],sha256=helper['sha256'],
+                origin_main=plan['origin_main'],content_sha256=plan['content_sha256'],
+                verification=verification)
+        else:
+            data=show(j['commit_full'],'tools/hier_contract/abstract_pin_stub.py')
+            row['effective_helper']=dict(basis='job_source_commit',source_commit=j['commit_full'],sha256=sha(data))
+        files[job+'/helper.py']=data
         groups.setdefault(j['host'],[]).append(row); rows.append(row)
     (art/'bundle_recovery_plan.json').write_text(json.dumps(rows,indent=2)+'\n')
     def stage(item):
