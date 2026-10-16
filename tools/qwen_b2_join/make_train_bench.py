@@ -67,10 +67,10 @@ task automatic run_op(input integer id,sp,tiles,ts,base,ots,ojs,pay);
   end
   // Deliberately off-calendar capture fault must be observable.
   if(mut==2&&age==1)rq[3][2212]=0;
-  @(negedge clk);start=0;
+  @(negedge clk);#0.01;start=0;
  end
  for(integer h=0;h<6;h=h+1)rq[h]=0;
- repeat(900)@(negedge clk);
+ repeat(900)@(negedge clk);#0.01;
  if(op_ends!=8*tiles||sf!=0||vf)$fatal(1,"train fault op%0d ends%0d sf%b vf%b",id,op_ends,sf,vf);
  $display("OP id%0d split%0d tiles%0d ns%0d last_end_delta%0d",id,sp,tiles,ns,expected_end-op_start);
  end
@@ -78,7 +78,7 @@ endtask
 initial begin
  for(integer h=0;h<6;h=h+1)rq[h]=0;
  for(integer r=0;r<65536;r=r+1)touched[r]=0;
- repeat(5)@(negedge clk);rst_n=1;repeat(30)@(negedge clk);
+ repeat(5)@(negedge clk);rst_n=1;repeat(30)@(negedge clk);#0.01;
  run_op(1,9,1,64,768,8,1,1);
  run_op(12,8,3,16,0,8,1,1);
  run_op(16,7,1,256,2975,8,1,1);
