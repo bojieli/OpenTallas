@@ -24,9 +24,9 @@
       "cut_at_7tracks_per_um": 0.055114638447971785
     },
     "S": {
-      "count": 1,
-      "min_spacing_um": null,
-      "cut_at_7tracks_per_um": 0.0022045855379188716
+      "count": 2,
+      "min_spacing_um": 4.032000000000004,
+      "cut_at_7tracks_per_um": 0.004409171075837743
     }
   },
   "pins": {
@@ -17370,6 +17370,14 @@
       "face": "S",
       "xy": [
         32.124,
+        0
+      ],
+      "layer": "M5"
+    },
+    "idle_issuer": {
+      "face": "S",
+      "xy": [
+        36.156000000000006,
         0
       ],
       "layer": "M5"
