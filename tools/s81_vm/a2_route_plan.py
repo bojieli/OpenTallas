@@ -1046,12 +1046,14 @@ def routed_report(P, nets, W, H, G=100.0, pg=None, router='maze', **kw):
     sh = list((Hd / cap).ravel()) + list((Vd / cap).ravel())
     import numpy as np
     over = []
+    import os
+    thr = float(os.environ.get('OT_HOT_SHARE', '0.60'))   # listing threshold only; edges_over_060 is unchanged
     for (gy, gx), v in np.ndenumerate(Hd):
-        if v / cap > 0.60:
+        if v / cap > thr:
             over.append(dict(edge='h', x_um=(gx + 1) * G, y_um=gy * G, share=round(v / cap, 3),
                              top=[[a, b, round(n)] for (a, b), n in who[('h', gx, gy)].most_common(3)]))
     for (gy, gx), v in np.ndenumerate(Vd):
-        if v / cap > 0.60:
+        if v / cap > thr:
             over.append(dict(edge='v', x_um=gx * G, y_um=(gy + 1) * G, share=round(v / cap, 3),
                              top=[[a, b, round(n)] for (a, b), n in who[('v', gx, gy)].most_common(3)]))
     over.sort(key=lambda r: -r['share'])
@@ -1065,14 +1067,14 @@ def routed_report(P, nets, W, H, G=100.0, pg=None, router='maze', **kw):
             reach[tuple(sorted((ta, tb)))] += 1
     return dict(model=('PathFinder maze' if router == 'maze' else 'Z-pattern') + ' global route on gcells (bundled, split <= %d bits)' % kw.get('chunk', 64),
                 gcell_um=G, cap_bits_per_gcell_edge=round(cap, 1), connections=len(conns), bundles=nb, pieces=npieces,
-                worst_share=round(max(sh), 3), edges_over_060=len(over), edges=len(sh),
+                worst_share=round(max(sh), 3), edges_over_060=sum(v > 0.60 for v in sh), edges=len(sh),
                 p99_share=round(sorted(sh)[int(0.99 * len(sh))], 3), face_pin_bits=dict(face_bits),
                 worst_horizontal_line=dict(share=round(max(hl)[0], 3), y_um=max(hl)[1],
                                            lines_over_060=sum(v > 0.60 for v, _ in hl), lines=len(hl)),
                 worst_vertical_line=dict(share=round(max(vl)[0], 3), x_um=max(vl)[1],
                                          lines_over_060=sum(v > 0.60 for v, _ in vl), lines=len(vl)),
                 leaf_links_over_500um=sum(reach.values()),
-                over_reach_pairs=[[a, b, n] for (a, b), n in reach.most_common(12)], hot=over[:15])
+                over_reach_pairs=[[a, b, n] for (a, b), n in reach.most_common(12)], hot=over[:int(os.environ.get('OT_HOT_N', '15'))])
 
 
 def main():
