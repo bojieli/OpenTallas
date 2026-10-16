@@ -1,3 +1,5 @@
+> **UNIT CORRECTION (2026-10-16):** The 0.52 mm2 SRAM figure is TOTAL across all32XC, not perXC. EachXC has one1024x256 macro174.744x70.488 and one128x256 macro94.824x41.064:0.016206mm2 macro area. With20umouter/intermacro channels, stacked lowerbound214.744x171.552um. The historical500x1200(.60mm2) reserves below are conservative unused-space experiments, NOT measured area requirements and NOT justification for die growth. Actual216x216XC native kit/fit is now owned by xc_physical with explicit local SM home x3788.64,y1343.52; it remains unqualified until actual synthesis/gate/native proof.
+
 # Interrupted v6b adoption recovery
 
 Status: **FAIL CLOSED; active v15 grants unchanged.**

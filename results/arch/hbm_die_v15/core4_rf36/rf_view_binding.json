@@ -1,0 +1,9384 @@
+{
+ "schema": "opentallas.hbm.rf_view_binding.v1",
+ "qualification": "FAIL_CLOSED_QCORE_BOUNDARY_VIEWS_OPEN",
+ "production_domain": "serial",
+ "period_ps": 1111.1,
+ "setup_budget_ps": 961.1,
+ "wire_ps_per_um": 0.76,
+ "centre_hop_max_um": 480,
+ "conservative_pin_wire_bound_um": 523.2,
+ "views": {
+  "hbfd_rly_48_WE": {
+   "view": "physical/ref_tile/hbfd_rly_48_we/views/hbfd_rly_48_WE/",
+   "source_ref": "b55c8b228",
+   "sha256": {
+    "hbfd_rly_48_WE.lef": "84a7fb8e0d6d67001284859d6f135b0784bbf99d28dd0de9a555511b40eb8c72",
+    "hbfd_rly_48_WE_tt.lib": "422ef4ec7531424d7e3f4601672ba77a44c349bcd901004df7e0ea784bdf2268",
+    "hbfd_rly_48_WE_ff.lib": "91f56974eba68a994770a38f59543fb75d4e422d70402543dd62305205208af7",
+    "insertion.json": "29c11ef6931c7705c307089073438282d97273ad20c2f78843a0370dabc999ec"
+   },
+   "lef_pins": {
+    "ck": [
+     8.219999999999999,
+     0.042
+    ],
+    "rs": [
+     8.315999999999999,
+     0.042
+    ],
+    "VDD": [
+     18.852,
+     10.8
+    ],
+    "VSS": [
+     18.66,
+     10.8
+    ]
+   },
+   "timing": {
+    "tt": {
+     "refs": {
+      "ck": {
+       "rise": 56.4,
+       "fall": 60.755174999999994,
+       "min": 52.53629,
+       "max": 56.68869,
+       "src": "insertion.json boundary mean",
+       "bmin": 55.9,
+       "bmax": 56.7,
+       "n": 48
+      }
+     },
+     "pins": {
+      "rs": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 138.47275,
+       "hold": -88.72026,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "VDD": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": []
+      },
+      "VSS": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": []
+      },
+      "i[47]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 143.40693,
+       "hold": -118.63632,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[46]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 144.5025,
+       "hold": -119.74704,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[45]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 143.5997,
+       "hold": -118.42952,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[44]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 143.686,
+       "hold": -118.53085999999999,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[43]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 143.55016,
+       "hold": -118.79988,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[42]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 142.51347,
+       "hold": -117.78763000000001,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[41]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 143.91852,
+       "hold": -118.84649999999999,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[40]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 143.24466,
+       "hold": -118.07556,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[39]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 143.65863,
+       "hold": -118.88927,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[38]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 144.48069999999998,
+       "hold": -119.72587,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[37]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 144.42577,
+       "hold": -119.38055,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[36]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 142.27705,
+       "hold": -117.10725,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[35]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 148.10408,
+       "hold": -123.32243,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[34]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 142.16243,
+       "hold": -117.49723,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[33]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 144.07513,
+       "hold": -119.03652,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[32]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 142.20894,
+       "hold": -117.05533,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[31]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 143.83268,
+       "hold": -119.08637999999999,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[30]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 146.10263,
+       "hold": -121.38810000000001,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[29]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 143.86695,
+       "hold": -118.8072,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[28]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 141.82281,
+       "hold": -117.01442,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[27]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 145.93747,
+       "hold": -121.09128999999999,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[26]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 142.54957,
+       "hold": -117.80358,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[25]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 142.78376,
+       "hold": -118.01378,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[24]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 142.10455,
+       "hold": -117.28444999999999,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[23]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 146.13119,
+       "hold": -121.24860000000001,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[22]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 143.5017,
+       "hold": -118.74727,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[21]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 146.45974,
+       "hold": -121.71368000000001,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[20]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 144.16601,
+       "hold": -119.37885,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[19]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 145.76623,
+       "hold": -120.95885999999999,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[18]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 142.66291,
+       "hold": -117.91828,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[17]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 143.32165,
+       "hold": -118.60983999999999,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[16]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 144.98047,
+       "hold": -120.2307,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[15]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 146.36715,
+       "hold": -121.54754,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[14]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 144.51024,
+       "hold": -119.69472999999999,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[13]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 142.61445,
+       "hold": -117.89585,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[12]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 143.57477,
+       "hold": -118.73292000000001,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[11]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 143.98794,
+       "hold": -119.20239000000001,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[10]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 145.8044,
+       "hold": -120.99285,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[9]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 144.61754,
+       "hold": -119.86045999999999,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[8]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 141.9475,
+       "hold": -117.1199,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[7]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 144.95297,
+       "hold": -120.15531999999999,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[6]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 143.61599,
+       "hold": -118.84899,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[5]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 146.25295,
+       "hold": -121.51857999999999,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[4]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 143.93306,
+       "hold": -119.11556,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[3]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 145.46565,
+       "hold": -120.65177,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[2]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 143.16206,
+       "hold": -118.36646999999999,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[1]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 142.54896,
+       "hold": -117.79195,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[0]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 141.88323,
+       "hold": -117.05044000000001,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[47]": {
+       "dir": "output",
+       "out": 214.70358000000002,
+       "lmin": 201.84777,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[46]": {
+       "dir": "output",
+       "out": 206.95492,
+       "lmin": 194.13401,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[45]": {
+       "dir": "output",
+       "out": 205.69307999999998,
+       "lmin": 192.94985,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[44]": {
+       "dir": "output",
+       "out": 210.37454,
+       "lmin": 197.74351,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[43]": {
+       "dir": "output",
+       "out": 215.22923999999998,
+       "lmin": 202.39242,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[42]": {
+       "dir": "output",
+       "out": 208.67117,
+       "lmin": 196.12071,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[41]": {
+       "dir": "output",
+       "out": 206.52766999999997,
+       "lmin": 193.8469,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[40]": {
+       "dir": "output",
+       "out": 208.45931,
+       "lmin": 195.84786,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[39]": {
+       "dir": "output",
+       "out": 213.68114999999997,
+       "lmin": 200.81915,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[38]": {
+       "dir": "output",
+       "out": 209.13402999999997,
+       "lmin": 196.28270999999998,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[37]": {
+       "dir": "output",
+       "out": 205.49749,
+       "lmin": 192.61961,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[36]": {
+       "dir": "output",
+       "out": 207.62877999999998,
+       "lmin": 194.98292,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[35]": {
+       "dir": "output",
+       "out": 209.22131,
+       "lmin": 196.38523,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[34]": {
+       "dir": "output",
+       "out": 210.66103999999999,
+       "lmin": 198.06967,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[33]": {
+       "dir": "output",
+       "out": 206.32223000000002,
+       "lmin": 193.70815,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[32]": {
+       "dir": "output",
+       "out": 208.35322999999997,
+       "lmin": 195.85278,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[31]": {
+       "dir": "output",
+       "out": 211.69188999999997,
+       "lmin": 199.09368,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[30]": {
+       "dir": "output",
+       "out": 209.246,
+       "lmin": 196.70277,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[29]": {
+       "dir": "output",
+       "out": 207.61855,
+       "lmin": 194.99862,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[28]": {
+       "dir": "output",
+       "out": 210.15682,
+       "lmin": 197.62946,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[27]": {
+       "dir": "output",
+       "out": 205.52599,
+       "lmin": 192.45971,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[26]": {
+       "dir": "output",
+       "out": 207.1636,
+       "lmin": 194.42258999999999,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[25]": {
+       "dir": "output",
+       "out": 209.4591,
+       "lmin": 196.91042,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[24]": {
+       "dir": "output",
+       "out": 209.46417,
+       "lmin": 197.04798,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[23]": {
+       "dir": "output",
+       "out": 215.25334999999998,
+       "lmin": 202.68994,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[22]": {
+       "dir": "output",
+       "out": 207.33345999999997,
+       "lmin": 194.6312,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[21]": {
+       "dir": "output",
+       "out": 206.96450000000002,
+       "lmin": 194.15718999999999,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[20]": {
+       "dir": "output",
+       "out": 207.00359,
+       "lmin": 194.35890999999998,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[19]": {
+       "dir": "output",
+       "out": 208.3749,
+       "lmin": 195.47547,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[18]": {
+       "dir": "output",
+       "out": 209.20311999999998,
+       "lmin": 196.52804,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[17]": {
+       "dir": "output",
+       "out": 211.96444,
+       "lmin": 199.42336,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[16]": {
+       "dir": "output",
+       "out": 209.27532,
+       "lmin": 196.88980999999998,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[15]": {
+       "dir": "output",
+       "out": 212.99519999999998,
+       "lmin": 200.10409,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[14]": {
+       "dir": "output",
+       "out": 210.84489999999997,
+       "lmin": 198.25955,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[13]": {
+       "dir": "output",
+       "out": 213.51683999999997,
+       "lmin": 201.02003999999997,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[12]": {
+       "dir": "output",
+       "out": 209.72322999999997,
+       "lmin": 197.12107,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[11]": {
+       "dir": "output",
+       "out": 209.96057,
+       "lmin": 197.0527,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[10]": {
+       "dir": "output",
+       "out": 210.92634999999999,
+       "lmin": 198.60768,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[9]": {
+       "dir": "output",
+       "out": 207.14622999999997,
+       "lmin": 194.54002,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[8]": {
+       "dir": "output",
+       "out": 210.95886,
+       "lmin": 198.53762,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[7]": {
+       "dir": "output",
+       "out": 209.50481999999997,
+       "lmin": 196.71286999999998,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[6]": {
+       "dir": "output",
+       "out": 210.31613000000002,
+       "lmin": 197.57112999999998,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[5]": {
+       "dir": "output",
+       "out": 211.13976,
+       "lmin": 198.68707,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[4]": {
+       "dir": "output",
+       "out": 212.69298999999998,
+       "lmin": 200.24621,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[3]": {
+       "dir": "output",
+       "out": 211.38534,
+       "lmin": 198.50312,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[2]": {
+       "dir": "output",
+       "out": 209.73864,
+       "lmin": 196.93356,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[1]": {
+       "dir": "output",
+       "out": 212.16033000000002,
+       "lmin": 199.54601,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[0]": {
+       "dir": "output",
+       "out": 207.39431,
+       "lmin": 194.68795,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      }
+     }
+    },
+    "ff": {
+     "refs": {
+      "ck": {
+       "rise": 42.2,
+       "fall": 43.847895,
+       "min": 39.45295,
+       "max": 42.48061,
+       "src": "insertion.json boundary mean",
+       "bmin": 41.8,
+       "bmax": 42.5,
+       "n": 48
+      }
+     },
+     "pins": {
+      "rs": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 98.99294,
+       "hold": -65.89553000000001,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "VDD": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": []
+      },
+      "VSS": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": []
+      },
+      "i[47]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 109.11138,
+       "hold": -88.82024000000001,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[46]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 109.74782,
+       "hold": -89.43656,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[45]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 109.00631,
+       "hold": -88.48161999999999,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[44]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 109.01559,
+       "hold": -88.48126,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[43]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 109.1588,
+       "hold": -88.89091,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[42]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 108.43149,
+       "hold": -88.1277,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[41]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 109.3011,
+       "hold": -88.81976,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[40]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 108.6864,
+       "hold": -88.16363000000001,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[39]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 109.27697,
+       "hold": -89.00058,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[38]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 109.75653,
+       "hold": -89.45095,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[37]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 109.63902,
+       "hold": -89.19028,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[36]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 108.00540000000001,
+       "hold": -87.46525,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[35]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 112.23432,
+       "hold": -91.94506000000001,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[34]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 108.15399000000001,
+       "hold": -87.88612,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[33]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 109.42045,
+       "hold": -88.99247,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[32]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 107.95117,
+       "hold": -87.42003,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[31]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 109.37206,
+       "hold": -89.12353,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[30]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 110.74600000000001,
+       "hold": -90.4033,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[29]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 109.25437000000001,
+       "hold": -88.81,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[28]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 107.84439,
+       "hold": -87.52454,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[27]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 110.74322000000001,
+       "hold": -90.4435,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[26]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 108.42272,
+       "hold": -88.10198,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[25]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 108.63044000000001,
+       "hold": -88.34905,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[24]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 108.09109000000001,
+       "hold": -87.72909,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[23]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 110.90676,
+       "hold": -90.60986,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[22]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 109.02645,
+       "hold": -88.73888,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[21]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 111.1498,
+       "hold": -90.80886000000001,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[20]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 109.44151000000001,
+       "hold": -89.10154,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[19]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 110.64525,
+       "hold": -90.30328,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[18]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 108.44924,
+       "hold": -88.14351,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[17]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 109.00710000000001,
+       "hold": -88.77177,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[16]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 110.04613,
+       "hold": -89.72271,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[15]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 111.05883,
+       "hold": -90.72461000000001,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[14]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 109.74015,
+       "hold": -89.44278,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[13]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 108.50739,
+       "hold": -88.21978,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[12]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 109.06018,
+       "hold": -88.70784,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[11]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 109.4092,
+       "hold": -89.12996000000001,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[10]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 110.54132,
+       "hold": -90.19833,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[9]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 109.89792,
+       "hold": -89.58530999999999,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[8]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 107.9559,
+       "hold": -87.59960000000001,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[7]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 110.05519,
+       "hold": -89.71731,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[6]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 109.0627,
+       "hold": -88.77801,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[5]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 110.90547000000001,
+       "hold": -90.54945000000001,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[4]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 109.29977000000001,
+       "hold": -88.93693,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[3]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 110.40078,
+       "hold": -90.10009,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[2]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 108.74731,
+       "hold": -88.42741000000001,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[1]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 108.45809,
+       "hold": -88.1418,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[0]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 107.90576,
+       "hold": -87.54283000000001,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[47]": {
+       "dir": "output",
+       "out": 150.82589000000002,
+       "lmin": 143.72055,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[46]": {
+       "dir": "output",
+       "out": 145.93692,
+       "lmin": 138.53467999999998,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[45]": {
+       "dir": "output",
+       "out": 145.24640999999997,
+       "lmin": 137.81619999999998,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[44]": {
+       "dir": "output",
+       "out": 148.37565,
+       "lmin": 141.03073,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[43]": {
+       "dir": "output",
+       "out": 151.16350999999997,
+       "lmin": 144.09168999999997,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[42]": {
+       "dir": "output",
+       "out": 147.30966,
+       "lmin": 139.96121999999997,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[41]": {
+       "dir": "output",
+       "out": 145.76582000000002,
+       "lmin": 138.37968,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[40]": {
+       "dir": "output",
+       "out": 147.36327999999997,
+       "lmin": 139.90971000000002,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[39]": {
+       "dir": "output",
+       "out": 150.11151,
+       "lmin": 143.08192000000003,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[38]": {
+       "dir": "output",
+       "out": 147.29352,
+       "lmin": 139.84877,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[37]": {
+       "dir": "output",
+       "out": 144.84116999999998,
+       "lmin": 137.45947,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[36]": {
+       "dir": "output",
+       "out": 146.59449,
+       "lmin": 139.26445999999999,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[35]": {
+       "dir": "output",
+       "out": 147.19549,
+       "lmin": 139.97123,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[34]": {
+       "dir": "output",
+       "out": 148.43234,
+       "lmin": 141.12547,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[33]": {
+       "dir": "output",
+       "out": 145.45927,
+       "lmin": 138.14779,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[32]": {
+       "dir": "output",
+       "out": 147.22350999999998,
+       "lmin": 139.88707,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[31]": {
+       "dir": "output",
+       "out": 148.91421000000003,
+       "lmin": 141.81534,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[30]": {
+       "dir": "output",
+       "out": 147.59462000000002,
+       "lmin": 140.31491,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[29]": {
+       "dir": "output",
+       "out": 146.47505999999998,
+       "lmin": 139.10249,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[28]": {
+       "dir": "output",
+       "out": 148.20488999999998,
+       "lmin": 140.87101,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[27]": {
+       "dir": "output",
+       "out": 144.54363999999998,
+       "lmin": 137.29352999999998,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[26]": {
+       "dir": "output",
+       "out": 145.99406,
+       "lmin": 138.67383999999998,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[25]": {
+       "dir": "output",
+       "out": 147.56682,
+       "lmin": 140.27357,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[24]": {
+       "dir": "output",
+       "out": 147.83995,
+       "lmin": 140.47985999999997,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[23]": {
+       "dir": "output",
+       "out": 151.22268000000003,
+       "lmin": 144.01346,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[22]": {
+       "dir": "output",
+       "out": 146.00009,
+       "lmin": 138.71719000000002,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[21]": {
+       "dir": "output",
+       "out": 145.59492,
+       "lmin": 138.3222,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[20]": {
+       "dir": "output",
+       "out": 146.16550999999998,
+       "lmin": 138.77463999999998,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[19]": {
+       "dir": "output",
+       "out": 146.47037999999998,
+       "lmin": 139.35550999999998,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[18]": {
+       "dir": "output",
+       "out": 147.52603,
+       "lmin": 140.06738,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[17]": {
+       "dir": "output",
+       "out": 149.13727,
+       "lmin": 141.75644999999997,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[16]": {
+       "dir": "output",
+       "out": 147.78956,
+       "lmin": 140.42487999999997,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[15]": {
+       "dir": "output",
+       "out": 149.32146999999998,
+       "lmin": 142.07175999999998,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[14]": {
+       "dir": "output",
+       "out": 148.46733999999998,
+       "lmin": 141.26256999999998,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[13]": {
+       "dir": "output",
+       "out": 150.15704,
+       "lmin": 142.86036000000001,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[12]": {
+       "dir": "output",
+       "out": 147.72508,
+       "lmin": 140.47046,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[11]": {
+       "dir": "output",
+       "out": 147.63716,
+       "lmin": 140.30291,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[10]": {
+       "dir": "output",
+       "out": 148.71084000000002,
+       "lmin": 141.51578999999998,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[9]": {
+       "dir": "output",
+       "out": 145.93793999999997,
+       "lmin": 138.61717,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[8]": {
+       "dir": "output",
+       "out": 148.80128000000002,
+       "lmin": 141.51355,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[7]": {
+       "dir": "output",
+       "out": 147.08539000000002,
+       "lmin": 139.99127,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[6]": {
+       "dir": "output",
+       "out": 148.17041999999998,
+       "lmin": 140.66899,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[5]": {
+       "dir": "output",
+       "out": 148.78886,
+       "lmin": 141.48333000000002,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[4]": {
+       "dir": "output",
+       "out": 150.05196999999998,
+       "lmin": 142.64125,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[3]": {
+       "dir": "output",
+       "out": 148.41944999999998,
+       "lmin": 141.22125999999997,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[2]": {
+       "dir": "output",
+       "out": 147.68596000000002,
+       "lmin": 140.41478,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[1]": {
+       "dir": "output",
+       "out": 149.29188,
+       "lmin": 141.90787999999998,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[0]": {
+       "dir": "output",
+       "out": 146.39796,
+       "lmin": 139.01047999999997,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      }
+     }
+    }
+   }
+  },
+  "hbfd_rly_48_EW": {
+   "view": "physical/ref_tile/hbfd_rly_48_ew/views/hbfd_rly_48_EW/",
+   "source_ref": "b55c8b228",
+   "sha256": {
+    "hbfd_rly_48_EW.lef": "87e8247aecbb01b80a81f425aed78fce6e7e5858cf247888c3db3ee5c278720a",
+    "hbfd_rly_48_EW_tt.lib": "db0394059a76c5059cc2fadd901cff7069fb60146130b49d2df411aa3ecd3e3d",
+    "hbfd_rly_48_EW_ff.lib": "24379d375af8aafa2acdce7c6122cee2b550a040951b4aee7719c36c9a7d004a",
+    "insertion.json": "13ddbbcbe476ca6791a58e2afa202ec7db98f5a017a17b08230cc92dc094942b"
+   },
+   "lef_pins": {
+    "ck": [
+     8.219999999999999,
+     0.042
+    ],
+    "rs": [
+     8.315999999999999,
+     0.042
+    ],
+    "VDD": [
+     18.852,
+     10.8
+    ],
+    "VSS": [
+     18.66,
+     10.8
+    ]
+   },
+   "timing": {
+    "tt": {
+     "refs": {
+      "ck": {
+       "rise": 57.2,
+       "fall": 61.50207,
+       "min": 53.44931,
+       "max": 57.70597,
+       "src": "insertion.json boundary mean",
+       "bmin": 56.8,
+       "bmax": 57.7,
+       "n": 48
+      }
+     },
+     "pins": {
+      "rs": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 118.36236,
+       "hold": -81.19595000000001,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "VDD": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": []
+      },
+      "VSS": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": []
+      },
+      "i[47]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 145.57729,
+       "hold": -120.52294,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[46]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 145.95773,
+       "hold": -120.93587,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[45]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 145.19189,
+       "hold": -120.23422,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[44]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 146.47681,
+       "hold": -121.7107,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[43]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 144.20659,
+       "hold": -119.17062,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[42]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 146.67632,
+       "hold": -121.63075,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[41]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 143.98712,
+       "hold": -119.11309,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[40]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 146.70378,
+       "hold": -121.92786000000001,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[39]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 145.09526,
+       "hold": -120.01232,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[38]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 144.24524000000002,
+       "hold": -119.29019,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[37]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 146.08342,
+       "hold": -121.20729,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[36]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 147.34794,
+       "hold": -122.54283000000001,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[35]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 145.60671000000002,
+       "hold": -120.6286,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[34]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 147.17205,
+       "hold": -122.17334,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[33]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 145.03313,
+       "hold": -120.14189,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[32]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 143.67786999999998,
+       "hold": -118.93415,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[31]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 145.42906,
+       "hold": -120.28218000000001,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[30]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 144.14312,
+       "hold": -119.29171,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[29]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 143.97686,
+       "hold": -119.14652000000001,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[28]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 144.95343,
+       "hold": -120.18877,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[27]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 147.25742,
+       "hold": -122.19279,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[26]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 146.21931999999998,
+       "hold": -121.29511000000001,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[25]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 145.93605000000002,
+       "hold": -121.07429,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[24]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 144.05047000000002,
+       "hold": -119.42045,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[23]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 151.38335,
+       "hold": -126.75086,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[22]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 147.82711,
+       "hold": -122.95196,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[21]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 144.44092,
+       "hold": -119.60139000000001,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[20]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 146.36219,
+       "hold": -121.73898,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[19]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 144.97489000000002,
+       "hold": -119.95221000000001,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[18]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 145.93685,
+       "hold": -120.89315,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[17]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 145.64234,
+       "hold": -120.8311,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[16]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 143.29119,
+       "hold": -118.63664,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[15]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 148.7405,
+       "hold": -123.68816,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[14]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 145.76206000000002,
+       "hold": -120.72945,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[13]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 143.41323,
+       "hold": -118.69121000000001,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[12]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 144.83046000000002,
+       "hold": -120.11417,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[11]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 149.88263,
+       "hold": -124.82306,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[10]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 145.61417,
+       "hold": -120.66995,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[9]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 148.42743000000002,
+       "hold": -123.68607,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[8]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 147.09479,
+       "hold": -122.39269,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[7]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 145.56015000000002,
+       "hold": -120.46822,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[6]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 145.4821,
+       "hold": -120.48049,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[5]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 144.06401,
+       "hold": -119.28367,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[4]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 149.1986,
+       "hold": -124.60741,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[3]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 146.49761999999998,
+       "hold": -121.458,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[2]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 146.03184,
+       "hold": -121.19844,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[1]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 144.2142,
+       "hold": -119.47782000000001,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[0]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 143.50598000000002,
+       "hold": -118.80801,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[47]": {
+       "dir": "output",
+       "out": 207.38759,
+       "lmin": 194.53334999999998,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[46]": {
+       "dir": "output",
+       "out": 209.92061,
+       "lmin": 197.25662,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[45]": {
+       "dir": "output",
+       "out": 208.14543000000003,
+       "lmin": 195.49917,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[44]": {
+       "dir": "output",
+       "out": 209.55247000000003,
+       "lmin": 197.12660999999997,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[43]": {
+       "dir": "output",
+       "out": 206.04847,
+       "lmin": 193.26369999999997,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[42]": {
+       "dir": "output",
+       "out": 210.2541,
+       "lmin": 197.44931000000003,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[41]": {
+       "dir": "output",
+       "out": 211.38175999999999,
+       "lmin": 198.96629000000001,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[40]": {
+       "dir": "output",
+       "out": 209.61812000000003,
+       "lmin": 197.19059,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[39]": {
+       "dir": "output",
+       "out": 208.42418000000004,
+       "lmin": 195.69767000000002,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[38]": {
+       "dir": "output",
+       "out": 216.01364999999998,
+       "lmin": 203.68260000000004,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[37]": {
+       "dir": "output",
+       "out": 215.08903000000004,
+       "lmin": 202.12889,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[36]": {
+       "dir": "output",
+       "out": 210.67485,
+       "lmin": 198.22814999999997,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[35]": {
+       "dir": "output",
+       "out": 210.654,
+       "lmin": 198.07403,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[34]": {
+       "dir": "output",
+       "out": 213.13423,
+       "lmin": 200.6103,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[33]": {
+       "dir": "output",
+       "out": 208.39921000000004,
+       "lmin": 195.68998,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[32]": {
+       "dir": "output",
+       "out": 213.7812,
+       "lmin": 201.43852000000004,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[31]": {
+       "dir": "output",
+       "out": 207.81288,
+       "lmin": 194.93261,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[30]": {
+       "dir": "output",
+       "out": 210.06004000000001,
+       "lmin": 197.42523999999997,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[29]": {
+       "dir": "output",
+       "out": 213.70961,
+       "lmin": 201.30867,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[28]": {
+       "dir": "output",
+       "out": 213.69862,
+       "lmin": 201.41948000000002,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[27]": {
+       "dir": "output",
+       "out": 209.23695000000004,
+       "lmin": 196.59348999999997,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[26]": {
+       "dir": "output",
+       "out": 207.98402,
+       "lmin": 195.49059999999997,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[25]": {
+       "dir": "output",
+       "out": 211.10185,
+       "lmin": 198.71170999999998,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[24]": {
+       "dir": "output",
+       "out": 213.48619000000002,
+       "lmin": 201.14595000000003,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[23]": {
+       "dir": "output",
+       "out": 208.11073,
+       "lmin": 195.38734,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[22]": {
+       "dir": "output",
+       "out": 210.47081000000003,
+       "lmin": 198.0999,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[21]": {
+       "dir": "output",
+       "out": 213.02092,
+       "lmin": 200.57548000000003,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[20]": {
+       "dir": "output",
+       "out": 211.00435,
+       "lmin": 198.54973,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[19]": {
+       "dir": "output",
+       "out": 208.66337,
+       "lmin": 196.01994000000002,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[18]": {
+       "dir": "output",
+       "out": 212.01573000000002,
+       "lmin": 199.51103,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[17]": {
+       "dir": "output",
+       "out": 209.57832000000002,
+       "lmin": 196.88986,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[16]": {
+       "dir": "output",
+       "out": 215.23463000000004,
+       "lmin": 202.95499999999998,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[15]": {
+       "dir": "output",
+       "out": 205.79603000000003,
+       "lmin": 193.02603,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[14]": {
+       "dir": "output",
+       "out": 214.48628000000002,
+       "lmin": 202.00316000000004,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[13]": {
+       "dir": "output",
+       "out": 213.03901000000002,
+       "lmin": 200.75032,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[12]": {
+       "dir": "output",
+       "out": 214.46141,
+       "lmin": 202.09941000000003,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[11]": {
+       "dir": "output",
+       "out": 210.06343000000004,
+       "lmin": 197.50856,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[10]": {
+       "dir": "output",
+       "out": 209.03318000000002,
+       "lmin": 196.41291999999999,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[9]": {
+       "dir": "output",
+       "out": 211.73359,
+       "lmin": 199.2924,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[8]": {
+       "dir": "output",
+       "out": 212.17555,
+       "lmin": 199.82411000000002,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[7]": {
+       "dir": "output",
+       "out": 210.65596,
+       "lmin": 198.27103999999997,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[6]": {
+       "dir": "output",
+       "out": 214.78334,
+       "lmin": 202.43626,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[5]": {
+       "dir": "output",
+       "out": 212.16026,
+       "lmin": 199.7903,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[4]": {
+       "dir": "output",
+       "out": 213.02800000000002,
+       "lmin": 200.64897000000002,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[3]": {
+       "dir": "output",
+       "out": 206.84398,
+       "lmin": 194.12721,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[2]": {
+       "dir": "output",
+       "out": 208.68336,
+       "lmin": 195.97625,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[1]": {
+       "dir": "output",
+       "out": 214.01024,
+       "lmin": 201.53950000000003,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[0]": {
+       "dir": "output",
+       "out": 213.31685,
+       "lmin": 200.93846000000002,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      }
+     }
+    },
+    "ff": {
+     "refs": {
+      "ck": {
+       "rise": 42.9,
+       "fall": 44.50655,
+       "min": 40.16724,
+       "max": 43.41989,
+       "src": "insertion.json boundary mean",
+       "bmin": 42.5,
+       "bmax": 43.4,
+       "n": 48
+      }
+     },
+     "pins": {
+      "rs": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 83.41615999999999,
+       "hold": -60.35879,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "VDD": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": []
+      },
+      "VSS": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": []
+      },
+      "i[47]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 110.45109,
+       "hold": -90.00737000000001,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[46]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 110.70328,
+       "hold": -90.29244,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[45]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 110.24163999999999,
+       "hold": -89.83464000000001,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[44]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 111.13367,
+       "hold": -90.79267,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[43]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 109.51945,
+       "hold": -89.1053,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[42]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 111.18284,
+       "hold": -90.72131999999999,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[41]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 109.38684,
+       "hold": -89.0181,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[40]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 111.31853999999998,
+       "hold": -90.97192,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[39]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 110.12213,
+       "hold": -89.69286,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[38]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 109.50546,
+       "hold": -89.12227,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[37]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 110.83922000000001,
+       "hold": -90.44116,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[36]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 111.77982,
+       "hold": -91.40081,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[35]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 110.4163,
+       "hold": -90.02285,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[34]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 111.48684,
+       "hold": -91.01954,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[33]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 110.20670000000001,
+       "hold": -89.85582,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[32]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 109.30679,
+       "hold": -89.06848,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[31]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 110.40503000000001,
+       "hold": -89.95544,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[30]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 109.67831000000001,
+       "hold": -89.39779,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[29]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 109.46688,
+       "hold": -89.15393,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[28]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 110.13621,
+       "hold": -89.85718,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[27]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 111.62697,
+       "hold": -91.18236999999999,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[26]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 111.02362,
+       "hold": -90.69458,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[25]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 110.81289999999998,
+       "hold": -90.46519,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[24]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 109.55974,
+       "hold": -89.35759999999999,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[23]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 114.29714999999999,
+       "hold": -94.03766999999999,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[22]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 112.02010999999999,
+       "hold": -91.67615,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[21]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 109.76932,
+       "hold": -89.45275000000001,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[20]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 111.11852999999999,
+       "hold": -90.85665,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[19]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 110.19134,
+       "hold": -89.75057,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[18]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 110.91324,
+       "hold": -90.48548,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[17]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 110.55362,
+       "hold": -90.24719999999999,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[16]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 109.08430999999999,
+       "hold": -88.88129,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[15]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 112.56778,
+       "hold": -92.09183999999999,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[14]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 110.71264,
+       "hold": -90.26936,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[13]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 109.03908000000001,
+       "hold": -88.77856,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[12]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 110.00107,
+       "hold": -89.7067,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[11]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 113.36787000000001,
+       "hold": -92.91587,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[10]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 110.53438,
+       "hold": -90.09665,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[9]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 112.32114999999999,
+       "hold": -92.03721,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[8]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 111.47317999999999,
+       "hold": -91.18797,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[7]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 110.59425999999999,
+       "hold": -90.15232,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[6]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 110.47541999999999,
+       "hold": -90.06495,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[5]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 109.48022,
+       "hold": -89.19351,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[4]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 112.84994,
+       "hold": -92.6756,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[3]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 111.16703000000001,
+       "hold": -90.68592,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[2]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 110.81352000000001,
+       "hold": -90.47428,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[1]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 109.55022,
+       "hold": -89.25437,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[0]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 109.09701000000001,
+       "hold": -88.83744999999999,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[47]": {
+       "dir": "output",
+       "out": 146.44352,
+       "lmin": 138.93876,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[46]": {
+       "dir": "output",
+       "out": 147.80929,
+       "lmin": 140.60210999999998,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[45]": {
+       "dir": "output",
+       "out": 146.92172,
+       "lmin": 139.45316,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[44]": {
+       "dir": "output",
+       "out": 147.88978,
+       "lmin": 140.39752,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[43]": {
+       "dir": "output",
+       "out": 145.54969,
+       "lmin": 138.12203,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[42]": {
+       "dir": "output",
+       "out": 147.8939,
+       "lmin": 140.81078,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[41]": {
+       "dir": "output",
+       "out": 149.21582999999998,
+       "lmin": 141.74899,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[40]": {
+       "dir": "output",
+       "out": 148.07289,
+       "lmin": 140.51684,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[39]": {
+       "dir": "output",
+       "out": 146.91212,
+       "lmin": 139.67535999999998,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[38]": {
+       "dir": "output",
+       "out": 151.95919,
+       "lmin": 144.86889,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[37]": {
+       "dir": "output",
+       "out": 151.08605,
+       "lmin": 144.12794,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[36]": {
+       "dir": "output",
+       "out": 148.44388999999998,
+       "lmin": 141.13137,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[35]": {
+       "dir": "output",
+       "out": 148.62013,
+       "lmin": 141.35211999999999,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[34]": {
+       "dir": "output",
+       "out": 149.88424,
+       "lmin": 142.82151,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[33]": {
+       "dir": "output",
+       "out": 146.62757,
+       "lmin": 139.36041,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[32]": {
+       "dir": "output",
+       "out": 150.46391,
+       "lmin": 143.02831,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[31]": {
+       "dir": "output",
+       "out": 146.55219,
+       "lmin": 139.17893,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[30]": {
+       "dir": "output",
+       "out": 147.63873999999998,
+       "lmin": 140.5369,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[29]": {
+       "dir": "output",
+       "out": 150.44874,
+       "lmin": 143.27679999999998,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[28]": {
+       "dir": "output",
+       "out": 150.33688,
+       "lmin": 143.18693,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[27]": {
+       "dir": "output",
+       "out": 147.4757,
+       "lmin": 140.21168,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[26]": {
+       "dir": "output",
+       "out": 146.67105999999998,
+       "lmin": 139.4069,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[25]": {
+       "dir": "output",
+       "out": 148.53703,
+       "lmin": 141.37798,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[24]": {
+       "dir": "output",
+       "out": 150.22321,
+       "lmin": 143.00509,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[23]": {
+       "dir": "output",
+       "out": 146.74635,
+       "lmin": 139.46968999999999,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[22]": {
+       "dir": "output",
+       "out": 148.37106,
+       "lmin": 141.18314999999998,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[21]": {
+       "dir": "output",
+       "out": 150.08175,
+       "lmin": 142.80607,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[20]": {
+       "dir": "output",
+       "out": 148.47636,
+       "lmin": 141.24308,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[19]": {
+       "dir": "output",
+       "out": 147.13708,
+       "lmin": 139.76933,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[18]": {
+       "dir": "output",
+       "out": 149.28976,
+       "lmin": 141.96282,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[17]": {
+       "dir": "output",
+       "out": 147.67684,
+       "lmin": 140.33006,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[16]": {
+       "dir": "output",
+       "out": 151.23451,
+       "lmin": 144.18177,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[15]": {
+       "dir": "output",
+       "out": 145.13174999999998,
+       "lmin": 137.77416,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[14]": {
+       "dir": "output",
+       "out": 150.9217,
+       "lmin": 143.56829,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[13]": {
+       "dir": "output",
+       "out": 150.2017,
+       "lmin": 143.00985,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[12]": {
+       "dir": "output",
+       "out": 150.86933,
+       "lmin": 143.69367,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[11]": {
+       "dir": "output",
+       "out": 148.13053,
+       "lmin": 140.78406999999999,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[10]": {
+       "dir": "output",
+       "out": 147.50932,
+       "lmin": 140.10326999999998,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[9]": {
+       "dir": "output",
+       "out": 149.17835,
+       "lmin": 141.96017,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[8]": {
+       "dir": "output",
+       "out": 149.43766,
+       "lmin": 142.2806,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[7]": {
+       "dir": "output",
+       "out": 148.55561,
+       "lmin": 141.28832,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[6]": {
+       "dir": "output",
+       "out": 151.30124999999998,
+       "lmin": 143.95585,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[5]": {
+       "dir": "output",
+       "out": 149.56838,
+       "lmin": 142.3058,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[4]": {
+       "dir": "output",
+       "out": 150.22508,
+       "lmin": 142.98901999999998,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[3]": {
+       "dir": "output",
+       "out": 145.87144999999998,
+       "lmin": 138.53089,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[2]": {
+       "dir": "output",
+       "out": 146.98408,
+       "lmin": 139.71214,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[1]": {
+       "dir": "output",
+       "out": 150.68696,
+       "lmin": 143.32241,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[0]": {
+       "dir": "output",
+       "out": 150.45848999999998,
+       "lmin": 143.17996,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      }
+     }
+    }
+   }
+  },
+  "hbfd_rly_48_SN": {
+   "view": "physical/ref_tile/hbfd_rly_48_sn/views/hbfd_rly_48_SN/",
+   "source_ref": "b55c8b228",
+   "sha256": {
+    "hbfd_rly_48_SN.lef": "e2f801ce3bde35b7f2dad5c199830eec6cc7eec1245bdc796524958d30db34b6",
+    "hbfd_rly_48_SN_tt.lib": "84565f789ea8e0d5db8f59b6623792467721c84068bb0b3c878728f9150608b2",
+    "hbfd_rly_48_SN_ff.lib": "656022f88556319756b852b077c1831a915f4bebe5e3931eae288fa169363263",
+    "insertion.json": "c99bda0c11e949a3719f896d69e9f378ec225dc1213fe3f0e77a349af580ab23"
+   },
+   "lef_pins": {
+    "ck": [
+     0.042,
+     13.212
+    ],
+    "rs": [
+     0.042,
+     13.308
+    ],
+    "VDD": [
+     18.852,
+     10.8
+    ],
+    "VSS": [
+     18.66,
+     10.8
+    ]
+   },
+   "timing": {
+    "tt": {
+     "refs": {
+      "ck": {
+       "rise": 59.0,
+       "fall": 63.237235,
+       "min": 54.64018,
+       "max": 59.68007,
+       "src": "insertion.json boundary mean",
+       "bmin": 58.1,
+       "bmax": 59.7,
+       "n": 48
+      }
+     },
+     "pins": {
+      "rs": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 120.21988999999999,
+       "hold": -83.51649,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "VDD": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": []
+      },
+      "VSS": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": []
+      },
+      "i[47]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 142.21329,
+       "hold": -117.23422,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[46]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 141.11118,
+       "hold": -116.18173,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[45]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 141.94198,
+       "hold": -116.97925000000001,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[44]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 141.54026,
+       "hold": -116.60634999999999,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[43]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 144.14355999999998,
+       "hold": -119.17038,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[42]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 144.09726999999998,
+       "hold": -119.27915999999999,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[41]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 142.17567,
+       "hold": -117.22871,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[40]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 147.35017,
+       "hold": -122.38235,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[39]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 142.32226,
+       "hold": -117.42618,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[38]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 143.14159,
+       "hold": -118.32156,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[37]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 146.43691,
+       "hold": -121.63011,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[36]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 143.54617000000002,
+       "hold": -118.57601,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[35]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 144.07052,
+       "hold": -119.09402,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[34]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 142.13934,
+       "hold": -117.14278,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[33]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 142.28706,
+       "hold": -117.38468,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[32]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 142.85381999999998,
+       "hold": -117.899,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[31]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 146.94155999999998,
+       "hold": -121.99031,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[30]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 143.65842,
+       "hold": -118.78389,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[29]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 146.37418,
+       "hold": -121.41954,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[28]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 143.18995999999999,
+       "hold": -118.23024000000001,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[27]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 148.81245,
+       "hold": -123.98827,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[26]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 145.51117,
+       "hold": -120.58819,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[25]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 140.98891,
+       "hold": -116.06916,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[24]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 141.04592,
+       "hold": -116.08892,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[23]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 146.48891,
+       "hold": -121.54523,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[22]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 145.43156,
+       "hold": -120.41228000000001,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[21]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 143.29877,
+       "hold": -118.43245999999999,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[20]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 142.7508,
+       "hold": -117.77929,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[19]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 141.13361,
+       "hold": -116.17696000000001,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[18]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 146.70628,
+       "hold": -121.61415,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[17]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 142.44092,
+       "hold": -117.50327,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[16]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 146.6525,
+       "hold": -121.47829,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[15]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 143.40176,
+       "hold": -118.29306,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[14]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 147.28519,
+       "hold": -122.13777999999999,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[13]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 142.29786000000001,
+       "hold": -117.05542,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[12]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 144.66536000000002,
+       "hold": -119.32018,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[11]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 143.2529,
+       "hold": -118.20886999999999,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[10]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 142.73104,
+       "hold": -117.6562,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[9]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 145.85217,
+       "hold": -120.79289,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[8]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 143.51202999999998,
+       "hold": -118.1637,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[7]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 142.89544999999998,
+       "hold": -117.83847,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[6]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 142.91901000000001,
+       "hold": -117.85114,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[5]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 142.84189,
+       "hold": -117.50838,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[4]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 143.28929,
+       "hold": -117.96016,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[3]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 143.48023999999998,
+       "hold": -118.17743,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[2]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 142.97655,
+       "hold": -117.67750000000001,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[1]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 143.79961,
+       "hold": -118.7639,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[0]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 141.79604999999998,
+       "hold": -116.4785,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[47]": {
+       "dir": "output",
+       "out": 208.55002000000002,
+       "lmin": 195.6707,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[46]": {
+       "dir": "output",
+       "out": 208.84762999999998,
+       "lmin": 196.10324,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[45]": {
+       "dir": "output",
+       "out": 210.34145999999998,
+       "lmin": 197.80969,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[44]": {
+       "dir": "output",
+       "out": 212.56195000000002,
+       "lmin": 200.08121,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[43]": {
+       "dir": "output",
+       "out": 205.2496,
+       "lmin": 192.3717,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[42]": {
+       "dir": "output",
+       "out": 208.00949000000003,
+       "lmin": 195.4106,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[41]": {
+       "dir": "output",
+       "out": 209.16507000000001,
+       "lmin": 196.64368,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[40]": {
+       "dir": "output",
+       "out": 211.86651999999998,
+       "lmin": 199.45123,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[39]": {
+       "dir": "output",
+       "out": 209.09073,
+       "lmin": 196.23309,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[38]": {
+       "dir": "output",
+       "out": 210.99856999999997,
+       "lmin": 198.30896,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[37]": {
+       "dir": "output",
+       "out": 205.80997000000002,
+       "lmin": 192.98804,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[36]": {
+       "dir": "output",
+       "out": 208.07477,
+       "lmin": 195.3261,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[35]": {
+       "dir": "output",
+       "out": 206.30469,
+       "lmin": 193.33887,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[34]": {
+       "dir": "output",
+       "out": 212.94461,
+       "lmin": 200.31131,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[33]": {
+       "dir": "output",
+       "out": 209.79172,
+       "lmin": 197.27252,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[32]": {
+       "dir": "output",
+       "out": 207.82278000000002,
+       "lmin": 195.06377,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[31]": {
+       "dir": "output",
+       "out": 208.94646999999998,
+       "lmin": 196.36578,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[30]": {
+       "dir": "output",
+       "out": 206.26904000000002,
+       "lmin": 193.53189,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[29]": {
+       "dir": "output",
+       "out": 208.23236000000003,
+       "lmin": 195.42024,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[28]": {
+       "dir": "output",
+       "out": 214.45614999999998,
+       "lmin": 202.11389000000003,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[27]": {
+       "dir": "output",
+       "out": 209.82858,
+       "lmin": 197.28780999999998,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[26]": {
+       "dir": "output",
+       "out": 205.22271999999998,
+       "lmin": 192.47745,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[25]": {
+       "dir": "output",
+       "out": 211.96337999999997,
+       "lmin": 199.52756,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[24]": {
+       "dir": "output",
+       "out": 212.60831000000002,
+       "lmin": 200.0412,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[23]": {
+       "dir": "output",
+       "out": 205.41394000000003,
+       "lmin": 192.55827,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[22]": {
+       "dir": "output",
+       "out": 215.47623,
+       "lmin": 203.19339000000002,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[21]": {
+       "dir": "output",
+       "out": 211.13797,
+       "lmin": 198.62872,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[20]": {
+       "dir": "output",
+       "out": 207.48593,
+       "lmin": 194.86005,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[19]": {
+       "dir": "output",
+       "out": 214.36419999999998,
+       "lmin": 201.88055000000003,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[18]": {
+       "dir": "output",
+       "out": 208.99410999999998,
+       "lmin": 196.50175,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[17]": {
+       "dir": "output",
+       "out": 209.57718,
+       "lmin": 197.09026999999998,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[16]": {
+       "dir": "output",
+       "out": 207.41478999999998,
+       "lmin": 194.6685,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[15]": {
+       "dir": "output",
+       "out": 208.48691000000002,
+       "lmin": 195.7659,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[14]": {
+       "dir": "output",
+       "out": 209.58983999999998,
+       "lmin": 196.88487,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[13]": {
+       "dir": "output",
+       "out": 207.89553999999998,
+       "lmin": 195.34369,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[12]": {
+       "dir": "output",
+       "out": 205.29303,
+       "lmin": 192.36632,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[11]": {
+       "dir": "output",
+       "out": 209.68900000000002,
+       "lmin": 197.03859999999997,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[10]": {
+       "dir": "output",
+       "out": 208.45263999999997,
+       "lmin": 195.8228,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[9]": {
+       "dir": "output",
+       "out": 212.88031,
+       "lmin": 200.38308999999998,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[8]": {
+       "dir": "output",
+       "out": 211.02631000000002,
+       "lmin": 198.36953999999997,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[7]": {
+       "dir": "output",
+       "out": 211.34875,
+       "lmin": 198.76004,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[6]": {
+       "dir": "output",
+       "out": 211.30844000000002,
+       "lmin": 198.76599,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[5]": {
+       "dir": "output",
+       "out": 212.82849,
+       "lmin": 200.38342,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[4]": {
+       "dir": "output",
+       "out": 211.20641999999998,
+       "lmin": 198.57758,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[3]": {
+       "dir": "output",
+       "out": 208.65062999999998,
+       "lmin": 195.90813,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[2]": {
+       "dir": "output",
+       "out": 207.48782,
+       "lmin": 194.70079,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[1]": {
+       "dir": "output",
+       "out": 209.75986,
+       "lmin": 197.05423000000002,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[0]": {
+       "dir": "output",
+       "out": 209.73447,
+       "lmin": 196.95815,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      }
+     }
+    },
+    "ff": {
+     "refs": {
+      "ck": {
+       "rise": 44.3,
+       "fall": 45.84823499999999,
+       "min": 41.15116,
+       "max": 45.11525,
+       "src": "insertion.json boundary mean",
+       "bmin": 43.5,
+       "bmax": 45.1,
+       "n": 48
+      }
+     },
+     "pins": {
+      "rs": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 86.07679999999999,
+       "hold": -61.62016,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "VDD": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": []
+      },
+      "VSS": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": []
+      },
+      "i[47]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 108.35013,
+       "hold": -88.48854,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[46]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 107.62669,
+       "hold": -87.76536999999999,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[45]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 108.14857,
+       "hold": -88.30165,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[44]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 107.93106,
+       "hold": -88.08411,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[43]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 109.63273,
+       "hold": -89.3786,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[42]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 109.96914,
+       "hold": -90.17049,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[41]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 108.39023999999999,
+       "hold": -88.53756,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[40]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 111.65738,
+       "hold": -91.79006,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[39]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 108.62935,
+       "hold": -88.76836,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[38]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 109.32582,
+       "hold": -89.54321999999999,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[37]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 111.46417,
+       "hold": -91.6331,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[36]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 109.21771,
+       "hold": -88.95525,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[35]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 109.56456,
+       "hold": -89.31357,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[34]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 108.26735,
+       "hold": -88.39299,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[33]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 108.48255,
+       "hold": -88.45157,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[32]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 108.86735999999999,
+       "hold": -88.98942,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[31]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 111.61094,
+       "hold": -91.31505,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[30]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 109.61586,
+       "hold": -89.60973,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[29]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 111.09355,
+       "hold": -90.79069999999999,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[28]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 109.08525999999999,
+       "hold": -89.20326,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[27]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 112.56379,
+       "hold": -92.39516,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[26]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 110.85327,
+       "hold": -90.81221,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[25]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 107.57432,
+       "hold": -87.70213,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[24]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 107.59468,
+       "hold": -87.69891,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[23]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 111.42175,
+       "hold": -91.33277,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[22]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 110.65168,
+       "hold": -90.54762,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[21]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 109.17452,
+       "hold": -89.18715,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[20]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 108.61444,
+       "hold": -88.34164999999999,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[19]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 107.6177,
+       "hold": -87.74411,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[18]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 111.29946,
+       "hold": -90.92992,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[17]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 108.42051,
+       "hold": -88.15463,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[16]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 111.13335,
+       "hold": -91.08846,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[15]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 109.15359,
+       "hold": -89.00888,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[14]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 111.76576,
+       "hold": -91.53962,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[13]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 108.2012,
+       "hold": -88.14397,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[12]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 109.64054,
+       "hold": -89.56988999999999,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[11]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 109.00681999999999,
+       "hold": -88.93874,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[10]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 108.69306999999999,
+       "hold": -88.70948,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[9]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 110.75515,
+       "hold": -90.62268,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[8]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 108.81277,
+       "hold": -88.78841,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[7]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 108.80642999999999,
+       "hold": -88.69421,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[6]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 108.81685,
+       "hold": -88.69095999999999,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[5]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 108.3755,
+       "hold": -88.36735999999999,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[4]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 108.70147,
+       "hold": -88.67546999999999,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[3]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 108.9143,
+       "hold": -88.86725999999999,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[2]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 108.4602,
+       "hold": -88.4708,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[1]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 109.32379,
+       "hold": -89.26135,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[0]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 107.64898,
+       "hold": -87.68662,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[47]": {
+       "dir": "output",
+       "out": 146.88472000000002,
+       "lmin": 139.51189,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[46]": {
+       "dir": "output",
+       "out": 147.11064,
+       "lmin": 139.80951,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[45]": {
+       "dir": "output",
+       "out": 148.19257,
+       "lmin": 140.93763,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[44]": {
+       "dir": "output",
+       "out": 149.59777000000003,
+       "lmin": 142.42227000000003,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[43]": {
+       "dir": "output",
+       "out": 144.80651999999998,
+       "lmin": 137.42379,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[42]": {
+       "dir": "output",
+       "out": 146.25605000000002,
+       "lmin": 138.97395999999998,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[41]": {
+       "dir": "output",
+       "out": 147.39972,
+       "lmin": 140.11766,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[40]": {
+       "dir": "output",
+       "out": 149.24716,
+       "lmin": 142.04561,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[39]": {
+       "dir": "output",
+       "out": 147.07855999999998,
+       "lmin": 139.64565,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[38]": {
+       "dir": "output",
+       "out": 148.24166000000002,
+       "lmin": 140.83258,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[37]": {
+       "dir": "output",
+       "out": 144.80374,
+       "lmin": 137.38571000000002,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[36]": {
+       "dir": "output",
+       "out": 146.82452999999998,
+       "lmin": 139.36853000000002,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[35]": {
+       "dir": "output",
+       "out": 145.55522000000002,
+       "lmin": 137.98725000000002,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[34]": {
+       "dir": "output",
+       "out": 149.70434999999998,
+       "lmin": 142.61554,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[33]": {
+       "dir": "output",
+       "out": 147.92827,
+       "lmin": 140.58159,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[32]": {
+       "dir": "output",
+       "out": 146.29930000000002,
+       "lmin": 138.99532,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[31]": {
+       "dir": "output",
+       "out": 147.62766,
+       "lmin": 140.01352000000003,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[30]": {
+       "dir": "output",
+       "out": 145.24063,
+       "lmin": 137.81786,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[29]": {
+       "dir": "output",
+       "out": 146.69422000000003,
+       "lmin": 139.43671,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[28]": {
+       "dir": "output",
+       "out": 150.75220000000002,
+       "lmin": 143.70989000000003,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[27]": {
+       "dir": "output",
+       "out": 148.01076,
+       "lmin": 140.70371,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[26]": {
+       "dir": "output",
+       "out": 144.56179000000003,
+       "lmin": 137.12754999999999,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[25]": {
+       "dir": "output",
+       "out": 149.437,
+       "lmin": 142.15868,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[24]": {
+       "dir": "output",
+       "out": 149.80178,
+       "lmin": 142.45252,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[23]": {
+       "dir": "output",
+       "out": 144.69317999999998,
+       "lmin": 137.27794,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[22]": {
+       "dir": "output",
+       "out": 151.64193999999998,
+       "lmin": 144.25527,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[21]": {
+       "dir": "output",
+       "out": 148.80329,
+       "lmin": 141.42801000000003,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[20]": {
+       "dir": "output",
+       "out": 146.48725000000002,
+       "lmin": 139.16442,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[19]": {
+       "dir": "output",
+       "out": 150.84590000000003,
+       "lmin": 143.6698,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[18]": {
+       "dir": "output",
+       "out": 147.36238000000003,
+       "lmin": 140.15068000000002,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[17]": {
+       "dir": "output",
+       "out": 147.94887,
+       "lmin": 140.63891999999998,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[16]": {
+       "dir": "output",
+       "out": 146.36005,
+       "lmin": 138.96158000000003,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[15]": {
+       "dir": "output",
+       "out": 146.87433,
+       "lmin": 139.63716,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[14]": {
+       "dir": "output",
+       "out": 147.74271,
+       "lmin": 140.44268,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[13]": {
+       "dir": "output",
+       "out": 146.78054000000003,
+       "lmin": 139.48297000000002,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[12]": {
+       "dir": "output",
+       "out": 145.16280999999998,
+       "lmin": 137.72553,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[11]": {
+       "dir": "output",
+       "out": 147.74642999999998,
+       "lmin": 140.50699000000003,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[10]": {
+       "dir": "output",
+       "out": 146.95229999999998,
+       "lmin": 139.67953999999997,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[9]": {
+       "dir": "output",
+       "out": 150.05277999999998,
+       "lmin": 142.61772000000002,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[8]": {
+       "dir": "output",
+       "out": 149.33341000000001,
+       "lmin": 141.78994999999998,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[7]": {
+       "dir": "output",
+       "out": 148.90154,
+       "lmin": 141.69551,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[6]": {
+       "dir": "output",
+       "out": 148.85662000000002,
+       "lmin": 141.67914000000002,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[5]": {
+       "dir": "output",
+       "out": 150.43201,
+       "lmin": 143.18262,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[4]": {
+       "dir": "output",
+       "out": 149.35028,
+       "lmin": 141.94071000000002,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[3]": {
+       "dir": "output",
+       "out": 147.63651,
+       "lmin": 140.06716,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[2]": {
+       "dir": "output",
+       "out": 146.64445999999998,
+       "lmin": 139.31723,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[1]": {
+       "dir": "output",
+       "out": 147.85141,
+       "lmin": 140.60057,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[0]": {
+       "dir": "output",
+       "out": 148.32636000000002,
+       "lmin": 140.88767,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      }
+     }
+    }
+   }
+  },
+  "hbfd_rly_48_NS": {
+   "view": "physical/ref_tile/hbfd_rly_48_ns/views/hbfd_rly_48_NS/",
+   "source_ref": "b55c8b228",
+   "sha256": {
+    "hbfd_rly_48_NS.lef": "8f6bd1b1bf964db30ec1fbe5e5a96591fdabcf392841bb60702ea39dd2f7f146",
+    "hbfd_rly_48_NS_tt.lib": "35b1e0a36d3ee39d4050a5233f3667aa9e219d012a38e7eb83f4e92e08a506e4",
+    "hbfd_rly_48_NS_ff.lib": "22904760f89f2ad8cf95f61d76242b8cf9dead99721a4ab3acdab5382eb0e40e",
+    "insertion.json": "8fc92e3a82695e8fdca7c9a58271ce59bebe2378f32c67ec5bc3d6206aa13805"
+   },
+   "lef_pins": {
+    "ck": [
+     0.042,
+     13.212
+    ],
+    "rs": [
+     0.042,
+     13.308
+    ],
+    "VDD": [
+     18.852,
+     10.8
+    ],
+    "VSS": [
+     18.66,
+     10.8
+    ]
+   },
+   "timing": {
+    "tt": {
+     "refs": {
+      "ck": {
+       "rise": 56.5,
+       "fall": 60.802189999999996,
+       "min": 52.70653,
+       "max": 57.23492,
+       "src": "insertion.json boundary mean",
+       "bmin": 56.0,
+       "bmax": 57.2,
+       "n": 48
+      }
+     },
+     "pins": {
+      "rs": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 124.6154,
+       "hold": -73.93895,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "VDD": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": []
+      },
+      "VSS": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": []
+      },
+      "i[47]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 142.83463,
+       "hold": -118.07005000000001,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[46]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 143.3154,
+       "hold": -118.56057,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[45]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 141.81207,
+       "hold": -117.07383999999999,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[44]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 142.03049,
+       "hold": -117.26875,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[43]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 143.81017,
+       "hold": -119.00217,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[42]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 143.334,
+       "hold": -118.68494,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[41]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 142.97482,
+       "hold": -118.21637,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[40]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 144.20109,
+       "hold": -119.33929,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[39]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 147.53989,
+       "hold": -122.90489,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[38]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 144.30786999999998,
+       "hold": -119.58991,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[37]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 144.228,
+       "hold": -119.57024,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[36]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 143.83669,
+       "hold": -119.10394,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[35]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 148.32596999999998,
+       "hold": -123.55508,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[34]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 148.11085,
+       "hold": -123.36725,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[33]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 142.35223000000002,
+       "hold": -117.62377000000001,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[32]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 141.89081,
+       "hold": -117.20179999999999,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[31]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 146.29066,
+       "hold": -121.58405,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[30]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 142.06317,
+       "hold": -117.34425,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[29]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 142.30043,
+       "hold": -117.57536999999999,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[28]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 143.81304,
+       "hold": -119.08828,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[27]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 145.28377999999998,
+       "hold": -120.5391,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[26]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 146.52596,
+       "hold": -121.77963,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[25]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 143.48986,
+       "hold": -118.71898,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[24]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 141.95029,
+       "hold": -117.215,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[23]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 142.59693,
+       "hold": -117.87541,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[22]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 145.28175,
+       "hold": -120.46278000000001,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[21]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 150.21154,
+       "hold": -125.75299,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[20]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 143.48151000000001,
+       "hold": -118.64889,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[19]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 146.45584,
+       "hold": -121.51349,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[18]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 147.58624,
+       "hold": -122.4674,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[17]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 144.18529999999998,
+       "hold": -119.26844,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[16]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 145.47388,
+       "hold": -120.67109,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[15]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 145.01264,
+       "hold": -120.10702,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[14]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 146.60969,
+       "hold": -121.6787,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[13]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 148.7809,
+       "hold": -124.51999,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[12]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 148.74375,
+       "hold": -124.24061,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[11]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 152.02364,
+       "hold": -127.5946,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[10]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 142.07719,
+       "hold": -117.53497999999999,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[9]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 143.52974,
+       "hold": -118.9221,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[8]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 145.48193,
+       "hold": -120.69334,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[7]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 146.15086,
+       "hold": -121.49738,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[6]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 145.02849,
+       "hold": -120.39256,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[5]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 142.21474,
+       "hold": -117.47626,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[4]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 142.23603,
+       "hold": -117.53730999999999,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[3]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 141.30703,
+       "hold": -116.54105,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[2]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 142.07539,
+       "hold": -117.30653000000001,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[1]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 146.23967,
+       "hold": -121.5502,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[0]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 143.78467999999998,
+       "hold": -119.11858000000001,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[47]": {
+       "dir": "output",
+       "out": 206.12054,
+       "lmin": 193.17754,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[46]": {
+       "dir": "output",
+       "out": 207.41692999999998,
+       "lmin": 194.69453,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[45]": {
+       "dir": "output",
+       "out": 208.62340999999998,
+       "lmin": 195.89345,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[44]": {
+       "dir": "output",
+       "out": 204.00268999999997,
+       "lmin": 191.09673,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[43]": {
+       "dir": "output",
+       "out": 207.52121,
+       "lmin": 194.73039,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[42]": {
+       "dir": "output",
+       "out": 206.20864999999998,
+       "lmin": 193.31799,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[41]": {
+       "dir": "output",
+       "out": 203.85892,
+       "lmin": 190.9408,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[40]": {
+       "dir": "output",
+       "out": 208.43658,
+       "lmin": 195.97252,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[39]": {
+       "dir": "output",
+       "out": 206.51909999999998,
+       "lmin": 193.82616,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[38]": {
+       "dir": "output",
+       "out": 208.16992,
+       "lmin": 195.73177,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[37]": {
+       "dir": "output",
+       "out": 202.81466999999998,
+       "lmin": 189.81949,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[36]": {
+       "dir": "output",
+       "out": 205.33524,
+       "lmin": 192.59924,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[35]": {
+       "dir": "output",
+       "out": 211.02184999999997,
+       "lmin": 198.63672,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[34]": {
+       "dir": "output",
+       "out": 205.27460000000002,
+       "lmin": 192.65331,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[33]": {
+       "dir": "output",
+       "out": 207.95181000000002,
+       "lmin": 195.36978,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[32]": {
+       "dir": "output",
+       "out": 208.18774000000002,
+       "lmin": 195.38618,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[31]": {
+       "dir": "output",
+       "out": 210.33771000000002,
+       "lmin": 197.73067,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[30]": {
+       "dir": "output",
+       "out": 212.10703,
+       "lmin": 199.69254,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[29]": {
+       "dir": "output",
+       "out": 210.08553999999998,
+       "lmin": 197.63716,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[28]": {
+       "dir": "output",
+       "out": 209.30154,
+       "lmin": 196.70062,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[27]": {
+       "dir": "output",
+       "out": 205.0528,
+       "lmin": 192.18729,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[26]": {
+       "dir": "output",
+       "out": 212.85210999999998,
+       "lmin": 200.50858,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[25]": {
+       "dir": "output",
+       "out": 207.79892,
+       "lmin": 195.2794,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[24]": {
+       "dir": "output",
+       "out": 210.19479,
+       "lmin": 197.71599,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[23]": {
+       "dir": "output",
+       "out": 206.23379999999997,
+       "lmin": 193.55592,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[22]": {
+       "dir": "output",
+       "out": 213.57697000000002,
+       "lmin": 201.05020000000002,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[21]": {
+       "dir": "output",
+       "out": 210.51096,
+       "lmin": 197.94763,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[20]": {
+       "dir": "output",
+       "out": 206.29733,
+       "lmin": 193.51105,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[19]": {
+       "dir": "output",
+       "out": 203.29303,
+       "lmin": 190.24854,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[18]": {
+       "dir": "output",
+       "out": 208.47778,
+       "lmin": 196.00316,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[17]": {
+       "dir": "output",
+       "out": 208.64409999999998,
+       "lmin": 195.93324,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[16]": {
+       "dir": "output",
+       "out": 206.98904,
+       "lmin": 194.12636,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[15]": {
+       "dir": "output",
+       "out": 209.66717999999997,
+       "lmin": 197.05923,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[14]": {
+       "dir": "output",
+       "out": 212.39478000000003,
+       "lmin": 199.85253999999998,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[13]": {
+       "dir": "output",
+       "out": 210.26584000000003,
+       "lmin": 197.5708,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[12]": {
+       "dir": "output",
+       "out": 206.62241,
+       "lmin": 194.00266,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[11]": {
+       "dir": "output",
+       "out": 208.52057000000002,
+       "lmin": 195.97456,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[10]": {
+       "dir": "output",
+       "out": 217.23122999999998,
+       "lmin": 205.14044,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[9]": {
+       "dir": "output",
+       "out": 209.52219000000002,
+       "lmin": 196.87265,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[8]": {
+       "dir": "output",
+       "out": 207.31757,
+       "lmin": 194.66223,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[7]": {
+       "dir": "output",
+       "out": 213.15497,
+       "lmin": 200.44177000000002,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[6]": {
+       "dir": "output",
+       "out": 213.5654,
+       "lmin": 201.14636000000002,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[5]": {
+       "dir": "output",
+       "out": 209.38785000000001,
+       "lmin": 196.88634,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[4]": {
+       "dir": "output",
+       "out": 216.90598,
+       "lmin": 204.48696999999999,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[3]": {
+       "dir": "output",
+       "out": 206.10433999999998,
+       "lmin": 193.20404,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[2]": {
+       "dir": "output",
+       "out": 206.53955000000002,
+       "lmin": 193.69122,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[1]": {
+       "dir": "output",
+       "out": 208.09116,
+       "lmin": 195.26642,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[0]": {
+       "dir": "output",
+       "out": 209.06808,
+       "lmin": 196.34023,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      }
+     }
+    },
+    "ff": {
+     "refs": {
+      "ck": {
+       "rise": 42.3,
+       "fall": 43.920984999999995,
+       "min": 39.48198,
+       "max": 42.96603,
+       "src": "insertion.json boundary mean",
+       "bmin": 41.7,
+       "bmax": 43.0,
+       "n": 48
+      }
+     },
+     "pins": {
+      "rs": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 89.30251999999999,
+       "hold": -54.97732,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "VDD": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": []
+      },
+      "VSS": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": []
+      },
+      "i[47]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 108.63592,
+       "hold": -88.42842999999999,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[46]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 108.9879,
+       "hold": -88.76966999999999,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[45]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 107.92267,
+       "hold": -87.68503999999999,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[44]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 108.06344,
+       "hold": -87.81305,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[43]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 109.33391,
+       "hold": -89.09601,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[42]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 109.10898,
+       "hold": -88.8872,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[41]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 108.69706,
+       "hold": -88.46467999999999,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[40]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 109.56927,
+       "hold": -89.26446,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[39]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 111.87391,
+       "hold": -91.61501999999999,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[38]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 109.74897,
+       "hold": -89.45389,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[37]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 109.69997,
+       "hold": -89.45829,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[36]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 109.46929,
+       "hold": -89.20608999999999,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[35]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 112.37434999999999,
+       "hold": -92.16209,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[34]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 112.37362,
+       "hold": -92.03288,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[33]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 108.4117,
+       "hold": -88.17938,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[32]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 108.05648,
+       "hold": -87.84121999999999,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[31]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 110.94922,
+       "hold": -90.58161999999999,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[30]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 108.13533,
+       "hold": -87.91832,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[29]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 108.27223,
+       "hold": -88.06397999999999,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[28]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 109.32497,
+       "hold": -89.03912,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[27]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 110.29592,
+       "hold": -89.93459999999999,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[26]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 111.10351,
+       "hold": -90.8394,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[25]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 109.1921,
+       "hold": -88.87259,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[24]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 108.04021,
+       "hold": -87.80089,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[23]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 108.51619,
+       "hold": -88.1877,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[22]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 110.3797,
+       "hold": -90.03702999999999,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[21]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 113.56325,
+       "hold": -93.41324,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[20]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 109.27977,
+       "hold": -88.9693,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[19]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 111.24107,
+       "hold": -90.85616999999999,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[18]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 111.84291999999999,
+       "hold": -91.26759999999999,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[17]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 109.59307,
+       "hold": -89.25944999999999,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[16]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 110.41432999999999,
+       "hold": -90.11644,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[15]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 110.11767,
+       "hold": -89.73761999999999,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[14]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 111.13839,
+       "hold": -90.69151,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[13]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 112.56121999999999,
+       "hold": -92.63552999999999,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[12]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 112.63762,
+       "hold": -92.57421,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[11]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 114.66295,
+       "hold": -94.44382999999999,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[10]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 108.28875,
+       "hold": -88.23544,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[9]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 109.19165,
+       "hold": -89.07095,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[8]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 110.30942999999999,
+       "hold": -90.04420999999999,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[7]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 110.91562,
+       "hold": -90.72097,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[6]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 110.20667,
+       "hold": -90.04355,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[5]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 108.13316,
+       "hold": -87.96039999999999,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[4]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 108.17367999999999,
+       "hold": -88.02234999999999,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[3]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 107.48096,
+       "hold": -87.26203,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[2]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 108.0024,
+       "hold": -87.82413,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[1]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 110.75068,
+       "hold": -90.59922,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "i[0]": {
+       "dir": "input",
+       "out": null,
+       "lmin": null,
+       "inp": 109.24073,
+       "hold": -89.08564999999999,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[47]": {
+       "dir": "output",
+       "out": 145.45049999999998,
+       "lmin": 137.78833000000003,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[46]": {
+       "dir": "output",
+       "out": 146.40184,
+       "lmin": 138.83387,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[45]": {
+       "dir": "output",
+       "out": 147.18536999999998,
+       "lmin": 139.57693999999998,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[44]": {
+       "dir": "output",
+       "out": 144.05593,
+       "lmin": 136.52280000000002,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[43]": {
+       "dir": "output",
+       "out": 146.36129,
+       "lmin": 138.78958,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[42]": {
+       "dir": "output",
+       "out": 145.29908999999998,
+       "lmin": 137.80110000000002,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[41]": {
+       "dir": "output",
+       "out": 143.78296,
+       "lmin": 136.29056000000003,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[40]": {
+       "dir": "output",
+       "out": 147.19155999999998,
+       "lmin": 139.80794000000003,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[39]": {
+       "dir": "output",
+       "out": 145.55671999999998,
+       "lmin": 138.10128000000003,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[38]": {
+       "dir": "output",
+       "out": 146.95094999999998,
+       "lmin": 139.58521000000002,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[37]": {
+       "dir": "output",
+       "out": 142.99517000000003,
+       "lmin": 135.46711,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[36]": {
+       "dir": "output",
+       "out": 144.77924000000002,
+       "lmin": 137.33114999999998,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[35]": {
+       "dir": "output",
+       "out": 148.66896000000003,
+       "lmin": 141.25648999999999,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[34]": {
+       "dir": "output",
+       "out": 144.80771,
+       "lmin": 137.36628000000002,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[33]": {
+       "dir": "output",
+       "out": 146.43283000000002,
+       "lmin": 139.12644999999998,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[32]": {
+       "dir": "output",
+       "out": 146.49774000000002,
+       "lmin": 139.18453,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[31]": {
+       "dir": "output",
+       "out": 148.16126000000003,
+       "lmin": 140.91863999999998,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[30]": {
+       "dir": "output",
+       "out": 149.25049,
+       "lmin": 142.11248,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[29]": {
+       "dir": "output",
+       "out": 148.1006,
+       "lmin": 140.75835,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[28]": {
+       "dir": "output",
+       "out": 147.61353000000003,
+       "lmin": 140.12626999999998,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[27]": {
+       "dir": "output",
+       "out": 144.57479999999998,
+       "lmin": 137.17899,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[26]": {
+       "dir": "output",
+       "out": 149.95445999999998,
+       "lmin": 142.63359000000003,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[25]": {
+       "dir": "output",
+       "out": 146.52397000000002,
+       "lmin": 139.19312000000002,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[24]": {
+       "dir": "output",
+       "out": 148.04769,
+       "lmin": 140.79351000000003,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[23]": {
+       "dir": "output",
+       "out": 145.45511,
+       "lmin": 138.07082000000003,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[22]": {
+       "dir": "output",
+       "out": 150.33857,
+       "lmin": 142.83507000000003,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[21]": {
+       "dir": "output",
+       "out": 148.34948000000003,
+       "lmin": 140.89794,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[20]": {
+       "dir": "output",
+       "out": 145.3125,
+       "lmin": 137.90209,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[19]": {
+       "dir": "output",
+       "out": 143.38805000000002,
+       "lmin": 135.85726,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[18]": {
+       "dir": "output",
+       "out": 147.17493000000002,
+       "lmin": 139.9097,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[17]": {
+       "dir": "output",
+       "out": 146.90705000000003,
+       "lmin": 139.70066000000003,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[16]": {
+       "dir": "output",
+       "out": 145.72109999999998,
+       "lmin": 138.39363000000003,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[15]": {
+       "dir": "output",
+       "out": 148.05167999999998,
+       "lmin": 140.47463,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[14]": {
+       "dir": "output",
+       "out": 149.77092,
+       "lmin": 142.4153,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[13]": {
+       "dir": "output",
+       "out": 148.11081000000001,
+       "lmin": 140.64051999999998,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[12]": {
+       "dir": "output",
+       "out": 145.62171999999998,
+       "lmin": 138.31838,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[11]": {
+       "dir": "output",
+       "out": 147.26894,
+       "lmin": 139.80397,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[10]": {
+       "dir": "output",
+       "out": 152.64195999999998,
+       "lmin": 145.39791000000002,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[9]": {
+       "dir": "output",
+       "out": 147.78521,
+       "lmin": 140.23838999999998,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[8]": {
+       "dir": "output",
+       "out": 146.3465,
+       "lmin": 139.03341999999998,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[7]": {
+       "dir": "output",
+       "out": 149.8893,
+       "lmin": 142.45524999999998,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[6]": {
+       "dir": "output",
+       "out": 150.47658,
+       "lmin": 143.09775000000002,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[5]": {
+       "dir": "output",
+       "out": 147.75333999999998,
+       "lmin": 140.48235,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[4]": {
+       "dir": "output",
+       "out": 152.62162999999998,
+       "lmin": 145.44341000000003,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[3]": {
+       "dir": "output",
+       "out": 145.46408000000002,
+       "lmin": 138.0904,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[2]": {
+       "dir": "output",
+       "out": 145.88967000000002,
+       "lmin": 138.44759,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[1]": {
+       "dir": "output",
+       "out": 146.78427,
+       "lmin": 139.42725000000002,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      },
+      "o[0]": {
+       "dir": "output",
+       "out": 147.33814999999998,
+       "lmin": 140.06447000000003,
+       "inp": null,
+       "hold": null,
+       "comb": [],
+       "clk": [
+        "ck"
+       ]
+      }
+     }
+    }
+   }
+  }
+ },
+ "pair_checks": [
+  {
+   "source": "hbfd_rly_48_WE",
+   "sink": "hbfd_rly_48_WE",
+   "worst_serial": {
+    "bit": 23,
+    "o_ps": 215.25334999999998,
+    "s_ps": 146.13119,
+    "wire_bound_um": 523.2,
+    "serial_slack_ps": 202.08345999999983,
+    "stream_sensitivity_slack_ps": -75.71654000000012
+   },
+   "worst_stream_sensitivity": {
+    "bit": 23,
+    "o_ps": 215.25334999999998,
+    "s_ps": 146.13119,
+    "wire_bound_um": 523.2,
+    "serial_slack_ps": 202.08345999999983,
+    "stream_sensitivity_slack_ps": -75.71654000000012
+   },
+   "worst_ff_hold": {
+    "bit": 0,
+    "launch_min_ps": 139.01047999999997,
+    "hold_ps": -87.54283000000001,
+    "zero_wire_margin_ps": 226.55330999999998,
+    "clock_uncertainty_skew_margin_ps": 111.55330999999998
+   }
+  },
+  {
+   "source": "hbfd_rly_48_WE",
+   "sink": "hbfd_rly_48_EW",
+   "worst_serial": {
+    "bit": 23,
+    "o_ps": 215.25334999999998,
+    "s_ps": 151.38335,
+    "wire_bound_um": 523.2,
+    "serial_slack_ps": 196.83129999999983,
+    "stream_sensitivity_slack_ps": -80.96870000000013
+   },
+   "worst_stream_sensitivity": {
+    "bit": 23,
+    "o_ps": 215.25334999999998,
+    "s_ps": 151.38335,
+    "wire_bound_um": 523.2,
+    "serial_slack_ps": 196.83129999999983,
+    "stream_sensitivity_slack_ps": -80.96870000000013
+   },
+   "worst_ff_hold": {
+    "bit": 21,
+    "launch_min_ps": 138.3222,
+    "hold_ps": -89.45275000000001,
+    "zero_wire_margin_ps": 227.77495000000002,
+    "clock_uncertainty_skew_margin_ps": 112.77495000000002
+   }
+  },
+  {
+   "source": "hbfd_rly_48_WE",
+   "sink": "hbfd_rly_48_SN",
+   "worst_serial": {
+    "bit": 23,
+    "o_ps": 215.25334999999998,
+    "s_ps": 146.48891,
+    "wire_bound_um": 523.2,
+    "serial_slack_ps": 201.72573999999986,
+    "stream_sensitivity_slack_ps": -76.0742600000001
+   },
+   "worst_stream_sensitivity": {
+    "bit": 23,
+    "o_ps": 215.25334999999998,
+    "s_ps": 146.48891,
+    "wire_bound_um": 523.2,
+    "serial_slack_ps": 201.72573999999986,
+    "stream_sensitivity_slack_ps": -76.0742600000001
+   },
+   "worst_ff_hold": {
+    "bit": 33,
+    "launch_min_ps": 138.14779,
+    "hold_ps": -88.45157,
+    "zero_wire_margin_ps": 226.59936,
+    "clock_uncertainty_skew_margin_ps": 111.59935999999999
+   }
+  },
+  {
+   "source": "hbfd_rly_48_WE",
+   "sink": "hbfd_rly_48_NS",
+   "worst_serial": {
+    "bit": 13,
+    "o_ps": 213.51683999999997,
+    "s_ps": 148.7809,
+    "wire_bound_um": 523.2,
+    "serial_slack_ps": 201.17025999999987,
+    "stream_sensitivity_slack_ps": -76.62974000000008
+   },
+   "worst_stream_sensitivity": {
+    "bit": 13,
+    "o_ps": 213.51683999999997,
+    "s_ps": 148.7809,
+    "wire_bound_um": 523.2,
+    "serial_slack_ps": 201.17025999999987,
+    "stream_sensitivity_slack_ps": -76.62974000000008
+   },
+   "worst_ff_hold": {
+    "bit": 33,
+    "launch_min_ps": 138.14779,
+    "hold_ps": -88.17938,
+    "zero_wire_margin_ps": 226.32716999999997,
+    "clock_uncertainty_skew_margin_ps": 111.32716999999997
+   }
+  },
+  {
+   "source": "hbfd_rly_48_EW",
+   "sink": "hbfd_rly_48_WE",
+   "worst_serial": {
+    "bit": 38,
+    "o_ps": 216.01364999999998,
+    "s_ps": 144.48069999999998,
+    "wire_bound_um": 523.2,
+    "serial_slack_ps": 202.9736499999999,
+    "stream_sensitivity_slack_ps": -74.82635000000005
+   },
+   "worst_stream_sensitivity": {
+    "bit": 38,
+    "o_ps": 216.01364999999998,
+    "s_ps": 144.48069999999998,
+    "wire_bound_um": 523.2,
+    "serial_slack_ps": 202.9736499999999,
+    "stream_sensitivity_slack_ps": -74.82635000000005
+   },
+   "worst_ff_hold": {
+    "bit": 26,
+    "launch_min_ps": 139.4069,
+    "hold_ps": -88.10198,
+    "zero_wire_margin_ps": 227.50888,
+    "clock_uncertainty_skew_margin_ps": 112.50888
+   }
+  },
+  {
+   "source": "hbfd_rly_48_EW",
+   "sink": "hbfd_rly_48_EW",
+   "worst_serial": {
+    "bit": 4,
+    "o_ps": 213.02800000000002,
+    "s_ps": 149.1986,
+    "wire_bound_um": 523.2,
+    "serial_slack_ps": 201.24139999999989,
+    "stream_sensitivity_slack_ps": -76.55860000000007
+   },
+   "worst_stream_sensitivity": {
+    "bit": 4,
+    "o_ps": 213.02800000000002,
+    "s_ps": 149.1986,
+    "wire_bound_um": 523.2,
+    "serial_slack_ps": 201.24139999999989,
+    "stream_sensitivity_slack_ps": -76.55860000000007
+   },
+   "worst_ff_hold": {
+    "bit": 31,
+    "launch_min_ps": 139.17893,
+    "hold_ps": -89.95544,
+    "zero_wire_margin_ps": 229.13437,
+    "clock_uncertainty_skew_margin_ps": 114.13436999999999
+   }
+  },
+  {
+   "source": "hbfd_rly_48_EW",
+   "sink": "hbfd_rly_48_SN",
+   "worst_serial": {
+    "bit": 16,
+    "o_ps": 215.23463000000004,
+    "s_ps": 146.6525,
+    "wire_bound_um": 523.2,
+    "serial_slack_ps": 201.58086999999978,
+    "stream_sensitivity_slack_ps": -76.21913000000018
+   },
+   "worst_stream_sensitivity": {
+    "bit": 16,
+    "o_ps": 215.23463000000004,
+    "s_ps": 146.6525,
+    "wire_bound_um": 523.2,
+    "serial_slack_ps": 201.58086999999978,
+    "stream_sensitivity_slack_ps": -76.21913000000018
+   },
+   "worst_ff_hold": {
+    "bit": 15,
+    "launch_min_ps": 137.77416,
+    "hold_ps": -89.00888,
+    "zero_wire_margin_ps": 226.78304,
+    "clock_uncertainty_skew_margin_ps": 111.78304
+   }
+  },
+  {
+   "source": "hbfd_rly_48_EW",
+   "sink": "hbfd_rly_48_NS",
+   "worst_serial": {
+    "bit": 21,
+    "o_ps": 213.02092,
+    "s_ps": 150.21154,
+    "wire_bound_um": 523.2,
+    "serial_slack_ps": 200.2355399999999,
+    "stream_sensitivity_slack_ps": -77.56446000000005
+   },
+   "worst_stream_sensitivity": {
+    "bit": 21,
+    "o_ps": 213.02092,
+    "s_ps": 150.21154,
+    "wire_bound_um": 523.2,
+    "serial_slack_ps": 200.2355399999999,
+    "stream_sensitivity_slack_ps": -77.56446000000005
+   },
+   "worst_ff_hold": {
+    "bit": 3,
+    "launch_min_ps": 138.53089,
+    "hold_ps": -87.26203,
+    "zero_wire_margin_ps": 225.79291999999998,
+    "clock_uncertainty_skew_margin_ps": 110.79291999999998
+   }
+  },
+  {
+   "source": "hbfd_rly_48_SN",
+   "sink": "hbfd_rly_48_WE",
+   "worst_serial": {
+    "bit": 19,
+    "o_ps": 214.36419999999998,
+    "s_ps": 145.76623,
+    "wire_bound_um": 523.2,
+    "serial_slack_ps": 203.33756999999991,
+    "stream_sensitivity_slack_ps": -74.46243000000004
+   },
+   "worst_stream_sensitivity": {
+    "bit": 19,
+    "o_ps": 214.36419999999998,
+    "s_ps": 145.76623,
+    "wire_bound_um": 523.2,
+    "serial_slack_ps": 203.33756999999991,
+    "stream_sensitivity_slack_ps": -74.46243000000004
+   },
+   "worst_ff_hold": {
+    "bit": 26,
+    "launch_min_ps": 137.12754999999999,
+    "hold_ps": -88.10198,
+    "zero_wire_margin_ps": 225.22952999999998,
+    "clock_uncertainty_skew_margin_ps": 110.22952999999998
+   }
+  },
+  {
+   "source": "hbfd_rly_48_SN",
+   "sink": "hbfd_rly_48_EW",
+   "worst_serial": {
+    "bit": 22,
+    "o_ps": 215.47623,
+    "s_ps": 147.82711,
+    "wire_bound_um": 523.2,
+    "serial_slack_ps": 200.1646599999999,
+    "stream_sensitivity_slack_ps": -77.63534000000004
+   },
+   "worst_stream_sensitivity": {
+    "bit": 22,
+    "o_ps": 215.47623,
+    "s_ps": 147.82711,
+    "wire_bound_um": 523.2,
+    "serial_slack_ps": 200.1646599999999,
+    "stream_sensitivity_slack_ps": -77.63534000000004
+   },
+   "worst_ff_hold": {
+    "bit": 30,
+    "launch_min_ps": 137.81786,
+    "hold_ps": -89.39779,
+    "zero_wire_margin_ps": 227.21564999999998,
+    "clock_uncertainty_skew_margin_ps": 112.21564999999998
+   }
+  },
+  {
+   "source": "hbfd_rly_48_SN",
+   "sink": "hbfd_rly_48_SN",
+   "worst_serial": {
+    "bit": 22,
+    "o_ps": 215.47623,
+    "s_ps": 145.43156,
+    "wire_bound_um": 523.2,
+    "serial_slack_ps": 202.56020999999987,
+    "stream_sensitivity_slack_ps": -75.23979000000008
+   },
+   "worst_stream_sensitivity": {
+    "bit": 22,
+    "o_ps": 215.47623,
+    "s_ps": 145.43156,
+    "wire_bound_um": 523.2,
+    "serial_slack_ps": 202.56020999999987,
+    "stream_sensitivity_slack_ps": -75.23979000000008
+   },
+   "worst_ff_hold": {
+    "bit": 12,
+    "launch_min_ps": 137.72553,
+    "hold_ps": -89.56988999999999,
+    "zero_wire_margin_ps": 227.29541999999998,
+    "clock_uncertainty_skew_margin_ps": 112.29541999999998
+   }
+  },
+  {
+   "source": "hbfd_rly_48_SN",
+   "sink": "hbfd_rly_48_NS",
+   "worst_serial": {
+    "bit": 11,
+    "o_ps": 209.68900000000002,
+    "s_ps": 152.02364,
+    "wire_bound_um": 523.2,
+    "serial_slack_ps": 201.75535999999988,
+    "stream_sensitivity_slack_ps": -76.04464000000007
+   },
+   "worst_stream_sensitivity": {
+    "bit": 11,
+    "o_ps": 209.68900000000002,
+    "s_ps": 152.02364,
+    "wire_bound_um": 523.2,
+    "serial_slack_ps": 201.75535999999988,
+    "stream_sensitivity_slack_ps": -76.04464000000007
+   },
+   "worst_ff_hold": {
+    "bit": 23,
+    "launch_min_ps": 137.27794,
+    "hold_ps": -88.1877,
+    "zero_wire_margin_ps": 225.46564,
+    "clock_uncertainty_skew_margin_ps": 110.46564000000001
+   }
+  },
+  {
+   "source": "hbfd_rly_48_NS",
+   "sink": "hbfd_rly_48_WE",
+   "worst_serial": {
+    "bit": 10,
+    "o_ps": 217.23122999999998,
+    "s_ps": 145.8044,
+    "wire_bound_um": 523.2,
+    "serial_slack_ps": 200.43236999999988,
+    "stream_sensitivity_slack_ps": -77.36763000000008
+   },
+   "worst_stream_sensitivity": {
+    "bit": 10,
+    "o_ps": 217.23122999999998,
+    "s_ps": 145.8044,
+    "wire_bound_um": 523.2,
+    "serial_slack_ps": 200.43236999999988,
+    "stream_sensitivity_slack_ps": -77.36763000000008
+   },
+   "worst_ff_hold": {
+    "bit": 37,
+    "launch_min_ps": 135.46711,
+    "hold_ps": -89.19028,
+    "zero_wire_margin_ps": 224.65739,
+    "clock_uncertainty_skew_margin_ps": 109.65738999999999
+   }
+  },
+  {
+   "source": "hbfd_rly_48_NS",
+   "sink": "hbfd_rly_48_EW",
+   "worst_serial": {
+    "bit": 4,
+    "o_ps": 216.90598,
+    "s_ps": 149.1986,
+    "wire_bound_um": 523.2,
+    "serial_slack_ps": 197.3634199999999,
+    "stream_sensitivity_slack_ps": -80.43658000000005
+   },
+   "worst_stream_sensitivity": {
+    "bit": 4,
+    "o_ps": 216.90598,
+    "s_ps": 149.1986,
+    "wire_bound_um": 523.2,
+    "serial_slack_ps": 197.3634199999999,
+    "stream_sensitivity_slack_ps": -80.43658000000005
+   },
+   "worst_ff_hold": {
+    "bit": 19,
+    "launch_min_ps": 135.85726,
+    "hold_ps": -89.75057,
+    "zero_wire_margin_ps": 225.60782999999998,
+    "clock_uncertainty_skew_margin_ps": 110.60782999999998
+   }
+  },
+  {
+   "source": "hbfd_rly_48_NS",
+   "sink": "hbfd_rly_48_SN",
+   "worst_serial": {
+    "bit": 4,
+    "o_ps": 216.90598,
+    "s_ps": 143.28929,
+    "wire_bound_um": 523.2,
+    "serial_slack_ps": 203.2727299999999,
+    "stream_sensitivity_slack_ps": -74.52727000000004
+   },
+   "worst_stream_sensitivity": {
+    "bit": 4,
+    "o_ps": 216.90598,
+    "s_ps": 143.28929,
+    "wire_bound_um": 523.2,
+    "serial_slack_ps": 203.2727299999999,
+    "stream_sensitivity_slack_ps": -74.52727000000004
+   },
+   "worst_ff_hold": {
+    "bit": 19,
+    "launch_min_ps": 135.85726,
+    "hold_ps": -87.74411,
+    "zero_wire_margin_ps": 223.60137,
+    "clock_uncertainty_skew_margin_ps": 108.60137
+   }
+  },
+  {
+   "source": "hbfd_rly_48_NS",
+   "sink": "hbfd_rly_48_NS",
+   "worst_serial": {
+    "bit": 21,
+    "o_ps": 210.51096,
+    "s_ps": 150.21154,
+    "wire_bound_um": 523.2,
+    "serial_slack_ps": 202.74549999999977,
+    "stream_sensitivity_slack_ps": -75.05450000000019
+   },
+   "worst_stream_sensitivity": {
+    "bit": 21,
+    "o_ps": 210.51096,
+    "s_ps": 150.21154,
+    "wire_bound_um": 523.2,
+    "serial_slack_ps": 202.74549999999977,
+    "stream_sensitivity_slack_ps": -75.05450000000019
+   },
+   "worst_ff_hold": {
+    "bit": 37,
+    "launch_min_ps": 135.46711,
+    "hold_ps": -89.45829,
+    "zero_wire_margin_ps": 224.9254,
+    "clock_uncertainty_skew_margin_ps": 109.9254
+   }
+  }
+ ],
+ "relay_pair_serial_setup_pass": true,
+ "relay_pair_zero_wire_ff_hold_pass": true,
+ "open": [
+  "actual per-stage master FLOW binding and orientation",
+  "actual source-bound qcore red_rf_v/red_tag[7:0]/red_x launch arcs and N/S pins",
+  "actual qcore rf_wv/rf_wa/rf_wd capture arcs,64 RF clock roots and boundary insertion",
+  "per-bit routed lengths and actual die clock phase/spread",
+  "complete current graph cuts including824new incident edges",
+  "die GRT/STA/DRC0"
+ ]
+}

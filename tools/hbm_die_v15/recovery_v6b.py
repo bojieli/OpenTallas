@@ -34,7 +34,8 @@ def main():
     homes = {}
     for q in ('SW', 'SE', 'NW', 'NE'):
         # Empty region above the bank-pair's HC/SFU: 1,020 x 1,300 um.
-        # Each calendar gets 0.60 mm2, versus the recorded ~0.52 SRAM lower bound.
+        # Historical free-space sensitivity only: 0.60 mm2 per calendar is NOT a measured need.
+        # Correct actual macro area is 0.016206 mm2 per XC; native216x216 fit is in progress.
         for g in range(4):
             hc, sfu = p[f'hc_{q}{g}'], p[f'sfu_{q}{g}']
             for k in range(2):
