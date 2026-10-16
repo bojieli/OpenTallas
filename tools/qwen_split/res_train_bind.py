@@ -8,6 +8,7 @@ import hashlib
 import json
 from pathlib import Path
 
+from qwen_split.closed_view import enabled as view_enabled, install_master as view_install, view_frame
 from qwen_split.source_pin_plan import rtl_ports
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -152,7 +153,9 @@ def _issue(model):
     if ISSUE in by:
         raise ValueError('res train issue already present')
     tt, su = by['tt_ctlm'], by['sp_su64_sfu']
-    wh = ISSUE_WH
+    vf = view_frame(ISSUE_MASTER) if view_enabled() else None
+    # Q-VIEWFRAME 10-16: the issuer slot is the CLOSED view's outline (c2 30.24 x 30.24), not the 129.6 candidate frame
+    wh = (vf[0], vf[1]) if vf is not None else ISSUE_WH
     target = ((tt.x + tt.w/2 + su.x + su.w/2)/2,
               (tt.y + tt.h/2 + su.y + su.h/2)/2)
     x, y = _free_site(model, wh, target, model['die'])
@@ -290,7 +293,12 @@ def install_masters(M, model, Master, partition_master):
     peers = peer_map(model)
     for b in range(BANDS):
         assign_pins(M, model, Master, by[f'sp_res_ser_{b}'], master(b), SOURCE, peers, partition_master)
-    assign_pins(M, model, Master, by[ISSUE], ISSUE_MASTER, ISSUE_SOURCE, peers, partition_master)
+    if view_enabled() and view_frame(ISSUE_MASTER) is not None:
+        # Q-VIEWFRAME 10-16: every die port (and TT-tap fragment) on the closed view's own pin; fails closed otherwise
+        view_install(M, model, Master, by[ISSUE], ISSUE_MASTER, rtl_ports(ROOT / ISSUE_SOURCE, ISSUE_MASTER),
+                     partition_master)
+    else:
+        assign_pins(M, model, Master, by[ISSUE], ISSUE_MASTER, ISSUE_SOURCE, peers, partition_master)
     M.pop(LEGACY, None)
     for b in range(BANDS):
         M.pop(f'qfd_sp_res_train_{b}', None)

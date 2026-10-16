@@ -197,6 +197,34 @@ def rng(ref, ports):
     return i, p, 0, ports[i][p]['bits']
 
 
+STRAP_TARGET_MASTERS = ('ot_static_cmd_target', 'ot_static_program_target')
+UNIV_CAL_DIR = 'rtl/hbm_accel/generic/vm/static/'
+UNIV_CAL_SRC = UNIV_CAL_DIR + 'hfd_hgi_vm_calendar.sv'
+_DBK = 'rtl/hbm_accel/generic/peers/static/'
+# H-NETLIST 0600 (H-DIE option A): F20 collars folded into their only consumer master (wrapper = consumer + collar as
+# pin-registered soft logic; F20 bus + identity strap tgt on the consumer face; collar status on renamed face ports).
+FOLD_RULES = [
+    dict(target='ot_static_program_target', detect='program_cfg_we',
+         consumers=('hfd_hgi_vm_calendar', 'ot_vms_calendar_static'),
+         wrapper='hfd_hgi_vm_calendar_f20', source=UNIV_CAL_DIR + 'hfd_hgi_vm_calendar_f20.sv',
+         deps=[UNIV_CAL_DIR + 'ot_vms_calendar_static_xcap.sv', UNIV_CAL_DIR + 'hfd_hgi_vm_calendar.sv',
+               UNIV_CAL_DIR + 'ot_static_program_target.sv'],
+         status={'configured': 'tgt_configured', 'fault': 'tgt_fault'}),
+    dict(target='ot_static_cmd_target', detect='cmd', consumers=('ot_hgi_dma_back_static_vp4_banks',),
+         wrapper='ot_hgi_dma_back_static_vp4_banks_cp', source=_DBK + 'ot_hgi_dma_back_static_vp4_banks_cp.sv',
+         deps=[_DBK + 'ot_hgi_dma_back_static_vp4_banks.sv', 'rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv'],
+         status={'configured': 'cp_configured', 'fault': 'cp_fault', 'active': 'cp_active'}),
+]
+
+
+def universal_calendar_fields():
+    """(field, lo, bits) of the universal calendar, read from the literal registered slices of its RTL."""
+    txt = (ROOT / UNIV_CAL_SRC).read_text()
+    f = sorted((int(lo), name, int(b)) for name, lo, b in re.findall(r'assign\s+(\w+)\s*=\s*calendar\[(\d+)\+:(\d+)\]', txt))
+    assert [lo for lo, _, _ in f] == [sum(b for _, _, b in f[:k]) for k in range(len(f))], 'universal fields not contiguous'
+    return [(name, lo, b) for lo, name, b in f]
+
+
 def build(specs_dir, out):
     v15 = json.loads((ROOT / V15).read_text())
     grants = json.loads((ROOT / GRANTS).read_text())
@@ -238,6 +266,56 @@ def build(specs_dir, out):
                             replaces_v15=prev['master'] if prev else None)
             if i.get('rtl_deps'):
                 insts[n]['rtl_deps'] = list(i['rtl_deps'])
+    # H-NETLIST 0600 (H-DIE option A): a programme target whose only consumer is a universal VM calendar is FOLDED into
+    # it (hfd_hgi_vm_calendar_f20 = target + calendar; a standalone ~630-pin collar is pin-bound as its own tile).
+    folded = {}       # target instance -> consumer instance
+    fold_rule = {}    # target instance -> rule
+    for s_ in specs:
+        for e in s_.get('edges', []):
+            a, b = e['src'][0], e['dst'][0]
+            if a not in insts or b not in insts:
+                continue
+            for r in FOLD_RULES:
+                if (e['src'][1] == r['detect'] and insts[a]['master'] == r['target']
+                        and insts[b]['master'] in r['consumers']):
+                    folded[a] = b
+                    fold_rule[a] = r
+    for t, c in folded.items():
+        insts[c]['folded_target'] = dict(instance=t, target=insts[t]['params'].get('TARGET'))
+    # H-NETLIST 0600 (owner 19:50 FEWER DISTINCT TILES): programme/command targets take their F20 target id from the
+    # identity strap pin tgt (TGT_PIN=1) instead of the TARGET parameter, so one hardened master per shape serves every id
+    # (76 cmd + 18+ programme targets -> 5 + 1 masters).  The id is a die constant on the strap, never a runtime value.
+    tgt_straps = []
+    for n, i in insts.items():
+        if i['master'] in STRAP_TARGET_MASTERS and 'TARGET' in i['params']:
+            v = str(i['params'].pop('TARGET'))
+            tid = int(v.split("'d")[1]) if "'d" in v else (int(v.split("'h")[1], 16) if "'h" in v else int(v))
+            i['params']['TGT_PIN'] = 1
+            tgt_straps.append(dict(inst=n, port='tgt', value=tid, reason=f'identity: F20 target id {tid} of this target instance'))
+    specs.append(dict(region='target_id_straps', straps=tgt_straps, edges=[], instances=[], clocks=[], gaps=[]))
+    # H-NETLIST 0600: fill calendars vmfc_<q> (ot_vms_calendar_static, W<=187) are the CLOSED universal VM calendar
+    # master hfd_hgi_vm_calendar (native PASS): same programme ABI, calendar[W-1:0] = its low packed fields cycle for
+    # cycle (rtl/hbm_accel/generic/vm/static/fill_universal_0600 gate). Their 'calendar' edges are re-cut per field
+    # below and the related clocks clk_cap/clk_mem join the instance clock domain.
+    univ_cal = {}
+    ucal_fields = universal_calendar_fields()
+    for n, i in insts.items():
+        if i['master'] == 'ot_vms_calendar_static' and int(i['params'].get('W', 146)) <= sum(b for _, _, b in ucal_fields):
+            univ_cal[n] = int(i['params'].get('W', 146))
+            i.update(master='hfd_hgi_vm_calendar', source=UNIV_CAL_SRC, params={},
+                     rtl_deps=[UNIV_CAL_DIR + 'ot_vms_calendar_static_xcap.sv'],
+                     note=i.get('note', '') + f' | H-NETLIST 0600: closed universal calendar master (was ot_vms_calendar_static W{univ_cal[n]})')
+    for t, c in folded.items():
+        tid = insts[t]['params'].get('TGT_PIN') and next(x['value'] for x in tgt_straps if x['inst'] == t)
+        r = fold_rule[t]
+        insts[c].update(master=r['wrapper'], source=r['source'], params=dict(r.get('params', {})), rtl_deps=list(r['deps']))
+        insts[c]['note'] = insts[c].get('note', '') + f' | H-NETLIST 0600: F20 target {tid} folded in (was {t})'
+        for x in tgt_straps:
+            if x['inst'] == t:
+                x['inst'] = c
+        del insts[t]
+    specs.append(dict(region='fill_calendar_universal', edges=[], instances=[], gaps=[], straps=[],
+                      clocks=[dict(inst=n, port=p, domain='stream', kind='clock') for n in univ_cal for p in ('clk_cap', 'clk_mem')]))
     ports = {}
     for n, i in insts.items():
         ports[n] = rtl.ports(i['master'], i['source'], i['params'])
@@ -265,6 +343,42 @@ def build(specs_dir, out):
             e.setdefault('name', f"{s['region']}_{k}")
             e['region'] = s['region']
             edges.append(e)
+    if folded:
+        inv = {}
+        for t, c in folded.items():
+            inv[t] = c
+        fe = []
+        for e in edges:
+            a, b = e['src'][0], e['dst'][0]
+            if a in inv and b == inv[a]:
+                continue                                   # target -> calendar programme pins: now internal
+            if b in inv and a == inv[b]:
+                continue                                   # calendar active -> target interlock: now internal
+            e = dict(e)
+            if b in inv:
+                e['dst'] = [inv[b]] + list(e['dst'][1:])   # F20 broadcast now lands on the calendar face
+            if a in inv:
+                port = fold_rule[a]['status'][e['src'][1]]
+                e['src'] = [inv[a], port] + list(e['src'][2:])
+            fe.append(e)
+        edges = fe
+    if univ_cal:
+        cut = []
+        for e in edges:
+            src = e['src']
+            if src[0] in univ_cal and src[1] == 'calendar':
+                lo = src[2] if len(src) > 2 else 0
+                hi = src[3] if len(src) > 3 else univ_cal[src[0]]
+                dst = e['dst']; dlo = dst[2] if len(dst) > 2 else 0
+                for fname, flo, fbits in ucal_fields:
+                    a, b = max(lo, flo), min(hi, flo + fbits)
+                    if a < b:
+                        cut.append(dict(e, name=f"{e['name']}__{fname}", src=[src[0], fname, a - flo, b - flo],
+                                        dst=[dst[0], dst[1], dlo + a - lo, dlo + b - lo],
+                                        basis=(e.get('basis') or '') + ' | universal calendar field slice (H-NETLIST 0600)'))
+            else:
+                cut.append(e)
+        edges = cut
     # ---------------- bit-level driver map
     drv = {}          # (inst, port, bit) -> (inst, port, bit) | ('PIN', name, bit)
     E = []
@@ -302,6 +416,8 @@ def build(specs_dir, out):
             ckdom[(r['instance'], r['port'])] = (dm, 'clock')
     for s in specs:
         for c in s.get('clocks', []):
+            if c['inst'] in folded:
+                continue
             ckdom[(c['inst'], c['port'])] = (c['domain'], c.get('kind', 'clock'))
     clocks = []
     for (i, p), (dm, kind) in sorted(ckdom.items()):
@@ -360,6 +476,8 @@ def build(specs_dir, out):
             aff = []
             for a in g.get('affects', []):
                 i, p = a[0], a[1]
+                if i in folded.values() and i in ports and p not in ports[i]:
+                    continue        # programme pins internal to a folded calendar+target master (H-NETLIST 0600)
                 if i not in ports or p not in ports[i]:
                     problems.append(f"gap {g['id']}: unknown {i}.{p}"); continue
                 ii, pp_, lo, hi = rng(a, ports)

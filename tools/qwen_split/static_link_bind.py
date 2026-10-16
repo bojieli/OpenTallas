@@ -10,6 +10,7 @@ record, the STATUS/RESULT record) are enumerated, never tied.
 import hashlib
 from pathlib import Path
 
+from qwen_split.closed_view import enabled as view_enabled, install_master as view_install, view_frame
 from qwen_split.source_pin_plan import rtl_ports
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -26,6 +27,13 @@ def apply(model):
         raise ValueError('static link bind needs the historical d2d_rom, native59 and ucie_kv')
     d2d.master = MASTER
     ports = rtl_ports(ROOT / SOURCE, MASTER)
+    vf = view_frame(MASTER) if view_enabled() else None
+    frame = None
+    if vf is not None:
+        # Q-VIEWFRAME 10-16: the slot takes the CLOSED view's outline (r5 475.2 x 280.8, bind_view_select.json) instead
+        # of the historical qfd_d2d_rom frame; the origin stands, so the shrink never touches a neighbour
+        frame = dict(historical_um=[d2d.w, d2d.h], view_um=[vf[0], vf[1]])
+        d2d.w, d2d.h = vf[0], vf[1]
     retire = {'x3_mux'}
     removed, kept, rst_bus, clk_bus = [], [], None, None
     for b, c, n, es in model['buses']:
@@ -104,6 +112,8 @@ def apply(model):
                            'crom_fault / execution_active / admit_ready / result_* (Q-DVM, Q-COLL, Q-COMPUTE, Q-FUNC '
                            'per the Q-LINK RTL note): no producer port exists on the compute die yet',
                qualified=False)
+    if frame is not None:
+        rec['view_frame'] = frame
     model['static_link_bind'] = rec
     return rec
 
@@ -113,7 +123,11 @@ def install_masters(M, model, Master, partition_master):
         return
     from qwen_split.native_graph_bind import assign_pins, peer_map
     by = {i.name: i for i in model['insts']}
-    assign_pins(M, model, Master, by['d2d_rom'], MASTER, SOURCE, peer_map(model), partition_master)
+    if view_enabled() and view_frame(MASTER) is not None:
+        # Q-VIEWFRAME 10-16: every die port on the closed view's own pin (fails closed on any port without one)
+        view_install(M, model, Master, by['d2d_rom'], MASTER, rtl_ports(ROOT / SOURCE, MASTER), partition_master)
+    else:
+        assign_pins(M, model, Master, by['d2d_rom'], MASTER, SOURCE, peer_map(model), partition_master)
     q = Master(BUMP, BUMP_WH, BUMP_WH, 3, 'package signal bump receiver (hard-macro model)')
     q.ports['o'] = ('pins', 1, 'N', 'M5', [round(.012 + round((BUMP_WH / 2 - .012) / .048) * .048, 4)], 1)
     q.order.append('o')

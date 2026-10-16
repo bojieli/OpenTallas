@@ -37,6 +37,7 @@ namespace eval ot_mts {
     variable bulk_active 0
     variable bulk_boxes {}
     variable bulk_grid {}
+    variable wrongway_skipped 0   ;# wrong-way pin stubs not used as track constraints (see pin_track_shapes)
 }
 
 proc ot_mts::gcd {a b} { while {$b} { set t [expr {$a % $b}]; set a $b; set b $t }; return $a }
@@ -134,6 +135,28 @@ proc ot_mts::meet {c1 c2} {
     return [list $L $out]
 }
 
+# The shapes of ONE pin that must sit on a track: {lname axis x1 y1 x2 y2} each.  A pin is reached along
+# its layer's preferred direction, so its access shapes are the preferred-direction ones (extent along the
+# preferred direction >= extent across it).  A routed view's abstract can carry, in the same pin, a short
+# wrong-way stub (the tile router's jog onto the pin: e.g. a 0.040 x 0.168 M4 piece, or a 0.126 x 0.065 M3
+# piece next to a 0.018-wide on-track M3 pin); its centre is not a track position and it spans tracks
+# across, so it does not constrain the origin -- PROVIDED the pin keeps at least one preferred-direction
+# shape, which then must be on track (fail closed: a pin with only wrong-way shapes constrains as before).
+# S-DIE 2026-10-16: c26b PLACE 'n0_0 y has no legal origin' = 25 closed bound views with such stubs.
+proc ot_mts::pin_track_shapes {shapes} {
+    variable wrongway_skipped
+    set pref {}
+    foreach s $shapes {
+        lassign $s lname axis x1 y1 x2 y2
+        set along  [expr {$axis eq "y" ? $x2 - $x1 : $y2 - $y1}]
+        set across [expr {$axis eq "y" ? $y2 - $y1 : $x2 - $x1}]
+        if {$along >= $across} { lappend pref $s }
+    }
+    if {![llength $pref]} { return $shapes }
+    incr wrongway_skipped [expr {[llength $shapes] - [llength $pref]}]
+    return $pref
+}
+
 # Legal origin residues for one master in one orientation: {x {P S} y {P S}} in DBU.
 # Every signal pin shape on a layer with tracks constrains the axis across its preferred direction.
 proc ot_mts::rule {master orient} {
@@ -148,6 +171,7 @@ proc ot_mts::rule {master orient} {
     set per [dict create]   ;# layer,axis -> dict of centre residues (2x) seen
     foreach mt [$master getMTerms] {
         if {![is_signal $mt]} { continue }
+        set shapes {}
         foreach mp [$mt getMPins] {
             foreach box [$mp getGeometry] {
                 set lay [$box getTechLayer]
@@ -156,9 +180,13 @@ proc ot_mts::rule {master orient} {
                 if {![info exists tracks($lname)]} { continue }
                 set axis [expr {[$lay getDirection] eq "HORIZONTAL" ? "y" : "x"}]
                 lassign [xform [$box xMin] [$box yMin] [$box xMax] [$box yMax] $orient $W $H] qx1 qy1 qx2 qy2
-                set c2 [expr {$axis eq "y" ? $qy1 + $qy2 : $qx1 + $qx2}]
-                dict set per "$lname,$axis" $c2 1
+                lappend shapes [list $lname $axis $qx1 $qy1 $qx2 $qy2]
             }
+        }
+        foreach s [pin_track_shapes $shapes] {
+            lassign $s lname axis qx1 qy1 qx2 qy2
+            set c2 [expr {$axis eq "y" ? $qy1 + $qy2 : $qx1 + $qx2}]
+            dict set per "$lname,$axis" $c2 1
         }
     }
     dict for {la centres} $per {
@@ -417,7 +445,7 @@ proc ot_mts::assert_on_track {args} {
             if {[[$inst getMaster] isBlock]} { lappend insts $inst }
         }
     }
-    set n_inst 0; set n_pins 0; set n_off 0; set n_nogrid 0; set worst 0.0
+    set n_inst 0; set n_pins 0; set n_off 0; set n_nogrid 0; set n_wrongway 0; set worst 0.0
     set bad {}
     foreach inst $insts {
         set st [$inst getPlacementStatus]
@@ -445,6 +473,7 @@ proc ot_mts::assert_on_track {args} {
                                       [expr {$c + [lindex $loc 0]}] [expr {$d + [lindex $loc 1]}]]
                 }
             }
+            set gs {}
             foreach s $abs {
                 lassign $s lay x1 y1 x2 y2
                 if {$lay eq "NULL" || $lay eq ""} { continue }
@@ -452,6 +481,13 @@ proc ot_mts::assert_on_track {args} {
                 set axis [expr {[$lay getDirection] eq "HORIZONTAL" ? "y" : "x"}]
                 set lines [grid_lines $block [$lay getName] $axis]
                 if {![llength $lines]} { incr n_nogrid; continue }
+                lappend gs [list [$lay getName] $axis $x1 $y1 $x2 $y2]
+            }
+            set keep [pin_track_shapes $gs]
+            incr n_wrongway [expr {[llength $gs] - [llength $keep]}]
+            foreach s $keep {
+                lassign $s lname axis x1 y1 x2 y2
+                set lines [grid_lines $block $lname $axis]
                 incr n_pins
                 set c2 [expr {$axis eq "y" ? $y1 + $y2 : $x1 + $x2}]
                 set d [offset2 $lines $c2]
@@ -471,8 +507,8 @@ proc ot_mts::assert_on_track {args} {
         }
     }
     set verdict [expr {$n_off ? "FAIL" : "PASS"}]
-    puts [format "OT_MACRO_TRACK_ASSERT %s%s macros=%d pins_checked=%d offtrack=%d max_offset_nm=%.1f no_track_grid=%d" \
-              $verdict [expr {$label eq "" ? "" : " label=$label"}] $n_inst $n_pins $n_off $worst $n_nogrid]
+    puts [format "OT_MACRO_TRACK_ASSERT %s%s macros=%d pins_checked=%d offtrack=%d max_offset_nm=%.1f no_track_grid=%d wrongway_stubs_exempt=%d" \
+              $verdict [expr {$label eq "" ? "" : " label=$label"}] $n_inst $n_pins $n_off $worst $n_nogrid $n_wrongway]
     foreach b $bad { puts "OT_MACRO_TRACK_ASSERT offtrack $b" }
     if {$n_off && !$warn_only} {
         error "OT_MACRO_TRACK_ASSERT FAIL: $n_off macro signal pin centres off their preferred-direction track (max [format %.1f $worst] nm); see results/uarch/macro_pin_access_audit_20261003"
