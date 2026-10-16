@@ -12,12 +12,12 @@
     "EDGES": 7116,
     "COLS": 38,
     "INDEX_PACK": 1,
-    "DICT_BANKS": "'{3,10,9,13,2,1,1,1,1,1,2,10,9,2,1,1,1,1,1,3,10,9,13,1,1,1,1,1,3,2,10,1,2,1,1,1,1,1}",
+    "DICT_BANKS": "{32'd1,32'd1,32'd1,32'd1,32'd1,32'd2,32'd1,32'd10,32'd2,32'd3,32'd1,32'd1,32'd1,32'd1,32'd1,32'd13,32'd9,32'd10,32'd3,32'd1,32'd1,32'd1,32'd1,32'd1,32'd2,32'd9,32'd10,32'd2,32'd1,32'd1,32'd1,32'd1,32'd1,32'd2,32'd13,32'd9,32'd10,32'd3}",
     "MACROS": 301
    },
    "slot": null,
    "owner": "H-SU",
-   "note": "whole-SU serial programme plane (target 128x256 SRAM macros, 301 macros) at the 4 x 2422-bit command boundary; params from results/arch/hbm_su_f2_static_1014/programme/two_planes_1103/serial_manifest.json (the MR1 proof image 7116 edges, receipt multirate_native_d9507c056); DICT_BANKS is an unpacked int array parameter (emit verbatim). NO die slot exists for it (H-DIE). command is registered and zeroed when !valid (ot_hbm_su_programme.sv always_ff), so the bench gate line=valid?command:0 is redundant and command binds directly."
+   "note": "whole-SU serial programme plane (target 128x256 SRAM macros, 301 macros) at the 4 x 2422-bit command boundary; params from results/arch/hbm_su_f2_static_1014/programme/two_planes_1103/serial_manifest.json (the MR1 proof image 7116 edges, receipt multirate_native_d9507c056); DICT_BANKS is an packed little-column vector parameter (emit verbatim). NO die slot exists for it (H-DIE). command is registered and zeroed when !valid (ot_hbm_su_programme.sv always_ff), so the bench gate line=valid?command:0 is redundant and command binds directly."
   },
   {
    "name": "sucore_SW",

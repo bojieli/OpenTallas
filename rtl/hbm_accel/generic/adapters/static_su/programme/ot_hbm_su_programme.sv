@@ -28,7 +28,8 @@ module ot_hbm_su_programme #(
   parameter integer INDEX_GROUPS=(COLS+15)/16,
   parameter integer INDEX_PACK=1,
   parameter integer INDEX_BANKS=(EDGES+128*INDEX_PACK-1)/(128*INDEX_PACK),
-  parameter integer DICT_BANKS [0:COLS-1]='{default:1},
+  // Packed little-column vector keeps the production source legal in Yosys.
+  parameter [32*COLS-1:0] DICT_BANKS={COLS{32'd1}},
   parameter integer MACROS=INDEX_GROUPS*INDEX_BANKS+COLS
 )(input logic clk, rst_n, input logic [MACROS-1:0] clk_macro,
   input logic cfg_we, input logic [15:0] cfg_bank, input logic [6:0] cfg_row,
@@ -41,7 +42,7 @@ module ot_hbm_su_programme #(
     integer v;
     begin
       v=INDEX_GROUPS*INDEX_BANKS;
-      for(integer k=0;k<c;k=k+1) v=v+DICT_BANKS[k];
+      for(integer k=0;k<c;k=k+1) v=v+DICT_BANKS[32*k+:32];
       return v;
     end
   endfunction
@@ -69,8 +70,8 @@ module ot_hbm_su_programme #(
       .cfg_row(cfg_row),.cfg_data(cfg_data),.data(index_rows[g*256+:256]));
   end
   for(genvar c=0;c<COLS;c=c+1) begin:dt
-    ot_hbm_su_programme_mem #(.BANKS(DICT_BANKS[c]),.BASE(dict_base(c))) mem(
-      .clk(clk),.clk_macro(clk_macro[dict_base(c)+:DICT_BANKS[c]]),.ren(v1),.addr(indices[c*16+:16]),.cfg_we(write_enable),.cfg_bank(cfg_bank),
+    ot_hbm_su_programme_mem #(.BANKS(DICT_BANKS[32*c+:32]),.BASE(dict_base(c))) mem(
+      .clk(clk),.clk_macro(clk_macro[dict_base(c)+:DICT_BANKS[32*c+:32]]),.ren(v1),.addr(indices[c*16+:16]),.cfg_we(write_enable),.cfg_bank(cfg_bank),
       .cfg_row(cfg_row),.cfg_data(cfg_data),.data(templates[c*256+:256]));
   end
   // Start sampled at S; first command/valid presented after S+3 and sampled
