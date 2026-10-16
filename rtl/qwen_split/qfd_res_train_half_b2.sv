@@ -31,7 +31,7 @@ module qfd_res_train_half_b2_bank #(parameter integer INDEX=0,BAND=0,NB=6,D=2,MU
  end end
 endmodule
 module qfd_res_train_half_b2 #(
- parameter integer BAND=0,NB=6,D=2,MAX_TRAIN=8,MUT=0
+ parameter integer BAND=0,NB=6,D=2,MAX_TRAIN=8,MUT=0,BSTN=0
 )(input wire ck,rst_n,input wire[23:0]ck_bank,
  input wire train_start,input wire[3:0]train_count,input wire[31:0]capture_stride,input wire payload_write,
  input wire[3:0]slot_count,
@@ -74,11 +74,30 @@ module qfd_res_train_half_b2 #(
  fbase=11'(D)+11'(LAG)*11'(n)+11'(k/8)*p+11'(k%8)*11'(n);
  endfunction
  wire[BANKS*551-1:0]bank_q;
+ // BSTN=1 (Q-B2r 10-16, multi-root leaf kit): every bank input leaves ONE parent-root (ck) station register, so each
+ // primary input is captured only in the ck domain and the 24 bank roots see ordinary related reg->reg paths.  Exact
+ // retiming, external edges unchanged: a bank sees cycle one edge late, so it captures rq (station copy) one edge
+ // later -- still >= 1 edge before its first emission (fbase - cap >= D >= 2) -- and compares emission against
+ // base-1, which lands on the same absolute edge as before.  rb / fault / the capture checks are untouched.
+ reg[2211:0]rq_s;reg[10:0]cycle_s;reg[31:0]stride_s;reg[3:0]ns_s;reg[BANKS-1:0]en_s;reg[11*BANKS-1:0]base_s;
+ always @(posedge ck)begin
+  rq_s<=rq[2211:0];cycle_s<=cycle;stride_s<=stride;ns_s<=ns_q;
+  for(integer k=0;k<BANKS;k=k+1)begin
+   en_s[k]<=enable&&payload&&(k<8*selected_count);
+   base_s[11*k+:11]<=fbase(k,ns_q,period_q)-11'd1;
+  end
+ end
  generate for(genvar bi=0;bi<BANKS;bi=bi+1)begin:bank
  localparam integer IDX=bi;
+ if(BSTN!=0)begin:g_s
+ qfd_res_train_half_b2_bank #(.INDEX(IDX),.BAND(BAND),.NB(NB),.D(D),.MUT(MUT))u(
+ .ck(ck_bank[IDX]),.rst_n(rst_n),.enable(en_s[IDX]),.cycle(cycle_s),.stride(stride_s),
+ .base(base_s[11*IDX+:11]),.ns(ns_s),.rq({1'b0,rq_s}),.q(bank_q[551*IDX+:551]));
+ end else begin:g_d
  qfd_res_train_half_b2_bank #(.INDEX(IDX),.BAND(BAND),.NB(NB),.D(D),.MUT(MUT))u(
  .ck(ck_bank[IDX]),.rst_n(rst_n),.enable(enable&&payload&&(IDX<8*selected_count)),.cycle(cycle),.stride(stride),
  .base(fbase(IDX,ns_q,period_q)),.ns(ns_q),.rq(rq),.q(bank_q[551*IDX+:551]));
+ end
  end endgenerate
  reg[550:0]merged;
  always @*begin merged=0;for(integer k=0;k<BANKS;k=k+1)merged=merged|bank_q[551*k+:551];end
