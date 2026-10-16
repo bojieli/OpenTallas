@@ -44,7 +44,7 @@
   "open": [
     "Native hard-leaf physical proof",
     "Actual parent graph/pins/cuts and per-child delivered clocks",
-    "2 foreign KV relay conflicts in first-pass geometry",
+    "10 source/foreign relay conflicts in final-sized first-pass geometry",
     "No actual6_final routed image exists"
   ],
   "lint": "verilator --lint-only --top-module dsfd_cfifo_partitioned PASS",

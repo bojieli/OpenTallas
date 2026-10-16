@@ -168,6 +168,7 @@
   "open": [
     "Check actual relocated input/output pins and every incident bus",
     "Re-run actual relay allocator and channels/cuts",
-    "Clock phase plus native timing must be re-proven; no stage-count claim"
+    "Clock phase plus native timing must be re-proven; no stage-count claim",
+    "Two KV station moves alone do not clear the other eight source-station overlaps at cf10/11/17/23."
   ]
 }

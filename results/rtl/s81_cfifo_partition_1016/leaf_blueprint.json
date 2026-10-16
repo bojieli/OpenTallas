@@ -755,7 +755,7 @@
   "cycles_added": 0,
   "source_semantics": "oa[0] qualifies every output; lane faults ORed inside return_control; lane-valid mismatch sticky status unchanged",
   "blockers": [
-    "2 foreign KV relay overlaps in first-pass expanded parent",
+    "10 first-pass overlaps: 8 source cx/cx_x2 stations at cf10/11/17/23 plus 2 foreign KV relays",
     "Return ri N to rd S separation must be resolved using actual peer pins, extra output stage priced if needed",
     "Parent source/read/output wires and actual cuts not proven",
     "No final die plan/clock delivery/native qualification"
