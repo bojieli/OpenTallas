@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """ot_s81_cfg7_seq PINREG 1 pin plan (S-ELEM-PQ/COLL 2026-10-16, VIS-ROM finding S81F-04, owner order 01:00 "crowding /
-pin positioning must be fixed").  Writes the explicit io tcl + a face report for the 17.28 x 51.84 tile (height from the W-face pin-flop depth: 356 pins at
-<= 7.5 b/um; the gate oflop check measured 6 flop columns = 10.6 um behind a 10.5 b/um face on the 41.04 tile).
+pin positioning must be fixed").  Writes the explicit io tcl + a face report for the 17.28 x 45.36 tile (height from the W-face pin density and util: 356 pins at
+<= 8.4 b/um with util 0.49 (41.04: 9.4 b/um, 51.84: util 0.43 < 0.45).
 
 Measured die geometry (die c21h a_real, EPYC4 s81-die-iter/c21h/a_real: floorplan_placed.def + elements/cfg/q_elem LEF),
 every pair in the cfg7 local frame (FN pairs unmirrored):
@@ -11,7 +11,7 @@ every pair in the cfg7 local frame (FN pairs unmirrored):
   * dsfd_qbank_S.i_cfg / i_go are 78..135 um W of the tile at y +64.9, the q element's bank_free / go_tag / sh_free
     at 90..118 um W, y +74.
 Plan:
-  W  (M4, 0.012 + 0.048 k, 2.8 tracks/pin = 7.4 b/um, cut 0.36): bottom -> top q6 q5 q4 q3 | clk | q2 q1 q0, then
+  W  (M4, 0.012 + 0.048 k, 2.5 tracks/pin = 8.3 b/um, cut 0.40): bottom -> top q6 q5 q4 q3 | clk | q2 q1 q0, then
      ce6..ce0 and a[0..11] on top.  Bundles stack nearest-ROM lowest (the ROM band is local y 0.8 .. 4.8), and the bits
      of each q bundle follow the ROM rd_out pin order bottom -> top (sorted by rd_out y: 29..42, 0, 43, 1, 44, .., 4,
      47, 5..28) so a straight hop keeps its order (was: bit-index order = 'interleaved' on all 13,286 rd bundles).
@@ -27,7 +27,7 @@ ROM index j -> 6 - j) instead of a second master.
 """
 import json, sys
 
-W, H = 17.28, 51.84
+W, H = 17.28, 45.36
 TRK0, TRK = 0.012, 0.048
 ROM_RD_Y = {i: 2.124 + 0.096 * i for i in range(29)}
 ROM_RD_Y.update({i: 0.78 + 0.096 * (i - 29) for i in range(29, 48)})
@@ -49,7 +49,7 @@ def main(out_tcl, out_rep):
     for j in (2, 1, 0):
         wl += [f"q{j}[{b}]" for b in QORD]
     wl += [f"ce{j}" for j in (6, 5, 4, 3, 2, 1, 0)] + [f"a[{b}]" for b in range(12)]
-    y0, step = 1.0, 2.8 * TRK
+    y0, step = 1.0, 2.5 * TRK
     ys, used = {}, set()
     for i, p in enumerate(wl):
         if p is None:

@@ -16,7 +16,7 @@
  ],
  "outline": {
   "w": 17.28,
-  "h": 51.84,
+  "h": 45.36,
   "exact": true
  },
  "layer_cap": "M5",
@@ -65,17 +65,17 @@
   "m5_pg_pitch": 2.7
  },
  "slot_change_request": {
-  "reason": "VIS-ROM S81F-04 pin plan (tools/s81/cfg7_pr_pins.py): W q bundles stacked nearest-ROM lowest in ROM rd_out pin order, clk on W at the q pin-flop centroid, N cfg/go/ef/go_tag at the W end in die-target order; outline 17.28 x 41.04 -> 17.28 x 51.84 (W face 356 pins at 7.4 b/um: the gate oflop check measured 6 pin-flop columns behind the 10.5 b/um face of the 41.04 tile); die rebind + co-placement asked in el1011-s81die.log [S-ELEM-PQ/COLL -> S-DIE] 2026-10-16",
+  "reason": "VIS-ROM S81F-04 pin plan (tools/s81/cfg7_pr_pins.py): W q bundles stacked nearest-ROM lowest in ROM rd_out pin order, clk on W at the q pin-flop centroid, N cfg/go/ef/go_tag at the W end in die-target order; outline 17.28 x 41.04 -> 17.28 x 45.36 (W face 356 pins at 8.3 b/um, util 0.49; 51.84 measured util 0.43); die rebind + co-placement asked in el1011-s81die.log [S-ELEM-PQ/COLL -> S-DIE] 2026-10-16",
   "outline": [
    17.28,
-   51.84
+   45.36
   ],
   "generator_slot": [
    34.536,
    60.456
   ]
  },
- "structural_change": "PINREG 1 successor of the CLOSED ot_s81_cfg7_seq LAYOUT 1 view (s81fill2_cfg7_seq_l1pd-g1-61d2351bf TT +62.00 / FF +19.99, VIS-ROM S81F-04 SEV2: 20 combinational feed-through pins, native capture 300.6 ps on 189 pins, launch 221.6 ps, W pins in bit-index order = 13,286 die rd bundles interleaved, clock at the S face). RTL rtl/v41die/ot_s81_cfg7_seq.sv PINREG 1 (opt-in, default 0 unchanged): every input (lc, ef, q0..q6) in a pin flop and every output (a, ce0..6, cfg, go_e, st, go_tag) from a pin flop; capture/go side 2 edges behind the loader (macro read loop +2), exact = PINREG 0 with inputs +1 and cfg/go_e/st/go_tag +3 edges (compiler schedule: lc -> cfg/go_e/st/go_tag +4 edges, lc -> a/ce +2 edges, fixed shift, no handshake). Gate tb_ot_s81_cfg7_seq.sv +TB_CFG7_PINREG PASS PQ1/PQ0/BF, mutants PRDL/TAG/NOFAULT FAIL. Pins tools/s81/cfg7_pr_pins.py from the measured die c21h geometry: W 356 pins 7.4 b/um cut 0.35 (q6..q3 | clk | q2..q0, ce, a; q bits in ROM rd_out pin order), N 59 pins at the W end in die-target order, E lc/st unchanged, S rst_n. Outline 17.28 x 41.04 -> 17.28 x 51.84 (pin-flop depth behind the W face; still inside the 60.456 generator slot / 62.95 ROM height).",
+ "structural_change": "PINREG 1 successor of the CLOSED ot_s81_cfg7_seq LAYOUT 1 view (s81fill2_cfg7_seq_l1pd-g1-61d2351bf TT +62.00 / FF +19.99, VIS-ROM S81F-04 SEV2: 20 combinational feed-through pins, native capture 300.6 ps on 189 pins, launch 221.6 ps, W pins in bit-index order = 13,286 die rd bundles interleaved, clock at the S face). RTL rtl/v41die/ot_s81_cfg7_seq.sv PINREG 1 (opt-in, default 0 unchanged): every input (lc, ef, q0..q6) in a pin flop and every output (a, ce0..6, cfg, go_e, st, go_tag) from a pin flop; capture/go side 2 edges behind the loader (macro read loop +2), exact = PINREG 0 with inputs +1 and cfg/go_e/st/go_tag +3 edges (compiler schedule: lc -> cfg/go_e/st/go_tag +4 edges, lc -> a/ce +2 edges, fixed shift, no handshake). Gate tb_ot_s81_cfg7_seq.sv +TB_CFG7_PINREG PASS PQ1/PQ0/BF, mutants PRDL/TAG/NOFAULT FAIL. Pins tools/s81/cfg7_pr_pins.py from the measured die c21h geometry: W 356 pins 8.3 b/um cut 0.40 (q6..q3 | clk | q2..q0, ce, a; q bits in ROM rd_out pin order), N 59 pins at the W end in die-target order, E lc/st unchanged, S rst_n. Outline 17.28 x 41.04 -> 17.28 x 45.36 (W pin density 9.4 -> 8.3 b/um at util 0.49; inside the 60.456 generator slot / 62.95 ROM height). Gate on 51.84: synth 258 um2 std, 564 flops, CTS 564 sinks TT 85.4 ps / spread 7.1, setup WNS +230 ps, hold +44.9 ps, util 0.43 (< 0.45) -> 45.36.",
  "job": {
   "owner": "Claude:S-ELEM-PQ/COLL",
   "branch": "claude/s81coll-cfg7-0100",
