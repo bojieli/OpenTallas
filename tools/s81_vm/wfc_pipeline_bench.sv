@@ -1,12 +1,12 @@
 `timescale 1ns/1ps
 module tb_wfc_pipeline;
  parameter RLAT=17, PAD=0;
- reg ct=0,cs=0,rt=0,rs=0;
+ reg ct=1,cs=1,rt=0,rs=0;
  always #6 ct=~ct; always #8 cs=~cs;
  reg[559:0] f=0; reg[3:0] ev=0,evd=0;reg[2047:0] ed=0,edd=0;
  wire[1028:0] tr,td;wire wr,wd;wire[13:0] ar,ad;wire[511:0] dr,dd;wire[3:0] vr,vd;wire[55:0] rr,rd;wire fr,fd;
  dsfd_vm_static_wfc_r5_ref #(.RLAT(RLAT),.RESPONSE_PAD(PAD)) ref_(cs,ct,cs,ct,cs,ct,rs,rt,rs,rt,rs,rt,f,tr,wr,ar,dr,vr,rr,ev,ed,1'b0,fr);
- dsfd_vm_static_wfc #(.RLAT(RLAT),.RESPONSE_PAD(PAD)) dut(cs,ct,cs,ct,rs,rt,ct,rt,cs,ct,cs,ct,rs,rt,rs,rt,rs,rt,f,td,wd,ad,dd,vd,rd,evd,edd,1'b0,fd);
+ dsfd_vm_static_wfc #(.RLAT(RLAT),.RESPONSE_PAD(PAD)) dut(cs,ct,cs,ct,rs,rt,ct,rt,cs,ct,ct,cs,rs,rt,rt,rs,cs,ct,cs,ct,rs,rt,rs,rt,rs,rt,f,td,wd,ad,dd,vd,rd,evd,edd,1'b0,fd);
  reg[526:0] whist=0;reg[59:0] ahist=0;
  reg[1025:0] shist[0:3];reg[1025:0] thist[0:2];reg[3:0] vhist=0;
  integer n=0,k,seed=1,seed0,reads=0,writes=0;
