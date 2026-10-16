@@ -1,0 +1,77 @@
+{
+ "schema": "opentallas.s81.vm-split4.slot-grant-request.v1",
+ "status": "CANDIDATE_NOT_ADOPTED",
+ "request": "Reserve measured parent screen4104x4644um for standard field4 front; outer actual peer graph/clock/PG/route must qualify",
+ "outline_um": [
+  4104,
+  4644
+ ],
+ "old_outline_um": [
+  4104,
+  4114.8
+ ],
+ "height_delta_um": 529.2,
+ "area_mm2": 19.058976,
+ "geometry": {
+  "spacing": 0,
+  "outside": 0,
+  "leaf_count": 511,
+  "bitnet_connections": 426898,
+  "workload": "All53sources/128actualSRAM/3capture slots unchanged"
+ },
+ "cuts": {
+  "worst": 0.595,
+  "p99": 0.584,
+  "over060": 0,
+  "edges": 3859,
+  "full_horizontal": 0.44,
+  "full_vertical": 0.529
+ },
+ "clock_ABI": {
+  "front_old_total_roots": 49,
+  "front_new_total_roots": 145,
+  "delta": 96,
+  "old_data_clock_vector": "ck_data[31:0], eight per slice",
+  "new_data_clock_vector": "ck_data[127:0], thirty-two per slice",
+  "old_data_reset_vector": "rst_data_n[31:0]",
+  "new_data_reset_vector": "rst_data_n[127:0]",
+  "index": "new[4*(8*slice+field)+nibble], nibble0..3 carries bits4*nibble+:4 of original16bitfield",
+  "categories_unchanged": [
+   "header1",
+   "payload4",
+   "control4",
+   "meta4",
+   "fault4"
+  ],
+  "control_master": "s81_a2f_control4_resetlocal x4 replaces oldcontrol4 without newroot",
+  "each_data_master": "s81_a2f_field4 (2532FF) x128, independent pin clock/reset per leaf",
+  "clock_rule": "Die must deliver phi-R at EACH child clock pin using its final routed insertion.json; current CTS R168.1/spread23.8ps diagnostic only",
+  "reset_rule": "Same release pipelines; hold/phase startup must align all child epochs before compiler fixed programme, production delivery not yet proven"
+ },
+ "schedule": {
+  "extra_data_cycles": 0,
+  "extra_diagnostic_cycles": 0,
+  "actual_programme_adoption": false
+ },
+ "live_proof": "Full16384-bit controlled composition same pins/all output edges remains running; component and native physical gates not adoption",
+ "open": [
+  "89272 leaflinks over500um; real relay reach/count and schedule cost",
+  "Full-composition exact/mutant receipt",
+  "All final routed native launch/capture/TT setup/FFhold/DRC0",
+  "Real parentGRT/DRT and actualpeer/pinrouting",
+  "Per-child clock/reset delivery and phase-R",
+  "PG connectivity/IR/EM",
+  "Unmeasured meta26 hardening",
+  "W0 proposed re-outline hardening",
+  "Production compiler/price/adoption"
+ ],
+ "sources": {
+  "tools/s81_vm/area_a2f_field4.sv": "3e21f264b0a2bf36efcb5b3f5a3f8df2185ea19d9b158e4174b8e44a4279f86d",
+  "tools/s81_vm/area_a2f_split4_composed.sv": "aaf555a3790e55465ce60ba60664bf533551091970fdf6e2eaa31d452eaf19b6",
+  "tools/s81_vm/area_a2f_control_resetlocal.sv": "76ee6a4294154abf2ad324d8f4c3a2ca68a0c51ea8a62036020ee4c7ff4e79f1",
+  "tools/s81_vm/a2f_split4_route_plan.py": "9e0ac2667c436bfa8c546b92303e1997d97093f289daa982eb57911a51876fb8",
+  "physical/s81_vm_a2f_split4_2118/s81_a2f_field4.pins.json": "933535b948fec16030b10a2df009d7c6341f10ce4a97fd2059976dcf619e0839",
+  "physical/s81_vm_a2f_control_resetlocal_2118/s81_a2f_control4_resetlocal.pins.json": "738461a9e9f6e6811644d842ec77aa9eaab44930ba0dfdb37937221b358e3295",
+  "results/arch/s81_vm_split4_2118/route_plan.json": "2aa6593193dc04ed319935b938d79688c75fbc04ad47663754ff63493efb5957"
+ }
+}

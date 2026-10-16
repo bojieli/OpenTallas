@@ -53,7 +53,7 @@ def main():
  ap=argparse.ArgumentParser();ap.add_argument('--passes',type=int,default=10);ap.add_argument('--out',default=str(ROOT/'results/arch/s81_vm_split4_2118/route_plan.json'));a=ap.parse_args()
  F.install_pin_models();baseface=R.port_face;cdc=('aSW','t_wfc','f_wfc','sel','col','qSW','t_gather');R.port_face=lambda p:'E' if p.startswith(cdc) else baseface(p)
  leaves,nets=R.load();ol=dict(F.OUTLINES);ol.update(s81_a2f_field16=(194.4,280.8),s81_a2f_meta26=(259.2,162.0),s81_a2f_control4=(194.4,129.6))
- leaves,nets=F.transform(leaves,nets,ol);vo=copy.deepcopy(F.VARIANTS['midcapd']);P,W,H,struct=F.build_mid(leaves,nets,3369.6,vo)
+ leaves,nets=F.transform(leaves,nets,ol);vo=copy.deepcopy(F.VARIANTS['midcapd']);vo['rows']=[['f0','f1','f2','f3','f4','f5','f6'],['ctl','fj','meta','f7']];P,W,H,struct=F.build_mid(leaves,nets,3369.6,vo)
  P,nets=expand(P,nets)
  oldpm=R.pin_models
  def pm(leaves):
