@@ -251,6 +251,18 @@ def build(specs_dir, out):
                             replaces_v15=prev['master'] if prev else None)
             if i.get('rtl_deps'):
                 insts[n]['rtl_deps'] = list(i['rtl_deps'])
+    # H-NETLIST 0600 (H-DIE option A): a programme target whose only consumer is a universal VM calendar is FOLDED into
+    # it (hfd_hgi_vm_calendar_f20 = target + calendar; a standalone ~630-pin collar is pin-bound as its own tile).
+    folded = {}
+    for s_ in specs:
+        for e in s_.get('edges', []):
+            a, b = e['src'][0], e['dst'][0]
+            if (e['src'][1] == 'program_cfg_we' and a in insts and b in insts
+                    and insts[a]['master'] == 'ot_static_program_target'
+                    and insts[b]['master'] in ('hfd_hgi_vm_calendar', 'ot_vms_calendar_static')):
+                folded[a] = b
+    for t, c in folded.items():
+        insts[c]['folded_target'] = dict(instance=t, target=insts[t]['params'].get('TARGET'))
     # H-NETLIST 0600 (owner 19:50 FEWER DISTINCT TILES): programme/command targets take their F20 target id from the
     # identity strap pin tgt (TGT_PIN=1) instead of the TARGET parameter, so one hardened master per shape serves every id
     # (76 cmd + 18+ programme targets -> 5 + 1 masters).  The id is a die constant on the strap, never a runtime value.
@@ -274,6 +286,16 @@ def build(specs_dir, out):
             i.update(master='hfd_hgi_vm_calendar', source=UNIV_CAL_SRC, params={},
                      rtl_deps=[UNIV_CAL_DIR + 'ot_vms_calendar_static_xcap.sv'],
                      note=i.get('note', '') + f' | H-NETLIST 0600: closed universal calendar master (was ot_vms_calendar_static W{univ_cal[n]})')
+    for t, c in folded.items():
+        tid = insts[t]['params'].get('TGT_PIN') and next(x['value'] for x in tgt_straps if x['inst'] == t)
+        insts[c].update(master='hfd_hgi_vm_calendar_f20', source=UNIV_CAL_DIR + 'hfd_hgi_vm_calendar_f20.sv', params={},
+                        rtl_deps=[UNIV_CAL_DIR + 'ot_vms_calendar_static_xcap.sv', UNIV_CAL_DIR + 'hfd_hgi_vm_calendar.sv',
+                                  UNIV_CAL_DIR + 'ot_static_program_target.sv'])
+        insts[c]['note'] = insts[c].get('note', '') + f' | H-NETLIST 0600: F20 target {tid} folded in (was {t})'
+        for x in tgt_straps:
+            if x['inst'] == t:
+                x['inst'] = c
+        del insts[t]
     specs.append(dict(region='fill_calendar_universal', edges=[], instances=[], gaps=[], straps=[],
                       clocks=[dict(inst=n, port=p, domain='stream', kind='clock') for n in univ_cal for p in ('clk_cap', 'clk_mem')]))
     ports = {}
@@ -303,6 +325,25 @@ def build(specs_dir, out):
             e.setdefault('name', f"{s['region']}_{k}")
             e['region'] = s['region']
             edges.append(e)
+    if folded:
+        inv = {}
+        for t, c in folded.items():
+            inv[t] = c
+        fe = []
+        for e in edges:
+            a, b = e['src'][0], e['dst'][0]
+            if a in inv and b == inv[a]:
+                continue                                   # target -> calendar programme pins: now internal
+            if b in inv and a == inv[b]:
+                continue                                   # calendar active -> target interlock: now internal
+            e = dict(e)
+            if b in inv:
+                e['dst'] = [inv[b]] + list(e['dst'][1:])   # F20 broadcast now lands on the calendar face
+            if a in inv:
+                port = {'configured': 'tgt_configured', 'fault': 'tgt_fault'}[e['src'][1]]
+                e['src'] = [inv[a], port] + list(e['src'][2:])
+            fe.append(e)
+        edges = fe
     if univ_cal:
         cut = []
         for e in edges:
@@ -357,6 +398,8 @@ def build(specs_dir, out):
             ckdom[(r['instance'], r['port'])] = (dm, 'clock')
     for s in specs:
         for c in s.get('clocks', []):
+            if c['inst'] in folded:
+                continue
             ckdom[(c['inst'], c['port'])] = (c['domain'], c.get('kind', 'clock'))
     clocks = []
     for (i, p), (dm, kind) in sorted(ckdom.items()):
@@ -415,6 +458,8 @@ def build(specs_dir, out):
             aff = []
             for a in g.get('affects', []):
                 i, p = a[0], a[1]
+                if i in folded.values() and i in ports and p not in ports[i]:
+                    continue        # programme pins internal to a folded calendar+target master (H-NETLIST 0600)
                 if i not in ports or p not in ports[i]:
                     problems.append(f"gap {g['id']}: unknown {i}.{p}"); continue
                 ii, pp_, lo, hi = rng(a, ports)

@@ -4,7 +4,7 @@
  "top": "hbm_v16_die",
  "generated_by": "tools/hbm_die_v15/full_die_v16.py",
  "basis": {
-  "commit": "415c8df5f",
+  "commit": "3a346f5db",
   "v15_contract": "results/arch/hbm_die_v15/source_contract/contract.json",
   "v15_contract_sha256": "eac5bff7d49473de7a7d8f0b993e427d4d004991e56670c8552f35e2b9a6b6cd",
   "grants": "results/arch/hier_contract_1015/hbm_v15.json",
@@ -131,11 +131,11 @@
   "off-die pins (SerDes/UCIe PMA, refclk, por_n) are die top-level ports"
  ],
  "summary": {
-  "instances": 1506,
+  "instances": 1494,
   "masters": 61,
-  "edges": 12004,
-  "edge_bits": 1233837,
-  "clock_reset_ports": 3526,
+  "edges": 11908,
+  "edge_bits": 1230165,
+  "clock_reset_ports": 3502,
   "straps": 188,
   "die_pins": 43,
   "exposed_input_ports": 0,
@@ -163,7 +163,7 @@
   "hbfd_rly_624_WE": 165,
   "hfd_ckgen": 1,
   "hfd_ep_static": 9,
-  "hfd_hgi_vm_calendar": 12,
+  "hfd_hgi_vm_calendar_f20": 12,
   "hfd_hgi_vms_static_NE": 1,
   "hfd_hgi_vms_static_NW": 1,
   "hfd_hgi_vms_static_SE": 1,
@@ -212,7 +212,7 @@
   "ot_pdie_serdes": 9,
   "ot_pdie_ucie": 1,
   "ot_static_cmd_target": 76,
-  "ot_static_program_target": 18,
+  "ot_static_program_target": 6,
   "ot_vms_status4_static": 1
  },
  "instances": {
@@ -912,14 +912,23 @@
    }
   },
   "calendar_SW": {
-   "master": "hfd_hgi_vm_calendar",
-   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar.sv",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
    "params": {},
    "slot": "calendar_SW",
    "owner": "H-SM",
    "region": "host_misc",
-   "note": "Universal W187 master; compiler --universal required; host-loader gap remains OPEN.",
+   "note": "Universal W187 master; compiler --universal required; host-loader gap remains OPEN. | H-NETLIST 0600: F20 target 96 folded in (was cp_cal_SW)",
    "replaces_v15": "hfd_hgi_vm_calendar_SW",
+   "folded_target": {
+    "instance": "cp_cal_SW",
+    "target": "8'd96"
+   },
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static_xcap.sv",
+    "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv"
+   ],
    "ports": {
     "clk": {
      "direction": "input",
@@ -937,33 +946,53 @@
      "direction": "input",
      "bits": 1
     },
-    "cfg_we": {
+    "tgt": {
+     "direction": "input",
+     "bits": 8
+    },
+    "cfg_v": {
      "direction": "input",
      "bits": 1
     },
+    "cfg_target": {
+     "direction": "input",
+     "bits": 8
+    },
     "cfg_addr": {
      "direction": "input",
-     "bits": 10
+     "bits": 12
     },
     "cfg_data": {
      "direction": "input",
      "bits": 256
     },
-    "start_v": {
+    "desc_v": {
      "direction": "input",
      "bits": 1
     },
-    "start_base": {
+    "desc_base": {
      "direction": "input",
-     "bits": 10
+     "bits": 12
     },
-    "start_limit": {
+    "desc_limit": {
      "direction": "input",
-     "bits": 11
+     "bits": 13
     },
-    "start_loops": {
+    "desc_loops": {
      "direction": "input",
      "bits": 16
+    },
+    "launch_v": {
+     "direction": "input",
+     "bits": 1
+    },
+    "tgt_configured": {
+     "direction": "output",
+     "bits": 1
+    },
+    "tgt_fault": {
+     "direction": "output",
+     "bits": 1
     },
     "calendar_v": {
      "direction": "output",
@@ -1286,14 +1315,23 @@
    }
   },
   "calendar_SE": {
-   "master": "hfd_hgi_vm_calendar",
-   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar.sv",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
    "params": {},
    "slot": "calendar_SE",
    "owner": "H-SM",
    "region": "host_misc",
-   "note": "Universal W187 master; compiler --universal required; host-loader gap remains OPEN.",
+   "note": "Universal W187 master; compiler --universal required; host-loader gap remains OPEN. | H-NETLIST 0600: F20 target 97 folded in (was cp_cal_SE)",
    "replaces_v15": "hfd_hgi_vm_calendar_SE",
+   "folded_target": {
+    "instance": "cp_cal_SE",
+    "target": "8'd97"
+   },
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static_xcap.sv",
+    "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv"
+   ],
    "ports": {
     "clk": {
      "direction": "input",
@@ -1311,33 +1349,53 @@
      "direction": "input",
      "bits": 1
     },
-    "cfg_we": {
+    "tgt": {
+     "direction": "input",
+     "bits": 8
+    },
+    "cfg_v": {
      "direction": "input",
      "bits": 1
     },
+    "cfg_target": {
+     "direction": "input",
+     "bits": 8
+    },
     "cfg_addr": {
      "direction": "input",
-     "bits": 10
+     "bits": 12
     },
     "cfg_data": {
      "direction": "input",
      "bits": 256
     },
-    "start_v": {
+    "desc_v": {
      "direction": "input",
      "bits": 1
     },
-    "start_base": {
+    "desc_base": {
      "direction": "input",
-     "bits": 10
+     "bits": 12
     },
-    "start_limit": {
+    "desc_limit": {
      "direction": "input",
-     "bits": 11
+     "bits": 13
     },
-    "start_loops": {
+    "desc_loops": {
      "direction": "input",
      "bits": 16
+    },
+    "launch_v": {
+     "direction": "input",
+     "bits": 1
+    },
+    "tgt_configured": {
+     "direction": "output",
+     "bits": 1
+    },
+    "tgt_fault": {
+     "direction": "output",
+     "bits": 1
     },
     "calendar_v": {
      "direction": "output",
@@ -1660,14 +1718,23 @@
    }
   },
   "calendar_NW": {
-   "master": "hfd_hgi_vm_calendar",
-   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar.sv",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
    "params": {},
    "slot": "calendar_NW",
    "owner": "H-SM",
    "region": "host_misc",
-   "note": "Universal W187 master; compiler --universal required; host-loader gap remains OPEN.",
+   "note": "Universal W187 master; compiler --universal required; host-loader gap remains OPEN. | H-NETLIST 0600: F20 target 98 folded in (was cp_cal_NW)",
    "replaces_v15": "hfd_hgi_vm_calendar_NW",
+   "folded_target": {
+    "instance": "cp_cal_NW",
+    "target": "8'd98"
+   },
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static_xcap.sv",
+    "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv"
+   ],
    "ports": {
     "clk": {
      "direction": "input",
@@ -1685,33 +1752,53 @@
      "direction": "input",
      "bits": 1
     },
-    "cfg_we": {
+    "tgt": {
+     "direction": "input",
+     "bits": 8
+    },
+    "cfg_v": {
      "direction": "input",
      "bits": 1
     },
+    "cfg_target": {
+     "direction": "input",
+     "bits": 8
+    },
     "cfg_addr": {
      "direction": "input",
-     "bits": 10
+     "bits": 12
     },
     "cfg_data": {
      "direction": "input",
      "bits": 256
     },
-    "start_v": {
+    "desc_v": {
      "direction": "input",
      "bits": 1
     },
-    "start_base": {
+    "desc_base": {
      "direction": "input",
-     "bits": 10
+     "bits": 12
     },
-    "start_limit": {
+    "desc_limit": {
      "direction": "input",
-     "bits": 11
+     "bits": 13
     },
-    "start_loops": {
+    "desc_loops": {
      "direction": "input",
      "bits": 16
+    },
+    "launch_v": {
+     "direction": "input",
+     "bits": 1
+    },
+    "tgt_configured": {
+     "direction": "output",
+     "bits": 1
+    },
+    "tgt_fault": {
+     "direction": "output",
+     "bits": 1
     },
     "calendar_v": {
      "direction": "output",
@@ -2034,14 +2121,23 @@
    }
   },
   "calendar_NE": {
-   "master": "hfd_hgi_vm_calendar",
-   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar.sv",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
    "params": {},
    "slot": "calendar_NE",
    "owner": "H-SM",
    "region": "host_misc",
-   "note": "Universal W187 master; compiler --universal required; host-loader gap remains OPEN.",
+   "note": "Universal W187 master; compiler --universal required; host-loader gap remains OPEN. | H-NETLIST 0600: F20 target 99 folded in (was cp_cal_NE)",
    "replaces_v15": "hfd_hgi_vm_calendar_NE",
+   "folded_target": {
+    "instance": "cp_cal_NE",
+    "target": "8'd99"
+   },
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static_xcap.sv",
+    "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv"
+   ],
    "ports": {
     "clk": {
      "direction": "input",
@@ -2059,33 +2155,53 @@
      "direction": "input",
      "bits": 1
     },
-    "cfg_we": {
+    "tgt": {
+     "direction": "input",
+     "bits": 8
+    },
+    "cfg_v": {
      "direction": "input",
      "bits": 1
     },
+    "cfg_target": {
+     "direction": "input",
+     "bits": 8
+    },
     "cfg_addr": {
      "direction": "input",
-     "bits": 10
+     "bits": 12
     },
     "cfg_data": {
      "direction": "input",
      "bits": 256
     },
-    "start_v": {
+    "desc_v": {
      "direction": "input",
      "bits": 1
     },
-    "start_base": {
+    "desc_base": {
      "direction": "input",
-     "bits": 10
+     "bits": 12
     },
-    "start_limit": {
+    "desc_limit": {
      "direction": "input",
-     "bits": 11
+     "bits": 13
     },
-    "start_loops": {
+    "desc_loops": {
      "direction": "input",
      "bits": 16
+    },
+    "launch_v": {
+     "direction": "input",
+     "bits": 1
+    },
+    "tgt_configured": {
+     "direction": "output",
+     "bits": 1
+    },
+    "tgt_fault": {
+     "direction": "output",
+     "bits": 1
     },
     "calendar_v": {
      "direction": "output",
@@ -45476,109 +45592,6 @@
     }
    }
   },
-  "cp_cal_SW": {
-   "master": "ot_static_program_target",
-   "source": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
-   "params": {
-    "PCW": 10,
-    "TGT_PIN": 1
-   },
-   "slot": "calendar_SW",
-   "owner": "H-NETLIST/cp1 (host control plane)",
-   "region": "cp1",
-   "note": "TARGET 96: port-exact (program_cfg_we/addr10/data256, start_v/base10/limit11/loops16) to hfd_hgi_vm_calendar_SW; existing master (no new tile).",
-   "replaces_v15": null,
-   "ports": {
-    "clk": {
-     "direction": "input",
-     "bits": 1
-    },
-    "rst_n": {
-     "direction": "input",
-     "bits": 1
-    },
-    "tgt": {
-     "direction": "input",
-     "bits": 8
-    },
-    "cfg_v": {
-     "direction": "input",
-     "bits": 1
-    },
-    "cfg_target": {
-     "direction": "input",
-     "bits": 8
-    },
-    "cfg_addr": {
-     "direction": "input",
-     "bits": 12
-    },
-    "cfg_data": {
-     "direction": "input",
-     "bits": 256
-    },
-    "desc_v": {
-     "direction": "input",
-     "bits": 1
-    },
-    "desc_base": {
-     "direction": "input",
-     "bits": 12
-    },
-    "desc_limit": {
-     "direction": "input",
-     "bits": 13
-    },
-    "desc_loops": {
-     "direction": "input",
-     "bits": 16
-    },
-    "launch_v": {
-     "direction": "input",
-     "bits": 1
-    },
-    "program_active": {
-     "direction": "input",
-     "bits": 1
-    },
-    "program_cfg_we": {
-     "direction": "output",
-     "bits": 1
-    },
-    "program_cfg_addr": {
-     "direction": "output",
-     "bits": 10
-    },
-    "program_cfg_data": {
-     "direction": "output",
-     "bits": 256
-    },
-    "program_start_v": {
-     "direction": "output",
-     "bits": 1
-    },
-    "program_start_base": {
-     "direction": "output",
-     "bits": 10
-    },
-    "program_start_limit": {
-     "direction": "output",
-     "bits": 11
-    },
-    "program_start_loops": {
-     "direction": "output",
-     "bits": 16
-    },
-    "configured": {
-     "direction": "output",
-     "bits": 1
-    },
-    "fault": {
-     "direction": "output",
-     "bits": 1
-    }
-   }
-  },
   "cp_xl_SW": {
    "master": "ot_static_cmd_target",
    "source": "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
@@ -46940,109 +46953,6 @@
      "bits": 1
     },
     "active": {
-     "direction": "output",
-     "bits": 1
-    }
-   }
-  },
-  "cp_cal_SE": {
-   "master": "ot_static_program_target",
-   "source": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
-   "params": {
-    "PCW": 10,
-    "TGT_PIN": 1
-   },
-   "slot": "calendar_SE",
-   "owner": "H-NETLIST/cp1 (host control plane)",
-   "region": "cp1",
-   "note": "TARGET 97: port-exact (program_cfg_we/addr10/data256, start_v/base10/limit11/loops16) to hfd_hgi_vm_calendar_SE; existing master (no new tile).",
-   "replaces_v15": null,
-   "ports": {
-    "clk": {
-     "direction": "input",
-     "bits": 1
-    },
-    "rst_n": {
-     "direction": "input",
-     "bits": 1
-    },
-    "tgt": {
-     "direction": "input",
-     "bits": 8
-    },
-    "cfg_v": {
-     "direction": "input",
-     "bits": 1
-    },
-    "cfg_target": {
-     "direction": "input",
-     "bits": 8
-    },
-    "cfg_addr": {
-     "direction": "input",
-     "bits": 12
-    },
-    "cfg_data": {
-     "direction": "input",
-     "bits": 256
-    },
-    "desc_v": {
-     "direction": "input",
-     "bits": 1
-    },
-    "desc_base": {
-     "direction": "input",
-     "bits": 12
-    },
-    "desc_limit": {
-     "direction": "input",
-     "bits": 13
-    },
-    "desc_loops": {
-     "direction": "input",
-     "bits": 16
-    },
-    "launch_v": {
-     "direction": "input",
-     "bits": 1
-    },
-    "program_active": {
-     "direction": "input",
-     "bits": 1
-    },
-    "program_cfg_we": {
-     "direction": "output",
-     "bits": 1
-    },
-    "program_cfg_addr": {
-     "direction": "output",
-     "bits": 10
-    },
-    "program_cfg_data": {
-     "direction": "output",
-     "bits": 256
-    },
-    "program_start_v": {
-     "direction": "output",
-     "bits": 1
-    },
-    "program_start_base": {
-     "direction": "output",
-     "bits": 10
-    },
-    "program_start_limit": {
-     "direction": "output",
-     "bits": 11
-    },
-    "program_start_loops": {
-     "direction": "output",
-     "bits": 16
-    },
-    "configured": {
-     "direction": "output",
-     "bits": 1
-    },
-    "fault": {
      "direction": "output",
      "bits": 1
     }
@@ -48414,109 +48324,6 @@
     }
    }
   },
-  "cp_cal_NW": {
-   "master": "ot_static_program_target",
-   "source": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
-   "params": {
-    "PCW": 10,
-    "TGT_PIN": 1
-   },
-   "slot": "calendar_NW",
-   "owner": "H-NETLIST/cp1 (host control plane)",
-   "region": "cp1",
-   "note": "TARGET 98: port-exact (program_cfg_we/addr10/data256, start_v/base10/limit11/loops16) to hfd_hgi_vm_calendar_NW; existing master (no new tile).",
-   "replaces_v15": null,
-   "ports": {
-    "clk": {
-     "direction": "input",
-     "bits": 1
-    },
-    "rst_n": {
-     "direction": "input",
-     "bits": 1
-    },
-    "tgt": {
-     "direction": "input",
-     "bits": 8
-    },
-    "cfg_v": {
-     "direction": "input",
-     "bits": 1
-    },
-    "cfg_target": {
-     "direction": "input",
-     "bits": 8
-    },
-    "cfg_addr": {
-     "direction": "input",
-     "bits": 12
-    },
-    "cfg_data": {
-     "direction": "input",
-     "bits": 256
-    },
-    "desc_v": {
-     "direction": "input",
-     "bits": 1
-    },
-    "desc_base": {
-     "direction": "input",
-     "bits": 12
-    },
-    "desc_limit": {
-     "direction": "input",
-     "bits": 13
-    },
-    "desc_loops": {
-     "direction": "input",
-     "bits": 16
-    },
-    "launch_v": {
-     "direction": "input",
-     "bits": 1
-    },
-    "program_active": {
-     "direction": "input",
-     "bits": 1
-    },
-    "program_cfg_we": {
-     "direction": "output",
-     "bits": 1
-    },
-    "program_cfg_addr": {
-     "direction": "output",
-     "bits": 10
-    },
-    "program_cfg_data": {
-     "direction": "output",
-     "bits": 256
-    },
-    "program_start_v": {
-     "direction": "output",
-     "bits": 1
-    },
-    "program_start_base": {
-     "direction": "output",
-     "bits": 10
-    },
-    "program_start_limit": {
-     "direction": "output",
-     "bits": 11
-    },
-    "program_start_loops": {
-     "direction": "output",
-     "bits": 16
-    },
-    "configured": {
-     "direction": "output",
-     "bits": 1
-    },
-    "fault": {
-     "direction": "output",
-     "bits": 1
-    }
-   }
-  },
   "cp_xl_NW": {
    "master": "ot_static_cmd_target",
    "source": "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
@@ -49878,109 +49685,6 @@
      "bits": 1
     },
     "active": {
-     "direction": "output",
-     "bits": 1
-    }
-   }
-  },
-  "cp_cal_NE": {
-   "master": "ot_static_program_target",
-   "source": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
-   "params": {
-    "PCW": 10,
-    "TGT_PIN": 1
-   },
-   "slot": "calendar_NE",
-   "owner": "H-NETLIST/cp1 (host control plane)",
-   "region": "cp1",
-   "note": "TARGET 99: port-exact (program_cfg_we/addr10/data256, start_v/base10/limit11/loops16) to hfd_hgi_vm_calendar_NE; existing master (no new tile).",
-   "replaces_v15": null,
-   "ports": {
-    "clk": {
-     "direction": "input",
-     "bits": 1
-    },
-    "rst_n": {
-     "direction": "input",
-     "bits": 1
-    },
-    "tgt": {
-     "direction": "input",
-     "bits": 8
-    },
-    "cfg_v": {
-     "direction": "input",
-     "bits": 1
-    },
-    "cfg_target": {
-     "direction": "input",
-     "bits": 8
-    },
-    "cfg_addr": {
-     "direction": "input",
-     "bits": 12
-    },
-    "cfg_data": {
-     "direction": "input",
-     "bits": 256
-    },
-    "desc_v": {
-     "direction": "input",
-     "bits": 1
-    },
-    "desc_base": {
-     "direction": "input",
-     "bits": 12
-    },
-    "desc_limit": {
-     "direction": "input",
-     "bits": 13
-    },
-    "desc_loops": {
-     "direction": "input",
-     "bits": 16
-    },
-    "launch_v": {
-     "direction": "input",
-     "bits": 1
-    },
-    "program_active": {
-     "direction": "input",
-     "bits": 1
-    },
-    "program_cfg_we": {
-     "direction": "output",
-     "bits": 1
-    },
-    "program_cfg_addr": {
-     "direction": "output",
-     "bits": 10
-    },
-    "program_cfg_data": {
-     "direction": "output",
-     "bits": 256
-    },
-    "program_start_v": {
-     "direction": "output",
-     "bits": 1
-    },
-    "program_start_base": {
-     "direction": "output",
-     "bits": 10
-    },
-    "program_start_limit": {
-     "direction": "output",
-     "bits": 11
-    },
-    "program_start_loops": {
-     "direction": "output",
-     "bits": 16
-    },
-    "configured": {
-     "direction": "output",
-     "bits": 1
-    },
-    "fault": {
      "direction": "output",
      "bits": 1
     }
@@ -53631,530 +53335,24 @@
     }
    }
   },
-  "cp_fill_SW": {
-   "master": "ot_static_program_target",
-   "source": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
-   "params": {
-    "PCW": 10,
-    "TGT_PIN": 1
-   },
-   "slot": null,
-   "owner": "H-NETLIST",
-   "region": "host_completion",
-   "note": "Host F20 fill-calendar programme collar. Two transport edges; compiler co-launches VM fills with service-group K windows.",
-   "replaces_v15": null,
-   "ports": {
-    "clk": {
-     "direction": "input",
-     "bits": 1
-    },
-    "rst_n": {
-     "direction": "input",
-     "bits": 1
-    },
-    "tgt": {
-     "direction": "input",
-     "bits": 8
-    },
-    "cfg_v": {
-     "direction": "input",
-     "bits": 1
-    },
-    "cfg_target": {
-     "direction": "input",
-     "bits": 8
-    },
-    "cfg_addr": {
-     "direction": "input",
-     "bits": 12
-    },
-    "cfg_data": {
-     "direction": "input",
-     "bits": 256
-    },
-    "desc_v": {
-     "direction": "input",
-     "bits": 1
-    },
-    "desc_base": {
-     "direction": "input",
-     "bits": 12
-    },
-    "desc_limit": {
-     "direction": "input",
-     "bits": 13
-    },
-    "desc_loops": {
-     "direction": "input",
-     "bits": 16
-    },
-    "launch_v": {
-     "direction": "input",
-     "bits": 1
-    },
-    "program_active": {
-     "direction": "input",
-     "bits": 1
-    },
-    "program_cfg_we": {
-     "direction": "output",
-     "bits": 1
-    },
-    "program_cfg_addr": {
-     "direction": "output",
-     "bits": 10
-    },
-    "program_cfg_data": {
-     "direction": "output",
-     "bits": 256
-    },
-    "program_start_v": {
-     "direction": "output",
-     "bits": 1
-    },
-    "program_start_base": {
-     "direction": "output",
-     "bits": 10
-    },
-    "program_start_limit": {
-     "direction": "output",
-     "bits": 11
-    },
-    "program_start_loops": {
-     "direction": "output",
-     "bits": 16
-    },
-    "configured": {
-     "direction": "output",
-     "bits": 1
-    },
-    "fault": {
-     "direction": "output",
-     "bits": 1
-    }
-   }
-  },
-  "cp_fill_SE": {
-   "master": "ot_static_program_target",
-   "source": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
-   "params": {
-    "PCW": 10,
-    "TGT_PIN": 1
-   },
-   "slot": null,
-   "owner": "H-NETLIST",
-   "region": "host_completion",
-   "note": "Host F20 fill-calendar programme collar. Two transport edges; compiler co-launches VM fills with service-group K windows.",
-   "replaces_v15": null,
-   "ports": {
-    "clk": {
-     "direction": "input",
-     "bits": 1
-    },
-    "rst_n": {
-     "direction": "input",
-     "bits": 1
-    },
-    "tgt": {
-     "direction": "input",
-     "bits": 8
-    },
-    "cfg_v": {
-     "direction": "input",
-     "bits": 1
-    },
-    "cfg_target": {
-     "direction": "input",
-     "bits": 8
-    },
-    "cfg_addr": {
-     "direction": "input",
-     "bits": 12
-    },
-    "cfg_data": {
-     "direction": "input",
-     "bits": 256
-    },
-    "desc_v": {
-     "direction": "input",
-     "bits": 1
-    },
-    "desc_base": {
-     "direction": "input",
-     "bits": 12
-    },
-    "desc_limit": {
-     "direction": "input",
-     "bits": 13
-    },
-    "desc_loops": {
-     "direction": "input",
-     "bits": 16
-    },
-    "launch_v": {
-     "direction": "input",
-     "bits": 1
-    },
-    "program_active": {
-     "direction": "input",
-     "bits": 1
-    },
-    "program_cfg_we": {
-     "direction": "output",
-     "bits": 1
-    },
-    "program_cfg_addr": {
-     "direction": "output",
-     "bits": 10
-    },
-    "program_cfg_data": {
-     "direction": "output",
-     "bits": 256
-    },
-    "program_start_v": {
-     "direction": "output",
-     "bits": 1
-    },
-    "program_start_base": {
-     "direction": "output",
-     "bits": 10
-    },
-    "program_start_limit": {
-     "direction": "output",
-     "bits": 11
-    },
-    "program_start_loops": {
-     "direction": "output",
-     "bits": 16
-    },
-    "configured": {
-     "direction": "output",
-     "bits": 1
-    },
-    "fault": {
-     "direction": "output",
-     "bits": 1
-    }
-   }
-  },
-  "cp_fill_NW": {
-   "master": "ot_static_program_target",
-   "source": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
-   "params": {
-    "PCW": 10,
-    "TGT_PIN": 1
-   },
-   "slot": null,
-   "owner": "H-NETLIST",
-   "region": "host_completion",
-   "note": "Host F20 fill-calendar programme collar. Two transport edges; compiler co-launches VM fills with service-group K windows.",
-   "replaces_v15": null,
-   "ports": {
-    "clk": {
-     "direction": "input",
-     "bits": 1
-    },
-    "rst_n": {
-     "direction": "input",
-     "bits": 1
-    },
-    "tgt": {
-     "direction": "input",
-     "bits": 8
-    },
-    "cfg_v": {
-     "direction": "input",
-     "bits": 1
-    },
-    "cfg_target": {
-     "direction": "input",
-     "bits": 8
-    },
-    "cfg_addr": {
-     "direction": "input",
-     "bits": 12
-    },
-    "cfg_data": {
-     "direction": "input",
-     "bits": 256
-    },
-    "desc_v": {
-     "direction": "input",
-     "bits": 1
-    },
-    "desc_base": {
-     "direction": "input",
-     "bits": 12
-    },
-    "desc_limit": {
-     "direction": "input",
-     "bits": 13
-    },
-    "desc_loops": {
-     "direction": "input",
-     "bits": 16
-    },
-    "launch_v": {
-     "direction": "input",
-     "bits": 1
-    },
-    "program_active": {
-     "direction": "input",
-     "bits": 1
-    },
-    "program_cfg_we": {
-     "direction": "output",
-     "bits": 1
-    },
-    "program_cfg_addr": {
-     "direction": "output",
-     "bits": 10
-    },
-    "program_cfg_data": {
-     "direction": "output",
-     "bits": 256
-    },
-    "program_start_v": {
-     "direction": "output",
-     "bits": 1
-    },
-    "program_start_base": {
-     "direction": "output",
-     "bits": 10
-    },
-    "program_start_limit": {
-     "direction": "output",
-     "bits": 11
-    },
-    "program_start_loops": {
-     "direction": "output",
-     "bits": 16
-    },
-    "configured": {
-     "direction": "output",
-     "bits": 1
-    },
-    "fault": {
-     "direction": "output",
-     "bits": 1
-    }
-   }
-  },
-  "cp_fill_NE": {
-   "master": "ot_static_program_target",
-   "source": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
-   "params": {
-    "PCW": 10,
-    "TGT_PIN": 1
-   },
-   "slot": null,
-   "owner": "H-NETLIST",
-   "region": "host_completion",
-   "note": "Host F20 fill-calendar programme collar. Two transport edges; compiler co-launches VM fills with service-group K windows.",
-   "replaces_v15": null,
-   "ports": {
-    "clk": {
-     "direction": "input",
-     "bits": 1
-    },
-    "rst_n": {
-     "direction": "input",
-     "bits": 1
-    },
-    "tgt": {
-     "direction": "input",
-     "bits": 8
-    },
-    "cfg_v": {
-     "direction": "input",
-     "bits": 1
-    },
-    "cfg_target": {
-     "direction": "input",
-     "bits": 8
-    },
-    "cfg_addr": {
-     "direction": "input",
-     "bits": 12
-    },
-    "cfg_data": {
-     "direction": "input",
-     "bits": 256
-    },
-    "desc_v": {
-     "direction": "input",
-     "bits": 1
-    },
-    "desc_base": {
-     "direction": "input",
-     "bits": 12
-    },
-    "desc_limit": {
-     "direction": "input",
-     "bits": 13
-    },
-    "desc_loops": {
-     "direction": "input",
-     "bits": 16
-    },
-    "launch_v": {
-     "direction": "input",
-     "bits": 1
-    },
-    "program_active": {
-     "direction": "input",
-     "bits": 1
-    },
-    "program_cfg_we": {
-     "direction": "output",
-     "bits": 1
-    },
-    "program_cfg_addr": {
-     "direction": "output",
-     "bits": 10
-    },
-    "program_cfg_data": {
-     "direction": "output",
-     "bits": 256
-    },
-    "program_start_v": {
-     "direction": "output",
-     "bits": 1
-    },
-    "program_start_base": {
-     "direction": "output",
-     "bits": 10
-    },
-    "program_start_limit": {
-     "direction": "output",
-     "bits": 11
-    },
-    "program_start_loops": {
-     "direction": "output",
-     "bits": 16
-    },
-    "configured": {
-     "direction": "output",
-     "bits": 1
-    },
-    "fault": {
-     "direction": "output",
-     "bits": 1
-    }
-   }
-  },
-  "cp_ep_SW": {
-   "master": "ot_static_program_target",
-   "source": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
-   "params": {
-    "PCW": 10,
-    "TGT_PIN": 1
-   },
-   "slot": null,
-   "owner": "H-NETLIST",
-   "region": "host_completion",
-   "note": "Endpoint RX calendar host collar, existing master",
-   "replaces_v15": null,
-   "ports": {
-    "clk": {
-     "direction": "input",
-     "bits": 1
-    },
-    "rst_n": {
-     "direction": "input",
-     "bits": 1
-    },
-    "tgt": {
-     "direction": "input",
-     "bits": 8
-    },
-    "cfg_v": {
-     "direction": "input",
-     "bits": 1
-    },
-    "cfg_target": {
-     "direction": "input",
-     "bits": 8
-    },
-    "cfg_addr": {
-     "direction": "input",
-     "bits": 12
-    },
-    "cfg_data": {
-     "direction": "input",
-     "bits": 256
-    },
-    "desc_v": {
-     "direction": "input",
-     "bits": 1
-    },
-    "desc_base": {
-     "direction": "input",
-     "bits": 12
-    },
-    "desc_limit": {
-     "direction": "input",
-     "bits": 13
-    },
-    "desc_loops": {
-     "direction": "input",
-     "bits": 16
-    },
-    "launch_v": {
-     "direction": "input",
-     "bits": 1
-    },
-    "program_active": {
-     "direction": "input",
-     "bits": 1
-    },
-    "program_cfg_we": {
-     "direction": "output",
-     "bits": 1
-    },
-    "program_cfg_addr": {
-     "direction": "output",
-     "bits": 10
-    },
-    "program_cfg_data": {
-     "direction": "output",
-     "bits": 256
-    },
-    "program_start_v": {
-     "direction": "output",
-     "bits": 1
-    },
-    "program_start_base": {
-     "direction": "output",
-     "bits": 10
-    },
-    "program_start_limit": {
-     "direction": "output",
-     "bits": 11
-    },
-    "program_start_loops": {
-     "direction": "output",
-     "bits": 16
-    },
-    "configured": {
-     "direction": "output",
-     "bits": 1
-    },
-    "fault": {
-     "direction": "output",
-     "bits": 1
-    }
-   }
-  },
   "epcal_SW": {
-   "master": "hfd_hgi_vm_calendar",
-   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar.sv",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
    "params": {},
    "slot": null,
    "owner": "H-NETLIST",
    "region": "host_completion",
-   "note": "Exact universal hfd_hgi_vm_calendar master (local reset2edges); 19 RX-control bits per local endpoint, high bits unused outputs. Compiler arm/read/release slots; no ready-driven rescheduling.",
+   "note": "Exact universal hfd_hgi_vm_calendar master (local reset2edges); 19 RX-control bits per local endpoint, high bits unused outputs. Compiler arm/read/release slots; no ready-driven rescheduling. | H-NETLIST 0600: F20 target 132 folded in (was cp_ep_SW)",
    "replaces_v15": null,
+   "folded_target": {
+    "instance": "cp_ep_SW",
+    "target": "8'd132"
+   },
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static_xcap.sv",
+    "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv"
+   ],
    "ports": {
     "clk": {
      "direction": "input",
@@ -54172,33 +53370,53 @@
      "direction": "input",
      "bits": 1
     },
-    "cfg_we": {
+    "tgt": {
+     "direction": "input",
+     "bits": 8
+    },
+    "cfg_v": {
      "direction": "input",
      "bits": 1
     },
+    "cfg_target": {
+     "direction": "input",
+     "bits": 8
+    },
     "cfg_addr": {
      "direction": "input",
-     "bits": 10
+     "bits": 12
     },
     "cfg_data": {
      "direction": "input",
      "bits": 256
     },
-    "start_v": {
+    "desc_v": {
      "direction": "input",
      "bits": 1
     },
-    "start_base": {
+    "desc_base": {
      "direction": "input",
-     "bits": 10
+     "bits": 12
     },
-    "start_limit": {
+    "desc_limit": {
      "direction": "input",
-     "bits": 11
+     "bits": 13
     },
-    "start_loops": {
+    "desc_loops": {
      "direction": "input",
      "bits": 16
+    },
+    "launch_v": {
+     "direction": "input",
+     "bits": 1
+    },
+    "tgt_configured": {
+     "direction": "output",
+     "bits": 1
+    },
+    "tgt_fault": {
+     "direction": "output",
+     "bits": 1
     },
     "calendar_v": {
      "direction": "output",
@@ -54287,121 +53505,27 @@
     "lg_local_write": {
      "direction": "output",
      "bits": 24
-    }
-   }
-  },
-  "cp_ep_SE": {
-   "master": "ot_static_program_target",
-   "source": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
-   "params": {
-    "PCW": 10,
-    "TGT_PIN": 1
-   },
-   "slot": null,
-   "owner": "H-NETLIST",
-   "region": "host_completion",
-   "note": "Endpoint RX calendar host collar, existing master",
-   "replaces_v15": null,
-   "ports": {
-    "clk": {
-     "direction": "input",
-     "bits": 1
-    },
-    "rst_n": {
-     "direction": "input",
-     "bits": 1
-    },
-    "tgt": {
-     "direction": "input",
-     "bits": 8
-    },
-    "cfg_v": {
-     "direction": "input",
-     "bits": 1
-    },
-    "cfg_target": {
-     "direction": "input",
-     "bits": 8
-    },
-    "cfg_addr": {
-     "direction": "input",
-     "bits": 12
-    },
-    "cfg_data": {
-     "direction": "input",
-     "bits": 256
-    },
-    "desc_v": {
-     "direction": "input",
-     "bits": 1
-    },
-    "desc_base": {
-     "direction": "input",
-     "bits": 12
-    },
-    "desc_limit": {
-     "direction": "input",
-     "bits": 13
-    },
-    "desc_loops": {
-     "direction": "input",
-     "bits": 16
-    },
-    "launch_v": {
-     "direction": "input",
-     "bits": 1
-    },
-    "program_active": {
-     "direction": "input",
-     "bits": 1
-    },
-    "program_cfg_we": {
-     "direction": "output",
-     "bits": 1
-    },
-    "program_cfg_addr": {
-     "direction": "output",
-     "bits": 10
-    },
-    "program_cfg_data": {
-     "direction": "output",
-     "bits": 256
-    },
-    "program_start_v": {
-     "direction": "output",
-     "bits": 1
-    },
-    "program_start_base": {
-     "direction": "output",
-     "bits": 10
-    },
-    "program_start_limit": {
-     "direction": "output",
-     "bits": 11
-    },
-    "program_start_loops": {
-     "direction": "output",
-     "bits": 16
-    },
-    "configured": {
-     "direction": "output",
-     "bits": 1
-    },
-    "fault": {
-     "direction": "output",
-     "bits": 1
     }
    }
   },
   "epcal_SE": {
-   "master": "hfd_hgi_vm_calendar",
-   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar.sv",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
    "params": {},
    "slot": null,
    "owner": "H-NETLIST",
    "region": "host_completion",
-   "note": "Exact universal hfd_hgi_vm_calendar master (local reset2edges); 19 RX-control bits per local endpoint, high bits unused outputs. Compiler arm/read/release slots; no ready-driven rescheduling.",
+   "note": "Exact universal hfd_hgi_vm_calendar master (local reset2edges); 19 RX-control bits per local endpoint, high bits unused outputs. Compiler arm/read/release slots; no ready-driven rescheduling. | H-NETLIST 0600: F20 target 133 folded in (was cp_ep_SE)",
    "replaces_v15": null,
+   "folded_target": {
+    "instance": "cp_ep_SE",
+    "target": "8'd133"
+   },
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static_xcap.sv",
+    "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv"
+   ],
    "ports": {
     "clk": {
      "direction": "input",
@@ -54419,33 +53543,53 @@
      "direction": "input",
      "bits": 1
     },
-    "cfg_we": {
+    "tgt": {
+     "direction": "input",
+     "bits": 8
+    },
+    "cfg_v": {
      "direction": "input",
      "bits": 1
     },
+    "cfg_target": {
+     "direction": "input",
+     "bits": 8
+    },
     "cfg_addr": {
      "direction": "input",
-     "bits": 10
+     "bits": 12
     },
     "cfg_data": {
      "direction": "input",
      "bits": 256
     },
-    "start_v": {
+    "desc_v": {
      "direction": "input",
      "bits": 1
     },
-    "start_base": {
+    "desc_base": {
      "direction": "input",
-     "bits": 10
+     "bits": 12
     },
-    "start_limit": {
+    "desc_limit": {
      "direction": "input",
-     "bits": 11
+     "bits": 13
     },
-    "start_loops": {
+    "desc_loops": {
      "direction": "input",
      "bits": 16
+    },
+    "launch_v": {
+     "direction": "input",
+     "bits": 1
+    },
+    "tgt_configured": {
+     "direction": "output",
+     "bits": 1
+    },
+    "tgt_fault": {
+     "direction": "output",
+     "bits": 1
     },
     "calendar_v": {
      "direction": "output",
@@ -54534,121 +53678,27 @@
     "lg_local_write": {
      "direction": "output",
      "bits": 24
-    }
-   }
-  },
-  "cp_ep_NW": {
-   "master": "ot_static_program_target",
-   "source": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
-   "params": {
-    "PCW": 10,
-    "TGT_PIN": 1
-   },
-   "slot": null,
-   "owner": "H-NETLIST",
-   "region": "host_completion",
-   "note": "Endpoint RX calendar host collar, existing master",
-   "replaces_v15": null,
-   "ports": {
-    "clk": {
-     "direction": "input",
-     "bits": 1
-    },
-    "rst_n": {
-     "direction": "input",
-     "bits": 1
-    },
-    "tgt": {
-     "direction": "input",
-     "bits": 8
-    },
-    "cfg_v": {
-     "direction": "input",
-     "bits": 1
-    },
-    "cfg_target": {
-     "direction": "input",
-     "bits": 8
-    },
-    "cfg_addr": {
-     "direction": "input",
-     "bits": 12
-    },
-    "cfg_data": {
-     "direction": "input",
-     "bits": 256
-    },
-    "desc_v": {
-     "direction": "input",
-     "bits": 1
-    },
-    "desc_base": {
-     "direction": "input",
-     "bits": 12
-    },
-    "desc_limit": {
-     "direction": "input",
-     "bits": 13
-    },
-    "desc_loops": {
-     "direction": "input",
-     "bits": 16
-    },
-    "launch_v": {
-     "direction": "input",
-     "bits": 1
-    },
-    "program_active": {
-     "direction": "input",
-     "bits": 1
-    },
-    "program_cfg_we": {
-     "direction": "output",
-     "bits": 1
-    },
-    "program_cfg_addr": {
-     "direction": "output",
-     "bits": 10
-    },
-    "program_cfg_data": {
-     "direction": "output",
-     "bits": 256
-    },
-    "program_start_v": {
-     "direction": "output",
-     "bits": 1
-    },
-    "program_start_base": {
-     "direction": "output",
-     "bits": 10
-    },
-    "program_start_limit": {
-     "direction": "output",
-     "bits": 11
-    },
-    "program_start_loops": {
-     "direction": "output",
-     "bits": 16
-    },
-    "configured": {
-     "direction": "output",
-     "bits": 1
-    },
-    "fault": {
-     "direction": "output",
-     "bits": 1
     }
    }
   },
   "epcal_NW": {
-   "master": "hfd_hgi_vm_calendar",
-   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar.sv",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
    "params": {},
    "slot": null,
    "owner": "H-NETLIST",
    "region": "host_completion",
-   "note": "Exact universal hfd_hgi_vm_calendar master (local reset2edges); 19 RX-control bits per local endpoint, high bits unused outputs. Compiler arm/read/release slots; no ready-driven rescheduling.",
+   "note": "Exact universal hfd_hgi_vm_calendar master (local reset2edges); 19 RX-control bits per local endpoint, high bits unused outputs. Compiler arm/read/release slots; no ready-driven rescheduling. | H-NETLIST 0600: F20 target 134 folded in (was cp_ep_NW)",
    "replaces_v15": null,
+   "folded_target": {
+    "instance": "cp_ep_NW",
+    "target": "8'd134"
+   },
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static_xcap.sv",
+    "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv"
+   ],
    "ports": {
     "clk": {
      "direction": "input",
@@ -54666,33 +53716,53 @@
      "direction": "input",
      "bits": 1
     },
-    "cfg_we": {
+    "tgt": {
+     "direction": "input",
+     "bits": 8
+    },
+    "cfg_v": {
      "direction": "input",
      "bits": 1
     },
+    "cfg_target": {
+     "direction": "input",
+     "bits": 8
+    },
     "cfg_addr": {
      "direction": "input",
-     "bits": 10
+     "bits": 12
     },
     "cfg_data": {
      "direction": "input",
      "bits": 256
     },
-    "start_v": {
+    "desc_v": {
      "direction": "input",
      "bits": 1
     },
-    "start_base": {
+    "desc_base": {
      "direction": "input",
-     "bits": 10
+     "bits": 12
     },
-    "start_limit": {
+    "desc_limit": {
      "direction": "input",
-     "bits": 11
+     "bits": 13
     },
-    "start_loops": {
+    "desc_loops": {
      "direction": "input",
      "bits": 16
+    },
+    "launch_v": {
+     "direction": "input",
+     "bits": 1
+    },
+    "tgt_configured": {
+     "direction": "output",
+     "bits": 1
+    },
+    "tgt_fault": {
+     "direction": "output",
+     "bits": 1
     },
     "calendar_v": {
      "direction": "output",
@@ -54784,20 +53854,34 @@
     }
    }
   },
-  "cp_ep_NE": {
-   "master": "ot_static_program_target",
-   "source": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
-   "params": {
-    "PCW": 10,
-    "TGT_PIN": 1
-   },
+  "epcal_NE": {
+   "master": "hfd_hgi_vm_calendar_f20",
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
+   "params": {},
    "slot": null,
    "owner": "H-NETLIST",
    "region": "host_completion",
-   "note": "Endpoint RX calendar host collar, existing master",
+   "note": "Exact universal hfd_hgi_vm_calendar master (local reset2edges); 19 RX-control bits per local endpoint, high bits unused outputs. Compiler arm/read/release slots; no ready-driven rescheduling. | H-NETLIST 0600: F20 target 135 folded in (was cp_ep_NE)",
    "replaces_v15": null,
+   "folded_target": {
+    "instance": "cp_ep_NE",
+    "target": "8'd135"
+   },
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static_xcap.sv",
+    "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv"
+   ],
    "ports": {
     "clk": {
+     "direction": "input",
+     "bits": 1
+    },
+    "clk_cap": {
+     "direction": "input",
+     "bits": 1
+    },
+    "clk_mem": {
      "direction": "input",
      "bits": 1
     },
@@ -54845,101 +53929,13 @@
      "direction": "input",
      "bits": 1
     },
-    "program_active": {
-     "direction": "input",
-     "bits": 1
-    },
-    "program_cfg_we": {
+    "tgt_configured": {
      "direction": "output",
      "bits": 1
     },
-    "program_cfg_addr": {
-     "direction": "output",
-     "bits": 10
-    },
-    "program_cfg_data": {
-     "direction": "output",
-     "bits": 256
-    },
-    "program_start_v": {
+    "tgt_fault": {
      "direction": "output",
      "bits": 1
-    },
-    "program_start_base": {
-     "direction": "output",
-     "bits": 10
-    },
-    "program_start_limit": {
-     "direction": "output",
-     "bits": 11
-    },
-    "program_start_loops": {
-     "direction": "output",
-     "bits": 16
-    },
-    "configured": {
-     "direction": "output",
-     "bits": 1
-    },
-    "fault": {
-     "direction": "output",
-     "bits": 1
-    }
-   }
-  },
-  "epcal_NE": {
-   "master": "hfd_hgi_vm_calendar",
-   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar.sv",
-   "params": {},
-   "slot": null,
-   "owner": "H-NETLIST",
-   "region": "host_completion",
-   "note": "Exact universal hfd_hgi_vm_calendar master (local reset2edges); 19 RX-control bits per local endpoint, high bits unused outputs. Compiler arm/read/release slots; no ready-driven rescheduling.",
-   "replaces_v15": null,
-   "ports": {
-    "clk": {
-     "direction": "input",
-     "bits": 1
-    },
-    "clk_cap": {
-     "direction": "input",
-     "bits": 1
-    },
-    "clk_mem": {
-     "direction": "input",
-     "bits": 1
-    },
-    "rst_n": {
-     "direction": "input",
-     "bits": 1
-    },
-    "cfg_we": {
-     "direction": "input",
-     "bits": 1
-    },
-    "cfg_addr": {
-     "direction": "input",
-     "bits": 10
-    },
-    "cfg_data": {
-     "direction": "input",
-     "bits": 256
-    },
-    "start_v": {
-     "direction": "input",
-     "bits": 1
-    },
-    "start_base": {
-     "direction": "input",
-     "bits": 10
-    },
-    "start_limit": {
-     "direction": "input",
-     "bits": 11
-    },
-    "start_loops": {
-     "direction": "input",
-     "bits": 16
     },
     "calendar_v": {
      "direction": "output",
@@ -90778,16 +89774,22 @@
    }
   },
   "vmfc_SW": {
-   "master": "hfd_hgi_vm_calendar",
-   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar.sv",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
    "params": {},
    "slot": "vmh_SW",
    "owner": "H-DIE",
    "region": "vmsm",
-   "note": "VM HBM fill calendar: programme SRAM (1024 x 256, magic/PC-checked words) issuing landing begin, VM fill windows (vm_* -> 8 vmks) and delivery start on fixed stream edges | H-NETLIST 0600: closed universal calendar master (was ot_vms_calendar_static W89)",
+   "note": "VM HBM fill calendar: programme SRAM (1024 x 256, magic/PC-checked words) issuing landing begin, VM fill windows (vm_* -> 8 vmks) and delivery start on fixed stream edges | H-NETLIST 0600: closed universal calendar master (was ot_vms_calendar_static W89) | H-NETLIST 0600: F20 target 56 folded in (was cp_fill_SW)",
    "replaces_v15": null,
+   "folded_target": {
+    "instance": "cp_fill_SW",
+    "target": "8'd56"
+   },
    "rtl_deps": [
-    "rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static_xcap.sv"
+    "rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static_xcap.sv",
+    "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv"
    ],
    "ports": {
     "clk": {
@@ -90806,33 +89808,53 @@
      "direction": "input",
      "bits": 1
     },
-    "cfg_we": {
+    "tgt": {
+     "direction": "input",
+     "bits": 8
+    },
+    "cfg_v": {
      "direction": "input",
      "bits": 1
     },
+    "cfg_target": {
+     "direction": "input",
+     "bits": 8
+    },
     "cfg_addr": {
      "direction": "input",
-     "bits": 10
+     "bits": 12
     },
     "cfg_data": {
      "direction": "input",
      "bits": 256
     },
-    "start_v": {
+    "desc_v": {
      "direction": "input",
      "bits": 1
     },
-    "start_base": {
+    "desc_base": {
      "direction": "input",
-     "bits": 10
+     "bits": 12
     },
-    "start_limit": {
+    "desc_limit": {
      "direction": "input",
-     "bits": 11
+     "bits": 13
     },
-    "start_loops": {
+    "desc_loops": {
      "direction": "input",
      "bits": 16
+    },
+    "launch_v": {
+     "direction": "input",
+     "bits": 1
+    },
+    "tgt_configured": {
+     "direction": "output",
+     "bits": 1
+    },
+    "tgt_fault": {
+     "direction": "output",
+     "bits": 1
     },
     "calendar_v": {
      "direction": "output",
@@ -91887,16 +90909,22 @@
    }
   },
   "vmfc_SE": {
-   "master": "hfd_hgi_vm_calendar",
-   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar.sv",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
    "params": {},
    "slot": "vmh_SE",
    "owner": "H-DIE",
    "region": "vmsm",
-   "note": "VM HBM fill calendar: programme SRAM (1024 x 256, magic/PC-checked words) issuing landing begin, VM fill windows (vm_* -> 8 vmks) and delivery start on fixed stream edges | H-NETLIST 0600: closed universal calendar master (was ot_vms_calendar_static W89)",
+   "note": "VM HBM fill calendar: programme SRAM (1024 x 256, magic/PC-checked words) issuing landing begin, VM fill windows (vm_* -> 8 vmks) and delivery start on fixed stream edges | H-NETLIST 0600: closed universal calendar master (was ot_vms_calendar_static W89) | H-NETLIST 0600: F20 target 57 folded in (was cp_fill_SE)",
    "replaces_v15": null,
+   "folded_target": {
+    "instance": "cp_fill_SE",
+    "target": "8'd57"
+   },
    "rtl_deps": [
-    "rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static_xcap.sv"
+    "rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static_xcap.sv",
+    "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv"
    ],
    "ports": {
     "clk": {
@@ -91915,33 +90943,53 @@
      "direction": "input",
      "bits": 1
     },
-    "cfg_we": {
+    "tgt": {
+     "direction": "input",
+     "bits": 8
+    },
+    "cfg_v": {
      "direction": "input",
      "bits": 1
     },
+    "cfg_target": {
+     "direction": "input",
+     "bits": 8
+    },
     "cfg_addr": {
      "direction": "input",
-     "bits": 10
+     "bits": 12
     },
     "cfg_data": {
      "direction": "input",
      "bits": 256
     },
-    "start_v": {
+    "desc_v": {
      "direction": "input",
      "bits": 1
     },
-    "start_base": {
+    "desc_base": {
      "direction": "input",
-     "bits": 10
+     "bits": 12
     },
-    "start_limit": {
+    "desc_limit": {
      "direction": "input",
-     "bits": 11
+     "bits": 13
     },
-    "start_loops": {
+    "desc_loops": {
      "direction": "input",
      "bits": 16
+    },
+    "launch_v": {
+     "direction": "input",
+     "bits": 1
+    },
+    "tgt_configured": {
+     "direction": "output",
+     "bits": 1
+    },
+    "tgt_fault": {
+     "direction": "output",
+     "bits": 1
     },
     "calendar_v": {
      "direction": "output",
@@ -92996,16 +92044,22 @@
    }
   },
   "vmfc_NW": {
-   "master": "hfd_hgi_vm_calendar",
-   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar.sv",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
    "params": {},
    "slot": "vmh_NW",
    "owner": "H-DIE",
    "region": "vmsm",
-   "note": "VM HBM fill calendar: programme SRAM (1024 x 256, magic/PC-checked words) issuing landing begin, VM fill windows (vm_* -> 8 vmks) and delivery start on fixed stream edges | H-NETLIST 0600: closed universal calendar master (was ot_vms_calendar_static W89)",
+   "note": "VM HBM fill calendar: programme SRAM (1024 x 256, magic/PC-checked words) issuing landing begin, VM fill windows (vm_* -> 8 vmks) and delivery start on fixed stream edges | H-NETLIST 0600: closed universal calendar master (was ot_vms_calendar_static W89) | H-NETLIST 0600: F20 target 58 folded in (was cp_fill_NW)",
    "replaces_v15": null,
+   "folded_target": {
+    "instance": "cp_fill_NW",
+    "target": "8'd58"
+   },
    "rtl_deps": [
-    "rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static_xcap.sv"
+    "rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static_xcap.sv",
+    "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv"
    ],
    "ports": {
     "clk": {
@@ -93024,33 +92078,53 @@
      "direction": "input",
      "bits": 1
     },
-    "cfg_we": {
+    "tgt": {
+     "direction": "input",
+     "bits": 8
+    },
+    "cfg_v": {
      "direction": "input",
      "bits": 1
     },
+    "cfg_target": {
+     "direction": "input",
+     "bits": 8
+    },
     "cfg_addr": {
      "direction": "input",
-     "bits": 10
+     "bits": 12
     },
     "cfg_data": {
      "direction": "input",
      "bits": 256
     },
-    "start_v": {
+    "desc_v": {
      "direction": "input",
      "bits": 1
     },
-    "start_base": {
+    "desc_base": {
      "direction": "input",
-     "bits": 10
+     "bits": 12
     },
-    "start_limit": {
+    "desc_limit": {
      "direction": "input",
-     "bits": 11
+     "bits": 13
     },
-    "start_loops": {
+    "desc_loops": {
      "direction": "input",
      "bits": 16
+    },
+    "launch_v": {
+     "direction": "input",
+     "bits": 1
+    },
+    "tgt_configured": {
+     "direction": "output",
+     "bits": 1
+    },
+    "tgt_fault": {
+     "direction": "output",
+     "bits": 1
     },
     "calendar_v": {
      "direction": "output",
@@ -94105,16 +93179,22 @@
    }
   },
   "vmfc_NE": {
-   "master": "hfd_hgi_vm_calendar",
-   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar.sv",
+   "master": "hfd_hgi_vm_calendar_f20",
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_f20.sv",
    "params": {},
    "slot": "vmh_NE",
    "owner": "H-DIE",
    "region": "vmsm",
-   "note": "VM HBM fill calendar: programme SRAM (1024 x 256, magic/PC-checked words) issuing landing begin, VM fill windows (vm_* -> 8 vmks) and delivery start on fixed stream edges | H-NETLIST 0600: closed universal calendar master (was ot_vms_calendar_static W89)",
+   "note": "VM HBM fill calendar: programme SRAM (1024 x 256, magic/PC-checked words) issuing landing begin, VM fill windows (vm_* -> 8 vmks) and delivery start on fixed stream edges | H-NETLIST 0600: closed universal calendar master (was ot_vms_calendar_static W89) | H-NETLIST 0600: F20 target 59 folded in (was cp_fill_NE)",
    "replaces_v15": null,
+   "folded_target": {
+    "instance": "cp_fill_NE",
+    "target": "8'd59"
+   },
    "rtl_deps": [
-    "rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static_xcap.sv"
+    "rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static_xcap.sv",
+    "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar.sv",
+    "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv"
    ],
    "ports": {
     "clk": {
@@ -94133,33 +93213,53 @@
      "direction": "input",
      "bits": 1
     },
-    "cfg_we": {
+    "tgt": {
+     "direction": "input",
+     "bits": 8
+    },
+    "cfg_v": {
      "direction": "input",
      "bits": 1
     },
+    "cfg_target": {
+     "direction": "input",
+     "bits": 8
+    },
     "cfg_addr": {
      "direction": "input",
-     "bits": 10
+     "bits": 12
     },
     "cfg_data": {
      "direction": "input",
      "bits": 256
     },
-    "start_v": {
+    "desc_v": {
      "direction": "input",
      "bits": 1
     },
-    "start_base": {
+    "desc_base": {
      "direction": "input",
-     "bits": 10
+     "bits": 12
     },
-    "start_limit": {
+    "desc_limit": {
      "direction": "input",
-     "bits": 11
+     "bits": 13
     },
-    "start_loops": {
+    "desc_loops": {
      "direction": "input",
      "bits": 16
+    },
+    "launch_v": {
+     "direction": "input",
+     "bits": 1
+    },
+    "tgt_configured": {
+     "direction": "output",
+     "bits": 1
+    },
+    "tgt_fault": {
+     "direction": "output",
+     "bits": 1
     },
     "calendar_v": {
      "direction": "output",
@@ -198566,7 +197666,7 @@
     1
    ],
    "sink": [
-    "cp_cal_SW",
+    "calendar_SW",
     "cfg_v",
     0,
     1
@@ -198587,7 +197687,7 @@
     8
    ],
    "sink": [
-    "cp_cal_SW",
+    "calendar_SW",
     "cfg_target",
     0,
     8
@@ -198608,7 +197708,7 @@
     12
    ],
    "sink": [
-    "cp_cal_SW",
+    "calendar_SW",
     "cfg_addr",
     0,
     12
@@ -198629,7 +197729,7 @@
     256
    ],
    "sink": [
-    "cp_cal_SW",
+    "calendar_SW",
     "cfg_data",
     0,
     256
@@ -198650,7 +197750,7 @@
     1
    ],
    "sink": [
-    "cp_cal_SW",
+    "calendar_SW",
     "desc_v",
     0,
     1
@@ -198671,7 +197771,7 @@
     12
    ],
    "sink": [
-    "cp_cal_SW",
+    "calendar_SW",
     "desc_base",
     0,
     12
@@ -198692,7 +197792,7 @@
     13
    ],
    "sink": [
-    "cp_cal_SW",
+    "calendar_SW",
     "desc_limit",
     0,
     13
@@ -198713,7 +197813,7 @@
     16
    ],
    "sink": [
-    "cp_cal_SW",
+    "calendar_SW",
     "desc_loops",
     0,
     16
@@ -198734,7 +197834,7 @@
     1
    ],
    "sink": [
-    "cp_cal_SW",
+    "calendar_SW",
     "launch_v",
     0,
     1
@@ -198743,174 +197843,6 @@
    "ready_or_credit": false,
    "allowed_exception": null,
    "basis": "host F20 broadcast: ot_hbm_host_static_ingress.sv:18-23 outputs (same names/widths) -> collar pin flops; same pattern as coll_idx_link (COLL TARGET 52+QID)",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_177",
-   "bits": 1,
-   "source": [
-    "cp_cal_SW",
-    "program_cfg_we",
-    0,
-    1
-   ],
-   "sink": [
-    "calendar_SW",
-    "cfg_we",
-    0,
-    1
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "ot_static_program_target #(PCW 10) outputs == hfd_hgi_vm_calendar_static.sv:4-10 inputs",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_178",
-   "bits": 10,
-   "source": [
-    "cp_cal_SW",
-    "program_cfg_addr",
-    0,
-    10
-   ],
-   "sink": [
-    "calendar_SW",
-    "cfg_addr",
-    0,
-    10
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "ot_static_program_target #(PCW 10) outputs == hfd_hgi_vm_calendar_static.sv:4-10 inputs",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_179",
-   "bits": 256,
-   "source": [
-    "cp_cal_SW",
-    "program_cfg_data",
-    0,
-    256
-   ],
-   "sink": [
-    "calendar_SW",
-    "cfg_data",
-    0,
-    256
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "ot_static_program_target #(PCW 10) outputs == hfd_hgi_vm_calendar_static.sv:4-10 inputs",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_180",
-   "bits": 1,
-   "source": [
-    "cp_cal_SW",
-    "program_start_v",
-    0,
-    1
-   ],
-   "sink": [
-    "calendar_SW",
-    "start_v",
-    0,
-    1
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "ot_static_program_target #(PCW 10) outputs == hfd_hgi_vm_calendar_static.sv:4-10 inputs",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_181",
-   "bits": 10,
-   "source": [
-    "cp_cal_SW",
-    "program_start_base",
-    0,
-    10
-   ],
-   "sink": [
-    "calendar_SW",
-    "start_base",
-    0,
-    10
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "ot_static_program_target #(PCW 10) outputs == hfd_hgi_vm_calendar_static.sv:4-10 inputs",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_182",
-   "bits": 11,
-   "source": [
-    "cp_cal_SW",
-    "program_start_limit",
-    0,
-    11
-   ],
-   "sink": [
-    "calendar_SW",
-    "start_limit",
-    0,
-    11
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "ot_static_program_target #(PCW 10) outputs == hfd_hgi_vm_calendar_static.sv:4-10 inputs",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_183",
-   "bits": 16,
-   "source": [
-    "cp_cal_SW",
-    "program_start_loops",
-    0,
-    16
-   ],
-   "sink": [
-    "calendar_SW",
-    "start_loops",
-    0,
-    16
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "ot_static_program_target #(PCW 10) outputs == hfd_hgi_vm_calendar_static.sv:4-10 inputs",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_184",
-   "bits": 1,
-   "source": [
-    "calendar_SW",
-    "active",
-    0,
-    1
-   ],
-   "sink": [
-    "cp_cal_SW",
-    "program_active",
-    0,
-    1
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "calendar active -> collar interlock (cfg/desc/launch while active = fault)",
    "region": "cp1"
   },
   {
@@ -203228,7 +202160,7 @@
     1
    ],
    "sink": [
-    "cp_cal_SE",
+    "calendar_SE",
     "cfg_v",
     0,
     1
@@ -203249,7 +202181,7 @@
     8
    ],
    "sink": [
-    "cp_cal_SE",
+    "calendar_SE",
     "cfg_target",
     0,
     8
@@ -203270,7 +202202,7 @@
     12
    ],
    "sink": [
-    "cp_cal_SE",
+    "calendar_SE",
     "cfg_addr",
     0,
     12
@@ -203291,7 +202223,7 @@
     256
    ],
    "sink": [
-    "cp_cal_SE",
+    "calendar_SE",
     "cfg_data",
     0,
     256
@@ -203312,7 +202244,7 @@
     1
    ],
    "sink": [
-    "cp_cal_SE",
+    "calendar_SE",
     "desc_v",
     0,
     1
@@ -203333,7 +202265,7 @@
     12
    ],
    "sink": [
-    "cp_cal_SE",
+    "calendar_SE",
     "desc_base",
     0,
     12
@@ -203354,7 +202286,7 @@
     13
    ],
    "sink": [
-    "cp_cal_SE",
+    "calendar_SE",
     "desc_limit",
     0,
     13
@@ -203375,7 +202307,7 @@
     16
    ],
    "sink": [
-    "cp_cal_SE",
+    "calendar_SE",
     "desc_loops",
     0,
     16
@@ -203396,7 +202328,7 @@
     1
    ],
    "sink": [
-    "cp_cal_SE",
+    "calendar_SE",
     "launch_v",
     0,
     1
@@ -203405,174 +202337,6 @@
    "ready_or_credit": false,
    "allowed_exception": null,
    "basis": "host F20 broadcast: ot_hbm_host_static_ingress.sv:18-23 outputs (same names/widths) -> collar pin flops; same pattern as coll_idx_link (COLL TARGET 52+QID)",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_399",
-   "bits": 1,
-   "source": [
-    "cp_cal_SE",
-    "program_cfg_we",
-    0,
-    1
-   ],
-   "sink": [
-    "calendar_SE",
-    "cfg_we",
-    0,
-    1
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "ot_static_program_target #(PCW 10) outputs == hfd_hgi_vm_calendar_static.sv:4-10 inputs",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_400",
-   "bits": 10,
-   "source": [
-    "cp_cal_SE",
-    "program_cfg_addr",
-    0,
-    10
-   ],
-   "sink": [
-    "calendar_SE",
-    "cfg_addr",
-    0,
-    10
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "ot_static_program_target #(PCW 10) outputs == hfd_hgi_vm_calendar_static.sv:4-10 inputs",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_401",
-   "bits": 256,
-   "source": [
-    "cp_cal_SE",
-    "program_cfg_data",
-    0,
-    256
-   ],
-   "sink": [
-    "calendar_SE",
-    "cfg_data",
-    0,
-    256
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "ot_static_program_target #(PCW 10) outputs == hfd_hgi_vm_calendar_static.sv:4-10 inputs",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_402",
-   "bits": 1,
-   "source": [
-    "cp_cal_SE",
-    "program_start_v",
-    0,
-    1
-   ],
-   "sink": [
-    "calendar_SE",
-    "start_v",
-    0,
-    1
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "ot_static_program_target #(PCW 10) outputs == hfd_hgi_vm_calendar_static.sv:4-10 inputs",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_403",
-   "bits": 10,
-   "source": [
-    "cp_cal_SE",
-    "program_start_base",
-    0,
-    10
-   ],
-   "sink": [
-    "calendar_SE",
-    "start_base",
-    0,
-    10
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "ot_static_program_target #(PCW 10) outputs == hfd_hgi_vm_calendar_static.sv:4-10 inputs",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_404",
-   "bits": 11,
-   "source": [
-    "cp_cal_SE",
-    "program_start_limit",
-    0,
-    11
-   ],
-   "sink": [
-    "calendar_SE",
-    "start_limit",
-    0,
-    11
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "ot_static_program_target #(PCW 10) outputs == hfd_hgi_vm_calendar_static.sv:4-10 inputs",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_405",
-   "bits": 16,
-   "source": [
-    "cp_cal_SE",
-    "program_start_loops",
-    0,
-    16
-   ],
-   "sink": [
-    "calendar_SE",
-    "start_loops",
-    0,
-    16
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "ot_static_program_target #(PCW 10) outputs == hfd_hgi_vm_calendar_static.sv:4-10 inputs",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_406",
-   "bits": 1,
-   "source": [
-    "calendar_SE",
-    "active",
-    0,
-    1
-   ],
-   "sink": [
-    "cp_cal_SE",
-    "program_active",
-    0,
-    1
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "calendar active -> collar interlock (cfg/desc/launch while active = fault)",
    "region": "cp1"
   },
   {
@@ -207890,7 +206654,7 @@
     1
    ],
    "sink": [
-    "cp_cal_NW",
+    "calendar_NW",
     "cfg_v",
     0,
     1
@@ -207911,7 +206675,7 @@
     8
    ],
    "sink": [
-    "cp_cal_NW",
+    "calendar_NW",
     "cfg_target",
     0,
     8
@@ -207932,7 +206696,7 @@
     12
    ],
    "sink": [
-    "cp_cal_NW",
+    "calendar_NW",
     "cfg_addr",
     0,
     12
@@ -207953,7 +206717,7 @@
     256
    ],
    "sink": [
-    "cp_cal_NW",
+    "calendar_NW",
     "cfg_data",
     0,
     256
@@ -207974,7 +206738,7 @@
     1
    ],
    "sink": [
-    "cp_cal_NW",
+    "calendar_NW",
     "desc_v",
     0,
     1
@@ -207995,7 +206759,7 @@
     12
    ],
    "sink": [
-    "cp_cal_NW",
+    "calendar_NW",
     "desc_base",
     0,
     12
@@ -208016,7 +206780,7 @@
     13
    ],
    "sink": [
-    "cp_cal_NW",
+    "calendar_NW",
     "desc_limit",
     0,
     13
@@ -208037,7 +206801,7 @@
     16
    ],
    "sink": [
-    "cp_cal_NW",
+    "calendar_NW",
     "desc_loops",
     0,
     16
@@ -208058,7 +206822,7 @@
     1
    ],
    "sink": [
-    "cp_cal_NW",
+    "calendar_NW",
     "launch_v",
     0,
     1
@@ -208067,174 +206831,6 @@
    "ready_or_credit": false,
    "allowed_exception": null,
    "basis": "host F20 broadcast: ot_hbm_host_static_ingress.sv:18-23 outputs (same names/widths) -> collar pin flops; same pattern as coll_idx_link (COLL TARGET 52+QID)",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_621",
-   "bits": 1,
-   "source": [
-    "cp_cal_NW",
-    "program_cfg_we",
-    0,
-    1
-   ],
-   "sink": [
-    "calendar_NW",
-    "cfg_we",
-    0,
-    1
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "ot_static_program_target #(PCW 10) outputs == hfd_hgi_vm_calendar_static.sv:4-10 inputs",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_622",
-   "bits": 10,
-   "source": [
-    "cp_cal_NW",
-    "program_cfg_addr",
-    0,
-    10
-   ],
-   "sink": [
-    "calendar_NW",
-    "cfg_addr",
-    0,
-    10
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "ot_static_program_target #(PCW 10) outputs == hfd_hgi_vm_calendar_static.sv:4-10 inputs",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_623",
-   "bits": 256,
-   "source": [
-    "cp_cal_NW",
-    "program_cfg_data",
-    0,
-    256
-   ],
-   "sink": [
-    "calendar_NW",
-    "cfg_data",
-    0,
-    256
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "ot_static_program_target #(PCW 10) outputs == hfd_hgi_vm_calendar_static.sv:4-10 inputs",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_624",
-   "bits": 1,
-   "source": [
-    "cp_cal_NW",
-    "program_start_v",
-    0,
-    1
-   ],
-   "sink": [
-    "calendar_NW",
-    "start_v",
-    0,
-    1
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "ot_static_program_target #(PCW 10) outputs == hfd_hgi_vm_calendar_static.sv:4-10 inputs",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_625",
-   "bits": 10,
-   "source": [
-    "cp_cal_NW",
-    "program_start_base",
-    0,
-    10
-   ],
-   "sink": [
-    "calendar_NW",
-    "start_base",
-    0,
-    10
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "ot_static_program_target #(PCW 10) outputs == hfd_hgi_vm_calendar_static.sv:4-10 inputs",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_626",
-   "bits": 11,
-   "source": [
-    "cp_cal_NW",
-    "program_start_limit",
-    0,
-    11
-   ],
-   "sink": [
-    "calendar_NW",
-    "start_limit",
-    0,
-    11
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "ot_static_program_target #(PCW 10) outputs == hfd_hgi_vm_calendar_static.sv:4-10 inputs",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_627",
-   "bits": 16,
-   "source": [
-    "cp_cal_NW",
-    "program_start_loops",
-    0,
-    16
-   ],
-   "sink": [
-    "calendar_NW",
-    "start_loops",
-    0,
-    16
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "ot_static_program_target #(PCW 10) outputs == hfd_hgi_vm_calendar_static.sv:4-10 inputs",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_628",
-   "bits": 1,
-   "source": [
-    "calendar_NW",
-    "active",
-    0,
-    1
-   ],
-   "sink": [
-    "cp_cal_NW",
-    "program_active",
-    0,
-    1
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "calendar active -> collar interlock (cfg/desc/launch while active = fault)",
    "region": "cp1"
   },
   {
@@ -212552,7 +211148,7 @@
     1
    ],
    "sink": [
-    "cp_cal_NE",
+    "calendar_NE",
     "cfg_v",
     0,
     1
@@ -212573,7 +211169,7 @@
     8
    ],
    "sink": [
-    "cp_cal_NE",
+    "calendar_NE",
     "cfg_target",
     0,
     8
@@ -212594,7 +211190,7 @@
     12
    ],
    "sink": [
-    "cp_cal_NE",
+    "calendar_NE",
     "cfg_addr",
     0,
     12
@@ -212615,7 +211211,7 @@
     256
    ],
    "sink": [
-    "cp_cal_NE",
+    "calendar_NE",
     "cfg_data",
     0,
     256
@@ -212636,7 +211232,7 @@
     1
    ],
    "sink": [
-    "cp_cal_NE",
+    "calendar_NE",
     "desc_v",
     0,
     1
@@ -212657,7 +211253,7 @@
     12
    ],
    "sink": [
-    "cp_cal_NE",
+    "calendar_NE",
     "desc_base",
     0,
     12
@@ -212678,7 +211274,7 @@
     13
    ],
    "sink": [
-    "cp_cal_NE",
+    "calendar_NE",
     "desc_limit",
     0,
     13
@@ -212699,7 +211295,7 @@
     16
    ],
    "sink": [
-    "cp_cal_NE",
+    "calendar_NE",
     "desc_loops",
     0,
     16
@@ -212720,7 +211316,7 @@
     1
    ],
    "sink": [
-    "cp_cal_NE",
+    "calendar_NE",
     "launch_v",
     0,
     1
@@ -212729,174 +211325,6 @@
    "ready_or_credit": false,
    "allowed_exception": null,
    "basis": "host F20 broadcast: ot_hbm_host_static_ingress.sv:18-23 outputs (same names/widths) -> collar pin flops; same pattern as coll_idx_link (COLL TARGET 52+QID)",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_843",
-   "bits": 1,
-   "source": [
-    "cp_cal_NE",
-    "program_cfg_we",
-    0,
-    1
-   ],
-   "sink": [
-    "calendar_NE",
-    "cfg_we",
-    0,
-    1
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "ot_static_program_target #(PCW 10) outputs == hfd_hgi_vm_calendar_static.sv:4-10 inputs",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_844",
-   "bits": 10,
-   "source": [
-    "cp_cal_NE",
-    "program_cfg_addr",
-    0,
-    10
-   ],
-   "sink": [
-    "calendar_NE",
-    "cfg_addr",
-    0,
-    10
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "ot_static_program_target #(PCW 10) outputs == hfd_hgi_vm_calendar_static.sv:4-10 inputs",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_845",
-   "bits": 256,
-   "source": [
-    "cp_cal_NE",
-    "program_cfg_data",
-    0,
-    256
-   ],
-   "sink": [
-    "calendar_NE",
-    "cfg_data",
-    0,
-    256
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "ot_static_program_target #(PCW 10) outputs == hfd_hgi_vm_calendar_static.sv:4-10 inputs",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_846",
-   "bits": 1,
-   "source": [
-    "cp_cal_NE",
-    "program_start_v",
-    0,
-    1
-   ],
-   "sink": [
-    "calendar_NE",
-    "start_v",
-    0,
-    1
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "ot_static_program_target #(PCW 10) outputs == hfd_hgi_vm_calendar_static.sv:4-10 inputs",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_847",
-   "bits": 10,
-   "source": [
-    "cp_cal_NE",
-    "program_start_base",
-    0,
-    10
-   ],
-   "sink": [
-    "calendar_NE",
-    "start_base",
-    0,
-    10
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "ot_static_program_target #(PCW 10) outputs == hfd_hgi_vm_calendar_static.sv:4-10 inputs",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_848",
-   "bits": 11,
-   "source": [
-    "cp_cal_NE",
-    "program_start_limit",
-    0,
-    11
-   ],
-   "sink": [
-    "calendar_NE",
-    "start_limit",
-    0,
-    11
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "ot_static_program_target #(PCW 10) outputs == hfd_hgi_vm_calendar_static.sv:4-10 inputs",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_849",
-   "bits": 16,
-   "source": [
-    "cp_cal_NE",
-    "program_start_loops",
-    0,
-    16
-   ],
-   "sink": [
-    "calendar_NE",
-    "start_loops",
-    0,
-    16
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "ot_static_program_target #(PCW 10) outputs == hfd_hgi_vm_calendar_static.sv:4-10 inputs",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_850",
-   "bits": 1,
-   "source": [
-    "calendar_NE",
-    "active",
-    0,
-    1
-   ],
-   "sink": [
-    "cp_cal_NE",
-    "program_active",
-    0,
-    1
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "calendar active -> collar interlock (cfg/desc/launch while active = fault)",
    "region": "cp1"
   },
   {
@@ -218489,8 +216917,8 @@
    "name": "cp2_229",
    "bits": 1,
    "source": [
-    "cp_fill_SW",
-    "configured",
+    "vmfc_SW",
+    "tgt_configured",
     0,
     1
    ],
@@ -218531,8 +216959,8 @@
    "name": "cp2_231",
    "bits": 1,
    "source": [
-    "cp_fill_SW",
-    "fault",
+    "vmfc_SW",
+    "tgt_fault",
     0,
     1
    ],
@@ -218573,8 +217001,8 @@
    "name": "cp2_233",
    "bits": 1,
    "source": [
-    "cp_fill_SE",
-    "configured",
+    "vmfc_SE",
+    "tgt_configured",
     0,
     1
    ],
@@ -218615,8 +217043,8 @@
    "name": "cp2_235",
    "bits": 1,
    "source": [
-    "cp_fill_SE",
-    "fault",
+    "vmfc_SE",
+    "tgt_fault",
     0,
     1
    ],
@@ -218657,8 +217085,8 @@
    "name": "cp2_237",
    "bits": 1,
    "source": [
-    "cp_fill_NW",
-    "configured",
+    "vmfc_NW",
+    "tgt_configured",
     0,
     1
    ],
@@ -218699,8 +217127,8 @@
    "name": "cp2_239",
    "bits": 1,
    "source": [
-    "cp_fill_NW",
-    "fault",
+    "vmfc_NW",
+    "tgt_fault",
     0,
     1
    ],
@@ -218741,8 +217169,8 @@
    "name": "cp2_241",
    "bits": 1,
    "source": [
-    "cp_fill_NE",
-    "configured",
+    "vmfc_NE",
+    "tgt_configured",
     0,
     1
    ],
@@ -218783,8 +217211,8 @@
    "name": "cp2_243",
    "bits": 1,
    "source": [
-    "cp_fill_NE",
-    "fault",
+    "vmfc_NE",
+    "tgt_fault",
     0,
     1
    ],
@@ -220841,8 +219269,8 @@
    "name": "cp2_341",
    "bits": 1,
    "source": [
-    "cp_cal_SW",
-    "configured",
+    "calendar_SW",
+    "tgt_configured",
     0,
     1
    ],
@@ -220883,8 +219311,8 @@
    "name": "cp2_343",
    "bits": 1,
    "source": [
-    "cp_cal_SW",
-    "fault",
+    "calendar_SW",
+    "tgt_fault",
     0,
     1
    ],
@@ -220925,8 +219353,8 @@
    "name": "cp2_345",
    "bits": 1,
    "source": [
-    "cp_cal_SE",
-    "configured",
+    "calendar_SE",
+    "tgt_configured",
     0,
     1
    ],
@@ -220967,8 +219395,8 @@
    "name": "cp2_347",
    "bits": 1,
    "source": [
-    "cp_cal_SE",
-    "fault",
+    "calendar_SE",
+    "tgt_fault",
     0,
     1
    ],
@@ -221009,8 +219437,8 @@
    "name": "cp2_349",
    "bits": 1,
    "source": [
-    "cp_cal_NW",
-    "configured",
+    "calendar_NW",
+    "tgt_configured",
     0,
     1
    ],
@@ -221051,8 +219479,8 @@
    "name": "cp2_351",
    "bits": 1,
    "source": [
-    "cp_cal_NW",
-    "fault",
+    "calendar_NW",
+    "tgt_fault",
     0,
     1
    ],
@@ -221093,8 +219521,8 @@
    "name": "cp2_353",
    "bits": 1,
    "source": [
-    "cp_cal_NE",
-    "configured",
+    "calendar_NE",
+    "tgt_configured",
     0,
     1
    ],
@@ -221135,8 +219563,8 @@
    "name": "cp2_355",
    "bits": 1,
    "source": [
-    "cp_cal_NE",
-    "fault",
+    "calendar_NE",
+    "tgt_fault",
     0,
     1
    ],
@@ -222017,8 +220445,8 @@
    "name": "cp2_397",
    "bits": 1,
    "source": [
-    "cp_ep_SW",
-    "configured",
+    "epcal_SW",
+    "tgt_configured",
     0,
     1
    ],
@@ -222059,8 +220487,8 @@
    "name": "cp2_399",
    "bits": 1,
    "source": [
-    "cp_ep_SW",
-    "fault",
+    "epcal_SW",
+    "tgt_fault",
     0,
     1
    ],
@@ -222164,8 +220592,8 @@
    "name": "cp2_404",
    "bits": 1,
    "source": [
-    "cp_ep_SE",
-    "configured",
+    "epcal_SE",
+    "tgt_configured",
     0,
     1
    ],
@@ -222206,8 +220634,8 @@
    "name": "cp2_406",
    "bits": 1,
    "source": [
-    "cp_ep_SE",
-    "fault",
+    "epcal_SE",
+    "tgt_fault",
     0,
     1
    ],
@@ -222290,8 +220718,8 @@
    "name": "cp2_410",
    "bits": 1,
    "source": [
-    "cp_ep_NW",
-    "configured",
+    "epcal_NW",
+    "tgt_configured",
     0,
     1
    ],
@@ -222332,8 +220760,8 @@
    "name": "cp2_412",
    "bits": 1,
    "source": [
-    "cp_ep_NW",
-    "fault",
+    "epcal_NW",
+    "tgt_fault",
     0,
     1
    ],
@@ -222416,8 +220844,8 @@
    "name": "cp2_416",
    "bits": 1,
    "source": [
-    "cp_ep_NE",
-    "configured",
+    "epcal_NE",
+    "tgt_configured",
     0,
     1
    ],
@@ -222458,8 +220886,8 @@
    "name": "cp2_418",
    "bits": 1,
    "source": [
-    "cp_ep_NE",
-    "fault",
+    "epcal_NE",
+    "tgt_fault",
     0,
     1
    ],
@@ -237101,7 +235529,7 @@
     1
    ],
    "sink": [
-    "cp_fill_SW",
+    "vmfc_SW",
     "cfg_v",
     0,
     1
@@ -237122,7 +235550,7 @@
     8
    ],
    "sink": [
-    "cp_fill_SW",
+    "vmfc_SW",
     "cfg_target",
     0,
     8
@@ -237143,7 +235571,7 @@
     12
    ],
    "sink": [
-    "cp_fill_SW",
+    "vmfc_SW",
     "cfg_addr",
     0,
     12
@@ -237164,7 +235592,7 @@
     256
    ],
    "sink": [
-    "cp_fill_SW",
+    "vmfc_SW",
     "cfg_data",
     0,
     256
@@ -237185,7 +235613,7 @@
     1
    ],
    "sink": [
-    "cp_fill_SW",
+    "vmfc_SW",
     "desc_v",
     0,
     1
@@ -237206,7 +235634,7 @@
     12
    ],
    "sink": [
-    "cp_fill_SW",
+    "vmfc_SW",
     "desc_base",
     0,
     12
@@ -237227,7 +235655,7 @@
     13
    ],
    "sink": [
-    "cp_fill_SW",
+    "vmfc_SW",
     "desc_limit",
     0,
     13
@@ -237248,7 +235676,7 @@
     16
    ],
    "sink": [
-    "cp_fill_SW",
+    "vmfc_SW",
     "desc_loops",
     0,
     16
@@ -237269,176 +235697,8 @@
     1
    ],
    "sink": [
-    "cp_fill_SW",
+    "vmfc_SW",
     "launch_v",
-    0,
-    1
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar",
-   "region": "host_completion"
-  },
-  {
-   "name": "host_completion_9",
-   "bits": 1,
-   "source": [
-    "cp_fill_SW",
-    "program_cfg_we",
-    0,
-    1
-   ],
-   "sink": [
-    "vmfc_SW",
-    "cfg_we",
-    0,
-    1
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar",
-   "region": "host_completion"
-  },
-  {
-   "name": "host_completion_10",
-   "bits": 10,
-   "source": [
-    "cp_fill_SW",
-    "program_cfg_addr",
-    0,
-    10
-   ],
-   "sink": [
-    "vmfc_SW",
-    "cfg_addr",
-    0,
-    10
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar",
-   "region": "host_completion"
-  },
-  {
-   "name": "host_completion_11",
-   "bits": 256,
-   "source": [
-    "cp_fill_SW",
-    "program_cfg_data",
-    0,
-    256
-   ],
-   "sink": [
-    "vmfc_SW",
-    "cfg_data",
-    0,
-    256
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar",
-   "region": "host_completion"
-  },
-  {
-   "name": "host_completion_12",
-   "bits": 1,
-   "source": [
-    "cp_fill_SW",
-    "program_start_v",
-    0,
-    1
-   ],
-   "sink": [
-    "vmfc_SW",
-    "start_v",
-    0,
-    1
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar",
-   "region": "host_completion"
-  },
-  {
-   "name": "host_completion_13",
-   "bits": 10,
-   "source": [
-    "cp_fill_SW",
-    "program_start_base",
-    0,
-    10
-   ],
-   "sink": [
-    "vmfc_SW",
-    "start_base",
-    0,
-    10
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar",
-   "region": "host_completion"
-  },
-  {
-   "name": "host_completion_14",
-   "bits": 11,
-   "source": [
-    "cp_fill_SW",
-    "program_start_limit",
-    0,
-    11
-   ],
-   "sink": [
-    "vmfc_SW",
-    "start_limit",
-    0,
-    11
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar",
-   "region": "host_completion"
-  },
-  {
-   "name": "host_completion_15",
-   "bits": 16,
-   "source": [
-    "cp_fill_SW",
-    "program_start_loops",
-    0,
-    16
-   ],
-   "sink": [
-    "vmfc_SW",
-    "start_loops",
-    0,
-    16
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar",
-   "region": "host_completion"
-  },
-  {
-   "name": "host_completion_16",
-   "bits": 1,
-   "source": [
-    "vmfc_SW",
-    "active",
-    0,
-    1
-   ],
-   "sink": [
-    "cp_fill_SW",
-    "program_active",
     0,
     1
    ],
@@ -237458,7 +235718,7 @@
     1
    ],
    "sink": [
-    "cp_fill_SE",
+    "vmfc_SE",
     "cfg_v",
     0,
     1
@@ -237479,7 +235739,7 @@
     8
    ],
    "sink": [
-    "cp_fill_SE",
+    "vmfc_SE",
     "cfg_target",
     0,
     8
@@ -237500,7 +235760,7 @@
     12
    ],
    "sink": [
-    "cp_fill_SE",
+    "vmfc_SE",
     "cfg_addr",
     0,
     12
@@ -237521,7 +235781,7 @@
     256
    ],
    "sink": [
-    "cp_fill_SE",
+    "vmfc_SE",
     "cfg_data",
     0,
     256
@@ -237542,7 +235802,7 @@
     1
    ],
    "sink": [
-    "cp_fill_SE",
+    "vmfc_SE",
     "desc_v",
     0,
     1
@@ -237563,7 +235823,7 @@
     12
    ],
    "sink": [
-    "cp_fill_SE",
+    "vmfc_SE",
     "desc_base",
     0,
     12
@@ -237584,7 +235844,7 @@
     13
    ],
    "sink": [
-    "cp_fill_SE",
+    "vmfc_SE",
     "desc_limit",
     0,
     13
@@ -237605,7 +235865,7 @@
     16
    ],
    "sink": [
-    "cp_fill_SE",
+    "vmfc_SE",
     "desc_loops",
     0,
     16
@@ -237626,176 +235886,8 @@
     1
    ],
    "sink": [
-    "cp_fill_SE",
+    "vmfc_SE",
     "launch_v",
-    0,
-    1
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar",
-   "region": "host_completion"
-  },
-  {
-   "name": "host_completion_26",
-   "bits": 1,
-   "source": [
-    "cp_fill_SE",
-    "program_cfg_we",
-    0,
-    1
-   ],
-   "sink": [
-    "vmfc_SE",
-    "cfg_we",
-    0,
-    1
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar",
-   "region": "host_completion"
-  },
-  {
-   "name": "host_completion_27",
-   "bits": 10,
-   "source": [
-    "cp_fill_SE",
-    "program_cfg_addr",
-    0,
-    10
-   ],
-   "sink": [
-    "vmfc_SE",
-    "cfg_addr",
-    0,
-    10
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar",
-   "region": "host_completion"
-  },
-  {
-   "name": "host_completion_28",
-   "bits": 256,
-   "source": [
-    "cp_fill_SE",
-    "program_cfg_data",
-    0,
-    256
-   ],
-   "sink": [
-    "vmfc_SE",
-    "cfg_data",
-    0,
-    256
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar",
-   "region": "host_completion"
-  },
-  {
-   "name": "host_completion_29",
-   "bits": 1,
-   "source": [
-    "cp_fill_SE",
-    "program_start_v",
-    0,
-    1
-   ],
-   "sink": [
-    "vmfc_SE",
-    "start_v",
-    0,
-    1
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar",
-   "region": "host_completion"
-  },
-  {
-   "name": "host_completion_30",
-   "bits": 10,
-   "source": [
-    "cp_fill_SE",
-    "program_start_base",
-    0,
-    10
-   ],
-   "sink": [
-    "vmfc_SE",
-    "start_base",
-    0,
-    10
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar",
-   "region": "host_completion"
-  },
-  {
-   "name": "host_completion_31",
-   "bits": 11,
-   "source": [
-    "cp_fill_SE",
-    "program_start_limit",
-    0,
-    11
-   ],
-   "sink": [
-    "vmfc_SE",
-    "start_limit",
-    0,
-    11
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar",
-   "region": "host_completion"
-  },
-  {
-   "name": "host_completion_32",
-   "bits": 16,
-   "source": [
-    "cp_fill_SE",
-    "program_start_loops",
-    0,
-    16
-   ],
-   "sink": [
-    "vmfc_SE",
-    "start_loops",
-    0,
-    16
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar",
-   "region": "host_completion"
-  },
-  {
-   "name": "host_completion_33",
-   "bits": 1,
-   "source": [
-    "vmfc_SE",
-    "active",
-    0,
-    1
-   ],
-   "sink": [
-    "cp_fill_SE",
-    "program_active",
     0,
     1
    ],
@@ -237815,7 +235907,7 @@
     1
    ],
    "sink": [
-    "cp_fill_NW",
+    "vmfc_NW",
     "cfg_v",
     0,
     1
@@ -237836,7 +235928,7 @@
     8
    ],
    "sink": [
-    "cp_fill_NW",
+    "vmfc_NW",
     "cfg_target",
     0,
     8
@@ -237857,7 +235949,7 @@
     12
    ],
    "sink": [
-    "cp_fill_NW",
+    "vmfc_NW",
     "cfg_addr",
     0,
     12
@@ -237878,7 +235970,7 @@
     256
    ],
    "sink": [
-    "cp_fill_NW",
+    "vmfc_NW",
     "cfg_data",
     0,
     256
@@ -237899,7 +235991,7 @@
     1
    ],
    "sink": [
-    "cp_fill_NW",
+    "vmfc_NW",
     "desc_v",
     0,
     1
@@ -237920,7 +236012,7 @@
     12
    ],
    "sink": [
-    "cp_fill_NW",
+    "vmfc_NW",
     "desc_base",
     0,
     12
@@ -237941,7 +236033,7 @@
     13
    ],
    "sink": [
-    "cp_fill_NW",
+    "vmfc_NW",
     "desc_limit",
     0,
     13
@@ -237962,7 +236054,7 @@
     16
    ],
    "sink": [
-    "cp_fill_NW",
+    "vmfc_NW",
     "desc_loops",
     0,
     16
@@ -237983,176 +236075,8 @@
     1
    ],
    "sink": [
-    "cp_fill_NW",
+    "vmfc_NW",
     "launch_v",
-    0,
-    1
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar",
-   "region": "host_completion"
-  },
-  {
-   "name": "host_completion_43",
-   "bits": 1,
-   "source": [
-    "cp_fill_NW",
-    "program_cfg_we",
-    0,
-    1
-   ],
-   "sink": [
-    "vmfc_NW",
-    "cfg_we",
-    0,
-    1
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar",
-   "region": "host_completion"
-  },
-  {
-   "name": "host_completion_44",
-   "bits": 10,
-   "source": [
-    "cp_fill_NW",
-    "program_cfg_addr",
-    0,
-    10
-   ],
-   "sink": [
-    "vmfc_NW",
-    "cfg_addr",
-    0,
-    10
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar",
-   "region": "host_completion"
-  },
-  {
-   "name": "host_completion_45",
-   "bits": 256,
-   "source": [
-    "cp_fill_NW",
-    "program_cfg_data",
-    0,
-    256
-   ],
-   "sink": [
-    "vmfc_NW",
-    "cfg_data",
-    0,
-    256
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar",
-   "region": "host_completion"
-  },
-  {
-   "name": "host_completion_46",
-   "bits": 1,
-   "source": [
-    "cp_fill_NW",
-    "program_start_v",
-    0,
-    1
-   ],
-   "sink": [
-    "vmfc_NW",
-    "start_v",
-    0,
-    1
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar",
-   "region": "host_completion"
-  },
-  {
-   "name": "host_completion_47",
-   "bits": 10,
-   "source": [
-    "cp_fill_NW",
-    "program_start_base",
-    0,
-    10
-   ],
-   "sink": [
-    "vmfc_NW",
-    "start_base",
-    0,
-    10
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar",
-   "region": "host_completion"
-  },
-  {
-   "name": "host_completion_48",
-   "bits": 11,
-   "source": [
-    "cp_fill_NW",
-    "program_start_limit",
-    0,
-    11
-   ],
-   "sink": [
-    "vmfc_NW",
-    "start_limit",
-    0,
-    11
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar",
-   "region": "host_completion"
-  },
-  {
-   "name": "host_completion_49",
-   "bits": 16,
-   "source": [
-    "cp_fill_NW",
-    "program_start_loops",
-    0,
-    16
-   ],
-   "sink": [
-    "vmfc_NW",
-    "start_loops",
-    0,
-    16
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar",
-   "region": "host_completion"
-  },
-  {
-   "name": "host_completion_50",
-   "bits": 1,
-   "source": [
-    "vmfc_NW",
-    "active",
-    0,
-    1
-   ],
-   "sink": [
-    "cp_fill_NW",
-    "program_active",
     0,
     1
    ],
@@ -238172,7 +236096,7 @@
     1
    ],
    "sink": [
-    "cp_fill_NE",
+    "vmfc_NE",
     "cfg_v",
     0,
     1
@@ -238193,7 +236117,7 @@
     8
    ],
    "sink": [
-    "cp_fill_NE",
+    "vmfc_NE",
     "cfg_target",
     0,
     8
@@ -238214,7 +236138,7 @@
     12
    ],
    "sink": [
-    "cp_fill_NE",
+    "vmfc_NE",
     "cfg_addr",
     0,
     12
@@ -238235,7 +236159,7 @@
     256
    ],
    "sink": [
-    "cp_fill_NE",
+    "vmfc_NE",
     "cfg_data",
     0,
     256
@@ -238256,7 +236180,7 @@
     1
    ],
    "sink": [
-    "cp_fill_NE",
+    "vmfc_NE",
     "desc_v",
     0,
     1
@@ -238277,7 +236201,7 @@
     12
    ],
    "sink": [
-    "cp_fill_NE",
+    "vmfc_NE",
     "desc_base",
     0,
     12
@@ -238298,7 +236222,7 @@
     13
    ],
    "sink": [
-    "cp_fill_NE",
+    "vmfc_NE",
     "desc_limit",
     0,
     13
@@ -238319,7 +236243,7 @@
     16
    ],
    "sink": [
-    "cp_fill_NE",
+    "vmfc_NE",
     "desc_loops",
     0,
     16
@@ -238340,176 +236264,8 @@
     1
    ],
    "sink": [
-    "cp_fill_NE",
+    "vmfc_NE",
     "launch_v",
-    0,
-    1
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar",
-   "region": "host_completion"
-  },
-  {
-   "name": "host_completion_60",
-   "bits": 1,
-   "source": [
-    "cp_fill_NE",
-    "program_cfg_we",
-    0,
-    1
-   ],
-   "sink": [
-    "vmfc_NE",
-    "cfg_we",
-    0,
-    1
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar",
-   "region": "host_completion"
-  },
-  {
-   "name": "host_completion_61",
-   "bits": 10,
-   "source": [
-    "cp_fill_NE",
-    "program_cfg_addr",
-    0,
-    10
-   ],
-   "sink": [
-    "vmfc_NE",
-    "cfg_addr",
-    0,
-    10
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar",
-   "region": "host_completion"
-  },
-  {
-   "name": "host_completion_62",
-   "bits": 256,
-   "source": [
-    "cp_fill_NE",
-    "program_cfg_data",
-    0,
-    256
-   ],
-   "sink": [
-    "vmfc_NE",
-    "cfg_data",
-    0,
-    256
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar",
-   "region": "host_completion"
-  },
-  {
-   "name": "host_completion_63",
-   "bits": 1,
-   "source": [
-    "cp_fill_NE",
-    "program_start_v",
-    0,
-    1
-   ],
-   "sink": [
-    "vmfc_NE",
-    "start_v",
-    0,
-    1
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar",
-   "region": "host_completion"
-  },
-  {
-   "name": "host_completion_64",
-   "bits": 10,
-   "source": [
-    "cp_fill_NE",
-    "program_start_base",
-    0,
-    10
-   ],
-   "sink": [
-    "vmfc_NE",
-    "start_base",
-    0,
-    10
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar",
-   "region": "host_completion"
-  },
-  {
-   "name": "host_completion_65",
-   "bits": 11,
-   "source": [
-    "cp_fill_NE",
-    "program_start_limit",
-    0,
-    11
-   ],
-   "sink": [
-    "vmfc_NE",
-    "start_limit",
-    0,
-    11
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar",
-   "region": "host_completion"
-  },
-  {
-   "name": "host_completion_66",
-   "bits": 16,
-   "source": [
-    "cp_fill_NE",
-    "program_start_loops",
-    0,
-    16
-   ],
-   "sink": [
-    "vmfc_NE",
-    "start_loops",
-    0,
-    16
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar",
-   "region": "host_completion"
-  },
-  {
-   "name": "host_completion_67",
-   "bits": 1,
-   "source": [
-    "vmfc_NE",
-    "active",
-    0,
-    1
-   ],
-   "sink": [
-    "cp_fill_NE",
-    "program_active",
     0,
     1
    ],
@@ -238529,7 +236285,7 @@
     1
    ],
    "sink": [
-    "cp_ep_SW",
+    "epcal_SW",
     "cfg_v",
     0,
     1
@@ -238550,7 +236306,7 @@
     8
    ],
    "sink": [
-    "cp_ep_SW",
+    "epcal_SW",
     "cfg_target",
     0,
     8
@@ -238571,7 +236327,7 @@
     12
    ],
    "sink": [
-    "cp_ep_SW",
+    "epcal_SW",
     "cfg_addr",
     0,
     12
@@ -238592,7 +236348,7 @@
     256
    ],
    "sink": [
-    "cp_ep_SW",
+    "epcal_SW",
     "cfg_data",
     0,
     256
@@ -238613,7 +236369,7 @@
     1
    ],
    "sink": [
-    "cp_ep_SW",
+    "epcal_SW",
     "desc_v",
     0,
     1
@@ -238634,7 +236390,7 @@
     12
    ],
    "sink": [
-    "cp_ep_SW",
+    "epcal_SW",
     "desc_base",
     0,
     12
@@ -238655,7 +236411,7 @@
     13
    ],
    "sink": [
-    "cp_ep_SW",
+    "epcal_SW",
     "desc_limit",
     0,
     13
@@ -238676,7 +236432,7 @@
     16
    ],
    "sink": [
-    "cp_ep_SW",
+    "epcal_SW",
     "desc_loops",
     0,
     16
@@ -238697,176 +236453,8 @@
     1
    ],
    "sink": [
-    "cp_ep_SW",
+    "epcal_SW",
     "launch_v",
-    0,
-    1
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar",
-   "region": "host_completion"
-  },
-  {
-   "name": "host_completion_77",
-   "bits": 1,
-   "source": [
-    "cp_ep_SW",
-    "program_cfg_we",
-    0,
-    1
-   ],
-   "sink": [
-    "epcal_SW",
-    "cfg_we",
-    0,
-    1
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar",
-   "region": "host_completion"
-  },
-  {
-   "name": "host_completion_78",
-   "bits": 10,
-   "source": [
-    "cp_ep_SW",
-    "program_cfg_addr",
-    0,
-    10
-   ],
-   "sink": [
-    "epcal_SW",
-    "cfg_addr",
-    0,
-    10
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar",
-   "region": "host_completion"
-  },
-  {
-   "name": "host_completion_79",
-   "bits": 256,
-   "source": [
-    "cp_ep_SW",
-    "program_cfg_data",
-    0,
-    256
-   ],
-   "sink": [
-    "epcal_SW",
-    "cfg_data",
-    0,
-    256
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar",
-   "region": "host_completion"
-  },
-  {
-   "name": "host_completion_80",
-   "bits": 1,
-   "source": [
-    "cp_ep_SW",
-    "program_start_v",
-    0,
-    1
-   ],
-   "sink": [
-    "epcal_SW",
-    "start_v",
-    0,
-    1
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar",
-   "region": "host_completion"
-  },
-  {
-   "name": "host_completion_81",
-   "bits": 10,
-   "source": [
-    "cp_ep_SW",
-    "program_start_base",
-    0,
-    10
-   ],
-   "sink": [
-    "epcal_SW",
-    "start_base",
-    0,
-    10
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar",
-   "region": "host_completion"
-  },
-  {
-   "name": "host_completion_82",
-   "bits": 11,
-   "source": [
-    "cp_ep_SW",
-    "program_start_limit",
-    0,
-    11
-   ],
-   "sink": [
-    "epcal_SW",
-    "start_limit",
-    0,
-    11
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar",
-   "region": "host_completion"
-  },
-  {
-   "name": "host_completion_83",
-   "bits": 16,
-   "source": [
-    "cp_ep_SW",
-    "program_start_loops",
-    0,
-    16
-   ],
-   "sink": [
-    "epcal_SW",
-    "start_loops",
-    0,
-    16
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar",
-   "region": "host_completion"
-  },
-  {
-   "name": "host_completion_84",
-   "bits": 1,
-   "source": [
-    "epcal_SW",
-    "active",
-    0,
-    1
-   ],
-   "sink": [
-    "cp_ep_SW",
-    "program_active",
     0,
     1
    ],
@@ -239453,7 +237041,7 @@
     1
    ],
    "sink": [
-    "cp_ep_SE",
+    "epcal_SE",
     "cfg_v",
     0,
     1
@@ -239474,7 +237062,7 @@
     8
    ],
    "sink": [
-    "cp_ep_SE",
+    "epcal_SE",
     "cfg_target",
     0,
     8
@@ -239495,7 +237083,7 @@
     12
    ],
    "sink": [
-    "cp_ep_SE",
+    "epcal_SE",
     "cfg_addr",
     0,
     12
@@ -239516,7 +237104,7 @@
     256
    ],
    "sink": [
-    "cp_ep_SE",
+    "epcal_SE",
     "cfg_data",
     0,
     256
@@ -239537,7 +237125,7 @@
     1
    ],
    "sink": [
-    "cp_ep_SE",
+    "epcal_SE",
     "desc_v",
     0,
     1
@@ -239558,7 +237146,7 @@
     12
    ],
    "sink": [
-    "cp_ep_SE",
+    "epcal_SE",
     "desc_base",
     0,
     12
@@ -239579,7 +237167,7 @@
     13
    ],
    "sink": [
-    "cp_ep_SE",
+    "epcal_SE",
     "desc_limit",
     0,
     13
@@ -239600,7 +237188,7 @@
     16
    ],
    "sink": [
-    "cp_ep_SE",
+    "epcal_SE",
     "desc_loops",
     0,
     16
@@ -239621,176 +237209,8 @@
     1
    ],
    "sink": [
-    "cp_ep_SE",
+    "epcal_SE",
     "launch_v",
-    0,
-    1
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar",
-   "region": "host_completion"
-  },
-  {
-   "name": "host_completion_121",
-   "bits": 1,
-   "source": [
-    "cp_ep_SE",
-    "program_cfg_we",
-    0,
-    1
-   ],
-   "sink": [
-    "epcal_SE",
-    "cfg_we",
-    0,
-    1
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar",
-   "region": "host_completion"
-  },
-  {
-   "name": "host_completion_122",
-   "bits": 10,
-   "source": [
-    "cp_ep_SE",
-    "program_cfg_addr",
-    0,
-    10
-   ],
-   "sink": [
-    "epcal_SE",
-    "cfg_addr",
-    0,
-    10
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar",
-   "region": "host_completion"
-  },
-  {
-   "name": "host_completion_123",
-   "bits": 256,
-   "source": [
-    "cp_ep_SE",
-    "program_cfg_data",
-    0,
-    256
-   ],
-   "sink": [
-    "epcal_SE",
-    "cfg_data",
-    0,
-    256
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar",
-   "region": "host_completion"
-  },
-  {
-   "name": "host_completion_124",
-   "bits": 1,
-   "source": [
-    "cp_ep_SE",
-    "program_start_v",
-    0,
-    1
-   ],
-   "sink": [
-    "epcal_SE",
-    "start_v",
-    0,
-    1
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar",
-   "region": "host_completion"
-  },
-  {
-   "name": "host_completion_125",
-   "bits": 10,
-   "source": [
-    "cp_ep_SE",
-    "program_start_base",
-    0,
-    10
-   ],
-   "sink": [
-    "epcal_SE",
-    "start_base",
-    0,
-    10
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar",
-   "region": "host_completion"
-  },
-  {
-   "name": "host_completion_126",
-   "bits": 11,
-   "source": [
-    "cp_ep_SE",
-    "program_start_limit",
-    0,
-    11
-   ],
-   "sink": [
-    "epcal_SE",
-    "start_limit",
-    0,
-    11
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar",
-   "region": "host_completion"
-  },
-  {
-   "name": "host_completion_127",
-   "bits": 16,
-   "source": [
-    "cp_ep_SE",
-    "program_start_loops",
-    0,
-    16
-   ],
-   "sink": [
-    "epcal_SE",
-    "start_loops",
-    0,
-    16
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar",
-   "region": "host_completion"
-  },
-  {
-   "name": "host_completion_128",
-   "bits": 1,
-   "source": [
-    "epcal_SE",
-    "active",
-    0,
-    1
-   ],
-   "sink": [
-    "cp_ep_SE",
-    "program_active",
     0,
     1
    ],
@@ -240209,7 +237629,7 @@
     1
    ],
    "sink": [
-    "cp_ep_NW",
+    "epcal_NW",
     "cfg_v",
     0,
     1
@@ -240230,7 +237650,7 @@
     8
    ],
    "sink": [
-    "cp_ep_NW",
+    "epcal_NW",
     "cfg_target",
     0,
     8
@@ -240251,7 +237671,7 @@
     12
    ],
    "sink": [
-    "cp_ep_NW",
+    "epcal_NW",
     "cfg_addr",
     0,
     12
@@ -240272,7 +237692,7 @@
     256
    ],
    "sink": [
-    "cp_ep_NW",
+    "epcal_NW",
     "cfg_data",
     0,
     256
@@ -240293,7 +237713,7 @@
     1
    ],
    "sink": [
-    "cp_ep_NW",
+    "epcal_NW",
     "desc_v",
     0,
     1
@@ -240314,7 +237734,7 @@
     12
    ],
    "sink": [
-    "cp_ep_NW",
+    "epcal_NW",
     "desc_base",
     0,
     12
@@ -240335,7 +237755,7 @@
     13
    ],
    "sink": [
-    "cp_ep_NW",
+    "epcal_NW",
     "desc_limit",
     0,
     13
@@ -240356,7 +237776,7 @@
     16
    ],
    "sink": [
-    "cp_ep_NW",
+    "epcal_NW",
     "desc_loops",
     0,
     16
@@ -240377,176 +237797,8 @@
     1
    ],
    "sink": [
-    "cp_ep_NW",
+    "epcal_NW",
     "launch_v",
-    0,
-    1
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar",
-   "region": "host_completion"
-  },
-  {
-   "name": "host_completion_157",
-   "bits": 1,
-   "source": [
-    "cp_ep_NW",
-    "program_cfg_we",
-    0,
-    1
-   ],
-   "sink": [
-    "epcal_NW",
-    "cfg_we",
-    0,
-    1
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar",
-   "region": "host_completion"
-  },
-  {
-   "name": "host_completion_158",
-   "bits": 10,
-   "source": [
-    "cp_ep_NW",
-    "program_cfg_addr",
-    0,
-    10
-   ],
-   "sink": [
-    "epcal_NW",
-    "cfg_addr",
-    0,
-    10
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar",
-   "region": "host_completion"
-  },
-  {
-   "name": "host_completion_159",
-   "bits": 256,
-   "source": [
-    "cp_ep_NW",
-    "program_cfg_data",
-    0,
-    256
-   ],
-   "sink": [
-    "epcal_NW",
-    "cfg_data",
-    0,
-    256
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar",
-   "region": "host_completion"
-  },
-  {
-   "name": "host_completion_160",
-   "bits": 1,
-   "source": [
-    "cp_ep_NW",
-    "program_start_v",
-    0,
-    1
-   ],
-   "sink": [
-    "epcal_NW",
-    "start_v",
-    0,
-    1
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar",
-   "region": "host_completion"
-  },
-  {
-   "name": "host_completion_161",
-   "bits": 10,
-   "source": [
-    "cp_ep_NW",
-    "program_start_base",
-    0,
-    10
-   ],
-   "sink": [
-    "epcal_NW",
-    "start_base",
-    0,
-    10
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar",
-   "region": "host_completion"
-  },
-  {
-   "name": "host_completion_162",
-   "bits": 11,
-   "source": [
-    "cp_ep_NW",
-    "program_start_limit",
-    0,
-    11
-   ],
-   "sink": [
-    "epcal_NW",
-    "start_limit",
-    0,
-    11
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar",
-   "region": "host_completion"
-  },
-  {
-   "name": "host_completion_163",
-   "bits": 16,
-   "source": [
-    "cp_ep_NW",
-    "program_start_loops",
-    0,
-    16
-   ],
-   "sink": [
-    "epcal_NW",
-    "start_loops",
-    0,
-    16
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar",
-   "region": "host_completion"
-  },
-  {
-   "name": "host_completion_164",
-   "bits": 1,
-   "source": [
-    "epcal_NW",
-    "active",
-    0,
-    1
-   ],
-   "sink": [
-    "cp_ep_NW",
-    "program_active",
     0,
     1
    ],
@@ -240965,7 +238217,7 @@
     1
    ],
    "sink": [
-    "cp_ep_NE",
+    "epcal_NE",
     "cfg_v",
     0,
     1
@@ -240986,7 +238238,7 @@
     8
    ],
    "sink": [
-    "cp_ep_NE",
+    "epcal_NE",
     "cfg_target",
     0,
     8
@@ -241007,7 +238259,7 @@
     12
    ],
    "sink": [
-    "cp_ep_NE",
+    "epcal_NE",
     "cfg_addr",
     0,
     12
@@ -241028,7 +238280,7 @@
     256
    ],
    "sink": [
-    "cp_ep_NE",
+    "epcal_NE",
     "cfg_data",
     0,
     256
@@ -241049,7 +238301,7 @@
     1
    ],
    "sink": [
-    "cp_ep_NE",
+    "epcal_NE",
     "desc_v",
     0,
     1
@@ -241070,7 +238322,7 @@
     12
    ],
    "sink": [
-    "cp_ep_NE",
+    "epcal_NE",
     "desc_base",
     0,
     12
@@ -241091,7 +238343,7 @@
     13
    ],
    "sink": [
-    "cp_ep_NE",
+    "epcal_NE",
     "desc_limit",
     0,
     13
@@ -241112,7 +238364,7 @@
     16
    ],
    "sink": [
-    "cp_ep_NE",
+    "epcal_NE",
     "desc_loops",
     0,
     16
@@ -241133,176 +238385,8 @@
     1
    ],
    "sink": [
-    "cp_ep_NE",
+    "epcal_NE",
     "launch_v",
-    0,
-    1
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar",
-   "region": "host_completion"
-  },
-  {
-   "name": "host_completion_193",
-   "bits": 1,
-   "source": [
-    "cp_ep_NE",
-    "program_cfg_we",
-    0,
-    1
-   ],
-   "sink": [
-    "epcal_NE",
-    "cfg_we",
-    0,
-    1
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar",
-   "region": "host_completion"
-  },
-  {
-   "name": "host_completion_194",
-   "bits": 10,
-   "source": [
-    "cp_ep_NE",
-    "program_cfg_addr",
-    0,
-    10
-   ],
-   "sink": [
-    "epcal_NE",
-    "cfg_addr",
-    0,
-    10
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar",
-   "region": "host_completion"
-  },
-  {
-   "name": "host_completion_195",
-   "bits": 256,
-   "source": [
-    "cp_ep_NE",
-    "program_cfg_data",
-    0,
-    256
-   ],
-   "sink": [
-    "epcal_NE",
-    "cfg_data",
-    0,
-    256
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar",
-   "region": "host_completion"
-  },
-  {
-   "name": "host_completion_196",
-   "bits": 1,
-   "source": [
-    "cp_ep_NE",
-    "program_start_v",
-    0,
-    1
-   ],
-   "sink": [
-    "epcal_NE",
-    "start_v",
-    0,
-    1
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar",
-   "region": "host_completion"
-  },
-  {
-   "name": "host_completion_197",
-   "bits": 10,
-   "source": [
-    "cp_ep_NE",
-    "program_start_base",
-    0,
-    10
-   ],
-   "sink": [
-    "epcal_NE",
-    "start_base",
-    0,
-    10
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar",
-   "region": "host_completion"
-  },
-  {
-   "name": "host_completion_198",
-   "bits": 11,
-   "source": [
-    "cp_ep_NE",
-    "program_start_limit",
-    0,
-    11
-   ],
-   "sink": [
-    "epcal_NE",
-    "start_limit",
-    0,
-    11
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar",
-   "region": "host_completion"
-  },
-  {
-   "name": "host_completion_199",
-   "bits": 16,
-   "source": [
-    "cp_ep_NE",
-    "program_start_loops",
-    0,
-    16
-   ],
-   "sink": [
-    "epcal_NE",
-    "start_loops",
-    0,
-    16
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "Existing ot_static_program_target PCW10 port ABI -> ot_vms_calendar_static W89 fill calendar",
-   "region": "host_completion"
-  },
-  {
-   "name": "host_completion_200",
-   "bits": 1,
-   "source": [
-    "epcal_NE",
-    "active",
-    0,
-    1
-   ],
-   "sink": [
-    "cp_ep_NE",
-    "program_active",
     0,
     1
    ],
@@ -347950,50 +345034,6 @@
    ]
   },
   {
-   "instance": "cp_cal_NE",
-   "port": "clk",
-   "bits": 1,
-   "domain": "stream",
-   "kind": "clock",
-   "source": [
-    "hb_ckgen",
-    "pll_stream"
-   ]
-  },
-  {
-   "instance": "cp_cal_NW",
-   "port": "clk",
-   "bits": 1,
-   "domain": "stream",
-   "kind": "clock",
-   "source": [
-    "hb_ckgen",
-    "pll_stream"
-   ]
-  },
-  {
-   "instance": "cp_cal_SE",
-   "port": "clk",
-   "bits": 1,
-   "domain": "stream",
-   "kind": "clock",
-   "source": [
-    "hb_ckgen",
-    "pll_stream"
-   ]
-  },
-  {
-   "instance": "cp_cal_SW",
-   "port": "clk",
-   "bits": 1,
-   "domain": "stream",
-   "kind": "clock",
-   "source": [
-    "hb_ckgen",
-    "pll_stream"
-   ]
-  },
-  {
    "instance": "cp_dma_NE",
    "port": "clk",
    "bits": 1,
@@ -348028,94 +345068,6 @@
   },
   {
    "instance": "cp_dma_SW",
-   "port": "clk",
-   "bits": 1,
-   "domain": "stream",
-   "kind": "clock",
-   "source": [
-    "hb_ckgen",
-    "pll_stream"
-   ]
-  },
-  {
-   "instance": "cp_ep_NE",
-   "port": "clk",
-   "bits": 1,
-   "domain": "stream",
-   "kind": "clock",
-   "source": [
-    "hb_ckgen",
-    "pll_stream"
-   ]
-  },
-  {
-   "instance": "cp_ep_NW",
-   "port": "clk",
-   "bits": 1,
-   "domain": "stream",
-   "kind": "clock",
-   "source": [
-    "hb_ckgen",
-    "pll_stream"
-   ]
-  },
-  {
-   "instance": "cp_ep_SE",
-   "port": "clk",
-   "bits": 1,
-   "domain": "stream",
-   "kind": "clock",
-   "source": [
-    "hb_ckgen",
-    "pll_stream"
-   ]
-  },
-  {
-   "instance": "cp_ep_SW",
-   "port": "clk",
-   "bits": 1,
-   "domain": "stream",
-   "kind": "clock",
-   "source": [
-    "hb_ckgen",
-    "pll_stream"
-   ]
-  },
-  {
-   "instance": "cp_fill_NE",
-   "port": "clk",
-   "bits": 1,
-   "domain": "stream",
-   "kind": "clock",
-   "source": [
-    "hb_ckgen",
-    "pll_stream"
-   ]
-  },
-  {
-   "instance": "cp_fill_NW",
-   "port": "clk",
-   "bits": 1,
-   "domain": "stream",
-   "kind": "clock",
-   "source": [
-    "hb_ckgen",
-    "pll_stream"
-   ]
-  },
-  {
-   "instance": "cp_fill_SE",
-   "port": "clk",
-   "bits": 1,
-   "domain": "stream",
-   "kind": "clock",
-   "source": [
-    "hb_ckgen",
-    "pll_stream"
-   ]
-  },
-  {
-   "instance": "cp_fill_SW",
    "port": "clk",
    "bits": 1,
    "domain": "stream",
@@ -385704,18 +382656,6 @@
    "note": "domain of the instance clock (v15 resets were outside the contract)"
   },
   {
-   "instance": "cp_cal_SW",
-   "port": "rst_n",
-   "bits": 1,
-   "domain": "stream",
-   "kind": "reset",
-   "source": [
-    "hb_ckgen",
-    "por_stream"
-   ],
-   "note": "domain of the instance clock (v15 resets were outside the contract)"
-  },
-  {
    "instance": "cp_xl_SW",
    "port": "rst_n",
    "bits": 1,
@@ -385825,18 +382765,6 @@
   },
   {
    "instance": "cp_svg_SE7",
-   "port": "rst_n",
-   "bits": 1,
-   "domain": "stream",
-   "kind": "reset",
-   "source": [
-    "hb_ckgen",
-    "por_stream"
-   ],
-   "note": "domain of the instance clock (v15 resets were outside the contract)"
-  },
-  {
-   "instance": "cp_cal_SE",
    "port": "rst_n",
    "bits": 1,
    "domain": "stream",
@@ -385968,18 +382896,6 @@
    "note": "domain of the instance clock (v15 resets were outside the contract)"
   },
   {
-   "instance": "cp_cal_NW",
-   "port": "rst_n",
-   "bits": 1,
-   "domain": "stream",
-   "kind": "reset",
-   "source": [
-    "hb_ckgen",
-    "por_stream"
-   ],
-   "note": "domain of the instance clock (v15 resets were outside the contract)"
-  },
-  {
    "instance": "cp_xl_NW",
    "port": "rst_n",
    "bits": 1,
@@ -386100,18 +383016,6 @@
    "note": "domain of the instance clock (v15 resets were outside the contract)"
   },
   {
-   "instance": "cp_cal_NE",
-   "port": "rst_n",
-   "bits": 1,
-   "domain": "stream",
-   "kind": "reset",
-   "source": [
-    "hb_ckgen",
-    "por_stream"
-   ],
-   "note": "domain of the instance clock (v15 resets were outside the contract)"
-  },
-  {
    "instance": "cp_xl_NE",
    "port": "rst_n",
    "bits": 1,
@@ -386136,79 +383040,7 @@
    "note": "domain of the instance clock (v15 resets were outside the contract)"
   },
   {
-   "instance": "cp_fill_SW",
-   "port": "rst_n",
-   "bits": 1,
-   "domain": "stream",
-   "kind": "reset",
-   "source": [
-    "hb_ckgen",
-    "por_stream"
-   ],
-   "note": "domain of the instance clock (v15 resets were outside the contract)"
-  },
-  {
-   "instance": "cp_fill_SE",
-   "port": "rst_n",
-   "bits": 1,
-   "domain": "stream",
-   "kind": "reset",
-   "source": [
-    "hb_ckgen",
-    "por_stream"
-   ],
-   "note": "domain of the instance clock (v15 resets were outside the contract)"
-  },
-  {
-   "instance": "cp_fill_NW",
-   "port": "rst_n",
-   "bits": 1,
-   "domain": "stream",
-   "kind": "reset",
-   "source": [
-    "hb_ckgen",
-    "por_stream"
-   ],
-   "note": "domain of the instance clock (v15 resets were outside the contract)"
-  },
-  {
-   "instance": "cp_fill_NE",
-   "port": "rst_n",
-   "bits": 1,
-   "domain": "stream",
-   "kind": "reset",
-   "source": [
-    "hb_ckgen",
-    "por_stream"
-   ],
-   "note": "domain of the instance clock (v15 resets were outside the contract)"
-  },
-  {
-   "instance": "cp_ep_SW",
-   "port": "rst_n",
-   "bits": 1,
-   "domain": "stream",
-   "kind": "reset",
-   "source": [
-    "hb_ckgen",
-    "por_stream"
-   ],
-   "note": "domain of the instance clock (v15 resets were outside the contract)"
-  },
-  {
    "instance": "epcal_SW",
-   "port": "rst_n",
-   "bits": 1,
-   "domain": "stream",
-   "kind": "reset",
-   "source": [
-    "hb_ckgen",
-    "por_stream"
-   ],
-   "note": "domain of the instance clock (v15 resets were outside the contract)"
-  },
-  {
-   "instance": "cp_ep_SE",
    "port": "rst_n",
    "bits": 1,
    "domain": "stream",
@@ -386232,31 +383064,7 @@
    "note": "domain of the instance clock (v15 resets were outside the contract)"
   },
   {
-   "instance": "cp_ep_NW",
-   "port": "rst_n",
-   "bits": 1,
-   "domain": "stream",
-   "kind": "reset",
-   "source": [
-    "hb_ckgen",
-    "por_stream"
-   ],
-   "note": "domain of the instance clock (v15 resets were outside the contract)"
-  },
-  {
    "instance": "epcal_NW",
-   "port": "rst_n",
-   "bits": 1,
-   "domain": "stream",
-   "kind": "reset",
-   "source": [
-    "hb_ckgen",
-    "por_stream"
-   ],
-   "note": "domain of the instance clock (v15 resets were outside the contract)"
-  },
-  {
-   "instance": "cp_ep_NE",
    "port": "rst_n",
    "bits": 1,
    "domain": "stream",
@@ -387632,13 +384440,13 @@
    "master": "ot_static_cmd_target"
   },
   {
-   "inst": "cp_cal_SW",
+   "inst": "calendar_SW",
    "port": "tgt",
    "value": 96,
    "reason": "identity: F20 target id 96 of this target instance",
    "lo": 0,
    "hi": 8,
-   "master": "ot_static_program_target"
+   "master": "hfd_hgi_vm_calendar_f20"
   },
   {
    "inst": "cp_xl_SW",
@@ -387731,13 +384539,13 @@
    "master": "ot_static_cmd_target"
   },
   {
-   "inst": "cp_cal_SE",
+   "inst": "calendar_SE",
    "port": "tgt",
    "value": 97,
    "reason": "identity: F20 target id 97 of this target instance",
    "lo": 0,
    "hi": 8,
-   "master": "ot_static_program_target"
+   "master": "hfd_hgi_vm_calendar_f20"
   },
   {
    "inst": "cp_xl_SE",
@@ -387830,13 +384638,13 @@
    "master": "ot_static_cmd_target"
   },
   {
-   "inst": "cp_cal_NW",
+   "inst": "calendar_NW",
    "port": "tgt",
    "value": 98,
    "reason": "identity: F20 target id 98 of this target instance",
    "lo": 0,
    "hi": 8,
-   "master": "ot_static_program_target"
+   "master": "hfd_hgi_vm_calendar_f20"
   },
   {
    "inst": "cp_xl_NW",
@@ -387929,13 +384737,13 @@
    "master": "ot_static_cmd_target"
   },
   {
-   "inst": "cp_cal_NE",
+   "inst": "calendar_NE",
    "port": "tgt",
    "value": 99,
    "reason": "identity: F20 target id 99 of this target instance",
    "lo": 0,
    "hi": 8,
-   "master": "ot_static_program_target"
+   "master": "hfd_hgi_vm_calendar_f20"
   },
   {
    "inst": "cp_xl_NE",
@@ -388010,76 +384818,76 @@
    "master": "ot_static_program_target"
   },
   {
-   "inst": "cp_fill_SW",
+   "inst": "vmfc_SW",
    "port": "tgt",
    "value": 56,
    "reason": "identity: F20 target id 56 of this target instance",
    "lo": 0,
    "hi": 8,
-   "master": "ot_static_program_target"
+   "master": "hfd_hgi_vm_calendar_f20"
   },
   {
-   "inst": "cp_fill_SE",
+   "inst": "vmfc_SE",
    "port": "tgt",
    "value": 57,
    "reason": "identity: F20 target id 57 of this target instance",
    "lo": 0,
    "hi": 8,
-   "master": "ot_static_program_target"
+   "master": "hfd_hgi_vm_calendar_f20"
   },
   {
-   "inst": "cp_fill_NW",
+   "inst": "vmfc_NW",
    "port": "tgt",
    "value": 58,
    "reason": "identity: F20 target id 58 of this target instance",
    "lo": 0,
    "hi": 8,
-   "master": "ot_static_program_target"
+   "master": "hfd_hgi_vm_calendar_f20"
   },
   {
-   "inst": "cp_fill_NE",
+   "inst": "vmfc_NE",
    "port": "tgt",
    "value": 59,
    "reason": "identity: F20 target id 59 of this target instance",
    "lo": 0,
    "hi": 8,
-   "master": "ot_static_program_target"
+   "master": "hfd_hgi_vm_calendar_f20"
   },
   {
-   "inst": "cp_ep_SW",
+   "inst": "epcal_SW",
    "port": "tgt",
    "value": 132,
    "reason": "identity: F20 target id 132 of this target instance",
    "lo": 0,
    "hi": 8,
-   "master": "ot_static_program_target"
+   "master": "hfd_hgi_vm_calendar_f20"
   },
   {
-   "inst": "cp_ep_SE",
+   "inst": "epcal_SE",
    "port": "tgt",
    "value": 133,
    "reason": "identity: F20 target id 133 of this target instance",
    "lo": 0,
    "hi": 8,
-   "master": "ot_static_program_target"
+   "master": "hfd_hgi_vm_calendar_f20"
   },
   {
-   "inst": "cp_ep_NW",
+   "inst": "epcal_NW",
    "port": "tgt",
    "value": 134,
    "reason": "identity: F20 target id 134 of this target instance",
    "lo": 0,
    "hi": 8,
-   "master": "ot_static_program_target"
+   "master": "hfd_hgi_vm_calendar_f20"
   },
   {
-   "inst": "cp_ep_NE",
+   "inst": "epcal_NE",
    "port": "tgt",
    "value": 135,
    "reason": "identity: F20 target id 135 of this target instance",
    "lo": 0,
    "hi": 8,
-   "master": "ot_static_program_target"
+   "master": "hfd_hgi_vm_calendar_f20"
   },
   {
    "inst": "cp_smw_SW",
@@ -389478,12 +386286,6 @@
    "affects": [
     [
      "calendar_SW",
-     "cfg_we",
-     0,
-     1
-    ],
-    [
-     "calendar_SW",
      "cfg_addr",
      0,
      10
@@ -389493,36 +386295,6 @@
      "cfg_data",
      0,
      256
-    ],
-    [
-     "calendar_SW",
-     "start_v",
-     0,
-     1
-    ],
-    [
-     "calendar_SW",
-     "start_base",
-     0,
-     10
-    ],
-    [
-     "calendar_SW",
-     "start_limit",
-     0,
-     11
-    ],
-    [
-     "calendar_SW",
-     "start_loops",
-     0,
-     16
-    ],
-    [
-     "calendar_SE",
-     "cfg_we",
-     0,
-     1
     ],
     [
      "calendar_SE",
@@ -389537,36 +386309,6 @@
      256
     ],
     [
-     "calendar_SE",
-     "start_v",
-     0,
-     1
-    ],
-    [
-     "calendar_SE",
-     "start_base",
-     0,
-     10
-    ],
-    [
-     "calendar_SE",
-     "start_limit",
-     0,
-     11
-    ],
-    [
-     "calendar_SE",
-     "start_loops",
-     0,
-     16
-    ],
-    [
-     "calendar_NW",
-     "cfg_we",
-     0,
-     1
-    ],
-    [
      "calendar_NW",
      "cfg_addr",
      0,
@@ -389579,36 +386321,6 @@
      256
     ],
     [
-     "calendar_NW",
-     "start_v",
-     0,
-     1
-    ],
-    [
-     "calendar_NW",
-     "start_base",
-     0,
-     10
-    ],
-    [
-     "calendar_NW",
-     "start_limit",
-     0,
-     11
-    ],
-    [
-     "calendar_NW",
-     "start_loops",
-     0,
-     16
-    ],
-    [
-     "calendar_NE",
-     "cfg_we",
-     0,
-     1
-    ],
-    [
      "calendar_NE",
      "cfg_addr",
      0,
@@ -389619,30 +386331,6 @@
      "cfg_data",
      0,
      256
-    ],
-    [
-     "calendar_NE",
-     "start_v",
-     0,
-     1
-    ],
-    [
-     "calendar_NE",
-     "start_base",
-     0,
-     10
-    ],
-    [
-     "calendar_NE",
-     "start_limit",
-     0,
-     11
-    ],
-    [
-     "calendar_NE",
-     "start_loops",
-     0,
-     16
     ]
    ],
    "note": "fix: owner assigns calendar target ids, instantiates 4 x ot_static_program_target(PCW10) beside the calendars (+ ot_hbm_program_block_ready each) and widens ingress TARGET_MASK; then edges ingress frame -> collars -> calendars are wires-only. calendar active/done/fault/ordinal/calendar_v outputs feed that aggregate (unconsumed now).",
@@ -391905,15 +388593,9 @@
    "affects": [
     [
      "calendar_SW",
-     "cfg_we",
-     0,
-     1
-    ],
-    [
-     "calendar_SW",
      "cfg_addr",
      0,
-     10
+     12
     ],
     [
      "calendar_SW",
@@ -391922,40 +388604,10 @@
      256
     ],
     [
-     "calendar_SW",
-     "start_v",
-     0,
-     1
-    ],
-    [
-     "calendar_SW",
-     "start_base",
-     0,
-     10
-    ],
-    [
-     "calendar_SW",
-     "start_limit",
-     0,
-     11
-    ],
-    [
-     "calendar_SW",
-     "start_loops",
-     0,
-     16
-    ],
-    [
-     "calendar_SE",
-     "cfg_we",
-     0,
-     1
-    ],
-    [
      "calendar_SE",
      "cfg_addr",
      0,
-     10
+     12
     ],
     [
      "calendar_SE",
@@ -391964,40 +388616,10 @@
      256
     ],
     [
-     "calendar_SE",
-     "start_v",
-     0,
-     1
-    ],
-    [
-     "calendar_SE",
-     "start_base",
-     0,
-     10
-    ],
-    [
-     "calendar_SE",
-     "start_limit",
-     0,
-     11
-    ],
-    [
-     "calendar_SE",
-     "start_loops",
-     0,
-     16
-    ],
-    [
-     "calendar_NW",
-     "cfg_we",
-     0,
-     1
-    ],
-    [
      "calendar_NW",
      "cfg_addr",
      0,
-     10
+     12
     ],
     [
      "calendar_NW",
@@ -392006,70 +388628,16 @@
      256
     ],
     [
-     "calendar_NW",
-     "start_v",
-     0,
-     1
-    ],
-    [
-     "calendar_NW",
-     "start_base",
-     0,
-     10
-    ],
-    [
-     "calendar_NW",
-     "start_limit",
-     0,
-     11
-    ],
-    [
-     "calendar_NW",
-     "start_loops",
-     0,
-     16
-    ],
-    [
-     "calendar_NE",
-     "cfg_we",
-     0,
-     1
-    ],
-    [
      "calendar_NE",
      "cfg_addr",
      0,
-     10
+     12
     ],
     [
      "calendar_NE",
      "cfg_data",
      0,
      256
-    ],
-    [
-     "calendar_NE",
-     "start_v",
-     0,
-     1
-    ],
-    [
-     "calendar_NE",
-     "start_base",
-     0,
-     10
-    ],
-    [
-     "calendar_NE",
-     "start_limit",
-     0,
-     11
-    ],
-    [
-     "calendar_NE",
-     "start_loops",
-     0,
-     16
     ]
    ],
    "note": "H-SM 1705 list also contains the hb_coll_<q>/lg_<q>_2 calendar-issuer inputs (owners H-COLL+IDX / LG) -- not repeated here.",
