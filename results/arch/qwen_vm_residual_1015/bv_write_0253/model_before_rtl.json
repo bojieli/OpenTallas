@@ -1,0 +1,102 @@
+{
+  "schema": "opentallas.qwen-central-vm-write-leaves.v1",
+  "source_commit": "859fc9132",
+  "opt_in_default": false,
+  "scope": "actual STATIC_SCHEDULE1/PAR_RB1/NOX full64bank16SU-bank RO6 source",
+  "macs_per_cycle": 0,
+  "memory_macros_added": 0,
+  "memory_read_bytes_per_cycle": 0,
+  "memory_write_bytes_per_cycle": 0,
+  "bank_write": {
+    "replicas": 64,
+    "line_bits": 8,
+    "mask_bits": 16,
+    "source_bits": 3,
+    "valid_bits": 1,
+    "data_bits": 512,
+    "ff_per_replica": 540
+  },
+  "replica_write": {
+    "replicas": 16,
+    "line_bits": 10,
+    "mask_bits": 16,
+    "valid_bits": 1,
+    "data_bits": 512,
+    "ff_per_replica": 539
+  },
+  "owned_existing_ff_bits": 43184,
+  "new_ff_bits": 0,
+  "extra_edges": 0,
+  "existing_write_register_edge": "E3; existing native bank input stage remains distinct and untouched",
+  "required_sustained_rows_per_cycle": {
+    "SU": 5,
+    "PAR_RB": 6,
+    "skid_sources": 4
+  },
+  "boundary_bits_per_cycle": 43184,
+  "physical_contact_bits": 86368,
+  "selected_partition": {
+    "data256_reuse_instances": 160,
+    "control28_instances": 64,
+    "control27_instances": 16,
+    "clock_roots": 240,
+    "residual_clock_roots_removed": 0,
+    "max_logical_sinks_per_new_root": 256,
+    "reused_data_outline_um": [
+      25.92,
+      51.84
+    ],
+    "proposed_control_outline_um": [
+      17.28,
+      21.6
+    ],
+    "area_um2": 244850.68800000005,
+    "routing_tracks_required_per_data_face": 256,
+    "control_input_contacts_max": 29,
+    "control_output_contacts_max": 28,
+    "track_pitch_um": 0.096,
+    "face_tracks_after_25pct_derate": 641.2500000000001,
+    "control_slot_granted": false,
+    "reused_leaf_homes_granted": false
+  },
+  "alternate_full_bank": {
+    "replicas": 80,
+    "clock_roots": 80,
+    "max_clock_sinks": 540,
+    "max_input_contacts": 542,
+    "max_output_contacts": 540,
+    "proposed_outline_um": [
+      25.92,
+      138.24
+    ],
+    "face_tracks_after_25pct_derate": 1991.2500000000002,
+    "area_um2": 286654.4640000001,
+    "status": "unbuilt; new full data physical master required"
+  },
+  "mux_demux_cost": "existing SU/skid/PAR_RB selectors unchanged and outside leaves; no added mux or demux",
+  "fanout_cost": "existing selector outputs each drive one E3 register pin; source broadcasts stay unhardened",
+  "remaining_BV_parent_ff": 10365,
+  "remaining_BV_memory_bits": 80,
+  "remaining_BV_categories": {
+    "other_write_control": 10342,
+    "row_read": 23
+  },
+  "outside_BV_parent_ff": 1833,
+  "source_all_soft_ff_before": 89735,
+  "fixed_transport": {
+    "SU_VL": 19,
+    "row_RL": 18,
+    "visibility": 8,
+    "fence": 9
+  },
+  "immutable_native_limits_ps": {
+    "launch": 220,
+    "capture": 190,
+    "spread": 80
+  },
+  "token_latency_change_cycles": 0,
+  "token_rate_credit": 0,
+  "qualification": "MODEL ONLY: source equivalence, independent clocks, control leaf CTS/native220/190/80, TT/FF/DRC0, actual homes/phase/PG and all incident cuts remain open; production/native token ledger unchanged",
+  "BV_source_sha256": "7b04314ab42961f0eb3b935dd0fe6e7fcec3fa09ee118c021d55672c795da778",
+  "source_census_sha256": "9682d2aa5e61b0d4633573a8b1d5ad8c4c28d19505dd95617ad0bcf56c6d04f0"
+}
