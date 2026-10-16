@@ -11,7 +11,22 @@
   "masters": 14,
   "clock_entries": 70,
   "normal_edges_added": 0,
-  "mutants": "Actual alias source status/kswap jobs running; no alias-source mutation claim yet",
+  "mutants": {
+    "status": {
+      "caught": true,
+      "eq_mismatches": 2121,
+      "dut_fault": 1,
+      "timeouts": 0,
+      "unit": "oth-ubuntu-52119-1792167622"
+    },
+    "kswap": {
+      "caught": true,
+      "eq_mismatches": 121697,
+      "mismatching_roots": 128,
+      "timeouts": 0,
+      "unit": "oth-ubuntu-52169-1792167623"
+    }
+  },
   "source_sha256": {
     "rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_capt_split.sv": "77e04c6df1dcc9802f52c1530441c3fcee92e47b906a5e2c6b330d9d1e326997",
     "rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_sp_capture_split_candidate.sv": "5eb59d47f4379cbf01d98e24c9517fb69fabf2b6e99700ebc3e6196b86dc62c6"
