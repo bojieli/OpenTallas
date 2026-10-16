@@ -72,18 +72,24 @@ module dsfd_vm_static_wfc_ctl #(parameter integer RLAT = 13, parameter integer R
         for (k = 1; k <= RLAT; k = k + 1) begin dl0[k] <= dl0[k-1]; dl1[k] <= dl1[k-1]; end
     end
     reg [1025:0] r_q; reg r_qv; reg r_bad;
+    // decoded constant-index lane select (one-hot AND-OR), replaces the runtime part-select e_d[512*l +: 512]
+    // (no wide $shiftx for synthesis; S-VM 0030, daemon runtime_partselect WARN)
+    function automatic [511:0] lane512(input [2047:0] d, input [1:0] l);
+        lane512 = ({512{l == 2'd0}} & d[0    +: 512]) | ({512{l == 2'd1}} & d[512  +: 512]) |
+                  ({512{l == 2'd2}} & d[1024 +: 512]) | ({512{l == 2'd3}} & d[1536 +: 512]);
+    endfunction
     wire        e0 = dv0[RLAT], e1 = dv1[RLAT];
     wire [1:0]  l0 = dl0[RLAT], l1 = dl1[RLAT];
     always @(posedge ck_control_t) begin
         if (!tn) begin r_q <= 1026'd0; r_qv <= 1'b0; r_bad <= 1'b0; end
         else begin
 `ifdef OT_VM_WFC_MUT_PAIR
-            r_q <= {e0, e0 ? e_d[512*l0 +: 512] : 512'd0, e1, e1 ? e_d[512*l1 +: 512] : 512'd0};
+            r_q <= {e0, e0 ? lane512(e_d, l0) : 512'd0, e1, e1 ? lane512(e_d, l1) : 512'd0};
 `else
-            r_q <= {e1, e1 ? e_d[512*l1 +: 512] : 512'd0, e0, e0 ? e_d[512*l0 +: 512] : 512'd0};
+            r_q <= {e1, e1 ? lane512(e_d, l1) : 512'd0, e0, e0 ? lane512(e_d, l0) : 512'd0};
 `endif
 `ifdef OT_VM_WFC_CTL_MUT_LANE
-            if (e1) r_q[1024:513] <= e_d[512*l0 +: 512];   // MUTANT: second response from the first lane
+            if (e1) r_q[1024:513] <= lane512(e_d, l0);   // MUTANT: second response from the first lane
 `endif
             r_qv <= e0 | e1;
             if (e_v != ((e0 ? (4'd1 << l0) : 4'd0) | (e1 ? (4'd1 << l1) : 4'd0))) r_bad <= 1'b1;
@@ -102,7 +108,13 @@ module dsfd_vm_static_wfc_ctl #(parameter integer RLAT = 13, parameter integer R
     end endgenerate
     reg [1:0] sq; always @(posedge ck_control_s or negedge rst_control_s) if (!rst_control_s) sq <= 2'b00; else sq <= {sq[0], 1'b1};
     wire own = err | r_bad | x34f;
-    always @(posedge ck_control_s) begin g_q <= sq[1]; e_q <= sq[1] && (own | x43f | vm_fault); end
+    // S-VM 0030 (VIS-ROM S81H-14 / OT_MULTI_ROOT): the serial-domain error bit no longer samples core-domain INPUT
+    // pins (x34f via own, x43f, vm_fault) combinationally; the sticky fault level is registered once on the core clock
+    // (pre_e, an owned core-domain register) and the serial flop samples that register (same-PLL related 4:3 path).
+    // Fault report latency +1 core edge; no data/schedule edge changes.
+    reg pre_e;
+    always @(posedge ck_control_t) pre_e <= own | x43f | vm_fault;
+    always @(posedge ck_control_s) begin g_q <= sq[1]; e_q <= sq[1] && pre_e; end
 `ifdef OT_VM_WFC_CTL_MUT_FAULT
     always @(posedge ck_control_t) if (!tn) fault <= 1'b0; else fault <= err | x34f | x43f;   // MUTANT: return-slot fault dropped
 `else
