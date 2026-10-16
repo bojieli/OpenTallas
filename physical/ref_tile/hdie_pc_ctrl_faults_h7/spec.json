@@ -1,0 +1,243 @@
+{
+ "name": "hdie_pc_ctrl_faults_h7",
+ "top": "ot_hbm_svc_pc_ctrl_leaf_cfg_faults",
+ "kind": "tile",
+ "sources": [
+  "rtl/lib/ot_rst_relay.sv",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg_faults.sv",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf.sv",
+  "rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc_strap_h7.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "pins": {
+  "N": [
+   "k_v",
+   "k_rdy",
+   "k_we",
+   "k_addr",
+   "k_len",
+   "k_tag",
+   "k_wdata",
+   "k_wstrb",
+   "kr_v",
+   "kr_rdy",
+   "kr_tag",
+   "kr_beat",
+   "kr_data",
+   "k_wr_done"
+  ],
+  "S": [
+   "row_v",
+   "row_op",
+   "row_bank",
+   "row_row",
+   "col_v",
+   "col_we",
+   "col_bank",
+   "col_col",
+   "col_data",
+   "col_strb",
+   "dram_rvalid",
+   "dram_rdata"
+  ],
+  "W": [
+   "clk",
+   "rst_n",
+   "owner_fault_split"
+  ],
+  "E": [
+   "pc_fault",
+   "pc_id",
+   "refresh_reload"
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 3,
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "at": [
+    56.16,
+    30.24
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "at": [
+    56.16,
+    92.88
+   ],
+   "at_exact": true
+  }
+ ],
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "Codex:H-HARDEN",
+  "branch": "codex/hbm-h7-fault-0920",
+  "tag": "faults0927",
+  "purpose": "Isolated additive H7 six local registered fault classes + exact source-pinned additive PHYS_WACT2 controller. Full49,600edge source miter and6class mutants passed; legacy scalar master/controller remain unchanged. FreshPG/native/TTFF/DRC0 and all128home proof remain open; not current-d4 adoption.",
+  "extra_paths": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "physical/ref_tile_specs/hdie_pc_ctrl_cfg",
+   "results/arch/hbm_die_v15/checkpoint_allocation",
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/model_ready_hbm_r14",
+   "tools/hbm_die_v15",
+   "tools/hbm_svc_packed136_image.py",
+   "tools/w19_payload_loader.py",
+   "tools/hbm_die_v15",
+   "results/rtl/hbm_harden_0811",
+   "results/arch/hbm_die_v16",
+   "physical/hbm_die_pins/h7_faults_0927"
+  ],
+  "record_to": "results/rtl/ref_tile/hdie_pc_ctrl_faults_h7",
+  "benches": [
+   {
+    "name": "exact",
+    "cmd": "bash tools/hbm_die_v15/bench_pc_ctrl_faults.sh {RUN}/bench/none none",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "PC_CTRL_FAULTS_GATE_PASS"
+   },
+   {
+    "name": "mutant0",
+    "cmd": "bash tools/hbm_die_v15/bench_pc_ctrl_faults.sh {RUN}/bench/0 0",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "FAULT_CLASS mismatch"
+   },
+   {
+    "name": "mutant1",
+    "cmd": "bash tools/hbm_die_v15/bench_pc_ctrl_faults.sh {RUN}/bench/1 1",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "FAULT_CLASS mismatch"
+   },
+   {
+    "name": "mutant2",
+    "cmd": "bash tools/hbm_die_v15/bench_pc_ctrl_faults.sh {RUN}/bench/2 2",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "FAULT_CLASS mismatch"
+   },
+   {
+    "name": "mutant3",
+    "cmd": "bash tools/hbm_die_v15/bench_pc_ctrl_faults.sh {RUN}/bench/3 3",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "FAULT_CLASS mismatch"
+   },
+   {
+    "name": "mutant4",
+    "cmd": "bash tools/hbm_die_v15/bench_pc_ctrl_faults.sh {RUN}/bench/4 4",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "FAULT_CLASS mismatch"
+   },
+   {
+    "name": "mutant5",
+    "cmd": "bash tools/hbm_die_v15/bench_pc_ctrl_faults.sh {RUN}/bench/5 5",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "FAULT_CLASS mismatch"
+   }
+  ],
+  "reroute_reason": {
+   "kind": "rtl_change",
+   "source": "results/arch/hbm_die_v15/pcctrl_h4_h5_1016/h6_drt/verdict.json",
+   "why": "H7 = H6 geometry (185.76x164.16, full-M5 SRAM reservation, west corridor) + QREG=1 RTL. H6 route 0c263832f: DRC0/GRT0 but TT -50.14 ps, 888 D pins, all in four unchanged-cycle classes: skid head -> K legality/same-row -> accepted -> 2,048 queue-flop enables (296 paths, -41.3); ep -> queue[ep] 32:1 -> bank decode -> controller wq_boh/wq_older/wq_col (247, -46.6); blk -> bank eligibility -> 32-wide slot reduction -> age winner -> wab_oh/wab (36, -50.1); owner_fault -> identity address -> head_identity (16, -28.1). Fix: queue written at free slots (no accepted in the enable), push entry a maintained register, identity candidates read from registered addresses, controller PHYS_WACT 2 registers bank/slot write-ACT eligibility from exact next-state values. +0 cycles; lockstep miters vs H6 (leaf QREG 0/1 every output every edge; controller PHYS_WACT 0/1/2) PASS with 4+3 mutants rejected."
+  }
+ },
+ "params": {
+  "OREG": 1,
+  "KREG": 1,
+  "KRREG": 1,
+  "RREG": 1,
+  "WPAY": 1,
+  "QREG": 1
+ },
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "the RTL registers its boundary itself (OREG: every PHY command output from a flop; KREG: K request in a 2-entry pin skid, k_rdy from a register; KRREG: K response from a 2-entry skid; RREG: PHY return valid+data captured at the pin; pc_id/refresh_reload straps captured in pc_id_q/refresh_reload_q). Flow pin registers would add a cycle inside the elastic K ready/valid handshake (HBM-stack boundary, owner 10-14) and overflow the skids."
+ },
+ "io_tcl": "physical/hbm_die_pins/h7_faults_0927/ot_hbm_svc_pc_ctrl_leaf_cfg_faults.tcl",
+ "structural_change": "Measured H7 source c673b8094 placementTT-55.04 from hb_oh -> cv decode/fanout -> global owner_fault D. Six independently registered local fault classes replace globalD cone and outputs move fromE toW; same internalkill edge. Source-current controller remains exact H7 via additive helper, no main PHYS_WACT1 substitution.",
+ "clock": "spine",
+ "spine_macro_leaf": true,
+ "std_area_um2": 6327,
+ "outline": {
+  "w": 185.76,
+  "h": 164.16
+ },
+ "orfs_vars": {
+  "OT_MEG_DEPTH_UM": 48
+ },
+ "slot_change_request": "APPROVED isolated H7 measurement grant aeabab04f,185.76x164.16 exact1229signalpins; no d4/default/all128-home adoption",
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "why": "Measured H7 source c673b8094 placementTT-55.04 from hb_oh -> cv decode/fanout -> global owner_fault D. Six independently registered local fault classes replace globalD cone and outputs move fromE toW; same internalkill edge. Source-current controller remains exact H7 via additive helper, no main PHYS_WACT1 substitution."
+ },
+ "provisional_measurement_grant": {
+  "grant_commit": "aeabab04f",
+  "path": "results/arch/hbm_die_v16/h7_fault_split_provisional_0920.json",
+  "source_request": "cf302625a",
+  "scope": "isolated actual additive H7 leaf only"
+ }
+}

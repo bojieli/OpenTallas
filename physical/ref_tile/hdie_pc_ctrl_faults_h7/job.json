@@ -1,0 +1,183 @@
+{
+ "name": "hdie_pc_ctrl_faults_h7-faults0927-COMMIT",
+ "block": "ot_hbm_svc_pc_ctrl_leaf_cfg_faults",
+ "ref_tile": true,
+ "owner": "Codex:H-HARDEN",
+ "purpose": "Isolated additive H7 six local registered fault classes + exact source-pinned additive PHYS_WACT2 controller. Full49,600edge source miter and6class mutants passed; legacy scalar master/controller remain unchanged. FreshPG/native/TTFF/DRC0 and all128home proof remain open; not current-d4 adoption.",
+ "threads": 8,
+ "peak_ram_gb": 24,
+ "source": {
+  "branch": "codex/hbm-h7-fault-0920",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "physical/ref_tile_specs/hdie_pc_ctrl_cfg",
+   "results/arch/hbm_die_v15/checkpoint_allocation",
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/model_ready_hbm_r14",
+   "tools/hbm_die_v15",
+   "tools/hbm_svc_packed136_image.py",
+   "tools/w19_payload_loader.py",
+   "tools/hbm_die_v15",
+   "results/rtl/hbm_harden_0811",
+   "results/arch/hbm_die_v16",
+   "physical/hbm_die_pins/h7_faults_0927"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hbm_svc_pc_ctrl_leaf_cfg_faults #(.OREG(1), .KREG(1), .KRREG(1), .RREG(1), .WPAY(1), .QREG(1)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/lib/ot_rst_relay.sv rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg_faults.sv rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf.sv rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc_strap_h7.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "exact",
+    "cmd": "bash tools/hbm_die_v15/bench_pc_ctrl_faults.sh {RUN}/bench/none none",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "PC_CTRL_FAULTS_GATE_PASS"
+   },
+   {
+    "name": "mutant0",
+    "cmd": "bash tools/hbm_die_v15/bench_pc_ctrl_faults.sh {RUN}/bench/0 0",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "FAULT_CLASS mismatch"
+   },
+   {
+    "name": "mutant1",
+    "cmd": "bash tools/hbm_die_v15/bench_pc_ctrl_faults.sh {RUN}/bench/1 1",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "FAULT_CLASS mismatch"
+   },
+   {
+    "name": "mutant2",
+    "cmd": "bash tools/hbm_die_v15/bench_pc_ctrl_faults.sh {RUN}/bench/2 2",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "FAULT_CLASS mismatch"
+   },
+   {
+    "name": "mutant3",
+    "cmd": "bash tools/hbm_die_v15/bench_pc_ctrl_faults.sh {RUN}/bench/3 3",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "FAULT_CLASS mismatch"
+   },
+   {
+    "name": "mutant4",
+    "cmd": "bash tools/hbm_die_v15/bench_pc_ctrl_faults.sh {RUN}/bench/4 4",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "FAULT_CLASS mismatch"
+   },
+   {
+    "name": "mutant5",
+    "cmd": "bash tools/hbm_die_v15/bench_pc_ctrl_faults.sh {RUN}/bench/5 5",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "FAULT_CLASS mismatch"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/hdie_pc_ctrl_faults_h7/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/hdie_pc_ctrl_faults_h7/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 24
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/hdie_pc_ctrl_faults_h7 --out {RUN}/record/views/ot_hbm_svc_pc_ctrl_leaf_cfg_faults --macro-view physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/hdie_pc_ctrl_faults_h7/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/hdie_pc_ctrl_faults_h7/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/hdie_pc_ctrl_faults_h7/hdie_pc_ctrl_faults_h7-faults0927-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "Measured H7 source c673b8094 placementTT-55.04 from hb_oh -> cv decode/fanout -> global owner_fault D. Six independently registered local fault classes replace globalD cone and outputs move fromE toW; same internalkill edge. Source-current controller remains exact H7 via additive helper, no main PHYS_WACT1 substitution.",
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "why": "Measured H7 source c673b8094 placementTT-55.04 from hb_oh -> cv decode/fanout -> global owner_fault D. Six independently registered local fault classes replace globalD cone and outputs move fromE toW; same internalkill edge. Source-current controller remains exact H7 via additive helper, no main PHYS_WACT1 substitution."
+ }
+}
