@@ -16,13 +16,13 @@ module tb_s81_issuer_pinreg_boundary;
  reg[35:0]pqw=0;reg primed=0;
  always @(posedge ck)if(cal_prime)primed<=1;else if(cal_start)primed<=0;
 `ifdef S81_STATUS_C8
- dsfd_stage_seq_static_c8 #(.NOPS(128),.STAGE(7))dut(
+ dsfd_stage_seq_static_c8 dut(
  .ck(ck),.rst(rn),.ckv(cvk),.rsv(rn),.f_ks(ks),.t_kd(kd),.f_pw(pw),.f_plen(plen),.t_st(st),
  .c0(c[0]),.c1(c[1]),.c2(c[2]),.c3(c[3]),.c4(c[4]),.c5(c[5]),.c6(c[6]),.c7(c[7]),.c12(c[12]),
  .d0(d[0]),.d1(d[1]),.d2(d[2]),.d3(d[3]),.d4(d[4]),.d5(d[5]),.d6(d[6]),.d7(d[7]),.d12(d[12]),
  .s0(s[0]),.s1(s[1]),.s2(s[2]),.s3(s[3]),.s4(s[4]),.s5(s[5]),.s6(s[6]),.s7(s[7]),.s12(s[12]));
 `else
- dsfd_stage_seq_static_c10 #(.NOPS(128),.STAGE(7))dut(
+ dsfd_stage_seq_static_c10 dut(
  .ck(ck),.rst(rn),.ckv(cvk),.rsv(rn),.f_ks(ks),.t_kd(kd),.f_pw(pw),.f_plen(plen),.t_st(st),
  .f_pq_pw(pqw),.t_pq_desc_pw(pq_desc),.calendar_prime(cal_prime),.stage_start(cal_start),.calendar_base(cal_base),
  .calendar_length(cal_len),.pq_image_sealed(1'b1),.pq_calendar_primed(primed),.pq_calendar_fault(1'b0),

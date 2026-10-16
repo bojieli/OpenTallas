@@ -55,7 +55,7 @@ def main():
   import sys
   sys.path.insert(0,str(ROOT/'tools/s81_static_control'))
   from program import encode_program
-  p=encode_program([dict(engine=0,arg=0x102938,issue=0,done=5),dict(engine=12,arg=0xfa0312,issue=1,done=6),dict(engine=14,arg=0,issue=6,done=0),dict(engine=15,arg=0,issue=7,done=0)],7,0)
+  p=encode_program([dict(engine=0,arg=0x102938,issue=0,done=5),dict(engine=12,arg=0xfa0312,issue=1,done=6),dict(engine=14,arg=0,issue=6,done=0),dict(engine=15,arg=0,issue=7,done=0)],0,0)
   (d/'status.hex').write_text(''.join(f"{x['word']:09x}\n"for x in p['writes']))
   for mode in [0,1]:
    with (d/f'mode{mode}.log').open('w')as f:run(['vvp','-n',str(d/'sim'),f'+mode={mode}'],cwd=d,stdout=f,stderr=subprocess.STDOUT)
@@ -65,7 +65,7 @@ def main():
    with (d/'old_registered_clock_reset_mutant.log').open('w')as f:r=subprocess.run(['vvp','-n',str(d/'old_mutant'),'+mode=0'],cwd=d,stdout=f,stderr=subprocess.STDOUT)
    if r.returncode==0 or 'serial clock/reset was data registered'not in(d/'old_registered_clock_reset_mutant.log').read_text():raise RuntimeError('actual historical clock/reset mutant escaped')
    receipt['old_wrapper_sha256']=digest(old)
-  receipt['tops'][kind]={'top':top,'NOPS':128,'STAGE':7,'kit_sha256':digest(kit),'wrapper_sha256':digest(d/'ot_pin_regs_wrapper.v'),'table_sha256':digest(d/'ot_pin_regs.tsv'),'role_env':{k:v for k,v in env.items()if k.startswith('OT_PIN_REGS')},'rows':rows}
+  receipt['tops'][kind]={'top':top,'NOPS':128,'STAGE':0,'kit_sha256':digest(kit),'wrapper_sha256':digest(d/'ot_pin_regs_wrapper.v'),'table_sha256':digest(d/'ot_pin_regs.tsv'),'role_env':{k:v for k,v in env.items()if k.startswith('OT_PIN_REGS')},'rows':rows}
  receipt['source_sha256']=sources;receipt['bench_sha256']=digest(ROOT/'rtl/dsrom_sys/s81_static_control/test/tb_s81_issuer_pinreg_boundary.sv')
  (out/'receipt.json').write_text(json.dumps(receipt,indent=2)+'\n')
  print('ISSUER_PINREG_BOUNDARY PASS actual128-row c8/c10 wrappers, exact clocks/reset release, +1ck dataIO and fixed fault observation',flush=True)
