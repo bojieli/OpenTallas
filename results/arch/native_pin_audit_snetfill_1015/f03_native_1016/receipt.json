@@ -1,0 +1,156 @@
+{
+ "scope": "Actual routed TTsetup/FFhold/DRC0 + checkedETM native pin audit; not SS setup closure or die integration.",
+ "native_limits_ps": {
+  "launch": 220,
+  "capture": 190,
+  "spread": 80
+ },
+ "structural_change": "126 a/b pin bits per node move W->E, same43.2x77.76 outline, centerclk/reset gap retained; truthful slot_change through strict root actual-face classification.",
+ "personally_viewed": true,
+ "images": "All six actual6_final.odb PNGs personally viewed after each route verdict. Edata bands and centerclk/reset gap retained; distributed cells with local red density bins, no macros/slivers/large interiorvoid.",
+ "history": "Original409699c63 closed_stands false samegeometry refusal preserved separately. Root actual-face fix admitted current-source retries via normal submit_exact; no bypass. Gates/regeneratedsource10ba4b0cc\u2192snapshot13d5be1a9.",
+ "nodes": [
+  {
+   "master": "dsfd_node_LLd",
+   "job": "s81net_node_lld-ab1-13d5be1a9",
+   "route_source": "13d5be1a9bfe02c84691be1f6b4a0795b26f8c77",
+   "tt_setup_ps": 95.22,
+   "ff_hold_ps": 23.29,
+   "drc": 0,
+   "native": {
+    "cell": "dsfd_node_LLd",
+    "view": "f03_final_lld/views",
+    "lib_cell": "dsfd_node_LLd",
+    "insertion": true,
+    "ref_src": [
+     "insertion.json boundary mean"
+    ],
+    "R_ps": 104.6,
+    "spread_ps": 12.8,
+    "outputs": 67,
+    "inputs": 127,
+    "launch_ps": 177.7,
+    "launch_pin": "o[28]",
+    "capture_ps": 132.2,
+    "capture_pin": "a[43]",
+    "launch_over": 0,
+    "capture_over": 0,
+    "comb_pins": 0,
+    "comb_first": [],
+    "pass": true,
+    "fail_why": ""
+   },
+   "changed_port_face_bits": 126,
+   "custom_io_sha256": "03056b4f3eee0329e17b30fafc56ae80b06c11603896fe73e0b3bfc3e52d95a6",
+   "final_odb_source": {
+    "odb": "/srv/opentallas-scratch2/claude/closure-loop/s81net_node_lld-ab1-13d5be1a9/routes/s81net_node_lld_ab1_13d5be1a9/work/orfs/results/asap7/opentallas_dsfd_node_LLd_asap7_ref_s81net_node_lld_ab1_13d5be1a9/base/6_final.odb",
+    "stage": "6_final",
+    "sha256": "f3e58e01aa7e4e890008eb1619f1368c24c597c94ce36a8ea5518fe4c8057515"
+   },
+   "files": {
+    "dsfd_node_LLd_ss.lib": "121d44fdc2bbbb2ea49edebbb4855f9a7b63abe7372b7fa6fa9eef3634c594a5",
+    "abstract.json": "8052aab6e4a00d965242f874e062fb4ed16cd7d49ad7d15af0339609fcf06028",
+    "insertion.json": "6633c5c12439a87d1c2cccc933bfa5fc14342671437747e51d984022006dcace",
+    "dsfd_node_LLd_ff.lib": "afe933f9d96b9249c36025ce48716ec6b1cb166155ff062abf360d1846d04917",
+    "dsfd_node_LLd.lef": "7515e8aedaff164377c59b4b9c352ef2ff1e438b61a86e08da26e7f0be3641e8",
+    "child_lint.json": "d09552d429afd90d3a8a38c3b3c856af63072a64fc30a2a8aec1d3e127f2bb64",
+    "dsfd_node_LLd_tt.lib": "f222b3f7f007ca0e2eaaee698af332955ec773a79509b253fe573a3685cf86a5"
+   }
+  },
+  {
+   "master": "dsfd_node_LLfd",
+   "job": "s81net_node_llfd-ab1-13d5be1a9",
+   "route_source": "13d5be1a9bfe02c84691be1f6b4a0795b26f8c77",
+   "tt_setup_ps": 89.29,
+   "ff_hold_ps": 18.49,
+   "drc": 0,
+   "native": {
+    "cell": "dsfd_node_LLfd",
+    "view": "f03_final_llfd/views",
+    "lib_cell": "dsfd_node_LLfd",
+    "insertion": true,
+    "ref_src": [
+     "insertion.json boundary mean"
+    ],
+    "R_ps": 106.5,
+    "spread_ps": 13.1,
+    "outputs": 67,
+    "inputs": 128,
+    "launch_ps": 176.6,
+    "launch_pin": "o[37]",
+    "capture_ps": 137.9,
+    "capture_pin": "fi[0]",
+    "launch_over": 0,
+    "capture_over": 0,
+    "comb_pins": 0,
+    "comb_first": [],
+    "pass": true,
+    "fail_why": ""
+   },
+   "changed_port_face_bits": 126,
+   "custom_io_sha256": "b7e74406dea1f189146979ee81879bb8d3359fc039ac41cf4d9384465a4c6dfa",
+   "final_odb_source": {
+    "odb": "/srv/opentallas-scratch/claude/closure-loop/s81net_node_llfd-ab1-13d5be1a9/routes/s81net_node_llfd_ab1_13d5be1a9/work/orfs/results/asap7/opentallas_dsfd_node_LLfd_asap7_ref_s81net_node_llfd_ab1_13d5be1a9/base/6_final.odb",
+    "stage": "6_final",
+    "sha256": "51e91300c5db54d30f454d3106a9921c66b12d186706b5f138c3529f1239b954"
+   },
+   "files": {
+    "abstract.json": "f62ccc2aabffed9710ab6e13c25ca0d85bf6c2cd7e5988e068543e0683d13005",
+    "insertion.json": "bd14a5bc26229d38b9a43a99ce175044c9c1e80f79ff6812358a331348acc1e0",
+    "dsfd_node_LLfd_ss.lib": "9397a5c70dcbee5a61b4bd875052d205e087f18f7f8bdb432db58aadbb8a3839",
+    "dsfd_node_LLfd_ff.lib": "266a9f3bd7eea5c4308c3390772c147ebff3cf2b31664d1d7f922d2319a185e8",
+    "dsfd_node_LLfd.lef": "6dd0ecaebebfc88aa62753c7e54a46cda8306e69227d54c7fb351cbcc43a1dca",
+    "child_lint.json": "7f44c1bdcb3ed2a2b206a40ce050af7b01407b2ef83aa8634a4ac39de14f77ce",
+    "dsfd_node_LLfd_tt.lib": "ff044f19c0b3c785dda9e3058e6ef0c91e2e0c67bcec5273f36081ee6eee821b"
+   }
+  },
+  {
+   "master": "dsfd_node_LLfu",
+   "job": "s81net_node_llfu-ab1-13d5be1a9",
+   "route_source": "13d5be1a9bfe02c84691be1f6b4a0795b26f8c77",
+   "tt_setup_ps": 84.29,
+   "ff_hold_ps": 22.89,
+   "drc": 0,
+   "native": {
+    "cell": "dsfd_node_LLfu",
+    "view": "f03_final_llfu/views",
+    "lib_cell": "dsfd_node_LLfu",
+    "insertion": true,
+    "ref_src": [
+     "insertion.json boundary mean"
+    ],
+    "R_ps": 109.7,
+    "spread_ps": 16.3,
+    "outputs": 67,
+    "inputs": 128,
+    "launch_ps": 176.3,
+    "launch_pin": "o[30]",
+    "capture_ps": 143.4,
+    "capture_pin": "fi[0]",
+    "launch_over": 0,
+    "capture_over": 0,
+    "comb_pins": 0,
+    "comb_first": [],
+    "pass": true,
+    "fail_why": ""
+   },
+   "changed_port_face_bits": 126,
+   "custom_io_sha256": "a5cbbd0176ef3f4ec5aa24dd25439594060998c5f47fce2c181ffd82b10b7c58",
+   "final_odb_source": {
+    "odb": "/srv/opentallas-scratch2/claude/closure-loop/s81net_node_llfu-ab1-13d5be1a9/routes/s81net_node_llfu_ab1_13d5be1a9/work/orfs/results/asap7/opentallas_dsfd_node_LLfu_asap7_ref_s81net_node_llfu_ab1_13d5be1a9/base/6_final.odb",
+    "stage": "6_final",
+    "sha256": "f0013143035cd0d90fa923f297135012ab31d85bc19b0c465be067886421a57b"
+   },
+   "files": {
+    "dsfd_node_LLfu.lef": "7c874fd7cae5d56089b626938d9a06d1e43c9d67dac4160454d397f065847d2f",
+    "dsfd_node_LLfu_ss.lib": "d184ac8b20c002beee817b20feecc03ae928e4dad704e186db23ab313fe28598",
+    "dsfd_node_LLfu_ff.lib": "4a0024a738baca41a08dfe92f5ca919a85695e6c67500ea0e0d5be55aa174856",
+    "abstract.json": "4e96d0181c68aee03bb03571ea7cff0ad037e0657aa9189c951c88e4a8546433",
+    "dsfd_node_LLfu_tt.lib": "309d75cac3dd885d25feb69134d56f5177fc2a4fcc890fd8790a6736afabcffe",
+    "insertion.json": "9c8478e911f104e2e24c9511ed8537b2b9efb72093fa13a6ee7b0820de362ab2",
+    "child_lint.json": "d84f50bd13a24a926b8db948a42213eb864a64d0d2bbffcb0650fb26b2f1555e"
+   }
+  }
+ ],
+ "adoption": "Published CLOSED leaf records from daemon; actual die incident placement/clock/reset/fullGEN proof remains with dieowner."
+}
