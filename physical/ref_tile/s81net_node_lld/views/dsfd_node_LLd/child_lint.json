@@ -1,33 +1,31 @@
 {
  "schema": "opentallas.hier_contract.child_lint.v1",
- "lef": "/srv/opentallas/claude/closure-loop/s81net_node_lld-n5-aad069240/record/views/dsfd_node_LLd/dsfd_node_LLd.lef",
+ "lef": "/srv/opentallas-scratch2/claude/closure-loop/s81net_node_lld-n6-13d6772ae/record/views/dsfd_node_LLd/dsfd_node_LLd.lef",
  "verdict": "PASS",
  "fails": [],
- "warns": [
-  "(f) face-pin access: 192 of 195 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. a[0] M4 (0.060,35.376), a[10] M4 (0.060,35.376), a[11] M4 (0.060,35.376))"
- ],
- "summary": "dsfd_node_LLd 86.4 x 77.76: PG M5 VDD 31 stripes (94% spread, 100% cov) / VSS 31 stripes (94% spread, 100% cov); strap M6; face pins 195 blocked-above 0 blocked-same 0; clock clk[0] insertion 140 ps; pockets M5 0 (closed)",
+ "warns": [],
+ "summary": "dsfd_node_LLd 43.2 x 77.76: PG M5 VDD 15 stripes (88% spread, 100% cov) / VSS 15 stripes (88% spread, 100% cov); strap M6; face pins 195 blocked-above 0 blocked-same 0; clock clk[0] insertion 126 ps; pockets M5 0 (closed)",
  "info": {
   "cell": "dsfd_node_LLd",
-  "W": 86.4,
+  "W": 43.2,
   "H": 77.76,
   "pg": {
    "nets": {
     "VDD": {
      "top_layer": "M5",
-     "stripes": 31,
+     "stripes": 15,
      "dir": "V",
-     "spread": 0.937,
+     "spread": 0.875,
      "coverage": 1.0,
-     "shapes_on_top": 31
+     "shapes_on_top": 15
     },
     "VSS": {
      "top_layer": "M5",
-     "stripes": 31,
+     "stripes": 15,
      "dir": "V",
-     "spread": 0.938,
+     "spread": 0.875,
      "coverage": 1.0,
-     "shapes_on_top": 31
+     "shapes_on_top": 15
     }
    },
    "top_layer": "M5",
@@ -40,24 +38,17 @@
   "face": {
    "face_pins": 195,
    "blocked_above": 0,
-   "covered_below": 0,
+   "covered_below": 2,
    "examples": [],
    "blocked_same": 0,
    "same_examples": [],
-   "band_same": 192,
-   "band_examples": [
-    "a[0] M4 (0.060,35.376)",
-    "a[10] M4 (0.060,35.376)",
-    "a[11] M4 (0.060,35.376)",
-    "a[12] M4 (0.060,35.376)",
-    "a[13] M4 (0.060,35.376)",
-    "a[14] M4 (0.060,35.376)"
-   ]
+   "band_same": 0,
+   "band_examples": []
   },
   "clock_insertion": {
    "clk[0]": {
-    "max_ps": 139.67,
-    "min_ps": 104.31
+    "max_ps": 126.26,
+    "min_ps": 89.75
    }
   },
   "pockets": {
@@ -66,7 +57,7 @@
    "marker": {
     "layer": "M5",
     "d_um": 1.536,
-    "added": 261
+    "added": 254
    },
    "count": 0,
    "area_um2": 0,

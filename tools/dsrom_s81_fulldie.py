@@ -5558,6 +5558,8 @@ SSTN_REG = False                # --sstn-reg (S-NET 2026-10-15): slot stations /
                                 # valid (async-reset flop) instead of an AND gate behind the output flop (logic at the pin)
 NODE_STATIC = False             # --node-static (S-NET 2026-10-15, owner static rule): return nodes = ot_s81_retn_static
 NODE_WIN = 2                    # --node-win: sibling window of the static return node (edges)
+NODE_RSTREG = False             # --node-rstreg (S-NET+FILL 2026-10-15, native audit): the static node's rst_n drives ONE
+                                # reset pin register (async assert, release +1 edge); every node flop resets from it
 HEND_STATIC = False             # --hend-static (S-NET 2026-10-15, owner static rule): hub end/start blocks and xstg cross on
                                 # fixed calendars (ot_s81_static_lane_end / ot_s81_static_ratio_cross), no meso/ratio FIFO,
                                 # no credit / ready / trained placement
@@ -10211,8 +10213,13 @@ def glue_rtl(m):
                     body.append(f'    wire {s_}_v = {s_}[0]; wire [31:0] {s_}_t = {s_}[32:1]; wire [31:0] {s_}_d = {s_}[64:33]; '
                                 f'wire {s_}_e = {s_}[65];')
             body.append('    wire ov, oe, flt; wire [31:0] ot_, od;')
+            nrs = 'rst_n[0]'
+            if NODE_STATIC and NODE_RSTREG:   # S-NET+FILL --node-rstreg: reset pin register (native capture of rst_n)
+                body.append("    reg rn; always @(posedge clk[0] or negedge rst_n[0]) if (!rst_n[0]) rn <= 1'b0; else rn <= 1'b1;"
+                            '   // reset pin register: async assert, release +1 edge')
+                nrs = 'rn'
             if NODE_STATIC:      # S-NET --node-static: fixed-slot node (compiler model tools/s81/static_return_calendar.py)
-                body.append(f'    ot_s81_retn_static #(.WIN({NODE_WIN}), .RST(1)) u_n (.clk(clk[0]), .rst_n(rst_n[0]), '
+                body.append(f'    ot_s81_retn_static #(.WIN({NODE_WIN}), .RST(1)) u_n (.clk(clk[0]), .rst_n({nrs}), '
                             '.a_v(a_v), .a_t(a_t), .a_d(a_d), .a_e(a_e), .b_v(b_v), .b_t(b_t), .b_d(b_d), .b_e(b_e), '
                             '.o_v(ov), .o_t(ot_), .o_d(od), .o_e(oe), .fault(flt));')
             else:
@@ -10221,7 +10228,7 @@ def glue_rtl(m):
                         '.o_v(ov), .o_t(ot_), .o_d(od), .o_e(oe), .fault(flt), .quiet());')
             body.append('    assign o = {oe, od, ot_, ov};')
             fi = ' | fi[0]' if fch else ''
-            body.append(f'    reg fr; always @(posedge clk[0] or negedge rst_n[0]) if (!rst_n[0]) fr <= 1\'b0; else fr <= flt{fi};')
+            body.append(f'    reg fr; always @(posedge clk[0] or negedge {nrs}) if (!{nrs}) fr <= 1\'b0; else fr <= flt{fi};')
             body.append('    assign fo = fr;')
         elif mst.startswith('dsfd_rstg') and SSTN_REG:   # S-NET --sstn-reg: valid in a column-reset flop at the pin
             w_ = ports['i'][1]
@@ -10572,6 +10579,11 @@ def die_options(ap):
     ap.add_argument('--node-static', action='store_true', help='S-NET (owner static rule 10-14): return nodes wrap '
                     'ot_s81_retn_static (fixed-slot sibling window, no queues / WAIT timeout / arbitration)')
     ap.add_argument('--node-win', type=int, default=2, help='S-NET: sibling window of the static return node (edges)')
+    ap.add_argument('--node-strip', type=float, default=None, help='S-NET+FILL (tile fill audit 10-15): return-node slot width '
+                    '(um, default 86.4); 43.2 = the n6 node masters (s81net_node_*-n6, pins physical/s81_die_pins/snet_node43), '
+                    'node strip NS_W = width + 8.64, every field column 43.2 um narrower')
+    ap.add_argument('--node-rstreg', action='store_true', help='S-NET+FILL (native audit 10-15): with --node-static, rst_n '
+                    'drives one reset pin register (async assert, release +1 edge) that resets every node flop')
     ap.add_argument('--hend-static', action='store_true', help='S-NET (owner static rule 10-14): hub end/start blocks and '
                     'xstg cross on fixed calendars (ot_s81_static_lane_end, ot_s81_static_ratio_cross); no meso / ratio '
                     'FIFO, credits, ready or trained placement')
@@ -10906,6 +10918,8 @@ def apply_options(a):
     SSTN_REG = bool(getattr(a, 'sstn_reg', False))
     NODE_STATIC = bool(getattr(a, 'node_static', False))
     NODE_WIN = int(getattr(a, 'node_win', 2) or 2)
+    global NODE_RSTREG
+    NODE_RSTREG = bool(getattr(a, 'node_rstreg', False))
     HEND_STATIC = bool(getattr(a, 'hend_static', False))
     SSTN_CCPAD = bool(getattr(a, 'sstn_ccpad', False))
     HSTN_POSEDGE = bool(getattr(a, 'hstn_posedge', False))
@@ -11038,6 +11052,12 @@ def apply_options(a):
             raise SystemExit('--coll-p2-lane: MD-2 P2 draft die A (--draft A)')
         COLL_SPLIT3_COMP = 'physical/s81_ph_views/collective/composition_split3cr_%s.json' % ('mtpl' if COLL_MTP_LANE else 'p2l')
     global CTRL_RQ, FWD_IFACE, HOP_EXTRA, HOP_GATE_UM, CTRL_SVC_ALIGN, BF_HIER, BF_FRAME_EXTRA, BF_FRONT_W, BF_ROUTE_H, BF_SEAM_UM, LANES_W, COL_W8, COL_PITCH8, DIE
+    global NODE_FRAME, NS_W, COL_W, COL_PITCH
+    if getattr(a, 'node_strip', None):   # S-NET+FILL (tile fill audit 354b5bb2e): narrower return-node strip
+        NODE_FRAME = (float(a.node_strip), NODE_FRAME[1])
+        NS_W = NODE_FRAME[0] + 8.64
+        COL_W = 2 * LANE_W + NS_W
+        COL_PITCH = COL_W + 8.64
     BF_HIER = getattr(a, 'bf_hier', None)
     if getattr(a, 'bf_hier_compact', False):
         assert BF_HIER is None, '--bf-hier and --bf-hier-compact are exclusive'

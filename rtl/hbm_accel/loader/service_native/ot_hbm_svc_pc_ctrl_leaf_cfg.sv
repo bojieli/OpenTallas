@@ -15,7 +15,13 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg #(
     parameter integer OREG=1,
     parameter integer KREG=1,
     parameter integer KRREG=1,
-    parameter integer RREG=1
+    parameter integer RREG=1,
+    // WPAY=1 (H-DIE 2026-10-15 22:50, physical default): the 256-bit write payload of the 32-entry same-row queue lives
+    // in a real 128x256 SRAM (rows 0..31) instead of 8,192 queue flops + a 32:1 x 256 head mux; the clock root drops
+    // from 15,219 to ~7k sinks.  The payload is read continuously at the NEXT head (rp, or rp+1 on a column pop), so
+    // the head word is valid one edge after any pop.  A write column issued less than two edges after its own payload
+    // write would read the old word: that is checked (sticky fault), never silently stretched.  WPAY=0 = flops.
+    parameter integer WPAY=1
 )(
     input wire clk,rst_n,
     input wire [4:0]pc_id,
@@ -56,7 +62,9 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg #(
     wire i_rdy;
     reg[1:0]state;reg sticky;reg[18:0]active_row;reg[31:0]observed_open;
     reg[4:0]wp,rp,ep;reg[5:0]count,unposted;
-    reg[319:0]queue[0:31];
+    reg[63:0]queue[0:31];          // {we,bank[4:0],col[4:0],tag[16:0],beat[3:0],wstrb[31:0]} = bits 319:256
+    wire[255:0]head_wdata;
+    reg fresh_v;reg[4:0]fresh_slot;
     reg[5:0]read_reserved,pending_count,response_count;
     reg[4:0]pending_wp,pending_rp,response_wp,response_rp;
     reg[20:0]pending_identity[0:31],response_identity[0:31];
@@ -70,7 +78,7 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg #(
         {1'b0,incoming[1:0]}+length<=4 && incoming_pc==pc_id_q && {1'b0,incoming}+length<=31'd703125000;
     wire same_row=incoming_row==active_row;
     wire dr,wr,cv,cwe,caq;wire[4:0]cb,cc;
-    wire[319:0]head=queue[rp],push=queue[ep];
+    wire[319:0]head={queue[rp],head_wdata},push={queue[ep],256'b0};
     wire push_read=!push[319];
     wire enqueue=state==RUN && unposted!=0 && (!push_read || read_reserved<32) && !sticky;
     wire accepted=i_v&&i_rdy;wire posted=enqueue&&wr;
@@ -115,6 +123,18 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg #(
         assign col_data=head[255:0];assign col_strb=head[287:256];
     end endgenerate
     assign owner_fault=sticky;
+    generate if(WPAY!=0)begin:g_wpay
+        // write payload SRAM: written once per accepted write (writes are length 1), read every edge at the next head
+        wire[4:0]wpay_raddr=cv?rp+5'd1:rp;
+        ot_sram_1r1w_128x256_m1_r2c2 u_write_payload(
+            .clk(clk),.r_ce_in(1'b1),.r_addr_in({2'b0,wpay_raddr}),.rd_out(head_wdata),
+            .w_ce_in(accepted&&i_we),.w_addr_in({2'b0,wp}),.wd_in(i_wdata),.w_mask_in({256{1'b1}}),
+            .rr_en(2'b0),.rr_addr(14'b0),.cr_en(2'b0),.cr_sel(16'b0));
+    end else begin:g_wflops
+        reg[255:0]wq[0:31];
+        always @(posedge clk) if(accepted)for(integer b=0;b<4;b=b+1)if(b<length)wq[5'(wp+b)]<=i_wdata;
+        assign head_wdata=wq[rp];
+    end endgenerate
     wire response_read=!sticky&&((!head_valid&&response_count!=0)||(response_take&&response_count>1));
     wire[4:0]response_read_address=response_take?response_rp+5'd1:response_rp;
     wire response_write=ret_v&&pending_count!=0&&!sticky;
@@ -136,13 +156,13 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg #(
         if(!lrst_n)begin
             state<=IDLE;sticky<=0;active_row<=0;observed_open<=0;wp<=0;rp<=0;ep<=0;count<=0;unposted<=0;
             read_reserved<=0;pending_count<=0;response_count<=0;pending_wp<=0;pending_rp<=0;response_wp<=0;response_rp<=0;
-            head_identity<=0;head_valid<=0;k_wr_done<=0;
+            head_identity<=0;head_valid<=0;k_wr_done<=0;fresh_v<=0;fresh_slot<=0;
         end else begin
             k_wr_done<=0;
             if(i_v&&!legal)sticky<=1;
             if(accepted)begin
                 for(integer b=0;b<4;b=b+1)if(b<length)
-                    queue[5'(wp+b)]<={i_we,incoming[14:12]^incoming[19:17],(2'(incoming[1:0]+b)^incoming[16:15]),incoming[11:7],i_tag,4'(b),i_wstrb,i_wdata};
+                    queue[5'(wp+b)]<={i_we,incoming[14:12]^incoming[19:17],(2'(incoming[1:0]+b)^incoming[16:15]),incoming[11:7],i_tag,4'(b),i_wstrb};
                 wp<=wp+5'(length);
                 if(state==IDLE || !same_row)begin active_row<=incoming_row;state<=DESC;end
             end
@@ -162,8 +182,10 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg #(
             end
             if(state==DESC && dr)state<=DRAIN;
             if(state==DRAIN && observed_open==0)state<=RUN;
+            fresh_v<=accepted&&i_we;fresh_slot<=wp;
             if(cv)begin
                 if(state!=RUN || count==0 || cwe!=head[319] || cb!=head[318:314] || cc!=head[313:309] || (!cwe&&!caq))sticky<=1;
+                if(WPAY!=0 && cwe && fresh_v && fresh_slot==rp)sticky<=1;
                 rp<=rp+1'b1;
                 if(cwe)k_wr_done<=1;
                 else begin

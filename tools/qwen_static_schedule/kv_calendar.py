@@ -80,11 +80,14 @@ def pc_schedule(demand, p, start_hbm):
     issue, go, put, freed = [0] * n, [0] * blocks, [0] * n, [0] * blocks
     t = start_hbm
     lmax = p['rd_landing_nominal_hbm'] + p['front_window_hbm']
+    blocked = refresh_blocked(p)
     for b in range(blocks):
         if b >= nb:
             t = max(t, freed[b - nb])                       # block credit
         idx = range(b * bl, min(n, (b + 1) * bl))
         for i in idx:
+            while blocked(t):
+                t += 1                                      # REFpb command + tRREFD: no ACT/RD slot on this PC
             issue[i] = t
             t += 1                                          # one RD per PC per HBM edge
         land_last = issue[idx[-1]] + lmax
@@ -94,6 +97,60 @@ def pc_schedule(demand, p, start_hbm):
             put[i] = go[b] + p['put_after_go_hbm'] + k * st
         freed[b] = put[idx[-1]] + 1
     return dict(issue=issue, go=go, put=put, freed=freed, rd_end=t)
+
+
+def receipt(contexts=(1, 128, 1000, 2048, 4096, 6144, 8192), layer_period_core=6639, ring_cdc_core_edges=3):
+    """36-layer KV calendar receipt: KV-die resized boundary (front NBLK 10, ring DEPTH 64; kv_buffer_resize.json) under
+    the controller refresh as implemented, plus the old sizes and the refresh upper bound as sensitivities."""
+    base = dict(SOURCED, ring_cdc_core_edges=ring_cdc_core_edges, layer_period_core=layer_period_core, write_ready_core=0)
+    cases = dict(
+        resized_n10_d64_refresh_as_implemented=dict(base, front_nblk=10, ring_depth=64, refresh=refresh_from_table()),
+        resized_n10_d64_refresh_upper_bound=dict(base, front_nblk=10, ring_depth=64, refresh=refresh_from_table(bound='upper')),
+        resized_n10_d128_refresh_upper_bound=dict(base, front_nblk=10, ring_depth=128, refresh=refresh_from_table(bound='upper')),
+        old_n4_d8_refresh_as_implemented=dict(base, refresh=refresh_from_table()),
+    )
+    out = {}
+    for name, q in cases.items():
+        out[name] = {}
+        for T in contexts:
+            r = compile_36(T, q)
+            l = r['layer']
+            out[name][str(T)] = dict(feasible=r['feasible'], qk_start_after_prefetch=l['qk_start_after_prefetch_core'],
+                                     ring_peak=l['ring_peak'], ring_depth=q['ring_depth'], front_nblk=q['front_nblk'],
+                                     k_rd_core=l['k_rd_core_edges'], credit_rate=l['front_credit_rate'],
+                                     pc_busy_hbm=r['pc_busy_hbm_per_layer'], refresh_edges=r['refresh_edges_per_layer'],
+                                     period_hbm=r['period_hbm'], own_row_scan=r['own_row_scan_index'])
+    return out
+
+
+def refresh_blocked(p):
+    """static REFpb windows of the HBM controller as implemented (results/arch/qwen_split_1014/kvsys_v1_4_3_design/
+    hbm_refresh_calendar.json as_implemented: ot_hbm_r14_stream_pc_srow REF_MODE 1, REFpb every T_REFIPB HBM edges at
+    the PC's strap phase, never postponed; tRFCpb lands on a bank outside the stream's current + next two sets, so the
+    stream loses only the REFpb command slot + tRREFD = block_hbm edges of RD/ACT issue per period).
+    refresh = {period_hbm, block_hbm, offset_hbm} (offset = PC phase - layer start, mod period); edges_per_layer only = legacy."""
+    r = p['refresh']
+    per, blk = r.get('period_hbm'), r.get('block_hbm', 0)
+    if not per or not blk:
+        return lambda t: False
+    off = r.get('offset_hbm', 0)
+    return lambda t: (t - off) % per < blk
+
+
+def refresh_from_table(path=None, bound='as_implemented'):
+    """refresh input from the KV-die controller table (as_implemented); the offset varies per layer -> compiled over all.
+    bound='as_implemented': REF_MODE 1 never blocks a column command (ot_hbm_r14_stream_pc_srow: rd_block = 0 in
+      REF_MODE 1; REFpb leaves on the ROW command slot; the bank is chosen outside the stream's current + next two sets,
+      whose ACTs are issued one set = 128 sectors ahead, so the tRREFD = 8 ACT gap never reaches an RD): block_hbm = 0.
+    bound='upper': every REFpb costs its command edge + tRREFD of RD issue (block_hbm = 1 + T_RREFD), the 6.8 % ACT-slot
+      bound applied to RDs (sensitivity only)."""
+    import json
+    path = path or ROOT / 'results/arch/qwen_split_1014/kvsys_v1_4_3_design/hbm_refresh_calendar.json'
+    a = json.loads(Path(path).read_text())['as_implemented']
+    src = a['source']
+    blk = 0 if bound == 'as_implemented' else 1 + src['T_RREFD']
+    return dict(period_hbm=src['T_REFIPB'], block_hbm=blk, offset_hbm=0, bound=bound,
+                source=str(Path(path).relative_to(ROOT)) if str(path).startswith(str(ROOT)) else str(path))
 
 
 def hbm_to_core(e_hbm, p):
@@ -114,8 +171,18 @@ def _layer_pc(ks, p):
 
 
 def compile_layer(T, p):
-    """one layer, worst PC: minimal QK start (core edges after the PC prefetch start) with no hold, ring peak, K fetch"""
+    """one layer, worst PC and worst refresh phase: minimal QK start (core edges after the PC prefetch start) with no
+    hold, ring peak, K fetch.  With a periodic refresh the layer start meets every phase over 36 layers x tokens, so the
+    schedule is compiled at every offset and the worst is the static reservation."""
     _need(p)
+    r = p['refresh']
+    if r.get('period_hbm') and r.get('block_hbm') and not r.get('fixed_offset'):
+        outs = [compile_layer(T, dict(p, refresh=dict(r, offset_hbm=o, fixed_offset=True))) for o in range(r['period_hbm'])]
+        w = max(outs, key=lambda d: (d['qk_start_after_prefetch_core'], d['ring_peak'], d['k_rd_hbm_edges']))
+        return dict(w, qk_start_after_prefetch_core=max(d['qk_start_after_prefetch_core'] for d in outs),
+                    ring_peak=max(d['ring_peak'] for d in outs), ring_ok=all(d['ring_ok'] for d in outs),
+                    k_rd_hbm_edges=max(d['k_rd_hbm_edges'] for d in outs),
+                    k_rd_core_edges=max(d['k_rd_core_edges'] for d in outs), refresh_offsets=len(outs))
     per = {pc: _layer_pc(ks, p) for pc, ks in k_streams(T, p).items() if ks}
     start = max(v[0] for v in per.values())
     peak = max(v[1] for v in per.values())
@@ -137,11 +204,14 @@ def compile_36(T, p, layers=36):
     period_hbm = math.floor(p['layer_period_core'] * p['core_ps'] / p['hbm_ps'])
     v_sectors = one['k_sectors']                              # V rows per PC = K rows per PC (static_kv_calendar model)
     writes = 2                                                # one K + one V sector of the new row per PC quarter
-    busy = one['k_rd_hbm_edges'] + v_sectors + writes + p['refresh']['edges_per_layer']
+    r = p['refresh']
+    ref_edges = (math.ceil(period_hbm / r['period_hbm']) * r['block_hbm'] if r.get('period_hbm')
+                 else r.get('edges_per_layer', 0))
+    busy = one['k_rd_hbm_edges'] + v_sectors + writes + ref_edges
     # the new token's own K row: its RD must issue after its WR commit
     ks = k_streams(T, p)
     own = [(pc, i) for pc, s in ks.items() for i, (_, _, t) in enumerate(s) if t == T - 1]
-    return dict(layer=one, layers=layers, period_hbm=period_hbm, pc_busy_hbm_per_layer=busy,
+    return dict(layer=one, layers=layers, period_hbm=period_hbm, pc_busy_hbm_per_layer=busy, refresh_edges_per_layer=ref_edges,
                 hbm_fits_period=busy <= period_hbm, own_row_pcs=len(own),
                 own_row_scan_index=sorted({i for _, i in own}),
                 own_row_rd_issue_hbm_after_prefetch=[i for _, i in own][:1],

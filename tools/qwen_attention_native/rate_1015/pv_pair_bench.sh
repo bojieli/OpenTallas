@@ -12,7 +12,9 @@ $VL --binary --timing -O2 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno
  > "$O/build_p${P}m${M}.log" 2>&1 || { echo "PV_PAIR FAIL build"; exit 1; }
 rc=0
 for T in $CTXS; do
- python3 tools/qwen_attention_native/rate_1015/pv_pair_ref.py --ctx $T --pair $P --seed $T --out "$O/vec_${T}_p$P" >/dev/null
+ rm -rf "$O/vec_${T}_p$P"
+ python3 tools/qwen_attention_native/rate_1015/pv_pair_ref.py --ctx $T --pair $P --seed $T --out "$O/vec_${T}_p$P" >/dev/null \
+  || { echo "PV_PAIR FAIL T=$T golden reference generation failed"; rc=1; continue; }
  line=$("$O/obj_p${P}m${M}/Vtb_qwen_tp8_pv_wide_pair" +VEC="$O/vec_${T}_p$P" +CTX=$T +MODE=$MODE | grep -E "^PV_PAIR|MISMATCH" | tail -1)
  echo "$line"; case "$line" in "PV_PAIR PASS"*) ;; *) rc=1;; esac
 done
