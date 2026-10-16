@@ -1,0 +1,46 @@
+{
+ "status": "PASS",
+ "scope": "two-row return chain (columns YB_STAGE 1 PAYLOAD_STAGE 0 + ctrn_col slices) vs cth_nt monolithic ctra/ctrb/ctrn; component chain only, not full HC / token",
+ "cycles": 3000,
+ "added_return_cycles_per_chain": 1,
+ "added_request_cycles": 1,
+ "added_cycles_per_row": 0,
+ "sources_sha256": {
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_return_columns.sv": "fefa77576e22684c1cc3609e7aa4bad7d82e045f62c3aeb1316021e46f5a9174",
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_cth_ntc.sv": "ea3814ed35450d3c06d8d2c23efca8c43da8a61ad815da8c25e1eab30505c5e3",
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_cth.sv": "3f8f63d41d8d2a0014b7c966a4b3d9f9b895471779d12f55be99199947ba0f38"
+ },
+ "results": [
+  {
+   "variant": "positive",
+   "returncode": 0,
+   "expected": true,
+   "log": "positive.log"
+  },
+  {
+   "variant": "partner_c1",
+   "returncode": 1,
+   "expected": true,
+   "log": "partner_c1.log"
+  },
+  {
+   "variant": "header_from_peer",
+   "returncode": 1,
+   "expected": true,
+   "log": "header_from_peer.log"
+  },
+  {
+   "variant": "no_par_ctrb",
+   "returncode": 1,
+   "expected": true,
+   "log": "no_par_ctrb.log"
+  },
+  {
+   "variant": "no_entry_register",
+   "returncode": 1,
+   "expected": true,
+   "log": "no_entry_register.log"
+  }
+ ],
+ "ot_run": "oth-ubuntu-3229690-1792160553 ot-epyc4"
+}

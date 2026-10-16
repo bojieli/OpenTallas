@@ -10,7 +10,7 @@
 // All four clock roots require the same phase; COLUMN0 owns the merged-valid register. Canonical compiler/slot adoption is separate.
 
 module ot_s81_hc_ctra_column #(
-    parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, S_RT = 4, ML = 5, AL = 4, CHAIN_STEP = AL, READ_STAGE = 0, COLUMN = 0, YB_STAGE = 0
+    parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, S_RT = 4, ML = 5, AL = 4, CHAIN_STEP = AL, READ_STAGE = 0, COLUMN = 0, YB_STAGE = 0, PAYLOAD_STAGE = 1
 ) (
     input  wire                   clk,
     input  wire                   rst_in,
@@ -44,7 +44,7 @@ module ot_s81_hc_ctra_column #(
     input  wire [1:0]             nflt_n, nflt_s,
     input  wire                   hov_d,
     output reg                    flag_fault, flag_hnz,
-    output reg [P_D-1:0]           header_delay,
+    output wire [P_D-1:0]          header_delay,
     input  wire                   hnz_n, hnz_s, pflt_n, pflt_s   // ctpl half 0 (N) / half 1 (S), group g
 );
     localparam integer O_D = 5 + S_RD * 16 + 20 + 6 + 8 + 32 + 1, FXW = O_D + S_RD * 512;
@@ -95,7 +95,11 @@ module ot_s81_hc_ctra_column #(
     wire [S_RT+3:0] rv_base;
     wire [3:0] fault_flags = {peer_fault,flag_fault};
     wire [3:0] hnz_flags = {peer_hnz,flag_hnz};
-    generate if(COLUMN==0) begin : g_merge
+    // COLUMN0 owns the merged valid; under YB_STAGE every column merges (peer flags all-to-all in the row), so each
+    // per-column ctrn slice takes its column's own rvm (identical in all four columns).  PAYLOAD_STAGE 0 (the row form,
+    // ot_s81_hc_retrow): no extra output register -- rvm / header / payload are the engine's own registers (flags ORed
+    // from registers of the same edge), so a column is cycle-identical to the monolithic ctra / ctrb strip.
+    generate if(COLUMN==0 || YB_STAGE) begin : g_merge
         reg rr_merge;
         reg [S_RT+3:0] rv_delay;
         always @(posedge clk) rr_merge<=e_rst;
@@ -106,7 +110,10 @@ module ot_s81_hc_ctra_column #(
                 rv_delay[S_RT+2]<=rv_base[S_RT+2] | (|fault_flags);
                 rv_delay[S_RT+3]<=rv_base[S_RT+3] | (|hnz_flags);
             end
-        assign rvm=rv_delay;
+        if(PAYLOAD_STAGE) begin : g_pd assign rvm=rv_delay; end
+        else begin : g_pc
+            assign rvm={rv_base[S_RT+3] | (|hnz_flags), rv_base[S_RT+2] | (|fault_flags), rv_base[S_RT+1:0]};
+        end
     end else begin : g_unmerged
         assign rvm=rv_base;
     end endgenerate
@@ -138,7 +145,11 @@ module ot_s81_hc_ctra_column #(
             flag_fault <= (|e_nflt_n) | (|e_nflt_s) | e_pflt_n | e_pflt_s;
             flag_hnz <= e_hnz_n | e_hnz_s;
         end
-    always @(posedge clk) header_delay <= rd_full[P_D-1:0];
+    generate if(PAYLOAD_STAGE) begin : g_hdr_reg
+        reg [P_D-1:0] h; always @(posedge clk) h <= rd_full[P_D-1:0]; assign header_delay=h;
+    end else begin : g_hdr_direct
+        assign header_delay=rd_full[P_D-1:0];
+    end endgenerate
     ot_s81_hc_ctra #(.NG(NG),.D(D),.NCOL(NCOL),.GS(GS),.S_RD(S_RD),.S_RT(S_RT),.ML(ML),.AL(AL),.CHAIN_STEP(CHAIN_STEP),.READ_STAGE(READ_STAGE)) u (
         .clk(clk),
         .rst_in(e_rst),
@@ -175,12 +186,14 @@ module ot_s81_hc_ctra_column #(
         .pflt_n('0),
         .pflt_s('0));
     reg [128*SH-1:0] payload_delay;
+    wire [128*SH-1:0] payload_own;
     generate for(sl=0;sl<SH;sl=sl+1) begin : g_slot
         for(chunk=0;chunk<2;chunk=chunk+1) begin : g_chunk
-            always @(posedge clk) payload_delay[128*sl+64*chunk +:64] <= rd_full[P_D+512*sl+64*(COLUMN+4*chunk) +:64];
+            assign payload_own[128*sl+64*chunk +:64] = rd_full[P_D+512*sl+64*(COLUMN+4*chunk) +:64];
         end
     end endgenerate
-    assign rdm=payload_delay;
+    always @(posedge clk) payload_delay <= payload_own;
+    assign rdm=PAYLOAD_STAGE ? payload_delay : payload_own;
 endmodule
 
 module ot_s81_hc_ctra_columns #(
@@ -217,6 +230,8 @@ module ot_s81_hc_ctra_columns #(
     wire [255:0] yb_raw = {yb_s, yb_n};
     generate for(c=0;c<4;c=c+1) begin : g_column
         wire [63:0] yb_fwd;
+        wire [127:0] csf;
+        wire hovf;
         wire [63:0] yb_loc = {yb_raw[16*(c+12) +:16], yb_raw[16*(c+8) +:16], yb_raw[16*(c+4) +:16], yb_raw[16*c +:16]};
         wire [191:0] yb_peer;
         for(genvar pc=0;pc<4;pc=pc+1) begin : g_peer
@@ -290,10 +305,10 @@ module ot_s81_hc_ctra_columns #(
             .yb_loc(yb_loc),
             .yb_fwd(yb_fwd),
             .yb_peer(yb_peer),
-            .cs_fwd(),
-            .cs_rel(g_column[3].u.cs_fwd),
-            .hov_fwd(),
-            .hov_rel(g_column[0].u.hov_fwd),
+            .cs_fwd(csf),
+            .cs_rel(g_column[3].csf),
+            .hov_fwd(hovf),
+            .hov_rel(g_column[0].hovf),
             .rdm(col_data),
             .rq_q(local_rq_q),
             .hs_run(local_hs_run),
@@ -333,7 +348,7 @@ module ot_s81_hc_ctra_columns #(
 endmodule
 
 module ot_s81_hc_ctrb_column #(
-    parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, S_RT = 4, ML = 5, AL = 4, CHAIN_STEP = AL, READ_STAGE = 0, COLUMN = 0, YB_STAGE = 0
+    parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, S_RT = 4, ML = 5, AL = 4, CHAIN_STEP = AL, READ_STAGE = 0, COLUMN = 0, YB_STAGE = 0, PAYLOAD_STAGE = 1
 ) (
     input  wire                   clk,
     input  wire                   rst_in,
@@ -395,12 +410,14 @@ module ot_s81_hc_ctrb_column #(
         .yb_n(yb_n),
         .yb_s(yb_s));
     reg [128*SH-1:0] payload_delay;
+    wire [128*SH-1:0] payload_own;
     generate for(sl=0;sl<SH;sl=sl+1) begin : g_slot
         for(chunk=0;chunk<2;chunk=chunk+1) begin : g_chunk
-            always @(posedge clk) payload_delay[128*sl+64*chunk +:64] <= rd_full[0+512*sl+64*(COLUMN+4*chunk) +:64];
+            assign payload_own[128*sl+64*chunk +:64] = rd_full[0+512*sl+64*(COLUMN+4*chunk) +:64];
         end
     end endgenerate
-    assign rdm=payload_delay;
+    always @(posedge clk) payload_delay <= payload_own;
+    assign rdm=PAYLOAD_STAGE ? payload_delay : payload_own;
 endmodule
 
 module ot_s81_hc_ctrb_columns #(

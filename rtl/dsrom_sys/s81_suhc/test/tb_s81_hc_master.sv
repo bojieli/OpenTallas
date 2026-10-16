@@ -7,7 +7,7 @@
 // (expected VM rows), n.mem (counts).  Prints per job its engine start / done (slab cycles) and
 // HCG jobs= done= err= rows= fault= code= cyc= bad_tag=  then HCG PASS / HCG FAIL.
 module tb_s81_hc_master;
-    parameter integer NG = 256, D = 5120, S_RD = 2, S_WR = 8, LVM = 10, MUT = 0, AMUT = 0, HIER = 0, NCOL = 3, GS = 8, HALF = 0, CSPLIT = 0, TAIL_SPLIT = 0, HEAD_ROWS = 10, CNL_PIN = 0, CHAIN_STEP = 4, LANE_SPECIALIZE = 0, PIPE = 0, PIPE_PD = 40, NTREE = 0, NT_K = 67, NT_DBG = 0;
+    parameter integer NG = 256, D = 5120, S_RD = 2, S_WR = 8, LVM = 10, MUT = 0, AMUT = 0, HIER = 0, NCOL = 3, GS = 8, HALF = 0, CSPLIT = 0, TAIL_SPLIT = 0, HEAD_ROWS = 10, CNL_PIN = 0, CHAIN_STEP = 4, LANE_SPECIALIZE = 0, PIPE = 0, PIPE_PD = 40, NTREE = 0, NT_K = 67, NT_DBG = 0, RETCOL = 0;
     parameter integer MAXJ = 64, MAXE = 4096, MAXY = 2048, TMAX = 400000;
     reg cck = 0, sk = 0, crs = 0, srs = 0;
     always #0.4165 cck = ~cck;              // controller 1.2 GHz
@@ -30,7 +30,7 @@ module tb_s81_hc_master;
     wire [S_WR*512-1:0] wq_d;
     wire flt, online;
     wire [3:0] fcode;
-    dsfd_sp_hc #(.NG(NG), .D(D), .S_RD(S_RD), .S_WR(S_WR), .LVM(LVM), .MUT(MUT), .AMUT(AMUT), .HIER(HIER), .NCOL(NCOL), .GS(GS), .HALF(HALF), .CSPLIT(CSPLIT), .TAIL_SPLIT(TAIL_SPLIT),.HEAD_ROWS(HEAD_ROWS),.CNL_PIN(CNL_PIN),.CHAIN_STEP(CHAIN_STEP),.LANE_SPECIALIZE(LANE_SPECIALIZE),.PIPE(PIPE),.PIPE_PD(PIPE_PD),.NTREE(NTREE),.NT_K(NT_K)) dut (
+    dsfd_sp_hc #(.NG(NG), .D(D), .S_RD(S_RD), .S_WR(S_WR), .LVM(LVM), .MUT(MUT), .AMUT(AMUT), .HIER(HIER), .NCOL(NCOL), .GS(GS), .HALF(HALF), .CSPLIT(CSPLIT), .TAIL_SPLIT(TAIL_SPLIT),.HEAD_ROWS(HEAD_ROWS),.CNL_PIN(CNL_PIN),.CHAIN_STEP(CHAIN_STEP),.LANE_SPECIALIZE(LANE_SPECIALIZE),.PIPE(PIPE),.PIPE_PD(PIPE_PD),.NTREE(NTREE),.NT_K(NT_K),.RETCOL(RETCOL)) dut (
         .cck(cck), .crs(crs), .sk(sk), .srs(srs), .c_cmd_v(c_cmd_v), .c_cmd_d(c_cmd_d), .c_done_v(c_done_v),
         .c_done_tag(c_done_tag), .inp(inp), .y_v(y_v), .y_rdy(y_rdy), .y_d(y_d), .rq_v(rq_v), .rq_row(rq_row),
         .rs_v(rs_v), .rs_d(rs_d), .wq_v(wq_v), .wq_row(wq_row), .wq_mask(wq_mask), .wq_d(wq_d), .flt(flt),
