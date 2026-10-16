@@ -1,6 +1,8 @@
 #!/bin/bash
 # Behavioural gate of the static x2-pair column entry dsfd_cfifo_crs (S-ELEM-PQ/COLL 2026-10-16, VIS-ROM S81F-02).
-# usage: cfifo_crs_gate.sh pass|warm|mut_payload|mut_valid|mut_clock|mut_ripin|mut_stop_s|mut_reset_frontier <outdir>
+# usage: cfifo_crs_gate.sh pass|warm|mut_payload|mut_valid|mut_clock|mut_ripin|mut_stop_s|mut_reset_frontier|mut_hstage|mut_hsel <outdir>
+#   mut_hstage   r5: delivered word taken from the negedge-cr_s read stage h without the cr register (one edge early)
+#   mut_hsel     r5: one-hot read select not advanced to rc_j (reads the slot one epoch late)
 #   mut_ripin    r3: rr takes ri directly (no north pin register) -> status latency mutant must fail
 #   pass         5 forwarded-clock phase pairs (xf, xf2 vs cr): every word exact on both lanes, fixed epoch, status
 #   warm         same five phases across explicit cold and warm resets, fixed first-output epoch
@@ -11,7 +13,8 @@ set -euo pipefail
 MODE=${1:?mode}; OUT=${2:?outdir}; mkdir -p "$OUT"
 R=$(cd "$(dirname "$0")/../.." && pwd)
 DUT=$R/rtl/dsrom_sys/s81_die_bind/glue/dsfd_cfifo_crs.sv
-LIB="$R/rtl/dsrom_sys/s81_die_bind/ot_s81_static_column_ingress.sv $R/rtl/dsrom_sys/s81_die_bind/ot_s81_static_lane_cross.sv"
+LIB="$R/rtl/dsrom_sys/s81_die_bind/ot_s81_static_column_ingress_hr.sv $R/rtl/dsrom_sys/s81_die_bind/ot_s81_static_lane_cross_hr.sv"
+DEFS=""
 TB=$R/rtl/dsrom_sys/s81_die_bind/test/tb_dsfd_cfifo_crs.sv
 STOP_S=0
 case $MODE in
@@ -20,6 +23,8 @@ case $MODE in
   mut_valid) sed "s/\.i(xd2)/.i({xd2[537:2], xd2[1:0] \& 2'b01})/" "$DUT" > "$OUT/dut.sv"; cmp -s "$DUT" "$OUT/dut.sv" && { echo "MUTANT NOT APPLIED"; exit 3; }; DUT=$OUT/dut.sv; PAIRS="2:2";;
   mut_clock) sed 's/\.f_ck(xf2)/.f_ck(~xf2)/' "$DUT" > "$OUT/dut.sv"; cmp -s "$DUT" "$OUT/dut.sv" && { echo "MUTANT NOT APPLIED"; exit 3; }; DUT=$OUT/dut.sv; PAIRS="2:2";;
   mut_stop_s) STOP_S=1; PAIRS="2:2";;
+  mut_hstage) DEFS="-DOT_S81_HR_MUT_NOSTAGE"; PAIRS="2:2 7:7";;
+  mut_hsel) DEFS="-DOT_S81_HR_MUT_SEL"; PAIRS="2:2 7:7";;
   mut_reset_frontier) sed 's/posedge cr_s or negedge rsync) if (!rsync)/posedge cr_s or negedge rst) if (!rst)/' "$DUT" > "$OUT/dut.sv"; cmp -s "$DUT" "$OUT/dut.sv" && { echo "MUTANT NOT APPLIED"; exit 3; }; DUT=$OUT/dut.sv; PAIRS="2:2";;
   mut_ripin) sed 's/sti\[0\], ri_q}/sti[0], ri}/' "$DUT" > "$OUT/dut.sv"; cmp -s "$DUT" "$OUT/dut.sv" && { echo "MUTANT NOT APPLIED"; exit 3; }; DUT=$OUT/dut.sv; PAIRS="2:2";;
   *) echo "bad mode $MODE"; exit 2;;
@@ -28,7 +33,7 @@ WARM=0; [ "$MODE" != warm ] || WARM=1
 fail=0; n=0
 for p in $PAIRS; do
   a=${p%:*}; b=${p#*:}
-  iverilog -g2012 -Ptb_dsfd_cfifo_crs.PHA=$a -Ptb_dsfd_cfifo_crs.PHB=$b -Ptb_dsfd_cfifo_crs.WARM=$WARM -Ptb_dsfd_cfifo_crs.STOP_S=$STOP_S -o "$OUT/sim_$a$b" "$TB" "$DUT" $LIB
+  iverilog -g2012 $DEFS -Ptb_dsfd_cfifo_crs.PHA=$a -Ptb_dsfd_cfifo_crs.PHB=$b -Ptb_dsfd_cfifo_crs.WARM=$WARM -Ptb_dsfd_cfifo_crs.STOP_S=$STOP_S -o "$OUT/sim_$a$b" "$TB" "$DUT" $LIB
   line=$(vvp -n "$OUT/sim_$a$b" | grep -E "CFIFO_X2 (PASS|FAIL)" | tail -1); echo "$line"
   case "$line" in *PASS*) n=$((n+1));; *) fail=1;; esac
 done
