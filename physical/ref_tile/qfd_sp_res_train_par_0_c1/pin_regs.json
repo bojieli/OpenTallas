@@ -1,0 +1,42 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qfd_sp_res_train_par_0",
+ "enable": true,
+ "clock": "ck",
+ "clock_ports": [
+  "ck",
+  "ck_bank0",
+  "ck_bank1",
+  "ck_bank2",
+  "ck_bank3",
+  "ck_bank4",
+  "ck_bank5",
+  "ck_bank6",
+  "ck_bank7",
+  "ck_bank8",
+  "ck_bank9",
+  "ck_bank10",
+  "ck_bank11",
+  "ck_bank12",
+  "ck_bank13",
+  "ck_bank14",
+  "ck_bank15",
+  "ck_bank16",
+  "ck_bank17",
+  "ck_bank18",
+  "ck_bank19",
+  "ck_bank20",
+  "ck_bank21",
+  "ck_bank22",
+  "ck_bank23"
+ ],
+ "exclude": "",
+ "reset": "",
+ "reason": "",
+ "latency_cycles": {
+  "input": 1,
+  "output": 1
+ },
+ "rule": "OWNER RULE 19:50 PT 2026-10-15: every new tile registers every input and every output at its pin",
+ "per_port_table": "$RESULTS_DIR/ot_pin_regs.tsv (route synthesis: port dir width cycles why)"
+}
