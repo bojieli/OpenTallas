@@ -90,6 +90,14 @@ CHILD_CK = {'qfd_tt_up4': ['ck_pin', 'ck_l0', 'ck_l1', 'ck_l2', 'ck_l3'],     # 
 # v1.3 (compute lead r4): the static slab masters (rtl/qwen_split/qfd_port_tiles.sv @10c74d529) take 49 entries each
 _SLAB_CK = (['ck'] + [f'ck_bw{k}' for k in range(8)] + [f'ck_pair{k}' for k in range(4)] + [f'ck_col{k}' for k in range(16)]
             + [f'ck_mul{k}' for k in range(16)] + [f'ck_group{k}' for k in range(4)])
+# OT_SPLIT_TILE_GRANT (re-packed 64-lane tile): the tile's 45 compensated clock entries (node-less tile: 44)
+try:
+    from qwen_split.source_pin_plan import grant_clocks as _gck
+    for _t in ('qfd_tile_nk', 'qfd_tile_nl'):
+        if _gck(_t):
+            CHILD_CK[_t] = _gck(_t)
+except ImportError:
+    pass
 for _b in range(3):
     CHILD_CK[f'qfd_port_tiles_{_b}'] = CHILD_CK[f'qfd_port_tiles_{_b}_f1'] = list(_SLAB_CK)
 
@@ -596,7 +604,9 @@ def place(v, m, G):
     # Actual hardened parent outlines have no legacy24-nm shape shave.
     for parent in m['insts']:
         if parent.master in ('qfd_tile_nk','qfd_tile_nl'):
-            parent.w, parent.h = 449.28, 1442.88
+            from qwen_split.source_pin_plan import tile_grant
+            _tg = tile_grant()
+            parent.w, parent.h = tuple(_tg['home_um']) if _tg else (449.28, 1442.88)
         elif parent.master.startswith('qfd_port_tiles_'):
             parent.w, parent.h = PORT_WH
         elif parent.master=='qfd_sp_band_lanes':
