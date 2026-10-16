@@ -1,0 +1,27 @@
+MISMATCH tag=8 got=43977200 expected=43d48740
+MISMATCH tag=9 got=43ab63c0 expected=43b377c0
+MISMATCH tag=10 got=43e243c0 expected=43977e00
+MISMATCH tag=11 got=43a02500 expected=43b3a800
+MISMATCH tag=12 got=439c5080 expected=43d42d40
+MISMATCH tag=13 got=43d42d40 expected=439cbe00
+MISMATCH tag=14 got=43b30040 expected=43a090c0
+MISMATCH tag=15 got=43971080 expected=43e243c0
+MISMATCH tag=24 got=439bf180 expected=43bcbce0
+MISMATCH tag=25 got=43a02500 expected=43c7c100
+MISMATCH tag=26 got=43e15480 expected=4399a5c0
+MISMATCH tag=27 got=43aafe60 expected=43a4f200
+MISMATCH tag=28 got=43977200 expected=43f09640
+MISMATCH tag=29 got=43bc9100 expected=43a56080
+MISMATCH tag=30 got=43c74740 expected=43993f00
+MISMATCH tag=31 got=43993f00 expected=43c7c100
+MISMATCH tag=40 got=43a4ed80 expected=43aafe60
+MISMATCH tag=41 got=4399a5c0 expected=43e1a7c0
+MISMATCH tag=42 got=43c857c0 expected=43a090c0
+MISMATCH tag=43 got=43bc9100 expected=439bf180
+MISMATCH tag=44 got=4397d800 expected=43d3a380
+MISMATCH tag=45 got=43abe5e0 expected=43b3a800
+MISMATCH tag=46 got=43e15480 expected=4396b180
+MISMATCH tag=47 got=43a08a40 expected=43b30040
+[2122000] %Fatal: tb_hbm_sm_mtp_k2.sv:66: Assertion failed in tb_hbm_sm_mtp_k2: K2 mismatch errors=24
+%Error: rtl/test/hbm_accel/sm_mtp_slots/tb_hbm_sm_mtp_k2.sv:66: Verilog $stop
+Aborting...
