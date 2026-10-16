@@ -220,5 +220,11 @@
   "rtl/common/ot_secded_cols.svh": "e6f149761d76bd0464dfb63781259e5b9f0bbb423f0f11ac465869955d0759c0"
  },
  "review": "42 fetched receipts all source hashes rechecked against current frozen snapshot and local exact wrappers. Recursive include scan found lk_ep SECDED columns; refreshed exact source-admitted receipt includes its header. Pending SerDes consumes gf1024 header and must pass new recursive include guard when terminal. IDX/SerDes remain live; no duplicate synthesis.",
- "receipt_count": 42
+ "receipt_count": 42,
+ "liberty_signature_audit": {
+  "corners_checked": 84,
+  "rule": "Each exact actual wrapper cell name and complete port direction/width signature equals frozen contract, both TT/FF.",
+  "guard_commit": "4de105961",
+  "status": "PASS"
+ }
 }
