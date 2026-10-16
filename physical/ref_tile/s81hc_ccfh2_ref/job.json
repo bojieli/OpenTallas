@@ -1,14 +1,14 @@
 {
- "name": "s81hc_ccfh2_ref-v5-sspread-m5strip-3f81e581e",
+ "name": "s81hc_ccfh2_ref-v6-native-spine-COMMIT",
  "block": "ot_s81_hc_ccf",
  "ref_tile": true,
- "owner": "Claude:s81hc-1013",
- "purpose": "s81-suhc-hier-1011 comb HIER2 (CSPLIT=1 slab: HALF=1 RLY=2 RF=4 DW=6, the configuration of ctileh + crootr/crooty/cpin; full ctile retired 07:42 as textbook class 1, 1067 um single root): ot_s81_hc_ccf at the HIER2 parameters; reference tile flow; v4: macros 1 and 3 mirrored (MY) so the five 512-bit read buses leave the single macro column 3 west / 2 east, and an explicit channel-only N/S pin plan on M5+M3 (physical/s81_hc_pinplan/ccf.tcl, tools/s81_suhc/crr_pinplan.py ccf_plan): no pin above or below the column; each bit's N and S pins sit over the channel on the side of its macro pin, in slice bands of one order on both faces (v3 958724442 EARLY_FAIL_CONGESTION 10,473 -> 13,208 markers, all over / at the edges of the column x 100-300, none in the two ~115 um channels: PPL pins over the full faces on M5 and ~3,700 signals per horizontal cut against M5-only capacity over the macros); slot unchanged | v5 (fourth congestion failure; v4 cut the markers 13,208 -> 1,040 and moved them): every v4 marker lies at the S face, y 2-8 um, x 0-120 um = the W channel, V capacity 21 / usage 22-24 per gcell -- the 3 x 512 ch_fd output pins of the W channel at 13.8 /um with their out-hold chains directly behind them (the E channel at 12.4 /um and the N face at 16 /um of plain inputs have none; nothing at the macro column or the N face). Change: the S-face pin plan of each side also uses 47 um of the 30 um band under the macro column (W side x 2.2-160, 9.7 /um; E side x 250.4-408.2, 8.8 /um; N face unchanged; physical/s81_hc_pinplan/ccf.tcl from tools/s81_suhc/crr_pinplan.py ccf_plan), ~450 nets a side turn under the column edge against ~1,000 derated H tracks of the band; plus the 6.0 um M5 no-entry strip inside both vertical edges of the five SRAMs (physical/s81_hc_pinplan/ccf_sram_edge_strip.tcl). Outline, slot, macro plan and RTL unchanged.",
+ "owner": "Claude:S-ELEM-PQ/CCF",
+ "purpose": "v6 native (S-ELEM-PQ/CCF 2026-10-16, audit results/rtl/s81_hc_ccf_native_0030/native_audit_s81_hc_hrow_0030.json: R 539.1 / spread 171.2 / launch 408.2 ch_rst / capture 544.3 fv_i[2]). Measured on the v5 routed ODB: (1) clock = TritonCTS H-tree of 13-15 BUFx24 stages (fanout 1-2, 25-37 ps each, avg sink wire 479 um, 602 dummy loads) -> boundary 497..668 ps; CTS-only replays on the same placement: -distance_between_buffers 80/120 cut depth to 6-8 but leave boundary spread 187-233 ps; the balanced symmetric spine (clock_spine.tcl SYM, fan 16, merge 80, leaf 16 sinks / 40 um, SRAM clk pins own leaves) gives 622..652 ps over all 14,186 sinks (spread 30). Single W-mid entry on 410 x 542 um: the unpadded spine already spans 342..630 ps, so <=300 ps needs a second clock entry (die pin) -- not taken; 14,186 sinks < 15k. (2) capture fv_i[2] = one input feeding 24 distributed g_pop_keep copies through 8 buffers (435 ps): the current io_flop_at_pins anchors every capture flop of a multi-load input at its pin. (3) launch ch_rst = rsr[1] shared with the internal reset fan-out: pin_reg_split clones a dedicated launch flop. (4) recipe-3 pads HB2 instead of HB4 (in 117 -> ~60 ps). Pins = die-assigned v18 rectangles (physical/s81_die_pins/v18/ot_s81_hc_ccf.tcl, identical to the closed view); outline, macro plan, RTL and cycle counts unchanged.",
  "threads": 8,
  "peak_ram_gb": 48,
  "source": {
-  "branch": "claude/s81hc-1013",
-  "commit": "3f81e581e"
+  "branch": "claude/s81hc-ccf-native-0030",
+  "commit": "COMMIT"
  },
  "stages": {
   "bench": [
@@ -50,7 +50,7 @@
    "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
   },
   "route": {
-   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.01 OT_MM_FF_SDC='physical/ref_tile/s81hc_ccfh2_ref/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/s81hc_ccfh2_ref/kit.env {LABEL} {RUN}/routes",
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/s81hc_ccfh2_ref/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/s81hc_ccfh2_ref/kit.env {LABEL} {RUN}/routes",
    "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
    "logs": [
     "{RUN}/routes/{LABEL}/flow.log"
@@ -95,14 +95,22 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81hc_ccfh2_ref/s81hc_ccfh2_ref-v5-sspread-m5strip-3f81e581e"
+   "to": "results/rtl/ref_tile/s81hc_ccfh2_ref/s81hc_ccfh2_ref-v6-native-spine-COMMIT"
   }
  ],
  "cycles_added": 0,
  "route_hold_corners": "mm",
- "route_hold_margin_ns": 0.01,
+ "route_hold_margin_ns": 0.03,
  "route_corner": "TC",
  "notes": "generated by tools/ref_tile/ref_tile.py",
  "merge_target": null,
- "structural_change": "v5 (fourth congestion failure; v4 cut the markers 13,208 -> 1,040 and moved them): every v4 marker lies at the S face, y 2-8 um, x 0-120 um = the W channel, V capacity 21 / usage 22-24 per gcell -- the 3 x 512 ch_fd output pins of the W channel at 13.8 /um with their out-hold chains directly behind them (the E channel at 12.4 /um and the N face at 16 /um of plain inputs have none; nothing at the macro column or the N face). Change: the S-face pin plan of each side also uses 47 um of the 30 um band under the macro column (W side x 2.2-160, 9.7 /um; E side x 250.4-408.2, 8.8 /um; N face unchanged; physical/s81_hc_pinplan/ccf.tcl from tools/s81_suhc/crr_pinplan.py ccf_plan), ~450 nets a side turn under the column edge against ~1,000 derated H tracks of the band; plus the 6.0 um M5 no-entry strip inside both vertical edges of the five SRAMs (physical/s81_hc_pinplan/ccf_sram_edge_strip.tcl). Outline, slot, macro plan and RTL unchanged."
+ "structural_change": "v6 native (S-ELEM-PQ/CCF 2026-10-16, audit results/rtl/s81_hc_ccf_native_0030/native_audit_s81_hc_hrow_0030.json: R 539.1 / spread 171.2 / launch 408.2 ch_rst / capture 544.3 fv_i[2]). Measured on the v5 routed ODB: (1) clock = TritonCTS H-tree of 13-15 BUFx24 stages (fanout 1-2, 25-37 ps each, avg sink wire 479 um, 602 dummy loads) -> boundary 497..668 ps; CTS-only replays on the same placement: -distance_between_buffers 80/120 cut depth to 6-8 but leave boundary spread 187-233 ps; the balanced symmetric spine (clock_spine.tcl SYM, fan 16, merge 80, leaf 16 sinks / 40 um, SRAM clk pins own leaves) gives 622..652 ps over all 14,186 sinks (spread 30). Single W-mid entry on 410 x 542 um: the unpadded spine already spans 342..630 ps, so <=300 ps needs a second clock entry (die pin) -- not taken; 14,186 sinks < 15k. (2) capture fv_i[2] = one input feeding 24 distributed g_pop_keep copies through 8 buffers (435 ps): the current io_flop_at_pins anchors every capture flop of a multi-load input at its pin. (3) launch ch_rst = rsr[1] shared with the internal reset fan-out: pin_reg_split clones a dedicated launch flop. (4) recipe-3 pads HB2 instead of HB4 (in 117 -> ~60 ps). Pins = die-assigned v18 rectangles (physical/s81_die_pins/v18/ot_s81_hc_ccf.tcl, identical to the closed view); outline, macro plan, RTL and cycle counts unchanged.",
+ "reroute_reason": {
+  "kind": "pin_register",
+  "source": "results/rtl/s81_hc_ccf_native_0030/native_audit_s81_hc_hrow_0030.json",
+  "cell": "ot_s81_hc_ccf",
+  "fix": "balanced symmetric clock spine (boundary spread 171 -> ~30 ps) + every capture flop of fv_i[2] anchored at its pin + dedicated ch_rst launch flop (pin_reg_split) + HB2 pin pads; same RTL, pins and outline",
+  "launch_ps": 408.2,
+  "capture_ps": 544.3
+ }
 }

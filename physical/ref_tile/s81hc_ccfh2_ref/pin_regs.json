@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_s81_hc_ccf",
+ "enable": false,
+ "reason": "ot_s81_hc_ccf already registers every data input and every output directly at its port in RTL (fd_i->fd_p, n_y->y1, n_yacc->ya, fv_i->fv_p + the 24 kept pop copies; ch_fd/ch_fv/yfl/ch_rst are flop outputs, ch_rst cloned to its own launch flop by pin_reg_split). The recipe-3 wrapper would add a second, redundant stage on all 6,600 pins (+6.4k sinks -> >15k on one root) and +2 cycles on the HC centre chain whose lockstep padding (FP/RP) is fixed in cpad; the native fix is placement (current io_flop_at_pins anchors every capture flop of a multi-load input at its pin) + the clock spine. 0 cycles."
+}

@@ -120,6 +120,12 @@
    "util",
    "utilisation 34% outside 45%-60% (std 6553 + macro 66617 in core 218406 um2)",
    "resize the outline to util 0.50-0.55 (drop 'outline', set util)"
+  ],
+  [
+   "WARN",
+   "fill",
+   "fill 33% = (macros/children 66617 + std 6553) / outline 222502 um2 (pin-bound: N face carries 3,697 input pins (fd_i 1,128 + n_y 2,560 + fv_i 7 + n_yacc + yfl) and S face 2,924 outputs, channel-only (no pin over the 171 um macro column): 3,697 / 239 um = 15.5 pins/um on M3+M5 at the die-assigned v18 rectangles; the 410.4 um width is set by the pins, not the cells (v2 302.4 um: PPL-0111, 3,135 slots < 3,697). Outline unchanged from the closed v5 view and the die slot.)",
+   ""
   ]
  ],
  "referenced": [
@@ -158,6 +164,11 @@
   "physical/ref_tile/s81hc_ccfh2_ref/signoff.sdc",
   "physical/ref_tile/s81hc_ccfh2_ref/pdn.tcl",
   "physical/ref_tile/s81hc_ccfh2_ref/pre_cts.tcl",
+  "physical/ref_tile/s81hc_ccfh2_ref/post_cts.tcl",
+  "physical/ref_tile/s81hc_ccfh2_ref/post_grt.tcl",
+  "physical/ref_tile/s81hc_ccfh2_ref/pre_drt.tcl",
+  "physical/ref_tile/s81hc_ccfh2_ref/pre_fill.tcl",
+  "physical/ref_tile/s81hc_ccfh2_ref/post_fill.tcl",
   "physical/ref_tile/s81hc_ccfh2_ref/pre_grt.tcl",
   "physical/ref_tile/s81hc_ccfh2_ref/post_drt.tcl",
   "tools/ref_tile/ref_route.sh",
@@ -169,7 +180,9 @@
   "physical/qwen_die_masters/post_plain.tcl",
   "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
   "physical/common_flow/grt_macro_top_layer.tcl",
-  "physical/s81_hc_pinplan/ccf.tcl",
+  "physical/qwen_die_masters/sram_edge_guard.tcl",
+  "physical/common_flow/macro_edge_via_guard.tcl",
+  "physical/s81_die_pins/v18/ot_s81_hc_ccf.tcl",
   "physical/qwen_die_masters/io_flop_at_pins.tcl",
   "physical/qwen_die_masters/out_flop_release.tcl",
   "physical/dsrom_window_source/leaf_iohold.tcl",
@@ -178,6 +191,9 @@
   "physical/dsrom_window_source/leaf_inhold_release.tcl",
   "physical/ref_tile/s81hc_ccfh2_ref/pre_gpl.tcl",
   "physical/ref_tile/s81hc_ccfh2_ref/pre_dpl.tcl",
+  "physical/common_flow/pin_reg_split.tcl",
+  "physical/common_flow/clock_spine.tcl",
+  "physical/ref_tile/s81hc_ccfh2_ref/spine_ins.tcl",
   "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef",
   "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_ss.lib",
   "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_ff.lib",

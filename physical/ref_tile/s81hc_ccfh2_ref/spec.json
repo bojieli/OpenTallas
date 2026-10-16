@@ -107,16 +107,16 @@
   "pd": 0.5,
   "threads": 8,
   "peak_ram_gb": 48,
-  "hold_margin_ns": 0.01,
   "pin_v": "M3 M5",
+  "hold_margin_ns": 0.03,
   "macro_halo_um": 5.4
  },
  "job": {
   "benches_from": "tools/s81_suhc/hc_tile_benches_ccf.json",
-  "owner": "Claude:s81hc-1013",
-  "branch": "claude/s81hc-1013",
-  "tag": "v5-sspread-m5strip",
-  "purpose": "s81-suhc-hier-1011 comb HIER2 (CSPLIT=1 slab: HALF=1 RLY=2 RF=4 DW=6, the configuration of ctileh + crootr/crooty/cpin; full ctile retired 07:42 as textbook class 1, 1067 um single root): ot_s81_hc_ccf at the HIER2 parameters; reference tile flow; v4: macros 1 and 3 mirrored (MY) so the five 512-bit read buses leave the single macro column 3 west / 2 east, and an explicit channel-only N/S pin plan on M5+M3 (physical/s81_hc_pinplan/ccf.tcl, tools/s81_suhc/crr_pinplan.py ccf_plan): no pin above or below the column; each bit's N and S pins sit over the channel on the side of its macro pin, in slice bands of one order on both faces (v3 958724442 EARLY_FAIL_CONGESTION 10,473 -> 13,208 markers, all over / at the edges of the column x 100-300, none in the two ~115 um channels: PPL pins over the full faces on M5 and ~3,700 signals per horizontal cut against M5-only capacity over the macros); slot unchanged | v5 (fourth congestion failure; v4 cut the markers 13,208 -> 1,040 and moved them): every v4 marker lies at the S face, y 2-8 um, x 0-120 um = the W channel, V capacity 21 / usage 22-24 per gcell -- the 3 x 512 ch_fd output pins of the W channel at 13.8 /um with their out-hold chains directly behind them (the E channel at 12.4 /um and the N face at 16 /um of plain inputs have none; nothing at the macro column or the N face). Change: the S-face pin plan of each side also uses 47 um of the 30 um band under the macro column (W side x 2.2-160, 9.7 /um; E side x 250.4-408.2, 8.8 /um; N face unchanged; physical/s81_hc_pinplan/ccf.tcl from tools/s81_suhc/crr_pinplan.py ccf_plan), ~450 nets a side turn under the column edge against ~1,000 derated H tracks of the band; plus the 6.0 um M5 no-entry strip inside both vertical edges of the five SRAMs (physical/s81_hc_pinplan/ccf_sram_edge_strip.tcl). Outline, slot, macro plan and RTL unchanged.",
+  "owner": "Claude:S-ELEM-PQ/CCF",
+  "branch": "claude/s81hc-ccf-native-0030",
+  "tag": "v6-native-spine",
+  "purpose": "v6 native (S-ELEM-PQ/CCF 2026-10-16, audit results/rtl/s81_hc_ccf_native_0030/native_audit_s81_hc_hrow_0030.json: R 539.1 / spread 171.2 / launch 408.2 ch_rst / capture 544.3 fv_i[2]). Measured on the v5 routed ODB: (1) clock = TritonCTS H-tree of 13-15 BUFx24 stages (fanout 1-2, 25-37 ps each, avg sink wire 479 um, 602 dummy loads) -> boundary 497..668 ps; CTS-only replays on the same placement: -distance_between_buffers 80/120 cut depth to 6-8 but leave boundary spread 187-233 ps; the balanced symmetric spine (clock_spine.tcl SYM, fan 16, merge 80, leaf 16 sinks / 40 um, SRAM clk pins own leaves) gives 622..652 ps over all 14,186 sinks (spread 30). Single W-mid entry on 410 x 542 um: the unpadded spine already spans 342..630 ps, so <=300 ps needs a second clock entry (die pin) -- not taken; 14,186 sinks < 15k. (2) capture fv_i[2] = one input feeding 24 distributed g_pop_keep copies through 8 buffers (435 ps): the current io_flop_at_pins anchors every capture flop of a multi-load input at its pin. (3) launch ch_rst = rsr[1] shared with the internal reset fan-out: pin_reg_split clones a dedicated launch flop. (4) recipe-3 pads HB2 instead of HB4 (in 117 -> ~60 ps). Pins = die-assigned v18 rectangles (physical/s81_die_pins/v18/ot_s81_hc_ccf.tcl, identical to the closed view); outline, macro plan, RTL and cycle counts unchanged.",
   "views_to": "physical/ref_tile/s81hc_ccfh2_ref/views",
   "record_to": "results/rtl/ref_tile/s81hc_ccfh2_ref"
  },
@@ -137,14 +137,36 @@
  "layer_cap": "M6",
  "layer_cap_grant": "S81 contract v13 sp_hc_s/comb: cluster_child grant coordinator2026-10-12 11:40; same M6 as prior ccf, no cap increase",
  "orfs_vars": {
-  "SYNTH_KEEP_MODULES": "ot_s81_hc_ccf_keep_ff"
+  "SYNTH_KEEP_MODULES": "ot_s81_hc_ccf_keep_ff",
+  "OT_SPINE_SYM": 1,
+  "OT_SPINE_SYM_FAN": 16,
+  "OT_SPINE_SYM_MERGE": 80,
+  "OT_SPINE_LEAF_N": 16,
+  "OT_SPINE_BIN": 40,
+  "OT_SPINE_MACRO_LEAF": 1
  },
- "io_tcl": "physical/s81_hc_pinplan/ccf.tcl",
- "structural_change": "v5 (fourth congestion failure; v4 cut the markers 13,208 -> 1,040 and moved them): every v4 marker lies at the S face, y 2-8 um, x 0-120 um = the W channel, V capacity 21 / usage 22-24 per gcell -- the 3 x 512 ch_fd output pins of the W channel at 13.8 /um with their out-hold chains directly behind them (the E channel at 12.4 /um and the N face at 16 /um of plain inputs have none; nothing at the macro column or the N face). Change: the S-face pin plan of each side also uses 47 um of the 30 um band under the macro column (W side x 2.2-160, 9.7 /um; E side x 250.4-408.2, 8.8 /um; N face unchanged; physical/s81_hc_pinplan/ccf.tcl from tools/s81_suhc/crr_pinplan.py ccf_plan), ~450 nets a side turn under the column edge against ~1,000 derated H tracks of the band; plus the 6.0 um M5 no-entry strip inside both vertical edges of the five SRAMs (physical/s81_hc_pinplan/ccf_sram_edge_strip.tcl). Outline, slot, macro plan and RTL unchanged.",
- "recipe": 2,
+ "io_tcl": "physical/s81_die_pins/v18/ot_s81_hc_ccf.tcl",
+ "structural_change": "v6 native (S-ELEM-PQ/CCF 2026-10-16, audit results/rtl/s81_hc_ccf_native_0030/native_audit_s81_hc_hrow_0030.json: R 539.1 / spread 171.2 / launch 408.2 ch_rst / capture 544.3 fv_i[2]). Measured on the v5 routed ODB: (1) clock = TritonCTS H-tree of 13-15 BUFx24 stages (fanout 1-2, 25-37 ps each, avg sink wire 479 um, 602 dummy loads) -> boundary 497..668 ps; CTS-only replays on the same placement: -distance_between_buffers 80/120 cut depth to 6-8 but leave boundary spread 187-233 ps; the balanced symmetric spine (clock_spine.tcl SYM, fan 16, merge 80, leaf 16 sinks / 40 um, SRAM clk pins own leaves) gives 622..652 ps over all 14,186 sinks (spread 30). Single W-mid entry on 410 x 542 um: the unpadded spine already spans 342..630 ps, so <=300 ps needs a second clock entry (die pin) -- not taken; 14,186 sinks < 15k. (2) capture fv_i[2] = one input feeding 24 distributed g_pop_keep copies through 8 buffers (435 ps): the current io_flop_at_pins anchors every capture flop of a multi-load input at its pin. (3) launch ch_rst = rsr[1] shared with the internal reset fan-out: pin_reg_split clones a dedicated launch flop. (4) recipe-3 pads HB2 instead of HB4 (in 117 -> ~60 ps). Pins = die-assigned v18 rectangles (physical/s81_die_pins/v18/ot_s81_hc_ccf.tcl, identical to the closed view); outline, macro plan, RTL and cycle counts unchanged.",
+ "recipe": 3,
  "boundary_tcl": [
   "physical/s81_hc_pinplan/ccf_sram_edge_strip.tcl"
  ],
+ "clock": "spine",
+ "pin_regs": {
+  "enable": false,
+  "reason": "ot_s81_hc_ccf already registers every data input and every output directly at its port in RTL (fd_i->fd_p, n_y->y1, n_yacc->ya, fv_i->fv_p + the 24 kept pop copies; ch_fd/ch_fv/yfl/ch_rst are flop outputs, ch_rst cloned to its own launch flop by pin_reg_split). The recipe-3 wrapper would add a second, redundant stage on all 6,600 pins (+6.4k sinks -> >15k on one root) and +2 cycles on the HC centre chain whose lockstep padding (FP/RP) is fixed in cpad; the native fix is placement (current io_flop_at_pins anchors every capture flop of a multi-load input at its pin) + the clock spine. 0 cycles."
+ },
+ "reroute_reason": {
+  "kind": "pin_register",
+  "source": "results/rtl/s81_hc_ccf_native_0030/native_audit_s81_hc_hrow_0030.json",
+  "cell": "ot_s81_hc_ccf",
+  "fix": "balanced symmetric clock spine (boundary spread 171 -> ~30 ps) + every capture flop of fv_i[2] anchored at its pin + dedicated ch_rst launch flop (pin_reg_split) + HB2 pin pads; same RTL, pins and outline",
+  "launch_ps": 408.2,
+  "capture_ps": 544.3
+ },
+ "fill_reason": {
+  "pin_bound": "N face carries 3,697 input pins (fd_i 1,128 + n_y 2,560 + fv_i 7 + n_yacc + yfl) and S face 2,924 outputs, channel-only (no pin over the 171 um macro column): 3,697 / 239 um = 15.5 pins/um on M3+M5 at the die-assigned v18 rectangles; the 410.4 um width is set by the pins, not the cells (v2 302.4 um: PPL-0111, 3,135 slots < 3,697). Outline unchanged from the closed v5 view and the die slot."
+ },
  "children": [],
  "inter": [],
  "io_flop_at_pins": {
@@ -152,5 +174,10 @@
   "allow_none": true
  },
  "inhold": true,
- "outhold": true
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
 }
