@@ -105,14 +105,9 @@
  "structural_change": "2026-10-16 HC-COMB (S-ENGRAM+NORM helper): pr2shore-f8b71b8b8 route EARLY_FAIL_CONGESTION GRT-0116. Measured: 627 hot regions only in the NW/NE corners (y > 140 um): PPL ordered groups clumped w_fd / e_fd (1,128 + 8 each) into the top ~45 um of the W / E faces (~25 pins/um, gate floorplan image) next to their FIRM output hold stacks (9,560 of 16,000 hot-net refs w_fd/e_fd/ot_outhold). Fix = explicit even pin plan io_spread.tcl (tools/ref_tile/spread_face_pins.py: every face spread evenly, bus bits in order, W/E M4 2-track, N/S M3/M5, clocks sk and cck centred on their faces; S-ELEM-B PQ class) + OT_OUTHOLD_FREE=1 (Q-DVM xcst m5d, CLOSED + native PASS). Same RTL, outline 190.08x190.08 (S-DIE grant), pin faces, 0 cycles.",
  "no_bench_reason": "bit-exactness is gated on the wires-only wrapper ot_s81_hc_comb in the slab bench (tools/s81_suhc/hc_gate.py NG64 HIER=2 (and 1) m0 PASS + m1/m3 FAIL, NG256 HIER=1 m0 PASS; el1011-s81-suhc-hier-1011.log [hc-split]); the tile alone has no golden",
  "reroute_reason": {
-  "kind": "native_launch",
-  "source": "results/rtl/s81_pq_native_audit_1015/pq_0600/hc_cseq_v1.json",
-  "cell": "ot_s81_hc_cseq",
-  "closed_job": "s81hc_cseqh2_ref-v1-70eafa55c",
-  "launch_ps": 305.3,
-  "capture_ps": 141.6,
-  "launch_over": 88,
-  "fix": "even per-face pin plan (w_fd/e_fd were clumped into the top 45 um of W/E at ~25 pins/um next to FIRM output hold stacks) + OT_OUTHOLD_FREE=1 output stage; slot growth 190.08x190.08 GRANTED by S-DIE (results/physical/die_iter_1012/s81/grants/sdie_codex_hc3_slot_growth_1016.json)",
-  "receipt_commit": "c6b476cd1 (main)"
+  "kind": "slot_change",
+  "slot_change_request": "GRANTED by S-DIE 6e712a1ab, published main 3ee815e01: results/physical/die_iter_1012/s81/grants/sdie_codex_hc3_slot_growth_1016.json (ot_s81_hc_cseq 190.08x190.08, was 155.52x155.52 in closed s81hc_cseqh2_ref-v1-70eafa55c); leaf routing only; parent pins/cuts/clock/incident hops/adoption remain HELD.",
+  "why": "closed v1 view fails native launch (305.3 ps on 88 pins > 220; results/rtl/s81_pq_native_audit_1015/pq_0600/hc_cseq_v1.json) and its RTL is superseded (ordered POST dispatch deda9c6ca: 5 of 28 RTL files differ from 70eafa55c); recipe-3 re-kit needs the granted larger outline",
+  "fix": "even per-face pin plan (w_fd/e_fd were clumped into the top 45 um of W/E at ~25 pins/um next to FIRM output hold stacks) + OT_OUTHOLD_FREE=1 output stage; slot growth 190.08x190.08 GRANTED by S-DIE (results/physical/die_iter_1012/s81/grants/sdie_codex_hc3_slot_growth_1016.json)"
  }
 }
