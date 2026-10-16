@@ -28,6 +28,7 @@ PRESERVED={
   'dsfd_capt_x8_data_w_b.json':('2314b2b4d','split1016b ck/rst entry on S face'),
   'dsfd_capt_rly_64_EW_r.json':('596843a47','split1016r RSREG=1 reset pin register'),
   'dsfd_capt_cd_n.json':('fc877d660 / 7f35da146','split1016n native-capture dsfd_capt_cd'),
+  'dsfd_capt_cd_p.json':('S-VM-CAPT-CD2 1016','split1016p dsfd_capt_cd PINREG=1 (f_st pin registers, +1 ckv)'),
   'dsfd_capt_status_x43_t.json':('cd7c02a09 / 61d167710','DECISION B status x43 stream leaf (+ pin_regs opt-out)'),
   'dsfd_capt_status_x43_s.json':('cd7c02a09 / 61d167710','DECISION B status x43 serial leaf (+ pin_regs opt-out)'),
 }

@@ -4,6 +4,7 @@
 # tb_dsfd_capt_cd_eq.sv).  Two DUT views per seed: the simulation model (enable form) and -DSYNTHESIS (the ICG cell
 # through a behavioural latch+AND model, i.e. the gated-clock netlist structure).
 # usage (source root): tools/s81_ph/capcd_eq_bench.sh <out> "<seeds>" [defines...]
+#   define CAPCD_PINREG (S-VM-CAPT-CD2): DUT #(.PINREG(1)), reference fed f_st delayed exactly one ckv edge (+1 ckv)
 #   verdict: "CAPCD_BENCH PASS runs=<n>" when every (view, seed) run prints EQ_PASS, else "CAPCD_BENCH FAIL"
 set -u
 OUT=$1; SEEDS=$2; shift 2
