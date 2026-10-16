@@ -29,6 +29,10 @@ RES_WH = (777.6, 518.4)
 LANES_WH = (881.28, 1131.84)
 SU_WH = (3240.0, 3672.0)        # qfd_sp_su64_sfu: 64-lane component 4.84 mm2 children + reducer + glue (Codex 3434 x 2570 bbox)
 VM_WH = (4708.8, 2203.2)        # TRIMMED central VM (owner 08:20 PT 10-14: distributed x slices adopted; banks / SU ports / row reads only, M7 cap, no wall)
+# OT_SPLIT_VM_WH=W,H (Q-COMPUTE-DIE r2h, 00:30 10-16): the VM parent outline Q-VMWB adopted (paired-bank 4872 x 3239.36,
+# main b73b3e82c results/arch/qwen_vm_residual_1015/outline_0030.json); the router cut PASS (0.592) assumes it
+if os.environ.get('OT_SPLIT_VM_WH', '').strip():
+    VM_WH = tuple(float(z) for z in os.environ['OT_SPLIT_VM_WH'].split(','))
 CTLM_WH = (777.6, 1814.4)
 UP4_WH = (345.6, 388.8)
 CLKRX_WH = (412.488, 412.488)
