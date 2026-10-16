@@ -124,8 +124,12 @@ def surgery(v, m, compact_seq=False):
     # under it (still W of the PHY, inside its D2D bump band); the synchronised reset reaches clk_rx (die centre) as a
     # relayed synchronous word (rst_fwd_s), not as one 16 mm unrelayed async net.  pll_fwd stays a clock trunk (the
     # top segment of the die clock tree, built by die CTS).
+    # Q-NETLIST 10-16: the CLOSED hard leaf's outline (view 21.6 x 21.6) instead of the historical 54 x 32.4 frame
+    from qwen_split.closed_view import view_frame as _vf
+    _rsv = _vf('qfd_rstsync') if os.environ.get('OT_SPLIT_VIEW_FRAMES', '1') != '0' else None
+    _rswh = (_rsv[0], _rsv[1]) if _rsv else (RS_WH[0] - v.SHAVE, RS_WH[1] - v.SHAVE)
     rs = Inst('rs_bump', 'qfd_rstsync', v.dn(xc - 4.32 - RS_WH[0], v.GX), v.up(ad.y - RS_WH[1] / 2, v.GY),
-              RS_WH[0] - v.SHAVE, RS_WH[1] - v.SHAVE, 'R0', kind='reset_sync', region='io', domain='stream_1p2')
+              _rswh[0], _rswh[1], 'R0', kind='reset_sync', region='io', domain='stream_1p2')
     cb = Inst('ckb_rom', 'qfd_ckbump', v.dn(rs.x + (RS_WH[0] - 43.2) / 2, v.GX), v.dn(rs.y - 4.32 - 43.2, v.GY),
               43.2 - v.SHAVE, 43.2 - v.SHAVE, 'R0', kind='bump', region='io', domain='stream_1p2')
     insts += [ph, ad, ck, cb, rs]
@@ -395,6 +399,9 @@ def _wrap_masters(v, m):
         rsm.face('rso_d', 1, 'E', 'M4', rsm.h / 2, 1)          # PHY | d2d_rom seam (W end), rst_n pins
         rsm.face('rso_f', 1, 'N', 'M5', rsm.w / 2, 1)          # relayed to clk_rx
         rsm.area('ck', 1, rsm.w / 2, rsm.h / 2, 1)
+        from qwen_split.closed_view import view_frame as _vf, apply as _vapply
+        if os.environ.get('OT_SPLIT_VIEW_FRAMES', '1') != '0' and _vf('qfd_rstsync'):
+            _vapply(rsm, _vf('qfd_rstsync'))             # Q-NETLIST 10-16: the closed leaf's abstract outline + pins
         M['qfd_rstsync'] = rsm
         sq = M.get('qfd_sp_constants_sequencer')        # r22ko4: no sequencer reservation
         cmp_ = bool(SEQ_COMPACT and m.get('r22k', {}).get('seq_compact'))   # compact: the left half of the S face

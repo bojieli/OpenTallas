@@ -1,0 +1,23 @@
+{
+ "cell": "ot_qwen_tp8_pv_slice_t",
+ "view": "physical/ref_tile/qkd_pv_slice_rstpin_r5/views/ot_qwen_tp8_pv_slice_t",
+ "lib_cell": "ot_qwen_tp8_pv_slice_t",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 252.6,
+ "spread_ps": 26.1,
+ "outputs": 513,
+ "inputs": 312,
+ "launch_ps": 186.8,
+ "launch_pin": "ts[104]",
+ "capture_ps": 132.0,
+ "capture_pin": "pe2[11]",
+ "launch_over": 0,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pass": true,
+ "fail_why": ""
+}

@@ -1,0 +1,11 @@
+{
+ "date": "2026-10-16T02:40-07:00", "author": "Claude H-SU",
+ "candidate": "H-DIE 38fe8862a results/arch/hbm_die_v15/su_overflow_home_0200/homes.json: 950.4x626.4 um heavy-lane grid in the outer-corner void per quadrant",
+ "stages_from_H-DIE": {"G0_VM_pair": 12, "G1_VM_pair": 17, "G0_slice": 14, "G1_slice": 19, "reducer": 31, "VM_hub": 36},
+ "model": "tools/throughput/accepted_cost.py S2 schedule, fixed delta per SU.VOP record (static schedule waits for the far lane); delta per dependent phase = 2 x 19 (bank read + write-back to the G1 pgslice) + 31 (reducer) = 69 edges, counted 1:1 as cycles",
+ "results": {
+  "qwen_ar": {"records": 12, "delta69": {"added_cycles": 24909.0, "e2e_loss_pct": 1.925}, "delta207_3phase": {"added_cycles": 74727.0, "e2e_loss_pct": 5.561}},
+  "ds_ar": {"records": 1356, "delta69": {"added_cycles": 76114.8, "e2e_loss_pct": 11.659}, "delta207_3phase": {"added_cycles": 238396.8, "e2e_loss_pct": 29.248}}
+ },
+ "verdict": "REJECTED: ds_ar >= 11.7 % e2e breaks the 5 %/unit limit. Requested the H-DIE alternative: ~1 mm taller SU band (overflow ~2.04 mm2 after bank r12)."
+}
