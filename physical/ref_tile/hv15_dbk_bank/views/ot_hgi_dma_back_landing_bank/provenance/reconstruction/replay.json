@@ -1,0 +1,59 @@
+{
+  "cell": "ot_hgi_dma_back_landing_bank",
+  "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
+  "job": "hv15_dbk_bank-geo1-bda78a0ad",
+  "host": "ot-epyc4",
+  "run": "/srv/opentallas-scratch2/claude/closure-loop/hv15_dbk_bank-geo1-bda78a0ad",
+  "record_commit": "cb0485ed874358eff13cf724d4a858b560bf8c62",
+  "source_commit": "bda78a0adc617d0af8afa52407422fc31357772b",
+  "orfs_dir": "/srv/opentallas-scratch2/claude/closure-loop/hv15_dbk_bank-geo1-bda78a0ad/routes/hv15_dbk_bank_geo1_bda78a0ad/work/orfs",
+  "raw_lef_expected": "ba0324d25f09f7074a3afe8acc0b34c2bad1d66668445daee5f0e6895c0ea4da",
+  "image": "openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+  "published_hashes": {
+    "ot_hgi_dma_back_landing_bank.lef": "3cdab7979aa8f65ce3361c8d46c1837b005cc10f215364fa2d53bcb9de6e19ff",
+    "ot_hgi_dma_back_landing_bank_tt.lib": "8ebaf54c73da50a9da97a676a6ae8cc7c9e127943f4057c9ea3659081ce7c139",
+    "ot_hgi_dma_back_landing_bank_ff.lib": "3d9e572cd30cd3b1f45e7d598e68816d47c20b45cda8db6c54c08013d344e9a9",
+    "ot_hgi_dma_back_landing_bank_ss.lib": "94cafedd5a3e60b8adc7a2fffc68a745d1ca93960b6fc0f556993acf712725b9",
+    "abstract.json": "e51d0da0da3cfffe6faffc346f2ec4c8401e8c06e69b638ed81654881433d18e",
+    "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2",
+    "child_lint.json": "15a8340e975bf93e343f505de95a48b10a2684c9a7c2f958ec4a9db7f1952b37"
+  },
+  "macro_mounts": [
+    {
+      "relative_dir": "macro0",
+      "target": "/mv0",
+      "source_commit": "bda78a0ad",
+      "source_dir": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+      "hashes": {
+        "ot_sram_1r1w_128x256_m1_r2c2_ss.lib": "1b82c8597f1113bfb9e256cfab01630d79e2032c29ecae4a5aca1203f7efe7ff",
+        "ot_sram_1r1w_128x256_m1_r2c2.lef": "86f2608011f6d5903bea0aad4da167ff9d9bf120d23508d10b69db450a816eaf"
+      }
+    }
+  ],
+  "passed": true,
+  "raw_sha256": "ba0324d25f09f7074a3afe8acc0b34c2bad1d66668445daee5f0e6895c0ea4da",
+  "final_sha256": "3cdab7979aa8f65ce3361c8d46c1837b005cc10f215364fa2d53bcb9de6e19ff",
+  "helper_sha256": "c3cae85e3aa1a8da5374284fe57418b2230ceb208aa76eff4567c6993bbe0c05",
+  "environment": {
+    "OT_OBS_CLOSE": null,
+    "OT_OBS_CLOSE_UM": null
+  },
+  "environment_basis": "Reconstruction replay cleared both options; original process environment was not recorded. Exact published output hash is reproduced.",
+  "invariants": {
+    "macro_name_unchanged": true,
+    "outline_unchanged": true,
+    "signal_pin_names_unchanged": true,
+    "original_signal_pin_rectangles_retained": true,
+    "power_pin_rectangles_unchanged": true
+  },
+  "processor_summary": "pinstub: 3 OBS rects moved into 3 pins: clk, read_en, rst_n; pockets: 81 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)",
+  "published_files_verified": {
+    "ot_hgi_dma_back_landing_bank.lef": true,
+    "ot_hgi_dma_back_landing_bank_tt.lib": true,
+    "ot_hgi_dma_back_landing_bank_ff.lib": true,
+    "ot_hgi_dma_back_landing_bank_ss.lib": true,
+    "abstract.json": true,
+    "insertion.json": true,
+    "child_lint.json": true
+  }
+}
