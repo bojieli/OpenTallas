@@ -72,18 +72,19 @@
     },
     "candidate_die_owner": {
       "halfband_or_band": 3.4264166400000002,
-      "serializer": 1.5116544,
+      "serializer": 2.41864704,
       "upper": 0.14183424,
       "port": 15.318097919999998
     },
     "delta": {
       "halfband_or_band": 0.43401277440000063,
-      "serializer": 0.30242419027199996,
+      "serializer": 1.209416830272,
       "upper": 0.08864640000000001,
       "port": 0.0
     },
-    "delta_total": 0.8250833646720004,
-    "excludes": "new status collector, routing channels, actual standard cells/packing/clock distribution"
+    "delta_total": 1.732076004671999,
+    "excludes": "new status collector, routing channels, actual standard cells/packing/clock distribution",
+    "serializer_caveat": "777.6x518.4 is the NEW conservative production 24-bank halftrain candidate from Q-COMPUTE-DIE and Q-B2-JOIN, superseding diagnostic777.6x324; actual mapped packing/clock qualification pending"
   },
   "timing": {
     "actual_allocator_b2": null,

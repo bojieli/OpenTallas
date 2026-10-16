@@ -67,15 +67,15 @@
     }
   },
   "upper": {
-    "master": "qfd_band_upper_b2_l2",
-    "source": "rtl/qwen_split/qfd_band_upper_b2_l2.sv",
+    "master": "qfd_band_upper_b2_l2_s4",
+    "source": "rtl/qwen_split/qfd_band_upper_b2_l2_s4.sv",
     "count": 8,
     "inputs": {
       "pw": 384,
       "pw_v": 6,
       "lf": 6,
-      "sel_e": 13,
-      "tv_e": 13
+      "sel_e": 2,
+      "tv_e": 2
     },
     "outputs": {
       "tt_ty": 192,
@@ -92,7 +92,8 @@
       "RPIN": 1
     },
     "outline": "candidate86.4x205.2 perroot; no inherited views",
-    "qualification": "Clock-root structural split; measured sink/CTS and physical gates still required"
+    "qualification": "Distinct compact4 source264a2d5cf, full16 exact+return-valid negative gate E4oth-ubuntu-84441-1792168069 running. Separate source-specific physical kit localgatePASS, actual synth/CTS pending.",
+    "selector_bits": "sel_e[0]/[1] = global10/11; tv_e[0]/[1] = global10/11; no extra stages"
   },
   "serializer": {
     "master": "qfd_res_ser_half_b2",
@@ -121,7 +122,7 @@
     "six actual train serializer rb -> VM NB6 PAR_RB1; native PAR3 calendar allows max3 active/cycle; source by qwen_b2_join",
     "tt_ctlm tc duplicated to W/E, half am routed separately; controller source pending"
   ],
-  "costs": "No actual allocator price yet. Existing 0bits/64stages and0.3..0.6mm2 are geometric estimates only.",
+  "costs": "Actual source FF/SRAM counts and candidate rectangle accounting in fullshape_cost.json; actual wholegraph allocator price still pending. Historical0bits/64stages and0.3..0.6mm2 are unqualified estimates.",
   "status_collector": {
     "master": "qfd_b2_word_status",
     "source": "rtl/qwen_split/qfd_b2_word_status.sv",
@@ -142,5 +143,44 @@
     "halfband": "qfd_sp_halfband_lanes",
     "upper": "qfd_band_upper_b2",
     "scope": "4 upper leaves: component proof passed with LC transport3+LNK before DLY1; superseded by primary8xNL2 for clock-root safety"
+  },
+  "historical_legacy_selector_upper": {
+    "master": "qfd_band_upper_b2_l2",
+    "source": "rtl/qwen_split/qfd_band_upper_b2_l2.sv",
+    "count": 8,
+    "inputs": {
+      "pw": 384,
+      "pw_v": 6,
+      "lf": 6,
+      "sel_e": 13,
+      "tv_e": 13
+    },
+    "outputs": {
+      "tt_ty": 192,
+      "tt_use": 1,
+      "tt_v": 1,
+      "fault": 1
+    },
+    "clock_entries": "clk",
+    "parameters": {
+      "NL": 2,
+      "NB": 6,
+      "TCUT": 6,
+      "LG": 12,
+      "RPIN": 1
+    },
+    "outline": "candidate86.4x205.2 perroot; no inherited views",
+    "qualification": "Full16 positive and dropped-return-valid negative PASS; mapped8507DFF. Declaration26 selectorbits only4 consumed. Replaced primary source ABI by compact4 under new formal grant."
+  },
+  "production_train_candidate": {
+    "master": "qfd_res_train_half_b2 (six source-specific HB wrappers by Q-B2-JOIN)",
+    "count": 6,
+    "outline_um": [
+      777.6,
+      518.4
+    ],
+    "banks": 24,
+    "clock_roots": 25,
+    "qualification": "NEW conservative rectangle from Q-COMPUTE-DIE and Q-B2-JOIN; actual source synth/packing/CTS pending; diagnostic777.6x324 superseded"
   }
 }
