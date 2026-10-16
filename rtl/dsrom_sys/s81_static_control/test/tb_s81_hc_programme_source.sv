@@ -7,8 +7,8 @@ module tb_s81_hc_programme_source;
 `ifndef HC_SOURCE_MUT
 `define HC_SOURCE_MUT 0
 `endif
- ot_s81_hc_programme_source #(.MUT(`HC_SOURCE_MUT))dut(.stream_ck(sc),.stream_rst_n(rn),.serial_ck(dc),.serial_rst_n(rn),
- .command_v(cv),.command_d(cd),.hc_v(hv),.hc_d(hd),.hc_done_age(da),.hc_ss_age(sa),.hc_scalar_age(ra),.hc_y_tag(yt),.hc_post_ages(pa),.fault(f));
+ ot_s81_hc_programme_source #(.MUT(`HC_SOURCE_MUT),.RAW_ROM_CLOCK(1))dut(.stream_ck(sc),.stream_rst_n(rn),.serial_ck(dc),.serial_rst_n(rn),
+ .rom_ck(sc),.command_v(cv),.command_d(cd),.hc_v(hv),.hc_d(hd),.hc_done_age(da),.hc_ss_age(sa),.hc_scalar_age(ra),.hc_y_tag(yt),.hc_post_ages(pa),.fault(f));
  integer st=-1,dt=-1,next=0,seen=0,j,mode=0;
  function automatic[31:0] val(input integer op,field);
   val=32'h81c00000+op*32+field;

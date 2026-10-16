@@ -9,6 +9,9 @@ from pathlib import Path
 p=argparse.ArgumentParser();p.add_argument('--out',type=Path,required=True);a=p.parse_args();root=Path(__file__).resolve().parents[2];out=a.out.resolve();out.mkdir(parents=True,exist_ok=True)
 sources=['rtl/dsrom_sys/s81_static_control/ot_s81_fixed_mailbox.sv','rtl/dsrom_sys/s81_static_control/ot_s81_hc_programme_source.sv','rtl/dsrom_sys/s81_static_control/ot_s81_hc_programme_endpoint.sv','rtl/dsrom_sys/s81_suhc/static/ot_s81_hc_cpin_calendar.sv','rtl/dsrom_sys/s81_suhc/static/ot_s81_hc_programme_cpin.sv']
 macro='physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8.v'
+macro_views=[str(p.relative_to(root))for p in sorted((root/macro).parent.glob('*'))if p.suffix in ('.v','.lef','.lib')]
+size=re.search(r'SIZE ([0-9.]+) BY ([0-9.]+)',(root/Path(macro).with_suffix('.lef')).read_text())
+macro_wh=tuple(map(float,size.groups()))
 raw=(root/macro).read_text();header=raw[raw.index('module '):raw.index(');')+2].replace('parameter string','parameter')
 (out/'rom_area_only.v').write_text('(* blackbox *)\n'+header+'\nendmodule\n')
 transformed=[]
@@ -30,12 +33,12 @@ for lib in libs:
  for name,body in re.findall(r'cell\s*\(\s*(\S+)\s*\)\s*\{(.*?)(?=\n  cell|\Z)',lib.read_text(),re.S):
   v=re.search(r'\barea\s*:\s*([\d.]+)',body)
   if v:areas[name]=float(v[1])
-counts=collections.Counter(c['type']for c in m['cells'].values());ff=collections.Counter();unknown=[]
+counts=collections.Counter(c['type']for c in m['cells'].values()if c['type']!='$scopeinfo');ff=collections.Counter();unknown=[]
 roots={p['bits'][0]:n for n,p in m['ports'].items()if n in ('stream_ck','sk')}
 for n,c in m['cells'].items():
  if 'DFF' in c['type']:
   ck=c['connections'].get('CLK',c['connections'].get('CK',[]));ff[roots.get(ck[0],str(ck))]+=1
- elif c['type']not in areas and 'ot_rom_4096x72_m8'not in c['type']:unknown.append(c['type'])
-rec=dict(top=top,params={'COMMAND_POST_AGES':1},standard_cell_area_um2=sum(areas.get(k,0)*v for k,v in counts.items()),mapped_ff_per_clock=dict(ff),macro_count=sum(v for k,v in counts.items()if 'ot_rom_4096x72_m8'in k),macro_area_um2=38.016*62.910,external_ports={n:dict(width=len(v['bits']),direction=v['direction'])for n,v in m['ports'].items()},unknown_cells=unknown,source_sha256={s:hashlib.sha256((root/s).read_bytes()).hexdigest()for s in sources+[macro]},scope='Mapped body/pin sizing only; no timing/clock/tree/place/route or native completeness proof')
+ elif c['type']!='$scopeinfo' and c['type']not in areas and 'ot_rom_4096x72_m8'not in c['type']:unknown.append(c['type'])
+rec=dict(top=top,params={'COMMAND_POST_AGES':1},standard_cell_area_um2=sum(areas.get(k,0)*v for k,v in counts.items()),mapped_ff_per_clock=dict(ff),macro_count=sum(v for k,v in counts.items()if 'ot_rom_4096x72_m8'in k),macro_area_um2=macro_wh[0]*macro_wh[1],macro_outline_um=macro_wh,library_sha256={p.name:hashlib.sha256(p.read_bytes()).hexdigest()for p in libs},external_ports={n:dict(width=len(v['bits']),direction=v['direction'])for n,v in m['ports'].items()},unknown_cells=unknown,source_sha256={s:hashlib.sha256((root/s).read_bytes()).hexdigest()for s in sources+macro_views},scope='Mapped body/pin sizing only; no timing/clock/tree/place/route or native completeness proof')
 (out/'receipt.json').write_text(json.dumps(rec,indent=2)+'\n');print(json.dumps({k:v for k,v in rec.items()if k not in ('external_ports','source_sha256')},indent=2))
 if unknown:raise SystemExit(2)

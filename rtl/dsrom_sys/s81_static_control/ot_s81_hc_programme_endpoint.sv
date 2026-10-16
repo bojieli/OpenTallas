@@ -7,8 +7,8 @@
 // Done return uses the existing actual alternating-register mailbox. For a
 // completion pin observed on serial edge S, stream done rises on floor(4*S/3)+3
 // under the declared common epoch; this phase-specific age must be compiled.
-module ot_s81_hc_programme_endpoint #(parameter string IMAGE="")(
- input wire stream_ck,stream_rst_n,serial_ck,serial_rst_n,
+module ot_s81_hc_programme_endpoint #(parameter string IMAGE="",parameter integer RAW_ROM_CLOCK=0)(
+ input wire stream_ck,stream_rst_n,serial_ck,serial_rst_n,rom_ck,
  input wire[84:0]c2,
  output wire[84:0]hc_command,
  output wire[31:0]hc_done_age,hc_ss_age,hc_scalar_age,hc_y_tag,
@@ -17,9 +17,9 @@ module ot_s81_hc_programme_endpoint #(parameter string IMAGE="")(
  output wire[8:0]stream_done,
  output wire fault
 );
- ot_s81_hc_programme_source #(.IMAGE(IMAGE))u_source(
+ ot_s81_hc_programme_source #(.IMAGE(IMAGE),.RAW_ROM_CLOCK(RAW_ROM_CLOCK))u_source(
   .stream_ck(stream_ck),.stream_rst_n(stream_rst_n),.serial_ck(serial_ck),.serial_rst_n(serial_rst_n),
-  .command_v(c2[84]),.command_d(c2[83:0]),.hc_v(hc_command[84]),.hc_d(hc_command[83:0]),
+  .rom_ck(rom_ck),.command_v(c2[84]),.command_d(c2[83:0]),.hc_v(hc_command[84]),.hc_d(hc_command[83:0]),
   .hc_done_age(hc_done_age),.hc_ss_age(hc_ss_age),.hc_scalar_age(hc_scalar_age),.hc_y_tag(hc_y_tag),
   .hc_post_ages(hc_post_ages),.fault(fault));
  ot_s81_fixed_mailbox #(.W(8))u_return(

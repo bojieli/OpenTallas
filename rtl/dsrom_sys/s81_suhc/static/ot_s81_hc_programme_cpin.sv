@@ -5,7 +5,7 @@ module ot_s81_hc_programme_cpin #(
     parameter string IMAGE = "",
     parameter integer NG = 256, NCOL = 3, GS = 8, S_RD = 2, TH = 8
 ) (
-    input wire stream_ck,stream_rst_n,sk,srs,
+    input wire stream_ck,stream_rst_n,sk,srs,rom_ck,
     input wire[84:0]c2,
     output wire[8:0]stream_done,
     output wire programme_fault,
@@ -59,9 +59,9 @@ module ot_s81_hc_programme_cpin #(
     wire[31:0]command_y_tag,command_done_age,command_ss_age,command_scalar_age;
     wire[639:0]command_post_ages;
     initial if(COMMAND_POST_AGES!=1)$fatal(1,"combined source requires explicit per-command POST ages");
-    ot_s81_hc_programme_endpoint #(.IMAGE(IMAGE))u_programme(
+    ot_s81_hc_programme_endpoint #(.IMAGE(IMAGE),.RAW_ROM_CLOCK(1))u_programme(
       .stream_ck(stream_ck),.stream_rst_n(stream_rst_n),.serial_ck(sk),.serial_rst_n(srs),
-      .c2(c2),.hc_command(hc_command),.hc_done_age(command_done_age),.hc_ss_age(command_ss_age),
+      .rom_ck(rom_ck),.c2(c2),.hc_command(hc_command),.hc_done_age(command_done_age),.hc_ss_age(command_ss_age),
       .hc_scalar_age(command_scalar_age),.hc_y_tag(command_y_tag),.hc_post_ages(command_post_ages),
       .serial_done(serial_done),.stream_done(stream_done),.fault(programme_fault));
     ot_s81_hc_cpin_calendar #(.NG(NG),.NCOL(NCOL),.GS(GS),.S_RD(S_RD),.TH(TH),.COMMAND_POST_AGES(1))u_cpin(

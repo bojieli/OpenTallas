@@ -12,7 +12,7 @@ for decl in re.findall(r'\b(?:input|output)\s+(?:wire|reg)\s*(?:\[[^\]]+\]\s*)?(
  ports += [n.strip().strip(',') for n in decl.split(',') if n.strip()]
 header=header.replace('module ot_s81_hc_cpin_calendar','module ot_s81_hc_programme_cpin')
 header=header.replace('parameter integer COMMAND_POST_AGES = 0,','parameter integer COMMAND_POST_AGES = 1,\n    parameter string IMAGE = "",')
-header=header.replace('input  wire                cck, crs, sk, srs,','input wire stream_ck,stream_rst_n,sk,srs,\n    input wire[84:0]c2,\n    output wire[8:0]stream_done,\n    output wire programme_fault,')
+header=header.replace('input  wire                cck, crs, sk, srs,','input wire stream_ck,stream_rst_n,sk,srs,rom_ck,\n    input wire[84:0]c2,\n    output wire[8:0]stream_done,\n    output wire programme_fault,')
 header=header.replace('    input wire [639:0] command_post_ages,\n','')
 header=header.replace('y_tag,command_y_tag,command_done_age,command_ss_age,command_scalar_age','y_tag')
 header=header.replace('    input  wire                c_cmd_v,\n','').replace('    input  wire [83:0]         c_cmd_d,\n','')
@@ -31,9 +31,9 @@ wires='''
     wire[31:0]command_y_tag,command_done_age,command_ss_age,command_scalar_age;
     wire[639:0]command_post_ages;
     initial if(COMMAND_POST_AGES!=1)$fatal(1,"combined source requires explicit per-command POST ages");
-    ot_s81_hc_programme_endpoint #(.IMAGE(IMAGE))u_programme(
+    ot_s81_hc_programme_endpoint #(.IMAGE(IMAGE),.RAW_ROM_CLOCK(1))u_programme(
       .stream_ck(stream_ck),.stream_rst_n(stream_rst_n),.serial_ck(sk),.serial_rst_n(srs),
-      .c2(c2),.hc_command(hc_command),.hc_done_age(command_done_age),.hc_ss_age(command_ss_age),
+      .rom_ck(rom_ck),.c2(c2),.hc_command(hc_command),.hc_done_age(command_done_age),.hc_ss_age(command_ss_age),
       .hc_scalar_age(command_scalar_age),.hc_y_tag(command_y_tag),.hc_post_ages(command_post_ages),
       .serial_done(serial_done),.stream_done(stream_done),.fault(programme_fault));
 '''

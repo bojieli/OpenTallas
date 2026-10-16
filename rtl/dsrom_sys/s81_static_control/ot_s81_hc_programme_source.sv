@@ -11,9 +11,9 @@
 // Serial phase2 captures once, at P+56/3 stream periods = P+14 serial periods.
 // Exact phase/clock arrival and pin placement must be measured before adoption.
 module ot_s81_hc_programme_source #(
- parameter string IMAGE="", parameter integer MUT=0
+ parameter string IMAGE="", parameter integer MUT=0, RAW_ROM_CLOCK=0
 )(
- input wire stream_ck,stream_rst_n,serial_ck,serial_rst_n,
+ input wire stream_ck,stream_rst_n,serial_ck,serial_rst_n,rom_ck,
  input wire command_v,input wire[83:0]command_d,
  output reg hc_v,output reg[83:0]hc_d,
  output reg[31:0]hc_done_age,hc_ss_age,hc_scalar_age,hc_y_tag,
@@ -23,10 +23,11 @@ module ot_s81_hc_programme_source #(
  reg[1:0]sp,dp;reg active,lease;reg[4:0]age;
  reg[11:0]base,rom_addr;wire[71:0]rom_word;
  reg[791:0]assembled;reg[83:0]saved_command;
+ wire macro_ck = RAW_ROM_CLOCK!=0 ? rom_ck : stream_ck;
  reg stream_fault,serial_fault;
  assign fault=stream_fault|serial_fault;
  ot_rom_4096x72_m8 #(.VIAMAP(IMAGE),.INSTANCE("hc_programme"))u_rom(
-  .clk(stream_ck),.ce_in(1'b1),.addr_in(rom_addr),.rd_out(rom_word));
+  .clk(macro_ck),.ce_in(1'b1),.addr_in(rom_addr),.rd_out(rom_word));
  always @(posedge stream_ck or negedge stream_rst_n)begin
   if(!stream_rst_n)begin
    sp<=0;active<=0;lease<=0;age<=0;base<=0;rom_addr<=0;
