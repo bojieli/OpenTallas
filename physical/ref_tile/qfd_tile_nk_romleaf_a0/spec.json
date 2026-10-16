@@ -425,8 +425,8 @@
     "pass_witness": "results/arch/qwen_romleaf_1552/bench/parent_nk_positive.log"
    },
    {
-    "name": "parent_native_1",
-    "cmd": "bash tools/qwen_romleaf/parent_nk_bench.sh {RUN}/bench/parent_native 1",
+    "name": "parent_native_leaf_clock_4",
+    "cmd": "bash tools/qwen_romleaf/parent_nk_bench.sh {RUN}/bench/parent_native 4",
     "expect": "fail",
     "threads": 8,
     "peak_ram_gb": 16,
