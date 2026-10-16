@@ -125,7 +125,7 @@ module ot_hbm_svc_pc_ctrl_leaf #(
         .rr_en(2'b0),.rr_addr(14'b0),.cr_en(2'b0),.cr_sel(16'b0));
     ot_hbm_r14_stream_pc #(.ENABLE(1),.PC(P),.REF_MODE(1),.WR_EN(1),.AQ_RD(1),.WQ(32),
         .REF_PHASE((PHASE+P*118/32)%118)) controller(
-        .clk(clk),.lrst_n(lrst_n),.desc_v(state==DESC),.desc_r(dr),.desc_row(active_row),.desc_n(11'd0),
+        .clk(clk),.rst_n(lrst_n),.desc_v(state==DESC),.desc_r(dr),.desc_row(active_row),.desc_n(11'd0),
         .go(1'b1),.next_posted(1'b0),.row_v(r_v),.row_prio(),.row_gnt(1'b1),
         .row_op(r_op),.row_bank(r_bank),.row_row(r_row),
         // desc_n=0 uses the actual access queue only. AQ reads never
