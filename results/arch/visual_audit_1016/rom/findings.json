@@ -1754,8 +1754,8 @@
     },
     "2": {
      "id": "S81H-08",
-     "outcome": "refuted",
-     "evidence": "Clock part refuted by A/B on the same RTL: r3 (clock at the SW corner, outhb3) CLOSED TT +55.11 / FF +8.41 / SS -150.7, and r3c (clock at W mid-face) CLOSED TT +53.07 / FF +5.25 / SS -216.9. Moving the clock toward the centre made FF and SS slightly WORSE. Both closed because of the output hold pads (r2 FF -10.52 / arg2 -28.72). The i_sel W pin wall is unchanged (676 pins on M4 at 5.6/um), and the W red flop column and S red row are still visible, but neither costs closure now.",
+     "outcome": "confirmed-partial",
+     "evidence": "Clock part refuted by A/B on the same RTL: r3 (clock at the SW corner, outhb3) CLOSED TT +55.11 / FF +8.41 / SS -150.7, and r3c (clock at W mid-face) CLOSED TT +53.07 / FF +5.25 / SS -216.9. Moving the clock toward the centre made FF and SS slightly WORSE. Both closed because of the output hold pads (r2 FF -10.52 / arg2 -28.72). The i_sel W pin wall is unchanged (676 pins on M4 at 5.6/um), and the W red flop column and S red row are still visible, but neither costs closure now. | 02:30 S-VM: r3c (W-centre clock) SELECTED on native clock: insertion R 173.7 -> 158.1 ps, spread 38.0 -> 31.1 ps vs r3 corner clock; FF 8.41 -> 5.25 (hold closed by output pads, not the clock). Density image LOOKED: mild W i_sel wall remains. Clock part confirmed on native metric, not on FF.",
      "before": {
       "r2_ff_ps": -10.52,
       "r2_arg2_ff_ps": -28.72
@@ -1771,7 +1771,8 @@
        "/tmp/visrom/r2/img/s81_S81H-08_field4_r3c_floorplan.png",
        "/tmp/visrom/r2/img/s81_S81H-08_field4_r3c_density.png"
       ]
-     }
+     },
+     "image_r2b": "img_r2/S81H-08__field4_r3c_selected_density.png"
     }
    }
   },
@@ -3194,7 +3195,8 @@
    "fix": "Before freezing: move ~4-6k bits from the S/N faces to E (E has 2.8x less load than S) or widen the VM band by one gcell row, to bring the worst share to <=0.55 (the rule range is 0.55-0.60). Any later VM addition (PQ producer, MIX4 engine 10) pushes the current cut over 0.60.",
    "severity": 2,
    "images_committed": [],
-   "images_local": []
+   "images_local": [],
+   "owner_ack": "S-VM 02:30: noted; E face (6,987 bits) is the relief lever in the parent kit."
   },
   {
    "id": "S81H-14",
@@ -3222,7 +3224,8 @@
    "fix": "Register vm_fault/x43f/own in the core domain and hand them to the serial domain through a static-schedule capture, or declare e_q in the core domain. Replace e_d[512*l0 +: 512] with decoded constant-index slices. This is an RTL fix; no layout is possible until it lands.",
    "severity": 1,
    "images_committed": [],
-   "images_local": []
+   "images_local": [],
+   "owner_ack": "S-VM 02:30: confirmed real (OT_MULTI_ROOT refusal; e_q samples x43f, vm_fault, x34f from core domain); structural fix needed, not resubmitted."
   }
  ],
  "no_image": [
@@ -3419,19 +3422,19 @@
   "date": "2026-10-16",
   "scored": {
    "confirmed": 5,
-   "refuted": 3,
+   "refuted": 2,
    "open": 43,
-   "retired": 2,
-   "confirmed-partial": 3
+   "confirmed-partial": 4,
+   "retired": 2
   },
   "hit_rate": {
-   "hits_confirmed_incl_partial": 8,
-   "refuted": 3,
+   "hits_confirmed_incl_partial": 9,
+   "refuted": 2,
    "decided": 11,
-   "hit_rate": 0.727,
+   "hit_rate": 0.818,
    "open": 43,
    "retired": 2,
-   "note": "refuted: QC-03 gearbox E face (r13 routed overflow 0, no hot wall; M6 impossible, M5 cap), S81H-08 field4 clock move (r3 corner FF +8.41 vs r3c W-centre +5.25), S81H-13 bank128_e timing (bke1 TT +343/FF +27.5). Owner-refuted parts of open findings: D-QC-01 3W/3E port split (cut 1.096), D-QC-02 reset fan-out is a relay-skip artefact (code-verified; full-relay r2h1/r2h2 pending)."
+   "note": "refuted: QC-03 gearbox E face (r13 routed overflow 0, no hot wall; M6 impossible, M5 cap), S81H-13 bank128_e timing (bke1 TT +343/FF +27.5). Owner-refuted parts of open findings: D-QC-01 3W/3E port split (cut 1.096), D-QC-02 reset fan-out is a relay-skip artefact (code-verified; full-relay r2h1/r2h2 pending). S81H-08 moved to partial 02:30 (native clock R 173.7->158.1, spread 38.0->31.1)."
   },
   "new_findings": 4,
   "reaudited": [
