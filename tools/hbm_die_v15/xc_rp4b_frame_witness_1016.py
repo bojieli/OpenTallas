@@ -3,7 +3,7 @@
 
 The single-row full-SM composition is a lower-bound candidate, not source-adopted.
 """
-import hashlib,json
+import hashlib,json,subprocess
 from pathlib import Path
 ROOT=Path(__file__).resolve().parents[2]
 def overlap(a,b):
@@ -26,8 +26,20 @@ def main():
             for k in range(8):
                 b=p[f'sm_{q}{k}'];assert b['w']==7200 and b['h']==1800
                 globals.append(dict(candidate=candidate,instance=f'xc_{q}{k}',destination=f'sm_{q}{k}',rect=dict(x=b['x']+xc['x'],y=b['y']+xc['y'],w=xc['w'],h=xc['h']),orientation_scope='R0 planning parent frame only; source transformation not adopted'))
+    logical_source='rtl/hbm_accel/sm/attn/ot_hbm_accel_smh_attn.sv'
+    logical_raw=subprocess.check_output(['git','-C',str(ROOT),'show','a89a10d1f:'+logical_source])
+    mapping=[dict(candidate_index=k,logical_column=k//2,logical_row=k%2,source_instance=f'g_c[{k//2}].g_p[{k%2}].u_t',physical_x=parents[k]['x']) for k in range(16)]
+    roof_total=7200*(1800-1434.24)
+    front_obstructed=front['w']*(front['h']-1434.24)
+    xc_obstructed=xc['w']*xc['h']
+    roof=dict(roof_base_y_um=1434.24,total_mm2=roof_total/1e6,front_obstructed_mm2=front_obstructed/1e6,xc_obstructed_mm2=xc_obstructed/1e6,conditional_free_mm2=(roof_total-front_obstructed-xc_obstructed)/1e6,
+              segments=[dict(x_um=[0,3421.44],free_height_um=365.76),dict(x_um=[3421.44,3767.04],free_height_um=34.56),dict(x_um=[3767.04,3788.64],free_height_um=365.76),dict(x_um=[3788.64,4013.28],free_height_um=128.16),dict(x_um=[4013.28,7200],free_height_um=365.76)],
+              connected_scope='Adjacent band may borrow lower-SM roof from its north side only after actual source-connected parent OBS/PG proof; centralfront and XC reduce the roof locally.',
+              physically_qualified_usable_mm2=None,programme_status='476 local candidate macros remain UNPLACED; free roof is not a programme grant')
     out=dict(schema='opentallas.hbm.xc_rp4b_frame.v1',qualification='CONDITIONAL_SINGLE_ROW_LOWER_BOUND_NOT_ADOPTED',
-             source_manifest=str(source),source_manifest_sha256=hashlib.sha256(raw).hexdigest(),parents=parents,front=front,xc=xc,
+             source_manifest=str(source),source_manifest_sha256=hashlib.sha256(raw).hexdigest(),parents=parents,front=front,xc=xc,roof=roof,
+             logical_source=logical_source,logical_source_ref='a89a10d1f',logical_source_sha256=hashlib.sha256(logical_raw).hexdigest(),logical_shape=[8,2],logical_candidate_mapping=mapping,
+             logical_mapping_scope='Enumeration only; actual source eight-by-two neighbor links, pins, clocks and relays are not rebound. Same-row column neighbors are855.36um apart at candidate centers; p0-to-p1 neighbors427.68um apart.',
              actual_child_count=len(children),child_rects=children,xc_overlap_hits=hits,body_clearance_um=21.6,front_clearance_um=21.6,roof_clearance_um=128.16,
              die_candidate_homes=globals,open=['actual eight-by-two source connected parent geometry','all incident links and relays/calendar','XC actual routed ETM/native view','parent clock/pins/layer/PG and native gate','programme476/SKV/collective homes unaffected and unplaced'])
     d=ROOT/'results/arch/hbm_die_v15/xc_rp4b_frame_1016';d.mkdir(exist_ok=True);(d/'witness.json').write_text(json.dumps(out,indent=1)+'\n')
@@ -43,7 +55,7 @@ def main():
     for b,color in [(front,'#d8ead2'),(xc,'#f4a64c')]:
         ax.add_patch(Rectangle((b['x'],b['y']),b['w'],b['h'],facecolor=color,edgecolor='black'))
         ax.text(b['x']+b['w']/2,b['y']+b['h']/2,b['name'],fontsize=7,rotation=90 if b==front else 0,ha='center',va='center')
-    ax.set(xlim=(0,7200),ylim=(0,1800),aspect='equal',xlabel='um',ylabel='um',title='Conditional SM7200x1800 carve:16 actual RP4b18-child layouts /central front /native XC224.64x216\nXC y1455.84 leaves21.6um above body1434.24 and128.16um below roof; full source-connected SM remains OPEN')
+    ax.set(xlim=(0,7200),ylim=(0,1800),aspect='equal',xlabel='um',ylabel='um',title='Conditional SM7200x1800 carve:16 actual RP4b18-child layouts /central front /candidate XC224.64x216\nXC y1455.84 leaves21.6um above body1434.24 and128.16um below roof; full source-connected SM remains OPEN')
     fig.tight_layout();fig.savefig(d/'witness.png',dpi=160);plt.close(fig)
     print(json.dumps(dict(xc_overlap_hits=hits,actual_child_count=len(children),global_homes=len(globals),qualification=out['qualification'])))
 if __name__=='__main__':main()

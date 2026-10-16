@@ -51,3 +51,25 @@ python3 tools/hbm_die_v15/rf_centre_routes.py results/arch/hbm_die_v15/core4_sfu
 python3 tools/hbm_die_v15/rf_centre_allocate.py results/arch/hbm_die_v15/core4_sfu2_wide
 python3 tools/hbm_die_v15/sfu_barrier_cut_1016.py --plan results/arch/hbm_die_v15/core4_sfu2_wide --out results/arch/hbm_die_v15/core4_sfu2_wide/sfu_barrier_cuts.json
 ```
+
+Source-pinned R23 station placement attempt:
+`python3 tools/hbm_die_v15/sfu_lg_face_windows_1016.py` assigns all4,448 core
+LG bits to four distinct partial N-face windows (utilization0.559233), matching
+the actual local_rq/local_wq/local_rr/local_w_done ABI and peer ports. It keeps
+all port base vectors on one face. Whole-core other ports, native endpoint
+views/clock roots and PG legality remain open; these are proposals.
+`python3 tools/hbm_die_v15/sfu_split48_footprints_1016.py` places the actual
+13×21.6-square leaf shapes in each of736 stations, source419e476e9/physical
+scalar14-clock ABId78d342fe. Three-column/five-row banks use distinct actual ABI escape centres, not a
+shared core-centre proxy. Group3 return uses five-column/three-row banks and
+moves turn stages19/20 together by86.4µm along the route. Independently staggered
+turns and2.16µm-snapped footprints now place all9,568 leaf shapes with zero
+rectangle conflicts, including against576 RF footprints and enlarged720-square
+SUCX windows. The former139/70-conflict attempts are superseded by this concrete
+escape and station-shape repair. All interior EW envelopes pass with43.2µm
+pin allowance plus4.32µm snap allowance and explicit lateral-stub cost. Worst envelope is
+414.55425µm against415.662µm native EW reach, only1.10775µm (~0.842ps)
+planning margin. This thin estimate is not routed timing closure. Actual
+per-bit obstacle-aware routes, clocks and endpoint views remain mandatory.
+The736 station reset leaves (15FF each) are still unplaced/unqualified.
+This proves only leaf footprint feasibility, not complete station qualification.

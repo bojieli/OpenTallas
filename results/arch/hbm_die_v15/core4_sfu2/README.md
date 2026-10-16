@@ -102,3 +102,13 @@ this bottleneck. Actual station footprints must follow a structural channel or
 distributed-SFU successor rather than being forced into this failing route plane.
 See sfu_barrier_cuts.json and the personally inspected sfu_barrier_cuts.png;
 `python3 tools/hbm_die_v15/sfu_barrier_cut_1016.py` reproduces them.
+
+The full-frame obstruction assumption is also tested against the explicit RP4b
+carve. Borrowing the adjacent lower SM roof yields a conditional 625.76 µm
+channel at this cut and utilization0.3041 without growing the780mm² outline.
+The roof is365.76µm high away from obstructions,34.56µm over the centralfront
+and128.16µm over XC. Per SM,2.633472mm² roof minus0.11446272mm² front and
+0.04852224mm² XC leaves2.47048704mm² geometrically free. Actual usable area
+is unqualified until parent OBS/PG, the eight-by-two connected graph, peer pins
+and clocks are bound; this is not an adopted higher-metal overroute exemption.
+See sfu_barrier_roof_cuts.json/png and ../xc_rp4b_frame_1016/witness.json.
