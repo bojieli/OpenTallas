@@ -10,19 +10,17 @@
   "rst"
  ],
  "outline": {
-  "w": 388.8,
+  "w": 194.4,
   "h": 34.56
  },
  "pins": {
   "S": [
-   "i_sw"
+   "i_sw",
+   "ck",
+   "rst"
   ],
   "N": [
    "o_lanes"
-  ],
-  "W": [
-   "ck",
-   "rst"
   ]
  },
  "layer_cap": "M5",
@@ -44,7 +42,7 @@
  "job": {
   "owner": "Claude:S-ELEM-PQ",
   "branch": "claude/s81-seltxq-1016",
-  "tag": "x3",
+  "tag": "x4",
   "purpose": "Harden dsfd_selt_xq (absent-quarter synthesiser, the open leaf of dsfd_bk_selector_c1 on the 1-stack S81 die); closure-first, removes the bk_selector_c1 stand-in once the parent binds it.",
   "benches": [
    {
@@ -83,12 +81,24 @@
  },
  "pin_ranges": {
   "o_lanes": [
-   10.8,
-   378.0
+   5.4,
+   189.0
   ],
   "i_sw": [
-   10.8,
-   102.6
+   5.4,
+   51.84
+  ],
+  "ck": [
+   95.04,
+   96.12
+  ],
+  "rst": [
+   97.2,
+   98.28
   ]
+ },
+ "reroute_reason": {
+  "kind": "slot_change",
+  "slot_change_request": "S-ELEM-PQ 2026-10-16: x3 view CLOSED TT +296.86/FF +18.12 but native FAIL (results/rtl/s81_seltxq_1016/x3-native.json: launch 228.7 > 220 on 14 east-end o_lanes pins, spread 80.2; ck entered on W of a 388.8-um tile). x4: 194.4x34.56, ck/rst at S centre, same RTL; tile not yet bound by S-DIE."
  }
 }
