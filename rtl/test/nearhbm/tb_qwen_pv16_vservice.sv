@@ -6,7 +6,7 @@
 // the controller's v_consumer_order (ascending ordinal; the rows t < T are exactly an ordinal prefix) and is only
 // ever POPPED AT ITS HEAD at a compiled slot -- no random access by t.  The compiled schedule uses only the pair's
 // static request slots and the cycle parity (sel = q[0]); tags are carried for checking only.
-// MODE: steady | legacy_order (rings filled in the old t[5:3] ordinal: must FAIL).  VMUT: qkd_pv16_vport MUT.
+// MODE: steady | legacy_order (rings streamed in raw sector order, not v_consumer_order: must FAIL).  VMUT: qkd_pv16_vport MUT.
 module tb_qwen_pv16_vservice;
  parameter integer PAIR=0, MUT=0, VMUT=0, RL=19, LEAF_RESET_PIN=0, CTL_RESET_PIN=0;
  reg clk=0,rst_n=0;always #1 clk=~clk;
@@ -34,7 +34,9 @@ module tb_qwen_pv16_vservice;
  integer cyc=0,scyc=-1,ocyc=-1,q0=-1,errors=0,words=0,nreq=0,pops=0,i,k,n,t,s,o,gq,qq,ln,ord;reg[7:0] seen;
  always @(posedge clk)cyc<=cyc+1;
  function automatic integer ordinal(input integer t, input integer legacy);
-  ordinal=legacy ? (((t>>9)&15)<<4)|(((t>>6)&1)<<3)|((t>>3)&7) : (((t>>9)&15)<<4)|(((t>>6)&1)<<3)|((t>>1)&7);
+  // legacy: the sector j itself, {t[6],t[12:9],low3} (half-major) -- a valid bijection read WITHOUT the controller's
+  // v_consumer_order: the stream order the pair cannot consume (must FAIL)
+  ordinal=legacy ? (((t>>6)&1)<<7)|(((t>>9)&15)<<3)|((t>>1)&7) : (((t>>9)&15)<<4)|(((t>>6)&1)<<3)|((t>>1)&7);
  endfunction
  initial begin
   if(!$value$plusargs("VEC=%s",vec))$fatal(1,"+VEC");
