@@ -1,5 +1,5 @@
 {
- "name": "hbm_sfucore_split-k2-COMMIT",
+ "name": "hbm_sfucore_split-k3-COMMIT",
  "block": "ot_hgi_sfu_core_split",
  "ref_tile": true,
  "owner": "Claude:H-SU/core-kit",
@@ -8,7 +8,18 @@
  "peak_ram_gb": 96,
  "source": {
   "branch": "claude/hsu-corekit-0700",
-  "commit": "COMMIT"
+  "commit": "COMMIT",
+  "extra_paths": [
+   "results/arch/hbm_native_1013/sfu_native_quarter",
+   "results/rtl/hbm_hc_sfu_static_1015/qswiglu",
+   "rtl/test/hbm_accel/generic",
+   "rtl/hbm_accel/generic/vm/static",
+   "physical/asap7_memory_macros",
+   "rtl/hbm_accel/generic/peers",
+   "rtl/hdc",
+   "physical/ref_tile/sfu_lane_ring3_rt/src",
+   "tools/hbm_static"
+  ]
  },
  "stages": {
   "bench": [
@@ -97,7 +108,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hbm_sfucore_split/hbm_sfucore_split-k2-COMMIT"
+   "to": "results/rtl/ref_tile/hbm_sfucore_split/hbm_sfucore_split-k3-COMMIT"
   }
  ],
  "cycles_added": 0,

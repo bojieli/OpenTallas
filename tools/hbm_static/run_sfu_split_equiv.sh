@@ -6,7 +6,10 @@ mkdir -p "$OUT"
 mapfile -t sources < results/arch/hbm_native_1013/sfu_native_quarter/r2_sources.txt
 manifest=results/arch/hbm_native_1013/sfu_native_quarter/closed_ae5899467.sha256
 frozen="$OUT/frozen"
-[ -d "$frozen" ] || while read -r digest path;do mkdir -p "$frozen/$(dirname "$path")";git show "ae5899467:physical/ref_tile/sfu_lane_ring3_rt/src/$path" > "$frozen/$path";done < "$manifest"
+# the closed ae5899467 lane sources are committed at physical/ref_tile/sfu_lane_ring3_rt/src (all 23 manifest hashes match);
+# copy them from the tree (closure-loop bench exports are not git repos), hash-checked below; git show only as fallback
+lane_src=physical/ref_tile/sfu_lane_ring3_rt/src
+[ -d "$frozen" ] || while read -r digest path;do mkdir -p "$frozen/$(dirname "$path")";if [ -f "$lane_src/$path" ];then cp "$lane_src/$path" "$frozen/$path";else git show "ae5899467:$lane_src/$path" > "$frozen/$path";fi;done < "$manifest"
 frozen=$(realpath "$frozen")
 (cd "$frozen" && sha256sum -c --quiet "$OLDPWD/$manifest")
 declare -A closed_paths
