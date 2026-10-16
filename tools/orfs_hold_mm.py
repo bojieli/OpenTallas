@@ -2,7 +2,8 @@
 """FLOW-HOLD (2026-10-07): patch a DISPOSABLE ORFS flow container's load.tcl / util.tcl so that, when the ORFS config
 exports OT_HOLD_MM=1, every stage loads a multi-mode session (scene WC = SS setup, scene BC = FF hold, each under its own
 constraints) and repair_timing_helper repairs SS setup and FF hold together (tools/orfs_hold_mm.tcl).  Without
-OT_HOLD_MM=1 the patched scripts behave exactly as the originals.  Applied like tools/orfs_allcorner_spef.py: inside a new
+OT_HOLD_MM=1 the multi-mode changes are inert. Detailed placement always receives ordinary final legalization after
+DPO/mirroring and before its unchanged placement check. Applied like tools/orfs_allcorner_spef.py: inside a new
 --rm container only; images, work dirs and evidence are never modified.
    orfs_hold_mm.py <ORFS scripts dir> [<helper tcl, default /src/tools/orfs_hold_mm.tcl>]"""
 import hashlib
