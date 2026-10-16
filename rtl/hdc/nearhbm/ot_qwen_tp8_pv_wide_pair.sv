@@ -123,23 +123,47 @@ module ot_qwen_tp8_pv_join_t #(parameter integer MUT=0, J_LAT=7)(
  wire[511:0] tb[0:7];
  genvar g;
  generate for(g=0;g<8;g=g+1)begin:g_t assign tb[g]=t_r[512*g+:512]; end endgenerate
- reg jrun;reg[4:0] jage;reg[511:0] xr,yr,ja,jb;reg jissue;
+ reg jrun;reg[4:0] jage;reg[511:0] xr,yr;wire[511:0] ja,jb;
  wire[511:0] jy;wire[15:0] jv;wire[31:0] jerr;
+ // Operand-select slot, decoded ONE edge ahead from the next (jrun, jage) and registered once PER LANE (kept copies):
+ // the shared jage decode drove all 1,024 operand-mux bits (3,299 loads, gate 21:06); each copy now drives one lane's
+ // 64 mux bits + its adder issue. Slot codes: 1..4 = L5 pairs, 5 = (xr,jy) at J_LAT+1 / J_LAT+3, 6 = (yr,jy) at 2J_LAT+3.
+ wire nrun=go_r?1'b1:(jrun&&jage!=5'(J_OUT));
+ wire[4:0] nage=go_r?5'd0:(jrun?jage+5'd1:jage);
+ reg[2:0] nsel;
  always @*begin
-  ja=0;jb=0;jissue=0;
-  if(jrun)case(jage)
-   5'd0:begin jissue=1;ja=tb[0];jb=(MUT==1)?tb[2]:tb[1];end
-   5'd1:begin jissue=1;ja=(MUT==1)?tb[1]:tb[2];jb=tb[3];end
-   5'd2:begin jissue=1;ja=tb[4];jb=tb[5];end
-   5'd3:begin jissue=1;ja=tb[6];jb=tb[7];end
-   5'(J_LAT+1):begin jissue=1;ja=xr;jb=jy;end
-   5'(J_LAT+3):begin jissue=1;ja=xr;jb=jy;end
-   5'(2*J_LAT+3):begin jissue=1;ja=yr;jb=jy;end
+  nsel=3'd0;
+  if(nrun)case(nage)
+   5'd0:nsel=3'd1;
+   5'd1:nsel=3'd2;
+   5'd2:nsel=3'd3;
+   5'd3:nsel=3'd4;
+   5'(J_LAT+1):nsel=3'd5;
+   5'(J_LAT+3):nsel=3'd5;
+   5'(2*J_LAT+3):nsel=3'd6;
    default:;
   endcase
  end
+ wire[15:0] jissue;
  generate for(g=0;g<16;g=g+1)begin:g_join
-  ot_hdc_fp32_add_lat #(.LAT(J_LAT),.DRST(0)) u_add(.clk(clk),.rst_n(rst_n),.valid_in(jissue),
+  (* keep = "true", dont_touch = "true" *) reg[2:0] js;
+  always @(posedge clk or negedge rst_n)if(!rst_n)js<=3'd0;else js<=nsel;
+  assign jissue[g]=js!=3'd0;
+  reg[31:0] la,lb;
+  always @*begin
+   la=32'd0;lb=32'd0;
+   case(js)
+    3'd1:begin la=tb[0][32*g+:32];lb=(MUT==1)?tb[2][32*g+:32]:tb[1][32*g+:32];end
+    3'd2:begin la=(MUT==1)?tb[1][32*g+:32]:tb[2][32*g+:32];lb=tb[3][32*g+:32];end
+    3'd3:begin la=tb[4][32*g+:32];lb=tb[5][32*g+:32];end
+    3'd4:begin la=tb[6][32*g+:32];lb=tb[7][32*g+:32];end
+    3'd5:begin la=xr[32*g+:32];lb=jy[32*g+:32];end
+    3'd6:begin la=yr[32*g+:32];lb=jy[32*g+:32];end
+    default:;
+   endcase
+  end
+  assign ja[32*g+:32]=la;assign jb[32*g+:32]=lb;
+  ot_hdc_fp32_add_lat #(.LAT(J_LAT),.DRST(0)) u_add(.clk(clk),.rst_n(rst_n),.valid_in(jissue[g]),
    .a(ja[32*g+:32]),.b(jb[32*g+:32]),.y(jy[32*g+:32]),.err(jerr[2*g+:2]),.valid_out(jv[g]));
  end endgenerate
  wire jexp=jrun&&(jage==J_LAT||jage==J_LAT+1||jage==J_LAT+2||jage==J_LAT+3||jage==2*J_LAT+1||jage==2*J_LAT+3||jage==J_OUT);
