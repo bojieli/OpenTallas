@@ -319,7 +319,7 @@ module ot_qkd_static_kv_timing #(
     assign wr_ok = legal_write && (PROFILE == 1 || reserved_write_col);
     // ---- row: refresh > forced PRE > ACT ahead (sets k, k+1) > PRE finished -----------
     function automatic [4:0] act_bank(input integer c, input [2:0] kk);
-      act_bank = {(c >= 4) ? kk + 3'd1 : kk, 2'(c & 3)};
+      act_bank = {(c >= 4) ? (context_active ? (kk ^ 3'd1) : kk + 3'd1) : kk, 2'(c & 3)};
     endfunction
     // candidates (no dynamic indexing on the decision path): per-bank ACT eligibility, the 4-bank
     // groups of sets k and k+1, lowest-first one-hot selection; PRE of finished banks, lowest first
