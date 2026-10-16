@@ -18,7 +18,7 @@ module tb_qwen_d2d_program;
     wire integer qs = P_QS;
     wire integer rs = P_RS + (lay == 0 ? P_RDELTA : 0);
     wire integer re = P_RE + (lay == 0 ? P_RDELTA : 0);
-    localparam integer ks = P_QS + 33, ss = P_QS + 38;
+    localparam integer ks = P_QS + 33, ss = P_SS;
     reg [31:0] layer_starts [0:35];
     parameter integer MUT = 0, PR = 1, TXL = 6, PHY = 5, P = 110, NLAY = 36, BAD_LAYER = -1;
     parameter CALDIR = "cal";

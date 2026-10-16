@@ -6,7 +6,7 @@ W=$(cd "$(dirname "$0")/../.." && pwd); R=$(cd "$W/.." && pwd)
 TXL=${TXL:-6}; PHY=${PHY:-5}
 mkdir -p "$OUT"
 CTXL=$TXL; [ "$MUT" = 4 ] && CTXL=$((TXL-1))
-python3 "$R/tools/qwen_split/d2d_link_calendar.py" --out "$OUT/cal" --txl "$CTXL" --phy "$PHY" --profile program --host-stages 0 --link-handoff "$R/results/arch/qwen_split_compute_1014/res_train_decision_1015/decision.json" $([ "${PR:-1}" = 1 ] && echo --pinreg) > "$OUT/calendar.log"
+python3 "$R/tools/qwen_split/d2d_link_calendar.py" --out "$OUT/cal" --txl "$CTXL" --phy "$PHY" --profile program --txd-c 1,2,1,2 --txd-k 1,2,1,1 --host-stages 0 --link-handoff "$R/results/arch/qwen_split_compute_1014/res_train_decision_1015/decision.json" $([ "${PR:-1}" = 1 ] && echo --pinreg) > "$OUT/calendar.log"
 python3 "$R/tools/qwen_split/d2d_program_params.py" "$OUT/cal/calendar.json" "$OUT/cal"
 SRC=("$W/lib/ot_rst_pipe.sv" "$W/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv" "$W/qwen_sys/split_20261014/ot_qwen_static_slot_link.sv"
  "$W/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv" "$W/qwen_sys/split_20261014/qkd_native_attention_record.sv"
