@@ -1,0 +1,152 @@
+{
+ "name": "hgi_topk_heap_rt_c",
+ "top": "ot_hgi_topk_heap_tile",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/generic_20261009/ot_hgi_idx_topk_heap.sv",
+  "rtl/lib/ot_rst_relay.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 259.2,
+  "h": 259.2
+ },
+ "pg_layer": "M6",
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "inst": "*g_lv?6?*",
+   "at": [
+    22.464,
+    148.32
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "inst": "*g_lv?7?*",
+   "at": [
+    138.24,
+    148.32
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "inst": "*g_lv?8?*",
+   "at": [
+    138.24,
+    86.4
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "inst": "*g_lv?9?*",
+   "at": [
+    22.464,
+    86.4
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2",
+   "inst": "*g_lv?10?*",
+   "at": [
+    22.464,
+    23.76
+   ]
+  }
+ ],
+ "pins": {
+  "N": [
+   "clk",
+   "rst_n",
+   "k",
+   "op_v",
+   "op_ext",
+   "op_x",
+   "op_cr",
+   "ext_v",
+   "ext_d",
+   "root_key",
+   "clr_go",
+   "idle"
+  ]
+ },
+ "refglob": "*",
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 48,
+  "hold_margin_ns": 0.01
+ },
+ "job": {
+  "owner": "Claude:el1011-heapb",
+  "branch": "claude/el1011-heapb",
+  "tag": "w8s",
+  "purpose": "el1011-heapb TRACK-B heap tile ot_hgi_topk_heap_tile (textbook 1+2 fix of rt_b: 16,063 flops one root, u_h.a_p[4][0] 3,674 / g_lv[6] wa_q 3,462 loads): level 6 -> 5th 128x256 SRAM (FFD 8, ~12.4k flops), flop levels 2-5 with registered one-hot read selects replicated per 54-b lane + per-word-lane write enables (no added stage, exact), pair select 2 kept copies; macros snake L6..L10; 259.2x259.2 PD 0.5, pins N face as rt_b",
+  "benches": [
+   {
+    "name": "heap_iw8w8_short_exact",
+    "cmd": "bash tools/hgi_topk_heap_bench.sh {RUN}/bench/short -DIW=8 -DHW=8 -DHUBC -DSHORT",
+    "expect": "pass",
+    "pass_regex": "^HGI_TOPK_HEAP PASS",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "timeout_s": 7200
+   },
+   {
+    "name": "heap_iw8w8_full_exact",
+    "cmd": "bash tools/hgi_topk_heap_bench.sh {RUN}/bench/full -DIW=8 -DHW=8 -DHUBC",
+    "expect": "pass",
+    "pass_regex": "^HGI_TOPK_HEAP PASS \\(16 cases\\)",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "timeout_s": 7200
+   },
+   {
+    "name": "heap_bypass_mutant",
+    "cmd": "bash tools/hgi_topk_heap_bench.sh {RUN}/bench/mbyp -DIW=8 -DHW=8 -DHUBC -DSHORT -DOT_TOPK_HEAP_MUT_BYP",
+    "expect": "fail",
+    "fail_regex": "HGI_TOPK_HEAP FAIL errors",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "timeout_s": 7200
+   },
+   {
+    "name": "heap_clear_mutant",
+    "cmd": "bash tools/hgi_topk_heap_bench.sh {RUN}/bench/mclr -DIW=8 -DHW=8 -DHUBC -DSHORT -DOT_TOPK_HEAP_MUT_CLR",
+    "expect": "fail",
+    "fail_regex": "HGI_TOPK_HEAP FAIL errors",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "timeout_s": 7200
+   }
+  ],
+  "extra_paths": [
+   "tools/hgi_topk_heap_bench.sh",
+   "rtl/test/hbm_generic_20261009",
+   "rtl/hbm_accel/generic_20261009",
+   "physical/asap7_memory_macros"
+  ],
+  "views_to": "physical/ref_tile/hgi_topk_heap_rt_c/views",
+  "record_to": "results/rtl/ref_tile/hgi_topk_heap_rt_c"
+ },
+ "params": {},
+ "children": [],
+ "inter": []
+}

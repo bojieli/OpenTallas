@@ -1,0 +1,140 @@
+{
+ "name": "hgi_topk_heap_rt_c-w8s-COMMIT",
+ "block": "ot_hgi_topk_heap_tile",
+ "ref_tile": true,
+ "owner": "Claude:el1011-heapb",
+ "purpose": "el1011-heapb TRACK-B heap tile ot_hgi_topk_heap_tile (textbook 1+2 fix of rt_b: 16,063 flops one root, u_h.a_p[4][0] 3,674 / g_lv[6] wa_q 3,462 loads): level 6 -> 5th 128x256 SRAM (FFD 8, ~12.4k flops), flop levels 2-5 with registered one-hot read selects replicated per 54-b lane + per-word-lane write enables (no added stage, exact), pair select 2 kept copies; macros snake L6..L10; 259.2x259.2 PD 0.5, pins N face as rt_b",
+ "threads": 16,
+ "peak_ram_gb": 48,
+ "source": {
+  "branch": "claude/el1011-heapb",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "tools/hgi_topk_heap_bench.sh",
+   "rtl/test/hbm_generic_20261009",
+   "rtl/hbm_accel/generic_20261009",
+   "physical/asap7_memory_macros"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN --top-module ot_hgi_topk_heap_tile rtl/hbm_accel/generic_20261009/ot_hgi_idx_topk_heap.sv rtl/lib/ot_rst_relay.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2_bb.v physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "heap_iw8w8_short_exact",
+    "cmd": "bash tools/hgi_topk_heap_bench.sh {RUN}/bench/short -DIW=8 -DHW=8 -DHUBC -DSHORT",
+    "expect": "pass",
+    "pass_regex": "^HGI_TOPK_HEAP PASS",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "timeout_s": 7200
+   },
+   {
+    "name": "heap_iw8w8_full_exact",
+    "cmd": "bash tools/hgi_topk_heap_bench.sh {RUN}/bench/full -DIW=8 -DHW=8 -DHUBC",
+    "expect": "pass",
+    "pass_regex": "^HGI_TOPK_HEAP PASS \\(16 cases\\)",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "timeout_s": 7200
+   },
+   {
+    "name": "heap_bypass_mutant",
+    "cmd": "bash tools/hgi_topk_heap_bench.sh {RUN}/bench/mbyp -DIW=8 -DHW=8 -DHUBC -DSHORT -DOT_TOPK_HEAP_MUT_BYP",
+    "expect": "fail",
+    "fail_regex": "HGI_TOPK_HEAP FAIL errors",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "timeout_s": 7200
+   },
+   {
+    "name": "heap_clear_mutant",
+    "cmd": "bash tools/hgi_topk_heap_bench.sh {RUN}/bench/mclr -DIW=8 -DHW=8 -DHUBC -DSHORT -DOT_TOPK_HEAP_MUT_CLR",
+    "expect": "fail",
+    "fail_regex": "HGI_TOPK_HEAP FAIL errors",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "timeout_s": 7200
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.01 OT_MM_FF_SDC='physical/ref_tile/hgi_topk_heap_rt_c/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/hgi_topk_heap_rt_c/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 16,
+   "peak_ram_gb": 48
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/hgi_topk_heap_rt_c --out {RUN}/record/views/ot_hgi_topk_heap_tile --macro-view physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2 --macro-view physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/hgi_topk_heap_rt_c/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_256x256_m2_r2c2"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/hgi_topk_heap_rt_c/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/hgi_topk_heap_rt_c/hgi_topk_heap_rt_c-w8s-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.01,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null
+}

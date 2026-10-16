@@ -48,7 +48,7 @@ endmodule
 // el1011-hbm-idx 10-11: WREG=1 registers the write port (ce / address / mask / data flops next to the macro, write one edge
 // after the B stage): the macro's wd_in / w_mask_in / w_addr_in see flop -> pin only (the w8 route had B-stage compare ->
 // select -> wd_in in one cycle across the block).  The heap's last-write register (byp) covers the extra edge (see heap).
-module ot_hgi_topk_lvl #(parameter integer DEPTH=1, parameter integer AW=1, parameter integer WREG=0) (
+module ot_hgi_topk_lvl #(parameter integer DEPTH=1, parameter integer AW=1, parameter integer WREG=0, parameter integer FFD=16) (
  input wire clk,
  input wire r_ce, input wire [AW-1:0] r_a, output wire [215:0] rd,
  input wire w_ce_i, input wire [AW-1:0] w_a_i, input wire [1:0] w_s, input wire [53:0] w_d, input wire w_all
@@ -63,7 +63,7 @@ module ot_hgi_topk_lvl #(parameter integer DEPTH=1, parameter integer AW=1, para
  end else begin : g_wc
   assign w_ce = w_ce_i; assign w_a = w_a_i; assign wmask = wmask_c; assign wdat = wdat_c;
  end endgenerate
- generate if (DEPTH <= 16) begin : g_ff
+ generate if (DEPTH <= FFD) begin : g_ff
   reg [215:0] m [0:DEPTH-1]; reg [215:0] q;
   integer i;
   always @(posedge clk) begin
@@ -89,10 +89,49 @@ module ot_hgi_topk_lvl #(parameter integer DEPTH=1, parameter integer AW=1, para
  end endgenerate
 endmodule
 
+// el1011-heapb 10-12 (textbook class 1/2, track B): a FLOP level store with pre-decoded, replicated controls and NO added
+// stage.  The old flop store (ot_hgi_topk_lvl g_ff, WREG) had ONE write-address register decoding into every word's enables
+// and ONE read address (the heap's a_p) driving the DEPTH:1 x 216-b read mux: 3.5k-load nets at DEPTH 16.  Here the read
+// word select is registered ONE-HOT from the D side of the heap's a_v / a_p (the same edge that loads a_p, so the read is
+// still issued in A_{j-2} and lands in rd one edge later, reading the store before that edge's write), replicated per 54-b
+// lane (each copy drives 54 AND gates; (* keep *) on the always stops yosys opt_merge from re-merging the identical copies);
+// the write is registered as DEPTH x 4 per-word-per-lane enables (each drives 54 flop enables) plus one 54-b data register
+// (<= DEPTH x 4 loads a bit).  rd is 0 the edge after a cycle with no read (the old store held it); the heap only consumes rd
+// two edges after an issued read (a_v[j-1] implies a_v[j-2] two edges earlier), so the difference is not observable.
+module ot_hgi_topk_flvl #(parameter integer DEPTH=1, parameter integer AW=1) (
+ input wire clk,
+ input wire r_ce_n, input wire [AW-1:0] r_a_n, output reg [215:0] rd,
+ input wire w_ce_i, input wire [AW-1:0] w_a_i, input wire [1:0] w_s, input wire [53:0] w_d, input wire w_all
+);
+ reg [DEPTH*4-1:0] we_q; reg [53:0] wd_q;
+ wire [DEPTH*4-1:0] rs_q;
+ wire [53:0] cq [0:DEPTH*4-1];
+ always @(posedge clk) wd_q <= w_all ? 54'd0 : w_d;
+ genvar w, s;
+ generate for (w = 0; w < DEPTH; w = w + 1) begin : g_w
+  for (s = 0; s < 4; s = s + 1) begin : g_s
+   reg [53:0] c; reg rs;
+   always @(posedge clk) we_q[w * 4 + s] <= w_ce_i && w_a_i == AW'(w) && (w_all || w_s == 2'(s));
+   always @(posedge clk) if (we_q[w * 4 + s]) c <= wd_q;
+   (* keep *) always @(posedge clk) rs <= r_ce_n && r_a_n == AW'(w);
+   assign rs_q[w * 4 + s] = rs;
+   assign cq[w * 4 + s] = c & {54{rs}};
+  end
+ end endgenerate
+ integer i, l;
+ reg [215:0] rn;
+ always @* begin
+  rn = 216'd0;
+  for (i = 0; i < DEPTH; i = i + 1) for (l = 0; l < 4; l = l + 1) rn[54 * l +: 54] = rn[54 * l +: 54] | cq[i * 4 + l];
+ end
+ always @(posedge clk) rd <= rn;
+endmodule
+
 `ifndef OT_TOPK_TILE_HARD   // the hierarchical w8 top reads the tile as a hardened macro (blackbox stub defines this)
 // One pipelined min-heap of capacity k (runtime, <= MAX_K): op = INS (enters only if x > root) or EXT (outputs the root,
 // sifts +INF).  One op every 2 cycles.  Entries {nz, key[52:0]}; key 0 = empty, key all-ones = +INF.
-module ot_hgi_topk_heap #(parameter integer MAX_K=2048, parameter integer MUT_BYP=0, parameter integer MUT_CLR=0) (
+module ot_hgi_topk_heap #(parameter integer MAX_K=2048, parameter integer MUT_BYP=0, parameter integer MUT_CLR=0,
+ parameter integer FFD=16) (
  input wire clk, rst_n,
  input wire [$clog2(MAX_K+1)-1:0] k,
  input wire op_v, input wire op_ext, input wire [53:0] op_x, output wire op_rdy,
@@ -136,15 +175,23 @@ module ot_hgi_topk_heap #(parameter integer MAX_K=2048, parameter integer MUT_BY
  wire ent = op_v && op_rdy;
  assign op_rdy = ent_c == 2'd0 && !clr_b && !clr_p;
  wire root_lt_x; ot_topk_lt #(.W(53)) u_ent (.a(h1[52:0]), .b(op_x[52:0]), .lt(root_lt_x));
+ // el1011-heapb: D side of a_v / a_p (the flop stores and the pair-select copies register their controls from these)
+ wire av_n [0:LV]; wire [PW-1:0] ap_n [0:LV];
+ assign av_n[0] = ent && (op_ext || root_lt_x); assign ap_n[0] = ent ? {{(PW-1){1'b0}}, 1'b1} : a_p[0];
  genvar j;
  generate for (j = 0; j < LV; j = j + 1) begin : g_st
   // A_j: children of a_p[j] (level j + 1)
   if (j == 0) begin : g_c0
    assign sc0[j] = h2; assign sc1[j] = h3;
   end else if (j + 1 < LV) begin : g_cn
-   wire [107:0] pr = a_p[j][0] ? rdr[j + 1][215:108] : rdr[j + 1][107:0];
-   assign sc0[j] = (MUT_BYP == 0 && byp_v[j + 1] && byp_p[j + 1] == {a_p[j][PW-2:0], 1'b0}) ? byp_d[j + 1] : pr[53:0];
-   assign sc1[j] = (MUT_BYP == 0 && byp_v[j + 1] && byp_p[j + 1] == {a_p[j][PW-2:0], 1'b1}) ? byp_d[j + 1] : pr[107:54];
+   // el1011-heapb: the pair select (108 mux loads) is two kept copies of a_p[j][0], one per child half (54 loads each)
+   reg ps0, ps1;
+   (* keep *) always @(posedge clk) ps0 <= ap_n[j][0];
+   (* keep *) always @(posedge clk) ps1 <= ap_n[j][0];
+   wire [53:0] pr0 = ps0 ? rdr[j + 1][161:108] : rdr[j + 1][53:0];
+   wire [53:0] pr1 = ps1 ? rdr[j + 1][215:162] : rdr[j + 1][107:54];
+   assign sc0[j] = (MUT_BYP == 0 && byp_v[j + 1] && byp_p[j + 1] == {a_p[j][PW-2:0], 1'b0}) ? byp_d[j + 1] : pr0;
+   assign sc1[j] = (MUT_BYP == 0 && byp_v[j + 1] && byp_p[j + 1] == {a_p[j][PW-2:0], 1'b1}) ? byp_d[j + 1] : pr1;
   end else begin : g_cl
    assign sc0[j] = 54'd0; assign sc1[j] = 54'd0;
   end
@@ -161,16 +208,23 @@ module ot_hgi_topk_heap #(parameter integer MAX_K=2048, parameter integer MUT_BY
   assign wr_v[j] = b_v[j]; assign wr_p[j] = b_p[j];
   assign wr_d[j] = stop ? b_x[j] : (take1 ? b_c1[j] : b_c0[j]);
   assign mv[j] = b_v[j] && !stop; assign mi[j] = {b_p[j][PW-2:0], take1};
+  if (j + 1 <= LV) begin : g_n assign av_n[j + 1] = mv[j]; assign ap_n[j + 1] = mi[j]; end
  end endgenerate
  // level stores j >= 2: written by B_j, read (grandchildren word) at A_{j-2}
  generate for (j = 2; j < LV; j = j + 1) begin : g_lv
   localparam integer D = qd(j), A = awf(qd(j));
   wire [PW-1:0] wp = wr_p[j];
   wire [PW-1:0] rp = a_p[j - 2];
-  ot_hgi_topk_lvl #(.DEPTH(D), .AW(A), .WREG(1)) u_l (.clk(clk),
-   .r_ce(a_v[j - 2]), .r_a(A'(rp & ((1 << (j - 2)) - 1))), .rd(rdq[j]),
-   .w_ce_i(wr_v[j] || clr_bl[j]), .w_a_i(clr_bl[j] ? A'(clr_cl[j]) : A'((wp & ((1 << j) - 1)) >> 2)), .w_s(wp[1:0]),
-   .w_d(wr_d[j]), .w_all(clr_bl[j]));
+  wire [A-1:0] w_a_c = clr_bl[j] ? A'(clr_cl[j]) : A'((wp & ((1 << j) - 1)) >> 2);
+  if (D <= FFD) begin : g_f            // flop store, replicated pre-decoded controls (el1011-heapb)
+   ot_hgi_topk_flvl #(.DEPTH(D), .AW(A)) u_l (.clk(clk),
+    .r_ce_n(av_n[j - 2]), .r_a_n(A'(ap_n[j - 2] & ((1 << (j - 2)) - 1))), .rd(rdq[j]),
+    .w_ce_i(wr_v[j] || clr_bl[j]), .w_a_i(w_a_c), .w_s(wp[1:0]), .w_d(wr_d[j]), .w_all(clr_bl[j]));
+  end else begin : g_m                 // SRAM macro store (registered write port)
+   ot_hgi_topk_lvl #(.DEPTH(D), .AW(A), .WREG(1), .FFD(0)) u_l (.clk(clk),
+    .r_ce(a_v[j - 2]), .r_a(A'(rp & ((1 << (j - 2)) - 1))), .rd(rdq[j]),
+    .w_ce_i(wr_v[j] || clr_bl[j]), .w_a_i(w_a_c), .w_s(wp[1:0]), .w_d(wr_d[j]), .w_all(clr_bl[j]));
+  end
   always @(posedge clk) rdr[j] <= rdq[j];
  end endgenerate
  integer i;
@@ -247,7 +301,7 @@ module ot_hgi_topk_heap_tile #(parameter integer MAX_K=2048, parameter integer M
 `else
  localparam integer MCL = MUT_CLR;
 `endif
- ot_hgi_topk_heap #(.MAX_K(MAX_K), .MUT_BYP(MBY), .MUT_CLR(MCL)) u_h (.clk(clk), .rst_n(trr[0]), .k(k_p),
+ ot_hgi_topk_heap #(.MAX_K(MAX_K), .MUT_BYP(MBY), .MUT_CLR(MCL), .FFD(8)) u_h (.clk(clk), .rst_n(trr[0]), .k(k_p),
   .op_v(fn != 2'd0), .op_ext(h_op[54]), .op_x(h_op[53:0]), .op_rdy(h_rdy), .ext_v(h_xv), .ext_d(h_xd), .root_key(h_root),
   .clr_go(c_p), .idle(h_idle));
  always @(posedge clk) begin
