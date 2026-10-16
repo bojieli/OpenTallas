@@ -53,7 +53,7 @@
   "rs"
  ],
  "outline": {
-  "w": 100.224,
+  "w": 116.64,
   "h": 198.72,
   "exact": true
  },
@@ -81,9 +81,9 @@
    "xb"
   ]
  },
- "io_tcl": "physical/ref_tile_specs/s81_bf_native_1015/static_pins/pins.tcl",
+ "io_tcl": "physical/ref_tile_specs/s81_bf_native_1015/static_pins_c10s/pins.tcl",
  "layer_cap": "M5",
- "recipe": 2,
+ "recipe": 3,
  "route": {
   "pd": 0.6,
   "threads": 16,
@@ -91,15 +91,15 @@
   "hold_margin_ns": 0.03,
   "macro_halo_um": 5.4
  },
- "structural_change": "BF clock-structure pass 2026-10-15 (S-ELEM-PQ, gate ec84ce526 FAILED CTS: hold repair ~119k buffers, util 102.8%; io_clk 202-252 ps vs ck 259-307 ps, boundary->core -158.9 ps because the io_clk programme flop fanned straight into the core issue cone). ck and io_clk stay two related roots of ONE die clock (same_pll_fixed_phase; one root measured 329 ps > 300 at 16,824 sinks, gate 75030). Every io_clk->ck crossing is now register -> lockup latch (io_clk low) -> register with no fan-out: programme pin flop -> latch -> programme_core_q (ck) -> issue (+1 edge, producer DELTA -1, issue edges vs go unchanged); cfg/go/go_bf/xs_v/xb_v through latches like the payload (0 cycles). f_rd replicated 17x (one kept copy per 32-bit read slice, was 4,378 loads); CPIN seam reset relay 1 -> 5 per face (<=160 loads). Outline/pins unchanged; no relaxed timing. | c3 (route c2 EARLY_FAIL_HOLD 26k buffers, measured): (1) kit SDC: the multi-entry die-skew reserve (hold 100/setup 150-210) was applied to EVERY ot_entry pair incl. the 12,276 same-root core paths -> now only between different entries (tools/ref_tile/clock_entry_constraints.py; FF hold violators 27,050 -> 3,401 on the c2 placement); (2) every free-clock core register under one always-enabled ICG u_fcg (same gating depth as the gated core; was 236.8 vs 329.1 ps hi0q_r->b_hi); programme register moved into the core on that clock; (3) core->seam crossing through one shared lockup-latch bank on the core root (ck low).",
+ "structural_change": "c10 (S-ELEM-PQ/BF 2026-10-16; c9 gate/route measured ck 13,185 sinks TT insertion 363 ps / spread 116 ps, CTS skew dominated by the two root ICG cones: u_fcg ENA low-phase latch 267 ps vs cloned ICG CLK 161 ps (routed reg->reg -35.7 ps at u_fcg ENA), u_ze -> u_cg ENA 140 ps; pins: W/E 776-bit buses packed into the middle 37% of the face at 10.4 pins/um, N 1,024-bit bus 10.4 pins/um on M5 only, clock entry at the SW corner, fill 0.632). STRUCTURE: (1) the static-programme core has NO clock gate: fclk = gclk = ck, one ungated balanced tree (u_fcg, its latch and the u_cg ICG removed); every former gclk register loads under its own kept copy of the registered gate enable (35 ot_v41_kreg u_cen, d = ze_d, async set on rst_n_pin like u_ze): exact by construction (an ICG passes edge t iff its low-phase latch holds ze_q(t-1), the value a data enable samples at t), 0 cycles; (2) outline 100.224 -> 116.64 x 198.72 (fill <= 0.60 incl. the enable muxes); (3) pins re-spaced by face with bit order kept: W/E over the whole face on M4 (4.0 pins/um), N/S alternating M5/M3 (N 4.6 pins/um per layer), ck + io_clk at the face centre. Pin registers: RTL registers every port at the pin already (recipe-3 synthesis pin_regs opted out with reason). Variant S: ck/io_clk at the S-face centre.",
  "reroute_reason": {
   "kind": "rtl_change",
-  "why": "CTS gate ec84ce526 FAILED: cross-root hold (io_clk programme flop fanning into the ck issue cone, -158.9 ps) -> 119k hold buffers, DPL util 102.8%; f_rd 4,378 loads; seam reset 775 loads",
-  "fix": "Register->lockup latch->register on every io_clk->ck crossing (programme +1 core edge absorbed by producer DELTA -1), 17 kept f_rd copies, 5 seam reset relays/face; two related roots of one die clock kept (single root measured 329 ps > 300)."
+  "why": "c9 (s81bf_front_static_clk-c9-COMMIT-89a4f6900) CTS: ck TT 363 ps / spread 116 ps > 300 / 80 from the root ICG cones (u_fcg ENA latch path -35.7 ps routed), corner clock entry, W/E/N pin bands 10.4 pins/um, fill 0.632",
+  "fix": "ungated ck tree with kept registered data-enable copies (0 cycles, exact), outline 116.64 wide, pins spread by face, clocks at the face centre (SLOT CHANGE REQUEST el1011-s81die.log 2026-10-16)"
  },
  "job": {
   "owner": "Claude:S-ELEM-PQ-1825",
-  "purpose": "BF clock-structure pass 2026-10-15 (S-ELEM-PQ, gate ec84ce526 FAILED CTS: hold repair ~119k buffers, util 102.8%; io_clk 202-252 ps vs ck 259-307 ps, boundary->core -158.9 ps because the io_clk programme flop fanned straight into the core issue cone). ck and io_clk stay two related roots of ONE die clock (same_pll_fixed_phase; one root measured 329 ps > 300 at 16,824 sinks, gate 75030). Every io_clk->ck crossing is now register -> lockup latch (io_clk low) -> register with no fan-out: programme pin flop -> latch -> programme_core_q (ck) -> issue (+1 edge, producer DELTA -1, issue edges vs go unchanged); cfg/go/go_bf/xs_v/xb_v through latches like the payload (0 cycles). f_rd replicated 17x (one kept copy per 32-bit read slice, was 4,378 loads); CPIN seam reset relay 1 -> 5 per face (<=160 loads). Outline/pins unchanged; no relaxed timing. | c3 (route c2 EARLY_FAIL_HOLD 26k buffers, measured): (1) kit SDC: the multi-entry die-skew reserve (hold 100/setup 150-210) was applied to EVERY ot_entry pair incl. the 12,276 same-root core paths -> now only between different entries (tools/ref_tile/clock_entry_constraints.py; FF hold violators 27,050 -> 3,401 on the c2 placement); (2) every free-clock core register under one always-enabled ICG u_fcg (same gating depth as the gated core; was 236.8 vs 329.1 ps hi0q_r->b_hi); programme register moved into the core on that clock; (3) core->seam crossing through one shared lockup-latch bank on the core root (ck low).",
+  "purpose": "c10 (S-ELEM-PQ/BF 2026-10-16; c9 gate/route measured ck 13,185 sinks TT insertion 363 ps / spread 116 ps, CTS skew dominated by the two root ICG cones: u_fcg ENA low-phase latch 267 ps vs cloned ICG CLK 161 ps (routed reg->reg -35.7 ps at u_fcg ENA), u_ze -> u_cg ENA 140 ps; pins: W/E 776-bit buses packed into the middle 37% of the face at 10.4 pins/um, N 1,024-bit bus 10.4 pins/um on M5 only, clock entry at the SW corner, fill 0.632). STRUCTURE: (1) the static-programme core has NO clock gate: fclk = gclk = ck, one ungated balanced tree (u_fcg, its latch and the u_cg ICG removed); every former gclk register loads under its own kept copy of the registered gate enable (35 ot_v41_kreg u_cen, d = ze_d, async set on rst_n_pin like u_ze): exact by construction (an ICG passes edge t iff its low-phase latch holds ze_q(t-1), the value a data enable samples at t), 0 cycles; (2) outline 100.224 -> 116.64 x 198.72 (fill <= 0.60 incl. the enable muxes); (3) pins re-spaced by face with bit order kept: W/E over the whole face on M4 (4.0 pins/um), N/S alternating M5/M3 (N 4.6 pins/um per layer), ck + io_clk at the face centre. Pin registers: RTL registers every port at the pin already (recipe-3 synthesis pin_regs opted out with reason). Variant S: ck/io_clk at the S-face centre.",
   "benches": [
    {
     "name": "actual_static_front_boundary",
@@ -166,7 +166,7 @@
    "rtl/proto",
    "results/rtl/s81_bf_compact_20261010/bench_prep_1013",
    "rtl/dsrom_sys/s81_die_bind",
-   "physical/ref_tile_specs/s81_bf_native_1015/static_pins",
+   "physical/ref_tile_specs/s81_bf_native_1015/static_pins_c10s",
    "tests/s81"
   ],
   "views_to": "physical/ref_tile/dsfd_bf_front_static_ref/views",
@@ -226,21 +226,31 @@
   }
  },
  "slot_change_request": {
-  "name": "dsfd_bf_front_static BF519 canonical",
+  "name": "dsfd_bf_front_static c10",
   "outline_um": [
-   100.224,
+   116.64,
    198.72
   ],
-  "request_file": "physical/ref_tile_specs/s81_bf_native_1015/static_pins/pin_request.json",
-  "status": "APPROVED_INDEPENDENT_LEAF_ONLY",
-  "reason": "actual static master addsf_prog38 andio_clk, preserving alloldlive pins; io_clk replaces unusedhph track",
-  "grant": {
-   "owner": "/root/s81_die_1103",
-   "candidate_commit": "e36bb6531",
-   "pins_tcl_sha256": "109c5326cf729e682441a25a028bff530d6206a0fc04b11e9379667089a3b83b",
-   "request_json_sha256": "5fd0361711eb960fd0ef042a2746f74ace89ff8a313194a85019dc6345463493",
-   "scope": "Independent candidate leaf only. Parent composition, mapped census, route/native TT/FF remain open; no inherited insertion.",
-   "normalization": "S-DIE approved exact five scalar ABI aliases; same rectangles/all3264other bits unchanged. Final hashes pending record."
+  "request_file": "physical/ref_tile_specs/s81_bf_native_1015/static_pins_c10s/pin_request.json",
+  "status": "REQUESTED (die-owned; el1011-s81die.log 2026-10-16 S-ELEM-PQ/BF)",
+  "reason": "width +16.416 um for fill <= 0.60; every face spread with bit order kept (the abutting bf_col faces re-pin by the same order-preserving stretch); clocks at the face centre",
+  "previous": {
+   "name": "dsfd_bf_front_static BF519 canonical",
+   "outline_um": [
+    100.224,
+    198.72
+   ],
+   "request_file": "physical/ref_tile_specs/s81_bf_native_1015/static_pins/pin_request.json",
+   "status": "APPROVED_INDEPENDENT_LEAF_ONLY",
+   "reason": "actual static master addsf_prog38 andio_clk, preserving alloldlive pins; io_clk replaces unusedhph track",
+   "grant": {
+    "owner": "/root/s81_die_1103",
+    "candidate_commit": "e36bb6531",
+    "pins_tcl_sha256": "109c5326cf729e682441a25a028bff530d6206a0fc04b11e9379667089a3b83b",
+    "request_json_sha256": "5fd0361711eb960fd0ef042a2746f74ace89ff8a313194a85019dc6345463493",
+    "scope": "Independent candidate leaf only. Parent composition, mapped census, route/native TT/FF remain open; no inherited insertion.",
+    "normalization": "S-DIE approved exact five scalar ABI aliases; same rectangles/all3264other bits unchanged. Final hashes pending record."
+   }
   }
  },
  "macros": [],
@@ -256,5 +266,9 @@
  "pin_reg_split": true,
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "RTL already registers every data port at the pin (inputs: PINREG pin flops on io_clk -> lockup latch -> core; f_prog programme_pin_q; qy0/qy1 dedicated face capture; outputs: CPIN seam flops on io_clk for c0/c1, st from registered busy/fault through source-ck lockups). A synthesis pin register would add a second edge on every port and break the fixed 1-edge seam contract (producer DELTA -1, c0/c1 column lockstep, 3-edge status pulse). Native audit of the routed view checks comb 0 pins."
  }
 }

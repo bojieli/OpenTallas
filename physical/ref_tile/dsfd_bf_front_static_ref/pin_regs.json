@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "dsfd_bf_front_static",
+ "enable": false,
+ "reason": "RTL already registers every data port at the pin (inputs: PINREG pin flops on io_clk -> lockup latch -> core; f_prog programme_pin_q; qy0/qy1 dedicated face capture; outputs: CPIN seam flops on io_clk for c0/c1, st from registered busy/fault through source-ck lockups). A synthesis pin register would add a second edge on every port and break the fixed 1-edge seam contract (producer DELTA -1, c0/c1 column lockstep, 3-edge status pulse). Native audit of the routed view checks comb 0 pins."
+}
