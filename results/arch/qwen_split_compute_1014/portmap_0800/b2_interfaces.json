@@ -92,7 +92,7 @@
       "RPIN": 1
     },
     "outline": "candidate86.4x205.2 perroot; no inherited views",
-    "qualification": "Distinct compact4 source264a2d5cf, full16 exact+return-valid negative gate E4oth-ubuntu-84441-1792168069 running. Separate source-specific physical kit localgatePASS, actual synth/CTS pending.",
+    "qualification": "Compact4 full16/SRAM/LNK2 PASS330800words/20675groups/2324ops and leaf7 dropped native return-valid mutant rejected: E4oth-ubuntu-84441-1792168069 exit0; physical synth/CTS pending.",
     "selector_bits": "sel_e[0]/[1] = global10/11; tv_e[0]/[1] = global10/11; no extra stages"
   },
   "serializer": {
