@@ -23,7 +23,7 @@
   "bench": [
    {
     "name": "lint",
-    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; dsfd_engram_lkp_static14 u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS -DOT_ENGRAM_CRCMAT --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hdc/v41/ot_hdc_engram_tables_shipped_pkg.sv rtl/hdc/v41/ot_hdc_engram_hash_shipped.sv rtl/dsrom_sys/engram/clock_partition_1015/ot_s81_engram_hash_clock_roots.sv rtl/dsrom_sys/engram/clock_partition_1015/ot_s81_engram_rowbank_clock_leaf.sv rtl/dsrom_sys/engram/static_lookup_1015/ot_s81_engram_lookup_static.sv rtl/dsrom_sys/engram/static_lookup_1015/dsfd_engram_lkp_static14.sv && echo lint-ok",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; dsfd_engram_lkp_static14 u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS -DOT_ENGRAM_CRCMAT --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hdc/v41/ot_hdc_engram_tables_shipped_pkg.sv rtl/hdc/v41/ot_hdc_engram_hash_shipped.sv rtl/dsrom_sys/engram/static_lookup_1015/ot_s81_engram_hash_static.sv rtl/dsrom_sys/engram/static_lookup_1015/ot_s81_engram_rowbank_static_leaf.sv rtl/dsrom_sys/engram/static_lookup_1015/ot_s81_engram_lookup_static.sv rtl/dsrom_sys/engram/static_lookup_1015/dsfd_engram_lkp_static14.sv && echo lint-ok",
     "expect": "pass",
     "threads": 1,
     "peak_ram_gb": 4,

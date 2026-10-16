@@ -1,0 +1,54 @@
+Design area 33645 um^2 50% utilization.
+Startpoint: rst_n (input port clocked by core_clk)
+Endpoint: u_e.lastl[9]$_DFF_PN0_
+                              96.4   slack (MET)
+Startpoint: o_d[54]$_DFF_P_
+Endpoint: o_d[54] (output port clocked by core_clk)
+                             294.9   slack (MET)
+Startpoint: u_e.u_hash.g_col[20].row_q[1]$_DFF_P_
+Endpoint: u_e.res[2][23]$_DFFE_PP_
+                             -99.0   slack (VIOLATED)
+Startpoint: u_e.u_hash.g_col[1].r[8][0]$_DFF_P_
+Endpoint: u_e.u_hash.g_col[0].s1[4][23]$_DFF_P_
+                            -113.8   slack (VIOLATED)
+Startpoint: u_e.slot[1]$_DFFE_PN0P_
+Endpoint: u_e.g_clocked_row[3].storage.payload[1][115]$_DFFE_PP_
+                            -120.4   slack (VIOLATED)
+Startpoint: u_e.slot[1]$_DFFE_PN0P_
+Endpoint: u_e.g_clocked_row[4].storage.payload[1][106]$_DFFE_PP_
+                            -171.8   slack (VIOLATED)
+Startpoint: u_e.slot[1]$_DFFE_PN0P_
+Endpoint: u_e.g_clocked_row[5].storage.payload[0][171]$_DFFE_PP_
+                            -137.7   slack (VIOLATED)
+Startpoint: u_e.u_hash.g_prod[7].pp1[6]$_DFF_P_
+Endpoint: u_e.u_hash.g_prod[7].pa[56]$_DFF_P_
+                             -99.3   slack (VIOLATED)
+Startpoint: u_e.u_hash.g_col[11].r[10][0]$_DFF_P_
+Endpoint: u_e.u_hash.g_col[11].s1[5][22]$_DFF_P_
+                            -116.1   slack (VIOLATED)
+Startpoint: u_e.u_hash.g_col[21].r[9][21]$_DFF_P_
+Endpoint: u_e.u_hash.g_col[17].s1[4][23]$_DFF_P_
+                            -115.0   slack (VIOLATED)
+Startpoint: u_e.u_hash.g_col[30].r[8][0]$_DFF_P_
+Endpoint: u_e.u_hash.g_col[30].s1[4][23]$_DFF_P_
+                            -107.5   slack (VIOLATED)
+Startpoint: u_e.u_hash.g_col[39].r[8][0]$_DFF_P_
+Endpoint: u_e.u_hash.g_col[38].s1[4][24]$_DFF_P_
+                            -104.7   slack (VIOLATED)
+Startpoint: u_e.u_hash.g_col[43].r[13][16]$_DFF_P_
+Endpoint: u_e.u_hash.g_col[46].s1[6][23]$_DFF_P_
+                             -99.8   slack (VIOLATED)
+Startpoint: hrt_q[1]$_DFF_P_
+Endpoint: u_e.g_clocked_row[0].storage.payload[1][45]$_DFFE_PP_
+                            -164.2   slack (VIOLATED)
+Startpoint: hrt_q[1]$_DFF_P_
+Endpoint: u_e.g_clocked_row[1].storage.payload[6][226]$_DFFE_PP_
+                            -159.6   slack (VIOLATED)
+Startpoint: u_e.slot[1]$_DFFE_PN0P_
+Endpoint: u_e.g_clocked_row[2].storage.payload[4][120]$_DFFE_PP_
+                            -105.4   slack (VIOLATED)
+Startpoint: u_e.u_hash.g_col[14].r[12][2]$_DFF_P_
+Endpoint: u_e.u_hash.g_col[14].s1[6][2]$_DFF_P_
+                      546.1   slack (MET)
+tns max -1085407.38
+wns max -171.80

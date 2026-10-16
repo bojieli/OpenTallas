@@ -5,6 +5,11 @@
 // launch. Every on-chip request/output slot is unconditional. Missing, stale,
 // duplicate or late external atoms poison the fixed return instead of retrying.
 // No normal ready/credit signals or dynamically shifted output slots exist.
+// 2026-10-16 (S-ENGRAM, static14 gate re-time): the hash is ot_s81_engram_hash_static (residues selected
+// directly, no row-minus-offset subtract across the column->core roots); accepted response atoms are
+// registered in the core root as one-hot (bank, atom) write enables + data and written one cycle later by
+// the row-root leaf (flop-to-flop root crossing), so emission starts at RETURN_AGE+1 (+1 cycle on every
+// output beat and status; the HBM response window age < RETURN_AGE is unchanged).
 import ot_hdc_engram_tables_shipped_pkg::*;
 
 module ot_s81_engram_lookup_static #(
@@ -131,9 +136,9 @@ module ot_s81_engram_lookup_static #(
     wire hfeed = (st == S_FEED);
     wire [ENG_ID_W-1:0] hcid = ids[ENG_ID_W*(3 - fcnt) +: ENG_ID_W];
     wire hov;
-    wire [RW*ENG_LAYERS*ENG_COLS-1:0] hrow;
-    ot_s81_engram_hash_clock_roots u_hash (.clk(clk_seed), .clk_columns(clk_hash), .rst_n(rst_n), .in_valid(hfeed), .in_first(hfeed && fcnt == 2'd0),
-                                       .in_cid(hcid), .out_valid(hov), .out_row(hrow));
+    wire [QW*ENG_LAYERS*ENG_COLS-1:0] hres;
+    ot_s81_engram_hash_static u_hash (.clk(clk_seed), .clk_columns(clk_hash), .rst_n(rst_n), .in_valid(hfeed), .in_first(hfeed && fcnt == 2'd0),
+                                       .in_cid(hcid), .out_valid(hov), .out_row(), .out_res(hres));
     reg [12:1] lastl;                        // marks the 4th feed through the hash latency
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) lastl <= 12'd0;
@@ -157,35 +162,30 @@ module ot_s81_engram_lookup_static #(
     genvar gj, gc;
     generate
         for (gj = 0; gj < CPR; gj = gj + 1) begin : g_col
-            reg [RW-1:0]  row_m, off_m;
+            reg [QW-1:0]  res_m;
             reg [ABW-1:0] cb_m;
-            reg [RW-1:0]  off_q;
             reg [ABW-1:0] cb_q;
-            wire [8*RW-1:0]  rows_c, offs_c;
+            wire [8*QW-1:0]  res_c;
             wire [8*ABW-1:0] cbs_c;
             for (gc = 0; gc < 8; gc = gc + 1) begin : g_cand          // gc = {layer, rank}
                 localparam integer C = (gc / 4) * ENG_COLS + (gc % 4) * CPR + gj;
                 localparam [63:0] CB = col_base(gc / 4, gc % 4, gj);
-                assign rows_c[RW*gc +: RW]  = hrow[RW*C +: RW];
-                assign offs_c[RW*gc +: RW]  = ENG_OFFSET[RW*C +: RW];
+                assign res_c[QW*gc +: QW]   = hres[QW*C +: QW];     // = row - offset, exactly
                 assign cbs_c[ABW*gc +: ABW] = CB[ABW-1:0];
             end
             integer m;
             always @(*) begin
-                row_m = {RW{1'b0}}; off_m = {RW{1'b0}}; cb_m = {ABW{1'b0}};
+                res_m = {QW{1'b0}}; cb_m = {ABW{1'b0}};
                 for (m = 0; m < 8; m = m + 1) begin
-                    row_m = row_m | ({RW{csel[m]}} & rows_c[RW*m +: RW]);
-                    off_m = off_m | ({RW{csel[m]}} & offs_c[RW*m +: RW]);
+                    res_m = res_m | ({QW{csel[m]}} & res_c[QW*m +: QW]);
                     cb_m  = cb_m  | ({ABW{csel[m]}} & cbs_c[ABW*m +: ABW]);
                 end
             end
             always @(posedge clk) begin
-                off_q <= off_m;
                 cb_q <= BASE + cb_m;
             end
-            wire [RW-1:0] lr = row_m - off_q;
             always @(posedge clk) begin
-                if (hdone) res[gj] <= lr[QW-1:0];
+                if (hdone) res[gj] <= res_m;
                 if (st == S_ADDR && acnt == 2'd0) begin
                     r256[gj] <= {{(ABW-QW-8){1'b0}}, res[gj], 8'd0};
                     r8[gj]   <= (ROWSTRIPE ? {{(ABW-QW-5){1'b0}},res[gj],5'd0} : {{(ABW-QW-4){1'b0}},res[gj],4'd0}) + cb_q;
@@ -201,11 +201,18 @@ module ot_s81_engram_lookup_static #(
     reg [1:0]   roff [0:CPR-1];             // row start within its first atom, in 8-byte units (0 / 2)
     integer j;
     genvar bank, atom;
+    // accepted atom -> core-root registers (one-hot bank x atom enables + data); the row-root leaf writes them
+    // one cycle later, so the core->row root crossing is flop to flop (enable fanout lives in the row root)
+    reg [255:0] wdata_q;
+    always @(posedge clk) wdata_q <= hr_data;
     generate for (bank=0; bank<CPR; bank=bank+1) begin : g_clocked_row
         wire [256*ATOMS-1:0] stored;
-        ot_s81_engram_rowbank_clock_leaf #(.ATOMS(ATOMS)) storage (
-            .ck(clk_rows[bank]), .write_v(response_ok && hr_tag == bank),
-            .write_idx(hr_idx), .write_data(hr_data), .rows(stored));
+        reg  [ATOMS-1:0] wen_q;
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) wen_q <= {ATOMS{1'b0}};
+            else        wen_q <= (response_ok && hr_tag == bank) ? ({{(ATOMS-1){1'b0}}, 1'b1} << hr_idx) : {ATOMS{1'b0}};
+        ot_s81_engram_rowbank_static_leaf #(.ATOMS(ATOMS)) storage (
+            .ck(clk_rows[bank]), .write_en(wen_q), .write_data(wdata_q), .rows(stored));
         for (atom=0; atom<ATOMS; atom=atom+1) begin : g_read
             assign rb[bank][atom]=stored[256*atom+:256];
         end
@@ -269,7 +276,7 @@ module ot_s81_engram_lookup_static #(
 
     wire      row_ok = (ej < CPR[2:0]);
     wire      room = 1'b1;
-    wire      e0_go = (st == S_EMIT) && active && age >= RETURN_AGE && !emit_done_r && row_ok && ek < 4'd8 && room;
+    wire      e0_go = (st == S_EMIT) && active && age >= RETURN_AGE + 1 && !emit_done_r && row_ok && ek < 4'd8 && room;
     reg [255:0] e1_lo, e1_hi, e1_a8;
     reg [1:0]   e1_off;
     reg [2:0]   e1_j, e1_k;

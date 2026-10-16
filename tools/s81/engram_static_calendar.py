@@ -1,7 +1,9 @@
 """Compile reserved on-chip lookup slots; never certify an external-memory bound.
 
 The source emits six requests at launch+20..25 (PIPE1). It reserves all
-54 response atoms until RETURN_AGE, then emits 48 words at RETURN_AGE+5..52.
+54 response atoms until RETURN_AGE, then emits 48 words at RETURN_AGE+6..53
+(+1 since 2026-10-16: accepted atoms are registered in the core root before the
+row-root write, so emission starts at age RETURN_AGE+1).
 The source's active reservation drains at RETURN_AGE+64. These offsets must
 stay bound to the real source proof; a request/response service schedule is
 separately required before canonical adoption.
@@ -40,7 +42,7 @@ def compile_calendar(operations, *, slots=8):
         events.append({'source_operation': op.source_operation, 'launch': op.launch,
             'slot': op.slot, 'request_cycles': list(range(op.launch+20,op.launch+26)),
             'response_deadline_exclusive': op.launch+op.return_age+1,
-            'output_cycles': list(range(op.launch+op.return_age+5,op.launch+op.return_age+53)),
+            'output_cycles': list(range(op.launch+op.return_age+6,op.launch+op.return_age+54)),
             'reservation_last_edge': prior_end,
             'external_service_qualification': 'UNBOUND',
             'collective_consumer_qualification': 'UNBOUND'})

@@ -5,7 +5,7 @@ class Calendar(unittest.TestCase):
     def test_source_slots(self):
         e=compile_calendar([Lookup('real.lookup.0',20,0,128)])[0]
         self.assertEqual(e['request_cycles'],list(range(40,46)))
-        self.assertEqual(e['output_cycles'],list(range(153,201)))
+        self.assertEqual(e['output_cycles'],list(range(154,202)))
         self.assertEqual(e['external_service_qualification'],'UNBOUND')
     def test_collision_is_not_rescheduled(self):
         with self.assertRaisesRegex(ValueError,'overlap'):
