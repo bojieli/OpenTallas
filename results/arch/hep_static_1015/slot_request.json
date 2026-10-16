@@ -1,0 +1,17 @@
+{
+ "from": "H-LKEP (Claude) 2026-10-15",
+ "to": "H-DIE (hbm_v15 contract)",
+ "master": "hfd_ep_static (rtl/hbm_accel/tu/ep_static_20261015/hfd_ep_static.sv), kit physical/ref_tile/hep_static_ref_1015",
+ "replaces": "hfd_lk_ep (v14, 2600 x 830 um, retired: 13 failed flat routes, on-die credits, does not fit the v15 ep window)",
+ "slots": ["ep_N0", "ep_N1", "ep_N2", "ep_N3", "ep_S0", "ep_S1", "ep_S2", "ep_S3", "ep_S4"],
+ "one_master": true,
+ "outline_um": [434.72, 515.2],
+ "orientation": {"ep_N*": "R0 (COLL face S, SerDes face W)", "ep_S*": "MX (COLL face N, SerDes face W)"},
+ "request": [
+  "Bind cell hfd_ep_static to all nine ep_* windows (one route, nine replicas; no per-instance literal, DEDUPE rule 2).",
+  "Unify the COLL_EP window offset: today ep_N0/N1/S0/S1/S2 at 0.0 and ep_N2/N3/S3/S4 at 312.32 on the COLL face; one master needs one offset (the kit places the COLL group across the whole S face; the die relays reach any offset).",
+  "Re-derive the pin windows from the real ports (top-down pin assignment): COLL face 1,262 bits (in 632: tx_v, tx_frame[612], rx_arm_v/bank, rx_block_words[7], rx_release_v/bank, rx_slot_v/bank, rx_slot_index[6], rst_n; out 630: rx_pin_v, rx_pin_flit[612], rx_block_ready[2], phy_up, fault, fault_cause[11]) vs 1,224 in v6; SerDes face 1,026 bits (sd_tx[512] out, sd_rx[512] + sd_st[2] in) vs 1,056. Cuts at 0.096 um/bit: COLL 121.2/434.72 = 0.28, SerDes 98.5/515.2 = 0.19 (<= 0.6).",
+  "COLL side contract change for H-COLL: the off-die elastic RX pingpong (ot_hgi_coll_offdie_rx_pingpong) lives in the endpoint next to the PHY (0az off-die boundary), not in the COLL wrapper; COLL drives arm/release/slot calendars and receives the registered rx_pin frames; TX frames only on lane slots (4 of every 5 beats, one IDLE beat per 204 groups)."
+ ],
+ "clock": "one root clk (link clock = ot_pdie_serdes ck), ~10k sinks (< 15k), entry S face M5 as contracted"
+}

@@ -1,0 +1,183 @@
+{
+ "name": "hep_static_ref_1015",
+ "top": "hfd_ep_static",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/tu/ep_static_20261015/hfd_ep_static.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_offdie_rx_pingpong.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_offdie_rx_block.sv",
+  "rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v"
+ ],
+ "params": {
+  "IDLE_K": 204,
+  "MUT": 0
+ },
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 434.72,
+  "h": 324.0,
+  "exact": true
+ },
+ "pg_layer": "M5",
+ "layer_cap": "M5",
+ "recipe": 2,
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "at": [
+    48.384,
+    222.48
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "at": [
+    240.624,
+    222.48
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "at": [
+    48.384,
+    123.12
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "at": [
+    240.624,
+    123.12
+   ],
+   "orient": "R0"
+  }
+ ],
+ "pins": {
+  "S": [
+   "clk",
+   "rst_n",
+   "tx_v",
+   "tx_frame",
+   "rx_arm_v",
+   "rx_arm_bank",
+   "rx_block_words",
+   "rx_release_v",
+   "rx_release_bank",
+   "rx_slot_v",
+   "rx_slot_bank",
+   "rx_slot_index",
+   "rx_pin_v",
+   "rx_pin_flit",
+   "rx_block_ready",
+   "phy_up",
+   "fault",
+   "fault_cause"
+  ],
+  "W": [
+   "sd_tx",
+   "sd_rx",
+   "sd_st"
+  ],
+  "N": [],
+  "E": []
+ },
+ "refglob": "*",
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "period_ps": 833.333333,
+  "hold_margin_ns": 0.03,
+  "pin_min_tracks": 2,
+  "macro_halo_um": 5.4
+ },
+ "structural_change": "v15 successor of the retired flat hfd_lk_ep (13 failed routes: 95k flops one root, 3 replay macros over 2.6 mm, on-die credits): one ~10k-flop master for all 9 ep windows 434.72x515.2, lane gearbox 613b->512b fixed 4-in-5 format + H-COLL off-die elastic RX pingpong, every port pin-registered, one clock root. Gate-1 findings fixed structurally: phase/take decode registered one edge early and replicated per 64-b slice, data registers without enables, outline compacted (util 26% -> ~41%) to cut clock spread.",
+ "job": {
+  "owner": "Claude:H-LKEP",
+  "branch": "claude/h-lkep-1015",
+  "tag": "ep1",
+  "purpose": "HBM v15 link endpoint master (ep_N0..N3/ep_S0..S4): static lane gearbox + 0az off-die elastic RX boundary; replaces hfd_lk_ep v14",
+  "benches": [
+   {
+    "name": "ep_exact_2dies_fec",
+    "cmd": "bash rtl/hbm_accel/tu/ep_static_20261015/run_hfd_ep_static_bench.sh . {RUN}/bench 0",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "pass_regex": "^TB_HFD_EP_STATIC .* PASS$",
+    "min_count_regex": "got=(768) bad=0"
+   },
+   {
+    "name": "ep_mut_tx_tail",
+    "cmd": "bash rtl/hbm_accel/tu/ep_static_20261015/run_hfd_ep_static_bench.sh . {RUN}/bench 1",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "pass_regex": "^TB_HFD_EP_STATIC .* PASS$"
+   },
+   {
+    "name": "ep_mut_rx_noidle",
+    "cmd": "bash rtl/hbm_accel/tu/ep_static_20261015/run_hfd_ep_static_bench.sh . {RUN}/bench 2",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "pass_regex": "^TB_HFD_EP_STATIC .* PASS$"
+   },
+   {
+    "name": "ep_mut_rx_swap",
+    "cmd": "bash rtl/hbm_accel/tu/ep_static_20261015/run_hfd_ep_static_bench.sh . {RUN}/bench 3",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "pass_regex": "^TB_HFD_EP_STATIC .* PASS$"
+   },
+   {
+    "name": "ep_mut_rxblock_bank",
+    "cmd": "bash rtl/hbm_accel/tu/ep_static_20261015/run_hfd_ep_static_bench.sh . {RUN}/bench 4",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "pass_regex": "^TB_HFD_EP_STATIC .* PASS$"
+   }
+  ],
+  "extra_paths": [
+   "rtl/hbm_accel/tu/ep_static_20261015",
+   "rtl/dsrom_sys/s81_link",
+   "rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv",
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2"
+  ],
+  "views_to": "physical/ref_tile/hep_static_ref_1015/views",
+  "record_to": "results/rtl/ref_tile/hep_static_ref_1015"
+ },
+ "std_area_um2": 4352,
+ "slot_change_request": {
+  "reason": "measured gate 1015 (window 434.72x515.2): std 4,352 + macros 53,294 um2 = util 26%, TT clock insertion 468-643 ps / spread 175 ps on 7,680 sinks from the sparse outline; shrink height to 324 um (util ~41%), same width and faces (COLL S, SerDes W, clk S); one master for all nine ep windows (S row MX). Pin cut COLL 0.28, SerDes 1,026 b on 324 um = 0.30.",
+  "prior_slot": "ep_N0..ep_S4 434.72 x 515.2",
+  "requested_leaf": "hfd_ep_static 434.72 x 324",
+  "request_file": "results/arch/hep_static_1015/slot_request.json"
+ },
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}
