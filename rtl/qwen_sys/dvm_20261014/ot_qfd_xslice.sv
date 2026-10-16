@@ -1120,30 +1120,37 @@ module ot_qfd_xhead #(
             b_xcs!={{(AW-XCW){1'b0}},e_xcs[ep_rd]},b_xbase!=e_xb[ep_rd],
             b_xjs!=0,b_wsrc,st[ep_rd]!=1,1'b0} : 13'd0;
     reg flt;
+    // FLT_PIPE (with ONWARD_REG 2, Q-LINK-D2D 2026-10-16): every fault condition lands in its own event flop fe[i] and the
+    // sticky flt takes |fe one edge later (w2 gate: lqbp -> wide AND/OR cone -> flt -104 ps across the 129.6-um head).
+    // The fault is sticky and only reported (fault chain), so +1 edge of fault latency changes no data edge.
+    localparam integer FLT_PIPE = (ONWARD_REG >= 2) ? 1 : 0;
+    reg [7:0] fe;
     always @(posedge ck or negedge rst_i)
         if (!rst_i) begin
-            st[0] <= 2'd0; st[1] <= 2'd0; ep_rd <= 1'b0; busy <= 1'b0; flt <= 1'b0; lr0_v <= {NH{1'b0}};
+            st[0] <= 2'd0; st[1] <= 2'd0; ep_rd <= 1'b0; busy <= 1'b0; flt <= 1'b0; fe <= 8'd0; lr0_v <= {NH{1'b0}};
             ph <= 3'd0; rep <= 1'b0; fault <= 1'b0;
         end else begin
             lr0_v <= rv;
+            fe <= 8'd0;
+            if (FLT_PIPE != 0 && |fe) flt <= 1'b1;
             fault <= flt | fi_q;
             // descriptor: claim the epoch
             if (d_v) begin
-                if(NATIVE_AFFINE!=0 && (d_xks!=1 || d_xcs!=d_k || !(d_k==2 || d_k==6 || d_k==8 || d_k==24 || d_k==32)))flt<=1;
-                if (st[d_ep] != 2'd0) flt <= 1'b1;
+                if(NATIVE_AFFINE!=0 && (d_xks!=1 || d_xcs!=d_k || !(d_k==2 || d_k==6 || d_k==8 || d_k==24 || d_k==32))) begin if (FLT_PIPE != 0) fe[0] <= 1'b1; else flt <= 1'b1; end
+                if (st[d_ep] != 2'd0) begin if (FLT_PIPE != 0) fe[1] <= 1'b1; else flt <= 1'b1; end
                 st[d_ep] <= 2'd1;
                 e_xb[d_ep] <= d_xb; e_xcs[d_ep] <= d_xcs; e_xks[d_ep] <= d_xks; e_sp[d_ep] <= d_sp; e_k[d_ep] <= d_k;
                 e_rnd[d_ep] <= d_rnd;
-                if (d_sp < SMIN || d_sp > SMAX) flt <= 1'b1;
+                if (d_sp < SMIN || d_sp > SMAX) begin if (FLT_PIPE != 0) fe[2] <= 1'b1; else flt <= 1'b1; end
             end
-            if (dp_v && pfault_n) flt <= 1'b1;
-            if ((NATIVE_AFFINE!=0 ? (g_q && e_pbad[rep_now]) : f_pos) || (NATIVE_AFFINE!=0 && |go_bad_bits)) flt <= 1'b1;
-            if (|lqbp) flt <= 1'b1;
-            if (miss) flt <= 1'b1;                                          // a leaf did not answer its read
+            if (dp_v && pfault_n) begin if (FLT_PIPE != 0) fe[3] <= 1'b1; else flt <= 1'b1; end
+            if ((NATIVE_AFFINE!=0 ? (g_q && e_pbad[rep_now]) : f_pos) || (NATIVE_AFFINE!=0 && |go_bad_bits)) begin if (FLT_PIPE != 0) fe[4] <= 1'b1; else flt <= 1'b1; end
+            if (|lqbp) begin if (FLT_PIPE != 0) fe[5] <= 1'b1; else flt <= 1'b1; end
+            if (miss) begin if (FLT_PIPE != 0) fe[6] <= 1'b1; else flt <= 1'b1; end                                          // a leaf did not answer its read
             // the go: consume the oldest filled epoch
             if (g_q) begin
                 if (busy && last) st[(MUT == 4) ? ~rep : rep] <= 2'd0;     // back to back: the previous op's last edge
-                if (NATIVE_AFFINE==0 && (!go_ok || (busy && !last))) flt <= 1'b1;
+                if (NATIVE_AFFINE==0 && (!go_ok || (busy && !last))) begin if (FLT_PIPE != 0) fe[7] <= 1'b1; else flt <= 1'b1; end
                 else begin
                     st[ep_rd] <= 2'd2;
                     rep <= (MUT == 4) ? ~ep_rd : ep_rd;
