@@ -38,9 +38,10 @@
  "source_proofs": {
   "mixed_write_leaf": "PASS129reads128good1invalid; physicalwrites identical, reference effective request delayed1; swappedtile mutantFAIL58ns",
   "array_exact": "RUNNING 2columns,128tiles,40ops,DX11,40ops variedrounding/reuse/attention writes",
-  "native_static36": "RUNNING 2columns,128tiles,36layers+6random,STATIC_SCHEDULE1,NATIVE_AFFINE1,DX11",
-  "whole_48column_parent": "NOT_PROVED",
-  "end_to_end_price_ratio": "UNMEASURED"
+  "native_static36": "RUNNING ACTUAL48columns/768tiles production profile SMIN7..11,36layers+6random,STATIC_SCHEDULE1,NATIVE_AFFINE1,DX11",
+  "whole_48column_parent": "Native static production-shape RTL full48column benchmark running; final physical real-view parent remains NOT_PROVED",
+  "end_to_end_price_ratio": "UNMEASURED",
+  "invalid_reduced_prod": "FAIL markers cyc27..,629663errors caused unsupported literal production split9/8 under incorrect SMIN4/SMAX7 reducedprofile; exit0isNOTpass, negative preserved"
  },
  "gaps": [
   "Current original leaf CTS rawgeometry0FAIL but native diagnostic FAIL r_v234.95/r_t228.41 and two outputs221.56/220.84ps",

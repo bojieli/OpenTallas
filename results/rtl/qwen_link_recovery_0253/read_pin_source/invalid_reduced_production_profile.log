@@ -1,0 +1,27 @@
+ot-run: ot-epyc4       admits   431 GB (avail 658, growth 175, headroom 48, waiters 0/0 GB) load 101/128 running 32 disk 839 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/dvm_read_pin_prod36_0253/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/codex/dvm_read_pin_prod36_0253/src
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-2174182-1792148968 after 0 s
+FAIL cyc=27 x_fault
+FAIL cyc=28 x_fault
+FAIL cyc=29 x_fault
+FAIL cyc=30 x_fault
+FAIL cyc=31 x_fault
+FAIL cyc=32 x_fault
+FAIL cyc=33 x_fault
+FAIL cyc=34 x_fault
+FAIL cyc=35 x_fault
+FAIL cyc=36 x_fault
+FAIL cyc=37 x_fault
+FAIL cyc=38 x_fault
+FAIL cyc=39 x_fault
+FAIL cyc=40 x_fault
+FAIL cyc=41 x_fault
+FAIL cyc=42 x_fault
+FAIL cyc=43 x_fault
+FAIL cyc=44 x_fault
+FAIL cyc=45 x_fault
+FAIL cyc=46 x_fault
+FAIL errors=629663 checks=1216512
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-2174182-1792148968): exit 0
