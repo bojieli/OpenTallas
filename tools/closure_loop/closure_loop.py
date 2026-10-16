@@ -3814,9 +3814,55 @@ def schedule_deferred_record_merges():
 RECORD_MAX_FILE_BYTES = 90 << 20
 
 
+# PORT-LATENCY (ROOT 2215, owner rule 19:50 PT 10-15): the exact elaborated pin-register stages of a recipe-3 tile reach the
+# static compilers from the CLOSED record, never from a typed constant.  publish() exports the route synthesis's own
+# $RESULTS_DIR/ot_pin_regs.tsv + ot_pin_regs_wrapper.v (physical/common_flow/ot_pin_regs.tcl) with
+# tools/ref_tile/port_latency.py, bound to the job's full source SHA, into <kit>/views/port_latency.json (beside the
+# closed view the compilers bind) and the job's results/closure_loop record.  A kit whose kit.env inserts pin registers
+# (OT_PIN_REGS=1) but whose route left no table fails closed (publish error -> NEEDS_HUMAN, never a silent 0).
+PORT_LATENCY_RE = re.compile(r"(physical/ref_tile/[^/\s'\"]+)/kit\.env")
+
+
+def port_latency_record(j):
+    """(kit dir, report dict) for a ref_tile route with pin registers; None when the kit inserts none."""
+    spec = j["spec"]
+    m = PORT_LATENCY_RE.search(((spec.get("stages") or {}).get("route") or {}).get("cmd") or "")
+    if not m:
+        return None
+    kit = m.group(1)
+    env = git("show", f"{j['commit_full']}:{kit}/kit.env", check=False).stdout
+    if "--orfs-var OT_PIN_REGS=1" not in env:
+        return None
+    top = None
+    try:
+        top = json.loads(git("show", f"{j['commit_full']}:{kit}/spec.json", check=False).stdout or "{}").get("top")
+    except ValueError:
+        pass
+    base = f"{j['run']}/routes/{label(j['name'])}/work/orfs/results/asap7/*/base"
+    with tempfile.TemporaryDirectory() as td:
+        got = {}
+        for f in ("ot_pin_regs.tsv", "ot_pin_regs_wrapper.v"):
+            r = ssh(j["host"], f"cat $(ls -d {base} | head -1)/{f}", timeout=120)
+            if r.returncode != 0 or not r.stdout:
+                raise RuntimeError(f"PORT-LATENCY: {kit}/kit.env inserts pin registers (OT_PIN_REGS=1) but the route left no "
+                                   f"{f} under {base} (fail closed: the compilers need the elaborated per-port stages)")
+            (Path(td) / f).write_text(r.stdout)
+            got[f] = Path(td) / f
+        if not top:
+            mm = re.search(r"^\s*module\s+(\S+)\s*\(", got["ot_pin_regs_wrapper.v"].read_text(), re.M)
+            top = mm.group(1) if mm else ""
+        if str(HERE.parent / "ref_tile") not in sys.path:
+            sys.path.insert(0, str(HERE.parent / "ref_tile"))
+        import port_latency
+        rep = port_latency.export(got["ot_pin_regs.tsv"], got["ot_pin_regs_wrapper.v"], top, j["commit_full"])
+    rep["job"] = j["name"]
+    return kit, rep
+
+
 def publish(j, metrics):
     """Commit record + view on the job branch (explicit paths), trial-merge into merge_target, push."""
     spec = j["spec"]
+    plat = port_latency_record(j)       # PORT-LATENCY: before any git work; a missing table raises (fail closed)
     source_branch, target = spec["source"]["branch"], spec.get("merge_target")
     branch = f"codex/closure-record-{j['name']}" if claude_owns_main() else source_branch
     rec_dir = f"results/closure_loop/{j['name']}"
@@ -3867,6 +3913,17 @@ def publish(j, metrics):
                     big.append(f"{f.relative_to(cwt)} {f.stat().st_size} B (kept on {j['host']}:{j['run']})")
                     f.unlink()
         (cwt / rec_dir).mkdir(parents=True, exist_ok=True)
+        plat_paths = []
+        if plat:
+            kit, rep = plat
+            txt = json.dumps(rep, indent=2, sort_keys=True) + "\n"
+            for r in spec.get("record", []):
+                vd = cwt / r["to"].rstrip("/") / rep["top"]
+                if r["to"].rstrip("/") == f"{kit}/views" and vd.is_dir():
+                    (vd / "port_latency.json").write_text(txt)
+                    plat_paths.append(str((vd / "port_latency.json").relative_to(cwt)))
+            (cwt / rec_dir / "port_latency.json").write_text(txt)
+            plat_paths.append(f"{rec_dir}/port_latency.json")
         if big:
             (cwt / rec_dir / "LARGE_FILES_EXCLUDED.txt").write_text("\n".join(big) + "\n")
             log(f"[{j['name']}] record: {len(big)} file(s) > {RECORD_MAX_FILE_BYTES >> 20} MB left out of git")
@@ -3881,6 +3938,9 @@ def publish(j, metrics):
                        checks=j.get("checks", {}), submit_checks=j.get("submit_checks"), calibration=j.get("calibration"), route_overlay_plan=j.get("route_overlay_plan"), cycles_added=spec.get("cycles_added"), status="CLOSED",
                        closed_at=now_iso(), job_spec=spec, io_budget=(j.get("rebudget") or {}).get("rb") or "link_budget_consistent (fixed split)",
                        rebudget=j.get("rebudget"))
+        if plat:
+            verdict["port_latency"] = dict(paths=plat_paths, sha256=hashlib.sha256(
+                (cwt / plat_paths[0]).read_bytes()).hexdigest(), schema=plat[1]["schema"])
         if j.get("export_lint_recovery"):
             verdict["export_lint_recovery"] = j["export_lint_recovery"]
         (cwt / rec_dir / "verdict.json").write_text(json.dumps(verdict, indent=1) + "\n")
