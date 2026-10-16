@@ -3,7 +3,7 @@
   "top": "dsfd_capt_rly_64_EW",
   "kind": "tile",
   "sources": [
-    "rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_capt_split.sv",
+    "rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_capt_split.sv", "rtl/hdc/ot_hdc_prefix.sv",
     "rtl/dsrom_sys/s81_ph/ot_s81ph_cap_tile.sv",
     "rtl/common/ot_ratio_cdc_fifo.sv",
     "rtl/dsrom_sys/s81_glue/ot_s81_rly.sv",
