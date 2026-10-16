@@ -1,0 +1,6 @@
+RF_ROUTE PASS routes=16 stages=36 actual48bitmasters=576 checks=33408
+- rtl/hbm_accel/generic/adapters/static_su/register_file/tb_hbm_su_rf_route.sv:48: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 21us; walltime 0.020 s; speed 1.056 ms/s
+- Verilator: cpu 0.020 s on 1 threads; allocated 7 MB
+exit=0

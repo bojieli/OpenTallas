@@ -7,31 +7,31 @@
 // explicitly named PCs. Real native burst order permutes logical t low bits
 // by row[1:0]; metadata records that permutation before any PHY acceptance.
 module ot_hbm_svc_prefetch_overlap_owner #(
- parameter [4:0] PC=0,parameter integer OWNER_AW=5
+ parameter [4:0] PC=0,parameter integer OWNER_AW=5,parameter integer LB=1
 )(
  input wire clk,rst_n,descriptor_v,input wire [29:0] descriptor_base,
  input wire [19:0] descriptor_pcs,input wire [14:0] descriptor_row_base,
- input wire [11:0] descriptor_total,input wire descriptor_bank,input wire [15:0] descriptor_epoch,
+ input wire [11:0] descriptor_total,input wire [LB-1:0] descriptor_bank,input wire [15:0] descriptor_epoch,
  input wire block_active,input wire [29:0] block_base,input wire [19:0] block_pcs,
- input wire [14:0] block_row_base,input wire [11:0] block_total,input wire block_bank,
+ input wire [14:0] block_row_base,input wire [11:0] block_total,input wire [LB-1:0] block_bank,
  input wire [15:0] block_epoch,input wire stop,k_ready,kr_v,input wire [16:0] kr_tag,
  input wire [3:0] kr_beat,input wire response_take,
  output wire k_v,output wire [29:0] k_addr,output wire [3:0] k_len,output wire [16:0] k_tag,
  output wire response_ok,output wire [10:0] response_ordinal,
- output wire [15:0] response_epoch,output wire response_bank,output wire fault,
+ output wire [15:0] response_epoch,output wire [LB-1:0] response_bank,output wire fault,
  output wire issue_done
 );
  localparam integer ENTRIES=1<<OWNER_AW,GW=17-OWNER_AW;
  reg [16:0] ticket;reg [9:0] cursor;reg sticky;reg issuing_q;
  reg [ENTRIES-1:0] valid_q;
  reg [GW-1:0] generation_q[0:ENTRIES-1];reg [15:0] epoch_q[0:ENTRIES-1];
- reg bank_q[0:ENTRIES-1],permuted_q[0:ENTRIES-1];reg [1:0] row_low_q[0:ENTRIES-1];
+ reg [LB-1:0] bank_q[0:ENTRIES-1];reg permuted_q[0:ENTRIES-1];reg [1:0] row_low_q[0:ENTRIES-1];
  reg [10:0] ordinal_q[0:ENTRIES-1];reg [2:0] length_q[0:ENTRIES-1];reg [3:0] seen_q[0:ENTRIES-1];
  wire [19:0] pcs=descriptor_v?descriptor_pcs:block_pcs;
  wire [14:0] row_base=descriptor_v?descriptor_row_base:block_row_base;
  wire [11:0] total=descriptor_v?descriptor_total:block_total;
  wire [15:0] epoch=descriptor_v?descriptor_epoch:block_epoch;
- wire bank=descriptor_v?descriptor_bank:block_bank;
+ wire [LB-1:0] bank=descriptor_v?descriptor_bank:block_bank;
  reg selected;reg [1:0] lane;integer j;
  always @*begin
   selected=0;lane=0;
