@@ -310,6 +310,31 @@ def pv_tree(m):
                             trunks='W and E side channel, 60-b cmd + start / context / epoch + reset, one tap per block row',
                             collection='col_valid / col_fault 2 b per column back on the same trunks (depth = balanced_depth)')
     return out
+def pv_vport_timing(m):
+    """measured relay edges of every V port's die words (Q-VMWB r5 contract: WP = pair req pin -> vport pr, RT = vport vq
+    register -> rsp at its in pins = landing 8 + request + return relays, O = vport out pins -> pair vin pins; the pair sees its
+    word RL = 4 + WP + DQ + RT + O edges after its request, one value for all 16 ports, DQ >= 0 the port's own wait)"""
+    st_ = m.get('relay_stages', {})
+    names = {i.name for i in m['insts']}
+    rows = {}
+    for st in STACKS:
+        for k in range(4):
+            vp = f'vport_{st}_{k}'
+            r_ = dict(WP=st_.get(f'pvrq_{st}_{k}'), O=st_.get(f'pvin_{st}_{k}'))
+            if f'slg_{st}_{2 * k}' in names:
+                r_['RT'] = 8 + max(st_.get(f'pvvq_{st}_{k}_{g}', 0) + st_.get(f'pvrs_{st}_{k}_{g}', 0) for g in (0, 1))
+            rows[vp] = r_
+    wp_ = [r_['WP'] for r_ in rows.values() if r_['WP'] is not None]
+    o_ = [r_['O'] for r_ in rows.values() if r_['O'] is not None]
+    rt_ = [r_['RT'] for r_ in rows.values() if r_.get('RT') is not None] or [8]
+    worst = max((r_['WP'] or 0) + (r_['O'] or 0) + r_.get('RT', 8) for r_ in rows.values())
+    return dict(ports=rows, WP_range=[min(wp_), max(wp_)] if wp_ else None, O_range=[min(o_), max(o_)] if o_ else None,
+                RT_range=[min(rt_), max(rt_)], RT_assumed_landing_only=not any('RT' in r_ for r_ in rows.values()),
+                worst_WP_plus_O_plus_RT=worst, RL_needed_DQ0=4 + worst, kit=dict(RL=19, WP=2, RT=8),
+                note='all 16 ports must see the same RL: shorter ports take DQ = RL - 4 - WP - RT - O (per-port value); '
+                     'the r5 kit DQ formula omits O (vport -> pair relays)')
+
+
 HEAD_CLK = ([f'ck_f{q}' for q in range(4)] + ['ck_k', 'ck_s'] +
             [f'ck_{t}{i}' for t in 'itabl' for i in range(16)])
 HEAD_CLK_CHILD = dict(**{f'ck_f{q}': f'front{q}' for q in range(4)}, ck_k='ktree', ck_s='score',
@@ -435,19 +460,26 @@ SPLIT_BINDINGS['qkd_rst_region'] = dict(module='qkd_rst_region', file='rtl/qwen_
     classed={'por_n': 'by_design: package POR pad (off-chip signal), async assert, synchronised inside the root'})
 SPLIT_BINDINGS['qkd_hgs'] = dict(module='qkh_head_gather_stage', file='rtl/qwen_sys/split_20261014/qkh_head_gather_stage.sv',
     ports=dict(ti_a=['ti_a'], e_a=['e_a'], ti_b=['ti_b'], e_b=['e_b'], ck=['ck']), classed={})
-# v1.4.4 PV16 wide pairs (wires-only; die-placed children via kv_expand).  The die connects ONLY the clock entries and the
-# reset today: the pair's data inputs (V / e / arrival identity / start / context / epoch) and outputs (V requests,
-# out_leaf, flags) have NO producer / consumer RTL on the die yet (landing strip without the 4 V return ports a stack,
-# ASTK strip without qkd_astk_native_er_service_w, hub without the wide-pair finalize face) -> they stay UNCONNECTED
-# (strict port bind MISMATCH, never tied); owners in kv_expand.PV_OPEN.
+# v1.4.4 PV16 wide pairs (die-placed children via kv_expand) behind their wires-only KV-die face qkd_pvw_die (one die word
+# per V port each way: vrq<k> pair -> vport k, vin<k> vport k -> pair, so valid / tag / data share ONE relay chain).
+# Inputs with no producer RTL on the die yet stay UNCONNECTED (strict bind: declared open, never tied; owners in
+# kv_expand.PV_OPEN): start / context_len / epoch (static attention calendar), in_e (ASTK e-read service), in_epoch (V arrival
+# epoch: the r5 vport carries none).  Outputs without a die consumer yet: out_* / fault / busy / out_age (finalize face).
 for _mn, _pair in (('qkd_pvw_s', 0), ('qkd_pvw_n', 1)):
-    SPLIT_BINDINGS[_mn] = dict(module='ot_qwen_tp8_pv_wide_pair', file='rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_pair.sv',
-        parameters=dict(PAIR=_pair, CTL_RESET_PIN=1, LEAF_RESET_PIN=0, FIRST_INPUT_AGE=20, MUT=0),
-        ports=dict(ck_c0=['col_clk'], rst_n=['rst_n'], st=['start', 'context_len', 'epoch'],
-                   vi=['in_valid', 'in_v', 'in_e', 'in_t', 'in_epoch'], vr=['req_valid', 'req_t'],
+    SPLIT_BINDINGS[_mn] = dict(module='qkd_pvw_die', file='rtl/qwen_sys/split_20261014/qkd_pvw_die.sv',
+        parameters=dict(PAIR=_pair, CTL_RESET_PIN=1, LEAF_RESET_PIN=1, FIRST_INPUT_AGE=20, MUT=0),
+        ports=dict(ck_c0=['col_clk'], rst_n=['rst_n'], st=['start', 'context_len', 'epoch'], ie=['in_e'], iep=['in_epoch'],
+                   **{f'vin{k}': [f'vin{k}'] for k in range(8)}, **{f'vrq{k}': [f'vrq{k}'] for k in range(8)},
                    po=['out_valid', 'out_leaf', 'out_epoch'], pf=['fault', 'busy', 'out_age']),
-        sliced={f'ck_c{s}': 'ck_c0' for s in range(1, 33)},
-        classed={'clk': 'by_design: unused by the RTL (every child takes its col_clk entry)'})
+        sliced={f'ck_c{s}': 'ck_c0' for s in range(1, 33)}, classed={})
+# v1.4.4 PV16 V ports (Q-VMWB r5 = the V ISSUER, kit physical/ref_tile/qkd_pv16_vport_r5): pr = the pair's request for this
+# port, vq0 / vq1 = V gets to static landing groups {k, 0} / {k, 1}, i0 / i1 = those groups' rsp words, vo -> the pair.
+# RL / WP / RT are the kit's (19 / 2 / 8); the die's measured relay depths are recorded in plan pv144.vport_timing.
+SPLIT_BINDINGS['qkd_pv16_vport'] = dict(module='qkd_pv16_vport', file='rtl/qwen_sys/static_kv_20261014/qkd_pv16_vport.sv',
+    parameters=dict(MUT=0, RL=19, WP=2, RT=8),
+    ports=dict(ck=['ck'], rst_n=['rst_n'], pr=['pr_valid', 'pr_t'], vq0=['vq0_valid', 'vq0_t'], vq1=['vq1_valid', 'vq1_t'],
+               i0=['in0_valid', 'in0_vflag', 'in0_t', 'in0_d'], i1=['in1_valid', 'in1_vflag', 'in1_t', 'in1_d'],
+               vo=['out_valid', 'out_t', 'out_v_lo', 'out_v_hi'], f=['fault']), classed={})
 SPLIT_BINDINGS['qkd_hss'] = dict(module='qkh_head_sstage', file='rtl/qwen_sys/split_20261014/qkh_head_stages.sv',
     ports=dict(s_a=['s_a'], s_b=['s_b'], ck=['ck']), classed={})
 SPLIT_PHY = 'qkd_hbm3e_phy_pc'
@@ -1304,11 +1336,14 @@ def _build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_w
                       centre_column_um=[round(lft, 3), round(rgt, 3), round(rgt - lft, 3)],
                       side_channel_um=[round(x_ - lft, 3), round(rgt - x_ - PVW[0], 3)],
                       spare_over_259_2_um=[round(x_ - lft - 2 * CHAN, 3), round(rgt - x_ - PVW[0] - 2 * CHAN, 3)])
-        homes, keep = {}, []
+        # the 16 V ports qkd_pv16_vport (Q-VMWB r5, the V issuer): port k of stack st serves landing groups {k, 0} / {k, 1}
+        # (vport_wiring.txt: groups 2k / 2k + 1, adjacent strip slots, LAND_GROUP_ORDER) -> its home is the landing-inner
+        # channel (landing | engine group) level with the middle of ITS two groups, so the V get / rsp words (RT) cross
+        # only the channel; the pair request / V word (WP / output) run the corridor + side channel to the centre.
+        # Static landing groups slg_<st>_<g> (OT_KV_STATIC, Q-KVSYS-DIE) give the group centres when present.
+        homes = {}
         for st in STACKS:
             ld_ = byc[f'land_{st}']
-            g0, g1 = grp_y[st]
-            # channel between the landing's inner face and the engine group (W: landing E face, E: landing W face)
             if st[0] == 'W':
                 c0 = ld_.x + ld_.w
                 c1 = min(i.x for i in ins if i.name.startswith(f'head_{st}_'))
@@ -1317,17 +1352,22 @@ def _build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_w
                 c0 = max(i.x + i.w for i in ins if i.name.startswith(f'head_{st}_'))
             vx = up(c0 + (c1 - c0 - PV_VPORT[0]) / 2, GX)
             for k_ in range(4):
-                if st[1] == 'S':
-                    vy = math.floor((g1 - (4 - k_) * PV_VPORT[1] - (3 - k_) * PV_GAP) / GY + 1e-9) * GY
-                else:
-                    vy = up(g0 + (3 - k_) * (PV_VPORT[1] + PV_GAP), GY)
-                homes[f'vport_{st}_{k_}'] = dict(xy=[round(vx, 4), round(vy, 4)], size=list(PV_VPORT), channel_um=[round(c0, 3), round(c1, 3)],
-                                                 pair=STACKS.index(st) % 2, pair_port=k_ + (4 if st[0] == 'E' else 0))
-                keep.append((f'vport_{st}_{k_}', vx, vy, PV_VPORT[0], PV_VPORT[1]))
+                ys_ = []
+                for g_ in (2 * k_, 2 * k_ + 1):
+                    sg_ = byc.get(f'slg_{st}_{g_}')
+                    ys_.append(sg_.y + sg_.h / 2 if sg_ is not None else
+                               ld_.y + KS.PC_PITCH * (4 * LAND_GROUP_ORDER.index(g_) + 2))
+                vy = up(sum(ys_) / 2 - PV_VPORT[1] / 2, GY)
+                nm_ = f'vport_{st}_{k_}'
+                add(nm_, 'qkd_pv16_vport', vx, vy, PV_VPORT[0] - SHAVE, PV_VPORT[1] - SHAVE, 'R0' if st[0] == 'W' else 'MY',
+                    'vport', 'attn')
+                homes[nm_] = dict(xy=[round(vx, 4), round(vy, 4)], size=list(PV_VPORT), channel_um=[round(c0, 3), round(c1, 3)],
+                                  groups=[2 * k_, 2 * k_ + 1], group_y_um=[round(y_, 3) for y_ in ys_],
+                                  pair=STACKS.index(st) % 2, pair_port=k_ + (4 if st[0] == 'E' else 0))
         pv_geo['vport_homes'] = homes
-        pv_geo['vport_status'] = ('RESERVED_KEEPOUT: qkd_pv16_vport instances + ring / pair wiring wait for the Q-VMWB landing '
-                                  'ring faces and pin file (the landing strip RTL has no return-ring face today)')
-        m_keep = [] if __import__('os').environ.get('DBG_NOVP') else keep
+        pv_geo['vport_status'] = ('INSTANTIATED qkd_pv16_vport (r5 RTL): pr / vo wired to the pair; vq / i faces wired to '
+                                  'slg_<st>_<g> only under OT_KV_STATIC (static landing); else DECLARED OPEN (the credit '
+                                  'qkd_land_strip has no V get / rsp_t face; never fed from its legacy rs)')
     # v1.2 candidate lanes are OFF by default (kvs2 T2 try: window fine H 1.37 -> 1.25, coarse 1.32 -> 1.17 H but 0.80 -> 1.10 V,
     # lx 1 -> 2 stages, one re-plan reach miss): OT_KV_LANES=1 turns them on for the next revision's work
     m['geo'] = dict(grp_y=grp_y, split=split, land_width_um=LAND_W, static_memory_reservation=LAND_W > 172.8, lanes=bool(split and __import__('os').environ.get('OT_KV_LANES', '2') in ('1', '2')), stack_pitch=sp, band_shift=band_shift, x_land=x_land, x_grp=x_grp, grp_w=grp_w, centre_w=centre_w, stack_h=stack_h, band_dy=band_dy,
@@ -1412,6 +1452,29 @@ def _v143_buses(add, st, e, c_):
             add((f'tsr_{se}_{h}', 'stack_local', T_RET, [s2_out, (c_, f's{h}')]))
 
 
+def _pv144_buses(m, add):
+    """v1.4.4: V port <-> PV pair words (one relay chain a word) and, with the static landing (slg_<st>_<g>, OT_KV_STATIC),
+    V port <-> landing group V get / rsp.  Port k of stack st = pair (STACKS index % 2) port wp = k + 4 (E stacks)."""
+    names = {i.name for i in m['insts']}
+    for st in STACKS:
+        pv_ = f'pvw_{STACKS.index(st) % 2}'
+        for k in range(4):
+            vp, wp = f'vport_{st}_{k}', k + (4 if st[0] == 'E' else 0)
+            add((f'pvrq_{st}_{k}', 'kv_oneway', 15, [(pv_, f'vrq{wp}'), (vp, 'pr')]))
+            add((f'pvin_{st}_{k}', 'kv_oneway', 1039, [(vp, 'vo'), (pv_, f'vin{wp}')]))
+            for g in (0, 1):
+                sg = f'slg_{st}_{2 * k + g}'
+                if sg not in names:
+                    continue          # credit landing: vq / i stay declared open (never fed from the legacy rs)
+                add((f'pvvq_{st}_{k}_{g}', 'kv_oneway', 15, [(vp, f'vq{g}'), (sg, 'vreq')]))
+                for i_, (bid, cl, bits, eps) in enumerate(m['buses']):
+                    if eps and eps[0] == (sg, 'rsp'):
+                        m['buses'][i_] = (bid, cl, bits, list(eps) + [(vp, f'i{g}')])   # rsp: K consumer + this port
+                        break
+                else:
+                    add((f'pvrs_{st}_{k}_{g}', 'kv_oneway', 1040, [(sg, 'rsp'), (vp, f'i{g}')]))
+
+
 def _buses(m, T, r):
     B = m['buses']
     names = {i.name for i in m['insts']}
@@ -1433,7 +1496,8 @@ def _buses(m, T, r):
               [(f'head_{st}_{e}_{h}', c_) for e in range(r) for h in range(4) for c_ in (HEAD_CLK if sp_ else ['ck'])] + \
               ([(f'head_{st}_{e}_{h}', c_) for e in range(r) for h in (1, 2) for c_ in ('ck_ft_t', 'ck_ft_s')] +
                [(i.name, 'ck') for i in m['insts'] if i.name.startswith(f'hst_{st}_')] if sp_ and V143['on'] else []) + \
-              [(c, 'clk') for c in cdcs[st]]
+              [(c, 'clk') for c in cdcs[st]] + \
+              [(i.name, 'ck') for i in m['insts'] if i.name.startswith(f'vport_{st}_')]   # v1.4.4 V ports: stack clock / reset
         add((f'clk_core_{st}', 'clock_trunk', 1, [('pll', f'pll_{st}')] + grp +
              [(f'ctrl_{st}', 'ck')]))   # qwen-1010/b: the kc stream-command FIFO's write side (reset: rsi, below)
         add((f'rst_core_{st}', 'reset', 1, [('pll', f'rso_{st}'), (f'ctrl_{st}', 'rsi')] +
@@ -1441,6 +1505,8 @@ def _buses(m, T, r):
     cen = ['d2d_kv', 'seq', 'embgw', 'ahub', 'host'] + (['lnk'] if m['geo'].get('split') else [])
     # v1.4.4: the two PV pairs = centre-clock groups, one entry per column (col_clk[s] -> its 9 tiles) + the control tile
     cen += [i.name for i in m['insts'] if i.master.startswith('qkd_pvw')]
+    if m['geo'].get('pv144'):
+        _pv144_buses(m, add)
     add(('clk_core_c', 'clock_trunk', 1, [('pll', 'pll_c')] +
          [(n, c_) for n in cen for c_ in (AHUB_CLK if (n == 'ahub' and m['geo'].get('split')) else
                                          PVW_CLK if n.startswith('pvw_') else ['ck'])] +
@@ -2698,6 +2764,26 @@ def _split_pins(M, m=None):
             if 'rst_n' in hm.ports:
                 x_, y_, w_, h_, _ = pl['u_ctl']
                 hm.ports['rst_n'] = ('area', 1, round(x_ + w_ / 2 + 6.4, 3), round(y_ + h_ / 2, 3), 1)
+            # V port words: stack PAIR ports 0-3 on the W face, stack PAIR + 2 ports 4-7 on the E face, level with the MIDDLE
+            # of the column array (measured 10-16: worst port 30 relay edges vs 53 with the pins at the control-strip end; the
+            # side-channel chains reach the middle from the S band and from the corridor alike).  The pair's array-wide
+            # 128-b chunk / cmd distribution from there is the element owner's.
+            for k_ in range(8):
+                f_, yc_ = ('W' if k_ < 4 else 'E'), PV_ARR[1] / 2 + ((k_ % 4) - 1.5) * 130.0
+                if f'vin{k_}' in hm.ports:
+                    hm.ports[f'vin{k_}'] = ('face', hm.ports[f'vin{k_}'][1], f_, 'M4', round(yc_, 3), 1)
+                if f'vrq{k_}' in hm.ports:
+                    hm.ports[f'vrq{k_}'] = ('face', hm.ports[f'vrq{k_}'][1], f_, 'M4', round(yc_ + 40.0, 3), 1)
+    # v1.4.4 V ports (Q-VMWB r5 pin faces, canonical R0): W = in0 + vq0, E = in1 + vq1, N = vo (out_valid / out_t / out_v)
+    # + pr + ck, S = rst_n + fault
+    if 'qkd_pv16_vport' in M:
+        vm_ = M['qkd_pv16_vport']
+        for p_, f_, c_ in (('i0', 'W', 86.4), ('vq0', 'W', 160.0), ('i1', 'E', 86.4), ('vq1', 'E', 160.0), ('vo', 'N', 43.2),
+                           ('pr', 'N', 72.0), ('rst_n', 'S', 20.0), ('f', 'S', 60.0)):
+            if p_ in vm_.ports:
+                vm_.ports[p_] = ('face', vm_.ports[p_][1], f_, 'M4' if f_ in 'WE' else 'M5', c_, 1)
+        if 'ck' in vm_.ports:
+            vm_.ports['ck'] = ('area', 1, vm_.w / 2 - 6.4, vm_.h / 2, 1)
     # the link bridge abuts the KV end: its rf / tf faces take the KV end's bit positions (v1 drew them ~220 um apart:
     # the 1.47 fine window of the d2d | lnk face); lx / lr leave its S face over the sequencer's lx / lr pins
     if m is not None and 'qkd_lnk' in M and 'qkd_d2d' in M:
@@ -3154,7 +3240,8 @@ def record(m):
                                               f'routes qkd_rhead_c / qkd_ectl_c)',
                              astk_w=ASTK_W, land_w=LAND_W, frames=FRAMES,
                              note='frames without a routed element are sized from synthesis or stated as ASSUMED'),
-                **({'pv144': dict(m['geo']['pv144'], tree=pv_tree(m))} if m['geo'].get('pv144') else {}))
+                **({'pv144': dict(m['geo']['pv144'], tree=pv_tree(m), vport_timing=pv_vport_timing(m))}
+                   if m['geo'].get('pv144') else {}))
 
 
 def check(m):

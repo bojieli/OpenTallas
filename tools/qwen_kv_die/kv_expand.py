@@ -59,10 +59,9 @@ VIEWS = dict(
     # v1.4.3 near-head feed-through leaves (the far head's T1 / S2)
     qkh_head_gather_stage=f'{RT}/qkh_head_gather_stage/views/qkh_head_gather_stage',
     qkh_head_sstage=f'{RT}/qkh_head_sstage/views/qkh_head_sstage',
-    # v1.4.4 PV16 wide pair leaves (CLOSED): slice / join r4 (LEAF_RESET_PIN 0), control r5 (CTL_RESET_PIN 1, reset pin
-    # capture successor of the r4 native reset-capture FAIL)
-    ot_qwen_tp8_pv_slice_t=f'{RT}/qkd_pv_slice/views/ot_qwen_tp8_pv_slice_t',
-    ot_qwen_tp8_pv_join_t=f'{RT}/qkd_pv_join/views/ot_qwen_tp8_pv_join_t',
+    # v1.4.4 PV16 wide pair leaves (CLOSED, all reset-pin r5: RESET_PIN 1 = the pair's LEAF_RESET_PIN / CTL_RESET_PIN 1)
+    ot_qwen_tp8_pv_slice_t=f'{RT}/qkd_pv_slice_rstpin_r5/views/ot_qwen_tp8_pv_slice_t',
+    ot_qwen_tp8_pv_join_t=f'{RT}/qkd_pv_join_rstpin_r5/views/ot_qwen_tp8_pv_join_t',
     ot_qwen_tp8_pv_wide_ctl=f'{RT}/qkd_pv_ctl_rstpin_r5/views/ot_qwen_tp8_pv_wide_ctl',
 )
 SR = 'rtl/qwen_sys/split_20261014'
@@ -77,16 +76,15 @@ RTL = dict(ot_qkh_head_frontq_native=f'{SR}/ot_qkh_head_native_r4.sv', ot_qkh_he
            **{m_: 'rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_pair.sv' for m_ in
               ('ot_qwen_tp8_pv_slice_t', 'ot_qwen_tp8_pv_join_t', 'ot_qwen_tp8_pv_wide_ctl')})
 # v1.4.4: wires-only sub-levels of an expanded parent (flattened with the parent; never a die instance)
-SUBLEVELS = dict(ot_qwen_tp8_pv_wide_pair=('ot_qwen_tp8_pv_col',))
+SUBLEVELS = dict(qkd_pvw_die=(('rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_pair.sv', 'ot_qwen_tp8_pv_wide_pair'),
+                             ('rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_pair.sv', 'ot_qwen_tp8_pv_col')))
 # v1.4.4: parent inputs with NO producer RTL on the die yet: left UNCONNECTED (never tied; strict port bind MISMATCH),
 # each with the element that owes the producer.  Only these ports may stay unbound; any other unbound input still refuses.
 PV_OPEN = dict(
     start='Q-ATTN-RATE / Q-KVSYS-DIE: PV start slot from the static attention calendar (hub / ECTL issue word)',
     context_len='Q-ATTN-RATE: per-layer context word of the static calendar (seq / ahub)',
     epoch='Q-ATTN-RATE: layer epoch word (seq / ahub)',
-    in_valid='Q-ELEM (landing strip): 4 V return ports a stack (8 PCs each) + V_EXT at the 0az boundary',
-    in_v='Q-ELEM (landing strip): 4 x 1,024-b V return words a stack (stack PAIR lanes 0-3 | PAIR+2 lanes 4-7)',
-    in_t='Q-ELEM (landing strip): V arrival row index per port', in_epoch='Q-ELEM (landing strip): V arrival epoch per port',
+    in_epoch='Q-VMWB: V arrival epoch per port (the r5 vport carries none; landing rsp_epoch not on its vo word)',
     in_e='Q-ATTN-RATE (ASTK): qkd_astk_native_er_service_w 4-wide e read face (not in the die ASTK strip qkd_astk_strip_s)')
 FLIP = dict(R0=(0, 0), MX=(0, 1), MY=(1, 0), R180=(1, 1))
 ORIENT = {v: k for k, v in FLIP.items()}
@@ -127,8 +125,9 @@ def _ctrl_plan(rev):
 
 
 def _pv_plan():
-    pl = K.pv_plan()
-    return lambda cell, fw, fh: (pl[cell][0], pl[cell][1], pl[cell][4])
+    pl = K.pv_plan()       # cells under the die face qkd_pvw_die flatten as 'u_pair.<pair cell>'
+    return lambda cell, fw, fh: (pl[cell.split('u_pair.', 1)[-1]][0], pl[cell.split('u_pair.', 1)[-1]][1],
+                                 pl[cell.split('u_pair.', 1)[-1]][4])
 
 
 def frames():
@@ -189,12 +188,12 @@ def module_text(path, mod):
 
 def elaborate(mod, file, leaf, parameters=None):
     """yosys JSON of the parent module with every leaf module a black box.  v1.4.4: wires-only SUBLEVELS of the parent
-    (same file) are read and flattened into it (cell names 'g_col[s].u_col.u_join'); parent parameters (BINDINGS
+    ((file, module) pairs) are read and flattened into it (cell names 'g_col[s].u_col.u_join'); parent parameters (BINDINGS
     'parameters') are set with chparam."""
     txt = module_text(ROOT / file, mod)
     subs = SUBLEVELS.get(mod, ())
-    for sm in subs:
-        txt += module_text(ROOT / file, sm).replace('`timescale 1ns/1ps\n', '')
+    for sf, sm in subs:
+        txt += module_text(ROOT / sf, sm).replace('`timescale 1ns/1ps\n', '')
     params = defaultdict(set)
     for cm in re.finditer(r'\b(\w+)\s*#\s*\((.*?)\)\s*(\w+)\s*\(', txt, re.S):
         if cm.group(1) in leaf:
