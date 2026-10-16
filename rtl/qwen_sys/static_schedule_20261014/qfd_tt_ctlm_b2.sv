@@ -45,7 +45,11 @@ module qfd_tt_ctlm_b2 #(parameter integer XPF_TRANSPORT_EDGES=-1) (
     output wire ovf
 );
     wire [340:0] c0;
+`ifdef OT_QFD_B2_AM_MUT
+    wire [103:0] f0={am0[51],am1[51],am0[50:0],am1[50:0]};
+`else
     wire [103:0] f0={am1[51],am0[51],am1[50:0],am0[50:0]};
+`endif
     assign tc0=c0; assign tc1=c0;
     wire [340:0] c1;
     wire [103:0] f1={am3[51],am2[51],am3[50:0],am2[50:0]};

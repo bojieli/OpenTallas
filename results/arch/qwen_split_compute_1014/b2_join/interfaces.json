@@ -3,7 +3,7 @@
   "sources": [
     {
       "source": "rtl/qwen_sys/static_schedule_20261014/qfd_tt_ctlm_b2.sv",
-      "sha256": "b92fb30b7f178a0780440beb18c2cc56ab3da1e42141154da6619907f3e4e748",
+      "sha256": "db5a216a9008d8303a028bca0a5dc4a2224d48ed9c61d19849205fc1a0c27da7",
       "top": "qfd_tt_ctlm_b2",
       "ports": {
         "ck_xpf": {
@@ -82,6 +82,18 @@
           "direction": "output",
           "bits": 1
         },
+        "mer3": {
+          "direction": "output",
+          "bits": 1
+        },
+        "mer4": {
+          "direction": "output",
+          "bits": 1
+        },
+        "mer5": {
+          "direction": "output",
+          "bits": 1
+        },
         "rf0": {
           "direction": "input",
           "bits": 1
@@ -91,6 +103,18 @@
           "bits": 1
         },
         "rf2": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rf3": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rf4": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rf5": {
           "direction": "input",
           "bits": 1
         },
@@ -4082,7 +4106,7 @@
     },
     {
       "source": "rtl/qwen_split/qfd_res_train_issue_b2.sv",
-      "sha256": "c52a2072584389aeb12640017f0cb7b3188afb6b4282cd65b37def9deff42cc0",
+      "sha256": "d658c2363cc0c51f3ae836adcdf217e587f0786c0a69001f2af63bcaea3f52e2",
       "top": "qfd_res_train_issue_b2",
       "ports": {
         "ck": {
@@ -4149,23 +4173,33 @@
     }
   ],
   "cycles": {
-    "controller_added": 0,
-    "vm_ingress_added": 0,
+    "controller_added_logic": 0,
+    "am_station_added_vs_old_master": 0,
+    "vm_ingress_added_logic": 0,
     "return_ro": 6,
     "return_pin_input": 1
   },
-  "calendar": "PRODUCTION six parallel halftrain F=D+HB*NH+t*max(8NH,stride)+i*NH+j. NH(split7..11)=4,2,1,3,1. Actual24 capturebanks and64 headonlymarkers. VM PAR_RB1/NB6, compiler must prove actualbankcuts.",
-  "scope": "Source ABIs and architecture only; no inherited physical view or native full-layer PASS. Shared24 serializer evidence is diagnostic only.",
+  "calendar": "Six parallel halftrain F=D+HB*NH+t*max(8NH,stride)+i*NH+j. NH(split7..11)=4,2,1,3,1. Actual24 capturebanks and64 headonlymarkers. VM PAR_RB1/NB6. Per-route padding unassigned.",
   "sizing": {
-    "per_half_bank_flops": 66312,
-    "parent_payload_output_flops": 551,
+    "capture_bits_per_half": 53088,
+    "capture_and_emit_ff_per_half": 66312,
+    "parent_output_ff_per_half": 551,
+    "parent_control_ff_census": "pending synthesis",
     "clock_entries_per_half": 25,
-    "pipeline_edges_at_rb_from_F": {
-      "payload": 1,
-      "marker_only": 0
-    },
+    "per_bank_ff": 2763,
+    "max_capture_bits_per_edge": 13278,
+    "max_result_bits_per_edge": 3306,
     "new_external_vm_payload_pins": 1653,
-    "tt_added_external_pins": 1101,
-    "outline": "UNASSIGNED pending synthesis/real pins; do not inherit old serializer rectangle"
-  }
+    "tt_extra_control_pins": 1107,
+    "normal_cycles_from_capture_zero_to_last_payload_pin": "D+5NH+(tiles-1)*max(8NH,stride)+7NH+NH-1+1 (observe after output-register edge); marker-only has one fewer edge",
+    "outline_um": null,
+    "area": "UNASSIGNED: actual source cell area/pin/clock assignment required; no inherited serializer grant"
+  },
+  "limits": [
+    "No inherited physical view",
+    "Whole native layer/token qualification OPEN",
+    "Other VM writers and die path ages require exact composed static calendar",
+    "Native E3 specialized master still requires its physical closure",
+    "Controller underlying arithmetic retained; literal ABI bench does not substitute full controller compute qualification"
+  ]
 }
