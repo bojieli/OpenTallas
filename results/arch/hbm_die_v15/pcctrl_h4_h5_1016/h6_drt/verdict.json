@@ -1,0 +1,29 @@
+{
+  "job": "hdie_pc_ctrl_cfg-cfg-h6-nooverflight-west-6a9d24cd2",
+  "source_commit": "6a9d24cd2",
+  "qualification": "FAILED TT setup; not adopted; native audit and insertion R remain OPEN",
+  "actual_odb": "5_2_route.odb",
+  "inspection_time": "2026-10-16T04:33:49.758601-07:00",
+  "actual_pngs_inspected": [
+    "images/density.png",
+    "images/floorplan.png"
+  ],
+  "findings": "Full west channel remains distributed; localized high density near top/bottom edges and some west bins, no macro-gap choke. Full M5 reservation fixed GRT overflow (0); final DRC 0. Internal write eligibility/priority and indexed queue write paths now limit extracted TT. Reset recovery reported +60.89 ps is not the worst path.",
+  "setup_tt_ps": -50.14,
+  "setup_tt_violating_d_pins": 888,
+  "hold_ff_ps": 16.39,
+  "ss_sensitivity_ps": -457.66,
+  "drc_count": 0,
+  "worst_path": {
+    "start": "controller.on.blk[5]",
+    "end": "controller.on.wab_oh[18]",
+    "slack_ps": -50.14,
+    "arrival_ps": 1200.48,
+    "required_ps": 1150.33
+  },
+  "secondary_paths": [
+    "ep[0] -> controller.on.wq_boh[5][15] (-46.605 ps)",
+    "g_kreg.u_skid.out_data[324] -> queue[6][31] (-41.344 ps)"
+  ],
+  "structural_followup": "Reduce serial bank eligibility / older-slot / winner reductions without adding cycles; separately evaluate queue write decode fanout. No unchanged retry."
+}

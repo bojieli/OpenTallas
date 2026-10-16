@@ -1,0 +1,42 @@
+{
+ "bus_colors": {
+  "VDD": "#e69eb0",
+  "VSS": "#a4a5e6",
+  "clk": "#e64c34",
+  "col_bank": "#e6b976",
+  "col_col": "#e6bb75",
+  "col_data": "#82e682",
+  "col_strb": "#2f2de6",
+  "col_v": "#a7e62b",
+  "col_we": "#e6cd53",
+  "dram_rdata": "#a2a2e6",
+  "dram_rvalid": "#a9e62f",
+  "k_addr": "#e6ab37",
+  "k_len": "#e66a67",
+  "k_rdy": "#c6a6e6",
+  "k_tag": "#8ce64b",
+  "k_v": "#e6bb84",
+  "k_wdata": "#5d83e6",
+  "k_we": "#4de69e",
+  "k_wr_done": "#59e69c",
+  "k_wstrb": "#65e6a4",
+  "kr_beat": "#cbe64f",
+  "kr_data": "#db44e6",
+  "kr_rdy": "#e65493",
+  "kr_tag": "#5ea3e6",
+  "kr_v": "#80b7e6",
+  "owner_fault": "#63e692",
+  "pc_fault": "#30e64f",
+  "pc_id": "#e6c75f",
+  "refresh_reload": "#e6b0b5",
+  "row_bank": "#e6839a",
+  "row_op": "#e6b95a",
+  "row_row": "#e6c437",
+  "row_v": "#d07de6",
+  "rst_n": "#bde3e6"
+ },
+ "images": {
+  "floorplan": "results/arch/hbm_die_v15/pcctrl_h4_h5_1016/h6_drt/images/floorplan.png",
+  "density": "results/arch/hbm_die_v15/pcctrl_h4_h5_1016/h6_drt/images/density.png"
+ }
+}
