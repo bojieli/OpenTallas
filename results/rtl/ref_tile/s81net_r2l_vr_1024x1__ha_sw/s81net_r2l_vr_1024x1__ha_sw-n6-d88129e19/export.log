@@ -1,0 +1,74 @@
+{"name": "dsfd_r2l_vr_1024x1__ha_SW", "ok": true, "checked": true, "files": {"dsfd_r2l_vr_1024x1__ha_SW.lef": "a3e17cd8a010d954deb6fb410549fe12bc417c66f952596d8d3e19955583b457", "dsfd_r2l_vr_1024x1__ha_SW_ff.lib": "91d0d761f7b3846fce261f37c31dfcc2c7001ec237c08697bb5d4f10cd60dc97", "dsfd_r2l_vr_1024x1__ha_SW_ss.lib": "52d830ccec5c6ea3057a464dd505887e351fd06c4519de30277f7d523b1054ca", "dsfd_r2l_vr_1024x1__ha_SW_tt.lib": "36c7b6a91987fcb2e0557539144215e9920178076665be8fa4258ffb6f5acbcc"}}
+CK_SS_MEAN=244 CK_SS_ALL_MEAN=243 CK_SS_MIN=231 CK_SS_ALL_MIN=228 CK_SS_MAX=256 CK_SS_ALL_MAX=258 CK_TT_MEAN=190 CK_TT_ALL_MEAN=189 CK_TT_MIN=178 CK_TT_ALL_MIN=176 CK_TT_MAX=201 CK_TT_ALL_MAX=202 CK_FF_MEAN=157 CK_FF_ALL_MEAN=156 CK_FF_MIN=145 CK_FF_ALL_MIN=145 CK_FF_MAX=168 CK_FF_ALL_MAX=168 CK_ROUTE_REF=SS
+ss: no clock arrivals for clock w_fi0
+SL
+  OR3x2_ASAP7_75t_SL
+  OR3x4_ASAP7_75t_SL
+  OR4x1_ASAP7_75t_SL
+  OR4x2_ASAP7_75t_SL
+  OR5x1_ASAP7_75t_SL
+  OR5x2_ASAP7_75t_SL
+  TIEHIx1_ASAP7_75t_SL
+  TIELOx1_ASAP7_75t_SL
+  XNOR2x1_ASAP7_75t_SL
+  XNOR2x2_ASAP7_75t_SL
+  XNOR2xp5_ASAP7_75t_SL
+  XOR2x1_ASAP7_75t_SL
+  XOR2x2_ASAP7_75t_SL
+  XOR2xp5_ASAP7_75t_SL
+  O2A1O1Ixp33_ASAP7_75t_SL
+  O2A1O1Ixp5_ASAP7_75t_SL
+  OA211x2_ASAP7_75t_SL
+  OA21x2_ASAP7_75t_SL
+  OA221x2_ASAP7_75t_SL
+  OA222x2_ASAP7_75t_SL
+  OA22x2_ASAP7_75t_SL
+  OA31x2_ASAP7_75t_SL
+  OA331x1_ASAP7_75t_SL
+  OA331x2_ASAP7_75t_SL
+  OA332x1_ASAP7_75t_SL
+  OA332x2_ASAP7_75t_SL
+  OA333x1_ASAP7_75t_SL
+  OA333x2_ASAP7_75t_SL
+  OA33x2_ASAP7_75t_SL
+  OAI211xp5_ASAP7_75t_SL
+  OAI21x1_ASAP7_75t_SL
+  OAI21xp33_ASAP7_75t_SL
+  OAI21xp5_ASAP7_75t_SL
+  OAI221xp5_ASAP7_75t_SL
+  OAI222xp33_ASAP7_75t_SL
+  OAI22x1_ASAP7_75t_SL
+  OAI22xp33_ASAP7_75t_SL
+  OAI22xp5_ASAP7_75t_SL
+  OAI311xp33_ASAP7_75t_SL
+  OAI31xp33_ASAP7_75t_SL
+  OAI31xp67_ASAP7_75t_SL
+  OAI321xp33_ASAP7_75t_SL
+  OAI322xp33_ASAP7_75t_SL
+  OAI32xp33_ASAP7_75t_SL
+  OAI331xp33_ASAP7_75t_SL
+  OAI332xp33_ASAP7_75t_SL
+  OAI333xp33_ASAP7_75t_SL
+  OAI33xp33_ASAP7_75t_SL
+[WARNING STA-0450] virtual clock vw can not be propagated.
+[WARNING STA-0450] virtual clock vclk can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+OT_CK_RAW_SOURCE core_clk
+OT_CK_RAW_SOURCE w_fi0
+OT_CK_SELECTED w_fi0
+OT_CK_CLOCK_PORT ck[0]: data input delays dropped
+OT_CK_CLOCK_PORT fi0[0]: data input delays dropped
+
+Traceback (most recent call last):
+  File "/srv/opentallas-scratch2/claude/closure-loop/s81net_r2l_vr_1024x1__ha_sw-n6-1ec9e0154/src/tools/closure_loop/ck_insertion.py", line 359, in <module>
+    main()
+    ~~~~^^
+  File "/srv/opentallas-scratch2/claude/closure-loop/s81net_r2l_vr_1024x1__ha_sw-n6-1ec9e0154/src/tools/closure_loop/ck_insertion.py", line 298, in main
+    subprocess.run(cmd, check=True)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.14/subprocess.py", line 578, in run
+    raise CalledProcessError(retcode, process.args,
+                             output=stdout, stderr=stderr)
+subprocess.CalledProcessError: Command '['/usr/bin/python3', '/srv/opentallas-scratch2/claude/closure-loop/s81net_r2l_vr_1024x1__ha_sw-n6-1ec9e0154/src/tools/closure_loop/ck_insertion.py', '--base', '/srv/opentallas-scratch2/claude/closure-loop/s81net_r2l_vr_1024x1__ha_sw-n6-1ec9e0154/routes/s81net_r2l_vr_1024x1__ha_sw_n6_1ec9e0154/work/orfs/results/asap7/opentallas_dsfd_r2l_vr_1024x1__ha_SW_asap7_ref_s81net_r2l_vr_1024x1__ha_sw_n6_1ec9e0154/base', '--clock', 'w_fi0', '--image', 'openroad/orfs:latest', '--route-corner', '', '--output', '/tmp/tmph75tbtj3/clock_1.json', '--routed', '--raw-source']' returned non-zero exit status 1.
+pinstub: 2 OBS rects moved into 2 pins: ck[0], rs[0]; pockets: 636 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)
+REF_TILE export dsfd_r2l_vr_1024x1__ha_SW: views rc=0 child_lint PASS 

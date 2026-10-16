@@ -2,7 +2,11 @@
 """Full production-stage shapes, synthetic external source values; not chip qualification."""
 from pathlib import Path
 import argparse,hashlib,json
+import sys
+# CAL7 per-root reset controller (s81_static_calendar_controller7_resetpins) runs ROM ABI v3 (RW565, lookahead bit)
+sys.path.insert(0,str(Path(__file__).resolve().parent/'resetpins'))
 from controller_image import FIELDS,ABI,LATENCIES,emit
+assert ABI=='opentallas.s81.collective-fixed-edge-rom.v3',ABI
 p=argparse.ArgumentParser();p.add_argument('--out',type=Path,required=True);a=p.parse_args();a.out.mkdir(parents=True,exist_ok=True)
 root=Path(__file__).resolve().parents[2]
 N=2141
@@ -29,7 +33,7 @@ command(0,44,1,0x123,5,'gather_vm')
 command(320,320,0,0x456,6,'reduce_vm_hc')
 for j in range(44):record(j,64,44,0x123,0)
 for j in range(320):record(j,400,320,0x456,1)
-cycles[305].update(done_valid=1,done_tag=133)
+cycles[307].update(done_valid=1,done_tag=133)
 cycles[2133].update(done_valid=1,done_tag=134)
 # Global peer PHY calendar. All beats, including idle beats, are explicit.
 for e,c in enumerate(cycles):

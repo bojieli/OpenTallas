@@ -1,0 +1,12 @@
+PASS STATUS_FIFO MUT=0 checks=174 max_fault_latency_rd_edges=9 wr_period=1024.000000 rd_period=833.333334
+STATUS_FIFO mutant1 direction0 rejected: FATAL: rtl/hbm_accel/loader/service_native/tb_hbm_svc_fault_cdc.sv:14: STATUS fault event lost
+STATUS_FIFO mutant2 direction0 rejected: FATAL: rtl/hbm_accel/loader/service_native/tb_hbm_svc_fault_cdc.sv:16: STATUS not sticky
+STATUS_FIFO mutant3 direction0 rejected: FATAL: rtl/hbm_accel/loader/service_native/tb_hbm_svc_fault_cdc.sv:14: STATUS fault event lost
+STATUS_FIFO mutant4 direction0 rejected: FATAL: rtl/hbm_accel/loader/service_native/tb_hbm_svc_fault_cdc.sv:22: STATUS unexpected overflow
+STATUS_FIFO mutant5 direction0 rejected: FATAL: rtl/hbm_accel/loader/service_native/tb_hbm_svc_fault_cdc.sv:14: STATUS fault event lost
+PASS STATUS_FIFO MUT=0 checks=174 max_fault_latency_rd_edges=8 wr_period=833.333334 rd_period=1024.000000
+STATUS_FIFO mutant1 direction1 rejected: FATAL: rtl/hbm_accel/loader/service_native/tb_hbm_svc_fault_cdc.sv:14: STATUS fault event lost
+STATUS_FIFO mutant2 direction1 rejected: FATAL: rtl/hbm_accel/loader/service_native/tb_hbm_svc_fault_cdc.sv:16: STATUS not sticky
+STATUS_FIFO mutant3 direction1 rejected: FATAL: rtl/hbm_accel/loader/service_native/tb_hbm_svc_fault_cdc.sv:14: STATUS fault event lost
+STATUS_FIFO mutant4 direction1 rejected: FATAL: rtl/hbm_accel/loader/service_native/tb_hbm_svc_fault_cdc.sv:22: STATUS unexpected overflow
+STATUS_FIFO mutant5 direction1 rejected: FATAL: rtl/hbm_accel/loader/service_native/tb_hbm_svc_fault_cdc.sv:14: STATUS fault event lost

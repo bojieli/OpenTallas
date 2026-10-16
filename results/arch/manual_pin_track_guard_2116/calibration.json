@@ -1,0 +1,231 @@
+{
+  "schema": "opentallas.actual_pin_track_access_guard.v1",
+  "source_job": "qfd_tt_scale_leaf-fs4-0d82da4ab",
+  "source_commit": "0d82da4ab1719c8d83a4d8dffeb1d6661880c147",
+  "raw_dump_sha256": "25c01c28615bae64abcd1975d70c4fdd45ae605d36d7e095ab598e2e3dd9edbd",
+  "raw_dump_local_path": "/home/ubuntu/claude-takeover-20261007/tt-fs4-root-track-dump.json",
+  "actual_layers": [
+    {
+      "name": "M1",
+      "level": 1,
+      "dir": "VERTICAL",
+      "pitch": 0.036,
+      "width": 0.018,
+      "track_patterns": [
+        [
+          0.009,
+          9600,
+          0.036
+        ]
+      ]
+    },
+    {
+      "name": "M2",
+      "level": 2,
+      "dir": "HORIZONTAL",
+      "pitch": 0.036,
+      "width": 0.018,
+      "track_patterns": [
+        [
+          0.045,
+          800,
+          0.27
+        ],
+        [
+          0.081,
+          800,
+          0.27
+        ],
+        [
+          0.117,
+          800,
+          0.27
+        ],
+        [
+          0.153,
+          800,
+          0.27
+        ],
+        [
+          0.189,
+          800,
+          0.27
+        ],
+        [
+          0.225,
+          800,
+          0.27
+        ],
+        [
+          0.27,
+          799,
+          0.27
+        ]
+      ]
+    },
+    {
+      "name": "M3",
+      "level": 3,
+      "dir": "VERTICAL",
+      "pitch": 0.036,
+      "width": 0.018,
+      "track_patterns": [
+        [
+          0.009,
+          9600,
+          0.036
+        ]
+      ]
+    },
+    {
+      "name": "M4",
+      "level": 4,
+      "dir": "HORIZONTAL",
+      "pitch": 0.048,
+      "width": 0.024,
+      "track_patterns": [
+        [
+          0.012,
+          4500,
+          0.048
+        ]
+      ]
+    },
+    {
+      "name": "M5",
+      "level": 5,
+      "dir": "VERTICAL",
+      "pitch": 0.048,
+      "width": 0.024,
+      "track_patterns": [
+        [
+          0.012,
+          7200,
+          0.048
+        ]
+      ]
+    },
+    {
+      "name": "M6",
+      "level": 6,
+      "dir": "HORIZONTAL",
+      "pitch": 0.064,
+      "width": 0.032,
+      "track_patterns": [
+        [
+          0.016,
+          3375,
+          0.064
+        ]
+      ]
+    },
+    {
+      "name": "M7",
+      "level": 7,
+      "dir": "VERTICAL",
+      "pitch": 0.064,
+      "width": 0.032,
+      "track_patterns": [
+        [
+          0.016,
+          5400,
+          0.064
+        ]
+      ]
+    },
+    {
+      "name": "M8",
+      "level": 8,
+      "dir": "HORIZONTAL",
+      "pitch": 0.08,
+      "width": 0.04,
+      "track_patterns": [
+        [
+          0.116,
+          2699,
+          0.08
+        ]
+      ]
+    },
+    {
+      "name": "M9",
+      "level": 9,
+      "dir": "VERTICAL",
+      "pitch": 0.08,
+      "width": 0.04,
+      "track_patterns": [
+        [
+          0.116,
+          4319,
+          0.08
+        ]
+      ]
+    },
+    {
+      "name": "Pad",
+      "level": 10,
+      "dir": "HORIZONTAL",
+      "pitch": 0.08,
+      "width": 0.04,
+      "track_patterns": [
+        [
+          0.116,
+          2699,
+          0.08
+        ]
+      ]
+    }
+  ],
+  "original": {
+    "checked": 695,
+    "inaccessible": 695,
+    "examples": [
+      [
+        "clk[0]",
+        "M4 [0.054, 190.02, 0.138, 190.044]"
+      ],
+      [
+        "rst_n[0]",
+        "M5 [234.42, 0.054, 234.444, 0.138]"
+      ],
+      [
+        "s3_v[0]",
+        "M5 [233.268, 0.054, 233.292, 0.138]"
+      ],
+      [
+        "scale_addr[0]",
+        "M4 [0.054, 40.452, 0.138, 40.476]"
+      ],
+      [
+        "scale_addr[100]",
+        "M4 [0.054, 50.052, 0.138, 50.076]"
+      ],
+      [
+        "scale_addr[101]",
+        "M4 [0.054, 50.148, 0.138, 50.172]"
+      ],
+      [
+        "scale_addr[102]",
+        "M4 [0.054, 50.244, 0.138, 50.268]"
+      ],
+      [
+        "scale_addr[103]",
+        "M4 [0.054, 50.34, 0.138, 50.364]"
+      ]
+    ]
+  },
+  "diagnostic_only": {
+    "description": "copy of dump; translate M4 Y and M5 X BPin rectangles +0.012um only",
+    "checked": 695,
+    "inaccessible": 0,
+    "not_a_source_or_route_change": true
+  },
+  "guard": {
+    "source_commit": "53efc860b",
+    "minimum_width_full_landing": true,
+    "any_accessible_shape_passes": true,
+    "no_silent_pin_grant_snapping": true,
+    "old_dumps_without_actual_grid_unchanged": true
+  },
+  "tests": "4 focused tests incl actual OpenDB DEF-grid readback passed; 2existing placementfixtures passed"
+}

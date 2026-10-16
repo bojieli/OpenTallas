@@ -1,5 +1,5 @@
 {
- "name": "hv15_dbk_vp4_ctl_stk0-rm1-COMMIT",
+ "name": "hv15_dbk_vp4_ctl_stk0-rm1-32ce35afa",
  "block": "ot_hgi_dma_back_static_vp4_controller",
  "ref_tile": true,
  "owner": "Claude:H-HARDEN",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 8,
  "source": {
   "branch": "claude/hbm-harden-1705",
-  "commit": "COMMIT",
+  "commit": "32ce35afa185db3fa19d800a44e49c5c9413c31e",
   "extra_paths": [
    "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
@@ -156,7 +156,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hv15_dbk_vp4_ctl_stk0/hv15_dbk_vp4_ctl_stk0-rm1-COMMIT"
+   "to": "results/rtl/ref_tile/hv15_dbk_vp4_ctl_stk0/hv15_dbk_vp4_ctl_stk0-rm1-32ce35afa"
   }
  ],
  "cycles_added": 0,

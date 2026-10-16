@@ -17,11 +17,12 @@
 #   source die_tie_rows.tcl; ot_tie_rows <m8_pitch> <m8_width> <m9_pitch> <m9_width>
 namespace eval ot_tie_rows {}
 
-proc ot_tie_rows {p8 w8 p9 w9 {half 12.0} {clear 0.6} {halo 1.08}} {
+proc ot_tie_rows {p8 w8 p9 w9 {half 12.0} {clear 0.6} {halo 1.08} {off8 0.0} {off9 0.0}} {
+  # off8 / off9 (KV die 2026-10-15): the core M8 / M9 -offset of the grid (the compute die's is 0; the KV die's 2.0)
   set block [ord::get_db_block]
   set dbu [$block getDbUnitsPerMicron]
   set core [$block getCoreArea]
-  set cx0 [$core xMin]; set cy0 [$core yMin]
+  set cx0 [expr {[$core xMin] + round($off9*$dbu)}]; set cy0 [expr {[$core yMin] + round($off8*$dbu)}]
   set P8 [expr {round($p8*$dbu)}]; set P9 [expr {round($p9*$dbu)}]
   set HALF [expr {round($half*$dbu)}]; set CLR [expr {round($clear*$dbu)}]
   set W9 [expr {round($w9*$dbu)}]

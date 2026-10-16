@@ -1,0 +1,18 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_s81_vm_x34_s",
+ "enable": true,
+ "clock": "s_ck",
+ "clock_ports": [
+  "s_ck"
+ ],
+ "exclude": "",
+ "reset": "",
+ "reason": "",
+ "latency_cycles": {
+  "input": 1,
+  "output": 1
+ },
+ "rule": "OWNER RULE 19:50 PT 2026-10-15: every new tile registers every input and every output at its pin",
+ "per_port_table": "$RESULTS_DIR/ot_pin_regs.tsv (route synthesis: port dir width cycles why)"
+}

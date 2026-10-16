@@ -61,5 +61,9 @@
   "record_to": "results/rtl/ref_tile/s81_rly_266_sn"
  },
  "children": [],
- "inter": []
+ "inter": [],
+ "pin_regs": {
+  "enable": false,
+  "reason": "OWNER RULE 19:50 opt-out (coordinator APPROVED 2026-10-15): this relay IS one flip-flop per bit between its input and output pins (ot_s81_rly: i -> r -> o, no logic); a flow pin register would add a second stage per bit and a cycle the die calendar does not price"
+ }
 }

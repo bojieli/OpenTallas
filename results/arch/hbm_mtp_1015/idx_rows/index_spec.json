@@ -1,0 +1,93 @@
+{
+ "schema": "opentallas.hbm_mtp_1015.idx_index_rows_spec.v1",
+ "P": 6,
+ "calendar": {
+  "source": "tools/hbm_idx_static_calendar.py",
+  "sha256": "9dc530e3285761775ad424d05485559f6a7269ee2bce4ecc939d23bd8cf0167d",
+  "frame_edges": 1389,
+  "unit_spans": {
+   "weight": {
+    "first": 0,
+    "last": 0,
+    "span": 1,
+    "slots": 1
+   },
+   "query": {
+    "first": 17,
+    "last": 144,
+    "span": 128,
+    "slots": 128
+   },
+   "head": {
+    "first": 173,
+    "last": 204,
+    "span": 32,
+    "slots": 32
+   },
+   "beat": {
+    "first": 306,
+    "last": 476,
+    "span": 171,
+    "slots": 171
+   },
+   "sel": {
+    "first": 305,
+    "last": 1251,
+    "span": 947,
+    "slots": 815
+   },
+   "link": {
+    "first": 1257,
+    "last": 1377,
+    "span": 121,
+    "slots": 16
+   },
+   "flush": {
+    "first": 1255,
+    "last": 1255,
+    "span": 1,
+    "slots": 1
+   }
+  },
+  "selector_busy_edges": 947,
+  "selector_after_ingest": 652,
+  "query_load_emit_edges": 305,
+  "array_busy_per_query": 303
+ },
+ "ii_edges": {
+  "S": 1389,
+  "Q1": 947,
+  "Q1b": 652,
+  "Q2_P_selectors": 331
+ },
+ "ii_over_frame": {
+  "S": 1.0,
+  "Q1": 0.6818,
+  "Q1b": 0.4694,
+  "Q2_P_selectors": 0.2383
+ },
+ "p6_edges": {
+  "S": 8334,
+  "Q1": 6124,
+  "Q1b": 4649,
+  "Q2_P_selectors": 3044
+ },
+ "model": {
+  "ii_over_c1": 0.2307,
+  "basis": "ds_mtp_verify.row_ii IDX.INDEX: c1 x 152 / 658.9"
+ },
+ "added_area_mm2_estimate": {
+  "Q1": 0.0052,
+  "Q1b": 0.1901,
+  "Q2_P_selectors": 3.5205
+ },
+ "area_basis": {
+  "dff_um2": 0.2916,
+  "hslices": 2048,
+  "query_slot_bits_per_hslice": 560,
+  "query_bank_bits": 17920,
+  "selector_tile_mm2": 0.3697,
+  "query_tile_mm2": 0.2019,
+  "note": "flop-only estimates (no mux/clock); Q1b: half a selector tile for a second line memory"
+ }
+}

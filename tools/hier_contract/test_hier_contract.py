@@ -55,6 +55,20 @@ class ChildLint(unittest.TestCase):
         self.assertEqual(r["verdict"], "PASS", r["fails"])
         self.assertEqual(r["info"]["pg"]["nets"]["VDD"]["stripes"], 3)
 
+    def test_pg_half_span_uses_exact_lef_decimals(self):
+        # Actual qfd_rly_26_NE_9x9 geometry: binary centres yield < 0.5.
+        for horizontal in (False, True):
+            for last, expected in (("7.992", True), ("7.991999999999", False)):
+                with self.subTest(horizontal=horizontal, last=last):
+                    rects = [("M5", 2.592, 0.0, 2.712, 10.8),
+                             ("M5", float(last), 0.0, float(last) + 0.12, 10.8)]
+                    if horizontal:
+                        rects = [(ly, y0, x0, y1, x1) for ly, x0, y0, x1, y1 in rects]
+                    m = {"W": 10.8, "H": 10.8, "obs": [], "pins": {
+                        n: {"use": use, "rects": rects} for n, use in
+                        (("VDD", "POWER"), ("VSS", "GROUND"))}}
+                    self.assertEqual(child_lint.check_pg(m)["ok"], expected)
+
     def test_bloat_fails(self):
         r = self.run_lint(lef(pg="M6", obs=[("M6", 0, 0, 20, 10)]))
         self.assertIn("a", self.checks(r))
@@ -98,6 +112,18 @@ class ChildLint(unittest.TestCase):
         self.assertEqual(r["info"]["face"]["band_same"], 2)
         self.assertEqual(r["verdict"], "PASS", r["fails"])
         self.assertTrue(any("several pins" in w for w in r["warns"]))
+
+    def test_band_carve_removes_band_obs_over_face_pins(self):
+        # ROOT 2026-10-15 (hbm_ckgen_rel-r1): abstract_pin_stub carves the band rect around the pins it covers; the rest
+        # of the band stays OBS and no face pin keeps a same-layer OBS over it
+        import abstract_pin_stub as APS
+        text = lef(sig=(("a", "M5", 5.0, 0.0), ("b", "M5", 7.0, 0.0)), obs=[("M5", 4.0, 0.1, 9.0, 0.4)])
+        out, _ = APS.process(text.replace("  END\nEND tile", "  END\nEND tile"))
+        r = self.run_lint(out)
+        self.assertEqual(r["info"]["face"]["band_same"], 0)
+        self.assertEqual(r["info"]["face"]["blocked_same"], 0)
+        left = APS.obs_rects(APS.split_lef(out)[1])["M5"]
+        self.assertAlmostEqual(sum((c - a) * (d - b) for a, b, c, d in left), 5.0 * 0.3 - 2 * 0.024 * 0.092, places=6)
 
     def test_libs_and_insertion(self):
         r = self.run_lint(lef(), libs={"tt": TT_LIB, "ff": ""})

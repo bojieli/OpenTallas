@@ -330,8 +330,10 @@ module qkd_astk_ctl_cal #(
     reg  [1:0]   zh;
     reg          zovf;
     wire         z_ne = zfw != zfr;
-    wire [132:0] z_hd = zf_m[zfr[3:0]];
-    always @(posedge ck) if (zq[0] && stl == 7'd0) zf_m[zfw[3:0]] <= {zq[137:10], zq[5:2], zq[1]};
+    wire [132:0] z_hd;
+    reg  [15:0]  zp;
+    wire [3:0]   zf_wa = STATIC_SCHEDULE ? zq[5:2] : zfw[3:0];
+    always @(posedge ck) if (zq[0] && stl == 7'd0) zf_m[zf_wa] <= {zq[137:10], zq[5:2], zq[1]};
     wire         legacy_l_pend = (kdone[0] && !lsent[0]) || (HEADS == 2 && kdone[1] && lsent[0] && !lsent[1]);
     wire         lg = lsent[0];
     wire         legacy_zd0 = !zsent[0] && qgo[0] && zn0 == nblk && !z_ne;
@@ -346,6 +348,9 @@ module qkd_astk_ctl_cal #(
     wire z_window = schedule_active && schedule_age >= zst_age-16'd1;
     wire z_slot = z_window && (z_age / Z_STRIDE < nblk) && (z_age % Z_STRIDE < 4);
     wire z_done_slot = z_window && z_age == nblk * Z_STRIDE;
+    wire [3:0] z_k = 4'(z_age / Z_STRIDE);
+    assign z_hd = zf_m[STATIC_SCHEDULE ? z_k : zfr[3:0]];
+    wire z_have = STATIC_SCHEDULE ? zp[z_k] : z_ne;
     wire l_pend = STATIC_SCHEDULE ? l_slot : legacy_l_pend;
     wire z_emit = STATIC_SCHEDULE ? z_slot : z_ne;
     wire zd0 = STATIC_SCHEDULE ? z_done_slot : legacy_zd0;
@@ -372,7 +377,7 @@ module qkd_astk_ctl_cal #(
     always @(posedge ck or negedge rn_q)
         if (!rn_q) begin
             sc0 <= 12'd0; sc1 <= 12'd0; kdone <= 2'b00; lsent <= 2'b00; zsent <= 2'b00; pvd <= 2'b00; lh <= 3'd0; mc0 <= 3'd0;
-            mc1 <= 3'd0; zn0 <= 5'd0; zn1 <= 5'd0; zfw <= 5'd0; zfr <= 5'd0; zh <= 2'd0; zovf <= 1'b0; f <= 1'b0; af <= 1'b0;
+            mc1 <= 3'd0; zn0 <= 5'd0; zn1 <= 5'd0; zfw <= 5'd0; zfr <= 5'd0; zh <= 2'd0; zovf <= 1'b0; f <= 1'b0; af <= 1'b0; zp <= 16'd0;
             ap[0] <= 1'b0; ap[45:43] <= 3'b000; lt[0] <= 1'b0; qo[0] <= 1'b0; qo[15] <= 1'b0; qo[536:534] <= 3'd0;
             co[0] <= 1'b0; stl <= 7'd0;
         end else begin
@@ -380,7 +385,7 @@ module qkd_astk_ctl_cal #(
             ap[0] <= 1'b0; ap[45] <= pv_v; ap[44:43] <= pvd;
             af <= f | (quiet && (xq[0] | fx_q | fy_q | fz_q)) | zovf;
             if (pv_bad || cal_bad || (STATIC_SCHEDULE &&
-                ((l_slot && !kdone[0]) || (z_slot && !z_ne) ||
+                ((l_slot && !kdone[0]) || (z_slot && !z_have) || (z_in && zp[zq[5:2]]) ||
                  (z_slot && (z_hd[0] || z_hd[4:1] != z_age / Z_STRIDE)) ||
                  (z_done_slot && (!qgo[0] || zn0 != nblk || z_ne))))) f <= 1'b1;
             if (pv_v && pxq[5:1] == 5'd31) pvd[pxq[6]] <= 1'b1;
@@ -389,7 +394,7 @@ module qkd_astk_ctl_cal #(
             if (HEADS == 2 && sc1 == n_s) kdone[1] <= 1'b1;
             if (am_q[0]) begin if (am_q[1]) mc1 <= mc1 + 3'd1; else mc0 <= mc0 + 3'd1; end
             if (stl != 7'd0) stl <= stl - 7'd1;
-            if (z_in) begin zfw <= zfw + 5'd1; if (zfw[3:0] == zfr[3:0] && zfw[4] != zfr[4]) zovf <= 1'b1; end
+            if (z_in) begin zp[zq[5:2]] <= 1'b1; zfw <= zfw + 5'd1; if (zfw[3:0] == zfr[3:0] && zfw[4] != zfr[4]) zovf <= 1'b1; end
             // sideband: lmax first, then the Z block sums, then Z done
             if (l_pend) begin
                 ap[0] <= 1'b1;
@@ -405,7 +410,7 @@ module qkd_astk_ctl_cal #(
             end
             if (start) begin
                 sc0 <= 12'd0; sc1 <= 12'd0; kdone <= 2'b00; lsent <= 2'b00; zsent <= 2'b00; pvd <= 2'b00; lh <= 3'd0;
-                mc0 <= 3'd0; mc1 <= 3'd0; zn0 <= 5'd0; zn1 <= 5'd0; zfw <= 5'd0; zfr <= 5'd0; zh <= 2'd0; f <= 1'b0; zovf <= 1'b0;
+                mc0 <= 3'd0; mc1 <= 3'd0; zn0 <= 5'd0; zn1 <= 5'd0; zfw <= 5'd0; zfr <= 5'd0; zh <= 2'd0; f <= 1'b0; zovf <= 1'b0; zp <= 16'd0;
                 stl <= 7'd96;
             end
         end

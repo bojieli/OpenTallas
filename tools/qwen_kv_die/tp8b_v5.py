@@ -594,7 +594,11 @@ def apply(v, m, G):
     # qwen-split compute die (2026-10-14): no PLL on this die; the KV/system die forwards clock + reset over the D2D bump
     # pair (r22k ckb_rom / rs_bump), so the compute reset leaf qfd_rstseq takes rst_fwd_s from the bump synchroniser
     pll, ck = by.get('pll'), by['clk_rx']
-    rr = v.Inst('rstseq_rom', 'qfd_rstseq', round(v.up(ck.x + ck.w + 4.32, v.GX), 4), ck.y, 54.0 - S, 54.0 - S,
+    # Q-NETLIST 10-16: the slot takes the CLOSED hard leaf's outline (21.6 x 21.6 view) instead of the historical 54 x 54 frame
+    from qwen_split.closed_view import view_frame as _vf
+    _rsq = _vf('qfd_rstseq') if _os.environ.get('OT_SPLIT_VIEW_FRAMES', '1') != '0' else None
+    _rwh = (_rsq[0], _rsq[1]) if _rsq else (54.0 - S, 54.0 - S)
+    rr = v.Inst('rstseq_rom', 'qfd_rstseq', round(v.up(ck.x + ck.w + 4.32, v.GX), 4), ck.y, _rwh[0], _rwh[1],
                 kind='ctl', region='hub', domain='stream_1p2')
     if pll is not None:
         # r9: qkd_rstseq is the CLOSED leaf (qkd_rstseq-kc1-b4a0a3156, 21.6 x 21.6); its reset input is por_n (PLL lock)
@@ -996,6 +1000,34 @@ def _tear_overlapped(v, m, over=()):
 DEOVERLAP_PARENTS = ('qfd_sp_vector_memory_par',)
 
 
+def _apply_pin_grant(M, grant):
+    """Move named port groups of unclosed masters to a granted face (and optional centre); returns touched masters."""
+    touched = []
+    for mname, ports in grant.get('masters', {}).items():
+        q = M.get(mname)
+        if q is None:
+            raise ValueError(f'OT_SPLIT_PIN_GRANT: master {mname} not on this die')
+        if mname in VIEWS:
+            raise ValueError(f'OT_SPLIT_PIN_GRANT: {mname} has a closed view; its pins are not re-assignable here')
+        for pn, g in ports.items():
+            sp = q.ports.get(pn)
+            if sp is None or sp[0] not in ('face', 'pins'):
+                raise ValueError(f'OT_SPLIT_PIN_GRANT: {mname}.{pn} is not a face/pins group')
+            f = g['face']
+            if f not in 'WENS' or (f in 'WE') != (sp[2] in 'WE'):
+                raise ValueError(f'OT_SPLIT_PIN_GRANT: {mname}.{pn} {sp[2]}->{f} changes the pin-layer direction')
+            if sp[0] == 'face':
+                q.ports[pn] = ('face', sp[1], f, sp[3], float(g.get('centre', sp[4])), sp[5])
+            else:
+                pos = list(sp[4])
+                if 'centre' in g:
+                    d = float(g['centre']) - (min(pos) + max(pos)) / 2
+                    pos = [round(z + d, 4) for z in pos]
+                q.ports[pn] = ('pins', sp[1], f, sp[3], pos, sp[5])
+        touched.append(mname)
+    return tuple(touched)
+
+
 def _deoverlap_faces(mst, pin_rects, gap=0.5):
     """Move only the movable 'face' groups that actually overlap another pin (rect level) to the nearest free span of
     their own face edge / layer; every other pin stays where it is.  Fails closed."""
@@ -1084,7 +1116,7 @@ def _wrap(v, m, G, peers):
         mst = M[it.master]
         if inst_name not in plan_cache:
             byi = {i.name: i for i in model['insts']}
-            want = {}
+            want, alt, spilled = {}, {}, []
             for p, sp in mst.ports.items():
                 if sp[0] != 'face' or p in skip or (ports is not None and p not in ports):
                     continue
@@ -1095,20 +1127,45 @@ def _wrap(v, m, G, peers):
                 ox, oy = o.x + o.w / 2, o.y + o.h / 2
                 dxo = max(it.x - ox, 0.0, ox - (it.x + it.w))
                 dyo = max(it.y - oy, 0.0, oy - (it.y + it.h))
-                if dyo >= dxo:
-                    f, a = ('N' if oy > it.y + it.h / 2 else 'S'), ox - it.x
-                else:
-                    f, a = ('E' if ox > it.x + it.w / 2 else 'W'), oy - it.y
-                # die face / die-local coordinate -> master face / master-local coordinate
-                if it.orient in ('MX', 'R180'):
-                    f = {'N': 'S', 'S': 'N'}.get(f, f)
-                    if f in 'EW':
-                        a = it.h - a
-                if it.orient in ('MY', 'R180'):
-                    f = {'E': 'W', 'W': 'E'}.get(f, f)
-                    if f in 'NS':
-                        a = it.w - a
-                want[p] = (f, a)
+                fns = (('N' if oy > it.y + it.h / 2 else 'S'), min(max(ox - it.x, 0.0), it.w))
+                few = (('E' if ox > it.x + it.w / 2 else 'W'), min(max(oy - it.y, 0.0), it.h))
+                f, a = fns if dyo >= dxo else few
+                f2, a2 = few if dyo >= dxo else fns
+
+                def to_master(f, a):
+                    # die face / die-local coordinate -> master face / master-local coordinate
+                    if it.orient in ('MX', 'R180'):
+                        f = {'N': 'S', 'S': 'N'}.get(f, f)
+                        if f in 'EW':
+                            a = it.h - a
+                    if it.orient in ('MY', 'R180'):
+                        f = {'E': 'W', 'W': 'E'}.get(f, f)
+                        if f in 'NS':
+                            a = it.w - a
+                    return f, a
+                want[p] = to_master(f, a)
+                alt[p] = to_master(f2, a2) + (abs(dxo - dyo),)
+            # Q-COMPUTE-DIE r8 (C23s fpq_s6): a face whose groups cannot fit spills the groups with the most diagonal
+            # peers (smallest |dx - dy|) to their second face toward the peer
+            for _ in range(len(want)):
+                over = None
+                for f in 'NSEW':
+                    L = mst.w if f in 'NS' else mst.h
+                    keep_ = sum(sp[1] * 0.048 * sp[5] + 2.0 for q, sp in mst.ports.items()
+                                if sp[0] == 'face' and sp[2] == f and q not in want)
+                    need = keep_ + sum(mst.ports[q][1] * 0.048 + 2.0 for q, (ff, _) in want.items() if ff == f) + 8.0
+                    if need > L:
+                        over = f
+                        break
+                if over is None:
+                    break
+                cand = sorted((alt[q][2], q) for q, (ff, _) in want.items() if ff == over and alt[q][0] != over)
+                if not cand:
+                    break
+                q = cand[0][1]
+                want[q] = alt[q][:2]
+                alt[q] = (over, 0.0, float('inf'))
+                spilled.append((q, over, want[q][0]))
             plan_cache[inst_name] = want
         want = plan_cache[inst_name]
         for f in 'NSEW':
@@ -1456,6 +1513,9 @@ def _wrap(v, m, G, peers):
         rr.face('rsi', 1, 'W', 'M4', 27.0, 1)
         for j, p in enumerate(('rso_seq', 'rso_ctlm', 'rso_f', 'rso_s', 'rso_io')):
             rr.face(p, 1, 'E' if j % 2 else 'S', 'M4' if j % 2 else 'M5', 12.0 + 8.0 * j, 1)
+        from qwen_split.closed_view import view_frame as _vf, apply as _vapply
+        if _os.environ.get('OT_SPLIT_VIEW_FRAMES', '1') != '0' and _vf('qfd_rstseq'):
+            _vapply(rr, _vf('qfd_rstseq'))               # Q-NETLIST 10-16: the closed leaf's abstract outline + pins
         M['qfd_rstseq'] = rr
         q = M.get('qkd_pll')
         if q is not None and 'lock' not in q.ports:
@@ -1829,6 +1889,10 @@ def _wrap(v, m, G, peers):
                 from qwen_split.res_train_bind import install_masters as install_res_train
                 from qwen_split.direct_up4 import partition_master as _pm2
                 install_res_train(M, model, Master, _pm2)
+            if model.get('sys_face_bind'):
+                from qwen_split.sys_face_bind import install_masters as install_sys_face
+                from qwen_split.direct_up4 import partition_master as _pm3
+                install_sys_face(M, model, Master, _pm3)
             # An added source tap can fragment already-connected non-native
             # consumers (slab tc and X tap gi). Preserve their exact real pin
             # rectangles while exposing the same numeric aliases on every peer.
@@ -1847,7 +1911,14 @@ def _wrap(v, m, G, peers):
             # faces, replan, link-word widening, native ports) can end with groups on top of each other (C22s:
             # qfd_sp_vector_memory_par write_commit_mask over ar[377..], 145 pairs). Top-down pin assignment owns
             # these pins: re-pack movable face groups along each face (fixed 'pins' fragments stay), fail closed.
-            for name_ in DEOVERLAP_PARENTS:
+            # OT_SPLIT_PIN_GRANT=<json> (Q-COMPUTE-DIE r2h, top-down pin assignment of UNCLOSED masters only):
+            # {"masters": {master: {port: {"face": F[, "centre": um]}}}} moves whole face/pins groups to the face
+            # that looks at their consumer; any resulting overlap is re-packed by _deoverlap_faces (fails closed)
+            _grant_path = _os.environ.get('OT_SPLIT_PIN_GRANT', '').strip()
+            _granted = ()
+            if _grant_path:
+                _granted = _apply_pin_grant(M, json.loads(Path(_grant_path).read_text()))
+            for name_ in tuple(DEOVERLAP_PARENTS) + tuple(n_ for n_ in _granted if n_ not in DEOVERLAP_PARENTS):
                 if name_ in M:
                     _deoverlap_faces(M[name_], v.pin_rects)
 
@@ -1900,12 +1971,13 @@ def _wrap(v, m, G, peers):
                     continue
                 _, n0, f, layer, poss, _ = mine[p]
                 n = min(wmap.get(p, n0), len(poss))
+                lays = getattr(mst, 'view_pin_layers', {}).get(p)   # closed_view.install_master: per-bit view layer
                 for i in range(n):
                     pos = poss[i]
                     hw = 0.012
                     r = {'W': (0.0, pos - hw, depth, pos + hw), 'E': (mst.w - depth, pos - hw, mst.w, pos + hw),
                          'S': (pos - hw, 0.0, pos + hw, depth), 'N': (pos - hw, mst.h - depth, pos + hw, mst.h)}[f]
-                    out.append((f'{p}[{i}]', layer, r))
+                    out.append((f'{p}[{i}]', lays[i] if lays else layer, r))
         else:
             out = base_pr(mst, k, wmap)
         sp_ = split.get(mst.name)

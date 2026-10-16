@@ -1,0 +1,8 @@
+ot-run: ot-epyc1tb     admits    65 GB (avail 328, growth 209, headroom 64, waiters 0/0 GB) load 83/128 running 25 disk 685 GB 
+ot-run: ot-epyc4       admits  -236 GB (avail 238, growth 223, headroom 48, waiters 15/204 GB) load 115/128 running 34 disk 756 GB 
+ot-run: ot-pve1        skipped: no /home/ubuntu/hbm-su-rf-route-882660d0e
+ot-run: ot-agidock128  skipped: no /home/ubuntu/hbm-su-rf-route-882660d0e
+ot-run: -> ot-epyc1tb
+ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-1066721-1792089332 after 0 s
+RF_ROUTE_GATE_PASS
+ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-1066721-1792089332): exit 0

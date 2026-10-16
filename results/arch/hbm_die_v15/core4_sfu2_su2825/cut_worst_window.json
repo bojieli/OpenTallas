@@ -1,0 +1,43 @@
+{
+ "axis": "h",
+ "line_um": 6300.0,
+ "window_um": [
+  13100.0,
+  14100.0
+ ],
+ "bits": 7878.0,
+ "ratio": 0.5602,
+ "by_class": {
+  "VM_HUB": 2152.0,
+  "HC_CORE": 1628.0,
+  "VM_HBM": 1536.0,
+  "IDX_VM": 1096.0,
+  "COLL_RING": 826.0,
+  "HBM_VM": 512.0,
+  "KV_DESC": 128.0
+ },
+ "top_links": {
+  "coll_NW>coll_SW:COLL_RING": 826.0,
+  "hc_SW>hc_SW1:HC_CORE": 596.0,
+  "vmh_SW>vmb_SW0:VM_HUB": 538.0,
+  "vmh_SW>vmb_SW1:VM_HUB": 538.0,
+  "vmh_SW>vmb_SW2:VM_HUB": 538.0,
+  "vmh_SW>vmb_SW5:VM_HUB": 538.0,
+  "hc_SW2>hc_SW:HC_CORE": 516.0,
+  "hc_SW3>hc_SW:HC_CORE": 516.0,
+  "vmb_SW0>idx_op:IDX_VM": 274.0,
+  "vmb_SW2>idx_op:IDX_VM": 274.0,
+  "vmb_SW3>idx_op:IDX_VM": 274.0,
+  "vmb_SW4>idx_op:IDX_VM": 274.0,
+  "vmh_SW>pc_SW0:VM_HBM": 256.0,
+  "vmh_SW>pc_SW1:VM_HBM": 256.0,
+  "pc_SW2>vmh_SW:HBM_VM": 256.0,
+  "vmh_SW>pc_SW3:VM_HBM": 256.0,
+  "vmh_SW>pc_SW4:VM_HBM": 256.0,
+  "vmh_SW>pc_SW6:VM_HBM": 256.0,
+  "pc_SW7>vmh_SW:HBM_VM": 256.0,
+  "vmh_SW>pc_SW7:VM_HBM": 256.0,
+  "vmh_SW>sm_SW0:KV_DESC": 64.0,
+  "vmh_SW>sm_SW2:KV_DESC": 64.0
+ }
+}

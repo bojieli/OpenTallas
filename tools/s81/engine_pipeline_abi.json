@@ -14,8 +14,10 @@
   },
   "fld": {
    "field_round_trip_cycles": 118,
-   "change": "adopted S81 floorplan SA_2x2_RP: field round trip 140 -> 118 cycles",
-   "source": "coordinator 2026-10-15 (S81 floorplan SA_2x2_RP adoption); field durations measured on the 140-cycle trip are stale"
+   "change": "adopted S81 floorplan SA_2x2_RP: field round trip 140 -> 118 cycles; static return node r2 (S-NET 2026-10-15, ot_s81_retn_static P1 port / P2 norm / P3 issue regs): node exit early + WIN + 10 + RST (was +7) = +3 edges per node level, frame trees 5..6 levels -> +18 edges on the worst field return (token +5,094 cycles = 0.272 %, tools/s81/return_node_cost.py)",
+   "source": "coordinator 2026-10-15 (S81 floorplan SA_2x2_RP adoption); field durations measured on the 140-cycle trip are stale; static_return_calendar.PIPE_C 10 (S-NET aad069240)",
+   "return_node_exit_edges": 10,
+   "return_node_levels_max": 6
   },
   "coll": {
    "control_rom_abi": "opentallas.s81.collective-fixed-edge-rom.v3",
@@ -24,6 +26,15 @@
    "vm_boundary_pin_capture_edges": 1,
    "change": "CAL7 ROM lookahead (565 macro-output capture flops + one-row-ahead prefetch: 0 normal edges, +1 edge once after reset) and per-root scalar reset; VM boundary PINCAP=1 (+1 write/visibility edge, read request 1, write output 2; b7 TT+88.15/FF+16.88/DRC0 native L181.1/C173.7)",
    "source": "tools/s81_static_collective/resetpins/controller_image.py LATENCIES (a514eb8ea, ABI v3; S-ELEM-B 875c6ee6f same ABI); results/arch/s81_elements_1319/vmb7/receipt.json (a4117e99d); collective durations measured on the v2 ROM / PINCAP 0 boundary are refused"
+  },
+  "vm": {
+   "a2_write_extra_edges": 2,
+   "a2f_relay_write_edges": 9,
+   "a2f_relay_read_edges": 16,
+   "a2f_relay_commit_edges": 3,
+   "change": "S81 VM = A2-F (compact-ID write architecture A2, +2 stream write edges; field-grouped front) with internal wire relays at R 900 um/stage TT: WRITE +9 (ingress 6, payload->front 1, front->scatter 2), READ +16 (port->rsched 2, rsched->FSR 1, FSR->b8 2, b8->return 2, return->read 3, read->port 6), COMMIT b8->seq +3; a job that reads and lands its result pays 16 + 2 + 9 + 3 = 30 edges",
+   "source": "S-VM COLLECT 3 (el1013-s81-vmfe.log 19:34), results/arch/s81_vm_a2f_1015/reach_price_a2f_midcapd.json; coordinator adoption 2026-10-15 ~19:55. PLANNED relay counts (route-plan screen): the exact VM service profile must be re-measured on the A2-F RTL (tools/s81_suhc/vm_service_profile.py) before any VM-touching job qualifies",
+   "applies_to": "every job binding with VM accesses (key vm_pipeline_abi)"
   }
  }
 }

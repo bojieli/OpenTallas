@@ -25,7 +25,7 @@ module tb_hgi_coll_native_vm;
  reg [1535:0] calendar[0:127];
  reg [4:0] input_v[0:127];reg [199:0] input_a[0:127];
  reg [2559:0] input_d[0:127];reg [79:0] input_m[0:127];
- reg [2247:0] expect_launch[0:127];reg [31:0] expect_owner[0:127];
+ reg [2247:0] expect_launch[0:127];reg [31:0] expect_owner[0:127];reg [7:0] expect_resv[0:127];
  reg [7:0] expect_bank_write[0:127],expect_commit[0:127],expect_bank_read[0:127];
  reg [3:0] expect_delivery[0:127];reg [2179:0] expect_data[0:127];
  reg [255:0] gold_main[0:7][0:127],gold_mirror[0:7][0:127];
@@ -166,10 +166,10 @@ module tb_hgi_coll_native_vm;
    input_v[c][lane]=1;input_a[c][lane*40+:40]=40'(sec)<<3;
    input_d[c][lane*512+:512]=data;input_m[c][lane*16+:16]=mask;
    for(integer h=0;h<2;h=h+1)begin
-    s=sec+16'(h);bank=int'(s[2:0]);t=c+1+h;
+    s=sec+16'(h);bank=int'(s[2:0]);t=c+2+h; // writer v4 relay edge: launch low C+2, high C+3; reservation fields keep C+1/C+2
     if(expect_launch[t][bank*281+280])$fatal(1,"invalid test compiler bank collision");
     expect_launch[t][bank*281+:281]={1'b1,s,data[h*256+:256],mask[h*8+:8]};
-    expect_owner[t][bank*4+:4]=4'(lane+5*h);
+    expect_owner[c+1+h][bank*4+:4]=4'(lane+5*h);expect_resv[c+1+h][bank]=1;
     expect_bank_write[t+1][bank]=1;expect_commit[t+4][bank]=1;
    end
   end
@@ -196,7 +196,7 @@ module tb_hgi_coll_native_vm;
  initial begin
   for(integer c=0;c<128;c=c+1)begin
    calendar[c]=0;input_v[c]=0;input_a[c]=0;input_d[c]=0;input_m[c]='1;
-   expect_launch[c]=0;expect_owner[c]=0;expect_commit[c]=0;expect_bank_write[c]=0;expect_bank_read[c]=0;
+   expect_launch[c]=0;expect_owner[c]=0;expect_resv[c]=0;expect_commit[c]=0;expect_bank_write[c]=0;expect_bank_read[c]=0;
    expect_delivery[c]=0;expect_data[c]=0;
   end
   for(integer n=0;n<16;n=n+1)for(integer l=0;l<4;l=l+1)
@@ -224,7 +224,7 @@ module tb_hgi_coll_native_vm;
    rv=input_v[cyc][3:0];tv=input_v[cyc][4];ra=input_a[cyc][159:0];rd=input_d[cyc][2047:0];
    td={input_a[cyc][199:160],input_m[cyc][79:64],input_d[cyc][2559:2048]};
    ingress=input_v[cyc];owners=expect_owner[cyc];
-   for(integer b=0;b<8;b=b+1)slots[b]=expect_launch[cyc][b*281+280];
+   for(integer b=0;b<8;b=b+1)slots[b]=expect_resv[cyc][b];
    bank_write_slot=expect_bank_write[cyc];bank_read_slot=expect_bank_read[cyc];
    if(MUT==2&&cyc==7)bank_write_slot[0]=0;
    @(posedge clk);#1;

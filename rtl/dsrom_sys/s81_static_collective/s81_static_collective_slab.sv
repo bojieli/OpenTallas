@@ -5,7 +5,7 @@
 // Configuration ROM/memory macro and production placement/phase/image are open
 // qualification gates. Missing ROM fails closed, never fabricates a schedule.
 module s81_static_collective_slab #(
- parameter ROM_FILE="",parameter integer CYCLES=1,parameter integer MUT=0
+ parameter ROM_FILE="",parameter integer CYCLES=1,parameter integer MUT=0,parameter integer VMB_PINCAP=1,parameter integer VMB_NARROW=0
 )(
  input wire[4:0]ck_control,input wire[7:0]ck_lane,input wire[15:0]ck_hc_lane,
  input wire rst_n,input wire[1:0]f_rank,
@@ -16,7 +16,8 @@ module s81_static_collective_slab #(
  output wire[7:0]phy_tx_valid,output wire[4095:0]phy_tx_data,
  input wire[513:0]f_wfc,output wire[513:0]t_wfc,
  input wire[76:0]f_host,output wire[514:0]t_host,
- output wire[8191:0]t_hc_y,output wire t_hc_yv,output wire[31:0]t_hc_tag
+ output wire[8191:0]t_hc_y,output wire t_hc_yv,output wire[31:0]t_hc_tag,
+ output wire[4:0]t_hc_y5 // additive y_row5 = reduced_seq[8:4], registered with t_hc_yv/t_hc_tag
 );
  wire read_slot;
  wire [13:0]read_row;
@@ -78,8 +79,23 @@ module s81_static_collective_slab #(
  wire boundary_fault;
  wire pack_bad;
  wire datapath_fault=transport_fault|channel_fault|raw_fault|reduce_fault|assemble_fault|boundary_fault|host_queue_fault;
- s81_static_calendar_controller #(.ROM_FILE(ROM_FILE),.CYCLES(CYCLES)) calendar(
- .clk(ck_control[0]),.rst_n(rn_control[0]),.c_cmd(c_cmd),.c_done(c_done),.c_st(controller_status),
+ // Calendar = CAL7 per-root reset controller (s81_static_calendar_controller7_resetpins, ROM ABI v3 RW565, record
+ // 9bbe3b9bb): its ROM banks and its three output roots are clocked from the sequencer clock ck_control[0], and
+ // each output root gets its own reset pin from a dedicated per-root synchronizer here (one load per reset net;
+ // the die delivers the same three pins from its reset tree). MUT=4 holds output root 1 in reset (must FAIL).
+ wire[2:0]ck_cal_out={3{ck_control[0]}};
+ wire[2:0]rn_cal_out;
+ generate for(root=0;root<3;root=root+1)begin:cal_reset_root
+  reg[1:0]rr;
+  always @(posedge ck_cal_out[root] or negedge rst_n)
+   if(!rst_n)rr<=0;else rr<={rr[0],!(MUT==4&&root==1)};
+  assign rn_cal_out[root]=rr[1];
+ end endgenerate
+ s81_static_calendar_controller7_resetpins #(.ROM_FILE(ROM_FILE),.CYCLES(CYCLES)) calendar(
+ .clk(ck_control[0]),.rst_n(rn_control[0]),
+ .rst_outputs0_n(rn_cal_out[0]),.rst_outputs1_n(rn_cal_out[1]),.rst_outputs2_n(rn_cal_out[2]),
+ .clk_rom({3{ck_control[0]}}),.clk_outputs(ck_cal_out),
+ .c_cmd(c_cmd),.c_done(c_done),.c_st(controller_status),
  .datapath_fault(datapath_fault),.busy(busy),
  .read_slot(read_slot),
  .read_row(read_row),
@@ -163,9 +179,9 @@ module s81_static_collective_slab #(
  s81_static_hc_assemble_clocked assemble(
  .clk_lane(ck_hc_lane),.clk_control(ck_control[4]),.rst_n(rn_control[4]),.write_slot(hc_assemble_slot),
  .word_index(hc_word_index),.word_valid(reduced_valid&&hc_assemble_slot),
- .word_data(reduced_data),.word_tag(reduced_tag),.word_error(reduced_error),
+ .word_data(reduced_data),.word_tag(reduced_tag),.word_row(reduced_seq[8:4]),.word_error(reduced_error),
  .emit_slot(hc_emit_slot),.emit_tag(hc_emit_tag),.row_valid(t_hc_yv),
- .row_data(t_hc_y),.row_tag(row_tag),.fault(assemble_fault));
+ .row_data(t_hc_y),.row_tag(row_tag),.row_y5(t_hc_y5),.fault(assemble_fault));
  wire raw_send;reg raw_send_q;reg[2:0]raw_channel;reg raw_last;
  integer c;reg[2:0]raw_tx_count;
  always @*begin
@@ -211,13 +227,22 @@ module s81_static_collective_slab #(
  // Native host ingress omits the historical credit bit. Its wire reservation
  // remains zero; accepting a nonzero bit would silently restore flow control.
  assign t_host=host_rx[514:0];
- s81_static_vm_boundary #(.MUT(MUT)) vm_boundary(
+ // VMB_PINCAP=1: native-qualified boundary leaf b7 (write path pin-captured, collective->VM write +1 fixed edge;
+ // the v3 calendar image prices it: gather_to_vm_source 2, hc_reduce_to_write 19)
+ // VMB_NARROW=1 (opt-in, S-ELEM-PQ/COLL 10-16): the leaf takes only the bits it reads (tags [7:0], host_rx {515, 0})
+ wire[(VMB_NARROW?8:32)-1:0]vmb_gather_tag,vmb_reduced_tag;wire[(VMB_NARROW?2:516)-1:0]vmb_host_rx;
+ generate if(VMB_NARROW)begin:g_vmbn
+  assign vmb_gather_tag=gather_tag[7:0];assign vmb_reduced_tag=reduced_tag[7:0];assign vmb_host_rx={host_rx[515],host_rx[0]};
+ end else begin:g_vmbw
+  assign vmb_gather_tag=gather_tag;assign vmb_reduced_tag=reduced_tag;assign vmb_host_rx=host_rx;
+ end endgenerate
+ s81_static_vm_boundary #(.MUT(MUT),.PINCAP(VMB_PINCAP),.NARROW(VMB_NARROW)) vm_boundary(
  .clk(ck_control[2]),.rst_n(rn_control[2]),.read_slot(read_slot),.read_row(read_row),.t_crq(t_crq),.t_vm(t_vm),
- .commit_gather(commit_gather),.hc_reduce_slot(hc_reduce_slot),.gather_we(gather_we),.gather_rows(gather_rows),.gather_data(gather_data),.gather_tag(gather_tag),
+ .commit_gather(commit_gather),.hc_reduce_slot(hc_reduce_slot),.gather_we(gather_we),.gather_rows(gather_rows),.gather_data(gather_data),.gather_tag(vmb_gather_tag),
  .hc_write_slot(hc_write_slot),.reduced_valid(reduced_valid),.reduced_error(reduced_error),.reduced_last(reduced_last),.reduced_seq(reduced_seq),
- .hc_expect_seq(hc_expect_seq),.hc_expect_last(hc_expect_last),.reduced_data(reduced_data),.reduced_tag(reduced_tag),.raw_sources(raw_sources),
+ .hc_expect_seq(hc_expect_seq),.hc_expect_last(hc_expect_last),.reduced_data(reduced_data),.reduced_tag(vmb_reduced_tag),.raw_sources(raw_sources),
  .phy_rx_fault(phy_rx_fault),.phy_rx_valid(phy_rx_valid),.phy_rx_live(phy_rx_live),.issue_slot(issue_slot),.raw_capture(raw_capture),
- .raw_capture_payload_slot(raw_capture_payload_slot),.raw_capture_meta_slot(raw_capture_meta_slot),.raw_tx_count(raw_tx_count),.host_rx(host_rx),
+ .raw_capture_payload_slot(raw_capture_payload_slot),.raw_capture_meta_slot(raw_capture_meta_slot),.raw_tx_count(raw_tx_count),.host_rx(vmb_host_rx),
  .pack_bad_out(pack_bad),.fault(boundary_fault));
 
 endmodule

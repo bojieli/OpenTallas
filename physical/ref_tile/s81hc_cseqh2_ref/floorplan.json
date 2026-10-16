@@ -6,16 +6,16 @@
  "die": [
   0,
   0,
-  155.52,
-  155.52
+  190.08,
+  190.08
  ],
  "core": [
   2.16,
   2.16,
-  153.36,
-  153.36
+  187.92000000000002,
+  187.92000000000002
  ],
- "why": "util 0.52 of std 11663 + macros 0 um2",
+ "why": "spec outline (exact: the closed view's sub-slot)",
  "std_area_um2": 11663,
  "layer_contract": {
   "children": {},
@@ -24,7 +24,9 @@
    "M2",
    "M6"
   ],
-  "strap_layer": "M7"
+  "strap_layer": "M7",
+  "layer_cap": "M6",
+  "cap_basis": "legacy kit (pre-2026-10-12 contract; re-route at M5 per m5_reroute_priority.json)"
  },
  "pins": {
   "N": [
@@ -81,7 +83,14 @@
  },
  "clock_port": "sk",
  "blocks": [],
- "findings": [],
+ "findings": [
+  [
+   "WARN",
+   "util",
+   "utilisation 34% outside 45%-60% (std 11663 + macro 0 in core 34507 um2)",
+   "resize the outline to util 0.50-0.55 (drop 'outline', set util)"
+  ]
+ ],
  "referenced": [
   "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_cseq.sv",
   "rtl/hdc/ot_hdc_fastfp.sv",
@@ -116,6 +125,11 @@
   "physical/ref_tile/s81hc_cseqh2_ref/signoff.sdc",
   "physical/ref_tile/s81hc_cseqh2_ref/pdn.tcl",
   "physical/ref_tile/s81hc_cseqh2_ref/pre_cts.tcl",
+  "physical/ref_tile/s81hc_cseqh2_ref/post_cts.tcl",
+  "physical/ref_tile/s81hc_cseqh2_ref/post_grt.tcl",
+  "physical/ref_tile/s81hc_cseqh2_ref/pre_drt.tcl",
+  "physical/ref_tile/s81hc_cseqh2_ref/pre_fill.tcl",
+  "physical/ref_tile/s81hc_cseqh2_ref/post_fill.tcl",
   "physical/ref_tile/s81hc_cseqh2_ref/pre_grt.tcl",
   "physical/ref_tile/s81hc_cseqh2_ref/post_drt.tcl",
   "tools/ref_tile/ref_route.sh",
@@ -125,6 +139,17 @@
   "physical/qwen_die_masters/pre_cts_skew.tcl",
   "physical/qwen_die_masters/pre_ref_skew.tcl",
   "physical/qwen_die_masters/post_plain.tcl",
-  "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl"
+  "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
+  "physical/common_flow/grt_macro_top_layer.tcl",
+  "physical/ref_tile/s81hc_cseqh2_ref/io_spread.tcl",
+  "physical/qwen_die_masters/io_flop_at_pins.tcl",
+  "physical/qwen_die_masters/out_flop_release.tcl",
+  "physical/dsrom_window_source/leaf_iohold.tcl",
+  "physical/dsrom_window_source/leaf_inhold_release.tcl",
+  "physical/dsrom_window_source/leaf_inhold.tcl",
+  "physical/dsrom_window_source/leaf_inhold_release.tcl",
+  "physical/ref_tile/s81hc_cseqh2_ref/pre_gpl.tcl",
+  "physical/ref_tile/s81hc_cseqh2_ref/pre_dpl.tcl",
+  "physical/common_flow/pin_reg_split.tcl"
  ]
 }

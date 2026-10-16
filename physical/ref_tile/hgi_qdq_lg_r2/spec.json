@@ -1,0 +1,149 @@
+{
+ "name": "hgi_qdq_lg_r2",
+ "top": "ot_hgi_qdq_lg_port_group_r2",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_transport_r2.sv"
+ ],
+ "params": {
+  "BANKS": 2
+ },
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 64.8,
+  "h": 194.4,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "macros": [],
+ "pins": {
+  "N": [
+   "clk",
+   "rst_n"
+  ],
+  "E": [
+   "rq_o",
+   "wq_o",
+   "rr_i"
+  ],
+  "W": [
+   "rq_i",
+   "wq_i",
+   "rr_o"
+  ]
+ },
+ "recipe": 2,
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  }
+ },
+ "job": {
+  "owner": "Claude H-SM",
+  "branch": "claude/hbm-sm-attention-1015",
+  "tag": "lgr2",
+  "purpose": "Native-audit successor of the closed LG v6 group (launch 270.7 ps on 227 wq_o pins: ONE register per bit between the W input and E output faces 64.8 um apart cannot sit at both pins). r2 = capture register at the input pin + launch register at the output pin per bit; the face-to-face crossing becomes a whole-cycle reg->reg path. Same die slot quant_NW0_lg 64.8 x 194.4 and die-granted pins; +1 edge per direction (rq, rr, wq), priced in the exact QUANT bench (LG=2: RL+4, WC+2).",
+  "benches": [
+   {
+    "name": "QDQ_LG_exact",
+    "cmd": "IO_REGS=1 LG=2 TSPLIT=2 bash tools/hgi_unit_tput/run_qdq_static.sh {RUN}/bench_lg && cat {RUN}/bench_lg/m0.log",
+    "expect": "pass",
+    "pass_regex": "PASS HGI_QDQ_STATIC_PROGRAM",
+    "min_count_regex": "beats=(\\d+)",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "QDQ_LG_group_binding_mutant",
+    "cmd": "IO_REGS=1 LG=2 TSPLIT=2 bash tools/hgi_unit_tput/run_qdq_static.sh {RUN}/bench_lg_m && {RUN}/bench_lg_m/m4.obj/sim +DIR=tools/hgi_unit_tput/vectors/qdqvec +PROGRAM=results/hbm_static_quant_1015/program.hex",
+    "expect": "fail",
+    "fail_regex": "unexpected bank write",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "extra_paths": [
+   "rtl/hdc",
+   "rtl/lib",
+   "rtl/hbm_accel/generic",
+   "rtl/test/hbm_accel/generic",
+   "physical/hbm_accel_die_views/common",
+   "physical/hbm_accel_die_views/quant",
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "tools/hgi_unit_tput",
+   "results/hbm_static_quant_1015/SW_replica",
+   "results/arch/hier_contract_1015/hbm_v15.json"
+  ],
+  "views_to": "physical/ref_tile/hgi_qdq_lg_r2/views",
+  "record_to": "results/rtl/ref_tile/hgi_qdq_lg_r2",
+  "structural_change": "Re-kit of the gate-clean QUANT LG port group (BANKS 2, kit hgi_qdq_lg_pg2 at 259.2x43.2) into the H-DIE v6 slot quant_NW*_lg 64.8 x 194.4 with the die-granted pins (36b341b5b: VM ports E, engine side W, 1,110 bits a side at 0.096 um/bit, clk/rst N). Same RTL; registered bank-pair near-tap stage (+2 read/+1 write in the exact bench, 152 vs immutable 168)."
+ },
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "structural_change": "Native-audit successor of the closed LG v6 group (launch 270.7 ps on 227 wq_o pins: ONE register per bit between the W input and E output faces 64.8 um apart cannot sit at both pins). r2 = capture register at the input pin + launch register at the output pin per bit; the face-to-face crossing becomes a whole-cycle reg->reg path. Same die slot quant_NW0_lg 64.8 x 194.4 and die-granted pins; +1 edge per direction (rq, rr, wq), priced in the exact QUANT bench (LG=2: RL+4, WC+2).",
+ "contract": {
+  "file": "results/arch/hier_contract_1015/hbm_v15.json",
+  "slot": "quant_NW0_lg"
+ },
+ "pin_ranges": {
+  "rq_o": [
+   85.84,
+   89.104
+  ],
+  "wq_o": [
+   89.104,
+   143.056
+  ],
+  "rr_i": [
+   143.056,
+   192.4
+  ],
+  "rq_i": [
+   85.84,
+   89.104
+  ],
+  "wq_i": [
+   89.104,
+   143.056
+  ],
+  "rr_o": [
+   143.056,
+   192.4
+  ],
+  "clk": [
+   32.352,
+   32.448
+  ],
+  "rst_n": [
+   33.352,
+   33.448
+  ]
+ }
+}

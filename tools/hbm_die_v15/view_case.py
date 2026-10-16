@@ -22,6 +22,7 @@ GRT: real tracks M4..M9, coarse M2/M3 tracks (gcell 9.6 um, the dietop method of
 M4/M5 0.30 and M6..M9 0.146 adjustments as that die STA.  Writes CASE_DIR/{die.v, run.tcl, manifest.json}.
 """
 import argparse, json, re, shutil
+from native_view_admission import require_admitted
 from collections import defaultdict
 from pathlib import Path
 
@@ -95,18 +96,97 @@ def place_child(bx, by, bw, bh, bo, cx, cy, cw, ch, co):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument('--region', default='pcrow', choices=['pcrow'])
+    ap.add_argument('--region', default='pcrow', choices=['pcrow', 'pcrow_rc'],
+                    help='pcrow = PHY(+modelled controller) abstract + 128 closed svc PCs (contract bands); pcrow_rc = '
+                         'the owner-rule successor: PHY-ONLY abstract ot_hbm3e_phy_rc_e8p5 + 128 REAL controller leaves '
+                         'ot_hbm_svc_pc_ctrl_leaf (one per PC, over its PHY channel window), row/column/data nets per PC')
+    ap.add_argument('--ctrl-view', type=Path, help='pcrow_rc: view dir of ot_hbm_svc_pc_ctrl_leaf (LEF + _tt/_ff.lib)')
+    ap.add_argument('--ctrl-view-kind', default='closed_tile_etm', help='pcrow_rc: closed_tile_etm | synth_etm_gate_lef')
     ap.add_argument('--out', required=True)
     ap.add_argument('--paths', type=int, default=200000)
     ap.add_argument('--pc-align', action='store_true',
                     help='variant B: east PHYs mirrored (MY / R180) to the band order, every PC placed directly over '
                          'its own PHY channel pin window, 10.8 um from the PHY edge (bands = soft groups)')
+    ap.add_argument('--die-clock', action='store_true',
+                    help='REAL die clock delivery instead of an ideal die clock: the hbm clock enters at the PLL output '
+                         '(pll_hbm) of the hfd_ckgen slot, TritonCTS builds the die tree to every view clock pin with '
+                         'ASAP7 RVT buffers placed only in channels/relay rows (every non-region compact660_v5 block is '
+                         'a placement blockage), the tree is global-routed with the signals and STA uses the propagated '
+                         'clock (die insertion + each ETM\'s own insertion)')
+    ap.add_argument('--die-clock-mode', default='explicit', choices=['explicit', 'tritoncts'],
+                    help='explicit = tools/hbm_die_v15/die_clock_tree.py (repeaters in free area only, balanced binary '
+                         'tree per quadrant); tritoncts = OpenROAD CTS (left 12 mm leaf nets on this die)')
+    ap.add_argument('--clock-pads', type=Path, help='json {sink inst: pad repeaters} from a measured run (skew feedback)')
+    ap.add_argument('--cts-opts', default='-distance_between_buffers 400 -obstruction_aware -sink_clustering_enable -macro_clustering_size 2 '
+                            '-macro_clustering_max_diameter 300',
+                    help='extra TritonCTS options (die repeater spacing on M8)')
+    ap.add_argument('--ckgen', default='hfd_ckgen', help='slot name of the clock root block in the grants')
     a = ap.parse_args()
     C = json.loads(CONTRACT.read_text()); G = json.loads(GRANTS.read_text()); P = json.loads(PLAN.read_text())
     out = Path(a.out); out.mkdir(parents=True, exist_ok=True)
     slots = {s['name']: s for s in G['slots']}
     W0 = G['floorplan']['die_um'][0]
     inst = C['instances']
+    if a.region == 'pcrow_rc':
+        return main_rc(a, C, G, P, out, slots, W0)
+    return emit(a, C, G, P, out, slots, W0, inst)
+
+
+def main_rc(a, C, G, P, out, slots, W0):
+    """pcrow_rc: PHY-only abstract + one REAL controller leaf per PC (owner rule 10-14).  Nets are the RTL wiring of
+    ot_hbm_svc_native_sector_pipeline_leaves (leaf p <-> PHY bits p*w..): row/column commands leaf->PHY, read return
+    PHY->leaf.  The leaf K side (SM service group), its fault outputs (stack fault OR / ca_fault glue) are out of region."""
+    global PHY_M, PC_M, VIEWS
+    PHY_M, PC_M = 'ot_hbm3e_phy_rc_e8p5', 'ot_hbm_svc_pc_ctrl_leaf'
+    assert a.ctrl_view, '--ctrl-view required for pcrow_rc'
+    VIEWS = {PHY_M: dict(dir=ROOT / f'physical/asap7_memory_macros/{PHY_M}', kind='hard_macro_abstract (PHY only)'),
+             PC_M: dict(dir=a.ctrl_view.resolve(), kind=a.ctrl_view_kind)}
+    phy_lef = next(VIEWS[PHY_M]['dir'].glob('*.lef'))
+    lp = lef_xy(phy_lef)
+    ctl_lef = next(VIEWS[PC_M]['dir'].glob('*.lef'))
+    m = re.search(r'SIZE\s+([\d.]+)\s+BY\s+([\d.]+)', ctl_lef.read_text())
+    cw, ch = float(m.group(1)), float(m.group(2))
+    per = [('row_v', 1, 'c'), ('row_op', 3, 'c'), ('row_bank', 5, 'c'), ('row_row', 19, 'c'), ('col_v', 1, 'c'),
+           ('col_we', 1, 'c'), ('col_bank', 5, 'c'), ('col_col', 5, 'c'), ('col_data', 256, 'c'), ('col_strb', 32, 'c'),
+           ('dram_rvalid', 1, 'p'), ('dram_rdata', 256, 'p')]
+    leaves, nets, used = {}, {}, defaultdict(set)
+    region = []
+    for q in ('SW', 'SE', 'NW', 'NE'):
+        b = P[f'phy_{q}']; north = b['y'] > 10000
+        o = 'MX' if north else 'R0'
+        phy = f'phy_{q}'; region.append(phy)
+        leaves[phy] = dict(master=PHY_M, x=b['x'], y=b['y'], orient=o, w=b['w'], h=b['h'], of=phy,
+                           note='PHY-only abstract; pins face the controller row')
+        for pc in range(32):
+            xs = [lp[f'{n}[{pc * w + k}]' if True else n][0] for n, w, _ in per for k in range(w)]
+            cx = b['x'] + sum(xs) / len(xs)
+            l = f'ctl_{q}_p{pc:02d}'; region.append(l)
+            y = round(b['y'] - 10.8 - ch, 3) if north else round(b['y'] + b['h'] + 10.8, 3)
+            leaves[l] = dict(master=PC_M, x=round(round((cx - cw / 2) / 0.216) * 0.216, 3), y=y,
+                             orient='MX' if north else 'R0', w=cw, h=ch, of=l,
+                             note=f'real controller of PC {pc}, centred over its PHY channel window')
+            for n, w, d in per:
+                for k in range(w):
+                    pp = f'{n}[{pc * w + k}]'
+                    lpin = f'{n}[{k}]' if w > 1 else n
+                    nn = f'n_{q}_{pp.replace("[", "_").replace("]", "")}'
+                    ends = [(l, lpin, 'drv'), (phy, pp, 'load')] if d == 'c' else [(phy, pp, 'drv'), (l, lpin, 'load')]
+                    nets[nn] = ends
+                    used[l].add(lpin); used[phy].add(pp)
+    ls = list(leaves.items())
+    for i, (l1, v1) in enumerate(ls):
+        for l2, v2 in ls[i + 1:]:
+            if v1['x'] < v2['x'] + v2['w'] and v2['x'] < v1['x'] + v1['w'] and \
+                    v1['y'] < v2['y'] + v2['h'] and v2['y'] < v1['y'] + v1['h']:
+                raise SystemExit(f'overlap {l1} {l2}')
+    return emit(a, C, G, P, out, slots, W0, None, pre=(region, leaves, nets, used, len(nets)))
+
+
+def emit(a, C, G, P, out, slots, W0, inst, pre=None):
+    if pre is not None:
+        region, leaves, nets, used, edges_in = pre
+        vpins = {m: lef_pins(next(VIEWS[m]['dir'].glob('*.lef'))) for m in VIEWS}
+        return emit_tail(a, C, G, P, out, slots, W0, region, leaves, nets, used, edges_in, vpins)
     region = sorted(n for n in inst if re.fullmatch(r'(phy_(SW|SE|NW|NE)|svc_(SW|SE|NW|NE)_s\d)', n))
     phys = [n for n in region if n.startswith('phy_')]
     bands = [n for n in region if n.startswith('svc_')]
@@ -197,8 +277,41 @@ def main():
                 if v1['x'] < v2['x'] + v2['w'] and v2['x'] < v1['x'] + v1['w'] and \
                         v1['y'] < v2['y'] + v2['h'] and v2['y'] < v1['y'] + v1['h']:
                     raise SystemExit(f'overlap {l1} {l2}')
+    return emit_tail(a, C, G, P, out, slots, W0, region, leaves, nets, used, edges_in, vpins)
+
+
+def emit_tail(a, C, G, P, out, slots, W0, region, leaves, nets, used, edges_in, vpins):
     # clocks / reset: die ports
     clk_pins = {PHY_M: ['clk'], PC_M: ['clk']}
+    tree = None
+    leafclk = {}
+    if a.die_clock and a.die_clock_mode == 'explicit':
+        import die_clock_tree as dct
+        ck = slots[a.ckgen]
+        root_xy = dct.ckgen_pin_xy(ck, 'pll_hbm')      # the hbm die tree starts at the ckgen pll_hbm output pin
+        vxy = {m: lef_xy(next(VIEWS[m]['dir'].glob('*.lef'))) for m in VIEWS}
+        sinks = []
+        for l, v in leaves.items():
+            px, py = vxy[v['master']]['clk']
+            o = v['orient']
+            if o in ('MY', 'R180'):
+                px = v['w'] - px
+            if o in ('MX', 'R180'):
+                py = v['h'] - py
+            sinks.append((l, 'clk', v['x'] + px, v['y'] + py))
+        obs = [(v['x'], v['y'], v['x'] + v['w'], v['y'] + v['h']) for v in leaves.values()]
+        for n, b in P.items():
+            if isinstance(b, dict) and 'x' in b and n.split('_')[0] not in ('phy', 'pc'):
+                obs.append((b['x'], b['y'], b['x'] + b['w'], b['y'] + b['h']))
+        Wd, Hd = G['floorplan']['die_um']
+        tree = dct.build(Wd, Hd, obs, root_xy, sinks,
+                         lambda inst: re.search(r'(SW|SE|NW|NE)', inst).group(1),
+                         leaf_pads=(json.loads(a.clock_pads.read_text()).get('leaf') if a.clock_pads else None),
+                         quad_pads=(json.loads(a.clock_pads.read_text()).get('quadrant') if a.clock_pads else None))
+        for n, d, loads in tree['nets']:
+            for ld in loads:
+                if ld[0] == 'pin':
+                    leafclk[ld[1]] = n
     for l, v in leaves.items():
         used[l].update(clk_pins[v['master']]); used[l].add('rst_n')
     # ---- die.v ----
@@ -213,7 +326,7 @@ def main():
             conn[l].append((p, n))
     for l in sorted(leaves):
         v = leaves[l]
-        cs = [f'.clk(clk_hbm)', '.rst_n(rst_n)']
+        cs = [f'.clk({leafclk.get(l, "clk_hbm")})', '.rst_n(rst_n)']
         bus = defaultdict(dict); scal = []
         for p, n in conn[l]:
             m = re.fullmatch(r'(\w+)\[(\d+)\]', p)
@@ -234,6 +347,24 @@ def main():
             parts = [x if x else f'nc_{l}_{p}_{k}' for k, x in zip(range(wv - 1, -1, -1), parts)]
             cs.append(f'.{p}({{{", ".join(parts)}}})')
         L.append(f'  {v["master"]} {l} (\n    ' + ',\n    '.join(cs) + '\n  );')
+    if tree:
+        for n, d, loads in tree['nets']:
+            L.append(f'  wire {n};')
+        drv = {}
+        for n, d, loads in tree['nets']:
+            if d[0] == 'buf':
+                drv[d[1]] = n
+        inp = {}
+        for n, d, loads in tree['nets']:
+            for ld in loads:
+                if ld[0] == 'buf':
+                    inp[ld[1]] = n
+        first = [n for n, d, _ in tree['nets'] if d == ('port', 'clk_hbm')]
+        assert len(first) == 1, first
+        ren = {first[0]: 'clk_hbm'}
+        L[:] = [x for x in L if x != f'  wire {first[0]};']
+        for b, cell, x, y in tree['buffers']:
+            L.append(f'  {cell} {b} (.A({ren.get(inp[b], inp[b])}), .Y({drv.get(b, b + "_nc")}));')
     L.append('endmodule')
     L[2:2] = [f'  wire {n};' for n in nc]
     (out / 'die.v').write_text('\n'.join(L) + '\n')
@@ -246,18 +377,17 @@ def main():
     for m, v in VIEWS.items():
         d = v['dir']
         libs.append((m, d))
+    tree_pl = [] if not tree else [f'place_inst -name {b} -location {{{x:.3f} {y:.3f}}} -orientation R0 -status FIRM'
+                                   for b, cell, x, y in tree['buffers']]
     pl = [f'place_inst -name {l} -location {{{v["x"]:.3f} {v["y"]:.3f}}} -orientation {v["orient"]} -status FIRM'
           for l, v in sorted(leaves.items())]
     tcl = f'''# H-DIE r3: v15 PC-row die GRT + TT/FF STA on real views (generated by tools/hbm_die_v15/view_case.py)
 read_lef {plat}/lef/asap7_tech_1x_201209.lef
 read_lef {plat}/lef/asap7sc7p5t_28_R_1x_220121a.lef
-read_lef /work/views/{PHY_M}.lef
-read_lef /work/views/{PC_M}.lef
+{chr(10).join(f'read_lef /work/views/{m}.lef' for m in VIEWS)}
 define_corners tt ff
-read_liberty -corner tt /work/views/{PC_M}_tt.lib
-read_liberty -corner ff /work/views/{PC_M}_ff.lib
-read_liberty -corner tt /work/views/{PHY_M}_tt.lib
-read_liberty -corner ff /work/views/{PHY_M}_ff.lib
+{chr(10).join(f'read_liberty -corner {c} /work/views/{m}_{c}.lib' for m in VIEWS for c in ('tt', 'ff'))}
+{{STDLIB}}
 read_verilog /work/die.v
 link_design hbm_v15_pcrow
 initialize_floorplan -die_area {{0 0 {W} {H}}} -core_area {{0 0 {W} {H}}} -site asap7sc7p5t
@@ -271,9 +401,11 @@ make_tracks M3 -x_offset 0.009 -x_pitch {p_:.3f} -y_offset 0.009 -y_pitch {p_:.3
 make_tracks M2 -x_offset 0.009 -x_pitch {p_:.3f} -y_offset 0.045 -y_pitch {p_:.3f}
 make_tracks M1 -x_offset 0.009 -x_pitch 0.036 -y_offset 0.009 -y_pitch 0.036
 {chr(10).join(pl)}
-place_pins -hor_layers M4 -ver_layers M5 -min_distance 2
+{chr(10).join(tree_pl)}
+{{PINS}}
 source {plat}/setRC.tcl
 set_routing_layers -signal M4-M9 -clock M4-M9
+{{CTS}}
 set_global_routing_layer_adjustment M4-M5 0.30
 set_global_routing_layer_adjustment M6-M9 0.146
 set t0 [clock seconds]
@@ -282,6 +414,7 @@ puts "OT_GRT_S [expr {{[clock seconds]-$t0}}]"
 report_wire_length -net * -global_route -file /work/out/wirelength_grt.csv
 estimate_parasitics -global_routing
 create_clock -name hbm -period {T_PS} [get_ports clk_hbm]
+{{PROP}}
 set_clock_uncertainty -setup 60 [all_clocks]
 set_clock_uncertainty -hold 25 [all_clocks]
 set_false_path -from [get_ports rst_n]
@@ -302,15 +435,132 @@ foreach {{c k}} {{tt max ff min}} {{
   dump $c $k /work/out/paths_${{c}}_${{k}}.txt
 }}
 report_tns
+{{SKEW}}
 puts OT_DONE
 '''
+    if a.die_clock:
+        ck = slots[a.ckgen]
+        import die_clock_tree as dct
+        cx, cy = dct.ckgen_pin_xy(ck, 'pll_hbm')       # die clock port at the ckgen pll_hbm output pin
+        region_kinds = ('phy', 'pc')
+        blk = []
+        for n, b in sorted(P.items()):
+            if not isinstance(b, dict) or 'x' not in b or n.split('_')[0] in region_kinds:
+                continue
+            blk.append((n, b['x'], b['y'], b['x'] + b['w'], b['y'] + b['h']))
+        bl = '\n'.join(f'odb::dbBlockage_create $blk [expr int({x0}*$dbu)] [expr int({y0}*$dbu)] '
+                        f'[expr int({x1}*$dbu)] [expr int({y1}*$dbu)]  ;# {n}' for n, x0, y0, x1, y1 in blk)
+        pins = (f'place_pin -pin_name clk_hbm -layer M9 -location {{{cx:.3f} {cy:.3f}}} -pin_size {{0.4 0.4}}\n'
+                'place_pins -hor_layers M4 -ver_layers M5 -min_distance 2')
+        cts = f'''set blk [ord::get_db_block]
+set dbu [[ord::get_db_tech] getDbUnitsPerMicron]
+# every compact660_v5 block outside this region is a hard placement blockage: die clock buffers live in the
+# 0.6 mm channels, relay rows and the soft service bands only (the closed views block themselves)
+{bl}
+create_clock -name hbm -period {T_PS} [get_ports clk_hbm]
+set_wire_rc -clock -layer M8
+set_wire_rc -signal -layer M6
+# die clock on M7-M9 (tiles cap M5, clusters M6): the die tree crosses blocks above their layer cap
+set_routing_layers -signal M4-M9 -clock M7-M9
+set t1 [clock seconds]
+clock_tree_synthesis -root_buf BUFx24_ASAP7_75t_R -buf_list {{BUFx16f_ASAP7_75t_R BUFx24_ASAP7_75t_R}} {a.cts_opts}
+puts "OT_CTS_S [expr {{[clock seconds]-$t1}}]"
+# legality without a die-wide site grid (detailed_placement over 660 mm2 of sites exceeds 32 GB): every clock buffer
+# must lie outside every blockage and every placed view
+set nb 0; set bad 0
+set obs {{}}
+foreach b [$blk getBlockages] {{ set r [$b getBBox]; lappend obs [list [$r xMin] [$r yMin] [$r xMax] [$r yMax]] }}
+foreach i [$blk getInsts] {{
+  if {{[[$i getMaster] isBlock]}} {{ set r [$i getBBox]; lappend obs [list [$r xMin] [$r yMin] [$r xMax] [$r yMax]] }}
+}}
+foreach i [$blk getInsts] {{
+  if {{[[$i getMaster] isBlock]}} continue
+  incr nb
+  set r [$i getBBox]
+  foreach o $obs {{
+    if {{[$r xMin] < [lindex $o 2] && [lindex $o 0] < [$r xMax] && [$r yMin] < [lindex $o 3] && [lindex $o 1] < [$r yMax]}} {{ incr bad; break }}
+  }}
+}}
+puts "OT_CTS_BUFS $nb OT_CTS_ILLEGAL_BEFORE $bad"
+# legalise: move each clock buffer that sits on a blockage / view to the nearest free point (8 directions, growing
+# radius 5 um .. 3 mm); the moved wire is real and global-routed below
+proc ot_free {{x0 y0 x1 y1 obs W H}} {{
+  if {{$x0 < 0 || $y0 < 0 || $x1 > $W || $y1 > $H}} {{ return 0 }}
+  foreach o $obs {{ if {{$x0 < [lindex $o 2] && [lindex $o 0] < $x1 && $y0 < [lindex $o 3] && [lindex $o 1] < $y1}} {{ return 0 }} }}
+  return 1
+}}
+set W [[$blk getDieArea] xMax]; set H [[$blk getDieArea] yMax]
+set moved 0; set unfixed 0; set maxd 0
+foreach i [$blk getInsts] {{
+  if {{[[$i getMaster] isBlock]}} continue
+  set r [$i getBBox]; set x0 [$r xMin]; set y0 [$r yMin]; set w [expr [$r xMax]-$x0]; set h [expr [$r yMax]-$y0]
+  if {{[ot_free $x0 $y0 [expr $x0+$w] [expr $y0+$h] $obs $W $H]}} continue
+  set done 0
+  foreach d {{5 10 20 40 80 120 160 240 320 480 640 960 1280 1920 2560 3000}} {{
+    set dd [expr int($d*$dbu)]
+    foreach {{dx dy}} {{1 0 -1 0 0 1 0 -1 1 1 1 -1 -1 1 -1 -1}} {{
+      set nx [expr $x0+$dx*$dd]; set ny [expr $y0+$dy*$dd]
+      if {{[ot_free $nx $ny [expr $nx+$w] [expr $ny+$h] $obs $W $H]}} {{ $i setLocation $nx $ny; set done 1; break }}
+    }}
+    if {{$done}} {{ if {{$d > $maxd}} {{ set maxd $d }}; break }}
+  }}
+  if {{$done}} {{ incr moved }} else {{ incr unfixed }}
+}}
+puts "OT_CTS_LEGALISE moved $moved unfixed $unfixed max_move_um $maxd"
+# clock-net geometry audit: driver and every sink location of each clock net (um)
+set f [open /work/out/clock_nets.txt w]
+foreach n [$blk getNets] {{
+  if {{[$n getSigType] ne "CLOCK" && ![string match clknet* [$n getName]] && [$n getName] ne "clk_hbm"}} continue
+  set s "[$n getName]"
+  foreach it [$n getITerms] {{
+    set i [$it getInst]; set ok [$it getAvgXY]
+    append s " [$i getName]/[[$it getMTerm] getName]@[expr [lindex $ok 1]/$dbu],[expr [lindex $ok 2]/$dbu]"
+  }}
+  puts $f $s
+}}
+close $f
+'''
+        if a.die_clock_mode == 'explicit':
+            cts = f'''set blk [ord::get_db_block]
+# explicit die clock tree (tools/hbm_die_v15/die_clock_tree.py): {tree['model']['buffers']} repeaters, model insertion
+# {tree['model']['model_insertion_ps']} ps; clock nets routed on M7-M9 (tiles cap M5, clusters M6)
+foreach n [$blk getNets] {{ if {{[string match dck_* [$n getName]] || [string match n_dck_* [$n getName]] || [$n getName] eq "clk_hbm"}} {{ $n setSigType CLOCK }} }}
+set_wire_rc -clock -layer M8
+set_wire_rc -signal -layer M6
+set_routing_layers -signal M4-M9 -clock M7-M9
+puts "OT_DIE_CLOCK explicit buffers {tree['model']['buffers']}"
+'''
+        prop = 'set_propagated_clock [all_clocks]'
+        skew = '''report_clock_skew -setup > /work/out/clock_skew.rpt
+report_clock_skew -hold >> /work/out/clock_skew.rpt
+catch {report_clock_latency -include_internal_latency > /work/out/clock_latency.rpt}
+# per-sink die clock latency, both corners: the clock-pin arrival in each view's worst launched path (parsed by
+# tools/hbm_die_v15/sink_latency.py from the full_clock_expanded reports)
+foreach c {tt ff} {
+  foreach n {SINKS} {
+    report_checks -from [get_cells $n] -corner $c -path_delay [expr {$c eq "tt" ? "max" : "min"}] -format full_clock_expanded >> /work/out/sink_paths_$c.rpt
+  }
+}
+catch {report_clock_latency > /work/out/clock_latency_plain.rpt}'''
+    else:
+        pins = 'place_pins -hor_layers M4 -ver_layers M5 -min_distance 2'
+        cts = prop = skew = ''
+    stdlib = '' if not a.die_clock else '\n'.join(
+        f'read_liberty -corner {c} {plat}/lib/NLDM/asap7sc7p5t_INVBUF_RVT_{c.upper()}_nldm_220122.lib.gz' for c in ('tt', 'ff'))
+    skew = skew.replace('{SINKS}', '{' + ' '.join(sorted(leaves)) + '}')
+    tcl = tcl.replace('{STDLIB}', stdlib)
+    tcl = tcl.replace('{PINS}', pins).replace('{CTS}', cts).replace('{PROP}', prop).replace('{SKEW}', skew)
     # worst_slack per corner: use report_worst_slack with -corner where available
     (out / 'run.tcl').write_text(tcl)
     vd = out / 'views'; vd.mkdir(exist_ok=True)
     for m, d in libs:
+        require_admitted(m, d)
         shutil.copy(next(d.glob('*.lef')), vd / f'{m}.lef')
         for c in ('tt', 'ff'):
-            shutil.copy(d / f'{m}_{c}.lib', vd / f'{m}_{c}.lib')
+            src = d / f'{m}_{c}.lib'
+            if not src.exists():
+                src = next(d.glob(f'*_{c}.lib'))
+            shutil.copy(src, vd / f'{m}_{c}.lib')
     (out / 'out').mkdir(exist_ok=True)
     # ---- manifest ----
     open_pins = {}
@@ -319,15 +569,20 @@ puts OT_DONE
         un = [p for p in allp if p not in used[l]]
         open_pins[l] = len(un)
     man = dict(schema='opentallas.hbm_v15.view_case.v1', region=a.region, variant='B_pc_align' if a.pc_align else 'A_grants_v4', die_um=[W, H],
-               contract_sha_file=str(CONTRACT.relative_to(ROOT)), grants=str(GRANTS.relative_to(ROOT)),
+               contract_sha_file=str(CONTRACT.relative_to(ROOT)) if a.region == 'pcrow' else 'n/a (pcrow_rc: RTL wiring of ot_hbm_svc_native_sector_pipeline_leaves)', grants=str(GRANTS.relative_to(ROOT)),
                grants_version=G['version'], plan=str(PLAN.relative_to(ROOT)),
-               views={m: dict(dir=str(v['dir'].relative_to(ROOT)), kind=v['kind']) for m, v in VIEWS.items()},
+               views={m: dict(dir=str(v['dir']), kind=v['kind']) for m, v in VIEWS.items()},
                region_instances=region, leaves=len(leaves), pcs=sum(1 for v in leaves.values() if v['master'] == PC_M),
                edges_in_region=edges_in, signal_nets=len(nets),
                out_of_region_open_pins=sum(open_pins.values()), open_pins_by_leaf=open_pins,
                placement={l: v for l, v in leaves.items()},
-               clock='ideal die clock hbm 833.333 ps (no die CTS); tile insertion inside each ETM',
+               clock=('REAL die clock delivery: PLL pll_hbm output at the hfd_ckgen slot, TritonCTS die tree (ASAP7 RVT '
+                      'buffers, channels/relay rows only), global-routed, propagated; tile insertion inside each ETM'
+                      if a.die_clock else 'ideal die clock hbm 833.333 ps (no die CTS); tile insertion inside each ETM'),
                corners='setup TT, hold FF (owner option B); SS not run (sensitivity only)')
+    if tree:
+        man['die_clock_tree'] = tree['model']
+        man['die_clock_buffers'] = [dict(name=b, cell=c, x=x, y=y) for b, c, x, y in tree['buffers']]
     (out / 'manifest.json').write_text(json.dumps(man, indent=1))
     print(json.dumps({k: man[k] for k in ('leaves', 'pcs', 'edges_in_region', 'signal_nets', 'out_of_region_open_pins')}))
 

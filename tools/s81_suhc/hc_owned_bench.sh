@@ -2,7 +2,7 @@
 # Production NG256 exact/mutant gate for physically owned broadcast epochs, serial or NTREE.
 set -euo pipefail
 out=$1; ntree=${2:-0}; tile=${3:-}; pipe=${HC_PIPE:-1}
-for c in "${S81_SU_CASES:-}" /srv/opentallas-scratch/claude/s81-suhc/su_cases_v2_ildr.pkl /srv/opentallas-scratch2/claude/s81-suhc/su_cases_v2_ildr.pkl "$HOME/s81-suhc/su_cases_v2_ildr.pkl"; do
+for c in "${S81_SU_CASES:-}" tools/s81_suhc/fixtures/su_cases_v2_ildr.pkl /srv/opentallas-scratch/claude/s81-suhc/su_cases_v2_ildr.pkl /srv/opentallas-scratch2/claude/s81-suhc/su_cases_v2_ildr.pkl "$HOME/s81-suhc/su_cases_v2_ildr.pkl"; do
     [ -n "$c" ] && [ -s "$c" ] && { pkl=$c; break; }
 done
 [ -n "${pkl:-}" ] || { echo fixture-not-found; exit 97; }

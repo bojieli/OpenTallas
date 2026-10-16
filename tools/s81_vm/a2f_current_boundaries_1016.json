@@ -1,0 +1,27 @@
+{
+  "scope": "Candidate boundary selection only. Each instance still requires exact native kit/parameters, real physical home and incident-pins proof. Rejected raw WFC fault bridge is deliberately not selected. Final source XML required.",
+  "expand": [
+    "dsfd_vm_static_landing"
+  ],
+  "add": [
+    "s81_a2_w0_payload33",
+    "dsfd_vm_native_valid_diag",
+    "dsfd_vm_wfc_request",
+    "dsfd_vm_wfc_return",
+    "dsfd_vm_wfc_fault_core",
+    "dsfd_vm_wfc_fault_serial",
+    "dsfd_vm_static_landing_fault_join",
+    "dsfd_vm_static_landing_lane0",
+    "dsfd_vm_static_landing_lane1",
+    "dsfd_vm_static_landing_lane2",
+    "dsfd_vm_static_landing_lane3",
+    "dsfd_vm_xio_request",
+    "dsfd_vm_xio_return",
+    "dsfd_vm_xio_serial",
+    "dsfd_vm_xio_fault_join",
+    "ot_s81_vm_fault_x34_s_w1",
+    "ot_s81_vm_fault_x34_t_w1",
+    "ot_s81_vm_fault_x43_t_w1",
+    "ot_s81_vm_fault_x43_s_w1"
+  ]
+}

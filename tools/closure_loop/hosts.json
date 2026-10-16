@@ -2,64 +2,6 @@
  "comment": "Closure-loop host table, in preference order (OWNER 2026-10-06: EPYC3 > EPYC1 > EPYC2 > PVE1 > AGIdock). cap = 1.2 x cores (OWNER_RULE_LOAD_CAP_20261006.txt): launch only if load1 + pending + job threads <= cap and MemAvailable >= peak + 32 GB. base = run root (NVMe on the EPYCs; EPYC2 /srv/opentallas-scratch is the root disk, so scratch2). max_job_threads / max_job_ram_gb restrict what a single job may take on a host (EPYC3 is the die-top host: 64 thr / 400 GB while no die-top runs; AGIdock has little RAM: jobs <= 20 GB). caps = tools a stage may need on that host (coordinator 2026-10-06: PVE1 is ORFS/docker only; AGIdock has Verilator 5.032 like the EPYCs). A stage's needs (default bench: verilator+iverilog+yosys; calibrate/route/signoff/summary: orfs) must be a subset of its host's caps. LOAD REBALANCE 2 (2026-10-06 21:15): EPYC3 is the die-top host -- spillover_only (chosen only when no other host fits) and reserve_ram_gb 500 kept free for the Qwen die-top run; the loop migrates its pre-CTS (bench/calibrate) jobs off any host above cap. Host choice scores free cores AND free RAM; a job's hosts list is a preference. OWNER 2026-10-06 21:35 (supersedes the 1.2x cap and LOAD REBALANCE 2): MEMORY is the limit -- admit while measured load1 + own launches of the last 10 min (declared threads) <= cap = 3 x cores, AND MemAvailable - own launches' peaks of the last 10 min >= job peak + max(10% host RAM, 32 GB). EPYC3 reserve lifted. LOCALHOST (OWNER 2026-10-07 05:00): added with max_loop_threads 24 and min_free_ram_gb 40. FILL THE FLEET (OWNER 2026-10-07 19:00, integrate agent): per-job max_job_threads / max_job_ram_gb raised to the host (cores; 0.95 x ram_gb) so admission is bound only by measured MemAvailable minus own pending peaks >= job peak + max(5% ram, 32 GB, min_free_ram_gb), the 3 x cores load cap and the disk floor. localhost unchanged (owner cap: 24 loop threads, 60 GB/job). DISK GUARD (2026-10-07 integrate): disk_roots = {path: min free GB} for every other filesystem a host's jobs write (docker /, second scratch); admission refuses while any is below its floor, as for the run root. NO OVERSUBSCRIPTION (OWNER 2026-10-07 19:31): cap = round(1.1 x cores); admit while max(load1, own running declared threads) + own launches of the last 10 min + job threads <= cap (was 3 x cores). RAM headroom = max(5% ram_gb, min_free_ram_gb, default 32 GB): AGIdock 8 GB / PVE1 16 GB so the small hosts take 40 GB jobs. LOCALHOST ROUTES (OWNER 2026-10-07 19:40): localhost bench_offload=true -- a job whose route/calibrate stages need only ORFS may be placed on localhost although its spec hosts list omits it (that list is a preference); its benches run on a fleet host with the bench tools (source synced to <base>/<name>-bench). Guard unchanged: <= 24 loop threads, MemAvailable >= peak + 40 GB. ADMISSION FIX (coordinator 20:05): load term = measured load1 + declared threads of own launches of the last 10 min only; declared threads of long-running stages are no longer counted (they starved the fleet at 38-58 % idle). MEMORY ONLY (OWNER 2026-10-07 20:10, supersedes the 19:31 cap and the 20:05 eff fix): no CPU/load admission check on remote hosts; 'cap' is informational. localhost keeps max_loop_threads 24 / min_free_ram_gb 40. GIT MIRROR (GITMIRROR sub-agent, drive-1010 2026-10-10): git_mirror = a seeded bare repo on the host (marker CL_READY); sync_source fetches the job branch from git_mirror_upstream (public, host -> GitHub), pushes the pinned commit to refs/cl/<sha> only when still missing (bulk direct ssh, delta only), archives on the host and falls back to the tar stream on any failure (tools/closure_loop/git_mirror.py). PVE1 BENCH OFFLOAD (OWNER 2026-10-13 fleet sizing: every machine fully available): ot-pve1 bench_offload=true, as localhost -- it has caps [orfs] only, so every job with a bench stage failed its caps check and PVE1 got 0 of 121 launches in 2 h; routes/calibrates now land there and the benches run on a fleet host with the bench tools.",
  "hosts": [
   {
-   "name": "ot-epyc1tb",
-   "label": "EPYC1",
-   "cores": 128,
-   "cap": 141,
-   "base": "/srv/opentallas/claude/closure-loop",
-   "max_job_threads": 128,
-   "max_job_ram_gb": 1076,
-   "min_free_disk_gb": 200,
-   "caps": [
-    "verilator",
-    "yosys",
-    "iverilog",
-    "orfs"
-   ],
-   "ram_gb": 1133,
-   "disk_roots": {
-    "/": 100,
-    "/srv/opentallas-scratch": 50
-   },
-   "external_jobs": [
-    {
-     "name": "hbm-hc64-physical",
-     "pid": 2938696,
-     "command_match": "hc-row-shard-r2/physical_private64/run.sh",
-     "peak_ram_gb": 128,
-     "owner": "Codex:hbm_system/hc_shard",
-     "reason": "New admitted EPYC1 HC64 fullshape route; stable launcher preserves128GiB future envelope until completed, actual phase peak not yet measured"
-    },
-    {
-     "name": "hbm-hc-epoch-physical",
-     "pid": 1366211,
-     "command_match": "hc-row-shard-r2/physical_epoch_c3b3f94c8/run.sh",
-     "peak_ram_gb": 128,
-     "owner": "Codex:hbm_system/hc_shard",
-     "reason": "Admitted full W32 realFP64macro epoch-identity route; futurephase estimate128GiB until actual peak measured"
-    },
-    {
-     "name": "hbm-retry545-pipeline-physical",
-     "pid": 2706708,
-     "command_match": "hbm-retry545-pipeline-pathfinding-r2/work",
-     "peak_ram_gb": 24,
-     "owner": "Codex:hbm_system/link_retry/retry_pipeline",
-     "reason": "New protected545/512 controller16realSRAM fullshape pathfinding; prior related GRT4.3GiB but futureDRT unmeasured, keep24GiB inventory"
-    },
-    {
-     "name": "hbm-retry545-pipeline-guard-physical",
-     "pid": 1878057,
-     "command_match": "hbm-retry545-pipeline-guard-pathfinding-r1/work",
-     "peak_ram_gb": 24,
-     "owner": "Codex:hbm_system/link_retry/retry_pipeline",
-     "reason": "Owner verified actual admitted driver; preserve progressing sixteen-macro route with24GiB future inventory"
-    }
-   ],
-   "git_mirror": "/srv/opentallas-scratch/claude/git-mirror/OpenTallas.git",
-   "git_mirror_upstream": "https://github.com/bojieli/OpenTallas",
-   "note": " | 2026-10-10 11:5x drive-1010: run root moved to /srv/opentallas (2.7 TB free) -- /srv/opentallas-scratch hit 95 % (152 GB < the 200 GB floor) and EPYC1 admitted nothing at load 59/128 with 437 GB RAM free; running jobs keep their scratch run dirs (floor 50 GB there)."
-  },
-  {
    "name": "ot-epyc4",
    "label": "EPYC4",
    "cores": 128,
@@ -80,32 +22,7 @@
     "/srv/opentallas-scratch": 30
    },
    "note": "Onboarded 2026-10-08 (claude-takeover-20261007/epyc4 kit, modelled on ot-epyc3). cores/ram_gb are placeholders for the EPYC3 class: replace with the measured nproc and MemTotal GB before enabling. smoke_only until s81ph-dsfd_ctrl_ctr-34b3e75dd-epyc4smoke reaches SMOKE_OK; then delete smoke_only. Memory-only admission (/srv/opentallas-scratch/admit.sh, 100 GiB reserve, CPU gate off). | 2026-10-08 02:06: onboarded (Tokyo, Cherry 1025189), PROBE MATCH ot-epyc3; admitted directly (owner: critical path). | drive-0849 2026-10-09 12:5x (coordinator fleet fix): run root moved scratch2 (2.9 TB, 220 GB free, the 200 GB floor kept EPYC4 idle at 250 GB free RAM) -> /srv/opentallas-scratch (2.9 TB, 2.8 TB free). Existing runs keep their scratch2 paths; scratch2 stays guarded at 30 GB. | drive-0849 15:5x: cap 384 (3 x cores, onboarding leftover) -> 141 = 1.1 x cores like the other EPYCs. cap only RANKS hosts (free-CPU term 0.5 x (cap - load - threads)/cap); at 384 EPYC4 out-ranked EPYC1 with ~10x more free RAM, herded routes onto it (load 191/128, 22 GB free) while EPYC1 sat at 233 GB free. | 2026-10-10 12:1x drive-1010: DOWN (ssh port 22 timeout) after MemAvailable fell to 7 GB at 11:50-11:55 -> smoke_only until it answers. | 2026-10-10 16:3x drive-1010: hard-rebooted 16:22 (Cherry API); earlyoom + ot-heavy + per-disk admit_disk installed -> smoke_only lifted. | 2026-10-12 04:00 PT: base moved to /srv/opentallas-scratch2 (scratch 96% full); old root kept as disk_root floor 30 GB for running jobs.",
-   "external_jobs": [
-    {
-     "name": "hbm-indexer-t1-exact",
-     "pid": 952687,
-     "command_match": "hbm-indexer-3a6f720d4",
-     "peak_ram_gb": 200,
-     "owner": "Codex:hbm_continuation",
-     "reason": "Measured compile-tail inventory:9804of9805CPP compiled, one180.84MB CPP remains; fullsubtree125.8GiB, onecompilerHWM5.616GiB,1.035GB objectarchive/link input. Owner confirmed200GiB phase envelope leaves~74GiB additional headroom; soft reservation, no process cap/restart."
-    },
-    {
-     "name": "hbm-indexer-nk4-synthesis",
-     "pid": 3252430,
-     "command_match": "slice_nk4/yosys.log",
-     "peak_ram_gb": 256,
-     "owner": "Codex:hbm_continuation",
-     "reason": "admitted 256GiB; retained historical NK4 peak203396396KiB"
-    },
-    {
-     "name": "hbm-selector-native-qend-calibration",
-     "pid": 745294,
-     "command_match": "hbm_idx_sel_native_qend_aa7127b87_pathfinding/cl/run.sh",
-     "peak_ram_gb": 120,
-     "owner": "Codex:hbm_continuation/selector_capture",
-     "reason": "Admitted actual6903pin native T1 LA7 MEMV1 READLAT2 EXPOSE1; sourceaa7127b87, inventory77952 override, stablelauncher tracks120GiB futuregrowth"
-    }
-   ],
+   "external_jobs": [],
    "git_mirror": "/srv/opentallas-scratch/claude/git-mirror/OpenTallas.git",
    "git_mirror_upstream": "https://github.com/bojieli/OpenTallas"
   },
@@ -127,24 +44,7 @@
     "/": 100
    },
    "min_free_ram_gb": 16,
-   "external_jobs": [
-    {
-     "name": "ha2-owner-opposite-phase-minimum-gate",
-     "pid": 299770,
-     "command_match": "ha2-owner-cx-20261009/run-gate.sh",
-     "peak_ram_gb": 12,
-     "owner": "Codex:hbm_system/link_retry/retry_pipeline",
-     "reason": "Actual admitted fullPF384 NC8 NPT8 INJ2 owner positive/changed-phase mutant minimum; pinnedVerilator5.050 source31f18f89a. Owner fullshape inventory12GiB envelope, soft capacity reservation until terminal"
-    },
-    {
-     "name": "s81-bf-input-holdseats-exact-gate",
-     "pid": 303289,
-     "command_match": "bf_txn_bench.py",
-     "peak_ram_gb": 40,
-     "owner": "Codex:s81_continuation",
-     "reason": "Actual admitted fullshape INPUT_HOLD_SEATS4 CG0 source82a708f5e,8compiler inventory. Frontend1.64GiB observed, peak unmeasured;40GiB original conservative build envelope until phase/terminal evidence"
-    }
-   ],
+   "external_jobs": [],
    "git_mirror": "/srv/opentallas-scratch/claude/git-mirror/OpenTallas.git",
    "git_mirror_upstream": "https://github.com/bojieli/OpenTallas"
   },
@@ -165,18 +65,9 @@
    ],
    "ram_gb": 125,
    "min_free_ram_gb": 2,
-   "note": " | OWNER 2026-10-07 23:00: disk floor removed. | OWNER 2026-10-08 00:20: no memory margin on AGIdock (min_free 2 GB), per-job RAM up to 110 GB. | 2026-10-12 13:05 coordinator: min_free_disk_gb 100 -> 200 (run root is on the OS root disk /dev/sda1; protect sshd/OS).",
+   "note": " | OWNER 2026-10-07 23:00: disk floor removed. | OWNER 2026-10-08 00:20: no memory margin on AGIdock (min_free 2 GB), per-job RAM up to 110 GB. | 2026-10-12 13:05 coordinator: min_free_disk_gb 100 -> 200 (run root is on the OS root disk /dev/sda1; protect sshd/OS). | ROOT 2026-10-15 19:20: smoke_only (no new loop jobs) after 3 VM resets in one day; release (delete smoke_only) once stable 2 h, with ~/.config/ot-run/held_hosts. | Codex 2026-10-15 21:31 PT: admission restored after continuous boot since19:24:11 (>2h), 502GB disk free, and actual ot-run selftest PASS (runexit7/no-memory75/baddir96). Existing jobs preserved.",
    "reserve_ram_gb": 0,
-   "external_jobs": [
-    {
-     "name": "hbm-native-full-publication-lint",
-     "pid": 2811687,
-     "command_match": "--top-module ot_hbm_collective_native_publication_candidate",
-     "peak_ram_gb": 24,
-     "owner": "Codex:hbm_system/link_retry",
-     "reason": "Owner fullshape inventory envelope24GiB: protected545 queues/landing/CDC/flight plus256 native lanes; actual frontend exceeded4GiB, peak unmeasured"
-    }
-   ],
+   "external_jobs": [],
    "git_mirror": "/srv/opentallas-scratch/claude/git-mirror/OpenTallas.git",
    "git_mirror_upstream": "https://github.com/bojieli/OpenTallas"
   },

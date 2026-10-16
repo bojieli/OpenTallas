@@ -1,0 +1,23 @@
+{
+  "last_read_issue_stream": 1367,
+  "last_read_return_stream": 1377,
+  "last_write_issue_stream": 9207,
+  "last_lg_ack_stream": 9214,
+  "last_bridge_read_serial": 1035,
+  "last_bridge_ack_serial": 6913,
+  "last_lane_write_serial": 6771,
+  "last_scalar_serial": 1646,
+  "last_store_sram_commit_serial": 6772,
+  "last_rf_register_commit_serial": 1683,
+  "config_serial_transactions": 34452,
+  "config_stream_transactions": 598,
+  "serial_prime_edges": 4,
+  "stream_prime_edges": 4,
+  "serial_programme_edges": 7116,
+  "stream_calendar_edges": 9489,
+  "checker_tail_serial_edges": 40,
+  "max_observed_completion_tick": 27652,
+  "quantum_ps": "2500/9",
+  "physical_clock_epoch_qualified": false,
+  "throughput_qualified": false
+}

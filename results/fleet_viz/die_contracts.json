@@ -6,7 +6,7 @@
    "design": "qwen_compute",
    "label": "Qwen compute die",
    "target": "Qwen ROM",
-   "revision": "C19 / wide27 (PM-H-S blocked, chain runs without it) on contract v1.3 + static successors",
+   "revision": "v1.4 (Q-NETLIST 2026-10-16): r2h floorplan (575.3 mm2), dp tree hosts, held45 tile, system face; strict port-bind PASS",
    "lead": "Q-COMPUTE-DIE",
    "log": "el1014-qwen-split-compute.log",
    "doc": "results/arch/qwen_split_compute_1014/CONTRACT.md",
@@ -14,9 +14,9 @@
    "sources": [
     {
      "kind": "port_bind",
-     "path": "results/arch/qwen_split_compute_1014/c13_smoke/port_bind.json",
-     "macro": "^(ot_qkvd_ucie_x64_phy|qfd_ckbump)$",
-     "evidence": "die chain port-bind (c13 smoke; latest committed compute bind)"
+     "path": "results/arch/qwen_split_compute_1014/netlist_0030/port_bind.json",
+     "macro": "^(ot_qkvd_ucie_x64_phy|ot_qfd_ucie_x64_phy|ot_qfd_serdes_112g_x12_phy_s597|qfd_ckbump|qfd_sigbump)$",
+     "evidence": "Q-NETLIST g2 strict port-bind PASS (39 masters / 1,642 instances, every count 0), CONTRACT.md v1.4"
     },
     {
      "kind": "json_keys",
@@ -46,39 +46,35 @@
     },
     {
      "element": "qfd_io_collective_static",
-     "evidence": "Q-COLL static IO set (el1014-qwen-coll-io.log); superseded_elements.json qfd_io_collective -> qfd_io_collective_static"
-    },
-    {
-     "element": "qfd_io_xfifo_static",
-     "evidence": "CONTRACT.md static CDC twelve-leaf composition (static_cdc/qfd_io_xfifo_static.json)"
+     "evidence": "Q-COLL static IO set (el1014-qwen-coll-io.log); superseded_elements.json qfd_io_collective -> qfd_io_collective_static",
+     "parent": "qfd_collective_static_io_production",
+     "role": "leaf"
     },
     {
      "element": "qfd_static_ch546",
-     "parent": "qfd_io_xfifo_static",
+     "parent": "qfd_collective_static_io_production",
      "role": "leaf",
-     "evidence": "static_cdc/qfd_static_ch546.json"
-    },
-    {
-     "element": "qfd_io_ucie_static",
-     "evidence": "Q-COLL static IO set (qfd_io_ucie_static)"
-    },
-    {
-     "element": "qfd_io_serdes_static",
-     "evidence": "Q-COLL static IO set (qfd_io_serdes_static x3)"
-    },
-    {
-     "element": "qfd_ucie_gearbox_r10",
-     "evidence": "compute log 2026-10-15 05:39/07:16 Q-COLL r10 ABI: gearbox becomes its own hard leaf beside ot_qfd_ucie_x64_phy (slot requested)"
-    },
-    {
-     "element": "ot_qfd_x3_mux_native",
-     "evidence": "CONTRACT.md static Q/KVN mux successor (static_x3/ot_qfd_x3_mux_native.json)"
+     "evidence": "CONTRACT.md v1.4: per-face channel of qfd_coll_static_face under the production collective"
     },
     {
      "element": "qfd_vm_qcommit",
      "parent": "qfd_sp_vector_memory",
      "role": "leaf",
      "evidence": "CONTRACT.md VM raw consume observers (vm_rawcommit/qfd_vm_qcommit.json)"
+    },
+    {
+     "element": "qfd_sys_face",
+     "evidence": "CONTRACT.md v1.4; rtl/qwen_split/qfd_sys_face.sv; bench results/arch/qwen_split_compute_1014/sys_face_0030 (PASS + 3 mutants FAIL)"
+    },
+    {
+     "element": "qfd_embedding_word_provider",
+     "evidence": "CONTRACT.md v1.4: compute-die word-level provider replaces qkd_embedding_static_core_provider"
+    },
+    {
+     "element": "qfd_ucie_six_five",
+     "parent": "qfd_collective_static_io_production",
+     "role": "leaf",
+     "evidence": "CONTRACT.md v1.4: gearbox r12 CLOSED f1f95843f, child of the production collective (was qfd_ucie_gearbox_r10)"
     }
    ],
    "retire": [
@@ -123,9 +119,59 @@
      ],
      "by": "qfd_io_serdes_static",
      "evidence": "Q-COLL static IO set"
+    },
+    {
+     "elements": [
+      "qfd_io_xfifo_static",
+      "qfd_io_ucie_static",
+      "qfd_io_serdes_static"
+     ],
+     "by": "qfd_collective_static_io_production",
+     "evidence": "CONTRACT.md v1.4: not instantiated by the production collective (stale)"
+    },
+    {
+     "elements": [
+      "ot_qfd_x3_mux_native"
+     ],
+     "by": "qfd_native59_compute_service",
+     "evidence": "static_link_bind retired the x3 mux (native59 drives x3); CONTRACT.md v1.4"
+    },
+    {
+     "elements": [
+      "qkd_embedding_static_core_provider"
+     ],
+     "by": "qfd_embedding_word_provider",
+     "evidence": "CONTRACT.md v1.4 (compute die only; the HBM half-beat join stays a KV-die function)"
+    },
+    {
+     "elements": [
+      "qfd_ucie_gearbox_r10"
+     ],
+     "by": "qfd_ucie_six_five",
+     "evidence": "CONTRACT.md v1.4 rename"
     }
    ],
    "streams": [
+    [
+     "^(qfd_sys_face|qfd_embedding_word_provider)$",
+     "Q-NETLIST"
+    ],
+    [
+     "^qfd_tile_n[kl]",
+     "Q-TILE45"
+    ],
+    [
+     "^(qfd_band_upper_tp8|qfd_res_train_issue|qfd_sp_res_train_par_[0-9]|qfd_rly_|qfd_seq_su_static)",
+     "Q-ELEM"
+    ],
+    [
+     "^qfd_sp_vector_memory_par$",
+     "Q-VMWB"
+    ],
+    [
+     "^(qfd_collective_static_io_production|qfd_d2d_static)$",
+     "Q-DVM+LINK"
+    ],
     [
      "^(qfd_(xc|xh|xs_|vm_|sp_vector)|ot_qfd_x)",
      "Q-DVM"
@@ -178,6 +224,11 @@
      ],
      "macro": "(phy|ckbump|pllm|fwdbump)",
      "evidence": "KV die contract v1.4.1 slots"
+    },
+    {
+     "kind": "registry",
+     "path": "results/fleet_viz/element_registry/qwen_kvsys_v143_die_masters_20261016.json",
+     "evidence": "Q-KVSYS-NETLIST 2026-10-16: v1.4.3 die masters absent from the v1.4.1 bind (qkd_hgs, qkd_hss, qkd_rly_t1, qkd_rst_region) + qkd_d2ds (die master of qkd_d2d_static); strict bind v2 results/arch/qwen_split_1014/kvsys_v1_4_3_design/port_bind_v2/"
     }
    ],
    "add": [
@@ -267,6 +318,10 @@
      "Q-KVSYS-DIE"
     ],
     [
+     "^qkh_",
+     "Q-KVSYS-ELEM"
+    ],
+    [
      "^(qkd_|ot_qkh_|ot_qkvd_)",
      "Q-KVSYS-ELEM"
     ]
@@ -276,11 +331,11 @@
    "design": "s81",
    "label": "S81 (DeepSeek ROM) die",
    "target": "DeepSeek ROM",
-   "revision": "v20 contract + v21 GEN18 candidate (GEN18c static seams/collective, S-BIND bind5)",
+   "revision": "v20 contract + v21 GEN18 candidate (GEN18c static seams/collective, S-BIND bind5) + S-DIE-NETLIST 0030 (PQ producer + MIX4 bound, v23 contract, absent-master resolution)",
    "lead": "S-DIE",
    "log": "el1011-s81die.log",
-   "doc": "results/arch/hier_contract_1011/s81_v21_gen18.json",
-   "complete": true,
+   "doc": "results/arch/hier_contract_1011/s81_v23_hc_budget.json",
+   "complete": false,
    "sources": [
     {
      "kind": "port_bind",
@@ -290,18 +345,18 @@
     },
     {
      "kind": "hier_slots",
-     "path": "results/arch/hier_contract_1011/s81_v21_gen18.json",
+     "path": "results/arch/hier_contract_1011/s81_v23_hc_budget.json",
      "at": "slots",
      "macro": "^(ot_hbm3e_phy|ot_pdie_|ot_rom_|ot_v41_rom_elem)",
-     "evidence": "S81 hier contract v21 (GEN18) slots"
+     "evidence": "S81 hier contract v23 (recipe --contract) slots"
     },
     {
      "kind": "json_field",
-     "path": "results/arch/hier_contract_1011/s81_v21_gen18.json",
+     "path": "results/arch/hier_contract_1011/s81_v23_hc_budget.json",
      "at": "relay_masters.masters",
      "field": "master",
      "rtl_field": "none",
-     "evidence": "S81 v21 relay masters"
+     "evidence": "S81 v23 relay masters"
     },
     {
      "kind": "filelist",
@@ -319,7 +374,42 @@
     },
     {
      "element": "dsfd_engram_mix4_c",
-     "evidence": "el1011-s81die.log 2026-10-15 06:30 MIX4 HOME (--mix4-slot; replaces the refused VM-E band)"
+     "evidence": "S-DIE-NETLIST 2026-10-16: bound by generator --mix4-bind (slot A, VM f_mx/t_mx, engine 10)",
+     "stream": "S-ENGRAM+NORM"
+    },
+    {
+     "element": "dsfd_stage_seq_static_c10",
+     "evidence": "S-DIE-NETLIST 2026-10-16: layer1 sequencer c9 + MIX4 engine 10 (run_static_c10.sh PASS)",
+     "stream": "S-ELEM-PQ"
+    },
+    {
+     "element": "dsfd_sp_pq_produced",
+     "evidence": "S-DIE-NETLIST 2026-10-16: PQ slot master under --pq-producer (S-ELEM-PQ 59014b2c2)",
+     "stream": "S-ELEM-PQ"
+    },
+    {
+     "element": "ot_hbm3e_phy_v41x_aw30_e8p5",
+     "role": "master",
+     "evidence": "S-DIE-NETLIST 2026-10-16: hard macro / PHY of the die netlist, owner by assignment (coordinator 00:30)",
+     "stream": "S-DIE"
+    },
+    {
+     "element": "ot_pdie_serdes",
+     "role": "master",
+     "evidence": "S-DIE-NETLIST 2026-10-16: hard macro / PHY of the die netlist, owner by assignment (coordinator 00:30)",
+     "stream": "S-DIE"
+    },
+    {
+     "element": "ot_pdie_ucie",
+     "role": "master",
+     "evidence": "S-DIE-NETLIST 2026-10-16: hard macro / PHY of the die netlist, owner by assignment (coordinator 00:30)",
+     "stream": "S-DIE"
+    },
+    {
+     "element": "ot_rom_4096x72_m8",
+     "role": "master",
+     "evidence": "S-DIE-NETLIST 2026-10-16: hard macro / PHY of the die netlist, owner by assignment (coordinator 00:30)",
+     "stream": "S-DIE"
     }
    ],
    "retire": [
@@ -344,9 +434,65 @@
      ],
      "by": "dsfd_engram_mix4_c",
      "evidence": "el1011-s81die.log 2026-10-15 06:30 MIX4 home"
+    },
+    {
+     "elements": [
+      "dsfd_bf_front"
+     ],
+     "by": "dsfd_bf_front_static",
+     "evidence": "S-DIE-NETLIST 2026-10-16 (results/arch/s81_netlist_0030/absent_master_resolution.json): layer1.f --bf-static-prog block: static BF front (compiled programme f_prog, no grants) replaces the BF front; c21h netlist instantiates dsfd_bf_front_static (519 x2 pairs), never dsfd_bf_front"
+    },
+    {
+     "elements": [
+      "ot_s81_cfg7_seq_bf"
+     ],
+     "by": "ot_s81_cfg7_seq_bfp",
+     "evidence": "S-DIE-NETLIST 2026-10-16 (results/arch/s81_netlist_0030/absent_master_resolution.json): generator CFG7 (BF pairs): seq master ot_s81_cfg7_seq_bfp under --bf-static-prog; ot_s81_cfg7_seq_bf is its loader CHILD (ot_s81_cfg7_seq_bfp / u_ld, results/arch/s81_netlist_0030/leaf_reach_c21h.json (tools/s81/die_leaf_reach.py on the c21h strict port-bind masters, layer1.f defines))"
+    },
+    {
+     "elements": [
+      "dsfd_l2r_vr_564x1__hx_E",
+      "dsfd_l2r_vr_564x1__hx_W"
+     ],
+     "by": "dsfd_l2r_vr_1100x1__hx_E / __hx_W",
+     "evidence": "S-DIE-NETLIST 2026-10-16 (results/arch/s81_netlist_0030/absent_master_resolution.json): --bf-x2-static: the x lane is one packed 1,101-b static word {x2 536 | legacy 564 | v} (layer1.f DSFD_PQ_STATIC_X2, dsfd_sp_pq_n xw/xe[1100:0]); the 564-b start blocks are the pre-x2 lane"
+    },
+    {
+     "elements": [
+      "dsfd_sstn_e0c0",
+      "dsfd_sstn_e0c0si",
+      "dsfd_sstn_e0c0sinf",
+      "dsfd_sstn_e0e1c0c1sinf"
+     ],
+     "by": "dsfd_sstn_<same code>_x2",
+     "evidence": "S-DIE-NETLIST 2026-10-16 (results/arch/s81_netlist_0030/absent_master_resolution.json): generator slot stations: master dsfd_sstn_<code> gains _x2 when the station carries the BF x2 lane (x2i port, --bf-x2-static); c21h has dsfd_sstn_e0c0_x2 / e0c0si_x2 / e0c0sinf_x2 / e0e1c0c1sinf_x2 for every one of these codes"
+    },
+    {
+     "elements": [
+      "dsfd_rly_266_SN",
+      "dsfd_rly_266_WE",
+      "dsfd_rly_283_SN",
+      "dsfd_rly_283_WE"
+     ],
+     "by": "packed static x lane stations (dsfd_rly_536_*, dsfd_stn{h,v}_538x1)",
+     "evidence": "S-DIE-NETLIST 2026-10-16 (results/arch/s81_netlist_0030/absent_master_resolution.json): W 266 / 283 relays carried the split x1 / x0 lanes of the 564-b x lane (contract relay_masters, GEN18 census); under --bf-x2-static the lane is one packed word staged by the x2-width stations; tile_dedupe_1015 rebinds 266_SN/WE -> 283_SN/WE, neither emitted by the current GEN"
+    },
+    {
+     "elements": [
+      "dsfd_rly_1_WE",
+      "dsfd_rly_2_SN",
+      "dsfd_rly_54_EW",
+      "dsfd_rly_68_EW"
+     ],
+     "by": "current GEN relay set (same widths, other orientations: dsfd_rly_1_EW/_WN, dsfd_rly_2_ES/EW/NE/NS/NW/WE/WS, dsfd_rly_54_WN, dsfd_rly_66_WE)",
+     "evidence": "S-DIE-NETLIST 2026-10-16 (results/arch/s81_netlist_0030/absent_master_resolution.json): relay masters are emitted per hop width x in/out face of the die geometry; these four orientations exist only in the GEN18 relay census (contract relay_masters); the vmc hub geometry does not emit them (c21h / gen26n netlists); closed views kept for dedupe"
     }
    ],
    "streams": [
+    [
+     "^(ot_s81_cfg7_seq_bfp|ot_s81_pq_rwbc|dsfd_stage_seq_static_c(9|10)|dsfd_sp_pq_produced)$",
+     "S-ELEM-PQ"
+    ],
     [
      "engram|_rx|surx",
      "S-ELEM-C"
@@ -364,13 +510,63 @@
      "S-NORM"
     ],
     [
-     "^(dsfd_(rly|hstn|stnh|sstn|l2r|m2l|r2l|xstg|node|qbank|rstg|lkck)|dsfd_.*__)",
-     "S-DIE"
+     "^(dsfd_(rly|hstn|stnh|stnv|sstn|l2r|m2l|r2l|xstg|node|qbank|rstg|lkck)|dsfd_.*__)",
+     "S-NET+FILL"
     ],
     [
      "^(dsfd_|ot_s81_|ot_p2h_|ot_mtp_)",
      "S-ELEM-B"
     ]
+   ],
+   "note": "Current complete master census is pending source-pinned c26b / gen26n GEN and strict port-bind results. Historical bind5 (GEN18) sources remain diagnostic inventory only and must not auto-retire modern unlisted S81 masters. Explicit source-evidenced retirements remain in force.",
+   "streams_note": "S-DIE-NETLIST 2026-10-16 (coordinator 00:30 owner assignment): relays / stations / network ends -> S-NET+FILL; PQ / cfg7 / HC control masters without an owner -> S-ELEM-PQ; everything else -> S-DIE",
+   "scope": [
+    {
+     "kind": "leaf",
+     "parent": "dsfd_sp_hc_c",
+     "elements": [
+      "ot_s81_hc_caq",
+      "ot_s81_hc_ccf",
+      "ot_s81_hc_ccr",
+      "ot_s81_hc_cntree",
+      "ot_s81_hc_crx",
+      "ot_s81_hc_cseq",
+      "ot_s81_hc_pad_f8",
+      "ot_s81_hc_pad_fv4fd5r2",
+      "ot_s81_hc_pad_meta2",
+      "ot_s81_hc_pad_r5"
+     ],
+     "evidence": "S-DIE-NETLIST 2026-10-16 (results/arch/s81_netlist_0030/absent_master_resolution.json): hardened leaves INSIDE the HC master dsfd_sp_hc_c (dsfd_sp_hc_c / u_hc:dsfd_sp_hc / u_cb:ot_s81_hc_comb / ...; results/arch/s81_netlist_0030/leaf_reach_c21h.json (tools/s81/die_leaf_reach.py on the c21h strict port-bind masters, layer1.f defines)); contract slots sp_hc_s/comb/* lacked the parent field (fixed in s81_v23_hc_budget.json); ot_s81_hc_pad_fv4fd5r2 = the u_pd.u_f5r1 slot, RTL module ot_s81_hc_pad_f5r1"
+    },
+    {
+     "kind": "role_home",
+     "elements": [
+      "ot_s81_embed_expand",
+      "ot_s81_engram_dispatch",
+      "ot_s81_hcx_controller",
+      "ot_s81_hcx_gatherpack",
+      "ot_s81_hcx_projection_leaf"
+     ],
+     "evidence": "S-DIE-NETLIST 2026-10-16 (results/arch/s81_netlist_0030/absent_master_resolution.json): Codex v20 functional-home RESERVATIONS (contract slots sp_embed_expand / sp_engram_dispatch / sp_hcx_*: \"no production adoption without static calendar/native checks\"); engines 9 emb / 11 HC projection and the Engram lookup|MIX dispatcher live on other die roles (dsfd_stage_seq_static_c8/c9/c10 ENG_PRESENT; die_ctrl_bindings role_absent.layer1 emb/head/spare); open die-architecture item for S-DIE: whether the single layer die mask must carry them"
+    },
+    {
+     "kind": "die_kind:layer1e",
+     "elements": [
+      "dsfd_engram_c"
+     ],
+     "evidence": "S-DIE-NETLIST 2026-10-16 (results/arch/s81_netlist_0030/absent_master_resolution.json): Engram lookup service eng_SE of the layer1e Engram home dies (generator STACKS layer1e, ENG_BUSES; die_ctrl_bindings engines.eng note \"layer1 (non-home) dies have no eng slab\")"
+    },
+    {
+     "kind": "die_kind:mtp",
+     "elements": [
+      "dsfd_mtp_hrow_cbe",
+      "dsfd_mtp_hrow_cbw",
+      "dsfd_mtp_hrow_hub",
+      "dsfd_mtp_hrow_ing",
+      "ot_mtp_p2_prefix_path"
+     ],
+     "evidence": "S-DIE-NETLIST 2026-10-16 (results/arch/s81_netlist_0030/absent_master_resolution.json): MTP residual-row banks (rep/hrow, ot_dsrom_mtp_hrow_die: MTP primary die, generator --hrow-src / MTP-DIE) and the MD-2 P2 draft-die A prefix path (generator --draft A); not built by the layer1 recipe; owners S-ELEM-B (MTP)"
+    }
    ]
   },
   {
@@ -516,6 +712,30 @@
      "by": "128 die-level ot_hbm_svc_static_pc leaf instances; service bands are soft groups",
      "reason": "HBM v5 flattens every service band into individually placed real PC leaves directly over PHY channel windows; these 17 name variants no longer need independent physical closure. Historical band routes remain evidence and PC native-boundary qualification remains OPEN.",
      "evidence": "results/arch/hier_contract_1015/hbm_v15.json version 5 slots kind=soft_group + pc_homes; el1015-hbm-v15-harden.log H-DIE 2026-10-15 13:10; results/fleet_viz/element_registry/hbm_service_soft_groups_1015.json"
+    },
+    {
+     "elements": [
+      "ot_vms_calendar_static"
+     ],
+     "by": "hfd_hgi_vm_calendar_SW/SE/NW/NE (CLOSED hv15_vm_cal_{sw,se,nw,ne}-takeover-47ef6b64b)",
+     "reason": "soft sub-block: ot_vms_calendar_static is the u_programme instance inside each hardened hfd_hgi_vm_calendar_<Q> tile (rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_static.sv); it has no physical slot of its own. Calendar reset-recovery native obligations stay with the four calendar tiles.",
+     "evidence": "H-HARDEN el1015-hbm-v15-harden.log 2026-10-15 r4"
+    },
+    {
+     "elements": [
+      "ot_hgi_dma_back_static"
+     ],
+     "by": "ot_hgi_dma_back_static_vp4_banks = ot_hgi_dma_back_static_vp4_controller + 8 x ot_hgi_dma_back_landing_bank (hb_dbk_<q> wires-only parent)",
+     "reason": "the monolithic DMA STORE back engine (cursor -827 ps, vp -412 ps CTS) is structurally replaced by the DESC_LAT4 controller leaf + eight landing-bank leaves (identical issue/drain/data/fence edges, actual 32VM/128SRAM production proof); H-DIE asked to re-grant hb_dbk_<q> as the wires-only cluster.",
+     "evidence": "jobs hv15_dbk_bank-pf1-4e0d5b48c / hv15_dbk_vp4_ctl_stk0-rm1 (claude/hbm-harden-1705), el1011-hbmdie.log H-HARDEN 1705 request (2)"
+    },
+    {
+     "elements": [
+      "hfd_ckgen_rel"
+     ],
+     "by": "hfd_ckgen_rel4 (one leaf, four domain releases, beside the PLL macro)",
+     "reason": "coordinator 10-15 dedupe decision: the 4-copy 2-flop leaf (hbm_ckgen_rel-r2-4c5a2f113 CLOSED, native PASS) folds into one leaf; the die reset tree fans the four releases out.",
+     "evidence": "H-HARDEN el1015-hbm-v15-harden.log; job hbm_ckgen_rel4-one1"
     }
    ],
    "streams": [

@@ -1,0 +1,24 @@
+{
+ "cell": "qfd_ucie_six_five",
+ "view": "home/ubuntu/artifacts/link-native-cts-0253/qfd_ucie_gearbox_r15",
+ "lib_cell": "qfd_ucie_six_five",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean",
+  "lib midrange"
+ ],
+ "R_ps": 203.7,
+ "spread_ps": 24.0,
+ "outputs": 1644,
+ "inputs": 1643,
+ "launch_ps": 195.8,
+ "launch_pin": "phy_tx_frame[49]",
+ "capture_ps": 149.7,
+ "capture_pin": "rst_n",
+ "launch_over": 0,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pass": true,
+ "fail_why": ""
+}

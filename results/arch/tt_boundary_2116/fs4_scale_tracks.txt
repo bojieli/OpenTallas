@@ -1,0 +1,17 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[WARNING ORD-0039] .openroad ignored with -python
+M1 VERTICAL X [[9, 9600, 36]] Y [[9, 6000, 36]]
+M2 HORIZONTAL X [[9, 9600, 36], [9, 9600, 36], [9, 9600, 36], [9, 9600, 36], [9, 9600, 36], [9, 9600, 36], [9, 9600, 36]] Y [[45, 800, 270], [81, 800, 270], [117, 800, 270], [153, 800, 270], [189, 800, 270], [225, 800, 270], [270, 799, 270]]
+M3 VERTICAL X [[9, 9600, 36]] Y [[9, 6000, 36]]
+M4 HORIZONTAL X [[45, 9599, 36]] Y [[12, 4500, 48]]
+M5 VERTICAL X [[12, 7200, 48]] Y [[12, 4500, 48]]
+M6 HORIZONTAL X [[60, 7199, 48]] Y [[16, 3375, 64]]
+M7 VERTICAL X [[16, 5400, 64]] Y [[16, 3375, 64]]
+M8 HORIZONTAL X [[116, 4319, 80]] Y [[116, 2699, 80]]
+M9 VERTICAL X [[116, 4319, 80]] Y [[116, 2699, 80]]
+Pad HORIZONTAL X [[116, 4319, 80]] Y [[116, 2699, 80]]
+COUNTS {'M4': 602, 'M5': 93} {'M4': 602, 'M5': 93}
+EXAMPLES {'M4': [{'name': 'clk[0]', 'center_dbu': 190032.0, 'axis': 'y', 'residual_dbu': 36.0}, {'name': 'scale_addr[0]', 'center_dbu': 40464.0, 'axis': 'y', 'residual_dbu': 36.0}, {'name': 'scale_addr[100]', 'center_dbu': 50064.0, 'axis': 'y', 'residual_dbu': 36.0}, {'name': 'scale_addr[101]', 'center_dbu': 50160.0, 'axis': 'y', 'residual_dbu': 36.0}, {'name': 'scale_addr[102]', 'center_dbu': 50256.0, 'axis': 'y', 'residual_dbu': 36.0}], 'M5': [{'name': 'rst_n[0]', 'center_dbu': 234432.0, 'axis': 'x', 'residual_dbu': 36.0}, {'name': 's3_v[0]', 'center_dbu': 233280.0, 'axis': 'x', 'residual_dbu': 36.0}, {'name': 'tag_payload[0]', 'center_dbu': 110304.0, 'axis': 'x', 'residual_dbu': 36.0}, {'name': 'tag_payload[10]', 'center_dbu': 123360.0, 'axis': 'x', 'residual_dbu': 36.0}, {'name': 'tag_payload[11]', 'center_dbu': 125280.0, 'axis': 'x', 'residual_dbu': 36.0}]}

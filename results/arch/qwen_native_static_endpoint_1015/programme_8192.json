@@ -1,0 +1,46 @@
+{
+  "schema": 1,
+  "authority": {
+    "epoch": 17,
+    "token": 19,
+    "position": 8191,
+    "stage": 7
+  },
+  "descriptor_hex": "0000003000001000001000c5f0000000000000000000000000100358000000000000000000000000080100000080401",
+  "tag_hex": "00088e0009fffc0",
+  "calendar_hex": "0299029902990354053304ea049901a20394019b01aa",
+  "compiled_rx_cmd": 4,
+  "compiled_tx_first": 1541,
+  "compiled_end": 1575,
+  "start_qk": 6,
+  "q_first": 7,
+  "q_last": 38,
+  "result_last": 1572,
+  "result_done": 1573,
+  "reserved_idle": 1573,
+  "status": 1574,
+  "service_edges": 1566,
+  "service_binding": {
+    "head": "G3S2",
+    "HXK": 13,
+    "AGE": 34,
+    "RL": 21,
+    "pv": "w16"
+  },
+  "sources": {
+    "tools/qwen_attention_native/attn_calendar.py": "01722f18b395d00e13411cc6b05584dd2b871bb704293ca261d943f52ae8405e",
+    "rtl/qwen_sys/split_20261014/qkd_native59_command_guard.sv": "d0d111ef6d9ab4d99722279fad879e1e31089a6a553ea9b4dd3863c27348baf9",
+    "rtl/qwen_sys/split_20261014/qkd_native59_descriptor_producer.sv": "ae0e6f50c68e316271c344f225eb2730bcf54f05fa3d4df4343d684379ca8495",
+    "rtl/qwen_sys/split_20261014/qkd_native_attention_static_ctl.sv": "2fcfac5cc25798e897f4f271a4e2e3624267292c9d20e7b58e1b8abd0a86f70b",
+    "rtl/qwen_sys/split_20261014/qkd_native_attention_programme.sv": "bb89cd9a6f38ffa8243bf363e1faf1085901ad9390c889f9158dde4cc378dd76"
+  },
+  "native_full_layer": false,
+  "native_full_token": false,
+  "required_producers": [
+    "HOST authority",
+    "actual native service and K/V memory ports",
+    "programme loader/run",
+    "electrical link slots",
+    "physical clock/pins"
+  ]
+}

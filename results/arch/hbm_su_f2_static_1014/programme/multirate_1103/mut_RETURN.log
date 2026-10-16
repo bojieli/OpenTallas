@@ -1,0 +1,3 @@
+[93000] %Fatal: multirate_tb.sv:62: Assertion failed in tb_su_multirate.unnamedblk8: SU_MULTIRATE FAIL serialedge=10 rr=00000000000000000000000000000000000000000000000000000000000000000 want=00000000000000000000000000000000000000000000000000000000000000000 done=1 fault=1
+%Error: /tmp/su-multirate-stage-1103/rtl/hbm_accel/generic/adapters/static_su/programme/multirate_tb.sv:62: Verilog $stop
+Aborting...

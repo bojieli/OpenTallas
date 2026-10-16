@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hbm_svc_sm_xcal",
+ "enable": false,
+ "reason": "Every XC data input already lands in the source RTL pin rung (cfg in u_cal, desc/run at top); all outputs are source flop outputs. Keep compiler-fixed exact lockstep edges proved by native issuer/calendar bench; duplicate synthesis-added input/output registers would break alignment."
+}

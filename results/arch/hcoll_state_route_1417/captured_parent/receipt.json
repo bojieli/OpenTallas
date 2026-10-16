@@ -1,0 +1,53 @@
+{
+ "schema": "opentallas.hcoll.captured_parent_proof.v1",
+ "source_commit": "01c7703f6",
+ "verdict": "PASS",
+ "unit": "oth-ubuntu-1680384-1792100695",
+ "host": "ot-agidock128",
+ "admission_gib": 24,
+ "threads": 8,
+ "remote": "/srv/opentallas-scratch/codex/hcoll-captured-ring-1417/proof-wave44",
+ "actual_parents": 4,
+ "state_leaves": 32,
+ "native_LAT8_add_leaves": 32,
+ "tags": 8,
+ "waves": 6,
+ "lane_checks": 1536,
+ "cycles": 271,
+ "read_lead_edges": 2,
+ "resource_safe_wave_edges": 44,
+ "tag_lifetime_edges": 42,
+ "reservation_fault_scenarios": [
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7,
+  8,
+  10,
+  11,
+  12
+ ],
+ "compiler_duplicate_TX": "EXPECTED_REJECT",
+ "hardware_mutants": {
+  "MUT_CARRY": "golden mismatch",
+  "MUT_TAG": "unexpected schedule fault cycle5",
+  "MUT_RING_ORDER": "unexpected schedule fault",
+  "MUT_READ_LEAD": "unexpected schedule fault cycle3"
+ },
+ "sources_sha256": {
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static.sv": "c827fb8dc971baca5e155b88a3381eab218999b127e3a4b9f419f3f28e77d514",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static_state_capture.sv": "9ffba061514f1f2fc150a38da9706c8a53c22dd38d077cbc3c7e24a7fb096857",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_captured_static.sv": "8a983e6b99f5abbbfd532844f653015370f6d1cafe212094cf42c036ad69241f",
+  "rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_pring_captured_static.sv": "57f5fd671ccb82e23a229266c206f3d648680e74915dfe3e820ee7ccd3ab5652",
+  "rtl/hbm_accel/generic/collective/p2p/run_pring_captured_bench.sh": "9e199c800f9ac72c2e2eb87b0f12625a4f4774d0ad60c8e3b2fb590fcdd798e1",
+  "rtl/hbm_accel/generic/collective/p2p/run_pring_captured_suite.sh": "cf46785dd9709fd8e4566180c75b3a2df5ba9f27c876c8e5cf912d9f896aeee4",
+  "rtl/hbm_accel/generic/collective/p2p/f32add.c": "fb471ffa0ebfb78c26b9d9a4f1d29514607d92b049fb6bccb05c5a6dc98b4040",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv": "f5e88cfcd8ce4809826eccf77fa8b83bc1ef14b430964dcf01cef70f70577b30",
+  "rtl/hdc/ot_hdc_prefix.sv": "98f2492a22012ffbaae49ac8405c2af693e16cb7bcdfafc5eb66db7943240587",
+  "rtl/hdc/ot_hdc_fastfp.sv": "ff9d928d809eef91c349e4be8b34e359548a24dab473be05fcab8b9f43db2643"
+ },
+ "scope": "Distinct ring parent functional/calendar proof only; current q3/q2 bindings unchanged, no wholeparent physical/offdie/FEC/throughput qualification. CLOSED state/add masters are reusable leaf implementations, parent clock/reach still OPEN. SS sensitivity only under binding TT/FF policy."
+}

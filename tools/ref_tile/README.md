@@ -42,6 +42,7 @@ synthesized area and the exact `"std_area_um2"` to put in the spec; `gen` then s
 | `forwarded_clock` | cluster with a forwarded-clock subtree (keeps the forwarding inverter, own root) |
 | `clock`, `clock_ports` | `spine` builds a balanced parent tree; `cts` uses TritonCTS. A wires-only `entries` parent takes one top port per actual hard-child clock pin. Generation automatically creates related per-entry clocks and a virtual IO clock, binds every pin to routed `insertion.json` boundary min/mean/max at TT/FF/SS, and remeasures entry wires after clearing source latency. Delivery is phi minus entry-wire delay minus child reference; ETM arcs are unchanged. Coverage or missing clock data fails. Entry clocks are explicitly propagated before measuring; actual bound Liberty names select TT/FF/SS, because a WC scene may contain TT libraries. Route-boundary/signoff zero wire arrivals require physical source/pin coincidence within 0.001 um; missing parasitics cannot qualify. Same-level internal setup reserves 60+90 ps; any pair with either TT entry-wire plus child R above 300 ps reserves 60+150 ps (including two deep entries); physical FF/SS scenes conservatively use 210 ps when the TT entry-wire level is not measured in that scene; internal hold reserves H1 50+50=100 ps. Its own flops belong in hardened leaves. Obsolete TT-only `wires_only_ioref` entry hooks are replaced automatically; the spine helper remains supported. `probe_clock_entries.py` provides an actual-ETM all-entry calibration probe; zero-wire calibration proves accounting, while routed parasitics and child clock checks remain required for closure. |
 | `clock_entry_domains` | Required when a child has multiple clock pins. Explicit related domains map every entry clock port and every normal IO (including resets) once: `{"core":{"ratio":[1,1],"ports":["ck"],"inputs":["rst","f_core*"],"outputs":["t_core*"]},"serial":{"ratio":[4,3],"ports":["ckv"],"inputs":["rsv","f_ser*"],"outputs":["t_ser*"]}}`. CK and CKV remain related at 833.333 and 1111.111 ps (PLL /3 and /4); both crossing directions and waveform edges are checked. Virtual IO references are separate, boundary min/mean/max is per actual child pin and domain, and nominal 0.2T IO budgets remain fixed during route overconstraint. Duplicate/missing domain coverage or unsupported exception policy fails. No asynchronous groups or reset waivers are generated. |
+| `clock_data_paths: "async_gray_fifo"` | Opt-in HBM/PHY FIFO boundary only, with `clock: "multiple_cts_roots"`, literal IO ownership, and `clock_relationship: {"kind":"hbm_phy_async_gray_fifo","stream_period_ps":833.333,"hbm_period_ps":1024.0}`. Exactly `core` and `hbm` domains use ratios `[1,1]` and `[3072000,2499999]`; each domain may expose multiple actual CTS roots, whose ordinary within-domain setup/hold paths remain timed. The generator fingerprints the reviewed `ot_hbm_svc_async_fifo`/reset sources, elaborates every actual parent source and parameter into a bit-level graph, and refuses other data crossings or shared inputs. Nonempty `defines`, `hard_define`, `hard_defines`, and `orfs_vars` are unsupported and refused. Unfingerprinted sources cannot supply reserved `src`/`hdlname` attributes or `$paramod` identities; a metadata alias cannot substitute for the reviewed FIFO module. It derives exact FIFO source-bit to receiver-bit/D-pin and output-bit mappings from that graph; mapped OpenSTA fanin then permits only those consumers and the same FIFO's Gray/online first synchronizers, with 773.333 ps maximum and 0 ps minimum datapath bounds and finite-path proof. No caller graph, custom timing hook, false path, clock group, reset waiver, on-chip backpressure permission, or physical qualification follows from this profile. A shared static strap still needs distinct domain-owned pins or a source-tied parent. |
 | `spine_through_icg` | cluster whose clock port enters ONE tile clock gate (ICG) that clocks the rest (SM tile `ot_cg_tile`): the spine is built on the ICG output net (`OT_SPINE_THROUGH_ICG=1`, log `OT_SPINE through ICG`) |
 | `route {pd, period_ps, hold_margin_ns, threads, peak_ram_gb, pin_h, pin_v, pin_balance}` | route knobs (770 ps over-constraint); `pin_balance: true` places pins uniformly over each face region alternating the pin_h / pin_v layers per 32-pin chunk (OT_PIN_BALANCE_H/V) for dense faces |
 | `job {owner, branch, tag, purpose, benches, benched_by, extra_paths, views_to, record_to, no_bench_reason}` | job spec fields; `benches` / `benched_by`: see "Behavioural bench at submit" |
@@ -327,3 +328,25 @@ Combining the two models created extra route-period virtual clocks that survived
 into 833.333 ps signoff. The strict clock inventory guard remains unchanged;
 unexpected virtual clocks and aliases still fail. Other clock modes retain the
 legacy hook and their existing job command bytes.
+
+### Export provenance
+
+New `ref_tile.py export` bundles preserve the unmodified exporter record at
+`provenance/view_export.abstract.json` and the manifest-verified raw LEF at
+`provenance/raw/<top>.lef`. The raw LEF is outside the top-level LEF set consumed
+by parents. `provenance/abstract_pin_stub.json` records the helper SHA256, command,
+exit/output, exact `OT_OBS_CLOSE` and `OT_OBS_CLOSE_UM` environment (null means
+unset), raw/final hashes, macro/pin invariants and full child-lint result.
+M6 pin-grant exports retain the same evidence with an identity transformation.
+
+The final `abstract.json.files` hashes describe published files after processing;
+`export_provenance` links and hashes the raw record and transformation receipt.
+The manifest remains `ok: false` until the helper succeeds, macro name/size/origin
+and pin names/directions/uses are unchanged, every original pin rectangle remains,
+and child lint passes. Additional pin-stub rectangles are permitted. Failures
+retain raw evidence and cannot publish the candidate as the final LEF. An existing
+provenance directory is refused: use a fresh export destination rather than
+rewriting historical evidence. Historical bundle recovery requires a separate,
+source-bound replay; this path does not repair old manifests.
+
+Focused check: `python3 -m unittest discover -s tools/ref_tile -p test_export_provenance.py -v`.

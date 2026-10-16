@@ -1,0 +1,4 @@
+{"name": "dsfd_hstnv_512", "ok": true, "checked": true, "files": {"dsfd_hstnv_512.lef": "575b20e69b57be45cd4103a4865a93de3b0c8153ec565866a23fd2ca5a7e000c", "dsfd_hstnv_512_ff.lib": "9bec9a71b45c7fd257fae27e8c654bf860041cead52cf57a196914744edc24cf", "dsfd_hstnv_512_ss.lib": "e6811d860cbc01c786303a6abc9ccc55bacbd346798b654281fd4437d1963849", "dsfd_hstnv_512_tt.lib": "b1449181c454a25c00bebc080255239e7926e6a679a364cac6983f8a5b9ba4ec"}}
+CK_SS_MEAN=113 CK_SS_ALL_MEAN=113 CK_SS_MIN=109 CK_SS_ALL_MIN=109 CK_SS_MAX=116 CK_SS_ALL_MAX=116 CK_TT_MEAN=83 CK_TT_ALL_MEAN=83 CK_TT_MIN=80 CK_TT_ALL_MIN=80 CK_TT_MAX=87 CK_TT_ALL_MAX=87 CK_FF_MEAN=67 CK_FF_ALL_MEAN=67 CK_FF_MIN=63 CK_FF_ALL_MIN=63 CK_FF_MAX=70 CK_FF_ALL_MAX=70 CK_ROUTE_REF=SS
+pinstub: 2 OBS rects moved into 2 pins: ck[0], dq[140]; pockets: 99 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)
+REF_TILE export dsfd_hstnv_512: views rc=0 child_lint PASS 

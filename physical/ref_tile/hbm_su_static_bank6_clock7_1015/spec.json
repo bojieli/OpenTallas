@@ -15,21 +15,23 @@
  ],
  "pins": {
   "N": [
-   "clk",
    "clk_macro3",
    "clk_macro4",
-   "clk_macro5",
-   "rst_n"
+   "clk_macro5"
   ],
   "W": [
    "read_v",
    "read_addr",
+   "clk",
+   "clk_ws",
+   "rst_n",
    "write_v",
    "write_addr",
    "write_data"
   ],
   "E": [
    "read_data",
+   "clk_rd",
    "read_return"
   ],
   "S": [
@@ -119,10 +121,10 @@
   "macro_halo_um": 5.4
  },
  "job": {
-  "owner": "Claude:H-ELEM-B",
-  "branch": "claude/hbm-elemb-su-1015",
-  "tag": "r4",
-  "purpose": "Candidate structural per-macro clocks: six distinct provider roots plus one boundary-register root. Previous bank r1 CTS insertion316.9ps/spread92.5ps/slew229.8ps, two SRAMs sharing clocknets. Actual one source per macro, no added data edge/retiming. Serial1111.111111ps unchanged. No route/replication qualification before physical slot/pins and TTsetup FFhold DRC0 nativeclock checks. Native CTS attempt1 rejected mixed raw-macro CTS roots; corrected explicit hybrid policy: six actual raw SRAM pin references plus one CTS root, no macro pin on a CTS source. Word-select flops remain on the existing register root. r3 (H-ELEM-B, coordinator 12:24): the r2 CTS measured raw macro clock slew 417.5 ps because all seven clock pins were clustered on the N face; each raw macro clock pin now sits over its own macro column on the face nearest its row (bottom row 0-2 on S, top row 3-5 on N, 20 um ranges at the macro column centres); register root clk + rst_n stay on N. No RTL change. r4 (H-SU 10-15 17:50): r3 gate WARN 0 fail but register-root TT insertion 234.5-275.5 ps (H-tree 6 buffer levels from an unconstrained N-face clk pin) > native launch 220: clk pin pinned at the N-face centre (140-160 um, beside clk_macro4) so the H-tree trunk starts over the sink centroid. No RTL change.",
+  "owner": "Claude:H-SU",
+  "branch": "claude/hsu-0030",
+  "tag": "r12",
+  "purpose": "Compact bank outline 390.96x151.2 -> 369.36x151.2 um (-5.5%, 59,113 -> 55,847 um2; x512 banks = -1.672 mm2; height stays 151.2 on the row/track lattice) against the measured whole-SU fit FAIL (39.175 vs 35.466 mm2 usable, receipt results/arch/hbm_su_f2_static_1014/fit_map_2330, f5aed54d7) and VIS-HBM finding T9 (bank r11 fill 0.405, 95% free bins <0.1). Same RTL/source as CLOSED r11 (native PASS L180.3/C121.2/spread45.2); macro-to-edge gaps 33->21.6 um on W/E, 20.088 um macro channels unchanged; r11 M5 whole-macro transit guard kept (the r4 369.36-wide DRC came from the register clock crossing the SRAMs, removed since r7/r10c/r11).",
   "views_to": "physical/ref_tile/hbm_su_static_bank6_clock7_1015/views",
   "record_to": "results/arch/hbm_su_f2_static_1014/arithmetic/physical/bank_clock7",
   "benches": [
@@ -159,16 +161,55 @@
     "needs": [
      "verilator"
     ]
+   },
+   {
+    "name": "bank_mutant_rd_halt",
+    "cmd": "bash tools/hbm_static/su_bank_run.sh {RUN}/bench/rd_halt rd_halt",
+    "expect": "fail",
+    "fail_regex": "SU_PINNED_BANK FAIL",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "bank_mutant_reset",
+    "cmd": "bash tools/hbm_static/su_bank_run.sh {RUN}/bench/reset reset",
+    "expect": "fail",
+    "fail_regex": "SU_PINNED_BANK FAIL",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "bank_mutant_ws_halt",
+    "cmd": "bash tools/hbm_static/su_bank_run.sh {RUN}/bench/ws_halt ws_halt",
+    "expect": "fail",
+    "fail_regex": "SU_PINNED_BANK FAIL",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
    }
+  ],
+  "auto_merge": false,
+  "extra_paths": [
+   "results/arch/hbm_su_f2_static_1014/arithmetic/physical/bank_clock7/r10c_diagnostic"
   ]
  },
- "recipe": 2,
+ "recipe": 3,
  "orfs_vars": {
-  "OT_MEG_DEPTH_UM": "2.4"
+  "OT_MEG_DEPTH_UM": "60.0"
  },
  "clock": "hybrid_entries",
  "clock_ports": [
   "clk",
+  "clk_rd",
+  "clk_ws",
   "clk_macro0",
   "clk_macro1",
   "clk_macro2",
@@ -268,43 +309,79 @@
     "write_addr",
     "write_data"
    ],
+   "outputs": []
+  },
+  "rd": {
+   "ports": [
+    "clk_rd"
+   ],
+   "ratio": [
+    1,
+    1
+   ],
+   "inputs": [],
    "outputs": [
     "read_data",
     "read_return"
    ]
+  },
+  "ws": {
+   "ports": [
+    "clk_ws"
+   ],
+   "ratio": [
+    1,
+    1
+   ],
+   "inputs": [],
+   "outputs": []
   }
  },
  "clock_cts_roots": [
-  "clk"
+  "clk",
+  "clk_rd",
+  "clk_ws"
  ],
  "pin_ranges": {
   "clk_macro0": [
-   59.86,
-   79.86
+   59.88,
+   79.88
   ],
   "clk_macro1": [
-   174.78,
-   194.78
+   174.79,
+   194.79
   ],
   "clk_macro2": [
-   289.69,
-   309.69
+   289.7,
+   309.7
   ],
   "clk_macro3": [
-   59.86,
-   79.86
+   59.88,
+   79.88
   ],
   "clk_macro4": [
-   174.78,
-   194.78
+   174.79,
+   194.79
   ],
   "clk_macro5": [
-   289.69,
-   309.69
+   289.7,
+   309.7
   ],
   "clk": [
-   140.0,
-   160.0
+   64.0,
+   73.0
+  ],
+  "clk_rd": [
+   65.0,
+   85.0
+  ],
+  "rst_n": [
+   86.0,
+   90.0
+  ],
+  "clk_ws": [
+   75.0,
+   84.0
   ]
  },
  "params": {},
@@ -320,5 +397,15 @@
  "pin_reg_split": true,
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "structural_change": "Compact bank outline 390.96x151.2 -> 369.36x151.2 um (-5.5%, 59,113 -> 55,847 um2; x512 banks = -1.672 mm2; height stays 151.2 on the row/track lattice) against the measured whole-SU fit FAIL (39.175 vs 35.466 mm2 usable, receipt results/arch/hbm_su_f2_static_1014/fit_map_2330, f5aed54d7) and VIS-HBM finding T9 (bank r11 fill 0.405, 95% free bins <0.1). Same RTL/source as CLOSED r11 (native PASS L180.3/C121.2/spread45.2); macro-to-edge gaps 33->21.6 um on W/E, 20.088 um macro channels unchanged; r11 M5 whole-macro transit guard kept (the r4 369.36-wide DRC came from the register clock crossing the SRAMs, removed since r7/r10c/r11).",
+ "pin_regs": {
+  "enable": false,
+  "reason": "the RTL (ot_hbm_su_static_pinned_bank) already registers every input (a_pin/r_pin/wa_pin/wd_pin/w_pin) and every output (read_data, r_return) at the boundary; a kit-level flop stage would add a redundant read edge"
+ },
+ "reroute_reason": {
+  "kind": "slot_change",
+  "slot_change_request": "H-DIE ACCEPTED 2026-10-16 01:25 (agent ae6c5dbbbcdc3d967): SU bank slot 390.96x151.2 -> 369.36x151.2 inside pgslice, faces and W/E y-ranges unchanged, clk_macro centres 69.88/184.79/299.70; requested by H-SU 01:10 against whole-SU fit FAIL f5aed54d7 (deficit 3.709 mm2)",
+  "why": "Compact bank outline 390.96x151.2 -> 369.36x151.2 um (-5.5%, 59,113 -> 55,847 um2; x512 banks = -1.672 mm2; height stays 151.2 on the row/track lattice) against the measured whole-SU fit FAIL (39.175 vs 35.466 mm2 usable, receipt results/arch/hbm_su_f2_static_1014/fit_map_2330, f5aed54d7) and VIS-HBM finding T9 (bank r11 fill 0.405, 95% free bins <0.1). Same RTL/source as CLOSED r11 (native PASS L180.3/C121.2/spread45.2); macro-to-edge gaps 33->21.6 um on W/E, 20.088 um macro channels unchanged; r11 M5 whole-macro transit guard kept (the r4 369.36-wide DRC came from the register clock crossing the SRAMs, removed since r7/r10c/r11)."
  }
 }

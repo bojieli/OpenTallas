@@ -13,6 +13,9 @@
 # unchanged (identical copies of the same register); only the folding is undone.  keep_hierarchy leaf modules
 # (ot_sc_rep_ff, ot_qwen_lrst_ff, ...) were the RTL-side workaround and remain valid.  Opt out: OT_KEEP_REGS=0 in the
 # route environment (run_abi3_physical.py / hbm_accel_smh_physical.py then omit SYNTH_CANONICALIZE_TCL).
+if {[info exists ::env(OT_PIN_REGS)] && $::env(OT_PIN_REGS) eq "1"} {
+  source [file join [file dirname [file normalize [info script]]] ot_pin_regs.tcl]
+}
 yosys proc
 yosys select -set ot_kw {*}{w:* a:keep %i}
 yosys select -set ot_kc {*}{@ot_kw %ci1 t:$*dff* t:$*dlatch* %u %i}

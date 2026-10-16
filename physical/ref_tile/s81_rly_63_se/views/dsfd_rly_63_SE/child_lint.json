@@ -1,12 +1,10 @@
 {
  "schema": "opentallas.hier_contract.child_lint.v1",
- "lef": "/srv/opentallas-scratch2/claude/closure-loop/s81_rly_63_se-v2-88e22fcbf/record/views/dsfd_rly_63_SE/dsfd_rly_63_SE.lef",
+ "lef": "/srv/opentallas-scratch/claude/closure-loop/s81_rly_63_se-r4-1480fbbb1/record/views/dsfd_rly_63_SE/dsfd_rly_63_SE.lef",
  "verdict": "PASS",
  "fails": [],
- "warns": [
-  "(f) face-pin access: 128 of 128 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. ck M5 (9.648,14.197), rs M5 (9.648,14.197), i[0] M5 (3.792,0.016))"
- ],
- "summary": "dsfd_rly_63_SE 15.12 x 15.12: PG M5 VDD 4 stripes (54% spread, 100% cov) / VSS 4 stripes (54% spread, 100% cov); strap M6; face pins 128 blocked-above 0 blocked-same 0; clock ck insertion 60 ps",
+ "warns": [],
+ "summary": "dsfd_rly_63_SE 15.12 x 15.12: PG M5 VDD 4 stripes (54% spread, 100% cov) / VSS 4 stripes (54% spread, 100% cov); strap M6; face pins 128 blocked-above 0 blocked-same 0; clock ck insertion 61 ps; pockets M5 0 (closed)",
  "info": {
   "cell": "dsfd_rly_63_SE",
   "W": 15.12,
@@ -40,25 +38,30 @@
   "face": {
    "face_pins": 128,
    "blocked_above": 0,
-   "covered_below": 16,
+   "covered_below": 70,
    "examples": [],
    "blocked_same": 0,
    "same_examples": [],
-   "band_same": 128,
-   "band_examples": [
-    "ck M5 (9.648,14.197)",
-    "rs M5 (9.648,14.197)",
-    "i[0] M5 (3.792,0.016)",
-    "i[10] M5 (3.792,0.016)",
-    "i[11] M5 (3.792,0.016)",
-    "i[12] M5 (3.792,0.016)"
-   ]
+   "band_same": 0,
+   "band_examples": []
   },
   "clock_insertion": {
    "ck": {
-    "max_ps": 60.42,
-    "min_ps": 53.08
+    "max_ps": 61.47,
+    "min_ps": 52.45
    }
+  },
+  "pockets": {
+   "layer": "M5",
+   "d_um": 1.536,
+   "marker": {
+    "layer": "M5",
+    "d_um": 1.536,
+    "added": 18
+   },
+   "count": 0,
+   "area_um2": 0,
+   "examples": []
   }
  }
 }

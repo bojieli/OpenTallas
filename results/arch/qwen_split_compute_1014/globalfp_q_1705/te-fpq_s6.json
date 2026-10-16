@@ -1,0 +1,63 @@
+{
+ "schema": "opentallas.qwen.globalfp-train-edges.v1",
+ "homes": "fpq_s6-homes.json",
+ "qualified": false,
+ "reach_um": 500,
+ "tag_to_issue_edges": 3,
+ "tag_to_issue_um": 1841.1,
+ "tag_to_issue_bus": "tt_c1__rsi_139",
+ "bands": [
+  {
+   "band": 0,
+   "tag_relay_edges": 24,
+   "tag_um": 12388.3,
+   "tag_worst_bus": "tt_c0",
+   "rq_relay_edges": 0,
+   "rq_um": 146.5,
+   "tag_to_capture_edges": 37,
+   "train_fanout_edges": 24,
+   "fanout_um": 12054.7,
+   "fanout_worst_bus": "rsi_slot_count",
+   "train_fanout_edges_padded": 25
+  },
+  {
+   "band": 1,
+   "tag_relay_edges": 13,
+   "tag_um": 6655.4,
+   "tag_worst_bus": "tt_c1__rsi_140",
+   "rq_relay_edges": 0,
+   "rq_um": 200.3,
+   "tag_to_capture_edges": 26,
+   "train_fanout_edges": 12,
+   "fanout_um": 6270.2,
+   "fanout_worst_bus": "rsi_payload_write",
+   "train_fanout_edges_padded": 12
+  },
+  {
+   "band": 2,
+   "tag_relay_edges": 12,
+   "tag_um": 6097.7,
+   "tag_worst_bus": "tt_c2",
+   "rq_relay_edges": 0,
+   "rq_um": 57.4,
+   "tag_to_capture_edges": 25,
+   "train_fanout_edges": 16,
+   "fanout_um": 8293.9,
+   "fanout_worst_bus": "rsi_slot_count",
+   "train_fanout_edges_padded": 21
+  }
+ ],
+ "unpadded_delays": [
+  10,
+  11,
+  6
+ ],
+ "TRAIN_EDGES": 11,
+ "fanout_pad_edges_per_band": [
+  1,
+  0,
+  5
+ ],
+ "binding_note": "wb_calendar.route_binding requires equal delays; bands with pad>0 need that many explicit extra fanout relay edges (train_fanout_edges += pad) so one TRAIN_EDGES aligns all captures.",
+ "scope": "Ideal 500 um geometric relay ages on actual pin pairs; measured reach, relay frames and native clocks remain OPEN."
+}

@@ -1,0 +1,128 @@
+{
+ "name": "qkd_pv_slice_rstpin_r5",
+ "top": "ot_qwen_tp8_pv_slice_t",
+ "kind": "tile",
+ "sources": [
+  "rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_pair.sv",
+  "rtl/hdc/nearhbm/ot_qwen_tp8_pv16_slice_gen.sv",
+  "rtl/hdc/nearhbm/ot_qwen_nearhbm_prod.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_fpu.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1_bb.v"
+ ],
+ "params": {
+  "RESET_PIN": 1
+ },
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 172.8,
+  "h": 172.8
+ },
+ "layer_cap": "M5",
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "count": 4
+  }
+ ],
+ "pins": {
+  "S": [
+   "pv2",
+   "pe2",
+   "bc"
+  ],
+  "N": [
+   "ts",
+   "fault"
+  ],
+  "W": [
+   "clk",
+   "rst_n"
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "recipe": 3,
+ "pin_regs": {
+  "enable": false,
+  "reason": "the RTL already registers every data port at the module boundary (ot_qwen_tp8_pv_col: pv/pe/cmd -> v_r/e_r/c_r, y/y_valid/fault are flops; ot_qwen_tp8_pv_wide_ctl: every input *_r, every output a flop; only the constant pair_id strap is unregistered) and the bench-measured static calendar includes those stages (P = 22 + NQ + 113, results/arch/qwen_attention_rate_1015/receipt.json, 53/53 exact); a flow-inserted second stage would add 1 cycle the compiler calendar does not have. io_flop_at_pins anchors the RTL pin flops (recipe 2)."
+ },
+ "purpose": "Q-ATTN-RATE 2026-10-15 (owner approved 21:05): THE replicated P.V leaf (512 per KV/system die = 2 pairs x 32 columns x 8 banks): the 16 serial chains of one bank for one 16-dim x head column (ot_qwen_tp8_pv16_slice: 16 bf16 x fp8 exact products + 16 FP32 adders LAT 7, 4 x 32x128 SRAM), its in-SRAM tree (levels 1-4), commit-slot checks; every port registered in RTL. Evidence: results/arch/qwen_attention_rate_1015/receipt.json.",
+ "job": {
+  "owner": "Codex:Q-KV-2330",
+  "branch": "codex/qwen-kv-2330",
+  "tag": "r5",
+  "purpose": "Actual native routed reset capture defect: ctl238.9ps / slice323.5ps exceeds190ps while all data pins pass. A kept boundary flop captures reset before internal reset distribution, +1 cold-release edge, zero normal-cycle change.",
+  "benches": [
+   {
+    "name": "pv_pair0_exact",
+    "cmd": "CTL_RESET_PIN=1 LEAF_RESET_PIN=1 bash tools/qwen_attention_native/rate_1015/pv_pair_bench.sh {RUN}/bench/pv0 0 0 steady '1 100 1000 8192'",
+    "expect": "pass",
+    "threads": 16,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PV_PAIR PASS T=8192 pair=0",
+    "min_count_regex": "words=(\\d+)"
+   },
+   {
+    "name": "pv_pair1_exact",
+    "cmd": "CTL_RESET_PIN=1 LEAF_RESET_PIN=1 bash tools/qwen_attention_native/rate_1015/pv_pair_bench.sh {RUN}/bench/pv1 1 0 steady '1 129 2049 8192'",
+    "expect": "pass",
+    "threads": 16,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PV_PAIR PASS T=8192 pair=1",
+    "min_count_regex": "words=(\\d+)"
+   },
+   {
+    "name": "pv_pair0_mut_joinorder",
+    "cmd": "CTL_RESET_PIN=1 LEAF_RESET_PIN=1 bash tools/qwen_attention_native/rate_1015/pv_pair_bench.sh {RUN}/bench/pvm 0 1 steady '1000'",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 64,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PV_PAIR PASS"
+   }
+  ],
+  "extra_paths": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1",
+   "rtl",
+   "tools/hdc_golden.py",
+   "tools/qwen_attention_native",
+   "tools/qwen_nearhbm_attn_ref.py"
+  ],
+  "views_to": "physical/ref_tile/qkd_pv_slice_rstpin_r5/views",
+  "record_to": "results/rtl/ref_tile/qkd_pv_slice_rstpin_r5"
+ },
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "io_tcl": "physical/ref_tile/qkd_pv_slice/io_spread.tcl",
+ "structural_change": "Actual native routed reset capture defect: ctl238.9ps / slice323.5ps exceeds190ps while all data pins pass. A kept boundary flop captures reset before internal reset distribution, +1 cold-release edge, zero normal-cycle change."
+}

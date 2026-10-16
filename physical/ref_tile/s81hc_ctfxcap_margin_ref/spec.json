@@ -66,14 +66,14 @@
   "macro_halo_um": 5.4
  },
  "job": {
-  "owner": "Codex:S-NORM",
-  "branch": "claude/s81-norm-tree-1014",
-  "tag": "margin1",
+  "owner": "Claude:s81-headchain-1705",
+  "branch": "claude/s81-headchain-1705",
+  "tag": "k4",
   "purpose": "Production serial HC owns every local broadcast register in its physical strip; no region-wrapper flops.",
   "no_bench_reason": "bit-exactness is gated on the HC slab composition bench (tools/s81_suhc/hc_gate.py NG256 HIER=2 m0 PASS + m1 FAIL, NG64 m0 PASS + m3 FAIL) at the kit commit; the tile alone has no golden",
   "views_to": "physical/ref_tile/s81hc_ctfxcap_margin_ref/views",
   "record_to": "results/rtl/ref_tile/s81hc_ctfxcap_margin_ref",
-  "structural_change": "Actual full FF hold repair causes117-122%local density at original25.92um height; doubled51.84um outline/core47.52 restores measured55.45%local density margin without numeric/cycle/pin-x/SDC changes.",
+  "structural_change": "k4 (S-NORM 1705): classified 4 CAP fails = v1/margin1 GRT-0116 overflow 26,013 (M3 V 15,042 at 14% avg, bottom bins) = the boundary hold-pad explosion (4,157+ BUFx2 behind one 576-um single-root strip, same signature as ctfx_nt v5), v3 EARLY_FAIL_HOLD rst_in->RESETN removal (fixed in RTL f47fec8e2: rr only load), v4 route crash. Structural: the CTS root is partitioned into 4 x-regions (clock_split_x, OT_CKS_K 4: the ctfs_nt v5-spread recipe that closed native PASS at 5.6 b/um faces) so boundary skew no longer demands per-bit hold pads; HB1 input pads only, no output pads; every port a pin register (owner 19:50). Outline = granted 576.72x51.84 margin slot; RTL/pins unchanged, 0 cycles.",
   "benches": [
    {
     "name": "owned_serial_exact",
@@ -113,16 +113,23 @@
  "keep_pin_regs": true,
  "pin_reg_split": true,
  "hold_pad": {
-  "cell": "HB1xp67_ASAP7_75t_R"
+  "cell": "HB1xp67_ASAP7_75t_R",
+  "basis": "no fixed output pad, HB1 input pads (native launch/capture; S-ELEM-B shared fix)"
  },
  "io_flop_at_pins": {
   "cols": 4,
-  "allow_none": false
+  "allow_none": true
  },
  "io_tcl": "physical/s81_die_pins/v21_hc_capture_margin_candidate/ot_s81_hc_ctfx_cap.tcl",
  "assigned_pins": {
   "file": "physical/s81_die_pins/v21_hc_capture_margin_candidate/ot_s81_hc_ctfx_cap.json",
   "source": "proposed structural height margin, actual die parent integration pending"
  },
- "slot_change_request": "Proposed51.84um capture height +25.92um percth;S-DIE actual parent/source/hop integration pending. No publication/adoption before grant."
+ "slot_change_request": "Proposed51.84um capture height +25.92um percth;S-DIE actual parent/source/hop integration pending. No publication/adoption before grant.",
+ "orfs_vars": {
+  "OT_CKS_K": "4"
+ },
+ "pre_cts_extra": [
+  "physical/common_flow/clock_split_x.tcl"
+ ]
 }

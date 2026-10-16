@@ -1,0 +1,66 @@
+{
+  "status": "TCL_SELECTION_TRACE_PASS",
+  "case": "/tmp/phy-pg-integration/compute",
+  "pdn_sha256": "d3ee86aebf6aec80aad6702af133a477e0cfaa12a8cd0b2829bda58f18d26a9a",
+  "masters": 45,
+  "instances": 1638,
+  "actual_phy_instances": [
+    "io_serdes",
+    "io_serdes_1",
+    "io_serdes_2",
+    "io_ucie",
+    "ucie_kv"
+  ],
+  "repaired_phy_instances": [
+    "io_serdes",
+    "io_serdes_1",
+    "io_serdes_2",
+    "io_ucie"
+  ],
+  "preserved_phy_instances": [
+    "ucie_kv"
+  ],
+  "old_grids_claiming_phy": [],
+  "grids": [
+    {
+      "grid": "core",
+      "selected_count": 0,
+      "phy": []
+    },
+    {
+      "grid": "pg_m8_0",
+      "selected_count": 161,
+      "phy": []
+    },
+    {
+      "grid": "pg_m8_1",
+      "selected_count": 2,
+      "phy": []
+    },
+    {
+      "grid": "pg_m8_2",
+      "selected_count": 583,
+      "phy": []
+    },
+    {
+      "grid": "pg_m8_3",
+      "selected_count": 162,
+      "phy": []
+    },
+    {
+      "grid": "pg_m8_4",
+      "selected_count": 725,
+      "phy": []
+    },
+    {
+      "grid": "NEW_DECLARED_PHY",
+      "selected_count": 4,
+      "phy": [
+        "io_serdes",
+        "io_serdes_1",
+        "io_serdes_2",
+        "io_ucie"
+      ]
+    }
+  ]
+}

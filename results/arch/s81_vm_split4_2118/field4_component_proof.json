@@ -1,0 +1,52 @@
+{
+ "status": "PASS_ACTUAL53_SOURCE_4QUARTER_3SLOT_COMPONENT",
+ "sources": {
+  "tools/s81_vm/area_a2f.sv": "87ac2c197d4bfefa87289de73525565c5aae4b6a20f55f62015354dde00f59b7",
+  "tools/s81_vm/area_a2f_field4.sv": "3e21f264b0a2bf36efcb5b3f5a3f8df2185ea19d9b158e4174b8e44a4279f86d"
+ },
+ "records": [
+  {
+   "variant": "gold",
+   "seed": 1,
+   "rc": 0,
+   "stdout": "FIELD4_EQUIV PASS seed1 edges400 sources53 quarters4 slots3 outputbits512\n/tmp/s81-field4-gate-lrdeb95p/tb.sv:25: $finish called at 4080000 (1ps)\n",
+   "pass_": true
+  },
+  {
+   "variant": "gold",
+   "seed": 2,
+   "rc": 0,
+   "stdout": "FIELD4_EQUIV PASS seed2 edges400 sources53 quarters4 slots3 outputbits512\n/tmp/s81-field4-gate-lrdeb95p/tb.sv:25: $finish called at 4080000 (1ps)\n",
+   "pass_": true
+  },
+  {
+   "variant": "gold",
+   "seed": 3,
+   "rc": 0,
+   "stdout": "FIELD4_EQUIV PASS seed3 edges400 sources53 quarters4 slots3 outputbits512\n/tmp/s81-field4-gate-lrdeb95p/tb.sv:25: $finish called at 4080000 (1ps)\n",
+   "pass_": true
+  },
+  {
+   "variant": "S81_FIELD4_MUT_DATA",
+   "seed": 1,
+   "rc": 1,
+   "stdout": "FATAL: /tmp/s81-field4-gate-lrdeb95p/tb.sv:22: FIELD4_MISMATCH edge0 valid0 data1 fault0\n       Time: 86000  Scope: tb\n",
+   "pass_": false
+  },
+  {
+   "variant": "S81_FIELD4_MUT_DATA",
+   "seed": 2,
+   "rc": 1,
+   "stdout": "FATAL: /tmp/s81-field4-gate-lrdeb95p/tb.sv:22: FIELD4_MISMATCH edge0 valid0 data1 fault0\n       Time: 86000  Scope: tb\n",
+   "pass_": false
+  },
+  {
+   "variant": "S81_FIELD4_MUT_DATA",
+   "seed": 3,
+   "rc": 1,
+   "stdout": "FATAL: /tmp/s81-field4-gate-lrdeb95p/tb.sv:22: FIELD4_MISMATCH edge0 valid0 data1 fault0\n       Time: 86000  Scope: tb\n",
+   "pass_": false
+  }
+ ],
+ "not_claimed": "Full128-SRAM composition or native physical qualification"
+}

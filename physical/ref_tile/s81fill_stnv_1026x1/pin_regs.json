@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "dsfd_stnv_1026x1",
+ "enable": false,
+ "reason": "OWNER RULE 19:50 opt-out (coordinator APPROVED 2026-10-15): this station IS one flip-flop per bit between its input and output pins (di -> q -> dq, no logic); a flow pin register would add a second stage per bit and a cycle the die calendar does not price"
+}

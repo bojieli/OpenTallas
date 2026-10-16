@@ -159,7 +159,8 @@ module tb_hgi_coll_sw_slice_parent;
     rslot_v=0;rslot=0;wslot_v=0;wslot=0;
     for(integer b=0;b<8;b=b+1)begin
      if((c-OFF>=6&&c-OFF<=29)||(c-OFF==61&&b<2))begin rslot_v[b]=1;rslot[b*3+:3]=3'd3;end
-     if((c-OFF==54&&b==0)||(c-OFF==55&&b==1))begin wslot_v[b]=1;wslot[b*3+:3]=3'd1;end
+     if((c-OFF==55&&b==0)||(c-OFF==56&&b==1))begin wslot_v[b]=1; // writer v4 relay edge (+1)
+     wslot[b*3+:3]=3'd1;end
     end
     @(posedge clk);#1;
     if(hfault||qfault_o||program_fault)$fatal(1,"slice-parent fault round%0d cycle%0d",round,c-OFF);
@@ -176,7 +177,7 @@ module tb_hgi_coll_sw_slice_parent;
     if(av!==(c-OFF==48))$fatal(1,"ARG publication cycle%0d",c-OFF);
     if(av)pubs=pubs+1;
     if(pdv[7]!==(c-OFF==51))$fatal(1,"writer sink phase cycle%0d",c-OFF);
-    if(kq_done!==(c-OFF==57?8'h01:c-OFF==58?8'h02:8'h00))$fatal(1,"slice kq commit cycle%0d got%h",c-OFF,kq_done);
+    if(kq_done!==(c-OFF==58?8'h01:c-OFF==59?8'h02:8'h00))$fatal(1,"slice kq commit cycle%0d got%h",c-OFF,kq_done);
     if(|kq_done)commits=commits+1;
     if(c-OFF==67)begin
      if(vm_rr[255:0]!=={224'd0,expected(round)}||vm_rr[257+:256]!==256'd0)
@@ -188,7 +189,7 @@ module tb_hgi_coll_sw_slice_parent;
    end
   end
   if(reads!=960||commits!=10||pubs!=5||halted!=5||readbacks!=5)$fatal(1,"coverage counts");
-  $display("HCOLL_SW_SLICE_PARENT PASS whole_q3_host_v4+whole_SW_slice rounds5 operand_sectors960 publish48 commit57_58 readback67 halt66 (+%0d host launch) contract rq/rr group3 kq",OFF);
+  $display("HCOLL_SW_SLICE_PARENT PASS whole_q3_host_v4+whole_SW_slice rounds5 operand_sectors960 publish48 commit58_59 readback67 halt66 (+%0d host launch) contract rq/rr group3 kq",OFF);
   $finish;
  end
 endmodule

@@ -1,0 +1,91 @@
+{
+ "source": "claude/hbm-sm-attention-1015 2ec22b51b+ (gradual-underflow lanes ot_hbm_accel_smh_tcl_gu in the native column, fold-calendar TB fix)",
+ "host": "ot-epyc4 /srv/opentallas-scratch/claude/hsm1705-att3",
+ "ds640_m0": "AGIdock run same source: PASS 52/52",
+ "runs": {
+  "ds128_m0": {
+   "verdict": "PASS",
+   "ops": 48,
+   "passed": 48,
+   "mismatches": 0,
+   "faults": 0
+  },
+  "ds640_kv1": {
+   "verdict": "FAIL",
+   "ops": 2,
+   "passed": 0,
+   "mismatches": 482,
+   "faults": 0
+  },
+  "ds640_kv2": {
+   "verdict": "FAIL",
+   "ops": 2,
+   "passed": 0,
+   "mismatches": 532,
+   "faults": 0
+  },
+  "ds640_kv3": {
+   "verdict": "FAIL",
+   "ops": 2,
+   "passed": 1,
+   "mismatches": 16,
+   "faults": 0
+  },
+  "ds640_pv1": {
+   "verdict": "FAIL",
+   "ops": 2,
+   "passed": 1,
+   "mismatches": 512,
+   "faults": 0
+  },
+  "ds640_pv2": {
+   "verdict": "FAIL",
+   "ops": 2,
+   "passed": 1,
+   "mismatches": 512,
+   "faults": 0
+  },
+  "qwen_kv2": {
+   "verdict": "FAIL",
+   "ops": 2,
+   "passed": 1,
+   "mismatches": 512,
+   "faults": 0
+  },
+  "qwen_kv4": {
+   "verdict": "FAIL",
+   "ops": 2,
+   "passed": 1,
+   "mismatches": 1024,
+   "faults": 0
+  },
+  "qwen_m0": {
+   "verdict": "PASS",
+   "ops": 192,
+   "passed": 192,
+   "mismatches": 0,
+   "faults": 0
+  },
+  "qwen_pv1": {
+   "verdict": "FAIL",
+   "ops": 2,
+   "passed": 1,
+   "mismatches": 512,
+   "faults": 0
+  },
+  "qwen_pv2": {
+   "verdict": "FAIL",
+   "ops": 2,
+   "passed": 1,
+   "mismatches": 512,
+   "faults": 0
+  },
+  "qwen_pv4": {
+   "verdict": "FAIL",
+   "ops": 2,
+   "passed": 1,
+   "mismatches": 512,
+   "faults": 0
+  }
+ }
+}

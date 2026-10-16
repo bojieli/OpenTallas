@@ -210,6 +210,9 @@ def in_gp_grt(c):
     return None
 
 
+GENERIC = {"run.sh", "run_case.sh", "stage.sh", "run.py", "go.sh", "job.sh", "main.sh", "run_all.sh"}
+
+
 def classify(argv):
     """command class for the size table: script basename + first plain argument, numbers and hashes normalised"""
     a = list(argv)
@@ -232,18 +235,25 @@ def classify(argv):
         elif b in ("bash", "sh", "python3", "python"):
             a = a[1:]
             if a and a[0] == "-c":
-                a = a[1].replace(";", " ").split() if len(a) > 1 else []
+                # v7 (ROOT 2026-10-16): the pass re-classifies from admit.log's space-joined command, so the -c script
+                # arrives split into words; take ALL remaining words (a real argv has the script as one word, and its
+                # positional parameters are rare), else every `bash -c 'echo ...; ... synth_master.sh'` was 'echo'
+                a = " ".join(a[1:]).replace(";", " ").replace("&&", " ").split() if len(a) > 1 else []
                 a = [x for x in a if x not in ("export",) and not x.startswith("PATH=")]
             while a and a[0].startswith("-"):
                 a = a[1:]
         else:
             break
-    k = next((i for i, x in enumerate(a[:40]) if re.search(r"\.(sh|py)$", x)), None)   # `cd X && VAR=1 bash run.sh ...`
-    if k:
+    k = next((i for i, x in enumerate(a[:160]) if re.search(r"\.(sh|py)$", x)), None)  # `cd X && VAR=1 bash run.sh ...`
+    if k is not None:
         a = a[k:]
     if not a:
         return "?"
     cls = norm(os.path.basename(a[0]))
+    if cls in GENERIC and os.path.basename(os.path.dirname(a[0].rstrip("/"))):
+        # v7: run.sh / run_case.sh / stage.sh name a different job in every directory (one 421 GB run.sh made every
+        # `bash case/run.sh` die case a 463 GB young charge): the parent directory is part of the class
+        cls = norm(os.path.basename(os.path.dirname(a[0].rstrip("/")))) + "/" + cls
     for i, x in enumerate(a[1:6]):
         if x in ("--name", "--seq", "--shape") and i + 2 < len(a):
             return cls + ":" + norm(a[i + 2])
@@ -588,9 +598,49 @@ def gate(mem, argv):
     b = books(rows, total, avail, table)
     head, floor = headroom(), floor_gb(total)
     can = admissible(total, avail, b, head, floor)
-    print(f"{'OK' if can >= res else 'NO'} {res} {cls} | need {res} GB, admissible {can:.0f} GB: available {avail:.0f} GB, "
+    ok = can >= res
+    held = die_hold(total, can, head, floor, table) if ok and os.environ.get("OT_HEAVY_PRIO") != "die" else 0
+    if held and can - res < held:
+        ok, note = False, (note + "; " if note else "") + f"DIE-FIRST: {held:.0f} GB held for a waiting die trial"
+    print(f"{'OK' if ok else 'NO'} {res} {cls} | need {res} GB, admissible {can:.0f} GB: available {avail:.0f} GB, "
           f"growth charged {b['grow']:.0f} GB, young {b['young']:.0f} GB, headroom {head} GB, real floor {floor:.0f} GB"
           + (f"; {note}" if note else ""))
+
+
+def prio_waiters(table, skip=()):
+    """DIE-FIRST (owner 2026-10-15 23:50: die-level trials iterate back to back and get admission priority on the
+    large-memory hosts): waiting ot-heavy processes started with OT_HEAVY_PRIO=die (ot-run --priority die), as
+    [(start_ticks, charge_gb)], oldest first"""
+    out = []
+    for p in os.listdir("/proc"):
+        if not p.isdigit() or int(p) in skip:
+            continue
+        a = rd(f"/proc/{p}/cmdline").split("\0")[:-1]
+        if not (len(a) > 3 and a[1:2] == ["/usr/local/bin/ot-heavy"] and "--mem" in a[:8] and "--" in a):
+            continue
+        if "OT_HEAVY_PRIO=die" not in rd(f"/proc/{p}/environ").split("\0"):
+            continue
+        m = int(a[a.index("--mem") + 1])
+        try:
+            start = int(rd(f"/proc/{p}/stat").rsplit(")", 1)[1].split()[19])
+        except (IndexError, ValueError):
+            start = 0
+        out.append((start, (admit_size(m, classify(a[a.index("--") + 1:]), table) or [m])[0]))
+    return sorted(out)
+
+
+def die_hold(total, can, head, floor, table):
+    """GB a non-die request must leave free: the oldest waiting die trial's charge, when it could ever start here
+    (charge <= RAM - floor - headroom) and cannot start now (else it is admitted on its next 20 s attempt)"""
+    me = {os.getpid(), os.getppid()}
+    try:
+        me.add(int(rd(f"/proc/{os.getppid()}/stat").rsplit(")", 1)[1].split()[1]))
+    except (IndexError, ValueError):
+        pass
+    for _, charge in prio_waiters(table, skip=me):
+        if charge <= total - floor - head:
+            return charge
+    return 0
 
 
 def waiters(table):

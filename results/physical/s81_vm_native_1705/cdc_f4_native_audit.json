@@ -1,0 +1,75 @@
+{
+ "schema": "opentallas.s81.vm-cdc-native-audit.v1",
+ "tool": "tools/hier_contract/native_pin_audit.py audit_one (TT; launch<=220, capture<=190)",
+ "audits": {
+  "ot_s81_vm_x34_t_w1026_1015_f4": {
+   "cell": "ot_s81_vm_x34_t",
+   "view": "physical/ref_tile/ot_s81_vm_x34_t_w1026_1015_f4/views/ot_s81_vm_x34_t",
+   "lib_cell": "ot_s81_vm_x34_t",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 202.6,
+   "spread_ps": 31.0,
+   "outputs": 1028,
+   "inputs": 3086,
+   "launch_ps": 193.7,
+   "launch_pin": "o_d[376]",
+   "capture_ps": 205.1,
+   "capture_pin": "b0[24]",
+   "launch_over": 0,
+   "capture_over": 12,
+   "comb_pins": 0,
+   "comb_first": [],
+   "pass": false,
+   "fail_why": "capture 205.11586 > 190 (12 pins)"
+  },
+  "ot_s81_vm_x34_t_w560_1015_f4": {
+   "cell": "ot_s81_vm_x34_t",
+   "view": "physical/ref_tile/ot_s81_vm_x34_t_w560_1015_f4/views/ot_s81_vm_x34_t",
+   "lib_cell": "ot_s81_vm_x34_t",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 175.3,
+   "spread_ps": 20.2,
+   "outputs": 562,
+   "inputs": 1688,
+   "launch_ps": 181.6,
+   "launch_pin": "o_d[348]",
+   "capture_ps": 202.9,
+   "capture_pin": "b0[338]",
+   "launch_over": 0,
+   "capture_over": 15,
+   "comb_pins": 0,
+   "comb_first": [],
+   "pass": false,
+   "fail_why": "capture 202.8656 > 190 (15 pins)"
+  },
+  "ot_s81_vm_x43_s_w512_1015_f4": {
+   "cell": "ot_s81_vm_x43_s",
+   "view": "physical/ref_tile/ot_s81_vm_x43_s_w512_1015_f4/views/ot_s81_vm_x43_s",
+   "lib_cell": "ot_s81_vm_x43_s",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 144.8,
+   "spread_ps": 24.3,
+   "outputs": 514,
+   "inputs": 1545,
+   "launch_ps": 194.2,
+   "launch_pin": "o_d[296]",
+   "capture_ps": 196.1,
+   "capture_pin": "bpar[1]",
+   "launch_over": 0,
+   "capture_over": 2,
+   "comb_pins": 0,
+   "comb_first": [],
+   "pass": false,
+   "fail_why": "capture 196.05305 > 190 (2 pins)"
+  }
+ }
+}

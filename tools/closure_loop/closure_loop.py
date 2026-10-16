@@ -79,6 +79,7 @@ OWNER = "Claude:closure-loop"
 SS_MIN, FF_MIN = 0.0, 0.0             # OWNER DECISION 2026-10-07 20:1x: ACCEPT at SS >= 0 / FF >= 0 / DRC 0 at 833.333 sign-off (+15 is the DESIGN target: route 770, repair hold margin 50; was +15/+15 since 10-06 18:15)
 RAM_HEADROOM_GB = 32
 LIGHT_STAGE_RAM_GB = 8      # drive-0849: bench / collect / export stages
+SYNC_DISK_GB = 16           # SYNC-ROOM: disk one source sync may write (src/ + bench_src*/ beyond the view store)
 LIGHT_DISK_FLOOR_GB = 30    # their run-root / disk-root floor (full floor for route / calibrate / ECO)
 ADMIT_SAFETY_GB = 16          # fixed safety over a job's own RAM request (owner: no reservation for future growth)
 PENDING_WINDOW_S = 600
@@ -91,9 +92,24 @@ RESOURCE_RE = re.compile(r"Cannot allocate memory|[Oo]ut of memory|\bOOM\b|oom-k
                          r"Resource temporarily unavailable|Killed\b|signal 9|exit code 137|MemoryError|"
                          r"admission (?:timed out|refused)|[Bb]us error|SIGBUS|Segmentation fault|internal compiler error|"
                          r"g\+\+: fatal error|cc1plus: .*(?:killed|error)", re.M)
+# DETERMINISTIC-NO-RETRY 2026-10-15: route first errors that never passed on a same-input retry (see crash())
+DETERMINISTIC_ROUTE_ERR_RE = re.compile(r"\b(?:DPL-0033|GPL-0305|PPL-0093|PPL-0111|ANT-0008|PDN-0233|MPL-0020|STA-0340)\b")
 # a bench whose TOOLS crashed (compiler bus error, segfault, OOM) is not a verdict on the RTL (hbm_su_red_slice_6f2d14e36:
 # g++ bus error on EPYC2 -> NEEDS_RTL although the bench never ran): crash -> retry once on another host -> NEEDS_HUMAN
-BENCH_CRASH_RC = (124, 134, 135, 137, 139, 143)
+BENCH_CRASH_RC = (124, 126, 127, 134, 135, 137, 139, 143)   # 126/127: cannot execute / not found (a truncated
+# binary left by a stage killed in a host reset: s81fill_hstnv_1029-f8 'Vtb: Permission denied' was judged a mutant that
+# failed to fail -> NEEDS_RTL); a crash is retried once with the bench's own output directories cleared
+BENCH_KEEP_DIRS = {"src", "cl", "routes", "record", "eco", "orfs", "work"}
+
+
+def bench_scratch_dirs(cmd):
+    """the per-bench output directories a bench command names under the run dir ({RUN}/<dir>...), never the source
+    snapshots, the loop's cl/ or route trees"""
+    out = []
+    for d in re.findall(r"\{RUN\}/([A-Za-z0-9_.-]+)", cmd or ""):
+        if d not in BENCH_KEEP_DIRS and not d.startswith(("bench_src", "src")) and d not in out and d not in (".", ".."):
+            out.append(d)
+    return out
 
 
 def bench_crashed(st, rc, tail):
@@ -1194,8 +1210,7 @@ def ref_gate_at_submit(j, jobs=None):
     if mode == "off":
         return
     try:
-        sys.path.insert(0, str(HERE.parent / "ref_tile"))
-        import pre_route_gate  # noqa: E402
+        pre_route_gate = ref_gate_modules()
         kw = {}
         if j["spec"].get("ref_tile"):
             # MEASURED CLOCK RULE (owner 2026-10-13; constants + rule text in tools/textbook_lint.py).  ref_gate.json
@@ -1521,6 +1536,7 @@ class Fleet:
         self.probe_cache = {}
         self.tool_cache = {}
         self.own_running = {}    # host -> declared threads of this loop's running stages
+        self.syncing = {}        # host -> jobs placed there and still syncing their source (SYNC-ROOM)
         self.last_good = {}      # host -> (t, last successful probe): used for PROBE_LAST_GOOD_S when a probe fails
         self.tool_good = {}      # host -> (t, last successful toolchain probe)
 
@@ -1698,6 +1714,20 @@ mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);
                                            for p in self.inflight_launches.get(host, [])]
             self.probe_cache.pop(host, None)
 
+    def sync_room(self, h):
+        """SYNC-ROOM (ROOT 2026-10-15): placing a job writes its source snapshot (src/ + bench_src*/, up to ~28 GB before
+        the view-store fix) before any stage runs, but the disk floor was judged on the first stage's RAM only: a light
+        first stage kept just LIGHT_DISK_FLOOR_GB, and AGIdock took 14 syncs at 60 GB free and hit 0 (17:40 10-15).
+        A placement now also needs room for every sync already in flight on the host plus its own."""
+        info = self.probe(h)
+        if info is None or info.get("disk_gb") is None:
+            return True, "ok"
+        n = self.syncing.get(h, 0) + 1
+        if info["disk_gb"] - SYNC_DISK_GB * n < LIGHT_DISK_FLOOR_GB:
+            return False, (f"{host_cfg(h)['label']} run root {info['disk_gb']} GB free - {n} source sync(s) x {SYNC_DISK_GB} GB "
+                           f"< {LIGHT_DISK_FLOOR_GB}")
+        return True, "ok"
+
     def choose(self, spec, exclude=()):
         with FLEET_LOCK:
             return self._choose(spec, exclude)
@@ -1789,6 +1819,9 @@ mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);
         for h in order:
             ok, msg = self.fits(h, threads, ram)
             if ok:
+                ok, msg = self.sync_room(h)
+            if ok:
+                self.syncing[h] = self.syncing.get(h, 0) + 1
                 return h, None
             why.append(msg)
         return None, "; ".join(why) or "no compatible host (capabilities/image probe unavailable or mismatched)"
@@ -1801,7 +1834,7 @@ def host_cores(cfg):
     return max(1, cfg.get("cores") or cfg.get("cap") or 1)
 
 
-TOOL_REF_HOST = "ot-epyc1tb"  # 10-12: EPYC3 retired; all hosts share orfs image 16470cea1d34
+TOOL_REF_HOST = "ot-epyc4"  # 10-16: EPYC1 being released (owner); 10-12: EPYC3 retired; all hosts share orfs image 16470cea1d34
 PROBE_LAST_GOOD_S = 300     # memory/disk/load: a failed probe reuses a good one at most 5 min old
 TOOL_LAST_GOOD_S = 6 * 3600  # image digests / tool versions change only on a deliberate host update
 # LOCALHOST IMAGE (2026-10-07): the fleet image loaded into localhost's overlay2 docker store has another image ID
@@ -1900,8 +1933,10 @@ def tt_overlay_fallback(cmd):
     overlay copy (kept at main on every host) instead; a snapshot that carries the file keeps its own."""
     if TT_OVERLAY_REL not in cmd:
         return cmd
-    pick = ("python3 \"$(test -f tools/closure_loop/tt_overlay.py && echo tools/closure_loop/tt_overlay.py || "
-            f"ls -d {' '.join(TT_OVERLAY_FLEET)} 2>/dev/null | head -1)\" ")
+    # FLEET-FIRST 2026-10-15 23:2x: the fleet copy (kept at main) wins over the snapshot's own -- a snapshot's buggy
+    # overlay (65529c027..3c31fb285 deleted GRT183_HOOK from run_abi3_physical.py) cannot be fixed by its pinned commit
+    pick = (f"python3 \"$(ls -d {' '.join(TT_OVERLAY_FLEET)} 2>/dev/null | head -1 | grep . || "
+            "echo tools/closure_loop/tt_overlay.py)\" ")
     return cmd.replace(TT_OVERLAY_REL, pick)
 
 
@@ -2609,10 +2644,46 @@ def inprocess_stale_sync(head=None):
                         if getattr(m, "__file__", None) and Path(m.__file__).resolve() == (root / rel).resolve())
         log(f"INPROCESS-SYNC vs origin/main {head[:9]}: {len(synced)} stale/missing file(s) replaced by main's copy: "
             + ", ".join(synced[:20]) + (f" (+{len(synced) - 20} more)" if len(synced) > 20 else "")
-            + (f"; already imported {loaded}: daemon restarts at the next idle tick start" if loaded else ""))
+            + (f"; already imported {loaded}: re-imported before the next submit check" if loaded else ""))
         if loaded:
-            _RESTART["why"] = f"in-process modules synced to main {head[:9]}: {', '.join(loaded)}"
+            _INPROC["gen"] += 1             # ref_gate_modules re-imports them before the next submit check
     return synced
+
+
+_INPROC = {"head": None, "gen": 0, "loaded_gen": 0, "lock": threading.Lock()}
+
+
+def inprocess_sync_on_main_move():
+    """every tick: when origin/main moved since the last INPROCESS-SYNC, re-sync the daemon's tools/ref_tile and
+    tools/hier_contract at once (not hourly): the submit check judges kits with these generators, and a kit generated on
+    a newer main was refused 'native_cts_sdc' while the daemon still held the older generator (hgi_sm_xl2_ctl-cl2b 20:51
+    10-15).  Changed in-process modules are re-imported before the next submit check (ref_gate_modules)."""
+    head = _ovl_head()
+    if not head or head == _INPROC["head"]:
+        return
+    synced = inprocess_stale_sync(head)
+    _INPROC["head"] = head
+    if synced:
+        _INPROC["gen"] += 1
+
+
+def ref_gate_modules():
+    """the pre_route_gate module for the submit check, re-imported (with every tools/ref_tile / hier_contract module it
+    loaded) after an INPROCESS-SYNC changed those files"""
+    with _INPROC["lock"]:
+        if _INPROC["loaded_gen"] != _INPROC["gen"]:
+            root = (HERE.parents[1]).resolve()
+            for name, m in list(sys.modules.items()):
+                f = getattr(m, "__file__", None)
+                if f and any(str(Path(f).resolve()).startswith(str(root / d) + "/") for d in INPROCESS_SYNC_DIRS):
+                    del sys.modules[name]
+            _INPROC["loaded_gen"] = _INPROC["gen"]
+            import importlib
+            importlib.invalidate_caches()
+            log(f"INPROCESS-SYNC: ref_tile / hier_contract modules re-imported (generation {_INPROC['gen']})")
+        sys.path.insert(0, str(HERE.parent / "ref_tile"))
+        import pre_route_gate  # noqa: E402
+        return pre_route_gate
 
 
 def restart_if_requested():
@@ -2704,9 +2775,21 @@ def ship_helpers(host, run, job=None):
             current, payloads = HO.capture_plan(HERE.parents[1], REPO, head=_ovl_head(), cache=_OVL["hist"])
             modes = {f["path"]: f["mode"] for f in current["files"]}
             frozen = job.setdefault("route_overlay_plan", current)
-            ok, why = HO.compare_plans(frozen, current)
+            ok, why, sanctioned = HO.compare_plans_sanctioned(frozen, current, REPO, head=current.get("origin_main"))
             if not ok:
                 raise ValueError(f"FROZEN_HELPER_OVERLAY: {why}; preserve original job and submit a fresh source-bound gate")
+            if sanctioned:
+                # FLEET-RUN SANCTION (ROOT 2026-10-16): only fleet-run helpers (tt_overlay.py: the route executes the
+                # fleet copy kept at main, fleet-first since 00cbddaea) drifted, to exactly origin/main's blob.  Keep the
+                # gate's plan, record both shas, and freeze the executed bytes so a later verify/reinstall matches cl/.
+                job.setdefault("route_overlay_plan_gate", frozen)
+                job.setdefault("helper_overlay_sanctioned", []).extend(dict(r, at=now_iso(), host=host, run=run)
+                                                                       for r in sanctioned)
+                for r in sanctioned:
+                    event(job, f"FLEET-RUN SANCTION: {r['path']} frozen {r['frozen_git_blob'][:9]} -> fleet/main "
+                               f"{r['current_git_blob'][:9]} (sha256 {r['current_sha256'][:16]}, origin/main "
+                               f"{str(r['origin_main'])[:9]}); the route runs the fleet copy")
+                job["route_overlay_plan"] = frozen = current
             HO.store_payloads(HELPER_STORE, frozen, payloads)
     buf = io.BytesIO()
     with tarfile.open(fileobj=buf, mode="w") as tf:
@@ -2877,14 +2960,32 @@ TTB_FILES = (("tt_overlay.py", "tools/closure_loop"), ("h1_patch.py", "tools/clo
 SNAPSHOT_REFRESH = ((FH_DIRS, FH_FILES), (TTB_DIRS, TTB_FILES))
 
 
+def _snapshot_main_sha(name):
+    """sha256 of the bytes the daemon ships for helper basename `name` now (origin/main resolution), or None"""
+    helper = next((h for h in HELPERS if Path(h).name == name), None)
+    if helper is None:
+        return None
+    try:
+        return hashlib.sha256(overlay_helper_bytes(helper)).hexdigest()
+    except Exception:  # noqa: BLE001
+        return None
+
+
 def snapshot_refresh_sh(run):
-    """shell: refresh every frozen flow snapshot's copies from the helpers just shipped to {run}/cl (tmp + mv)"""
+    """shell: refresh every frozen flow snapshot's copies from the helpers just shipped to {run}/cl (tmp + mv).
+    SNAPSHOT-MAIN-ONLY (ROOT 2026-10-16): a copy is refreshed only when {run}/cl/<f> has the sha256 of the bytes the
+    daemon ships from origin/main NOW.  A frozen job (verified original / reinstalled / bench relocation) carries its
+    gate-time helpers in cl/, and the old unconditional copy would have pushed e.g. tt_overlay ba24e51 (deletes
+    GRT183_HOOK) back over the fleet snapshot every route runs (tt_overlay_fallback is fleet-first)."""
     out = ""
     for dirs, files in SNAPSHOT_REFRESH:
-        out += (f"for fh in {' '.join(dirs)}; do for fd in {' '.join(f + ':' + d for f, d in files)}; do "
-                f"f=${{fd%%:*}}; t=$fh/${{fd#*:}}; "
-                f"[ -f {run}/cl/$f ] && [ -d $t ] && ! cmp -s {run}/cl/$f $t/$f && "
-                f"cp -f {run}/cl/$f $t/.$f.$$ && mv -f $t/.$f.$$ $t/$f; done; done; ")
+        for f, d in files:
+            sha = _snapshot_main_sha(f)
+            if not sha:
+                continue
+            out += (f"for fh in {' '.join(dirs)}; do t=$fh/{d}; [ -f {run}/cl/{f} ] && [ -d $t ] && "
+                    f"[ \"$(sha256sum < {run}/cl/{f} | cut -c1-64)\" = {sha} ] && ! cmp -s {run}/cl/{f} $t/{f} && "
+                    f"cp -f {run}/cl/{f} $t/.{f}.$$ && mv -f $t/.{f}.$$ $t/{f}; done; ")
     return out
 
 
@@ -3295,7 +3396,12 @@ elif [ -f {run}/cl/{t}.pid ]; then echo LOST; else echo STARTING; fi""", timeout
     note_host(j.get("host"), bool(w))
     if not w:
         return "UNREACHABLE", None
-    return (w[0], int(w[1])) if w[0] == "RC" else (w[0], None)
+    if w[0] == "RC":
+        # an EMPTY / non-numeric rc file (the host reset while the wrapper wrote it: AGIdock 10-15, s81fill_hstnv_560-f8
+        # bench_payload_bit_mutant -> 'RC' alone, IndexError x10 -> NEEDS_HUMAN) is a stage that died without an exit
+        # status: LOST, handled like a vanished wrapper
+        return ("RC", int(w[1])) if len(w) > 1 and re.fullmatch(r"-?\d+", w[1]) else ("LOST", None)
+    return w[0], None
 
 
 def remote_ok(j, cmd, timeout=300):
@@ -3306,6 +3412,23 @@ def remote_ok(j, cmd, timeout=300):
     return r.returncode == 0, (r.stdout + r.stderr)[-400:]
 
 
+def bench_input_error(full):
+    """A simulator may warn about missing memory images and still exit zero.
+
+    HBM PC proof 2026-10-15 falsely compared zero-filled actual/expected arrays
+    after '$readmem file not found'. Missing stimuli prove neither a positive
+    nor a detected mutant. Ignore ordinary readmem messages and short images
+    that a bench may intentionally load into a larger memory.
+    """
+    for line in full.splitlines():
+        if re.search(r"\b(?:FATAL|ERROR)\b.*(?:required image unavailable|incomplete (?:records|backing) image|duplicate backing sector address)", line, re.I):
+            return line.strip()[:500]
+        if re.search(r"\breadmem(?:[hb]|\s+file)?\b", line, re.I) and re.search(
+                r"file\s+not\s+found|(?:unable|cannot|could\s+not|can't)\s+(?:to\s+)?open|no\s+such\s+file", line, re.I):
+            return line.strip()[:500]
+    return ""
+
+
 def bench_outcome(j, st, rc, ok_extra=True):
     """pass: rc 0 (+ ok, + pass_regex); fail: rc != 0 (+ fail_regex).  Regexes are MULTILINE over the whole stage log
     (last 20000 lines), so ^FAIL matches any line."""
@@ -3313,7 +3436,11 @@ def bench_outcome(j, st, rc, ok_extra=True):
     for _ in range(4):  # an ssh hiccup returns an empty log and mis-judged benches (code-pair 10-07); fetch until it reads
         # drive-resume 2026-10-09: a bench that prints nothing (qkd_d2d *_record: a python -c exit-code check) left an
         # EMPTY log, read as an ssh hiccup 10x -> NEEDS_HUMAN.  A marker line proves the file was read: empty is valid.
-        r = ssh(j["host"], f"f={j['run']}/cl/{j['stage_tag']}.log; [ -f $f ] && echo OT_BENCH_LOG_READ && tail -n 20000 $f",
+        # Initialization warnings may precede more than 20,000 comparison
+        # lines. Scan the whole log for missing readmem inputs before its tail.
+        errors = r"readmem.*(file[[:space:]]+not[[:space:]]+found|unable.*open|cannot.*open|could[[:space:]]+not.*open|no[[:space:]]+such[[:space:]]+file)|((FATAL|ERROR).*(required image unavailable|incomplete (records|backing) image|duplicate backing sector address))"
+        r = ssh(j["host"], f"f={j['run']}/cl/{j['stage_tag']}.log; [ -f $f ] && {{ echo OT_BENCH_LOG_READ; "
+                f"LC_ALL=C grep -i -m 3 -E {shlex.quote(errors)} \"$f\" || true; tail -n 20000 \"$f\"; }}",
                 timeout=180)
         if r.returncode == 0 and r.stdout.startswith("OT_BENCH_LOG_READ"):
             full = r.stdout.split("\n", 1)[1] if "\n" in r.stdout else ""
@@ -3321,6 +3448,10 @@ def bench_outcome(j, st, rc, ok_extra=True):
         time.sleep(15)
     else:
         raise RuntimeError(f"bench log unreadable on {j['host']}: {j['run']}/cl/{j['stage_tag']}.log")
+    input_error = bench_input_error(full)
+    if input_error:
+        j.setdefault("bench_work", {})[st["key"]] = "input error: " + input_error
+        return False
     if st["expect"] == "pass":
         ok = rc == 0 and ok_extra and (not st.get("pass_regex") or re.search(st["pass_regex"], full, re.M) is not None)
         if ok:
@@ -3336,11 +3467,13 @@ def bench_why(j, st, rc, ok_extra=True):
     """Why a bench with expect PASS was judged not passed, for the verdict reason.  rc=0 alone read as 'expected PASS
     but rc=0' (5 jobs 2026-10-15: pass_regex not matching the bench's actual verdict line, or a min_count_regex the
     bench never prints) and was triaged as a flow bug."""
+    note = (j.get("bench_work") or {}).get(st["key"], "")
+    if note.startswith("input error:"):
+        return f" ({note})"
     if st.get("expect") != "pass" or rc != 0:
         return ""
     if not ok_extra:
         return " (ok check failed)"
-    note = (j.get("bench_work") or {}).get(st["key"], "")
     if note.startswith("vacuous"):
         return f" ({note})"
     if st.get("pass_regex"):
@@ -3352,6 +3485,8 @@ def expected_fail_seen(st, rc, full):
     """expect FAIL (negative control): the log's own verdict decides, regardless of rc -- a mutant bench that prints
     FAIL but exits 0 was read as "expected FAIL but rc=0" (LOOP-GAPS 2026-10-08).  With fail_regex: it must match (a
     crash with rc != 0 and no FAIL verdict is not a detected mutant).  Without: rc != 0 or a conventional ^FAIL line."""
+    if bench_input_error(full):
+        return False
     if st.get("fail_regex"):
         return re.search(st["fail_regex"], full, re.M) is not None
     return rc != 0 or re.search(r"^FAIL\b", full, re.M) is not None
@@ -3711,9 +3846,67 @@ def schedule_deferred_record_merges():
 RECORD_MAX_FILE_BYTES = 90 << 20
 
 
+# PORT-LATENCY (ROOT 2215, owner rule 19:50 PT 10-15): the exact elaborated pin-register stages of a recipe-3 tile reach the
+# static compilers from the CLOSED record, never from a typed constant.  publish() exports the route synthesis's own
+# $RESULTS_DIR/ot_pin_regs.tsv + ot_pin_regs_wrapper.v (physical/common_flow/ot_pin_regs.tcl) with
+# tools/ref_tile/port_latency.py, bound to the job's full source SHA, into <kit>/views/port_latency.json (beside the
+# closed view the compilers bind) and the job's results/closure_loop record.  A kit whose kit.env inserts pin registers
+# (OT_PIN_REGS=1) but whose route left no table fails closed (publish error -> NEEDS_HUMAN, never a silent 0).
+PORT_LATENCY_RE = re.compile(r"(physical/ref_tile/[^/\s'\"]+)/kit\.env")
+
+
+def port_latency_record(j):
+    """(kit dir, report dict) for a ref_tile route with pin registers; None when the kit inserts none."""
+    spec = j["spec"]
+    m = PORT_LATENCY_RE.search(((spec.get("stages") or {}).get("route") or {}).get("cmd") or "")
+    if not m:
+        return None
+    kit = m.group(1)
+    env = git("show", f"{j['commit_full']}:{kit}/kit.env", check=False).stdout
+    if str(HERE.parent / "ref_tile") not in sys.path:
+        sys.path.insert(0, str(HERE.parent / "ref_tile"))
+    from kit_orfs_vars import parse
+    enabled = parse(env).get("OT_PIN_REGS") == "1"
+    top = None
+    tile_spec = {}
+    try:
+        tile_spec = json.loads(git("show", f"{j['commit_full']}:{kit}/spec.json", check=False).stdout or "{}")
+        top = tile_spec.get("top")
+    except ValueError as ex:
+        raise RuntimeError("PORT-LATENCY: invalid source-pinned tile specification") from ex
+    if not enabled:
+        declared = tile_spec.get("pin_regs")
+        if isinstance(declared, dict) and declared.get("enable") is not False:
+            raise RuntimeError("PORT-LATENCY: spec enables pin registers but kit lacks a literal OT_PIN_REGS=1 option")
+        return None
+    if not top:
+        raise RuntimeError("PORT-LATENCY: missing source-pinned tile top; control roles cannot be verified")
+    base = f"{j['run']}/routes/{label(j['name'])}/work/orfs/results/asap7/*/base"
+    with tempfile.TemporaryDirectory() as td:
+        got = {}
+        for f in ("ot_pin_regs.tsv", "ot_pin_regs_wrapper.v"):
+            r = ssh(j["host"], f"cat $(ls -d {base} | head -1)/{f}", timeout=120)
+            if r.returncode != 0 or not r.stdout:
+                raise RuntimeError(f"PORT-LATENCY: {kit}/kit.env inserts pin registers (OT_PIN_REGS=1) but the route left no "
+                                   f"{f} under {base} (fail closed: the compilers need the elaborated per-port stages)")
+            (Path(td) / f).write_text(r.stdout)
+            got[f] = Path(td) / f
+        if str(HERE.parent / "ref_tile") not in sys.path:
+            sys.path.insert(0, str(HERE.parent / "ref_tile"))
+        import port_latency
+        rep = port_latency.export(got["ot_pin_regs.tsv"], got["ot_pin_regs_wrapper.v"], top, j["commit_full"])
+        def role_source(path):
+            result = git("show", f"{j['commit_full']}:{path}", check=False)
+            return result.stdout if result.returncode == 0 else None
+        rep["control_roles"] = port_latency.validate_roles(rep, got["ot_pin_regs_wrapper.v"], tile_spec, role_source)
+    rep["job"] = j["name"]
+    return kit, rep
+
+
 def publish(j, metrics):
     """Commit record + view on the job branch (explicit paths), trial-merge into merge_target, push."""
     spec = j["spec"]
+    plat = port_latency_record(j)       # PORT-LATENCY: before any git work; a missing table raises (fail closed)
     source_branch, target = spec["source"]["branch"], spec.get("merge_target")
     branch = f"codex/closure-record-{j['name']}" if claude_owns_main() else source_branch
     rec_dir = f"results/closure_loop/{j['name']}"
@@ -3764,6 +3957,17 @@ def publish(j, metrics):
                     big.append(f"{f.relative_to(cwt)} {f.stat().st_size} B (kept on {j['host']}:{j['run']})")
                     f.unlink()
         (cwt / rec_dir).mkdir(parents=True, exist_ok=True)
+        plat_paths = []
+        if plat:
+            kit, rep = plat
+            txt = json.dumps(rep, indent=2, sort_keys=True) + "\n"
+            for r in spec.get("record", []):
+                vd = cwt / r["to"].rstrip("/") / rep["top"]
+                if r["to"].rstrip("/") == f"{kit}/views" and vd.is_dir():
+                    (vd / "port_latency.json").write_text(txt)
+                    plat_paths.append(str((vd / "port_latency.json").relative_to(cwt)))
+            (cwt / rec_dir / "port_latency.json").write_text(txt)
+            plat_paths.append(f"{rec_dir}/port_latency.json")
         if big:
             (cwt / rec_dir / "LARGE_FILES_EXCLUDED.txt").write_text("\n".join(big) + "\n")
             log(f"[{j['name']}] record: {len(big)} file(s) > {RECORD_MAX_FILE_BYTES >> 20} MB left out of git")
@@ -3778,6 +3982,9 @@ def publish(j, metrics):
                        checks=j.get("checks", {}), submit_checks=j.get("submit_checks"), calibration=j.get("calibration"), route_overlay_plan=j.get("route_overlay_plan"), cycles_added=spec.get("cycles_added"), status="CLOSED",
                        closed_at=now_iso(), job_spec=spec, io_budget=(j.get("rebudget") or {}).get("rb") or "link_budget_consistent (fixed split)",
                        rebudget=j.get("rebudget"))
+        if plat:
+            verdict["port_latency"] = dict(paths=plat_paths, sha256=hashlib.sha256(
+                (cwt / plat_paths[0]).read_bytes()).hexdigest(), schema=plat[1]["schema"])
         if j.get("export_lint_recovery"):
             verdict["export_lint_recovery"] = j["export_lint_recovery"]
         (cwt / rec_dir / "verdict.json").write_text(json.dumps(verdict, indent=1) + "\n")
@@ -4020,6 +4227,12 @@ def stage_output_dirs(j, st):
         return [subst(d, j) for d in ([out] if isinstance(out, str) else out)]
     if st["kind"] in ("calibrate", "route"):
         return [f"{j['run']}/routes/{label(j['name'])}{'_cal' if st['kind'] == 'calibrate' else ''}"]
+    # EXPORT-ASIDE (ROOT 2026-10-16, qkd_rlys_1-v1-838dc5048): a retried ref_tile collect re-exported into the same
+    # views dir and export_provenance refused it ('existing provenance: use a fresh export directory'), so EVERY
+    # failed first collect became NEEDS_HUMAN on the retry.  The export --out dir is the stage's output.
+    m = re.search(r"ref_tile\.py export\b[^&;|>]*?--out\s+(\S+)", st.get("cmd") or "")
+    if m:
+        return [subst(m.group(1), j)]
     return []
 
 
@@ -4149,7 +4362,7 @@ def crash(j, st, fleet, why):
     if err:
         why = re.sub(r"ok-check failed: *(;|$)", "ok-check failed;", why)
         why = f"{why}; first error: {err}"
-    if st["kind"] == "route" and "GRT-0116" in (err + tail) and not why.startswith("LOST"):
+    if st["kind"] == "route" and re.search(r"GRT-0116|GRT-0232", err + tail) and not why.startswith("LOST"):
         # stuckscan 2026-10-08: GRT gave up with congestion -- deterministic for this floorplan; a retry re-spends the
         # whole route (hbm_coll_port_big/rows, s81b-vm_bgh-grid: 'retry once on the same host')
         finish(j, "EARLY_FAIL_CONGESTION", f"global route finished with congestion (GRT-0116): {err[:200]}",
@@ -4159,6 +4372,15 @@ def crash(j, st, fleet, why):
     resource = bool(RESOURCE_RE.search(tail + " " + err)) or why.startswith(("LOST", "bench tool crash"))
     j.setdefault("crashes", []).append(dict(stage=st["key"], host=j["host"], attempt=j["attempt"], why=why,
                                             resource=resource, tail=tail[-1500:], first_error=err))
+    det = DETERMINISTIC_ROUTE_ERR_RE.search(err) if st["kind"] == "route" and not resource else None
+    if det:
+        # DETERMINISTIC-NO-RETRY 2026-10-15 (ROOT): daemon.log 10-06..10-15, every same-input retry of these first
+        # errors failed again with the same error (DPL-0033 30/30+, GPL-0305 15/15, PPL-0093 14/14, ANT-0008 11/11,
+        # PDN-0233 9/9, MPL-0020 7/7, PPL-0111 6/6, STA-0340 5/5): a retry re-spent the whole route for nothing.
+        finish(j, "NEEDS_HUMAN", f"{st['key']} failed deterministically ({det.group(0)}), not retried: {err[:300]}",
+               f"NEEDS_HUMAN: {st['key']} first error {det.group(0)} is deterministic for these inputs (measured: every "
+               f"same-input retry failed again); fix the kit/floorplan and resubmit.\n{err[:300]}")
+        return
     if j["retries_used"] >= 1:
         finish(j, "NEEDS_HUMAN", f"{st['key']} crashed twice ({why}; resource={resource})"[:600],
                f"NEEDS_HUMAN: {st['key']} crashed twice ({why}); last log tail:\n" +
@@ -4586,6 +4808,12 @@ def bench_track(j, fleet, stl):
                     launch_token = fleet._launched(host, st["threads"], st["ram"], actual=True)
             n = (e or {}).get("n", 0) + 1
             v = dict(j, host=host, run=location["run"], attempt=f"{location['attempt']}b{n}")
+            if e is not None and e.get("state") == "retry":
+                stale = bench_scratch_dirs(st["cmd"])
+                if stale:       # a crashed attempt's partial outputs (half-built simulator) must not be reused
+                    ssh(host, "rm -rf " + " ".join(shlex.quote(f"{location['run'].rstrip('/')}/{d}") for d in stale),
+                        timeout=300)
+                    event(j, f"bench track: {k} retry clears its outputs {stale}")
             try:
                 launch_stage(v, st, st["cmd"])
             finally:
@@ -5284,6 +5512,14 @@ def step(j, fleet):
             elif rc != 0 or not ok_extra:
                 return crash(j, st, fleet, f"rc={rc}{'' if ok_extra else ' ok-check failed: ' + okout.strip()[-200:]}")
             event(j, f"{st['key']} done (rc={rc})")
+            if st["kind"] == "route":
+                # LAYOUT IMAGES (owner rule 20:45 10-15): ref_route.sh renders floorplan / density / congestion PNGs
+                # beside the route; the paths go into the job record so the owner LOOKS at them with the verdict
+                r = ssh(j["host"], f"ls {j['run']}/routes/*/layout/*.png 2>/dev/null", timeout=60)
+                pngs = [x for x in (r.stdout or "").split() if x.endswith(".png")]
+                if pngs:
+                    j["layout_images"] = {"host": j["host"], "paths": pngs}
+                    event(j, f"LAYOUT images ({j['host']}): " + " ".join(pngs))
             if st["kind"] == "calibrate":
                 r = ssh(j["host"], f"cat {j['run']}/cl/calib.json", timeout=60)
                 if r.returncode == 255:
@@ -6035,8 +6271,11 @@ def child_lint_gate_checks(spec):
 
 def pick_view_lef(paths, block):
     """the block's own view among the record's LEFs (not bloat / macro copies of its children)"""
-    cand = [p for p in paths if p.endswith(".lef") and "_bloat" not in p and "/macros/" not in p]
-    return next((p for p in cand if Path(p).stem == block), None)
+    cand = [p for p in paths if p.endswith(".lef") and "_bloat" not in p
+            and not {"macros", "provenance"}.intersection(Path(p).parts) and Path(p).stem == block]
+    # Collect retries retain <block>.attemptN beside the active view. Prefer the
+    # canonical bundle; provenance/raw is immutable evidence, never an active view.
+    return next((p for p in cand if Path(p).parent.name == block), next(iter(cand), None))
 
 
 def child_lint_view(lef_text, checks, pin_grant=None, def_text=None, tech_text=None):
@@ -6198,6 +6437,16 @@ def reevaluate_benches(jobs):
         except RuntimeError as exc:
             # An unavailable historical log must not starve later jobs or the
             # independent recovery passes. Do not consume this retry until read.
+            # RETIRED-HOST 2026-10-15: a log on a host retired from hosts.json (EPYC2/3, 10-12) can never be read
+            # again; it was re-deferred every tick (~3,400 log lines per job). Consume the retry once: verdict stands.
+            if j.get("host") and all(h["name"] != j["host"] for h in hosts_table()):
+                with job_lock(j["name"]):
+                    fresh = load_job(j["name"])
+                    if eligible(fresh) is not None and fresh.get("reason") == j.get("reason"):
+                        fresh.setdefault("fix_requeued", []).append(fid)
+                        event(fresh, f"{st['key']} not re-judged under {fid}: log on retired host {j['host']}; verdict stands")
+                        save_job(fresh)
+                continue
             log(f"[{j['name']}] bench re-judgment deferred: {exc}")
             continue
         with job_lock(j["name"]):
@@ -6864,6 +7113,32 @@ def trim_snapshot(tp):
         with open(os.path.join(tp, "TRIMMED_SOURCE_SNAPSHOT"), "w") as f:
             f.write("source snapshot trimmed by deep release; git archive %s re-creates it; receipt paths kept\n" % a["src_commit"])
     return b
+if mode == "src" and a.get("keep_config_paths"):
+    # GRT183 2026-10-15 (ROOT): a NEEDS_HUMAN route is diagnosed by re-running its saved ORFS state, which reads the
+    # /src files its config.mk names (macro LEF/Liberty/GDS, kit SDC/TCL): qfd_tt_scale_leaf-tg1's replay died on a
+    # trimmed ot_sram_1r1w_128x256_m1_r2c2_tt.lib.  Keep every config-named /src path; for a path >= 3 levels deep
+    # (physical/asap7_memory_macros/<macro>/..., physical/ref_tile/<kit>/...) keep its whole directory (all corners).
+    import re as _re
+    for dp, dn, fn in os.walk(R):
+        if dp == R + "/src" or dp.startswith(R + "/src/") or "/bench_src" in dp:
+            dn[:] = []
+            continue
+        if "config.mk" not in fn:
+            continue
+        try:
+            txt = open(os.path.join(dp, "config.mk"), errors="replace").read()
+        except OSError:
+            continue
+        for rel in set(_re.findall(r"/src/([A-Za-z0-9_./+-]+)", txt)):
+            rel = os.path.normpath(rel)
+            if rel.startswith(".."):
+                continue
+            p = os.path.join(R, "src", rel)
+            d = os.path.dirname(rel)
+            if d.count("/") >= 2 and os.path.isdir(os.path.join(R, "src", d)):
+                p = os.path.join(R, "src", d)
+            if os.path.exists(p):
+                hard.append(p)
 if mode == "src":
     # SRC-RELEASE (ROOT 2026-10-15): only the git snapshots (src/, bench_src*/) at the job's own commit, trimmed to the
     # receipt-named paths; nothing else in the run dir is touched
@@ -7280,7 +7555,8 @@ def release_src(jobs, now=None, limit=SRC_RELEASE_PER_TICK):
                 continue
             full = git("rev-parse", commit + "^{commit}").stdout.strip()
             run = j["run"].rstrip("/")
-            arg = dict(run=run, mode="src", src_commit=full, refs=[r for r in ev["refs"] if r.startswith(run + "/")])
+            arg = dict(run=run, mode="src", src_commit=full, refs=[r for r in ev["refs"] if r.startswith(run + "/")],
+                       keep_config_paths=j["status"] == "NEEDS_HUMAN")
             r = ssh(j["host"], f"OT_DR={shlex.quote(json.dumps(arg))} python3 - <<'DRPY'\n{DEEP_RELEASE_PY}\nDRPY\n", timeout=1800)
             n += 1
             m = re.search(r"DEEP_FREED (\d+)", r.stdout)
@@ -8031,6 +8307,10 @@ def host_down_requeue(j, kind, now=None):
 
 def tick(fleet):
     restart_if_requested()
+    try:
+        inprocess_sync_on_main_move()
+    except Exception:  # noqa: BLE001
+        log("inprocess_sync_on_main_move error:\n" + traceback.format_exc())
     t_ph = time.time()
     overlay_drift_check()
     _slow_phase("overlay_drift_check", t_ph)
@@ -8050,6 +8330,12 @@ def tick(fleet):
             if e.get("state") == "running":
                 own[e["host"]] = own.get(e["host"], 0) + 4
     fleet.own_running = own
+    sync = {}
+    for x in all_jobs():
+        if x["status"] == "SYNC" and x.get("host") and not x.get("source_synced"):
+            sync[x["host"]] = sync.get(x["host"], 0) + 1
+    with FLEET_LOCK:
+        fleet.syncing = sync
     schedule_housekeeping()     # release_bulk / release_deep / stale24_sweep: background, never ahead of dispatch
     t_mg = time.time()
     try:
@@ -8794,7 +9080,23 @@ def cmd_recover_export_lint(a):
     import base64
     from export_lint_recovery import eligible
     j = load_job(a.name)
-    eligible(j)
+    evidence = None
+    try:
+        eligible(j)
+    except ValueError as exc:
+        if str(exc) != 'no recorded PG lint collection failure':
+            raise
+        probe = ("import hashlib,json,pathlib; "
+                 "ps=[p for p in pathlib.Path(" + repr(j['run']) + ").glob('record/views/**/provenance/abstract_pin_stub.json') "
+                 "if p.parent.parent.name==" + repr(j['spec']['block']) + "]; "
+                 "print(json.dumps([dict(path=str(p),sha256=hashlib.sha256(p.read_bytes()).hexdigest(),"
+                 "child_lint=json.loads(p.read_text()).get('child_lint',{})) for p in ps]))")
+        r = ssh(j['host'], 'python3 -c ' + shlex.quote(probe), timeout=60, check=True)
+        records = json.loads(r.stdout)
+        if len(records) != 1:
+            raise ValueError('expected one retained structured lint receipt')
+        evidence = records[0]
+        eligible(j, evidence)
     head = _ovl_head()
     rel = "tools/hier_contract/child_lint.py"
     data = subprocess.run(["git", "-C", str(REPO), "show", f"{head}:{rel}"],
@@ -8802,6 +9104,8 @@ def cmd_recover_export_lint(a):
     request = dict(job=j, helper_commit=head, helper_b64=base64.b64encode(data).decode(),
                    helper_sha256=hashlib.sha256(data).hexdigest(),
                    guard_b64=base64.b64encode((HERE / "export_lint_recovery.py").read_bytes()).decode())
+    if evidence:
+        request['pg_lint_evidence'] = evidence
     r = ssh(j["host"], "python3 - prepare " + shlex.quote(json.dumps(request)),
             input=(HERE / "export_lint_recovery.py").read_text(), timeout=120, check=True)
     j["export_lint_recovery"] = dict(json.loads(r.stdout), requested=now_iso())

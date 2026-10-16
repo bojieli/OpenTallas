@@ -16,6 +16,10 @@ macro behavioural models etc.).  For every instance of the die top:
              listed (OUTPUT_OPEN, informational);
   * WIDTHS   die connection width == RTL port width evaluated with the INSTANCE's parameter overrides (#(...)) over the
              module's defaults (WIDTH_MISMATCH);
+  * PADS     DEDUPE (owner rule 19:50 10-15, fewer distinct tiles): a standard master used below its width may tie its
+             DECLARED spare input bits low (--pad-file / DIE_V.pads.json, per master with a reason and per-port bit ranges
+             or a logical width); undeclared ties, ties high and 'z stay INPUT_TIED; spare outputs are OUTPUT_OPEN
+             (informational) as before;
   * NETS     bit-level: every die-net bit read by an input has exactly one driver (an output port of a bound instance or a
              top input) -- UNDRIVEN / MULTI_DRIVEN.
 
@@ -267,7 +271,8 @@ class Module:
             rhs = m.group(2).strip()
             if not re.fullmatch(r"[\s{}(),\d'bBhHdDoOxXzZ_]*", rhs):
                 self._kind = 'real'; return 'real'
-        for m in re.finditer(r'^\s*(\w+)\s*(#\s*\(.*?\)\s*)?\w+\s*\(', b, re.M | re.S):
+        # (?:^|;): a one-line module ('module m (...); child #(..) u (...); endmodule') has its body start at ';'
+        for m in re.finditer(r'(?:^|;)\s*(\w+)\s*(#\s*\(.*?\)\s*)?\w+\s*\(', b, re.M | re.S):
             if m.group(1) in idx and m.group(1) != self.name:
                 self._kind = 'real'; return 'real'
         # gate primitives count as behaviour (a hand netlist)
@@ -431,6 +436,13 @@ class Conn:
         self.bits = bits           # list of (net, bit) MSB-first, or ('CONST', v) / ('Z', None)
 
 
+class _Conns(dict):
+    """named connections of one instance; .dups lists every port connected more than once (DUPLICATE_PORT)."""
+    def __init__(self, *a, **k):
+        super().__init__(*a, **k)
+        self.dups = []
+
+
 def parse_die(path, top=None):
     t = strip_comments(Path(path).read_text(errors='replace'))
     mods = list(re.finditer(r'\bmodule\s+(\w+)', t))
@@ -476,8 +488,10 @@ def parse_die(path, top=None):
         if prm:
             for pm in re.finditer(r'\.(\w+)\s*\(([^()]*(?:\([^()]*\))?[^()]*)\)', prm):
                 params[pm.group(1)] = pm.group(2).strip()
-        cm = {}
+        cm = _Conns()
         for c in _named_conns(conns):
+            if c[0] in cm:                       # a port named twice: Verilog keeps one silently -- always a GEN bug
+                cm.dups.append(c[0])
             cm[c[0]] = c[1]
         insts.append((mst, inst.strip(), params, cm))
     for n in re.findall(r'(\\\S+|\w+)', hdr):
@@ -562,9 +576,47 @@ def expr_bits(expr, nets):
 
 
 # ------------------------------------------------------------------------------------------------ check
-def check(die_v, top, idx, amb, allow_model, mparams=None, max_list=40, straps=frozenset()):
+def pad_bits(spec, width):
+    """port-relative bit indexes (LSB = 0) a PAD declaration covers: [[lo, hi], ...] or {"logical_width": L} (bits
+    L .. width-1)"""
+    if isinstance(spec, dict):
+        L = int(spec["logical_width"])
+        return set(range(L, width if width is not None else L))
+    out = set()
+    for lo, hi in spec:
+        out |= set(range(min(int(lo), int(hi)), max(int(lo), int(hi)) + 1))
+    return out
+
+
+def load_pads(obj):
+    """{"pads": {master: {"reason": str, "ports": {port: [[lo, hi], ...] | {"logical_width": L}}}}} ->
+    Optional "instances" entries add master/reason/ports per instance and load as (master, port, instance).
+    The instance entry takes precedence over a master entry, keeping mixed logical widths independent.
+    DEDUPE padding (main f041848a1, owner rule 19:50 'fewer distinct tiles'): a standard master
+    replicated at a smaller logical width ties its spare INPUT bits low and leaves its spare OUTPUT bits open; only the
+    declared bits may be tied (to 0), everything else stays INPUT_TIED.  A master entry without a reason is refused."""
+    pads = {}
+    master_map = obj.get("pads", {}) if "instances" in obj else obj.get("pads", obj)
+    for mst, ent in master_map.items():
+        if not isinstance(ent, dict) or not str(ent.get("reason", "")).strip() or not isinstance(ent.get("ports"), dict):
+            raise SystemExit(f"die_port_bind: pad declaration for {mst} needs a reason and a ports map")
+        for pn, spec in ent["ports"].items():
+            pads[(mst, pn)] = spec
+    for inst, ent in obj.get("instances", {}).items():
+        if (not isinstance(ent, dict) or not str(ent.get("reason", "")).strip()
+                or not isinstance(ent.get("ports"), dict) or not ent.get("master")):
+            raise SystemExit(f"die_port_bind: instance pad declaration for {inst} needs master, reason and ports")
+        for pn, spec in ent["ports"].items():
+            pads[(ent["master"], pn, inst)] = spec
+    return pads
+
+
+def check(die_v, top, idx, amb, allow_model, mparams=None, max_list=40, straps=frozenset(), pads=None):
     """straps: {(master, port)} declared STRAP inputs (die constants by contract: tile ids, station indexes, group
-    numbers); a constant on one of them is recorded as a strap, not as INPUT_TIED.  Every other tied input fails."""
+    numbers); a constant on one of them is recorded as a strap, not as INPUT_TIED.  pads: {(master, port[, instance]): bit spec}
+    declared PAD bits (load_pads): a constant 0 on a declared input bit is a pad bit, not INPUT_TIED; a tie to 1 / 'z, or
+    on any undeclared bit, still fails.  Every other tied input fails."""
+    pads = pads or {}
     nets, tin, tout, insts = parse_die(die_v, top)
     mparams = mparams or {}
     drv = defaultdict(int)       # (net) -> bitmask of driven bits (by count via lists below)
@@ -583,7 +635,8 @@ def check(die_v, top, idx, amb, allow_model, mparams=None, max_list=40, straps=f
             continue
         rec = masters.setdefault(mst, dict(instances=0, rtl=None, kind=None, param_sets={}, examples=[],
                                            die_port_not_in_rtl=set(), input_unconnected=set(), input_tied=set(),
-                                           output_open=set(), width_mismatch={}, unparsed_conn=set(), straps=set()))
+                                           output_open=set(), width_mismatch={}, unparsed_conn=set(), straps=set(),
+                                           duplicate_port=set(), pad_bits=defaultdict(int)))
         rec['instances'] += 1
         if len(rec['examples']) < 3:
             rec['examples'].append(inst)
@@ -603,6 +656,7 @@ def check(die_v, top, idx, amb, allow_model, mparams=None, max_list=40, straps=f
             rec['param_sets'][pkey] = 0
         rec['param_sets'][pkey] += 1
         env = mod.env(params)
+        rec['duplicate_port'].update(getattr(cm, 'dups', ()))
         for pn, ex in cm.items():
             if pn not in mod.ports:
                 rec['die_port_not_in_rtl'].add(pn)
@@ -621,11 +675,15 @@ def check(die_v, top, idx, amb, allow_model, mparams=None, max_list=40, straps=f
             w = mod.width(pn, env)
             if w is not None and w != len(bits):
                 rec['width_mismatch'].setdefault(pn, set()).add((len(bits), w))
-            for b in bits:
+            pad_key = (mst, pn, inst) if (mst, pn, inst) in pads else (mst, pn)
+            pset = pad_bits(pads[pad_key], w if w is not None else len(bits)) if pad_key in pads else set()
+            for k_msb, b in enumerate(bits):
                 if b[0] in ('CONST', 'Z'):
                     if d != 'output':
                         if b[0] == 'CONST' and (mst, pn) in straps:
                             rec['straps'].add(pn)
+                        elif b[0] == 'CONST' and b[1] == 0 and (len(bits) - 1 - k_msb) in pset:
+                            rec['pad_bits'][pn] += 1
                         else:
                             rec['input_tied'].add(pn)
                 elif b[0] == 'UNDECL':
@@ -666,10 +724,11 @@ def check(die_v, top, idx, amb, allow_model, mparams=None, max_list=40, straps=f
     # ---------------- summary
     S = dict(masters=len(masters), instances=sum(r['instances'] for r in masters.values()),
              unbound_masters=0, stub_masters=0, ambiguous_masters=0, port_not_in_rtl=0, width_mismatch=0,
-             input_unconnected=0, input_tied=0, unparsed_connections=0, undriven_net_bits=sum(undriven.values()),
+             input_unconnected=0, input_tied=0, unparsed_connections=0, duplicate_port_connections=0, undriven_net_bits=sum(undriven.values()),
              multi_driven_net_bits=sum(multi.values()), top_assigns=len(findings['TOP_ASSIGN']),
              params_not_in_rtl=len(findings['PARAM_NOT_IN_RTL']),
-             strap_ports=sum(len(r['straps']) for r in masters.values()))
+             strap_ports=sum(len(r['straps']) for r in masters.values()),
+             pad_bits=sum(sum(r['pad_bits'].values()) for r in masters.values()))
     out_m = {}
     for mst, r in sorted(masters.items()):
         bad = []
@@ -682,10 +741,11 @@ def check(die_v, top, idx, amb, allow_model, mparams=None, max_list=40, straps=f
                 S['ambiguous_masters'] += 1; bad.append('AMBIGUOUS')
         for key, tag in (('die_port_not_in_rtl', 'PORT_NOT_IN_RTL'), ('width_mismatch', 'WIDTH_MISMATCH'),
                          ('input_unconnected', 'INPUT_UNCONNECTED'), ('input_tied', 'INPUT_TIED'),
-                         ('unparsed_conn', 'UNPARSED')):
+                         ('unparsed_conn', 'UNPARSED'), ('duplicate_port', 'DUPLICATE_PORT')):
             if r[key]:
                 bad.append(tag)
-                S[{'die_port_not_in_rtl': 'port_not_in_rtl', 'unparsed_conn': 'unparsed_connections'}.get(key, key)] += len(r[key])
+                S[{'die_port_not_in_rtl': 'port_not_in_rtl', 'unparsed_conn': 'unparsed_connections',
+                   'duplicate_port': 'duplicate_port_connections'}.get(key, key)] += len(r[key])
         out_m[mst] = dict(verdict='PASS' if not bad else 'FAIL', fails=bad, instances=r['instances'], rtl=r['rtl'],
                           kind=r['kind'], ambiguous_defs=amb.get(mst), examples=r['examples'],
                           param_sets=dict(list(r['param_sets'].items())[:8]),
@@ -693,10 +753,12 @@ def check(die_v, top, idx, amb, allow_model, mparams=None, max_list=40, straps=f
                           input_unconnected=sorted(r['input_unconnected'])[:max_list],
                           input_tied=sorted(r['input_tied'])[:max_list],
                           straps=sorted(r['straps'])[:max_list],
+                          pad_bits=dict(sorted(r['pad_bits'].items())[:max_list]),
                           output_open=sorted(r['output_open'])[:max_list],
                           width_mismatch={p: sorted(v) for p, v in sorted(r['width_mismatch'].items())[:max_list]},
-                          unparsed_conn=sorted(r['unparsed_conn'])[:max_list])
-    fail_keys = [k for k in S if k not in ('masters', 'instances', 'strap_ports') and S[k]]
+                          unparsed_conn=sorted(r['unparsed_conn'])[:max_list],
+                          duplicate_port=sorted(r['duplicate_port'])[:max_list])
+    fail_keys = [k for k in S if k not in ('masters', 'instances', 'strap_ports', 'pad_bits') and S[k]]
     return dict(schema=SCHEMA, die_v=str(die_v), top=top, verdict='PASS' if not fail_keys else 'FAIL',
                 failing=fail_keys, summary=S, masters=out_m,
                 undriven_nets=dict(sorted(undriven.items(), key=lambda kv: -kv[1])[:200]),
@@ -789,8 +851,13 @@ def main(argv=None):
     ap.add_argument('--strap', action='append', default=[], help='MASTER:PORT declared strap input (a die constant by '
                     'contract, e.g. a tile id); a constant on it is recorded, not INPUT_TIED')
     ap.add_argument('--strap-file', help='JSON [[master, port], ...] or {"straps": [[master, port], ...]}')
+    ap.add_argument('--pad-file', help='JSON {"pads": {master: {"reason": ..., "ports": {port: [[lo, hi], ...] | '
+                    '{"logical_width": L}}}}}: declared DEDUPE padding bits (spare inputs tied low, spare outputs open); '
+                    'or {"instances": {inst: {"master": master, "reason": ..., "ports": ...}}}; instance entries bind each logical width independently; default DIE_V.pads.json')
     ap.add_argument('--out')
     a = ap.parse_args(argv)
+    a.pad_file = a.pad_file or (a.die_v + '.pads.json' if Path(a.die_v + '.pads.json').exists() else None)
+    pads = load_pads(json.loads(Path(a.pad_file).read_text())) if a.pad_file else {}
     straps = {tuple(s.split(':', 1)) for s in a.strap}
     if a.strap_file:
         sj = json.loads(Path(a.strap_file).read_text())
@@ -822,7 +889,8 @@ def main(argv=None):
         return 0
     pj = a.params or (a.die_v + '.params.json' if Path(a.die_v + '.params.json').exists() else None)
     mparams = json.loads(Path(pj).read_text()).get('masters', {}) if pj else {}
-    rec = check(a.die_v, a.top, idx, amb, set(a.allow_model), mparams, straps=frozenset(straps))
+    rec = check(a.die_v, a.top, idx, amb, set(a.allow_model), mparams, straps=frozenset(straps), pads=pads)
+    rec['pads_declared'] = sorted(':'.join(k) for k in pads)
     rec['die_sha256'] = hashlib.sha256(Path(a.die_v).read_bytes()).hexdigest()
     rec['straps_declared'] = sorted(':'.join(s) for s in straps)
     rec['params_file'] = pj
@@ -846,6 +914,8 @@ def main(argv=None):
                 det.append('in_unconn=' + ','.join(r['input_unconnected'][:8]))
             if r['input_tied']:
                 det.append('tied=' + ','.join(r['input_tied'][:8]))
+            if r.get('duplicate_port'):
+                det.append('dup=' + ','.join(r['duplicate_port'][:8]))
             print(f"FAIL {mst:34s} x{r['instances']:<6d} {'/'.join(r['fails'])} {' '.join(det)}")
     print('DIE_PORT_BIND ' + rec['verdict'] + ' ' + ' '.join(f'{k}={v}' for k, v in S.items()))
     return 0 if rec['verdict'] == 'PASS' else 1

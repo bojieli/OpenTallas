@@ -222,6 +222,14 @@
     "threads": 1,
     "peak_ram_gb": 2,
     "min_count_regex": "eachgroup_reads=(\\d+)"
+   },
+   {
+    "name": "wrong_compiled_identity_mutant",
+    "cmd": "cd rtl/hbm_accel/generic/vm/static/identity && iverilog -g2012 -s tb_hbm_vm_identity -Ptb_hbm_vm_identity.SID=0 -Ptb_hbm_vm_identity.RG=5 -Ptb_hbm_vm_identity.WG=1 -Ptb_hbm_vm_identity.MUT=3 -o {RUN}/mut3.vvp ../ot_vms_ce_counter_pipe.sv ../ot_vms_bank_static_identity.sv ../../../../../../physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v tb_hbm_vm_identity.sv && vvp {RUN}/mut3.vvp",
+    "expect": "fail",
+    "fail_regex": "FATAL: .*bank fault",
+    "threads": 1,
+    "peak_ram_gb": 2
    }
   ]
  },

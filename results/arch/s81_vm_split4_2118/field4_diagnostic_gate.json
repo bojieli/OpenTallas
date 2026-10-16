@@ -1,0 +1,64 @@
+{
+ "schema": "opentallas.preserved-diagnostic-gate-reference.v1",
+ "qualification_status": "UNQUALIFIED_DIAGNOSTIC_NOT_A_CURRENT_GATE",
+ "canonical_preserved_result": "physical/ref_tile/s81_a2f_field4_pilot_2118_r1/source_binding_history/4eda7a0f7159a53ed64e32dd14d39b987bec081333aaa304396b2b6742dac8a9.json",
+ "json_pointer": "/original_result",
+ "original_standalone_sha256": "4eda7a0f7159a53ed64e32dd14d39b987bec081333aaa304396b2b6742dac8a9",
+ "canonical_file_sha256": "0da69a3d32e6bb61eb465e603be8eacd941d3db54a543ce70454d1ffacb3475b",
+ "verdict": "WARN",
+ "source_commit": null,
+ "clock": {
+  "max_root_sinks": 2532,
+  "root": "port:ck",
+  "cts": true,
+  "tt_insertion_ps": 183.0,
+  "tt_spread_ps": 29.6,
+  "declared_clock": null,
+  "limits": {
+   "sinks": 15000,
+   "insertion_ps": 300.0,
+   "spread_ps": 80.0
+  },
+  "clock_measurements": [
+   {
+    "source": "ck",
+    "clock": "core_clk",
+    "tt": {
+     "boundary": {
+      "n": 1145,
+      "mean": 171.4,
+      "min": 156.5,
+      "max": 183.0
+     },
+     "all": {
+      "n": 2536,
+      "mean": 168.0,
+      "min": 153.4,
+      "max": 183.0
+     },
+     "errors": [],
+     "macros": null,
+     "macro_libs": 0
+    }
+   }
+  ],
+  "measured_clock": "core_clk",
+  "verdict": "PASS",
+  "text": "2,532 sinks on the largest root <= 15,000; measured TT insertion 183.0 ps, leaf spread 29.6 ps"
+ },
+ "items": [
+  {
+   "severity": "WARN",
+   "check": "util",
+   "message": "synthesized std area 4033 um2 + macros 0 in core 10283: util 39%",
+   "fix": "set \"std_area_um2\": 4033 and drop 'outline' (gen sizes to util 0.52)"
+  },
+  {
+   "severity": "WARN",
+   "check": "textbook.util_channel",
+   "message": "utilisation 39.2% outside 45%-65% (std 4033 + macro 0 um2 in 10283 um2): shrink the outline (long wires / sparse placement)",
+   "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
+  }
+ ],
+ "reason": "This exact diagnostic result is retained in source_binding_history. Avoid duplicating its full 15,000-file archive manifest. Current physical gates and original unqualified history remain intact."
+}

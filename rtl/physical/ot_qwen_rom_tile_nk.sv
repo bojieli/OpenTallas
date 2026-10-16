@@ -43,10 +43,16 @@ module ot_qwen_rom_tile_nk #(
     parameter integer BAW = 12,
     parameter integer NDH = 0,            // q13 spec r5 leaf 2: ot_qwen_rom_tile_w12 NDH / BMUT (hardened node leaf)
     parameter integer BMUT = 0,
+    parameter integer LOCAL_ROOTS = 0,
     parameter integer CHILD_CLOCKS = 0,
     parameter integer NODE = 1            // q14 r9: 0 = node-less tile (ot_qwen_rom_tile_w12 NODE)
 ) (
     input wire [CODE_BANKS-1:0] ck_rpair,
+    input wire [CODE_BANKS-1:0] ck_pair1,
+    input wire [1:0] ck_rqr,
+    input wire [7:0] ck_tx,
+
+    input wire [2*CODE_BANKS-1:0] ck_rom,     // Q-TILE-REPACK: raw ROM macro clock entries (CHILD_CLOCKS, RPH 1)
     input wire [7:0] ck_lsl,
     input wire ck_node,
     input  wire              clk,
@@ -69,10 +75,10 @@ module ot_qwen_rom_tile_nk #(
 `ifndef SYNTHESIS
         .ROM_TILE(ROM_TILE),
 `endif
-        .CHILD_CLOCKS(CHILD_CLOCKS), .NW(NW), .GT(GT), .SMIN(SMIN), .CODE_BANKS(CODE_BANKS), .KV_VB(KV_VB), .KV_NH(KV_NH),
+        .LOCAL_ROOTS(LOCAL_ROOTS), .CHILD_CLOCKS(CHILD_CLOCKS), .NW(NW), .GT(GT), .SMIN(SMIN), .CODE_BANKS(CODE_BANKS), .KV_VB(KV_VB), .KV_NH(KV_NH),
         .MEM_EXTRA(MEM_EXTRA), .ACC_LAT(ACC_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT),
         .TREE_LAT(TREE_LAT), .ROM_PIPE(ROM_PIPE), .ROM_ARELAY(ROM_ARELAY), .ROM_CAP2(ROM_CAP2), .ROM_CAPX(ROM_CAPX), .LRST(LRST), .ARPB(ARPB), .MPR(MPR), .HIER(HIER), .HIER_HARD(HIER_HARD), .TOREG(TOREG), .TIDR(TIDR), .LRR(LRR), .RPH(RPH), .RQR(RQR), .XTX(XTX), .ANR(ANR), .BAW(BAW), .NDH(NDH), .NODE(NODE), .BMUT(BMUT), .KV_SLICE(0)) u_tile (
-        .ck_rpair(ck_rpair), .ck_lsl(ck_lsl), .ck_node(ck_node),
+        .ck_rpair(ck_rpair), .ck_pair1(ck_pair1), .ck_rqr(ck_rqr), .ck_tx(ck_tx), .ck_rom(ck_rom), .ck_lsl(ck_lsl), .ck_node(ck_node),
         .clk(clk), .rst_n(rst_n), .tile_id(tile_id), .ib_go(ib_go), .ib(ib), .xl(xl), .t_out(t_out), .t_vout(t_vout),
         .n_a(n_a), .n_b(n_b), .n_va(n_va), .n_y(n_y), .n_vy(n_vy), .fault(tile_fault),
         .kvw_ce(1'b0), .kvw_addr(7'd0), .kvw_data(512'd0), .kvw_mask(512'd0));

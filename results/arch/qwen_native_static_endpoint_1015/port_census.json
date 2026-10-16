@@ -1,0 +1,178 @@
+{
+  "top": "qkd_native_attention_programme",
+  "ports": {
+    "ck": {
+      "direction": "input",
+      "bits": 1
+    },
+    "rst_n": {
+      "direction": "input",
+      "bits": 1
+    },
+    "issue": {
+      "direction": "input",
+      "bits": 1
+    },
+    "run": {
+      "direction": "input",
+      "bits": 1
+    },
+    "fused_program_capability": {
+      "direction": "input",
+      "bits": 1
+    },
+    "authority_valid": {
+      "direction": "input",
+      "bits": 1
+    },
+    "authority_epoch": {
+      "direction": "input",
+      "bits": 16
+    },
+    "authority_token": {
+      "direction": "input",
+      "bits": 18
+    },
+    "authority_position": {
+      "direction": "input",
+      "bits": 18
+    },
+    "authority_stage": {
+      "direction": "input",
+      "bits": 6
+    },
+    "compiled_calendar": {
+      "direction": "input",
+      "bits": 176
+    },
+    "compiled_rx_cmd": {
+      "direction": "input",
+      "bits": 16
+    },
+    "compiled_tx_first": {
+      "direction": "input",
+      "bits": 16
+    },
+    "compiled_end": {
+      "direction": "input",
+      "bits": 16
+    },
+    "rx_event": {
+      "direction": "input",
+      "bits": 1
+    },
+    "rx_payload": {
+      "direction": "input",
+      "bits": 548
+    },
+    "tx_slot": {
+      "direction": "input",
+      "bits": 1
+    },
+    "tx_slot_kind": {
+      "direction": "input",
+      "bits": 4
+    },
+    "tx_slot_beat": {
+      "direction": "input",
+      "bits": 5
+    },
+    "tx_valid": {
+      "direction": "output",
+      "bits": 1
+    },
+    "tx_payload": {
+      "direction": "output",
+      "bits": 548
+    },
+    "request_valid": {
+      "direction": "output",
+      "bits": 1
+    },
+    "request_ready": {
+      "direction": "input",
+      "bits": 1
+    },
+    "request_epoch": {
+      "direction": "output",
+      "bits": 16
+    },
+    "request_layer": {
+      "direction": "output",
+      "bits": 6
+    },
+    "request_position": {
+      "direction": "output",
+      "bits": 18
+    },
+    "request_calendar": {
+      "direction": "output",
+      "bits": 176
+    },
+    "q_valid": {
+      "direction": "output",
+      "bits": 1
+    },
+    "q_beat": {
+      "direction": "output",
+      "bits": 5
+    },
+    "q_data": {
+      "direction": "output",
+      "bits": 512
+    },
+    "result_valid": {
+      "direction": "input",
+      "bits": 1
+    },
+    "result_beat": {
+      "direction": "input",
+      "bits": 5
+    },
+    "result_data": {
+      "direction": "input",
+      "bits": 512
+    },
+    "result_epoch": {
+      "direction": "input",
+      "bits": 16
+    },
+    "result_layer": {
+      "direction": "input",
+      "bits": 6
+    },
+    "result_done": {
+      "direction": "input",
+      "bits": 1
+    },
+    "service_fault": {
+      "direction": "input",
+      "bits": 1
+    },
+    "result_reserved": {
+      "direction": "output",
+      "bits": 1
+    },
+    "busy": {
+      "direction": "output",
+      "bits": 1
+    },
+    "fault": {
+      "direction": "output",
+      "bits": 1
+    },
+    "age": {
+      "direction": "output",
+      "bits": 16
+    }
+  },
+  "port_bits": {
+    "input": 1390,
+    "output": 1303
+  },
+  "generic_flop_bits": 3530,
+  "generic_cells": 286,
+  "memory_bits": 0,
+  "mapped_area_qualified": false,
+  "native_service_instantiated": false
+}

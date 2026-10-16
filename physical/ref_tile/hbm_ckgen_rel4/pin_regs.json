@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "hfd_ckgen_rel4",
+ "enable": false,
+ "reason": "every output rst_* IS its domain's release flop (registered at the pin by RTL); the inputs por_n/locked are asynchronous-assert reset arms of those flops by function (a pin register would turn the async assert synchronous and add a release edge); clock pins are clocks."
+}

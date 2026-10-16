@@ -11,7 +11,7 @@ def digest(path):
     return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 
-def eligible(j):
+def eligible(j, evidence=None):
     if (j.get('status') != 'NEEDS_HUMAN' or j.get('stage_key') != 'collect'
             or not j.get('spec', {}).get('ref_tile') or j.get('export_lint_recovery')
             or not j.get('freeze_helper_overlay') or not j.get('route_overlay_plan')):
@@ -24,7 +24,16 @@ def eligible(j):
     metrics = j['metrics']
     if (metrics.get('errors') or metrics.get('ss_ps', -1) < 0 or metrics.get('ff_ps', -1) < 0):
         raise ValueError('routed setup/hold are not passing')
-    if not any('child_lint FAIL (b) pg:' in c.get('tail', '') for c in j.get('crashes', [])):
+    logged_pg = any('child_lint FAIL (b) pg:' in c.get('tail', '') for c in j.get('crashes', []))
+    # Transactional exports historically hid the detailed lint behind a generic
+    # error. Accept its preserved structured receipt, never a claimed status.
+    recorded_pg = False
+    if evidence and any('child_lint FAIL' in c.get('tail', '') for c in j.get('crashes', [])):
+        lint = evidence.get('child_lint', {})
+        fails = lint.get('fails', [])
+        recorded_pg = (lint.get('verdict') == 'FAIL' and bool(fails)
+                       and all(f.startswith('(b) pg:') for f in fails))
+    if not logged_pg and not recorded_pg:
         raise ValueError('no recorded PG lint collection failure')
 
 
@@ -36,8 +45,16 @@ def verify(manifest):
 
 def prepare(request):
     j = request['job']
-    eligible(j)
     run = Path(j['run'])
+    evidence = request.get('pg_lint_evidence')
+    if evidence:
+        p = Path(evidence['path'])
+        if (not p.resolve().is_relative_to((run / 'record/views').resolve())
+                or p.name != 'abstract_pin_stub.json'
+                or digest(p) != evidence['sha256']
+                or json.loads(p.read_text()).get('child_lint') != evidence['child_lint']):
+            raise ValueError('structured PG lint evidence differs from retained export')
+    eligible(j, evidence)
     base = list((Path(j['metrics']['orfs_dir']) / 'results/asap7').glob('*/base'))
     if len(base) != 1:
         raise ValueError('expected one physical route base')

@@ -78,12 +78,48 @@ def move_stubs(head, obs, pins):
             hit = [p for p, rs in pins.items() if any(l == cur and _ov(r, x[1:]) for x in rs for l in [x[0]])]
             if len(hit) == 1:
                 moved.setdefault(hit[0], []).append((cur, m.groups())); continue
+            if len(hit) > 1:
+                # 1b BAND CARVE (ROOT 2026-10-15, hbm_ckgen_rel-r1): an OBS rect over SEVERAL pins is the exporter's
+                # decomposition of the occupied edge band; the part of it over a pin rect is that pin's own metal, so
+                # the OBS keeps only the rect minus those pin rects (child_lint (f) band: no OBS over a face pin)
+                holes = [x[1:] for p in hit for x in pins[p] if x[0] == cur and _ov(r, x[1:])]
+                ind = re.match(r"\s*", line).group()
+                out += [f"{ind}RECT  {_um(a)} {_um(b)} {_um(c)} {_um(e)} ;"
+                        for a, b, c, e in rect_minus(tuple(map(_iu, r)), [tuple(map(_iu, h)) for h in holes])]
+                continue
         out.append(line)
     obs = "\n".join(out)
     for p, rs in moved.items():
         add = "".join(f"\n    PORT\n      LAYER {l} ;\n        RECT  {a} {b} {c} {d} ;\n    END" for l, (a, b, c, d) in rs)
         head = re.sub(rf"(  PIN {re.escape(p)}\n.*?)(\n  END {re.escape(p)})", lambda m: m.group(1) + add + m.group(2), head, count=1, flags=re.S)
     return head, obs, moved
+
+
+def rect_minus(r, holes):
+    """integer rect r minus the union of integer holes, as disjoint rects (row runs merged over equal rows)"""
+    holes = [(max(h[0], r[0]), max(h[1], r[1]), min(h[2], r[2]), min(h[3], r[3])) for h in holes]
+    holes = [h for h in holes if h[0] < h[2] and h[1] < h[3]]
+    xs = sorted({r[0], r[2], *[v for h in holes for v in (h[0], h[2])]})
+    ys = sorted({r[1], r[3], *[v for h in holes for v in (h[1], h[3])]})
+    rows = []
+    for y0, y1 in zip(ys, ys[1:]):
+        runs, start = [], None
+        for x0, x1 in zip(xs, xs[1:]):
+            free = not any(h[0] <= x0 and x1 <= h[2] and h[1] <= y0 and y1 <= h[3] for h in holes)
+            if free and start is None:
+                start = x0
+            if not free and start is not None:
+                runs.append((start, x0)); start = None
+        if start is not None:
+            runs.append((start, xs[-1]))
+        rows.append((y0, y1, runs))
+    out = []
+    for y0, y1, runs in rows:                      # merge vertically when the runs repeat exactly
+        if out and out[-1][2] == runs and out[-1][1] == y0:
+            out[-1] = (out[-1][0], y1, runs)
+        else:
+            out.append((y0, y1, runs))
+    return [(a, y0, b, y1) for y0, y1, runs in out for a, b in runs]
 
 
 def top_obs_layer(layers):

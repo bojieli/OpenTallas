@@ -127,6 +127,11 @@ def main() -> int:
                     'M4 66 %% on a 30-um face carrying 513 pins): grow the DATA FACE to the pin demand at cut <= 0.6 (N/S: '
                     'M3/M5 alternation 0.12 um a pin; W/E: M4 0.16 um a pin; + 2 x 4.32 um) and spread every face evenly '
                     '(tools/ref_tile/spread_face_pins.py); no M6 PORT-only pins needed (W/E <= 6.25 b/um on M4)')
+    ap.add_argument('--face-depth-util', type=float, default=0.0, help='with --face-cut: re-derive the depth from the flop '
+                    'content at this utilisation on the grown face (0 = keep the depth)')
+    ap.add_argument('--no-outhold', action='store_true', help='FILL f8 (vertical wide stations: f6 hstnv_513 and f7 hstnv_129s '
+                    'GRT-0116 with 8-90 overflow, all vertical, in the recipe-2 OUTPUT hold-pad band behind the N-face dq pins): '
+                    'no output hold pads; the die receiver carries the input hold stages (S-NET n3 rule, closed on 41 hend kits)')
     a = ap.parse_args()
     glue_txt = Path(a.glue).read_text()
     glue_sha = hashlib.sha256(glue_txt.encode()).hexdigest()
@@ -134,7 +139,7 @@ def main() -> int:
     lef_txt = gzip.open(a.lef, 'rt').read() if a.lef.endswith('.gz') else Path(a.lef).read_text()
     macs = lef_macros(lef_txt)
     counts = {ln.split()[1]: int(ln.split()[0]) for ln in Path(a.counts).read_text().splitlines() if ln.strip()}
-    want = [m for m in sorted(mods) if re.fullmatch(r'dsfd_hstn[hv]_\d+|dsfd_stn[hv]_\d+x1', m)]
+    want = [m for m in sorted(mods) if re.fullmatch(r'dsfd_hstn[hv]_\d+s?|dsfd_stn[hv]_\d+x1', m)]   # 's': split slice master (f7)
     if a.only:
         sel = set(a.only.split(','))
         want = [m for m in want if m in sel]
@@ -176,6 +181,14 @@ def main() -> int:
                 if need > dw:
                     dw, face_grown = need, True
             grown = grown or face_grown
+            if face_grown and a.face_depth_util:
+                # depth back to what the flop rows need on the longer face (recipe-2 content at util <= --face-depth-util),
+                # never below the generator slot depth: area, not the f5 narrow-face growth, sets it
+                core = (AREA_BIT * wb + AREA_FIX) / a.face_depth_util
+                if horiz_of(mst):
+                    dw = max(snap(mac['w']), snap(core / (dh - 2 * MARGIN) + 2 * MARGIN))
+                else:
+                    dh = max(snap(mac['h']), snap(core / (dw - 2 * MARGIN) + 2 * MARGIN))
         sha = hashlib.sha256(txt.encode()).hexdigest()
         (ROOT / RTL_DIR / f'{mst}.sv').write_text(txt)
         horiz = mst.startswith(('dsfd_hstnh_', 'dsfd_stnh_'))
@@ -233,6 +246,7 @@ def main() -> int:
             'pins': {f: sorted(v) for f, v in sorted(faces.items())},
             'io_tcl': f'{PIN_DIR}/{mst}.tcl',
             'recipe': 2,
+            'pin_regs': {'enable': False, 'reason': 'OWNER RULE 19:50 opt-out (coordinator APPROVED 2026-10-15): this station IS one flip-flop per bit between its input and output pins (di -> q -> dq, no logic); a flow pin register would add a second stage per bit and a cycle the die calendar does not price'},
             'route': {'pd': 0.5, 'threads': 4, 'peak_ram_gb': 8 if wb <= 1100 else 16, 'pin_h': 'M4', 'pin_v': 'M3 M5',
                       'm5_pg_pitch': 2.7},
             'structural_change': ((f'First hardening of the GEN18r generated forwarded-clock station {mst} ({n} die instances): '
@@ -279,6 +293,11 @@ def main() -> int:
                 'reason': (f'recipe-2 content {AREA_BIT * wb + AREA_FIX:.0f} um2 exceeds util {UTIL_MAX} of the generator '
                            f'slot core {face_area(mac, horiz):.0f} um2; depth-only growth keeps every data pin coordinate'),
                 'outline': [dw, dh], 'generator_slot': [mac['w'], mac['h']]}
+        if a.no_outhold:
+            spec['outhold'] = False
+            spec['structural_change'] += (' | f8: no recipe-2 output hold pads (the vertical f6/f7 GRT-0116 overflow sat in the '
+                                          'output hold-pad band behind the N-face dq pins); hop hold is carried by the receiver\'s '
+                                          'input hold stages')
         if face_grown:
             spec['slot_change_request']['reason'] = ('f6: data face sized to the pin demand at cut <= 0.6 (0.12 um a pin N/S, '
                                                      '0.16 um a pin W/E, + 8.64 um); pins spread evenly (io_tcl)')

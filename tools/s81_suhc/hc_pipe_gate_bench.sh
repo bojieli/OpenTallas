@@ -5,7 +5,7 @@ set -euo pipefail
 out=$1
 mode=${2:-exact}
 case "$mode" in exact) pd=40 ;; guard_mut) pd=0 ;; *) exit 64 ;; esac
-for c in "${S81_SU_CASES:-}" /srv/opentallas-scratch/claude/s81-suhc/su_cases_v2_ildr.pkl /srv/opentallas-scratch2/claude/s81-suhc/su_cases_v2_ildr.pkl "$HOME/s81-suhc/su_cases_v2_ildr.pkl"; do
+for c in "${S81_SU_CASES:-}" tools/s81_suhc/fixtures/su_cases_v2_ildr.pkl /srv/opentallas-scratch/claude/s81-suhc/su_cases_v2_ildr.pkl /srv/opentallas-scratch2/claude/s81-suhc/su_cases_v2_ildr.pkl "$HOME/s81-suhc/su_cases_v2_ildr.pkl"; do
     [ -n "$c" ] && [ -s "$c" ] && { pkl=$c; break; }
 done
 [ -n "${pkl:-}" ] || { echo "hc_pipe_gate: fixture missing"; exit 97; }

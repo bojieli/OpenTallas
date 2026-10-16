@@ -43,6 +43,24 @@
    "cycles": 3048
   }
  },
+ "production_layer": {
+  "priced": 6835.0,
+  "measured_scope": {
+   "vehicle_measured": 5480,
+   "minus_vehicle_attention": 1550.0,
+   "plus_kv_die_attention": 1620
+  },
+  "composed": 6639.0,
+  "ratio": 0.9713,
+  "still_priced": {
+   "issue_relays_r22k": 623,
+   "slab_mul_lat7": 4.0,
+   "die_relays_430um": 432.0,
+   "band_integrate (re-price 10-08)": 28.0,
+   "serdes_pinreg (re-price 10-08)": 2.0
+  },
+  "note": "vehicle layer measured (tile attention swapped out) + measured KV-die attention + the still-priced relay/adder terms"
+ },
  "layer": {
   "name": "L1",
   "measured_cycles": 5480,
@@ -569,13 +587,20 @@
     "l0": 50,
     "added_cycles": 2160,
     "grade": "measured layers + head bound"
+   },
+   {
+    "item": "KV-die attention (native static w16 service + link) vs priced attn_kv",
+    "per_layer": -196.0,
+    "l0": -196.0,
+    "added_cycles": -7056.0,
+    "grade": "measured component (service bench + link stages)"
    }
   ],
-  "added_cycles": 2210.0,
-  "cycles": 251641.0,
-  "e2e_loss_pct": 0.878,
+  "added_cycles": -4846.0,
+  "cycles": 244585.0,
+  "e2e_loss_pct": -1.981,
   "tok_s_price": 4810.9,
-  "tok_s": 4768.7
+  "tok_s": 4906.3
  },
  "unmeasured_per_layer": {
   "cycles_per_layer": 1089.0,
@@ -588,8 +613,16 @@
    "serdes_pinreg (re-price 10-08)": 2.0
   },
   "kv_die_attention": {
-   "cycles": 1816.0,
-   "record": "results/rtl/tput_map_1011/qwen_kv_die/record.json (its own composed bench)"
+   "cycles": 1620,
+   "priced": 1816.0,
+   "ratio": 0.8921,
+   "status": "MEASURED (component: service + link)",
+   "service_cycles_T8192": 1555,
+   "link_cycles": 65,
+   "record": "results/arch/qwen_attention_rate_1015/receipt.json",
+   "source": "55a5f5a98 (branch claude/q-attn-rate-1015)",
+   "calendar": "tools/qwen_attention_native/attn_calendar.py (production pv=w16)",
+   "exact": "53/53 (same vector set as qwen_attention_native_calendar_1015: T=1..8192 + 6 kinds)"
   },
   "embed": "embedding fetch through the KV die (272, priced)"
  },

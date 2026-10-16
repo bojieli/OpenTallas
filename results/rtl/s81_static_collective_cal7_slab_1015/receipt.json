@@ -1,0 +1,6 @@
+{"scope":"COMPONENT slab gate: real s81_static_collective_slab with CAL7 per-root reset controller (s81_static_calendar_controller7_resetpins, record 9bbe3b9bb), ROM ABI v3 RW565 image from tools/s81_static_collective/resetpins/controller_image.py in 3 x ot_rom_4096x266_m8 viamaps, VM boundary b7 PINCAP=1, one real dsfd_sp_vm with 128 SRAM macros; not die qualification",
+ "wiring":"clk_rom[2:0] and clk_outputs[2:0] = ck_control[0]; rst_outputs{0,1,2}_n from three per-root 2-flop synchronizers in the slab (one load per reset net)",
+ "runner":"tools/s81_static_collective/run_slab_gate.sh WORK [MUT [PINCAP]] (Verilator 5.050)",
+ "base":"PASS fullstatic slab actual128SRAM rows=498 fp32_bits_checked=7968 HCrows=20 done=2 WFC=1 host=1",
+ "mutants":{"3_rom_reads_next_row":"FAIL detected (fault edge3)","4_output_root1_reset_held":"FAIL detected (fault edge69 transport)"},
+ "timing_delta_vs_v2":"collective->VM writes +1 edge (PINCAP), done 306->308 for the 44-item gather; matches v3 LATENCIES"}

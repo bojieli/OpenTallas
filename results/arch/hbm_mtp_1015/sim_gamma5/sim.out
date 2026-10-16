@@ -1,0 +1,4 @@
+HC aperture reader trace (mtp): 1056 readers, 0 bad, 0 dead loads
+  step 1: anchor 0 drafts [223, 18, 16, 223, 18] targets [223, 939, 16, 23, 89804, 16] accept 1
+swap-in round trip (rank 0, working h == slot h): 322 swap-ins, 0 bad, first []
+PASS: accept stream == golden [5, 223, 939]; L0 columns [(0, True), (1, True), (2, True), (3, True), (4, True), (5, True), (6, True)]; draft True drafts [223, 18, 16, 223, 18] vs [223, 18, 16, 223, 18]; launches 978 S2 741464

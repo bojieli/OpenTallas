@@ -79,7 +79,7 @@ class ReliabilityTests(unittest.TestCase):
         for bad in (True, False, "ot-epyc2", [], ["unknown-host"]):
             with self.subTest(value=bad):
                 self.assertTrue(any("host_require" in e for e in cl.validate(dict(spec, host_require=bad))))
-        self.assertFalse(any("host_require" in e for e in cl.validate(dict(spec, host_require=["ot-epyc1tb"]))))
+        self.assertFalse(any("host_require" in e for e in cl.validate(dict(spec, host_require=["ot-epyc4"]))))
 
     def test_failed_tool_probe_is_retried_without_hour_long_fleet_outage(self):
         fleet = cl.Fleet()
@@ -144,6 +144,25 @@ class ReliabilityTests(unittest.TestCase):
         save.assert_called_once()
         saved = save.call_args.args[0]
         self.assertEqual((saved["name"], saved["status"], saved["stage_idx"]), ("available", "READY", 1))
+
+    def test_unreadable_bench_on_retired_host_consumes_retry_once(self):
+        job = dict(name="retired", status="NEEDS_RTL", spec={}, host="ot-epyc3",
+                   reason="bench_exact expected PASS but rc=0", stage_tag="bench_exact.a1")
+        cl.save_job(copy.deepcopy(job))
+        stage = dict(key="bench_exact", expect="pass")
+        with patch.object(cl, "stage_list", return_value=[stage]), \
+             patch.object(cl, "hosts_table", return_value=[dict(name="ot-epyc1tb")]), \
+             patch.object(cl, "bench_outcome", side_effect=RuntimeError("unreadable")), \
+             patch.object(cl, "log") as log, patch.object(cl, "event"):
+            cl.reevaluate_benches([job])
+        log.assert_not_called()
+        saved = cl.load_job("retired")
+        self.assertEqual(saved["status"], "NEEDS_RTL")
+        self.assertIn("bench-log-retry-20261007", saved["fix_requeued"])
+        with patch.object(cl, "stage_list", return_value=[stage]), \
+             patch.object(cl, "bench_outcome") as outcome:
+            cl.reevaluate_benches([saved])
+        outcome.assert_not_called()
 
     def test_cancel_survives_stale_save_and_new_worker(self):
         stale = copy.deepcopy(self.j)

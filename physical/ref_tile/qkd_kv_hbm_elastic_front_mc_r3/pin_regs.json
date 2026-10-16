@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qkd_kv_hbm_elastic_front_mc",
+ "enable": false,
+ "reason": "Actual RTL captures the data boundary in each original domain; explicit four phase-aligned storage clock inputs split sink count without any normal-cycle delta. The component production bench accounts every existing register. Clock/reset ports are domain controls."
+}

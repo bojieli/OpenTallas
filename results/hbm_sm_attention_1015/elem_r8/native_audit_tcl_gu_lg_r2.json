@@ -1,0 +1,48 @@
+[
+ {
+  "cell": "ot_hbm_accel_smh_tcl_gu",
+  "view": "physical/ref_tile/smh_tcl_gu_ref/views/ot_hbm_accel_smh_tcl_gu",
+  "lib_cell": "ot_hbm_accel_smh_tcl_gu",
+  "insertion": true,
+  "ref_src": [
+   "insertion.json boundary mean"
+  ],
+  "R_ps": 175.5,
+  "spread_ps": 12.3,
+  "outputs": 257,
+  "inputs": 259,
+  "launch_ps": 204.6,
+  "launch_pin": "sum_o[146]",
+  "capture_ps": 171.2,
+  "capture_pin": "i_x[116]",
+  "launch_over": 0,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": true,
+  "fail_why": ""
+ },
+ {
+  "cell": "ot_hgi_qdq_lg_port_group_r2",
+  "view": "physical/ref_tile/hgi_qdq_lg_r2/views/ot_hgi_qdq_lg_port_group_r2",
+  "lib_cell": "ot_hgi_qdq_lg_port_group_r2",
+  "insertion": true,
+  "ref_src": [
+   "insertion.json boundary mean"
+  ],
+  "R_ps": 131.3,
+  "spread_ps": 17.4,
+  "outputs": 1110,
+  "inputs": 1111,
+  "launch_ps": 183.2,
+  "launch_pin": "rr_o[494]",
+  "capture_ps": 143.4,
+  "capture_pin": "rst_n",
+  "launch_over": 0,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": true,
+  "fail_why": ""
+ }
+]

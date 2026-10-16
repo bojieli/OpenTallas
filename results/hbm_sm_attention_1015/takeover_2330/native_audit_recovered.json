@@ -1,0 +1,92 @@
+[
+  {
+    "cell": "ot_hgi_qdq_transport_ctl_r2",
+    "view": "physical/ref_tile/hgi_qdq_tsplit_ctl_r2/views/ot_hgi_qdq_transport_ctl_r2",
+    "lib_cell": "ot_hgi_qdq_transport_ctl_r2",
+    "insertion": true,
+    "ref_src": [
+      "insertion.json boundary mean"
+    ],
+    "R_ps": 131.5,
+    "spread_ps": 21.1,
+    "outputs": 360,
+    "inputs": 60,
+    "launch_ps": 181.2,
+    "launch_pin": "wq_addr[68]",
+    "capture_ps": 138.1,
+    "capture_pin": "cmd_dst[3]",
+    "launch_over": 0,
+    "capture_over": 0,
+    "comb_pins": 0,
+    "comb_first": [],
+    "pass": true,
+    "fail_why": "",
+    "view_sha256": {
+      "ot_hgi_qdq_transport_ctl_r2.lef": "68eff4cd6f73be1fe807ea63073c64facfc7f35b590ca34c481c62500b4ec8f9",
+      "ot_hgi_qdq_transport_ctl_r2_ss.lib": "de29d6feec1750616e5bdd6d39e7eb2192bee6b82aff654c6658b58e1e5d0f64",
+      "ot_hgi_qdq_transport_ctl_r2_ff.lib": "635a9859e3d5b90f3b332750c68bfb1c6a35b8e4558240046b3f25842da7d008",
+      "insertion.json": "90b54ad635e4afa18219f26b482819e25e589e908fd5fd39f37b7f84b59c3b96",
+      "ot_hgi_qdq_transport_ctl_r2_tt.lib": "1c3fec5b999d9f7e8449a7d3f8b808a979a3d38e9efd03e187295c35c7cfee1b"
+    }
+  },
+  {
+    "cell": "ot_hgi_sm_xload_cl2_bdring",
+    "view": "physical/ref_tile/hgi_sm_xl2_bdring/views/ot_hgi_sm_xload_cl2_bdring",
+    "lib_cell": "ot_hgi_sm_xload_cl2_bdring",
+    "insertion": true,
+    "ref_src": [
+      "insertion.json boundary mean"
+    ],
+    "R_ps": 263.2,
+    "spread_ps": 48.1,
+    "outputs": 2048,
+    "inputs": 638,
+    "launch_ps": 392.9,
+    "launch_pin": "bq_d[668]",
+    "capture_ps": 511.7,
+    "capture_pin": "zhi",
+    "launch_over": 30,
+    "capture_over": 18,
+    "comb_pins": 0,
+    "comb_first": [],
+    "pass": false,
+    "fail_why": "launch 392.87788 > 220 (30 pins); capture 511.66664 > 190 (18 pins)",
+    "view_sha256": {
+      "ot_hgi_sm_xload_cl2_bdring_tt.lib": "9e8bb7118fed6fe05af21235d751558049cc647e504dc7520ac8bb167b440d40",
+      "insertion.json": "0d0eef3d67f5fbda1416d4b743ee195bae8cc9b3ef6656f34312199644956afc",
+      "ot_hgi_sm_xload_cl2_bdring.lef": "03a80eb70375ea1f11774480f26a7841e6667407f876cd3b9a20f7031eab0925",
+      "ot_hgi_sm_xload_cl2_bdring_ss.lib": "de0201830271f55807d892f2335b28b378537f5e10f5480f6128433d57f214fd",
+      "ot_hgi_sm_xload_cl2_bdring_ff.lib": "36a11dbb8b6b1c48c682ddcae19cace9a0ee189455c323971302f84acb067554"
+    }
+  },
+  {
+    "cell": "ot_hgi_sm_xload_cl2_bfq",
+    "view": "physical/ref_tile/hgi_sm_xl2_bfq/views/ot_hgi_sm_xload_cl2_bfq",
+    "lib_cell": "ot_hgi_sm_xload_cl2_bfq",
+    "insertion": true,
+    "ref_src": [
+      "insertion.json boundary mean"
+    ],
+    "R_ps": 343.8,
+    "spread_ps": 88.3,
+    "outputs": 256,
+    "inputs": 1050,
+    "launch_ps": 213.0,
+    "launch_pin": "rwq[43]",
+    "capture_ps": 416.8,
+    "capture_pin": "rst_n",
+    "launch_over": 0,
+    "capture_over": 3,
+    "comb_pins": 0,
+    "comb_first": [],
+    "pass": false,
+    "fail_why": "capture 416.8191 > 190 (3 pins)",
+    "view_sha256": {
+      "ot_hgi_sm_xload_cl2_bfq_ss.lib": "cd3fcd4da5785ee0a02be98ebd68cbbcb64c344f82f53a12655d29a3adca4b3e",
+      "ot_hgi_sm_xload_cl2_bfq.lef": "0bff16ffaedab887449e93f31317d2f64db8662c26971c219b547dd10440f787",
+      "insertion.json": "9e281ba38a203d9a5f4ef2e4c8802b8c11e290e7bf59a92e97743a510ad1bac6",
+      "ot_hgi_sm_xload_cl2_bfq_ff.lib": "29026764297b6a90559dde24c0fd1ed49a9af6550718b08652c2f2f5f941da4b",
+      "ot_hgi_sm_xload_cl2_bfq_tt.lib": "7d7898ee600e227eea13d82bf3ec1a3211db42a25118b8c004803f0ada1d2c1a"
+    }
+  }
+]

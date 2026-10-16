@@ -25,7 +25,11 @@ module tb_hgi_qdq_static #(parameter integer MUT=0,IO_REGS=0,LG=0,TSPLIT=0,NPG=4
         .rq(rq),.rr(rr),.wq(wq),.beat_done(done),.record_done(rdone),.fault(fault));
     // Fault-cause probes into the transport control (monolith or split control leaf).
     wire tr_bad,tr_dv24; wire [7:0] tr_expected;
-    generate if(TSPLIT!=0) begin: probe_split
+    generate if(TSPLIT==2) begin: probe_split_r2
+        assign tr_bad=dut.engine.split_transport_r2.transport.ctl.u_ctl.bad;
+        assign tr_dv24=dut.engine.split_transport_r2.transport.ctl.u_ctl.dv[24];
+        assign tr_expected=dut.engine.split_transport_r2.transport.ctl.u_ctl.expected;
+    end else if(TSPLIT!=0) begin: probe_split
         assign tr_bad=dut.engine.split_transport.transport.ctl.bad;
         assign tr_dv24=dut.engine.split_transport.transport.ctl.dv[24];
         assign tr_expected=dut.engine.split_transport.transport.ctl.expected;

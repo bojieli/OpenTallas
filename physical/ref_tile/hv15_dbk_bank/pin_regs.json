@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hgi_dma_back_landing_bank",
+ "enable": false,
+ "reason": "the RTL already registers every input and output at the pin (rr_data_q, read_en_q/read_slot_q, write_en_q/write_slot_q, capture_addr, wd_valid/wd_payload launch flops; native audit of pf1 PASS): recipe-3 insertion would add a cycle on a fixed compiler calendar for nothing."
+}

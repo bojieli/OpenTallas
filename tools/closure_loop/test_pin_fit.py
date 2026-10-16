@@ -62,7 +62,7 @@ class RouteSettingsAreTheGateSettings(unittest.TestCase):
         m = re.search(r"^export OT_PIN_GROUP_MAX=\$\{OT_PIN_GROUP_MAX:-(\d+)\}$", sh, re.M)
         self.assertTrue(m, "ref_route.sh applies the route's group bound to every caller (route, gate, --cts)")
         self.assertEqual(int(m.group(1)), PF.ROUTE_PIN_GROUP_MAX)
-        self.assertLess(sh.index("source $KITENV"), m.start())           # the kit's own export wins
+        self.assertLess(sh.index('source "$KITENV"'), m.start())         # the kit's own export wins (quoted since 7c1815717)
         self.assertIn("OT_PIN_GROUP_MAX={PGM} bash tools/ref_tile/ref_route.sh", G.REMOTE_SH)
         self.assertEqual(SL.FIXES[0]["env"]["OT_PIN_GROUP_MAX"], str(PF.ROUTE_PIN_GROUP_MAX))
 
@@ -300,7 +300,11 @@ class SubmitHookOnTheRealKits(unittest.TestCase):
 
     @unittest.skipUnless(_has("0f9a940a0"), "commit 0f9a940a0 not in this clone")
     def test_kc4_passes(self):
-        self.assertEqual(self._submit("0f9a940a0")["verdict"], "PASS")
+        # pin_fit passes; the owner pin-register rule (10-15 19:50, refuse from 10-16 19:50) independently names this
+        # pre-rule kit, so judge the pin_fit check only
+        r = self._submit("0f9a940a0")
+        self.assertNotIn("pin_fit", r["message"], r)
+        self.assertTrue(r["verdict"] == "PASS" or r["message"].startswith("pin_regs:"), r)
 
 
 if __name__ == "__main__":

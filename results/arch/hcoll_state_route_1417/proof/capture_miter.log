@@ -1,0 +1,13 @@
+ot-run: ot-epyc4       admits    97 GB (avail 391, growth 270, headroom 48, waiters 1/168 GB) load 128/128 running 38 disk 364 GB 
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-1611953-1792099563 after 0 s
+CAPTURE_MITER PASS cycles=8192 checks=32252 actual_old_RTL_delay=1 input_bits=164 payload_bits=1536 read_face_bits=128 II=1
+- tools/hbm_coll_static/tb_state_capture_miter.sv:135: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 82us; walltime 0.008 s; speed 7.605 ms/s
+- Verilator: cpu 0.011 s on 1 threads; alloced 1017 MB
+[1306000] %Fatal: tb_state_capture_miter.sv:130: Assertion failed in tb_state_capture_miter.unnamedblk1: CAPTURE_MITER mismatch cycle=129 field=carry_add got=00000000 expected=855ff8a6
+%Error: tools/hbm_coll_static/tb_state_capture_miter.sv:130: Verilog $stop
+Aborting...
+tools/hbm_coll_static/run_state_capture_miter.sh: line 7: 1612545 Aborted                    (core dumped) "$out/obj/Vtb_state_capture_miter"
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-1611953-1792099563): exit 0

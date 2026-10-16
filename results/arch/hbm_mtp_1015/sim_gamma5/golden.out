@@ -1,0 +1,12 @@
+pos 0 token 0 -> 5 (244 s)
+draft stage 0 (256 s)
+draft stage 1 (263 s)
+draft stage 2 (270 s)
+draft: [223, 18, 16, 223, 18] (502 s)
+pos 1 token 5 -> 223 (682 s)
+pos 2 token 223 -> 939 (1195 s)
+pos 3 token 18 -> 16 (1451 s)
+pos 4 token 16 -> 23 (1725 s)
+pos 5 token 223 -> 89804 (1910 s)
+pos 6 token 18 -> 16 (2091 s)
+SPEC: y 5 drafts [223, 18, 16, 223, 18] targets [223, 939, 16, 23, 89804, 16] accept 1 emitted [5, 223, 939]

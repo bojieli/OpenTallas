@@ -1,0 +1,10 @@
+{
+  "status": "FAIL",
+  "scope": "first actual PROFILE0 controller join with independent compiler image",
+  "cause": "controller sticky fault first V reservation; classification pending debug successor",
+  "source_calendar_sha256": "f0fb0ae7ee2c1362dc4fdcb74c3456920d14aa12ba730c21705540ccd907dc9b",
+  "actual_job": "E4 unit oth-ubuntu-3770099-1792163971 exit1",
+  "raw_log_sha256": "d7e8632f4dd8ece7d4eed5e200889ec649cec85a0ad6913f02970ef85dcc3eea",
+  "native_qualified": false,
+  "classified_cause": "V first reserved slot while bank16 unavailable: schedule_fault1/j512/open00fe0000; command/early/raw faults all0. Descriptor posted only100 edges before firstread allowed prior idle refresh to leave bank16 unavailable (tRFCpb196). Compiler correction preposts V descriptor400 edges before firstread, after completed K, without moving RD/consumer slots."
+}

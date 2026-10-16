@@ -1,0 +1,2 @@
+DMA_WBREADY_FAULT_PASS checks=3 ref_edge=70 dut_edge=71 fault_extra_edges=1 normal_extra_edges=0
+rtl/hbm_accel/generic/peers/static/tb_dma_vp4_wbready_fault.sv:32: $finish called at 940000 (1ps)

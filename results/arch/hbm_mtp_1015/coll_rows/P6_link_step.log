@@ -1,0 +1,16 @@
+DATA_MISMATCH e0 lane0 j2 cyc2645 got1ff000101 want1ff000102
+DATA_MISMATCH e0 lane1 j2 cyc2645 got1ff004101 want1ff004102
+DATA_MISMATCH e0 lane2 j2 cyc2645 got1ff00a5a5 want1ff00a5a5
+LANE e0 die0 q0 lane0 delivered3738 first_del491 last_del4228
+LANE e0 die0 q0 lane1 delivered3738 first_del491 last_del4228
+LANE e0 die0 q0 lane2 delivered3738 first_del491 last_del4228
+PARENT e0 die0 q0 first_inj_pin7 first_tx_pin-2153 first_rx_pin-2153 done4229 done_count1
+LANE e1 die0 q1 lane0 delivered3738 first_del491 last_del4228
+LANE e1 die0 q1 lane1 delivered3738 first_del491 last_del4228
+PARENT e1 die0 q1 first_inj_pin7 first_tx_pin-2153 first_rx_pin-2153 done4229 done_count1
+ROWGATHER_ROWS_MEASURE P6 R623 W453 launch_to_last_delivery q3=4228 q2=4228 die=4228 delivered18690/18690 data_err18680 addr_err0 stray0 fault_first26
+ROWGATHER_ROWS FAIL P6 errors0 data18680 addr0 stray0 fault_first26
+- rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_q_static_host_v4_rows.sv:260: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 6us; walltime 171.379 s; speed 37.286 ns/s
+- Verilator: cpu 171.221 s on 1 threads; allocated 275 MB

@@ -1,0 +1,22 @@
+Clock hbm
+rise -> rise
+    min     max
+   0.00    0.00 source latency
+14470.56         network latency phy_NW/clk
+        16945.12 network latency svc_SW_s7__u_pc28/clk
+   0.00  267.27 internal clock latency
+---------------
+14470.56 17212.39 latency
+        2741.83 skew
+
+fall -> fall
+    min     max
+   0.00    0.00 source latency
+15703.30         network latency phy_NW/clk
+        18135.23 network latency svc_SW_s4__u_pc18/clk
+   0.00  286.36 internal clock latency
+---------------
+15703.30 18421.59 latency
+        2718.29 skew
+
+

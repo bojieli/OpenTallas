@@ -1,0 +1,50 @@
+{
+ "schema": "opentallas.hbm_pc_pin_boundary_proof.v1",
+ "source_sha256": {
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf.sv": "1e04d7ef9310409105bb2c8dd6e2da8a1f0fae7d4aa0f8b2e118f5b714c088bc",
+  "rtl/hbm_accel/loader/service_native/tb_hbm_svc_pin_skid2.sv": "e191644a5c02bf5d4d28d0fe17ff5eb36ad8b891e2122c61e3106f4fc40b7b50",
+  "rtl/hbm_accel/loader/service_native/run_sm_groups_issued.sh": "f75b95056e873326eab57c586cea9634a6731e8126092f389a4a6f412aa242a3",
+  "rtl/hbm_accel/loader/service_native/tb_hbm_svc_sm_groups_issued.sv": "6fbf6b0fc173268638f83a39d046460bf785f8a6d69d90b537f15b25fdfab279"
+ },
+ "production_shape": {
+  "controllers": 32,
+  "SMs": 8,
+  "rows": 64,
+  "epochs": 8,
+  "records": 4096,
+  "bytes_per_epoch_per_SM": 8704
+ },
+ "measured": {
+  "first_done_ps": 269585.225,
+  "steady_epoch_ps": 69583.3055,
+  "B_per_stream_cycle_per_SM": 104.239563,
+  "price_B_per_cycle": 99,
+  "throughput_to_price": 1.052925,
+  "historical_KRREG_first_done_ps": 267918.559,
+  "observed_cold_delta_ps": 1666.666
+ },
+ "structural_change": [
+  "PHY return valid+256data captured before bookkeeping:1HBMedge,257FF",
+  "Two-entry K/KR registered-head skids preserve count<2 and exact FIFO edge timing, remove output pointer mux"
+ ],
+ "skid_proof": {
+  "checks": 8160,
+  "full": 864,
+  "stalled": 1803,
+  "head_overwrite_mutant": "FAIL at t5",
+  "added_FIFO_edges": 0
+ },
+ "physical": {
+  "status": "OPEN",
+  "prior_controller_gate": "diagnostic;hold-31.19ps on mux-driven kr_data[48] and1027 deep primary-input paths; no route submitted",
+  "clock_requirement": "Actual TT<=300ps insertion and<=80ps spread if root exceeds15000 sinks"
+ },
+ "proof_scope": "Actual on-chip issued service groups, controller RTL, real mapped SRAM functional models and allowed external DRAM fixture. Not full token/compute or native physical qualification. No arithmetic or internal memory substitute.",
+ "unpredictable_boundary": "Only external HBM service/block-ready is elastic; on-die programme remains fixed-cycle.",
+ "mutants": [
+  "early programme rejected",
+  "copy before residency rejected",
+  "missing external images rejected"
+ ],
+ "raw_HBM_capture_added_ps": 1024
+}

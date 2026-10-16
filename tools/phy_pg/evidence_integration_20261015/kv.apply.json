@@ -1,0 +1,98 @@
+{
+  "hbm_pg": [
+    {
+      "schema": "opentallas.assumed-hbm-pg-interface.v1",
+      "status": "ASSUMED_UNQUALIFIED",
+      "target_original_sha256": "ef813cf6f670a8be3aa065776a26bd04f74644f3fff8cf8e97668f70e95789f3",
+      "source_sha256": "a78921a45550470f35ee92202611268179296f7d71de2db2133e105986afae14",
+      "candidate_sha256": "1638dfabc198e4d1ab4edfebeb8844f32c0bc6d214f005cfa1279af87bd44c7c",
+      "width_um": "833.496",
+      "height_um": "12000.120",
+      "area_delta_um2": 0,
+      "latency_delta_cycles": 0,
+      "signal_interface_delta": "none",
+      "obstruction_delta": "none",
+      "supply_interface_delta": "added VDD/VSS M4 rails cloned verbatim from same-outline ot_hbm3e_phy source",
+      "claim": "Declared external power interface only; no vendor/internal analog, IR/EM or full-die qualification.",
+      "master": "qkd_hbm3e_phy_pc",
+      "lef": "elements.lef"
+    }
+  ],
+  "hbm_instances": [
+    "phy_WN",
+    "phy_WS",
+    "phy_EN",
+    "phy_ES"
+  ],
+  "schema": "opentallas.assumed-phy-pg-case.v1",
+  "status": "ASSUMED_UNQUALIFIED",
+  "instances": [
+    "ucie_rom",
+    "serdes_host"
+  ],
+  "masters": [
+    {
+      "schema": "opentallas.assumed-phy-pg-access.v1",
+      "status": "ASSUMED_UNQUALIFIED",
+      "source_sha256": "c41d397e507a8e23d4d7b799ae3bef7caf4e29cda84809923aa84b87ba831114",
+      "candidate_sha256": "1113c9b048630d62fc18620f877004b185fe8d5061e4cb767e057df29dc7aac1",
+      "width_um": "777.600",
+      "height_um": "777.600",
+      "area_delta_um2": 0,
+      "interface_delta": "none; original M4 PG pins preserved",
+      "m5_reserved_columns_um": [
+        [
+          "775.444",
+          "775.844"
+        ],
+        [
+          "776.452",
+          "776.852"
+        ]
+      ],
+      "m5_reserved_area_um2": "621.7600",
+      "strap_width_um": ".12",
+      "strap_spacing_um": ".888",
+      "strap_pitch_um": "2.016",
+      "offset_r0_mx_um": "775.644",
+      "offset_my_r180_um": "0.948",
+      "claim": "Modeled PHY access reservation only; needs actual PDN connectivity, short/obstruction checks and eventual vendor confirmation.",
+      "master": "ot_qkvd_ucie_x64_phy",
+      "lef": "elements.lef"
+    },
+    {
+      "schema": "opentallas.assumed-phy-pg-access.v1",
+      "status": "ASSUMED_UNQUALIFIED",
+      "source_sha256": "e81ba885bb74648c057c937177aba02e6f2210b7cd01c59601246b2cfc3ac0bb",
+      "candidate_sha256": "3dbee30ccd31da92b3d09d4698c4585dd532fcd98d62071b9ae3f5d083aad9dd",
+      "width_um": "2320.056",
+      "height_um": "1563.570",
+      "area_delta_um2": 0,
+      "interface_delta": "none; original M4 PG pins preserved",
+      "m5_reserved_columns_um": [
+        [
+          "2317.876",
+          "2318.276"
+        ],
+        [
+          "2318.884",
+          "2319.284"
+        ]
+      ],
+      "m5_reserved_area_um2": "1250.5360",
+      "strap_width_um": ".12",
+      "strap_spacing_um": ".888",
+      "strap_pitch_um": "2.016",
+      "offset_r0_mx_um": "2318.076",
+      "offset_my_r180_um": "0.972",
+      "claim": "Modeled PHY access reservation only; needs actual PDN connectivity, short/obstruction checks and eventual vendor confirmation.",
+      "master": "ot_qfd_serdes_112g_x12_phy",
+      "lef": "elements.lef"
+    }
+  ],
+  "helper_sha256": "8546d00aa32e93b70d61c22ac971179cf29b519a064b81ac94608d602a1331c1",
+  "bbox_helper_sha256": "ef8d4b0600af5cdc0468dc88bf8916fd33e1e954fe90f81213c7f3d35a509887",
+  "hbm_helper_sha256": "5aa961d3d0956ba290633a19e055fcf7ea9a501d4e16de588ba64f55ed85664c",
+  "area_delta_um2": 0,
+  "qualification": "Fixture proves declared geometry only; full die connectivity/short/routing/IR checks still required; no foundry IP claim."
+}

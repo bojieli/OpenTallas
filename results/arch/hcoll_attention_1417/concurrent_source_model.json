@@ -1,0 +1,3244 @@
+{
+  "schema": "hcoll-eight-SM-concurrent-source-capacity-v1",
+  "verdict": "MODEL_AND_REQUIRED_GRAPH_ONLY",
+  "source_binding": {
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static.sv": "c827fb8dc971baca5e155b88a3381eab218999b127e3a4b9f419f3f28e77d514",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_reduce_static.sv": "208ece87fe5d2beb545dcfa11ad50836a98d704bfc0b3afef06ddac940d4f5db",
+    "rtl/hbm_accel/sm/attn/ot_hbm_sm_attn_leafh.sv": "eff74553f322dd20cf38d3f33b454bb2575e88d06204941f9ac4830fdba86764",
+    "rtl/hbm_accel/sm/attn/ot_hbm_sm_attn_be.sv": "d20a3375ba1cb8a33803a0e1bf967d920136155f777923082b1ac637c46f4024",
+    "rtl/hbm_accel/sm/static/ot_smh_static_front.sv": "834abe7fd14eabaa9eae4505c6361341234ab75c5c3e517003bb1c15afde30bd"
+  },
+  "shape": {
+    "tokens": 8192,
+    "SM": 32,
+    "quadrants": 4,
+    "SM_per_quad": 8,
+    "KV_groups": 2,
+    "query_heads_per_KV": 4,
+    "block_rows": 128,
+    "block_slots_per_SM": 2,
+    "head_dimensions": 128,
+    "output_FP32_words": 1024
+  },
+  "actual_layout": {
+    "publication": "lane2h+half=head h,dim=rrow+64half,rrow0..63",
+    "SRAM": "512bits={publication_beat_odd,publication_beat_even}",
+    "row_sequence": "slot0pair0,slot1pair0,...slot0pair31,slot1pair31",
+    "native_reads_per_SM_per_KV": 64,
+    "total_native_reads": 4096,
+    "fixed_stream_input_edges": 128,
+    "publication_edges_per_SM_all_KV": 256
+  },
+  "arithmetic": {
+    "FP32_adds": 64512,
+    "current96_lane_ideal_floor": 672,
+    "ring8_lanes_per_quad_cross_phase_floor": 1536,
+    "current16_vector_lanes_per_quad_only_floor": 1008,
+    "new_scalar_adders": 624,
+    "raw_reused_adder_footprint_mm2": 0.8413756415999999,
+    "added_vs96_raw_footprint_mm2": 0.7119332351999998
+  },
+  "transport": {
+    "per_quad_A_sent_FP32_words": 8192,
+    "per_quad_B_sent_FP32_words": 4096,
+    "A_FP32_words_per_quad_edge": 64,
+    "B_FP32_words_per_quad_edge": 32,
+    "A_raw_data_bits_per_direction": 2048,
+    "B_raw_data_bits_per_direction": 1024,
+    "source_native_SRAM_data_bits_per_quad_edge": 4096,
+    "metadata_reset_clock_PG_not_included_in_data_bits": true
+  },
+  "static_latency": {
+    "stages": [
+      {
+        "name": "quadrant_bit0",
+        "replicas": 32,
+        "lanes": 8,
+        "scalar_adders": 256,
+        "peer": "q xor1",
+        "tx_bits_per_quad": 2048,
+        "heads_kept": "h%2 == q%2"
+      },
+      {
+        "name": "quadrant_bit1",
+        "replicas": 32,
+        "lanes": 4,
+        "scalar_adders": 128,
+        "peer": "q xor2",
+        "tx_bits_per_quad": 1024,
+        "heads_kept": "h==q within KV group"
+      },
+      {
+        "name": "block_slot",
+        "replicas": 32,
+        "lanes": 4,
+        "scalar_adders": 128,
+        "initiation_interval": 2
+      },
+      {
+        "name": "SM_bit0",
+        "replicas": 16,
+        "lanes": 4,
+        "scalar_adders": 64,
+        "pairing": [
+          [
+            0,
+            1
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            4,
+            5
+          ],
+          [
+            6,
+            7
+          ]
+        ],
+        "initiation_interval": 2
+      },
+      {
+        "name": "SM_bit1",
+        "replicas": 8,
+        "lanes": 4,
+        "scalar_adders": 32,
+        "pairing": [
+          [
+            [
+              0,
+              1
+            ],
+            [
+              2,
+              3
+            ]
+          ],
+          [
+            [
+              4,
+              5
+            ],
+            [
+              6,
+              7
+            ]
+          ]
+        ],
+        "initiation_interval": 2
+      },
+      {
+        "name": "SM_bit2",
+        "replicas": 4,
+        "lanes": 4,
+        "scalar_adders": 16,
+        "pairing": [
+          [
+            [
+              [
+                0,
+                1
+              ],
+              [
+                2,
+                3
+              ]
+            ],
+            [
+              [
+                4,
+                5
+              ],
+              [
+                6,
+                7
+              ]
+            ]
+          ]
+        ],
+        "initiation_interval": 2
+      }
+    ],
+    "FP32_latency": 8,
+    "link_A_registered_edges": 2,
+    "link_B_registered_edges": 2,
+    "proposed_first_output_edge": 52,
+    "proposed_last_output_edge": 178,
+    "source_bank_request_to_first_input_edges": 4,
+    "proposed_last_from_first_bank_request_edge": 182,
+    "scope": "derived cycle contract, must be measured on literal native RTL; no physical relay assumption",
+    "reference_merge_edges": 318,
+    "reference_times_1p05": 333.9,
+    "residual_for_real_relays_writes_and_extra_faces_edges": 151.89999999999998
+  },
+  "cost_limits": {
+    "unit": 0.05,
+    "design": 0.15,
+    "status": "native full-token delta unmeasured; no acceptance or repricing"
+  },
+  "dedicated_stager": {
+    "macros_die": 64,
+    "macro_shape": "64x512",
+    "raw_macro_area_mm2": 0.85243871232,
+    "status": "primary structural allocation; physical grant and raw-row source profile pending"
+  },
+  "graph": {
+    "nodes": [
+      {
+        "name": "q0.sm0.stager",
+        "kind": "two64x512_native_SRAM",
+        "parent": "q0",
+        "logical_SM": 0,
+        "replicas": 1,
+        "physical_family": "common_SM_stager"
+      },
+      {
+        "name": "q0.sm0.A",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 8,
+        "scalar_master": "ot_hgi_coll_pring_static_add_lane",
+        "raw_closed_leaf_area_um2": 10786.867199999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q0.sm0.B",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 4,
+        "scalar_master": "ot_hgi_coll_pring_static_add_lane",
+        "raw_closed_leaf_area_um2": 5393.433599999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q0.sm0.slot",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 4,
+        "scalar_master": "ot_hgi_coll_pring_static_add_lane",
+        "raw_closed_leaf_area_um2": 5393.433599999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q0.sm1.stager",
+        "kind": "two64x512_native_SRAM",
+        "parent": "q0",
+        "logical_SM": 1,
+        "replicas": 1,
+        "physical_family": "common_SM_stager"
+      },
+      {
+        "name": "q0.sm1.A",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 8,
+        "scalar_master": "ot_hgi_coll_pring_static_add_lane",
+        "raw_closed_leaf_area_um2": 10786.867199999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q0.sm1.B",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 4,
+        "scalar_master": "ot_hgi_coll_pring_static_add_lane",
+        "raw_closed_leaf_area_um2": 5393.433599999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q0.sm1.slot",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 4,
+        "scalar_master": "ot_hgi_coll_pring_static_add_lane",
+        "raw_closed_leaf_area_um2": 5393.433599999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q0.sm2.stager",
+        "kind": "two64x512_native_SRAM",
+        "parent": "q0",
+        "logical_SM": 2,
+        "replicas": 1,
+        "physical_family": "common_SM_stager"
+      },
+      {
+        "name": "q0.sm2.A",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 8,
+        "scalar_master": "ot_hgi_coll_pring_static_add_lane",
+        "raw_closed_leaf_area_um2": 10786.867199999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q0.sm2.B",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 4,
+        "scalar_master": "ot_hgi_coll_pring_static_add_lane",
+        "raw_closed_leaf_area_um2": 5393.433599999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q0.sm2.slot",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 4,
+        "scalar_master": "ot_hgi_coll_pring_static_add_lane",
+        "raw_closed_leaf_area_um2": 5393.433599999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q0.sm3.stager",
+        "kind": "two64x512_native_SRAM",
+        "parent": "q0",
+        "logical_SM": 3,
+        "replicas": 1,
+        "physical_family": "common_SM_stager"
+      },
+      {
+        "name": "q0.sm3.A",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 8,
+        "scalar_master": "ot_hgi_coll_pring_static_add_lane",
+        "raw_closed_leaf_area_um2": 10786.867199999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q0.sm3.B",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 4,
+        "scalar_master": "ot_hgi_coll_pring_static_add_lane",
+        "raw_closed_leaf_area_um2": 5393.433599999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q0.sm3.slot",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 4,
+        "scalar_master": "ot_hgi_coll_pring_static_add_lane",
+        "raw_closed_leaf_area_um2": 5393.433599999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q0.sm4.stager",
+        "kind": "two64x512_native_SRAM",
+        "parent": "q0",
+        "logical_SM": 4,
+        "replicas": 1,
+        "physical_family": "common_SM_stager"
+      },
+      {
+        "name": "q0.sm4.A",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 8,
+        "scalar_master": "ot_hgi_coll_pring_static_add_lane",
+        "raw_closed_leaf_area_um2": 10786.867199999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q0.sm4.B",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 4,
+        "scalar_master": "ot_hgi_coll_pring_static_add_lane",
+        "raw_closed_leaf_area_um2": 5393.433599999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q0.sm4.slot",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 4,
+        "scalar_master": "ot_hgi_coll_pring_static_add_lane",
+        "raw_closed_leaf_area_um2": 5393.433599999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q0.sm5.stager",
+        "kind": "two64x512_native_SRAM",
+        "parent": "q0",
+        "logical_SM": 5,
+        "replicas": 1,
+        "physical_family": "common_SM_stager"
+      },
+      {
+        "name": "q0.sm5.A",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 8,
+        "scalar_master": "ot_hgi_coll_pring_static_add_lane",
+        "raw_closed_leaf_area_um2": 10786.867199999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q0.sm5.B",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 4,
+        "scalar_master": "ot_hgi_coll_pring_static_add_lane",
+        "raw_closed_leaf_area_um2": 5393.433599999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q0.sm5.slot",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 4,
+        "scalar_master": "ot_hgi_coll_pring_static_add_lane",
+        "raw_closed_leaf_area_um2": 5393.433599999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q0.sm6.stager",
+        "kind": "two64x512_native_SRAM",
+        "parent": "q0",
+        "logical_SM": 6,
+        "replicas": 1,
+        "physical_family": "common_SM_stager"
+      },
+      {
+        "name": "q0.sm6.A",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 8,
+        "scalar_master": "ot_hgi_coll_pring_static_add_lane",
+        "raw_closed_leaf_area_um2": 10786.867199999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q0.sm6.B",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 4,
+        "scalar_master": "ot_hgi_coll_pring_static_add_lane",
+        "raw_closed_leaf_area_um2": 5393.433599999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q0.sm6.slot",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 4,
+        "scalar_master": "ot_hgi_coll_pring_static_add_lane",
+        "raw_closed_leaf_area_um2": 5393.433599999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q0.sm7.stager",
+        "kind": "two64x512_native_SRAM",
+        "parent": "q0",
+        "logical_SM": 7,
+        "replicas": 1,
+        "physical_family": "common_SM_stager"
+      },
+      {
+        "name": "q0.sm7.A",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 8,
+        "scalar_master": "ot_hgi_coll_pring_static_add_lane",
+        "raw_closed_leaf_area_um2": 10786.867199999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q0.sm7.B",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 4,
+        "scalar_master": "ot_hgi_coll_pring_static_add_lane",
+        "raw_closed_leaf_area_um2": 5393.433599999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q0.sm7.slot",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 4,
+        "scalar_master": "ot_hgi_coll_pring_static_add_lane",
+        "raw_closed_leaf_area_um2": 5393.433599999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q0.tree0.0",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 4,
+        "raw_closed_leaf_area_um2": 5393.433599999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q0.tree0.1",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 4,
+        "raw_closed_leaf_area_um2": 5393.433599999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q0.tree0.2",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 4,
+        "raw_closed_leaf_area_um2": 5393.433599999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q0.tree0.3",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 4,
+        "raw_closed_leaf_area_um2": 5393.433599999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q0.tree1.0",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 4,
+        "raw_closed_leaf_area_um2": 5393.433599999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q0.tree1.1",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 4,
+        "raw_closed_leaf_area_um2": 5393.433599999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q0.tree2.0",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 4,
+        "raw_closed_leaf_area_um2": 5393.433599999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q1.sm0.stager",
+        "kind": "two64x512_native_SRAM",
+        "parent": "q1",
+        "logical_SM": 8,
+        "replicas": 1,
+        "physical_family": "common_SM_stager"
+      },
+      {
+        "name": "q1.sm0.A",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 8,
+        "scalar_master": "ot_hgi_coll_pring_static_add_lane",
+        "raw_closed_leaf_area_um2": 10786.867199999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q1.sm0.B",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 4,
+        "scalar_master": "ot_hgi_coll_pring_static_add_lane",
+        "raw_closed_leaf_area_um2": 5393.433599999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q1.sm0.slot",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 4,
+        "scalar_master": "ot_hgi_coll_pring_static_add_lane",
+        "raw_closed_leaf_area_um2": 5393.433599999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q1.sm1.stager",
+        "kind": "two64x512_native_SRAM",
+        "parent": "q1",
+        "logical_SM": 9,
+        "replicas": 1,
+        "physical_family": "common_SM_stager"
+      },
+      {
+        "name": "q1.sm1.A",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 8,
+        "scalar_master": "ot_hgi_coll_pring_static_add_lane",
+        "raw_closed_leaf_area_um2": 10786.867199999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q1.sm1.B",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 4,
+        "scalar_master": "ot_hgi_coll_pring_static_add_lane",
+        "raw_closed_leaf_area_um2": 5393.433599999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q1.sm1.slot",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 4,
+        "scalar_master": "ot_hgi_coll_pring_static_add_lane",
+        "raw_closed_leaf_area_um2": 5393.433599999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q1.sm2.stager",
+        "kind": "two64x512_native_SRAM",
+        "parent": "q1",
+        "logical_SM": 10,
+        "replicas": 1,
+        "physical_family": "common_SM_stager"
+      },
+      {
+        "name": "q1.sm2.A",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 8,
+        "scalar_master": "ot_hgi_coll_pring_static_add_lane",
+        "raw_closed_leaf_area_um2": 10786.867199999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q1.sm2.B",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 4,
+        "scalar_master": "ot_hgi_coll_pring_static_add_lane",
+        "raw_closed_leaf_area_um2": 5393.433599999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q1.sm2.slot",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 4,
+        "scalar_master": "ot_hgi_coll_pring_static_add_lane",
+        "raw_closed_leaf_area_um2": 5393.433599999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q1.sm3.stager",
+        "kind": "two64x512_native_SRAM",
+        "parent": "q1",
+        "logical_SM": 11,
+        "replicas": 1,
+        "physical_family": "common_SM_stager"
+      },
+      {
+        "name": "q1.sm3.A",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 8,
+        "scalar_master": "ot_hgi_coll_pring_static_add_lane",
+        "raw_closed_leaf_area_um2": 10786.867199999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q1.sm3.B",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 4,
+        "scalar_master": "ot_hgi_coll_pring_static_add_lane",
+        "raw_closed_leaf_area_um2": 5393.433599999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q1.sm3.slot",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 4,
+        "scalar_master": "ot_hgi_coll_pring_static_add_lane",
+        "raw_closed_leaf_area_um2": 5393.433599999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q1.sm4.stager",
+        "kind": "two64x512_native_SRAM",
+        "parent": "q1",
+        "logical_SM": 12,
+        "replicas": 1,
+        "physical_family": "common_SM_stager"
+      },
+      {
+        "name": "q1.sm4.A",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 8,
+        "scalar_master": "ot_hgi_coll_pring_static_add_lane",
+        "raw_closed_leaf_area_um2": 10786.867199999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q1.sm4.B",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 4,
+        "scalar_master": "ot_hgi_coll_pring_static_add_lane",
+        "raw_closed_leaf_area_um2": 5393.433599999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q1.sm4.slot",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 4,
+        "scalar_master": "ot_hgi_coll_pring_static_add_lane",
+        "raw_closed_leaf_area_um2": 5393.433599999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q1.sm5.stager",
+        "kind": "two64x512_native_SRAM",
+        "parent": "q1",
+        "logical_SM": 13,
+        "replicas": 1,
+        "physical_family": "common_SM_stager"
+      },
+      {
+        "name": "q1.sm5.A",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 8,
+        "scalar_master": "ot_hgi_coll_pring_static_add_lane",
+        "raw_closed_leaf_area_um2": 10786.867199999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q1.sm5.B",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 4,
+        "scalar_master": "ot_hgi_coll_pring_static_add_lane",
+        "raw_closed_leaf_area_um2": 5393.433599999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q1.sm5.slot",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 4,
+        "scalar_master": "ot_hgi_coll_pring_static_add_lane",
+        "raw_closed_leaf_area_um2": 5393.433599999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q1.sm6.stager",
+        "kind": "two64x512_native_SRAM",
+        "parent": "q1",
+        "logical_SM": 14,
+        "replicas": 1,
+        "physical_family": "common_SM_stager"
+      },
+      {
+        "name": "q1.sm6.A",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 8,
+        "scalar_master": "ot_hgi_coll_pring_static_add_lane",
+        "raw_closed_leaf_area_um2": 10786.867199999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q1.sm6.B",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 4,
+        "scalar_master": "ot_hgi_coll_pring_static_add_lane",
+        "raw_closed_leaf_area_um2": 5393.433599999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q1.sm6.slot",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 4,
+        "scalar_master": "ot_hgi_coll_pring_static_add_lane",
+        "raw_closed_leaf_area_um2": 5393.433599999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q1.sm7.stager",
+        "kind": "two64x512_native_SRAM",
+        "parent": "q1",
+        "logical_SM": 15,
+        "replicas": 1,
+        "physical_family": "common_SM_stager"
+      },
+      {
+        "name": "q1.sm7.A",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 8,
+        "scalar_master": "ot_hgi_coll_pring_static_add_lane",
+        "raw_closed_leaf_area_um2": 10786.867199999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q1.sm7.B",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 4,
+        "scalar_master": "ot_hgi_coll_pring_static_add_lane",
+        "raw_closed_leaf_area_um2": 5393.433599999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q1.sm7.slot",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 4,
+        "scalar_master": "ot_hgi_coll_pring_static_add_lane",
+        "raw_closed_leaf_area_um2": 5393.433599999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q1.tree0.0",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 4,
+        "raw_closed_leaf_area_um2": 5393.433599999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q1.tree0.1",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 4,
+        "raw_closed_leaf_area_um2": 5393.433599999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q1.tree0.2",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 4,
+        "raw_closed_leaf_area_um2": 5393.433599999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q1.tree0.3",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 4,
+        "raw_closed_leaf_area_um2": 5393.433599999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q1.tree1.0",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 4,
+        "raw_closed_leaf_area_um2": 5393.433599999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q1.tree1.1",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 4,
+        "raw_closed_leaf_area_um2": 5393.433599999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q1.tree2.0",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 4,
+        "raw_closed_leaf_area_um2": 5393.433599999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q2.sm0.stager",
+        "kind": "two64x512_native_SRAM",
+        "parent": "q2",
+        "logical_SM": 16,
+        "replicas": 1,
+        "physical_family": "common_SM_stager"
+      },
+      {
+        "name": "q2.sm0.A",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 8,
+        "scalar_master": "ot_hgi_coll_pring_static_add_lane",
+        "raw_closed_leaf_area_um2": 10786.867199999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q2.sm0.B",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 4,
+        "scalar_master": "ot_hgi_coll_pring_static_add_lane",
+        "raw_closed_leaf_area_um2": 5393.433599999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q2.sm0.slot",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 4,
+        "scalar_master": "ot_hgi_coll_pring_static_add_lane",
+        "raw_closed_leaf_area_um2": 5393.433599999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q2.sm1.stager",
+        "kind": "two64x512_native_SRAM",
+        "parent": "q2",
+        "logical_SM": 17,
+        "replicas": 1,
+        "physical_family": "common_SM_stager"
+      },
+      {
+        "name": "q2.sm1.A",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 8,
+        "scalar_master": "ot_hgi_coll_pring_static_add_lane",
+        "raw_closed_leaf_area_um2": 10786.867199999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q2.sm1.B",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 4,
+        "scalar_master": "ot_hgi_coll_pring_static_add_lane",
+        "raw_closed_leaf_area_um2": 5393.433599999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q2.sm1.slot",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 4,
+        "scalar_master": "ot_hgi_coll_pring_static_add_lane",
+        "raw_closed_leaf_area_um2": 5393.433599999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q2.sm2.stager",
+        "kind": "two64x512_native_SRAM",
+        "parent": "q2",
+        "logical_SM": 18,
+        "replicas": 1,
+        "physical_family": "common_SM_stager"
+      },
+      {
+        "name": "q2.sm2.A",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 8,
+        "scalar_master": "ot_hgi_coll_pring_static_add_lane",
+        "raw_closed_leaf_area_um2": 10786.867199999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q2.sm2.B",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 4,
+        "scalar_master": "ot_hgi_coll_pring_static_add_lane",
+        "raw_closed_leaf_area_um2": 5393.433599999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q2.sm2.slot",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 4,
+        "scalar_master": "ot_hgi_coll_pring_static_add_lane",
+        "raw_closed_leaf_area_um2": 5393.433599999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q2.sm3.stager",
+        "kind": "two64x512_native_SRAM",
+        "parent": "q2",
+        "logical_SM": 19,
+        "replicas": 1,
+        "physical_family": "common_SM_stager"
+      },
+      {
+        "name": "q2.sm3.A",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 8,
+        "scalar_master": "ot_hgi_coll_pring_static_add_lane",
+        "raw_closed_leaf_area_um2": 10786.867199999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q2.sm3.B",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 4,
+        "scalar_master": "ot_hgi_coll_pring_static_add_lane",
+        "raw_closed_leaf_area_um2": 5393.433599999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q2.sm3.slot",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 4,
+        "scalar_master": "ot_hgi_coll_pring_static_add_lane",
+        "raw_closed_leaf_area_um2": 5393.433599999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q2.sm4.stager",
+        "kind": "two64x512_native_SRAM",
+        "parent": "q2",
+        "logical_SM": 20,
+        "replicas": 1,
+        "physical_family": "common_SM_stager"
+      },
+      {
+        "name": "q2.sm4.A",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 8,
+        "scalar_master": "ot_hgi_coll_pring_static_add_lane",
+        "raw_closed_leaf_area_um2": 10786.867199999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q2.sm4.B",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 4,
+        "scalar_master": "ot_hgi_coll_pring_static_add_lane",
+        "raw_closed_leaf_area_um2": 5393.433599999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q2.sm4.slot",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 4,
+        "scalar_master": "ot_hgi_coll_pring_static_add_lane",
+        "raw_closed_leaf_area_um2": 5393.433599999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q2.sm5.stager",
+        "kind": "two64x512_native_SRAM",
+        "parent": "q2",
+        "logical_SM": 21,
+        "replicas": 1,
+        "physical_family": "common_SM_stager"
+      },
+      {
+        "name": "q2.sm5.A",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 8,
+        "scalar_master": "ot_hgi_coll_pring_static_add_lane",
+        "raw_closed_leaf_area_um2": 10786.867199999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q2.sm5.B",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 4,
+        "scalar_master": "ot_hgi_coll_pring_static_add_lane",
+        "raw_closed_leaf_area_um2": 5393.433599999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q2.sm5.slot",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 4,
+        "scalar_master": "ot_hgi_coll_pring_static_add_lane",
+        "raw_closed_leaf_area_um2": 5393.433599999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q2.sm6.stager",
+        "kind": "two64x512_native_SRAM",
+        "parent": "q2",
+        "logical_SM": 22,
+        "replicas": 1,
+        "physical_family": "common_SM_stager"
+      },
+      {
+        "name": "q2.sm6.A",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 8,
+        "scalar_master": "ot_hgi_coll_pring_static_add_lane",
+        "raw_closed_leaf_area_um2": 10786.867199999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q2.sm6.B",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 4,
+        "scalar_master": "ot_hgi_coll_pring_static_add_lane",
+        "raw_closed_leaf_area_um2": 5393.433599999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q2.sm6.slot",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 4,
+        "scalar_master": "ot_hgi_coll_pring_static_add_lane",
+        "raw_closed_leaf_area_um2": 5393.433599999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q2.sm7.stager",
+        "kind": "two64x512_native_SRAM",
+        "parent": "q2",
+        "logical_SM": 23,
+        "replicas": 1,
+        "physical_family": "common_SM_stager"
+      },
+      {
+        "name": "q2.sm7.A",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 8,
+        "scalar_master": "ot_hgi_coll_pring_static_add_lane",
+        "raw_closed_leaf_area_um2": 10786.867199999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q2.sm7.B",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 4,
+        "scalar_master": "ot_hgi_coll_pring_static_add_lane",
+        "raw_closed_leaf_area_um2": 5393.433599999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q2.sm7.slot",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 4,
+        "scalar_master": "ot_hgi_coll_pring_static_add_lane",
+        "raw_closed_leaf_area_um2": 5393.433599999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q2.tree0.0",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 4,
+        "raw_closed_leaf_area_um2": 5393.433599999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q2.tree0.1",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 4,
+        "raw_closed_leaf_area_um2": 5393.433599999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q2.tree0.2",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 4,
+        "raw_closed_leaf_area_um2": 5393.433599999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q2.tree0.3",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 4,
+        "raw_closed_leaf_area_um2": 5393.433599999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q2.tree1.0",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 4,
+        "raw_closed_leaf_area_um2": 5393.433599999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q2.tree1.1",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 4,
+        "raw_closed_leaf_area_um2": 5393.433599999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q2.tree2.0",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 4,
+        "raw_closed_leaf_area_um2": 5393.433599999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q3.sm0.stager",
+        "kind": "two64x512_native_SRAM",
+        "parent": "q3",
+        "logical_SM": 24,
+        "replicas": 1,
+        "physical_family": "common_SM_stager"
+      },
+      {
+        "name": "q3.sm0.A",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 8,
+        "scalar_master": "ot_hgi_coll_pring_static_add_lane",
+        "raw_closed_leaf_area_um2": 10786.867199999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q3.sm0.B",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 4,
+        "scalar_master": "ot_hgi_coll_pring_static_add_lane",
+        "raw_closed_leaf_area_um2": 5393.433599999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q3.sm0.slot",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 4,
+        "scalar_master": "ot_hgi_coll_pring_static_add_lane",
+        "raw_closed_leaf_area_um2": 5393.433599999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q3.sm1.stager",
+        "kind": "two64x512_native_SRAM",
+        "parent": "q3",
+        "logical_SM": 25,
+        "replicas": 1,
+        "physical_family": "common_SM_stager"
+      },
+      {
+        "name": "q3.sm1.A",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 8,
+        "scalar_master": "ot_hgi_coll_pring_static_add_lane",
+        "raw_closed_leaf_area_um2": 10786.867199999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q3.sm1.B",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 4,
+        "scalar_master": "ot_hgi_coll_pring_static_add_lane",
+        "raw_closed_leaf_area_um2": 5393.433599999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q3.sm1.slot",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 4,
+        "scalar_master": "ot_hgi_coll_pring_static_add_lane",
+        "raw_closed_leaf_area_um2": 5393.433599999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q3.sm2.stager",
+        "kind": "two64x512_native_SRAM",
+        "parent": "q3",
+        "logical_SM": 26,
+        "replicas": 1,
+        "physical_family": "common_SM_stager"
+      },
+      {
+        "name": "q3.sm2.A",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 8,
+        "scalar_master": "ot_hgi_coll_pring_static_add_lane",
+        "raw_closed_leaf_area_um2": 10786.867199999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q3.sm2.B",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 4,
+        "scalar_master": "ot_hgi_coll_pring_static_add_lane",
+        "raw_closed_leaf_area_um2": 5393.433599999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q3.sm2.slot",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 4,
+        "scalar_master": "ot_hgi_coll_pring_static_add_lane",
+        "raw_closed_leaf_area_um2": 5393.433599999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q3.sm3.stager",
+        "kind": "two64x512_native_SRAM",
+        "parent": "q3",
+        "logical_SM": 27,
+        "replicas": 1,
+        "physical_family": "common_SM_stager"
+      },
+      {
+        "name": "q3.sm3.A",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 8,
+        "scalar_master": "ot_hgi_coll_pring_static_add_lane",
+        "raw_closed_leaf_area_um2": 10786.867199999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q3.sm3.B",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 4,
+        "scalar_master": "ot_hgi_coll_pring_static_add_lane",
+        "raw_closed_leaf_area_um2": 5393.433599999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q3.sm3.slot",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 4,
+        "scalar_master": "ot_hgi_coll_pring_static_add_lane",
+        "raw_closed_leaf_area_um2": 5393.433599999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q3.sm4.stager",
+        "kind": "two64x512_native_SRAM",
+        "parent": "q3",
+        "logical_SM": 28,
+        "replicas": 1,
+        "physical_family": "common_SM_stager"
+      },
+      {
+        "name": "q3.sm4.A",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 8,
+        "scalar_master": "ot_hgi_coll_pring_static_add_lane",
+        "raw_closed_leaf_area_um2": 10786.867199999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q3.sm4.B",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 4,
+        "scalar_master": "ot_hgi_coll_pring_static_add_lane",
+        "raw_closed_leaf_area_um2": 5393.433599999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q3.sm4.slot",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 4,
+        "scalar_master": "ot_hgi_coll_pring_static_add_lane",
+        "raw_closed_leaf_area_um2": 5393.433599999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q3.sm5.stager",
+        "kind": "two64x512_native_SRAM",
+        "parent": "q3",
+        "logical_SM": 29,
+        "replicas": 1,
+        "physical_family": "common_SM_stager"
+      },
+      {
+        "name": "q3.sm5.A",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 8,
+        "scalar_master": "ot_hgi_coll_pring_static_add_lane",
+        "raw_closed_leaf_area_um2": 10786.867199999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q3.sm5.B",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 4,
+        "scalar_master": "ot_hgi_coll_pring_static_add_lane",
+        "raw_closed_leaf_area_um2": 5393.433599999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q3.sm5.slot",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 4,
+        "scalar_master": "ot_hgi_coll_pring_static_add_lane",
+        "raw_closed_leaf_area_um2": 5393.433599999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q3.sm6.stager",
+        "kind": "two64x512_native_SRAM",
+        "parent": "q3",
+        "logical_SM": 30,
+        "replicas": 1,
+        "physical_family": "common_SM_stager"
+      },
+      {
+        "name": "q3.sm6.A",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 8,
+        "scalar_master": "ot_hgi_coll_pring_static_add_lane",
+        "raw_closed_leaf_area_um2": 10786.867199999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q3.sm6.B",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 4,
+        "scalar_master": "ot_hgi_coll_pring_static_add_lane",
+        "raw_closed_leaf_area_um2": 5393.433599999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q3.sm6.slot",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 4,
+        "scalar_master": "ot_hgi_coll_pring_static_add_lane",
+        "raw_closed_leaf_area_um2": 5393.433599999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q3.sm7.stager",
+        "kind": "two64x512_native_SRAM",
+        "parent": "q3",
+        "logical_SM": 31,
+        "replicas": 1,
+        "physical_family": "common_SM_stager"
+      },
+      {
+        "name": "q3.sm7.A",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 8,
+        "scalar_master": "ot_hgi_coll_pring_static_add_lane",
+        "raw_closed_leaf_area_um2": 10786.867199999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q3.sm7.B",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 4,
+        "scalar_master": "ot_hgi_coll_pring_static_add_lane",
+        "raw_closed_leaf_area_um2": 5393.433599999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q3.sm7.slot",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 4,
+        "scalar_master": "ot_hgi_coll_pring_static_add_lane",
+        "raw_closed_leaf_area_um2": 5393.433599999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q3.tree0.0",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 4,
+        "raw_closed_leaf_area_um2": 5393.433599999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q3.tree0.1",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 4,
+        "raw_closed_leaf_area_um2": 5393.433599999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q3.tree0.2",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 4,
+        "raw_closed_leaf_area_um2": 5393.433599999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q3.tree0.3",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 4,
+        "raw_closed_leaf_area_um2": 5393.433599999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q3.tree1.0",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 4,
+        "raw_closed_leaf_area_um2": 5393.433599999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q3.tree1.1",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 4,
+        "raw_closed_leaf_area_um2": 5393.433599999999,
+        "placement_not_granted": true
+      },
+      {
+        "name": "q3.tree2.0",
+        "kind": "LAT8_scalar_adder_group",
+        "lanes": 4,
+        "raw_closed_leaf_area_um2": 5393.433599999999,
+        "placement_not_granted": true
+      }
+    ],
+    "edges": [
+      {
+        "src": "q0.sm0.producer",
+        "dst": "q0.sm0.stager",
+        "bits": 269,
+        "includes": "rv1,rrow12,rdata256",
+        "kind": "fixed_publication",
+        "actual_producer_join": false
+      },
+      {
+        "src": "q0.sm0.stager",
+        "dst": "q0.sm0.A",
+        "bits": 512,
+        "kind": "native_read",
+        "II": 1
+      },
+      {
+        "src": "q0.sm0.stager",
+        "dst": "q1.sm0.A",
+        "bits": 256,
+        "kind": "quad_bit0",
+        "II": 1
+      },
+      {
+        "src": "q0.sm0.A",
+        "dst": "q0.sm0.B",
+        "bits": 128,
+        "kind": "local_keep",
+        "II": 1
+      },
+      {
+        "src": "q0.sm0.A",
+        "dst": "q2.sm0.B",
+        "bits": 128,
+        "kind": "quad_bit1",
+        "II": 1
+      },
+      {
+        "src": "q0.sm0.B",
+        "dst": "q0.sm0.slot",
+        "bits": 128,
+        "kind": "block_slot_pair",
+        "II": 1
+      },
+      {
+        "src": "q0.sm1.producer",
+        "dst": "q0.sm1.stager",
+        "bits": 269,
+        "includes": "rv1,rrow12,rdata256",
+        "kind": "fixed_publication",
+        "actual_producer_join": false
+      },
+      {
+        "src": "q0.sm1.stager",
+        "dst": "q0.sm1.A",
+        "bits": 512,
+        "kind": "native_read",
+        "II": 1
+      },
+      {
+        "src": "q0.sm1.stager",
+        "dst": "q1.sm1.A",
+        "bits": 256,
+        "kind": "quad_bit0",
+        "II": 1
+      },
+      {
+        "src": "q0.sm1.A",
+        "dst": "q0.sm1.B",
+        "bits": 128,
+        "kind": "local_keep",
+        "II": 1
+      },
+      {
+        "src": "q0.sm1.A",
+        "dst": "q2.sm1.B",
+        "bits": 128,
+        "kind": "quad_bit1",
+        "II": 1
+      },
+      {
+        "src": "q0.sm1.B",
+        "dst": "q0.sm1.slot",
+        "bits": 128,
+        "kind": "block_slot_pair",
+        "II": 1
+      },
+      {
+        "src": "q0.sm2.producer",
+        "dst": "q0.sm2.stager",
+        "bits": 269,
+        "includes": "rv1,rrow12,rdata256",
+        "kind": "fixed_publication",
+        "actual_producer_join": false
+      },
+      {
+        "src": "q0.sm2.stager",
+        "dst": "q0.sm2.A",
+        "bits": 512,
+        "kind": "native_read",
+        "II": 1
+      },
+      {
+        "src": "q0.sm2.stager",
+        "dst": "q1.sm2.A",
+        "bits": 256,
+        "kind": "quad_bit0",
+        "II": 1
+      },
+      {
+        "src": "q0.sm2.A",
+        "dst": "q0.sm2.B",
+        "bits": 128,
+        "kind": "local_keep",
+        "II": 1
+      },
+      {
+        "src": "q0.sm2.A",
+        "dst": "q2.sm2.B",
+        "bits": 128,
+        "kind": "quad_bit1",
+        "II": 1
+      },
+      {
+        "src": "q0.sm2.B",
+        "dst": "q0.sm2.slot",
+        "bits": 128,
+        "kind": "block_slot_pair",
+        "II": 1
+      },
+      {
+        "src": "q0.sm3.producer",
+        "dst": "q0.sm3.stager",
+        "bits": 269,
+        "includes": "rv1,rrow12,rdata256",
+        "kind": "fixed_publication",
+        "actual_producer_join": false
+      },
+      {
+        "src": "q0.sm3.stager",
+        "dst": "q0.sm3.A",
+        "bits": 512,
+        "kind": "native_read",
+        "II": 1
+      },
+      {
+        "src": "q0.sm3.stager",
+        "dst": "q1.sm3.A",
+        "bits": 256,
+        "kind": "quad_bit0",
+        "II": 1
+      },
+      {
+        "src": "q0.sm3.A",
+        "dst": "q0.sm3.B",
+        "bits": 128,
+        "kind": "local_keep",
+        "II": 1
+      },
+      {
+        "src": "q0.sm3.A",
+        "dst": "q2.sm3.B",
+        "bits": 128,
+        "kind": "quad_bit1",
+        "II": 1
+      },
+      {
+        "src": "q0.sm3.B",
+        "dst": "q0.sm3.slot",
+        "bits": 128,
+        "kind": "block_slot_pair",
+        "II": 1
+      },
+      {
+        "src": "q0.sm4.producer",
+        "dst": "q0.sm4.stager",
+        "bits": 269,
+        "includes": "rv1,rrow12,rdata256",
+        "kind": "fixed_publication",
+        "actual_producer_join": false
+      },
+      {
+        "src": "q0.sm4.stager",
+        "dst": "q0.sm4.A",
+        "bits": 512,
+        "kind": "native_read",
+        "II": 1
+      },
+      {
+        "src": "q0.sm4.stager",
+        "dst": "q1.sm4.A",
+        "bits": 256,
+        "kind": "quad_bit0",
+        "II": 1
+      },
+      {
+        "src": "q0.sm4.A",
+        "dst": "q0.sm4.B",
+        "bits": 128,
+        "kind": "local_keep",
+        "II": 1
+      },
+      {
+        "src": "q0.sm4.A",
+        "dst": "q2.sm4.B",
+        "bits": 128,
+        "kind": "quad_bit1",
+        "II": 1
+      },
+      {
+        "src": "q0.sm4.B",
+        "dst": "q0.sm4.slot",
+        "bits": 128,
+        "kind": "block_slot_pair",
+        "II": 1
+      },
+      {
+        "src": "q0.sm5.producer",
+        "dst": "q0.sm5.stager",
+        "bits": 269,
+        "includes": "rv1,rrow12,rdata256",
+        "kind": "fixed_publication",
+        "actual_producer_join": false
+      },
+      {
+        "src": "q0.sm5.stager",
+        "dst": "q0.sm5.A",
+        "bits": 512,
+        "kind": "native_read",
+        "II": 1
+      },
+      {
+        "src": "q0.sm5.stager",
+        "dst": "q1.sm5.A",
+        "bits": 256,
+        "kind": "quad_bit0",
+        "II": 1
+      },
+      {
+        "src": "q0.sm5.A",
+        "dst": "q0.sm5.B",
+        "bits": 128,
+        "kind": "local_keep",
+        "II": 1
+      },
+      {
+        "src": "q0.sm5.A",
+        "dst": "q2.sm5.B",
+        "bits": 128,
+        "kind": "quad_bit1",
+        "II": 1
+      },
+      {
+        "src": "q0.sm5.B",
+        "dst": "q0.sm5.slot",
+        "bits": 128,
+        "kind": "block_slot_pair",
+        "II": 1
+      },
+      {
+        "src": "q0.sm6.producer",
+        "dst": "q0.sm6.stager",
+        "bits": 269,
+        "includes": "rv1,rrow12,rdata256",
+        "kind": "fixed_publication",
+        "actual_producer_join": false
+      },
+      {
+        "src": "q0.sm6.stager",
+        "dst": "q0.sm6.A",
+        "bits": 512,
+        "kind": "native_read",
+        "II": 1
+      },
+      {
+        "src": "q0.sm6.stager",
+        "dst": "q1.sm6.A",
+        "bits": 256,
+        "kind": "quad_bit0",
+        "II": 1
+      },
+      {
+        "src": "q0.sm6.A",
+        "dst": "q0.sm6.B",
+        "bits": 128,
+        "kind": "local_keep",
+        "II": 1
+      },
+      {
+        "src": "q0.sm6.A",
+        "dst": "q2.sm6.B",
+        "bits": 128,
+        "kind": "quad_bit1",
+        "II": 1
+      },
+      {
+        "src": "q0.sm6.B",
+        "dst": "q0.sm6.slot",
+        "bits": 128,
+        "kind": "block_slot_pair",
+        "II": 1
+      },
+      {
+        "src": "q0.sm7.producer",
+        "dst": "q0.sm7.stager",
+        "bits": 269,
+        "includes": "rv1,rrow12,rdata256",
+        "kind": "fixed_publication",
+        "actual_producer_join": false
+      },
+      {
+        "src": "q0.sm7.stager",
+        "dst": "q0.sm7.A",
+        "bits": 512,
+        "kind": "native_read",
+        "II": 1
+      },
+      {
+        "src": "q0.sm7.stager",
+        "dst": "q1.sm7.A",
+        "bits": 256,
+        "kind": "quad_bit0",
+        "II": 1
+      },
+      {
+        "src": "q0.sm7.A",
+        "dst": "q0.sm7.B",
+        "bits": 128,
+        "kind": "local_keep",
+        "II": 1
+      },
+      {
+        "src": "q0.sm7.A",
+        "dst": "q2.sm7.B",
+        "bits": 128,
+        "kind": "quad_bit1",
+        "II": 1
+      },
+      {
+        "src": "q0.sm7.B",
+        "dst": "q0.sm7.slot",
+        "bits": 128,
+        "kind": "block_slot_pair",
+        "II": 1
+      },
+      {
+        "src": "q0.sm0.slot",
+        "dst": "q0.tree0.0",
+        "bits": 128,
+        "kind": "ordered_SM_tree",
+        "II": 2
+      },
+      {
+        "src": "q0.sm1.slot",
+        "dst": "q0.tree0.0",
+        "bits": 128,
+        "kind": "ordered_SM_tree",
+        "II": 2
+      },
+      {
+        "src": "q0.sm2.slot",
+        "dst": "q0.tree0.1",
+        "bits": 128,
+        "kind": "ordered_SM_tree",
+        "II": 2
+      },
+      {
+        "src": "q0.sm3.slot",
+        "dst": "q0.tree0.1",
+        "bits": 128,
+        "kind": "ordered_SM_tree",
+        "II": 2
+      },
+      {
+        "src": "q0.sm4.slot",
+        "dst": "q0.tree0.2",
+        "bits": 128,
+        "kind": "ordered_SM_tree",
+        "II": 2
+      },
+      {
+        "src": "q0.sm5.slot",
+        "dst": "q0.tree0.2",
+        "bits": 128,
+        "kind": "ordered_SM_tree",
+        "II": 2
+      },
+      {
+        "src": "q0.sm6.slot",
+        "dst": "q0.tree0.3",
+        "bits": 128,
+        "kind": "ordered_SM_tree",
+        "II": 2
+      },
+      {
+        "src": "q0.sm7.slot",
+        "dst": "q0.tree0.3",
+        "bits": 128,
+        "kind": "ordered_SM_tree",
+        "II": 2
+      },
+      {
+        "src": "q0.tree0.0",
+        "dst": "q0.tree1.0",
+        "bits": 128,
+        "kind": "ordered_SM_tree",
+        "II": 2
+      },
+      {
+        "src": "q0.tree0.1",
+        "dst": "q0.tree1.0",
+        "bits": 128,
+        "kind": "ordered_SM_tree",
+        "II": 2
+      },
+      {
+        "src": "q0.tree0.2",
+        "dst": "q0.tree1.1",
+        "bits": 128,
+        "kind": "ordered_SM_tree",
+        "II": 2
+      },
+      {
+        "src": "q0.tree0.3",
+        "dst": "q0.tree1.1",
+        "bits": 128,
+        "kind": "ordered_SM_tree",
+        "II": 2
+      },
+      {
+        "src": "q0.tree1.0",
+        "dst": "q0.tree2.0",
+        "bits": 128,
+        "kind": "ordered_SM_tree",
+        "II": 2
+      },
+      {
+        "src": "q0.tree1.1",
+        "dst": "q0.tree2.0",
+        "bits": 128,
+        "kind": "ordered_SM_tree",
+        "II": 2
+      },
+      {
+        "src": "q0.tree2.0",
+        "dst": "q0.VM_SU_PV_input",
+        "bits": 128,
+        "II": 2,
+        "kind": "two_noncontiguous_dimension_pairs",
+        "remaining": "actual VM sector packing/address writes and SU read calendar"
+      },
+      {
+        "src": "q1.sm0.producer",
+        "dst": "q1.sm0.stager",
+        "bits": 269,
+        "includes": "rv1,rrow12,rdata256",
+        "kind": "fixed_publication",
+        "actual_producer_join": false
+      },
+      {
+        "src": "q1.sm0.stager",
+        "dst": "q1.sm0.A",
+        "bits": 512,
+        "kind": "native_read",
+        "II": 1
+      },
+      {
+        "src": "q1.sm0.stager",
+        "dst": "q0.sm0.A",
+        "bits": 256,
+        "kind": "quad_bit0",
+        "II": 1
+      },
+      {
+        "src": "q1.sm0.A",
+        "dst": "q1.sm0.B",
+        "bits": 128,
+        "kind": "local_keep",
+        "II": 1
+      },
+      {
+        "src": "q1.sm0.A",
+        "dst": "q3.sm0.B",
+        "bits": 128,
+        "kind": "quad_bit1",
+        "II": 1
+      },
+      {
+        "src": "q1.sm0.B",
+        "dst": "q1.sm0.slot",
+        "bits": 128,
+        "kind": "block_slot_pair",
+        "II": 1
+      },
+      {
+        "src": "q1.sm1.producer",
+        "dst": "q1.sm1.stager",
+        "bits": 269,
+        "includes": "rv1,rrow12,rdata256",
+        "kind": "fixed_publication",
+        "actual_producer_join": false
+      },
+      {
+        "src": "q1.sm1.stager",
+        "dst": "q1.sm1.A",
+        "bits": 512,
+        "kind": "native_read",
+        "II": 1
+      },
+      {
+        "src": "q1.sm1.stager",
+        "dst": "q0.sm1.A",
+        "bits": 256,
+        "kind": "quad_bit0",
+        "II": 1
+      },
+      {
+        "src": "q1.sm1.A",
+        "dst": "q1.sm1.B",
+        "bits": 128,
+        "kind": "local_keep",
+        "II": 1
+      },
+      {
+        "src": "q1.sm1.A",
+        "dst": "q3.sm1.B",
+        "bits": 128,
+        "kind": "quad_bit1",
+        "II": 1
+      },
+      {
+        "src": "q1.sm1.B",
+        "dst": "q1.sm1.slot",
+        "bits": 128,
+        "kind": "block_slot_pair",
+        "II": 1
+      },
+      {
+        "src": "q1.sm2.producer",
+        "dst": "q1.sm2.stager",
+        "bits": 269,
+        "includes": "rv1,rrow12,rdata256",
+        "kind": "fixed_publication",
+        "actual_producer_join": false
+      },
+      {
+        "src": "q1.sm2.stager",
+        "dst": "q1.sm2.A",
+        "bits": 512,
+        "kind": "native_read",
+        "II": 1
+      },
+      {
+        "src": "q1.sm2.stager",
+        "dst": "q0.sm2.A",
+        "bits": 256,
+        "kind": "quad_bit0",
+        "II": 1
+      },
+      {
+        "src": "q1.sm2.A",
+        "dst": "q1.sm2.B",
+        "bits": 128,
+        "kind": "local_keep",
+        "II": 1
+      },
+      {
+        "src": "q1.sm2.A",
+        "dst": "q3.sm2.B",
+        "bits": 128,
+        "kind": "quad_bit1",
+        "II": 1
+      },
+      {
+        "src": "q1.sm2.B",
+        "dst": "q1.sm2.slot",
+        "bits": 128,
+        "kind": "block_slot_pair",
+        "II": 1
+      },
+      {
+        "src": "q1.sm3.producer",
+        "dst": "q1.sm3.stager",
+        "bits": 269,
+        "includes": "rv1,rrow12,rdata256",
+        "kind": "fixed_publication",
+        "actual_producer_join": false
+      },
+      {
+        "src": "q1.sm3.stager",
+        "dst": "q1.sm3.A",
+        "bits": 512,
+        "kind": "native_read",
+        "II": 1
+      },
+      {
+        "src": "q1.sm3.stager",
+        "dst": "q0.sm3.A",
+        "bits": 256,
+        "kind": "quad_bit0",
+        "II": 1
+      },
+      {
+        "src": "q1.sm3.A",
+        "dst": "q1.sm3.B",
+        "bits": 128,
+        "kind": "local_keep",
+        "II": 1
+      },
+      {
+        "src": "q1.sm3.A",
+        "dst": "q3.sm3.B",
+        "bits": 128,
+        "kind": "quad_bit1",
+        "II": 1
+      },
+      {
+        "src": "q1.sm3.B",
+        "dst": "q1.sm3.slot",
+        "bits": 128,
+        "kind": "block_slot_pair",
+        "II": 1
+      },
+      {
+        "src": "q1.sm4.producer",
+        "dst": "q1.sm4.stager",
+        "bits": 269,
+        "includes": "rv1,rrow12,rdata256",
+        "kind": "fixed_publication",
+        "actual_producer_join": false
+      },
+      {
+        "src": "q1.sm4.stager",
+        "dst": "q1.sm4.A",
+        "bits": 512,
+        "kind": "native_read",
+        "II": 1
+      },
+      {
+        "src": "q1.sm4.stager",
+        "dst": "q0.sm4.A",
+        "bits": 256,
+        "kind": "quad_bit0",
+        "II": 1
+      },
+      {
+        "src": "q1.sm4.A",
+        "dst": "q1.sm4.B",
+        "bits": 128,
+        "kind": "local_keep",
+        "II": 1
+      },
+      {
+        "src": "q1.sm4.A",
+        "dst": "q3.sm4.B",
+        "bits": 128,
+        "kind": "quad_bit1",
+        "II": 1
+      },
+      {
+        "src": "q1.sm4.B",
+        "dst": "q1.sm4.slot",
+        "bits": 128,
+        "kind": "block_slot_pair",
+        "II": 1
+      },
+      {
+        "src": "q1.sm5.producer",
+        "dst": "q1.sm5.stager",
+        "bits": 269,
+        "includes": "rv1,rrow12,rdata256",
+        "kind": "fixed_publication",
+        "actual_producer_join": false
+      },
+      {
+        "src": "q1.sm5.stager",
+        "dst": "q1.sm5.A",
+        "bits": 512,
+        "kind": "native_read",
+        "II": 1
+      },
+      {
+        "src": "q1.sm5.stager",
+        "dst": "q0.sm5.A",
+        "bits": 256,
+        "kind": "quad_bit0",
+        "II": 1
+      },
+      {
+        "src": "q1.sm5.A",
+        "dst": "q1.sm5.B",
+        "bits": 128,
+        "kind": "local_keep",
+        "II": 1
+      },
+      {
+        "src": "q1.sm5.A",
+        "dst": "q3.sm5.B",
+        "bits": 128,
+        "kind": "quad_bit1",
+        "II": 1
+      },
+      {
+        "src": "q1.sm5.B",
+        "dst": "q1.sm5.slot",
+        "bits": 128,
+        "kind": "block_slot_pair",
+        "II": 1
+      },
+      {
+        "src": "q1.sm6.producer",
+        "dst": "q1.sm6.stager",
+        "bits": 269,
+        "includes": "rv1,rrow12,rdata256",
+        "kind": "fixed_publication",
+        "actual_producer_join": false
+      },
+      {
+        "src": "q1.sm6.stager",
+        "dst": "q1.sm6.A",
+        "bits": 512,
+        "kind": "native_read",
+        "II": 1
+      },
+      {
+        "src": "q1.sm6.stager",
+        "dst": "q0.sm6.A",
+        "bits": 256,
+        "kind": "quad_bit0",
+        "II": 1
+      },
+      {
+        "src": "q1.sm6.A",
+        "dst": "q1.sm6.B",
+        "bits": 128,
+        "kind": "local_keep",
+        "II": 1
+      },
+      {
+        "src": "q1.sm6.A",
+        "dst": "q3.sm6.B",
+        "bits": 128,
+        "kind": "quad_bit1",
+        "II": 1
+      },
+      {
+        "src": "q1.sm6.B",
+        "dst": "q1.sm6.slot",
+        "bits": 128,
+        "kind": "block_slot_pair",
+        "II": 1
+      },
+      {
+        "src": "q1.sm7.producer",
+        "dst": "q1.sm7.stager",
+        "bits": 269,
+        "includes": "rv1,rrow12,rdata256",
+        "kind": "fixed_publication",
+        "actual_producer_join": false
+      },
+      {
+        "src": "q1.sm7.stager",
+        "dst": "q1.sm7.A",
+        "bits": 512,
+        "kind": "native_read",
+        "II": 1
+      },
+      {
+        "src": "q1.sm7.stager",
+        "dst": "q0.sm7.A",
+        "bits": 256,
+        "kind": "quad_bit0",
+        "II": 1
+      },
+      {
+        "src": "q1.sm7.A",
+        "dst": "q1.sm7.B",
+        "bits": 128,
+        "kind": "local_keep",
+        "II": 1
+      },
+      {
+        "src": "q1.sm7.A",
+        "dst": "q3.sm7.B",
+        "bits": 128,
+        "kind": "quad_bit1",
+        "II": 1
+      },
+      {
+        "src": "q1.sm7.B",
+        "dst": "q1.sm7.slot",
+        "bits": 128,
+        "kind": "block_slot_pair",
+        "II": 1
+      },
+      {
+        "src": "q1.sm0.slot",
+        "dst": "q1.tree0.0",
+        "bits": 128,
+        "kind": "ordered_SM_tree",
+        "II": 2
+      },
+      {
+        "src": "q1.sm1.slot",
+        "dst": "q1.tree0.0",
+        "bits": 128,
+        "kind": "ordered_SM_tree",
+        "II": 2
+      },
+      {
+        "src": "q1.sm2.slot",
+        "dst": "q1.tree0.1",
+        "bits": 128,
+        "kind": "ordered_SM_tree",
+        "II": 2
+      },
+      {
+        "src": "q1.sm3.slot",
+        "dst": "q1.tree0.1",
+        "bits": 128,
+        "kind": "ordered_SM_tree",
+        "II": 2
+      },
+      {
+        "src": "q1.sm4.slot",
+        "dst": "q1.tree0.2",
+        "bits": 128,
+        "kind": "ordered_SM_tree",
+        "II": 2
+      },
+      {
+        "src": "q1.sm5.slot",
+        "dst": "q1.tree0.2",
+        "bits": 128,
+        "kind": "ordered_SM_tree",
+        "II": 2
+      },
+      {
+        "src": "q1.sm6.slot",
+        "dst": "q1.tree0.3",
+        "bits": 128,
+        "kind": "ordered_SM_tree",
+        "II": 2
+      },
+      {
+        "src": "q1.sm7.slot",
+        "dst": "q1.tree0.3",
+        "bits": 128,
+        "kind": "ordered_SM_tree",
+        "II": 2
+      },
+      {
+        "src": "q1.tree0.0",
+        "dst": "q1.tree1.0",
+        "bits": 128,
+        "kind": "ordered_SM_tree",
+        "II": 2
+      },
+      {
+        "src": "q1.tree0.1",
+        "dst": "q1.tree1.0",
+        "bits": 128,
+        "kind": "ordered_SM_tree",
+        "II": 2
+      },
+      {
+        "src": "q1.tree0.2",
+        "dst": "q1.tree1.1",
+        "bits": 128,
+        "kind": "ordered_SM_tree",
+        "II": 2
+      },
+      {
+        "src": "q1.tree0.3",
+        "dst": "q1.tree1.1",
+        "bits": 128,
+        "kind": "ordered_SM_tree",
+        "II": 2
+      },
+      {
+        "src": "q1.tree1.0",
+        "dst": "q1.tree2.0",
+        "bits": 128,
+        "kind": "ordered_SM_tree",
+        "II": 2
+      },
+      {
+        "src": "q1.tree1.1",
+        "dst": "q1.tree2.0",
+        "bits": 128,
+        "kind": "ordered_SM_tree",
+        "II": 2
+      },
+      {
+        "src": "q1.tree2.0",
+        "dst": "q1.VM_SU_PV_input",
+        "bits": 128,
+        "II": 2,
+        "kind": "two_noncontiguous_dimension_pairs",
+        "remaining": "actual VM sector packing/address writes and SU read calendar"
+      },
+      {
+        "src": "q2.sm0.producer",
+        "dst": "q2.sm0.stager",
+        "bits": 269,
+        "includes": "rv1,rrow12,rdata256",
+        "kind": "fixed_publication",
+        "actual_producer_join": false
+      },
+      {
+        "src": "q2.sm0.stager",
+        "dst": "q2.sm0.A",
+        "bits": 512,
+        "kind": "native_read",
+        "II": 1
+      },
+      {
+        "src": "q2.sm0.stager",
+        "dst": "q3.sm0.A",
+        "bits": 256,
+        "kind": "quad_bit0",
+        "II": 1
+      },
+      {
+        "src": "q2.sm0.A",
+        "dst": "q2.sm0.B",
+        "bits": 128,
+        "kind": "local_keep",
+        "II": 1
+      },
+      {
+        "src": "q2.sm0.A",
+        "dst": "q0.sm0.B",
+        "bits": 128,
+        "kind": "quad_bit1",
+        "II": 1
+      },
+      {
+        "src": "q2.sm0.B",
+        "dst": "q2.sm0.slot",
+        "bits": 128,
+        "kind": "block_slot_pair",
+        "II": 1
+      },
+      {
+        "src": "q2.sm1.producer",
+        "dst": "q2.sm1.stager",
+        "bits": 269,
+        "includes": "rv1,rrow12,rdata256",
+        "kind": "fixed_publication",
+        "actual_producer_join": false
+      },
+      {
+        "src": "q2.sm1.stager",
+        "dst": "q2.sm1.A",
+        "bits": 512,
+        "kind": "native_read",
+        "II": 1
+      },
+      {
+        "src": "q2.sm1.stager",
+        "dst": "q3.sm1.A",
+        "bits": 256,
+        "kind": "quad_bit0",
+        "II": 1
+      },
+      {
+        "src": "q2.sm1.A",
+        "dst": "q2.sm1.B",
+        "bits": 128,
+        "kind": "local_keep",
+        "II": 1
+      },
+      {
+        "src": "q2.sm1.A",
+        "dst": "q0.sm1.B",
+        "bits": 128,
+        "kind": "quad_bit1",
+        "II": 1
+      },
+      {
+        "src": "q2.sm1.B",
+        "dst": "q2.sm1.slot",
+        "bits": 128,
+        "kind": "block_slot_pair",
+        "II": 1
+      },
+      {
+        "src": "q2.sm2.producer",
+        "dst": "q2.sm2.stager",
+        "bits": 269,
+        "includes": "rv1,rrow12,rdata256",
+        "kind": "fixed_publication",
+        "actual_producer_join": false
+      },
+      {
+        "src": "q2.sm2.stager",
+        "dst": "q2.sm2.A",
+        "bits": 512,
+        "kind": "native_read",
+        "II": 1
+      },
+      {
+        "src": "q2.sm2.stager",
+        "dst": "q3.sm2.A",
+        "bits": 256,
+        "kind": "quad_bit0",
+        "II": 1
+      },
+      {
+        "src": "q2.sm2.A",
+        "dst": "q2.sm2.B",
+        "bits": 128,
+        "kind": "local_keep",
+        "II": 1
+      },
+      {
+        "src": "q2.sm2.A",
+        "dst": "q0.sm2.B",
+        "bits": 128,
+        "kind": "quad_bit1",
+        "II": 1
+      },
+      {
+        "src": "q2.sm2.B",
+        "dst": "q2.sm2.slot",
+        "bits": 128,
+        "kind": "block_slot_pair",
+        "II": 1
+      },
+      {
+        "src": "q2.sm3.producer",
+        "dst": "q2.sm3.stager",
+        "bits": 269,
+        "includes": "rv1,rrow12,rdata256",
+        "kind": "fixed_publication",
+        "actual_producer_join": false
+      },
+      {
+        "src": "q2.sm3.stager",
+        "dst": "q2.sm3.A",
+        "bits": 512,
+        "kind": "native_read",
+        "II": 1
+      },
+      {
+        "src": "q2.sm3.stager",
+        "dst": "q3.sm3.A",
+        "bits": 256,
+        "kind": "quad_bit0",
+        "II": 1
+      },
+      {
+        "src": "q2.sm3.A",
+        "dst": "q2.sm3.B",
+        "bits": 128,
+        "kind": "local_keep",
+        "II": 1
+      },
+      {
+        "src": "q2.sm3.A",
+        "dst": "q0.sm3.B",
+        "bits": 128,
+        "kind": "quad_bit1",
+        "II": 1
+      },
+      {
+        "src": "q2.sm3.B",
+        "dst": "q2.sm3.slot",
+        "bits": 128,
+        "kind": "block_slot_pair",
+        "II": 1
+      },
+      {
+        "src": "q2.sm4.producer",
+        "dst": "q2.sm4.stager",
+        "bits": 269,
+        "includes": "rv1,rrow12,rdata256",
+        "kind": "fixed_publication",
+        "actual_producer_join": false
+      },
+      {
+        "src": "q2.sm4.stager",
+        "dst": "q2.sm4.A",
+        "bits": 512,
+        "kind": "native_read",
+        "II": 1
+      },
+      {
+        "src": "q2.sm4.stager",
+        "dst": "q3.sm4.A",
+        "bits": 256,
+        "kind": "quad_bit0",
+        "II": 1
+      },
+      {
+        "src": "q2.sm4.A",
+        "dst": "q2.sm4.B",
+        "bits": 128,
+        "kind": "local_keep",
+        "II": 1
+      },
+      {
+        "src": "q2.sm4.A",
+        "dst": "q0.sm4.B",
+        "bits": 128,
+        "kind": "quad_bit1",
+        "II": 1
+      },
+      {
+        "src": "q2.sm4.B",
+        "dst": "q2.sm4.slot",
+        "bits": 128,
+        "kind": "block_slot_pair",
+        "II": 1
+      },
+      {
+        "src": "q2.sm5.producer",
+        "dst": "q2.sm5.stager",
+        "bits": 269,
+        "includes": "rv1,rrow12,rdata256",
+        "kind": "fixed_publication",
+        "actual_producer_join": false
+      },
+      {
+        "src": "q2.sm5.stager",
+        "dst": "q2.sm5.A",
+        "bits": 512,
+        "kind": "native_read",
+        "II": 1
+      },
+      {
+        "src": "q2.sm5.stager",
+        "dst": "q3.sm5.A",
+        "bits": 256,
+        "kind": "quad_bit0",
+        "II": 1
+      },
+      {
+        "src": "q2.sm5.A",
+        "dst": "q2.sm5.B",
+        "bits": 128,
+        "kind": "local_keep",
+        "II": 1
+      },
+      {
+        "src": "q2.sm5.A",
+        "dst": "q0.sm5.B",
+        "bits": 128,
+        "kind": "quad_bit1",
+        "II": 1
+      },
+      {
+        "src": "q2.sm5.B",
+        "dst": "q2.sm5.slot",
+        "bits": 128,
+        "kind": "block_slot_pair",
+        "II": 1
+      },
+      {
+        "src": "q2.sm6.producer",
+        "dst": "q2.sm6.stager",
+        "bits": 269,
+        "includes": "rv1,rrow12,rdata256",
+        "kind": "fixed_publication",
+        "actual_producer_join": false
+      },
+      {
+        "src": "q2.sm6.stager",
+        "dst": "q2.sm6.A",
+        "bits": 512,
+        "kind": "native_read",
+        "II": 1
+      },
+      {
+        "src": "q2.sm6.stager",
+        "dst": "q3.sm6.A",
+        "bits": 256,
+        "kind": "quad_bit0",
+        "II": 1
+      },
+      {
+        "src": "q2.sm6.A",
+        "dst": "q2.sm6.B",
+        "bits": 128,
+        "kind": "local_keep",
+        "II": 1
+      },
+      {
+        "src": "q2.sm6.A",
+        "dst": "q0.sm6.B",
+        "bits": 128,
+        "kind": "quad_bit1",
+        "II": 1
+      },
+      {
+        "src": "q2.sm6.B",
+        "dst": "q2.sm6.slot",
+        "bits": 128,
+        "kind": "block_slot_pair",
+        "II": 1
+      },
+      {
+        "src": "q2.sm7.producer",
+        "dst": "q2.sm7.stager",
+        "bits": 269,
+        "includes": "rv1,rrow12,rdata256",
+        "kind": "fixed_publication",
+        "actual_producer_join": false
+      },
+      {
+        "src": "q2.sm7.stager",
+        "dst": "q2.sm7.A",
+        "bits": 512,
+        "kind": "native_read",
+        "II": 1
+      },
+      {
+        "src": "q2.sm7.stager",
+        "dst": "q3.sm7.A",
+        "bits": 256,
+        "kind": "quad_bit0",
+        "II": 1
+      },
+      {
+        "src": "q2.sm7.A",
+        "dst": "q2.sm7.B",
+        "bits": 128,
+        "kind": "local_keep",
+        "II": 1
+      },
+      {
+        "src": "q2.sm7.A",
+        "dst": "q0.sm7.B",
+        "bits": 128,
+        "kind": "quad_bit1",
+        "II": 1
+      },
+      {
+        "src": "q2.sm7.B",
+        "dst": "q2.sm7.slot",
+        "bits": 128,
+        "kind": "block_slot_pair",
+        "II": 1
+      },
+      {
+        "src": "q2.sm0.slot",
+        "dst": "q2.tree0.0",
+        "bits": 128,
+        "kind": "ordered_SM_tree",
+        "II": 2
+      },
+      {
+        "src": "q2.sm1.slot",
+        "dst": "q2.tree0.0",
+        "bits": 128,
+        "kind": "ordered_SM_tree",
+        "II": 2
+      },
+      {
+        "src": "q2.sm2.slot",
+        "dst": "q2.tree0.1",
+        "bits": 128,
+        "kind": "ordered_SM_tree",
+        "II": 2
+      },
+      {
+        "src": "q2.sm3.slot",
+        "dst": "q2.tree0.1",
+        "bits": 128,
+        "kind": "ordered_SM_tree",
+        "II": 2
+      },
+      {
+        "src": "q2.sm4.slot",
+        "dst": "q2.tree0.2",
+        "bits": 128,
+        "kind": "ordered_SM_tree",
+        "II": 2
+      },
+      {
+        "src": "q2.sm5.slot",
+        "dst": "q2.tree0.2",
+        "bits": 128,
+        "kind": "ordered_SM_tree",
+        "II": 2
+      },
+      {
+        "src": "q2.sm6.slot",
+        "dst": "q2.tree0.3",
+        "bits": 128,
+        "kind": "ordered_SM_tree",
+        "II": 2
+      },
+      {
+        "src": "q2.sm7.slot",
+        "dst": "q2.tree0.3",
+        "bits": 128,
+        "kind": "ordered_SM_tree",
+        "II": 2
+      },
+      {
+        "src": "q2.tree0.0",
+        "dst": "q2.tree1.0",
+        "bits": 128,
+        "kind": "ordered_SM_tree",
+        "II": 2
+      },
+      {
+        "src": "q2.tree0.1",
+        "dst": "q2.tree1.0",
+        "bits": 128,
+        "kind": "ordered_SM_tree",
+        "II": 2
+      },
+      {
+        "src": "q2.tree0.2",
+        "dst": "q2.tree1.1",
+        "bits": 128,
+        "kind": "ordered_SM_tree",
+        "II": 2
+      },
+      {
+        "src": "q2.tree0.3",
+        "dst": "q2.tree1.1",
+        "bits": 128,
+        "kind": "ordered_SM_tree",
+        "II": 2
+      },
+      {
+        "src": "q2.tree1.0",
+        "dst": "q2.tree2.0",
+        "bits": 128,
+        "kind": "ordered_SM_tree",
+        "II": 2
+      },
+      {
+        "src": "q2.tree1.1",
+        "dst": "q2.tree2.0",
+        "bits": 128,
+        "kind": "ordered_SM_tree",
+        "II": 2
+      },
+      {
+        "src": "q2.tree2.0",
+        "dst": "q2.VM_SU_PV_input",
+        "bits": 128,
+        "II": 2,
+        "kind": "two_noncontiguous_dimension_pairs",
+        "remaining": "actual VM sector packing/address writes and SU read calendar"
+      },
+      {
+        "src": "q3.sm0.producer",
+        "dst": "q3.sm0.stager",
+        "bits": 269,
+        "includes": "rv1,rrow12,rdata256",
+        "kind": "fixed_publication",
+        "actual_producer_join": false
+      },
+      {
+        "src": "q3.sm0.stager",
+        "dst": "q3.sm0.A",
+        "bits": 512,
+        "kind": "native_read",
+        "II": 1
+      },
+      {
+        "src": "q3.sm0.stager",
+        "dst": "q2.sm0.A",
+        "bits": 256,
+        "kind": "quad_bit0",
+        "II": 1
+      },
+      {
+        "src": "q3.sm0.A",
+        "dst": "q3.sm0.B",
+        "bits": 128,
+        "kind": "local_keep",
+        "II": 1
+      },
+      {
+        "src": "q3.sm0.A",
+        "dst": "q1.sm0.B",
+        "bits": 128,
+        "kind": "quad_bit1",
+        "II": 1
+      },
+      {
+        "src": "q3.sm0.B",
+        "dst": "q3.sm0.slot",
+        "bits": 128,
+        "kind": "block_slot_pair",
+        "II": 1
+      },
+      {
+        "src": "q3.sm1.producer",
+        "dst": "q3.sm1.stager",
+        "bits": 269,
+        "includes": "rv1,rrow12,rdata256",
+        "kind": "fixed_publication",
+        "actual_producer_join": false
+      },
+      {
+        "src": "q3.sm1.stager",
+        "dst": "q3.sm1.A",
+        "bits": 512,
+        "kind": "native_read",
+        "II": 1
+      },
+      {
+        "src": "q3.sm1.stager",
+        "dst": "q2.sm1.A",
+        "bits": 256,
+        "kind": "quad_bit0",
+        "II": 1
+      },
+      {
+        "src": "q3.sm1.A",
+        "dst": "q3.sm1.B",
+        "bits": 128,
+        "kind": "local_keep",
+        "II": 1
+      },
+      {
+        "src": "q3.sm1.A",
+        "dst": "q1.sm1.B",
+        "bits": 128,
+        "kind": "quad_bit1",
+        "II": 1
+      },
+      {
+        "src": "q3.sm1.B",
+        "dst": "q3.sm1.slot",
+        "bits": 128,
+        "kind": "block_slot_pair",
+        "II": 1
+      },
+      {
+        "src": "q3.sm2.producer",
+        "dst": "q3.sm2.stager",
+        "bits": 269,
+        "includes": "rv1,rrow12,rdata256",
+        "kind": "fixed_publication",
+        "actual_producer_join": false
+      },
+      {
+        "src": "q3.sm2.stager",
+        "dst": "q3.sm2.A",
+        "bits": 512,
+        "kind": "native_read",
+        "II": 1
+      },
+      {
+        "src": "q3.sm2.stager",
+        "dst": "q2.sm2.A",
+        "bits": 256,
+        "kind": "quad_bit0",
+        "II": 1
+      },
+      {
+        "src": "q3.sm2.A",
+        "dst": "q3.sm2.B",
+        "bits": 128,
+        "kind": "local_keep",
+        "II": 1
+      },
+      {
+        "src": "q3.sm2.A",
+        "dst": "q1.sm2.B",
+        "bits": 128,
+        "kind": "quad_bit1",
+        "II": 1
+      },
+      {
+        "src": "q3.sm2.B",
+        "dst": "q3.sm2.slot",
+        "bits": 128,
+        "kind": "block_slot_pair",
+        "II": 1
+      },
+      {
+        "src": "q3.sm3.producer",
+        "dst": "q3.sm3.stager",
+        "bits": 269,
+        "includes": "rv1,rrow12,rdata256",
+        "kind": "fixed_publication",
+        "actual_producer_join": false
+      },
+      {
+        "src": "q3.sm3.stager",
+        "dst": "q3.sm3.A",
+        "bits": 512,
+        "kind": "native_read",
+        "II": 1
+      },
+      {
+        "src": "q3.sm3.stager",
+        "dst": "q2.sm3.A",
+        "bits": 256,
+        "kind": "quad_bit0",
+        "II": 1
+      },
+      {
+        "src": "q3.sm3.A",
+        "dst": "q3.sm3.B",
+        "bits": 128,
+        "kind": "local_keep",
+        "II": 1
+      },
+      {
+        "src": "q3.sm3.A",
+        "dst": "q1.sm3.B",
+        "bits": 128,
+        "kind": "quad_bit1",
+        "II": 1
+      },
+      {
+        "src": "q3.sm3.B",
+        "dst": "q3.sm3.slot",
+        "bits": 128,
+        "kind": "block_slot_pair",
+        "II": 1
+      },
+      {
+        "src": "q3.sm4.producer",
+        "dst": "q3.sm4.stager",
+        "bits": 269,
+        "includes": "rv1,rrow12,rdata256",
+        "kind": "fixed_publication",
+        "actual_producer_join": false
+      },
+      {
+        "src": "q3.sm4.stager",
+        "dst": "q3.sm4.A",
+        "bits": 512,
+        "kind": "native_read",
+        "II": 1
+      },
+      {
+        "src": "q3.sm4.stager",
+        "dst": "q2.sm4.A",
+        "bits": 256,
+        "kind": "quad_bit0",
+        "II": 1
+      },
+      {
+        "src": "q3.sm4.A",
+        "dst": "q3.sm4.B",
+        "bits": 128,
+        "kind": "local_keep",
+        "II": 1
+      },
+      {
+        "src": "q3.sm4.A",
+        "dst": "q1.sm4.B",
+        "bits": 128,
+        "kind": "quad_bit1",
+        "II": 1
+      },
+      {
+        "src": "q3.sm4.B",
+        "dst": "q3.sm4.slot",
+        "bits": 128,
+        "kind": "block_slot_pair",
+        "II": 1
+      },
+      {
+        "src": "q3.sm5.producer",
+        "dst": "q3.sm5.stager",
+        "bits": 269,
+        "includes": "rv1,rrow12,rdata256",
+        "kind": "fixed_publication",
+        "actual_producer_join": false
+      },
+      {
+        "src": "q3.sm5.stager",
+        "dst": "q3.sm5.A",
+        "bits": 512,
+        "kind": "native_read",
+        "II": 1
+      },
+      {
+        "src": "q3.sm5.stager",
+        "dst": "q2.sm5.A",
+        "bits": 256,
+        "kind": "quad_bit0",
+        "II": 1
+      },
+      {
+        "src": "q3.sm5.A",
+        "dst": "q3.sm5.B",
+        "bits": 128,
+        "kind": "local_keep",
+        "II": 1
+      },
+      {
+        "src": "q3.sm5.A",
+        "dst": "q1.sm5.B",
+        "bits": 128,
+        "kind": "quad_bit1",
+        "II": 1
+      },
+      {
+        "src": "q3.sm5.B",
+        "dst": "q3.sm5.slot",
+        "bits": 128,
+        "kind": "block_slot_pair",
+        "II": 1
+      },
+      {
+        "src": "q3.sm6.producer",
+        "dst": "q3.sm6.stager",
+        "bits": 269,
+        "includes": "rv1,rrow12,rdata256",
+        "kind": "fixed_publication",
+        "actual_producer_join": false
+      },
+      {
+        "src": "q3.sm6.stager",
+        "dst": "q3.sm6.A",
+        "bits": 512,
+        "kind": "native_read",
+        "II": 1
+      },
+      {
+        "src": "q3.sm6.stager",
+        "dst": "q2.sm6.A",
+        "bits": 256,
+        "kind": "quad_bit0",
+        "II": 1
+      },
+      {
+        "src": "q3.sm6.A",
+        "dst": "q3.sm6.B",
+        "bits": 128,
+        "kind": "local_keep",
+        "II": 1
+      },
+      {
+        "src": "q3.sm6.A",
+        "dst": "q1.sm6.B",
+        "bits": 128,
+        "kind": "quad_bit1",
+        "II": 1
+      },
+      {
+        "src": "q3.sm6.B",
+        "dst": "q3.sm6.slot",
+        "bits": 128,
+        "kind": "block_slot_pair",
+        "II": 1
+      },
+      {
+        "src": "q3.sm7.producer",
+        "dst": "q3.sm7.stager",
+        "bits": 269,
+        "includes": "rv1,rrow12,rdata256",
+        "kind": "fixed_publication",
+        "actual_producer_join": false
+      },
+      {
+        "src": "q3.sm7.stager",
+        "dst": "q3.sm7.A",
+        "bits": 512,
+        "kind": "native_read",
+        "II": 1
+      },
+      {
+        "src": "q3.sm7.stager",
+        "dst": "q2.sm7.A",
+        "bits": 256,
+        "kind": "quad_bit0",
+        "II": 1
+      },
+      {
+        "src": "q3.sm7.A",
+        "dst": "q3.sm7.B",
+        "bits": 128,
+        "kind": "local_keep",
+        "II": 1
+      },
+      {
+        "src": "q3.sm7.A",
+        "dst": "q1.sm7.B",
+        "bits": 128,
+        "kind": "quad_bit1",
+        "II": 1
+      },
+      {
+        "src": "q3.sm7.B",
+        "dst": "q3.sm7.slot",
+        "bits": 128,
+        "kind": "block_slot_pair",
+        "II": 1
+      },
+      {
+        "src": "q3.sm0.slot",
+        "dst": "q3.tree0.0",
+        "bits": 128,
+        "kind": "ordered_SM_tree",
+        "II": 2
+      },
+      {
+        "src": "q3.sm1.slot",
+        "dst": "q3.tree0.0",
+        "bits": 128,
+        "kind": "ordered_SM_tree",
+        "II": 2
+      },
+      {
+        "src": "q3.sm2.slot",
+        "dst": "q3.tree0.1",
+        "bits": 128,
+        "kind": "ordered_SM_tree",
+        "II": 2
+      },
+      {
+        "src": "q3.sm3.slot",
+        "dst": "q3.tree0.1",
+        "bits": 128,
+        "kind": "ordered_SM_tree",
+        "II": 2
+      },
+      {
+        "src": "q3.sm4.slot",
+        "dst": "q3.tree0.2",
+        "bits": 128,
+        "kind": "ordered_SM_tree",
+        "II": 2
+      },
+      {
+        "src": "q3.sm5.slot",
+        "dst": "q3.tree0.2",
+        "bits": 128,
+        "kind": "ordered_SM_tree",
+        "II": 2
+      },
+      {
+        "src": "q3.sm6.slot",
+        "dst": "q3.tree0.3",
+        "bits": 128,
+        "kind": "ordered_SM_tree",
+        "II": 2
+      },
+      {
+        "src": "q3.sm7.slot",
+        "dst": "q3.tree0.3",
+        "bits": 128,
+        "kind": "ordered_SM_tree",
+        "II": 2
+      },
+      {
+        "src": "q3.tree0.0",
+        "dst": "q3.tree1.0",
+        "bits": 128,
+        "kind": "ordered_SM_tree",
+        "II": 2
+      },
+      {
+        "src": "q3.tree0.1",
+        "dst": "q3.tree1.0",
+        "bits": 128,
+        "kind": "ordered_SM_tree",
+        "II": 2
+      },
+      {
+        "src": "q3.tree0.2",
+        "dst": "q3.tree1.1",
+        "bits": 128,
+        "kind": "ordered_SM_tree",
+        "II": 2
+      },
+      {
+        "src": "q3.tree0.3",
+        "dst": "q3.tree1.1",
+        "bits": 128,
+        "kind": "ordered_SM_tree",
+        "II": 2
+      },
+      {
+        "src": "q3.tree1.0",
+        "dst": "q3.tree2.0",
+        "bits": 128,
+        "kind": "ordered_SM_tree",
+        "II": 2
+      },
+      {
+        "src": "q3.tree1.1",
+        "dst": "q3.tree2.0",
+        "bits": 128,
+        "kind": "ordered_SM_tree",
+        "II": 2
+      },
+      {
+        "src": "q3.tree2.0",
+        "dst": "q3.VM_SU_PV_input",
+        "bits": 128,
+        "II": 2,
+        "kind": "two_noncontiguous_dimension_pairs",
+        "remaining": "actual VM sector packing/address writes and SU read calendar"
+      }
+    ]
+  },
+  "alternatives": [
+    {
+      "name": "SM_local_stagers_distributed_tree",
+      "status": "structural candidate, not qualified",
+      "placement": "stager beside each producer; A/B and local tree stages near incident link endpoints",
+      "benefit": "short producer wires, distributed traffic",
+      "cost": "512bit local stager outputs and eight distributed peer lanes; all relay and tree legs charged"
+    },
+    {
+      "name": "central_attention_island",
+      "status": "structural candidate, not qualified",
+      "placement": "all32 SM/cache/stagers plus four ordered trees in one coherent region",
+      "benefit": "short critical gather, quad exchange and tree legs",
+      "cost": "must relocate every VM/SFU/DMA/SU/PHY/programme/clock/PG incident edge; not a COLL-only translation"
+    },
+    {
+      "name": "COLL_adjacent_stagers",
+      "status": "structural candidate, not qualified",
+      "placement": "32common stager leaves near four collective trees; preserve existing SM homes",
+      "benefit": "long producer trunks are269bits rather than512bit gather trunks",
+      "cost": "producer relay latency enters block-ready; 32source trunks and HBM/service adjacencies remain real"
+    }
+  ],
+  "remaining": [
+    "actual624adder native proof and fixed slot mutants",
+    "actual32SM raw SRAM producer binding",
+    "current source-bound pin/clock geometry with every incident edge",
+    "actual VM/SU final writes and read slots",
+    "TTsetup FFhold DRC0 physical proof; SS sensitivity only",
+    "measured full-shape token throughput against immutable price"
+  ]
+}

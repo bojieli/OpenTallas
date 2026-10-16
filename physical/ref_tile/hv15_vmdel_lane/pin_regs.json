@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hbm_svc_vmdel_lane",
+ "enable": false,
+ "reason": "RTL registers every pin (v3/v4/v5): begin/start/fill inputs and the cross-lane full0_all/full1_all/pcbad_all status inputs are captured in pin flops; dq/block_ready/busy/fault and the full0/full1/pcbad status outputs leave from flops; rst_n reaches the valid/reset pin flops only. Synthesis pin registers would add a second, unpriced stage."
+}

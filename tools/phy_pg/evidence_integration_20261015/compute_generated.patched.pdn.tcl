@@ -1,0 +1,342 @@
+# r5 full-die PDN: r4 grids, anchored instance patterns, one macro grid per stripe phase
+add_global_connection -net VDD -inst_pattern {.*} -pin_pattern {^VDD$} -power
+add_global_connection -net VSS -inst_pattern {.*} -pin_pattern {^VSS$} -ground
+global_connect
+set_voltage_domain -name CORE -power VDD -ground VSS
+define_pdn_grid -name core -voltage_domains CORE -pins {M9} -starts_with GROUND
+add_pdn_stripe -grid core -layer M8 -width .48 -pitch 9.091 -offset 0
+add_pdn_stripe -grid core -layer M9 -width .48 -pitch 9.091 -offset 0
+add_pdn_connect -grid core -layers {M8 M9}
+add_pdn_stripe -grid core -layer M1 -width .018 -followpins
+add_pdn_stripe -grid core -layer M2 -width .018 -followpins
+add_pdn_stripe -grid core -layer M3 -width 0.09 -pitch 4.32 -spacing 2.07 -offset 1.08 -extend_to_boundary
+add_pdn_stripe -grid core -layer M4 -width 0.12 -pitch 4.32 -spacing 2.04 -offset 1.08 -extend_to_boundary
+add_pdn_stripe -grid core -layer M5 -width 0.12 -pitch 8.64 -spacing 4.2 -offset 2.16 -extend_to_boundary
+add_pdn_stripe -grid core -layer M6 -width 0.16 -pitch 8.64 -spacing 4.16 -offset 2.16 -extend_to_boundary
+add_pdn_stripe -grid core -layer M7 -width 0.16 -pitch 8.64 -spacing 4.16 -offset 2.16 -extend_to_boundary
+add_pdn_connect -grid core -layers {M1 M2}
+add_pdn_connect -grid core -layers {M2 M3}
+add_pdn_connect -grid core -layers {M3 M4}
+add_pdn_connect -grid core -layers {M4 M5}
+add_pdn_connect -grid core -layers {M5 M6}
+add_pdn_connect -grid core -layers {M6 M7}
+add_pdn_connect -grid core -layers {M7 M8}
+define_pdn_grid -macro -instances {^s_0_12$ ^s_10_12$ ^s_11_12$ ^s_12_12$ ^s_13_12$ ^s_14_12$ ^s_15_12$ ^s_16_12$ ^s_17_12$ ^s_18_12$ ^s_19_12$ ^s_1_12$ ^s_20_12$ ^s_21_12$ ^s_22_12$ ^s_23_12$ ^s_24_12$ ^s_25_12$ ^s_26_12$ ^s_27_12$ ^s_28_12$ ^s_29_12$ ^s_2_12$ ^s_30_12$ ^s_31_12$ ^s_32_12$ ^s_33_12$ ^s_34_12$ ^s_35_12$ ^s_36_12$ ^s_37_12$ ^s_38_12$ ^s_39_12$ ^s_3_12$ ^s_40_12$ ^s_41_12$ ^s_42_12$ ^s_43_12$ ^s_44_12$ ^s_45_12$ ^s_46_12$ ^s_47_12$ ^s_4_12$ ^s_5_12$ ^s_6_12$ ^s_7_12$ ^s_8_12$ ^s_9_12$} -voltage_domains CORE -name pg_m8_0 -starts_with GROUND -grid_over_boundary
+add_pdn_stripe -grid pg_m8_0 -layer M8 -width .48 -pitch 9.091 -offset 0.025
+add_pdn_connect -grid pg_m8_0 -layers {M7 M8}
+add_pdn_connect -grid pg_m8_0 -layers {M8 M9}
+define_pdn_grid -macro -instances {^t_0_15$ ^t_10_15$ ^t_11_15$ ^t_12_15$ ^t_13_15$ ^t_14_15$ ^t_15_15$ ^t_16_15$ ^t_17_15$ ^t_18_15$ ^t_19_15$ ^t_1_15$ ^t_20_15$ ^t_21_15$ ^t_22_15$ ^t_23_15$ ^t_24_15$ ^t_25_15$ ^t_26_15$ ^t_27_15$ ^t_28_15$ ^t_29_15$ ^t_2_15$ ^t_30_15$ ^t_31_15$ ^t_32_15$ ^t_33_15$ ^t_34_15$ ^t_35_15$ ^t_36_15$ ^t_37_15$ ^t_38_15$ ^t_39_15$ ^t_3_15$ ^t_40_15$ ^t_41_15$ ^t_42_15$ ^t_43_15$ ^t_44_15$ ^t_45_15$ ^t_46_15$ ^t_47_15$ ^t_4_15$ ^t_5_15$ ^t_6_15$ ^t_7_15$ ^t_8_15$ ^t_9_15$} -voltage_domains CORE -name pg_m8_1 -starts_with GROUND -grid_over_boundary
+add_pdn_stripe -grid pg_m8_1 -layer M8 -width .48 -pitch 9.091 -offset 0.172
+add_pdn_connect -grid pg_m8_1 -layers {M7 M8}
+add_pdn_connect -grid pg_m8_1 -layers {M8 M9}
+define_pdn_grid -macro -instances {^sp_port_tiles_2$} -voltage_domains CORE -name pg_m8_2 -starts_with GROUND -grid_over_boundary
+add_pdn_stripe -grid pg_m8_2 -layer M8 -width .48 -pitch 9.091 -offset 0.238
+add_pdn_connect -grid pg_m8_2 -layers {M7 M8}
+add_pdn_connect -grid pg_m8_2 -layers {M8 M9}
+define_pdn_grid -macro -instances {^t_0_9$ ^t_10_9$ ^t_11_9$ ^t_12_9$ ^t_13_9$ ^t_14_9$ ^t_15_9$ ^t_16_9$ ^t_17_9$ ^t_18_9$ ^t_19_9$ ^t_1_9$ ^t_20_9$ ^t_21_9$ ^t_22_9$ ^t_23_9$ ^t_24_9$ ^t_25_9$ ^t_26_9$ ^t_27_9$ ^t_28_9$ ^t_29_9$ ^t_2_9$ ^t_30_9$ ^t_31_9$ ^t_32_9$ ^t_33_9$ ^t_34_9$ ^t_35_9$ ^t_36_9$ ^t_37_9$ ^t_38_9$ ^t_39_9$ ^t_3_9$ ^t_40_9$ ^t_41_9$ ^t_42_9$ ^t_43_9$ ^t_44_9$ ^t_45_9$ ^t_46_9$ ^t_47_9$ ^t_4_9$ ^t_5_9$ ^t_6_9$ ^t_7_9$ ^t_8_9$ ^t_9_9$} -voltage_domains CORE -name pg_m8_3 -starts_with GROUND -grid_over_boundary
+add_pdn_stripe -grid pg_m8_3 -layer M8 -width .48 -pitch 9.091 -offset 0.541
+add_pdn_connect -grid pg_m8_3 -layers {M7 M8}
+add_pdn_connect -grid pg_m8_3 -layers {M8 M9}
+define_pdn_grid -macro -instances {^s_0_14$ ^s_10_14$ ^s_11_14$ ^s_12_14$ ^s_13_14$ ^s_14_14$ ^s_15_14$ ^s_16_14$ ^s_17_14$ ^s_18_14$ ^s_19_14$ ^s_1_14$ ^s_20_14$ ^s_21_14$ ^s_22_14$ ^s_23_14$ ^s_24_14$ ^s_25_14$ ^s_26_14$ ^s_27_14$ ^s_28_14$ ^s_29_14$ ^s_2_14$ ^s_30_14$ ^s_31_14$ ^s_32_14$ ^s_33_14$ ^s_34_14$ ^s_35_14$ ^s_36_14$ ^s_37_14$ ^s_38_14$ ^s_39_14$ ^s_3_14$ ^s_40_14$ ^s_41_14$ ^s_42_14$ ^s_43_14$ ^s_44_14$ ^s_45_14$ ^s_46_14$ ^s_47_14$ ^s_4_14$ ^s_5_14$ ^s_6_14$ ^s_7_14$ ^s_8_14$ ^s_9_14$} -voltage_domains CORE -name pg_m8_4 -starts_with GROUND -grid_over_boundary
+add_pdn_stripe -grid pg_m8_4 -layer M8 -width .48 -pitch 9.091 -offset 0.622
+add_pdn_connect -grid pg_m8_4 -layers {M7 M8}
+add_pdn_connect -grid pg_m8_4 -layers {M8 M9}
+define_pdn_grid -macro -instances {^crom_g_1$} -voltage_domains CORE -name pg_m8_5 -starts_with GROUND -grid_over_boundary
+add_pdn_stripe -grid pg_m8_5 -layer M8 -width .48 -pitch 9.091 -offset 0.662
+add_pdn_connect -grid pg_m8_5 -layers {M7 M8}
+add_pdn_connect -grid pg_m8_5 -layers {M8 M9}
+define_pdn_grid -macro -instances {^cbuf_g_5$} -voltage_domains CORE -name pg_m8_6 -starts_with GROUND -grid_over_boundary
+add_pdn_stripe -grid pg_m8_6 -layer M8 -width .48 -pitch 9.091 -offset 0.803
+add_pdn_connect -grid pg_m8_6 -layers {M7 M8}
+add_pdn_connect -grid pg_m8_6 -layers {M8 M9}
+define_pdn_grid -macro -instances {^cbuf_g_7$} -voltage_domains CORE -name pg_m8_7 -starts_with GROUND -grid_over_boundary
+add_pdn_stripe -grid pg_m8_7 -layer M8 -width .48 -pitch 9.091 -offset 0.897
+add_pdn_connect -grid pg_m8_7 -layers {M7 M8}
+add_pdn_connect -grid pg_m8_7 -layers {M8 M9}
+define_pdn_grid -macro -instances {^h_0$ ^h_1$ ^h_10$ ^h_11$ ^h_12$ ^h_13$ ^h_14$ ^h_15$ ^h_16$ ^h_17$ ^h_18$ ^h_19$ ^h_2$ ^h_20$ ^h_21$ ^h_22$ ^h_23$ ^h_24$ ^h_25$ ^h_26$ ^h_27$ ^h_28$ ^h_29$ ^h_3$ ^h_30$ ^h_31$ ^h_32$ ^h_33$ ^h_34$ ^h_35$ ^h_36$ ^h_37$ ^h_38$ ^h_39$ ^h_4$ ^h_40$ ^h_41$ ^h_42$ ^h_43$ ^h_44$ ^h_45$ ^h_46$ ^h_47$ ^h_5$ ^h_6$ ^h_7$ ^h_8$ ^h_9$} -voltage_domains CORE -name pg_m8_8 -starts_with GROUND -grid_over_boundary
+add_pdn_stripe -grid pg_m8_8 -layer M8 -width .48 -pitch 9.091 -offset 0.918
+add_pdn_connect -grid pg_m8_8 -layers {M7 M8}
+add_pdn_connect -grid pg_m8_8 -layers {M8 M9}
+define_pdn_grid -macro -instances {^clk_rx$} -voltage_domains CORE -name pg_m8_9 -starts_with GROUND -grid_over_boundary
+add_pdn_stripe -grid pg_m8_9 -layer M8 -width .48 -pitch 9.091 -offset 1.015
+add_pdn_connect -grid pg_m8_9 -layers {M7 M8}
+add_pdn_connect -grid pg_m8_9 -layers {M8 M9}
+define_pdn_grid -macro -instances {^t_0_11$ ^t_10_11$ ^t_11_11$ ^t_12_11$ ^t_13_11$ ^t_14_11$ ^t_15_11$ ^t_16_11$ ^t_17_11$ ^t_18_11$ ^t_19_11$ ^t_1_11$ ^t_20_11$ ^t_21_11$ ^t_22_11$ ^t_23_11$ ^t_24_11$ ^t_25_11$ ^t_26_11$ ^t_27_11$ ^t_28_11$ ^t_29_11$ ^t_2_11$ ^t_30_11$ ^t_31_11$ ^t_32_11$ ^t_33_11$ ^t_34_11$ ^t_35_11$ ^t_36_11$ ^t_37_11$ ^t_38_11$ ^t_39_11$ ^t_3_11$ ^t_40_11$ ^t_41_11$ ^t_42_11$ ^t_43_11$ ^t_44_11$ ^t_45_11$ ^t_46_11$ ^t_47_11$ ^t_4_11$ ^t_5_11$ ^t_6_11$ ^t_7_11$ ^t_8_11$ ^t_9_11$} -voltage_domains CORE -name pg_m8_10 -starts_with GROUND -grid_over_boundary
+add_pdn_stripe -grid pg_m8_10 -layer M8 -width .48 -pitch 9.091 -offset 1.138
+add_pdn_connect -grid pg_m8_10 -layers {M7 M8}
+add_pdn_connect -grid pg_m8_10 -layers {M8 M9}
+define_pdn_grid -macro -instances {^s_0_2$ ^s_10_2$ ^s_11_2$ ^s_12_2$ ^s_13_2$ ^s_14_2$ ^s_15_2$ ^s_16_2$ ^s_17_2$ ^s_18_2$ ^s_19_2$ ^s_1_2$ ^s_20_2$ ^s_21_2$ ^s_22_2$ ^s_23_2$ ^s_24_2$ ^s_25_2$ ^s_26_2$ ^s_27_2$ ^s_28_2$ ^s_29_2$ ^s_2_2$ ^s_30_2$ ^s_31_2$ ^s_32_2$ ^s_33_2$ ^s_34_2$ ^s_35_2$ ^s_36_2$ ^s_37_2$ ^s_38_2$ ^s_39_2$ ^s_3_2$ ^s_40_2$ ^s_41_2$ ^s_42_2$ ^s_43_2$ ^s_44_2$ ^s_45_2$ ^s_46_2$ ^s_47_2$ ^s_4_2$ ^s_5_2$ ^s_6_2$ ^s_7_2$ ^s_8_2$ ^s_9_2$} -voltage_domains CORE -name pg_m8_11 -starts_with GROUND -grid_over_boundary
+add_pdn_stripe -grid pg_m8_11 -layer M8 -width .48 -pitch 9.091 -offset 1.170
+add_pdn_connect -grid pg_m8_11 -layers {M7 M8}
+add_pdn_connect -grid pg_m8_11 -layers {M8 M9}
+define_pdn_grid -macro -instances {^crom_g_2$} -voltage_domains CORE -name pg_m8_12 -starts_with GROUND -grid_over_boundary
+add_pdn_stripe -grid pg_m8_12 -layer M8 -width .48 -pitch 9.091 -offset 1.231
+add_pdn_connect -grid pg_m8_12 -layers {M7 M8}
+add_pdn_connect -grid pg_m8_12 -layers {M8 M9}
+define_pdn_grid -macro -instances {^sp_band_lanes_0$} -voltage_domains CORE -name pg_m8_13 -starts_with GROUND -grid_over_boundary
+add_pdn_stripe -grid pg_m8_13 -layer M8 -width .48 -pitch 9.091 -offset 1.265
+add_pdn_connect -grid pg_m8_13 -layers {M7 M8}
+add_pdn_connect -grid pg_m8_13 -layers {M8 M9}
+define_pdn_grid -macro -instances {^sp_port_tiles_1$ ^sp_port_tiles_1_f1$} -voltage_domains CORE -name pg_m8_14 -starts_with GROUND -grid_over_boundary
+add_pdn_stripe -grid pg_m8_14 -layer M8 -width .48 -pitch 9.091 -offset 1.269
+add_pdn_connect -grid pg_m8_14 -layers {M7 M8}
+add_pdn_connect -grid pg_m8_14 -layers {M8 M9}
+define_pdn_grid -macro -instances {^sp_res_ser_1$} -voltage_domains CORE -name pg_m8_15 -starts_with GROUND -grid_over_boundary
+add_pdn_stripe -grid pg_m8_15 -layer M8 -width .48 -pitch 9.091 -offset 1.292
+add_pdn_connect -grid pg_m8_15 -layers {M7 M8}
+add_pdn_connect -grid pg_m8_15 -layers {M8 M9}
+define_pdn_grid -macro -instances {^cbuf_g_0$} -voltage_domains CORE -name pg_m8_16 -starts_with GROUND -grid_over_boundary
+add_pdn_stripe -grid pg_m8_16 -layer M8 -width .48 -pitch 9.091 -offset 1.325
+add_pdn_connect -grid pg_m8_16 -layers {M7 M8}
+add_pdn_connect -grid pg_m8_16 -layers {M8 M9}
+define_pdn_grid -macro -instances {^tt_ctlm$} -voltage_domains CORE -name pg_m8_17 -starts_with GROUND -grid_over_boundary
+add_pdn_stripe -grid pg_m8_17 -layer M8 -width .48 -pitch 9.091 -offset 1.538
+add_pdn_connect -grid pg_m8_17 -layers {M7 M8}
+add_pdn_connect -grid pg_m8_17 -layers {M8 M9}
+define_pdn_grid -macro -instances {^res_train_issue$} -voltage_domains CORE -name pg_m8_18 -starts_with GROUND -grid_over_boundary
+add_pdn_stripe -grid pg_m8_18 -layer M8 -width .48 -pitch 9.091 -offset 1.585
+add_pdn_connect -grid pg_m8_18 -layers {M7 M8}
+add_pdn_connect -grid pg_m8_18 -layers {M8 M9}
+define_pdn_grid -macro -instances {^t_0_13$ ^t_10_13$ ^t_11_13$ ^t_12_13$ ^t_13_13$ ^t_14_13$ ^t_15_13$ ^t_16_13$ ^t_17_13$ ^t_18_13$ ^t_19_13$ ^t_1_13$ ^t_20_13$ ^t_21_13$ ^t_22_13$ ^t_23_13$ ^t_24_13$ ^t_25_13$ ^t_26_13$ ^t_27_13$ ^t_28_13$ ^t_29_13$ ^t_2_13$ ^t_30_13$ ^t_31_13$ ^t_32_13$ ^t_33_13$ ^t_34_13$ ^t_35_13$ ^t_36_13$ ^t_37_13$ ^t_38_13$ ^t_39_13$ ^t_3_13$ ^t_40_13$ ^t_41_13$ ^t_42_13$ ^t_43_13$ ^t_44_13$ ^t_45_13$ ^t_46_13$ ^t_47_13$ ^t_4_13$ ^t_5_13$ ^t_6_13$ ^t_7_13$ ^t_8_13$ ^t_9_13$} -voltage_domains CORE -name pg_m8_19 -starts_with GROUND -grid_over_boundary
+add_pdn_stripe -grid pg_m8_19 -layer M8 -width .48 -pitch 9.091 -offset 1.735
+add_pdn_connect -grid pg_m8_19 -layers {M7 M8}
+add_pdn_connect -grid pg_m8_19 -layers {M8 M9}
+define_pdn_grid -macro -instances {^s_0_4$ ^s_10_4$ ^s_11_4$ ^s_12_4$ ^s_13_4$ ^s_14_4$ ^s_15_4$ ^s_16_4$ ^s_17_4$ ^s_18_4$ ^s_19_4$ ^s_1_4$ ^s_20_4$ ^s_21_4$ ^s_22_4$ ^s_23_4$ ^s_24_4$ ^s_25_4$ ^s_26_4$ ^s_27_4$ ^s_28_4$ ^s_29_4$ ^s_2_4$ ^s_30_4$ ^s_31_4$ ^s_32_4$ ^s_33_4$ ^s_34_4$ ^s_35_4$ ^s_36_4$ ^s_37_4$ ^s_38_4$ ^s_39_4$ ^s_3_4$ ^s_40_4$ ^s_41_4$ ^s_42_4$ ^s_43_4$ ^s_44_4$ ^s_45_4$ ^s_46_4$ ^s_47_4$ ^s_4_4$ ^s_5_4$ ^s_6_4$ ^s_7_4$ ^s_8_4$ ^s_9_4$} -voltage_domains CORE -name pg_m8_20 -starts_with GROUND -grid_over_boundary
+add_pdn_stripe -grid pg_m8_20 -layer M8 -width .48 -pitch 9.091 -offset 1.767
+add_pdn_connect -grid pg_m8_20 -layers {M7 M8}
+add_pdn_connect -grid pg_m8_20 -layers {M8 M9}
+define_pdn_grid -macro -instances {^seq_su$ ^sp_su64_sfu$} -voltage_domains CORE -name pg_m8_21 -starts_with GROUND -grid_over_boundary
+add_pdn_stripe -grid pg_m8_21 -layer M8 -width .48 -pitch 9.091 -offset 1.822
+add_pdn_connect -grid pg_m8_21 -layers {M7 M8}
+add_pdn_connect -grid pg_m8_21 -layers {M8 M9}
+define_pdn_grid -macro -instances {^t_0_1$ ^t_10_1$ ^t_11_1$ ^t_12_1$ ^t_13_1$ ^t_14_1$ ^t_15_1$ ^t_16_1$ ^t_17_1$ ^t_18_1$ ^t_19_1$ ^t_1_1$ ^t_20_1$ ^t_21_1$ ^t_22_1$ ^t_23_1$ ^t_24_1$ ^t_25_1$ ^t_26_1$ ^t_27_1$ ^t_28_1$ ^t_29_1$ ^t_2_1$ ^t_30_1$ ^t_31_1$ ^t_32_1$ ^t_33_1$ ^t_34_1$ ^t_35_1$ ^t_36_1$ ^t_37_1$ ^t_38_1$ ^t_39_1$ ^t_3_1$ ^t_40_1$ ^t_41_1$ ^t_42_1$ ^t_43_1$ ^t_44_1$ ^t_45_1$ ^t_46_1$ ^t_47_1$ ^t_4_1$ ^t_5_1$ ^t_6_1$ ^t_7_1$ ^t_8_1$ ^t_9_1$} -voltage_domains CORE -name pg_m8_22 -starts_with GROUND -grid_over_boundary
+add_pdn_stripe -grid pg_m8_22 -layer M8 -width .48 -pitch 9.091 -offset 2.283
+add_pdn_connect -grid pg_m8_22 -layers {M7 M8}
+add_pdn_connect -grid pg_m8_22 -layers {M8 M9}
+define_pdn_grid -macro -instances {^s_0_6$ ^s_10_6$ ^s_11_6$ ^s_12_6$ ^s_13_6$ ^s_14_6$ ^s_15_6$ ^s_16_6$ ^s_17_6$ ^s_18_6$ ^s_19_6$ ^s_1_6$ ^s_20_6$ ^s_21_6$ ^s_22_6$ ^s_23_6$ ^s_24_6$ ^s_25_6$ ^s_26_6$ ^s_27_6$ ^s_28_6$ ^s_29_6$ ^s_2_6$ ^s_30_6$ ^s_31_6$ ^s_32_6$ ^s_33_6$ ^s_34_6$ ^s_35_6$ ^s_36_6$ ^s_37_6$ ^s_38_6$ ^s_39_6$ ^s_3_6$ ^s_40_6$ ^s_41_6$ ^s_42_6$ ^s_43_6$ ^s_44_6$ ^s_45_6$ ^s_46_6$ ^s_47_6$ ^s_4_6$ ^s_5_6$ ^s_6_6$ ^s_7_6$ ^s_8_6$ ^s_9_6$} -voltage_domains CORE -name pg_m8_23 -starts_with GROUND -grid_over_boundary
+add_pdn_stripe -grid pg_m8_23 -layer M8 -width .48 -pitch 9.091 -offset 2.364
+add_pdn_connect -grid pg_m8_23 -layers {M7 M8}
+add_pdn_connect -grid pg_m8_23 -layers {M8 M9}
+define_pdn_grid -macro -instances {^cbuf_g_1$} -voltage_domains CORE -name pg_m8_24 -starts_with GROUND -grid_over_boundary
+add_pdn_stripe -grid pg_m8_24 -layer M8 -width .48 -pitch 9.091 -offset 2.465
+add_pdn_connect -grid pg_m8_24 -layers {M7 M8}
+add_pdn_connect -grid pg_m8_24 -layers {M8 M9}
+define_pdn_grid -macro -instances {^tt_up4_leaf1$} -voltage_domains CORE -name pg_m8_25 -starts_with GROUND -grid_over_boundary
+add_pdn_stripe -grid pg_m8_25 -layer M8 -width .48 -pitch 9.091 -offset 2.501
+add_pdn_connect -grid pg_m8_25 -layers {M7 M8}
+add_pdn_connect -grid pg_m8_25 -layers {M8 M9}
+define_pdn_grid -macro -instances {^xs_tap$} -voltage_domains CORE -name pg_m8_26 -starts_with GROUND -grid_over_boundary
+add_pdn_stripe -grid pg_m8_26 -layer M8 -width .48 -pitch 9.091 -offset 2.724
+add_pdn_connect -grid pg_m8_26 -layers {M7 M8}
+add_pdn_connect -grid pg_m8_26 -layers {M8 M9}
+define_pdn_grid -macro -instances {^t_0_3$ ^t_10_3$ ^t_11_3$ ^t_12_3$ ^t_13_3$ ^t_14_3$ ^t_15_3$ ^t_16_3$ ^t_17_3$ ^t_18_3$ ^t_19_3$ ^t_1_3$ ^t_20_3$ ^t_21_3$ ^t_22_3$ ^t_23_3$ ^t_24_3$ ^t_25_3$ ^t_26_3$ ^t_27_3$ ^t_28_3$ ^t_29_3$ ^t_2_3$ ^t_30_3$ ^t_31_3$ ^t_32_3$ ^t_33_3$ ^t_34_3$ ^t_35_3$ ^t_36_3$ ^t_37_3$ ^t_38_3$ ^t_39_3$ ^t_3_3$ ^t_40_3$ ^t_41_3$ ^t_42_3$ ^t_43_3$ ^t_44_3$ ^t_45_3$ ^t_46_3$ ^t_47_3$ ^t_4_3$ ^t_5_3$ ^t_6_3$ ^t_7_3$ ^t_8_3$ ^t_9_3$} -voltage_domains CORE -name pg_m8_27 -starts_with GROUND -grid_over_boundary
+add_pdn_stripe -grid pg_m8_27 -layer M8 -width .48 -pitch 9.091 -offset 2.880
+add_pdn_connect -grid pg_m8_27 -layers {M7 M8}
+add_pdn_connect -grid pg_m8_27 -layers {M8 M9}
+define_pdn_grid -macro -instances {^d2d_rom$} -voltage_domains CORE -name pg_m8_28 -starts_with GROUND -grid_over_boundary
+add_pdn_stripe -grid pg_m8_28 -layer M8 -width .48 -pitch 9.091 -offset 3.068
+add_pdn_connect -grid pg_m8_28 -layers {M7 M8}
+add_pdn_connect -grid pg_m8_28 -layers {M8 M9}
+define_pdn_grid -macro -instances {^s_0_15$ ^s_10_15$ ^s_11_15$ ^s_12_15$ ^s_13_15$ ^s_14_15$ ^s_15_15$ ^s_16_15$ ^s_17_15$ ^s_18_15$ ^s_19_15$ ^s_1_15$ ^s_20_15$ ^s_21_15$ ^s_22_15$ ^s_23_15$ ^s_24_15$ ^s_25_15$ ^s_26_15$ ^s_27_15$ ^s_28_15$ ^s_29_15$ ^s_2_15$ ^s_30_15$ ^s_31_15$ ^s_32_15$ ^s_33_15$ ^s_34_15$ ^s_35_15$ ^s_36_15$ ^s_37_15$ ^s_38_15$ ^s_39_15$ ^s_3_15$ ^s_40_15$ ^s_41_15$ ^s_42_15$ ^s_43_15$ ^s_44_15$ ^s_45_15$ ^s_46_15$ ^s_47_15$ ^s_4_15$ ^s_5_15$ ^s_6_15$ ^s_7_15$ ^s_8_15$ ^s_9_15$} -voltage_domains CORE -name pg_m8_29 -starts_with GROUND -grid_over_boundary
+add_pdn_stripe -grid pg_m8_29 -layer M8 -width .48 -pitch 9.091 -offset 3.306
+add_pdn_connect -grid pg_m8_29 -layers {M7 M8}
+add_pdn_connect -grid pg_m8_29 -layers {M8 M9}
+define_pdn_grid -macro -instances {^crom_g_4$} -voltage_domains CORE -name pg_m8_30 -starts_with GROUND -grid_over_boundary
+add_pdn_stripe -grid pg_m8_30 -layer M8 -width .48 -pitch 9.091 -offset 3.391
+add_pdn_connect -grid pg_m8_30 -layers {M7 M8}
+add_pdn_connect -grid pg_m8_30 -layers {M8 M9}
+define_pdn_grid -macro -instances {^cbuf_g_2$ ^cbuf_g_3$} -voltage_domains CORE -name pg_m8_31 -starts_with GROUND -grid_over_boundary
+add_pdn_stripe -grid pg_m8_31 -layer M8 -width .48 -pitch 9.091 -offset 3.461
+add_pdn_connect -grid pg_m8_31 -layers {M7 M8}
+add_pdn_connect -grid pg_m8_31 -layers {M8 M9}
+define_pdn_grid -macro -instances {^t_0_5$ ^t_10_5$ ^t_11_5$ ^t_12_5$ ^t_13_5$ ^t_14_5$ ^t_15_5$ ^t_16_5$ ^t_17_5$ ^t_18_5$ ^t_19_5$ ^t_1_5$ ^t_20_5$ ^t_21_5$ ^t_22_5$ ^t_23_5$ ^t_24_5$ ^t_25_5$ ^t_26_5$ ^t_27_5$ ^t_28_5$ ^t_29_5$ ^t_2_5$ ^t_30_5$ ^t_31_5$ ^t_32_5$ ^t_33_5$ ^t_34_5$ ^t_35_5$ ^t_36_5$ ^t_37_5$ ^t_38_5$ ^t_39_5$ ^t_3_5$ ^t_40_5$ ^t_41_5$ ^t_42_5$ ^t_43_5$ ^t_44_5$ ^t_45_5$ ^t_46_5$ ^t_47_5$ ^t_4_5$ ^t_5_5$ ^t_6_5$ ^t_7_5$ ^t_8_5$ ^t_9_5$} -voltage_domains CORE -name pg_m8_32 -starts_with GROUND -grid_over_boundary
+add_pdn_stripe -grid pg_m8_32 -layer M8 -width .48 -pitch 9.091 -offset 3.477
+add_pdn_connect -grid pg_m8_32 -layers {M7 M8}
+add_pdn_connect -grid pg_m8_32 -layers {M8 M9}
+define_pdn_grid -macro -instances {^s_0_9$ ^s_10_9$ ^s_11_9$ ^s_12_9$ ^s_13_9$ ^s_14_9$ ^s_15_9$ ^s_16_9$ ^s_17_9$ ^s_18_9$ ^s_19_9$ ^s_1_9$ ^s_20_9$ ^s_21_9$ ^s_22_9$ ^s_23_9$ ^s_24_9$ ^s_25_9$ ^s_26_9$ ^s_27_9$ ^s_28_9$ ^s_29_9$ ^s_2_9$ ^s_30_9$ ^s_31_9$ ^s_32_9$ ^s_33_9$ ^s_34_9$ ^s_35_9$ ^s_36_9$ ^s_37_9$ ^s_38_9$ ^s_39_9$ ^s_3_9$ ^s_40_9$ ^s_41_9$ ^s_42_9$ ^s_43_9$ ^s_44_9$ ^s_45_9$ ^s_46_9$ ^s_47_9$ ^s_4_9$ ^s_5_9$ ^s_6_9$ ^s_7_9$ ^s_8_9$ ^s_9_9$} -voltage_domains CORE -name pg_m8_33 -starts_with GROUND -grid_over_boundary
+add_pdn_stripe -grid pg_m8_33 -layer M8 -width .48 -pitch 9.091 -offset 3.675
+add_pdn_connect -grid pg_m8_33 -layers {M7 M8}
+add_pdn_connect -grid pg_m8_33 -layers {M8 M9}
+define_pdn_grid -macro -instances {^t_0_0$ ^t_10_0$ ^t_11_0$ ^t_12_0$ ^t_13_0$ ^t_14_0$ ^t_15_0$ ^t_16_0$ ^t_17_0$ ^t_18_0$ ^t_19_0$ ^t_1_0$ ^t_20_0$ ^t_21_0$ ^t_22_0$ ^t_23_0$ ^t_24_0$ ^t_25_0$ ^t_26_0$ ^t_27_0$ ^t_28_0$ ^t_29_0$ ^t_2_0$ ^t_30_0$ ^t_31_0$ ^t_32_0$ ^t_33_0$ ^t_34_0$ ^t_35_0$ ^t_36_0$ ^t_37_0$ ^t_38_0$ ^t_39_0$ ^t_3_0$ ^t_40_0$ ^t_41_0$ ^t_42_0$ ^t_43_0$ ^t_44_0$ ^t_45_0$ ^t_46_0$ ^t_47_0$ ^t_4_0$ ^t_5_0$ ^t_6_0$ ^t_7_0$ ^t_8_0$ ^t_9_0$} -voltage_domains CORE -name pg_m8_34 -starts_with GROUND -grid_over_boundary
+add_pdn_stripe -grid pg_m8_34 -layer M8 -width .48 -pitch 9.091 -offset 3.729
+add_pdn_connect -grid pg_m8_34 -layers {M7 M8}
+add_pdn_connect -grid pg_m8_34 -layers {M8 M9}
+define_pdn_grid -macro -instances {^crom_g_6$} -voltage_domains CORE -name pg_m8_35 -starts_with GROUND -grid_over_boundary
+add_pdn_stripe -grid pg_m8_35 -layer M8 -width .48 -pitch 9.091 -offset 3.960
+add_pdn_connect -grid pg_m8_35 -layers {M7 M8}
+add_pdn_connect -grid pg_m8_35 -layers {M8 M9}
+define_pdn_grid -macro -instances {^tt_up4_leaf2$} -voltage_domains CORE -name pg_m8_36 -starts_with GROUND -grid_over_boundary
+add_pdn_stripe -grid pg_m8_36 -layer M8 -width .48 -pitch 9.091 -offset 4.067
+add_pdn_connect -grid pg_m8_36 -layers {M7 M8}
+add_pdn_connect -grid pg_m8_36 -layers {M8 M9}
+define_pdn_grid -macro -instances {^t_0_7$ ^t_10_7$ ^t_11_7$ ^t_12_7$ ^t_13_7$ ^t_14_7$ ^t_15_7$ ^t_16_7$ ^t_17_7$ ^t_18_7$ ^t_19_7$ ^t_1_7$ ^t_20_7$ ^t_21_7$ ^t_22_7$ ^t_23_7$ ^t_24_7$ ^t_25_7$ ^t_26_7$ ^t_27_7$ ^t_28_7$ ^t_29_7$ ^t_2_7$ ^t_30_7$ ^t_31_7$ ^t_32_7$ ^t_33_7$ ^t_34_7$ ^t_35_7$ ^t_36_7$ ^t_37_7$ ^t_38_7$ ^t_39_7$ ^t_3_7$ ^t_40_7$ ^t_41_7$ ^t_42_7$ ^t_43_7$ ^t_44_7$ ^t_45_7$ ^t_46_7$ ^t_47_7$ ^t_4_7$ ^t_5_7$ ^t_6_7$ ^t_7_7$ ^t_8_7$ ^t_9_7$} -voltage_domains CORE -name pg_m8_37 -starts_with GROUND -grid_over_boundary
+add_pdn_stripe -grid pg_m8_37 -layer M8 -width .48 -pitch 9.091 -offset 4.074
+add_pdn_connect -grid pg_m8_37 -layers {M7 M8}
+add_pdn_connect -grid pg_m8_37 -layers {M8 M9}
+define_pdn_grid -macro -instances {^s_0_11$ ^s_10_11$ ^s_11_11$ ^s_12_11$ ^s_13_11$ ^s_14_11$ ^s_15_11$ ^s_16_11$ ^s_17_11$ ^s_18_11$ ^s_19_11$ ^s_1_11$ ^s_20_11$ ^s_21_11$ ^s_22_11$ ^s_23_11$ ^s_24_11$ ^s_25_11$ ^s_26_11$ ^s_27_11$ ^s_28_11$ ^s_29_11$ ^s_2_11$ ^s_30_11$ ^s_31_11$ ^s_32_11$ ^s_33_11$ ^s_34_11$ ^s_35_11$ ^s_36_11$ ^s_37_11$ ^s_38_11$ ^s_39_11$ ^s_3_11$ ^s_40_11$ ^s_41_11$ ^s_42_11$ ^s_43_11$ ^s_44_11$ ^s_45_11$ ^s_46_11$ ^s_47_11$ ^s_4_11$ ^s_5_11$ ^s_6_11$ ^s_7_11$ ^s_8_11$ ^s_9_11$} -voltage_domains CORE -name pg_m8_38 -starts_with GROUND -grid_over_boundary
+add_pdn_stripe -grid pg_m8_38 -layer M8 -width .48 -pitch 9.091 -offset 4.272
+add_pdn_connect -grid pg_m8_38 -layers {M7 M8}
+add_pdn_connect -grid pg_m8_38 -layers {M8 M9}
+define_pdn_grid -macro -instances {^crom_g_5$} -voltage_domains CORE -name pg_m8_39 -starts_with GROUND -grid_over_boundary
+add_pdn_stripe -grid pg_m8_39 -layer M8 -width .48 -pitch 9.091 -offset 4.293
+add_pdn_connect -grid pg_m8_39 -layers {M7 M8}
+add_pdn_connect -grid pg_m8_39 -layers {M8 M9}
+define_pdn_grid -macro -instances {^sp_port_tiles_0$} -voltage_domains CORE -name pg_m8_40 -starts_with GROUND -grid_over_boundary
+add_pdn_stripe -grid pg_m8_40 -layer M8 -width .48 -pitch 9.091 -offset 4.324
+add_pdn_connect -grid pg_m8_40 -layers {M7 M8}
+add_pdn_connect -grid pg_m8_40 -layers {M8 M9}
+define_pdn_grid -macro -instances {^sp_res_ser_0$} -voltage_domains CORE -name pg_m8_41 -starts_with GROUND -grid_over_boundary
+add_pdn_stripe -grid pg_m8_41 -layer M8 -width .48 -pitch 9.091 -offset 4.347
+add_pdn_connect -grid pg_m8_41 -layers {M7 M8}
+add_pdn_connect -grid pg_m8_41 -layers {M8 M9}
+define_pdn_grid -macro -instances {^t_0_8$ ^t_10_8$ ^t_11_8$ ^t_12_8$ ^t_13_8$ ^t_14_8$ ^t_15_8$ ^t_16_8$ ^t_17_8$ ^t_18_8$ ^t_19_8$ ^t_1_8$ ^t_20_8$ ^t_21_8$ ^t_22_8$ ^t_23_8$ ^t_24_8$ ^t_25_8$ ^t_26_8$ ^t_27_8$ ^t_28_8$ ^t_29_8$ ^t_2_8$ ^t_30_8$ ^t_31_8$ ^t_32_8$ ^t_33_8$ ^t_34_8$ ^t_35_8$ ^t_36_8$ ^t_37_8$ ^t_38_8$ ^t_39_8$ ^t_3_8$ ^t_40_8$ ^t_41_8$ ^t_42_8$ ^t_43_8$ ^t_44_8$ ^t_45_8$ ^t_46_8$ ^t_47_8$ ^t_4_8$ ^t_5_8$ ^t_6_8$ ^t_7_8$ ^t_8_8$ ^t_9_8$} -voltage_domains CORE -name pg_m8_42 -starts_with GROUND -grid_over_boundary
+add_pdn_stripe -grid pg_m8_42 -layer M8 -width .48 -pitch 9.091 -offset 4.788
+add_pdn_connect -grid pg_m8_42 -layers {M7 M8}
+add_pdn_connect -grid pg_m8_42 -layers {M8 M9}
+define_pdn_grid -macro -instances {^s_0_13$ ^s_10_13$ ^s_11_13$ ^s_12_13$ ^s_13_13$ ^s_14_13$ ^s_15_13$ ^s_16_13$ ^s_17_13$ ^s_18_13$ ^s_19_13$ ^s_1_13$ ^s_20_13$ ^s_21_13$ ^s_22_13$ ^s_23_13$ ^s_24_13$ ^s_25_13$ ^s_26_13$ ^s_27_13$ ^s_28_13$ ^s_29_13$ ^s_2_13$ ^s_30_13$ ^s_31_13$ ^s_32_13$ ^s_33_13$ ^s_34_13$ ^s_35_13$ ^s_36_13$ ^s_37_13$ ^s_38_13$ ^s_39_13$ ^s_3_13$ ^s_40_13$ ^s_41_13$ ^s_42_13$ ^s_43_13$ ^s_44_13$ ^s_45_13$ ^s_46_13$ ^s_47_13$ ^s_4_13$ ^s_5_13$ ^s_6_13$ ^s_7_13$ ^s_8_13$ ^s_9_13$} -voltage_domains CORE -name pg_m8_43 -starts_with GROUND -grid_over_boundary
+add_pdn_stripe -grid pg_m8_43 -layer M8 -width .48 -pitch 9.091 -offset 4.869
+add_pdn_connect -grid pg_m8_43 -layers {M7 M8}
+add_pdn_connect -grid pg_m8_43 -layers {M8 M9}
+define_pdn_grid -macro -instances {^rstseq_rom$} -voltage_domains CORE -name pg_m8_44 -starts_with GROUND -grid_over_boundary
+add_pdn_stripe -grid pg_m8_44 -layer M8 -width .48 -pitch 9.091 -offset 4.945
+add_pdn_connect -grid pg_m8_44 -layers {M7 M8}
+add_pdn_connect -grid pg_m8_44 -layers {M8 M9}
+define_pdn_grid -macro -instances {^sp_vector_memory$} -voltage_domains CORE -name pg_m8_45 -starts_with GROUND -grid_over_boundary
+add_pdn_stripe -grid pg_m8_45 -layer M8 -width .48 -pitch 9.091 -offset 5.000
+add_pdn_connect -grid pg_m8_45 -layers {M7 M8}
+add_pdn_connect -grid pg_m8_45 -layers {M8 M9}
+define_pdn_grid -macro -instances {^tt_up4_leaf0$} -voltage_domains CORE -name pg_m8_46 -starts_with GROUND -grid_over_boundary
+add_pdn_stripe -grid pg_m8_46 -layer M8 -width .48 -pitch 9.091 -offset 5.182
+add_pdn_connect -grid pg_m8_46 -layers {M7 M8}
+add_pdn_connect -grid pg_m8_46 -layers {M8 M9}
+define_pdn_grid -macro -instances {^t_0_10$ ^t_10_10$ ^t_11_10$ ^t_12_10$ ^t_13_10$ ^t_14_10$ ^t_15_10$ ^t_16_10$ ^t_17_10$ ^t_18_10$ ^t_19_10$ ^t_1_10$ ^t_20_10$ ^t_21_10$ ^t_22_10$ ^t_23_10$ ^t_24_10$ ^t_25_10$ ^t_26_10$ ^t_27_10$ ^t_28_10$ ^t_29_10$ ^t_2_10$ ^t_30_10$ ^t_31_10$ ^t_32_10$ ^t_33_10$ ^t_34_10$ ^t_35_10$ ^t_36_10$ ^t_37_10$ ^t_38_10$ ^t_39_10$ ^t_3_10$ ^t_40_10$ ^t_41_10$ ^t_42_10$ ^t_43_10$ ^t_44_10$ ^t_45_10$ ^t_46_10$ ^t_47_10$ ^t_4_10$ ^t_5_10$ ^t_6_10$ ^t_7_10$ ^t_8_10$ ^t_9_10$} -voltage_domains CORE -name pg_m8_47 -starts_with GROUND -grid_over_boundary
+add_pdn_stripe -grid pg_m8_47 -layer M8 -width .48 -pitch 9.091 -offset 5.385
+add_pdn_connect -grid pg_m8_47 -layers {M7 M8}
+add_pdn_connect -grid pg_m8_47 -layers {M8 M9}
+define_pdn_grid -macro -instances {^s_0_1$ ^s_10_1$ ^s_11_1$ ^s_12_1$ ^s_13_1$ ^s_14_1$ ^s_15_1$ ^s_16_1$ ^s_17_1$ ^s_18_1$ ^s_19_1$ ^s_1_1$ ^s_20_1$ ^s_21_1$ ^s_22_1$ ^s_23_1$ ^s_24_1$ ^s_25_1$ ^s_26_1$ ^s_27_1$ ^s_28_1$ ^s_29_1$ ^s_2_1$ ^s_30_1$ ^s_31_1$ ^s_32_1$ ^s_33_1$ ^s_34_1$ ^s_35_1$ ^s_36_1$ ^s_37_1$ ^s_38_1$ ^s_39_1$ ^s_3_1$ ^s_40_1$ ^s_41_1$ ^s_42_1$ ^s_43_1$ ^s_44_1$ ^s_45_1$ ^s_46_1$ ^s_47_1$ ^s_4_1$ ^s_5_1$ ^s_6_1$ ^s_7_1$ ^s_8_1$ ^s_9_1$} -voltage_domains CORE -name pg_m8_48 -starts_with GROUND -grid_over_boundary
+add_pdn_stripe -grid pg_m8_48 -layer M8 -width .48 -pitch 9.091 -offset 5.417
+add_pdn_connect -grid pg_m8_48 -layers {M7 M8}
+add_pdn_connect -grid pg_m8_48 -layers {M8 M9}
+define_pdn_grid -macro -instances {^cbuf_g_4$} -voltage_domains CORE -name pg_m8_49 -starts_with GROUND -grid_over_boundary
+add_pdn_stripe -grid pg_m8_49 -layer M8 -width .48 -pitch 9.091 -offset 5.597
+add_pdn_connect -grid pg_m8_49 -layers {M7 M8}
+add_pdn_connect -grid pg_m8_49 -layers {M8 M9}
+define_pdn_grid -macro -instances {^io_collective$} -voltage_domains CORE -name pg_m8_50 -starts_with GROUND -grid_over_boundary
+add_pdn_stripe -grid pg_m8_50 -layer M8 -width .48 -pitch 9.091 -offset 5.673
+add_pdn_connect -grid pg_m8_50 -layers {M7 M8}
+add_pdn_connect -grid pg_m8_50 -layers {M8 M9}
+define_pdn_grid -macro -instances {^s_0_8$ ^s_10_8$ ^s_11_8$ ^s_12_8$ ^s_13_8$ ^s_14_8$ ^s_15_8$ ^s_16_8$ ^s_17_8$ ^s_18_8$ ^s_19_8$ ^s_1_8$ ^s_20_8$ ^s_21_8$ ^s_22_8$ ^s_23_8$ ^s_24_8$ ^s_25_8$ ^s_26_8$ ^s_27_8$ ^s_28_8$ ^s_29_8$ ^s_2_8$ ^s_30_8$ ^s_31_8$ ^s_32_8$ ^s_33_8$ ^s_34_8$ ^s_35_8$ ^s_36_8$ ^s_37_8$ ^s_38_8$ ^s_39_8$ ^s_3_8$ ^s_40_8$ ^s_41_8$ ^s_42_8$ ^s_43_8$ ^s_44_8$ ^s_45_8$ ^s_46_8$ ^s_47_8$ ^s_4_8$ ^s_5_8$ ^s_6_8$ ^s_7_8$ ^s_8_8$ ^s_9_8$} -voltage_domains CORE -name pg_m8_51 -starts_with GROUND -grid_over_boundary
+add_pdn_stripe -grid pg_m8_51 -layer M8 -width .48 -pitch 9.091 -offset 5.857
+add_pdn_connect -grid pg_m8_51 -layers {M7 M8}
+add_pdn_connect -grid pg_m8_51 -layers {M8 M9}
+define_pdn_grid -macro -instances {^t_0_12$ ^t_10_12$ ^t_11_12$ ^t_12_12$ ^t_13_12$ ^t_14_12$ ^t_15_12$ ^t_16_12$ ^t_17_12$ ^t_18_12$ ^t_19_12$ ^t_1_12$ ^t_20_12$ ^t_21_12$ ^t_22_12$ ^t_23_12$ ^t_24_12$ ^t_25_12$ ^t_26_12$ ^t_27_12$ ^t_28_12$ ^t_29_12$ ^t_2_12$ ^t_30_12$ ^t_31_12$ ^t_32_12$ ^t_33_12$ ^t_34_12$ ^t_35_12$ ^t_36_12$ ^t_37_12$ ^t_38_12$ ^t_39_12$ ^t_3_12$ ^t_40_12$ ^t_41_12$ ^t_42_12$ ^t_43_12$ ^t_44_12$ ^t_45_12$ ^t_46_12$ ^t_47_12$ ^t_4_12$ ^t_5_12$ ^t_6_12$ ^t_7_12$ ^t_8_12$ ^t_9_12$} -voltage_domains CORE -name pg_m8_52 -starts_with GROUND -grid_over_boundary
+add_pdn_stripe -grid pg_m8_52 -layer M8 -width .48 -pitch 9.091 -offset 5.982
+add_pdn_connect -grid pg_m8_52 -layers {M7 M8}
+add_pdn_connect -grid pg_m8_52 -layers {M8 M9}
+define_pdn_grid -macro -instances {^s_0_3$ ^s_10_3$ ^s_11_3$ ^s_12_3$ ^s_13_3$ ^s_14_3$ ^s_15_3$ ^s_16_3$ ^s_17_3$ ^s_18_3$ ^s_19_3$ ^s_1_3$ ^s_20_3$ ^s_21_3$ ^s_22_3$ ^s_23_3$ ^s_24_3$ ^s_25_3$ ^s_26_3$ ^s_27_3$ ^s_28_3$ ^s_29_3$ ^s_2_3$ ^s_30_3$ ^s_31_3$ ^s_32_3$ ^s_33_3$ ^s_34_3$ ^s_35_3$ ^s_36_3$ ^s_37_3$ ^s_38_3$ ^s_39_3$ ^s_3_3$ ^s_40_3$ ^s_41_3$ ^s_42_3$ ^s_43_3$ ^s_44_3$ ^s_45_3$ ^s_46_3$ ^s_47_3$ ^s_4_3$ ^s_5_3$ ^s_6_3$ ^s_7_3$ ^s_8_3$ ^s_9_3$} -voltage_domains CORE -name pg_m8_53 -starts_with GROUND -grid_over_boundary
+add_pdn_stripe -grid pg_m8_53 -layer M8 -width .48 -pitch 9.091 -offset 6.014
+add_pdn_connect -grid pg_m8_53 -layers {M7 M8}
+add_pdn_connect -grid pg_m8_53 -layers {M8 M9}
+define_pdn_grid -macro -instances {^crom_g_0$} -voltage_domains CORE -name pg_m8_54 -starts_with GROUND -grid_over_boundary
+add_pdn_stripe -grid pg_m8_54 -layer M8 -width .48 -pitch 9.091 -offset 6.074
+add_pdn_connect -grid pg_m8_54 -layers {M7 M8}
+add_pdn_connect -grid pg_m8_54 -layers {M8 M9}
+define_pdn_grid -macro -instances {^sp_res_ser_2$} -voltage_domains CORE -name pg_m8_55 -starts_with GROUND -grid_over_boundary
+add_pdn_stripe -grid pg_m8_55 -layer M8 -width .48 -pitch 9.091 -offset 6.270
+add_pdn_connect -grid pg_m8_55 -layers {M7 M8}
+add_pdn_connect -grid pg_m8_55 -layers {M8 M9}
+define_pdn_grid -macro -instances {^crom_g_3$} -voltage_domains CORE -name pg_m8_56 -starts_with GROUND -grid_over_boundary
+add_pdn_stripe -grid pg_m8_56 -layer M8 -width .48 -pitch 9.091 -offset 6.547
+add_pdn_connect -grid pg_m8_56 -layers {M7 M8}
+add_pdn_connect -grid pg_m8_56 -layers {M8 M9}
+define_pdn_grid -macro -instances {^t_0_14$ ^t_10_14$ ^t_11_14$ ^t_12_14$ ^t_13_14$ ^t_14_14$ ^t_15_14$ ^t_16_14$ ^t_17_14$ ^t_18_14$ ^t_19_14$ ^t_1_14$ ^t_20_14$ ^t_21_14$ ^t_22_14$ ^t_23_14$ ^t_24_14$ ^t_25_14$ ^t_26_14$ ^t_27_14$ ^t_28_14$ ^t_29_14$ ^t_2_14$ ^t_30_14$ ^t_31_14$ ^t_32_14$ ^t_33_14$ ^t_34_14$ ^t_35_14$ ^t_36_14$ ^t_37_14$ ^t_38_14$ ^t_39_14$ ^t_3_14$ ^t_40_14$ ^t_41_14$ ^t_42_14$ ^t_43_14$ ^t_44_14$ ^t_45_14$ ^t_46_14$ ^t_47_14$ ^t_4_14$ ^t_5_14$ ^t_6_14$ ^t_7_14$ ^t_8_14$ ^t_9_14$} -voltage_domains CORE -name pg_m8_57 -starts_with GROUND -grid_over_boundary
+add_pdn_stripe -grid pg_m8_57 -layer M8 -width .48 -pitch 9.091 -offset 6.579
+add_pdn_connect -grid pg_m8_57 -layers {M7 M8}
+add_pdn_connect -grid pg_m8_57 -layers {M8 M9}
+define_pdn_grid -macro -instances {^s_0_5$ ^s_10_5$ ^s_11_5$ ^s_12_5$ ^s_13_5$ ^s_14_5$ ^s_15_5$ ^s_16_5$ ^s_17_5$ ^s_18_5$ ^s_19_5$ ^s_1_5$ ^s_20_5$ ^s_21_5$ ^s_22_5$ ^s_23_5$ ^s_24_5$ ^s_25_5$ ^s_26_5$ ^s_27_5$ ^s_28_5$ ^s_29_5$ ^s_2_5$ ^s_30_5$ ^s_31_5$ ^s_32_5$ ^s_33_5$ ^s_34_5$ ^s_35_5$ ^s_36_5$ ^s_37_5$ ^s_38_5$ ^s_39_5$ ^s_3_5$ ^s_40_5$ ^s_41_5$ ^s_42_5$ ^s_43_5$ ^s_44_5$ ^s_45_5$ ^s_46_5$ ^s_47_5$ ^s_4_5$ ^s_5_5$ ^s_6_5$ ^s_7_5$ ^s_8_5$ ^s_9_5$} -voltage_domains CORE -name pg_m8_58 -starts_with GROUND -grid_over_boundary
+add_pdn_stripe -grid pg_m8_58 -layer M8 -width .48 -pitch 9.091 -offset 6.611
+add_pdn_connect -grid pg_m8_58 -layers {M7 M8}
+add_pdn_connect -grid pg_m8_58 -layers {M8 M9}
+define_pdn_grid -macro -instances {^rs_bump$} -voltage_domains CORE -name pg_m8_59 -starts_with GROUND -grid_over_boundary
+add_pdn_stripe -grid pg_m8_59 -layer M8 -width .48 -pitch 9.091 -offset 6.724
+add_pdn_connect -grid pg_m8_59 -layers {M7 M8}
+add_pdn_connect -grid pg_m8_59 -layers {M8 M9}
+define_pdn_grid -macro -instances {^sp_port_tiles_2_f1$} -voltage_domains CORE -name pg_m8_60 -starts_with GROUND -grid_over_boundary
+add_pdn_stripe -grid pg_m8_60 -layer M8 -width .48 -pitch 9.091 -offset 6.765
+add_pdn_connect -grid pg_m8_60 -layers {M7 M8}
+add_pdn_connect -grid pg_m8_60 -layers {M8 M9}
+define_pdn_grid -macro -instances {^ckb_rom$} -voltage_domains CORE -name pg_m8_61 -starts_with GROUND -grid_over_boundary
+add_pdn_stripe -grid pg_m8_61 -layer M8 -width .48 -pitch 9.091 -offset 6.819
+add_pdn_connect -grid pg_m8_61 -layers {M7 M8}
+add_pdn_connect -grid pg_m8_61 -layers {M8 M9}
+define_pdn_grid -macro -instances {^s_0_0$ ^s_10_0$ ^s_11_0$ ^s_12_0$ ^s_13_0$ ^s_14_0$ ^s_15_0$ ^s_16_0$ ^s_17_0$ ^s_18_0$ ^s_19_0$ ^s_1_0$ ^s_20_0$ ^s_21_0$ ^s_22_0$ ^s_23_0$ ^s_24_0$ ^s_25_0$ ^s_26_0$ ^s_27_0$ ^s_28_0$ ^s_29_0$ ^s_2_0$ ^s_30_0$ ^s_31_0$ ^s_32_0$ ^s_33_0$ ^s_34_0$ ^s_35_0$ ^s_36_0$ ^s_37_0$ ^s_38_0$ ^s_39_0$ ^s_3_0$ ^s_40_0$ ^s_41_0$ ^s_42_0$ ^s_43_0$ ^s_44_0$ ^s_45_0$ ^s_46_0$ ^s_47_0$ ^s_4_0$ ^s_5_0$ ^s_6_0$ ^s_7_0$ ^s_8_0$ ^s_9_0$} -voltage_domains CORE -name pg_m8_62 -starts_with GROUND -grid_over_boundary
+add_pdn_stripe -grid pg_m8_62 -layer M8 -width .48 -pitch 9.091 -offset 6.863
+add_pdn_connect -grid pg_m8_62 -layers {M7 M8}
+add_pdn_connect -grid pg_m8_62 -layers {M8 M9}
+define_pdn_grid -macro -instances {^up4_sel_station$} -voltage_domains CORE -name pg_m8_63 -starts_with GROUND -grid_over_boundary
+add_pdn_stripe -grid pg_m8_63 -layer M8 -width .48 -pitch 9.091 -offset 6.890
+add_pdn_connect -grid pg_m8_63 -layers {M7 M8}
+add_pdn_connect -grid pg_m8_63 -layers {M8 M9}
+define_pdn_grid -macro -instances {^t_0_2$ ^t_10_2$ ^t_11_2$ ^t_12_2$ ^t_13_2$ ^t_14_2$ ^t_15_2$ ^t_16_2$ ^t_17_2$ ^t_18_2$ ^t_19_2$ ^t_1_2$ ^t_20_2$ ^t_21_2$ ^t_22_2$ ^t_23_2$ ^t_24_2$ ^t_25_2$ ^t_26_2$ ^t_27_2$ ^t_28_2$ ^t_29_2$ ^t_2_2$ ^t_30_2$ ^t_31_2$ ^t_32_2$ ^t_33_2$ ^t_34_2$ ^t_35_2$ ^t_36_2$ ^t_37_2$ ^t_38_2$ ^t_39_2$ ^t_3_2$ ^t_40_2$ ^t_41_2$ ^t_42_2$ ^t_43_2$ ^t_44_2$ ^t_45_2$ ^t_46_2$ ^t_47_2$ ^t_4_2$ ^t_5_2$ ^t_6_2$ ^t_7_2$ ^t_8_2$ ^t_9_2$} -voltage_domains CORE -name pg_m8_64 -starts_with GROUND -grid_over_boundary
+add_pdn_stripe -grid pg_m8_64 -layer M8 -width .48 -pitch 9.091 -offset 7.127
+add_pdn_connect -grid pg_m8_64 -layers {M7 M8}
+add_pdn_connect -grid pg_m8_64 -layers {M8 M9}
+define_pdn_grid -macro -instances {^sp_band_lanes_1$} -voltage_domains CORE -name pg_m8_65 -starts_with GROUND -grid_over_boundary
+add_pdn_stripe -grid pg_m8_65 -layer M8 -width .48 -pitch 9.091 -offset 7.301
+add_pdn_connect -grid pg_m8_65 -layers {M7 M8}
+add_pdn_connect -grid pg_m8_65 -layers {M8 M9}
+define_pdn_grid -macro -instances {^crom_g_7$} -voltage_domains CORE -name pg_m8_66 -starts_with GROUND -grid_over_boundary
+add_pdn_stripe -grid pg_m8_66 -layer M8 -width .48 -pitch 9.091 -offset 7.401
+add_pdn_connect -grid pg_m8_66 -layers {M7 M8}
+add_pdn_connect -grid pg_m8_66 -layers {M8 M9}
+define_pdn_grid -macro -instances {^ucie_kv$} -voltage_domains CORE -name pg_m8_67 -starts_with GROUND -grid_over_boundary
+add_pdn_stripe -grid pg_m8_67 -layer M8 -width .48 -pitch 9.091 -offset 7.626
+add_pdn_connect -grid pg_m8_67 -layers {M7 M8}
+add_pdn_connect -grid pg_m8_67 -layers {M8 M9}
+define_pdn_grid -macro -instances {^t_0_4$ ^t_10_4$ ^t_11_4$ ^t_12_4$ ^t_13_4$ ^t_14_4$ ^t_15_4$ ^t_16_4$ ^t_17_4$ ^t_18_4$ ^t_19_4$ ^t_1_4$ ^t_20_4$ ^t_21_4$ ^t_22_4$ ^t_23_4$ ^t_24_4$ ^t_25_4$ ^t_26_4$ ^t_27_4$ ^t_28_4$ ^t_29_4$ ^t_2_4$ ^t_30_4$ ^t_31_4$ ^t_32_4$ ^t_33_4$ ^t_34_4$ ^t_35_4$ ^t_36_4$ ^t_37_4$ ^t_38_4$ ^t_39_4$ ^t_3_4$ ^t_40_4$ ^t_41_4$ ^t_42_4$ ^t_43_4$ ^t_44_4$ ^t_45_4$ ^t_46_4$ ^t_47_4$ ^t_4_4$ ^t_5_4$ ^t_6_4$ ^t_7_4$ ^t_8_4$ ^t_9_4$} -voltage_domains CORE -name pg_m8_68 -starts_with GROUND -grid_over_boundary
+add_pdn_stripe -grid pg_m8_68 -layer M8 -width .48 -pitch 9.091 -offset 7.724
+add_pdn_connect -grid pg_m8_68 -layers {M7 M8}
+add_pdn_connect -grid pg_m8_68 -layers {M8 M9}
+define_pdn_grid -macro -instances {^cbuf_g_6$} -voltage_domains CORE -name pg_m8_69 -starts_with GROUND -grid_over_boundary
+add_pdn_stripe -grid pg_m8_69 -layer M8 -width .48 -pitch 9.091 -offset 7.733
+add_pdn_connect -grid pg_m8_69 -layers {M7 M8}
+add_pdn_connect -grid pg_m8_69 -layers {M8 M9}
+define_pdn_grid -macro -instances {^tt_up4_leaf3$} -voltage_domains CORE -name pg_m8_70 -starts_with GROUND -grid_over_boundary
+add_pdn_stripe -grid pg_m8_70 -layer M8 -width .48 -pitch 9.091 -offset 7.817
+add_pdn_connect -grid pg_m8_70 -layers {M7 M8}
+add_pdn_connect -grid pg_m8_70 -layers {M8 M9}
+define_pdn_grid -macro -instances {^sp_band_lanes_2$} -voltage_domains CORE -name pg_m8_71 -starts_with GROUND -grid_over_boundary
+add_pdn_stripe -grid pg_m8_71 -layer M8 -width .48 -pitch 9.091 -offset 8.212
+add_pdn_connect -grid pg_m8_71 -layers {M7 M8}
+add_pdn_connect -grid pg_m8_71 -layers {M8 M9}
+define_pdn_grid -macro -instances {^t_0_6$ ^t_10_6$ ^t_11_6$ ^t_12_6$ ^t_13_6$ ^t_14_6$ ^t_15_6$ ^t_16_6$ ^t_17_6$ ^t_18_6$ ^t_19_6$ ^t_1_6$ ^t_20_6$ ^t_21_6$ ^t_22_6$ ^t_23_6$ ^t_24_6$ ^t_25_6$ ^t_26_6$ ^t_27_6$ ^t_28_6$ ^t_29_6$ ^t_2_6$ ^t_30_6$ ^t_31_6$ ^t_32_6$ ^t_33_6$ ^t_34_6$ ^t_35_6$ ^t_36_6$ ^t_37_6$ ^t_38_6$ ^t_39_6$ ^t_3_6$ ^t_40_6$ ^t_41_6$ ^t_42_6$ ^t_43_6$ ^t_44_6$ ^t_45_6$ ^t_46_6$ ^t_47_6$ ^t_4_6$ ^t_5_6$ ^t_6_6$ ^t_7_6$ ^t_8_6$ ^t_9_6$} -voltage_domains CORE -name pg_m8_72 -starts_with GROUND -grid_over_boundary
+add_pdn_stripe -grid pg_m8_72 -layer M8 -width .48 -pitch 9.091 -offset 8.321
+add_pdn_connect -grid pg_m8_72 -layers {M7 M8}
+add_pdn_connect -grid pg_m8_72 -layers {M8 M9}
+define_pdn_grid -macro -instances {^embed_prov$} -voltage_domains CORE -name pg_m8_73 -starts_with GROUND -grid_over_boundary
+add_pdn_stripe -grid pg_m8_73 -layer M8 -width .48 -pitch 9.091 -offset 8.322
+add_pdn_connect -grid pg_m8_73 -layers {M7 M8}
+add_pdn_connect -grid pg_m8_73 -layers {M8 M9}
+define_pdn_grid -macro -instances {^s_0_10$ ^s_10_10$ ^s_11_10$ ^s_12_10$ ^s_13_10$ ^s_14_10$ ^s_15_10$ ^s_16_10$ ^s_17_10$ ^s_18_10$ ^s_19_10$ ^s_1_10$ ^s_20_10$ ^s_21_10$ ^s_22_10$ ^s_23_10$ ^s_24_10$ ^s_25_10$ ^s_26_10$ ^s_27_10$ ^s_28_10$ ^s_29_10$ ^s_2_10$ ^s_30_10$ ^s_31_10$ ^s_32_10$ ^s_33_10$ ^s_34_10$ ^s_35_10$ ^s_36_10$ ^s_37_10$ ^s_38_10$ ^s_39_10$ ^s_3_10$ ^s_40_10$ ^s_41_10$ ^s_42_10$ ^s_43_10$ ^s_44_10$ ^s_45_10$ ^s_46_10$ ^s_47_10$ ^s_4_10$ ^s_5_10$ ^s_6_10$ ^s_7_10$ ^s_8_10$ ^s_9_10$} -voltage_domains CORE -name pg_m8_74 -starts_with GROUND -grid_over_boundary
+add_pdn_stripe -grid pg_m8_74 -layer M8 -width .48 -pitch 9.091 -offset 8.519
+add_pdn_connect -grid pg_m8_74 -layers {M7 M8}
+add_pdn_connect -grid pg_m8_74 -layers {M8 M9}
+define_pdn_grid -macro -instances {^bump_fwd_epoch$ ^bump_fwd_lrst$} -voltage_domains CORE -name pg_m8_75 -starts_with GROUND -grid_over_boundary
+add_pdn_stripe -grid pg_m8_75 -layer M8 -width .48 -pitch 9.091 -offset 8.536
+add_pdn_connect -grid pg_m8_75 -layers {M7 M8}
+add_pdn_connect -grid pg_m8_75 -layers {M8 M9}
+define_pdn_grid -macro -instances {^native59$} -voltage_domains CORE -name pg_m8_76 -starts_with GROUND -grid_over_boundary
+add_pdn_stripe -grid pg_m8_76 -layer M8 -width .48 -pitch 9.091 -offset 8.631
+add_pdn_connect -grid pg_m8_76 -layers {M7 M8}
+add_pdn_connect -grid pg_m8_76 -layers {M8 M9}
+define_pdn_grid -macro -instances {^s_0_7$ ^s_10_7$ ^s_11_7$ ^s_12_7$ ^s_13_7$ ^s_14_7$ ^s_15_7$ ^s_16_7$ ^s_17_7$ ^s_18_7$ ^s_19_7$ ^s_1_7$ ^s_20_7$ ^s_21_7$ ^s_22_7$ ^s_23_7$ ^s_24_7$ ^s_25_7$ ^s_26_7$ ^s_27_7$ ^s_28_7$ ^s_29_7$ ^s_2_7$ ^s_30_7$ ^s_31_7$ ^s_32_7$ ^s_33_7$ ^s_34_7$ ^s_35_7$ ^s_36_7$ ^s_37_7$ ^s_38_7$ ^s_39_7$ ^s_3_7$ ^s_40_7$ ^s_41_7$ ^s_42_7$ ^s_43_7$ ^s_44_7$ ^s_45_7$ ^s_46_7$ ^s_47_7$ ^s_4_7$ ^s_5_7$ ^s_6_7$ ^s_7_7$ ^s_8_7$ ^s_9_7$} -voltage_domains CORE -name pg_m8_77 -starts_with GROUND -grid_over_boundary
+add_pdn_stripe -grid pg_m8_77 -layer M8 -width .48 -pitch 9.091 -offset 8.917
+add_pdn_connect -grid pg_m8_77 -layers {M7 M8}
+add_pdn_connect -grid pg_m8_77 -layers {M8 M9}
+define_pdn_grid -macro -instances {^sp_port_tiles_0_f1$} -voltage_domains CORE -name pg_m8_78 -starts_with GROUND -grid_over_boundary
+add_pdn_stripe -grid pg_m8_78 -layer M8 -width .48 -pitch 9.091 -offset 9.072
+add_pdn_connect -grid pg_m8_78 -layers {M7 M8}
+add_pdn_connect -grid pg_m8_78 -layers {M8 M9}
+# Explicit ASSUMED PHY PG access contract v1; source-pinned candidate LEFs required.
+source /work/assumed_phy_pg_access.tcl
+ot_assumed_phy_pg_grids

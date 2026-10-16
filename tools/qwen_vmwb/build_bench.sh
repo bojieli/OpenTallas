@@ -9,7 +9,7 @@ F="physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x
  $S/ot_qfd_vm_xfifo8_t.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv $P/ot_qfd_vm_xplane.sv $P/ot_qfd_vm_xtree.sv
  rtl/qwen_sys/vm_me_20261008/ot_qfd_res_path.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_vector_memory.sv
  rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv rtl/hdc/ot_hdc_delay.sv rtl/physical/ot_qwen_tree_delay.sv
- rtl/physical/ot_qwen_tree_delay_tiles.sv rtl/qwen_split/qfd_su_vm_pack.sv $N/qfd_sp_vector_memory.sv rtl/qwen_sys/dvm_20261014/ot_qfd_vm_q_export_fixed.sv
+ rtl/physical/ot_qwen_tree_delay_tiles.sv rtl/qwen_split/qfd_su_vm_pack.sv $N/qfd_sp_vector_memory.sv rtl/qwen_sys/dvm_20261014/ot_qfd_vm_q_export_fixed.sv rtl/qwen_sys/vm_native_physical_20261015/qvm_bank_banked_native.sv rtl/qwen_sys/vm_native_physical_20261015/qvm_su_bank_native.sv
  tools/qwen_producer_train/component_sources.sv rtl/qwen_split/qfd_res_train_static.sv rtl/qwen_split/qfd_res_train_par.sv rtl/qwen_split/qfd_res_train_issue.sv
  results/arch/qwen_split_compute_1014/vmwb_1015/tb_vmwb.sv"
 mkdir -p "$out"

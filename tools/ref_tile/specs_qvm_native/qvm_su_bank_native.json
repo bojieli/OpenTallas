@@ -1,0 +1,271 @@
+{
+ "params": {
+  "MUT": 0
+ },
+ "job": {
+  "owner": "Claude:Q-VMWB (el1015-qwen-attn.log)",
+  "branch": "claude/q-vmwb-vm-1705",
+  "tag": "su3",
+  "purpose": "SU operand-bank native successor cluster, su2: macro->capture phase by entry geometry.",
+  "views_to": "physical/ref_tile/qvm_su_bank_native/views",
+  "record_to": "results/rtl/ref_tile/qvm_su_bank_native",
+  "cycles_added": 0,
+  "extra_paths": [
+   "rtl/qwen_sys/vm_native_physical_20261015",
+   "rtl/qwen_sys/vm_plane_20261013",
+   "rtl/qwen_sys/vm_me_20261008",
+   "rtl/qwen_sys/rtl_finish_20261007",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "physical/ref_tile/qvm_data256_native/views",
+   "physical/ref_tile/qvm_su_bank_ctrl_native/views"
+  ],
+  "benches": [
+   {
+    "name": "su_m0",
+    "cmd": "mkdir -p {RUN}/bench && $HOME/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -Wno-fatal --top-module tb_qvm_su_bank_native -GMUT=0 -j 2 --Mdir {RUN}/bench/m0 rtl/qwen_sys/vm_native_physical_20261015/tb_qvm_su_bank_native.sv rtl/qwen_sys/vm_native_physical_20261015/qvm_su_bank_native.sv rtl/qwen_sys/vm_native_physical_20261015/qvm_bank_banked_native.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_region_leaf.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_vector_memory.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v > {RUN}/bench/m0.build.log 2>&1 && {RUN}/bench/m0/Vtb_qvm_su_bank_native",
+    "expect": "pass",
+    "pass_regex": "PASS qvm_su_bank_native",
+    "threads": 2,
+    "peak_ram_gb": 2,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "su_m1",
+    "cmd": "mkdir -p {RUN}/bench && $HOME/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -Wno-fatal --top-module tb_qvm_su_bank_native -GMUT=1 -j 2 --Mdir {RUN}/bench/m1 rtl/qwen_sys/vm_native_physical_20261015/tb_qvm_su_bank_native.sv rtl/qwen_sys/vm_native_physical_20261015/qvm_su_bank_native.sv rtl/qwen_sys/vm_native_physical_20261015/qvm_bank_banked_native.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_region_leaf.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_vector_memory.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v > {RUN}/bench/m1.build.log 2>&1 && {RUN}/bench/m1/Vtb_qvm_su_bank_native",
+    "expect": "fail",
+    "pass_regex": "PASS qvm_su_bank_native",
+    "threads": 2,
+    "peak_ram_gb": 2,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "su_m2",
+    "cmd": "mkdir -p {RUN}/bench && $HOME/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -Wno-fatal --top-module tb_qvm_su_bank_native -GMUT=2 -j 2 --Mdir {RUN}/bench/m2 rtl/qwen_sys/vm_native_physical_20261015/tb_qvm_su_bank_native.sv rtl/qwen_sys/vm_native_physical_20261015/qvm_su_bank_native.sv rtl/qwen_sys/vm_native_physical_20261015/qvm_bank_banked_native.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_region_leaf.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_vector_memory.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v > {RUN}/bench/m2.build.log 2>&1 && {RUN}/bench/m2/Vtb_qvm_su_bank_native",
+    "expect": "fail",
+    "pass_regex": "PASS qvm_su_bank_native",
+    "threads": 2,
+    "peak_ram_gb": 2,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "structural_change": "su3 after su2-ee983ad21 TT -2.70 (su1 -8.81): still only u_hi -> u_cap_hi (1024x256 rd_out 561 ps); the hi macro clk pin sat 117 um above the S face (entry wire 76.9 ps). su3 turns the hi macro R180 so its clk and rd_out pins sit on its right edge near the TOP (y ~186, 56 um below the N face) and takes ck_mem_hi from the N face above that column; rd_out still faces the capture leaves. ck_mem_lo stays S under the lo macro clk, ck_cap_lo/hi N (later capture; cap->out +358 ps). Same RTL/children/outline/entries, 0 cycles."
+ },
+ "name": "qvm_su_bank_native",
+ "top": "qvm_su_bank_native",
+ "kind": "cluster",
+ "sources": [
+  "rtl/qwen_sys/vm_native_physical_20261015/qvm_su_bank_hard_native.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v"
+ ],
+ "clock": "entries",
+ "clock_port": "ck_ctrl",
+ "clock_ports": [
+  "ck_ctrl",
+  "ck_in_lo",
+  "ck_in_hi",
+  "ck_mem_lo",
+  "ck_mem_hi",
+  "ck_cap_lo",
+  "ck_cap_hi",
+  "ck_out_lo",
+  "ck_out_hi"
+ ],
+ "reset_ports": [
+  "rst_n"
+ ],
+ "std_area_um2": 0,
+ "outline": {
+  "w": 371.52,
+  "h": 237.6
+ },
+ "pins": {
+  "W": [
+   "re",
+   "we",
+   "ra",
+   "wl",
+   "wm",
+   "wd",
+   "ck_in_lo",
+   "ck_in_hi",
+   "ck_ctrl",
+   "rst_n"
+  ],
+  "E": [
+   "q"
+  ],
+  "S": [
+   "ck_mem_lo",
+   "ck_out_lo",
+   "ck_out_hi"
+  ],
+  "N": [
+   "ck_mem_hi",
+   "ck_cap_lo",
+   "ck_cap_hi"
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 8,
+  "macro_halo_um": 5.4,
+  "hold_margin_ns": 0.03
+ },
+ "slot_change_request": "NEW master: native structural successor of ot_qfd_vm_su_t (48 instances in qfd_sp_vector_memory_par); not yet in a die contract; same 9-entry clock/pin geometry rule as qvm_bank_entries_my_native ne3.",
+ "children": [
+  {
+   "view": "physical/ref_tile/qvm_su_bank_ctrl_native/views/qvm_su_bank_ctrl_native",
+   "count": 1,
+   "inst": "u_ctrl",
+   "at": [
+    25.92,
+    190.08
+   ]
+  },
+  {
+   "view": "physical/ref_tile/qvm_data256_native/views/qvm_data256_native",
+   "count": 1,
+   "inst": "u_in_lo",
+   "at": [
+    25.92,
+    25.92
+   ]
+  },
+  {
+   "view": "physical/ref_tile/qvm_data256_native/views/qvm_data256_native",
+   "count": 1,
+   "inst": "u_in_hi",
+   "at": [
+    25.92,
+    116.64
+   ]
+  },
+  {
+   "view": "physical/ref_tile/qvm_data256_native/views/qvm_data256_native",
+   "count": 1,
+   "inst": "u_cap_lo",
+   "at": [
+    272.16,
+    25.92
+   ]
+  },
+  {
+   "view": "physical/ref_tile/qvm_data256_native/views/qvm_data256_native",
+   "count": 1,
+   "inst": "u_cap_hi",
+   "at": [
+    272.16,
+    116.64
+   ]
+  },
+  {
+   "view": "physical/ref_tile/qvm_data256_native/views/qvm_data256_native",
+   "count": 1,
+   "inst": "u_out_lo",
+   "at": [
+    319.68,
+    25.92
+   ]
+  },
+  {
+   "view": "physical/ref_tile/qvm_data256_native/views/qvm_data256_native",
+   "count": 1,
+   "inst": "u_out_hi",
+   "at": [
+    319.68,
+    116.64
+   ]
+  }
+ ],
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "u_lo",
+   "at": [
+    73.44,
+    25.92
+   ],
+   "clock_entry": {
+    "port": "ck_mem_lo",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   },
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "u_hi",
+   "at": [
+    73.44,
+    116.64
+   ],
+   "clock_entry": {
+    "port": "ck_mem_hi",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   },
+   "orient": "R180"
+  }
+ ],
+ "child_lattice_um": 4.32,
+ "inter": [],
+ "recipe": 2,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "pin_ranges": {
+  "ck_in_lo": [
+   46.5,
+   50.5
+  ],
+  "ck_in_hi": [
+   137.28,
+   141.28
+  ],
+  "ck_ctrl": [
+   194.78,
+   198.28
+  ],
+  "rst_n": [
+   199.28,
+   202.78
+  ],
+  "q": [
+   24.0,
+   170.0
+  ],
+  "ck_mem_lo": [
+   245.5,
+   247.5
+  ],
+  "ck_mem_hi": [
+   247.0,
+   249.0
+  ],
+  "ck_cap_lo": [
+   271.0,
+   273.0
+  ],
+  "ck_cap_hi": [
+   274.0,
+   276.0
+  ]
+ }
+}

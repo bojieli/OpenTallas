@@ -49,6 +49,25 @@ def derive():
                "    wire [15:0] z_age = schedule_age - (zst_age-16'd1);\n"
                "    wire z_window = schedule_active && schedule_age >= zst_age-16'd1;")
     ctl = edit(ctl, "(HEADS != 1 || LMAX_START_AGE < 1 ||\n        Z_START_AGE < LMAX_START_AGE+4 || Z_STRIDE < 4)", "(HEADS != 1 || Z_STRIDE < 4)")
+    # Z block sums by block index (static only, Q-VMWB 2026-10-15): the EP chain finishes a stack's PARTIAL last block
+    # (fewer gam groups) before the full ones, so arrival order != block order when nblk >= 2 and T is not a multiple of
+    # 128 in that stack (T = 1000/3000/5000/7000 faulted at the first Z slot). The static calendar reads block k at slot
+    # k: write zf_m at the block tag, read at z_age / Z_STRIDE, presence per block (duplicate = fault). Legacy unchanged.
+    ctl = edit(ctl, "    wire [132:0] z_hd = zf_m[zfr[3:0]];\n", "    wire [132:0] z_hd;\n    reg  [15:0]  zp;\n")
+    ctl = edit(ctl, "    always @(posedge ck) if (zq[0] && stl == 7'd0) zf_m[zfw[3:0]] <= {zq[137:10], zq[5:2], zq[1]};",
+               "    wire [3:0]   zf_wa = STATIC_SCHEDULE ? zq[5:2] : zfw[3:0];\n"
+               "    always @(posedge ck) if (zq[0] && stl == 7'd0) zf_m[zf_wa] <= {zq[137:10], zq[5:2], zq[1]};")
+    ctl = edit(ctl, "    wire z_done_slot = z_window && z_age == nblk * Z_STRIDE;\n",
+               "    wire z_done_slot = z_window && z_age == nblk * Z_STRIDE;\n"
+               "    wire [3:0] z_k = 4'(z_age / Z_STRIDE);\n"
+               "    assign z_hd = zf_m[STATIC_SCHEDULE ? z_k : zfr[3:0]];\n"
+               "    wire z_have = STATIC_SCHEDULE ? zp[z_k] : z_ne;\n")
+    ctl = edit(ctl, "((l_slot && !kdone[0]) || (z_slot && !z_ne) ||", "((l_slot && !kdone[0]) || (z_slot && !z_have) || (z_in && zp[zq[5:2]]) ||")
+    ctl = edit(ctl, "            if (z_in) begin zfw <= zfw + 5'd1;", "            if (z_in) begin zp[zq[5:2]] <= 1'b1; zfw <= zfw + 5'd1;")
+    ctl = edit(ctl, "zfw <= 5'd0; zfr <= 5'd0; zh <= 2'd0; zovf <= 1'b0; f <= 1'b0; af <= 1'b0;",
+               "zfw <= 5'd0; zfr <= 5'd0; zh <= 2'd0; zovf <= 1'b0; f <= 1'b0; af <= 1'b0; zp <= 16'd0;")
+    ctl = edit(ctl, "zfw <= 5'd0; zfr <= 5'd0; zh <= 2'd0; f <= 1'b0; zovf <= 1'b0;\n",
+               "zfw <= 5'd0; zfr <= 5'd0; zh <= 2'd0; f <= 1'b0; zovf <= 1'b0; zp <= 16'd0;\n")
     ctl = edit(ctl, "            if (pv_bad || (STATIC_SCHEDULE &&", "            if (pv_bad || cal_bad || (STATIC_SCHEDULE &&")
     tp8 = module(src, 'qkd_astk_ctl_tp8')
     tp8 = edit(tp8, 'module qkd_astk_ctl_tp8 #(', 'module qkd_astk_ctl_tp8_cal #(')

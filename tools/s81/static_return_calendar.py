@@ -57,6 +57,21 @@ def norm(t: int) -> int:
     return _mk(row, lo, k, n)
 
 
+def norm_closed(t: int) -> int:
+    """the RTL's closed form of norm() (ot_s81_retn_static n5b): first j >= k with !C(j), else 5; k >= 5 unchanged"""
+    row, lo, k, n = _f(t)
+    c = [(not (lo == 0 and (1 << j) >= n)) and ((lo >> j) & 1) == 0 and lo + (1 << j) >= n for j in range(5)]
+    kf = k
+    if k < 5:
+        kf = next((j for j in range(k, 5) if not c[j]), 5)
+    return _mk(row, lo, kf, n)
+
+
+def norm_closed_check() -> int:
+    """exhaustive over (lo, k, n): the closed form equals the package loop bit for bit; returns the mismatch count"""
+    return sum(norm_closed(_mk(5, lo, k, n)) != norm(_mk(5, lo, k, n)) for lo in range(32) for k in range(8) for n in range(32))
+
+
 def complete(t: int) -> bool:
     _, lo, k, n = _f(t)
     return lo == 0 and ((1 << k) & 63) >= n

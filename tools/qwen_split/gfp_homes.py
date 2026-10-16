@@ -8,9 +8,14 @@ is transactional: malformed or overlapping candidates leave the model intact.
 import hashlib
 import json
 import math
+import os
 from pathlib import Path
 
 ORIENTS = ('R0', 'MX', 'MY', 'R180')
+# one footprint; the generator assigns NK vs NL per tile AFTER homes (source-current identity wins on rebase)
+TILE_PAIR = {'qfd_tile_nk', 'qfd_tile_nl'}
+# source renames of one slot, same outline (Q-NETLIST 10-16: compute-die embedding provider = word-level store)
+RENAMED = {('qkd_embedding_static_core_provider', 'qfd_embedding_word_provider')}
 
 
 def source_fingerprint(model):
@@ -33,6 +38,15 @@ def source_fingerprint(model):
                        ('native_control_contract', 'native_graph_bind', 'static_link_bind',
                         'res_train_bind', 'native_static_io_bind') if k in model})
     return hashlib.sha256(json.dumps(payload, sort_keys=True, separators=(',', ':')).encode()).hexdigest()
+
+
+def _view_shrink(inst, home):
+    """Q-NETLIST 10-16: the instance was redrawn from its CLOSED hard view (closed_view.view_frame) and that view fits
+    inside the home's historical frame: the home's origin stands (the frame only shrinks; no neighbour is touched)"""
+    from qwen_split.closed_view import view_frame
+    f = view_frame(inst.master)
+    return (f is not None and abs(f[0] - inst.w) < 1e-3 and abs(f[1] - inst.h) < 1e-3 and
+            inst.w <= float(home['w']) + 1e-3 and inst.h <= float(home['h']) + 1e-3)
 
 
 def _rect(name, h):
@@ -58,27 +72,53 @@ def _overlaps(rects, eps=1e-3):
 def apply(model, path):
     raw = Path(path).read_bytes()
     d = json.loads(raw)
-    if d.get('schema') != 'opentallas.qwen.globalfp-homes.v1':
+    if d.get('schema') not in ('opentallas.qwen.globalfp-homes.v1', 'opentallas.qwen.globalfp-q-homes.1705.v1',
+                               'opentallas.qwen.globalfp-q-homes.2210.v1'):
         raise ValueError('OT_SPLIT_HOMES: unexpected schema')
+    if d.get('schema') == 'opentallas.qwen.globalfp-q-homes.2210.v1':
+        # re-packed-tile homes (Q-COMPUTE-DIE 2210) carry their own die outline: the field is re-derived, not translated
+        model['die']['w'], model['die']['h'] = float(d['die']['w']), float(d['die']['h'])
+    if isinstance(d.get('reserve'), list):
+        # GLOBAL-FP-Q 1705 homes name their reserved channels (slab vertical channels) without rectangles: they are
+        # the gaps the homes leave free, so there is nothing extra to reserve here; the names stay in the receipt
+        d['reserve_names'] = d.pop('reserve')
     digest = source_fingerprint(model)
-    if d.get('source_model_sha256') != digest:
-        raise ValueError('OT_SPLIT_HOMES: stale or missing source_model_sha256')
     homes = d.get('homes')
     if not isinstance(homes, dict) or not homes:
         raise ValueError('OT_SPLIT_HOMES: nonempty homes object required')
     by = {i.name: i for i in model['insts']}
+    rebase = None
+    if d.get('source_model_sha256') != digest:
+        # OT_SPLIT_HOMES_REBASE=1 (Q-COMPUTE-DIE, coordinator-adopted fpq_s6 on a newer graph): the homes still apply
+        # only if EVERY current instance has a home with its exact master and outline; homes of instances the current
+        # graph no longer has are dropped and recorded. The overlap/outside checks below stay.
+        if os.environ.get('OT_SPLIT_HOMES_REBASE') != '1':
+            raise ValueError('OT_SPLIT_HOMES: stale or missing source_model_sha256')
+        post = set(model.get('sys_face_bind', {}).get('new_instances', ()))   # sited after the homes (sys_face_bind.place)
+        missing = sorted(set(by) - set(homes) - post)
+        if missing:
+            raise ValueError(f'OT_SPLIT_HOMES rebase: {len(missing)} current instances without a home, e.g. {missing[:4]}')
+        dropped = sorted(set(homes) - set(by))
+        homes = {n: h for n, h in homes.items() if n in by}
+        rebase = dict(homes_fingerprint=d.get('source_model_sha256'), current_fingerprint=digest, dropped=dropped)
     if len(by) != len(model['insts']) or set(homes)-set(by):
         raise ValueError('OT_SPLIT_HOMES: duplicate or unknown instance')
-    proposed = {n: dict(x=i.x, y=i.y, w=i.w, h=i.h, o=i.orient) for n, i in by.items()}
-    moved = []
+    post_home = set(model.get('sys_face_bind', {}).get('new_instances', ())) - set(homes)
+    proposed = {n: dict(x=i.x, y=i.y, w=i.w, h=i.h, o=i.orient) for n, i in by.items() if n not in post_home}
+    moved, view_shrunk = [], []
     for n, h in homes.items():
         i = by[n]
-        if h['m'] != i.master or any(abs(float(h[k])-getattr(i,k)) > 1e-3 for k in ('w','h')):
+        same = h['m'] == i.master or (rebase is not None and ({h['m'], i.master} <= TILE_PAIR or (h['m'], i.master) in RENAMED))
+        if same and any(abs(float(h[k])-getattr(i,k)) > 1e-3 for k in ('w','h')) and _view_shrink(i, h):
+            view_shrunk.append(n)                      # closed leaf smaller than its historical frame: keep the origin
+        elif not same or any(abs(float(h[k])-getattr(i,k)) > 1e-3 for k in ('w','h')):
             raise ValueError(f'OT_SPLIT_HOMES: {n} master/outline mismatch')
         if h['o'] not in ORIENTS:
             raise ValueError(f'OT_SPLIT_HOMES: {n} unsupported orientation')
         _rect(n, h)
         proposed[n].update(x=float(h['x']), y=float(h['y']), o=h['o'])
+        if n in view_shrunk:
+            proposed[n].update(w=i.w, h=i.h)
         if (i.x, i.y, i.orient) != (float(h['x']), float(h['y']), h['o']):
             moved.append(n)
     rects = [_rect(n, h) for n, h in proposed.items()]
@@ -93,8 +133,8 @@ def apply(model, path):
         raise ValueError(f'OT_SPLIT_HOMES: outside={outside[:4]}, overlaps={overlap[:4]}')
     for n, h in proposed.items():
         by[n].x, by[n].y, by[n].orient = h['x'], h['y'], h['o']
-    return dict(path=str(path), sha256=hashlib.sha256(raw).hexdigest(), source_model_sha256=digest,
+    return dict(path=str(path), schema=d.get('schema'), view_shrunk=view_shrunk, named_new=sorted(set(model.get('sys_face_bind', {}).get('new_instances', ())) & set(homes)), sha256=hashlib.sha256(raw).hexdigest(), source_model_sha256=digest,
                 candidate=d.get('candidate'), moved=len(moved), moved_names=moved,
-                reserve=reserve, qualified=False,
+                reserve=reserve, reserve_names=d.get('reserve_names', []), rebase=rebase, qualified=False,
                 open=['actual pins and legal orientations', 'relay allocation and cut capacity',
                       'clock/reset delivery', 'compiler fixed-cycle calendar', 'GRT/TT/FF/DRC'])

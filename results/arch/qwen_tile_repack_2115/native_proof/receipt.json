@@ -1,0 +1,79 @@
+{
+ "schema": "qwen.repack45.native_clock_equivalence.v1",
+ "source": "ebb88b7463b8296ac37bae24c1c7c633b4a4c92f",
+ "scope": "actual64MAC/10mappedROM/8LSL/node common-phase component clock-only equivalence, not whole-die or full-token qualification",
+ "source_sha256": {
+  "rtl/hdc/ot_qwen_rom_tile_w12.sv": "5cb701b2f8f0fbb49e747ce9e1fcee0eebae88b0ba18ca2611212700d3d69f64",
+  "rtl/hdc/ot_qwen_w12_matvec.sv": "1f5fdb02f24fe8e8f00479ad6732e5b356230b1ef67b0998b98f74f0e835cbdc",
+  "rtl/physical/ot_qwen_rom_tile_nk.sv": "5fc1bbc4ab315d241a611ab586232508decde83e94ae08a0a71393dd91b80966",
+  "rtl/physical/qfd_tile_nk_rp1.sv": "32e58bd62b231db227f6984ab0c93530d8f147d62f2256f702b97d3fa9d918ed",
+  "rtl/physical/qfd_tile_nk_rp2_45.sv": "9352a540a96a69092d1d910fa852191fdf3d0519ff4c44298b348e921a35e064",
+  "rtl/test/tb_qwen_repack45_native.sv": "faa8d42c320659b63e239a973aaed7bf83acf9fa6cbd786659b3bddfb2b94dd4",
+  "physical/asap7_memory_macros/ot_rom_4096x266_m8/ot_rom_4096x266_m8.v": "a26eebf06605ae3e9bca8d25c6d979a95553ea03ddc5e82cacd3192bf811a16b"
+ },
+ "fixed_schedule": {
+  "GT": 3072,
+  "cycles": 6500,
+  "issue_edges": [
+   200,
+   1400,
+   2600,
+   3800,
+   5000
+  ],
+  "commands": {
+   "NOUT": 4096,
+   "rounds": 2,
+   "K_chunks": 32,
+   "split": 7,
+   "ROM_bases": [
+    0,
+    4096,
+    8192,
+    12288,
+    16384
+   ]
+  },
+  "normal_added_edges": 0
+ },
+ "native_models": {
+  "MACs": 64,
+  "LSL_bodies": 8,
+  "node": 1,
+  "mapped_ROMs": 10,
+  "ROM_shape": "4096x266",
+  "stimulus": "testbench initializes actual mapped macro via arrays and externaloperand/command pins; both DUTs perform all compute in targetRTL"
+ },
+ "positive": {
+  "exit": 0,
+  "edge_comparisons": 6399,
+  "valid_output_words512": 2560,
+  "nonzero_output_words512": 2560,
+  "LSL_active_edges": [
+   2560,
+   2560,
+   2560,
+   2560,
+   2560,
+   2560,
+   2560,
+   2560
+  ]
+ },
+ "mutants": {
+  "TX0_stopped": {
+   "exit": 1,
+   "mismatches": 6250
+  },
+  "pair1_bank0_stopped": {
+   "legacy_process_exit": 0,
+   "checked_runner_exit": 1,
+   "actual_rejection": "FAIL rph macro5 requestcopy at214ns; existing monitor $finish exit0 is rejected by requiredpositivePASS marker"
+  },
+  "n_a_face_stopped": {
+   "exit": 1,
+   "mismatches": 6399
+  }
+ },
+ "physical": "HELD; no45entry clockpins/routes/native timing qualification yet"
+}

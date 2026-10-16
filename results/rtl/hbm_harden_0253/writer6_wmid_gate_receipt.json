@@ -1,0 +1,30 @@
+{
+  "schema": "opentallas.writer_v6_gate_receipt.v1",
+  "variant": "mid_W_body",
+  "source_commit": "bb557ca994200f297ba8187d80c55d30d6de02c7",
+  "gate_result": "physical/ref_tile/hcoll_vmwrite_static_v6_roots_wmid/gate_result.json",
+  "source_binding_valid": true,
+  "source_binding_message": "gate-consumed source and gate-executed overlays match",
+  "remote_archive_verified": true,
+  "scope": "Useful exact post-CTS placement diagnostic; routed/native qualification OPEN; no route/adoption",
+  "placement_tt_setup_ps": -48.59973534721007,
+  "placement_tt_hold_ps": 43.854503362084074,
+  "placement_ff_hold_ps": 17.57119449941058,
+  "placement_native_launch_ps": 190.3693293511033,
+  "placement_native_capture_ps": 129.1155671130602,
+  "body_boundary_R_ps": 238.451176424414,
+  "body_all_min_ps": 216.984924,
+  "body_all_max_ps": 271.667633,
+  "body_boundary_n": 6,
+  "body_all_n": 4169,
+  "actual_total_clock_endpoints": 9247,
+  "images_inspected": [
+    "floorplan",
+    "post-CTS density"
+  ],
+  "image_hashes": {
+    "density.png": "1b38842d1394a030186fddf4c9a41baaf8d31a0855b963e960a8e28ae4600fbf",
+    "floorplan.png": "68a451a5e0f88fea348dbdfe49331d35780d6ed214bd7f6e40e1f58c8cf0eee3"
+  },
+  "diagnosis": "SID metadata north385um -> address check south17um -> cloned status endpoint north384um. Data709.51ps vs captureearly10.02ps; keep16 boundary roots and structurally specialize actual literal quadrant identity before nextgate."
+}

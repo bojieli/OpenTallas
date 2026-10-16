@@ -12,8 +12,8 @@
   "rs"
  ],
  "outline": {
-  "w": 17.256,
-  "h": 17.256
+  "w": 17.28,
+  "h": 17.28
  },
  "macros": [],
  "pins": {
@@ -38,10 +38,10 @@
   "macro_halo_um": 5.4
  },
  "job": {
-  "owner": "Claude:fill-s81",
-  "branch": "claude/el1015-fill-1015",
-  "tag": "g18",
-  "purpose": "S81 die relay master dsfd_rly_1_WN (519 instances in the GEN18r placement, generated outline + interim timing there): real hard tile, 1 b in W / out N, ck+rs S, scalar ck/rs, M5 cap, one register stage, minimum output delay at the pin (outhold BUF-HB4-BUF) for the >= 65 ps abutted-seam budget",
+  "owner": "Claude:s81-net-fill",
+  "branch": "claude/el1015-snetfill-2215",
+  "tag": "rfp2",
+  "purpose": "S81 dsfd_rly_1_WN re-cut 17.256 -> 17.28 x 17.28 (64 rows x 320 sites) so MX / MY / R180 placement stays on the row / site lattice (S-DIE --orientation-qualification); serves WN R0 + EN MY 299 + WS MX 523 + ES R180 222 (c26b kit_requests); same RTL, same pin faces",
   "benches": [
    {
     "name": "exact_words",
@@ -75,5 +75,14 @@
  "pin_reg_split": true,
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "OWNER RULE 19:50 opt-out (coordinator APPROVED 2026-10-15): this relay IS one flip-flop per bit between its input and output pins (ot_s81_rly: i -> r -> o, no logic); a flow pin register would add a second stage per bit and a cycle the die calendar does not price"
+ },
+ "structural_change": "rfp2: outline 17.256 -> 17.28 (even row parity, site grid) for mirror binding; same RTL / faces / recipe",
+ "reroute_reason": {
+  "kind": "slot_change",
+  "slot_change_request": "S-DIE a5e8547aaad74fc6a 2026-10-16 ~08:00 (SendMessage to S-NET+FILL): \"Yes, please re-cut WN to 17.28 so that WS/EN/ES bind too\" -- orientation qualification needs the 17.28 lattice outline"
  }
 }

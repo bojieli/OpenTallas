@@ -1,0 +1,244 @@
+{
+ "schema": "opentallas.s81.vm-reach-price.v1",
+ "floorplan": "a2f_midcapd",
+ "faces": "band",
+ "rectangle_um": [
+  4104.0,
+  4114.8
+ ],
+ "model": "",
+ "by_reach": {
+  "900.0": {
+   "write": {
+    "hops": [
+     {
+      "hop": "ingress",
+      "max_um": 5411.3,
+      "relay_stages": 6
+     },
+     {
+      "hop": "payload_front",
+      "max_um": 1638.3,
+      "relay_stages": 1
+     },
+     {
+      "hop": "front_scatter",
+      "max_um": 2028.6,
+      "relay_stages": 2
+     },
+     {
+      "hop": "scatter_b8",
+      "max_um": 157.4,
+      "relay_stages": 0
+     },
+     {
+      "hop": "b8_b4",
+      "max_um": 292.1,
+      "relay_stages": 0
+     },
+     {
+      "hop": "b4_bank",
+      "max_um": 888.5,
+      "relay_stages": 0
+     }
+    ],
+    "added_edges": 9
+   },
+   "read": {
+    "hops": [
+     {
+      "hop": "port_rsched",
+      "max_um": 2222.8,
+      "relay_stages": 2
+     },
+     {
+      "hop": "rsched_fsr",
+      "max_um": 1765.7,
+      "relay_stages": 1
+     },
+     {
+      "hop": "fsr_b8",
+      "max_um": 2092.2,
+      "relay_stages": 2
+     },
+     {
+      "hop": "b8_b4",
+      "max_um": 292.1,
+      "relay_stages": 0
+     },
+     {
+      "hop": "b4_bank",
+      "max_um": 888.5,
+      "relay_stages": 0
+     },
+     {
+      "hop": "b8_return",
+      "max_um": 2604.4,
+      "relay_stages": 2
+     },
+     {
+      "hop": "return_read",
+      "max_um": 3585.3,
+      "relay_stages": 3
+     },
+     {
+      "hop": "read_port",
+      "max_um": 5432.2,
+      "relay_stages": 6
+     }
+    ],
+    "added_edges": 16
+   },
+   "commit": {
+    "hops": [
+     {
+      "hop": "b8_seq",
+      "max_um": 2903.9,
+      "relay_stages": 3
+     }
+    ],
+    "added_edges": 3
+   },
+   "price": {
+    "ar": {
+     "node_delta": 25,
+     "upper_every_node": {
+      "added_cycles": 44850.0,
+      "e2e_loss_pct": 5.133
+     },
+     "vm_class_nodes": {
+      "added_cycles": 43175.0,
+      "e2e_loss_pct": 4.951
+     }
+    },
+    "mtp": {
+     "node_delta": 25,
+     "upper_every_node": {
+      "added_cycles": 56325.0,
+      "e2e_loss_pct": 4.565
+     },
+     "vm_class_nodes": {
+      "added_cycles": 53650.0,
+      "e2e_loss_pct": 4.358
+     }
+    }
+   }
+  },
+  "1118.0": {
+   "write": {
+    "hops": [
+     {
+      "hop": "ingress",
+      "max_um": 5411.3,
+      "relay_stages": 4
+     },
+     {
+      "hop": "payload_front",
+      "max_um": 1638.3,
+      "relay_stages": 1
+     },
+     {
+      "hop": "front_scatter",
+      "max_um": 2028.6,
+      "relay_stages": 1
+     },
+     {
+      "hop": "scatter_b8",
+      "max_um": 157.4,
+      "relay_stages": 0
+     },
+     {
+      "hop": "b8_b4",
+      "max_um": 292.1,
+      "relay_stages": 0
+     },
+     {
+      "hop": "b4_bank",
+      "max_um": 888.5,
+      "relay_stages": 0
+     }
+    ],
+    "added_edges": 6
+   },
+   "read": {
+    "hops": [
+     {
+      "hop": "port_rsched",
+      "max_um": 2222.8,
+      "relay_stages": 1
+     },
+     {
+      "hop": "rsched_fsr",
+      "max_um": 1765.7,
+      "relay_stages": 1
+     },
+     {
+      "hop": "fsr_b8",
+      "max_um": 2092.2,
+      "relay_stages": 1
+     },
+     {
+      "hop": "b8_b4",
+      "max_um": 292.1,
+      "relay_stages": 0
+     },
+     {
+      "hop": "b4_bank",
+      "max_um": 888.5,
+      "relay_stages": 0
+     },
+     {
+      "hop": "b8_return",
+      "max_um": 2604.4,
+      "relay_stages": 2
+     },
+     {
+      "hop": "return_read",
+      "max_um": 3585.3,
+      "relay_stages": 3
+     },
+     {
+      "hop": "read_port",
+      "max_um": 5432.2,
+      "relay_stages": 4
+     }
+    ],
+    "added_edges": 12
+   },
+   "commit": {
+    "hops": [
+     {
+      "hop": "b8_seq",
+      "max_um": 2903.9,
+      "relay_stages": 2
+     }
+    ],
+    "added_edges": 2
+   },
+   "price": {
+    "ar": {
+     "node_delta": 18,
+     "upper_every_node": {
+      "added_cycles": 32292.0,
+      "e2e_loss_pct": 3.75
+     },
+     "vm_class_nodes": {
+      "added_cycles": 31086.0,
+      "e2e_loss_pct": 3.615
+     }
+    },
+    "mtp": {
+     "node_delta": 18,
+     "upper_every_node": {
+      "added_cycles": 40554.0,
+      "e2e_loss_pct": 3.329
+     },
+     "vm_class_nodes": {
+      "added_cycles": 38628.0,
+      "e2e_loss_pct": 3.176
+     }
+    }
+   }
+  }
+ }
+}

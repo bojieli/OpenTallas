@@ -1,33 +1,33 @@
 {
  "schema": "opentallas.hier_contract.child_lint.v1",
- "lef": "/srv/opentallas/claude/closure-loop/hv15_dbk_vp4_ctl_stk0-pfx4-048ef8953/record/views/ot_hgi_dma_back_static_vp4_controller/ot_hgi_dma_back_static_vp4_controller.lef",
+ "lef": "/srv/opentallas/claude/closure-loop/hv15_dbk_vp4_ctl_stk0-rm1-12d5b43f5/record/views/ot_hgi_dma_back_static_vp4_controller/ot_hgi_dma_back_static_vp4_controller.lef",
  "verdict": "PASS",
  "fails": [],
  "warns": [
-  "(f) face-pin access: 879 of 879 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. bank_output_en[0] M4 (74.617,45.264), bank_output_en[1] M4 (74.617,45.264), bank_output_en[2] M4 (74.617,45.264))"
+  "(f) face-pin access: 871 of 871 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. bank_output_en[0] M4 (68.389,42.192), bank_output_en[1] M4 (68.389,42.192), bank_output_en[2] M4 (68.389,42.192))"
  ],
- "summary": "ot_hgi_dma_back_static_vp4_controller 75.6 x 75.6: PG M5 VDD 14 stripes (93% spread, 100% cov) / VSS 14 stripes (93% spread, 100% cov); strap M6; face pins 879 blocked-above 0 blocked-same 0; clock clk insertion 148 ps; pockets M5 0 (closed)",
+ "summary": "ot_hgi_dma_back_static_vp4_controller 69.12 x 69.12: PG M5 VDD 12 stripes (86% spread, 100% cov) / VSS 12 stripes (86% spread, 100% cov); strap M6; face pins 871 blocked-above 0 blocked-same 0; clock clk insertion 142 ps; pockets M5 0 (closed)",
  "info": {
   "cell": "ot_hgi_dma_back_static_vp4_controller",
-  "W": 75.6,
-  "H": 75.6,
+  "W": 69.12,
+  "H": 69.12,
   "pg": {
    "nets": {
     "VDD": {
      "top_layer": "M5",
-     "stripes": 14,
+     "stripes": 12,
      "dir": "V",
-     "spread": 0.929,
+     "spread": 0.859,
      "coverage": 1.0,
-     "shapes_on_top": 14
+     "shapes_on_top": 12
     },
     "VSS": {
      "top_layer": "M5",
-     "stripes": 14,
+     "stripes": 12,
      "dir": "V",
-     "spread": 0.929,
+     "spread": 0.859,
      "coverage": 1.0,
-     "shapes_on_top": 14
+     "shapes_on_top": 12
     }
    },
    "top_layer": "M5",
@@ -38,26 +38,26 @@
   "strap_layer": "M6",
   "cap": null,
   "face": {
-   "face_pins": 879,
+   "face_pins": 871,
    "blocked_above": 0,
-   "covered_below": 109,
+   "covered_below": 87,
    "examples": [],
    "blocked_same": 0,
    "same_examples": [],
-   "band_same": 879,
+   "band_same": 871,
    "band_examples": [
-    "bank_output_en[0] M4 (74.617,45.264)",
-    "bank_output_en[1] M4 (74.617,45.264)",
-    "bank_output_en[2] M4 (74.617,45.264)",
-    "bank_output_en[3] M4 (74.617,45.264)",
-    "bank_output_en[4] M4 (74.617,45.264)",
-    "bank_output_en[5] M4 (74.617,45.264)"
+    "bank_output_en[0] M4 (68.389,42.192)",
+    "bank_output_en[1] M4 (68.389,42.192)",
+    "bank_output_en[2] M4 (68.389,42.192)",
+    "bank_output_en[3] M4 (68.389,42.192)",
+    "bank_output_en[4] M4 (68.389,42.192)",
+    "bank_output_en[5] M4 (68.389,42.192)"
    ]
   },
   "clock_insertion": {
    "clk": {
-    "max_ps": 148.21,
-    "min_ps": 107.97
+    "max_ps": 141.94,
+    "min_ps": 112.51
    }
   },
   "pockets": {
@@ -66,7 +66,7 @@
    "marker": {
     "layer": "M5",
     "d_um": 1.536,
-    "added": 451
+    "added": 369
    },
    "count": 0,
    "area_um2": 0,

@@ -5,7 +5,7 @@
 // in sm_parent_revision_model.json. Zero word is idle; nonzero needs0xa2magic.
 // Real parser/converter/pstore drive real operand ports. Faults never insert
 // cycles or wait for a late packet/operand. Normal modes reuse the legacyfront.
-module ot_hbm_sm_attn_front_static(
+module ot_hbm_sm_attn_front_static #(parameter integer KVMUT = 0)(   // KVMUT: bench negative control only (ot_hbm_sm_kv_line MUT)
     input wire clk,rst_n,
     input wire [191:0] command,
     input wire [63:0] kv_desc,
@@ -52,7 +52,7 @@ module ot_hbm_sm_attn_front_static(
     wire converter_ready,b_valid,b_last,b_wend,converter_busy,converter_fault;
     wire [1023:0] b_data;
     wire [2:0] b_slot,b_step;
-    ot_hbm_sm_kv_line u_converter(.clk(clk),.rst_n(rst_n),.cfg_v(configure),
+    ot_hbm_sm_kv_line #(.MUT(KVMUT)) u_converter(.clk(clk),.rst_n(rst_n),.cfg_v(configure),
         .cfg_qk(!pv),.cfg_kv4(mode[0]),.cfg_n8(command[165:153]),.cfg_h128(h128),.cfg_rows(command[178:166]),
         .s_valid(attention&&packet[1098]),.s_ready(converter_ready),.s_data(packet[1087:0]),
         .m_valid(b_valid),.m_ready(consume),.m_data(b_data),.m_slot(b_slot),.m_step(b_step),

@@ -1,0 +1,89 @@
+{
+ "schema": "opentallas.hgi_sim.ds_mtp_golden_spec.v1",
+ "p0": 0,
+ "gamma": 5,
+ "y": 5,
+ "noise": 128799,
+ "drafts_block": [
+  223,
+  18,
+  16,
+  223,
+  18
+ ],
+ "drafts": [
+  223,
+  18,
+  16,
+  223,
+  18
+ ],
+ "verify_tokens": [
+  5,
+  223,
+  18,
+  16,
+  223,
+  18
+ ],
+ "targets": [
+  223,
+  939,
+  16,
+  23,
+  89804,
+  16
+ ],
+ "accepted": 1,
+ "emitted": [
+  5,
+  223,
+  939
+ ],
+ "prompt": [
+  0
+ ],
+ "drafter": "dspark (real)",
+ "positions": [
+  {
+   "pos": 0,
+   "argmax": 5
+  },
+  {
+   "pos": 1,
+   "argmax": 223
+  },
+  {
+   "pos": 2,
+   "argmax": 939
+  },
+  {
+   "pos": 3,
+   "argmax": 16
+  },
+  {
+   "pos": 4,
+   "argmax": 23
+  },
+  {
+   "pos": 5,
+   "argmax": 89804
+  },
+  {
+   "pos": 6,
+   "argmax": 16
+  }
+ ],
+ "golden": {
+  "tools/hdc_golden_v41.py": {
+   "git_blob": "12c83c5a517e92ce081e2e71b2bc8d519fa90f75",
+   "sha256": "1bf8f3dd95228cabb0b717ea96d0b2ec903c88d0c85c5834a56c5fc8466373d4"
+  },
+  "tools/hdc_golden.py": {
+   "git_blob": "ddc237fa2db72730eb5884100ff47a77faf8d83f",
+   "sha256": "85cd0710fd5d3926c31f0954729b22c18a75ba8835f7e3735018f02655f911a6"
+  }
+ },
+ "init_sha": "e7cb833da456d0b6486b347c822d2ca12f2dac1670daf5faa86c35102e9a6552",
+ "wall_s": 2094.5
+}

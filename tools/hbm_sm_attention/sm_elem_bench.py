@@ -241,8 +241,10 @@ def x_beats(fields):
     return [(frag >> (2048 * g)) & ((1 << 2048) - 1) for g in range(13)]
 
 
-def compile_op(rec, op, lat, mode_pv, t0=8):
-    """One attention op on one SM -> (calendar, expectation).  lat: implemented latencies (cycles)."""
+def compile_op(rec, op, lat, mode_pv, t0=8, smut=""):
+    """One attention op on one SM -> (calendar, expectation).  lat: implemented latencies (cycles).
+    smut (schedule negative controls, must FAIL): "r7clear" = the r7 law clear_w = last_w + qk_clear (wipes wave w-1
+    before its publication); "early" = publish_w at last_w + qk_land_meas (one cycle before the last landing registers)."""
     name, kind, kv4, rows, nrun = op[:5]
     T8 = len(rec["rows8"])
     qk = kind == "qk"
@@ -336,17 +338,39 @@ def compile_op(rec, op, lat, mode_pv, t0=8):
     exp = dict(first_line=first_line, last_consume=last_consume, lines=len(lines))
     # ---- results ----
     if qk:
+        # QK score calendar from the MEASURED landings (r8, 2026-10-15).  The BE holds ONE DS score register per column
+        # (mode 1, scores[0]); every BE control (clear / publish) reaches column c BE_DELAY + 4 x hop(c) after issue,
+        # the same skew the scores carry, so all three are compared in COMMAND time (landing cycle - control delay of
+        # that column).  Measured (probe ds640 qk_sm0, calibrate subcommand): wave w lands at last_w + [qk_first,
+        # qk_land_meas] command cycles.  Laws, per wave w:
+        #   clear_w   >  publish_{w-1}                 (never wipe the previous wave before it is published)
+        #   clear_w   <  last_w + qk_first             (cleared before its own first landing)
+        #   publish_w >  last_w + qk_land_meas         (every column landed)
+        #   publish_w <  last_{w+1} + qk_first         (published before wave w+1 overwrites the register)
+        # The r7 calendar put clear_w at last_w + 8 = publish_{w-1} - 49: wave w-1's scores were wiped after landing
+        # (probe: col 3 lands 301, clear arrives 306) -> score_fault on the publication.
         nw = (len(rows) + 7) // 8
         exp["qk"] = []
+        lasts = [max(cc for i, (cc, _b) in enumerate(beats) if i // 64 == w) for w in range(nw)]
+        prev_pub = None
         for w in range(nw):
-            wbeats = [cc for cc, b in beats if (beats.index((cc, b)) // 64) == w]
-            last_w = max(wbeats)
+            last_w = lasts[w]
             ncols = min(8, len(rows) - 8 * w)
             pub = last_w + lat["qk_land"] + 1
-            clr = last_w + lat["qk_clear"]
+            clr = last_w + lat["qk_clear"] if prev_pub is None else prev_pub + 1
+            if smut == "early":
+                pub = last_w + lat["qk_land_meas"]
+            if smut == "r7clear":
+                clr = last_w + lat["qk_clear"]
+            assert clr < last_w + lat["qk_first"], f"wave {w}: clear {clr} not before first landing {last_w + lat['qk_first']}"
+            assert smut or pub > last_w + lat.get("qk_land_meas", lat["qk_land"]), f"wave {w}: publish {pub} before last landing"
+            if not smut and w + 1 < nw:
+                assert pub < lasts[w + 1] + lat["qk_first"], f"wave {w}: publish {pub} after wave {w + 1} lands"
             cal.set(clr, mode=mode, be_clear=1)
             cal.set(pub, mode=mode, be_publish=1, be_row=8 * w, be_expect=(1 << ncols) - 1)
-            exp["qk"].append(dict(wave=w, rows=[rows[8 * w + k] for k in range(ncols)], publish=pub))
+            exp["qk"].append(dict(wave=w, rows=[rows[8 * w + k] for k in range(ncols)], last_consume=last_w, clear=clr,
+                                  publish=pub))
+            prev_pub = pub
         end = exp["qk"][-1]["publish"] + lat["out"]
     else:
         pub = last_consume + lat["pv_node"]
@@ -412,7 +436,46 @@ def check(rec, op, exp, out):
                 first_result=words[0][0] if words else None, last_result=words[-1][0] if words else None)
 
 
-DEFAULT_LAT = dict(req_lead=8, qk_land=120, qk_clear=8, pv_node=160, out=40)
+# qk_first / qk_land_meas: measured QK landing window in command time after the wave's last consume (calibrate
+# subcommand on the probe run, results/hbm_sm_attention_1015/elem_r8/qk_landing_calibration.json: the score K beat
+# reaches column c's register at last_w + 63..70 command cycles, control delay 11 + 4 x hop(c)); qk_land = measured
+# max + 8 cycles margin.  pv_node / out: the r7 margin values (PV passes exact with them).
+DEFAULT_LAT = dict(req_lead=8, qk_first=63, qk_land_meas=70, qk_land=78, qk_clear=8, pv_node=160, out=40)
+
+
+def calibrate(probe_dir: str, rec, op, lat):
+    """measured QK landing window (command time) from a --probe run (its played cmd.hex + run.log).
+
+    The consume schedule (hence last_w) does not depend on the result latencies, so it is recompiled; the clears are
+    read from the PLAYED calendar (bit 108).  S lines (score_valid per column) give the clear ARRIVAL per column ->
+    control delay d(c) = arrival - issue; K lines with krow[2:0] == column are the score landings.  Returns per-wave
+    offsets landing - d(c) - last_w."""
+    _cal, exp = compile_op(rec, op, lat, False)
+    pd = Path(probe_dir)
+    clears = [c for c, ln in enumerate((pd / "cmd.hex").read_text().split()) if (int(ln, 16) >> 108) & 1]
+    ev = [ln.split() for ln in (pd / "run.log").read_text().splitlines() if ln[:2] in ("S ", "K ")]
+    falls = {}
+    for e in ev:
+        if e[0] == "S" and int(e[3], 16) == 0:
+            falls.setdefault(int(e[2]), []).append(int(e[1]))
+    delay = {}
+    for col, fs in falls.items():           # first clear after a landing: the earliest issued clear that can explain it
+        ds = sorted({f - c for f in fs for c in clears if 0 < f - c < 64})
+        delay[col] = ds[0] if ds else None
+    lasts = [q["last_consume"] for q in exp["qk"]]
+    waves = []
+    for w, last in enumerate(lasts):
+        offs = []
+        for e in ev:
+            if e[0] != "K":
+                continue
+            cyc, col, row = int(e[1]), int(e[2]), int(e[3], 16)
+            if row // 8 == w and row % 8 == col and delay.get(col) is not None:
+                offs.append(cyc - delay[col] - last)
+        waves.append(dict(wave=w, last_consume=last, landings=len(offs), first=min(offs) if offs else None,
+                          last=max(offs) if offs else None))
+    return dict(control_delay=delay, waves=waves, qk_first=min(w["first"] for w in waves if w["first"] is not None),
+                qk_land_meas=max(w["last"] for w in waves if w["last"] is not None))
 
 
 def main(argv=None):
@@ -424,10 +487,27 @@ def main(argv=None):
     p.add_argument("--seed", type=int, default=1015)
     p.add_argument("--lat", default="", help="JSON of implemented latencies (default: margin calendar)")
     p.add_argument("--probe", action="store_true")
-    p.add_argument("--dmut", type=int, default=0)
+    p.add_argument("--dmut", type=int, default=0, help="converter mutant (ot_hbm_sm_kv_line MUT), negative control")
+    p.add_argument("--smut", default="", choices=["", "r7clear", "early"], help="calendar negative control")
     p.add_argument("--work", required=True)
     p.add_argument("--out", required=True)
+    c = sub.add_parser("calibrate", help="measured QK landing window from a --probe run directory")
+    c.add_argument("--shape", choices=["ds640", "ds128"], default="ds640")
+    c.add_argument("--op", default="qk_sm0")
+    c.add_argument("--seed", type=int, default=1015)
+    c.add_argument("--probe-dir", required=True)
+    c.add_argument("--out", required=True)
     a = ap.parse_args(argv)
+    if a.cmd == "calibrate":
+        T8, T4 = (128, 512) if a.shape == "ds640" else (128, 0)
+        rec = B.make_record(T8, T4, a.seed)
+        ops, _nrun = B.plan(rec, a.shape)
+        op = [o for o in ops if o[0] == a.op][0]
+        r = calibrate(a.probe_dir, rec, op, dict(DEFAULT_LAT))
+        r.update(shape=a.shape, op=a.op, seed=a.seed, probe_dir=str(a.probe_dir))
+        Path(a.out).write_text(json.dumps(r, indent=1))
+        print(json.dumps(r))
+        return 0
     work = Path(a.work).resolve()
     work.mkdir(parents=True, exist_ok=True)
     lat = dict(DEFAULT_LAT)
@@ -437,14 +517,14 @@ def main(argv=None):
     rec = B.make_record(T8, T4, a.seed)
     ops, nrun = B.plan(rec, a.shape)
     want = a.ops.split(",")
-    ops = [o for o in ops if o[0] in want]
+    ops = [o for o in ops if a.ops == "all" or o[0] in want]
     assert ops, "no ops"
     exe = build(work, a.probe, a.dmut)
     results = []
     t0 = time.time()
     for op in ops:
-        cal, exp = compile_op(rec, op, lat, op[1] == "pv")
-        d = work / f"{a.shape}_{op[0]}_p{int(a.probe)}_d{a.dmut}"
+        cal, exp = compile_op(rec, op, lat, op[1] == "pv", smut=a.smut)
+        d = work / f"{a.shape}_{op[0]}_p{int(a.probe)}_d{a.dmut}{('_' + a.smut) if a.smut else ''}"
         d.mkdir(exist_ok=True)
         n = exp["end"] + 4
         cal.write(d, n)
@@ -459,7 +539,7 @@ def main(argv=None):
             res["span_first_line_to_last_result"] = res["last_result"] - exp["first_line"]
         results.append(res)
         print(("PASS " if res["pass"] else "FAIL ") + json.dumps({k: v for k, v in res.items() if k != "calendar"}), flush=True)
-    summ = dict(shape=a.shape, ops=len(results), passed=sum(r["pass"] for r in results), probe=a.probe, dmut=a.dmut,
+    summ = dict(shape=a.shape, ops=len(results), passed=sum(r["pass"] for r in results), probe=a.probe, dmut=a.dmut, smut=a.smut,
                 lat=lat, wall_s=round(time.time() - t0, 1),
                 verdict="PASS" if all(r["pass"] for r in results) else "FAIL")
     Path(a.out).write_text(json.dumps(dict(summary=summ, ops=results), indent=1))

@@ -245,7 +245,7 @@ module tb_hgi_coll_sw_arg_join;
     @(negedge clk);start=0;
     // Executed program word0 is start+4; real bank samples request one edge later.
     bank_rslot=(c>=6&&c<=29)?8'hff:c==61?8'h03:8'h00;
-    bank_wslot=c==54?8'h01:c==55?8'h02:8'h00;
+    bank_wslot=c==55?8'h01:c==56?8'h02:8'h00; // writer v4 relay edge (+1)
     @(posedge clk);#1;
     if(issuer_fault||ctl_fault||qfault||afault||w_fault)$fatal(1,"native ARG join fault round%0d cycle%0d issuer%0d ctl%0d q%h arg%0d writer%0d",round,c,issuer_fault,ctl_fault,qcause,afault,w_fault);
     for(integer b=0;b<8;b=b+1)begin
@@ -268,7 +268,7 @@ module tb_hgi_coll_sw_arg_join;
      pubs=pubs+1;
     end
     if(dv[7] !== (c==51))$fatal(1,"ARG source switch writer phase cycle%0d",c);
-    if(kdone!==(c==57?8'h01:c==58?8'h02:8'h00))$fatal(1,"actual SRAM result commit cycle%0d got%h",c,kdone);
+    if(kdone!==(c==58?8'h01:c==59?8'h02:8'h00))$fatal(1,"actual SRAM result commit cycle%0d got%h",c,kdone);
     if(|kdone)commits=commits+1;
     if(c==67)begin
      if(vm_rr[256]!==1'b1 || vm_rr[257+256]!==1'b1)$fatal(1,"actual SRAM readback valid");
@@ -279,7 +279,7 @@ module tb_hgi_coll_sw_arg_join;
    end
   end
   if(received!=480||commits!=10||pubs!=5||halted!=5)$fatal(1,"coverage counts");
-  $display("SW_ARG_NATIVE_JOIN PASS G96 rounds5 operands480 exactgoldens5 SRAM27 commits10 flush6 first_operand17 last_operand40 publish48 write57_58 halt66");
+  $display("SW_ARG_NATIVE_JOIN PASS G96 rounds5 operands480 exactgoldens5 SRAM27 commits10 flush6 first_operand17 last_operand40 publish48 write58_59 halt66");
   $finish;
  end
 endmodule

@@ -20,7 +20,7 @@ module tb_hbm_smh_attn;
     reg [191:0] command = 0; reg [1098:0] packet = 0; reg [63:0] kv_desc = 0;
     reg xw_en = 0; reg [6:0] xw_addr = 0, xw_grp = 0; reg [2047:0] xw_data = 0;
     wire [42:0] request; wire rv, fault, sfault; wire [11:0] rrow; wire [255:0] rdata;
-    ot_hbm_accel_smh_attn u_dut (.clk(clk), .rst_n(rst_n), .command(command), .kv_desc(kv_desc), .packet(packet),
+    ot_hbm_accel_smh_attn #(.KVMUT(DMUT)) u_dut (.clk(clk), .rst_n(rst_n), .command(command), .kv_desc(kv_desc), .packet(packet),
         .request(request), .xw_en(xw_en), .xw_addr(xw_addr), .xw_grp(xw_grp), .xw_data(xw_data),
         .rv(rv), .rrow(rrow), .rdata(rdata), .fault(fault), .schedule_fault(sfault));
     integer n, cyc, k, nres = 0;

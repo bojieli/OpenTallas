@@ -31,7 +31,7 @@ set ::ot_ce_leaf_roots 1
 set ::ot_ce_related_data 1
 set ::ot_ce_refs [dict create ]
 set ::ot_ce_counts [dict create ]
-set ::ot_ce_domains [dict create {core} {clock core_clk io_budget_ps 222.222 inputs {{rst_n} {lane_id} {ld} {ld_bank} {ld_c} {emit} {bank} {o_v} {i_v} {no} {ni} {ls} {lvw} {vb} {krow} {obase} {aibase} {aind} {gsh} {cpair} {dst} {srcs} {vi_q} {rd_q} {cx_srcs} {cx_arnd} {cx_arelu} {cx_amin} {cx_cclip} {cx_imm3} {ci_sfu} {cs_sfu} {side_y} {clk_stage_4} {clk_insert_0} {clk_insert_1} {clk_insert_2} {clk_insert_3}} outputs {{vi_re} {vi_addr} {rd_addr} {rd_re} {rd_src} {side_v} {coll}}} {stage1} {clock ot_io_stage1 io_budget_ps 222.222 inputs {{cp_m1} {cp_imm1}} outputs {}} {stage2} {clock ot_io_stage2 io_budget_ps 222.222 inputs {{cm_m1} {cm_m2} {cm_qm} {cm_imm1}} outputs {}} {stage3} {clock ot_io_stage3 io_budget_ps 222.222 inputs {{ca_ad} {ca_imm2}} outputs {{side_x}}} {stage5} {clock ot_io_stage5 io_budget_ps 222.222 inputs {{cs_e1} {cs_imm2}} outputs {}} {stage6} {clock ot_io_stage6 io_budget_ps 222.222 inputs {{ce_e2} {ce_imm1}} outputs {}} {stage7} {clock ot_io_stage7 io_budget_ps 222.222 inputs {{co_rnd} {co_dst}} outputs {{vm_we} {vm_waddr} {vm_wdata} {kv_we} {kv_waddr} {kv_wdata} {ro_v} {ro_x} {fault}}}]
+set ::ot_ce_domains [dict create {core} {clock core_clk io_budget_ps 222.222 inputs {{rst_n} {lane_id} {ld} {ld_bank} {ld_c} {emit} {bank} {o_v} {i_v} {no} {ni} {ls} {lvw} {vb} {krow} {obase} {aibase} {aind} {gsh} {cpair} {dst} {srcs} {vi_q} {rd_q} {cx_srcs} {cx_arnd} {cx_arelu} {cx_amin} {cx_cclip} {cx_imm3} {ci_sfu} {cs_sfu} {side_y} {clk_stage_4} {clk_insert_0} {clk_insert_1} {clk_insert_2} {clk_insert_3} {cp_m1} {cp_imm1} {cm_m1} {cm_m2} {cm_qm} {cm_imm1} {ca_ad} {ca_imm2} {cs_e1} {cs_imm2} {ce_e2} {ce_imm1} {co_rnd} {co_dst}} outputs {{vi_re} {vi_addr} {rd_addr} {rd_re} {rd_src} {side_v} {side_x}}} {stage1} {clock ot_io_stage1 io_budget_ps 222.222 inputs {} outputs {}} {stage2} {clock ot_io_stage2 io_budget_ps 222.222 inputs {} outputs {}} {stage3} {clock ot_io_stage3 io_budget_ps 222.222 inputs {} outputs {}} {stage5} {clock ot_io_stage5 io_budget_ps 222.222 inputs {} outputs {}} {stage6} {clock ot_io_stage6 io_budget_ps 222.222 inputs {} outputs {}} {stage7} {clock ot_io_stage7 io_budget_ps 222.222 inputs {} outputs {{vm_we} {vm_waddr} {vm_wdata} {kv_we} {kv_waddr} {kv_wdata} {ro_v} {ro_x} {fault} {coll}}}]
 set ::ot_ce_source_domains [dict create {clk_stage_0} {core} {clk_stage_1} {stage1} {clk_stage_2} {stage2} {clk_stage_3} {stage3} {clk_stage_5} {stage5} {clk_stage_6} {stage6} {clk_stage_7} {stage7}]
 set ::ot_ce_explicit_domains 1
 set ::ot_ce_cts_roots {{clk_stage_0} {clk_stage_1} {clk_stage_2} {clk_stage_3} {clk_stage_5} {clk_stage_6} {clk_stage_7}}
@@ -462,16 +462,26 @@ proc ot_ce_apply {} {
   }
   # Every entry is synchronous and related. Reserve die skew on internal hops;
   # no asynchronous groups, false paths or ETM insertion add-back.
-  set_clock_uncertainty -setup 150 -from [get_clocks ot_entry_*] -to [get_clocks ot_entry_*]
-  # H1 authoritative pair_check.HOLD_TREE =50ps hold margin+50ps die skew.
-  # Tile-local25ps uncertainty is not the composed pair margin.
-  set_clock_uncertainty -hold 100 -from [get_clocks ot_entry_*] -to [get_clocks ot_entry_*]
+  # H1 authoritative pair_check.HOLD_TREE =50ps hold margin+50ps die skew (hold 100, setup 150).
   # Each deep tile has its own earlier trunk tap. The authoritative TREE
   # pair budget uses150ps die skew when either reference exceeds300ps,
-  # including deep-to-deep pairs (pair_check.SKEW_DEEP).
-  if {[llength $highclocks]} {
-    set_clock_uncertainty -setup 210 -from $highclocks -to [get_clocks ot_entry_*]
-    set_clock_uncertainty -setup 210 -from [get_clocks ot_entry_*] -to $highclocks
+  # including deep-to-deep pairs (pair_check.SKEW_DEEP) (setup 210).
+  # S-ELEM-PQ 2026-10-15: a register pair on ONE glue CTS root of this tile shares one die tap and one
+  # propagated standard-cell tree whose real skew STA already sees, so it is timed like every single-root
+  # tile (base uncertainty); the die-skew reserve applies to every pair of DIFFERENT entries and to hard-
+  # child entries (dsfd_bf_front_static: the uniform rule put hold 100 / setup 210 on all 12,276 core-root
+  # paths -> 15,826 hold endpoints, 119k buffers).
+  set ot_ce_glue {}
+  foreach name $::ot_ce_cts_roots { lappend ot_ce_glue [get_full_name [get_clocks ot_entry_[lsearch -exact $::ot_ce_ports $name]]] }
+  set ot_ce_high {}
+  foreach c $highclocks { lappend ot_ce_high [get_full_name $c] }
+  foreach a [get_clocks ot_entry_*] {
+    foreach b [get_clocks ot_entry_*] {
+      set an [get_full_name $a]; set bn [get_full_name $b]
+      if {$an eq $bn && $an in $ot_ce_glue} { continue }
+      set_clock_uncertainty -setup [expr {($an in $ot_ce_high || $bn in $ot_ce_high) ? 210 : 150}] -from $a -to $b
+      set_clock_uncertainty -hold 100 -from $a -to $b
+    }
   }
   # Preserve measured boundary spread: balancing the mean does not erase the
   # earliest/latest physical boundary arrivals or change ETM setup/hold arcs.

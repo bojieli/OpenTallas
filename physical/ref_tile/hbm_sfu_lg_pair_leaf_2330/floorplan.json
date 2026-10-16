@@ -1,0 +1,96 @@
+{
+ "schema": "opentallas.ref_tile.floorplan.v1",
+ "name": "hbm_sfu_lg_pair_leaf_2330",
+ "top": "ot_hgi_sfu_lg_pair_leaf",
+ "kind": "tile",
+ "die": [
+  0,
+  0,
+  21.6,
+  129.6
+ ],
+ "core": [
+  2.16,
+  2.16,
+  19.44,
+  127.44
+ ],
+ "why": "spec outline",
+ "std_area_um2": 374,
+ "layer_contract": {
+  "children": {},
+  "pg_layer": "M5",
+  "rlayers": [
+   "M2",
+   "M5"
+  ],
+  "strap_layer": "M6",
+  "layer_cap": "M5",
+  "cap_basis": "contract",
+  "signal_max_layer": "M5"
+ },
+ "pins": {
+  "N": [
+   "clk",
+   "rst_n"
+  ],
+  "W": [
+   "c_rq",
+   "c_wq",
+   "c_rr",
+   "c_w_done"
+  ],
+  "E": [
+   "lg_rq",
+   "lg_wq",
+   "lg_rr",
+   "lg_w_done"
+  ]
+ },
+ "clock_port": "clk",
+ "blocks": [],
+ "findings": [
+  [
+   "WARN",
+   "util",
+   "utilisation 17% outside 45%-60% (std 374 + macro 0 in core 2165 um2)",
+   "resize the outline to util 0.50-0.55 (drop 'outline', set util)"
+  ]
+ ],
+ "referenced": [
+  "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_leaf.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "physical/ref_tile/hbm_sfu_lg_pair_leaf_2330/kit.env",
+  "physical/ref_tile/hbm_sfu_lg_pair_leaf_2330/clock.sdc",
+  "physical/ref_tile/hbm_sfu_lg_pair_leaf_2330/signoff.sdc",
+  "physical/ref_tile/hbm_sfu_lg_pair_leaf_2330/pdn.tcl",
+  "physical/ref_tile/hbm_sfu_lg_pair_leaf_2330/pre_cts.tcl",
+  "physical/ref_tile/hbm_sfu_lg_pair_leaf_2330/post_cts.tcl",
+  "physical/ref_tile/hbm_sfu_lg_pair_leaf_2330/post_grt.tcl",
+  "physical/ref_tile/hbm_sfu_lg_pair_leaf_2330/pre_drt.tcl",
+  "physical/ref_tile/hbm_sfu_lg_pair_leaf_2330/pre_fill.tcl",
+  "physical/ref_tile/hbm_sfu_lg_pair_leaf_2330/post_fill.tcl",
+  "physical/ref_tile/hbm_sfu_lg_pair_leaf_2330/pre_grt.tcl",
+  "physical/ref_tile/hbm_sfu_lg_pair_leaf_2330/post_drt.tcl",
+  "tools/ref_tile/ref_route.sh",
+  "physical/qwen_die_masters/io_ref_skew.sdc",
+  "physical/qwen_die_masters/io_plain.sdc",
+  "physical/qwen_die_masters/repair_budget.tcl",
+  "physical/qwen_die_masters/pre_cts_skew.tcl",
+  "physical/qwen_die_masters/pre_ref_skew.tcl",
+  "physical/qwen_die_masters/post_plain.tcl",
+  "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
+  "physical/common_flow/grt_macro_top_layer.tcl",
+  "tools/ref_tile/signal_layer_audit.tcl",
+  "physical/hbm_sfu_pair_2330/io.tcl",
+  "physical/qwen_die_masters/io_flop_at_pins.tcl",
+  "physical/qwen_die_masters/out_flop_release.tcl",
+  "physical/dsrom_window_source/leaf_iohold.tcl",
+  "physical/dsrom_window_source/leaf_inhold_release.tcl",
+  "physical/dsrom_window_source/leaf_inhold.tcl",
+  "physical/dsrom_window_source/leaf_inhold_release.tcl",
+  "physical/ref_tile/hbm_sfu_lg_pair_leaf_2330/pre_gpl.tcl",
+  "physical/ref_tile/hbm_sfu_lg_pair_leaf_2330/pre_dpl.tcl",
+  "physical/common_flow/pin_reg_split.tcl"
+ ]
+}

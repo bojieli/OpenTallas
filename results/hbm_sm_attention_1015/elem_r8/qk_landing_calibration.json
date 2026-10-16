@@ -1,0 +1,41 @@
+{
+ "control_delay": {
+  "3": 11,
+  "4": 11,
+  "2": 15,
+  "5": 15,
+  "1": 19,
+  "6": 19,
+  "0": 23,
+  "7": 23
+ },
+ "waves": [
+  {
+   "wave": 0,
+   "last_consume": 223,
+   "landings": 8,
+   "first": 63,
+   "last": 70
+  },
+  {
+   "wave": 1,
+   "last_consume": 287,
+   "landings": 8,
+   "first": 63,
+   "last": 70
+  },
+  {
+   "wave": 2,
+   "last_consume": 347,
+   "landings": 4,
+   "first": 67,
+   "last": 70
+  }
+ ],
+ "qk_first": 63,
+ "qk_land_meas": 70,
+ "shape": "ds640",
+ "op": "qk_sm0",
+ "seed": 1015,
+ "probe_dir": "/home/ubuntu/hsm-1705/probe/qk"
+}

@@ -4,7 +4,7 @@
 // 2048-sector block remains in one main sid aperture (or one local mirror).
 // start reserves 256 consecutive SRAM read slots; dq appears after each read
 // edge. The VM samples dq on its following edge and commits three edges later.
-module ot_hbm_svc_static_vm_delivery (
+module ot_hbm_svc_static_vm_delivery #(parameter integer STATUS_LAT=0) (
  input wire clk,rst_n,begin_v,begin_bank,input wire [15:0] begin_epoch,
  input wire [31:0] fill_v,fill_bank,input wire [191:0] fill_slot,
  input wire [511:0] fill_epoch,input wire [8191:0] fill_data,
@@ -23,7 +23,7 @@ module ot_hbm_svc_static_vm_delivery (
   if(!aperture_ok || busy)bad<=1;
   else base_q<=start_base_sector;
  end
- ot_hbm_svc_static_landing #(.READ_GROUPS(4)) u_landing (
+ ot_hbm_svc_static_landing #(.READ_GROUPS(4),.STATUS_LAT(STATUS_LAT)) u_landing (
  .clk(clk),.rst_n(rst_n),.begin_v(begin_v),.begin_bank(begin_bank),.begin_epoch(begin_epoch),
  .fill_v(fill_v),.fill_bank(fill_bank),.fill_slot(fill_slot),.fill_epoch(fill_epoch),.fill_data(fill_data),
  .block_ready(block_ready),.start(start && aperture_ok && !bad),.start_bank(start_bank),.start_epoch(start_epoch),

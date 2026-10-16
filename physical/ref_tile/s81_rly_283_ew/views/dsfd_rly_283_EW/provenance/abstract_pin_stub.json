@@ -1,0 +1,125 @@
+{
+  "schema": 1,
+  "kind": "abstract_pin_stub",
+  "status": "PASS",
+  "input": {
+    "path": "provenance/raw/dsfd_rly_283_EW.lef",
+    "sha256": "7ef358ffb3364f4e4dc4645e3dc0631c31a51601ec47f33bd3c8bd84374c40d2"
+  },
+  "output": {
+    "path": "dsfd_rly_283_EW.lef",
+    "sha256": "521895706188c983a7a3ee2dbdbc5be89dede63e87a4cb63003facbb75d0c219"
+  },
+  "helper": {
+    "path": "tools/hier_contract/abstract_pin_stub.py",
+    "sha256": "c3cae85e3aa1a8da5374284fe57418b2230ceb208aa76eff4567c6993bbe0c05",
+    "source_commit": "1480fbbb1574d66e3f9668b3c005556f3d6ce8c7",
+    "retained_copy": "provenance/helper/abstract_pin_stub.py"
+  },
+  "environment": {
+    "OT_OBS_CLOSE": null,
+    "OT_OBS_CLOSE_UM": null
+  },
+  "command": [
+    "python3",
+    "provenance/helper/abstract_pin_stub.py",
+    "provenance/raw/dsfd_rly_283_EW.lef",
+    "dsfd_rly_283_EW.lef"
+  ],
+  "returncode": 0,
+  "stdout": "pinstub: 0 OBS rects moved into 0 pins: ; pockets: 39 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
+  "stderr": "",
+  "invariants": {
+    "macro_outline": "PASS",
+    "pin_names_directions_uses": "PASS",
+    "original_pin_rectangles_retained": "PASS"
+  },
+  "child_lint": {
+    "schema": "opentallas.hier_contract.child_lint.v1",
+    "lef": "/srv/opentallas-scratch/claude/closure-loop/s81_rly_283_ew-r4-1480fbbb1/record/views/dsfd_rly_283_EW/dsfd_rly_283_EW.lef",
+    "verdict": "PASS",
+    "fails": [],
+    "warns": [],
+    "summary": "dsfd_rly_283_EW 23.76 x 30.24: PG M5 VDD 4 stripes (68% spread, 100% cov) / VSS 4 stripes (68% spread, 100% cov); strap M6; face pins 568 blocked-above 0 blocked-same 0; clock ck insertion 93 ps; pockets M5 0 (closed)",
+    "info": {
+      "cell": "dsfd_rly_283_EW",
+      "W": 23.76,
+      "H": 30.24,
+      "pg": {
+        "nets": {
+          "VDD": {
+            "top_layer": "M5",
+            "stripes": 4,
+            "dir": "V",
+            "spread": 0.682,
+            "coverage": 1.0,
+            "shapes_on_top": 4
+          },
+          "VSS": {
+            "top_layer": "M5",
+            "stripes": 4,
+            "dir": "V",
+            "spread": 0.682,
+            "coverage": 1.0,
+            "shapes_on_top": 4
+          }
+        },
+        "top_layer": "M5",
+        "ok": true,
+        "why": []
+      },
+      "pg_layer": "M5",
+      "strap_layer": "M6",
+      "cap": null,
+      "face": {
+        "face_pins": 568,
+        "blocked_above": 0,
+        "covered_below": 0,
+        "examples": [],
+        "blocked_same": 0,
+        "same_examples": [],
+        "band_same": 0,
+        "band_examples": []
+      },
+      "clock_insertion": {
+        "ck": {
+          "max_ps": 92.59,
+          "min_ps": 75.21
+        }
+      },
+      "pockets": {
+        "layer": "M5",
+        "d_um": 1.536,
+        "marker": {
+          "layer": "M5",
+          "d_um": 1.536,
+          "added": 39
+        },
+        "count": 0,
+        "area_um2": 0,
+        "examples": []
+      }
+    }
+  },
+  "replay": {
+    "historical": true,
+    "job": "s81_rly_283_ew-r4-1480fbbb1",
+    "source_commit": "1480fbbb1574d66e3f9668b3c005556f3d6ce8c7",
+    "published_record_commit": "9a09531b248238abb3e696b5a96c5fbde69d2150",
+    "orfs_dir": "/srv/opentallas-scratch/claude/closure-loop/s81_rly_283_ew-r4-1480fbbb1/routes/s81_rly_283_ew_r4_1480fbbb1/work/orfs",
+    "raw_export_tcl": "provenance/reconstruction/raw.tcl",
+    "raw_export_tcl_sha256": "aace2d72c0e36411b8c5308e6cc2c5118e85858787745b85e733f94376dbeff0",
+    "environment_basis": "Reconstruction replay cleared both options; original process environment was not recorded. Exact published output hash is reproduced.",
+    "raw_matches_original_manifest": true,
+    "final_matches_published_export": true,
+    "all_published_files_verified": {
+      "dsfd_rly_283_EW.lef": "521895706188c983a7a3ee2dbdbc5be89dede63e87a4cb63003facbb75d0c219",
+      "dsfd_rly_283_EW_tt.lib": "4eb48c939fea5d1a94e7385b1afb0d293830ce09f87ee89a326df669ccacaf59",
+      "dsfd_rly_283_EW_ff.lib": "6de80fc5e0b7eb9e28fd61c510ab2cdfc71ea0619a1b5f72db431599568286f2",
+      "dsfd_rly_283_EW_ss.lib": "b45975ff2e2a7938b8f6ef253c69552f996958fb5cc7b1bbac7939b7486cd4c7",
+      "abstract.json": "ac52ddc9759568ebafff81c61def852164d0b15248fbff6699c6403327faa55d",
+      "insertion.json": "011957c89d75578d40a5fd7c709a1757670547b0c63c8aceaa4f9e3ada624d6b",
+      "child_lint.json": "70bb0c4f6fb88d55cb12d5363a8373f470ef7ee9589b8a9791d640d657096932"
+    }
+  }
+}

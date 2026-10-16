@@ -1,0 +1,2003 @@
+{
+ "schema": "opentallas.s81.aggro.v2",
+ "date": "2026-10-15",
+ "author": "S81-AGGRO (Claude)",
+ "scope": "PLANNING SCREEN: real canonical packer + real allocator stage counts; hub = actual outlines + actual closed-port faces; gcell maze screen (not OpenROAD GRT)",
+ "today": {
+  "stages": 81,
+  "pairs": 2417,
+  "dies": 376,
+  "AR_tok_s": 1447.7,
+  "MTP_tok_s": 4238.4,
+  "chips_kW": 33.1,
+  "silicon_mm2": 840972
+ },
+ "knee": [
+  {
+   "name": "strip-0",
+   "refill": false,
+   "removed_columns": [],
+   "pairs": 2385,
+   "stages": 74,
+   "dies": 348,
+   "d_dies_vs_today": -28,
+   "MTP_tok_s": 4263.9,
+   "AR_tok_s": 1460.1,
+   "silicon_vs_today": -0.0648,
+   "chips_kW": 30.4,
+   "hub_width_um": 6134.4,
+   "fits": false,
+   "worst_road_cut": 330761.481,
+   "whitespace": 0.09
+  },
+  {
+   "name": "strip-1",
+   "refill": false,
+   "removed_columns": [
+    10
+   ],
+   "pairs": 2334,
+   "stages": 74,
+   "dies": 348,
+   "d_dies_vs_today": -28,
+   "MTP_tok_s": 4263.9,
+   "AR_tok_s": 1460.1,
+   "silicon_vs_today": -0.0648,
+   "chips_kW": 30.1,
+   "hub_width_um": 7325.9,
+   "fits": false,
+   "worst_road_cut": 330761.481,
+   "whitespace": 0.25
+  },
+  {
+   "name": "strip-2",
+   "refill": false,
+   "removed_columns": [
+    10,
+    11
+   ],
+   "pairs": 2322,
+   "stages": 74,
+   "dies": 348,
+   "d_dies_vs_today": -28,
+   "MTP_tok_s": 4263.9,
+   "AR_tok_s": 1460.1,
+   "silicon_vs_today": -0.0648,
+   "chips_kW": 30.0,
+   "hub_width_um": 8517.3,
+   "fits": false,
+   "worst_road_cut": 347875.556,
+   "whitespace": 0.35
+  },
+  {
+   "name": "strip-3",
+   "refill": false,
+   "removed_columns": [
+    9,
+    10,
+    11
+   ],
+   "pairs": 2000,
+   "stages": 89,
+   "dies": 408,
+   "d_dies_vs_today": 32,
+   "MTP_tok_s": 4209.6,
+   "AR_tok_s": 1433.8,
+   "silicon_vs_today": 0.0741,
+   "chips_kW": 32.5,
+   "hub_width_um": 9708.8,
+   "fits": false,
+   "worst_road_cut": 3.961,
+   "whitespace": 0.433
+  },
+  {
+   "name": "strip-4",
+   "refill": false,
+   "removed_columns": [
+    9,
+    10,
+    11,
+    12
+   ],
+   "pairs": 1985,
+   "stages": 89,
+   "dies": 408,
+   "d_dies_vs_today": 32,
+   "MTP_tok_s": 4209.6,
+   "AR_tok_s": 1433.8,
+   "silicon_vs_today": 0.0741,
+   "chips_kW": 32.4,
+   "hub_width_um": 10900.2,
+   "fits": true,
+   "worst_road_cut": 0.45,
+   "whitespace": 0.484
+  },
+  {
+   "name": "strip-5",
+   "refill": false,
+   "removed_columns": [
+    8,
+    9,
+    10,
+    11,
+    12
+   ],
+   "pairs": 1973,
+   "stages": 89,
+   "dies": 408,
+   "d_dies_vs_today": 32,
+   "MTP_tok_s": 4209.6,
+   "AR_tok_s": 1433.8,
+   "silicon_vs_today": 0.0741,
+   "chips_kW": 32.3,
+   "hub_width_um": 12091.7,
+   "fits": true,
+   "worst_road_cut": 0.276,
+   "whitespace": 0.531
+  },
+  {
+   "name": "strip-6",
+   "refill": false,
+   "removed_columns": [
+    8,
+    9,
+    10,
+    11,
+    12,
+    13
+   ],
+   "pairs": 1715,
+   "stages": 103,
+   "dies": 464,
+   "d_dies_vs_today": 88,
+   "MTP_tok_s": 4160.2,
+   "AR_tok_s": 1410.0,
+   "silicon_vs_today": 0.2037,
+   "chips_kW": 34.3,
+   "hub_width_um": 13283.1,
+   "fits": true,
+   "worst_road_cut": 0.173,
+   "whitespace": 0.583
+  },
+  {
+   "name": "strip-7",
+   "refill": false,
+   "removed_columns": [
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13
+   ],
+   "pairs": 1706,
+   "stages": 103,
+   "dies": 464,
+   "d_dies_vs_today": 88,
+   "MTP_tok_s": 4160.2,
+   "AR_tok_s": 1410.0,
+   "silicon_vs_today": 0.2037,
+   "chips_kW": 34.2,
+   "hub_width_um": 14474.6,
+   "fits": true,
+   "worst_road_cut": 0.138,
+   "whitespace": 0.614
+  },
+  {
+   "name": "strip-8",
+   "refill": false,
+   "removed_columns": [
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14
+   ],
+   "pairs": 1513,
+   "stages": null,
+   "dies": null,
+   "d_dies_vs_today": null,
+   "MTP_tok_s": null,
+   "AR_tok_s": null,
+   "silicon_vs_today": null,
+   "chips_kW": null,
+   "hub_width_um": 15666.0,
+   "fits": true,
+   "worst_road_cut": 0.106,
+   "whitespace": 0.65
+  },
+  {
+   "name": "L-3+2E",
+   "refill": false,
+   "removed_columns": [
+    9,
+    10,
+    11
+   ],
+   "pairs": 1979,
+   "stages": 89,
+   "dies": 408,
+   "d_dies_vs_today": 32,
+   "MTP_tok_s": 4209.6,
+   "AR_tok_s": 1433.8,
+   "silicon_vs_today": 0.0741,
+   "chips_kW": 32.4,
+   "hub_width_um": 12083.0,
+   "fits": true,
+   "worst_road_cut": 0.266,
+   "whitespace": 0.484
+  },
+  {
+   "name": "L-4+1E",
+   "refill": false,
+   "removed_columns": [
+    9,
+    10,
+    11,
+    12
+   ],
+   "pairs": 1973,
+   "stages": 89,
+   "dies": 408,
+   "d_dies_vs_today": 32,
+   "MTP_tok_s": 4209.6,
+   "AR_tok_s": 1433.8,
+   "silicon_vs_today": 0.0741,
+   "chips_kW": 32.3,
+   "hub_width_um": 12083.0,
+   "fits": true,
+   "worst_road_cut": 0.261,
+   "whitespace": 0.509
+  },
+  {
+   "name": "plus-3+1W1E",
+   "refill": false,
+   "removed_columns": [
+    9,
+    10,
+    11
+   ],
+   "pairs": 1983,
+   "stages": 89,
+   "dies": 408,
+   "d_dies_vs_today": 32,
+   "MTP_tok_s": 4209.6,
+   "AR_tok_s": 1433.8,
+   "silicon_vs_today": 0.0741,
+   "chips_kW": 32.4,
+   "hub_width_um": 12074.4,
+   "fits": true,
+   "worst_road_cut": 0.274,
+   "whitespace": 0.48
+  },
+  {
+   "name": "square",
+   "refill": false,
+   "removed_columns": [],
+   "pairs": 1631,
+   "stages": 111,
+   "dies": 496,
+   "d_dies_vs_today": 120,
+   "MTP_tok_s": 4132.5,
+   "AR_tok_s": 1396.8,
+   "silicon_vs_today": 0.2778,
+   "chips_kW": 35.8,
+   "hub_width_um": 16243.9,
+   "fits": true,
+   "worst_road_cut": 0.09,
+   "whitespace": 0.497
+  },
+  {
+   "name": "circle",
+   "refill": false,
+   "removed_columns": [],
+   "pairs": 1588,
+   "stages": 111,
+   "dies": 496,
+   "d_dies_vs_today": 120,
+   "MTP_tok_s": 4132.5,
+   "AR_tok_s": 1396.8,
+   "silicon_vs_today": 0.2778,
+   "chips_kW": 35.3,
+   "hub_width_um": 16935.5,
+   "fits": true,
+   "worst_road_cut": 0.072,
+   "whitespace": 0.499
+  },
+  {
+   "name": "compact-VM",
+   "refill": false,
+   "removed_columns": [],
+   "pairs": 2000,
+   "stages": 89,
+   "dies": 408,
+   "d_dies_vs_today": 32,
+   "MTP_tok_s": 4209.6,
+   "AR_tok_s": 1433.8,
+   "silicon_vs_today": 0.0741,
+   "chips_kW": 32.5,
+   "hub_width_um": 13150.3,
+   "fits": true,
+   "worst_road_cut": 0.447,
+   "whitespace": 0.29
+  },
+  {
+   "name": "strip-0",
+   "refill": "parity",
+   "removed_columns": [],
+   "pairs": 2521,
+   "stages": 74,
+   "dies": 348,
+   "d_dies_vs_today": -28,
+   "MTP_tok_s": 4263.9,
+   "AR_tok_s": 1460.1,
+   "silicon_vs_today": -0.0648,
+   "chips_kW": 31.3,
+   "hub_width_um": 7084.8,
+   "fits": false,
+   "worst_road_cut": 368782.222,
+   "whitespace": 0.19
+  },
+  {
+   "name": "strip-1",
+   "refill": "parity",
+   "removed_columns": [
+    10
+   ],
+   "pairs": 2428,
+   "stages": 74,
+   "dies": 348,
+   "d_dies_vs_today": -28,
+   "MTP_tok_s": 4263.9,
+   "AR_tok_s": 1460.1,
+   "silicon_vs_today": -0.0648,
+   "chips_kW": 30.7,
+   "hub_width_um": 8233.1,
+   "fits": false,
+   "worst_road_cut": 347875.556,
+   "whitespace": 0.323
+  },
+  {
+   "name": "strip-2",
+   "refill": "parity",
+   "removed_columns": [
+    10,
+    11
+   ],
+   "pairs": 2410,
+   "stages": 74,
+   "dies": 348,
+   "d_dies_vs_today": -28,
+   "MTP_tok_s": 4263.9,
+   "AR_tok_s": 1460.1,
+   "silicon_vs_today": -0.0648,
+   "chips_kW": 30.6,
+   "hub_width_um": 9381.3,
+   "fits": false,
+   "worst_road_cut": 351668.148,
+   "whitespace": 0.404
+  },
+  {
+   "name": "strip-3",
+   "refill": "parity",
+   "removed_columns": [
+    9,
+    10,
+    11
+   ],
+   "pairs": 2116,
+   "stages": 84,
+   "dies": 388,
+   "d_dies_vs_today": 12,
+   "MTP_tok_s": 4227.6,
+   "AR_tok_s": 1442.4,
+   "silicon_vs_today": 0.0278,
+   "chips_kW": 31.9,
+   "hub_width_um": 10529.6,
+   "fits": false,
+   "worst_road_cut": 0.603,
+   "whitespace": 0.461
+  },
+  {
+   "name": "strip-4",
+   "refill": "parity",
+   "removed_columns": [
+    9,
+    10,
+    11,
+    12
+   ],
+   "pairs": 2088,
+   "stages": 89,
+   "dies": 408,
+   "d_dies_vs_today": 32,
+   "MTP_tok_s": 4209.6,
+   "AR_tok_s": 1433.8,
+   "silicon_vs_today": 0.0741,
+   "chips_kW": 33.2,
+   "hub_width_um": 11677.8,
+   "fits": true,
+   "worst_road_cut": 0.332,
+   "whitespace": 0.512
+  },
+  {
+   "name": "strip-5",
+   "refill": "parity",
+   "removed_columns": [
+    8,
+    9,
+    10,
+    11,
+    12
+   ],
+   "pairs": 2074,
+   "stages": 89,
+   "dies": 408,
+   "d_dies_vs_today": 32,
+   "MTP_tok_s": 4209.6,
+   "AR_tok_s": 1433.8,
+   "silicon_vs_today": 0.0741,
+   "chips_kW": 33.1,
+   "hub_width_um": 12826.1,
+   "fits": true,
+   "worst_road_cut": 0.216,
+   "whitespace": 0.559
+  },
+  {
+   "name": "strip-6",
+   "refill": "parity",
+   "removed_columns": [
+    8,
+    9,
+    10,
+    11,
+    12,
+    13
+   ],
+   "pairs": 1838,
+   "stages": 103,
+   "dies": 464,
+   "d_dies_vs_today": 88,
+   "MTP_tok_s": 4160.2,
+   "AR_tok_s": 1410.0,
+   "silicon_vs_today": 0.2037,
+   "chips_kW": 35.4,
+   "hub_width_um": 13974.3,
+   "fits": true,
+   "worst_road_cut": 0.163,
+   "whitespace": 0.592
+  },
+  {
+   "name": "strip-7",
+   "refill": "parity",
+   "removed_columns": [
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13
+   ],
+   "pairs": 1819,
+   "stages": 103,
+   "dies": 464,
+   "d_dies_vs_today": 88,
+   "MTP_tok_s": 4160.2,
+   "AR_tok_s": 1410.0,
+   "silicon_vs_today": 0.2037,
+   "chips_kW": 35.2,
+   "hub_width_um": 15122.6,
+   "fits": true,
+   "worst_road_cut": 0.122,
+   "whitespace": 0.632
+  },
+  {
+   "name": "strip-8",
+   "refill": "parity",
+   "removed_columns": [
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14
+   ],
+   "pairs": 1615,
+   "stages": 111,
+   "dies": 496,
+   "d_dies_vs_today": 120,
+   "MTP_tok_s": 4132.5,
+   "AR_tok_s": 1396.8,
+   "silicon_vs_today": 0.2778,
+   "chips_kW": 35.6,
+   "hub_width_um": 16270.8,
+   "fits": true,
+   "worst_road_cut": 0.096,
+   "whitespace": 0.666
+  },
+  {
+   "name": "L-3+2E",
+   "refill": "parity",
+   "removed_columns": [
+    9,
+    10,
+    11
+   ],
+   "pairs": 2088,
+   "stages": 89,
+   "dies": 408,
+   "d_dies_vs_today": 32,
+   "MTP_tok_s": 4209.6,
+   "AR_tok_s": 1433.8,
+   "silicon_vs_today": 0.0741,
+   "chips_kW": 33.2,
+   "hub_width_um": 12817.4,
+   "fits": true,
+   "worst_road_cut": 0.208,
+   "whitespace": 0.51
+  },
+  {
+   "name": "L-4+1E",
+   "refill": "parity",
+   "removed_columns": [
+    9,
+    10,
+    11,
+    12
+   ],
+   "pairs": 2075,
+   "stages": 89,
+   "dies": 408,
+   "d_dies_vs_today": 32,
+   "MTP_tok_s": 4209.6,
+   "AR_tok_s": 1433.8,
+   "silicon_vs_today": 0.0741,
+   "chips_kW": 33.1,
+   "hub_width_um": 12817.4,
+   "fits": true,
+   "worst_road_cut": 0.213,
+   "whitespace": 0.537
+  },
+  {
+   "name": "plus-3+1W1E",
+   "refill": "parity",
+   "removed_columns": [
+    9,
+    10,
+    11
+   ],
+   "pairs": 2088,
+   "stages": 89,
+   "dies": 408,
+   "d_dies_vs_today": 32,
+   "MTP_tok_s": 4209.6,
+   "AR_tok_s": 1433.8,
+   "silicon_vs_today": 0.0741,
+   "chips_kW": 33.2,
+   "hub_width_um": 12808.8,
+   "fits": true,
+   "worst_road_cut": 0.193,
+   "whitespace": 0.522
+  },
+  {
+   "name": "square",
+   "refill": "parity",
+   "removed_columns": [],
+   "pairs": 1821,
+   "stages": 103,
+   "dies": 464,
+   "d_dies_vs_today": 88,
+   "MTP_tok_s": 4160.2,
+   "AR_tok_s": 1410.0,
+   "silicon_vs_today": 0.2037,
+   "chips_kW": 35.3,
+   "hub_width_um": 16243.9,
+   "fits": true,
+   "worst_road_cut": 0.103,
+   "whitespace": 0.485
+  },
+  {
+   "name": "circle",
+   "refill": "parity",
+   "removed_columns": [],
+   "pairs": 1808,
+   "stages": 103,
+   "dies": 464,
+   "d_dies_vs_today": 88,
+   "MTP_tok_s": 4160.2,
+   "AR_tok_s": 1410.0,
+   "silicon_vs_today": 0.2037,
+   "chips_kW": 35.1,
+   "hub_width_um": 16935.5,
+   "fits": true,
+   "worst_road_cut": 0.089,
+   "whitespace": 0.485
+  },
+  {
+   "name": "compact-VM",
+   "refill": "parity",
+   "removed_columns": [],
+   "pairs": 2074,
+   "stages": 89,
+   "dies": 408,
+   "d_dies_vs_today": 32,
+   "MTP_tok_s": 4209.6,
+   "AR_tok_s": 1433.8,
+   "silicon_vs_today": 0.0741,
+   "chips_kW": 33.1,
+   "hub_width_um": 13290.1,
+   "fits": true,
+   "worst_road_cut": 0.261,
+   "whitespace": 0.301
+  }
+ ],
+ "hub": [
+  {
+   "key": "c5",
+   "name": "C5 strip (Codex combined_2118)",
+   "order": "S14W | SU | VM (+MIX4 N) | capture column | VCH 1,296 | HC tower (hc_s low, hc_t high) | S14E",
+   "checks": [],
+   "bbox_um": [
+    10511.9,
+    3216.2,
+    10877.7,
+    20543.7
+   ],
+   "roads_um": {
+    "W": 661.8,
+    "E": 552.1
+   },
+   "road_cut": {
+    "W": 0.557,
+    "E": 0.361
+   },
+   "structural_turns": [
+    "SU-VM",
+    "capture-VM",
+    "PQ-VM",
+    "WFC-VM",
+    "WFC-collective",
+    "host-collective"
+   ],
+   "worst_flow_cut": 0.177,
+   "hub_relays_all": 25,
+   "relay_edges_by_class": {
+    "su": 15,
+    "field": 3,
+    "coll": 13
+   },
+   "e2e_loss_delta_vs_c5_pct": {
+    "ar": 0.0,
+    "mtp": 0.0
+   },
+   "tree_edges_and_link_hops": [
+    65,
+    32
+   ],
+   "e2e_loss_delta_vs_c5_incl_trees_links_pct": {
+    "ar": 0.0,
+    "mtp": 0.0
+   },
+   "tok_s_rm5_89st": {
+    "MTP": 4210.0,
+    "AR": 1434.0
+   },
+   "grt_screen": {
+    "max_util": 2.938,
+    "p99_util": 0.881,
+    "edges_over_060": 496,
+    "overflow_edges": 27,
+    "hub_hops": {
+     "collect-W": 37,
+     "collect-E": 31,
+     "bcast-W": 28,
+     "link": 0,
+     "bcast-E": 23,
+     "svc": 19,
+     "SU-VM": 16,
+     "PQ-VM": 13,
+     "WFC-VM": 11,
+     "capture-VM": 16,
+     "WFC-collective": 0,
+     "HC_s-VM": 7,
+     "collective-HC_s": 6,
+     "host-collective": 4,
+     "HC_s-HC_t": 2
+    }
+   },
+   "flows": [
+    {
+     "name": "SU-VM",
+     "bits": 17137,
+     "face_a": "N",
+     "face_b": "TURN",
+     "window_um": 1890.0,
+     "gap_um": 1066.2,
+     "cut": null,
+     "relays": 2,
+     "status": "STRUCTURAL: face N does not look at vm; needs a 1045-um turn channel (none reserved)"
+    },
+    {
+     "name": "HC_s-HC_t",
+     "bits": 15660,
+     "face_a": "N",
+     "face_b": "S",
+     "window_um": 1816.5,
+     "gap_um": 799.2,
+     "cut": 0.177,
+     "relays": 1,
+     "status": null
+    },
+    {
+     "name": "capture-VM",
+     "bits": 13376,
+     "face_a": "S",
+     "face_b": "TURN",
+     "window_um": 1728.0,
+     "gap_um": 836.9,
+     "cut": null,
+     "relays": 1,
+     "status": "STRUCTURAL: face S does not look at vm; needs a 815-um turn channel (none reserved)"
+    },
+    {
+     "name": "MIX4-VM",
+     "bits": 12732,
+     "face_a": "S",
+     "face_b": "N",
+     "window_um": 3229.2,
+     "gap_um": 21.6,
+     "cut": 0.081,
+     "relays": 0,
+     "status": null
+    },
+    {
+     "name": "collective-HC_s",
+     "bits": 8225,
+     "face_a": "E",
+     "face_b": "W",
+     "window_um": 2721.6,
+     "gap_um": 3024.0,
+     "cut": 0.083,
+     "relays": 6,
+     "status": null
+    },
+    {
+     "name": "capture-gather",
+     "bits": 6959,
+     "face_a": "N",
+     "face_b": "S",
+     "window_um": 1728.0,
+     "gap_um": 43.2,
+     "cut": 0.083,
+     "relays": 0,
+     "status": null
+    },
+    {
+     "name": "HC_s-VM",
+     "bits": 5401,
+     "face_a": "W",
+     "face_b": "E",
+     "window_um": 3754.1,
+     "gap_um": 3045.6,
+     "cut": 0.039,
+     "relays": 6,
+     "status": null
+    },
+    {
+     "name": "collective-VM",
+     "bits": 4921,
+     "face_a": "N",
+     "face_b": "S",
+     "window_um": 1706.4,
+     "gap_um": 21.6,
+     "cut": 0.059,
+     "relays": 0,
+     "status": null
+    },
+    {
+     "name": "PQ-VM",
+     "bits": 2069,
+     "face_a": "E",
+     "face_b": "TURN",
+     "window_um": 449.3,
+     "gap_um": 1409.2,
+     "cut": null,
+     "relays": 2,
+     "status": "STRUCTURAL: face E does not look at vm; needs a 126-um turn channel (none reserved)"
+    },
+    {
+     "name": "WFC-VM",
+     "bits": 1589,
+     "face_a": "E",
+     "face_b": "TURN",
+     "window_um": 328.3,
+     "gap_um": 118.5,
+     "cut": null,
+     "relays": 0,
+     "status": "STRUCTURAL: face E does not look at vm; needs a 97-um turn channel (none reserved)"
+    },
+    {
+     "name": "WFC-collective",
+     "bits": 1030,
+     "face_a": "E",
+     "face_b": "TURN",
+     "window_um": 328.3,
+     "gap_um": 3816.9,
+     "cut": null,
+     "relays": 7,
+     "status": "STRUCTURAL: face E does not look at collective; needs a 63-um turn channel (none reserved)"
+    },
+    {
+     "name": "host-collective",
+     "bits": 597,
+     "face_a": "E",
+     "face_b": "TURN",
+     "window_um": 129.6,
+     "gap_um": 209.2,
+     "cut": null,
+     "relays": 0,
+     "status": "STRUCTURAL: face E does not look at collective; needs a 36-um turn channel (none reserved)"
+    }
+   ],
+   "rects": {
+    "su": [
+     10511.856,
+     3818.88,
+     1889.976,
+     10709.256
+    ],
+    "vm": [
+     12423.456,
+     7989.84,
+     4104.0,
+     4644.0
+    ],
+    "hc_t": [
+     19573.056,
+     13599.36,
+     1816.536,
+     10160.616
+    ],
+    "hc_s": [
+     19573.056,
+     3216.24,
+     1816.536,
+     9583.896
+    ],
+    "capture": [
+     16549.056,
+     12072.24,
+     1727.976,
+     561.576
+    ],
+    "gather": [
+     16549.056,
+     12677.04,
+     1727.976,
+     1045.416
+    ],
+    "wfc": [
+     16549.056,
+     11722.32,
+     1727.976,
+     328.296
+    ],
+    "pq": [
+     16549.056,
+     13895.28,
+     1672.248,
+     449.256
+    ],
+    "sseq": [
+     16549.056,
+     14517.36,
+     1727.976,
+     88.536
+    ],
+    "collective": [
+     14821.056,
+     5246.64,
+     1727.976,
+     2721.576
+    ],
+    "host": [
+     14821.056,
+     4944.24,
+     1727.976,
+     129.576
+    ],
+    "mix4": [
+     12423.456,
+     12655.44,
+     3229.2,
+     1321.92
+    ]
+   }
+  },
+  {
+   "key": "vmc",
+   "name": "VM-centred column (recommended)",
+   "order": "S14W | PQ/WFC/sseq col | VM (MIX4 N-W, capture+gather N-E, SU under) | collective col | ch | HC tower flipped (hc_t low, hc_s high) | S14E",
+   "checks": [],
+   "bbox_um": [
+    11275.8,
+    3648.3,
+    9894.9,
+    20543.7
+   ],
+   "roads_um": {
+    "W": 1425.7,
+    "E": 771.0
+   },
+   "road_cut": {
+    "W": 0.259,
+    "E": 0.259
+   },
+   "structural_turns": [],
+   "worst_flow_cut": 0.187,
+   "hub_relays_all": 5,
+   "relay_edges_by_class": {
+    "su": 5,
+    "field": 0,
+    "coll": 0
+   },
+   "e2e_loss_delta_vs_c5_pct": {
+    "ar": -1.678,
+    "mtp": -1.477
+   },
+   "tree_edges_and_link_hops": [
+    88,
+    32
+   ],
+   "e2e_loss_delta_vs_c5_incl_trees_links_pct": {
+    "ar": -0.873,
+    "mtp": -0.787
+   },
+   "tok_s_rm5_89st": {
+    "MTP": 4243.0,
+    "AR": 1446.0
+   },
+   "grt_screen": {
+    "max_util": 0.658,
+    "p99_util": 0.58,
+    "edges_over_060": 27,
+    "overflow_edges": 0,
+    "hub_hops": {
+     "collect-E": 39,
+     "collect-W": 48,
+     "svc": 41,
+     "bcast-E": 40,
+     "link": 32,
+     "bcast-W": 21,
+     "HC_s-VM": 5,
+     "HC_s-HC_t": 2,
+     "SU-VM": 1,
+     "collective-HC_s": 1
+    }
+   },
+   "flows": [
+    {
+     "name": "SU-VM",
+     "bits": 17137,
+     "face_a": "N",
+     "face_b": "S",
+     "window_um": 1890.0,
+     "gap_um": 432.0,
+     "cut": 0.187,
+     "relays": 0,
+     "status": null
+    },
+    {
+     "name": "HC_s-HC_t",
+     "bits": 15660,
+     "face_a": "S",
+     "face_b": "N",
+     "window_um": 1816.5,
+     "gap_um": 799.2,
+     "cut": 0.177,
+     "relays": 1,
+     "status": null
+    },
+    {
+     "name": "capture-VM",
+     "bits": 13376,
+     "face_a": "S",
+     "face_b": "N",
+     "window_um": 1728.0,
+     "gap_um": 21.6,
+     "cut": 0.159,
+     "relays": 0,
+     "status": null
+    },
+    {
+     "name": "MIX4-VM",
+     "bits": 12732,
+     "face_a": "S",
+     "face_b": "N",
+     "window_um": 2354.4,
+     "gap_um": 21.6,
+     "cut": 0.111,
+     "relays": 0,
+     "status": null
+    },
+    {
+     "name": "collective-HC_s",
+     "bits": 8225,
+     "face_a": "E",
+     "face_b": "W",
+     "window_um": 2721.6,
+     "gap_um": 432.0,
+     "cut": 0.083,
+     "relays": 0,
+     "status": null
+    },
+    {
+     "name": "capture-gather",
+     "bits": 6959,
+     "face_a": "N",
+     "face_b": "S",
+     "window_um": 1728.0,
+     "gap_um": 43.2,
+     "cut": 0.083,
+     "relays": 0,
+     "status": null
+    },
+    {
+     "name": "HC_s-VM",
+     "bits": 5401,
+     "face_a": "W",
+     "face_b": "E",
+     "window_um": 1594.1,
+     "gap_um": 2246.4,
+     "cut": 0.093,
+     "relays": 4,
+     "status": null
+    },
+    {
+     "name": "collective-VM",
+     "bits": 4921,
+     "face_a": "W",
+     "face_b": "E",
+     "window_um": 2721.6,
+     "gap_um": 86.4,
+     "cut": 0.05,
+     "relays": 0,
+     "status": null
+    },
+    {
+     "name": "PQ-VM",
+     "bits": 2069,
+     "face_a": "E",
+     "face_b": "W",
+     "window_um": 449.3,
+     "gap_um": 0.0,
+     "cut": 0.126,
+     "relays": 0,
+     "status": null
+    },
+    {
+     "name": "WFC-VM",
+     "bits": 1589,
+     "face_a": "W",
+     "face_b": "E",
+     "window_um": 328.3,
+     "gap_um": 86.4,
+     "cut": 0.133,
+     "relays": 0,
+     "status": null
+    },
+    {
+     "name": "WFC-collective",
+     "bits": 1030,
+     "face_a": "W",
+     "face_b": "L-seam",
+     "window_um": 328.3,
+     "gap_um": 43.2,
+     "cut": 0.086,
+     "relays": 0,
+     "status": "short L-turn through the reserved seam"
+    },
+    {
+     "name": "host-collective",
+     "bits": 597,
+     "face_a": "E",
+     "face_b": "L-seam",
+     "window_um": 129.6,
+     "gap_um": 21.6,
+     "cut": 0.126,
+     "relays": 0,
+     "status": "short L-turn through the reserved seam"
+    }
+   ],
+   "rects": {
+    "su": [
+     13003.735,
+     5624.312,
+     1889.976,
+     10709.256
+    ],
+    "vm": [
+     13003.735,
+     16765.568,
+     4104.0,
+     4644.0
+    ],
+    "mix4": [
+     12128.959,
+     21431.168,
+     3229.2,
+     1321.92
+    ],
+    "capture": [
+     15379.759,
+     21431.168,
+     1727.976,
+     561.576
+    ],
+    "gather": [
+     15379.759,
+     22035.944,
+     1727.976,
+     1045.416
+    ],
+    "collective": [
+     17194.135,
+     16765.568,
+     1727.976,
+     2721.576
+    ],
+    "host": [
+     17194.135,
+     16614.392,
+     1727.976,
+     129.576
+    ],
+    "sseq": [
+     11275.759,
+     16787.168,
+     1727.976,
+     88.536
+    ],
+    "wfc": [
+     17194.135,
+     19530.344,
+     1727.976,
+     328.296
+    ],
+    "pq": [
+     11331.487,
+     16897.304,
+     1672.248,
+     449.256
+    ],
+    "hc_s": [
+     19354.135,
+     14608.104,
+     1816.536,
+     9583.896
+    ],
+    "hc_t": [
+     19354.135,
+     3648.288,
+     1816.536,
+     10160.616
+    ]
+   }
+  },
+  {
+   "key": "vmc2",
+   "name": "VM-centred column v2 (S-DIE D1+D2, SU|VM 432)",
+   "order": "S14W | sseq col | VM (MIX4 N-W, capture+gather+PQ N-E, SU under) | collective col | ch | HC tower flipped (hc_t low, hc_s high) | S14E; hc_s top under the gather",
+   "checks": [],
+   "bbox_um": [
+    11275.8,
+    1216.2,
+    9894.9,
+    22271.2
+   ],
+   "roads_um": {
+    "W": 1425.7,
+    "E": 771.0
+   },
+   "road_cut": {
+    "W": 0.259,
+    "E": 0.259
+   },
+   "structural_turns": [],
+   "worst_flow_cut": 0.187,
+   "hub_relays_all": 9,
+   "relay_edges_by_class": {
+    "su": 5,
+    "field": 4,
+    "coll": 0
+   },
+   "e2e_loss_delta_vs_c5_pct": {
+    "ar": -1.538,
+    "mtp": -1.357
+   },
+   "tree_edges_and_link_hops": [
+    91,
+    32
+   ],
+   "e2e_loss_delta_vs_c5_incl_trees_links_pct": {
+    "ar": -0.628,
+    "mtp": -0.577
+   },
+   "tok_s_rm5_89st": {
+    "MTP": 4234.0,
+    "AR": 1443.0
+   },
+   "grt_screen": {
+    "max_util": 0.73,
+    "p99_util": 0.524,
+    "edges_over_060": 14,
+    "overflow_edges": 0,
+    "hub_hops": {
+     "collect-E": 39,
+     "collect-W": 47,
+     "bcast-E": 44,
+     "bcast-W": 42,
+     "svc": 41,
+     "link": 32,
+     "PQ-VM": 12,
+     "HC_s-VM": 5,
+     "HC_s-HC_t": 2,
+     "SU-VM": 1,
+     "collective-HC_s": 1
+    }
+   },
+   "flows": [
+    {
+     "name": "SU-VM",
+     "bits": 17137,
+     "face_a": "N",
+     "face_b": "S",
+     "window_um": 1890.0,
+     "gap_um": 432.0,
+     "cut": 0.187,
+     "relays": 0,
+     "status": null
+    },
+    {
+     "name": "HC_s-HC_t",
+     "bits": 15660,
+     "face_a": "S",
+     "face_b": "N",
+     "window_um": 1816.5,
+     "gap_um": 799.2,
+     "cut": 0.177,
+     "relays": 1,
+     "status": null
+    },
+    {
+     "name": "capture-VM",
+     "bits": 13376,
+     "face_a": "S",
+     "face_b": "N",
+     "window_um": 1728.0,
+     "gap_um": 21.6,
+     "cut": 0.159,
+     "relays": 0,
+     "status": null
+    },
+    {
+     "name": "MIX4-VM",
+     "bits": 12732,
+     "face_a": "S",
+     "face_b": "N",
+     "window_um": 2354.4,
+     "gap_um": 21.6,
+     "cut": 0.111,
+     "relays": 0,
+     "status": null
+    },
+    {
+     "name": "collective-HC_s",
+     "bits": 8225,
+     "face_a": "E",
+     "face_b": "W",
+     "window_um": 2721.6,
+     "gap_um": 432.0,
+     "cut": 0.083,
+     "relays": 0,
+     "status": null
+    },
+    {
+     "name": "capture-gather",
+     "bits": 6959,
+     "face_a": "N",
+     "face_b": "S",
+     "window_um": 1728.0,
+     "gap_um": 43.2,
+     "cut": 0.083,
+     "relays": 0,
+     "status": null
+    },
+    {
+     "name": "HC_s-VM",
+     "bits": 5401,
+     "face_a": "W",
+     "face_b": "E",
+     "window_um": 1594.1,
+     "gap_um": 2246.4,
+     "cut": 0.093,
+     "relays": 4,
+     "status": null
+    },
+    {
+     "name": "collective-VM",
+     "bits": 4921,
+     "face_a": "W",
+     "face_b": "E",
+     "window_um": 2721.6,
+     "gap_um": 86.4,
+     "cut": 0.05,
+     "relays": 0,
+     "status": null
+    },
+    {
+     "name": "PQ-VM",
+     "bits": 2069,
+     "face_a": "E",
+     "face_b": "channel",
+     "window_um": 449.3,
+     "gap_um": 2144.6,
+     "cut": 0.126,
+     "relays": 4,
+     "status": "L-turn through the reserved free column (screen-routed)"
+    },
+    {
+     "name": "WFC-VM",
+     "bits": 1589,
+     "face_a": "W",
+     "face_b": "E",
+     "window_um": 328.3,
+     "gap_um": 86.4,
+     "cut": 0.133,
+     "relays": 0,
+     "status": null
+    },
+    {
+     "name": "WFC-collective",
+     "bits": 1030,
+     "face_a": "W",
+     "face_b": "L-seam",
+     "window_um": 328.3,
+     "gap_um": 43.2,
+     "cut": 0.086,
+     "relays": 0,
+     "status": "short L-turn through the reserved seam"
+    },
+    {
+     "name": "host-collective",
+     "bits": 597,
+     "face_a": "E",
+     "face_b": "L-seam",
+     "window_um": 129.6,
+     "gap_um": 237.6,
+     "cut": 0.126,
+     "relays": 0,
+     "status": "short L-turn through the reserved seam"
+    }
+   ],
+   "rects": {
+    "su": [
+     13003.735,
+     5408.312,
+     1889.976,
+     10709.256
+    ],
+    "vm": [
+     13003.735,
+     16549.568,
+     4104.0,
+     4644.0
+    ],
+    "mix4": [
+     12128.959,
+     21215.168,
+     3229.2,
+     1321.92
+    ],
+    "capture": [
+     15379.759,
+     21215.168,
+     1727.976,
+     561.576
+    ],
+    "gather": [
+     15379.759,
+     21819.944,
+     1727.976,
+     1045.416
+    ],
+    "collective": [
+     17194.135,
+     16549.568,
+     1727.976,
+     2721.576
+    ],
+    "host": [
+     17194.135,
+     16182.392,
+     1727.976,
+     129.576
+    ],
+    "sseq": [
+     11275.759,
+     16787.168,
+     1727.976,
+     88.536
+    ],
+    "wfc": [
+     17194.135,
+     19314.344,
+     1727.976,
+     328.296
+    ],
+    "pq": [
+     15379.759,
+     23038.16,
+     1672.248,
+     449.256
+    ],
+    "hc_s": [
+     19354.135,
+     12176.048,
+     1816.536,
+     9583.896
+    ],
+    "hc_t": [
+     19354.135,
+     1216.232,
+     1816.536,
+     10160.616
+    ]
+   }
+  },
+  {
+   "key": "vmc3",
+   "name": "VM-centred square, low (HC side by side)",
+   "order": "S14W | VM (capture+gather+PQ N-E, SU S-W, MIX4 S-E) | collective col (WFC MY, host, sseq) | ch | hc_s | hc_t | S14E",
+   "checks": [],
+   "bbox_um": [
+    11406.6,
+    300.0,
+    10005.1,
+    17906.3
+   ],
+   "roads_um": {
+    "W": 1556.6,
+    "E": 530.0
+   },
+   "road_cut": {
+    "W": 0.237,
+    "E": 0.376
+   },
+   "structural_turns": [],
+   "worst_flow_cut": 0.187,
+   "hub_relays_all": 8,
+   "relay_edges_by_class": {
+    "su": 4,
+    "field": 4,
+    "coll": 0
+   },
+   "e2e_loss_delta_vs_c5_pct": {
+    "ar": -1.668,
+    "mtp": -1.471
+   },
+   "tree_edges_and_link_hops": [
+    70,
+    51
+   ],
+   "e2e_loss_delta_vs_c5_incl_trees_links_pct": {
+    "ar": -1.094,
+    "mtp": -0.96
+   },
+   "tok_s_rm5_89st": {
+    "MTP": 4250.0,
+    "AR": 1450.0
+   },
+   "grt_screen": {
+    "max_util": 1.113,
+    "p99_util": 0.797,
+    "edges_over_060": 55,
+    "overflow_edges": 9,
+    "hub_hops": {
+     "collect-E": 31,
+     "bcast-E": 36,
+     "collect-W": 34,
+     "svc": 28,
+     "bcast-W": 28,
+     "link": 51,
+     "PQ-VM": 12,
+     "HC_s-VM": 5,
+     "collective-HC_s": 1,
+     "SU-VM": 1
+    }
+   },
+   "flows": [
+    {
+     "name": "SU-VM",
+     "bits": 17137,
+     "face_a": "N",
+     "face_b": "S",
+     "window_um": 1890.0,
+     "gap_um": 216.0,
+     "cut": 0.187,
+     "relays": 0,
+     "status": null
+    },
+    {
+     "name": "HC_s-HC_t",
+     "bits": 15660,
+     "face_a": "E",
+     "face_b": "W",
+     "window_um": 9583.9,
+     "gap_um": 21.6,
+     "cut": 0.045,
+     "relays": 0,
+     "status": null
+    },
+    {
+     "name": "capture-VM",
+     "bits": 13376,
+     "face_a": "S",
+     "face_b": "N",
+     "window_um": 1728.0,
+     "gap_um": 21.6,
+     "cut": 0.159,
+     "relays": 0,
+     "status": null
+    },
+    {
+     "name": "MIX4-VM",
+     "bits": 12732,
+     "face_a": "N",
+     "face_b": "S",
+     "window_um": 2192.4,
+     "gap_um": 21.6,
+     "cut": 0.119,
+     "relays": 0,
+     "status": null
+    },
+    {
+     "name": "collective-HC_s",
+     "bits": 8225,
+     "face_a": "E",
+     "face_b": "W",
+     "window_um": 2721.6,
+     "gap_um": 432.0,
+     "cut": 0.083,
+     "relays": 0,
+     "status": null
+    },
+    {
+     "name": "capture-gather",
+     "bits": 6959,
+     "face_a": "N",
+     "face_b": "S",
+     "window_um": 1728.0,
+     "gap_um": 86.4,
+     "cut": 0.083,
+     "relays": 0,
+     "status": null
+    },
+    {
+     "name": "HC_s-VM",
+     "bits": 5401,
+     "face_a": "W",
+     "face_b": "E",
+     "window_um": 1376.0,
+     "gap_um": 2246.4,
+     "cut": 0.108,
+     "relays": 4,
+     "status": null
+    },
+    {
+     "name": "collective-VM",
+     "bits": 4921,
+     "face_a": "W",
+     "face_b": "E",
+     "window_um": 2721.6,
+     "gap_um": 86.4,
+     "cut": 0.05,
+     "relays": 0,
+     "status": null
+    },
+    {
+     "name": "PQ-VM",
+     "bits": 2069,
+     "face_a": "E",
+     "face_b": "channel",
+     "window_um": 449.3,
+     "gap_um": 2187.8,
+     "cut": 0.126,
+     "relays": 4,
+     "status": "L-turn through the reserved free column (screen-routed)"
+    },
+    {
+     "name": "WFC-VM",
+     "bits": 1589,
+     "face_a": "W",
+     "face_b": "E",
+     "window_um": 328.3,
+     "gap_um": 86.4,
+     "cut": 0.133,
+     "relays": 0,
+     "status": null
+    },
+    {
+     "name": "WFC-collective",
+     "bits": 1030,
+     "face_a": "W",
+     "face_b": "L-seam",
+     "window_um": 328.3,
+     "gap_um": 86.4,
+     "cut": 0.086,
+     "relays": 0,
+     "status": "short L-turn through the reserved seam"
+    },
+    {
+     "name": "host-collective",
+     "bits": 597,
+     "face_a": "E",
+     "face_b": "L-seam",
+     "window_um": 129.6,
+     "gap_um": 457.9,
+     "cut": 0.126,
+     "relays": 0,
+     "status": "short L-turn through the reserved seam"
+    }
+   ],
+   "rects": {
+    "su": [
+     11406.632,
+     300.0,
+     1889.976,
+     10709.256
+    ],
+    "vm": [
+     11406.632,
+     11225.256,
+     4104.0,
+     4644.0
+    ],
+    "mix4": [
+     13318.208,
+     9881.736,
+     3229.2,
+     1321.92
+    ],
+    "capture": [
+     13782.656,
+     15890.856,
+     1727.976,
+     561.576
+    ],
+    "gather": [
+     13782.656,
+     16538.832,
+     1727.976,
+     1045.416
+    ],
+    "pq": [
+     13782.656,
+     17757.048,
+     1672.248,
+     449.256
+    ],
+    "collective": [
+     15597.032,
+     11225.256,
+     1727.976,
+     2721.576
+    ],
+    "wfc": [
+     15597.032,
+     14033.232,
+     1727.976,
+     328.296
+    ],
+    "host": [
+     15597.032,
+     14404.728,
+     1727.976,
+     129.576
+    ],
+    "sseq": [
+     15597.032,
+     14577.504,
+     1727.976,
+     88.536
+    ],
+    "hc_s": [
+     17757.032,
+     6894.936,
+     1816.536,
+     9583.896
+    ],
+    "hc_t": [
+     19595.168,
+     6318.216,
+     1816.536,
+     10160.616
+    ]
+   }
+  },
+  {
+   "key": "vmsq",
+   "name": "VM-centred square (HC side by side)",
+   "order": "PQ/WFC col | VM (+N stack, SU under) | collective col | ch | hc_s | hc_t",
+   "checks": [],
+   "bbox_um": [
+    9850.1,
+    5840.3,
+    11517.0,
+    17241.0
+   ],
+   "roads_um": {
+    "W": 0.0,
+    "E": 574.6
+   },
+   "road_cut": {
+    "W": null,
+    "E": 0.347
+   },
+   "structural_turns": [],
+   "worst_flow_cut": 0.187,
+   "hub_relays_all": 4,
+   "relay_edges_by_class": {
+    "su": 4,
+    "field": 0,
+    "coll": 0
+   },
+   "e2e_loss_delta_vs_c5_pct": {
+    "ar": -1.808,
+    "mtp": -1.591
+   },
+   "tree_edges_and_link_hops": null,
+   "e2e_loss_delta_vs_c5_incl_trees_links_pct": null,
+   "tok_s_rm5_89st": null,
+   "grt_screen": {
+    "max_util": null,
+    "p99_util": null,
+    "edges_over_060": null,
+    "overflow_edges": null,
+    "hub_hops": null
+   },
+   "flows": [
+    {
+     "name": "SU-VM",
+     "bits": 17137,
+     "face_a": "N",
+     "face_b": "S",
+     "window_um": 1890.0,
+     "gap_um": 216.0,
+     "cut": 0.187,
+     "relays": 0,
+     "status": null
+    },
+    {
+     "name": "HC_s-HC_t",
+     "bits": 15660,
+     "face_a": "E",
+     "face_b": "W",
+     "window_um": 9583.9,
+     "gap_um": 21.6,
+     "cut": 0.045,
+     "relays": 0,
+     "status": null
+    },
+    {
+     "name": "capture-VM",
+     "bits": 13376,
+     "face_a": "S",
+     "face_b": "N",
+     "window_um": 1728.0,
+     "gap_um": 21.6,
+     "cut": 0.159,
+     "relays": 0,
+     "status": null
+    },
+    {
+     "name": "MIX4-VM",
+     "bits": 12732,
+     "face_a": "S",
+     "face_b": "N",
+     "window_um": 2354.4,
+     "gap_um": 21.6,
+     "cut": 0.111,
+     "relays": 0,
+     "status": null
+    },
+    {
+     "name": "collective-HC_s",
+     "bits": 8225,
+     "face_a": "E",
+     "face_b": "W",
+     "window_um": 2721.6,
+     "gap_um": 216.0,
+     "cut": 0.083,
+     "relays": 0,
+     "status": null
+    },
+    {
+     "name": "capture-gather",
+     "bits": 6959,
+     "face_a": "N",
+     "face_b": "S",
+     "window_um": 1728.0,
+     "gap_um": 43.2,
+     "cut": 0.083,
+     "relays": 0,
+     "status": null
+    },
+    {
+     "name": "HC_s-VM",
+     "bits": 5401,
+     "face_a": "W",
+     "face_b": "E",
+     "window_um": 1594.1,
+     "gap_um": 2030.4,
+     "cut": 0.093,
+     "relays": 4,
+     "status": null
+    },
+    {
+     "name": "collective-VM",
+     "bits": 4921,
+     "face_a": "W",
+     "face_b": "E",
+     "window_um": 2721.6,
+     "gap_um": 86.4,
+     "cut": 0.05,
+     "relays": 0,
+     "status": null
+    },
+    {
+     "name": "PQ-VM",
+     "bits": 2069,
+     "face_a": "E",
+     "face_b": "W",
+     "window_um": 449.3,
+     "gap_um": 0.0,
+     "cut": 0.126,
+     "relays": 0,
+     "status": null
+    },
+    {
+     "name": "WFC-VM",
+     "bits": 1589,
+     "face_a": "W",
+     "face_b": "E",
+     "window_um": 328.3,
+     "gap_um": 86.4,
+     "cut": 0.133,
+     "relays": 0,
+     "status": null
+    },
+    {
+     "name": "WFC-collective",
+     "bits": 1030,
+     "face_a": "W",
+     "face_b": "L-seam",
+     "window_um": 328.3,
+     "gap_um": 43.2,
+     "cut": 0.086,
+     "relays": 0,
+     "status": "short L-turn through the reserved seam"
+    },
+    {
+     "name": "host-collective",
+     "bits": 597,
+     "face_a": "E",
+     "face_b": "L-seam",
+     "window_um": 129.6,
+     "gap_um": 21.6,
+     "cut": 0.126,
+     "relays": 0,
+     "status": "short L-turn through the reserved seam"
+    }
+   ],
+   "rects": {
+    "su": [
+     11578.032,
+     5840.312,
+     1889.976,
+     10709.256
+    ],
+    "vm": [
+     11578.032,
+     16765.568,
+     4104.0,
+     4644.0
+    ],
+    "mix4": [
+     10703.256,
+     21431.168,
+     3229.2,
+     1321.92
+    ],
+    "capture": [
+     13954.056,
+     21431.168,
+     1727.976,
+     561.576
+    ],
+    "gather": [
+     13954.056,
+     22035.944,
+     1727.976,
+     1045.416
+    ],
+    "collective": [
+     15768.432,
+     16765.568,
+     1727.976,
+     2721.576
+    ],
+    "host": [
+     15768.432,
+     16614.392,
+     1727.976,
+     129.576
+    ],
+    "sseq": [
+     9850.056,
+     16787.168,
+     1727.976,
+     88.536
+    ],
+    "wfc": [
+     15768.432,
+     19530.344,
+     1727.976,
+     328.296
+    ],
+    "pq": [
+     9905.784,
+     16897.304,
+     1672.248,
+     449.256
+    ],
+    "hc_s": [
+     17712.432,
+     12725.672,
+     1816.536,
+     9583.896
+    ],
+    "hc_t": [
+     19550.568,
+     12425.672,
+     1816.536,
+     10160.616
+    ]
+   }
+  }
+ ],
+ "vm_rows": {
+  "VM_RELAY": "unchanged by hub shape: a2f_reach_price midcapd with SU on S face = write 9 / read 16 (same as W). Set by VM size: area x0.5 -> 17 edges, x0.75 -> 22, x1.25 -> 31, x1.5 -> 34 (0.205 % AR per edge).",
+  "VM_READ": "S-VM 23:xx: A2-F hop-1 = drop the b4 relay level: -2 cycles a round trip, -32 leaves, -0.54 mm2, no outline growth -> fits every candidate; the 41->85 row was measured on the legacy bgq28 leaf and must be re-priced with VM.RELAY on A2-F.",
+  "VM_SIZE": "S-VM: VM size is set by row width (128 banks x 128 b, 53 sources x 16,384 b), not layers/die; halving SRAM depth saves ~1 mm2 of 19.06 -> more dies do NOT shrink the VM."
+ },
+ "per_edge_pct": {
+  "ar": {
+   "su": 0.13,
+   "field": 0.035,
+   "coll": 0.021
+  },
+  "mtp": {
+   "su": 0.114,
+   "field": 0.03,
+   "coll": 0.019
+  }
+ }
+}

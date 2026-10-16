@@ -1,0 +1,995 @@
+{
+ "schema": "opentallas.s81.rom_trade.v1",
+ "date": "2026-10-15",
+ "author": "S-ROMTRADE (Claude)",
+ "question": "fewer ROM pairs per S81 die for a roomy hub (owner 18:55): sizing points, die count, tok/s, power, silicon",
+ "grades": {
+  "stage_counts": "MODEL: real allocator tools/dsrom_s73_pair1.py (metadata mapping, every decoder matrix placed, 0 failures) at each pair/BF count; not RTL",
+  "geometry": "SCREEN: source/contract outlines, canonical slot heights, option-C track counts at 21.09 tracks/um; no GEN, no GRT",
+  "tok_s": "DERIVED: published composition (three_machine_compose ds_rom, 85 stages, AR 626.279 us / MTP step 884.524 us, tau 4.159) + (stages - 85) x 0.8384 us (measured full-KP4 hop + rack mean flight); field phases and per-layer compute unchanged (fewer pairs a die does not change pairs a layer)",
+  "power": "MODEL: every layer die at the busiest-die saturated basis (SerDes 30.6 W fixed, the other static 19.6 W and dynamic 33.9 W scaled by pairs a die), head 92.34 W, draft 84.1 W, stack 2.8 W"
+ },
+ "area_breakdown": {
+  "die_mm2": 858.0,
+  "field_columns": 22,
+  "roots": 128,
+  "pairs": 2417,
+  "bf": 519,
+  "hub_gap_between_fields_um": 5987.52,
+  "field_w_edge_um": 13571.28,
+  "field_e_edge_um": 19558.8,
+  "hub_interval_um": [
+   5097.6,
+   21822.1
+  ],
+  "hub_interval_mm2": 111.24,
+  "hub_interval_fill_current": 0.6,
+  "rows": {
+   "rom_field_frames_mm2": 538.64,
+   "rom_field_interframe_channels_mm2": 99.92,
+   "field_column_gaps_and_service_streets_mm2": 4.94,
+   "hub_blocks_mm2": 66.73,
+   "hub_strip_mm2": 155.68,
+   "hub_strip_roads_whitespace_mm2": 82.61,
+   "bank_selector_collector_mm2": 6.34,
+   "io_phy_ctrl_svc_links_mm2": 29.76,
+   "hcp_homes_mm2": 13.44,
+   "edges_corners_unassigned_mm2": 15.63
+  },
+  "share": {
+   "rom_field_frames_mm2": 0.6278,
+   "rom_field_interframe_channels_mm2": 0.1165,
+   "field_column_gaps_and_service_streets_mm2": 0.0058,
+   "hub_blocks_mm2": 0.0778,
+   "hub_strip_mm2": 0.1814,
+   "hub_strip_roads_whitespace_mm2": 0.0963,
+   "bank_selector_collector_mm2": 0.0074,
+   "io_phy_ctrl_svc_links_mm2": 0.0347,
+   "hcp_homes_mm2": 0.0157,
+   "edges_corners_unassigned_mm2": 0.0182
+  },
+  "rom_share_note": "ROM field = frames + interframe channels + column gaps; hub strip = everything between the W and E fields (roads S14W/VCH/S14E included)",
+  "columns": [
+   {
+    "x": 327.024,
+    "h": 25960.0,
+    "roots": 6
+   },
+   {
+    "x": 1518.48,
+    "h": 25960.0,
+    "roots": 6
+   },
+   {
+    "x": 2709.936,
+    "h": 22918.7,
+    "roots": 5
+   },
+   {
+    "x": 3901.392,
+    "h": 22918.7,
+    "roots": 6
+   },
+   {
+    "x": 5092.848,
+    "h": 22918.7,
+    "roots": 6
+   },
+   {
+    "x": 6284.304,
+    "h": 22918.7,
+    "roots": 6
+   },
+   {
+    "x": 7475.76,
+    "h": 22918.7,
+    "roots": 6
+   },
+   {
+    "x": 8667.216,
+    "h": 21495.2,
+    "roots": 5
+   },
+   {
+    "x": 9858.672,
+    "h": 21542.7,
+    "roots": 5
+   },
+   {
+    "x": 11050.128,
+    "h": 21542.7,
+    "roots": 5
+   },
+   {
+    "x": 12388.464,
+    "h": 24584.0,
+    "roots": 6
+   },
+   {
+    "x": 19558.8,
+    "h": 24584.0,
+    "roots": 6
+   },
+   {
+    "x": 20750.256,
+    "h": 25960.0,
+    "roots": 6
+   },
+   {
+    "x": 21941.712,
+    "h": 25960.0,
+    "roots": 6
+   },
+   {
+    "x": 23133.168,
+    "h": 25960.0,
+    "roots": 6
+   },
+   {
+    "x": 24324.624,
+    "h": 25960.0,
+    "roots": 6
+   },
+   {
+    "x": 25516.08,
+    "h": 25960.0,
+    "roots": 6
+   },
+   {
+    "x": 26707.536,
+    "h": 25960.0,
+    "roots": 6
+   },
+   {
+    "x": 27898.992,
+    "h": 25960.0,
+    "roots": 6
+   },
+   {
+    "x": 29090.448,
+    "h": 25960.0,
+    "roots": 6
+   },
+   {
+    "x": 30281.904,
+    "h": 25960.0,
+    "roots": 6
+   },
+   {
+    "x": 31473.36,
+    "h": 25960.0,
+    "roots": 6
+   }
+  ]
+ },
+ "roads": {
+  "S14W_tracks_no_tdm": 6977,
+  "S14W_tracks_tdm": 6126,
+  "S14E_tracks": 4207,
+  "S14W_um_at_050_no_tdm": 661.6,
+  "S14W_um_at_050_tdm": 580.9,
+  "S14E_um_at_050": 399.0,
+  "track_density_per_um": 21.09,
+  "note": "option C (44bb36c57) levers A/B/D/E kept (cost <= 0 stages); return TDM (C, +2 stages on 12 paths) NOT used: the owner forbids relay-stage growth, so S14W is sized for its pre-TDM demand"
+ },
+ "stations_mm2_accepted": 3.6,
+ "base_pack_check": {
+  "pairs": 2509,
+  "bf": 539,
+  "roots": 128,
+  "root_types": {
+   "20p/4bf": 93,
+   "15p/3bf": 4,
+   "19p/5bf": 31
+  }
+ },
+ "rows": {
+  "today_binding": {
+   "what": "current die (2,417 pairs, 22 columns) at the released 81-stage binding",
+   "alloc": {
+    "pairs": 2417,
+    "bf": 519,
+    "stages_run": 81,
+    "matrix_stages": 74,
+    "occupied_pairs_total": 178885,
+    "word_fill_matrix_stages": 0.776,
+    "issue_cycles_per_stage": {
+     "mean": 106107,
+     "max": 107856,
+     "min": 96304,
+     "max_over_mean": 1.0165
+    },
+    "capacity_pass": true,
+    "failures": 0
+   },
+   "array": {
+    "stages": 81,
+    "layer_dies": 324,
+    "vs_today_headline": {
+     "basis": "today's report headline (AR 1,447.7 / MTP 4,238.4, tau 4.159) taken as the 81-stage die; only the stage-hop change applied",
+     "d_stages": 0,
+     "AR_tok_s": 1447.7,
+     "MTP_tok_s": 4238.4,
+     "MTP_ge_3000": true
+    },
+    "l20_scan_home_stage": 40,
+    "headline_anchor": {
+     "AR_tok_s": 1519.6,
+     "MTP_tok_s": 4384.5,
+     "MTP_ge_3000": true
+    },
+    "dies": 376,
+    "stacks": 476,
+    "packages": 188,
+    "trays": 41,
+    "stage_hops": 80,
+    "AR_us": 622.926,
+    "AR_tok_s": 1605.3,
+    "MTP_step_us": 881.171,
+    "MTP_tok_s": 4719.9,
+    "chips_w": 33052,
+    "die_silicon_mm2": 322608,
+    "stack_silicon_mm2": 518364,
+    "total_silicon_mm2": 840972
+   }
+  },
+  "today_repacked": {
+   "what": "same die, layers re-cut onto the stages they need (providers homed inside)",
+   "alloc": {
+    "pairs": 2417,
+    "bf": 519,
+    "stages_run": 74,
+    "matrix_stages": 74,
+    "occupied_pairs_total": 178858,
+    "word_fill_matrix_stages": 0.7761,
+    "issue_cycles_per_stage": {
+     "mean": 106107,
+     "max": 107856,
+     "min": 96304,
+     "max_over_mean": 1.0165
+    },
+    "capacity_pass": true,
+    "failures": 0
+   },
+   "array": {
+    "stages": 74,
+    "layer_dies": 296,
+    "vs_today_headline": {
+     "basis": "today's report headline (AR 1,447.7 / MTP 4,238.4, tau 4.159) taken as the 81-stage die; only the stage-hop change applied",
+     "d_stages": -7,
+     "AR_tok_s": 1460.1,
+     "MTP_tok_s": 4263.9,
+     "MTP_ge_3000": true
+    },
+    "l20_scan_home_stage": 37,
+    "headline_anchor": {
+     "AR_tok_s": 1533.3,
+     "MTP_tok_s": 4411.8,
+     "MTP_ge_3000": true
+    },
+    "dies": 348,
+    "stacks": 448,
+    "packages": 174,
+    "trays": 37,
+    "stage_hops": 73,
+    "AR_us": 617.057,
+    "AR_tok_s": 1620.6,
+    "MTP_step_us": 875.302,
+    "MTP_tok_s": 4751.5,
+    "chips_w": 30619,
+    "die_silicon_mm2": 298584,
+    "stack_silicon_mm2": 487872,
+    "total_silicon_mm2": 786456
+   }
+  },
+  "today_full_frames": {
+   "what": "same 22 columns with 20-pair frames (the canonical 19-pair frames leave one q lane empty): 2,509 pairs",
+   "alloc": {
+    "pairs": 2509,
+    "bf": 539,
+    "stages_run": 70,
+    "matrix_stages": 70,
+    "occupied_pairs_total": 175630,
+    "word_fill_matrix_stages": 0.7904,
+    "issue_cycles_per_stage": {
+     "mean": 111841,
+     "max": 113904,
+     "min": 107704,
+     "max_over_mean": 1.0184
+    },
+    "capacity_pass": true,
+    "failures": 0
+   },
+   "array": {
+    "stages": 70,
+    "layer_dies": 280,
+    "vs_today_headline": {
+     "basis": "today's report headline (AR 1,447.7 / MTP 4,238.4, tau 4.159) taken as the 81-stage die; only the stage-hop change applied",
+     "d_stages": -11,
+     "AR_tok_s": 1467.3,
+     "MTP_tok_s": 4278.6,
+     "MTP_ge_3000": true
+    },
+    "l20_scan_home_stage": 35,
+    "headline_anchor": {
+     "AR_tok_s": 1541.2,
+     "MTP_tok_s": 4427.5,
+     "MTP_ge_3000": true
+    },
+    "dies": 332,
+    "stacks": 432,
+    "packages": 166,
+    "trays": 35,
+    "stage_hops": 69,
+    "AR_us": 613.704,
+    "AR_tok_s": 1629.5,
+    "MTP_step_us": 871.949,
+    "MTP_tok_s": 4769.8,
+    "chips_w": 29799,
+    "die_silicon_mm2": 284856,
+    "stack_silicon_mm2": 470448,
+    "total_silicon_mm2": 755304
+   }
+  },
+  "minimal": {
+   "what": "3 columns; SU reshaped to 1,586 x 12,770 (same 20.25 mm2), no internal channel, S14E at the 0.50 limit: everything abuts; tight",
+   "removed_columns": [
+    "W10",
+    "E11",
+    "W9"
+   ],
+   "roots": {
+    "pairs": 2316,
+    "bf": 498,
+    "roots": 128,
+    "root_types": {
+     "20p/4bf": 64,
+     "17p/3bf": 14,
+     "13p/3bf": 8,
+     "15p/3bf": 5,
+     "18p/4bf": 4,
+     "11p/3bf": 10,
+     "19p/5bf": 23
+    }
+   },
+   "layout": {
+    "hub_strip_gap_um": 9561.9,
+    "S14W_um": 661.6,
+    "S14E_um": 400.1,
+    "S14E_cut": 0.499,
+    "S14W_cut": 0.5,
+    "hub_content_w_um": 8500.2,
+    "su_outline_um": [
+     1586.0,
+     12767.8
+    ],
+    "tier_h_um": 19973.5,
+    "fits_height": true,
+    "roads_ok_050": true,
+    "hub_blocks_mm2": 89.89,
+    "hub_area_full_strip_mm2": 185.49,
+    "whitespace_full_strip": 0.515,
+    "bus_stage_check": [
+     {
+      "bus": "su_vm",
+      "today_gap_um": 0,
+      "gap_um": 0,
+      "today_stages": 0,
+      "stages": 0,
+      "growth": 0
+     },
+     {
+      "bus": "cap_vm",
+      "today_gap_um": 0,
+      "gap_um": 0,
+      "today_stages": 0,
+      "stages": 0,
+      "growth": 0
+     },
+     {
+      "bus": "cap_gather",
+      "today_gap_um": 0,
+      "gap_um": 0,
+      "today_stages": 0,
+      "stages": 0,
+      "growth": 0
+     },
+     {
+      "bus": "mix4_vm",
+      "today_gap_um": 514.0,
+      "gap_um": 0,
+      "today_stages": 2,
+      "stages": 0,
+      "growth": -2
+     },
+     {
+      "bus": "coll_vm",
+      "today_gap_um": 1100.0,
+      "gap_um": 0,
+      "today_stages": 3,
+      "stages": 0,
+      "growth": -3
+     },
+     {
+      "bus": "hc_s_vm",
+      "today_gap_um": 1734.3,
+      "gap_um": 1728.0,
+      "today_stages": 4,
+      "stages": 4,
+      "growth": 0
+     },
+     {
+      "bus": "coll_hc_s",
+      "today_gap_um": 1641.6,
+      "gap_um": 0.0,
+      "today_stages": 4,
+      "stages": 0,
+      "growth": -4
+     },
+     {
+      "bus": "hc_s_hc_t",
+      "today_gap_um": 799.2,
+      "gap_um": 799.2,
+      "today_stages": 2,
+      "stages": 2,
+      "growth": 0
+     }
+    ],
+    "relay_growth_any": false
+   },
+   "alloc": {
+    "pairs": 2316,
+    "bf": 498,
+    "stages_run": 74,
+    "matrix_stages": 74,
+    "occupied_pairs_total": 171384,
+    "word_fill_matrix_stages": 0.81,
+    "issue_cycles_per_stage": {
+     "mean": 106107,
+     "max": 107856,
+     "min": 97368,
+     "max_over_mean": 1.0165
+    },
+    "capacity_pass": true,
+    "failures": 0
+   },
+   "array": {
+    "stages": 74,
+    "layer_dies": 296,
+    "vs_today_headline": {
+     "basis": "today's report headline (AR 1,447.7 / MTP 4,238.4, tau 4.159) taken as the 81-stage die; only the stage-hop change applied",
+     "d_stages": -7,
+     "AR_tok_s": 1460.1,
+     "MTP_tok_s": 4263.9,
+     "MTP_ge_3000": true
+    },
+    "l20_scan_home_stage": 37,
+    "headline_anchor": {
+     "AR_tok_s": 1533.3,
+     "MTP_tok_s": 4411.8,
+     "MTP_ge_3000": true
+    },
+    "dies": 348,
+    "stacks": 448,
+    "packages": 174,
+    "trays": 37,
+    "stage_hops": 73,
+    "AR_us": 617.057,
+    "AR_tok_s": 1620.6,
+    "MTP_step_us": 875.302,
+    "MTP_tok_s": 4751.5,
+    "chips_w": 29957,
+    "die_silicon_mm2": 298584,
+    "stack_silicon_mm2": 487872,
+    "total_silicon_mm2": 786456
+   }
+  },
+  "recommended": {
+   "what": "4 columns; SU as closure (a), 216-um channel between the HC tower and the capture column, ~500 um spare road width",
+   "removed_columns": [
+    "W10",
+    "E11",
+    "W9",
+    "E12"
+   ],
+   "roots": {
+    "pairs": 2176,
+    "bf": 468,
+    "roots": 128,
+    "root_types": {
+     "20p/4bf": 60,
+     "17p/3bf": 15,
+     "13p/3bf": 10,
+     "19p/5bf": 9,
+     "18p/4bf": 6,
+     "11p/3bf": 27,
+     "15p/3bf": 1
+    }
+   },
+   "layout": {
+    "hub_strip_gap_um": 10753.3,
+    "S14W_um": 661.6,
+    "S14E_um": 1026.2,
+    "S14E_cut": 0.194,
+    "S14W_cut": 0.5,
+    "hub_content_w_um": 9065.5,
+    "su_outline_um": [
+     1935.36,
+     10463.0
+    ],
+    "tier_h_um": 19973.5,
+    "fits_height": true,
+    "roads_ok_050": true,
+    "hub_blocks_mm2": 89.89,
+    "hub_area_full_strip_mm2": 197.83,
+    "whitespace_full_strip": 0.546,
+    "bus_stage_check": [
+     {
+      "bus": "su_vm",
+      "today_gap_um": 0,
+      "gap_um": 0,
+      "today_stages": 0,
+      "stages": 0,
+      "growth": 0
+     },
+     {
+      "bus": "cap_vm",
+      "today_gap_um": 0,
+      "gap_um": 0,
+      "today_stages": 0,
+      "stages": 0,
+      "growth": 0
+     },
+     {
+      "bus": "cap_gather",
+      "today_gap_um": 0,
+      "gap_um": 0,
+      "today_stages": 0,
+      "stages": 0,
+      "growth": 0
+     },
+     {
+      "bus": "mix4_vm",
+      "today_gap_um": 514.0,
+      "gap_um": 0,
+      "today_stages": 2,
+      "stages": 0,
+      "growth": -2
+     },
+     {
+      "bus": "coll_vm",
+      "today_gap_um": 1100.0,
+      "gap_um": 0,
+      "today_stages": 3,
+      "stages": 0,
+      "growth": -3
+     },
+     {
+      "bus": "hc_s_vm",
+      "today_gap_um": 1734.3,
+      "gap_um": 1944.0,
+      "today_stages": 4,
+      "stages": 4,
+      "growth": 0
+     },
+     {
+      "bus": "coll_hc_s",
+      "today_gap_um": 1641.6,
+      "gap_um": 216.0,
+      "today_stages": 4,
+      "stages": 1,
+      "growth": -3
+     },
+     {
+      "bus": "hc_s_hc_t",
+      "today_gap_um": 799.2,
+      "gap_um": 799.2,
+      "today_stages": 2,
+      "stages": 2,
+      "growth": 0
+     }
+    ],
+    "relay_growth_any": false
+   },
+   "alloc": {
+    "pairs": 2176,
+    "bf": 468,
+    "stages_run": 82,
+    "matrix_stages": 82,
+    "occupied_pairs_total": 178432,
+    "word_fill_matrix_stages": 0.778,
+    "issue_cycles_per_stage": {
+     "mean": 95755,
+     "max": 101808,
+     "min": 3624,
+     "max_over_mean": 1.0632
+    },
+    "capacity_pass": true,
+    "failures": 0
+   },
+   "array": {
+    "stages": 82,
+    "layer_dies": 328,
+    "vs_today_headline": {
+     "basis": "today's report headline (AR 1,447.7 / MTP 4,238.4, tau 4.159) taken as the 81-stage die; only the stage-hop change applied",
+     "d_stages": 1,
+     "AR_tok_s": 1445.9,
+     "MTP_tok_s": 4234.8,
+     "MTP_ge_3000": true
+    },
+    "l20_scan_home_stage": 41,
+    "headline_anchor": {
+     "AR_tok_s": 1517.7,
+     "MTP_tok_s": 4380.6,
+     "MTP_ge_3000": true
+    },
+    "dies": 380,
+    "stacks": 480,
+    "packages": 190,
+    "trays": 41,
+    "stage_hops": 81,
+    "AR_us": 623.764,
+    "AR_tok_s": 1603.2,
+    "MTP_step_us": 882.009,
+    "MTP_tok_s": 4715.4,
+    "chips_w": 31650,
+    "die_silicon_mm2": 326040,
+    "stack_silicon_mm2": 522720,
+    "total_silicon_mm2": 848760
+   }
+  },
+  "compact_L": {
+   "what": "5 columns; HC_t | HC_s side by side so the whole hub is one 10.5-mm tier; field roots return into the strip above the tier (L-shaped hub); needs a field-topology screen (those roots return straight down into the gather)",
+   "removed_columns": [
+    "W10",
+    "E11",
+    "W9",
+    "E12",
+    "W8"
+   ],
+   "roots": {
+    "pairs": 2421,
+    "bf": 521,
+    "roots": 128,
+    "root_types": {
+     "20p/4bf": 83,
+     "15p/3bf": 5,
+     "17p/3bf": 1,
+     "13p/3bf": 9,
+     "19p/5bf": 26,
+     "18p/4bf": 2,
+     "11p/3bf": 2
+    }
+   },
+   "layout": {
+    "hub_strip_gap_um": 11944.8,
+    "S14W_um": 661.6,
+    "S14E_um": 617.1,
+    "S14E_cut": 0.323,
+    "S14W_cut": 0.5,
+    "hub_content_w_um": 10666.1,
+    "su_outline_um": [
+     1935.36,
+     10463.0
+    ],
+    "tier_h_um": 10463.0,
+    "fits_height": true,
+    "roads_ok_050": true,
+    "hub_blocks_mm2": 88.44,
+    "hub_area_full_strip_mm2": 232.76,
+    "whitespace_full_strip": 0.62,
+    "l_hub": {
+     "tier_top_um": 12249.3,
+     "returned_w_um": 10666.1,
+     "returned_h_um": 10849.3,
+     "hub_area_mm2": 111.6,
+     "whitespace": 0.208,
+     "returned_columns": 8
+    },
+    "bus_stage_check": [
+     {
+      "bus": "su_vm",
+      "today_gap_um": 0,
+      "gap_um": 0,
+      "today_stages": 0,
+      "stages": 0,
+      "growth": 0
+     },
+     {
+      "bus": "cap_vm",
+      "today_gap_um": 0,
+      "gap_um": 0,
+      "today_stages": 0,
+      "stages": 0,
+      "growth": 0
+     },
+     {
+      "bus": "cap_gather",
+      "today_gap_um": 0,
+      "gap_um": 0,
+      "today_stages": 0,
+      "stages": 0,
+      "growth": 0
+     },
+     {
+      "bus": "mix4_vm",
+      "today_gap_um": 514.0,
+      "gap_um": 0,
+      "today_stages": 2,
+      "stages": 0,
+      "growth": -2
+     },
+     {
+      "bus": "coll_vm",
+      "today_gap_um": 1100.0,
+      "gap_um": 0,
+      "today_stages": 3,
+      "stages": 0,
+      "growth": -3
+     },
+     {
+      "bus": "hc_s_vm",
+      "today_gap_um": 1734.3,
+      "gap_um": 1728.0,
+      "today_stages": 4,
+      "stages": 4,
+      "growth": 0
+     },
+     {
+      "bus": "coll_hc_s",
+      "today_gap_um": 1641.6,
+      "gap_um": 0.0,
+      "today_stages": 4,
+      "stages": 0,
+      "growth": -4
+     },
+     {
+      "bus": "hc_s_hc_t",
+      "today_gap_um": 799.2,
+      "gap_um": 0,
+      "today_stages": 2,
+      "stages": 0,
+      "growth": -2
+     }
+    ],
+    "relay_growth_any": false
+   },
+   "alloc": {
+    "pairs": 2421,
+    "bf": 521,
+    "stages_run": 74,
+    "matrix_stages": 74,
+    "occupied_pairs_total": 179154,
+    "word_fill_matrix_stages": 0.7749,
+    "issue_cycles_per_stage": {
+     "mean": 106107,
+     "max": 107856,
+     "min": 96304,
+     "max_over_mean": 1.0165
+    },
+    "capacity_pass": true,
+    "failures": 0
+   },
+   "array": {
+    "stages": 74,
+    "layer_dies": 296,
+    "vs_today_headline": {
+     "basis": "today's report headline (AR 1,447.7 / MTP 4,238.4, tau 4.159) taken as the 81-stage die; only the stage-hop change applied",
+     "d_stages": -7,
+     "AR_tok_s": 1460.1,
+     "MTP_tok_s": 4263.9,
+     "MTP_ge_3000": true
+    },
+    "l20_scan_home_stage": 37,
+    "headline_anchor": {
+     "AR_tok_s": 1533.3,
+     "MTP_tok_s": 4411.8,
+     "MTP_ge_3000": true
+    },
+    "dies": 348,
+    "stacks": 448,
+    "packages": 174,
+    "trays": 37,
+    "stage_hops": 73,
+    "AR_us": 617.057,
+    "AR_tok_s": 1620.6,
+    "MTP_step_us": 875.302,
+    "MTP_tok_s": 4751.5,
+    "chips_w": 30645,
+    "die_silicon_mm2": 298584,
+    "stack_silicon_mm2": 487872,
+    "total_silicon_mm2": 786456
+   }
+  },
+  "generous": {
+   "what": "6 columns; HC_t | HC_s side by side (corridor and its 5.2k VCH lanes vanish), whole hub one ~10.5-mm tier, roads well under 0.50",
+   "removed_columns": [
+    "W10",
+    "E11",
+    "W9",
+    "E12",
+    "W8",
+    "E13"
+   ],
+   "roots": {
+    "pairs": 1904,
+    "bf": 410,
+    "roots": 128,
+    "root_types": {
+     "20p/4bf": 25,
+     "17p/3bf": 39,
+     "13p/3bf": 7,
+     "15p/3bf": 4,
+     "11p/3bf": 52,
+     "18p/4bf": 1
+    }
+   },
+   "layout": {
+    "hub_strip_gap_um": 13136.3,
+    "S14W_um": 661.6,
+    "S14E_um": 1592.6,
+    "S14E_cut": 0.125,
+    "S14W_cut": 0.5,
+    "hub_content_w_um": 10882.1,
+    "su_outline_um": [
+     1935.36,
+     10463.0
+    ],
+    "tier_h_um": 10463.0,
+    "fits_height": true,
+    "roads_ok_050": true,
+    "hub_blocks_mm2": 88.44,
+    "hub_area_full_strip_mm2": 237.47,
+    "whitespace_full_strip": 0.628,
+    "bus_stage_check": [
+     {
+      "bus": "su_vm",
+      "today_gap_um": 0,
+      "gap_um": 0,
+      "today_stages": 0,
+      "stages": 0,
+      "growth": 0
+     },
+     {
+      "bus": "cap_vm",
+      "today_gap_um": 0,
+      "gap_um": 0,
+      "today_stages": 0,
+      "stages": 0,
+      "growth": 0
+     },
+     {
+      "bus": "cap_gather",
+      "today_gap_um": 0,
+      "gap_um": 0,
+      "today_stages": 0,
+      "stages": 0,
+      "growth": 0
+     },
+     {
+      "bus": "mix4_vm",
+      "today_gap_um": 514.0,
+      "gap_um": 0,
+      "today_stages": 2,
+      "stages": 0,
+      "growth": -2
+     },
+     {
+      "bus": "coll_vm",
+      "today_gap_um": 1100.0,
+      "gap_um": 0,
+      "today_stages": 3,
+      "stages": 0,
+      "growth": -3
+     },
+     {
+      "bus": "hc_s_vm",
+      "today_gap_um": 1734.3,
+      "gap_um": 1944.0,
+      "today_stages": 4,
+      "stages": 4,
+      "growth": 0
+     },
+     {
+      "bus": "coll_hc_s",
+      "today_gap_um": 1641.6,
+      "gap_um": 216.0,
+      "today_stages": 4,
+      "stages": 1,
+      "growth": -3
+     },
+     {
+      "bus": "hc_s_hc_t",
+      "today_gap_um": 799.2,
+      "gap_um": 0,
+      "today_stages": 2,
+      "stages": 0,
+      "growth": -2
+     }
+    ],
+    "relay_growth_any": false
+   },
+   "alloc": {
+    "pairs": 1904,
+    "bf": 410,
+    "stages_run": 96,
+    "matrix_stages": 96,
+    "occupied_pairs_total": 182784,
+    "word_fill_matrix_stages": 0.7595,
+    "issue_cycles_per_stage": {
+     "mean": 81847,
+     "max": 83664,
+     "min": 7056,
+     "max_over_mean": 1.0222
+    },
+    "capacity_pass": true,
+    "failures": 0
+   },
+   "array": {
+    "stages": 96,
+    "layer_dies": 384,
+    "vs_today_headline": {
+     "basis": "today's report headline (AR 1,447.7 / MTP 4,238.4, tau 4.159) taken as the 81-stage die; only the stage-hop change applied",
+     "d_stages": 15,
+     "AR_tok_s": 1421.8,
+     "MTP_tok_s": 4184.8,
+     "MTP_ge_3000": true
+    },
+    "l20_scan_home_stage": 48,
+    "headline_anchor": {
+     "AR_tok_s": 1491.1,
+     "MTP_tok_s": 4327.1,
+     "MTP_ge_3000": true
+    },
+    "dies": 436,
+    "stacks": 536,
+    "packages": 218,
+    "trays": 48,
+    "stage_hops": 95,
+    "AR_us": 635.501,
+    "AR_tok_s": 1573.6,
+    "MTP_step_us": 893.746,
+    "MTP_tok_s": 4653.4,
+    "chips_w": 33906,
+    "die_silicon_mm2": 374088,
+    "stack_silicon_mm2": 583704,
+    "total_silicon_mm2": 957792
+   }
+  }
+ },
+ "alternatives": {
+  "in_reticle_closure_a": {
+   "what": "today's plan: su_s reshape 1,935 x 10,463 (c22a, main 755620003), A2 stacked in the W column, option C roads",
+   "rom_change_pairs": 0,
+   "stages": 81,
+   "hub_vertical_slack_um": 0.0,
+   "road_cuts": "S14W 0.570 (with return TDM +2 stages on 12 paths, +0.34 % AR), S14E 0.391, street 0.597, VCH needs the HC t<->s lanes moved into the corridor",
+   "meets_owner_1855": false,
+   "why": "0 um height slack, cuts at 0.60 not 0.50, TDM adds relay stages, VM/SU/capture stacked"
+  },
+  "multi_die_hub_split": {
+   "what": "fallback B: VM + MIX4 + capture/gather on a companion die per layer die",
+   "added_dies": 324,
+   "d2d_bits": {
+    "su_vm": 17137,
+    "vm_capture": 13376,
+    "mix4_vm": 12732
+   },
+   "su_vm_bandwidth_tbps": 20.6,
+   "latency": "UCIe 10 ns (12 cycles) per crossing, >= 2 crossings a field phase; ~40 layers x ~10 phases -> >= 9,600 cycles = >= 8 us a token (>= +1.3 % AR) before serialization",
+   "meets_owner_1855": false,
+   "why": "+324 dies and packages of 4, ~21 Tb/s of SU<->VM D2D a die, new PHY RTL; strictly worse than removing <= 4 field columns"
+  }
+ },
+ "sources": {
+  "results/physical/die_iter_1012/s81/canonical_gen_1015/capacity_service_gap_broad_reroot_E.json": "ef91a10712e3a585ed51124db7733fb81aa4a3e936ab5def312b516dd585ea6d",
+  "results/uarch/dsrom_s81_released_binding_20261004/canonical/inventory.json": "0b8d8f6fddf7a427941b7a235aeb80e0ee370c51cafddba6427fa61d3ff99480",
+  "results/arch/s81_globalfp_1015/optc_r2/optc1_homes_roads.json": "ad4c9bf7be678febe01367194d7a34e77adc1e599a8c32d417565a970b32b02a",
+  "results/arch/s81_die_vm_fit_1015/a2_fit.json": "6f7768cea12bb7912c3aaa87c90f10e0d7abbf1c757d929de91df2d7b6eda400",
+  "results/arch/s81_globalfp_1015/graph.json": "f0ac1171cfaaf2abe008790d05802e4cee2b4ece183ecae5a6557ebdbd0b7693",
+  "results/arch/three_machine_compose/compose.json": "23f7a3a735a54c78fb97a5ae322457de967e0dd2d6b47f1a6c4033451c75305b",
+  "results/arch/dsrom_s81_rack_20261006/rack.json": "eac1c069ec5aaefe11a796a8fd6b2c5adf788ed8ffe7b78d8890b4b1720aface",
+  "results/rtl/dsrom_s81_fulldie_20261004/floorplan.json": "4afc64790f8788bc2a68aee943ec2ea750d4fffbcbd3c3432039ad56d150baa0"
+ },
+ "tool_sha256": "8223beebf4ca2c23f20872743776c1ebfecd1d70a6ab1debabf26187a3c4b40e"
+}

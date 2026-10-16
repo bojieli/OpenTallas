@@ -6,12 +6,13 @@
 // Eight unchanged bank leaves retain their own related clock roots. Functional
 // and physical qualification is separate; no producer or compiler adoption.
 module ot_hgi_dma_back_static_vp4_banks #(
-    parameter integer STK=0,
-    parameter integer QID=STK,
     parameter [35:0] STACK_BYTES=36'd22500000000,
-    parameter integer MUT=0 // 1 wrong destination sector; 2 premature source retire
+    parameter integer MUT=0 // 1 wrong destination sector; 2 premature source retire; 3 strap ignored (bench only)
 )(
     input wire clk,rst_n,
+    // stack identity strap (H-HARDEN 2026-10-15, DEDUPE: ONE controller/cluster master for all four stacks; replaces
+    // the old per-stack parameters): a declared die-level logical constant per instance, captured by a controller pin flop
+    input wire [1:0] stk,
     input wire [7:0] clk_bank, // eight real related bank clock entries; clk is controller root
     input wire [31:0] cycle,
     input wire mv_v,
@@ -37,9 +38,16 @@ module ot_hgi_dma_back_static_vp4_banks #(
     wire [7:0] rr_valid_i,bank_read_en,bank_output_en;
     wire [6:0] bank_read_slot,bank_write_slot;
     wire [255:0] bank_read_addr;
-    ot_hgi_dma_back_static_vp4_controller #(.STK(STK),.QID(QID),.STACK_BYTES(STACK_BYTES),.MUT(MUT)) u_control(
+    // OT_DBK_HARD (hb_dbk wires-only cluster route): the controller is a hard view, instantiated without overrides
+    // (its defaults ARE the hardened configuration); simulation keeps the bench MUT/STACK_BYTES pass-through.
+`ifdef OT_DBK_HARD
+    ot_hgi_dma_back_static_vp4_controller u_control(
+`else
+    ot_hgi_dma_back_static_vp4_controller #(.STACK_BYTES(STACK_BYTES),.MUT(MUT)) u_control(
+`endif
         .clk(clk),
         .rst_n(rst_n),
+        .stk(stk),
         .cycle_in(cycle),
         .mv_v(mv_v),
         .mv(mv),
@@ -79,12 +87,11 @@ module ot_hgi_dma_back_static_vp4_banks #(
     end
 endmodule
 module ot_hgi_dma_back_static_vp4_controller #(
-    parameter integer STK=0,
-    parameter integer QID=STK,
     parameter [35:0] STACK_BYTES=36'd22500000000,
-    parameter integer MUT=0 // 1 wrong destination sector; 2 premature source retire
+    parameter integer MUT=0 // 1 wrong destination sector; 2 premature source retire; 3 strap ignored (bench only)
 )(
     input wire clk,rst_n,
+    input wire [1:0] stk,   // stack identity strap: die constant per instance (stack = HBM queue id)
     input wire [31:0] cycle_in,
     input wire mv_v,
     input wire [226:0] mv,
@@ -115,6 +122,10 @@ module ot_hgi_dma_back_static_vp4_controller #(
         if(!rst_n)begin reset_meta<=0;reset_ready<=0;end
         else begin reset_meta<=1;reset_ready<=reset_meta;end
     wire local_rst_n=reset_ready;
+    // Strap pin flop: the identity is static from power-up, so the captured copy is stable long before the two-edge
+    // reset release; it only feeds the descriptor stack check and the request sector's queue bits.
+    reg [1:0] stk_q;
+    always @(posedge clk) stk_q<=(MUT==3)?2'd0:stk;
     // A response-valid pin capture already supplies the landing write enables.
     // Compare its captured value with the equally delayed expected mask; only
     // malformed response fault reporting gains one edge, never execution stalls.
@@ -145,12 +156,16 @@ module ot_hgi_dma_back_static_vp4_controller #(
     reg [40:0] b_vprod,b_hprod; reg [14:0] b_nchunk; reg [7:0] b_rchunk; reg [17:0] b_total; reg b_static_ok;
     wire [10:0] a_nsec=a_mv[219:209];                     // nsec<=1024 when valid (range term below)
     wire [7:0] a_rchunk=8'((a_mv[219:209]+11'd7)>>3);      // ceil(nsec/8) <= 128 when valid
-    wire [6:0] a_rows_m1=7'(a_mv[192:186]-7'd1);           // rows<=128 when valid
+    // (rows-1) mod 128 times x == R*x - x with R = rows[6:0], or 128 when rows[6:0]==0: the decrement leaves the
+    // multiplier stage; the -x terms of a pair are the bit-concatenation {x1,x0} subtracted in the pair sum (exact).
+    wire [7:0] a_rows_r={a_mv[192:186]==7'd0,a_mv[192:186]};
     reg [226:0] p_mv,q_mv;reg [31:0] p_ci,p_cd,q_ci,q_cd;reg p_cb,q_cb;reg [15:0] p_ce,q_ce;
     reg [14:0] p_vpart[0:3],p_hpart[0:3];
     reg [22:0] q_vlo,q_vhi,q_hlo,q_hhi;
     reg [14:0] p_nchunk,q_nchunk;reg [7:0] p_rchunk,q_rchunk;
+    reg p_nch_c,p_nch_wrap;
     reg [17:0] p_total,q_total;reg p_static_ok,q_static_ok;
+    reg [13:0] p_total_hi;
     reg [18:0] b_vbase_end;reg [40:0] b_hbase_end;
     reg [31:0] b_ci_m2,b_ci_m3,b_cd_m1,b_cd_m2,b_cd_m3,b_cd_m4,b_end_m2,b_end_m3;
     always @(posedge clk or negedge local_rst_n)
@@ -160,26 +175,29 @@ module ot_hgi_dma_back_static_vp4_controller #(
         a_mv<=mv;a_ci<=issue_at;a_cd<=drain_at;a_cb<=mv_wb_bank;a_ce<=mv_wb_epoch;
         p_mv<=a_mv;p_ci<=a_ci;p_cd<=a_cd;p_cb<=a_cb;p_ce<=a_ce;
         for(integer i=0;i<4;i=i+1)begin
-            p_vpart[i]<=15'(a_rows_m1)*15'(a_mv[45+8*i+:8]);
-            p_hpart[i]<=15'(a_rows_m1)*15'(a_mv[138+8*i+:8]);
+            p_vpart[i]<=15'(a_rows_r)*15'(a_mv[45+8*i+:8]);
+            p_hpart[i]<=15'(a_rows_r)*15'(a_mv[138+8*i+:8]);
         end
         p_rchunk<=(a_mv[226:209]==0)?8'd0:a_rchunk;
-        p_nchunk<=15'(a_mv[193:186])*15'(a_rchunk);
-        p_total<=18'(a_nsec)*18'(a_mv[193:186]);
+        // rows*ceil(n/8) = rows*(n>>3) + (n%8!=0 ? rows : 0) mod 2^15; the 8-bit ceil wraps to 0 at n>=2041: exact
+        p_nchunk<=15'(a_mv[193:186])*15'(a_mv[219:212]);
+        p_nch_c<=a_mv[211:209]!=3'd0;p_nch_wrap<=a_mv[219:212]==8'hff&&a_mv[211:209]!=3'd0;
+        // nsec*rows as two narrow partial products, summed at the next stage (exact mod 2^18)
+        p_total<=18'(a_nsec[5:0])*18'(a_mv[193:186]);p_total_hi<=14'(a_nsec[10:6])*14'(a_mv[193:186]);
         p_static_ok<=a_mv[1:0]==1&&a_mv[94:93]==0&&a_mv[92:77]==1&&a_mv[185:170]==1&&
             (a_mv[4:2]==0||a_mv[4:2]==5)&&(a_mv[97:95]==0||a_mv[97:95]==5)&&a_mv[4:2]==a_mv[97:95]&&
             a_mv[10:5]==0&&a_mv[50:45]==0&&a_mv[208:206]==0&&a_mv[205:186]!=0&&a_mv[205:186]<=128&&
             a_mv[226:209]!=0&&a_mv[226:209]<=1024&&
-            a_mv[102:98]==0&&a_mv[142:138]==0&&a_mv[137:135]==0&&a_mv[134:133]==2'(STK)&&
+            a_mv[102:98]==0&&a_mv[142:138]==0&&a_mv[137:135]==0&&a_mv[134:133]==stk_q&&
             (a_mv[205:186]==1||a_mv[76:45]>=a_mv[226:206])&&
             (a_mv[205:186]==1||a_mv[169:138]==(32'(a_mv[226:206])<<2))&&
             (a_mv[205:186]==1||a_mv[211:206]==0);
         q_mv<=p_mv;q_ci<=p_ci;q_cd<=p_cd;q_cb<=p_cb;q_ce<=p_ce;
-        q_vlo<=23'(p_vpart[0])+(23'(p_vpart[1])<<8);
-        q_vhi<=23'(p_vpart[2])+(23'(p_vpart[3])<<8);
-        q_hlo<=23'(p_hpart[0])+(23'(p_hpart[1])<<8);
-        q_hhi<=23'(p_hpart[2])+(23'(p_hpart[3])<<8);
-        q_rchunk<=p_rchunk;q_nchunk<=p_nchunk;q_total<=p_total;q_static_ok<=p_static_ok;
+        q_vlo<=23'(p_vpart[0])+(23'(p_vpart[1])<<8)-23'(p_mv[60:45]);
+        q_vhi<=23'(p_vpart[2])+(23'(p_vpart[3])<<8)-23'(p_mv[76:61]);
+        q_hlo<=23'(p_hpart[0])+(23'(p_hpart[1])<<8)-23'(p_mv[153:138]);
+        q_hhi<=23'(p_hpart[2])+(23'(p_hpart[3])<<8)-23'(p_mv[169:154]);
+        q_rchunk<=p_rchunk;q_nchunk<=p_nch_wrap?15'd0:p_nchunk+(p_nch_c?15'(p_mv[193:186]):15'd0);q_total<=p_total+(18'(p_total_hi)<<6);q_static_ok<=p_static_ok;
         b_mv<=q_mv;b_ci<=q_ci;b_cd<=q_cd;b_cb<=q_cb;b_ce<=q_ce;
         b_vprod<=41'(q_vlo)+(41'(q_vhi)<<16);
         b_hprod<=41'(q_hlo)+(41'(q_hhi)<<16);
@@ -263,7 +281,7 @@ module ot_hgi_dma_back_static_vp4_controller #(
         if(column==row_chunks-1 && row_sectors[2:0]!=0)
             issue_mask=(8'd1<<row_sectors[2:0])-1'b1;
         if(chunk_vm>=17'd65536) issue_sec=16'h8000|16'((chunk_vm-17'd65536)>>3);
-        else issue_sec={1'b0,2'(QID),chunk_vm[15:3]};
+        else issue_sec={1'b0,stk_q,chunk_vm[15:3]};
     end
     assign bank_read_slot=drain_index[6:0];
     // Each landing bank pin-captures the raw response valid itself; its slot is this
@@ -282,7 +300,7 @@ module ot_hgi_dma_back_static_vp4_controller #(
         c_vend_d=b_vbase_end+19'(b_vprod[16:0]);
         c_hend_d=b_hbase_end+b_hprod;
         c_vok<=(b_mv[44:5]<65536&&41'(c_vend_d)<=65536)||(b_mv[44:5]>=65536&&41'(c_vend_d)<=98304);
-        c_hok<=c_hend_d[40:37]==0&&c_hend_d[36:35]==2'(STK)&&{1'b0,c_hend_d[34:0]}<=STACK_BYTES;
+        c_hok<=c_hend_d[40:37]==0&&c_hend_d[36:35]==stk_q&&{1'b0,c_hend_d[34:0]}<=STACK_BYTES;
         c_nchunk_ok<=b_nchunk>0&&b_nchunk<=128;
         c_ilead_ok<=$signed(b_ci_m2-cycle_q)>=1;            // ci-cycle(k)>=1, cycle(k)=cycle_q(k-1)+2
         c_lag_ok<=$signed(b_cd-b_ci)>=10;

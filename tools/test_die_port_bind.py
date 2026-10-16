@@ -39,6 +39,15 @@ class T(unittest.TestCase):
         self.assertEqual(rc, 0, r['summary'])
         self.assertEqual(r['verdict'], 'PASS')
 
+    def test_duplicate_port(self):
+        # r2h2/r2h4 GEN emitted .tt(actual) AND .tt(1538'h0) on one instance; Verilog keeps one silently -> FAIL
+        rc, r = run("module top (ck);\n  input ck;\n  wire [15:0] n1;\n  wire [15:0] n2;\n"
+                    "  a u0 (.ck(ck), .i(n2), .o(n1), .en(ck), .i(16'h0));\n  wrap w (.ck(ck), .i(n1), .o(n2));\nendmodule\n")
+        self.assertEqual(rc, 1)
+        self.assertEqual(r['summary']['duplicate_port_connections'], 1)
+        self.assertIn('DUPLICATE_PORT', r['masters']['a']['fails'])
+        self.assertEqual(r['masters']['a']['duplicate_port'], ['i'])
+
     def test_findings(self):
         rc, r = run("module top (ck);\n  input ck;\n  wire [15:0] n1;\n  wire [7:0] n4;\n  wire [3:0] n3;\n"
                     "  a u1 (.ck(ck), .i(n4), .o(n1), .q(n3));\n  shell s (.x(n3), .y(n3));\n  missing m (.a(n1));\n"
@@ -66,6 +75,31 @@ class T(unittest.TestCase):
         self.assertEqual(r['summary']['strap_ports'], 1)
         rc, r = run(die, ['--strap', 'a:i'])          # a strap on another port does not excuse the tie
         self.assertEqual(rc, 1)
+
+    def test_declared_pad_bits(self):
+        # DEDUPE padding: a 16-bit standard master used at logical width 12 ties i[15:12] low and leaves o[15:12] open
+        die = ("module top (ck);\n  input ck;\n  wire [15:0] n1;\n  wire [11:0] n2;\n"
+               "  a u0 (.ck(ck), .i({4'b0, n2}), .o(n1), .en(ck));\n  wrap w (.ck(ck), .i(n1), .o({n2, n1[3:0]}));\nendmodule\n")
+        die = die.replace(".o({n2, n1[3:0]})", ".o())")
+        die = die.replace("wire [11:0] n2;", "wire [11:0] n2;\n  wire [15:0] n9;").replace(".o())", ".o(n9))")
+        die = die.replace("a u0 (.ck(ck), .i({4'b0, n2})", "a u0 (.ck(ck), .i({4'b0, n9[11:0]})")
+        rc, r = run(die)
+        self.assertIn('input_tied', r['failing'])                 # undeclared: still a tie
+        with tempfile.TemporaryDirectory() as d:
+            pf = Path(d) / 'pads.json'
+            pf.write_text(json.dumps({'pads': {'a': {'reason': 'dedupe: 12-bit use of the 16-bit master',
+                                                     'ports': {'i': {'logical_width': 12}}}}}))
+            rc, r = run(die, ['--pad-file', str(pf)])
+            self.assertNotIn('input_tied', r['failing'], r['summary'])
+            self.assertEqual(r['masters']['a']['pad_bits'], {'i': 4})
+            self.assertEqual(r['summary']['pad_bits'], 4)
+            pf.write_text(json.dumps({'pads': {'a': {'reason': 'x', 'ports': {'i': [[13, 15]]}}}}))
+            rc, r = run(die, ['--pad-file', str(pf)])
+            self.assertIn('input_tied', r['failing'])             # bit 12 is not declared
+            one = die.replace("{4'b0, n9[11:0]}", "{4'b1000, n9[11:0]}")
+            pf.write_text(json.dumps({'pads': {'a': {'reason': 'x', 'ports': {'i': {'logical_width': 12}}}}}))
+            rc, r = run(one, ['--pad-file', str(pf)])
+            self.assertIn('input_tied', r['failing'])             # a pad bit tied HIGH is not padding
 
     def test_params_sidecar(self):
         with tempfile.TemporaryDirectory() as d:

@@ -78,6 +78,7 @@ def main() -> int:
         pins = {f: [] for f in "NSEW"}
         pins[fi].append("i"); pins[fo].append("o"); pins[cf] += ["ck", "rs"]
         spec = {
+            'pin_regs': {'enable': False, 'reason': 'OWNER RULE 19:50 opt-out (coordinator APPROVED 2026-10-15): this relay IS one flip-flop per bit between its input and output pins (ot_s81_rly: i -> r -> o, no logic); a flow pin register would add a second stage per bit and a cycle the die calendar does not price'},
             "name": name, "top": mst, "kind": "tile",
             "sources": [f"{RTL}/ot_s81_rly.sv", f"{RTL}/{a.rtl_file}"],
             "params": {}, "clock_port": "ck", "reset_ports": ["rs"],

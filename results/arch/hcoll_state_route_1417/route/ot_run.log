@@ -1,0 +1,7 @@
+ot-run: ot-agidock128  admits    22 GB (avail 66, growth 32, headroom 24, waiters 0/0 GB) load 18/64 running 6 disk 78 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-1598013-1792099889 after 0 s
+rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static.sv: OK
+rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_static_state_capture.sv: OK
+{"cell": "ot_hgi_coll_pring_static_state_capture_lane", "view": "/srv/opentallas-scratch/claude/ref_gate/hcoll_ring_state_capture_1417-20261015-142729/views/ot_hgi_coll_pring_static_state_capture_lane", "lib_cell": "ot_hgi_coll_pring_static_state_capture_lane", "insertion": true, "ref_src": ["insertion.json boundary mean"], "R_ps": 126.7, "spread_ps": 9.8, "outputs": 128, "inputs": 164, "launch_ps": 178.6, "launch_pin": "tx_data[11]", "capture_ps": 134.9, "capture_pin": "acc_data[2]", "launch_over": 0, "capture_over": 0, "comb_pins": 0, "comb_first": [], "pass": true, "fail_why": "", "scope": "single routed diagnostic candidate; current parent not adopted; +1edge read/write visibility"}
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-1598013-1792099889): exit 0

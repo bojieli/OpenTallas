@@ -10,32 +10,23 @@
  "reset_ports": [
   "rst_n"
  ],
- "outline": {
-  "w": 273.456,
-  "h": 194.4,
-  "exact": true
- },
  "macros": [
   {
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
    "count": 1,
    "inst": "u_residual",
-   "at": [
-    55.296,
-    43.2
-   ],
    "orient": "MY"
   }
  ],
  "pins": {
   "W": [
+   "rst_n",
    "write_v",
    "write_word",
    "write_data"
   ],
   "N": [
    "clk",
-   "rst_n",
    "read_v",
    "read_word"
   ],
@@ -45,7 +36,6 @@
    "fault"
   ]
  },
- "io_tcl": "physical/hbm_hc/HC_residual_half_exact_source_place.tcl",
  "layer_cap": "M5",
  "recipe": 2,
  "route": {
@@ -56,10 +46,10 @@
   "macro_halo_um": 5.4
  },
  "job": {
-  "owner": "Codex:/root/h_hc_physical",
-  "branch": "codex/hc-physical-1015",
+  "owner": "Claude:H-NETLIST/kits (for HC owner)",
+  "branch": "claude/hnl-vmdel-0600",
   "tag": "native1",
-  "purpose": "Actual PRIMARY92root HC ot_hgi_hc_residual_half_static source; explicitgeometryassignedpins andpublishedrowpacking; measurelocalclockspan andboundarySTA, no wholeHCclaim",
+  "purpose": "Actual PRIMARY92root HC ot_hgi_hc_residual_half_static source; explicitgeometryassignedpins andpublishedrowpacking; measurelocalclockspan andboundarySTA, no wholeHCclaim | H-NETLIST/kits 10-16: regenerated + regated on current main (gate 10-15 04:59 predates flow overlays); leaf of the static HC engine (codex/hc-static-engine-1014 ot_hgi_hc_projection_sys1_split_static; v16 gap G-HC-ENG). | Re-kit 10-16 after gate PNG review: the 273.456x194.4 exact engine sub-slot left util 24.6% with the top half empty and gate TT insertion 326 ps; outline 220.32x125.28 (util ~48% of std 279 + macro 12,314 um2; macro + 20-um channels), face pins (W write, E read data, N control), exact-source pin plan dropped (the HC engine sub-slot is not bound in the v16 die; HC owner re-plans the engine from the new abstract). | v2 10-16: native capture fix (read pin flops TML4 + rst_n pin flop), bench PASS + write-capture and read-capture bypass mutants FAIL (Icarus 11 and 12). | v2b 10-16 (H-NETLIST/vmdel): c88039d70 NEEDS_RTL was a bench-spec defect only -- min_count_regex 'checks=(\\d+)' also counted the read-capture mutant's FATAL 'checks=0' line echoed by tools/hbm_hc/run_memory_partition.sh (actual result RESIDUAL_HALF PASS checks=1280, 32x WEIGHT_QUARTER PASS checks=512); regex anchored to the PASS lines; same RTL, reroute_reason rtl_change. | v3 10-16 (H-NETLIST/vmdel): native audit of CLOSED v2 36070f827 failed capture 243.8 ps on rst_n only; rst_n -> D pin of one synchronous reset pin flop on the W face (no async clear on the port), valid pin flops unreset; bench PASS, write/read capture bypass mutants FAIL.",
   "structural_change": "Replace500um10SRAMsharedclockmonolith withboundedlocalroot; keepactualmemory/phase/TML3; residualwrite+1 priced",
   "extra_paths": [
    "physical/hbm_hc",
@@ -82,7 +72,7 @@
      "iverilog"
     ],
     "pass_regex": "WEIGHT_QUARTER PASS",
-    "min_count_regex": "checks=(\\d+)"
+    "min_count_regex": "^[A-Z_]+ PASS .*checks=(\\d+)"
    },
    {
     "name": "write_capture_bypass_mutant",
@@ -99,9 +89,18 @@
   "views_to": "physical/ref_tile/hbm_hc_residual_half_static/views",
   "record_to": "results/rtl/ref_tile/hbm_hc_residual_half_static"
  },
- "pin_hook_before_flops": [
-  "physical/hbm_hc/HC_residual_half_exact_source_audit.tcl"
- ],
+ "pin_regs": {
+  "enable": false,
+  "reason": "RTL registers every pin itself (v3): write_v/write_word/write_data and read_v/read_word in first-pin flops (priced: +1 write edge, read TML4), rst_n only on the D pin of one synchronous reset pin flop rst_s (no async clear / recovery endpoint on the port), residual_data/read_valid/fault leave from flops; synthesis pin registers would add an unpriced stage."
+ },
+ "outline": {
+  "w": 220.32,
+  "h": 125.28
+ },
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "why": "native pin audit of CLOSED hbm_hc_residual_half_static-native1-36070f827 (merged main 9070d9fbd): capture S+R 243.8 ps > 190 on rst_n, the only failing pin (R 209.8, spread 63.2, launch 204.2, 0 comb pins); rst_n still hit 3 async-clear/recovery endpoints. v3 RTL: rst_n lands only on the D pin of a dedicated synchronous pin flop rst_s (W face), valid pin flops unreset, all other state resets from rst_s (release timing unchanged, assertion +1 edge). Supersedes v1 ea5b169e7 and v2 36070f827 (both native-capture fails)."
+ },
  "params": {},
  "children": [],
  "inter": [],

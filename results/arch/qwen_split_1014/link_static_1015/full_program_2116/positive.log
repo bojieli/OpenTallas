@@ -1,0 +1,42 @@
+PROGRAM_LAYER_START layer=0 compiled_cycle=272 actual_cycle=277
+PROGRAM_LAYER_START layer=1 compiled_cycle=7070 actual_start_pin_cycle=7068
+PROGRAM_LAYER_START layer=2 compiled_cycle=13906 actual_start_pin_cycle=13904
+PROGRAM_LAYER_START layer=3 compiled_cycle=20742 actual_start_pin_cycle=20740
+PROGRAM_LAYER_START layer=4 compiled_cycle=27578 actual_start_pin_cycle=27576
+PROGRAM_LAYER_START layer=5 compiled_cycle=34414 actual_start_pin_cycle=34412
+PROGRAM_LAYER_START layer=6 compiled_cycle=41250 actual_start_pin_cycle=41248
+PROGRAM_LAYER_START layer=7 compiled_cycle=48086 actual_start_pin_cycle=48084
+PROGRAM_LAYER_START layer=8 compiled_cycle=54922 actual_start_pin_cycle=54920
+PROGRAM_LAYER_START layer=9 compiled_cycle=61758 actual_start_pin_cycle=61756
+PROGRAM_LAYER_START layer=10 compiled_cycle=68594 actual_start_pin_cycle=68592
+PROGRAM_LAYER_START layer=11 compiled_cycle=75430 actual_start_pin_cycle=75428
+PROGRAM_LAYER_START layer=12 compiled_cycle=82266 actual_start_pin_cycle=82264
+PROGRAM_LAYER_START layer=13 compiled_cycle=89102 actual_start_pin_cycle=89100
+PROGRAM_LAYER_START layer=14 compiled_cycle=95938 actual_start_pin_cycle=95936
+PROGRAM_LAYER_START layer=15 compiled_cycle=102774 actual_start_pin_cycle=102772
+PROGRAM_LAYER_START layer=16 compiled_cycle=109610 actual_start_pin_cycle=109608
+PROGRAM_LAYER_START layer=17 compiled_cycle=116446 actual_start_pin_cycle=116444
+PROGRAM_LAYER_START layer=18 compiled_cycle=123282 actual_start_pin_cycle=123280
+PROGRAM_LAYER_START layer=19 compiled_cycle=130118 actual_start_pin_cycle=130116
+PROGRAM_LAYER_START layer=20 compiled_cycle=136954 actual_start_pin_cycle=136952
+PROGRAM_LAYER_START layer=21 compiled_cycle=143790 actual_start_pin_cycle=143788
+PROGRAM_LAYER_START layer=22 compiled_cycle=150626 actual_start_pin_cycle=150624
+PROGRAM_LAYER_START layer=23 compiled_cycle=157462 actual_start_pin_cycle=157460
+PROGRAM_LAYER_START layer=24 compiled_cycle=164298 actual_start_pin_cycle=164296
+PROGRAM_LAYER_START layer=25 compiled_cycle=171134 actual_start_pin_cycle=171132
+PROGRAM_LAYER_START layer=26 compiled_cycle=177970 actual_start_pin_cycle=177968
+PROGRAM_LAYER_START layer=27 compiled_cycle=184806 actual_start_pin_cycle=184804
+PROGRAM_LAYER_START layer=28 compiled_cycle=191642 actual_start_pin_cycle=191640
+PROGRAM_LAYER_START layer=29 compiled_cycle=198478 actual_start_pin_cycle=198476
+PROGRAM_LAYER_START layer=30 compiled_cycle=205314 actual_start_pin_cycle=205312
+PROGRAM_LAYER_START layer=31 compiled_cycle=212150 actual_start_pin_cycle=212148
+PROGRAM_LAYER_START layer=32 compiled_cycle=218986 actual_start_pin_cycle=218984
+PROGRAM_LAYER_START layer=33 compiled_cycle=225822 actual_start_pin_cycle=225820
+PROGRAM_LAYER_START layer=34 compiled_cycle=232658 actual_start_pin_cycle=232656
+PROGRAM_LAYER_START layer=35 compiled_cycle=239494 actual_start_pin_cycle=239492
+frames C->S 1188 S->C 1188 kvn 144 results 36 host-checks 36 normal-epoch faults 0 errors 0
+D2D_PROGRAM_PASS
+- /srv/opentallas-scratch/codex/qwen-link-prefetch-2116/src/rtl/test/qwen_split/tb_qwen_d2d_program.sv:273: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 206us; walltime 3.132 s; speed 65.619 us/s
+- Verilator: cpu 3.131 s on 1 threads; allocated 7 MB

@@ -64,7 +64,7 @@ module tb_hbm_sm_attn;
             .tag(otag[64*cc +: 16]), .ov(t_ov[cc]), .y(t_y[32*cc +: 32]), .otag(t_tag[16*cc +: 16]), .fault(t_f[cc]));
     end endgenerate
     // stimulus + monitor
-    integer fold = 0, npb = 0, last_pb = -1, fold_t0 = -1, ii;
+    integer fold = 0, npb = 0, last_pb = -1, fold_t0 = -1, ii, fi;   // fi: the fold calendar counter (ii belongs to the monitor)
     integer cyc = 0, li = 0, acc = 0, first_in = -1, last_in = -1, last_out = -1, nres = 0, want = 0, k, b, fb = -1, lb = -1, nb = 0, kk, bb;
     always @(posedge clk) cyc <= cyc + 1;
     // line rate: a line may be offered on cycles where the rate accumulator wraps (RN / RD lines per cycle)
@@ -128,12 +128,12 @@ module tb_hbm_sm_attn;
                     // fixed fold calendar (cycle offsets from F0): level 1 (0,2)@0 (4,6)@2 (1,3)@4 (5,7)@6, level 2 (0,4)@12
                     // (1,5)@16, publication of entry 0 @22 and entry 1 @38 (word 14 of the first node)
                     fold_t0 = cyc;
-                    for (ii = 0; ii <= 38; ii = ii + 1) begin
-                        fold_start <= (ii == 0 || ii == 2 || ii == 4 || ii == 6 || ii == 12 || ii == 16);
-                        fold_a <= (ii == 0) ? 3'd0 : (ii == 2) ? 3'd4 : (ii == 4) ? 3'd1 : (ii == 6) ? 3'd5 : (ii == 12) ? 3'd0 : 3'd1;
-                        fold_b <= (ii == 0) ? 3'd2 : (ii == 2) ? 3'd6 : (ii == 4) ? 3'd3 : (ii == 6) ? 3'd7 : (ii == 12) ? 3'd4 : 3'd5;
-                        pub_start <= (ii == 22 || ii == 38);
-                        pub_slot <= (ii == 38) ? 3'd1 : 3'd0;
+                    for (fi = 0; fi <= 38; fi = fi + 1) begin
+                        fold_start <= (fi == 0 || fi == 2 || fi == 4 || fi == 6 || fi == 12 || fi == 16);
+                        fold_a <= (fi == 0) ? 3'd0 : (fi == 2) ? 3'd4 : (fi == 4) ? 3'd1 : (fi == 6) ? 3'd5 : (fi == 12) ? 3'd0 : 3'd1;
+                        fold_b <= (fi == 0) ? 3'd2 : (fi == 2) ? 3'd6 : (fi == 4) ? 3'd3 : (fi == 6) ? 3'd7 : (fi == 12) ? 3'd4 : 3'd5;
+                        pub_start <= (fi == 22 || fi == 38);
+                        pub_slot <= (fi == 38) ? 3'd1 : 3'd0;
                         @(posedge clk);
                     end
                     fold_start <= 0; pub_start <= 0;

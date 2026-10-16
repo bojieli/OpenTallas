@@ -137,9 +137,14 @@ module ot_qwen_rom_tile_logic_w12 #(
     parameter integer KV_PREP = 0,        // KV-op offset pipeline cycles (ot_qwen_w12_matvec_part KV_PREP)
     parameter integer MUL_LAT = 5,        // lane BF16 product latency (ot_qwen_w12_matvec_part MUL_LAT)
     parameter integer TREE_LAT = 3,       // split-tree pair adder latency (ot_qwen_w12_matvec_part TREE_LAT)
+    parameter integer LOCAL_ROOTS = 0, // opt-in localized soft roots, no data latency change
     parameter integer CHILD_CLOCKS = 0
 ) (
     input wire [CODE_BANKS-1:0] ck_rpair,
+    input wire [CODE_BANKS-1:0] ck_pair1,
+    input wire [1:0] ck_rqr,
+    input wire [7:0] ck_tx,
+
     input wire [7:0] ck_lsl,
     input wire ck_node,
     input  wire              clk,
@@ -244,9 +249,9 @@ module ot_qwen_rom_tile_logic_w12 #(
         assign t_vout = t_vout_i;
     end endgenerate
     ot_qwen_w12_matvec_part #(.W(W), .G(TG), .IL(IL), .AW(AW), .NW(NW), .INT8_WEIGHT(1), .INT8_SCALE_WCS_BASE(1),
-        .CHILD_CLOCKS(CHILD_CLOCKS), .PART(1), .GT(GT), .GBASE_PORT(1), .SMIN(SMIN), .NX(0), .MEM_EXTRA(ME_EXTRA), .WCONV(ROM_PIPE), .LRST(LRST), .TMUT(TMUT), .ANR(ANR), .HIER(HIER), .HIER_HARD(HIER_HARD), .LRR(LRR), .XTX(XTX),
+        .LOCAL_ROOTS(LOCAL_ROOTS), .CHILD_CLOCKS(CHILD_CLOCKS), .PART(1), .GT(GT), .GBASE_PORT(1), .SMIN(SMIN), .NX(0), .MEM_EXTRA(ME_EXTRA), .WCONV(ROM_PIPE), .LRST(LRST), .TMUT(TMUT), .ANR(ANR), .HIER(HIER), .HIER_HARD(HIER_HARD), .LRR(LRR), .XTX(XTX),
         .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT)) u_me (
-        .ck_lsl(ck_lsl),
+        .ck_lsl(ck_lsl), .ck_tx(ck_tx),
         .clk(clk), .rst_n(rst_n), .go(go_i), .ready(), .idle(),
         .i_nout(b_nout), .i_tiles(b_tiles), .i_k(b_k), .i_wsrc(b_wsrc),
         .i_wbase(b_wbase), .i_ts(b_ts), .i_ks(b_ks), .i_js(b_js),
@@ -499,9 +504,11 @@ module ot_qwen_rom_tile_logic_w12 #(
                     assign rom_req_m[13*(CODE_BANKS+b) +: 13] = 13'd0;
                 end else begin : g_sf
                     wire [25:0] rq;
-                    ot_qwen_rpair_logic #(.PWB(PWB), .ROM_CAP2(ROM_CAP2), .ROM_CAPX(ROM_CAPX), .ROM_MUT(ROM_MUT),
+                    ot_qwen_rpair_logic #(.PAIR_CLOCKS(LOCAL_ROOTS != 0 && CHILD_CLOCKS != 0), .PWB(PWB), .ROM_CAP2(ROM_CAP2), .ROM_CAPX(ROM_CAPX), .ROM_MUT(ROM_MUT),
                         .MUT3((TMUT == 3 && b == 0) ? 1 : 0), .MUT5((TMUT == 5 && b == 0) ? 1 : 0)) u_rp (
-                        .clk(clk), .rst_n(rst_n), .ce_d(ce_pre[b]), .any_d((b < SB) ? any_s : any_n), .ad_d((b < SB) ? adm_pre : adm_pre_n), .req_m(rq),
+                        // Q-TILE-REPACK: CHILD_CLOCKS gives each soft bank row its own CTS root ck_rpair[b] (the hardened
+                        // leaf's clock entry becomes a local standard-cell root; ~4.4k sinks per bank, not 22k on clk)
+                        .clk(CHILD_CLOCKS ? ck_rpair[b] : clk), .ck_pair({ck_pair1[b],ck_rpair[b]}), .rst_n(rst_n), .ce_d(ce_pre[b]), .any_d((b < SB) ? any_s : any_n), .ad_d((b < SB) ? adm_pre : adm_pre_n), .req_m(rq),
                         .rd({rom_rd[(CODE_BANKS + b)*266 +: PWB], rom_rd[b*266 +: PWB]}), .r_q(r_q));
                     assign rom_req_m[13*b +: 13] = rq[12:0];
                     assign rom_req_m[13*(CODE_BANKS+b) +: 13] = rq[25:13];
@@ -511,7 +518,12 @@ module ot_qwen_rom_tile_logic_w12 #(
             end
             if (RQR != 0) begin : g_rqr
                 (* keep *) reg [2*2*PWB-1:0] gs_q, gn_q;
-                always @(posedge clk) begin gs_q <= rw[CODE_BANKS]; gn_q <= rwn[CODE_BANKS]; end
+                // Q-TILE-REPACK: with CHILD_CLOCKS at RPH 1 the group registers join a bank-row root of their own
+                // group (south: row SB/2, north: row (SB+CODE_BANKS)/2), keeping the tile root ck under 15k sinks
+                wire ck_gs = (LOCAL_ROOTS != 0 && CHILD_CLOCKS != 0) ? ck_rqr[0] : (CHILD_CLOCKS != 0 && RPH == 1) ? ck_rpair[SB/2] : clk;
+                wire ck_gn = (LOCAL_ROOTS != 0 && CHILD_CLOCKS != 0) ? ck_rqr[1] : (CHILD_CLOCKS != 0 && RPH == 1) ? ck_rpair[(SB+CODE_BANKS)/2] : clk;
+                always @(posedge ck_gs) gs_q <= rw[CODE_BANKS];
+                always @(posedge ck_gn) gn_q <= rwn[CODE_BANKS];
                 assign wrom_q = gs_q | gn_q;
             end else begin : g_rq0
                 assign wrom_q = rw[CODE_BANKS];
@@ -741,9 +753,17 @@ module ot_qwen_rom_tile_w12 #(
     parameter integer XTX = 0,             // el1011-q-tile r3: registered transmit rungs per hardened leaf (matvec HIER_HARD; +XTX cycles)
     parameter integer KV_SLICE = 1,       // 0 (el1011-q-tile, r22ko4 qfd_tile_nk): no KV slice macros / write port (attention on the KV die)
     parameter integer BAW = 12,           // 11: ot_rom_2048x266_m8 banks (set CODE_BANKS to twice the 4096-word count)
+    parameter integer LOCAL_ROOTS = 0, // opt-in localized soft roots, no data latency change
     parameter integer CHILD_CLOCKS = 0
 ) (
     input wire [CODE_BANKS-1:0] ck_rpair,
+    input wire [CODE_BANKS-1:0] ck_pair1,
+    input wire [1:0] ck_rqr,
+    input wire [7:0] ck_tx,
+
+    // Q-TILE-REPACK 10-15: CHILD_CLOCKS with RPH 1 (ROM macros placed directly in the tile parent): one raw-macro clock
+    // entry per macro, index p*CODE_BANKS + b (= g_col[p].g_bank[b].u_rom).  Unused (any value) otherwise.
+    input wire [2*CODE_BANKS-1:0] ck_rom,
     input wire [7:0] ck_lsl,
     input wire ck_node,
     input  wire              clk,
@@ -778,9 +798,9 @@ module ot_qwen_rom_tile_w12 #(
 `ifndef SYNTHESIS
         .ROM_TILE(ROM_TILE),
 `endif
-        .CHILD_CLOCKS(CHILD_CLOCKS), .NW(NW), .GT(GT), .SMIN(SMIN), .CODE_BANKS(CODE_BANKS), .KV_LOCAL(KV_SLICE),
+        .LOCAL_ROOTS(LOCAL_ROOTS), .CHILD_CLOCKS(CHILD_CLOCKS), .NW(NW), .GT(GT), .SMIN(SMIN), .CODE_BANKS(CODE_BANKS), .KV_LOCAL(KV_SLICE),
         .KV_VB(KV_VB), .KV_NH(KV_NH), .MEM_EXTRA(MEM_EXTRA), .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT), .ROM_PIPE(ROM_PIPE), .ROM_ARELAY(ROM_ARELAY), .ROM_CAP2(ROM_CAP2), .ROM_CAPX(ROM_CAPX), .LRST(LRST), .ARPB(ARPB), .MPR(MPR), .HIER(HIER), .HIER_HARD(HIER_HARD), .TOREG(TOREG), .TIDR(TIDR), .LRR(LRR), .RPH(RPH), .RQR(RQR), .XTX(XTX), .ANR(ANR), .BAW(BAW), .NDH(NDH), .NODE(NODE), .BMUT(BMUT)) u_logic (
-        .ck_rpair(ck_rpair), .ck_lsl(ck_lsl), .ck_node(ck_node),
+        .ck_rpair(ck_rpair), .ck_pair1(ck_pair1), .ck_rqr(ck_rqr), .ck_tx(ck_tx), .ck_lsl(ck_lsl), .ck_node(ck_node),
         .clk(clk), .rst_n(rst_n), .tile_id(tile_id), .ib_go(ib_go), .ib(ib), .xl(xl),
         .t_out(t_out), .t_vout(t_vout), .n_a(n_a), .n_b(n_b), .n_va(n_va), .n_y(n_y), .n_vy(n_vy), .fault(fault),
         .rom_ce(rom_ce), .rom_addr(rom_addr), .rom_addr_n(rom_addr_n), .rom_addr_b(rom_addr_b), .rom_req_m(rom_req_m), .rom_rd(rom_rd),
@@ -792,7 +812,7 @@ module ot_qwen_rom_tile_w12 #(
         //: array binding); BAW 11 half-depth banks live under g_colh (zero-trip loops, no extra scope level)
         for (p = 0; p < ((BAW == 12 && RPH != 2) ? 2 : 0); p = p + 1) begin : g_col
             for (b = 0; b < CODE_BANKS; b = b + 1) begin : g_bank
-                ot_rom_4096x266_m8 u_rom (.clk(clk), .ce_in((MPR != 0) ? rom_req_m[13*(p*CODE_BANKS+b)+12] : rom_ce[b]),
+                ot_rom_4096x266_m8 u_rom (.clk((CHILD_CLOCKS != 0 && RPH == 1) ? ck_rom[p*CODE_BANKS+b] : clk), .ce_in((MPR != 0) ? rom_req_m[13*(p*CODE_BANKS+b)+12] : rom_ce[b]),
                     .addr_in((MPR != 0) ? rom_req_m[13*(p*CODE_BANKS+b) +: 12] : (ARPB != 0) ? rom_addr_b[12*b +: 12] : (ROM_PIPE != 0 && b >= (CODE_BANKS + 1) / 2) ? rom_addr_n : rom_addr),
                     .rd_out(rom_rd[(p*CODE_BANKS + b)*266 +: 266]));
             end
@@ -868,6 +888,7 @@ endmodule
 // (parent flops), r_q is the row's relay register; the parent ORs the rows' r_q (== rs | rn of the flat pipeline).
 // MUT3 = the tile's TMUT 3 (column-1 request one edge stale); MUT5 = boundary mutant (relay word one edge late).
 module ot_qwen_rpair_logic #(
+    parameter integer PAIR_CLOCKS = 0,
     parameter integer PWB = 256,
     parameter integer ROM_CAP2 = 1,
     parameter integer ROM_CAPX = 2,
@@ -876,6 +897,7 @@ module ot_qwen_rpair_logic #(
     parameter integer MUT5 = 0
 ) (
     input  wire               clk,
+    input  wire [1:0]         ck_pair,
     input  wire               rst_n,
     input  wire               ce_d,
     input  wire               any_d,
@@ -902,13 +924,15 @@ module ot_qwen_rpair_logic #(
         integer i;
         begin lead1 = 0; for (i = 0; i < 8; i = i + 1) if (m[i]) lead1 = i[2:0]; end
     endfunction
-    ot_qwen_mpr_reg u_r0 (.clk(clk), .rst_n(rst_n), .d({ce_d, ad_d}), .q(req_m[12:0]));
+    wire pc0 = PAIR_CLOCKS ? ck_pair[0] : clk;
+    wire pc1 = PAIR_CLOCKS ? ck_pair[1] : clk;
+    ot_qwen_mpr_reg u_r0 (.clk(pc0), .rst_n(rst_n), .d({ce_d, ad_d}), .q(req_m[12:0]));
     generate if (MUT3 != 0) begin : g_mut
         wire [12:0] stale;
         ot_qwen_mpr_reg u_s (.clk(clk), .rst_n(rst_n), .d({ce_d, ad_d}), .q(stale));
-        ot_qwen_mpr_reg u_r1 (.clk(clk), .rst_n(rst_n), .d(stale), .q(req_m[25:13]));
+        ot_qwen_mpr_reg u_r1 (.clk(pc1), .rst_n(rst_n), .d(stale), .q(req_m[25:13]));
     end else begin : g_ok
-        ot_qwen_mpr_reg u_r1 (.clk(clk), .rst_n(rst_n), .d({ce_d, ad_d}), .q(req_m[25:13]));
+        ot_qwen_mpr_reg u_r1 (.clk(pc1), .rst_n(rst_n), .d({ce_d, ad_d}), .q(req_m[25:13]));
     end endgenerate
     //: the row's copy of its request enable and of "any row enabled" (== rom_ce[b], |rom_ce of the flat pipeline)
     (* keep *) reg ce_q, any_q;
@@ -924,11 +948,12 @@ module ot_qwen_rpair_logic #(
     end
     genvar p;
     generate for (p = 0; p < 2; p = p + 1) begin : g_pair
+        wire pair_clk = PAIR_CLOCKS ? ck_pair[p] : clk;
         wire [2*PWB-1:0] cv;
         begin : g_bank
                 //: the bank's output register at its pins, no enable
                 (* keep *) reg [PWB-1:0] cap;
-                always @(posedge clk) cap <= rd[p*PWB +: PWB];
+                always @(posedge pair_clk) cap <= rd[p*PWB +: PWB];
                 wire [PWB-1:0] cx;                     // the word the expansion reads
                 wire           sx, sx_early;           // its bank select (and the mutant's one-edge-early select)
                 wire [2*PWB-1:0] cxw;                  // ROM_CAPX: the registered masked expansion
@@ -941,12 +966,12 @@ module ot_qwen_rpair_logic #(
                     (* keep *) reg [PWB/32-1:0] sel_r;          // the select, one kept copy per 4 bytes
                     genvar ex, er;
                     for (er = 0; er < PWB / 32; er = er + 1) begin : g_selr
-                        always @(posedge clk) sel_r[er] <= (ROM_MUT != 0) ? sel_1 : sel_c;
+                        always @(posedge pair_clk) sel_r[er] <= (ROM_MUT != 0) ? sel_1 : sel_c;
                     end
                     for (ex = 0; ex < PWB / 8; ex = ex + 1) begin : g_cvx
                         wire [7:0] cb = cap[8*ex +: 8];
                         wire [7:0] mg = cb[7] ? (~cb + 8'd1) : cb;
-                        always @(posedge clk) begin
+                        always @(posedge pair_clk) begin
                             xa_s[ex] <= cb[7];
                             xa_m[8*ex +: 8] <= mg;
                             xa_p[3*ex +: 3] <= lead1(mg);
@@ -954,7 +979,7 @@ module ot_qwen_rpair_logic #(
                         end
                         //: rung B: normalising shift + exponent, masked by the select of the edge rung A holds
                         wire [7:0] nm = xa_m[8*ex +: 8] << (3'd7 - xa_p[3*ex +: 3]);
-                        always @(posedge clk)
+                        always @(posedge pair_clk)
                             cap2x[16*ex +: 16] <= (xa_nz[ex] && sel_r[ex / 4]) ?
                                 {xa_s[ex], 8'd127 + {5'd0, xa_p[3*ex +: 3]}, nm[6:0]} : 16'd0;
                     end
@@ -964,12 +989,12 @@ module ot_qwen_rpair_logic #(
                     (* keep *) reg [2*PWB-1:0] cap2x;
                     genvar ex;
                     for (ex = 0; ex < PWB / 8; ex = ex + 1) begin : g_cvx
-                        always @(posedge clk) cap2x[16*ex +: 16] <= int8_bf16(cap[8*ex +: 8]) & {16{(ROM_MUT != 0) ? sel_1 : sel_c}};
+                        always @(posedge pair_clk) cap2x[16*ex +: 16] <= int8_bf16(cap[8*ex +: 8]) & {16{(ROM_MUT != 0) ? sel_1 : sel_c}};
                     end
                     assign cx = {PWB{1'b0}}; assign sx = 1'b0; assign sx_early = 1'b0; assign cxw = cap2x;
                 end else if (ROM_CAP2 != 0) begin : g_cap2
                     (* keep *) reg [PWB-1:0] cap2;
-                    always @(posedge clk) cap2 <= cap;
+                    always @(posedge pair_clk) cap2 <= cap;
                     assign cx = cap2; assign sx = sel_c2; assign sx_early = sel_c; assign cxw = {2*PWB{1'b0}};
                 end else begin : g_cap1
                     assign cx = cap; assign sx = sel_c; assign sx_early = sel_1; assign cxw = {2*PWB{1'b0}};
@@ -984,7 +1009,7 @@ module ot_qwen_rpair_logic #(
                 end
         end
         reg [2*PWB-1:0] g, r, rx;
-        always @(posedge clk) begin g <= cv; r <= g; rx <= r; end
+        always @(posedge pair_clk) begin g <= cv; r <= g; rx <= r; end
         assign r_q[2*PWB*p +: 2*PWB] = (MUT5 != 0) ? rx : r;
     end endgenerate
 endmodule

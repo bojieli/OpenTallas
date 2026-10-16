@@ -52,3 +52,22 @@ def test_restart_waits_for_background_work():
             raise AssertionError("expected SystemExit")
         except SystemExit as ex:
             assert ex.code == 0
+
+
+def test_ref_gate_modules_reimport(tmp_path):
+    import types
+    fake_root = tmp_path / "d"
+    (fake_root / "tools/ref_tile").mkdir(parents=True)
+    (fake_root / "tools/closure_loop").mkdir(parents=True)
+    (fake_root / "tools/ref_tile/pre_route_gate.py").write_text("V = 1\n")
+    with patch.object(cl, "HERE", fake_root / "tools/closure_loop"), patch.object(cl, "log", lambda *a: None), \
+            patch.dict(cl._INPROC, {"gen": 0, "loaded_gen": 0}):
+        sys.modules.pop("pre_route_gate", None)
+        m = cl.ref_gate_modules()
+        assert m.V == 1
+        (fake_root / "tools/ref_tile/pre_route_gate.py").write_text("V = 2  # regenerated generator\n")
+        assert cl.ref_gate_modules().V == 1          # no sync generation change: the loaded module stays
+        cl._INPROC["gen"] += 1
+        assert cl.ref_gate_modules().V == 2          # after an INPROCESS-SYNC the module is re-imported
+        sys.modules.pop("pre_route_gate", None)
+        sys.path.remove(str(fake_root / "tools/ref_tile"))

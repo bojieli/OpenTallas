@@ -1,6 +1,9 @@
 `default_nettype none
 // One stack's actual static16-key scorer. Every issue is a compiler slot;
 // tags/partial masks/keeps are checked and never reschedule the arithmetic.
+// Key line p (of this stack's 8 HBM service groups svg_<stack><p>, die wiring idxcoll.json) carries the packed136
+// service tag = tag_base + row with tag_base = 128*p + the block's first beat: tag(p,beat) = (128*p + beat) % 1024
+// (H-NETLIST idxcoll 2026-10-15; was (beat*8 + p) % 1024, which no sequential-tag service block can produce).
 module ot_hbm_idx_score_static #(parameter integer MUT=0)(
  input wire clk_ctl,input wire[3:0]clk_engine,clk_meta,clk_tail,
  input wire[15:0]clk_chunk,input wire[511:0]clk_hslice,input wire rst_n,
@@ -48,7 +51,7 @@ module ot_hbm_idx_score_static #(parameter integer MUT=0)(
    if((|efault)||(ev!={4{ev[0]}}))fault<=1;
    if(beat_v)begin
     if(nkeys>2736||beat_index>170)fault<=1;
-    for(integer p=0;p<8;p=p+1)if(!key_lines[p*1099]||key_lines[p*1099+1+:10]!==10'(int'(beat_index)*8+p))fault<=1;
+    for(integer p=0;p<8;p=p+1)if(!key_lines[p*1099]||key_lines[p*1099+1+:10]!==10'(p*128+int'(beat_index)))fault<=1;
    end
   end
  end

@@ -30,6 +30,13 @@ module tb_dsfd_sp_vm_static;
 `else
     localparam integer CAP_PIPE=0;
 `endif
+    // S-VM 0030: the master bench used to ignore OT_VM_NATIVE_WSCATTER (always WSCATTER_PIPE 0), so the 10-16 "pipe 1"
+    // receipt (results/rtl/s81_vm_master_current_scatter_20261016) ran pipe 0 twice.  The define now reaches the DUT.
+`ifdef OT_VM_NATIVE_WSCATTER
+    localparam integer WSCATTER_PIPE=1;
+`else
+    localparam integer WSCATTER_PIPE=0;
+`endif
 
     reg s_ck = 1, t_ck = 1, rst = 0, rss = 0;
     always #556 s_ck = ~s_ck;
@@ -43,7 +50,7 @@ module tb_dsfd_sp_vm_static;
     reg [2203:0] fcol = 0; reg [14:0] crq = 0; wire [512:0] crs;
     reg [514:0] sel = 0, col = 0; reg [1026:0] asw = 0;
     wire [511:0] tgat; reg [10:0] xgo = 0; wire [512:0] qsw; reg [2:0] qsws = 3'b011;
-    dsfd_sp_vm #(.CAP_PIPE(CAP_PIPE), .READ_PIPE(READ_PIPE)) dut (
+    dsfd_sp_vm #(.CAP_PIPE(CAP_PIPE), .READ_PIPE(READ_PIPE), .WSCATTER_PIPE(WSCATTER_PIPE)) dut (
         .ck_read_data_t({64{t_ck}}), .ck_read_valid_t({8{t_ck}}), .rss_read_data_t({64{rss}}), .rss_read_valid_t({8{rss}}),
         .ck_core_t(t_ck), .ck_rsched_t(t_ck), .ck_seq_t(t_ck), .ck_landing_t(t_ck),
         .ck_mem_fsr_t({16{t_ck}}), .ck_mem_return_t({16{t_ck}}), .ck_mem_bank_t({128{t_ck}}),
@@ -60,8 +67,14 @@ module tb_dsfd_sp_vm_static;
         .rst_landing_x34_s({3{rst}}), .rss_landing_x34_t({3{rss}}),
         .ck_cap_control_s(s_ck), .rst_cap_control_s(rst), .ck_cap_lane_s({16{s_ck}}),
         .ck_cap_x34_s({16{s_ck}}), .ck_cap_x34_t({16{t_ck}}), .rst_cap_x34_s({16{rst}}), .rss_cap_x34_t({16{rss}}),
+        .ck_wfc_fault_s(s_ck), .ck_wfc_fault_t(t_ck), .rst_wfc_fault_s(rst), .rss_wfc_fault_t(rss),
+        .ck_wfc_return_t(t_ck), .rss_wfc_return_t(rss),
+        .ck_wfc_fault_x34_s(s_ck), .ck_wfc_fault_x34_t(t_ck), .ck_wfc_fault_x43_t(t_ck), .ck_wfc_fault_x43_s(s_ck),
+        .rst_wfc_fault_x34_s(rst), .rss_wfc_fault_x34_t(rss), .rss_wfc_fault_x43_t(rss), .rst_wfc_fault_x43_s(rst),
         .ck_wfc_control_s(s_ck), .ck_wfc_control_t(t_ck), .ck_wfc_x34_s(s_ck), .ck_wfc_x34_t(t_ck), .ck_wfc_x43_s(s_ck), .ck_wfc_x43_t(t_ck),
         .rst_wfc_control_s(rst), .rss_wfc_control_t(rss), .rst_wfc_x34_s(rst), .rss_wfc_x34_t(rss), .rst_wfc_x43_s(rst), .rss_wfc_x43_t(rss),
+        .ck_xio_return_t(t_ck), .rss_xio_return_t(rss), .ck_xio_fault_t(t_ck), .ck_xio_fault_s(s_ck),
+        .rss_xio_fault_t(rss), .rst_xio_fault_s(rst), .ck_xio_fault_join_t(t_ck), .rss_xio_fault_join_t(rss),
         .ck_xio_control_s(s_ck), .ck_xio_control_t(t_ck), .ck_xio_x43_s({2{s_ck}}), .ck_xio_x43_t({2{t_ck}}),
         .rst_xio_control_s(rst), .rss_xio_control_t(rss), .rst_xio_x43_s({2{rst}}), .rss_xio_x43_t({2{rss}}), .c_cmd(c_cmd), .c_done(c_done), .c_st(c_st),
         .t_inp_su(t_inp_su), .t_inp_hc(t_inp_hc),
@@ -112,8 +125,8 @@ module tb_dsfd_sp_vm_static;
             for (k = 0; k < n; k = k + 1) begin
                 while (I % 4 == ((2-READ_PIPE)%4+4)%4) I = I + 1;
                 d = mem[base + k];
-                if (dest == 0) e_q[x43_serial(I + 15+READ_PIPE)] = {d, 1'b1};
-                else e_g[x43_serial(I + 15+READ_PIPE)] = {d[510:0], 1'b1};
+                if (dest == 0) e_q[x43_serial(I + 19+READ_PIPE)] = {d, 1'b1};
+                else e_g[x43_serial(I + 19+READ_PIPE)] = {d[510:0], 1'b1};
                 I = I + 1;
             end
         end
@@ -158,7 +171,7 @@ module tb_dsfd_sp_vm_static;
         end
         if (tk >= 300 && tk < 332) begin
             r = 1024 + tk - 300; crq = {14'(r), 1'b1};
-            e_tc[tk + 1 + 12+READ_PIPE] = {mem[r], 1'b1};
+            e_tc[tk + 1 + 16+READ_PIPE] = {mem[r], 1'b1};
         end
         // Invalid STREAM destination is a schedule-fault witness.
         if (mode == 1 && tk == 360) issue(3'd4, {2'd2, 14'd1024, 5'd0});
@@ -217,7 +230,7 @@ module tb_dsfd_sp_vm_static;
             r = 4096 + 2 * (sk - 200);
             fwfc[528] = 1'b1; fwfc[543:529] = 15'(r); fwfc[558:544] = 15'(r + 1); fwfc[559] = 1'b1;
             if (mode == 7 && sk == 210) fwfc[558:544] = 15'(r + 4);
-            e_w[sk + 1 + 15+3*((READ_PIPE+3)/4)] = {1'b1, mem[r + 1], 1'b1, mem[r]};
+            e_w[sk + 1 + 18+3*((READ_PIPE+3)/4)] = {1'b1, mem[r + 1], 1'b1, mem[r]};
         end
         if (sk >= 130 && sk < 134) begin
             r = 7000 + sk - 130; sel = {1'b0, 1'b1, rowdata(r, 6), 1'b1}; mem[r] = rowdata(r, 6); memv[r] = 1;
@@ -292,13 +305,13 @@ module tb_dsfd_sp_vm_static;
         end else begin : fw reg ok;
             ok = 1'b0;
             case (mode)
-                1: ok = dut.u_xio.f_iss[2];
-                2: ok = dut.u_xio.f9;
-                3: ok = dut.u_xio.f_s[0];
-                4: ok = dut.u_xio.f_iss[2];
-                5: ok = dut.u_xio.f_iss[1];
-                6: ok = dut.u_wfc.err && twfc[1028];
-                7: ok = dut.u_wfc.err && twfc[1028];
+                1: ok = dut.u_xio.u_req.f_iss[2];
+                2: ok = dut.u_xio.u_ret.fault;
+                3: ok = dut.u_xio.u_serial.fault;
+                4: ok = dut.u_xio.u_req.f_iss[2];
+                5: ok = dut.u_xio.u_req.f_iss[1];
+                6: ok = dut.u_wfc.u_req.err && twfc[1028];
+                7: ok = dut.u_wfc.u_req.err && twfc[1028];
                 8: ok = |dut.u_cap.lf;
                 default: ok = 1'b0;
             endcase

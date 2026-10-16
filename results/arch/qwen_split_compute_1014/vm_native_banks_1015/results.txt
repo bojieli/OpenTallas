@@ -1,0 +1,48 @@
+n0 PC1 {"variant":1,"smut":0,"imut":0,"vpmut":0,"bursts":8,"rows":48,"vm_rows_checked":48,"first_tag_after_go":275,"first_capture_after_go":288,"tag_to_capture":13,"last_landing_after_go":311,"errors":0,"fault_ser":"000","fault_issue":0,"fault_vm":0} PASS vmwb 
+n0 PC11 {"variant":1,"smut":0,"imut":0,"vpmut":0,"bursts":8,"rows":192,"vm_rows_checked":143,"first_tag_after_go":1238,"first_capture_after_go":1251,"tag_to_capture":13,"last_landing_after_go":1334,"errors":0,"fault_ser":"000","fault_issue":0,"fault_vm":0} PASS vmwb 
+n0 PC12 {"variant":1,"smut":0,"imut":0,"vpmut":0,"bursts":24,"rows":288,"vm_rows_checked":288,"first_tag_after_go":227,"first_capture_after_go":240,"tag_to_capture":13,"last_landing_after_go":347,"errors":0,"fault_ser":"000","fault_issue":0,"fault_vm":0} PASS vmwb 
+n0 PC16 {"variant":1,"smut":0,"imut":0,"vpmut":0,"bursts":8,"rows":192,"vm_rows_checked":192,"first_tag_after_go":467,"first_capture_after_go":480,"tag_to_capture":13,"last_landing_after_go":563,"errors":0,"fault_ser":"000","fault_issue":0,"fault_vm":0} PASS vmwb 
+n0 PC20 {"variant":1,"smut":0,"imut":0,"vpmut":0,"bursts":24,"rows":288,"vm_rows_checked":288,"first_tag_after_go":259,"first_capture_after_go":272,"tag_to_capture":13,"last_landing_after_go":411,"errors":0,"fault_ser":"000","fault_issue":0,"fault_vm":0} PASS vmwb 
+n1 PC1 {"variant":1,"smut":0,"imut":0,"vpmut":0,"bursts":8,"rows":48,"vm_rows_checked":48,"first_tag_after_go":275,"first_capture_after_go":288,"tag_to_capture":13,"last_landing_after_go":311,"errors":0,"fault_ser":"000","fault_issue":0,"fault_vm":0} PASS vmwb 
+n1 PC11 {"variant":1,"smut":0,"imut":0,"vpmut":0,"bursts":8,"rows":192,"vm_rows_checked":143,"first_tag_after_go":1238,"first_capture_after_go":1251,"tag_to_capture":13,"last_landing_after_go":1334,"errors":0,"fault_ser":"000","fault_issue":0,"fault_vm":0} PASS vmwb 
+n1 PC12 {"variant":1,"smut":0,"imut":0,"vpmut":0,"bursts":24,"rows":288,"vm_rows_checked":288,"first_tag_after_go":227,"first_capture_after_go":240,"tag_to_capture":13,"last_landing_after_go":347,"errors":0,"fault_ser":"000","fault_issue":0,"fault_vm":0} PASS vmwb 
+n1 PC16 {"variant":1,"smut":0,"imut":0,"vpmut":0,"bursts":8,"rows":192,"vm_rows_checked":192,"first_tag_after_go":467,"first_capture_after_go":480,"tag_to_capture":13,"last_landing_after_go":563,"errors":0,"fault_ser":"000","fault_issue":0,"fault_vm":0} PASS vmwb 
+n1 PC20 {"variant":1,"smut":0,"imut":0,"vpmut":0,"bursts":24,"rows":288,"vm_rows_checked":288,"first_tag_after_go":259,"first_capture_after_go":272,"tag_to_capture":13,"last_landing_after_go":411,"errors":0,"fault_ser":"000","fault_issue":0,"fault_vm":0} PASS vmwb 
+n1vp PC1 {"variant":1,"smut":0,"imut":0,"vpmut":1,"bursts":8,"rows":48,"vm_rows_checked":48,"first_tag_after_go":275,"first_capture_after_go":288,"tag_to_capture":13,"last_landing_after_go":311,"errors":256,"fault_ser":"000","fault_issue":0,"fault_vm":0} FAIL vmwb errors=256 
+n1vp PC11 {"variant":1,"smut":0,"imut":0,"vpmut":1,"bursts":8,"rows":192,"vm_rows_checked":143,"first_tag_after_go":1238,"first_capture_after_go":1251,"tag_to_capture":13,"last_landing_after_go":1334,"errors":0,"fault_ser":"000","fault_issue":0,"fault_vm":0} PASS vmwb 
+n1vp PC12 {"variant":1,"smut":0,"imut":0,"vpmut":1,"bursts":24,"rows":288,"vm_rows_checked":288,"first_tag_after_go":227,"first_capture_after_go":240,"tag_to_capture":13,"last_landing_after_go":347,"errors":1536,"fault_ser":"000","fault_issue":0,"fault_vm":0} FAIL vmwb errors=1536 
+n1vp PC16 {"variant":1,"smut":0,"imut":0,"vpmut":1,"bursts":8,"rows":192,"vm_rows_checked":192,"first_tag_after_go":467,"first_capture_after_go":480,"tag_to_capture":13,"last_landing_after_go":563,"errors":1024,"fault_ser":"000","fault_issue":0,"fault_vm":0} FAIL vmwb errors=1024 
+n1vp PC20 {"variant":1,"smut":0,"imut":0,"vpmut":1,"bursts":24,"rows":288,"vm_rows_checked":288,"first_tag_after_go":259,"first_capture_after_go":272,"tag_to_capture":13,"last_landing_after_go":411,"errors":1536,"fault_ser":"000","fault_issue":0,"fault_vm":0} FAIL vmwb errors=1536 
+
+ds_n0 PASS vm_die_static real_Q_rows=64 words=1024 attention_rows=32 actual_commit_edges=8 fenced_commit_edges=9 TAG59=checked seq_requests=256 fixed_RL=13 Q_cadence=1
+ds_n1 PASS vm_die_static real_Q_rows=64 words=1024 attention_rows=32 actual_commit_edges=8 fenced_commit_edges=9 TAG59=checked seq_requests=256 fixed_RL=13 Q_cadence=1
+ds_n1_obs FAIL beats=32 fault=1 FAIL SU beats=32 fault=1 FAIL vm_die_static errors=2
+09837e60757bbcbc8a751dbfdc4018a662003a1b5f89975a576348fd41f7fba9  wb_n1/obj/Vtb_vmwb
+13e4eb1eb0bd5d5912b40f9abd353fb3cc2fbdf6783c8ced9c9f1ec8b5a3c16e  ds_n1/obj/Vtb_qfd_vm_die_static
+6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380  physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v
+312006d550f75c240846e561301d908e38fe45707bb7fcbf38d9b78ff019bf2d  physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v
+ac30b638f8cf33c17f1bd534e7696ea2dfabd2c37a8c873b158e4b8b62f8429b  rtl/qwen_sys/vm_nox_20261014/qfd_vm_attention_commit_fence.sv
+f12236c89d6bb9e5c4cb37a9933afd9abae7326de257bb143b366a0373db4084  rtl/qwen_sys/vm_nox_20261014/ot_qfd_vm_region_nx.sv
+f7cd663de88c6a07dad159b46d67348575415c8b3eb97a70902784e2a806e647  rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_region_leaf.sv
+02a0f49b766c299b8de5371671afd33314a09a929c1b5a2a0c93c7532919d989  rtl/qwen_sys/vm_die_split_20261012/ot_qfd_vm_region_quarter.sv
+993d2f31e2741755a9aba8ff44c29d6b0df8562764797ad3a31806bbbec4ddac  rtl/qwen_sys/vm_die_split_20261012/ot_qfd_vm_answer_tiles.sv
+17fc7ce6995bdf41f0dcd1ae3abced60b1a0f86dcb5ded98b1b95e3660383421  rtl/qwen_sys/vm_die_split_20261012/ot_qfd_vm_xfifo8_t.sv
+dc83415c233407b94119806a0a9a9ba52d343f8d649f76ad3d8a9e8fb5a34ff7  rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv
+2ec29c19e804843e0e6819e173c0e30f2bc47abff14b383046036c077ec16f25  rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xplane.sv
+3998d891fa7c22658680da39bd4c970b2d4286ddd5b23575141ef1de03da1242  rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_xtree.sv
+58cf023e623627da6790d20bb0cae2611c491ebc9a4251e491ba629b245dac17  rtl/qwen_sys/vm_me_20261008/ot_qfd_res_path.sv
+8dbb5752657f157d2c81aaf47bec486c19b55994a2f8d0d763cbcc07743b2853  rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_vector_memory.sv
+51145388077b85b2e19c71c71dc959c40097d963a9c3fc8eba00d5137d2bfcb1  rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_tree_top.sv
+7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688  rtl/hdc/ot_hdc_delay.sv
+c9ab39febd24fbf11181d223b55d2e6718feabbc016b5ba85eb97a7b613f6c1b  rtl/physical/ot_qwen_tree_delay.sv
+e0bcd2f85cd5fd854f4f3d6c0d1acfa85bbeb7328e550427baf154fab406ca3f  rtl/physical/ot_qwen_tree_delay_tiles.sv
+89cfe22baa32e68ec0b1231857d6a09ca52a239ced43b1feaed70078c8863886  rtl/qwen_split/qfd_su_vm_pack.sv
+5b9b54e229e22bc0a25c1c96f74614460aec9c4df044c8d0b09d80ab091d3d44  rtl/qwen_sys/vm_nox_20261014/qfd_sp_vector_memory.sv
+f7c95a54cc6581171e43eb73ad06739f0254fbf7c05e95efa70e642ee8e75c92  rtl/qwen_sys/dvm_20261014/ot_qfd_vm_q_export_fixed.sv
+b6b26f18b39fabeb1953922c839ba28d329f7ac513f7ee63ddc18975379ece10  rtl/qwen_sys/vm_native_physical_20261015/qvm_bank_banked_native.sv
+0e11ada83efd98a267e78c081b00810e4a0713d2b414fd2a70596af146cd5bb7  rtl/qwen_sys/vm_native_physical_20261015/qvm_su_bank_native.sv
+cf9f5b6fd28d973c6e5a91146e4f3640a0c897c8796a9fbfa422b1247b3a4da3  tools/qwen_producer_train/component_sources.sv
+9e7415d22afbdff965cc76873e2e33b39689a1fb95c92bee35676e7ad8675275  rtl/qwen_split/qfd_res_train_static.sv
+dfc71012bad893fcf8999dda778324651f76609cff9535470c625fdf60596440  rtl/qwen_split/qfd_res_train_par.sv
+d6985a3fe92f18aa83a261a012cd92d8f4e61865fc510328d5462ca2b36516b3  rtl/qwen_split/qfd_res_train_issue.sv
+923f5bd88504213f2a0313877c25b75e8526b26f6e09b50c54d8a60fbb74ae14  results/arch/qwen_split_compute_1014/vmwb_1015/tb_vmwb.sv

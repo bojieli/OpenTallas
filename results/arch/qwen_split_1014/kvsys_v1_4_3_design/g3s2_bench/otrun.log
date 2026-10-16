@@ -1,0 +1,20 @@
+ot-run: ot-epyc1tb     admits   429 GB (avail 655, growth 124, headroom 64, waiters 0/0 GB) load 124/128 running 27 disk 351 GB 
+ot-run: -> ot-epyc1tb
+ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-3608816-1792112901 after 0 s
+== MUT 0
+- Verilator: $finish at 4us; walltime 4.801 s; speed 776.439 ns/s
+- Verilator: cpu 4.795 s on 1 threads; allocated 49 MB
+rc=0
+== MUT 31
+%Error: rtl/test/qwen_split/tb_qkh_head_native.sv:139: Verilog $stop
+Aborting...
+rc=1
+== MUT 32
+%Error: rtl/test/qwen_split/tb_qkh_head_native.sv:139: Verilog $stop
+Aborting...
+rc=1
+== MUT 33
+%Error: rtl/test/qwen_split/tb_qkh_head_native.sv:139: Verilog $stop
+Aborting...
+rc=1
+ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-3608816-1792112901): exit 0

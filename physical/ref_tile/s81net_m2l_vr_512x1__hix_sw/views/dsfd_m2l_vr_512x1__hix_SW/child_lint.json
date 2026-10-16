@@ -1,0 +1,80 @@
+{
+ "schema": "opentallas.hier_contract.child_lint.v1",
+ "lef": "/srv/opentallas-scratch2/claude/closure-loop/s81net_m2l_vr_512x1__hix_sw-n3-4d669381d/record/views/dsfd_m2l_vr_512x1__hix_SW/dsfd_m2l_vr_512x1__hix_SW.lef",
+ "verdict": "PASS",
+ "fails": [],
+ "warns": [
+  "(f) face-pin access: 1030 of 1032 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. di0[0] M4 (0.156,4.416), di0[100] M4 (0.156,4.416), di0[101] M4 (0.156,4.416))"
+ ],
+ "summary": "dsfd_m2l_vr_512x1__hix_SW 129.6 x 174.96: PG M5 VDD 47 stripes (96% spread, 100% cov) / VSS 47 stripes (96% spread, 100% cov); strap M6; face pins 1032 blocked-above 0 blocked-same 0; clock ck[0] insertion 191 ps; clock fi0[0] insertion 179 ps; pockets M5 0 (closed)",
+ "info": {
+  "cell": "dsfd_m2l_vr_512x1__hix_SW",
+  "W": 129.6,
+  "H": 174.96,
+  "pg": {
+   "nets": {
+    "VDD": {
+     "top_layer": "M5",
+     "stripes": 47,
+     "dir": "V",
+     "spread": 0.958,
+     "coverage": 1.0,
+     "shapes_on_top": 47
+    },
+    "VSS": {
+     "top_layer": "M5",
+     "stripes": 47,
+     "dir": "V",
+     "spread": 0.958,
+     "coverage": 1.0,
+     "shapes_on_top": 47
+    }
+   },
+   "top_layer": "M5",
+   "ok": true,
+   "why": []
+  },
+  "pg_layer": "M5",
+  "strap_layer": "M6",
+  "cap": null,
+  "face": {
+   "face_pins": 1032,
+   "blocked_above": 0,
+   "covered_below": 112,
+   "examples": [],
+   "blocked_same": 0,
+   "same_examples": [],
+   "band_same": 1030,
+   "band_examples": [
+    "di0[0] M4 (0.156,4.416)",
+    "di0[100] M4 (0.156,4.416)",
+    "di0[101] M4 (0.156,4.416)",
+    "di0[102] M4 (0.156,4.416)",
+    "di0[103] M4 (0.156,4.416)",
+    "di0[104] M4 (0.156,4.416)"
+   ]
+  },
+  "clock_insertion": {
+   "ck[0]": {
+    "max_ps": 190.86,
+    "min_ps": 133.6
+   },
+   "fi0[0]": {
+    "max_ps": 178.95,
+    "min_ps": 127.13
+   }
+  },
+  "pockets": {
+   "layer": "M5",
+   "d_um": 1.536,
+   "marker": {
+    "layer": "M5",
+    "d_um": 1.536,
+    "added": 448
+   },
+   "count": 0,
+   "area_um2": 0,
+   "examples": []
+  }
+ }
+}

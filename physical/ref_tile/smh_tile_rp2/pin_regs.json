@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hbm_accel_smh_tile_eg",
+ "enable": false,
+ "reason": "OWNER RULE 19:50 met in the RTL, not by a wrapper: every data port already lands in / launches from one register at its pin (OT_SMH_PINREG: 3,705 rin/bin landing flops; rout = row_e last flop, bout = the hard beat_e last stage at the E face; gout = u_gov/u_god; gin = g_gl u_v/u_d; xs_* straps = strap stage s0; rst_n = the RSTPIN flop; cgi/cgo = the cg wake register), anchored by io_flop_at_pins.  A wrapper flop would add +1 cycle per tile hop on the 3,705-bit chain (x8 hops) and ~7.6k sinks (> 15k on one root)."
+}

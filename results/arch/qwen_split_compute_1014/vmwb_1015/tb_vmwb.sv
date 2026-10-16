@@ -11,7 +11,7 @@
 // image built from the port outputs in capture order; land count = bursts; no serializer / issuer / VM fault;
 // reports the last landing edge after go (rb end beat of band 2).
 module tb_vmwb;
-parameter integer VARIANT=1,SMUT=0,IMUT=0,VPMUT=0,TE=18;
+parameter integer VARIANT=1,SMUT=0,IMUT=0,VPMUT=0,TE=18,NATIVE_BANKS=0;
 reg clk=0;always #5 clk=~clk;
 reg rst_n=0,go=0;wire pv;wire[112:0]pf;
 reg[17:0]nout,tiles,k;reg wsrc,round,oen,mmode;reg[23:0]wbase,ts,ks,js,xbase,xks,xjs,xcs,wcs,obase,ots,ojs;reg[3:0]split;
@@ -47,7 +47,7 @@ genvar g;generate for(g=0;g<3;g=g+1)begin:gs
  end
 end endgenerate
 reg [532:0] svw=0; reg [20:0] svr=0;wire svq_v,vfault;wire[511:0]svq;wire[15:0]ld;
-qfd_sp_vector_memory #(.USE_MACRO(1),.USE_LEAF_CLOCKS(1),.PAR_RB(VARIANT),.PMUT(VPMUT)) dut(
+qfd_sp_vector_memory #(.USE_MACRO(1),.USE_LEAF_CLOCKS(1),.PAR_RB(VARIANT),.PMUT(VPMUT),.NATIVE_BANKS(NATIVE_BANKS)) dut(
 .ck(clk),.rst_n(rst_n),
 .ck_r0_0(clk),
 .ck_r0_1(clk),

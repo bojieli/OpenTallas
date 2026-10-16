@@ -1,0 +1,18 @@
+{
+  "scope": "Tail-unit component; real sigmoid/exp/Sinkhorn RTL; external golden mixes/table",
+  "full_engine_qualified": false,
+  "phases": 7,
+  "words": 168,
+  "launch_to_result_cycles": 496,
+  "tested_mutants": [
+    1
+  ],
+  "passed": true,
+  "runs": [
+    {
+      "mutant": 1,
+      "rc": 1,
+      "expected_outcome_observed": true
+    }
+  ]
+}

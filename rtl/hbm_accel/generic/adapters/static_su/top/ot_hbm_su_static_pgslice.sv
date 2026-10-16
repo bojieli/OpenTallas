@@ -30,7 +30,23 @@
 // edge early.
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_hbm_su_static_pgslice #(
- parameter integer QID=0,G=0,READ_RETURN=10,WRITE_RETURN=7,FETCH_EXTRA_EDGES=2,MLAT=3,ALAT=3,LEAF=0,MUT=0
+ parameter integer QID=0,G=0,READ_RETURN=10,WRITE_RETURN=7,FETCH_EXTRA_EDGES=2,MLAT=3,ALAT=3,LEAF=0,MUT=0,MULTIRATE=0,
+ // PIN_REG (owner rule 10-15 19:50): every lane is the pin-registered leaf ot_hbm_su_static_lane_pinreg: its store /
+ // RF-stream requests leave +2 edges and its writes / reducer operands +4 edges later (su_top_compile --pin-reg)
+ parameter integer PIN_REG=0,
+ // COLLPORT (H-NETLIST/suport 2026-10-16, default 0 = unchanged): the quarter's COLL joins through ot_hbm_su_static_cxport.
+ //   INJECT  inj_rd/inj_addr (stream, from COLL, captured at A in a stream pin slot); serial edge n = ceil((3A+3)/4)
+ //           (A mod 4 in {0,1,3}) drives bank READ PORT 5 (shared with DRAIN by the compiler calendar) of the store groups
+ //           named by the 4 sectors (2 lanes x lo/hi): group g = a[6:3], this slice iff a[5:4]==G, h = a[3], hi = a[6],
+ //           row a[15:7]; inj_q = the 32 banks' port-5 read_data (n+2), registered by the cxport at n+3.
+ //           B39_NOOP (SW): a lane whose addr_lo[39]=1 is an IDX-staging read: no SU read.
+ //   DELIVERY dw_v/dw_row/dw_d (serial, cxport registers at n): half hi writes banks 16hi..16hi+15 (word w -> bank
+ //           16hi+w) at row; bank pins sample n+1, commit n+2. Write port priority fill > delivery > lane; any two in one
+ //           edge latch FAULT.
+ //   Checks (FAULT): inject and drain on one group in one edge; two sectors on one group with different rows.
+ //   MUT (bench): 8 inject slot map off by one phase; 9 B39 no-op ignored; 10 delivery word order reversed.
+ parameter integer COLLPORT=0,
+ parameter integer B39_NOOP=(QID==0)
 )(
  input wire pg_clk,
  input wire [255:0] clk_lane, input wire [127:0] clk_insert, input wire [31:0] rst_lane_n,
@@ -40,6 +56,7 @@ module ot_hbm_su_static_pgslice #(
  input wire clk_ctl,
  input wire [5:0] clk_side,
  input wire rst_n,
+ input wire bridge_rst_n, // phase-zero reset for MULTIRATE boundary only
  input wire [1741:0] control,
  input wire [2*30-1:0] vmr_cmd,
  input wire [2*39-1:0] vmw_cmd,
@@ -50,9 +67,21 @@ module ot_hbm_su_static_pgslice #(
  output reg [31:0] slice_x,
  output wire [2*17-1:0] lg_rq, output wire [2*281-1:0] lg_wq,
  input wire [2*257-1:0] lg_rr, input wire [1:0] lg_w_done,
+ // COLLPORT ports (unused when COLLPORT=0)
+ input wire [1:0] inj_rd,
+ input wire [159:0] inj_addr,
+ output wire [1023:0] inj_q,
+ input wire [1:0] dw_v,
+ input wire [17:0] dw_row,
+ input wire [1023:0] dw_d,
  output reg fault
 );
- localparam integer RR=READ_RETURN;
+ // Serial fill destination delay and stream leaf tap return are different
+ // contracts at3:4. n+12 response is sampled into fill at n+13; pinned store
+ // macros commit n+15. Stream leaf retains its native10/7 edge contract.
+ localparam integer RR=MULTIRATE ? 12 : READ_RETURN;
+ initial if(MULTIRATE && (READ_RETURN!=10 || WRITE_RETURN!=7))
+  $fatal(1,"SU multirate candidate requires source-proven stream tap10/7");
  function automatic integer lid(input integer n); lid=(n<16)?16*G+n:64+16*G+(n-16); endfunction
  // ------------------------------------------------------------------ lanes
  wire [31:0] vi_re,vm_we,kv_we,ro_v,l_fault,l_coll;
@@ -81,7 +110,30 @@ module ot_hbm_su_static_pgslice #(
   wire [839:0] terms;
   for(genvar s=0;s<5;s=s+1)begin:g_terms assign terms[s*168+:168]=c_ld_c[s*240+:168]; end
   wire sv; wire [31:0] sx;
-  if(KIND==2)begin:g_side assign side_v=sv; assign side_x=sx; assign side_fn=c_ci_sfu; assign side_fn_out=c_cs_sfu; end
+  if(KIND==2)begin:g_side
+   assign side_v=sv; assign side_x=sx;
+   if(PIN_REG)begin:g_fn_pin
+    // the pin-registered FULL lane sees its commands one edge later: the side function selects follow it
+    reg [2:0] fn_q,fn_out_q;
+    always @(posedge clk_side[0])begin fn_q<=c_ci_sfu; fn_out_q<=c_cs_sfu; end
+    assign side_fn=fn_q; assign side_fn_out=fn_out_q;
+   end else begin:g_fn_comb assign side_fn=c_ci_sfu; assign side_fn_out=c_cs_sfu; end
+  end
+  if(PIN_REG)begin:g_pr
+  ot_hbm_su_static_lane_pinreg #(.LN(7),.KIND(KIND),.MLAT(MLAT),.ALAT(ALAT),.LEAF(LEAF),.FETCH_EXTRA_EDGES(FETCH_EXTRA_EDGES)) u_lane(
+   .clk_stage(clk_lane[n*8+:8]),.clk_insert(clk_insert[n*4+:4]),.rst_n(rst_lane_n[n]),.lane_id(11'(L)),
+   .cx_srcs(c_srcs),.ld(c_ld),.ld_bank(c_ld_bank),.ld_c(terms),.emit(c_emit),.bank(c_bank),.o_v(c_o_v),.i_v(c_i_v),
+   .no(c_no),.ni(c_ni),.ls(c_ls),.lvw(c_lvw),.vb(c_vb),.krow(c_krow),.obase(c_obase),.aibase(c_aibase),.aind(c_aind),
+   .gsh(c_gsh),.cpair(c_cpair),.dst(c_dst),.srcs(c_srcs),.cx_arnd(c_cx_arnd),.cx_arelu(c_cx_arelu),.cx_amin(c_cx_amin),
+   .cx_cclip(c_cx_cclip),.cx_imm3(c_cx_imm3),.cp_m1(c_cp_m1),.cp_imm1(c_cp_imm1),.cm_m1(c_cm_m1),.cm_m2(c_cm_m2),
+   .cm_qm(c_cm_qm),.cm_imm1(c_cm_imm1),.ca_ad(c_ca_ad),.ca_imm2(c_ca_imm2),.ci_sfu(c_ci_sfu),.cs_sfu(c_cs_sfu),
+   .cs_e1(c_cs_e1),.cs_imm2(c_cs_imm2),.ce_e2(c_ce_e2),.ce_imm1(c_ce_imm1),.co_rnd(c_co_rnd),.co_dst(c_co_dst),
+   .vi_q(vi_q[n*32+:32]),.rd_q(rd_q[n*128+:128]),.vi_re(vi_re[n]),.vm_we(vm_we[n]),.kv_we(kv_we[n]),.ro_v(ro_v[n]),
+   .fault(l_fault[n]),.coll(l_coll[n]),.vi_addr(vi_addr[n*24+:24]),.vm_waddr(vm_waddr[n*24+:24]),
+   .kv_waddr(kv_waddr[n*24+:24]),.rd_addr(rd_addr[n*96+:96]),.rd_re(rd_re[n*4+:4]),.rd_src(rd_src[n*8+:8]),
+   .vm_wdata(vm_wdata[n*32+:32]),.kv_wdata(kv_wdata[n*32+:32]),.ro_x(ro_x[n*32+:32]),
+   .side_v(sv),.side_x(sx),.side_y(side_y));
+  end else begin:g_plain
   ot_hbm_su_static_lane #(.LN(7),.KIND(KIND),.MLAT(MLAT),.ALAT(ALAT),.LEAF(LEAF),.FETCH_EXTRA_EDGES(FETCH_EXTRA_EDGES)) u_lane(
    .clk_stage(clk_lane[n*8+:8]),.clk_insert(clk_insert[n*4+:4]),.rst_n(rst_lane_n[n]),.lane_id(11'(L)),
    .cx_srcs(c_srcs),.ld(c_ld),.ld_bank(c_ld_bank),.ld_c(terms),.emit(c_emit),.bank(c_bank),.o_v(c_o_v),.i_v(c_i_v),
@@ -95,6 +147,7 @@ module ot_hbm_su_static_pgslice #(
    .kv_waddr(kv_waddr[n*24+:24]),.rd_addr(rd_addr[n*96+:96]),.rd_re(rd_re[n*4+:4]),.rd_src(rd_src[n*8+:8]),
    .vm_wdata(vm_wdata[n*32+:32]),.kv_wdata(kv_wdata[n*32+:32]),.ro_x(ro_x[n*32+:32]),
    .side_v(sv),.side_x(sx),.side_y(side_y));
+  end
  end
  if(QID==0&&G==0)begin:g_side_pipe
   ot_hbm_su_static_side u_side(.clk(clk_side),.rst_n(rst_n),.v(side_v),.fn(side_fn),.x(side_x),.fn_out(side_fn_out),
@@ -105,11 +158,26 @@ module ot_hbm_su_static_pgslice #(
   assign side_v=1'b0; assign side_x=32'd0; assign side_fn=3'd0; assign side_fn_out=3'd0;
  end
  // ------------------------------------------------------------------ VM bank leaves (port group G = banks 2G, 2G+1)
- wire [2*17-1:0] su_rq; wire [2*281-1:0] su_wq; wire [2*257-1:0] su_rr; wire [1:0] su_w_done,leaf_fault;
+ wire [2*17-1:0] su_rq; wire [2*281-1:0] su_wq; wire [2*257-1:0] su_rr; wire [1:0] su_w_done,leaf_fault,bridge_fault;
+ wire [33:0] leaf_rq; wire [561:0] leaf_wq; wire [513:0] leaf_rr; wire [1:0] leaf_done;
  for(genvar h=0;h<2;h=h+1)begin:g_leaf
+  if(MULTIRATE)begin:g_multirate
+   ot_hbm_su_multirate_bridge u_bridge(
+    .serial_clk(clk_ctl),.stream_clk(pg_clk),.rst_n(bridge_rst_n),
+    .serial_rq(su_rq[h*17+:17]),.serial_wq(su_wq[h*281+:281]),
+    .serial_rr(su_rr[h*257+:257]),.serial_done(su_w_done[h]),
+    .stream_rq(leaf_rq[h*17+:17]),.stream_wq(leaf_wq[h*281+:281]),
+    .stream_rr(leaf_rr[h*257+:257]),.stream_done(leaf_done[h]),.fault(bridge_fault[h]));
+  end else begin:g_same_clock
+   assign leaf_rq[h*17+:17]=su_rq[h*17+:17];
+   assign leaf_wq[h*281+:281]=su_wq[h*281+:281];
+   assign su_rr[h*257+:257]=leaf_rr[h*257+:257];
+   assign su_w_done[h]=leaf_done[h];
+   assign bridge_fault[h]=1'b0;
+  end
   ot_hbm_su_static_vm_bank_leaf #(.QID(QID),.B(2*G+h),.READ_RETURN(READ_RETURN),.WRITE_RETURN(WRITE_RETURN)) u_leaf(
-   .clk(pg_clk),.rst_n(rst_n),.su_rq(su_rq[h*17+:17]),.su_wq(su_wq[h*281+:281]),.su_rr(su_rr[h*257+:257]),
-   .su_w_done(su_w_done[h]),.lg_rq(lg_rq[h*17+:17]),.lg_wq(lg_wq[h*281+:281]),.lg_rr(lg_rr[h*257+:257]),
+   .clk(pg_clk),.rst_n(rst_n),.su_rq(leaf_rq[h*17+:17]),.su_wq(leaf_wq[h*281+:281]),.su_rr(leaf_rr[h*257+:257]),
+   .su_w_done(leaf_done[h]),.lg_rq(lg_rq[h*17+:17]),.lg_wq(lg_wq[h*281+:281]),.lg_rr(lg_rr[h*257+:257]),
    .lg_w_done(lg_w_done[h]),.fault(leaf_fault[h]));
  end
  // ------------------------------------------------------------------ FILL: request, destination delay line, one stage
@@ -131,8 +199,39 @@ module ot_hbm_su_static_pgslice #(
    end
   always @(posedge clk_ctl)begin fr_hi[h]<=fd[h][FD][9];fr_row[h]<=fd[h][FD][8:0];fr_dat[h]<=su_rr[h*257+:256];end
  end
+ // ------------------------------------------------------------------ COLLPORT inject: stream pin slots -> port-5 reads
+ wire [3:0] ij_v;                     // per group {hi,h}: inject read of this slice at this serial edge
+ wire [35:0] ij_row;                  // ij_row[9*grp+:9]
+ wire ij_bad;
+ if(COLLPORT!=0)begin:g_inj
+  reg [1:0] sp; reg [1:0] sq;
+  always @(posedge pg_clk or negedge bridge_rst_n) if(!bridge_rst_n) sp<=2'd0; else sp<=sp+2'd1;
+  always @(posedge clk_ctl or negedge bridge_rst_n) if(!bridge_rst_n) sq<=2'd0; else sq<=(sq==2'd2)?2'd0:sq+2'd1;
+  reg [161:0] slot [0:3];
+  always @(posedge pg_clk) slot[sp] <= {inj_rd, inj_addr};
+  wire [1:0] rs = ((sq==2'd1)?2'd0:(sq==2'd2)?2'd1:2'd3) + ((MUT==8)?2'd1:2'd0);
+  wire [161:0] ij = slot[rs];
+  reg [3:0] v; reg [35:0] row; reg bad; integer k,gg;
+  always @* begin
+   v=0; row=0; bad=0;
+   for(k=0;k<4;k=k+1) begin : dec
+    reg [39:0] a, lo; reg on; reg [1:0] grp;
+    a = ij[40*k+:40]; lo = ij[80*(k/2)+:40];
+    on = ij[160+(k/2)] && !(B39_NOOP!=0 && lo[39] && MUT!=9) && a[5:4]==2'(G);
+    grp = {a[6],a[3]};
+    if(on) begin
+     if(v[grp] && row[9*grp+:9]!=a[15:7]) bad=1'b1;
+     v[grp]=1'b1; row[9*grp+:9]=a[15:7];
+    end
+   end
+  end
+  assign ij_v=v; assign ij_row=row; assign ij_bad=bad;
+ end else begin:g_no_inj
+  assign ij_v=4'd0; assign ij_row=36'd0; assign ij_bad=1'b0;
+ end
  // ------------------------------------------------------------------ store banks
  wire [32*192-1:0] bank_q;
+ wire [31:0] st_inj_drain;
  wire [31:0] st_conflict,st_id_fault;
  // drain store-group reads: port h reads group (h, grp_hi) = slice lanes 8h + 16*grp_hi .. +7
  wire [1:0] dr_v,dr_hi; wire [8:0] dr_row [0:1];
@@ -148,22 +247,29 @@ module ot_hbm_su_static_pgslice #(
    assign ra[p*9+:9]={a[17:16],a[13:7]}; assign rv[p]=rd_re[n*4+p]&&rd_src[n*8+2*p+:2]==2'd0;
   end
   assign ra[4*9+:9]={vi_addr[n*24+16+:2],vi_addr[n*24+7+:7]}; assign rv[4]=vi_re[n]; assign vi_q[n*32+:32]=q[4*32+:32];
-  assign ra[5*9+:9]=dr_row[H]; assign rv[5]=dr_v[H]&&dr_hi[H]==1'(HI);
+  wire drn=dr_v[H]&&dr_hi[H]==1'(HI);
+  wire ijn=ij_v[2*HI+H];
+  assign ra[5*9+:9]=ijn?ij_row[9*(2*HI+H)+:9]:dr_row[H]; assign rv[5]=drn||ijn;
+  assign st_inj_drain[n]=drn&&ijn;
   assign bank_q[n*192+:192]=q;
+  assign inj_q[n*32+:32]=q[5*32+:32];
   wire lw=vm_we[n]|kv_we[n];
   wire [23:0] la=vm_we[n]?vm_waddr[n*24+:24]:kv_waddr[n*24+:24];
   wire [31:0] ldat=vm_we[n]?vm_wdata[n*32+:32]:kv_wdata[n*32+:32];
   wire fw=fr_v[H]&&fr_hi[H]==1'(HI);
-  assign st_conflict[n]=fw&&lw;
+  wire dwn=(COLLPORT!=0)&&dw_v[HI];
+  wire [8:0] dwr=dw_row[9*HI+:9];
+  wire [31:0] dwd=dw_d[512*HI+32*((MUT==10)?15-(n%16):(n%16))+:32];
+  assign st_conflict[n]=(fw&&lw)||(fw&&dwn)||(dwn&&lw);
   reg idf; integer p2;
   always @*begin
    idf=lw&&(la[6:0]!=7'(L)||la[15:14]!=2'(QID));
    for(p2=0;p2<4;p2=p2+1)if(rv[p2]&&(rd_addr[(n*4+p2)*24+:7]!=7'(L)||rd_addr[(n*4+p2)*24+14+:2]!=2'(QID)))idf=1;
   end
   assign st_id_fault[n]=idf;
-  ot_hbm_su_static_pinned_bank #(.READERS(6),.RB(9)) u_bank(.clk(clk_bank[n]),.clk_macro(clk_bank_macro[n*6+:6]),.rst_n(rst_n),.read_v(rv),.read_addr(ra),
-   .read_data(q),.read_return(),.write_v(lw|fw),.write_addr(fw?fr_row[H]:{la[17:16],la[13:7]}),
-   .write_data(fw?fr_dat[H][K*32+:32]:ldat));
+  ot_hbm_su_static_pinned_bank #(.READERS(6),.RB(9)) u_bank(.clk(clk_bank[n]),.clk_rd(clk_bank[n]),.clk_ws(clk_bank[n]),.clk_macro(clk_bank_macro[n*6+:6]),.rst_n(rst_n),.read_v(rv),.read_addr(ra),
+   .read_data(q),.read_return(),.write_v(lw|fw|dwn),.write_addr(fw?fr_row[H]:dwn?dwr:{la[17:16],la[13:7]}),
+   .write_data(fw?fr_dat[H][K*32+:32]:dwn?dwd:ldat));
  end
  // ------------------------------------------------------------------ RF broadcast into lane operands
  reg [31:0] rf_src_bad;
@@ -217,7 +323,7 @@ module ot_hbm_su_static_pgslice #(
  // ------------------------------------------------------------------ sticky fault
  always @(posedge clk_ctl or negedge rst_n)
   if(!rst_n)fault<=1'b0;
-  else if((|l_fault)||(|l_coll)||(|leaf_fault)||(|st_conflict)||(|st_id_fault)||(|cmd_far)||(|rf_src_bad)||
-          (|rf_drain_bad)||red_bad||side_fault)fault<=1'b1;
+  else if((|l_fault)||(|l_coll)||(|leaf_fault)||(|bridge_fault)||(|st_conflict)||(|st_id_fault)||(|cmd_far)||(|rf_src_bad)||
+          (|rf_drain_bad)||red_bad||side_fault||(|st_inj_drain)||ij_bad)fault<=1'b1;
 endmodule
 `default_nettype wire

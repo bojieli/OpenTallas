@@ -17,6 +17,7 @@
 // sticky schedule_fault (never a stall).  Only the DS FP8/FP4/BF16 production shape is supported (as the static SM).
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_hbm_accel_smh_attn #(
+    parameter integer KVMUT = 0,        // bench negative control only (converter mutant, ot_hbm_sm_kv_line MUT)
     parameter integer BE_DELAY = 8,
     parameter integer HOPD = 4          // row-bundle registers per column hop (pt_w/pt_e incl. PT4): a column's control is
                                         // delayed with its rows, so the front's result deskew ((5 + PT4) a hop) aligns it
@@ -72,7 +73,7 @@ module ot_hbm_accel_smh_attn #(
     wire [SUB*RBW-1:0] f_rl, f_rr;
     wire [NP*BBW-1:0]  f_bl, f_br;
     wire [NH*QLW-1:0]  f_ql, f_qr;
-    ot_hbm_sm_attn_front_static u_front (.clk(clk), .rst_n(rst_n), .command(command), .kv_desc(kv_desc), .packet(packet),
+    ot_hbm_sm_attn_front_static #(.KVMUT(KVMUT)) u_front (.clk(clk), .rst_n(rst_n), .command(command), .kv_desc(kv_desc), .packet(packet),
         .xw_en(xw_en), .xw_addr(xw_addr), .xw_grp(xw_grp), .xw_data(xw_data), .request(request),
         .rl(f_rl), .rr(f_rr), .bl(f_bl), .br(f_br), .ql(f_ql), .qr(f_qr),
         .rv(rv), .rrow(rrow), .rdata(rdata), .fault(fault), .schedule_fault(schedule_fault));

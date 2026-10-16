@@ -1,0 +1,52 @@
+{
+ "qfd_xcst_s_m5": {
+  "cell": "qfd_xcst_s_m5",
+  "view": "physical/ref_tile/qfd_xcst_s_m5/views/qfd_xcst_s_m5",
+  "lib_cell": "qfd_xcst_s_m5",
+  "insertion": true,
+  "ref_src": [
+   "insertion.json boundary mean"
+  ],
+  "R_ps": 130.1,
+  "spread_ps": 26.9,
+  "outputs": 960,
+  "inputs": 520,
+  "launch_ps": 186.6,
+  "launch_pin": "b_d[487]",
+  "capture_ps": 183.8,
+  "capture_pin": "a_d[261]",
+  "launch_over": 0,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": true,
+  "fail_why": ""
+ },
+ "qfd_xcst_n_m5": {
+  "cell": "qfd_xcst_n_m5",
+  "view": "physical/ref_tile/qfd_xcst_n_m5/views/qfd_xcst_n_m5",
+  "lib_cell": "qfd_xcst_n_m5",
+  "insertion": true,
+  "ref_src": [
+   "insertion.json boundary mean"
+  ],
+  "R_ps": 128.9,
+  "spread_ps": 34.3,
+  "outputs": 960,
+  "inputs": 520,
+  "launch_ps": 192.6,
+  "launch_pin": "tap_d[9]",
+  "capture_ps": 186.1,
+  "capture_pin": "b_d[467]",
+  "launch_over": 0,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": true,
+  "fail_why": ""
+ },
+ "_jobs": {
+  "qfd_xcst_s_m5": "qfd_xcst_s_m5-xsm5d-2a10238e1 CLOSED TT +297.27 / FF +23.72 DRC 0",
+  "qfd_xcst_n_m5": "qfd_xcst_n_m5-xnm5d-2a10238e1 CLOSED TT +265.38 / FF +24.34 DRC 0"
+ }
+}

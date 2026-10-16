@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "dsfd_qbank_S",
+ "enable": false,
+ "reason": "The actual target RTL already registers all604 data bits once at the boundary; rn is the only external reset pin sink. A generic extra pin wrapper would add an unpriced second normal data edge."
+}

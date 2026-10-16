@@ -31,4 +31,4 @@ iverilog -g2012 -s tb_s81_pq_headpc_pin_capture -DOT_S81_PQ_PINREAD_MUT_BYPASS -
 set +e;vvp "$work/bypass.vvp" > "$work/bypass.log" 2>&1;rc=$?;set -e
 if [[ $rc == 0 ]] || ! grep -q 'PINREAD_CAPTURE FAIL' "$work/bypass.log";then cat "$work/bypass.log";exit 1;fi
 cat "$work/bypass.log"
-echo 'PQ_QB_PINREAD_GATE PASS positive=1 mutants=3 production_KMAX=6144 macros=4 added_read_cycles=3'
+echo 'PQ_QB_PINREAD_GATE PASS positive=1 mutants=3 production_KMAX=6144 macros=4 added_read_cycles=4'

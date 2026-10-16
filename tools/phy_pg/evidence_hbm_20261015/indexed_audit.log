@@ -1,0 +1,24 @@
+ot-run: ot-epyc1tb     skipped: no /srv/opentallas-scratch/codex/phy-pg-hbm-v1-1015/indexed-audit
+ot-run: ot-epyc4       admits   458 GB (avail 685, growth 77, headroom 48, waiters 0/0 GB) load 48/128 running 18 disk 761 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/phy-pg-hbm-v1-1015/indexed-audit
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/codex/phy-pg-hbm-v1-1015/indexed-audit
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-2987185-1792126219 after 0 s
+{
+  "status": "PASS",
+  "shapes": 11368919,
+  "orientations": [
+    "R0",
+    "R0",
+    "MY",
+    "MY"
+  ],
+  "routing_shapes_inside_macros": 10955579,
+  "m5_straps": 616,
+  "opposite_net_comparisons": 17800268,
+  "shorts": 0,
+  "obstruction_violations": 0,
+  "signal_pin_overlaps": 0,
+  "m8_signal_spacing40_violations": 0
+}
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-2987185-1792126219): exit 0

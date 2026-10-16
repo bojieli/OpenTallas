@@ -1,0 +1,7 @@
+SU_NATIVE_MULTIRATE_ENDPOINTS {"last_read_issue_stream":1367,"last_read_return_stream":1377,"last_write_issue_stream":9212,"last_lg_ack_stream":9219,"last_bridge_read_serial":1035,"last_bridge_ack_serial":6917,"last_lane_write_serial":6775,"last_scalar_serial":1650,"last_store_sram_commit_serial":6776,"last_rf_register_commit_serial":1687,"config_serial_transactions":34469,"config_stream_transactions":598,"serial_prime_edges":4,"stream_prime_edges":4,"serial_programme_edges":7120,"stream_calendar_edges":9495,"checker_tail_serial_edges":40}
+SU_NATIVE_MULTIRATE_TOP PASS lanes512 storeSRAM3072 nativeVMbanks32 VM_SRAM96 programmeSRAM308 serial_edges7120 stream_edges9495 reads32768 writes135184 scalars9
+- rtl/hbm_accel/generic/adapters/static_su/programme/tb_hbm_su_native_multirate_top.sv:210: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 48us; walltime 5844.774 s; speed 8.151 ns/s
+- Verilator: cpu 5827.175 s on 1 threads; allocated 666 MB
+rc=0

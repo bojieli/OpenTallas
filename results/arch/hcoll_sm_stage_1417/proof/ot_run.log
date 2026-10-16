@@ -1,0 +1,42 @@
+ot-run: ot-epyc1tb     admits   115 GB (avail 341, growth 121, headroom 64, waiters 1/168 GB) load 46/128 running 13 disk 221 GB 
+ot-run: -> ot-epyc1tb
+ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-2778485-1792101753 after 0 s
+SM_STAGE PASS quadrants=4 SMs=32 actual_macros=64 epochs=3 FP32_checked=98304 pub_beats=12288 writes512=6144 reads512=49152 prefetch_ready=11 LP_latency=1 ring_wave=44 allocation=UNALLOCATED
+- rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_sm_stage.sv:147: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 128us; walltime 0.091 s; speed 1.408 ms/s
+- Verilator: cpu 0.091 s on 1 threads; allocated 7 MB
+SM_STAGE FAULT PASS scenario=1 actual_macros=64 no_stall=1
+- rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_sm_stage.sv:114: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 1us; walltime 0.002 s; speed 682.479 us/s
+- Verilator: cpu 0.002 s on 1 threads; allocated 7 MB
+SM_STAGE FAULT PASS scenario=2 actual_macros=64 no_stall=1
+- rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_sm_stage.sv:114: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 1us; walltime 0.002 s; speed 679.759 us/s
+- Verilator: cpu 0.002 s on 1 threads; allocated 7 MB
+SM_STAGE FAULT PASS scenario=3 actual_macros=64 no_stall=1
+- rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_sm_stage.sv:114: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 177ns; walltime 0.000 s; speed 375.831 us/s
+- Verilator: cpu 0.000 s on 1 threads; allocated 7 MB
+SM_STAGE FAULT PASS scenario=4 actual_macros=64 no_stall=1
+- rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_sm_stage.sv:114: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3us; walltime 0.004 s; speed 666.767 us/s
+- Verilator: cpu 0.004 s on 1 threads; allocated 7 MB
+SM_STAGE FAULT PASS scenario=5 actual_macros=64 no_stall=1
+- rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_sm_stage.sv:114: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 2us; walltime 0.002 s; speed 649.452 us/s
+- Verilator: cpu 0.002 s on 1 threads; allocated 7 MB
+SM_STAGE FAULT PASS scenario=6 actual_macros=64 no_stall=1
+- rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_sm_stage.sv:114: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 77ns; walltime 0.000 s; speed 882.816 us/s
+- Verilator: cpu 0.000 s on 1 threads; allocated 7 MB
+SM_STAGE MUTANT PASS bank
+SM_STAGE MUTANT PASS column
+SM_STAGE SUITE PASS
+ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-2778485-1792101753): exit 0

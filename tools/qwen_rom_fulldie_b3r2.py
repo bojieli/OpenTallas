@@ -1877,6 +1877,12 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
     for it in m['insts']:
         add_rect((it.x, it.y, it.x + it.w, it.y + it.h))
     die_top = g['y_io']
+    # Re-packed tile rows expose real horizontal channels. Derive them from
+    # actual placed tile bodies, not the historical TILE_SLOT height. free()
+    # below still checks every macro and every previously reserved relay.
+    from qwen_split.relay_row_gaps import row_gaps, contains_frame
+    legal_row_gaps = row_gaps((it.y, it.y + it.h) for it in m['insts']
+                             if re.fullmatch(r't_\d+_\d+', it.name))
 
     def corr_of(x):
         j = min(range(COLS), key=lambda c: abs(cx_list[c] - x))
@@ -1903,7 +1909,8 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             for dx, dy in sorted(cands, key=lambda t: abs(t[0]) + abs(t[1])):
                 x0 = v.dn(x - w / 2 + dx, v.GX)
                 y0 = v.dn(y - h / 2 + dy, v.GY)
-                if in_field(x0 + w / 2, y0 + h / 2) and corr_of(x0 + w / 2) is None and not (cur_tight[0] or cur_gapok[0]):
+                if in_field(x0 + w / 2, y0 + h / 2) and corr_of(x0 + w / 2) is None and not (cur_tight[0] or cur_gapok[0] or
+                                contains_frame(legal_row_gaps, y0, h)):
                     continue           # never over a tile body (it4: a KV row-run relay may sit in a row gap; free()
                     #                    still refuses any tile overlap)
                 if free((x0, y0, x0 + w, y0 + h)):
@@ -2902,6 +2909,13 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         def _try(c, tol):
             w, h = frame(c)
             sp = place(c[1], c[2], w + v.SHAVE, h + v.SHAVE, None if wide else c[3], tol)
+            # A head macro can occupy the entire vertical corridor through a
+            # deliberately widened horizontal channel. Search that actual empty
+            # row channel instead of requiring a frame to overlap the head.
+            if sp is None and not wide and c[3] is not None:
+                alt = place(c[1], c[2], w + v.SHAVE, h + v.SHAVE, None, tol)
+                if alt is not None and contains_frame(legal_row_gaps, alt[1], h + v.SHAVE):
+                    sp = alt
             return None if sp is None else (sp[0], sp[1], w, h)
         def _chain(path):
             cands, L = candidates(path)
@@ -2938,6 +2952,21 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                     c = reach[-1]
                     sp = _try(c, None)
                     if sp is None:
+                        # Immutable local failure receipt, never a relaxed gate.
+                        if _os.environ.get('OT_RELAY_SITE_FAILURE'):
+                            w_, h_ = frame(c)
+                            near = set()
+                            for gx_ in range(int((c[1]-1000)//BK), int((c[1]+1000)//BK)+1):
+                                for gy_ in range(int((c[2]-1000)//BK), int((c[2]+1000)//BK)+1):
+                                    near.update(grid.get((gx_, gy_), ()))
+                            named = {tuple((it.x,it.y,it.x+it.w,it.y+it.h)):it.name for it in m['insts']}
+                            for pn_, pl_ in plans.items():
+                                for fk_, f_ in enumerate(pl_['frames']):
+                                    named[(f_[0],f_[1],f_[0]+f_[2]+v.SHAVE,f_[1]+f_[3]+v.SHAVE)] = str(pl_.get('bid',pn_))+':'+str(fk_)
+                            json.dump(dict(bid=bid, bits=bits, cls=cl, candidate=c, frame=[w_,h_],
+                                           path=path, legal_row_gaps=legal_row_gaps,
+                                           nearby=[dict(rect=r_, owner=named.get(r_,'reserved relay/pad')) for r_ in sorted(near)]),
+                                      open(_os.environ['OT_RELAY_SITE_FAILURE'],'w'),indent=2)
                         raise ValueError(f'relays: no free spot for {bid} near ({c[1]:.0f}, {c[2]:.0f})')
                     got = (c, sp)
                 x0, y0, w, h = got[1]
@@ -3057,6 +3086,8 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         return site_cache[key]
 
 
+    from qwen_split.relay_frame_ownership import FrameOwnership
+    reservations = FrameOwnership(plans)
     repaired, unrepaired, off_plan, cut_over = [], [], [], []
     lifted0 = set()      # r9: chains lifted off the grid at the start of pass 2 (their pass-1 frames are not restored)
     unrep = {}           # r8: bid -> reason (a chain repaired by a later rip-up pass leaves the list)
@@ -3080,10 +3111,10 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         if tree is None:
             unrep[pl['bid']] = 'no sites'
             return False
-        # free the bus's own pass-1 relays for its search
-        own = [(f[0], f[1], f[0] + f[2] + v.SHAVE, f[1] + f[3] + v.SHAVE) for f in pl['frames']]
-        for r_ in own:
-            rm_rect(r_)
+        # A globally lifted plan retains search candidates, not live reservations.
+        # Releasing those stale coordinates a second time can erase a different
+        # repaired chain that claimed the old site. Only the actual owner releases.
+        owned_before_search = reservations.release(idx, pl['frames'], unplace)
         D = RMAX - max(W, H) / 2 + 26.0
         if GATE and P2P_REACH:
             # split-compute C4: the reach is PIN TO PIN (owner rule; RELAY_REACH_OK): two frames face to face on the
@@ -3229,7 +3260,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             for a_, b_ in spans_:
                 pre_, suf_ = pl['frames'][:a_], pl['frames'][b_:]
                 kept_ = [(f[0], f[1], f[0] + W, f[1] + H) for f in pre_ + suf_]
-                if idx in lifted0 and any(not free(r_) for r_ in kept_):
+                if any(not free(r_) for r_ in kept_):
                     # r9: a lifted chain keeps the rest of its pass-1 chain only while those sites are still free (run
                     # f1: 13 chains 'self-overlap': the kept frames had gone to chains repaired before)
                     continue
@@ -3336,20 +3367,21 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                 frames, why = [], 'self-overlap'
         if not frames:
             unrep[pl['bid']] = why
-            if idx not in lifted0:
-                for r_ in own:
-                    add_rect(r_)
+            if owned_before_search:
+                # Restore only geometry that this search actually released.
+                # No other chain can acquire it during this sequential search.
+                replace_frames(pl['frames'])
+                reservations.mark(idx)
             else:
-                # Pass-1 frames were lifted before the work list, so another
-                # repaired chain may own their sites now. Do not emit those
-                # stale rectangles on a failed search. The open chain remains
-                # explicitly unrepaired; a later retry can search fresh sites.
+                # Lifted candidates may now belong to another chain. They are
+                # not a placement to restore or emit after a failed search.
                 pl['frames'] = []
             if unbooked:
                 book(booked[idx][0], bits)
             return False
         old = len(pl['frames'])
         pl['frames'] = frames
+        reservations.mark(idx)
         unrep.pop(pl['bid'], None)
         rep_at[idx] = True
         repaired[:] = [q for q in repaired if q[0] != pl['bid']]
@@ -3385,7 +3417,8 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
     def _lift(j):
         plj = plans[j]
         fr = list(plj['frames'])
-        unplace(fr)
+        if not reservations.release(j, fr, unplace):
+            raise ValueError(f"relay occupancy: rip-up victim {plj['bid']} has no live reservation")
         return fr
 
     def _settle(j, fr):
@@ -3396,6 +3429,10 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         for f in keep_:
             add_rect((f[0], f[1], f[0] + f[2] + v.SHAVE, f[1] + f[3] + v.SHAVE))
         plj['frames'] = keep_
+        if keep_:
+            reservations.mark(j)
+        else:
+            reservations.discard(j)
         return len(keep_) == len(fr)
 
     work = [idx for idx, pl in sorted(plans.items()) if needs_repair(pl)]
@@ -3412,7 +3449,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         # at the edges of the blocks their plans crossed; left in place they took the sites the earlier repairs needed
         # (run b2: x3 'start 0', emb 'end free 0' beside the SU) and were gone by the end of the pass.
         for idx in work:
-            unplace(plans[idx]['frames'])
+            reservations.release(idx, plans[idx]['frames'], unplace)
             lifted0.add(idx)
     ripped = set()
     rounds = 0
@@ -3660,10 +3697,12 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
     m['tp8_tree_pads'] = dict(buses=len(pad_done) + len(pre_pads), relays=sum(pad_done.values()) + sum(
         len(f) for f in pre_pads.values()), reserved_columns=len(pre_pads), walked=len(pad_done))
     # ---- emit relays and hops
+    from qwen_split.relay_clock import assigned_clock
     for idx, pl in sorted(plans.items()):
         bid, cl, bits, eps = pl['bid'], pl['cl'], pl['bits'], pl['eps']
         link = cl in ('link_spine', 'link_channel')
         dom = next((by[x].domain for x, _ in eps if by[x].domain != 'cdc'), 'stream_1p2')
+        assigned_ck = assigned_clock(m, bid, cl)
         pts = [pl['P0']] + [(f[0] + f[2] / 2, f[1] + f[3] / 2) for f in pl['frames']] + [pl['P1']]
         prev, hops, rhops = eps[0], [], []
         for k, (x0, y0, w, h) in enumerate(pl['frames']):
@@ -3688,6 +3727,8 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                 rhops.append((rhop, cl, 1, [(nm, 'a_r'), rprev]))
             if link:
                 fck_new.append((f'fck_{hop}', 'clock_trunk', 1, [(prev[0], f'fck_{prev[1]}'), (nm, 'fck_a')]))
+            elif assigned_ck is not None:
+                ck_add.setdefault(assigned_ck, []).append((nm, 'ck'))
             elif dom == 'stream_1p2':
                 ck_add.setdefault(f'clk_r{region_of(ccx, ccy)}', []).append((nm, 'ck'))
             else:
@@ -4251,10 +4292,24 @@ def _reset_tree(v, m):
         _json.dump(dict(nets=nets, rects=rects, W=m['die']['w'], H=m['die']['h'], gx=v.GX, gy=v.GY), open(_os.environ['OT_RESET_DUMP'], 'w'))
     cells, wires, per, errors = _rst_tree_build(nets, rects, m['die']['w'], m['die']['h'], v.GX, v.GY)
     if errors:
-        rec.update(errors=errors, per_net=per)
-        if _os.environ.get('OT_RESET_GATE') == 'warn':     # diagnosis only: the long nets are left in place and reported
+        rec.update(errors=errors, per_net=dict(per))
+        if _os.environ.get('OT_RESET_GATE') != 'warn':
+            raise ValueError(f'reset tree: {len(errors)} unbuildable: {errors[:8]}')
+        # diagnosis only (warn): the nets with an unbuildable sink / driver stay single long nets and are reported; Q-COMPUTE-DIE
+        # 10-16: every OTHER reset net still gets its tree (r2h2: 3 unreachable pins on rst_spine / rst_io dropped the whole
+        # tree, so rst_field reached 1,584 sinks as one 47.5 mm net and die STA read -3.96 us on it)
+        if _os.environ.get('OT_RESET_PARTIAL', '1') == '0':
             return rec
-        raise ValueError(f'reset tree: {len(errors)} unbuildable: {errors[:8]}')
+        bad = {e['net'] for e in errors}
+        cells = [c for c in cells if c[4] not in bad]
+        wires = [w for w in wires if w[1] not in bad]
+        nets = [n for n in nets if n['bid'] not in bad]
+        per = {k: r for k, r in per.items() if k not in bad}
+        idx_of = {k: j for k, j in idx_of.items() if k not in bad}
+        ck_of_bus = {k: c for k, c in ck_of_bus.items() if k not in bad}
+        rec['partial_unbuilt_nets'] = sorted(bad)
+        if not nets:
+            return rec
     dom_inst = {n['bid']: n['domain'] for n in nets}
     ck_add = {}
     for nm, mst, x, y, bid, _ in cells:
@@ -5242,12 +5297,23 @@ def _wrap_masters(v, m, area_pins=False, ns_faces=False, spread=False, channel=F
                 cursor[(mst, face, 'lo')] = centre + span / 2 + 1.0
                 M.face(port, nb, face, layer, centre, 1)
                 continue
-            c = cursor.get((mst, face), along - 4.0)
-            centre = c - span / 2 - 1.0
-            cursor[(mst, face)] = centre - span / 2 - 1.0
-            if centre - span / 2 < 1.0:
-                raise ValueError(f'{mst}.{port}: face {face} full')
-            M.face(port, nb, face, layer, centre, 1)
+            # Q-COMPUTE-DIE r8 (C23s fpq_s6: seq_su_static moved west, every peer east): a full preferred face spills to
+            # the perpendicular face toward the peer, then the remaining faces; fails only when all four are full
+            perp = ('N' if ot.cy >= me.cy else 'S') if not vert else ('E' if ot.cx >= me.cx else 'W')
+            order = [face, perp] + [f_ for f_ in 'EWNS' if f_ not in (face, perp)]
+            for f_ in order:
+                v_ = f_ in 'NS'
+                if v_ and not ns_faces and f_ != face:
+                    continue
+                along_ = M.w if v_ else M.h
+                c = cursor.get((mst, f_), along_ - 4.0)
+                centre = c - span / 2 - 1.0
+                if centre - span / 2 >= 1.0:
+                    cursor[(mst, f_)] = centre - span / 2 - 1.0
+                    M.face(port, nb, f_, 'M5' if v_ else 'M4', centre, 1)
+                    break
+            else:
+                raise ValueError(f'{mst}.{port}: faces {order} full')
         return out
     v.masters = masters
 
@@ -6423,6 +6489,13 @@ foreach net {VDD VSS} { if {[catch {check_power_grid -net $net} err]} { puts "OT
 mem check
 write_db /work/floorplan_pdn.odb
 """)
+    # Explicit modeled-PHY candidate revision, before any floorplan ODB exists.
+    from phy_pg.apply_case import maybe_apply as _assumed_phy_pg
+    # Compute PHY abstracts arrive in bind_real, after this frame-only case.
+    # Its chain applies the same contract after binding and final PDN regroup.
+    phy_access = None if m.get('split_compute') else _assumed_phy_pg(work)
+    if phy_access:
+        man['assumed_phy_pg_access'] = 'assumed_phy_pg_access.json'
     man.update(case='a_pdn', bump_um=bump_um, macro_grids=len(meta), producer=__file__, die=m['die'],
                **({'pdn_rev': rev} if rev != 'r4' else {}),
                execution_order=['run.tcl', 'run_pdn.tcl'])

@@ -43,6 +43,17 @@ CDC adapter and the testbench are the two explicit exclusions; their startup,
 phase and physical proofs remain separate. Absent profiles retain the historical contract
 checks; these mechanisms do not adopt a pipeline for the die.
 
+The opt-in profile `s81_vm_a2f_hop1_r4_c2_w1` binds the independent
+A2-F parent measurement in `results/rtl/s81_vm_a2f_parent_419d72270/record.json`
+(re-measured on 419d72270; earlier receipts are historical).
+It requires that receipt's immutable digest and all 73 staged source hashes,
+including the actual SRAM model. Its core-source write pin P reaches raw SRAM
+at P+11+n and returns commit at P+12+n; a read pin Q reaches raw SRAM at Q+6
+and returns at Q+14. New-value visibility requires Q >= P+6+n. Reusing the
+legacy raw write/read ages is rejected even though the commit age is unchanged.
+These ages exclude physical die wire relays. The profile does not update engine
+durations, adopt a die calendar, or establish native full-token completeness.
+
 The generated schedule is checked using
 `tools/s81_suhc/static_vm_reservations.py`. Any missing binding, stale evidence,
 unsupported native operation, latency mismatch, timing conflict, or unproduced
@@ -162,3 +173,25 @@ coverage, groups and the objective against the original source graph and FIELD
 alternatives. The full candidate passes; changed templates, missing source-rank
 operations, a fabricated objective improvement and a split colocation group all
 fail. These are source design proofs; they do not establish native execution.
+
+Topology comes from the selected allocator, rather than the historical81-stage
+constant. `canonical_source_export.py` checks every literal pair/root/child
+against allocator region bounds and BF IDs, and declares its stage/rank counts.
+The execution join requires all those ranks, including the new tail stages of
+the89-stage C5 allocator, before compiling any partial programme set. Geometry
+and populated rank obligations still supply no native programme or source home.
+Legacy exports without count metadata retain the historical81-stage topology.
+
+## Client-affine VM banking (S-FUNC 2026-10-16, opt-in)
+
+A contract may name `slice_affinity` (`tools/s81_suhc/vm_slice_affinity.py`): regions of logical rows, each placed
+only in a slice set S of the four 128-bit VM slices (k = |S| in {1, 2, 4}; chunk j -> slice S[j % k], physical row
+P[s] + i*4/k + j//k), plus each client's wired read/write slices. `static_vm_reservations.check` then counts every
+logical-row access as four bank operations per (slice, bank, edge), rejects accesses to an unwired slice
+(`affinity_unwired_access`) and unmapped rows; absent `slice_affinity` = the historical striped behaviour. Tests:
+`tools/s81_suhc/tests/test_vm_slice_affinity.py` (SU 16 rows/edge on [0,1] fills all 32 banks of each slice exactly;
+the 17th row collides; HC 9 rows on [3] collide; disjoint sets serve two clients on one edge).
+`vm_affinity_plan.py` applies mapping A to the actual tensor inventory (SU operand layout + MIX4/H) and reports
+per-slice occupancy, the wired reach each client port needs and every cross-set access; `tools/s81/vm_affinity_price.py`
+prices per-class/per-op relay edges on the token path. Record: `results/arch/s81_vm_affinity_1016/`. Planning grade:
+the port->slice RTL wiring, per-set relay pipelines and their measured ages are S-VM obligations before adoption.

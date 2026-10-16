@@ -35,6 +35,7 @@ from binding_order import sliced_order
 CORNERS = ('tt', 'ff', 'ss')
 RT = 'physical/ref_tile'
 # closed leaf views (module -> view dir); every leaf of an expanded frame must have one
+ECTL_H13 = __import__('os').environ.get('OT_KV_ECTL_H13', '0') == '1'
 VIEWS = dict(
     ot_qkh_head_frontq_native=f'{RT}/qkh_r4_frontq_1014/views/ot_qkh_head_frontq_native',
     ot_qkh_head_stin_native=f'{RT}/qkh_r3_stin_1014/views/ot_qkh_head_stin_native',
@@ -44,11 +45,20 @@ VIEWS = dict(
     ot_qkh_ktree=f'{RT}/ot_qkh_ktree_m5/views/ot_qkh_ktree',
     ot_qkh_head_score4_native=f'{RT}/qkh_r4_score4_1014/views/ot_qkh_head_score4_native',
     qkd_ectl_a_tp8_direct=f'{RT}/qkd_ectl_a_tp8_direct/views/qkd_ectl_a_tp8_direct',
-    qkd_ectl_a_tp8_epoch_direct=f'{RT}/qkd_ectl_a_tp8_direct/views/qkd_ectl_a_tp8_epoch_direct',
-    qkd_ectl_b_tp8_direct=f'{RT}/qkd_ectl_b_tp8_direct/views/qkd_ectl_b_tp8_direct',
-    qkd_ectl_c_tp8_direct=f'{RT}/qkd_ectl_c_tp8_direct/views/qkd_ectl_c_tp8_direct',
+    # Q-ELEM 2026-10-15 22:34 (G3S2 composition: HXK5 silently wrong 512/512, HXK13 exact 53/53): OT_KV_ECTL_H13=1 binds
+    # a -> the h5 view (synthesis byte-identical to h13, results/arch/qwen_ectl_h13_2115/ab_reuse.json; the a_h13 view is
+    # pending its native capture fix), b -> h5 (identical, native PASS), c -> the CLOSED h13 view (e033dce09). Never c_h5.
+    qkd_ectl_a_tp8_epoch_direct=(f'{RT}/qkd_ectl_a_tp8_epoch_direct_h5/views/qkd_ectl_a_tp8_epoch_direct' if ECTL_H13 else
+                                 f'{RT}/qkd_ectl_a_tp8_direct/views/qkd_ectl_a_tp8_epoch_direct'),
+    qkd_ectl_b_tp8_direct=(f'{RT}/qkd_ectl_b_tp8_direct_h5/views/qkd_ectl_b_tp8_direct' if ECTL_H13 else
+                           f'{RT}/qkd_ectl_b_tp8_direct/views/qkd_ectl_b_tp8_direct'),
+    qkd_ectl_c_tp8_direct=(f'{RT}/qkd_ectl_c_tp8_direct_h13/views/qkd_ectl_c_tp8_direct' if ECTL_H13 else
+                           f'{RT}/qkd_ectl_c_tp8_direct/views/qkd_ectl_c_tp8_direct'),
     qkd_ctrl_pc=f'{RT}/qkd_ctrl_pc/views/qkd_ctrl_pc',
     qkd_ctrl_kc=f'{RT}/qkd_ctrl_kc/views/qkd_ctrl_kc',
+    # v1.4.3 near-head feed-through leaves (the far head's T1 / S2)
+    qkh_head_gather_stage=f'{RT}/qkh_head_gather_stage/views/qkh_head_gather_stage',
+    qkh_head_sstage=f'{RT}/qkh_head_sstage/views/qkh_head_sstage',
 )
 SR = 'rtl/qwen_sys/split_20261014'
 RTL = dict(ot_qkh_head_frontq_native=f'{SR}/ot_qkh_head_native_r4.sv', ot_qkh_head_score4_native=f'{SR}/ot_qkh_head_native_r4.sv',
@@ -57,14 +67,17 @@ RTL = dict(ot_qkh_head_frontq_native=f'{SR}/ot_qkh_head_native_r4.sv', ot_qkh_he
            ot_qkh_ktree='rtl/hdc/nearhbm/ot_qkh_subtiles.sv',
            **{f'qkd_ectl_{x}_tp8_direct': f'{SR}/qkd_ectl_native_direct_tp8.sv' for x in 'abc'},
            qkd_ectl_a_tp8_epoch_direct=f'{SR}/qkd_ectl_a_tp8_epoch_direct.sv',
-           qkd_ctrl_pc='rtl/qwen_sys/kv_die_20261009/qkd_ctrl_strip.sv', qkd_ctrl_kc='rtl/qwen_sys/kv_die_20261009/qkd_ctrl_strip.sv')
+           qkd_ctrl_pc='rtl/qwen_sys/kv_die_20261009/qkd_ctrl_strip.sv', qkd_ctrl_kc='rtl/qwen_sys/kv_die_20261009/qkd_ctrl_strip.sv',
+           qkh_head_gather_stage=f'{SR}/qkh_head_gather_stage.sv', qkh_head_sstage=f'{SR}/qkh_head_stages.sv')
 FLIP = dict(R0=(0, 0), MX=(0, 1), MY=(1, 0), R180=(1, 1))
 ORIENT = {v: k for k, v in FLIP.items()}
 
 
 # ---- per-frame placement plans: yosys cell name -> (x, y, orient) in the frame's canonical (R0) coordinates -------------
-def _head_plan():
-    pl = json.loads((ROOT / 'results/arch/qwen_split_1014/head_native_r4_codex_1014/plan.json').read_text())['children']
+def _head_plan(ft=False):
+    pl = json.loads((ROOT / (K.HEAD_FT_PLAN if ft else 'results/arch/qwen_split_1014/head_native_r4_codex_1014/plan.json')).read_text())['children']
+    if ft:      # v1.4.3: the far neighbour's T1 / S2 in the feed-through channel
+        pl = dict(pl, ftg=[*K.V143_FT['ftg'], *K.HGS], fts=[*K.V143_FT['fts'], *K.HSS])
 
     def name(cell):
         m = re.fullmatch(r'g_front\[(\d+)\]\.u_front', cell)
@@ -74,7 +87,7 @@ def _head_plan():
         if m:
             t, k = m.groups()
             return dict(stin=f'stin{t}', stk=f'stk{t}', nb1=f'nb1_{t}', nb2=f'nb2_{t}', l8=f'lane{t}')[k]
-        return dict(u_kt='ktree', u_score='score')[cell]
+        return dict(u_kt='ktree', u_score='score', u_ftg='ftg', u_fts='fts')[cell]
     return lambda cell, fw, fh: (pl[name(cell)][0], pl[name(cell)][1], 'R0')
 
 
@@ -97,6 +110,7 @@ def _ctrl_plan(rev):
 def frames():
     return dict(
         qkd_rhead=dict(plan=_head_plan(), straps=lambda inst: dict(hid=int(inst.rsplit('_', 1)[1]))),
+        qkd_rhead_ft=dict(plan=_head_plan(True), straps=lambda inst: dict(hid=int(inst.rsplit('_', 1)[1]))),
         qkd_ectl=dict(plan=_ectl_plan(),
                       straps=lambda inst: dict(cfg=(int(inst.split('_')[2]) << 2) | K.STACKS.index(inst.split('_')[1]))),
         qkd_ctrl=dict(plan=_ctrl_plan(True), straps=lambda inst: {}),

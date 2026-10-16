@@ -1,0 +1,10 @@
+RF_ROUTE ERROR cycle=64 route=5 got=07e1714629e want=17e1714629e
+RF_ROUTE ERROR cycle=65 route=5 got=0891717649b want=1891717649b
+RF_ROUTE ERROR cycle=66 route=5 got=09417166694 want=19417166694
+RF_ROUTE ERROR cycle=67 route=5 got=09f17116891 want=19f17116891
+RF_ROUTE ERROR cycle=68 route=5 got=0aa17106a92 want=1aa17106a92
+RF_ROUTE ERROR cycle=69 route=5 got=0b517136c8f want=1b517136c8f
+[21160000] %Fatal: tb_hbm_su_rf_route.sv:46: Assertion failed in tb_hbm_su_rf_route: RF_ROUTE FAIL errors=1699 checks=33856
+%Error: rtl/hbm_accel/generic/adapters/static_su/register_file/tb_hbm_su_rf_route.sv:46: Verilog $stop
+Aborting...
+exit=1

@@ -114,6 +114,36 @@ def synthesis_std_area(chip_area: float, blocks: list, root=ROOT) -> float:
     return max(0.0, chip_area - logical)
 
 
+class PortMap(dict):
+    """Port widths plus the actual declared index bounds for literal clock bits."""
+    def __init__(self, ports, ranges=None):
+        super().__init__(ports)
+        self.ranges = ranges or {}
+
+
+def module_port_ranges(body):
+    body = re.sub(r"\(\*.*?\*\)", " ", body, flags=re.S)
+    params = TL.module_params(body)
+    hdr = body[:body.find(";")] if ";" in body else body
+    out = {}
+    for blob in (hdr, body):
+        for m in re.finditer(r"\b(input|output|inout)\b([^;]*?)(?=;|\)\s*$|\binput\b|\boutput\b|\binout\b)", blob, re.S):
+            seg = m[2]
+            dims = re.findall(r"\[([^\]:]+):([^\]]+)\]", seg)
+            bounds = None
+            if len(dims) == 1:
+                a, b = (TL._eval_int(x, params) for x in dims[0])
+                if a is not None and b is not None:
+                    bounds = [min(a, b), max(a, b)]
+            names = re.sub(r"\[[^\]]*\]", " ", seg)
+            for name in re.findall(r"\b([A-Za-z_]\w*)\b", names):
+                if name not in TL._KW and name not in out:
+                    out[name] = bounds
+        if out:
+            break
+    return out
+
+
 def rtl_ports(sources, top, root=None, dirs=False, defines=None):
     root = root or ROOT
     texts = []
@@ -148,37 +178,53 @@ def rtl_ports(sources, top, root=None, dirs=False, defines=None):
     mods = TL.rtl_modules(texts)
     if top not in mods:
         return None
-    return TL.module_port_dirs(mods[top]) if dirs else TL.module_ports(mods[top])
+    return TL.module_port_dirs(mods[top]) if dirs else PortMap(TL.module_ports(mods[top]), module_port_ranges(mods[top]))
 
 
 def check_pins(g: Gate, spec: dict, ports: dict | None, where="RTL"):
     if ports is None:
         g.add("FAIL", "pins", f"top module {spec['top']} not found in the {where} sources", "fix 'top' / 'sources'")
         return
-    plan = {}
-    for f, names in spec["pins"].items():
-        for n in names:
-            plan.setdefault(n, []).append(f)
-    if spec["pins"].get("ANY"):
-        g.add("WARN", "pins", f"{len(spec['pins']['ANY'])} port group(s) left to the IO placer (ANY): {spec['pins']['ANY'][:4]}",
-              "give every bus a face (and an offset range) from the die contract before the die integrates it")
-    for n, fs in plan.items():
-        if len(fs) > 1:
-            g.add("FAIL", "pins", f"port {n} planned on {len(fs)} faces {fs}", "one face per port")
-        if n not in ports:
-            near = [p for p in ports if p.startswith(n.rstrip("[0]"))][:3]
-            g.add("FAIL", "pins", f"pin plan names '{n}', not a port of {spec['top']} ({where})"
-                  + (f"; ports like it: {near}" if near else ""), "name ports by their (scalar) base name")
-    miss = [p for p in ports if p not in plan]
-    if miss:
-        g.add("FAIL", "pins", f"{len(miss)} ports not in the pin plan (exhaustive regions fail the floorplan): {miss[:8]}",
-              "assign every port to a face")
+    if RT.literal_pin_bits(spec):
+        try:
+            RT.validate_literal_pin_plan(spec, ports if where == "synthesized netlist" else None, ROOT)
+        except RT.SpecError as e:
+            g.add("FAIL", "pins", str(e), "preserve complete actual pin coverage, exact IO source and named M6 contacts")
+    else:
+        plan = {}
+        for f, names in spec["pins"].items():
+            for n in names:
+                plan.setdefault(n, []).append(f)
+        if spec["pins"].get("ANY"):
+            g.add("WARN", "pins", f"{len(spec['pins']['ANY'])} port group(s) left to the IO placer (ANY): {spec['pins']['ANY'][:4]}",
+                  "give every bus a face (and an offset range) from the die contract before the die integrates it")
+        for n, fs in plan.items():
+            if len(fs) > 1:
+                g.add("FAIL", "pins", f"port {n} planned on {len(fs)} faces {fs}", "one face per port")
+            if n not in ports:
+                near = [p for p in ports if p.startswith(n.rstrip("[0]"))][:3]
+                g.add("FAIL", "pins", f"pin plan names '{n}', not a port of {spec['top']} ({where})"
+                      + (f"; ports like it: {near}" if near else ""), "name ports by their (scalar) base name")
+        miss = [p for p in ports if p not in plan]
+        if miss:
+            g.add("FAIL", "pins", f"{len(miss)} ports not in the pin plan (exhaustive regions fail the floorplan): {miss[:8]}",
+                  "assign every port to a face")
     one = [p for p, (w, vec) in ports.items() if vec and w == 1]
     if one:
-        g.add("WARN", "pins", f"1-bit vector ports {one[:6]}: scalars after synthesis (named by base name here, which is "
-              "safe; a hand pin list must not say x[0])", "declare them scalar in RTL")
-    if spec["clock_port"] not in ports:
-        g.add("FAIL", "pins", f"clock port {spec['clock_port']} is not a port of {spec['top']}", "fix clock_port")
+        g.add("WARN", "pins", f"1-bit vector ports {one[:6]}: retain declared indices for literal clock entries; "
+              "check actual mapped pin names for a hand pin list", "use the actual RTL and mapped pin names")
+    for clock in RT.clock_ports(spec):
+        # Entry-clock specs use literal bits, while the RTL header parser returns
+        # vector base names. Keep pin-face plans grouped by base name, but accept
+        # an in-range bit of a vector as an actual clock entry.
+        bit = re.fullmatch(r"([A-Za-z_][A-Za-z0-9_]*)\[(\d+)\]", clock)
+        exists = clock in ports
+        if bit and bit[1] in ports:
+            width, vector = ports[bit[1]]
+            bounds = getattr(ports, "ranges", {}).get(bit[1])
+            exists = bool(vector and bounds and bounds[0] <= int(bit[2]) <= bounds[1])
+        if not exists:
+            g.add("FAIL", "pins", f"clock port {clock} is not a port of {spec['top']}", "fix clock_port")
 
 
 # --------------------------------------------------------------------------------------------- pin fit / pin flops
@@ -448,6 +494,117 @@ def stale_native_cts_sdcs(kd: Path, spec: dict) -> list:
             if not (kd / name).is_file() or (kd / name).read_bytes() != text.encode()]
 
 
+PIN_REGS_FAIL_AFTER = "2026-10-16T19:50:00-07:00"   # OWNER RULE 19:50 PT 10-15 + 24 h of WARN
+
+
+def check_pin_regs(g: Gate, kd: Path, spec: dict, now=None):
+    """OWNER RULE 19:50 PT 2026-10-15: every new tile registers every input and every output at its pin.  A leaf-tile
+    kit whose route does not insert pin registers (kit.env without OT_PIN_REGS=1) and records no opt-out reason is WARNed
+    until PIN_REGS_FAIL_AFTER and refused after it; re-kit it (ref_tile.py gen with recipe 3).  CLOSED tiles stand (they
+    are not re-routed); a loop successor of an already-routed parent stays a WARN."""
+    import datetime as dt
+    if spec.get("kind", "tile") != "tile":
+        return
+    try:
+        env = (kd / "kit.env").read_text()
+    except OSError:
+        return
+    pr = spec.get("pin_regs") or {}
+    from kit_orfs_vars import parse
+    try:
+        enabled = parse(env).get("OT_PIN_REGS") == "1"
+    except ValueError as ex:
+        g.add("FAIL", "pin_regs", str(ex))
+        return
+    if enabled:
+        g.add("INFO", "pin_regs", "pin registers on every data input and output (+1 cycle each; kit pin_regs.json)")
+        return
+    if pr.get("enable") is False and str(pr.get("reason", "")).strip():
+        g.add("INFO", "pin_regs", f"pin registers opted out: {pr['reason'][:300]}")
+        return
+    late = (now or dt.datetime.now().astimezone()) >= dt.datetime.fromisoformat(PIN_REGS_FAIL_AFTER)
+    sev = "FAIL" if late and not spec.get("auto_react_parent") else "WARN"
+    g.add(sev, "pin_regs", f"{RT.PIN_REGS_RULE}: this kit's ports are not registered at the pins and no opt-out is recorded"
+          + ("" if late else f" (WARN until {PIN_REGS_FAIL_AFTER}, then refused)"),
+          "re-kit with recipe 3 (python3 tools/ref_tile/ref_tile.py gen <spec> with \"recipe\": 3, or delete kit.env "
+          "for a new kit), or record \"pin_regs\": {\"enable\": false, \"reason\": \"...\"}")
+
+
+def check_port_latency(g: Gate, kd: Path, spec: dict, out: str, commit=None, now=None, binding=None):
+    """PORT-LATENCY (ROOT 2215): a kit that inserts pin registers (kit.env OT_PIN_REGS=1) must leave the elaborated
+    per-port table of its synthesis (ot_pin_regs.tsv + wrapper); it is exported here with tools/ref_tile/port_latency.py
+    (g.port_latency -> gate_result.json "port_latency") so the per-port stages are visible before the route.  A missing or
+    malformed table is a WARN until PIN_REGS_FAIL_AFTER, then a FAIL: the compilers would otherwise see no stages."""
+    import base64
+    import datetime as dt
+    import tempfile
+    import zlib
+    try:
+        env = (kd / "kit.env").read_text()
+    except OSError:
+        return
+    from kit_orfs_vars import parse
+    try:
+        enabled = parse(env).get("OT_PIN_REGS") == "1"
+    except ValueError as ex:
+        g.add("FAIL", "port_latency", str(ex))
+        return
+    if not enabled:
+        declared = spec.get("pin_regs")
+        if isinstance(declared, dict) and declared.get("enable") is not False:
+            g.add("FAIL", "port_latency", "spec enables pin registers but kit lacks a literal OT_PIN_REGS=1 option")
+        return
+    late = (now or dt.datetime.now().astimezone()) >= dt.datetime.fromisoformat(PIN_REGS_FAIL_AFTER)
+    sev = "FAIL" if late else "WARN"
+    m = re.search(r"^GATE_PIN_REGS_B64 (\S+) (\S+)\s*$", out, re.M)
+    if not m:
+        g.add(sev, "port_latency", "kit inserts pin registers (OT_PIN_REGS=1) but synthesis left no ot_pin_regs.tsv / "
+              "ot_pin_regs_wrapper.v: the compilers would see no per-port stages",
+              "check that physical/common_flow/ot_keep_regs.tcl sourced ot_pin_regs.tcl in 1_synth (OT_PIN_REGS line in the log)")
+        return
+    sys.path.insert(0, str(ROOT / "tools/ref_tile"))
+    import port_latency as PL
+    with tempfile.TemporaryDirectory() as td:
+        tab, wrap = Path(td) / "ot_pin_regs.tsv", Path(td) / "ot_pin_regs_wrapper.v"
+        tab.write_bytes(zlib.decompress(base64.b64decode(m.group(1))))
+        wrap.write_bytes(zlib.decompress(base64.b64decode(m.group(2))))
+        src = commit if commit and re.fullmatch(r"[0-9a-f]{40}", str(commit)) else "0" * 40
+        try:
+            rep = PL.export(tab, wrap, spec["top"], src)
+            def role_source(path):
+                # Bind role-defining SDC to the exact archived synthesis bytes,
+                # including snapshots without a clean provenance commit.
+                if binding is not None:
+                    files = _BlobFiles(binding.get("files") or [])
+                    try:
+                        return files[path].decode() if path in files else None
+                    except (KeyError, UnicodeError):
+                        return None
+                    finally:
+                        files.close()
+                return git_show(commit, path)
+            rep["control_roles"] = PL.validate_roles(rep, wrap, spec, role_source)
+        except ValueError as ex:
+            g.add("FAIL", "port_latency", f"elaborated pin-register table rejected: {ex}", "fix ot_pin_regs.tcl output / the kit")
+            return
+    if src != commit:
+        rep["source_commit"] = None
+        rep["source_note"] = f"gate snapshot {commit}: not a git commit; the route's CLOSED record carries the bound report"
+    g.port_latency = rep
+    regs = {d: sum(1 for p in rep["ports"].values() if p["dir"] == d and p["register_edges"]) for d in ("input", "output")}
+    g.add("INFO", "port_latency", f"elaborated pin registers: {regs['input']} input / {regs['output']} output ports +1 edge; "
+          f"{sum(1 for p in rep['ports'].values() if not p['register_edges'])} ports pass through (clock/reset/excluded/inout)")
+
+
+def check_kit_shell(g: Gate, kd: Path):
+    syntax = subprocess.run(["bash", "-n", str(kd / "kit.env")], capture_output=True, text=True)
+    if syntax.returncode or syntax.stderr.strip():
+        g.add("FAIL", "kit_shell", "kit.env is not valid Bash: " + syntax.stderr.strip()[-400:],
+              "regenerate with the current quoted EXTRA generator, commit, then run an exact source-bound gate")
+        return False
+    return True
+
+
 def check_kit(g: Gate, kd: Path, job: dict | None, commit=None):
     stale = stale_multi_root_sdcs(kd)
     if stale:
@@ -470,10 +627,12 @@ def check_kit(g: Gate, kd: Path, job: dict | None, commit=None):
               "and submit a new normal successor; preserve original accepted/frozen jobs")
     for sev, chk, msg, fix in fresh["findings"]:
         g.add(sev, chk, msg, fix)
+    check_pin_regs(g, kd, spec)
     fp = json.loads((kd / "floorplan.json").read_text())
     if [round(x, 3) for x in fp["die"][2:]] != [round(x, 3) for x in fresh["outline"]]:
         g.add("FAIL", "kit", f"kit outline {fp['die'][2:]} != regenerated {fresh['outline']}", "re-run ref_tile.py gen")
     env = (kd / "kit.env").read_text()
+    check_kit_shell(g, kd)
     if "pin_group_max" in spec.get("route", {}):
         pgm = re.search(r"^export OT_PIN_GROUP_MAX=(\d+)$", env, re.M)
         if not pgm or int(pgm[1]) != RT.pin_group_max(spec):
@@ -566,9 +725,20 @@ def check_kit(g: Gate, kd: Path, job: dict | None, commit=None):
     return spec
 
 
+# GATE STEP CAP (ROOT 2026-10-15): seconds one capped gate step (CTS run, trial GRT) may take before it is a stall
+GATE_STEP_CAP_S = int(os.environ.get("OT_GATE_STEP_CAP_S", "14400"))
+
+
 # --------------------------------------------------------------------------------------------- remote
 REMOTE_SH = r"""set -uo pipefail
 R={R}; mkdir -p $R/src $R/bin
+# Keep the original full measurement stream on the host. GNU tee -p continues
+# writing this file if SSH closes its output pipe; the admitted job must finish
+# and retain its terminal receipt rather than dying at the next echo.
+exec > >(tee -p "$R/execution.log") 2>&1
+# Intentional early exits (for example failed floorplan geometry) are terminal
+# too. The trap records script status; tool status remains in GATE_*_RC.
+trap 'rc=$?; echo "GATE_SCRIPT_RC=$rc"; echo GATE_DONE' EXIT
 ACTUAL=$(sha256sum $R.tgz | cut -d' ' -f1)
 [ "$ACTUAL" = "{ARCHIVE_SHA256}" ] || {{ echo GATE_SOURCE_BINDING_FAIL; exit 1; }}
 echo "GATE_SOURCE_ARCHIVE_SHA256=$ACTUAL"
@@ -581,6 +751,15 @@ for e in ${{PATH//:/ }}; do if [ -x "$e/docker" ] && ! [ "$e/docker" -ef "$0" ];
   exec "$e/docker" "$@"; fi; done; exit 127
 EOS
 chmod +x $R/bin/docker; export PATH=$R/bin:$PATH
+# GATE STEP CAP (ROOT 2026-10-15): a CTS / trial-GRT step that has not finished in {STEP_CAP} s is a stall (a 15 h
+# dsfd_vm_write_dispatch_b24 gate sat in the DPL negotiation legalizer at 150k illegal cells after repair_design tripled
+# the instance count); kill the named container and report GATE_STALL instead of holding a fleet slot for days
+ot_capped() {{  # ot_capped NAME docker run --name NAME ...
+  local n=$1 t0=$(date +%s) rc; shift
+  timeout -k 60 {STEP_CAP} "$@"; rc=$?
+  if [ $(( $(date +%s) - t0 )) -ge {STEP_CAP} ]; then docker kill "$n" >/dev/null 2>&1; echo "GATE_STALL $n exceeded {STEP_CAP} s"; fi
+  return $rc
+}}
 docker image inspect --format 'GATE_TOOL_IMAGE_ID={{{{.Id}}}} GATE_TOOL_IMAGE_DIGESTS={{{{json .RepoDigests}}}}' {IMG} 2>/dev/null
 printf 'GATE_TOOL_CTS_MACRO_CLUSTER=%s\n' "${{OT_CTS_MACRO_CLUSTER:-}}"
 cd $R/src && echo {COMMIT} > SOURCE_COMMIT
@@ -598,20 +777,43 @@ NB=${{B#$C/}}
 docker run --rm -v $R/src:/src:ro -v $C:/work -w /OpenROAD-flow-scripts/flow {IMG} bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; python3 /src/tools/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts >/dev/null && make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base /work/$NB/3_2_place_iop.odb" > $R/iop.log 2>&1; echo "GATE_IOP_RC=$?"
 grep -hE "\[ERROR" $R/iop.log | head -4 | sed 's/^/GATE_FLOWERR /'
 printf 'read_db /work/%s/3_2_place_iop.odb\nsource /src/tools/fp_margin_lint.tcl\not_fp_lint_dump /work/gate_dump.json\nexit\n' $NB > $C/gate_dump.tcl
-docker run --rm -v $R/src:/src:ro -v $C:/work {IMG} /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -exit /work/gate_dump.tcl > $R/dump.log 2>&1; echo "GATE_DUMP_RC=$?"
+docker run --rm -v $R/src:/src:ro -v $C:/work {IMG} /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -exit /work/gate_dump.tcl > $R/dump.log 2>&1; DUMPRC=$?; echo "GATE_DUMP_RC=$DUMPRC"
+[ "$DUMPRC" -eq 0 ] || exit 0
+# Validate the actual placed-IO dump before CTS or any PASS evidence is accepted.
+python3 tools/fp_margin_lint.py pins $C/gate_dump.json --out $R/pin_geometry.json > $R/pin_geometry.log 2>&1; PINRC=$?
+sed 's/^/GATE_FP /' $R/pin_geometry.log
+echo "GATE_PIN_GEOMETRY_RC=$PINRC"
+[ -s $R/pin_geometry.json ] && python3 -c 'import json,sys;print("GATE_PIN_GEOMETRY_RESULT "+json.dumps(json.load(open(sys.argv[1])),separators=(",",":")))' $R/pin_geometry.json
+[ "$PINRC" -eq 0 ] || exit 0
+# LAYOUT IMAGES (owner rule 20:45 10-15): the floorplan the route starts from (macros, pins, PG) -> PNG on the gate side
+ot_layout() {{  # ot_layout ODB TAG: tools/ref_tile/layout_dump.tcl on the odb, json back as one zlib+base64 line
+  printf 'read_db /work/%s\nsource /src/tools/ref_tile/layout_dump.tcl\nexit\n' "$1" > $C/gate_layout_$2.tcl
+  docker run --rm -e OT_LAYOUT_OUT=/work/gate_layout_$2.json -e OT_LAYOUT_CLOCKS={CLKS} -e OT_LAYOUT_TOP={TOP} -v $R/src:/src:ro -v $C:/work {IMG} /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -exit /work/gate_layout_$2.tcl > $R/layout_$2.log 2>&1
+  [ -s $C/gate_layout_$2.json ] && python3 -c "import zlib,base64,sys;print('GATE_LAYOUT_B64 '+sys.argv[2]+' '+base64.b64encode(zlib.compress(open(sys.argv[1],'rb').read(),9)).decode())" $C/gate_layout_$2.json $2
+}}
+ot_layout $NB/3_2_place_iop.odb floorplan
 python3 tools/textbook_lint.py check --netlist $B/1_2_yosys.v --dump $C/gate_dump.json --out $R/textbook.json --mode refuse --refuse-checks {RC} | sed 's/^/GATE_TB /'
 python3 - $B/1_2_yosys.v {TOP} <<'EOP'
 import re,sys,json
 t=open(sys.argv[1]).read(); m=re.search(r"module\s+\\?"+re.escape(sys.argv[2])+r"\s*\((.*?)\);(.*?)endmodule",t,re.S)
-ports={{}}
+ports={{}}; ranges={{}}
 if m:
   for d in re.finditer(r"\b(input|output|inout)\b\s*(?:signed\s*)?(\[[^\]]*\])?\s*([^;]+);",m.group(2)):
     for n in d.group(3).split(","): ports[n.strip().lstrip("\\")]=[1 if not d.group(2) else None, bool(d.group(2))]
+    if d.group(2):
+      bounds=re.fullmatch(r"\[\s*(-?\d+)\s*:\s*(-?\d+)\s*\]",d.group(2))
+      if bounds:
+        a,b=map(int,bounds.groups())
+        for n in d.group(3).split(","): ranges[n.strip().lstrip("\\")]=[min(a,b),max(a,b)]
 print("GATE_PORTS "+json.dumps(ports))
+print("GATE_PORT_RANGES "+json.dumps(ranges))
 EOP
 grep -h "Chip area\|chip area" $C/reports/asap7/*/base/synth_stat.txt 2>/dev/null | tail -1 | sed 's/^/GATE_AREA /'
+# PORT-LATENCY (ROOT 2215): the elaborated pin-register table + wrapper of this synthesis (ot_pin_regs.tcl) come back for
+# tools/ref_tile/port_latency.py; the closure loop records the same export from the route at CLOSE for the compilers
+[ -s $B/ot_pin_regs.tsv ] && [ -s $B/ot_pin_regs_wrapper.v ] && python3 -c "import zlib,base64,sys;print('GATE_PIN_REGS_B64 '+' '.join(base64.b64encode(zlib.compress(open(f,'rb').read(),9)).decode() for f in sys.argv[1:]))" $B/ot_pin_regs.tsv $B/ot_pin_regs_wrapper.v
 if [ "{CTS}" = 1 ]; then
-  docker run --rm -v $R/src:/src:ro -v $C:/work -w /OpenROAD-flow-scripts/flow {IMG} bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; python3 /src/tools/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts >/dev/null && make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base cts" > $R/cts.log 2>&1; echo "GATE_CTS_RC=$?"
+  ot_capped gate_cts_${{R##*/}} docker run --rm --name gate_cts_${{R##*/}} -v $R/src:/src:ro -v $C:/work -w /OpenROAD-flow-scripts/flow {IMG} bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; python3 /src/tools/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts >/dev/null && make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base cts" > $R/cts.log 2>&1; echo "GATE_CTS_RC=$?"
   grep -h "\[ERROR" $R/cts.log | head -3 | sed 's/^/GATE_CTSERR /'
   grep -h "^OT_SPINE iter\|^REF_TILE spine" $R/cts.log | tail -2 | sed 's/^/GATE_SPINE /'
   grep -h "OT_SPINE done port" $R/cts.log $C/logs/asap7/*/base/4_1_cts.log 2>/dev/null | head -1 | sed 's/^/GATE_SPINE_DONE /'
@@ -621,8 +823,19 @@ if [ "{CTS}" = 1 ]; then
   python3 -c "import json;d=json.load(open('$R/ck.json'));[print('GATE_CK_DOMAIN '+json.dumps({{'source':pin,'clock':r.get('clock'),'tt':r.get('tt')}})) for pin,r in d.get('clock_measurements',{{}}).items()]" 2>/dev/null
   docker run --rm -e OT_GATE_SIGNOFF_SDC=/src/{KIT}/signoff.sdc -v $R/src:/src:ro -v $C:/work {IMG} /OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -exit /src/tools/ref_tile/path_classes.tcl > $R/pc.log 2>&1
   grep "^GATE_PC" $R/pc.log
+  ot_layout $NB/4_1_cts.odb placed
 fi
-echo GATE_DONE
+# TRIAL ROUTE (owner rule 20:45 10-15): parent / cluster kits (hardened children or >= 4 macros) place + global-route
+# here (no detailed route): overflow, per-layer usage and the congestion hotspots come back; overflow > 0 refuses the kit
+if [ "{TRIAL}" = 1 ]; then
+  ot_capped gate_grt_${{R##*/}} docker run --rm --name gate_grt_${{R##*/}} -v $R/src:/src:ro -v $C:/work -w /OpenROAD-flow-scripts/flow {IMG} bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; python3 /src/tools/orfs_hold_mm.py /OpenROAD-flow-scripts/flow/scripts >/dev/null && make DESIGN_CONFIG=/work/config.mk WORK_HOME=/work FLOW_VARIANT=base GLOBAL_ROUTE_ARGS='-allow_congestion -verbose' GENERATE_ARTIFACTS_ON_FAILURE=1 grt" > $R/grt.log 2>&1; echo "GATE_GRT_RC=$?"
+  GL=$(ls $C/logs/asap7/*/base/5_1_grt.log 2>/dev/null | head -1)
+  [ -n "$GL" ] && grep -E "^(M[0-9]+|Total) +[0-9]+ +[0-9]+ +[0-9.]+%" $GL | tail -12 | sed 's/^/GATE_GRT_LAYER /'
+  [ -n "$GL" ] && grep -hE "GRT-0116|Total overflow|overflow" $GL | tail -3 | sed 's/^/GATE_GRT_NOTE /'
+  CR=$(ls $C/reports/asap7/*/base/congestion.rpt 2>/dev/null | head -1)
+  [ -n "$CR" ] && python3 -c "import zlib,base64,sys;print('GATE_CONG_B64 '+base64.b64encode(zlib.compress(open(sys.argv[1],'rb').read()[:20000000],9)).decode())" $CR
+  ot_layout $NB/5_1_grt.odb placed
+fi
 """
 
 
@@ -641,6 +854,7 @@ def ship_tar(paths, overlay_payloads=None, overlay_modes=None):
             if src.exists():
                 tf.add(str(src), arcname=p, filter=lambda ti: None if ("/views/" in ti.name and ti.name.endswith(".gds"))
                        or "__pycache__" in ti.name or "source_binding_history" in Path(ti.name).parts
+                       or "gate_layout" in Path(ti.name).parts
                        or Path(ti.name).name in SB.EXCLUDED else ti)
         for h in SHIP_HELPERS:      # the loop's shipped flow helpers win over the snapshot's copies
             f = DAEMON_TREE / h
@@ -848,7 +1062,8 @@ def remote(g: Gate, kd: Path, spec: dict, host: str, cap: int, mem: int, cts: bo
     commit = binding["commit"] or "snapshot-sha256:" + binding["manifest_sha256"]
     sh = REMOTE_SH.format(R=R, COMMIT=commit, CAP=(cap if cap > 0 else "unlimited"), KIT=kd.relative_to(ROOT), IMG="openroad/orfs:latest",
                           RC=",".join(GATE_REFUSE), TOP=spec["top"], CTS=1 if cts else 0, PGM=PF.ROUTE_PIN_GROUP_MAX,
-                          CLK=spec["clock_port"], ARCHIVE_SHA256=binding["archive_sha256"])   # ck_insertion (9f48f5ed8): --clock = clock name or its source port; the default 'ck' failed every kit whose port is 'clk'
+                          TRIAL=1 if is_parent_kit(spec) else 0, CLKS=",".join(RT.declared_clock_ports(spec)),
+                          CLK=spec["clock_port"], ARCHIVE_SHA256=binding["archive_sha256"], STEP_CAP=GATE_STEP_CAP_S)   # ck_insertion (9f48f5ed8): --clock = clock name or its source port; the default 'ck' failed every kit whose port is 'clk'
     sh = gate_route_clock_hooks(sh, spec)
     sh = gate_route_hold_context(sh, spec, str(kd.relative_to(ROOT)))
     binding["route_hold_context"] = RT.route_hold_context(spec, str(kd.relative_to(ROOT)))
@@ -903,7 +1118,165 @@ def remote(g: Gate, kd: Path, spec: dict, host: str, cap: int, mem: int, cts: bo
     logp.write_text(out + "\n--- stderr\n" + p.stderr.decode(errors="replace")[-4000:])
     g.remote_host = host
     g.add("INFO", "remote", f"remote log {logp}; host dir {host}:{R}")
+    # A dropped SSH session can leave the admitted container running. Its
+    # partial stdout must never become a terminal CTS/clock qualification.
+    # Preserve the source snapshot and handle; collect this original job.
+    terminal = re.search(r"^GATE_SCRIPT_RC=(\d+)$", out, re.M)
+    completed = (terminal is not None and int(terminal[1]) == p.returncode
+                 and re.search(r"^GATE_DONE$", out, re.M)
+                 and b"NOT COMPLETED" not in p.stderr)
+    if not completed:
+        g.add("FAIL", "remote_incomplete",
+              f"remote gate has no verified terminal completion (ot-run exit {p.returncode}); "
+              f"original job may still run at {host}:{R}; script {script}; log {logp}",
+              "inspect the original live handle and collect its terminal output; do not submit a duplicate")
+        g.clock = {"cts": bool(cts), "verdict": "REFUSE", "status": "REMOTE_INCOMPLETE",
+                   "text": "transport or script ended without verified GATE_DONE; no clock qualification"}
+        return
     analyse_remote(g, kd, spec, out, cts, binding, cap, host, round(time.time() - t0), local_snapshot)
+    if p.returncode:
+        g.add("FAIL", "remote_script", f"remote script completed with exit {p.returncode}",
+              "read the original terminal log and fix the reported failure")
+    gate_layout(g, kd, spec, out)
+
+
+FILL_WARN, FILL_FAIL = 0.50, 0.35       # OWNER RULE 20:45 PT 10-15 (parent / cluster kits)
+
+
+def is_parent_kit(spec: dict) -> bool:
+    """a parent / cluster kit: kind cluster, hardened children, or >= 4 hard macros"""
+    return spec.get("kind") == "cluster" or bool(spec.get("children")) or len(spec.get("macros") or []) >= 4
+
+
+def pin_demand(d: dict) -> list:
+    """per face: pins, occupied span of the face (first..last pin), edge length -- pin-bound evidence"""
+    X0, Y0, X1, Y1 = d["die"]
+    faces = {"S": [], "N": [], "W": [], "E": []}
+    for name, layer, a, b, c, e in d.get("pins", []):
+        cx, cy = (a + c) / 2, (b + e) / 2
+        dist = {"S": cy - Y0, "N": Y1 - cy, "W": cx - X0, "E": X1 - cx}
+        f = min(dist, key=dist.get)
+        faces[f].append(cx if f in "SN" else cy)
+    out = []
+    for f, v in faces.items():
+        edge = (X1 - X0) if f in "SN" else (Y1 - Y0)
+        span = (max(v) - min(v)) if len(v) > 1 else 0.0
+        out.append({"face": f, "pins": len(v), "span_um": round(span, 1), "edge_um": round(edge, 1),
+                    "occupancy": round(span / edge, 3) if edge else 0.0})
+    return out
+
+
+def gate_layout(g: Gate, kd: Path, spec: dict, out: str):
+    """LAYOUT IMAGES + FILL + TRIAL ROUTE (OWNER RULE 20:45 PT 2026-10-15): render the gate's layout dumps to PNG in
+    <kit>/gate_layout/ (floorplan, post-place density, GRT congestion), judge fill of parent / cluster kits and the
+    trial global route's overflow.  Element owners LOOK at the PNGs (AGENT_PREAMBLE 'LOOK AT THE LAYOUT')."""
+    import base64
+    import zlib
+    sys.path.insert(0, str(Path(__file__).resolve().parent))
+    import layout_png as LP
+    dumps = {}
+    for tag, b64 in re.findall(r"^GATE_LAYOUT_B64 (\S+) (\S+)$", out, re.M):
+        try:
+            dumps[tag] = json.loads(zlib.decompress(base64.b64decode(b64)))
+        except Exception as ex:  # noqa: BLE001
+            g.add("WARN", "layout_images", f"layout dump {tag} unreadable: {type(ex).__name__}")
+    od = kd / "gate_layout"
+    imgs = {}
+    title = spec.get("name", kd.name)
+    if "floorplan" in dumps:
+        imgs["floorplan"], _ = LP.render_floorplan(dumps["floorplan"], od / "floorplan.png", f"{title} floorplan (gate)")
+    pl = dumps.get("placed")
+    if pl:
+        imgs["density"] = LP.render_grid(pl, "density", od / "density.png", f"{title} post-place density (gate)",
+                                         "std-cell area / bin area: blue 0, green 0.5, red 1.0+ ; grey = macros")
+    m = re.search(r"^GATE_CONG_B64 (\S+)$", out, re.M)
+    if m and pl:
+        try:
+            pl = dict(pl, congestion=LP.congestion_grid(pl, zlib.decompress(base64.b64decode(m.group(1))).decode(errors="replace")))
+            imgs["congestion"] = LP.render_grid(pl, "congestion", od / "congestion.png", f"{title} GRT congestion (gate trial)",
+                                                f"{pl['congestion']['markers']} congested gcells (red = most)")
+        except Exception as ex:  # noqa: BLE001
+            g.add("WARN", "layout_images", f"congestion report unreadable: {type(ex).__name__}")
+    if imgs:
+        g.add("INFO", "layout_images", "LOOK at these before submitting: " + "; ".join(f"{k} {p}" for k, p in imgs.items() if p))
+        g.layout_images = {k: p for k, p in imgs.items() if p}
+    elif dumps == {} and "GATE_DONE" in out:
+        g.add("WARN", "layout_images", "the gate produced no layout dump (layout_dump.tcl); see the remote layout_*.log")
+    parent = is_parent_kit(spec)
+    fpd = dumps.get("floorplan")
+    if parent and fpd:
+        st = fpd.get("stats", {})
+        fill = float(st.get("fill") or 0.0)
+        pd = pin_demand(fpd)
+        dem = ", ".join(f"{x['face']} {x['pins']} pins over {x['span_um']}/{x['edge_um']} um ({x['occupancy']:.0%})" for x in pd)
+        reason = str((spec.get("fill_reason") or {}).get("pin_bound", "")).strip()
+        msg = (f"fill {fill:.0%} = (hard macros {st.get('block_area')} + synthesized std cells {st.get('std_area')}) / "
+               f"outline {st.get('die_area')} um2; pin demand per face: {dem}")
+        if fill < FILL_FAIL and not reason:
+            g.add("FAIL", "fill", msg + f" (< {FILL_FAIL:.0%})", "shrink the outline / regroup the macros, or record "
+                  "\"fill_reason\": {\"pin_bound\": \"<why the perimeter, not the area, sets the outline>\"} if the pin "
+                  "demand above shows the edges are full")
+        elif fill < FILL_WARN:
+            g.add("WARN", "fill", msg + (f" (pin-bound: {reason})" if reason else f" (< {FILL_WARN:.0%})"))
+        else:
+            g.add("INFO", "fill", msg)
+    if parent and "GATE_GRT_RC=" in out:
+        rows = re.findall(r"^GATE_GRT_LAYER (\S+) +(\d+) +(\d+) +([\d.]+)%\s+(\d+) */ *(\d+) */ *(\d+)", out, re.M)
+        tot = [r for r in rows if r[0] == "Total"]
+        lay = [r for r in rows if r[0] != "Total"]
+        worst = max(lay, key=lambda r: float(r[3]), default=None)
+        ovf = int(tot[-1][6]) if tot else None
+        note = (f"trial GRT: total overflow {ovf}" + (f"; worst layer {worst[0]} {worst[3]}% used" if worst else "")
+                + (f"; congestion map {imgs.get('congestion')}" if imgs.get("congestion") else ""))
+        if ovf is None:
+            g.add("FAIL", "trial_route", "trial global route produced no congestion table (GATE_GRT_RC="
+                  + re.search(r"GATE_GRT_RC=(\S+)", out).group(1) + ")", "read the remote grt.log")
+        elif ovf > 0:
+            g.add("FAIL", "trial_route", note, "regroup macros / widen the congested channels / move pins to their "
+                  "consumers; look at congestion.png and density.png")
+        else:
+            g.add("INFO", "trial_route", note)
+
+
+def check_actual_pin_geometry(g: Gate, out: str):
+    """A missing, failed or malformed actual-dump proof can never become PASS."""
+    kv = dict(re.findall(r"\b(GATE_[A-Z0-9_]+)=(\S+)", out))
+    records = re.findall(r"^GATE_PIN_GEOMETRY_RESULT (.*)$", out, re.M)
+    try:
+        if kv.get("GATE_DUMP_RC") != "0" or len(records) != 1:
+            raise ValueError("missing successful actual gate_dump / unique pin-geometry report")
+        rep = json.loads(records[0])
+        if not isinstance(rep, dict) or not isinstance(rep.get("metrics"), dict):
+            raise ValueError("malformed actual pin-geometry report")
+        if (not isinstance(rep.get("fails"), list) or
+                any(not isinstance(f, dict) or not isinstance(f.get("check"), str) or
+                    not isinstance(f.get("msg"), str) for f in rep["fails"])):
+            raise ValueError("malformed actual pin-geometry findings")
+        metrics = rep["metrics"]
+        keys = ("signal_clock_pins", "pin_rectangles", "pin_track_checked", "pin_track_inaccessible",
+                "pin_rectangles_outside", "missing_geometry")
+        if any(type(metrics.get(k)) is not int or metrics[k] < 0 for k in keys):
+            raise ValueError("invalid actual pin-geometry counters")
+        if (rep.get("schema") != "opentallas.fp_pin_geometry.v1" or
+                not re.fullmatch(r"[0-9a-f]{64}", rep.get("dump_sha256", "")) or
+                not re.fullmatch(r"[0-9a-f]{64}", rep.get("validator_sha256", "")) or
+                metrics["signal_clock_pins"] <= 0):
+            raise ValueError("invalid actual pin-geometry proof")
+        if rep.get("verdict") == "PASS" and not rep["fails"] and kv.get("GATE_PIN_GEOMETRY_RC") == "0":
+            if metrics["pin_track_checked"] != metrics["signal_clock_pins"]:
+                raise ValueError("PASS lacks actual track coverage for every signal/clock pin")
+            if any(metrics[k] for k in ("pin_track_inaccessible", "pin_rectangles_outside", "missing_geometry")):
+                raise ValueError("PASS contradicts actual pin-geometry metrics")
+            g.add("INFO", "floorplan.pin_geometry", f"actual pin geometry PASS: {metrics}; dump SHA256 {rep['dump_sha256']}")
+            return
+        if rep.get("verdict") != "FAIL" or not rep["fails"] or kv.get("GATE_PIN_GEOMETRY_RC") != "3":
+            raise ValueError("actual pin-geometry checker status/report disagree")
+        for finding in rep["fails"]:
+            g.add("FAIL", "floorplan." + finding["check"], finding["msg"],
+                  "fix actual pin shapes/coordinates against the die and DEF tracks; retain the assigned native pin plan")
+    except (KeyError, TypeError, ValueError) as e:
+        g.add("FAIL", "floorplan.pin_geometry", str(e),
+              "rerun the actual placed-IO dump and fp_margin_lint pins check; old CTS measurements alone cannot qualify geometry")
 
 
 def analyse_remote(g: Gate, kd: Path, spec: dict, out: str, cts: bool, binding: dict,
@@ -949,9 +1322,12 @@ def analyse_remote(g: Gate, kd: Path, spec: dict, out: str, cts: bool, binding: 
     if kv.get("GATE_IOP_RC") not in (None, "0"):
         g.add("FAIL", "io_place", "IO placement failed: " + "; ".join(errs[:3]),
               PF.FIX_TEXT if any("PPL-0093" in e for e in errs) else "fix the pin plan / pin layers")
+    check_actual_pin_geometry(g, out)
     m = re.search(r"^GATE_PORTS (.*)$", out, re.M)
     if m:
-        ports = {k: tuple(v) for k, v in json.loads(m.group(1)).items()}
+        bounds = re.search(r"^GATE_PORT_RANGES (.*)$", out, re.M)
+        ports = PortMap({k: tuple(v) for k, v in json.loads(m.group(1)).items()},
+                        json.loads(bounds[1]) if bounds else {})
         check_pins(g, spec, ports, where="synthesized netlist")
     am = re.search(r"^GATE_AREA .*?([\d.]+)\s*$", out, re.M)
     if am:
@@ -965,6 +1341,7 @@ def analyse_remote(g: Gate, kd: Path, spec: dict, out: str, cts: bool, binding: 
         sev = "INFO" if RT.UTIL_LO <= u <= RT.UTIL_HI + 0.05 else ("FAIL" if u > 0.70 else "WARN")
         g.add(sev, "util", f"synthesized std area {area:.0f} um2 + macros {mac:.0f} in core {core:.0f}: util {u:.0%}",
               f"set \"std_area_um2\": {area:.0f} and drop 'outline' (gen sizes to util 0.52)" if sev != "INFO" else "")
+    check_port_latency(g, kd, spec, out, binding.get("commit"), binding=binding)
     for line in re.findall(r"^GATE_TB (.*)$", out, re.M):
         if line.startswith("TEXTBOOK_LINT:"):
             continue
@@ -978,6 +1355,10 @@ def analyse_remote(g: Gate, kd: Path, spec: dict, out: str, cts: bool, binding: 
             g.add("INFO", "textbook", line[len("textbook_lint: "):][:300])
             continue
         g.add("FAIL" if tag == "REFUSE" else "WARN", f"textbook.{chk}", msg[:500], TEXTBOOK_FIX.get(chk, ""))
+    for stall in re.findall(r"^GATE_STALL (.*)$", out, re.M):
+        g.add("FAIL", "gate_stall", f"{stall[:200]} (step cap; repair/legalizer blow-up or GRT stall)",
+              "read the remote cts.log / grt.log tail: the route would stall the same way; reduce density / fix the "
+              "floorplan or the repair_design fan-out cause before routing")
     if cts and kv.get("GATE_CTS_RC") not in (None, "0"):
         g.add("FAIL", "cts_run", "placement / CTS of the kit failed: " + "; ".join(re.findall(r"^GATE_CTSERR (.*)$", out, re.M))[:500],
               "the route would fail the same way (DPL-0033 / GPL-0305 / CTS-*): fix the floorplan / density before routing")
@@ -1247,6 +1628,8 @@ def write_gate_result(g: Gate, kd: Path, cts: bool, host: str):
            "generated": time.strftime("%Y-%m-%dT%H:%M:%S%z"), "host": getattr(g, "remote_host", host), "cts": bool(cts),
            "commit": g.source_binding.get("commit"), "source_binding": g.source_binding,
            "clock": g.clock, "items": [i for i in g.items if i["severity"] != "INFO"][:40]}
+    if getattr(g, "port_latency", None):
+        out["port_latency"] = g.port_latency
     previous = kd / CLOCK_RESULT
     if previous.exists():
         import hashlib
@@ -1290,6 +1673,9 @@ def _materialise(repo: str, commit: str, kit: str, dst: Path) -> None:
          # pin_hook_before_flops (claude s81-grpA r4, 10-14): ref_tile gen checks each hook exists at ROOT; without it
          # dsfd_vm_be_sl r5 (besl_xhold.tcl, committed at the source commit) was REFUSED "missing pin hook"
          + [x for x in sp.get("pin_hook_before_flops", []) if isinstance(x, str)]
+         # pre_dpl_extra (Q-TILE45b 10-16): ref_tile gen checks each pre-DPL hook exists at ROOT exactly like the pin
+         # hooks; without it qfd_tile_{nk,nl}_rp2_g4t (reconcile_sink_owners.tcl at the source commit) was REFUSED
+         + [x for x in sp.get("pre_dpl_extra", []) if isinstance(x, str)]
          # M6 pin-only grant (S-NET+FILL 10-15): ref_tile gen compares io_tcl / post_synth_tcl / orfs_vars .tcl/.sdc at
          # ROOT with the grant's source commit; without them every granted station was REFUSED "source differs"
          + [sp[k].removeprefix("/src/") for k in ("io_tcl", "post_synth_tcl") if isinstance(sp.get(k), str)]

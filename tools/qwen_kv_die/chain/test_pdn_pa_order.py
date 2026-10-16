@@ -33,5 +33,16 @@ class PaOrder(unittest.TestCase):
             K.pdn_pin_access_after_pdn(VEHICLE.replace('write_db', 'write_def'))
 
 
+    def test_tie_rows_hooks(self):
+        out = K.kv_tie_rows_hooks(K.pdn_pin_access_after_pdn(VEHICLE))
+        self.assertLess(out.index('mem read'), out.index('ot_tie_rows 10.88 0.48 10.88 0.48 12.0 0.6 1.08 2.0 2.0'))
+        self.assertLess(out.index('ot_tie_rows 10.88'), out.index('pdngen'))
+        self.assertLess(out.index('pdngen'), out.index('ot_tie_rows_verify 10.88 0.48'))
+        self.assertLess(out.index('ot_tie_rows_verify'), out.index('die_constant_pg_check'))
+        self.assertEqual(K.kv_tie_rows_hooks(out), out)
+        self.assertIn('-layer {M1} -width {0.018} -followpins', K.KV_TIE_PG)
+        self.assertIn('-layers {M2 M9}', K.KV_TIE_PG)
+
+
 if __name__ == '__main__':
     unittest.main()

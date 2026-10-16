@@ -1,0 +1,118 @@
+{
+ "generic_FF_bits": 1905,
+ "clock_FF_bits": {
+  "clk_control": 1769,
+  "clk_mem[1]": 68,
+  "clk_mem[0]": 68
+ },
+ "native_macros_by_clock": {
+  "clk_mem[0]": 1,
+  "clk_mem[1]": 1
+ },
+ "native_macro_total": 2,
+ "ports": {
+  "clk_control": {
+   "direction": "input",
+   "bits": 1
+  },
+  "clk_mem": {
+   "direction": "input",
+   "bits": 2
+  },
+  "rst_n": {
+   "direction": "input",
+   "bits": 1
+  },
+  "fill_begin": {
+   "direction": "input",
+   "bits": 1
+  },
+  "fill_bank": {
+   "direction": "input",
+   "bits": 1
+  },
+  "pub_slot": {
+   "direction": "input",
+   "bits": 1
+  },
+  "pub_block": {
+   "direction": "input",
+   "bits": 1
+  },
+  "pub_beat": {
+   "direction": "input",
+   "bits": 6
+  },
+  "rv": {
+   "direction": "input",
+   "bits": 1
+  },
+  "rrow": {
+   "direction": "input",
+   "bits": 12
+  },
+  "rdata": {
+   "direction": "input",
+   "bits": 256
+  },
+  "prefetch_begin": {
+   "direction": "input",
+   "bits": 1
+  },
+  "prefetch_bank": {
+   "direction": "input",
+   "bits": 1
+  },
+  "prefetch_head": {
+   "direction": "input",
+   "bits": 2
+  },
+  "prefetch_dimvec": {
+   "direction": "input",
+   "bits": 4
+  },
+  "release_v": {
+   "direction": "input",
+   "bits": 1
+  },
+  "release_bank": {
+   "direction": "input",
+   "bits": 1
+  },
+  "vectors": {
+   "direction": "output",
+   "bits": 512
+  },
+  "vector_ready": {
+   "direction": "output",
+   "bits": 1
+  },
+  "prefetch_done": {
+   "direction": "output",
+   "bits": 1
+  },
+  "vector_bank": {
+   "direction": "output",
+   "bits": 1
+  },
+  "vector_head": {
+   "direction": "output",
+   "bits": 2
+  },
+  "vector_dimvec": {
+   "direction": "output",
+   "bits": 4
+  },
+  "bank_ready": {
+   "direction": "output",
+   "bits": 2
+  },
+  "fault": {
+   "direction": "output",
+   "bits": 1
+  }
+ },
+ "total_port_bits": 817,
+ "timing_qualified": false,
+ "mapped_area_qualified": false
+}

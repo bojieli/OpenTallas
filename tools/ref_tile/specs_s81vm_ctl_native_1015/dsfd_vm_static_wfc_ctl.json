@@ -1,0 +1,192 @@
+{
+ "name": "dsfd_vm_static_wfc_ctl_native_1015_r1",
+ "top": "dsfd_vm_static_wfc_ctl",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_wfc.sv"
+ ],
+ "params": {
+  "RLAT": 17,
+  "RESPONSE_PAD": 0
+ },
+ "defines": [],
+ "clock": "multiple_cts_roots",
+ "clock_port": "ck_control_t",
+ "clock_ports": [
+  "ck_control_t",
+  "ck_control_s"
+ ],
+ "clock_data_paths": "related_pll_ratio",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   4,
+   3
+  ],
+  "phase_ps": 0
+ },
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_control_t"
+   ],
+   "inputs": [
+    "rss_control_t",
+    "xv",
+    "xd",
+    "x34f",
+    "x43f",
+    "e_v",
+    "e_d",
+    "vm_fault"
+   ],
+   "outputs": [
+    "w_v",
+    "w_row",
+    "w_d",
+    "a_v",
+    "a_row",
+    "s_v",
+    "s_d",
+    "fault"
+   ]
+  },
+  "serial": {
+   "ratio": [
+    4,
+    3
+   ],
+   "ports": [
+    "ck_control_s"
+   ],
+   "inputs": [
+    "rst_control_s"
+   ],
+   "outputs": [
+    "g_q",
+    "e_q"
+   ]
+  }
+ },
+ "reset_ports": [
+  "rss_control_t",
+  "rst_control_s"
+ ],
+ "outline": {
+  "w": 194.4,
+  "h": 394.2,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "pins": {
+  "W": [
+   "ck_control_t",
+   "rss_control_t",
+   "ck_control_s",
+   "rst_control_s",
+   "xv",
+   "xd",
+   "x34f"
+  ],
+  "E": [
+   "w_v",
+   "w_row",
+   "w_d",
+   "a_v",
+   "a_row",
+   "e_v",
+   "e_d"
+  ],
+  "N": [
+   "s_v",
+   "s_d",
+   "g_q",
+   "e_q",
+   "x43f",
+   "vm_fault",
+   "fault"
+  ]
+ },
+ "io_tcl": "physical/s81_vm_ctl_native_1015/dsfd_vm_static_wfc_ctl.tcl",
+ "macros": [],
+ "route": {
+  "pd": 0.4,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "period_ps": 770,
+  "hold_margin_ns": 0.03
+ },
+ "recipe": 2,
+ "pin_regs": {
+  "enable": false,
+  "reason": "every output is a flop and every input lands on a flop in its first stage; extra pin stages would move the fixed 3:4 / 4:3 x43 sample slots of the WFC protocol"
+ },
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "structural_change": "WFC control glue (decode, return, grant/t_err) hardened as its own two-root leaf on the ck_wfc_control_t / ck_wfc_control_s die categories (previously parent flops with no view); parent dsfd_vm_static_wfc is wires only; data edges unchanged, diagnostic fault +1 stream edge.",
+ "slot_change_request": {
+  "contract": "S81 VM native control-leaf geometry candidate",
+  "version": "wfc-ctl-1015",
+  "why": "new hardened leaf; die/parent pin grant required before parent adoption"
+ },
+ "job": {
+  "owner": "claude:S-VM ctlglue",
+  "branch": "claude/s81-vm-ctlglue-1015",
+  "tag": "native1",
+  "extra_paths": [
+   "tools/s81_vm",
+   "rtl/dsrom_sys/s81_ph/vm",
+   "physical/s81_vm_ctl_native_1015"
+  ],
+  "purpose": "Native WFC control leaf: differential bench vs the r9 parent body + observed DUT mutants, native CTS.",
+  "benches": [
+   {
+    "name": "wfc_ctl_equiv",
+    "cmd": "bash tools/s81_vm/wfc_ctl_equiv_gate.sh {RUN}/wfc ",
+    "expect": "pass",
+    "pass_regex": "WFC_CTL_GATE PASS",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "wfc_ctl_mut_lane",
+    "cmd": "bash tools/s81_vm/wfc_ctl_equiv_gate.sh {RUN}/wfc OT_VM_WFC_CTL_MUT_LANE",
+    "expect": "fail",
+    "fail_regex": "WFC_CTL_GATE FAIL OT_VM_WFC_CTL_MUT_LANE",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "wfc_ctl_mut_fault",
+    "cmd": "bash tools/s81_vm/wfc_ctl_equiv_gate.sh {RUN}/wfc OT_VM_WFC_CTL_MUT_FAULT",
+    "expect": "fail",
+    "fail_regex": "WFC_CTL_GATE FAIL OT_VM_WFC_CTL_MUT_FAULT",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ],
+  "cycles_added": 0
+ }
+}

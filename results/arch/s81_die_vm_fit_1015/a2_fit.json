@@ -1,0 +1,1366 @@
+{
+ "schema": "opentallas.s81.die_vm_fit.v1",
+ "date": "2026-10-15",
+ "author": "S-DIE r4",
+ "question": "Does the A2 VM (3369.6 x 5063.0 um, main 37a313326) fit the S81 hub inside 33x26 once option C (main 44bb36c57) frees road width, every cut <= 0.60?",
+ "verdict": "NO",
+ "geometry_source": "GEN19b canonical placement (c19b a_real/place.tcl, src19): su_s 13780.8,1831.68 (1889.976x10709.256); sp_vm 14036.1,12562.56; capture 16536.96 .. collective 19744.56 .. host 22638.96 (+129.6) in the W column x 13942.8-15670.8; VCH 15670.8-17312.4 (1641.6); E column 17312.4-19040.4: hc_t 3216.24 (9849.6) + corridor 799.2 + hc_s 13826.16 (9324.7); bk_collector bottom 23654.2",
+ "height": {
+  "w_column_stack_um": {
+   "su_s_to_vm": 10730.88,
+   "vm": 5063.0,
+   "gap": 21.6,
+   "capture_gather_pq_wfc_sseq": 3207.6,
+   "collective": 2894.4,
+   "host": 129.6
+  },
+  "stack_top_um": 23878.8,
+  "hub_top_minus_gap_um": 23632.6,
+  "shortfall_um": 246.2,
+  "shortfall_if_host_to_E_column_top_um": 95.0,
+  "note": "VM spans W column + VCH (3369.6 = 13942.8..17312.4); any wider spans the E tower (19973.5 of 21822 um tall, free 1363 bottom / 481 top)"
+ },
+ "roads": {
+  "s14_capacity_tracks_060": 12903,
+  "joint_margin_option_c": 4833,
+  "band_blocked_by_vm": {
+   "y0": 12444,
+   "y1": 13738,
+   "joint_nonvm_tracks": 14425,
+   "over_s14_tracks": 1523,
+   "hub_road_um": 120.2,
+   "note": "a full-width VM over this band leaves only S14W+S14E (share 0.671); VM bottom must be >= 13738 for 0.60, which makes the height shortfall 1444 um"
+  },
+  "option_c_slack_note": "option C slack is aggregate width at y 16509; at the VM height the hub stack, not road width, binds; VM<->collective/pq/wfc/gather lanes (9078 tracks at y 16509) vanish with abutment"
+ },
+ "bands": [
+  {
+   "y0": 48.6,
+   "y1": 99.8,
+   "tracks": {
+    "S14W": 71,
+    "VCH": 0,
+    "S14E": 781
+   },
+   "vm_lane_tracks": {
+    "S14W": 0,
+    "VCH": 0,
+    "S14E": 0
+   },
+   "joint_nonvm": 852,
+   "hub_road_um_joint": 0.0
+  },
+  {
+   "y0": 99.8,
+   "y1": 1510.9,
+   "tracks": {
+    "S14W": 1177,
+    "VCH": 0,
+    "S14E": 781
+   },
+   "vm_lane_tracks": {
+    "S14W": 0,
+    "VCH": 0,
+    "S14E": 0
+   },
+   "joint_nonvm": 1958,
+   "hub_road_um_joint": 0.0
+  },
+  {
+   "y0": 1510.9,
+   "y1": 1560.6,
+   "tracks": {
+    "S14W": 1177,
+    "VCH": 0,
+    "S14E": 868
+   },
+   "vm_lane_tracks": {
+    "S14W": 0,
+    "VCH": 0,
+    "S14E": 0
+   },
+   "joint_nonvm": 2045,
+   "hub_road_um_joint": 0.0
+  },
+  {
+   "y0": 1560.6,
+   "y1": 1574.6,
+   "tracks": {
+    "S14W": 1692,
+    "VCH": 0,
+    "S14E": 868
+   },
+   "vm_lane_tracks": {
+    "S14W": 0,
+    "VCH": 0,
+    "S14E": 0
+   },
+   "joint_nonvm": 2560,
+   "hub_road_um_joint": 0.0
+  },
+  {
+   "y0": 1574.6,
+   "y1": 1576.8,
+   "tracks": {
+    "S14W": 1692,
+    "VCH": 0,
+    "S14E": 879
+   },
+   "vm_lane_tracks": {
+    "S14W": 0,
+    "VCH": 0,
+    "S14E": 0
+   },
+   "joint_nonvm": 2571,
+   "hub_road_um_joint": 0.0
+  },
+  {
+   "y0": 1576.8,
+   "y1": 1786.3,
+   "tracks": {
+    "S14W": 1692,
+    "VCH": 0,
+    "S14E": 883
+   },
+   "vm_lane_tracks": {
+    "S14W": 0,
+    "VCH": 0,
+    "S14E": 0
+   },
+   "joint_nonvm": 2575,
+   "hub_road_um_joint": 0.0
+  },
+  {
+   "y0": 1786.3,
+   "y1": 1816.3,
+   "tracks": {
+    "S14W": 1692,
+    "VCH": 515,
+    "S14E": 883
+   },
+   "vm_lane_tracks": {
+    "S14W": 0,
+    "VCH": 0,
+    "S14E": 0
+   },
+   "joint_nonvm": 3090,
+   "hub_road_um_joint": 0.0
+  },
+  {
+   "y0": 1816.3,
+   "y1": 3460.3,
+   "tracks": {
+    "S14W": 1692,
+    "VCH": 617,
+    "S14E": 781
+   },
+   "vm_lane_tracks": {
+    "S14W": 0,
+    "VCH": 0,
+    "S14E": 0
+   },
+   "joint_nonvm": 3090,
+   "hub_road_um_joint": 0.0
+  },
+  {
+   "y0": 3460.3,
+   "y1": 3902.1,
+   "tracks": {
+    "S14W": 1692,
+    "VCH": 617,
+    "S14E": 781
+   },
+   "vm_lane_tracks": {
+    "S14W": 0,
+    "VCH": 0,
+    "S14E": 0
+   },
+   "joint_nonvm": 3090,
+   "hub_road_um_joint": 0.0
+  },
+  {
+   "y0": 3902.1,
+   "y1": 3902.1,
+   "tracks": {
+    "S14W": 3543,
+    "VCH": 617,
+    "S14E": 2668
+   },
+   "vm_lane_tracks": {
+    "S14W": 0,
+    "VCH": 0,
+    "S14E": 0
+   },
+   "joint_nonvm": 6828,
+   "hub_road_um_joint": 0.0
+  },
+  {
+   "y0": 3902.1,
+   "y1": 3953.2,
+   "tracks": {
+    "S14W": 3827,
+    "VCH": 617,
+    "S14E": 2668
+   },
+   "vm_lane_tracks": {
+    "S14W": 0,
+    "VCH": 0,
+    "S14E": 0
+   },
+   "joint_nonvm": 7112,
+   "hub_road_um_joint": 0.0
+  },
+  {
+   "y0": 3953.2,
+   "y1": 6467.2,
+   "tracks": {
+    "S14W": 3925,
+    "VCH": 617,
+    "S14E": 2668
+   },
+   "vm_lane_tracks": {
+    "S14W": 0,
+    "VCH": 0,
+    "S14E": 0
+   },
+   "joint_nonvm": 7210,
+   "hub_road_um_joint": 0.0
+  },
+  {
+   "y0": 6467.2,
+   "y1": 7374.4,
+   "tracks": {
+    "S14W": 3925,
+    "VCH": 1723,
+    "S14E": 2668
+   },
+   "vm_lane_tracks": {
+    "S14W": 0,
+    "VCH": 0,
+    "S14E": 0
+   },
+   "joint_nonvm": 8316,
+   "hub_road_um_joint": 0.0
+  },
+  {
+   "y0": 7374.4,
+   "y1": 7550.4,
+   "tracks": {
+    "S14W": 4351,
+    "VCH": 2433,
+    "S14E": 2668
+   },
+   "vm_lane_tracks": {
+    "S14W": 0,
+    "VCH": 0,
+    "S14E": 0
+   },
+   "joint_nonvm": 9452,
+   "hub_road_um_joint": 0.0
+  },
+  {
+   "y0": 7550.4,
+   "y1": 7729.7,
+   "tracks": {
+    "S14W": 4635,
+    "VCH": 3214,
+    "S14E": 2668
+   },
+   "vm_lane_tracks": {
+    "S14W": 0,
+    "VCH": 0,
+    "S14E": 0
+   },
+   "joint_nonvm": 10517,
+   "hub_road_um_joint": 0.0
+  },
+  {
+   "y0": 7729.7,
+   "y1": 7729.7,
+   "tracks": {
+    "S14W": 4493,
+    "VCH": 3214,
+    "S14E": 2668
+   },
+   "vm_lane_tracks": {
+    "S14W": 0,
+    "VCH": 0,
+    "S14E": 0
+   },
+   "joint_nonvm": 10375,
+   "hub_road_um_joint": 0.0
+  },
+  {
+   "y0": 7729.7,
+   "y1": 7885.1,
+   "tracks": {
+    "S14W": 4990,
+    "VCH": 3995,
+    "S14E": 2668
+   },
+   "vm_lane_tracks": {
+    "S14W": 0,
+    "VCH": 0,
+    "S14E": 0
+   },
+   "joint_nonvm": 11653,
+   "hub_road_um_joint": 0.0
+  },
+  {
+   "y0": 7885.1,
+   "y1": 7909.0,
+   "tracks": {
+    "S14W": 6055,
+    "VCH": 3995,
+    "S14E": 3449
+   },
+   "vm_lane_tracks": {
+    "S14W": 0,
+    "VCH": 0,
+    "S14E": 0
+   },
+   "joint_nonvm": 13499,
+   "hub_road_um_joint": 47.1
+  },
+  {
+   "y0": 7909.0,
+   "y1": 7936.3,
+   "tracks": {
+    "S14W": 5984,
+    "VCH": 4776,
+    "S14E": 3449
+   },
+   "vm_lane_tracks": {
+    "S14W": 0,
+    "VCH": 0,
+    "S14E": 0
+   },
+   "joint_nonvm": 14209,
+   "hub_road_um_joint": 103.2
+  },
+  {
+   "y0": 7936.3,
+   "y1": 8088.2,
+   "tracks": {
+    "S14W": 6126,
+    "VCH": 4776,
+    "S14E": 3449
+   },
+   "vm_lane_tracks": {
+    "S14W": 0,
+    "VCH": 0,
+    "S14E": 0
+   },
+   "joint_nonvm": 14351,
+   "hub_road_um_joint": 114.4
+  },
+  {
+   "y0": 8088.2,
+   "y1": 8088.2,
+   "tracks": {
+    "S14W": 5487,
+    "VCH": 4776,
+    "S14E": 3449
+   },
+   "vm_lane_tracks": {
+    "S14W": 0,
+    "VCH": 0,
+    "S14E": 0
+   },
+   "joint_nonvm": 13712,
+   "hub_road_um_joint": 63.9
+  },
+  {
+   "y0": 8088.2,
+   "y1": 8264.2,
+   "tracks": {
+    "S14W": 5416,
+    "VCH": 5557,
+    "S14E": 3449
+   },
+   "vm_lane_tracks": {
+    "S14W": 0,
+    "VCH": 0,
+    "S14E": 0
+   },
+   "joint_nonvm": 14422,
+   "hub_road_um_joint": 120.0
+  },
+  {
+   "y0": 8264.2,
+   "y1": 8610.8,
+   "tracks": {
+    "S14W": 5416,
+    "VCH": 6267,
+    "S14E": 3449
+   },
+   "vm_lane_tracks": {
+    "S14W": 0,
+    "VCH": 0,
+    "S14E": 0
+   },
+   "joint_nonvm": 15132,
+   "hub_road_um_joint": 176.1
+  },
+  {
+   "y0": 8610.8,
+   "y1": 8805.7,
+   "tracks": {
+    "S14W": 5416,
+    "VCH": 5557,
+    "S14E": 4159
+   },
+   "vm_lane_tracks": {
+    "S14W": 0,
+    "VCH": 0,
+    "S14E": 0
+   },
+   "joint_nonvm": 15132,
+   "hub_road_um_joint": 176.1
+  },
+  {
+   "y0": 8805.7,
+   "y1": 9000.6,
+   "tracks": {
+    "S14W": 5416,
+    "VCH": 4776,
+    "S14E": 3378
+   },
+   "vm_lane_tracks": {
+    "S14W": 0,
+    "VCH": 0,
+    "S14E": 0
+   },
+   "joint_nonvm": 13570,
+   "hub_road_um_joint": 52.7
+  },
+  {
+   "y0": 9000.6,
+   "y1": 9098.0,
+   "tracks": {
+    "S14W": 4706,
+    "VCH": 3995,
+    "S14E": 2313
+   },
+   "vm_lane_tracks": {
+    "S14W": 0,
+    "VCH": 0,
+    "S14E": 0
+   },
+   "joint_nonvm": 11014,
+   "hub_road_um_joint": 0.0
+  },
+  {
+   "y0": 9098.0,
+   "y1": 9195.5,
+   "tracks": {
+    "S14W": 4706,
+    "VCH": 2889,
+    "S14E": 2313
+   },
+   "vm_lane_tracks": {
+    "S14W": 0,
+    "VCH": 0,
+    "S14E": 0
+   },
+   "joint_nonvm": 9908,
+   "hub_road_um_joint": 0.0
+  },
+  {
+   "y0": 9195.5,
+   "y1": 9390.4,
+   "tracks": {
+    "S14W": 4848,
+    "VCH": 2108,
+    "S14E": 2952
+   },
+   "vm_lane_tracks": {
+    "S14W": 0,
+    "VCH": 0,
+    "S14E": 0
+   },
+   "joint_nonvm": 9908,
+   "hub_road_um_joint": 0.0
+  },
+  {
+   "y0": 9390.4,
+   "y1": 9585.2,
+   "tracks": {
+    "S14W": 4848,
+    "VCH": 1327,
+    "S14E": 3733
+   },
+   "vm_lane_tracks": {
+    "S14W": 0,
+    "VCH": 0,
+    "S14E": 0
+   },
+   "joint_nonvm": 9908,
+   "hub_road_um_joint": 0.0
+  },
+  {
+   "y0": 9585.2,
+   "y1": 11868.2,
+   "tracks": {
+    "S14W": 4848,
+    "VCH": 617,
+    "S14E": 3449
+   },
+   "vm_lane_tracks": {
+    "S14W": 0,
+    "VCH": 0,
+    "S14E": 0
+   },
+   "joint_nonvm": 8914,
+   "hub_road_um_joint": 0.0
+  },
+  {
+   "y0": 11868.2,
+   "y1": 11919.3,
+   "tracks": {
+    "S14W": 4777,
+    "VCH": 617,
+    "S14E": 4207
+   },
+   "vm_lane_tracks": {
+    "S14W": 0,
+    "VCH": 0,
+    "S14E": 0
+   },
+   "joint_nonvm": 9601,
+   "hub_road_um_joint": 0.0
+  },
+  {
+   "y0": 11919.3,
+   "y1": 12443.7,
+   "tracks": {
+    "S14W": 4280,
+    "VCH": 617,
+    "S14E": 4207
+   },
+   "vm_lane_tracks": {
+    "S14W": 0,
+    "VCH": 0,
+    "S14E": 0
+   },
+   "joint_nonvm": 9104,
+   "hub_road_um_joint": 0.0
+  },
+  {
+   "y0": 12443.7,
+   "y1": 12534.9,
+   "tracks": {
+    "S14W": 4280,
+    "VCH": 5839,
+    "S14E": 4207
+   },
+   "vm_lane_tracks": {
+    "S14W": 0,
+    "VCH": 0,
+    "S14E": 0
+   },
+   "joint_nonvm": 14326,
+   "hub_road_um_joint": 112.4
+  },
+  {
+   "y0": 12534.9,
+   "y1": 13588.5,
+   "tracks": {
+    "S14W": 4280,
+    "VCH": 5938,
+    "S14E": 4207
+   },
+   "vm_lane_tracks": {
+    "S14W": 0,
+    "VCH": 0,
+    "S14E": 0
+   },
+   "joint_nonvm": 14425,
+   "hub_road_um_joint": 120.2
+  },
+  {
+   "y0": 13588.5,
+   "y1": 13737.6,
+   "tracks": {
+    "S14W": 4280,
+    "VCH": 5423,
+    "S14E": 4207
+   },
+   "vm_lane_tracks": {
+    "S14W": 0,
+    "VCH": 0,
+    "S14E": 0
+   },
+   "joint_nonvm": 13910,
+   "hub_road_um_joint": 79.5
+  },
+  {
+   "y0": 13737.6,
+   "y1": 13955.8,
+   "tracks": {
+    "S14W": 3253,
+    "VCH": 5423,
+    "S14E": 4207
+   },
+   "vm_lane_tracks": {
+    "S14W": 0,
+    "VCH": 0,
+    "S14E": 0
+   },
+   "joint_nonvm": 12883,
+   "hub_road_um_joint": 0.0
+  },
+  {
+   "y0": 13955.8,
+   "y1": 14137.2,
+   "tracks": {
+    "S14W": 3253,
+    "VCH": 201,
+    "S14E": 4207
+   },
+   "vm_lane_tracks": {
+    "S14W": 0,
+    "VCH": 0,
+    "S14E": 0
+   },
+   "joint_nonvm": 7661,
+   "hub_road_um_joint": 0.0
+  },
+  {
+   "y0": 14137.2,
+   "y1": 15439.7,
+   "tracks": {
+    "S14W": 2738,
+    "VCH": 201,
+    "S14E": 4207
+   },
+   "vm_lane_tracks": {
+    "S14W": 0,
+    "VCH": 0,
+    "S14E": 0
+   },
+   "joint_nonvm": 7146,
+   "hub_road_um_joint": 0.0
+  },
+  {
+   "y0": 15439.7,
+   "y1": 15851.2,
+   "tracks": {
+    "S14W": 2738,
+    "VCH": 716,
+    "S14E": 4207
+   },
+   "vm_lane_tracks": {
+    "S14W": 0,
+    "VCH": 0,
+    "S14E": 0
+   },
+   "joint_nonvm": 7661,
+   "hub_road_um_joint": 0.0
+  },
+  {
+   "y0": 15851.2,
+   "y1": 15851.2,
+   "tracks": {
+    "S14W": 2667,
+    "VCH": 716,
+    "S14E": 3426
+   },
+   "vm_lane_tracks": {
+    "S14W": 0,
+    "VCH": 0,
+    "S14E": 0
+   },
+   "joint_nonvm": 6809,
+   "hub_road_um_joint": 0.0
+  },
+  {
+   "y0": 15851.2,
+   "y1": 15902.4,
+   "tracks": {
+    "S14W": 2667,
+    "VCH": 716,
+    "S14E": 3426
+   },
+   "vm_lane_tracks": {
+    "S14W": 0,
+    "VCH": 0,
+    "S14E": 0
+   },
+   "joint_nonvm": 6809,
+   "hub_road_um_joint": 0.0
+  },
+  {
+   "y0": 15902.4,
+   "y1": 15902.4,
+   "tracks": {
+    "S14W": 2099,
+    "VCH": 716,
+    "S14E": 3426
+   },
+   "vm_lane_tracks": {
+    "S14W": 0,
+    "VCH": 0,
+    "S14E": 0
+   },
+   "joint_nonvm": 6241,
+   "hub_road_um_joint": 0.0
+  },
+  {
+   "y0": 15902.4,
+   "y1": 16509.3,
+   "tracks": {
+    "S14W": 2099,
+    "VCH": 716,
+    "S14E": 3426
+   },
+   "vm_lane_tracks": {
+    "S14W": 0,
+    "VCH": 0,
+    "S14E": 0
+   },
+   "joint_nonvm": 6241,
+   "hub_road_um_joint": 0.0
+  },
+  {
+   "y0": 16509.3,
+   "y1": 17126.2,
+   "tracks": {
+    "S14W": 2099,
+    "VCH": 9926,
+    "S14E": 3426
+   },
+   "vm_lane_tracks": {
+    "S14W": 0,
+    "VCH": 9210,
+    "S14E": 0
+   },
+   "joint_nonvm": 6241,
+   "hub_road_um_joint": 0.0
+  },
+  {
+   "y0": 17126.2,
+   "y1": 18159.6,
+   "tracks": {
+    "S14W": 2099,
+    "VCH": 9401,
+    "S14E": 3426
+   },
+   "vm_lane_tracks": {
+    "S14W": 0,
+    "VCH": 8685,
+    "S14E": 0
+   },
+   "joint_nonvm": 6241,
+   "hub_road_um_joint": 0.0
+  },
+  {
+   "y0": 18159.6,
+   "y1": 18344.4,
+   "tracks": {
+    "S14W": 2099,
+    "VCH": 9500,
+    "S14E": 3426
+   },
+   "vm_lane_tracks": {
+    "S14W": 0,
+    "VCH": 8685,
+    "S14E": 0
+   },
+   "joint_nonvm": 6340,
+   "hub_road_um_joint": 0.0
+  },
+  {
+   "y0": 18344.4,
+   "y1": 18966.5,
+   "tracks": {
+    "S14W": 2099,
+    "VCH": 7429,
+    "S14E": 3426
+   },
+   "vm_lane_tracks": {
+    "S14W": 0,
+    "VCH": 6614,
+    "S14E": 0
+   },
+   "joint_nonvm": 6340,
+   "hub_road_um_joint": 0.0
+  },
+  {
+   "y0": 18966.5,
+   "y1": 19282.8,
+   "tracks": {
+    "S14W": 2099,
+    "VCH": 5838,
+    "S14E": 3426
+   },
+   "vm_lane_tracks": {
+    "S14W": 0,
+    "VCH": 5023,
+    "S14E": 0
+   },
+   "joint_nonvm": 6340,
+   "hub_road_um_joint": 0.0
+  },
+  {
+   "y0": 19282.8,
+   "y1": 19303.9,
+   "tracks": {
+    "S14W": 2099,
+    "VCH": 7085,
+    "S14E": 3426
+   },
+   "vm_lane_tracks": {
+    "S14W": 0,
+    "VCH": 5023,
+    "S14E": 0
+   },
+   "joint_nonvm": 7587,
+   "hub_road_um_joint": 0.0
+  },
+  {
+   "y0": 19303.9,
+   "y1": 19383.8,
+   "tracks": {
+    "S14W": 2099,
+    "VCH": 6998,
+    "S14E": 3426
+   },
+   "vm_lane_tracks": {
+    "S14W": 0,
+    "VCH": 5023,
+    "S14E": 0
+   },
+   "joint_nonvm": 7500,
+   "hub_road_um_joint": 0.0
+  },
+  {
+   "y0": 19383.8,
+   "y1": 19445.4,
+   "tracks": {
+    "S14W": 2099,
+    "VCH": 6987,
+    "S14E": 3426
+   },
+   "vm_lane_tracks": {
+    "S14W": 0,
+    "VCH": 5023,
+    "S14E": 0
+   },
+   "joint_nonvm": 7489,
+   "hub_road_um_joint": 0.0
+  },
+  {
+   "y0": 19445.4,
+   "y1": 19467.6,
+   "tracks": {
+    "S14W": 2099,
+    "VCH": 6983,
+    "S14E": 3426
+   },
+   "vm_lane_tracks": {
+    "S14W": 0,
+    "VCH": 5023,
+    "S14E": 0
+   },
+   "joint_nonvm": 7485,
+   "hub_road_um_joint": 0.0
+  },
+  {
+   "y0": 19467.6,
+   "y1": 19472.4,
+   "tracks": {
+    "S14W": 2099,
+    "VCH": 6478,
+    "S14E": 3426
+   },
+   "vm_lane_tracks": {
+    "S14W": 0,
+    "VCH": 4924,
+    "S14E": 0
+   },
+   "joint_nonvm": 7079,
+   "hub_road_um_joint": 0.0
+  },
+  {
+   "y0": 19472.4,
+   "y1": 19504.8,
+   "tracks": {
+    "S14W": 2099,
+    "VCH": 6565,
+    "S14E": 3426
+   },
+   "vm_lane_tracks": {
+    "S14W": 0,
+    "VCH": 4924,
+    "S14E": 0
+   },
+   "joint_nonvm": 7166,
+   "hub_road_um_joint": 0.0
+  },
+  {
+   "y0": 19504.8,
+   "y1": 19544.1,
+   "tracks": {
+    "S14W": 2099,
+    "VCH": 6576,
+    "S14E": 3426
+   },
+   "vm_lane_tracks": {
+    "S14W": 0,
+    "VCH": 4924,
+    "S14E": 0
+   },
+   "joint_nonvm": 7177,
+   "hub_road_um_joint": 0.0
+  },
+  {
+   "y0": 19544.1,
+   "y1": 19564.2,
+   "tracks": {
+    "S14W": 2099,
+    "VCH": 6629,
+    "S14E": 3426
+   },
+   "vm_lane_tracks": {
+    "S14W": 0,
+    "VCH": 4924,
+    "S14E": 0
+   },
+   "joint_nonvm": 7230,
+   "hub_road_um_joint": 0.0
+  },
+  {
+   "y0": 19564.2,
+   "y1": 19604.1,
+   "tracks": {
+    "S14W": 2099,
+    "VCH": 6633,
+    "S14E": 3426
+   },
+   "vm_lane_tracks": {
+    "S14W": 0,
+    "VCH": 4924,
+    "S14E": 0
+   },
+   "joint_nonvm": 7234,
+   "hub_road_um_joint": 0.0
+  },
+  {
+   "y0": 19604.1,
+   "y1": 19630.1,
+   "tracks": {
+    "S14W": 2012,
+    "VCH": 6633,
+    "S14E": 3426
+   },
+   "vm_lane_tracks": {
+    "S14W": 0,
+    "VCH": 4924,
+    "S14E": 0
+   },
+   "joint_nonvm": 7147,
+   "hub_road_um_joint": 0.0
+  },
+  {
+   "y0": 19630.1,
+   "y1": 19685.1,
+   "tracks": {
+    "S14W": 2001,
+    "VCH": 6633,
+    "S14E": 3426
+   },
+   "vm_lane_tracks": {
+    "S14W": 0,
+    "VCH": 4924,
+    "S14E": 0
+   },
+   "joint_nonvm": 7136,
+   "hub_road_um_joint": 0.0
+  },
+  {
+   "y0": 19685.1,
+   "y1": 19729.0,
+   "tracks": {
+    "S14W": 1997,
+    "VCH": 6633,
+    "S14E": 3426
+   },
+   "vm_lane_tracks": {
+    "S14W": 0,
+    "VCH": 4924,
+    "S14E": 0
+   },
+   "joint_nonvm": 7132,
+   "hub_road_um_joint": 0.0
+  },
+  {
+   "y0": 19729.0,
+   "y1": 19834.2,
+   "tracks": {
+    "S14W": 1997,
+    "VCH": 675,
+    "S14E": 3426
+   },
+   "vm_lane_tracks": {
+    "S14W": 0,
+    "VCH": 0,
+    "S14E": 0
+   },
+   "joint_nonvm": 6098,
+   "hub_road_um_joint": 0.0
+  },
+  {
+   "y0": 19834.2,
+   "y1": 19834.2,
+   "tracks": {
+    "S14W": 1926,
+    "VCH": 675,
+    "S14E": 2645
+   },
+   "vm_lane_tracks": {
+    "S14W": 0,
+    "VCH": 0,
+    "S14E": 0
+   },
+   "joint_nonvm": 5246,
+   "hub_road_um_joint": 0.0
+  },
+  {
+   "y0": 19834.2,
+   "y1": 19885.4,
+   "tracks": {
+    "S14W": 1926,
+    "VCH": 675,
+    "S14E": 2645
+   },
+   "vm_lane_tracks": {
+    "S14W": 0,
+    "VCH": 0,
+    "S14E": 0
+   },
+   "joint_nonvm": 5246,
+   "hub_road_um_joint": 0.0
+  },
+  {
+   "y0": 19885.4,
+   "y1": 19885.4,
+   "tracks": {
+    "S14W": 820,
+    "VCH": 675,
+    "S14E": 1539
+   },
+   "vm_lane_tracks": {
+    "S14W": 0,
+    "VCH": 0,
+    "S14E": 0
+   },
+   "joint_nonvm": 3034,
+   "hub_road_um_joint": 0.0
+  },
+  {
+   "y0": 19885.4,
+   "y1": 20948.7,
+   "tracks": {
+    "S14W": 4924,
+    "VCH": 675,
+    "S14E": 4104
+   },
+   "vm_lane_tracks": {
+    "S14W": 0,
+    "VCH": 0,
+    "S14E": 0
+   },
+   "joint_nonvm": 9703,
+   "hub_road_um_joint": 0.0
+  },
+  {
+   "y0": 20948.7,
+   "y1": 21038.7,
+   "tracks": {
+    "S14W": 3898,
+    "VCH": 1701,
+    "S14E": 4104
+   },
+   "vm_lane_tracks": {
+    "S14W": 0,
+    "VCH": 0,
+    "S14E": 0
+   },
+   "joint_nonvm": 9703,
+   "hub_road_um_joint": 0.0
+  },
+  {
+   "y0": 21038.7,
+   "y1": 21084.8,
+   "tracks": {
+    "S14W": 3385,
+    "VCH": 2214,
+    "S14E": 4104
+   },
+   "vm_lane_tracks": {
+    "S14W": 0,
+    "VCH": 0,
+    "S14E": 0
+   },
+   "joint_nonvm": 9703,
+   "hub_road_um_joint": 0.0
+  },
+  {
+   "y0": 21084.8,
+   "y1": 21128.0,
+   "tracks": {
+    "S14W": 2872,
+    "VCH": 2727,
+    "S14E": 4104
+   },
+   "vm_lane_tracks": {
+    "S14W": 0,
+    "VCH": 0,
+    "S14E": 0
+   },
+   "joint_nonvm": 9703,
+   "hub_road_um_joint": 0.0
+  },
+  {
+   "y0": 21128.0,
+   "y1": 21128.7,
+   "tracks": {
+    "S14W": 2359,
+    "VCH": 2727,
+    "S14E": 4104
+   },
+   "vm_lane_tracks": {
+    "S14W": 0,
+    "VCH": 0,
+    "S14E": 0
+   },
+   "joint_nonvm": 9190,
+   "hub_road_um_joint": 0.0
+  },
+  {
+   "y0": 21128.7,
+   "y1": 21218.7,
+   "tracks": {
+    "S14W": 1846,
+    "VCH": 3240,
+    "S14E": 4104
+   },
+   "vm_lane_tracks": {
+    "S14W": 0,
+    "VCH": 0,
+    "S14E": 0
+   },
+   "joint_nonvm": 9190,
+   "hub_road_um_joint": 0.0
+  },
+  {
+   "y0": 21218.7,
+   "y1": 22438.5,
+   "tracks": {
+    "S14W": 820,
+    "VCH": 4779,
+    "S14E": 4104
+   },
+   "vm_lane_tracks": {
+    "S14W": 0,
+    "VCH": 0,
+    "S14E": 0
+   },
+   "joint_nonvm": 9703,
+   "hub_road_um_joint": 0.0
+  },
+  {
+   "y0": 22438.5,
+   "y1": 22532.0,
+   "tracks": {
+    "S14W": 820,
+    "VCH": 5378,
+    "S14E": 4104
+   },
+   "vm_lane_tracks": {
+    "S14W": 0,
+    "VCH": 0,
+    "S14E": 0
+   },
+   "joint_nonvm": 10302,
+   "hub_road_um_joint": 0.0
+  },
+  {
+   "y0": 22532.0,
+   "y1": 22540.7,
+   "tracks": {
+    "S14W": 526,
+    "VCH": 5378,
+    "S14E": 4104
+   },
+   "vm_lane_tracks": {
+    "S14W": 0,
+    "VCH": 0,
+    "S14E": 0
+   },
+   "joint_nonvm": 10008,
+   "hub_road_um_joint": 0.0
+  },
+  {
+   "y0": 22540.7,
+   "y1": 22565.5,
+   "tracks": {
+    "S14W": 526,
+    "VCH": 5378,
+    "S14E": 4104
+   },
+   "vm_lane_tracks": {
+    "S14W": 0,
+    "VCH": 0,
+    "S14E": 0
+   },
+   "joint_nonvm": 10008,
+   "hub_road_um_joint": 0.0
+  },
+  {
+   "y0": 22565.5,
+   "y1": 22623.4,
+   "tracks": {
+    "S14W": 515,
+    "VCH": 5378,
+    "S14E": 4104
+   },
+   "vm_lane_tracks": {
+    "S14W": 0,
+    "VCH": 0,
+    "S14E": 0
+   },
+   "joint_nonvm": 9997,
+   "hub_road_um_joint": 0.0
+  },
+  {
+   "y0": 22623.4,
+   "y1": 23200.0,
+   "tracks": {
+    "S14W": 515,
+    "VCH": 4721,
+    "S14E": 4104
+   },
+   "vm_lane_tracks": {
+    "S14W": 0,
+    "VCH": 0,
+    "S14E": 0
+   },
+   "joint_nonvm": 9340,
+   "hub_road_um_joint": 0.0
+  },
+  {
+   "y0": 23200.0,
+   "y1": 23624.2,
+   "tracks": {
+    "S14W": 515,
+    "VCH": 617,
+    "S14E": 0
+   },
+   "vm_lane_tracks": {
+    "S14W": 0,
+    "VCH": 0,
+    "S14E": 0
+   },
+   "joint_nonvm": 1132,
+   "hub_road_um_joint": 0.0
+  },
+  {
+   "y0": 23624.2,
+   "y1": 23654.2,
+   "tracks": {
+    "S14W": 515,
+    "VCH": 515,
+    "S14E": 102
+   },
+   "vm_lane_tracks": {
+    "S14W": 0,
+    "VCH": 0,
+    "S14E": 0
+   },
+   "joint_nonvm": 1132,
+   "hub_road_um_joint": 0.0
+  },
+  {
+   "y0": 23654.2,
+   "y1": 23784.8,
+   "tracks": {
+    "S14W": 515,
+    "VCH": 0,
+    "S14E": 102
+   },
+   "vm_lane_tracks": {
+    "S14W": 0,
+    "VCH": 0,
+    "S14E": 0
+   },
+   "joint_nonvm": 617,
+   "hub_road_um_joint": 0.0
+  },
+  {
+   "y0": 23784.8,
+   "y1": 23874.5,
+   "tracks": {
+    "S14W": 515,
+    "VCH": 0,
+    "S14E": 15
+   },
+   "vm_lane_tracks": {
+    "S14W": 0,
+    "VCH": 0,
+    "S14E": 0
+   },
+   "joint_nonvm": 530,
+   "hub_road_um_joint": 0.0
+  },
+  {
+   "y0": 23874.5,
+   "y1": 23916.6,
+   "tracks": {
+    "S14W": 515,
+    "VCH": 0,
+    "S14E": 4
+   },
+   "vm_lane_tracks": {
+    "S14W": 0,
+    "VCH": 0,
+    "S14E": 0
+   },
+   "joint_nonvm": 519,
+   "hub_road_um_joint": 0.0
+  },
+  {
+   "y0": 23916.6,
+   "y1": 23960.9,
+   "tracks": {
+    "S14W": 0,
+    "VCH": 0,
+    "S14E": 4
+   },
+   "vm_lane_tracks": {
+    "S14W": 0,
+    "VCH": 0,
+    "S14E": 0
+   },
+   "joint_nonvm": 4,
+   "hub_road_um_joint": 0.0
+  },
+  {
+   "y0": 23960.9,
+   "y1": 26000,
+   "tracks": {
+    "S14W": 0,
+    "VCH": 0,
+    "S14E": 0
+   },
+   "vm_lane_tracks": {
+    "S14W": 0,
+    "VCH": 0,
+    "S14E": 0
+   },
+   "joint_nonvm": 0,
+   "hub_road_um_joint": 0.0
+  }
+ ]
+}

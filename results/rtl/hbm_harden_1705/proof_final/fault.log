@@ -1,0 +1,2 @@
+DMA_NATIVE_FAULT_PASS banks=8 checks=26 reset_release_edges=2 malformed_response_fault_extra_edges=1 normal_execution_extra_edges=0
+rtl/hbm_accel/generic/peers/static/tb_dma_vp4_native_fault.sv:23: $finish called at 550000 (1ps)

@@ -1,0 +1,106 @@
+{
+ "name": "s81_a2f_field16_pilot_1015_r1",
+ "top": "s81_a2f_field16",
+ "kind": "tile",
+ "sources": [
+  "tools/s81_vm/area_a2_controlled.sv",
+  "tools/s81_vm/area_id_native.sv",
+  "tools/s81_vm/area_id_native_join.sv",
+  "tools/s81_vm/area_a2_hardmasters.sv",
+  "tools/s81_vm/area_a2f.sv"
+ ],
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 183.6,
+  "h": 140.4,
+  "exact": true
+ },
+ "pins": {
+  "S": [
+   "i_data"
+  ],
+  "N": [
+   "o_data",
+   "o_v"
+  ],
+  "W": [
+   "ck",
+   "rst_n",
+   "i_sel"
+  ],
+  "E": [
+   "i_drain_v",
+   "i_drain_slot",
+   "fault"
+  ]
+ },
+ "io_tcl": "physical/s81_vm_a2f_1015/s81_a2f_field16.tcl",
+ "macros": [],
+ "route": {
+  "pd": 0.4,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "period_ps": 770,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "recipe": 2,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "structural_change": "s81_a2f_field16: A2-F field-major write front master (four quarter copies merged, shared input pipeline); pilot measures the planned outline; cycle-exact to A2, zero added cycles.",
+ "slot_change_request": {
+  "contract": "S81 VM A2-F front geometry candidate",
+  "version": "a2f-1015",
+  "why": "new hardened leaf; VM parent plan a2f_route_plan.py"
+ },
+ "job": {
+  "owner": "claude:S-VM A2-F",
+  "branch": "claude/s81-vm-a2hier-1015",
+  "tag": "pilot1",
+  "extra_paths": [
+   "tools/s81_vm",
+   "physical/s81_vm_a2f_1015"
+  ],
+  "purpose": "A2-F pilot: measured area/closure of the planned outline (cut screen input).",
+  "benches": [
+   {
+    "name": "a2f_field16_equiv",
+    "cmd": "python3 tools/s81_vm/area_a2f_equiv_gate.py --seeds 1 --bench gold",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "A2F_EQUIV PASS gold"
+   },
+   {
+    "name": "a2f_field16_mut_sel",
+    "cmd": "python3 tools/s81_vm/area_a2f_equiv_gate.py --seeds 1 --bench S81_A2F_MUT_SEL_SWAP",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "A2F_EQUIV FAIL S81_A2F_MUT_SEL_SWAP"
+   }
+  ],
+  "cycles_added": 0
+ },
+ "params": {},
+ "children": [],
+ "inter": []
+}

@@ -1,0 +1,39 @@
+{
+  "status": "held_coherent_set_only",
+  "rows": [
+    {
+      "master": "ot_s81_hc_ctfn_nt",
+      "job": "s81hc_ctfnnt_ref-n3-nohb4-COMMIT-92a2c5553",
+      "record_commit": "6de40d441",
+      "TT_ps": 328.58,
+      "FF_ps": 8.61,
+      "DRC": 0,
+      "launch_ps": 208.50349,
+      "capture_ps": 165.81769,
+      "spread_ps": 35.8,
+      "R_ps": 264.7,
+      "native_pass": true,
+      "raw_audit": "ctfnnt_n3_native_audit.txt"
+    },
+    {
+      "master": "ot_s81_hc_ctfs_nt",
+      "job": "s81hc_ctfsnt_ref-v6-ysh-pd35sc-COMMIT-3f4973a01",
+      "record_commit": "ef32747a0",
+      "TT_ps": 126.12,
+      "FF_ps": 7.1,
+      "DRC": 0,
+      "launch_ps": 212.53309,
+      "capture_ps": 180.67941,
+      "spread_ps": 54.5,
+      "R_ps": 274.2,
+      "native_pass": true,
+      "raw_audit": "ctfsnt_v6_native_audit.txt"
+    }
+  ],
+  "conditions": [
+    "No independent view promotion",
+    "Source-bound v25 y-shift placement and ctfn_nt RTL must be adopted as coherent source set",
+    "Current assigned peer joins and die geometry must be verified",
+    "Actual complete HC exact/mutant/native schedule required"
+  ]
+}

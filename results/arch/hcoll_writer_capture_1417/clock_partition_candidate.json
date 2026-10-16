@@ -1,0 +1,192 @@
+{
+  "schema": "opentallas.hcoll.writer_clock_partition_candidate.v1",
+  "status": "V3 preparatory RTL and same-edge exact/mutant proofs PASS; no typed14clockgrant or physical/native qualification yet. Original v2 route preserved.",
+  "basis": {
+    "source_commit": "7cb9bc5ea",
+    "mapped_source_sha256": "79902a842064d5c824376236b4cb868bd513c35e2c92c3b73cfcfe7f29427ced",
+    "mapped_flops": 6504,
+    "netlist": "AGI hcoll_vmwrite_static_v2-20261015-142200/routes/gate/work/orfs/results/asap7/opentallas_ot_hgi_coll_static_vmwrite_asap7_ref_gate/base/1_2_yosys.v"
+  },
+  "actual_mapped_register_groups": {
+    "a0": 200,
+    "a1": 80,
+    "bown_q": 32,
+    "d0": 2560,
+    "d1": 1280,
+    "fault": 1,
+    "islot_q": 5,
+    "kq": 2248,
+    "launch_done": 5,
+    "m0": 16,
+    "m1": 8,
+    "multi_q": 8,
+    "sid_q": 2,
+    "so_q": 32,
+    "sv_q": 8,
+    "used_q": 8,
+    "v0": 5,
+    "v1": 5,
+    "vm_q": 1
+  },
+  "proposed_clock_groups": [
+    {
+      "name": "rgx0_capture",
+      "ff": 826,
+      "ports": [
+        "rgx_v[0]",
+        "rgx_addr[39:0]",
+        "rgx_data[511:0]"
+      ],
+      "registers": "a0/a1/d0/d1/v0/v1 lane slice",
+      "clock_entry_face": "W"
+    },
+    {
+      "name": "rgx1_capture",
+      "ff": 826,
+      "ports": [
+        "rgx_v[1]",
+        "rgx_addr[79:40]",
+        "rgx_data[1023:512]"
+      ],
+      "registers": "a0/a1/d0/d1/v0/v1 lane slice",
+      "clock_entry_face": "W"
+    },
+    {
+      "name": "rgx2_capture",
+      "ff": 826,
+      "ports": [
+        "rgx_v[2]",
+        "rgx_addr[119:80]",
+        "rgx_data[1535:1024]"
+      ],
+      "registers": "a0/a1/d0/d1/v0/v1 lane slice",
+      "clock_entry_face": "W"
+    },
+    {
+      "name": "rgx3_capture",
+      "ff": 827,
+      "ports": [
+        "rgx_v[3]",
+        "rgx_addr[159:120]",
+        "rgx_data[2047:1536]"
+      ],
+      "registers": "a0/a1/d0/d1/v0/v1 lane slice; vm_q adjacent W-face pin",
+      "clock_entry_face": "W"
+    },
+    {
+      "name": "tkw_capture",
+      "ff": 850,
+      "ports": [
+        "tkw_v",
+        "tkw_d[567:0]"
+      ],
+      "registers": "lane4 a0/a1/d0/d1/v0/v1 plus m0/m1",
+      "clock_entry_face": "S"
+    },
+    {
+      "name": "bank0_launch",
+      "ff": 287,
+      "ports": [
+        "kq[280:0]"
+      ],
+      "registers": "kq281 + used1 + multi1 + bown4",
+      "clock_entry_face": "E"
+    },
+    {
+      "name": "bank1_launch",
+      "ff": 287,
+      "ports": [
+        "kq[561:281]"
+      ],
+      "registers": "kq281 + used1 + multi1 + bown4",
+      "clock_entry_face": "E"
+    },
+    {
+      "name": "bank2_launch",
+      "ff": 287,
+      "ports": [
+        "kq[842:562]"
+      ],
+      "registers": "kq281 + used1 + multi1 + bown4",
+      "clock_entry_face": "E"
+    },
+    {
+      "name": "bank3_launch",
+      "ff": 287,
+      "ports": [
+        "kq[1123:843]"
+      ],
+      "registers": "kq281 + used1 + multi1 + bown4",
+      "clock_entry_face": "E"
+    },
+    {
+      "name": "bank4_launch",
+      "ff": 287,
+      "ports": [
+        "kq[1404:1124]"
+      ],
+      "registers": "kq281 + used1 + multi1 + bown4",
+      "clock_entry_face": "E"
+    },
+    {
+      "name": "bank5_launch",
+      "ff": 287,
+      "ports": [
+        "kq[1685:1405]"
+      ],
+      "registers": "kq281 + used1 + multi1 + bown4",
+      "clock_entry_face": "E"
+    },
+    {
+      "name": "bank6_launch",
+      "ff": 287,
+      "ports": [
+        "kq[1966:1686]"
+      ],
+      "registers": "kq281 + used1 + multi1 + bown4",
+      "clock_entry_face": "E"
+    },
+    {
+      "name": "bank7_launch",
+      "ff": 293,
+      "ports": [
+        "kq[2247:1967]"
+      ],
+      "registers": "kq281 + used1 + multi1 + bown4 + launch_done5 + fault1 (E-face outputs)",
+      "clock_entry_face": "E"
+    },
+    {
+      "name": "metadata",
+      "ff": 47,
+      "ports": [
+        "sid[1:0]",
+        "ingress_slot[4:0]",
+        "slot_valid[7:0]",
+        "slot_owner[31:0]"
+      ],
+      "registers": "sid2/islot5/sv8/so32 (N-face pin captures)",
+      "clock_entry_face": "N"
+    }
+  ],
+  "cost": {
+    "roots_before": 1,
+    "roots_proposed": 14,
+    "root_max_ff": 850,
+    "registers_added_planned": 0,
+    "production_cycles_added_planned": 0,
+    "fault_timing": "retain precise C+1",
+    "writer_clock_ports_added": 13,
+    "four_parent_writer_clock_ports_added": 52,
+    "macro_memory_added": 0,
+    "footprint_proposed_um": [
+      103.68,
+      388.8
+    ],
+    "mapped_area_delta": "UNMEASURED; clock-cell area and pin/route cost must be measured",
+    "native_capture_requirement_ps": 190,
+    "native_launch_requirement_ps": 220
+  },
+  "clock_delivery_requirement": "14 independently delivered local roots, each phi minus its own extracted R; all logical edges remain aligned. Actual local placement/clock/pins/cuts/native/internal timing must pass; no forwarded or inherited clock qualification. New typed pin grants required before route.",
+  "alternative_hard_leaf_partition": "Five ingress plus eight bank plus metadata leaves require wide exposed interleaf interfaces and full face/channel cut accounting. Flat multiple-root master keeps existing internal wires and footprint while localizing clock roots; neither candidate is physically qualified.",
+  "master": "ot_hgi_coll_static_vmwrite_roots_v3"
+}

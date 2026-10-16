@@ -10,15 +10,15 @@ module tb_hbm_svc_sm_stack_capacity;
  reg stream=0,hbm=0;initial forever begin #416.666 stream=1;#416.667 stream=0;end
  initial begin #173;forever #512 hbm=~hbm;end
  reg srst=0,hrst=0;reg[7:0]reserve_v=0,start_v=0,cfg_we=0,go=0;
- wire[7:0]reserve_ready,active,done,fault,pv;wire[15:0]ready,cache_ready,owned;
+ wire[7:0]reserve_ready,active,done,fault,pv;wire[31:0]ready;wire[15:0]cache_ready,owned;
  reg[79:0]cfg_addr=0;reg[2047:0]cfg_data=0;reg[79:0]tags=0;
  wire[31:0]kv,krdy,kwe,kdone,rv,rrdy;wire[959:0]ka;wire[127:0]kl,rb;wire[543:0]kt,rt;wire[8191:0]kw,rd;wire[1023:0]ks;
  wire[8*1099-1:0]packet;wire[8*135-1:0]programme;wire[8*1082-1:0]lt0,lt1;wire[8*570-1:0]lb0,lb1;wire[95:0]fm;wire[343:0]expected_request;
  ot_hbm_svc_sm_stack_native #(.STACK(STACK)) dut(
  .stream_clk({8{stream}}),.stream_rst_n({8{srst}}),.hbm_clk({8{hbm}}),.hbm_rst_n({8{hrst}}),
  .stream_bank_clk({16{stream}}),.hbm_fifo_clk({16{hbm}}),.hbm_pc_clk({32{hbm}}),
- .reserve_v(reserve_v),.reserve_ready(reserve_ready),.reserve_base({8{32'(STACK<<30)}}),.reserve_row_base({8{15'd20738}}),.reserve_total({8{12'(SECT)}}),.reserve_bank(8'd0),.reserve_epoch({8{16'd51}}),.reserve_rows({8{7'(ROWS)}}),.reserve_tag_base(tags),
- .block_ready(ready),.cache_ready(cache_ready),.cache_owned(owned),.start_v(start_v),.start_bank(8'd0),.start_epoch({8{16'd51}}),
+ .reserve_v(reserve_v),.reserve_ready(reserve_ready),.reserve_base({8{32'(STACK<<30)}}),.reserve_row_base({8{15'd20738}}),.reserve_total({8{12'(SECT)}}),.reserve_bank(16'd0),.reserve_epoch({8{16'd51}}),.reserve_rows({8{7'(ROWS)}}),.reserve_tag_base(tags),
+ .block_ready(ready),.cache_ready(cache_ready),.cache_owned(owned),.start_v(start_v),.start_bank(16'd0),.start_epoch({8{16'd51}}),
  .program_cfg_we(cfg_we),.program_cfg_addr(cfg_addr),.program_cfg_data(cfg_data),.program_start_v(go),.program_start_base(80'd0),.program_start_limit({8{11'(ROWS+1)}}),.program_start_loops({8{16'd1}}),
  .program_active(active),.program_done(done),.fault(fault),.expected_request(expected_request),.lt0(lt0),.lt1(lt1),.lb0(lb0),.lb1(lb1),.fm(fm),.packet_observe(packet),.programme_observe(programme),.programme_v(pv),
  .clk_phy(hbm),.rst_phy_n(hrst),.pc_clk_phy({32{hbm}}),
@@ -85,7 +85,7 @@ module tb_hbm_svc_sm_stack_capacity;
   cfg_we=0;repeat(4)@(negedge stream);
   reserve_v=ACTIVE;#1;if((reserve_ready&ACTIVE)!=ACTIVE)$fatal(1,"SM_STACK reservation notready");reserve_at=$realtime;
   @(negedge stream);reserve_v=0;
-  wait(((ready[0]&&(!ACTIVE[1]||ready[2])&&(!ACTIVE[2]||ready[4])&&(!ACTIVE[3]||ready[6])&&(!ACTIVE[4]||ready[8])&&(!ACTIVE[5]||ready[10])&&(!ACTIVE[6]||ready[12])&&(!ACTIVE[7]||ready[14]))));ready_at=$realtime;
+  wait(((ready[0]&&(!ACTIVE[1]||ready[4])&&(!ACTIVE[2]||ready[8])&&(!ACTIVE[3]||ready[12])&&(!ACTIVE[4]||ready[16])&&(!ACTIVE[5]||ready[20])&&(!ACTIVE[6]||ready[24])&&(!ACTIVE[7]||ready[28]))));ready_at=$realtime;
   @(negedge stream);start_v=ACTIVE;@(negedge stream);start_v=0;
   wait(cache_ready[0]&&(!ACTIVE[1]||cache_ready[2])&&(!ACTIVE[2]||cache_ready[4])&&(!ACTIVE[3]||cache_ready[6])&&(!ACTIVE[4]||cache_ready[8])&&(!ACTIVE[5]||cache_ready[10])&&(!ACTIVE[6]||cache_ready[12])&&(!ACTIVE[7]||cache_ready[14]));cache_at=$realtime;
   @(negedge stream);go=ACTIVE;@(negedge stream);go=0;wait((done&ACTIVE)==ACTIVE);done_at=$realtime;

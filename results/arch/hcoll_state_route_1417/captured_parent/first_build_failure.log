@@ -1,0 +1,35 @@
+ot-run: ot-epyc4       admits    -7 GB (avail 287, growth 246, headroom 48, waiters 2/176 GB) load 137/128 running 42 disk 338 GB 
+ot-run: -> ot-epyc4 (will queue: admits -183 GB < 24 GB)
+ot-heavy: waiting for memory on regular-crane: need 24 GB, admissible -7 GB: available 287 GB, growth charged 246 GB, young 30 GB, headroom 48 GB, real floor 227 GB
+ot-heavy: admitted on regular-crane as oth-ubuntu-1672878-1792100555 after 40 s
+   40 |     output reg [2:0] rr_tag,
+      |     ^~~~~~
+%Error: rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_captured_static.sv:41:5: syntax error, unexpected output, expecting IDENTIFIER or do or final or randomize
+   41 |     output reg [255:0] rr_d,
+      |     ^~~~~~
+%Error: rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_captured_static.sv:42:5: syntax error, unexpected output, expecting IDENTIFIER or do or final or randomize
+   42 |     output reg fault
+      |     ^~~~~~
+%Error: rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_captured_static.sv:49:5: syntax error, unexpected for
+   49 |     for(genvar d=0;d<2;d=d+1)begin:g_carry_write
+      |     ^~~
+%Error: rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_captured_static.sv:70:5: syntax error, unexpected generate
+   70 |     generate if (NT!=8 || LAT<4 || LAT>8) begin:g_bad
+      |     ^~~~~~~~
+%Error: rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_captured_static.sv:100:5: syntax error, unexpected always
+  100 |     always @(posedge clk or negedge rst_n) begin:step
+      |     ^~~~~~
+%Error: rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_captured_static.sv:105:9: syntax error, unexpected if
+  105 |         if(!rst_n)begin
+      |         ^~
+%Error: rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_captured_static.sv:111:29: syntax error, unexpected IDENTIFIER
+  111 |             for(integer t=0;t<NT;t=t+1)carry_v[t]<=0;
+      |                             ^
+%Error: rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_captured_static.sv:133:29: syntax error, unexpected IDENTIFIER
+  133 |             for(integer i=1;i<LAT;i=i+1)pt[i]<=pt[i-1];
+      |                             ^
+%Error: rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_pring_captured_static.sv:161:29: syntax error, unexpected IDENTIFIER
+  161 |             for(integer d=0;d<2;d=d+1)begin
+      |                             ^
+%Error: Exiting due to 38 error(s)
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-1672878-1792100555): exit 2

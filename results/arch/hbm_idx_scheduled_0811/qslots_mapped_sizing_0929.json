@@ -1,0 +1,308 @@
+{
+  "schema": "opentallas.hbm.qslots_mapped_sizing.v1",
+  "source_manifest": {
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_qslots.sv": "4fc382d585026bc8fc23464ea90b9d5b86ad7bbec34acef0dccc65e3eb9d88f3",
+    "tools/hbm_die_v15/synth_master.sh": "134e53cc718587f2c083f90c5fc7ae1405341c6316afc445985d70a22f8f7256",
+    "tools/hbm_die_v15/master_filelist.py": "e9471bb727ee8bf76a4b90bfc217d63d79fdcf84f6c11936d7e80f6a4734f16b"
+  },
+  "proof_commit": "618fa49ba",
+  "exact_proof_source_hashes_match": true,
+  "masters": [
+    {
+      "name": "capture545",
+      "master": "ot_hgi_coll_qslots_capture",
+      "params": {
+        "NS": 1,
+        "PWT": 545
+      },
+      "std_area_um2": 183.79548,
+      "ff": 547,
+      "clock_roots": {
+        "clk": 547
+      },
+      "ports": {
+        "clk": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "src_v": {
+          "direction": "input",
+          "bits": 1
+        },
+        "capture_slot": {
+          "direction": "input",
+          "bits": 1
+        },
+        "src_d": {
+          "direction": "input",
+          "bits": 545
+        },
+        "captured": {
+          "direction": "output",
+          "bits": 545
+        },
+        "captured_slot": {
+          "direction": "output",
+          "bits": 1
+        },
+        "fault": {
+          "direction": "output",
+          "bits": 1
+        }
+      },
+      "total_pin_bits": 1096,
+      "netlist_sha256": "e7499d0efc5677c371a89e61d39220dc42fa1e9b2260ff6890cfbbf64f8f6fa9",
+      "status": "Actual mapped synthesis sizing only; no native clock/pin/TT/FF/DRC qualification."
+    },
+    {
+      "name": "output_q2_b1",
+      "master": "ot_hgi_coll_qslots_output",
+      "params": {
+        "NS": 9,
+        "ND": 15,
+        "PWT": 1,
+        "SELW": 4,
+        "MUT_SELECT": 0
+      },
+      "std_area_um2": 72.84168,
+      "ff": 125,
+      "clock_roots": {
+        "clk": 125
+      },
+      "ports": {
+        "clk": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "captured": {
+          "direction": "input",
+          "bits": 9
+        },
+        "captured_slot": {
+          "direction": "input",
+          "bits": 9
+        },
+        "sink_slot": {
+          "direction": "input",
+          "bits": 15
+        },
+        "sink_select": {
+          "direction": "input",
+          "bits": 60
+        },
+        "dst_v": {
+          "direction": "output",
+          "bits": 15
+        },
+        "dst_d": {
+          "direction": "output",
+          "bits": 15
+        },
+        "select_fault": {
+          "direction": "output",
+          "bits": 1
+        },
+        "unavailable_fault": {
+          "direction": "output",
+          "bits": 1
+        }
+      },
+      "total_pin_bits": 127,
+      "netlist_sha256": "d60bc9069b57b8eda70689a03334e9147638511f17ed85a35fd47a728fdfe716",
+      "status": "Actual mapped synthesis sizing only; no native clock/pin/TT/FF/DRC qualification."
+    },
+    {
+      "name": "output_q2_b32",
+      "master": "ot_hgi_coll_qslots_output",
+      "params": {
+        "NS": 9,
+        "ND": 15,
+        "PWT": 32,
+        "SELW": 4,
+        "MUT_SELECT": 0
+      },
+      "std_area_um2": 563.83776,
+      "ff": 869,
+      "clock_roots": {
+        "clk": 869
+      },
+      "ports": {
+        "clk": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "captured": {
+          "direction": "input",
+          "bits": 288
+        },
+        "captured_slot": {
+          "direction": "input",
+          "bits": 9
+        },
+        "sink_slot": {
+          "direction": "input",
+          "bits": 15
+        },
+        "sink_select": {
+          "direction": "input",
+          "bits": 60
+        },
+        "dst_v": {
+          "direction": "output",
+          "bits": 15
+        },
+        "dst_d": {
+          "direction": "output",
+          "bits": 480
+        },
+        "select_fault": {
+          "direction": "output",
+          "bits": 1
+        },
+        "unavailable_fault": {
+          "direction": "output",
+          "bits": 1
+        }
+      },
+      "total_pin_bits": 871,
+      "netlist_sha256": "66f24f26235df8c16ca7f4e0b191867c8b3557521a2c51edca7068b625c7d37e",
+      "status": "Actual mapped synthesis sizing only; no native clock/pin/TT/FF/DRC qualification."
+    },
+    {
+      "name": "output_q3_b1",
+      "master": "ot_hgi_coll_qslots_output",
+      "params": {
+        "NS": 10,
+        "ND": 16,
+        "PWT": 1,
+        "SELW": 4,
+        "MUT_SELECT": 0
+      },
+      "std_area_um2": 82.91646,
+      "ff": 134,
+      "clock_roots": {
+        "clk": 134
+      },
+      "ports": {
+        "clk": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "captured": {
+          "direction": "input",
+          "bits": 10
+        },
+        "captured_slot": {
+          "direction": "input",
+          "bits": 10
+        },
+        "sink_slot": {
+          "direction": "input",
+          "bits": 16
+        },
+        "sink_select": {
+          "direction": "input",
+          "bits": 64
+        },
+        "dst_v": {
+          "direction": "output",
+          "bits": 16
+        },
+        "dst_d": {
+          "direction": "output",
+          "bits": 16
+        },
+        "select_fault": {
+          "direction": "output",
+          "bits": 1
+        },
+        "unavailable_fault": {
+          "direction": "output",
+          "bits": 1
+        }
+      },
+      "total_pin_bits": 136,
+      "netlist_sha256": "5c1e4a2f43ac9ecc55743b269a28e6ed2557de73800bca8331ced54d281a06d5",
+      "status": "Actual mapped synthesis sizing only; no native clock/pin/TT/FF/DRC qualification."
+    },
+    {
+      "name": "output_q3_b32",
+      "master": "ot_hgi_coll_qslots_output",
+      "params": {
+        "NS": 10,
+        "ND": 16,
+        "PWT": 32,
+        "SELW": 4,
+        "MUT_SELECT": 0
+      },
+      "std_area_um2": 644.34852,
+      "ff": 940,
+      "clock_roots": {
+        "clk": 940
+      },
+      "ports": {
+        "clk": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "captured": {
+          "direction": "input",
+          "bits": 320
+        },
+        "captured_slot": {
+          "direction": "input",
+          "bits": 10
+        },
+        "sink_slot": {
+          "direction": "input",
+          "bits": 16
+        },
+        "sink_select": {
+          "direction": "input",
+          "bits": 64
+        },
+        "dst_v": {
+          "direction": "output",
+          "bits": 16
+        },
+        "dst_d": {
+          "direction": "output",
+          "bits": 512
+        },
+        "select_fault": {
+          "direction": "output",
+          "bits": 1
+        },
+        "unavailable_fault": {
+          "direction": "output",
+          "bits": 1
+        }
+      },
+      "total_pin_bits": 942,
+      "netlist_sha256": "c4687dd89d26a0dbef8089ba3fba8ffcff7228d9eb719f9970e47e7367c9f196",
+      "status": "Actual mapped synthesis sizing only; no native clock/pin/TT/FF/DRC qualification."
+    }
+  ],
+  "capture_native_boundary_gap": "src_v has no dedicated input capture flop; it directly enters same-edge sticky-fault XOR. capture_slot also fans into that check. A physical successor needs registered fault observation with explicit exceptional-fault timing proof before native qualification. Normal payload C/C+1/C+2 need not change.",
+  "scope": "Five exact source and parameter specializations mapped at actual TT library, one clk root each; grants and parent source/view binding remain OPEN."
+}

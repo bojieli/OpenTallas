@@ -40,9 +40,17 @@ module ot_qfd_vm_region_nx #(
     parameter integer BANK_BASE = 0,
     parameter integer TOTAL_BANKS = 64,
     parameter integer USE_LEAF_CLOCKS = 0,
-    parameter integer LEAF_MUT = 0
+    parameter integer LEAF_MUT = 0,
+    // Q-VMWB 2026-10-15: 1 = the native structural successors of the storage leaves (qvm_bank_banked_native for
+    // ot_qfd_vm_bank_t, qvm_su_bank_native for ot_qfd_vm_su_t; cycle-exact, tb_qvm_bank_banked_native /
+    // tb_qvm_su_bank_native), each entry clock driven by the leaf clock that drove the replaced leaf.
+    parameter integer USE_NATIVE_CLOCKS = 0, // independent phi-R entry per physical bank clock pin
+    parameter integer NATIVE_BANKS = 0
 ) (
     input  wire                      clk,
+`ifdef OT_QFD_VM_PARTITIONED_CLOCKS
+    input wire [(NBK+NSU*NSB)*9-1:0] native_ck,
+`endif
     input  wire [55:0]               leaf_ck,
     input  wire [7:0]                observer_ck,
     input  wire                      rst_n,
@@ -68,6 +76,12 @@ module ot_qfd_vm_region_nx #(
     output wire [511:0]              ro,
     output wire [NSU*NSB*512-1:0]    so
 );
+`ifndef OT_QFD_VM_PARTITIONED_CLOCKS
+    wire [(NBK+NSU*NSB)*9-1:0] native_ck = {(NBK+NSU*NSB)*9{1'b0}};
+    if (USE_NATIVE_CLOCKS != 0) begin : g_need_partitioned_clocks
+        initial $fatal(1, "ot_qfd_vm_region_nx: USE_NATIVE_CLOCKS needs +define+OT_QFD_VM_PARTITIONED_CLOCKS");
+    end
+`endif
 `ifndef SYNTHESIS
     initial if (NBK != 8 || NSB != 2 || NSU != 3 || NRI != 2 || NRX != 2 || NRS != 1)
         $fatal(1, "ot_qfd_vm_region_nx: unsupported leaf shape");
@@ -97,12 +111,20 @@ module ot_qfd_vm_region_nx #(
         end else begin : g_wd
             `OT_QFD_VM_DELAY2_MOD u_wd (.clk(lc[4*g+1]), .d(wd[g*512 +: 512]), .q(m_wd[g*512 +: 512]));
         end
+        if (NATIVE_BANKS != 0) begin : g_nbt
+            wire bc = lc[4*g+2];
+            wire [8:0] nc = USE_NATIVE_CLOCKS ? native_ck[9*g+:9] : {9{bc}};
+            qvm_bank_banked_native u_bt (.ck_ctrl(nc[0]), .ck_in_lo(nc[1]), .ck_in_hi(nc[2]), .ck_mem_lo(nc[3]), .ck_mem_hi(nc[4]),
+                .ck_cap_lo(nc[5]), .ck_cap_hi(nc[6]), .ck_out_lo(nc[7]), .ck_out_hi(nc[8]), .rst_n(rtg[g]),
+                .re(m_re), .ra(m_ra), .q(bq[g*512 +: 512]), .we(m_we), .wl(m_wl), .wm(m_wm), .wd(m_wd[g*512 +: 512]));
+        end else begin : g_lbt
 `ifndef OT_QFD_VM_HARD
         ot_qfd_vm_bank_t #(.DEPTH(DEPTH), .LAW(LAW), .USE_MACRO(USE_MACRO)) u_bt (.clk(lc[4*g+2]), .rst_n(rtg[g]),
 `else
         ot_qfd_vm_bank_t u_bt (.clk(lc[4*g+2]), .rst_n(rtg[g]),
 `endif
             .re(m_re), .ra(m_ra), .q(bq[g*512 +: 512]), .we(m_we), .wl(m_wl), .wm(m_wm), .wd(m_wd[g*512 +: 512]));
+        end
         if (LEAF_MUT == 5 && g == 2) begin : g_bxm
             assign bx[g*512 +: 512] = bq[g*512 +: 512];
         end else begin : g_bx
@@ -163,6 +185,13 @@ module ot_qfd_vm_region_nx #(
         end else begin : g_sd
             `OT_QFD_VM_DELAY2_MOD u_sd (.clk(lc[33+3*(c*NSB+j)]), .d(swd[j*512 +: 512]), .q(m_swd));
         end
+        if (NATIVE_BANKS != 0) begin : g_nst
+            wire sc = lc[34+3*(c*NSB+j)];
+            wire [8:0] nc = USE_NATIVE_CLOCKS ? native_ck[9*(NBK+c*NSB+j)+:9] : {9{sc}};
+            qvm_su_bank_native u_st (.ck_ctrl(nc[0]), .ck_in_lo(nc[1]), .ck_in_hi(nc[2]), .ck_mem_lo(nc[3]), .ck_mem_hi(nc[4]),
+                .ck_cap_lo(nc[5]), .ck_cap_hi(nc[6]), .ck_out_lo(nc[7]), .ck_out_hi(nc[8]), .rst_n(rts[c*NSB + j]),
+                .re(m_sre), .ra(m_sra), .we(m_swe), .wl(m_swl), .wm(m_swm), .wd(m_swd), .q(sq[(c*NSB + j)*512 +: 512]));
+        end else begin : g_lst
 `ifndef OT_QFD_VM_HARD
         ot_qfd_vm_su_t #(.NSB(1), .DEPTHS(DEPTHS), .LAWS(LAWS), .USE_MACRO(USE_MACRO)) u_st (.clk(lc[34+3*(c*NSB+j)]),
 `else
@@ -170,6 +199,7 @@ module ot_qfd_vm_region_nx #(
 `endif
             .rst_n(rts[c*NSB + j]), .sre(m_sre), .sra(m_sra), .swe(m_swe), .swl(m_swl), .swm(m_swm), .swd(m_swd),
             .q(sq[(c*NSB + j)*512 +: 512]));
+        end
       end
     end endgenerate
     generate for (c = 0; c < NSU; c = c + 1) begin : g_su_leaf

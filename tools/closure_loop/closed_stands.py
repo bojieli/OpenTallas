@@ -30,6 +30,7 @@ for _p in (str(HERE), str(HERE.parent)):
         sys.path.insert(0, _p)
 import rtl_boundary  # noqa: E402
 import textbook_lint as TL  # noqa: E402
+import custom_io_faces  # noqa: E402
 
 KIT_RE = re.compile(r"ref_route\.sh\s+(\S+)/kit\.env")
 GEOM_KEYS = ("FW", "FH", "PINS", "PINEX", "PIN_H", "PIN_V")           # outline + pin faces / pin layers of a kit
@@ -43,6 +44,31 @@ def _num(x):
 
 def _commit(j):
     return str(j.get("commit_full") or ((j.get("spec") or {}).get("source") or {}).get("commit") or "")
+
+
+def pin_wrapper_args(text):
+    """Actual RTL-generation knobs, distinct from physical placement/hold knobs.
+
+    Read the generated EXTRA array as a whole: _cfg_vars stops at parentheses
+    inside quoted regexes. Unknown shell construction is not evidence of change.
+    """
+    match = re.search(r'^EXTRA=\((.*)\)\s*$', text, re.M)
+    if not match:
+        return None if 'OT_PIN_REGS=' in text else {'enable': False}
+    try:
+        tokens = shlex.split(match[1])
+    except ValueError:
+        return None
+    values = dict(t.split('=', 1) for t in tokens if '=' in t and t.split('=', 1)[0] in
+                  ('OT_PIN_REGS', 'OT_PIN_REGS_CLOCK', 'OT_PIN_REGS_EXCLUDE', 'OT_PIN_REGS_RESET'))
+    if values.get('OT_PIN_REGS', '0') == '0':
+        return {'enable': False}
+    if values.get('OT_PIN_REGS') != '1' or not values.get('OT_PIN_REGS_CLOCK'):
+        return None
+    if any(re.search(r'\$[A-Za-z_{(]|`', v) for v in values.values()):
+        return None
+    return dict(enable=True, clock=values['OT_PIN_REGS_CLOCK'],
+                exclude=values.get('OT_PIN_REGS_EXCLUDE', ''), reset=values.get('OT_PIN_REGS_RESET', ''))
 
 
 def route_recipe(spec, show):
@@ -60,7 +86,9 @@ def route_recipe(spec, show):
             ptoks = shlex.split(v.get("PARAMS", "()").strip("()")) if v.get("PARAMS") else []
             geom = {k: ln.split("=", 1)[1].strip() for ln in text.splitlines()
                     for k in GEOM_KEYS if ln.startswith(k + "=")}
-            return {"top": spec.get("block"), "sources": srcs, "params": rtl_boundary._params(ptoks), "geom": geom}
+            return {"top": spec.get("block"), "sources": srcs, "params": rtl_boundary._params(ptoks), "geom": geom,
+                    "pin_wrapper": pin_wrapper_args(text), "custom_io_faces": custom_io_faces.read(text, commit, show),
+                    "pin_regions": custom_io_faces.regions(geom.get("PINS", "()"))}
         r = rtl_boundary.recipe(spec, show)
         return dict(r, geom={}) if r else None
     except Exception:  # noqa: BLE001
@@ -100,13 +128,18 @@ def rtl_compare(new_rec, new_commit, closed_job, closed_rec, blob):
     cc = _commit(closed_job)
     if not new_rec or not new_rec.get("sources"):
         return "unknown", "the new job's RTL sources cannot be read from its route command"
-    if cc and new_commit and (cc.startswith(new_commit) or new_commit.startswith(cc)):
+    new_wrapper, old_wrapper = new_rec.get('pin_wrapper'), (closed_rec or {}).get('pin_wrapper')
+    wrapper_changed = new_wrapper is not None and old_wrapper is not None and new_wrapper != old_wrapper
+    if not wrapper_changed and cc and new_commit and (cc.startswith(new_commit) or new_commit.startswith(cc)):
         return "same", f"same source commit {cc[:9]}"
     new = {s: blob(new_commit, s) for s in sorted(set(new_rec["sources"]))}
     if any(v is None for v in new.values()):
         return "unknown", f"source missing at {new_commit[:9]}: {[k for k, v in new.items() if v is None][:3]}"
     if not cc or blob(cc, "") is None:
         return "unknown", f"closed commit {cc[:9] or '?'} is not in the object store"
+    if wrapper_changed:
+        return 'differs', ('generic pin-wrapper RTL generation differs: '
+                           f'{old_wrapper} -> {new_wrapper}; core sources may remain unchanged')
     if {s: blob(cc, s) for s in new} == new:
         return "same", f"{len(new)} RTL source file(s) byte-identical at {cc[:9]} and {new_commit[:9]}"
     if closed_rec and closed_rec.get("sources"):
@@ -224,12 +257,61 @@ def check(spec, name, jobs, show, blob, closure_counts=None, bench_gap=None, exi
             return refuse("slot_change needs \"contract\" (contract file + version) or \"slot_change_request\" (the "
                           "die lead's SLOT CHANGE REQUEST line)")
         g = (new_rec or {}).get("geom") or {}
-        eq = [x["name"] for x in same if g and ((recs[x["name"]] or {}).get("geom") or {}) == g]
+        if not spec.get("ref_tile"):
+            # Preserve the legacy non-ref_tile classifier; this repair is scoped
+            # to source-pinned ref_tile kit geometry.
+            eq = [x["name"] for x in same if g and ((recs[x["name"]] or {}).get("geom") or {}) == g]
+            if eq:
+                return refuse(f"slot_change claimed, but the kit's outline and pin faces ({', '.join(sorted(g))}) equal "
+                              f"those of closed {eq[-1]} (a layer-cap change alone is die_window, not slot_change)")
+            return admit(f"outline / pin faces differ from the closed view per {cite[:200]!r}"
+                         + ("" if g else " (not verifiable: no kit.env geometry)"))
+        outline = custom_io_faces.outline(g)
+        old_outlines = {x["name"]: custom_io_faces.outline((recs[x["name"]] or {}).get("geom")) for x in same}
+        if outline is None or any(v is None for v in old_outlines.values()):
+            return refuse("slot_change needs readable source-pinned new and closed ref_tile outline geometry")
+        custom = (new_rec or {}).get("custom_io_faces") or {"status": "absent"}
+        if custom["status"] == "error":
+            facts["custom_io_face_error"] = custom
+            return refuse("slot_change custom IO source is unverified: " + custom["error"])
+        regions = (new_rec or {}).get("pin_regions") or {"status": "verified", "faces": {}}
+        if regions["status"] == "error":
+            return refuse("slot_change pin regions are unverified: " + regions["error"])
+        if custom["status"] == "verified" and regions["faces"]:
+            return refuse("slot_change custom IO plus nonempty pin-region rules are ambiguous")
+        facts["slot_outline"] = outline
+        face_evidence, eq = {}, []
+        for closed_job in same:
+            closed_name = closed_job["name"]
+            closed_rec = recs[closed_name] or {}
+            # Only proven FW/FH or actual port-to-face changes justify this
+            # reason. PIN_H/PIN_V/PINEX, coordinates and rule text do not.
+            if old_outlines[closed_name] != outline:
+                continue
+            old_regions = closed_rec.get("pin_regions") or {"status": "verified", "faces": {}}
+            if old_regions["status"] == "error":
+                return refuse("slot_change closed pin regions are unverified: " + old_regions["error"])
+            old_custom = closed_rec.get("custom_io_faces") or {"status": "absent"}
+            if old_custom["status"] == "verified" and old_regions["faces"]:
+                return refuse("slot_change closed custom IO plus nonempty pin-region rules are ambiguous")
+            if custom["status"] != "absent" or old_custom["status"] != "absent":
+                comparison = custom_io_faces.compare(custom, old_custom)
+                face_evidence[closed_name] = comparison
+                facts["custom_io_face_comparisons"] = face_evidence
+                if comparison["status"] == "unverified":
+                    return refuse("slot_change custom IO faces are unverified: " + comparison["error"])
+                if comparison["status"] == "changed":
+                    continue
+            else:
+                if regions["faces"].keys() != old_regions["faces"].keys():
+                    return refuse("slot_change pin-region port sets differ; no complete face comparison")
+                if regions["faces"] != old_regions["faces"]:
+                    continue
+            eq.append(closed_name)
         if eq:
-            return refuse(f"slot_change claimed, but the kit's outline and pin faces ({', '.join(sorted(g))}) equal "
-                          f"those of closed {eq[-1]} (a layer-cap change alone is die_window, not slot_change)")
-        return admit(f"outline / pin faces differ from the closed view per {cite[:200]!r}"
-                     + ("" if g else " (not verifiable: no kit.env geometry)"))
+            return refuse(f"slot_change claimed, but the kit's outline and pin faces equal those of closed {eq[-1]} "
+                          "(a layer-cap change alone is die_window, not slot_change)")
+        return admit(f"outline / pin faces differ from the closed view per {cite[:200]!r}")
     if kind == "param_change":
         ps = rr.get("params")
         if not ((isinstance(ps, (dict, list)) and len(ps) > 0) or txt("params", 3)):
