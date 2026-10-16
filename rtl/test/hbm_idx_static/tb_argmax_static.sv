@@ -9,12 +9,12 @@ module tb_argmax_static;
     localparam integer NE = 16384, NPRE = 4096, NCHK = 1024;
     reg clk = 0; always #5 clk = ~clk;
     reg rst_n = 0;
-    reg [2365:0] cq_all = 0; wire [1917:0] cr_all;
-    reg [15:0] client_seq = 0; reg [7:0] response_enable = 0; reg [15:0] response_seq = 0;
-    reg [7:0] bank_enable = 0; reg [23:0] bank_client = 0;
+    reg [675:0] cq_all = 0; wire [547:0] cr_all;   // current SW ABI (H-NETLIST 0600): NC2 clients 0 ARGMAX, 1 IDX
+    reg [5:0] client_seq = 0; reg [2:0] response_enable = 0; reg [5:0] response_seq = 0;
+    reg [7:0] bank_enable = 0; reg [15:0] bank_client = 0;
     reg [7:0] rslot_v = 0, wslot_v = 0; reg [23:0] rslot = 0, wslot = 0;
     reg [679:0] rq_bench = 0; wire [679:0] rq; wire [10279:0] rr;
-    reg [2247:0] dq = 0; wire [7:0] wq_done, dq_done, kq_done;
+    reg [2247:0] dq = 0; wire [15:0] wq_done; wire [7:0] dq_done, kq_done;
     wire [2223:0] cw_out, ccw_out; wire [143:0] bank_status; wire [2:0] hub_status, ring_fault; wire [1:0] mirror_busy;
     wire [18:0] vmstat;
     reg go = 0, mode = 0, a_mirror = 0; reg [17:0] imm_a = 0, a_base = 0, n = 0, o_base = 0; reg [15:0] o_is = 0;
@@ -31,9 +31,9 @@ module tb_argmax_static;
     always @* begin cq_all = 0; cq_all[0 +: 338] = cq; client_seq = 0; client_seq[0 +: 2] = cq_seq; end
     hfd_hgi_vms_static_SW slice(.clk_bank({8{clk}}), .clk_hub(clk), .clk_ring({2{clk}}), .clk_replay(clk), .rst_n(rst_n),
         .cq(cq_all), .cr(cr_all), .client_seq(client_seq), .response_enable(response_enable), .response_seq(response_seq),
-        .bank_enable(bank_enable), .bank_client(bank_client), .hub_ring_enable(2'd0), .hub_ring_client(6'd0),
+        .bank_enable(bank_enable), .bank_client(bank_client), .hub_ring_enable(2'd0), .hub_ring_client(4'd0),
         .rslot_v(rslot_v), .wslot_v(wslot_v), .rslot(rslot), .wslot(wslot), .rq(rq), .rr(rr),
-        .wq(2248'd0), .wq_done(wq_done), .dq(dq), .kq(2248'd0), .dq_done(dq_done), .kq_done(kq_done),
+        .wq(4496'd0), .wq_done(wq_done), .dq(dq), .kq(2248'd0), .dq_done(dq_done), .kq_done(kq_done),
         .cw_in(2224'd0), .ccw_in(2224'd0), .cw_out(cw_out), .ccw_out(ccw_out), .ring_tx_enable(2'd0),
         .ring_tx_source(6'd0), .replay_enable(1'b0), .replay_source(1'b0), .bank_status(bank_status),
         .hub_status(hub_status), .mirror_busy(mirror_busy), .vmstat(vmstat), .ring_fault(ring_fault));
@@ -83,7 +83,7 @@ module tb_argmax_static;
         while (i < npre) begin
             dq = 0; wslot_v = 0; wslot = 0;
             for (b = 0; b < 8; b = b + 1) if (i < npre && pre[i][258:256] == 3'(b) && !wslot_v[b]) begin
-                wslot_v[b] = 1; wslot[b*3 +: 3] = 3'd5;
+                wslot_v[b] = 1; wslot[b*3 +: 3] = 3'd6;   // DMA write WG+4 (WG=2)
                 dq[b*281 +: 281] = {1'b1, pre[i][271:256], pre[i][255:0], 8'hff};
                 i = i + 1;
             end
@@ -96,8 +96,8 @@ module tb_argmax_static;
             response_enable = 0; response_seq = 0; go = 0; am_stream = stm[e];
             for (b = 0; b < 8; b = b + 1) begin
                 if (cal[e][b]) begin rslot_v[b] = 1; rslot[b*3 +: 3] = 3'd4; end
-                if (cal[e][8+b]) begin bank_enable[b] = 1; bank_client[b*3 +: 3] = 3'd0; end
-                if (cal[e][16+b]) begin wslot_v[b] = 1; wslot[b*3 +: 3] = 3'd3; end
+                if (cal[e][8+b]) begin bank_enable[b] = 1; bank_client[b*2 +: 2] = 2'd0; end
+                if (cal[e][16+b]) begin wslot_v[b] = 1; wslot[b*3 +: 3] = 3'd4; end   // packet write WG+2
             end
             if (cal[e][26]) begin response_enable[0] = 1; response_seq[0 +: 2] = cal[e][25:24]; end
             for (r = 0; r < nrec; r = r + 1) if (rG[r] == e) begin
