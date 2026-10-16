@@ -42,9 +42,10 @@ module ot_s81_hc_ccf_bankpipe #(
     initial if(NG!=256 || D!=5120 || NCOL!=3 || GS!=8 || S_RD!=2 ||
                FIFO_SLICE!=512 || KEEP_POP!=1 || Y_RELAY!=1 || HALF!=1 || RLY!=2 || RF!=5 || DW!=6)
         $fatal(1,"CCF bankpipe: only measured production shape is supported");
-    ot_s81_hc_ccf_bankpipe_capture #(.FVW(FVW),.FSW(FSW),.YS(YS1)) u_n(
+    ot_s81_hc_ccf_bankpipe_capture #(.FVW(FVW),.FSW(FSW),.YS(YS1),.DEPTH(YDC),.POPBIT(S_RD)) u_n(
       .clk(sk_n),.srs(srs),.fv(fv_i),.fd(fd_i),.yv(n_yacc),.y(n_y),
-      .srs_q(psrs),.fv_q(pfv),.fd_q(pfd),.yv_q(pyacc),.y_q(py));
+      .srs_q(psrs),.fv_q(pfv),.fd_q(pfd),.yv_q(pyacc),.y_q(py),
+      .bank_valid(valid),.bank_overflow(overflow),.yfl(yfl));
     for(genvar b=0;b<5;b=b+1) begin:g_bank
       ot_s81_hc_ccf_bankpipe_bank #(.DEPTH(YDC)) u_b(
        .clk(bank_ck[b]),.srs(psrs),.pop_i(pfv[S_RD]),.push_i(pyacc),.data_i(py[b*512+:512]),
@@ -73,14 +74,36 @@ module ot_s81_hc_ccf_bankpipe #(
       .RLY(RLY),
       .DW(DW)
     ) u_s(.sk(sk_s),.srs(psrs),.fv_i(pfv),.fd_i(pfd),.n_yacc(pyacc),
-      .bank_heads(heads),.bank_valid(valid),.bank_overflow(overflow),
-      .ch_rst(ch_rst),.ch_fv(ch_fv),.ch_fd(ch_fd),.yfl(yfl));
+      .bank_heads(heads),
+      .ch_rst(ch_rst),.ch_fv(ch_fv),.ch_fd(ch_fd));
 endmodule
 
-module ot_s81_hc_ccf_bankpipe_capture #(parameter FVW=7,FSW=1128,YS=2560)(
+// Input capture plus the actual north-local fault observer; all public timing stays +2.
+module ot_s81_hc_ccf_bankpipe_capture #(parameter FVW=7,FSW=1128,YS=2560,DEPTH=32,POPBIT=2)(
  input wire clk,srs,input wire[FVW-1:0]fv,input wire[FSW-1:0]fd,input wire yv,input wire[YS-1:0]y,
- output reg srs_q,output reg[FVW-1:0]fv_q,output reg[FSW-1:0]fd_q,output reg yv_q,output reg[YS-1:0]y_q);
+ input wire[4:0]bank_valid,bank_overflow,
+ output reg srs_q,output reg[FVW-1:0]fv_q,output reg[FSW-1:0]fd_q,output reg yv_q,output reg[YS-1:0]y_q,
+ output reg yfl);
  always @(posedge clk) begin srs_q<=srs;fv_q<=fv;fd_q<=fd;yv_q<=yv;y_q<=y;end
+ // Match S's real reset/control phases; this is the original observer moved, not a prediction.
+ reg[2:0]rsr;always @(posedge clk)rsr<={rsr[1:0],srs_q};
+ reg pop_mid,ya_mid,pop_p,ya_p;
+ always @(posedge clk or negedge rsr[1])
+  if(!rsr[1])begin pop_mid<=0;ya_mid<=0;end
+  else begin pop_mid<=fv_q[POPBIT];ya_mid<=yv_q;end
+ always @(posedge clk or negedge rsr[2])
+  if(!rsr[2])begin pop_p<=0;ya_p<=0;end
+  else begin pop_p<=pop_mid;ya_p<=ya_mid;end
+ localparam integer YB=$clog2(DEPTH);
+ reg[YB:0]yn1;
+ wire yf_hv=&bank_valid;
+ wire yf_ovf=|bank_overflow;
+ always @(posedge clk or negedge rsr[2])
+  if(!rsr[2])begin yn1<=0;yfl<=0;end
+  else begin
+   yn1<=yn1+ya_p-pop_p;
+   if((ya_p && !pop_p && yn1==DEPTH) || (pop_p && yn1==0) || (pop_p && !yf_hv) || yf_ovf) yfl<=1;
+  end
 endmodule
 
 module ot_s81_hc_ccf_bankpipe_bank #(parameter DEPTH=32)(
@@ -112,11 +135,9 @@ module ot_s81_hc_ccf_bankpipe_control #(
     input wire [FSW-1:0] fd_i,
     input wire n_yacc,
     input wire [YS1-1:0] bank_heads,
-    input wire [4:0] bank_valid,bank_overflow,
-    output wire ch_rst,
+        output wire ch_rst,
     output reg [FVW-1:0] ch_fv,
-    output reg [FDW-1:0] ch_fd,
-    output reg yfl
+    output reg [FDW-1:0] ch_fd
 );
     localparam integer NS = NG / GS;
     localparam integer NP = (NS + NCOL - 1) / NCOL;
@@ -164,23 +185,12 @@ module ot_s81_hc_ccf_bankpipe_control #(
     reg           ya;
     always @(posedge sk or negedge rs_n) if (!rs_n) begin fv_p <= 0; ya <= 1'b0; end else begin fv_p <= fv_mid; ya <= ya_mid; end
     always @(posedge sk) fd_p <= fd_mid;
-    reg [YB:0]    yn1;
-    reg [YB-1:0]  yw, yr;
     wire pop = fv_p[S_RD];
     wire [YS1-1:0] yf_head;
-    wire           yf_hv, yf_ovf;
     assign yf_head=bank_heads;
-    assign yf_hv=&bank_valid;
-    assign yf_ovf=|bank_overflow;
     always @(posedge sk or negedge rs_n)
-        if (!rs_n) begin ch_fv <= 0; yn1 <= 0; yw <= 0; yr <= 0; yfl <= 1'b0; end
-        else begin
-            ch_fv <= (L1 > 0) ? fv_p : {FVW{1'b0}};
-            if (ya) yw <= yw + 1'b1;
-            if (pop) yr <= yr + 1'b1;
-            yn1 <= yn1 + ya - pop;
-            if (L1 > 0 && ((ya && !pop && yn1 == YDC) || (pop && yn1 == 0) || (pop && !yf_hv) || yf_ovf)) yfl <= 1'b1;
-        end
+        if (!rs_n) ch_fv <= 0;
+        else ch_fv <= (L1 > 0) ? fv_p : {FVW{1'b0}};
     always @(posedge sk) begin
         ch_fd[O_D-1:0] <= fd_p[O_D-1:0];
         begin : dfield

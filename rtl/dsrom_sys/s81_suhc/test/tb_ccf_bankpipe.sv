@@ -6,7 +6,7 @@ module tb_ccf_bankpipe;
  wire ro,rn,fo,fn;wire[FVW-1:0]vo,vn;wire[FDW-1:0]do_,dn;
  reg[6:0] allow_roots=7'b1111111;wire[4:0]bc={5{ck}}&allow_roots[6:2];
  wire ckn=ck&allow_roots[0],cks=ck&allow_roots[1];
- integer mode=0,seed=1,cycle=0,k,checks=0,errors=0,tag,cclass;
+ integer mode=0,seed=1,faultcase=0,cycle=0,k,checks=0,errors=0,tag,cclass,old_fault_seen=0,new_fault_seen=0;
  reg[FDW+FVW+1:0] previous,older;
  integer samples_old[0:5],samples_new[0:5],lat_old[0:5],lat_new[0:5];
  reg[31:0] prng=32'h715ac3d9;
@@ -20,6 +20,7 @@ module tb_ccf_bankpipe;
  initial begin
   if($value$plusargs("MODE=%d",mode))begin end
   if($value$plusargs("SEED=%d",seed))begin end
+  if($value$plusargs("FAULTCASE=%d",faultcase))begin end
   prng=32'h715ac3d9^seed;
   previous=0;older=0;
   for(k=0;k<6;k=k+1)begin samples_old[k]=0;samples_new[k]=0;lat_old[k]=0;lat_new[k]=0;end
@@ -38,16 +39,30 @@ module tb_ccf_bankpipe;
    if(cycle>=224&&cycle<240)fv[3]=1; // NORM-go
    if(cycle>=256&&cycle<272)fv[6]=1; // HSTORE
    if(cycle>=300)begin prng=next_rand(prng);fv=prng[6:0];yv=prng[7];end
+   if(faultcase!=0)begin
+    fv=0;yv=0;
+    if(faultcase==1 && cycle==80)fv[2]=1; // genuine FIFO underflow
+    if(faultcase==2 && cycle>=40 && cycle<180)yv=1; // genuine overflow
+    if(faultcase==3)begin
+     if(cycle>=40&&cycle<56)yv=1; // safe count, isolate real bank-overflow input term
+     if(cycle==100)force old_dut.yf_ovf=1'b1;
+     if(cycle==101)force dut.g_bank[0].u_b.ovf=1'b1;
+     if(cycle==104)release old_dut.yf_ovf;
+     if(cycle==105)release dut.g_bank[0].u_b.ovf;
+    end
+   end
    if(mode>=1&&mode<=7&&cycle==64)allow_roots[mode-1]=0;
    @(posedge ck);#0.001;
    if(cycle>20)begin
     checks=checks+1;
+    if(fo===1'b1)old_fault_seen=1;
+    if(fn===1'b1)new_fault_seen=1;
     if({rn,vn,dn,fn} !== older)begin
      errors=errors+1;
      if(errors<4)$display("CCF_DIFF cycle=%0d mode=%0d reset=%0b fvnew=%h fvexpected=%h",cycle,mode,rn,vn,older[FDW+FVW:FDW+1]);
     end
    end
-   if(mode==0)begin
+   if(mode==0 && faultcase==0)begin
     for(k=0;k<2;k=k+1)begin
      tag=k==0 ? do_[20:5] : dn[20:5];cclass=-1;
      if(tag>=128&&tag<144)cclass=0;
@@ -64,8 +79,9 @@ module tb_ccf_bankpipe;
    end
    older=previous;previous={ro,vo,do_,fo};
   end
+  if(faultcase!=0 && (!old_fault_seen || !new_fault_seen))$fatal(1,"CCF_FAULT_NOT_OBSERVED case=%0d old=%0d new=%0d",faultcase,old_fault_seen,new_fault_seen);
   if(errors!=0)$fatal(1,"CCF_BANKPIPE_FAIL checks=%0d mismatches=%0d mode=%0d seed=%0d",checks,errors,mode,seed);
-  if(mode==0)for(k=0;k<6;k=k+1)begin
+  if(mode==0 && faultcase==0)for(k=0;k<6;k=k+1)begin
    if(samples_old[k]!=16 || samples_new[k]!=16 || lat_old[k]!=1 || lat_new[k]!=3)
     $fatal(1,"CCF_LATENCY_FAIL class=%0d oldsamples=%0d newsamples=%0d oldedges=%0d newedges=%0d",k,samples_old[k],samples_new[k],lat_old[k],lat_new[k]);
    $display("CCF_BOUNDARY_LATENCY class=%0d old_edges=%0d new_edges=%0d extra_edges=2 II=1 samples=%0d",k,lat_old[k],lat_new[k],samples_new[k]);
