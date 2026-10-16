@@ -28,13 +28,13 @@ proc ot_ref_pick {by master pat} {
   error "ref_tile place: no unplaced instance of $master matching '$pat'"
 }
 set ot_ref_n 0
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_1024x256_m2_r2c2 {}]
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_1024x256_m2_r2c2 {*bank.u_a}]
 $i setOrient R0; $i setLocation [expr {round(47.52 * $dbu)}] [expr {round(29.232 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] ot_sram_1r1w_1024x256_m2_r2c2 at 47.52 29.232 R0"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_1024x256_m2_r2c2 {}]
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_1024x256_m2_r2c2 {*bank.u_b}]
 $i setOrient R0; $i setLocation [expr {round(47.52 * $dbu)}] [expr {round(99.744 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] ot_sram_1r1w_1024x256_m2_r2c2 at 47.52 99.744 R0"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_1024x256_m2_r2c2 {}]
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_1024x256_m2_r2c2 {*bank.u_c}]
 $i setOrient R0; $i setLocation [expr {round(47.52 * $dbu)}] [expr {round(170.256 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] ot_sram_1r1w_1024x256_m2_r2c2 at 47.52 170.256 R0"
 set nb 0; dict for {k v} $ot_ref_by { incr nb [llength $v] }

@@ -48,6 +48,9 @@ close $vm_rows
 set vm_actual_signal 0
 foreach bt [$vb getBTerms] {if {[$bt getSigType] ni {POWER GROUND}} {incr vm_actual_signal}}
 if {$vm_actual_signal != [llength $vm_expected]} {incr vm_bad;puts "VM_ID_PIN_ERROR signal inventory $vm_actual_signal expected [llength $vm_expected]"}
+# abutted SRAM stack (pitch = height + .024 on the M4 lattice): block the .024 um slivers (textbook util_channel)
+set ot_sliver_um 20.0
+source /src/physical/common_flow/macro_channel_block.tcl
 source /src/tools/fp_margin_lint.tcl
 ot_fp_lint_dump [file join $::env(RESULTS_DIR) identity_actual_pin_pg.json]
 orfs_write_db $::env(RESULTS_DIR)/3_2_place_iop.odb

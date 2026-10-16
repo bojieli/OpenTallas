@@ -21,7 +21,7 @@ module ot_vms_bank_q2_faces_core(
 
     input wire [2:0] bid,
     input wire [1:0] sid,
-    input wire clk, clk_n, clk_s, clk_e, clk_w,
+    input wire clk, clk_n, clk_s, clk_e, clk_w, clk_macro0, clk_macro1, clk_macro2,
     input wire rst_n,
     input wire rslot_v,
     input wire [2:0] rslot,
@@ -52,7 +52,7 @@ module ot_vms_bank_q2_faces_core(
  ot_vms_bank_q2_faces_body #(.RG(5),.WG(3),.EG_WIDE(1)) bank(
  .bid(bid),
  .sid(sid),
- .clk(clk),.clk_n(clk_n),.clk_s(clk_s),.clk_e(clk_e),.clk_w(clk_w),
+ .clk(clk),.clk_n(clk_n),.clk_s(clk_s),.clk_e(clk_e),.clk_w(clk_w), .clk_macro0(clk_macro0), .clk_macro1(clk_macro1), .clk_macro2(clk_macro2),
  .rst_n(rst_n),
  .rslot_v(rslot_v),
  .rslot(rslot),

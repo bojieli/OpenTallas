@@ -26,7 +26,7 @@ module tb_hbm_vm_q0_faces;
     for(genvar b=0;b<8;b=b+1)begin:bank
         hfd_vms_bank_native_q0_faces memory(
           .bid(3'(b)),.sid(2'(SID)),.clk(clk),.clk_n(FACE_DROP==1?1'b0:clk),.clk_s(FACE_DROP==2?1'b0:clk),
-          .clk_e(FACE_DROP==3?1'b0:clk),.clk_w(FACE_DROP==4?1'b0:clk),
+          .clk_e(FACE_DROP==3?1'b0:clk),.clk_w(FACE_DROP==4?1'b0:clk),.clk_macro0(FACE_DROP==5?1'b0:clk),.clk_macro1(FACE_DROP==6?1'b0:clk),.clk_macro2(FACE_DROP==7?1'b0:clk),
           .rst_n(rst_n),.rslot_v(rslot_v[b]),.rslot(rslot[b*RB+:RB]),
           .wslot_v(wslot_v[b]),.wslot(wslot[b*WB+:WB]),.dq(dq[b*281+:281]),.dq_done(dma_done[b]),
           .kq(281'd0),.kq_done(),.xq(276'd0),.xq_done(),.xq2(276'd0),.xq2_done(),.eg(),

@@ -75,11 +75,24 @@
    "wq_done0",
    "xq",
    "xq_done",
-   "clk_w"
+   "clk_w",
+   "clk_macro0",
+   "clk_macro1",
+   "clk_macro2"
   ]
  },
  "clock_port": "clk",
  "clock_ports": [
+  "clk",
+  "clk_n",
+  "clk_s",
+  "clk_e",
+  "clk_w",
+  "clk_macro0",
+  "clk_macro1",
+  "clk_macro2"
+ ],
+ "clock_cts_roots": [
   "clk",
   "clk_n",
   "clk_s",
@@ -91,7 +104,7 @@
    "kind": "macro",
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
    "master": "ot_sram_1r1w_1024x256_m2_r2c2",
-   "inst": null,
+   "inst": "*bank.u_a",
    "idx": 0,
    "x": 47.52,
    "y": 29.232,
@@ -104,7 +117,7 @@
    "kind": "macro",
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
    "master": "ot_sram_1r1w_1024x256_m2_r2c2",
-   "inst": null,
+   "inst": "*bank.u_b",
    "idx": 0,
    "x": 47.52,
    "y": 99.744,
@@ -117,7 +130,7 @@
    "kind": "macro",
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
    "master": "ot_sram_1r1w_1024x256_m2_r2c2",
-   "inst": null,
+   "inst": "*bank.u_c",
    "idx": 0,
    "x": 47.52,
    "y": 170.256,
