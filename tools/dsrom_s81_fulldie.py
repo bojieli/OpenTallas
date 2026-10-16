@@ -6010,9 +6010,21 @@ def layer1_seq_master():
     return 'dsfd_stage_seq_static_c9' if PQ_PRODUCER else 'dsfd_stage_seq_static_c8'
 
 
+def manifest_defines(manifest='physical/s81_die_rtl/layer1.f'):
+    """every +define+ in the die RTL manifest, incl. several on one line (+define+A+B+C, as tools/die_port_bind.py
+    reads them). S-DIE 0600 10-16: the first-only regex dropped OT_PQ_*_SPLIT/BC_SLICED (layer1.f line 57) -> gen26n
+    port bind FAIL: dsfd_sp_pq_produced ck_aq_aux/ck_ix_read/ck_qb_aux unconnected, ck_bc[15:4] undriven."""
+    out = set()
+    for line in (ROOT / manifest).read_text().splitlines():
+        line = line.split('//')[0].strip()
+        if line.startswith('+define+'):
+            out.update(d.split('=')[0] for d in line[len('+define+'):].split('+') if d)
+    return out
+
+
 def pq_rtl_clock_ports(manifest='physical/s81_die_rtl/layer1.f'):
     """clock-entry ports of dsfd_sp_pq_n under the die RTL manifest's OT_PQ_* defines (one source of truth), bit-sliced"""
-    defs = set(re.findall(r'^\+define\+(\w+)', (ROOT / manifest).read_text(), re.M))
+    defs = set(manifest_defines(manifest))
     vec = [('ck_aq', 2), ('ck_ix', 4), ('ck_bc', 16 if 'OT_PQ_BC_SLICED' in defs else 4)]
     if 'OT_PQ_QB_PHYS_SPLIT' in defs:
         vec.append(('ck_qb_aux', 4))
@@ -6028,7 +6040,7 @@ def pq_rom4(manifest='physical/s81_die_rtl/layer1.f'):
     """S-DIE r2 2026-10-15 (S-ELEM-B dc28161fa): +define+DSFD_PQ_ROM4 in the die manifest = the 16,384-row stream ROM
     is FOUR ot_rom_4096x72 macros pqrom2a..d (ra2 12 b shared, rc2[b] -> pqrom2<b>.ce, pqrom2<b>.rd[47:0] ->
     rq2[48b+:48]); one source of truth with tools/die_port_bind.py (the manifest's defines)."""
-    return 'DSFD_PQ_ROM4' in set(re.findall(r'^\+define\+(\w+)', (ROOT / manifest).read_text(), re.M))
+    return 'DSFD_PQ_ROM4' in set(manifest_defines(manifest))
 
 
 def pq_rom_names():
