@@ -11,7 +11,7 @@
  "address_overlaps": 0,
  "capacity_failures": 0,
  "head_pairs_used": 338,
- "head_pairs_recipe": 631,
+ "head_pairs_recipe": 379,
  "primary_max_pair_fill": 1752,
  "primary_phase_groups": {
   "mtp.0:wq_a+wkv": {
@@ -176,10 +176,10 @@
   "results/uarch/dsrom_s81_released_binding_20261004/canonical/matrix_map.jsonl.gz": "985a9ee7ea26d2a7bb1aebadc5151252836eacf8181e8794b1ef6d7819db0326",
   "results/uarch/dsrom_s81_released_binding_20261004/canonical/providers.json": "91ad040342b25cd38fb69ef0eb7cb4966ff8e7e9c43cd4c3bd53a04ee30f792d",
   "results/uarch/dsrom_mtp_p2_20261009/rowpack.json.gz": "6eee0e381b7de8c1ab138dcf044a0bd1584236ed7585467f072cba353a43d8d3",
-  "tools/dsrom_s81_mtp_binding.py": "3969a5eb556c24cbc3822aef90745cbeb7232c3710e12089b5617231ad62d2ee"
+  "tools/dsrom_s81_mtp_binding.py": "c31074e3255aa51c68e008d17c3c2b0d661514bca3234af79b509a9a1d8b3f58"
  },
  "checkpoint_index_sha256": "74b0686a3d2891980d5e303251b075a3bccae2c2ff650747db2620a649b98fa8",
- "source_commit": "cdcd03346420b2c3cf54fcaa4e719df82d239491",
+ "source_commit": "2c6a5e4076ba1d05a7422d852cc803ad8bd96225",
  "qualification": {
   "storage_binding": true,
   "field_schedule_qualified": false,

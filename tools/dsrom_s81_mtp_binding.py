@@ -19,9 +19,13 @@ Die set added to the S81 array (die count is not scarce: add dies, do not squeez
   D{A,B}.r0..4.k0..3   40 MD-2 draft dies (layer1 recipe + --draft A|B): routed experts, the selected whole-superrow
              rowpack results/uarch/dsrom_mtp_p2_20261009/rowpack.json.gz (image gate PASS, tools/dsrom_mtp_draft_images.py);
              5 row packages share each side/rank image.
-  H.h0..h11  the 12 head dies (head631 recipe): markov_head.embed replicated (dense pairs after the globals share),
-             markov_head.head vocab-split (die h: rows h*10,774.., engine e of 340: 32 rows in its 2 local ROM macros),
-             confidence_head / final draft norm in the head CROM.
+  H.h0..h19  the 20 head dies (head340f20 recipe, mtp-head-1010 fs3: the full340 Markov head -- 4 Markov drivers +
+             1 bundle glue per head bundle, driver frames beside the bundle frames -- fits from 20 head dies; die count
+             is not scarce): markov_head.embed replicated (dense pairs after the globals share), markov_head.head
+             vocab-split (die h: rows h*6,464.., engine e of 204 = 51 bundles x 4: 32 rows in its 2 local ROM macros),
+             confidence_head / final draft norm in the head CROM.  The canonical globals stay on h0..h11 (pairs
+             0..210, byte-identical canonical binding); h12..h19 leave those pairs empty and use the same Markov layout.
+             Was 12 head631 dies (631 pairs, 340 engines a die).
 
     python3 tools/dsrom_s81_mtp_binding.py --out results/uarch/dsrom_s81_mtp_binding_20261010
 """
@@ -48,8 +52,9 @@ DEPTH = 8192                     # addresses a pair (two 4096-row macros deep x 
 PAIRS_LAYER1 = 1792              # m221pq / s81 layer1 full recipe
 ADDR_BYTES_FP8 = 64              # one address = 2 banks x 32 data bytes (+ inline E8M0 carrier bits)
 STAGES, TP, ROWS = 3, 4, 5
-HEAD_DIES, HEAD_PAIRS, HEAD_GLOBAL_PAIRS = 12, 631, 211
-MARKOV_ENGINES, MARKOV_ROWS_ENGINE = 340, 32
+HEAD_DIES, HEAD_PAIRS, HEAD_GLOBAL_PAIRS = 20, 379, 211     # head340f20 (was 12 head631 dies, 631 pairs)
+HEAD_RECIPE = 'head340f20'
+MARKOV_ENGINES, MARKOV_ROWS_ENGINE = 204, 32                   # 51 bundles x 4 drivers a die (was 85 x 4 = 340)
 # co-issued phase groups of one DSpark block (the field reads every member of a group in one phase)
 PHASE_GROUPS = (('wq_a', 'wkv'), ('wq_b.rows0', 'wq_b.rows4608'),
                 ('wo_a.group0.rows0', 'wo_a.group0.rows768', 'wo_a.group1.rows0', 'wo_a.group1.rows768'),
@@ -278,7 +283,7 @@ def build(out: Path):
         assert nbytes(h) == unowned[t]['source_storage_bytes'], t
     prim = [Die(f'P.k{k}', 'primary', 'layer1 full + --draft P', PAIRS_LAYER1, k) for k in range(TP)]
     drafts = [Die(f'D{s}.r{r}.k{k}', f'draft{s}', f'draft{s}', PAIRS_LAYER1, k) for s in 'AB' for r in range(ROWS) for k in range(TP)]
-    heads = [Die(f'H.h{h}', 'head', 'head631', HEAD_PAIRS, h % TP) for h in range(HEAD_DIES)]
+    heads = [Die(f'H.h{h}', 'head', HEAD_RECIPE, HEAD_PAIRS, h % TP) for h in range(HEAD_DIES)]
     owners = collections.defaultdict(list)
     providers = []
     pstats, pfill = place_primary(prim, hdr, owners)
@@ -303,7 +308,7 @@ def build(out: Path):
     die_checks = [d.check() for d in prim + drafts + heads if d.rep and d.iv]
     for c in die_checks:
         c['applies_to'] = ('all 4 primary rank dies' if c['die'].startswith('P.') else
-                           'all 20 %s dies (5 rows x 4 ranks: rank-invariant layout)' % c['die'][:2] if c['die'].startswith('D') else 'all 12 head dies')
+                           'all 20 %s dies (5 rows x 4 ranks: rank-invariant layout)' % c['die'][:2] if c['die'].startswith('D') else f'all {HEAD_DIES} head dies')
     overl = sum(c['overlaps'] for c in die_checks)
     cap_bad = [c for c in die_checks if c['max_pair_fill'] > DEPTH]
     head_markov_end = hstats['markov_pairs_end']
@@ -329,10 +334,13 @@ def build(out: Path):
                                 role='DSpark primary TP4 group: mtp.0..2 attention / router / shared expert / hc / vectors + mtp.0 seed projection'),
                    draft=dict(count=2 * ROWS * TP, ids=[d.id for d in drafts], recipe='tools/s81/s81_dies_recipe.py draftA / draftB',
                               role='MD-2 P2 routed experts (5 row packages x 4 ranks x A/B; A sums the row experts in id order)')),
-        head=dict(count=HEAD_DIES, ids=[d.id for d in heads], recipe='tools/s81/s81_dies_recipe.py head631 (--mtp-seq --mtp-links 5)',
+        head=dict(count=HEAD_DIES, ids=[d.id for d in heads], recipe=f'tools/s81/s81_dies_recipe.py {HEAD_RECIPE} (--head-dies {HEAD_DIES} --pairs {HEAD_PAIRS} --mtp-seq --mtp-links 5 --relay-pin-path --markov-full340)',
                   mtp_content='Markov embed (replicated) + Markov head vocab share + confidence/norm CROM; pairs %d..%d of %d '
-                              '(%d..%d spare: the former P2 primary reservation, now on P.k*)' % (HEAD_GLOBAL_PAIRS, head_markov_end, HEAD_PAIRS, head_markov_end, HEAD_PAIRS)),
-        dies_added_vs_canonical=TP + 2 * ROWS * TP, bytes_by_home=dict(bytes_by_home),
+                              '(%d..%d spare)' % (HEAD_GLOBAL_PAIRS, head_markov_end, HEAD_PAIRS, head_markov_end, HEAD_PAIRS)),
+        dies_added_vs_canonical=TP + 2 * ROWS * TP + (HEAD_DIES - 12),     # + the full340 head dies beyond the canonical 12
+        head_dies_vs_canonical=dict(canonical=12, bound=HEAD_DIES, added=HEAD_DIES - 12,
+                                    why='full340 Markov head (4 drivers + glue a bundle, driver frames) fits from 20 head dies (mtp-head-1010 fs3)'),
+        bytes_by_home=dict(bytes_by_home),
         topology=dict(
             seed='accept on head h0 (dsfd_mtp_seq) -> board hop h0 -> P.k* (main_proj on the primary; main-hidden captures ride the stage link to the head group, then this hop)',
             blocks='P.k* run mtp.0 -> mtp.1 -> mtp.2 back to back (block st+1 on the dies holding block st output: no stage hop)',

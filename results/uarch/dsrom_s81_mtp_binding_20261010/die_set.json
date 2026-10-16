@@ -62,7 +62,7 @@
   }
  },
  "head": {
-  "count": 12,
+  "count": 20,
   "ids": [
    "H.h0",
    "H.h1",
@@ -75,12 +75,26 @@
    "H.h8",
    "H.h9",
    "H.h10",
-   "H.h11"
+   "H.h11",
+   "H.h12",
+   "H.h13",
+   "H.h14",
+   "H.h15",
+   "H.h16",
+   "H.h17",
+   "H.h18",
+   "H.h19"
   ],
-  "recipe": "tools/s81/s81_dies_recipe.py head631 (--mtp-seq --mtp-links 5)",
-  "mtp_content": "Markov embed (replicated) + Markov head vocab share + confidence/norm CROM; pairs 211..338 of 631 (338..631 spare: the former P2 primary reservation, now on P.k*)"
+  "recipe": "tools/s81/s81_dies_recipe.py head340f20 (--head-dies 20 --pairs 379 --mtp-seq --mtp-links 5 --relay-pin-path --markov-full340)",
+  "mtp_content": "Markov embed (replicated) + Markov head vocab share + confidence/norm CROM; pairs 211..338 of 379 (338..379 spare)"
  },
- "dies_added_vs_canonical": 44,
+ "dies_added_vs_canonical": 52,
+ "head_dies_vs_canonical": {
+  "canonical": 12,
+  "bound": 20,
+  "added": 8,
+  "why": "full340 Markov head (4 drivers + glue a bundle, driver frames) fits from 20 head dies (mtp-head-1010 fs3)"
+ },
  "bytes_by_home": {
   "primary": 581025160,
   "draft": 7219445760,
