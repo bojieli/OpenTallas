@@ -1,0 +1,87 @@
+{
+  "generated": "2026-10-15T21:42:01-0700",
+  "verdict": "WARN",
+  "clock": {
+    "max_root_sinks": 8783,
+    "root": "port:clk[0]",
+    "cts": true,
+    "tt_insertion_ps": 458.5,
+    "tt_spread_ps": 139.5,
+    "declared_clock": null,
+    "limits": {
+      "sinks": 15000,
+      "insertion_ps": 300.0,
+      "spread_ps": 80.0
+    },
+    "clock_measurements": [
+      {
+        "source": "clk[0]",
+        "clock": "core_clk",
+        "tt": {
+          "boundary": {
+            "n": 1525,
+            "mean": 384.0,
+            "min": 359.7,
+            "max": 458.3
+          },
+          "all": {
+            "n": 8399,
+            "mean": 378.8,
+            "min": 319.0,
+            "max": 458.5
+          },
+          "errors": [],
+          "macros": {
+            "n": 2,
+            "nets": 2,
+            "max_per_net": 1,
+            "reg_mean": 378.8,
+            "max_slew": 55.5,
+            "max_late": -48.8,
+            "pins": [
+              {
+                "pin": "u_ot_pr_core.u_tt.u_ctl.u_tag.g_mem.g_b[0].g_m[0].u_m/clk",
+                "arr": 330.0,
+                "slew": 55.5,
+                "late": -48.8,
+                "net": "clknet_1_0__leaf_clk[0]"
+              },
+              {
+                "pin": "u_ot_pr_core.u_tt.u_ctl.u_tag.g_mem.g_b[1].g_m[0].u_m/clk",
+                "arr": 319.0,
+                "slew": 23.3,
+                "late": -59.8,
+                "net": "clknet_1_1__leaf_clk[0]"
+              }
+            ]
+          },
+          "macro_libs": 1
+        }
+      }
+    ],
+    "measured_clock": "core_clk",
+    "verdict": "PASS",
+    "text": "8,783 sinks on the largest root <= 15,000; measured TT insertion 458.5 ps, leaf spread 139.5 ps"
+  },
+  "items": [
+    {
+      "severity": "WARN",
+      "check": "util",
+      "message": "synthesized std area 6173 um2 + macros 7783 in core 72242: util 19%",
+      "fix": "set \"std_area_um2\": 6173 and drop 'outline' (gen sizes to util 0.52)"
+    },
+    {
+      "severity": "WARN",
+      "check": "textbook.high_fanout",
+      "message": "reset u_ot_pr_core.u_rs.rst_q$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R): 801 loads (792 flops, e.g. u_ot_pr_core.me_acc[0]$_DFFE_PN0P_) > 256: register it and replicate per region (rtl/lib/ot_rst_relay.sv: one relay copy per region)",
+      "fix": "no reset on datapath registers; replicate enables / selects / pointer bits per region (<= ~256 loads)"
+    },
+    {
+      "severity": "WARN",
+      "check": "textbook.util_channel",
+      "message": "utilisation 17.7% outside 45%-65% (std 5032 + macro 7783 um2 in 72242 um2): shrink the outline (long wires / sparse placement)",
+      "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
+    }
+  ],
+  "scope": "first track-corrected CTS diagnostic; current metadata/helper gate required before submit"
+}
