@@ -126725,7 +126725,7 @@
    },
    "outline": {
     "w": 220.32,
-    "h": 177.12
+    "h": 116.64
    },
    "pg_layer": "M5",
    "strap_layer": "M6",
@@ -126743,260 +126743,260 @@
      "face": "W",
      "layer": "M4",
      "span_um": [
-      73.824,
-      73.92
+      43.584,
+      43.68
      ],
-     "offset": 73.872
+     "offset": 43.632
     },
     {
      "name": "rst_n",
      "face": "W",
      "layer": "M4",
      "span_um": [
-      73.92,
-      74.016
+      43.68,
+      43.776
      ],
-     "offset": 73.968
+     "offset": 43.728
     },
     {
      "name": "cfg_we",
      "face": "W",
      "layer": "M4",
      "span_um": [
-      74.016,
-      74.112
+      43.776,
+      43.872
      ],
-     "offset": 74.064
+     "offset": 43.824
     },
     {
      "name": "cfg_addr[9:0]",
      "face": "W",
      "layer": "M4",
      "span_um": [
-      74.112,
-      75.072
+      43.872,
+      44.832
      ],
-     "offset": 74.592
+     "offset": 44.352
     },
     {
      "name": "cfg_data[255:0]",
      "face": "W",
      "layer": "M4",
      "span_um": [
-      75.072,
-      99.648
+      44.832,
+      69.408
      ],
-     "offset": 87.36
+     "offset": 57.12
     },
     {
      "name": "start_v",
      "face": "W",
      "layer": "M4",
      "span_um": [
-      99.648,
-      99.744
+      69.408,
+      69.504
      ],
-     "offset": 99.696
+     "offset": 69.456
     },
     {
      "name": "start_base[9:0]",
      "face": "W",
      "layer": "M4",
      "span_um": [
-      99.744,
-      100.704
+      69.504,
+      70.464
      ],
-     "offset": 100.224
+     "offset": 69.984
     },
     {
      "name": "start_limit[10:0]",
      "face": "W",
      "layer": "M4",
      "span_um": [
-      100.704,
-      101.76
+      70.464,
+      71.52
      ],
-     "offset": 101.232
+     "offset": 70.992
     },
     {
      "name": "start_loops[15:0]",
      "face": "W",
      "layer": "M4",
      "span_um": [
-      101.76,
-      103.296
+      71.52,
+      73.056
      ],
-     "offset": 102.528
+     "offset": 72.288
     },
     {
      "name": "client_seq[9:0]",
      "face": "E",
      "layer": "M4",
      "span_um": [
-      79.584,
-      80.544
+      49.344,
+      50.304
      ],
-     "offset": 80.064
+     "offset": 49.824
     },
     {
      "name": "response_enable[4:0]",
      "face": "E",
      "layer": "M4",
      "span_um": [
-      80.544,
-      81.024
+      50.304,
+      50.784
      ],
-     "offset": 80.784
+     "offset": 50.544
     },
     {
      "name": "response_seq[9:0]",
      "face": "E",
      "layer": "M4",
      "span_um": [
-      81.024,
-      81.984
+      50.784,
+      51.744
      ],
-     "offset": 81.504
+     "offset": 51.264
     },
     {
      "name": "bank_enable[7:0]",
      "face": "E",
      "layer": "M4",
      "span_um": [
-      81.984,
-      82.752
+      51.744,
+      52.512
      ],
-     "offset": 82.368
+     "offset": 52.128
     },
     {
      "name": "bank_client[23:0]",
      "face": "E",
      "layer": "M4",
      "span_um": [
-      82.752,
-      85.056
+      52.512,
+      54.816
      ],
-     "offset": 83.904
+     "offset": 53.664
     },
     {
      "name": "hub_ring_enable[1:0]",
      "face": "E",
      "layer": "M4",
      "span_um": [
-      85.056,
-      85.248
+      54.816,
+      55.008
      ],
-     "offset": 85.152
+     "offset": 54.912
     },
     {
      "name": "hub_ring_client[5:0]",
      "face": "E",
      "layer": "M4",
      "span_um": [
-      85.248,
-      85.824
+      55.008,
+      55.584
      ],
-     "offset": 85.536
+     "offset": 55.296
     },
     {
      "name": "rslot_v[7:0]",
      "face": "E",
      "layer": "M4",
      "span_um": [
-      85.824,
-      86.592
+      55.584,
+      56.352
      ],
-     "offset": 86.208
+     "offset": 55.968
     },
     {
      "name": "wslot_v[7:0]",
      "face": "E",
      "layer": "M4",
      "span_um": [
-      86.592,
-      87.36
+      56.352,
+      57.12
      ],
-     "offset": 86.976
+     "offset": 56.736
     },
     {
      "name": "rslot[23:0]",
      "face": "E",
      "layer": "M4",
      "span_um": [
-      87.36,
-      89.664
+      57.12,
+      59.424
      ],
-     "offset": 88.512
+     "offset": 58.272
     },
     {
      "name": "wslot[23:0]",
      "face": "E",
      "layer": "M4",
      "span_um": [
-      89.664,
-      91.968
+      59.424,
+      61.728
      ],
-     "offset": 90.816
+     "offset": 60.576
     },
     {
      "name": "ring_tx_enable[1:0]",
      "face": "E",
      "layer": "M4",
      "span_um": [
-      91.968,
-      92.16
+      61.728,
+      61.92
      ],
-     "offset": 92.064
+     "offset": 61.824
     },
     {
      "name": "ring_tx_source[5:0]",
      "face": "E",
      "layer": "M4",
      "span_um": [
-      92.16,
-      92.736
+      61.92,
+      62.496
      ],
-     "offset": 92.448
+     "offset": 62.208
     },
     {
      "name": "replay_enable",
      "face": "E",
      "layer": "M4",
      "span_um": [
-      92.736,
-      92.832
+      62.496,
+      62.592
      ],
-     "offset": 92.784
+     "offset": 62.544
     },
     {
      "name": "replay_source",
      "face": "E",
      "layer": "M4",
      "span_um": [
-      92.832,
-      92.928
+      62.592,
+      62.688
      ],
-     "offset": 92.88
+     "offset": 62.64
     },
     {
      "name": "lg_local_read[23:0]",
      "face": "E",
      "layer": "M4",
      "span_um": [
-      92.928,
-      95.232
+      62.688,
+      64.992
      ],
-     "offset": 94.08
+     "offset": 63.84
     },
     {
      "name": "lg_local_write[23:0]",
      "face": "E",
      "layer": "M4",
      "span_um": [
-      95.232,
-      97.536
+      64.992,
+      67.296
      ],
-     "offset": 96.384
+     "offset": 66.144
     },
     {
      "name": "calendar_v",
@@ -127051,7 +127051,7 @@
    ],
    "planning_group": "vmh_SW",
    "qualified": false,
-   "notes": "Source universal W187; candidate slot only. Fresh view, host programming, complete hub packing, incident pin hops and native die timing remain OPEN. Universal output low slices are explicit in consumers."
+   "notes": "Source universal W187; compact candidate slot only (174.744x70.488 SRAM, at least20um edge channels, target51.9% total fill). Fresh view, host programming, complete hub packing, incident pin hops and native die timing remain OPEN. Universal output low slices are explicit in consumers."
   },
   {
    "name": "calendar_SE",
@@ -127070,7 +127070,7 @@
    },
    "outline": {
     "w": 220.32,
-    "h": 177.12
+    "h": 116.64
    },
    "pg_layer": "M5",
    "strap_layer": "M6",
@@ -127088,260 +127088,260 @@
      "face": "W",
      "layer": "M4",
      "span_um": [
-      73.824,
-      73.92
+      43.584,
+      43.68
      ],
-     "offset": 73.872
+     "offset": 43.632
     },
     {
      "name": "rst_n",
      "face": "W",
      "layer": "M4",
      "span_um": [
-      73.92,
-      74.016
+      43.68,
+      43.776
      ],
-     "offset": 73.968
+     "offset": 43.728
     },
     {
      "name": "cfg_we",
      "face": "W",
      "layer": "M4",
      "span_um": [
-      74.016,
-      74.112
+      43.776,
+      43.872
      ],
-     "offset": 74.064
+     "offset": 43.824
     },
     {
      "name": "cfg_addr[9:0]",
      "face": "W",
      "layer": "M4",
      "span_um": [
-      74.112,
-      75.072
+      43.872,
+      44.832
      ],
-     "offset": 74.592
+     "offset": 44.352
     },
     {
      "name": "cfg_data[255:0]",
      "face": "W",
      "layer": "M4",
      "span_um": [
-      75.072,
-      99.648
+      44.832,
+      69.408
      ],
-     "offset": 87.36
+     "offset": 57.12
     },
     {
      "name": "start_v",
      "face": "W",
      "layer": "M4",
      "span_um": [
-      99.648,
-      99.744
+      69.408,
+      69.504
      ],
-     "offset": 99.696
+     "offset": 69.456
     },
     {
      "name": "start_base[9:0]",
      "face": "W",
      "layer": "M4",
      "span_um": [
-      99.744,
-      100.704
+      69.504,
+      70.464
      ],
-     "offset": 100.224
+     "offset": 69.984
     },
     {
      "name": "start_limit[10:0]",
      "face": "W",
      "layer": "M4",
      "span_um": [
-      100.704,
-      101.76
+      70.464,
+      71.52
      ],
-     "offset": 101.232
+     "offset": 70.992
     },
     {
      "name": "start_loops[15:0]",
      "face": "W",
      "layer": "M4",
      "span_um": [
-      101.76,
-      103.296
+      71.52,
+      73.056
      ],
-     "offset": 102.528
+     "offset": 72.288
     },
     {
      "name": "client_seq[9:0]",
      "face": "E",
      "layer": "M4",
      "span_um": [
-      79.584,
-      80.544
+      49.344,
+      50.304
      ],
-     "offset": 80.064
+     "offset": 49.824
     },
     {
      "name": "response_enable[4:0]",
      "face": "E",
      "layer": "M4",
      "span_um": [
-      80.544,
-      81.024
+      50.304,
+      50.784
      ],
-     "offset": 80.784
+     "offset": 50.544
     },
     {
      "name": "response_seq[9:0]",
      "face": "E",
      "layer": "M4",
      "span_um": [
-      81.024,
-      81.984
+      50.784,
+      51.744
      ],
-     "offset": 81.504
+     "offset": 51.264
     },
     {
      "name": "bank_enable[7:0]",
      "face": "E",
      "layer": "M4",
      "span_um": [
-      81.984,
-      82.752
+      51.744,
+      52.512
      ],
-     "offset": 82.368
+     "offset": 52.128
     },
     {
      "name": "bank_client[23:0]",
      "face": "E",
      "layer": "M4",
      "span_um": [
-      82.752,
-      85.056
+      52.512,
+      54.816
      ],
-     "offset": 83.904
+     "offset": 53.664
     },
     {
      "name": "hub_ring_enable[1:0]",
      "face": "E",
      "layer": "M4",
      "span_um": [
-      85.056,
-      85.248
+      54.816,
+      55.008
      ],
-     "offset": 85.152
+     "offset": 54.912
     },
     {
      "name": "hub_ring_client[5:0]",
      "face": "E",
      "layer": "M4",
      "span_um": [
-      85.248,
-      85.824
+      55.008,
+      55.584
      ],
-     "offset": 85.536
+     "offset": 55.296
     },
     {
      "name": "rslot_v[7:0]",
      "face": "E",
      "layer": "M4",
      "span_um": [
-      85.824,
-      86.592
+      55.584,
+      56.352
      ],
-     "offset": 86.208
+     "offset": 55.968
     },
     {
      "name": "wslot_v[7:0]",
      "face": "E",
      "layer": "M4",
      "span_um": [
-      86.592,
-      87.36
+      56.352,
+      57.12
      ],
-     "offset": 86.976
+     "offset": 56.736
     },
     {
      "name": "rslot[23:0]",
      "face": "E",
      "layer": "M4",
      "span_um": [
-      87.36,
-      89.664
+      57.12,
+      59.424
      ],
-     "offset": 88.512
+     "offset": 58.272
     },
     {
      "name": "wslot[23:0]",
      "face": "E",
      "layer": "M4",
      "span_um": [
-      89.664,
-      91.968
+      59.424,
+      61.728
      ],
-     "offset": 90.816
+     "offset": 60.576
     },
     {
      "name": "ring_tx_enable[1:0]",
      "face": "E",
      "layer": "M4",
      "span_um": [
-      91.968,
-      92.16
+      61.728,
+      61.92
      ],
-     "offset": 92.064
+     "offset": 61.824
     },
     {
      "name": "ring_tx_source[5:0]",
      "face": "E",
      "layer": "M4",
      "span_um": [
-      92.16,
-      92.736
+      61.92,
+      62.496
      ],
-     "offset": 92.448
+     "offset": 62.208
     },
     {
      "name": "replay_enable",
      "face": "E",
      "layer": "M4",
      "span_um": [
-      92.736,
-      92.832
+      62.496,
+      62.592
      ],
-     "offset": 92.784
+     "offset": 62.544
     },
     {
      "name": "replay_source",
      "face": "E",
      "layer": "M4",
      "span_um": [
-      92.832,
-      92.928
+      62.592,
+      62.688
      ],
-     "offset": 92.88
+     "offset": 62.64
     },
     {
      "name": "lg_local_read[23:0]",
      "face": "E",
      "layer": "M4",
      "span_um": [
-      92.928,
-      95.232
+      62.688,
+      64.992
      ],
-     "offset": 94.08
+     "offset": 63.84
     },
     {
      "name": "lg_local_write[23:0]",
      "face": "E",
      "layer": "M4",
      "span_um": [
-      95.232,
-      97.536
+      64.992,
+      67.296
      ],
-     "offset": 96.384
+     "offset": 66.144
     },
     {
      "name": "calendar_v",
@@ -127396,7 +127396,7 @@
    ],
    "planning_group": "vmh_SE",
    "qualified": false,
-   "notes": "Source universal W187; candidate slot only. Fresh view, host programming, complete hub packing, incident pin hops and native die timing remain OPEN. Universal output low slices are explicit in consumers."
+   "notes": "Source universal W187; compact candidate slot only (174.744x70.488 SRAM, at least20um edge channels, target51.9% total fill). Fresh view, host programming, complete hub packing, incident pin hops and native die timing remain OPEN. Universal output low slices are explicit in consumers."
   },
   {
    "name": "calendar_NW",
@@ -127415,7 +127415,7 @@
    },
    "outline": {
     "w": 220.32,
-    "h": 177.12
+    "h": 116.64
    },
    "pg_layer": "M5",
    "strap_layer": "M6",
@@ -127433,260 +127433,260 @@
      "face": "W",
      "layer": "M4",
      "span_um": [
-      73.824,
-      73.92
+      43.584,
+      43.68
      ],
-     "offset": 73.872
+     "offset": 43.632
     },
     {
      "name": "rst_n",
      "face": "W",
      "layer": "M4",
      "span_um": [
-      73.92,
-      74.016
+      43.68,
+      43.776
      ],
-     "offset": 73.968
+     "offset": 43.728
     },
     {
      "name": "cfg_we",
      "face": "W",
      "layer": "M4",
      "span_um": [
-      74.016,
-      74.112
+      43.776,
+      43.872
      ],
-     "offset": 74.064
+     "offset": 43.824
     },
     {
      "name": "cfg_addr[9:0]",
      "face": "W",
      "layer": "M4",
      "span_um": [
-      74.112,
-      75.072
+      43.872,
+      44.832
      ],
-     "offset": 74.592
+     "offset": 44.352
     },
     {
      "name": "cfg_data[255:0]",
      "face": "W",
      "layer": "M4",
      "span_um": [
-      75.072,
-      99.648
+      44.832,
+      69.408
      ],
-     "offset": 87.36
+     "offset": 57.12
     },
     {
      "name": "start_v",
      "face": "W",
      "layer": "M4",
      "span_um": [
-      99.648,
-      99.744
+      69.408,
+      69.504
      ],
-     "offset": 99.696
+     "offset": 69.456
     },
     {
      "name": "start_base[9:0]",
      "face": "W",
      "layer": "M4",
      "span_um": [
-      99.744,
-      100.704
+      69.504,
+      70.464
      ],
-     "offset": 100.224
+     "offset": 69.984
     },
     {
      "name": "start_limit[10:0]",
      "face": "W",
      "layer": "M4",
      "span_um": [
-      100.704,
-      101.76
+      70.464,
+      71.52
      ],
-     "offset": 101.232
+     "offset": 70.992
     },
     {
      "name": "start_loops[15:0]",
      "face": "W",
      "layer": "M4",
      "span_um": [
-      101.76,
-      103.296
+      71.52,
+      73.056
      ],
-     "offset": 102.528
+     "offset": 72.288
     },
     {
      "name": "client_seq[9:0]",
      "face": "E",
      "layer": "M4",
      "span_um": [
-      79.584,
-      80.544
+      49.344,
+      50.304
      ],
-     "offset": 80.064
+     "offset": 49.824
     },
     {
      "name": "response_enable[4:0]",
      "face": "E",
      "layer": "M4",
      "span_um": [
-      80.544,
-      81.024
+      50.304,
+      50.784
      ],
-     "offset": 80.784
+     "offset": 50.544
     },
     {
      "name": "response_seq[9:0]",
      "face": "E",
      "layer": "M4",
      "span_um": [
-      81.024,
-      81.984
+      50.784,
+      51.744
      ],
-     "offset": 81.504
+     "offset": 51.264
     },
     {
      "name": "bank_enable[7:0]",
      "face": "E",
      "layer": "M4",
      "span_um": [
-      81.984,
-      82.752
+      51.744,
+      52.512
      ],
-     "offset": 82.368
+     "offset": 52.128
     },
     {
      "name": "bank_client[23:0]",
      "face": "E",
      "layer": "M4",
      "span_um": [
-      82.752,
-      85.056
+      52.512,
+      54.816
      ],
-     "offset": 83.904
+     "offset": 53.664
     },
     {
      "name": "hub_ring_enable[1:0]",
      "face": "E",
      "layer": "M4",
      "span_um": [
-      85.056,
-      85.248
+      54.816,
+      55.008
      ],
-     "offset": 85.152
+     "offset": 54.912
     },
     {
      "name": "hub_ring_client[5:0]",
      "face": "E",
      "layer": "M4",
      "span_um": [
-      85.248,
-      85.824
+      55.008,
+      55.584
      ],
-     "offset": 85.536
+     "offset": 55.296
     },
     {
      "name": "rslot_v[7:0]",
      "face": "E",
      "layer": "M4",
      "span_um": [
-      85.824,
-      86.592
+      55.584,
+      56.352
      ],
-     "offset": 86.208
+     "offset": 55.968
     },
     {
      "name": "wslot_v[7:0]",
      "face": "E",
      "layer": "M4",
      "span_um": [
-      86.592,
-      87.36
+      56.352,
+      57.12
      ],
-     "offset": 86.976
+     "offset": 56.736
     },
     {
      "name": "rslot[23:0]",
      "face": "E",
      "layer": "M4",
      "span_um": [
-      87.36,
-      89.664
+      57.12,
+      59.424
      ],
-     "offset": 88.512
+     "offset": 58.272
     },
     {
      "name": "wslot[23:0]",
      "face": "E",
      "layer": "M4",
      "span_um": [
-      89.664,
-      91.968
+      59.424,
+      61.728
      ],
-     "offset": 90.816
+     "offset": 60.576
     },
     {
      "name": "ring_tx_enable[1:0]",
      "face": "E",
      "layer": "M4",
      "span_um": [
-      91.968,
-      92.16
+      61.728,
+      61.92
      ],
-     "offset": 92.064
+     "offset": 61.824
     },
     {
      "name": "ring_tx_source[5:0]",
      "face": "E",
      "layer": "M4",
      "span_um": [
-      92.16,
-      92.736
+      61.92,
+      62.496
      ],
-     "offset": 92.448
+     "offset": 62.208
     },
     {
      "name": "replay_enable",
      "face": "E",
      "layer": "M4",
      "span_um": [
-      92.736,
-      92.832
+      62.496,
+      62.592
      ],
-     "offset": 92.784
+     "offset": 62.544
     },
     {
      "name": "replay_source",
      "face": "E",
      "layer": "M4",
      "span_um": [
-      92.832,
-      92.928
+      62.592,
+      62.688
      ],
-     "offset": 92.88
+     "offset": 62.64
     },
     {
      "name": "lg_local_read[23:0]",
      "face": "E",
      "layer": "M4",
      "span_um": [
-      92.928,
-      95.232
+      62.688,
+      64.992
      ],
-     "offset": 94.08
+     "offset": 63.84
     },
     {
      "name": "lg_local_write[23:0]",
      "face": "E",
      "layer": "M4",
      "span_um": [
-      95.232,
-      97.536
+      64.992,
+      67.296
      ],
-     "offset": 96.384
+     "offset": 66.144
     },
     {
      "name": "calendar_v",
@@ -127741,7 +127741,7 @@
    ],
    "planning_group": "vmh_NW",
    "qualified": false,
-   "notes": "Source universal W187; candidate slot only. Fresh view, host programming, complete hub packing, incident pin hops and native die timing remain OPEN. Universal output low slices are explicit in consumers."
+   "notes": "Source universal W187; compact candidate slot only (174.744x70.488 SRAM, at least20um edge channels, target51.9% total fill). Fresh view, host programming, complete hub packing, incident pin hops and native die timing remain OPEN. Universal output low slices are explicit in consumers."
   },
   {
    "name": "calendar_NE",
@@ -127760,7 +127760,7 @@
    },
    "outline": {
     "w": 220.32,
-    "h": 177.12
+    "h": 116.64
    },
    "pg_layer": "M5",
    "strap_layer": "M6",
@@ -127778,260 +127778,260 @@
      "face": "W",
      "layer": "M4",
      "span_um": [
-      73.824,
-      73.92
+      43.584,
+      43.68
      ],
-     "offset": 73.872
+     "offset": 43.632
     },
     {
      "name": "rst_n",
      "face": "W",
      "layer": "M4",
      "span_um": [
-      73.92,
-      74.016
+      43.68,
+      43.776
      ],
-     "offset": 73.968
+     "offset": 43.728
     },
     {
      "name": "cfg_we",
      "face": "W",
      "layer": "M4",
      "span_um": [
-      74.016,
-      74.112
+      43.776,
+      43.872
      ],
-     "offset": 74.064
+     "offset": 43.824
     },
     {
      "name": "cfg_addr[9:0]",
      "face": "W",
      "layer": "M4",
      "span_um": [
-      74.112,
-      75.072
+      43.872,
+      44.832
      ],
-     "offset": 74.592
+     "offset": 44.352
     },
     {
      "name": "cfg_data[255:0]",
      "face": "W",
      "layer": "M4",
      "span_um": [
-      75.072,
-      99.648
+      44.832,
+      69.408
      ],
-     "offset": 87.36
+     "offset": 57.12
     },
     {
      "name": "start_v",
      "face": "W",
      "layer": "M4",
      "span_um": [
-      99.648,
-      99.744
+      69.408,
+      69.504
      ],
-     "offset": 99.696
+     "offset": 69.456
     },
     {
      "name": "start_base[9:0]",
      "face": "W",
      "layer": "M4",
      "span_um": [
-      99.744,
-      100.704
+      69.504,
+      70.464
      ],
-     "offset": 100.224
+     "offset": 69.984
     },
     {
      "name": "start_limit[10:0]",
      "face": "W",
      "layer": "M4",
      "span_um": [
-      100.704,
-      101.76
+      70.464,
+      71.52
      ],
-     "offset": 101.232
+     "offset": 70.992
     },
     {
      "name": "start_loops[15:0]",
      "face": "W",
      "layer": "M4",
      "span_um": [
-      101.76,
-      103.296
+      71.52,
+      73.056
      ],
-     "offset": 102.528
+     "offset": 72.288
     },
     {
      "name": "client_seq[9:0]",
      "face": "E",
      "layer": "M4",
      "span_um": [
-      79.584,
-      80.544
+      49.344,
+      50.304
      ],
-     "offset": 80.064
+     "offset": 49.824
     },
     {
      "name": "response_enable[4:0]",
      "face": "E",
      "layer": "M4",
      "span_um": [
-      80.544,
-      81.024
+      50.304,
+      50.784
      ],
-     "offset": 80.784
+     "offset": 50.544
     },
     {
      "name": "response_seq[9:0]",
      "face": "E",
      "layer": "M4",
      "span_um": [
-      81.024,
-      81.984
+      50.784,
+      51.744
      ],
-     "offset": 81.504
+     "offset": 51.264
     },
     {
      "name": "bank_enable[7:0]",
      "face": "E",
      "layer": "M4",
      "span_um": [
-      81.984,
-      82.752
+      51.744,
+      52.512
      ],
-     "offset": 82.368
+     "offset": 52.128
     },
     {
      "name": "bank_client[23:0]",
      "face": "E",
      "layer": "M4",
      "span_um": [
-      82.752,
-      85.056
+      52.512,
+      54.816
      ],
-     "offset": 83.904
+     "offset": 53.664
     },
     {
      "name": "hub_ring_enable[1:0]",
      "face": "E",
      "layer": "M4",
      "span_um": [
-      85.056,
-      85.248
+      54.816,
+      55.008
      ],
-     "offset": 85.152
+     "offset": 54.912
     },
     {
      "name": "hub_ring_client[5:0]",
      "face": "E",
      "layer": "M4",
      "span_um": [
-      85.248,
-      85.824
+      55.008,
+      55.584
      ],
-     "offset": 85.536
+     "offset": 55.296
     },
     {
      "name": "rslot_v[7:0]",
      "face": "E",
      "layer": "M4",
      "span_um": [
-      85.824,
-      86.592
+      55.584,
+      56.352
      ],
-     "offset": 86.208
+     "offset": 55.968
     },
     {
      "name": "wslot_v[7:0]",
      "face": "E",
      "layer": "M4",
      "span_um": [
-      86.592,
-      87.36
+      56.352,
+      57.12
      ],
-     "offset": 86.976
+     "offset": 56.736
     },
     {
      "name": "rslot[23:0]",
      "face": "E",
      "layer": "M4",
      "span_um": [
-      87.36,
-      89.664
+      57.12,
+      59.424
      ],
-     "offset": 88.512
+     "offset": 58.272
     },
     {
      "name": "wslot[23:0]",
      "face": "E",
      "layer": "M4",
      "span_um": [
-      89.664,
-      91.968
+      59.424,
+      61.728
      ],
-     "offset": 90.816
+     "offset": 60.576
     },
     {
      "name": "ring_tx_enable[1:0]",
      "face": "E",
      "layer": "M4",
      "span_um": [
-      91.968,
-      92.16
+      61.728,
+      61.92
      ],
-     "offset": 92.064
+     "offset": 61.824
     },
     {
      "name": "ring_tx_source[5:0]",
      "face": "E",
      "layer": "M4",
      "span_um": [
-      92.16,
-      92.736
+      61.92,
+      62.496
      ],
-     "offset": 92.448
+     "offset": 62.208
     },
     {
      "name": "replay_enable",
      "face": "E",
      "layer": "M4",
      "span_um": [
-      92.736,
-      92.832
+      62.496,
+      62.592
      ],
-     "offset": 92.784
+     "offset": 62.544
     },
     {
      "name": "replay_source",
      "face": "E",
      "layer": "M4",
      "span_um": [
-      92.832,
-      92.928
+      62.592,
+      62.688
      ],
-     "offset": 92.88
+     "offset": 62.64
     },
     {
      "name": "lg_local_read[23:0]",
      "face": "E",
      "layer": "M4",
      "span_um": [
-      92.928,
-      95.232
+      62.688,
+      64.992
      ],
-     "offset": 94.08
+     "offset": 63.84
     },
     {
      "name": "lg_local_write[23:0]",
      "face": "E",
      "layer": "M4",
      "span_um": [
-      95.232,
-      97.536
+      64.992,
+      67.296
      ],
-     "offset": 96.384
+     "offset": 66.144
     },
     {
      "name": "calendar_v",
@@ -128086,7 +128086,7 @@
    ],
    "planning_group": "vmh_NE",
    "qualified": false,
-   "notes": "Source universal W187; candidate slot only. Fresh view, host programming, complete hub packing, incident pin hops and native die timing remain OPEN. Universal output low slices are explicit in consumers."
+   "notes": "Source universal W187; compact candidate slot only (174.744x70.488 SRAM, at least20um edge channels, target51.9% total fill). Fresh view, host programming, complete hub packing, incident pin hops and native die timing remain OPEN. Universal output low slices are explicit in consumers."
   }
  ],
  "sub_layouts": {
