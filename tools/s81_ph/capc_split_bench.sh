@@ -64,65 +64,22 @@ one('.rsv(rsv), .f_gather(f_gather), .t_vm(t_vm), .t_cd(dc));',
         end
     // ordered completed-phase events: reference t_cd vs candidate t_cd
     // (either side may toggle first: the x43 status lane is not slower than the elastic FIFO, so events pair by index)
-    reg [9:0] evr [0:4095]; reg [9:0] evd [0:4095]; time etr [0:4095]; time etd [0:4095]; integer dmin = 1 << 30, dmax = -(1 << 30); integer ner = 0, ned = 0, ncmp = 0, sqm = 0, smm = 0; reg rtq = 1'b0, dtq = 1'b0;
+    reg [9:0] evr [0:4095]; reg [9:0] evd [0:4095]; time etr [0:4095]; time etd [0:4095]; integer cdmin = 1 << 30, cdmax = -(1 << 30); integer ner = 0, ned = 0, ncmp = 0, sqm = 0, smm = 0; reg rtq = 1'b0, dtq = 1'b0;
     always @(posedge ckv[0]) begin
         cx_q <= cx;
         if (rc[11] !== rtq) begin rtq <= rc[11]; evr[ner % 4096] = rc[9:0]; etr[ner % 4096] = $time; ner = ner + 1; end
         if (dc[11] !== dtq) begin dtq <= dc[11]; evd[ned % 4096] = dc[9:0]; etd[ned % 4096] = $time; ned = ned + 1; end
         while (ncmp < ner && ncmp < ned) begin
             if (evr[ncmp % 4096] !== evd[ncmp % 4096]) begin sqm = sqm + 1; if (sqm < 5) $display("CAPC_EQ CD_SEQ MISMATCH t=%0t event %0d ref %h dut %h", $time, ncmp, evr[ncmp % 4096], evd[ncmp % 4096]); end
-            if ($signed(etd[ncmp % 4096] - etr[ncmp % 4096]) < dmin) dmin = $signed(etd[ncmp % 4096] - etr[ncmp % 4096]);
-            if ($signed(etd[ncmp % 4096] - etr[ncmp % 4096]) > dmax) dmax = $signed(etd[ncmp % 4096] - etr[ncmp % 4096]);
+            if ($signed(etd[ncmp % 4096] - etr[ncmp % 4096]) < cdmin) cdmin = $signed(etd[ncmp % 4096] - etr[ncmp % 4096]);
+            if ($signed(etd[ncmp % 4096] - etr[ncmp % 4096]) > cdmax) cdmax = $signed(etd[ncmp % 4096] - etr[ncmp % 4096]);
             ncmp = ncmp + 1;
         end
     end""")
 one('            if (rv !== t_vm || rc_q !== dc) begin mm = mm + 1; if (mm < 5) $display("CAPC_EQ MISMATCH t=%0t vm_eq %b cd %h/%h", $time, rv === t_vm, rc_q, dc); end',
     '            if (rv[13311:0] !== t_vm[13311:0] || st_x !== t_vm[13375:13312] || cx_q !== dc) begin mm = mm + 1; if (st_x !== t_vm[13375:13312]) smm = smm + 1; if (mm < 5) $display("CAPC_EQ MISMATCH t=%0t rows_eq %b st %h/%h cd %h/%h", $time, rv[13311:0] === t_vm[13311:0], st_x, t_vm[13375:13312], cx_q, dc); end')
 one('    final $display("CAPC_EQ mismatches=%0d tcd_toggles=%0d vm_active_cycles=%0d %s", mm, tg, nw, (mm == 0 && nw > 0) ? "EQ_PASS" : "EQ_FAIL");',
-    '    final $display("CAPC_EQ mismatches=%0d status_mm=%0d tcd_toggles=%0d cd_events=%0d/%0d cd_seq_mm=%0d cd_dut_minus_ref_ns=%0d..%0d vm_active_cycles=%0d %s", mm, smm, tg, ned, ner, sqm, (ncmp > 0) ? dmin : 0, (ncmp > 0) ? dmax : 0, nw, (mm == 0 && sqm == 0 && ner - ned <= 1 && ned - ner <= 1 && nw > 0) ? "EQ_PASS" : "EQ_FAIL");')
-# claude S-VM-CAPT-X8 2026-10-16 (DECISION B, ctrl_c/dsfd_capt_x8_x43.sv): the data halves are now the STATIC
-# fixed-bank 3:4 transfer.  Its row words reach t_vm 1..2 serial cycles EARLIER than the reference's hold queue + ratio
-# FIFO and are paired differently (sample indices n0 + n1 together at serial edge 2), so the row lanes t_vm[13311:0]
-# are no longer cycle-identical BY DESIGN and leave the lockstep compare above.  Replacement expectations:
-#  * every root's row-word SEQUENCE (content and order) equals the reference's (no word lost, added or reordered);
-#  * the per-word serial-edge delta (dut - ref) is reported (CAPC_SEQ ... serial_edge_delta_dut_minus_ref);
-#  * no DUT row word reaches t_vm while the DUT status lane shows the phase drained (st[2]) more often than the
-#    reference's words do (the VM capture lanes flush partial rows on drained);
-#  * status lane / t_cd stay as S-VM-CAPT-STATUS defined them; both captures get its epoch reset rse.
-one('    always @(posedge ckv[0]) if (rsv[0]) begin',
-    '    reg [50:0] rq [0:127][$]; reg [50:0] dq [0:127][$]; int re [0:127][$]; int de [0:127][$];\n'
-    '    int sk = 0, late_r = 0, late_d = 0, sm = 0, sw = 0, dmin = 1000000, dmax = -1000000;\n'
-    '    always @(posedge ckv[0]) if (rse[0]) begin : seq\n'
-    '        reg anyr, anyd; anyr = 1\'b0; anyd = 1\'b0;\n'
-    '        for (int k = 0; k < 128; k++) begin\n'
-    '            if (rv[104*k])      begin rq[k].push_back(rv[104*k+1 +: 51]);   re[k].push_back(sk); anyr = 1\'b1; end\n'
-    '            if (rv[104*k+52])   begin rq[k].push_back(rv[104*k+53 +: 51]);  re[k].push_back(sk); anyr = 1\'b1; end\n'
-    '            if (t_vm[104*k])    begin dq[k].push_back(t_vm[104*k+1 +: 51]); de[k].push_back(sk); anyd = 1\'b1; end\n'
-    '            if (t_vm[104*k+52]) begin dq[k].push_back(t_vm[104*k+53 +: 51]); de[k].push_back(sk); anyd = 1\'b1; end\n'
-    '        end\n'
-    '        if (anyr && rv[13314]) late_r = late_r + 1;\n'
-    '        if (anyd && t_vm[13314]) late_d = late_d + 1;\n'
-    '        sk = sk + 1;\n'
-    '    end\n'
-    '    always @(posedge ckv[0]) if (rsv[0]) begin')
-one('if (rv[13311:0] !== t_vm[13311:0] || st_x !== t_vm[13375:13312]', 'if (st_x !== t_vm[13375:13312]')
-one('    final $display("CAPC_EQ mismatches=',
-    '    final begin\n'
-    '        for (int k = 0; k < 128; k++) begin\n'
-    '            if (rq[k].size() != dq[k].size()) begin sm = sm + 1; if (sm < 5) $display("CAPC_SEQ MISMATCH root %0d ref %0d dut %0d words", k, rq[k].size(), dq[k].size()); end\n'
-    '            else for (int i = 0; i < rq[k].size(); i++) begin\n'
-    '                sw = sw + 1;\n'
-    '                if (rq[k][i] !== dq[k][i]) begin sm = sm + 1; if (sm < 5) $display("CAPC_SEQ MISMATCH root %0d word %0d ref %h dut %h", k, i, rq[k][i], dq[k][i]); break; end\n'
-    '                if (de[k][i] - re[k][i] < dmin) dmin = de[k][i] - re[k][i];\n'
-    '                if (de[k][i] - re[k][i] > dmax) dmax = de[k][i] - re[k][i];\n'
-    '            end\n'
-    '        end\n'
-    '        $display("CAPC_SEQ words=%0d seq_mismatches=%0d serial_edge_delta_dut_minus_ref=%0d..%0d late_after_drained ref=%0d dut=%0d", sw, sm, dmin, dmax, late_r, late_d);\n'
-    '        mm = mm + sm + ((late_d > late_r) ? 1 : 0);\n'
-    '        $display("CAPC_EQ mismatches=')
-one('? "EQ_PASS" : "EQ_FAIL");', '? "EQ_PASS" : "EQ_FAIL");\n    end')
-one('rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_sp_capture_split_candidate.sv $G/capc_shim.sv',
-    'rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_capt_x8_x43.sv rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_sp_capture_split_candidate.sv $G/capc_shim.sv')
+    '    final $display("CAPC_EQ mismatches=%0d status_mm=%0d tcd_toggles=%0d cd_events=%0d/%0d cd_seq_mm=%0d cd_dut_minus_ref_ns=%0d..%0d vm_active_cycles=%0d %s", mm, smm, tg, ned, ner, sqm, (ncmp > 0) ? cdmin : 0, (ncmp > 0) ? cdmax : 0, nw, (mm == 0 && sqm == 0 && ner - ned <= 1 && ned - ner <= 1 && nw > 0) ? "EQ_PASS" : "EQ_FAIL");')
 Path(sys.argv[1]).write_text(s)
 PY
 bash "$out/split_runner.sh" "$@"
