@@ -16,6 +16,7 @@ module qfd_tt_ctlm_b2 #(parameter integer XPF_TRANSPORT_EDGES=-1) (
     input wire [15:0] su_observe,output wire [71:0] xpf,
     output wire mer0,mer1,mer2,mer3,mer4,mer5,
     input wire rf0,rf1,rf2,rf3,rf4,rf5,xflt,
+    input wire b2_status_fault,
     input wire ck_head,
     input wire ck_tree,
     output wire [340:0] tc0,tc1,
@@ -164,7 +165,7 @@ module qfd_tt_ctlm_b2 #(parameter integer XPF_TRANSPORT_EDGES=-1) (
     assign mer0=w_me_clk_en;assign mer1=w_me_clk_en;assign mer2=w_me_clk_en;
     assign mer3=w_me_clk_en;assign mer4=w_me_clk_en;assign mer5=w_me_clk_en;
 
-    assign w_fab_fault = fab|rf0|rf1|rf2|rf3|rf4|rf5|xflt|xpf_loader_fault|xpf_schedule_fault;
+    assign w_fab_fault = fab|rf0|rf1|rf2|rf3|rf4|rf5|xflt|b2_status_fault|xpf_loader_fault|xpf_schedule_fault;
     assign cf = w_c_fault;
     assign ovf = w_ov;
     wire me_image_ready,xpf_loader_ready,xpf_monitor_ready;

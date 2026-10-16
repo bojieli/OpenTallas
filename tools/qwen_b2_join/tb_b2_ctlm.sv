@@ -28,6 +28,7 @@ reg rf3=0;
 reg rf4=0;
 reg rf5=0;
 reg xflt=0;
+reg b2_status_fault=0;
 wire [340:0] tc0;
 wire [340:0] tc1;
 reg [51:0] am0=0;
@@ -61,7 +62,7 @@ reg kwd=0;
 reg fab=0;
 wire cf;
 wire ovf;
-qfd_tt_ctlm_b2 #(.XPF_TRANSPORT_EDGES(1))dut(.ck_xpf(clk),.ck_me_sched(clk),.cp_active(cp_active),.cp(cp),.su_image_ready(su_image_ready),.control_stores_ready(control_stores_ready),.program_obs(program_obs),.layer_context_v(layer_context_v),.native_tok(native_tok),.native_pos(native_pos),.native_cmd(native_cmd),.native_ret(native_ret),.command_stage(command_stage),.ib(ib),.su_observe(su_observe),.xpf(xpf),.mer0(mer0),.mer1(mer1),.mer2(mer2),.mer3(mer3),.mer4(mer4),.mer5(mer5),.rf0(rf0),.rf1(rf1),.rf2(rf2),.rf3(rf3),.rf4(rf4),.rf5(rf5),.xflt(xflt),.ck_head(clk),.ck_tree(clk),.tc0(tc0),.tc1(tc1),.am0(am0),.am1(am1),.lc0(lc0),.lc1(lc1),.tc2(tc2),.tc3(tc3),.am2(am2),.am3(am3),.lc2(lc2),.lc3(lc3),.tc4(tc4),.tc5(tc5),.am4(am4),.am5(am5),.lc4(lc4),.lc5(lc5),.ld(ld),.mee(mee),.meok(meok),.mx(mx),.pw(pw),.rsi(rs),.sel(sel),.st(st),.uf(uf),.xm(xm),.xs(xs),.kok(kok),.kwd(kwd),.fab(fab),.cf(cf),.ovf(ovf));
+qfd_tt_ctlm_b2 #(.XPF_TRANSPORT_EDGES(1))dut(.ck_xpf(clk),.ck_me_sched(clk),.cp_active(cp_active),.cp(cp),.su_image_ready(su_image_ready),.control_stores_ready(control_stores_ready),.program_obs(program_obs),.layer_context_v(layer_context_v),.native_tok(native_tok),.native_pos(native_pos),.native_cmd(native_cmd),.native_ret(native_ret),.command_stage(command_stage),.ib(ib),.su_observe(su_observe),.xpf(xpf),.mer0(mer0),.mer1(mer1),.mer2(mer2),.mer3(mer3),.mer4(mer4),.mer5(mer5),.rf0(rf0),.rf1(rf1),.rf2(rf2),.rf3(rf3),.rf4(rf4),.rf5(rf5),.xflt(xflt),.b2_status_fault(b2_status_fault),.ck_head(clk),.ck_tree(clk),.tc0(tc0),.tc1(tc1),.am0(am0),.am1(am1),.lc0(lc0),.lc1(lc1),.tc2(tc2),.tc3(tc3),.am2(am2),.am3(am3),.lc2(lc2),.lc3(lc3),.tc4(tc4),.tc5(tc5),.am4(am4),.am5(am5),.lc4(lc4),.lc5(lc5),.ld(ld),.mee(mee),.meok(meok),.mx(mx),.pw(pw),.rsi(rs),.sel(sel),.st(st),.uf(uf),.xm(xm),.xs(xs),.kok(kok),.kwd(kwd),.fab(fab),.cf(cf),.ovf(ovf));
 initial begin
 repeat(5)@(negedge clk);#0.01;rs=1;
 for(integer k=0;k<128;k=k+1)begin
@@ -71,7 +72,9 @@ am2={1'(k>>2),51'(64'h123456789abcdef+64'(k)*17+64'd2)};
 am3={1'(k>>3),51'(64'h123456789abcdef+64'(k)*17+64'd3)};
 am4={1'(k>>4),51'(64'h123456789abcdef+64'(k)*17+64'd4)};
 am5={1'(k>>5),51'(64'h123456789abcdef+64'(k)*17+64'd5)};
+b2_status_fault=k[0]; xflt=k[1];
 #0.01;
+if((b2_status_fault||xflt)&&!dut.w_fab_fault)$fatal(1,"missing independent native faults");
 if(dut.w_p_am[0+:51]!==am0[50:0])$fatal(1,"AM partial map h0");
 if(dut.w_p_fault[0]!==am0[51])$fatal(1,"AM fault map h0");
 if(tc0!==dut.c0)$fatal(1,"TC fanout h0");

@@ -3,7 +3,7 @@
   "sources": [
     {
       "source": "rtl/qwen_sys/static_schedule_20261014/qfd_tt_ctlm_b2.sv",
-      "sha256": "db5a216a9008d8303a028bca0a5dc4a2224d48ed9c61d19849205fc1a0c27da7",
+      "sha256": "8d713dc3e953f8bbb0f73eedce372979f9223d36347344b328689e3e942674db",
       "top": "qfd_tt_ctlm_b2",
       "ports": {
         "ck_xpf": {
@@ -119,6 +119,10 @@
           "bits": 1
         },
         "xflt": {
+          "direction": "input",
+          "bits": 1
+        },
+        "b2_status_fault": {
           "direction": "input",
           "bits": 1
         },
