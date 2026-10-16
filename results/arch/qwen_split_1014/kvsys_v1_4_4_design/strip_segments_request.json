@@ -1,0 +1,160 @@
+{
+ "schema": "opentallas.kvsys.slot_request.v1",
+ "from": "Q-KVSYS-STRIP (sub-worker of Q-KVSYS-DIE), 2026-10-16",
+ "to": "Q-KVSYS-DIE (die lead; kv_die.py geometry is yours: this file only REQUESTS slots)",
+ "finding": "VIS-ROM D-QK-02 sev2: qkd_astk/_n 220.3 x 9,674.6 um (44:1) and qkd_land/_n 172.8 x 12,141.3 um (70:1) planned as full-height strips; astk -> ectl_c links up to 9,061 um (mean 2,815), every lane fans to the strip centre.",
+ "geometry_basis": "kvs11-v143c case (/tmp/visrom/die/qkv_kvs11/dump.json): stack WS astk x 3,251.664-3,471.960, y 2,002.32-11,676.936; engine rows at a 2,419.2-um pitch (ectl_WS_k__u_c y 3,147.12 + 2,419.2 k); free width between the W engine column (ectl c right edge x 3,035.232) and the E column (ectl c left edge x 3,688.200) = 652.968 um; land_WS x 1,654.668-1,827.444 (172.8), y 151.2-12,292.512, PC pitch 378.",
+ "astk": {
+  "master": "qkd_astk_seg (module qkd_astk_seg, rtl/qwen_sys/split_20261014/qkd_astk_seg.sv, generator tools/qwen_kv_die/astk_segments.py)",
+  "replaces": "qkd_astk / qkd_astk_n frames (qkd_astk_strip_s rows); the hub end (qkd_astk_ctl_tp8 + 4 x qkd_astk_zn + the hub-end relay stations u_rq8 / u_rx8 / u_rc0 / u_rc1 / u_rpx / u_rpy / u_rf) stays as die leaves / die relays above row 3 exactly as today",
+  "content": "one engine row: column c = 0 (engine 2r, W) and c = 1 (engine 2r+1, E), each 13 CLOSED leaves bottom->top pv_tp8 A0,B0,A1,B1 | ex,ex | ep | ex,ex | pv A2,B2,A3,B3 = 16 qkd_astk_pv_tp8 + 8 qkd_astk_ex + 2 qkd_astk_ep, plus the relay stations of the chain hops entering the row (qi x2, ri x2, xi x2, zi x1 at RL = 1: 2,673 flops on ck_r)",
+  "count_per_stack": 4,
+  "count_per_die": 16,
+  "outline_um": [
+   466.56,
+   2177.28
+  ],
+  "children_in_segment_um": {
+   "col0_x": 43.2,
+   "col1_x": 259.2,
+   "y_origins_bottom_to_top": [
+    43.2,
+    172.8,
+    302.4,
+    432.0,
+    561.6,
+    734.4,
+    907.2,
+    1296.0,
+    1468.8,
+    1641.6,
+    1771.2,
+    1900.8,
+    2030.4
+   ],
+   "masters_bottom_to_top": [
+    "pv A0",
+    "pv B0",
+    "pv A1",
+    "pv B1",
+    "ex",
+    "ex",
+    "ep (345.6)",
+    "ex",
+    "ex",
+    "pv A2",
+    "pv B2",
+    "pv A3",
+    "pv B3"
+   ],
+   "note": "origins on the 43.2-um child lattice, every channel >= 20 um (pv 25.92, ex 23.76, ep 43.2, column gap 54); ep spans y 907.2-1252.8 = the ECTL so/si band of the row when the segment sits 120.96 above the row base"
+  },
+  "fill": "children 0.574 mm2 in 1.016 mm2 = 0.565",
+  "positions": "segment r of stack S: x centred between the stack's engine columns (WS: x0 = 3,128.52 = centre 3,361.80 - 233.28; 93.3-um channels to the W and E ECTL columns); y0 = astk_S bottom + r x 2,419.2 + 120.96 (S stacks, rows counted from the end away from the hub = the current row order); N stacks: the same master placed MX, rows counted from the hub end outward (as the leaves today). E stacks: MY (W/E faces swap: engine 2r stays on the landing side, as kv_die mirrors the group today).",
+  "spine_between_segments": "inter-segment gap 241.92 um (2,419.2 - 2,177.28): lanes leaf-to-leaf (top leaf of row r to bottom leaf of row r+1: 328.3 um, both ends leaf pin flops); chains qi / ro (down) and xo / zo (up) segment pin to segment pin, every source a flop (relay or ep output reg) and every sink a relay flop or an ep pin flop; NO die relay needed between segments. Same stages as the benched composition at RL 1: ADDED CYCLES 0 (the relays only move into the segment that consumes them).",
+  "die_width_change": "none: 466.56 fits the 652.97-um gap between the engine columns (today the 220.32 frame cannot hold the leaves at all: two 162-um columns need >= 324)",
+  "pins_per_face": {
+   "W": {
+    "so_a": 425,
+    "si_a": 634,
+    "nb_a": 4096,
+    "chain_top": "qi_i 572 + ro_i 522 (from row r+1; top 120 um of the face)",
+    "chain_bottom": "qi_o 572 + ro_o 522 (to row r-1; bottom 120 um)",
+    "density": "6,859 pins / 2,177 um = 3.2/um (M4)",
+    "note": "nb_a head h bits [1024h +: 1024] level with head h of engine 2r; so_a / si_a level with the ep (y 907-1253)"
+   },
+   "E": {
+    "so_b": 425,
+    "si_b": 634,
+    "nb_b": 4096,
+    "chain_top": "xo_o 267 + zo_o 651 (to row r+1)",
+    "chain_bottom": "xi_i 267 + zi_i 651 (from row r-1)",
+    "density": "6,991 / 2,177 = 3.2/um (M4)"
+   },
+   "N": {
+    "lanes": "per column the leaf lane pins at the leaf's own x (col0 x 44.7-181.2, col1 x 260.7-397.2): uo/do_/po/co/kuo/kdo/tuo/tdo/fo directions per LANES in astk_segments.py, 1,350 pins a column",
+    "ck/rst": "entry pins (hybrid_entries: 26 child entries ck_v[15:0] ck_x[7:0] ck_e[1:0] + one CTS root ck_r) on the N face between the columns"
+   },
+   "S": {
+    "lanes": "mirror of N (1,350 a column)",
+    "straps": "st[1:0], r[1:0], rcfg[21:0] (die ties: rcfg r0..r3 = 0x106120, 0x20666a, 0x34a1b0, 0x0007fa)",
+    "rst_n": 1
+   }
+  },
+  "clock": "hybrid_entries: one entry per leaf (26, delivered phi - R by the die tree as today's 109 strip entries / 4 rows + hub end) and ONE CTS root ck_r for the 2,673 relay flops of the segment (the 'one clock entry per segment' of the audit for the segment's own logic; the leaves keep their own native entries, owner per-child rule).",
+  "bench": "physical/qkd_astk_strip/bench.sh with ASTK_SEG=1 (dut ot_qkd_astk_strip_seg = 4 x qkd_astk_seg + the unchanged hub end) vs the golden aggregator, 4 stacks, TP8 profile: results in bench_results below",
+  "blocked_on": "qkd_astk_ep has no closed view (ks4 EARLY_FAIL_CONGESTION; Q-KVSYS-STRIP item A): the segment kit is generated but its gate/route waits for the ep view; if the ep fix changes its outline the y origins above shift (ep slot 345.6 -> new height).",
+  "bench_results": {
+   "exact": "PASS qkd_astk all 4 stacks exact (RL 1): ASTK_SEG=1 bench.sh, TP8 profile (KVD_HEADS 1, KVD_Q_FP32, KVD_ASTK_TP8), 8 layers a stack incl. T 1 / 129 / 600 / 2048 / 4097 / 8191 / 8192 and overtaken starts",
+   "cycles": "the 32 LAYER lines (mismatches, lmax / Z / P.V / e-read counts, gold and dut cycles) are byte-identical to the unsegmented ot_qkd_astk_strip run (same bench, same build flags): ADDED CYCLES 0 (e.g. T 8192 S 0: gold 1012 / dut 1226 both)",
+   "mutant": "MUT 1 (pv) on the segmented strip: FAIL qkd_astk mutant 1 detected (0 of 1 stacks pass)",
+   "logs": "/tmp/claude-1000/qstrip/astk_seg_pos, astk_ref_pos, astk_seg_mut (local Verilator 5.050, 2026-10-16 01:35-01:50 PT)"
+  }
+ },
+ "land": {
+  "master": "qkd_land_seg (rtl/qwen_sys/split_20261014/qkd_land_seg.sv, generator tools/qwen_kv_die/land_segments.py)",
+  "replaces": "qkd_land / qkd_land_n frames (qkd_land_strip_s): 8 segments + qkd_land_emb_ifw (N end, unchanged) + the kn / lt die relay spine (unchanged)",
+  "content": "row-engine group i: 4 x qkd_land_pc (slots 4i..4i+3, E column) + qkd_land_grp_epoch (W column); WIRES ONLY (every hop leaf to leaf), straps g[2:0] = LAND_GROUP_ORDER[i], st[1:0]",
+  "count_per_stack": 8,
+  "count_per_die": 32,
+  "outline_um": [
+   241.92,
+   1512.0
+  ],
+  "children_in_segment_um": {
+   "grp": [
+    23.76,
+    604.8
+   ],
+   "pc_x": 131.76,
+   "pc_y": [
+    97.2,
+    475.2,
+    853.2,
+    1231.2
+   ],
+   "child_lattice_um": 2.16,
+   "why": "the 378-um HBM PC pitch is not a multiple of 43.2; 2.16 keeps rows/sites/M1-M5 tracks (children M5-capped, no M6/M7 pins); every child >= 20 um from a pin face (21.6 core margin + 2.16), grp|pc channel 21.6"
+  },
+  "fill": "children 0.086 mm2 in 0.366 mm2 = 0.24 (PC-pitch bound: the slot is set by the 378-um HBM PC pitch the CDC / controller strips abut, not by area)",
+  "positions": "segment i of stack S at y0 = land_S bottom + 1,512 i (slots 4i..4i+3; pc q of segment i at the same y as today's slot 4i+q +/- the 97.2 centring); x: the landing strip widens 172.8 -> 241.92 (+69.12: 23.76-um margins so no leaf sits within 20 um of a pin face + the 21.6 grp|pc channel; the static-memory landing reservation LAND_W 237.6 + 4.32)",
+  "spine_between_segments": "segments abut (pc chains dn / up / cr / pf: pc3 of segment i to pc0 of i+1 = the same 205.2-um gap as today); kn / lt (1,068 b) keep today's die relay stations in the strip channel: kvn middle station D1 + S/N chains of depth 2,6,9,12 to the group taps. ADDED CYCLES 0 (structurally identical, proved by yosys equivalence).",
+  "pins_per_face": {
+   "E": {
+    "per slot q": "li 282, lp 1, cf 1, es 288, er 261 (level with pc q)",
+    "density": "3,332 / 1,512 = 2.2/um (M4)"
+   },
+   "W": {
+    "rq": 17,
+    "rs": 1025,
+    "lt": 21,
+    "kn": 1047,
+    "density": "2,110 / 1,512 = 1.4/um (M4), level with the grp leaf (y 604.8-907.2)"
+   },
+   "N": {
+    "dn_i": 298,
+    "up_o": 262,
+    "cr_o": 32,
+    "pf_o": 1,
+    "gf_o": 1,
+    "note": "at the pc column x (118.8-205.2) except gf_o (grp column)",
+    "density": "594 / 86.4 = 6.9/um on M3+M5 (as the pc leaf's own N face)"
+   },
+   "S": {
+    "dn_o": 298,
+    "up_i": 262,
+    "cr_i": 32,
+    "pf_i": 1,
+    "gf_i": 1,
+    "straps": "g[2:0], st[1:0]",
+    "rst_n": 1
+   }
+  },
+  "clock": "entries: ck_p[3:0] + ck_g (5 child entries, no parent flop, no parent tree)",
+  "bench": "tools/qwen_kv_die/land_segments.py --equiv: yosys equivalence of qkd_land_strip_seg vs qkd_land_strip_s (leaves black boxes)",
+  "bench_results": {
+   "equiv": "EQUIV PASS: 51 instances (32 pc + 8 grp + emb + 10 relay stations), 83,390 checked items (every instance input bit's driver, every strip output bit, masters and parameters), 0 differ",
+   "mutant": "pc0 lpc strap = slot 1 in the segment: detected (8 items differ)"
+  }
+ }
+}

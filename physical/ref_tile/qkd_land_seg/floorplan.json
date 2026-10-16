@@ -1,0 +1,255 @@
+{
+ "schema": "opentallas.ref_tile.floorplan.v1",
+ "name": "qkd_land_seg",
+ "top": "qkd_land_seg",
+ "kind": "cluster",
+ "die": [
+  0,
+  0,
+  241.92,
+  1512.0
+ ],
+ "core": [
+  2.16,
+  2.16,
+  239.76,
+  1509.84
+ ],
+ "why": "spec outline (exact: the closed view's sub-slot)",
+ "std_area_um2": null,
+ "layer_contract": {
+  "children": {
+   "qkd_land_pc": "M5",
+   "qkd_land_grp_epoch": "M5"
+  },
+  "pg_layer": "M7",
+  "rlayers": [
+   "M2",
+   "M6"
+  ],
+  "strap_layer": "M8",
+  "signal_max_layer": "M6"
+ },
+ "pins": {
+  "E": [
+   "es0",
+   "er0",
+   "li0",
+   "lp0",
+   "cf0",
+   "es1",
+   "er1",
+   "li1",
+   "lp1",
+   "cf1",
+   "es2",
+   "er2",
+   "li2",
+   "lp2",
+   "cf2",
+   "es3",
+   "er3",
+   "li3",
+   "lp3",
+   "cf3"
+  ],
+  "W": [
+   "ck_p0",
+   "ck_p1",
+   "ck_p2",
+   "ck_p3",
+   "g",
+   "st",
+   "lt",
+   "rq",
+   "rs",
+   "kn",
+   "ck_g",
+   "rst_p0",
+   "rst_p1",
+   "rst_p2",
+   "rst_p3",
+   "rst_g"
+  ],
+  "N": [
+   "dn_i",
+   "up_o",
+   "cr_o",
+   "pf_o",
+   "gf_o"
+  ],
+  "S": [
+   "dn_o",
+   "up_i",
+   "cr_i",
+   "pf_i",
+   "gf_i"
+  ]
+ },
+ "clock_port": "ck_p0",
+ "clock_ports": [
+  "ck_p0",
+  "ck_p1",
+  "ck_p2",
+  "ck_p3",
+  "ck_g"
+ ],
+ "blocks": [
+  {
+   "kind": "child",
+   "view": "physical/ref_tile/qkd_land_pc/views/qkd_land_pc",
+   "master": "qkd_land_pc",
+   "inst": "u_pc0",
+   "idx": 0,
+   "x": 131.76,
+   "y": 97.2,
+   "w": 86.4,
+   "h": 172.8,
+   "orient": "R0",
+   "offtrack": 0
+  },
+  {
+   "kind": "child",
+   "view": "physical/ref_tile/qkd_land_pc/views/qkd_land_pc",
+   "master": "qkd_land_pc",
+   "inst": "u_pc1",
+   "idx": 0,
+   "x": 131.76,
+   "y": 475.2,
+   "w": 86.4,
+   "h": 172.8,
+   "orient": "R0",
+   "offtrack": 0
+  },
+  {
+   "kind": "child",
+   "view": "physical/ref_tile/qkd_land_pc/views/qkd_land_pc",
+   "master": "qkd_land_pc",
+   "inst": "u_pc2",
+   "idx": 0,
+   "x": 131.76,
+   "y": 853.2,
+   "w": 86.4,
+   "h": 172.8,
+   "orient": "R0",
+   "offtrack": 0
+  },
+  {
+   "kind": "child",
+   "view": "physical/ref_tile/qkd_land_pc/views/qkd_land_pc",
+   "master": "qkd_land_pc",
+   "inst": "u_pc3",
+   "idx": 0,
+   "x": 131.76,
+   "y": 1231.2,
+   "w": 86.4,
+   "h": 172.8,
+   "orient": "R0",
+   "offtrack": 0
+  },
+  {
+   "kind": "child",
+   "view": "physical/ref_tile/qkd_land_grp_epoch/views/qkd_land_grp_epoch",
+   "master": "qkd_land_grp_epoch",
+   "inst": "u_g",
+   "idx": 0,
+   "x": 23.76,
+   "y": 604.8,
+   "w": 86.4,
+   "h": 302.4,
+   "orient": "R0",
+   "offtrack": 0
+  }
+ ],
+ "findings": [
+  [
+   "WARN",
+   "macro_grid",
+   "qkd_land_pc#0: origin (131.76, 97.2) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "qkd_land_pc#0: origin (131.76, 475.2) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "qkd_land_pc#0: origin (131.76, 853.2) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "qkd_land_pc#0: origin (131.76, 1231.2) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "macro_grid",
+   "qkd_land_grp_epoch#0: origin (23.76, 604.8) off the 43.2 um child lattice (lcm of site, row, M1-M7 tracks, strap pitch)",
+   "build the child on the common lattice"
+  ],
+  [
+   "WARN",
+   "fill",
+   "parent kit without std_area_um2: fill not computed at gen (the gate measures it)",
+   "pass --area-um2 / std_area_um2 from the synthesis smoke"
+  ]
+ ],
+ "referenced": [
+  "rtl/qwen_sys/split_20261014/qkd_land_seg.sv",
+  "physical/ref_tile/qkd_land_seg/kit.env",
+  "physical/ref_tile/qkd_land_seg/clock.sdc",
+  "physical/ref_tile/qkd_land_seg/signoff.sdc",
+  "physical/ref_tile/qkd_land_seg/pdn.tcl",
+  "physical/ref_tile/qkd_land_seg/pre_cts.tcl",
+  "physical/ref_tile/qkd_land_seg/post_cts.tcl",
+  "physical/ref_tile/qkd_land_seg/post_grt.tcl",
+  "physical/ref_tile/qkd_land_seg/pre_drt.tcl",
+  "physical/ref_tile/qkd_land_seg/pre_fill.tcl",
+  "physical/ref_tile/qkd_land_seg/post_fill.tcl",
+  "physical/ref_tile/qkd_land_seg/pre_grt.tcl",
+  "physical/ref_tile/qkd_land_seg/post_drt.tcl",
+  "tools/ref_tile/ref_route.sh",
+  "physical/qwen_die_masters/io_ref_skew.sdc",
+  "physical/qwen_die_masters/io_plain.sdc",
+  "physical/qwen_die_masters/repair_budget.tcl",
+  "physical/qwen_die_masters/pre_cts_skew.tcl",
+  "physical/qwen_die_masters/pre_ref_skew.tcl",
+  "physical/qwen_die_masters/post_plain.tcl",
+  "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
+  "physical/common_flow/grt_macro_top_layer.tcl",
+  "tools/ref_tile/signal_layer_audit.tcl",
+  "physical/common_flow/clock_entries.tcl",
+  "physical/ref_tile/qkd_land_seg/clock_entry.sdc",
+  "physical/ref_tile/qkd_land_pc/views/qkd_land_pc/insertion.json",
+  "physical/ref_tile/qkd_land_pc/views/qkd_land_pc/insertion.json",
+  "physical/ref_tile/qkd_land_pc/views/qkd_land_pc/insertion.json",
+  "physical/ref_tile/qkd_land_pc/views/qkd_land_pc/insertion.json",
+  "physical/ref_tile/qkd_land_grp_epoch/views/qkd_land_grp_epoch/insertion.json",
+  "physical/ref_tile/qkd_land_pc/views/qkd_land_pc/qkd_land_pc.lef",
+  "physical/ref_tile/qkd_land_pc/views/qkd_land_pc/qkd_land_pc_ss.lib",
+  "physical/ref_tile/qkd_land_pc/views/qkd_land_pc/qkd_land_pc_ff.lib",
+  "physical/ref_tile/qkd_land_pc/views/qkd_land_pc/qkd_land_pc_tt.lib",
+  "physical/ref_tile/qkd_land_pc/views/qkd_land_pc/qkd_land_pc.lef",
+  "physical/ref_tile/qkd_land_pc/views/qkd_land_pc/qkd_land_pc_ss.lib",
+  "physical/ref_tile/qkd_land_pc/views/qkd_land_pc/qkd_land_pc_ff.lib",
+  "physical/ref_tile/qkd_land_pc/views/qkd_land_pc/qkd_land_pc_tt.lib",
+  "physical/ref_tile/qkd_land_pc/views/qkd_land_pc/qkd_land_pc.lef",
+  "physical/ref_tile/qkd_land_pc/views/qkd_land_pc/qkd_land_pc_ss.lib",
+  "physical/ref_tile/qkd_land_pc/views/qkd_land_pc/qkd_land_pc_ff.lib",
+  "physical/ref_tile/qkd_land_pc/views/qkd_land_pc/qkd_land_pc_tt.lib",
+  "physical/ref_tile/qkd_land_pc/views/qkd_land_pc/qkd_land_pc.lef",
+  "physical/ref_tile/qkd_land_pc/views/qkd_land_pc/qkd_land_pc_ss.lib",
+  "physical/ref_tile/qkd_land_pc/views/qkd_land_pc/qkd_land_pc_ff.lib",
+  "physical/ref_tile/qkd_land_pc/views/qkd_land_pc/qkd_land_pc_tt.lib",
+  "physical/ref_tile/qkd_land_grp_epoch/views/qkd_land_grp_epoch/qkd_land_grp_epoch.lef",
+  "physical/ref_tile/qkd_land_grp_epoch/views/qkd_land_grp_epoch/qkd_land_grp_epoch_ss.lib",
+  "physical/ref_tile/qkd_land_grp_epoch/views/qkd_land_grp_epoch/qkd_land_grp_epoch_ff.lib",
+  "physical/ref_tile/qkd_land_grp_epoch/views/qkd_land_grp_epoch/qkd_land_grp_epoch_tt.lib",
+  "physical/ref_tile/qkd_land_seg/place.tcl"
+ ]
+}

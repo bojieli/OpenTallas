@@ -58,15 +58,17 @@ module qkd_ahub_core #(
     output reg  [511:0]  out_data,
     output reg           fault,
     output reg  [7:0]    ev,
-    // Z heads (one group of ports a head h = 0..3: zh_*[h])
-    (* keep = "true", dont_touch = "true" *) output reg  [3:0]    zh_start,
-    output reg  [511:0]  zh_we,              // head h: [128h +: 128]
-    (* keep = "true", dont_touch = "true" *) output reg  [511:0]  zh_sid,             // head h: [128h +: 128]
-    (* keep = "true", dont_touch = "true" *) output reg  [15:0]   zh_iv,              // head h: [4h +: 4]
-    (* keep = "true", dont_touch = "true" *) output reg  [3:0]    zh_g,
-    (* keep = "true", dont_touch = "true" *) output reg  [23:0]   zh_p,               // head h: [6h +: 6]
-    input  wire [255:0]  zh_root,            // head h: [64h +: 64]
-    input  wire [15:0]   zh_err,             // head h: [4h +: 4]
+    // Z heads, split by face (Q-KVSYS-STRIP 2026-10-16, VIS-ROM QKV-07: 1,345 pins on ONE face at 8.9/um): heads 0 / 1 on
+    // the W face (zw_*), heads 2 / 3 on the E face (ze_*); the pair's head j is bit group j of its port (= head 2 side + j).
+    // Every output is the same output flop as before (a wire from the internal zh_* register), every input the same pin.
+    output wire [1:0]    zw_start,  output wire [1:0]    ze_start,
+    output wire [255:0]  zw_we,     output wire [255:0]  ze_we,      // head j: [128j +: 128]
+    output wire [255:0]  zw_sid,    output wire [255:0]  ze_sid,     // head j: [128j +: 128]
+    output wire [7:0]    zw_iv,     output wire [7:0]    ze_iv,      // head j: [4j +: 4]
+    output wire [1:0]    zw_g,      output wire [1:0]    ze_g,
+    output wire [11:0]   zw_p,      output wire [11:0]   ze_p,       // head j: [6j +: 6]
+    input  wire [127:0]  zw_root,   input  wire [127:0]  ze_root,    // head j: [64j +: 64]
+    input  wire [7:0]    zw_err,    input  wire [7:0]    ze_err,     // head j: [4j +: 4]
     // reciprocal leaf
     output reg           rc_v,
     output reg  [31:0]   rc_x,
@@ -81,6 +83,17 @@ module qkd_ahub_core #(
     input  wire [511:0]  pl_y,               // tile l: [128l +: 128]
     input  wire [15:0]   pl_pf               // tile l: [4l +: 4]
 );
+    // the Z-head output registers (one copy a head, (* keep *)) and the joined input pins (head h = 0..3 as before)
+    (* keep = "true", dont_touch = "true" *) reg  [3:0]    zh_start;
+    reg  [511:0]  zh_we;
+    (* keep = "true", dont_touch = "true" *) reg  [511:0]  zh_sid;
+    (* keep = "true", dont_touch = "true" *) reg  [15:0]   zh_iv;
+    (* keep = "true", dont_touch = "true" *) reg  [3:0]    zh_g;
+    (* keep = "true", dont_touch = "true" *) reg  [23:0]   zh_p;
+    wire [255:0]  zh_root = {ze_root, zw_root};
+    wire [15:0]   zh_err  = {ze_err, zw_err};
+    assign {ze_start, zw_start} = zh_start;  assign {ze_we, zw_we} = zh_we;  assign {ze_sid, zw_sid} = zh_sid;
+    assign {ze_iv, zw_iv} = zh_iv;  assign {ze_g, zw_g} = zh_g;  assign {ze_p, zw_p} = zh_p;
     localparam integer NBEAT = 4 * HD / 16;
     localparam integer BPH = HD / 16;
     // derived chain lengths (hub_t: RV 4, RA 3, PR 4, RZ 17, TAG 26 with ZW/ZR/RA/PV/Y 0 and SR 1, no core pin stages)
@@ -404,6 +417,13 @@ module ot_qkd_ahub_die #(
     input  wire          ck_recip,
     input  wire [3:0]    ck_pbst,
     input  wire [3:0]    ck_pvlg,
+`ifdef QKD_AHUB_RLY_CLK
+    // hardened hub parent (kit qkd_ahub_die, Q-KVSYS-STRIP 2026-10-16): the composition's relay stations get their OWN clock
+    // ports (CTS roots of the parent), so every leaf clock entry stays a pure entry (the die ties each to the leaf's clock)
+    input  wire [3:0]    ck_sr,            // u_sr (pbst -> pvlg relays), the pvlg clock
+    input  wire          ck_rx,            // u_rxi (core -> recip), the recip clock
+    input  wire          ck_ry,            // u_ryo (recip -> core), the core clock
+`endif
     input  wire          rst_n,
     input  wire          start,
     input  wire [3:0]    si_valid,
@@ -429,14 +449,20 @@ module ot_qkd_ahub_die #(
     wire [255:0] zh_root;   wire [15:0]  zh_err;
     wire         rc_v, rc_vo, rc_fault;  wire [31:0] rc_x, rc_y;
     wire [23:0]  pb_ra;     wire [3:0] pl_v;  wire [127:0] pl_rz;  wire [511:0] pl_y;  wire [15:0] pl_pf;
+`ifdef QKD_AHUB_RLY_CLK
+    qkd_ahub_core u_core (      // hard child: its hardened defaults = this module's defaults (no #() on a hard view)
+`else
     qkd_ahub_core #(.HD(HD), .ADD_LAT(ADD_LAT), .MUL_LAT(MUL_LAT), .ZW(ZW), .ZW_RLY(ZW_RLY), .ZR_RLY(ZR_RLY),
                     .RA_RLY(RA_RLY), .SR_RLY(SR_RLY), .PV_RLY(PV_RLY), .Y_RLY(Y_RLY)) u_core (
+`endif
         .clk(ck_core), .rst_n(rst_n), .start(start), .si_valid(si_valid), .si_type(si_type), .si_g(si_g), .si_hh(si_hh),
         .si_k(si_k), .si_any(si_any), .si_data(si_data), .pi_valid(pi_valid), .pi_g(pi_g),
         .am(am), .out_valid(out_valid), .out_g(out_g),
         .out_beat(out_beat), .out_data(out_data), .fault(fault), .ev(ev),
-        .zh_start(zh_start), .zh_we(zh_we), .zh_sid(zh_sid), .zh_iv(zh_iv), .zh_g(zh_g), .zh_p(zh_p),
-        .zh_root(zh_root), .zh_err(zh_err), .rc_v(rc_v), .rc_x(rc_x), .rc_y(rc_y), .rc_vo(rc_vo), .rc_fault(rc_fault),
+        .zw_start(zh_start[1:0]), .ze_start(zh_start[3:2]), .zw_we(zh_we[255:0]), .ze_we(zh_we[511:256]),
+        .zw_sid(zh_sid[255:0]), .ze_sid(zh_sid[511:256]), .zw_iv(zh_iv[7:0]), .ze_iv(zh_iv[15:8]), .zw_g(zh_g[1:0]),
+        .ze_g(zh_g[3:2]), .zw_p(zh_p[11:0]), .ze_p(zh_p[23:12]), .zw_root(zh_root[127:0]), .ze_root(zh_root[255:128]),
+        .zw_err(zh_err[7:0]), .ze_err(zh_err[15:8]), .rc_v(rc_v), .rc_x(rc_x), .rc_y(rc_y), .rc_vo(rc_vo), .rc_fault(rc_fault),
         .pb_ra(pb_ra), .pl_v(pl_v), .pl_rz(pl_rz), .pl_y(pl_y), .pl_pf(pl_pf));
     // Z heads
     genvar g;
@@ -452,12 +478,17 @@ module ot_qkd_ahub_die #(
     end endgenerate
     // reciprocal leaf
     wire [32:0] rxi, ryo_t, ryo;  wire rf_t, rf;
-    ot_qkd_drly #(.W(33), .N(RX_RLY)) u_rxi (.clk(ck_recip), .d({rc_v, rc_x}), .q(rxi));
+    ot_qkd_drly #(.W(33), .N(RX_RLY)) u_rxi (.clk(ck_rxr), .d({rc_v, rc_x}), .q(rxi));
     ot_qkh_recip_leaf u_recip (.clk(ck_recip), .rst_n(rst_n), .v(rxi[32]), .x(rxi[31:0]), .y(ryo_t[31:0]), .vo(ryo_t[32]),
                                .fault(rf_t));
-    ot_qkd_drly #(.W(34), .N(RY_RLY)) u_ryo (.clk(ck_core), .d({rf_t, ryo_t}), .q({rf, ryo}));
+    ot_qkd_drly #(.W(34), .N(RY_RLY)) u_ryo (.clk(ck_ryr), .d({rf_t, ryo_t}), .q({rf, ryo}));
     assign rc_y = ryo[31:0];  assign rc_vo = ryo[32];  assign rc_fault = rf;
     // beat stores and lane groups
+`ifdef QKD_AHUB_RLY_CLK
+    wire [3:0] ck_srr = ck_sr;  wire ck_rxr = ck_rx;  wire ck_ryr = ck_ry;
+`else
+    wire [3:0] ck_srr = ck_pvlg;  wire ck_rxr = ck_recip;  wire ck_ryr = ck_core;
+`endif
     wire [2047:0] sr_t, sr;
     generate for (g = 0; g < 4; g = g + 1) begin : g_s
         wire [5:0] ra;  wire [519:0] pin;
@@ -467,7 +498,7 @@ module ot_qkd_ahub_die #(
             .d({pi_valid[g], pi_g[g], pi_beat[6*g +: 6], pi_data[512*g +: 512]}), .q(pin));
         ot_nhb_pbst u_pbst (.clk(ck_pbst[g]), .rst_n(rst_n), .pv(pin[519]), .pgi(pin[518]), .pbeat(pin[517:512]),
                             .pdata(pin[511:0]), .ra(ra), .sr(sr_t[512*g +: 512]));
-        ot_qkd_drly #(.W(512), .N(SR_RLY)) u_sr (.clk(ck_pvlg[g]), .d(sr_t[512*g +: 512]), .q(sr[512*g +: 512]));
+        ot_qkd_drly #(.W(512), .N(SR_RLY)) u_sr (.clk(ck_srr[g]), .d(sr_t[512*g +: 512]), .q(sr[512*g +: 512]));
     end endgenerate
     generate for (g = 0; g < 4; g = g + 1) begin : g_pv
         wire [32:0] vi;  wire [131:0] yo_t, yo;

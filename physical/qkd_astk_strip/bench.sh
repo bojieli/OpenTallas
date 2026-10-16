@@ -15,7 +15,13 @@ W=$R/rtl
 python3 "$R/tools/qwen_kv_die/astk_gold_gen.py" "$OUT/ot_qkd_astk_gold.sv" || { echo "FAIL qkd_astk gold gen"; exit 1; }
 awk '/^module ot_hdc_lzc32/,/^endmodule/' $W/hdc/ot_hdc_fastfp.sv > "$OUT/lzc.sv"
 awk '/^module ot_hdc_fp32_add_lat_nr /{s=1} !s{print} s&&/^endmodule/{s=0}' $W/hdc/ot_hdc_fp32_add_lat_nr.sv > "$OUT/nr_rest.sv"
-SRC="$W/test/qwen_kv_die/tb_qkd_astk.sv $OUT/ot_qkd_astk_gold.sv $W/test/qwen_kv_die/ot_qwen_nearhbm_attn_stack_k.sv $W/qwen_sys/kv_die_20261009/qkd_astk_leaves.sv
+# ASTK_SEG=1 (Q-KVSYS-STRIP 2026-10-16): the dut is the SEGMENTED strip ot_qkd_astk_strip_seg (4 x qkd_astk_seg +
+# the unchanged hub end, rtl/qwen_sys/split_20261014/qkd_astk_seg.sv) instead of the benched die wiring ot_qkd_astk_strip
+TB=$W/test/qwen_kv_die/tb_qkd_astk.sv
+if [ "${ASTK_SEG:-0}" = 1 ]; then
+  sed 's/ot_qkd_astk_strip #(/ot_qkd_astk_strip_seg #(/' "$TB" > "$OUT/tb_qkd_astk_seg.sv"; TB="$OUT/tb_qkd_astk_seg.sv $W/qwen_sys/split_20261014/qkd_astk_seg.sv"
+fi
+SRC="$TB $OUT/ot_qkd_astk_gold.sv $W/test/qwen_kv_die/ot_qwen_nearhbm_attn_stack_k.sv $W/qwen_sys/kv_die_20261009/qkd_astk_leaves.sv
  $W/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_h.sv $W/hdc/nearhbm/ot_qwen_nearhbm_head_hs.sv $W/hdc/nearhbm/ot_qkh_subtiles.sv $W/lib/ot_rst_relay.sv
  $OUT/nr_rest.sv $W/test/nearhbm/sim_nhb_fp_lat_nr_dpi.sv $W/test/nearhbm/sim_nhb_fp_lat_dpi.sv $W/hdc/ot_hdc_delay.sv $W/hdc/ot_hdc_sfu.sv
  $W/hdc/nearhbm/ot_qwen_nearhbm_sfu_p.sv $W/hdc/ot_hdc_prefix.sv $OUT/lzc.sv $W/hdc/nearhbm/ot_qwen_nearhbm_prod.sv $W/hdc/ot_hdc_sfu_q.sv
