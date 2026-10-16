@@ -117,11 +117,85 @@ end
 endmodule
 '''
 
+def lower_partitioned(source, out, parts=4, line_bits=9688, start_depth=2, uniform=True, mut_pc_slice=None):
+    """H-SU 2026-10-16 (opt-in, --partition): split the whole-SU line into PARTS per-quarter producers (line bits
+    [k*SB,(k+1)*SB), SB = line_bits/PARTS), each lowered exactly as lower() lowers a whole line, so each producer holds
+    only its own columns' dictionaries and its own edge-index table and sits beside its consumer.  Only start/length
+    cross the die, as an equal-age registered tree of START_DEPTH edges inside ot_hbm_su_programme_part; the compiler
+    issues start START_DEPTH edges earlier, so every command bit reaches its consumer on the same edge as from the
+    monolithic producer (fixed-cycle stream, no queue/credit).  uniform=True gives every producer the element-wise max
+    dictionary capacity (one physical master for all PARTS).  The default lower() path is untouched."""
+    assert line_bits%parts==0 and start_depth>=1
+    sb=line_bits//parts
+    out.mkdir(parents=True,exist_ok=True)
+    rows=[int(t,16) for t in source.read_text().split()]
+    assert rows and all(0<=r<1<<line_bits for r in rows)
+    ms=[]
+    for k in range(parts):
+        d=out/f'slice{k}'; d.mkdir(parents=True,exist_ok=True)
+        (d/'source.mem').write_text(''.join(f'{(r>>(k*sb))&((1<<sb)-1):0{(sb+3)//4}x}\n' for r in rows))
+        ms.append(lower(d/'source.mem',d,line_bits=sb,param_prefix=f'PSLICE{k}'))
+    cols=ms[0]['columns']; ib=ms[0]['index_banks']; groups=ms[0]['index_groups']
+    assert all(m['columns']==cols and m['index_banks']==ib and m['index_groups']==groups for m in ms)
+    cap=[max(m['dictionary_banks'][c] for m in ms) for c in range(cols)] if uniform else None
+    # global host config stream: slice k banks [base_k, base_k + macros_k); each slice's own bank numbering inside.
+    smac=[(groups*ib+sum(cap)) if uniform else m['total_macros'] for m in ms]
+    base=[sum(smac[:k]) for k in range(parts)]
+    def slice_dict_base(m):  # first bank of each dictionary column inside the slice
+        db=cap if uniform else m['dictionary_banks']; return [groups*ib+sum(db[:c]) for c in range(cols)]
+    lines=[]; lines_mut=[]
+    for k,m in enumerate(ms):
+        d=out/f'slice{k}'
+        own=[(int(l[:4],16),int(l[4:6],16),l[6:]) for l in (d/'config.mem').read_text().split()]
+        if uniform:  # remap the slice's own dictionary bank ids onto the uniform capacity layout
+            odb=m['dictionary_banks']; ob=[groups*ib+sum(odb[:c]) for c in range(cols)]; nb=slice_dict_base(m)
+            def remap(b):
+                if b<groups*ib: return b
+                c=max(i for i in range(cols) if ob[i]<=b); return nb[c]+(b-ob[c])
+            own=[(remap(b),r,w) for b,r,w in own]
+        for b,r,w in own: lines.append(f'{base[k]+b:04x}{r:02x}{w}\n')
+        if mut_pc_slice==k:  # MUT: this slice's index table rotated by one edge == its PC offset by one
+            idx=[(b,r,w) for b,r,w in own if b<groups*ib]; rest=[(b,r,w) for b,r,w in own if b>=groups*ib]
+            words=[w for b,r,w in sorted(idx)]; words=words[1:]+words[:1]
+            idx=[(b,r,words[i]) for i,(b,r,_) in enumerate(sorted(idx))]
+            own=idx+rest
+        for b,r,w in own: lines_mut.append(f'{base[k]+b:04x}{r:02x}{w}\n')
+    assert base[-1]+smac[-1]<=65536
+    (out/'config.mem').write_text(''.join(lines))
+    if mut_pc_slice is not None: (out/'config_mut_pc.mem').write_text(''.join(lines_mut))
+    (out/'expected.mem').write_text(''.join(f'{r:0{(line_bits+3)//4}x}\n' for r in rows))
+    pk=out/'part_params.svh'
+    sdb=[(cap if uniform else m['dictionary_banks']) for m in ms]
+    flat=[x for k in range(parts) for x in sdb[k]]
+    pk.write_text(f'localparam integer PART_N={parts}, PART_SB={sb}, PART_COLS={cols}, PART_EDGES={len(rows)}, '
+                  f'PART_WRITES={len(lines)}, PART_MACROS={sum(smac)}, PART_DEPTH={start_depth}, PART_FIRST_DICT={groups*ib};\n'
+                  f'localparam [32*PART_N-1:0] PART_SMACROS={{'+','.join("32'd"+str(x) for x in reversed(smac))+'};\n'
+                  f'localparam [32*PART_N*PART_COLS-1:0] PART_DICT_BANKS={{'+','.join("32'd"+str(x) for x in reversed(flat))+'};\n')
+    man=dict(schema='opentallas.hbm.su_programme.partitioned.v1', qualified=False, source=str(source),
+             source_sha256=sha(source), edges=len(rows), line_bits=line_bits, parts=parts, slice_bits=sb,
+             start_depth=start_depth, uniform_capacity=uniform, columns_per_slice=cols, index_banks_per_slice=ib,
+             slice_macros=smac, slice_bank_base=base, total_macros=sum(smac),
+             slice_dictionary_banks_exact=[m['dictionary_banks'] for m in ms],
+             slice_dictionary_banks_used=sdb, slice_dictionary_entries=[m['dictionary_entries'] for m in ms],
+             slice_macros_exact=[m['total_macros'] for m in ms], config_transactions=len(lines),
+             startup_consumer_edges=4+start_depth, start_issue_advance_edges=start_depth,
+             crossing_bits_per_slice='start 1 + length 16 (registered, equal age); config bus host-time only',
+             mut_pc_slice=mut_pc_slice)
+    (out/'part_manifest.json').write_text(json.dumps(man,indent=2)+'\n')
+    return man
+
 def main():
     p=argparse.ArgumentParser(); p.add_argument('source',type=Path); p.add_argument('out',type=Path)
     p.add_argument('--extra-mem',type=Path); p.add_argument('--extra-bits',type=int,default=0)
     p.add_argument('--line-bits',type=int,default=9688)
     p.add_argument('--param-prefix',default='PROGRAMME')
     p.add_argument('--index-pack',type=int,default=1)
-    a=p.parse_args(); print(json.dumps(lower(a.source,a.out,a.extra_mem,a.extra_bits,a.line_bits,a.param_prefix,a.index_pack),indent=2))
+    p.add_argument('--partition',type=int,default=0,help='opt-in: N per-quarter producers (ot_hbm_su_programme_part)')
+    p.add_argument('--start-depth',type=int,default=2); p.add_argument('--exact-capacity',action='store_true')
+    p.add_argument('--mut-pc-slice',type=int)
+    a=p.parse_args()
+    if a.partition:
+        print(json.dumps(lower_partitioned(a.source,a.out,a.partition,a.line_bits,a.start_depth,not a.exact_capacity,
+                                           a.mut_pc_slice),indent=2)); return
+    print(json.dumps(lower(a.source,a.out,a.extra_mem,a.extra_bits,a.line_bits,a.param_prefix,a.index_pack),indent=2))
 if __name__=='__main__': main()

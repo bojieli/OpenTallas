@@ -1,0 +1,188 @@
+{
+  "schema": "opentallas.hbm.su_programme.partitioned.v1",
+  "qualified": false,
+  "source": "/srv/opentallas-scratch2/claude/hsu-pgpart/out/vec/prog.mem",
+  "source_sha256": "ee3905bff558ff32e8424e7552c4b6c2197b8c2a671dd3a3a7a550cd9bbb248a",
+  "edges": 7111,
+  "line_bits": 9688,
+  "parts": 4,
+  "slice_bits": 2422,
+  "start_depth": 2,
+  "uniform_capacity": true,
+  "columns_per_slice": 10,
+  "index_banks_per_slice": 56,
+  "slice_macros": [
+    98,
+    98,
+    98,
+    98
+  ],
+  "slice_bank_base": [
+    0,
+    98,
+    196,
+    294
+  ],
+  "total_macros": 392,
+  "slice_dictionary_banks_exact": [
+    [
+      3,
+      10,
+      9,
+      13,
+      2,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    [
+      3,
+      10,
+      9,
+      13,
+      2,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    [
+      3,
+      10,
+      9,
+      13,
+      2,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    [
+      3,
+      10,
+      9,
+      13,
+      2,
+      1,
+      1,
+      1,
+      1,
+      1
+    ]
+  ],
+  "slice_dictionary_banks_used": [
+    [
+      3,
+      10,
+      9,
+      13,
+      2,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    [
+      3,
+      10,
+      9,
+      13,
+      2,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    [
+      3,
+      10,
+      9,
+      13,
+      2,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    [
+      3,
+      10,
+      9,
+      13,
+      2,
+      1,
+      1,
+      1,
+      1,
+      1
+    ]
+  ],
+  "slice_dictionary_entries": [
+    [
+      347,
+      1153,
+      1036,
+      1601,
+      133,
+      3,
+      3,
+      2,
+      2,
+      3
+    ],
+    [
+      338,
+      1153,
+      1036,
+      1601,
+      133,
+      3,
+      3,
+      2,
+      2,
+      3
+    ],
+    [
+      338,
+      1153,
+      1036,
+      1601,
+      133,
+      3,
+      3,
+      2,
+      2,
+      3
+    ],
+    [
+      338,
+      1153,
+      1036,
+      1601,
+      133,
+      3,
+      3,
+      2,
+      2,
+      3
+    ]
+  ],
+  "slice_macros_exact": [
+    98,
+    98,
+    98,
+    98
+  ],
+  "config_transactions": 45549,
+  "startup_consumer_edges": 6,
+  "start_issue_advance_edges": 2,
+  "crossing_bits_per_slice": "start 1 + length 16 (registered, equal age); config bus host-time only",
+  "mut_pc_slice": 3
+}
