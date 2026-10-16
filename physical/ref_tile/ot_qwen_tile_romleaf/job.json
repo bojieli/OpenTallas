@@ -1,5 +1,5 @@
 {
- "name": "ot_qwen_tile_romleaf-a0-HEAD",
+ "name": "ot_qwen_tile_romleaf-a0-4fe0c00bd",
  "block": "ot_qwen_tile_romleaf",
  "ref_tile": true,
  "owner": "Codex:Q-ROMLEAF1552",
@@ -8,7 +8,13 @@
  "peak_ram_gb": 16,
  "source": {
   "branch": "codex/qwen-romleaf-1552",
-  "commit": "HEAD"
+  "commit": "4fe0c00bd",
+  "extra_paths": [
+   "rtl/test/tb_qwen_romleaf_1552.sv",
+   "tools/qwen_romleaf/bench.sh",
+   "results/arch/qwen_romleaf_1552/bench/leaf_positive.log",
+   "results/arch/qwen_romleaf_1552/bench/leaf_latency_mutant.log"
+  ]
  },
  "stages": {
   "bench": [
@@ -31,7 +37,8 @@
     "peak_ram_gb": 8,
     "needs": [
      "verilator"
-    ]
+    ],
+    "pass_witness": "results/arch/qwen_romleaf_1552/bench/leaf_positive.log"
    },
    {
     "name": "romleaf_latency_mutant",
@@ -42,7 +49,8 @@
     "peak_ram_gb": 8,
     "needs": [
      "verilator"
-    ]
+    ],
+    "fail_witness": "results/arch/qwen_romleaf_1552/bench/leaf_latency_mutant.log"
    }
   ],
   "calibrate": {
@@ -95,7 +103,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/ot_qwen_tile_romleaf/ot_qwen_tile_romleaf-a0-HEAD"
+   "to": "results/rtl/ref_tile/ot_qwen_tile_romleaf/ot_qwen_tile_romleaf-a0-4fe0c00bd"
   }
  ],
  "cycles_added": 0,
