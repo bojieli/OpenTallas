@@ -37,4 +37,4 @@ fi
 bash tools/qwen_split/port_bind_compute.sh $R/case_r22k/die.v $R/port_bind > $R/port_bind.line 2>&1; pb=$?
 echo "$(date '+%F %T %Z') port-bind (no stubs): $(cat $R/port_bind.line) rc=$pb" >> $R/STATUS.log
 echo "$(date '+%F %T %Z') qwen-split compute chain $T (src $(cat SOURCE_COMMIT)); real views: $(python3 -c "import json;b=json.load(open('../bind.json'));print(b['masters_bound'],'masters /',b['instances_bound'],'of',b['instances'],'instances')")" >> $R/STATUS.log
-exec env OT_PG_OPEN_DIAG=${OT_PG_OPEN_DIAG:-1} OT_ADMIT=pass OT_ITERS=12 OT_ROUTE_RESET=1 OT_CORNERS="tt ff ss" OT_STA_CLOCKS=$R/libs/clocks.tcl bash $S/src/tools/qwen_kv_die/chain/die_chain.sh r22k $R $S/src
+exec env OT_STA_SUMMARY=${OT_STA_SUMMARY:-1} OT_PG_OPEN_DIAG=${OT_PG_OPEN_DIAG:-1} OT_ADMIT=pass OT_ITERS=12 OT_ROUTE_RESET=1 OT_CORNERS="tt ff ss" OT_STA_CLOCKS=$R/libs/clocks.tcl bash $S/src/tools/qwen_kv_die/chain/die_chain.sh r22k $R $S/src

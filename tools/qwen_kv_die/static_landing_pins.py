@@ -23,11 +23,12 @@ def build():
             assert key not in d['pins'];d['pins'][key]=dict(face=face,xy=xy,layer='M4' if face in 'WE' else 'M5')
     pc=master('qkd_static_kv_landing_pc',151.2,172.8)
     for name,n,lo,hi in [('get',1,8,9),('get_t',14,10,12),('get_v',1,14,15),('get_epoch',16,16,18),('get_layer',6,20,21),('out_data',256,50,125),('out_valid',1,132,133),('out_t',14,136,139),('out_v',1,140,141),('out_epoch',16,144,147),('out_layer',6,150,152),('fault',1,154,155)]:pins(pc,name,n,'W',lo,hi)
-    for name,n,lo,hi in [('expected_put',1,8,9),('expected_sector',10,10,13),('actual_valid',1,16,17),('actual_sector',10,18,21),('actual_epoch',16,24,28),('actual_layer',6,30,32),('actual_data',256,40,112),('arm',1,120,121),('epoch',16,124,128),('layer',6,130,132),('ctx_t',14,134,138)]:pins(pc,name,n,'E',lo,hi)
+    for name,n,lo,hi in [('expected_put',1,8,9),('expected_sector',10,10,13),('actual_valid',1,16,17),('actual_sector',10,18,21),('actual_epoch',16,24,28),('actual_layer',6,30,32),('actual_data',256,40,112),('arm',1,120,121),('epoch',16,124,128),('layer',6,130,132)]:pins(pc,name,n,'E',lo,hi)
     for name,n,lo,hi in [('ck',1,70,72),('rst_n',1,75,77),('cfg_stack',2,80,81),('cfg_group',3,84,85)]:pins(pc,name,n,'S',lo,hi)
     ctl=master('qkd_static_kv_rowctl',86.4,302.4)
     for name,n,lo,hi in [('req_valid',1,4,5),('req_t',14,6,8),('req_v',1,9,10),('req_epoch',16,12,14.4),('req_layer',6,15,16),('rsp_data',1024,24,284),('rsp_valid',1,286,286.4),('rsp_t',14,287,289),('rsp_v',1,289.5,289.8),('rsp_epoch',16,290.5,292.8),('rsp_layer',6,293.5,294.5),('fault',1,296,296.4)]:pins(ctl,name,n,'W',lo,hi)
-    for name,n,lo,hi in [('vreq_valid',1,297,297.4),('vreq_t',14,298,300.2)]:pins(ctl,name,n,'W',lo,hi)   # Q-VMWB 10-16: VREQ=1 V get face
+    for name,n,lo,hi in [('vreq_valid',1,297,297.4),('vreq_t',14,298,300.2)]:pins(ctl,name,n,'W',lo,hi)
+    for name,n,lo,hi in [('arm',1,46,47),('epoch',16,48,51),('layer',6,52,53.5)]:pins(ctl,name,n,'S',lo,hi)   # VREQ: armed epoch / layer   # Q-VMWB 10-16: VREQ=1 V get face
     for name,n,lo,hi in [('ck',1,40,41),('rst_n',1,43,44)]:pins(ctl,name,n,'S',lo,hi)
     for name,n,lo,hi in [('pc_get',4,4,4.6),('pc_get_t',56,5,13),('pc_get_v',4,13.5,14.1),('pc_get_epoch',64,14.5,23.6),('pc_get_layer',24,24,27.4)]:pins(ctl,name,n,'E',lo,hi)
     for q in range(4):

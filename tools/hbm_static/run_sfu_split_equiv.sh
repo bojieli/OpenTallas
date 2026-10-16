@@ -14,7 +14,7 @@ while read -r digest path;do closed_paths["$path"]=1;done < "$manifest"
 for i in "${!sources[@]}";do [ "${closed_paths[${sources[$i]}]:-0}" = 1 ] && sources[$i]="$frozen/${sources[$i]}";done
 sources+=(rtl/hbm_accel/generic/peers/ot_hgi_sfu_static_quarter.sv rtl/test/hbm_accel/generic/tb_hgi_sfu_split_equiv.sv)
 python3 tools/hbm_static/make_qswiglu_gate.py "${SFU_QSWIGLU_FIXTURE:-results/rtl/hbm_hc_sfu_static_1015/qswiglu}" "$OUT/data"
-lgpath=0;[ -n "${SFU_LG_R:-}" ] && lgpath=$((SFU_LG_R+1))
+lgpath=$((${SFU_LG_R:?SFU_LG_R required (0 or 23)}+1))  # reference split engine LG = 1 + R; the split core runs LG_PATH=R so its bridge (R+1 incl. its pin-register pair) matches
 SFU_LG_PATH=$lgpath python3 tools/hbm_static/make_qswiglu_io_calendar.py "$OUT/data"
 cp "$OUT/data/image.hex" "$OUT/image.hex"
 M=physical/asap7_memory_macros
@@ -28,7 +28,7 @@ sources+=($P/ot_hgi_sfu_scheduled_engine.sv $P/ot_hgi_sfu_io_calendar_static.sv 
  "$M/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v"
  "$M/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v")
 defs=("-DSFU_IMAGE=\"$OUT/image.hex\"" "-DSFU_DATA_DIR=\"$OUT/data\"")
-if [ -n "${SFU_LG_R:-}" ];then
+if true;then
  sources+=($P/ot_hgi_sfu_split_engine.sv $P/ot_hgi_sfu_lg_relay.sv $P/ot_hgi_sfu_lg_pair_leaf.sv)
  defs+=(-DSFU_LG_R=$SFU_LG_R)
 fi
