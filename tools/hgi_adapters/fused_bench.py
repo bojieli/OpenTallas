@@ -170,12 +170,17 @@ def main():
     # Row p: h at p 20,480, pre at 160,000 + 8 p, y at 122,880 + 5,120 p (all bank phase 0); one GPK gain image.
     nrow = int(os.environ.get('FUSED_ROWS', '0'))
     if nrow:
+        assert 1 <= nrow <= 8, 'LL P-row job supports one through eight rows'
         D = 5120
         hl = (rng.standard_normal((nrow, 4, D)) * 2).astype(np.float32)
         prel = (rng.random((nrow, 4)) * 1.5).astype(np.float32)
         w = LB.to_bf16((1 + 0.1 * rng.standard_normal(D)).astype(np.float32))
         eps = np.float32(1e-6)
-        HS, OB, CB, CS, OS = 4 * D, 122880, 160000, 8, D
+        # Keep all H rows, output rows and per-row scalars disjoint for P7/P8
+        # too. P6 retains the existing exact addresses and image hashes.
+        HS, CS, OS = 4 * D, 8, D
+        OB = nrow * HS
+        CB = max(160000, OB + nrow * D + 64)
         bb = 0x4_0000_0000
         gb = (f32w(w) >> 16).astype(np.uint32)
         hb = {}
