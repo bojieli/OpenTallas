@@ -2194,11 +2194,22 @@ def _relays(m):
     # trunk keeps the bus's own class / relays; after planning, the branch's first segment joins the trunk's source net
     # (the driver pin drives the trunk's first hop and every branch's first hop) and its stage count is recorded.
     forks_ = {}
+    fork_names = {b_[0] for b_ in order_}
     for bid_f, loads_f in (m.get('forks') or {}).items():
-        src_f = next(e_[3][0] for e_ in order_ if e_[0] == bid_f)
-        bits_f = next(e_[2] for e_ in order_ if e_[0] == bid_f)
+        trunks_f = [e_ for e_ in order_ if e_[0] == bid_f]
+        if len(trunks_f) != 1:
+            raise ValueError(f'kv die fork {bid_f}: exactly one trunk required')
+        _, class_f, bits_f, ends_f = trunks_f[0]
+        if class_f in ('clock_trunk', 'reset', 'constant') or class_f in ABUT or len(ends_f) != 2:
+            raise ValueError(f'kv die fork {bid_f}: only point-to-point data trunks may fork')
+        src_f = ends_f[0]
+        if len(set(loads_f)) != len(loads_f) or any(e_ in ends_f for e_ in loads_f):
+            raise ValueError(f'kv die fork {bid_f}: duplicate load or driver alias')
         for i_f, ld_f in enumerate(loads_f):
             nm_f = f'{bid_f}__f{i_f}'
+            if nm_f in fork_names:
+                raise ValueError(f'kv die fork {nm_f}: bus name collision')
+            fork_names.add(nm_f)
             forks_[nm_f] = bid_f
             order_.append((nm_f, 'kv_oneway', bits_f, [src_f, ld_f]))
     for bid, cl, bits, eps in order_:
@@ -2561,6 +2572,8 @@ def _relays(m):
                 raise ValueError(f'kv die fork {nm_f}: segment or trunk {bid_f} missing')
             bf_, cf_, wf_, ef_ = nb[idx_[nm_f]]
             bt_, ct_, wt_, et_ = nb[idx_[bid_f]]
+            if wf_ != wt_:
+                raise ValueError(f'kv die fork {nm_f}: width {wf_} != trunk width {wt_}')
             if ef_[0] != et_[0]:
                 raise ValueError(f'kv die fork {nm_f}: driver {ef_[0]} != trunk driver {et_[0]}')
             nb[idx_[bid_f]] = (bt_, ct_, wt_, list(et_) + [e_ for e_ in ef_[1:] if e_ not in et_])
