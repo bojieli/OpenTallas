@@ -132876,19 +132876,21 @@
  },
  "vm_strap_child_grants_2210": {
   "file": "results/arch/hbm_die_v15/vm_strap_grants_2210.json",
-  "sha256": "9e0f2fb6606f198af959529e2ae5e253649427d2582528758c2b9375fe123c8c",
+  "sha256": "4ece6b2c57f0787189f7d5f549360a84f7fec6a2917ae646d9e11e34bf3be074",
   "outline_um": [
    270.0,
    270.0
   ],
   "supersedes": "vm_strap_child_grants_2116 (356.4 x 365.04) for NEW strap kits; running 356x365 routes = diagnostics",
   "pin_layers": {
-   "W": "M4+M6",
-   "E": "M4+M6",
-   "N": "M5+M7",
-   "S": "M5+M7"
+   "W": "M4",
+   "E": "M4",
+   "N": "M5",
+   "S": "M5"
   },
-  "accepted_by": "H-SM 2026-10-15 ~22:55",
+  "layer_cap": "M6 (PG M6, parent strap M7)",
+  "bit_pitch_um": 0.192,
+  "accepted_by": "H-SM 2026-10-15 ~23:0x (cap-M6 single-layer variant; 2-layer v3 withdrawn: ref_tile has no pins-above-cap leaf contract)",
   "production_binding_adopted": false
  }
 }
