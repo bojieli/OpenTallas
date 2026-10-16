@@ -28,12 +28,12 @@ proc ot_ref_pick {by master pat} {
   error "ref_tile place: no unplaced instance of $master matching '$pat'"
 }
 set ot_ref_n 0
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_128x256_m1_r2c2 {u_cp.g_tab.g_w[0].u_tab}]
-$i setOrient R0; $i setLocation [expr {round(527.04 * $dbu)}] [expr {round(118.8 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_128x256_m1_r2c2 at 527.04 118.8 R0"
-set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_128x256_m1_r2c2 {u_cp.g_tab.g_w[1].u_tab}]
-$i setOrient R0; $i setLocation [expr {round(527.04 * $dbu)}] [expr {round(181.44 * $dbu)}]; $i setPlacementStatus FIRM
-puts "REF_TILE place: [$i getName] ot_sram_1r1w_128x256_m1_r2c2 at 527.04 181.44 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_128x256_m1_r2c2 {g_tab[0].u_tab}]
+$i setOrient R0; $i setLocation [expr {round(527.04 * $dbu)}] [expr {round(23.76 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_128x256_m1_r2c2 at 527.04 23.76 R0"
+set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_128x256_m1_r2c2 {g_tab[1].u_tab}]
+$i setOrient R0; $i setLocation [expr {round(527.04 * $dbu)}] [expr {round(295.92 * $dbu)}]; $i setPlacementStatus FIRM
+puts "REF_TILE place: [$i getName] ot_sram_1r1w_128x256_m1_r2c2 at 527.04 295.92 R0"
 set i [ot_ref_pick $ot_ref_by ot_hgi_dma_back_landing_bank {u_dbk.L[0].u_bank}]
 $i setOrient R0; $i setLocation [expr {round(23.76 * $dbu)}] [expr {round(23.76 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] ot_hgi_dma_back_landing_bank at 23.76 23.76 R0"

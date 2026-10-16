@@ -50,6 +50,7 @@
   ],
   "E": [
    "clk",
+   "clk_cp",
    "rst_n",
    "stk",
    "tgt",
@@ -72,12 +73,16 @@
    "busy"
   ],
   "ANY": [
-   "clk_bank"
+   "clk_bank",
+   "clk_tab"
   ]
  },
  "clock_port": "clk",
  "clock_ports": [
   "clk",
+  "clk_cp",
+  "clk_tab[0]",
+  "clk_tab[1]",
   "clk_bank[0]",
   "clk_bank[1]",
   "clk_bank[2]",
@@ -87,15 +92,18 @@
   "clk_bank[6]",
   "clk_bank[7]"
  ],
+ "clock_cts_roots": [
+  "clk_cp"
+ ],
  "blocks": [
   {
    "kind": "macro",
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
    "master": "ot_sram_1r1w_128x256_m1_r2c2",
-   "inst": "u_cp.g_tab.g_w[0].u_tab",
+   "inst": "g_tab[0].u_tab",
    "idx": 0,
    "x": 527.04,
-   "y": 118.8,
+   "y": 23.76,
    "w": 94.824,
    "h": 41.064,
    "orient": "R0",
@@ -105,10 +113,10 @@
    "kind": "macro",
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
    "master": "ot_sram_1r1w_128x256_m1_r2c2",
-   "inst": "u_cp.g_tab.g_w[1].u_tab",
+   "inst": "g_tab[1].u_tab",
    "idx": 0,
    "x": 527.04,
-   "y": 181.44,
+   "y": 295.92,
    "w": 94.824,
    "h": 41.064,
    "orient": "R0",

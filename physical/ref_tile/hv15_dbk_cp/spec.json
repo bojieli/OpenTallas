@@ -9,10 +9,13 @@
   "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv",
   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"
  ],
- "clock": "entries",
+ "clock": "hybrid_entries",
  "clock_port": "clk",
  "clock_ports": [
   "clk",
+  "clk_cp",
+  "clk_tab[0]",
+  "clk_tab[1]",
   "clk_bank[0]",
   "clk_bank[1]",
   "clk_bank[2]",
@@ -45,6 +48,7 @@
   ],
   "E": [
    "clk",
+   "clk_cp",
    "rst_n",
    "stk",
    "tgt",
@@ -67,7 +71,8 @@
    "busy"
   ],
   "ANY": [
-   "clk_bank"
+   "clk_bank",
+   "clk_tab"
   ]
  },
  "outline": {
@@ -197,20 +202,30 @@
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
    "count": 1,
-   "inst": "u_cp.g_tab.g_w[0].u_tab",
+   "inst": "g_tab[0].u_tab",
    "at": [
     527.04,
-    118.8
-   ]
+    23.76
+   ],
+   "clock_entry": {
+    "port": "clk_tab[0]",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   }
   },
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
    "count": 1,
-   "inst": "u_cp.g_tab.g_w[1].u_tab",
+   "inst": "g_tab[1].u_tab",
    "at": [
     527.04,
-    181.44
-   ]
+    295.92
+   ],
+   "clock_entry": {
+    "port": "clk_tab[1]",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   }
   }
  ],
  "inter": [],
@@ -295,6 +310,9 @@
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
  },
+ "clock_cts_roots": [
+  "clk_cp"
+ ],
  "io_tcl": "results/arch/hbm_die_v15/dbk_cp_ring_1016/assigned_pins.tcl",
  "slot_change_request": "hb_dbk_<q> successor: master ot_hgi_dma_back_static_vp4_banks_cp (collar folded, H-DIE option A), outline 511.92x360.72 -> 645.84x360.72, F20 host bus + tgt strap + cp status on E, per-bank clock entries on the nearest face, rr/wd regrouped by bank row/column. Requires a new die slot grant.",
  "reroute_reason": {

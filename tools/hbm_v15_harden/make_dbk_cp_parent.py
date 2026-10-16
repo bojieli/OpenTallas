@@ -25,7 +25,7 @@ BW, BH = 140.4, 87.48
 COLS = [23.76, 194.4, 365.04]
 ROWS = [23.76, 131.76, 239.76]
 CTRL = (265.68, 140.4)
-SRAMS = [(527.04, 118.8), (527.04, 181.44)]
+SRAMS = [(527.04, 23.76), (527.04, 295.92)]   # table SRAMs at the S / N ends: own clock entry <= ~65 um
 # ring: (col, row) of each bank; the controller takes the centre
 HOME = {0: (0, 0), 1: (1, 0), 2: (2, 0), 3: (0, 1), 5: (2, 1), 6: (0, 2), 7: (1, 2), 4: (2, 2)}
 BANK = 'physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank'
@@ -82,11 +82,14 @@ def main():
     for n, v in zip(wb, grid(265.0, 330.0, len(wb), avoid['N'])): pins[n] = ('N', v)
     # E face: collar clock/strap/F20 bus/status beside the collar column
     pins['clk'] = ('E', snap(178.0))
+    pins['clk_cp'] = ('E', snap(182.0))
+    pins['clk_tab[0]'] = ('S', snap(SRAMS[0][0] + 0.8))
+    pins['clk_tab[1]'] = ('N', snap(SRAMS[1][0] + 0.8))
     e = (['rst_n', 'stk[0]', 'stk[1]'] + [f'tgt[{i}]' for i in range(8)] + ['cfg_v'] + [f'cfg_target[{i}]' for i in range(8)] +
          [f'cfg_addr[{i}]' for i in range(12)] + [f'cfg_data[{i}]' for i in range(256)] + ['desc_v'] +
          [f'desc_base[{i}]' for i in range(12)] + [f'desc_limit[{i}]' for i in range(13)] + [f'desc_loops[{i}]' for i in range(16)] +
          ['launch_v', 'cp_configured', 'cp_fault', 'cp_active', 'mv_src', 'mv_done', 'mv_fault', 'quiet', 'busy'])
-    for n, v in zip(e, grid(100.0, 260.0, len(e), [pins['clk'][1]])): pins[n] = ('E', v)
+    for n, v in zip(e, grid(100.0, 260.0, len(e), [pins['clk'][1], pins['clk_cp'][1]])): pins[n] = ('E', v)
     lines = ['# H-HARDEN dbk_cp ring: exact pin plan (tools/hbm_v15_harden/make_dbk_cp_parent.py); ODB readback mandatory.',
              'source /src/physical/common_flow/assigned_pin_exact.tcl']
     for n, (f, v) in sorted(pins.items()):
@@ -106,8 +109,11 @@ def main():
                          'rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv'] + old['sources'],
                 pins={k: v for k, v in face_map.items() if v}, outline=dict(w=W, h=H, exact=True),
                 children=children, macros=[dict(view=SR, count=2, at=list(SRAMS[0])), ] if False else
-                [dict(view=SR, count=1, inst='u_cp.g_tab.g_w[0].u_tab', at=list(SRAMS[0])),
-                 dict(view=SR, count=1, inst='u_cp.g_tab.g_w[1].u_tab', at=list(SRAMS[1]))],
+                [dict(view=SR, count=1, inst=f'g_tab[{w}].u_tab', at=list(SRAMS[w]),
+                      clock_entry=dict(port=f'clk_tab[{w}]', pin='clk', reference='raw_liberty_clock_pin')) for w in range(2)],
+                clock='hybrid_entries', clock_port='clk',
+                clock_ports=['clk', 'clk_cp', 'clk_tab[0]', 'clk_tab[1]'] + [f'clk_bank[{b}]' for b in range(8)],
+                clock_cts_roots=['clk_cp'],
                 io_tcl=f'results/arch/hbm_die_v15/dbk_cp_ring_1016/assigned_pins.tcl',
                 pin_regs=dict(enable=False, reason=('Banks/controller are hard children owning their registered endpoints; the folded '
                     'collar registers every input in a pin flop and drives every output from a flop (ot_static_cmd_target pin rule).')),
