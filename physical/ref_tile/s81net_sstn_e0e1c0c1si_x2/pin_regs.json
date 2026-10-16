@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "dsfd_sstn_e0e1c0c1si_x2",
+ "enable": false,
+ "reason": "S-DIE approved: RTL already implements one register per data bit from input pin to output pin (plus column-reset controls). A second flow register adds an unpriced cycle. Preserve existing io_flop_at_pins placement and real RTL registers."
+}

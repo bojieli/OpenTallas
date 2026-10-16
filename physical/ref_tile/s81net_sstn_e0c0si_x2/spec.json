@@ -50,14 +50,14 @@
   "hold_margin_ns": 0.03,
   "macro_halo_um": 5.4
  },
- "structural_change": "S-NET dsfd_sstn_e0c0si_x2 (357 die instances): the reset-qualified valid is now a column-reset flop at the pin (--sstn-reg) instead of flop AND rs behind the output pin (logic after the output register); 0 cycles, same ports; full declared x2 payload/control checked at the rising edge, with lane/payload/reset/edge mutants; RTL = the case glue module rendered by the generator (module sha256 81db6a1c4f953d93, glue ab5e41fe55f2cc31); pins at the generator centres (c26b).",
+ "structural_change": "S-NET dsfd_sstn_e0c0si_x2 (357 die instances): the reset-qualified valid is now a column-reset flop at the pin (--sstn-reg) instead of flop AND rs behind the output pin (logic after the output register); 0 cycles, same ports; full declared x2 payload/control checked at the rising edge, with lane/payload/reset/edge mutants; RTL = the case glue module rendered by the generator (module sha256 81db6a1c4f953d93, glue ab5e41fe55f2cc31); pins at the generator centres (c26b). | x2 structural congestion correction: remove synthetic output BUF-HB-BUF delay chains from the N-face pin-flop band; e0c0 GRT measured 6,743 overflow (M2 1616/M3 2392/M4 1698/M5 1037), congestion report identifies ot_outhold nets at x69..96 y24..29. Retain real output registers, receiver input hold, exact same pins/outline/one-edge RTL. S-DIE approved 2026-10-16 08:17; actual FF hold/native gates remain mandatory.",
  "reroute_reason": {
   "kind": "rtl_change"
  },
  "job": {
-  "owner": "Claude:s81-net-fill",
+  "owner": "Codex:s81-net-fill",
   "branch": "claude/el1015-snetfill-2215",
-  "tag": "x1",
+  "tag": "x2nh",
   "purpose": "S81 S-NET static-schedule redesign: dsfd_sstn_e0c0si_x2 (357 replicas, hardened once): exact bench + observed failing mutants; recipe 2, M5 cap, generator pins",
   "views_to": "physical/ref_tile/s81net_sstn_e0c0si_x2/views",
   "record_to": "results/rtl/ref_tile/s81net_sstn_e0c0si_x2",
@@ -127,10 +127,14 @@
   "allow_none": true
  },
  "inhold": true,
- "outhold": true,
+ "outhold": false,
  "keep_pin_regs": true,
  "pin_reg_split": true,
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "S-DIE approved: RTL already implements one register per data bit from input pin to output pin (plus column-reset controls). A second flow register adds an unpriced cycle. Preserve existing io_flop_at_pins placement and real RTL registers."
  }
 }
