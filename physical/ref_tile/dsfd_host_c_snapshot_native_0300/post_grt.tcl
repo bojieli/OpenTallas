@@ -1,0 +1,1 @@
+source /src/physical/ref_tile/dsfd_host_c_snapshot_native_0300/clock_entry.sdc

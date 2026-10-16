@@ -1,0 +1,33 @@
+{
+  "scope": "Exact component timeline only; native HOST physical and die qualification remain open.",
+  "baseline_commit": "b2f33895e752e8181d38995af652bae212f8a2d9",
+  "source": "rtl/dsrom_sys/s81_ingest/ot_s81_ingest_visibility_fence.sv",
+  "source_sha256": "33806f0009eb7c08ee56309b86aabaf4181478a29193a51474bddaa0ff662c40",
+  "cases": [
+    {
+      "case": "c6_h6_p0",
+      "expected": "pass",
+      "returncode": 0
+    },
+    {
+      "case": "c6_h6_p1",
+      "expected": "pass",
+      "returncode": 0
+    },
+    {
+      "case": "c6_h8_p0",
+      "expected": "pass",
+      "returncode": 0
+    },
+    {
+      "case": "c8_h6_p0",
+      "expected": "pass",
+      "returncode": 0
+    },
+    {
+      "case": "c6_h6_p0_mutant",
+      "expected": "fail",
+      "returncode": 1
+    }
+  ]
+}
