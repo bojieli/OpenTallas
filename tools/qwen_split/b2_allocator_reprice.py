@@ -104,6 +104,7 @@ def main():
         for bid,cl,n,es in data:
             if bid.startswith('bword_'):
                 src,(pn,pin)=es;b=int(pn.split('_')[3]);hb=2*b+int(pn.endswith('_f1'))
+                pin=f'bw{int(pin[2:])%8}' if re.fullmatch(r'bw[0-9]+',pin) else pin
                 newdata.append(add(bid,n,src,(port_by[hb].name,pin)));continue
             # Selectors and controller faults retain source-exact existing pin slices.
             if any(i in leaves for i,p in es)and not bid.startswith(('pword_','tt_lf','tt_ty')):
