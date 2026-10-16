@@ -1,0 +1,199 @@
+{
+ "name": "qkd_ectl_a_tp8_epoch_direct_pg16",
+ "top": "qkd_ectl_a_tp8_epoch_direct",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_sys/split_20261014/qkd_ectl_a_tp8_epoch_direct.sv",
+  "rtl/qwen_sys/split_20261014/qkd_ectl_native_direct_tp8.sv",
+  "rtl/hdc/nearhbm/ot_qkd_ectl_parts.sv",
+  "rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_h.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+  "rtl/lib/ot_rst_relay.sv"
+ ],
+ "params": {
+  "STATIC_QK": 1,
+  "QK_ISSUE_AGE": 34,
+  "ROW_RETURN_LAT": 21,
+  "HXK": 13
+ },
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 254.88,
+  "h": 129.6
+ },
+ "layer_cap": "M6",
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_rows*g_macro?0?*u_s",
+   "at": [
+    22.464,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_rows*g_macro?1?*u_s",
+   "at": [
+    137.592,
+    43.2
+   ],
+   "orient": "R0"
+  }
+ ],
+ "pins": {
+  "W": [
+   "rq",
+   "rs"
+  ],
+  "E": [
+   "rs_o",
+   "x_i"
+  ],
+  "S": [
+   "cfg",
+   "rst_n",
+   "t0_row"
+  ],
+  "N": [
+   "ck",
+   "t1_row"
+  ]
+ },
+ "pin_ranges": {
+  "rq": [
+   2.2,
+   4.2
+  ],
+  "rs": [
+   6.0,
+   124.0
+  ],
+  "rs_o": [
+   6.0,
+   110.0
+  ],
+  "x_i": [
+   112.0,
+   124.0
+  ],
+  "cfg": [
+   6.0,
+   8.0
+  ],
+  "rst_n": [
+   10.0,
+   11.0
+  ],
+  "t0_row": [
+   23.0,
+   232.0
+  ],
+  "ck": [
+   126.9,
+   127.9
+  ],
+  "t1_row": [
+   23.0,
+   232.0
+  ]
+ },
+ "route": {
+  "pd": 0.45,
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "recipe": 3,
+ "structural_change": "Q-KVSYS-DIE 2026-10-16 ECTL A pin grant: rs W face M4+M6 (4.5 / 4.7 pins/um/layer, was 8.6 M4-only), each row-bus half over its own SRAM on N/S (was right half only), HB4 pin pad on rs (routed FF measured the HB2 pad short by 1.3 ps -> ECO hold pairs -> native audit of CLOSED qkd_ectl_a_tp8_epoch_direct_h5-h5-fbaf25d48: capture 220.98 ps on 913 input pins > 190 (rs[405] -> rsp_data_p[404]: pin pad HB2+BUFx4 + routed hold ECO HB2+BUFx2+HB2+BUFx2, results/arch/qwen_split_1014/ectl_a_capture_2116/diagnosis.json)). Same RTL / outline / 0 cycles; HXK 13 production (netlist identical to h5). Pin registers (rsp_data_p at the W pins) kept, spine clock kept.",
+ "job": {
+  "owner": "claude:Q-ELEM-ECTL",
+  "branch": "claude/qelem-ectl-0200",
+  "tag": "pg16",
+  "purpose": "Q-KVSYS-DIE 2026-10-16 ECTL A pin grant: rs W face M4+M6 (4.5 / 4.7 pins/um/layer, was 8.6 M4-only), each row-bus half over its own SRAM on N/S (was right half only), HB4 pin pad on rs (routed FF measured the HB2 pad short by 1.3 ps -> ECO hold pairs -> native audit of CLOSED qkd_ectl_a_tp8_epoch_direct_h5-h5-fbaf25d48: capture 220.98 ps on 913 input pins > 190 (rs[405] -> rsp_data_p[404]: pin pad HB2+BUFx4 + routed hold ECO HB2+BUFx2+HB2+BUFx2, results/arch/qwen_split_1014/ectl_a_capture_2116/diagnosis.json)). Same RTL / outline / 0 cycles; HXK 13 production (netlist identical to h5). Pin registers (rsp_data_p at the W pins) kept, spine clock kept.",
+  "benches": [
+   {
+    "name": "ectl_h13_exact",
+    "cmd": "bash tools/qwen_kv_die/ectl_h13_bench.sh {RUN}/bench/h13 0",
+    "expect": "pass",
+    "threads": 2,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^ECTL_H13 PASS",
+    "min_count_regex": "consume=(\\d+)"
+   },
+   {
+    "name": "ectl_h13_hxk5_mutant",
+    "cmd": "bash tools/qwen_kv_die/ectl_h13_bench.sh {RUN}/bench/hxk5 4",
+    "expect": "fail",
+    "threads": 2,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "SCORE_AGE_MISMATCH"
+   }
+  ],
+  "extra_paths": [
+   "rtl/test/qwen_split",
+   "rtl/test/qwen_kv_die",
+   "rtl/qwen_sys",
+   "rtl/hdc",
+   "rtl/lib",
+   "tools/qwen_kv_die",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "results/arch/qwen_split_1014/ectl_pin_grant_1016"
+  ],
+  "views_to": "physical/ref_tile/qkd_ectl_a_tp8_epoch_direct_pg16/views",
+  "record_to": "results/rtl/ref_tile/qkd_ectl_a_tp8_epoch_direct_pg16",
+  "hosts": [
+   "ot-epyc1tb",
+   "ot-epyc4",
+   "ot-pve1"
+  ],
+  "structural_change": "Q-KVSYS-DIE 2026-10-16 ECTL A pin grant: rs W face M4+M6 (4.5 / 4.7 pins/um/layer, was 8.6 M4-only), each row-bus half over its own SRAM on N/S (was right half only), HB4 pin pad on rs (routed FF measured the HB2 pad short by 1.3 ps -> ECO hold pairs -> native audit of CLOSED qkd_ectl_a_tp8_epoch_direct_h5-h5-fbaf25d48: capture 220.98 ps on 913 input pins > 190 (rs[405] -> rsp_data_p[404]: pin pad HB2+BUFx4 + routed hold ECO HB2+BUFx2+HB2+BUFx2, results/arch/qwen_split_1014/ectl_a_capture_2116/diagnosis.json)). Same RTL / outline / 0 cycles; HXK 13 production (netlist identical to h5). Pin registers (rsp_data_p at the W pins) kept, spine clock kept."
+ },
+ "boundary_tcl": [
+  "physical/qwen_die_masters/sram_edge_guard.tcl"
+ ],
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R",
+  "strong_ports": "^rs\\[",
+  "basis": "routed FF hold of CLOSED qkd_ectl_a_tp8_epoch_direct_h5-h5-fbaf25d48 (ot-epyc4 cl/eco/eco.log, OT_WIN_CLASS): port rs[*] -> rsp_data_p[*] n=1024 worst hold -1.3 ps with the HB2 pad; the loop hold ECO then put HB2+BUFx2+HB2+BUFx2 on 913 inputs (FF +102.6 on rs[405], TT capture 220.98 ps). HB4 adds ~17 ps FF (~21 ps TT) at the pad so the route closes FF without routed hold pairs"
+ },
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "clock": "spine",
+ "slot_change_request": "Q-KVSYS-DIE 2026-10-16 ECTL A pin grant (KV die lead, same outline / RTL / 0 cycles): t0_row / t1_row [255:0] over SRAM 0 (x 23.5..116.3), [511:256] over SRAM 1 (x 138.6..231.4), bit-ascending; A and B identical row maps (parent columns repeat at the 254.88-um leaf pitch); exact pins results/arch/qwen_split_1014/ectl_pin_grant_1016/qkd_ectl_a_tp8_epoch_direct.tcl, parent face map results/arch/qwen_split_1014/ectl_pin_grant_1016/pin_grant.json",
+ "children": [],
+ "inter": [],
+ "pin_regs": {
+  "enable": false,
+  "reason": "ECTL static calendar: QK_ISSUE_AGE, ROW_RETURN_LAT (=K_EXT 16 + RQD 2 + 3 response pin stages) and HXK count every boundary edge of the K-pass / row-return loop inside the RTL; synthesis-only pin registers (+1 per port) would shift the fixed-cycle issue/return by edges the RTL constants and the native benches do not see (age fault). Pin registration for this leaf must be done in RTL with the constants re-derived (KV die lead / Q-ATTN decision). Pin geometry, outline and io_flop_at_pins unchanged from the closed kit."
+ },
+ "reroute_reason": {
+  "kind": "slot_change",
+  "slot_change_request": "Q-KVSYS-DIE 2026-10-16 ECTL A pin grant (KV die lead, same outline / RTL / 0 cycles): t0_row / t1_row [255:0] over SRAM 0 (x 23.5..116.3), [511:256] over SRAM 1 (x 138.6..231.4), bit-ascending; A and B identical row maps (parent columns repeat at the 254.88-um leaf pitch); exact pins results/arch/qwen_split_1014/ectl_pin_grant_1016/qkd_ectl_a_tp8_epoch_direct.tcl, parent face map results/arch/qwen_split_1014/ectl_pin_grant_1016/pin_grant.json",
+  "why": "pin plan moved (rs W M4+M6, t0_row, t1_row) per Q-KVSYS-DIE 2026-10-16 ECTL A pin grant",
+  "native_audit": "native audit of CLOSED qkd_ectl_a_tp8_epoch_direct_h5-h5-fbaf25d48: capture 220.98 ps on 913 input pins > 190 (rs[405] -> rsp_data_p[404]: pin pad HB2+BUFx4 + routed hold ECO HB2+BUFx2+HB2+BUFx2, results/arch/qwen_split_1014/ectl_a_capture_2116/diagnosis.json)"
+ },
+ "purpose": "KV-die v1.4.3 G3S2 production binding: HXK13 = hierarchical native r4 head8 + G3S2 five edges. Full static service composition at 22ff95ba0: HXK5 silently wrong 512/512, HXK13 exact53/53 contexts plus rejecting numerical/timing mutants. RTL/outline/pins unchanged; parameter change only. Native pin/reset/clock gates remain mandatory.",
+ "io_tcl": "results/arch/qwen_split_1014/ectl_pin_grant_1016/qkd_ectl_a_tp8_epoch_direct.tcl",
+ "layer_cap_grant": "Q-KVSYS-DIE: Q-KVSYS-DIE 2026-10-16 ECTL A pin grant -- the 1,025-bit rs bus on the W face over M4 + M6 (even bits M4, odd bits M6, <= 4.7 pins/um/layer; was 8.6 /um M4 only, VIS-ROM QKV-02); PG M6 stripes, parent strap M7 over this leaf"
+}

@@ -91,7 +91,18 @@ if {[info procs clock_tree_synthesis] ne "" && [info procs ot_ce_cts_orig] eq ""
       if {[llength $cts_args] != [llength $args]} {
         set ot_ce_prev {}
         foreach e $entry_nets { set en [lindex $e 0]; lappend ot_ce_prev [$en isDoNotTouch]; $en setDoNotTouch 1 }
-        repair_clock_nets
+        # OpenROAD 6cb3f2b704 repair_clock_nets iterates every SDC clock source,
+        # including dont_touch hard entries, and errors if a long entry needs a buffer.
+        # Repair only the selected soft-root nets. This runs the same resizer net
+        # repair engine, with additional slew/cap/fanout checks, without modifying
+        # clocks, their latency/phase constraints, or hard-entry connectivity.
+        est::check_parasitics
+        set ot_ce_max_wire [rsz::check_max_wire_length 0 true]
+        foreach name $cts_nets {
+          set dn [$block findNet $name]
+          if {$dn eq "NULL"} { error "OT_HYBRID: selected repair net $name is missing" }
+          rsz::repair_net_cmd [sta::db_net_to_sta $dn] $ot_ce_max_wire 0 0
+        }
         foreach e $entry_nets p $ot_ce_prev {
           set en [lindex $e 0]; $en setDoNotTouch $p
           set its {}
@@ -100,7 +111,7 @@ if {[info procs clock_tree_synthesis] ne "" && [info procs ot_ce_cts_orig] eq ""
             error "OT_HYBRID: post-CTS clock repair changed hard entry net [$en getName]"
           }
         }
-        puts "OT_HYBRID post-CTS repair_clock_nets on selected roots; [llength $entry_nets] hard entries unchanged"
+        puts "OT_HYBRID post-CTS scoped net repair on selected roots; [llength $entry_nets] hard entries unchanged"
       }
       puts "OT_HYBRID CTS roots [join $roots " "]; hard-child entries excluded"
     }

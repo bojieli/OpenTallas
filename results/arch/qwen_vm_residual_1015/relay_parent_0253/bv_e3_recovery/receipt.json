@@ -1,0 +1,36 @@
+{
+  "scope": "Standalone full E3 source extraction only; child candidate8dca81d98 not merged into current VM physical source. Full token, physical/nativeclock and uninitialised X-state proof OPEN.",
+  "candidate_branch": "codex/qvm-bv-write-0253",
+  "candidate_commit": "8dca81d98",
+  "golden_commit": "859fc9132",
+  "generated_source_byteidentical_to_child_launched_bench": true,
+  "simulator": "Verilator5.050 compiled, two-state",
+  "original_Icarus_result": "INCOMPLETE; saved3611/PID1795943 disappeared without terminal result, no surviving same process on local/E4/PVE/AGI at03:52. Saved .sv/.vvp preserved. No Icarus PASS claim.",
+  "recovery_handle": "ot-runE4 unit2032956-1792147987 exec15735 exit0",
+  "positive": {
+    "edges": 3000,
+    "bits_per_edge": 43184,
+    "comparisons": 129552000,
+    "exit": 0,
+    "verdict": "PASS"
+  },
+  "hardware_negative": {
+    "mutation": "Upper256 data capture incorrectly wired lower256",
+    "exit": 1,
+    "first_failure": "bw_data cycle0",
+    "verdict": "EXPECTED_FAIL"
+  },
+  "hashes": {
+    "m1_early.build.log": "72ae5202a721c632d6af7e8e0624ddce679b3de321be2c335253074b942f4a8d",
+    "m0.sha256": "4c307230670a221ea3396f7db843ace8fd36be7edb019f2255535ed1c03ca5f3",
+    "m1_early.sha256": "c12adde84cdc5ffc5731e41e153f5cf74c5a7a24f2a9f70cc1da35218bfc58b8",
+    "m0.exit": "9a271f2a916b0b6ee6cecb2426f0b3206ef074578be55d9bc94f6f3fe3ab86aa",
+    "m0.sv": "4977277e5fb68f01adc5b3a03b715ab05c351ce4839e185ec1b7294e814ac902",
+    "m0.run.log": "be7e6b6eef7e129c2fdf47024f8faf157766347f0761048918fb6bc31337a26d",
+    "m0.build.log": "06200127ef73d2072875bf7427c128411a23d2b99720ea70da4db4b0d2a2d377",
+    "m1_early.run.log": "86556214d41544fd62a016479f6ca6bc8a65b16c469d08eeb593bcb0838f9836",
+    "m1_early.sv": "3c9b02cfefdc8178e5c89e693490b1995175d264e2d6f35dc92e7eebf05f6baf",
+    "run.sh": "1296802cdd8334d928c951e57eace13540e13685e617ab77047b2aad265e439f",
+    "m1_early.exit": "4355a46b19d348dc2f57c046f8ef63d4538ebb936000f3c9ee954a27460dd865"
+  }
+}

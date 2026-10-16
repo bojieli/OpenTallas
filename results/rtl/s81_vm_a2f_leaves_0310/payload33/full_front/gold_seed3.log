@@ -1,0 +1,5 @@
+PASS a2f==a2 seed3 edges267 writes5289 valid_edges197 fault_edges28
+- ../fixture/bench.sv:61: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3us; walltime 25.884 s; speed 103.771 ns/s
+- Verilator: cpu 25.882 s on 1 threads; allocated 56 MB

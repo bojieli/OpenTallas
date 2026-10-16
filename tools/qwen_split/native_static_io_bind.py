@@ -153,6 +153,11 @@ def apply(model):
         new.append(('clk_coll_blk', 'clock_trunk', 1, [('clk_rx', 'pll_coll_blk')] +
                     [('io_collective', f'blk_ck{k}') for k in range(ports['blk_ck'][0])]))
     model['buses'] = [q for q in kept if q[0] not in ('clk_ucie', 'clk_coll')] + new
+    # These retained production PHY paths run on the actual 1 GHz FDI roots
+    # above. Legacy instance domains (serial_0p9 / link_serdes) are not their
+    # clock contract after replacing the collective with its native RTL.
+    model.setdefault('relay_clock_by_bus', {}).update(
+        {b: 'clk_ucie' for b, c, _, _ in new if c == 'coll_fdi'})
     split = model.setdefault('port_split', {})
     split[MASTER] = dict(cd=[('in_data', 512), ('in_last', 1), ('in_mode', 1), ('in_tag', 32), ('in_valid', 1)],
                          cc=[('out_data', 512), ('out_last', 1), ('out_rank', 3), ('out_err', 1), ('out_valid', 1)])

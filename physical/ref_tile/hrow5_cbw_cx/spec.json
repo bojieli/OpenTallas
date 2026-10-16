@@ -21,10 +21,10 @@
   "N": [
    "t_w",
    "t_r",
-   "t_d"
+   "t_d",
+   "ck"
   ],
   "W": [
-   "ck",
    "rst",
    "f_bid"
   ]
@@ -39,10 +39,10 @@
   "macro_halo_um": 5.4
  },
  "job": {
-  "owner": "Claude:el1011-ds-mtp",
-  "branch": "codex/ds-hrow-1012",
-  "tag": "r8b-cl",
-  "purpose": "r8b (claude-hrow 10-13): r8a 6.0 um M5 no-entry strip inside SRAM vertical edges PLUS real launch decoupling: r7 netlist kept 1,104 macro launch flops but opt_merge folded the un-kept chain pin flops wi/ri into them (5 cells each left), so one flop still drove SRAM wd_in/addr and the forwarding register (FF misses cbe -3.08 at SRAM pins, cbw -20.24 at 13 D pins). keep on wi/ri makes chain forwarding and SRAM launch separate flops (expect ~6,294 flops), no latency change. Pass: DRC 0, TT/FF >= 0, child_lint c+f at M5, hrow_tiles pos PASS / mut FAIL; log CX_HROW created 8 strip 6.0 / removed 8, OT_SPINE done.",
+  "owner": "Claude:S-ELEM-PQ/HROW",
+  "branch": "claude/hrow-native-0030",
+  "tag": "n1-0030",
+  "purpose": "S-ELEM-PQ/HROW 2026-10-16: closed hrow5_cbw_cx-r8b-cl-b05bb421d fails the native pin audit (R 538.5 > 300, spread 89.2 > 80, TT launch 422.8 on 991 outputs, capture 440.4 on 962 inputs; results/physical/s81_hrow_native_0030/native_audit_s81_hc_hrow_0030.json). Causes: pin flops not anchored at the faces (inhold/outhold pads only) and a W-edge clock entry into a 475.2 um wide tile through a 293-leaf spine (1,164 buffers, leaf arrival 441-512 ps). Fix: recipe 3 kit (io_flop_at_pins + pin_reg_split + keep_pin_regs + HB2 pads), TritonCTS from the N-face centre; RTL, outline, macro plan, data pin faces unchanged; 0 cycles added (every port already registered in RTL; wrapper opted out with reason). dsfd_mtp_hrow_cbe (identical RTL) is retired in favour of this view (die dedupe list: REBIND cbe to cbw). Pass: TT/FF >= 0, DRC 0, native launch <= 220 / capture <= 190 / spread <= 80 / R <= 300, hrow_tiles pos PASS / mut FAIL.",
   "benches": [
    {
     "name": "hrow_tiles_pos",
@@ -112,15 +112,37 @@
  "params": {},
  "children": [],
  "inter": [],
- "clock": "spine",
- "spine_macro_leaf": true,
- "orfs_vars": {
-  "OT_SPINE_LEAF_N": 24,
-  "OT_SPINE_BIN": 40,
-  "OT_SPINE_SEG": 100,
-  "OT_SPINE_ITERS": 6
- },
+ "clock": "cts",
+ "orfs_vars": {},
  "boundary_tcl": [
   "physical/hrow_cx/sram_edge_access.tcl"
- ]
+ ],
+ "recipe": 3,
+ "pin_regs": {
+  "enable": false,
+  "reason": "ot_dsrom_mtp_hrow_cbcore already registers every data port at a dedicated kept boundary flop: inputs f_w/f_r/f_d/f_bid -> wi/ri/di/id (+ the kept SRAM launch copies macro_wa/ra/wd capturing the same edge), outputs t_w/t_r/t_d = out flops wo/ro/dq. io_flop_at_pins anchors all of them at the pin faces. A generic wrapper would add 2 edges per chain tile = +20 edges per part chain (10 tiles) on every read/write/response for no structural gain. 0 cycles added."
+ },
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": false
+ },
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "pin_ranges": {
+  "ck": [
+   235.0,
+   240.2
+  ]
+ },
+ "reroute_reason": {
+  "kind": "pin_register",
+  "source": "results/physical/s81_hrow_native_0030/native_audit_s81_hc_hrow_0030.json",
+  "cell": "dsfd_mtp_hrow_cbw",
+  "launch_ps": 422.8,
+  "capture_ps": 440.4,
+  "fix": "kit recipe 3 (owner rule 19:50): io_flop_at_pins anchors the RTL pin flops wi/ri/di/id, SRAM launch copies and out flops wo/ro/dq at their faces, pin_reg_split + keep_pin_regs + HB2 pads; clock: spine (R 538.5, spread 89.2) replaced by TritonCTS entered at the N-face centre (contract face N) so the farthest sink is 453 um, not 583 um, from the clock pin; RTL unchanged, 0 cycles"
+ }
 }

@@ -85,6 +85,32 @@ PARTS = dict(dsfd_bk_selector=('dsfd_selt_q', 'dsfd_selt_c'), dsfd_bk_collector=
              dsfd_wfc=('ot_dsrom_wfc_tokpipe_src', 'dsfd_wfc_tok_hard', 'dsfd_wfc_lnk'))
 
 
+# These are literal current cluster children, NOT aliases of the older flat
+# slabs above. In particular capture_c instantiates x8_dual plus DONE/reset
+# relays, while gather_c has distinct W/E/control leaves and relay strips.
+# Listing children only improves the diagnostic census: the kit still emits
+# INTERIM arcs until a source-qualified assembled view exists for this master.
+PARTS.update(
+    dsfd_sp_capture_c=('dsfd_capt_ctl', 'dsfd_capt_g2', 'dsfd_capt_x8_dual', 'dsfd_capt_cd',
+                       'dsfd_rly_68_EW', 'dsfd_rly_54_EW', 'dsfd_rly_2_WE',
+                       'dsfd_rly_63_WE', 'dsfd_rly_2_EW', 'dsfd_rly_15_SN'),
+    dsfd_sp_gather_c=('dsfd_gth_ctl', 'dsfd_gth_re', 'dsfd_gth_rw', 'dsfd_gth_strip',
+                      'dsfd_rly_214_NS', 'dsfd_rly_276_EW', 'dsfd_rly_276_WE'))
+
+
+def partition_record(mst, indexes, parts=None):
+    """Diagnostic child coverage; never substitute child closure for parent STA."""
+    required = (parts if parts is not None else PARTS).get(mst)
+    if required is None:
+        return {}
+    closed = [child for child in required if all(
+        child in indexes.get(corner, {}) and indexes[corner][child][1] == 'closed'
+        for corner in ('ss', 'tt', 'ff'))]
+    return dict(view='partitioned', tiles=list(required), tiles_closed=sorted(closed),
+                timing_model='interim_pin_registered', parent_qualified=False,
+                qualification='source-qualified assembled parent view required')
+
+
 def _rank(p, root, label):
     """lib preference when several files define one cell: this die variant's closed records, then S81-PH closed tiles,
     then other S81 die view records, then anything else (newest first within a rank)"""
@@ -313,6 +339,12 @@ def arcs_insertion(mst, view, mi, libpath=None, parts=None):
             ss, ff = j['ss']['boundary']['mean'], j['ff']['boundary']['mean']
             return [ss, ff, (ss + ff) / 2]
     if view == 'assembled':
+        if mst in ('dsfd_sp_capture_c', 'dsfd_sp_gather_c'):
+            # Their literal inventory is useful for diagnostics, but each child
+            # has its own entry. A scalar mean of unrelated roots would corrupt
+            # phi-R delivery. A future assembled view needs per-pin references.
+            raise ValueError(f'{mst}: multi-root assembled view requires per-pin insertion references; '
+                             'a mean over child masters is not a valid clock reference')
         src = [x for x in (parts or PARTS).get(mst, ()) if x in mi]
         if src:
             return [sum(mi[x][c] for x in src) / len(src) for c in ('ss', 'ff', 'tt')]
@@ -861,9 +893,10 @@ def main():
                         done.append('dsfd_coll_ck')
                     r_['qualification'] = rec['collective_binding']['qualification']
                     r_['binding_problems'] = rec['collective_binding']['problems']
+                    r_.update(view='partitioned', tiles=list(parts[mst]), tiles_closed=done,
+                              timing_model='interim_pin_registered', parent_qualified=False)
                 else:
-                    done = sorted(x for x in parts[mst] if x in cls_['ss'] and cls_['ss'][x][1] == 'closed')
-                r_.update(view='partitioned', tiles=list(parts[mst]), tiles_closed=done)
+                    r_.update(partition_record(mst, cls_, parts))
             rec['masters'][mst] = r_
         (a.out / f'interim_{corner}.lib').write_text(interim_lib(cells, corner, pads))
         (a.out / f'libs_{corner}.txt').write_text('\n'.join(sorted(libs) + [f'/kit/interim_{corner}.lib']) + '\n')

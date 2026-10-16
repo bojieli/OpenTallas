@@ -1,0 +1,32 @@
+[
+  {
+    "mutant": "OT_VM_XIO_MUT_REQUEST",
+    "returncode": 1,
+    "observed_failure": "FATAL: tools/s81_vm/tb_xio_partition_0253.sv:19: REQUEST DELTA cycle77 new1 olddelay0"
+  },
+  {
+    "mutant": "OT_VM_XIO_MUT_RETURN",
+    "returncode": 1,
+    "observed_failure": "FATAL: tools/s81_vm/tb_xio_partition_0253.sv:21: COLLECTIVE DELTA cycle92 gotxXXXXxxxXXXXXxxxXXXXXxxxxXXXXxxxXXXXXxxxXXXXXxxxXXXXXxxxxXXXXxxxXXXXXxxxXXXXXxxxXXXXXxxxxXXXXxxxXXXXXxxxXXXXXxxxXXXXXxxxxXXXXxxxX expected12756ed1b2756ec152756ef0f2756ee092756e9032756e87d2756eb772756ea712756e56b2756e4652756e75f2756e6592756e1532756e04d2756e3472756e247"
+  },
+  {
+    "mutant": "OT_VM_XIO_MUT_GATHER",
+    "returncode": 1,
+    "observed_failure": "FATAL: tools/s81_vm/tb_xio_partition_0253.sv:35: GATHER SERIAL DELTA serial300 got2756d49b2756d5952756d68f2756d7892756d0832756d1fd2756d2f72756d3f12756dceb2756dde52756dedf2756dfd92756d8d32756d9cd2756dac72756dbcf expected93ab6a4d93ab6aca93ab6b4793ab6bc493ab684193ab68fe93ab697b93ab69f893ab6e7593ab6ef293ab6f6f93ab6fec93ab6c6993ab6ce693ab6d6393ab6de3"
+  },
+  {
+    "mutant": "OT_VM_XIO_MUT_TAG",
+    "returncode": 1,
+    "observed_failure": "FATAL: tools/s81_vm/tb_xio_partition_0253.sv:22: TUPLE tag/row/mask/data mismatch"
+  },
+  {
+    "mutant": "OT_VM_XIO_MUT_FAULT",
+    "returncode": 1,
+    "observed_failure": "FATAL: tools/s81_vm/tb_xio_partition_0253.sv:56: FAULT reflection missing old1 new0"
+  },
+  {
+    "mutant": "OT_VM_XIO_MUT_WARM",
+    "returncode": 1,
+    "observed_failure": "FATAL: tools/s81_vm/tb_xio_partition_0253.sv:25: VALID PROGRAM FAULT cycle715 old0 new1 req0 ret0 serial0"
+  }
+]
