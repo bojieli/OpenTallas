@@ -1,0 +1,24 @@
+{
+  "source_revision": "b263c04dc",
+  "source_sha256": {
+    "results/arch/hbm_die_v16/die.v": "3b942ae003e42f8d6172c6904222d8a2eb29cbff63237aac6ee9eca5aca1221e",
+    "tools/hbm_static/su_top_compile.py": "ce2157e122b9d7f88c7bcb7c2afc5eb14a3530ac01ec6dacf8d70609f4be5d6a",
+    "rtl/hbm_accel/generic/adapters/static_su/collport/tb_hbm_su_collport.sv": "2678a53aaa2ddf250a38f4d1bf076af4d9d0de45cd6ebbde093d2b630fae85f3"
+  },
+  "verdict": "OPEN_PRODUCTION_JOIN",
+  "physical_qualified": false,
+  "whole_layer_native_qualified": false,
+  "findings": [
+    "Direct cxport scalar transport and RF36 transport consume independent tag fields; equal path depth is not a requirement.",
+    "su_top_compile exports only RF tag bit8; no CW/EMIT/RR_EN lowering exists in that compiler revision.",
+    "Existing collport bench drives reducer red_sv/red_tag/red_x externally; qcore red outputs are disconnected in that bench. This proves a declared-boundary component, not a native reducer->COLL composition.",
+    "New directed lowering reserves qcore commands, stream carry publication, returned RF-sector bank ports, and four RF replicas separately. It emits 74-bit native commands and no arithmetic values.",
+    "Upstream readiness declarations and actual COLL lp/rr slots still require authoritative whole-layer composition. Directed input is not production evidence."
+  ],
+  "next": "Bind actual source-ready reducer values and collective lp/rr programme rows to this lowering, then run actual reducer->cxport->COLL->RF composition with failing latency/tag mutants.",
+  "tests": {
+    "cases": 11,
+    "exit_code": 0,
+    "scope": "compiler reservation unit tests only"
+  }
+}
