@@ -126,6 +126,11 @@ class Roadmap:
    cy=self.G.corr_y(self.m, 'xdn' if kind=='x' else 'r0')
    sx=self.entry[side][0][0]
    stem += [(source[0],cy),(sx,cy)]
+  elif side=='W' and self.G.wide_hub() and source[0] > self.G.wide_hub()['s14w'][1]:
+   # wide hub: hub sources leave W through the W strip and the W corridor above MIX4 (SU / VM / MIX4 below)
+   cy=self.G.wide_corr_y(self.m, 'xdn' if kind=='x' else 'r0')
+   sx=self.entry[side][0][0];vx=self.G.wide_strip_x(self.m, 'xdn' if kind=='x' else 'r0')
+   stem += [(vx,source[1]),(vx,cy),(sx,cy)] if source[0]>vx else [(source[0],cy),(sx,cy)]
   base=stem[-1]
   for node in self.entry[side]:
    d=abs(node[0]-base[0])+abs(node[1]-base[1]);dist[node]=d;prev[node]=None;heapq.heappush(q,(d,node))
@@ -199,7 +204,7 @@ def trunks(G,m,CH,cor,starts,ga,end_spec,hub_block,bus):
  x_stages/r_stages become compiler inputs, never an ideal tier flight estimate.
  """
  compact_return_relays(G,m,CH)
- road=Roadmap(G,m,cor);allowed=[v for k,v in cor.items() if k.startswith(('cfstreet','rsclane','s14','vch','hcc','svc_access'))]
+ road=Roadmap(G,m,cor);allowed=[v for k,v in cor.items() if k.startswith(('cfstreet','rsclane','s14','vch','hcc','svc_access','hub_w','strip_w'))]
  m['chain_paths']=[];calendar={};m['canonical_injectors']={side:dict(inst=starts[side].name,box=list(starts[side].box()),source_ports=['fo','od'])for side in 'WE'}
  m['canonical_broadcast_trees']={}
  # One real broadcast tree per physical half. Shared road prefixes are
@@ -220,6 +225,9 @@ def trunks(G,m,CH,cor,starts,ga,end_spec,hub_block,bus):
    assert G._mh(entry,override)<.001,('broadcast override is not an actual S14 entry',side,override,entry)
   if side=='E':
    cy=G.corr_y(m,'xdn');prefix=G._dedup([source,(source[0],cy),(entry[0],cy),entry])
+  elif G.wide_hub():
+   # wide hub: up the W strip to the W corridor above MIX4, then W to the S14W entry
+   cy=G.wide_corr_y(m,'xdn');prefix=G._dedup([source,(source[0],cy),(entry[0],cy),entry])
   else:prefix=G._dedup([source,(entry[0],source[1]),entry])
   dist={entry:0};parent={entry:None};q=[(0,entry)]
   while q:
@@ -332,9 +340,20 @@ def trunks(G,m,CH,cor,starts,ga,end_spec,hub_block,bus):
      active=flows[entry];dst=(endb.x+endb.w/2,endb.y+endb.h/2);path=[entry]
      if side=='E':
       cy=G.corr_y(m,f'r{t}');vx=G.vch_x(m,f'r{t}');path +=[(entry[0],cy),(vx,cy)]
+     elif G.wide_hub():
+      # wide hub: W returns cross over SU / MIX4 in the W corridor, then drop down the W strip to the gather W face
+      cy=G.wide_corr_y(m,f'r{t}');vx=G.wide_strip_x(m,f'r{t}');path +=[(entry[0],cy),(vx,cy)]
      if side!=logical:
       wx=G.s14_x(m,'W',f'r{t}');vx=G.vch_x(m,f'r{t}');xx0,xx1=sorted((wx,vx));margin=.432
       free=[(max(cor['s14W'][1],cor['vch'][1]),min(cor['s14W'][3],cor['vch'][3]))]
+      if G.wide_hub():
+       # wide hub: the halves meet across the capture column only (W strip <-> VCH), through a seam between its slabs
+       wx=G.wide_strip_x(m,f'r{t}');xx0,xx1=sorted((wx,vx))
+       # above the gather (not the pq-cnt seam), up to the W approach top: the free column above the host included
+       free=[(max(cor['strip_w'][1],cor['vch'][1],ga.y+ga.h),min(cor['hub_w'][3],cor['vch'][3]))]
+       sm_=G.wide_hub().get('vmhc_seam')
+       if sm_:   # the VM <-> HC seam is reserved for those buses
+        free=[iv for lo_,hi_ in free for iv in ((lo_,min(hi_,sm_[0]-20)),(max(lo_,sm_[1]+20),hi_)) if iv[1]>iv[0]]
       for obj in m['insts']:
        if obj.x>=xx1 or obj.x+obj.w<=xx0:continue
        cut=(obj.y-margin,obj.y+obj.h+margin);nfree=[]
@@ -352,7 +371,7 @@ def trunks(G,m,CH,cor,starts,ga,end_spec,hub_block,bus):
      for lane,r in group:
       tail=active[lane];bus(f'{prefix}_fe{lane}','fclk',1,[(tail[0],tail[1]),(endb.name,f'fi{lane}')]);bus(f'{prefix}_de{lane}','lane',G.CRET+2,[(tail[0],tail[2]),(endb.name,f'di{lane}')])
       m.setdefault('r_stages',{})[r]=flights[r];calendar[r].update(return_stations=flights[r],gather_input_lane=lane,return_bundle=prefix)
-   G._local_chain(m,CH,[cor['s14W'] if logical=='W' else cor['vch']],endb,'o',ga,f'r{logical}{t}',n*(G.CRET+1)+2,f'hr_{logical}{t}_o','stream_1p2')
+   G._local_chain(m,CH,([cor['s14W']]+([cor['strip_w'],cor['hub_w']] if G.wide_hub() else []) if logical=='W' else [cor['vch']]),endb,'o',ga,f'r{logical}{t}',n*(G.CRET+1)+2,f'hr_{logical}{t}_o','stream_1p2')
  m['canonical_calendar']=[calendar[r] for r in sorted(calendar)]
 
 

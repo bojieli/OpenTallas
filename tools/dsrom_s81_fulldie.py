@@ -3843,6 +3843,9 @@ class Chains:
                     if placed is not None:
                         self.m.setdefault('stn70_across', []).append(dict(chain=name, at=list(placed), lanes=len(lanes)))
             if placed is None:
+                print('OT_CHAIN_NO_SPOT', name, [(round(p_[0], 1), round(p_[1], 1)) for p_ in path], file=sys.stderr, flush=True)
+                print('OT_CHAIN_NO_SPOT_NEAR', name, lanes[:3], len(lanes), [(i_.name, round(i_.x), round(i_.y), round(i_.w), round(i_.h)) for i_ in self.m['insts']
+                      if abs(i_.x + i_.w / 2 - cx) < 400 and abs(i_.y + i_.h / 2 - cy) < 400][:60], file=sys.stderr, flush=True)
                 raise RuntimeError(f'chain {name}: no station spot near s={target:.0f} of {L:.0f} ({cx:.0f}, {cy:.0f})')
             x, y = placed
             orient = {'E': 'R0', 'W': 'MY', 'N': 'R0', 'S': 'MX'}[d]
@@ -3976,7 +3979,7 @@ def collective_variant_binding():
 
 
 def build_r8(variant=None):
-    global HOP_PLAN
+    global HOP_PLAN, VCH8, SPINE_W8, MIX4_SLOT
     if HOP_FIX and HOP_PLAN is None:
         HOP_PLAN = {}
         ALIGN_EXT[0] = False     # r8: planning passes align single stations only (the r7 rule)
@@ -4012,6 +4015,16 @@ def build_r8(variant=None):
     x_fe = up(x_sp + SPINE_W8, GX)                                # spine E edge
     x_le = dn(W - EDGE - LINK_COL, GX)
     assert x_fe + SPF + COLS8 * COL_PITCH8 <= x_le + 1e-6
+    wide_ = wide_hub()
+    if wide_:
+        # --hub-layout wide (S-DIE 10-15, option C5): the spine = capture column | VCH | HC column from the layout;
+        # SU and VM stand W of it (side by side), the roads S14W / S14E take the layout's widths
+        if HUB_LAYOUT.get('mix4_slot'):
+            MIX4_SLOT = tuple(HUB_LAYOUT['mix4_slot'])      # MIX4 on the VM N face (layout), not the --mix4-slot home
+        VCH8 = wide_['vch']
+        SPINE_W8 = 2 * wide_['cw'] + wide_['vch']
+        x_sp, x_fe = up(wide_['x_sp'], GX), up(wide_['x_fe'], GX)
+        assert abs(x_fe - x_sp - SPINE_W8) < GX + 1e-6, ('wide hub spine width', x_fe - x_sp, SPINE_W8)
     band = up(EDGE, GY) + PHY_H + 8.64 + CTRL_D + 8.64 + SVC_D
     SLOT_H, SLOTS = slot_geometry()
     FRAME_H = column_height()
@@ -4201,6 +4214,8 @@ def build_r8(variant=None):
     # ---- spine: W column as r7 (SU split around the centre stack), E column HC split around a crossing corridor
     x_vch = x_sp + dn((SPINE_W8 - VCH8) / 2, GX)
     cw = dn((SPINE_W8 - VCH8) / 2, GX)
+    if wide_hub():
+        x_vch, cw = up(wide_hub()['x_vch'], GX), up(wide_hub()['cw'], GX)
     x_spe = x_vch + VCH8
     regions.append(dict(name='spine', kind='hub', rect=[x_sp, y_f, x_fe, y_top]))
     regions.append(dict(name='vch', kind='channel', rect=[x_vch, y_f, x_vch + VCH8, y_top]))
@@ -4576,6 +4591,8 @@ def build_r8(variant=None):
     rp = real_lef(PHY_LEF)
     phys, ctrls, svcs = {}, {}, {}
     xs_phy = [up(x_fw + (x_sp - x_fw) / 2 - PHY_W / 2, GX), up(x_fe + (x_le - x_fe) / 2 - PHY_W / 2, GX)]
+    if wide_hub() and wide_hub().get('phy_x'):   # wide hub: the IO stays where the canonical die has it
+        xs_phy = [up(wide_hub()['phy_x']['SW'], GX), up(wide_hub()['phy_x']['SE'], GX)]
     band_ys = {}
     for side in 'SN':
         for i, xp in enumerate(xs_phy):
@@ -4793,11 +4810,12 @@ def _split_fields(m, inst, spec):
 # ---------------------------------------------------------------------------------------- r8 nets
 def _corridors(m):
     g = m['geo']
+    _GEO_REF[0] = g
     W, H = DIE
     b0, b1 = g['band_depth'] + 4.32, H - g['band_depth'] - 4.32
     cor = dict(
-        s14W=(g['x_sp'] - SPF + 4.32, b0, g['x_sp'] - 4.32, b1),
-        s14E=(g['x_fe'] + 4.32, b0, g['x_fe'] + SPF - 4.32, b1),
+        s14W=(s14_span('W')[0] + 4.32, b0, s14_span('W')[1] - 4.32, b1),
+        s14E=(s14_span('E')[0] + 4.32, b0, s14_span('E')[1] - 4.32, b1),
         vch=(m['x_vch'] + 4.32, b0, m['x_vch'] + VCH8 - 4.32, b1),
         hcc=(m['x_spe'] - 4.32, m['corridor'][0] + 4.32, g['x_fe'] + 4.32, m['corridor'][1] - 4.32),
         edgeW=(g['x_lw'] + LINK_COL + 4.32, g['y_f'], g['x_fw'] - 4.32, g['y_top']),
@@ -4806,7 +4824,16 @@ def _corridors(m):
         stripN=(g['x_lw'] + LINK_COL + 4.32, g['y_top'] + 4.32, g['x_le'] - 4.32, H - g['band_depth'] - 4.32),
         gapS=(m['gap_x'][0] + 4.32, 20.0, m['gap_x'][1] - 4.32, g['y_f'] - 4.32),
         gapN=(m['gap_x'][0] + 4.32, g['y_top'] + 4.32, m['gap_x'][1] - 4.32, H - 20.0))
-    if HUB_SOUTH_SHIFT:
+    if wide_hub():
+        # wide hub: the W approach above MIX4 (hub_w), the W return strip beside the gather W face (strip_w) and the
+        # capture-column room below the capture slab (VM <-> HC lanes) are real channels
+        w_ = wide_hub()
+        for k_ in ('hub_w', 'strip_w', 'capfree', 'above_su', 'vm_s', 'su_under', 'seam_rect'):
+            if k_ not in w_:
+                continue
+            x0_, y0_, x1_, y1_ = w_[k_]
+            cor[k_] = (x0_ + 4.32, max(y0_, b0) + 4.32, x1_ - 4.32, min(y1_, b1) - 4.32)
+    if HUB_SOUTH_SHIFT and not wide_hub():
         su = m['hub']['su_s']
         cor['su_south_bypass'] = (su.x - 216.0, EDGE, su.x + su.w + 216.0, su.y - 4.32)
     if COLL_SPLIT3:
@@ -5071,6 +5098,8 @@ def buses_r8(m):
             xx = face_x + 0.55 * VCH8           # E-half return ends mid-VCH: keep the VCH west lanes free (r8 GRT)
         if name.startswith('hr_') and side == 'W':
             xx = face_x - 0.55 * SPF - w
+        if wide_hub() and side == 'W':   # wide hub: the gather / PQ W faces open onto the W strip and the W approach
+            allowed = list(allowed) + [cor['strip_w'], cor['hub_w']]
         pl = P.near(xx + w / 2, y_c, w, h, allowed, horiz=False, span=1600.0, rows=6)
         assert pl, name
         it = P.add(Inst(name, master, pl[0], pl[1], w, h, 'MY' if side == 'W' else 'R0', kind=kind, region='hub'))
@@ -5122,7 +5151,7 @@ def buses_r8(m):
     rowx = 64.8          # x-trunk station row (offset in the channel)
     rowr = 8.64          # return-trunk row
     rowl = 118.8         # link row
-    s14x = {'W': x_sp - SPF / 2, 'E': x_fe + SPF / 2}
+    s14x = {h_: sum(s14_span(h_)) / 2 for h_ in 'WE'} if wide_hub() else {'W': x_sp - SPF / 2, 'E': x_fe + SPF / 2}
     m['chain_paths'] = []
 
     def tap_x(half, c, off):
@@ -7178,9 +7207,13 @@ def _pq_cnt_buses(m, CH8, cor, bits):
         n_ = kl[side]
         kl[side] += 1
         vx = (cor['s14W'][2] - 30.0 - HUB_LANE_PITCH * n_) if side == 'W' else (cor['vch'][0] + 30.0 + HUB_LANE_PITCH * (n_ + 0.5))
+        if wide_hub() and side == 'W':   # wide hub: the W lanes run in the W strip beside the gather / PQ W faces
+            vx = cor['strip_w'][2] - 30.0 - HUB_LANE_PITCH * n_
         tx = min(max(leaf.x + leaf.w / 2, P_.x + 20.0), P_.x + P_.w - 20.0)
         p_ = [((leaf.x if side == 'W' else leaf.x + leaf.w), yr), (vx, yr), (vx, yg), (tx, yg), (tx, P_.y)]
         allowed = [row, gap, cor['s14W'] if side == 'W' else cor['vch']]
+        if wide_hub() and side == 'W':
+            allowed += [cor['strip_w'], cor['hub_w']]
         return _dedup(p_), allowed
 
     def staged(name, path, allowed, bits, src_eps, dst_eps):
@@ -7272,7 +7305,13 @@ def _hub_bus_chain(m, CH8, cor, a_, b_, bits, pa, pb, dom=None, reach_um=None):
                                                      floor_added=max(0, math.ceil(L / LINK_STAGE_UM - 1e-9) - 1))
         return
     xcol = [cor[k_] for k_ in ('ecolS', 'ecolN', 'vmW', 'vmE', 'hrtxG') if k_ in cor]
-    if (hcA != hcB or ((ECOL_SLABS or SU_E) and not same_col)) and hi - lo > 100.0:
+    wpath_ = _wide_hub_path(m, A, Bk) if (wide_hub() and {a_, b_} & {'vm', 'su_s'}) else None
+    if wpath_ is not None:
+        # wide hub (S-DIE 10-15): SU | VM | capture column side by side -- abutting faces wire directly, VM / SU reach the
+        # column above them through their N face (W strip / W approach), the HC through the capture column's free floor
+        path = wpath_
+        xcol = xcol + [cor[k_] for k_ in ('strip_w', 'hub_w', 'capfree', 'above_su', 'seam_rect') if k_ in cor]
+    elif (hcA != hcB or ((ECOL_SLABS or SU_E) and not same_col)) and hi - lo > 100.0:
         # across the VCH where the two slabs overlap in y: a straight horizontal bus
         lane = m.setdefault('_hb_lane', {}).setdefault('x', [0])
         # --suhc-v2: 8 y lanes + the VM slot buses share these rows: spread over 90 % of the overlap (not the middle half)
@@ -7391,6 +7430,76 @@ def _hub_bus_chain(m, CH8, cor, a_, b_, bits, pa, pb, dom=None, reach_um=None):
                                                   floor_added=max(0, math.ceil(L / LINK_STAGE_UM - 1e-9) - 1))
 
 
+def _wide_hub_path(m, A, Bk):
+    """wide hub: the A -> Bk bus polyline when A or Bk is a W block (VM / SU); None = the generic rules"""
+    w_ = wide_hub()
+    x_sp, x_vch = m['geo']['x_sp'], m['x_vch']
+    west = {'sp_vm', 'sp_su_s'}
+    wb, ot = (A, Bk) if A.name in west else (Bk, A)
+    lanes = m.setdefault('_wide_hb_lane', {})
+
+    def spread(key, lo, hi):
+        k = lanes.setdefault(key, [0])
+        v = lo + (hi - lo) * (0.05 + 0.9 * ((k[0] * 0.37) % 1.0))
+        k[0] += 1
+        return v
+    lo, hi = max(A.y, Bk.y) + 20.0, min(A.y + A.h, Bk.y + Bk.h) - 20.0
+    left, right = (A, Bk) if A.x < Bk.x else (Bk, A)
+    out = None
+    xlo_, xhi_ = max(A.x, Bk.x) + 20.0, min(A.x + A.w, Bk.x + Bk.w) - 20.0
+    lower, upper = (A, Bk) if A.y < Bk.y else (Bk, A)
+    if xhi_ - xlo_ > 50.0 and upper.y - (lower.y + lower.h) <= CC_REACH:
+        x_ = spread('vabut', xlo_, xhi_)                  # face to face vertically (VM S face | collective)
+        return [(x_, lower.y + lower.h), (x_, upper.y)] if lower is A else [(x_, upper.y), (x_, lower.y + lower.h)]
+    if hi - lo > 50.0 and right.x - (left.x + left.w) <= CC_REACH:
+        y_ = spread('abut', lo, hi)                       # face to face (SU | VM, VM | capture)
+        out = [(left.x + left.w, y_), (right.x, y_)] if left is A else [(right.x, y_), (left.x + left.w, y_)]
+        return out
+    if ot.name.startswith('sp_hc_') and wb.name == 'sp_vm':
+        cf_ = w_['capfree']
+        lo2_, hi2_ = max(wb.y, cf_[1], ot.y) + 30.0, min(wb.y + wb.h, cf_[3], ot.y + ot.h) - 30.0
+        if hi2_ - lo2_ > 60.0:
+            # straight across the capture-column floor and the VCH where VM, floor and HC face overlap (the VCH is
+            # crossed, never run along: its stretch beside the gather holds the E-return ends)
+            y1 = spread('vmhc_x', lo2_, hi2_)
+            p_ = [(wb.x + wb.w, y1), (ot.x, y1)]
+            return p_ if wb is A else p_[::-1]
+        if w_.get('vmhc_seam'):
+            # up the W strip from the VM N face, E through the reserved capture-column seam, straight across the
+            # VCH above the gather (its quiet stretch) into the hc_s W face
+            sy0_, sy1_ = w_['vmhc_seam']
+            ys = spread('vmhc_seam', sy0_ + 30.0, sy1_ - 30.0)
+            kv_ = lanes.setdefault('vm_n', [0]);kv_[0] += 1
+            sx = w_['strip_w'][0] + 40.0 + 55.0 * ((kv_[0] - 1) % 6)
+            p_ = [(sx, wb.y + wb.h), (sx, ys), (ot.x, ys)]
+            return p_ if wb is A else p_[::-1]
+        y1 = spread('vmhc', max(wb.y, cf_[1]) + 30.0, min(wb.y + wb.h, cf_[3]) - 30.0)
+        if ot.y + 20.0 < y1 < ot.y + ot.h - 20.0:
+            p_ = [(wb.x + wb.w, y1), (ot.x, y1)]
+        else:
+            vx = m['x_vch'] + VCH8 * (0.68 + 0.05 * ((lanes['vmhc'][0] - 1) % 6))
+            off_ = 400.0 + 260.0 * ((lanes["vmhc"][0] - 1) % 8)
+            y2 = ot.y + off_ if y1 < ot.y else ot.y + ot.h - off_
+            p_ = [(wb.x + wb.w, y1), (vx, y1), (vx, y2), (ot.x, y2)]
+    elif abs(ot.x - x_sp) < 1.0 or (ot.x >= x_sp - 1.0 and ot.x + ot.w <= x_vch + 1.0):
+        # capture-column slab above the W block: up its N face, then E to the slab's W face
+        if wb.name == 'sp_vm':
+            # the W third of the strip: the gather W face side holds the W-return ends and the pq-cnt lanes
+            kv_ = lanes.setdefault('vm_n', [0]);kv_[0] += 1
+            sx = w_['strip_w'][0] + 40.0 + 55.0 * ((kv_[0] - 1) % 6)
+        else:
+            x1_ = min(wb.x + wb.w, (HUB_LAYOUT.get('mix4_slot') or [wb.x + wb.w])[0] - 60.0)   # W of a MIX4 overhang
+            sx = wb.x + 40.0 + (x1_ - wb.x - 80.0) * (0.1 + 0.8 * ((lanes.setdefault('su_n', [0])[0] * 0.37) % 1.0))
+            lanes['su_n'][0] += 1
+        # enter the slab's W face low (the VM / SU lie below it; the face's middle holds the link / end blocks)
+        kb_ = lanes.setdefault('low', [0]);kb_[0] += 1
+        yb = min(ot.y + 40.0 + 90.0 * ((kb_[0] - 1) % 6), ot.y + ot.h - 20.0)
+        p_ = [(sx, wb.y + wb.h), (sx, yb), (ot.x, yb)]
+    else:
+        return None
+    return p_ if wb is A else p_[::-1]
+
+
 def vch_x(m, tag):
     """per-chain x track inside the VCH (spreads the vertical chains over its width instead of one centre line)"""
     d = m.setdefault('_vch_lane', {})
@@ -7408,15 +7517,52 @@ def vch_x(m, tag):
 LANES_S14 = 8
 
 
+def wide_hub():
+    """--hub-layout 'wide' section (S-DIE 10-15 wide hub: SU | VM | capture column | VCH | HC side by side)"""
+    return HUB_LAYOUT.get('wide') if HUB_LAYOUT else None
+
+
+def s14_span(half):
+    """x interval of the half's S14 road (spine edge +- SPF, or the wide-hub layout's road)"""
+    if wide_hub():
+        return tuple(wide_hub()['s14w' if half == 'W' else 's14e'])
+    g = _GEO_REF[0]
+    return (g['x_sp'] - SPF, g['x_sp']) if half == 'W' else (g['x_fe'], g['x_fe'] + SPF)
+
+
+_GEO_REF = [None]
+
+
+def wide_corr_y(m, tag):
+    """wide hub: per-chain y track inside the W return corridor (above MIX4)"""
+    d = m.setdefault('_wcorr_lane', {})
+    if tag not in d:
+        d[tag] = len(d)
+    y0, y1 = wide_hub()['corr_w']
+    n = 24
+    return y0 + 30.0 + (y1 - y0 - 60.0) * (((d[tag] * 7) % n) + 0.5) / n
+
+
+def wide_strip_x(m, tag):
+    """wide hub: per-chain x track inside the W return strip (MIX4 E edge .. capture column W face)"""
+    d = m.setdefault('_wstrip_lane', {})
+    if tag not in d:
+        d[tag] = len(d)
+    x0, _, x1, _ = wide_hub()['strip_w']
+    x0 = x0 + 0.45 * (x1 - x0)     # E 55 % of the strip (gather W face side); the W 45 % carries the VM N-face buses
+    n = 8
+    return x0 + 30.0 + (x1 - x0 - 60.0) * (((d[tag] * 3) % n) + 0.5) / n
+
+
 def s14_x(m, half, tag):
     """per-chain x track inside the half's spine-to-field (S14) channel"""
     d = m.setdefault('_s14_lane_' + half, {})
     if tag not in d:
         d[tag] = len(d)
     i = d[tag] % LANES_S14
-    g = m['geo']
-    x0 = g['x_sp'] - SPF if half == 'W' else g['x_fe']
-    return x0 + 50.0 + (SPF - 100.0) * (i + 0.5) / LANES_S14
+    _GEO_REF[0] = m['geo']
+    x0, x1 = s14_span(half)
+    return x0 + 50.0 + (x1 - x0 - 100.0) * (i + 0.5) / LANES_S14
 
 
 def corr_y(m, tag):
@@ -7538,7 +7684,7 @@ def _svc_chains(m, CH8, P, cor, end_spec, hub_block):
     allc = list(cor.values())
     yS = (g['band_depth'] + g['y_f']) / 2
     yN = (g['y_top'] + H - g['band_depth']) / 2
-    s14W = g['x_sp'] - SPF / 2
+    s14W = sum(s14_span('W')) / 2 if wide_hub() else g['x_sp'] - SPF / 2
     vchx = m['x_vch'] + VCH8 / 2
     vmy = vm.y + vm.h / 2
 
@@ -7606,6 +7752,15 @@ def _svc_chains(m, CH8, P, cor, end_spec, hub_block):
                 path=service_path(sys.modules[__name__],m,cor,src_xy,endpoint,side)
             else:
                 path=list(reversed(service_path(sys.modules[__name__],m,cor,endpoint,src_xy,side)))
+            vs_ = cor.get('vm_s')
+            # the hub foot: VM S face and the band blocks under the hub (bk_selector), between S14W and the capture column
+            in_vs_ = lambda q_: bool(vs_) and cor['su_under'][0] + 700.0 <= q_[0] <= vs_[2] + 1 and q_[1] <= vs_[3] + 300
+            if wide_hub() and side == 'W' and (in_vs_(src_xy) or in_vs_(endpoint)):
+                # wide hub: a VM S-face end and the SW service meet W along the channel under the SU (the field streets
+                # are on the far side of the SU)
+                su_ = cor['su_under'];yc_ = (su_[1] + su_[3]) / 2 + 40.0 * (len(m.setdefault('_su_under_lane', [])) % 5 - 2)
+                m['_su_under_lane'].append(name)
+                path = [src_xy, (src_xy[0], yc_), (endpoint[0], yc_), endpoint]
         # A wide service record uses its real W/E-face station in an RSC
         # vertical access lane; its17.256um body fits, its54.84um N/S-face
         # alternative does not. Actual pin turns/reach remain to be audited.
@@ -8051,11 +8206,21 @@ def _hub_at(P, name, master, w, h, slab, side, y, cor):
     if assigned and assigned.get('outline_change_request'):
         w, h = assigned['outline_um']
     x = slab.x - w / 2 - 6.0 if side == 'W' else slab.x + slab.w + w / 2 + 6.0
-    pl = P.near(x, y, w, h, [cor['s14W'] if side == 'W' else cor['vch']], horiz=False, span=1800.0, rows=6)
+    if wide_hub() and slab.name == 'sp_vm' and 'vm_s' in cor:
+        # wide hub: the VM's W face is the SU, its E face the capture column; its service / hub ends stand in the free
+        # region on its S face ("S = the rest", A2-F), spread along the face
+        k_ = int(hashlib.sha256(name.encode()).hexdigest()[:6], 16) / float(1 << 24)
+        pl = P.near(slab.x + slab.w * (0.08 + 0.84 * k_), slab.y - h / 2 - 40.0, w, h, [cor['vm_s']], horiz=True,
+                    span=4000.0, rows=24)
+        assert pl, name
+        return Inst(name, master, pl[0], pl[1], w, h, 'R0', kind='hend', region='hub')
+    allowed_ = [cor['s14W']] + ([cor[k_] for k_ in ('strip_w', 'hub_w', 'vm_s') if k_ in cor] if wide_hub() else []) if side == 'W' \
+        else [cor['vch']] + ([cor['capfree']] if wide_hub() and 'capfree' in cor else [])
+    pl = P.near(x, y, w, h, allowed_, horiz=False, span=1800.0, rows=6)
     if not pl and name.startswith('he_h_'):
         # mtp-dsbind hrow lanes: the channel beside a crowded slab (collective with the MTP lanes) is full near its
         # centre; search the channel's whole height for the end block (the lane's stations follow it there)
-        pl = P.near(x, y, w, h, [cor['s14W'] if side == 'W' else cor['vch']], horiz=False, span=6000.0, rows=20)
+        pl = P.near(x, y, w, h, allowed_, horiz=False, span=6000.0, rows=20)
     assert pl, name
     return Inst(name, master, pl[0], pl[1], w, h, 'MY' if side == 'W' else 'R0', kind='hend', region='hub')
 
@@ -8148,7 +8313,7 @@ def _link_chains(m, CH8, P, cor, end_spec, hub_block, rowl):
     g, hub = m['geo'], m['hub']
     coll = hub['collective']
     allc = list(cor.values())
-    s14 = {'W': g['x_sp'] - SPF / 2, 'E': g['x_fe'] + SPF / 2}
+    s14 = {h_: sum(s14_span(h_)) / 2 for h_ in 'WE'} if wide_hub() else {'W': g['x_sp'] - SPF / 2, 'E': g['x_fe'] + SPF / 2}
     vchx = m['x_vch'] + VCH8 / 2
     edge = {'W': (cor['edgeW'][0] + cor['edgeW'][2]) / 2, 'E': (cor['edgeE'][0] + cor['edgeE'][2]) / 2}
     cy = coll.y + coll.h / 2
@@ -8171,7 +8336,15 @@ def _link_chains(m, CH8, P, cor, end_spec, hub_block, rowl):
         yy = cy + (i - 1.5) * 90.0 if n_side <= 4 else cy + (i - (n_side - 1) / 2) * min(90.0, 0.8 * coll.h / n_side)
         cx = coll.x if side == 'W' else coll.x + coll.w
         nm = f'K{side}{i}'
-        if side == 'W':
+        if side == 'W' and wide_hub() and 'su_under' in cor and cx < m['geo']['x_sp'] - 1.0:
+            # wide hub (VM-centred cluster): the collective sits on the VM S face, the SU W of the VM -- W links leave
+            # its W face into the VM S-face room, drop to the service channel under the SU and run W to S14W
+            sx_ = s14_x(m, 'W', nm)
+            su_ = cor['su_under']
+            xd_ = coll.x - 120.0 - 70.0 * (i % 8)
+            yu_ = su_[1] + 60.0 + (su_[3] - su_[1] - 120.0) * ((i * 3 % 8) + 0.5) / 8
+            core = [(cx, yy), (xd_, yy), (xd_, yu_), (sx_, yu_), (sx_, ry)]
+        elif side == 'W':
             sx_ = s14_x(m, 'W', nm)
             core = [(cx, yy), (sx_, yy), (sx_, ry)]
         else:
@@ -8182,7 +8355,7 @@ def _link_chains(m, CH8, P, cor, end_spec, hub_block, rowl):
         if CANONICAL_LAYOUT is not None:
             from s81.canonical_layout import Roadmap
             road = Roadmap(sys.modules[__name__], m, cor)
-            ci = 0 if side == 'W' else 21
+            ci = 0 if side == 'W' else max(f_['column_index'] for f_ in m['frames'].values())   # outermost column
             roots = [r for r, f in m['frames'].items() if f['column_index'] == ci]
             rr = min(roots, key=lambda r: abs(m['frames'][r]['street'][1] + 79.8 - ly_t))
             field_path = _dedup(core + road.to_root(side, core[-1], rr, 'x'))
