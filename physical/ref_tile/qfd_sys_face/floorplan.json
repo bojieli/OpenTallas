@@ -30,8 +30,6 @@
  },
  "pins": {
   "N": [
-   "ck",
-   "rst_n",
    "fwd_epoch",
    "admit_ready",
    "cal_seg",
@@ -60,6 +58,8 @@
    "result_fault",
    "result_gen",
    "result_tag",
+   "ck",
+   "rst_n",
    "result_token",
    "result_v",
    "result_value",
@@ -129,8 +129,8 @@
    "master": "ot_rom_4096x72_m8",
    "inst": null,
    "idx": 0,
-   "x": 241.92,
-   "y": 77.76,
+   "x": 190.08,
+   "y": 129.6,
    "w": 38.016,
    "h": 62.91,
    "orient": "R0",

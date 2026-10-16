@@ -69,7 +69,15 @@
  "route": {
   "pd": 0.5,
   "threads": 8,
-  "peak_ram_gb": 24
+  "peak_ram_gb": 24,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  },
+  "cts_sink": {
+   "sink_clustering": false
+  }
  },
  "structural_change": "NEW leaf (ELEM-CENSUS 10-16, census class F, Q-COMPUTE-DIE go 10-16): compute-die embedding row store qfd_embedding_word_provider (Q-NETLIST ab5f73bcc, wires-only top over qkd_embedding_static_preload_face + qkd_embedding_static_core_store with the mapped ot_sram_1r1w_64x512_m1_r2c2 row SRAM), CONTRACT v1.4 frame 259.2 x 216 um, one ck root. Recipe 3: every data input and output registered at its pin (+1 edge in, +1 edge out, recorded in pin_regs.json for the compiler schedule). Pin FACES = the die tool's top-down assignment (q2o1 out_skc pins/qfd_embedding_word_provider.json: E row/slot/fill face toward sys_face, S sequencer ROM-port face, N ck/rst_n); per-port ranges are not frozen into the RTL or the kit (q2o2 moves the tile into the centre white space above the SU; a face move is a re-kit only).",
  "slot_change_request": "none: CONTRACT.md v1.4 frame 259.2 x 216 (results/arch/qwen_split_compute_1014/CONTRACT.md:38); faces from the die tool's q2o1 assignment, ports spread over each face instead of the generator's dense corner ranges (word_data 512 b at 0.096 um pitch in the generator file).",
@@ -130,6 +138,112 @@
      "iverilog"
     ]
    }
+  ]
+ },
+ "pin_ranges": {
+  "ck": [
+   129.06,
+   130.14
+  ],
+  "rst_n": [
+   138.24,
+   139.32
+  ],
+  "word_v": [
+   4.652,
+   5.732
+  ],
+  "word_data": [
+   6.927,
+   155.7
+  ],
+  "word_token": [
+   156.564,
+   161.794
+  ],
+  "word_index": [
+   162.658,
+   164.402
+  ],
+  "word_scale": [
+   165.597,
+   166.677
+  ],
+  "word_epoch": [
+   167.873,
+   172.522
+  ],
+  "expected_word_slot": [
+   173.718,
+   174.798
+  ],
+  "expected_token": [
+   175.994,
+   181.224
+  ],
+  "expected_word": [
+   182.088,
+   183.831
+  ],
+  "expected_scale": [
+   185.027,
+   186.107
+  ],
+  "expected_epoch": [
+   187.303,
+   191.952
+  ],
+  "fill_begin": [
+   193.148,
+   194.228
+  ],
+  "fill_token": [
+   195.423,
+   200.654
+  ],
+  "fill_epoch": [
+   201.518,
+   206.167
+  ],
+  "core_epoch": [
+   207.031,
+   211.68
+  ],
+  "core_start": [
+   4.974,
+   6.054
+  ],
+  "core_token": [
+   7.573,
+   14.739
+  ],
+  "embed_code_re": [
+   16.257,
+   17.337
+  ],
+  "embed_code_addr": [
+   18.856,
+   28.41
+  ],
+  "embed_code_q": [
+   29.274,
+   233.111
+  ],
+  "embed_scale_re": [
+   234.629,
+   235.709
+  ],
+  "embed_scale_addr": [
+   237.227,
+   244.393
+  ],
+  "embed_scale_q": [
+   245.257,
+   251.627
+  ],
+  "fault": [
+   253.146,
+   254.226
   ]
  }
 }
