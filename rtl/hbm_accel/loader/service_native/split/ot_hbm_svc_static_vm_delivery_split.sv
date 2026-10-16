@@ -61,6 +61,14 @@ module ot_hbm_svc_vmdel_lane (
  // the whole lane state is the v2 state one cycle later and the cross-lane status bits (full0/full1/pcbad, still
  // registered-state ANDs) stay mutually consistent.  Measured cost: lane interface latency +2 cycles (start->first dq
  // 1->3, fill->block_ready 1->3), II=1 unchanged; equivalence = v2/monolithic outputs delayed exactly 2 cycles.
+ // ---- v4 (H-NETLIST/kits 10-16, owner rule 19:50 'register every pin, both directions'; v2 gate textbook.high_fanout:
+ // rst_n port -> 640 reset flops): the rst_n PIN reaches only the 7 valid pin registers and ONE reset pin flop rst_q
+ // (async assert, sync release, writer-v4 pattern).  Every other flop (replicated control, PC seen/count state, output
+ // registers) resets from rst_q, so the port net is a pin-local net and the reset fan-out launches from a flop.  The
+ // internal state releases one edge later, exactly when the first pin-registered input reaches it: outputs remain the
+ // monolithic module delayed exactly 2 cycles (same LAT=2 benches), 0 added cycles.
+ reg rst_q;
+ always @(posedge clk or negedge rst_n) if(!rst_n) rst_q<=1'b0; else rst_q<=1'b1;
  reg begin_v,begin_bank,start,start_bank; reg [15:0] begin_epoch,start_epoch,start_base_sector;
  reg [3:0] fill_v,fill_bank; reg [23:0] fill_slot; reg [63:0] fill_epoch; reg [1023:0] fill_data;
  always @(posedge clk or negedge rst_n)
@@ -71,8 +79,8 @@ module ot_hbm_svc_vmdel_lane (
   start_base_sector<=start_base_sector_i;fill_bank<=fill_bank_i;fill_slot<=fill_slot_i;fill_epoch<=fill_epoch_i;fill_data<=fill_data_i;
  end
  wire [1:0] block_ready_c; wire busy_c,fault_c; wire [280:0] dq_c;
- always @(posedge clk or negedge rst_n)
-  if(!rst_n) begin block_ready<=0;busy<=0;fault<=0;dq<=0; end
+ always @(posedge clk or negedge rst_q)
+  if(!rst_q) begin block_ready<=0;busy<=0;fault<=0;dq<=0; end
   else begin block_ready<=block_ready_c;busy<=busy_c;fault<=fault_c;dq<=dq_c; end
  // ---- replicated control (ot_hbm_svc_static_landing + ot_hbm_svc_static_vm_delivery, bit for bit) ----
  reg [1:0] owned; reg [15:0] epoch0,epoch1,base_q; reg running,bank_q,sticky,bad,out_v;
@@ -91,13 +99,13 @@ module ot_hbm_svc_vmdel_lane (
  wire [1:0] rg=running ? group_q : 2'd0;
  wire [5:0] rs=running ? slot_q : 6'd0;
  wire clear_bank=begin_v && !owned[begin_bank] && !(lstart && start_bank==begin_bank);
- always @(posedge clk or negedge rst_n)if(!rst_n)begin base_q<=0;bad<=0;end
+ always @(posedge clk or negedge rst_q)if(!rst_q)begin base_q<=0;bad<=0;end
  else if(start)begin
   if(!aperture_ok || running)bad<=1;
   else base_q<=start_base_sector;
  end
- always @(posedge clk or negedge rst_n) begin
-  if(!rst_n) begin
+ always @(posedge clk or negedge rst_q) begin
+  if(!rst_q) begin
    owned<=0;epoch0<=0;epoch1<=0;running<=0;bank_q<=0;slot_q<=0;
    sticky<=0;group_q<=0;out_group<=0;out_v<=0;out_slot<=0;
   end else begin
@@ -126,8 +134,8 @@ module ot_hbm_svc_vmdel_lane (
   wire fill_ok=fill_v[g] && owned[fb] && fill_epoch[g*16+:16]==ep && !seen_fb[fs] && !(issue && rb==fb) && !landing_fault;
   // n counts accepted (always distinct, !seen) writes, so &seen == (n==64) == n[6]: a registered full flag
   assign f0[g]=n0[6]; assign f1[g]=n1[6]; assign bad_v[g]=pbad;
-  always @(posedge clk or negedge rst_n)begin
-   if(!rst_n)begin seen0<=0;seen1<=0;n0<=0;n1<=0;pbad<=0;end
+  always @(posedge clk or negedge rst_q)begin
+   if(!rst_q)begin seen0<=0;seen1<=0;n0<=0;n1<=0;pbad<=0;end
    else begin
     if(clear_bank && !begin_bank)begin seen0<=0;n0<=0;end
     if(clear_bank && begin_bank)begin seen1<=0;n1<=0;end

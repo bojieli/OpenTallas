@@ -3,7 +3,8 @@
 #  v3 (10-15): lanes register every input and output, LAT=2 cycles; both benches compare against the 2-cycle-delayed reference.
 #  MUT=0: the production delivery bench run against the SPLIT (module renamed in a scratch copy) + lockstep
 #         equivalence vs the monolithic module (every output bit, every cycle, legal + violating traffic);
-#  MUT=1: bank-leaf group select swapped (groups 0/1); MUT=2: bank-leaf SRAM read slot corrupted. HBM-V15-HARDEN 10-15
+#  MUT=1: bank-leaf group select swapped (groups 0/1); MUT=2: bank-leaf SRAM read slot corrupted;
+#  MUT=3 (v4 rst pin flop): lane state released one edge late (two-stage reset release). HBM-V15-HARDEN 10-15
 set -euo pipefail
 out=${1:?out}; mut=${2:-0}; cyc=${CYCLES:-4000}; LAT=2; mkdir -p "$out"  # v3 lane pin registers: interface latency 2
 d=rtl/hbm_accel/loader/service_native
@@ -13,6 +14,7 @@ cp $sp "$out/split.sv"
 case "$mut" in
  1) sed -i 's/({256{out_group==2.d0}}&macro_data\[0+:256\])/({256{out_group==2\x27d0}}\&macro_data[256+:256])/' "$out/split.sv";;
  2) sed -i 's/\.r_addr_in({rb,rs})/.r_addr_in({rb,rs ^ 6\x27d1})/' "$out/split.sv";;
+ 3) sed -i 's/ else rst_q<=1.b1;/ else rst_q<=rst_q2; reg rst_q2; always @(posedge clk or negedge rst_n) if(!rst_n) rst_q2<=0; else rst_q2<=1;/' "$out/split.sv";;  # v4: lane state released one edge late
 esac
 if [ "$mut" != 0 ]; then cmp -s "$out/split.sv" $sp && { echo 'mutant not applied'; exit 3; }; fi
 sed 's/module ot_hbm_svc_static_vm_delivery_split /module ot_hbm_svc_static_vm_delivery /' "$out/split.sv" > "$out/as_delivery.sv"
