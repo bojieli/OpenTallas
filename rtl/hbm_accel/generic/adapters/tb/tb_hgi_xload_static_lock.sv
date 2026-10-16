@@ -57,18 +57,29 @@ module tb_xload_static_lock;
         .rst_n(rst_n), .x_v(xs_v), .x_base(x_base), .x_n(x_n), .x_p(x_p), .x_stride(x_stride), .x_space(2'd1), .x_fmt(x_fmt),
         .x_xb(x_xb), .x_busy(busy_r), .x_done(done_r), .x_fault(f_r), .xw_en(en_r), .xw_last(last_r), .xw_addr(ad_r),
         .xw_grp(gr_r), .xw_data(d_r), .rq(rq_r), .rr(rr));
+    // owner rule 19:50 (every leaf pin registered): cl2 adds exactly XW_ADD = 2 edges to every xw beat and x_done
+    // (raw rr pin capture + egress pin capture); rq is unchanged.
+    localparam integer XW_ADD = 2;
+    reg done_d [0:XW_ADD-1]; reg en_d [0:XW_ADD-1]; reg last_d [0:XW_ADD-1];
+    reg [6:0] ad_d [0:XW_ADD-1]; reg [6:0] gr_d [0:XW_ADD-1]; reg [2047:0] dd_d [0:XW_ADD-1];
+    always @(posedge clk) begin
+        done_d[0] <= done_r; en_d[0] <= en_r; last_d[0] <= last_r; ad_d[0] <= ad_r; gr_d[0] <= gr_r; dd_d[0] <= d_r;
+        for (integer i = 1; i < XW_ADD; i = i + 1) begin
+            done_d[i] <= done_d[i-1]; en_d[i] <= en_d[i-1]; last_d[i] <= last_d[i-1]; ad_d[i] <= ad_d[i-1]; gr_d[i] <= gr_d[i-1]; dd_d[i] <= dd_d[i-1];
+        end
+    end
     integer cl2_diff = 0, cl2_cmp = 0;
-    always @(posedge clk) if (rst_n) begin : cl2cmp
+    always @(posedge clk) if (rst_n && cyc > 20) begin : cl2cmp
         reg bad; bad = 1'b0;
-        if (busy_b !== busy_r || done_b !== done_r || f_b !== f_r || en_b !== en_r || last_b !== last_r) bad = 1'b1;
-        if (en_r && (ad_b !== ad_r || gr_b !== gr_r || d_b !== d_r)) bad = 1'b1;
+        if (done_b !== done_d[XW_ADD-1] || en_b !== en_d[XW_ADD-1] || last_b !== last_d[XW_ADD-1]) bad = 1'b1;
+        if (en_b && (ad_b !== ad_d[XW_ADD-1] || gr_b !== gr_d[XW_ADD-1] || d_b !== dd_d[XW_ADD-1])) bad = 1'b1;
         for (integer b = 0; b < 8; b = b + 1) begin
             if (rq[b*17 + 16] !== rq_r[b*17 + 16]) bad = 1'b1;
             if (rq_r[b*17 + 16] && rq[b*17 +: 16] !== rq_r[b*17 +: 16]) bad = 1'b1;
         end
         cl2_cmp = cl2_cmp + 1;
         if (bad) begin
-            if (cl2_diff < 5) $display("ERR cl2 differs from cl at cycle %0d (en %b/%b busy %b/%b done %b/%b fault %b/%b)", cyc, en_b, en_r, busy_b, busy_r, done_b, done_r, f_b, f_r);
+            if (cl2_diff < 5) $display("ERR cl2 differs from cl (+%0d) at cycle %0d (en %b/%b done %b/%b)", XW_ADD, cyc, en_b, en_d[XW_ADD-1], done_b, done_d[XW_ADD-1]);
             cl2_diff = cl2_diff + 1;
         end
     end
@@ -98,7 +109,11 @@ module tb_xload_static_lock;
     integer be_cyc [0:4095]; reg [6:0] be_ad [0:4095]; reg [6:0] be_gr [0:4095];
     // block-dot streaming emission model (= tools/hbm_sm_xload_static_timing.py): pair (k, b) decided at
     // E = max(k WB + n(b), E_prev + 2) after the tpair origin; beat (k, b, a) on the xw pins at command + CBD + E + a
+`ifdef XLOAD_CL2
+    localparam integer CBD = 27 + 2;          // cl2: + 2 fixed edges (pin-registered landing and egress)
+`else
     localparam integer CBD = 27;
+`endif
     function automatic integer nall(input integer lav, input integer bb);
         integer p2, j2; nall = 0;
         for (p2 = 0; p2 < 8; p2 = p2 + 1) for (j2 = 0; j2 < lav; j2 = j2 + 1)
@@ -168,8 +183,8 @@ module tb_xload_static_lock;
             $display("cmd %0d fmt %0d P %0d K %0d xb %0d done %0d/%0d beats %0d span %0d", c, x_fmt, x_p, x_n, x_xb, nda, ndb, nbeats_b, last_bc - first_b + 1);
         end
 `ifdef XLOAD_CL2
-        $display("cl2 vs cl: %0d cycles compared, %0d differ", cl2_cmp, cl2_diff);
-        if (cl2_diff) errors = errors + 1;
+        $display("cl2 vs cl (+%0d edges): %0d cycles compared, %0d differ; fault %b/%b", XW_ADD, cl2_cmp, cl2_diff, f_b, f_r);
+        if (cl2_diff || f_r) errors = errors + 1;
 `endif
         if (f_b || lanefault) begin $display("static fault %b lanefault %0d", f_b, lanefault); errors = errors + 1; end
         if (errors == 0) $display("XLOAD_STATIC_LOCK PASS"); else $display("XLOAD_STATIC_LOCK FAIL %0d", errors);

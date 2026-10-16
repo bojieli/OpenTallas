@@ -1315,12 +1315,17 @@ def sim(a):
     patch_timing_dyn()
     from hgi_sim import timing as T
     from hgi_sim.ds_native_timing import NativeCost
+    price_pos = getattr(a, "price_pos", None)       # None: each launch at its own position (the functional run's)
+    att_b = None
+    if getattr(a, "att_b", None):
+        att_b = json.loads(Path(a.att_b).read_text())[getattr(a, "att_b_var", "exposed")]["per_record"]
     costs, t_launch = [], 0.0
     per_launch = []
     cache = {}
     for e in eng.launches:
         body = K.body[0][(e["k"], e["Lp"])]
-        key = (e["k"], e["Lp"], e["pos"], e["token"])
+        ppos = e["pos"] if price_pos is None else price_pos
+        key = (e["k"], e["Lp"], ppos, e["token"])
         if key not in cache:
             for r in body:
                 if not hasattr(r, "src_key0"):        # (NativeCost.walk replaces r.src by its own record)
@@ -1341,13 +1346,19 @@ def sim(a):
                     return c, "measured_tu_budget", f"{r.op} {nb} B over 96 (TU collective model; no measured class)"
                 if r.unit == "COLL" and r.src_key is None:
                     return model()
+                if r.unit == "ATT" and att_b:
+                    # option B (attention on the SM engines, the current die): the measured SM attention component
+                    # span a record (b_measured_model.json per_record, by selection size 640 / 128; DSpark rows 128)
+                    T_ = r.desc["O"].n if r.op == "QK" else r.desc["A"].n
+                    cls = "640" if T_ > 128 + 64 else "128"
+                    return float(att_b[cls][r.op.lower()]), "measured_component+model", f"SM attention option B T{cls}"
                 try:
                     return nc(r, dyn, L)
                 except KeyError:
                     if r.unit == "COLL":          # a size the measured table lacks (the DSpark stages' gathers)
                         return model()
                     raise
-            sch = T.schedule(body, e["pos"], "S2", token=e["token"], cost_fn=cf)
+            sch = T.schedule(body, ppos, "S2", token=e["token"], cost_fn=cf)
             cache[key] = sch
         sch = cache[key]
         for i, (k_, L_, L1_) in enumerate(sch["ex"]):
@@ -1364,7 +1375,8 @@ def sim(a):
     hc_rank, own, own_kern = 3, {k_: 0.0 for k_ in KINDS}, {}
     for e in eng.launches:
         body = K.body[hc_rank][(e["k"], e["Lp"])]
-        key = (hc_rank, e["k"], e["Lp"], e["pos"], e["token"])
+        ppos = e["pos"] if price_pos is None else price_pos
+        key = (hc_rank, e["k"], e["Lp"], ppos, e["token"])
         if key not in cache:
             for r in body:
                 if not hasattr(r, "src_key0"):
@@ -1374,7 +1386,7 @@ def sim(a):
                 r.src_extra = []
                 r.layer = e["Lp"]
             nc = NativeCost(K.ops, body)
-            cache[key] = T.schedule(body, e["pos"], "S2", token=e["token"], cost_fn=lambda r, dyn, L, nc=nc: cf(r, dyn, L, nc))
+            cache[key] = T.schedule(body, ppos, "S2", token=e["token"], cost_fn=lambda r, dyn, L, nc=nc: cf(r, dyn, L, nc))
         own[e["kind"]] += cache[key]["total_cycles"]
         own_kern.setdefault(f"{e['kind']}{'' if e['Lp'] == 0 else e['Lp']}", round(cache[key]["total_cycles"], 1))
     r0_kern = {}
@@ -1398,6 +1410,8 @@ def sim(a):
                draft_checks=draft_checks, verdict="PASS" if ok_all else "FAIL", step1_diverged=diverged,
                swapin_round_trip=swapchk, swap_layout=K.swap_layout, colslot_image=colimg,
                launches=len(eng.launches), s2_job_cycles=round(t_launch, 1),
+               price_pos=price_pos, att_pricing=("option B: measured SM attention spans, " + str(a.att_b) + " "
+                                                 + getattr(a, "att_b_var", "exposed")) if att_b else "ATT table (option A)",
                s2_l0_cycles=[x["s2_cycles"] for x in l0],
                s2_by_kind={k_: round(sum(x["s2_cycles"] for x in per_launch if x["kind"] == k_), 1)
                            for k_ in KINDS},
@@ -1533,6 +1547,10 @@ def main():
                    help="column swap: stripe4 = the legacy one-record STRIPE4 swap (the e2e die bench); native = the B2 "
                         "four-cluster own-stack group (cluster q's quarter of h on stack q; another slot image)")
     q.add_argument("--hc-trace-only", action="store_true", help="build the kernels, write the reader trace, stop")
+    q.add_argument("--price-pos", type=int, help="price every launch body at this position (e.g. 1048575: the 1M step; "
+                   "the functional run and its checks are unchanged)")
+    q.add_argument("--att-b", help="b_measured_model.json: price ATT records by the measured SM attention spans (option B)")
+    q.add_argument("--att-b-var", default="exposed", choices=("exposed", "prefetch"))
     a = ap.parse_args()
     if a.cmd == "golden":
         return golden(a)
