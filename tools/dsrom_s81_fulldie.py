@@ -1598,7 +1598,6 @@ def write_netlist(m, k, path, top='dsfd_die', skip=()):
         sliced = defaultdict(list)
         for c in conns.get(it.name, []):
             if len(c) == 4:                      # a slice of a generated / bundled port
-                assert not (k == 1 and it.name in (m.get('pad') or {}) and c[0] in m['pad'][it.name]['ports']), (it.name, c[0], 'sliced DEDUPE padding unsupported')
                 sliced[c[0]].append((c[3], c[1], c[2]))
                 continue
             if isinstance(c[0], list):
@@ -1612,9 +1611,9 @@ def write_netlist(m, k, path, top='dsfd_die', skip=()):
             else:
                 port, net, n = c
                 pr_ = (m.get('pad') or {}).get(it.name)
-                if pr_ and port in pr_['ports'] and k == 1 and n < pr_['std']:
+                if pr_ and port in pr_['ports'] and k == 1 and n < pad_std(pr_, port):
                     # --dedupe-pad: spare standard bits above the logical width
-                    sp_ = pr_['std'] - n
+                    sp_ = pad_std(pr_, port) - n
                     if m['pdir'][it.master][port][0] == 'input':
                         parts.append(f".{port}({{{sp_}'b0, {net}}})")
                         pads_decl[it.name][port] = n
@@ -1632,6 +1631,24 @@ def write_netlist(m, k, path, top='dsfd_die', skip=()):
         for base, pcs in sliced.items():
             pcs.sort()
             assert all(pcs[i][0] + pcs[i][2] <= pcs[i + 1][0] for i in range(len(pcs) - 1)), (it.name, base, pcs)
+            pr_ = (m.get('pad') or {}).get(it.name) if k == 1 else None
+            if pr_ and base in pr_['ports']:
+                # --dedupe-pad kcopy (S-DIE-KCOPY 2026-10-16): a padded standard port bound by several slices (a k-copy
+                # cut on a shared net): the slices cover logical bits 0 .. L-1 contiguously; the spare bits L .. std-1
+                # are tied low (input, declared PAD) or get a no-load net (output), exactly as the whole-port case
+                L_, S_ = pr_['ports'][base], pad_std(pr_, base)
+                assert pcs[0][0] == 0 and all(pcs[i][0] + pcs[i][2] == pcs[i + 1][0] for i in range(len(pcs) - 1)) \
+                    and pcs[-1][0] + pcs[-1][2] == L_, (it.name, base, pcs, L_, 'padded port slices must cover 0 .. L-1')
+                if S_ > L_:
+                    if m['pdir'][it.master][base][0] == 'input':
+                        pcs = pcs + [(L_, f"{S_ - L_}'b0", S_ - L_)]
+                        pads_decl[it.name][base] = L_
+                    else:
+                        nc_ = f'n_pad_{it.name}_{base}'
+                        V.append(f'  wire [{S_ - L_ - 1}:0] {nc_};')
+                        pcs = pcs + [(L_, nc_, S_ - L_)]
+                parts.append(f'.{base}({{' + ', '.join(net for _, net, _ in reversed(pcs)) + '})')
+                continue
             rw_ = rtl_port_width(it.master, base) if RTL_BIND else None
             top_ = pcs[-1][0] + pcs[-1][2]
             if any(pcs[i][0] + pcs[i][2] < pcs[i + 1][0] for i in range(len(pcs) - 1)) or pcs[0][0] != 0 or \
@@ -1668,6 +1685,11 @@ def write_netlist(m, k, path, top='dsfd_die', skip=()):
                 hi = full - 1
             cat = ', '.join(bits_.get(j, "1'bz") for j in range(hi, -1, -1))
             parts.append(f'.{Q.esc(base)}({{{cat}}})')
+        for port, w_ in sorted((m.get('kcopy_nc') or {}).get(it.name, {}).items()):
+            # --dedupe-pad kcopy: a copy output no FROM bit maps to (e.g. the second l2r copy's st) -- a no-load net
+            nc_ = f'n_kcnc_{it.name}_{port}'
+            V.append(f'  wire [{w_ - 1}:0] {nc_};')
+            parts.append(f'.{port}({nc_})')
         V.append(f'  {it.master} {it.name} (' + ', '.join(parts) + ');')
     V.append('endmodule\n')
     Path(path).write_text('\n'.join(V))
@@ -3905,6 +3927,12 @@ def _split_multi_lane_stations(m):
                                      % (len(victims), sum(r_['lanes'] for r_ in rec)))
 
 
+def pad_std(pr, port):
+    """--dedupe-pad record: the standard's full width of `port` (a k-copy record carries per-port widths 'stdp', e.g.
+    the l2r 564 copy: i 565, od 566; a plain pad record one width 'std' for its di / dq pair)."""
+    return (pr.get('stdp') or {}).get(port, pr['std'])
+
+
 def _dedupe_pad(m):
     """--dedupe-pad FILE (S-NET+FILL 2026-10-16, coordinator decision; DEDUPE owner rule 19:50 'fewer distinct tiles'):
     every instance of a map FROM master becomes an instance of the standard TO (same RTL body family, one register
@@ -3949,6 +3977,266 @@ def _dedupe_pad(m):
             STN_FOOTPRINTS[to] = wh
     m['dedupe_pad'] = dict(file=DEDUPE_PAD['path'], instances=len(rec),
                            by_master={k: sum(1 for r in rec.values() if r['frm'] == k) for k in mp})
+    if DEDUPE_PAD.get('kcopy'):
+        _dedupe_kcopy(m, DEDUPE_PAD['kcopy'])
+        m['dedupe_pad']['kcopy'] = m['kcopy']['by_master']
+
+
+def _view_port_widths(master):
+    """{port: (direction 'input' / 'output', width)} of a bound CLOSED view (its LEF pins; bus pins p[i])."""
+    v = bound_views().get(master)
+    if v is None:
+        raise SystemExit(f'--dedupe-pad kcopy: target {master} is not a bound view in {VIEW_BINDING} (every k-copy '
+                         'target must be a CLOSED standard)')
+    out = {}
+    for pn, d in v['pins'].items():
+        mm = re.match(r'^(.*)\[(\d+)\]$', pn)
+        b, i = (mm.group(1), int(mm.group(2))) if mm else (pn, 0)
+        d = {'INPUT': 'input', 'OUTPUT': 'output', 'INOUT': 'inout'}.get(d, d)
+        assert out.get(b, (d, 0))[0] == d, (master, b, 'mixed pin directions')
+        out[b] = (d, max(out.get(b, (d, 0))[1], i + 1))
+    return out
+
+
+def _kcopy_pieces(e, frm_ports, to_ports, frm):
+    """Validate one kcopy entry and return its pieces [(copy j, from port, a, b, to port, d)] (FROM bits a..b land on
+    TO port bits d .. d + b - a of copy j), the shared FROM inputs, each copy's logical width per mapped TO port and its
+    unmapped TO outputs (no-load).  A copy's TO port concatenates its chunks LSB first; a chunk is [from port, lo, hi]
+    or [from port] (the whole port)."""
+    pieces, cover, logical, nc = [], defaultdict(lambda: defaultdict(int)), [], []
+    mapped = set()
+    for j, c in enumerate(e['copies']):
+        tp = to_ports[j]
+        lg, d_ = {}, None
+        for tpn, chunks in c['ports'].items():
+            assert tpn in tp, (frm, c['to'], tpn, 'TO port absent from the bound view')
+            d_ = 0
+            for ch in chunks:
+                fpn = ch[0]
+                assert fpn in frm_ports, (frm, fpn, 'FROM port absent from the die buses')
+                a, b = (ch[1], ch[2]) if len(ch) == 3 else (0, frm_ports[fpn][1] - 1)
+                assert 0 <= a <= b < frm_ports[fpn][1], (frm, ch, frm_ports[fpn])
+                assert frm_ports[fpn][0] == tp[tpn][0], (frm, fpn, tpn, 'direction differs')
+                pieces.append((j, fpn, a, b, tpn, d_))
+                for q in range(a, b + 1):
+                    cover[fpn][q] += 1
+                d_ += b - a + 1
+                mapped.add(fpn)
+            assert d_ <= tp[tpn][1], (frm, c['to'], tpn, d_, tp[tpn][1], 'slice wider than the standard')
+            lg[tpn] = d_
+        logical.append(lg)
+        nc.append({pn: w for pn, (d, w) in tp.items() if pn not in c['ports'] and pn not in frm_ports and d == 'output'})
+    shared = sorted(pn for pn in frm_ports if pn not in mapped)
+    for pn, (d, w) in frm_ports.items():
+        if pn in mapped:
+            n_ = [cover[pn][q] for q in range(w)]
+            assert min(n_) >= 1, (frm, pn, 'FROM bits not mapped to any copy', [q for q in range(w) if not n_[q]][:8])
+            assert d != 'output' or max(n_) == 1, (frm, pn, 'FROM output bit driven by two copies')
+        else:
+            assert d == 'input', (frm, pn, 'unmapped FROM output')
+            for j, tp in enumerate(to_ports):
+                assert tp.get(pn, (None, None))[0] == 'input' and tp[pn][1] == w, \
+                    (frm, e['copies'][j]['to'], pn, 'shared input absent or of another width on the standard')
+    for j, tp in enumerate(to_ports):
+        for pn, (d, w) in tp.items():
+            if d == 'input':
+                assert pn in e['copies'][j]['ports'] or pn in shared, (frm, e['copies'][j]['to'], pn, 'TO input left unconnected')
+            elif pn not in e['copies'][j]['ports'] and pn in frm_ports and pn not in shared:
+                nc[j][pn] = w        # a FROM output name mapped to another copy only (l2r st): no-load here
+    return pieces, shared, logical, nc
+
+
+def _dedupe_kcopy(m, km):
+    """--dedupe-pad kcopy (S-DIE-KCOPY 2026-10-16; spec results/arch/native_pin_audit_snetfill_1015/resid_kcopy_1016.json,
+    DEDUPE owner rule 19:50 10-15): an instance of FROM becomes k side-by-side instances <inst>__k<j> of CLOSED
+    standards, same orientation.  Copy j takes contiguous FROM bit slices in order; the FROM inputs no copy maps (ck,
+    cks, rs, rss) go to every copy (one clock sink per copy).  Its die nets are cut at the copy boundaries (sub-nets
+    <bus>__kc<s>); spare TO inputs are tied low (PAD, die.v.pads.json), spare / unmapped TO outputs get no-load nets,
+    exactly as _dedupe_pad.  Copies abut along the data face (km[FROM]['stack']: 'x' for hstnv, 'y' for hstnh / hub
+    ends) in a combined box at the original site, else the nearest legal box.  One register stage, 0 cycles.
+    km: {FROM: {stack, copies: [{to, ports: {to_port: [[from_port, lo, hi], ...]}}]}}; a hub end's FROM is
+    <master>__<instance> (its final name)."""
+    W, H = DIE
+    def key(it):
+        if it.master in km:
+            return it.master
+        k_ = f'{it.master}__{it.name}'
+        return k_ if it.kind == 'hend' and k_ in km else None
+    victims = [it for it in m['insts'] if key(it)]
+    if not victims:
+        m['kcopy'] = dict(instances=0, by_master={}, records=[])
+        return
+    use = port_usage(m)
+    bv = bound_views()
+    vic = {it.name: it for it in victims}
+    plan = {}
+    for it in victims:
+        e = km[key(it)]
+        to_ports = [_view_port_widths(c['to']) for c in e['copies']]
+        frm_ports = dict(use[it.name])
+        plan[it.name] = (e,) + _kcopy_pieces(e, frm_ports, to_ports, key(it)) + (frm_ports,)
+    m['insts'][:] = [it for it in m['insts'] if it.name not in vic]
+    P = Placer(m)
+    gap = 0.864 + SHAVE
+    rec, copies_of = [], {}
+    for it in victims:
+        e, pieces, shared, logical, nc, frm_ports = plan[it.name]
+        k = len(e['copies'])
+        sz = [(bv[c['to']]['w'], bv[c['to']]['h']) for c in e['copies']]
+        ax = e.get('stack') or ('x' if 'hstnv' in it.master else 'y')
+        mm_ = re.fullmatch(r'(-?x)?(-?y)?', ax)
+        assert mm_ and ax, (it.name, ax, "stack is x / y / xy with optional '-' per axis")
+        sx = 0 if not mm_.group(1) else (-1 if mm_.group(1).startswith('-') else 1)
+        sy = 0 if not mm_.group(2) else (-1 if mm_.group(2).startswith('-') else 1)
+        # km[FROM]['orient']: the standard's own placement orientation when the FROM instance stands mirrored (a W-side
+        # hub end is MY; its closed view was hardened with the mirrored pin faces and is legal only R0)
+        ori = e.get('orient') or it.orient
+        if ori in ('MY', 'R180'):
+            sx = -sx         # keep the bit order monotonic along a mirrored face
+        if ori in ('MX', 'R180'):
+            sy = -sy
+        # copy j's offset from copy 0: the copies follow each other along the stack axis (both axes: a diagonal
+        # staircase, so an l2r end whose input and output faces are adjacent keeps both faces open on every copy)
+        offs, ox, oy = {}, 0.0, 0.0
+        for j in range(k):
+            offs[j] = (ox, oy)
+            if sx:
+                ox += sx * up(sz[j][0] + gap, GX) if sx > 0 else 0.0
+                if sx < 0 and j + 1 < k:
+                    ox -= up(sz[j + 1][0] + gap, GX)
+            if sy:
+                oy += sy * up(sz[j][1] + gap, GY) if sy > 0 else 0.0
+                if sy < 0 and j + 1 < k:
+                    oy -= up(sz[j + 1][1] + gap, GY)
+        bx0 = min(offs[j][0] for j in range(k)); by0 = min(offs[j][1] for j in range(k))
+        offs = {j: (o[0] - bx0, o[1] - by0) for j, o in offs.items()}
+        Wc = max(offs[j][0] + sz[j][0] for j in range(k)); Hc = max(offs[j][1] + sz[j][1] for j in range(k))
+        cx, cy = it.x + it.w / 2, it.y + it.h / 2
+        cands = [(it.x, it.y), (dn(cx - Wc / 2, GX), it.y), (it.x, dn(cy - Hc / 2, GY)),
+                 (dn(it.x + it.w - Wc, GX), it.y), (it.x, dn(it.y + it.h - Hc, GY)), (dn(cx - Wc / 2, GX), dn(cy - Hc / 2, GY))]
+        def fits(x0, y0):
+            for j in range(k):
+                bx = (x0 + offs[j][0], y0 + offs[j][1], x0 + offs[j][0] + sz[j][0], y0 + offs[j][1] + sz[j][1])
+                if bx[0] < 0 or bx[1] < 0 or bx[2] > W or bx[3] > H or not P.occ.free(bx, 0.432):
+                    return False
+            return True
+        at = next(((x0, y0) for x0, y0 in cands if fits(x0, y0)), None)
+        how = 'in_place' if at else None
+        if at is None:
+            for span_, rows_ in ((120.0, 12), (300.0, 30), (500.0, 48)):
+                at = P.near(cx, cy, Wc, Hc, [(0.0, 0.0, W, H)], horiz=(sx == 0), span=span_, rows=rows_)
+                if at:
+                    how = f'moved_span{int(span_)}'
+                    break
+        subs = []
+        for j, c in enumerate(e['copies']):
+            w_, h_ = sz[j]
+            if at:
+                x0, y0 = at[0] + offs[j][0], at[1] + offs[j][1]
+            else:     # no combined box: each copy on its own nearest legal box (recorded)
+                pl = P.near(cx, cy, w_, h_, [(0.0, 0.0, W, H)], horiz=(sx == 0), span=500.0, rows=48)
+                assert pl, ('--dedupe-pad kcopy: no box for copy', it.name, j, (w_, h_))
+                x0, y0 = pl
+                how = 'split_boxes'
+            sub = P.add(Inst(f'{it.name}__k{j}', c['to'], x0, y0, w_, h_, ori, kind=it.kind, region=it.region,
+                             domain=it.domain, power_w=it.power_w / k))
+            subs.append(sub)
+            if it.kind == 'hend':
+                m.setdefault('_l2r_wdom', {})[sub.name] = l2r_write_dom(m, it)
+                if c['to'] not in m['glue'] and '__' in c['to']:
+                    base_ = c['to'].split('__', 1)[0]
+                    g_ = re.fullmatch(r'dsfd_(m2l|r2l|l2r)_([a-z0-9]+)_(\d+)x1', base_)
+                    assert g_, (c['to'], 'unsupported hub-end standard')
+                    src_ = dict(m['glue'].get(it.master) or {})
+                    assert src_.get('kind') == g_.group(1) and src_.get('fmt') == g_.group(2), (it.master, src_, c['to'])
+                    m['glue'][c['to']] = dict(src_, lanes=[int(g_.group(3))])
+            std_ = {pn: to_w for pn, (_, to_w) in _view_port_widths(c['to']).items() if pn in logical[j] and logical[j][pn] < to_w}
+            if std_:
+                m.setdefault('pad', {})[sub.name] = dict(frm=key(it), std=max(std_.values()), stdp=std_,
+                                                         ports={pn: logical[j][pn] for pn in std_}, kcopy=it.name)
+            if nc[j]:
+                m.setdefault('kcopy_nc', {})[sub.name] = dict(nc[j])
+        copies_of[it.name] = subs
+        rec.append(dict(inst=it.name, frm=key(it), at=[round(it.x, 3), round(it.y, 3)], slot=[round(it.w, 3), round(it.h, 3)],
+                        copies=[[s_.name, s_.master, round(s_.x, 3), round(s_.y, 3)] for s_ in subs], placed=how,
+                        combined=[round(Wc, 3), round(Hc, 3)], orient=[it.orient, ori]))
+    # ---- nets: cut every bus touching a victim at the copy boundaries
+    new_buses, nsplit = [], 0
+    for b_ in m['buses']:
+        bid, cls, bits, eps = b_[0], b_[1], b_[2], b_[3]
+        if not any(e_[0] in vic for e_ in eps):
+            new_buses.append(b_)
+            continue
+        def span(inst, spec):
+            """(port, first port bit, first net bit, length) of an endpoint"""
+            src_, off_ = psrc(spec)
+            pb, lo, hi = pslice(src_)
+            if lo is None:
+                return pb, 0, 0, bits
+            return pb, lo, off_ or 0, hi - lo + 1
+        cuts = {0, bits}
+        vpieces = {}
+        for inst, spec in eps:
+            if inst not in vic:
+                continue
+            pb, plo, nlo, ln = span(inst, spec)
+            if pb in plan[inst][2]:      # shared input (ck / rs): every copy, same spec
+                continue
+            lst = []
+            for (j, fpn, a, bb, tpn, d0) in plan[inst][1]:
+                if fpn != pb:
+                    continue
+                a2, b2 = max(a, plo), min(bb, plo + ln - 1)
+                if a2 > b2:
+                    continue
+                n0 = nlo + a2 - plo
+                lst.append((n0, n0 + b2 - a2, j, tpn, d0 + a2 - a))
+                cuts.update((n0, n0 + b2 - a2 + 1))
+            vpieces[inst, spec] = lst
+        cuts = sorted(cuts)
+        segs = list(zip(cuts[:-1], cuts[1:]))
+        if len(segs) > 1:
+            nsplit += 1
+        for si, (s0, s1) in enumerate(segs):
+            neps = []
+            for inst, spec in eps:
+                if inst == 'TOP':
+                    assert len(segs) == 1, (bid, 'a die top port on a k-copy cut net')
+                    neps.append((inst, spec))
+                    continue
+                pb, plo, nlo, ln = span(inst, spec)
+                if inst in vic and pb in plan[inst][2]:
+                    neps += [(s_.name, spec) for s_ in copies_of[inst]]
+                    continue
+                if inst in vic:
+                    for (n0, n1, j, tpn, d) in vpieces[inst, spec]:
+                        if n0 <= s0 and s1 - 1 <= n1:
+                            d0 = d + s0 - n0
+                            whole = (d0 == 0 and s1 - s0 == plan[inst][3][j][tpn] and
+                                     sum(1 for p_ in plan[inst][1] if p_[0] == j and p_[4] == tpn) == 1)
+                            neps.append((copies_of[inst][j].name, tpn if whole else f'{tpn}[{d0}:{d0 + s1 - s0 - 1}]'))
+                    continue
+                a2, b2 = max(s0, nlo), min(s1 - 1, nlo + ln - 1)
+                if a2 > b2:
+                    continue          # a partial load (psrc) outside this segment
+                if len(segs) == 1:
+                    neps.append((inst, spec))
+                    continue
+                p0 = plo + a2 - nlo
+                sp_ = f'{pb}[{p0}:{p0 + b2 - a2}]'
+                if a2 > s0 or b2 < s1 - 1:
+                    sp_ += f'@{a2 - s0}'
+                neps.append((inst, sp_))
+            nb = type(b_)([bid if si == 0 else f'{bid}__kc{s0}', cls, s1 - s0, neps] + list(b_[4:]))
+            new_buses.append(nb)
+    m['buses'][:] = new_buses
+    by_ = defaultdict(int)
+    for r_ in rec:
+        by_[r_['frm']] += 1
+    m['kcopy'] = dict(file=DEDUPE_PAD['path'], instances=len(rec), copies=sum(len(r_['copies']) for r_ in rec),
+                      split_nets=nsplit, by_master=dict(by_), records=rec)
+    m.setdefault('notes', []).append('--dedupe-pad kcopy: %d instances -> %d closed-standard copies, %d nets cut'
+                                     % (len(rec), m['kcopy']['copies'], nsplit))
 
 
 def _apply_station_footprints(m):
@@ -9517,7 +9805,7 @@ def finalize_r8(m):
         for p_, w_ in pr_['ports'].items():
             d_, b_ = use[in_][p_]
             assert b_ == w_, (in_, p_, b_, w_)
-            use[in_][p_] = (d_, pr_['std'])
+            use[in_][p_] = (d_, pad_std(pr_, p_))
     by_ = {it.name: it for it in m['insts']}
     m['_nets_of_o'] = defaultdict(list)
     for b_ in m['buses']:
@@ -11991,7 +12279,8 @@ def apply_options(a):
         SSTN_SPLIT_MAP = dict(path=str(a.sstn_split_map), map=json.loads(sp_.read_text()), sha256=hashlib.sha256(sp_.read_bytes()).hexdigest())
     if getattr(a, 'dedupe_pad', None):
         pp_ = Path(a.dedupe_pad); pp_ = pp_ if pp_.is_absolute() else ROOT / pp_
-        DEDUPE_PAD = dict(path=str(a.dedupe_pad), map=json.loads(pp_.read_text())['map'])
+        pj_ = json.loads(pp_.read_text())
+        DEDUPE_PAD = dict(path=str(a.dedupe_pad), map=pj_['map'], kcopy=pj_.get('kcopy') or {})
     global PIN_RELAY, NXT_REACH, CHS, VCH8, HC_CORR, SPINE_W8
     PIN_RELAY = bool(getattr(a, 'pin_relay', False))
     NXT_REACH = bool(getattr(a, 'nxt_reach', False))
