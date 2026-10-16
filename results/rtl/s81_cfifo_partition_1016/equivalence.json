@@ -1,9 +1,9 @@
 {
   "schema": "opentallas.s81.cfifo_partition_equivalence.v1",
-  "generated": "2026-10-16T03:58:38.967741-07:00",
+  "generated": "2026-10-16T04:04:13.177367-07:00",
   "base_commit": "be80fa40319c3f3a2ee6e0f21da6e6aff6b5d0de",
   "source_sha256": {
-    "rtl/dsrom_sys/s81_die_bind/glue/dsfd_cfifo_partitioned.sv": "14c9cc8d7a49c02cbe856d004db673df5900ffbb85e643f815db8c350c1460f9",
+    "rtl/dsrom_sys/s81_die_bind/glue/dsfd_cfifo_partitioned.sv": "7242f4256d5383a744b791d4e35d2c4f31b1bf9f28246f95fdc2b1655bddd7df",
     "rtl/dsrom_sys/s81_die_bind/glue/dsfd_cfifo_x2pair.sv": "dedf37e3e971b332dac3f73ed1d650283bfb858c3858c72aade6d7f3a657d4a3",
     "rtl/dsrom_sys/s81_die_bind/ot_s81_static_column_ingress.sv": "ce4a1a1ae6c423478ea74f60d360c7f19e53757c30d159849097f2d79f549938",
     "rtl/dsrom_sys/s81_die_bind/ot_s81_static_lane_cross.sv": "586c49f533b429c9fca1bebde92ce9f31b691b37a22959ba8f49d6ca4abcfe9b",
@@ -46,5 +46,7 @@
     "Actual parent graph/pins/cuts and per-child delivered clocks",
     "2 foreign KV relay conflicts in first-pass geometry",
     "No actual6_final routed image exists"
-  ]
+  ],
+  "lint": "verilator --lint-only --top-module dsfd_cfifo_partitioned PASS",
+  "typed_hard_leaves": "Parent uses unique module names without parameter overrides; generic parameterized helpers are internal to each hard leaf."
 }

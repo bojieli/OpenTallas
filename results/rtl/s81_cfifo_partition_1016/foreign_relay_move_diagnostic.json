@@ -1,0 +1,173 @@
+{
+  "scope": "UNQUALIFIED_FIRST_PASS_RECTANGLE_DIAGNOSTIC_ONLY",
+  "source": "17b13fb0637869d53580a1084bdd250d18828d9b",
+  "parent_outline_um": [
+    384.48,
+    159.84
+  ],
+  "source_final_pins": false,
+  "source_final_hops": false,
+  "rows": [
+    {
+      "name": "f_KW3r_22",
+      "old_xy_um": [
+        7855.056,
+        16074.72
+      ],
+      "candidate_xy_um": [
+        7855.056,
+        16020.72
+      ],
+      "delta_um": [
+        0,
+        -54
+      ],
+      "overlaps": [],
+      "incident_buses": [
+        [
+          "KW3r_f21",
+          "fclk",
+          1,
+          [
+            [
+              "f_KW3r_21",
+              "fo0"
+            ],
+            [
+              "f_KW3r_22",
+              "fi0"
+            ]
+          ]
+        ],
+        [
+          "KW3r_d21",
+          "lane",
+          512,
+          [
+            [
+              "f_KW3r_21",
+              "do0"
+            ],
+            [
+              "f_KW3r_22",
+              "di0"
+            ]
+          ]
+        ],
+        [
+          "KW3r_f22",
+          "fclk",
+          1,
+          [
+            [
+              "f_KW3r_22",
+              "fo0"
+            ],
+            [
+              "f_KW3r_23",
+              "fi0"
+            ]
+          ]
+        ],
+        [
+          "KW3r_d22",
+          "lane",
+          512,
+          [
+            [
+              "f_KW3r_22",
+              "do0"
+            ],
+            [
+              "f_KW3r_23",
+              "di0"
+            ]
+          ]
+        ]
+      ]
+    },
+    {
+      "name": "f_KW3r_25",
+      "old_xy_um": [
+        8887.968,
+        15832.8
+      ],
+      "candidate_xy_um": [
+        8887.968,
+        15778.8
+      ],
+      "delta_um": [
+        0,
+        -54
+      ],
+      "overlaps": [],
+      "incident_buses": [
+        [
+          "KW3r_f24",
+          "fclk",
+          1,
+          [
+            [
+              "f_KW3r_24",
+              "fo0"
+            ],
+            [
+              "f_KW3r_25",
+              "fi0"
+            ]
+          ]
+        ],
+        [
+          "KW3r_d24",
+          "lane",
+          512,
+          [
+            [
+              "f_KW3r_24",
+              "do0"
+            ],
+            [
+              "f_KW3r_25",
+              "di0"
+            ]
+          ]
+        ],
+        [
+          "KW3r_f25",
+          "fclk",
+          1,
+          [
+            [
+              "f_KW3r_25",
+              "fo0"
+            ],
+            [
+              "f_KW3r_26",
+              "fi0"
+            ]
+          ]
+        ],
+        [
+          "KW3r_d25",
+          "lane",
+          512,
+          [
+            [
+              "f_KW3r_25",
+              "do0"
+            ],
+            [
+              "f_KW3r_26",
+              "di0"
+            ]
+          ]
+        ]
+      ]
+    }
+  ],
+  "open": [
+    "Check actual relocated input/output pins and every incident bus",
+    "Re-run actual relay allocator and channels/cuts",
+    "Clock phase plus native timing must be re-proven; no stage-count claim"
+  ]
+}

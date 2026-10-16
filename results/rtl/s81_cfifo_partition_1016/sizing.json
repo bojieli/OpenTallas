@@ -28,11 +28,11 @@
   "proposal": {
     "outline_um": [
       384.48,
-      144.72
+      159.84
     ],
     "origin_delta_um": [
       0,
-      -49.70399999999999
+      -64.824
     ],
     "cycles_added": 0,
     "ingress_widths": [
@@ -52,8 +52,8 @@
       ]
     ],
     "ingress_leaf_um": [
-      43.2,
-      43.2
+      47.52,
+      47.52
     ],
     "formatter_widths": [
       128,
@@ -67,12 +67,12 @@
       76
     ],
     "formatter_leaf_um": [
-      17.28,
-      12.96
+      21.6,
+      17.28
     ],
     "return_leaf_um": [
       25.92,
-      12.96
+      17.28
     ],
     "clock_roots": {
       "source": 10,
@@ -86,19 +86,102 @@
     "new_flops_model": 12793,
     "relative_ff_cost": 0.03898318849995941,
     "minimum_parallel_128bit_channel_um": 6.770337459007723,
-    "reserved_channel_um": 20,
-    "macro_area_um2": 21013.8624,
-    "parent_area_um2": 55641.9456,
-    "parent_area_delta_vs_old_slot_mm2": 1.868456189952
+    "reserved_channel_um": 21.6,
+    "macro_area_um2": 26388.633600000005,
+    "parent_area_um2": 61455.283200000005,
+    "parent_area_delta_vs_old_slot_mm2": 2.612563402752001,
+    "postcts_density_estimate": {
+      "method": "Use measured flat9940.2um2/12313 modeledflops as conservative initial area/flop; not physical proof",
+      "ingress_max_flops": 1190,
+      "ingress_core_area_um2": 1866.2400000000002,
+      "ingress_core_fill_estimate": 0.5147670153730257,
+      "formatter_core_area_um2": 223.94880000000003,
+      "formatter_core_fill_estimate": 0.4614158120990706
+    },
+    "channel_parallel_two_ingress_groups_bits": 226,
+    "parallel_group_cut_ratio_at_21_6um": 0.3320521410016808,
+    "channel_caveat": "This bound covers one pair of113-bit groups only. Actual parent bit routes/cumulative cuts not proven."
   },
   "overlaps": [
+    {
+      "cfifo": "cf10",
+      "other": "f_cx10_1",
+      "master": "dsfd_stnh_566x1",
+      "overlap_um": [
+        17.256000000001222,
+        3.7600000000000193
+      ]
+    },
+    {
+      "cfifo": "cf10",
+      "other": "f_cx10_x2_1",
+      "master": "dsfd_stnh_538x1",
+      "overlap_um": [
+        9.503999999997177,
+        3.7600000000000193
+      ]
+    },
+    {
+      "cfifo": "cf11",
+      "other": "f_cx11_1",
+      "master": "dsfd_stnh_566x1",
+      "overlap_um": [
+        17.256000000001222,
+        3.7600000000000193
+      ]
+    },
+    {
+      "cfifo": "cf11",
+      "other": "f_cx11_x2_1",
+      "master": "dsfd_stnh_538x1",
+      "overlap_um": [
+        9.504000000000815,
+        3.7600000000000193
+      ]
+    },
+    {
+      "cfifo": "cf17",
+      "other": "f_cx17_1",
+      "master": "dsfd_stnh_566x1",
+      "overlap_um": [
+        17.256000000001222,
+        3.7600000000000193
+      ]
+    },
+    {
+      "cfifo": "cf17",
+      "other": "f_cx17_x2_1",
+      "master": "dsfd_stnh_538x1",
+      "overlap_um": [
+        9.503999999997177,
+        3.7600000000000193
+      ]
+    },
+    {
+      "cfifo": "cf23",
+      "other": "f_cx23_1",
+      "master": "dsfd_stnh_566x1",
+      "overlap_um": [
+        17.255999999999403,
+        3.7600000000002183
+      ]
+    },
+    {
+      "cfifo": "cf23",
+      "other": "f_cx23_x2_1",
+      "master": "dsfd_stnh_538x1",
+      "overlap_um": [
+        9.504000000000815,
+        3.7600000000002183
+      ]
+    },
     {
       "cfifo": "cf72",
       "other": "f_KW3r_22",
       "master": "dsfd_stnh_512x1",
       "overlap_um": [
         17.256000000000313,
-        16.743999999998778
+        30.21600000000035
       ]
     },
     {
@@ -107,11 +190,11 @@
       "master": "dsfd_stnh_512x1",
       "overlap_um": [
         17.255999999999403,
-        16.719999999999345
+        30.21600000000035
       ]
     }
   ],
-  "overlap_count": 2,
+  "overlap_count": 10,
   "open": [
     "Actual leaf synthesis/hold allowance/PG/pins/clock tree",
     "Actual parent signal routes for every incident bit",
