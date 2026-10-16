@@ -1,0 +1,103 @@
+{
+  "evidence": {
+    "ot_pin_regs.tsv": "dd50455817f2e76425516ec8189dead0e1d960709871aa89e39489b9de7a37ec",
+    "ot_pin_regs_wrapper.v": "c2a6480adf3f16eba106835e31ef2c353bb5347e7c1879b9ccdefb83a9521f54"
+  },
+  "job": "qfd_res_train_issue_c2-c2-79d590888",
+  "ports": {
+    "capture_stride": {
+      "dir": "output",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 32
+    },
+    "ck": {
+      "dir": "input",
+      "reason": "clock",
+      "register_edges": 0,
+      "width": 1
+    },
+    "fault": {
+      "dir": "output",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 1
+    },
+    "me_go": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 1
+    },
+    "me_oen": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 1
+    },
+    "me_split": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 4
+    },
+    "me_tiles": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 18
+    },
+    "me_ts": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 24
+    },
+    "payload_write": {
+      "dir": "output",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 1
+    },
+    "rst_n": {
+      "dir": "input",
+      "reason": "reset",
+      "register_edges": 0,
+      "width": 1
+    },
+    "slot_count": {
+      "dir": "output",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 4
+    },
+    "tag_last": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 1
+    },
+    "tag_v": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 1
+    },
+    "train_count": {
+      "dir": "output",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 4
+    },
+    "train_start": {
+      "dir": "output",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 1
+    }
+  },
+  "schema": "opentallas.ref_tile.port_latency.v1",
+  "scope": "Additional generic wrapper edges only; core RTL stages remain in measured core duration; no physical qualification",
+  "source_commit": "79d590888a0f626bc92bcd56af0af4f62d8df1b5",
+  "top": "qfd_res_train_issue"
+}
