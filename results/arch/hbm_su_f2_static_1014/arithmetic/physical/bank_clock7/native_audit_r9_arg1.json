@@ -1,0 +1,26 @@
+{
+ "cell": "ot_hbm_su_static_bank6_clock_physical",
+ "view": "physical/ref_tile/hbm_su_static_bank6_clock7_1015/views/ot_hbm_su_static_bank6_clock_physical",
+ "lib_cell": "ot_hbm_su_static_bank6_clock_physical",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean",
+  "lib midrange"
+ ],
+ "R_ps": 196.6,
+ "spread_ps": 74.7,
+ "outputs": 198,
+ "inputs": 103,
+ "launch_ps": 217.6,
+ "launch_pin": "read_data[81]",
+ "capture_ps": 370.1,
+ "capture_pin": "rst_n",
+ "launch_over": 0,
+ "capture_over": 39,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pass": false,
+ "fail_why": "capture 370.07467 > 190 (39 pins)",
+ "job": "hbm_su_static_bank6_clock7_1015-r9-COMMIT-9a821b4c9-arg1",
+ "record": "a688dbf30"
+}
