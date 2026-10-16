@@ -1717,6 +1717,13 @@ def die_master_params(m):
             raise ValueError('--vm-native-candidate needs an actual dsfd_sp_vm instance')
         out['dsfd_sp_vm'] = dict(vm_native_candidate_params(),
                                 _source='explicit --vm-native-candidate; source construction only, not physical qualification')
+    if WFC_RETURN256:
+        if 'dsfd_sp_vm' not in used:
+            raise ValueError('--wfc-return256 needs an actual dsfd_sp_vm instance')
+        r_ = out.setdefault('dsfd_sp_vm', {})
+        r_.update(wfc_return256_params())
+        r_['_source'] = '; '.join(x_ for x_ in (r_.get('_source'), '--wfc-return256: u_wfc.u_ret = return256 lo/hi + '
+                                                'native valid diag (S-VM 6136ed704), 3 return roots') if x_)
     for mst, rel in BOUND_VIEW_RECEIPTS.items():
         if mst in used:
             out[mst] = dict(_receipt_params(rel), _source=rel)
@@ -1747,6 +1754,21 @@ def vm_native_candidate_params():
     requested = dict(READ_PIPE=4, CAP_PIPE=2, WSCATTER_PIPE=1)
     if len(wrappers) != 1 or not set(requested).issubset(wrappers[0].params):
         raise ValueError('--vm-native-candidate requires actual READ_PIPE/CAP_PIPE/WSCATTER_PIPE wrapper parameters')
+    return requested
+
+
+def wfc_return256_params():
+    """--wfc-return256: the dsfd_sp_vm elaboration override; fail closed unless the die VM RTL declares WFC_RETURN256
+    and its return roots are 3 bits wide under it (rtl/dsrom_sys/s81_ph/vm/dsfd_sp_vm_static.sv, S-DIE-WFC 10-16)."""
+    import die_port_bind as DPB
+    source = ROOT / 'rtl/dsrom_sys/s81_ph/vm/dsfd_sp_vm_static.sv'
+    modules = DPB.parse_modules(DPB.preprocess(source.read_text(), {}), str(source))
+    wrappers = [md for md in modules if md.name == 'dsfd_sp_vm']
+    requested = dict(WFC_RETURN256=1)
+    if len(wrappers) != 1 or 'WFC_RETURN256' not in wrappers[0].params or any(
+            wrappers[0].width(p_, wrappers[0].env(requested)) != 3 for p_ in WFC_RETURN256_PORTS):
+        raise ValueError('--wfc-return256 requires the dsfd_sp_vm WFC_RETURN256 parameter with 3-bit '
+                         'ck_wfc_return_t / rss_wfc_return_t')
     return requested
 
 
@@ -6069,6 +6091,12 @@ STATIC_COLLECTIVE_MASTER = 'dsfd_sp_collective_static_c'
 STATIC_COLLECTIVE_RTL = 'rtl/dsrom_sys/s81_static_collective/dsfd_sp_collective_static_c.sv'
 STATIC_COLLECTIVE = False       # --static-collective: swap the hub collective master (RTL must be on the source tree)
 VM_NATIVE_CANDIDATE = False    # explicit4/2/1 source construction; default remains actual RTL0/0/0
+# S-DIE-WFC 2026-10-16 (--wfc-return256, c26j; S-VM 6136ed704 / 75eb05ada): the die VM's u_wfc.u_ret is the return256
+# split (two dsfd_vm_wfc_return256 slices lo / hi + the closed dsfd_vm_native_valid_diag), dsfd_sp_vm WFC_RETURN256 1:
+# ck_wfc_return_t / rss_wfc_return_t widen 1 -> 3 die roots ([0] lo, [1] hi, [2] diag), each its own phi - R delivery.
+# Default off: the master's default elaboration (scalar return root, legacy dsfd_vm_wfc_return leaf) is unchanged.
+WFC_RETURN256 = False
+WFC_RETURN256_PORTS = ('ck_wfc_return_t', 'rss_wfc_return_t')
 PIN_OVERRIDES = None            # --pin-overrides (S-DIE r11 10-15): adopted GEO-S face re-assignments, see load_pin_overrides
 PIN_OVERRIDES_APPLIED = {}
 
@@ -6246,6 +6274,8 @@ def rtl_clock_reset_entries(master, manifest='physical/s81_die_rtl/layer1.f'):
                     env[k_] = DPB.ev(v_, env)
                 except Exception:
                     pass
+            if master == 'dsfd_sp_vm' and WFC_RETURN256:
+                env.update(wfc_return256_params())       # --wfc-return256: the die elaborates WFC_RETURN256 1
             out = dict(clock=defaultdict(list), reset=defaultdict(list))
             for pn in md.order:
                 d_, rng = md.ports[pn]
@@ -6260,7 +6290,8 @@ def rtl_clock_reset_entries(master, manifest='physical/s81_die_rtl/layer1.f'):
                 w_ = 1
                 for hi_, lo_ in rng:
                     w_ *= abs(DPB.ev(hi_, env) - DPB.ev(lo_, env)) + 1
-                out[cls_][dom_] += [pn] if (w_ == 1 and not rng) else [f'{pn}[{i_}:{i_}]' for i_ in range(w_)]
+                scalar_ = w_ == 1 and (not rng or (master == 'dsfd_sp_vm' and pn in WFC_RETURN256_PORTS))
+                out[cls_][dom_] += [pn] if scalar_ else [f'{pn}[{i_}:{i_}]' for i_ in range(w_)]
             break
         if out is not None:
             break
@@ -11857,6 +11888,8 @@ def die_options(ap):
                     'compiler command edge (manifest define DSFD_SUHC_STATIC_ISSUE); the void VM -> SU / HC t_inp nets leave')
     ap.add_argument('--static-seams', action='store_true', help='S-DIE r11 2026-10-15: static VM<->collective seam (t_vm 2204, t_crq 15, t_crs 513), drop vm.t_collective/tcs credit and hc_s.y_rdy, add collective.t_hc_tag -> hc_s.y_tag')
     ap.add_argument('--static-collective', action='store_true', help='swap the hub collective to dsfd_sp_collective_static_c (needs its RTL in the tree)')
+    ap.add_argument('--wfc-return256', action='store_true', help='S-DIE-WFC 2026-10-16 (c26j): dsfd_sp_vm WFC_RETURN256 1 '
+                    '(u_wfc.u_ret = return256 lo/hi + native valid diag, S-VM 6136ed704): ck/rss_wfc_return_t 1 -> 3 roots')
     ap.add_argument('--vm-native-candidate', action='store_true', help='explicit source candidate dsfd_sp_vm READ_PIPE4/CAP_PIPE2/WSCATTER_PIPE1; requires actual wrapper parameters; no physical/native qualification inheritance')
     ap.add_argument('--mix4-slot', help='X,Y,W,H um: Engram MIX4 home reservation (screen)')
     ap.add_argument('--pq-producer', action='store_true', help='S-DIE-NETLIST 2026-10-16: PQ issuer produced on the die: '
@@ -11905,6 +11938,11 @@ def apply_options(a):
     VM_NATIVE_CANDIDATE = bool(getattr(a, 'vm_native_candidate', False))
     if VM_NATIVE_CANDIDATE:
         vm_native_candidate_params()
+    global WFC_RETURN256
+    WFC_RETURN256 = bool(getattr(a, 'wfc_return256', False))
+    _RTL_CLOCK_CACHE.pop('dsfd_sp_vm', None)
+    if WFC_RETURN256:
+        wfc_return256_params()
     global SUHC_STATIC_ISSUE, BF_X2_STATIC, LSW, BF_STATIC_PROG, BF_X2_PAIR
     BF_STATIC_PROG = bool(getattr(a, 'bf_static_prog', False))
     SUHC_STATIC_ISSUE = bool(getattr(a, 'suhc_static_issue', False))
