@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """View plan of the v16 full HBM die case (H-DIE-V16CASE 2026-10-16): for every master/port-variant of the v16 source
 contract (results/arch/hbm_die_v16/contract.json) pick the view a die GRT/STA binds:
-  REAL  = closed routed view on main (physical/**/views/<m>/<m>.lef + <m>_{tt,ff}.lib) whose pins equal the contract ports
+  ROUTED_UNBOUND = routed library candidate on main (source/native qualification unverified) (physical/**/views/<m>/<m>.lef + <m>_{tt,ff}.lib) whose pins equal the contract ports
   SYNTH = current-source mapped netlist ETM (synth_master.sh HIER=1 + synth_etm.sh): an estimate, never a sign-off view.
 One representative instance per (master, port signature); per-instance parameter differences that do not change ports
 (pgslice G, cmd target TARGET, PC P ...) share that representative's ETM (recorded in views.json).
@@ -83,7 +83,9 @@ def main():
             lp = lef_ports(rv[1])
             mism = {p: (lp.get(p), w) for p, w in ports.items() if lp.get(p) != w}
             extra = sorted(set(lp) - set(ports))
-            ent.update(kind='REAL' if not mism else 'REAL_PORT_MISMATCH', view_dir=str(Path(rv[0]).relative_to(ROOT)),
+            ent.update(kind='ROUTED_UNBOUND' if not mism else 'REAL_PORT_MISMATCH',
+                       source_lineage_verified=False, native_qualified=False,
+                       qualification_gap='Port signature alone does not prove source/dependency/parameter lineage or native qualification.', view_dir=str(Path(rv[0]).relative_to(ROOT)),
                        lef=str(Path(rv[1]).relative_to(ROOT)), tt=str(Path(rv[2]).relative_to(ROOT)),
                        ff=str(Path(rv[3]).relative_to(ROOT)), mismatch=mism, view_extra_pins=extra)
             if not mism:

@@ -157,10 +157,10 @@ def main():
         if e['master'] == 'hfd_ckgen':
             excluded[c] = 'PLL model: domain clocks/resets enter as die ports at the ckgen slot'
             continue
-        if e['kind'] == 'REAL':
+        if e['kind'] in ('REAL', 'ROUTED_UNBOUND'):
             shutil.copy(ROOT / e['lef'], vd / f'{c}.lef')
             shutil.copy(ROOT / e['tt'], vd / f'{c}_tt.lib'); shutil.copy(ROOT / e['ff'], vd / f'{c}_ff.lib')
-            kinds[c] = 'REAL' + (' (TT abstract used at FF: modelled off-die PHY macro)' if e['tt'] == e['ff'] else '')
+            kinds[c] = 'ROUTED_UNBOUND' + (' (TT abstract used at FF: modelled off-die PHY macro)' if e['tt'] == e['ff'] else '')
             size[c] = lef_size(vd / f'{c}.lef')
         else:
             sd = a.views / 'synth' / c
@@ -549,6 +549,7 @@ def main():
                     dropped_edge_bits={f'{k[0]}:{k[1]}': v for k, v in dropped.items()},
                     signal_nets=len(nets), die_ports=len(die_ports),
                     synth_clock_entry=dict(rule='SYNTH ETM clock pins re-capped to one 2 fF entry buffer', pins_recapped=ecap),
+                    routed_view_qualification='All routed candidates are source/native UNBOUND; matching ports alone cannot qualify them.',
                     placement=pl, corners='setup TT, hold FF (owner option B); SS not run')
     # Pin the actual consumed bytes, including generated abstracts and recapped SYNTH ETMs.
     # A source path alone cannot establish lineage after another branch changes a view.
