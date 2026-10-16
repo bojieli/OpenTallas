@@ -19,9 +19,20 @@ a=ap.parse_args()
 base=a.fixtures.resolve(); mode=int(a.mutant); variant='core' if a.core else 'vm'
 top='tb_s81_su_cp_vm' if variant=='vm' else 'tb_s81_su_cp'
 out=a.work.resolve()/f'build_{variant}_m{mode}';out.mkdir(parents=True,exist_ok=True)
+(out/'receipt.json').unlink(missing_ok=True)
 files=[root/p for p in dict.fromkeys(G.RTL+G.H.FP['rtl']+['rtl/dsrom_sys/s81_suhc/ot_s81_su_cp.sv','rtl/dsrom_sys/s81_suhc/ot_s81_su_cp_vm.sv',f'rtl/dsrom_sys/s81_suhc/test/{top}.sv','physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v'])]
 vl=Path.home()/'.local/opentallas-tools/verilator-5.050/bin/verilator'
 cmd=[str(vl),'--binary','--timing','-j',str(a.jobs),'-Wno-fatal','-Wno-lint','-Wno-style','-Wno-WIDTH','--top-module',top,f'-GMUT={mode}','--Mdir',str(out/'obj'),'-o','sim',*map(str,files)]
+def pin(paths):
+ return {str(p.relative_to(root)):hashlib.sha256(p.read_bytes()).hexdigest() for p in paths}
+
+# Bind the inputs before compilation. Hashing only after simulation could
+# attribute an old binary's numerical verdict to newly edited RTL or fixtures.
+fixture_files=sorted(p for p in base.glob('L*/*') if p.is_file())
+if not fixture_files:
+ raise RuntimeError('no CP fixtures found: '+str(base))
+source_pins=pin(files)
+fixture_pins={str(p.relative_to(base)):hashlib.sha256(p.read_bytes()).hexdigest() for p in fixture_files}
 t=time.time()
 with (out/'build.log').open('w') as log:r=subprocess.run(cmd,stdout=log,stderr=subprocess.STDOUT)
 if r.returncode:print('BUILD FAIL',r.returncode,flush=True);sys.exit(r.returncode)
@@ -39,5 +50,9 @@ if variant=='vm' and mode==0:
  protocol_mutant=dict(satisfied=ok,rc=p.returncode,summary=[l for l in p.stdout.splitlines() if l.startswith(('CP_VM_DONE','CP_VM_RESULT'))])
  checks.append(dict(layer=2,expected='late VM response FAIL on unchanged schedule',satisfied=ok))
  print('PROTOCOL_MUTANT',ok,p.stdout[-500:],flush=True)
-record=dict(qualification='CP component with actual arithmetic and SRAM; declared VM interface fixtures; not a native full token',fixture_sha256={str(p.relative_to(base)):hashlib.sha256(p.read_bytes()).hexdigest() for p in base.glob('L*/*') if p.is_file()},protocol_mutant=protocol_mutant,mode=mode,seconds=time.time()-t,checks=checks,source_sha256={str(p.relative_to(root)):hashlib.sha256(p.read_bytes()).hexdigest() for p in files},verdict='PASS' if all(x['satisfied'] for x in checks) else 'FAIL')
+if source_pins!=pin(files):
+ raise RuntimeError('CP sources changed during build/run; no receipt issued')
+if fixture_pins!={str(p.relative_to(base)):hashlib.sha256(p.read_bytes()).hexdigest() for p in base.glob('L*/*') if p.is_file()}:
+ raise RuntimeError('CP fixtures changed during build/run; no receipt issued')
+record=dict(qualification='CP component with actual arithmetic and SRAM; declared VM interface fixtures; not a native full token',fixture_sha256=fixture_pins,protocol_mutant=protocol_mutant,mode=mode,seconds=time.time()-t,checks=checks,source_sha256=source_pins,verdict='PASS' if all(x['satisfied'] for x in checks) else 'FAIL')
 (out/'receipt.json').write_text(json.dumps(record,indent=2)+'\n');sys.exit(0 if record['verdict']=='PASS' else 1)
