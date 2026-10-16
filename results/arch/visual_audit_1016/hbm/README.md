@@ -45,7 +45,7 @@ Only work that changed since pass 1 was re-audited; `contact_sheet_round2.png`. 
 | T7 smh_bdc d62 | withdrawn | leaf re-harden dropped by the owner (last run FLOORPLAN_MARGIN util 64.1%) |
 | T12 LK EP | open | structural change adopted (21.6-um channel between macro rows), route 3 queued; see R2-1 |
 | T3 strap | open | same geometry: q1 CLOSED +18.72; q0 -149.91 -> -62.49; q2/q3 -111.27. strap5 (RTL fix) has no gate yet |
-| T9 SU | magnitude refuted, direction confirmed | H-SU: 20-um macro-to-face rule + 151.2 row lattice leave only the W/E margins (33 -> 21.6 um): bank6 slot 369.36 x 151.2, -5.5 % = -1.672 mm2 over 512 banks (my ~20 % estimate was wrong); r12 re-gating. Earlier r12 submit had failed on `ot-run` not on PATH |
+| T9 SU | magnitude refuted, direction confirmed | H-SU: 20-um macro-to-face rule + 151.2 row lattice leave only the W/E margins (33 -> 21.6 um): bank6 slot 369.36 x 151.2, -5.5 % = -1.672 mm2 over 512 banks (my ~20 % estimate was wrong); r12 re-gating. reduce r4 half: noted / no action (4 per die, 0.036 mm2 = 1 % of the deficit; pin density re-checked only if die GRT overflows at its faces). Earlier r12 submit had failed on `ot-run` not on PATH |
 | D1-D3, T1, T2, T5, T6, T8, T10, T11 | open | no d3, cl2e, rp4 or re-kit has a gate or route yet |
 
 Hit rate: 1 of 1 decided findings confirmed (gate-level, provisional), 0 refuted, 1 withdrawn, 13 open.

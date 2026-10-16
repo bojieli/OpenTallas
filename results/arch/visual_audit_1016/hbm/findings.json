@@ -1170,6 +1170,12 @@
      "date": "2026-10-16T01:25",
      "status": "partially-refuted (estimate)",
      "evidence": "H-SU: kit generator keeps >=20 um macro-to-pin-face + 2.16 um core margin and the 151.2 height is fixed by the row/track lattice; only the 33-um W/E margins shrink to 21.6 um -> bank6 slot 369.36 x 151.2 (accepted by H-DIE), -5.5% / -1.672 mm2 over 512 banks, not the ~20% I estimated. bank r12 re-gating. reduce r4 (ot_hbm_su_reduce_static, Codex:HBM-SU-structural job) ownership queried."
+    },
+    {
+     "round": 2,
+     "date": "2026-10-16T01:30",
+     "status": "reduce half: noted / no action",
+     "evidence": "H-SU: ot_hbm_su_reduce_static is 4 per die; 216x151.2 -> 216x110 saves 4 x 216 x 41.2 um2 = 0.036 mm2 (1% of the 3.7 mm2 SU deficit), not worth re-routing a CLOSED (TT +154.98) tile; W/E 14 pins/um revisited only if die GRT shows overflow at the reducer faces"
     }
    ]
   },
