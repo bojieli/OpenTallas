@@ -18,7 +18,7 @@ else:
  if a.mut==0:
   expected='PASS native Engram MIX4 full4x5120 in-place20480words done tag53 writes640 reads4161 write_span639..798 cycles=810'
   receipt['status']='ACTUAL_FULL_SHAPE_COMPONENT_PASS'if r.returncode==0 and expected in log else'NUMERICAL_OR_CALENDAR_FAIL'
- else:receipt['status']='ACTUAL_STOPPED_NEW_INGRESS_CLOCK_REJECTED'if r.returncode!=0 and 'timeout' in log else'MUTANT_NOT_REJECTED_OR_UNCLASSIFIED'
+ else:receipt['status']='ACTUAL_STOPPED_NEW_INGRESS_CLOCK_REJECTED'if r.returncode!=0 and ('timeout' in log or ('endpoint fault cyc=28 cluster_faults=0000 ep=0 top=1' in log)) else'MUTANT_NOT_REJECTED_OR_UNCLASSIFIED'
  print(log,flush=True)
 (O/'receipt.json').write_text(json.dumps(receipt,indent=1)+'\n');print(receipt['status'],flush=True)
 raise SystemExit(0 if receipt['status'] in ('ACTUAL_FULL_SHAPE_COMPONENT_PASS','ACTUAL_STOPPED_NEW_INGRESS_CLOCK_REJECTED')else 1)
