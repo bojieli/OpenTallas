@@ -129,6 +129,9 @@ def main() -> int:
                     '(tools/ref_tile/spread_face_pins.py); no M6 PORT-only pins needed (W/E <= 6.25 b/um on M4)')
     ap.add_argument('--face-depth-util', type=float, default=0.0, help='with --face-cut: re-derive the depth from the flop '
                     'content at this utilisation on the grown face (0 = keep the depth)')
+    ap.add_argument('--no-outhold', action='store_true', help='FILL f8 (vertical wide stations: f6 hstnv_513 and f7 hstnv_129s '
+                    'GRT-0116 with 8-90 overflow, all vertical, in the recipe-2 OUTPUT hold-pad band behind the N-face dq pins): '
+                    'no output hold pads; the die receiver carries the input hold stages (S-NET n3 rule, closed on 41 hend kits)')
     a = ap.parse_args()
     glue_txt = Path(a.glue).read_text()
     glue_sha = hashlib.sha256(glue_txt.encode()).hexdigest()
@@ -289,6 +292,11 @@ def main() -> int:
                 'reason': (f'recipe-2 content {AREA_BIT * wb + AREA_FIX:.0f} um2 exceeds util {UTIL_MAX} of the generator '
                            f'slot core {face_area(mac, horiz):.0f} um2; depth-only growth keeps every data pin coordinate'),
                 'outline': [dw, dh], 'generator_slot': [mac['w'], mac['h']]}
+        if a.no_outhold:
+            spec['outhold'] = False
+            spec['structural_change'] += (' | f8: no recipe-2 output hold pads (the vertical f6/f7 GRT-0116 overflow sat in the '
+                                          'output hold-pad band behind the N-face dq pins); hop hold is carried by the receiver\'s '
+                                          'input hold stages')
         if face_grown:
             spec['slot_change_request']['reason'] = ('f6: data face sized to the pin demand at cut <= 0.6 (0.12 um a pin N/S, '
                                                      '0.16 um a pin W/E, + 8.64 um); pins spread evenly (io_tcl)')
