@@ -13,7 +13,7 @@ module qkd_hbm_boot_static_completion_debt #(parameter integer TIMEOUT=20000,MUT
  output wire fault,output reg boot_quiet);
  always @(posedge ck or negedge rst_n)begin
   if(!rst_n)boot_quiet<=0;
-  else boot_quiet<=verified&&test_done&&test_ok&&empty&&!waiting&&!boot_go&&
+  else boot_quiet<=(MUT==2)?(test_done&&test_ok&&!fault):verified&&test_done&&test_ok&&empty&&!waiting&&!boot_go&&
    !normal_es[0]&&!ctrl_es[0]&&!ctrl_er[0]&&!ctrl_er[259]&&!ctrl_er[260]&&
    !completion_v&&!normal_completion_v&&!boot_completion_v&&!raw_normal_er[0]&&!fault;
  end

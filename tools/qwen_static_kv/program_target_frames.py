@@ -24,6 +24,19 @@ def encode_image(target:int,epoch:int,program:list[int],descriptors:list[int])->
  frames.append((8<<524)|4|(epoch<<8)|(digest<<24)|(target<<88))
  return {'target':target,'epoch':epoch,'program_words':len(program),'descriptor_words':len(descriptors),'digest':f'{digest:016x}','frames528':[f'{f:0132x}' for f in frames]}
 
+
+def encode_boot_bundle(epoch:int,images:list[dict])->dict:
+ if len(images)!=10:raise ValueError('boot bundle requires targets0..9 exactly once')
+ indexed={}
+ for image in images:
+  target=image['target']
+  if type(target) is not int or not 0<=target<=9 or target in indexed:raise ValueError('unsupported or duplicate boot target')
+  if image.get('epoch',epoch)!=epoch:raise ValueError('all images must use one installed epoch')
+  indexed[target]=image
+ order=list(range(1,10))+[0]
+ encoded=[encode_image(t,epoch,indexed[t]['program'],indexed[t]['descriptors']) for t in order]
+ return {'epoch':epoch,'target_order':order,'images':encoded,'frames528':[f for image in encoded for f in image['frames528']]}
+
 def main():
- p=argparse.ArgumentParser();p.add_argument('image',type=Path);p.add_argument('--out',type=Path,required=True);a=p.parse_args();d=json.loads(a.image.read_text());result=encode_image(d['target'],d['epoch'],d['program'],d['descriptors']);a.out.write_text(json.dumps(result,indent=2)+'\n')
+ p=argparse.ArgumentParser();p.add_argument('image',type=Path);p.add_argument('--out',type=Path,required=True);a=p.parse_args();d=json.loads(a.image.read_text());result=encode_boot_bundle(d['epoch'],d['images']) if 'images' in d else encode_image(d['target'],d['epoch'],d['program'],d['descriptors']);a.out.write_text(json.dumps(result,indent=2)+'\n')
 if __name__=='__main__':main()
