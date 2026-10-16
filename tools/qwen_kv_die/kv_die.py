@@ -694,14 +694,14 @@ BINDINGS.update(qkd_dcal=dcal_binding())
 RTL.update(qkd_dcal=DCAL_FILE)
 
 # Q-KVSYS PVJOIN 2026-10-16 (OT_KV_KVNC=1, needs OT_KV_DCAL=1, default off): the KV-side compiled KVN context
-# qkd_kvn_ctx_cal (rtl/qwen_sys/d2d_static_20261015/qkd_kvn_ctx_cal.sv, kit physical/ref_tile/qkd_kvn_ctx_cal_r1) produces
+# qkd_kvn_ctx_cal (rtl/qwen_sys/d2d_static_20261015/qkd_kvn_ctx_cal.sv, kit physical/ref_tile/qkd_kvn_ctx_cal_r2) produces
 # the static D2D end's kvn_compiled_identity / kvn_compiled_generation (2 of the 17 strict-bind open inputs,
 # bind17_producers.json): identity = {HOST cohort epoch, stage = KV link calendar run index + 1, cohort token / position, 0},
 # generation = HOST cohort_gen.  Inputs: the calendar sequencer's cal_start (tap of n_dcal_cfg bit 40 at its source) and
 # its run index layer (new 6-bit bus), the HOST root's cohort_tag / cohort_gen.  Bench tools/qwen_kv_die/kvn_ctx_bench.sh.
 KVNC = __import__('os').environ.get('OT_KV_KVNC', '0') == '1'
 KVNC_FILE = 'rtl/qwen_sys/d2d_static_20261015/qkd_kvn_ctx_cal.sv'
-KVNC_WH = (12.96, 15.12)
+KVNC_WH = (12.96, 19.44)
 KVNC_CS_BIT = sum(dict(cfg_tx_we=1, cfg_rx_we=1, cfg_addr=6, cfg_data=32)[p_] for p_ in DCAL_CFG[:DCAL_CFG.index('cal_start')])
 assert KVNC_CS_BIT == 40      # LSB-first bit of cal_start in n_dcal_cfg
 BINDINGS.update(qkd_kvnc=dict(module='qkd_kvn_ctx_cal', file=KVNC_FILE, parameters=dict(MUT=0),
