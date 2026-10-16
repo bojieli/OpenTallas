@@ -24,6 +24,7 @@ import ref_tile as RT  # noqa: E402
 
 SRC_GRANT = "results/arch/hbm_die_v15/vm_strap_grants_2210.json"
 GRANT = "results/arch/hbm_die_v16/vm_native_bank_grants_0600.json"
+OUT_RE = r"^(rr[0-9]+|wq_done[0-9]+|eg|pr|status|dq_done|kq_done|xq_done|xq2_done)$"
 SHAPES = {0: (5, 2, "SW"), 1: (4, 2, "SE"), 2: (5, 3, "NW")}   # native_q1 also serves NE (sid port)
 
 
@@ -84,7 +85,15 @@ def make():
                           "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v"],
                  contract={"file": GRANT, "slot": slot["name"]}, pins={f: [] for f in "NSEW"}, pin_ranges={},
                  io_tcl=f"{hd_rel}/io.tcl")
-        s["orfs_vars"] = {"POST_IO_PLACEMENT_TCL": f"{hd_rel}/post_iop.tcl", "OT_IOF_FOLLOW_AND": "1"}
+        s["orfs_vars"] = {"POST_IO_PLACEMENT_TCL": f"{hd_rel}/post_iop.tcl"}
+        # nat2 (native q2 nat1 06aa9f2f6 NEEDS_RTL TT -59.5: all 35 TT violators input->reg, reg->reg +60.5, outputs
+        # +335.6; SS classes dq[280] -> dq_d (192 paths), kq, pq, xq, wq1 -- each write source's VALID PIN drives ~281
+        # masking ANDs (strap5 pin-capture zeroing) inside the 0.2 T input budget): recipe-3 pin register on every INPUT
+        # (+1 edge on every bank input, uniform, so slots and data stay aligned; outputs are RTL output registers already).
+        s["pin_regs"] = {"enable": True, "exclude": OUT_RE, "reason": (
+            "outputs excluded: rr*/eg/pr/status/*_done are already RTL output registers (ot_vms_bank_static_strap.sv "
+            "L135-141, L44-56); inputs get a recipe-3 pin flop because native q2 nat1 06aa9f2f6 failed TT -59.5 on 35 "
+            "input->reg endpoints (valid pin -> 281 masking ANDs)")}
         expected = []
         for p in slot["pins"]:
             st = stem(p["name"])
@@ -111,14 +120,15 @@ def make():
                 "native_abi_1016/tb_hbm_vm_native_abi.sv && vvp {RUN}/m%d.vvp")
         sc = (f"Native v16 ABI master for {'/'.join(slot['native_shape']['quadrants'])} (RG{rg}/WG{wg}; die netlist main "
               "04fad9220 binds hfd_vms_bank_native_q*, strap masters retired). Same body as strap6: strap5 write tree "
-              "(payload zeroed at its own pin capture, lv_rep removed), SECDED flip on the D edge, OT_IOF_FOLLOW_AND=1 "
-              "(pin -> AND2 -> DFF captures anchored; strap5 q2/q3 view capture 493.3 ps / 818 pins without it)"
+              "(payload zeroed at its own pin capture, lv_rep removed), SECDED flip on the D edge. nat2: recipe-3 pin "
+              "register on every input (+1 edge per input, uniform; native q2 nat1 TT -59.5 = 35 input->reg endpoints, "
+              "valid pin -> ~281 masking ANDs; reg->reg +60.5), outputs stay RTL registers"
               + ", EG_WIDE=1 (strap5 q0 TT -114.94: 21/22 violators packet/COLL leaf -> egress pin clones; native q2 gate "
                 "nat1 placement reg->reg -115.9 at eg_d[10], same egress pattern; equivalence 0 mismatches at RG5/WG2, "
                 "RG4/WG2, RG5/WG3)"
               + ". Pins: v4 strap grant N/S/W + E face = strap q2 E (0.144 um) minus rq5/rr5 "
               f"({GRANT}).")
-        s["job"].update(tag="nat1", purpose=sc, structural_change=sc,
+        s["job"].update(tag="nat2", purpose=sc, structural_change=sc,
                         extra_paths=["rtl/hbm_accel/generic/vm/static", hd_rel, GRANT,
                                      "physical/common_flow/assigned_pin_exact.tcl"],
                         record_to=f"results/rtl/ref_tile/{name}", views_to=f"physical/ref_tile/{name}/views",
