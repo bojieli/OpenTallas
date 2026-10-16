@@ -4,7 +4,7 @@
 // edge src(rc) = NS*(rc/ND) + rc%ND - LAG (0 for the compiled bubble phases and before the lag fills), fault 0; with
 // SKIPV the source puts a valid word in a never-read phase and the fault must rise.
 module tb_s81_static_ratio_cross;
-    parameter integer NS = 4, ND = 3, PH_W = 0, PH_R = 0, REL = 5, MUT = 0, SKIPV = 0, W = 40;
+    parameter integer NS = 4, ND = 3, PH_W = 0, PH_R = 0, REL = 5, MUT = 0, SKIPV = 0, W = 40, WRN = 0;
     localparam integer SDIV = 12 / NS, DDIV = 12 / ND;
     localparam integer LAG = (NS < ND) ? 1 : 0;
     reg tick = 0; always #0.5 tick = ~tick;
@@ -17,7 +17,7 @@ module tb_s81_static_ratio_cross;
     reg w_rst_n = 0, r_rst_n = 0;
     reg [W-1:0] i = 0;
     wire [W-1:0] o; wire o_live, fault;
-    ot_s81_static_ratio_cross #(.W(W), .NS(NS), .ND(ND), .VBIT(0), .MUT(MUT)) dut (.w_ck(w_ck), .w_rst_n(w_rst_n),
+    ot_s81_static_ratio_cross #(.W(W), .NS(NS), .ND(ND), .VBIT(0), .WRN(WRN), .MUT(MUT)) dut (.w_ck(w_ck), .w_rst_n(w_rst_n),
         .i(i), .r_ck(r_ck), .r_rst_n(r_rst_n), .o(o), .o_live(o_live), .fault(fault));
     function automatic [W-1:0] word(input integer j);
         reg [W-1:0] x; integer ph, sd;

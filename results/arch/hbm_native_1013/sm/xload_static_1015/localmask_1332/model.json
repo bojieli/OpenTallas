@@ -1,0 +1,37 @@
+{
+  "scope": "structural model and keep-cell mechanism; no actual xload physical qualification",
+  "source_candidate": "5713a4bf8",
+  "parameter": {
+    "LOCAL_MASK_REGS": 1
+  },
+  "default": 0,
+  "actual_shape": {
+    "SRAM_128x256": 32,
+    "mask_bits_per_macro": 256,
+    "bank_half_mask_width": 128
+  },
+  "predecessor_measured": {
+    "mask_driver_nets": 2,
+    "loads_per_driver": 4096,
+    "floorplan_WNS_ps": -383.091,
+    "failing_endpoints": 9689,
+    "repair_iteration": 370
+  },
+  "planned_local_mask_registers": 64,
+  "expected_additional_mask_FFs_vs_merged_st2": 62,
+  "planned_max_macro_mask_loads_per_driver": 128,
+  "pipeline_edge_change": 0,
+  "programme_cycle_change": 0,
+  "bandwidth_change": 0,
+  "macro_count_change": 0,
+  "physical_area_change": "UNMEASURED; +62 scalar FFs relative to observed merged implementation, plus real buffers determined by P&R",
+  "micro_synthesis": {
+    "plain_wire_keep_FFs": 2,
+    "cell_keep_promotion_FFs": 64,
+    "tool": "local yosys 0.9, same select/proc/techmap/setattr mechanism as physical/common_flow/ot_keep_regs.tcl; actual ORFS fullshape still required"
+  },
+  "clock_obligation": "Actual root census/CTS; >15000 needs measured <=300ps insertion and <=80ps spread or leaf split",
+  "slot_obligation": "Inherited diagnostic outline641.52x604.8 only; current SM child-window and pins must be granted before native adoption",
+  "correctness_obligation": "Actual32SRAM lock24commands plus terminal halfmaskswap mutant; live PVE benchmark",
+  "native_obligation": "Actual ORFS confirms64 independent local driverFFs; preserve pipelineedge then CTS/setupTT/holdFF/DRC0/nativepins"
+}

@@ -91,7 +91,7 @@ class ProgramTest(unittest.TestCase):
     def test_encoding_rejects_semantic_mutants(self):
         good=[dict(engine=0,arg=1,issue=2,done=6),dict(engine=15,arg=0,issue=8,done=0)]
         for rows in [[],good[:1],good+[good[0]],
-                     [dict(good[0],engine=13),good[1]],
+                     [dict(good[0],engine=16),good[1]],
                      [dict(good[0],done=2),good[1]],
                      [dict(good[0],arg=1<<24),good[1]],
                      [good[0],dict(good[1],issue=6)],

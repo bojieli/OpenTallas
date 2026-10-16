@@ -1,0 +1,12 @@
+{
+ "scope": "Candidate810 fullMIX4 arithmetic component with external fixed-latency VM; not whole native chip",
+ "positive": "exact20480outputs/640writes/4161reads PASS810, expect-cycles810 assertion PASS",
+ "negative": "actual result-valid capture bypass M22 faults atcycle78",
+ "delta": {
+  "mul4_extra_ff_estimate": 771,
+  "mul4_extra_edges": 2,
+  "control_reference_extra_ff": 2,
+  "per_four_cluster_engine_extra_ff_estimate": 24680
+ },
+ "native_physical": "OPEN freshmul4CTS running;810 control variant must not inherit808controlview"
+}

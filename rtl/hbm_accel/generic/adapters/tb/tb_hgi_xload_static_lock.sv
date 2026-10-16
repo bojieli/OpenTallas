@@ -14,8 +14,15 @@ module tb_xload_static_lock;
     localparam integer MS = 2;
 `elsif MUT3
     localparam integer MS = 3;
+`elsif MUT4
+    localparam integer MS = 4;
 `else
     localparam integer MS = 0;
+`endif
+`ifdef XLOAD_LOCAL_MASK_REGS
+    localparam integer LM=1;
+`else
+    localparam integer LM=0;
 `endif
     reg clk = 0; always #1 clk = ~clk;
     reg rst_n = 0; integer seed = 3, errors = 0, cyc = 0; always @(posedge clk) cyc <= cyc + 1;
@@ -30,7 +37,13 @@ module tb_xload_static_lock;
         .rg_req(), .rg_gnt(1'b0), .wrq(), .wrq_cr(32'd0), .wrr({32*257{1'b0}}));
     ot_hgi_vm_unit #(.NC(5)) va (.clk(clk), .rst_n(rst_n), .cq({tq, qa}), .cr({tra, ra}), .status());
     wire [8*17-1:0] rq; reg [8*257-1:0] rr;
-    ot_hgi_sm_xload_static #(.RD_LAT(RD_LAT), .MUT(MS)) ub (.clk(clk), .rst_n(rst_n), .x_v(xs_v), .x_base(x_base), .x_n(x_n),
+`ifdef XLOAD_CLOCK_LEAVES
+    // five related phase-0 roots of the clock-leaf successor, all from the die clock (local mask capture built in)
+    ot_hgi_sm_xload_static_cl #(.RD_LAT(RD_LAT), .MUT(MS)) ub (.clk(clk), .clk_bf(clk), .clk_qlo(clk), .clk_qhi(clk), .clk_bd(clk),
+        .rst_n(rst_n), .x_v(xs_v), .x_base(x_base), .x_n(x_n),
+`else
+    ot_hgi_sm_xload_static #(.RD_LAT(RD_LAT), .MUT(MS), .LOCAL_MASK_REGS(LM)) ub (.clk(clk), .rst_n(rst_n), .x_v(xs_v), .x_base(x_base), .x_n(x_n),
+`endif
         .x_p(x_p), .x_stride(x_stride), .x_space(2'd1), .x_fmt(x_fmt), .x_xb(x_xb), .x_busy(busy_b), .x_done(done_b),
         .x_fault(f_b), .xw_en(en_b), .xw_last(last_b), .xw_addr(ad_b), .xw_grp(gr_b), .xw_data(d_b), .rq(rq), .rr(rr));
     // ---- static VM read group model (declared boundary): word memory mirrored from the VM unit writes

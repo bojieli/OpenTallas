@@ -1,0 +1,76 @@
+{
+ "schema": "opentallas.hier_contract.child_lint.v1",
+ "lef": "/srv/opentallas-scratch/claude/closure-loop/hgi_qdq_tsplit_ctl-hgiqdqtsplitctl-01dba637f/record/views/ot_hgi_qdq_transport_ctl/ot_hgi_qdq_transport_ctl.lef",
+ "verdict": "PASS",
+ "fails": [],
+ "warns": [
+  "(f) face-pin access: 482 of 535 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. dec_header[0] M4 (86.281,0.288), dec_header[100] M4 (86.281,0.288), dec_header[101] M4 (86.281,0.288))"
+ ],
+ "summary": "ot_hgi_qdq_transport_ctl 86.4 x 86.4: PG M5 VDD 16 stripes (94% spread, 100% cov) / VSS 16 stripes (94% spread, 100% cov); strap M6; face pins 535 blocked-above 0 blocked-same 0; clock clk insertion 147 ps; pockets M5 0 (closed)",
+ "info": {
+  "cell": "ot_hgi_qdq_transport_ctl",
+  "W": 86.4,
+  "H": 86.4,
+  "pg": {
+   "nets": {
+    "VDD": {
+     "top_layer": "M5",
+     "stripes": 16,
+     "dir": "V",
+     "spread": 0.937,
+     "coverage": 1.0,
+     "shapes_on_top": 16
+    },
+    "VSS": {
+     "top_layer": "M5",
+     "stripes": 16,
+     "dir": "V",
+     "spread": 0.938,
+     "coverage": 1.0,
+     "shapes_on_top": 16
+    }
+   },
+   "top_layer": "M5",
+   "ok": true,
+   "why": []
+  },
+  "pg_layer": "M5",
+  "strap_layer": "M6",
+  "cap": null,
+  "face": {
+   "face_pins": 535,
+   "blocked_above": 0,
+   "covered_below": 26,
+   "examples": [],
+   "blocked_same": 0,
+   "same_examples": [],
+   "band_same": 482,
+   "band_examples": [
+    "dec_header[0] M4 (86.281,0.288)",
+    "dec_header[100] M4 (86.281,0.288)",
+    "dec_header[101] M4 (86.281,0.288)",
+    "dec_header[102] M4 (86.281,0.288)",
+    "dec_header[103] M4 (86.281,0.288)",
+    "dec_header[104] M4 (86.281,0.288)"
+   ]
+  },
+  "clock_insertion": {
+   "clk": {
+    "max_ps": 146.57,
+    "min_ps": 111.2
+   }
+  },
+  "pockets": {
+   "layer": "M5",
+   "d_um": 1.536,
+   "marker": {
+    "layer": "M5",
+    "d_um": 1.536,
+    "added": 202
+   },
+   "count": 0,
+   "area_um2": 0,
+   "examples": []
+  }
+ }
+}

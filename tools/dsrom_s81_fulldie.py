@@ -9627,7 +9627,7 @@ def _hend_static_glue(m, mst, kind, lanes, fmt, ports):
         rec = f'rc{j}'
         b.append(f'    wire [{pw}:0] rq{j}; wire lv{j}, fl{j};')
         if kind == 'r2l':
-            b.append(f'    ot_s81_static_ratio_cross #(.W({pw + 1}), .NS(4), .ND(3), .VBIT(0)) u_{j} (.w_ck(fi{j}[0]), '
+            b.append(f'    ot_s81_static_ratio_cross #(.W({pw + 1}), .NS(4), .ND(3), .VBIT(0), .WRN(1)) u_{j} (.w_ck(fi{j}[0]), '
                      f'.w_rst_n({rec}[0]), .i({rec}[{pw + 1}:1]), .r_ck(ck[0]), .r_rst_n(rsl), .o(rq{j}), .o_live(lv{j}), '
                      f'.fault(fl{j}));')
         else:

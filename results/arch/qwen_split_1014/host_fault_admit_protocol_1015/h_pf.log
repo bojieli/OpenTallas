@@ -1,0 +1,9 @@
+MISMATCH cyc283 fault_src ref=00080008 dut=00080000
+MISMATCH cyc284 fault_src ref=00080008 dut=00080000
+MISMATCH cyc285 fault_src ref=00080008 dut=00080000
+MISMATCH cyc286 fault_src ref=00080008 dut=00080000
+ACTIVITY ctrl_es_cycles=39 launches=512 bad_launch=0 booted_at=82 pf_at=282 pf_seen=284 admit_toggles=29 hbm_rst_n=1 boot_go_seen sys_ready=0 fault_src=00080000
+FAIL host partition protocol: 4 mismatching output samples, first at cycle 283
+FATAL: /tmp/claude-1000/hostproto/tb_host_partition_equiv.sv:208: 
+       Time: 3000000 Scope: tb_host_partition_equiv
+rc=1

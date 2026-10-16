@@ -1,0 +1,1507 @@
+{
+ "schema": "opentallas.s81.mix4-current149-constituents.v1",
+ "source_commit": "4456f664b547bd712007ae98218b672c25433a55",
+ "sha256": {
+  "rtl/dsrom_sys/engram/mix/dsfd_engram_mix4_c.sv": "c6d0a6c1be2259c51452a95e6164b6e7f87dfa9e28b2d5ae9df25153b3281879",
+  "rtl/dsrom_sys/engram/mix/ot_s81_engram_mix.sv": "893b7f7aedb186ccb2fb9a1b215fc128b1ebb601943b7e24aaec68745d40a17e"
+ },
+ "static_define": "DSFD_ENGRAM_STATIC_ISSUE",
+ "ports": {
+  "ck": 149,
+  "rst": 1,
+  "c_cmd": 85,
+  "c_done": 9,
+  "c_st": 2,
+  "rq_v": 20,
+  "rq_row": 280,
+  "rs_v": 20,
+  "rs_d": 10240,
+  "wq_v": 4,
+  "wq_row": 56,
+  "wq_mask": 64,
+  "wq_d": 2048
+ },
+ "masters": {
+  "mul4": {
+   "top": "ot_s81_engram_mul4",
+   "source_commit": "2e57a7a75708ffaabf18f0c714b01998cb0fecf1",
+   "job": "s81engm_mul4-boundary810-0852-2e57a7a75",
+   "job_status_observed": "CLOSED",
+   "outline_um": [
+    181.44,
+    120.96
+   ],
+   "source_spec": "physical/ref_tile/s81engm_mul4/spec.json",
+   "source_spec_sha256": "db95412b0acca1316601082cacf694ba76e6d898b720e01770bc9ea486789f16",
+   "pin_tcl": "physical/s81_die_pins/v21_engram_arithmetic/ot_s81_engram_mul4.tcl",
+   "pin_tcl_sha256": "da7ffe56dc54aad0b760473720f1eaf2bfb94de49be939a14a84889b23a95d8d",
+   "normal_edges_added_here": 0
+  },
+  "chunk8": {
+   "top": "ot_s81_engram_chunk8",
+   "source_commit": "bf044b7f6cf54ea28cef4128b1ee2cbff22e965f",
+   "job": "s81engm_chunk8-v21-bf044b7f6",
+   "job_status_observed": "CLOSED",
+   "outline_um": [
+    90.72,
+    90.72
+   ],
+   "source_spec": "physical/ref_tile/s81engm_chunk8/spec.json",
+   "source_spec_sha256": "d525a5e99c68509166446079c174b3c14d3c552875ba2dd00cd891372a916de4",
+   "pin_tcl": "physical/s81_die_pins/v21_engram_arithmetic/ot_s81_engram_chunk8.tcl",
+   "pin_tcl_sha256": "33f26c47676e3d00d875f5d44ce2d984b084085f76682382af0a7f4177695780",
+   "normal_edges_added_here": 0
+  },
+  "add8": {
+   "top": "ot_s81_engram_add8",
+   "source_commit": "bf044b7f6cf54ea28cef4128b1ee2cbff22e965f",
+   "job": "s81engm_add8-v21-bf044b7f6",
+   "job_status_observed": "CLOSED",
+   "outline_um": [
+    181.44,
+    99.36
+   ],
+   "source_spec": "physical/ref_tile/s81engm_add8/spec.json",
+   "source_spec_sha256": "03f0b20a9898eafc25cc5bc232fcb2a52a3e87af9f7001b3d7c1c0c76659394e",
+   "pin_tcl": "physical/s81_die_pins/v21_engram_arithmetic/ot_s81_engram_add8.tcl",
+   "pin_tcl_sha256": "da21d303cda5603272844eed07f004e890fba80e5299cff60454000eee11ca0d",
+   "normal_edges_added_here": 0
+  },
+  "norm": {
+   "top": "ot_s81_engram_norm",
+   "source_commit": "bf044b7f6cf54ea28cef4128b1ee2cbff22e965f",
+   "job": "s81engm_norm-v21-bf044b7f6",
+   "job_status_observed": "CLOSED",
+   "outline_um": [
+    181.44,
+    95.04
+   ],
+   "source_spec": "physical/ref_tile/s81engm_norm/spec.json",
+   "source_spec_sha256": "c1605f644a6e526aff9e966243757547705ba931a72aa4fcb8b5d4f7a0a5269e",
+   "pin_tcl": "physical/s81_die_pins/v21_engram_arithmetic/ot_s81_engram_norm.tcl",
+   "pin_tcl_sha256": "21f33193c55930c2da7c7866b602619d4748f459c20c7b1eea480f8fdb6d81a6",
+   "normal_edges_added_here": 0
+  },
+  "sum": {
+   "top": "ot_s81_engram_sum",
+   "source_commit": "26b917e437753da4d3c9d610c3d6ee6bb532414c",
+   "job": "s81engm_sum-fixed808-0833-26b917e43",
+   "job_status_observed": "CLOSED",
+   "outline_um": [
+    90.72,
+    99.36
+   ],
+   "source_spec": "physical/ref_tile/s81engm_sum/spec.json",
+   "source_spec_sha256": "d02f939f4ed57efce20bc46fe6f49e8ce81c5fb623adab992c9022d00f4fe536",
+   "pin_tcl": "physical/s81_die_pins/v21_engram_arithmetic/ot_s81_engram_sum.tcl",
+   "pin_tcl_sha256": "8a04e059ef8145f046a398ff7945ea0db085d684645299325bdcb17b7498db3d",
+   "normal_edges_added_here": 0
+  },
+  "signed_sqrt": {
+   "top": "ot_s81_engram_signed_sqrt",
+   "source_commit": "16a88341722d44b5bfd4ff5255e298e37861349b",
+   "job": "s81engm_signed_sqrt-v21-16a883417",
+   "job_status_observed": "CLOSED",
+   "outline_um": [
+    64.8,
+    43.2
+   ],
+   "source_spec": "physical/ref_tile/s81engm_signed_sqrt/spec.json",
+   "source_spec_sha256": "331c5dd0fd87b578e942cc42c590a0f3294abb01bd43dde372133b15ae78e6fd",
+   "pin_tcl": "physical/s81_die_pins/v21_engram_arithmetic/ot_s81_engram_signed_sqrt.tcl",
+   "pin_tcl_sha256": "105ca6ce0a0dbcb3939c679fcc02c738df0497b3e394e07f5e2344205dad9432",
+   "normal_edges_added_here": 0
+  },
+  "sigmoid": {
+   "top": "ot_s81_engram_sigmoid",
+   "source_commit": "bf044b7f6cf54ea28cef4128b1ee2cbff22e965f",
+   "job": "s81engm_sigmoid-v21-bf044b7f6",
+   "job_status_observed": "CLOSED",
+   "outline_um": [
+    181.44,
+    110.16
+   ],
+   "source_spec": "physical/ref_tile/s81engm_sigmoid/spec.json",
+   "source_spec_sha256": "e04758beb075f367a170fd3ab049861351fb2f236a65f74aebc616ae2890b260",
+   "pin_tcl": "physical/s81_die_pins/v21_engram_arithmetic/ot_s81_engram_sigmoid.tcl",
+   "pin_tcl_sha256": "5aa8f8d9f9fcf9e7d83ae8ab40d3459e74cc16441ccac1e0687d9660232a66b6",
+   "normal_edges_added_here": 0
+  },
+  "control": {
+   "top": "ot_s81_engram_mix_control",
+   "source_commit": "6af87135e63185192992fc46b6b01a3adb645524",
+   "job": "s81engm_control-c810-6af87135e",
+   "job_status_observed": "CLOSED",
+   "outline_um": [
+    90.72,
+    64.8
+   ],
+   "source_spec": "physical/ref_tile/s81engm_control/spec.json",
+   "source_spec_sha256": "befea26e257025c800498d455159d17a2da14a57cc616675af2b2e195f33df89",
+   "pin_tcl": "physical/s81_die_pins/v21_engram_arithmetic/ot_s81_engram_mix_control.tcl",
+   "pin_tcl_sha256": "b33b3aa3cd8361ea3dcb5672711142ba0507fb0f241e074c3723087eaeb677be",
+   "normal_edges_added_here": 0
+  },
+  "rly": {
+   "top": "ot_s81_engram_rly",
+   "source_commit": "772decf15",
+   "job": "s81engm_rly-component-0822-772decf15",
+   "job_status_observed": "CLOSED",
+   "outline_um": [
+    43.2,
+    21.6
+   ],
+   "source_spec": "physical/ref_tile/s81engm_rly/spec.json",
+   "source_spec_sha256": "9bc2068ae283e2f6f41dcca6aacf0f2b28743417ac7a85199f7da7293f4e5b30",
+   "pin_tcl": "physical/s81_die_pins/v21_engram_arithmetic/ot_s81_engram_rly.tcl",
+   "pin_tcl_sha256": "756a61f45b8afa6fdfa2cee9ea1fd7825348344eac86e9ba2606ca3699593e48",
+   "normal_edges_added_here": 0
+  },
+  "shctl": {
+   "top": "ot_s81_engram_mixq_shctl",
+   "source_commit": "dfd1e697a",
+   "job": "s81engm_shctl-bankv1benchfix-1421-dfd1e697a",
+   "job_status_observed": "READY",
+   "outline_um": [
+    86.4,
+    54.0
+   ],
+   "source_spec": "physical/ref_tile/s81engm_shctl/spec.json",
+   "source_spec_sha256": "957f928468c945146e1dbc9169d723091c978f63154b8bd6b336162fbdd0c3c8",
+   "pin_tcl": "physical/s81_die_pins/v21_engram_arithmetic/ot_s81_engram_mixq_shctl.tcl",
+   "pin_tcl_sha256": "f976349c33c0bd16783a8b5b6b1a0073304da959e18d65dacf2c8200ba18ccae",
+   "normal_edges_added_here": 0
+  },
+  "shcol": {
+   "top": "ot_s81_engram_mixq_shcol",
+   "source_commit": "dfd1e697a",
+   "job": "s81engm_shcol-bankv1benchfix-1421-dfd1e697a",
+   "job_status_observed": "READY",
+   "outline_um": [
+    164.16,
+    54.0
+   ],
+   "source_spec": "physical/ref_tile/s81engm_shcol/spec.json",
+   "source_spec_sha256": "3a6c4a1806d267eba82f57e01023c31f72ce88864eb750e39a3dec251eb2be0f",
+   "pin_tcl": "physical/s81_die_pins/v21_engram_arithmetic/ot_s81_engram_mixq_shcol_spread_w164.tcl",
+   "pin_tcl_sha256": "4adf43250a3eb24b39bb71aaf129f4912497532b356714b2594630c365354f45",
+   "normal_edges_added_here": 0
+  }
+ },
+ "clock_entries": [
+  {
+   "bit": 0,
+   "scope": "top descriptor/BC/return/RS5",
+   "blocker": "unpartitioned top state/relay stations"
+  },
+  {
+   "bit": 1,
+   "scope": "cluster0.shell.ctl"
+  },
+  {
+   "bit": 2,
+   "scope": "cluster0.shell.col0"
+  },
+  {
+   "bit": 3,
+   "scope": "cluster0.shell.col1"
+  },
+  {
+   "bit": 4,
+   "scope": "cluster0.shell.col2"
+  },
+  {
+   "bit": 5,
+   "scope": "cluster0.shell.col3"
+  },
+  {
+   "bit": 6,
+   "scope": "cluster0.mix.control+relay"
+  },
+  {
+   "bit": 7,
+   "scope": "cluster0.mix.arithmetic[0]"
+  },
+  {
+   "bit": 8,
+   "scope": "cluster0.mix.arithmetic[1]"
+  },
+  {
+   "bit": 9,
+   "scope": "cluster0.mix.arithmetic[2]"
+  },
+  {
+   "bit": 10,
+   "scope": "cluster0.mix.arithmetic[3]"
+  },
+  {
+   "bit": 11,
+   "scope": "cluster0.mix.arithmetic[4]"
+  },
+  {
+   "bit": 12,
+   "scope": "cluster0.mix.arithmetic[5]"
+  },
+  {
+   "bit": 13,
+   "scope": "cluster0.mix.arithmetic[6]"
+  },
+  {
+   "bit": 14,
+   "scope": "cluster0.mix.arithmetic[7]"
+  },
+  {
+   "bit": 15,
+   "scope": "cluster0.mix.arithmetic[8]"
+  },
+  {
+   "bit": 16,
+   "scope": "cluster0.mix.arithmetic[9]"
+  },
+  {
+   "bit": 17,
+   "scope": "cluster0.mix.arithmetic[10]"
+  },
+  {
+   "bit": 18,
+   "scope": "cluster0.mix.arithmetic[11]"
+  },
+  {
+   "bit": 19,
+   "scope": "cluster0.mix.arithmetic[12]"
+  },
+  {
+   "bit": 20,
+   "scope": "cluster0.mix.arithmetic[13]"
+  },
+  {
+   "bit": 21,
+   "scope": "cluster0.mix.arithmetic[14]"
+  },
+  {
+   "bit": 22,
+   "scope": "cluster0.mix.arithmetic[15]"
+  },
+  {
+   "bit": 23,
+   "scope": "cluster0.mix.arithmetic[16]"
+  },
+  {
+   "bit": 24,
+   "scope": "cluster0.mix.arithmetic[17]"
+  },
+  {
+   "bit": 25,
+   "scope": "cluster0.mix.arithmetic[18]"
+  },
+  {
+   "bit": 26,
+   "scope": "cluster0.mix.arithmetic[19]"
+  },
+  {
+   "bit": 27,
+   "scope": "cluster0.mix.arithmetic[20]"
+  },
+  {
+   "bit": 28,
+   "scope": "cluster0.mix.arithmetic[21]"
+  },
+  {
+   "bit": 29,
+   "scope": "cluster0.mix.arithmetic[22]"
+  },
+  {
+   "bit": 30,
+   "scope": "cluster0.mix.arithmetic[23]"
+  },
+  {
+   "bit": 31,
+   "scope": "cluster0.mix.arithmetic[24]"
+  },
+  {
+   "bit": 32,
+   "scope": "cluster0.mix.arithmetic[25]"
+  },
+  {
+   "bit": 33,
+   "scope": "cluster0.mix.arithmetic[26]"
+  },
+  {
+   "bit": 34,
+   "scope": "cluster0.mix.arithmetic[27]"
+  },
+  {
+   "bit": 35,
+   "scope": "cluster0.mix.arithmetic[28]"
+  },
+  {
+   "bit": 36,
+   "scope": "cluster0.mix.arithmetic[29]"
+  },
+  {
+   "bit": 37,
+   "scope": "cluster0.mix.arithmetic[30]"
+  },
+  {
+   "bit": 38,
+   "scope": "cluster1.shell.ctl"
+  },
+  {
+   "bit": 39,
+   "scope": "cluster1.shell.col0"
+  },
+  {
+   "bit": 40,
+   "scope": "cluster1.shell.col1"
+  },
+  {
+   "bit": 41,
+   "scope": "cluster1.shell.col2"
+  },
+  {
+   "bit": 42,
+   "scope": "cluster1.shell.col3"
+  },
+  {
+   "bit": 43,
+   "scope": "cluster1.mix.control+relay"
+  },
+  {
+   "bit": 44,
+   "scope": "cluster1.mix.arithmetic[0]"
+  },
+  {
+   "bit": 45,
+   "scope": "cluster1.mix.arithmetic[1]"
+  },
+  {
+   "bit": 46,
+   "scope": "cluster1.mix.arithmetic[2]"
+  },
+  {
+   "bit": 47,
+   "scope": "cluster1.mix.arithmetic[3]"
+  },
+  {
+   "bit": 48,
+   "scope": "cluster1.mix.arithmetic[4]"
+  },
+  {
+   "bit": 49,
+   "scope": "cluster1.mix.arithmetic[5]"
+  },
+  {
+   "bit": 50,
+   "scope": "cluster1.mix.arithmetic[6]"
+  },
+  {
+   "bit": 51,
+   "scope": "cluster1.mix.arithmetic[7]"
+  },
+  {
+   "bit": 52,
+   "scope": "cluster1.mix.arithmetic[8]"
+  },
+  {
+   "bit": 53,
+   "scope": "cluster1.mix.arithmetic[9]"
+  },
+  {
+   "bit": 54,
+   "scope": "cluster1.mix.arithmetic[10]"
+  },
+  {
+   "bit": 55,
+   "scope": "cluster1.mix.arithmetic[11]"
+  },
+  {
+   "bit": 56,
+   "scope": "cluster1.mix.arithmetic[12]"
+  },
+  {
+   "bit": 57,
+   "scope": "cluster1.mix.arithmetic[13]"
+  },
+  {
+   "bit": 58,
+   "scope": "cluster1.mix.arithmetic[14]"
+  },
+  {
+   "bit": 59,
+   "scope": "cluster1.mix.arithmetic[15]"
+  },
+  {
+   "bit": 60,
+   "scope": "cluster1.mix.arithmetic[16]"
+  },
+  {
+   "bit": 61,
+   "scope": "cluster1.mix.arithmetic[17]"
+  },
+  {
+   "bit": 62,
+   "scope": "cluster1.mix.arithmetic[18]"
+  },
+  {
+   "bit": 63,
+   "scope": "cluster1.mix.arithmetic[19]"
+  },
+  {
+   "bit": 64,
+   "scope": "cluster1.mix.arithmetic[20]"
+  },
+  {
+   "bit": 65,
+   "scope": "cluster1.mix.arithmetic[21]"
+  },
+  {
+   "bit": 66,
+   "scope": "cluster1.mix.arithmetic[22]"
+  },
+  {
+   "bit": 67,
+   "scope": "cluster1.mix.arithmetic[23]"
+  },
+  {
+   "bit": 68,
+   "scope": "cluster1.mix.arithmetic[24]"
+  },
+  {
+   "bit": 69,
+   "scope": "cluster1.mix.arithmetic[25]"
+  },
+  {
+   "bit": 70,
+   "scope": "cluster1.mix.arithmetic[26]"
+  },
+  {
+   "bit": 71,
+   "scope": "cluster1.mix.arithmetic[27]"
+  },
+  {
+   "bit": 72,
+   "scope": "cluster1.mix.arithmetic[28]"
+  },
+  {
+   "bit": 73,
+   "scope": "cluster1.mix.arithmetic[29]"
+  },
+  {
+   "bit": 74,
+   "scope": "cluster1.mix.arithmetic[30]"
+  },
+  {
+   "bit": 75,
+   "scope": "cluster2.shell.ctl"
+  },
+  {
+   "bit": 76,
+   "scope": "cluster2.shell.col0"
+  },
+  {
+   "bit": 77,
+   "scope": "cluster2.shell.col1"
+  },
+  {
+   "bit": 78,
+   "scope": "cluster2.shell.col2"
+  },
+  {
+   "bit": 79,
+   "scope": "cluster2.shell.col3"
+  },
+  {
+   "bit": 80,
+   "scope": "cluster2.mix.control+relay"
+  },
+  {
+   "bit": 81,
+   "scope": "cluster2.mix.arithmetic[0]"
+  },
+  {
+   "bit": 82,
+   "scope": "cluster2.mix.arithmetic[1]"
+  },
+  {
+   "bit": 83,
+   "scope": "cluster2.mix.arithmetic[2]"
+  },
+  {
+   "bit": 84,
+   "scope": "cluster2.mix.arithmetic[3]"
+  },
+  {
+   "bit": 85,
+   "scope": "cluster2.mix.arithmetic[4]"
+  },
+  {
+   "bit": 86,
+   "scope": "cluster2.mix.arithmetic[5]"
+  },
+  {
+   "bit": 87,
+   "scope": "cluster2.mix.arithmetic[6]"
+  },
+  {
+   "bit": 88,
+   "scope": "cluster2.mix.arithmetic[7]"
+  },
+  {
+   "bit": 89,
+   "scope": "cluster2.mix.arithmetic[8]"
+  },
+  {
+   "bit": 90,
+   "scope": "cluster2.mix.arithmetic[9]"
+  },
+  {
+   "bit": 91,
+   "scope": "cluster2.mix.arithmetic[10]"
+  },
+  {
+   "bit": 92,
+   "scope": "cluster2.mix.arithmetic[11]"
+  },
+  {
+   "bit": 93,
+   "scope": "cluster2.mix.arithmetic[12]"
+  },
+  {
+   "bit": 94,
+   "scope": "cluster2.mix.arithmetic[13]"
+  },
+  {
+   "bit": 95,
+   "scope": "cluster2.mix.arithmetic[14]"
+  },
+  {
+   "bit": 96,
+   "scope": "cluster2.mix.arithmetic[15]"
+  },
+  {
+   "bit": 97,
+   "scope": "cluster2.mix.arithmetic[16]"
+  },
+  {
+   "bit": 98,
+   "scope": "cluster2.mix.arithmetic[17]"
+  },
+  {
+   "bit": 99,
+   "scope": "cluster2.mix.arithmetic[18]"
+  },
+  {
+   "bit": 100,
+   "scope": "cluster2.mix.arithmetic[19]"
+  },
+  {
+   "bit": 101,
+   "scope": "cluster2.mix.arithmetic[20]"
+  },
+  {
+   "bit": 102,
+   "scope": "cluster2.mix.arithmetic[21]"
+  },
+  {
+   "bit": 103,
+   "scope": "cluster2.mix.arithmetic[22]"
+  },
+  {
+   "bit": 104,
+   "scope": "cluster2.mix.arithmetic[23]"
+  },
+  {
+   "bit": 105,
+   "scope": "cluster2.mix.arithmetic[24]"
+  },
+  {
+   "bit": 106,
+   "scope": "cluster2.mix.arithmetic[25]"
+  },
+  {
+   "bit": 107,
+   "scope": "cluster2.mix.arithmetic[26]"
+  },
+  {
+   "bit": 108,
+   "scope": "cluster2.mix.arithmetic[27]"
+  },
+  {
+   "bit": 109,
+   "scope": "cluster2.mix.arithmetic[28]"
+  },
+  {
+   "bit": 110,
+   "scope": "cluster2.mix.arithmetic[29]"
+  },
+  {
+   "bit": 111,
+   "scope": "cluster2.mix.arithmetic[30]"
+  },
+  {
+   "bit": 112,
+   "scope": "cluster3.shell.ctl"
+  },
+  {
+   "bit": 113,
+   "scope": "cluster3.shell.col0"
+  },
+  {
+   "bit": 114,
+   "scope": "cluster3.shell.col1"
+  },
+  {
+   "bit": 115,
+   "scope": "cluster3.shell.col2"
+  },
+  {
+   "bit": 116,
+   "scope": "cluster3.shell.col3"
+  },
+  {
+   "bit": 117,
+   "scope": "cluster3.mix.control+relay"
+  },
+  {
+   "bit": 118,
+   "scope": "cluster3.mix.arithmetic[0]"
+  },
+  {
+   "bit": 119,
+   "scope": "cluster3.mix.arithmetic[1]"
+  },
+  {
+   "bit": 120,
+   "scope": "cluster3.mix.arithmetic[2]"
+  },
+  {
+   "bit": 121,
+   "scope": "cluster3.mix.arithmetic[3]"
+  },
+  {
+   "bit": 122,
+   "scope": "cluster3.mix.arithmetic[4]"
+  },
+  {
+   "bit": 123,
+   "scope": "cluster3.mix.arithmetic[5]"
+  },
+  {
+   "bit": 124,
+   "scope": "cluster3.mix.arithmetic[6]"
+  },
+  {
+   "bit": 125,
+   "scope": "cluster3.mix.arithmetic[7]"
+  },
+  {
+   "bit": 126,
+   "scope": "cluster3.mix.arithmetic[8]"
+  },
+  {
+   "bit": 127,
+   "scope": "cluster3.mix.arithmetic[9]"
+  },
+  {
+   "bit": 128,
+   "scope": "cluster3.mix.arithmetic[10]"
+  },
+  {
+   "bit": 129,
+   "scope": "cluster3.mix.arithmetic[11]"
+  },
+  {
+   "bit": 130,
+   "scope": "cluster3.mix.arithmetic[12]"
+  },
+  {
+   "bit": 131,
+   "scope": "cluster3.mix.arithmetic[13]"
+  },
+  {
+   "bit": 132,
+   "scope": "cluster3.mix.arithmetic[14]"
+  },
+  {
+   "bit": 133,
+   "scope": "cluster3.mix.arithmetic[15]"
+  },
+  {
+   "bit": 134,
+   "scope": "cluster3.mix.arithmetic[16]"
+  },
+  {
+   "bit": 135,
+   "scope": "cluster3.mix.arithmetic[17]"
+  },
+  {
+   "bit": 136,
+   "scope": "cluster3.mix.arithmetic[18]"
+  },
+  {
+   "bit": 137,
+   "scope": "cluster3.mix.arithmetic[19]"
+  },
+  {
+   "bit": 138,
+   "scope": "cluster3.mix.arithmetic[20]"
+  },
+  {
+   "bit": 139,
+   "scope": "cluster3.mix.arithmetic[21]"
+  },
+  {
+   "bit": 140,
+   "scope": "cluster3.mix.arithmetic[22]"
+  },
+  {
+   "bit": 141,
+   "scope": "cluster3.mix.arithmetic[23]"
+  },
+  {
+   "bit": 142,
+   "scope": "cluster3.mix.arithmetic[24]"
+  },
+  {
+   "bit": 143,
+   "scope": "cluster3.mix.arithmetic[25]"
+  },
+  {
+   "bit": 144,
+   "scope": "cluster3.mix.arithmetic[26]"
+  },
+  {
+   "bit": 145,
+   "scope": "cluster3.mix.arithmetic[27]"
+  },
+  {
+   "bit": 146,
+   "scope": "cluster3.mix.arithmetic[28]"
+  },
+  {
+   "bit": 147,
+   "scope": "cluster3.mix.arithmetic[29]"
+  },
+  {
+   "bit": 148,
+   "scope": "cluster3.mix.arithmetic[30]"
+  }
+ ],
+ "cluster_logical_entries": 37,
+ "cluster_physical_children": 38,
+ "clock_blockers": [
+  "Control and105-bit relay share one logical entry but have independently measured R; no per-child clock qualification inferred.",
+  "Top root0 RS5 stations/state not yet physically partitioned."
+ ],
+ "legacy_shell_row_correction": "Current submitted shcol kit is164.16x54, not old172.8x54; old801.36 assertion was a conservative legacy row reference. Exact current constituent widths and legal channel allowance determine actual cluster.",
+ "proposals": {
+  "diagnostic_5p4_gaps": {
+   "width_um": 768.96,
+   "height_um": 767.88,
+   "gap_um": 5.4,
+   "outer_margin_um": 2.16,
+   "leaves": 38,
+   "boxes": [
+    {
+     "row": "shell",
+     "row_index": 0,
+     "master": "shcol",
+     "x": 2.16,
+     "y": 2.16,
+     "w": 164.16,
+     "h": 54.0
+    },
+    {
+     "row": "shell",
+     "row_index": 1,
+     "master": "shcol",
+     "x": 171.72,
+     "y": 2.16,
+     "w": 164.16,
+     "h": 54.0
+    },
+    {
+     "row": "shell",
+     "row_index": 2,
+     "master": "shctl",
+     "x": 341.28,
+     "y": 2.16,
+     "w": 86.4,
+     "h": 54.0
+    },
+    {
+     "row": "shell",
+     "row_index": 3,
+     "master": "shcol",
+     "x": 433.08,
+     "y": 2.16,
+     "w": 164.16,
+     "h": 54.0
+    },
+    {
+     "row": "shell",
+     "row_index": 4,
+     "master": "shcol",
+     "x": 602.64,
+     "y": 2.16,
+     "w": 164.16,
+     "h": 54.0
+    },
+    {
+     "row": "add8",
+     "row_index": 0,
+     "master": "add8",
+     "x": 13.5,
+     "y": 61.56,
+     "w": 181.44,
+     "h": 99.36
+    },
+    {
+     "row": "add8",
+     "row_index": 1,
+     "master": "add8",
+     "x": 200.34,
+     "y": 61.56,
+     "w": 181.44,
+     "h": 99.36
+    },
+    {
+     "row": "add8",
+     "row_index": 2,
+     "master": "add8",
+     "x": 387.18,
+     "y": 61.56,
+     "w": 181.44,
+     "h": 99.36
+    },
+    {
+     "row": "add8",
+     "row_index": 3,
+     "master": "add8",
+     "x": 574.02,
+     "y": 61.56,
+     "w": 181.44,
+     "h": 99.36
+    },
+    {
+     "row": "mul4a",
+     "row_index": 0,
+     "master": "mul4",
+     "x": 13.5,
+     "y": 166.32,
+     "w": 181.44,
+     "h": 120.96
+    },
+    {
+     "row": "mul4a",
+     "row_index": 1,
+     "master": "mul4",
+     "x": 200.34,
+     "y": 166.32,
+     "w": 181.44,
+     "h": 120.96
+    },
+    {
+     "row": "mul4a",
+     "row_index": 2,
+     "master": "mul4",
+     "x": 387.18,
+     "y": 166.32,
+     "w": 181.44,
+     "h": 120.96
+    },
+    {
+     "row": "mul4a",
+     "row_index": 3,
+     "master": "mul4",
+     "x": 574.02,
+     "y": 166.32,
+     "w": 181.44,
+     "h": 120.96
+    },
+    {
+     "row": "mul4b",
+     "row_index": 0,
+     "master": "mul4",
+     "x": 13.5,
+     "y": 292.68,
+     "w": 181.44,
+     "h": 120.96
+    },
+    {
+     "row": "mul4b",
+     "row_index": 1,
+     "master": "mul4",
+     "x": 200.34,
+     "y": 292.68,
+     "w": 181.44,
+     "h": 120.96
+    },
+    {
+     "row": "mul4b",
+     "row_index": 2,
+     "master": "mul4",
+     "x": 387.18,
+     "y": 292.68,
+     "w": 181.44,
+     "h": 120.96
+    },
+    {
+     "row": "mul4b",
+     "row_index": 3,
+     "master": "mul4",
+     "x": 574.02,
+     "y": 292.68,
+     "w": 181.44,
+     "h": 120.96
+    },
+    {
+     "row": "relay",
+     "row_index": 0,
+     "master": "rly",
+     "x": 362.88,
+     "y": 419.04,
+     "w": 43.2,
+     "h": 21.6
+    },
+    {
+     "row": "reduceA",
+     "row_index": 0,
+     "master": "chunk8",
+     "x": 50.76,
+     "y": 446.04,
+     "w": 90.72,
+     "h": 90.72
+    },
+    {
+     "row": "reduceA",
+     "row_index": 1,
+     "master": "chunk8",
+     "x": 146.88,
+     "y": 446.04,
+     "w": 90.72,
+     "h": 90.72
+    },
+    {
+     "row": "reduceA",
+     "row_index": 2,
+     "master": "chunk8",
+     "x": 243.0,
+     "y": 446.04,
+     "w": 90.72,
+     "h": 90.72
+    },
+    {
+     "row": "reduceA",
+     "row_index": 3,
+     "master": "sum",
+     "x": 339.12,
+     "y": 446.04,
+     "w": 90.72,
+     "h": 99.36
+    },
+    {
+     "row": "reduceA",
+     "row_index": 4,
+     "master": "chunk8",
+     "x": 435.24,
+     "y": 446.04,
+     "w": 90.72,
+     "h": 90.72
+    },
+    {
+     "row": "reduceA",
+     "row_index": 5,
+     "master": "chunk8",
+     "x": 531.36,
+     "y": 446.04,
+     "w": 90.72,
+     "h": 90.72
+    },
+    {
+     "row": "reduceA",
+     "row_index": 6,
+     "master": "chunk8",
+     "x": 627.48,
+     "y": 446.04,
+     "w": 90.72,
+     "h": 90.72
+    },
+    {
+     "row": "reduceB",
+     "row_index": 0,
+     "master": "chunk8",
+     "x": 2.7,
+     "y": 550.8,
+     "w": 90.72,
+     "h": 90.72
+    },
+    {
+     "row": "reduceB",
+     "row_index": 1,
+     "master": "chunk8",
+     "x": 98.82,
+     "y": 550.8,
+     "w": 90.72,
+     "h": 90.72
+    },
+    {
+     "row": "reduceB",
+     "row_index": 2,
+     "master": "chunk8",
+     "x": 194.94,
+     "y": 550.8,
+     "w": 90.72,
+     "h": 90.72
+    },
+    {
+     "row": "reduceB",
+     "row_index": 3,
+     "master": "sum",
+     "x": 291.06,
+     "y": 550.8,
+     "w": 90.72,
+     "h": 99.36
+    },
+    {
+     "row": "reduceB",
+     "row_index": 4,
+     "master": "sum",
+     "x": 387.18,
+     "y": 550.8,
+     "w": 90.72,
+     "h": 99.36
+    },
+    {
+     "row": "reduceB",
+     "row_index": 5,
+     "master": "chunk8",
+     "x": 483.3,
+     "y": 550.8,
+     "w": 90.72,
+     "h": 90.72
+    },
+    {
+     "row": "reduceB",
+     "row_index": 6,
+     "master": "chunk8",
+     "x": 579.42,
+     "y": 550.8,
+     "w": 90.72,
+     "h": 90.72
+    },
+    {
+     "row": "reduceB",
+     "row_index": 7,
+     "master": "chunk8",
+     "x": 675.54,
+     "y": 550.8,
+     "w": 90.72,
+     "h": 90.72
+    },
+    {
+     "row": "scalar",
+     "row_index": 0,
+     "master": "norm",
+     "x": 23.76,
+     "y": 655.56,
+     "w": 181.44,
+     "h": 95.04
+    },
+    {
+     "row": "scalar",
+     "row_index": 1,
+     "master": "signed_sqrt",
+     "x": 210.6,
+     "y": 655.56,
+     "w": 64.8,
+     "h": 43.2
+    },
+    {
+     "row": "scalar",
+     "row_index": 2,
+     "master": "control",
+     "x": 280.8,
+     "y": 655.56,
+     "w": 90.72,
+     "h": 64.8
+    },
+    {
+     "row": "scalar",
+     "row_index": 3,
+     "master": "sigmoid",
+     "x": 376.92,
+     "y": 655.56,
+     "w": 181.44,
+     "h": 110.16
+    },
+    {
+     "row": "scalar",
+     "row_index": 4,
+     "master": "norm",
+     "x": 563.76,
+     "y": 655.56,
+     "w": 181.44,
+     "h": 95.04
+    }
+   ],
+   "registered_seam_reach": "OPEN: full actual pin-to-pin adjacency not yet repaired/proven",
+   "physical_status": "unqualified proposal, not a fitted/routed cluster"
+  },
+  "conservative_21p6_channels": {
+   "width_um": 920.16,
+   "height_um": 920.16,
+   "gap_um": 21.6,
+   "outer_margin_um": 21.6,
+   "leaves": 38,
+   "boxes": [
+    {
+     "row": "shell",
+     "row_index": 0,
+     "master": "shcol",
+     "x": 45.36,
+     "y": 21.6,
+     "w": 164.16,
+     "h": 54.0
+    },
+    {
+     "row": "shell",
+     "row_index": 1,
+     "master": "shcol",
+     "x": 231.12,
+     "y": 21.6,
+     "w": 164.16,
+     "h": 54.0
+    },
+    {
+     "row": "shell",
+     "row_index": 2,
+     "master": "shctl",
+     "x": 416.88,
+     "y": 21.6,
+     "w": 86.4,
+     "h": 54.0
+    },
+    {
+     "row": "shell",
+     "row_index": 3,
+     "master": "shcol",
+     "x": 524.88,
+     "y": 21.6,
+     "w": 164.16,
+     "h": 54.0
+    },
+    {
+     "row": "shell",
+     "row_index": 4,
+     "master": "shcol",
+     "x": 710.64,
+     "y": 21.6,
+     "w": 164.16,
+     "h": 54.0
+    },
+    {
+     "row": "add8",
+     "row_index": 0,
+     "master": "add8",
+     "x": 64.8,
+     "y": 97.2,
+     "w": 181.44,
+     "h": 99.36
+    },
+    {
+     "row": "add8",
+     "row_index": 1,
+     "master": "add8",
+     "x": 267.84,
+     "y": 97.2,
+     "w": 181.44,
+     "h": 99.36
+    },
+    {
+     "row": "add8",
+     "row_index": 2,
+     "master": "add8",
+     "x": 470.88,
+     "y": 97.2,
+     "w": 181.44,
+     "h": 99.36
+    },
+    {
+     "row": "add8",
+     "row_index": 3,
+     "master": "add8",
+     "x": 673.92,
+     "y": 97.2,
+     "w": 181.44,
+     "h": 99.36
+    },
+    {
+     "row": "mul4a",
+     "row_index": 0,
+     "master": "mul4",
+     "x": 64.8,
+     "y": 218.16,
+     "w": 181.44,
+     "h": 120.96
+    },
+    {
+     "row": "mul4a",
+     "row_index": 1,
+     "master": "mul4",
+     "x": 267.84,
+     "y": 218.16,
+     "w": 181.44,
+     "h": 120.96
+    },
+    {
+     "row": "mul4a",
+     "row_index": 2,
+     "master": "mul4",
+     "x": 470.88,
+     "y": 218.16,
+     "w": 181.44,
+     "h": 120.96
+    },
+    {
+     "row": "mul4a",
+     "row_index": 3,
+     "master": "mul4",
+     "x": 673.92,
+     "y": 218.16,
+     "w": 181.44,
+     "h": 120.96
+    },
+    {
+     "row": "mul4b",
+     "row_index": 0,
+     "master": "mul4",
+     "x": 64.8,
+     "y": 360.72,
+     "w": 181.44,
+     "h": 120.96
+    },
+    {
+     "row": "mul4b",
+     "row_index": 1,
+     "master": "mul4",
+     "x": 267.84,
+     "y": 360.72,
+     "w": 181.44,
+     "h": 120.96
+    },
+    {
+     "row": "mul4b",
+     "row_index": 2,
+     "master": "mul4",
+     "x": 470.88,
+     "y": 360.72,
+     "w": 181.44,
+     "h": 120.96
+    },
+    {
+     "row": "mul4b",
+     "row_index": 3,
+     "master": "mul4",
+     "x": 673.92,
+     "y": 360.72,
+     "w": 181.44,
+     "h": 120.96
+    },
+    {
+     "row": "relay",
+     "row_index": 0,
+     "master": "rly",
+     "x": 438.48,
+     "y": 503.28,
+     "w": 43.2,
+     "h": 21.6
+    },
+    {
+     "row": "reduceA",
+     "row_index": 0,
+     "master": "chunk8",
+     "x": 77.76,
+     "y": 546.48,
+     "w": 90.72,
+     "h": 90.72
+    },
+    {
+     "row": "reduceA",
+     "row_index": 1,
+     "master": "chunk8",
+     "x": 190.08,
+     "y": 546.48,
+     "w": 90.72,
+     "h": 90.72
+    },
+    {
+     "row": "reduceA",
+     "row_index": 2,
+     "master": "chunk8",
+     "x": 302.4,
+     "y": 546.48,
+     "w": 90.72,
+     "h": 90.72
+    },
+    {
+     "row": "reduceA",
+     "row_index": 3,
+     "master": "sum",
+     "x": 414.72,
+     "y": 546.48,
+     "w": 90.72,
+     "h": 99.36
+    },
+    {
+     "row": "reduceA",
+     "row_index": 4,
+     "master": "chunk8",
+     "x": 527.04,
+     "y": 546.48,
+     "w": 90.72,
+     "h": 90.72
+    },
+    {
+     "row": "reduceA",
+     "row_index": 5,
+     "master": "chunk8",
+     "x": 639.36,
+     "y": 546.48,
+     "w": 90.72,
+     "h": 90.72
+    },
+    {
+     "row": "reduceA",
+     "row_index": 6,
+     "master": "chunk8",
+     "x": 751.68,
+     "y": 546.48,
+     "w": 90.72,
+     "h": 90.72
+    },
+    {
+     "row": "reduceB",
+     "row_index": 0,
+     "master": "chunk8",
+     "x": 21.6,
+     "y": 667.44,
+     "w": 90.72,
+     "h": 90.72
+    },
+    {
+     "row": "reduceB",
+     "row_index": 1,
+     "master": "chunk8",
+     "x": 133.92,
+     "y": 667.44,
+     "w": 90.72,
+     "h": 90.72
+    },
+    {
+     "row": "reduceB",
+     "row_index": 2,
+     "master": "chunk8",
+     "x": 246.24,
+     "y": 667.44,
+     "w": 90.72,
+     "h": 90.72
+    },
+    {
+     "row": "reduceB",
+     "row_index": 3,
+     "master": "sum",
+     "x": 358.56,
+     "y": 667.44,
+     "w": 90.72,
+     "h": 99.36
+    },
+    {
+     "row": "reduceB",
+     "row_index": 4,
+     "master": "sum",
+     "x": 470.88,
+     "y": 667.44,
+     "w": 90.72,
+     "h": 99.36
+    },
+    {
+     "row": "reduceB",
+     "row_index": 5,
+     "master": "chunk8",
+     "x": 583.2,
+     "y": 667.44,
+     "w": 90.72,
+     "h": 90.72
+    },
+    {
+     "row": "reduceB",
+     "row_index": 6,
+     "master": "chunk8",
+     "x": 695.52,
+     "y": 667.44,
+     "w": 90.72,
+     "h": 90.72
+    },
+    {
+     "row": "reduceB",
+     "row_index": 7,
+     "master": "chunk8",
+     "x": 807.84,
+     "y": 667.44,
+     "w": 90.72,
+     "h": 90.72
+    },
+    {
+     "row": "scalar",
+     "row_index": 0,
+     "master": "norm",
+     "x": 66.96,
+     "y": 788.4,
+     "w": 181.44,
+     "h": 95.04
+    },
+    {
+     "row": "scalar",
+     "row_index": 1,
+     "master": "signed_sqrt",
+     "x": 270.0,
+     "y": 788.4,
+     "w": 64.8,
+     "h": 43.2
+    },
+    {
+     "row": "scalar",
+     "row_index": 2,
+     "master": "control",
+     "x": 356.4,
+     "y": 788.4,
+     "w": 90.72,
+     "h": 64.8
+    },
+    {
+     "row": "scalar",
+     "row_index": 3,
+     "master": "sigmoid",
+     "x": 468.72,
+     "y": 788.4,
+     "w": 181.44,
+     "h": 110.16
+    },
+    {
+     "row": "scalar",
+     "row_index": 4,
+     "master": "norm",
+     "x": 671.76,
+     "y": 788.4,
+     "w": 181.44,
+     "h": 95.04
+    }
+   ],
+   "registered_seam_reach": "OPEN: full actual pin-to-pin adjacency not yet repaired/proven",
+   "physical_status": "unqualified proposal, not a fitted/routed cluster"
+  }
+ },
+ "current_home_status": "No parent fit/clock/seam qualification; do not adopt old763.56/771.12/801.36 dimensions as current hardened parent",
+ "native_VM_profile": "W0 numerical baseline868; new static149 W1 full128SRAM proof4456f664b in progress, hypothesis869 only"
+}

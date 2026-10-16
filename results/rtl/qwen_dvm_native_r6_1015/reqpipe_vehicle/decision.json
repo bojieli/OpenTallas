@@ -1,0 +1,13 @@
+{
+ "schema": "opentallas.qwen_dvm.reqpipe_cost.v1",
+ "date": "2026-10-15",
+ "candidate": "ot_qfd_xhead REQ_PIPE=1 (head lr_* read-request relay; QD/DX/BD +1, compiler-visible)",
+ "vehicle": "partition_token.py L3 (3 layers, exact) on the same vehicle source; baseline qD_dvm_r3x12 (XVM13/BD89) vs qD_dvm_rq1 (XVM14/BD90)",
+ "baseline_stage_cycles": {"L0": 7224, "L1": 6868, "L2": 6868, "total": 20969},
+ "reqpipe_stage_cycles": {"L0": 7230, "L1": 6874, "L2": 6874, "total": 20987},
+ "delta_cycles_per_layer": 6,
+ "delta_fraction": 0.000858,
+ "exact": true, "layer_x_mismatches": 0, "kv_mismatches": 0,
+ "ledger_check": "measured e2e loss 0.086% <= 5%/unit and well inside 15%/design",
+ "decision": "REQ_PIPE=1 cost ACCEPTED (+6 cycles/layer). Adopt as qfd_xcol_e/w default only when the regenerated rq CTS gates (a22d5a351) show the head->leaf read-request r-path cleared (REQ_PIPE=0 gate3: core->leaf slack -304 ps) and the routes close; otherwise no adoption."
+}
