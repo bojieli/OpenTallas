@@ -93,7 +93,7 @@ def esc(n):
 
 def pin_key(p):
     inst, port = p.rsplit('/', 1)
-    return inst, port[:-3] if port.endswith('[0]') else port
+    return inst, port
 
 
 class Die:
@@ -161,12 +161,15 @@ def load_targets(path):
 
     def v(m, p):
         r = km.get(m, {})
-        pp = r.get('physical_insertion_per_clock_pin_ps', {})
-        if p not in pp:
-            pp = r.get('insertion_per_clock_pin_ps', {})
-        if p in pp:
-            value = pp[p]
-        else:
+        candidates = (p, p[:-3] if p.endswith('[0]') else p + '[0]')
+        value = None
+        for field in ('physical_insertion_per_clock_pin_ps', 'insertion_per_clock_pin_ps'):
+            pp = r.get(field, {})
+            found = next((key for key in candidates if key in pp), None)
+            if found is not None:
+                value = pp[found]
+                break
+        if value is None:
             value = r.get('insertion_in_arcs_ps')
         if value is None:
             raise ValueError(f'missing native insertion R for {m}/{p} in {path}')
