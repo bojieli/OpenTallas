@@ -141,7 +141,7 @@ def main():
                 raise SystemExit('MUTANT SURVIVED ' + m)
     out = dict(schema='opentallas.s81.vm-a2f-equiv.v1',
                status='PASS_A2F_CYCLE_EXACT_TO_A2_ALL_OUTPUTS_ALL_EDGES_FUNCTIONAL_ONLY',
-               sources={s: sha(s) for s in SOURCES}, gate_sha256=sha('tools/s81_vm/area_a2f_equiv_gate.py'),
+               sources={s: sha(s) for s in SOURCES}, gate_sha256=sha('tools/s81_vm/area_a2f_split4_equiv_gate.py'),
                simulator='iverilog -g2012', records=recs,
                not_claimed='no physical view, timing, native clock/reset delivery or production adoption')
     Path(a.out).parent.mkdir(parents=True, exist_ok=True)
