@@ -12,7 +12,18 @@ class CaptureSplitRegen(unittest.TestCase):
     def test_specs_generated_or_preserved(self):
         bad, n = capture_split_specs.check()
         self.assertEqual(bad, [])
-        self.assertEqual(n, 18)
+        self.assertEqual(n, 22)
+
+    def test_status_x43_generated(self):
+        import capx43_status_kits as ks
+        out = ks.outputs()
+        self.assertEqual(len(out), 4)
+        names = {p.name for p in out}
+        self.assertNotIn("dsfd_capt_status_x43_t.json", capture_split_specs.PRESERVED)
+        self.assertTrue({"dsfd_capt_status_x43_t.tcl", "dsfd_capt_status_x43_s.json"} <= names)
+        s = out[ks.PINS / "dsfd_capt_status_x43_s.tcl"]
+        self.assertIn("place_pin -pin_name {rsv[0]} -layer M5", s)
+        self.assertEqual(s.count("pin_name {t_st["), 64)
 
     def test_check_detects_a_change(self):
         out, _ = capture_split.render()

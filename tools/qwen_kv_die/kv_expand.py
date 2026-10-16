@@ -211,7 +211,7 @@ def elaborate(mod, file, leaf, parameters=None):
         (td / 'stubs.v').write_text('\n'.join(stub_text(m_, leaf[m_]['ports'], params[m_]) for m_ in leaf))
         (td / 'parent.sv').write_text(txt)
         (td / 'run.ys').write_text(f'read_verilog -sv {td}/stubs.v\nread_verilog -sv {td}/parent.sv\n{chp}'
-                                   f'hierarchy -top {mod}\nproc\n' + ('flatten\nopt_expr\n' if subs else '') +
+                                   f'hierarchy -top {mod}\nproc\n' + ('flatten\ndelete t:$scopeinfo\nopt_expr\n' if subs else '') +
                                    f'opt_clean\nwrite_json {td}/out.json\n')
         r = subprocess.run(['yosys', '-q', '-s', str(td / 'run.ys')], capture_output=True, text=True)
         if r.returncode:
