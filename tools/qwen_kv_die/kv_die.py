@@ -26,6 +26,7 @@ import hashlib
 import json
 import re
 import math
+import os
 import sys
 from pathlib import Path
 
@@ -937,8 +938,9 @@ def _leaf_pin(it, port):
 
 
 def build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_wq_head=False, kv_wq_wide=False, kv_wq_mirror=False, split=False, reserve_static_memory=False, reserve_native_astk=False, host_v14=None, host_north=None, host_trees=None, v143=None):
-    """qwen-1010/b 2026-10-10: two passes -- the second plans every relay chain from the pins the first pass drew (a
-    shared master's pin is the one its first instance's peers set), so each hop is measured pin to pin on the die."""
+    """qwen-1010/b 2026-10-10: plan actual relay chains from drawn pins."""
+    if os.environ.get('OT_KV_STATIC', '0') == '1':
+        raise ValueError('OT_KV_STATIC requires the explicit source-pinned --static-graph compiler join; legacy physical graph is forbidden')
     kw = dict(r=r, kv_wq_leaves=kv_wq_leaves, kv_wq_binary=kv_wq_binary, kv_wq_leaf_s=kv_wq_leaf_s, kv_wq_head=kv_wq_head,
               kv_wq_wide=kv_wq_wide, kv_wq_mirror=kv_wq_mirror, split=split)
     if host_v14 is not None:
@@ -3123,6 +3125,8 @@ def case(m, work):
     """the die-level case of the r21 Qwen chain (tools/qwen_rom_fulldie.case_real: elements.lef from these masters,
     phy_ew.lef, die.v, place.tcl, run.tcl legality / on-track / pin access, run_pa.tcl PDN), written by the base
     generator's writer with this die's masters and port widths."""
+    if os.environ.get('OT_KV_STATIC', '0') == '1' or m.get('geo', {}).get('kv_static'):
+        raise ValueError('static source composition has no qualified physical case/legacy-view alias')
     if m['geo'].get('static_memory_reservation'):
         raise ValueError('static memory shape reservation is plan-only until actual adapter ports/relays replace old landing binding')
     # qwen-1010/b 2026-10-11: the mirror leaf plan is the ADOPTED write queue (ctl_bin + leaf_s_w129(_m) closed, bound
@@ -3284,6 +3288,7 @@ def main(argv=None):
     ap.add_argument('--kv-wq-mirror', action='store_true', help='candidate single-layer mirror-legal wide leaf; head capture remains opt-in')
     ap.add_argument('--reserve-static-memory', action='store_true', help='plan-only native151.2umPC SRAM column plus86.4um row-control column; actual adapter binding still required')
     ap.add_argument('--reserve-native-astk', action='store_true', help='plan-only328.32um parent for actual two162um ASTK columns; selected static/native views remain required')
+    ap.add_argument('--static-graph', type=Path, help='OT_KV_STATIC=1 only: complete source-pinned compiler join JSON; never imports legacy credit graph')
     ap.add_argument('--split', action='store_true', help='qwen-split 2026-10-14: the KV/SYSTEM die of the two-die split (CONTRACT_KVSYS.md)')
     ap.add_argument('--host-v14', action='store_true', help='kvsys v1.4: real HOST root core + 128 die-placed PC slices + PLL model')
     ap.add_argument('--host-north', action='store_true', help='kvsys v1.4.1: HOST root core directly below the static D2D end')
@@ -3291,6 +3296,21 @@ def main(argv=None):
     ap.add_argument('--v143', action='store_true', help='kvsys v1.4.3 G3S2: staged head ingress / score on closed gather / '
                     'sstage views, near-head feed-through frames, anchored group growth (needs --split --host-trees)')
     a = ap.parse_args(argv)
+    if os.environ.get('OT_KV_STATIC', '0') == '1':
+        import kv_static
+        if not a.split:
+            ap.error('OT_KV_STATIC requires --split')
+        if a.mode == 'case':
+            ap.error('static physical case held: actual homes/pins/clocks/native benches and TT/FF/DRC qualification remain required')
+        if not a.static_graph:
+            a.out.mkdir(parents=True, exist_ok=True)
+            (a.out / 'static_requirements.json').write_text(json.dumps(kv_static.requirements(), indent=2) + '\n')
+            ap.error('OT_KV_STATIC requires --static-graph with all actual native producers; requirements emitted, no fallback netlist')
+        report = kv_static.emit(a.static_graph, a.out)
+        print(json.dumps(dict(status=report['status'], native_qualified=False, physical_qualified=False)))
+        return 0
+    if a.static_graph:
+        ap.error('--static-graph requires explicit OT_KV_STATIC=1')
     if a.host_v14:
         if not a.split:
             ap.error('--host-v14 needs --split')
