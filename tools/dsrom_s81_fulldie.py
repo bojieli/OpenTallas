@@ -6097,6 +6097,12 @@ VM_NATIVE_CANDIDATE = False    # explicit4/2/1 source construction; default rema
 # Default off: the master's default elaboration (scalar return root, legacy dsfd_vm_wfc_return leaf) is unchanged.
 WFC_RETURN256 = False
 WFC_RETURN256_PORTS = ('ck_wfc_return_t', 'rss_wfc_return_t')
+# S-DIE-WFC 2026-10-16 (--pqcnt-lef-pins, c26j; S-ELEM-PQ main 46455e19f): the --pq-cnt count leaves bound to their
+# closed views (ot_s81_pq_rwbc15 / rwbc2) take their assigned-port rectangles from the bound LEF verbatim (the export's
+# literal contacts, <= 24 / 20 nm from the v22 assigned centres) instead of the assigned record's coordinates, so every
+# die-side pin model (masters_r8, spread load maps) is the placed macro's.  Default off.
+PQCNT_LEF_PINS = False
+PQCNT_MASTERS = ('ot_s81_pq_rwbc15', 'ot_s81_pq_rwbc2')
 PIN_OVERRIDES = None            # --pin-overrides (S-DIE r11 10-15): adopted GEO-S face re-assignments, see load_pin_overrides
 PIN_OVERRIDES_APPLIED = {}
 
@@ -10265,6 +10271,9 @@ def _assigned_physical_pins(Mx, ports):
     rec = _assigned_record(Mx.name)
     if not rec:
         return
+    if PQCNT_LEF_PINS and Mx.name in PQCNT_MASTERS and Mx.name in bound_views():
+        _pqcnt_lef_physical_pins(Mx, ports, rec)
+        return
     if HEND_BOUND_FOOTPRINT and '__' in Mx.name:
         # --hend-bound-footprint: a hub end resized to its bound view's outline keeps the view's measured pins (the
         # bound view replaces this generated master in write_lefs); the assignment made for the estimated outline is moot
@@ -10294,6 +10303,45 @@ def _assigned_physical_pins(Mx, ports):
         Mx.ports[port] = ('rects', rects)
         if port not in Mx.order:
             Mx.order.append(port)
+
+
+def _pqcnt_lef_physical_pins(Mx, ports, rec):
+    """--pqcnt-lef-pins: the assigned ports of a bound count leaf at the bound LEF's literal contacts (layer + first
+    RECT of each bit's PIN, verbatim).  Hard errors: outline differs from the view, a bit without its LEF pin, a LEF
+    contact on another face than the assignment, a LEF signal pin outside the die ports."""
+    v_ = bound_views()[Mx.name]
+    if abs(v_['w'] - Mx.w) > BOUND_TOL or abs(v_['h'] - Mx.h) > BOUND_TOL:
+        raise SystemExit(f'--pqcnt-lef-pins: {Mx.name} view {v_["w"]} x {v_["h"]} != slot {Mx.w:.3f} x {Mx.h:.3f}')
+    lef = {}
+    for pm in re.finditer(r'\n\s*PIN (\S+)\s*\n(.*?)\n\s*END \1', v_['text'], re.S):
+        if re.search(r'USE\s+(POWER|GROUND)', pm.group(2)):
+            continue
+        r_ = re.search(r'LAYER\s+(\S+)\s*;\s*RECT\s+([-\d.]+)\s+([-\d.]+)\s+([-\d.]+)\s+([-\d.]+)', pm.group(2))
+        lef[pm.group(1)] = (r_.group(1), tuple(float(x_) for x_ in r_.groups()[1:]))
+    extra = sorted(set(lef) - {f'{p_}[{i}]' for p_, (_d, n_) in ports.items() for i in range(n_)} - set(ports))
+    if extra:
+        raise SystemExit(f'--pqcnt-lef-pins: {Mx.name} LEF signal pins without a die port: {extra[:4]}')
+    shift = 0.0
+    for port, spec in rec['ports'].items():
+        assert port in ports and spec['bits'] == ports[port][1], (Mx.name, port, spec['bits'], ports.get(port))
+        cs = spec.get('per_bit') or [[spec['face'], spec['layer'], (spec['at'][0] + i * spec['at'][1]) if spec['uniform']
+                                      else spec['at'][i], spec['depth']] for i in range(spec['bits'])]
+        rects = []
+        for i, (face, _l, c, _d) in enumerate(cs):
+            nm = f'{port}[{i}]' if f'{port}[{i}]' in lef else port
+            if nm not in lef:
+                raise SystemExit(f'--pqcnt-lef-pins: {Mx.name} has no LEF pin {port}[{i}]')
+            layer, (x0, y0, x1, y1) = lef[nm]
+            on = {'N': abs(y1 - Mx.h) < 1e-3, 'S': abs(y0) < 1e-3, 'E': abs(x1 - Mx.w) < 1e-3, 'W': abs(x0) < 1e-3}[face]
+            if not on:
+                raise SystemExit(f'--pqcnt-lef-pins: {Mx.name} {nm} LEF contact {lef[nm]} is not on the assigned {face} face')
+            shift = max(shift, abs(((x0 + x1) if face in 'NS' else (y0 + y1)) / 2 - c))
+            rects.append((f'{port}[{i}]', layer, (x0, y0, x1, y1)))
+        Mx.ports[port] = ('rects', rects)
+        if port not in Mx.order:
+            Mx.order.append(port)
+    print('OT_PQCNT_LEF_PINS %s: %d assigned ports at the bound LEF contacts (max shift %.3f um from the assignment)'
+          % (Mx.name, len(rec['ports']), shift), file=sys.stderr)
 
 
 def _require_physical_source_ports(master, ports):
@@ -11888,6 +11936,8 @@ def die_options(ap):
                     'compiler command edge (manifest define DSFD_SUHC_STATIC_ISSUE); the void VM -> SU / HC t_inp nets leave')
     ap.add_argument('--static-seams', action='store_true', help='S-DIE r11 2026-10-15: static VM<->collective seam (t_vm 2204, t_crq 15, t_crs 513), drop vm.t_collective/tcs credit and hc_s.y_rdy, add collective.t_hc_tag -> hc_s.y_tag')
     ap.add_argument('--static-collective', action='store_true', help='swap the hub collective to dsfd_sp_collective_static_c (needs its RTL in the tree)')
+    ap.add_argument('--pqcnt-lef-pins', action='store_true', help='S-DIE-WFC 2026-10-16 (c26j): bound --pq-cnt count leaves '
+                    '(ot_s81_pq_rwbc15 / rwbc2) take their assigned-port pin rectangles from the bound LEF verbatim')
     ap.add_argument('--wfc-return256', action='store_true', help='S-DIE-WFC 2026-10-16 (c26j): dsfd_sp_vm WFC_RETURN256 1 '
                     '(u_wfc.u_ret = return256 lo/hi + native valid diag, S-VM 6136ed704): ck/rss_wfc_return_t 1 -> 3 roots')
     ap.add_argument('--vm-native-candidate', action='store_true', help='explicit source candidate dsfd_sp_vm READ_PIPE4/CAP_PIPE2/WSCATTER_PIPE1; requires actual wrapper parameters; no physical/native qualification inheritance')
@@ -11938,7 +11988,8 @@ def apply_options(a):
     VM_NATIVE_CANDIDATE = bool(getattr(a, 'vm_native_candidate', False))
     if VM_NATIVE_CANDIDATE:
         vm_native_candidate_params()
-    global WFC_RETURN256
+    global WFC_RETURN256, PQCNT_LEF_PINS
+    PQCNT_LEF_PINS = bool(getattr(a, 'pqcnt_lef_pins', False))
     WFC_RETURN256 = bool(getattr(a, 'wfc_return256', False))
     _RTL_CLOCK_CACHE.pop('dsfd_sp_vm', None)
     if WFC_RETURN256:
