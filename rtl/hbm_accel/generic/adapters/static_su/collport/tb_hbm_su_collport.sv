@@ -94,8 +94,12 @@ module tb_hbm_su_collport #(parameter integer QID=1, INJ_RET=11, SD=0, MUT_CX=0,
  // drive on stream edges (after the edge: COLL registers at edge P)
  integer stage=0;                     // 0 delivery, 1 inject, 2 rc/rr/sfu, 3 done
  integer dcount=0, icount=0;
- reg [8:0] drows [0:15]; integer ndrows=8;
- initial for(integer i=0;i<16;i=i+1) drows[i]=9'(i*37+5);
+ reg [8:0] drows [0:15]; integer ndrows=16;
+ initial for(integer i=0;i<16;i=i+1) drows[i]=9'((i/2)*37+5+(i%2));
+ // Seed once. Repeated $urandom(seed) reseeds to the same first value.
+ initial begin integer discarded; discarded=$urandom(seed); end
+ integer accepted_dw=0,nonzero_inject_checks=0;reg[127:0]del_lanes_seen=0;bit mem_valid[0:127][0:511];
+ always @(posedge clk_q)if(rst)accepted_dw=accepted_dw+$countones(dw_v);
  always @(posedge clk_s) if(rst) begin : drive
   integer pn, ph;
   pn=p+1; ph=pn%4;                    // pn = index of THIS edge
@@ -105,12 +109,15 @@ module tb_hbm_su_collport #(parameter integer QID=1, INJ_RET=11, SD=0, MUT_CX=0,
    if(stage==0) begin
     reg [3:0] dv; reg [2179:0] df; reg [159:0] ob;
     dv=0; df=0; ob=0;
-    for(integer j=0;j<4;j=j+1) if($urandom(seed)%4!=0) begin
+    for(integer j=0;j<4;j=j+1) begin
      integer half, row, base;
-     half=$urandom%2; row=drows[$urandom%ndrows]; base=64*half+16*j;
+     half=(dcount/ndrows)%2; row=drows[dcount%ndrows]; base=64*half+16*j;
      dv[j]=1; ob[40*j+:40]=saddr(base,row);
      df[545*j+544]=1'b1; df[545*j+512+:16]=16'(dcount);
-     for(integer w=0;w<16;w=w+1) begin df[545*j+32*w+:32]=$urandom; mem[base+w][row]=df[545*j+32*w+:32]; end
+     for(integer w=0;w<16;w=w+1) begin
+      df[545*j+32*w+:32]=32'h3a000001 ^ (32'(dcount)<<12) ^ (32'(row)<<3) ^ 32'(base+w);
+      mem[base+w][row]=df[545*j+32*w+:32];mem_valid[base+w][row]=1;del_lanes_seen[base+w]=1;
+     end
     end
     del_valid<=dv; del_flit<=df; del_obase<=ob; dcount=dcount+1;
     if(dcount>=NDEL) stage=1;
@@ -119,7 +126,7 @@ module tb_hbm_su_collport #(parameter integer QID=1, INJ_RET=11, SD=0, MUT_CX=0,
     rd=0; ad=0; ex=0;
     for(integer j=0;j<2;j=j+1) if($urandom%5!=0) begin
      integer lane, row, lane2, row2, b39;
-     lane=8*($urandom%16); row=drows[$urandom%ndrows];
+     lane=8*($urandom%16); row=drows[2*($urandom%(ndrows/2))];
      lane2=(lane+8)%128; row2=row+((lane+8)/128);
      if(row2>511) row2=row;
      b39=(B39!=0) && ($urandom%4==0);
@@ -130,7 +137,10 @@ module tb_hbm_su_collport #(parameter integer QID=1, INJ_RET=11, SD=0, MUT_CX=0,
       // IDX lane: SU drives 0; its hi address names a group the other lane may read at another row
       ad[80*j+40+:40]=saddr(8*(j==0?3:5),(row+1)%512);
      end else
-      for(integer w=0;w<8;w=w+1) begin ex[512*j+32*w+:32]=mem[lane+w][row]; ex[512*j+256+32*w+:32]=mem[lane2+w][row2]; end
+      for(integer w=0;w<8;w=w+1) begin
+       if(!mem_valid[lane+w][row] || !mem_valid[lane2+w][row2])err("test attempted uninitialized expected memory");
+       ex[512*j+32*w+:32]=mem[lane+w][row]; ex[512*j+256+32*w+:32]=mem[lane2+w][row2];
+      end
     end
     // avoid two sectors on one group at different rows (a compiler rule; RTL faults)
     begin : grpchk
@@ -138,10 +148,11 @@ module tb_hbm_su_collport #(parameter integer QID=1, INJ_RET=11, SD=0, MUT_CX=0,
      for(integer a=0;a<4;a=a+1) for(integer b=a+1;b<4;b=b+1)
       if(rd[a/2] && rd[b/2] && !(B39 && ad[80*(a/2)+39]) && !(B39 && ad[80*(b/2)+39]) &&
          ad[40*a+3+:4]==ad[40*b+3+:4] && ad[40*a+7+:9]!=ad[40*b+7+:9]) ok=0;
-     if(!ok) rd=0;
+     if(!ok) begin rd=0; ex=0; end
     end
     if(rd!=0 || 1) begin
      inj_rd<=rd; inj_addr<=ad;
+     if(ex!=0)nonzero_inject_checks=nonzero_inject_checks+1;
      at=pn+INJ_RET; exp_inj[at%8192]=ex; exp_has[at%8192]=1;
     end
     icount=icount+1;
@@ -259,10 +270,10 @@ module tb_hbm_su_collport #(parameter integer QID=1, INJ_RET=11, SD=0, MUT_CX=0,
     $display("SU_COLLPORT PASS negative control faulted PHASE2=%0d COLLIDE=%0d seen_overlap=%0d (cx %0d core %0d slices %b)",ph2,collide,saw_collision,cx_fault,core_fault,sl_fault);
    else begin $display("SU_COLLPORT FAIL negative control did not fault"); $fatal(1,"SU_COLLPORT gate rejected"); end
   end else begin
-  if(errors==0 && !any_fault && checks>NINJ/2 && rc_seen==6)
-   $display("SU_COLLPORT PASS QID=%0d INJ_RET=%0d SD=%0d checks=%0d deliveries=%0d injects=%0d rc=%0d",QID,INJ_RET,SD,checks,dcount,icount,rc_seen);
+  if(errors==0 && !any_fault && checks>NINJ/2 && rc_seen==6 && accepted_dw>=4*NDEL && nonzero_inject_checks>NINJ/2 && (&del_lanes_seen))
+   $display("SU_COLLPORT PASS QID=%0d INJ_RET=%0d SD=%0d checks=%0d delivery_loops=%0d actual_dw=%0d injects=%0d nonzero_inject_checks=%0d lanes_initialized=%0d rc=%0d",QID,INJ_RET,SD,checks,dcount,accepted_dw,icount,nonzero_inject_checks,$countones(del_lanes_seen),rc_seen);
   else begin
-   $display("SU_COLLPORT FAIL errors=%0d fault(cx %0d core %0d slices %b) checks=%0d rc=%0d",errors,cx_fault,core_fault,sl_fault,checks,rc_seen);
+   $display("SU_COLLPORT FAIL errors=%0d fault(cx %0d core %0d slices %b) checks=%0d rc=%0d actual_dw=%0d nonzero_inject_checks=%0d lanes_initialized=%0d",errors,cx_fault,core_fault,sl_fault,checks,rc_seen,accepted_dw,nonzero_inject_checks,$countones(del_lanes_seen));
    $fatal(1,"SU_COLLPORT gate rejected");
   end
   end
