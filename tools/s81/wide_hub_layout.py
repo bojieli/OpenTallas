@@ -62,6 +62,9 @@ def main():
     ap.add_argument('--out', type=Path, required=True)
     ap.add_argument('--vm-seam', type=float, default=86.4, help='vmc: actual VM to collective access channel width')
     ap.add_argument('--pq-gap', type=float, default=432.0, help='vmc: gather | PQ crossing channel (um)')
+    ap.add_argument('--vmc-vch', type=float, default=432.0, help='vmc: collective column | HC channel (VCH) width um')
+    ap.add_argument('--su-offset', type=float, default=3153.7,
+                    help='vmc: SU W edge offset from the hub W edge (um); the VM, capture stack, MIX4 and sseq follow it')
     ap.add_argument('--mode', choices=('c5', 'vmc'), default='c5',
                     help='c5 = side-by-side strip (historical); vmc = VM-centred cluster from real port faces (S81-AGGRO vmc + S-DIE D1/D2)')
     a = ap.parse_args()
@@ -175,10 +178,10 @@ def vmc_main(a):
     bk_top_lim = bx[3] - a.abut                    # bk_collector bottom
     su_floor = 1831.68                             # 45 um clear of bk_selector top (1786.3)
     # ---- x (S81-AGGRO vmc)
-    col_x = up(hx0 + 3153.7 + 4104.0 + a.vm_seam, GX)   # 17,194.1: collective / WFC / host column (fixed by the HC + S14E)
+    col_x = up(hx0 + a.su_offset + 4104.0 + a.vm_seam, GX)   # 17,194.1: collective / WFC / host column (fixed by the HC + S14E)
     vm_x = dn(col_x - a.vm_seam - B['vm'][0], GX)       # VM E edge on the 86.4 seam; a wider VM (S-VM) grows W
-    su_x = up(hx0 + 3153.7, GX)                    # 13,003.7 (S81-AGGRO vmc2)
-    hc_x = up(col_x + a.cw + 432.0, GX)            # 432-um channel collective column | HC
+    su_x = up(hx0 + a.su_offset, GX)               # 13,003.7 (S81-AGGRO vmc2)
+    hc_x = up(col_x + a.cw + a.vmc_vch, GX)        # VCH (default 432 um) collective column | HC
     s14e = hx1 - (hc_x + B['hc_s'][0])
     assert s14e >= a.s14e_min - 1e-6, ('S14E below its 0.50 width', s14e)
     cap_x = up(vm_x + (B['vm'][0] - B['capture'][0]) / 2, GX)
@@ -219,7 +222,7 @@ def vmc_main(a):
     top = pq_y + B['pq'][1]
     rec = dict(
         schema='opentallas.s81.hub_layout.v2', source='tools/s81/wide_hub_layout.py --mode vmc', canonical=a.canonical,
-        order='S14W | sseq+MIX4 | SU under VM (capture, gather, PQ on its N face) | collective/host/WFC(MY) | 432 | '
+        order='S14W | sseq+MIX4 | SU under VM (capture, gather, PQ on its N face) | collective/host/WFC(MY) | %g | ' % a.vmc_vch +
               'HC (hc_t low, hc_s high, top below the gather) | S14E',
         blocks=blocks,
         corridor=[hc_x, c0, B['hc_t'][0], c1 - c0],
@@ -234,6 +237,11 @@ def vmc_main(a):
         checks=dict(hub_um=[hx0, hx1], hub_width_um=round(hx1 - hx0, 3), s14e_um=round(s14e, 3), top_um=round(top, 3),
                     su_y=su_y, vm=[vm_y, vm_y + B['vm'][1]], gather=[ga_y, ga_y + B['gather'][1]],
                     hc_s=[hcs_y, hcs_y + B['hc_s'][1]], hc_t=[hct_y, hct_y + B['hc_t'][1]], corridor=[c0, c1]))
+    if a.vmc_vch != 432.0 or a.su_offset != 3153.7:   # parameterised seams (S-DIE-26B): record them (default records unchanged)
+        rec['checks'].update(s14w_um=round(min(mix4[0], sseq[0]) - hx0, 3),
+                             vm_collective_um=round(col_x - (vm_x + B['vm'][0]), 3),
+                             collective_hc_um=round(hc_x - (col_x + a.cw), 3),
+                             capture_gather_um=round(ga_y - (cap_y + B['capture'][1]), 3))
     a.out.parent.mkdir(parents=True, exist_ok=True)
     a.out.write_text(json.dumps(rec, indent=1) + '\n')
     print(json.dumps(rec['checks']))
