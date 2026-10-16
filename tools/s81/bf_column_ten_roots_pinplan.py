@@ -53,7 +53,7 @@ def main():
         for i,y in enumerate([26.7,113.1]):
             pins[f'rom_ck{i}']=dict(face='W' if args.face=='E' else 'E',layer='M4',
                                     x=0.0 if args.face=='E' else 450.144,y=y,w=.192,h=.024,
-                                    source_pin=f'u_col.g_pp.u_rom{i}.clk')
+                                    source_pin=f'u_view.g_pp.u_rom{i}.clk')
     assert len(pins) == (853 if args.raw_rom_entries else 851)
     for n, p in pins.items():
         for m, q in pins.items():
@@ -91,7 +91,7 @@ def main():
         record['schema']='opentallas.s81.bf_column_hybrid12.v1'
         record['raw_rom_clock_contract']=dict(reference='raw_liberty_clock_pin',
             phase_ps=0,period_ps=833.333,normal_edges_added=0,
-            macro_clock_pins={f'rom_ck{i}':f'u_col.g_pp.u_rom{i}.clk' for i in range(2)},
+            macro_clock_pins={f'rom_ck{i}':f'u_view.g_pp.u_rom{i}.clk' for i in range(2)},
             parent_delivery='Separate physical delivery phi-R per entry; raw macro setup/hold/CQ from its own TT/FF/SS Liberty. No inferred internal insertion or CTS guard waiver.',
             free_running='Actual ce_in unchanged. Reset initialization and idle drain must pass source-current full pair; no dynamic scheduling.')
     kind='hybrid12' if args.raw_rom_entries else 'ten_roots'

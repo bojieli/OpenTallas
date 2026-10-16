@@ -295,7 +295,7 @@ endmodule
          'inputs':{str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in [path,ROOT/'rtl/v41rom/ot_v41_bf16_lanes3.sv',wp]},
          'outputs':{str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in [leaf,red,fp,segment,lp,cp,rp,wrp]},
          'physical_leaf_status':'Actual source hierarchy extracted: lane4 x4, two BF reductions, FP4 chain/pair leaves and segment leaf. Parent retains real control/input pipelines and two ROM macros. Hardening, clock pins, all incident cuts and native boundary proof remain pending.',
-         'roots':['ck: boundary/input relays','leaf_ck[0]: FP4 term0+chain0+pair','leaf_ck[1]: FP4 term1+chain1','leaf_ck[2]: segment reduction/output','leaf_ck[3]: BF16 lanes0..3','leaf_ck[4]: BF16 lanes4..7','leaf_ck[5]: BF16 lanes8..11','leaf_ck[6]: BF16 lanes12..15','leaf_ck[7]: BF16 pairwise level0','leaf_ck[8]: BF16 pairwise levels1..3','rom_ck0: u_col.g_pp.u_rom0.clk raw Liberty reference','rom_ck1: u_col.g_pp.u_rom1.clk raw Liberty reference']}
+         'roots':['ck: boundary/input relays','leaf_ck[0]: FP4 term0+chain0+pair','leaf_ck[1]: FP4 term1+chain1','leaf_ck[2]: segment reduction/output','leaf_ck[3]: BF16 lanes0..3','leaf_ck[4]: BF16 lanes4..7','leaf_ck[5]: BF16 lanes8..11','leaf_ck[6]: BF16 lanes12..15','leaf_ck[7]: BF16 pairwise level0','leaf_ck[8]: BF16 pairwise levels1..3','rom_ck0: u_view.g_pp.u_rom0.clk raw Liberty reference','rom_ck1: u_view.g_pp.u_rom1.clk raw Liberty reference']}
     out=ROOT/'results/rtl/s81_bf_clock_1015/c10/recovery_0253/root_source.json';out.write_text(json.dumps(rec,indent=2)+'\n')
     print(json.dumps(rec,indent=2))
 

@@ -7690,7 +7690,7 @@
       "y": 26.7,
       "w": 0.192,
       "h": 0.024,
-      "source_pin": "u_col.g_pp.u_rom0.clk"
+      "source_pin": "u_view.g_pp.u_rom0.clk"
     },
     "rom_ck1": {
       "face": "W",
@@ -7699,7 +7699,7 @@
       "y": 113.1,
       "w": 0.192,
       "h": 0.024,
-      "source_pin": "u_col.g_pp.u_rom1.clk"
+      "source_pin": "u_view.g_pp.u_rom1.clk"
     }
   },
   "changes": {
@@ -7739,8 +7739,8 @@
     "period_ps": 833.333,
     "normal_edges_added": 0,
     "macro_clock_pins": {
-      "rom_ck0": "u_col.g_pp.u_rom0.clk",
-      "rom_ck1": "u_col.g_pp.u_rom1.clk"
+      "rom_ck0": "u_view.g_pp.u_rom0.clk",
+      "rom_ck1": "u_view.g_pp.u_rom1.clk"
     },
     "parent_delivery": "Separate physical delivery phi-R per entry; raw macro setup/hold/CQ from its own TT/FF/SS Liberty. No inferred internal insertion or CTS guard waiver.",
     "free_running": "Actual ce_in unchanged. Reset initialization and idle drain must pass source-current full pair; no dynamic scheduling."
