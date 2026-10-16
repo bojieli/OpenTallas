@@ -466,8 +466,7 @@ def main():
             if d:
                 clkpins[d][l].append(p)
     for di, (dom, insts) in enumerate(sorted(clkpins.items())):
-        rx = ck['origin']['x'] + ck['outline']['w'] * (0.3 + 0.4 * di)
-        ry = ck['origin']['y'] + ck['outline']['h'] / 2
+        rx, ry = dct.ckgen_pin_xy(ck, f'pll_{dom}')     # the domain's die tree starts at its ckgen output pin
         sinks = []
         for l, pl in insts.items():
             v = leaves[l]
