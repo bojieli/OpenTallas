@@ -29,13 +29,13 @@ module tb_s81_stage_seq;
     wire             job_done;
     wire [NENG-1:0]  cmd_v; wire [NENG*CMDW-1:0] cmd_d;
     reg  [NENG-1:0]  dn_v = 0; reg [NENG*TAGW-1:0] dn_tag = 0;
-    wire             busy, fault; wire [3:0] fault_code; wire [31:0] st_jobs, st_cmds, st_cs;
+    wire             busy, fault; wire [3:0] fault_code; wire [31:0] st_jobs, st_cmds;
 
     ot_s81_stage_seq #(.NOPS(NOPS), .NENG(NENG), .QD(QD), .FQ(FQ), .MUT(MUT)) dut (
         .clk(clk), .rst_n(rst_n), .pw_v(pw_v), .pw_a(pw_a), .pw_d(pw_d), .prog_len(prog_len),
         .job_v(job_v), .job_rdy(job_rdy), .job_user(job_user), .job_pos(job_pos), .job_tok(job_tok), .job_done(job_done),
         .cmd_v(cmd_v), .cmd_d(cmd_d), .dn_v(dn_v), .dn_tag(dn_tag), .busy(busy), .fault(fault), .fault_code(fault_code),
-        .st_jobs(st_jobs), .st_cmds(st_cmds), .st_credit_stall(st_cs));
+        .st_jobs(st_jobs), .st_cmds(st_cmds));
 
     // ---- program (golden trace) ----
     reg [159:0] img [0:NOPS-1];
@@ -165,8 +165,8 @@ module tb_s81_stage_seq;
             integer dl, pass;
             dl = (jobs_done == NJOB) ? done_t[NJOB-1] - last_end[NJOB-1] : -1;
             pass = (jobs_done == NJOB) && started == n * NJOB && late == 0 && ctx_bad == 0 && !fault;
-            $display("TB_S81_STAGE_SEQ prog=%s nops=%0d jobs=%0d/%0d started=%0d/%0d late=%0d ctx_bad=%0d fault=%0d code=%0d done_lat=%0d worst_margin=%0d credit_stall=%0d makespan0=%0d t0=%0d,%0d,%0d %s",
-                     prog, n, jobs_done, NJOB, started, n * NJOB, late, ctx_bad, fault, fault_code, dl, worst_margin, st_cs,
+            $display("TB_S81_STAGE_SEQ prog=%s nops=%0d jobs=%0d/%0d started=%0d/%0d late=%0d ctx_bad=%0d fault=%0d code=%0d done_lat=%0d worst_margin=%0d makespan0=%0d t0=%0d,%0d,%0d %s",
+                     prog, n, jobs_done, NJOB, started, n * NJOB, late, ctx_bad, fault, fault_code, dl, worst_margin,
                      last_end[0] - t0[0], t0[0], (NJOB > 1) ? t0[1] : -1, (NJOB > 2) ? t0[2] : -1, pass ? "PASS" : "FAIL");
             $finish;
         end

@@ -148,7 +148,7 @@ def main() -> int:
             assert 'ot_meso_fifo' not in txt and 'ot_ratio_cdc_fifo' not in txt, f'{mst}: render the glue with --hend-static'
         mac = macs[mst]
         dw, dh = K.snap(mac['w']), K.snap(mac['h'])
-        spread = kd in ('hend', 'xstg') and mst in sizes
+        spread = kd in ('hend', 'xstg', 'sstn') and mst in sizes   # sstn: n5 (sinf GRT-0116 behind a clustered S-face pin band)
         if spread:
             # S-NET n3 (verdicts 12:43 FLOORPLAN_MARGIN util 63 %, 12:49 EARLY_FAIL_CONGESTION on the 291-b lane): size
             # from the measured demand, not the generator slot.  Face cut <= 0.6: N/S pins alternate M3/M5 (0.072 um a

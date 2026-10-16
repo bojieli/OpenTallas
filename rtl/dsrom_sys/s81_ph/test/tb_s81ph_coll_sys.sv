@@ -377,7 +377,7 @@ module tb_s81ph_coll_sys;
             .job_v(sq_jv[gd]), .job_rdy(sq_rdy[gd]), .job_user(10'(gd)), .job_pos(21'd1048575), .job_tok(21'd12345),
             .job_done(sq_jd[gd]), .cmd_v(sq_cv[gd]), .cmd_d(sq_cd[gd]),
             .dn_v({8'd0, sq_dn[gd][8], 3'd0}), .dn_tag({64'd0, sq_dn[gd][7:0], 24'd0}),
-            .busy(), .fault(sq_flt[gd]), .fault_code(), .st_jobs(), .st_cmds(), .st_credit_stall());
+            .busy(), .fault(sq_flt[gd]), .fault_code(), .st_jobs(), .st_cmds());
         assign c3a[gd] = c3m;
         assign sq_dn[gd] = d3a[gd];
         assign sq_st[gd] = csta[gd];

@@ -1,0 +1,9 @@
+{
+ "schema": "opentallas.s81.stage_seq_nocredit.v1",
+ "source_commit": "5380bfb1a",
+ "baseline_commit": "7929fd815 (origin/main)",
+ "change": "st_credit_stall output + counter removed from ot_s81_stage_seq (HISTORICAL credit-issue sequencer; die binds dsfd_stage_seq_static_c)",
+ "bench": "rtl/dsrom_sys/s81_ctrl/test/run_stage_seq.sh QD 8 MUT 0 L 4, all 59 stage programs, Verilator 5.050",
+ "result": "new PASS 59 FAIL 0; old PASS 59 FAIL 0; every TB_S81_STAGE_SEQ line identical after dropping the old credit_stall field",
+ "why": "the counter was the INPLACE_NBA_LOOP (g_peer.u_sq.st_credit_stall) that failed VERILATOR_NBA_GUARD in the ad49e6d63 HCX layer build"
+}

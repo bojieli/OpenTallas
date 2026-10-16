@@ -51,20 +51,20 @@
   "pin_v": "M3 M5",
   "m5_pg_pitch": 2.7
  },
- "structural_change": "S-NET dsfd_sstn_e0e1c0c1sinf (99 die instances): the reset-qualified valid is now a column-reset flop at the pin (--sstn-reg) instead of flop AND rs behind the output pin (logic after the output register); 0 cycles, same ports; RTL = the case glue module rendered by the generator (module sha256 f335cb63783fe71d, glue db43fe8fec3ba6e8); pins at the generator centres (gen19b).",
+ "structural_change": "S-NET dsfd_sstn_e0e1c0c1sinf (99 die instances): the reset-qualified valid is now a column-reset flop at the pin (--sstn-reg) instead of flop AND rs behind the output pin (logic after the output register); 0 cycles, same ports; RTL = the case glue module rendered by the generator (module sha256 f335cb63783fe71d, glue db43fe8fec3ba6e8); pins at the generator centres (gen19b). | n3 sizing: std 522 um2 -> util <= 0.55, faces at cut <= 0.6 (outline 172.8 x 30.24 vs generator slot 172.776 x 30.216); pins spread evenly per face (spread_face_pins.py, clock at face centre), no output hold pads (die receivers carry input hold stages)",
  "reroute_reason": {
   "kind": "rtl_change"
  },
  "job": {
   "owner": "Claude:s81-net",
   "branch": "claude/el1015-s81-net-static",
-  "tag": "n2",
+  "tag": "n5",
   "purpose": "S81 S-NET static-schedule redesign: dsfd_sstn_e0e1c0c1sinf (99 replicas, hardened once): exact bench + observed failing mutants; recipe 2, M5 cap, generator pins",
   "views_to": "physical/ref_tile/s81net_sstn_e0e1c0c1sinf/views",
   "record_to": "results/rtl/ref_tile/s81net_sstn_e0e1c0c1sinf",
   "extra_paths": [
    "rtl/dsrom_sys/s81_static_net/gen",
-   "physical/s81_die_pins/snet_gen19b",
+   "physical/s81_die_pins/snet_gen19b/dsfd_sstn_e0e1c0c1sinf.tcl",
    "rtl/dsrom_sys/s81_static_net",
    "tools/s81_static_net"
   ],
@@ -86,5 +86,17 @@
     "peak_ram_gb": 2
    }
   ]
+ },
+ "slot_change_request": {
+  "reason": "S-NET n3: measured std area / pin cut",
+  "outline": [
+   172.8,
+   30.24
+  ],
+  "generator_slot": [
+   172.776,
+   30.216
+  ],
+  "pins": "physical/s81_die_pins/snet_gen19b/dsfd_sstn_e0e1c0c1sinf.tcl"
  }
 }
