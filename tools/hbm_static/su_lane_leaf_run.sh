@@ -11,8 +11,8 @@ vl=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
 obj="$out/obj_$top"
 if [ ! -x "$obj/Vtb_su_static_lane_leaf" ]; then
 "$vl" --binary --timing -O1 -j 4 -Wno-fatal -Wno-lint -Wno-style --top-module tb_su_static_lane_leaf \
- +define+LEAF_TOP="$top" -GMLAT="$mlat" -GALAT="$alat" -GLEAF="$leaf" -GLANE="$lane" --Mdir "$obj" \
- $S/arithmetic/tb_su_static_lane_leaf.sv $S/arithmetic/${top}.sv $S/arithmetic/ot_hbm_su_static_lane.sv \
+ +define+LEAF_TOP="$top" -GMLAT="$mlat" -GALAT="$alat" -GLEAF="$leaf" -GLANE="$lane" -GPINREG="${SU_PINREG:-0}" --Mdir "$obj" \
+ $S/arithmetic/tb_su_static_lane_leaf.sv $S/arithmetic/${top}.sv $S/arithmetic/ot_hbm_su_static_lane_pinreg.sv $S/arithmetic/ot_hbm_su_static_lane.sv \
  $S/arithmetic/ot_hbm_su_static_ins.sv $S/data_store/ot_hbm_su_static_pinned_bank.sv $S/data_store/ot_hbm_su_static_data_store.sv \
  rtl/hbm_accel/generic/peers/ot_hgi_su_unit.sv rtl/hdc/v41x/ot_hdc_v41x_sfu.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_fpu.sv \
  rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/proto/ot_fp32_add_rne_pipe.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/ot_hdc_fastfp.sv \
