@@ -1,0 +1,159 @@
+{
+ "name": "smh_xs_d62",
+ "top": "ot_hbm_accel_smh_xs",
+ "kind": "tile",
+ "sources": [
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/v41rom/ot_v41_bterm.sv",
+  "rtl/v41rom/ot_v41_bterm2.sv",
+  "rtl/gpu/ot_gpu_fadd.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/gpu/ot_gpu_tree.sv",
+  "rtl/gpu/ot_gpu_issue.sv",
+  "rtl/gpu/ot_gpu_stack.sv",
+  "rtl/gpu/ot_gpu_tc_col.sv",
+  "rtl/gpu/ot_gpu_bd_col.sv",
+  "rtl/hdc/v41/ot_hdc_blockdot.sv",
+  "rtl/gpu/ot_gpu_bulk_copy.sv",
+  "rtl/hdc/ot_hdc_fpu.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+  "rtl/proto/ot_fp32_add_rne_pipe.sv",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hbm_accel/epilogue/ot_hbm_accel_issue.sv",
+  "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv",
+  "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy_oq4.sv",
+  "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy_oq5.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_tc16.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_bd_col.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_issue_pq.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_stack.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_smh_bd.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_smh.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+  "physical/hbm_accel_macros/ot_sram_1r1w_512x256_m1_r2c2/ot_sram_1r1w_512x256_m1_r2c2_bb.v",
+  "rtl/lib/ot_hdly.sv",
+  "rtl/lib/ot_rst_relay.sv"
+ ],
+ "defines": [
+  "OT_SMH_XLK",
+  "OT_FP_DATA_NORST",
+  "OT_SMH_DRST0",
+  "OT_SMH_RSTRELAY",
+  "OT_SMH_HIER"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_a"
+ ],
+ "outline": {
+  "w": 259.2,
+  "h": 155.544
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "at": [
+    23.76,
+    30.24
+   ],
+   "inst": "*g_xm?0?.u_x*"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "at": [
+    139.968,
+    30.24
+   ],
+   "inst": "*g_xm?1?.u_x*"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "at": [
+    23.76,
+    92.88
+   ],
+   "inst": "*g_xm?2?.u_x*"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "at": [
+    139.968,
+    92.88
+   ],
+   "inst": "*g_xm?3?.u_x*"
+  }
+ ],
+ "pins": {
+  "N": [
+   "clk",
+   "o_ifirst",
+   "o_ifp4",
+   "o_ilast",
+   "o_itag",
+   "o_iv_b",
+   "rst_a",
+   "xs_a1",
+   "xs_a2",
+   "xs_g1",
+   "xs_g2"
+  ],
+  "S": [
+   "bk1",
+   "ohl1",
+   "rl1"
+  ],
+  "E": [
+   "o_ifirst_e",
+   "o_ilast_e",
+   "o_itag_e",
+   "o_iv_f"
+  ],
+  "ANY": [
+   "o_iw",
+   "o_ix"
+  ]
+ },
+ "route": {
+  "pd": 0.6,
+  "threads": 16,
+  "peak_ram_gb": 64,
+  "hold_margin_ns": 0.01,
+  "pin_h": "M4",
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "Claude H-SM",
+  "branch": "claude/hbm-sm-repack-1015",
+  "tag": "d62",
+  "purpose": "[H-SM d62] smh_xs_ref_p45m re-hardened denser for the v8 SM column (1036.8 um wide): 302.4 x 155.544 -> 259.2 x 155.544 (-14.3 %): two macro columns 23.76 um from the W edge, 21.384-um macro channel kept",
+  "no_bench_reason": "exactness is gated by the SM tile cluster lockstep bench under OT_SMH_HIER (ec948f1fc, ot-epyc4 w_hier2: 12 ops exact, CG_LOCKSTEP mismatches 0, PASS 8270 cycles) plus its late32/hold0 mutants, carried by the tile-cluster job; this child job re-routes unchanged RTL (xs round 4 be99a7db9: ot_hdly hold-delay landing stage)",
+  "views_to": "physical/ref_tile/smh_xs_ref_p45m/views",
+  "record_to": "results/rtl/ref_tile/smh_xs_ref_p45m",
+  "structural_change": "[H-SM v8 SM column, OWNER 22:30] density re-harden of smh_xs_ref_p45m (302.4 x 155.544, synth util 0.533) at ~62 % fill: 302.4 x 155.544 -> 259.2 x 155.544 (-14.3 %): two macro columns 23.76 um from the W edge, 21.384-um macro channel kept; pd 0.60. Measures the leaf fill that closes; the 1036.8-um SM column height follows it."
+ },
+ "layer_cap": "M6",
+ "layer_cap_grant": "coordinator el1012 (as smh_xs_ref_p40x): the closed xs p50/p45 @0fbf9bc20 recipe (region-grouped pins, M6 routing) with horizontal face pins on M4 ONLY: the closed views carry 362 M4 + 318 M6 face pins, and ASAP7 M4 (y 12/48) and M6 (y 16/64) tracks have no common mirror residue (MX needs y0+H = 8 mod 16 for M4 and 0 mod 16 for M6), so the SM tile cluster's leaf-1 MX/R180 xs cannot sit on track; M6 stays a routing layer only",
+ "inhold": true,
+ "params": {},
+ "children": [],
+ "inter": [],
+ "recipe": 2,
+ "pin_regs": {
+  "enable": false,
+  "reason": "density re-harden of the CLOSED master smh_xs_ref_p45m (same RTL, ports, faces and latency; recipe 2 as closed): a recipe-3 wrapper would add +1 cycle on every leaf port inside the SM tile, whose pins are already registered (OT_SMH_PINREG); leaf ports are internal SM tile seams"
+ },
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}

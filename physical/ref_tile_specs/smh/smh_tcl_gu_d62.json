@@ -1,0 +1,137 @@
+{
+ "name": "smh_tcl_gu_d62",
+ "top": "ot_hbm_accel_smh_tcl_gu",
+ "kind": "tile",
+ "sources": [
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/v41rom/ot_v41_bterm.sv",
+  "rtl/v41rom/ot_v41_bterm2.sv",
+  "rtl/gpu/ot_gpu_fadd.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/gpu/ot_gpu_tree.sv",
+  "rtl/gpu/ot_gpu_issue.sv",
+  "rtl/gpu/ot_gpu_stack.sv",
+  "rtl/gpu/ot_gpu_tc_col.sv",
+  "rtl/gpu/ot_gpu_bd_col.sv",
+  "rtl/hdc/v41/ot_hdc_blockdot.sv",
+  "rtl/gpu/ot_gpu_bulk_copy.sv",
+  "rtl/hdc/ot_hdc_fpu.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+  "rtl/proto/ot_fp32_add_rne_pipe.sv",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hbm_accel/epilogue/ot_hbm_accel_issue.sv",
+  "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv",
+  "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy_oq4.sv",
+  "rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy_oq5.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_tc16.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_bd_col.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_issue_pq.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_stack.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_smh_bd.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_smh.sv",
+  "rtl/hbm_accel/sm/ot_hbm_accel_smh_gu.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+  "physical/hbm_accel_macros/ot_sram_1r1w_512x256_m1_r2c2/ot_sram_1r1w_512x256_m1_r2c2_bb.v",
+  "rtl/lib/ot_rst_relay.sv"
+ ],
+ "defines": [
+  "OT_SMH_XLK",
+  "OT_FP_DATA_NORST",
+  "OT_SMH_DRST0",
+  "OT_SMH_RSTRELAY",
+  "OT_SMH_HIER"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_a"
+ ],
+ "outline": {
+  "w": 86.4,
+  "h": 108.0
+ },
+ "pg_layer": "M6",
+ "macros": [],
+ "pins": {
+  "N": [
+   "clk",
+   "i_first",
+   "i_v",
+   "i_w",
+   "i_x",
+   "rst_a"
+  ],
+  "S": [
+   "lfault",
+   "sum_o"
+  ]
+ },
+ "io_tcl": "physical/ref_tile_specs/smh/smh_tcl_ref_p50_pins.tcl",
+ "route": {
+  "pd": 0.6,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "hold_margin_ns": 0.01,
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "Claude H-SM",
+  "branch": "claude/hbm-sm-repack-1015",
+  "tag": "d62",
+  "purpose": "[H-SM d62] smh_tcl_gu_ref re-hardened denser for the v8 SM column (1036.8 um wide): 86.4 x 120.024 -> 86.4 x 108.0 (-10.0 %)",
+  "structural_change": "[H-SM v8 SM column, OWNER 22:30] density re-harden of smh_tcl_gu_ref (86.4 x 120.024, synth util 0.5545) at ~62 % fill: 86.4 x 120.024 -> 86.4 x 108.0 (-10.0 %); pd 0.60. Measures the leaf fill that closes; the 1036.8-um SM column height follows it.",
+  "extra_paths": [
+   "rtl/test/hbm_accel/sm_gu"
+  ],
+  "benches": [
+   {
+    "name": "bmul_gu_exact",
+    "cmd": "bash rtl/test/hbm_accel/sm_gu/run_bmul_gu.sh {RUN}/gu",
+    "expect": "pass",
+    "pass_regex": "BMUL_GU PASS",
+    "threads": 8,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "bmul_closed_negative",
+    "cmd": "bash rtl/test/hbm_accel/sm_gu/run_bmul_gu.sh {RUN}/closed closed",
+    "expect": "fail",
+    "fail_regex": "BMUL_GU FAIL",
+    "threads": 8,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "views_to": "physical/ref_tile/smh_tcl_gu_ref/views",
+  "record_to": "results/rtl/ref_tile/smh_tcl_gu_ref"
+ },
+ "layer_cap": "M6",
+ "layer_cap_grant": "coordinator el1012 io_tcl audit: same-contract re-route of an existing SMH child (closed @a9afd2404/10db43429 with region-grouped pins); the SMH parents (pdn_smh_tile_hier.tcl / front_c) take child PG on M6 under their M7 straps, so the child keeps M6 PG until the parent is re-cut to the M5 contract",
+ "params": {},
+ "children": [],
+ "inter": [],
+ "recipe": 2,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "density re-harden of the CLOSED master smh_tcl_gu_ref (same RTL, ports, faces and latency; recipe 2 as closed): a recipe-3 wrapper would add +1 cycle on every leaf port inside the SM tile, whose pins are already registered (OT_SMH_PINREG); leaf ports are internal SM tile seams"
+ }
+}

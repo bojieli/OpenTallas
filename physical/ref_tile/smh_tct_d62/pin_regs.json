@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hbm_accel_smh_tct",
+ "enable": false,
+ "reason": "density re-harden of the CLOSED master smh_tct_ref_p45 (same RTL, ports, faces and latency; recipe 2 as closed): a recipe-3 wrapper would add +1 cycle on every leaf port inside the SM tile, whose pins are already registered (OT_SMH_PINREG); leaf ports are internal SM tile seams"
+}
