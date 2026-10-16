@@ -1,0 +1,136 @@
+{
+ "name": "qfd_embedding_word_provider",
+ "top": "qfd_embedding_word_provider",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_split/qfd_embedding_word_provider.sv",
+  "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_preload_face.sv",
+  "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_core_store.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 259.2,
+  "h": 216.0,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "inst": "store.codes",
+   "at": [
+    43.2,
+    114.48
+   ],
+   "orient": "R0"
+  }
+ ],
+ "pins": {
+  "N": [
+   "ck",
+   "rst_n"
+  ],
+  "E": [
+   "word_v",
+   "word_data",
+   "word_token",
+   "word_index",
+   "word_scale",
+   "word_epoch",
+   "expected_word_slot",
+   "expected_token",
+   "expected_word",
+   "expected_scale",
+   "expected_epoch",
+   "fill_begin",
+   "fill_token",
+   "fill_epoch",
+   "core_epoch"
+  ],
+  "S": [
+   "core_start",
+   "core_token",
+   "embed_code_re",
+   "embed_code_addr",
+   "embed_code_q",
+   "embed_scale_re",
+   "embed_scale_addr",
+   "embed_scale_q",
+   "fault"
+  ],
+  "W": []
+ },
+ "recipe": 3,
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 24
+ },
+ "structural_change": "NEW leaf (ELEM-CENSUS 10-16, census class F, Q-COMPUTE-DIE go 10-16): compute-die embedding row store qfd_embedding_word_provider (Q-NETLIST ab5f73bcc, wires-only top over qkd_embedding_static_preload_face + qkd_embedding_static_core_store with the mapped ot_sram_1r1w_64x512_m1_r2c2 row SRAM), CONTRACT v1.4 frame 259.2 x 216 um, one ck root. Recipe 3: every data input and output registered at its pin (+1 edge in, +1 edge out, recorded in pin_regs.json for the compiler schedule). Pin FACES = the die tool's top-down assignment (q2o1 out_skc pins/qfd_embedding_word_provider.json: E row/slot/fill face toward sys_face, S sequencer ROM-port face, N ck/rst_n); per-port ranges are not frozen into the RTL or the kit (q2o2 moves the tile into the centre white space above the SU; a face move is a re-kit only).",
+ "slot_change_request": "none: CONTRACT.md v1.4 frame 259.2 x 216 (results/arch/qwen_split_compute_1014/CONTRACT.md:38); faces from the die tool's q2o1 assignment, ports spread over each face instead of the generator's dense corner ranges (word_data 512 b at 0.096 um pitch in the generator file).",
+ "job": {
+  "owner": "Claude:ELEM-CENSUS kit helper",
+  "branch": "claude/census-qkit-1016",
+  "tag": "ec1",
+  "cycles_added": 2,
+  "purpose": "Compute-die embedding row store leaf, never kitted before (census 10-16). Standalone self-checking bench (new, ELEM-CENSUS): 6 rows x 64 code words + scale in random order through the mapped SRAM model, every word read back bit-exact, + 4 fault detections; mutants made on copies of the child sources (row-complete check removed / SRAM word address ^1 / scale from the wrong header half) must FAIL. The tile is also exercised as a child of tb_qfd_sys_face (Q-NETLIST, 1,512 events).",
+  "extra_paths": [
+   "rtl/test/qwen_split/run_embedding_word_provider_bench.sh",
+   "rtl/test/qwen_split/tb_qfd_embedding_word_provider.sv",
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2"
+  ],
+  "benches": [
+   {
+    "name": "provider_rows_exact",
+    "cmd": "bash rtl/test/qwen_split/run_embedding_word_provider_bench.sh {RUN}/bench/exact 0",
+    "expect": "pass",
+    "pass_regex": "^EMB_PROVIDER_PASS rows=6 compared=390 checks=4",
+    "min_count_regex": "^EMB_PROVIDER_PASS rows=\\d+ compared=(\\d+)",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "provider_incomplete_row_mutant",
+    "cmd": "bash rtl/test/qwen_split/run_embedding_word_provider_bench.sh {RUN}/bench/mut1 1",
+    "expect": "fail",
+    "fail_regex": "^EMB_PROVIDER_FAIL errors=[1-9]",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "provider_sram_word_addr_mutant",
+    "cmd": "bash rtl/test/qwen_split/run_embedding_word_provider_bench.sh {RUN}/bench/mut2 2",
+    "expect": "fail",
+    "fail_regex": "^EMB_PROVIDER_FAIL errors=[1-9]",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "provider_scale_half_mutant",
+    "cmd": "bash rtl/test/qwen_split/run_embedding_word_provider_bench.sh {RUN}/bench/mut3 3",
+    "expect": "fail",
+    "fail_regex": "^EMB_PROVIDER_FAIL errors=[1-9]",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ]
+ }
+}

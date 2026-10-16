@@ -704,6 +704,28 @@ def with_sent(body):
     """a pre-serialised snapshot plus sent_at: the page measures generated_at against the server's own clock"""
     return b'{"sent_at":%.3f,' % time.time() + body.encode()[1:]
 
+_REQ_LOG = HERE / 'requests.log'
+_req_lock = threading.Lock()
+
+
+def _rss_mb():
+    try:
+        return int(open('/proc/self/statm').read().split()[1]) * os.sysconf('SC_PAGE_SIZE') / 2 ** 20
+    except (OSError, ValueError, IndexError):
+        return 0.0
+
+
+def _req_log(line):
+    with _req_lock:
+        try:
+            if _REQ_LOG.exists() and _REQ_LOG.stat().st_size > 20 * 2 ** 20:
+                _REQ_LOG.replace(_REQ_LOG.with_suffix('.log.1'))
+            with open(_REQ_LOG, 'a') as f:
+                f.write(line + '\n')
+        except OSError:
+            pass
+
+
 class H(BaseHTTPRequestHandler):
     protocol_version = 'HTTP/1.1'
     def end_headers(self):
@@ -923,6 +945,30 @@ class H(BaseHTTPRequestHandler):
         return js(dict(error='unknown explorer endpoint'), 404)
 
     def log_message(self, *a): pass
+
+    # REQUEST LOG (ROOT 2026-10-16, after the 10:56 OOM crashloop): one line per request -- path, status bytes written,
+    # seconds, RSS before/after (MB) -- to requests.log beside the server (truncated at 20 MB). Children (git) are not
+    # in RSS; their cost shows as a slow request.
+    def setup(self):
+        super().setup()
+        w = self.wfile; me = self; me._ot_bytes = 0
+        class _Count:
+            def write(self_, b):
+                me._ot_bytes += len(b); return w.write(b)
+            def __getattr__(self_, k): return getattr(w, k)
+        self.wfile = _Count()
+
+    def handle_one_request(self):
+        r0, t0, self._ot_bytes = _rss_mb(), time.time(), 0
+        try:
+            super().handle_one_request()
+        finally:
+            path = getattr(self, 'path', None)
+            if path:
+                r1 = _rss_mb()
+                _req_log('%s %s %s %d %.2fs rss %.0f->%.0f (%+.0f) MB' % (time.strftime('%m-%dT%H:%M:%S'), self.command, path[:300],
+                         self._ot_bytes, time.time() - t0, r0, r1, r1 - r0))
+                self.path = None
 
 class Server(ThreadingHTTPServer):
     daemon_threads = True
