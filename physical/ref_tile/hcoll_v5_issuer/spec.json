@@ -35,6 +35,9 @@
    "fault",
    "uop_v",
    "uop_pc"
+  ],
+  "S": [
+   "uop_d1"
   ]
  },
  "layer_cap": "M5",
@@ -79,7 +82,7 @@
  },
  "pin_regs": {
   "enable": false,
-  "reason": "The hard_v5 V5 lockstep bench (hard outputs at +2 vs production host_v4) fixes the issuer leaf's edges: raw busy/done/fault/uop_v/uop_pc and tap_iteration are flop Q (programme-target feedback at host_v4 edges), uop_d2/busy_d2/done_d2/start_d2 are the leaf's own 2-edge delay flops, tap_steps is the bank face flop AND uop_v (host_v4 mask) captured by the protocol leaf's pin flops; cfg/start/start_pc land in control flops. A synthesis pin stage would add edges the V5 schedule and bench do not carry."
+  "reason": "The hard_v5 V5 lockstep bench (hard outputs at +2 vs production host_v4) fixes the issuer leaf's edges: raw busy/done/fault/uop_v/uop_pc and tap_iteration are flop Q (programme-target feedback at host_v4 edges), uop_d1 (V5b: to the protocol leaf, which pin-captures it) and uop_d2/busy_d2/done_d2/start_d2 are the leaf's own 2-edge delay flops, tap_steps is the bank face flop AND uop_v (host_v4 mask) captured by the protocol leaf's pin flops; cfg/start/start_pc land in control flops. A synthesis pin stage would add edges the V5 schedule and bench do not carry."
  },
  "job": {
   "owner": "Claude:H-NETLIST/COLL-CTL-1045",

@@ -17,13 +17,31 @@ module ot_hgi_coll_iter_mul(
  output reg [15:0] m_iaddr_h,m_del_h,m_rgx_h,
  output reg [23:0] m_lk_l,m_lk_h
 );
+ // V5b (H-NETLIST 1315, ctl3 gate reg->reg -181.2 ps: it[3] -> m_rgx_l[30], 16x16 product, 24 levels ~872 ps):
+ // the registered stage holds 16x8 partial products only; the combine is folded into ot_hgi_coll_ctl_v5_combine
+ // (same edge, in front of the field adders, which now read a pin-captured instruction). Exact V4 truncation:
+ //   16'(it_l*a)            = 16'(pa0 + {pa1,8'd0})                     pa0 = 16'(it_l*a[7:0]), pa1 = 8'(it_l*a[15:8])
+ //   32'(it_l*b + {16'(it_h*b),16'd0}) = 32'(pl0 + {pl1,8'd0} + {ph0,16'd0} + {ph1,24'd0})
+ //                         pl0 = it_l*b[7:0] (24b), pl1 = it_l*b[15:8] (24b), ph0 = 16'(it_h*b[7:0]), ph1 = 8'(it_h*b[15:8])
+ // The m_* ports keep their names and edges: m_*_l carries the full 32-bit offset, m_*_h is 0 (ctl_v5 adds it, a no-op).
  reg [31:0] it;reg [15:0] a,v,b,c,d;reg [7:0] k;
+ reg [15:0] pa0,pv0;reg [7:0] pa1,pv1;
+ reg [23:0] pb0,pb1,pc0,pc1,pd0,pd1;reg [15:0] qb0,qc0,qd0;reg [7:0] qb1,qc1,qd1;
  always @(posedge clk)begin
   it<=iteration;a<=s_idx;v<=s_vm;b<=s_iaddr;c<=s_del;d<=s_rgx;k<=s_lk;
-  m_idx<=16'(it[15:0]*a);m_vm<=16'(it[15:0]*v);
-  m_iaddr_l<=it[15:0]*b;m_del_l<=it[15:0]*c;m_rgx_l<=it[15:0]*d;
-  m_iaddr_h<=16'(it[31:16]*b);m_del_h<=16'(it[31:16]*c);m_rgx_h<=16'(it[31:16]*d);
+  pa0<=16'(it[15:0]*a[7:0]);pa1<=8'(it[15:0]*a[15:8]);
+  pv0<=16'(it[15:0]*v[7:0]);pv1<=8'(it[15:0]*v[15:8]);
+  pb0<=it[15:0]*b[7:0];pb1<=it[15:0]*b[15:8];qb0<=16'(it[31:16]*b[7:0]);qb1<=8'(it[31:16]*b[15:8]);
+  pc0<=it[15:0]*c[7:0];pc1<=it[15:0]*c[15:8];qc0<=16'(it[31:16]*c[7:0]);qc1<=8'(it[31:16]*c[15:8]);
+  pd0<=it[15:0]*d[7:0];pd1<=it[15:0]*d[15:8];qd0<=16'(it[31:16]*d[7:0]);qd1<=8'(it[31:16]*d[15:8]);
   m_lk_l<=it[15:0]*k;m_lk_h<=it[31:16]*k;
+ end
+ always @*begin
+  m_idx=16'(pa0+{pa1,8'd0});m_vm=16'(pv0+{pv1,8'd0});
+  m_iaddr_l=32'({8'd0,pb0}+{pb1,8'd0}+{qb0,16'd0}+{qb1,24'd0});
+  m_del_l=32'({8'd0,pc0}+{pc1,8'd0}+{qc0,16'd0}+{qc1,24'd0});
+  m_rgx_l=32'({8'd0,pd0}+{pd1,8'd0}+{qd0,16'd0}+{qd1,24'd0});
+  m_iaddr_h=16'd0;m_del_h=16'd0;m_rgx_h=16'd0;
  end
 endmodule
 

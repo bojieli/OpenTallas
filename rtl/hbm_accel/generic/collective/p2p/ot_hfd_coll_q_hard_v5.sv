@@ -179,6 +179,7 @@ module ot_hgi_coll_issuer_m(
  // V5 issue timing: the instruction stream and its control (start/busy/done) leave 2 edges later; the early tap
  // carries iteration and the six step fields at the raw edge for the protocol leaf's pipelined products.
  output reg [1535:0] uop_d2,
+ output reg [1535:0] uop_d1,                 // V5b: the protocol leaf pin-captures d1 (its own flop = the d2 edge)
  output reg busy_d2,done_d2,start_d2,
  output wire [31:0] tap_iteration,
  output wire [87:0] tap_steps                // {lk8, rgx16, del16, iaddr16, vm16, idx16}
@@ -194,7 +195,7 @@ module ot_hgi_coll_issuer_m(
 `endif
  assign tap_iteration=iteration;
  assign tap_steps={uop[1407+:8],uop[1318+:16],uop[1350+:16],uop[1366+:16],uop[1302+:16],uop[1334+:16]};
- reg [1535:0] uop_d1;reg busy_d1,done_d1,start_d1;
+ reg busy_d1,done_d1,start_d1;
  always @(posedge clk_control)begin uop_d1<=uop;uop_d2<=uop_d1;end
  always @(posedge clk_control or negedge rst_n)
   if(!rst_n)begin busy_d1<=0;busy_d2<=0;done_d1<=0;done_d2<=0;start_d1<=0;start_d2<=0;end
@@ -220,8 +221,12 @@ module ot_hgi_coll_ctl_v5_core #(parameter integer NPT=3,SOLO=1,ND=NPT+13)(
   .s_vm(tap_steps[16+:16]),.s_iaddr(tap_steps[32+:16]),.s_del(tap_steps[48+:16]),.s_rgx(tap_steps[64+:16]),
   .s_lk(tap_steps[80+:8]),.m_idx(m_idx),.m_vm(m_vm),.m_iaddr_l(m_iaddr_l),.m_del_l(m_del_l),.m_rgx_l(m_rgx_l),
   .m_iaddr_h(m_iaddr_h),.m_del_h(m_del_h),.m_rgx_h(m_rgx_h),.m_lk_l(m_lk_l),.m_lk_h(m_lk_h));
+ // V5b: inst arrives at the d1 edge and is captured at the pin, so inst_q is the d2 edge of the V5 schedule
+ // (ctl3 gate in->reg -464.6 ps: inst[996] -> delivery_obase 40b add from the pin, 24 levels).
+ reg [1535:0] inst_q;
+ always @(posedge clk_control) inst_q<=inst;
  ot_hgi_coll_q_static_ctl_v5 #(.NPT(NPT),.SOLO(SOLO),.INJLAT(12)) u(.clk_control(clk_control),.rst_n(rst_n),
-  .inst(inst),.m_idx(m_idx),.m_vm(m_vm),.m_iaddr_l(m_iaddr_l),.m_del_l(m_del_l),.m_rgx_l(m_rgx_l),
+  .inst(inst_q),.m_idx(m_idx),.m_vm(m_vm),.m_iaddr_l(m_iaddr_l),.m_del_l(m_del_l),.m_rgx_l(m_rgx_l),
   .m_iaddr_h(m_iaddr_h),.m_del_h(m_del_h),.m_rgx_h(m_rgx_h),.m_lk_l(m_lk_l),.m_lk_h(m_lk_h),
   .hgi_start(hgi_start),.hgi_busy(hgi_busy),.issue_done(issue_done),.tkm_done(tkm_done),.tkm_busy(tkm_busy),
   .dest_v(dest_v),.rc_v(rc_v),.rc_tag(rc_tag),.vm_rr(vm_rr),.vm_req_pin(vm_req_pin),.inj_req_pin(inj_req_pin),
@@ -420,11 +425,11 @@ module ot_hfd_coll_q_hard_v5_body #(
  localparam integer PWT=545,SELW=4;
  // ---- issuer + programme target + fault join
  wire [36:0] program_cfg;wire hgi_start;wire [5:0] hgi_start_pc;
- wire issue_fault,issue_done,uop_v;wire [1535:0] inst;wire [5:0] uop_pc;
+ wire issue_fault,issue_done,uop_v;wire [1535:0] inst,inst_d1;wire [5:0] uop_pc;
  wire issue_busy_raw,issue_done_raw,start_d2;wire [31:0] tap_iteration;wire [87:0] tap_steps;
  ot_hgi_coll_issuer_m u_issuer(.clk_control(clk_issue),.rst_n(rst_n),
   .cfg(program_cfg),.start(hgi_start),.start_pc(hgi_start_pc),.busy(issue_busy_raw),.done(issue_done_raw),
-  .fault(issue_fault),.uop_v(uop_v),.uop_pc(uop_pc),.uop_d2(inst),.busy_d2(hgi_busy),.done_d2(issue_done),
+  .fault(issue_fault),.uop_v(uop_v),.uop_pc(uop_pc),.uop_d2(inst),.uop_d1(inst_d1),.busy_d2(hgi_busy),.done_d2(issue_done),
   .start_d2(start_d2),.tap_iteration(tap_iteration),.tap_steps(tap_steps));
  assign hgi_done=issue_done;assign done=issue_done;assign hgi_fault=fault;
  // ---- ISA fields (wires; identical positions to ot_hfd_coll_q_static_v4)
@@ -484,7 +489,7 @@ module ot_hfd_coll_q_hard_v5_body #(
   wire arg_out_v;wire [PWT-1:0] arg_out_data;
   assign source_v[NPT+7]=arg_out_v;assign source_d[(NPT+7)*PWT+:PWT]=arg_out_data;
   assign capture_calendar[NPT+7]=p_ring[82];
-  ot_hgi_coll_ctl_v5_q3 u_control(.clk_control(clk_control),.rst_n(rst_n),.inst(inst),
+  ot_hgi_coll_ctl_v5_q3 u_control(.clk_control(clk_control),.rst_n(rst_n),.inst(inst_d1),
    .tap_iteration(tap_iteration),.tap_steps(tap_steps),.hgi_start(start_d2),.hgi_busy(hgi_busy),.issue_done(issue_done),.tkm_done(tkm_done),.tkm_busy(tkm_busy),
    .dest_v(dest_v),.rc_v(rc_v),.rc_tag(rc_tag),.vm_rr(vm_rr),
    .vm_req_pin(vm_req_pin),.inj_req_pin(inj_req_pin),.inj_idx_pin(inj_idx_pin),.inj_addr_pin(inj_addr_pin),
@@ -520,7 +525,7 @@ module ot_hfd_coll_q_hard_v5_body #(
   // No arg/tkm engine in q2: their tkm sinks are unrouted switch outputs; illegal reservations fault in u_fj.
   assign tk_w_v=1'b0;assign tk_w_addr=40'd0;assign tk_w_mask=16'd0;assign tk_w_data=512'd0;
   assign tkm_done=1'b0;assign tkm_busy=1'b0;assign arg_fault=1'b0;assign tkm_fault=1'b0;assign tk_cycles=32'd0;
-  ot_hgi_coll_ctl_v5_q2 u_control(.clk_control(clk_control),.rst_n(rst_n),.inst(inst),
+  ot_hgi_coll_ctl_v5_q2 u_control(.clk_control(clk_control),.rst_n(rst_n),.inst(inst_d1),
    .tap_iteration(tap_iteration),.tap_steps(tap_steps),.hgi_start(start_d2),.hgi_busy(hgi_busy),.issue_done(issue_done),.tkm_done(tkm_done),.tkm_busy(tkm_busy),
    .dest_v(dest_v),.rc_v(rc_v),.rc_tag(rc_tag),.vm_rr(vm_rr),
    .vm_req_pin(vm_req_pin),.inj_req_pin(inj_req_pin),.inj_idx_pin(inj_idx_pin),.inj_addr_pin(inj_addr_pin),
