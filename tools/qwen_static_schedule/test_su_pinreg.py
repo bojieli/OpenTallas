@@ -37,16 +37,16 @@ class SuPinreg(unittest.TestCase):
             self.assertEqual((d['embed'], d['status'], d['su_op']), (-1, 1, 0))
             w0 = S.copy_windows(4, S.load(t, 0))
             w1 = S.copy_windows(4, d)
-            # PINREG=0 straight from qfd_su_static_copy: reads E+1..E+4, writes E+17..E+20, done E+21, active E+0..E+20
-            self.assertEqual(w0, dict(reads=(1, 4), writes=(17, 20), done=21, active=(0, 20)))
-            self.assertEqual(w1, dict(reads=(3, 6), writes=(20, 23), done=23, active=(1, 22)))
+            # PINREG=0 straight from qfd_su_static_copy: reads E+1..E+4, writes E+17..E+20, done E+21, internal occupancy E+0..E+20 (pin cp_active +1: E+1..E+21)
+            self.assertEqual(w0, dict(reads=(1, 4), writes=(17, 20), done=21, active=(1, 21)))
+            self.assertEqual(w1, dict(reads=(3, 6), writes=(20, 23), done=23, active=(2, 23)))
             # back-to-back copies: +2 controller edges per copy at PINREG=1 (fall +2), relays from the allocator
-            self.assertEqual(S.next_copy_edge(100, 4, S.load(t, 0), 3, 2), 100 + 3 + 20 + 1 + 2 + 1)
-            self.assertEqual(S.next_copy_edge(100, 4, d, 3, 2), 100 + 3 + 22 + 1 + 2 + 1)
-            self.assertTrue(S.check_copies([(100, 4), (129, 64)], d, 3, 2))
+            self.assertEqual(S.next_copy_edge(100, 4, S.load(t, 0), 3, 2), 100 + 3 + 21 + 1 + 2 + 1)
+            self.assertEqual(S.next_copy_edge(100, 4, d, 3, 2), 100 + 3 + 23 + 1 + 2 + 1)
+            self.assertTrue(S.check_copies([(100, 4), (130, 64)], d, 3, 2))
             with self.assertRaises(ScheduleError):
-                S.check_copies([(100, 4), (128, 64)], d, 3, 2)   # legal at PINREG=0 (127), one edge short at 1
-            self.assertTrue(S.check_copies([(100, 4), (127, 64)], S.load(t, 0), 3, 2))
+                S.check_copies([(100, 4), (129, 64)], d, 3, 2)   # legal at PINREG=0 (128), one edge short at 1
+            self.assertTrue(S.check_copies([(100, 4), (128, 64)], S.load(t, 0), 3, 2))
 
     def test_fail_closed(self):
         with tempfile.TemporaryDirectory() as t:

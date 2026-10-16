@@ -10,7 +10,8 @@ that samples the copy command cp (all at the SU die pins, SU clock edges):
     va read beats      E+1+r .. E+B+r              (B = cp beats, r = reads delta)
     va / xsw writes    E+R+2+w .. E+R+B+1+w        (R = 15, w = writes delta)
     cp_done            E+R+B+2+d
-    cp_active high     E+a_rise .. E+R+B+1+a_fall  (inclusive; low again from edge E+R+B+2+a_fall)
+    cp_active high     E+1+a_rise .. E+R+B+2+a_fall (inclusive; the PINREG=0 source already registers cp_active
+                       once at the pin -- u_copy_active_pin -- so the pin is the internal occupancy 0..R+B+1 plus 1)
 At PINREG=1 the measured deltas are reads +2, writes +3, cp_done +2, cp_active rise +1 / fall +2 (copy start +1).
 The decomposition is checked: reads = start + 1 (va pin register), writes = reads + 1 (READ_EDGES 15 -> 16),
 cp_done = start + 1 (pin register), cp_active rise = start, fall = start + 1.
@@ -18,7 +19,7 @@ cp_done = start + 1 (pin register), cp_active rise = start, fall = start + 1.
 Controller back-to-back copy rule (ot_qfd_tt_ctlm_split_static: cp_available = !cp_active_q, cp_active_q is one
 register on the controller root): a copy issued at controller edge c reaches the SU after cp_relay edges; the next copy
 may issue at controller edge c2 only when cp_active_q is already low:
-    c2 >= c + cp_relay + (R + B + 1 + a_fall) + 1 + cp_active_relay + 1
+    c2 >= c + cp_relay + (R + B + 2 + a_fall) + 1 + cp_active_relay + 1
 Relay edges are the die allocator's ages (allocator_stage_of), passed in, never assumed.
 
 Other contracts: embedding requests external_a_re/addr reach seq_su one edge EARLIER (-1; answers keep their latency
@@ -91,7 +92,7 @@ def copy_windows(beats, delta):
     return dict(reads=(1 + delta['reads'], B + delta['reads']),
                 writes=(R + 2 + delta['writes'], R + B + 1 + delta['writes']),
                 done=R + B + 2 + delta['done'],
-                active=(delta['active_rise'], R + B + 1 + delta['active_fall']))
+                active=(1 + delta['active_rise'], R + B + 2 + delta['active_fall']))
 
 
 def next_copy_edge(issue_edge, beats, delta, cp_relay, cp_active_relay):
