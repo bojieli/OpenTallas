@@ -7,16 +7,16 @@
   0,
   0,
   434.72,
-  293.76
+  315.36
  ],
  "core": [
   2.16,
   2.16,
   432.56,
-  291.59999999999997
+  313.2
  ],
  "why": "spec outline (exact: the closed view's sub-slot)",
- "std_area_um2": null,
+ "std_area_um2": 3459.0,
  "layer_contract": {
   "children": {},
   "pg_layer": "M5",
@@ -79,7 +79,7 @@
    "inst": "u_rxb.g_block[1].u_block.g_mem[0].u_mem.u_sram",
    "idx": 0,
    "x": 22.464,
-   "y": 192.288,
+   "y": 213.84,
    "w": 171.288,
    "h": 77.784,
    "orient": "MY",
@@ -105,14 +105,27 @@
    "inst": "u_rxb.g_block[1].u_block.g_mem[1].u_mem.u_sram",
    "idx": 0,
    "x": 241.056,
-   "y": 192.288,
+   "y": 213.84,
    "w": 171.288,
    "h": 77.784,
    "orient": "R0",
    "offtrack": 0
   }
  ],
- "findings": [],
+ "findings": [
+  [
+   "WARN",
+   "util",
+   "utilisation 42% outside 45%-60% (std 3459 + macro 53294 in core 133872 um2)",
+   "resize the outline to util 0.50-0.55 (drop 'outline', set util)"
+  ],
+  [
+   "WARN",
+   "fill",
+   "fill 41% = (macros/children 53294 + std 3459) / outline 137093 um2 < 50%",
+   ""
+  ]
+ ],
  "referenced": [
   "rtl/hbm_accel/tu/ep_static_20261015/hfd_ep_static.sv",
   "rtl/hbm_accel/tu/ep_static_20261015/ot_hep_rx_store.sv",

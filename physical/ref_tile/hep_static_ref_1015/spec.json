@@ -17,7 +17,7 @@
  ],
  "outline": {
   "w": 434.72,
-  "h": 293.76,
+  "h": 315.36,
   "exact": true
  },
  "pg_layer": "M5",
@@ -41,7 +41,7 @@
    "inst": "u_rxb.g_block[1].u_block.g_mem[0].u_mem.u_sram",
    "at": [
     22.464,
-    192.288
+    213.84
    ],
    "at_exact": true,
    "orient": "MY"
@@ -63,7 +63,7 @@
    "inst": "u_rxb.g_block[1].u_block.g_mem[1].u_mem.u_sram",
    "at": [
     241.056,
-    192.288
+    213.84
    ],
    "at_exact": true,
    "orient": "R0"
@@ -113,7 +113,7 @@
    "v": "M3 M5"
   }
  },
- "structural_change": "v15 successor of the retired flat hfd_lk_ep (13 failed routes): one ~8k-flop master for all 9 ep windows, lane gearbox 613b->512b fixed 4-in-5 format + off-die elastic RX pingpong (0az boundary), every port pin-registered, one clock root. Route-2 fix of route-1 EARLY_FAIL_HOLD (setup/hold conflict at enable-mux D pins with one 612-load select): selects replicated per 64-b slice, bypass-free SRAM leaf, macro columns facing one centre datapath channel, logic band at the COLL/SerDes faces.",
+ "structural_change": "v15 successor of the retired flat hfd_lk_ep (13 failed routes): one ~8k-flop master for all 9 ep windows, lane gearbox 613b->512b fixed 4-in-5 format + off-die elastic RX pingpong (0az boundary), every port pin-registered, one clock root. Route-2 fix of route-1 EARLY_FAIL_HOLD (setup/hold conflict at enable-mux D pins with one 612-load select): selects replicated per 64-b slice, bypass-free SRAM leaf, macro columns facing one centre datapath channel, logic band at the COLL/SerDes faces. Route-3 fix of route-2 EARLY_FAIL_CONGESTION (12 zero-capacity M2/M4 gcells on 3 nets at the inward SRAM faces of the 47 um centre channel; abutted N-S macro pairs left no horizontal corridor): the two macro rows are separated by a 21.6 um horizontal channel (outline 434.72 x 315.36 inside the 434.72 x 515.2 window), giving the face escapes and the band->channel nets a crossing corridor.",
  "job": {
   "owner": "Claude:H-LKEP",
   "branch": "claude/h-lkep-1015",
@@ -174,7 +174,7 @@
  "slot_change_request": {
   "reason": "route 1 (b58969306) EARLY_FAIL_HOLD at FF -79 ps on u_block.pin_flit[484]/D: setup/hold conflict at a 2:1 enable-mux D pin (select vp[2] = one flop fanning out to 612 flops, SS setup +62 ps; data leg dout->pin_flit needs >= +109 ps FF). Route 2: (RTL) every wide select replicated per 64-b slice (block pin_flit, pingpong merge, TX beat idle), SRAM leaf without the never-firing write->read bypass; (floorplan) two abutted N-S macro columns in the upper part, left column MY / right R0 so all rd_out / wd_in[265:0] / clk faces face one 47.3 um centre channel (M3+M5 2,300 vertical tracks for 1,224 crossing bits = 0.53) (bits 0..305 left half, 306..611 right half), outer 20.3 um edge channels for wd_in[305:266] + ties, lower 114 um band for the gearboxes and pin registers (SerDes W pins 2..140 um, COLL S face, clk S centre). Outline 434.72 x 293.76 inside the 434.72 x 515.2 ep window.",
   "prior_slot": "ep_N0..ep_S4 434.72 x 515.2",
-  "requested_leaf": "hfd_ep_static 434.72 x 324",
+  "requested_leaf": "hfd_ep_static 434.72 x 315.36",
   "request_file": "results/arch/hep_static_1015/slot_request.json"
  },
  "pin_ranges": {
@@ -275,5 +275,9 @@
  "pin_reg_split": true,
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "hfd_ep_static registers every input and every output at its pin in RTL (hfd_ep_static.sv: p_* input pin registers for tx_v/tx_frame/rx_* controls/sd_rx/sd_st; sd_tx = the TX beat register; rx_pin_v/rx_pin_flit = the pingpong merge registers; rx_block_ready/phy_up/fault/fault_cause output registers); a recipe-3 wrapper would add a second +1-cycle stage on 2,450 pins"
  }
 }
