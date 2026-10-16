@@ -1,5 +1,5 @@
 {
-  "status": "SOURCE_INTERFACE_WIP_NOT_PHYSICALLY_QUALIFIED",
+  "status": "COMPONENT_PROOFS_PASS_PRIMARY_NL2_INDEPENDENT_RETURNS_PENDING",
   "ordering": [
     "W0",
     "E0",
@@ -22,59 +22,77 @@
     "outputs": {
       "cw0": 2050,
       "rq": 2213,
-      "am": 52
+      "am": 52,
+      "result_status_v": 1
     },
     "clock_entries": "ck,ck_bw0..7,ck_pair0..3,ck_col0..15,ck_mul0..15,ck_group0..3",
     "outline": "candidate1036.8x2462.4 from die owner; new source needs views",
-    "status": "cw0[2048]=native valid, [2049]=native fault. local sticky word fault folded into am[51] with registered am station (+1); central cross-half valid check pending. Source-specific qfd_b2_word_status added, real die wiring/padding remains pending."
+    "status": "Local cw fault preserved into am. cw0 native valid/fault and dedicated result_status_v go to central checker with compiler-padded event ages. Source registered faces restored; actual wholeport operation proof belongs Q-B2-JOIN.",
+    "source_child": "qfd_slab_port_leaf_b2 has fixedBANDF2, distinct source identity; original BANDF1 leaf restored",
+    "parent_register_bits": 6709,
+    "boundary_stages": "tc341/ty2048 input, cw2050/rq2213/am52 outputs; result_status_v kept independent capture of local_result[2212] on same edge as rq_q[2212]"
   },
   "halfband": {
-    "master": "qfd_sp_halfband_lanes",
-    "source": "rtl/physical/ot_qwen_halfband_lanes_slots.sv",
+    "master": "qfd_sp_halfband_lanes_b2_l2",
+    "source": "rtl/physical/ot_qwen_halfband_lanes_slots_b2_l2.sv",
     "count": 6,
     "inputs": {
       "tw": 2048,
       "c": 26,
-      "tt": 1538,
       "b0": 1,
-      "lnk": 6
+      "lnk": 6,
+      "tt_l0..tt_l7": 194
     },
     "outputs": {
       "pw": 513,
-      "pw_l0..pw_l3": 129,
-      "f_up": 4,
+      "f_up": 8,
       "ty": 2048,
-      "f": 1
+      "f": 1,
+      "pw_l0..pw_l7": 65
     },
     "clock_entries": "ck,ck_l0..15",
-    "outline": "candidate881.28x648 from die owner; new views required"
+    "outline": "candidate881.28x648 from die owner; new views required",
+    "qualification": "Primary8xNL2 with independent return flags pending exact/mutant proof; no inherited physical view",
+    "return_packing": "Each tt_lu={tt_v,tt_use,tt_ty[191:0]}; each lane takes its own upper return flags, no dropped copies",
+    "lnk_strap_range": {
+      "external": [
+        0,
+        54
+      ],
+      "internal_leaf": [
+        1,
+        55
+      ],
+      "reason": "parent adds one LNK unit for its stations, GP4 DU0=20 and128deep ring"
+    }
   },
   "upper": {
-    "master": "qfd_band_upper_b2",
-    "source": "rtl/qwen_split/qfd_band_upper_b2.sv",
-    "count": 4,
+    "master": "qfd_band_upper_b2_l2",
+    "source": "rtl/qwen_split/qfd_band_upper_b2_l2.sv",
+    "count": 8,
     "inputs": {
-      "pw": 768,
+      "pw": 384,
       "pw_v": 6,
       "lf": 6,
       "sel_e": 13,
       "tv_e": 13
     },
     "outputs": {
-      "tt_ty": 384,
+      "tt_ty": 192,
       "tt_use": 1,
       "tt_v": 1,
       "fault": 1
     },
     "clock_entries": "clk",
     "parameters": {
-      "NL": 4,
+      "NL": 2,
       "NB": 6,
       "TCUT": 6,
       "LG": 12,
       "RPIN": 1
     },
-    "outline": "candidate86.4x410.4 from die owner; new views required"
+    "outline": "candidate86.4x205.2 perroot; no inherited views",
+    "qualification": "Clock-root structural split; measured sink/CTS and physical gates still required"
   },
   "serializer": {
     "master": "qfd_res_ser_half_b2",
@@ -90,16 +108,17 @@
     },
     "clock_entries": "ck",
     "calendar": "D+4*HB+j; j0..3; HB5 slot3 end; 24-edge span",
-    "outline": "candidate777.6x324 from die owner; new views required"
+    "outline": "candidate777.6x324 from die owner; new views required",
+    "status": "DIAGNOSTIC PREDECESSOR ONLY. Native961w uses trained PAR3 result calendar with eight consecutive captures; qwen_b2_join owns actual qfd_res_train_half_b2 and VM NB6 PAR_RB1 integration. Do not bind this simple24spacing module as production."
   },
   "graph": [
     "Each original bword terminates same-side port bw0..7",
     "cw0 data[2047:0] -> local halfband tw; cw0 upper status remains fault/control audit",
-    "Halfband h pw_lu[127:0] -> upper u pw[128*h+:128]; pw_lu[128] -> pw_v[h]; f_up[u] -> lf[h]",
-    "Upper u tt_ty distributes quarter lanes to halfband0 tt only, upper use/v duplicated per quarter as existing tree",
+    "Halfband h pw_lu[63:0] -> upper u pw[64*h+:64]; pw_lu[64] -> pw_v[h]; f_up[u] -> lf[h]",
+    "Upper u tt_ty192/use/v -> halfband0 tt_lu194, preserving all8 independent return status copies; otherhalfbands tie unused tt_lu0 under b0=0",
     "local halfband ty -> same-side port ty",
-    "port rq -> same-side serializer rq",
-    "six serializer rb -> six independent VM result sources, statically disjoint; VM source pending",
+    "port rq -> same-side actual qfd_res_train_half_b2 rq (source by qwen_b2_join)",
+    "six actual train serializer rb -> VM NB6 PAR_RB1; native PAR3 calendar allows max3 active/cycle; source by qwen_b2_join",
     "tt_ctlm tc duplicated to W/E, half am routed separately; controller source pending"
   ],
   "costs": "No actual allocator price yet. Existing 0bits/64stages and0.3..0.6mm2 are geometric estimates only.",
@@ -109,13 +128,19 @@
     "count": 1,
     "inputs": {
       "word_v": 6,
-      "word_fault": 6
+      "word_fault": 6,
+      "result_v": 6
     },
     "outputs": {
       "fault": 1
     },
     "clock_entries": "ck",
-    "required_schedule": "Actual cw0 status links padded to same source-event edge by compiler; fault route to controller still pending source integration",
+    "required_schedule": "Pad six actual cw status events together and six actual result_status_v events together in distinct equal-age groups; fault never reschedules execution",
     "outline": "unassigned tiny new leaf"
+  },
+  "historical_four_lane_upper": {
+    "halfband": "qfd_sp_halfband_lanes",
+    "upper": "qfd_band_upper_b2",
+    "scope": "4 upper leaves: component proof passed with LC transport3+LNK before DLY1; superseded by primary8xNL2 for clock-root safety"
   }
 }

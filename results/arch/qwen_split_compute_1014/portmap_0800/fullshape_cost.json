@@ -1,0 +1,77 @@
+{
+  "qualification": "SOURCE_COUNTS_AND_PROPOSED_RECTANGLES_ONLY",
+  "model_path": "/home/ubuntu/artifacts/qdieplan-0700/geom_dpC.json",
+  "model_sha256": "038f21ef92c741c961a40d7b12e44fcd0081a00f0b3726962fbcbaec3cec3aa2",
+  "sources": {
+    "rtl/qwen_sys/lane_band_20261008/ot_qfd_band_lanes.sv": "01383800e446a14a6e5d376353fb8288732112c70b9453fa5f1e7fec304e7f0e",
+    "rtl/physical/ot_qwen_halfband_lanes_slots.sv": "5701b100fe6707c0a43e50a8929362f54c821d38231c89423d52056d725163ba",
+    "rtl/qwen_split/qfd_band_upper_b2.sv": "9075e7a0cc6b0cd4a8ba8860a14ae748897623cedbf5d34a6b7c5a1a106daa56",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef": "bb0024665e7323656008a9f4df35efe56fd6ca1cdef9ce4c8d2f9676fefb0227"
+  },
+  "shape": {
+    "groups": 3072,
+    "lanes": 16,
+    "bands_old": 3,
+    "halfbands_new": 6,
+    "production_splits": [
+      7,
+      8,
+      9,
+      10,
+      11
+    ],
+    "empty_split12_rejected_for_b2_output": true
+  },
+  "fp32_tree_adders": {
+    "old_local": 336,
+    "old_upper": 16,
+    "b2_local": 288,
+    "b2_upper": 64,
+    "delta": 0
+  },
+  "mapped_hold_sram_instances": {
+    "configuration": "RDMEM1, LNKS1; fixed 128x256 macro for both GP8 width256 and GP4 width128",
+    "old": 192,
+    "b2": 288,
+    "delta": 96,
+    "macro_size_um": [
+      94.824,
+      41.04
+    ],
+    "delta_macro_footprint_mm2": 0.37359138816,
+    "scope": "Source elaboration formula, synthesis and routed view still required. Upper holds remain flops."
+  },
+  "outline_mm2": {
+    "baseline_actual_model": {
+      "halfband_or_band": 2.9924038655999996,
+      "serializer": 1.209230209728,
+      "upper": 0.05318783999999999,
+      "port": 15.318097919999998
+    },
+    "candidate_die_owner": {
+      "halfband_or_band": 3.4264166400000002,
+      "serializer": 1.5116544,
+      "upper": 0.14183424,
+      "port": 15.318097919999998
+    },
+    "delta": {
+      "halfband_or_band": 0.43401277440000063,
+      "serializer": 0.30242419027199996,
+      "upper": 0.08864640000000001,
+      "port": 0.0
+    },
+    "delta_total": 0.8250833646720004,
+    "excludes": "new status collector, routing channels, actual standard cells/packing/clock distribution"
+  },
+  "timing": {
+    "actual_allocator_b2": null,
+    "geometric_64_stages_is_not_a_measurement": true,
+    "native_static_full_token": null,
+    "pending": "Q-COMPUTE-DIE builds actual b2 graph and real allocator; source-native join + measured schedule and physical TT/FF/DRC gates pending"
+  },
+  "historical_area_estimate_mm2": [
+    0.3,
+    0.6
+  ],
+  "historical_estimate_superseded_by_candidate_outline_arithmetic": true
+}
