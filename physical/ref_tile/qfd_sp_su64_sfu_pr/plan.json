@@ -2756,11 +2756,11 @@
   ],
   "ck_align0": [
    874.832,
-   86.4
+   86.94
   ],
   "ck_align1": [
    2429.968,
-   86.4
+   86.94
   ],
   "ck_align2": [
    874.832,
@@ -2858,6 +2858,12 @@
    1619.984,
    1836.0
   ]
+ },
+ "m8_phase_check": {
+  "rule": "die M8 PG at SU-local y = 0 mod 8.64 (0.48 wide): every interior M7 clock pin >= 0.5 um clear",
+  "pins": 346,
+  "min_clearance_um": 0.54,
+  "violations": []
  },
  "groups": {
   "S:va,vq": [

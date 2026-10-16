@@ -142,6 +142,19 @@ VIEWS = {'head': ('physical/ref_tile/qfd_su_lane_h_native_crom5_f/views/qfd_su_l
          'exp': ('physical/ref_tile/qfd_su_sfu_exp_native45/views/qfd_su_sfu_exp_native45', 'u_exp', 129.6, 151.2, 62.652, 0.0)}
 
 
+def m8_phase_ok(y):
+    """die M8 PG stripes (0.48 wide, 8.64 pitch) sit on SU-local y = 0 mod 8.64 (Q-COMPUTE-DIE q2o2): >= 0.5 um clear"""
+    u = y % 8.64
+    return min(u, 8.64 - u) >= 0.5
+
+
+def m8_phase_fix(y):
+    for d in [0] + [s * k * 0.054 for k in range(1, 30) for s in (1, -1)]:
+        if m8_phase_ok(y + d):
+            return round(y + d, 3)
+    raise ValueError(y)
+
+
 def m7_track_near(x):
     off, p = TRK['M7']
     k0 = round((x - off) / p)
@@ -175,7 +188,12 @@ def main(out):
         interior[f'ck_red{i}'] = (m7_track_near(129.6 + 3 * 388.8 + 324.0 + 32.4), round(172.8 + i * 432.0 + 324.0 + 54.0, 3))
     interior['ck_red8'] = (m7_track_near(600.0), 40.0)
     interior['ck'] = (m7_track_near(1620.0), 1836.0)
+    interior = {k: (x, m8_phase_fix(y)) for k, (x, y) in interior.items()}
     assert len(interior) == len(CLOCKS) and set(interior) == set(CLOCKS)
+    m8_check = dict(rule='die M8 PG at SU-local y = 0 mod 8.64 (0.48 wide): every interior M7 clock pin >= 0.5 um clear',
+                    pins=len(interior), min_clearance_um=round(min(min(y % 8.64, 8.64 - y % 8.64) for _, y in interior.values()), 3),
+                    violations=[k for k, (x, y) in interior.items() if not m8_phase_ok(y)])
+    assert not m8_check['violations']
     # ---- data pins ----
     bitpos = {}   # port -> list of (face, layer, x, y)
     for face, names, win, minstart, _ in GROUPS:
@@ -232,7 +250,7 @@ def main(out):
                 density_pins_per_um=dict(S=dens('S'), W=dens('W'), E=dens('E')))
     (out / 'assigned_pins.json').write_text(json.dumps(data, indent=1) + '\n')
     (out / 'children.json').write_text(json.dumps(children, indent=1) + '\n')
-    plan = dict(lanes=L, interior_clock_pins=interior,
+    plan = dict(lanes=L, interior_clock_pins=interior, m8_phase_check=m8_check,
                 groups={f'{f}:{",".join(n)}': [bitpos[n[0]][0][2:], bitpos[n[-1]][-1][2:]] for f, n, *_ in GROUPS})
     (out / 'plan.json').write_text(json.dumps(plan, indent=1) + '\n')
     print(json.dumps(dict(pins=sum(len(v) for v in bitpos.values()), children=len(children), density=data['density_pins_per_um'],

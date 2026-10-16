@@ -26344,8 +26344,8 @@ place_pin -pin_name {ck_rcp63} -layer M7 -location {3123.3440 3329.4000} -pin_si
 place_pin -pin_name {ck_rsq63} -layer M7 -location {2913.6160 3366.6000} -pin_size {0.032 0.192}
 place_pin -pin_name {ck_exp63} -layer M7 -location {3086.4160 3366.6000} -pin_size {0.032 0.192}
 place_pin -pin_name {ck_lane63} -layer M7 -location {3207.5680 3346.8000} -pin_size {0.032 0.192}
-place_pin -pin_name {ck_align0} -layer M7 -location {874.8320 86.4000} -pin_size {0.032 0.192}
-place_pin -pin_name {ck_align1} -layer M7 -location {2429.9680 86.4000} -pin_size {0.032 0.192}
+place_pin -pin_name {ck_align0} -layer M7 -location {874.8320 86.9400} -pin_size {0.032 0.192}
+place_pin -pin_name {ck_align1} -layer M7 -location {2429.9680 86.9400} -pin_size {0.032 0.192}
 place_pin -pin_name {ck_align2} -layer M7 -location {874.8320 550.8000} -pin_size {0.032 0.192}
 place_pin -pin_name {ck_align3} -layer M7 -location {2429.9680 550.8000} -pin_size {0.032 0.192}
 place_pin -pin_name {ck_align4} -layer M7 -location {874.8320 982.8000} -pin_size {0.032 0.192}

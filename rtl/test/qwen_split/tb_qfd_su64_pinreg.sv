@@ -87,7 +87,7 @@ module tb_qfd_su64_pinreg;
     endtask
     // copy-mode event streams (pin images of the copy beats)
     reg [49:0] r0q [0:4095]; reg [49:0] r1q [0:4095]; integer nr0=0,nr1=0,fr0=-1,fr1=-1;
-    reg [2184:0] w0q [0:4095]; reg [2184:0] w1q [0:4095]; integer nw0=0,nw1=0,fw0=-1,fw1=-1,cd0=-1,cd1=-1;
+    reg [2184:0] w0q [0:4095]; reg [2184:0] w1q [0:4095]; integer nw0=0,nw1=0,fw0=-1,fw1=-1,cd0=-1,cd1=-1,ca0r=-1,ca0f=-1,ca1r=-1,ca1f=-1;
     always @(negedge clk) if (rst_n && cyc > 2) begin
         if (MODE == 0) begin
             if (d0_va !== d1_va) bad("va");
@@ -104,6 +104,8 @@ module tb_qfd_su64_pinreg;
             if (d1_va[48]) begin if (fr1 < 0) fr1 = cyc; r1q[nr1] = d1_va[49:0]; nr1 = nr1 + 1; end
             if (|d0_va[2309:2246]) begin if (fw0 < 0) fw0 = cyc; w0q[nw0] = {d0_va[2309:150], d0_xsw[24:0]}; nw0 = nw0 + 1; end
             if (|d1_va[2309:2246]) begin if (fw1 < 0) fw1 = cyc; w1q[nw1] = {d1_va[2309:150], d1_xsw[24:0]}; nw1 = nw1 + 1; end
+            if (d0_cpa && ca0r < 0) ca0r = cyc; if (!d0_cpa && ca0r >= 0 && ca0f < 0) ca0f = cyc;
+            if (d1_cpa && ca1r < 0) ca1r = cyc; if (!d1_cpa && ca1r >= 0 && ca1f < 0) ca1f = cyc;
             if (d0_cpd && cd0 < 0) cd0 = cyc;
             if (d1_cpd && cd1 < 0) cd1 = cyc;
         end
@@ -154,11 +156,12 @@ module tb_qfd_su64_pinreg;
                 if (fr1 - fr0 != 2) bad("copy read edge (+2)");
                 if (fw1 - fw0 != 3) bad("copy write edge (+3)");
                 if (cd1 - cd0 != 2) bad("cp_done edge (+2)");
+                if (ca1r - ca0r != 1 || ca1f - ca0f != 2) bad("cp_active edges (+1 rise / +2 fall)");
                 for (k = 0; k < nr0; k = k + 1) if (r0q[k] !== r1q[k]) bad("copy read beat");
                 for (k = 0; k < nw0; k = k + 1) if (w0q[k] !== w1q[k]) bad("copy write beat");
-                $display("COPY%0d reads %0d/%0d writes %0d/%0d first_read +%0d first_write +%0d cp_done +%0d", n, nr0, nr1, nw0, nw1,
-                         fr1-fr0, fw1-fw0, cd1-cd0);
-                nr0=0;nr1=0;nw0=0;nw1=0;fr0=-1;fr1=-1;fw0=-1;fw1=-1;cd0=-1;cd1=-1;
+                $display("COPY%0d reads %0d/%0d writes %0d/%0d first_read +%0d first_write +%0d cp_done +%0d cp_active +%0d/+%0d", n, nr0, nr1, nw0, nw1,
+                         fr1-fr0, fw1-fw0, cd1-cd0, ca1r-ca0r, ca1f-ca0f);
+                nr0=0;nr1=0;nw0=0;nw1=0;fr0=-1;fr1=-1;fw0=-1;fw1=-1;cd0=-1;cd1=-1;ca0r=-1;ca0f=-1;ca1r=-1;ca1f=-1;
             end
         end
         if (MODE == 0 && (d0_sd[107] || d1_sd[107])) $display("NOTE fault bits d0 %0d d1 %0d", d0_sd[107], d1_sd[107]);
