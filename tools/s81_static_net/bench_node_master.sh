@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # S-NET production bench of a generated static return node master.
-#   bench_node_master.sh pass|mut_window|mut_fault MASTER GLUE_SV OUT
-# mut_window: the master with its node window +1 (sed on the master text); mut_fault: fault chain cut (fo <= flt only).
+#   bench_node_master.sh pass|mut_window|mut_fault|mut_rst MASTER GLUE_SV OUT
+# mut_window: the master with its node window +1 (sed on the master text); mut_fault: fault chain cut (fo <= flt only);
+# mut_rst: the reset pin register never asserts (node flops see no reset).
 set -eu
 cd "$(dirname "$0")/../.."
 mode=${1:?}; mst=${2:?}; glue=${3:?}; out=${4:?}; mkdir -p "$out"
@@ -10,6 +11,8 @@ fch=0; [[ "${mst:12}" == *f* ]] && fch=1
 awk "/^module $mst /,/^endmodule/" "$glue" > "$out/master.sv"; grep -q "ot_s81_retn_static" "$out/master.sv" || { echo "NODE_STATIC FAIL master is not the static node"; exit 1; }
 case $mode in
   mut_window) sed -i 's/\.WIN(\([0-9]*\))/.WIN(9\1)/; s/\.WIN(92)/.WIN(3)/; s/\.WIN(91)/.WIN(2)/' "$out/master.sv";;
+  mut_rst) grep -q "reg rn;" "$out/master.sv" || { echo "NODE_STATIC FAIL mut_rst needs the reset pin register"; exit 1; }
+           sed -i "s/if (!rst_n\[0\]) rn <= 1'b0; else rn <= 1'b1;/rn <= 1'b1;/" "$out/master.sv";;
   mut_fault) sed -i 's/fr <= flt | fi\[0\];/fr <= 1'"'"'b0;/; s/fr <= flt;/fr <= 1'"'"'b0;/' "$out/master.sv";;
 esac
 win=$(grep -o '\.WIN([0-9]*)' "$out/master.sv" | head -1 | tr -dc 0-9); [ "$mode" != pass ] && win=$(grep -o '\.WIN([0-9]*)' "$glue" | head -1 | tr -dc 0-9)
