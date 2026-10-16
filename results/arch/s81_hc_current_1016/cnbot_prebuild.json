@@ -1,0 +1,75 @@
+{
+  "scope": "additive NT bottom independent root source candidate; no inherited parent/clock/native physical closure",
+  "source": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_ntree.sv",
+  "source_sha256": "056c436d639a844e4bd02f74b2ed31f9486560b25e159dd6eec8545d1abd9364",
+  "generated_sha256": "de77f7fea5d43c92b9400b1b34a786d7e73a1462ec736b8722d902771fe07a92",
+  "roots": [
+    {
+      "index": 0,
+      "child": "g_c[0].u_a",
+      "type": "ot_s81_hc_cncla"
+    },
+    {
+      "index": 1,
+      "child": "g_c[0].u_b",
+      "type": "ot_s81_hc_cnclb"
+    },
+    {
+      "index": 2,
+      "child": "g_c[1].u_a",
+      "type": "ot_s81_hc_cncla"
+    },
+    {
+      "index": 3,
+      "child": "g_c[1].u_b",
+      "type": "ot_s81_hc_cnclb"
+    },
+    {
+      "index": 4,
+      "child": "g_c[2].u_a",
+      "type": "ot_s81_hc_cncla"
+    },
+    {
+      "index": 5,
+      "child": "g_c[2].u_b",
+      "type": "ot_s81_hc_cnclb"
+    },
+    {
+      "index": 6,
+      "child": "u_tr",
+      "type": "ot_s81_hc_cntree"
+    },
+    {
+      "index": 7,
+      "child": "u_rsq",
+      "type": "ot_s81_hc_cnrsq"
+    }
+  ],
+  "new_payload_FF": 0,
+  "new_control_FF": 0,
+  "new_data_cycles": 0,
+  "child_tuple": {
+    "NG": 256,
+    "D": 5120,
+    "NCOL": 3,
+    "GS": 8,
+    "S_RD": 2,
+    "S_RT": 4,
+    "ML": 5,
+    "AL": 4,
+    "NT_K": 67,
+    "cntree": {
+      "HALF": 1,
+      "RLY": 2,
+      "RF": 4,
+      "DW": 6
+    }
+  },
+  "residual_roots_total_including_previous53": 61,
+  "open": [
+    "source equality and stopped-real-root checks",
+    "per-root sink census/current real clock pins",
+    "actual native views and compact parent homes",
+    "current die TAIL_SPLIT1 lacks NT lane joins"
+  ]
+}

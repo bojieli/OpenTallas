@@ -1,0 +1,13 @@
+{
+  "test": "full actual eight-child arithmetic graph native lint",
+  "verdict": "PASS",
+  "host": "ot-epyc4",
+  "unit": "oth-ubuntu-111219-1792168268",
+  "remote": "/srv/opentallas-scratch/codex/s81-hc-bottom-0933",
+  "modules": 163,
+  "allocated_MB": 1572.449,
+  "wall_seconds": 18.854,
+  "log_sha256": "7f08fa821c5e50e93f4e0aa8485c2c6900a9451b902353b7a6ac42dfe1fbb208",
+  "source_sha256": "de77f7fea5d43c92b9400b1b34a786d7e73a1462ec736b8722d902771fe07a92",
+  "limits": "Lint only; edge equality/stopped-real-root probes, sink census, routed/native physical and die integration remain open."
+}

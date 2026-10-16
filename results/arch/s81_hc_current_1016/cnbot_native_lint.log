@@ -1,0 +1,142 @@
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/s81-hc-bottom-0933/ot_s81_hc_cnbot_roots.sv:38:14: Operator ASSIGN expects 32 bits on the Assign RHS, but Assign RHS's LOGAND generates 1 bits.
+                                                                                                     : ... note: In instance 'ot_s81_hc_cnbot_roots'
+   38 |         expd = (owner(n) == c) && (c != 3) && (n == 1 || owner(n / 2) != c);
+      |              ^
+                      ... For warning description see https://verilator.org/warn/WIDTHEXPAND?v=5.050
+                      ... Use "/* verilator lint_off WIDTHEXPAND */" and lint_on around source to disable this message.
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/codex/s81-hc-bottom-0933/ot_s81_hc_cnbot_roots.sv:52:72: Logical operator LOGAND expects 1 bit on the LHS, but LHS's FUNCREF 'expd' generates 32 bits.
+                                                                                                    : ... note: In instance 'ot_s81_hc_cnbot_roots'
+   52 |         begin t = 0; for (m = 1; m < n; m = m + 1) t = t + (expd(m, c) && hlf(m) == h); exh = t; end
+      |                                                                        ^~
+                     ... For warning description see https://verilator.org/warn/WIDTHTRUNC?v=5.050
+                     ... Use "/* verilator lint_off WIDTHTRUNC */" and lint_on around source to disable this message.
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/codex/s81-hc-bottom-0933/ot_s81_hc_cnbot_roots.sv:81:17: Logical operator GENIF expects 1 bit on the If, but If's FUNCREF 'expd' generates 32 bits.
+                                                                                                    : ... note: In instance 'ot_s81_hc_cnbot_roots'
+   81 |                 if (expd(n, c)) begin : g_e
+      |                 ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/s81-hc-native-trace-0918/rtl/dsrom_sys/s81_suhc/test/ot_s81_hc_ntree_trace.sv:501:14: Operator ASSIGN expects 32 bits on the Assign RHS, but Assign RHS's LOGAND generates 1 bits.
+                                                                                                                                        : ... note: In instance 'ot_s81_hc_cnbot_roots.g_c[2].u_a'
+  501 |         expd = (owner(n) == C) && ((((n << lev(n)) - NL) / NS) / 2 == 0) && (n == 1 || owner(n / 2) != C);
+      |              ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/s81-hc-native-trace-0918/rtl/dsrom_sys/s81_suhc/test/ot_s81_hc_ntree_trace.sv:557:14: Operator ASSIGN expects 32 bits on the Assign RHS, but Assign RHS's LOGAND generates 1 bits.
+                                                                                                                                        : ... note: In instance 'ot_s81_hc_cnbot_roots.g_c[2].u_b'
+  557 |         expd = (owner(n) == C) && ((((n << lev(n)) - NL) / NS) / 2 == 1) && (n == 1 || owner(n / 2) != C);
+      |              ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/s81-hc-native-trace-0918/rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_cntree.sv:67:14: Operator ASSIGN expects 32 bits on the Assign RHS, but Assign RHS's LOGAND generates 1 bits.
+                                                                                                                                  : ... note: In instance 'ot_s81_hc_cnbot_roots.u_tr'
+   67 |         expd = (owner(n) == c) && (c != 3) && (n == 1 || owner(n / 2) != c);
+      |              ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/codex/s81-hc-native-trace-0918/rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_cntree.sv:40:54: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'HALF' generates 32 bits.
+                                                                                                                                 : ... note: In instance 'ot_s81_hc_cnbot_roots.u_tr'
+   40 |     localparam integer PAD = HOP * (NP - L1) * (HALF ? 2 : 1);     
+      |                                                      ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/s81-hc-native-trace-0918/rtl/dsrom_sys/s81_suhc/test/ot_s81_hc_ntree_trace.sv:383:14: Operator ASSIGN expects 32 bits on the Assign RHS, but Assign RHS's LOGAND generates 1 bits.
+                                                                                                                                        : ... note: In instance 'ot_s81_hc_cnbot_roots.g_c[2].u_b.u_c'
+  383 |         expd = (owner(n) == C) && ((((n << lev(n)) - NL) / NS) / 2 == H) && (n == 1 || owner(n / 2) != C);
+      |              ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/s81-hc-native-trace-0918/rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_stree.sv:50:14: Operator ASSIGN expects 32 bits on the Assign RHS, but Assign RHS's LOGAND generates 1 bits.
+                                                                                                                                 : ... note: In instance 'ot_s81_hc_cnbot_roots.u_tr.u_tree'
+   50 |         expd = (owner(n) == c) && (c != 3) && (n == 1 || owner(n / 2) != c);
+      |              ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/codex/s81-hc-native-trace-0918/rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_stree.sv:87:29: Logical operator LOGAND expects 1 bit on the RHS, but RHS's FUNCREF 'expd' generates 32 bits.
+                                                                                                                                : ... note: In instance 'ot_s81_hc_cnbot_roots.u_tr.u_tree'
+   87 |                 if (OWN < 3 && expd(n, OWN)) begin : g_ex
+      |                             ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/codex/s81-hc-native-trace-0918/rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_stree.sv:90:35: Logical operator LOGAND expects 1 bit on the RHS, but RHS's FUNCREF 'expd' generates 32 bits.
+                                                                                                                                : ... note: In instance 'ot_s81_hc_cnbot_roots.u_tr.u_tree'
+   90 |             end else if (OWN == 3 && expd(n, O)) begin : g_im
+      |                                   ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/s81-hc-native-trace-0918/rtl/dsrom_sys/s81_suhc/test/ot_s81_hc_ntree_trace.sv:301:14: Operator ASSIGN expects 32 bits on the Assign RHS, but Assign RHS's LOGAND generates 1 bits.
+                                                                                                                                        : ... note: In instance 'ot_s81_hc_cnbot_roots.g_c[2].u_b.u_c.u_tree'
+  301 |         mine = (owner(n) == OWN) && (half(n) == H);
+      |              ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/codex/s81-hc-native-trace-0918/rtl/dsrom_sys/s81_suhc/test/ot_s81_hc_ntree_trace.sv:304:24: Logical operator LOGAND expects 1 bit on the LHS, but LHS's FUNCREF 'mine' generates 32 bits.
+                                                                                                                                       : ... note: In instance 'ot_s81_hc_cnbot_roots.g_c[2].u_b.u_c.u_tree'
+  304 |         expd = mine(n) && (n == 1 || owner(n / 2) != OWN);
+      |                        ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/s81-hc-native-trace-0918/rtl/dsrom_sys/s81_suhc/test/ot_s81_hc_ntree_trace.sv:304:14: Operator ASSIGN expects 32 bits on the Assign RHS, but Assign RHS's LOGAND generates 1 bits.
+                                                                                                                                        : ... note: In instance 'ot_s81_hc_cnbot_roots.g_c[2].u_b.u_c.u_tree'
+  304 |         expd = mine(n) && (n == 1 || owner(n / 2) != OWN);
+      |              ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/codex/s81-hc-native-trace-0918/rtl/dsrom_sys/s81_suhc/test/ot_s81_hc_ntree_trace.sv:323:13: Logical operator GENIF expects 1 bit on the If, but If's FUNCREF 'mine' generates 32 bits.
+                                                                                                                                       : ... note: In instance 'ot_s81_hc_cnbot_roots.g_c[2].u_b.u_c.u_tree'
+  323 |             if (mine(n)) begin : g_own
+      |             ^~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/codex/s81-hc-native-trace-0918/rtl/dsrom_sys/s81_suhc/test/ot_s81_hc_ntree_trace.sv:331:17: Logical operator GENIF expects 1 bit on the If, but If's FUNCREF 'expd' generates 32 bits.
+                                                                                                                                       : ... note: In instance 'ot_s81_hc_cnbot_roots.g_c[2].u_b.u_c.u_tree'
+  331 |                 if (expd(n)) begin : g_ex
+      |                 ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/s81-hc-native-trace-0918/rtl/hdc/ot_hdc_fp32_f12.sv:247:23: Operator VAR 'CUTS' expects 32 bits on the Initial value, but Initial value's CONST '8'h6a' generates 8 bits.
+  247 |     parameter integer CUTS = 8'b01101010
+      |                       ^~~~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/s81-hc-native-trace-0918/rtl/hdc/ot_hdc_fp32_f12.sv:58:23: Operator VAR 'CUTS' expects 32 bits on the Initial value, but Initial value's CONST '7'h6a' generates 7 bits.
+   58 |     parameter integer CUTS = 6'b101010
+      |                       ^~~~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/s81-hc-native-trace-0918/rtl/hdc/ot_hdc_fp32_f12.sv:58:23: Operator VAR 'CUTS' expects 32 bits on the Initial value, but Initial value's CONST '6'h2a' generates 6 bits.
+   58 |     parameter integer CUTS = 6'b101010
+      |                       ^~~~
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/codex/s81-hc-native-trace-0918/rtl/hdc/ot_hdc_fp32_f12.sv:43:14: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'CUT' generates 32 bits.
+                                                                                                            : ... note: In instance 'ot_s81_hc_cnbot_roots.u_rsq.u_rsq.g_nr[2].m_y...g_l5.u.u.u_k0'
+   43 |     generate if (CUT) begin : g_r
+      |              ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/s81-hc-native-trace-0918/rtl/dsrom_sys/s81_suhc/test/ot_s81_hc_ntree_trace.sv:423:39: Operator SUB expects 32 bits on the LHS, but LHS's VARREF 'o' generates 5 bits.
+                                                                                                                                        : ... note: In instance 'ot_s81_hc_cnbot_roots.g_c[2].u_b.u_c'
+  423 |                         else hv[vi][o - BC] <= 1'b1;
+      |                                       ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/s81-hc-native-trace-0918/rtl/dsrom_sys/s81_suhc/test/ot_s81_hc_ntree_trace.sv:422:31: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'o' generates 5 bits.
+                                                                                                                                        : ... note: In instance 'ot_s81_hc_cnbot_roots.g_c[2].u_b.u_c'
+  422 |                         if (o < BC || o >= BC + LC || vi >= NV || hv[vi][o - BC]) e_lane <= 1'b1;
+      |                               ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/s81-hc-native-trace-0918/rtl/dsrom_sys/s81_suhc/test/ot_s81_hc_ntree_trace.sv:422:41: Operator GTE expects 32 bits on the LHS, but LHS's VARREF 'o' generates 5 bits.
+                                                                                                                                        : ... note: In instance 'ot_s81_hc_cnbot_roots.g_c[2].u_b.u_c'
+  422 |                         if (o < BC || o >= BC + LC || vi >= NV || hv[vi][o - BC]) e_lane <= 1'b1;
+      |                                         ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/s81-hc-native-trace-0918/rtl/dsrom_sys/s81_suhc/test/ot_s81_hc_ntree_trace.sv:422:58: Operator GTE expects 32 bits on the LHS, but LHS's VARREF 'vi' generates 3 bits.
+                                                                                                                                        : ... note: In instance 'ot_s81_hc_cnbot_roots.g_c[2].u_b.u_c'
+  422 |                         if (o < BC || o >= BC + LC || vi >= NV || hv[vi][o - BC]) e_lane <= 1'b1;
+      |                                                          ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/s81-hc-native-trace-0918/rtl/dsrom_sys/s81_suhc/test/ot_s81_hc_ntree_trace.sv:422:76: Operator SUB expects 32 bits on the LHS, but LHS's VARREF 'o' generates 5 bits.
+                                                                                                                                        : ... note: In instance 'ot_s81_hc_cnbot_roots.g_c[2].u_b.u_c'
+  422 |                         if (o < BC || o >= BC + LC || vi >= NV || hv[vi][o - BC]) e_lane <= 1'b1;
+      |                                                                            ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/s81-hc-native-trace-0918/rtl/dsrom_sys/s81_suhc/test/ot_s81_hc_ntree_trace.sv:430:61: Operator EQ expects 32 bits on the LHS, but LHS's SEL generates 5 bits.
+                                                                                                                                        : ... note: In instance 'ot_s81_hc_cnbot_roots.g_c[2].u_b.u_c'
+  430 |                     if (dlq[SH * q] && dlq[SH * q + 1 +: 5] == BC + p && dlq[SH * q + 6 +: 3] == j)
+      |                                                             ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/s81-hc-native-trace-0918/rtl/dsrom_sys/s81_suhc/test/ot_s81_hc_ntree_trace.sv:430:95: Operator EQ expects 32 bits on the LHS, but LHS's SEL generates 3 bits.
+                                                                                                                                        : ... note: In instance 'ot_s81_hc_cnbot_roots.g_c[2].u_b.u_c'
+  430 |                     if (dlq[SH * q] && dlq[SH * q + 1 +: 5] == BC + p && dlq[SH * q + 6 +: 3] == j)
+      |                                                                                               ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/s81-hc-native-trace-0918/rtl/dsrom_sys/s81_suhc/test/ot_s81_hc_ntree_trace.sv:443:62: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'fi1' generates 3 bits.
+                                                                                                                                        : ... note: In instance 'ot_s81_hc_cnbot_roots.g_c[2].u_b.u_c'
+  443 |             for (j = 0; j < NV; j = j + 1) sel[p][j] <= (fi1 == j);
+      |                                                              ^~
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/s81-hc-native-trace-0918/rtl/hdc/v41x/ot_dsrom_divc.sv:131:20: Operator SUB expects 32 bits on the LHS, but LHS's VARREF 's4_eu' generates 11 bits.
+                                                                                                                 : ... note: In instance 'ot_s81_hc_cnbot_roots.u_rsq.u_div'
+  131 |         er = s4_eu - 11'sd49 - K + $signed({5'd0, lead});
+      |                    ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/s81-hc-native-trace-0918/rtl/hdc/v41x/ot_dsrom_divc.sv:131:20: Operator SUB expects 32 bits on the RHS, but RHS's CONST '11'sh31' generates 11 bits.
+                                                                                                                 : ... note: In instance 'ot_s81_hc_cnbot_roots.u_rsq.u_div'
+  131 |         er = s4_eu - 11'sd49 - K + $signed({5'd0, lead});
+      |                    ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/s81-hc-native-trace-0918/rtl/hdc/v41x/ot_dsrom_divc.sv:131:34: Operator ADD expects 32 bits on the RHS, but RHS's SIGNED generates 11 bits.
+                                                                                                                 : ... note: In instance 'ot_s81_hc_cnbot_roots.u_rsq.u_div'
+  131 |         er = s4_eu - 11'sd49 - K + $signed({5'd0, lead});
+      |                                  ^
+%Warning-WIDTHTRUNC: /srv/opentallas-scratch/codex/s81-hc-native-trace-0918/rtl/hdc/v41x/ot_dsrom_divc.sv:131:12: Operator ASSIGN expects 11 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                                                                                : ... note: In instance 'ot_s81_hc_cnbot_roots.u_rsq.u_div'
+  131 |         er = s4_eu - 11'sd49 - K + $signed({5'd0, lead});
+      |            ^
+%Warning-WIDTHEXPAND: /srv/opentallas-scratch/codex/s81-hc-native-trace-0918/rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_cntree.sv:129:44: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'tvi' generates 8 bits.
+                                                                                                                                   : ... note: In instance 'ot_s81_hc_cnbot_roots.u_tr'
+  129 |             wire       hit = vsum_v && tvi == n - NVP;
+      |                                            ^~
+%Warning-UNSIGNED: /srv/opentallas-scratch/codex/s81-hc-native-trace-0918/rtl/dsrom_sys/s81_suhc/test/ot_s81_hc_ntree_trace.sv:422:31: Comparison is constant due to unsigned arithmetic
+                                                                                                                                     : ... note: In instance 'ot_s81_hc_cnbot_roots.g_c[2].u_b.u_c'
+  422 |                         if (o < BC || o >= BC + LC || vi >= NV || hv[vi][o - BC]) e_lane <= 1'b1;
+      |                               ^
+                   ... For warning description see https://verilator.org/warn/UNSIGNED?v=5.050
+                   ... Use "/* verilator lint_off UNSIGNED */" and lint_on around source to disable this message.
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 16.549 MB sources in 163 modules, into 67.395 MB in 68 C++ files needing 0.000 MB
+- Verilator: Walltime 18.854 s (elab=1.385, cvt=16.223, bld=0.000); cpu 18.851 s on 1 threads; allocated 1572.449 MB
