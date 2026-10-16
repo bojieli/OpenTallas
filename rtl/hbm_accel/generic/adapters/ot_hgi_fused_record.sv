@@ -233,7 +233,16 @@ module ot_hgi_fused_record #(
     // only on the HC engine path (the micro-op lowering refuses R > 1).
     wire [19:0] rA = dA[87:68];
     wire rw_multi = (op == 6'd0) && (rA > 20'd1);
-    wire rw_ok = (rA <= 20'd8) && (dA[119:88] == {9'd0, d, 2'b00}) && (dC[87:68] == rA) && (dC[119:88] == 32'd8) &&
+    // P-row jobs use complete reserved rows in the actual 262144-word VM.
+    // Widen before addition, and check the raw base before any lane truncation.
+    // rA is limited to 2..8 below; the low nibble makes the constant-HCD
+    // extent arithmetic small without weakening the row-count check.
+    wire [41:0] rw_a_end = {2'd0, dA[47:8]} + 42'(rA[3:0]) * 42'(4 * HCD);
+    wire [41:0] rw_o_end = {2'd0, dO[47:8]} + 42'(rA[3:0]) * 42'(HCD);
+    wire [41:0] rw_c_end = {2'd0, dC[47:8]} + 42'(rA[3:0]) * 42'd8;
+    wire rw_ok = (rA <= 20'd8) && (dB[87:68] == 20'd1) && (dC[67:48] == 20'd4) &&
+                 (rw_a_end <= 42'd262144) && (rw_o_end <= 42'd262144) && (rw_c_end <= 42'd262144) &&
+                 (dA[119:88] == {9'd0, d, 2'b00}) && (dC[87:68] == rA) && (dC[119:88] == 32'd8) &&
                  (dC[10:8] == 3'd0) && (dO[87:68] == rA) && (dO[119:88] == {11'd0, d});
     reg k_rw, k_rwok; reg [2:0] k_nr;
     reg [1:0] sudone;
