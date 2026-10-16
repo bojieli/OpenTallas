@@ -1,0 +1,43 @@
+{
+  "schema": "opentallas.pcctrl-recovery.v1",
+  "timestamp": "2026-10-16T02:59:00-07:00",
+  "h4": {
+    "commit": "28e23d0214cf83f3f37b4c73966d4e481c1c7fa2",
+    "job": "hdie_pc_ctrl_cfg-cfg-h4-pcidqq-28e23d021",
+    "status": "GRT_FAIL",
+    "global_usage_percent": 45.51,
+    "overflow": {
+      "M4": 9,
+      "M5": 24,
+      "total": 33
+    },
+    "failure_class": "capacity-zero SRAM west pin-face escape",
+    "native_status": "not qualified; no routed ETM"
+  },
+  "h5": {
+    "commit": "145159c02e4e3bb1ad7fe70146979dae325da429",
+    "issued_shape": {
+      "PC": 32,
+      "SM": 8,
+      "rows": 64,
+      "epochs": 8
+    },
+    "issued_exact": "PASS",
+    "mutants": [
+      "EARLY_PROGRAMME",
+      "NORESIDENT_ISSUER",
+      "CFG_PC",
+      "CFG_PHASE"
+    ],
+    "wpay_exact": "PASS",
+    "wpay_mutant": "stale_head rejected",
+    "gate": {
+      "host": "ot-agidock128",
+      "pid": 1481980,
+      "remote": "/srv/opentallas-scratch/claude/ref_gate/hdie_pc_ctrl_cfg-20261016-023212",
+      "state": "CTS hold repair in flight"
+    },
+    "native_status": "not qualified; no route yet"
+  },
+  "next_step": "Finish preserved H5 gate; inspect actual M4 pin/PG/guard overlap before structural successor. Do not launch H5 unchanged merely to retry H4 congestion."
+}
