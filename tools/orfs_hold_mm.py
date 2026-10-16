@@ -78,7 +78,8 @@ def patch_final_dpl(scripts: Path) -> str:
     """Fail closed unless the final mutation/check sequence is exactly recognized."""
     target = scripts / "detail_place.tcl"
     text = target.read_text()
-    if text.count(FINAL_DPL_BLOCK) == 1:
+    if (text.count(FINAL_DPL_BLOCK) == 1 and text.count("OT_FINAL_DPL") == 1
+            and FINAL_DPL_ANCHOR not in text):
         return "already patched"
     if "OT_FINAL_DPL" in text or text.count(FINAL_DPL_ANCHOR) != 1:
         raise SystemExit("orfs_hold_mm: final legalization anchor not found exactly once in detail_place.tcl; refusing")

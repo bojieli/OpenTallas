@@ -25,7 +25,9 @@ class FinalDplPatchTest(unittest.TestCase):
 
     def test_unknown_or_duplicate_sequence_refused_without_write(self):
         for text in ["unknown flow\n", FINAL_DPL_ANCHOR + "\n" + FINAL_DPL_ANCHOR,
-                     FINAL_DPL_ANCHOR.replace("-verbose", ""), "# OT_FINAL_DPL\n" + FINAL_DPL_ANCHOR]:
+                     FINAL_DPL_ANCHOR.replace("-verbose", ""), "# OT_FINAL_DPL\n" + FINAL_DPL_ANCHOR,
+                     FINAL_DPL_BLOCK + "\n" + FINAL_DPL_ANCHOR,
+                     FINAL_DPL_BLOCK + "\n# OT_FINAL_DPL"]:
             with self.subTest(text=text):
                 path = self.fixture(text)
                 with self.assertRaises(SystemExit):
