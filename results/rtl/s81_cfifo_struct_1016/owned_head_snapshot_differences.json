@@ -1,0 +1,470 @@
+[
+  {
+    "path": "physical/common_flow/clock_entries.tcl",
+    "snapshot_blob": "a14a49595e0404c08e8f884df4faed94b4a48c19",
+    "head_blob": "c1ee42dff714e23d6c3efa5eaf7879a8b0173ecf",
+    "source": "working_tree"
+  },
+  {
+    "path": "rtl/dsrom_sys/s81_die_bind/ot_s81_bf_prog_seq.sv",
+    "snapshot_blob": "e4d23a923ebdd8fc76b6045906cd42782341adcf",
+    "head_blob": "6bbbb0bffe98f83427238366a1a24ff08c5e0682",
+    "source": "working_tree"
+  },
+  {
+    "path": "tools/closure_loop/closure_loop.py",
+    "snapshot_blob": "b9c44da22d23eb78f5f13d00219d4ef0341f0484",
+    "head_blob": "3be0d3e810cb92fcd596c62b7668fa05efcf12f7",
+    "source": "working_tree"
+  },
+  {
+    "path": "tools/closure_loop/hosts.json",
+    "snapshot_blob": "8a1a7d893f9429242bab0286f0052d50f3a1787d",
+    "head_blob": "a47540f9cc40827b212c02adcb7f4ae09f5bbd66",
+    "source": "working_tree"
+  },
+  {
+    "path": "tools/closure_loop/submit_exact.py",
+    "snapshot_blob": "3168beba824bdeb258d5b7374a366c758a5176a0",
+    "head_blob": "8dd99c9c779781a2b150bd1760cae47ef7a2bccf",
+    "source": "working_tree"
+  },
+  {
+    "path": "tools/closure_loop/test_reliability.py",
+    "snapshot_blob": "a2f83b282baa0ea3fcd08f63bb6950bf0f7ddc77",
+    "head_blob": "f7a3fca736e8f0ca14de7020c55c60dfff87a047",
+    "source": "working_tree"
+  },
+  {
+    "path": "tools/die_clock_check.py",
+    "snapshot_blob": "0e1cc2e9dceb7989a4e50a75ab155ee1a795aba3",
+    "head_blob": "26a6d99fc67ae3d484bba0e0c576c215728f8f55",
+    "source": "working_tree"
+  },
+  {
+    "path": "tools/die_top_lint.py",
+    "snapshot_blob": "214f13a7e484bc33dbf0056b651c7feed6712afb",
+    "head_blob": "55164b65fddedce7ab3a18e12b326bab9ce77834",
+    "source": "working_tree"
+  },
+  {
+    "path": "tools/dshbm_sm_pq_seq.py",
+    "snapshot_blob": "a1a0b72af0d9e5a175d98f4eae565bb2226d688b",
+    "head_blob": "e479a24d7fb3c65792e17a6b1888e3b39ad89beb",
+    "source": "working_tree"
+  },
+  {
+    "path": "tools/dsrom_s81_fulldie.py",
+    "snapshot_blob": "691a95a6c3ed3abe5a214722b54b52819702136c",
+    "head_blob": "bbe4056d854c64b0be2cd8ab746269c1e1153d03",
+    "source": "working_tree"
+  },
+  {
+    "path": "tools/fleet/fleet_sweep.py",
+    "snapshot_blob": "3b612fce2d47eba78d4df9006af93868d05a9c3c",
+    "head_blob": "750c9dd0fe882837221b4e75452d23aaac8b7feb",
+    "source": "working_tree"
+  },
+  {
+    "path": "tools/fleet/ot-run",
+    "snapshot_blob": "580c847a25dc9d6dd8c7626dae7c9a174f1ccd1a",
+    "head_blob": "640360061f3916710f53e795e975f280394c508f",
+    "source": "working_tree"
+  },
+  {
+    "path": "tools/fleet/ot-sizes-sync",
+    "snapshot_blob": "9d2d085990b3dc6db8688882bfa302a5512b292e",
+    "head_blob": "ac566131785378c1c0eafc97850ab50f4e029a4e",
+    "source": "working_tree"
+  },
+  {
+    "path": "tools/fleet_viz/die_contracts.py",
+    "snapshot_blob": "d35ea824afd9e71951d609c4362f29630eec7152",
+    "head_blob": "6c73e496bb326439b0b9bc2ff78fbb9a63bcb3b3",
+    "source": "working_tree"
+  },
+  {
+    "path": "tools/fleet_viz/elements.py",
+    "snapshot_blob": "5d5c827d39edd650030529aa078173e5339dddd3",
+    "head_blob": "fb6a08f137eede5e501a59a2232d96f92d84f82e",
+    "source": "working_tree"
+  },
+  {
+    "path": "tools/fleet_viz/explorer/dataflow/data/index.json",
+    "snapshot_blob": "dfaeeb4dbdf4c8f9fd049cbf6d87c469de92ebce",
+    "head_blob": "efeaa0b411b3fed8ddae9d821f5810d05c7f961b",
+    "source": "working_tree"
+  },
+  {
+    "path": "tools/fleet_viz/explorer/dataflow/dataflow.css",
+    "snapshot_blob": "f56e87c4784aee283e4ea535bacc318bc3ee01ab",
+    "head_blob": "9e97c0c49052c67e9dff427391a8651c4e3e5442",
+    "source": "working_tree"
+  },
+  {
+    "path": "tools/fleet_viz/explorer/dataflow/dataflow.js",
+    "snapshot_blob": "68a9c2ba74a00134b23303b58e3b519e780b8a1f",
+    "head_blob": "e3541abf230926e915cc49f73c98588ee293c58a",
+    "source": "working_tree"
+  },
+  {
+    "path": "tools/fleet_viz/explorer/dataflow/index.html",
+    "snapshot_blob": "18dc0d8e65ccd95f83db44fb76c3cf4e3933d0f6",
+    "head_blob": "cc5a51130a706415e9cc82e54a2a66b61f3c1b38",
+    "source": "working_tree"
+  },
+  {
+    "path": "tools/fleet_viz/fleet_hosts.json",
+    "snapshot_blob": "30c049bf17b364b3ae36675c2a3be402e1d20020",
+    "head_blob": "72a1c72a6c84ee9c7bc665f3964a65017ca046d6",
+    "source": "working_tree"
+  },
+  {
+    "path": "tools/fleet_viz/install.sh",
+    "snapshot_blob": "92993c719c47484aeca4c91efbd982d20c86b35b",
+    "head_blob": "662fa43ca82b0e0435e4fe3ff859d5cb78117be8",
+    "source": "working_tree"
+  },
+  {
+    "path": "tools/fleet_viz/layout_store.py",
+    "snapshot_blob": "a51412be1cb2e383a432e2ae911daf04f5e5153b",
+    "head_blob": "c3c5b2b7143c9f79bde7d466e346c21e2ac1a703",
+    "source": "working_tree"
+  },
+  {
+    "path": "tools/fleet_viz/master_identity.json",
+    "snapshot_blob": "001c1bc6872c5e1b223cb88934fbeff5194fdbbf",
+    "head_blob": "58760c1e5b2ed16c5814dea76cd340b8016f2eac",
+    "source": "working_tree"
+  },
+  {
+    "path": "tools/fleet_viz/server.py",
+    "snapshot_blob": "f599b24768b9fa343de2fbd7448c5bb2d6a17c78",
+    "head_blob": "77a2b024e229aa11c7e93c4b0a7b90684bddaae9",
+    "source": "working_tree"
+  },
+  {
+    "path": "tools/hbm_die_v15/case_reach.py",
+    "snapshot_blob": "0eb6bfe59af460242e620210110984fb6cce2926",
+    "head_blob": "d7718e990d69c355c63c34d0c0623778d90051f0",
+    "source": "working_tree"
+  },
+  {
+    "path": "tools/hbm_die_v15/die_case_v16.py",
+    "snapshot_blob": "d82785eff01f99d3360f7a183fe512064e63d094",
+    "head_blob": "0ac22693ec899529cc3d4b3deb73c7015662c495",
+    "source": "working_tree"
+  },
+  {
+    "path": "tools/hbm_die_v15/test_case_reach.py",
+    "snapshot_blob": "f8f90c1a9163a3c07de7349c3266d82527c41e4a",
+    "head_blob": "30dba0a3f97e44fd3c04faf37047e3166ecf77dc",
+    "source": "working_tree"
+  },
+  {
+    "path": "tools/hbm_die_v15/test_v16_fetch_admission.py",
+    "snapshot_blob": "1a875eddf888be766d3d85d99351f9c106874ef9",
+    "head_blob": "4f1af43aa8a1cb058520ec67de4abb414d8b4087",
+    "source": "working_tree"
+  },
+  {
+    "path": "tools/hbm_die_v15/v16_fetch.py",
+    "snapshot_blob": "3532a22b026fb370c89a6a10152fb8bea25a97b8",
+    "head_blob": "93bba6f4979e1782f9b73c27d12fb4620bdb4682",
+    "source": "working_tree"
+  },
+  {
+    "path": "tools/qwen_kv_die/chain/kvsys_prep.sh",
+    "snapshot_blob": "eabde096a51bca1de80d94983a3cff8568742bb0",
+    "head_blob": "a41b91f5572d1a0d3b321af0e92cda201b9d87bf",
+    "source": "working_tree"
+  },
+  {
+    "path": "tools/qwen_kv_die/kv_die.py",
+    "snapshot_blob": "bb264af58733007610c4436b2903613725584a6a",
+    "head_blob": "6283567d19daa5d0848bc46e85246079d96af5cc",
+    "source": "working_tree"
+  },
+  {
+    "path": "tools/qwen_kv_die/kv_elastic_boundary.py",
+    "snapshot_blob": "d7e6b443475f6da0db03d268128bca86f90acc67",
+    "head_blob": "e8924fb727e34ddd87247c8bc7f475039699f811",
+    "source": "working_tree"
+  },
+  {
+    "path": "tools/qwen_kv_die/kv_expand.py",
+    "snapshot_blob": "4368cd1e542509e43e03765ae22dce8a3c987b8e",
+    "head_blob": "c2afa5cb19ee879c74791ad5372834b13acdeea9",
+    "source": "working_tree"
+  },
+  {
+    "path": "tools/qwen_kv_die/prepare_landing_replay.py",
+    "snapshot_blob": "8772c2f7d90eee8a53f029d6bec8fc906e5824bd",
+    "head_blob": "4e62ce75a248f05d870eae18096289edfb90c528",
+    "source": "working_tree"
+  },
+  {
+    "path": "tools/qwen_kv_die/tp8b_v5.py",
+    "snapshot_blob": "b0b91cefadaa4d7b0d18b3627a5c10e16edda293",
+    "head_blob": "bbd9f162d403593c8863e4ed01c8cab91e307a0e",
+    "source": "working_tree"
+  },
+  {
+    "path": "tools/qwen_rom_fulldie_b3r2.py",
+    "snapshot_blob": "1f29a7eda16fdefec5ead2e98b4931bc04180f26",
+    "head_blob": "ff47f9ba64edad5b8e0f70eb6156dbfd1125001e",
+    "source": "working_tree"
+  },
+  {
+    "path": "tools/qwen_scale_rom/build.py",
+    "snapshot_blob": "5acb0f8014ac8026f94a02a50b225e54af4182c6",
+    "head_blob": "3d1d0eb41057a92b9ac78d67e251519869ee577a",
+    "source": "working_tree"
+  },
+  {
+    "path": "tools/qwen_split/b2_allocator_reprice.py",
+    "snapshot_blob": "f231e633d416622c18f3c0bd6007b6f6ca253b62",
+    "head_blob": "e65113d9ba529d1f0e06df8502cabd236cb24602",
+    "source": "working_tree"
+  },
+  {
+    "path": "tools/qwen_split/command_distribution.py",
+    "snapshot_blob": "0d187166286439caf60796c7dfb8518a58c6adc1",
+    "head_blob": "20d0976a2151118543139df092e6b4a2db123d32",
+    "source": "working_tree"
+  },
+  {
+    "path": "tools/qwen_split/compute_spine.py",
+    "snapshot_blob": "21cab54fd5042cfd311f551a567c17d0a23273a8",
+    "head_blob": "e1dbc1a5cf74c82b037a09f9cbbe0f1cb5389771",
+    "source": "working_tree"
+  },
+  {
+    "path": "tools/qwen_split/gfp_homes.py",
+    "snapshot_blob": "9162e286bfe824b8ffc75382f0dfc89d5c255b8a",
+    "head_blob": "9028207ac6e14954c9f7a6a0a17fd5e74061bb3e",
+    "source": "working_tree"
+  },
+  {
+    "path": "tools/qwen_split/run_fork_bench.sh",
+    "snapshot_blob": "62ac46410a4abf003333ddbda09786455e322bc0",
+    "head_blob": "b00fe267da6a387b8e9aef490acdb4deb5265d6c",
+    "source": "working_tree"
+  },
+  {
+    "path": "tools/qwen_split/test_command_distribution.py",
+    "snapshot_blob": "f911aaee2087323fa9b7ba9ab888150aee65cb39",
+    "head_blob": "c69afa811ab47a35b766c0d0ea9a4936938baba2",
+    "source": "working_tree"
+  },
+  {
+    "path": "tools/qwen_split/test_gfp_homes.py",
+    "snapshot_blob": "7f937cd151282396ddf1741a7e765e3105c97a07",
+    "head_blob": "2daa889ccda8c24fe6fc4bf8cc77fa9581f67440",
+    "source": "working_tree"
+  },
+  {
+    "path": "tools/qwen_static_kv/check_controller_drain.py",
+    "snapshot_blob": "d7573c34555b5092550a9f8ff56778028e9b63b9",
+    "head_blob": "08a36963b9dd8a20f1304650f4f65680bed0a2e2",
+    "source": "working_tree"
+  },
+  {
+    "path": "tools/qwen_static_kv/controller_calendar_image.py",
+    "snapshot_blob": "4559f49d813106748e8abd3c567718638320798a",
+    "head_blob": "5a67ddd822de578145368b0597c5297f935aa91a",
+    "source": "working_tree"
+  },
+  {
+    "path": "tools/qwen_static_kv/run_controller_calendar_native.py",
+    "snapshot_blob": "5c1f53e88188a404f39dcb09b87b754bef546a07",
+    "head_blob": "3265cb283ac4d75a92e1296a0d6f126b87cefbcb",
+    "source": "working_tree"
+  },
+  {
+    "path": "tools/qwen_static_kv/run_kv_hbm_elastic_boundary.sh",
+    "snapshot_blob": "eced9e378b8731ecc377710c815040da7aa507a3",
+    "head_blob": "95333c83b187ba704e4a7874b314e2e557a54072",
+    "source": "working_tree"
+  },
+  {
+    "path": "tools/qwen_static_kv/run_kv_hbm_elastic_boundary_mc.sh",
+    "snapshot_blob": "e059293c5c3797661d4e52788ea253b1d9711b6c",
+    "head_blob": "bee7868fcc5aad45d595acd70f6e9977f12c00d7",
+    "source": "working_tree"
+  },
+  {
+    "path": "tools/qwen_static_kv/run_paced_v_return_full128.sh",
+    "snapshot_blob": "a66d31821dd70dc3738693722d492ca2d848094e",
+    "head_blob": "1852faee3575d87751f806d7397d26e10f36dbe6",
+    "source": "working_tree"
+  },
+  {
+    "path": "tools/qwen_static_kv/run_physical_writer_gate.sh",
+    "snapshot_blob": "6aca002bde61dbf3b52321b9e7616316dc4d79aa",
+    "head_blob": "650c2f7bdc00d8abf537d4b764b6e51a10f8bed2",
+    "source": "working_tree"
+  },
+  {
+    "path": "tools/qwen_static_kv/run_return_controller_calendar.sh",
+    "snapshot_blob": "a98641c6057d9e2019f158e2445e70a582419973",
+    "head_blob": "c952a872380465da0a828f16efde990e81d65470",
+    "source": "working_tree"
+  },
+  {
+    "path": "tools/ref_tile/README.md",
+    "snapshot_blob": "6731acf90959c4b10fa53c04172d9a010ac7a56c",
+    "head_blob": "4dca0eae3f528e15053859ad422d0db84ab1d382",
+    "source": "working_tree"
+  },
+  {
+    "path": "tools/ref_tile/async_gray_fifo_constraints.py",
+    "snapshot_blob": "53899bd2d5b5e7ec7a584e390617ef1ae7abf297",
+    "head_blob": "cc0c8f994bc0eba173e19706fae51099b97fc0b3",
+    "source": "working_tree"
+  },
+  {
+    "path": "tools/ref_tile/clock_entry_constraints.py",
+    "snapshot_blob": "1a24b1b70d71f6fc782912102b59b2bfd54c5069",
+    "head_blob": "76f52c9fd8e49e99fb58e85a1ceb0acb60875f49",
+    "source": "working_tree"
+  },
+  {
+    "path": "tools/ref_tile/composition_gates.json",
+    "snapshot_blob": "0457c7276fd9f87547cf764b2a5387758809ae80",
+    "head_blob": "15e9db0e40928dab7d8374725956622a9a91d8ec",
+    "source": "working_tree"
+  },
+  {
+    "path": "tools/ref_tile/pre_route_gate.py",
+    "snapshot_blob": "f217c280ac8ae62c7f2c8e73df09f2a03180df0c",
+    "head_blob": "388f82563204c089447533c5888bf06e726b9886",
+    "source": "working_tree"
+  },
+  {
+    "path": "tools/ref_tile/ref_route.sh",
+    "snapshot_blob": "a6272b17daadb1c705e790051d5e0fb62288a90d",
+    "head_blob": "91510fcfe0466dde5bbdb8ab5766bb602d9bdf3d",
+    "source": "working_tree"
+  },
+  {
+    "path": "tools/ref_tile/ref_tile.py",
+    "snapshot_blob": "6d51c6fdac68a48973f66b8ee07f5eab3938ccc3",
+    "head_blob": "2b6e7a2878f392ce20dcc7de011203a5ca2a2b72",
+    "source": "working_tree"
+  },
+  {
+    "path": "tools/ref_tile/specs_qvm_native/qvm_bank_entries_my_native.json",
+    "snapshot_blob": "9424ca9a66a1e677d1afc02b62a54e85a687aa1a",
+    "head_blob": "f288fcdc1740ec79ef8a56287583125b55c57d23",
+    "source": "working_tree"
+  },
+  {
+    "path": "tools/ref_tile/specs_s81hc/s81hc_ccrh2_ref.json",
+    "snapshot_blob": "2196a1ca9cc19ad6a5c821a43a2d151a099d71e9",
+    "head_blob": "0d417c83ff08af401710278a777f5563d9ce43c5",
+    "source": "working_tree"
+  },
+  {
+    "path": "tools/ref_tile/specs_s81hc/s81hc_cseqh2_ref.json",
+    "snapshot_blob": "2a5fcfd0169aaf1f1340333138a05a66acf28a15",
+    "head_blob": "bbccf6cc04cfb2755a6ecf5bf1a1f159fd703ec4",
+    "source": "working_tree"
+  },
+  {
+    "path": "tools/ref_tile/test_async_gray_fifo_constraints.py",
+    "snapshot_blob": "fa9db087e94dc3724cf1000caaa5d0265e35d49a",
+    "head_blob": "4a28c95bcbb2d3e16d37b2385f2e939419da3add",
+    "source": "working_tree"
+  },
+  {
+    "path": "tools/ref_tile/test_clock_entry_pin_bits.py",
+    "snapshot_blob": "fb90bdd46c7ca33c5104fcb939ecb13c38d65e37",
+    "head_blob": "cd52591e9a62ec7ee7cbba46a8f0ec438be8caa5",
+    "source": "working_tree"
+  },
+  {
+    "path": "tools/ref_tile/tests/test_gate_disk_admission.py",
+    "snapshot_blob": "d455328abaa367d656b9c948634927e90766aa1f",
+    "head_blob": "626be53b7dedf1bb225d5d5f0de2d402b67339f4",
+    "source": "working_tree"
+  },
+  {
+    "path": "tools/ref_tile/tests/test_hybrid_clock_entries.py",
+    "snapshot_blob": "50d0658fa240e417e7e32d17e402ebaa203632ff",
+    "head_blob": "64b2388fc6a03f146a58403978f9b1eef3ecb05d",
+    "source": "working_tree"
+  },
+  {
+    "path": "tools/s81/bf_programme_compile.py",
+    "snapshot_blob": "8992a1750973d5634b246286cc92154dd494b732",
+    "head_blob": "42baec90fb83460cb56b9dbb871fef0b191dee87",
+    "source": "working_tree"
+  },
+  {
+    "path": "tools/s81/hub_router.py",
+    "snapshot_blob": "d4443a2c24baad395b93f7007e870974e8139b00",
+    "head_blob": "b54f841b1c4bf2741d546cbbc32c0ecbc724ceb4",
+    "source": "working_tree"
+  },
+  {
+    "path": "tools/s81/pq_native_hierarchy.py",
+    "snapshot_blob": "07afbccc7f5bc3efb9d20a789207c03a2b3ce5b2",
+    "head_blob": "1e37aacab5be29672149a8fa34a4a1a4269bac86",
+    "source": "working_tree"
+  },
+  {
+    "path": "tools/s81/test_hub_router.py",
+    "snapshot_blob": "63165cbfd5cd1c6cfb2fa495bcffa751fcb60c48",
+    "head_blob": "d9d8a770570b80b8a78d99198ce47a2041bf0bac",
+    "source": "working_tree"
+  },
+  {
+    "path": "tools/s81/view_binding_closed.py",
+    "snapshot_blob": "d9a3a9797fc29c27b202e21627ae2e7f89858f10",
+    "head_blob": "285eeffeabdfad6e3255d01ae3225b9db65865bc",
+    "source": "working_tree"
+  },
+  {
+    "path": "tools/s81_engram_mix/gate.py",
+    "snapshot_blob": "fab84352d383bccd878f3f6a0c3215cada7cc0e4",
+    "head_blob": "064a69279d89ecc74591a38cde3ef2f0eee11556",
+    "source": "working_tree"
+  },
+  {
+    "path": "tools/s81_hc_current/lint.py",
+    "snapshot_blob": "e387b13ee317428a7c6ead89113eb9dac7f467f1",
+    "head_blob": "7f06f7d8731716536dc1460e1163f32730fac1b1",
+    "source": "working_tree"
+  },
+  {
+    "path": "tools/s81_static_collective/build_slab_fixture.py",
+    "snapshot_blob": "8808ef2db4948b71f115297dd953ab56462f885d",
+    "head_blob": "bed66049ea7ce8aa89130aa57f24fee4155d713e",
+    "source": "working_tree"
+  },
+  {
+    "path": "tools/s81_static_collective/resetpins/controller_image.py",
+    "snapshot_blob": "d143f4cc949afd248e10c5792011c8df5dd8ec54",
+    "head_blob": "4b8ef28ffb2d1a449c0ac405fa96d420361e12f6",
+    "source": "working_tree"
+  },
+  {
+    "path": "tools/s81_static_net/bench_hend_master.sh",
+    "snapshot_blob": "7e9b43d6791e47b531775e1e30b8d634c916dad8",
+    "head_blob": "e974fb4d4ce9cc316998110d3a61e367b059bcaf",
+    "source": "working_tree"
+  },
+  {
+    "path": "tools/s81_suhc/ccf_bankpipe_gate.sh",
+    "snapshot_blob": "11b2117fd20aa63bc78da2a2420671155bc192d0",
+    "head_blob": "06615c55a0d8b024b64dbfa69f0f13290705f16b",
+    "source": "working_tree"
+  },
+  {
+    "path": "tools/s81_suhc/softmax_tail_gate.py",
+    "snapshot_blob": "283d15b65f55a4a01fb8f42d24fcacc302da8867",
+    "head_blob": "128c0aff9baa0a69eb4d0402abbc3802e2916cc6",
+    "source": "working_tree"
+  }
+]

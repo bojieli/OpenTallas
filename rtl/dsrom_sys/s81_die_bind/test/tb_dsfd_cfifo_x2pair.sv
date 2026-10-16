@@ -8,7 +8,7 @@
 // {st | fault, st, ri} one edge late with fault 0, rs = synchronised reset.  PHA/PHB = xf/xf2 phase vs cr (ns).
 `timescale 1ns/1ps
 module tb_dsfd_cfifo_x2pair;
- parameter integer PHA=2, PHB=2, TRUNK=9, NW=400, WARM=0;
+ parameter integer PHA=2, PHB=2, TRUNK=9, NW=400, WARM=0, STOP_S=0;
  reg cr=0, xf=0, xf2=0, rst=0;
  initial forever #5 cr=~cr;
  initial begin #(PHA); forever #5 xf=~xf; end
@@ -16,7 +16,9 @@ module tb_dsfd_cfifo_x2pair;
  reg [1100:0] R=0; reg [65:0] ri=0; reg [1:0] st=0;
  wire [282:0] xa; wire [265:0] xb; wire [14:0] cc; wire [535:0] x2; wire [69:0] rd; wire co, rf, rs;
  reg [565:0] xd = 0; reg [537:0] xd2 = 0; reg go = 0;
- dsfd_cfifo dut(.cc(cc), .cr(cr), .cr_s(cr), .rd(rd), .ri(ri), .rs(rs), .rst(rst), .st(st),
+ // Negative control halts the actual south root after source traffic starts.
+ wire cr_s = (STOP_S && n > 20) ? 1'b0 : cr;
+ dsfd_cfifo dut(.cc(cc), .cr(cr), .cr_s(cr_s), .rd(rd), .ri(ri), .rs(rs), .rst(rst), .st(st),
                 .xa(xa), .xb(xb), .xd(xd), .xf(xf), .x2(x2), .xd2(xd2), .xf2(xf2));
  reg [1100:0] gold [0:4095]; integer n=0, n2=0, k; reg [1100:0] w2;
  function automatic [1100:0] word(input integer s);
@@ -75,6 +77,19 @@ module tb_dsfd_cfifo_x2pair;
  // r3: ri passes the north pin register ri_q then rr: 2 edges, like st (cr and cr_s are one PLL clock, phase 0)
  reg [65:0] ri_p=0;
  always @(posedge cr) begin #1; ri_d = ri_p; ri_p = ri; st_d = st_qq; ri = {$random,$random,$random}; st = $random; end
+ integer reset_edges=0;
+ always @(posedge cr) begin
+  if (!rst) reset_edges=0;
+  else begin
+   reset_edges=reset_edges+1;
+   #0.2;
+   if (dut.rsync !== (reset_edges >= 2) ||
+       (!STOP_S && dut.rsync_s !== (reset_edges >= 4))) begin
+    $display("CFIFO_X2 FAIL reset frontier edge=%0d north=%b south=%b",reset_edges,dut.rsync,dut.rsync_s);
+    bad=bad+1;
+   end
+  end
+ end
  initial begin
   #23; rst = 1;
   repeat (TRUNK) @(posedge cr); #4; go = 1; go_time=$time;

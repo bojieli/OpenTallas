@@ -147,12 +147,12 @@
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
  },
- "structural_change": "CR ROOT SPLIT + ri PIN REGISTER (r3): south96 d6091e667 CLOSED but native FAIL (results/rtl/s81_cfifo_native_1016/south96-native.json: cr R 222.2 boundary 183..254 spread 70.9, launch xb[191] 247.6, capture ri[62] 339.0). cr now clocks only the north band (ri_q pin register, sti, xa/xb/cc/x2 output flops, rs) from its unchanged N pin x94.38; new cr_s (same PLL, phase 0) on S M5 x229.98 clocks the column ingress core side and rr -> rd. ri -> rd +1 edge (2 edges, as st). Pins otherwise identical to south96.",
+ "structural_change": "RESET FRONTIER r4 over r3 CR ROOT SPLIT: raw north rst terminates only in north rsync_q; south rsyncs_q observes registered rsync. Original crs1 CTS signoff TT setup+138.796ps / FF hold+19.511ps passes, but native CTS rst capture251.881ps FAIL (all data capture and launch pass). +2 fixed initialization cr edges before south reset release (four after raw rst), zero new FF, zero streaming/status edges versus r3. Same PLL phase0 and continuous roots; south recovery/removal paths remain timed. Forwarded marker must start after fourth reset edge. Fresh exact-source CTS gate and native audit REQUIRED; original gate not transferable.",
  "job": {
   "owner": "Codex:S81-CFIFO-physical",
-  "branch": "claude/s81-cfifo-crsplit-1016",
-  "tag": "crs1",
-  "purpose": "dsfd_cfifo r3 CR split + ri pin register: native-launch/capture successor of the CLOSED south96 view (closure-first).",
+  "branch": "codex/s81-cfifo-struct-1258",
+  "tag": "crs2",
+  "purpose": "CFIFO reset frontier r4: remove raw north reset fanout to south synchronizer; +2 initialization edges, unchanged data calendar.",
   "views_to": "physical/ref_tile/s81coll_cfifo_x2_crs/views",
   "record_to": "results/rtl/ref_tile/s81coll_cfifo_x2_crs",
   "extra_paths": [
@@ -160,7 +160,8 @@
    "tools/s81/cfifo_x2pair_gate.sh",
    "tools/s81/cfifo_x2pair_pins.py",
    "physical/s81_die_pins/cfifo_x2pair",
-   "physical/s81_die_pins/cfifo_x2pair_crs"
+   "physical/s81_die_pins/cfifo_x2pair_crs",
+   "tools/s81/cfifo_struct_1016"
   ],
   "benches": [
    {
@@ -228,11 +229,22 @@
     "needs": [
      "iverilog"
     ]
+   },
+   {
+    "name": "stopped_south_root_mutant",
+    "cmd": "bash tools/s81/cfifo_x2pair_gate.sh mut_stop_s {RUN}/bench_stop_s",
+    "expect": "fail",
+    "fail_regex": "CFIFO_X2 FAIL",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
    }
   ]
  },
  "reroute_reason": {
   "kind": "rtl_change",
-  "why": "r3 dsfd_cfifo: cr split into cr (north) / cr_s (south) roots + ri pin register (+1 status edge, tb compensated, mut_ripin fails); south96 native FAIL"
+  "why": "RESET FRONTIER r4 over r3 CR ROOT SPLIT: raw north rst terminates only in north rsync_q; south rsyncs_q observes registered rsync. Original crs1 CTS signoff TT setup+138.796ps / FF hold+19.511ps passes, but native CTS rst capture251.881ps FAIL (all data capture and launch pass). +2 fixed initialization cr edges before south reset release (four after raw rst), zero new FF, zero streaming/status edges versus r3. Same PLL phase0 and continuous roots; south recovery/removal paths remain timed. Forwarded marker must start after fourth reset edge. Fresh exact-source CTS gate and native audit REQUIRED; original gate not transferable."
  }
 }

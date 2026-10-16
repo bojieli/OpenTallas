@@ -33,10 +33,14 @@ module dsfd_cfifo (
     // capture ri 339.0): two CTS roots of the SAME PLL clock at phase 0 -- cr (north: ri/st pin capture, xa/xb/cc/x2
     // output flops, rs) and cr_s (south: column ingress core side, status word rr -> rd).  ri gets a pin register on cr
     // (+1 edge on ri -> rd, now 2 edges like st; the compiler's status calendar takes the fixed +1).  Each root has its
-    // own reset synchroniser from rst.
+    // own reset synchroniser; r4 below stages south reset from the registered north reset.
     reg [1:0] rsync_q; always @(posedge cr or negedge rst) if (!rst) rsync_q <= 2'b00; else rsync_q <= {rsync_q[0], 1'b1};
     wire rsync = rsync_q[1];
-    reg [1:0] rsyncs_q; always @(posedge cr_s or negedge rst) if (!rst) rsyncs_q <= 2'b00; else rsyncs_q <= {rsyncs_q[0], 1'b1};
+    // r4 reset frontier: raw north rst terminates in the north synchronizer.
+    // South reset observes its registered release through its own two flops.
+    // +2 initialization edges versus r3; no data/status edge change. Recovery
+    // and removal from rsync to cr_s remain ordinary timed related-root paths.
+    reg [1:0] rsyncs_q; always @(posedge cr_s or negedge rsync) if (!rsync) rsyncs_q <= 2'b00; else rsyncs_q <= {rsyncs_q[0], 1'b1};
     wire rsync_s = rsyncs_q[1];
     reg [65:0] ri_q; always @(posedge cr) ri_q <= ri;      // ri pin register (north root)
     // --bf-x2-static (S-BIND 2026-10-15, owner static-cycle rule): column entry = ot_s81_static_column_ingress

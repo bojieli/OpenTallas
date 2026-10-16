@@ -1,0 +1,63 @@
+{
+  "scope": "CTS placement RC diagnostic only; not routed qualification",
+  "source": "a1c811a00 exact gate snapshot",
+  "launch": [
+    216.98516,
+    "xb[106]"
+  ],
+  "capture": [
+    251.88117,
+    "rst"
+  ],
+  "launch_over": 0,
+  "capture_over": 1,
+  "comb_pins": [],
+  "refs": {
+    "cr": {
+      "rise": 110.8,
+      "fall": 117.34455000000001,
+      "min": 96.05635,
+      "max": 120.49053,
+      "src": "insertion.json boundary mean",
+      "bmin": 103.0,
+      "bmax": 120.5,
+      "n": 1170
+    },
+    "cr_s": {
+      "rise": 212.8,
+      "fall": 226.956705,
+      "min": 184.53529,
+      "max": 218.19479,
+      "src": "insertion.json boundary mean",
+      "bmin": 210.7,
+      "bmax": 213.7,
+      "n": 72
+    },
+    "xf": {
+      "rise": 167.5,
+      "fall": 178.686915,
+      "min": 148.92395,
+      "max": 175.68672,
+      "src": "insertion.json boundary mean",
+      "bmin": 161.9,
+      "bmax": 172.3,
+      "n": 566
+    },
+    "xf2": {
+      "rise": 150.7,
+      "fall": 159.81528,
+      "min": 134.0558,
+      "max": 160.12123,
+      "src": "insertion.json boundary mean",
+      "bmin": 148.0,
+      "bmax": 153.5,
+      "n": 538
+    }
+  },
+  "spreads": {
+    "cr": 17.5,
+    "cr_s": 3.0,
+    "xf": 10.400000000000006,
+    "xf2": 5.5
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "scope": "Measured crs1 closure diagnosis and unqualified crs2 source candidate",
+  "original_source": "a1c811a005b0eb93683a331e8b5015838260f475 exact content snapshot",
+  "original_run": "ot-epyc4:/srv/opentallas-scratch/claude/ref_gate/s81coll_cfifo_x2_crs-20261016-121335",
+  "original_gate": "WARN 0 fail 4 warn; completed 2026-10-16 13:01 PT",
+  "setup_tt_ps": 138.796,
+  "hold_tt_ps": 50.573,
+  "hold_ff_ps": 19.511,
+  "stalled_checkpoint_is_not_final": true,
+  "xb120_actual_ff": {
+    "launch": "u_x.u_cross.o[404]$_DFF_PN0_ on cr_s",
+    "capture": "xb[120]$_DFF_P_ on cr",
+    "launch_clock_ps": 157.557,
+    "capture_clock_with_source_latency_ps": 179.214,
+    "source_latency_cr_ps": 86.122,
+    "arrival_ps": 345.742,
+    "required_ps": 292.607,
+    "slack_ps": 53.135,
+    "hold_uncertainty_ps": 100
+  },
+  "clock_entry_policy": "Original generated signoff.sdc ot_ce_apply measures boundary mean R per root and sets source latency phi-R (phi maximum root reference); no SDC edits. FF phi176.1357155ps; TT phi212.7558102ps. Actual generated SDC hash preserved.",
+  "original_native": "FAIL only rst capture251.88117ps; launch216.98516 xb106 passes, zero combinational pins; all data captures pass",
+  "rst_actual_tt_path": {
+    "endpoint": "rsyncs_q[0]$_DFF_PN0_/RESETN cr_s recovery",
+    "wire_and_buffer_delay_ps": 263.07,
+    "arrival_ps": 742.171,
+    "required_ps": 997.322,
+    "setup_slack_ps": 255.151,
+    "explanation": "Timing closure passes but north reset input has excessive native capture obligation to south reset synchronizer."
+  },
+  "viewed_images": [
+    "floorplan.png",
+    "density.png"
+  ],
+  "image_findings": "Pre-route 280.8x69.12; actual north-west pin band has red density and south xd strip has red density. No congestion clearance claimed.",
+  "candidate": "r4 reset frontier: rsyncs consumes registered north rsync; +2 initialization cr edges, no new state, zero data/status edges vs r3",
+  "candidate_bench": "Five forwarded phase pairs exact fixed absolute calendars PASS; all five cold/warm reset pairs PASS with explicit north edge2 / south edge4 reset release assertions. Payload, valid, wrong forwarded clock, bypass-ri and stopped actual cr_s mutants all FAIL as required.",
+  "lint": "Verilator lint PASS through ot-run on AGI; host version omits unsupported Wno-MODMISSING flag.",
+  "source_binding": "Owned HEAD differs 78 files from original snapshot, including physical/common_flow/clock_entries.tcl. Original gate evidence is preserved as historical diagnostic and MUST NOT qualify crs2; fresh exact-source CTS gate required.",
+  "open_gates": [
+    "fresh CTS setup/hold/native audit",
+    "routed setup/hold/DRC0",
+    "production marker initialization calendar and all128 die pin/clock rebind",
+    "production throughput and immutable price comparison"
+  ]
+}
