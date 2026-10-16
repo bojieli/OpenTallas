@@ -1,0 +1,44 @@
+{
+  "schema": "opentallas.s81.hcx-pre-forward.v1",
+  "status": "COMPONENT_TRANSPORT_PASS",
+  "native_full_layer_qualified": false,
+  "cause": "HC NORM consumes carried pre_in; native tail produces pre for next block. Prior integration used current pre one block early.",
+  "source_sha256": {
+    "rtl/dsrom_sys/s81_hcx/ot_s81_hcx_pre_forward.sv": "720cf95a7632eac840fb75e2235110c86adb7009b923fa9045e61e15aa283616",
+    "rtl/dsrom_sys/s81_hcx/test/tb_s81_hcx_pre_forward.sv": "8b44e7e7bbd19d209716205b892100a6e524c27f6441a6853ffdd1fe7e9d1853",
+    "rtl/dsrom_sys/s81_ctrl/test/tb_s81_die_layer.sv": "4b3edd613f0fd74b2b2350cda22d4673cdcce1c2d5ab9c64bcc3885c5a5cbb03",
+    "tools/s81_ctrl/die_layer_stim.py": "f99b08fffd65ff6c8fd27480c70cb907dcdd92ad4c773bb685f609c046eddfde",
+    "tools/s81_ftok/hcx_pre_forward_gate.sh": "b41851837233b2e4bfd07a99b23ea2ee99a7d159d6d2242572cd8d10827155fe",
+    "tools/uarch_model.py": "11eec27e86b0247730a9c6a44f533aec54d3a95a5346bf1bfb403b491575fd44"
+  },
+  "command": "bash tools/s81_ftok/hcx_pre_forward_gate.sh OUT",
+  "actual_rtl": true,
+  "arithmetic_changed": false,
+  "nominal": {
+    "jobs": 3,
+    "checks": 15
+  },
+  "mutant": {
+    "kind": "MUT_CURRENT_PRE=1",
+    "status": "REJECTED",
+    "first_failure": "block0"
+  },
+  "compiler_delta": {
+    "cycles": 0,
+    "vm_reads": 0,
+    "vm_writes": 0,
+    "existing_write_calendar_preserved": true
+  },
+  "boundary": {
+    "incoming_pre": "declared external layer-boundary input",
+    "ffn_pre": "actual attention HCX computed result stored in pending registers",
+    "outgoing_pre": "actual FFN HCX computed result; real next-layer hop still required"
+  },
+  "field_count_or_workload_changed": false,
+  "scope": "Native 128-bit quartet forwarding and unchanged comb/post/eps write data only. Full native arithmetic layer replay not yet measured.",
+  "open": [
+    "full actual HCX+HC layer nominal/mutant replay",
+    "physical integration, placement/pins/clocks/TT/FF/DRC",
+    "real inter-layer incoming/outgoing pre handoff and complete89stage programmes"
+  ]
+}

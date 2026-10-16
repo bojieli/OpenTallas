@@ -558,7 +558,8 @@ def main():
                         coef_rows=[C_BASE, C_BASE + 1, C_BASE + COEF_STRIDE, C_BASE + COEF_STRIDE + 1],
                         golden_coefficient_injection=False, native_qualified=False,
                         declared_boundaries=['ideal bench VM', 'TP4 raw gather bench transport (collective glue)',
-                                             'peer ranks read die-0 H rows (replicated residual)'])
+                                             'peer ranks read die-0 H rows (replicated residual)',
+                                             'incoming pre quartet from the preceding layer boundary'])
     if fixed_rows:
         sys.path.insert(0, str(ROOT/'tools/s81_static_control'))
         from program import encode_program
@@ -624,6 +625,17 @@ def main():
         with open(a.out / 'hcx_hin.mem', 'w') as f:     # at each command and the coefficient rows at each chain done
             for blk in ('attn', 'ffn'):
                 f.write(''.join(f'{int(r):0128x}\n' for r in hcx_hin[blk]))
+        # Explicit external pre_in is the preceding layer's result, just like
+        # the incoming HIDDEN payload. Only pre_out is expected/check data.
+        # Internal FFN pre is produced by actual attention HCX, never booted.
+        assert 'pre_out' in ch, 'native HCX pre-forwarding requires the released layer-boundary pre_out fixture'
+        with open(a.out / 'hcx_pre_io.mem', 'w') as f:
+            f.write(f"{HG.pack(HG.u32(gold['attn']['pre']), 32):032x}\n")
+            f.write(f"{HG.pack(HG.u32(ch['pre_out']), 32):032x}\n")
+        hcx_meta['pre_forwarding'] = dict(incoming='declared external layer pre_in boundary',
+            internal_ffn='actual attention HCX pre output carried in native registers',
+            outgoing='actual FFN HCX pre output; next-layer handoff still requires integration',
+            rtl='rtl/dsrom_sys/s81_hcx/ot_s81_hcx_pre_forward.sv', added_cycles=0, added_vm_writes=0)
         with open(a.out / 'hcx_coef.mem', 'w') as f:
             for blk in ('attn', 'ffn'):
                 g = gold[blk]

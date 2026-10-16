@@ -544,13 +544,32 @@ module tb_s81_die_layer;
         // simulator scheduling order; a blocking increment races that checker.
         if (hcx_c[84]) begin if (hcx_cmds < 2) hcx_cmd_cyc[hcx_cmds] = cyc; hcx_cmds <= hcx_cmds + 1; end
     end
-    wire hcx_srv, hcx_swv; wire [13:0] hcx_sra, hcx_swa; wire [15:0] hcx_swm; wire [511:0] hcx_swd;
+    wire hcx_srv, hcx_swv; wire [13:0] hcx_sra, hcx_swa; wire [15:0] hcx_swm; wire [511:0] hcx_swd, hcx_swd_raw;
     reg [3:0] hcx_sv = 0, hcx_sc = 0; reg [511:0] hcx_sdp [0:3]; reg [13:0] hcx_sap [0:3]; reg [15:0] hcx_smp [0:3]; reg [511:0] hcx_swp [0:3];
     ot_s81_hcx_post_gain_native #(.MUT_POST(HXMUT == 2)) u_hxpost (.clk(ckv),.rst_n(hcx_srst_n),.start(hcx_ss),.gain_mode(1'b0),
         .gain_draft(1'b0),.ffn(hcx_sffn),.raw_base_row(hcx_sraw),.coef_base_row(hcx_scoef),.gain_base_row(14'd4096),
         .layer_idx(hcx_slayer),.norm_eps(32'h1e3ce508),.compiled_cycles(16'd540),.done(hcx_sd),.rq_v(hcx_srv),.rq_row(hcx_sra),
-        .rs_v(hcx_sv[3]),.rs_d(hcx_sdp[3]),.wq_v(hcx_swv),.wq_row(hcx_swa),.wq_mask(hcx_swm),.wq_d(hcx_swd),.wq_commit(hcx_sc[3]),
+        .rs_v(hcx_sv[3]),.rs_d(hcx_sdp[3]),.wq_v(hcx_swv),.wq_row(hcx_swa),.wq_mask(hcx_swm),.wq_d(hcx_swd_raw),.wq_commit(hcx_sc[3]),
         .fault(hcx_sf));
+    // pre_in is a declared layer-boundary input from the preceding block.
+    // The actual native tail's pre quartet belongs to the following block.
+    reg [127:0] hcx_pre_io [0:1]; reg hcx_pre_iv=0;
+    wire hcx_pre_ov,hcx_pre_fault;wire [127:0] hcx_pre_out;
+    integer hcx_pre_count=0,hcx_pre_bad=0;
+    initial begin
+        while(cyc<1100) @(negedge ck);
+        @(negedge ckv);hcx_pre_iv=1;
+        @(negedge ckv);hcx_pre_iv=0;
+    end
+    ot_s81_hcx_pre_forward #(.MUT_CURRENT_PRE(HXMUT==3)) u_hxpre(
+        .clk(ckv),.rst_n(hcx_srst_n),.incoming_v(hcx_pre_iv),.incoming_pre(hcx_pre_io[0]),
+        .start(hcx_ss),.done(hcx_sd),.coef_base_row(hcx_scoef),
+        .i_v(hcx_swv),.i_row(hcx_swa),.i_mask(hcx_swm),.i_data(hcx_swd_raw),.o_data(hcx_swd),
+        .outgoing_v(hcx_pre_ov),.outgoing_pre(hcx_pre_out),.fault(hcx_pre_fault));
+    always @(posedge ckv) if(hcx_pre_ov)begin
+        if(hcx_pre_count==1 && hcx_pre_out!==hcx_pre_io[1])hcx_pre_bad++;
+        hcx_pre_count++;
+    end
     always @(posedge ckv) begin
         hcx_sv <= {hcx_sv[2:0], hcx_srv}; hcx_sdp[0] <= vm[hcx_sra]; for (int i = 1; i < 4; i++) hcx_sdp[i] <= hcx_sdp[i-1];
         hcx_sc <= {hcx_sc[2:0], hcx_swv}; hcx_sap[0] <= hcx_swa; hcx_smp[0] <= hcx_swm; hcx_swp[0] <= hcx_swd;
@@ -972,6 +991,7 @@ module tb_s81_die_layer;
 `ifdef TB_HCX_REAL
         $readmemh({dir, "/hcx_hin.mem"}, hcx_hin_x);
         $readmemh({dir, "/hcx_coef.mem"}, hcx_coef_x);
+        $readmemh({dir, "/hcx_pre_io.mem"}, hcx_pre_io);
 `endif
 `ifdef TB_SU_REAL
         $readmemh({dir, "/su_n.mem"}, su_nm); SUN = su_nm[0];
@@ -1111,6 +1131,8 @@ module tb_s81_die_layer;
         $display("HCX_REAL commands=%0d at %0d,%0d rank0_h_row_reads=%0d post_vm_writes=%0d raw_gather_errors=%0d golden_coefficient_injection=0 native_layer=0",
             hcx_cmds, hcx_cmd_cyc[0], hcx_cmd_cyc[1], hcx_reads, hcx_writes, hcx_errs);
         if (hcx_cmds != 2*JOBS || hcx_reads != 2*640*JOBS || hcx_errs) begin errors++; $display("ERR HCX chain transaction count"); end
+        $display("HCX_PRE incoming=declared_layer_boundary outgoing_count=%0d outgoing_bad=%0d fault=%0d",hcx_pre_count,hcx_pre_bad,hcx_pre_fault);
+        if(hcx_pre_count!=2*JOBS || hcx_pre_bad || hcx_pre_fault)errors++;
         $display("HCX_CHECK hin_bad=%0d,%0d coef_words_bad=%0d,%0d (golden rows used only for this check)",
             hcx_hin_bad[0], hcx_hin_bad[1], hcx_coef_bad[0], hcx_coef_bad[1]);
         if (hcx_hin_bad[0] != 0 || hcx_hin_bad[1] != 0 || hcx_coef_bad[0] != 0 || hcx_coef_bad[1] != 0) errors++;
