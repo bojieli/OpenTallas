@@ -77,12 +77,16 @@ reg io_cfg_we=0,io_start_v=0;
 `endif
  `define SREF dut.u_core
  localparam integer EQ_LG=`SFU_LG_R;
+`ifdef SFU_PSTORE_R6
+ localparam integer D=4;   // r6 store: one relay stage on io_word/compiler_control (+1 uniform edge)
+`else
  localparam integer D=3;
+`endif
  wire [470:0] s_io;
  wire [1741:0] s_ctl;
  wire s_pact,s_pdone,s_ioact,s_iodone,s_sfault,s_cfault;
  wire [31:0] s_pord,s_ioord;
- ot_hgi_sfu_programme_store #(.PAGE_AW(1)) eq_store(.clk(clk),.rst_n(rst_n),
+ `ifdef SFU_PSTORE_R6 ot_hgi_sfu_programme_store_r6 `else ot_hgi_sfu_programme_store `endif #(.PAGE_AW(1)) eq_store(.clk(clk),.rst_n(rst_n),
   .cfg_we(cfg_we),.cfg_stripe(cfg_stripe),.cfg_addr(cfg_addr),.cfg_data(cfg_data),
   .start_base(11'd0),.start_limit(12'(NINST)),.start_loops(16'd1),
   .programme_active(s_pact),.programme_done(s_pdone),.programme_ordinal(s_pord),
@@ -171,6 +175,9 @@ reg io_cfg_we=0,io_start_v=0;
   repeat(16)@(negedge clk);rst_n=1;
   for(integer row=0;row<257;row++)begin init=1;init_sector=12'(row*8);@(negedge clk);end
   init=0;repeat(20)@(negedge clk);rst_n=0;repeat(8)@(negedge clk);rst_n=1;
+`ifdef SFU_PSTORE_R6
+  repeat(4)@(negedge clk);   // r6 host contract: configuration starts >= RELEASE_CYCLES (3) edges after rst_n release (reset relay)
+`endif
   for(integer p=0;p<NINST;p++)for(integer st=0;st<8;st++)begin
    reg [1741:0] row;
    row=controls[p];

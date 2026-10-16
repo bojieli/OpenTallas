@@ -35,6 +35,8 @@ if true;then
  sources+=($P/ot_hgi_sfu_split_engine.sv $P/ot_hgi_sfu_lg_relay.sv $P/ot_hgi_sfu_lg_pair_leaf.sv)
  defs+=(-DSFU_LG_R=$SFU_LG_R)
 fi
+# STORE6=1 (r6, opt-in): the store under test is ot_hgi_sfu_programme_store_r6 (reset relay, relay stage, D=4)
+if [ "${STORE6:-0}" = 1 ];then sources+=($P/ot_hgi_sfu_programme_store_r6.sv rtl/lib/ot_rst_relay.sv); defs+=(-DSFU_PSTORE_R6); fi
 case "${EQ_MUT:-}" in flip) defs+=(-DOT_SFU_PSTORE_MUT_FLIP);; skip) defs+=(-DOT_SFU_CORE_MUT_SKIP_REG);; "") ;; *) echo bad EQ_MUT >&2;exit 2;; esac
 rows=$(python3 -c "import json,sys;print(json.load(open(sys.argv[1]))['rows'])" "$OUT/data/io_manifest.json")
 sedge=$(python3 -c "import json,sys;print(json.load(open(sys.argv[1]))['scalar_prefetch_edge'])" "$OUT/data/io_manifest.json")
