@@ -28116,9 +28116,11 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .fault(vmdel_NE7__fault),
     .dq(vmdel_NE7__dq)
   );
-  ot_hbm_vm_lg_static_bank #(.READ_RETURN(10), .WRITE_RETURN(7)) lg_SW_0_b0 (
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(18), .WRITE_RETURN(15), .RET_PIN(1)) lg_SW_0_b0 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .rret(5'd10),
+    .wret(5'd7),
     .local_rq(su_SW0__lg_rq[16:0]),
     .far_rq(lg_SW_1_b0__near_rq[16:0]),
     .local_wq(su_SW0__lg_wq[280:0]),
@@ -28135,9 +28137,11 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .far_w_done(lg_SW_0_b0__far_w_done),
     .fault(lg_SW_0_b0__fault)
   );
-  ot_hbm_vm_lg_static_bank #(.READ_RETURN(10), .WRITE_RETURN(7)) lg_SW_0_b1 (
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(18), .WRITE_RETURN(15), .RET_PIN(1)) lg_SW_0_b1 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .rret(5'd10),
+    .wret(5'd7),
     .local_rq(su_SW0__lg_rq[33:17]),
     .far_rq(lg_SW_1_b1__near_rq[16:0]),
     .local_wq(su_SW0__lg_wq[561:281]),
@@ -28154,9 +28158,11 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .far_w_done(lg_SW_0_b1__far_w_done),
     .fault(lg_SW_0_b1__fault)
   );
-  ot_hbm_vm_lg_static_bank #(.READ_RETURN(10), .WRITE_RETURN(7)) lg_SW_0_b2 (
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(18), .WRITE_RETURN(15), .RET_PIN(1)) lg_SW_0_b2 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .rret(5'd10),
+    .wret(5'd7),
     .local_rq(su_SW1__lg_rq[16:0]),
     .far_rq(lg_SW_1_b2__near_rq[16:0]),
     .local_wq(su_SW1__lg_wq[280:0]),
@@ -28173,9 +28179,11 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .far_w_done(lg_SW_0_b2__far_w_done),
     .fault(lg_SW_0_b2__fault)
   );
-  ot_hbm_vm_lg_static_bank #(.READ_RETURN(10), .WRITE_RETURN(7)) lg_SW_0_b3 (
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(18), .WRITE_RETURN(15), .RET_PIN(1)) lg_SW_0_b3 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .rret(5'd10),
+    .wret(5'd7),
     .local_rq(su_SW1__lg_rq[33:17]),
     .far_rq(lg_SW_1_b3__near_rq[16:0]),
     .local_wq(su_SW1__lg_wq[561:281]),
@@ -28192,9 +28200,11 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .far_w_done(lg_SW_0_b3__far_w_done),
     .fault(lg_SW_0_b3__fault)
   );
-  ot_hbm_vm_lg_static_bank #(.READ_RETURN(10), .WRITE_RETURN(7)) lg_SW_0_b4 (
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(18), .WRITE_RETURN(15), .RET_PIN(1)) lg_SW_0_b4 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .rret(5'd10),
+    .wret(5'd7),
     .local_rq(su_SW2__lg_rq[16:0]),
     .far_rq(lg_SW_1_b4__near_rq[16:0]),
     .local_wq(su_SW2__lg_wq[280:0]),
@@ -28211,9 +28221,11 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .far_w_done(lg_SW_0_b4__far_w_done),
     .fault(lg_SW_0_b4__fault)
   );
-  ot_hbm_vm_lg_static_bank #(.READ_RETURN(10), .WRITE_RETURN(7)) lg_SW_0_b5 (
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(18), .WRITE_RETURN(15), .RET_PIN(1)) lg_SW_0_b5 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .rret(5'd10),
+    .wret(5'd7),
     .local_rq(su_SW2__lg_rq[33:17]),
     .far_rq(lg_SW_1_b5__near_rq[16:0]),
     .local_wq(su_SW2__lg_wq[561:281]),
@@ -28230,9 +28242,11 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .far_w_done(lg_SW_0_b5__far_w_done),
     .fault(lg_SW_0_b5__fault)
   );
-  ot_hbm_vm_lg_static_bank #(.READ_RETURN(10), .WRITE_RETURN(7)) lg_SW_0_b6 (
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(18), .WRITE_RETURN(15), .RET_PIN(1)) lg_SW_0_b6 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .rret(5'd10),
+    .wret(5'd7),
     .local_rq(su_SW3__lg_rq[16:0]),
     .far_rq(lg_SW_1_b6__near_rq[16:0]),
     .local_wq(su_SW3__lg_wq[280:0]),
@@ -28249,9 +28263,11 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .far_w_done(lg_SW_0_b6__far_w_done),
     .fault(lg_SW_0_b6__fault)
   );
-  ot_hbm_vm_lg_static_bank #(.READ_RETURN(10), .WRITE_RETURN(7)) lg_SW_0_b7 (
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(18), .WRITE_RETURN(15), .RET_PIN(1)) lg_SW_0_b7 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .rret(5'd10),
+    .wret(5'd7),
     .local_rq(su_SW3__lg_rq[33:17]),
     .far_rq(lg_SW_1_b7__near_rq[16:0]),
     .local_wq(su_SW3__lg_wq[561:281]),
@@ -28268,9 +28284,11 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .far_w_done(lg_SW_0_b7__far_w_done),
     .fault(lg_SW_0_b7__fault)
   );
-  ot_hbm_vm_lg_static_bank #(.READ_RETURN(14), .WRITE_RETURN(11)) lg_SW_1_b0 (
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(18), .WRITE_RETURN(15), .RET_PIN(1)) lg_SW_1_b0 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .rret(5'd14),
+    .wret(5'd11),
     .local_rq(sfu_SW0__lg_rq[16:0]),
     .far_rq(lg_SW_2_b0__near_rq[16:0]),
     .local_wq(sfu_SW0__lg_wq[280:0]),
@@ -28287,9 +28305,11 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .far_w_done(lg_SW_1_b0__far_w_done),
     .fault(lg_SW_1_b0__fault)
   );
-  ot_hbm_vm_lg_static_bank #(.READ_RETURN(14), .WRITE_RETURN(11)) lg_SW_1_b1 (
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(18), .WRITE_RETURN(15), .RET_PIN(1)) lg_SW_1_b1 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .rret(5'd14),
+    .wret(5'd11),
     .local_rq(sfu_SW0__lg_rq[33:17]),
     .far_rq(lg_SW_2_b1__near_rq[16:0]),
     .local_wq(sfu_SW0__lg_wq[561:281]),
@@ -28306,9 +28326,11 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .far_w_done(lg_SW_1_b1__far_w_done),
     .fault(lg_SW_1_b1__fault)
   );
-  ot_hbm_vm_lg_static_bank #(.READ_RETURN(14), .WRITE_RETURN(11)) lg_SW_1_b2 (
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(18), .WRITE_RETURN(15), .RET_PIN(1)) lg_SW_1_b2 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .rret(5'd14),
+    .wret(5'd11),
     .local_rq(sfu_SW1__lg_rq[16:0]),
     .far_rq(lg_SW_2_b2__near_rq[16:0]),
     .local_wq(sfu_SW1__lg_wq[280:0]),
@@ -28325,9 +28347,11 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .far_w_done(lg_SW_1_b2__far_w_done),
     .fault(lg_SW_1_b2__fault)
   );
-  ot_hbm_vm_lg_static_bank #(.READ_RETURN(14), .WRITE_RETURN(11)) lg_SW_1_b3 (
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(18), .WRITE_RETURN(15), .RET_PIN(1)) lg_SW_1_b3 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .rret(5'd14),
+    .wret(5'd11),
     .local_rq(sfu_SW1__lg_rq[33:17]),
     .far_rq(lg_SW_2_b3__near_rq[16:0]),
     .local_wq(sfu_SW1__lg_wq[561:281]),
@@ -28344,9 +28368,11 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .far_w_done(lg_SW_1_b3__far_w_done),
     .fault(lg_SW_1_b3__fault)
   );
-  ot_hbm_vm_lg_static_bank #(.READ_RETURN(14), .WRITE_RETURN(11)) lg_SW_1_b4 (
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(18), .WRITE_RETURN(15), .RET_PIN(1)) lg_SW_1_b4 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .rret(5'd14),
+    .wret(5'd11),
     .local_rq(sfu_SW2__lg_rq[16:0]),
     .far_rq(lg_SW_2_b4__near_rq[16:0]),
     .local_wq(sfu_SW2__lg_wq[280:0]),
@@ -28363,9 +28389,11 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .far_w_done(lg_SW_1_b4__far_w_done),
     .fault(lg_SW_1_b4__fault)
   );
-  ot_hbm_vm_lg_static_bank #(.READ_RETURN(14), .WRITE_RETURN(11)) lg_SW_1_b5 (
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(18), .WRITE_RETURN(15), .RET_PIN(1)) lg_SW_1_b5 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .rret(5'd14),
+    .wret(5'd11),
     .local_rq(sfu_SW2__lg_rq[33:17]),
     .far_rq(lg_SW_2_b5__near_rq[16:0]),
     .local_wq(sfu_SW2__lg_wq[561:281]),
@@ -28382,9 +28410,11 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .far_w_done(lg_SW_1_b5__far_w_done),
     .fault(lg_SW_1_b5__fault)
   );
-  ot_hbm_vm_lg_static_bank #(.READ_RETURN(14), .WRITE_RETURN(11)) lg_SW_1_b6 (
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(18), .WRITE_RETURN(15), .RET_PIN(1)) lg_SW_1_b6 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .rret(5'd14),
+    .wret(5'd11),
     .local_rq(sfu_SW3__lg_rq[16:0]),
     .far_rq(lg_SW_2_b6__near_rq[16:0]),
     .local_wq(sfu_SW3__lg_wq[280:0]),
@@ -28401,9 +28431,11 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .far_w_done(lg_SW_1_b6__far_w_done),
     .fault(lg_SW_1_b6__fault)
   );
-  ot_hbm_vm_lg_static_bank #(.READ_RETURN(14), .WRITE_RETURN(11)) lg_SW_1_b7 (
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(18), .WRITE_RETURN(15), .RET_PIN(1)) lg_SW_1_b7 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .rret(5'd14),
+    .wret(5'd11),
     .local_rq(sfu_SW3__lg_rq[33:17]),
     .far_rq(lg_SW_2_b7__near_rq[16:0]),
     .local_wq(sfu_SW3__lg_wq[561:281]),
@@ -28540,9 +28572,11 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .local_w_done(lg_SW_2_b7__local_w_done),
     .fault(lg_SW_2_b7__fault)
   );
-  ot_hbm_vm_lg_static_bank #(.READ_RETURN(10), .WRITE_RETURN(7)) lg_SE_0_b0 (
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(18), .WRITE_RETURN(15), .RET_PIN(1)) lg_SE_0_b0 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .rret(5'd10),
+    .wret(5'd7),
     .local_rq(su_SE0__lg_rq[16:0]),
     .far_rq(lg_SE_1_b0__near_rq[16:0]),
     .local_wq(su_SE0__lg_wq[280:0]),
@@ -28559,9 +28593,11 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .far_w_done(lg_SE_0_b0__far_w_done),
     .fault(lg_SE_0_b0__fault)
   );
-  ot_hbm_vm_lg_static_bank #(.READ_RETURN(10), .WRITE_RETURN(7)) lg_SE_0_b1 (
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(18), .WRITE_RETURN(15), .RET_PIN(1)) lg_SE_0_b1 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .rret(5'd10),
+    .wret(5'd7),
     .local_rq(su_SE0__lg_rq[33:17]),
     .far_rq(lg_SE_1_b1__near_rq[16:0]),
     .local_wq(su_SE0__lg_wq[561:281]),
@@ -28578,9 +28614,11 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .far_w_done(lg_SE_0_b1__far_w_done),
     .fault(lg_SE_0_b1__fault)
   );
-  ot_hbm_vm_lg_static_bank #(.READ_RETURN(10), .WRITE_RETURN(7)) lg_SE_0_b2 (
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(18), .WRITE_RETURN(15), .RET_PIN(1)) lg_SE_0_b2 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .rret(5'd10),
+    .wret(5'd7),
     .local_rq(su_SE1__lg_rq[16:0]),
     .far_rq(lg_SE_1_b2__near_rq[16:0]),
     .local_wq(su_SE1__lg_wq[280:0]),
@@ -28597,9 +28635,11 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .far_w_done(lg_SE_0_b2__far_w_done),
     .fault(lg_SE_0_b2__fault)
   );
-  ot_hbm_vm_lg_static_bank #(.READ_RETURN(10), .WRITE_RETURN(7)) lg_SE_0_b3 (
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(18), .WRITE_RETURN(15), .RET_PIN(1)) lg_SE_0_b3 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .rret(5'd10),
+    .wret(5'd7),
     .local_rq(su_SE1__lg_rq[33:17]),
     .far_rq(lg_SE_1_b3__near_rq[16:0]),
     .local_wq(su_SE1__lg_wq[561:281]),
@@ -28616,9 +28656,11 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .far_w_done(lg_SE_0_b3__far_w_done),
     .fault(lg_SE_0_b3__fault)
   );
-  ot_hbm_vm_lg_static_bank #(.READ_RETURN(10), .WRITE_RETURN(7)) lg_SE_0_b4 (
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(18), .WRITE_RETURN(15), .RET_PIN(1)) lg_SE_0_b4 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .rret(5'd10),
+    .wret(5'd7),
     .local_rq(su_SE2__lg_rq[16:0]),
     .far_rq(lg_SE_1_b4__near_rq[16:0]),
     .local_wq(su_SE2__lg_wq[280:0]),
@@ -28635,9 +28677,11 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .far_w_done(lg_SE_0_b4__far_w_done),
     .fault(lg_SE_0_b4__fault)
   );
-  ot_hbm_vm_lg_static_bank #(.READ_RETURN(10), .WRITE_RETURN(7)) lg_SE_0_b5 (
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(18), .WRITE_RETURN(15), .RET_PIN(1)) lg_SE_0_b5 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .rret(5'd10),
+    .wret(5'd7),
     .local_rq(su_SE2__lg_rq[33:17]),
     .far_rq(lg_SE_1_b5__near_rq[16:0]),
     .local_wq(su_SE2__lg_wq[561:281]),
@@ -28654,9 +28698,11 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .far_w_done(lg_SE_0_b5__far_w_done),
     .fault(lg_SE_0_b5__fault)
   );
-  ot_hbm_vm_lg_static_bank #(.READ_RETURN(10), .WRITE_RETURN(7)) lg_SE_0_b6 (
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(18), .WRITE_RETURN(15), .RET_PIN(1)) lg_SE_0_b6 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .rret(5'd10),
+    .wret(5'd7),
     .local_rq(su_SE3__lg_rq[16:0]),
     .far_rq(lg_SE_1_b6__near_rq[16:0]),
     .local_wq(su_SE3__lg_wq[280:0]),
@@ -28673,9 +28719,11 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .far_w_done(lg_SE_0_b6__far_w_done),
     .fault(lg_SE_0_b6__fault)
   );
-  ot_hbm_vm_lg_static_bank #(.READ_RETURN(10), .WRITE_RETURN(7)) lg_SE_0_b7 (
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(18), .WRITE_RETURN(15), .RET_PIN(1)) lg_SE_0_b7 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .rret(5'd10),
+    .wret(5'd7),
     .local_rq(su_SE3__lg_rq[33:17]),
     .far_rq(lg_SE_1_b7__near_rq[16:0]),
     .local_wq(su_SE3__lg_wq[561:281]),
@@ -28692,9 +28740,11 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .far_w_done(lg_SE_0_b7__far_w_done),
     .fault(lg_SE_0_b7__fault)
   );
-  ot_hbm_vm_lg_static_bank #(.READ_RETURN(14), .WRITE_RETURN(11)) lg_SE_1_b0 (
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(18), .WRITE_RETURN(15), .RET_PIN(1)) lg_SE_1_b0 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .rret(5'd14),
+    .wret(5'd11),
     .local_rq(sfu_SE0__lg_rq[16:0]),
     .far_rq(lg_SE_2_b0__near_rq[16:0]),
     .local_wq(sfu_SE0__lg_wq[280:0]),
@@ -28711,9 +28761,11 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .far_w_done(lg_SE_1_b0__far_w_done),
     .fault(lg_SE_1_b0__fault)
   );
-  ot_hbm_vm_lg_static_bank #(.READ_RETURN(14), .WRITE_RETURN(11)) lg_SE_1_b1 (
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(18), .WRITE_RETURN(15), .RET_PIN(1)) lg_SE_1_b1 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .rret(5'd14),
+    .wret(5'd11),
     .local_rq(sfu_SE0__lg_rq[33:17]),
     .far_rq(lg_SE_2_b1__near_rq[16:0]),
     .local_wq(sfu_SE0__lg_wq[561:281]),
@@ -28730,9 +28782,11 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .far_w_done(lg_SE_1_b1__far_w_done),
     .fault(lg_SE_1_b1__fault)
   );
-  ot_hbm_vm_lg_static_bank #(.READ_RETURN(14), .WRITE_RETURN(11)) lg_SE_1_b2 (
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(18), .WRITE_RETURN(15), .RET_PIN(1)) lg_SE_1_b2 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .rret(5'd14),
+    .wret(5'd11),
     .local_rq(sfu_SE1__lg_rq[16:0]),
     .far_rq(lg_SE_2_b2__near_rq[16:0]),
     .local_wq(sfu_SE1__lg_wq[280:0]),
@@ -28749,9 +28803,11 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .far_w_done(lg_SE_1_b2__far_w_done),
     .fault(lg_SE_1_b2__fault)
   );
-  ot_hbm_vm_lg_static_bank #(.READ_RETURN(14), .WRITE_RETURN(11)) lg_SE_1_b3 (
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(18), .WRITE_RETURN(15), .RET_PIN(1)) lg_SE_1_b3 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .rret(5'd14),
+    .wret(5'd11),
     .local_rq(sfu_SE1__lg_rq[33:17]),
     .far_rq(lg_SE_2_b3__near_rq[16:0]),
     .local_wq(sfu_SE1__lg_wq[561:281]),
@@ -28768,9 +28824,11 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .far_w_done(lg_SE_1_b3__far_w_done),
     .fault(lg_SE_1_b3__fault)
   );
-  ot_hbm_vm_lg_static_bank #(.READ_RETURN(14), .WRITE_RETURN(11)) lg_SE_1_b4 (
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(18), .WRITE_RETURN(15), .RET_PIN(1)) lg_SE_1_b4 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .rret(5'd14),
+    .wret(5'd11),
     .local_rq(sfu_SE2__lg_rq[16:0]),
     .far_rq(lg_SE_2_b4__near_rq[16:0]),
     .local_wq(sfu_SE2__lg_wq[280:0]),
@@ -28787,9 +28845,11 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .far_w_done(lg_SE_1_b4__far_w_done),
     .fault(lg_SE_1_b4__fault)
   );
-  ot_hbm_vm_lg_static_bank #(.READ_RETURN(14), .WRITE_RETURN(11)) lg_SE_1_b5 (
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(18), .WRITE_RETURN(15), .RET_PIN(1)) lg_SE_1_b5 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .rret(5'd14),
+    .wret(5'd11),
     .local_rq(sfu_SE2__lg_rq[33:17]),
     .far_rq(lg_SE_2_b5__near_rq[16:0]),
     .local_wq(sfu_SE2__lg_wq[561:281]),
@@ -28806,9 +28866,11 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .far_w_done(lg_SE_1_b5__far_w_done),
     .fault(lg_SE_1_b5__fault)
   );
-  ot_hbm_vm_lg_static_bank #(.READ_RETURN(14), .WRITE_RETURN(11)) lg_SE_1_b6 (
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(18), .WRITE_RETURN(15), .RET_PIN(1)) lg_SE_1_b6 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .rret(5'd14),
+    .wret(5'd11),
     .local_rq(sfu_SE3__lg_rq[16:0]),
     .far_rq(lg_SE_2_b6__near_rq[16:0]),
     .local_wq(sfu_SE3__lg_wq[280:0]),
@@ -28825,9 +28887,11 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .far_w_done(lg_SE_1_b6__far_w_done),
     .fault(lg_SE_1_b6__fault)
   );
-  ot_hbm_vm_lg_static_bank #(.READ_RETURN(14), .WRITE_RETURN(11)) lg_SE_1_b7 (
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(18), .WRITE_RETURN(15), .RET_PIN(1)) lg_SE_1_b7 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .rret(5'd14),
+    .wret(5'd11),
     .local_rq(sfu_SE3__lg_rq[33:17]),
     .far_rq(lg_SE_2_b7__near_rq[16:0]),
     .local_wq(sfu_SE3__lg_wq[561:281]),
@@ -28964,9 +29028,11 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .local_w_done(lg_SE_2_b7__local_w_done),
     .fault(lg_SE_2_b7__fault)
   );
-  ot_hbm_vm_lg_static_bank #(.READ_RETURN(10), .WRITE_RETURN(7)) lg_NW_0_b0 (
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(18), .WRITE_RETURN(15), .RET_PIN(1)) lg_NW_0_b0 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .rret(5'd10),
+    .wret(5'd7),
     .local_rq(su_NW0__lg_rq[16:0]),
     .far_rq(lg_NW_1_b0__near_rq[16:0]),
     .local_wq(su_NW0__lg_wq[280:0]),
@@ -28983,9 +29049,11 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .far_w_done(lg_NW_0_b0__far_w_done),
     .fault(lg_NW_0_b0__fault)
   );
-  ot_hbm_vm_lg_static_bank #(.READ_RETURN(10), .WRITE_RETURN(7)) lg_NW_0_b1 (
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(18), .WRITE_RETURN(15), .RET_PIN(1)) lg_NW_0_b1 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .rret(5'd10),
+    .wret(5'd7),
     .local_rq(su_NW0__lg_rq[33:17]),
     .far_rq(lg_NW_1_b1__near_rq[16:0]),
     .local_wq(su_NW0__lg_wq[561:281]),
@@ -29002,9 +29070,11 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .far_w_done(lg_NW_0_b1__far_w_done),
     .fault(lg_NW_0_b1__fault)
   );
-  ot_hbm_vm_lg_static_bank #(.READ_RETURN(10), .WRITE_RETURN(7)) lg_NW_0_b2 (
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(18), .WRITE_RETURN(15), .RET_PIN(1)) lg_NW_0_b2 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .rret(5'd10),
+    .wret(5'd7),
     .local_rq(su_NW1__lg_rq[16:0]),
     .far_rq(lg_NW_1_b2__near_rq[16:0]),
     .local_wq(su_NW1__lg_wq[280:0]),
@@ -29021,9 +29091,11 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .far_w_done(lg_NW_0_b2__far_w_done),
     .fault(lg_NW_0_b2__fault)
   );
-  ot_hbm_vm_lg_static_bank #(.READ_RETURN(10), .WRITE_RETURN(7)) lg_NW_0_b3 (
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(18), .WRITE_RETURN(15), .RET_PIN(1)) lg_NW_0_b3 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .rret(5'd10),
+    .wret(5'd7),
     .local_rq(su_NW1__lg_rq[33:17]),
     .far_rq(lg_NW_1_b3__near_rq[16:0]),
     .local_wq(su_NW1__lg_wq[561:281]),
@@ -29040,9 +29112,11 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .far_w_done(lg_NW_0_b3__far_w_done),
     .fault(lg_NW_0_b3__fault)
   );
-  ot_hbm_vm_lg_static_bank #(.READ_RETURN(10), .WRITE_RETURN(7)) lg_NW_0_b4 (
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(18), .WRITE_RETURN(15), .RET_PIN(1)) lg_NW_0_b4 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .rret(5'd10),
+    .wret(5'd7),
     .local_rq(su_NW2__lg_rq[16:0]),
     .far_rq(lg_NW_1_b4__near_rq[16:0]),
     .local_wq(su_NW2__lg_wq[280:0]),
@@ -29059,9 +29133,11 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .far_w_done(lg_NW_0_b4__far_w_done),
     .fault(lg_NW_0_b4__fault)
   );
-  ot_hbm_vm_lg_static_bank #(.READ_RETURN(10), .WRITE_RETURN(7)) lg_NW_0_b5 (
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(18), .WRITE_RETURN(15), .RET_PIN(1)) lg_NW_0_b5 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .rret(5'd10),
+    .wret(5'd7),
     .local_rq(su_NW2__lg_rq[33:17]),
     .far_rq(lg_NW_1_b5__near_rq[16:0]),
     .local_wq(su_NW2__lg_wq[561:281]),
@@ -29078,9 +29154,11 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .far_w_done(lg_NW_0_b5__far_w_done),
     .fault(lg_NW_0_b5__fault)
   );
-  ot_hbm_vm_lg_static_bank #(.READ_RETURN(10), .WRITE_RETURN(7)) lg_NW_0_b6 (
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(18), .WRITE_RETURN(15), .RET_PIN(1)) lg_NW_0_b6 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .rret(5'd10),
+    .wret(5'd7),
     .local_rq(su_NW3__lg_rq[16:0]),
     .far_rq(lg_NW_1_b6__near_rq[16:0]),
     .local_wq(su_NW3__lg_wq[280:0]),
@@ -29097,9 +29175,11 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .far_w_done(lg_NW_0_b6__far_w_done),
     .fault(lg_NW_0_b6__fault)
   );
-  ot_hbm_vm_lg_static_bank #(.READ_RETURN(10), .WRITE_RETURN(7)) lg_NW_0_b7 (
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(18), .WRITE_RETURN(15), .RET_PIN(1)) lg_NW_0_b7 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .rret(5'd10),
+    .wret(5'd7),
     .local_rq(su_NW3__lg_rq[33:17]),
     .far_rq(lg_NW_1_b7__near_rq[16:0]),
     .local_wq(su_NW3__lg_wq[561:281]),
@@ -29116,9 +29196,11 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .far_w_done(lg_NW_0_b7__far_w_done),
     .fault(lg_NW_0_b7__fault)
   );
-  ot_hbm_vm_lg_static_bank #(.READ_RETURN(14), .WRITE_RETURN(11)) lg_NW_1_b0 (
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(18), .WRITE_RETURN(15), .RET_PIN(1)) lg_NW_1_b0 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .rret(5'd14),
+    .wret(5'd11),
     .local_rq(sfu_NW0__lg_rq[16:0]),
     .far_rq(lg_NW_2_b0__near_rq[16:0]),
     .local_wq(sfu_NW0__lg_wq[280:0]),
@@ -29135,9 +29217,11 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .far_w_done(lg_NW_1_b0__far_w_done),
     .fault(lg_NW_1_b0__fault)
   );
-  ot_hbm_vm_lg_static_bank #(.READ_RETURN(14), .WRITE_RETURN(11)) lg_NW_1_b1 (
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(18), .WRITE_RETURN(15), .RET_PIN(1)) lg_NW_1_b1 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .rret(5'd14),
+    .wret(5'd11),
     .local_rq(sfu_NW0__lg_rq[33:17]),
     .far_rq(lg_NW_2_b1__near_rq[16:0]),
     .local_wq(sfu_NW0__lg_wq[561:281]),
@@ -29154,9 +29238,11 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .far_w_done(lg_NW_1_b1__far_w_done),
     .fault(lg_NW_1_b1__fault)
   );
-  ot_hbm_vm_lg_static_bank #(.READ_RETURN(14), .WRITE_RETURN(11)) lg_NW_1_b2 (
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(18), .WRITE_RETURN(15), .RET_PIN(1)) lg_NW_1_b2 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .rret(5'd14),
+    .wret(5'd11),
     .local_rq(sfu_NW1__lg_rq[16:0]),
     .far_rq(lg_NW_2_b2__near_rq[16:0]),
     .local_wq(sfu_NW1__lg_wq[280:0]),
@@ -29173,9 +29259,11 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .far_w_done(lg_NW_1_b2__far_w_done),
     .fault(lg_NW_1_b2__fault)
   );
-  ot_hbm_vm_lg_static_bank #(.READ_RETURN(14), .WRITE_RETURN(11)) lg_NW_1_b3 (
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(18), .WRITE_RETURN(15), .RET_PIN(1)) lg_NW_1_b3 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .rret(5'd14),
+    .wret(5'd11),
     .local_rq(sfu_NW1__lg_rq[33:17]),
     .far_rq(lg_NW_2_b3__near_rq[16:0]),
     .local_wq(sfu_NW1__lg_wq[561:281]),
@@ -29192,9 +29280,11 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .far_w_done(lg_NW_1_b3__far_w_done),
     .fault(lg_NW_1_b3__fault)
   );
-  ot_hbm_vm_lg_static_bank #(.READ_RETURN(14), .WRITE_RETURN(11)) lg_NW_1_b4 (
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(18), .WRITE_RETURN(15), .RET_PIN(1)) lg_NW_1_b4 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .rret(5'd14),
+    .wret(5'd11),
     .local_rq(sfu_NW2__lg_rq[16:0]),
     .far_rq(lg_NW_2_b4__near_rq[16:0]),
     .local_wq(sfu_NW2__lg_wq[280:0]),
@@ -29211,9 +29301,11 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .far_w_done(lg_NW_1_b4__far_w_done),
     .fault(lg_NW_1_b4__fault)
   );
-  ot_hbm_vm_lg_static_bank #(.READ_RETURN(14), .WRITE_RETURN(11)) lg_NW_1_b5 (
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(18), .WRITE_RETURN(15), .RET_PIN(1)) lg_NW_1_b5 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .rret(5'd14),
+    .wret(5'd11),
     .local_rq(sfu_NW2__lg_rq[33:17]),
     .far_rq(lg_NW_2_b5__near_rq[16:0]),
     .local_wq(sfu_NW2__lg_wq[561:281]),
@@ -29230,9 +29322,11 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .far_w_done(lg_NW_1_b5__far_w_done),
     .fault(lg_NW_1_b5__fault)
   );
-  ot_hbm_vm_lg_static_bank #(.READ_RETURN(14), .WRITE_RETURN(11)) lg_NW_1_b6 (
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(18), .WRITE_RETURN(15), .RET_PIN(1)) lg_NW_1_b6 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .rret(5'd14),
+    .wret(5'd11),
     .local_rq(sfu_NW3__lg_rq[16:0]),
     .far_rq(lg_NW_2_b6__near_rq[16:0]),
     .local_wq(sfu_NW3__lg_wq[280:0]),
@@ -29249,9 +29343,11 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .far_w_done(lg_NW_1_b6__far_w_done),
     .fault(lg_NW_1_b6__fault)
   );
-  ot_hbm_vm_lg_static_bank #(.READ_RETURN(14), .WRITE_RETURN(11)) lg_NW_1_b7 (
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(18), .WRITE_RETURN(15), .RET_PIN(1)) lg_NW_1_b7 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .rret(5'd14),
+    .wret(5'd11),
     .local_rq(sfu_NW3__lg_rq[33:17]),
     .far_rq(lg_NW_2_b7__near_rq[16:0]),
     .local_wq(sfu_NW3__lg_wq[561:281]),
@@ -29388,9 +29484,11 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .local_w_done(lg_NW_2_b7__local_w_done),
     .fault(lg_NW_2_b7__fault)
   );
-  ot_hbm_vm_lg_static_bank #(.READ_RETURN(10), .WRITE_RETURN(7)) lg_NE_0_b0 (
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(18), .WRITE_RETURN(15), .RET_PIN(1)) lg_NE_0_b0 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .rret(5'd10),
+    .wret(5'd7),
     .local_rq(su_NE0__lg_rq[16:0]),
     .far_rq(lg_NE_1_b0__near_rq[16:0]),
     .local_wq(su_NE0__lg_wq[280:0]),
@@ -29407,9 +29505,11 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .far_w_done(lg_NE_0_b0__far_w_done),
     .fault(lg_NE_0_b0__fault)
   );
-  ot_hbm_vm_lg_static_bank #(.READ_RETURN(10), .WRITE_RETURN(7)) lg_NE_0_b1 (
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(18), .WRITE_RETURN(15), .RET_PIN(1)) lg_NE_0_b1 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .rret(5'd10),
+    .wret(5'd7),
     .local_rq(su_NE0__lg_rq[33:17]),
     .far_rq(lg_NE_1_b1__near_rq[16:0]),
     .local_wq(su_NE0__lg_wq[561:281]),
@@ -29426,9 +29526,11 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .far_w_done(lg_NE_0_b1__far_w_done),
     .fault(lg_NE_0_b1__fault)
   );
-  ot_hbm_vm_lg_static_bank #(.READ_RETURN(10), .WRITE_RETURN(7)) lg_NE_0_b2 (
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(18), .WRITE_RETURN(15), .RET_PIN(1)) lg_NE_0_b2 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .rret(5'd10),
+    .wret(5'd7),
     .local_rq(su_NE1__lg_rq[16:0]),
     .far_rq(lg_NE_1_b2__near_rq[16:0]),
     .local_wq(su_NE1__lg_wq[280:0]),
@@ -29445,9 +29547,11 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .far_w_done(lg_NE_0_b2__far_w_done),
     .fault(lg_NE_0_b2__fault)
   );
-  ot_hbm_vm_lg_static_bank #(.READ_RETURN(10), .WRITE_RETURN(7)) lg_NE_0_b3 (
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(18), .WRITE_RETURN(15), .RET_PIN(1)) lg_NE_0_b3 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .rret(5'd10),
+    .wret(5'd7),
     .local_rq(su_NE1__lg_rq[33:17]),
     .far_rq(lg_NE_1_b3__near_rq[16:0]),
     .local_wq(su_NE1__lg_wq[561:281]),
@@ -29464,9 +29568,11 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .far_w_done(lg_NE_0_b3__far_w_done),
     .fault(lg_NE_0_b3__fault)
   );
-  ot_hbm_vm_lg_static_bank #(.READ_RETURN(10), .WRITE_RETURN(7)) lg_NE_0_b4 (
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(18), .WRITE_RETURN(15), .RET_PIN(1)) lg_NE_0_b4 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .rret(5'd10),
+    .wret(5'd7),
     .local_rq(su_NE2__lg_rq[16:0]),
     .far_rq(lg_NE_1_b4__near_rq[16:0]),
     .local_wq(su_NE2__lg_wq[280:0]),
@@ -29483,9 +29589,11 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .far_w_done(lg_NE_0_b4__far_w_done),
     .fault(lg_NE_0_b4__fault)
   );
-  ot_hbm_vm_lg_static_bank #(.READ_RETURN(10), .WRITE_RETURN(7)) lg_NE_0_b5 (
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(18), .WRITE_RETURN(15), .RET_PIN(1)) lg_NE_0_b5 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .rret(5'd10),
+    .wret(5'd7),
     .local_rq(su_NE2__lg_rq[33:17]),
     .far_rq(lg_NE_1_b5__near_rq[16:0]),
     .local_wq(su_NE2__lg_wq[561:281]),
@@ -29502,9 +29610,11 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .far_w_done(lg_NE_0_b5__far_w_done),
     .fault(lg_NE_0_b5__fault)
   );
-  ot_hbm_vm_lg_static_bank #(.READ_RETURN(10), .WRITE_RETURN(7)) lg_NE_0_b6 (
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(18), .WRITE_RETURN(15), .RET_PIN(1)) lg_NE_0_b6 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .rret(5'd10),
+    .wret(5'd7),
     .local_rq(su_NE3__lg_rq[16:0]),
     .far_rq(lg_NE_1_b6__near_rq[16:0]),
     .local_wq(su_NE3__lg_wq[280:0]),
@@ -29521,9 +29631,11 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .far_w_done(lg_NE_0_b6__far_w_done),
     .fault(lg_NE_0_b6__fault)
   );
-  ot_hbm_vm_lg_static_bank #(.READ_RETURN(10), .WRITE_RETURN(7)) lg_NE_0_b7 (
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(18), .WRITE_RETURN(15), .RET_PIN(1)) lg_NE_0_b7 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .rret(5'd10),
+    .wret(5'd7),
     .local_rq(su_NE3__lg_rq[33:17]),
     .far_rq(lg_NE_1_b7__near_rq[16:0]),
     .local_wq(su_NE3__lg_wq[561:281]),
@@ -29540,9 +29652,11 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .far_w_done(lg_NE_0_b7__far_w_done),
     .fault(lg_NE_0_b7__fault)
   );
-  ot_hbm_vm_lg_static_bank #(.READ_RETURN(14), .WRITE_RETURN(11)) lg_NE_1_b0 (
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(18), .WRITE_RETURN(15), .RET_PIN(1)) lg_NE_1_b0 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .rret(5'd14),
+    .wret(5'd11),
     .local_rq(sfu_NE0__lg_rq[16:0]),
     .far_rq(lg_NE_2_b0__near_rq[16:0]),
     .local_wq(sfu_NE0__lg_wq[280:0]),
@@ -29559,9 +29673,11 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .far_w_done(lg_NE_1_b0__far_w_done),
     .fault(lg_NE_1_b0__fault)
   );
-  ot_hbm_vm_lg_static_bank #(.READ_RETURN(14), .WRITE_RETURN(11)) lg_NE_1_b1 (
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(18), .WRITE_RETURN(15), .RET_PIN(1)) lg_NE_1_b1 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .rret(5'd14),
+    .wret(5'd11),
     .local_rq(sfu_NE0__lg_rq[33:17]),
     .far_rq(lg_NE_2_b1__near_rq[16:0]),
     .local_wq(sfu_NE0__lg_wq[561:281]),
@@ -29578,9 +29694,11 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .far_w_done(lg_NE_1_b1__far_w_done),
     .fault(lg_NE_1_b1__fault)
   );
-  ot_hbm_vm_lg_static_bank #(.READ_RETURN(14), .WRITE_RETURN(11)) lg_NE_1_b2 (
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(18), .WRITE_RETURN(15), .RET_PIN(1)) lg_NE_1_b2 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .rret(5'd14),
+    .wret(5'd11),
     .local_rq(sfu_NE1__lg_rq[16:0]),
     .far_rq(lg_NE_2_b2__near_rq[16:0]),
     .local_wq(sfu_NE1__lg_wq[280:0]),
@@ -29597,9 +29715,11 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .far_w_done(lg_NE_1_b2__far_w_done),
     .fault(lg_NE_1_b2__fault)
   );
-  ot_hbm_vm_lg_static_bank #(.READ_RETURN(14), .WRITE_RETURN(11)) lg_NE_1_b3 (
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(18), .WRITE_RETURN(15), .RET_PIN(1)) lg_NE_1_b3 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .rret(5'd14),
+    .wret(5'd11),
     .local_rq(sfu_NE1__lg_rq[33:17]),
     .far_rq(lg_NE_2_b3__near_rq[16:0]),
     .local_wq(sfu_NE1__lg_wq[561:281]),
@@ -29616,9 +29736,11 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .far_w_done(lg_NE_1_b3__far_w_done),
     .fault(lg_NE_1_b3__fault)
   );
-  ot_hbm_vm_lg_static_bank #(.READ_RETURN(14), .WRITE_RETURN(11)) lg_NE_1_b4 (
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(18), .WRITE_RETURN(15), .RET_PIN(1)) lg_NE_1_b4 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .rret(5'd14),
+    .wret(5'd11),
     .local_rq(sfu_NE2__lg_rq[16:0]),
     .far_rq(lg_NE_2_b4__near_rq[16:0]),
     .local_wq(sfu_NE2__lg_wq[280:0]),
@@ -29635,9 +29757,11 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .far_w_done(lg_NE_1_b4__far_w_done),
     .fault(lg_NE_1_b4__fault)
   );
-  ot_hbm_vm_lg_static_bank #(.READ_RETURN(14), .WRITE_RETURN(11)) lg_NE_1_b5 (
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(18), .WRITE_RETURN(15), .RET_PIN(1)) lg_NE_1_b5 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .rret(5'd14),
+    .wret(5'd11),
     .local_rq(sfu_NE2__lg_rq[33:17]),
     .far_rq(lg_NE_2_b5__near_rq[16:0]),
     .local_wq(sfu_NE2__lg_wq[561:281]),
@@ -29654,9 +29778,11 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .far_w_done(lg_NE_1_b5__far_w_done),
     .fault(lg_NE_1_b5__fault)
   );
-  ot_hbm_vm_lg_static_bank #(.READ_RETURN(14), .WRITE_RETURN(11)) lg_NE_1_b6 (
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(18), .WRITE_RETURN(15), .RET_PIN(1)) lg_NE_1_b6 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .rret(5'd14),
+    .wret(5'd11),
     .local_rq(sfu_NE3__lg_rq[16:0]),
     .far_rq(lg_NE_2_b6__near_rq[16:0]),
     .local_wq(sfu_NE3__lg_wq[280:0]),
@@ -29673,9 +29799,11 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .far_w_done(lg_NE_1_b6__far_w_done),
     .fault(lg_NE_1_b6__fault)
   );
-  ot_hbm_vm_lg_static_bank #(.READ_RETURN(14), .WRITE_RETURN(11)) lg_NE_1_b7 (
+  ot_hbm_vm_lg_static_bank #(.READ_RETURN(18), .WRITE_RETURN(15), .RET_PIN(1)) lg_NE_1_b7 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
+    .rret(5'd14),
+    .wret(5'd11),
     .local_rq(sfu_NE3__lg_rq[33:17]),
     .far_rq(lg_NE_2_b7__near_rq[16:0]),
     .local_wq(sfu_NE3__lg_wq[561:281]),
