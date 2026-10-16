@@ -8,7 +8,7 @@ module hfd_host_native #(parameter integer MUT=0)(
  input wire clk_controller,clk_landing,clk_ep,clk_face,
  input wire[11:0]clk_sub,input wire clk_tx_shared,clk_rx_shared,clk_status_shared,
  input wire clk_phy,rst_n,input wire[23:0]session,
- inout wire[786:0]h,
+ inout wire[786:0]h,input wire[1:0]s_bresp,
  output wire[512:0]pma_tx,output wire pma_tck,
  input wire[512:0]pma_rx,input wire pma_rck,
  output wire[4:0]faults,output wire[1:0]phy_status,output wire ep_locked
@@ -22,7 +22,7 @@ module hfd_host_native #(parameter integer MUT=0)(
  always @(posedge clk_controller or negedge rst_n)
  if(!rst_n)tx_credits<=32;
  else tx_credits<=tx_credits+6'(f_lk[1093])-6'(send);
- hfd_host_packet_face #(.MUT(MUT))u_packet(.clk(clk_controller),.rst_n(rst_n),.h(h),
+ hfd_host_packet_face #(.MUT(MUT))u_packet(.clk(clk_controller),.rst_n(rst_n),.h(h),.s_bresp(s_bresp),
  .rx_valid(lv),.rx_packet(ld),.rx_ready(lr),.tx_valid(cv),.tx_packet(cd),.tx_ready(cr),.protocol_fault(packet_fault));
  assign f_lk[0]=send;assign f_lk[545:1]={33'd0,cd};assign f_lk[546]=pop;assign f_lk[1117:1094]=session;
  hfd_lk_ep #(.HARD_CLOCKS(1))u_endpoint(.clk(clk_ep),.clk_face(clk_face),.clk_sub(clk_sub),

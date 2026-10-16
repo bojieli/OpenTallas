@@ -1,0 +1,116 @@
+{
+  "schema": "opentallas.qcoll.local_xfold_geometry_request.v1",
+  "qualified": false,
+  "grant_status": "REQUEST_only_inside_existingS4 candidate;computeallowslocalentryREQUESTaftermachineplanreview",
+  "module": "ot_coll_local_xfold",
+  "source_owner": "/root/qwen_elements_1417/vmwb_functional",
+  "clock_abi": [
+    "ctl_ck",
+    "fold_ck"
+  ],
+  "outline_um": [
+    213.84,
+    181.44
+  ],
+  "instances": [
+    {
+      "name": "xf0",
+      "at_inner_um": [
+        54,
+        43.2
+      ],
+      "fold_child_local_um": [
+        32.4,
+        0
+      ],
+      "fold_child_view": "physical/ref_tile/coll_fold_slice_rt/views/ot_coll_fold_slice",
+      "fold_orient": "R0"
+    },
+    {
+      "name": "xf1",
+      "at_inner_um": [
+        54,
+        259.2
+      ],
+      "fold_child_local_um": [
+        32.4,
+        0
+      ],
+      "fold_child_view": "physical/ref_tile/coll_fold_slice_rt/views/ot_coll_fold_slice",
+      "fold_orient": "R0"
+    },
+    {
+      "name": "xf2",
+      "at_inner_um": [
+        54,
+        475.2
+      ],
+      "fold_child_local_um": [
+        32.4,
+        0
+      ],
+      "fold_child_view": "physical/ref_tile/coll_fold_slice_rt/views/ot_coll_fold_slice",
+      "fold_orient": "R0"
+    },
+    {
+      "name": "xf3",
+      "at_inner_um": [
+        54,
+        691.2
+      ],
+      "fold_child_local_um": [
+        32.4,
+        0
+      ],
+      "fold_child_view": "physical/ref_tile/coll_fold_slice_rt/views/ot_coll_fold_slice",
+      "fold_orient": "R0"
+    }
+  ],
+  "logic_band_um": [
+    32.4,
+    181.44
+  ],
+  "logic_band_area_um2": 5878.656,
+  "pins": {
+    "W": [
+      "td[127:0]",
+      "sr0[127:0]",
+      "sr1[127:0]",
+      "sr2[127:0]",
+      "ctl_ck",
+      "rst_n",
+      "pkg_s[1:0]",
+      "red_in"
+    ],
+    "E": [
+      "sum[127:0]",
+      "v_out",
+      "e_out"
+    ],
+    "N": [
+      "fold_ck"
+    ]
+  },
+  "clock_pin_requests_local_um": {
+    "ctl_ck": [
+      0.096,
+      90.732
+    ],
+    "fold_ck": [
+      131.148,
+      181.398
+    ]
+  },
+  "conservative_face_cuts": {
+    "raw512_W_two_tracks_with_10p8um_corner_reserve": 0.2880450070323488,
+    "sum128_E_two_tracks_with_10p8um_corner_reserve": 0.0720112517580872
+  },
+  "controls_FF": 16,
+  "extra_data_edges": 0,
+  "must_prove": [
+    "No extraedgecandidate only; actualmux+existingfoldnativecapture mayexceed190ps; cannotinferfromclosedfold.",
+    "16registeredPKselects and4x128datamuxinsidewrapper; no datamux remainsparentforthisgroup.",
+    "ExistingclosedfoldLEF/logic/cycles preserved; unclosedwrapperclockentries independentwithrelatedsamefrequencycrosschecks.",
+    "E SR0leaf to thiswrapperWface still>=766.8um horizontally; layout/globalrelay/calendar remainsOPEN."
+  ]
+}

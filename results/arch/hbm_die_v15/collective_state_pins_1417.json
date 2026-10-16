@@ -1,0 +1,420 @@
+{
+ "schema": "opentallas.hbm_v15.collective_state_pins.v1",
+ "top": "ot_hgi_coll_pring_static_state_lane",
+ "outline_um": [
+  64.8,
+  64.8
+ ],
+ "source_ref": "3729cb8fc",
+ "source_sha256": "c827fb8dc971baca5e155b88a3381eab218999b127e3a4b9f419f3f28e77d514",
+ "pins": [
+  {
+   "name": "clk",
+   "face": "N",
+   "layer": "M5",
+   "offset": 32.4,
+   "span_um": [
+    32.352,
+    32.448
+   ],
+   "offset_pending_view": true
+  },
+  {
+   "name": "lp_we",
+   "face": "W",
+   "layer": "M4",
+   "offset": 24.576,
+   "span_um": [
+    24.528,
+    24.624
+   ],
+   "offset_pending_view": true
+  },
+  {
+   "name": "lp_tag[2:0]",
+   "face": "W",
+   "layer": "M4",
+   "offset": 24.768,
+   "span_um": [
+    24.624,
+    24.912
+   ],
+   "offset_pending_view": true
+  },
+  {
+   "name": "lp_data[31:0]",
+   "face": "W",
+   "layer": "M4",
+   "offset": 26.448,
+   "span_um": [
+    24.912,
+    27.984
+   ],
+   "offset_pending_view": true
+  },
+  {
+   "name": "acc_we",
+   "face": "W",
+   "layer": "M4",
+   "offset": 28.032,
+   "span_um": [
+    27.984,
+    28.08
+   ],
+   "offset_pending_view": true
+  },
+  {
+   "name": "acc_tag[2:0]",
+   "face": "W",
+   "layer": "M4",
+   "offset": 28.224,
+   "span_um": [
+    28.08,
+    28.368
+   ],
+   "offset_pending_view": true
+  },
+  {
+   "name": "acc_data[31:0]",
+   "face": "W",
+   "layer": "M4",
+   "offset": 29.904,
+   "span_um": [
+    28.368,
+    31.44
+   ],
+   "offset_pending_view": true
+  },
+  {
+   "name": "carry_we[1:0]",
+   "face": "W",
+   "layer": "M4",
+   "offset": 31.536,
+   "span_um": [
+    31.44,
+    31.632
+   ],
+   "offset_pending_view": true
+  },
+  {
+   "name": "carry0_tag[2:0]",
+   "face": "W",
+   "layer": "M4",
+   "offset": 31.776,
+   "span_um": [
+    31.632,
+    31.92
+   ],
+   "offset_pending_view": true
+  },
+  {
+   "name": "carry1_tag[2:0]",
+   "face": "W",
+   "layer": "M4",
+   "offset": 32.064,
+   "span_um": [
+    31.92,
+    32.208
+   ],
+   "offset_pending_view": true
+  },
+  {
+   "name": "carry0_src[1:0]",
+   "face": "W",
+   "layer": "M4",
+   "offset": 32.304,
+   "span_um": [
+    32.208,
+    32.4
+   ],
+   "offset_pending_view": true
+  },
+  {
+   "name": "carry1_src[1:0]",
+   "face": "W",
+   "layer": "M4",
+   "offset": 32.496,
+   "span_um": [
+    32.4,
+    32.592
+   ],
+   "offset_pending_view": true
+  },
+  {
+   "name": "carry0_data[31:0]",
+   "face": "W",
+   "layer": "M4",
+   "offset": 34.128,
+   "span_um": [
+    32.592,
+    35.664
+   ],
+   "offset_pending_view": true
+  },
+  {
+   "name": "carry1_data[31:0]",
+   "face": "W",
+   "layer": "M4",
+   "offset": 37.2,
+   "span_um": [
+    35.664,
+    38.736
+   ],
+   "offset_pending_view": true
+  },
+  {
+   "name": "read_add",
+   "face": "W",
+   "layer": "M4",
+   "offset": 38.784,
+   "span_um": [
+    38.736,
+    38.832
+   ],
+   "offset_pending_view": true
+  },
+  {
+   "name": "read_tx",
+   "face": "W",
+   "layer": "M4",
+   "offset": 38.88,
+   "span_um": [
+    38.832,
+    38.928
+   ],
+   "offset_pending_view": true
+  },
+  {
+   "name": "read_rr",
+   "face": "W",
+   "layer": "M4",
+   "offset": 38.976,
+   "span_um": [
+    38.928,
+    39.024
+   ],
+   "offset_pending_view": true
+  },
+  {
+   "name": "read_rhs_acc",
+   "face": "W",
+   "layer": "M4",
+   "offset": 39.072,
+   "span_um": [
+    39.024,
+    39.12
+   ],
+   "offset_pending_view": true
+  },
+  {
+   "name": "read_tx_acc",
+   "face": "W",
+   "layer": "M4",
+   "offset": 39.168,
+   "span_um": [
+    39.12,
+    39.216
+   ],
+   "offset_pending_view": true
+  },
+  {
+   "name": "add_tag[2:0]",
+   "face": "W",
+   "layer": "M4",
+   "offset": 39.36,
+   "span_um": [
+    39.216,
+    39.504
+   ],
+   "offset_pending_view": true
+  },
+  {
+   "name": "tx_tag[2:0]",
+   "face": "W",
+   "layer": "M4",
+   "offset": 39.648,
+   "span_um": [
+    39.504,
+    39.792
+   ],
+   "offset_pending_view": true
+  },
+  {
+   "name": "rr_tag[2:0]",
+   "face": "W",
+   "layer": "M4",
+   "offset": 39.936,
+   "span_um": [
+    39.792,
+    40.08
+   ],
+   "offset_pending_view": true
+  },
+  {
+   "name": "add_src[1:0]",
+   "face": "W",
+   "layer": "M4",
+   "offset": 40.176,
+   "span_um": [
+    40.08,
+    40.272
+   ],
+   "offset_pending_view": true
+  },
+  {
+   "name": "rhs_add[31:0]",
+   "face": "E",
+   "layer": "M4",
+   "offset": 27.792,
+   "span_um": [
+    26.256,
+    29.328
+   ],
+   "offset_pending_view": true
+  },
+  {
+   "name": "carry_add[31:0]",
+   "face": "E",
+   "layer": "M4",
+   "offset": 30.864,
+   "span_um": [
+    29.328,
+    32.4
+   ],
+   "offset_pending_view": true
+  },
+  {
+   "name": "tx_data[31:0]",
+   "face": "E",
+   "layer": "M4",
+   "offset": 33.936,
+   "span_um": [
+    32.4,
+    35.472
+   ],
+   "offset_pending_view": true
+  },
+  {
+   "name": "acc_rr[31:0]",
+   "face": "E",
+   "layer": "M4",
+   "offset": 37.008,
+   "span_um": [
+    35.472,
+    38.544
+   ],
+   "offset_pending_view": true
+  }
+ ],
+ "pin_ranges": {
+  "clk": [
+   32.352,
+   32.448
+  ],
+  "lp_we": [
+   24.528,
+   24.624
+  ],
+  "lp_tag": [
+   24.624,
+   24.912
+  ],
+  "lp_data": [
+   24.912,
+   27.984
+  ],
+  "acc_we": [
+   27.984,
+   28.08
+  ],
+  "acc_tag": [
+   28.08,
+   28.368
+  ],
+  "acc_data": [
+   28.368,
+   31.44
+  ],
+  "carry_we": [
+   31.44,
+   31.632
+  ],
+  "carry0_tag": [
+   31.632,
+   31.92
+  ],
+  "carry1_tag": [
+   31.92,
+   32.208
+  ],
+  "carry0_src": [
+   32.208,
+   32.4
+  ],
+  "carry1_src": [
+   32.4,
+   32.592
+  ],
+  "carry0_data": [
+   32.592,
+   35.664
+  ],
+  "carry1_data": [
+   35.664,
+   38.736
+  ],
+  "read_add": [
+   38.736,
+   38.832
+  ],
+  "read_tx": [
+   38.832,
+   38.928
+  ],
+  "read_rr": [
+   38.928,
+   39.024
+  ],
+  "read_rhs_acc": [
+   39.024,
+   39.12
+  ],
+  "read_tx_acc": [
+   39.12,
+   39.216
+  ],
+  "add_tag": [
+   39.216,
+   39.504
+  ],
+  "tx_tag": [
+   39.504,
+   39.792
+  ],
+  "rr_tag": [
+   39.792,
+   40.08
+  ],
+  "add_src": [
+   40.08,
+   40.272
+  ],
+  "rhs_add": [
+   26.256,
+   29.328
+  ],
+  "carry_add": [
+   29.328,
+   32.4
+  ],
+  "tx_data": [
+   32.4,
+   35.472
+  ],
+  "acc_rr": [
+   35.472,
+   38.544
+  ]
+ },
+ "scope": "1417 independent margin grant only; native C1472 and actual parent topology remain OPEN"
+}

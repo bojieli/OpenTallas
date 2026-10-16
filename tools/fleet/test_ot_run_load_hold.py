@@ -80,6 +80,44 @@ class LoadHold(unittest.TestCase):
 
 
 class PickEligibility(unittest.TestCase):
+    def test_status_does_not_advertise_cpu_held_only_memory_fit_host(self):
+        module = load(Path(__file__).with_name('ot-run'))
+        rows = dict(epyc=row(20, 70, 128), pve=row(104, 43, 28))
+        output = io.StringIO()
+        with patch.object(module, 'probe', side_effect=lambda h,d: (h,rows[h])), \
+             patch.dict(os.environ, {}, clear=True), contextlib.redirect_stdout(output):
+            module.status(list(rows))
+        self.assertIn('next 16-thread 32 GB job: load held', output.getvalue())
+        self.assertNotIn('-> pve', output.getvalue())
+
+    def test_large_request_never_queues_on_physically_incapable_idle_host(self):
+        module = load(Path(__file__).with_name('ot-run'))
+        rows = dict(epyc={**row(-40, 90, 128), 'total_gb': 1008, 'floor_gb': 202},
+                    agi={**row(28, 10, 64), 'total_gb': 126, 'floor_gb': 25})
+        result = exercise(module, rows, mem=168)
+        self.assertEqual(result['host'], 'epyc', result)
+        self.assertIn('will queue', result['log'])
+
+    def test_incapable_host_cannot_release_capable_host_cpu_hold(self):
+        module = load(Path(__file__).with_name('ot-run'))
+        rows = dict(epyc={**row(-40, 200, 128), 'total_gb': 1008, 'floor_gb': 202},
+                    agi={**row(28, 10, 64), 'total_gb': 126, 'floor_gb': 25})
+        result = exercise(module, rows, mem=168)
+        self.assertTrue(result['held'], result)
+
+    def test_no_physically_capable_host_never_creates_waiter(self):
+        module = load(Path(__file__).with_name('ot-run'))
+        result = exercise(module, dict(agi={**row(28, 10, 64), 'total_gb':126, 'floor_gb':25}), mem=168)
+        self.assertIsNone(result['host'], result)
+        self.assertIn('no host qualifies', result['status'])
+
+    def test_mandatory_headroom_boundary_and_old_probe_compatibility(self):
+        module = load(Path(__file__).with_name('ot-run'))
+        self.assertTrue(module.physically_capable(dict(total_gb=126, headroom_gb=24, floor_gb=25),101))
+        self.assertFalse(module.physically_capable(dict(total_gb=126, headroom_gb=24, floor_gb=25),102))
+        self.assertFalse(module.physically_capable(dict(total_gb=126, headroom_gb=30, floor_gb=25),97))
+        self.assertTrue(module.physically_capable({},168))
+
     def test_pick_and_run_prefer_same_cpu_eligible_host_despite_fresh_load(self):
         module = load(Path(__file__).with_name('ot-run'))
         rows = dict(epyc={**row(104,180,128), 'fresh':10},pve=row(104,43,28))

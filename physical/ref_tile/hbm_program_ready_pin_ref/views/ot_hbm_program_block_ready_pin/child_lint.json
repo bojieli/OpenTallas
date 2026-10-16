@@ -1,0 +1,76 @@
+{
+ "schema": "opentallas.hier_contract.child_lint.v1",
+ "lef": "/srv/opentallas/claude/closure-loop/hbm_program_ready_pin_ref-pin1-6d0674c2b/record/views/ot_hbm_program_block_ready_pin/ot_hbm_program_block_ready_pin.lef",
+ "verdict": "PASS",
+ "fails": [],
+ "warns": [
+  "(f) face-pin access: 67 of 67 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. block_ready M4 (85.453,42.720), fault M4 (85.453,42.720), cfg_addr[0] M4 (0.060,37.440))"
+ ],
+ "summary": "ot_hbm_program_block_ready_pin 86.4 x 86.4: PG M5 VDD 16 stripes (94% spread, 100% cov) / VSS 16 stripes (94% spread, 100% cov); strap M6; face pins 67 blocked-above 0 blocked-same 0; clock clk insertion 131 ps; pockets M5 0 (closed)",
+ "info": {
+  "cell": "ot_hbm_program_block_ready_pin",
+  "W": 86.4,
+  "H": 86.4,
+  "pg": {
+   "nets": {
+    "VDD": {
+     "top_layer": "M5",
+     "stripes": 16,
+     "dir": "V",
+     "spread": 0.937,
+     "coverage": 1.0,
+     "shapes_on_top": 16
+    },
+    "VSS": {
+     "top_layer": "M5",
+     "stripes": 16,
+     "dir": "V",
+     "spread": 0.938,
+     "coverage": 1.0,
+     "shapes_on_top": 16
+    }
+   },
+   "top_layer": "M5",
+   "ok": true,
+   "why": []
+  },
+  "pg_layer": "M5",
+  "strap_layer": "M6",
+  "cap": null,
+  "face": {
+   "face_pins": 67,
+   "blocked_above": 0,
+   "covered_below": 0,
+   "examples": [],
+   "blocked_same": 0,
+   "same_examples": [],
+   "band_same": 67,
+   "band_examples": [
+    "block_ready M4 (85.453,42.720)",
+    "fault M4 (85.453,42.720)",
+    "cfg_addr[0] M4 (0.060,37.440)",
+    "cfg_addr[1] M4 (0.060,37.440)",
+    "cfg_addr[2] M4 (0.060,37.440)",
+    "cfg_addr[3] M4 (0.060,37.440)"
+   ]
+  },
+  "clock_insertion": {
+   "clk": {
+    "max_ps": 130.75,
+    "min_ps": 106.29
+   }
+  },
+  "pockets": {
+   "layer": "M5",
+   "d_um": 1.536,
+   "marker": {
+    "layer": "M5",
+    "d_um": 1.536,
+    "added": 181
+   },
+   "count": 0,
+   "area_um2": 0,
+   "examples": []
+  }
+ }
+}
