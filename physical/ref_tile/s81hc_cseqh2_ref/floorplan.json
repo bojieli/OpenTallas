@@ -6,14 +6,14 @@
  "die": [
   0,
   0,
-  155.52,
-  155.52
+  190.08,
+  190.08
  ],
  "core": [
   2.16,
   2.16,
-  153.36,
-  153.36
+  187.92000000000002,
+  187.92000000000002
  ],
  "why": "spec outline (exact: the closed view's sub-slot)",
  "std_area_um2": 11663,
@@ -83,7 +83,14 @@
  },
  "clock_port": "sk",
  "blocks": [],
- "findings": [],
+ "findings": [
+  [
+   "WARN",
+   "util",
+   "utilisation 34% outside 45%-60% (std 11663 + macro 0 in core 34507 um2)",
+   "resize the outline to util 0.50-0.55 (drop 'outline', set util)"
+  ]
+ ],
  "referenced": [
   "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_cseq.sv",
   "rtl/hdc/ot_hdc_fastfp.sv",

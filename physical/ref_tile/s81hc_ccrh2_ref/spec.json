@@ -72,22 +72,16 @@
   "benches_from": "tools/s81_suhc/hc_gate_benches.json",
   "owner": "Claude:S-ELEM-PQ/HC3",
   "branch": "claude/s81hc3-native-0030",
-  "tag": "pr1",
+  "tag": "pr2shore",
   "purpose": "S-ELEM-PQ/HC3 native pin re-kit of CLOSED s81hc_ccrh2_ref-v1-70eafa55c (ot_s81_hc_ccr: launch 264.06348 > 220 (27 pins); capture 191.644 > 190 (1 pins) at phi - R, results/rtl/s81_hc_native_0030/native_audit.json); same outline and pin faces, kit recipe 3 (OWNER RULE 19:50)",
   "no_bench_reason": "bit-exactness is gated on the wires-only wrapper ot_s81_hc_comb in the slab bench (tools/s81_suhc/hc_gate.py NG64 HIER=2 (and 1) m0 PASS + m1/m3 FAIL, NG256 HIER=1 m0 PASS; el1011-s81-suhc-hier-1011.log [hc-split]); the tile alone has no golden",
   "views_to": "physical/ref_tile/s81hc_ccrh2_ref/views",
   "record_to": "results/rtl/ref_tile/s81hc_ccrh2_ref",
   "reroute_reason": {
-   "kind": "pin_register",
-   "source": "results/rtl/s81_hc_native_0030/native_audit.json",
-   "cell": "ot_s81_hc_ccr",
-   "fix": "recipe 3 pin stage at the closed RTL / outline / pin faces, 0 cycles: pin_reg_split clones every subtree-loaded crd launch flop so each crd_o feed-through bit has a dedicated flop (same D, same cycle) placed freely between its W capture pin and E launch pin; non-feed-through pin flops anchored at their pins; kept pin registers; HB2 pads",
-   "launch_ps": 264.1,
-   "capture_ps": 191.6,
-   "closed_job": "s81hc_ccrh2_ref-v1-70eafa55c",
-   "added_cycles_per_port": {}
+   "kind": "slot_change",
+   "slot_change_request": "2026-10-16T02:58:29.003514-07:00 HC3 slot request: ot_s81_hc_ccr 151.2x151.2 -> 151.2x190.08 um. Preserve all pin faces and RTL/cycles; redistributed absolute pin coordinates require parent peer geometry regeneration. Boundary-local GRT congestion pr1 requires longer shoreline; diagnostic CTS gate only until S-DIE grant."
   },
-  "structural_change": "recipe 3 pin stage at the closed RTL / outline / pin faces, 0 cycles: pin_reg_split clones every subtree-loaded crd launch flop so each crd_o feed-through bit has a dedicated flop (same D, same cycle) placed freely between its W capture pin and E launch pin; non-feed-through pin flops anchored at their pins; kept pin registers; HB2 pads"
+  "structural_change": "2026-10-16T02:58:29.003514-07:00 HC3 slot request: ot_s81_hc_ccr 151.2x151.2 -> 151.2x190.08 um. Preserve all pin faces and RTL/cycles; redistributed absolute pin coordinates require parent peer geometry regeneration. Boundary-local GRT congestion pr1 requires longer shoreline; diagnostic CTS gate only until S-DIE grant."
  },
  "params": {
   "HALF": 1,
@@ -100,7 +94,7 @@
  "recipe": 3,
  "outline": {
   "w": 151.2,
-  "h": 151.2,
+  "h": 190.08,
   "exact": true
  },
  "pin_regs": {
