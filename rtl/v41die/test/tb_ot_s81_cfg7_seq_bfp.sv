@@ -24,6 +24,7 @@ module tb_ot_s81_cfg7_seq_bfp;
     reg [81:0] dtab [0:(1<<PHW)-1];
     reg [71:0] mem [0:6][0:4095];
     integer g, p, k, cyc = 0, nissue = 0, ngo = 0;
+    integer empty_starts = 0;
     reg [31:0] rng = 32'h5eed1015;
     function automatic [31:0] nx(input [31:0] r); nx = {r[30:0], r[31] ^ r[21] ^ r[1] ^ r[0]}; endfunction
     initial begin
@@ -74,6 +75,7 @@ module tb_ot_s81_cfg7_seq_bfp;
         if ({cfg, ge, st, fp} !== {rcfg, rge, rst_e, rfp})
             $fatal(1, "BFP MISMATCH cyc=%0d phase=%0d fp=%h ref=%h cfg=%h ref=%h", cyc, cur, fp, rfp, cfg, rcfg);
         if (fp[0]) nissue <= nissue + 1;
+        if (ge && dut.desc[81:0]===82'd0) empty_starts <= empty_starts+1;
         if (st[1]) $fatal(1, "BFP unexpected fault cyc=%0d", cyc);
     end
     integer ph_i, w8;
@@ -83,7 +85,9 @@ module tb_ot_s81_cfg7_seq_bfp;
             rng = nx(rng);
             @(negedge clk); phase = PHW'(rng % (1 << PHW)); np = 3'(rng[13:11]); cfg_go = 1;
 `ifdef TB_BFP_EMPTY
-            if (ph_i==0) phase=0;
+            // The first load can precede the local reset-relay release. Exercise
+            // the literal empty descriptor after a complete warm-up phase.
+            if (ph_i==1) phase=0;
 `endif
             @(negedge clk); cfg_go = 0;
             repeat (40) @(negedge clk);
@@ -91,6 +95,10 @@ module tb_ot_s81_cfg7_seq_bfp;
             @(negedge clk); go = 0;
             repeat (24 * 8 + 30) @(negedge clk);
         end
+`ifdef TB_BFP_EMPTY
+        if(empty_starts==0) $fatal(1,"BFP empty phase was never issued");
+        $display("EMPTY descriptor actual go starts=%0d",empty_starts);
+`endif
         $display("PASS ot_s81_cfg7_seq_bfp lockstep phases=%0d issues=%0d cycles=%0d", ngo, nissue, cyc);
         $finish;
     end
