@@ -5,7 +5,7 @@ Actual RTL arithmetic and SRAM history; VM returns are declared boundary inputs.
 This verifies the component and its fixed calendar, not native full-die memory.
 """
 from pathlib import Path
-import argparse, sys, subprocess, json, hashlib, time
+import argparse, sys, subprocess, json, hashlib, time, re
 root=Path(__file__).resolve().parents[2]
 sys.path.insert(0,str(root/'tools/s81_suhc'))
 import su_gate as G
@@ -14,14 +14,17 @@ ap.add_argument('--work',required=True,type=Path)
 ap.add_argument('--fixtures',type=Path,default=root/'results/rtl/s81_cp_1014/fixtures')
 ap.add_argument('--mutant',action='store_true')
 ap.add_argument('--core',action='store_true')
+ap.add_argument('--endpoint',action='store_true',help='real hctl descriptor/tap/CP seam')
 ap.add_argument('--jobs',type=int,default=8)
 ap.add_argument('--layers',default='2,8,14',help='comma-separated fixture layers')
 a=ap.parse_args()
-base=a.fixtures.resolve(); mode=int(a.mutant); variant='core' if a.core else 'vm'
-top='tb_s81_su_cp_vm' if variant=='vm' else 'tb_s81_su_cp'
+base=a.fixtures.resolve(); mode=int(a.mutant); variant='endpoint' if a.endpoint else 'core' if a.core else 'vm'
+top='tb_s81_su_cp_endpoint' if variant=='endpoint' else 'tb_s81_su_cp_vm' if variant=='vm' else 'tb_s81_su_cp'
+marker='CP_ENDPOINT' if variant=='endpoint' else 'CP_VM' if variant=='vm' else 'CP'
 out=a.work.resolve()/f'build_{variant}_m{mode}';out.mkdir(parents=True,exist_ok=True)
 (out/'receipt.json').unlink(missing_ok=True)
 files=[root/p for p in dict.fromkeys(G.RTL+G.H.FP['rtl']+['rtl/dsrom_sys/s81_suhc/ot_s81_su_cp.sv','rtl/dsrom_sys/s81_suhc/ot_s81_su_cp_vm.sv',f'rtl/dsrom_sys/s81_suhc/test/{top}.sv','physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v'])]
+if variant=='endpoint':files += [root/'rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_hctl.sv',root/'rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_cpt.sv']
 vl=Path.home()/'.local/opentallas-tools/verilator-5.050/bin/verilator'
 cmd=[str(vl),'--binary','--timing','-j',str(a.jobs),'-Wno-fatal','-Wno-lint','-Wno-style','-Wno-WIDTH','--top-module',top,f'-GMUT={mode}','--Mdir',str(out/'obj'),'-o','sim',*map(str,files)]
 def pin(paths):
@@ -44,15 +47,17 @@ for L in [int(x) for x in a.layers.split(',')]:
  if (fixture/'binding.json').exists():
   binding=json.loads((fixture/'binding.json').read_text());extra=[f'+VM={fixture}/vm.mem',f'+D0={binding["descriptor_rows"][0]}',f'+D1={binding["descriptor_rows"][1]}']
  p=subprocess.run([str(out/'obj/sim'),f'+DIR={fixture}',*extra],capture_output=True,text=True);(out/f'run_L{L:02d}.log').write_text(p.stdout+p.stderr)
- ok=(('CP_VM PASS' if variant=='vm' else 'CP PASS') in p.stdout and p.returncode==0) if mode==0 else (('CP_VM FAIL' if variant=='vm' else 'CP FAIL') in p.stdout and p.returncode!=0 and ('BAD beat' in p.stdout or 'BAD row' in p.stdout))
- checks.append(dict(layer=L,expected='PASS' if mode==0 else 'FAIL',satisfied=ok,rc=p.returncode,summary=[l for l in p.stdout.splitlines() if l.startswith(('CP_DONE','CP_RESULT','CP_VM_DONE','CP_VM_RESULT','BAD beat','BAD row'))]))
+ ok=((marker+' PASS') in p.stdout and p.returncode==0) if mode==0 else ((marker+' FAIL') in p.stdout and p.returncode!=0 and ('BAD beat' in p.stdout or 'BAD row' in p.stdout))
+ checks.append(dict(layer=L,expected='PASS' if mode==0 else 'FAIL',satisfied=ok,rc=p.returncode,summary=[l for l in p.stdout.splitlines() if l.startswith(('CP_DONE','CP_RESULT','CP_VM_DONE','CP_VM_RESULT','CP_ENDPOINT_DONE','CP_ENDPOINT_RESULT','BAD beat','BAD row'))]))
  print(L,ok,p.stdout[-500:],flush=True)
 protocol_mutant=None
-if variant=='vm' and mode==0:
+if variant in ('vm','endpoint') and mode==0:
  p=subprocess.run([str(out/'obj/sim'),f'+DIR={base}/L02','+LATE=1',*([f'+VM={base}/L02/vm.mem',f'+D0={json.loads((base/"L02/binding.json").read_text())["descriptor_rows"][0]}',f'+D1={json.loads((base/"L02/binding.json").read_text())["descriptor_rows"][1]}'] if (base/'L02/binding.json').exists() else [])],capture_output=True,text=True)
  (out/'run_late_L02.log').write_text(p.stdout+p.stderr)
- ok=p.returncode!=0 and 'CP_VM FAIL' in p.stdout and 'cycles139 scheduled139 fault1' in p.stdout and 'cycles272 scheduled272 fault1' in p.stdout
- protocol_mutant=dict(satisfied=ok,rc=p.returncode,summary=[l for l in p.stdout.splitlines() if l.startswith(('CP_VM_DONE','CP_VM_RESULT'))])
+ ok=p.returncode!=0 and (marker+' FAIL') in p.stdout
+ if variant=='vm':ok=ok and 'cycles139 scheduled139 fault1' in p.stdout and 'cycles272 scheduled272 fault1' in p.stdout
+ else:ok=ok and 'fault1' in p.stdout
+ protocol_mutant=dict(satisfied=ok,rc=p.returncode,summary=[l for l in p.stdout.splitlines() if l.startswith(('CP_VM_DONE','CP_VM_RESULT','CP_ENDPOINT_DONE','CP_ENDPOINT_RESULT'))])
  checks.append(dict(layer=2,expected='late VM response FAIL on unchanged schedule',satisfied=ok))
  print('PROTOCOL_MUTANT',ok,p.stdout[-500:],flush=True)
 if source_pins!=pin(files):
