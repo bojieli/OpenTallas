@@ -125,21 +125,19 @@ module ot_s81_hc_ctfx_nt2 #(
     reg       farq;
     reg [4:0] oct;
     always @(posedge clk_l) begin farq <= tid[0]; oct <= tid[5:1]; end
-    // DL_PIN = 1 (S-ENGRAM+NORM 2210, owner rule 10-15 19:50 "register every input at its pin"): s3 native capture
-    // FAILED on 49 lane pins (dl_in 33 up to 219.6 ps, cs 16 up to 203.7): each N-face dl_in bit fed a merge mux and the
-    // slot-valid bits also fed the collision OR, so the FF-hold pads sat in series with two or three logic levels.  Now
-    // every dl_in bit is captured by one pin register (no logic), and the two slot selects are registers decoded one
-    // cycle early from the ctq valid line (vs[DS-1] -> vs[DS]), so a cs bit sees one AND-OR level to its flop.  The far
-    // half-tile's own partial still enters dl_out in the cycle ctra latches it (the bottom's NT_K is unchanged); a
-    // partial that passes through this strip arrives one cycle later per half-tile it crosses (the lane is collision-
-    // checked by its sticky fault bit, and every arrival stays before the far tile's own).
+    // DL_PIN = 1 (S-ENGRAM+NORM 2210): s3 routed native capture FAILED on 49 lane pins (dl_in 33 up to 219.6 ps, cs 16
+    // up to 203.7): every dl_in bit reached its flop through the merge select decode (vs[DS] && farq, oct[0]) and the
+    // slot-valid bits through the collision OR as well, so the FF-hold pads sat in series with two or three logic
+    // levels.  The two slot selects are now registers decoded one cycle early from the ctq valid line (vs[DS-1] ->
+    // vs[DS]; farq / oct are pin-captured statics), so a dl_in or cs bit sees ONE AND-OR level to its dl_out flop.
+    // Function and cycles are identical (same word, same cycle).  A pure pin register on dl_in was measured and
+    // REJECTED: it delays every partial passing a strip by one cycle per half-tile, so two same-parity octets 4
+    // half-tiles apart meet within NV vectors (hc_gate NTREE NG256 exact FAIL, lane fault cyc 1896, 2d4856e45).
     generate if (DL_PIN) begin : g_dl_pin
-        reg [DLW-1:0] dq;
-        reg           m0, m1;
+        reg m0, m1;
         always @(posedge clk_l or negedge rst_n)
-            if (!rst_n) begin dq <= 0; m0 <= 1'b0; m1 <= 1'b0; end
+            if (!rst_n) begin m0 <= 1'b0; m1 <= 1'b0; end
             else begin
-                dq <= dl_in;
                 m0 <= vs[DS-1] && farq && !oct[0];
                 m1 <= vs[DS-1] && farq &&  oct[0];
             end
@@ -147,9 +145,9 @@ module ot_s81_hc_ctfx_nt2 #(
         always @(posedge clk_l or negedge rst_n)
             if (!rst_n) dl_out <= 0;
             else begin
-                dl_out[0 +: SW]  <= m0 ? mw : dq[0 +: SW];
-                dl_out[SW +: SW] <= m1 ? mw : dq[SW +: SW];
-                dl_out[DLW-1]    <= dq[DLW-1] | (m0 & dq[0]) | (m1 & dq[SW]);
+                dl_out[0 +: SW]  <= m0 ? mw : dl_in[0 +: SW];
+                dl_out[SW +: SW] <= m1 ? mw : dl_in[SW +: SW];
+                dl_out[DLW-1]    <= dl_in[DLW-1] | (m0 & dl_in[0]) | (m1 & dl_in[SW]);
             end
     end else begin : g_dl_comb
         always @(posedge clk_l or negedge rst_n)
