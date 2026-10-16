@@ -1,0 +1,163 @@
+{
+ "name": "s81engm_shcolb",
+ "kind": "tile",
+ "top": "ot_s81_engram_mixq_shcol_b",
+ "sources": [
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_fp32_f12.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_add6.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_norm.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "rtl/hdc/ot_hdc_fpu.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+  "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+  "rtl/hdc/v41/ot_hdc_fsqrt.sv",
+  "rtl/hdc/v41/ot_hdc_fdiv.sv",
+  "rtl/hdc/v41/ot_hdc_softplus.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+  "rtl/hdc/v41/ot_hdc_actquant.sv",
+  "rtl/hdc/v41x/ot_dsrom_aq12.sv",
+  "rtl/hdc/v41x/ot_dsrom_divc.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_vec_side.sv",
+  "rtl/dsrom_sys/engram/mix/ot_s81_engram_mix.sv",
+  "rtl/dsrom_sys/engram/mix/dsfd_engram_mix4_c.sv",
+  "rtl/dsrom_sys/engram/mix/dsfd_engram_mix4_banded.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst"
+ ],
+ "outline": {
+  "w": 164.16,
+  "h": 54.0,
+  "exact": true
+ },
+ "util": 0.5,
+ "layer_cap": "M5",
+ "recipe": 2,
+ "pins": {
+  "S": [
+   "rs_v",
+   "rs_d",
+   "wq_d"
+  ],
+  "N": [
+   "ov",
+   "iv",
+   "ph",
+   "h",
+   "kv",
+   "w",
+   "result"
+  ],
+  "W": [
+   "ck",
+   "rst"
+  ],
+  "E": []
+ },
+ "io_tcl": "physical/s81_die_pins/v21_engram_arithmetic/ot_s81_engram_mixq_shcol_b.tcl",
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "pin_v": "M3 M5",
+  "pin_h": "M4",
+  "pin_min_tracks": 1,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "why_floorplan": "banded MIX4 shell payload column (shcol + own-column issue valid iv/ph, +2 FF): same 164.16 x 54 outline as the closed shcol; faces swapped for the banded cluster column (VM side S toward the cluster transport channel, cluster side N toward add8/mul4 above); 4 per cluster x 4 clusters (replaces ot_s81_engram_mixq_shcol, no added master count)",
+ "structural_change": "S-ENGRAM+NORM MIX4-PARENT 10-16: the shell control iv/phase broadcast to 8 mul4 + 4 add8 (frozen R0 screen: -147 ps worst, 5+4+1+1 negative fan-out joins) is replaced by each payload column issuing its own column valid from the registered load decision it already makes (iv = ld_r|ld_a, ph = ld_a, same edge as h/kv/w): 0 cycles, exact. The load decision uses the captured return-valid pattern alone (REDUCE = 11111, ADD = 00111; the shell control faults on any other), so the fr/fa phase-flag inputs (and their 8 long control joins per cluster) are removed.",
+ "job": {
+  "owner": "Claude:s81-surx-engram-1015",
+  "branch": "codex/s81-elements-shell-1417",
+  "tag": "bankv1benchfix-1421",
+  "purpose": "S81 Engram MIX4 split-shell leaf ot_s81_engram_mixq_shcol (control + 4 payload columns)",
+  "benches": [
+   {
+    "name": "mix4_exact_L01",
+    "cmd": "python3 tools/s81_engram_mix/gate.py --mix4 --fp rtl --snap results/rtl/s81_engram_mix_1014/fixtures/engram_L01.pkl --out {RUN}/mix4_m0 --vm-banked",
+    "expect": "pass",
+    "threads": 16,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "PASS native Engram MIX4.*20480words.*writes640 reads4161.*cycles=810"
+   },
+   {
+    "name": "mix4_mut1_key",
+    "cmd": "python3 tools/s81_engram_mix/gate.py --mix4 --fp rtl --snap results/rtl/s81_engram_mix_1014/fixtures/engram_L01.pkl --mut 1 --out {RUN}/mix4_m1 --vm-banked",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "FAIL [0-9]+ words"
+   },
+   {
+    "name": "mix4_mut21_ovalign",
+    "cmd": "python3 tools/s81_engram_mix/gate.py --mix4 --fp rtl --snap results/rtl/s81_engram_mix_1014/fixtures/engram_L01.pkl --mut 21 --out {RUN}/mix4_m21 --vm-banked",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "FAIL [0-9]+ words"
+   },
+   {
+    "name": "mix4_mut22_boundary_valid",
+    "cmd": "python3 tools/s81_engram_mix/gate.py --mix4 --fp rtl --vm-banked --snap results/rtl/s81_engram_mix_1014/fixtures/engram_L01.pkl --mut 22 --out {RUN}/mix4_m22",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "endpoint fault cyc=78"
+   }
+  ],
+  "views_to": "physical/ref_tile/s81engm_shcol/views",
+  "record_to": "results/rtl/ref_tile/s81engm_shcol",
+  "extra_paths": [
+   "physical/s81_die_pins/v21_engram_arithmetic",
+   "rtl/dsrom_sys",
+   "rtl/hdc",
+   "rtl/lib",
+   "tools/s81_engram_mix",
+   "tools/s81_suhc",
+   "results/rtl/s81_engram_mix_1014/fixtures"
+  ],
+  "hold_merge": "Candidate requires coherent bank-striped producer/compiler/native128SRAM and actual parent clock/homes; no standalone view adoption."
+ },
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": false,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "reason": "new master ot_s81_engram_mixq_shcol_b (shcol + iv/ph outputs, VM face S) for the banded MIX4 cluster"
+ },
+ "defines": [
+  "DSFD_ENGRAM_STATIC_ISSUE"
+ ]
+}
