@@ -5,6 +5,7 @@
 #   synth_master.sh <src root> <out dir> <name> <top> <params k=v,...|-> <blackbox mods comma|-> [--prefer FILE]
 # File list: tools/hbm_die_v15/master_filelist.py (mapped memory macros read -lib from their _bb.v).
 # Yosys in the ORFS asap7lock image, RVT TT liberty; synth -flatten, dfflibmap, abc; writes
+#   DEFINES=A,B: extra -D for every source; EXTRA=f1,f2: extra source files (outside the indexed roots).
 #   HIER=1: no -flatten (per-module area, replicated leaves mapped once).
 #   <name>.stat (stat -liberty), <name>.netlist.v (write_verilog -noattr, top keeps its RTL port list), <name>.files.json
 set -u
@@ -13,12 +14,14 @@ PREF=""; [ "${1:-}" = "--prefer" ] && PREF="--prefer $SRC/$2"
 BBARG=""; [ "$BB" != "-" ] && BBARG="--bb $BB"
 mkdir -p $OUT
 HDIE_ALLOW_AMBIGUOUS=1 python3 $SRC/tools/hbm_die_v15/master_filelist.py $TOP --root $SRC --json $PREF $BBARG > $OUT/$NAME.files.json || { echo "$NAME FILELIST_FAIL"; exit 2; }
-python3 - "$OUT/$NAME.files.json" "$OUT/$NAME.ys" "$TOP" "$PRM" "$BB" "$NAME" "${COARSE:-0}" "${HIER:-0}" <<'PY'
+python3 - "$OUT/$NAME.files.json" "$OUT/$NAME.ys" "$TOP" "$PRM" "$BB" "$NAME" "${COARSE:-0}" "${HIER:-0}" "${DEFINES:-}" "${EXTRA:-}" <<'PY'
 import json,sys
-d=json.load(open(sys.argv[1])); ys=sys.argv[2]; top=sys.argv[3]; prm=sys.argv[4]; bb=sys.argv[5]; name=sys.argv[6]
+d=json.load(open(sys.argv[1])); dfs=''.join(f' -D{x}' for x in sys.argv[9].split(',') if x)
+for f in [x for x in sys.argv[10].split(',') if x]:   # EXTRA: files outside the indexed RTL roots (e.g. rtl/model_ready_*)
+    d['files'].insert(0, f) ys=sys.argv[2]; top=sys.argv[3]; prm=sys.argv[4]; bb=sys.argv[5]; name=sys.argv[6]
 L=[]
 for m in d['macros']: L.append(f"read_verilog -lib {m['file']}")
-for f in d['files']: L.append(f"read_verilog -sv -DSYNTHESIS {f}")
+for f in d['files']: L.append(f"read_verilog -sv -DSYNTHESIS{dfs} {f}")
 for b in ([] if bb=='-' else bb.split(',')):
     if b: L.append(f"blackbox {b}")
 if prm!='-':
