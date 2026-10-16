@@ -401,7 +401,7 @@ def d2ds_binding():
                            rec_rx=list(D2DS_REC_RX), lrc=['host_link_reset_req', 'host_recovery_clear'],
                            fwd_epoch=['fwd_epoch'], fwd_link_rst_n=['fwd_link_rst_n'], serdes_up=['serdes_up'],
                            status_epoch16=['status_epoch16'], host_drained_local=['host_drained_local'],
-                           host_boot_begin=['host_boot_begin']),
+                           host_boot_begin=['host_boot_begin'], lpf=['fault']),
                 sliced={},
                 classed={'por_n': 'by_design: package POR pad (off-chip signal)'})
 
@@ -1278,6 +1278,9 @@ def _d2ds_swap(m):
     # host_drained_local (exported host interface idle); host_boot_begin rides the root boot_go tree (hboot, below)
     add(('hsep', 'spine_local', 16, [('host', 'token_epoch'), ('d2d_kv', 'status_epoch16')]))
     add(('hhdl', 'spine_local', 1, [('host', 'host_drained_local'), ('d2d_kv', 'host_drained_local')]))
+    # v1.4.2 (HOST owner = KV die lead): the root's typed die-local physical fault is the static D2D end's sticky fault
+    # (root places it on bit die_id); the root's engine admission is the link's native_admit_ready inside the root RTL
+    add(('hlpf', 'spine_local', 1, [('d2d_kv', 'lpf'), ('host', 'link_physical_fault')]))
     by = {i.name: i for i in m['insts']}
     ck_ = by['ckb_kv']
     for j, (n_, p_) in enumerate((('fwb_ep', 'fwd_epoch'), ('fwb_rs', 'fwd_link_rst_n'))):
