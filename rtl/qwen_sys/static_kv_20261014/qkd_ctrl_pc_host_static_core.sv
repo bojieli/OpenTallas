@@ -266,7 +266,12 @@ module qkd_ctrl_pc_host_static_core #(
     // u_ecc (ot_qfd_kv_landing_ecc) is the hardened child qkd_ctrl_pc_ecc_child. Its PIPE stage 0 captures i_v / i_code
     // (port flops) and i_sec / i_row on the same edge; the head metadata is registered here one edge ahead: the head
     // at edge t is tq[tr + kv_v] at t-1 (an entry is written >= RL + PHY edges before its beat returns).
-    wire         l_v = e_l_v, ecc_fault = e_fault;
+    // KVCTRL core_s4 (2026-10-16): e_l_v is captured in a pin flop (was a 13-level input cone into drain_kv). l_v only
+    // feeds the drain debt / idle observations: drain_kv now counts the landing one hclk edge later (debt held one edge
+    // longer, never early); the raw pin bit stays in the activity veto so idle cannot assert in between. Traffic 0 edges.
+    reg          l_v_q;
+    always @(posedge hclk or negedge h_rn) if (!h_rn) l_v_q <= 1'b0; else l_v_q <= e_l_v;
+    wire         l_v = l_v_q, ecc_fault = e_fault;
     wire [TQA:0] tr_nx   = tr + {{TQA{1'b0}}, kv_v};
     wire [33:0]  h_nx    = tq[tr_nx[TQA-1:0]];
     wire [9:0]   h_nx_j  = (MUT == 3) ? {h_nx[9:2], h_nx[0], h_nx[1]} : h_nx[9:0];
@@ -404,7 +409,7 @@ module qkd_ctrl_pc_host_static_core #(
     // pipelines. Static reads are covered above through their actual e_v.
     reg [15:0] drain_kv;
     wire hbm_drain_activity=obs_commit_valid||rd_kv||tc_v||cmd_v||static_v_q||c_v||s_cr||wv_q||cv_q||hand_q||
-      wcon_q||row_v||col_v||po[0]||po[28]||rv_q||rawslot_q||kv_v||em_v||l_v||native_commit_valid;
+      wcon_q||row_v||col_v||po[0]||po[28]||rv_q||rawslot_q||kv_v||em_v||l_v||e_l_v||native_commit_valid;
     reg hbm_debt_zero_q;reg [1:0] hbm_quiet_q;
     always @(posedge hclk or negedge h_rn)
       if(!h_rn)begin hbm_debt_zero_q<=0;hbm_quiet_q<=0;end
@@ -427,7 +432,7 @@ module qkd_ctrl_pc_host_static_core #(
         else idle_hbm<=hgo&&ctl_phase_idle&&t_empty&&raw_out==0&&drain_kv==0&&
           !tc_v&&!cmd_v&&!static_v_q&&!c_v&&!s_cr&&!wv_q&&!cv_q&&!hand_q&&
           hold==0&&!wcon_q&&dv==0&&av_s==0&&!row_v&&!col_v&&!po[0]&&!po[28]&&
-          !rv_q&&!rawslot_q&&!kv_v&&!em_v&&!l_v&&!native_commit_valid&&!obs_commit_valid&&
+          !rv_q&&!rawslot_q&&!kv_v&&!em_v&&!l_v&&!e_l_v&&!native_commit_valid&&!obs_commit_valid&&
           !drain_fault_hbm&&!fo&&!f_ecdc;
       end
 endmodule

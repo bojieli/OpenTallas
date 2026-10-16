@@ -1,0 +1,176 @@
+{
+ "name": "qkd_ctrl_pc_core_s4",
+ "top": "qkd_ctrl_pc_host_static_core",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_emb_cdc.sv",
+  "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_write_observer.sv",
+  "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv",
+  "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv",
+  "rtl/qwen_sys/kv_die_20261009/ot_qkvd_kcmd_tap.sv",
+  "rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_cdc.sv",
+  "rtl/qwen_sys/host_20261013/qkd_host_static_pc.sv",
+  "rtl/lib/ot_async_fifo.sv",
+  "rtl/lib/ot_reset_sync.sv",
+  "rtl/qwen_sys/static_kv_20261014/qkd_ctrl_pc_host_static_core.sv"
+ ],
+ "params": {
+  "PROFILE": 0,
+  "ELASTIC": 1,
+  "RAW_WD": 256,
+  "TQD": 64,
+  "DRAIN_PIPE": 1,
+  "STRAP_CDC": 1
+ },
+ "clock_port": "ck",
+ "reset_ports": [],
+ "outline": {
+  "w": 97.2,
+  "h": 216.0,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "macros": [],
+ "pins": {
+  "W": [
+   "ci_c",
+   "co_c",
+   "es",
+   "er",
+   "hrst",
+   "rsi",
+   "pc",
+   "static_cmd_owner",
+   "static_cmd",
+   "reserved_rd",
+   "reserved_static_col",
+   "reserved_write_col",
+   "static_epoch",
+   "expected_raw_valid",
+   "cfg_stack",
+   "es_context",
+   "es_expected_valid",
+   "es_expected_identity",
+   "es_expected_address",
+   "es_expected_pc",
+   "es_expected_stack",
+   "native_commit_valid",
+   "native_commit_identity",
+   "native_commit_address",
+   "corrected_epoch",
+   "completion_v",
+   "completion_we",
+   "completion_fault",
+   "idle_core",
+   "idle_hbm",
+   "drain_fault_core",
+   "drain_fault_hbm"
+  ],
+  "E": [
+   "po",
+   "pi_v",
+   "p_col_v",
+   "p_col_we",
+   "p_col_sr",
+   "p_w_v",
+   "p_w_d",
+   "p_wd",
+   "p_kv_v",
+   "p_em_v",
+   "p_em_d",
+   "p_fault",
+   "e_sec",
+   "e_row",
+   "e_l_v",
+   "e_fault"
+  ],
+  "N": [
+   "ki",
+   "fo",
+   "pll_hbm",
+   "ck"
+  ],
+  "S": [
+   "ko",
+   "fi"
+  ]
+ },
+ "sdc_extra": [
+  "physical/qkd_ctrl_strip/qkd_ctrl_pc_host_static_core_hclk.sdc"
+ ],
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  },
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "recipe": 3,
+ "slot_change_request": "KVCTRL split: children of the wires-parent qkd_ctrl_pc_host_static inside the existing 247.512x378 controller slot (core W 97.2x216, ECC 38.88^2 + port 64.8x71.28 E column).",
+ "job": {
+  "owner": "Claude:Q-KVSYS-DIE KVCTRL",
+  "branch": "claude/qkvctrl-split-1016",
+  "tag": "s4",
+  "purpose": "KVCTRL split 2026-10-16 (Codex-prescribed, no third same-shape retry, no waiver): e1 one HBM root 17,150 sinks at measured insertion 426.8 ps (>300 rule) and e2 plateaued at native_commit_identity -58.453 ps. qkd_ctrl_pc_host_static becomes a wires-parent of three hardened roots: core (scheduler/tags/CDC/observer/drain, ~13.3k hclk sinks est), port (actual ot_qfd_emb_pcport KVW2/RQD64 + its data pin flops, ~2.9k), ECC (actual ot_qfd_kv_landing_ecc, ~0.9k). Every seam output flop-driven; priced edges: native commit +1 hclk (new pin register; SDC moves native_commit_* to the hclk domain), static write data +1 hclk into the port (hidden, column >= 4 edges later), KV read/write 0. s4 (lead 2026-10-16, parallel to core_s1's hold ECO): STRUCTURAL fixes of the two measured core limiters. (1) e_l_v is captured in a pin flop l_v_q (core_s1 routed TT in->reg -30.92; gate textbook 13-level e_l_v -> drain_kv cone): drain_kv counts the ECC landing one hclk edge later (debt held longer, never early; raw e_l_v kept in the activity veto), traffic 0 edges, drain observation <= +1 hclk (already conservative, DRAIN_PIPE). (2) ot_qkd_static_kv_timing write-queue next head: per-entry bank one-hot stored at push + registered wq_rp1, both head candidates read in parallel and the late wr_ok selects last (was wr_ok -> wq_rp+1 -> 4:1 read -> 5:32 decode, 18 levels, ~772 ps): cycle-identical, 0 edges. cycles_added 0 (traffic/data); drain observation +1 hclk.",
+  "extra_paths": [
+   "rtl/lib",
+   "rtl/qwen_sys/emb_hbm_20261008",
+   "rtl/qwen_sys/host_20261013",
+   "rtl/qwen_sys/kv_die_20261009",
+   "rtl/qwen_sys/q5_20261009",
+   "rtl/qwen_sys/static_kv_20261014",
+   "rtl/test/qwen_static_kv",
+   "tools/qwen_static_kv",
+   "physical/qkd_ctrl_strip"
+  ],
+  "benches": [
+   {
+    "name": "actual_controller_conservative_drain",
+    "cmd": "python3 tools/qwen_static_kv/check_controller_drain.py {RUN}/bench/drain && cat {RUN}/bench/drain/production_j0.log",
+    "expect": "pass",
+    "pass_regex": "DRAIN_PASS boundary checks[1-9]",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "missing_actual_host_read_debt",
+    "cmd": "{RUN}/bench/drain/obj_missing_host_read_debt/Vtb_kv_hbm_elastic_boundary +jit=16 +seed=2",
+    "expect": "fail",
+    "fail_regex": "DRAIN_EARLY_CORE",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "peak_ram_gb": 16
+ },
+ "structural_change": "KVCTRL split 2026-10-16 (Codex-prescribed, no third same-shape retry, no waiver): e1 one HBM root 17,150 sinks at measured insertion 426.8 ps (>300 rule) and e2 plateaued at native_commit_identity -58.453 ps. qkd_ctrl_pc_host_static becomes a wires-parent of three hardened roots: core (scheduler/tags/CDC/observer/drain, ~13.3k hclk sinks est), port (actual ot_qfd_emb_pcport KVW2/RQD64 + its data pin flops, ~2.9k), ECC (actual ot_qfd_kv_landing_ecc, ~0.9k). Every seam output flop-driven; priced edges: native commit +1 hclk (new pin register; SDC moves native_commit_* to the hclk domain), static write data +1 hclk into the port (hidden, column >= 4 edges later), KV read/write 0. s3: source rebind after merging main 183dfcb93 (STATIC_REFRESH parameter threaded parent->u_core->u_ctl->timing; default STATIC_REFRESH=0/CONTEXT_DESC=0 elaboration unchanged: refresh_rr unused, context_active constant 0). Outline/pins identical to s1. s4 (lead 2026-10-16, parallel to core_s1's hold ECO): STRUCTURAL fixes of the two measured core limiters. (1) e_l_v is captured in a pin flop l_v_q (core_s1 routed TT in->reg -30.92; gate textbook 13-level e_l_v -> drain_kv cone): drain_kv counts the ECC landing one hclk edge later (debt held longer, never early; raw e_l_v kept in the activity veto), traffic 0 edges, drain observation <= +1 hclk (already conservative, DRAIN_PIPE). (2) ot_qkd_static_kv_timing write-queue next head: per-entry bank one-hot stored at push + registered wq_rp1, both head candidates read in parallel and the late wr_ok selects last (was wr_ok -> wq_rp+1 -> 4:1 read -> 5:32 decode, 18 levels, ~772 ps): cycle-identical, 0 edges. cycles_added 0 (traffic/data); drain observation +1 hclk.",
+ "pin_regs": {
+  "enable": false,
+  "reason": "RTL registers every seam/pin explicitly (children: input pin flops or the wrapped module's first stage; outputs flop-driven). No extra wrapper edges."
+ },
+ "std_area_um2": 10400,
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}
