@@ -513,7 +513,12 @@ module ot_qwen_rom_tile_logic_w12 #(
             end
             if (RQR != 0) begin : g_rqr
                 (* keep *) reg [2*2*PWB-1:0] gs_q, gn_q;
-                always @(posedge clk) begin gs_q <= rw[CODE_BANKS]; gn_q <= rwn[CODE_BANKS]; end
+                // Q-TILE-REPACK: with CHILD_CLOCKS at RPH 1 the group registers join a bank-row root of their own
+                // group (south: row SB/2, north: row (SB+CODE_BANKS)/2), keeping the tile root ck under 15k sinks
+                wire ck_gs = (CHILD_CLOCKS != 0 && RPH == 1) ? ck_rpair[SB/2] : clk;
+                wire ck_gn = (CHILD_CLOCKS != 0 && RPH == 1) ? ck_rpair[(SB+CODE_BANKS)/2] : clk;
+                always @(posedge ck_gs) gs_q <= rw[CODE_BANKS];
+                always @(posedge ck_gn) gn_q <= rwn[CODE_BANKS];
                 assign wrom_q = gs_q | gn_q;
             end else begin : g_rq0
                 assign wrom_q = rw[CODE_BANKS];
