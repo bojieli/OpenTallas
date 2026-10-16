@@ -1,0 +1,13 @@
+{
+  "scope": "Exact completed ECO pass1 geometry; overall c10 still ECO pass2 and NOT CLOSED",
+  "source_commit": "5fce4c7b5607c476c206908187ebf6371fbb73ba",
+  "odb": "/srv/opentallas-scratch2/claude/closure-loop/s81bf_front_static_clk-c10-5fce4c7b5/cl/eco/pass1/orfs/results/asap7/opentallas_dsfd_bf_front_static_asap7_ref_s81bf_front_static_clk_c10_5fce4c7b5/base/6_final.odb",
+  "odb_sha256": "73c4f01e1c0558536024a6d1979f66af39b2e0e2596467427c4eb1cec4fd4075",
+  "placement_dump_sha256": "b3ac9142a5f89e47b3875edaa492dc8ade4fdc53b6bd5503c60311caa1938bae",
+  "personally_viewed_image": "/home/ubuntu/wt/s81-bf-c10/results/rtl/s81_bf_clock_1015/c10/recovery_0253/front_pass1_geometry/actual_placement.png",
+  "finding": "Hold cells increased3246->16342, concentrated across N/S perimeter capture banks. N/S density approaches0.9-1.0 while west/east central empty corridors remain. Actual IO root spans perimeter; split source clocks by N/S/W/E and real reset relays proposed. Native capture329.5/117 remains FAIL.",
+  "tt_setup_ps": -0.48,
+  "ff_hold_ps": 11.02,
+  "drc": 0,
+  "physical_qualification": false
+}
