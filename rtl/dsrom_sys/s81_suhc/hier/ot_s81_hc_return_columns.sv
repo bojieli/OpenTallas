@@ -16,7 +16,11 @@ module ot_s81_hc_ctra_column #(
     // capture / relay + one consumer register: own lanes yb_o <= yb_r, peers yb_pq <= yb_peer at their pin, COLUMN 3
     // cs_o <= cs_q, others cs_pq <= cs_rel); ctrs Y_LAG / CS_LAG 2.  HQ_LAG: the banks' hrq come through pin registers
     // (caller), the merge waits HQ_LAG more cycles (ctrs).
-    parameter integer HQ_LAG = 0
+    parameter integer HQ_LAG = 0,
+    // retcol a4 native (gate CTS capture audit): FLAG_SPLIT 1 = the row flag register split per face (N inputs ->
+    // one flop at N, S inputs -> one at S; the flag output is their OR = same edge, 0 cycles); HOV_REG 1 = the
+    // engine's hov operand is the pin register hov_q (+1 cycle on the lq row's overflow flag sampling)
+    parameter integer FLAG_SPLIT = 0, HOV_REG = 0
 ) (
     input  wire                   clk,
     input  wire                   rst_in,
@@ -49,7 +53,7 @@ module ot_s81_hc_ctra_column #(
     input  wire [4*32-1:0]        cs,
     input  wire [1:0]             nflt_n, nflt_s,
     input  wire                   hov_d,
-    output reg                    flag_fault, flag_hnz,
+    output wire                   flag_fault, flag_hnz,
     output wire [P_D-1:0]          header_delay,
     input  wire                   hnz_n, hnz_s, pflt_n, pflt_s,  // ctpl half 0 (N) / half 1 (S), group g
     output wire [255:0]           yb_lag            // YB_STAGE: the engine's y beat view {yb_s, yb_n} (for the column's ctrb)
@@ -96,7 +100,7 @@ module ot_s81_hc_ctra_column #(
         assign e_cs=cs_use;   assign cs_fwd=(COLUMN==3) ? cs_q : '0;
         // hov_d only reaches rvm's overflow flag, which COLUMN 0 owns (its slice carries the row's valid); the
         // relayed copy keeps the other columns' (unused) flag inputs driven without a long join
-        assign e_hov=hov_d; assign hov_fwd=(COLUMN==0) ? hov_q : 1'b0;
+        assign e_hov=HOV_REG ? hov_q : hov_d; assign hov_fwd=(COLUMN==0) ? hov_q : 1'b0;
         assign e_nflt_n=nflt_n; assign e_nflt_s=nflt_s; assign e_hnz_n=hnz_n; assign e_hnz_s=hnz_s;
         assign e_pflt_n=pflt_n; assign e_pflt_s=pflt_s;
     end else begin : g_direct
@@ -153,12 +157,25 @@ module ot_s81_hc_ctra_column #(
     end endgenerate
     reg rr;
     always @(posedge clk) rr <= e_rst;
-    always @(posedge clk or negedge rr)
-        if(!rr) begin flag_fault<=0;flag_hnz<=0;end
-        else begin
-            flag_fault <= (|e_nflt_n) | (|e_nflt_s) | e_pflt_n | e_pflt_s;
-            flag_hnz <= e_hnz_n | e_hnz_s;
-        end
+    generate if(FLAG_SPLIT) begin : g_flag_split
+        reg ff_n, ff_s, fh_n, fh_s;
+        always @(posedge clk or negedge rr)
+            if(!rr) begin ff_n<=0;ff_s<=0;fh_n<=0;fh_s<=0;end
+            else begin
+                ff_n <= (|e_nflt_n) | e_pflt_n; ff_s <= (|e_nflt_s) | e_pflt_s;
+                fh_n <= e_hnz_n; fh_s <= e_hnz_s;
+            end
+        assign flag_fault = ff_n | ff_s; assign flag_hnz = fh_n | fh_s;
+    end else begin : g_flag_one
+        reg ff, fh;
+        always @(posedge clk or negedge rr)
+            if(!rr) begin ff<=0;fh<=0;end
+            else begin
+                ff <= (|e_nflt_n) | (|e_nflt_s) | e_pflt_n | e_pflt_s;
+                fh <= e_hnz_n | e_hnz_s;
+            end
+        assign flag_fault = ff; assign flag_hnz = fh;
+    end endgenerate
     generate if(PAYLOAD_STAGE) begin : g_hdr_reg
         reg [P_D-1:0] h; always @(posedge clk) h <= rd_full[P_D-1:0]; assign header_delay=h;
     end else begin : g_hdr_direct

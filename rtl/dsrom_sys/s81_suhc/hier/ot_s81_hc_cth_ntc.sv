@@ -454,6 +454,8 @@ module ot_s81_hc_ret_column #(
     //   HQ_LAG 1 : hrq_col -> hrq_q; the merge (and the rd relay) one cycle later = +1 cycle per return row (h return).
     //   YB_STAGE 2: own y lanes yb_r -> yb_o, peer lanes yb_peer -> yb_pq, cs (COLUMN 3 cs_q / others cs_in) -> cs_o:
     //              Y_LAG / CS_LAG 2 = y returns and the cs capture +1 more.
+    //   flags    : the row flag register split per face (FLAG_SPLIT, 0 cycles); hov: pin register hov_q feeds the
+    //              lq row's overflow flag (HOV_REG, +1 cycle on that flag's sampling).
     //   FV_PIN 1 : fv is the row's EARLY fv (ctfxs fv, one register before ctfl's fv_local) captured at this pin with
     //              ctfl's reset relay (rst_in -> rr, async clear) = bit-identical to fv_local: 0 cycles.
     parameter integer HQ_LAG = 1, YB_STAGE = 2, FV_PIN = 1
@@ -547,7 +549,7 @@ module ot_s81_hc_ret_column #(
             assign yb_rel[16 * q +: 16] = yb_peer[64 * P + 16 * K +: 16];
         end
     end endgenerate
-    ot_s81_hc_ctra_column #(.NG(NG),.D(D),.NCOL(NCOL),.GS(GS),.S_RD(S_RD),.S_RT(S_RT),.ML(ML),.AL(AL),.CHAIN_STEP(CHAIN_STEP),.READ_STAGE(READ_STAGE),.COLUMN(COLUMN),.YB_STAGE(YB_STAGE),.PAYLOAD_STAGE(0),.FLAG_MERGE(0),.HQ_LAG(HQ_LAG)) u_a (
+    ot_s81_hc_ctra_column #(.NG(NG),.D(D),.NCOL(NCOL),.GS(GS),.S_RD(S_RD),.S_RT(S_RT),.ML(ML),.AL(AL),.CHAIN_STEP(CHAIN_STEP),.READ_STAGE(READ_STAGE),.COLUMN(COLUMN),.YB_STAGE(YB_STAGE),.PAYLOAD_STAGE(0),.FLAG_MERGE(0),.HQ_LAG(HQ_LAG),.FLAG_SPLIT(1),.HOV_REG(1)) u_a (
         .clk(clk), .rst_in(rst_in), .tid(tid), .last(last), .fv(fv_use), .fdx(fdx), .rv_in(rv_in), .rdh_in(hdr_in), .rdp_in(a_rdp),
         .rvm(rvm), .peer_fault(3'b0), .peer_hnz(3'b0), .yb_loc(yb_loc), .yb_fwd(yb_fwd), .yb_peer(yb_peer),
         .cs_fwd(cs_f), .cs_rel(cs_in), .hov_fwd(hov_fwd), .hov_rel(hov_in),

@@ -28,6 +28,9 @@ module dsfd_sp_hc #(
     // RETCOL (HC-COLUMN 10-16, NTREE only): half-octets ot_s81_hc_cth_ntc = four-column return + per-column ctrn_col
     // slices, the chain carried as per-column bundles inside the slab (ports unchanged); y-beat / cs relays: y returns +1.
     parameter integer NTREE = 0, NT_K = 67, RETCOL = 0,
+    // RETCOL_HQ (retcol a4 10-16): the ret_column hrq pin register (HQ_LAG 1) adds one return register per row; the
+    // centre chain's return padding follows it (RET_EXTRA per short row, as CNL_PIN's read stage does)
+    parameter integer RETCOL_HQ = 1,
     parameter integer CCF_BP = 0                         // HC-COMB 2026-10-16: ot_s81_hc_comb CCF successor (opt-in, 0 = unchanged)
 ) (
     output wire [TFW-1:0] t_tf0, t_tf1, t_tf2,
@@ -144,7 +147,7 @@ module dsfd_sp_hc #(
     wire [NE2*32-1:0] e_ex;
     ot_s81_hc_comb #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .S_WR(S_WR), .S_RT(S_RT), .ML(ML), .AL(AL),
                      .MUT(MUT), .AMUT(AMUT), .HALF(HALF), .RLY(RLY), .RF(CSPLIT ? 5 : 1),
-                     .DW(CSPLIT ? 6 : 5), .RET_EXTRA(CNL_PIN), .PIPE(PIPE), .PIPE_PD(PIPE_PD), .CCF_BP(CCF_BP)) u_cb (
+                     .DW(CSPLIT ? 6 : 5), .RET_EXTRA(CNL_PIN + ((NTREE && RETCOL) ? RETCOL_HQ : 0)), .PIPE(PIPE), .PIPE_PD(PIPE_PD), .CCF_BP(CCF_BP)) u_cb (
         .cck(cck), .crs(crs), .sk(sk), .srs(srs), .n_cmd_v(n_cmd_v), .n_cmd_d(n_cmd_d), .n_done_v(n_done_v),
         .n_done_tag(n_done_tag), .n_inp(n_inp), .n_rq_v(n_rq_v), .n_rq_row(n_rq_row), .n_rs_v(n_rs_v), .n_rs_d(n_rs_d),
         .n_flt(n_flt), .n_online(n_online), .n_fcode(n_fcode), .n_yacc(n_yacc), .n_y(n_y), .n_ypop(n_ypop),
