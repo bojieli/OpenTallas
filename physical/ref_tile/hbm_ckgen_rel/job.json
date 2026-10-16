@@ -1,14 +1,14 @@
 {
- "name": "hbm_ckgen_rel-r1-4d4e2f518",
+ "name": "hbm_ckgen_rel-r2-COMMIT",
  "block": "hfd_ckgen_rel",
  "ref_tile": true,
  "owner": "Claude:H-HARDEN",
- "purpose": "HBM die clock root hb_ckgen reset-release leaf hfd_ckgen_rel (x4, one per PLL domain): async assert on por_n AND PLL lock, two-flop synchronous release in the domain clock. hb_ckgen = PLL modelled hard macro ot_hbm_pll_bb + 4 of these leaves, wires only.",
+ "purpose": "HBM die clock root hb_ckgen reset-release leaf hfd_ckgen_rel (x4, one per PLL domain): async assert on por_n AND PLL lock, two-flop synchronous release in the domain clock. hb_ckgen = PLL modelled hard macro ot_hbm_pll_bb + 4 of these leaves, wires only. r2: outline 15.12 -> 21.6 um (r1 routed flow_rc 0 but child_lint FAIL: (b) M5 PG stripes span 36% < 50% of a 15.12 um tile at the 5.4 um PG pitch; (f) N-face M5 pins under one edge-band OBS).",
  "threads": 2,
  "peak_ram_gb": 4,
  "source": {
   "branch": "claude/hbm-harden-1705",
-  "commit": "4d4e2f5189e6a80ceb46d235cb72396a6aab7d70",
+  "commit": "COMMIT",
   "extra_paths": [
    "rtl/hbm_accel/control",
    "tools/hbm_v15_harden"
@@ -97,7 +97,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hbm_ckgen_rel/hbm_ckgen_rel-r1-4d4e2f518"
+   "to": "results/rtl/ref_tile/hbm_ckgen_rel/hbm_ckgen_rel-r2-COMMIT"
   }
  ],
  "cycles_added": 0,
