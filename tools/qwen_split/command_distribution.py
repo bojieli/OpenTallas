@@ -10,7 +10,8 @@ ROOT=Path(__file__).resolve().parents[2]
 MASTER='qfd_static_command_fork42'
 SOURCE='rtl/qwen_split/qfd_static_command_fork42.sv'
 FIELDS=(('train_start',1),('train_count',4),('capture_stride',32),('payload_write',1),('slot_count',4))
-WH=(43.2,43.2)
+WH=(17.28,15.12)
+SHAPES={'qfd_static_command_fork42':WH,'qfd_static_selector_fork26':(15.12,12.96)}
 
 def joins(fielddefs=FIELDS):
  out={};offset=0
@@ -38,7 +39,7 @@ def apply(model,sinks,issuer='res_train_issue',fielddefs=FIELDS,master=MASTER,so
  if len(clock)!=1 or len(reset)!=1:raise ValueError('need exact issuer clock and reset roots')
  depth=math.ceil(math.log2(len(sinks)));nodes=[];edges=[];obs=list(model['insts']);groups={}
  def free_home(cx,cy):
-  w,h=WH
+  w,h=SHAPES.get(master,WH)
   for ring in range(200):
    for dy in range(-ring,ring+1):
     for dx in ({-ring,ring}if abs(dy)<ring else range(-ring,ring+1)):
@@ -50,7 +51,7 @@ def apply(model,sinks,issuer='res_train_issue',fielddefs=FIELDS,master=MASTER,so
   raise ValueError('no free registered command fork home')
  def build(dest,level,parent=None,branch=None):
   node=copy.copy(prototype);node.name=f'{prefix}_fork_{len(nodes)}';node.master=master
-  node.w,node.h=WH;node.orient='R0';node.kind='command_fork'
+  node.w,node.h=SHAPES.get(master,WH);node.orient='R0';node.kind='command_fork'
   if parent is None:cx,cy=source.x+source.w+WH[0]/2+21.6,source.y+source.h/2
   else:
    dcx=sum(by[n].x+by[n].w/2 for n in dest)/len(dest)
@@ -102,14 +103,16 @@ def install_master(M,model,Master,pin_rects):
   pp=rtl_ports(ROOT/rec['source'],mn)
   expected=dict(ck=(1,'input'),rst_n=(1,'input'),a=(width,'input'),b0=(width,'output'),b1=(width,'output'))
   if pp!=expected:raise ValueError(f'{mn} fork source ABI mismatch')
-  q=Master(mn,*WH,5,f'NEW source-bound registered static fork,{2*width+1} FF, no physical inheritance')
-  z0=21.6-(width-1)*.096/2
+  ww,hh=SHAPES.get(mn,WH)
+  q=Master(mn,ww,hh,5,f'NEW source-bound registered static fork,{2*width+1} FF, no physical inheritance')
+  side=[snap(2.16+k*(hh-4.32)/(width-1))for k in range(width)]
+  north=[snap(3.42+k*(ww-5.58)/(width-1))for k in range(width)]
   q.ports={
-   'a':('pins',width,'W','M4',[snap(z0+k*.096)for k in range(width)],1),
-   'b0':('pins',width,'E','M4',[snap(z0+k*.096)for k in range(width)],1),
-   'b1':('pins',width,'N','M5',[snap(z0+k*.096)for k in range(width)],1),
-   'ck':('pins',1,'N','M5',[snap(10.8)],1),
-   'rst_n':('pins',1,'N','M5',[snap(12.96)],1)}
+   'a':('pins',width,'W','M4',side,1),
+   'b0':('pins',width,'E','M4',side,1),
+   'b1':('pins',width,'N','M5',north,1),
+   'ck':('pins',1,'N','M5',[snap(1.08)],1),
+   'rst_n':('pins',1,'N','M5',[snap(2.16)],1)}
   q.order=list(q.ports)
   rects=pin_rects(q,1,{p:sp[1]for p,sp in q.ports.items()})
   partition_master(q,joins(fd),rects);M[mn]=q
