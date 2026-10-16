@@ -40,6 +40,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from die_case import synth_lef, entry_cap, ports_of_lib, rect_of  # noqa: E402
 from view_case import lef_pins, lef_xy  # noqa: E402
+import clock_sites
 import die_clock_tree as dct  # noqa: E402
 
 CONTRACT = ROOT / 'results/arch/hbm_die_v16/contract.json'
@@ -599,6 +600,7 @@ def main():
         trees[dom] = dict(buffers=bufs, nets=tnets, model=t['model'], port=port)
         print('clock', dom, 'sinks', len(sinks), 'buffers', len(bufs), flush=True)
 
+    clock_sites.allocate(trees, W, H, obs)
     render(out, manifest, P, W, H, trees)
     # ---------------- die.v ----------------
     netname = {}
