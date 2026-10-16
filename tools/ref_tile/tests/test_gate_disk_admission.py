@@ -54,7 +54,7 @@ class DiskBudget(unittest.TestCase):
 
 
 class RemoteAdmission(unittest.TestCase):
-    def exercise(self, host='auto', disk=None, reject=False, held=False):
+    def exercise(self, host='auto', disk=None, reject=False, held=False, interrupted=False, missing_done=False):
         with tempfile.TemporaryDirectory() as td, contextlib.ExitStack() as stack:
             root = Path(td)
             kd = root / 'physical/kit'
@@ -80,6 +80,10 @@ class RemoteAdmission(unittest.TestCase):
                         return subprocess.CompletedProcess(cmd, 75, '', 'ot-run: load hold')
                     return subprocess.CompletedProcess(cmd, 1 if reject else 0,
                                                        '' if reject else 'ot-test\n', 'disk too small' if reject else '')
+                if cmd[0] == 'ot-run':
+                    return subprocess.CompletedProcess(cmd, 255 if interrupted else 0,
+                        b'GATE_FLOW_RC=0\n' if interrupted or missing_done else b'GATE_DONE\n',
+                        b'ot-run: NOT COMPLETED: ssh status 255' if interrupted else b'')
                 return subprocess.CompletedProcess(cmd, 0, b'', b'')
             stack.enter_context(patch.object(PG.subprocess, 'run', side_effect=run))
             gate = PG.Gate()
@@ -88,6 +92,11 @@ class RemoteAdmission(unittest.TestCase):
             if reject:
                 self.assertEqual(gate.verdict, 'FAIL')
                 self.assertEqual(len(calls), 1)  # no upload, no started job
+                analyse.assert_not_called()
+            elif interrupted or missing_done:
+                self.assertEqual(gate.verdict, 'FAIL')
+                self.assertEqual(gate.clock['status'], 'REMOTE_INCOMPLETE')
+                self.assertTrue(any(i['check'] == 'remote_incomplete' for i in gate.items))
                 analyse.assert_not_called()
             else:
                 self.assertEqual(gate.source_binding['disk_admission']['reserve_gb'], 30 if disk is None else 7)
@@ -120,6 +129,12 @@ class RemoteAdmission(unittest.TestCase):
         calls = self.exercise(held=True)
         self.assertEqual(calls[0], calls[1])
         self.assertEqual(calls[2][0], 'ssh')
+
+    def test_started_job_with_ssh_disconnect_never_becomes_clock_evidence(self):
+        self.exercise(interrupted=True)
+
+    def test_success_exit_without_terminal_marker_is_also_incomplete(self):
+        self.exercise(missing_done=True)
 
     def test_no_disk_qualifying_host_does_not_ship_or_run(self):
         self.exercise(reject=True)
