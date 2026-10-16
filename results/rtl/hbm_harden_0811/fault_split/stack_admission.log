@@ -1,0 +1,15 @@
+ot-run: ot-epyc4       admits   279 GB (avail 506, growth 172, headroom 48, waiters 0/0 GB) load 69/128 running 36 disk 901 GB 
+ot-run: ot-pve1        admits   150 GB (avail 198, growth 16, headroom 32, waiters 0/0 GB) load 33/28 running 6 disk 1325 GB 
+ot-run: ot-agidock128  admits    28 GB (avail 72, growth 38, headroom 24, waiters 0/0 GB) load 31/64 running 9 disk 269 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-2321855-1792166209 after 0 s
+ROW stack_mutant=0 rc=1
+FATAL: rtl/hbm_accel/loader/service_native/tb_hbm_stack_fault_split.sv:33: STACK_FAULT_SPLIT mixed flags
+       Time: 33984000  Scope: tb_hbm_stack_fault_split
+ROW stack_mutant=1 rc=1
+FATAL: rtl/hbm_accel/loader/service_native/tb_hbm_stack_fault_split.sv:18: STACK_FAULT_SPLIT mismatch case5 status04/00
+       Time: 972100  Scope: tb_hbm_stack_fault_split
+ROW stack_mutant=2 rc=1
+FATAL: rtl/hbm_accel/loader/service_native/tb_hbm_stack_fault_split.sv:18: STACK_FAULT_SPLIT mismatch case0 status00/0X
+       Time: 42100  Scope: tb_hbm_stack_fault_split
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-2321855-1792166209): exit 1

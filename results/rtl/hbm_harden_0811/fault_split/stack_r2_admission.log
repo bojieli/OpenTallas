@@ -1,0 +1,15 @@
+ot-run: ot-epyc4       admits   271 GB (avail 498, growth 156, headroom 48, waiters 0/0 GB) load 64/128 running 34 disk 901 GB 
+ot-run: ot-pve1        admits   151 GB (avail 199, growth 12, headroom 32, waiters 0/0 GB) load 32/28 running 5 disk 1325 GB 
+ot-run: ot-agidock128  admits    26 GB (avail 71, growth 39, headroom 24, waiters 0/0 GB) load 33/64 running 9 disk 269 GB 
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-4134460-1792166260 after 0 s
+ROW stack_mutant=0 rc=0
+STACK_FAULT_SPLIT PASS cases=193 checks=4827 owner_pins=192 added_edges=0
+rtl/hbm_accel/loader/service_native/tb_hbm_stack_fault_split.sv:34: $finish called at 33984000 (1ps)
+ROW stack_mutant=1 rc=1
+FATAL: rtl/hbm_accel/loader/service_native/tb_hbm_stack_fault_split.sv:18: STACK_FAULT_SPLIT mismatch case5 status04/00
+       Time: 972100  Scope: tb_hbm_stack_fault_split
+ROW stack_mutant=2 rc=1
+FATAL: rtl/hbm_accel/loader/service_native/tb_hbm_stack_fault_split.sv:18: STACK_FAULT_SPLIT mismatch case0 status00/0X
+       Time: 42100  Scope: tb_hbm_stack_fault_split
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-4134460-1792166260): exit 0
