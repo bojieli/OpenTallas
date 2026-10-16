@@ -195,20 +195,20 @@ module ot_qwen_tp8_pv_wide_ctl #(parameter integer FIRST_INPUT_AGE=20)(
  wire next_window=(state==FEED)&&pa+16'd1>=16'(FIRSTI)&&qn<nq;
  wire[11:0] rn=qn[15:4];wire[3:0] an=qn[3:0];
  reg[7:0] exp_take,pexp_v;reg[13:0] pexp_t[0:7];
- integer l;
+ integer l,wn,wt,wp;                          // loop temporaries (blocking, combinational only; no automatic decls for yosys)
  always @*begin
-  exp_take=0;pexp_v=0;
+  exp_take=0;pexp_v=0;wn=0;wt=0;wp=0;
   for(l=0;l<8;l=l+1)pexp_t[l]=0;
   for(l=0;l<8;l=l+1)begin
-   automatic integer n=int'(rc)-(l>>2);
-   automatic integer t=256*n+128*int'(pair_id)+16*l+int'(ac);
-   automatic integer port=4*(n&1)+(l&3);
-   if(chk_window&&n>=0&&t<int'(lim))begin pexp_v[port]=1'b1;pexp_t[port]=14'(t);end
+   wn=int'(rc)-(l>>2);
+   wt=256*wn+128*int'(pair_id)+16*l+int'(ac);
+   wp=4*(wn&1)+(l&3);
+   if(chk_window&&wn>=0&&wt<int'(lim))begin pexp_v[wp]=1'b1;pexp_t[wp]=14'(wt);end
   end
   for(l=0;l<8;l=l+1)begin
-   automatic integer n=int'(rn)-(l>>2);
-   automatic integer t=256*n+128*int'(pair_id)+16*l+int'(an);
-   if(next_window&&n>=0&&t<int'(lim))exp_take[l]=1'b1;
+   wn=int'(rn)-(l>>2);
+   wt=256*wn+128*int'(pair_id)+16*l+int'(an);
+   if(next_window&&wn>=0&&wt<int'(lim))exp_take[l]=1'b1;
   end
  end
  wire[7:0] rq;wire[111:0] rqt;
@@ -284,14 +284,14 @@ module ot_qwen_tp8_vrow_wide (
  output reg[7:0] req_valid,output reg[111:0] req_t,output reg fault
 );
  reg active;reg[15:0] q;reg[15:0] nq;reg[13:0] lim;
- integer l;
+ integer l,wn,wt,wp;                          // loop temporaries (blocking, combinational only; no automatic decls for yosys)
  always @*begin
-  req_valid=0;req_t=0;
+  req_valid=0;req_t=0;wn=0;wt=0;wp=0;
   if(active&&q<nq)for(l=0;l<8;l=l+1)begin
-   automatic integer n=int'(q>>4)-(l>>2);
-   automatic integer t=256*n+128*int'(pair_id)+16*l+int'(q&15);
-   automatic integer port=4*(n&1)+(l&3);
-   if(n>=0&&t<int'(lim))begin req_valid[port]=1'b1;req_t[14*port+:14]=14'(t);end
+   wn=int'(q>>4)-(l>>2);
+   wt=256*wn+128*int'(pair_id)+16*l+int'(q&15);
+   wp=4*(wn&1)+(l&3);
+   if(wn>=0&&wt<int'(lim))begin req_valid[wp]=1'b1;req_t[14*wp+:14]=14'(wt);end
   end
  end
  always @(posedge clk or negedge rst_n)
