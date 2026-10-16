@@ -1,0 +1,133 @@
+{
+ "schema": "opentallas.w18.corner_sta.v1",
+ "orfs_dir": "/srv/opentallas/claude/closure-loop/vm_strap_q1_ref-strap4hookfix-a900c2792/cl/eco-combo1/pass1/orfs",
+ "sdc": "###############################################################################\n# Created by write_sdc\n###############################################################################\ncurrent_design hfd_vms_bank_strap_q1\n###############################################################################\n# Timing Constraints\n###############################################################################\ncreate_clock -name core_clk -period 833.3330 [get_ports {clk}]\nset_clock_uncertainty -setup 60.0000 core_clk\nset_clock_uncertainty -hold 25.0000 core_clk\nset_propagated_clock [get_clocks {core_clk}]\n",
+ "sdc_name": "6_final.sdc",
+ "setup_tt": {
+  "corner": "tt",
+  "check": "setup",
+  "worst_slack_ps": 18.72,
+  "tns_ps": 0.0,
+  "worst_register_d_slack_ps": 18.72,
+  "worst_reg_to_reg_slack_ps": 18.72,
+  "worst_input_to_reg_slack_ps": 332.37,
+  "worst_output_port_slack_ps": 220.02,
+  "violating_d_pins": 0,
+  "errors": [],
+  "tool_rc": 0,
+  "odb_sha256": "273eff16364acdef9155136c18b1a79dadd7022acb5977fb26871079aeb90348",
+  "spef_sha256": "db264e2a2cb4f79706a939093dff898f9390837005fdfe8770f9d7ec03666bfb",
+  "sdc_name": "6_final.sdc",
+  "sdc_sha256": "16e9cdcc102dbf691e9e3847f2c5c658daf34763b5909e3155ab2970438a129f",
+  "vt_flavours_added": [
+   "LVT"
+  ],
+  "libraries": [
+   "asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz",
+   "asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz",
+   "asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz",
+   "asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+   "asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz",
+   "asap7sc7p5t_AO_LVT_TT_nldm_211120.lib.gz",
+   "asap7sc7p5t_INVBUF_LVT_TT_nldm_220122.lib.gz",
+   "asap7sc7p5t_OA_LVT_TT_nldm_211120.lib.gz",
+   "asap7sc7p5t_SEQ_LVT_TT_nldm_220123.lib",
+   "asap7sc7p5t_SIMPLE_LVT_TT_nldm_211120.lib.gz"
+  ]
+ },
+ "setup_ss": {
+  "corner": "ss",
+  "check": "setup",
+  "worst_slack_ps": -290.32,
+  "tns_ps": -282323.5,
+  "worst_register_d_slack_ps": -290.32,
+  "worst_reg_to_reg_slack_ps": -290.32,
+  "worst_input_to_reg_slack_ps": 253.6,
+  "worst_output_port_slack_ps": 14.52,
+  "violating_d_pins": 2092,
+  "errors": [],
+  "tool_rc": 0,
+  "odb_sha256": "273eff16364acdef9155136c18b1a79dadd7022acb5977fb26871079aeb90348",
+  "spef_sha256": "db264e2a2cb4f79706a939093dff898f9390837005fdfe8770f9d7ec03666bfb",
+  "sdc_name": "6_final.sdc",
+  "sdc_sha256": "16e9cdcc102dbf691e9e3847f2c5c658daf34763b5909e3155ab2970438a129f",
+  "vt_flavours_added": [
+   "LVT"
+  ],
+  "libraries": [
+   "asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz",
+   "asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz",
+   "asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz",
+   "asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib",
+   "asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz",
+   "asap7sc7p5t_AO_LVT_SS_nldm_211120.lib.gz",
+   "asap7sc7p5t_INVBUF_LVT_SS_nldm_220122.lib.gz",
+   "asap7sc7p5t_OA_LVT_SS_nldm_211120.lib.gz",
+   "asap7sc7p5t_SEQ_LVT_SS_nldm_220123.lib",
+   "asap7sc7p5t_SIMPLE_LVT_SS_nldm_211120.lib.gz"
+  ]
+ },
+ "hold_ff": {
+  "corner": "ff",
+  "check": "hold",
+  "worst_slack_ps": 19.48,
+  "tns_ps": 0.0,
+  "worst_register_d_slack_ps": 22.82,
+  "worst_reg_to_reg_slack_ps": 19.48,
+  "worst_input_to_reg_slack_ps": 22.82,
+  "worst_output_port_slack_ps": 23.42,
+  "violating_d_pins": 0,
+  "errors": [],
+  "tool_rc": 0,
+  "odb_sha256": "273eff16364acdef9155136c18b1a79dadd7022acb5977fb26871079aeb90348",
+  "spef_sha256": "db264e2a2cb4f79706a939093dff898f9390837005fdfe8770f9d7ec03666bfb",
+  "sdc_name": "6_final.sdc",
+  "sdc_sha256": "16e9cdcc102dbf691e9e3847f2c5c658daf34763b5909e3155ab2970438a129f",
+  "vt_flavours_added": [
+   "LVT"
+  ],
+  "libraries": [
+   "asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz",
+   "asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz",
+   "asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz",
+   "asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib",
+   "asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz",
+   "asap7sc7p5t_AO_LVT_FF_nldm_211120.lib.gz",
+   "asap7sc7p5t_INVBUF_LVT_FF_nldm_220122.lib.gz",
+   "asap7sc7p5t_OA_LVT_FF_nldm_211120.lib.gz",
+   "asap7sc7p5t_SEQ_LVT_FF_nldm_220123.lib",
+   "asap7sc7p5t_SIMPLE_LVT_FF_nldm_211120.lib.gz"
+  ]
+ },
+ "post_sdc": {
+  "physical/ref_tile/vm_strap_q1_ref/signoff.sdc": "91e0066333cbece07835f540eb1f50f9476be1daf7bc567d96186000ac784359",
+  "physical/common_flow/io_ref_routed.sdc": "cb2805c3a4a622051ebd24447f6898db2d82fdd6060317692dc3180ef5ac6a7e"
+ },
+ "libraries": {
+  "ss": [
+   "asap7sc7p5t_AO_RVT_SS_nldm_211120.lib.gz",
+   "asap7sc7p5t_INVBUF_RVT_SS_nldm_220122.lib.gz",
+   "asap7sc7p5t_OA_RVT_SS_nldm_211120.lib.gz",
+   "asap7sc7p5t_SEQ_RVT_SS_nldm_220123.lib",
+   "asap7sc7p5t_SIMPLE_RVT_SS_nldm_211120.lib.gz"
+  ],
+  "ff": [
+   "asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz",
+   "asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz",
+   "asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz",
+   "asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib",
+   "asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz"
+  ],
+  "tt": [
+   "asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz",
+   "asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz",
+   "asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz",
+   "asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib",
+   "asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz"
+  ]
+ },
+ "tool_sha256": "7801f467617d68c7e8a3f906e5415c8913de77188a6af30dbfe835fc28b05fd1",
+ "policy": "OWNER Option B (confirmed 2026-10-08): setup at TT >= 0 ps and hold at FF >= 0 ps at the actual clocks and boundaries in the selected propagated SDC; SS setup is a sensitivity; 60/25 ps uncertainty policy. DRC 0 is checked separately by the physical verdict.",
+ "ss_sensitivity": -290.32,
+ "closes_signoff": true
+}
