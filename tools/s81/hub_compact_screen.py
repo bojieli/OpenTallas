@@ -55,6 +55,9 @@ FIXED_FACE = {('sp_capture', 'sp_vm'): 'S', ('sp_capture', 'sp_gather'): 'N', ('
               ('sp_hc_s', 'sp_hc_t'): 'S', ('sp_hc_t', 'sp_hc_s'): 'N', ('svc_SW', '*'): 'N'}
 
 
+ORIENT = {}
+
+
 def load(p):
     b = Path(p).read_bytes()
     return json.loads(gzip.decompress(b) if str(p).endswith('.gz') else b)
@@ -165,9 +168,12 @@ def band_faces(L):
 
 def layout_rects(model_rects, L):
     R = dict(model_rects)
+    ORIENT.clear()
     if L is None:
         return R
     for k, v in L['blocks'].items():
+        if len(v) > 5:
+            ORIENT[k] = v[5]
         if k.startswith('bk_') and not L.get('band_blocks'):
             continue            # the generator places the band blocks itself unless the layout carries them
         R[k] = tuple(v[:4])
@@ -193,6 +199,8 @@ def end_of(R, a, b, toward=None):
     """(face, point) of a's end of the a-b flow: the record face when fixed, else the face toward the peer; the point
     is the face point nearest `toward` (the other end's point, as the generator aligns a free end) or the peer"""
     fa = FIXED_FACE.get((a, b)) or FIXED_FACE.get((a, '*'))
+    if fa and ORIENT.get(a):             # record faces are master coordinates: apply the layout orientation
+        fa = HR._flip(fa, ORIENT[a])
     ia, ib = ns(a, R[a]), ns(b, R[b])
     tw = SimpleNamespace(x=toward[0], y=toward[1], w=0.0, h=0.0) if toward else ib
     f = fa or HR.face_toward(ia, ib)
