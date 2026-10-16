@@ -1,0 +1,86 @@
+{
+ "name": "qkd_rlys_1",
+ "top": "qkd_rlys_1",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_sys/kv_rly_std_20261016/qkd_rlys.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [],
+ "outline": {
+  "w": 10.8,
+  "h": 10.8
+ },
+ "macros": [],
+ "pins": {
+  "S": [
+   "ck"
+  ],
+  "W": [
+   "a"
+  ],
+  "E": [
+   "b"
+  ]
+ },
+ "recipe": 3,
+ "pin_regs": {
+  "enable": false,
+  "reason": "a relay standard is ONE register stage pin to pin (a -> flop -> b, no logic): its data flop is the pin register of both pins (io_flop_at_pins anchors it at the faces); the die plan counts exactly 1 core cycle per relay stage (kv_die.py relay_stages), so extra pin registers would change the static calendar"
+ },
+ "inhold": true,
+ "outhold": true,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "route": {
+  "pd": 0.45,
+  "threads": 4,
+  "peak_ram_gb": 8,
+  "m5_pg_pitch": 2.7,
+  "pin_min_tracks": 3,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "Claude:Q-KVSYS-DIE",
+  "branch": "claude/qkvsys-rly-std",
+  "tag": "v1",
+  "purpose": "Qwen KV/system die relay STANDARD qkd_rlys_1: one register stage of width class 1 b (a W face in, b E face out, ck S), 10.8 x 10.8 um, M5 cap, W/E pins on M4 at 3 tracks (<= 0.15 pins/um, rule <= 8 pins/um/layer, VIS-ROM QKV-04), no reset (flush rule), 1 cycle/stage as the die plan; replaces the 21 generated qkd_rly_<W> masters as replicas (tools/qwen_kv_die/kv_rly_std.py, OT_KV_RLY_STD=1)",
+  "benches": [
+   {
+    "name": "exact_words",
+    "cmd": "bash rtl/qwen_sys/kv_rly_std_20261016/test/bench_rlys.sh pass qkd_rlys_1 1 {RUN}/bench_p",
+    "expect": "pass",
+    "pass_regex": "RLYS_BENCH PASS 0 errors in 20000 words",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "neg_bit0_mutant",
+    "cmd": "bash rtl/qwen_sys/kv_rly_std_20261016/test/bench_rlys.sh mut qkd_rlys_1 1 {RUN}/bench_m",
+    "expect": "fail",
+    "fail_regex": "RLYS_BENCH FAIL",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "views_to": "physical/ref_tile/qkd_rlys_1/views",
+  "record_to": "results/rtl/ref_tile/qkd_rlys_1"
+ },
+ "children": [],
+ "inter": [],
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}

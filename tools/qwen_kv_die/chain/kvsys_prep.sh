@@ -47,6 +47,12 @@ if [ "${OT_KV_EXPAND:-all}" != none ]; then
   python3 tools/qwen_kv_die/kv_expand.py --run $O $( [ "${OT_KV_EXPAND:-all}" = all ] || echo --only ${OT_KV_EXPAND} ) > $O/expand.log
   EXP="--expanded $O/expand.json"
 fi
+# Q-KVSYS-RLY 2026-10-16 (OT_KV_RLY_STD=1, also read by kv_die.py / kv_pin_repair.py for the frame size): every
+# qkd_rly_<W> relay stage -> replicas of the closed relay standards qkd_rlys_1/36/296/528 (declared pads die.v.pads.json)
+if [ "${OT_KV_RLY_STD:-0}" = 1 ]; then
+  python3 tools/qwen_kv_die/kv_rly_std.py --run $O > $O/rly_std.log
+  EXP="--expanded $O/expand.json"
+fi
 # v1.4: the host SerDes and the UCIe PHY bind their native ports (tx_up / tx_v / tx_flit / rx_v / rx_flit): SerDes <-> root core phy_*, UCIe <-> qkd_d2d_static fdi_* (583 b)
 [ -n "$H14" ] && python3 tools/qwen_kv_die/kv_native_phy.py --case $O/case_kv > $O/native_phy.log \
   && python3 tools/qwen_kv_die/kv_native_phy.py --case $O/case_kv --libs $O/libs >> $O/native_phy.log
