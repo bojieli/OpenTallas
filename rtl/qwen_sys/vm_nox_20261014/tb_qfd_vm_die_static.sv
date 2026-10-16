@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 module tb_qfd_vm_die_static;
-parameter integer OBS_MUT=0,PACK_MUT=0,MEM=0,CONFLICT_MUT=0;
+parameter integer OBS_MUT=0,PACK_MUT=0,MEM=0,CONFLICT_MUT=0,NATIVE_BANKS=0;
 integer COMMIT_MUT=0;
 initial void'($value$plusargs("COMMIT_MUT=%d",COMMIT_MUT));
 integer epoch=0;
@@ -22,11 +22,20 @@ genvar rg,bg;
 generate for(rg=0;rg<8;rg=rg+1)begin : g_check_r
  for(bg=0;bg<8;bg=bg+1)begin : g_check_b
   // Compare actual SRAM-consumed pins independently of the observer.
-  always @(posedge clk)if(rst_n && dut.u_vm.g_tile.g_t[rg].u_t.g_b[bg].u_bt.p_we &&
-     dut.u_vm.g_tile.g_t[rg].u_t.g_b[bg].u_bt.p_wl==49)begin
-   if(dut.u_vm.g_tile.g_t[rg].u_t.g_b[bg].u_bt.p_wd!==image(49*64+rg*8+bg) ||
-      dut.u_vm.g_tile.g_t[rg].u_t.g_b[bg].u_bt.p_wm!==16'hffff)
+  if(NATIVE_BANKS==0)begin : g_leg
+  always @(posedge clk)if(rst_n && dut.u_vm.g_tile.g_t[rg].u_t.g_b[bg].g_lbt.u_bt.p_we &&
+     dut.u_vm.g_tile.g_t[rg].u_t.g_b[bg].g_lbt.u_bt.p_wl==49)begin
+   if(dut.u_vm.g_tile.g_t[rg].u_t.g_b[bg].g_lbt.u_bt.p_wd!==image(49*64+rg*8+bg) ||
+      dut.u_vm.g_tile.g_t[rg].u_t.g_b[bg].g_lbt.u_bt.p_wm!==16'hffff)
        $fatal(1,"FAIL actual SRAM consumed data/mask r%0d b%0d",rg,bg);
+  end
+  end else begin : g_nat   // native successor: the macro write pins after the ctrl / data256 input leaves
+  always @(posedge clk)if(rst_n && dut.u_vm.g_tile.g_t[rg].u_t.g_b[bg].g_nbt.u_bt.pwe &&
+     dut.u_vm.g_tile.g_t[rg].u_t.g_b[bg].g_nbt.u_bt.pwl==49)begin
+   if(dut.u_vm.g_tile.g_t[rg].u_t.g_b[bg].g_nbt.u_bt.pwd!==image(49*64+rg*8+bg) ||
+      dut.u_vm.g_tile.g_t[rg].u_t.g_b[bg].g_nbt.u_bt.pwm!==16'hffff)
+       $fatal(1,"FAIL actual SRAM consumed data/mask r%0d b%0d",rg,bg);
+  end
   end
  end
 end endgenerate
@@ -38,7 +47,7 @@ reg [532:0] svw=0; reg [20:0] svr=0; reg [519:0] ar=0;
 reg qe=0,qs=0;wire qsr,qd,fault,svq_v;wire [511:0] svq;wire [523:0] q;
 integer beats=0,errors=0,cycles=0,start_cycle=0,requests=0,responses=0,req_start=0;
 
-qfd_sp_vector_memory #(.USE_MACRO(MEM),.USE_LEAF_CLOCKS(1),.OBS_MUT(OBS_MUT)) dut(
+qfd_sp_vector_memory #(.USE_MACRO(MEM),.USE_LEAF_CLOCKS(1),.OBS_MUT(OBS_MUT),.NATIVE_BANKS(NATIVE_BANKS)) dut(
 .ck(clk),.rst_n(rst_n),
 .ck_r0_0(clk),
 .ck_r0_1(clk),
