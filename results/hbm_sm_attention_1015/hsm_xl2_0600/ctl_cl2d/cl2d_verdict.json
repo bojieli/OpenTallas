@@ -1,0 +1,25 @@
+{
+ "job": "hgi_sm_xl2_ctl-cl2d-COMMIT-b0d45974d",
+ "status": "NEEDS_RTL",
+ "reason": "TT -92.5 / FF 18.09 ps / DRC 4 (line TT >= +0 / FF >= +0 / DRC 0)",
+ "source_commit": "b0d45974d8264c78823879ce723f147352e97b2c",
+ "tt_setup_ps": -92.5,
+ "tt_tns_ps": -4973.1,
+ "ff_hold_ps": 18.09,
+ "drc": 4,
+ "routed_ioref": {
+  "tt_i2r": 197.63,
+  "tt_out": 301.56,
+  "ff_i2r": 18.09,
+  "ff_out": 20.69,
+  "ff_r2r": 19.76,
+  "registers": 15591
+ },
+ "events": [
+  "2026-10-16T00:13:28-07:00 verdict TT -92.50 / FF +18.09 / DRC 4 / checks failed [] -> NOT CLOSED",
+  "2026-10-16T00:15:45-07:00 routed-insertion IO re-STA: TT setup -92.50 / FF hold +18.09 (route SDC -92.5 / 18.09); routed reference TT [none] FF [none]",
+  "2026-10-16T00:15:45-07:00 verdict at the ROUTED insertion: TT -92.50 / FF +18.09 -> NOT CLOSED",
+  "2026-10-16T00:17:50-07:00 NEEDS_RTL: TT -92.5 / FF 18.09 ps / DRC 4 (line TT >= +0 / FF >= +0 / DRC 0)"
+ ],
+ "note": "copied from the closure-loop job record (local state) 10-16; route data on ot-epyc1tb already deleted (failed-run policy). Critical path per H-SM 10-15 log: la/lane_en flop -> need table -> wc>=need -> bd_em -> eb2 next state -> one-hot decode -> bsel (~8 levels + ~400 ps wire). DRC 4 = corner pins M5 spacing, fixed at ROOT (tools/ref_tile/ref_route.sh OT_PIN_CORNER_UM)."
+}

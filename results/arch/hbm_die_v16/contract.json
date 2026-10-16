@@ -4,11 +4,11 @@
  "top": "hbm_v16_die",
  "generated_by": "tools/hbm_die_v15/full_die_v16.py",
  "basis": {
-  "commit": "c7df43318",
+  "commit": "8146db7ac",
   "v15_contract": "results/arch/hbm_die_v15/source_contract/contract.json",
   "v15_contract_sha256": "eac5bff7d49473de7a7d8f0b993e427d4d004991e56670c8552f35e2b9a6b6cd",
   "grants": "results/arch/hier_contract_1015/hbm_v15.json",
-  "grants_version": 6,
+  "grants_version": 7,
   "plan": "results/arch/hbm_die_v15/compact660_v5/compact.P.json",
   "plan_slots": 195,
   "specs": {
@@ -131,18 +131,18 @@
   "off-die pins (SerDes/UCIe PMA, refclk, por_n) are die top-level ports"
  ],
  "summary": {
-  "instances": 1536,
+  "instances": 1532,
   "masters": 61,
-  "edges": 12157,
-  "edge_bits": 1193273,
-  "clock_reset_ports": 3594,
+  "edges": 12117,
+  "edge_bits": 1192829,
+  "clock_reset_ports": 3598,
   "straps": 351,
   "die_pins": 43,
   "exposed_input_ports": 0,
   "exposed_input_bits": 0,
   "exposed_unassigned_ports": 0,
   "gaps": 30,
-  "open_output_ports": 880,
+  "open_output_ports": 840,
   "problems": 0,
   "before_v15": {
    "instances": 83,
@@ -209,10 +209,10 @@
   "ot_hgi_sfu_programme_store": 4,
   "ot_hgi_sm_xload_cl2_bdring": 4,
   "ot_hgi_sm_xload_cl2_bfq": 16,
-  "ot_hgi_sm_xload_cl2_ctl": 4,
+  "ot_hgi_sm_xload_cl2_ctlw": 4,
   "ot_pdie_serdes": 9,
   "ot_pdie_ucie": 1,
-  "ot_static_cmd_target": 36,
+  "ot_static_cmd_target": 32,
   "ot_vms_status4_static": 1
  },
  "instances": {
@@ -942,6 +942,10 @@
      "direction": "input",
      "bits": 1
     },
+    "clk_tgt": {
+     "direction": "input",
+     "bits": 1
+    },
     "rst_n": {
      "direction": "input",
      "bits": 1
@@ -1112,6 +1116,10 @@
      "bits": 1
     },
     "clk_mem": {
+     "direction": "input",
+     "bits": 1
+    },
+    "clk_tgt": {
      "direction": "input",
      "bits": 1
     },
@@ -1288,6 +1296,10 @@
      "direction": "input",
      "bits": 1
     },
+    "clk_tgt": {
+     "direction": "input",
+     "bits": 1
+    },
     "rst_n": {
      "direction": "input",
      "bits": 1
@@ -1458,6 +1470,10 @@
      "bits": 1
     },
     "clk_mem": {
+     "direction": "input",
+     "bits": 1
+    },
+    "clk_tgt": {
      "direction": "input",
      "bits": 1
     },
@@ -40992,141 +41008,6 @@
     }
    }
   },
-  "cp_xl_SW": {
-   "master": "ot_static_cmd_target",
-   "source": "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
-   "params": {
-    "MODE": 1,
-    "CW": 108,
-    "RELF": 0,
-    "NA": 1,
-    "NF": 1,
-    "TGT_PIN": 1
-   },
-   "slot": "xl_SW",
-   "owner": "H-NETLIST/cp1 (host control plane)",
-   "region": "cp1",
-   "note": "TARGET 100: command calendar (128 x {x-load cmd 108, at 32}, one 128x256 SRAM) fired at launch_base+loop*period+at; x_v pulse + fields, no x_rdy (the cl2 ctl has none). cmd = {x_xb7,x_fmt2,x_space2,x_stride32,x_p4,x_n21,x_base40}.",
-   "replaces_v15": null,
-   "ports": {
-    "clk": {
-     "direction": "input",
-     "bits": 1
-    },
-    "rst_n": {
-     "direction": "input",
-     "bits": 1
-    },
-    "tgt": {
-     "direction": "input",
-     "bits": 8
-    },
-    "cfg_v": {
-     "direction": "input",
-     "bits": 1
-    },
-    "cfg_target": {
-     "direction": "input",
-     "bits": 8
-    },
-    "cfg_addr": {
-     "direction": "input",
-     "bits": 12
-    },
-    "cfg_data": {
-     "direction": "input",
-     "bits": 256
-    },
-    "desc_v": {
-     "direction": "input",
-     "bits": 1
-    },
-    "desc_base": {
-     "direction": "input",
-     "bits": 12
-    },
-    "desc_limit": {
-     "direction": "input",
-     "bits": 13
-    },
-    "desc_loops": {
-     "direction": "input",
-     "bits": 16
-    },
-    "launch_v": {
-     "direction": "input",
-     "bits": 1
-    },
-    "tgt_active": {
-     "direction": "input",
-     "bits": 1
-    },
-    "tgt_fault": {
-     "direction": "input",
-     "bits": 1
-    },
-    "a_we": {
-     "direction": "output",
-     "bits": 1
-    },
-    "a_addr": {
-     "direction": "output",
-     "bits": 1
-    },
-    "a_data": {
-     "direction": "output",
-     "bits": 256
-    },
-    "b_we": {
-     "direction": "output",
-     "bits": 1
-    },
-    "b_addr": {
-     "direction": "output",
-     "bits": 1
-    },
-    "b_data": {
-     "direction": "output",
-     "bits": 256
-    },
-    "run_v": {
-     "direction": "output",
-     "bits": 1
-    },
-    "run_base": {
-     "direction": "output",
-     "bits": 1
-    },
-    "run_count": {
-     "direction": "output",
-     "bits": 1
-    },
-    "cmd_v": {
-     "direction": "output",
-     "bits": 1
-    },
-    "cmd": {
-     "direction": "output",
-     "bits": 108
-    },
-    "cycle": {
-     "direction": "output",
-     "bits": 32
-    },
-    "configured": {
-     "direction": "output",
-     "bits": 1
-    },
-    "fault": {
-     "direction": "output",
-     "bits": 1
-    },
-    "active": {
-     "direction": "output",
-     "bits": 1
-    }
-   }
-  },
   "cp_svg_SE0": {
    "master": "ot_static_cmd_target",
    "source": "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
@@ -42204,141 +42085,6 @@
     "cmd": {
      "direction": "output",
      "bits": 1
-    },
-    "cycle": {
-     "direction": "output",
-     "bits": 32
-    },
-    "configured": {
-     "direction": "output",
-     "bits": 1
-    },
-    "fault": {
-     "direction": "output",
-     "bits": 1
-    },
-    "active": {
-     "direction": "output",
-     "bits": 1
-    }
-   }
-  },
-  "cp_xl_SE": {
-   "master": "ot_static_cmd_target",
-   "source": "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
-   "params": {
-    "MODE": 1,
-    "CW": 108,
-    "RELF": 0,
-    "NA": 1,
-    "NF": 1,
-    "TGT_PIN": 1
-   },
-   "slot": "xl_SE",
-   "owner": "H-NETLIST/cp1 (host control plane)",
-   "region": "cp1",
-   "note": "TARGET 101: command calendar (128 x {x-load cmd 108, at 32}, one 128x256 SRAM) fired at launch_base+loop*period+at; x_v pulse + fields, no x_rdy (the cl2 ctl has none). cmd = {x_xb7,x_fmt2,x_space2,x_stride32,x_p4,x_n21,x_base40}.",
-   "replaces_v15": null,
-   "ports": {
-    "clk": {
-     "direction": "input",
-     "bits": 1
-    },
-    "rst_n": {
-     "direction": "input",
-     "bits": 1
-    },
-    "tgt": {
-     "direction": "input",
-     "bits": 8
-    },
-    "cfg_v": {
-     "direction": "input",
-     "bits": 1
-    },
-    "cfg_target": {
-     "direction": "input",
-     "bits": 8
-    },
-    "cfg_addr": {
-     "direction": "input",
-     "bits": 12
-    },
-    "cfg_data": {
-     "direction": "input",
-     "bits": 256
-    },
-    "desc_v": {
-     "direction": "input",
-     "bits": 1
-    },
-    "desc_base": {
-     "direction": "input",
-     "bits": 12
-    },
-    "desc_limit": {
-     "direction": "input",
-     "bits": 13
-    },
-    "desc_loops": {
-     "direction": "input",
-     "bits": 16
-    },
-    "launch_v": {
-     "direction": "input",
-     "bits": 1
-    },
-    "tgt_active": {
-     "direction": "input",
-     "bits": 1
-    },
-    "tgt_fault": {
-     "direction": "input",
-     "bits": 1
-    },
-    "a_we": {
-     "direction": "output",
-     "bits": 1
-    },
-    "a_addr": {
-     "direction": "output",
-     "bits": 1
-    },
-    "a_data": {
-     "direction": "output",
-     "bits": 256
-    },
-    "b_we": {
-     "direction": "output",
-     "bits": 1
-    },
-    "b_addr": {
-     "direction": "output",
-     "bits": 1
-    },
-    "b_data": {
-     "direction": "output",
-     "bits": 256
-    },
-    "run_v": {
-     "direction": "output",
-     "bits": 1
-    },
-    "run_base": {
-     "direction": "output",
-     "bits": 1
-    },
-    "run_count": {
-     "direction": "output",
-     "bits": 1
-    },
-    "cmd_v": {
-     "direction": "output",
-     "bits": 1
-    },
-    "cmd": {
-     "direction": "output",
-     "bits": 108
     },
     "cycle": {
      "direction": "output",
@@ -43454,141 +43200,6 @@
     }
    }
   },
-  "cp_xl_NW": {
-   "master": "ot_static_cmd_target",
-   "source": "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
-   "params": {
-    "MODE": 1,
-    "CW": 108,
-    "RELF": 0,
-    "NA": 1,
-    "NF": 1,
-    "TGT_PIN": 1
-   },
-   "slot": "xl_NW",
-   "owner": "H-NETLIST/cp1 (host control plane)",
-   "region": "cp1",
-   "note": "TARGET 102: command calendar (128 x {x-load cmd 108, at 32}, one 128x256 SRAM) fired at launch_base+loop*period+at; x_v pulse + fields, no x_rdy (the cl2 ctl has none). cmd = {x_xb7,x_fmt2,x_space2,x_stride32,x_p4,x_n21,x_base40}.",
-   "replaces_v15": null,
-   "ports": {
-    "clk": {
-     "direction": "input",
-     "bits": 1
-    },
-    "rst_n": {
-     "direction": "input",
-     "bits": 1
-    },
-    "tgt": {
-     "direction": "input",
-     "bits": 8
-    },
-    "cfg_v": {
-     "direction": "input",
-     "bits": 1
-    },
-    "cfg_target": {
-     "direction": "input",
-     "bits": 8
-    },
-    "cfg_addr": {
-     "direction": "input",
-     "bits": 12
-    },
-    "cfg_data": {
-     "direction": "input",
-     "bits": 256
-    },
-    "desc_v": {
-     "direction": "input",
-     "bits": 1
-    },
-    "desc_base": {
-     "direction": "input",
-     "bits": 12
-    },
-    "desc_limit": {
-     "direction": "input",
-     "bits": 13
-    },
-    "desc_loops": {
-     "direction": "input",
-     "bits": 16
-    },
-    "launch_v": {
-     "direction": "input",
-     "bits": 1
-    },
-    "tgt_active": {
-     "direction": "input",
-     "bits": 1
-    },
-    "tgt_fault": {
-     "direction": "input",
-     "bits": 1
-    },
-    "a_we": {
-     "direction": "output",
-     "bits": 1
-    },
-    "a_addr": {
-     "direction": "output",
-     "bits": 1
-    },
-    "a_data": {
-     "direction": "output",
-     "bits": 256
-    },
-    "b_we": {
-     "direction": "output",
-     "bits": 1
-    },
-    "b_addr": {
-     "direction": "output",
-     "bits": 1
-    },
-    "b_data": {
-     "direction": "output",
-     "bits": 256
-    },
-    "run_v": {
-     "direction": "output",
-     "bits": 1
-    },
-    "run_base": {
-     "direction": "output",
-     "bits": 1
-    },
-    "run_count": {
-     "direction": "output",
-     "bits": 1
-    },
-    "cmd_v": {
-     "direction": "output",
-     "bits": 1
-    },
-    "cmd": {
-     "direction": "output",
-     "bits": 108
-    },
-    "cycle": {
-     "direction": "output",
-     "bits": 32
-    },
-    "configured": {
-     "direction": "output",
-     "bits": 1
-    },
-    "fault": {
-     "direction": "output",
-     "bits": 1
-    },
-    "active": {
-     "direction": "output",
-     "bits": 1
-    }
-   }
-  },
   "cp_svg_NE0": {
    "master": "ot_static_cmd_target",
    "source": "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
@@ -44666,141 +44277,6 @@
     "cmd": {
      "direction": "output",
      "bits": 1
-    },
-    "cycle": {
-     "direction": "output",
-     "bits": 32
-    },
-    "configured": {
-     "direction": "output",
-     "bits": 1
-    },
-    "fault": {
-     "direction": "output",
-     "bits": 1
-    },
-    "active": {
-     "direction": "output",
-     "bits": 1
-    }
-   }
-  },
-  "cp_xl_NE": {
-   "master": "ot_static_cmd_target",
-   "source": "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
-   "params": {
-    "MODE": 1,
-    "CW": 108,
-    "RELF": 0,
-    "NA": 1,
-    "NF": 1,
-    "TGT_PIN": 1
-   },
-   "slot": "xl_NE",
-   "owner": "H-NETLIST/cp1 (host control plane)",
-   "region": "cp1",
-   "note": "TARGET 103: command calendar (128 x {x-load cmd 108, at 32}, one 128x256 SRAM) fired at launch_base+loop*period+at; x_v pulse + fields, no x_rdy (the cl2 ctl has none). cmd = {x_xb7,x_fmt2,x_space2,x_stride32,x_p4,x_n21,x_base40}.",
-   "replaces_v15": null,
-   "ports": {
-    "clk": {
-     "direction": "input",
-     "bits": 1
-    },
-    "rst_n": {
-     "direction": "input",
-     "bits": 1
-    },
-    "tgt": {
-     "direction": "input",
-     "bits": 8
-    },
-    "cfg_v": {
-     "direction": "input",
-     "bits": 1
-    },
-    "cfg_target": {
-     "direction": "input",
-     "bits": 8
-    },
-    "cfg_addr": {
-     "direction": "input",
-     "bits": 12
-    },
-    "cfg_data": {
-     "direction": "input",
-     "bits": 256
-    },
-    "desc_v": {
-     "direction": "input",
-     "bits": 1
-    },
-    "desc_base": {
-     "direction": "input",
-     "bits": 12
-    },
-    "desc_limit": {
-     "direction": "input",
-     "bits": 13
-    },
-    "desc_loops": {
-     "direction": "input",
-     "bits": 16
-    },
-    "launch_v": {
-     "direction": "input",
-     "bits": 1
-    },
-    "tgt_active": {
-     "direction": "input",
-     "bits": 1
-    },
-    "tgt_fault": {
-     "direction": "input",
-     "bits": 1
-    },
-    "a_we": {
-     "direction": "output",
-     "bits": 1
-    },
-    "a_addr": {
-     "direction": "output",
-     "bits": 1
-    },
-    "a_data": {
-     "direction": "output",
-     "bits": 256
-    },
-    "b_we": {
-     "direction": "output",
-     "bits": 1
-    },
-    "b_addr": {
-     "direction": "output",
-     "bits": 1
-    },
-    "b_data": {
-     "direction": "output",
-     "bits": 256
-    },
-    "run_v": {
-     "direction": "output",
-     "bits": 1
-    },
-    "run_base": {
-     "direction": "output",
-     "bits": 1
-    },
-    "run_count": {
-     "direction": "output",
-     "bits": 1
-    },
-    "cmd_v": {
-     "direction": "output",
-     "bits": 1
-    },
-    "cmd": {
-     "direction": "output",
-     "bits": 108
     },
     "cycle": {
      "direction": "output",
@@ -47696,6 +47172,10 @@
      "direction": "input",
      "bits": 1
     },
+    "clk_tgt": {
+     "direction": "input",
+     "bits": 1
+    },
     "rst_n": {
      "direction": "input",
      "bits": 1
@@ -47866,6 +47346,10 @@
      "bits": 1
     },
     "clk_mem": {
+     "direction": "input",
+     "bits": 1
+    },
+    "clk_tgt": {
      "direction": "input",
      "bits": 1
     },
@@ -48042,6 +47526,10 @@
      "direction": "input",
      "bits": 1
     },
+    "clk_tgt": {
+     "direction": "input",
+     "bits": 1
+    },
     "rst_n": {
      "direction": "input",
      "bits": 1
@@ -48212,6 +47700,10 @@
      "bits": 1
     },
     "clk_mem": {
+     "direction": "input",
+     "bits": 1
+    },
+    "clk_tgt": {
      "direction": "input",
      "bits": 1
     },
@@ -49681,19 +49173,26 @@
    }
   },
   "xl_SW_ctl": {
-   "master": "ot_hgi_sm_xload_cl2_ctl",
+   "master": "ot_hgi_sm_xload_cl2_ctlw",
    "source": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv",
    "params": {
     "PMAX": 8,
     "RD_LAT": 6,
-    "MUT": 0,
-    "NR": 32
+    "NR": 32,
+    "LEAD": 8
    },
    "slot": null,
    "owner": "H-SM",
    "region": "sm_vm",
-   "note": "quadrant SW static SM x-load control leaf (cluster ot_hgi_sm_xload_static_cl2 flattened to die level, H-SM 1705-r2/r5; kit hgi_sm_xl2_ctl 345.6x345.6, route cl2b aec2eb46f). Slot not granted (H-SM asked H-DIE 20:21)",
+   "note": "quadrant SW static SM x-load control leaf (cluster ot_hgi_sm_xload_static_cl2 flattened to die level, H-SM 1705-r2/r5; kit hgi_sm_xl2_ctl 345.6x345.6, route cl2b aec2eb46f). Slot not granted (H-SM asked H-DIE 20:21) | H-NETLIST 0600: F20 target 100 folded in (was cp_xl_SW)",
    "replaces_v15": null,
+   "folded_target": {
+    "instance": "cp_xl_SW",
+    "target": "8'd100"
+   },
+   "rtl_deps": [
+    "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv"
+   ],
    "ports": {
     "clk": {
      "direction": "input",
@@ -49707,47 +49206,59 @@
      "direction": "input",
      "bits": 1
     },
-    "x_v": {
+    "tgt": {
+     "direction": "input",
+     "bits": 8
+    },
+    "cfg_v": {
      "direction": "input",
      "bits": 1
     },
-    "x_base": {
+    "cfg_target": {
      "direction": "input",
-     "bits": 40
+     "bits": 8
     },
-    "x_n": {
+    "cfg_addr": {
      "direction": "input",
-     "bits": 21
+     "bits": 12
     },
-    "x_p": {
+    "cfg_data": {
      "direction": "input",
-     "bits": 4
+     "bits": 256
     },
-    "x_stride": {
+    "desc_v": {
      "direction": "input",
-     "bits": 32
+     "bits": 1
     },
-    "x_space": {
+    "desc_base": {
      "direction": "input",
-     "bits": 2
+     "bits": 12
     },
-    "x_fmt": {
+    "desc_limit": {
      "direction": "input",
-     "bits": 2
+     "bits": 13
     },
-    "x_xb": {
+    "desc_loops": {
      "direction": "input",
-     "bits": 7
+     "bits": 16
     },
-    "x_busy": {
+    "launch_v": {
+     "direction": "input",
+     "bits": 1
+    },
+    "configured": {
+     "direction": "output",
+     "bits": 1
+    },
+    "fault": {
+     "direction": "output",
+     "bits": 1
+    },
+    "active": {
      "direction": "output",
      "bits": 1
     },
     "x_done": {
-     "direction": "output",
-     "bits": 1
-    },
-    "x_fault": {
      "direction": "output",
      "bits": 1
     },
@@ -50245,19 +49756,26 @@
    }
   },
   "xl_SE_ctl": {
-   "master": "ot_hgi_sm_xload_cl2_ctl",
+   "master": "ot_hgi_sm_xload_cl2_ctlw",
    "source": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv",
    "params": {
     "PMAX": 8,
     "RD_LAT": 6,
-    "MUT": 0,
-    "NR": 32
+    "NR": 32,
+    "LEAD": 8
    },
    "slot": null,
    "owner": "H-SM",
    "region": "sm_vm",
-   "note": "quadrant SE static SM x-load control leaf (cluster ot_hgi_sm_xload_static_cl2 flattened to die level, H-SM 1705-r2/r5; kit hgi_sm_xl2_ctl 345.6x345.6, route cl2b aec2eb46f). Slot not granted (H-SM asked H-DIE 20:21)",
+   "note": "quadrant SE static SM x-load control leaf (cluster ot_hgi_sm_xload_static_cl2 flattened to die level, H-SM 1705-r2/r5; kit hgi_sm_xl2_ctl 345.6x345.6, route cl2b aec2eb46f). Slot not granted (H-SM asked H-DIE 20:21) | H-NETLIST 0600: F20 target 101 folded in (was cp_xl_SE)",
    "replaces_v15": null,
+   "folded_target": {
+    "instance": "cp_xl_SE",
+    "target": "8'd101"
+   },
+   "rtl_deps": [
+    "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv"
+   ],
    "ports": {
     "clk": {
      "direction": "input",
@@ -50271,47 +49789,59 @@
      "direction": "input",
      "bits": 1
     },
-    "x_v": {
+    "tgt": {
+     "direction": "input",
+     "bits": 8
+    },
+    "cfg_v": {
      "direction": "input",
      "bits": 1
     },
-    "x_base": {
+    "cfg_target": {
      "direction": "input",
-     "bits": 40
+     "bits": 8
     },
-    "x_n": {
+    "cfg_addr": {
      "direction": "input",
-     "bits": 21
+     "bits": 12
     },
-    "x_p": {
+    "cfg_data": {
      "direction": "input",
-     "bits": 4
+     "bits": 256
     },
-    "x_stride": {
+    "desc_v": {
      "direction": "input",
-     "bits": 32
+     "bits": 1
     },
-    "x_space": {
+    "desc_base": {
      "direction": "input",
-     "bits": 2
+     "bits": 12
     },
-    "x_fmt": {
+    "desc_limit": {
      "direction": "input",
-     "bits": 2
+     "bits": 13
     },
-    "x_xb": {
+    "desc_loops": {
      "direction": "input",
-     "bits": 7
+     "bits": 16
     },
-    "x_busy": {
+    "launch_v": {
+     "direction": "input",
+     "bits": 1
+    },
+    "configured": {
+     "direction": "output",
+     "bits": 1
+    },
+    "fault": {
+     "direction": "output",
+     "bits": 1
+    },
+    "active": {
      "direction": "output",
      "bits": 1
     },
     "x_done": {
-     "direction": "output",
-     "bits": 1
-    },
-    "x_fault": {
      "direction": "output",
      "bits": 1
     },
@@ -50809,19 +50339,26 @@
    }
   },
   "xl_NW_ctl": {
-   "master": "ot_hgi_sm_xload_cl2_ctl",
+   "master": "ot_hgi_sm_xload_cl2_ctlw",
    "source": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv",
    "params": {
     "PMAX": 8,
     "RD_LAT": 6,
-    "MUT": 0,
-    "NR": 32
+    "NR": 32,
+    "LEAD": 8
    },
    "slot": null,
    "owner": "H-SM",
    "region": "sm_vm",
-   "note": "quadrant NW static SM x-load control leaf (cluster ot_hgi_sm_xload_static_cl2 flattened to die level, H-SM 1705-r2/r5; kit hgi_sm_xl2_ctl 345.6x345.6, route cl2b aec2eb46f). Slot not granted (H-SM asked H-DIE 20:21)",
+   "note": "quadrant NW static SM x-load control leaf (cluster ot_hgi_sm_xload_static_cl2 flattened to die level, H-SM 1705-r2/r5; kit hgi_sm_xl2_ctl 345.6x345.6, route cl2b aec2eb46f). Slot not granted (H-SM asked H-DIE 20:21) | H-NETLIST 0600: F20 target 102 folded in (was cp_xl_NW)",
    "replaces_v15": null,
+   "folded_target": {
+    "instance": "cp_xl_NW",
+    "target": "8'd102"
+   },
+   "rtl_deps": [
+    "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv"
+   ],
    "ports": {
     "clk": {
      "direction": "input",
@@ -50835,47 +50372,59 @@
      "direction": "input",
      "bits": 1
     },
-    "x_v": {
+    "tgt": {
+     "direction": "input",
+     "bits": 8
+    },
+    "cfg_v": {
      "direction": "input",
      "bits": 1
     },
-    "x_base": {
+    "cfg_target": {
      "direction": "input",
-     "bits": 40
+     "bits": 8
     },
-    "x_n": {
+    "cfg_addr": {
      "direction": "input",
-     "bits": 21
+     "bits": 12
     },
-    "x_p": {
+    "cfg_data": {
      "direction": "input",
-     "bits": 4
+     "bits": 256
     },
-    "x_stride": {
+    "desc_v": {
      "direction": "input",
-     "bits": 32
+     "bits": 1
     },
-    "x_space": {
+    "desc_base": {
      "direction": "input",
-     "bits": 2
+     "bits": 12
     },
-    "x_fmt": {
+    "desc_limit": {
      "direction": "input",
-     "bits": 2
+     "bits": 13
     },
-    "x_xb": {
+    "desc_loops": {
      "direction": "input",
-     "bits": 7
+     "bits": 16
     },
-    "x_busy": {
+    "launch_v": {
+     "direction": "input",
+     "bits": 1
+    },
+    "configured": {
+     "direction": "output",
+     "bits": 1
+    },
+    "fault": {
+     "direction": "output",
+     "bits": 1
+    },
+    "active": {
      "direction": "output",
      "bits": 1
     },
     "x_done": {
-     "direction": "output",
-     "bits": 1
-    },
-    "x_fault": {
      "direction": "output",
      "bits": 1
     },
@@ -51373,19 +50922,26 @@
    }
   },
   "xl_NE_ctl": {
-   "master": "ot_hgi_sm_xload_cl2_ctl",
+   "master": "ot_hgi_sm_xload_cl2_ctlw",
    "source": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv",
    "params": {
     "PMAX": 8,
     "RD_LAT": 6,
-    "MUT": 0,
-    "NR": 32
+    "NR": 32,
+    "LEAD": 8
    },
    "slot": null,
    "owner": "H-SM",
    "region": "sm_vm",
-   "note": "quadrant NE static SM x-load control leaf (cluster ot_hgi_sm_xload_static_cl2 flattened to die level, H-SM 1705-r2/r5; kit hgi_sm_xl2_ctl 345.6x345.6, route cl2b aec2eb46f). Slot not granted (H-SM asked H-DIE 20:21)",
+   "note": "quadrant NE static SM x-load control leaf (cluster ot_hgi_sm_xload_static_cl2 flattened to die level, H-SM 1705-r2/r5; kit hgi_sm_xl2_ctl 345.6x345.6, route cl2b aec2eb46f). Slot not granted (H-SM asked H-DIE 20:21) | H-NETLIST 0600: F20 target 103 folded in (was cp_xl_NE)",
    "replaces_v15": null,
+   "folded_target": {
+    "instance": "cp_xl_NE",
+    "target": "8'd103"
+   },
+   "rtl_deps": [
+    "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv"
+   ],
    "ports": {
     "clk": {
      "direction": "input",
@@ -51399,47 +50955,59 @@
      "direction": "input",
      "bits": 1
     },
-    "x_v": {
+    "tgt": {
+     "direction": "input",
+     "bits": 8
+    },
+    "cfg_v": {
      "direction": "input",
      "bits": 1
     },
-    "x_base": {
+    "cfg_target": {
      "direction": "input",
-     "bits": 40
+     "bits": 8
     },
-    "x_n": {
+    "cfg_addr": {
      "direction": "input",
-     "bits": 21
+     "bits": 12
     },
-    "x_p": {
+    "cfg_data": {
      "direction": "input",
-     "bits": 4
+     "bits": 256
     },
-    "x_stride": {
+    "desc_v": {
      "direction": "input",
-     "bits": 32
+     "bits": 1
     },
-    "x_space": {
+    "desc_base": {
      "direction": "input",
-     "bits": 2
+     "bits": 12
     },
-    "x_fmt": {
+    "desc_limit": {
      "direction": "input",
-     "bits": 2
+     "bits": 13
     },
-    "x_xb": {
+    "desc_loops": {
      "direction": "input",
-     "bits": 7
+     "bits": 16
     },
-    "x_busy": {
+    "launch_v": {
+     "direction": "input",
+     "bits": 1
+    },
+    "configured": {
+     "direction": "output",
+     "bits": 1
+    },
+    "fault": {
+     "direction": "output",
+     "bits": 1
+    },
+    "active": {
      "direction": "output",
      "bits": 1
     },
     "x_done": {
-     "direction": "output",
-     "bits": 1
-    },
-    "x_fault": {
      "direction": "output",
      "bits": 1
     },
@@ -83942,6 +83510,10 @@
      "direction": "input",
      "bits": 1
     },
+    "clk_tgt": {
+     "direction": "input",
+     "bits": 1
+    },
     "rst_n": {
      "direction": "input",
      "bits": 1
@@ -85074,6 +84646,10 @@
      "bits": 1
     },
     "clk_mem": {
+     "direction": "input",
+     "bits": 1
+    },
+    "clk_tgt": {
      "direction": "input",
      "bits": 1
     },
@@ -86212,6 +85788,10 @@
      "direction": "input",
      "bits": 1
     },
+    "clk_tgt": {
+     "direction": "input",
+     "bits": 1
+    },
     "rst_n": {
      "direction": "input",
      "bits": 1
@@ -87344,6 +86924,10 @@
      "bits": 1
     },
     "clk_mem": {
+     "direction": "input",
+     "bits": 1
+    },
+    "clk_tgt": {
      "direction": "input",
      "bits": 1
     },
@@ -203217,7 +202801,7 @@
     1
    ],
    "sink": [
-    "cp_xl_SW",
+    "xl_SW_ctl",
     "cfg_v",
     0,
     1
@@ -203238,7 +202822,7 @@
     8
    ],
    "sink": [
-    "cp_xl_SW",
+    "xl_SW_ctl",
     "cfg_target",
     0,
     8
@@ -203259,7 +202843,7 @@
     12
    ],
    "sink": [
-    "cp_xl_SW",
+    "xl_SW_ctl",
     "cfg_addr",
     0,
     12
@@ -203280,7 +202864,7 @@
     256
    ],
    "sink": [
-    "cp_xl_SW",
+    "xl_SW_ctl",
     "cfg_data",
     0,
     256
@@ -203301,7 +202885,7 @@
     1
    ],
    "sink": [
-    "cp_xl_SW",
+    "xl_SW_ctl",
     "desc_v",
     0,
     1
@@ -203322,7 +202906,7 @@
     12
    ],
    "sink": [
-    "cp_xl_SW",
+    "xl_SW_ctl",
     "desc_base",
     0,
     12
@@ -203343,7 +202927,7 @@
     13
    ],
    "sink": [
-    "cp_xl_SW",
+    "xl_SW_ctl",
     "desc_limit",
     0,
     13
@@ -203364,7 +202948,7 @@
     16
    ],
    "sink": [
-    "cp_xl_SW",
+    "xl_SW_ctl",
     "desc_loops",
     0,
     16
@@ -203385,7 +202969,7 @@
     1
    ],
    "sink": [
-    "cp_xl_SW",
+    "xl_SW_ctl",
     "launch_v",
     0,
     1
@@ -203394,216 +202978,6 @@
    "ready_or_credit": false,
    "allowed_exception": null,
    "basis": "host F20 broadcast: ot_hbm_host_static_ingress.sv:18-23 outputs (same names/widths) -> collar pin flops; same pattern as coll_idx_link (COLL TARGET 52+QID)",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_194",
-   "bits": 1,
-   "source": [
-    "cp_xl_SW",
-    "cmd_v",
-    0,
-    1
-   ],
-   "sink": [
-    "xl_SW_ctl",
-    "x_v",
-    0,
-    1
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "ot_static_cmd_target MODE 1 cmd -> ot_hgi_sm_xload_static_cl2.sv:44-51 command pins (registered there)",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_195",
-   "bits": 40,
-   "source": [
-    "cp_xl_SW",
-    "cmd",
-    0,
-    40
-   ],
-   "sink": [
-    "xl_SW_ctl",
-    "x_base",
-    0,
-    40
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "ot_static_cmd_target MODE 1 cmd -> ot_hgi_sm_xload_static_cl2.sv:44-51 command pins (registered there)",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_196",
-   "bits": 21,
-   "source": [
-    "cp_xl_SW",
-    "cmd",
-    40,
-    61
-   ],
-   "sink": [
-    "xl_SW_ctl",
-    "x_n",
-    0,
-    21
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "ot_static_cmd_target MODE 1 cmd -> ot_hgi_sm_xload_static_cl2.sv:44-51 command pins (registered there)",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_197",
-   "bits": 4,
-   "source": [
-    "cp_xl_SW",
-    "cmd",
-    61,
-    65
-   ],
-   "sink": [
-    "xl_SW_ctl",
-    "x_p",
-    0,
-    4
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "ot_static_cmd_target MODE 1 cmd -> ot_hgi_sm_xload_static_cl2.sv:44-51 command pins (registered there)",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_198",
-   "bits": 32,
-   "source": [
-    "cp_xl_SW",
-    "cmd",
-    65,
-    97
-   ],
-   "sink": [
-    "xl_SW_ctl",
-    "x_stride",
-    0,
-    32
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "ot_static_cmd_target MODE 1 cmd -> ot_hgi_sm_xload_static_cl2.sv:44-51 command pins (registered there)",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_199",
-   "bits": 2,
-   "source": [
-    "cp_xl_SW",
-    "cmd",
-    97,
-    99
-   ],
-   "sink": [
-    "xl_SW_ctl",
-    "x_space",
-    0,
-    2
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "ot_static_cmd_target MODE 1 cmd -> ot_hgi_sm_xload_static_cl2.sv:44-51 command pins (registered there)",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_200",
-   "bits": 2,
-   "source": [
-    "cp_xl_SW",
-    "cmd",
-    99,
-    101
-   ],
-   "sink": [
-    "xl_SW_ctl",
-    "x_fmt",
-    0,
-    2
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "ot_static_cmd_target MODE 1 cmd -> ot_hgi_sm_xload_static_cl2.sv:44-51 command pins (registered there)",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_201",
-   "bits": 7,
-   "source": [
-    "cp_xl_SW",
-    "cmd",
-    101,
-    108
-   ],
-   "sink": [
-    "xl_SW_ctl",
-    "x_xb",
-    0,
-    7
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "ot_static_cmd_target MODE 1 cmd -> ot_hgi_sm_xload_static_cl2.sv:44-51 command pins (registered there)",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_202",
-   "bits": 1,
-   "source": [
-    "xl_SW_ctl",
-    "x_busy",
-    0,
-    1
-   ],
-   "sink": [
-    "cp_xl_SW",
-    "tgt_active",
-    0,
-    1
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "x-load busy -> collar active (install interlock only)",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_203",
-   "bits": 1,
-   "source": [
-    "xl_SW_ctl",
-    "x_fault",
-    0,
-    1
-   ],
-   "sink": [
-    "cp_xl_SW",
-    "tgt_fault",
-    0,
-    1
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "x-load sticky fault -> collar fault",
    "region": "cp1"
   },
   {
@@ -207522,7 +206896,7 @@
     1
    ],
    "sink": [
-    "cp_xl_SE",
+    "xl_SE_ctl",
     "cfg_v",
     0,
     1
@@ -207543,7 +206917,7 @@
     8
    ],
    "sink": [
-    "cp_xl_SE",
+    "xl_SE_ctl",
     "cfg_target",
     0,
     8
@@ -207564,7 +206938,7 @@
     12
    ],
    "sink": [
-    "cp_xl_SE",
+    "xl_SE_ctl",
     "cfg_addr",
     0,
     12
@@ -207585,7 +206959,7 @@
     256
    ],
    "sink": [
-    "cp_xl_SE",
+    "xl_SE_ctl",
     "cfg_data",
     0,
     256
@@ -207606,7 +206980,7 @@
     1
    ],
    "sink": [
-    "cp_xl_SE",
+    "xl_SE_ctl",
     "desc_v",
     0,
     1
@@ -207627,7 +207001,7 @@
     12
    ],
    "sink": [
-    "cp_xl_SE",
+    "xl_SE_ctl",
     "desc_base",
     0,
     12
@@ -207648,7 +207022,7 @@
     13
    ],
    "sink": [
-    "cp_xl_SE",
+    "xl_SE_ctl",
     "desc_limit",
     0,
     13
@@ -207669,7 +207043,7 @@
     16
    ],
    "sink": [
-    "cp_xl_SE",
+    "xl_SE_ctl",
     "desc_loops",
     0,
     16
@@ -207690,7 +207064,7 @@
     1
    ],
    "sink": [
-    "cp_xl_SE",
+    "xl_SE_ctl",
     "launch_v",
     0,
     1
@@ -207699,216 +207073,6 @@
    "ready_or_credit": false,
    "allowed_exception": null,
    "basis": "host F20 broadcast: ot_hbm_host_static_ingress.sv:18-23 outputs (same names/widths) -> collar pin flops; same pattern as coll_idx_link (COLL TARGET 52+QID)",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_416",
-   "bits": 1,
-   "source": [
-    "cp_xl_SE",
-    "cmd_v",
-    0,
-    1
-   ],
-   "sink": [
-    "xl_SE_ctl",
-    "x_v",
-    0,
-    1
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "ot_static_cmd_target MODE 1 cmd -> ot_hgi_sm_xload_static_cl2.sv:44-51 command pins (registered there)",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_417",
-   "bits": 40,
-   "source": [
-    "cp_xl_SE",
-    "cmd",
-    0,
-    40
-   ],
-   "sink": [
-    "xl_SE_ctl",
-    "x_base",
-    0,
-    40
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "ot_static_cmd_target MODE 1 cmd -> ot_hgi_sm_xload_static_cl2.sv:44-51 command pins (registered there)",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_418",
-   "bits": 21,
-   "source": [
-    "cp_xl_SE",
-    "cmd",
-    40,
-    61
-   ],
-   "sink": [
-    "xl_SE_ctl",
-    "x_n",
-    0,
-    21
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "ot_static_cmd_target MODE 1 cmd -> ot_hgi_sm_xload_static_cl2.sv:44-51 command pins (registered there)",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_419",
-   "bits": 4,
-   "source": [
-    "cp_xl_SE",
-    "cmd",
-    61,
-    65
-   ],
-   "sink": [
-    "xl_SE_ctl",
-    "x_p",
-    0,
-    4
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "ot_static_cmd_target MODE 1 cmd -> ot_hgi_sm_xload_static_cl2.sv:44-51 command pins (registered there)",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_420",
-   "bits": 32,
-   "source": [
-    "cp_xl_SE",
-    "cmd",
-    65,
-    97
-   ],
-   "sink": [
-    "xl_SE_ctl",
-    "x_stride",
-    0,
-    32
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "ot_static_cmd_target MODE 1 cmd -> ot_hgi_sm_xload_static_cl2.sv:44-51 command pins (registered there)",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_421",
-   "bits": 2,
-   "source": [
-    "cp_xl_SE",
-    "cmd",
-    97,
-    99
-   ],
-   "sink": [
-    "xl_SE_ctl",
-    "x_space",
-    0,
-    2
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "ot_static_cmd_target MODE 1 cmd -> ot_hgi_sm_xload_static_cl2.sv:44-51 command pins (registered there)",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_422",
-   "bits": 2,
-   "source": [
-    "cp_xl_SE",
-    "cmd",
-    99,
-    101
-   ],
-   "sink": [
-    "xl_SE_ctl",
-    "x_fmt",
-    0,
-    2
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "ot_static_cmd_target MODE 1 cmd -> ot_hgi_sm_xload_static_cl2.sv:44-51 command pins (registered there)",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_423",
-   "bits": 7,
-   "source": [
-    "cp_xl_SE",
-    "cmd",
-    101,
-    108
-   ],
-   "sink": [
-    "xl_SE_ctl",
-    "x_xb",
-    0,
-    7
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "ot_static_cmd_target MODE 1 cmd -> ot_hgi_sm_xload_static_cl2.sv:44-51 command pins (registered there)",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_424",
-   "bits": 1,
-   "source": [
-    "xl_SE_ctl",
-    "x_busy",
-    0,
-    1
-   ],
-   "sink": [
-    "cp_xl_SE",
-    "tgt_active",
-    0,
-    1
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "x-load busy -> collar active (install interlock only)",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_425",
-   "bits": 1,
-   "source": [
-    "xl_SE_ctl",
-    "x_fault",
-    0,
-    1
-   ],
-   "sink": [
-    "cp_xl_SE",
-    "tgt_fault",
-    0,
-    1
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "x-load sticky fault -> collar fault",
    "region": "cp1"
   },
   {
@@ -211827,7 +210991,7 @@
     1
    ],
    "sink": [
-    "cp_xl_NW",
+    "xl_NW_ctl",
     "cfg_v",
     0,
     1
@@ -211848,7 +211012,7 @@
     8
    ],
    "sink": [
-    "cp_xl_NW",
+    "xl_NW_ctl",
     "cfg_target",
     0,
     8
@@ -211869,7 +211033,7 @@
     12
    ],
    "sink": [
-    "cp_xl_NW",
+    "xl_NW_ctl",
     "cfg_addr",
     0,
     12
@@ -211890,7 +211054,7 @@
     256
    ],
    "sink": [
-    "cp_xl_NW",
+    "xl_NW_ctl",
     "cfg_data",
     0,
     256
@@ -211911,7 +211075,7 @@
     1
    ],
    "sink": [
-    "cp_xl_NW",
+    "xl_NW_ctl",
     "desc_v",
     0,
     1
@@ -211932,7 +211096,7 @@
     12
    ],
    "sink": [
-    "cp_xl_NW",
+    "xl_NW_ctl",
     "desc_base",
     0,
     12
@@ -211953,7 +211117,7 @@
     13
    ],
    "sink": [
-    "cp_xl_NW",
+    "xl_NW_ctl",
     "desc_limit",
     0,
     13
@@ -211974,7 +211138,7 @@
     16
    ],
    "sink": [
-    "cp_xl_NW",
+    "xl_NW_ctl",
     "desc_loops",
     0,
     16
@@ -211995,7 +211159,7 @@
     1
    ],
    "sink": [
-    "cp_xl_NW",
+    "xl_NW_ctl",
     "launch_v",
     0,
     1
@@ -212004,216 +211168,6 @@
    "ready_or_credit": false,
    "allowed_exception": null,
    "basis": "host F20 broadcast: ot_hbm_host_static_ingress.sv:18-23 outputs (same names/widths) -> collar pin flops; same pattern as coll_idx_link (COLL TARGET 52+QID)",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_638",
-   "bits": 1,
-   "source": [
-    "cp_xl_NW",
-    "cmd_v",
-    0,
-    1
-   ],
-   "sink": [
-    "xl_NW_ctl",
-    "x_v",
-    0,
-    1
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "ot_static_cmd_target MODE 1 cmd -> ot_hgi_sm_xload_static_cl2.sv:44-51 command pins (registered there)",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_639",
-   "bits": 40,
-   "source": [
-    "cp_xl_NW",
-    "cmd",
-    0,
-    40
-   ],
-   "sink": [
-    "xl_NW_ctl",
-    "x_base",
-    0,
-    40
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "ot_static_cmd_target MODE 1 cmd -> ot_hgi_sm_xload_static_cl2.sv:44-51 command pins (registered there)",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_640",
-   "bits": 21,
-   "source": [
-    "cp_xl_NW",
-    "cmd",
-    40,
-    61
-   ],
-   "sink": [
-    "xl_NW_ctl",
-    "x_n",
-    0,
-    21
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "ot_static_cmd_target MODE 1 cmd -> ot_hgi_sm_xload_static_cl2.sv:44-51 command pins (registered there)",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_641",
-   "bits": 4,
-   "source": [
-    "cp_xl_NW",
-    "cmd",
-    61,
-    65
-   ],
-   "sink": [
-    "xl_NW_ctl",
-    "x_p",
-    0,
-    4
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "ot_static_cmd_target MODE 1 cmd -> ot_hgi_sm_xload_static_cl2.sv:44-51 command pins (registered there)",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_642",
-   "bits": 32,
-   "source": [
-    "cp_xl_NW",
-    "cmd",
-    65,
-    97
-   ],
-   "sink": [
-    "xl_NW_ctl",
-    "x_stride",
-    0,
-    32
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "ot_static_cmd_target MODE 1 cmd -> ot_hgi_sm_xload_static_cl2.sv:44-51 command pins (registered there)",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_643",
-   "bits": 2,
-   "source": [
-    "cp_xl_NW",
-    "cmd",
-    97,
-    99
-   ],
-   "sink": [
-    "xl_NW_ctl",
-    "x_space",
-    0,
-    2
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "ot_static_cmd_target MODE 1 cmd -> ot_hgi_sm_xload_static_cl2.sv:44-51 command pins (registered there)",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_644",
-   "bits": 2,
-   "source": [
-    "cp_xl_NW",
-    "cmd",
-    99,
-    101
-   ],
-   "sink": [
-    "xl_NW_ctl",
-    "x_fmt",
-    0,
-    2
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "ot_static_cmd_target MODE 1 cmd -> ot_hgi_sm_xload_static_cl2.sv:44-51 command pins (registered there)",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_645",
-   "bits": 7,
-   "source": [
-    "cp_xl_NW",
-    "cmd",
-    101,
-    108
-   ],
-   "sink": [
-    "xl_NW_ctl",
-    "x_xb",
-    0,
-    7
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "ot_static_cmd_target MODE 1 cmd -> ot_hgi_sm_xload_static_cl2.sv:44-51 command pins (registered there)",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_646",
-   "bits": 1,
-   "source": [
-    "xl_NW_ctl",
-    "x_busy",
-    0,
-    1
-   ],
-   "sink": [
-    "cp_xl_NW",
-    "tgt_active",
-    0,
-    1
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "x-load busy -> collar active (install interlock only)",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_647",
-   "bits": 1,
-   "source": [
-    "xl_NW_ctl",
-    "x_fault",
-    0,
-    1
-   ],
-   "sink": [
-    "cp_xl_NW",
-    "tgt_fault",
-    0,
-    1
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "x-load sticky fault -> collar fault",
    "region": "cp1"
   },
   {
@@ -216132,7 +215086,7 @@
     1
    ],
    "sink": [
-    "cp_xl_NE",
+    "xl_NE_ctl",
     "cfg_v",
     0,
     1
@@ -216153,7 +215107,7 @@
     8
    ],
    "sink": [
-    "cp_xl_NE",
+    "xl_NE_ctl",
     "cfg_target",
     0,
     8
@@ -216174,7 +215128,7 @@
     12
    ],
    "sink": [
-    "cp_xl_NE",
+    "xl_NE_ctl",
     "cfg_addr",
     0,
     12
@@ -216195,7 +215149,7 @@
     256
    ],
    "sink": [
-    "cp_xl_NE",
+    "xl_NE_ctl",
     "cfg_data",
     0,
     256
@@ -216216,7 +215170,7 @@
     1
    ],
    "sink": [
-    "cp_xl_NE",
+    "xl_NE_ctl",
     "desc_v",
     0,
     1
@@ -216237,7 +215191,7 @@
     12
    ],
    "sink": [
-    "cp_xl_NE",
+    "xl_NE_ctl",
     "desc_base",
     0,
     12
@@ -216258,7 +215212,7 @@
     13
    ],
    "sink": [
-    "cp_xl_NE",
+    "xl_NE_ctl",
     "desc_limit",
     0,
     13
@@ -216279,7 +215233,7 @@
     16
    ],
    "sink": [
-    "cp_xl_NE",
+    "xl_NE_ctl",
     "desc_loops",
     0,
     16
@@ -216300,7 +215254,7 @@
     1
    ],
    "sink": [
-    "cp_xl_NE",
+    "xl_NE_ctl",
     "launch_v",
     0,
     1
@@ -216309,216 +215263,6 @@
    "ready_or_credit": false,
    "allowed_exception": null,
    "basis": "host F20 broadcast: ot_hbm_host_static_ingress.sv:18-23 outputs (same names/widths) -> collar pin flops; same pattern as coll_idx_link (COLL TARGET 52+QID)",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_860",
-   "bits": 1,
-   "source": [
-    "cp_xl_NE",
-    "cmd_v",
-    0,
-    1
-   ],
-   "sink": [
-    "xl_NE_ctl",
-    "x_v",
-    0,
-    1
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "ot_static_cmd_target MODE 1 cmd -> ot_hgi_sm_xload_static_cl2.sv:44-51 command pins (registered there)",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_861",
-   "bits": 40,
-   "source": [
-    "cp_xl_NE",
-    "cmd",
-    0,
-    40
-   ],
-   "sink": [
-    "xl_NE_ctl",
-    "x_base",
-    0,
-    40
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "ot_static_cmd_target MODE 1 cmd -> ot_hgi_sm_xload_static_cl2.sv:44-51 command pins (registered there)",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_862",
-   "bits": 21,
-   "source": [
-    "cp_xl_NE",
-    "cmd",
-    40,
-    61
-   ],
-   "sink": [
-    "xl_NE_ctl",
-    "x_n",
-    0,
-    21
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "ot_static_cmd_target MODE 1 cmd -> ot_hgi_sm_xload_static_cl2.sv:44-51 command pins (registered there)",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_863",
-   "bits": 4,
-   "source": [
-    "cp_xl_NE",
-    "cmd",
-    61,
-    65
-   ],
-   "sink": [
-    "xl_NE_ctl",
-    "x_p",
-    0,
-    4
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "ot_static_cmd_target MODE 1 cmd -> ot_hgi_sm_xload_static_cl2.sv:44-51 command pins (registered there)",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_864",
-   "bits": 32,
-   "source": [
-    "cp_xl_NE",
-    "cmd",
-    65,
-    97
-   ],
-   "sink": [
-    "xl_NE_ctl",
-    "x_stride",
-    0,
-    32
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "ot_static_cmd_target MODE 1 cmd -> ot_hgi_sm_xload_static_cl2.sv:44-51 command pins (registered there)",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_865",
-   "bits": 2,
-   "source": [
-    "cp_xl_NE",
-    "cmd",
-    97,
-    99
-   ],
-   "sink": [
-    "xl_NE_ctl",
-    "x_space",
-    0,
-    2
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "ot_static_cmd_target MODE 1 cmd -> ot_hgi_sm_xload_static_cl2.sv:44-51 command pins (registered there)",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_866",
-   "bits": 2,
-   "source": [
-    "cp_xl_NE",
-    "cmd",
-    99,
-    101
-   ],
-   "sink": [
-    "xl_NE_ctl",
-    "x_fmt",
-    0,
-    2
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "ot_static_cmd_target MODE 1 cmd -> ot_hgi_sm_xload_static_cl2.sv:44-51 command pins (registered there)",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_867",
-   "bits": 7,
-   "source": [
-    "cp_xl_NE",
-    "cmd",
-    101,
-    108
-   ],
-   "sink": [
-    "xl_NE_ctl",
-    "x_xb",
-    0,
-    7
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "ot_static_cmd_target MODE 1 cmd -> ot_hgi_sm_xload_static_cl2.sv:44-51 command pins (registered there)",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_868",
-   "bits": 1,
-   "source": [
-    "xl_NE_ctl",
-    "x_busy",
-    0,
-    1
-   ],
-   "sink": [
-    "cp_xl_NE",
-    "tgt_active",
-    0,
-    1
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "x-load busy -> collar active (install interlock only)",
-   "region": "cp1"
-  },
-  {
-   "name": "cp1_869",
-   "bits": 1,
-   "source": [
-    "xl_NE_ctl",
-    "x_fault",
-    0,
-    1
-   ],
-   "sink": [
-    "cp_xl_NE",
-    "tgt_fault",
-    0,
-    1
-   ],
-   "clock": "stream",
-   "ready_or_credit": false,
-   "allowed_exception": null,
-   "basis": "x-load sticky fault -> collar fault",
    "region": "cp1"
   },
   {
@@ -224211,7 +222955,7 @@
    "name": "cp2_357",
    "bits": 1,
    "source": [
-    "cp_xl_SW",
+    "xl_SW_ctl",
     "configured",
     0,
     1
@@ -224232,7 +222976,7 @@
    "name": "cp2_358",
    "bits": 1,
    "source": [
-    "cp_xl_SW",
+    "xl_SW_ctl",
     "active",
     0,
     1
@@ -224253,7 +222997,7 @@
    "name": "cp2_359",
    "bits": 1,
    "source": [
-    "cp_xl_SW",
+    "xl_SW_ctl",
     "fault",
     0,
     1
@@ -224274,7 +223018,7 @@
    "name": "cp2_360",
    "bits": 1,
    "source": [
-    "cp_xl_SE",
+    "xl_SE_ctl",
     "configured",
     0,
     1
@@ -224295,7 +223039,7 @@
    "name": "cp2_361",
    "bits": 1,
    "source": [
-    "cp_xl_SE",
+    "xl_SE_ctl",
     "active",
     0,
     1
@@ -224316,7 +223060,7 @@
    "name": "cp2_362",
    "bits": 1,
    "source": [
-    "cp_xl_SE",
+    "xl_SE_ctl",
     "fault",
     0,
     1
@@ -224337,7 +223081,7 @@
    "name": "cp2_363",
    "bits": 1,
    "source": [
-    "cp_xl_NW",
+    "xl_NW_ctl",
     "configured",
     0,
     1
@@ -224358,7 +223102,7 @@
    "name": "cp2_364",
    "bits": 1,
    "source": [
-    "cp_xl_NW",
+    "xl_NW_ctl",
     "active",
     0,
     1
@@ -224379,7 +223123,7 @@
    "name": "cp2_365",
    "bits": 1,
    "source": [
-    "cp_xl_NW",
+    "xl_NW_ctl",
     "fault",
     0,
     1
@@ -224400,7 +223144,7 @@
    "name": "cp2_366",
    "bits": 1,
    "source": [
-    "cp_xl_NE",
+    "xl_NE_ctl",
     "configured",
     0,
     1
@@ -224421,7 +223165,7 @@
    "name": "cp2_367",
    "bits": 1,
    "source": [
-    "cp_xl_NE",
+    "xl_NE_ctl",
     "active",
     0,
     1
@@ -224442,7 +223186,7 @@
    "name": "cp2_368",
    "bits": 1,
    "source": [
-    "cp_xl_NE",
+    "xl_NE_ctl",
     "fault",
     0,
     1
@@ -352071,6 +350815,17 @@
   },
   {
    "instance": "calendar_NE",
+   "port": "clk_tgt",
+   "bits": 1,
+   "domain": "stream",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ]
+  },
+  {
+   "instance": "calendar_NE",
    "port": "rst_n",
    "bits": 1,
    "domain": "stream",
@@ -352115,6 +350870,17 @@
   },
   {
    "instance": "calendar_NW",
+   "port": "clk_tgt",
+   "bits": 1,
+   "domain": "stream",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ]
+  },
+  {
+   "instance": "calendar_NW",
    "port": "rst_n",
    "bits": 1,
    "domain": "stream",
@@ -352159,6 +350925,17 @@
   },
   {
    "instance": "calendar_SE",
+   "port": "clk_tgt",
+   "bits": 1,
+   "domain": "stream",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ]
+  },
+  {
+   "instance": "calendar_SE",
    "port": "rst_n",
    "bits": 1,
    "domain": "stream",
@@ -352193,6 +350970,17 @@
   {
    "instance": "calendar_SW",
    "port": "clk_mem",
+   "bits": 1,
+   "domain": "stream",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ]
+  },
+  {
+   "instance": "calendar_SW",
+   "port": "clk_tgt",
    "bits": 1,
    "domain": "stream",
    "kind": "clock",
@@ -352785,50 +351573,6 @@
    ]
   },
   {
-   "instance": "cp_xl_NE",
-   "port": "clk",
-   "bits": 1,
-   "domain": "stream",
-   "kind": "clock",
-   "source": [
-    "hb_ckgen",
-    "pll_stream"
-   ]
-  },
-  {
-   "instance": "cp_xl_NW",
-   "port": "clk",
-   "bits": 1,
-   "domain": "stream",
-   "kind": "clock",
-   "source": [
-    "hb_ckgen",
-    "pll_stream"
-   ]
-  },
-  {
-   "instance": "cp_xl_SE",
-   "port": "clk",
-   "bits": 1,
-   "domain": "stream",
-   "kind": "clock",
-   "source": [
-    "hb_ckgen",
-    "pll_stream"
-   ]
-  },
-  {
-   "instance": "cp_xl_SW",
-   "port": "clk",
-   "bits": 1,
-   "domain": "stream",
-   "kind": "clock",
-   "source": [
-    "hb_ckgen",
-    "pll_stream"
-   ]
-  },
-  {
    "instance": "ctl_NE_p00",
    "port": "clk",
    "bits": 1,
@@ -355876,6 +354620,17 @@
    ]
   },
   {
+   "instance": "epcal_NE",
+   "port": "clk_tgt",
+   "bits": 1,
+   "domain": "stream",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ]
+  },
+  {
    "instance": "epcal_NW",
    "port": "clk",
    "bits": 1,
@@ -355900,6 +354655,17 @@
   {
    "instance": "epcal_NW",
    "port": "clk_mem",
+   "bits": 1,
+   "domain": "stream",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ]
+  },
+  {
+   "instance": "epcal_NW",
+   "port": "clk_tgt",
    "bits": 1,
    "domain": "stream",
    "kind": "clock",
@@ -355942,6 +354708,17 @@
    ]
   },
   {
+   "instance": "epcal_SE",
+   "port": "clk_tgt",
+   "bits": 1,
+   "domain": "stream",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ]
+  },
+  {
    "instance": "epcal_SW",
    "port": "clk",
    "bits": 1,
@@ -355966,6 +354743,17 @@
   {
    "instance": "epcal_SW",
    "port": "clk_mem",
+   "bits": 1,
+   "domain": "stream",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ]
+  },
+  {
+   "instance": "epcal_SW",
+   "port": "clk_tgt",
    "bits": 1,
    "domain": "stream",
    "kind": "clock",
@@ -387029,6 +385817,17 @@
   },
   {
    "instance": "vmfc_NE",
+   "port": "clk_tgt",
+   "bits": 1,
+   "domain": "stream",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ]
+  },
+  {
+   "instance": "vmfc_NE",
    "port": "rst_n",
    "bits": 1,
    "domain": "stream",
@@ -387073,6 +385872,17 @@
   },
   {
    "instance": "vmfc_NW",
+   "port": "clk_tgt",
+   "bits": 1,
+   "domain": "stream",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ]
+  },
+  {
+   "instance": "vmfc_NW",
    "port": "rst_n",
    "bits": 1,
    "domain": "stream",
@@ -387117,6 +385927,17 @@
   },
   {
    "instance": "vmfc_SE",
+   "port": "clk_tgt",
+   "bits": 1,
+   "domain": "stream",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ]
+  },
+  {
+   "instance": "vmfc_SE",
    "port": "rst_n",
    "bits": 1,
    "domain": "stream",
@@ -387151,6 +385972,17 @@
   {
    "instance": "vmfc_SW",
    "port": "clk_mem",
+   "bits": 1,
+   "domain": "stream",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ]
+  },
+  {
+   "instance": "vmfc_SW",
+   "port": "clk_tgt",
    "bits": 1,
    "domain": "stream",
    "kind": "clock",
@@ -390087,18 +388919,6 @@
    "note": "domain of the instance clock (v15 resets were outside the contract)"
   },
   {
-   "instance": "cp_xl_SW",
-   "port": "rst_n",
-   "bits": 1,
-   "domain": "stream",
-   "kind": "reset",
-   "source": [
-    "hb_ckgen",
-    "por_stream"
-   ],
-   "note": "domain of the instance clock (v15 resets were outside the contract)"
-  },
-  {
    "instance": "cp_svg_SE0",
    "port": "rst_n",
    "bits": 1,
@@ -390184,18 +389004,6 @@
   },
   {
    "instance": "cp_svg_SE7",
-   "port": "rst_n",
-   "bits": 1,
-   "domain": "stream",
-   "kind": "reset",
-   "source": [
-    "hb_ckgen",
-    "por_stream"
-   ],
-   "note": "domain of the instance clock (v15 resets were outside the contract)"
-  },
-  {
-   "instance": "cp_xl_SE",
    "port": "rst_n",
    "bits": 1,
    "domain": "stream",
@@ -390303,18 +389111,6 @@
    "note": "domain of the instance clock (v15 resets were outside the contract)"
   },
   {
-   "instance": "cp_xl_NW",
-   "port": "rst_n",
-   "bits": 1,
-   "domain": "stream",
-   "kind": "reset",
-   "source": [
-    "hb_ckgen",
-    "por_stream"
-   ],
-   "note": "domain of the instance clock (v15 resets were outside the contract)"
-  },
-  {
    "instance": "cp_svg_NE0",
    "port": "rst_n",
    "bits": 1,
@@ -390400,18 +389196,6 @@
   },
   {
    "instance": "cp_svg_NE7",
-   "port": "rst_n",
-   "bits": 1,
-   "domain": "stream",
-   "kind": "reset",
-   "source": [
-    "hb_ckgen",
-    "por_stream"
-   ],
-   "note": "domain of the instance clock (v15 resets were outside the contract)"
-  },
-  {
-   "instance": "cp_xl_NE",
    "port": "rst_n",
    "bits": 1,
    "domain": "stream",
@@ -392982,13 +391766,13 @@
    "master": "hfd_hgi_vm_calendar_f20"
   },
   {
-   "inst": "cp_xl_SW",
+   "inst": "xl_SW_ctl",
    "port": "tgt",
    "value": 100,
    "reason": "identity: F20 target id 100 of this target instance",
    "lo": 0,
    "hi": 8,
-   "master": "ot_static_cmd_target"
+   "master": "ot_hgi_sm_xload_cl2_ctlw"
   },
   {
    "inst": "hb_dbk_SW",
@@ -393081,13 +391865,13 @@
    "master": "hfd_hgi_vm_calendar_f20"
   },
   {
-   "inst": "cp_xl_SE",
+   "inst": "xl_SE_ctl",
    "port": "tgt",
    "value": 101,
    "reason": "identity: F20 target id 101 of this target instance",
    "lo": 0,
    "hi": 8,
-   "master": "ot_static_cmd_target"
+   "master": "ot_hgi_sm_xload_cl2_ctlw"
   },
   {
    "inst": "hb_dbk_SE",
@@ -393180,13 +391964,13 @@
    "master": "hfd_hgi_vm_calendar_f20"
   },
   {
-   "inst": "cp_xl_NW",
+   "inst": "xl_NW_ctl",
    "port": "tgt",
    "value": 102,
    "reason": "identity: F20 target id 102 of this target instance",
    "lo": 0,
    "hi": 8,
-   "master": "ot_static_cmd_target"
+   "master": "ot_hgi_sm_xload_cl2_ctlw"
   },
   {
    "inst": "hb_dbk_NW",
@@ -393279,13 +392063,13 @@
    "master": "hfd_hgi_vm_calendar_f20"
   },
   {
-   "inst": "cp_xl_NE",
+   "inst": "xl_NE_ctl",
    "port": "tgt",
    "value": 103,
    "reason": "identity: F20 target id 103 of this target instance",
    "lo": 0,
    "hi": 8,
-   "master": "ot_static_cmd_target"
+   "master": "ot_hgi_sm_xload_cl2_ctlw"
   },
   {
    "inst": "hb_dbk_NE",
@@ -398115,200 +396899,7 @@
    "id": "G-SMVM-XCMD",
    "owner": "H-SM (with HBM compiler / CP)",
    "missing_rtl": "a STATIC x-load command issuer (programme-SRAM sequencer like ot_static_program_target + calendar) that drives x_v/x_base/x_n/x_p/x_stride/x_space/x_fmt/x_xb on fixed cycles and consumes x_done/x_fault. Every producer on main is credited (x_rdy handshake): ot_hgi_sm_record, ot_hgi_smmv, ot_hbm_b2_xload_command (and ot_hgi_cp_die ux_v/ux_rdy). None can bind to the static cl2 ctl (no x_rdy input).",
-   "affects": [
-    [
-     "xl_SW_ctl",
-     "x_v",
-     0,
-     1
-    ],
-    [
-     "xl_SW_ctl",
-     "x_base",
-     0,
-     40
-    ],
-    [
-     "xl_SW_ctl",
-     "x_n",
-     0,
-     21
-    ],
-    [
-     "xl_SW_ctl",
-     "x_p",
-     0,
-     4
-    ],
-    [
-     "xl_SW_ctl",
-     "x_stride",
-     0,
-     32
-    ],
-    [
-     "xl_SW_ctl",
-     "x_space",
-     0,
-     2
-    ],
-    [
-     "xl_SW_ctl",
-     "x_fmt",
-     0,
-     2
-    ],
-    [
-     "xl_SW_ctl",
-     "x_xb",
-     0,
-     7
-    ],
-    [
-     "xl_SE_ctl",
-     "x_v",
-     0,
-     1
-    ],
-    [
-     "xl_SE_ctl",
-     "x_base",
-     0,
-     40
-    ],
-    [
-     "xl_SE_ctl",
-     "x_n",
-     0,
-     21
-    ],
-    [
-     "xl_SE_ctl",
-     "x_p",
-     0,
-     4
-    ],
-    [
-     "xl_SE_ctl",
-     "x_stride",
-     0,
-     32
-    ],
-    [
-     "xl_SE_ctl",
-     "x_space",
-     0,
-     2
-    ],
-    [
-     "xl_SE_ctl",
-     "x_fmt",
-     0,
-     2
-    ],
-    [
-     "xl_SE_ctl",
-     "x_xb",
-     0,
-     7
-    ],
-    [
-     "xl_NW_ctl",
-     "x_v",
-     0,
-     1
-    ],
-    [
-     "xl_NW_ctl",
-     "x_base",
-     0,
-     40
-    ],
-    [
-     "xl_NW_ctl",
-     "x_n",
-     0,
-     21
-    ],
-    [
-     "xl_NW_ctl",
-     "x_p",
-     0,
-     4
-    ],
-    [
-     "xl_NW_ctl",
-     "x_stride",
-     0,
-     32
-    ],
-    [
-     "xl_NW_ctl",
-     "x_space",
-     0,
-     2
-    ],
-    [
-     "xl_NW_ctl",
-     "x_fmt",
-     0,
-     2
-    ],
-    [
-     "xl_NW_ctl",
-     "x_xb",
-     0,
-     7
-    ],
-    [
-     "xl_NE_ctl",
-     "x_v",
-     0,
-     1
-    ],
-    [
-     "xl_NE_ctl",
-     "x_base",
-     0,
-     40
-    ],
-    [
-     "xl_NE_ctl",
-     "x_n",
-     0,
-     21
-    ],
-    [
-     "xl_NE_ctl",
-     "x_p",
-     0,
-     4
-    ],
-    [
-     "xl_NE_ctl",
-     "x_stride",
-     0,
-     32
-    ],
-    [
-     "xl_NE_ctl",
-     "x_space",
-     0,
-     2
-    ],
-    [
-     "xl_NE_ctl",
-     "x_fmt",
-     0,
-     2
-    ],
-    [
-     "xl_NE_ctl",
-     "x_xb",
-     0,
-     7
-    ]
-   ],
+   "affects": [],
    "note": "outputs x_busy/x_done/x_fault/xw_last of xl_<q>_ctl left unconsumed (xw_last has no SM input; x_done/x_fault belong to the missing issuer).",
    "region": "sm_vm",
    "undriven_ports": 0,
@@ -400958,56 +399549,6 @@
    32
   ],
   [
-   "cp_xl_SW",
-   "a_we",
-   1
-  ],
-  [
-   "cp_xl_SW",
-   "a_addr",
-   1
-  ],
-  [
-   "cp_xl_SW",
-   "a_data",
-   256
-  ],
-  [
-   "cp_xl_SW",
-   "b_we",
-   1
-  ],
-  [
-   "cp_xl_SW",
-   "b_addr",
-   1
-  ],
-  [
-   "cp_xl_SW",
-   "b_data",
-   256
-  ],
-  [
-   "cp_xl_SW",
-   "run_v",
-   1
-  ],
-  [
-   "cp_xl_SW",
-   "run_base",
-   1
-  ],
-  [
-   "cp_xl_SW",
-   "run_count",
-   1
-  ],
-  [
-   "cp_xl_SW",
-   "cycle",
-   32
-  ],
-  [
    "cp_svg_SE0",
    "cmd_v",
    1
@@ -401124,56 +399665,6 @@
   ],
   [
    "cp_svg_SE7",
-   "cycle",
-   32
-  ],
-  [
-   "cp_xl_SE",
-   "a_we",
-   1
-  ],
-  [
-   "cp_xl_SE",
-   "a_addr",
-   1
-  ],
-  [
-   "cp_xl_SE",
-   "a_data",
-   256
-  ],
-  [
-   "cp_xl_SE",
-   "b_we",
-   1
-  ],
-  [
-   "cp_xl_SE",
-   "b_addr",
-   1
-  ],
-  [
-   "cp_xl_SE",
-   "b_data",
-   256
-  ],
-  [
-   "cp_xl_SE",
-   "run_v",
-   1
-  ],
-  [
-   "cp_xl_SE",
-   "run_base",
-   1
-  ],
-  [
-   "cp_xl_SE",
-   "run_count",
-   1
-  ],
-  [
-   "cp_xl_SE",
    "cycle",
    32
   ],
@@ -401298,56 +399789,6 @@
    32
   ],
   [
-   "cp_xl_NW",
-   "a_we",
-   1
-  ],
-  [
-   "cp_xl_NW",
-   "a_addr",
-   1
-  ],
-  [
-   "cp_xl_NW",
-   "a_data",
-   256
-  ],
-  [
-   "cp_xl_NW",
-   "b_we",
-   1
-  ],
-  [
-   "cp_xl_NW",
-   "b_addr",
-   1
-  ],
-  [
-   "cp_xl_NW",
-   "b_data",
-   256
-  ],
-  [
-   "cp_xl_NW",
-   "run_v",
-   1
-  ],
-  [
-   "cp_xl_NW",
-   "run_base",
-   1
-  ],
-  [
-   "cp_xl_NW",
-   "run_count",
-   1
-  ],
-  [
-   "cp_xl_NW",
-   "cycle",
-   32
-  ],
-  [
    "cp_svg_NE0",
    "cmd_v",
    1
@@ -401464,56 +399905,6 @@
   ],
   [
    "cp_svg_NE7",
-   "cycle",
-   32
-  ],
-  [
-   "cp_xl_NE",
-   "a_we",
-   1
-  ],
-  [
-   "cp_xl_NE",
-   "a_addr",
-   1
-  ],
-  [
-   "cp_xl_NE",
-   "a_data",
-   256
-  ],
-  [
-   "cp_xl_NE",
-   "b_we",
-   1
-  ],
-  [
-   "cp_xl_NE",
-   "b_addr",
-   1
-  ],
-  [
-   "cp_xl_NE",
-   "b_data",
-   256
-  ],
-  [
-   "cp_xl_NE",
-   "run_v",
-   1
-  ],
-  [
-   "cp_xl_NE",
-   "run_base",
-   1
-  ],
-  [
-   "cp_xl_NE",
-   "run_count",
-   1
-  ],
-  [
-   "cp_xl_NE",
    "cycle",
    32
   ],
