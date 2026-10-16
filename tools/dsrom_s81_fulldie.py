@@ -10417,6 +10417,9 @@ def die_options(ap):
     ap.add_argument('--node-static', action='store_true', help='S-NET (owner static rule 10-14): return nodes wrap '
                     'ot_s81_retn_static (fixed-slot sibling window, no queues / WAIT timeout / arbitration)')
     ap.add_argument('--node-win', type=int, default=2, help='S-NET: sibling window of the static return node (edges)')
+    ap.add_argument('--node-strip', type=float, default=None, help='S-NET+FILL (tile fill audit 10-15): return-node slot width '
+                    '(um, default 86.4); 43.2 = the n6 node masters (s81net_node_*-n6, pins physical/s81_die_pins/snet_node43), '
+                    'node strip NS_W = width + 8.64, every field column 43.2 um narrower')
     ap.add_argument('--node-rstreg', action='store_true', help='S-NET+FILL (native audit 10-15): with --node-static, rst_n '
                     'drives one reset pin register (async assert, release +1 edge) that resets every node flop')
     ap.add_argument('--hend-static', action='store_true', help='S-NET (owner static rule 10-14): hub end/start blocks and '
@@ -10887,6 +10890,12 @@ def apply_options(a):
             raise SystemExit('--coll-p2-lane: MD-2 P2 draft die A (--draft A)')
         COLL_SPLIT3_COMP = 'physical/s81_ph_views/collective/composition_split3cr_%s.json' % ('mtpl' if COLL_MTP_LANE else 'p2l')
     global CTRL_RQ, FWD_IFACE, HOP_EXTRA, HOP_GATE_UM, CTRL_SVC_ALIGN, BF_HIER, BF_FRAME_EXTRA, BF_FRONT_W, BF_ROUTE_H, BF_SEAM_UM, LANES_W, COL_W8, COL_PITCH8, DIE
+    global NODE_FRAME, NS_W, COL_W, COL_PITCH
+    if getattr(a, 'node_strip', None):   # S-NET+FILL (tile fill audit 354b5bb2e): narrower return-node strip
+        NODE_FRAME = (float(a.node_strip), NODE_FRAME[1])
+        NS_W = NODE_FRAME[0] + 8.64
+        COL_W = 2 * LANE_W + NS_W
+        COL_PITCH = COL_W + 8.64
     BF_HIER = getattr(a, 'bf_hier', None)
     if getattr(a, 'bf_hier_compact', False):
         assert BF_HIER is None, '--bf-hier and --bf-hier-compact are exclusive'
