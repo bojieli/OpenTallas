@@ -180,11 +180,10 @@ def test_balanced_pins_avoid_tile_corners(monkeypatch):
     fp = flow.resolve_floorplan(None, None, [r"^a$=top", r"^b$=left:0-100"], None)
     tcl = flow.io_constraints_tcl(fp["pin_regions"], die_area_um=[0, 0, 345.6, 345.6])
     assert "expr {1 + (344.6 - 1) * ($ot_first + 0.5) / $ot_count}" in tcl      # full top face
-    assert "expr {1 + (100 - 1) * ($ot_first + 0.5) / $ot_count}" in tcl        # range starting at the corner
+    assert "expr {0 + (100 - 0) * ($ot_first + 0.5) / $ot_count}" in tcl        # explicit range: as written
     monkeypatch.setenv("OT_PIN_CORNER_UM", "0")
     tcl = flow.io_constraints_tcl(fp["pin_regions"], die_area_um=[0, 0, 345.6, 345.6])
     assert "expr {0 + (345.6 - 0) * ($ot_first + 0.5) / $ot_count}" in tcl     # opt-out keeps the old positions
     monkeypatch.setenv("OT_PIN_CORNER_UM", "1.0")
-    fp = flow.resolve_floorplan(None, None, [r"^a$=top:0-0.5"], None)
-    with pytest.raises(ValueError, match="corner margin"):
-        flow.io_constraints_tcl(fp["pin_regions"], die_area_um=[0, 0, 345.6, 345.6])
+    fp = flow.resolve_floorplan(None, None, [r"^a$=top:0.2-0.8"], None)                # a corner window stays legal
+    assert "expr {0.2 + (0.8 - 0.2)" in flow.io_constraints_tcl(fp["pin_regions"], die_area_um=[0, 0, 345.6, 345.6])

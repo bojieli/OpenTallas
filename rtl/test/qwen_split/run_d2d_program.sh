@@ -6,7 +6,8 @@ W=$(cd "$(dirname "$0")/../.." && pwd); R=$(cd "$W/.." && pwd)
 TXL=${TXL:-6}; PHY=${PHY:-5}
 mkdir -p "$OUT"
 CTXL=$TXL; [ "$MUT" = 4 ] && CTXL=$((TXL-1))
-python3 "$R/tools/qwen_split/d2d_link_calendar.py" --out "$OUT/cal" --txl "$CTXL" --phy "$PHY" --profile program --txd-c 1,2,1,2 --txd-k 1,2,1,1 --host-stages 0 --link-handoff "$R/results/arch/qwen_split_compute_1014/res_train_decision_1015/decision.json" $([ "${PR:-1}" = 1 ] && echo --pinreg) > "$OUT/calendar.log"
+# compute port 1 (program record): the PR master captures it TXD 3 (qfd_d2d_static TXDP {4,1,3,3}) = raw 1 + 2 pin flops
+python3 "$R/tools/qwen_split/d2d_link_calendar.py" --out "$OUT/cal" --txl "$CTXL" --phy "$PHY" --profile program --txd-c $([ "${PR:-1}" = 1 ] && echo 1,1,1,2 || echo 1,2,1,2) --txd-k 1,2,1,1 --host-stages 0 --link-handoff "$R/results/arch/qwen_split_compute_1014/res_train_decision_1015/decision.json" $([ "${PR:-1}" = 1 ] && echo --pinreg) > "$OUT/calendar.log"
 python3 "$R/tools/qwen_split/d2d_program_params.py" "$OUT/cal/calendar.json" "$OUT/cal"
 # the committed constant sequencer image must be the compiler's (mutant 4 compiles a wrong TXL: its images differ by design)
 python3 "$R/tools/qwen_split/d2d_cal_seq_image.py" "$OUT/cal" "$OUT/cal/d2d_cal_image_compiled.svh"

@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hgi_dma_back_static_vp4_banks",
+ "enable": false,
+ "reason": "Parent is wires only; actual hard children own the registered endpoints and nine independently compensated clock entries. Parent wires remain part of the die hop budget."
+}

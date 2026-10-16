@@ -48,5 +48,17 @@
     "coherent compiler/HC parent +1 serial edge and measured totalcost",
     "new source-pinned view and child lint; no old cap view inheritance"
   ],
-  "reason": "Measured old fd_in1007 capture clone at opposite face creates469.836um separation; separate actual N capture and S launch flops preserve faces at +1 serial edge. Root authorized structural successor; no owner rule or qualification waiver."
+  "reason": "Measured old fd_in1007 capture clone is on the opposite face; across the capture/launch semantic pin pairs,64/1128 exceed190um and the worst is469.836um. Separate actual N capture and S launch flops preserve faces at +1 serial edge. Root authorized structural successor; no owner rule or qualification waiver.",
+  "measured_failure_geometry": {
+    "fd_in1007_pin_um": [
+      509.436,
+      51.798
+    ],
+    "fd_in1007_capture_clone_um": [
+      92.34,
+      4.86
+    ],
+    "fd_in1007_manhattan_um": 464.034,
+    "worst_semantic_capture_launch_pair_um": 469.836
+  }
 }

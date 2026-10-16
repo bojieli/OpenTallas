@@ -56,8 +56,8 @@
   },
   "slot_change_request": "Official local pin grant d61fc4215; candidate only. Whole-die static boundary homes and integration remain open.",
   "job": {
-    "owner": "Codex:Q-KV-2330",
-    "branch": "codex/qwen-kv-2330",
+    "owner": "Claude:Q-ELEM-0030",
+    "branch": "claude/qelem-ectl-a-2215",
     "tag": "mc3",
     "purpose": "Four actual independent phase-aligned pll_hbm_data storage roots: fixed bit slices replace a single >15k storage root; no clock gating, no timing exception between same-phase roots, no normal-cycle delta. Front width259.2 removes measured66.4% utilization failure.",
     "benches": [
