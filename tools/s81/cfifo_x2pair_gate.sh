@@ -1,6 +1,7 @@
 #!/bin/bash
 # Behavioural gate of the static x2-pair column entry dsfd_cfifo (S-ELEM-PQ/COLL 2026-10-16, VIS-ROM S81F-02).
-# usage: cfifo_x2pair_gate.sh pass|warm|mut_payload|mut_valid|mut_clock <outdir>
+# usage: cfifo_x2pair_gate.sh pass|warm|mut_payload|mut_valid|mut_clock|mut_ripin <outdir>
+#   mut_ripin    r3: rr takes ri directly (no north pin register) -> status latency mutant must fail
 #   pass         5 forwarded-clock phase pairs (xf, xf2 vs cr): every word exact on both lanes, fixed epoch, status
 #   warm         same five phases across explicit cold and warm resets, fixed first-output epoch
 #   mut_clock    invert the actual xf2 source of u_x2 -> clock/epoch mutant must fail
@@ -17,6 +18,7 @@ case $MODE in
   mut_payload) sed 's/xw_\[568:566\]/xw_[566:564]/' "$DUT" > "$OUT/dut.sv"; cmp -s "$DUT" "$OUT/dut.sv" && { echo "MUTANT NOT APPLIED"; exit 3; }; DUT=$OUT/dut.sv; PAIRS="2:2";;
   mut_valid) sed "s/\.i(xd2)/.i({xd2[537:2], xd2[1:0] \& 2'b01})/" "$DUT" > "$OUT/dut.sv"; cmp -s "$DUT" "$OUT/dut.sv" && { echo "MUTANT NOT APPLIED"; exit 3; }; DUT=$OUT/dut.sv; PAIRS="2:2";;
   mut_clock) sed 's/\.f_ck(xf2)/.f_ck(~xf2)/' "$DUT" > "$OUT/dut.sv"; cmp -s "$DUT" "$OUT/dut.sv" && { echo "MUTANT NOT APPLIED"; exit 3; }; DUT=$OUT/dut.sv; PAIRS="2:2";;
+  mut_ripin) sed 's/sti\[0\], ri_q}/sti[0], ri}/' "$DUT" > "$OUT/dut.sv"; cmp -s "$DUT" "$OUT/dut.sv" && { echo "MUTANT NOT APPLIED"; exit 3; }; DUT=$OUT/dut.sv; PAIRS="2:2";;
   *) echo "bad mode $MODE"; exit 2;;
 esac
 WARM=0; [ "$MODE" != warm ] || WARM=1
