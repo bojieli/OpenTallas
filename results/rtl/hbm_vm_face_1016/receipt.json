@@ -1,0 +1,366 @@
+{
+  "schema": "opentallas.vm_face_roots_component.v1",
+  "source_commit": "0187d0f0b",
+  "host": "ot-epyc4",
+  "otrun_unit": "oth-ubuntu-2165110-1792148873",
+  "otrun_exit": 0,
+  "positive_runs": 4,
+  "mutant_rejections": 64,
+  "scope": "Actual8literalbankchildren/24realSRAMmodels per4quadrants. Every widewrite/readgroup, packet/DMA, returnedge6 andwriteedge3 checked. Faultmutants: wrongresponsegroup,bankidentity,sliceidentity,actualrawmacroclockdrop andeachof12actualsoftclockroots dropped. Standalone component only; no physical/native/full-die qualification.",
+  "normal_data_edges_added": 0,
+  "original_failure": "87f1 source transformation selected first clk_local[11] outputdone and omitted ECC body; compile error136, preserved. 0187 anchors response section and asserts ECC retained.",
+  "files": {
+    "rtl/hbm_accel/generic/vm/static/ot_vms_bank_static_face_roots.sv": "1fabccccfceb7de00484351da4fa2531ed3c4147c946aec0a54e8530c963b2ab",
+    "rtl/hbm_accel/generic/vm/static/ot_vms_bank_face_physical.sv": "5a022bdda9dbaff6c67e4e4fbcf11eda05d28eae6275bc6df5d2af19c20e9f91",
+    "rtl/hbm_accel/generic/vm/static/ot_vms_ce_counter_pipe.sv": "de10f3eea0f6b8bb0a652ec30621ba4d919b64f7a96651dbc94a4fc7b7ff09fa",
+    "rtl/hbm_accel/generic/vm/static/native_abi_1016/run_face_literal.sh": "2177a40546a99e5d2f09656a1e3eea636b6f0aa3ef7a012b14b1361f07b9871e",
+    "rtl/hbm_accel/generic/vm/static/native_abi_1016/tb_hbm_vm_face_literal.sv": "e6562fd97a2837c8a403a3c8f01e9b72ce62a6461a54a898458032052a250008",
+    "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_face_q3.sv": "44f806580162baa4f2a073e3e41eec0d8ac7513948283c5d0cc64f83b1261c62",
+    "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_face_q1.sv": "e6f9829e98debdf72bc399cffe4bdb0bb402d6df0229c6d1b48839373696adc4",
+    "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_face_q0.sv": "12fb09a29089d18684d067d3bb52d27c54f9b58118fa5a1be6104423e2d8280a",
+    "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_face_q2.sv": "9e80ce866f89813c050d3a4e63de8f268c1d78e4661441205a1893948b1f95f4",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v": "25ca11845381ce089cc5f2fbab82a90672d8704fe6c66f4445814b33b4b7d51e"
+  },
+  "runs": [
+    {
+      "path": "results/rtl/hbm_vm_face_1016/bench/q0_m0.log",
+      "sha256": "156dad41f58602b858164b65dd7df94374ad5245cbf552755a1ab7fe2cd1833b",
+      "result": "PASS"
+    },
+    {
+      "path": "results/rtl/hbm_vm_face_1016/bench/q0_m1.log",
+      "sha256": "14e4b2be305b88ad16139f4c0217672070c7db34a4492a97477fc67266614eeb",
+      "result": "MUTANT_REJECTED"
+    },
+    {
+      "path": "results/rtl/hbm_vm_face_1016/bench/q0_m10.log",
+      "sha256": "71d8f02fb5c398dbc1a9b32595e70d84424c9466a237191a885300d411d76c54",
+      "result": "MUTANT_REJECTED"
+    },
+    {
+      "path": "results/rtl/hbm_vm_face_1016/bench/q0_m11.log",
+      "sha256": "c729638e58b3d2a9c028e266ec7cf5662e57229dd7bce0054b5f21e8caf4dab4",
+      "result": "MUTANT_REJECTED"
+    },
+    {
+      "path": "results/rtl/hbm_vm_face_1016/bench/q0_m12.log",
+      "sha256": "c729638e58b3d2a9c028e266ec7cf5662e57229dd7bce0054b5f21e8caf4dab4",
+      "result": "MUTANT_REJECTED"
+    },
+    {
+      "path": "results/rtl/hbm_vm_face_1016/bench/q0_m13.log",
+      "sha256": "2d254ccfc1b90c5ef0a276dfd3f24c75c9b135478174661faaf1f5b93588601f",
+      "result": "MUTANT_REJECTED"
+    },
+    {
+      "path": "results/rtl/hbm_vm_face_1016/bench/q0_m14.log",
+      "sha256": "2d254ccfc1b90c5ef0a276dfd3f24c75c9b135478174661faaf1f5b93588601f",
+      "result": "MUTANT_REJECTED"
+    },
+    {
+      "path": "results/rtl/hbm_vm_face_1016/bench/q0_m15.log",
+      "sha256": "74178a93c718e1a28c9d6786f85087e14f03195e2171c50b4eb4394209e37629",
+      "result": "MUTANT_REJECTED"
+    },
+    {
+      "path": "results/rtl/hbm_vm_face_1016/bench/q0_m16.log",
+      "sha256": "f5e6ba9e630a88e8b87e831cd1cc2ecff1658206e84daca4d463fc07be376a99",
+      "result": "MUTANT_REJECTED"
+    },
+    {
+      "path": "results/rtl/hbm_vm_face_1016/bench/q0_m17.log",
+      "sha256": "c729638e58b3d2a9c028e266ec7cf5662e57229dd7bce0054b5f21e8caf4dab4",
+      "result": "MUTANT_REJECTED"
+    },
+    {
+      "path": "results/rtl/hbm_vm_face_1016/bench/q0_m3.log",
+      "sha256": "ad2b949e7d7c7f7864ace7d2092be899f36ef3b18c06f4f429c9ff111a07a1c9",
+      "result": "MUTANT_REJECTED"
+    },
+    {
+      "path": "results/rtl/hbm_vm_face_1016/bench/q0_m4.log",
+      "sha256": "ad2b949e7d7c7f7864ace7d2092be899f36ef3b18c06f4f429c9ff111a07a1c9",
+      "result": "MUTANT_REJECTED"
+    },
+    {
+      "path": "results/rtl/hbm_vm_face_1016/bench/q0_m5.log",
+      "sha256": "65d819bdc6df282cf9a3f2113dce33044095db49428b5ba3a9e70fc9d6a3972e",
+      "result": "MUTANT_REJECTED"
+    },
+    {
+      "path": "results/rtl/hbm_vm_face_1016/bench/q0_m6.log",
+      "sha256": "2d254ccfc1b90c5ef0a276dfd3f24c75c9b135478174661faaf1f5b93588601f",
+      "result": "MUTANT_REJECTED"
+    },
+    {
+      "path": "results/rtl/hbm_vm_face_1016/bench/q0_m7.log",
+      "sha256": "74178a93c718e1a28c9d6786f85087e14f03195e2171c50b4eb4394209e37629",
+      "result": "MUTANT_REJECTED"
+    },
+    {
+      "path": "results/rtl/hbm_vm_face_1016/bench/q0_m8.log",
+      "sha256": "65d819bdc6df282cf9a3f2113dce33044095db49428b5ba3a9e70fc9d6a3972e",
+      "result": "MUTANT_REJECTED"
+    },
+    {
+      "path": "results/rtl/hbm_vm_face_1016/bench/q0_m9.log",
+      "sha256": "c729638e58b3d2a9c028e266ec7cf5662e57229dd7bce0054b5f21e8caf4dab4",
+      "result": "MUTANT_REJECTED"
+    },
+    {
+      "path": "results/rtl/hbm_vm_face_1016/bench/q1_m0.log",
+      "sha256": "e6f2119cc58bbd76067f99560e8cc8bcbec122e55e3c79369ee9258f20e4b764",
+      "result": "PASS"
+    },
+    {
+      "path": "results/rtl/hbm_vm_face_1016/bench/q1_m1.log",
+      "sha256": "71ce02e883bf432b8aa83ab1e1cb2658de7b71db768ddbce4896036975207aa4",
+      "result": "MUTANT_REJECTED"
+    },
+    {
+      "path": "results/rtl/hbm_vm_face_1016/bench/q1_m10.log",
+      "sha256": "b10a273d16f2a20bf2767a6ef59f51a2e65255bf315ed3c3f664f2023ebe5dfa",
+      "result": "MUTANT_REJECTED"
+    },
+    {
+      "path": "results/rtl/hbm_vm_face_1016/bench/q1_m11.log",
+      "sha256": "d2f3616b49538de0cef1ddf9b369a08b23e77ac8995eaebf303dba98bfec6f81",
+      "result": "MUTANT_REJECTED"
+    },
+    {
+      "path": "results/rtl/hbm_vm_face_1016/bench/q1_m12.log",
+      "sha256": "d2f3616b49538de0cef1ddf9b369a08b23e77ac8995eaebf303dba98bfec6f81",
+      "result": "MUTANT_REJECTED"
+    },
+    {
+      "path": "results/rtl/hbm_vm_face_1016/bench/q1_m13.log",
+      "sha256": "21223eae3000efd570cf6653469d7bc44d43687d55544dc696c1957d59c881ac",
+      "result": "MUTANT_REJECTED"
+    },
+    {
+      "path": "results/rtl/hbm_vm_face_1016/bench/q1_m14.log",
+      "sha256": "50c68eadf2387ad85b0dd8d15e3a0732da6efead379a0d1c4f24da483ea1e57c",
+      "result": "MUTANT_REJECTED"
+    },
+    {
+      "path": "results/rtl/hbm_vm_face_1016/bench/q1_m15.log",
+      "sha256": "ab18ca5df778032491b7e327458ac5ef44b94ab3f603769f5a58856b9805a5b5",
+      "result": "MUTANT_REJECTED"
+    },
+    {
+      "path": "results/rtl/hbm_vm_face_1016/bench/q1_m16.log",
+      "sha256": "21223eae3000efd570cf6653469d7bc44d43687d55544dc696c1957d59c881ac",
+      "result": "MUTANT_REJECTED"
+    },
+    {
+      "path": "results/rtl/hbm_vm_face_1016/bench/q1_m17.log",
+      "sha256": "d2f3616b49538de0cef1ddf9b369a08b23e77ac8995eaebf303dba98bfec6f81",
+      "result": "MUTANT_REJECTED"
+    },
+    {
+      "path": "results/rtl/hbm_vm_face_1016/bench/q1_m3.log",
+      "sha256": "a64f256f2bcc4b1dcc723130efbb2d9148363eb121e1a24ee4852e820f7627fa",
+      "result": "MUTANT_REJECTED"
+    },
+    {
+      "path": "results/rtl/hbm_vm_face_1016/bench/q1_m4.log",
+      "sha256": "a64f256f2bcc4b1dcc723130efbb2d9148363eb121e1a24ee4852e820f7627fa",
+      "result": "MUTANT_REJECTED"
+    },
+    {
+      "path": "results/rtl/hbm_vm_face_1016/bench/q1_m5.log",
+      "sha256": "65d819bdc6df282cf9a3f2113dce33044095db49428b5ba3a9e70fc9d6a3972e",
+      "result": "MUTANT_REJECTED"
+    },
+    {
+      "path": "results/rtl/hbm_vm_face_1016/bench/q1_m6.log",
+      "sha256": "65d819bdc6df282cf9a3f2113dce33044095db49428b5ba3a9e70fc9d6a3972e",
+      "result": "MUTANT_REJECTED"
+    },
+    {
+      "path": "results/rtl/hbm_vm_face_1016/bench/q1_m7.log",
+      "sha256": "ab18ca5df778032491b7e327458ac5ef44b94ab3f603769f5a58856b9805a5b5",
+      "result": "MUTANT_REJECTED"
+    },
+    {
+      "path": "results/rtl/hbm_vm_face_1016/bench/q1_m8.log",
+      "sha256": "21223eae3000efd570cf6653469d7bc44d43687d55544dc696c1957d59c881ac",
+      "result": "MUTANT_REJECTED"
+    },
+    {
+      "path": "results/rtl/hbm_vm_face_1016/bench/q1_m9.log",
+      "sha256": "d2f3616b49538de0cef1ddf9b369a08b23e77ac8995eaebf303dba98bfec6f81",
+      "result": "MUTANT_REJECTED"
+    },
+    {
+      "path": "results/rtl/hbm_vm_face_1016/bench/q2_m0.log",
+      "sha256": "aead3abc8fde32f4280edf9708af313d20a6e315030302e8071db1272d322b0e",
+      "result": "PASS"
+    },
+    {
+      "path": "results/rtl/hbm_vm_face_1016/bench/q2_m1.log",
+      "sha256": "14e4b2be305b88ad16139f4c0217672070c7db34a4492a97477fc67266614eeb",
+      "result": "MUTANT_REJECTED"
+    },
+    {
+      "path": "results/rtl/hbm_vm_face_1016/bench/q2_m10.log",
+      "sha256": "71d8f02fb5c398dbc1a9b32595e70d84424c9466a237191a885300d411d76c54",
+      "result": "MUTANT_REJECTED"
+    },
+    {
+      "path": "results/rtl/hbm_vm_face_1016/bench/q2_m11.log",
+      "sha256": "c729638e58b3d2a9c028e266ec7cf5662e57229dd7bce0054b5f21e8caf4dab4",
+      "result": "MUTANT_REJECTED"
+    },
+    {
+      "path": "results/rtl/hbm_vm_face_1016/bench/q2_m12.log",
+      "sha256": "c729638e58b3d2a9c028e266ec7cf5662e57229dd7bce0054b5f21e8caf4dab4",
+      "result": "MUTANT_REJECTED"
+    },
+    {
+      "path": "results/rtl/hbm_vm_face_1016/bench/q2_m13.log",
+      "sha256": "2d254ccfc1b90c5ef0a276dfd3f24c75c9b135478174661faaf1f5b93588601f",
+      "result": "MUTANT_REJECTED"
+    },
+    {
+      "path": "results/rtl/hbm_vm_face_1016/bench/q2_m14.log",
+      "sha256": "598f3508585a60d9dc69a49aa550c4408546a390726341515c8759c6e2360a24",
+      "result": "MUTANT_REJECTED"
+    },
+    {
+      "path": "results/rtl/hbm_vm_face_1016/bench/q2_m15.log",
+      "sha256": "74178a93c718e1a28c9d6786f85087e14f03195e2171c50b4eb4394209e37629",
+      "result": "MUTANT_REJECTED"
+    },
+    {
+      "path": "results/rtl/hbm_vm_face_1016/bench/q2_m16.log",
+      "sha256": "511ba216bd7437b467c0f079f9302b9ed3a61e2edd1bac2280833157d51d1f74",
+      "result": "MUTANT_REJECTED"
+    },
+    {
+      "path": "results/rtl/hbm_vm_face_1016/bench/q2_m17.log",
+      "sha256": "c729638e58b3d2a9c028e266ec7cf5662e57229dd7bce0054b5f21e8caf4dab4",
+      "result": "MUTANT_REJECTED"
+    },
+    {
+      "path": "results/rtl/hbm_vm_face_1016/bench/q2_m3.log",
+      "sha256": "ad2b949e7d7c7f7864ace7d2092be899f36ef3b18c06f4f429c9ff111a07a1c9",
+      "result": "MUTANT_REJECTED"
+    },
+    {
+      "path": "results/rtl/hbm_vm_face_1016/bench/q2_m4.log",
+      "sha256": "ad2b949e7d7c7f7864ace7d2092be899f36ef3b18c06f4f429c9ff111a07a1c9",
+      "result": "MUTANT_REJECTED"
+    },
+    {
+      "path": "results/rtl/hbm_vm_face_1016/bench/q2_m5.log",
+      "sha256": "65d819bdc6df282cf9a3f2113dce33044095db49428b5ba3a9e70fc9d6a3972e",
+      "result": "MUTANT_REJECTED"
+    },
+    {
+      "path": "results/rtl/hbm_vm_face_1016/bench/q2_m6.log",
+      "sha256": "598f3508585a60d9dc69a49aa550c4408546a390726341515c8759c6e2360a24",
+      "result": "MUTANT_REJECTED"
+    },
+    {
+      "path": "results/rtl/hbm_vm_face_1016/bench/q2_m7.log",
+      "sha256": "74178a93c718e1a28c9d6786f85087e14f03195e2171c50b4eb4394209e37629",
+      "result": "MUTANT_REJECTED"
+    },
+    {
+      "path": "results/rtl/hbm_vm_face_1016/bench/q2_m8.log",
+      "sha256": "65d819bdc6df282cf9a3f2113dce33044095db49428b5ba3a9e70fc9d6a3972e",
+      "result": "MUTANT_REJECTED"
+    },
+    {
+      "path": "results/rtl/hbm_vm_face_1016/bench/q2_m9.log",
+      "sha256": "c729638e58b3d2a9c028e266ec7cf5662e57229dd7bce0054b5f21e8caf4dab4",
+      "result": "MUTANT_REJECTED"
+    },
+    {
+      "path": "results/rtl/hbm_vm_face_1016/bench/q3_m0.log",
+      "sha256": "aead3abc8fde32f4280edf9708af313d20a6e315030302e8071db1272d322b0e",
+      "result": "PASS"
+    },
+    {
+      "path": "results/rtl/hbm_vm_face_1016/bench/q3_m1.log",
+      "sha256": "14e4b2be305b88ad16139f4c0217672070c7db34a4492a97477fc67266614eeb",
+      "result": "MUTANT_REJECTED"
+    },
+    {
+      "path": "results/rtl/hbm_vm_face_1016/bench/q3_m10.log",
+      "sha256": "71d8f02fb5c398dbc1a9b32595e70d84424c9466a237191a885300d411d76c54",
+      "result": "MUTANT_REJECTED"
+    },
+    {
+      "path": "results/rtl/hbm_vm_face_1016/bench/q3_m11.log",
+      "sha256": "c729638e58b3d2a9c028e266ec7cf5662e57229dd7bce0054b5f21e8caf4dab4",
+      "result": "MUTANT_REJECTED"
+    },
+    {
+      "path": "results/rtl/hbm_vm_face_1016/bench/q3_m12.log",
+      "sha256": "c729638e58b3d2a9c028e266ec7cf5662e57229dd7bce0054b5f21e8caf4dab4",
+      "result": "MUTANT_REJECTED"
+    },
+    {
+      "path": "results/rtl/hbm_vm_face_1016/bench/q3_m13.log",
+      "sha256": "2d254ccfc1b90c5ef0a276dfd3f24c75c9b135478174661faaf1f5b93588601f",
+      "result": "MUTANT_REJECTED"
+    },
+    {
+      "path": "results/rtl/hbm_vm_face_1016/bench/q3_m14.log",
+      "sha256": "598f3508585a60d9dc69a49aa550c4408546a390726341515c8759c6e2360a24",
+      "result": "MUTANT_REJECTED"
+    },
+    {
+      "path": "results/rtl/hbm_vm_face_1016/bench/q3_m15.log",
+      "sha256": "74178a93c718e1a28c9d6786f85087e14f03195e2171c50b4eb4394209e37629",
+      "result": "MUTANT_REJECTED"
+    },
+    {
+      "path": "results/rtl/hbm_vm_face_1016/bench/q3_m16.log",
+      "sha256": "511ba216bd7437b467c0f079f9302b9ed3a61e2edd1bac2280833157d51d1f74",
+      "result": "MUTANT_REJECTED"
+    },
+    {
+      "path": "results/rtl/hbm_vm_face_1016/bench/q3_m17.log",
+      "sha256": "c729638e58b3d2a9c028e266ec7cf5662e57229dd7bce0054b5f21e8caf4dab4",
+      "result": "MUTANT_REJECTED"
+    },
+    {
+      "path": "results/rtl/hbm_vm_face_1016/bench/q3_m3.log",
+      "sha256": "ad2b949e7d7c7f7864ace7d2092be899f36ef3b18c06f4f429c9ff111a07a1c9",
+      "result": "MUTANT_REJECTED"
+    },
+    {
+      "path": "results/rtl/hbm_vm_face_1016/bench/q3_m4.log",
+      "sha256": "ad2b949e7d7c7f7864ace7d2092be899f36ef3b18c06f4f429c9ff111a07a1c9",
+      "result": "MUTANT_REJECTED"
+    },
+    {
+      "path": "results/rtl/hbm_vm_face_1016/bench/q3_m5.log",
+      "sha256": "65d819bdc6df282cf9a3f2113dce33044095db49428b5ba3a9e70fc9d6a3972e",
+      "result": "MUTANT_REJECTED"
+    },
+    {
+      "path": "results/rtl/hbm_vm_face_1016/bench/q3_m6.log",
+      "sha256": "598f3508585a60d9dc69a49aa550c4408546a390726341515c8759c6e2360a24",
+      "result": "MUTANT_REJECTED"
+    },
+    {
+      "path": "results/rtl/hbm_vm_face_1016/bench/q3_m7.log",
+      "sha256": "74178a93c718e1a28c9d6786f85087e14f03195e2171c50b4eb4394209e37629",
+      "result": "MUTANT_REJECTED"
+    },
+    {
+      "path": "results/rtl/hbm_vm_face_1016/bench/q3_m8.log",
+      "sha256": "65d819bdc6df282cf9a3f2113dce33044095db49428b5ba3a9e70fc9d6a3972e",
+      "result": "MUTANT_REJECTED"
+    },
+    {
+      "path": "results/rtl/hbm_vm_face_1016/bench/q3_m9.log",
+      "sha256": "c729638e58b3d2a9c028e266ec7cf5662e57229dd7bce0054b5f21e8caf4dab4",
+      "result": "MUTANT_REJECTED"
+    }
+  ]
+}
