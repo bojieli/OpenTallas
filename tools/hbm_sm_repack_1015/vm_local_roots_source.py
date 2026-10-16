@@ -37,4 +37,5 @@ text=text.replace("wire die_clk=MUT==5&&bid==7?1'b0:clk;", "wire[2:0]die_macro=M
 for q in range(4):text=text.replace(f'hfd_vms_bank_native_q{q}',f'hfd_vms_bank_local_q{q}')
 assert text.count('.clk(die_clk)')==4
 text=text.replace('.clk(die_clk)', '.clk_pin(clk_local[0]),.clk_ctrl(clk_local[1]),.clk_s1(clk_local[2]),.clk_s2(clk_local[3]),.clk_ecc(clk_local[4]),.clk_out(clk_local[5]),.clk_ma(die_macro[0]),.clk_mb(die_macro[1]),.clk_mc(die_macro[2])')
+text=text.replace('hfd_vms_bank_local_q3 u_bank','hfd_vms_bank_local_q2 u_bank')
 (D/'ot_vms_bank_local_physical.sv').write_text(text)

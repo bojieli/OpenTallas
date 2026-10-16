@@ -374,34 +374,50 @@ proc ot_ce_corner {} {
 }
 # get_property pin arrival_max_rise is a DATA arrival query. On a clock-only
 # macro pin it returns an infinity sentinel even with a finite propagated clock
-# path. Read the actual rising clock path in the current analysis scene instead.
+# path. Read propagated clock tags in the current scene and remove the
+# source waveform edge time; falling-edge-only registers include that phase.
 proc ot_ce_finite {value} {
   return [expr {[string is double -strict $value] && ![regexp -nocase {inf|nan} $value]}]
 }
 proc ot_ce_clock_wire {pin clock} {
   set scene [get_property [sta::cmd_scene] name]
   set clock_name [get_full_name $clock]
-  set values {}
+  set by_transition [dict create rise {} fall {}]
+  set waveform {}
+  foreach time [$clock waveform] {lappend waveform [sta::time_sta_ui $time]}
+  if {[llength $waveform] != 2 || ![ot_ce_finite [lindex $waveform 0]] ||
+      ![ot_ce_finite [lindex $waveform 1]]} {
+    error "OT_ENTRIES: invalid source clock waveform $clock_name"
+  }
   foreach vertex [$pin vertices] {
     if {$vertex eq "NULL"} continue
-    set paths [$vertex path_iterator rise max]
-    while {[$paths has_next]} {
-      set path [$paths next]
-      # OpenSTA's Path tag identifies scene, rise/max, clock and propagation.
-      # Match the complete fixed fields, never accept another scene's path.
-      set tag [$path tag]
-      if {[lindex $tag 1] ne $scene || [lindex $tag 2] ne "^max" ||
-          [lindex $tag 3] ne $clock_name || [lindex $tag 4] ne "^" ||
-          [string first "(clock prop)" $tag] < 0} continue
-      set arrival [sta::time_sta_ui [$path arrival]]
-      if {![ot_ce_finite $arrival]} {
-        $paths finish
-        error "OT_ENTRIES: nonfinite propagated clock arrival on [get_full_name $pin] scene=$scene clock=$clock_name"
+    foreach transition {rise fall} marker {^ v} {
+      set paths [$vertex path_iterator $transition max]
+      while {[$paths has_next]} {
+        set path [$paths next]
+        # Sink transition and source clock edge are distinct (inverting trees).
+        # Exclude data, ideal, other-scene and other-clock paths as before.
+        set tag [$path tag]
+        set edge [lindex $tag 4]
+        if {[lindex $tag 1] ne $scene || [lindex $tag 2] ne "${marker}max" ||
+            [lindex $tag 3] ne $clock_name || $edge ni {^ v} ||
+            [string first "(clock prop)" $tag] < 0} continue
+        set arrival [sta::time_sta_ui [$path arrival]]
+        if {![ot_ce_finite $arrival]} {
+          $paths finish
+          error "OT_ENTRIES: nonfinite propagated clock arrival on [get_full_name $pin] scene=$scene clock=$clock_name"
+        }
+        set phase [lindex $waveform [expr {$edge eq "^" ? 0 : 1}]]
+        dict lappend by_transition $transition [expr {$arrival - $phase}]
       }
-      lappend values $arrival
+      $paths finish
     }
-    $paths finish
   }
+  # Preserve the rising pin-transition reference. An inverted/negedge clock
+  # may associate it with the falling source edge; remove that actual phase.
+  # Fall-only pins remain measurable. Multiple same-transition tags fail.
+  set values [dict get $by_transition rise]
+  if {![llength $values]} {set values [dict get $by_transition fall]}
   if {[llength $values] != 1} {
     # Synthesis/floorplan have no extracted entry wire. This is solely a finite
     # pre-CTS diagnostic reference; routed gates must measure a clock path.
