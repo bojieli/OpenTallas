@@ -20,8 +20,9 @@ M.SMH_SRC+=['rtl/hbm_accel/sm/repack/ot_hbm_smh_rp4_clocks.sv']
 # Preserve the test's coarse-gate activity monitor after the real controller
 # moved into the die-level distributor. This changes no stimulus or checker.
 tb=(r/'rtl/test/tb_hbm_accel_sm_pq_seq.sv').read_text()
-if tb.count('u_t.u.u_cgt.gclk')!=1:raise RuntimeError('gate monitor path changed')
-tb=tb.replace('u_t.u.u_cgt.gclk','u_t.u.u_clk.g_root[0].u_cgt.gclk')
+# The monitor reads the gate ENABLE (tb line ~96: dut_g...g_tw.u_t.u.u_cgt.en), not gclk; 8934fe46d looked for gclk.
+if tb.count('u_t.u.u_cgt.en')!=1:raise RuntimeError('gate monitor path changed')
+tb=tb.replace('u_t.u.u_cgt.en','u_t.u.u_clk.g_root[0].u_cgt.en')
 tbshadow=out/'tb_rp4_monitor.sv';tbshadow.write_text(tb)
 M.SRC=[str(tbshadow) if x=='rtl/test/tb_hbm_accel_sm_pq_seq.sv' else x for x in M.SRC]
 # Change optimization only; preserve the existing parser/vector/checker/compiler.
