@@ -45,34 +45,34 @@
    "design": "qwen_rom",
    "unit": "ATTN.NATIVE_STATIC service (QK+softmax+PV+finalize, T=8192, minimal per-context calendar; link/landing excluded => lower bound)",
    "group": "ATTN.NATIVE",
-   "measured": 5362.0,
+   "measured": 1620.0,
    "price": 1816.0,
    "unit_of_measure": "cycles",
-   "unit_ratio": 2.9526,
-   "e2e_loss_pct": 33.853,
+   "unit_ratio": 0.8921,
+   "e2e_loss_pct": -2.911,
    "binding_workload": "ar",
    "per_workload": {
     "ar": {
      "model": "token-path longest path",
      "base_cycles": 249431.0,
-     "cycles": 377087.0,
-     "added_cycles": 127656.0,
+     "cycles": 242375.0,
+     "added_cycles": -7056.0,
      "runs_per_token": 36,
      "critical_runs": 36,
      "overlapped_runs": 0,
      "other_price_nodes_skipped": 0,
-     "naive_added_cycles": 127656.0,
+     "naive_added_cycles": -7056.0,
      "wave_positions": 0,
      "wave_added_cycles_per_position": 0.0,
-     "e2e_loss_pct": 33.853
+     "e2e_loss_pct": -2.911
     }
    },
-   "within_unit_limit": false,
-   "evidence": "results/arch/qwen_attention_native_calendar_1015/receipt.json",
+   "within_unit_limit": true,
+   "evidence": "results/arch/qwen_attention_rate_1015/receipt.json",
    "evidence_grade": "committed_bench",
    "date": "2026-10-15",
    "status": "proposed",
-   "note": "Q-VMWB 2026-10-15 (coordinator request): priced attn_kv 1816 cyc/layer at P8191 (results/arch/qwen_kv_die_20261009/reprice.json, incl. link step) vs measured static native attention service 5362 cyc at T=8192 (zfix production binary, 53/53 contexts exact; T=1 882, 1000 1425, 4096 3066). Delta 3546 added to every critical attn_kv node; the measured figure excludes the KV link/landing stages, so the loss is a LOWER BOUND. Dominant term: PV pairs stream 1 V row/cycle each (pair out = 590 + T/2 = 4686 at T=8192) vs the priced rate -> needs a structural PV/V-stream redesign (wider PV or more pairs), not acceptance."
+   "note": "Q-ATTN-RATE 2026-10-15 RE-MEASURED after the structural P.V redesign (16 V rows/cycle, ot_qwen_tp8_attention_native_service_w16, 8-bank ot_qwen_tp8_pv_wide_pair x2): service 1555 cyc at T=8192 (53/53 contexts exact, 14 mutants fail) + 65 link (LINK.md 5b) = 1620 vs price 1816 = 0.892x -> QUALIFIES within 1.10x, e2e -2.9 % vs price. History (never overwritten, results/arch/qwen_attention_native_calendar_1015/receipt.json): the 1-row/cycle pairs measured 5362 (2.95x, 33.85 % e2e)."
   },
   {
    "design": "qwen_rom",
@@ -394,17 +394,36 @@
    "price": 0.0,
    "unit_of_measure": "cycles",
    "unit_ratio": null,
-   "e2e_loss_pct": 0.272,
+   "e2e_loss_pct": 0.626,
    "binding_workload": "ar",
    "per_workload": {
     "ar": {
-     "model": "S81 stage programs (golden ASAP, exact recomposition of all 59 committed makespans), every fld phase +18 edges",
-     "base_cycles": 1868531,
-     "cycles": 1873625,
-     "added_cycles": 5094,
-     "program_records": 332,
-     "added_cycles_per_record": 18,
-     "e2e_loss_pct": 0.272
+     "model": "token-path longest path, +18 on every field node (return node r2, 6 levels x 3)",
+     "base_cycles": 828866.4,
+     "cycles": 834086.4,
+     "added_cycles": 5220.0,
+     "runs_per_token": 336,
+     "critical_runs": 290,
+     "overlapped_runs": 46,
+     "other_price_nodes_skipped": 0,
+     "naive_added_cycles": 6048.0,
+     "wave_positions": 0,
+     "wave_added_cycles_per_position": 0.0,
+     "e2e_loss_pct": 0.626
+    },
+    "mtp": {
+     "model": "token-path longest path, +18 on every field node (return node r2, 6 levels x 3)",
+     "base_cycles": 1177516.1,
+     "cycles": 1183852.1,
+     "added_cycles": 6336.0,
+     "runs_per_token": 312,
+     "critical_runs": 312,
+     "overlapped_runs": 0,
+     "other_price_nodes_skipped": 0,
+     "naive_added_cycles": 5616.0,
+     "wave_positions": 5,
+     "wave_added_cycles_per_position": 144.0,
+     "e2e_loss_pct": 0.535
     }
    },
    "within_unit_limit": true,
@@ -412,7 +431,7 @@
    "evidence_grade": "committed_bench",
    "date": "2026-10-15",
    "status": "proposed",
-   "note": "S-NET 2026-10-15 structural fix of the static return node (n2 routes TT -798..-2034 ps; logic depth 1,615 -> 512 ps): P1 port / P2 normalised-tag / P3 issue registers, exit early+WIN+10+RST (was +7), static_return_calendar.PIPE_C 10. Frame return trees over 2 x pairs leaves are 5..6 levels (dsfd_s81_fulldie return_tree); worst 6 -> +18 edges per field phase, +5,094 cycles a token over 59 stage programs (5 levels: +4,245 = 0.227 %). Compiler carries it: engine_pipeline_abi fld return_node_exit_edges 10 / return_node_levels_max 6 (stale field durations refused). Composed analytically on the fixed schedule (fixed latency, no stall), not a die run."
+   "note": "S-NET 2026-10-15 structural fix of the static return node (n2 routes TT -798..-2034 ps; logic depth 1,615 -> 512 ps): P1 port / P2 normalised-tag / P3 issue registers, exit early+WIN+10+RST (was +7), static_return_calendar.PIPE_C 10. Frame return trees over 2 x pairs leaves are 5..6 levels (dsfd_s81_fulldie return_tree); worst 6 -> +18 edges per field phase, +5,094 cycles a token over 59 stage programs (5 levels: +4,245 = 0.227 %). Compiler carries it: engine_pipeline_abi fld return_node_exit_edges 10 / return_node_levels_max 6 (stale field durations refused). Composed analytically on the fixed schedule (fixed latency, no stall), not a die run. RE-PRICED on the ledger basis (token_path_20261009 rom_loss, the method of every S81 row): AR 0.626 % / MTP 0.535 %; the 59-stage-program composition (0.272 %) is a lower bound (not every phase on the token critical path there)."
   },
   {
    "design": "s81",
@@ -838,6 +857,39 @@
   },
   {
    "design": "s81",
+   "unit": "VM.A2_COMMIT_REMAINDER (A2 +2 write edges + A2-F commit relay +3 per VM job, not charged by VM.RELAY +25)",
+   "group": "VM.A2_COMMIT_REMAINDER",
+   "measured": 30.0,
+   "price": 25.0,
+   "unit_of_measure": "cycles",
+   "unit_ratio": 1.2,
+   "e2e_loss_pct": 0.98,
+   "binding_workload": "ar",
+   "per_workload": {
+    "ar": {
+     "model": "token-path longest path, VM-class nodes: +30 (read 16 + A2 write 2 + relay write 9 + commit 3) minus the +25 already charged by accepted VM.RELAY",
+     "base_cycles": 872041.4,
+     "cycles": 880676.4,
+     "added_cycles": 8635.0,
+     "e2e_loss_pct": 0.98
+    },
+    "mtp": {
+     "model": "token-path longest path, VM-class nodes: +30 (read 16 + A2 write 2 + relay write 9 + commit 3) minus the +25 already charged by accepted VM.RELAY",
+     "base_cycles": 1231166.1,
+     "cycles": 1241896.1,
+     "added_cycles": 10730.0,
+     "e2e_loss_pct": 0.864
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "results/arch/s81_vm_a2f_1015/reach_price_a2f_midcapd.json",
+   "evidence_grade": "committed_bench",
+   "date": "2026-10-15",
+   "status": "proposed",
+   "note": "accepted VM.RELAY charges +25 (read 16 + write 9) per VM-class node; the producer done fence is the RETURNED commit (b8->seq +3) and A2 adds +2 stream write edges (Codex DECISION 14:47; 0.431 % AR alone), so a job that lands its result pays +30. This row charges the +5 remainder on the same token path (VM.RELAY basis). Compiler: engine_pipeline_abi vm record (2/9/16/3) required on every VM-touching job."
+  },
+  {
+   "design": "s81",
    "unit": "VM.READ (VM read latency at the leaf chain, CURRENT design: leaf hop 2 (+40 a read round trip) + dsfd_vm_fe_h FRL 6 (+4); flat 41 -> 85 cycles)",
    "group": "VM.READ",
    "measured": 85.0,
@@ -882,6 +934,65 @@
    "accepted_date": "2026-10-14",
    "owner_exception": "owner exception 2026-10-14: accepted above the 5%/unit limit; hop-1 variant in progress, row to be re-measured if it replaces",
    "acceptance_note": "owner exception 2026-10-14: accepted above the 5%/unit limit; hop-1 variant in progress, row to be re-measured if it replaces; S81 accepted total 17.485 % is OVER the 15 % design limit: owner-accepted exception (owner ~06:55 PT 2026-10-14 accepts the CURRENT VM read (leaf hop 2) and HC NORM (serial chain) designs as long as they close)"
+  },
+  {
+   "design": "s81",
+   "unit": "VM.RELAY (A2-F VM floorplan wire-reach relay stages: write +9, read +16, commit +3 edges per VM job at R = 900 um/stage TT; 18 edges at R = 1,118 um/stage; VM access edges 30 -> 55)",
+   "group": "VM.RELAY",
+   "measured": 55.0,
+   "price": 30.0,
+   "unit_of_measure": "cycles",
+   "unit_ratio": 1.8333,
+   "e2e_loss_pct": 5.133,
+   "binding_workload": "ar",
+   "per_workload": {
+    "ar": {
+     "model": "token-path longest path, +25 edges on every node (upper; VM-class nodes only: 4.951 % AR / 4.358 % MTP)",
+     "base_cycles": 828866.4,
+     "cycles": 873716.4,
+     "added_cycles": 44850.0,
+     "runs_per_token": 2742,
+     "critical_runs": 1794,
+     "overlapped_runs": 948,
+     "other_price_nodes_skipped": 0,
+     "naive_added_cycles": 68550.0,
+     "wave_positions": 0,
+     "wave_added_cycles_per_position": 0.0,
+     "e2e_loss_pct": 5.133,
+     "basis_1118um": {
+      "node_delta": 18,
+      "e2e_loss_pct": 3.75
+     }
+    },
+    "mtp": {
+     "model": "token-path longest path, +25 edges on every node (upper; VM-class nodes only: 4.951 % AR / 4.358 % MTP)",
+     "base_cycles": 1177516.1,
+     "cycles": 1233841.1,
+     "added_cycles": 56325.0,
+     "runs_per_token": 2014,
+     "critical_runs": 2013,
+     "overlapped_runs": 1,
+     "other_price_nodes_skipped": 0,
+     "naive_added_cycles": 50350.0,
+     "wave_positions": 5,
+     "wave_added_cycles_per_position": 1200.0,
+     "e2e_loss_pct": 4.565,
+     "basis_1118um": {
+      "node_delta": 18,
+      "e2e_loss_pct": 3.329
+     }
+    }
+   },
+   "within_unit_limit": false,
+   "evidence": "results/arch/s81_vm_a2f_1015/reach_price_a2f_midcapd.json",
+   "evidence_grade": "committed_bench",
+   "date": "2026-10-15",
+   "status": "accepted",
+   "note": "MEASURED on the committed pin-accurate A2-F floorplan screen (tools/s81_vm/a2f_route_plan.py midcapd, 4,104 x 4,115 um; longest connection per hop class -> ceil(L/R)-1 relays; tools/s81_vm/a2f_reach_price.py), NOT a routed die: basis R = 900 um/stage (TT 0.76 ps/um minus clk-q/setup/80-ps spread) -> +25 = 5.133 % AR / 4.565 % MTP (charged); R = 1,118 um/stage (raw TT wire) -> +18 = 3.75 % AR / 3.329 % MTP. Same method on the A2 v4 floorplan: +33 = 6.666 % AR. Base 30 = write commit P+14 + read return P+16. Possible partial overlap with VM.READ (leaf-chain RTL latency of the legacy front); re-price both from real relay reach once the A2-F pilots and die routing land.",
+   "share_basis": "modelled",
+   "accepted_date": "2026-10-15",
+   "owner_exception": "owner floor rule via coordinator 2026-10-15 21:20: accepted above 5 %/unit and with S81 over 15 % as long as S81 MTP stays well above 3,000 tok/s",
+   "acceptance_note": "coordinator 21:20 PT 2026-10-15: A2-F adopted as production S81 VM front; relay cost accepted under the owner floor (S81 MTP well above 3,000 tok/s: ~4,235 -> ~4,040)"
   },
   {
    "design": "r25gq",
@@ -1519,8 +1630,8 @@
  "totals": {
   "qwen_rom": {
    "accepted_pct": 1.065,
-   "proposed_pct": 38.184,
-   "accepted_plus_proposed_pct": 39.249,
+   "proposed_pct": 4.331,
+   "accepted_plus_proposed_pct": 5.396,
    "limit_pct": 15.0,
    "accepted_rows": 4,
    "proposed_rows": 7,
@@ -1529,14 +1640,14 @@
    "over_limit_by_owner_exception": false
   },
   "s81": {
-   "accepted_pct": 17.485,
-   "proposed_pct": 0.272,
-   "accepted_plus_proposed_pct": 17.757,
+   "accepted_pct": 22.618,
+   "proposed_pct": 1.606,
+   "accepted_plus_proposed_pct": 24.224,
    "limit_pct": 15.0,
-   "accepted_rows": 10,
-   "proposed_rows": 1,
-   "headroom_pct": -2.485,
-   "owner_exception_rows": 1,
+   "accepted_rows": 11,
+   "proposed_rows": 2,
+   "headroom_pct": -7.618,
+   "owner_exception_rows": 2,
    "over_limit_by_owner_exception": true
   },
   "r25gq": {

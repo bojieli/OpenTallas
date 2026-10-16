@@ -77,7 +77,15 @@ FACES = {"N": "top", "S": "bottom", "E": "right", "W": "left"}
 #                      anchors every one of them at its own pin (R2: one flop -> INV fanout 7 -> 7 pins, unanchored).
 #        keep_pin_regs true: OT_KEEP_PIN_REGS=1 for physical/common_flow/ot_keep_regs.tcl -- synthesis keeps every top-level
 #                      register that drives an output port (opt_merge no longer folds equal pin registers).
-RECIPE_LATEST = 2
+#   3  (OWNER RULE 19:50 PT 2026-10-15) recipe 2 + PIN REGISTERS: every data input and every output of a leaf tile gets
+#      one flip-flop at its pin (physical/common_flow/ot_pin_regs.tcl, OT_PIN_REGS=1, run at synthesis on the elaborated
+#      top), clocked by the tile clock; clock / reset ports (and inouts) pass straight through.  +1 cycle per registered
+#      input and per registered output -- the compiler schedule absorbs it (pin_regs.json in the kit; the exact per-port
+#      table is $RESULTS_DIR/ot_pin_regs.tsv of the route).  io_flop_at_pins anchors them at the pin face.  Opt-out only
+#      with a recorded reason: "pin_regs": {"enable": false, "reason": "..."}; per-port: "pin_regs": {"exclude":
+#      "<regexp>", "reason": "..."}; a multi-clock tile names the data clock: "pin_regs": {"clock": "<port>"}.
+RECIPE_LATEST = 3
+PIN_REGS_RULE = "OWNER RULE 19:50 PT 2026-10-15: every new tile registers every input and every output at its pin"
 RECIPE_HOLD_PAD = "HB2xp67_ASAP7_75t_R"
 HOLD_PAD_STRONG = "HB4xp67_ASAP7_75t_R"
 PIN_REG_SPLIT_TCL = "physical/common_flow/pin_reg_split.tcl"
@@ -148,6 +156,8 @@ def apply_recipe(s: dict, recipe: int) -> dict:
         if not r.get("hold_delay"):
             s.setdefault("inhold", True)
             s.setdefault("outhold", True)
+    if recipe >= 3 and s.get("kind") == "tile":
+        s.setdefault("pin_regs", {"enable": True})
     if s.get("io_flop_at_pins"):
         s.setdefault("keep_pin_regs", True)
         if s.get("inhold") or s.get("outhold"):       # the split runs inside the recipe-2 pin hook (pre_gpl.tcl)
@@ -155,6 +165,42 @@ def apply_recipe(s: dict, recipe: int) -> dict:
     if (s.get("inhold") or s.get("outhold")) and "OT_INHOLD_MASTER" not in s.get("orfs_vars", {}):
         s.setdefault("hold_pad", {"cell": RECIPE_HOLD_PAD})
     return s
+
+
+def pin_regs_plan(s: dict) -> dict | None:
+    """the kit's pin-register plan (recipe 3) or None; SpecError on an opt-out / exclusion without a reason"""
+    pr = s.get("pin_regs")
+    if pr is None:
+        return None
+    if not isinstance(pr, dict):
+        raise SpecError('spec: pin_regs must be an object ({"enable": true} | {"enable": false, "reason": ...})')
+    if pr.get("enable") is False:
+        if not str(pr.get("reason", "")).strip():
+            raise SpecError(f"spec: pin_regs opt-out needs a recorded reason ({PIN_REGS_RULE})")
+        return {"enable": False, "reason": pr["reason"]}
+    if pr.get("exclude") and not str(pr.get("reason", "")).strip():
+        raise SpecError("spec: pin_regs.exclude needs a recorded reason")
+    cks = clock_ports(s)
+    ck = pr.get("clock") or (cks[0] if len(cks) == 1 else None)
+    if not ck:
+        raise SpecError(f"spec: multi-clock tile ({', '.join(cks)}): name the data clock in pin_regs.clock, or opt out "
+                        "with a reason")
+    return {"enable": True, "clock": ck, "clock_ports": cks, "exclude": pr.get("exclude", ""),
+            "reset": pr.get("reset", ""), "reason": pr.get("reason", ""),
+            "latency_cycles": {"input": 1, "output": 1}, "rule": PIN_REGS_RULE,
+            "per_port_table": "$RESULTS_DIR/ot_pin_regs.tsv (route synthesis: port dir width cycles why)"}
+
+
+def pin_regs_vars(s: dict) -> list:
+    plan = pin_regs_plan(s)
+    if not plan or not plan["enable"]:
+        return []
+    out = ["--orfs-var OT_PIN_REGS=1", f"--orfs-var OT_PIN_REGS_CLOCK={','.join([plan['clock']] + [c for c in plan['clock_ports'] if c != plan['clock']])}"]
+    if plan["exclude"]:
+        out.append(f"--orfs-var OT_PIN_REGS_EXCLUDE={shq(plan['exclude'])}")
+    if plan["reset"]:
+        out.append(f"--orfs-var OT_PIN_REGS_RESET={shq(plan['reset'])}")
+    return out
 
 
 def hold_pad_vars(s: dict) -> list:
@@ -1345,6 +1391,7 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
             if not wrap:
                 extra.append("--step-tcl PRE_DETAIL_PLACE=physical/dsrom_window_source/leaf_inhold_release.tcl")
     extra += hold_pad_vars(s)
+    extra += pin_regs_vars(s)
     if s.get("keep_pin_regs"):
         extra.append("--orfs-var OT_KEEP_PIN_REGS=1")
     if s.get("pin_reg_split") and not wrap:
@@ -1669,6 +1716,10 @@ def gen(spec_path: str, area_um2: float | None = None, commit: str | None = None
              **gen_hooks(s, kd), "floorplan.json": json.dumps(fp, indent=1) + "\n",
              "spec.json": json.dumps(({**raw_spec, "m6_pin_grant": lc["m6_pin_grant"]} if lc.get("m6_pin_grant")
                                       else {k: v for k, v in s.items()}), indent=1) + "\n"}
+    prp = pin_regs_plan(s)
+    if prp is not None:
+        files["pin_regs.json"] = json.dumps({"schema": "opentallas.ref_tile.pin_regs.v1", "top": s["top"], **prp},
+                                            indent=1) + "\n"
     ffr = gen_signoff_ffrepair(s, s.get("refglob", "*"), ",".join(s["inter"]) or "none_*")
     if ffr:
         files["signoff_ffrepair.sdc"] = ffr
