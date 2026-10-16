@@ -1,3 +1,5 @@
+source /work/hbm_pg_interface.tcl
+ot_hbm_pg::check
 # tools/qwen_rom_fulldie.py die PDN: M8/M9 per-region straps at the r2 coverages (per net)
 add_global_connection -net {VDD} -inst_pattern {.*} -pin_pattern {^VDD$} -power
 add_global_connection -net {VSS} -inst_pattern {.*} -pin_pattern {^VSS$} -ground
@@ -114,8 +116,6 @@ add_pdn_stripe -grid {core} -layer {M1} -width {0.018} -followpins
 add_pdn_stripe -grid {core} -layer {M2} -width {0.018} -followpins
 add_pdn_connect -grid {core} -layers {M1 M2}
 add_pdn_connect -grid {core} -layers {M2 M9}
-source /work/hbm_pg_interface.tcl
-ot_hbm_pg::begin
 # Explicit ASSUMED PHY PG access contract v1; source-pinned candidate LEFs required.
 source /work/assumed_phy_pg_access.tcl
 ot_assumed_phy_pg_grids

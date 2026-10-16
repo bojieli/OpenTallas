@@ -9,6 +9,8 @@ set block [ord::get_db_block]
 foreach {name orient x y} {phy_WS MY 20.304 222.480 phy_WN MY 20.304 12365.976 phy_ES R0 9944.208 222.480 phy_EN R0 9944.208 12365.976} {
  set inst [$block findInst $name];$inst setOrient $orient;$inst setLocation [expr {round($x*1000)}] [expr {round($y*1000)}];$inst setPlacementStatus FIRM
 }
+source hbm_pg_interface.tcl
+ot_hbm_pg::check
 add_global_connection -net VDD -inst_pattern {.*} -pin_pattern {^VDD$} -power
 add_global_connection -net VSS -inst_pattern {.*} -pin_pattern {^VSS$} -ground
 global_connect
@@ -22,9 +24,7 @@ define_pdn_grid -macro -cells {qkd_hbm3e_phy_pc} -voltage_domains CORE -name phy
 add_pdn_stripe -grid phy -layer M5 -width .12 -pitch 10.88 -offset 1
 add_pdn_connect -grid phy -layers {M4 M5}
 add_pdn_connect -grid phy -layers {M5 M8}
-source hbm_pg_interface.tcl
-ot_hbm_pg::begin
-try {pdngen -failed_via_report failed_vias.rpt} finally {ot_hbm_pg::restore}
+pdngen -failed_via_report failed_vias.rpt
 check_power_grid -net VDD
 check_power_grid -net VSS
 write_db fixture.odb

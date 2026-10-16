@@ -69,13 +69,10 @@ unchanged. It adds the exact native master name (and its bbox alias) to the
 HBM grid, which connects M4->M5->M8. This is a declared external power model,
 not a claim about vendor/internal analog layout, IR/EM or full-die signoff.
 
-The new HBM preflight rejects missing actual supply MTerms. During pdngen it
-also reserves a temporary parent M8 keepout of 0.16um around each actual native
-HBM M8 signal pin. These protect the existing clock/reset pins from power
-stripes. The pdngen finally block removes the temporary block obstructions;
-macro pin/OBS geometry is never edited. A case without the recognized finally
-cleanup hook is rejected before any files are written. New cases also receive
-the source-pinned bbox helper, which preserves declared link access columns.
+The new HBM preflight rejects missing actual supply MTerms. It changes no
+geometry. The dense actual-placement HBM fixture proves that OpenROAD's emitted
+power metal clears existing signal pins without additional keepouts. New cases
+also receive the source-pinned bbox helper, preserving declared link columns.
 
 patch_pdn rewrites only literal generated foreach-glob lists and exact instance
 selectors. It refuses arbitrary PHY regexp selectors instead of deleting pieces
@@ -84,7 +81,8 @@ source hashes are in evidence_integration_20261015. trace_pdn_selection executes
 the actual Tcl control flow against LEF-derived master/pin attributes and the
 entire emitted netlist; it is a selector test, not a physical simulation.
 
-HBM full-size actual four-instance fixture is in hbm_fixture. The initial
-copy-rails fixture and the successor with signal keepouts are physically run
-separately; their audit evidence is recorded separately when collected. No
+HBM full-size actual four-instance fixture is in hbm_fixture. The full-size
+copy-rails fixture is physically run; its geometry readback is audited with two
+independent broad-phase enumeration strategies. A temporary-keepout diagnostic
+is preserved separately; those keepouts are unnecessary and are not adopted. No
 historical LEFs or frozen die cases are changed by this work.

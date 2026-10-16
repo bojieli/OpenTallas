@@ -16,7 +16,7 @@ NAMES=r'ot_q(?:fd_serdes_112g_x12|fd_ucie_x64|kvd_ucie_x64)_phy(?:_s\d+)?'
 def patch_pdn(text, phy_instances, hbm_pg=False):
     # Remove exact instance ownership from old generic M8 grids. The PHY now
     # belongs solely to its declared M4/M5/M8 grid.
-    lines=text.splitlines();out=[];skip_grid=None
+    lines=text.splitlines();out=['source /work/hbm_pg_interface.tcl','ot_hbm_pg::check'] if hbm_pg else [];skip_grid=None
     for line in lines:
         if line.startswith('define_pdn_grid -macro'):
             match=re.search(r'-instances \{([^}]*)\}',line)
@@ -45,8 +45,6 @@ def patch_pdn(text, phy_instances, hbm_pg=False):
         if not line.lstrip().startswith('#') and re.search(NAMES,line):
             raise ValueError('unsupported PHY selector; explicit partition required: '+line)
         out.append(line)
-    if hbm_pg:
-        out+=['source /work/hbm_pg_interface.tcl','ot_hbm_pg::begin']
     out+=['# Explicit ASSUMED PHY PG access contract v1; source-pinned candidate LEFs required.',
           'source /work/assumed_phy_pg_access.tcl','ot_assumed_phy_pg_grids']
     return '\n'.join(out)+'\n'
@@ -77,18 +75,10 @@ def apply(case):
     for master in masters:insts+=re.findall(r'\b'+re.escape(master)+r'\s+(\w+)\s*\(',netlist)
     if not insts:raise ValueError('no actual modeled PHY instances in die.v')
     pdn=case/'pdn.tcl';old_pdn=pdn.read_text();new_pdn=patch_pdn(old_pdn,insts,bool(hbm_receipts))
-    hbm_run=None
-    if hbm_receipts:
-        run=case/'run_pdn.tcl'
-        if not run.exists():raise ValueError('HBM PG candidate requires pdngen finally cleanup hook in run_pdn.tcl')
-        raw=run.read_text();anchor='pdngen} finally {'
-        if raw.count(anchor)!=1:raise ValueError('unrecognized pdngen cleanup hook')
-        hbm_run=(run,raw,raw.replace(anchor,anchor+'\n  if {[llength [info commands ot_hbm_pg::restore]]} {ot_hbm_pg::restore}'))
     for p,old,new in plans:
         p.with_suffix('.historical-original.lef.txt').write_text(old);p.write_text(new)
     pdn.with_suffix('.historical-original.tcl.txt').write_text(old_pdn);pdn.write_text(new_pdn)
-    if hbm_run:
-        p,old,new=hbm_run;p.with_suffix('.historical-original.tcl.txt').write_text(old);p.write_text(new)
+    if hbm_receipts:
         (case/'hbm_pg_interface.tcl').write_text(Path(__file__).with_name('hbm_pg_interface.tcl').read_text())
     # Manual fresh-case adoption must also update the conservative-OBS helper;
     # old snapshots would otherwise close the newly reserved access columns.

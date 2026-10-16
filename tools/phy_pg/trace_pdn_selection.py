@@ -62,7 +62,7 @@ def trace(case):
         interp.createcommand(name,lambda *args:'')
     interp.createcommand('source',lambda *args:'')
     interp.eval('namespace eval ot_hbm_pg {}')
-    interp.createcommand('ot_hbm_pg::begin',lambda:'')
+    interp.createcommand('ot_hbm_pg::check',lambda:'')
     interp.createcommand('puts',lambda *args:'')
     interp.createcommand('ot_assumed_phy_pg_grids',lambda:grids.append(dict(grid='NEW_DECLARED_PHY',selected_count=len(phy),phy=sorted(phy))) or '')
     text=(case/'pdn.tcl').read_text();interp.eval(text)
