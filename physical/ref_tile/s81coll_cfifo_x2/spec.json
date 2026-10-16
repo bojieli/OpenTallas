@@ -1,0 +1,206 @@
+{
+ "name": "s81coll_cfifo_x2",
+ "top": "dsfd_cfifo",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_die_bind/glue/dsfd_cfifo_x2pair.sv",
+  "rtl/dsrom_sys/s81_die_bind/ot_s81_static_column_ingress.sv",
+  "rtl/dsrom_sys/s81_die_bind/ot_s81_static_lane_cross.sv"
+ ],
+ "params": {},
+ "clock": "multiple_cts_roots",
+ "clock_port": "cr",
+ "clock_ports": [
+  "cr",
+  "xf",
+  "xf2"
+ ],
+ "clock_data_paths": "related_same_frequency",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "cr"
+   ],
+   "inputs": [
+    "ri",
+    "st",
+    "rst"
+   ],
+   "outputs": [
+    "xa",
+    "xb",
+    "cc",
+    "x2",
+    "rd",
+    "rs"
+   ]
+  },
+  "lane": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "xf"
+   ],
+   "inputs": [
+    "xd"
+   ],
+   "outputs": []
+  },
+  "lane2": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "xf2"
+   ],
+   "inputs": [
+    "xd2"
+   ],
+   "outputs": []
+  }
+ },
+ "reset_ports": [
+  "rst"
+ ],
+ "outline": {
+  "w": 280.8,
+  "h": 51.84,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "pins": {
+  "N": [
+   "xa",
+   "xb",
+   "x2",
+   "cr",
+   "co",
+   "ck",
+   "cc",
+   "st",
+   "ri",
+   "rs"
+  ],
+  "S": [
+   "xd",
+   "xf",
+   "xd2",
+   "xf2",
+   "rd",
+   "rf"
+  ],
+  "W": [
+   "rst"
+  ]
+ },
+ "io_tcl": "physical/s81_die_pins/cfifo_x2pair/dsfd_cfifo.tcl",
+ "recipe": 2,
+ "pin_regs": {
+  "enable": false,
+  "reason": "OWNER RULE 19:50: the RTL already registers every data pin -- xd on xf and xd2 on xf2 (ot_s81_static_column_ingress pin register), ri/st on cr (rr/sti), every output from a flop (xa/xb/cc/x2 *_r, rd = rr/rsync, rs = rsync); co = ck and rf = cr are clock wires. A flow pin register would add an edge the die calendar does not price."
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "pin_v": "M3 M5",
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": false,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "structural_change": "First hardening of the die's STATIC x2-pair column entry dsfd_cfifo (128 die instances; VIS-ROM S81F-02 SEV1): the die (c21h, --bf-x2-static --bf-x2-pair --cfifo-colck) binds xd2[537:0]/xf2 on every instance but the bound elements.lef view (legacy meso-FIFO cfifo, 431.976x95.016) has no such pins -> 68,864 die bits unconnected. RTL = the c21h glue module byte-identical (module sha256 e892a5bb); two ot_s81_static_column_ingress (xd on xf, xd2 on xf2; fixed epoch, no ready/credit/occupancy), outputs registered on cr. Three CTS roots (cr core / xf / xf2 lanes, related same-frequency phase 0). Pins (tools/s81/cfifo_x2pair_pins.py): x2 at the station x2i pitch 0.096 under the sinf station column (die jog 25.68 -> 0), cc/st under cci/so (jog 53 -> 0), xd2/xf2 new on S beside xd, xf beside xd, rd 0.096 pitch, cr at the core-sink centroid; outline 431.976x95.016 -> 280.8x51.84 keeping the absolute die x/y of the N-face data pins (slot change). 0 cycles vs the die glue.",
+ "slot_change_request": {
+  "reason": "static x2-pair cfifo (S81F-02): xd2/xf2 pins added; x2 aligned to sstn *sinf_x2 x2i (zero jog); outline from content (~7k um2) instead of the legacy 41k um2 slot",
+  "outline": [
+   280.8,
+   51.84
+  ],
+  "generator_slot": [
+   431.976,
+   95.016
+  ],
+  "origin_shift_um": [
+   103.68,
+   43.176
+  ],
+  "pins": "physical/s81_die_pins/cfifo_x2pair/dsfd_cfifo.tcl",
+  "request_file": "physical/s81_die_pins/cfifo_x2pair/pin_request.json"
+ },
+ "job": {
+  "owner": "Claude:S-ELEM-PQ/COLL",
+  "branch": "claude/s81coll-cfifo-0100",
+  "tag": "x1",
+  "purpose": "S81 static x2-pair column entry dsfd_cfifo (128 replicas): first closed view with xd2/xf2 (die port-bind), x2 aligned to the station x2i column",
+  "views_to": "physical/ref_tile/s81coll_cfifo_x2/views",
+  "record_to": "results/rtl/ref_tile/s81coll_cfifo_x2",
+  "extra_paths": [
+   "rtl/dsrom_sys/s81_die_bind",
+   "tools/s81/cfifo_x2pair_gate.sh",
+   "tools/s81/cfifo_x2pair_pins.py",
+   "physical/s81_die_pins/cfifo_x2pair"
+  ],
+  "benches": [
+   {
+    "name": "exact_words_5phase",
+    "cmd": "bash tools/s81/cfifo_x2pair_gate.sh pass {RUN}/bench_p",
+    "expect": "pass",
+    "pass_regex": "CFIFO_X2_GATE PASS 5 phase pairs",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "x2_payload_mutant",
+    "cmd": "bash tools/s81/cfifo_x2pair_gate.sh mut_payload {RUN}/bench_m",
+    "expect": "fail",
+    "fail_regex": "CFIFO_X2 FAIL",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "x2_valid_mutant",
+    "cmd": "bash tools/s81/cfifo_x2pair_gate.sh mut_valid {RUN}/bench_v",
+    "expect": "fail",
+    "fail_regex": "CFIFO_X2 FAIL",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ]
+ }
+}

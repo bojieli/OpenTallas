@@ -1,0 +1,21 @@
+{
+ "master": "dsfd_cfifo",
+ "rtl": "rtl/dsrom_sys/s81_die_bind/glue/dsfd_cfifo_x2pair.sv",
+ "old_view": {
+  "outline": [
+   431.976,
+   95.016
+  ],
+  "source": "c21h a_real/elements.lef"
+ },
+ "new_outline": [
+  280.8,
+  51.84
+ ],
+ "origin_shift_um": [
+  103.68,
+  43.176
+ ],
+ "note": "absolute die x/y of xa/xb/x2-start/xd/rd-start kept; x2 pitch = station x2i pitch (jog 0); cc/st under station cci/so; xd2/xf2 new pins (die bits had none); xf beside xd; rd pitch 0.096",
+ "pins": 2350
+}
