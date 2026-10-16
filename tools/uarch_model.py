@@ -17327,6 +17327,24 @@ def hbm_host_static_ingress_model():
       scope='component ingress only; actual host packet/landing join, heterogeneous target adapters, all-ready reduction, fullchip binding and performance remain OPEN')
 
 
+def s81_hcx_pre_forward_model():
+    """Correct the pre-coefficient producer edge; no rate or physical credit."""
+    return dict(schema='opentallas.s81.hcx-pre-forward.v1',
+        scope='native coefficient tail local forwarding, full-layer boundary integration still required',
+        replicas=1, macs_per_cycle=0, arithmetic_ops_per_cycle=0, memory_macros=0,
+        state_bits=dict(pending_pre=128, next_pre=128, outgoing_pre=128,
+                        pending_valid=1, busy=1, next_valid=1, outgoing_valid=1, fault=1, base=14),
+        coefficient_write_port=dict(bits=512, mask_bits=16, row_bits=14, records_per_cycle=1),
+        forwarded_pre_bits=128, incoming_boundary_bits=129, outgoing_boundary_bits=129,
+        added_vm_reads=0, added_vm_writes=0, added_cycles=0,
+        logic='128 selected data bits replace current pre with carried pre; current post/comb/epsilon are preserved',
+        physical='local registers in the existing post owner; no standalone slot or physical closure claimed',
+        area_um2=None, placement=None, tracks=None,
+        open=['post-owner placement and exact pins/cut/clock/TT/FF/DRC',
+              'real inter-layer incoming/outgoing pre transport on the fixed compiler calendar',
+              'native full-layer replay and end-to-end measured rate'])
+
+
 def s81_bf_ten_root_candidate_model(**kwargs):
     """Source-pinned opt-in sizing; unknown physical capacity fails closed."""
     from uarch_model_s81_bf_ten_root import model

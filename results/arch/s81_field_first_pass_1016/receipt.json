@@ -1,0 +1,38 @@
+{
+  "schema": "opentallas.s81.first-pass-field-replay.v1",
+  "qualified": false,
+  "source_commit": "17b13fb0637869d53580a1084bdd250d18828d9b",
+  "scope": "FIRST_PASS_PRE_HOP_PRE_FINAL_PINS_NOT_USABLE_FOR_QUALIFICATION",
+  "host": "ot-epyc4",
+  "memory_gb": 4,
+  "threads": 1,
+  "allocator_unit": "oth-ubuntu-2028290-1792147910",
+  "join_unit": "oth-ubuntu-2087806-1792148181",
+  "exit_code": 0,
+  "remote_directory": "/srv/opentallas-scratch/codex/s81-field-17b-1016",
+  "outputs": {
+    "field_fragment_homes.jsonl.gz": {
+      "path": "joined_final/field_fragment_homes.jsonl.gz",
+      "sha256": "bd997557aa23d770de7bd0a43aebdddcfc877fcde73c662a7a9ea106d62ab617"
+    },
+    "pairs.jsonl.gz": {
+      "path": "joined_final/pairs.jsonl.gz",
+      "sha256": "1204eaa5e328ba7cea0744adda53f130010885f1a323897fb57ce99119ffc21c"
+    },
+    "source_field_operation_homes.jsonl.gz": {
+      "path": "joined_final/source_field_operation_homes.jsonl.gz",
+      "sha256": "c18ace5f12c2c091888e35e2aa600edea0939ef92b6c2b718509f7efd4270009"
+    }
+  },
+  "mechanism_tests": 9,
+  "sources": {
+    "tools/dsrom_s73_pair1.py": "0d2d38ac664bbcb7e896f2ae3b93a1e7593b5223ccd541a943bf8d3cf7e2243a",
+    "tools/s81/first_pass_field_join.py": "8f0e9d07b8515da38f083b1da223e9915df539123ab39414295c0ca1fe4b3451",
+    "tools/s81/test_first_pass_field_join.py": "c5f62297857582985a31685732bdfa64286310f1b313dbcca279a5624f434f51"
+  },
+  "rejected_diagnostics": [
+    "regions-only metadata moved literal BF sites despite matching BF counts; replaced by exact BF_site_IDs",
+    "first join asserted rank_dies as a scalar; corrected to complete stage/rank identities",
+    "initial successful structural report inferred unsupported whole-system die count; final source omits total and proves only356 required rank dies"
+  ]
+}

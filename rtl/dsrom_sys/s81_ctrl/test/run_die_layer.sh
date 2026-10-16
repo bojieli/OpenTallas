@@ -95,7 +95,7 @@ if [ -n "${HCXROM:-}" ]; then
  rtl/hdc/v41/ot_hdc_sk_arith.sv rtl/hdc/v41/ot_hdc_sk_recip_rom.sv rtl/hdc/v41/ot_hdc_sinkhorn.sv rtl/hdc/v41/ot_hdc_sinkhorn_mc.sv
  rtl/hdc/hbm/ot_hdc_v41x_weight_window.sv rtl/hbm_accel/generic/adapters/ot_hgi_hc_record.sv rtl/hbm_accel/generic/peers/ot_hgi_hc_unit.sv
  rtl/hbm_accel/generic/vm/ot_hgi_vm_core.sv rtl/hbm_accel/generic/vm/ot_hgi_vm_unit.sv rtl/hbm_accel/generic/vm/ot_hgi_vm_wrd.sv rtl/link/ot_fifo_sram_fwft.sv
- rtl/dsrom_sys/s81_hcx/ot_s81_hcx_vm_scheduled.sv rtl/dsrom_sys/s81_hcx/ot_s81_hcx_post_native.sv
+ rtl/dsrom_sys/s81_hcx/ot_s81_hcx_pre_forward.sv rtl/dsrom_sys/s81_hcx/ot_s81_hcx_vm_scheduled.sv rtl/dsrom_sys/s81_hcx/ot_s81_hcx_post_native.sv
  rtl/dsrom_sys/s81_native_head_connect/ot_s81_head_gain_stream.sv rtl/dsrom_sys/s81_hcx/ot_s81_hcx_post_gain_native.sv"
 fi
 # the hierarchical HC slab modules dsfd_sp_hc.sv names since 10-12 (HIER generate; the bench keeps HIER 0): without them the build fails
@@ -114,7 +114,7 @@ SUD=""; [ -n "${SUSNAP:-}" ] && SUD="+define+TB_SU_REAL"
 SPL="+define+OT_S81PH_GBX_FMT1 +define+OT_S81PH_EP_PIPE2 +define+OT_S81PH_COLL_OQPIPE +define+OT_S81PH_COLL_QPIPE +define+OT_S81PH_COLL_SPLIT +define+OT_S81PH_COLL_CR +define+OT_S81PH_LANE_CR +define+OT_S81PH_COLL_PULL +define+OT_S81PH_COLL_TREP"
 HX=""; [ $HCH = 1 ] && HX="+define+TB_HC_HIER -GHIER=1 -GHALF=1 -GCSPLIT=1 -GTAIL_SPLIT=2 -GCNL_PIN=1 -GCHAIN_STEP=6 -GHEAD_ROWS=$([ $NG = 256 ] && echo 10 || echo 2)"
 for m in $MODES; do
-  case $m in base) X="";; nom) X="-GEPER=0";; mut_ep) X="-GMUT=2";; mut_drop) X="-GMUT=4";; mut_hc) X="-GHMUT=1";; mut_coll) X="+define+OT_S81PH_MUT_TREP";; mut_inp) X="-GINP1=1";; mut_pd) X="-GPIPE=1 -GPIPE_PD=0";; mut_hl) X="-GHST=1 -GHLMUT=1";; mut_tx) X="-GHTX=3";; mut_su) X="-GSUMUT=4";; mut_sux) X="-GSUXMUT=3";; mut_rw) X="-GSUXMUT=4";; mut_mix) X="-GMXMUT=2";; mut_hcxl) X="-GHXMUT=1 -GHX_FAST=478 -GHX_PROJ_DONE=479";; mut_hcxp) X="-GHXMUT=2";;
+  case $m in base) X="";; nom) X="-GEPER=0";; mut_ep) X="-GMUT=2";; mut_drop) X="-GMUT=4";; mut_hc) X="-GHMUT=1";; mut_coll) X="+define+OT_S81PH_MUT_TREP";; mut_inp) X="-GINP1=1";; mut_pd) X="-GPIPE=1 -GPIPE_PD=0";; mut_hl) X="-GHST=1 -GHLMUT=1";; mut_tx) X="-GHTX=3";; mut_su) X="-GSUMUT=4";; mut_sux) X="-GSUXMUT=3";; mut_rw) X="-GSUXMUT=4";; mut_mix) X="-GMXMUT=2";; mut_hcxl) X="-GHXMUT=1 -GHX_FAST=478 -GHX_PROJ_DONE=479";; mut_hcxp) X="-GHXMUT=2";; mut_hcxpre) X="-GHXMUT=3";;
     seqc) X="+define+TB_SEQC -GTMAX=110000";; mut_seqc) X="+define+TB_SEQC +define+OT_SSEQC_MUT_DROP_START -GTMAX=110000";; esac
   RUNL=$LAYERS; [ $m = base ] || [ $m = nom ] || [ $m = seqc ] || RUNL=$(echo $LAYERS | awk '{print $1}')
   XGM=""; for g in ${XG:-}; do n=${g%%=*}; case " $X " in *" $n="*) ;; *) XGM="$XGM $g";; esac; done

@@ -15,7 +15,7 @@
   62.64,
   21.6
  ],
- "why": "spec outline",
+ "why": "spec outline (exact: the closed view's sub-slot)",
  "std_area_um2": null,
  "layer_contract": {
   "children": {},
@@ -52,6 +52,11 @@
   "physical/ref_tile/hbfd_rly_624_ns/signoff.sdc",
   "physical/ref_tile/hbfd_rly_624_ns/pdn.tcl",
   "physical/ref_tile/hbfd_rly_624_ns/pre_cts.tcl",
+  "physical/ref_tile/hbfd_rly_624_ns/post_cts.tcl",
+  "physical/ref_tile/hbfd_rly_624_ns/post_grt.tcl",
+  "physical/ref_tile/hbfd_rly_624_ns/pre_drt.tcl",
+  "physical/ref_tile/hbfd_rly_624_ns/pre_fill.tcl",
+  "physical/ref_tile/hbfd_rly_624_ns/post_fill.tcl",
   "physical/ref_tile/hbfd_rly_624_ns/pre_grt.tcl",
   "physical/ref_tile/hbfd_rly_624_ns/post_drt.tcl",
   "tools/ref_tile/ref_route.sh",
@@ -70,6 +75,7 @@
   "physical/dsrom_window_source/leaf_inhold.tcl",
   "physical/dsrom_window_source/leaf_inhold_release.tcl",
   "physical/ref_tile/hbfd_rly_624_ns/pre_gpl.tcl",
-  "physical/ref_tile/hbfd_rly_624_ns/pre_dpl.tcl"
+  "physical/ref_tile/hbfd_rly_624_ns/pre_dpl.tcl",
+  "physical/common_flow/pin_reg_split.tcl"
  ]
 }
