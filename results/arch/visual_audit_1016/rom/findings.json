@@ -1774,7 +1774,8 @@
      },
      "image_r2b": "img_r2/S81H-08__field4_r3c_selected_density.png"
     }
-   }
+   },
+   "status_1016_0400": "field4 r3c CLOSED and bound (FF +5.25); i_sel split deferred unless die STA flags input hold."
   },
   {
    "id": "S81H-09",
@@ -3235,7 +3236,8 @@
    "severity": 2,
    "images_committed": [],
    "images_local": [],
-   "owner_ack": "S-VM 02:30: noted; E face (6,987 bits) is the relief lever in the parent kit."
+   "owner_ack": "S-VM 02:30: noted; E face (6,987 bits) is the relief lever in the parent kit.",
+   "status_1016_0400": "S-VM measured: near-limit cells (0.55-0.60) are a plateau of E-W crossings in two columns (x~1,500 and ~3,900, y 1,100-3,100) plus the N capture strip; moving pins S->E does NOT cut E-W crossings (VIS-ROM fix refuted on mechanism). Control-leaf placement (rsched 2,900,1,933; seq 2,318,1,933) gives worst 0.593 / p99 0.585. <=0.55 needs fewer bits through those columns (MIX read leaves beside the W face) or more outline/layers; screened in the parent kit."
   },
   {
    "id": "S81H-14",
@@ -3264,7 +3266,8 @@
    "severity": 1,
    "images_committed": [],
    "images_local": [],
-   "owner_ack": "S-VM 02:30: confirmed real (OT_MULTI_ROOT refusal; e_q samples x43f, vm_fault, x34f from core domain); structural fix needed, not resubmitted."
+   "owner_ack": "S-VM 02:30: confirmed real (OT_MULTI_ROOT refusal; e_q samples x43f, vm_fault, x34f from core domain); structural fix needed, not resubmitted.",
+   "status_1016_0400": "fix-in-gate: r5 dsfd_vm_static_wfc_ctl_native_1015_r5-split5-d0344ba3f submitted. r4 route had failed TT -98.74 / FF -70.09: (a) e_d->s_d -98.7 ps on 548 endpoints (lane-major e_d pins, 4 mux sources up to 225 um apart), (b) xd->w_d -36.5 (w_d flops pinned at E outputs 194 um from W inputs), (c) pre_e->e_q 4:3 core->serial crossing in-leaf. r5: e_d bit-major, pin-flop anchoring inputs only, NO in-leaf crossing (e_q serial-native x43 fault, fault core-native). Equivalence gate PASS vs r9 split ref (FAULT/LANE mutants + unmodified r9 FAIL). CTS gate WARN 0 fail, in->reg +174, reg->reg +259 ps. VIS-ROM LOOKED at gate density: cells at their W/E input faces, centre and top/bottom ~35% very sparse (area, not timing)."
   }
  ],
  "no_image": [
