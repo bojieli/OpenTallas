@@ -1,0 +1,435 @@
+// Hardened-root REMAINDER of qkd_ctrl_pc_host_static (Q-KVSYS-DIE KVCTRL split 2026-10-16): the original body with
+// u_port (ot_qfd_emb_pcport) and u_ecc (ot_qfd_kv_landing_ecc) peeled into their own hardened children (separate HBM
+// clock roots; e1 measured 17,150 sinks on one root, insertion 426.8 ps). Traffic timing is edge-for-edge unchanged
+// except: static write data reaches the port +1 hclk (the column follows c_v by >= 4 edges) and the native commit
+// observation leaves +1 hclk through a pin register.
+module qkd_ctrl_pc_host_static_core #(
+    parameter integer ROW0  = 64,          // CONTRACT map v2: HBM row of layer 0
+    parameter integer CVL   = 2,           // qkd_cdc_wleaf r2 (WPIPE 1): h_cv edges after h_wcon at its pin
+    parameter integer HOFF  = 3,           // cycles the hand-off head is not looked at after h_hand (>= 2)
+    parameter integer WDONE = 17,          // write-done edges after the WR column (>= CVL + 4)
+    parameter integer LATE  = 4096,        // a held (layer-mismatch) write faults after this many cycles
+    parameter integer PROFILE = 0,
+    parameter integer EVMUT = 0,
+    parameter integer MUT   = 0,
+    // HANDOFF 0az: 1 = the PHY read return is elastic (HBM/PHY latency not
+    // compile-time fixed). expected_raw_valid is then the NOMINAL (minimum)
+    // raw return slot: a return earlier than the nominal count is a fault, a
+    // return later is absorbed (tag queue + landing ECC are in order, and the
+    // qkd_kv_hbm_elastic_front block buffer re-times the corrected sectors),
+    // and an outstanding nominal return with no PHY data for RAW_WD edges is a
+    // PHY-late fault (watchdog). 0 = historical exact-slot check.
+    parameter integer ELASTIC = 0,
+    parameter integer RAW_WD = 256,
+    // In-order read tag / pcport class queue depth. The fixed RL23 calendar
+    // needs 32; the elastic PHY window needs CMD 4 + RL 23 + window + ECC
+    // outstanding reads, so ELASTIC uses 64 (sized in the 0az parent proof).
+    parameter integer STRAP_CDC = 0, // 1: physical HBM pin capture -> two core-domain captures
+    parameter integer DRAIN_PIPE = 0, // 1: conservative two-edge drain summary; no traffic latency change
+    parameter integer TQD = (ELASTIC != 0) ? 64 : 32,
+    parameter integer CONTEXT_DESC = 0
+) (
+    input  wire         pll_hbm,
+    input  wire         hrst,
+    input  wire         ck,
+    input  wire         rsi,
+    input  wire [4:0]   pc,
+    input  wire [62:0]  ci_c,       // {ci[318:309], ci[52:0]}: the KV write data ci[308:53] lands in the port child
+    output wire [11:0]  co_c,       // co[293:282] = {at, av, wcon, hand}; co[281:0] is the ECC child
+    input  wire [287:0] es,
+    output wire [260:0] er,
+    output reg [327:0] po,
+    input  wire         pi_v,       // pi[0]; pi[288:1] lands in the port child
+    input  wire [32:0]  ki,
+    output wire [32:0]  ko,
+    input  wire         fi,
+    output reg          fo,
+    input wire static_cmd_owner,input wire [42:0] static_cmd,input wire reserved_rd,input wire reserved_static_col,input wire reserved_write_col,
+    input wire [15:0] static_epoch,input wire expected_raw_valid,
+    input wire [1:0] cfg_stack,
+    input wire [317:0] es_context,
+    input wire es_expected_valid,input wire [60:0] es_expected_identity,
+    input wire [28:0] es_expected_address,input wire [4:0] es_expected_pc,input wire [1:0] es_expected_stack,
+    output wire native_commit_valid,output wire [60:0] native_commit_identity,
+    output wire [28:0] native_commit_address,
+    output wire [15:0] corrected_epoch,
+    output wire completion_v,completion_we,completion_fault,
+    // Registered observations only. A parent drain barrier must join BOTH
+    // domains plus actual upstream quiet, front idle and return-ring idle.
+    output reg idle_core,idle_hbm,output reg drain_fault_core,drain_fault_hbm,
+    // ---- hardened-child seams (wires-parent qkd_ctrl_pc_host_static); every seam output is flop-driven ----
+    output reg          p_col_v, p_col_we, p_col_sr,     // column one edge before the port's pin capture
+    output reg          p_w_v,                         // static write data, registered (+1 hclk, hidden by >= 4-edge column)
+    output reg  [255:0] p_w_d,
+    input  wire [287:0] p_wd,
+    input  wire         p_kv_v, p_em_v,
+    input  wire [257:0] p_em_d,
+    input  wire         p_fault,
+    output reg  [16:0]  e_sec,                         // tag-queue head, registered one edge ahead (lookahead pop)
+    output reg  [7:0]   e_row,
+    input  wire         e_l_v, e_fault
+);
+    localparam integer LW  = CVL + 1;              // column delay in front of the pcport
+    localparam integer WDS = WDONE - (CVL + 3) + 1;    // write-done stages after the completion pin flop
+    wire hclk = pll_hbm;
+    wire obs_commit_valid;wire [60:0] obs_commit_identity;wire [28:0] obs_commit_address;
+
+    // ---- resets: pin flops; hrst is hclk-synchronous, rsi core-synchronous -------------------------------------------
+    (* keep *) reg hr_q;
+    (* keep *) reg rs_q;
+    always @(posedge hclk) hr_q <= hrst;
+    always @(posedge ck)   rs_q <= rsi;
+    wire h_rn = hr_q;
+
+    // ---- strap: the scheduler's reset release, dly(pc) cycles after the leaf's ---------------------------------------
+    wire [6:0] dtab [0:31];
+    genvar gi;
+    generate for (gi = 0; gi < 32; gi = gi + 1) begin : g_dly
+        localparam integer RP = ((gi * 118) / 32) % 118;
+        assign dtab[gi] = 7'(RP + ((RP + gi) % 2) + (MUT == 1 ? 1 : 0));
+    end endgenerate
+    reg [6:0] dsel, dcnt;
+    reg       hgo;
+    (* keep *) reg [4:0] pc_q;
+    always @(posedge hclk) begin pc_q <= pc; dsel <= dtab[pc_q]; end
+    always @(posedge hclk or negedge h_rn)
+        if (!h_rn) begin dcnt <= 7'd0; hgo <= 1'b0; end
+        else if (dcnt == dsel) hgo <= 1'b1;
+        else dcnt <= dcnt + 7'd1;
+
+    // ---- kc chain station --------------------------------------------------------------------------------------------
+    wire        tc_v;
+    wire [31:0] tc_d;
+    ot_qkvd_kcmd_tap #(.ROW0(ROW0)) u_tap (.clk(hclk), .rst_n(h_rn), .i_v(ki[0]), .i_d(ki[32:1]),
+        .o_v(ko[0]), .o_d(ko[32:1]), .c_v(tc_v), .c_d(tc_d));
+
+    // ---- W-face pin flops (CDC ho) -----------------------------------------------------------------------------------
+    (* keep *) reg         wv_q, cv_q, hf_q;
+    (* keep *) reg [23:0]  wsec_q, csec_q;
+    (* keep *) reg [8:0]   ctag_q;
+    always @(posedge hclk or negedge h_rn)
+        if (!h_rn) begin wv_q <= 1'b0; cv_q <= 1'b0; hf_q <= 1'b0; end
+        else begin wv_q <= ci_c[3]; cv_q <= ci_c[28]; hf_q <= ci_c[62]; end
+    always @(posedge hclk) begin wsec_q <= ci_c[27:4]; csec_q <= ci_c[52:29]; ctag_q <= ci_c[61:53]; end
+
+    // ---- E-face pin flops (PHY return) -------------------------------------------------------------------------------
+    (* keep *) reg         rv_q,rawslot_q;
+    (* keep *) reg [15:0] epoch_q;
+    always @(posedge hclk)epoch_q<=static_epoch;
+    always @(posedge hclk or negedge h_rn)if(!h_rn)rawslot_q<=0;else rawslot_q<=expected_raw_valid;
+    always @(posedge hclk or negedge h_rn) if (!h_rn) rv_q <= 1'b0; else rv_q <= pi_v;
+
+    // ---- raw PHY return check: exact slot (historical) or elastic window (0az) ---------------------------------------
+    localparam integer TQA = $clog2(TQD);
+    reg [6:0] raw_out;               // nominal raw returns not yet received (<= TQD outstanding tags)
+    reg [8:0] raw_age;
+    reg f_raw;
+    always @(posedge hclk or negedge h_rn)
+        if (!h_rn) begin raw_out <= 6'd0; raw_age <= 9'd0; f_raw <= 1'b0; end
+        else if (ELASTIC != 0) begin
+            raw_out <= raw_out + {6'd0, rawslot_q} - {6'd0, rv_q};
+            if (rv_q && raw_out == 7'd0 && !rawslot_q) f_raw <= 1'b1;           // earlier than nominal / unsolicited
+            if (raw_out == 7'(TQD) && rawslot_q && !rv_q) f_raw <= 1'b1;        // outstanding count overflow
+            if (rv_q || raw_out == 7'd0) raw_age <= 9'd0;
+            else if (raw_age == 9'(RAW_WD - 1)) f_raw <= 1'b1;                  // PHY late beyond watchdog
+            else raw_age <= raw_age + 9'd1;
+        end
+    wire raw_bad = (ELASTIC == 0) ? (rv_q != rawslot_q) : f_raw;
+
+    // ---- command arbiter ---------------------------------------------------------------------------------------------
+    wire        c_v;                 // embedding static command, HBM side of its crossing (below)
+    wire [286:0] c_d;wire [61:0] c_context;wire [346:0] col_context;wire native_observer_fault;
+    reg  [3:0]  cr;
+    reg  [2:0]  hold;
+    reg         cur_v;
+    reg  [18:0] cur_row;
+    reg         hand_q;
+    reg  [12:0] late_c;
+    reg         f_late, f_cmd, f_early;
+    wire        cmd_credit,ctl_phase_idle;
+    reg static_owner_d;
+    always @(posedge hclk or negedge h_rn)if(!h_rn)static_owner_d<=0;else static_owner_d<=static_owner_q;
+    // w_sec (ot_qkvd_kv_wq sec_of) = {7'b0, layer[5:0], v, g, t[6], t[13:9], t[5:3]}: the PC-local sector j is the 10
+    // bits {v, g, t[6], t[12:9], t[5:3]} (t[13] = sec[7] is 0 for T <= 8,192; a set bit is out of range and never issued)
+    wire [9:0]  wj     = {wsec_q[10:8], wsec_q[6:0]};
+    wire [18:0] wrow   = 19'(ROW0) + {13'd0, wsec_q[16:11]};
+    wire        w_match = (cur_v && cur_row == wrow && !wsec_q[7]) || (MUT == 4);
+    wire        w_pend = hgo && wv_q && hold == 3'd0;
+    wire        w_go   = w_pend && w_match && cr > 4'd2 && !tc_v && !static_owner_q;
+    (* keep *) reg static_owner_q,static_v_q,rdslot_q,srslot_q,wrslot_q;
+    (* keep *) reg [31:0] static_d_q;
+    (* keep *) reg [9:0] static_first_q;
+    always @(posedge hclk)begin static_d_q<=static_cmd[32:1];static_first_q<=static_cmd[42:33];end
+    always @(posedge hclk or negedge h_rn)
+      if(!h_rn)begin static_owner_q<=0;static_v_q<=0;rdslot_q<=0;srslot_q<=0;wrslot_q<=0;end
+      else begin static_owner_q<=static_cmd_owner;static_v_q<=static_cmd[0];rdslot_q<=reserved_rd;srslot_q<=reserved_static_col;wrslot_q<=reserved_write_col;end
+    wire        cmd_v  = static_owner_q ? static_v_q : (tc_v | w_go);
+    wire [31:0] cmd    = static_owner_q ? static_d_q : tc_v ? tc_d : {2'd2, 20'd0, wj[6:2], wj[9:7], wj[1:0]};
+    always @(posedge hclk or negedge hgo)
+        if (!hgo) begin
+            cr <= 4'd8; hold <= 3'd0; cur_v <= 1'b0; hand_q <= 1'b0; late_c <= 13'd0; f_late <= 1'b0; f_cmd <= 1'b0;
+        end else begin
+            cr <= cr - {3'd0, cmd_v} + {3'd0, cmd_credit};
+            if (cmd_v && cr == 4'd0) f_cmd <= 1'b1;
+            if((static_owner_q&&(tc_v||w_pend))||(!static_owner_q&&static_v_q))f_cmd<=1'b1;
+            if(static_owner_q!=static_owner_d && (!ctl_phase_idle||tw!=tr||c_v||cv_q||wv_q))f_cmd<=1'b1;
+            hand_q <= w_go;
+            if (w_go) hold <= 3'(HOFF); else if (hold != 3'd0) hold <= hold - 3'd1;
+            if (tc_v && tc_d[31:30] == 2'd0) cur_v <= 1'b1;
+            if (w_pend && !w_match) begin
+                if (late_c == 13'(LATE - 1)) f_late <= 1'b1; else late_c <= late_c + 13'd1;
+            end else late_c <= 13'd0;
+        end
+    always @(posedge hclk) if (tc_v && tc_d[31:30] == 2'd0) cur_row <= tc_d[18:0];
+    always @(posedge hclk or negedge h_rn)
+        if (!h_rn) f_early <= 1'b0;
+        else if (!hgo && (tc_v || c_v || static_v_q)) f_early <= 1'b1;      // traffic inside the strap delay
+
+    // ---- the scheduler -----------------------------------------------------------------------------------------------
+    wire        row_v, col_v, col_we, col_sr, ctl_fault, s_cr;
+    wire [2:0]  row_op;
+    wire [4:0]  row_bank, col_bank, col_col;
+    wire [18:0] row_row;
+    ot_qkd_static_ctrl_pc_emb #(.CONTEXT_DESC(CONTEXT_DESC),.ENABLE(1), .PC(0), .PHASE(0),.PROFILE(PROFILE)) u_ctl (
+        .clk(hclk), .rst_n(hgo), .cmd_v(cmd_v), .cmd(cmd), .cmd_first(static_owner_q?static_first_q:10'd0),.reserved_rd(rdslot_q),.reserved_static_col(srslot_q),.reserved_write_col(wrslot_q), .cmd_credit(cmd_credit),
+        .row_v(row_v), .row_op(row_op), .row_bank(row_bank), .row_row(row_row),
+        .col_v(col_v), .col_bank(col_bank), .col_col(col_col), .col_we(col_we), .busy(), .phase_idle(ctl_phase_idle), .fault(ctl_fault),
+        .s_context({c_context,c_d[274:256],c_d[284:280],c_d[279:275],c_d[255:0]}),.col_context(col_context),.s_v(c_v), .s_we(c_d[285]), .s_bank(c_d[284:280]), .s_col(c_d[279:275]), .s_row(c_d[274:256]),
+        .s_cr(s_cr), .col_sr(col_sr));
+
+    // ---- WR column -> h_wcon, the delayed column of the pcport, completion check, write-done -------------------------
+    reg         wcon_q;
+    reg  [LW:0] dv, dwe, dsr;                     // [0] = one edge after the pin column ... [LW-1] = the pcport's
+    reg  [9:0]  dbc [0:LW];
+    integer     di;
+    always @(posedge hclk or negedge h_rn)
+        if (!h_rn) begin wcon_q <= 1'b0; dv <= 0; dwe <= 0; dsr <= 0; end
+        else begin
+            wcon_q <= col_v && col_we && !col_sr;
+            dv <= {dv[LW-1:0], col_v}; dwe <= {dwe[LW-1:0], col_we}; dsr <= {dsr[LW-1:0], col_sr};
+        end
+    always @(posedge hclk) begin
+        dbc[0] <= {col_bank, col_col};
+        for (di = 1; di <= LW; di = di + 1) dbc[di] <= dbc[di-1];
+    end
+    wire        pcol_v = dv[LW-1], pcol_we = dwe[LW-1], pcol_sr = dsr[LW-1];
+    reg         f_wmis;
+    wire [9:0]  cj = {csec_q[10:8], csec_q[6:0]};
+    always @(posedge hclk or negedge h_rn)
+        if (!h_rn) f_wmis <= 1'b0;
+        else if (cv_q && dbc[LW] != {cj[9:7], cj[1:0], cj[6:2]}) f_wmis <= 1'b1;
+    reg  [WDS:0] av_s;
+    reg  [8:0]   at_s [0:WDS];
+    integer      wi;
+    always @(posedge hclk or negedge h_rn)
+        if (!h_rn) av_s <= 0; else av_s <= {av_s[WDS-1:0], cv_q};
+    always @(posedge hclk) begin
+        at_s[0] <= ctag_q;
+        for (wi = 1; wi <= WDS; wi = wi + 1) at_s[wi] <= at_s[wi-1];
+    end
+
+    // ---- PC port: read class, embedding ECC, PHY write data ----------------------------------------------------------
+    // u_port (ot_qfd_emb_pcport KVW2) is the hardened child qkd_ctrl_pc_port_child: it captures the column at its
+    // pin from dv[LW-2] (same edge as the historical dv[LW-1]), and the KV write / PHY read data at its own pin flops.
+    wire [287:0] wd = p_wd;
+    wire         kv_v = p_kv_v, em_v = p_em_v, port_fault = p_fault;
+    wire [257:0] em_d = p_em_d;
+    generate if (LW >= 2) begin : g_pcol
+        always @(posedge hclk or negedge h_rn)
+            if (!h_rn) begin p_col_v <= 1'b0; p_col_we <= 1'b0; p_col_sr <= 1'b0; p_w_v <= 1'b0; end
+            else begin p_col_v <= dv[LW-2]; p_col_we <= dwe[LW-2]; p_col_sr <= dsr[LW-2]; p_w_v <= c_v && c_d[286]; end
+    end endgenerate
+    always @(posedge hclk) p_w_d <= c_d[255:0];
+
+    // ---- read tags: {open row, j} per KV RD, in order ----------------------------------------------------------------
+    reg  [7:0]  brow [0:31];
+    reg  [33:0] tq [0:TQD-1];
+    reg  [TQA:0] tw, tr;
+    reg         f_tag;
+    wire        rd_kv   = col_v && !col_we && !col_sr;
+    wire [9:0]  rj      = {col_bank[4:2], col_col, col_bank[1:0]};
+    wire        t_empty = tw == tr;
+    wire        t_full  = tw[TQA-1:0] == tr[TQA-1:0] && tw[TQA] != tr[TQA];
+    wire [33:0] t_head  = tq[tr[TQA-1:0]];
+    wire [9:0]  t_j     = (MUT == 3) ? {t_head[9:2], t_head[0], t_head[1]} : t_head[9:0];
+    wire [7:0]  t_layer = t_head[17:10] - 8'(ROW0);
+    always @(posedge hclk) begin
+        if (row_v && row_op == 3'd1) brow[row_bank] <= row_row[7:0];
+        if (rd_kv) tq[tw[TQA-1:0]] <= {epoch_q,brow[col_bank], rj};
+    end
+    always @(posedge hclk or negedge h_rn)
+        if (!h_rn) begin tw <= '0; tr <= '0; f_tag <= 1'b0; end
+        else begin
+            if (rd_kv) begin tw <= tw + 1'b1; if (t_full) f_tag <= 1'b1; end
+            if (kv_v)  begin tr <= tr + 1'b1; if (t_empty) f_tag <= 1'b1; end
+        end
+
+    // ---- landing ECC -> CDC hi ---------------------------------------------------------------------------------------
+    // u_ecc (ot_qfd_kv_landing_ecc) is the hardened child qkd_ctrl_pc_ecc_child. Its PIPE stage 0 captures i_v / i_code
+    // (port flops) and i_sec / i_row on the same edge; the head metadata is registered here one edge ahead: the head
+    // at edge t is tq[tr + kv_v] at t-1 (an entry is written >= RL + PHY edges before its beat returns).
+    wire         l_v = e_l_v, ecc_fault = e_fault;
+    wire [TQA:0] tr_nx   = tr + {{TQA{1'b0}}, kv_v};
+    wire [33:0]  h_nx    = tq[tr_nx[TQA-1:0]];
+    wire [9:0]   h_nx_j  = (MUT == 3) ? {h_nx[9:2], h_nx[0], h_nx[1]} : h_nx[9:0];
+    wire [7:0]   h_nx_l  = h_nx[17:10] - 8'(ROW0);
+    always @(posedge hclk) begin e_sec <= {h_nx_l[5:0], h_nx_j[9:7], 1'b0, h_nx_j[6:0]}; e_row <= h_nx[17:10]; end
+    reg [15:0] ep0,ep1,ep2;
+    always @(posedge hclk)begin ep0<=t_head[33:18];ep1<=ep0;ep2<=ep1;end
+    assign corrected_epoch=ep2;
+    assign co_c = {at_s[WDS], av_s[WDS], wcon_q, hand_q};
+    // Dedicated raw PHY pin stage: all command and write-data bits move
+    // together, preserving JEDEC spacings and CWL alignment. Physical static
+    // completion and KV write retirement move with the actual launched column.
+    reg physical_col_sr;
+    reg [3:0] expected_sr_pipe;
+    always @(posedge hclk or negedge h_rn)if(!h_rn)expected_sr_pipe<=0;else expected_sr_pipe<={expected_sr_pipe[2:0],reserved_static_col};
+    reg [346:0] physical_context;
+    always @(posedge hclk)physical_context<=col_context;
+    always @(posedge hclk or negedge h_rn)
+      if(!h_rn)begin po<=0;physical_col_sr<=0;end
+      else begin po<={wd,col_col,col_bank,col_we,col_v,row_row,row_bank,row_op,row_v};physical_col_sr<=col_sr;end
+
+    // ---- embedding static port crossing (strip engine on the core clock) ---------------------------------------------
+    (* keep *) reg         es_v_q;
+    (* keep *) reg [286:0] es_d_q;
+    (* keep *) reg [317:0] es_context_q;
+    (* keep *) reg es_expected_q;
+    (* keep *) reg [60:0] es_expected_identity_q;
+    (* keep *) reg [28:0] es_expected_address_q;
+    (* keep *) reg [4:0] es_expected_pc_q,pc_core_q;
+    (* keep *) reg [4:0] pc_core_meta;
+    (* keep *) reg [1:0] stack_q,es_expected_stack_q;
+    reg native_intake_fault;
+    always @(posedge ck)begin
+      es_context_q<=es_context;es_expected_identity_q<=es_expected_identity;
+      es_expected_address_q<=es_expected_address;es_expected_pc_q<=es_expected_pc;
+      es_expected_stack_q<=es_expected_stack;stack_q<=cfg_stack;
+      pc_core_meta<=pc_q;pc_core_q<=(STRAP_CDC!=0)?pc_core_meta:pc;
+    end
+    always @(posedge ck or negedge rs_q)
+      if(!rs_q)begin es_expected_q<=0;native_intake_fault<=0;end
+      else begin
+        es_expected_q<=es_expected_valid;
+        if(PROFILE==0 && ((es_v_q&&es_context_q[317])!=es_expected_q))native_intake_fault<=1;
+        if(es_v_q&&es_context_q[317] && (es_context_q[316:256]!=es_expected_identity_q ||
+          es_context_q[255:0]!={256{1'b1}} || !es_d_q[286] || !es_d_q[285] ||
+          {es_d_q[274:256],es_d_q[284:280],es_d_q[279:275]}!=es_expected_address_q ||
+          pc_core_q!=es_expected_pc_q || stack_q!=es_expected_stack_q))native_intake_fault<=1;
+      end
+    always @(posedge ck or negedge rs_q) if (!rs_q) es_v_q <= 1'b0; else es_v_q <= es[0];
+    always @(posedge ck) es_d_q <= es[287:1];
+    wire         e_v, s_credit, f_core, f_ecdc;
+    wire [257:0] e_d;
+    ot_qkd_static_emb_cdc #(.ENABLE(1)) u_ecdc (
+        .clk(ck), .rst_n(rs_q), .hclk(hclk), .hrst_n(h_rn), .s_v(es_v_q), .s_d(es_d_q),.s_context(es_context_q[317:256]), .c_v(c_v), .c_d(c_d),.c_context(c_context),
+        .h_credit(s_cr), .s_credit(s_credit), .h_v(em_v), .h_d(em_d), .e_v(e_v), .e_d(e_d),
+        .fault_core(f_core), .fault_hbm(f_ecdc));
+    reg          er_v, er_cr, er_f;
+    reg  [257:0] er_d;
+    always @(posedge ck or negedge rs_q)
+        if (!rs_q) begin er_v <= 1'b0; er_cr <= 1'b0; er_f <= 1'b0; end
+        else begin er_v <= e_v; er_cr <= s_credit; er_f <= f_core | native_intake_fault; end
+    always @(posedge ck) er_d <= e_d;
+    assign er = {er_f, er_cr, er_d, er_v};
+
+    // ---- sticky fault chain, S -> N ----------------------------------------------------------------------------------
+    always @(posedge hclk or negedge h_rn)
+        if (!h_rn) fo <= 1'b0;
+        else fo <= fo | fi | ctl_fault | port_fault | ecc_fault | hf_q | f_ecdc | f_late | f_cmd | f_early | f_wmis | f_tag | raw_bad | native_observer_fault;
+    qkd_static_kv_write_observer #(.STRICT(PROFILE==0)) u_native_write_observer(
+        .hclk(hclk),.rst_n(h_rn),.po(po),.static_column(physical_col_sr),.expected_static_column(expected_sr_pipe[3]),.context_word(physical_context),
+        .commit_valid(obs_commit_valid),.commit_identity(obs_commit_identity),.commit_address(obs_commit_address),.fault(native_observer_fault));
+    // Output pin stage (structural fix of the e2 native_commit_identity output path): the observer's commit flops sit
+    // with the payload pipe; these flops sit at the W pins. +1 hclk on the commit observation, none on traffic.
+    (* keep *) reg nc_v_q;(* keep *) reg [60:0] nc_id_q;(* keep *) reg [28:0] nc_ad_q;
+    always @(posedge hclk or negedge h_rn)if(!h_rn)nc_v_q<=1'b0;else nc_v_q<=obs_commit_valid;
+    always @(posedge hclk)begin nc_id_q<=obs_commit_identity;nc_ad_q<=obs_commit_address;end
+    assign native_commit_valid=nc_v_q;assign native_commit_identity=nc_id_q;assign native_commit_address=nc_ad_q;
+    qkd_ctrl_static_commit #(.WDONE(WDONE),.MUT(EVMUT)) u_static_commit(
+        .hclk(hclk),.hrst_n(h_rn),.ck(ck),.rst_n(rs_q),
+        .col_v(po[28]),.col_we(po[29]),.col_sr(physical_col_sr),
+        .completion_v(completion_v),.completion_we(completion_we),.fault(completion_fault));
+
+    // ---- actual outstanding work observations (not execution/admission gates) ----
+    // Completion is WDONE, not the early er credit. Reads additionally wait
+    // for the actual returned payload; elastic PHY lateness cannot assert idle.
+    // Credits are counted separately so no hidden credit FIFO entry is ignored.
+    reg [15:0] drain_desc,drain_reads,drain_credits;
+    wire dc_push=es_v_q,dc_pop=completion_v;
+    wire dr_push=es_v_q&&!es_d_q[285],dr_pop=e_v;
+    wire dq_push=es_v_q,dq_pop=s_credit;
+    // Register wide reductions independently, and require two quiet edges so
+    // a stale zero summary cannot hide an intake captured on the previous edge.
+    // Current activity remains an eager veto; only idle assertion may be later.
+    wire core_drain_activity=es[0]||es_v_q||completion_v||e_v||er_v||s_credit||er_cr;
+    reg core_debt_zero_q;reg [1:0] core_quiet_q;
+    always @(posedge ck or negedge rs_q)
+      if(!rs_q)begin core_debt_zero_q<=0;core_quiet_q<=0;end
+      else begin
+        core_debt_zero_q<=drain_desc==0&&drain_reads==0&&drain_credits==0;
+        core_quiet_q<={core_quiet_q[0],!core_drain_activity};
+      end
+    always @(posedge ck or negedge rs_q)
+      if(!rs_q)begin
+        drain_desc<=0;drain_reads<=0;drain_credits<=0;
+        drain_fault_core<=0;idle_core<=0;
+      end else begin
+        case({dc_push,dc_pop})
+          2'b10:drain_desc<=drain_desc+16'd1;
+          2'b01:drain_desc<=drain_desc-16'd1;
+          default:;
+        endcase
+        case({dr_push,dr_pop})
+          2'b10:drain_reads<=drain_reads+16'd1;
+          2'b01:drain_reads<=drain_reads-16'd1;
+          default:;
+        endcase
+        case({dq_push,dq_pop})
+          2'b10:drain_credits<=drain_credits+16'd1;
+          2'b01:drain_credits<=drain_credits-16'd1;
+          default:;
+        endcase
+        if((dc_pop&&!dc_push&&drain_desc==0)||
+           (dr_pop&&!dr_push&&drain_reads==0)||
+           (dq_pop&&!dq_push&&drain_credits==0)||
+           (dc_push&&!dc_pop&&drain_desc==16'hffff)||
+           (dr_push&&!dr_pop&&drain_reads==16'hffff)||
+           (dq_push&&!dq_pop&&drain_credits==16'hffff))drain_fault_core<=1;
+        if(DRAIN_PIPE!=0)idle_core<=core_debt_zero_q&&(&core_quiet_q)&&!core_drain_activity&&
+          !drain_fault_core&&!completion_fault&&!f_core&&!native_intake_fault;
+        else idle_core<=drain_desc==0&&drain_reads==0&&drain_credits==0&&
+          !es[0]&&!es_v_q&&!completion_v&&!e_v&&!er_v&&!s_credit&&!er_cr&&
+          !drain_fault_core&&!completion_fault&&!f_core&&!native_intake_fault;
+      end
+    // KV corrected returns include tag, PHY raw, pcport and landing ECC
+    // pipelines. Static reads are covered above through their actual e_v.
+    reg [15:0] drain_kv;
+    wire hbm_drain_activity=obs_commit_valid||rd_kv||tc_v||cmd_v||static_v_q||c_v||s_cr||wv_q||cv_q||hand_q||
+      wcon_q||row_v||col_v||po[0]||po[28]||rv_q||rawslot_q||kv_v||em_v||l_v||native_commit_valid;
+    reg hbm_debt_zero_q;reg [1:0] hbm_quiet_q;
+    always @(posedge hclk or negedge h_rn)
+      if(!h_rn)begin hbm_debt_zero_q<=0;hbm_quiet_q<=0;end
+      else begin
+        hbm_debt_zero_q<=raw_out==0&&drain_kv==0&&hold==0&&dv==0&&av_s==0;
+        hbm_quiet_q<={hbm_quiet_q[0],!hbm_drain_activity};
+      end
+    always @(posedge hclk or negedge h_rn)
+      if(!h_rn)begin drain_kv<=0;drain_fault_hbm<=0;idle_hbm<=0;end
+      else begin
+        case({rd_kv,l_v})
+          2'b10:drain_kv<=drain_kv+16'd1;
+          2'b01:drain_kv<=drain_kv-16'd1;
+          default:;
+        endcase
+        if((l_v&&!rd_kv&&drain_kv==0)||
+           (rd_kv&&!l_v&&drain_kv==16'hffff))drain_fault_hbm<=1;
+        if(DRAIN_PIPE!=0)idle_hbm<=hgo&&ctl_phase_idle&&t_empty&&hbm_debt_zero_q&&
+          (&hbm_quiet_q)&&!hbm_drain_activity&&!drain_fault_hbm&&!fo&&!f_ecdc;
+        else idle_hbm<=hgo&&ctl_phase_idle&&t_empty&&raw_out==0&&drain_kv==0&&
+          !tc_v&&!cmd_v&&!static_v_q&&!c_v&&!s_cr&&!wv_q&&!cv_q&&!hand_q&&
+          hold==0&&!wcon_q&&dv==0&&av_s==0&&!row_v&&!col_v&&!po[0]&&!po[28]&&
+          !rv_q&&!rawslot_q&&!kv_v&&!em_v&&!l_v&&!native_commit_valid&&!obs_commit_valid&&
+          !drain_fault_hbm&&!fo&&!f_ecdc;
+      end
+endmodule
