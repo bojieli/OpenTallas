@@ -50,3 +50,35 @@
   g22: RUN_RC=0
 2026-10-16T10:24:14-07:00 G22 PASS
 2026-10-16T10:24:14-07:00 chain_m0 done
+2026-10-16T10:36:41-07:00 build_m3 rc=0
+2026-10-16T10:36:53-07:00 build_m1 rc=0
+  mut3_p1: MIX_MISMATCH pos0 row0 got=bd65f8cb exp=3dd683ab
+  mut3_p1: MIX_MISMATCH pos0 row1 got=bd3f0797 exp=bdc4654d
+  mut3_p1: MIX_MISMATCH pos0 row2 got=3df7008c exp=3c7e523c
+  mut3_p1: MIX_MISMATCH pos0 row3 got=bd8da6e8 exp=3d8f6917
+  mut3_p1: MIX_MISMATCH pos0 row4 got=be130b11 exp=bcb19ef8
+  mut3_p1: TAIL_MISMATCH q0 pos0 word0 got=3f40f4b6 exp=3f4535bb
+2026-10-16T10:38:11-07:00 MUT3 p1 FAIL as expected
+2026-10-16T10:38:11-07:00 chain_mut3 done
+  mut1_p1: MIX_MISMATCH pos0 row0 got=3dca4070 exp=3dd683ab
+  mut1_p1: MIX_MISMATCH pos0 row1 got=bda1fc16 exp=bdc4654d
+  mut1_p1: MIX_MISMATCH pos0 row2 got=b8ccffea exp=3c7e523c
+  mut1_p1: MIX_MISMATCH pos0 row3 got=3e01a1e1 exp=3d8f6917
+  mut1_p1: MIX_MISMATCH pos0 row4 got=bdd1eb4a exp=bcb19ef8
+  mut1_p1: TAIL_MISMATCH q0 pos0 word0 got=3f450e25 exp=3f4535bb
+2026-10-16T10:38:25-07:00 MUT1 p1 FAIL as expected
+2026-10-16T10:38:25-07:00 chain_mut1 done
+2026-10-16T10:39:54-07:00 chain_mut2 start
+2026-10-16T11:08:44-07:00 build_m2 rc=0
+  mut2_p1: TAIL_MISMATCH q0 pos0 word0 got=3f4535aa exp=3f4535bb
+  mut2_p1: TAIL_MISMATCH q0 pos0 word1 got=3f68634b exp=3f68635c
+  mut2_p1: TAIL_MISMATCH q0 pos0 word2 got=3f282d75 exp=3f282d86
+  mut2_p1: TAIL_MISMATCH q0 pos0 word3 got=3ebb377e exp=3ebb37a0
+  mut2_p1: TAIL_MISMATCH q1 pos0 word0 got=3f4535aa exp=3f4535bb
+  mut2_p1: HC_ENG_DONE mode=0 npos=1 mixes=24 mixbad=0 outs=4 outbad=16 TB=1944 last_mix_t=2413 first_out_t=2912 last_out_t=2912 HC_MIX_CYCLES=968
+2026-10-16T11:10:42-07:00 MUT2 p1 FAIL as expected
+  mut2_g22: HC_ENG_DONE mode=2 npos=1 mixes=0 mixbad=0 outs=2 outbad=0 TB=8 last_mix_t=0 first_out_t=538 last_out_t=538 HC_MIX_CYCLES=530
+  mut2_g22: HC_ENG PASS
+  mut2_g22: RUN_RC=0
+2026-10-16T11:11:07-07:00 MUT2 g22 unexpectedly PASS (escape)
+2026-10-16T11:11:07-07:00 chain_mut2 done
