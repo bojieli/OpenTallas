@@ -1,0 +1,175 @@
+{
+  "schema": "opentallas.source-pinned-component-native-boundary-audit.v1",
+  "job": "s81pq_qb_headpc_native-p8-exactcts-1515-3d298fbc5",
+  "source_commit": "3d298fbc5fc71514304344cded3e8ae4ed163640",
+  "record_commit": "8ecf89cbf228ecf32963634296a6c7d31fd36a08",
+  "audit_base_commit": "7929fd8152aa646f25eac6384a5b01728bc753a2",
+  "scope": "Component exported boundary only; not full layer, token, production adoption or die qualification.",
+  "route": {
+    "host": "ot-epyc1tb",
+    "run": "/srv/opentallas/claude/closure-loop/s81pq_qb_headpc_native-p8-exactcts-1515-3d298fbc5",
+    "tt_setup_ps": 104.16,
+    "ff_hold_ps": 18.09,
+    "drc": 0,
+    "ss_sensitivity_ps": -228.48
+  },
+  "source": {
+    "path": "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_qb_pinread_native.sv",
+    "job_git_blob": "32efad260a43fbafd1cd92e03931f52012e56784",
+    "current_main_git_blob": "32efad260a43fbafd1cd92e03931f52012e56784",
+    "matches_current_main": true
+  },
+  "view_sha256": {
+    "insertion.json": "507f008fa4aea0126b2255c4b738c7af0063ed6cbc58f7c643da9f9c5efe59ae",
+    "ot_s81_pq_qb_headpc_native_tt.lib": "edcae50d344b4c78369d60770c410bba93a9506c172f4875307f0b1f59e312e0",
+    "ot_s81_pq_qb_headpc_native_ff.lib": "bb8ddf0dfa44d63c7ba8f9275e29771209f57ecc3921e332e7051a65fcdd0f33"
+  },
+  "clock_references": {
+    "clk": {
+      "rise": 208.3,
+      "fall": 221.40038,
+      "min": 172.60423,
+      "max": 227.80153,
+      "src": "insertion.json boundary mean",
+      "bmin": 188.8,
+      "bmax": 227.8,
+      "n": 1897
+    }
+  },
+  "raw_metrics": {
+    "launch": {
+      "pin": "hq0[188]",
+      "clock": "clk",
+      "ps": 179.29253
+    },
+    "capture": {
+      "pin": "h_b0[3]",
+      "clock": "clk",
+      "ps": 244.58763
+    },
+    "spread_ps": 39.0,
+    "ff_min_launch_minus_max_hold_ps": 148.44803000000002
+  },
+  "violating_launch_arcs": [],
+  "violating_capture_arcs": [
+    {
+      "pin": "consume",
+      "clock": "clk",
+      "ps": 241.40427
+    },
+    {
+      "pin": "h_b0[8]",
+      "clock": "clk",
+      "ps": 205.25592
+    },
+    {
+      "pin": "h_b0[7]",
+      "clock": "clk",
+      "ps": 206.18198
+    },
+    {
+      "pin": "h_b0[6]",
+      "clock": "clk",
+      "ps": 214.34928000000002
+    },
+    {
+      "pin": "h_b0[5]",
+      "clock": "clk",
+      "ps": 206.47109
+    },
+    {
+      "pin": "h_b0[4]",
+      "clock": "clk",
+      "ps": 215.87949
+    },
+    {
+      "pin": "h_b0[3]",
+      "clock": "clk",
+      "ps": 244.58763
+    },
+    {
+      "pin": "h_b0[2]",
+      "clock": "clk",
+      "ps": 201.01559
+    },
+    {
+      "pin": "h_b0[1]",
+      "clock": "clk",
+      "ps": 209.42520000000002
+    },
+    {
+      "pin": "h_b0[0]",
+      "clock": "clk",
+      "ps": 231.59544
+    },
+    {
+      "pin": "h_b1[8]",
+      "clock": "clk",
+      "ps": 200.70153000000002
+    },
+    {
+      "pin": "h_b1[7]",
+      "clock": "clk",
+      "ps": 218.18931
+    },
+    {
+      "pin": "h_b1[6]",
+      "clock": "clk",
+      "ps": 213.28586
+    },
+    {
+      "pin": "h_b1[5]",
+      "clock": "clk",
+      "ps": 213.19741000000002
+    },
+    {
+      "pin": "h_b1[4]",
+      "clock": "clk",
+      "ps": 202.62659000000002
+    },
+    {
+      "pin": "h_b1[3]",
+      "clock": "clk",
+      "ps": 244.00884000000002
+    },
+    {
+      "pin": "h_b1[2]",
+      "clock": "clk",
+      "ps": 209.13337
+    },
+    {
+      "pin": "h_b1[1]",
+      "clock": "clk",
+      "ps": 223.96087
+    },
+    {
+      "pin": "h_b1[0]",
+      "clock": "clk",
+      "ps": 239.92950000000002
+    },
+    {
+      "pin": "hw_sv[1]",
+      "clock": "clk",
+      "ps": 221.52368
+    },
+    {
+      "pin": "hw_sv[0]",
+      "clock": "clk",
+      "ps": 226.7415
+    }
+  ],
+  "combinational_pins": [],
+  "unconstrained_or_unused_inputs": [],
+  "unconstrained_note": "ETM omitted timing arcs: requires source/parameter/integration classification; no waiver inferred.",
+  "bench_state": {
+    "bench_lint": "done",
+    "bench_native_pinread_exact_and_mutants": "done",
+    "bench_mutant_capture_bypass": "done"
+  },
+  "limits": {
+    "launch_ps": 220,
+    "capture_ps": 190,
+    "spread_ps": 80
+  },
+  "boundary_status": "FAIL"
+}
