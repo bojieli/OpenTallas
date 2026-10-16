@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.die_port_bind.v2",
- "die_v": "/tmp/claude-1000/hnl0600/g5/die.v",
+ "die_v": "/tmp/claude-1000/hnl0600/g6/die.v",
  "top": "hbm_v16_die",
  "verdict": "PASS",
  "failing": [],
@@ -1361,7 +1361,7 @@
     "sfucore_NW"
    ],
    "param_sets": {
-    "{\"AW\": \"11\", \"LG_PATH\": \"12\", \"LWB\": \"15\", \"PAGE_AW\": \"1\"}": 4
+    "{\"AW\": \"11\", \"LG_PATH\": \"24\", \"LWB\": \"15\", \"PAGE_AW\": \"1\"}": 4
    },
    "die_port_not_in_rtl": [],
    "input_unconnected": [],
@@ -1617,7 +1617,7 @@
   "hbfd_rly_624_SN:i",
   "hbfd_rly_624_WE:i"
  ],
- "die_sha256": "ad578d13f3c0faebd41b7586f86d734b1c243a07b97548845b128844a6678380",
+ "die_sha256": "86cfa5d3de621243a11fcccf6624d0df680c09e86a5a617bf2f7ef7ac1d45e2e",
  "straps_declared": [
   "ot_hbm_static_cfg_collar:tgt",
   "ot_hbm_svc_vmdel_lane:bank_id",

@@ -26132,7 +26132,7 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .i(rfr_NE_NE_34__o[47:0]),
     .o(rfr_NE_NE_35__o)
   );
-  ot_hgi_sfu_scheduled_engine #(.PAGE_AW(1), .AW(11), .LWB(15), .LG_PATH(12)) sfucore_SW (
+  ot_hgi_sfu_scheduled_engine #(.PAGE_AW(1), .AW(11), .LWB(15), .LG_PATH(24)) sfucore_SW (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
     .clk_lg({4{hb_ckgen__pll_stream[0]}}),
@@ -26752,7 +26752,7 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .i(sfr_SW3_b09__o[623:0]),
     .o(sfr_SW3_b10__o)
   );
-  ot_hgi_sfu_scheduled_engine #(.PAGE_AW(1), .AW(11), .LWB(15), .LG_PATH(12)) sfucore_SE (
+  ot_hgi_sfu_scheduled_engine #(.PAGE_AW(1), .AW(11), .LWB(15), .LG_PATH(24)) sfucore_SE (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
     .clk_lg({4{hb_ckgen__pll_stream[0]}}),
@@ -27372,7 +27372,7 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .i(sfr_SE3_b09__o[623:0]),
     .o(sfr_SE3_b10__o)
   );
-  ot_hgi_sfu_scheduled_engine #(.PAGE_AW(1), .AW(11), .LWB(15), .LG_PATH(12)) sfucore_NW (
+  ot_hgi_sfu_scheduled_engine #(.PAGE_AW(1), .AW(11), .LWB(15), .LG_PATH(24)) sfucore_NW (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
     .clk_lg({4{hb_ckgen__pll_stream[0]}}),
@@ -27992,7 +27992,7 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .i(sfr_NW3_b09__o[623:0]),
     .o(sfr_NW3_b10__o)
   );
-  ot_hgi_sfu_scheduled_engine #(.PAGE_AW(1), .AW(11), .LWB(15), .LG_PATH(12)) sfucore_NE (
+  ot_hgi_sfu_scheduled_engine #(.PAGE_AW(1), .AW(11), .LWB(15), .LG_PATH(24)) sfucore_NE (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
     .clk_lg({4{hb_ckgen__pll_stream[0]}}),
