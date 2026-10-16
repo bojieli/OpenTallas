@@ -1,13 +1,17 @@
 {
   "status": "COMPONENT_DIFFERENTIAL_PASS_NOT_NATIVE_OR_PARENT_QUALIFICATION",
   "source_sha256": {
-    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_xio.sv": "7ef7c42928536da0f973abdaff828b8436caea5eb2e788a16e1a0ebed67e2ae0",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_xio.sv": "b2e11b539bfe64ac2cab1743f8e8007344770161f07a66a69622673541c3c1b9",
     "rtl/dsrom_sys/s81_ph/vm/ot_s81_vm_x43.sv": "db36f2611d91193aa7b9fe8031b75c9ad901d0449aa90fbe77db0a12109c1b52",
     "rtl/dsrom_sys/s81_ph/vm/ot_s81_vm_x34.sv": "db4810e343feccefb7a2cf3a010e99cced012e985e2635d55425c65a596a6e37",
     "rtl/dsrom_sys/s81_ph/vm/ot_s81_vm_fault_transports.sv": "6a30738f0744ecfead55f56e28f41b62b71c689d3cbf5ff45da20a161e7a0d7f",
     "tools/s81_vm/xio_ref_legacy.sv": "35e3aec07081c1a89320e97b3f7f4b55ff5aa33dd6141681570d7c6b9e6c073a",
-    "tools/s81_vm/tb_xio_partition_0253.sv": "bf5fab3ca382a21bb67b4ca13416cd1b89b532b4294ef6e71107bd3bc2846e88",
-    "tools/s81_vm/xio_partition_gate_0253.sh": "b6f83b169e671e6d62964428667f45a0976389d3db33b43ab79700f301b0b7b2"
+    "tools/s81_vm/tb_xio_partition_0253.sv": "eaaaccf239bd288e960d300c27999f8a09a1abb4f359584ce18d00ac1d7a6d2b",
+    "tools/s81_vm/xio_partition_gate_0253.sh": "f40505e833fe386bac7d6528e2ee6216f96f8806c06bc71778088f2339b9c426",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_xio_request.sv": "1a43c55fee287fb68a917b692693123ff8acd345d0d01dd29e000364cb5c5a66",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_xio_return.sv": "9392ce929a86e3c33bab5af06ca0227730c2659ab0adbbb30bfd79a47eb37d01",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_xio_serial.sv": "16b92d9b6d4a255acbf393411aba268f52daf27ee7c01897a144821fc4abb4da",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_xio_fault_join.sv": "6e3800844520f1fd34f347b3de7a8fe772103a6c547bd1cc4085197e39cddaa0"
   },
   "gold_configurations": [
     {
@@ -47,12 +51,12 @@
     {
       "mutant": "OT_VM_XIO_MUT_REQUEST",
       "returncode": 1,
-      "observed_failure": "FATAL: tools/s81_vm/tb_xio_partition_0253.sv:19: REQUEST DELTA cycle76 new1 olddelay0"
+      "observed_failure": "FATAL: tools/s81_vm/tb_xio_partition_0253.sv:19: REQUEST DELTA cycle77 new1 olddelay0"
     },
     {
       "mutant": "OT_VM_XIO_MUT_RETURN",
       "returncode": 1,
-      "observed_failure": "FATAL: tools/s81_vm/tb_xio_partition_0253.sv:21: COLLECTIVE DELTA cycle91 gotxXXXXxxxXXXXXxxxXXXXXxxxxXXXXxxxXXXXXxxxXXXXXxxxXXXXXxxxxXXXXxxxXXXXXxxxXXXXXxxxXXXXXxxxxXXXXxxxXXXXXxxxXXXXXxxxXXXXXxxxxXXXXxxxX expected12756ed1b2756ec152756ef0f2756ee092756e9032756e87d2756eb772756ea712756e56b2756e4652756e75f2756e6592756e1532756e04d2756e3472756e247"
+      "observed_failure": "FATAL: tools/s81_vm/tb_xio_partition_0253.sv:21: COLLECTIVE DELTA cycle92 gotxXXXXxxxXXXXXxxxXXXXXxxxxXXXXxxxXXXXXxxxXXXXXxxxXXXXXxxxxXXXXxxxXXXXXxxxXXXXXxxxXXXXXxxxxXXXXxxxXXXXXxxxXXXXXxxxXXXXXxxxxXXXXxxxX expected12756ed1b2756ec152756ef0f2756ee092756e9032756e87d2756eb772756ea712756e56b2756e4652756e75f2756e6592756e1532756e04d2756e3472756e247"
     },
     {
       "mutant": "OT_VM_XIO_MUT_GATHER",
@@ -76,8 +80,8 @@
     }
   ],
   "measured": {
-    "request_core_delta": 1,
-    "collective_return_core_delta": 3,
+    "request_core_delta": 2,
+    "collective_return_core_delta": 4,
     "query_gather_return_core_delta": 4,
     "query_gather_return_serial_delta": 3,
     "collective_II": 1,
@@ -98,5 +102,6 @@
     "rss_fault_join_t"
   ],
   "shared_W1_source_commit": "5095b4dc5",
-  "scope": "Declared memory boundary uses deterministic fixed-latency stimuli. Actual XIO request/return/control/serial/W1 transport RTL instantiated. No mapped SRAM/full parent/compiler/TT/FF/DRC qualification claim."
+  "scope": "Declared memory boundary uses deterministic fixed-latency stimuli. Actual XIO request/return/control/serial/W1 transport RTL instantiated. No mapped SRAM/full parent/compiler/TT/FF/DRC qualification claim.",
+  "physical_predecessor": "r1 request rejected on actual CTS native TT capture276.58174ps. r2 captures request inputs before decode and removes one Q/G return-tail edge; fresh physical gate required."
 }
