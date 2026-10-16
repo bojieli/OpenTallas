@@ -70,7 +70,7 @@ for q,widths in dict(SW=(8,4,8,16,4),SE=(2,1,2,8,2),NE=(2,1,2,8,2)).items():
         e([f'calendar_{q}',field,0,w],[f'hb_vms_{q}',field,0,w],w)
         s['edges'][-1]['basis']='Universal W187 field contains zero-extended original per-quadrant packed value (tools/hbm_vm_static_calendar.py pack); exact low-field slice preserves all original client lane bits.'
 s['gaps'].append(dict(id='G-HOST-PROGRAM-INSTALL',owner='H-NETLIST / host programme targets',
-    missing_rtl='Programme-target configured proves descriptor bounds and one-launch arm only; no actual loaded-row completeness check is integrated for cp_cal/cp_fill/cp_ep/hc_tgt. Status aggregation PASS does not prove installation readiness. Integrate the actual loaded-row checker and compiled full-image evidence before native qualification.',
+    missing_rtl='Basic programme targets now track actual registered write pins, protect header/PC, scan referenced rows and invalidate stale image generations. Their component proof does not close MODE0 SVG programme+descriptor references, MODE1 striped command tables, or all required full production image/operation coverage. These typed loader installation checks remain native completeness gaps.',
     affects=[],note='Semantic installation-safety gap; no input tie or fake producer closes it.'))
 write('host_completion',s)
 # Extend the existing root, preserving its original target/fault ordering and host fault pins.

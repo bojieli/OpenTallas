@@ -101,7 +101,7 @@ module tb_static_cmd_target;
         if (s_awe) begin if (s_aa == 10'd5 && s_ad == DA) saw_a = saw_a + 1; else begin errors = errors + 1; $display("ERROR svg A write %h", s_aa); end end
         if (s_bwe) begin if (s_ba == 7'd3 && s_bd == DB) saw_b = saw_b + 1; else begin errors = errors + 1; $display("ERROR svg B write %h", s_ba); end end
         if (s_run) begin if (s_rb == 7'd3 && s_rc == 8'd7) saw_run = saw_run + 1; else begin errors = errors + 1; $display("ERROR run %0d %0d", s_rb, s_rc); end end
-        if (c_we) begin if (c_wa == 10'd9 && c_wd == DC) saw_cal_w = saw_cal_w + 1; else begin errors = errors + 1; $display("ERROR cal write"); end end
+        if (c_we) begin if (c_wa >= 10'd2 && c_wa < 10'd40 && c_wd[255:240] == 16'hc7a1 && c_wd[239:224] == {6'b0,c_wa} && c_wd[223:0] == DC[223:0]) saw_cal_w = saw_cal_w + 1; else begin errors = errors + 1; $display("ERROR cal write"); end end
         if (c_sv) begin if (c_sb == 10'd2 && c_sl == 11'd40 && c_lp == 16'd3) saw_cal_s = saw_cal_s + 1; else begin errors = errors + 1; $display("ERROR cal start"); end end
         if (x_cv) begin : XC
             integer e, l; reg [31:0] exp_c;
@@ -135,8 +135,11 @@ module tb_static_cmd_target;
         repeat (5) @(posedge clk); rst_n = 1; repeat (5) @(posedge clk);
         // svg: window A row 5, window B row 3, run [3,10)
         row(8'd64, 12'h005, DA); row(8'd64, 12'h403, DB); desc(8'd64, 12'd3, 13'd10, 16'd1);
-        // calendar target 96: programme row 9, start [2,40) x3
-        row(8'd96, 12'h009, DC); desc(8'd96, 12'd2, 13'd40, 16'd3);
+        // calendar target96: every actual programme row2..39 installed before start[2,40)x3
+        for(integer p=2;p<40;p++)begin
+            reg[255:0] word_;word_=DC;word_[255:240]=16'hc7a1;word_[239:224]=16'(p);row(8'd96,12'(p),word_);
+        end
+        desc(8'd96, 12'd2, 13'd40, 16'd3);
         // x-load: period word, entries 4..6, loops 2
         row(8'd100, 12'hC00, {224'd0, XPER});
         for (integer e = 0; e < 3; e = e + 1) row(8'd100, 12'h800 + 12'(4 + e), {116'd0, XP[e], XAT[e]});
@@ -158,7 +161,7 @@ module tb_static_cmd_target;
         if (s_flt) begin errors = errors + 1; $display("ERROR svg fault without cause"); end
         force cfg_v = 1'b1; force cfg_target = 8'd64; @(posedge clk); release cfg_v; release cfg_target; repeat (4) @(posedge clk);
         if (!s_flt) begin errors = errors + 1; $display("ERROR cfg while running not faulted"); end
-        if (saw_a != 1 || saw_b != 1 || saw_run != 1 || saw_cal_w != 1 || saw_cal_s != 1) begin errors = errors + 1;
+        if (saw_a != 1 || saw_b != 1 || saw_run != 1 || saw_cal_w != 38 || saw_cal_s != 1) begin errors = errors + 1;
             $display("ERROR counts a%0d b%0d run%0d calw%0d cals%0d", saw_a, saw_b, saw_run, saw_cal_w, saw_cal_s); end
         if (nx != 6) begin errors = errors + 1; $display("ERROR xload issued %0d of 6", nx); end
         if (nd != 2) begin errors = errors + 1; $display("ERROR dma issued %0d of 2", nd); end

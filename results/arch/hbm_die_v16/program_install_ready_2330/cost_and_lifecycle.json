@@ -1,0 +1,38 @@
+{
+  "schema": "opentallas.hbm.program-install-control-cost.v1",
+  "state_kind": "Finite valid-row bitmap and control only. Payload remains in actual mapped programme SRAM.",
+  "before_register_bits_formula": "614+5*PCW",
+  "added_register_bits_formula": "(1<<PCW)+2*PCW+10",
+  "pcw10": {
+    "previous_rtl_register_bits": 664,
+    "additional_rtl_register_bits": 1054,
+    "total_rtl_register_bits": 1718
+  },
+  "direct_v16_instances": 16,
+  "direct_projected_extra_ff_bits": 16864,
+  "embedded_qdq_targets": 1,
+  "full_current_v16_projected_extra_ff_bits": 17918,
+  "area_mm2": null,
+  "area_status": "Unmeasured until actual synthesis/placement. These are source declaration counts, not mapped cell counts.",
+  "clock_status": "Projected1718 state bits per PCW10 target is below15000 sink rule; actual CTS/native insertion/launch/capture/spread remains OPEN.",
+  "latency_edges": {
+    "external_reset_release": 2,
+    "write_to_programme_output": 2,
+    "fresh_descriptor_to_ready_if_writes_committed": "N+2 for N referenced rows; worst1026edges for1024rows",
+    "immediate_last_write_single_row_descriptor_to_ready": 4,
+    "unchanged_resident_same_range_descriptor_to_ready": 2,
+    "target_launch_to_actual_calendar_output": 6,
+    "normal_execution_edges_added": 0
+  },
+  "lifecycle": [
+    "First accepted programme-pin write after any descriptor starts a new image generation and invalidates all old row-valid bits.",
+    "Every referenced row must be written in that generation; arbitrary order and holes outside the descriptor range are allowed.",
+    "Write acceptance checks actual protected programme magic and PC identity. Tracking observes actual registered writes, not raw broadcasts.",
+    "Descriptor scan and a two-edge SRAM-commit guard precede configured; early launch faults and emits no start.",
+    "A consumed descriptor disarms. A fresh descriptor may reuse the same range proof only while its resident image has not changed.",
+    "A changed range is rescanned. A write after descriptor requires rewriting the complete newly referenced range; no implicit partial-image inheritance.",
+    "Validation is installation activity. Running programme timelines never wait or reschedule. Any descriptor work on a critical launch path must be priced in the full compiler model."
+  ],
+  "physical": "UNQUALIFIED; no old view inheritance. Published target/QDQ/attention consumers listed in host_review_2330/target_requalification.json.",
+  "remaining": "MODE0 SVG A/B reference closure, MODE1 striped command-table install completeness and full production operation/image coverage are not qualified here."
+}
