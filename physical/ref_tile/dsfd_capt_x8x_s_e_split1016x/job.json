@@ -1,5 +1,5 @@
 {
- "name": "dsfd_capt_x8x_s_e_split1016x-x43-adfe85fc2",
+ "name": "dsfd_capt_x8x_s_e_split1016x-x43-COMMIT",
  "block": "dsfd_capt_x8x_s_e",
  "ref_tile": true,
  "owner": "claude:S-VM-CAPT-X8",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 16,
  "source": {
   "branch": "codex/s81-hub-parents-0811",
-  "commit": "adfe85fc2",
+  "commit": "COMMIT",
   "extra_paths": [
    "tools/s81_ph",
    "rtl/dsrom_sys/s81_ph",
@@ -53,7 +53,7 @@
     "name": "capture_split_mutant_drop1",
     "cmd": "bash tools/s81_ph/capc_split_bench.sh {RUN}/mut mut 'mix' S81PH_CAPX_MUT_DROP1",
     "expect": "fail",
-    "fail_regex": "CAPC_SEQ words=.*seq_mismatches=[1-9]",
+    "fail_regex": "mismatching_roots=[1-9][0-9]* RESULT FAIL CAPC_EQ mismatches=[1-9][0-9]*.*EQ_FAIL",
     "threads": 8,
     "peak_ram_gb": 16
    }
@@ -106,7 +106,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/dsfd_capt_x8x_s_e_split1016x/dsfd_capt_x8x_s_e_split1016x-x43-adfe85fc2"
+   "to": "results/rtl/ref_tile/dsfd_capt_x8x_s_e_split1016x/dsfd_capt_x8x_s_e_split1016x-x43-COMMIT"
   }
  ],
  "cycles_added": 0,
