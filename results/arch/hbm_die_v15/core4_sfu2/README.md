@@ -4,8 +4,17 @@ Status: **UNADOPTED; source-specific endpoint views and static cycles remain ope
 
 This coherent alternative inserts the complete SFU core/store before bank-pair
 group2 while retaining the quarter RF/reducer core at the inner band end. The
-quarter core uses the actual276.48square native-kit candidate (gate pending),
-with its centre-facing RF boundary kept at the old band edge. The native source
+quarter core reserves a 330.48 × 330.48 µm native-kit successor (gate pending),
+with its centre-facing RF boundary kept at the old band edge. Native common-flow
+synthesis retains all six RF payload replicas: 76,220 flops and 52,285.28 µm²
+total cell-plus-macro area. The earlier generic count of 38,176 flops omitted
+the physical keep-register hook and cannot size this block. The former
+276.48 µm square would have about 70.6% core fill; the enlarged candidate has
+about 49.2%, before native placement and clock qualification. The upper core
+overhangs the low join column by 54 µm while retaining the original 276.48 µm
+column pitch; the enlarged source-bound SUCX remains 32.4 µm away horizontally.
+Charging the full enlarged width through the linear band fails by 53.592 µm,
+so that unrevised linear arrangement is explicitly rejected. The native source
 candidate relocates the existing RF ingress register rung; full normal component
 edge equivalence is measured separately by the qcore owner. This plan does not
 overlay the compact source on any old physical view.
@@ -16,8 +25,8 @@ weighted old-graph stages8.686. The new current source graph must replace old
 aggregate links before these cuts can qualify the die.
 
 All16 RF geometric polylines avoid hard rectangles. Their minimum depth is at
-most33 at480um; keeping the actual production36 stages places all576 source-
-bound standard48 footprints with no overlaps and max centre interval433um.
+most32 at480um; keeping the actual production36 stages places all576 source-
+bound standard48 footprints with no overlaps and max centre interval427.128um.
 Actual source/sink pins, all66 qcore root references, routing and TT/FF/DRC
 remain open. The actual external RF capture endpoint after rung relocation is
 clk_ctl; the64 internal ctl-to-bank commit paths remain required STA paths.
@@ -52,6 +61,11 @@ with balanced125/125/125/125/124 live lanes per624-bit station and56 explicit
 spares.304/624/1136 are not native-qualified replacements. Footprints, clock
 roots, pin direction, cut and actual stage count must be priced for either
 qualified replacement; a functional lane split does not eliminate traffic.
+The actual 13 × 48-bit station composition also requires 13 reset-region flops
+and two reset synchronizers (15 additional flops per station). Native leaf
+area and sink counts in the comparison exclude that new station glue. Across
+736 stations this adds 11,040 reset flops, with physical area, clock/reset
+placement, routes and release timing still unqualified.
 
 Recommended next physical study: this middle-SFU alternative, using actual
 qualified relay leaves, explicit result transport and complete current graph.
@@ -68,7 +82,7 @@ historical incorrect per-XC0.52mm2 interpretation.
 Reproduce:
 
 ```sh
-python3 tools/hbm_die_v15/compact_plan.py --layout col --core-at 4 --sfu-at-group 2 --core-w 276.48 --core-h 276.48 --band 2891.92 --su-w 1797.12 --su-h 2671.92 --smw 7200 --smh 1800 --edge 100 --column 3050 --channel 450 --hub-w 480 --fit --carry --out results/arch/hbm_die_v15/core4_sfu2
+python3 tools/hbm_die_v15/compact_plan.py --layout col --core-at 4 --sfu-at-group 2 --core-w 330.48 --core-h 330.48 --core-column-w 276.48 --band 2891.92 --su-w 1797.12 --su-h 2671.92 --smw 7200 --smh 1800 --edge 100 --column 3050 --channel 450 --hub-w 480 --fit --carry --out results/arch/hbm_die_v15/core4_sfu2
 python3 tools/hbm_die_v15/v6_eval.py results/arch/hbm_die_v15/core4_sfu2 --slack 1200
 python3 tools/hbm_die_v15/rf_centre_routes.py results/arch/hbm_die_v15/core4_sfu2
 python3 tools/hbm_die_v15/rf_centre_allocate.py results/arch/hbm_die_v15/core4_sfu2

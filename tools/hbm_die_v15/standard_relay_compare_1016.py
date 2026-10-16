@@ -53,6 +53,9 @@ def main():
                      hashes={f:hashlib.sha256(b).hexdigest() for f,b in raw.items()},
                      export_verdict_checks=export,outline_um=[w,h],one_station_leaves=n,
                      one_station_area_mm2=n*w*h/1e6,
+                     area_scope='native leaf footprints only; excludes composition reset/clock/wire glue',
+                     composition_reset_extra_ff=15 if width==48 else None,
+                     composition_reset_scope='13 region + 2 sync FF for source-proven 13x48 station' if width==48 else 'not established for this composition',
                      one_station_clock_sinks=n*ins['tt'].get('all',{}).get('n',boundary['n']),
                      unused_lanes=n*width-624,payload_lane_map=used,
                      full_master_launch_ps=allout,full_master_capture_ps=allin,
@@ -66,6 +69,7 @@ def main():
              qualification='COMPARISON_ONLY_NO_SOURCE_OR_DIE_ADOPTION',
              obligations=['source must instantiate selected real master leaves with explicit lane padding',
                           'count actual footprints/pins/clocks/cuts and per-bit native reach',
+                          '13x48 reset composition adds 15 FF per station; qualify actual reset placement/release and price glue',
                           'no source cycles changed without measured compiler/performance proof'])
     (ROOT/a.out).write_text(json.dumps(out,indent=1)+'\n')
     for r in rows:
