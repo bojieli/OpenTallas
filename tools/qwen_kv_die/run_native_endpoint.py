@@ -26,10 +26,14 @@ def main():
     binary, vec, out = a.binary.resolve(), a.vectors.resolve(), a.out.resolve()
     build = binary.parent.parent
     source_manifest = build/'source.sha256'
-    for line in source_manifest.read_text().splitlines():
-        expected, name = line.split(maxsplit=1)
-        if sha(Path(name.strip())) != expected:
-            raise ValueError(f'built source hash mismatch: {name}')
+    manifests = [source_manifest]
+    if (build/'compiler_override.sha256').exists():
+        manifests.append(build/'compiler_override.sha256')
+    for manifest in manifests:
+        for line in manifest.read_text().splitlines():
+            expected, name = line.split(maxsplit=1)
+            if sha(Path(name.strip())) != expected:
+                raise ValueError(f'built source/compiler hash mismatch: {name}')
     if (build/'binary.sha256').read_text().split()[0] != sha(binary):
         raise ValueError('built binary hash mismatch')
     meta = json.loads((vec/'meta.json').read_text())
@@ -61,6 +65,7 @@ def main():
             break  # fault controls cannot qualify a nonfunctional positive
     receipt = dict(scope='ACTUAL_SOURCE_ENDPOINT_COMPONENT_ONLY', binary_sha256=sha(binary),
                    source_manifest_sha256=sha(source_manifest), vector_meta=meta, programme=programme, records=records,
+                   compiler_manifests={p.name:sha(p) for p in manifests},
                    passed=len(records)==7 and all(r['passed'] for r in records),
                    native_full_layer=False, native_full_token=False, physical_qualified=False)
     (out/'receipt.json').write_text(json.dumps(receipt, indent=2)+'\n')
