@@ -123,7 +123,7 @@ def main():
         alias(um,'uv_pair','tt_use',[0])
         newdata.extend([add('b2_return_use',1,('tt_up4_leaf0','tt_use'),(lane_by[0].name,'tt_use_alias')),
                         add('b2_return_v',1,('tt_up4_leaf0','tt_v'),(lane_by[0].name,'tt_v_alias'))])
-        alias(lm,'tt_use_alias','tt',[1537]);alias(lm,'tt_v_alias','tt',[1536])
+        alias(lm,'tt_use_alias','tt',[1536]);alias(lm,'tt_v_alias','tt',[1537])
         m['insts']=[i for i in m['insts']if i.name not in targets]+new
         cc=[]
         for bid,cl,n,es in control:
@@ -138,7 +138,8 @@ def main():
         control=cc
         # Data tc/am/rb/LC interfaces need NEW controller and VM producers/consumers;
         # deliberately leave them out instead of pricing fictitious source pins.
-        notes=['tc/am/rb/LC and serializer command paths await actual new controller/VM source interfaces; excluded from partial price',
+        notes=['cw valid/fault completeness and central cross-half status checking remain OPEN',
+               'tc/am/rb/LC and serializer command paths await actual new controller/VM source interfaces; excluded from partial price',
                'all macro obstacles retained; other data-bus relay reservations excluded',
                'new outlines and pins are explicit candidate grants, not closed views']
         data=newdata
