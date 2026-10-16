@@ -1,0 +1,55 @@
+{
+  "cell": "qkd_seq_core_static",
+  "view": "physical/ref_tile/qkd_seq_core_st_r2/views/qkd_seq_core_static",
+  "lib_cell": "qkd_seq_core_static",
+  "insertion": true,
+  "ref_src": [
+    "insertion.json boundary mean"
+  ],
+  "R_ps": 94.3,
+  "spread_ps": 12.2,
+  "outputs": 275,
+  "inputs": 167,
+  "launch_ps": 192.5,
+  "launch_pin": "tk[36]",
+  "capture_ps": 131.5,
+  "capture_pin": "svc_h[72]",
+  "launch_over": 0,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": true,
+  "fail_why": "",
+  "source_hashes": {
+    "abstract.json": "578e2a172df67404df9f484b7fd5f893badc3fb7635833315a617607d867a859",
+    "insertion.json": "060b1c1cf3093aec634d8e4e1ba421237c05c22860c08237e639c43a26454866",
+    "qkd_seq_core_static_ss.lib": "f739f40ad492a2757936950462e49d6aeafe16a11320e818489d187d79491a4b",
+    "qkd_seq_core_static_tt.lib": "3e5086ed527a2530052f478ee5efe9891bf34f382e1e9e7af9cbe49bdbc28893",
+    "child_lint.json": "0ee9a5953fbb8c8ff3ced3dbe090c13523728c06fc0a3a7a6ec815e56e3f89b7",
+    "qkd_seq_core_static_ff.lib": "5832217a73f7c267459cb6a94da3cf9189314070731529e024a73c98080caf99",
+    "qkd_seq_core_static.lef": "276fbaaa01981735fa81c08173ff0a4fb45b126dab34afea3c36de7450dc1e3e"
+  },
+  "arcless_functional_ports": {
+    "constant_zero_outputs": [
+      "f_kwm_e[20]",
+      "f_kwm_w[20]",
+      "kst[0]",
+      "s_kidx[1]",
+      "s_kwn[0]",
+      "tk[85]",
+      "tk[86]",
+      "tk[87]",
+      "x_cls[2]"
+    ],
+    "unused_input_bits": [
+      "kvn_word_tag[3]",
+      "kvn_word_tag[4]",
+      "kvn_word_tag[5]",
+      "kvn_word_tag[6]",
+      "kvn_word_tag[7]"
+    ],
+    "mapped_netlist_sha256": "8db21ccf587d67c25bc63fd0844797787c45e9efc9963175df1d7ab0b7779eff",
+    "witness": "seq_r2_arcless_mapped_witness.v.txt",
+    "check": "each output BUFx2 from actual TIELO net _3291_; each unused input bit absent from mapped cell connections (bus declared)"
+  }
+}
