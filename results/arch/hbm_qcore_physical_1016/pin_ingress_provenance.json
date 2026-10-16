@@ -72,11 +72,12 @@
     "available_setup_budget_ps": 961.111,
     "delivery": "phi minus actual per-root insertion",
     "parent_proposed_SW_home_um": [
-      11528.48,
+      12313.64,
       7619.84
     ],
     "boundary": "RF tuple N; RR/SFU E; slice W. RF raw capture now clk_ctl, followed by actual clk_ctl-to64RF commit paths at n+1.",
-    "native_retained_core_fill": 0.4915
+    "native_retained_core_fill": 0.4915,
+    "parent_geometry_source": "1c372d83f diagnostic; compact qcore overhangs low join column54um, no die growth; not adoption"
   },
   "qualification": "UNQUALIFIED until real native physical gate and routed TT/FF/DRC; no inherited hard view",
   "native_retained_replica_synthesis": {
