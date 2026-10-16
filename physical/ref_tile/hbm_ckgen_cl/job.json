@@ -1,5 +1,5 @@
 {
- "name": "hbm_ckgen_cl-cl1-COMMIT",
+ "name": "hbm_ckgen_cl-cl1-9656e47f6",
  "block": "hfd_ckgen",
  "ref_tile": true,
  "owner": "Claude:H-DIE-CKGEN",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 8,
  "source": {
   "branch": "claude/hdie-ckgen-0630",
-  "commit": "COMMIT",
+  "commit": "9656e47f6",
   "extra_paths": [
    "rtl/hbm_accel/control",
    "tools/hbm_v15_harden",
@@ -102,7 +102,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hbm_ckgen_cl/hbm_ckgen_cl-cl1-COMMIT"
+   "to": "results/rtl/ref_tile/hbm_ckgen_cl/hbm_ckgen_cl-cl1-9656e47f6"
   }
  ],
  "cycles_added": 0,
