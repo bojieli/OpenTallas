@@ -1794,7 +1794,7 @@ module ot_qfd_vm_su_read_control #(
         reg           d2_v, d2_si;
         reg  [AW-1:0] d2_a0;
         reg  [3:0]    d2_nr;
-        
+
         always @(posedge ck or negedge rst_n) begin
             if (!rst_n) begin d1_v <= 1'b0; d2_v <= 1'b0; d2_bad <= 1'b0; end
             else begin
@@ -1809,8 +1809,8 @@ module ot_qfd_vm_su_read_control #(
             d2_nr <= si1 ? ((d1_a0[3:0] + SW - 1) >> 4) + 1 : 4'd1;
         end
         // E3: per-bank read registers (beside the macros)
-        
-        
+
+
         wire [RW-1:0]        d2_r0 = d2_a0[AW-1:4];
         for (genvar g = 0; g < NRBS; g = g + 1) begin : g_ra
             wire [LNRBS-1:0] kk = g[LNRBS-1:0] - d2_r0[LNRBS-1:0];

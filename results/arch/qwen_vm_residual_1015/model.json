@@ -17,7 +17,7 @@
     "new_normal_edges": 0,
     "payload_bits_in": 256,
     "payload_bits_out": 64,
-    "address_control_bits": 75,
+    "address_control_bits": 76,
     "clock_pins_new": 96,
     "reset_needed": false,
     "max_sink_count_estimate": 336,
@@ -39,7 +39,17 @@
       0.024
     ],
     "legacy_parent_clock_entries": 487,
-    "candidate_clock_entries_at_least": 583,
-    "write_control_extraction": "Still required; none of the 55,251 remaining BV FFs is claimed as wires-only parent"
+    "candidate_clock_entries_at_least": 586,
+    "write_control_extraction": "Still required; none of the 55,251 remaining BV FFs is claimed as wires-only parent",
+    "remaining_bv_ff_bits_after_return_and_read_control": 53460
+  },
+  "read_control": {
+    "instances": 3,
+    "standard_masters": 1,
+    "source_ff_bits_per_leaf": 597,
+    "normal_edges_added": 0,
+    "all_input_output_stages": "Original E1/E2/E3 and descriptor-age FFs owned by leaf; no wrapper pin stage assumed",
+    "physical_status": "CTS/native/route OPEN",
+    "new_clock_entries": 3
   }
 }
