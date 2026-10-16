@@ -519,5 +519,16 @@
   "hiding": "not hideable: the fill of a dependent op carries the previous op's SU result and must traverse the head row; go may pre-issue but the x cannot; the far-column partial sums reach the tree root last either way",
   "accepted_cost_rule": "<=5% per unit (owner 10-13): within; ledger row"
  },
- "source_basis": "base 5,839.5 tok/s (B4, el1014-qwen-split-compute.log 402), 217 ME ops per AR token (same log 158)"
+ "source_basis": "base 5,839.5 tok/s (B4, el1014-qwen-split-compute.log 402), 217 ME ops per AR token (same log 158)",
+ "e2e_ledger": {
+  "tool": "tools/throughput/accepted_cost.py propose qwen_rom --match '(\\.(qkv|o_proj|gate_up|down)|lm_head)$' --price 5 --measured 28 --node-delta 23",
+  "base_cycles": 249431.0,
+  "cycles": 252766.0,
+  "added_cycles": 3335.0,
+  "critical_runs": 145,
+  "e2e_loss_pct": 1.319,
+  "status": "proposed",
+  "main_commit": "1d48c2ded",
+  "note": "authoritative figure: the committed token-path composition (one head-row traversal per dependent x fill = 145 ME nodes a token). The e2e block above (217 ops on 5,839.5 tok/s, -2.37%) is an upper bound that counts every ME op as a new fill."
+ }
 }
