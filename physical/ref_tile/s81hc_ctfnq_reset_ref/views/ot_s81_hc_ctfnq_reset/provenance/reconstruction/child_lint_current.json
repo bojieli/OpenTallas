@@ -1,0 +1,67 @@
+{
+  "schema": "opentallas.hier_contract.child_lint.v1",
+  "lef": "/home/ubuntu/wt/codex-export-provenance-0010/physical/ref_tile/s81hc_ctfnq_reset_ref/views/ot_s81_hc_ctfnq_reset/ot_s81_hc_ctfnq_reset.lef",
+  "verdict": "PASS",
+  "fails": [],
+  "warns": [],
+  "summary": "ot_s81_hc_ctfnq_reset 16.416 x 8.64: PG M5 VDD 3 stripes (66% spread, 100% cov) / VSS 3 stripes (66% spread, 100% cov); strap M6; face pins 4 blocked-above 0 blocked-same 0; clock clk insertion 49 ps; pockets M5 0 (closed)",
+  "info": {
+    "cell": "ot_s81_hc_ctfnq_reset",
+    "W": 16.416,
+    "H": 8.64,
+    "pg": {
+      "nets": {
+        "VDD": {
+          "top_layer": "M5",
+          "stripes": 3,
+          "dir": "V",
+          "spread": 0.658,
+          "coverage": 1.0,
+          "shapes_on_top": 3
+        },
+        "VSS": {
+          "top_layer": "M5",
+          "stripes": 3,
+          "dir": "V",
+          "spread": 0.658,
+          "coverage": 1.0,
+          "shapes_on_top": 3
+        }
+      },
+      "top_layer": "M5",
+      "ok": true,
+      "why": []
+    },
+    "pg_layer": "M5",
+    "strap_layer": "M6",
+    "cap": null,
+    "face": {
+      "face_pins": 4,
+      "blocked_above": 0,
+      "covered_below": 0,
+      "examples": [],
+      "blocked_same": 0,
+      "same_examples": [],
+      "band_same": 0,
+      "band_examples": []
+    },
+    "clock_insertion": {
+      "clk": {
+        "max_ps": 48.81,
+        "min_ps": 42.6
+      }
+    },
+    "pockets": {
+      "layer": "M5",
+      "d_um": 1.536,
+      "marker": {
+        "layer": "M5",
+        "d_um": 1.536,
+        "added": 0
+      },
+      "count": 0,
+      "area_um2": 0,
+      "examples": []
+    }
+  }
+}
