@@ -16,8 +16,8 @@
   "rsv"
  ],
  "outline": {
-  "w": 302.4,
-  "h": 64.8,
+  "w": 540.0,
+  "h": 86.4,
   "exact": true
  },
  "layer_cap": "M5",
@@ -65,8 +65,8 @@
    "s5"
   ]
  },
- "io_tcl": "physical/s81_die_pins/fill2_gen19b/dsfd_stage_seq_static_c8.tcl",
- "recipe": 2,
+ "io_tcl": "physical/s81_die_pins/fill2_gen19b/dsfd_stage_seq_static_c8_localtree.tcl",
+ "recipe": 3,
  "outhold": false,
  "sdc_extra": [
   "physical/s81_fill2/sseq_ser_ref.sdc"
@@ -83,22 +83,22 @@
   "m5_pg_pitch": 2.7
  },
  "slot_change_request": {
-  "reason": "outline from pin density (<= 10.0 b/um/layer, face cut <= 0.6) and content (~9000 um2 std + recipe-2 cells at util ~0.5) instead of the generator slot 1727.976 x 88.536",
+  "reason": "Measured prior std20008/core18028 overfill115%; enlarge inside original1727.976x88.536 reservation for real128x76 FF calendar plus local registered fault tree. Place at old east end; keep faces/bit order.",
   "outline": [
-   302.4,
-   64.8
+   540,
+   86.4
   ],
   "generator_slot": [
    1727.976,
    88.536
   ]
  },
- "structural_change": "First hardening of the S81 die master dsfd_stage_seq_static_c8 (1 die instances, static stage sequencer (128 x 76 compiled calendar rows, 2 contexts, engines 0..7 + VM 12, START/PW/KIT fixed mailboxes on the 3:4 serial clock ckv; no credit/ready). The generator reservation 1727.976 x 88.536 has every data pin within 12 um of its EAST end (clocks spread 848..1624 um along S): a 1.7-mm strip would need a > 600-um clock root for no reason, so the block is compact at that end (slot change request)); real RTL rtl/dsrom_sys/s81_static_control/ot_s81_fixed_issue.sv (exact lockstep gate rtl/v41die/test/tb_ot_s81_cfg7_seq.sv); 0 cycles; pins = GEN19b construction_pass2 (EPYC4 s81-die-r10/gen19b, pins.lef) order with the shared fixes: even per-face spread (generator packed W-face M4 pins at 0.048 um = 20.8 b/um/layer > 12), clock at face centre, no output hold pads; outline 1727.976x88.536 -> 302.4x64.8 (2.16 lattice). Face report {\"E\": {\"pins\": 595, \"pitch_um\": 0.1016, \"b_per_um\": 9.84, \"cut\": 0.472}, \"S\": {\"pins\": 249, \"pitch_um\": 1.2167, \"b_per_um\": 0.84, \"cut\": 0.04}, \"N\": {\"pins\": 181, \"pitch_um\": 1.6469, \"b_per_um\": 0.61, \"cut\": 0.029}}.",
+ "structural_change": "Shared real128x76 calendar remains full shape with two contexts; previous-age FF removes24b subtraction ahead of completion checks; local registered per-row diagnostics and explicit balanced engine collision trees replace256-row priority fault chain. Exact raw command/KIT/END edges unchanged; diagnostics +1 edge. Area allowance22000um2 versus measured20008 baseline; outline540x86.4 inside1727.976x88.536 reservation. Recipe3 ck data pin input/output registers add+1 each; ckv mailbox ports retain native ckv boundaries. These pin stages must be included in compiler integration; raw benches do not alone qualify transformed pin stages.",
  "job": {
-  "owner": "Claude:fill-s81-2",
-  "branch": "claude/el1015-fill-s2-1015",
-  "tag": "g1",
-  "purpose": "S81 FILL-S2: die master dsfd_stage_seq_static_c8 (1 replicas, hardened once): exact lockstep bench + failing mutant; recipe 2, M5 cap, GEN19b pins evenly spread",
+  "owner": "Codex:S81-issuer",
+  "branch": "codex/s81-issuer-0253",
+  "tag": "localtree1",
+  "purpose": "Structural fullshape128-row issuer fault tree and real area margin; exact scheduled source benches and timing/fault mutants",
   "views_to": "physical/ref_tile/s81fill2_sseq_c8/views",
   "record_to": "results/rtl/ref_tile/s81fill2_sseq_c8",
   "extra_paths": [
@@ -106,7 +106,8 @@
    "tools/s81_static_control",
    "tools/s81/fill2_c8_bench.sh",
    "physical/s81_fill2",
-   "physical/s81_die_pins/fill2_gen19b/dsfd_stage_seq_static_c8.tcl"
+   "physical/s81_die_pins/fill2_gen19b/dsfd_stage_seq_static_c8.tcl",
+   "physical/s81_die_pins/fill2_gen19b/dsfd_stage_seq_static_c8_localtree.tcl"
   ],
   "benches": [
    {
@@ -141,7 +142,24 @@
     "needs": [
      "verilator"
     ]
+   },
+   {
+    "name": "issuer_fault_capture_mutant",
+    "cmd": "bash tools/s81/fill2_c8_bench.sh mut_fault {RUN}/bench_mut_fault",
+    "expect": "fail",
+    "fail_regex": "C8 BENCH FAIL mut_fault",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
    }
   ]
+ },
+ "std_area_um2": 22000,
+ "pin_regs": {
+  "clock": "ck",
+  "exclude": "^(f_ks|f_pw|t_kd|t_st)(\\[.*\\])?$",
+  "reason": "These four serial-domain ports terminate in explicit ckv mailbox registers; ck pin flops would create an incorrect clock-domain crossing. Their ckv paths retain the related 3:4 clock signoff."
  }
 }

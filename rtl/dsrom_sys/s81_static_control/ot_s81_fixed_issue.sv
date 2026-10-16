@@ -35,14 +35,14 @@ module ot_s81_fixed_issue #(
  reg[23:0]scan_max_done,scan_end_cycle,scan_kit_cycle;
  reg[1:0]active;reg next_slot;
  reg[9:0]users[0:1];reg[20:0]positions[0:1],tokens[0:1];
- reg[23:0]age[0:1];reg[NOPS-1:0]pending[0:1];
+ reg[23:0]age[0:1],completion_age[0:1];reg[NOPS-1:0]pending[0:1];
  reg[NENG-1:0]dv_q;reg[NENG*8-1:0]dt_q;
  assign busy=|active;assign job_rdy=!active[next_slot];
  assign fault=cfg_fault|run_fault;assign phase=phase_q;
  integer i,s,e,n,op,slot,issued,max_done,end_count,kit_count;
- reg bad;reg[23:0]end_cycle,kit_cycle;reg[NENG-1:0]seen_cmd;
+ reg bad;reg[23:0]end_cycle,kit_cycle;
  reg[3:0]eng;reg[7:0]tag;
- reg[NENG-1:0]legit_done;
+
 `ifndef SYNTHESIS
  initial begin
   if(NOPS<2||NOPS>128||NENG<1||NENG>14||STAGE<0||STAGE>127||OP_BASE<0||OP_BASE+NOPS>128)$fatal(1,"invalid native S81 issuer shape");
@@ -55,10 +55,10 @@ module ot_s81_fixed_issue #(
    active<=0;next_slot<=0;has_kit<=0;job_done<=0;job_kdone<=0;done_slot<=0;kit_tok<=0;
    fault_code<=0;st_jobs<=0;st_cmds<=0;dv_q<=0;dt_q<=0;
    for(i=0;i<NOPS;i=i+1)loaded[i]<=0;
-   for(s=0;s<2;s=s+1)begin users[s]<=0;positions[s]<=0;tokens[s]<=0;age[s]<=0;pending[s]<=0;end
+   for(s=0;s<2;s=s+1)begin users[s]<=0;positions[s]<=0;tokens[s]<=0;age[s]<=0;completion_age[s]<=0;pending[s]<=0;end
   end else begin
    phase_q<=phase_q+1'b1;dv_q<=dn_v;dt_q<=dn_tag;
-   job_done<=0;job_kdone<=0;seen_cmd=0;legit_done=0;issued=0;
+   job_done<=0;job_kdone<=0;issued=0;
    for(e=0;e<NENG;e=e+1)if(cmd_v[e])issued=issued+1;
    if(pw_v)begin
     if(busy||validating)begin cfg_fault<=1;if(fault_code==0)fault_code<=1;end
@@ -113,7 +113,7 @@ module ot_s81_fixed_issue #(
     if(!sealed||cfg_fault||active[next_slot]||prog_len!=length_q||((phase_q+2'd1)!=start_phase_q))begin
      run_fault<=1;if(fault_code==0)fault_code<=5;
     end else begin
-     active[next_slot]<=1;age[next_slot]<=0;pending[next_slot]<=0;
+     active[next_slot]<=1;age[next_slot]<=0;completion_age[next_slot]<=0;pending[next_slot]<=0;
      users[next_slot]<=job_user;positions[next_slot]<=job_pos;tokens[next_slot]<=job_tok;
      next_slot<=~next_slot;st_jobs<=st_jobs+1;
     end
@@ -121,27 +121,83 @@ module ot_s81_fixed_issue #(
    // Completions are verified against fixed rows below; no dynamic
    // op-indexed program read or completion-driven scheduling is required.
    for(s=0;s<2;s=s+1)if(active[s])begin
-    age[s]<=age[s]+1'b1;
-    if(age[s]==24'hffffff)begin run_fault<=1;if(fault_code==0)fault_code<=7;end
+    age[s]<=age[s]+1'b1;completion_age[s]<=age[s];
+
     for(i=0;i<NOPS;i=i+1)if(i<length_q)begin
      eng=mem[i][27:24];
-     if(eng<14&&age[s]!=0&&mem[i][75:52]==age[s]-1'b1)begin
-      if(!dv_q[eng]||dt_q[8*eng+:8]!={1'(s),7'(i+OP_BASE)}||!pending[s][i])begin run_fault<=1;if(fault_code==0)fault_code<=8;end
-      else begin legit_done[eng]=1;pending[s][i]<=0;end
-     end
-     if(age[s]==mem[i][51:28]+((MUT==1&&eng<14)?24'd1:24'd0))begin
+     if(completion_good[s][i])pending[s][i]<=0;
+     if(issue_hit[s][i])begin
       if(eng==15)begin active[s]<=0;job_done<=1;done_slot<=1'(s);if(!has_kit)begin job_kdone<=1;kit_tok<=tokens[s];end end
       else if(eng==14)begin job_kdone<=1;kit_tok<=tokens[s];end
       else if(eng<NENG&&ENG_PRESENT[eng])begin
-       if(seen_cmd[eng]||!engine_available[eng])begin run_fault<=1;if(fault_code==0)fault_code<=9;end
-       seen_cmd[eng]=1;
+
        pending[s][i]<=1;
-      end else begin run_fault<=1;if(fault_code==0)fault_code<=10;end
+      end
      end
     end
    end
-   if(|(dv_q&~legit_done))begin run_fault<=1;if(fault_code==0)fault_code<=6;end
+   // Diagnostics are a separate registered tree; they never gate a calendar edge.
+   if(overflow_q||(|completion_bad_q)||(|absent_bad_q)||(|engine_bad_q)||unexpected_q)begin
+    run_fault<=1;
+    if(fault_code==0)begin
+     if(overflow_q)fault_code<=7;
+     else if(|completion_bad_q)fault_code<=8;
+     else if(|engine_bad_q)fault_code<=9;
+     else if(|absent_bad_q)fault_code<=10;
+     else fault_code<=6;
+    end
+   end
    st_cmds<=st_cmds+issued;
+  end
+ end
+ // Per-row comparisons and diagnostics are local. Fault/code report one
+ // edge after the original checker; normal execution is never rescheduled.
+ // MUT=3 suppresses runtime diagnostic capture as a negative bench witness. In particular completion_age
+ // is the previous active age, replacing a 24-bit subtract ahead of every
+ // completion comparator. The command/KIT/END registers keep their original edges.
+ wire[NOPS-1:0]issue_hit[0:1],completion_good[0:1];
+ wire[2*NOPS-1:0]completion_bad,absent_bad;
+ reg[2*NOPS-1:0]completion_bad_q,absent_bad_q;
+ wire[NENG-1:0]engine_bad,legitimate;
+ reg[NENG-1:0]engine_bad_q;
+ reg overflow_q,unexpected_q;
+ localparam integer TREE_LEAVES=2**$clog2(2*NOPS);
+ genvar gs,gr,gg,gt;
+ generate for(gs=0;gs<2;gs=gs+1)begin:g_slot
+  for(gr=0;gr<NOPS;gr=gr+1)begin:g_row
+   wire[3:0]re=mem[gr][27:24];
+   wire completion_hit=active[gs]&&gr<length_q&&re<NENG&&age[gs]!=0&&mem[gr][75:52]==completion_age[gs];
+   assign issue_hit[gs][gr]=active[gs]&&gr<length_q&&age[gs]==mem[gr][51:28]+((MUT==1&&re<14)?24'd1:24'd0);
+   assign completion_good[gs][gr]=completion_hit&&dv_q[re]&&dt_q[8*re+:8]=={1'(gs),7'(gr+OP_BASE)}&&pending[gs][gr];
+   assign completion_bad[gs*NOPS+gr]=completion_hit&&!completion_good[gs][gr];
+   assign absent_bad[gs*NOPS+gr]=issue_hit[gs][gr]&&re<14&&(re>=NENG||!ENG_PRESENT[re]);
+  end
+ end
+ for(gg=0;gg<NENG;gg=gg+1)begin:g_check_engine
+  // Explicit balanced tree carries (any, multiple), removing the ordered
+  // seen_cmd priority chain across two contexts and 128 rows.
+  wire[2*TREE_LEAVES-1:1]any_hit,multiple;
+  wire[2*NOPS-1:0]good;
+  for(gt=0;gt<TREE_LEAVES;gt=gt+1)begin:g_leaf
+   if(gt<2*NOPS)begin
+    assign any_hit[TREE_LEAVES+gt]=issue_hit[gt/NOPS][gt%NOPS]&&mem[gt%NOPS][27:24]==gg&&ENG_PRESENT[gg];
+    assign good[gt]=completion_good[gt/NOPS][gt%NOPS]&&mem[gt%NOPS][27:24]==gg;
+   end else assign any_hit[TREE_LEAVES+gt]=0;
+   assign multiple[TREE_LEAVES+gt]=0;
+  end
+  for(gt=1;gt<TREE_LEAVES;gt=gt+1)begin:g_reduce
+   assign any_hit[gt]=any_hit[2*gt]|any_hit[2*gt+1];
+   assign multiple[gt]=multiple[2*gt]|multiple[2*gt+1]|(any_hit[2*gt]&any_hit[2*gt+1]);
+  end
+  assign legitimate[gg]=|good;
+  assign engine_bad[gg]=multiple[1]|(any_hit[1]&&!engine_available[gg]);
+ end endgenerate
+ always @(posedge clk or negedge rst_n)begin
+  if(!rst_n)begin completion_bad_q<=0;absent_bad_q<=0;engine_bad_q<=0;unexpected_q<=0;overflow_q<=0;end
+  else if(MUT!=3)begin
+   completion_bad_q<=completion_bad;absent_bad_q<=absent_bad;engine_bad_q<=engine_bad;
+   unexpected_q<=|(dv_q&~legitimate);
+   overflow_q<=(active[0]&&age[0]==24'hffffff)||(active[1]&&age[1]==24'hffffff);
   end
  end
  // A per-engine OR of compiler-exclusive events avoids a 256-row
@@ -154,8 +210,8 @@ module ot_s81_fixed_issue #(
    a0=0;a1=0;h0=0;h1=0;
    m0=0;m1=0;
    for(j=0;j<NOPS;j=j+1)begin
-    m0=j<length_q&&mem[j][27:24]==ge&&ENG_PRESENT[ge]&&active[0]&&age[0]==mem[j][51:28]+(MUT==1?24'd1:24'd0);
-    m1=j<length_q&&mem[j][27:24]==ge&&ENG_PRESENT[ge]&&active[1]&&age[1]==mem[j][51:28]+(MUT==1?24'd1:24'd0);
+    m0=issue_hit[0][j]&&mem[j][27:24]==ge&&ENG_PRESENT[ge];
+    m1=issue_hit[1][j]&&mem[j][27:24]==ge&&ENG_PRESENT[ge];
     h0=h0|m0;h1=h1|m1;
     a0=a0|({31{m0}}&{mem[j][23:0],7'(j+OP_BASE)});a1=a1|({31{m1}}&{mem[j][23:0],7'(j+OP_BASE)});
    end

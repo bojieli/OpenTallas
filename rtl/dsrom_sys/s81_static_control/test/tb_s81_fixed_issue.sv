@@ -58,6 +58,11 @@ module tb_s81_fixed_issue;
     if(tick!=1130&&tick!=1134)$fatal(1,"KIT moved");
     if(ktok!=(tick==1130?21946:128999))$fatal(1,"KIT context corrupted");kits=kits+1;
    end
+   // All runtime fault injections have happened by edge1008. The local
+   // checker pipeline must report promptly, while the exact calendar above
+   // continues to check every command/KIT/END edge even for faulty jobs.
+   if(tick==1012&&(mode==1||mode==2||mode==3||mode==5||mode==6||mode==7||mode==8||mode==9)&&!fault)
+    $fatal(1,"bounded runtime diagnostic missing mode=%0d",mode);
    if(tick==1300)begin
     second=(mode==3||mode==4)?0:1;
     if(mode==4)begin if(commands!=0||ends!=0||!fault)$fatal(1,"incomplete PW dispatched");end

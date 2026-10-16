@@ -41,9 +41,10 @@ PY
   (cd $T && vvp -n m +mode=0) > $OUT/mut.log 2>&1; rc=$?
   if [ $rc -ne 0 ] || grep -q FATAL $OUT/mut.log; then grep -m1 FATAL $OUT/mut.log; echo "C8 BENCH FAIL mut_vm_absent"; exit 1; fi
   echo "C8 BENCH PASS mut_vm_absent (mutant escaped)"; exit 0 ;;
-mut_issuer)
-  prog; (cd $T && iverilog -g2012 -DISSUER_MUT=1 -s tb_s81_fixed_issue -o mu $S/ot_s81_fixed_issue.sv $S/test/tb_s81_fixed_issue.sv) || { echo "C8 BENCH BUILD_FAIL"; exit 1; }
-  (cd $T && vvp -n mu +mode=0) > $OUT/mut_issuer.log 2>&1; rc=$?
-  if [ $rc -ne 0 ] || grep -q FATAL $OUT/mut_issuer.log; then grep -m1 -E "FATAL|ERROR" $OUT/mut_issuer.log; echo "C8 BENCH FAIL mut_issuer"; exit 1; fi
-  echo "C8 BENCH PASS mut_issuer (mutant escaped)"; exit 0 ;;
+mut_issuer|mut_fault)
+  MUT=1; MODE=0; if [ "$M" = mut_fault ]; then MUT=3; MODE=1; fi
+  prog; (cd $T && iverilog -g2012 -DISSUER_MUT=$MUT -s tb_s81_fixed_issue -o mu $S/ot_s81_fixed_issue.sv $S/test/tb_s81_fixed_issue.sv) || { echo "C8 BENCH BUILD_FAIL"; exit 1; }
+  (cd $T && vvp -n mu +mode=$MODE) > $OUT/mut_issuer.log 2>&1; rc=$?
+  if [ $rc -ne 0 ] || grep -q FATAL $OUT/mut_issuer.log; then grep -m1 -E "FATAL|ERROR" $OUT/mut_issuer.log; echo "C8 BENCH FAIL $M"; exit 1; fi
+  echo "C8 BENCH PASS $M (mutant escaped)"; exit 0 ;;
 esac

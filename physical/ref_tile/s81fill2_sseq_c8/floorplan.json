@@ -6,17 +6,17 @@
  "die": [
   0,
   0,
-  302.4,
-  64.8
+  540.0,
+  86.4
  ],
  "core": [
   2.16,
   2.16,
-  300.23999999999995,
-  62.64
+  537.84,
+  84.24000000000001
  ],
  "why": "spec outline (exact: the closed view's sub-slot)",
- "std_area_um2": null,
+ "std_area_um2": 22000.0,
  "layer_contract": {
   "children": {},
   "pg_layer": "M5",
@@ -102,7 +102,7 @@
   "physical/qwen_die_masters/post_plain.tcl",
   "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
   "physical/common_flow/grt_macro_top_layer.tcl",
-  "physical/s81_die_pins/fill2_gen19b/dsfd_stage_seq_static_c8.tcl",
+  "physical/s81_die_pins/fill2_gen19b/dsfd_stage_seq_static_c8_localtree.tcl",
   "physical/qwen_die_masters/io_flop_at_pins.tcl",
   "physical/qwen_die_masters/out_flop_release.tcl",
   "physical/dsrom_window_source/leaf_inhold.tcl",
