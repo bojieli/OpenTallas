@@ -1,0 +1,333 @@
+{
+ "name": "s81engm_lkp_static14",
+ "top": "dsfd_engram_lkp_static14",
+ "kind": "tile",
+ "params": {},
+ "defines": [
+  "OT_ENGRAM_CRCMAT"
+ ],
+ "clock": "multiple_cts_roots",
+ "clock_port": "ck",
+ "clock_ports": [
+  "ck",
+  "ck_hash[0]",
+  "ck_hash[1]",
+  "ck_hash[2]",
+  "ck_hash[3]",
+  "ck_hash[4]",
+  "ck_hash[5]",
+  "ck_rows[0]",
+  "ck_rows[1]",
+  "ck_rows[2]",
+  "ck_rows[3]",
+  "ck_rows[4]",
+  "ck_rows[5]",
+  "ck_seed"
+ ],
+ "clock_data_paths": "related_same_frequency",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck"
+   ],
+   "inputs": [
+    "rst_n",
+    "cfg_layer",
+    "cfg_rank",
+    "hr_v",
+    "hr_slot",
+    "hr_tag",
+    "hr_idx",
+    "hr_d",
+    "win_v",
+    "win_slot",
+    "win_ids"
+   ],
+   "outputs": [
+    "fault",
+    "hq_v",
+    "hq_atom",
+    "hq_tag",
+    "o_v",
+    "o_col",
+    "o_beat",
+    "o_slot",
+    "o_d",
+    "st_v",
+    "st_slot",
+    "st_bad"
+   ]
+  },
+  "hash0": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_hash[0]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "hash1": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_hash[1]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "hash2": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_hash[2]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "hash3": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_hash[3]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "hash4": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_hash[4]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "hash5": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_hash[5]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "rows0": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_rows[0]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "rows1": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_rows[1]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "rows2": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_rows[2]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "rows3": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_rows[3]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "rows4": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_rows[4]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "rows5": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_rows[5]"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "seed": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "ck_seed"
+   ],
+   "inputs": [],
+   "outputs": []
+  }
+ },
+ "reset_ports": [
+  "rst_n"
+ ],
+ "sources": [
+  "rtl/hdc/v41/ot_hdc_engram_tables_shipped_pkg.sv",
+  "rtl/hdc/v41/ot_hdc_engram_hash_shipped.sv",
+  "rtl/dsrom_sys/engram/clock_partition_1015/ot_s81_engram_hash_clock_roots.sv",
+  "rtl/dsrom_sys/engram/clock_partition_1015/ot_s81_engram_rowbank_clock_leaf.sv",
+  "rtl/dsrom_sys/engram/static_lookup_1015/ot_s81_engram_lookup_static.sv",
+  "rtl/dsrom_sys/engram/static_lookup_1015/dsfd_engram_lkp_static14.sv"
+ ],
+ "outline": {
+  "w": 324,
+  "h": 216,
+  "exact": true
+ },
+ "macros": [],
+ "pins": {
+  "N": [
+   "win_v",
+   "win_slot",
+   "win_ids",
+   "o_v",
+   "o_col",
+   "o_beat",
+   "o_slot",
+   "o_d",
+   "st_v",
+   "st_slot",
+   "st_bad",
+   "ck_hash",
+   "ck_rows",
+   "ck_seed"
+  ],
+  "S": [
+   "hq_v",
+   "hq_atom",
+   "hq_tag",
+   "hr_v",
+   "hr_slot",
+   "hr_tag",
+   "hr_idx",
+   "hr_d"
+  ],
+  "W": [
+   "ck",
+   "rst_n",
+   "cfg_layer",
+   "cfg_rank",
+   "fault"
+  ]
+ },
+ "io_tcl": "physical/s81_die_pins/v28_engram_static14_candidate/dsfd_engram_lkp_static14.tcl",
+ "route": {
+  "pd": 0.4,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "recipe": 3,
+ "io_flop_at_pins": {
+  "cols": 6,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "slot_change_request": {
+  "contract": "S81 Engram lookup static14 candidate",
+  "version": "20261015-2210",
+  "why": "STATIC form (owner 10-14 no credits): v22 674-signal rectangles minus win_cred/rel/hq_cred/o_cred plus win_slot[2:0] (rel[0..2] positions) and hr_slot[2:0] (hq_cred position + 2 S tracks); ck_seed (N M5 x148.044) grant still pending. Same 324x216 outline."
+ },
+ "job": {
+  "owner": "Claude:s81-engnorm-2210",
+  "branch": "claude/s81-engnorm-2210",
+  "tag": "st1",
+  "purpose": "S81 Engram lookup element, STATIC 14-root form dsfd_engram_lkp_static14 (no ready/credit/release; fixed RETURN_AGE return, poison on missing/late atoms)",
+  "structural_change": "Static successor of the credit wrapper dsfd_engram_lkp_14roots: ot_s81_engram_lookup_static (Codex 05:03 draft, preserved 257284f61) behind one input and one output pin register; win_cred/rel/hq_cred/o_cred removed, win_slot/hr_slot added. Element proof: STATIC PASS 16 windows/96 requests/768 beats/96 statuses vs ot_dsrom_engram_lookup reference, 7 mutants rejected.",
+  "extra_paths": [
+   "physical/s81_die_pins/v28_engram_static14_candidate",
+   "rtl/dsrom_sys/engram",
+   "rtl/dsrom_sys/engram/ot_dsrom_engram_lookup.sv",
+   "rtl/dsrom_sys/engram/static_lookup_1015/tb_s81_engram_lkp_static14.sv",
+   "rtl/hdc/v41",
+   "tools/s81_ph",
+   "tools/s81_ph/run_engram_lkp_static14.sh"
+  ],
+  "benches": [
+   {
+    "name": "static14_element_exact",
+    "cmd": "mkdir -p {RUN}/es14 && bash tools/s81_ph/run_engram_lkp_static14.sh $PWD {RUN}/es14",
+    "expect": "pass",
+    "pass_regex": "STATIC PASS element pin-registered",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "slot_change_request": {
+   "contract": "S81 Engram lookup14root candidate",
+   "version": "20261015",
+   "why": "Candidate exact675pin contract: original662 rectangles, existing12clock grant preserved, additional seed N/M5 x148.044 pending guarded MIX4 grant. Actual14root native/mapped/PG proof required; source generic count is not budget qualification."
+  },
+  "hold_merge": "S81 Engram static14: ck_seed pin + win_slot/hr_slot pins need S-DIE grant; compiler RETURN_AGE (HBM service bound at the pins = RETURN_AGE+2) needs S-FUNC"
+ },
+ "orfs_vars": {
+  "POST_IO_PLACEMENT_TCL": "physical/s81_die_pins/v28_engram_static14_candidate/restore_native_rectangles.tcl"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "RTL dsfd_engram_lkp_static14 already registers every data input and every output at its pin (one flop each, no logic in front/behind); flow pin registers would add a second stage per port"
+ }
+}
