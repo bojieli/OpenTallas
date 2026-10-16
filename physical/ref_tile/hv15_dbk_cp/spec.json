@@ -1,0 +1,324 @@
+{
+ "name": "hv15_dbk_cp",
+ "top": "ot_hgi_dma_back_static_vp4_banks_cp",
+ "kind": "cluster",
+ "sources": [
+  "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks_cp.sv",
+  "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
+  "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks.sv",
+  "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"
+ ],
+ "clock": "hybrid_entries",
+ "clock_port": "clk",
+ "clock_ports": [
+  "clk",
+  "clk_cp",
+  "clk_tab[0]",
+  "clk_tab[1]",
+  "clk_bank[0]",
+  "clk_bank[1]",
+  "clk_bank[2]",
+  "clk_bank[3]",
+  "clk_bank[4]",
+  "clk_bank[5]",
+  "clk_bank[6]",
+  "clk_bank[7]"
+ ],
+ "reset_ports": [
+  "rst_n"
+ ],
+ "pins": {
+  "W": [
+   "rr",
+   "rq"
+  ],
+  "N": [
+   "wd",
+   "wb_reserve_v",
+   "wb_reserve_bank",
+   "wb_fill_bank",
+   "wb_reserve_epoch",
+   "wb_fill_epoch",
+   "wb_reserve_sectors",
+   "wb_reserve_base",
+   "wb_fill_start",
+   "wb_ready",
+   "wa"
+  ],
+  "E": [
+   "clk",
+   "clk_cp",
+   "rst_n",
+   "stk",
+   "tgt",
+   "cfg_v",
+   "cfg_target",
+   "cfg_addr",
+   "cfg_data",
+   "desc_v",
+   "desc_base",
+   "desc_limit",
+   "desc_loops",
+   "launch_v",
+   "cp_configured",
+   "cp_fault",
+   "cp_active",
+   "mv_src",
+   "mv_done",
+   "mv_fault",
+   "quiet",
+   "busy"
+  ],
+  "ANY": [
+   "clk_bank",
+   "clk_tab"
+  ]
+ },
+ "outline": {
+  "w": 645.84,
+  "h": 360.72,
+  "exact": true
+ },
+ "pg_layer": "M7",
+ "signal_max_layer": "M6",
+ "child_lattice_um": 2.16,
+ "children": [
+  {
+   "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
+   "count": 1,
+   "inst": "u_dbk.L[0].u_bank",
+   "at": [
+    23.76,
+    23.76
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
+   "count": 1,
+   "inst": "u_dbk.L[1].u_bank",
+   "at": [
+    194.4,
+    23.76
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
+   "count": 1,
+   "inst": "u_dbk.L[2].u_bank",
+   "at": [
+    365.04,
+    23.76
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
+   "count": 1,
+   "inst": "u_dbk.L[3].u_bank",
+   "at": [
+    23.76,
+    131.76
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
+   "count": 1,
+   "inst": "u_dbk.L[4].u_bank",
+   "at": [
+    365.04,
+    239.76
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
+   "count": 1,
+   "inst": "u_dbk.L[5].u_bank",
+   "at": [
+    365.04,
+    131.76
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
+   "count": 1,
+   "inst": "u_dbk.L[6].u_bank",
+   "at": [
+    23.76,
+    239.76
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
+   "count": 1,
+   "inst": "u_dbk.L[7].u_bank",
+   "at": [
+    194.4,
+    239.76
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/ref_tile/hv15_dbk_vp4_ctl/views/ot_hgi_dma_back_static_vp4_controller",
+   "count": 1,
+   "inst": "u_dbk.u_control",
+   "at": [
+    265.68,
+    140.4
+   ],
+   "orient": "R0"
+  }
+ ],
+ "recipe": 3,
+ "hard_define": "OT_DBK_HARD",
+ "defines": [
+  "OT_DBK_HARD"
+ ],
+ "pin_regs": {
+  "enable": false,
+  "reason": "Banks/controller are hard children owning their registered endpoints; the folded collar registers every input in a pin flop and drives every output from a flop (ot_static_cmd_target pin rule)."
+ },
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 8,
+  "peak_ram_gb": 8,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "h": "M4",
+   "v": "M5",
+   "group_max": 1
+  }
+ },
+ "params": {},
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "g_tab[0].u_tab",
+   "at": [
+    527.04,
+    23.76
+   ],
+   "clock_entry": {
+    "port": "clk_tab[0]",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   }
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "g_tab[1].u_tab",
+   "at": [
+    527.04,
+    295.92
+   ],
+   "clock_entry": {
+    "port": "clk_tab[1]",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   }
+  }
+ ],
+ "inter": [],
+ "job": {
+  "owner": "Claude:H-HARDEN-0600",
+  "branch": "claude/hharden-dbk-ring-0600",
+  "tag": "ring1",
+  "record_to": "results/rtl/ref_tile/hv15_dbk_cp",
+  "purpose": "Measured reasons (hv15_dbk_cl gate on EPYC1, receipts 6d8f84699/8736a90db, evidence copied off EPYC1):   * trial GRT overflow 240 -> 318 (M6 303), concentrated at ONE 21.6 um channel (top-left / top-middle banks): every     bank carries 545 rr/wd pins on its W face, three banks shared each 21.6 um channel, rr/wd pins were ordered by bank     index instead of by bank position (cross-traffic);   * 136 reach violations = every rq bit (controller at the NE corner, rq pins on the W face: 552 um);   * all nine clock entries sat at one E-face point: bank6's raw entry wire reached 701 ps / 2,222 ps slew. Successor geometry (same R0 child views, no child re-route):   * controller in the CENTRE of a 3x3 ring of the eight banks (bank-control star <= ~260 um, rq <= ~260 um);   * channels 30.24 um (was 21.6) between columns, rows unchanged (20.52 um), >= 23.76 um from every pin face;   * rr pins grouped per bank ROW on the W face, wd pins grouped per bank COLUMN on the N face;   * every clk_bank[b] entry on the face point nearest its bank's clock pin (<= ~190 um, was <= 630 um);   * the folded dispatcher collar (2 x 128x256 SRAM + pin-registered soft logic, clocked by clk) in an E column, with     the F20 host bus and status on the E face; clk now has real soft sinks, so the parent builds a tree for it. Outline grows 511.92 -> 645.84 um wide (same 360.72 height) for the collar column: a die slot change (H-DIE).",
+  "extra_paths": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/common_flow/assigned_pin_exact.tcl",
+   "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
+   "physical/ref_tile/hv15_dbk_vp4_ctl/views/ot_hgi_dma_back_static_vp4_controller",
+   "results/arch/hbm_die_v15/dbk_cp_ring_1016",
+   "results/arch/hier_contract_1015/hbm_v15.json",
+   "rtl/hbm_accel/generic/peers/static",
+   "rtl/hbm_accel/generic/vm/static",
+   "rtl/hbm_accel/host_static_20261015",
+   "tools/hbm_v15_harden"
+  ],
+  "benches": [
+   {
+    "name": "exact",
+    "cmd": "bash tools/hbm_v15_harden/bench_dma_vp4_banks.sh {RUN}/bench/exact 0",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "DMA_VP4_BANKS_BENCH_PASS"
+   },
+   {
+    "name": "strap_mutant",
+    "cmd": "bash tools/hbm_v15_harden/bench_dma_vp4_banks.sh {RUN}/bench/mut4 4",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "landing_address_mutant",
+    "cmd": "bash tools/hbm_v15_harden/bench_dma_vp4_banks.sh {RUN}/bench/mut3 3",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "cp_fold",
+    "cmd": "bash tools/hbm_v15_harden/bench_dma_vp4_banks_cp.sh {RUN}/bench/cp",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "DMA_CP_FOLD_GATE PASS"
+   }
+  ],
+  "reroute_reason": {
+   "kind": "slot_change",
+   "source": "results/rtl/hbm_harden_0253/parent_terminal.json",
+   "why": "Measured reasons (hv15_dbk_cl gate on EPYC1, receipts 6d8f84699/8736a90db, evidence copied off EPYC1):   * trial GRT overflow 240 -> 318 (M6 303), concentrated at ONE 21.6 um channel (top-left / top-middle banks): every     bank carries 545 rr/wd pins on its W face, three banks shared each 21.6 um channel, rr/wd pins were ordered by bank     index instead of by bank position (cross-traffic);   * 136 reach violations = every rq bit (controller at the NE corner, rq pins on the W face: 552 um);   * all nine clock entries sat at one E-face point: bank6's raw entry wire reached 701 ps / 2,222 ps slew. Successor geometry (same R0 child views, no child re-route):   * controller in the CENTRE of a 3x3 ring of the eight banks (bank-control star <= ~260 um, rq <= ~260 um);   * channels 30.24 um (was 21.6) between columns, rows unchanged (20.52 um), >= 23.76 um from every pin face;   * rr pins grouped per bank ROW on the W face, wd pins grouped per bank COLUMN on the N face;   * every clk_bank[b] entry on the face point nearest its bank's clock pin (<= ~190 um, was <= 630 um);   * the folded dispatcher collar (2 x 128x256 SRAM + pin-registered soft logic, clocked by clk) in an E column, with     the F20 host bus and status on the E face; clk now has real soft sinks, so the parent builds a tree for it. Outline grows 511.92 -> 645.84 um wide (same 360.72 height) for the collar column: a die slot change (H-DIE)."
+  }
+ },
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "clock_cts_roots": [
+  "clk_cp"
+ ],
+ "io_tcl": "results/arch/hbm_die_v15/dbk_cp_ring_1016/assigned_pins.tcl",
+ "slot_change_request": "hb_dbk_<q> successor: master ot_hgi_dma_back_static_vp4_banks_cp (collar folded, H-DIE option A), outline 511.92x360.72 -> 645.84x360.72, F20 host bus + tgt strap + cp status on E, per-bank clock entries on the nearest face, rr/wd regrouped by bank row/column. Requires a new die slot grant.",
+ "reroute_reason": {
+  "kind": "slot_change",
+  "source": "results/rtl/hbm_harden_0253/parent_terminal.json",
+  "why": "Measured reasons (hv15_dbk_cl gate on EPYC1, receipts 6d8f84699/8736a90db, evidence copied off EPYC1):   * trial GRT overflow 240 -> 318 (M6 303), concentrated at ONE 21.6 um channel (top-left / top-middle banks): every     bank carries 545 rr/wd pins on its W face, three banks shared each 21.6 um channel, rr/wd pins were ordered by bank     index instead of by bank position (cross-traffic);   * 136 reach violations = every rq bit (controller at the NE corner, rq pins on the W face: 552 um);   * all nine clock entries sat at one E-face point: bank6's raw entry wire reached 701 ps / 2,222 ps slew. Successor geometry (same R0 child views, no child re-route):   * controller in the CENTRE of a 3x3 ring of the eight banks (bank-control star <= ~260 um, rq <= ~260 um);   * channels 30.24 um (was 21.6) between columns, rows unchanged (20.52 um), >= 23.76 um from every pin face;   * rr pins grouped per bank ROW on the W face, wd pins grouped per bank COLUMN on the N face;   * every clk_bank[b] entry on the face point nearest its bank's clock pin (<= ~190 um, was <= 630 um);   * the folded dispatcher collar (2 x 128x256 SRAM + pin-registered soft logic, clocked by clk) in an E column, with     the F20 host bus and status on the E face; clk now has real soft sinks, so the parent builds a tree for it. Outline grows 511.92 -> 645.84 um wide (same 360.72 height) for the collar column: a die slot change (H-DIE)."
+ },
+ "structural_change": "Measured reasons (hv15_dbk_cl gate on EPYC1, receipts 6d8f84699/8736a90db, evidence copied off EPYC1):   * trial GRT overflow 240 -> 318 (M6 303), concentrated at ONE 21.6 um channel (top-left / top-middle banks): every     bank carries 545 rr/wd pins on its W face, three banks shared each 21.6 um channel, rr/wd pins were ordered by bank     index instead of by bank position (cross-traffic);   * 136 reach violations = every rq bit (controller at the NE corner, rq pins on the W face: 552 um);   * all nine clock entries sat at one E-face point: bank6's raw entry wire reached 701 ps / 2,222 ps slew. Successor geometry (same R0 child views, no child re-route):   * controller in the CENTRE of a 3x3 ring of the eight banks (bank-control star <= ~260 um, rq <= ~260 um);   * channels 30.24 um (was 21.6) between columns, rows unchanged (20.52 um), >= 23.76 um from every pin face;   * rr pins grouped per bank ROW on the W face, wd pins grouped per bank COLUMN on the N face;   * every clk_bank[b] entry on the face point nearest its bank's clock pin (<= ~190 um, was <= 630 um);   * the folded dispatcher collar (2 x 128x256 SRAM + pin-registered soft logic, clocked by clk) in an E column, with     the F20 host bus and status on the E face; clk now has real soft sinks, so the parent builds a tree for it. Outline grows 511.92 -> 645.84 um wide (same 360.72 height) for the collar column: a die slot change (H-DIE)."
+}
