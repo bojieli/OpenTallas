@@ -1,0 +1,26 @@
+{
+ "source_commit": "f8a9ca970",
+ "outline_um": [
+  21.6,
+  129.6
+ ],
+ "std_um2": 374,
+ "FF": 1113,
+ "core_fill_fraction": 0.1731,
+ "boundary_stages_each_way": 1,
+ "cold_reset_edges": 2,
+ "CTS_TT_insertion_max_ps": 113.2,
+ "CTS_TT_spread_ps": 8,
+ "placement_setup_ps": 331.3,
+ "placement_hold_ps": 48.05,
+ "gate_failures": 0,
+ "looked_images": [
+  "physical/ref_tile/hbm_sfu_lg_pair_leaf_2330/gate_layout/floorplan.png",
+  "physical/ref_tile/hbm_sfu_lg_pair_leaf_2330/gate_layout/density.png"
+ ],
+ "visual_findings": "Empty central20um strip removed relative to43.2. Pins distributed over106.7um of each129.6um face; edge-local FF strips. Remaining narrow center supports clock/buses. Both-edge hold-stage congestion warning requires actual trialGRT before route.",
+ "native_final_audit": "OPEN",
+ "trial_GRT": "QUEUED_NOT_YET_QUALIFIED",
+ "production_native_complete": false,
+ "SFU_core_home": "OPEN"
+}
