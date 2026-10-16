@@ -4322,644 +4322,196 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
   wire [0:0] vmks_NE7__fault;
   wire [108:0] xc_SW0__cmd_ext;
   wire [63:0] xc_SW0__kv_desc;
-  wire [0:0] xc_SW0__active;
   wire [0:0] xc_SW0__done;
+  wire [0:0] xc_SW0__configured;
   wire [0:0] xc_SW0__fault;
-  wire [0:0] cpx_SW0__a_we;
-  wire [9:0] cpx_SW0__a_addr;
-  wire [255:0] cpx_SW0__a_data;
-  wire [0:0] cpx_SW0__b_we;
-  wire [0:0] cpx_SW0__b_addr;
-  wire [255:0] cpx_SW0__b_data;
-  wire [0:0] cpx_SW0__run_v;
-  wire [0:0] cpx_SW0__run_base;
-  wire [0:0] cpx_SW0__run_count;
-  wire [0:0] cpx_SW0__cmd_v;
-  wire [0:0] cpx_SW0__cmd;
-  wire [31:0] cpx_SW0__cycle;
-  wire [0:0] cpx_SW0__configured;
-  wire [0:0] cpx_SW0__fault;
-  wire [0:0] cpx_SW0__active;
+  wire [0:0] xc_SW0__active;
   wire [108:0] xc_SW1__cmd_ext;
   wire [63:0] xc_SW1__kv_desc;
-  wire [0:0] xc_SW1__active;
   wire [0:0] xc_SW1__done;
+  wire [0:0] xc_SW1__configured;
   wire [0:0] xc_SW1__fault;
-  wire [0:0] cpx_SW1__a_we;
-  wire [9:0] cpx_SW1__a_addr;
-  wire [255:0] cpx_SW1__a_data;
-  wire [0:0] cpx_SW1__b_we;
-  wire [0:0] cpx_SW1__b_addr;
-  wire [255:0] cpx_SW1__b_data;
-  wire [0:0] cpx_SW1__run_v;
-  wire [0:0] cpx_SW1__run_base;
-  wire [0:0] cpx_SW1__run_count;
-  wire [0:0] cpx_SW1__cmd_v;
-  wire [0:0] cpx_SW1__cmd;
-  wire [31:0] cpx_SW1__cycle;
-  wire [0:0] cpx_SW1__configured;
-  wire [0:0] cpx_SW1__fault;
-  wire [0:0] cpx_SW1__active;
+  wire [0:0] xc_SW1__active;
   wire [108:0] xc_SW2__cmd_ext;
   wire [63:0] xc_SW2__kv_desc;
-  wire [0:0] xc_SW2__active;
   wire [0:0] xc_SW2__done;
+  wire [0:0] xc_SW2__configured;
   wire [0:0] xc_SW2__fault;
-  wire [0:0] cpx_SW2__a_we;
-  wire [9:0] cpx_SW2__a_addr;
-  wire [255:0] cpx_SW2__a_data;
-  wire [0:0] cpx_SW2__b_we;
-  wire [0:0] cpx_SW2__b_addr;
-  wire [255:0] cpx_SW2__b_data;
-  wire [0:0] cpx_SW2__run_v;
-  wire [0:0] cpx_SW2__run_base;
-  wire [0:0] cpx_SW2__run_count;
-  wire [0:0] cpx_SW2__cmd_v;
-  wire [0:0] cpx_SW2__cmd;
-  wire [31:0] cpx_SW2__cycle;
-  wire [0:0] cpx_SW2__configured;
-  wire [0:0] cpx_SW2__fault;
-  wire [0:0] cpx_SW2__active;
+  wire [0:0] xc_SW2__active;
   wire [108:0] xc_SW3__cmd_ext;
   wire [63:0] xc_SW3__kv_desc;
-  wire [0:0] xc_SW3__active;
   wire [0:0] xc_SW3__done;
+  wire [0:0] xc_SW3__configured;
   wire [0:0] xc_SW3__fault;
-  wire [0:0] cpx_SW3__a_we;
-  wire [9:0] cpx_SW3__a_addr;
-  wire [255:0] cpx_SW3__a_data;
-  wire [0:0] cpx_SW3__b_we;
-  wire [0:0] cpx_SW3__b_addr;
-  wire [255:0] cpx_SW3__b_data;
-  wire [0:0] cpx_SW3__run_v;
-  wire [0:0] cpx_SW3__run_base;
-  wire [0:0] cpx_SW3__run_count;
-  wire [0:0] cpx_SW3__cmd_v;
-  wire [0:0] cpx_SW3__cmd;
-  wire [31:0] cpx_SW3__cycle;
-  wire [0:0] cpx_SW3__configured;
-  wire [0:0] cpx_SW3__fault;
-  wire [0:0] cpx_SW3__active;
+  wire [0:0] xc_SW3__active;
   wire [108:0] xc_SW4__cmd_ext;
   wire [63:0] xc_SW4__kv_desc;
-  wire [0:0] xc_SW4__active;
   wire [0:0] xc_SW4__done;
+  wire [0:0] xc_SW4__configured;
   wire [0:0] xc_SW4__fault;
-  wire [0:0] cpx_SW4__a_we;
-  wire [9:0] cpx_SW4__a_addr;
-  wire [255:0] cpx_SW4__a_data;
-  wire [0:0] cpx_SW4__b_we;
-  wire [0:0] cpx_SW4__b_addr;
-  wire [255:0] cpx_SW4__b_data;
-  wire [0:0] cpx_SW4__run_v;
-  wire [0:0] cpx_SW4__run_base;
-  wire [0:0] cpx_SW4__run_count;
-  wire [0:0] cpx_SW4__cmd_v;
-  wire [0:0] cpx_SW4__cmd;
-  wire [31:0] cpx_SW4__cycle;
-  wire [0:0] cpx_SW4__configured;
-  wire [0:0] cpx_SW4__fault;
-  wire [0:0] cpx_SW4__active;
+  wire [0:0] xc_SW4__active;
   wire [108:0] xc_SW5__cmd_ext;
   wire [63:0] xc_SW5__kv_desc;
-  wire [0:0] xc_SW5__active;
   wire [0:0] xc_SW5__done;
+  wire [0:0] xc_SW5__configured;
   wire [0:0] xc_SW5__fault;
-  wire [0:0] cpx_SW5__a_we;
-  wire [9:0] cpx_SW5__a_addr;
-  wire [255:0] cpx_SW5__a_data;
-  wire [0:0] cpx_SW5__b_we;
-  wire [0:0] cpx_SW5__b_addr;
-  wire [255:0] cpx_SW5__b_data;
-  wire [0:0] cpx_SW5__run_v;
-  wire [0:0] cpx_SW5__run_base;
-  wire [0:0] cpx_SW5__run_count;
-  wire [0:0] cpx_SW5__cmd_v;
-  wire [0:0] cpx_SW5__cmd;
-  wire [31:0] cpx_SW5__cycle;
-  wire [0:0] cpx_SW5__configured;
-  wire [0:0] cpx_SW5__fault;
-  wire [0:0] cpx_SW5__active;
+  wire [0:0] xc_SW5__active;
   wire [108:0] xc_SW6__cmd_ext;
   wire [63:0] xc_SW6__kv_desc;
-  wire [0:0] xc_SW6__active;
   wire [0:0] xc_SW6__done;
+  wire [0:0] xc_SW6__configured;
   wire [0:0] xc_SW6__fault;
-  wire [0:0] cpx_SW6__a_we;
-  wire [9:0] cpx_SW6__a_addr;
-  wire [255:0] cpx_SW6__a_data;
-  wire [0:0] cpx_SW6__b_we;
-  wire [0:0] cpx_SW6__b_addr;
-  wire [255:0] cpx_SW6__b_data;
-  wire [0:0] cpx_SW6__run_v;
-  wire [0:0] cpx_SW6__run_base;
-  wire [0:0] cpx_SW6__run_count;
-  wire [0:0] cpx_SW6__cmd_v;
-  wire [0:0] cpx_SW6__cmd;
-  wire [31:0] cpx_SW6__cycle;
-  wire [0:0] cpx_SW6__configured;
-  wire [0:0] cpx_SW6__fault;
-  wire [0:0] cpx_SW6__active;
+  wire [0:0] xc_SW6__active;
   wire [108:0] xc_SW7__cmd_ext;
   wire [63:0] xc_SW7__kv_desc;
-  wire [0:0] xc_SW7__active;
   wire [0:0] xc_SW7__done;
+  wire [0:0] xc_SW7__configured;
   wire [0:0] xc_SW7__fault;
-  wire [0:0] cpx_SW7__a_we;
-  wire [9:0] cpx_SW7__a_addr;
-  wire [255:0] cpx_SW7__a_data;
-  wire [0:0] cpx_SW7__b_we;
-  wire [0:0] cpx_SW7__b_addr;
-  wire [255:0] cpx_SW7__b_data;
-  wire [0:0] cpx_SW7__run_v;
-  wire [0:0] cpx_SW7__run_base;
-  wire [0:0] cpx_SW7__run_count;
-  wire [0:0] cpx_SW7__cmd_v;
-  wire [0:0] cpx_SW7__cmd;
-  wire [31:0] cpx_SW7__cycle;
-  wire [0:0] cpx_SW7__configured;
-  wire [0:0] cpx_SW7__fault;
-  wire [0:0] cpx_SW7__active;
+  wire [0:0] xc_SW7__active;
   wire [108:0] xc_SE0__cmd_ext;
   wire [63:0] xc_SE0__kv_desc;
-  wire [0:0] xc_SE0__active;
   wire [0:0] xc_SE0__done;
+  wire [0:0] xc_SE0__configured;
   wire [0:0] xc_SE0__fault;
-  wire [0:0] cpx_SE0__a_we;
-  wire [9:0] cpx_SE0__a_addr;
-  wire [255:0] cpx_SE0__a_data;
-  wire [0:0] cpx_SE0__b_we;
-  wire [0:0] cpx_SE0__b_addr;
-  wire [255:0] cpx_SE0__b_data;
-  wire [0:0] cpx_SE0__run_v;
-  wire [0:0] cpx_SE0__run_base;
-  wire [0:0] cpx_SE0__run_count;
-  wire [0:0] cpx_SE0__cmd_v;
-  wire [0:0] cpx_SE0__cmd;
-  wire [31:0] cpx_SE0__cycle;
-  wire [0:0] cpx_SE0__configured;
-  wire [0:0] cpx_SE0__fault;
-  wire [0:0] cpx_SE0__active;
+  wire [0:0] xc_SE0__active;
   wire [108:0] xc_SE1__cmd_ext;
   wire [63:0] xc_SE1__kv_desc;
-  wire [0:0] xc_SE1__active;
   wire [0:0] xc_SE1__done;
+  wire [0:0] xc_SE1__configured;
   wire [0:0] xc_SE1__fault;
-  wire [0:0] cpx_SE1__a_we;
-  wire [9:0] cpx_SE1__a_addr;
-  wire [255:0] cpx_SE1__a_data;
-  wire [0:0] cpx_SE1__b_we;
-  wire [0:0] cpx_SE1__b_addr;
-  wire [255:0] cpx_SE1__b_data;
-  wire [0:0] cpx_SE1__run_v;
-  wire [0:0] cpx_SE1__run_base;
-  wire [0:0] cpx_SE1__run_count;
-  wire [0:0] cpx_SE1__cmd_v;
-  wire [0:0] cpx_SE1__cmd;
-  wire [31:0] cpx_SE1__cycle;
-  wire [0:0] cpx_SE1__configured;
-  wire [0:0] cpx_SE1__fault;
-  wire [0:0] cpx_SE1__active;
+  wire [0:0] xc_SE1__active;
   wire [108:0] xc_SE2__cmd_ext;
   wire [63:0] xc_SE2__kv_desc;
-  wire [0:0] xc_SE2__active;
   wire [0:0] xc_SE2__done;
+  wire [0:0] xc_SE2__configured;
   wire [0:0] xc_SE2__fault;
-  wire [0:0] cpx_SE2__a_we;
-  wire [9:0] cpx_SE2__a_addr;
-  wire [255:0] cpx_SE2__a_data;
-  wire [0:0] cpx_SE2__b_we;
-  wire [0:0] cpx_SE2__b_addr;
-  wire [255:0] cpx_SE2__b_data;
-  wire [0:0] cpx_SE2__run_v;
-  wire [0:0] cpx_SE2__run_base;
-  wire [0:0] cpx_SE2__run_count;
-  wire [0:0] cpx_SE2__cmd_v;
-  wire [0:0] cpx_SE2__cmd;
-  wire [31:0] cpx_SE2__cycle;
-  wire [0:0] cpx_SE2__configured;
-  wire [0:0] cpx_SE2__fault;
-  wire [0:0] cpx_SE2__active;
+  wire [0:0] xc_SE2__active;
   wire [108:0] xc_SE3__cmd_ext;
   wire [63:0] xc_SE3__kv_desc;
-  wire [0:0] xc_SE3__active;
   wire [0:0] xc_SE3__done;
+  wire [0:0] xc_SE3__configured;
   wire [0:0] xc_SE3__fault;
-  wire [0:0] cpx_SE3__a_we;
-  wire [9:0] cpx_SE3__a_addr;
-  wire [255:0] cpx_SE3__a_data;
-  wire [0:0] cpx_SE3__b_we;
-  wire [0:0] cpx_SE3__b_addr;
-  wire [255:0] cpx_SE3__b_data;
-  wire [0:0] cpx_SE3__run_v;
-  wire [0:0] cpx_SE3__run_base;
-  wire [0:0] cpx_SE3__run_count;
-  wire [0:0] cpx_SE3__cmd_v;
-  wire [0:0] cpx_SE3__cmd;
-  wire [31:0] cpx_SE3__cycle;
-  wire [0:0] cpx_SE3__configured;
-  wire [0:0] cpx_SE3__fault;
-  wire [0:0] cpx_SE3__active;
+  wire [0:0] xc_SE3__active;
   wire [108:0] xc_SE4__cmd_ext;
   wire [63:0] xc_SE4__kv_desc;
-  wire [0:0] xc_SE4__active;
   wire [0:0] xc_SE4__done;
+  wire [0:0] xc_SE4__configured;
   wire [0:0] xc_SE4__fault;
-  wire [0:0] cpx_SE4__a_we;
-  wire [9:0] cpx_SE4__a_addr;
-  wire [255:0] cpx_SE4__a_data;
-  wire [0:0] cpx_SE4__b_we;
-  wire [0:0] cpx_SE4__b_addr;
-  wire [255:0] cpx_SE4__b_data;
-  wire [0:0] cpx_SE4__run_v;
-  wire [0:0] cpx_SE4__run_base;
-  wire [0:0] cpx_SE4__run_count;
-  wire [0:0] cpx_SE4__cmd_v;
-  wire [0:0] cpx_SE4__cmd;
-  wire [31:0] cpx_SE4__cycle;
-  wire [0:0] cpx_SE4__configured;
-  wire [0:0] cpx_SE4__fault;
-  wire [0:0] cpx_SE4__active;
+  wire [0:0] xc_SE4__active;
   wire [108:0] xc_SE5__cmd_ext;
   wire [63:0] xc_SE5__kv_desc;
-  wire [0:0] xc_SE5__active;
   wire [0:0] xc_SE5__done;
+  wire [0:0] xc_SE5__configured;
   wire [0:0] xc_SE5__fault;
-  wire [0:0] cpx_SE5__a_we;
-  wire [9:0] cpx_SE5__a_addr;
-  wire [255:0] cpx_SE5__a_data;
-  wire [0:0] cpx_SE5__b_we;
-  wire [0:0] cpx_SE5__b_addr;
-  wire [255:0] cpx_SE5__b_data;
-  wire [0:0] cpx_SE5__run_v;
-  wire [0:0] cpx_SE5__run_base;
-  wire [0:0] cpx_SE5__run_count;
-  wire [0:0] cpx_SE5__cmd_v;
-  wire [0:0] cpx_SE5__cmd;
-  wire [31:0] cpx_SE5__cycle;
-  wire [0:0] cpx_SE5__configured;
-  wire [0:0] cpx_SE5__fault;
-  wire [0:0] cpx_SE5__active;
+  wire [0:0] xc_SE5__active;
   wire [108:0] xc_SE6__cmd_ext;
   wire [63:0] xc_SE6__kv_desc;
-  wire [0:0] xc_SE6__active;
   wire [0:0] xc_SE6__done;
+  wire [0:0] xc_SE6__configured;
   wire [0:0] xc_SE6__fault;
-  wire [0:0] cpx_SE6__a_we;
-  wire [9:0] cpx_SE6__a_addr;
-  wire [255:0] cpx_SE6__a_data;
-  wire [0:0] cpx_SE6__b_we;
-  wire [0:0] cpx_SE6__b_addr;
-  wire [255:0] cpx_SE6__b_data;
-  wire [0:0] cpx_SE6__run_v;
-  wire [0:0] cpx_SE6__run_base;
-  wire [0:0] cpx_SE6__run_count;
-  wire [0:0] cpx_SE6__cmd_v;
-  wire [0:0] cpx_SE6__cmd;
-  wire [31:0] cpx_SE6__cycle;
-  wire [0:0] cpx_SE6__configured;
-  wire [0:0] cpx_SE6__fault;
-  wire [0:0] cpx_SE6__active;
+  wire [0:0] xc_SE6__active;
   wire [108:0] xc_SE7__cmd_ext;
   wire [63:0] xc_SE7__kv_desc;
-  wire [0:0] xc_SE7__active;
   wire [0:0] xc_SE7__done;
+  wire [0:0] xc_SE7__configured;
   wire [0:0] xc_SE7__fault;
-  wire [0:0] cpx_SE7__a_we;
-  wire [9:0] cpx_SE7__a_addr;
-  wire [255:0] cpx_SE7__a_data;
-  wire [0:0] cpx_SE7__b_we;
-  wire [0:0] cpx_SE7__b_addr;
-  wire [255:0] cpx_SE7__b_data;
-  wire [0:0] cpx_SE7__run_v;
-  wire [0:0] cpx_SE7__run_base;
-  wire [0:0] cpx_SE7__run_count;
-  wire [0:0] cpx_SE7__cmd_v;
-  wire [0:0] cpx_SE7__cmd;
-  wire [31:0] cpx_SE7__cycle;
-  wire [0:0] cpx_SE7__configured;
-  wire [0:0] cpx_SE7__fault;
-  wire [0:0] cpx_SE7__active;
+  wire [0:0] xc_SE7__active;
   wire [108:0] xc_NW0__cmd_ext;
   wire [63:0] xc_NW0__kv_desc;
-  wire [0:0] xc_NW0__active;
   wire [0:0] xc_NW0__done;
+  wire [0:0] xc_NW0__configured;
   wire [0:0] xc_NW0__fault;
-  wire [0:0] cpx_NW0__a_we;
-  wire [9:0] cpx_NW0__a_addr;
-  wire [255:0] cpx_NW0__a_data;
-  wire [0:0] cpx_NW0__b_we;
-  wire [0:0] cpx_NW0__b_addr;
-  wire [255:0] cpx_NW0__b_data;
-  wire [0:0] cpx_NW0__run_v;
-  wire [0:0] cpx_NW0__run_base;
-  wire [0:0] cpx_NW0__run_count;
-  wire [0:0] cpx_NW0__cmd_v;
-  wire [0:0] cpx_NW0__cmd;
-  wire [31:0] cpx_NW0__cycle;
-  wire [0:0] cpx_NW0__configured;
-  wire [0:0] cpx_NW0__fault;
-  wire [0:0] cpx_NW0__active;
+  wire [0:0] xc_NW0__active;
   wire [108:0] xc_NW1__cmd_ext;
   wire [63:0] xc_NW1__kv_desc;
-  wire [0:0] xc_NW1__active;
   wire [0:0] xc_NW1__done;
+  wire [0:0] xc_NW1__configured;
   wire [0:0] xc_NW1__fault;
-  wire [0:0] cpx_NW1__a_we;
-  wire [9:0] cpx_NW1__a_addr;
-  wire [255:0] cpx_NW1__a_data;
-  wire [0:0] cpx_NW1__b_we;
-  wire [0:0] cpx_NW1__b_addr;
-  wire [255:0] cpx_NW1__b_data;
-  wire [0:0] cpx_NW1__run_v;
-  wire [0:0] cpx_NW1__run_base;
-  wire [0:0] cpx_NW1__run_count;
-  wire [0:0] cpx_NW1__cmd_v;
-  wire [0:0] cpx_NW1__cmd;
-  wire [31:0] cpx_NW1__cycle;
-  wire [0:0] cpx_NW1__configured;
-  wire [0:0] cpx_NW1__fault;
-  wire [0:0] cpx_NW1__active;
+  wire [0:0] xc_NW1__active;
   wire [108:0] xc_NW2__cmd_ext;
   wire [63:0] xc_NW2__kv_desc;
-  wire [0:0] xc_NW2__active;
   wire [0:0] xc_NW2__done;
+  wire [0:0] xc_NW2__configured;
   wire [0:0] xc_NW2__fault;
-  wire [0:0] cpx_NW2__a_we;
-  wire [9:0] cpx_NW2__a_addr;
-  wire [255:0] cpx_NW2__a_data;
-  wire [0:0] cpx_NW2__b_we;
-  wire [0:0] cpx_NW2__b_addr;
-  wire [255:0] cpx_NW2__b_data;
-  wire [0:0] cpx_NW2__run_v;
-  wire [0:0] cpx_NW2__run_base;
-  wire [0:0] cpx_NW2__run_count;
-  wire [0:0] cpx_NW2__cmd_v;
-  wire [0:0] cpx_NW2__cmd;
-  wire [31:0] cpx_NW2__cycle;
-  wire [0:0] cpx_NW2__configured;
-  wire [0:0] cpx_NW2__fault;
-  wire [0:0] cpx_NW2__active;
+  wire [0:0] xc_NW2__active;
   wire [108:0] xc_NW3__cmd_ext;
   wire [63:0] xc_NW3__kv_desc;
-  wire [0:0] xc_NW3__active;
   wire [0:0] xc_NW3__done;
+  wire [0:0] xc_NW3__configured;
   wire [0:0] xc_NW3__fault;
-  wire [0:0] cpx_NW3__a_we;
-  wire [9:0] cpx_NW3__a_addr;
-  wire [255:0] cpx_NW3__a_data;
-  wire [0:0] cpx_NW3__b_we;
-  wire [0:0] cpx_NW3__b_addr;
-  wire [255:0] cpx_NW3__b_data;
-  wire [0:0] cpx_NW3__run_v;
-  wire [0:0] cpx_NW3__run_base;
-  wire [0:0] cpx_NW3__run_count;
-  wire [0:0] cpx_NW3__cmd_v;
-  wire [0:0] cpx_NW3__cmd;
-  wire [31:0] cpx_NW3__cycle;
-  wire [0:0] cpx_NW3__configured;
-  wire [0:0] cpx_NW3__fault;
-  wire [0:0] cpx_NW3__active;
+  wire [0:0] xc_NW3__active;
   wire [108:0] xc_NW4__cmd_ext;
   wire [63:0] xc_NW4__kv_desc;
-  wire [0:0] xc_NW4__active;
   wire [0:0] xc_NW4__done;
+  wire [0:0] xc_NW4__configured;
   wire [0:0] xc_NW4__fault;
-  wire [0:0] cpx_NW4__a_we;
-  wire [9:0] cpx_NW4__a_addr;
-  wire [255:0] cpx_NW4__a_data;
-  wire [0:0] cpx_NW4__b_we;
-  wire [0:0] cpx_NW4__b_addr;
-  wire [255:0] cpx_NW4__b_data;
-  wire [0:0] cpx_NW4__run_v;
-  wire [0:0] cpx_NW4__run_base;
-  wire [0:0] cpx_NW4__run_count;
-  wire [0:0] cpx_NW4__cmd_v;
-  wire [0:0] cpx_NW4__cmd;
-  wire [31:0] cpx_NW4__cycle;
-  wire [0:0] cpx_NW4__configured;
-  wire [0:0] cpx_NW4__fault;
-  wire [0:0] cpx_NW4__active;
+  wire [0:0] xc_NW4__active;
   wire [108:0] xc_NW5__cmd_ext;
   wire [63:0] xc_NW5__kv_desc;
-  wire [0:0] xc_NW5__active;
   wire [0:0] xc_NW5__done;
+  wire [0:0] xc_NW5__configured;
   wire [0:0] xc_NW5__fault;
-  wire [0:0] cpx_NW5__a_we;
-  wire [9:0] cpx_NW5__a_addr;
-  wire [255:0] cpx_NW5__a_data;
-  wire [0:0] cpx_NW5__b_we;
-  wire [0:0] cpx_NW5__b_addr;
-  wire [255:0] cpx_NW5__b_data;
-  wire [0:0] cpx_NW5__run_v;
-  wire [0:0] cpx_NW5__run_base;
-  wire [0:0] cpx_NW5__run_count;
-  wire [0:0] cpx_NW5__cmd_v;
-  wire [0:0] cpx_NW5__cmd;
-  wire [31:0] cpx_NW5__cycle;
-  wire [0:0] cpx_NW5__configured;
-  wire [0:0] cpx_NW5__fault;
-  wire [0:0] cpx_NW5__active;
+  wire [0:0] xc_NW5__active;
   wire [108:0] xc_NW6__cmd_ext;
   wire [63:0] xc_NW6__kv_desc;
-  wire [0:0] xc_NW6__active;
   wire [0:0] xc_NW6__done;
+  wire [0:0] xc_NW6__configured;
   wire [0:0] xc_NW6__fault;
-  wire [0:0] cpx_NW6__a_we;
-  wire [9:0] cpx_NW6__a_addr;
-  wire [255:0] cpx_NW6__a_data;
-  wire [0:0] cpx_NW6__b_we;
-  wire [0:0] cpx_NW6__b_addr;
-  wire [255:0] cpx_NW6__b_data;
-  wire [0:0] cpx_NW6__run_v;
-  wire [0:0] cpx_NW6__run_base;
-  wire [0:0] cpx_NW6__run_count;
-  wire [0:0] cpx_NW6__cmd_v;
-  wire [0:0] cpx_NW6__cmd;
-  wire [31:0] cpx_NW6__cycle;
-  wire [0:0] cpx_NW6__configured;
-  wire [0:0] cpx_NW6__fault;
-  wire [0:0] cpx_NW6__active;
+  wire [0:0] xc_NW6__active;
   wire [108:0] xc_NW7__cmd_ext;
   wire [63:0] xc_NW7__kv_desc;
-  wire [0:0] xc_NW7__active;
   wire [0:0] xc_NW7__done;
+  wire [0:0] xc_NW7__configured;
   wire [0:0] xc_NW7__fault;
-  wire [0:0] cpx_NW7__a_we;
-  wire [9:0] cpx_NW7__a_addr;
-  wire [255:0] cpx_NW7__a_data;
-  wire [0:0] cpx_NW7__b_we;
-  wire [0:0] cpx_NW7__b_addr;
-  wire [255:0] cpx_NW7__b_data;
-  wire [0:0] cpx_NW7__run_v;
-  wire [0:0] cpx_NW7__run_base;
-  wire [0:0] cpx_NW7__run_count;
-  wire [0:0] cpx_NW7__cmd_v;
-  wire [0:0] cpx_NW7__cmd;
-  wire [31:0] cpx_NW7__cycle;
-  wire [0:0] cpx_NW7__configured;
-  wire [0:0] cpx_NW7__fault;
-  wire [0:0] cpx_NW7__active;
+  wire [0:0] xc_NW7__active;
   wire [108:0] xc_NE0__cmd_ext;
   wire [63:0] xc_NE0__kv_desc;
-  wire [0:0] xc_NE0__active;
   wire [0:0] xc_NE0__done;
+  wire [0:0] xc_NE0__configured;
   wire [0:0] xc_NE0__fault;
-  wire [0:0] cpx_NE0__a_we;
-  wire [9:0] cpx_NE0__a_addr;
-  wire [255:0] cpx_NE0__a_data;
-  wire [0:0] cpx_NE0__b_we;
-  wire [0:0] cpx_NE0__b_addr;
-  wire [255:0] cpx_NE0__b_data;
-  wire [0:0] cpx_NE0__run_v;
-  wire [0:0] cpx_NE0__run_base;
-  wire [0:0] cpx_NE0__run_count;
-  wire [0:0] cpx_NE0__cmd_v;
-  wire [0:0] cpx_NE0__cmd;
-  wire [31:0] cpx_NE0__cycle;
-  wire [0:0] cpx_NE0__configured;
-  wire [0:0] cpx_NE0__fault;
-  wire [0:0] cpx_NE0__active;
+  wire [0:0] xc_NE0__active;
   wire [108:0] xc_NE1__cmd_ext;
   wire [63:0] xc_NE1__kv_desc;
-  wire [0:0] xc_NE1__active;
   wire [0:0] xc_NE1__done;
+  wire [0:0] xc_NE1__configured;
   wire [0:0] xc_NE1__fault;
-  wire [0:0] cpx_NE1__a_we;
-  wire [9:0] cpx_NE1__a_addr;
-  wire [255:0] cpx_NE1__a_data;
-  wire [0:0] cpx_NE1__b_we;
-  wire [0:0] cpx_NE1__b_addr;
-  wire [255:0] cpx_NE1__b_data;
-  wire [0:0] cpx_NE1__run_v;
-  wire [0:0] cpx_NE1__run_base;
-  wire [0:0] cpx_NE1__run_count;
-  wire [0:0] cpx_NE1__cmd_v;
-  wire [0:0] cpx_NE1__cmd;
-  wire [31:0] cpx_NE1__cycle;
-  wire [0:0] cpx_NE1__configured;
-  wire [0:0] cpx_NE1__fault;
-  wire [0:0] cpx_NE1__active;
+  wire [0:0] xc_NE1__active;
   wire [108:0] xc_NE2__cmd_ext;
   wire [63:0] xc_NE2__kv_desc;
-  wire [0:0] xc_NE2__active;
   wire [0:0] xc_NE2__done;
+  wire [0:0] xc_NE2__configured;
   wire [0:0] xc_NE2__fault;
-  wire [0:0] cpx_NE2__a_we;
-  wire [9:0] cpx_NE2__a_addr;
-  wire [255:0] cpx_NE2__a_data;
-  wire [0:0] cpx_NE2__b_we;
-  wire [0:0] cpx_NE2__b_addr;
-  wire [255:0] cpx_NE2__b_data;
-  wire [0:0] cpx_NE2__run_v;
-  wire [0:0] cpx_NE2__run_base;
-  wire [0:0] cpx_NE2__run_count;
-  wire [0:0] cpx_NE2__cmd_v;
-  wire [0:0] cpx_NE2__cmd;
-  wire [31:0] cpx_NE2__cycle;
-  wire [0:0] cpx_NE2__configured;
-  wire [0:0] cpx_NE2__fault;
-  wire [0:0] cpx_NE2__active;
+  wire [0:0] xc_NE2__active;
   wire [108:0] xc_NE3__cmd_ext;
   wire [63:0] xc_NE3__kv_desc;
-  wire [0:0] xc_NE3__active;
   wire [0:0] xc_NE3__done;
+  wire [0:0] xc_NE3__configured;
   wire [0:0] xc_NE3__fault;
-  wire [0:0] cpx_NE3__a_we;
-  wire [9:0] cpx_NE3__a_addr;
-  wire [255:0] cpx_NE3__a_data;
-  wire [0:0] cpx_NE3__b_we;
-  wire [0:0] cpx_NE3__b_addr;
-  wire [255:0] cpx_NE3__b_data;
-  wire [0:0] cpx_NE3__run_v;
-  wire [0:0] cpx_NE3__run_base;
-  wire [0:0] cpx_NE3__run_count;
-  wire [0:0] cpx_NE3__cmd_v;
-  wire [0:0] cpx_NE3__cmd;
-  wire [31:0] cpx_NE3__cycle;
-  wire [0:0] cpx_NE3__configured;
-  wire [0:0] cpx_NE3__fault;
-  wire [0:0] cpx_NE3__active;
+  wire [0:0] xc_NE3__active;
   wire [108:0] xc_NE4__cmd_ext;
   wire [63:0] xc_NE4__kv_desc;
-  wire [0:0] xc_NE4__active;
   wire [0:0] xc_NE4__done;
+  wire [0:0] xc_NE4__configured;
   wire [0:0] xc_NE4__fault;
-  wire [0:0] cpx_NE4__a_we;
-  wire [9:0] cpx_NE4__a_addr;
-  wire [255:0] cpx_NE4__a_data;
-  wire [0:0] cpx_NE4__b_we;
-  wire [0:0] cpx_NE4__b_addr;
-  wire [255:0] cpx_NE4__b_data;
-  wire [0:0] cpx_NE4__run_v;
-  wire [0:0] cpx_NE4__run_base;
-  wire [0:0] cpx_NE4__run_count;
-  wire [0:0] cpx_NE4__cmd_v;
-  wire [0:0] cpx_NE4__cmd;
-  wire [31:0] cpx_NE4__cycle;
-  wire [0:0] cpx_NE4__configured;
-  wire [0:0] cpx_NE4__fault;
-  wire [0:0] cpx_NE4__active;
+  wire [0:0] xc_NE4__active;
   wire [108:0] xc_NE5__cmd_ext;
   wire [63:0] xc_NE5__kv_desc;
-  wire [0:0] xc_NE5__active;
   wire [0:0] xc_NE5__done;
+  wire [0:0] xc_NE5__configured;
   wire [0:0] xc_NE5__fault;
-  wire [0:0] cpx_NE5__a_we;
-  wire [9:0] cpx_NE5__a_addr;
-  wire [255:0] cpx_NE5__a_data;
-  wire [0:0] cpx_NE5__b_we;
-  wire [0:0] cpx_NE5__b_addr;
-  wire [255:0] cpx_NE5__b_data;
-  wire [0:0] cpx_NE5__run_v;
-  wire [0:0] cpx_NE5__run_base;
-  wire [0:0] cpx_NE5__run_count;
-  wire [0:0] cpx_NE5__cmd_v;
-  wire [0:0] cpx_NE5__cmd;
-  wire [31:0] cpx_NE5__cycle;
-  wire [0:0] cpx_NE5__configured;
-  wire [0:0] cpx_NE5__fault;
-  wire [0:0] cpx_NE5__active;
+  wire [0:0] xc_NE5__active;
   wire [108:0] xc_NE6__cmd_ext;
   wire [63:0] xc_NE6__kv_desc;
-  wire [0:0] xc_NE6__active;
   wire [0:0] xc_NE6__done;
+  wire [0:0] xc_NE6__configured;
   wire [0:0] xc_NE6__fault;
-  wire [0:0] cpx_NE6__a_we;
-  wire [9:0] cpx_NE6__a_addr;
-  wire [255:0] cpx_NE6__a_data;
-  wire [0:0] cpx_NE6__b_we;
-  wire [0:0] cpx_NE6__b_addr;
-  wire [255:0] cpx_NE6__b_data;
-  wire [0:0] cpx_NE6__run_v;
-  wire [0:0] cpx_NE6__run_base;
-  wire [0:0] cpx_NE6__run_count;
-  wire [0:0] cpx_NE6__cmd_v;
-  wire [0:0] cpx_NE6__cmd;
-  wire [31:0] cpx_NE6__cycle;
-  wire [0:0] cpx_NE6__configured;
-  wire [0:0] cpx_NE6__fault;
-  wire [0:0] cpx_NE6__active;
+  wire [0:0] xc_NE6__active;
   wire [108:0] xc_NE7__cmd_ext;
   wire [63:0] xc_NE7__kv_desc;
-  wire [0:0] xc_NE7__active;
   wire [0:0] xc_NE7__done;
+  wire [0:0] xc_NE7__configured;
   wire [0:0] xc_NE7__fault;
-  wire [0:0] cpx_NE7__a_we;
-  wire [9:0] cpx_NE7__a_addr;
-  wire [255:0] cpx_NE7__a_data;
-  wire [0:0] cpx_NE7__b_we;
-  wire [0:0] cpx_NE7__b_addr;
-  wire [255:0] cpx_NE7__b_data;
-  wire [0:0] cpx_NE7__run_v;
-  wire [0:0] cpx_NE7__run_base;
-  wire [0:0] cpx_NE7__run_count;
-  wire [0:0] cpx_NE7__cmd_v;
-  wire [0:0] cpx_NE7__cmd;
-  wire [31:0] cpx_NE7__cycle;
-  wire [0:0] cpx_NE7__configured;
-  wire [0:0] cpx_NE7__fault;
-  wire [0:0] cpx_NE7__active;
+  wire [0:0] xc_NE7__active;
   wire [1023:0] cij_SW__inj_d;
   wire [0:0] cij_SW__fault;
   wire [511:0] lk_S0__rx;
@@ -6173,77 +5725,21 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
   wire [0:0] xl_NE_aqhi__fault;
   wire [2047:0] xl_NE_bd__bq_d;
   wire [2247:0] smw_SW__wq;
-  wire [0:0] smw_SW__busy;
+  wire [0:0] smw_SW__configured;
   wire [0:0] smw_SW__fault;
-  wire [0:0] cp_smw_SW__a_we;
-  wire [0:0] cp_smw_SW__a_addr;
-  wire [255:0] cp_smw_SW__a_data;
-  wire [0:0] cp_smw_SW__b_we;
-  wire [0:0] cp_smw_SW__b_addr;
-  wire [255:0] cp_smw_SW__b_data;
-  wire [0:0] cp_smw_SW__run_v;
-  wire [0:0] cp_smw_SW__run_base;
-  wire [0:0] cp_smw_SW__run_count;
-  wire [0:0] cp_smw_SW__cmd_v;
-  wire [25:0] cp_smw_SW__cmd;
-  wire [31:0] cp_smw_SW__cycle;
-  wire [0:0] cp_smw_SW__configured;
-  wire [0:0] cp_smw_SW__fault;
-  wire [0:0] cp_smw_SW__active;
+  wire [0:0] smw_SW__active;
   wire [2247:0] smw_SE__wq;
-  wire [0:0] smw_SE__busy;
+  wire [0:0] smw_SE__configured;
   wire [0:0] smw_SE__fault;
-  wire [0:0] cp_smw_SE__a_we;
-  wire [0:0] cp_smw_SE__a_addr;
-  wire [255:0] cp_smw_SE__a_data;
-  wire [0:0] cp_smw_SE__b_we;
-  wire [0:0] cp_smw_SE__b_addr;
-  wire [255:0] cp_smw_SE__b_data;
-  wire [0:0] cp_smw_SE__run_v;
-  wire [0:0] cp_smw_SE__run_base;
-  wire [0:0] cp_smw_SE__run_count;
-  wire [0:0] cp_smw_SE__cmd_v;
-  wire [25:0] cp_smw_SE__cmd;
-  wire [31:0] cp_smw_SE__cycle;
-  wire [0:0] cp_smw_SE__configured;
-  wire [0:0] cp_smw_SE__fault;
-  wire [0:0] cp_smw_SE__active;
+  wire [0:0] smw_SE__active;
   wire [2247:0] smw_NW__wq;
-  wire [0:0] smw_NW__busy;
+  wire [0:0] smw_NW__configured;
   wire [0:0] smw_NW__fault;
-  wire [0:0] cp_smw_NW__a_we;
-  wire [0:0] cp_smw_NW__a_addr;
-  wire [255:0] cp_smw_NW__a_data;
-  wire [0:0] cp_smw_NW__b_we;
-  wire [0:0] cp_smw_NW__b_addr;
-  wire [255:0] cp_smw_NW__b_data;
-  wire [0:0] cp_smw_NW__run_v;
-  wire [0:0] cp_smw_NW__run_base;
-  wire [0:0] cp_smw_NW__run_count;
-  wire [0:0] cp_smw_NW__cmd_v;
-  wire [25:0] cp_smw_NW__cmd;
-  wire [31:0] cp_smw_NW__cycle;
-  wire [0:0] cp_smw_NW__configured;
-  wire [0:0] cp_smw_NW__fault;
-  wire [0:0] cp_smw_NW__active;
+  wire [0:0] smw_NW__active;
   wire [2247:0] smw_NE__wq;
-  wire [0:0] smw_NE__busy;
+  wire [0:0] smw_NE__configured;
   wire [0:0] smw_NE__fault;
-  wire [0:0] cp_smw_NE__a_we;
-  wire [0:0] cp_smw_NE__a_addr;
-  wire [255:0] cp_smw_NE__a_data;
-  wire [0:0] cp_smw_NE__b_we;
-  wire [0:0] cp_smw_NE__b_addr;
-  wire [255:0] cp_smw_NE__b_data;
-  wire [0:0] cp_smw_NE__run_v;
-  wire [0:0] cp_smw_NE__run_base;
-  wire [0:0] cp_smw_NE__run_count;
-  wire [0:0] cp_smw_NE__cmd_v;
-  wire [25:0] cp_smw_NE__cmd;
-  wire [31:0] cp_smw_NE__cycle;
-  wire [0:0] cp_smw_NE__configured;
-  wire [0:0] cp_smw_NE__fault;
-  wire [0:0] cp_smw_NE__active;
+  wire [0:0] smw_NE__active;
   wire [0:0] subr_SW__bridge_rst_n;
   wire [0:0] subr_SW__fault;
   wire [0:0] subr_SE__bridge_rst_n;
@@ -9945,11 +9441,12 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .fault(sm_SW0__fault),
     .schedule_fault(sm_SW0__schedule_fault)
   );
-  ot_hbm_svc_vm_kshare #(.SM(0), .MUT(0)) vmks_SW0 (
+  ot_hbm_svc_vm_kshare #(.MUT(0)) vmks_SW0 (
     .hbm_clk(hb_ckgen__pll_hbm[0]),
     .hbm_rst_n(hb_ckgen__por_hbm[0]),
     .stream_clk(hb_ckgen__pll_stream[0]),
     .stream_rst_n(hb_ckgen__por_stream[0]),
+    .sm(3'd0),
     .g_k_v(svg_SW0__k_v[3:0]),
     .g_k_rdy(vmks_SW0__g_k_rdy),
     .g_k_addr(svg_SW0__k_addr[119:0]),
@@ -10059,11 +9556,12 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .fault(sm_SW1__fault),
     .schedule_fault(sm_SW1__schedule_fault)
   );
-  ot_hbm_svc_vm_kshare #(.SM(1), .MUT(0)) vmks_SW1 (
+  ot_hbm_svc_vm_kshare #(.MUT(0)) vmks_SW1 (
     .hbm_clk(hb_ckgen__pll_hbm[0]),
     .hbm_rst_n(hb_ckgen__por_hbm[0]),
     .stream_clk(hb_ckgen__pll_stream[0]),
     .stream_rst_n(hb_ckgen__por_stream[0]),
+    .sm(3'd1),
     .g_k_v(svg_SW1__k_v[3:0]),
     .g_k_rdy(vmks_SW1__g_k_rdy),
     .g_k_addr(svg_SW1__k_addr[119:0]),
@@ -10173,11 +9671,12 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .fault(sm_SW2__fault),
     .schedule_fault(sm_SW2__schedule_fault)
   );
-  ot_hbm_svc_vm_kshare #(.SM(2), .MUT(0)) vmks_SW2 (
+  ot_hbm_svc_vm_kshare #(.MUT(0)) vmks_SW2 (
     .hbm_clk(hb_ckgen__pll_hbm[0]),
     .hbm_rst_n(hb_ckgen__por_hbm[0]),
     .stream_clk(hb_ckgen__pll_stream[0]),
     .stream_rst_n(hb_ckgen__por_stream[0]),
+    .sm(3'd2),
     .g_k_v(svg_SW2__k_v[3:0]),
     .g_k_rdy(vmks_SW2__g_k_rdy),
     .g_k_addr(svg_SW2__k_addr[119:0]),
@@ -10287,11 +9786,12 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .fault(sm_SW3__fault),
     .schedule_fault(sm_SW3__schedule_fault)
   );
-  ot_hbm_svc_vm_kshare #(.SM(3), .MUT(0)) vmks_SW3 (
+  ot_hbm_svc_vm_kshare #(.MUT(0)) vmks_SW3 (
     .hbm_clk(hb_ckgen__pll_hbm[0]),
     .hbm_rst_n(hb_ckgen__por_hbm[0]),
     .stream_clk(hb_ckgen__pll_stream[0]),
     .stream_rst_n(hb_ckgen__por_stream[0]),
+    .sm(3'd3),
     .g_k_v(svg_SW3__k_v[3:0]),
     .g_k_rdy(vmks_SW3__g_k_rdy),
     .g_k_addr(svg_SW3__k_addr[119:0]),
@@ -10401,11 +9901,12 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .fault(sm_SW4__fault),
     .schedule_fault(sm_SW4__schedule_fault)
   );
-  ot_hbm_svc_vm_kshare #(.SM(4), .MUT(0)) vmks_SW4 (
+  ot_hbm_svc_vm_kshare #(.MUT(0)) vmks_SW4 (
     .hbm_clk(hb_ckgen__pll_hbm[0]),
     .hbm_rst_n(hb_ckgen__por_hbm[0]),
     .stream_clk(hb_ckgen__pll_stream[0]),
     .stream_rst_n(hb_ckgen__por_stream[0]),
+    .sm(3'd4),
     .g_k_v(svg_SW4__k_v[3:0]),
     .g_k_rdy(vmks_SW4__g_k_rdy),
     .g_k_addr(svg_SW4__k_addr[119:0]),
@@ -10515,11 +10016,12 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .fault(sm_SW5__fault),
     .schedule_fault(sm_SW5__schedule_fault)
   );
-  ot_hbm_svc_vm_kshare #(.SM(5), .MUT(0)) vmks_SW5 (
+  ot_hbm_svc_vm_kshare #(.MUT(0)) vmks_SW5 (
     .hbm_clk(hb_ckgen__pll_hbm[0]),
     .hbm_rst_n(hb_ckgen__por_hbm[0]),
     .stream_clk(hb_ckgen__pll_stream[0]),
     .stream_rst_n(hb_ckgen__por_stream[0]),
+    .sm(3'd5),
     .g_k_v(svg_SW5__k_v[3:0]),
     .g_k_rdy(vmks_SW5__g_k_rdy),
     .g_k_addr(svg_SW5__k_addr[119:0]),
@@ -10629,11 +10131,12 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .fault(sm_SW6__fault),
     .schedule_fault(sm_SW6__schedule_fault)
   );
-  ot_hbm_svc_vm_kshare #(.SM(6), .MUT(0)) vmks_SW6 (
+  ot_hbm_svc_vm_kshare #(.MUT(0)) vmks_SW6 (
     .hbm_clk(hb_ckgen__pll_hbm[0]),
     .hbm_rst_n(hb_ckgen__por_hbm[0]),
     .stream_clk(hb_ckgen__pll_stream[0]),
     .stream_rst_n(hb_ckgen__por_stream[0]),
+    .sm(3'd6),
     .g_k_v(svg_SW6__k_v[3:0]),
     .g_k_rdy(vmks_SW6__g_k_rdy),
     .g_k_addr(svg_SW6__k_addr[119:0]),
@@ -10743,11 +10246,12 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .fault(sm_SW7__fault),
     .schedule_fault(sm_SW7__schedule_fault)
   );
-  ot_hbm_svc_vm_kshare #(.SM(7), .MUT(0)) vmks_SW7 (
+  ot_hbm_svc_vm_kshare #(.MUT(0)) vmks_SW7 (
     .hbm_clk(hb_ckgen__pll_hbm[0]),
     .hbm_rst_n(hb_ckgen__por_hbm[0]),
     .stream_clk(hb_ckgen__pll_stream[0]),
     .stream_rst_n(hb_ckgen__por_stream[0]),
+    .sm(3'd7),
     .g_k_v(svg_SW7__k_v[3:0]),
     .g_k_rdy(vmks_SW7__g_k_rdy),
     .g_k_addr(svg_SW7__k_addr[119:0]),
@@ -11897,11 +11401,12 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .fault(sm_SE0__fault),
     .schedule_fault(sm_SE0__schedule_fault)
   );
-  ot_hbm_svc_vm_kshare #(.SM(0), .MUT(0)) vmks_SE0 (
+  ot_hbm_svc_vm_kshare #(.MUT(0)) vmks_SE0 (
     .hbm_clk(hb_ckgen__pll_hbm[0]),
     .hbm_rst_n(hb_ckgen__por_hbm[0]),
     .stream_clk(hb_ckgen__pll_stream[0]),
     .stream_rst_n(hb_ckgen__por_stream[0]),
+    .sm(3'd0),
     .g_k_v(svg_SE0__k_v[3:0]),
     .g_k_rdy(vmks_SE0__g_k_rdy),
     .g_k_addr(svg_SE0__k_addr[119:0]),
@@ -12011,11 +11516,12 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .fault(sm_SE1__fault),
     .schedule_fault(sm_SE1__schedule_fault)
   );
-  ot_hbm_svc_vm_kshare #(.SM(1), .MUT(0)) vmks_SE1 (
+  ot_hbm_svc_vm_kshare #(.MUT(0)) vmks_SE1 (
     .hbm_clk(hb_ckgen__pll_hbm[0]),
     .hbm_rst_n(hb_ckgen__por_hbm[0]),
     .stream_clk(hb_ckgen__pll_stream[0]),
     .stream_rst_n(hb_ckgen__por_stream[0]),
+    .sm(3'd1),
     .g_k_v(svg_SE1__k_v[3:0]),
     .g_k_rdy(vmks_SE1__g_k_rdy),
     .g_k_addr(svg_SE1__k_addr[119:0]),
@@ -12125,11 +11631,12 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .fault(sm_SE2__fault),
     .schedule_fault(sm_SE2__schedule_fault)
   );
-  ot_hbm_svc_vm_kshare #(.SM(2), .MUT(0)) vmks_SE2 (
+  ot_hbm_svc_vm_kshare #(.MUT(0)) vmks_SE2 (
     .hbm_clk(hb_ckgen__pll_hbm[0]),
     .hbm_rst_n(hb_ckgen__por_hbm[0]),
     .stream_clk(hb_ckgen__pll_stream[0]),
     .stream_rst_n(hb_ckgen__por_stream[0]),
+    .sm(3'd2),
     .g_k_v(svg_SE2__k_v[3:0]),
     .g_k_rdy(vmks_SE2__g_k_rdy),
     .g_k_addr(svg_SE2__k_addr[119:0]),
@@ -12239,11 +11746,12 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .fault(sm_SE3__fault),
     .schedule_fault(sm_SE3__schedule_fault)
   );
-  ot_hbm_svc_vm_kshare #(.SM(3), .MUT(0)) vmks_SE3 (
+  ot_hbm_svc_vm_kshare #(.MUT(0)) vmks_SE3 (
     .hbm_clk(hb_ckgen__pll_hbm[0]),
     .hbm_rst_n(hb_ckgen__por_hbm[0]),
     .stream_clk(hb_ckgen__pll_stream[0]),
     .stream_rst_n(hb_ckgen__por_stream[0]),
+    .sm(3'd3),
     .g_k_v(svg_SE3__k_v[3:0]),
     .g_k_rdy(vmks_SE3__g_k_rdy),
     .g_k_addr(svg_SE3__k_addr[119:0]),
@@ -12353,11 +11861,12 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .fault(sm_SE4__fault),
     .schedule_fault(sm_SE4__schedule_fault)
   );
-  ot_hbm_svc_vm_kshare #(.SM(4), .MUT(0)) vmks_SE4 (
+  ot_hbm_svc_vm_kshare #(.MUT(0)) vmks_SE4 (
     .hbm_clk(hb_ckgen__pll_hbm[0]),
     .hbm_rst_n(hb_ckgen__por_hbm[0]),
     .stream_clk(hb_ckgen__pll_stream[0]),
     .stream_rst_n(hb_ckgen__por_stream[0]),
+    .sm(3'd4),
     .g_k_v(svg_SE4__k_v[3:0]),
     .g_k_rdy(vmks_SE4__g_k_rdy),
     .g_k_addr(svg_SE4__k_addr[119:0]),
@@ -12467,11 +11976,12 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .fault(sm_SE5__fault),
     .schedule_fault(sm_SE5__schedule_fault)
   );
-  ot_hbm_svc_vm_kshare #(.SM(5), .MUT(0)) vmks_SE5 (
+  ot_hbm_svc_vm_kshare #(.MUT(0)) vmks_SE5 (
     .hbm_clk(hb_ckgen__pll_hbm[0]),
     .hbm_rst_n(hb_ckgen__por_hbm[0]),
     .stream_clk(hb_ckgen__pll_stream[0]),
     .stream_rst_n(hb_ckgen__por_stream[0]),
+    .sm(3'd5),
     .g_k_v(svg_SE5__k_v[3:0]),
     .g_k_rdy(vmks_SE5__g_k_rdy),
     .g_k_addr(svg_SE5__k_addr[119:0]),
@@ -12581,11 +12091,12 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .fault(sm_SE6__fault),
     .schedule_fault(sm_SE6__schedule_fault)
   );
-  ot_hbm_svc_vm_kshare #(.SM(6), .MUT(0)) vmks_SE6 (
+  ot_hbm_svc_vm_kshare #(.MUT(0)) vmks_SE6 (
     .hbm_clk(hb_ckgen__pll_hbm[0]),
     .hbm_rst_n(hb_ckgen__por_hbm[0]),
     .stream_clk(hb_ckgen__pll_stream[0]),
     .stream_rst_n(hb_ckgen__por_stream[0]),
+    .sm(3'd6),
     .g_k_v(svg_SE6__k_v[3:0]),
     .g_k_rdy(vmks_SE6__g_k_rdy),
     .g_k_addr(svg_SE6__k_addr[119:0]),
@@ -12695,11 +12206,12 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .fault(sm_SE7__fault),
     .schedule_fault(sm_SE7__schedule_fault)
   );
-  ot_hbm_svc_vm_kshare #(.SM(7), .MUT(0)) vmks_SE7 (
+  ot_hbm_svc_vm_kshare #(.MUT(0)) vmks_SE7 (
     .hbm_clk(hb_ckgen__pll_hbm[0]),
     .hbm_rst_n(hb_ckgen__por_hbm[0]),
     .stream_clk(hb_ckgen__pll_stream[0]),
     .stream_rst_n(hb_ckgen__por_stream[0]),
+    .sm(3'd7),
     .g_k_v(svg_SE7__k_v[3:0]),
     .g_k_rdy(vmks_SE7__g_k_rdy),
     .g_k_addr(svg_SE7__k_addr[119:0]),
@@ -13849,11 +13361,12 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .fault(sm_NW0__fault),
     .schedule_fault(sm_NW0__schedule_fault)
   );
-  ot_hbm_svc_vm_kshare #(.SM(0), .MUT(0)) vmks_NW0 (
+  ot_hbm_svc_vm_kshare #(.MUT(0)) vmks_NW0 (
     .hbm_clk(hb_ckgen__pll_hbm[0]),
     .hbm_rst_n(hb_ckgen__por_hbm[0]),
     .stream_clk(hb_ckgen__pll_stream[0]),
     .stream_rst_n(hb_ckgen__por_stream[0]),
+    .sm(3'd0),
     .g_k_v(svg_NW0__k_v[3:0]),
     .g_k_rdy(vmks_NW0__g_k_rdy),
     .g_k_addr(svg_NW0__k_addr[119:0]),
@@ -13963,11 +13476,12 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .fault(sm_NW1__fault),
     .schedule_fault(sm_NW1__schedule_fault)
   );
-  ot_hbm_svc_vm_kshare #(.SM(1), .MUT(0)) vmks_NW1 (
+  ot_hbm_svc_vm_kshare #(.MUT(0)) vmks_NW1 (
     .hbm_clk(hb_ckgen__pll_hbm[0]),
     .hbm_rst_n(hb_ckgen__por_hbm[0]),
     .stream_clk(hb_ckgen__pll_stream[0]),
     .stream_rst_n(hb_ckgen__por_stream[0]),
+    .sm(3'd1),
     .g_k_v(svg_NW1__k_v[3:0]),
     .g_k_rdy(vmks_NW1__g_k_rdy),
     .g_k_addr(svg_NW1__k_addr[119:0]),
@@ -14077,11 +13591,12 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .fault(sm_NW2__fault),
     .schedule_fault(sm_NW2__schedule_fault)
   );
-  ot_hbm_svc_vm_kshare #(.SM(2), .MUT(0)) vmks_NW2 (
+  ot_hbm_svc_vm_kshare #(.MUT(0)) vmks_NW2 (
     .hbm_clk(hb_ckgen__pll_hbm[0]),
     .hbm_rst_n(hb_ckgen__por_hbm[0]),
     .stream_clk(hb_ckgen__pll_stream[0]),
     .stream_rst_n(hb_ckgen__por_stream[0]),
+    .sm(3'd2),
     .g_k_v(svg_NW2__k_v[3:0]),
     .g_k_rdy(vmks_NW2__g_k_rdy),
     .g_k_addr(svg_NW2__k_addr[119:0]),
@@ -14191,11 +13706,12 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .fault(sm_NW3__fault),
     .schedule_fault(sm_NW3__schedule_fault)
   );
-  ot_hbm_svc_vm_kshare #(.SM(3), .MUT(0)) vmks_NW3 (
+  ot_hbm_svc_vm_kshare #(.MUT(0)) vmks_NW3 (
     .hbm_clk(hb_ckgen__pll_hbm[0]),
     .hbm_rst_n(hb_ckgen__por_hbm[0]),
     .stream_clk(hb_ckgen__pll_stream[0]),
     .stream_rst_n(hb_ckgen__por_stream[0]),
+    .sm(3'd3),
     .g_k_v(svg_NW3__k_v[3:0]),
     .g_k_rdy(vmks_NW3__g_k_rdy),
     .g_k_addr(svg_NW3__k_addr[119:0]),
@@ -14305,11 +13821,12 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .fault(sm_NW4__fault),
     .schedule_fault(sm_NW4__schedule_fault)
   );
-  ot_hbm_svc_vm_kshare #(.SM(4), .MUT(0)) vmks_NW4 (
+  ot_hbm_svc_vm_kshare #(.MUT(0)) vmks_NW4 (
     .hbm_clk(hb_ckgen__pll_hbm[0]),
     .hbm_rst_n(hb_ckgen__por_hbm[0]),
     .stream_clk(hb_ckgen__pll_stream[0]),
     .stream_rst_n(hb_ckgen__por_stream[0]),
+    .sm(3'd4),
     .g_k_v(svg_NW4__k_v[3:0]),
     .g_k_rdy(vmks_NW4__g_k_rdy),
     .g_k_addr(svg_NW4__k_addr[119:0]),
@@ -14419,11 +13936,12 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .fault(sm_NW5__fault),
     .schedule_fault(sm_NW5__schedule_fault)
   );
-  ot_hbm_svc_vm_kshare #(.SM(5), .MUT(0)) vmks_NW5 (
+  ot_hbm_svc_vm_kshare #(.MUT(0)) vmks_NW5 (
     .hbm_clk(hb_ckgen__pll_hbm[0]),
     .hbm_rst_n(hb_ckgen__por_hbm[0]),
     .stream_clk(hb_ckgen__pll_stream[0]),
     .stream_rst_n(hb_ckgen__por_stream[0]),
+    .sm(3'd5),
     .g_k_v(svg_NW5__k_v[3:0]),
     .g_k_rdy(vmks_NW5__g_k_rdy),
     .g_k_addr(svg_NW5__k_addr[119:0]),
@@ -14533,11 +14051,12 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .fault(sm_NW6__fault),
     .schedule_fault(sm_NW6__schedule_fault)
   );
-  ot_hbm_svc_vm_kshare #(.SM(6), .MUT(0)) vmks_NW6 (
+  ot_hbm_svc_vm_kshare #(.MUT(0)) vmks_NW6 (
     .hbm_clk(hb_ckgen__pll_hbm[0]),
     .hbm_rst_n(hb_ckgen__por_hbm[0]),
     .stream_clk(hb_ckgen__pll_stream[0]),
     .stream_rst_n(hb_ckgen__por_stream[0]),
+    .sm(3'd6),
     .g_k_v(svg_NW6__k_v[3:0]),
     .g_k_rdy(vmks_NW6__g_k_rdy),
     .g_k_addr(svg_NW6__k_addr[119:0]),
@@ -14647,11 +14166,12 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .fault(sm_NW7__fault),
     .schedule_fault(sm_NW7__schedule_fault)
   );
-  ot_hbm_svc_vm_kshare #(.SM(7), .MUT(0)) vmks_NW7 (
+  ot_hbm_svc_vm_kshare #(.MUT(0)) vmks_NW7 (
     .hbm_clk(hb_ckgen__pll_hbm[0]),
     .hbm_rst_n(hb_ckgen__por_hbm[0]),
     .stream_clk(hb_ckgen__pll_stream[0]),
     .stream_rst_n(hb_ckgen__por_stream[0]),
+    .sm(3'd7),
     .g_k_v(svg_NW7__k_v[3:0]),
     .g_k_rdy(vmks_NW7__g_k_rdy),
     .g_k_addr(svg_NW7__k_addr[119:0]),
@@ -15801,11 +15321,12 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .fault(sm_NE0__fault),
     .schedule_fault(sm_NE0__schedule_fault)
   );
-  ot_hbm_svc_vm_kshare #(.SM(0), .MUT(0)) vmks_NE0 (
+  ot_hbm_svc_vm_kshare #(.MUT(0)) vmks_NE0 (
     .hbm_clk(hb_ckgen__pll_hbm[0]),
     .hbm_rst_n(hb_ckgen__por_hbm[0]),
     .stream_clk(hb_ckgen__pll_stream[0]),
     .stream_rst_n(hb_ckgen__por_stream[0]),
+    .sm(3'd0),
     .g_k_v(svg_NE0__k_v[3:0]),
     .g_k_rdy(vmks_NE0__g_k_rdy),
     .g_k_addr(svg_NE0__k_addr[119:0]),
@@ -15915,11 +15436,12 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .fault(sm_NE1__fault),
     .schedule_fault(sm_NE1__schedule_fault)
   );
-  ot_hbm_svc_vm_kshare #(.SM(1), .MUT(0)) vmks_NE1 (
+  ot_hbm_svc_vm_kshare #(.MUT(0)) vmks_NE1 (
     .hbm_clk(hb_ckgen__pll_hbm[0]),
     .hbm_rst_n(hb_ckgen__por_hbm[0]),
     .stream_clk(hb_ckgen__pll_stream[0]),
     .stream_rst_n(hb_ckgen__por_stream[0]),
+    .sm(3'd1),
     .g_k_v(svg_NE1__k_v[3:0]),
     .g_k_rdy(vmks_NE1__g_k_rdy),
     .g_k_addr(svg_NE1__k_addr[119:0]),
@@ -16029,11 +15551,12 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .fault(sm_NE2__fault),
     .schedule_fault(sm_NE2__schedule_fault)
   );
-  ot_hbm_svc_vm_kshare #(.SM(2), .MUT(0)) vmks_NE2 (
+  ot_hbm_svc_vm_kshare #(.MUT(0)) vmks_NE2 (
     .hbm_clk(hb_ckgen__pll_hbm[0]),
     .hbm_rst_n(hb_ckgen__por_hbm[0]),
     .stream_clk(hb_ckgen__pll_stream[0]),
     .stream_rst_n(hb_ckgen__por_stream[0]),
+    .sm(3'd2),
     .g_k_v(svg_NE2__k_v[3:0]),
     .g_k_rdy(vmks_NE2__g_k_rdy),
     .g_k_addr(svg_NE2__k_addr[119:0]),
@@ -16143,11 +15666,12 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .fault(sm_NE3__fault),
     .schedule_fault(sm_NE3__schedule_fault)
   );
-  ot_hbm_svc_vm_kshare #(.SM(3), .MUT(0)) vmks_NE3 (
+  ot_hbm_svc_vm_kshare #(.MUT(0)) vmks_NE3 (
     .hbm_clk(hb_ckgen__pll_hbm[0]),
     .hbm_rst_n(hb_ckgen__por_hbm[0]),
     .stream_clk(hb_ckgen__pll_stream[0]),
     .stream_rst_n(hb_ckgen__por_stream[0]),
+    .sm(3'd3),
     .g_k_v(svg_NE3__k_v[3:0]),
     .g_k_rdy(vmks_NE3__g_k_rdy),
     .g_k_addr(svg_NE3__k_addr[119:0]),
@@ -16257,11 +15781,12 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .fault(sm_NE4__fault),
     .schedule_fault(sm_NE4__schedule_fault)
   );
-  ot_hbm_svc_vm_kshare #(.SM(4), .MUT(0)) vmks_NE4 (
+  ot_hbm_svc_vm_kshare #(.MUT(0)) vmks_NE4 (
     .hbm_clk(hb_ckgen__pll_hbm[0]),
     .hbm_rst_n(hb_ckgen__por_hbm[0]),
     .stream_clk(hb_ckgen__pll_stream[0]),
     .stream_rst_n(hb_ckgen__por_stream[0]),
+    .sm(3'd4),
     .g_k_v(svg_NE4__k_v[3:0]),
     .g_k_rdy(vmks_NE4__g_k_rdy),
     .g_k_addr(svg_NE4__k_addr[119:0]),
@@ -16371,11 +15896,12 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .fault(sm_NE5__fault),
     .schedule_fault(sm_NE5__schedule_fault)
   );
-  ot_hbm_svc_vm_kshare #(.SM(5), .MUT(0)) vmks_NE5 (
+  ot_hbm_svc_vm_kshare #(.MUT(0)) vmks_NE5 (
     .hbm_clk(hb_ckgen__pll_hbm[0]),
     .hbm_rst_n(hb_ckgen__por_hbm[0]),
     .stream_clk(hb_ckgen__pll_stream[0]),
     .stream_rst_n(hb_ckgen__por_stream[0]),
+    .sm(3'd5),
     .g_k_v(svg_NE5__k_v[3:0]),
     .g_k_rdy(vmks_NE5__g_k_rdy),
     .g_k_addr(svg_NE5__k_addr[119:0]),
@@ -16485,11 +16011,12 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .fault(sm_NE6__fault),
     .schedule_fault(sm_NE6__schedule_fault)
   );
-  ot_hbm_svc_vm_kshare #(.SM(6), .MUT(0)) vmks_NE6 (
+  ot_hbm_svc_vm_kshare #(.MUT(0)) vmks_NE6 (
     .hbm_clk(hb_ckgen__pll_hbm[0]),
     .hbm_rst_n(hb_ckgen__por_hbm[0]),
     .stream_clk(hb_ckgen__pll_stream[0]),
     .stream_rst_n(hb_ckgen__por_stream[0]),
+    .sm(3'd6),
     .g_k_v(svg_NE6__k_v[3:0]),
     .g_k_rdy(vmks_NE6__g_k_rdy),
     .g_k_addr(svg_NE6__k_addr[119:0]),
@@ -16599,11 +16126,12 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .fault(sm_NE7__fault),
     .schedule_fault(sm_NE7__schedule_fault)
   );
-  ot_hbm_svc_vm_kshare #(.SM(7), .MUT(0)) vmks_NE7 (
+  ot_hbm_svc_vm_kshare #(.MUT(0)) vmks_NE7 (
     .hbm_clk(hb_ckgen__pll_hbm[0]),
     .hbm_rst_n(hb_ckgen__por_hbm[0]),
     .stream_clk(hb_ckgen__pll_stream[0]),
     .stream_rst_n(hb_ckgen__por_stream[0]),
+    .sm(3'd7),
     .g_k_v(svg_NE7__k_v[3:0]),
     .g_k_rdy(vmks_NE7__g_k_rdy),
     .g_k_addr(svg_NE7__k_addr[119:0]),
@@ -16652,25 +16180,7 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .fill_data(vmks_NE7__fill_data),
     .fault(vmks_NE7__fault)
   );
-  ot_hbm_svc_sm_xcal #(.MUT(0)) xc_SW0 (
-    .clk(hb_ckgen__pll_stream[0]),
-    .rst_n(hb_ckgen__por_stream[0]),
-    .cfg_we(cpx_SW0__a_we[0]),
-    .cfg_addr(cpx_SW0__a_addr[9:0]),
-    .cfg_data(cpx_SW0__a_data[255:0]),
-    .desc_we(cp_svg_SW0__b_we[0]),
-    .desc_addr(cp_svg_SW0__b_addr[6:0]),
-    .desc_data(cp_svg_SW0__b_data[255:0]),
-    .run_v(cp_svg_SW0__run_v[0]),
-    .run_base(cp_svg_SW0__run_base[6:0]),
-    .run_count(cp_svg_SW0__run_count[7:0]),
-    .cmd_ext(xc_SW0__cmd_ext),
-    .kv_desc(xc_SW0__kv_desc),
-    .active(xc_SW0__active),
-    .done(xc_SW0__done),
-    .fault(xc_SW0__fault)
-  );
-  ot_static_cmd_target #(.MODE(0), .AWA(10), .AWB(0), .RBW(1), .RCW(1), .NA(1), .NF(1), .TGT_PIN(1)) cpx_SW0 (
+  ot_hbm_svc_sm_xcal_t xc_SW0 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
     .tgt(8'd192),
@@ -16683,43 +16193,14 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .desc_limit(host_cp_ingress__desc_limit[12:0]),
     .desc_loops(host_cp_ingress__desc_loops[15:0]),
     .launch_v(host_cp_ingress__launch_v[0]),
-    .tgt_active(xc_SW0__active[0]),
-    .tgt_fault(xc_SW0__fault[0]),
-    .a_we(cpx_SW0__a_we),
-    .a_addr(cpx_SW0__a_addr),
-    .a_data(cpx_SW0__a_data),
-    .b_we(cpx_SW0__b_we),
-    .b_addr(cpx_SW0__b_addr),
-    .b_data(cpx_SW0__b_data),
-    .run_v(cpx_SW0__run_v),
-    .run_base(cpx_SW0__run_base),
-    .run_count(cpx_SW0__run_count),
-    .cmd_v(cpx_SW0__cmd_v),
-    .cmd(cpx_SW0__cmd),
-    .cycle(cpx_SW0__cycle),
-    .configured(cpx_SW0__configured),
-    .fault(cpx_SW0__fault),
-    .active(cpx_SW0__active)
+    .cmd_ext(xc_SW0__cmd_ext),
+    .kv_desc(xc_SW0__kv_desc),
+    .done(xc_SW0__done),
+    .configured(xc_SW0__configured),
+    .fault(xc_SW0__fault),
+    .active(xc_SW0__active)
   );
-  ot_hbm_svc_sm_xcal #(.MUT(0)) xc_SW1 (
-    .clk(hb_ckgen__pll_stream[0]),
-    .rst_n(hb_ckgen__por_stream[0]),
-    .cfg_we(cpx_SW1__a_we[0]),
-    .cfg_addr(cpx_SW1__a_addr[9:0]),
-    .cfg_data(cpx_SW1__a_data[255:0]),
-    .desc_we(cp_svg_SW1__b_we[0]),
-    .desc_addr(cp_svg_SW1__b_addr[6:0]),
-    .desc_data(cp_svg_SW1__b_data[255:0]),
-    .run_v(cp_svg_SW1__run_v[0]),
-    .run_base(cp_svg_SW1__run_base[6:0]),
-    .run_count(cp_svg_SW1__run_count[7:0]),
-    .cmd_ext(xc_SW1__cmd_ext),
-    .kv_desc(xc_SW1__kv_desc),
-    .active(xc_SW1__active),
-    .done(xc_SW1__done),
-    .fault(xc_SW1__fault)
-  );
-  ot_static_cmd_target #(.MODE(0), .AWA(10), .AWB(0), .RBW(1), .RCW(1), .NA(1), .NF(1), .TGT_PIN(1)) cpx_SW1 (
+  ot_hbm_svc_sm_xcal_t xc_SW1 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
     .tgt(8'd193),
@@ -16732,43 +16213,14 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .desc_limit(host_cp_ingress__desc_limit[12:0]),
     .desc_loops(host_cp_ingress__desc_loops[15:0]),
     .launch_v(host_cp_ingress__launch_v[0]),
-    .tgt_active(xc_SW1__active[0]),
-    .tgt_fault(xc_SW1__fault[0]),
-    .a_we(cpx_SW1__a_we),
-    .a_addr(cpx_SW1__a_addr),
-    .a_data(cpx_SW1__a_data),
-    .b_we(cpx_SW1__b_we),
-    .b_addr(cpx_SW1__b_addr),
-    .b_data(cpx_SW1__b_data),
-    .run_v(cpx_SW1__run_v),
-    .run_base(cpx_SW1__run_base),
-    .run_count(cpx_SW1__run_count),
-    .cmd_v(cpx_SW1__cmd_v),
-    .cmd(cpx_SW1__cmd),
-    .cycle(cpx_SW1__cycle),
-    .configured(cpx_SW1__configured),
-    .fault(cpx_SW1__fault),
-    .active(cpx_SW1__active)
+    .cmd_ext(xc_SW1__cmd_ext),
+    .kv_desc(xc_SW1__kv_desc),
+    .done(xc_SW1__done),
+    .configured(xc_SW1__configured),
+    .fault(xc_SW1__fault),
+    .active(xc_SW1__active)
   );
-  ot_hbm_svc_sm_xcal #(.MUT(0)) xc_SW2 (
-    .clk(hb_ckgen__pll_stream[0]),
-    .rst_n(hb_ckgen__por_stream[0]),
-    .cfg_we(cpx_SW2__a_we[0]),
-    .cfg_addr(cpx_SW2__a_addr[9:0]),
-    .cfg_data(cpx_SW2__a_data[255:0]),
-    .desc_we(cp_svg_SW2__b_we[0]),
-    .desc_addr(cp_svg_SW2__b_addr[6:0]),
-    .desc_data(cp_svg_SW2__b_data[255:0]),
-    .run_v(cp_svg_SW2__run_v[0]),
-    .run_base(cp_svg_SW2__run_base[6:0]),
-    .run_count(cp_svg_SW2__run_count[7:0]),
-    .cmd_ext(xc_SW2__cmd_ext),
-    .kv_desc(xc_SW2__kv_desc),
-    .active(xc_SW2__active),
-    .done(xc_SW2__done),
-    .fault(xc_SW2__fault)
-  );
-  ot_static_cmd_target #(.MODE(0), .AWA(10), .AWB(0), .RBW(1), .RCW(1), .NA(1), .NF(1), .TGT_PIN(1)) cpx_SW2 (
+  ot_hbm_svc_sm_xcal_t xc_SW2 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
     .tgt(8'd194),
@@ -16781,43 +16233,14 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .desc_limit(host_cp_ingress__desc_limit[12:0]),
     .desc_loops(host_cp_ingress__desc_loops[15:0]),
     .launch_v(host_cp_ingress__launch_v[0]),
-    .tgt_active(xc_SW2__active[0]),
-    .tgt_fault(xc_SW2__fault[0]),
-    .a_we(cpx_SW2__a_we),
-    .a_addr(cpx_SW2__a_addr),
-    .a_data(cpx_SW2__a_data),
-    .b_we(cpx_SW2__b_we),
-    .b_addr(cpx_SW2__b_addr),
-    .b_data(cpx_SW2__b_data),
-    .run_v(cpx_SW2__run_v),
-    .run_base(cpx_SW2__run_base),
-    .run_count(cpx_SW2__run_count),
-    .cmd_v(cpx_SW2__cmd_v),
-    .cmd(cpx_SW2__cmd),
-    .cycle(cpx_SW2__cycle),
-    .configured(cpx_SW2__configured),
-    .fault(cpx_SW2__fault),
-    .active(cpx_SW2__active)
+    .cmd_ext(xc_SW2__cmd_ext),
+    .kv_desc(xc_SW2__kv_desc),
+    .done(xc_SW2__done),
+    .configured(xc_SW2__configured),
+    .fault(xc_SW2__fault),
+    .active(xc_SW2__active)
   );
-  ot_hbm_svc_sm_xcal #(.MUT(0)) xc_SW3 (
-    .clk(hb_ckgen__pll_stream[0]),
-    .rst_n(hb_ckgen__por_stream[0]),
-    .cfg_we(cpx_SW3__a_we[0]),
-    .cfg_addr(cpx_SW3__a_addr[9:0]),
-    .cfg_data(cpx_SW3__a_data[255:0]),
-    .desc_we(cp_svg_SW3__b_we[0]),
-    .desc_addr(cp_svg_SW3__b_addr[6:0]),
-    .desc_data(cp_svg_SW3__b_data[255:0]),
-    .run_v(cp_svg_SW3__run_v[0]),
-    .run_base(cp_svg_SW3__run_base[6:0]),
-    .run_count(cp_svg_SW3__run_count[7:0]),
-    .cmd_ext(xc_SW3__cmd_ext),
-    .kv_desc(xc_SW3__kv_desc),
-    .active(xc_SW3__active),
-    .done(xc_SW3__done),
-    .fault(xc_SW3__fault)
-  );
-  ot_static_cmd_target #(.MODE(0), .AWA(10), .AWB(0), .RBW(1), .RCW(1), .NA(1), .NF(1), .TGT_PIN(1)) cpx_SW3 (
+  ot_hbm_svc_sm_xcal_t xc_SW3 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
     .tgt(8'd195),
@@ -16830,43 +16253,14 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .desc_limit(host_cp_ingress__desc_limit[12:0]),
     .desc_loops(host_cp_ingress__desc_loops[15:0]),
     .launch_v(host_cp_ingress__launch_v[0]),
-    .tgt_active(xc_SW3__active[0]),
-    .tgt_fault(xc_SW3__fault[0]),
-    .a_we(cpx_SW3__a_we),
-    .a_addr(cpx_SW3__a_addr),
-    .a_data(cpx_SW3__a_data),
-    .b_we(cpx_SW3__b_we),
-    .b_addr(cpx_SW3__b_addr),
-    .b_data(cpx_SW3__b_data),
-    .run_v(cpx_SW3__run_v),
-    .run_base(cpx_SW3__run_base),
-    .run_count(cpx_SW3__run_count),
-    .cmd_v(cpx_SW3__cmd_v),
-    .cmd(cpx_SW3__cmd),
-    .cycle(cpx_SW3__cycle),
-    .configured(cpx_SW3__configured),
-    .fault(cpx_SW3__fault),
-    .active(cpx_SW3__active)
+    .cmd_ext(xc_SW3__cmd_ext),
+    .kv_desc(xc_SW3__kv_desc),
+    .done(xc_SW3__done),
+    .configured(xc_SW3__configured),
+    .fault(xc_SW3__fault),
+    .active(xc_SW3__active)
   );
-  ot_hbm_svc_sm_xcal #(.MUT(0)) xc_SW4 (
-    .clk(hb_ckgen__pll_stream[0]),
-    .rst_n(hb_ckgen__por_stream[0]),
-    .cfg_we(cpx_SW4__a_we[0]),
-    .cfg_addr(cpx_SW4__a_addr[9:0]),
-    .cfg_data(cpx_SW4__a_data[255:0]),
-    .desc_we(cp_svg_SW4__b_we[0]),
-    .desc_addr(cp_svg_SW4__b_addr[6:0]),
-    .desc_data(cp_svg_SW4__b_data[255:0]),
-    .run_v(cp_svg_SW4__run_v[0]),
-    .run_base(cp_svg_SW4__run_base[6:0]),
-    .run_count(cp_svg_SW4__run_count[7:0]),
-    .cmd_ext(xc_SW4__cmd_ext),
-    .kv_desc(xc_SW4__kv_desc),
-    .active(xc_SW4__active),
-    .done(xc_SW4__done),
-    .fault(xc_SW4__fault)
-  );
-  ot_static_cmd_target #(.MODE(0), .AWA(10), .AWB(0), .RBW(1), .RCW(1), .NA(1), .NF(1), .TGT_PIN(1)) cpx_SW4 (
+  ot_hbm_svc_sm_xcal_t xc_SW4 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
     .tgt(8'd196),
@@ -16879,43 +16273,14 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .desc_limit(host_cp_ingress__desc_limit[12:0]),
     .desc_loops(host_cp_ingress__desc_loops[15:0]),
     .launch_v(host_cp_ingress__launch_v[0]),
-    .tgt_active(xc_SW4__active[0]),
-    .tgt_fault(xc_SW4__fault[0]),
-    .a_we(cpx_SW4__a_we),
-    .a_addr(cpx_SW4__a_addr),
-    .a_data(cpx_SW4__a_data),
-    .b_we(cpx_SW4__b_we),
-    .b_addr(cpx_SW4__b_addr),
-    .b_data(cpx_SW4__b_data),
-    .run_v(cpx_SW4__run_v),
-    .run_base(cpx_SW4__run_base),
-    .run_count(cpx_SW4__run_count),
-    .cmd_v(cpx_SW4__cmd_v),
-    .cmd(cpx_SW4__cmd),
-    .cycle(cpx_SW4__cycle),
-    .configured(cpx_SW4__configured),
-    .fault(cpx_SW4__fault),
-    .active(cpx_SW4__active)
+    .cmd_ext(xc_SW4__cmd_ext),
+    .kv_desc(xc_SW4__kv_desc),
+    .done(xc_SW4__done),
+    .configured(xc_SW4__configured),
+    .fault(xc_SW4__fault),
+    .active(xc_SW4__active)
   );
-  ot_hbm_svc_sm_xcal #(.MUT(0)) xc_SW5 (
-    .clk(hb_ckgen__pll_stream[0]),
-    .rst_n(hb_ckgen__por_stream[0]),
-    .cfg_we(cpx_SW5__a_we[0]),
-    .cfg_addr(cpx_SW5__a_addr[9:0]),
-    .cfg_data(cpx_SW5__a_data[255:0]),
-    .desc_we(cp_svg_SW5__b_we[0]),
-    .desc_addr(cp_svg_SW5__b_addr[6:0]),
-    .desc_data(cp_svg_SW5__b_data[255:0]),
-    .run_v(cp_svg_SW5__run_v[0]),
-    .run_base(cp_svg_SW5__run_base[6:0]),
-    .run_count(cp_svg_SW5__run_count[7:0]),
-    .cmd_ext(xc_SW5__cmd_ext),
-    .kv_desc(xc_SW5__kv_desc),
-    .active(xc_SW5__active),
-    .done(xc_SW5__done),
-    .fault(xc_SW5__fault)
-  );
-  ot_static_cmd_target #(.MODE(0), .AWA(10), .AWB(0), .RBW(1), .RCW(1), .NA(1), .NF(1), .TGT_PIN(1)) cpx_SW5 (
+  ot_hbm_svc_sm_xcal_t xc_SW5 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
     .tgt(8'd197),
@@ -16928,43 +16293,14 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .desc_limit(host_cp_ingress__desc_limit[12:0]),
     .desc_loops(host_cp_ingress__desc_loops[15:0]),
     .launch_v(host_cp_ingress__launch_v[0]),
-    .tgt_active(xc_SW5__active[0]),
-    .tgt_fault(xc_SW5__fault[0]),
-    .a_we(cpx_SW5__a_we),
-    .a_addr(cpx_SW5__a_addr),
-    .a_data(cpx_SW5__a_data),
-    .b_we(cpx_SW5__b_we),
-    .b_addr(cpx_SW5__b_addr),
-    .b_data(cpx_SW5__b_data),
-    .run_v(cpx_SW5__run_v),
-    .run_base(cpx_SW5__run_base),
-    .run_count(cpx_SW5__run_count),
-    .cmd_v(cpx_SW5__cmd_v),
-    .cmd(cpx_SW5__cmd),
-    .cycle(cpx_SW5__cycle),
-    .configured(cpx_SW5__configured),
-    .fault(cpx_SW5__fault),
-    .active(cpx_SW5__active)
+    .cmd_ext(xc_SW5__cmd_ext),
+    .kv_desc(xc_SW5__kv_desc),
+    .done(xc_SW5__done),
+    .configured(xc_SW5__configured),
+    .fault(xc_SW5__fault),
+    .active(xc_SW5__active)
   );
-  ot_hbm_svc_sm_xcal #(.MUT(0)) xc_SW6 (
-    .clk(hb_ckgen__pll_stream[0]),
-    .rst_n(hb_ckgen__por_stream[0]),
-    .cfg_we(cpx_SW6__a_we[0]),
-    .cfg_addr(cpx_SW6__a_addr[9:0]),
-    .cfg_data(cpx_SW6__a_data[255:0]),
-    .desc_we(cp_svg_SW6__b_we[0]),
-    .desc_addr(cp_svg_SW6__b_addr[6:0]),
-    .desc_data(cp_svg_SW6__b_data[255:0]),
-    .run_v(cp_svg_SW6__run_v[0]),
-    .run_base(cp_svg_SW6__run_base[6:0]),
-    .run_count(cp_svg_SW6__run_count[7:0]),
-    .cmd_ext(xc_SW6__cmd_ext),
-    .kv_desc(xc_SW6__kv_desc),
-    .active(xc_SW6__active),
-    .done(xc_SW6__done),
-    .fault(xc_SW6__fault)
-  );
-  ot_static_cmd_target #(.MODE(0), .AWA(10), .AWB(0), .RBW(1), .RCW(1), .NA(1), .NF(1), .TGT_PIN(1)) cpx_SW6 (
+  ot_hbm_svc_sm_xcal_t xc_SW6 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
     .tgt(8'd198),
@@ -16977,43 +16313,14 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .desc_limit(host_cp_ingress__desc_limit[12:0]),
     .desc_loops(host_cp_ingress__desc_loops[15:0]),
     .launch_v(host_cp_ingress__launch_v[0]),
-    .tgt_active(xc_SW6__active[0]),
-    .tgt_fault(xc_SW6__fault[0]),
-    .a_we(cpx_SW6__a_we),
-    .a_addr(cpx_SW6__a_addr),
-    .a_data(cpx_SW6__a_data),
-    .b_we(cpx_SW6__b_we),
-    .b_addr(cpx_SW6__b_addr),
-    .b_data(cpx_SW6__b_data),
-    .run_v(cpx_SW6__run_v),
-    .run_base(cpx_SW6__run_base),
-    .run_count(cpx_SW6__run_count),
-    .cmd_v(cpx_SW6__cmd_v),
-    .cmd(cpx_SW6__cmd),
-    .cycle(cpx_SW6__cycle),
-    .configured(cpx_SW6__configured),
-    .fault(cpx_SW6__fault),
-    .active(cpx_SW6__active)
+    .cmd_ext(xc_SW6__cmd_ext),
+    .kv_desc(xc_SW6__kv_desc),
+    .done(xc_SW6__done),
+    .configured(xc_SW6__configured),
+    .fault(xc_SW6__fault),
+    .active(xc_SW6__active)
   );
-  ot_hbm_svc_sm_xcal #(.MUT(0)) xc_SW7 (
-    .clk(hb_ckgen__pll_stream[0]),
-    .rst_n(hb_ckgen__por_stream[0]),
-    .cfg_we(cpx_SW7__a_we[0]),
-    .cfg_addr(cpx_SW7__a_addr[9:0]),
-    .cfg_data(cpx_SW7__a_data[255:0]),
-    .desc_we(cp_svg_SW7__b_we[0]),
-    .desc_addr(cp_svg_SW7__b_addr[6:0]),
-    .desc_data(cp_svg_SW7__b_data[255:0]),
-    .run_v(cp_svg_SW7__run_v[0]),
-    .run_base(cp_svg_SW7__run_base[6:0]),
-    .run_count(cp_svg_SW7__run_count[7:0]),
-    .cmd_ext(xc_SW7__cmd_ext),
-    .kv_desc(xc_SW7__kv_desc),
-    .active(xc_SW7__active),
-    .done(xc_SW7__done),
-    .fault(xc_SW7__fault)
-  );
-  ot_static_cmd_target #(.MODE(0), .AWA(10), .AWB(0), .RBW(1), .RCW(1), .NA(1), .NF(1), .TGT_PIN(1)) cpx_SW7 (
+  ot_hbm_svc_sm_xcal_t xc_SW7 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
     .tgt(8'd199),
@@ -17026,43 +16333,14 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .desc_limit(host_cp_ingress__desc_limit[12:0]),
     .desc_loops(host_cp_ingress__desc_loops[15:0]),
     .launch_v(host_cp_ingress__launch_v[0]),
-    .tgt_active(xc_SW7__active[0]),
-    .tgt_fault(xc_SW7__fault[0]),
-    .a_we(cpx_SW7__a_we),
-    .a_addr(cpx_SW7__a_addr),
-    .a_data(cpx_SW7__a_data),
-    .b_we(cpx_SW7__b_we),
-    .b_addr(cpx_SW7__b_addr),
-    .b_data(cpx_SW7__b_data),
-    .run_v(cpx_SW7__run_v),
-    .run_base(cpx_SW7__run_base),
-    .run_count(cpx_SW7__run_count),
-    .cmd_v(cpx_SW7__cmd_v),
-    .cmd(cpx_SW7__cmd),
-    .cycle(cpx_SW7__cycle),
-    .configured(cpx_SW7__configured),
-    .fault(cpx_SW7__fault),
-    .active(cpx_SW7__active)
+    .cmd_ext(xc_SW7__cmd_ext),
+    .kv_desc(xc_SW7__kv_desc),
+    .done(xc_SW7__done),
+    .configured(xc_SW7__configured),
+    .fault(xc_SW7__fault),
+    .active(xc_SW7__active)
   );
-  ot_hbm_svc_sm_xcal #(.MUT(0)) xc_SE0 (
-    .clk(hb_ckgen__pll_stream[0]),
-    .rst_n(hb_ckgen__por_stream[0]),
-    .cfg_we(cpx_SE0__a_we[0]),
-    .cfg_addr(cpx_SE0__a_addr[9:0]),
-    .cfg_data(cpx_SE0__a_data[255:0]),
-    .desc_we(cp_svg_SE0__b_we[0]),
-    .desc_addr(cp_svg_SE0__b_addr[6:0]),
-    .desc_data(cp_svg_SE0__b_data[255:0]),
-    .run_v(cp_svg_SE0__run_v[0]),
-    .run_base(cp_svg_SE0__run_base[6:0]),
-    .run_count(cp_svg_SE0__run_count[7:0]),
-    .cmd_ext(xc_SE0__cmd_ext),
-    .kv_desc(xc_SE0__kv_desc),
-    .active(xc_SE0__active),
-    .done(xc_SE0__done),
-    .fault(xc_SE0__fault)
-  );
-  ot_static_cmd_target #(.MODE(0), .AWA(10), .AWB(0), .RBW(1), .RCW(1), .NA(1), .NF(1), .TGT_PIN(1)) cpx_SE0 (
+  ot_hbm_svc_sm_xcal_t xc_SE0 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
     .tgt(8'd200),
@@ -17075,43 +16353,14 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .desc_limit(host_cp_ingress__desc_limit[12:0]),
     .desc_loops(host_cp_ingress__desc_loops[15:0]),
     .launch_v(host_cp_ingress__launch_v[0]),
-    .tgt_active(xc_SE0__active[0]),
-    .tgt_fault(xc_SE0__fault[0]),
-    .a_we(cpx_SE0__a_we),
-    .a_addr(cpx_SE0__a_addr),
-    .a_data(cpx_SE0__a_data),
-    .b_we(cpx_SE0__b_we),
-    .b_addr(cpx_SE0__b_addr),
-    .b_data(cpx_SE0__b_data),
-    .run_v(cpx_SE0__run_v),
-    .run_base(cpx_SE0__run_base),
-    .run_count(cpx_SE0__run_count),
-    .cmd_v(cpx_SE0__cmd_v),
-    .cmd(cpx_SE0__cmd),
-    .cycle(cpx_SE0__cycle),
-    .configured(cpx_SE0__configured),
-    .fault(cpx_SE0__fault),
-    .active(cpx_SE0__active)
+    .cmd_ext(xc_SE0__cmd_ext),
+    .kv_desc(xc_SE0__kv_desc),
+    .done(xc_SE0__done),
+    .configured(xc_SE0__configured),
+    .fault(xc_SE0__fault),
+    .active(xc_SE0__active)
   );
-  ot_hbm_svc_sm_xcal #(.MUT(0)) xc_SE1 (
-    .clk(hb_ckgen__pll_stream[0]),
-    .rst_n(hb_ckgen__por_stream[0]),
-    .cfg_we(cpx_SE1__a_we[0]),
-    .cfg_addr(cpx_SE1__a_addr[9:0]),
-    .cfg_data(cpx_SE1__a_data[255:0]),
-    .desc_we(cp_svg_SE1__b_we[0]),
-    .desc_addr(cp_svg_SE1__b_addr[6:0]),
-    .desc_data(cp_svg_SE1__b_data[255:0]),
-    .run_v(cp_svg_SE1__run_v[0]),
-    .run_base(cp_svg_SE1__run_base[6:0]),
-    .run_count(cp_svg_SE1__run_count[7:0]),
-    .cmd_ext(xc_SE1__cmd_ext),
-    .kv_desc(xc_SE1__kv_desc),
-    .active(xc_SE1__active),
-    .done(xc_SE1__done),
-    .fault(xc_SE1__fault)
-  );
-  ot_static_cmd_target #(.MODE(0), .AWA(10), .AWB(0), .RBW(1), .RCW(1), .NA(1), .NF(1), .TGT_PIN(1)) cpx_SE1 (
+  ot_hbm_svc_sm_xcal_t xc_SE1 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
     .tgt(8'd201),
@@ -17124,43 +16373,14 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .desc_limit(host_cp_ingress__desc_limit[12:0]),
     .desc_loops(host_cp_ingress__desc_loops[15:0]),
     .launch_v(host_cp_ingress__launch_v[0]),
-    .tgt_active(xc_SE1__active[0]),
-    .tgt_fault(xc_SE1__fault[0]),
-    .a_we(cpx_SE1__a_we),
-    .a_addr(cpx_SE1__a_addr),
-    .a_data(cpx_SE1__a_data),
-    .b_we(cpx_SE1__b_we),
-    .b_addr(cpx_SE1__b_addr),
-    .b_data(cpx_SE1__b_data),
-    .run_v(cpx_SE1__run_v),
-    .run_base(cpx_SE1__run_base),
-    .run_count(cpx_SE1__run_count),
-    .cmd_v(cpx_SE1__cmd_v),
-    .cmd(cpx_SE1__cmd),
-    .cycle(cpx_SE1__cycle),
-    .configured(cpx_SE1__configured),
-    .fault(cpx_SE1__fault),
-    .active(cpx_SE1__active)
+    .cmd_ext(xc_SE1__cmd_ext),
+    .kv_desc(xc_SE1__kv_desc),
+    .done(xc_SE1__done),
+    .configured(xc_SE1__configured),
+    .fault(xc_SE1__fault),
+    .active(xc_SE1__active)
   );
-  ot_hbm_svc_sm_xcal #(.MUT(0)) xc_SE2 (
-    .clk(hb_ckgen__pll_stream[0]),
-    .rst_n(hb_ckgen__por_stream[0]),
-    .cfg_we(cpx_SE2__a_we[0]),
-    .cfg_addr(cpx_SE2__a_addr[9:0]),
-    .cfg_data(cpx_SE2__a_data[255:0]),
-    .desc_we(cp_svg_SE2__b_we[0]),
-    .desc_addr(cp_svg_SE2__b_addr[6:0]),
-    .desc_data(cp_svg_SE2__b_data[255:0]),
-    .run_v(cp_svg_SE2__run_v[0]),
-    .run_base(cp_svg_SE2__run_base[6:0]),
-    .run_count(cp_svg_SE2__run_count[7:0]),
-    .cmd_ext(xc_SE2__cmd_ext),
-    .kv_desc(xc_SE2__kv_desc),
-    .active(xc_SE2__active),
-    .done(xc_SE2__done),
-    .fault(xc_SE2__fault)
-  );
-  ot_static_cmd_target #(.MODE(0), .AWA(10), .AWB(0), .RBW(1), .RCW(1), .NA(1), .NF(1), .TGT_PIN(1)) cpx_SE2 (
+  ot_hbm_svc_sm_xcal_t xc_SE2 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
     .tgt(8'd202),
@@ -17173,43 +16393,14 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .desc_limit(host_cp_ingress__desc_limit[12:0]),
     .desc_loops(host_cp_ingress__desc_loops[15:0]),
     .launch_v(host_cp_ingress__launch_v[0]),
-    .tgt_active(xc_SE2__active[0]),
-    .tgt_fault(xc_SE2__fault[0]),
-    .a_we(cpx_SE2__a_we),
-    .a_addr(cpx_SE2__a_addr),
-    .a_data(cpx_SE2__a_data),
-    .b_we(cpx_SE2__b_we),
-    .b_addr(cpx_SE2__b_addr),
-    .b_data(cpx_SE2__b_data),
-    .run_v(cpx_SE2__run_v),
-    .run_base(cpx_SE2__run_base),
-    .run_count(cpx_SE2__run_count),
-    .cmd_v(cpx_SE2__cmd_v),
-    .cmd(cpx_SE2__cmd),
-    .cycle(cpx_SE2__cycle),
-    .configured(cpx_SE2__configured),
-    .fault(cpx_SE2__fault),
-    .active(cpx_SE2__active)
+    .cmd_ext(xc_SE2__cmd_ext),
+    .kv_desc(xc_SE2__kv_desc),
+    .done(xc_SE2__done),
+    .configured(xc_SE2__configured),
+    .fault(xc_SE2__fault),
+    .active(xc_SE2__active)
   );
-  ot_hbm_svc_sm_xcal #(.MUT(0)) xc_SE3 (
-    .clk(hb_ckgen__pll_stream[0]),
-    .rst_n(hb_ckgen__por_stream[0]),
-    .cfg_we(cpx_SE3__a_we[0]),
-    .cfg_addr(cpx_SE3__a_addr[9:0]),
-    .cfg_data(cpx_SE3__a_data[255:0]),
-    .desc_we(cp_svg_SE3__b_we[0]),
-    .desc_addr(cp_svg_SE3__b_addr[6:0]),
-    .desc_data(cp_svg_SE3__b_data[255:0]),
-    .run_v(cp_svg_SE3__run_v[0]),
-    .run_base(cp_svg_SE3__run_base[6:0]),
-    .run_count(cp_svg_SE3__run_count[7:0]),
-    .cmd_ext(xc_SE3__cmd_ext),
-    .kv_desc(xc_SE3__kv_desc),
-    .active(xc_SE3__active),
-    .done(xc_SE3__done),
-    .fault(xc_SE3__fault)
-  );
-  ot_static_cmd_target #(.MODE(0), .AWA(10), .AWB(0), .RBW(1), .RCW(1), .NA(1), .NF(1), .TGT_PIN(1)) cpx_SE3 (
+  ot_hbm_svc_sm_xcal_t xc_SE3 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
     .tgt(8'd203),
@@ -17222,43 +16413,14 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .desc_limit(host_cp_ingress__desc_limit[12:0]),
     .desc_loops(host_cp_ingress__desc_loops[15:0]),
     .launch_v(host_cp_ingress__launch_v[0]),
-    .tgt_active(xc_SE3__active[0]),
-    .tgt_fault(xc_SE3__fault[0]),
-    .a_we(cpx_SE3__a_we),
-    .a_addr(cpx_SE3__a_addr),
-    .a_data(cpx_SE3__a_data),
-    .b_we(cpx_SE3__b_we),
-    .b_addr(cpx_SE3__b_addr),
-    .b_data(cpx_SE3__b_data),
-    .run_v(cpx_SE3__run_v),
-    .run_base(cpx_SE3__run_base),
-    .run_count(cpx_SE3__run_count),
-    .cmd_v(cpx_SE3__cmd_v),
-    .cmd(cpx_SE3__cmd),
-    .cycle(cpx_SE3__cycle),
-    .configured(cpx_SE3__configured),
-    .fault(cpx_SE3__fault),
-    .active(cpx_SE3__active)
+    .cmd_ext(xc_SE3__cmd_ext),
+    .kv_desc(xc_SE3__kv_desc),
+    .done(xc_SE3__done),
+    .configured(xc_SE3__configured),
+    .fault(xc_SE3__fault),
+    .active(xc_SE3__active)
   );
-  ot_hbm_svc_sm_xcal #(.MUT(0)) xc_SE4 (
-    .clk(hb_ckgen__pll_stream[0]),
-    .rst_n(hb_ckgen__por_stream[0]),
-    .cfg_we(cpx_SE4__a_we[0]),
-    .cfg_addr(cpx_SE4__a_addr[9:0]),
-    .cfg_data(cpx_SE4__a_data[255:0]),
-    .desc_we(cp_svg_SE4__b_we[0]),
-    .desc_addr(cp_svg_SE4__b_addr[6:0]),
-    .desc_data(cp_svg_SE4__b_data[255:0]),
-    .run_v(cp_svg_SE4__run_v[0]),
-    .run_base(cp_svg_SE4__run_base[6:0]),
-    .run_count(cp_svg_SE4__run_count[7:0]),
-    .cmd_ext(xc_SE4__cmd_ext),
-    .kv_desc(xc_SE4__kv_desc),
-    .active(xc_SE4__active),
-    .done(xc_SE4__done),
-    .fault(xc_SE4__fault)
-  );
-  ot_static_cmd_target #(.MODE(0), .AWA(10), .AWB(0), .RBW(1), .RCW(1), .NA(1), .NF(1), .TGT_PIN(1)) cpx_SE4 (
+  ot_hbm_svc_sm_xcal_t xc_SE4 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
     .tgt(8'd204),
@@ -17271,43 +16433,14 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .desc_limit(host_cp_ingress__desc_limit[12:0]),
     .desc_loops(host_cp_ingress__desc_loops[15:0]),
     .launch_v(host_cp_ingress__launch_v[0]),
-    .tgt_active(xc_SE4__active[0]),
-    .tgt_fault(xc_SE4__fault[0]),
-    .a_we(cpx_SE4__a_we),
-    .a_addr(cpx_SE4__a_addr),
-    .a_data(cpx_SE4__a_data),
-    .b_we(cpx_SE4__b_we),
-    .b_addr(cpx_SE4__b_addr),
-    .b_data(cpx_SE4__b_data),
-    .run_v(cpx_SE4__run_v),
-    .run_base(cpx_SE4__run_base),
-    .run_count(cpx_SE4__run_count),
-    .cmd_v(cpx_SE4__cmd_v),
-    .cmd(cpx_SE4__cmd),
-    .cycle(cpx_SE4__cycle),
-    .configured(cpx_SE4__configured),
-    .fault(cpx_SE4__fault),
-    .active(cpx_SE4__active)
+    .cmd_ext(xc_SE4__cmd_ext),
+    .kv_desc(xc_SE4__kv_desc),
+    .done(xc_SE4__done),
+    .configured(xc_SE4__configured),
+    .fault(xc_SE4__fault),
+    .active(xc_SE4__active)
   );
-  ot_hbm_svc_sm_xcal #(.MUT(0)) xc_SE5 (
-    .clk(hb_ckgen__pll_stream[0]),
-    .rst_n(hb_ckgen__por_stream[0]),
-    .cfg_we(cpx_SE5__a_we[0]),
-    .cfg_addr(cpx_SE5__a_addr[9:0]),
-    .cfg_data(cpx_SE5__a_data[255:0]),
-    .desc_we(cp_svg_SE5__b_we[0]),
-    .desc_addr(cp_svg_SE5__b_addr[6:0]),
-    .desc_data(cp_svg_SE5__b_data[255:0]),
-    .run_v(cp_svg_SE5__run_v[0]),
-    .run_base(cp_svg_SE5__run_base[6:0]),
-    .run_count(cp_svg_SE5__run_count[7:0]),
-    .cmd_ext(xc_SE5__cmd_ext),
-    .kv_desc(xc_SE5__kv_desc),
-    .active(xc_SE5__active),
-    .done(xc_SE5__done),
-    .fault(xc_SE5__fault)
-  );
-  ot_static_cmd_target #(.MODE(0), .AWA(10), .AWB(0), .RBW(1), .RCW(1), .NA(1), .NF(1), .TGT_PIN(1)) cpx_SE5 (
+  ot_hbm_svc_sm_xcal_t xc_SE5 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
     .tgt(8'd205),
@@ -17320,43 +16453,14 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .desc_limit(host_cp_ingress__desc_limit[12:0]),
     .desc_loops(host_cp_ingress__desc_loops[15:0]),
     .launch_v(host_cp_ingress__launch_v[0]),
-    .tgt_active(xc_SE5__active[0]),
-    .tgt_fault(xc_SE5__fault[0]),
-    .a_we(cpx_SE5__a_we),
-    .a_addr(cpx_SE5__a_addr),
-    .a_data(cpx_SE5__a_data),
-    .b_we(cpx_SE5__b_we),
-    .b_addr(cpx_SE5__b_addr),
-    .b_data(cpx_SE5__b_data),
-    .run_v(cpx_SE5__run_v),
-    .run_base(cpx_SE5__run_base),
-    .run_count(cpx_SE5__run_count),
-    .cmd_v(cpx_SE5__cmd_v),
-    .cmd(cpx_SE5__cmd),
-    .cycle(cpx_SE5__cycle),
-    .configured(cpx_SE5__configured),
-    .fault(cpx_SE5__fault),
-    .active(cpx_SE5__active)
+    .cmd_ext(xc_SE5__cmd_ext),
+    .kv_desc(xc_SE5__kv_desc),
+    .done(xc_SE5__done),
+    .configured(xc_SE5__configured),
+    .fault(xc_SE5__fault),
+    .active(xc_SE5__active)
   );
-  ot_hbm_svc_sm_xcal #(.MUT(0)) xc_SE6 (
-    .clk(hb_ckgen__pll_stream[0]),
-    .rst_n(hb_ckgen__por_stream[0]),
-    .cfg_we(cpx_SE6__a_we[0]),
-    .cfg_addr(cpx_SE6__a_addr[9:0]),
-    .cfg_data(cpx_SE6__a_data[255:0]),
-    .desc_we(cp_svg_SE6__b_we[0]),
-    .desc_addr(cp_svg_SE6__b_addr[6:0]),
-    .desc_data(cp_svg_SE6__b_data[255:0]),
-    .run_v(cp_svg_SE6__run_v[0]),
-    .run_base(cp_svg_SE6__run_base[6:0]),
-    .run_count(cp_svg_SE6__run_count[7:0]),
-    .cmd_ext(xc_SE6__cmd_ext),
-    .kv_desc(xc_SE6__kv_desc),
-    .active(xc_SE6__active),
-    .done(xc_SE6__done),
-    .fault(xc_SE6__fault)
-  );
-  ot_static_cmd_target #(.MODE(0), .AWA(10), .AWB(0), .RBW(1), .RCW(1), .NA(1), .NF(1), .TGT_PIN(1)) cpx_SE6 (
+  ot_hbm_svc_sm_xcal_t xc_SE6 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
     .tgt(8'd206),
@@ -17369,43 +16473,14 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .desc_limit(host_cp_ingress__desc_limit[12:0]),
     .desc_loops(host_cp_ingress__desc_loops[15:0]),
     .launch_v(host_cp_ingress__launch_v[0]),
-    .tgt_active(xc_SE6__active[0]),
-    .tgt_fault(xc_SE6__fault[0]),
-    .a_we(cpx_SE6__a_we),
-    .a_addr(cpx_SE6__a_addr),
-    .a_data(cpx_SE6__a_data),
-    .b_we(cpx_SE6__b_we),
-    .b_addr(cpx_SE6__b_addr),
-    .b_data(cpx_SE6__b_data),
-    .run_v(cpx_SE6__run_v),
-    .run_base(cpx_SE6__run_base),
-    .run_count(cpx_SE6__run_count),
-    .cmd_v(cpx_SE6__cmd_v),
-    .cmd(cpx_SE6__cmd),
-    .cycle(cpx_SE6__cycle),
-    .configured(cpx_SE6__configured),
-    .fault(cpx_SE6__fault),
-    .active(cpx_SE6__active)
+    .cmd_ext(xc_SE6__cmd_ext),
+    .kv_desc(xc_SE6__kv_desc),
+    .done(xc_SE6__done),
+    .configured(xc_SE6__configured),
+    .fault(xc_SE6__fault),
+    .active(xc_SE6__active)
   );
-  ot_hbm_svc_sm_xcal #(.MUT(0)) xc_SE7 (
-    .clk(hb_ckgen__pll_stream[0]),
-    .rst_n(hb_ckgen__por_stream[0]),
-    .cfg_we(cpx_SE7__a_we[0]),
-    .cfg_addr(cpx_SE7__a_addr[9:0]),
-    .cfg_data(cpx_SE7__a_data[255:0]),
-    .desc_we(cp_svg_SE7__b_we[0]),
-    .desc_addr(cp_svg_SE7__b_addr[6:0]),
-    .desc_data(cp_svg_SE7__b_data[255:0]),
-    .run_v(cp_svg_SE7__run_v[0]),
-    .run_base(cp_svg_SE7__run_base[6:0]),
-    .run_count(cp_svg_SE7__run_count[7:0]),
-    .cmd_ext(xc_SE7__cmd_ext),
-    .kv_desc(xc_SE7__kv_desc),
-    .active(xc_SE7__active),
-    .done(xc_SE7__done),
-    .fault(xc_SE7__fault)
-  );
-  ot_static_cmd_target #(.MODE(0), .AWA(10), .AWB(0), .RBW(1), .RCW(1), .NA(1), .NF(1), .TGT_PIN(1)) cpx_SE7 (
+  ot_hbm_svc_sm_xcal_t xc_SE7 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
     .tgt(8'd207),
@@ -17418,43 +16493,14 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .desc_limit(host_cp_ingress__desc_limit[12:0]),
     .desc_loops(host_cp_ingress__desc_loops[15:0]),
     .launch_v(host_cp_ingress__launch_v[0]),
-    .tgt_active(xc_SE7__active[0]),
-    .tgt_fault(xc_SE7__fault[0]),
-    .a_we(cpx_SE7__a_we),
-    .a_addr(cpx_SE7__a_addr),
-    .a_data(cpx_SE7__a_data),
-    .b_we(cpx_SE7__b_we),
-    .b_addr(cpx_SE7__b_addr),
-    .b_data(cpx_SE7__b_data),
-    .run_v(cpx_SE7__run_v),
-    .run_base(cpx_SE7__run_base),
-    .run_count(cpx_SE7__run_count),
-    .cmd_v(cpx_SE7__cmd_v),
-    .cmd(cpx_SE7__cmd),
-    .cycle(cpx_SE7__cycle),
-    .configured(cpx_SE7__configured),
-    .fault(cpx_SE7__fault),
-    .active(cpx_SE7__active)
+    .cmd_ext(xc_SE7__cmd_ext),
+    .kv_desc(xc_SE7__kv_desc),
+    .done(xc_SE7__done),
+    .configured(xc_SE7__configured),
+    .fault(xc_SE7__fault),
+    .active(xc_SE7__active)
   );
-  ot_hbm_svc_sm_xcal #(.MUT(0)) xc_NW0 (
-    .clk(hb_ckgen__pll_stream[0]),
-    .rst_n(hb_ckgen__por_stream[0]),
-    .cfg_we(cpx_NW0__a_we[0]),
-    .cfg_addr(cpx_NW0__a_addr[9:0]),
-    .cfg_data(cpx_NW0__a_data[255:0]),
-    .desc_we(cp_svg_NW0__b_we[0]),
-    .desc_addr(cp_svg_NW0__b_addr[6:0]),
-    .desc_data(cp_svg_NW0__b_data[255:0]),
-    .run_v(cp_svg_NW0__run_v[0]),
-    .run_base(cp_svg_NW0__run_base[6:0]),
-    .run_count(cp_svg_NW0__run_count[7:0]),
-    .cmd_ext(xc_NW0__cmd_ext),
-    .kv_desc(xc_NW0__kv_desc),
-    .active(xc_NW0__active),
-    .done(xc_NW0__done),
-    .fault(xc_NW0__fault)
-  );
-  ot_static_cmd_target #(.MODE(0), .AWA(10), .AWB(0), .RBW(1), .RCW(1), .NA(1), .NF(1), .TGT_PIN(1)) cpx_NW0 (
+  ot_hbm_svc_sm_xcal_t xc_NW0 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
     .tgt(8'd208),
@@ -17467,43 +16513,14 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .desc_limit(host_cp_ingress__desc_limit[12:0]),
     .desc_loops(host_cp_ingress__desc_loops[15:0]),
     .launch_v(host_cp_ingress__launch_v[0]),
-    .tgt_active(xc_NW0__active[0]),
-    .tgt_fault(xc_NW0__fault[0]),
-    .a_we(cpx_NW0__a_we),
-    .a_addr(cpx_NW0__a_addr),
-    .a_data(cpx_NW0__a_data),
-    .b_we(cpx_NW0__b_we),
-    .b_addr(cpx_NW0__b_addr),
-    .b_data(cpx_NW0__b_data),
-    .run_v(cpx_NW0__run_v),
-    .run_base(cpx_NW0__run_base),
-    .run_count(cpx_NW0__run_count),
-    .cmd_v(cpx_NW0__cmd_v),
-    .cmd(cpx_NW0__cmd),
-    .cycle(cpx_NW0__cycle),
-    .configured(cpx_NW0__configured),
-    .fault(cpx_NW0__fault),
-    .active(cpx_NW0__active)
+    .cmd_ext(xc_NW0__cmd_ext),
+    .kv_desc(xc_NW0__kv_desc),
+    .done(xc_NW0__done),
+    .configured(xc_NW0__configured),
+    .fault(xc_NW0__fault),
+    .active(xc_NW0__active)
   );
-  ot_hbm_svc_sm_xcal #(.MUT(0)) xc_NW1 (
-    .clk(hb_ckgen__pll_stream[0]),
-    .rst_n(hb_ckgen__por_stream[0]),
-    .cfg_we(cpx_NW1__a_we[0]),
-    .cfg_addr(cpx_NW1__a_addr[9:0]),
-    .cfg_data(cpx_NW1__a_data[255:0]),
-    .desc_we(cp_svg_NW1__b_we[0]),
-    .desc_addr(cp_svg_NW1__b_addr[6:0]),
-    .desc_data(cp_svg_NW1__b_data[255:0]),
-    .run_v(cp_svg_NW1__run_v[0]),
-    .run_base(cp_svg_NW1__run_base[6:0]),
-    .run_count(cp_svg_NW1__run_count[7:0]),
-    .cmd_ext(xc_NW1__cmd_ext),
-    .kv_desc(xc_NW1__kv_desc),
-    .active(xc_NW1__active),
-    .done(xc_NW1__done),
-    .fault(xc_NW1__fault)
-  );
-  ot_static_cmd_target #(.MODE(0), .AWA(10), .AWB(0), .RBW(1), .RCW(1), .NA(1), .NF(1), .TGT_PIN(1)) cpx_NW1 (
+  ot_hbm_svc_sm_xcal_t xc_NW1 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
     .tgt(8'd209),
@@ -17516,43 +16533,14 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .desc_limit(host_cp_ingress__desc_limit[12:0]),
     .desc_loops(host_cp_ingress__desc_loops[15:0]),
     .launch_v(host_cp_ingress__launch_v[0]),
-    .tgt_active(xc_NW1__active[0]),
-    .tgt_fault(xc_NW1__fault[0]),
-    .a_we(cpx_NW1__a_we),
-    .a_addr(cpx_NW1__a_addr),
-    .a_data(cpx_NW1__a_data),
-    .b_we(cpx_NW1__b_we),
-    .b_addr(cpx_NW1__b_addr),
-    .b_data(cpx_NW1__b_data),
-    .run_v(cpx_NW1__run_v),
-    .run_base(cpx_NW1__run_base),
-    .run_count(cpx_NW1__run_count),
-    .cmd_v(cpx_NW1__cmd_v),
-    .cmd(cpx_NW1__cmd),
-    .cycle(cpx_NW1__cycle),
-    .configured(cpx_NW1__configured),
-    .fault(cpx_NW1__fault),
-    .active(cpx_NW1__active)
+    .cmd_ext(xc_NW1__cmd_ext),
+    .kv_desc(xc_NW1__kv_desc),
+    .done(xc_NW1__done),
+    .configured(xc_NW1__configured),
+    .fault(xc_NW1__fault),
+    .active(xc_NW1__active)
   );
-  ot_hbm_svc_sm_xcal #(.MUT(0)) xc_NW2 (
-    .clk(hb_ckgen__pll_stream[0]),
-    .rst_n(hb_ckgen__por_stream[0]),
-    .cfg_we(cpx_NW2__a_we[0]),
-    .cfg_addr(cpx_NW2__a_addr[9:0]),
-    .cfg_data(cpx_NW2__a_data[255:0]),
-    .desc_we(cp_svg_NW2__b_we[0]),
-    .desc_addr(cp_svg_NW2__b_addr[6:0]),
-    .desc_data(cp_svg_NW2__b_data[255:0]),
-    .run_v(cp_svg_NW2__run_v[0]),
-    .run_base(cp_svg_NW2__run_base[6:0]),
-    .run_count(cp_svg_NW2__run_count[7:0]),
-    .cmd_ext(xc_NW2__cmd_ext),
-    .kv_desc(xc_NW2__kv_desc),
-    .active(xc_NW2__active),
-    .done(xc_NW2__done),
-    .fault(xc_NW2__fault)
-  );
-  ot_static_cmd_target #(.MODE(0), .AWA(10), .AWB(0), .RBW(1), .RCW(1), .NA(1), .NF(1), .TGT_PIN(1)) cpx_NW2 (
+  ot_hbm_svc_sm_xcal_t xc_NW2 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
     .tgt(8'd210),
@@ -17565,43 +16553,14 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .desc_limit(host_cp_ingress__desc_limit[12:0]),
     .desc_loops(host_cp_ingress__desc_loops[15:0]),
     .launch_v(host_cp_ingress__launch_v[0]),
-    .tgt_active(xc_NW2__active[0]),
-    .tgt_fault(xc_NW2__fault[0]),
-    .a_we(cpx_NW2__a_we),
-    .a_addr(cpx_NW2__a_addr),
-    .a_data(cpx_NW2__a_data),
-    .b_we(cpx_NW2__b_we),
-    .b_addr(cpx_NW2__b_addr),
-    .b_data(cpx_NW2__b_data),
-    .run_v(cpx_NW2__run_v),
-    .run_base(cpx_NW2__run_base),
-    .run_count(cpx_NW2__run_count),
-    .cmd_v(cpx_NW2__cmd_v),
-    .cmd(cpx_NW2__cmd),
-    .cycle(cpx_NW2__cycle),
-    .configured(cpx_NW2__configured),
-    .fault(cpx_NW2__fault),
-    .active(cpx_NW2__active)
+    .cmd_ext(xc_NW2__cmd_ext),
+    .kv_desc(xc_NW2__kv_desc),
+    .done(xc_NW2__done),
+    .configured(xc_NW2__configured),
+    .fault(xc_NW2__fault),
+    .active(xc_NW2__active)
   );
-  ot_hbm_svc_sm_xcal #(.MUT(0)) xc_NW3 (
-    .clk(hb_ckgen__pll_stream[0]),
-    .rst_n(hb_ckgen__por_stream[0]),
-    .cfg_we(cpx_NW3__a_we[0]),
-    .cfg_addr(cpx_NW3__a_addr[9:0]),
-    .cfg_data(cpx_NW3__a_data[255:0]),
-    .desc_we(cp_svg_NW3__b_we[0]),
-    .desc_addr(cp_svg_NW3__b_addr[6:0]),
-    .desc_data(cp_svg_NW3__b_data[255:0]),
-    .run_v(cp_svg_NW3__run_v[0]),
-    .run_base(cp_svg_NW3__run_base[6:0]),
-    .run_count(cp_svg_NW3__run_count[7:0]),
-    .cmd_ext(xc_NW3__cmd_ext),
-    .kv_desc(xc_NW3__kv_desc),
-    .active(xc_NW3__active),
-    .done(xc_NW3__done),
-    .fault(xc_NW3__fault)
-  );
-  ot_static_cmd_target #(.MODE(0), .AWA(10), .AWB(0), .RBW(1), .RCW(1), .NA(1), .NF(1), .TGT_PIN(1)) cpx_NW3 (
+  ot_hbm_svc_sm_xcal_t xc_NW3 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
     .tgt(8'd211),
@@ -17614,43 +16573,14 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .desc_limit(host_cp_ingress__desc_limit[12:0]),
     .desc_loops(host_cp_ingress__desc_loops[15:0]),
     .launch_v(host_cp_ingress__launch_v[0]),
-    .tgt_active(xc_NW3__active[0]),
-    .tgt_fault(xc_NW3__fault[0]),
-    .a_we(cpx_NW3__a_we),
-    .a_addr(cpx_NW3__a_addr),
-    .a_data(cpx_NW3__a_data),
-    .b_we(cpx_NW3__b_we),
-    .b_addr(cpx_NW3__b_addr),
-    .b_data(cpx_NW3__b_data),
-    .run_v(cpx_NW3__run_v),
-    .run_base(cpx_NW3__run_base),
-    .run_count(cpx_NW3__run_count),
-    .cmd_v(cpx_NW3__cmd_v),
-    .cmd(cpx_NW3__cmd),
-    .cycle(cpx_NW3__cycle),
-    .configured(cpx_NW3__configured),
-    .fault(cpx_NW3__fault),
-    .active(cpx_NW3__active)
+    .cmd_ext(xc_NW3__cmd_ext),
+    .kv_desc(xc_NW3__kv_desc),
+    .done(xc_NW3__done),
+    .configured(xc_NW3__configured),
+    .fault(xc_NW3__fault),
+    .active(xc_NW3__active)
   );
-  ot_hbm_svc_sm_xcal #(.MUT(0)) xc_NW4 (
-    .clk(hb_ckgen__pll_stream[0]),
-    .rst_n(hb_ckgen__por_stream[0]),
-    .cfg_we(cpx_NW4__a_we[0]),
-    .cfg_addr(cpx_NW4__a_addr[9:0]),
-    .cfg_data(cpx_NW4__a_data[255:0]),
-    .desc_we(cp_svg_NW4__b_we[0]),
-    .desc_addr(cp_svg_NW4__b_addr[6:0]),
-    .desc_data(cp_svg_NW4__b_data[255:0]),
-    .run_v(cp_svg_NW4__run_v[0]),
-    .run_base(cp_svg_NW4__run_base[6:0]),
-    .run_count(cp_svg_NW4__run_count[7:0]),
-    .cmd_ext(xc_NW4__cmd_ext),
-    .kv_desc(xc_NW4__kv_desc),
-    .active(xc_NW4__active),
-    .done(xc_NW4__done),
-    .fault(xc_NW4__fault)
-  );
-  ot_static_cmd_target #(.MODE(0), .AWA(10), .AWB(0), .RBW(1), .RCW(1), .NA(1), .NF(1), .TGT_PIN(1)) cpx_NW4 (
+  ot_hbm_svc_sm_xcal_t xc_NW4 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
     .tgt(8'd212),
@@ -17663,43 +16593,14 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .desc_limit(host_cp_ingress__desc_limit[12:0]),
     .desc_loops(host_cp_ingress__desc_loops[15:0]),
     .launch_v(host_cp_ingress__launch_v[0]),
-    .tgt_active(xc_NW4__active[0]),
-    .tgt_fault(xc_NW4__fault[0]),
-    .a_we(cpx_NW4__a_we),
-    .a_addr(cpx_NW4__a_addr),
-    .a_data(cpx_NW4__a_data),
-    .b_we(cpx_NW4__b_we),
-    .b_addr(cpx_NW4__b_addr),
-    .b_data(cpx_NW4__b_data),
-    .run_v(cpx_NW4__run_v),
-    .run_base(cpx_NW4__run_base),
-    .run_count(cpx_NW4__run_count),
-    .cmd_v(cpx_NW4__cmd_v),
-    .cmd(cpx_NW4__cmd),
-    .cycle(cpx_NW4__cycle),
-    .configured(cpx_NW4__configured),
-    .fault(cpx_NW4__fault),
-    .active(cpx_NW4__active)
+    .cmd_ext(xc_NW4__cmd_ext),
+    .kv_desc(xc_NW4__kv_desc),
+    .done(xc_NW4__done),
+    .configured(xc_NW4__configured),
+    .fault(xc_NW4__fault),
+    .active(xc_NW4__active)
   );
-  ot_hbm_svc_sm_xcal #(.MUT(0)) xc_NW5 (
-    .clk(hb_ckgen__pll_stream[0]),
-    .rst_n(hb_ckgen__por_stream[0]),
-    .cfg_we(cpx_NW5__a_we[0]),
-    .cfg_addr(cpx_NW5__a_addr[9:0]),
-    .cfg_data(cpx_NW5__a_data[255:0]),
-    .desc_we(cp_svg_NW5__b_we[0]),
-    .desc_addr(cp_svg_NW5__b_addr[6:0]),
-    .desc_data(cp_svg_NW5__b_data[255:0]),
-    .run_v(cp_svg_NW5__run_v[0]),
-    .run_base(cp_svg_NW5__run_base[6:0]),
-    .run_count(cp_svg_NW5__run_count[7:0]),
-    .cmd_ext(xc_NW5__cmd_ext),
-    .kv_desc(xc_NW5__kv_desc),
-    .active(xc_NW5__active),
-    .done(xc_NW5__done),
-    .fault(xc_NW5__fault)
-  );
-  ot_static_cmd_target #(.MODE(0), .AWA(10), .AWB(0), .RBW(1), .RCW(1), .NA(1), .NF(1), .TGT_PIN(1)) cpx_NW5 (
+  ot_hbm_svc_sm_xcal_t xc_NW5 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
     .tgt(8'd213),
@@ -17712,43 +16613,14 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .desc_limit(host_cp_ingress__desc_limit[12:0]),
     .desc_loops(host_cp_ingress__desc_loops[15:0]),
     .launch_v(host_cp_ingress__launch_v[0]),
-    .tgt_active(xc_NW5__active[0]),
-    .tgt_fault(xc_NW5__fault[0]),
-    .a_we(cpx_NW5__a_we),
-    .a_addr(cpx_NW5__a_addr),
-    .a_data(cpx_NW5__a_data),
-    .b_we(cpx_NW5__b_we),
-    .b_addr(cpx_NW5__b_addr),
-    .b_data(cpx_NW5__b_data),
-    .run_v(cpx_NW5__run_v),
-    .run_base(cpx_NW5__run_base),
-    .run_count(cpx_NW5__run_count),
-    .cmd_v(cpx_NW5__cmd_v),
-    .cmd(cpx_NW5__cmd),
-    .cycle(cpx_NW5__cycle),
-    .configured(cpx_NW5__configured),
-    .fault(cpx_NW5__fault),
-    .active(cpx_NW5__active)
+    .cmd_ext(xc_NW5__cmd_ext),
+    .kv_desc(xc_NW5__kv_desc),
+    .done(xc_NW5__done),
+    .configured(xc_NW5__configured),
+    .fault(xc_NW5__fault),
+    .active(xc_NW5__active)
   );
-  ot_hbm_svc_sm_xcal #(.MUT(0)) xc_NW6 (
-    .clk(hb_ckgen__pll_stream[0]),
-    .rst_n(hb_ckgen__por_stream[0]),
-    .cfg_we(cpx_NW6__a_we[0]),
-    .cfg_addr(cpx_NW6__a_addr[9:0]),
-    .cfg_data(cpx_NW6__a_data[255:0]),
-    .desc_we(cp_svg_NW6__b_we[0]),
-    .desc_addr(cp_svg_NW6__b_addr[6:0]),
-    .desc_data(cp_svg_NW6__b_data[255:0]),
-    .run_v(cp_svg_NW6__run_v[0]),
-    .run_base(cp_svg_NW6__run_base[6:0]),
-    .run_count(cp_svg_NW6__run_count[7:0]),
-    .cmd_ext(xc_NW6__cmd_ext),
-    .kv_desc(xc_NW6__kv_desc),
-    .active(xc_NW6__active),
-    .done(xc_NW6__done),
-    .fault(xc_NW6__fault)
-  );
-  ot_static_cmd_target #(.MODE(0), .AWA(10), .AWB(0), .RBW(1), .RCW(1), .NA(1), .NF(1), .TGT_PIN(1)) cpx_NW6 (
+  ot_hbm_svc_sm_xcal_t xc_NW6 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
     .tgt(8'd214),
@@ -17761,43 +16633,14 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .desc_limit(host_cp_ingress__desc_limit[12:0]),
     .desc_loops(host_cp_ingress__desc_loops[15:0]),
     .launch_v(host_cp_ingress__launch_v[0]),
-    .tgt_active(xc_NW6__active[0]),
-    .tgt_fault(xc_NW6__fault[0]),
-    .a_we(cpx_NW6__a_we),
-    .a_addr(cpx_NW6__a_addr),
-    .a_data(cpx_NW6__a_data),
-    .b_we(cpx_NW6__b_we),
-    .b_addr(cpx_NW6__b_addr),
-    .b_data(cpx_NW6__b_data),
-    .run_v(cpx_NW6__run_v),
-    .run_base(cpx_NW6__run_base),
-    .run_count(cpx_NW6__run_count),
-    .cmd_v(cpx_NW6__cmd_v),
-    .cmd(cpx_NW6__cmd),
-    .cycle(cpx_NW6__cycle),
-    .configured(cpx_NW6__configured),
-    .fault(cpx_NW6__fault),
-    .active(cpx_NW6__active)
+    .cmd_ext(xc_NW6__cmd_ext),
+    .kv_desc(xc_NW6__kv_desc),
+    .done(xc_NW6__done),
+    .configured(xc_NW6__configured),
+    .fault(xc_NW6__fault),
+    .active(xc_NW6__active)
   );
-  ot_hbm_svc_sm_xcal #(.MUT(0)) xc_NW7 (
-    .clk(hb_ckgen__pll_stream[0]),
-    .rst_n(hb_ckgen__por_stream[0]),
-    .cfg_we(cpx_NW7__a_we[0]),
-    .cfg_addr(cpx_NW7__a_addr[9:0]),
-    .cfg_data(cpx_NW7__a_data[255:0]),
-    .desc_we(cp_svg_NW7__b_we[0]),
-    .desc_addr(cp_svg_NW7__b_addr[6:0]),
-    .desc_data(cp_svg_NW7__b_data[255:0]),
-    .run_v(cp_svg_NW7__run_v[0]),
-    .run_base(cp_svg_NW7__run_base[6:0]),
-    .run_count(cp_svg_NW7__run_count[7:0]),
-    .cmd_ext(xc_NW7__cmd_ext),
-    .kv_desc(xc_NW7__kv_desc),
-    .active(xc_NW7__active),
-    .done(xc_NW7__done),
-    .fault(xc_NW7__fault)
-  );
-  ot_static_cmd_target #(.MODE(0), .AWA(10), .AWB(0), .RBW(1), .RCW(1), .NA(1), .NF(1), .TGT_PIN(1)) cpx_NW7 (
+  ot_hbm_svc_sm_xcal_t xc_NW7 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
     .tgt(8'd215),
@@ -17810,43 +16653,14 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .desc_limit(host_cp_ingress__desc_limit[12:0]),
     .desc_loops(host_cp_ingress__desc_loops[15:0]),
     .launch_v(host_cp_ingress__launch_v[0]),
-    .tgt_active(xc_NW7__active[0]),
-    .tgt_fault(xc_NW7__fault[0]),
-    .a_we(cpx_NW7__a_we),
-    .a_addr(cpx_NW7__a_addr),
-    .a_data(cpx_NW7__a_data),
-    .b_we(cpx_NW7__b_we),
-    .b_addr(cpx_NW7__b_addr),
-    .b_data(cpx_NW7__b_data),
-    .run_v(cpx_NW7__run_v),
-    .run_base(cpx_NW7__run_base),
-    .run_count(cpx_NW7__run_count),
-    .cmd_v(cpx_NW7__cmd_v),
-    .cmd(cpx_NW7__cmd),
-    .cycle(cpx_NW7__cycle),
-    .configured(cpx_NW7__configured),
-    .fault(cpx_NW7__fault),
-    .active(cpx_NW7__active)
+    .cmd_ext(xc_NW7__cmd_ext),
+    .kv_desc(xc_NW7__kv_desc),
+    .done(xc_NW7__done),
+    .configured(xc_NW7__configured),
+    .fault(xc_NW7__fault),
+    .active(xc_NW7__active)
   );
-  ot_hbm_svc_sm_xcal #(.MUT(0)) xc_NE0 (
-    .clk(hb_ckgen__pll_stream[0]),
-    .rst_n(hb_ckgen__por_stream[0]),
-    .cfg_we(cpx_NE0__a_we[0]),
-    .cfg_addr(cpx_NE0__a_addr[9:0]),
-    .cfg_data(cpx_NE0__a_data[255:0]),
-    .desc_we(cp_svg_NE0__b_we[0]),
-    .desc_addr(cp_svg_NE0__b_addr[6:0]),
-    .desc_data(cp_svg_NE0__b_data[255:0]),
-    .run_v(cp_svg_NE0__run_v[0]),
-    .run_base(cp_svg_NE0__run_base[6:0]),
-    .run_count(cp_svg_NE0__run_count[7:0]),
-    .cmd_ext(xc_NE0__cmd_ext),
-    .kv_desc(xc_NE0__kv_desc),
-    .active(xc_NE0__active),
-    .done(xc_NE0__done),
-    .fault(xc_NE0__fault)
-  );
-  ot_static_cmd_target #(.MODE(0), .AWA(10), .AWB(0), .RBW(1), .RCW(1), .NA(1), .NF(1), .TGT_PIN(1)) cpx_NE0 (
+  ot_hbm_svc_sm_xcal_t xc_NE0 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
     .tgt(8'd216),
@@ -17859,43 +16673,14 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .desc_limit(host_cp_ingress__desc_limit[12:0]),
     .desc_loops(host_cp_ingress__desc_loops[15:0]),
     .launch_v(host_cp_ingress__launch_v[0]),
-    .tgt_active(xc_NE0__active[0]),
-    .tgt_fault(xc_NE0__fault[0]),
-    .a_we(cpx_NE0__a_we),
-    .a_addr(cpx_NE0__a_addr),
-    .a_data(cpx_NE0__a_data),
-    .b_we(cpx_NE0__b_we),
-    .b_addr(cpx_NE0__b_addr),
-    .b_data(cpx_NE0__b_data),
-    .run_v(cpx_NE0__run_v),
-    .run_base(cpx_NE0__run_base),
-    .run_count(cpx_NE0__run_count),
-    .cmd_v(cpx_NE0__cmd_v),
-    .cmd(cpx_NE0__cmd),
-    .cycle(cpx_NE0__cycle),
-    .configured(cpx_NE0__configured),
-    .fault(cpx_NE0__fault),
-    .active(cpx_NE0__active)
+    .cmd_ext(xc_NE0__cmd_ext),
+    .kv_desc(xc_NE0__kv_desc),
+    .done(xc_NE0__done),
+    .configured(xc_NE0__configured),
+    .fault(xc_NE0__fault),
+    .active(xc_NE0__active)
   );
-  ot_hbm_svc_sm_xcal #(.MUT(0)) xc_NE1 (
-    .clk(hb_ckgen__pll_stream[0]),
-    .rst_n(hb_ckgen__por_stream[0]),
-    .cfg_we(cpx_NE1__a_we[0]),
-    .cfg_addr(cpx_NE1__a_addr[9:0]),
-    .cfg_data(cpx_NE1__a_data[255:0]),
-    .desc_we(cp_svg_NE1__b_we[0]),
-    .desc_addr(cp_svg_NE1__b_addr[6:0]),
-    .desc_data(cp_svg_NE1__b_data[255:0]),
-    .run_v(cp_svg_NE1__run_v[0]),
-    .run_base(cp_svg_NE1__run_base[6:0]),
-    .run_count(cp_svg_NE1__run_count[7:0]),
-    .cmd_ext(xc_NE1__cmd_ext),
-    .kv_desc(xc_NE1__kv_desc),
-    .active(xc_NE1__active),
-    .done(xc_NE1__done),
-    .fault(xc_NE1__fault)
-  );
-  ot_static_cmd_target #(.MODE(0), .AWA(10), .AWB(0), .RBW(1), .RCW(1), .NA(1), .NF(1), .TGT_PIN(1)) cpx_NE1 (
+  ot_hbm_svc_sm_xcal_t xc_NE1 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
     .tgt(8'd217),
@@ -17908,43 +16693,14 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .desc_limit(host_cp_ingress__desc_limit[12:0]),
     .desc_loops(host_cp_ingress__desc_loops[15:0]),
     .launch_v(host_cp_ingress__launch_v[0]),
-    .tgt_active(xc_NE1__active[0]),
-    .tgt_fault(xc_NE1__fault[0]),
-    .a_we(cpx_NE1__a_we),
-    .a_addr(cpx_NE1__a_addr),
-    .a_data(cpx_NE1__a_data),
-    .b_we(cpx_NE1__b_we),
-    .b_addr(cpx_NE1__b_addr),
-    .b_data(cpx_NE1__b_data),
-    .run_v(cpx_NE1__run_v),
-    .run_base(cpx_NE1__run_base),
-    .run_count(cpx_NE1__run_count),
-    .cmd_v(cpx_NE1__cmd_v),
-    .cmd(cpx_NE1__cmd),
-    .cycle(cpx_NE1__cycle),
-    .configured(cpx_NE1__configured),
-    .fault(cpx_NE1__fault),
-    .active(cpx_NE1__active)
+    .cmd_ext(xc_NE1__cmd_ext),
+    .kv_desc(xc_NE1__kv_desc),
+    .done(xc_NE1__done),
+    .configured(xc_NE1__configured),
+    .fault(xc_NE1__fault),
+    .active(xc_NE1__active)
   );
-  ot_hbm_svc_sm_xcal #(.MUT(0)) xc_NE2 (
-    .clk(hb_ckgen__pll_stream[0]),
-    .rst_n(hb_ckgen__por_stream[0]),
-    .cfg_we(cpx_NE2__a_we[0]),
-    .cfg_addr(cpx_NE2__a_addr[9:0]),
-    .cfg_data(cpx_NE2__a_data[255:0]),
-    .desc_we(cp_svg_NE2__b_we[0]),
-    .desc_addr(cp_svg_NE2__b_addr[6:0]),
-    .desc_data(cp_svg_NE2__b_data[255:0]),
-    .run_v(cp_svg_NE2__run_v[0]),
-    .run_base(cp_svg_NE2__run_base[6:0]),
-    .run_count(cp_svg_NE2__run_count[7:0]),
-    .cmd_ext(xc_NE2__cmd_ext),
-    .kv_desc(xc_NE2__kv_desc),
-    .active(xc_NE2__active),
-    .done(xc_NE2__done),
-    .fault(xc_NE2__fault)
-  );
-  ot_static_cmd_target #(.MODE(0), .AWA(10), .AWB(0), .RBW(1), .RCW(1), .NA(1), .NF(1), .TGT_PIN(1)) cpx_NE2 (
+  ot_hbm_svc_sm_xcal_t xc_NE2 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
     .tgt(8'd218),
@@ -17957,43 +16713,14 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .desc_limit(host_cp_ingress__desc_limit[12:0]),
     .desc_loops(host_cp_ingress__desc_loops[15:0]),
     .launch_v(host_cp_ingress__launch_v[0]),
-    .tgt_active(xc_NE2__active[0]),
-    .tgt_fault(xc_NE2__fault[0]),
-    .a_we(cpx_NE2__a_we),
-    .a_addr(cpx_NE2__a_addr),
-    .a_data(cpx_NE2__a_data),
-    .b_we(cpx_NE2__b_we),
-    .b_addr(cpx_NE2__b_addr),
-    .b_data(cpx_NE2__b_data),
-    .run_v(cpx_NE2__run_v),
-    .run_base(cpx_NE2__run_base),
-    .run_count(cpx_NE2__run_count),
-    .cmd_v(cpx_NE2__cmd_v),
-    .cmd(cpx_NE2__cmd),
-    .cycle(cpx_NE2__cycle),
-    .configured(cpx_NE2__configured),
-    .fault(cpx_NE2__fault),
-    .active(cpx_NE2__active)
+    .cmd_ext(xc_NE2__cmd_ext),
+    .kv_desc(xc_NE2__kv_desc),
+    .done(xc_NE2__done),
+    .configured(xc_NE2__configured),
+    .fault(xc_NE2__fault),
+    .active(xc_NE2__active)
   );
-  ot_hbm_svc_sm_xcal #(.MUT(0)) xc_NE3 (
-    .clk(hb_ckgen__pll_stream[0]),
-    .rst_n(hb_ckgen__por_stream[0]),
-    .cfg_we(cpx_NE3__a_we[0]),
-    .cfg_addr(cpx_NE3__a_addr[9:0]),
-    .cfg_data(cpx_NE3__a_data[255:0]),
-    .desc_we(cp_svg_NE3__b_we[0]),
-    .desc_addr(cp_svg_NE3__b_addr[6:0]),
-    .desc_data(cp_svg_NE3__b_data[255:0]),
-    .run_v(cp_svg_NE3__run_v[0]),
-    .run_base(cp_svg_NE3__run_base[6:0]),
-    .run_count(cp_svg_NE3__run_count[7:0]),
-    .cmd_ext(xc_NE3__cmd_ext),
-    .kv_desc(xc_NE3__kv_desc),
-    .active(xc_NE3__active),
-    .done(xc_NE3__done),
-    .fault(xc_NE3__fault)
-  );
-  ot_static_cmd_target #(.MODE(0), .AWA(10), .AWB(0), .RBW(1), .RCW(1), .NA(1), .NF(1), .TGT_PIN(1)) cpx_NE3 (
+  ot_hbm_svc_sm_xcal_t xc_NE3 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
     .tgt(8'd219),
@@ -18006,43 +16733,14 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .desc_limit(host_cp_ingress__desc_limit[12:0]),
     .desc_loops(host_cp_ingress__desc_loops[15:0]),
     .launch_v(host_cp_ingress__launch_v[0]),
-    .tgt_active(xc_NE3__active[0]),
-    .tgt_fault(xc_NE3__fault[0]),
-    .a_we(cpx_NE3__a_we),
-    .a_addr(cpx_NE3__a_addr),
-    .a_data(cpx_NE3__a_data),
-    .b_we(cpx_NE3__b_we),
-    .b_addr(cpx_NE3__b_addr),
-    .b_data(cpx_NE3__b_data),
-    .run_v(cpx_NE3__run_v),
-    .run_base(cpx_NE3__run_base),
-    .run_count(cpx_NE3__run_count),
-    .cmd_v(cpx_NE3__cmd_v),
-    .cmd(cpx_NE3__cmd),
-    .cycle(cpx_NE3__cycle),
-    .configured(cpx_NE3__configured),
-    .fault(cpx_NE3__fault),
-    .active(cpx_NE3__active)
+    .cmd_ext(xc_NE3__cmd_ext),
+    .kv_desc(xc_NE3__kv_desc),
+    .done(xc_NE3__done),
+    .configured(xc_NE3__configured),
+    .fault(xc_NE3__fault),
+    .active(xc_NE3__active)
   );
-  ot_hbm_svc_sm_xcal #(.MUT(0)) xc_NE4 (
-    .clk(hb_ckgen__pll_stream[0]),
-    .rst_n(hb_ckgen__por_stream[0]),
-    .cfg_we(cpx_NE4__a_we[0]),
-    .cfg_addr(cpx_NE4__a_addr[9:0]),
-    .cfg_data(cpx_NE4__a_data[255:0]),
-    .desc_we(cp_svg_NE4__b_we[0]),
-    .desc_addr(cp_svg_NE4__b_addr[6:0]),
-    .desc_data(cp_svg_NE4__b_data[255:0]),
-    .run_v(cp_svg_NE4__run_v[0]),
-    .run_base(cp_svg_NE4__run_base[6:0]),
-    .run_count(cp_svg_NE4__run_count[7:0]),
-    .cmd_ext(xc_NE4__cmd_ext),
-    .kv_desc(xc_NE4__kv_desc),
-    .active(xc_NE4__active),
-    .done(xc_NE4__done),
-    .fault(xc_NE4__fault)
-  );
-  ot_static_cmd_target #(.MODE(0), .AWA(10), .AWB(0), .RBW(1), .RCW(1), .NA(1), .NF(1), .TGT_PIN(1)) cpx_NE4 (
+  ot_hbm_svc_sm_xcal_t xc_NE4 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
     .tgt(8'd220),
@@ -18055,43 +16753,14 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .desc_limit(host_cp_ingress__desc_limit[12:0]),
     .desc_loops(host_cp_ingress__desc_loops[15:0]),
     .launch_v(host_cp_ingress__launch_v[0]),
-    .tgt_active(xc_NE4__active[0]),
-    .tgt_fault(xc_NE4__fault[0]),
-    .a_we(cpx_NE4__a_we),
-    .a_addr(cpx_NE4__a_addr),
-    .a_data(cpx_NE4__a_data),
-    .b_we(cpx_NE4__b_we),
-    .b_addr(cpx_NE4__b_addr),
-    .b_data(cpx_NE4__b_data),
-    .run_v(cpx_NE4__run_v),
-    .run_base(cpx_NE4__run_base),
-    .run_count(cpx_NE4__run_count),
-    .cmd_v(cpx_NE4__cmd_v),
-    .cmd(cpx_NE4__cmd),
-    .cycle(cpx_NE4__cycle),
-    .configured(cpx_NE4__configured),
-    .fault(cpx_NE4__fault),
-    .active(cpx_NE4__active)
+    .cmd_ext(xc_NE4__cmd_ext),
+    .kv_desc(xc_NE4__kv_desc),
+    .done(xc_NE4__done),
+    .configured(xc_NE4__configured),
+    .fault(xc_NE4__fault),
+    .active(xc_NE4__active)
   );
-  ot_hbm_svc_sm_xcal #(.MUT(0)) xc_NE5 (
-    .clk(hb_ckgen__pll_stream[0]),
-    .rst_n(hb_ckgen__por_stream[0]),
-    .cfg_we(cpx_NE5__a_we[0]),
-    .cfg_addr(cpx_NE5__a_addr[9:0]),
-    .cfg_data(cpx_NE5__a_data[255:0]),
-    .desc_we(cp_svg_NE5__b_we[0]),
-    .desc_addr(cp_svg_NE5__b_addr[6:0]),
-    .desc_data(cp_svg_NE5__b_data[255:0]),
-    .run_v(cp_svg_NE5__run_v[0]),
-    .run_base(cp_svg_NE5__run_base[6:0]),
-    .run_count(cp_svg_NE5__run_count[7:0]),
-    .cmd_ext(xc_NE5__cmd_ext),
-    .kv_desc(xc_NE5__kv_desc),
-    .active(xc_NE5__active),
-    .done(xc_NE5__done),
-    .fault(xc_NE5__fault)
-  );
-  ot_static_cmd_target #(.MODE(0), .AWA(10), .AWB(0), .RBW(1), .RCW(1), .NA(1), .NF(1), .TGT_PIN(1)) cpx_NE5 (
+  ot_hbm_svc_sm_xcal_t xc_NE5 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
     .tgt(8'd221),
@@ -18104,43 +16773,14 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .desc_limit(host_cp_ingress__desc_limit[12:0]),
     .desc_loops(host_cp_ingress__desc_loops[15:0]),
     .launch_v(host_cp_ingress__launch_v[0]),
-    .tgt_active(xc_NE5__active[0]),
-    .tgt_fault(xc_NE5__fault[0]),
-    .a_we(cpx_NE5__a_we),
-    .a_addr(cpx_NE5__a_addr),
-    .a_data(cpx_NE5__a_data),
-    .b_we(cpx_NE5__b_we),
-    .b_addr(cpx_NE5__b_addr),
-    .b_data(cpx_NE5__b_data),
-    .run_v(cpx_NE5__run_v),
-    .run_base(cpx_NE5__run_base),
-    .run_count(cpx_NE5__run_count),
-    .cmd_v(cpx_NE5__cmd_v),
-    .cmd(cpx_NE5__cmd),
-    .cycle(cpx_NE5__cycle),
-    .configured(cpx_NE5__configured),
-    .fault(cpx_NE5__fault),
-    .active(cpx_NE5__active)
+    .cmd_ext(xc_NE5__cmd_ext),
+    .kv_desc(xc_NE5__kv_desc),
+    .done(xc_NE5__done),
+    .configured(xc_NE5__configured),
+    .fault(xc_NE5__fault),
+    .active(xc_NE5__active)
   );
-  ot_hbm_svc_sm_xcal #(.MUT(0)) xc_NE6 (
-    .clk(hb_ckgen__pll_stream[0]),
-    .rst_n(hb_ckgen__por_stream[0]),
-    .cfg_we(cpx_NE6__a_we[0]),
-    .cfg_addr(cpx_NE6__a_addr[9:0]),
-    .cfg_data(cpx_NE6__a_data[255:0]),
-    .desc_we(cp_svg_NE6__b_we[0]),
-    .desc_addr(cp_svg_NE6__b_addr[6:0]),
-    .desc_data(cp_svg_NE6__b_data[255:0]),
-    .run_v(cp_svg_NE6__run_v[0]),
-    .run_base(cp_svg_NE6__run_base[6:0]),
-    .run_count(cp_svg_NE6__run_count[7:0]),
-    .cmd_ext(xc_NE6__cmd_ext),
-    .kv_desc(xc_NE6__kv_desc),
-    .active(xc_NE6__active),
-    .done(xc_NE6__done),
-    .fault(xc_NE6__fault)
-  );
-  ot_static_cmd_target #(.MODE(0), .AWA(10), .AWB(0), .RBW(1), .RCW(1), .NA(1), .NF(1), .TGT_PIN(1)) cpx_NE6 (
+  ot_hbm_svc_sm_xcal_t xc_NE6 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
     .tgt(8'd222),
@@ -18153,43 +16793,14 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .desc_limit(host_cp_ingress__desc_limit[12:0]),
     .desc_loops(host_cp_ingress__desc_loops[15:0]),
     .launch_v(host_cp_ingress__launch_v[0]),
-    .tgt_active(xc_NE6__active[0]),
-    .tgt_fault(xc_NE6__fault[0]),
-    .a_we(cpx_NE6__a_we),
-    .a_addr(cpx_NE6__a_addr),
-    .a_data(cpx_NE6__a_data),
-    .b_we(cpx_NE6__b_we),
-    .b_addr(cpx_NE6__b_addr),
-    .b_data(cpx_NE6__b_data),
-    .run_v(cpx_NE6__run_v),
-    .run_base(cpx_NE6__run_base),
-    .run_count(cpx_NE6__run_count),
-    .cmd_v(cpx_NE6__cmd_v),
-    .cmd(cpx_NE6__cmd),
-    .cycle(cpx_NE6__cycle),
-    .configured(cpx_NE6__configured),
-    .fault(cpx_NE6__fault),
-    .active(cpx_NE6__active)
+    .cmd_ext(xc_NE6__cmd_ext),
+    .kv_desc(xc_NE6__kv_desc),
+    .done(xc_NE6__done),
+    .configured(xc_NE6__configured),
+    .fault(xc_NE6__fault),
+    .active(xc_NE6__active)
   );
-  ot_hbm_svc_sm_xcal #(.MUT(0)) xc_NE7 (
-    .clk(hb_ckgen__pll_stream[0]),
-    .rst_n(hb_ckgen__por_stream[0]),
-    .cfg_we(cpx_NE7__a_we[0]),
-    .cfg_addr(cpx_NE7__a_addr[9:0]),
-    .cfg_data(cpx_NE7__a_data[255:0]),
-    .desc_we(cp_svg_NE7__b_we[0]),
-    .desc_addr(cp_svg_NE7__b_addr[6:0]),
-    .desc_data(cp_svg_NE7__b_data[255:0]),
-    .run_v(cp_svg_NE7__run_v[0]),
-    .run_base(cp_svg_NE7__run_base[6:0]),
-    .run_count(cp_svg_NE7__run_count[7:0]),
-    .cmd_ext(xc_NE7__cmd_ext),
-    .kv_desc(xc_NE7__kv_desc),
-    .active(xc_NE7__active),
-    .done(xc_NE7__done),
-    .fault(xc_NE7__fault)
-  );
-  ot_static_cmd_target #(.MODE(0), .AWA(10), .AWB(0), .RBW(1), .RCW(1), .NA(1), .NF(1), .TGT_PIN(1)) cpx_NE7 (
+  ot_hbm_svc_sm_xcal_t xc_NE7 (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
     .tgt(8'd223),
@@ -18202,23 +16813,12 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .desc_limit(host_cp_ingress__desc_limit[12:0]),
     .desc_loops(host_cp_ingress__desc_loops[15:0]),
     .launch_v(host_cp_ingress__launch_v[0]),
-    .tgt_active(xc_NE7__active[0]),
-    .tgt_fault(xc_NE7__fault[0]),
-    .a_we(cpx_NE7__a_we),
-    .a_addr(cpx_NE7__a_addr),
-    .a_data(cpx_NE7__a_data),
-    .b_we(cpx_NE7__b_we),
-    .b_addr(cpx_NE7__b_addr),
-    .b_data(cpx_NE7__b_data),
-    .run_v(cpx_NE7__run_v),
-    .run_base(cpx_NE7__run_base),
-    .run_count(cpx_NE7__run_count),
-    .cmd_v(cpx_NE7__cmd_v),
-    .cmd(cpx_NE7__cmd),
-    .cycle(cpx_NE7__cycle),
-    .configured(cpx_NE7__configured),
-    .fault(cpx_NE7__fault),
-    .active(cpx_NE7__active)
+    .cmd_ext(xc_NE7__cmd_ext),
+    .kv_desc(xc_NE7__kv_desc),
+    .done(xc_NE7__done),
+    .configured(xc_NE7__configured),
+    .fault(xc_NE7__fault),
+    .active(xc_NE7__active)
   );
   ot_hgi_coll_inj_idx_join #(.INJLAT(12)) cij_SW (
     .clk(hb_ckgen__pll_stream[0]),
@@ -19628,9 +18228,9 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .desc_v(host_cp_ingress__desc_v[0]),
     .launch_v(host_cp_ingress__launch_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
-    .t_ready({cpx_NE7__configured[0], cpx_NE6__configured[0], cpx_NE5__configured[0], cpx_NE4__configured[0], cpx_NE3__configured[0], cpx_NE2__configured[0], cpx_NE1__configured[0], cpx_NE0__configured[0], cpx_NW7__configured[0], cpx_NW6__configured[0], cpx_NW5__configured[0], cpx_NW4__configured[0], cpx_NW3__configured[0], cpx_NW2__configured[0], cpx_NW1__configured[0], cpx_NW0__configured[0], cpx_SE7__configured[0], cpx_SE6__configured[0], cpx_SE5__configured[0], cpx_SE4__configured[0], cpx_SE3__configured[0], cpx_SE2__configured[0], cpx_SE1__configured[0], cpx_SE0__configured[0], cpx_SW7__configured[0], cpx_SW6__configured[0], cpx_SW5__configured[0], cpx_SW4__configured[0], cpx_SW3__configured[0], cpx_SW2__configured[0], cpx_SW1__configured[0], cpx_SW0__configured[0], hc_tbl_tgt__configured[0], hc_eng_tgt__configured[0], cp_smw_NE__configured[0], cp_smw_NW__configured[0], cp_smw_SE__configured[0], cp_smw_SW__configured[0], epcal_NE__tgt_configured[0], epcal_NW__tgt_configured[0], epcal_SE__tgt_configured[0], epcal_SW__tgt_configured[0], hc_tgt_NE__configured[0], hc_tgt_NW__configured[0], hc_tgt_SE__configured[0], hc_tgt_SW__configured[0], hb_dbk_NE__cp_configured[0], hb_dbk_NW__cp_configured[0], hb_dbk_SE__cp_configured[0], hb_dbk_SW__cp_configured[0], cp_xl_NE__configured[0], cp_xl_NW__configured[0], cp_xl_SE__configured[0], cp_xl_SW__configured[0], calendar_NE__tgt_configured[0], calendar_NW__tgt_configured[0], calendar_SE__tgt_configured[0], calendar_SW__tgt_configured[0], cp_svg_NE7__configured[0], cp_svg_NE6__configured[0], cp_svg_NE5__configured[0], cp_svg_NE4__configured[0], cp_svg_NE3__configured[0], cp_svg_NE2__configured[0], cp_svg_NE1__configured[0], cp_svg_NE0__configured[0], cp_svg_NW7__configured[0], cp_svg_NW6__configured[0], cp_svg_NW5__configured[0], cp_svg_NW4__configured[0], cp_svg_NW3__configured[0], cp_svg_NW2__configured[0], cp_svg_NW1__configured[0], cp_svg_NW0__configured[0], cp_svg_SE7__configured[0], cp_svg_SE6__configured[0], cp_svg_SE5__configured[0], cp_svg_SE4__configured[0], cp_svg_SE3__configured[0], cp_svg_SE2__configured[0], cp_svg_SE1__configured[0], cp_svg_SE0__configured[0], cp_svg_SW7__configured[0], cp_svg_SW6__configured[0], cp_svg_SW5__configured[0], cp_svg_SW4__configured[0], cp_svg_SW3__configured[0], cp_svg_SW2__configured[0], cp_svg_SW1__configured[0], cp_svg_SW0__configured[0], vmfc_NE__tgt_configured[0], vmfc_NW__tgt_configured[0], vmfc_SE__tgt_configured[0], vmfc_SW__tgt_configured[0], col_idx__ready[0], col_sfu_NE__ready[0], col_sfu_NW__ready[0], col_sfu_SE__ready[0], col_sfu_SW__ready[0], col_su__ready[0], hb_coll_NE__program_configured[0], hb_coll_NW__program_configured[0], hb_coll_SE__program_configured[0], hb_coll_SW__program_configured[0], hb_quant_NW__configured[0]}),
-    .t_active({cpx_NE7__active[0], cpx_NE6__active[0], cpx_NE5__active[0], cpx_NE4__active[0], cpx_NE3__active[0], cpx_NE2__active[0], cpx_NE1__active[0], cpx_NE0__active[0], cpx_NW7__active[0], cpx_NW6__active[0], cpx_NW5__active[0], cpx_NW4__active[0], cpx_NW3__active[0], cpx_NW2__active[0], cpx_NW1__active[0], cpx_NW0__active[0], cpx_SE7__active[0], cpx_SE6__active[0], cpx_SE5__active[0], cpx_SE4__active[0], cpx_SE3__active[0], cpx_SE2__active[0], cpx_SE1__active[0], cpx_SE0__active[0], cpx_SW7__active[0], cpx_SW6__active[0], cpx_SW5__active[0], cpx_SW4__active[0], cpx_SW3__active[0], cpx_SW2__active[0], cpx_SW1__active[0], cpx_SW0__active[0], hc_eng__program_active[0], hc_eng__program_active[0], cp_smw_NE__active[0], cp_smw_NW__active[0], cp_smw_SE__active[0], cp_smw_SW__active[0], epcal_NE__active[0], epcal_NW__active[0], epcal_SE__active[0], epcal_SW__active[0], hc_NE__program_active[0], hc_NW__program_active[0], hc_SE__program_active[0], hc_SW__program_active[0], hb_dbk_NE__cp_active[0], hb_dbk_NW__cp_active[0], hb_dbk_SE__cp_active[0], hb_dbk_SW__cp_active[0], cp_xl_NE__active[0], cp_xl_NW__active[0], cp_xl_SE__active[0], cp_xl_SW__active[0], calendar_NE__active[0], calendar_NW__active[0], calendar_SE__active[0], calendar_SW__active[0], cp_svg_NE7__active[0], cp_svg_NE6__active[0], cp_svg_NE5__active[0], cp_svg_NE4__active[0], cp_svg_NE3__active[0], cp_svg_NE2__active[0], cp_svg_NE1__active[0], cp_svg_NE0__active[0], cp_svg_NW7__active[0], cp_svg_NW6__active[0], cp_svg_NW5__active[0], cp_svg_NW4__active[0], cp_svg_NW3__active[0], cp_svg_NW2__active[0], cp_svg_NW1__active[0], cp_svg_NW0__active[0], cp_svg_SE7__active[0], cp_svg_SE6__active[0], cp_svg_SE5__active[0], cp_svg_SE4__active[0], cp_svg_SE3__active[0], cp_svg_SE2__active[0], cp_svg_SE1__active[0], cp_svg_SE0__active[0], cp_svg_SW7__active[0], cp_svg_SW6__active[0], cp_svg_SW5__active[0], cp_svg_SW4__active[0], cp_svg_SW3__active[0], cp_svg_SW2__active[0], cp_svg_SW1__active[0], cp_svg_SW0__active[0], vmfc_NE__active[0], vmfc_NW__active[0], vmfc_SE__active[0], vmfc_SW__active[0], col_idx__active[0], col_sfu_NE__active[0], col_sfu_NW__active[0], col_sfu_SE__active[0], col_sfu_SW__active[0], col_su__active[0], hb_coll_NE__hgi_busy[0], hb_coll_NW__hgi_busy[0], hb_coll_SE__hgi_busy[0], hb_coll_SW__hgi_busy[0], hb_quant_NW__program_active[0]}),
-    .t_fault({sfus_NE__fault[0], sfus_NW__fault[0], sfus_SE__fault[0], sfus_SW__fault[0], sucx_NE__fault[0], sucx_NW__fault[0], sucx_SE__fault[0], sucx_SW__fault[0], wbk_NE__fault[0], wbk_NW__fault[0], wbk_SE__fault[0], wbk_SW__fault[0], cpx_NE7__fault[0], cpx_NE6__fault[0], cpx_NE5__fault[0], cpx_NE4__fault[0], cpx_NE3__fault[0], cpx_NE2__fault[0], cpx_NE1__fault[0], cpx_NE0__fault[0], cpx_NW7__fault[0], cpx_NW6__fault[0], cpx_NW5__fault[0], cpx_NW4__fault[0], cpx_NW3__fault[0], cpx_NW2__fault[0], cpx_NW1__fault[0], cpx_NW0__fault[0], cpx_SE7__fault[0], cpx_SE6__fault[0], cpx_SE5__fault[0], cpx_SE4__fault[0], cpx_SE3__fault[0], cpx_SE2__fault[0], cpx_SE1__fault[0], cpx_SE0__fault[0], cpx_SW7__fault[0], cpx_SW6__fault[0], cpx_SW5__fault[0], cpx_SW4__fault[0], cpx_SW3__fault[0], cpx_SW2__fault[0], cpx_SW1__fault[0], cpx_SW0__fault[0], hc_tbl_tgt__fault[0], hc_eng__fault[0], hc_eng_tgt__fault[0], cp_smw_NE__fault[0], cp_smw_NW__fault[0], cp_smw_SE__fault[0], cp_smw_SW__fault[0], ep_N3__fault[0], ep_N2__fault[0], epcal_NE__fault[0], epcal_NE__tgt_fault[0], ep_N1__fault[0], ep_N0__fault[0], epcal_NW__fault[0], epcal_NW__tgt_fault[0], ep_S4__fault[0], ep_S3__fault[0], epcal_SE__fault[0], epcal_SE__tgt_fault[0], ep_S2__fault[0], ep_S1__fault[0], ep_S0__fault[0], epcal_SW__fault[0], epcal_SW__tgt_fault[0], hc_NE__fault[0], hc_tgt_NE__fault[0], hc_NW__fault[0], hc_tgt_NW__fault[0], hc_SE__fault[0], hc_tgt_SE__fault[0], hc_SW__fault[0], hc_tgt_SW__fault[0], hb_dbk_NE__cp_fault[0], hb_dbk_NW__cp_fault[0], hb_dbk_SE__cp_fault[0], hb_dbk_SW__cp_fault[0], cp_xl_NE__fault[0], cp_xl_NW__fault[0], cp_xl_SE__fault[0], cp_xl_SW__fault[0], calendar_NE__fault[0], calendar_NE__tgt_fault[0], calendar_NW__fault[0], calendar_NW__tgt_fault[0], calendar_SE__fault[0], calendar_SE__tgt_fault[0], calendar_SW__fault[0], calendar_SW__tgt_fault[0], cp_svg_NE7__fault[0], cp_svg_NE6__fault[0], cp_svg_NE5__fault[0], cp_svg_NE4__fault[0], cp_svg_NE3__fault[0], cp_svg_NE2__fault[0], cp_svg_NE1__fault[0], cp_svg_NE0__fault[0], cp_svg_NW7__fault[0], cp_svg_NW6__fault[0], cp_svg_NW5__fault[0], cp_svg_NW4__fault[0], cp_svg_NW3__fault[0], cp_svg_NW2__fault[0], cp_svg_NW1__fault[0], cp_svg_NW0__fault[0], cp_svg_SE7__fault[0], cp_svg_SE6__fault[0], cp_svg_SE5__fault[0], cp_svg_SE4__fault[0], cp_svg_SE3__fault[0], cp_svg_SE2__fault[0], cp_svg_SE1__fault[0], cp_svg_SE0__fault[0], cp_svg_SW7__fault[0], cp_svg_SW6__fault[0], cp_svg_SW5__fault[0], cp_svg_SW4__fault[0], cp_svg_SW3__fault[0], cp_svg_SW2__fault[0], cp_svg_SW1__fault[0], cp_svg_SW0__fault[0], vmfc_NE__fault[0], vmfc_NE__tgt_fault[0], vmfc_NW__fault[0], vmfc_NW__tgt_fault[0], vmfc_SE__fault[0], vmfc_SE__tgt_fault[0], vmfc_SW__fault[0], vmfc_SW__tgt_fault[0], col_idx__fault[0], col_sfu_NE__fault[0], col_sfu_NW__fault[0], col_sfu_SE__fault[0], col_sfu_SW__fault[0], col_su__fault[0], hb_coll_NE__fault[0], hb_coll_NE__hgi_fault[0], hb_coll_NE__program_fault[0], hb_coll_NW__fault[0], hb_coll_NW__hgi_fault[0], hb_coll_NW__program_fault[0], hb_coll_SE__fault[0], hb_coll_SE__hgi_fault[0], hb_coll_SE__program_fault[0], hb_coll_SW__fault[0], hb_coll_SW__hgi_fault[0], hb_coll_SW__program_fault[0], hb_quant_NW__fault[0]}),
+    .t_ready({xc_NE7__configured[0], xc_NE6__configured[0], xc_NE5__configured[0], xc_NE4__configured[0], xc_NE3__configured[0], xc_NE2__configured[0], xc_NE1__configured[0], xc_NE0__configured[0], xc_NW7__configured[0], xc_NW6__configured[0], xc_NW5__configured[0], xc_NW4__configured[0], xc_NW3__configured[0], xc_NW2__configured[0], xc_NW1__configured[0], xc_NW0__configured[0], xc_SE7__configured[0], xc_SE6__configured[0], xc_SE5__configured[0], xc_SE4__configured[0], xc_SE3__configured[0], xc_SE2__configured[0], xc_SE1__configured[0], xc_SE0__configured[0], xc_SW7__configured[0], xc_SW6__configured[0], xc_SW5__configured[0], xc_SW4__configured[0], xc_SW3__configured[0], xc_SW2__configured[0], xc_SW1__configured[0], xc_SW0__configured[0], hc_tbl_tgt__configured[0], hc_eng_tgt__configured[0], smw_NE__configured[0], smw_NW__configured[0], smw_SE__configured[0], smw_SW__configured[0], epcal_NE__tgt_configured[0], epcal_NW__tgt_configured[0], epcal_SE__tgt_configured[0], epcal_SW__tgt_configured[0], hc_tgt_NE__configured[0], hc_tgt_NW__configured[0], hc_tgt_SE__configured[0], hc_tgt_SW__configured[0], hb_dbk_NE__cp_configured[0], hb_dbk_NW__cp_configured[0], hb_dbk_SE__cp_configured[0], hb_dbk_SW__cp_configured[0], cp_xl_NE__configured[0], cp_xl_NW__configured[0], cp_xl_SE__configured[0], cp_xl_SW__configured[0], calendar_NE__tgt_configured[0], calendar_NW__tgt_configured[0], calendar_SE__tgt_configured[0], calendar_SW__tgt_configured[0], cp_svg_NE7__configured[0], cp_svg_NE6__configured[0], cp_svg_NE5__configured[0], cp_svg_NE4__configured[0], cp_svg_NE3__configured[0], cp_svg_NE2__configured[0], cp_svg_NE1__configured[0], cp_svg_NE0__configured[0], cp_svg_NW7__configured[0], cp_svg_NW6__configured[0], cp_svg_NW5__configured[0], cp_svg_NW4__configured[0], cp_svg_NW3__configured[0], cp_svg_NW2__configured[0], cp_svg_NW1__configured[0], cp_svg_NW0__configured[0], cp_svg_SE7__configured[0], cp_svg_SE6__configured[0], cp_svg_SE5__configured[0], cp_svg_SE4__configured[0], cp_svg_SE3__configured[0], cp_svg_SE2__configured[0], cp_svg_SE1__configured[0], cp_svg_SE0__configured[0], cp_svg_SW7__configured[0], cp_svg_SW6__configured[0], cp_svg_SW5__configured[0], cp_svg_SW4__configured[0], cp_svg_SW3__configured[0], cp_svg_SW2__configured[0], cp_svg_SW1__configured[0], cp_svg_SW0__configured[0], vmfc_NE__tgt_configured[0], vmfc_NW__tgt_configured[0], vmfc_SE__tgt_configured[0], vmfc_SW__tgt_configured[0], col_idx__ready[0], col_sfu_NE__ready[0], col_sfu_NW__ready[0], col_sfu_SE__ready[0], col_sfu_SW__ready[0], col_su__ready[0], hb_coll_NE__program_configured[0], hb_coll_NW__program_configured[0], hb_coll_SE__program_configured[0], hb_coll_SW__program_configured[0], hb_quant_NW__configured[0]}),
+    .t_active({xc_NE7__active[0], xc_NE6__active[0], xc_NE5__active[0], xc_NE4__active[0], xc_NE3__active[0], xc_NE2__active[0], xc_NE1__active[0], xc_NE0__active[0], xc_NW7__active[0], xc_NW6__active[0], xc_NW5__active[0], xc_NW4__active[0], xc_NW3__active[0], xc_NW2__active[0], xc_NW1__active[0], xc_NW0__active[0], xc_SE7__active[0], xc_SE6__active[0], xc_SE5__active[0], xc_SE4__active[0], xc_SE3__active[0], xc_SE2__active[0], xc_SE1__active[0], xc_SE0__active[0], xc_SW7__active[0], xc_SW6__active[0], xc_SW5__active[0], xc_SW4__active[0], xc_SW3__active[0], xc_SW2__active[0], xc_SW1__active[0], xc_SW0__active[0], hc_eng__program_active[0], hc_eng__program_active[0], smw_NE__active[0], smw_NW__active[0], smw_SE__active[0], smw_SW__active[0], epcal_NE__active[0], epcal_NW__active[0], epcal_SE__active[0], epcal_SW__active[0], hc_NE__program_active[0], hc_NW__program_active[0], hc_SE__program_active[0], hc_SW__program_active[0], hb_dbk_NE__cp_active[0], hb_dbk_NW__cp_active[0], hb_dbk_SE__cp_active[0], hb_dbk_SW__cp_active[0], cp_xl_NE__active[0], cp_xl_NW__active[0], cp_xl_SE__active[0], cp_xl_SW__active[0], calendar_NE__active[0], calendar_NW__active[0], calendar_SE__active[0], calendar_SW__active[0], cp_svg_NE7__active[0], cp_svg_NE6__active[0], cp_svg_NE5__active[0], cp_svg_NE4__active[0], cp_svg_NE3__active[0], cp_svg_NE2__active[0], cp_svg_NE1__active[0], cp_svg_NE0__active[0], cp_svg_NW7__active[0], cp_svg_NW6__active[0], cp_svg_NW5__active[0], cp_svg_NW4__active[0], cp_svg_NW3__active[0], cp_svg_NW2__active[0], cp_svg_NW1__active[0], cp_svg_NW0__active[0], cp_svg_SE7__active[0], cp_svg_SE6__active[0], cp_svg_SE5__active[0], cp_svg_SE4__active[0], cp_svg_SE3__active[0], cp_svg_SE2__active[0], cp_svg_SE1__active[0], cp_svg_SE0__active[0], cp_svg_SW7__active[0], cp_svg_SW6__active[0], cp_svg_SW5__active[0], cp_svg_SW4__active[0], cp_svg_SW3__active[0], cp_svg_SW2__active[0], cp_svg_SW1__active[0], cp_svg_SW0__active[0], vmfc_NE__active[0], vmfc_NW__active[0], vmfc_SE__active[0], vmfc_SW__active[0], col_idx__active[0], col_sfu_NE__active[0], col_sfu_NW__active[0], col_sfu_SE__active[0], col_sfu_SW__active[0], col_su__active[0], hb_coll_NE__hgi_busy[0], hb_coll_NW__hgi_busy[0], hb_coll_SE__hgi_busy[0], hb_coll_SW__hgi_busy[0], hb_quant_NW__program_active[0]}),
+    .t_fault({sfus_NE__fault[0], sfus_NW__fault[0], sfus_SE__fault[0], sfus_SW__fault[0], sucx_NE__fault[0], sucx_NW__fault[0], sucx_SE__fault[0], sucx_SW__fault[0], wbk_NE__fault[0], wbk_NW__fault[0], wbk_SE__fault[0], wbk_SW__fault[0], xc_NE7__fault[0], xc_NE6__fault[0], xc_NE5__fault[0], xc_NE4__fault[0], xc_NE3__fault[0], xc_NE2__fault[0], xc_NE1__fault[0], xc_NE0__fault[0], xc_NW7__fault[0], xc_NW6__fault[0], xc_NW5__fault[0], xc_NW4__fault[0], xc_NW3__fault[0], xc_NW2__fault[0], xc_NW1__fault[0], xc_NW0__fault[0], xc_SE7__fault[0], xc_SE6__fault[0], xc_SE5__fault[0], xc_SE4__fault[0], xc_SE3__fault[0], xc_SE2__fault[0], xc_SE1__fault[0], xc_SE0__fault[0], xc_SW7__fault[0], xc_SW6__fault[0], xc_SW5__fault[0], xc_SW4__fault[0], xc_SW3__fault[0], xc_SW2__fault[0], xc_SW1__fault[0], xc_SW0__fault[0], hc_tbl_tgt__fault[0], hc_eng__fault[0], hc_eng_tgt__fault[0], smw_NE__fault[0], smw_NW__fault[0], smw_SE__fault[0], smw_SW__fault[0], ep_N3__fault[0], ep_N2__fault[0], epcal_NE__fault[0], epcal_NE__tgt_fault[0], ep_N1__fault[0], ep_N0__fault[0], epcal_NW__fault[0], epcal_NW__tgt_fault[0], ep_S4__fault[0], ep_S3__fault[0], epcal_SE__fault[0], epcal_SE__tgt_fault[0], ep_S2__fault[0], ep_S1__fault[0], ep_S0__fault[0], epcal_SW__fault[0], epcal_SW__tgt_fault[0], hc_NE__fault[0], hc_tgt_NE__fault[0], hc_NW__fault[0], hc_tgt_NW__fault[0], hc_SE__fault[0], hc_tgt_SE__fault[0], hc_SW__fault[0], hc_tgt_SW__fault[0], hb_dbk_NE__cp_fault[0], hb_dbk_NW__cp_fault[0], hb_dbk_SE__cp_fault[0], hb_dbk_SW__cp_fault[0], cp_xl_NE__fault[0], cp_xl_NW__fault[0], cp_xl_SE__fault[0], cp_xl_SW__fault[0], calendar_NE__fault[0], calendar_NE__tgt_fault[0], calendar_NW__fault[0], calendar_NW__tgt_fault[0], calendar_SE__fault[0], calendar_SE__tgt_fault[0], calendar_SW__fault[0], calendar_SW__tgt_fault[0], cp_svg_NE7__fault[0], cp_svg_NE6__fault[0], cp_svg_NE5__fault[0], cp_svg_NE4__fault[0], cp_svg_NE3__fault[0], cp_svg_NE2__fault[0], cp_svg_NE1__fault[0], cp_svg_NE0__fault[0], cp_svg_NW7__fault[0], cp_svg_NW6__fault[0], cp_svg_NW5__fault[0], cp_svg_NW4__fault[0], cp_svg_NW3__fault[0], cp_svg_NW2__fault[0], cp_svg_NW1__fault[0], cp_svg_NW0__fault[0], cp_svg_SE7__fault[0], cp_svg_SE6__fault[0], cp_svg_SE5__fault[0], cp_svg_SE4__fault[0], cp_svg_SE3__fault[0], cp_svg_SE2__fault[0], cp_svg_SE1__fault[0], cp_svg_SE0__fault[0], cp_svg_SW7__fault[0], cp_svg_SW6__fault[0], cp_svg_SW5__fault[0], cp_svg_SW4__fault[0], cp_svg_SW3__fault[0], cp_svg_SW2__fault[0], cp_svg_SW1__fault[0], cp_svg_SW0__fault[0], vmfc_NE__fault[0], vmfc_NE__tgt_fault[0], vmfc_NW__fault[0], vmfc_NW__tgt_fault[0], vmfc_SE__fault[0], vmfc_SE__tgt_fault[0], vmfc_SW__fault[0], vmfc_SW__tgt_fault[0], col_idx__fault[0], col_sfu_NE__fault[0], col_sfu_NW__fault[0], col_sfu_SE__fault[0], col_sfu_SW__fault[0], col_su__fault[0], hb_coll_NE__fault[0], hb_coll_NE__hgi_fault[0], hb_coll_NE__program_fault[0], hb_coll_NW__fault[0], hb_coll_NW__hgi_fault[0], hb_coll_NW__program_fault[0], hb_coll_SE__fault[0], hb_coll_SE__hgi_fault[0], hb_coll_SE__program_fault[0], hb_coll_SW__fault[0], hb_coll_SW__hgi_fault[0], hb_coll_SW__program_fault[0], hb_quant_NW__fault[0]}),
     .h_fault({host_phy__phy_fault[0], host_phy__pad_fault[0], host_cp_ep_face__f_lk_tx[547], host_cp_landing__fault[0], host_cp_packet__protocol_fault[0], host_cp_ingress__fault[0]}),
     .block_ready(host_status__block_ready),
     .program_active(host_status__program_active),
@@ -21219,24 +19819,11 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .lane_en_i(xl_NE_ctl__lane_en[63:0]),
     .bq_d(xl_NE_bd__bq_d)
   );
-  ot_hbm_sm_vm_wr_q #(.QUAD(0), .DEPTH(4)) smw_SW (
-    .clk(hb_ckgen__pll_stream[0]),
-    .rst_n(hb_ckgen__por_stream[0]),
-    .rv({sm_SW7__rv[0], sm_SW6__rv[0], sm_SW5__rv[0], sm_SW4__rv[0], sm_SW3__rv[0], sm_SW2__rv[0], sm_SW1__rv[0], sm_SW0__rv[0]}),
-    .rrow({sm_SW7__rrow[11:0], sm_SW6__rrow[11:0], sm_SW5__rrow[11:0], sm_SW4__rrow[11:0], sm_SW3__rrow[11:0], sm_SW2__rrow[11:0], sm_SW1__rrow[11:0], sm_SW0__rrow[11:0]}),
-    .rdata({sm_SW7__rdata[255:0], sm_SW6__rdata[255:0], sm_SW5__rdata[255:0], sm_SW4__rdata[255:0], sm_SW3__rdata[255:0], sm_SW2__rdata[255:0], sm_SW1__rdata[255:0], sm_SW0__rdata[255:0]}),
-    .cmd_v(cp_smw_SW__cmd_v[0]),
-    .cmd(cp_smw_SW__cmd[25:0]),
-    .sm_fault({sm_SW7__fault[0], sm_SW6__fault[0], sm_SW5__fault[0], sm_SW4__fault[0], sm_SW3__fault[0], sm_SW2__fault[0], sm_SW1__fault[0], sm_SW0__fault[0]}),
-    .sm_sched_fault({sm_SW7__schedule_fault[0], sm_SW6__schedule_fault[0], sm_SW5__schedule_fault[0], sm_SW4__schedule_fault[0], sm_SW3__schedule_fault[0], sm_SW2__schedule_fault[0], sm_SW1__schedule_fault[0], sm_SW0__schedule_fault[0]}),
-    .wq(smw_SW__wq),
-    .busy(smw_SW__busy),
-    .fault(smw_SW__fault)
-  );
-  ot_static_cmd_target #(.MODE(1), .CW(26), .RELF(0), .NA(1), .NF(1), .TGT_PIN(1)) cp_smw_SW (
+  ot_hbm_sm_vm_wr_q_t #(.DEPTH(4)) smw_SW (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
     .tgt(8'd160),
+    .quad(2'd0),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -21246,42 +19833,21 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .desc_limit(host_cp_ingress__desc_limit[12:0]),
     .desc_loops(host_cp_ingress__desc_loops[15:0]),
     .launch_v(host_cp_ingress__launch_v[0]),
-    .tgt_active(smw_SW__busy[0]),
-    .tgt_fault(smw_SW__fault[0]),
-    .a_we(cp_smw_SW__a_we),
-    .a_addr(cp_smw_SW__a_addr),
-    .a_data(cp_smw_SW__a_data),
-    .b_we(cp_smw_SW__b_we),
-    .b_addr(cp_smw_SW__b_addr),
-    .b_data(cp_smw_SW__b_data),
-    .run_v(cp_smw_SW__run_v),
-    .run_base(cp_smw_SW__run_base),
-    .run_count(cp_smw_SW__run_count),
-    .cmd_v(cp_smw_SW__cmd_v),
-    .cmd(cp_smw_SW__cmd),
-    .cycle(cp_smw_SW__cycle),
-    .configured(cp_smw_SW__configured),
-    .fault(cp_smw_SW__fault),
-    .active(cp_smw_SW__active)
+    .rv({sm_SW7__rv[0], sm_SW6__rv[0], sm_SW5__rv[0], sm_SW4__rv[0], sm_SW3__rv[0], sm_SW2__rv[0], sm_SW1__rv[0], sm_SW0__rv[0]}),
+    .rrow({sm_SW7__rrow[11:0], sm_SW6__rrow[11:0], sm_SW5__rrow[11:0], sm_SW4__rrow[11:0], sm_SW3__rrow[11:0], sm_SW2__rrow[11:0], sm_SW1__rrow[11:0], sm_SW0__rrow[11:0]}),
+    .rdata({sm_SW7__rdata[255:0], sm_SW6__rdata[255:0], sm_SW5__rdata[255:0], sm_SW4__rdata[255:0], sm_SW3__rdata[255:0], sm_SW2__rdata[255:0], sm_SW1__rdata[255:0], sm_SW0__rdata[255:0]}),
+    .sm_fault({sm_SW7__fault[0], sm_SW6__fault[0], sm_SW5__fault[0], sm_SW4__fault[0], sm_SW3__fault[0], sm_SW2__fault[0], sm_SW1__fault[0], sm_SW0__fault[0]}),
+    .sm_sched_fault({sm_SW7__schedule_fault[0], sm_SW6__schedule_fault[0], sm_SW5__schedule_fault[0], sm_SW4__schedule_fault[0], sm_SW3__schedule_fault[0], sm_SW2__schedule_fault[0], sm_SW1__schedule_fault[0], sm_SW0__schedule_fault[0]}),
+    .wq(smw_SW__wq),
+    .configured(smw_SW__configured),
+    .fault(smw_SW__fault),
+    .active(smw_SW__active)
   );
-  ot_hbm_sm_vm_wr_q #(.QUAD(1), .DEPTH(4)) smw_SE (
-    .clk(hb_ckgen__pll_stream[0]),
-    .rst_n(hb_ckgen__por_stream[0]),
-    .rv({sm_SE7__rv[0], sm_SE6__rv[0], sm_SE5__rv[0], sm_SE4__rv[0], sm_SE3__rv[0], sm_SE2__rv[0], sm_SE1__rv[0], sm_SE0__rv[0]}),
-    .rrow({sm_SE7__rrow[11:0], sm_SE6__rrow[11:0], sm_SE5__rrow[11:0], sm_SE4__rrow[11:0], sm_SE3__rrow[11:0], sm_SE2__rrow[11:0], sm_SE1__rrow[11:0], sm_SE0__rrow[11:0]}),
-    .rdata({sm_SE7__rdata[255:0], sm_SE6__rdata[255:0], sm_SE5__rdata[255:0], sm_SE4__rdata[255:0], sm_SE3__rdata[255:0], sm_SE2__rdata[255:0], sm_SE1__rdata[255:0], sm_SE0__rdata[255:0]}),
-    .cmd_v(cp_smw_SE__cmd_v[0]),
-    .cmd(cp_smw_SE__cmd[25:0]),
-    .sm_fault({sm_SE7__fault[0], sm_SE6__fault[0], sm_SE5__fault[0], sm_SE4__fault[0], sm_SE3__fault[0], sm_SE2__fault[0], sm_SE1__fault[0], sm_SE0__fault[0]}),
-    .sm_sched_fault({sm_SE7__schedule_fault[0], sm_SE6__schedule_fault[0], sm_SE5__schedule_fault[0], sm_SE4__schedule_fault[0], sm_SE3__schedule_fault[0], sm_SE2__schedule_fault[0], sm_SE1__schedule_fault[0], sm_SE0__schedule_fault[0]}),
-    .wq(smw_SE__wq),
-    .busy(smw_SE__busy),
-    .fault(smw_SE__fault)
-  );
-  ot_static_cmd_target #(.MODE(1), .CW(26), .RELF(0), .NA(1), .NF(1), .TGT_PIN(1)) cp_smw_SE (
+  ot_hbm_sm_vm_wr_q_t #(.DEPTH(4)) smw_SE (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
     .tgt(8'd161),
+    .quad(2'd1),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -21291,42 +19857,21 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .desc_limit(host_cp_ingress__desc_limit[12:0]),
     .desc_loops(host_cp_ingress__desc_loops[15:0]),
     .launch_v(host_cp_ingress__launch_v[0]),
-    .tgt_active(smw_SE__busy[0]),
-    .tgt_fault(smw_SE__fault[0]),
-    .a_we(cp_smw_SE__a_we),
-    .a_addr(cp_smw_SE__a_addr),
-    .a_data(cp_smw_SE__a_data),
-    .b_we(cp_smw_SE__b_we),
-    .b_addr(cp_smw_SE__b_addr),
-    .b_data(cp_smw_SE__b_data),
-    .run_v(cp_smw_SE__run_v),
-    .run_base(cp_smw_SE__run_base),
-    .run_count(cp_smw_SE__run_count),
-    .cmd_v(cp_smw_SE__cmd_v),
-    .cmd(cp_smw_SE__cmd),
-    .cycle(cp_smw_SE__cycle),
-    .configured(cp_smw_SE__configured),
-    .fault(cp_smw_SE__fault),
-    .active(cp_smw_SE__active)
+    .rv({sm_SE7__rv[0], sm_SE6__rv[0], sm_SE5__rv[0], sm_SE4__rv[0], sm_SE3__rv[0], sm_SE2__rv[0], sm_SE1__rv[0], sm_SE0__rv[0]}),
+    .rrow({sm_SE7__rrow[11:0], sm_SE6__rrow[11:0], sm_SE5__rrow[11:0], sm_SE4__rrow[11:0], sm_SE3__rrow[11:0], sm_SE2__rrow[11:0], sm_SE1__rrow[11:0], sm_SE0__rrow[11:0]}),
+    .rdata({sm_SE7__rdata[255:0], sm_SE6__rdata[255:0], sm_SE5__rdata[255:0], sm_SE4__rdata[255:0], sm_SE3__rdata[255:0], sm_SE2__rdata[255:0], sm_SE1__rdata[255:0], sm_SE0__rdata[255:0]}),
+    .sm_fault({sm_SE7__fault[0], sm_SE6__fault[0], sm_SE5__fault[0], sm_SE4__fault[0], sm_SE3__fault[0], sm_SE2__fault[0], sm_SE1__fault[0], sm_SE0__fault[0]}),
+    .sm_sched_fault({sm_SE7__schedule_fault[0], sm_SE6__schedule_fault[0], sm_SE5__schedule_fault[0], sm_SE4__schedule_fault[0], sm_SE3__schedule_fault[0], sm_SE2__schedule_fault[0], sm_SE1__schedule_fault[0], sm_SE0__schedule_fault[0]}),
+    .wq(smw_SE__wq),
+    .configured(smw_SE__configured),
+    .fault(smw_SE__fault),
+    .active(smw_SE__active)
   );
-  ot_hbm_sm_vm_wr_q #(.QUAD(2), .DEPTH(4)) smw_NW (
-    .clk(hb_ckgen__pll_stream[0]),
-    .rst_n(hb_ckgen__por_stream[0]),
-    .rv({sm_NW7__rv[0], sm_NW6__rv[0], sm_NW5__rv[0], sm_NW4__rv[0], sm_NW3__rv[0], sm_NW2__rv[0], sm_NW1__rv[0], sm_NW0__rv[0]}),
-    .rrow({sm_NW7__rrow[11:0], sm_NW6__rrow[11:0], sm_NW5__rrow[11:0], sm_NW4__rrow[11:0], sm_NW3__rrow[11:0], sm_NW2__rrow[11:0], sm_NW1__rrow[11:0], sm_NW0__rrow[11:0]}),
-    .rdata({sm_NW7__rdata[255:0], sm_NW6__rdata[255:0], sm_NW5__rdata[255:0], sm_NW4__rdata[255:0], sm_NW3__rdata[255:0], sm_NW2__rdata[255:0], sm_NW1__rdata[255:0], sm_NW0__rdata[255:0]}),
-    .cmd_v(cp_smw_NW__cmd_v[0]),
-    .cmd(cp_smw_NW__cmd[25:0]),
-    .sm_fault({sm_NW7__fault[0], sm_NW6__fault[0], sm_NW5__fault[0], sm_NW4__fault[0], sm_NW3__fault[0], sm_NW2__fault[0], sm_NW1__fault[0], sm_NW0__fault[0]}),
-    .sm_sched_fault({sm_NW7__schedule_fault[0], sm_NW6__schedule_fault[0], sm_NW5__schedule_fault[0], sm_NW4__schedule_fault[0], sm_NW3__schedule_fault[0], sm_NW2__schedule_fault[0], sm_NW1__schedule_fault[0], sm_NW0__schedule_fault[0]}),
-    .wq(smw_NW__wq),
-    .busy(smw_NW__busy),
-    .fault(smw_NW__fault)
-  );
-  ot_static_cmd_target #(.MODE(1), .CW(26), .RELF(0), .NA(1), .NF(1), .TGT_PIN(1)) cp_smw_NW (
+  ot_hbm_sm_vm_wr_q_t #(.DEPTH(4)) smw_NW (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
     .tgt(8'd162),
+    .quad(2'd2),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -21336,42 +19881,21 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .desc_limit(host_cp_ingress__desc_limit[12:0]),
     .desc_loops(host_cp_ingress__desc_loops[15:0]),
     .launch_v(host_cp_ingress__launch_v[0]),
-    .tgt_active(smw_NW__busy[0]),
-    .tgt_fault(smw_NW__fault[0]),
-    .a_we(cp_smw_NW__a_we),
-    .a_addr(cp_smw_NW__a_addr),
-    .a_data(cp_smw_NW__a_data),
-    .b_we(cp_smw_NW__b_we),
-    .b_addr(cp_smw_NW__b_addr),
-    .b_data(cp_smw_NW__b_data),
-    .run_v(cp_smw_NW__run_v),
-    .run_base(cp_smw_NW__run_base),
-    .run_count(cp_smw_NW__run_count),
-    .cmd_v(cp_smw_NW__cmd_v),
-    .cmd(cp_smw_NW__cmd),
-    .cycle(cp_smw_NW__cycle),
-    .configured(cp_smw_NW__configured),
-    .fault(cp_smw_NW__fault),
-    .active(cp_smw_NW__active)
+    .rv({sm_NW7__rv[0], sm_NW6__rv[0], sm_NW5__rv[0], sm_NW4__rv[0], sm_NW3__rv[0], sm_NW2__rv[0], sm_NW1__rv[0], sm_NW0__rv[0]}),
+    .rrow({sm_NW7__rrow[11:0], sm_NW6__rrow[11:0], sm_NW5__rrow[11:0], sm_NW4__rrow[11:0], sm_NW3__rrow[11:0], sm_NW2__rrow[11:0], sm_NW1__rrow[11:0], sm_NW0__rrow[11:0]}),
+    .rdata({sm_NW7__rdata[255:0], sm_NW6__rdata[255:0], sm_NW5__rdata[255:0], sm_NW4__rdata[255:0], sm_NW3__rdata[255:0], sm_NW2__rdata[255:0], sm_NW1__rdata[255:0], sm_NW0__rdata[255:0]}),
+    .sm_fault({sm_NW7__fault[0], sm_NW6__fault[0], sm_NW5__fault[0], sm_NW4__fault[0], sm_NW3__fault[0], sm_NW2__fault[0], sm_NW1__fault[0], sm_NW0__fault[0]}),
+    .sm_sched_fault({sm_NW7__schedule_fault[0], sm_NW6__schedule_fault[0], sm_NW5__schedule_fault[0], sm_NW4__schedule_fault[0], sm_NW3__schedule_fault[0], sm_NW2__schedule_fault[0], sm_NW1__schedule_fault[0], sm_NW0__schedule_fault[0]}),
+    .wq(smw_NW__wq),
+    .configured(smw_NW__configured),
+    .fault(smw_NW__fault),
+    .active(smw_NW__active)
   );
-  ot_hbm_sm_vm_wr_q #(.QUAD(3), .DEPTH(4)) smw_NE (
-    .clk(hb_ckgen__pll_stream[0]),
-    .rst_n(hb_ckgen__por_stream[0]),
-    .rv({sm_NE7__rv[0], sm_NE6__rv[0], sm_NE5__rv[0], sm_NE4__rv[0], sm_NE3__rv[0], sm_NE2__rv[0], sm_NE1__rv[0], sm_NE0__rv[0]}),
-    .rrow({sm_NE7__rrow[11:0], sm_NE6__rrow[11:0], sm_NE5__rrow[11:0], sm_NE4__rrow[11:0], sm_NE3__rrow[11:0], sm_NE2__rrow[11:0], sm_NE1__rrow[11:0], sm_NE0__rrow[11:0]}),
-    .rdata({sm_NE7__rdata[255:0], sm_NE6__rdata[255:0], sm_NE5__rdata[255:0], sm_NE4__rdata[255:0], sm_NE3__rdata[255:0], sm_NE2__rdata[255:0], sm_NE1__rdata[255:0], sm_NE0__rdata[255:0]}),
-    .cmd_v(cp_smw_NE__cmd_v[0]),
-    .cmd(cp_smw_NE__cmd[25:0]),
-    .sm_fault({sm_NE7__fault[0], sm_NE6__fault[0], sm_NE5__fault[0], sm_NE4__fault[0], sm_NE3__fault[0], sm_NE2__fault[0], sm_NE1__fault[0], sm_NE0__fault[0]}),
-    .sm_sched_fault({sm_NE7__schedule_fault[0], sm_NE6__schedule_fault[0], sm_NE5__schedule_fault[0], sm_NE4__schedule_fault[0], sm_NE3__schedule_fault[0], sm_NE2__schedule_fault[0], sm_NE1__schedule_fault[0], sm_NE0__schedule_fault[0]}),
-    .wq(smw_NE__wq),
-    .busy(smw_NE__busy),
-    .fault(smw_NE__fault)
-  );
-  ot_static_cmd_target #(.MODE(1), .CW(26), .RELF(0), .NA(1), .NF(1), .TGT_PIN(1)) cp_smw_NE (
+  ot_hbm_sm_vm_wr_q_t #(.DEPTH(4)) smw_NE (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
     .tgt(8'd163),
+    .quad(2'd3),
     .cfg_v(host_cp_ingress__cfg_v[0]),
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .cfg_addr(host_cp_ingress__cfg_addr[11:0]),
@@ -21381,23 +19905,15 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .desc_limit(host_cp_ingress__desc_limit[12:0]),
     .desc_loops(host_cp_ingress__desc_loops[15:0]),
     .launch_v(host_cp_ingress__launch_v[0]),
-    .tgt_active(smw_NE__busy[0]),
-    .tgt_fault(smw_NE__fault[0]),
-    .a_we(cp_smw_NE__a_we),
-    .a_addr(cp_smw_NE__a_addr),
-    .a_data(cp_smw_NE__a_data),
-    .b_we(cp_smw_NE__b_we),
-    .b_addr(cp_smw_NE__b_addr),
-    .b_data(cp_smw_NE__b_data),
-    .run_v(cp_smw_NE__run_v),
-    .run_base(cp_smw_NE__run_base),
-    .run_count(cp_smw_NE__run_count),
-    .cmd_v(cp_smw_NE__cmd_v),
-    .cmd(cp_smw_NE__cmd),
-    .cycle(cp_smw_NE__cycle),
-    .configured(cp_smw_NE__configured),
-    .fault(cp_smw_NE__fault),
-    .active(cp_smw_NE__active)
+    .rv({sm_NE7__rv[0], sm_NE6__rv[0], sm_NE5__rv[0], sm_NE4__rv[0], sm_NE3__rv[0], sm_NE2__rv[0], sm_NE1__rv[0], sm_NE0__rv[0]}),
+    .rrow({sm_NE7__rrow[11:0], sm_NE6__rrow[11:0], sm_NE5__rrow[11:0], sm_NE4__rrow[11:0], sm_NE3__rrow[11:0], sm_NE2__rrow[11:0], sm_NE1__rrow[11:0], sm_NE0__rrow[11:0]}),
+    .rdata({sm_NE7__rdata[255:0], sm_NE6__rdata[255:0], sm_NE5__rdata[255:0], sm_NE4__rdata[255:0], sm_NE3__rdata[255:0], sm_NE2__rdata[255:0], sm_NE1__rdata[255:0], sm_NE0__rdata[255:0]}),
+    .sm_fault({sm_NE7__fault[0], sm_NE6__fault[0], sm_NE5__fault[0], sm_NE4__fault[0], sm_NE3__fault[0], sm_NE2__fault[0], sm_NE1__fault[0], sm_NE0__fault[0]}),
+    .sm_sched_fault({sm_NE7__schedule_fault[0], sm_NE6__schedule_fault[0], sm_NE5__schedule_fault[0], sm_NE4__schedule_fault[0], sm_NE3__schedule_fault[0], sm_NE2__schedule_fault[0], sm_NE1__schedule_fault[0], sm_NE0__schedule_fault[0]}),
+    .wq(smw_NE__wq),
+    .configured(smw_NE__configured),
+    .fault(smw_NE__fault),
+    .active(smw_NE__active)
   );
   ot_hbm_su_bridge_release #(.MUT(0)) subr_SW (
     .clk_serial(hb_ckgen__pll_serial[0]),

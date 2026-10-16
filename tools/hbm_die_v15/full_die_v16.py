@@ -214,7 +214,21 @@ FOLD_RULES = [
          wrapper='ot_hgi_dma_back_static_vp4_banks_cp', source=_DBK + 'ot_hgi_dma_back_static_vp4_banks_cp.sv',
          deps=[_DBK + 'ot_hgi_dma_back_static_vp4_banks.sv', 'rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv'],
          status={'configured': 'cp_configured', 'fault': 'cp_fault', 'active': 'cp_active'}),
+    dict(target='ot_static_cmd_target', detect='a_we', consumers=('ot_hbm_svc_sm_xcal',),
+         wrapper='ot_hbm_svc_sm_xcal_t', source='rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_xcal_t.sv',
+         deps=['rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_xcal.sv', 'rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv'],
+         status={'configured': 'configured', 'fault': 'fault', 'active': 'active'},
+         # the xcal_t carries its own descriptor window B (host writes the svg descriptor rows to both targets; both
+         # collars fire on the same global launch edge, H-SM tb_hbm_svc_sm_xcal_t): the svg collar no longer feeds it
+         drop_dst_ports=('desc_we', 'desc_addr', 'desc_data', 'run_v', 'run_base', 'run_count')),
+    dict(target='ot_static_cmd_target', detect='cmd_v', consumers=('ot_hbm_sm_vm_wr_q',),
+         wrapper='ot_hbm_sm_vm_wr_q_t', source='rtl/hbm_accel/generic/vm/static/ot_hbm_sm_vm_wr_q_t.sv',
+         deps=['rtl/hbm_accel/generic/vm/static/ot_hbm_sm_vm_wr_q.sv', 'rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv'],
+         params={'DEPTH': 4}, param_straps={'QUAD': 'quad'},
+         status={'configured': 'configured', 'fault': 'fault', 'active': 'active'}),
 ]
+# parameters that became identity strap pins (H-SM DEDUPE 2026-10-16): one hardened master for every value
+PARAM_STRAPS = {'ot_hbm_svc_vm_kshare': {'SM': 'sm'}}
 
 
 def universal_calendar_fields():
@@ -292,6 +306,11 @@ def build(specs_dir, out):
             tid = int(v.split("'d")[1]) if "'d" in v else (int(v.split("'h")[1], 16) if "'h" in v else int(v))
             i['params']['TGT_PIN'] = 1
             tgt_straps.append(dict(inst=n, port='tgt', value=tid, reason=f'identity: F20 target id {tid} of this target instance'))
+    for n, i in insts.items():
+        for prm, port in PARAM_STRAPS.get(i['master'], {}).items():
+            if prm in i['params']:
+                tgt_straps.append(dict(inst=n, port=port, value=int(i['params'].pop(prm)),
+                                       reason=f'identity: {prm} of this instance (was a parameter)'))
     specs.append(dict(region='target_id_straps', straps=tgt_straps, edges=[], instances=[], clocks=[], gaps=[]))
     # H-NETLIST 0600: fill calendars vmfc_<q> (ot_vms_calendar_static, W<=187) are the CLOSED universal VM calendar
     # master hfd_hgi_vm_calendar (native PASS): same programme ABI, calendar[W-1:0] = its low packed fields cycle for
@@ -308,6 +327,9 @@ def build(specs_dir, out):
     for t, c in folded.items():
         tid = insts[t]['params'].get('TGT_PIN') and next(x['value'] for x in tgt_straps if x['inst'] == t)
         r = fold_rule[t]
+        for prm, port in r.get('param_straps', {}).items():
+            tgt_straps.append(dict(inst=c, port=port, value=int(insts[c]['params'][prm]),
+                                   reason=f'identity: {prm} of this instance (was a parameter)'))
         insts[c].update(master=r['wrapper'], source=r['source'], params=dict(r.get('params', {})), rtl_deps=list(r['deps']))
         insts[c]['note'] = insts[c].get('note', '') + f' | H-NETLIST 0600: F20 target {tid} folded in (was {t})'
         for x in tgt_straps:
@@ -345,8 +367,10 @@ def build(specs_dir, out):
             edges.append(e)
     if folded:
         inv = {}
+        consumers_rule = {}
         for t, c in folded.items():
             inv[t] = c
+            consumers_rule[c] = fold_rule[t]
         fe = []
         for e in edges:
             a, b = e['src'][0], e['dst'][0]
@@ -354,6 +378,8 @@ def build(specs_dir, out):
                 continue                                   # target -> calendar programme pins: now internal
             if b in inv and a == inv[b]:
                 continue                                   # calendar active -> target interlock: now internal
+            if b in consumers_rule and e['dst'][1] in consumers_rule[b].get('drop_dst_ports', ()):
+                continue                                   # superseded feed into a folded consumer (rule note)
             e = dict(e)
             if b in inv:
                 e['dst'] = [inv[b]] + list(e['dst'][1:])   # F20 broadcast now lands on the calendar face
