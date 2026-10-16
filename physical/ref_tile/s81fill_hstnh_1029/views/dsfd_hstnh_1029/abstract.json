@@ -177,11 +177,18 @@
   },
   "macro_views": [],
   "files": {
-    "dsfd_hstnh_1029.lef": "f76c6bf3bf0418ff144fd0a5978be7f6424c05e56fdf96b4ec2a06e78008002f",
+    "dsfd_hstnh_1029.lef": "8db88c0b3fc8f7f570ed36dac16c618d775df1b49e74b9b332f3822350ac7c4f",
     "dsfd_hstnh_1029_ff.lib": "fb606e0db96bc440380efd9533c5acde60c94a23cb8e6173f5f330d62d85ac4f",
     "dsfd_hstnh_1029_ss.lib": "d2215eb1c7afcb9ee5e824c87a2a70a62a19e5b40c7570bbcf0cd2ae96ae46fb",
     "dsfd_hstnh_1029_tt.lib": "5711029267d1173718e8b377f5ab93ad459e00b7b7df89680c2241985b68b329"
   },
   "ok": true,
-  "checked": true
+  "checked": true,
+  "export_provenance": {
+    "schema": 1,
+    "raw_manifest": "provenance/view_export.abstract.json",
+    "raw_manifest_sha256": "af2571253fa9c5e65245cee35b682ef24f2c3f8034c90c22209103b17d78b072",
+    "transformation": "provenance/abstract_pin_stub.json",
+    "transformation_sha256": "de722a496a94b5a1cfa73f1dabebf6c07692981ed35b15144b9b272fe6847ab8"
+  }
 }

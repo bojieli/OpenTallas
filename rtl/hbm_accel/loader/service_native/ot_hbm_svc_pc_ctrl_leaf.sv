@@ -17,7 +17,8 @@ module ot_hbm_svc_pc_ctrl_leaf #(
     parameter integer OREG=1,
     parameter integer KREG=1,
     parameter integer KRREG=1,
-    parameter integer RREG=1
+    parameter integer RREG=1,
+    parameter integer WPAY=1
 )(
     input wire clk,rst_n,
     input wire k_v,output wire k_rdy,input wire k_we,
@@ -46,7 +47,7 @@ module ot_hbm_svc_pc_ctrl_leaf #(
 `else
     localparam integer REF_STRAP=RELOAD;
 `endif
-    ot_hbm_svc_pc_ctrl_leaf_cfg #(.OREG(OREG),.KREG(KREG),.KRREG(KRREG),.RREG(RREG)) u_cfg(
+    ot_hbm_svc_pc_ctrl_leaf_cfg #(.OREG(OREG),.KREG(KREG),.KRREG(KRREG),.RREG(RREG),.WPAY(WPAY)) u_cfg(
         .pc_id(5'(PC_STRAP)),.refresh_reload(8'(REF_STRAP)),
         .k_v(k_v),
         .k_rdy(k_rdy),

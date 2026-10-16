@@ -81,6 +81,10 @@ DIES = {
     ),
     'hbm': dict(
         label='HBM accelerator die', lead='H-DIE', design='hbm',
+        # v16 full-die netlist (H-NETLIST, tools/hbm_die_v15/run_v16.sh): strict die_port_bind v2 record on main; the v15
+        # source contract below is the fallback when no v16 record is published
+        bind=[('repo', 'results/arch/hbm_die_v16/port_bind.json')],
+        v16_contract='results/arch/hbm_die_v16/contract.json',
         contract='results/arch/hbm_die_v15/source_contract/contract.json',
         readiness='results/arch/hbm_die_v15/die_chain_readiness.json',
         exposed='results/arch/hbm_die_v15/views_v5/exposed_inputs_by_owner_1705.json',
@@ -422,7 +426,8 @@ def die(name, cfg, reg, native, remote=True):
                contract_complete=dcfg.get('complete'), unknowns=[])
     bind = None
     phys = {}
-    if name == 'hbm':
+    hbm_v16 = name == 'hbm' and repo_read(cfg['bind'][0][1]) is not None
+    if name == 'hbm' and not hbm_v16:
         c = json.loads(repo_read(cfg['contract']))
         inst = c['instances']
         masters = collections.Counter(v['master'] for v in inst.values())
@@ -469,6 +474,19 @@ def die(name, cfg, reg, native, remote=True):
         if not bind:
             out['unknowns'].append('no readable bind record')
             return out
+        if hbm_v16:                                   # v16 full netlist: exposed inputs + physical view inventory
+            c = json.loads(repo_read(cfg['v16_contract']) or '{}')
+            ex = c.get('exposed_inputs') or {}
+            bind['summary']['exposed_inputs'] = dict(ports=ex.get('ports'), bits=ex.get('bits'),
+                                                     by_owner=ex.get('by_owner') or {}, src=cfg['v16_contract'],
+                                                     commit=repo_commit(cfg['v16_contract']))
+            bind['summary']['gaps'] = sum(1 for g in c.get('gaps') or [] if g.get('undriven_ports'))
+            bind['summary']['unbound_source_ports'] = ex.get('ports')
+            bind['src']['die_v'] = 'results/arch/hbm_die_v16/die.v (top hbm_v16_die)'
+            inv = json.loads(repo_read(cfg['inventory']) or '{}')
+            phys = dict(src=cfg['inventory'], commit=repo_commit(cfg['inventory']),
+                        area_mm2_by_status=inv.get('area_mm2_by_status') or inv.get('summary', {}).get('area_mm2_by_status'),
+                        note='views_v5 inventory predates the v16 netlist (v15 instance names)')
         # physical view binding of the latest chain
         if cfg.get('view_bind') and bind['src']['host'] != 'repo':
             vb = read(bind['src']['host'], norm_rel(bind['src']['path'], cfg['view_bind']))
@@ -644,7 +662,7 @@ def markdown(res):
         s = d['bind_summary']
         L.append(f"| {d['label']} | {s['instances']:,} | {s['masters']} | {d['placeholders']['rtl_nonreal_instances']:,} | "
                  f"{d['placeholders']['no_closed_view_instances']:,} | {d['bind_open']['input_ports_unconnected']:,}"
-                 f"{' (= exposed inputs; ' + format(d['remaining']['hbm_unbound_source_ports'], ',') + ' unresolved ports incl. outputs)' if d['die'] == 'hbm' else ''} | "
+                 f"{' (= exposed inputs; ' + format(d['remaining']['hbm_unbound_source_ports'], ',') + ' unresolved ports incl. outputs)' if d['die'] == 'hbm' and 'exposed_inputs_engine_update' in s else ''} | "
                  f"{d['view_state_masters']['closed + native PASS']} | {d['remaining']['of_which_in_netlist']} | "
                  f"{len(d['contract_missing'])} | **{d['remaining']['total']:,}** | "
                  f"{d['remaining']['masters_not_closed_native_after_dedupe']} of {d['remaining']['masters_not_closed_native']} |")
@@ -683,7 +701,12 @@ def markdown(res):
         if s.get('undriven_net_bits') is not None:
             L.append(f"| (3) undriven / multi-driven net bits, stub masters, unbound masters | {s['undriven_net_bits']} / "
                      f"{s['multi_driven_net_bits']} / {s['stub_masters']} / {s['unbound_masters']} |")
-        if d['die'] == 'hbm':
+        if d['die'] == 'hbm' and 'exposed_inputs_engine_update' not in s:
+            e = s['exposed_inputs']
+            L.append(f"| (3) exposed die inputs (v16 full netlist) | {e['ports'] or 0:,} ports / {e['bits'] or 0:,} bits in "
+                     f"{s.get('gaps')} open gaps (`{e['src']}` {e['commit']}); by owner "
+                     + '; '.join(f"{k} {v['ports']}/{v['bits']:,}" for k, v in e['by_owner'].items()) + ' |')
+        elif d['die'] == 'hbm':
             e = s['exposed_inputs']
             L.append(f"| (3) exposed die inputs (views_v5) | {e['ports']:,} ports / {e['bits']:,} bits; by owner "
                      + '; '.join(f"{k} {v['ports']}/{v['bits']:,}" for k, v in e['by_owner'].items()) + ' |')

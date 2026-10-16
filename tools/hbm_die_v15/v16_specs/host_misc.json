@@ -1,0 +1,3286 @@
+{
+ "region": "host_misc",
+ "author": "Claude region agent host_misc (H-NETLIST v16)",
+ "basis_commit": "d96381d6e",
+ "instances": [
+  {
+   "name": "host_N",
+   "master": "ot_pdie_ucie",
+   "source": "rtl/dsrom_sys/s81_link/ot_pdie_serdes.sv",
+   "params": {},
+   "slot": "host_N",
+   "owner": "H-DIE",
+   "note": "host UCIe-A shoreline hard macro (grant hard_macro_real_rtl_1405); tx/rx 512 b digital side faces host_cp; pma_* are die pads (off-die boundary, elastic)"
+  },
+  {
+   "name": "host_cp_ep_face",
+   "master": "hfd_lk_ep_face",
+   "source": "rtl/hbm_accel/tu/lk_ep_20261010/hfd_lk_ep_face.sv",
+   "params": {
+    "MUT_FACE": 0
+   },
+   "slot": "host_cp",
+   "owner": "host owner",
+   "note": "pin-register face of the host link endpoint; lifted from hfd_lk_ep (wires-only wrapper, HARD_CLOCKS=1 so face clock = clk_face) as instantiated by hfd_host_native u_endpoint"
+  },
+  {
+   "name": "host_cp_ep",
+   "master": "ot_hbm_lk_ep",
+   "source": "rtl/hbm_accel/tu/lk_ep_20261010/ot_hbm_lk_ep.sv",
+   "params": {
+    "HARD_CLOCKS": 1,
+    "NS": 3,
+    "LW": 487,
+    "TXQ": 32,
+    "FCR": 256
+   },
+   "slot": "host_cp",
+   "owner": "host owner",
+   "note": "host link endpoint core (CRC/replay 545, link-level credit at the off-die host boundary, HANDOFF 0az); params exactly as hfd_lk_ep instantiates it"
+  },
+  {
+   "name": "host_cp_landing",
+   "master": "ot_hbm_host_landing256",
+   "source": "rtl/hbm_accel/io_native_20261014/ot_hbm_host_landing256.sv",
+   "params": {},
+   "slot": "host_cp",
+   "owner": "host owner",
+   "note": "host landing FIFO, two real 256x256 SRAMs (matches endpoint FCR256)"
+  },
+  {
+   "name": "host_cp_packet",
+   "master": "ot_hbm_host_packet_static",
+   "source": "rtl/hbm_accel/host_static_20261015/ot_hbm_host_packet_static.sv",
+   "params": {},
+   "slot": "host_cp",
+   "owner": "host owner",
+   "note": "STATIC successor of ot_hbm_host_packet (cp2): dynamic-loader faces h_*/h_dma_*/m_* retired (ops 03/04/91..94 refused), credit-gated 545-b flit to the endpoint face, status packets from host_status; pin-registered"
+  },
+  {
+   "name": "host_cp_ingress",
+   "master": "ot_hbm_host_static_ingress",
+   "source": "rtl/hbm_accel/host_static_20261015/ot_hbm_host_static_ingress.sv",
+   "params": {
+    "MUT": 0,
+    "TARGET_MASK": "256'hf001f1ffffffffffff0ff1000000000000"
+   },
+   "slot": "host_cp_ingress",
+   "owner": "host owner",
+   "note": "static host configuration ingress (granted diagnostic_component_child, native leaf qualified); TARGET_MASK default = only target 48 (QDQ NW) | H-NETLIST: TARGET_MASK = targets 48 (QUANT NW) + 52..55 (COLL SW/SE/NW/NE, region coll_idx_link) | cp2: TARGET_MASK = 48, 52..55, 64..107 (cp1), 112 (SU), 116..119 (SFU), 120 (IDX+TOPK+ARGMAX)"
+  },
+  {
+   "name": "hb_quant_NW",
+   "master": "ot_hgi_qdq_host_static",
+   "source": "rtl/hbm_accel/generic/qw/static/ot_hgi_qdq_host_static.sv",
+   "params": {
+    "RL": 7,
+    "WC": 4,
+    "COMPACT": 1
+   },
+   "slot": null,
+   "owner": "H-SM (QUANT, ex H-ATTQ)",
+   "note": "KEPT v15 (see notes: split leaves quant_NW0..3/_lg/_xp have no parent composition on main); now driven by host_cp_ingress (target 48)"
+  },
+  {
+   "name": "hb_dbk_SW",
+   "master": "ot_hgi_dma_back_static_vp4_banks",
+   "source": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks.sv",
+   "params": {},
+   "slot": "hb_dbk_SW",
+   "owner": "H-HARDEN",
+   "note": "One vp4 bank-cluster master; registered stk strap and eight bank clock entries."
+  },
+  {
+   "name": "hb_dbk_SE",
+   "master": "ot_hgi_dma_back_static_vp4_banks",
+   "source": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks.sv",
+   "params": {},
+   "slot": "hb_dbk_SE",
+   "owner": "H-HARDEN",
+   "note": "One vp4 bank-cluster master; registered stk strap and eight bank clock entries."
+  },
+  {
+   "name": "hb_dbk_NW",
+   "master": "ot_hgi_dma_back_static_vp4_banks",
+   "source": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks.sv",
+   "params": {},
+   "slot": "hb_dbk_NW",
+   "owner": "H-HARDEN",
+   "note": "One vp4 bank-cluster master; registered stk strap and eight bank clock entries."
+  },
+  {
+   "name": "hb_dbk_NE",
+   "master": "ot_hgi_dma_back_static_vp4_banks",
+   "source": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks.sv",
+   "params": {},
+   "slot": "hb_dbk_NE",
+   "owner": "H-HARDEN",
+   "note": "One vp4 bank-cluster master; registered stk strap and eight bank clock entries."
+  },
+  {
+   "name": "calendar_SW",
+   "master": "hfd_hgi_vm_calendar",
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar.sv",
+   "params": {},
+   "slot": "calendar_SW",
+   "owner": "H-SM",
+   "note": "Universal W187 master; compiler --universal required; host-loader gap remains OPEN."
+  },
+  {
+   "name": "calendar_SE",
+   "master": "hfd_hgi_vm_calendar",
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar.sv",
+   "params": {},
+   "slot": "calendar_SE",
+   "owner": "H-SM",
+   "note": "Universal W187 master; compiler --universal required; host-loader gap remains OPEN."
+  },
+  {
+   "name": "calendar_NW",
+   "master": "hfd_hgi_vm_calendar",
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar.sv",
+   "params": {},
+   "slot": "calendar_NW",
+   "owner": "H-SM",
+   "note": "Universal W187 master; compiler --universal required; host-loader gap remains OPEN."
+  },
+  {
+   "name": "calendar_NE",
+   "master": "hfd_hgi_vm_calendar",
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar.sv",
+   "params": {},
+   "slot": "calendar_NE",
+   "owner": "H-SM",
+   "note": "Universal W187 master; compiler --universal required; host-loader gap remains OPEN."
+  },
+  {
+   "name": "vm_status4",
+   "master": "ot_vms_status4_static",
+   "source": "rtl/hbm_accel/generic/vm/static/ot_vms_status4_static.sv",
+   "params": {},
+   "slot": null,
+   "owner": "H-SM",
+   "note": "KEPT v15; inputs bound by v15 status_<q>; vmstat has no consumer"
+  }
+ ],
+ "retire_v15": [],
+ "edges": [
+  {
+   "src": [
+    "host_cp_ep_face",
+    "core_t_v"
+   ],
+   "dst": [
+    "host_cp_ep",
+    "t_v"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/tu/lk_ep_20261010/hfd_lk_ep.sv:29-33 u_face.core_t_v -> u.t_v"
+  },
+  {
+   "src": [
+    "host_cp_ep_face",
+    "core_t_flit"
+   ],
+   "dst": [
+    "host_cp_ep",
+    "t_flit"
+   ],
+   "bits": 545,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/tu/lk_ep_20261010/hfd_lk_ep.sv:29-33 u_face.core_t_flit -> u.t_flit"
+  },
+  {
+   "src": [
+    "host_cp_ep_face",
+    "core_r_cr"
+   ],
+   "dst": [
+    "host_cp_ep",
+    "r_cr"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/tu/lk_ep_20261010/hfd_lk_ep.sv:29-33 u_face.core_r_cr -> u.r_cr"
+  },
+  {
+   "src": [
+    "host_cp_ep_face",
+    "core_session"
+   ],
+   "dst": [
+    "host_cp_ep",
+    "session"
+   ],
+   "bits": 24,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/tu/lk_ep_20261010/hfd_lk_ep.sv:29-33 u_face.core_session -> u.session"
+  },
+  {
+   "src": [
+    "host_cp_ep",
+    "t_cr"
+   ],
+   "dst": [
+    "host_cp_ep_face",
+    "t_cr"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/tu/lk_ep_20261010/hfd_lk_ep.sv:31-34 u.t_cr -> u_face.t_cr"
+  },
+  {
+   "src": [
+    "host_cp_ep",
+    "r_v"
+   ],
+   "dst": [
+    "host_cp_ep_face",
+    "r_v"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/tu/lk_ep_20261010/hfd_lk_ep.sv:31-34 u.r_v -> u_face.r_v"
+  },
+  {
+   "src": [
+    "host_cp_ep",
+    "r_flit"
+   ],
+   "dst": [
+    "host_cp_ep_face",
+    "r_flit"
+   ],
+   "bits": 545,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/tu/lk_ep_20261010/hfd_lk_ep.sv:31-34 u.r_flit -> u_face.r_flit"
+  },
+  {
+   "src": [
+    "host_cp_ep",
+    "fault"
+   ],
+   "dst": [
+    "host_cp_ep_face",
+    "fault"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/tu/lk_ep_20261010/hfd_lk_ep.sv:31-34 u.fault -> u_face.fault"
+  },
+  {
+   "src": [
+    "host_cp_ep",
+    "locked"
+   ],
+   "dst": [
+    "host_cp_ep_face",
+    "locked"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/tu/lk_ep_20261010/hfd_lk_ep.sv:31-34 u.locked -> u_face.locked"
+  },
+  {
+   "src": [
+    "host_cp_landing",
+    "pop"
+   ],
+   "dst": [
+    "host_cp_ep_face",
+    "f_lk_rx",
+    546,
+    547
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/io_native_20261014/hfd_host_native.sv:27 f_lk[546]=pop + rtl/hbm_accel/tu/lk_ep_20261010/hfd_lk_ep.sv:29"
+  },
+  {
+   "src": [
+    "host_cp_ep_face",
+    "f_lk_tx",
+    0,
+    1
+   ],
+   "dst": [
+    "host_cp_landing",
+    "in_v"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/io_native_20261014/hfd_host_native.sv:31 in_v(f_lk[547]) + rtl/hbm_accel/tu/lk_ep_20261010/hfd_lk_ep.sv:19 f_lk[1093:547]=face_tx[546:0]"
+  },
+  {
+   "src": [
+    "host_cp_ep_face",
+    "f_lk_tx",
+    1,
+    546
+   ],
+   "dst": [
+    "host_cp_landing",
+    "in_data"
+   ],
+   "bits": 545,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/io_native_20261014/hfd_host_native.sv:31 in_data(f_lk[1092:548]) + rtl/hbm_accel/tu/lk_ep_20261010/hfd_lk_ep.sv:19"
+  },
+  {
+   "src": [
+    "host_cp_landing",
+    "out_v"
+   ],
+   "dst": [
+    "host_cp_packet",
+    "rx_valid"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/io_native_20261014/hfd_host_native.sv:25-26/31-32 u_landing.out_v(lv) -> u_packet.rx_valid(lv)"
+  },
+  {
+   "src": [
+    "host_cp_landing",
+    "out_data"
+   ],
+   "dst": [
+    "host_cp_packet",
+    "rx_packet"
+   ],
+   "bits": 512,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/io_native_20261014/hfd_host_native.sv:25-26/31-32 out_data(ld) -> rx_packet(ld)"
+  },
+  {
+   "src": [
+    "host_cp_packet",
+    "rx_ready"
+   ],
+   "dst": [
+    "host_cp_landing",
+    "out_ready"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/io_native_20261014/hfd_host_native.sv:25-26/31-32 rx_ready(lr) -> out_ready(lr)"
+  },
+  {
+   "src": [
+    "host_cp_packet",
+    "s_awvalid"
+   ],
+   "dst": [
+    "host_cp_ingress",
+    "s_awvalid"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/host_static_20261015/hfd_host_static_native_qdq_program.sv:81-85 u_ingress.s_awvalid on the same h[] bits as hfd_host_packet_face u_controller.s_awvalid"
+  },
+  {
+   "src": [
+    "host_cp_packet",
+    "s_awaddr"
+   ],
+   "dst": [
+    "host_cp_ingress",
+    "s_awaddr"
+   ],
+   "bits": 12,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/host_static_20261015/hfd_host_static_native_qdq_program.sv:81-85 u_ingress.s_awaddr on the same h[] bits as hfd_host_packet_face u_controller.s_awaddr"
+  },
+  {
+   "src": [
+    "host_cp_packet",
+    "s_wvalid"
+   ],
+   "dst": [
+    "host_cp_ingress",
+    "s_wvalid"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/host_static_20261015/hfd_host_static_native_qdq_program.sv:81-85 u_ingress.s_wvalid on the same h[] bits as hfd_host_packet_face u_controller.s_wvalid"
+  },
+  {
+   "src": [
+    "host_cp_packet",
+    "s_wdata"
+   ],
+   "dst": [
+    "host_cp_ingress",
+    "s_wdata"
+   ],
+   "bits": 32,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/host_static_20261015/hfd_host_static_native_qdq_program.sv:81-85 u_ingress.s_wdata on the same h[] bits as hfd_host_packet_face u_controller.s_wdata"
+  },
+  {
+   "src": [
+    "host_cp_packet",
+    "s_wstrb"
+   ],
+   "dst": [
+    "host_cp_ingress",
+    "s_wstrb"
+   ],
+   "bits": 4,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/host_static_20261015/hfd_host_static_native_qdq_program.sv:81-85 u_ingress.s_wstrb on the same h[] bits as hfd_host_packet_face u_controller.s_wstrb"
+  },
+  {
+   "src": [
+    "host_cp_packet",
+    "s_bready"
+   ],
+   "dst": [
+    "host_cp_ingress",
+    "s_bready"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/host_static_20261015/hfd_host_static_native_qdq_program.sv:81-85 u_ingress.s_bready on the same h[] bits as hfd_host_packet_face u_controller.s_bready"
+  },
+  {
+   "src": [
+    "host_cp_packet",
+    "s_arvalid"
+   ],
+   "dst": [
+    "host_cp_ingress",
+    "s_arvalid"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/host_static_20261015/hfd_host_static_native_qdq_program.sv:81-85 u_ingress.s_arvalid on the same h[] bits as hfd_host_packet_face u_controller.s_arvalid"
+  },
+  {
+   "src": [
+    "host_cp_packet",
+    "s_araddr"
+   ],
+   "dst": [
+    "host_cp_ingress",
+    "s_araddr"
+   ],
+   "bits": 12,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/host_static_20261015/hfd_host_static_native_qdq_program.sv:81-85 u_ingress.s_araddr on the same h[] bits as hfd_host_packet_face u_controller.s_araddr"
+  },
+  {
+   "src": [
+    "host_cp_packet",
+    "s_rready"
+   ],
+   "dst": [
+    "host_cp_ingress",
+    "s_rready"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/host_static_20261015/hfd_host_static_native_qdq_program.sv:81-85 u_ingress.s_rready on the same h[] bits as hfd_host_packet_face u_controller.s_rready"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "s_awready"
+   ],
+   "dst": [
+    "host_cp_packet",
+    "s_awready"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/host_static_20261015/hfd_host_static_native_qdq_program.sv:81-85 u_ingress.s_awready -> h[] -> hfd_host_packet_face u_controller.s_awready"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "s_wready"
+   ],
+   "dst": [
+    "host_cp_packet",
+    "s_wready"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/host_static_20261015/hfd_host_static_native_qdq_program.sv:81-85 u_ingress.s_wready -> h[] -> hfd_host_packet_face u_controller.s_wready"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "s_bvalid"
+   ],
+   "dst": [
+    "host_cp_packet",
+    "s_bvalid"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/host_static_20261015/hfd_host_static_native_qdq_program.sv:81-85 u_ingress.s_bvalid -> h[] -> hfd_host_packet_face u_controller.s_bvalid"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "s_arready"
+   ],
+   "dst": [
+    "host_cp_packet",
+    "s_arready"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/host_static_20261015/hfd_host_static_native_qdq_program.sv:81-85 u_ingress.s_arready -> h[] -> hfd_host_packet_face u_controller.s_arready"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "s_rvalid"
+   ],
+   "dst": [
+    "host_cp_packet",
+    "s_rvalid"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/host_static_20261015/hfd_host_static_native_qdq_program.sv:81-85 u_ingress.s_rvalid -> h[] -> hfd_host_packet_face u_controller.s_rvalid"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "s_rdata"
+   ],
+   "dst": [
+    "host_cp_packet",
+    "s_rdata"
+   ],
+   "bits": 32,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/host_static_20261015/hfd_host_static_native_qdq_program.sv:81-85 u_ingress.s_rdata -> h[] -> hfd_host_packet_face u_controller.s_rdata"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "s_bresp"
+   ],
+   "dst": [
+    "host_cp_packet",
+    "s_bresp"
+   ],
+   "bits": 2,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/host_static_20261015/hfd_host_static_native_qdq_program.sv:85/rtl/hbm_accel/io_native_20261014/hfd_host_native.sv:25 s_bresp(bresp) wire from u_ingress to u_host.u_packet"
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "cfg_v"
+   ],
+   "dst": [
+    "hb_quant_NW",
+    "cfg_v"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/host_static_20261015/hfd_host_static_native_qdq_program.sv:87-90 (ingress -> target48 COMPACT1 programme leaf, same ot_hgi_qdq_native_program_leaf as inside ot_hgi_qdq_host_static); tb_hbm_host_static_ingress / tb_hgi_qdq_compact_host_static; v15 required_owner \"actual host/CP loader (NW target 48)\""
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "cfg_target"
+   ],
+   "dst": [
+    "hb_quant_NW",
+    "cfg_target"
+   ],
+   "bits": 8,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/host_static_20261015/hfd_host_static_native_qdq_program.sv:87-90 (ingress -> target48 COMPACT1 programme leaf, same ot_hgi_qdq_native_program_leaf as inside ot_hgi_qdq_host_static); tb_hbm_host_static_ingress / tb_hgi_qdq_compact_host_static; v15 required_owner \"actual host/CP loader (NW target 48)\""
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "cfg_addr"
+   ],
+   "dst": [
+    "hb_quant_NW",
+    "cfg_addr"
+   ],
+   "bits": 12,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/host_static_20261015/hfd_host_static_native_qdq_program.sv:87-90 (ingress -> target48 COMPACT1 programme leaf, same ot_hgi_qdq_native_program_leaf as inside ot_hgi_qdq_host_static); tb_hbm_host_static_ingress / tb_hgi_qdq_compact_host_static; v15 required_owner \"actual host/CP loader (NW target 48)\""
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "cfg_data"
+   ],
+   "dst": [
+    "hb_quant_NW",
+    "cfg_data"
+   ],
+   "bits": 256,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/host_static_20261015/hfd_host_static_native_qdq_program.sv:87-90 (ingress -> target48 COMPACT1 programme leaf, same ot_hgi_qdq_native_program_leaf as inside ot_hgi_qdq_host_static); tb_hbm_host_static_ingress / tb_hgi_qdq_compact_host_static; v15 required_owner \"actual host/CP loader (NW target 48)\""
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "desc_v"
+   ],
+   "dst": [
+    "hb_quant_NW",
+    "desc_v"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/host_static_20261015/hfd_host_static_native_qdq_program.sv:87-90 (ingress -> target48 COMPACT1 programme leaf, same ot_hgi_qdq_native_program_leaf as inside ot_hgi_qdq_host_static); tb_hbm_host_static_ingress / tb_hgi_qdq_compact_host_static; v15 required_owner \"actual host/CP loader (NW target 48)\""
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "desc_base"
+   ],
+   "dst": [
+    "hb_quant_NW",
+    "desc_base"
+   ],
+   "bits": 12,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/host_static_20261015/hfd_host_static_native_qdq_program.sv:87-90 (ingress -> target48 COMPACT1 programme leaf, same ot_hgi_qdq_native_program_leaf as inside ot_hgi_qdq_host_static); tb_hbm_host_static_ingress / tb_hgi_qdq_compact_host_static; v15 required_owner \"actual host/CP loader (NW target 48)\""
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "desc_limit"
+   ],
+   "dst": [
+    "hb_quant_NW",
+    "desc_limit"
+   ],
+   "bits": 13,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/host_static_20261015/hfd_host_static_native_qdq_program.sv:87-90 (ingress -> target48 COMPACT1 programme leaf, same ot_hgi_qdq_native_program_leaf as inside ot_hgi_qdq_host_static); tb_hbm_host_static_ingress / tb_hgi_qdq_compact_host_static; v15 required_owner \"actual host/CP loader (NW target 48)\""
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "desc_loops"
+   ],
+   "dst": [
+    "hb_quant_NW",
+    "desc_loops"
+   ],
+   "bits": 16,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/host_static_20261015/hfd_host_static_native_qdq_program.sv:87-90 (ingress -> target48 COMPACT1 programme leaf, same ot_hgi_qdq_native_program_leaf as inside ot_hgi_qdq_host_static); tb_hbm_host_static_ingress / tb_hgi_qdq_compact_host_static; v15 required_owner \"actual host/CP loader (NW target 48)\""
+  },
+  {
+   "src": [
+    "host_cp_ingress",
+    "launch_v"
+   ],
+   "dst": [
+    "hb_quant_NW",
+    "launch_v"
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "rtl/hbm_accel/host_static_20261015/hfd_host_static_native_qdq_program.sv:87-90 (ingress -> target48 COMPACT1 programme leaf, same ot_hgi_qdq_native_program_leaf as inside ot_hgi_qdq_host_static); tb_hbm_host_static_ingress / tb_hgi_qdq_compact_host_static; v15 required_owner \"actual host/CP loader (NW target 48)\""
+  },
+  {
+   "src": [
+    "hb_vms_SW",
+    "vmstat",
+    0,
+    19
+   ],
+   "dst": [
+    "vm_status4",
+    "quadrant_status",
+    0,
+    19
+   ],
+   "bits": 19,
+   "clock": "stream",
+   "basis": "v15 contract known_actual_edges status_SW (kept)"
+  },
+  {
+   "src": [
+    "hb_vms_SE",
+    "vmstat",
+    0,
+    19
+   ],
+   "dst": [
+    "vm_status4",
+    "quadrant_status",
+    19,
+    38
+   ],
+   "bits": 19,
+   "clock": "stream",
+   "basis": "v15 contract known_actual_edges status_SE (kept)"
+  },
+  {
+   "src": [
+    "hb_vms_NW",
+    "vmstat",
+    0,
+    19
+   ],
+   "dst": [
+    "vm_status4",
+    "quadrant_status",
+    38,
+    57
+   ],
+   "bits": 19,
+   "clock": "stream",
+   "basis": "v15 contract known_actual_edges status_NW (kept)"
+  },
+  {
+   "src": [
+    "hb_vms_NE",
+    "vmstat",
+    0,
+    19
+   ],
+   "dst": [
+    "vm_status4",
+    "quadrant_status",
+    57,
+    76
+   ],
+   "bits": 19,
+   "clock": "stream",
+   "basis": "v15 contract known_actual_edges status_NE (kept)"
+  }
+ ],
+ "drop_v15_edges": [],
+ "clocks": [
+  {
+   "inst": "host_N",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "host_N",
+   "port": "rst",
+   "domain": "stream",
+   "kind": "reset"
+  },
+  {
+   "inst": "host_cp_ep_face",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "host_cp_ep_face",
+   "port": "rst_n",
+   "domain": "stream",
+   "kind": "reset"
+  },
+  {
+   "inst": "host_cp_ep",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "host_cp_ep",
+   "port": "clk_sub",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "host_cp_ep",
+   "port": "clk_tx_shared",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "host_cp_ep",
+   "port": "clk_rx_shared",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "host_cp_ep",
+   "port": "clk_status_shared",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "host_cp_ep",
+   "port": "rst_n",
+   "domain": "stream",
+   "kind": "reset"
+  },
+  {
+   "inst": "host_cp_landing",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "host_cp_landing",
+   "port": "rst_n",
+   "domain": "stream",
+   "kind": "reset"
+  },
+  {
+   "inst": "host_cp_packet",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "host_cp_packet",
+   "port": "rst_n",
+   "domain": "stream",
+   "kind": "reset"
+  },
+  {
+   "inst": "host_cp_ingress",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "host_cp_ingress",
+   "port": "rst_n",
+   "domain": "stream",
+   "kind": "reset"
+  },
+  {
+   "inst": "hb_quant_NW",
+   "port": "clk_program",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hb_quant_NW",
+   "port": "clk_transport",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hb_quant_NW",
+   "port": "clk_dxl",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hb_quant_NW",
+   "port": "clk_dbq",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hb_quant_NW",
+   "port": "clk_daq",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hb_quant_NW",
+   "port": "rst_n",
+   "domain": "stream",
+   "kind": "reset"
+  },
+  {
+   "inst": "hb_dbk_SW",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hb_dbk_SW",
+   "port": "clk_bank",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hb_dbk_SW",
+   "port": "rst_n",
+   "domain": "stream",
+   "kind": "reset"
+  },
+  {
+   "inst": "calendar_SW",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "calendar_SW",
+   "port": "rst_n",
+   "domain": "stream",
+   "kind": "reset"
+  },
+  {
+   "inst": "hb_dbk_SE",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hb_dbk_SE",
+   "port": "clk_bank",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hb_dbk_SE",
+   "port": "rst_n",
+   "domain": "stream",
+   "kind": "reset"
+  },
+  {
+   "inst": "calendar_SE",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "calendar_SE",
+   "port": "rst_n",
+   "domain": "stream",
+   "kind": "reset"
+  },
+  {
+   "inst": "hb_dbk_NW",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hb_dbk_NW",
+   "port": "clk_bank",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hb_dbk_NW",
+   "port": "rst_n",
+   "domain": "stream",
+   "kind": "reset"
+  },
+  {
+   "inst": "calendar_NW",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "calendar_NW",
+   "port": "rst_n",
+   "domain": "stream",
+   "kind": "reset"
+  },
+  {
+   "inst": "hb_dbk_NE",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hb_dbk_NE",
+   "port": "clk_bank",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "hb_dbk_NE",
+   "port": "rst_n",
+   "domain": "stream",
+   "kind": "reset"
+  },
+  {
+   "inst": "calendar_NE",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "calendar_NE",
+   "port": "rst_n",
+   "domain": "stream",
+   "kind": "reset"
+  },
+  {
+   "inst": "vm_status4",
+   "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vm_status4",
+   "port": "rst_n",
+   "domain": "stream",
+   "kind": "reset"
+  }
+ ],
+ "straps": [
+  {
+   "inst": "hb_dbk_SW",
+   "port": "stk",
+   "lo": 0,
+   "hi": 2,
+   "value": 0,
+   "reason": "Registered physical stack identity; no runtime selection."
+  },
+  {
+   "inst": "hb_dbk_SE",
+   "port": "stk",
+   "lo": 0,
+   "hi": 2,
+   "value": 1,
+   "reason": "Registered physical stack identity; no runtime selection."
+  },
+  {
+   "inst": "hb_dbk_NW",
+   "port": "stk",
+   "lo": 0,
+   "hi": 2,
+   "value": 2,
+   "reason": "Registered physical stack identity; no runtime selection."
+  },
+  {
+   "inst": "hb_dbk_NE",
+   "port": "stk",
+   "lo": 0,
+   "hi": 2,
+   "value": 3,
+   "reason": "Registered physical stack identity; no runtime selection."
+  }
+ ],
+ "gaps": [
+  {
+   "id": "G-HOST-PADS",
+   "owner": "H-DIE",
+   "missing_rtl": "none missing: ot_pdie_ucie PMA side is the off-die host boundary (declared behavioural PMA pads)",
+   "affects": [
+    [
+     "host_N",
+     "pma_rx",
+     0,
+     513
+    ],
+    [
+     "host_N",
+     "pma_rck",
+     0,
+     1
+    ]
+   ],
+   "note": "die top-level pad ports (host UCIe-A shoreline); coordinator promotes them to die ports. Outputs pma_tx[513]/pma_tck likewise go to pads. pma_rck is the received forwarded clock (rate-matched inside the macro)."
+  },
+  {
+   "id": "G-HOST-LOADER-CAL",
+   "owner": "host owner + H-SM",
+   "missing_rtl": "VM calendar programme issuer from the static ingress: ot_static_program_target #(.PCW(10)) is port-exact to hfd_hgi_vm_calendar_<q> (program_cfg_we/addr10/data256/start_v/base10/limit11/loops16) but NO target ids are assigned on main for the 4 VM calendars (only 48 QDQ, 49 attention, 52+QID COLL, 125 QDQ-SW) and ingress TARGET_MASK admits only 48; ot_vms_calendar_host_static is port-exact too (cfg_we[4]/addr[40]/data[1024]/start_* slices) but needs lcp_doorbell from ot_hgi_loader_cp (retired CP), terminates its c_* passthrough in that CP and itself decodes F20..F2c (would shadow host_cp_ingress on the single packet AXI port)",
+   "affects": [
+    [
+     "calendar_SW",
+     "cfg_we",
+     0,
+     1
+    ],
+    [
+     "calendar_SW",
+     "cfg_addr",
+     0,
+     10
+    ],
+    [
+     "calendar_SW",
+     "cfg_data",
+     0,
+     256
+    ],
+    [
+     "calendar_SW",
+     "start_v",
+     0,
+     1
+    ],
+    [
+     "calendar_SW",
+     "start_base",
+     0,
+     10
+    ],
+    [
+     "calendar_SW",
+     "start_limit",
+     0,
+     11
+    ],
+    [
+     "calendar_SW",
+     "start_loops",
+     0,
+     16
+    ],
+    [
+     "calendar_SE",
+     "cfg_we",
+     0,
+     1
+    ],
+    [
+     "calendar_SE",
+     "cfg_addr",
+     0,
+     10
+    ],
+    [
+     "calendar_SE",
+     "cfg_data",
+     0,
+     256
+    ],
+    [
+     "calendar_SE",
+     "start_v",
+     0,
+     1
+    ],
+    [
+     "calendar_SE",
+     "start_base",
+     0,
+     10
+    ],
+    [
+     "calendar_SE",
+     "start_limit",
+     0,
+     11
+    ],
+    [
+     "calendar_SE",
+     "start_loops",
+     0,
+     16
+    ],
+    [
+     "calendar_NW",
+     "cfg_we",
+     0,
+     1
+    ],
+    [
+     "calendar_NW",
+     "cfg_addr",
+     0,
+     10
+    ],
+    [
+     "calendar_NW",
+     "cfg_data",
+     0,
+     256
+    ],
+    [
+     "calendar_NW",
+     "start_v",
+     0,
+     1
+    ],
+    [
+     "calendar_NW",
+     "start_base",
+     0,
+     10
+    ],
+    [
+     "calendar_NW",
+     "start_limit",
+     0,
+     11
+    ],
+    [
+     "calendar_NW",
+     "start_loops",
+     0,
+     16
+    ],
+    [
+     "calendar_NE",
+     "cfg_we",
+     0,
+     1
+    ],
+    [
+     "calendar_NE",
+     "cfg_addr",
+     0,
+     10
+    ],
+    [
+     "calendar_NE",
+     "cfg_data",
+     0,
+     256
+    ],
+    [
+     "calendar_NE",
+     "start_v",
+     0,
+     1
+    ],
+    [
+     "calendar_NE",
+     "start_base",
+     0,
+     10
+    ],
+    [
+     "calendar_NE",
+     "start_limit",
+     0,
+     11
+    ],
+    [
+     "calendar_NE",
+     "start_loops",
+     0,
+     16
+    ]
+   ],
+   "note": "fix: owner assigns calendar target ids, instantiates 4 x ot_static_program_target(PCW10) beside the calendars (+ ot_hbm_program_block_ready each) and widens ingress TARGET_MASK; then edges ingress frame -> collars -> calendars are wires-only. calendar active/done/fault/ordinal/calendar_v outputs feed that aggregate (unconsumed now)."
+  },
+  {
+   "id": "G-HOST-LOADER-SVG",
+   "owner": "host owner + H-DIE (service engine)",
+   "missing_rtl": "service-group programme producer: ot_hbm_svc_sm_group program_cfg_we/addr10/data256 could come from an ot_static_program_target(PCW10) collar (no target id assigned), but desc_we/desc_addr7/desc_data256 and run_v/run_base7/run_count8 have no collar/adapter on main (ot_static_program_target emits start base/limit/loops, not a descriptor-RAM write + base/count run)",
+   "affects": [
+    [
+     "svg_SW0",
+     "program_cfg_we",
+     0,
+     1
+    ],
+    [
+     "svg_SW0",
+     "program_cfg_addr",
+     0,
+     10
+    ],
+    [
+     "svg_SW0",
+     "program_cfg_data",
+     0,
+     256
+    ],
+    [
+     "svg_SW0",
+     "desc_we",
+     0,
+     1
+    ],
+    [
+     "svg_SW0",
+     "desc_addr",
+     0,
+     7
+    ],
+    [
+     "svg_SW0",
+     "desc_data",
+     0,
+     256
+    ],
+    [
+     "svg_SW0",
+     "run_v",
+     0,
+     1
+    ],
+    [
+     "svg_SW0",
+     "run_base",
+     0,
+     7
+    ],
+    [
+     "svg_SW0",
+     "run_count",
+     0,
+     8
+    ],
+    [
+     "svg_SW1",
+     "program_cfg_we",
+     0,
+     1
+    ],
+    [
+     "svg_SW1",
+     "program_cfg_addr",
+     0,
+     10
+    ],
+    [
+     "svg_SW1",
+     "program_cfg_data",
+     0,
+     256
+    ],
+    [
+     "svg_SW1",
+     "desc_we",
+     0,
+     1
+    ],
+    [
+     "svg_SW1",
+     "desc_addr",
+     0,
+     7
+    ],
+    [
+     "svg_SW1",
+     "desc_data",
+     0,
+     256
+    ],
+    [
+     "svg_SW1",
+     "run_v",
+     0,
+     1
+    ],
+    [
+     "svg_SW1",
+     "run_base",
+     0,
+     7
+    ],
+    [
+     "svg_SW1",
+     "run_count",
+     0,
+     8
+    ],
+    [
+     "svg_SW2",
+     "program_cfg_we",
+     0,
+     1
+    ],
+    [
+     "svg_SW2",
+     "program_cfg_addr",
+     0,
+     10
+    ],
+    [
+     "svg_SW2",
+     "program_cfg_data",
+     0,
+     256
+    ],
+    [
+     "svg_SW2",
+     "desc_we",
+     0,
+     1
+    ],
+    [
+     "svg_SW2",
+     "desc_addr",
+     0,
+     7
+    ],
+    [
+     "svg_SW2",
+     "desc_data",
+     0,
+     256
+    ],
+    [
+     "svg_SW2",
+     "run_v",
+     0,
+     1
+    ],
+    [
+     "svg_SW2",
+     "run_base",
+     0,
+     7
+    ],
+    [
+     "svg_SW2",
+     "run_count",
+     0,
+     8
+    ],
+    [
+     "svg_SW3",
+     "program_cfg_we",
+     0,
+     1
+    ],
+    [
+     "svg_SW3",
+     "program_cfg_addr",
+     0,
+     10
+    ],
+    [
+     "svg_SW3",
+     "program_cfg_data",
+     0,
+     256
+    ],
+    [
+     "svg_SW3",
+     "desc_we",
+     0,
+     1
+    ],
+    [
+     "svg_SW3",
+     "desc_addr",
+     0,
+     7
+    ],
+    [
+     "svg_SW3",
+     "desc_data",
+     0,
+     256
+    ],
+    [
+     "svg_SW3",
+     "run_v",
+     0,
+     1
+    ],
+    [
+     "svg_SW3",
+     "run_base",
+     0,
+     7
+    ],
+    [
+     "svg_SW3",
+     "run_count",
+     0,
+     8
+    ],
+    [
+     "svg_SW4",
+     "program_cfg_we",
+     0,
+     1
+    ],
+    [
+     "svg_SW4",
+     "program_cfg_addr",
+     0,
+     10
+    ],
+    [
+     "svg_SW4",
+     "program_cfg_data",
+     0,
+     256
+    ],
+    [
+     "svg_SW4",
+     "desc_we",
+     0,
+     1
+    ],
+    [
+     "svg_SW4",
+     "desc_addr",
+     0,
+     7
+    ],
+    [
+     "svg_SW4",
+     "desc_data",
+     0,
+     256
+    ],
+    [
+     "svg_SW4",
+     "run_v",
+     0,
+     1
+    ],
+    [
+     "svg_SW4",
+     "run_base",
+     0,
+     7
+    ],
+    [
+     "svg_SW4",
+     "run_count",
+     0,
+     8
+    ],
+    [
+     "svg_SW5",
+     "program_cfg_we",
+     0,
+     1
+    ],
+    [
+     "svg_SW5",
+     "program_cfg_addr",
+     0,
+     10
+    ],
+    [
+     "svg_SW5",
+     "program_cfg_data",
+     0,
+     256
+    ],
+    [
+     "svg_SW5",
+     "desc_we",
+     0,
+     1
+    ],
+    [
+     "svg_SW5",
+     "desc_addr",
+     0,
+     7
+    ],
+    [
+     "svg_SW5",
+     "desc_data",
+     0,
+     256
+    ],
+    [
+     "svg_SW5",
+     "run_v",
+     0,
+     1
+    ],
+    [
+     "svg_SW5",
+     "run_base",
+     0,
+     7
+    ],
+    [
+     "svg_SW5",
+     "run_count",
+     0,
+     8
+    ],
+    [
+     "svg_SW6",
+     "program_cfg_we",
+     0,
+     1
+    ],
+    [
+     "svg_SW6",
+     "program_cfg_addr",
+     0,
+     10
+    ],
+    [
+     "svg_SW6",
+     "program_cfg_data",
+     0,
+     256
+    ],
+    [
+     "svg_SW6",
+     "desc_we",
+     0,
+     1
+    ],
+    [
+     "svg_SW6",
+     "desc_addr",
+     0,
+     7
+    ],
+    [
+     "svg_SW6",
+     "desc_data",
+     0,
+     256
+    ],
+    [
+     "svg_SW6",
+     "run_v",
+     0,
+     1
+    ],
+    [
+     "svg_SW6",
+     "run_base",
+     0,
+     7
+    ],
+    [
+     "svg_SW6",
+     "run_count",
+     0,
+     8
+    ],
+    [
+     "svg_SW7",
+     "program_cfg_we",
+     0,
+     1
+    ],
+    [
+     "svg_SW7",
+     "program_cfg_addr",
+     0,
+     10
+    ],
+    [
+     "svg_SW7",
+     "program_cfg_data",
+     0,
+     256
+    ],
+    [
+     "svg_SW7",
+     "desc_we",
+     0,
+     1
+    ],
+    [
+     "svg_SW7",
+     "desc_addr",
+     0,
+     7
+    ],
+    [
+     "svg_SW7",
+     "desc_data",
+     0,
+     256
+    ],
+    [
+     "svg_SW7",
+     "run_v",
+     0,
+     1
+    ],
+    [
+     "svg_SW7",
+     "run_base",
+     0,
+     7
+    ],
+    [
+     "svg_SW7",
+     "run_count",
+     0,
+     8
+    ],
+    [
+     "svg_SE0",
+     "program_cfg_we",
+     0,
+     1
+    ],
+    [
+     "svg_SE0",
+     "program_cfg_addr",
+     0,
+     10
+    ],
+    [
+     "svg_SE0",
+     "program_cfg_data",
+     0,
+     256
+    ],
+    [
+     "svg_SE0",
+     "desc_we",
+     0,
+     1
+    ],
+    [
+     "svg_SE0",
+     "desc_addr",
+     0,
+     7
+    ],
+    [
+     "svg_SE0",
+     "desc_data",
+     0,
+     256
+    ],
+    [
+     "svg_SE0",
+     "run_v",
+     0,
+     1
+    ],
+    [
+     "svg_SE0",
+     "run_base",
+     0,
+     7
+    ],
+    [
+     "svg_SE0",
+     "run_count",
+     0,
+     8
+    ],
+    [
+     "svg_SE1",
+     "program_cfg_we",
+     0,
+     1
+    ],
+    [
+     "svg_SE1",
+     "program_cfg_addr",
+     0,
+     10
+    ],
+    [
+     "svg_SE1",
+     "program_cfg_data",
+     0,
+     256
+    ],
+    [
+     "svg_SE1",
+     "desc_we",
+     0,
+     1
+    ],
+    [
+     "svg_SE1",
+     "desc_addr",
+     0,
+     7
+    ],
+    [
+     "svg_SE1",
+     "desc_data",
+     0,
+     256
+    ],
+    [
+     "svg_SE1",
+     "run_v",
+     0,
+     1
+    ],
+    [
+     "svg_SE1",
+     "run_base",
+     0,
+     7
+    ],
+    [
+     "svg_SE1",
+     "run_count",
+     0,
+     8
+    ],
+    [
+     "svg_SE2",
+     "program_cfg_we",
+     0,
+     1
+    ],
+    [
+     "svg_SE2",
+     "program_cfg_addr",
+     0,
+     10
+    ],
+    [
+     "svg_SE2",
+     "program_cfg_data",
+     0,
+     256
+    ],
+    [
+     "svg_SE2",
+     "desc_we",
+     0,
+     1
+    ],
+    [
+     "svg_SE2",
+     "desc_addr",
+     0,
+     7
+    ],
+    [
+     "svg_SE2",
+     "desc_data",
+     0,
+     256
+    ],
+    [
+     "svg_SE2",
+     "run_v",
+     0,
+     1
+    ],
+    [
+     "svg_SE2",
+     "run_base",
+     0,
+     7
+    ],
+    [
+     "svg_SE2",
+     "run_count",
+     0,
+     8
+    ],
+    [
+     "svg_SE3",
+     "program_cfg_we",
+     0,
+     1
+    ],
+    [
+     "svg_SE3",
+     "program_cfg_addr",
+     0,
+     10
+    ],
+    [
+     "svg_SE3",
+     "program_cfg_data",
+     0,
+     256
+    ],
+    [
+     "svg_SE3",
+     "desc_we",
+     0,
+     1
+    ],
+    [
+     "svg_SE3",
+     "desc_addr",
+     0,
+     7
+    ],
+    [
+     "svg_SE3",
+     "desc_data",
+     0,
+     256
+    ],
+    [
+     "svg_SE3",
+     "run_v",
+     0,
+     1
+    ],
+    [
+     "svg_SE3",
+     "run_base",
+     0,
+     7
+    ],
+    [
+     "svg_SE3",
+     "run_count",
+     0,
+     8
+    ],
+    [
+     "svg_SE4",
+     "program_cfg_we",
+     0,
+     1
+    ],
+    [
+     "svg_SE4",
+     "program_cfg_addr",
+     0,
+     10
+    ],
+    [
+     "svg_SE4",
+     "program_cfg_data",
+     0,
+     256
+    ],
+    [
+     "svg_SE4",
+     "desc_we",
+     0,
+     1
+    ],
+    [
+     "svg_SE4",
+     "desc_addr",
+     0,
+     7
+    ],
+    [
+     "svg_SE4",
+     "desc_data",
+     0,
+     256
+    ],
+    [
+     "svg_SE4",
+     "run_v",
+     0,
+     1
+    ],
+    [
+     "svg_SE4",
+     "run_base",
+     0,
+     7
+    ],
+    [
+     "svg_SE4",
+     "run_count",
+     0,
+     8
+    ],
+    [
+     "svg_SE5",
+     "program_cfg_we",
+     0,
+     1
+    ],
+    [
+     "svg_SE5",
+     "program_cfg_addr",
+     0,
+     10
+    ],
+    [
+     "svg_SE5",
+     "program_cfg_data",
+     0,
+     256
+    ],
+    [
+     "svg_SE5",
+     "desc_we",
+     0,
+     1
+    ],
+    [
+     "svg_SE5",
+     "desc_addr",
+     0,
+     7
+    ],
+    [
+     "svg_SE5",
+     "desc_data",
+     0,
+     256
+    ],
+    [
+     "svg_SE5",
+     "run_v",
+     0,
+     1
+    ],
+    [
+     "svg_SE5",
+     "run_base",
+     0,
+     7
+    ],
+    [
+     "svg_SE5",
+     "run_count",
+     0,
+     8
+    ],
+    [
+     "svg_SE6",
+     "program_cfg_we",
+     0,
+     1
+    ],
+    [
+     "svg_SE6",
+     "program_cfg_addr",
+     0,
+     10
+    ],
+    [
+     "svg_SE6",
+     "program_cfg_data",
+     0,
+     256
+    ],
+    [
+     "svg_SE6",
+     "desc_we",
+     0,
+     1
+    ],
+    [
+     "svg_SE6",
+     "desc_addr",
+     0,
+     7
+    ],
+    [
+     "svg_SE6",
+     "desc_data",
+     0,
+     256
+    ],
+    [
+     "svg_SE6",
+     "run_v",
+     0,
+     1
+    ],
+    [
+     "svg_SE6",
+     "run_base",
+     0,
+     7
+    ],
+    [
+     "svg_SE6",
+     "run_count",
+     0,
+     8
+    ],
+    [
+     "svg_SE7",
+     "program_cfg_we",
+     0,
+     1
+    ],
+    [
+     "svg_SE7",
+     "program_cfg_addr",
+     0,
+     10
+    ],
+    [
+     "svg_SE7",
+     "program_cfg_data",
+     0,
+     256
+    ],
+    [
+     "svg_SE7",
+     "desc_we",
+     0,
+     1
+    ],
+    [
+     "svg_SE7",
+     "desc_addr",
+     0,
+     7
+    ],
+    [
+     "svg_SE7",
+     "desc_data",
+     0,
+     256
+    ],
+    [
+     "svg_SE7",
+     "run_v",
+     0,
+     1
+    ],
+    [
+     "svg_SE7",
+     "run_base",
+     0,
+     7
+    ],
+    [
+     "svg_SE7",
+     "run_count",
+     0,
+     8
+    ],
+    [
+     "svg_NW0",
+     "program_cfg_we",
+     0,
+     1
+    ],
+    [
+     "svg_NW0",
+     "program_cfg_addr",
+     0,
+     10
+    ],
+    [
+     "svg_NW0",
+     "program_cfg_data",
+     0,
+     256
+    ],
+    [
+     "svg_NW0",
+     "desc_we",
+     0,
+     1
+    ],
+    [
+     "svg_NW0",
+     "desc_addr",
+     0,
+     7
+    ],
+    [
+     "svg_NW0",
+     "desc_data",
+     0,
+     256
+    ],
+    [
+     "svg_NW0",
+     "run_v",
+     0,
+     1
+    ],
+    [
+     "svg_NW0",
+     "run_base",
+     0,
+     7
+    ],
+    [
+     "svg_NW0",
+     "run_count",
+     0,
+     8
+    ],
+    [
+     "svg_NW1",
+     "program_cfg_we",
+     0,
+     1
+    ],
+    [
+     "svg_NW1",
+     "program_cfg_addr",
+     0,
+     10
+    ],
+    [
+     "svg_NW1",
+     "program_cfg_data",
+     0,
+     256
+    ],
+    [
+     "svg_NW1",
+     "desc_we",
+     0,
+     1
+    ],
+    [
+     "svg_NW1",
+     "desc_addr",
+     0,
+     7
+    ],
+    [
+     "svg_NW1",
+     "desc_data",
+     0,
+     256
+    ],
+    [
+     "svg_NW1",
+     "run_v",
+     0,
+     1
+    ],
+    [
+     "svg_NW1",
+     "run_base",
+     0,
+     7
+    ],
+    [
+     "svg_NW1",
+     "run_count",
+     0,
+     8
+    ],
+    [
+     "svg_NW2",
+     "program_cfg_we",
+     0,
+     1
+    ],
+    [
+     "svg_NW2",
+     "program_cfg_addr",
+     0,
+     10
+    ],
+    [
+     "svg_NW2",
+     "program_cfg_data",
+     0,
+     256
+    ],
+    [
+     "svg_NW2",
+     "desc_we",
+     0,
+     1
+    ],
+    [
+     "svg_NW2",
+     "desc_addr",
+     0,
+     7
+    ],
+    [
+     "svg_NW2",
+     "desc_data",
+     0,
+     256
+    ],
+    [
+     "svg_NW2",
+     "run_v",
+     0,
+     1
+    ],
+    [
+     "svg_NW2",
+     "run_base",
+     0,
+     7
+    ],
+    [
+     "svg_NW2",
+     "run_count",
+     0,
+     8
+    ],
+    [
+     "svg_NW3",
+     "program_cfg_we",
+     0,
+     1
+    ],
+    [
+     "svg_NW3",
+     "program_cfg_addr",
+     0,
+     10
+    ],
+    [
+     "svg_NW3",
+     "program_cfg_data",
+     0,
+     256
+    ],
+    [
+     "svg_NW3",
+     "desc_we",
+     0,
+     1
+    ],
+    [
+     "svg_NW3",
+     "desc_addr",
+     0,
+     7
+    ],
+    [
+     "svg_NW3",
+     "desc_data",
+     0,
+     256
+    ],
+    [
+     "svg_NW3",
+     "run_v",
+     0,
+     1
+    ],
+    [
+     "svg_NW3",
+     "run_base",
+     0,
+     7
+    ],
+    [
+     "svg_NW3",
+     "run_count",
+     0,
+     8
+    ],
+    [
+     "svg_NW4",
+     "program_cfg_we",
+     0,
+     1
+    ],
+    [
+     "svg_NW4",
+     "program_cfg_addr",
+     0,
+     10
+    ],
+    [
+     "svg_NW4",
+     "program_cfg_data",
+     0,
+     256
+    ],
+    [
+     "svg_NW4",
+     "desc_we",
+     0,
+     1
+    ],
+    [
+     "svg_NW4",
+     "desc_addr",
+     0,
+     7
+    ],
+    [
+     "svg_NW4",
+     "desc_data",
+     0,
+     256
+    ],
+    [
+     "svg_NW4",
+     "run_v",
+     0,
+     1
+    ],
+    [
+     "svg_NW4",
+     "run_base",
+     0,
+     7
+    ],
+    [
+     "svg_NW4",
+     "run_count",
+     0,
+     8
+    ],
+    [
+     "svg_NW5",
+     "program_cfg_we",
+     0,
+     1
+    ],
+    [
+     "svg_NW5",
+     "program_cfg_addr",
+     0,
+     10
+    ],
+    [
+     "svg_NW5",
+     "program_cfg_data",
+     0,
+     256
+    ],
+    [
+     "svg_NW5",
+     "desc_we",
+     0,
+     1
+    ],
+    [
+     "svg_NW5",
+     "desc_addr",
+     0,
+     7
+    ],
+    [
+     "svg_NW5",
+     "desc_data",
+     0,
+     256
+    ],
+    [
+     "svg_NW5",
+     "run_v",
+     0,
+     1
+    ],
+    [
+     "svg_NW5",
+     "run_base",
+     0,
+     7
+    ],
+    [
+     "svg_NW5",
+     "run_count",
+     0,
+     8
+    ],
+    [
+     "svg_NW6",
+     "program_cfg_we",
+     0,
+     1
+    ],
+    [
+     "svg_NW6",
+     "program_cfg_addr",
+     0,
+     10
+    ],
+    [
+     "svg_NW6",
+     "program_cfg_data",
+     0,
+     256
+    ],
+    [
+     "svg_NW6",
+     "desc_we",
+     0,
+     1
+    ],
+    [
+     "svg_NW6",
+     "desc_addr",
+     0,
+     7
+    ],
+    [
+     "svg_NW6",
+     "desc_data",
+     0,
+     256
+    ],
+    [
+     "svg_NW6",
+     "run_v",
+     0,
+     1
+    ],
+    [
+     "svg_NW6",
+     "run_base",
+     0,
+     7
+    ],
+    [
+     "svg_NW6",
+     "run_count",
+     0,
+     8
+    ],
+    [
+     "svg_NW7",
+     "program_cfg_we",
+     0,
+     1
+    ],
+    [
+     "svg_NW7",
+     "program_cfg_addr",
+     0,
+     10
+    ],
+    [
+     "svg_NW7",
+     "program_cfg_data",
+     0,
+     256
+    ],
+    [
+     "svg_NW7",
+     "desc_we",
+     0,
+     1
+    ],
+    [
+     "svg_NW7",
+     "desc_addr",
+     0,
+     7
+    ],
+    [
+     "svg_NW7",
+     "desc_data",
+     0,
+     256
+    ],
+    [
+     "svg_NW7",
+     "run_v",
+     0,
+     1
+    ],
+    [
+     "svg_NW7",
+     "run_base",
+     0,
+     7
+    ],
+    [
+     "svg_NW7",
+     "run_count",
+     0,
+     8
+    ],
+    [
+     "svg_NE0",
+     "program_cfg_we",
+     0,
+     1
+    ],
+    [
+     "svg_NE0",
+     "program_cfg_addr",
+     0,
+     10
+    ],
+    [
+     "svg_NE0",
+     "program_cfg_data",
+     0,
+     256
+    ],
+    [
+     "svg_NE0",
+     "desc_we",
+     0,
+     1
+    ],
+    [
+     "svg_NE0",
+     "desc_addr",
+     0,
+     7
+    ],
+    [
+     "svg_NE0",
+     "desc_data",
+     0,
+     256
+    ],
+    [
+     "svg_NE0",
+     "run_v",
+     0,
+     1
+    ],
+    [
+     "svg_NE0",
+     "run_base",
+     0,
+     7
+    ],
+    [
+     "svg_NE0",
+     "run_count",
+     0,
+     8
+    ],
+    [
+     "svg_NE1",
+     "program_cfg_we",
+     0,
+     1
+    ],
+    [
+     "svg_NE1",
+     "program_cfg_addr",
+     0,
+     10
+    ],
+    [
+     "svg_NE1",
+     "program_cfg_data",
+     0,
+     256
+    ],
+    [
+     "svg_NE1",
+     "desc_we",
+     0,
+     1
+    ],
+    [
+     "svg_NE1",
+     "desc_addr",
+     0,
+     7
+    ],
+    [
+     "svg_NE1",
+     "desc_data",
+     0,
+     256
+    ],
+    [
+     "svg_NE1",
+     "run_v",
+     0,
+     1
+    ],
+    [
+     "svg_NE1",
+     "run_base",
+     0,
+     7
+    ],
+    [
+     "svg_NE1",
+     "run_count",
+     0,
+     8
+    ],
+    [
+     "svg_NE2",
+     "program_cfg_we",
+     0,
+     1
+    ],
+    [
+     "svg_NE2",
+     "program_cfg_addr",
+     0,
+     10
+    ],
+    [
+     "svg_NE2",
+     "program_cfg_data",
+     0,
+     256
+    ],
+    [
+     "svg_NE2",
+     "desc_we",
+     0,
+     1
+    ],
+    [
+     "svg_NE2",
+     "desc_addr",
+     0,
+     7
+    ],
+    [
+     "svg_NE2",
+     "desc_data",
+     0,
+     256
+    ],
+    [
+     "svg_NE2",
+     "run_v",
+     0,
+     1
+    ],
+    [
+     "svg_NE2",
+     "run_base",
+     0,
+     7
+    ],
+    [
+     "svg_NE2",
+     "run_count",
+     0,
+     8
+    ],
+    [
+     "svg_NE3",
+     "program_cfg_we",
+     0,
+     1
+    ],
+    [
+     "svg_NE3",
+     "program_cfg_addr",
+     0,
+     10
+    ],
+    [
+     "svg_NE3",
+     "program_cfg_data",
+     0,
+     256
+    ],
+    [
+     "svg_NE3",
+     "desc_we",
+     0,
+     1
+    ],
+    [
+     "svg_NE3",
+     "desc_addr",
+     0,
+     7
+    ],
+    [
+     "svg_NE3",
+     "desc_data",
+     0,
+     256
+    ],
+    [
+     "svg_NE3",
+     "run_v",
+     0,
+     1
+    ],
+    [
+     "svg_NE3",
+     "run_base",
+     0,
+     7
+    ],
+    [
+     "svg_NE3",
+     "run_count",
+     0,
+     8
+    ],
+    [
+     "svg_NE4",
+     "program_cfg_we",
+     0,
+     1
+    ],
+    [
+     "svg_NE4",
+     "program_cfg_addr",
+     0,
+     10
+    ],
+    [
+     "svg_NE4",
+     "program_cfg_data",
+     0,
+     256
+    ],
+    [
+     "svg_NE4",
+     "desc_we",
+     0,
+     1
+    ],
+    [
+     "svg_NE4",
+     "desc_addr",
+     0,
+     7
+    ],
+    [
+     "svg_NE4",
+     "desc_data",
+     0,
+     256
+    ],
+    [
+     "svg_NE4",
+     "run_v",
+     0,
+     1
+    ],
+    [
+     "svg_NE4",
+     "run_base",
+     0,
+     7
+    ],
+    [
+     "svg_NE4",
+     "run_count",
+     0,
+     8
+    ],
+    [
+     "svg_NE5",
+     "program_cfg_we",
+     0,
+     1
+    ],
+    [
+     "svg_NE5",
+     "program_cfg_addr",
+     0,
+     10
+    ],
+    [
+     "svg_NE5",
+     "program_cfg_data",
+     0,
+     256
+    ],
+    [
+     "svg_NE5",
+     "desc_we",
+     0,
+     1
+    ],
+    [
+     "svg_NE5",
+     "desc_addr",
+     0,
+     7
+    ],
+    [
+     "svg_NE5",
+     "desc_data",
+     0,
+     256
+    ],
+    [
+     "svg_NE5",
+     "run_v",
+     0,
+     1
+    ],
+    [
+     "svg_NE5",
+     "run_base",
+     0,
+     7
+    ],
+    [
+     "svg_NE5",
+     "run_count",
+     0,
+     8
+    ],
+    [
+     "svg_NE6",
+     "program_cfg_we",
+     0,
+     1
+    ],
+    [
+     "svg_NE6",
+     "program_cfg_addr",
+     0,
+     10
+    ],
+    [
+     "svg_NE6",
+     "program_cfg_data",
+     0,
+     256
+    ],
+    [
+     "svg_NE6",
+     "desc_we",
+     0,
+     1
+    ],
+    [
+     "svg_NE6",
+     "desc_addr",
+     0,
+     7
+    ],
+    [
+     "svg_NE6",
+     "desc_data",
+     0,
+     256
+    ],
+    [
+     "svg_NE6",
+     "run_v",
+     0,
+     1
+    ],
+    [
+     "svg_NE6",
+     "run_base",
+     0,
+     7
+    ],
+    [
+     "svg_NE6",
+     "run_count",
+     0,
+     8
+    ],
+    [
+     "svg_NE7",
+     "program_cfg_we",
+     0,
+     1
+    ],
+    [
+     "svg_NE7",
+     "program_cfg_addr",
+     0,
+     10
+    ],
+    [
+     "svg_NE7",
+     "program_cfg_data",
+     0,
+     256
+    ],
+    [
+     "svg_NE7",
+     "desc_we",
+     0,
+     1
+    ],
+    [
+     "svg_NE7",
+     "desc_addr",
+     0,
+     7
+    ],
+    [
+     "svg_NE7",
+     "desc_data",
+     0,
+     256
+    ],
+    [
+     "svg_NE7",
+     "run_v",
+     0,
+     1
+    ],
+    [
+     "svg_NE7",
+     "run_base",
+     0,
+     7
+    ],
+    [
+     "svg_NE7",
+     "run_count",
+     0,
+     8
+    ]
+   ],
+   "note": "32 svg instances are the coordinator's; producer side only. running/run_done/program_active/fault outputs belong in the same readiness/fault aggregate (G-HOST-READY)."
+  },
+  {
+   "id": "G-HC",
+   "owner": "HC owner",
+   "missing_rtl": "static HC master with LG-pair client ports (rq 8x17 / wq 8x281 / rr 8x257 / w_done 8, no ready/credit) for hc_<q><k> (16 window slots) and hc_eng: hfd_hc (v14, ck0..7, f_sfu/t_sfu 1024 b) is an SFU-ring tile, not an LG client; ot_hgi_hc_eng/_ll use credits (wrq_cr/wwq_cr, job_v/job_rdy, rg/wg req-gnt) over 32 banks; hfd_hc_eng / ot_hgi_hc_eng_station lg_rup512/lg_rdn8256/lg_wup8960/lg_wdn64 are the 32-bank request form of the same dynamic engine; rtl/hbm_accel/generic/peers/static_hc/ has only leaves (bank shell/control/memory, weight quarter, residual half, aperture + aperture bridge consuming dq[2248]) with no tile/engine top; the HC static engine parent is on codex/hc-static-engine-1014 (a35449ada, HC_STATIC_ENGINE_HANDBACK_20261015.md), not on main",
+   "affects": [
+    [
+     "lg_SW_2",
+     "local_rq",
+     0,
+     136
+    ],
+    [
+     "lg_SW_2",
+     "local_wq",
+     0,
+     2248
+    ],
+    [
+     "lg_SE_2",
+     "local_rq",
+     0,
+     136
+    ],
+    [
+     "lg_SE_2",
+     "local_wq",
+     0,
+     2248
+    ],
+    [
+     "lg_NW_2",
+     "local_rq",
+     0,
+     136
+    ],
+    [
+     "lg_NW_2",
+     "local_wq",
+     0,
+     2248
+    ],
+    [
+     "lg_NE_2",
+     "local_rq",
+     0,
+     136
+    ],
+    [
+     "lg_NE_2",
+     "local_wq",
+     0,
+     2248
+    ]
+   ],
+   "note": "lg_<q>_2 local_rr/local_w_done/bank_fault outputs stay unconsumed; local_read/local_write are already driven by calendar_<q> (v15). No hc_* / hc_eng instances emitted."
+  },
+  {
+   "id": "G-DMA",
+   "owner": "H-HARDEN (DMA)",
+   "missing_rtl": "static DMA dispatcher (cycle/mv_v/mv[227]/issue_at/drain_at/mv_wb_bank/mv_wb_epoch) and the service write-back band reservation partner (wb_ready, wa[12] in; consumer of wb_reserve_*/wb_fill_*/wd[2312]): no module on main outputs issue_at/drain_at/mv_wb_epoch/wa/wb_ready, and no module takes wb_reserve_v as input (svc bands retired; ot_hbm_svc_sm_group has no WB port)",
+   "affects": [
+    [
+     "hb_dbk_SW",
+     "cycle",
+     0,
+     32
+    ],
+    [
+     "hb_dbk_SW",
+     "mv_v",
+     0,
+     1
+    ],
+    [
+     "hb_dbk_SW",
+     "mv",
+     0,
+     227
+    ],
+    [
+     "hb_dbk_SW",
+     "issue_at",
+     0,
+     32
+    ],
+    [
+     "hb_dbk_SW",
+     "drain_at",
+     0,
+     32
+    ],
+    [
+     "hb_dbk_SW",
+     "mv_wb_bank",
+     0,
+     1
+    ],
+    [
+     "hb_dbk_SW",
+     "mv_wb_epoch",
+     0,
+     16
+    ],
+    [
+     "hb_dbk_SW",
+     "wb_ready",
+     0,
+     1
+    ],
+    [
+     "hb_dbk_SW",
+     "wa",
+     0,
+     12
+    ],
+    [
+     "hb_dbk_SE",
+     "cycle",
+     0,
+     32
+    ],
+    [
+     "hb_dbk_SE",
+     "mv_v",
+     0,
+     1
+    ],
+    [
+     "hb_dbk_SE",
+     "mv",
+     0,
+     227
+    ],
+    [
+     "hb_dbk_SE",
+     "issue_at",
+     0,
+     32
+    ],
+    [
+     "hb_dbk_SE",
+     "drain_at",
+     0,
+     32
+    ],
+    [
+     "hb_dbk_SE",
+     "mv_wb_bank",
+     0,
+     1
+    ],
+    [
+     "hb_dbk_SE",
+     "mv_wb_epoch",
+     0,
+     16
+    ],
+    [
+     "hb_dbk_SE",
+     "wb_ready",
+     0,
+     1
+    ],
+    [
+     "hb_dbk_SE",
+     "wa",
+     0,
+     12
+    ],
+    [
+     "hb_dbk_NW",
+     "cycle",
+     0,
+     32
+    ],
+    [
+     "hb_dbk_NW",
+     "mv_v",
+     0,
+     1
+    ],
+    [
+     "hb_dbk_NW",
+     "mv",
+     0,
+     227
+    ],
+    [
+     "hb_dbk_NW",
+     "issue_at",
+     0,
+     32
+    ],
+    [
+     "hb_dbk_NW",
+     "drain_at",
+     0,
+     32
+    ],
+    [
+     "hb_dbk_NW",
+     "mv_wb_bank",
+     0,
+     1
+    ],
+    [
+     "hb_dbk_NW",
+     "mv_wb_epoch",
+     0,
+     16
+    ],
+    [
+     "hb_dbk_NW",
+     "wb_ready",
+     0,
+     1
+    ],
+    [
+     "hb_dbk_NW",
+     "wa",
+     0,
+     12
+    ],
+    [
+     "hb_dbk_NE",
+     "cycle",
+     0,
+     32
+    ],
+    [
+     "hb_dbk_NE",
+     "mv_v",
+     0,
+     1
+    ],
+    [
+     "hb_dbk_NE",
+     "mv",
+     0,
+     227
+    ],
+    [
+     "hb_dbk_NE",
+     "issue_at",
+     0,
+     32
+    ],
+    [
+     "hb_dbk_NE",
+     "drain_at",
+     0,
+     32
+    ],
+    [
+     "hb_dbk_NE",
+     "mv_wb_bank",
+     0,
+     1
+    ],
+    [
+     "hb_dbk_NE",
+     "mv_wb_epoch",
+     0,
+     16
+    ],
+    [
+     "hb_dbk_NE",
+     "wb_ready",
+     0,
+     1
+    ],
+    [
+     "hb_dbk_NE",
+     "wa",
+     0,
+     12
+    ]
+   ],
+   "note": "outputs mv_src/mv_done/mv_fault/quiet/busy, wb_reserve_*/wb_fill_*/wd unconsumed. Per-quadrant timebase \"cycle\" also has no die producer."
+  },
+  {
+   "id": "G-QUANT-SPLIT",
+   "owner": "H-SM (QUANT)",
+   "missing_rtl": "parent composition joining the target-48 programme leaf with the LG=1/TSPLIT=1 engine: ot_hgi_qdq_program_static has LG/TSPLIT but takes raw calendar ports (no target collar); ot_hgi_qdq_host_static has the collar but no LG/TSPLIT; dxl/dbq/daq decoder and programme leaf have no slot among quant_NW0..3 / _lg / _xp; glue (cmd_v=command_v&&command[0], fault OR) has no die home",
+   "affects": [],
+   "note": "hb_quant_NW (v15) kept. Split = RL 7->9, WC 4->5 changes NW compiler reservation timestamps; 18:07 native audit FAIL on ctl (capture 304 ps), rslice, LG (launch 270.7 ps) with +1-edge structural fixes pending (el1015-hbm-sm-attention.log:159-160). The granted quant_NW0..3 / quant_NW*_lg / quant_NW_xp* slots are therefore unused in v16."
+  }
+ ],
+ "notes": "HOST: a real UCIe->AXI-lite bridge exists on main: hfd_host_native (rtl/hbm_accel/io_native_20261014) = ot_pdie_ucie + hfd_lk_ep (CRC/replay endpoint) + ot_hbm_host_landing256 (2 x 256x256 SRAM) + ot_hbm_host_packet (packet engine, AXI-lite master s_*), joined to ot_hbm_host_static_ingress in hfd_host_static_native_qdq_program. It is lifted leaf-by-leaf: host_N (the granted ot_pdie_ucie macro) + host_cp_ep_face/host_cp_ep (hfd_lk_ep is a wires-only wrapper over inout die buses, lifted to its two leaves) + host_cp_landing + host_cp_packet in the host_cp window + host_cp_ingress. hfd_host_native's glue (6-bit tx credit counter, zero pads, pad_fault, fault concat) has no die home -> gaps G-HOST-TXCREDIT / G-HOST-PAD / G-STATUS; session id has no producer (G-HOST-SESSION); the loader service face of the packet engine (h_*/h_dma_*/m_*/irq/fault) belonged to the retired dynamic loader/CP (G-HOST-LOADERFACE).\nClock family: hfd_host_native and the ingress README both require ONE synchronous family from PHY digital side to programme targets (no CDC exists); the granted host_cp_ingress slot is clock_domain stream, so every host instance incl. host_N.clk is put on stream. If the coordinator wants host_N on link, a real CDC between endpoint and ingress is missing (doubt).\nAXI-lite valid/ready between host_cp_packet and host_cp_ingress is treated as part of the off-die host boundary (README: \"host elasticity ends at configuration writes\"); nothing after the ingress uses ready/credit.\nLOADER: only target 48 (QDQ NW, hb_quant_NW) matches the ingress frame exactly and is bound (9 edges, basis hfd_host_static_native_qdq_program + v15 required_owner \"host/CP loader (NW target 48)\"). VM calendars, svc groups, SFU, IDX, COLL, ARGMAX, SU need target ids / collars / adapters (G-HOST-LOADER-*). ot_vms_calendar_host_static was examined and rejected (depends on retired CP doorbell/passthrough, shadows F20-F2c). Readiness aggregate absent (G-HOST-READY).\nQUANT: hb_quant_NW (ot_hgi_qdq_host_static RL7 WC4 COMPACT1) KEPT; split leaves granted but no parent composition on main (G-QUANT-SPLIT). v15 VM edges quant_vm_rq/rr/wq stand.\nDMA: hb_dbk_<q> master changed to grants-v7 ot_hgi_dma_back_static_vp4_banks (STK SW0 SE1 NW2 NE3, same as grant params), v15 rq/rr edges stand; command + WB-band ports gap (G-DMA).\nHC: no static LG-client HC master on main (G-HC); no hc_* / hc_eng instances emitted.\nVM STATUS: vm_status4 fully driven by v15 status edges (restated); vmstat and the calendars' status outputs have no consumer. | cp2 2026-10-15: host face/status gaps G-HOST-TXCREDIT/PAD/LOADERFACE/READY/LOADER-OTHERS/STATUS closed by cp2.json (G-HOST-SESSION re-pointed there)"
+}

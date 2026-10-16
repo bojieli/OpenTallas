@@ -78,7 +78,11 @@ module ot_hbm_r14_stream_pc_strap #(
   parameter integer WR_EN = 0, WQ = 4, T_RTW = 10, T_WTR = 14, T_WRR = 28, T_RCDW = 10,
   parameter integer PULLIN = 0,
   parameter integer AQ_RD = 0,
-  parameter integer AQ_STARVE = 64
+  parameter integer AQ_STARVE = 64,
+  // Physical candidate: predecoded per-slot write ACT state and registered
+  // age relations avoid rp -> rotated queue -> bank mux -> priority -> decode.
+  // No new command edge or policy; default preserves historical implementation.
+  parameter integer PHYS_WACT = 0
 )(
   input  wire        clk, rst_n,
   input wire slot_parity, input wire [7:0] refresh_reload,
@@ -129,6 +133,10 @@ module ot_hbm_r14_stream_pc_strap #(
     wire [10:0] j_p1 = j + 11'd1;
     // ---- write queue (WR_EN) ------------------------------------------------------------
     reg [4:0] wq_bank [0:WQ-1]; reg [4:0] wq_col [0:WQ-1]; reg wq_rd [0:WQ-1];
+    reg [31:0] wq_boh [0:WQ-1];
+    reg [3:0] wq_bgoh [0:WQ-1];
+    reg [WQ-1:0] wq_pv;
+    reg [WQ*WQ-1:0] wq_older;
     localparam AQ = (WR_EN != 0) && (AQ_RD != 0);
     reg hr;                                           // AQ_RD: the head entry is a read (registered)
     reg [WQW:0] wq_n; reg [WQW-1:0] wq_rp;
@@ -148,21 +156,30 @@ module ot_hbm_r14_stream_pc_strap #(
     integer hi;                                       // registered: one cycle behind the queue)
     always @* begin
       hold_n = 0;
-      for (hi = 0; hi < WQ; hi = hi + 1) if (wq_in[hi]) hold_n = hold_n | (32'b1 << wq_bq[hi*5 +: 5]);
+      if (PHYS_WACT != 0) begin
+        // This exact same set also feeds the current-cycle PRE exclusion.
+        // Reuse the physical-slot onehots instead of rebuilding all32
+        // rotated queue banks from rp on the row-command decision path.
+        for (hi = 0; hi < WQ; hi = hi + 1)
+          hold_n = hold_n | ({32{wq_pv[hi]}} & wq_boh[hi]);
+      end else begin
+        for (hi = 0; hi < WQ; hi = hi + 1) if (wq_in[hi]) hold_n = hold_n | (32'b1 << wq_bq[hi*5 +: 5]);
+      end
     end
     always @(posedge clk or negedge rst_n) if (!rst_n) hold <= 0; else hold <= hold_n;
     wire wr_ok;
     // ---- refresh windows -------------------------------------------------------------
-    // Dynamic reset values cannot be asynchronous cell reset constants. Load
-    // the registered strap synchronously on every held-reset edge; the parent
-    // reset relay holds this sequencer until the pins have been captured.
-    always @(posedge clk)
-      if(!rst_n) ref_c<=RW'(refresh_reload); else ref_c<=ref_n;
     wire ref_due = (ref_c == 0);
     reg  phase;                                       // cycle parity; this PC's row slot when == PC[0]
     wire slot_next = (phase != slot_parity);           // the next cycle is this PC's row slot
     wire [RW-1:0] ref_n = ref_due ? RW'(PERIOD - 1) : ref_c - 1'b1;   // ref_c of the next cycle
     wire ref_due_n = (ref_n == 0);
+    // (declared after ref_n: yosys needs the width before use)
+    // Dynamic reset values cannot be asynchronous cell reset constants. Load
+    // the registered strap synchronously on every held-reset edge; the parent
+    // reset relay holds this sequencer until the pins have been captured.
+    always @(posedge clk)
+      if(!rst_n) ref_c<=RW'(refresh_reload); else ref_c<=ref_n;
     wire act_block = REF_MODE ? (ref_n != 0 && ref_n < RW'(T_RREFD))
                               : (ref_n <= RW'(T_RP + T_RAS + 2));
     wire rd_block  = REF_MODE ? 1'b0 : (ref_c <= RW'(T_RP + T_RTP + 2));
@@ -349,26 +366,44 @@ module ot_hbm_r14_stream_pc_strap #(
     // write ACT: closed target bank, not chosen (or about to be chosen) for refresh
     // any queued write's bank may open (oldest first), so a burst of writes opens its banks together
     wire [WQ-1:0] wq_act;
+    wire [WQ-1:0] wq_act_physical;
     for (genvar i = 0; i < WQ; i = i + 1) begin : wqa
       wire [4:0] bq = wq_bq[i*5 +: 5];
       assign wq_act[i] = wq_in[i] && !open[bq] && !blk[bq] && aok_z[bq] && rrdl_z[bq[1:0]] &&
                          !(REF_MODE && (ref_c == RW'(LEAD) || ref_c == RW'(LEAD + 1)) && bq == bsel);
+      assign wq_act_physical[i] = W && wq_pv[i] &&
+          (|(wq_boh[i] & ~open & ~blk & aok_z)) && (|(wq_bgoh[i] & rrdl_z)) &&
+          !(REF_MODE && (ref_c == RW'(LEAD) || ref_c == RW'(LEAD + 1)) && wq_bank[i] == bsel);
     end
     // The candidate (oldest queued write whose bank can open) is REGISTERED and re-validated at use
     // against the current bank state with one-hot reductions, keeping the queue indexing and the
     // bank-state muxes off the row-decision path.
-    reg wcand; reg [4:0] wab_n; reg wcrd_n;
+    reg wcand; reg [4:0] wab_n; reg wcrd_n; reg [31:0] wab_oh_n;
+    reg [WQ-1:0] pwin;
     integer ai;
     always @* begin
-      wcand = 1'b0; wab_n = 0; wcrd_n = 1'b0;
-      for (ai = WQ - 1; ai >= 0; ai = ai - 1) if (wq_act[ai]) begin
-        wcand = 1'b1; wab_n = wq_bq[ai*5 +: 5]; wcrd_n = AQ && wq_rd[WQW'(wq_rp + ai)];
+      wcand = 1'b0; wab_n = 0; wcrd_n = 1'b0; wab_oh_n = 0; pwin = 0;
+      if (PHYS_WACT != 0) begin
+        wcand = |wq_act_physical;
+        for (ai = 0; ai < WQ; ai = ai + 1)
+          pwin[ai] = wq_act_physical[ai] && !(|(wq_older[ai*WQ +: WQ] & wq_act_physical));
+        for (ai = 0; ai < WQ; ai = ai + 1) begin
+          wab_n = wab_n | ({5{pwin[ai]}} & wq_bank[ai]);
+          wab_oh_n = wab_oh_n | ({32{pwin[ai]}} & wq_boh[ai]);
+          wcrd_n = wcrd_n | (pwin[ai] && AQ && wq_rd[ai]);
+        end
+        if (!wcand) wab_oh_n = 32'b1;
+      end else begin
+        for (ai = WQ - 1; ai >= 0; ai = ai - 1) if (wq_act[ai]) begin
+          wcand = 1'b1; wab_n = wq_bq[ai*5 +: 5]; wcrd_n = AQ && wq_rd[WQW'(wq_rp + ai)];
+        end
+        wab_oh_n = 32'b1 << wab_n;
       end
     end
     reg wcand_q; reg [4:0] wab; reg [31:0] wab_oh; reg wcrd_q;
     always @(posedge clk or negedge rst_n)
       if (!rst_n) begin wcand_q <= 1'b0; wab <= 0; wab_oh <= 0; wcrd_q <= 1'b0; end
-      else begin wcand_q <= W && wcand; wab <= wab_n; wab_oh <= 32'b1 << wab_n; wcrd_q <= wcrd_n; end
+      else begin wcand_q <= W && wcand; wab <= wab_n; wab_oh <= wab_oh_n; wcrd_q <= wcrd_n; end
     wire wact_ok = wcand_q && !(|(wab_oh & (open | blk))) && (|(wab_oh & aok_z)) && rrdl_z[wab[1:0]] &&
                    !(REF_MODE && (ref_c == RW'(LEAD) || ref_c == RW'(LEAD + 1)) && wab == bsel) &&
                    !act_block && noact_c == 0 && rrds_c == 0 && faw_ok;
@@ -410,6 +445,27 @@ module ot_hbm_r14_stream_pc_strap #(
     assign wr_r = W && wq_n != (WQW+1)'(WQ);
     assign desc_r = !streaming && !fault_r && !wq_ne;
     assign busy = streaming; assign ref_fault = fault_r;
+    // The age matrix updates only at a push: the new slot is younger than
+    // every surviving valid slot. Popped slots are masked by wq_pv. OH payload
+    // and age bits need no reset because no invalid slot can become a candidate.
+    if (PHYS_WACT != 0) begin : physical_write_act
+      wire [WQW-1:0] wp = WQW'(wq_rp + wq_n);
+      integer p, q;
+      always @(posedge clk or negedge rst_n)
+        if (!rst_n) wq_pv <= 0;
+        else if (W) begin
+          wq_pv <= (wq_pv | ((wr_v && wr_r) ? (WQ'(1) << wp) : WQ'(0))) &
+                   ~(wr_ok ? (WQ'(1) << wq_rp) : WQ'(0));
+          if (wr_v && wr_r) begin
+            wq_boh[wp] <= 32'b1 << wr_bank;
+            wq_bgoh[wp] <= 4'b1 << wr_bank[1:0];
+            for (p = 0; p < WQ; p = p + 1)
+              for (q = 0; q < WQ; q = q + 1)
+                if (wp == WQW'(p)) wq_older[p*WQ + q] <= wq_pv[q] && q != p;
+                else if (wp == WQW'(q)) wq_older[p*WQ + q] <= 1'b0;
+          end
+        end
+    end
     always @(posedge clk or negedge rst_n) begin
       if (!rst_n) begin
         streaming <= 0; last <= 0; nm1 <= 0;

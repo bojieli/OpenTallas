@@ -1,0 +1,4 @@
+{"name": "ot_qwen_tp8_pv_wide_ctl", "ok": true, "checked": true, "files": {"ot_qwen_tp8_pv_wide_ctl.lef": "f9667634c825cf2d08b49f4493d4a1176a5d4f4e7702f16ba5aadf8dfca1cc24", "ot_qwen_tp8_pv_wide_ctl_ff.lib": "a42648f7799778510f67b4ddab6ef9bac4312e7d1f4d5b944edff0af8b20af68", "ot_qwen_tp8_pv_wide_ctl_ss.lib": "9857126a0a734af88ccda48ddd967ed8e9349148a076b4e42694c81a5a34ffdb", "ot_qwen_tp8_pv_wide_ctl_tt.lib": "be7ab64f8a895d789d9c838e8063e9e40fee85b64e0f46ae96e77a6c52402296"}}
+CK_SS_MEAN=138 CK_SS_ALL_MEAN=138 CK_SS_MIN=132 CK_SS_ALL_MIN=132 CK_SS_MAX=143 CK_SS_ALL_MAX=143 CK_TT_MEAN=98 CK_TT_ALL_MEAN=98 CK_TT_MIN=91 CK_TT_ALL_MIN=91 CK_TT_MAX=102 CK_TT_ALL_MAX=102 CK_FF_MEAN=75 CK_FF_ALL_MEAN=75 CK_FF_MIN=68 CK_FF_ALL_MIN=68 CK_FF_MAX=79 CK_FF_ALL_MAX=79 CK_ROUTE_REF=SS
+pinstub: 0 OBS rects moved into 0 pins: ; pockets: 127 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)
+REF_TILE export ot_qwen_tp8_pv_wide_ctl: views rc=0 child_lint PASS 

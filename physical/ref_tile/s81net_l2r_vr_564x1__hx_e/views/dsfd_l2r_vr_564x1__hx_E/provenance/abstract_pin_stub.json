@@ -1,0 +1,138 @@
+{
+  "schema": 1,
+  "kind": "abstract_pin_stub",
+  "status": "PASS",
+  "input": {
+    "path": "provenance/raw/dsfd_l2r_vr_564x1__hx_E.lef",
+    "sha256": "9337b78e273514db75aae3951b7629ccd4ea774aa41bd9c072bbddb7e23bc62d"
+  },
+  "output": {
+    "path": "dsfd_l2r_vr_564x1__hx_E.lef",
+    "sha256": "ec9b8ca7429697edea0356d60cc0a88d28a67efd78baf08d67aa71c3b2e8f3c5"
+  },
+  "helper": {
+    "path": "tools/hier_contract/abstract_pin_stub.py",
+    "sha256": "252e63041ed47cd5b4bdca41532c89f8f859b8e783a99487cb308d89e916aec5",
+    "source_commit": "f8139a4c74ccd178a2f3fb3fe879a99e4b718347",
+    "retained_copy": "provenance/helper/abstract_pin_stub.py"
+  },
+  "environment": {
+    "OT_OBS_CLOSE": null,
+    "OT_OBS_CLOSE_UM": null
+  },
+  "command": [
+    "python3",
+    "provenance/helper/abstract_pin_stub.py",
+    "provenance/raw/dsfd_l2r_vr_564x1__hx_E.lef",
+    "dsfd_l2r_vr_564x1__hx_E.lef"
+  ],
+  "returncode": 0,
+  "stdout": "pinstub: 4 OBS rects moved into 4 pins: cks[0], st[0], st[1], st[2]; pockets: 68 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
+  "stderr": "",
+  "invariants": {
+    "macro_outline": "PASS",
+    "pin_names_directions_uses": "PASS",
+    "original_pin_rectangles_retained": "PASS"
+  },
+  "child_lint": {
+    "schema": "opentallas.hier_contract.child_lint.v1",
+    "lef": "/srv/opentallas-scratch2/claude/closure-loop/s81net_l2r_vr_564x1__hx_e-n3-f8139a4c7/record/views/dsfd_l2r_vr_564x1__hx_E/dsfd_l2r_vr_564x1__hx_E.lef",
+    "verdict": "PASS",
+    "fails": [],
+    "warns": [
+      "(f) face-pin access: 1136 of 1139 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. ck[0] M3 (4.356,0.108), fo[0] M3 (4.356,0.108), od[101] M3 (4.356,0.108))"
+    ],
+    "summary": "dsfd_l2r_vr_564x1__hx_E 77.76 x 99.36: PG M5 VDD 28 stripes (94% spread, 100% cov) / VSS 28 stripes (94% spread, 100% cov); strap M6; face pins 1139 blocked-above 0 blocked-same 0; clock ck[0] insertion 115 ps; clock cks[0] insertion 103 ps; pockets M5 0 (closed)",
+    "info": {
+      "cell": "dsfd_l2r_vr_564x1__hx_E",
+      "W": 77.76,
+      "H": 99.36,
+      "pg": {
+        "nets": {
+          "VDD": {
+            "top_layer": "M5",
+            "stripes": 28,
+            "dir": "V",
+            "spread": 0.937,
+            "coverage": 1.0,
+            "shapes_on_top": 28
+          },
+          "VSS": {
+            "top_layer": "M5",
+            "stripes": 28,
+            "dir": "V",
+            "spread": 0.938,
+            "coverage": 1.0,
+            "shapes_on_top": 28
+          }
+        },
+        "top_layer": "M5",
+        "ok": true,
+        "why": []
+      },
+      "pg_layer": "M5",
+      "strap_layer": "M6",
+      "cap": null,
+      "face": {
+        "face_pins": 1139,
+        "blocked_above": 0,
+        "covered_below": 2,
+        "examples": [],
+        "blocked_same": 0,
+        "same_examples": [],
+        "band_same": 1136,
+        "band_examples": [
+          "ck[0] M3 (4.356,0.108)",
+          "fo[0] M3 (4.356,0.108)",
+          "od[101] M3 (4.356,0.108)",
+          "od[103] M3 (4.356,0.108)",
+          "od[105] M3 (4.356,0.108)",
+          "od[107] M3 (4.356,0.108)"
+        ]
+      },
+      "clock_insertion": {
+        "ck[0]": {
+          "max_ps": 115.21,
+          "min_ps": 86.43
+        },
+        "cks[0]": {
+          "max_ps": 103.28,
+          "min_ps": 83.58
+        }
+      },
+      "pockets": {
+        "layer": "M5",
+        "d_um": 1.536,
+        "marker": {
+          "layer": "M5",
+          "d_um": 1.536,
+          "added": 68
+        },
+        "count": 0,
+        "area_um2": 0,
+        "examples": []
+      }
+    }
+  },
+  "replay": {
+    "historical": true,
+    "job": "s81net_l2r_vr_564x1__hx_e-n3-f8139a4c7",
+    "source_commit": "f8139a4c74ccd178a2f3fb3fe879a99e4b718347",
+    "published_record_commit": "cd1d7df78e231be9508f02c32b57d58130af8f73",
+    "orfs_dir": "/srv/opentallas-scratch2/claude/closure-loop/s81net_l2r_vr_564x1__hx_e-n3-f8139a4c7/routes/s81net_l2r_vr_564x1__hx_e_n3_f8139a4c7/work/orfs",
+    "raw_export_tcl": "provenance/reconstruction/raw.tcl",
+    "raw_export_tcl_sha256": "129628bce636eb57d483c3ccbd4e34d7541ba1e6573da8dd95cc5b171b1cfe2d",
+    "environment_basis": "Reconstruction replay cleared both options; original process environment was not recorded. Exact published output hash is reproduced.",
+    "raw_matches_original_manifest": true,
+    "final_matches_published_export": true,
+    "all_published_files_verified": {
+      "dsfd_l2r_vr_564x1__hx_E.lef": "ec9b8ca7429697edea0356d60cc0a88d28a67efd78baf08d67aa71c3b2e8f3c5",
+      "dsfd_l2r_vr_564x1__hx_E_tt.lib": "552db061f7d7b9ec27d7997832232788dd77a359789b494bfd9c708e7cc7376b",
+      "dsfd_l2r_vr_564x1__hx_E_ff.lib": "b3c2c8ddfffa0109cab3481f0d751fd75d989296d0ad292d478ecec85f0de705",
+      "dsfd_l2r_vr_564x1__hx_E_ss.lib": "78269f93d7bc1971d75bb32f6573dc104be1a2bfcb2a83e5699565c85735b8af",
+      "abstract.json": "432d169612c752599f8d8da5f162712ca77bbbfa240c229c3172aa554e5e6cc7",
+      "insertion.json": "ec1ee6d6271920cdc1d83d514ff026e02a0f65722afd36d12abd57730b29fe29",
+      "child_lint.json": "78daf13d58b16a267d87f822d9b6fabbf95ff990bdb5a89f9d1020f1b9c71378"
+    }
+  }
+}

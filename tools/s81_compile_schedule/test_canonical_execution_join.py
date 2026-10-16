@@ -71,6 +71,17 @@ class CanonicalJoinTests(unittest.TestCase):
             binding['jobs']['native_job']['physical_instance']='su'
             record['binding']=self.pin('repeated_hierarchy_binding.json',binding)
         self.assertTrue(self.run_join()['local_programmes_ready'])
+    def test_allocator89_requires_programmes_on_new_tail_stages(self):
+        self.canonical['counts']=dict(stages=89,rank_dies=356)
+        self.canonical['rank_programme_bindings'] += [dict(stage=s,rank=r,die_id=4*s+r) for s in range(81,89) for r in range(4)]
+        report=self.run_join()
+        missing=[v for v in report['violations'] if v['kind']=='missing_rank_programme']
+        self.assertEqual(len(missing),32)
+        self.assertEqual({v['stage'] for v in missing},set(range(81,89)))
+        self.assertEqual(report['compiled_rank_programmes'],[])
+        self.canonical['rank_programme_bindings'].pop()
+        with self.assertRaisesRegex(ValueError,'complete allocator'):self.run_join()
+
     def test_missing_mtp_not_hidden_by_2654_backbone_nodes(self):
         self.catalogue['source_SU_nodes'][0]['scope']=0
         r=self.run_join();self.assertIn('missing_literal_MTP_continuation_operations',self.reasons(r))

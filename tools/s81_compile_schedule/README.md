@@ -162,3 +162,11 @@ coverage, groups and the objective against the original source graph and FIELD
 alternatives. The full candidate passes; changed templates, missing source-rank
 operations, a fabricated objective improvement and a split colocation group all
 fail. These are source design proofs; they do not establish native execution.
+
+Topology comes from the selected allocator, rather than the historical81-stage
+constant. `canonical_source_export.py` checks every literal pair/root/child
+against allocator region bounds and BF IDs, and declares its stage/rank counts.
+The execution join requires all those ranks, including the new tail stages of
+the89-stage C5 allocator, before compiling any partial programme set. Geometry
+and populated rank obligations still supply no native programme or source home.
+Legacy exports without count metadata retain the historical81-stage topology.

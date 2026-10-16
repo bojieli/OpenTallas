@@ -1,0 +1,13 @@
+ot-run: ot-epyc4       admits   382 GB (avail 609, growth 77, headroom 48, waiters 0/0 GB) load 48/128 running 12 disk 766 GB 
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-3255889-1792130383 after 0 s
+rc=0
+SM_GROUPS_ISSUED epoch=6 done_ps=687085.058000
+SM_GROUPS_ISSUED epoch=7 done_ps=756251.697000
+SM_GROUPS_EARLY_PROGRAMME_MUTANT rejected
+SM_GROUPS_NORESIDENT_ISSUER_MUTANT rejected: SM_STACK DUT fault cycle174 maskff
+rtl/hbm_accel/loader/service_native/run_sm_groups_issued.sh: line 44: 3278862 Aborted                    (core dumped) "$out/obj_cfg_$bad/sim" +IMAGES="$images" > "$out/cfg_${bad}_mutant.log" 2>&1
+SM_GROUPS_CFG_PC_MUTANT rejected
+rtl/hbm_accel/loader/service_native/run_sm_groups_issued.sh: line 44: 3288002 Aborted                    (core dumped) "$out/obj_cfg_$bad/sim" +IMAGES="$images" > "$out/cfg_${bad}_mutant.log" 2>&1
+SM_GROUPS_CFG_PHASE_MUTANT rejected
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-3255889-1792130383): exit 0

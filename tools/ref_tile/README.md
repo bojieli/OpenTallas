@@ -327,3 +327,25 @@ Combining the two models created extra route-period virtual clocks that survived
 into 833.333 ps signoff. The strict clock inventory guard remains unchanged;
 unexpected virtual clocks and aliases still fail. Other clock modes retain the
 legacy hook and their existing job command bytes.
+
+### Export provenance
+
+New `ref_tile.py export` bundles preserve the unmodified exporter record at
+`provenance/view_export.abstract.json` and the manifest-verified raw LEF at
+`provenance/raw/<top>.lef`. The raw LEF is outside the top-level LEF set consumed
+by parents. `provenance/abstract_pin_stub.json` records the helper SHA256, command,
+exit/output, exact `OT_OBS_CLOSE` and `OT_OBS_CLOSE_UM` environment (null means
+unset), raw/final hashes, macro/pin invariants and full child-lint result.
+M6 pin-grant exports retain the same evidence with an identity transformation.
+
+The final `abstract.json.files` hashes describe published files after processing;
+`export_provenance` links and hashes the raw record and transformation receipt.
+The manifest remains `ok: false` until the helper succeeds, macro name/size/origin
+and pin names/directions/uses are unchanged, every original pin rectangle remains,
+and child lint passes. Additional pin-stub rectangles are permitted. Failures
+retain raw evidence and cannot publish the candidate as the final LEF. An existing
+provenance directory is refused: use a fresh export destination rather than
+rewriting historical evidence. Historical bundle recovery requires a separate,
+source-bound replay; this path does not repair old manifests.
+
+Focused check: `python3 -m unittest discover -s tools/ref_tile -p test_export_provenance.py -v`.

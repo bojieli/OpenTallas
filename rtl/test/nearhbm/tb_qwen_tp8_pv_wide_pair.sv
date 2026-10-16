@@ -5,12 +5,12 @@
 // compare-only. Checks: output pulse at the pair's static out_age, 512 words bit-exact, fault 0.
 // Plusargs: +VEC=dir +CTX=T +MODE=steady|v_late|v_swap ; parameter MUT=1 = wrong join order (negative control).
 module tb_qwen_tp8_pv_wide_pair;
- parameter integer PAIR=0,MUT=0,RL=19;
+ parameter integer LEAF_RESET_PIN=0, CTL_RESET_PIN=0, PAIR=0,MUT=0,RL=19;
  reg clk=0,rst_n=0;always #1 clk=~clk;
  reg start=0;integer CTX;string vec,mode;
  reg [7:0] in_valid=0;reg [8191:0] in_v=0;reg [511:0] in_e=0;reg [111:0] in_t=0;reg [127:0] in_epoch=0;
  wire [7:0] req_valid;wire [111:0] req_t;wire out_valid,fault,busy;wire [16383:0] out_leaf;wire [15:0] out_epoch,out_age;
- ot_qwen_tp8_pv_wide_pair #(.PAIR(PAIR),.FIRST_INPUT_AGE(RL+1),.MUT(MUT)) u(.clk(clk),.rst_n(rst_n),.start(start),
+ ot_qwen_tp8_pv_wide_pair #(.PAIR(PAIR),.CTL_RESET_PIN(CTL_RESET_PIN),.LEAF_RESET_PIN(LEAF_RESET_PIN),.FIRST_INPUT_AGE(RL+1),.MUT(MUT)) u(.clk(clk),.rst_n(rst_n),.start(start),
   .col_clk({33{clk}}),.context_len(14'(CTX)),.epoch(16'd23),.in_valid(in_valid),.in_v(in_v),.in_e(in_e),.in_t(in_t),
   .in_epoch(in_epoch),.req_valid(req_valid),.req_t(req_t),.out_valid(out_valid),.out_leaf(out_leaf),.out_epoch(out_epoch),
   .fault(fault),.busy(busy),.out_age(out_age));
@@ -22,6 +22,12 @@ module tb_qwen_tp8_pv_wide_pair;
   if(!$value$plusargs("VEC=%s",vec))$fatal(1,"+VEC");
   if(!$value$plusargs("CTX=%d",CTX))$fatal(1,"+CTX");
   if(!$value$plusargs("MODE=%s",mode))mode="steady";
+  // fail closed on missing vectors (10-15 22:30: a missing golden produced all-zero gold == all-zero DUT = false PASS)
+  for(i=0;i<3;i=i+1)begin
+   n=$fopen({vec,(i==0)?"/v.hex":(i==1)?"/e.hex":"/gold.hex"},"r");
+   if(n==0)$fatal(1,"missing vector file in %0s",vec);
+   $fclose(n);
+  end
   $readmemh({vec,"/v.hex"},vr);$readmemh({vec,"/e.hex"},er);$readmemh({vec,"/gold.hex"},gold);
   for(k=0;k<8;k=k+1)begin wp[k]=0;rp[k]=0;end
   repeat(5)@(negedge clk);rst_n=1;repeat(3)@(negedge clk);

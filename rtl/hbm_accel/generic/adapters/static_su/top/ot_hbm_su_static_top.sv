@@ -16,7 +16,7 @@
 // reducer 1 to quarter 3's replica is missing (replica incoherence).
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_hbm_su_static_top #(
- parameter integer READ_RETURN=10,WRITE_RETURN=7,RF_RELAY=36,FETCH_EXTRA_EDGES=2,MLAT=3,ALAT=3,LEAF=0,MUT=0,MULTIRATE=0
+ parameter integer READ_RETURN=10,WRITE_RETURN=7,RF_RELAY=36,FETCH_EXTRA_EDGES=2,MLAT=3,ALAT=3,LEAF=0,MUT=0,MULTIRATE=0,PIN_REG=0
 )(
  input wire [15:0] pg_clk,                       // 4 port-group roots per quarter
  input wire [4095:0] clk_lane, input wire [2047:0] clk_insert, input wire [511:0] rst_lane_n,
@@ -40,11 +40,11 @@ module ot_hbm_su_static_top #(
  output wire [19:0] fault                        // per quarter {core, slice 3..0}
 );
  localparam integer QMUT=(MUT==8)?0:MUT;
- wire [3:0] red_sv; wire [4*32-1:0] red_tag,red_x;
+ wire [3:0] red_sv,red_rf_v; wire [4*32-1:0] red_tag,red_x;
  // relay[w][d]: reducer w -> replica d, RF_RELAY stages of {v, addr8, data32}
  wire [40:0] rly_out [0:3][0:3];
  for(genvar w=0;w<4;w=w+1)begin:g_src
-  wire [40:0] head={red_sv[w]&&red_tag[w*32+8],red_tag[w*32+:8],red_x[w*32+:32]};
+  wire [40:0] head={red_rf_v[w],red_tag[w*32+:8],red_x[w*32+:32]};   // red_rf_v = red_sv && tag[8], decoded in the core
   for(genvar d=0;d<4;d=d+1)begin:g_dst
    if(RF_RELAY==0)begin:g_wire
     assign rly_out[w][d]=head;
@@ -65,14 +65,14 @@ module ot_hbm_su_static_top #(
    assign wv[w]=rly_out[w][q][40]; assign wa[w*8+:8]=rly_out[w][q][39:32]; assign wd[w*32+:32]=rly_out[w][q][31:0];
   end
   ot_hbm_su_static_quarter #(.QID(q),.READ_RETURN(READ_RETURN),.WRITE_RETURN(WRITE_RETURN),
-   .FETCH_EXTRA_EDGES(FETCH_EXTRA_EDGES),.MLAT(MLAT),.ALAT(ALAT),.LEAF(LEAF),.MUT(QMUT),.MULTIRATE(MULTIRATE)) u_quarter(
+   .FETCH_EXTRA_EDGES(FETCH_EXTRA_EDGES),.MLAT(MLAT),.ALAT(ALAT),.LEAF(LEAF),.MUT(QMUT),.MULTIRATE(MULTIRATE),.PIN_REG(PIN_REG)) u_quarter(
    .pg_clk(pg_clk[q*4+:4]),.clk_lane(clk_lane[q*1024+:1024]),.clk_insert(clk_insert[q*512+:512]),
    .rst_lane_n(rst_lane_n[q*128+:128]),.clk_bcast(clk_bcast[q*16+:16]),.rst_bcast_n(rst_bcast_n[q*16+:16]),
    .clk_bank(clk_bank[q*128+:128]),.clk_bank_macro(clk_bank_macro[q*768+:768]),.clk_rf(clk_rf[q*64+:64]),.clk_ctl(clk_ctl[q*4+:4]),.clk_core(clk_core[q]),
    .clk_red(clk_red[q]),.clk_side(clk_side),.rst_n(rst_n),.bridge_rst_n(bridge_rst_n),.control(control[q*1742+:1742]),
    .vmr_cmd(vmr_cmd[q*240+:240]),.vmw_cmd(vmw_cmd[q*312+:312]),.rf_rd_cmd(rf_rd_cmd[q*54+:54]),
    .red_cmd(red_cmd[q*74+:74]),.rf_wv(wv),.rf_wa(wa),.rf_wd(wd),.red_sv(red_sv[q]),.red_tag(red_tag[q*32+:32]),
-   .red_x(red_x[q*32+:32]),.lg_rq(lg_rq[q*136+:136]),.lg_wq(lg_wq[q*2248+:2248]),.lg_rr(lg_rr[q*2056+:2056]),
+   .red_x(red_x[q*32+:32]),.red_rf_v(red_rf_v[q]),.lg_rq(lg_rq[q*136+:136]),.lg_wq(lg_wq[q*2248+:2248]),.lg_rr(lg_rr[q*2056+:2056]),
    .lg_w_done(lg_w_done[q*8+:8]),.fault(fault[q*5+:5]));
  end
 endmodule

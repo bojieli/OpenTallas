@@ -1,0 +1,6 @@
+ot-run: ot-epyc1tb     admits   528 GB (avail 754, growth 46, headroom 64, waiters 0/0 GB) load 59/128 running 12 disk 651 GB 
+ot-run: -> ot-epyc1tb
+ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-1614892-1792131047 after 0 s
+SU_TOP_GATE PASS
+ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-1614892-1792131047): exit 0
+rc=0

@@ -1,0 +1,8 @@
+FAIL hfd_hgi_vms_static_NW              x1      INPUT_UNCONNECTED in_unconn=cq
+FAIL ot_hbm_argmax_static_sw            x1      INPUT_UNCONNECTED in_unconn=am_stream
+FAIL ot_hbm_hc_q_static                 x4      INPUT_UNCONNECTED in_unconn=result,result_position,result_v
+FAIL ot_hfd_coll_q2_static_host_v4      x3      INPUT_UNCONNECTED in_unconn=inj_d,rc_d,rc_tag,rc_v
+FAIL ot_hfd_coll_q3_static_host_v4      x1      INPUT_UNCONNECTED in_unconn=inj_d,rc_d,rc_tag,rc_v
+FAIL ot_hgi_dma_back_static_vp4_banks   x4      INPUT_UNCONNECTED in_unconn=wa,wb_ready
+FAIL ot_hgi_sfu_scheduled_engine        x4      INPUT_UNCONNECTED in_unconn=side_y,vi_q
+DIE_PORT_BIND FAIL masters=55 instances=1418 unbound_masters=0 stub_masters=0 ambiguous_masters=0 port_not_in_rtl=0 width_mismatch=0 input_unconnected=17 input_tied=0 unparsed_connections=0 undriven_net_bits=7490 multi_driven_net_bits=0 top_assigns=0 params_not_in_rtl=0 strap_ports=3 pad_bits=2288
