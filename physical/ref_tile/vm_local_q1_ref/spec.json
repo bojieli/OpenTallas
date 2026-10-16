@@ -1,0 +1,519 @@
+{
+ "name": "vm_local_q1_ref",
+ "top": "hfd_vms_bank_local_q1",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_local_q1.sv",
+  "rtl/hbm_accel/generic/vm/static/ot_vms_bank_static_local_roots.sv",
+  "rtl/hbm_accel/generic/vm/static/ot_vms_ce_counter_pipe.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v"
+ ],
+ "clock_port": "clk_pin",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "pins": {
+  "N": [
+   "clk_ctrl",
+   "rst_n",
+   "bid",
+   "sid",
+   "rslot_v",
+   "rslot",
+   "wslot_v",
+   "wslot",
+   "rq2",
+   "rr2",
+   "kq_done",
+   "kq",
+   "status"
+  ],
+  "S": [
+   "rq3",
+   "rr3",
+   "dq",
+   "dq_done",
+   "pq",
+   "pr"
+  ],
+  "E": [
+   "clk_ecc",
+   "clk_out",
+   "rq1",
+   "rr1",
+   "xq2",
+   "xq2_done",
+   "eg",
+   "wq1",
+   "wq_done1"
+  ],
+  "W": [
+   "clk_pin",
+   "clk_s1",
+   "clk_s2",
+   "clk_ma",
+   "clk_mb",
+   "clk_mc",
+   "rq0",
+   "rr0",
+   "wq0",
+   "wq_done0",
+   "xq",
+   "xq_done"
+  ]
+ },
+ "pin_ranges": {
+  "clk_pin": [
+   134.94,
+   135.036
+  ],
+  "clk_ctrl": [
+   134.94,
+   135.036
+  ],
+  "clk_s1": [
+   136.956,
+   137.052
+  ],
+  "clk_s2": [
+   138.972,
+   139.068
+  ],
+  "clk_ecc": [
+   134.94,
+   135.036
+  ],
+  "clk_out": [
+   136.956,
+   137.052
+  ],
+  "clk_ma": [
+   29.964,
+   30.06
+  ],
+  "clk_mb": [
+   100.476,
+   100.572
+  ],
+  "clk_mc": [
+   170.988,
+   171.084
+  ],
+  "rst_n": [
+   135.132,
+   135.228
+  ],
+  "bid": [
+   135.324,
+   135.804
+  ],
+  "sid": [
+   135.9,
+   136.188
+  ],
+  "rslot_v": [
+   2.172,
+   2.268
+  ],
+  "rslot": [
+   2.556,
+   3.612
+  ],
+  "wslot_v": [
+   3.9,
+   3.996
+  ],
+  "wslot": [
+   4.476,
+   5.532
+  ],
+  "rq2": [
+   5.82,
+   13.212
+  ],
+  "rr2": [
+   13.5,
+   129.948
+  ],
+  "kq_done": [
+   130.236,
+   130.332
+  ],
+  "kq": [
+   130.812,
+   259.452
+  ],
+  "status": [
+   259.932,
+   267.708
+  ],
+  "rq3": [
+   2.172,
+   6.108
+  ],
+  "rr3": [
+   6.204,
+   67.74
+  ],
+  "dq": [
+   68.028,
+   135.324
+  ],
+  "dq_done": [
+   135.42,
+   135.516
+  ],
+  "pq": [
+   135.612,
+   203.868
+  ],
+  "pr": [
+   204.156,
+   267.804
+  ],
+  "rq1": [
+   2.172,
+   6.108
+  ],
+  "rr1": [
+   6.204,
+   67.548
+  ],
+  "xq2": [
+   67.644,
+   133.596
+  ],
+  "xq2_done": [
+   133.692,
+   133.788
+  ],
+  "eg": [
+   133.884,
+   200.412
+  ],
+  "wq1": [
+   200.508,
+   267.612
+  ],
+  "wq_done1": [
+   267.708,
+   267.804
+  ],
+  "rq0": [
+   2.172,
+   7.26
+  ],
+  "rr0": [
+   7.548,
+   89.196
+  ],
+  "wq0": [
+   89.292,
+   179.532
+  ],
+  "wq_done0": [
+   179.82,
+   179.916
+  ],
+  "xq": [
+   180.204,
+   267.276
+  ],
+  "xq_done": [
+   267.564,
+   267.66
+  ]
+ },
+ "outline": {
+  "w": 270.0,
+  "h": 270.0,
+  "exact": true
+ },
+ "layer_cap": "M6",
+ "recipe": 2,
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "at": [
+    47.52,
+    29.232
+   ],
+   "at_exact": true,
+   "inst": "bank.u_a",
+   "clock_entry": {
+    "port": "clk_ma",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   }
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "at": [
+    47.52,
+    99.744
+   ],
+   "at_exact": true,
+   "inst": "bank.u_b",
+   "clock_entry": {
+    "port": "clk_mb",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   }
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "at": [
+    47.52,
+    170.256
+   ],
+   "at_exact": true,
+   "inst": "bank.u_c",
+   "clock_entry": {
+    "port": "clk_mc",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   }
+  }
+ ],
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "hold_margin_ns": 0.03,
+  "pin_balance": {
+   "group_max": 32,
+   "h": "M4",
+   "v": "M3 M5"
+  },
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "Codex H-SM native clock recovery",
+  "branch": "claude/hsm-rp4-0030",
+  "tag": "local1",
+  "purpose": "Repeated native clock failures of old270spine (R~600ps/spread100ps, q0TT-114.94) require structural clock ownership:6local related soft roots plus3direct rawLiberty SRAM clocks; fewer than~2kFF per localroot. Full270face pin redistribution from currentdiegrant, actual abutted3SRAMstack unchanged. New native shape SW/SEWG2, NW/NERG5; oldclosed views stand. Noadded dataedges; actualphi-R perentry required; parent/die adoption OPEN.",
+  "structural_change": "Repeated native clock failures of old270spine (R~600ps/spread100ps, q0TT-114.94) require structural clock ownership:6local related soft roots plus3direct rawLiberty SRAM clocks; fewer than~2kFF per localroot. Full270face pin redistribution from currentdiegrant, actual abutted3SRAMstack unchanged. New native shape SW/SEWG2, NW/NERG5; oldclosed views stand. Noadded dataedges; actualphi-R perentry required; parent/die adoption OPEN.",
+  "record_to": "results/rtl/ref_tile/vm_local_q1_ref",
+  "views_to": "physical/ref_tile/vm_local_q1_ref/views",
+  "extra_paths": [
+   "rtl/hbm_accel/generic/vm/static",
+   "physical/hbm_vm_local_1016/q1",
+   "results/arch/hbm_die_v15/vm_native_local_grants_1016.json",
+   "physical/common_flow/assigned_pin_exact.tcl"
+  ],
+  "benches": [
+   {
+    "name": "native8bank_exact",
+    "cmd": "iverilog -g2012 -s tb_hbm_vm_local_literal -Ptb_hbm_vm_local_literal.SID=1 -Ptb_hbm_vm_local_literal.RG=4 -Ptb_hbm_vm_local_literal.WG=2 -Ptb_hbm_vm_local_literal.MUT=0 -o {RUN}/bench_0.vvp rtl/hbm_accel/generic/vm/static/ot_vms_ce_counter_pipe.sv rtl/hbm_accel/generic/vm/static/ot_vms_bank_static_local_roots.sv rtl/hbm_accel/generic/vm/static/ot_vms_bank_local_physical.sv rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_local_q*.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v rtl/hbm_accel/generic/vm/static/native_abi_1016/tb_hbm_vm_local_literal.sv && vvp {RUN}/bench_0.vvp",
+    "expect": "pass",
+    "pass_regex": "VM_LOCAL_LITERAL PASS",
+    "threads": 1,
+    "peak_ram_gb": 8
+   },
+   {
+    "name": "actual_macro_clockdrop_mutant",
+    "cmd": "iverilog -g2012 -s tb_hbm_vm_local_literal -Ptb_hbm_vm_local_literal.SID=1 -Ptb_hbm_vm_local_literal.RG=4 -Ptb_hbm_vm_local_literal.WG=2 -Ptb_hbm_vm_local_literal.MUT=5 -o {RUN}/bench_5.vvp rtl/hbm_accel/generic/vm/static/ot_vms_ce_counter_pipe.sv rtl/hbm_accel/generic/vm/static/ot_vms_bank_static_local_roots.sv rtl/hbm_accel/generic/vm/static/ot_vms_bank_local_physical.sv rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_local_q*.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v rtl/hbm_accel/generic/vm/static/native_abi_1016/tb_hbm_vm_local_literal.sv && vvp {RUN}/bench_5.vvp",
+    "expect": "fail",
+    "fail_regex": "FATAL: .*actual SRAM readback mismatch",
+    "threads": 1,
+    "peak_ram_gb": 8
+   }
+  ]
+ },
+ "params": {},
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB1xp67_ASAP7_75t_R"
+ },
+ "clock": "hybrid_entries",
+ "contract": {
+  "file": "results/arch/hbm_die_v15/vm_native_local_grants_1016.json",
+  "slot": "vmb_SE_local_clock_master"
+ },
+ "io_tcl": "physical/hbm_vm_local_1016/q1/io.tcl",
+ "orfs_vars": {
+  "POST_IO_PLACEMENT_TCL": "physical/hbm_vm_local_1016/q1/post_iop.tcl"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "Current actual strap5 payload/valid, slot/identity/reset and output registers are retained byte-for-byte except clock roots in ot_vms_bank_static_local_roots.sv. Every data input still enters actual pin flop and output exits registered rr/eg/pr/status/done flop;9clockports drive only their own6softtrees and3rawmacroclocks. Exactcomponent SRAM/read/write/clockdrop benches prove unchanged3edgewrite and6edgeread; adding wrapper flops changes staticcalendar and is unnecessary. io_flop_at_pins anchors actual retained input/output registers."
+ },
+ "floorplan_note": "q2 identity2 --cts gate failed GPL-0305 (NaN) twice with the generated 3-macro column (20 um macro-macro channels, 5.4 um halos -> 9.5 um cell rows between arrays; overflow stuck at 0.115 for 12k iterations). Structural: the three arrays (pins only on W/E faces) form one abutted N-S stack (pitch = array height + 0.024 um) centred in the core, so no narrow inter-array channel exists; two ~70 um N/S channels carry the cross traffic.",
+ "pg_layer": "M6",
+ "layer_cap_grant": "H-DIE native grant39bc56c6b preserves270x270 M6PG/signalcap andM7parentstrap; source-pinned9independent clock entries, no inherited oldview.",
+ "clock_ports": [
+  "clk_pin",
+  "clk_ctrl",
+  "clk_s1",
+  "clk_s2",
+  "clk_ecc",
+  "clk_out",
+  "clk_ma",
+  "clk_mb",
+  "clk_mc"
+ ],
+ "clock_cts_roots": [
+  "clk_pin",
+  "clk_ctrl",
+  "clk_s1",
+  "clk_s2",
+  "clk_ecc",
+  "clk_out"
+ ],
+ "clock_data_paths": "related_same_frequency",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_pin"
+   ],
+   "inputs": [
+    "rq0",
+    "rq1",
+    "rq2",
+    "rq3",
+    "wq0",
+    "wq1",
+    "dq",
+    "kq",
+    "xq",
+    "xq2",
+    "pq"
+   ],
+   "outputs": []
+  },
+  "ctrl": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_ctrl"
+   ],
+   "inputs": [
+    "bid",
+    "sid",
+    "rst_n",
+    "rslot_v",
+    "rslot",
+    "wslot_v",
+    "wslot"
+   ],
+   "outputs": []
+  },
+  "s1": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_s1"
+   ],
+   "inputs": [],
+   "outputs": [
+    "eg"
+   ]
+  },
+  "s2": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_s2"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "ecc": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_ecc"
+   ],
+   "inputs": [],
+   "outputs": [
+    "wq_done0",
+    "wq_done1",
+    "dq_done",
+    "kq_done",
+    "xq_done",
+    "xq2_done"
+   ]
+  },
+  "out": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_out"
+   ],
+   "inputs": [],
+   "outputs": [
+    "rr0",
+    "rr1",
+    "rr2",
+    "rr3",
+    "pr",
+    "status"
+   ]
+  },
+  "ma": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_ma"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "mb": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_mb"
+   ],
+   "inputs": [],
+   "outputs": []
+  },
+  "mc": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_mc"
+   ],
+   "inputs": [],
+   "outputs": []
+  }
+ }
+}
