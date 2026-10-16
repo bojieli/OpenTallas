@@ -8,7 +8,7 @@
 // [83]read_v,[84]bank,[100:85]epoch,[106:101]row,[116:107]tag;
 // [117]retire_v,[118]bank,[134:119]epoch. Read precedes expected packet by1word.
 module ot_hbm_svc_sm_feed_programmed #(
- parameter [1:0] STACK=0,parameter integer SM=0,OWNER_AW=5,RESPONSE_DEPTH=8,DECOUPLE=1,OVERLAP=1,LBANKS=2,
+ parameter [1:0] STACK=0,parameter integer SM=0,OWNER_AW=5,RESPONSE_DEPTH=8,DECOUPLE=1,OVERLAP=1,LBANKS=4,
  parameter integer LB=(LBANKS>2)?2:1
 )(
  input wire stream_clk,stream_rst_n,hbm_clk,hbm_rst_n,
@@ -24,6 +24,9 @@ module ot_hbm_svc_sm_feed_programmed #(
  output wire program_active,program_done,output wire fault,
  output wire[42:0]expected_request,output wire[1081:0]lt0,lt1,output wire[569:0]lb0,lb1,output wire[11:0]fm,
  output wire[1098:0]packet_observe,output wire[134:0]programme_observe,output wire programme_v,
+ // H-DIE 2026-10-15: the SM command this programme issues (fixed idle slot = 0), the die net to the SM's command port
+ // (the same value the internal consumer copy sees); packet_observe is the die net to the SM's packet port.
+ output wire[82:0]sm_command,
  output wire[3:0]k_v,input wire[3:0]k_rdy,output wire[119:0]k_addr,
  output wire[15:0]k_len,output wire[67:0]k_tag,output wire[3:0]k_we,
  output wire[1023:0]k_wdata,output wire[127:0]k_wstrb,input wire[3:0]k_wr_done,
@@ -64,6 +67,7 @@ module ot_hbm_svc_sm_feed_programmed #(
   .start_v(program_start_v),.start_base(program_start_base),.start_limit(program_start_limit),.start_loops(program_start_loops),
   .calendar(programme),.calendar_v(programme_v),.ordinal(ordinal),.active(program_active),.done(program_done),.fault(programme_fault));
  assign programme_observe=programme;
+ assign sm_command=programme_v?programme[82:0]:83'd0;
  ot_hbm_svc_static_sm_packed136 #(.PACKED136(1)) rows(
   .clk(stream_clk),.rst_n(stream_rst_n),.open_v(open_q),.open_bank(open_bank_q),.open_epoch(open_epoch_q),.open_count(rows_q[open_land_q]),.open_tag_base(tag_q[open_land_q]),
   .sector_v(out_v?out_mask:4'b0),.sector_index(indices),.sector_epoch(epochs),.sector_data(out_data),
@@ -71,7 +75,7 @@ module ot_hbm_svc_sm_feed_programmed #(
   .retire_v(programme_v&&programme[117]),.retire_bank(programme[118]),.retire_epoch(programme[134:119]),
   .block_ready(cache_ready),.bank_owned(cache_owned),.busy(cache_busy),.fault(cache_fault),.out_packet(packet_observe));
  ot_smh_static_feed consumer(
-  .clk(stream_clk),.rst_n(stream_rst_n),.command(programme_v?programme[82:0]:83'd0),.packet(packet_observe),
+  .clk(stream_clk),.rst_n(stream_rst_n),.command(sm_command),.packet(packet_observe),
   .expected_request(expected_request),.fault(feed_fault),.lt0(lt0),.lt1(lt1),.lb0(lb0),.lb1(lb1),.fm(fm));
  assign fault=descriptor_fault||cdc_fault||cache_fault||programme_fault||feed_fault;
 endmodule
