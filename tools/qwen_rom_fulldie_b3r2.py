@@ -6434,6 +6434,11 @@ foreach net {VDD VSS} { if {[catch {check_power_grid -net $net} err]} { puts "OT
 mem check
 write_db /work/floorplan_pdn.odb
 """)
+    # Explicit modeled-PHY candidate revision, before any floorplan ODB exists.
+    from phy_pg.apply_case import maybe_apply as _assumed_phy_pg
+    phy_access = _assumed_phy_pg(work)
+    if phy_access:
+        man['assumed_phy_pg_access'] = 'assumed_phy_pg_access.json'
     man.update(case='a_pdn', bump_um=bump_um, macro_grids=len(meta), producer=__file__, die=m['die'],
                **({'pdn_rev': rev} if rev != 'r4' else {}),
                execution_order=['run.tcl', 'run_pdn.tcl'])

@@ -1,0 +1,52 @@
+{
+  "schema": "opentallas.s81.held-slot-grant.v1",
+  "status": "HELD_CANDIDATE_SLOT_ONLY",
+  "master": "ot_s81_hc_ctfx_cap_pinpipe",
+  "replaces": "ot_s81_hc_ctfx_cap",
+  "outline_um": [
+    576.72,
+    51.84
+  ],
+  "source_commit": "925d5397ac33f5d8d8a43075367f301d1dc4864b",
+  "spec": "physical/ref_tile/s81hc_ctfxcap_pinpipe_ref/spec.json",
+  "pin_assignment": {
+    "path": "physical/s81_die_pins/v26_hc_capture_spread_candidate/ot_s81_hc_ctfx_cap.tcl",
+    "sha256": "59b2f7e2a06ff67a81a1de6ead8e2f6acf942fc60ccaef3a905bab8f5c71a9c0",
+    "source": "unchanged v26 assigned full-span N/S pin order; inherited coordinate candidate only"
+  },
+  "faces": {
+    "N": [
+      "fd_in",
+      "fv_in",
+      "rst_in",
+      "clk"
+    ],
+    "S": [
+      "fdx",
+      "fv",
+      "fv_local",
+      "fdx_local"
+    ]
+  },
+  "physical_view_inheritance": false,
+  "native_qualified": false,
+  "adopted_in_parent": false,
+  "latency": {
+    "serial_hc_edges_added": 1,
+    "payload_and_valid_both": true,
+    "diagnostic_reset_edges": "unchanged; prove held reset and peer schedule"
+  },
+  "area": {
+    "additional_flops": 1135,
+    "measured_routed_area_um2": null
+  },
+  "required_before_adoption": [
+    "exact bench PASS and mutant FAIL",
+    "TT setup>=0 / FF hold>=0 / DRC0",
+    "native launch<=220ps / capture<=190ps / spread<=80ps",
+    "whole connected HC peer-pin reach/cut proof from current HC pin tool",
+    "coherent compiler/HC parent +1 serial edge and measured totalcost",
+    "new source-pinned view and child lint; no old cap view inheritance"
+  ],
+  "reason": "Measured old fd_in1007 capture clone at opposite face creates469.836um separation; separate actual N capture and S launch flops preserve faces at +1 serial edge. Root authorized structural successor; no owner rule or qualification waiver."
+}

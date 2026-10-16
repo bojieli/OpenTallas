@@ -137,39 +137,6 @@
   },
   {
    "design": "qwen_rom",
-   "unit": "KVDIE.HEAD_STAGES v1.4.3 (+3 gather in, +2 score back per attention request; ECTL HXK 5)",
-   "group": "KVDIE.HEAD_V143",
-   "measured": 1625.0,
-   "price": 1620.0,
-   "unit_of_measure": "cycles",
-   "unit_ratio": 1.0031,
-   "e2e_loss_pct": 0.072,
-   "binding_workload": "ar",
-   "per_workload": {
-    "ar": {
-     "model": "token-path longest path",
-     "base_cycles": 249431.0,
-     "cycles": 249611.0,
-     "added_cycles": 180.0,
-     "runs_per_token": 36,
-     "critical_runs": 36,
-     "overlapped_runs": 0,
-     "other_price_nodes_skipped": 0,
-     "naive_added_cycles": 180.0,
-     "wave_positions": 0,
-     "wave_added_cycles_per_position": 0.0,
-     "e2e_loss_pct": 0.072
-    }
-   },
-   "within_unit_limit": true,
-   "evidence": "results/arch/qwen_kv_calendar_1015/receipt.json",
-   "evidence_grade": "interim_log",
-   "date": "2026-10-15",
-   "status": "proposed",
-   "note": "Q-VMWB 2026-10-15 (coordinator): v1.4.3 KV-die head G3S2 adds 3 gather-in + 2 score-back stages = +5 core edges per attention request (el1014-qwen-split-kvsys.log, Q-KVSYS-DIE composition bench PASS / 3 mutants FAIL), carried in tools/qwen_static_schedule/attention.py V143_HEAD_EDGES. Price = the measured w16 attention + link (1620); re-measure on the v1.4.3 binary. The 36-layer KV calendar (tools/qwen_static_schedule/kv_calendar.py) adds 0 cycles once the 0az front is NBLK>=10 and the return ring DEPTH>=48 (current 4 / 8 are infeasible)."
-  },
-  {
-   "design": "qwen_rom",
    "unit": "TT.ROMCMD qfd_tt_head_static h4 rom_cmd output register (+1 ROM-tree command edge)",
    "group": "TT.ROMCMD",
    "measured": 2.0,
@@ -1663,11 +1630,11 @@
  "totals": {
   "qwen_rom": {
    "accepted_pct": 1.065,
-   "proposed_pct": 4.403,
-   "accepted_plus_proposed_pct": 5.468,
+   "proposed_pct": 4.331,
+   "accepted_plus_proposed_pct": 5.396,
    "limit_pct": 15.0,
    "accepted_rows": 4,
-   "proposed_rows": 8,
+   "proposed_rows": 7,
    "headroom_pct": 13.935,
    "owner_exception_rows": 0,
    "over_limit_by_owner_exception": false

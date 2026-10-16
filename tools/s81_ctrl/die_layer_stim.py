@@ -284,6 +284,7 @@ def main():
                     'job kind become jobs of the production slab on the golden operands (tools/s81_ftok/su_layer.py), '
                     'their chain members are aliased to the job, the SU ops with no job kind move to the behavioural port '
                     f'{SUX_PORT} (su.x) at program duration')
+    ap.add_argument('--mix-p2p', type=int, default=0, help='measured MIX4 command-pin -> done-pin latency (component gate)')
     ap.add_argument('--mix-snap', type=Path, help='real MIX4 operands; collapse eng.* onto one actual master command')
     ap.add_argument('--hcx-real', action='store_true', help='port 9: the HC coefficient chain on real RTL (4-rank '
                     'dsfd_sp_hcx_projection + gatherpack + post, ot_s81_hcx_chain_seq) under the fixed issuer: the '
@@ -401,10 +402,10 @@ def main():
         from program import encode_program, issuer_done_row
         # Issuer row semantics (ot_s81_fixed_issue): 'issue' is the age whose edge loads the command
         # register (command pin = issue+1); 'done' is the age whose edge samples the completion pin.
-        # MIX4's measured command-pin -> done-pin latency is 772 (component gate), so
-        # done = issue + 1 + 772. issue+772 (=1428) misses the completion by one edge: issuer
-        # fault code 8 at stream cycle 2681 (tb_s81_engram_mix4_fixed reproduces it).
-        MIX_ISSUE, MIX_PIN_TO_PIN = 656, 772
+        # MIX4's MEASURED command-pin -> done-pin latency comes from --mix-p2p (no constant: the RTL moved
+        # 772 -> 810 with the bank-striped/static-issue line d9790c0fd, and a stale 772 faults the issuer, code 8).
+        assert a.mix_p2p and a.mix_p2p > 0, '--mix-snap needs --mix-p2p (measured MIX4 component gate pin-to-pin)'
+        MIX_ISSUE, MIX_PIN_TO_PIN = 656, a.mix_p2p
         mix_done = issuer_done_row(MIX_ISSUE, MIX_PIN_TO_PIN)
         fixed_rows.append(dict(engine=10,arg=db,issue=MIX_ISSUE,done=mix_done,pin_to_pin=MIX_PIN_TO_PIN))
         mc = encode_program([dict(engine=10,arg=db,issue=MIX_ISSUE,done=mix_done,pin_to_pin=MIX_PIN_TO_PIN),

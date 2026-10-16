@@ -33,13 +33,14 @@
   "N": [
    "clk_macro3",
    "clk_macro4",
-   "clk_macro5",
-   "rst_n"
+   "clk_macro5"
   ],
   "W": [
    "read_v",
    "read_addr",
    "clk",
+   "clk_ws",
+   "rst_n",
    "write_v",
    "write_addr",
    "write_data"
@@ -59,6 +60,7 @@
  "clock_ports": [
   "clk",
   "clk_rd",
+  "clk_ws",
   "clk_macro0",
   "clk_macro1",
   "clk_macro2",
@@ -68,7 +70,8 @@
  ],
  "clock_cts_roots": [
   "clk",
-  "clk_rd"
+  "clk_rd",
+  "clk_ws"
  ],
  "blocks": [
   {
@@ -150,7 +153,14 @@
    "offtrack": 0
   }
  ],
- "findings": [],
+ "findings": [
+  [
+   "WARN",
+   "fill",
+   "parent kit without std_area_um2: fill not computed at gen (the gate measures it)",
+   "pass --area-um2 / std_area_um2 from the synthesis smoke"
+  ]
+ ],
  "referenced": [
   "rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_pinned_bank.sv",
   "rtl/hbm_accel/generic/adapters/static_su/data_store/ot_hbm_su_static_data_store.sv",

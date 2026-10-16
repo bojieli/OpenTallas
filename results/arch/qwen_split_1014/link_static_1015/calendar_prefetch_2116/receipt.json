@@ -1,0 +1,14 @@
+{
+  "normal_cycle_change": 0,
+  "configuration_settle_edges": 1,
+  "exact_events": 4,
+  "positive_errors": 0,
+  "immediate_cfg_start_fault": true,
+  "wrong_segment_mutant_errors": 5,
+  "source_sha256": {
+    "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_static.sv": "3a39c812033ae8d759a3f5d95902018ac6f5eadf67aed62c26e908414f90de26",
+    "rtl/test/qwen_split/tb_d2d_calendar_prefetch.sv": "ea4a89d6de7259f112a4cbf3593e9a4e5825fbdacc53d35b5f6e8bf769e1b05a"
+  },
+  "physical_qualified": false,
+  "whole_token_native_qualified": false
+}

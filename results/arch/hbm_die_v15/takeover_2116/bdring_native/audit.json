@@ -1,0 +1,253 @@
+{
+ "cell": "ot_hgi_sm_xload_cl2_bdring",
+ "view": "physical/ref_tile/hgi_sm_xl2_bdring/views/ot_hgi_sm_xload_cl2_bdring",
+ "lib_cell": "ot_hgi_sm_xload_cl2_bdring",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 263.2,
+ "spread_ps": 48.1,
+ "outputs": 2048,
+ "inputs": 638,
+ "launch_ps": 392.9,
+ "launch_pin": "bq_d[668]",
+ "capture_ps": 511.7,
+ "capture_pin": "zhi",
+ "launch_over": 30,
+ "capture_over": 18,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pass": false,
+ "fail_why": "launch 392.87788 > 220 (30 pins); capture 511.66664 > 190 (18 pins)",
+ "capture_failures": [
+  {
+   "pin": "zhi",
+   "ps": 511.66664000000003
+  },
+  {
+   "pin": "zlo",
+   "ps": 510.75881
+  },
+  {
+   "pin": "r_wsel[15]",
+   "ps": 448.30084999999997
+  },
+  {
+   "pin": "r_wsel[14]",
+   "ps": 440.36195999999995
+  },
+  {
+   "pin": "r_wsel[13]",
+   "ps": 441.23515999999995
+  },
+  {
+   "pin": "r_wsel[12]",
+   "ps": 506.10425
+  },
+  {
+   "pin": "r_wsel[11]",
+   "ps": 439.63134
+  },
+  {
+   "pin": "r_wsel[10]",
+   "ps": 474.89205
+  },
+  {
+   "pin": "r_wsel[9]",
+   "ps": 448.60375999999997
+  },
+  {
+   "pin": "r_wsel[8]",
+   "ps": 476.13824999999997
+  },
+  {
+   "pin": "r_wsel[7]",
+   "ps": 446.95461
+  },
+  {
+   "pin": "r_wsel[6]",
+   "ps": 461.1743
+  },
+  {
+   "pin": "r_wsel[5]",
+   "ps": 454.26541
+  },
+  {
+   "pin": "r_wsel[4]",
+   "ps": 463.92724999999996
+  },
+  {
+   "pin": "r_wsel[3]",
+   "ps": 400.37555
+  },
+  {
+   "pin": "r_wsel[2]",
+   "ps": 482.24378
+  },
+  {
+   "pin": "r_wsel[1]",
+   "ps": 456.96961999999996
+  },
+  {
+   "pin": "r_wsel[0]",
+   "ps": 452.24828
+  }
+ ],
+ "launch_failures": [
+  {
+   "pin": "bq_d[1432]",
+   "ps": 256.86395999999996
+  },
+  {
+   "pin": "bq_d[1426]",
+   "ps": 370.20857000000007
+  },
+  {
+   "pin": "bq_d[1420]",
+   "ps": 274.14466999999996
+  },
+  {
+   "pin": "bq_d[1414]",
+   "ps": 325.2444
+  },
+  {
+   "pin": "bq_d[1404]",
+   "ps": 284.59004
+  },
+  {
+   "pin": "bq_d[1398]",
+   "ps": 298.6537
+  },
+  {
+   "pin": "bq_d[1392]",
+   "ps": 277.31147000000004
+  },
+  {
+   "pin": "bq_d[1386]",
+   "ps": 275.52919
+  },
+  {
+   "pin": "bq_d[1380]",
+   "ps": 258.02821
+  },
+  {
+   "pin": "bq_d[1216]",
+   "ps": 249.59907000000004
+  },
+  {
+   "pin": "bq_d[1076]",
+   "ps": 274.91078
+  },
+  {
+   "pin": "bq_d[1070]",
+   "ps": 258.35341
+  },
+  {
+   "pin": "bq_d[1058]",
+   "ps": 283.55298999999997
+  },
+  {
+   "pin": "bq_d[924]",
+   "ps": 234.33757000000003
+  },
+  {
+   "pin": "bq_d[918]",
+   "ps": 244.64711
+  },
+  {
+   "pin": "bq_d[906]",
+   "ps": 287.33234999999996
+  },
+  {
+   "pin": "bq_d[778]",
+   "ps": 358.06244999999996
+  },
+  {
+   "pin": "bq_d[748]",
+   "ps": 274.80873
+  },
+  {
+   "pin": "bq_d[742]",
+   "ps": 313.75813
+  },
+  {
+   "pin": "bq_d[736]",
+   "ps": 388.01198000000005
+  },
+  {
+   "pin": "bq_d[718]",
+   "ps": 285.51349999999996
+  },
+  {
+   "pin": "bq_d[712]",
+   "ps": 295.59675
+  },
+  {
+   "pin": "bq_d[706]",
+   "ps": 255.34742
+  },
+  {
+   "pin": "bq_d[674]",
+   "ps": 228.69702999999998
+  },
+  {
+   "pin": "bq_d[668]",
+   "ps": 392.87788000000006
+  },
+  {
+   "pin": "bq_d[644]",
+   "ps": 249.02790999999996
+  },
+  {
+   "pin": "bq_d[602]",
+   "ps": 267.24512999999996
+  },
+  {
+   "pin": "bq_d[590]",
+   "ps": 260.64338000000004
+  },
+  {
+   "pin": "bq_d[280]",
+   "ps": 261.07936
+  },
+  {
+   "pin": "bq_d[274]",
+   "ps": 250.27704999999997
+  }
+ ],
+ "source": "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv",
+ "source_sha256": "dbc7226f2359d65738572ed96cd75bdfed234691eda2200d6989dc8bf15823cf",
+ "view_sha256": {
+  "ot_hgi_sm_xload_cl2_bdring.lef": "03a80eb70375ea1f11774480f26a7841e6667407f876cd3b9a20f7031eab0925",
+  "ot_hgi_sm_xload_cl2_bdring_tt.lib": "9e8bb7118fed6fe05af21235d751558049cc647e504dc7520ac8bb167b440d40",
+  "ot_hgi_sm_xload_cl2_bdring_ff.lib": "36a11dbb8b6b1c48c682ddcae19cace9a0ee189455c323971302f84acb067554",
+  "insertion.json": "0d0eef3d67f5fbda1416d4b743ee195bae8cc9b3ef6656f34312199644956afc"
+ },
+ "routed_evidence": {
+  "job": "hgi_sm_xl2_bdring-cl2c-COMMIT-7a8256359",
+  "TT_ps": 10.45,
+  "FF_ps": 15.02,
+  "DRC": 0,
+  "SS_ps": -288.33
+ },
+ "scope": "Historical generic routed closure stands; HBM native parent/die adoption REFUSED until source/view exact root-real-view qualification passes. No inferred qualification from CLOSED.",
+ "classified_defects": [
+  {
+   "kind": "capture",
+   "pins": 18,
+   "cause": "zlo/zhi data gating and r_wsel enables directly precede 32x266 ring storage; no command landing FF at those pins."
+  },
+  {
+   "kind": "launch",
+   "pins": 30,
+   "cause": "bq_d is registered in RTL, so excess launch includes physical Q-to-pin path; exact routed path decomposition pending."
+  }
+ ],
+ "layout_inspected": {
+  "floorplan.png": "20068a5823854be003c3fbf6767c74760ed70da8ebef67c0e13716ad59277bad",
+  "density.png": "67d3f7667a72a6811b5b9c248f05a489662ae641b1ee0371dd2b2811597e8cac"
+ },
+ "layout_observation": "216x216 um, 22.6% cell fill; output strip east and quantiser input strip north; density clusters in upper/east interior, empty southwest. No macro obstruction. No congestion or boundary qualification inferred from image.",
+ "next": "Register control landing coherently with wr_lo/hi, account the added edge in parent fixed calendar, and localize beat output capture to assigned pins; rerun exact composition and failing mutant before fresh physical gate. Parent independently exposes each ctl/eg and four BF clock entry before qualification."
+}

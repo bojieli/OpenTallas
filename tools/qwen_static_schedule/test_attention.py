@@ -58,6 +58,14 @@ class Attention(unittest.TestCase):
             with self.assertRaises(ScheduleError):
                 compile_calendar([prog], contract, root)
 
+    def test_measured_link_ages(self):
+        L = A.MEASURED_LINK
+        self.assertEqual((L['request_edges'], L['result_edges']), (20, 19))
+        rec = dict(stage=0, pc=0, word='1', unit=1)
+        imp = A.pc11_implementation(rec, 8192, 'L0', L, period_fs=833334)
+        ev = {e['id']: e['offset_fs'] // 833334 for e in imp['events']}
+        self.assertEqual(ev['result_landed'], 20 + 1566 + 19)         # Q send slot -> result at the compute pin
+
 
 if __name__ == '__main__':
     unittest.main()
