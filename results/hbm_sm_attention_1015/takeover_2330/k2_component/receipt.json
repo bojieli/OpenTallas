@@ -1,0 +1,49 @@
+{
+  "schema": "opentallas.sm_mtp_k2_component_receipt.v1",
+  "source_commit": "99a48cdfa",
+  "host": "ot-agidock128",
+  "time": "2026-10-15T23:47:48-07:00",
+  "scope": "actual two-set BDC diagnostic component, not integrated SM or physical qualification",
+  "shape": {
+    "positions": 6,
+    "rows": 8,
+    "terms": 32,
+    "sets": 2,
+    "contexts_per_set": 24,
+    "lanes_per_set": 2,
+    "FP8_values_per_lane": 32
+  },
+  "exact_results": 48,
+  "mutants": {
+    "operand_slot_alias": 24,
+    "IL8_context_alias": 48
+  },
+  "serial_issue_cycles": 1536,
+  "dual_issue_cycles": 768,
+  "serial_completion_cycles": 1574,
+  "dual_completion_cycles": 806,
+  "serial_weight_boundary_reads": 1536,
+  "dual_weight_boundary_reads": 256,
+  "synthesis": {
+    "baseline_one_IL8_BDC_um2": 7161.38982,
+    "dual_IL24_BDC_um2": 14381.09964,
+    "increment_over_one_baseline_um2": 7219.70982,
+    "increment_over_two_baselines_um2": 58.31999999999971,
+    "baseline_flops": 10667,
+    "dual_flops": 21723
+  },
+  "open": [
+    "new slot SRAM/storage and operand ports",
+    "HBM line retention/dispatch",
+    "actual fullSM issue and retire calendar",
+    "fullSM production numerical and throughput proof",
+    "physical area/clock/pins/route and native timing"
+  ],
+  "files": {
+    "area_baseline.json": "80703275bad9567a6c809b19f503e51359a11db8f749f9c377aef645f918bec0",
+    "area_k2.json": "9c41816e7e4d534ddb53b65836272ed03314568f42526f226f6e5572ee58e739",
+    "run_m2.log": "e0957e5c9db17598aaeaae1558c0bb0a777e2399d5a76c23c3e446442903ff4e",
+    "run_m1.log": "fb2ae304b18e0cc8c057e1bc12e38fc6dfebdb41fe6bb2521cc42a7ca9f52e5e",
+    "run_m0.log": "bf26bda1f6f8beaf15772a98e8d9ab451978cda9a44cd2f20886c4aa76b2e087"
+  }
+}
