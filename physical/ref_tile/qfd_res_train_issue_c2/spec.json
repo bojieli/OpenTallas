@@ -127,5 +127,35 @@
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
  },
- "slot_change_request": "Die frame 129.6 x 129.6 -> 30.24 x 30.24 um: c1 CTS gate (c5ab86ca3) measured 607 FF / 315 um2 std = util 2.0% in the 129.6 frame (one huge empty region, owner 20:45 reject) and the die-assigned pins sat in the N-W corner. Same faces (me_*/ck/rst_n N, train_*/tag_* W, fault E), pins placed by the flow along the face; the die adopts the view's frame and pins."
+ "slot_change_request": "Die frame 129.6 x 129.6 -> 30.24 x 30.24 um: c1 CTS gate (c5ab86ca3) measured 607 FF / 315 um2 std = util 2.0% in the 129.6 frame (one huge empty region, owner 20:45 reject) and the die-assigned pins sat in the N-W corner. Same faces (me_*/ck/rst_n N, train_*/tag_* W, fault E), pins placed by the flow along the face; the die adopts the view's frame and pins.",
+ "pin_ranges": {
+  "ck": [
+   14.8,
+   15.4
+  ],
+  "rst_n": [
+   16.0,
+   16.6
+  ],
+  "me_go": [
+   3.0,
+   13.8
+  ],
+  "me_oen": [
+   3.0,
+   13.8
+  ],
+  "me_split": [
+   3.0,
+   13.8
+  ],
+  "me_tiles": [
+   3.0,
+   13.8
+  ],
+  "me_ts": [
+   3.0,
+   13.8
+  ]
+ }
 }
