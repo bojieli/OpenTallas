@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.s81.hub_layout.v2",
- "source": "S-DIE hub v3i (v3h + collective x 15560 + host/sseq MY so their record faces point W): screen max cut 0.554, 0 edges >0.60",
+ "source": "S-DIE hub v3i: VM over compact SU across a 432-um link street; collective+host/WFC/sseq(MY) at x 15650; folded HC split N/S of the street; bk pair at the vmk S-band sites. Screen max cut 0.587, 0 edges >0.60",
  "canonical": "results/physical/die_iter_1012/s81/canonical_widehub_1015/rm5_p1973h_ns43.json",
  "order": "v3 street: VM over SU (W), collective+host+wfc+sseq centre N of street, HC_S N / HC_T S of street (E); link street y12500+432; bk pair under SU near SW svc",
  "blocks": {
@@ -40,7 +40,7 @@
    false
   ],
   "sp_sseq": [
-   15560,
+   15650,
    17432.8,
    1727.976,
    88.536,
@@ -48,14 +48,14 @@
    "MY"
   ],
   "sp_collective": [
-   15560,
+   15650,
    12932,
    1727.976,
    2721.576,
    false
   ],
   "sp_host": [
-   15560,
+   15650,
    16932.8,
    1727.976,
    129.576,
@@ -63,7 +63,7 @@
    "MY"
   ],
   "sp_wfc": [
-   15560,
+   15650,
    17084.0,
    1727.976,
    328.296,
@@ -85,15 +85,15 @@
    true
   ],
   "bk_selector": [
-   10600,
-   3200,
+   13800.672,
+   2611.44,
    5270.376,
    321.816,
    true
   ],
   "bk_collector": [
-   10600,
-   3543.4,
+   13800.672,
+   1708.56,
    5270.376,
    881.256,
    true
@@ -207,27 +207,27 @@
  },
  "band_blocks": {
   "bk_selector": [
-   10600,
-   3200,
+   13800.672,
+   2611.44,
    5270.376,
    321.816,
    "R0",
    {
     "vd": "N",
     "iSW": "W",
-    "c_cmd": "N"
+    "c_cmd": "E"
    }
   ],
   "bk_collector": [
-   10600,
-   3543.4,
+   13800.672,
+   1708.56,
    5270.376,
    881.256,
    "R0",
    {
-    "vd": "N",
+    "vd": "W",
     "cSW": "W",
-    "c_cmd": "N"
+    "c_cmd": "E"
    }
   ]
  }
