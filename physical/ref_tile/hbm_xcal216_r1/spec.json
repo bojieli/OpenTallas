@@ -6,6 +6,7 @@
   "MUT": 0
  },
  "sources": [
+  "rtl/lib/ot_rst_relay.sv",
   "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_xcal.sv",
   "rtl/hbm_accel/sm/static/ot_smh_calendar_static.sv",
   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v",
@@ -73,9 +74,9 @@
   "macro_halo_um": 5.4
  },
  "job": {
-  "owner": "Codex:H-XC-physical-1016",
-  "branch": "codex/xc-physical-1016",
-  "tag": "r1",
+  "owner": "Claude H-SM xload helper 0945",
+  "branch": "claude/hsm-xcal-1010",
+  "tag": "r2rst",
   "purpose": "Actual source-native XC leaf; source af261fbcb MUT0; 216x216 nested SM grant x3788.64 y1343.52 provisional faces. Per-XC SRAM 0.016206mm2 (all32 0.5186mm2), never 0.52mm2 per XC. Fixed compiler cycles retained.",
   "extra_paths": [
    "rtl/test/hbm_netlist_v16",
@@ -110,7 +111,8 @@
    }
   ],
   "views_to": "physical/ref_tile/hbm_xcal216_r1/views",
-  "record_to": "results/rtl/ref_tile/hbm_xcal216_r1"
+  "record_to": "results/rtl/ref_tile/hbm_xcal216_r1",
+  "structural_change": "r1 CLOSED TT +89.98 but native FAIL capture 254.0 ps on rst_n only (L203.9, sp49.0 pass): the rst_n port net reached every async clear deep in the clock tree. r2rst: rst_n drives only ot_rst_relay (2 sync + 1 relay flop) at the W pin next to clk; release 3 edges later (before any host run launch); bench 38/38 PASS, MUT1/MUT2 FAIL."
  },
  "pin_regs": {
   "enable": false,

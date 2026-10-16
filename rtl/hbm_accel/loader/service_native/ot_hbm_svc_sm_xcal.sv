@@ -39,14 +39,19 @@ module ot_hbm_svc_sm_xcal #(parameter integer MUT = 0) (
     output reg           done,
     output reg           fault
 );
+    // ---------------- reset relay at the rst_n pin (H-SM 10-16: r1 native FAIL capture 254.0 ps on rst_n only -- the port
+    // net reached every async clear deep in the clock tree).  The port now drives only this relay (2 sync + 1 relay flop,
+    // placed at the W pin next to the clock entry); release is 3 edges later, before any host run launch.
+    wire rn;
+    ot_rst_relay #(.REGIONS(1), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rst (.clk(clk), .rst_n_in(rst_n), .rst_n(rn));
     // ---------------- pin flops
     reg desc_we_q, run_q;
     reg [6:0] desc_addr_q, run_base_q;
     reg [255:0] desc_data_q;
     reg [7:0] run_count_q;
     always @(posedge clk) begin desc_addr_q <= desc_addr; desc_data_q <= desc_data; run_base_q <= run_base; run_count_q <= run_count; end
-    always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin desc_we_q <= 1'b0; run_q <= 1'b0; end
+    always @(posedge clk or negedge rn)
+        if (!rn) begin desc_we_q <= 1'b0; run_q <= 1'b0; end
         else begin desc_we_q <= desc_we; run_q <= run_v; end
     // ---------------- go table (copy of the svg issuer's descriptor table)
     reg running, rd_q, ent_v;
@@ -63,13 +68,13 @@ module ot_hbm_svc_sm_xcal #(parameter integer MUT = 0) (
     // ---------------- extension programme calendar (same leaf as the svg feed's programme calendar)
     wire [172:0] word;
     wire cal_v, cal_active, cal_done, cal_fault;
-    ot_smh_calendar_static #(.W(173)) u_cal (.clk(clk), .rst_n(rst_n), .cfg_we(cfg_we), .cfg_addr(cfg_addr),
+    ot_smh_calendar_static #(.W(173)) u_cal (.clk(clk), .rst_n(rn), .cfg_we(cfg_we), .cfg_addr(cfg_addr),
         .cfg_data(cfg_data), .start_v(go), .start_base(e_base), .start_limit(e_limit), .start_loops(e_loops),
         .calendar(word), .calendar_v(cal_v), .ordinal(), .active(cal_active), .done(cal_done), .fault(cal_fault));
     assign cmd_ext = (MUT == 2) ? word[172:64] : word[108:0];
     assign kv_desc = (MUT == 2) ? word[63:0] : word[172:109];
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin
+    always @(posedge clk or negedge rn) begin
+        if (!rn) begin
             running <= 1'b0; rd_q <= 1'b0; ent_v <= 1'b0; rp <= 7'd0; rp_q <= 7'd0; n_rd <= 8'd0; n_go <= 8'd0;
             rc <= 24'd0; e_at <= 24'd0; e_base <= 10'd0; e_limit <= 11'd0; e_loops <= 16'd0;
             active <= 1'b0; done <= 1'b0; fault <= 1'b0;
