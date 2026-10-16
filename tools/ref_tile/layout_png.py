@@ -271,7 +271,7 @@ def render_tile(dump, outdir, rpt=None, title=""):
     out = {}
     out["floorplan"], legend = render_floorplan(d, outdir / "floorplan.png", title)
     if d.get("density"):
-        out["density"] = render_grid(d, "density", outdir / "density.png", f"{title} post-place density",
+        out["density"] = render_grid(d, "density", outdir / "density.png", f"{title} std-cell density",
                                      "std-cell area / bin area: blue 0, green 0.5, red 1.0+ ; grey = macros")
     if rpt:
         t = Path(rpt).read_text(errors="replace") if Path(rpt).exists() else ""
