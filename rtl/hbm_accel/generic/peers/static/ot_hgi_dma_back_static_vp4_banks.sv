@@ -154,6 +154,7 @@ module ot_hgi_dma_back_static_vp4_controller #(
     reg [14:0] p_nchunk,q_nchunk;reg [7:0] p_rchunk,q_rchunk;
     reg p_nch_c,p_nch_wrap;
     reg [17:0] p_total,q_total;reg p_static_ok,q_static_ok;
+    reg [13:0] p_total_hi;
     reg [18:0] b_vbase_end;reg [40:0] b_hbase_end;
     reg [31:0] b_ci_m2,b_ci_m3,b_cd_m1,b_cd_m2,b_cd_m3,b_cd_m4,b_end_m2,b_end_m3;
     always @(posedge clk or negedge local_rst_n)
@@ -170,7 +171,8 @@ module ot_hgi_dma_back_static_vp4_controller #(
         // rows*ceil(n/8) = rows*(n>>3) + (n%8!=0 ? rows : 0) mod 2^15; the 8-bit ceil wraps to 0 at n>=2041: exact
         p_nchunk<=15'(a_mv[193:186])*15'(a_mv[219:212]);
         p_nch_c<=a_mv[211:209]!=3'd0;p_nch_wrap<=a_mv[219:212]==8'hff&&a_mv[211:209]!=3'd0;
-        p_total<=18'(a_nsec)*18'(a_mv[193:186]);
+        // nsec*rows as two narrow partial products, summed at the next stage (exact mod 2^18)
+        p_total<=18'(a_nsec[5:0])*18'(a_mv[193:186]);p_total_hi<=14'(a_nsec[10:6])*14'(a_mv[193:186]);
         p_static_ok<=a_mv[1:0]==1&&a_mv[94:93]==0&&a_mv[92:77]==1&&a_mv[185:170]==1&&
             (a_mv[4:2]==0||a_mv[4:2]==5)&&(a_mv[97:95]==0||a_mv[97:95]==5)&&a_mv[4:2]==a_mv[97:95]&&
             a_mv[10:5]==0&&a_mv[50:45]==0&&a_mv[208:206]==0&&a_mv[205:186]!=0&&a_mv[205:186]<=128&&
@@ -184,7 +186,7 @@ module ot_hgi_dma_back_static_vp4_controller #(
         q_vhi<=23'(p_vpart[2])+(23'(p_vpart[3])<<8)-23'(p_mv[76:61]);
         q_hlo<=23'(p_hpart[0])+(23'(p_hpart[1])<<8)-23'(p_mv[153:138]);
         q_hhi<=23'(p_hpart[2])+(23'(p_hpart[3])<<8)-23'(p_mv[169:154]);
-        q_rchunk<=p_rchunk;q_nchunk<=p_nch_wrap?15'd0:p_nchunk+(p_nch_c?15'(p_mv[193:186]):15'd0);q_total<=p_total;q_static_ok<=p_static_ok;
+        q_rchunk<=p_rchunk;q_nchunk<=p_nch_wrap?15'd0:p_nchunk+(p_nch_c?15'(p_mv[193:186]):15'd0);q_total<=p_total+(18'(p_total_hi)<<6);q_static_ok<=p_static_ok;
         b_mv<=q_mv;b_ci<=q_ci;b_cd<=q_cd;b_cb<=q_cb;b_ce<=q_ce;
         b_vprod<=41'(q_vlo)+(41'(q_vhi)<<16);
         b_hprod<=41'(q_hlo)+(41'(q_hhi)<<16);
