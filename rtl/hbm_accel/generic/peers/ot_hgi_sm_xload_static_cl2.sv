@@ -552,8 +552,14 @@ module ot_hgi_sm_xload_cl2_bdring #(
     input  wire signed [9:0]  qe_lo, qe_hi,
     input  wire [2*((PMAX*3152+2047)/2048)-1:0] bsel,  // one-hot {parity, beat} (registered in ctl)
     input  wire [PMAX*8-1:0]  lane_en_i,
-    output reg  [2047:0]      bq_d
+    output wire [2047:0]      bq_d
 );
+    // cl2e: the beat register holds the INVERTED beat so the ASAP7 QN-only flop (DFFHQN) drives bq_d with no output
+    // inverter. cl2d placed 25 of the 2048 output-polarity INVs ~300 um from their pin flops (native launch 489.6 ps
+    // on bq_d[420]); with the inversion folded into the D-side AND-OR (AOI) the pin is driven by the flop itself.
+    // Same edge, same values at the pin.
+    reg [2047:0] bq_n;
+    assign bq_d = ~bq_n;
     localparam integer XC = 3152;
     localparam integer NBQ = (PMAX * XC + 2047) / 2048;
     localparam integer RB = 2048 / NR;
@@ -610,7 +616,7 @@ module ot_hgi_sm_xload_cl2_bdring #(
         reg [RB-1:0] acc; acc = {RB{1'b0}};
         for (integer x = 0; x < NBQ; x = x + 1)
             acc = acc | ({RB{bs[k][x]}} & beat_w[0][x][k*RB +: RB]) | ({RB{bs[k][NBQ + x]}} & beat_w[1][x][k*RB +: RB]);
-        bq_d[k*RB +: RB] <= acc;
+        bq_n[k*RB +: RB] <= ~acc;
     end
 endmodule
 
