@@ -1,0 +1,53 @@
+{
+  "schema": "qwen.static_k_issuer.model.v1",
+  "date": "2026-10-16T08:16:54.229830-07:00",
+  "source_producer": "qkd_ectl_a_tp8_epoch_direct STATIC_QK=1 HEADS=1; fixed scan from static_qk_calendar.py",
+  "normal_execution": "no ready, credits or arrival-selected slot; faults cannot reschedule",
+  "replicas": 32,
+  "rows_at_T8192_per_engine": 256,
+  "rows_per_issue_edge": 1,
+  "compute_MACs": 0,
+  "boundary_bits_per_edge": {
+    "ectl_to_bridge_rq": 17,
+    "bridge_to_segment_req": 38,
+    "segment_to_bridge_rsp": 1062,
+    "bridge_to_ectl_rs": 1025
+  },
+  "data_bytes_per_edge": 128,
+  "pipeline_edges": {
+    "rq_to_req": 1,
+    "rsp_to_rs": 1,
+    "additional_round_trip": 2
+  },
+  "latency_binding": {
+    "RESPONSE_LAT": "actual physical req pin -> rsp pin edge distance; required >=1",
+    "external_row_latency": "RESPONSE_LAT + 2",
+    "ECTL_ROW_RETURN_LAT": "RESPONSE_LAT + 7 (existing generator->request and response capture stages)",
+    "consume_age_constraint": "must recompile static_qk_calendar; write before read and occupancy <=128"
+  },
+  "proof_profile": {
+    "RESPONSE_LAT": 2,
+    "external_row_latency": 4,
+    "ECTL_ROW_RETURN_LAT": 9,
+    "QK_ISSUE_AGE": 34,
+    "shape": "36 layers of actual ECTL A/B/C + real SRAM, 256 exact rows per engine per layer; external rows declared test stimuli"
+  },
+  "storage_bits_upper_bound": "~2200 + 37 * RESPONSE_LAT; <=15000 clock sinks for RESPONSE_LAT <=300",
+  "floorplan_request": {
+    "outline_um": [
+      64.8,
+      280.8
+    ],
+    "area_mm2_each": 0.01819584,
+    "area_mm2_32": 0.58226688,
+    "pin_faces": "opposing ECTL-facing rq17/rs1025 and landing-facing req38/rsp1062",
+    "routing_layer": "requires assigned physical grant; no view yet",
+    "tracks_required_landing_face": 1100,
+    "capacity_at_7pins_per_um": 1965.6000000000001,
+    "cut_ratio": 0.5596255596255596,
+    "status": "sizing request only; no place/route claim",
+    "grant": "Die lead dimension-only grant 2026-10-16T08:20 PT; long W face landing / E face ECTL, mirrored east stacks. Exact x/y/pins/clocks await v1.5 allincident geometry."
+  },
+  "qualification": "component proof only; full die physical calendar, actual landing and native qualification open",
+  "performance_claim": "Only two added local stages measured. No end-to-end token cost acceptance or full physical KV latency claimed."
+}

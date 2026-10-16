@@ -18,7 +18,12 @@
  "archive": {
   "path": "/home/ubuntu/closed_archive/dsfd_stnh_566x1/s81-dsfd-stnh-566x1-2e2d7aa3f-arch",
   "manifest_sha256": "230ea329165a7b71a096f0b37f6e49bcc156eaf85af6d1f92c7d3798397537b5",
-  "commit": "2e2d7aa3f1fe34b1ba709a331721868d69e58fdb"
+  "commit": "2e2d7aa3f1fe34b1ba709a331721868d69e58fdb",
+  "replay_inputs": {
+   "routes/s81_dsfd_stnh_566x1_2e2d7aa3f_arch/work/orfs/results/asap7/opentallas_dsfd_stnh_566x1_asap7_s81g_s81_dsfd_stnh_566x1_2e2d7aa3f_arch/base/6_final.odb": "9c83def3682082407b3d64c9f9d6c71a9dff2c086c0ddfb059c587750d41262f",
+   "routes/s81_dsfd_stnh_566x1_2e2d7aa3f_arch/work/orfs/results/asap7/opentallas_dsfd_stnh_566x1_asap7_s81g_s81_dsfd_stnh_566x1_2e2d7aa3f_arch/base/6_final.sdc": "e47513b56855a45c6e7969a13ffd93830b199c4e012c83946b9b6c2141196231",
+   "routes/s81_dsfd_stnh_566x1_2e2d7aa3f_arch/work/orfs/results/asap7/opentallas_dsfd_stnh_566x1_asap7_s81g_s81_dsfd_stnh_566x1_2e2d7aa3f_arch/base/6_final.spef": "589f25ca272ee60db61d093b7b7b81ce56dd580936a2a2762a9d02f4410c559c"
+  }
  },
  "native_audit": {
   "pass": true,
@@ -40,7 +45,8 @@
   "dsfd_stnh_566x1_tt.lib": "2baad2bb9e26adf914dc72eea95fbffcc9e8d7a7fdf98ee3fbf0f9a3a2dd69e5",
   "dsfd_stnh_566x1_ff.lib": "13ba3a1d8c99958e8fee4a82782d4f0d27e0513fdef134eda937255be311cb8d",
   "dsfd_stnh_566x1_ss.lib": "fcb57f45beeb9c244fed377c17551b2673c7351522a2e90a24c4fa0a08f25037",
-  "abstract.json": "1ab9dec400d12b3ff14314c42be5aa30c66308831a8579b2beeccdf08601b8d0"
+  "abstract.json": "1ab9dec400d12b3ff14314c42be5aa30c66308831a8579b2beeccdf08601b8d0",
+  "insertion.json": "02240a74880b366de53d9f6a9e5abffa885f63702b56af0a2ee66e5f4f419cc7"
  },
  "verdict": "PASS",
  "why": [],

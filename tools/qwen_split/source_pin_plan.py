@@ -60,14 +60,32 @@ NL_DROP = ('n_a', 'n_b', 'n_y', 'ck_node')
 def tile_grant():
     """OT_SPLIT_TILE_GRANT=<held_grant.json> (Q-COMPUTE-DIE 2026-10-15, owner 20:35 re-pack): the re-packed 64-lane tile
     (Q-TILE45 kit, e.g. physical/ref_tile/qfd_tile_nk_rp2_45_a2/held_grant.json) replaces the 449.28 x 1442.88 slot.  The
-    grant's outline and every pin (data windows granted by the die lead, 45 clock entries) are used as-is; the node-less
-    tile takes the same pins minus n_a / n_b / n_y / ck_node."""
+    grant's outline and every pin are used as-is. Clock entries must match the declared
+    source RTL exactly; this includes legacy45 and the g3 17/13-entry variants. The
+    node-less tile drops the ports absent from its source RTL twin."""
     path = os.environ.get('OT_SPLIT_TILE_GRANT', '').strip()
     if not path:
         return None
     g = json.loads((ROOT / path if not os.path.isabs(path) else Path(path)).read_text())
-    if len(g['home_um']) != 2 or sum(1 for p in g['pins'] if p['clock']) != 45:
-        raise ValueError('OT_SPLIT_TILE_GRANT: need an outline and 45 clock entries')
+    outline = g.get('home_um', [])
+    if len(outline) != 2 or any(not isinstance(v, (int, float)) or not math.isfinite(v) or v <= 0 for v in outline):
+        raise ValueError('OT_SPLIT_TILE_GRANT: need a positive finite outline')
+    top = g.get('top', '')
+    if not top or Path(top).name != top:
+        raise ValueError('OT_SPLIT_TILE_GRANT: missing or invalid source RTL top')
+    ports = rtl_ports(ROOT / f'rtl/physical/{top}.sv', top)
+    expected = {p for p in ports if p == 'ck' or p.startswith('ck_')}
+    if not expected or any(ports[p] != (1, 'input') for p in expected):
+        raise ValueError('OT_SPLIT_TILE_GRANT: source RTL clocks must be scalar inputs')
+    clocks = g.get('clocks', [])
+    pins = g.get('pins', [])
+    clock_pins = [p['name'] for p in pins if p.get('clock', False)]
+    pin_names = [p['name'] for p in pins]
+    if (len(pin_names) != len(set(pin_names)) or len(clocks) != len(set(clocks))
+            or set(clocks) != expected or set(clock_pins) != expected
+            or len(clock_pins) != len(expected)):
+        raise ValueError('OT_SPLIT_TILE_GRANT: clock list and marked pins must exactly match source RTL clocks '
+                         f'{sorted(expected)}')
     return g
 
 
