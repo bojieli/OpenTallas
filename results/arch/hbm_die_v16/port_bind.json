@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.die_port_bind.v2",
- "die_v": "/tmp/claude-1000/hnl0030/base/g/die.v",
+ "die_v": "/tmp/claude-1000/hnl0030/int1/g/die.v",
  "top": "hbm_v16_die",
  "verdict": "FAIL",
  "failing": [
@@ -8,17 +8,17 @@
   "undriven_net_bits"
  ],
  "summary": {
-  "masters": 55,
-  "instances": 1418,
+  "masters": 58,
+  "instances": 1491,
   "unbound_masters": 0,
   "stub_masters": 0,
   "ambiguous_masters": 0,
   "port_not_in_rtl": 0,
   "width_mismatch": 0,
-  "input_unconnected": 17,
+  "input_unconnected": 16,
   "input_tied": 0,
   "unparsed_connections": 0,
-  "undriven_net_bits": 7490,
+  "undriven_net_bits": 2994,
   "multi_driven_net_bits": 0,
   "top_assigns": 0,
   "params_not_in_rtl": 0,
@@ -438,11 +438,11 @@
    "width_mismatch": {},
    "unparsed_conn": []
   },
-  "ot_hbm_accel_smh_static": {
+  "ot_hbm_accel_smh_attn": {
    "verdict": "PASS",
    "fails": [],
    "instances": 32,
-   "rtl": "rtl/hbm_accel/sm/static/ot_hbm_accel_smh_static.sv",
+   "rtl": "rtl/hbm_accel/sm/attn/ot_hbm_accel_smh_attn.sv",
    "kind": "real",
    "ambiguous_defs": null,
    "examples": [
@@ -462,13 +462,11 @@
    "width_mismatch": {},
    "unparsed_conn": []
   },
-  "ot_hbm_argmax_static_sw": {
-   "verdict": "FAIL",
-   "fails": [
-    "INPUT_UNCONNECTED"
-   ],
+  "ot_hbm_argmax_static_sw_vm": {
+   "verdict": "PASS",
+   "fails": [],
    "instances": 1,
-   "rtl": "rtl/hbm_accel/generic/ot_hbm_argmax_static_sw.sv",
+   "rtl": "rtl/hbm_accel/generic/ot_hbm_argmax_static_sw_vm.sv",
    "kind": "real",
    "ambiguous_defs": null,
    "examples": [
@@ -478,9 +476,7 @@
     "{}": 1
    },
    "die_port_not_in_rtl": [],
-   "input_unconnected": [
-    "am_stream"
-   ],
+   "input_unconnected": [],
    "input_tied": [],
    "straps": [],
    "pad_bits": {},
@@ -595,7 +591,7 @@
     "host_cp_ingress"
    ],
    "param_sets": {
-    "{\"MUT\": \"0\", \"TARGET_MASK\": \"256'hf001f1ffffffffffff0ff1000000000000\"}": 1
+    "{\"MUT\": \"0\", \"TARGET_MASK\": \"256'hffffffff0000000f000000f001f1ffffffffffff0ff1000000000000\"}": 1
    },
    "die_port_not_in_rtl": [],
    "input_unconnected": [],
@@ -650,6 +646,33 @@
    "width_mismatch": {},
    "unparsed_conn": []
   },
+  "ot_hbm_sm_vm_wr_q": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 4,
+   "rtl": "rtl/hbm_accel/generic/vm/static/ot_hbm_sm_vm_wr_q.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "smw_SW",
+    "smw_SE",
+    "smw_NW"
+   ],
+   "param_sets": {
+    "{\"DEPTH\": \"4\", \"QUAD\": \"0\"}": 1,
+    "{\"DEPTH\": \"4\", \"QUAD\": \"1\"}": 1,
+    "{\"DEPTH\": \"4\", \"QUAD\": \"2\"}": 1,
+    "{\"DEPTH\": \"4\", \"QUAD\": \"3\"}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
   "ot_hbm_static_cfg_collar": {
    "verdict": "PASS",
    "fails": [],
@@ -689,7 +712,7 @@
     "host_status"
    ],
    "param_sets": {
-    "{\"NF\": \"100\", \"NH\": \"6\", \"NT\": \"67\", \"TGTS\": \"536'h878685846f6e6d6c6b6a696867666564636261605f5e5d5c5b5a595857565554535251504f4e4d4c4b4a494847464544434241403b3a39387877767574703736353430\"}": 1
+    "{\"NF\": \"136\", \"NH\": \"6\", \"NT\": \"103\", \"TGTS\": \"824'hdfdedddcdbdad9d8d7d6d5d4d3d2d1d0cfcecdcccbcac9c8c7c6c5c4c3c2c1c0a3a2a1a0878685846f6e6d6c6b6a696867666564636261605f5e5d5c5b5a595857565554535251504f4e4d4c4b4a494847464544434241403b3a39387877767574703736353430\"}": 1
    },
    "die_port_not_in_rtl": [],
    "input_unconnected": [],
@@ -853,6 +876,30 @@
     "{\"FIXED_GO\": \"1\", \"SM\": \"5\", \"STACK\": \"0\"}": 1,
     "{\"FIXED_GO\": \"1\", \"SM\": \"6\", \"STACK\": \"0\"}": 1,
     "{\"FIXED_GO\": \"1\", \"SM\": \"7\", \"STACK\": \"0\"}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "ot_hbm_svc_sm_xcal": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 32,
+   "rtl": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_xcal.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "xc_SW0",
+    "xc_SW1",
+    "xc_SW2"
+   ],
+   "param_sets": {
+    "{\"MUT\": \"0\"}": 32
    },
    "die_port_not_in_rtl": [],
    "input_unconnected": [],
@@ -1067,10 +1114,35 @@
    },
    "die_port_not_in_rtl": [],
    "input_unconnected": [
-    "inj_d",
     "rc_d",
     "rc_tag",
     "rc_v"
+   ],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": []
+  },
+  "ot_hgi_coll_inj_idx_join": {
+   "verdict": "FAIL",
+   "fails": [
+    "INPUT_UNCONNECTED"
+   ],
+   "instances": 1,
+   "rtl": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_inj_idx_join.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "cij_SW"
+   ],
+   "param_sets": {
+    "{\"INJLAT\": \"12\"}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [
+    "su_inj_d"
    ],
    "input_tied": [],
    "straps": [],
@@ -1306,24 +1378,24 @@
   "ot_static_cmd_target": {
    "verdict": "PASS",
    "fails": [],
-   "instances": 40,
+   "instances": 76,
    "rtl": "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
    "kind": "real",
    "ambiguous_defs": null,
    "examples": [
-    "cp_svg_SW0",
-    "cp_svg_SW1",
-    "cp_svg_SW2"
+    "cpx_SW0",
+    "cpx_SW1",
+    "cpx_SW2"
    ],
    "param_sets": {
-    "{\"AWA\": \"10\", \"AWB\": \"7\", \"MODE\": \"0\", \"NA\": \"2\", \"NF\": \"1\", \"RBW\": \"7\", \"RCW\": \"8\", \"TARGET\": \"8'd64\"}": 1,
-    "{\"AWA\": \"10\", \"AWB\": \"7\", \"MODE\": \"0\", \"NA\": \"2\", \"NF\": \"1\", \"RBW\": \"7\", \"RCW\": \"8\", \"TARGET\": \"8'd65\"}": 1,
-    "{\"AWA\": \"10\", \"AWB\": \"7\", \"MODE\": \"0\", \"NA\": \"2\", \"NF\": \"1\", \"RBW\": \"7\", \"RCW\": \"8\", \"TARGET\": \"8'd66\"}": 1,
-    "{\"AWA\": \"10\", \"AWB\": \"7\", \"MODE\": \"0\", \"NA\": \"2\", \"NF\": \"1\", \"RBW\": \"7\", \"RCW\": \"8\", \"TARGET\": \"8'd67\"}": 1,
-    "{\"AWA\": \"10\", \"AWB\": \"7\", \"MODE\": \"0\", \"NA\": \"2\", \"NF\": \"1\", \"RBW\": \"7\", \"RCW\": \"8\", \"TARGET\": \"8'd68\"}": 1,
-    "{\"AWA\": \"10\", \"AWB\": \"7\", \"MODE\": \"0\", \"NA\": \"2\", \"NF\": \"1\", \"RBW\": \"7\", \"RCW\": \"8\", \"TARGET\": \"8'd69\"}": 1,
-    "{\"AWA\": \"10\", \"AWB\": \"7\", \"MODE\": \"0\", \"NA\": \"2\", \"NF\": \"1\", \"RBW\": \"7\", \"RCW\": \"8\", \"TARGET\": \"8'd70\"}": 1,
-    "{\"AWA\": \"10\", \"AWB\": \"7\", \"MODE\": \"0\", \"NA\": \"2\", \"NF\": \"1\", \"RBW\": \"7\", \"RCW\": \"8\", \"TARGET\": \"8'd71\"}": 1
+    "{\"AWA\": \"10\", \"AWB\": \"0\", \"MODE\": \"0\", \"NA\": \"1\", \"NF\": \"1\", \"RBW\": \"1\", \"RCW\": \"1\", \"TARGET\": \"8'd192\"}": 1,
+    "{\"AWA\": \"10\", \"AWB\": \"0\", \"MODE\": \"0\", \"NA\": \"1\", \"NF\": \"1\", \"RBW\": \"1\", \"RCW\": \"1\", \"TARGET\": \"8'd193\"}": 1,
+    "{\"AWA\": \"10\", \"AWB\": \"0\", \"MODE\": \"0\", \"NA\": \"1\", \"NF\": \"1\", \"RBW\": \"1\", \"RCW\": \"1\", \"TARGET\": \"8'd194\"}": 1,
+    "{\"AWA\": \"10\", \"AWB\": \"0\", \"MODE\": \"0\", \"NA\": \"1\", \"NF\": \"1\", \"RBW\": \"1\", \"RCW\": \"1\", \"TARGET\": \"8'd195\"}": 1,
+    "{\"AWA\": \"10\", \"AWB\": \"0\", \"MODE\": \"0\", \"NA\": \"1\", \"NF\": \"1\", \"RBW\": \"1\", \"RCW\": \"1\", \"TARGET\": \"8'd196\"}": 1,
+    "{\"AWA\": \"10\", \"AWB\": \"0\", \"MODE\": \"0\", \"NA\": \"1\", \"NF\": \"1\", \"RBW\": \"1\", \"RCW\": \"1\", \"TARGET\": \"8'd197\"}": 1,
+    "{\"AWA\": \"10\", \"AWB\": \"0\", \"MODE\": \"0\", \"NA\": \"1\", \"NF\": \"1\", \"RBW\": \"1\", \"RCW\": \"1\", \"TARGET\": \"8'd198\"}": 1,
+    "{\"AWA\": \"10\", \"AWB\": \"0\", \"MODE\": \"0\", \"NA\": \"1\", \"NF\": \"1\", \"RBW\": \"1\", \"RCW\": \"1\", \"TARGET\": \"8'd199\"}": 1
    },
    "die_port_not_in_rtl": [],
    "input_unconnected": [],
@@ -1413,22 +1485,16 @@
   }
  },
  "undriven_nets": {
-  "nc__hb_vms_NE__wq": 4496,
-  "nc__hb_vms_NW__wq": 2248,
+  "nc__hb_vms_NE__wq": 2248,
   "nc__hb_vms_SW__cq": 338,
   "nc__hb_vms_NE__rq": 272,
   "nc__hb_vms_NW__rq": 136
  },
  "undriven_classes": {
   "nc__hb_vms_NE__wq": {
-   "bits": 4496,
-   "nets": 1,
-   "example": "nc__hb_vms_NE__wq"
-  },
-  "nc__hb_vms_NW__wq": {
    "bits": 2248,
    "nets": 1,
-   "example": "nc__hb_vms_NW__wq"
+   "example": "nc__hb_vms_NE__wq"
   },
   "nc__hb_vms_SW__cq": {
    "bits": 338,
@@ -1458,7 +1524,7 @@
   "hbfd_rly_624_SN:i",
   "hbfd_rly_624_WE:i"
  ],
- "die_sha256": "42d58f30eed3c2cfe99fbdd65099a7bfd38d5ad3b4c8005bbce7b806f3f59a64",
+ "die_sha256": "28ee065edaa307f7cbdf3e4fb6c24e2868929e7e77d012df91a9edf33a9d133a",
  "straps_declared": [
   "ot_hbm_static_cfg_collar:tgt",
   "ot_hbm_svc_vmdel_lane:bank_id",

@@ -12,7 +12,7 @@ composes EVERY die instance from real RTL on main:
     Codex DECISION 14:40, H-DIE 1705);
   * the service engine region (bit-exact from tools/hbm_die_v15/die_case.py): per quadrant the PHY-only abstract
     ot_hbm3e_phy_rc_e8p5 (the one modelled core), 32 real controllers ot_hbm_svc_pc_ctrl_leaf, 8 SM service groups
-    ot_hbm_svc_sm_group (issuer + four-PC feed) and 8 SM tiles ot_hbm_accel_smh_static;
+    ot_hbm_svc_sm_group (issuer + four-PC feed) and 8 SM tiles ot_hbm_accel_smh_attn;
   * region specs written against the owners' RTL (tools/hbm_die_v15/v16_specs/*.json: sm_vm, su_sfu, coll_idx_link,
     host_misc): instances, edges (with the composition RTL / log line that proves each mapping), clock/reset domains,
     straps, and GAPS (owner + missing RTL) for every input no real producer drives.
@@ -141,8 +141,11 @@ def engine_region():
                              source='rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_group.sv',
                              params=dict(STACK=QID[q], SM=k, FIXED_GO=1), slot=f'pc_{q}{k}', owner='H-DIE', region='engine',
                              note='SM k service group: issuer (descriptor SRAM) + four-PC feed (LBANKS 4)'))
-            inst.append(dict(name=s, master='ot_hbm_accel_smh_static', source='rtl/hbm_accel/sm/static/ot_hbm_accel_smh_static.sv',
-                             params={}, slot=s, owner='H-SM', region='engine', note='static SM tile (grant v6 real pins)'))
+            # H-NETLIST/attn 2026-10-16 (parent-approved): the ATTENTION SM (owner option B); command[191:83] + kv_desc
+            # come from xc_<q><k> (v16_specs/attn_0030.json), command[82:0] from svg_<q><k>.sm_command (below).
+            inst.append(dict(name=s, master='ot_hbm_accel_smh_attn', source='rtl/hbm_accel/sm/attn/ot_hbm_accel_smh_attn.sv',
+                             params={}, slot=s, owner='H-SM', region='engine',
+                             note='attention-capable static SM (ot_hbm_accel_smh_static + attention front/BE; grant v6 pins + KV_DESC)'))
             for p, dm in (('stream_clk', 'stream'), ('hbm_clk', 'hbm'), ('stream_bank_clk', 'stream'),
                           ('hbm_fifo_clk', 'hbm'), ('hbm_pc_clk', 'hbm')):
                 clocks.append(dict(inst=g, port=p, domain=dm, kind='clock'))
@@ -177,7 +180,7 @@ def engine_region():
                              allowed_exception=kexc if p in rdy else None)
                     edges.append(e)
             edges.append(dict(src=[g, 'sm_packet'], dst=[s, 'packet'], clock='stream', basis=basis))
-            edges.append(dict(src=[g, 'sm_command'], dst=[s, 'command'], clock='stream', basis=basis))
+            edges.append(dict(src=[g, 'sm_command'], dst=[s, 'command', 0, 83], clock='stream', basis=basis))
     # G-ENG-STACK-FAULT (-> sfault_<q> = ot_hbm_svc_stack_fault) and G-VM-HBM-PATH (-> vmks_<q><k> + vmdel_<q><b> +
     # vmfc_<q>) are closed by tools/hbm_die_v15/v16_specs/vmsm.json (H-NETLIST/vmsm 2026-10-15).
     gaps = []

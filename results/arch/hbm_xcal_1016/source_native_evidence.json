@@ -1,0 +1,54 @@
+{
+  "scope": "source-native XC component only; no full SM or die closure",
+  "source_baseline": "af261fbcb",
+  "top": "ot_hbm_svc_sm_xcal",
+  "params": {
+    "MUT": 0
+  },
+  "bench": {
+    "exact_words": 38,
+    "expected_words": 38,
+    "errors": 0,
+    "mutant_1_errors": 39,
+    "mutant_2_errors": 38,
+    "real_models": true,
+    "static_timeline": "lockstep against actual issuer FIXED_GO and real W135 programme calendar"
+  },
+  "source_sha256": {
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_xcal.sv": "671143c054981275285724ca5ddf7e8db891e13cdf2474ee725ccf7203cedc2f",
+    "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_issuer.sv": "0a67c36a409a6bbe849024c502f59f377abd8bb812655b5e9752fc1ce4e52697",
+    "rtl/hbm_accel/sm/static/ot_smh_calendar_static.sv": "4ecc595f2a0eb3fbc3c433f807013626abbafaba4aa0629b81b7e5faf582ba85",
+    "rtl/test/hbm_netlist_v16/tb_hbm_svc_sm_xcal.sv": "7e18c98813bda363774ab1b29cd34a8696be59a881c2a037690e094f73f3d03a",
+    "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v": "6530a2ef457f260a942e067b556ff55d75f931350af5807cfd6b05cd5e1ff380",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "dba769863f502de28853a78ac30544a406c7cb66fd3249019ef9fa5a5b73e36e"
+  },
+  "native_outline_um": [
+    224.64,
+    216
+  ],
+  "macro_area_um2_per_xc": 16206,
+  "xc_replica_count": 32,
+  "macro_area_mm2_all_32": 0.518592,
+  "std_cells": 3096,
+  "flops": 1210,
+  "std_area_um2_textbook": 543,
+  "clock_sinks": 1212,
+  "additional_boundary_cycles": 0,
+  "native_parent_home_um": [
+    3788.64,
+    1343.52
+  ],
+  "parent_scope": "proposed nested slot only, requires actual attention SM capture pins before seam qualification",
+  "r1_gate": {
+    "verdict": "WARN",
+    "failures": 0,
+    "warnings": 2,
+    "setup_placement_ps": 57.1,
+    "hold_placement_ps": 42.5,
+    "tt_boundary_mean_ps": 286.6,
+    "tt_leaf_max_ps": 318.6,
+    "tt_spread_ps": 71.4,
+    "reason_for_successor": "default grouped IO placed105outputFF in10um requiring21columns; r2 spreads pins over full assigned faces"
+  },
+  "qualification": "UNQUALIFIED: routed TT setup/FF hold/DRC and actual SM seam remain required"
+}

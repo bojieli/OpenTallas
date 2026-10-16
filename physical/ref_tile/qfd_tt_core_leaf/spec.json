@@ -40,7 +40,8 @@
  "params": {},
  "clock_port": "clk",
  "reset_ports": [
-  "rst_n"
+  "rst_n",
+  "scale_rst_n"
  ],
  "outline": {
   "w": 345.6,

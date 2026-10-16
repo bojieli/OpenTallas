@@ -38,12 +38,19 @@ def clock_ports(text):
 
 
 def audit(spec, env, read):
-    if not re.search(r'\bOT_PIN_REGS=1\b', env):
-        return None
-    match = re.search(r'\bOT_PIN_REGS_CLOCK=([^\s\x27"\)]+)', env)
-    if not match:
+    from kit_orfs_vars import parse
+    variables = parse(env)
+    if variables.get('OT_PIN_REGS') != '1':
+        # Historical direct environment fragments used by the read-only CLI.
+        if not re.search(r'\bOT_PIN_REGS=1\b', env):
+            return None
+        match = re.search(r'\bOT_PIN_REGS_CLOCK=[\x27"]?([^\s\x27"\)]+)', env)
+        clock = match[1] if match else None
+    else:
+        clock = variables.get('OT_PIN_REGS_CLOCK')
+    if not clock:
         raise ValueError('enabled generic wrapper has no clock assignment')
-    passthrough = {base(p) for p in match[1].split(',')}
+    passthrough = {base(p) for p in clock.split(',')}
     exclude = spec.get('pin_regs', {}).get('exclude', '')
     declared = {base(spec['clock_port'])}
     declared.update(base(p) for p in spec.get('clock_ports', []))
