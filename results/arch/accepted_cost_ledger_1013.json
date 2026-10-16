@@ -388,6 +388,34 @@
   },
   {
    "design": "s81",
+   "unit": "FIELD.RETURN_NODE_R2 (ot_s81_retn_static r2: +3 fixed pipeline edges per return-node level, 6 levels worst frame)",
+   "group": "FIELD.RETURN_NODE_R2",
+   "measured": 18.0,
+   "price": 0.0,
+   "unit_of_measure": "cycles",
+   "unit_ratio": null,
+   "e2e_loss_pct": 0.272,
+   "binding_workload": "ar",
+   "per_workload": {
+    "ar": {
+     "model": "S81 stage programs (golden ASAP, exact recomposition of all 59 committed makespans), every fld phase +18 edges",
+     "base_cycles": 1868531,
+     "cycles": 1873625,
+     "added_cycles": 5094,
+     "program_records": 332,
+     "added_cycles_per_record": 18,
+     "e2e_loss_pct": 0.272
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "results/arch/s81_return_node_r2_cost_1015/levels6.json",
+   "evidence_grade": "committed_bench",
+   "date": "2026-10-15",
+   "status": "proposed",
+   "note": "S-NET 2026-10-15 structural fix of the static return node (n2 routes TT -798..-2034 ps; logic depth 1,615 -> 512 ps): P1 port / P2 normalised-tag / P3 issue registers, exit early+WIN+10+RST (was +7), static_return_calendar.PIPE_C 10. Frame return trees over 2 x pairs leaves are 5..6 levels (dsfd_s81_fulldie return_tree); worst 6 -> +18 edges per field phase, +5,094 cycles a token over 59 stage programs (5 levels: +4,245 = 0.227 %). Compiler carries it: engine_pipeline_abi fld return_node_exit_edges 10 / return_node_levels_max 6 (stale field durations refused). Composed analytically on the fixed schedule (fixed latency, no stall), not a die run."
+  },
+  {
+   "design": "s81",
    "unit": "HC.COEF (coefficient-row load in front of each NORM, unpriced serial HC job)",
    "group": "HC.COEF",
    "measured": 17.0,
@@ -924,6 +952,122 @@
   },
   {
    "design": "r25gq",
+   "unit": "COLL.STATE_CAPTURE ALL_REDUCE_SUM",
+   "group": "COLL.STATE_CAPTURE",
+   "measured": 44.0,
+   "price": 40.0,
+   "unit_of_measure": "cycles",
+   "unit_ratio": 1.1,
+   "e2e_loss_pct": 0.76,
+   "binding_workload": "qwen_ar",
+   "per_workload": {
+    "qwen_ar": {
+     "model": "S2 schedule, op re-scheduled at its measured ratio",
+     "base_cycles": 1269120.1,
+     "cycles": 1278840.1,
+     "added_cycles": 9720.0,
+     "program_records": 2,
+     "e2e_loss_pct": 0.76
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "results/arch/hcoll_state_route_1417/captured_parent_model.json",
+   "evidence_grade": "committed_bench",
+   "date": "2026-10-15",
+   "status": "proposed",
+   "note": "Captured-state ring master ot_hgi_coll_pring_static_state_capture_lane (CLOSED TT+203.25/FF+26.87/DRC0, native L178.6/C134.9; replaces the 1664-FF state master whose 1472 inputs up to 6 levels fail native capture): ring wave 44 vs 40 edges (tag lifetime 42 vs 37), conservative S2 re-schedule of every ring-reduce op at 1.10x. Coordinator accepted 2026-10-15 ~19:00 (<=1.3 % tok/s)."
+  },
+  {
+   "design": "r25gq",
+   "unit": "COLL.STATE_CAPTURE ARGMAX_MERGE",
+   "group": "COLL.STATE_CAPTURE",
+   "measured": 44.0,
+   "price": 40.0,
+   "unit_of_measure": "cycles",
+   "unit_ratio": 1.1,
+   "e2e_loss_pct": 0.014,
+   "binding_workload": "ds_ar",
+   "per_workload": {
+    "ds_ar": {
+     "model": "S2 schedule, op re-scheduled at its measured ratio",
+     "base_cycles": 557152.4,
+     "cycles": 557227.8,
+     "added_cycles": 75.4,
+     "program_records": 1,
+     "e2e_loss_pct": 0.014
+    },
+    "qwen_ar": {
+     "model": "S2 schedule, op re-scheduled at its measured ratio",
+     "base_cycles": 1269120.1,
+     "cycles": 1269178.7,
+     "added_cycles": 58.6,
+     "program_records": 1,
+     "e2e_loss_pct": 0.005
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "results/arch/hcoll_state_route_1417/captured_parent_model.json",
+   "evidence_grade": "committed_bench",
+   "date": "2026-10-15",
+   "status": "proposed",
+   "note": "Captured-state ring master ot_hgi_coll_pring_static_state_capture_lane (CLOSED TT+203.25/FF+26.87/DRC0, native L178.6/C134.9; replaces the 1664-FF state master whose 1472 inputs up to 6 levels fail native capture): ring wave 44 vs 40 edges (tag lifetime 42 vs 37), conservative S2 re-schedule of every ring-reduce op at 1.10x. Coordinator accepted 2026-10-15 ~19:00 (<=1.3 % tok/s)."
+  },
+  {
+   "design": "r25gq",
+   "unit": "COLL.STATE_CAPTURE GROUP_REDUCE_MCAST",
+   "group": "COLL.STATE_CAPTURE",
+   "measured": 44.0,
+   "price": 40.0,
+   "unit_of_measure": "cycles",
+   "unit_ratio": 1.1,
+   "e2e_loss_pct": 1.035,
+   "binding_workload": "ds_ar",
+   "per_workload": {
+    "ds_ar": {
+     "model": "S2 schedule, op re-scheduled at its measured ratio",
+     "base_cycles": 557291.4,
+     "cycles": 563121.3,
+     "added_cycles": 5829.9,
+     "program_records": 40,
+     "e2e_loss_pct": 1.035
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "results/arch/hcoll_state_route_1417/captured_parent_model.json",
+   "evidence_grade": "committed_bench",
+   "date": "2026-10-15",
+   "status": "proposed",
+   "note": "Captured-state ring master ot_hgi_coll_pring_static_state_capture_lane (CLOSED TT+203.25/FF+26.87/DRC0, native L178.6/C134.9; replaces the 1664-FF state master whose 1472 inputs up to 6 levels fail native capture): ring wave 44 vs 40 edges (tag lifetime 42 vs 37), conservative S2 re-schedule of every ring-reduce op at 1.10x. Coordinator accepted 2026-10-15 ~19:00 (<=1.3 % tok/s)."
+  },
+  {
+   "design": "r25gq",
+   "unit": "COLL.STATE_CAPTURE TOPK_MERGE",
+   "group": "COLL.STATE_CAPTURE",
+   "measured": 44.0,
+   "price": 40.0,
+   "unit_of_measure": "cycles",
+   "unit_ratio": 1.1,
+   "e2e_loss_pct": 0.262,
+   "binding_workload": "ds_ar",
+   "per_workload": {
+    "ds_ar": {
+     "model": "S2 schedule, op re-scheduled at its measured ratio",
+     "base_cycles": 557291.4,
+     "cycles": 558753.3,
+     "added_cycles": 1462.0,
+     "program_records": 9,
+     "e2e_loss_pct": 0.262
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "results/arch/hcoll_state_route_1417/captured_parent_model.json",
+   "evidence_grade": "committed_bench",
+   "date": "2026-10-15",
+   "status": "proposed",
+   "note": "Captured-state ring master ot_hgi_coll_pring_static_state_capture_lane (CLOSED TT+203.25/FF+26.87/DRC0, native L178.6/C134.9; replaces the 1664-FF state master whose 1472 inputs up to 6 levels fail native capture): ring wave 44 vs 40 edges (tag lifetime 42 vs 37), conservative S2 re-schedule of every ring-reduce op at 1.10x. Coordinator accepted 2026-10-15 ~19:00 (<=1.3 % tok/s)."
+  },
+  {
+   "design": "r25gq",
    "unit": "FUSED.QDQ_FP8 [bench of record, WIDE]",
    "group": "FUSED.QDQ_FP8",
    "measured": 65.8,
@@ -1384,22 +1528,22 @@
   },
   "s81": {
    "accepted_pct": 17.485,
-   "proposed_pct": 0,
-   "accepted_plus_proposed_pct": 17.485,
+   "proposed_pct": 0.272,
+   "accepted_plus_proposed_pct": 17.757,
    "limit_pct": 15.0,
    "accepted_rows": 10,
-   "proposed_rows": 0,
+   "proposed_rows": 1,
    "headroom_pct": -2.485,
    "owner_exception_rows": 1,
    "over_limit_by_owner_exception": true
   },
   "r25gq": {
    "accepted_pct": 0,
-   "proposed_pct": 112.546,
-   "accepted_plus_proposed_pct": 112.546,
+   "proposed_pct": 113.581,
+   "accepted_plus_proposed_pct": 113.581,
    "limit_pct": 15.0,
    "accepted_rows": 0,
-   "proposed_rows": 17,
+   "proposed_rows": 21,
    "headroom_pct": 15.0,
    "owner_exception_rows": 0,
    "over_limit_by_owner_exception": false
