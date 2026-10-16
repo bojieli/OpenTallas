@@ -19,6 +19,10 @@ the libs and abstract.json were last written by ONE git commit (one export bundl
 record), the LEF is a fixed point of abstract_pin_stub (it is the post-processed form) and its MACRO / signal pin set
 equals the TT liberty's cell / pin set.  Exact raw-replay recovery (export_manifest_0010) supersedes this lineage.
 
+RECEIPT-BACKED LINEAGE (ROOT 10-16): a view with no loop job of its own (strict re-export from the closed archive; derived
+scalar-pin rename) binds through the CLOSED job named by its view_lineage.json, only while tools/view_lineage.py verify
+passes (receipt PASS, files unchanged, job still CLOSED); lineage ARCHIVE_REEXPORT / SCALAR_PIN_RENAME.
+
 It never relaxes a gate: native launch/capture/spread audits and production-throughput qualification stay owed per tile
 and are listed as open in the table ('native_open'). Rows use DIAGNOSTIC_CLOSED and require
 OT_S81_DIAGNOSTIC_CLOSED_VIEWS=1, so a trial cannot promote them to native QUALIFIED.  The generator still refuses any binding whose pins / outline /
@@ -38,6 +42,8 @@ import subprocess
 import sys
 from view_binding import export_fix
 from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+import view_lineage as VL  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[2]
 JOBS = Path.home() / ".local/state/closure_loop/jobs"
@@ -51,7 +57,16 @@ def sha(p: Path) -> str:
 
 def job_of(abstract: dict) -> str | None:
     m = re.search(r"/closure-loop/([^/]+)/", abstract.get("orfs_dir", ""))
-    return m.group(1) if m else None
+    if m:
+        return m.group(1)
+    # closed-archive re-export (tools/tt_views/view_export.py job replay, --require-check): the export ran on a restored
+    # copy of the closed run, so orfs_dir is the restore dir; the job is the one whose verdict the export reproduced
+    # (verdict.check ok against verdict.job's record) -- the same job-state gates then apply to that CLOSED job
+    v = abstract.get("verdict") if isinstance(abstract.get("verdict"), dict) else {}
+    chk = v.get("check") or {}
+    if v.get("job") and all((chk.get(c) or {}).get("ok") for c in ("tt", "ff")):
+        return v["job"]
+    return None
 
 
 def verdict_ok(reason: str):
@@ -189,6 +204,16 @@ def main():
         why = []
         js = Path(a.jobs) / f"{job}.json" if job else None
         jd = json.loads(js.read_text()) if js and js.exists() else None
+        lineage_rcpt = None
+        if (d / VL.RECEIPT).is_file():
+            # RECEIPT-BACKED LINEAGE (ROOT 10-16): a strict re-export from the closed archive (or a derived scalar-pin
+            # rename) has no loop job of its own; it binds through the CLOSED job its verified view_lineage.json names
+            ok_l, why_l, rcpt = VL.verify(d, Path(a.jobs))
+            if ok_l:
+                job, lineage_rcpt = rcpt["original_job"], rcpt
+                jd = json.loads((Path(a.jobs) / f"{job}.json").read_text())
+            else:
+                why.append(f"view_lineage refused: {why_l}")
         if jd is None:
             why.append(f"no closure-loop job state for {job}")
         else:
@@ -209,6 +234,12 @@ def main():
         # their verdict SDC and match the files recorded by that export.
         ok_export, export_why = export_fix(dict(master=master, export_dir=str(rel)))
         lineage = "EXACT_EXPORT"
+        if lineage_rcpt is not None:
+            lineage = lineage_rcpt["kind"].upper()
+            if lineage_rcpt["kind"] == "scalar_pin_rename" and not ok_export:
+                # the rename changes the recorded LEF/lib bytes by construction; the receipt pins the parent's
+                # verdict-replay export and maps every renamed file back to it
+                ok_export, export_why = True, "scalar_pin_rename of a verdict-replay export (view_lineage.json)"
         if not ok_export and a.poststub_same_commit and export_why == f"{master}.lef on disk is not the file the verdict-replay export recorded":
             ok_ps, ps_why = ps_cache.get(str(d)) or poststub_lineage(master, d, rec)
             if ok_ps:

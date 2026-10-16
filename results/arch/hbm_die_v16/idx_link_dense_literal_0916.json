@@ -1,0 +1,36 @@
+{
+ "schema": "opentallas.hbm.literal_pin_supplemental_grant.v1",
+ "status": "HOLD_FOR_ACTUAL_CURRENT_GENERATOR_TRACK_READBACK",
+ "base_grant_commit": "9c662b7a2",
+ "base_grant": "results/arch/hbm_die_v16/idx_link_dense_provisional_0913.json",
+ "base_grant_sha256": "729d89b8181bd2b3593e84682685b756b3252030d11d00b748d6aa1d6f22d8cc",
+ "cell": "ot_hbm_idx_topk_link_static_dense",
+ "source_snapshot": "ba36e274e",
+ "source_sha256": "4e2a16984cf40418c01c0ca78366a083ac83b51c7198b9c5fd0b8fa0f35fb65b",
+ "kit_snapshot": "e4d57b8fe",
+ "kit_sha256": {
+  "results/arch/hbm_idx_scheduled_0811/dense_pin_plan_0913.json": "b583bfee32e175472f274a9a1a571741c733a3b0357834a26336b0e726571a31",
+  "physical/ref_tile/hidx_link_dense_0913/assigned_io.tcl": "8539ea811fa323fa7f1f183472fbd34e1e4c6c0a93905a895c88e2030fa41dea",
+  "tools/ref_tile/specs_idx/hidx_link_dense_0913.json": "6f52eb5cfaf9171dbe77c806f7195d2aa29a8a3d61b4411ba90961a04b81412a"
+ },
+ "pin_count": 4597,
+ "rule": "Inherited offsets are nominal midpoints within typed spans. Exact M4 centres are low+0.060+0.096*i (midpoint+0.012), phase0.036 at0.048 pitch; every literal pin rectangle remains inside its original face/span.",
+ "clock_centres": {
+  "clk": 372.18,
+  "clk_mem[0]": 372.276,
+  "clk_mem[1]": 372.372,
+  "clk_mem[2]": 372.468,
+  "clk_mem[3]": 372.564,
+  "clk_mem[4]": 372.66,
+  "clk_mem[5]": 372.756,
+  "clk_mem[6]": 372.852,
+  "clk_mem[7]": 372.948
+ },
+ "worst_occupied_window_cut": 0.5,
+ "whole_face_cut": {
+  "E": 0.00064412,
+  "W": 0.29545894
+ },
+ "native_requirements": "Fresh actual dense-master source-param-bound CTS/native R/phase/slew/TTFFDRC and actual placed rectangle/PG check remain required. No parent/default/d4 flip or old-view alias; preserve old link gate.",
+ "actual_grid_requirement": "Canonical spread_face_pins.OFF is not evidence of a generated ODB track grid. Actual H7/F20 readback showed M4 phase0.012, contrary to helper0.036. Before routing, read actual current-generator floorplan ODB tracks, compare every literal pin centre by layer, and issue a source-pinned supplemental grant. No new duplicate heavy gate. Existing useful jobs preserved."
+}

@@ -86,7 +86,22 @@ def entry_cap(lib, ff=2.0):
     return n
 
 
-def synth_lef(name, w, h, pins, path):
+def _minus(rects, keepout):
+    """rectangles minus keep-out rectangles (x0, y0, x1, y1), as disjoint rectangles"""
+    for (c0, d0, c1, d1) in keepout:
+        nr = []
+        for (a0, b0, a1, b1) in rects:
+            if c0 >= a1 or c1 <= a0 or d0 >= b1 or d1 <= b0:
+                nr.append((a0, b0, a1, b1)); continue
+            for r in ((a0, b0, c0, b1), (c1, b0, a1, b1), (max(a0, c0), b0, min(a1, c1), d0),
+                      (max(a0, c0), d1, min(a1, c1), b1)):
+                if r[2] - r[0] > 0.01 and r[3] - r[1] > 0.01:
+                    nr.append(r)
+        rects = nr
+    return rects
+
+
+def synth_lef(name, w, h, pins, path, keepout=()):
     """Abstract of a SYNTH view: real outline, pins at the given (face, lo, hi) spans, every bit on a track (M5 N/S at
     x = 0.012 + 0.048 k, M4 E/W at y = 0.012 + 0.048 k), OBS M1..M5 (the die routes M6+ over it, M4/M5 in channels)."""
     L = ['VERSION 5.7 ;', 'BUSBITCHARS "[]" ;', 'DIVIDERCHAR "/" ;', f'MACRO {name}', '  CLASS BLOCK ;',
@@ -113,7 +128,12 @@ def synth_lef(name, w, h, pins, path):
             L += [f'  PIN {bit}', f'    DIRECTION {d.upper()} ;',
                   '    USE CLOCK ;' if re.search(r'clk', pn) else '    USE SIGNAL ;', '    PORT', f'      LAYER {lay} ;',
                   f'      RECT {r[0]:.3f} {r[1]:.3f} {r[2]:.3f} {r[3]:.3f} ;', '    END', f'  END {bit}']
-    L += ['  OBS'] + [f'    LAYER M{k} ;\n    RECT 0 0 {w:.3f} {h:.3f} ;' for k in range(1, 6)] + ['  END', f'END {name}', '', 'END LIBRARY']
+    # die-owned feedthrough column / row (grant reserved_channels, H-SM 10-16 owner 07:30): no OBS on M1-M6 there, so the
+    # die places relays / clock repeaters and routes through; the rest of the outline stays OBS M1-M5 as before
+    ko = [(c['x_um'][0], c['y_um'][0], c['x_um'][1], c['y_um'][1]) for c in keepout]
+    obs = _minus([(0.0, 0.0, w, h)], ko)
+    L += ['  OBS'] + [f'    LAYER M{k} ;\n' + '\n'.join(f'    RECT {r[0]:.3f} {r[1]:.3f} {r[2]:.3f} {r[3]:.3f} ;' for r in obs)
+                      for k in range(1, 6)] + ['  END', f'END {name}', '', 'END LIBRARY']
     Path(path).write_text('\n'.join(L) + '\n')
 
 
@@ -237,7 +257,7 @@ def main():
     pins, miss, extra = grant_pins(s0, sm_ports)
     assert not miss, ('SM ports whose grant pins do not cover the view port', miss)
     kinds['sm_grant_ports_absent_in_view'] = extra
-    synth_lef(SM_M, s0['outline']['w'], s0['outline']['h'], pins, vd / f'{SM_M}.lef')
+    synth_lef(SM_M, s0['outline']['w'], s0['outline']['h'], pins, vd / f'{SM_M}.lef', keepout=s0.get('reserved_channels', []))
     kinds[SM_M] = 'SYNTH (hierarchical mapped netlist ETM, -DOT_SMH_FC_HIER; outline + pins = v6 grant)'
     MS = [PHY_M, CTL_M, SVG_M, SM_M]
     if a.stn_view:

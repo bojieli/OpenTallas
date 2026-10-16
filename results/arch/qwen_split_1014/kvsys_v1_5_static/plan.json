@@ -4,30 +4,112 @@
  "owner": "Q-KVSYS-DIE (KV die lead)",
  "goal": "KV die v1.5 = static fixed-cycle KV memory path (owner 10-14 rule: no on-die credits/ready; elastic only at the HBM boundary): the credit landing strip qkd_land_strip_s (kvi_cr/kvo_cr/emf_cr/emr_cr credit returns, rq/rs merge) is replaced by the static landing; generator flag OT_KV_STATIC=1 in tools/qwen_kv_die (default off until every master below has RTL).",
  "per_stack_composition": [
-  {"inst": "slg_<st>_<k>", "count_per_stack": 8, "master": "qkd_static_kv_landing_seg", "rtl": "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_landing_seg.sv (= qkd_static_kv_landing_physical_grp VMAP=1 VREQ=1, cfg_stack/cfg_group straps, one ck)", "view": "kit gating (Q-KVSYS-STRIP, branch claude/qkvsys-seg), 151.2 x 1512 um, E = return/writer side, W = engine side", "replaces": "qkd_land_strip_s (32 land_pc + 8 grp + emb)"},
-  {"inst": "lcal_<st>_<k>", "count_per_stack": 8, "master": "qkd_kv_landing_cal", "rtl": "NEW (Q-VMWB accepted 07:20): boot-cfg ROM + counters; out arm/l_epoch/l_layer/l_put[3:0]/l_sector[39:0] to the segment, r_put/r_sector/r_epoch/r_layer to its 4 return slots; in go/ctx_t/epoch/layer + cfg chain", "view": "none yet"},
-  {"inst": "fcal_<st>_<k>", "count_per_stack": 8, "master": "qkd_kv_front_cal", "rtl": "NEW (Q-VMWB, HBM-side leaf, pll_hbm only): blk_go[3:0] to the 4 PC fronts", "view": "none yet"},
-  {"inst": "rsl_<st>_<pc>", "count_per_stack": 32, "master": "qkd_static_kv_return_slots_mc", "rtl": "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_slots_mc.sv", "view": "mc3b CLOSED but native FAIL (capture 259.3 ps); mc_r4 rtl_change gating (Q-KVSYS-DIE, 194.4 x 216)"},
-  {"inst": "fr_<st>_<pc>", "count_per_stack": 32, "master": "qkd_kv_hbm_elastic_front_mc", "rtl": "rtl/qwen_sys/static_kv_20261014/qkd_kv_hbm_elastic_front_mc.sv", "view": "CLOSED mc_r3-mc3-9196b2eb1 (259.2 x 216); native audit owed"},
-  {"inst": "ctrl_<st> (32 leaves)", "master": "qkd_ctrl_pc_host_static ELASTIC=1 RAW_WD=256 TQD=64", "rtl": "rtl/qwen_sys/static_kv_20261014/qkd_ctrl_pc_host_static.sv", "view": "NO kit (kv_elastic_boundary OPEN_JOINS: physical master/outline/pin grants owed); replaces the credit-era qkd_ctrl_pc np1 leaves"},
-  {"inst": "vport_<st>_<k>", "count_per_stack": 4, "master": "qkd_pv16_vport (r5 V issuer)", "view": "kit on main 2cf79d0b1 (Q-VMWB); wiring vport_wiring.txt; Q-KVSYS-PV places them + PV16 spine"}
+  {
+   "inst": "slg_<st>_<k>",
+   "count_per_stack": 8,
+   "master": "qkd_static_kv_landing_seg",
+   "rtl": "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_landing_seg.sv (= qkd_static_kv_landing_physical_grp VMAP=1 VREQ=1, cfg_stack/cfg_group straps, one ck)",
+   "view": "kit gating (Q-KVSYS-STRIP, branch claude/qkvsys-seg), 151.2 x 1512 um, E = return/writer side, W = engine side",
+   "replaces": "qkd_land_strip_s (32 land_pc + 8 grp + emb)"
+  },
+  {
+   "inst": "lcal_<st>_<k>",
+   "count_per_stack": 8,
+   "master": "qkd_kv_landing_cal",
+   "rtl": "NEW (Q-VMWB accepted 07:20): boot-cfg ROM + counters; out arm/l_epoch/l_layer/l_put[3:0]/l_sector[39:0] to the segment, r_put/r_sector/r_epoch/r_layer to its 4 return slots; in go/ctx_t/epoch/layer + cfg chain",
+   "view": "SUBMITTED qkd_kv_landing_cal-c1-bf2d11829 (Q-VMWB); kgo/vgo from the layer sequencer"
+  },
+  {
+   "inst": "fcal_<st>_<k>",
+   "count_per_stack": 8,
+   "master": "qkd_kv_front_cal",
+   "rtl": "NEW (Q-VMWB, HBM-side leaf, pll_hbm only): blk_go[3:0] to the 4 PC fronts",
+   "view": "none yet"
+  },
+  {
+   "inst": "rsl_<st>_<pc>",
+   "count_per_stack": 32,
+   "master": "qkd_static_kv_return_slots_mc",
+   "rtl": "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_slots_mc.sv",
+   "view": "mc3b CLOSED but native FAIL (capture 259.3 ps); mc_r4 rtl_change gating (Q-KVSYS-DIE, 194.4 x 216)"
+  },
+  {
+   "inst": "fr_<st>_<pc>",
+   "count_per_stack": 32,
+   "master": "qkd_kv_hbm_elastic_front_mc",
+   "rtl": "rtl/qwen_sys/static_kv_20261014/qkd_kv_hbm_elastic_front_mc.sv",
+   "view": "CLOSED mc_r3-mc3-9196b2eb1 (259.2 x 216); native audit owed"
+  },
+  {
+   "inst": "ctrl_<st> (32 leaves)",
+   "master": "qkd_ctrl_pc_host_static ELASTIC=1 RAW_WD=256 TQD=64",
+   "rtl": "rtl/qwen_sys/static_kv_20261014/qkd_ctrl_pc_host_static.sv",
+   "view": "NO kit (kv_elastic_boundary OPEN_JOINS: physical master/outline/pin grants owed); replaces the credit-era qkd_ctrl_pc np1 leaves"
+  },
+  {
+   "inst": "vport_<st>_<k>",
+   "count_per_stack": 4,
+   "master": "qkd_pv16_vport (r5 V issuer)",
+   "view": "kit on main 2cf79d0b1 (Q-VMWB); wiring vport_wiring.txt; Q-KVSYS-PV places them + PV16 spine"
+  }
  ],
  "per_die": [
-  {"inst": "wrn", "master": "qkd_kv_static_writer_native #(.VMAP(1))", "rtl": "rtl/physical/ot_qkd_kv_static_writer_native.sv", "view": "CLOSED r1-r4-3b9e625b5 (adoption hold 0az lifted only with this plan)", "inputs": "kvn_word_* from qkd_d2d_static (WRITER_LINK_MAP) instead of qkd_seq kvn", "outputs": "es lanes by dest_stack/dest_pc to the static controllers"}
+  {
+   "inst": "wrn",
+   "master": "qkd_kv_static_writer_native #(.VMAP(1))",
+   "rtl": "rtl/physical/ot_qkd_kv_static_writer_native.sv",
+   "view": "CLOSED r1-r4-3b9e625b5 (adoption hold 0az lifted only with this plan)",
+   "inputs": "kvn_word_* from qkd_d2d_static (WRITER_LINK_MAP) instead of qkd_seq kvn",
+   "outputs": "es lanes by dest_stack/dest_pc to the static controllers"
+  }
  ],
  "missing_producers": [
-  {"what": "landing/return calendar (expected_put/sector/epoch/layer, arm/epoch/layer)", "owner": "Q-VMWB (accepted)", "module": "qkd_kv_landing_cal"},
-  {"what": "front blk_go", "owner": "Q-VMWB (requested)", "module": "qkd_kv_front_cal"},
-  {"what": "controller_hbm_calendar static_cmd/static_cmd_owner/reserved_rd/reserved_static_col/reserved_write_col/static_epoch/expected_raw_valid", "owner": "UNASSIGNED (coordinator: Q-ELEM or Q-VMWB)", "module": "per-PC controller calendar leaf (same ROM+counter shape)"},
-  {"what": "static K issuer (req_valid/req_t/req_v/req_epoch/req_layer to each segment; consumes rsp_valid && !rsp_v) replacing ECTL rq/rs credit merge", "owner": "Q-ELEM ECTL (static ECTL successor); reference: Codex qkd_native_attention_endpoint G3S2 service (k_req_* / k_rsp_*)", "module": "TBD"},
-  {"what": "writer independent expectation compiled_identity/compiled_generation and link kvn_compiled_identity/generation", "owner": "Q-LINK / Q-KVSYS-ELEM", "module": "TBD"},
-  {"what": "controller completion_v/we -> HOST slices, completion_fault -> root; KV drain barrier (kv_active/drained/flush_local)", "owner": "Q-KVSYS-DIE (HOST owner) after the controller swap", "module": "die wiring"}
+  {
+   "what": "landing/return calendar (expected_put/sector/epoch/layer, arm/epoch/layer)",
+   "owner": "Q-VMWB (accepted)",
+   "module": "qkd_kv_landing_cal"
+  },
+  {
+   "what": "front blk_go",
+   "owner": "Q-VMWB (requested)",
+   "module": "qkd_kv_front_cal"
+  },
+  {
+   "what": "controller_hbm_calendar static_cmd/static_cmd_owner/reserved_rd/reserved_static_col/reserved_write_col/static_epoch/expected_raw_valid",
+   "owner": "UNASSIGNED (coordinator: Q-ELEM or Q-VMWB)",
+   "module": "per-PC controller calendar leaf (same ROM+counter shape)"
+  },
+  {
+   "what": "static K issuer (req_valid/req_t/req_v/req_epoch/req_layer to each segment; consumes rsp_valid && !rsp_v) replacing ECTL rq/rs credit merge",
+   "owner": "Q-ELEM ECTL (static ECTL successor); reference: Codex qkd_native_attention_endpoint G3S2 service (k_req_* / k_rsp_*)",
+   "module": "TBD"
+  },
+  {
+   "what": "writer independent expectation compiled_identity/compiled_generation and link kvn_compiled_identity/generation",
+   "owner": "Q-LINK / Q-KVSYS-ELEM",
+   "module": "TBD"
+  },
+  {
+   "what": "controller completion_v/we -> HOST slices, completion_fault -> root; KV drain barrier (kv_active/drained/flush_local)",
+   "owner": "Q-KVSYS-DIE (HOST owner) after the controller swap",
+   "module": "die wiring"
+  }
  ],
- "retired_by_static": ["qkd_land_strip_s credit words kvi_cr/kvo_cr/emf_cr/emr_cr", "ECTL rq/rs (credit/DQ merge)", "qkd_seq kvn_<st> path (replaced by d2d kvn_word_* -> writer native)", "qkd_seq r_kvd/r_sd/r_x3_d/t_ar_cr open inputs (retired credit bridge)"],
+ "retired_by_static": [
+  "qkd_land_strip_s credit words kvi_cr/kvo_cr/emf_cr/emr_cr",
+  "ECTL rq/rs (credit/DQ merge)",
+  "qkd_seq kvn_<st> path (replaced by d2d kvn_word_* -> writer native)",
+  "qkd_seq r_kvd/r_sd/r_x3_d/t_ar_cr open inputs (retired credit bridge)"
+ ],
  "sequence": [
   "1. views: landing_seg, return_slots mc_r4, front native audit, vport r5 (in flight)",
   "2. RTL: landing_cal + front_cal (Q-VMWB), controller calendar + static controller kit (owner TBD), static K issuer (Q-ELEM ECTL)",
   "3. generator OT_KV_STATIC=1: frames bound to the RTL above; strict bind v2 must reach 0 open inputs on the static path",
   "4. full-die trial (E4/AGIdock, --priority die) with real views"
+ ],
+ "die_contract_items": [
+  "Reset release beat-aligned: the die reset release must land on a 768-core / 625-HBM-edge beat boundary (qkd_kv_landing_cal PH0 = 0 elaborated; Q-VMWB 2026-10-16)",
+  "qkd_kv_landing_cal-c1-bf2d11829 SUBMITTED (30.24 um square, 32/die): in ck rst_n cfg_we cfg_addr[7:0] cfg_data[63:0] kgo vgo ctx_t[13:0] epoch[15:0] layer[5:0]; out arm l_epoch l_layer l_put[3:0] l_sector[39:0] r_put[3:0] r_sector[39:0] r_epoch r_layer fault; faces W cfg / N ck rst kgo vgo ctx_t epoch layer / E r_* / S l_* arm fault",
+  "landing alias fix 35a278613: K row ordinal {sec[6:3],sec[7],sec[2:0]}, no ctx_t pin on the landing; rowctl VREQ=1 gains arm/epoch/layer"
  ]
 }

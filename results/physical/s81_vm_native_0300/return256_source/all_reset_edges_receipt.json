@@ -1,0 +1,8 @@
+{
+  "scope": "Additional exact reset-edge proof. Reference is old full-width return plus exact existing native_valid_diag, declaring its reset semantics and two diagnostic stages. DUT retains actual two256 slices+same native_diag. Every1600edge compared including all reset assert/held/release intervals; force-isolated eachslice fault witnesses retained.",
+  "checks": 1600,
+  "pass_": true,
+  "production_adoption": false,
+  "source_commit": "c15649a12",
+  "original_component_bench_unchanged": true
+}

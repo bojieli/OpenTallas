@@ -1,0 +1,613 @@
+{
+ "schema": "opentallas.die_port_bind.v2",
+ "die_v": "/home/ubuntu/artifacts/s81-netfill-0811/padproof/die.v",
+ "top": "dedupe_die",
+ "verdict": "PASS",
+ "failing": [],
+ "summary": {
+  "masters": 21,
+  "instances": 30,
+  "unbound_masters": 0,
+  "stub_masters": 0,
+  "ambiguous_masters": 0,
+  "port_not_in_rtl": 0,
+  "width_mismatch": 0,
+  "input_unconnected": 0,
+  "input_tied": 0,
+  "unparsed_connections": 0,
+  "duplicate_port_connections": 0,
+  "undriven_net_bits": 0,
+  "multi_driven_net_bits": 0,
+  "top_assigns": 0,
+  "params_not_in_rtl": 0,
+  "strap_ports": 0,
+  "pad_bits": 1545
+ },
+ "masters": {
+  "dsfd_hstnh_20": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 2,
+   "rtl": "/home/ubuntu/artifacts/s81-netfill-0811/padproof/masters.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "u0",
+    "u1"
+   ],
+   "param_sets": {
+    "{}": 2
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {
+    "di": 7
+   },
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "dsfd_hstnh_2049": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/home/ubuntu/artifacts/s81-netfill-0811/padproof/masters.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "u2"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {
+    "di": 1
+   },
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "dsfd_hstnh_2204": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/home/ubuntu/artifacts/s81-netfill-0811/padproof/masters.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "u3"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {
+    "di": 40
+   },
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "dsfd_hstnh_4": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/home/ubuntu/artifacts/s81-netfill-0811/padproof/masters.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "u4"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {
+    "di": 1
+   },
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "dsfd_hstnh_4096": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/home/ubuntu/artifacts/s81-netfill-0811/padproof/masters.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "u5"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {
+    "di": 1040
+   },
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "dsfd_hstnh_513": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/home/ubuntu/artifacts/s81-netfill-0811/padproof/masters.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "u6"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {
+    "di": 1
+   },
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "dsfd_hstnh_77": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 2,
+   "rtl": "/home/ubuntu/artifacts/s81-netfill-0811/padproof/masters.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "u7",
+    "u8"
+   ],
+   "param_sets": {
+    "{}": 2
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {
+    "di": 34
+   },
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "dsfd_hstnh_85": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/home/ubuntu/artifacts/s81-netfill-0811/padproof/masters.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "u9"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {
+    "di": 1
+   },
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "dsfd_hstnv_1029": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 2,
+   "rtl": "/home/ubuntu/artifacts/s81-netfill-0811/padproof/masters.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "u11",
+    "u12"
+   ],
+   "param_sets": {
+    "{}": 2
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {
+    "di": 7
+   },
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "dsfd_hstnv_15": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/home/ubuntu/artifacts/s81-netfill-0811/padproof/masters.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "u13"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {
+    "di": 3
+   },
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "dsfd_hstnv_2": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/home/ubuntu/artifacts/s81-netfill-0811/padproof/masters.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "u10"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {
+    "di": 1
+   },
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "dsfd_hstnv_20": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 2,
+   "rtl": "/home/ubuntu/artifacts/s81-netfill-0811/padproof/masters.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "u14",
+    "u15"
+   ],
+   "param_sets": {
+    "{}": 2
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {
+    "di": 7
+   },
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "dsfd_hstnv_2049": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/home/ubuntu/artifacts/s81-netfill-0811/padproof/masters.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "u16"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {
+    "di": 1
+   },
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "dsfd_hstnv_4": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/home/ubuntu/artifacts/s81-netfill-0811/padproof/masters.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "u17"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {
+    "di": 1
+   },
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "dsfd_hstnv_53": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/home/ubuntu/artifacts/s81-netfill-0811/padproof/masters.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "u18"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {
+    "di": 5
+   },
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "dsfd_hstnv_759": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/home/ubuntu/artifacts/s81-netfill-0811/padproof/masters.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "u21"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {
+    "di": 67
+   },
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "dsfd_hstnv_77": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 2,
+   "rtl": "/home/ubuntu/artifacts/s81-netfill-0811/padproof/masters.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "u19",
+    "u20"
+   ],
+   "param_sets": {
+    "{}": 2
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {
+    "di": 34
+   },
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "dsfd_hstnv_85": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/home/ubuntu/artifacts/s81-netfill-0811/padproof/masters.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "u22"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {
+    "di": 1
+   },
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "dsfd_rly_63_WN": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 1,
+   "rtl": "/home/ubuntu/artifacts/s81-netfill-0811/padproof/masters.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "u23"
+   ],
+   "param_sets": {
+    "{}": 1
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {
+    "i": 25
+   },
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "dsfd_stnh_566x1": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 3,
+   "rtl": "/home/ubuntu/artifacts/s81-netfill-0811/padproof/masters.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "u24",
+    "u25",
+    "u26"
+   ],
+   "param_sets": {
+    "{}": 3
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {
+    "di0": 134
+   },
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
+  "dsfd_stnv_566x1": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 3,
+   "rtl": "/home/ubuntu/artifacts/s81-netfill-0811/padproof/masters.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "u27",
+    "u28",
+    "u29"
+   ],
+   "param_sets": {
+    "{}": 3
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {
+    "di0": 134
+   },
+   "output_open": [
+    "fn0"
+   ],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  }
+ },
+ "undriven_nets": {},
+ "undriven_classes": {},
+ "multi_driven_classes": {},
+ "multi_driven_nets": {},
+ "top_assigns": [],
+ "params_not_in_rtl": [],
+ "pads_declared": [
+  "dsfd_hstnh_2049:di:u2",
+  "dsfd_hstnh_20:di:u0",
+  "dsfd_hstnh_20:di:u1",
+  "dsfd_hstnh_2204:di:u3",
+  "dsfd_hstnh_4096:di:u5",
+  "dsfd_hstnh_4:di:u4",
+  "dsfd_hstnh_513:di:u6",
+  "dsfd_hstnh_77:di:u7",
+  "dsfd_hstnh_77:di:u8",
+  "dsfd_hstnh_85:di:u9",
+  "dsfd_hstnv_1029:di:u11",
+  "dsfd_hstnv_1029:di:u12",
+  "dsfd_hstnv_15:di:u13",
+  "dsfd_hstnv_2049:di:u16",
+  "dsfd_hstnv_20:di:u14",
+  "dsfd_hstnv_20:di:u15",
+  "dsfd_hstnv_2:di:u10",
+  "dsfd_hstnv_4:di:u17",
+  "dsfd_hstnv_53:di:u18",
+  "dsfd_hstnv_759:di:u21",
+  "dsfd_hstnv_77:di:u19",
+  "dsfd_hstnv_77:di:u20",
+  "dsfd_hstnv_85:di:u22",
+  "dsfd_rly_63_WN:i:u23",
+  "dsfd_stnh_566x1:di0:u24",
+  "dsfd_stnh_566x1:di0:u25",
+  "dsfd_stnh_566x1:di0:u26",
+  "dsfd_stnv_566x1:di0:u27",
+  "dsfd_stnv_566x1:di0:u28",
+  "dsfd_stnv_566x1:di0:u29"
+ ],
+ "die_sha256": "317537e8de7d33edd3770e34f6c8c61541c3a563b28defa09c5e696eba54e701",
+ "straps_declared": [],
+ "params_file": "/home/ubuntu/artifacts/s81-netfill-0811/padproof/die.v.params.json",
+ "rtl_roots": [
+  "/tmp/no-rtl-here"
+ ],
+ "rtl_files": [
+  "/home/ubuntu/artifacts/s81-netfill-0811/padproof/masters.sv",
+  "rtl/common/ot_fwd_link_stage.sv"
+ ],
+ "defines": []
+}

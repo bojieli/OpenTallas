@@ -21,10 +21,33 @@ one uniform, compact die model that tools/budgets/{clock_plan,budget_sheet}.py r
 """
 import argparse
 import gzip
+import hashlib
 import json
 import os
 import sys
 from pathlib import Path
+
+
+def case_real_blocks(lint, die, model, out, glue=None):
+    """Resolve directions against this case's glue, as run_lint/run_pin_align do.
+
+    A missing real source is an extraction failure, not an all-placeholder direction model.
+    Preserve the exact glue bytes beside the model unless a generated case file was supplied.
+    """
+    provenance = None
+    if die.startswith('s81r8'):
+        lint.R8_ACTIVE[0] = True
+        path = Path(glue).resolve() if glue else out.parent / (out.name.removesuffix('.gz').removesuffix('.json') + '_glue.sv')
+        if not glue:
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text(lint.S.glue_rtl(model))
+        data = path.read_bytes()
+        lint.GLUE_CASE[0] = str(path.resolve())
+        provenance = dict(path=str(path.resolve()), sha256=hashlib.sha256(data).hexdigest(),
+                          kind='supplied case glue' if glue else 'generated from extracted case')
+    elif glue:
+        raise ValueError('--glue is only supported for S81 r8 cases')
+    return lint.real_blocks(die, model), provenance
 
 
 def anchor(Mx, port):
@@ -51,6 +74,7 @@ def main():
     ap.add_argument('--qwen-recipe', default='r21b')
     ap.add_argument('--variant', default='', help='qwen_kv: kv_die.build flags (die_top_lint --variant), e.g. kv_wq_mirror')
     ap.add_argument('--out', required=True, type=Path)
+    ap.add_argument('--glue', type=Path, help='S81: use this case\'s already generated glue RTL (recorded by SHA256)')
     a = ap.parse_args()
     src = a.src.resolve()
     os.chdir(src)
@@ -65,13 +89,10 @@ def main():
         L.VARIANT = a.variant
     m, pw, M, tool = L.build(a.die)
     by = {it.name: it for it in m['insts']}
-    try:
-        real = L.real_blocks(a.die, m)
-    except Exception as e:  # noqa: BLE001
-        print('real_blocks failed:', repr(e), file=sys.stderr)
-        real = {}
+    real, glue_provenance = case_real_blocks(L, a.die, m, a.out.resolve(), a.glue)
     buses = []
     nodir = 0
+    dir_errors = []
     for bus in m['buses']:
         bid, cls, bits, eps = bus
         out = []
@@ -82,8 +103,10 @@ def main():
                     seg, _ = L.endpoint_dirs(a.die, real, by, bus, j)
                     ds = {s[2] for s in seg} if seg else set()
                     d = ds.pop() if len(ds) == 1 else ('mixed' if ds else '?')
-                except Exception:  # noqa: BLE001
+                except Exception as e:  # noqa: BLE001
                     nodir += 1
+                    if len(dir_errors) < 20:
+                        dir_errors.append(dict(bus=bid, instance=inst, port=port, error=repr(e)))
             out.append([inst, port, d])
         if a.die == 'qwen_rom' and cls == 'clock_trunk' and bid.startswith('fck_'):
             cls = 'fclk'       # Qwen link-hop forwarded clocks (relay chain fck_*): travel with their data, not CTS trees
@@ -140,7 +163,8 @@ def main():
                pin_stage_buses=sorted(m.get('pin_stage_buses', [])),
                relay_rule=bool(a.die == 'hbm' and (m.get('variant') or {}).get('relay_all')),
                budget_stages=bool(a.die == 'hbm' and (m.get('variant') or {}).get('budget_stages')),
-               path_buses=sorted({b for ids in m.get('paths', {}).values() for b in ids}), real_masters=sorted(real), endpoint_dir_failures=nodir)
+               path_buses=sorted({b for ids in m.get('paths', {}).values() for b in ids}), real_masters=sorted(real),
+               case_glue=glue_provenance, endpoint_dir_failures=nodir, endpoint_dir_failure_examples=dir_errors)
     a.out.parent.mkdir(parents=True, exist_ok=True)
     with gzip.open(a.out, 'wt') as f:
         json.dump(rec, f, separators=(',', ':'))

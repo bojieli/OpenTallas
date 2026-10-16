@@ -1,0 +1,210 @@
+{
+ "schema": "opentallas.hbm.provisional_native_child_grant.v1",
+ "status": "PROVISIONAL_ISOLATED_SUCCESSOR_MEASUREMENT_ONLY",
+ "cell": "ot_hbm_idx_topk_link_static_dense",
+ "source_snapshot": "ba36e274e",
+ "source": "rtl/hbm_accel/index/ot_hbm_idx_topk_link_static_dense.sv",
+ "source_sha256": "4e2a16984cf40418c01c0ca78366a083ac83b51c7198b9c5fd0b8fa0f35fb65b",
+ "params": {
+  "MUT": 0
+ },
+ "previous_cell": "ot_hbm_idx_topk_link_static",
+ "same_module_header_except_master": true,
+ "base_grant": "results/arch/hier_contract_1015/hbm_v15.json",
+ "base_grant_sha256": "19a72cdd479a5216ad5620a8ac15c0b01a559743aeca8f177eed8aa4ef5db817",
+ "outline": {
+  "w": 317.52,
+  "h": 745.2
+ },
+ "pins": [
+  {
+   "name": "clk",
+   "face": "E",
+   "layer": "M4",
+   "offset": 372.168,
+   "span_um": [
+    372.12,
+    372.216
+   ],
+   "pins_per_um": 10.417
+  },
+  {
+   "name": "clk_mem[7:0]",
+   "face": "E",
+   "layer": "M4",
+   "offset": 372.6,
+   "span_um": [
+    372.216,
+    372.984
+   ],
+   "pins_per_um": 10.417
+  },
+  {
+   "name": "rst_n",
+   "face": "E",
+   "layer": "M4",
+   "offset": 373.032,
+   "span_um": [
+    372.984,
+    373.08
+   ],
+   "pins_per_um": 10.417
+  },
+  {
+   "name": "clear",
+   "face": "W",
+   "layer": "M4",
+   "offset": 152.472,
+   "span_um": [
+    152.424,
+    152.52
+   ],
+   "pins_per_um": 10.417
+  },
+  {
+   "name": "ingest_v",
+   "face": "W",
+   "layer": "M4",
+   "offset": 152.568,
+   "span_um": [
+    152.52,
+    152.616
+   ],
+   "pins_per_um": 10.417
+  },
+  {
+   "name": "selected_line[2367:0]",
+   "face": "W",
+   "layer": "M4",
+   "offset": 266.28,
+   "span_um": [
+    152.616,
+    379.944
+   ],
+   "pins_per_um": 10.417
+  },
+  {
+   "name": "flush",
+   "face": "W",
+   "layer": "M4",
+   "offset": 379.992,
+   "span_um": [
+    379.944,
+    380.04
+   ],
+   "pins_per_um": 10.417
+  },
+  {
+   "name": "emit_v",
+   "face": "W",
+   "layer": "M4",
+   "offset": 380.088,
+   "span_um": [
+    380.04,
+    380.136
+   ],
+   "pins_per_um": 10.417
+  },
+  {
+   "name": "emit_group[3:0]",
+   "face": "W",
+   "layer": "M4",
+   "offset": 380.328,
+   "span_um": [
+    380.136,
+    380.52
+   ],
+   "pins_per_um": 10.417
+  },
+  {
+   "name": "rank[7:0]",
+   "face": "W",
+   "layer": "M4",
+   "offset": 380.904,
+   "span_um": [
+    380.52,
+    381.288
+   ],
+   "pins_per_um": 10.417
+  },
+  {
+   "name": "gbase[7:0]",
+   "face": "W",
+   "layer": "M4",
+   "offset": 381.672,
+   "span_um": [
+    381.288,
+    382.056
+   ],
+   "pins_per_um": 10.417
+  },
+  {
+   "name": "tx_v[3:0]",
+   "face": "W",
+   "layer": "M4",
+   "offset": 382.248,
+   "span_um": [
+    382.056,
+    382.44
+   ],
+   "pins_per_um": 10.417
+  },
+  {
+   "name": "tx[2179:0]",
+   "face": "W",
+   "layer": "M4",
+   "offset": 487.08,
+   "span_um": [
+    382.44,
+    591.72
+   ],
+   "pins_per_um": 10.417
+  },
+  {
+   "name": "fault",
+   "face": "W",
+   "layer": "M4",
+   "offset": 591.768,
+   "span_um": [
+    591.72,
+    591.816
+   ],
+   "pins_per_um": 10.417
+  },
+  {
+   "name": "selected_count[9:0]",
+   "face": "W",
+   "layer": "M4",
+   "offset": 592.296,
+   "span_um": [
+    591.816,
+    592.776
+   ],
+   "pins_per_um": 10.417
+  }
+ ],
+ "clock_entries": [
+  "clk",
+  "clk_mem[0]",
+  "clk_mem[1]",
+  "clk_mem[2]",
+  "clk_mem[3]",
+  "clk_mem[4]",
+  "clk_mem[5]",
+  "clk_mem[6]",
+  "clk_mem[7]"
+ ],
+ "pg_layer": "M5",
+ "strap_layer": "M6",
+ "signal_max_layer": "M5",
+ "layer_cap": "M5",
+ "normal_data_edge_delta": 0,
+ "macro_requirement": "Eight actual 64x512 SRAMs; preserve real clk_mem[7:0] entries and exact source macro resolution.",
+ "physical_requirements": [
+  "Generate full literal per-bit pin plan matching every inherited face/range; audit whole-face and every occupied local window against 0.096um/two-track/0.60 budget.",
+  "Fresh native CTS, raw SRAM clock stub/slew, phase/phi-minus-R and all nine entries required.",
+  "TT setup>=0, FF hold>=0, DRC0, no routing OBS or clock rule waiver; inspect density/congestion/layout images.",
+  "Pin actual dense source/params/defines/macros and prove same-cycle positive plus semantic mutants; no renamed old Liberty/view reuse."
+ ],
+ "adoption": "No parent source/default/d4 change, no full-parent placement, and no native qualification inherited. Preserve existing old-link job. Parent adoption requires actual parameter/source/port binding and geometry proof."
+}

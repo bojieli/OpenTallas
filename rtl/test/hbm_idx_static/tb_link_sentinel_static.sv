@@ -6,7 +6,7 @@ module tb_link_sentinel_static;
  reg[3:0]emit_group=0;reg[2367:0]selected_line=0;
  wire[3:0]tx_v;wire[2179:0]tx;wire fault;wire[9:0]selected_count;
  integer errors=0,records=0,flits=0;reg[511:0]seen=0;
- ot_hbm_idx_topk_link_static #(.MUT(MUT))dut(.clk(clk),.clk_mem({8{clk}}),.rst_n(rst_n),.clear(clear),.ingest_v(ingest_v),.selected_line(selected_line),.flush(flush),.emit_v(emit_v),.emit_group(emit_group),.rank(8'd3),.gbase(8'd1),.tx_v(tx_v),.tx(tx),.fault(fault),.selected_count(selected_count));
+ ot_hbm_idx_topk_link_static_core #(.MUT(MUT))dut(.clk(clk),.clk_mem({8{clk}}),.rst_n(rst_n),.clear(clear),.ingest_v(ingest_v),.selected_line(selected_line),.flush(flush),.emit_v(emit_v),.emit_group(emit_group),.rank(8'd3),.gbase(8'd1),.tx_v(tx_v),.tx(tx),.fault(fault),.selected_count(selected_count));
  always @(negedge clk)if(|tx_v)begin
   for(integer l=0;l<4;l=l+1)begin
    if(!tx_v[l]||tx[l*545+512+:16]!==16'(128+flits))errors++;

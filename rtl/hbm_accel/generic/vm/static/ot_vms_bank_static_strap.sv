@@ -29,6 +29,7 @@
 module ot_vms_bank_static_strap #(
     parameter integer RG = 2,
     parameter integer WG = 2,
+    parameter integer EG_WIDE = 0, // strap6: 1 = egress payload from the wide leaves only (identical eg whenever eg_v)
     parameter integer MUT = 0 // 1: wrong read owner; 2: write-sector permutation; 3: CE population fault; 4: write enable ignores the slot (any active source writes)
 ) (
     input wire clk, rst_n,
@@ -193,6 +194,17 @@ module ot_vms_bank_static_strap #(
         end
         else assign write_tree[WLEAVES+wl]=276'd0;
     end
+    // strap6 (q0 strap5 TT -114.94: 21 of 22 violators = packet/COLL leaf -> write OR tree -> egress pin clones across the
+    // SRAM stack): the mirror egress carries ONLY wide writes (eg_v needs the slot's wide source and no other active
+    // source, whose leaves are then zero), so eg_d is the OR of the WG wide leaves alone.  Identical eg whenever eg_v.
+    wire [275:0] eg_or;
+    if (WG == 1) begin : g_eg1
+        assign eg_or = write_tree[WLEAVES];
+    end else begin : g_egn
+        reg [275:0] eo;
+        always @* begin eo = '0; for (integer g = 0; g < WG; g = g + 1) eo = eo | write_tree[WLEAVES+g]; end
+        assign eg_or = eo;
+    end
     for (genvar wn=1;wn<WLEAVES;wn=wn+1) begin : g_write_or
         assign write_tree[wn]=write_tree[2*wn] | write_tree[2*wn+1];
     end
@@ -295,7 +307,7 @@ module ot_vms_bank_static_strap #(
         // A qualified capture prevents merging it into the internal S1 data.
         // Unconditional capture (H-ELEM-A 2026-10-15: gate reg->reg -81 / -228 ps ended at the eg_d enable decode):
         // eg_v alone qualifies the egress beat; the payload register carries no enable from the slot/ECC decode.
-        eg_d <= wr_decode[274:0];
+        eg_d <= (EG_WIDE != 0) ? eg_or[274:0] : wr_decode[274:0];
     end
     // ------------------------------------------------------------------ S2: macro pins
     reg [9:0] m_ra, m_wa; reg m_rA, m_rC, m_rB, m_wA, m_wB, m_wC; reg [311:0] m_wd; reg [7:0] m_mA, m_mC; reg [15:0] m_mB;

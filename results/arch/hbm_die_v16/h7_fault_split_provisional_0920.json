@@ -1,0 +1,166 @@
+{
+ "schema": "opentallas.hbm.provisional_native_child_grant.v1",
+ "status": "PROVISIONAL_ISOLATED_SUCCESSOR_MEASUREMENT_ONLY",
+ "cell": "ot_hbm_svc_pc_ctrl_leaf_cfg_faults",
+ "source_snapshot": "cf302625a",
+ "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg_faults.sv",
+ "params": {
+  "OREG": 1,
+  "KREG": 1,
+  "KRREG": 1,
+  "RREG": 1,
+  "WPAY": 1,
+  "QREG": 1
+ },
+ "receipt_sha256": {
+  "results/rtl/hbm_harden_0811/fault_split/physical_request.json": "f5d408fd9f770a8191fe16ad247b065f95724d5ffbe882fc340d91e42eba4d76",
+  "results/rtl/hbm_harden_0811/fault_split/additive_controller/receipt.json": "fe3b14fb77a267d28e4073362eb777509a7c4feec1e98cfd193a8844ae05c243",
+  "results/rtl/hbm_harden_0811/fault_split/actual_track_readback/summary.json": "b6807bb350f2c46a9a39d224756eb9ce23a916ccf7e51be0a832d77dbee26b28",
+  "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg_faults.sv": "8c6e548ed59e80dccf523556d86e75d757b0d37856a74172d5389a9bdb154118",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf.sv": "c56a3487cab5560d0347a895b11c6cffcf6359515b00b6b44794baa8c0fcda15",
+  "rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc_strap_h7.sv": "bcdda846683fa0104f37594f8cabbc2df56ab898d715218c82e0fb1008258779",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v": "9352069d59a398f6946d3971477dcc989306f1351c9c205cea9d68b183728c2c"
+ },
+ "outline_um": [
+  185.76,
+  164.16
+ ],
+ "macro_rectangles_um": [
+  [
+   "g_wpay.u_write_payload",
+   "ot_sram_1r1w_128x256_m1_r2c2",
+   56.16,
+   30.24,
+   150.984,
+   71.304
+  ],
+  [
+   "u_response_payload",
+   "ot_sram_1r1w_128x256_m1_r2c2",
+   56.16,
+   92.88,
+   150.984,
+   133.944
+  ]
+ ],
+ "literal_pin_request": "results/rtl/hbm_harden_0811/fault_split/physical_request.json",
+ "signal_pin_count": 1229,
+ "pg_excluded": true,
+ "new_fault_pin_rectangles": [
+  [
+   "owner_fault_split[0]",
+   "M4",
+   0.0,
+   19.392,
+   0.192,
+   19.416
+  ],
+  [
+   "owner_fault_split[1]",
+   "M4",
+   0.0,
+   19.584,
+   0.192,
+   19.608
+  ],
+  [
+   "owner_fault_split[2]",
+   "M4",
+   0.0,
+   19.776,
+   0.192,
+   19.8
+  ],
+  [
+   "owner_fault_split[3]",
+   "M4",
+   0.0,
+   19.968,
+   0.192,
+   19.992
+  ],
+  [
+   "owner_fault_split[4]",
+   "M4",
+   0.0,
+   20.16,
+   0.192,
+   20.184
+  ],
+  [
+   "owner_fault_split[5]",
+   "M4",
+   0.0,
+   20.352,
+   0.192,
+   20.376
+  ]
+ ],
+ "actual_track_grid": {
+  "proof": "results/rtl/hbm_harden_0811/fault_split/actual_track_readback/summary.json",
+  "unit": "oth-ubuntu-2392759-1792167418",
+  "host": "ot-agidock128",
+  "exit": 0,
+  "M4_Y_um": {
+   "origin": 0.012,
+   "pitch": 0.048
+  },
+  "M3_X_um": {
+   "origin": 0.009,
+   "pitch": 0.036
+  },
+  "M5_X_um": {
+   "origin": 0.012,
+   "pitch": 0.048
+  },
+  "all_legacy_1224_signal_rectangles_on_track": true,
+  "new_six_fault_rectangles_on_same_actual_grid": true,
+  "note": "Canonical spread_face_pins.OFF M4=0.036 is not the actual M4 Y grid of either captured ODB. Use actual track readback; no invented snap."
+ },
+ "audit": "All1229 literal signal centres independently checked against actual ODB layer grids M3X.009/.036,M4Y.012/.048,M5X.012/.048; all in outline and unique. Six new W pins have22.824um minimum gap to other W rectangles; no scalar owner_fault retained.",
+ "new_fault_window": {
+  "face": "W",
+  "layer": "M4",
+  "span_um": [
+   19.308,
+   20.46
+  ],
+  "data_bits": 6,
+  "allocation_um_per_bit": 0.096,
+  "cut": 0.5
+ },
+ "normal_cycles_added": 0,
+ "fault_observation_cycles_added": 0,
+ "cost": {
+  "controller_instances": 128,
+  "extra_controller_ff_each": 5,
+  "parent_instances": 4,
+  "extra_parent_input_ff_each": 160,
+  "declared_total_extra_ff": 1280,
+  "additional_fault_wires": 640,
+  "normal_cycles_added": 0,
+  "fault_observation_cycles_added": 0
+ },
+ "required_gates": [
+  "exact new pin and macro readback",
+  "TT setup",
+  "FF hold",
+  "DRC0",
+  "native root/launch/capture proof",
+  "component mutants retained",
+  "literal parent wiring and all128 home/cut proof before adoption",
+  "Fresh PG must be regenerated, not inherited rectangles; new ODB track/pin/macro readback required.",
+  "Existing R418.9ps and TT-55.0373ps are FAILED; scalar-OR repair alone cannot inherit native timing qualification."
+ ],
+ "adoption": "Current d4/default/controller ABI unchanged. Isolated measurement only, no native or all128 parent homes/cut/clock/phase qualification inherited. Component source receipts do not establish production CDC or throughput.",
+ "source_dependencies": {
+  "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg_faults.sv": "8c6e548ed59e80dccf523556d86e75d757b0d37856a74172d5389a9bdb154118",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf.sv": "c56a3487cab5560d0347a895b11c6cffcf6359515b00b6b44794baa8c0fcda15",
+  "rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc_strap_h7.sv": "bcdda846683fa0104f37594f8cabbc2df56ab898d715218c82e0fb1008258779",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v": "9352069d59a398f6946d3971477dcc989306f1351c9c205cea9d68b183728c2c"
+ },
+ "namespace_revision": "Exact original H7 controller dependency now additive *_strap_h7. No substitution by main PHYS_WACT1; no change to geometry/pins/params/normal edges/cost.",
+ "supersedes": "3fec25e1c initial source binding required original unmerged H7 helper. This grant binds complete additive *_strap_h7 dependency graph; all1229 pins, macros, params and costs remain byte-exact request geometry. Fresh49,600edge/6class/6omission mutant proof atcf302 required and reviewed."
+}

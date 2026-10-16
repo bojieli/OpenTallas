@@ -1,0 +1,50 @@
+TRACE c3 localstart1 rq0 rs0 captured0 slot0
+TRACE c7 localstart0 rq1 rs0 captured0 slot0
+TRACE c8 localstart0 rq1 rs0 captured0 slot0
+TRACE c9 localstart0 rq1 rs0 captured0 slot0
+TRACE c10 localstart0 rq1 rs0 captured0 slot0
+TRACE c11 localstart0 rq1 rs1 captured0 slot0
+TRACE c12 localstart0 rq1 rs1 captured0 slot0
+TRACE c13 localstart0 rq1 rs1 captured0 slot0
+TRACE c14 localstart0 rq1 rs1 captured1 slot1
+TRACE c15 localstart0 rq1 rs1 captured1 slot1
+STATIC_K PASS layer=0 mutant=0 req=256 consume=256 bridge=256 rs=256 firstreq=7 localstart=3 firstconsume=37 bridgefault=0
+STATIC_K PASS layer=1 mutant=0 req=256 consume=256 bridge=256 rs=256 firstreq=7 localstart=3 firstconsume=37 bridgefault=0
+STATIC_K PASS layer=2 mutant=0 req=256 consume=256 bridge=256 rs=256 firstreq=7 localstart=3 firstconsume=37 bridgefault=0
+STATIC_K PASS layer=3 mutant=0 req=256 consume=256 bridge=256 rs=256 firstreq=7 localstart=3 firstconsume=37 bridgefault=0
+STATIC_K PASS layer=4 mutant=0 req=256 consume=256 bridge=256 rs=256 firstreq=7 localstart=3 firstconsume=37 bridgefault=0
+STATIC_K PASS layer=5 mutant=0 req=256 consume=256 bridge=256 rs=256 firstreq=7 localstart=3 firstconsume=37 bridgefault=0
+STATIC_K PASS layer=6 mutant=0 req=256 consume=256 bridge=256 rs=256 firstreq=7 localstart=3 firstconsume=37 bridgefault=0
+STATIC_K PASS layer=7 mutant=0 req=256 consume=256 bridge=256 rs=256 firstreq=7 localstart=3 firstconsume=37 bridgefault=0
+STATIC_K PASS layer=8 mutant=0 req=256 consume=256 bridge=256 rs=256 firstreq=7 localstart=3 firstconsume=37 bridgefault=0
+STATIC_K PASS layer=9 mutant=0 req=256 consume=256 bridge=256 rs=256 firstreq=7 localstart=3 firstconsume=37 bridgefault=0
+STATIC_K PASS layer=10 mutant=0 req=256 consume=256 bridge=256 rs=256 firstreq=7 localstart=3 firstconsume=37 bridgefault=0
+STATIC_K PASS layer=11 mutant=0 req=256 consume=256 bridge=256 rs=256 firstreq=7 localstart=3 firstconsume=37 bridgefault=0
+STATIC_K PASS layer=12 mutant=0 req=256 consume=256 bridge=256 rs=256 firstreq=7 localstart=3 firstconsume=37 bridgefault=0
+STATIC_K PASS layer=13 mutant=0 req=256 consume=256 bridge=256 rs=256 firstreq=7 localstart=3 firstconsume=37 bridgefault=0
+STATIC_K PASS layer=14 mutant=0 req=256 consume=256 bridge=256 rs=256 firstreq=7 localstart=3 firstconsume=37 bridgefault=0
+STATIC_K PASS layer=15 mutant=0 req=256 consume=256 bridge=256 rs=256 firstreq=7 localstart=3 firstconsume=37 bridgefault=0
+STATIC_K PASS layer=16 mutant=0 req=256 consume=256 bridge=256 rs=256 firstreq=7 localstart=3 firstconsume=37 bridgefault=0
+STATIC_K PASS layer=17 mutant=0 req=256 consume=256 bridge=256 rs=256 firstreq=7 localstart=3 firstconsume=37 bridgefault=0
+STATIC_K PASS layer=18 mutant=0 req=256 consume=256 bridge=256 rs=256 firstreq=7 localstart=3 firstconsume=37 bridgefault=0
+STATIC_K PASS layer=19 mutant=0 req=256 consume=256 bridge=256 rs=256 firstreq=7 localstart=3 firstconsume=37 bridgefault=0
+STATIC_K PASS layer=20 mutant=0 req=256 consume=256 bridge=256 rs=256 firstreq=7 localstart=3 firstconsume=37 bridgefault=0
+STATIC_K PASS layer=21 mutant=0 req=256 consume=256 bridge=256 rs=256 firstreq=7 localstart=3 firstconsume=37 bridgefault=0
+STATIC_K PASS layer=22 mutant=0 req=256 consume=256 bridge=256 rs=256 firstreq=7 localstart=3 firstconsume=37 bridgefault=0
+STATIC_K PASS layer=23 mutant=0 req=256 consume=256 bridge=256 rs=256 firstreq=7 localstart=3 firstconsume=37 bridgefault=0
+STATIC_K PASS layer=24 mutant=0 req=256 consume=256 bridge=256 rs=256 firstreq=7 localstart=3 firstconsume=37 bridgefault=0
+STATIC_K PASS layer=25 mutant=0 req=256 consume=256 bridge=256 rs=256 firstreq=7 localstart=3 firstconsume=37 bridgefault=0
+STATIC_K PASS layer=26 mutant=0 req=256 consume=256 bridge=256 rs=256 firstreq=7 localstart=3 firstconsume=37 bridgefault=0
+STATIC_K PASS layer=27 mutant=0 req=256 consume=256 bridge=256 rs=256 firstreq=7 localstart=3 firstconsume=37 bridgefault=0
+STATIC_K PASS layer=28 mutant=0 req=256 consume=256 bridge=256 rs=256 firstreq=7 localstart=3 firstconsume=37 bridgefault=0
+STATIC_K PASS layer=29 mutant=0 req=256 consume=256 bridge=256 rs=256 firstreq=7 localstart=3 firstconsume=37 bridgefault=0
+STATIC_K PASS layer=30 mutant=0 req=256 consume=256 bridge=256 rs=256 firstreq=7 localstart=3 firstconsume=37 bridgefault=0
+STATIC_K PASS layer=31 mutant=0 req=256 consume=256 bridge=256 rs=256 firstreq=7 localstart=3 firstconsume=37 bridgefault=0
+STATIC_K PASS layer=32 mutant=0 req=256 consume=256 bridge=256 rs=256 firstreq=7 localstart=3 firstconsume=37 bridgefault=0
+STATIC_K PASS layer=33 mutant=0 req=256 consume=256 bridge=256 rs=256 firstreq=7 localstart=3 firstconsume=37 bridgefault=0
+STATIC_K PASS layer=34 mutant=0 req=256 consume=256 bridge=256 rs=256 firstreq=7 localstart=3 firstconsume=37 bridgefault=0
+STATIC_K PASS layer=35 mutant=0 req=256 consume=256 bridge=256 rs=256 firstreq=7 localstart=3 firstconsume=37 bridgefault=0
+- rtl/test/qwen_static_kv/tb_qkd_static_k_issuer.sv:99: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 18us; walltime 0.631 s; speed 57.230 us/s
+- Verilator: cpu 0.316 s on 1 threads; alloced 217 MB
