@@ -254,9 +254,11 @@ module tb_qwen_d2d_program;
         tick(1); cstart = 0; cseg = 0;
         while (cyc < tstart + P_L0 + 5) tick(1);
         tok = 0; lay = 0; lstart = tstart + P_L0;
+        $display("PROGRAM_LAYER_START layer=0 compiled_cycle=%0d actual_cycle=%0d", P_L0, cyc-tstart);
         for (l = 1; l < NLAY; l = l + 1) begin
             while (cyc < tstart + layer_starts[l] - LEAD - 1) tick(1);
             lay = l; lstart = tstart + layer_starts[l]; cstart = 1;
+            $display("PROGRAM_LAYER_START layer=%0d compiled_cycle=%0d actual_start_pin_cycle=%0d", l, layer_starts[l], cyc+1-tstart);
             tick(1); cstart = 0;
         end
         while (cyc < tstart + P_FINISH) tick(1);
