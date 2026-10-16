@@ -6458,6 +6458,7 @@ MESO_D8 = False                 # --meso-d8 (v6, default off): meso FIFOs DEPTH 
 HC_XFACE = False                # --hc-xface (S81-RERUN v7, default off): hc_s <-> hc_n exchange face to face across
                                 #   the corridor inside the HC column (out of the VCH-edge lane)
 SEL_XSTG = False                # --sel-xstg (S81-RERUN v8, default off): d8g1 meso crossing stage (1.5 T arcs + low guard)
+RLY536_RSTREG = False           # --rly536-rstreg: canonical536 relay resetpinregister; +1bootstrapreleaseedge,0productionedges
 HEND_BOUND_FOOTPRINT = False    # --hend-bound-footprint: reserve each hub end's verified view outline before placement
 DEDUPE_PAD = None               # --dedupe-pad FILE: DEDUPE pad map (instances of FROM become the standard TO, spare bits padded)
                                 #   on the 8 end block -> selector / collector buses; +6 cycles
@@ -11012,6 +11013,18 @@ def _status_lane_glue(kind, fmt, ports):
     return b
 
 
+def rly536_reset_contract(m):
+    """Explicit static bootstrap requirement; physical generation alone does not qualify the compiler."""
+    if not RLY536_RSTREG:
+        return None
+    masters = sorted(k for k in m['pdir'] if re.fullmatch(r'dsfd_rly_536_[NSEW]{2}', k))
+    return dict(schema='s81-rly536-reset-contract-v1', masters=masters,
+                async_assert='immediate', release_edges_before_first_production=1,
+                normal_data_edges=1, added_normal_edges=0,
+                source='rtl/dsrom_sys/s81_glue/ot_s81_rly.sv', params=dict(W=536, RSREG=1),
+                compiler_bootstrap_qualification='OPEN: consumer must reserve and verify release edge before production')
+
+
 def glue_rtl(m):
     """Verilog of every generated glue master (structural over the real primitives ot_fwd_link_stage, ot_meso_fifo,
     ot_ratio_cdc_fifo, ot_v41_retn_w17w10)."""
@@ -11061,8 +11074,14 @@ def glue_rtl(m):
                     body.append(f'    assign {q_} = r_{p_[2:]};')
         elif mst.startswith('dsfd_rly'):
             w = ports['i'][1]
-            body.append(f'    reg [{w - 1}:0] r; always @(posedge ck[0] or negedge rs[0]) if (!rs[0]) r <= {w}\'d0; else r <= i;')
-            body.append('    assign o = r;')
+            if RLY536_RSTREG and re.fullmatch(r'dsfd_rly_536_[NSEW]{2}', mst):
+                assert w == 536, (mst, w)
+                # Physical canonical536 leaf: one resetpinregister releases before production starts.
+                # Asyncassert still immediate; firstreleaseedge holdsdatazero, subsequentedgescapturei.
+                body.append('    ot_s81_rly #(.W(536), .RSREG(1)) u (.ck(ck), .rs(rs), .i(i), .o(o));')
+            else:
+                body.append(f'    reg [{w - 1}:0] r; always @(posedge ck[0] or negedge rs[0]) if (!rs[0]) r <= {w}\'d0; else r <= i;')
+                body.append('    assign o = r;')
         elif mst.startswith('dsfd_xstg') and HEND_STATIC:
             w = ports['i'][1]
             body += ['    // S-NET --hend-static: end block (cw) -> band block (ck), same frequency, on the fixed calendar of',
@@ -11411,6 +11430,7 @@ def plan_record_r8(m):
                                                'rtl/common/ot_ratio_cdc_fifo.sv', 'rtl/v41die/ot_v41_retn_w17w10.sv')},
         die=dict(w_um=DIE[0], h_um=DIE[1], mm2=round(DIE[0] * DIE[1] / 1e6, 3)), variant=m['variant'],
         ctrl_model=m.get('ctrl_model'), ctrl_binding_shell_sha256=m.get('ctrl_binding_shell_sha256'),
+        **(dict(rly536_reset_contract=rly536_reset_contract(m)) if RLY536_RSTREG else {}),
         slot=dict(elem_frame_h_um=ELEM_FRAME_H, q_elem_frame_h_um=Q_ELEM_FRAME_H, frame_h_um=g['frame_h'], slot_h_um=g['slot_h'], slots_per_column=g['slots'],
                   capacity=capacity_report()),
         instances=dict(kinds), area_mm2_by_kind={k: round(v, 3) for k, v in area.items()},
@@ -11539,6 +11559,7 @@ def die_options(ap):
                     '(r3 GRT: hop relays 776-906 um from their load, TT -244 on ck_col relay paths)')
     ap.add_argument('--pin-relay', action='store_true', help='r9: relay station abutting every hardened-block pin on '
                     'die interfaces (last segment <= 100 um; needs --hop-fix; default off)')
+    ap.add_argument('--rly536-rstreg', action='store_true', help='canonical536-bit relay resetpinregister (536only): asyncassert unchanged, +1bootstrapreleaseedge, 0productionedges; requires statically scheduled reset release')
     ap.add_argument('--dedupe-pad', help='S-NET+FILL: DEDUPE pad map JSON (results/arch/tile_dedupe_1015/s81_pad_map_1016.json): '
                     'instances of FROM become the closed standard TO; spare inputs tied low (die.v.pads.json), spare outputs open')
     ap.add_argument('--hend-bound-footprint', action='store_true', help='S-NET+FILL: reserve the verified binding-table '
@@ -11882,6 +11903,8 @@ def apply_options(a):
     SEL_XSTG = bool(getattr(a, 'sel_xstg', False))
     global HEND_BOUND_FOOTPRINT
     HEND_BOUND_FOOTPRINT = bool(getattr(a, 'hend_bound_footprint', False))
+    global RLY536_RSTREG
+    RLY536_RSTREG = bool(getattr(a, 'rly536_rstreg', False))
     global DEDUPE_PAD
     DEDUPE_PAD = None
     if getattr(a, 'dedupe_pad', None):
@@ -12381,6 +12404,10 @@ def main(argv=None):
         write_netlist(m, 1, work / 'die.v')
         if GEN == 'r8':
             (work / 'die_glue.sv').write_text(glue_rtl(m))    # this case's glue masters (die_port_bind --rtl-file)
+            if RLY536_RSTREG:
+                (work / 'die_glue.reset_contract.json').write_text(json.dumps(rly536_reset_contract(m), indent=1) + '\n')
+            elif (work / 'die_glue.reset_contract.json').exists():
+                (work / 'die_glue.reset_contract.json').unlink()
         print(json.dumps(dict(die_v=str(work / 'die.v'), insts=len(m['insts']))))
     elif a.mode == 'real':
         print(json.dumps(case_real(m, work)))
