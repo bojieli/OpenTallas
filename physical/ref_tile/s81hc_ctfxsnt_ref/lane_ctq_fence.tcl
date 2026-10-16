@@ -11,8 +11,15 @@ set ::lcf_blk [ord::get_db_block]
 set ::lcf_dbu [$::lcf_blk getDbUnitsPerMicron]
 set ::lcf_core [$::lcf_blk getCoreArea]
 set ::lcf_x0 121.0; set ::lcf_x1 166.0
+# s4b: the region edges sit on the 0.054-um site grid of the core (s4 gate DPL-0008/0033: one fenced register
+# legalized across the unaligned edge); the row span is the core's own.
+set ::lcf_site [[lindex [$::lcf_blk getRows] 0] getSite]
+set ::lcf_sw [$::lcf_site getWidth]
+set ::lcf_cx [$::lcf_core xMin]
 set ::lcf_r [odb::dbRegion_create $::lcf_blk "ctfxs_lane_ctq"]
-odb::dbBox_create $::lcf_r [expr {round($::lcf_x0*$::lcf_dbu)}] [$::lcf_core yMin] [expr {round($::lcf_x1*$::lcf_dbu)}] [$::lcf_core yMax]
+set ::lcf_bx0 [expr {$::lcf_cx + int(ceil((round($::lcf_x0*$::lcf_dbu) - $::lcf_cx) / double($::lcf_sw))) * $::lcf_sw}]
+set ::lcf_bx1 [expr {$::lcf_cx + int(floor((round($::lcf_x1*$::lcf_dbu) - $::lcf_cx) / double($::lcf_sw))) * $::lcf_sw}]
+odb::dbBox_create $::lcf_r $::lcf_bx0 [$::lcf_core yMin] $::lcf_bx1 [$::lcf_core yMax]
 set ::lcf_g [odb::dbGroup_create $::lcf_r "ctfxs_lane_ctq_grp"]
 set ::lcf_n 0; set ::lcf_a 0.0
 foreach i [$::lcf_blk getInsts] {
