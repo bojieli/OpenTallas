@@ -8,7 +8,10 @@
 // r2 (Q-COMPUTE-ELEM, 2026-10-15, coordinator 12:50 accepted +1 cycle): rom_cmd leaves the head from a register
 // (CMDREG=1): h3 gate reg->out -633.9 ps = u_sd_me_i_wcs -> native route + resident relocation (16 levels) -> pin.
 // The tree command is one edge later (compiler-visible +1 on every ROM-tree command; ledger row TT.ROMCMD).
-module ot_qfd_tt_ctlm_static_hr #(parameter integer CMDREG = 1) (
+// h6 (Q-ELEM-TTH 2026-10-16, RSTN=1): rst_n drove ~481 async-clear flops directly (reset pins are excluded from the
+// pin registers; scale-leaf tc1 class: native rst_n capture 357 ps). Now rst_n -> one ot_qfd_rst_stn flop at the pin
+// -> the leaf-internal reset rsl (assert asynchronous, release one ck_head edge later; no data/command edge changes).
+module ot_qfd_tt_ctlm_static_hr #(parameter integer CMDREG = 1, parameter integer RSTN = 1) (
     input wire [94:0] rom_ret_i,
     input wire ck_me_sched,
     input wire cp_active,output wire [55:0] cp,
@@ -55,6 +58,8 @@ module ot_qfd_tt_ctlm_static_hr #(parameter integer CMDREG = 1) (
     output wire  me_clk_en,
     output wire  c_fault
 );
+    wire rsl;
+    ot_qfd_rst_stn #(.D(RSTN)) u_rst_stn (.clk(ck_head), .rst_n(rst_n), .rst_q(rsl));
     wire [379:0] cmd;
     wire [94:0] ret,rom_ret;
     assign rom_ret=rom_ret_i;
@@ -62,8 +67,8 @@ module ot_qfd_tt_ctlm_static_hr #(parameter integer CMDREG = 1) (
     wire head_fault,relocation_fault;
     reg [5:0] loaded_stage;
     reg relocation_sticky;
-    always @(posedge ck_head or negedge rst_n)
-      if(!rst_n)begin loaded_stage<=0;relocation_sticky<=0;end
+    always @(posedge ck_head or negedge rsl)
+      if(!rsl)begin loaded_stage<=0;relocation_sticky<=0;end
       else begin
         if(pw_v && pw_addr==1017 && pw_data[63:32]==32'h43414c53)
           loaded_stage<=pw_data[17:12];
@@ -75,15 +80,15 @@ module ot_qfd_tt_ctlm_static_hr #(parameter integer CMDREG = 1) (
       .in_cmd(local_rom_cmd),.in_stage(loaded_stage),.out_cmd(rom_cmd_c),.fault(relocation_fault));
     generate if (CMDREG != 0) begin : g_cmdreg
       reg [379:0] rom_cmd_q;
-      always @(posedge ck_head or negedge rst_n)
-        if (!rst_n) rom_cmd_q <= 380'd0; else rom_cmd_q <= rom_cmd_c;
+      always @(posedge ck_head or negedge rsl)
+        if (!rsl) rom_cmd_q <= 380'd0; else rom_cmd_q <= rom_cmd_c;
       assign rom_cmd = rom_cmd_q;
     end else begin : g_cmdwire
       assign rom_cmd = rom_cmd_c;
     end endgenerate
     assign c_fault=head_fault|relocation_sticky;
     ot_qfd_native_cmd_route u_native_route (
-      .clk(ck_head),.rst_n(rst_n),.cmd(cmd),.rom_ret(rom_ret),.native_ret(native_ret),
+      .clk(ck_head),.rst_n(rsl),.cmd(cmd),.rom_ret(rom_ret),.native_ret(native_ret),
       .rom_cmd(local_rom_cmd),.native_cmd(native_cmd),.ret(ret));
     qfd_tt_ctlm_head_static_rk u_head (
         .me_observe(me_observe),.cp_active(cp_active),.cp(cp),
@@ -93,7 +98,7 @@ module ot_qfd_tt_ctlm_static_hr #(parameter integer CMDREG = 1) (
         .clk(ck_head),
         .ck_pm({ck_pm1,ck_pm0}),
         .ck_sched(ck_me_sched),
-        .rst_n(rst_n),
+        .rst_n(rsl),
         .h_start(h_start),
         .token(token),
         .pos(pos),

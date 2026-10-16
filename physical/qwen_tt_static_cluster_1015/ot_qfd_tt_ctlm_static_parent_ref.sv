@@ -73,8 +73,16 @@ module ot_qfd_tt_ctlm_static_parent_ref (
     wire head_fault,relocation_fault;
     reg [5:0] loaded_stage;
     reg relocation_sticky;
-    always @(posedge ck_head or negedge rst_n)
-      if(!rst_n)begin loaded_stage<=0;relocation_sticky<=0;end
+    // h6 (Q-ELEM-TTH 2026-10-16): the head side (what the hr leaf holds) releases reset one ck_head edge after rst_n
+    // (ot_qfd_rst_stn at the leaf pin, hr RSTN=1); the ROM tree keeps the raw rst_n. TB_RSTN=0 = the old raw-reset body
+    // (bench control: must FAIL against the RSTN=1 leaf).
+`ifndef TB_RSTN
+`define TB_RSTN 1
+`endif
+    wire rsh;
+    ot_qfd_rst_stn #(.D(`TB_RSTN)) u_ref_rst_stn (.clk(ck_head), .rst_n(rst_n), .rst_q(rsh));
+    always @(posedge ck_head or negedge rsh)
+      if(!rsh)begin loaded_stage<=0;relocation_sticky<=0;end
       else begin
         if(pw_v && pw_addr==1017 && pw_data[63:32]==32'h43414c53)
           loaded_stage<=pw_data[17:12];
@@ -91,15 +99,15 @@ module ot_qfd_tt_ctlm_static_parent_ref (
 `endif
     generate if (REF_CMDREG != 0) begin : g_cmdreg
       reg [379:0] rom_cmd_q;
-      always @(posedge ck_head or negedge rst_n)
-        if (!rst_n) rom_cmd_q <= 380'd0; else rom_cmd_q <= rom_cmd_c;
+      always @(posedge ck_head or negedge rsh)
+        if (!rsh) rom_cmd_q <= 380'd0; else rom_cmd_q <= rom_cmd_c;
       assign rom_cmd = rom_cmd_q;
     end else begin : g_cmdwire
       assign rom_cmd = rom_cmd_c;
     end endgenerate
     assign c_fault=head_fault|relocation_sticky;
     ot_qfd_native_cmd_route u_native_route (
-      .clk(ck_head),.rst_n(rst_n),.cmd(cmd),.rom_ret(rom_ret),.native_ret(native_ret),
+      .clk(ck_head),.rst_n(rsh),.cmd(cmd),.rom_ret(rom_ret),.native_ret(native_ret),
       .rom_cmd(local_rom_cmd),.native_cmd(native_cmd),.ret(ret));
     qfd_tt_ctlm_head_static u_head (
         .me_observe(me_observe),.cp_active(cp_active),.cp(cp),
@@ -108,7 +116,7 @@ module ot_qfd_tt_ctlm_static_parent_ref (
 
         .clk(ck_head),
         .ck_sched(ck_me_sched),
-        .rst_n(rst_n),
+        .rst_n(rsh),
         .h_start(h_start),
         .token(token),
         .pos(pos),

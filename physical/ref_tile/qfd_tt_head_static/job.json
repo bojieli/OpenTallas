@@ -1,13 +1,13 @@
 {
- "name": "qfd_tt_head_static-h5-COMMIT",
+ "name": "qfd_tt_head_static-h6-COMMIT",
  "block": "ot_qfd_tt_ctlm_static_hr",
  "ref_tile": true,
- "owner": "Claude:q15_compute_elem",
+ "owner": "Claude:Q-ELEM-TTH",
  "purpose": "Static TT head-side leaf, raw SRAM clock entries (h3) for the qfd_tt_ctlm_static_s cluster",
  "threads": 8,
  "peak_ram_gb": 16,
  "source": {
-  "branch": "claude/q15-tt-static",
+  "branch": "claude/qelem-tth-1016",
   "commit": "COMMIT",
   "extra_paths": [
    "physical/qwen_tt_static_cluster_1015",
@@ -51,6 +51,17 @@
    {
     "name": "bench_tt_regroup_m2",
     "cmd": "RG_OBJ={RUN}/bench/rg_m2 bash physical/qwen_tt_static_cluster_1015/run_regroup.sh 2 60000",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "REGROUP_FAIL"
+   },
+   {
+    "name": "bench_tt_regroup_rawrst",
+    "cmd": "RG_OBJ={RUN}/bench/rg_r0 RG_DEFS=-DTB_RSTN=0 bash physical/qwen_tt_static_cluster_1015/run_regroup.sh 0 60000",
     "expect": "fail",
     "threads": 8,
     "peak_ram_gb": 4,
@@ -110,7 +121,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qfd_tt_head_static/qfd_tt_head_static-h5-COMMIT"
+   "to": "results/rtl/ref_tile/qfd_tt_head_static/qfd_tt_head_static-h6-COMMIT"
   }
  ],
  "cycles_added": 1,

@@ -214,6 +214,23 @@ proc ot_ce_constant_cone {start} {
   if {$pin in {"" NULL}} {return 0}
   return [ot_ce_constant_iterm $pin {} 64]
 }
+# Classification is immutable during one ownership validation. Memoize only
+# in the caller's local dictionary; no STA object/classification survives it.
+proc ot_ce_startpoint_class {start purpose memo_name} {
+  upvar 1 $memo_name memo
+  set name [get_full_name $start]
+  set key [list $purpose [sta::object_type $start] $name]
+  if {[dict exists $memo $key]} {return [dict get $memo $key]}
+  if {$purpose eq "input" && [llength [get_ports -quiet $name]]} {
+    set result [list port $name]
+  } elseif {$purpose eq "output" && [sta::object_type $start] eq "Pin" && [$start is_top_level_port]} {
+    set result [list top_pin $name]
+  } else {
+    set result [list cell [get_full_name [get_cells -quiet -of_objects $start]]]
+  }
+  dict set memo $key $result
+  return $result
+}
 # A multi-root leaf contains independent synchronous datapaths. Domain declarations
 # are checked against the real synthesized timing graph, not trusted as metadata.
 proc ot_ce_leaf_ownership {inputs outputs} {
@@ -241,6 +258,7 @@ proc ot_ce_leaf_ownership {inputs outputs} {
   set ::ot_ce_register_cells {}
   foreach r [all_registers -cells] {dict set ::ot_ce_register_cells [get_full_name $r] 1}
   set ::ot_ce_const_memo {}
+  set startpoint_classes {}
   # OpenSTA's -data_pins population includes asynchronous clear/preset
   # controls. Classify these from the actual loaded Liberty sequential arcs,
   # never from port names or reset_ports. They retain recovery/removal timing;
@@ -252,14 +270,13 @@ proc ot_ce_leaf_ownership {inputs outputs} {
     set cell [get_full_name [get_cells -of_objects $pin]]
     set expected [dict get $cells $cell]
     foreach start [get_fanin -flat -startpoints_only -to $pin] {
-      set ports [get_ports -quiet [get_full_name $start]]
-      if {[llength $ports]} {
+      lassign [ot_ce_startpoint_class $start input startpoint_classes] source_kind source
+      if {$source_kind eq "port"} {
         set name [get_full_name $start]
         if {![dict exists $inputs $name] || [dict get $inputs $name] ne $expected} {
           error "OT_MULTI_ROOT: input $name has wrong domain for $cell"
         }
       } else {
-        set source [get_full_name [get_cells -quiet -of_objects $start]]
         if {![dict exists $cells $source]} {
           if {[ot_ce_constant_cone $start]} {
             puts "OT_MULTI_ROOT LIBERTY_CONSTANT [get_full_name $start] -> [get_full_name $pin]"
@@ -280,14 +297,14 @@ proc ot_ce_leaf_ownership {inputs outputs} {
       # A die-strap tie output (contract v1.2 tie_hi/tie_lo), possibly
       # synthesis-buffered, has no clock and no data domain to own; it must be
       # proved constant above. Registers and ports keep their domain checks.
-      if {[sta::object_type $start] eq "Pin" && [$start is_top_level_port]} {
+      lassign [ot_ce_startpoint_class $start output startpoint_classes] source_kind source
+      if {$source_kind eq "top_pin"} {
         if {[ot_ce_constant_cone $start]} {
           puts "OT_MULTI_ROOT LIBERTY_CONSTANT [get_full_name $start] -> $name"
           continue
         }
         error "OT_MULTI_ROOT: output $name has wrong or unregistered source domain [get_full_name $start]"
       }
-      set source [get_full_name [get_cells -quiet -of_objects $start]]
       if {![dict exists $cells $source] && [ot_ce_constant_cone $start]} {
         puts "OT_MULTI_ROOT LIBERTY_CONSTANT [get_full_name $start] -> $name"
         continue
@@ -364,34 +381,50 @@ proc ot_ce_corner {} {
 }
 # get_property pin arrival_max_rise is a DATA arrival query. On a clock-only
 # macro pin it returns an infinity sentinel even with a finite propagated clock
-# path. Read the actual rising clock path in the current analysis scene instead.
+# path. Read propagated clock tags in the current scene and remove the
+# source waveform edge time; falling-edge-only registers include that phase.
 proc ot_ce_finite {value} {
   return [expr {[string is double -strict $value] && ![regexp -nocase {inf|nan} $value]}]
 }
 proc ot_ce_clock_wire {pin clock} {
   set scene [get_property [sta::cmd_scene] name]
   set clock_name [get_full_name $clock]
-  set values {}
+  set by_transition [dict create rise {} fall {}]
+  set waveform {}
+  foreach time [$clock waveform] {lappend waveform [sta::time_sta_ui $time]}
+  if {[llength $waveform] != 2 || ![ot_ce_finite [lindex $waveform 0]] ||
+      ![ot_ce_finite [lindex $waveform 1]]} {
+    error "OT_ENTRIES: invalid source clock waveform $clock_name"
+  }
   foreach vertex [$pin vertices] {
     if {$vertex eq "NULL"} continue
-    set paths [$vertex path_iterator rise max]
-    while {[$paths has_next]} {
-      set path [$paths next]
-      # OpenSTA's Path tag identifies scene, rise/max, clock and propagation.
-      # Match the complete fixed fields, never accept another scene's path.
-      set tag [$path tag]
-      if {[lindex $tag 1] ne $scene || [lindex $tag 2] ne "^max" ||
-          [lindex $tag 3] ne $clock_name || [lindex $tag 4] ne "^" ||
-          [string first "(clock prop)" $tag] < 0} continue
-      set arrival [sta::time_sta_ui [$path arrival]]
-      if {![ot_ce_finite $arrival]} {
-        $paths finish
-        error "OT_ENTRIES: nonfinite propagated clock arrival on [get_full_name $pin] scene=$scene clock=$clock_name"
+    foreach transition {rise fall} marker {^ v} {
+      set paths [$vertex path_iterator $transition max]
+      while {[$paths has_next]} {
+        set path [$paths next]
+        # Sink transition and source clock edge are distinct (inverting trees).
+        # Exclude data, ideal, other-scene and other-clock paths as before.
+        set tag [$path tag]
+        set edge [lindex $tag 4]
+        if {[lindex $tag 1] ne $scene || [lindex $tag 2] ne "${marker}max" ||
+            [lindex $tag 3] ne $clock_name || $edge ni {^ v} ||
+            [string first "(clock prop)" $tag] < 0} continue
+        set arrival [sta::time_sta_ui [$path arrival]]
+        if {![ot_ce_finite $arrival]} {
+          $paths finish
+          error "OT_ENTRIES: nonfinite propagated clock arrival on [get_full_name $pin] scene=$scene clock=$clock_name"
+        }
+        set phase [lindex $waveform [expr {$edge eq "^" ? 0 : 1}]]
+        dict lappend by_transition $transition [expr {$arrival - $phase}]
       }
-      lappend values $arrival
+      $paths finish
     }
-    $paths finish
   }
+  # Preserve the rising pin-transition reference. An inverted/negedge clock
+  # may associate it with the falling source edge; remove that actual phase.
+  # Fall-only pins remain measurable. Multiple same-transition tags fail.
+  set values [dict get $by_transition rise]
+  if {![llength $values]} {set values [dict get $by_transition fall]}
   if {[llength $values] != 1} {
     # Synthesis/floorplan have no extracted entry wire. This is solely a finite
     # pre-CTS diagnostic reference; routed gates must measure a clock path.
@@ -406,24 +439,30 @@ proc ot_ce_clock_wire {pin clock} {
 }
 # Match ck_insertion.py's exported insertion.json boundary population: input
 # timing endpoints plus output timing launch registers, intersected with this root.
-proc ot_ce_boundary_pins {pins} {
-  set regs {}; set boundary {}
-  foreach pin $pins { dict set regs [regsub {/[^/]+$} [get_full_name $pin] {}] $pin }
+proc ot_ce_boundary_cells {} {
+  set boundary {}
   set inputs [all_inputs -no_clocks]
   if {[llength $inputs]} {
     foreach path [find_timing_paths -path_delay max -from $inputs -to [all_registers -data_pins] -group_path_count 200000 -endpoint_path_count 1] {
-      set name [regsub {/[^/]+$} [get_full_name [get_property $path endpoint]] {}]
-      if {[dict exists $regs $name]} { dict set boundary $name [dict get $regs $name] }
+      dict set boundary [regsub {/[^/]+$} [get_full_name [get_property $path endpoint]] {}] 1
     }
   }
   if {[llength [all_outputs]]} {
     foreach path [find_timing_paths -path_delay max -from [all_registers -clock_pins] -to [all_outputs] -group_path_count 200000 -endpoint_path_count 100000] {
-      set name [regsub {/[^/]+$} [get_full_name [get_property $path startpoint]] {}]
-      if {[dict exists $regs $name]} { dict set boundary $name [dict get $regs $name] }
+      dict set boundary [regsub {/[^/]+$} [get_full_name [get_property $path startpoint]] {}] 1
     }
+  }
+  return $boundary
+}
+proc ot_ce_boundary_pins {pins boundary_cells} {
+  set regs {}; set boundary {}
+  foreach pin $pins {dict set regs [regsub {/[^/]+$} [get_full_name $pin] {}] $pin}
+  dict for {name unused} $boundary_cells {
+    if {[dict exists $regs $name]} {dict set boundary $name [dict get $regs $name]}
   }
   return [dict values $boundary]
 }
+
 proc ot_ce_apply {} {
   set corner [ot_ce_corner]
   set clk [get_clocks core_clk]
@@ -495,6 +534,10 @@ proc ot_ce_apply {} {
   dict for {m n} $::ot_ce_counts {
     if {![dict exists $counts $m] || [dict get $counts $m] != $n} { error "OT_ENTRIES: bound child count mismatch $m" }
   }
+  # Source latencies are zero for this whole measurement loop, and no STA
+  # constraints/netlist change until rows are complete. Query the same bounded
+  # boundary population once per apply/current corner, never across calls.
+  set boundary_cells {}; set boundary_cells_ready 0
   foreach row [ot_ce_direct_rows $corner] {
     set name [get_full_name [lindex $row 0]]
     if {[dict exists $seen $name]} {error "OT_DIRECT_MACRO: duplicate hard-source ownership $name"}
@@ -527,7 +570,10 @@ proc ot_ce_apply {} {
     if {[llength $arrivals] > 15000 && ($tree_mean > 300 || $hi-$lo > 80)} {
       error "OT_HYBRID: glue root $name exceeds measured large-root insertion/spread limits"
     }
-    set boundary [ot_ce_boundary_pins $pins]
+    if {!$boundary_cells_ready} {
+      set boundary_cells [ot_ce_boundary_cells]; set boundary_cells_ready 1
+    }
+    set boundary [ot_ce_boundary_pins $pins $boundary_cells]
     set scope boundary
     if {![llength $boundary]} { set boundary $pins; set scope all_internal_only }
     set arrivals {}; set total 0.0
@@ -577,16 +623,26 @@ proc ot_ce_apply {} {
   }
   # Every entry is synchronous and related. Reserve die skew on internal hops;
   # no asynchronous groups, false paths or ETM insertion add-back.
-  set_clock_uncertainty -setup 150 -from [get_clocks ot_entry_*] -to [get_clocks ot_entry_*]
-  # H1 authoritative pair_check.HOLD_TREE =50ps hold margin+50ps die skew.
-  # Tile-local25ps uncertainty is not the composed pair margin.
-  set_clock_uncertainty -hold 100 -from [get_clocks ot_entry_*] -to [get_clocks ot_entry_*]
+  # H1 authoritative pair_check.HOLD_TREE =50ps hold margin+50ps die skew (hold 100, setup 150).
   # Each deep tile has its own earlier trunk tap. The authoritative TREE
   # pair budget uses150ps die skew when either reference exceeds300ps,
-  # including deep-to-deep pairs (pair_check.SKEW_DEEP).
-  if {[llength $highclocks]} {
-    set_clock_uncertainty -setup 210 -from $highclocks -to [get_clocks ot_entry_*]
-    set_clock_uncertainty -setup 210 -from [get_clocks ot_entry_*] -to $highclocks
+  # including deep-to-deep pairs (pair_check.SKEW_DEEP) (setup 210).
+  # S-ELEM-PQ 2026-10-15: a register pair on ONE glue CTS root of this tile shares one die tap and one
+  # propagated standard-cell tree whose real skew STA already sees, so it is timed like every single-root
+  # tile (base uncertainty); the die-skew reserve applies to every pair of DIFFERENT entries and to hard-
+  # child entries (dsfd_bf_front_static: the uniform rule put hold 100 / setup 210 on all 12,276 core-root
+  # paths -> 15,826 hold endpoints, 119k buffers).
+  set ot_ce_glue {}
+  foreach name $::ot_ce_cts_roots { lappend ot_ce_glue [get_full_name [get_clocks ot_entry_[lsearch -exact $::ot_ce_ports $name]]] }
+  set ot_ce_high {}
+  foreach c $highclocks { lappend ot_ce_high [get_full_name $c] }
+  foreach a [get_clocks ot_entry_*] {
+    foreach b [get_clocks ot_entry_*] {
+      set an [get_full_name $a]; set bn [get_full_name $b]
+      if {$an eq $bn && $an in $ot_ce_glue} { continue }
+      set_clock_uncertainty -setup [expr {($an in $ot_ce_high || $bn in $ot_ce_high) ? 210 : 150}] -from $a -to $b
+      set_clock_uncertainty -hold 100 -from $a -to $b
+    }
   }
   # Preserve measured boundary spread: balancing the mean does not erase the
   # earliest/latest physical boundary arrivals or change ETM setup/hold arcs.
