@@ -4,7 +4,7 @@
  "top": "hbm_v16_die",
  "generated_by": "tools/hbm_die_v15/full_die_v16.py",
  "basis": {
-  "commit": "005075acd",
+  "commit": "ef98097ec",
   "v15_contract": "results/arch/hbm_die_v15/source_contract/contract.json",
   "v15_contract_sha256": "eac5bff7d49473de7a7d8f0b993e427d4d004991e56670c8552f35e2b9a6b6cd",
   "grants": "results/arch/hier_contract_1015/hbm_v15.json",
@@ -85,7 +85,7 @@
   "masters": 55,
   "edges": 10069,
   "edge_bits": 1029907,
-  "clock_reset_ports": 3306,
+  "clock_reset_ports": 3322,
   "straps": 90,
   "die_pins": 43,
   "exposed_input_ports": 51,
@@ -877,6 +877,14 @@
      "direction": "input",
      "bits": 1
     },
+    "clk_cap": {
+     "direction": "input",
+     "bits": 1
+    },
+    "clk_mem": {
+     "direction": "input",
+     "bits": 1
+    },
     "rst_n": {
      "direction": "input",
      "bits": 1
@@ -1240,6 +1248,14 @@
    "replaces_v15": "hfd_hgi_vm_calendar_SE",
    "ports": {
     "clk": {
+     "direction": "input",
+     "bits": 1
+    },
+    "clk_cap": {
+     "direction": "input",
+     "bits": 1
+    },
+    "clk_mem": {
      "direction": "input",
      "bits": 1
     },
@@ -1609,6 +1625,14 @@
      "direction": "input",
      "bits": 1
     },
+    "clk_cap": {
+     "direction": "input",
+     "bits": 1
+    },
+    "clk_mem": {
+     "direction": "input",
+     "bits": 1
+    },
     "rst_n": {
      "direction": "input",
      "bits": 1
@@ -1972,6 +1996,14 @@
    "replaces_v15": "hfd_hgi_vm_calendar_NE",
    "ports": {
     "clk": {
+     "direction": "input",
+     "bits": 1
+    },
+    "clk_cap": {
+     "direction": "input",
+     "bits": 1
+    },
+    "clk_mem": {
      "direction": "input",
      "bits": 1
     },
@@ -44967,6 +44999,14 @@
      "direction": "input",
      "bits": 1
     },
+    "clk_cap": {
+     "direction": "input",
+     "bits": 1
+    },
+    "clk_mem": {
+     "direction": "input",
+     "bits": 1
+    },
     "rst_n": {
      "direction": "input",
      "bits": 1
@@ -45199,6 +45239,14 @@
    "replaces_v15": null,
    "ports": {
     "clk": {
+     "direction": "input",
+     "bits": 1
+    },
+    "clk_cap": {
+     "direction": "input",
+     "bits": 1
+    },
+    "clk_mem": {
      "direction": "input",
      "bits": 1
     },
@@ -45437,6 +45485,14 @@
      "direction": "input",
      "bits": 1
     },
+    "clk_cap": {
+     "direction": "input",
+     "bits": 1
+    },
+    "clk_mem": {
+     "direction": "input",
+     "bits": 1
+    },
     "rst_n": {
      "direction": "input",
      "bits": 1
@@ -45669,6 +45725,14 @@
    "replaces_v15": null,
    "ports": {
     "clk": {
+     "direction": "input",
+     "bits": 1
+    },
+    "clk_cap": {
+     "direction": "input",
+     "bits": 1
+    },
+    "clk_mem": {
      "direction": "input",
      "bits": 1
     },
@@ -295418,6 +295482,28 @@
   },
   {
    "instance": "calendar_NE",
+   "port": "clk_cap",
+   "bits": 1,
+   "domain": "stream",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ]
+  },
+  {
+   "instance": "calendar_NE",
+   "port": "clk_mem",
+   "bits": 1,
+   "domain": "stream",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ]
+  },
+  {
+   "instance": "calendar_NE",
    "port": "rst_n",
    "bits": 1,
    "domain": "stream",
@@ -295440,6 +295526,28 @@
   },
   {
    "instance": "calendar_NW",
+   "port": "clk_cap",
+   "bits": 1,
+   "domain": "stream",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ]
+  },
+  {
+   "instance": "calendar_NW",
+   "port": "clk_mem",
+   "bits": 1,
+   "domain": "stream",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ]
+  },
+  {
+   "instance": "calendar_NW",
    "port": "rst_n",
    "bits": 1,
    "domain": "stream",
@@ -295452,6 +295560,28 @@
   {
    "instance": "calendar_SE",
    "port": "clk",
+   "bits": 1,
+   "domain": "stream",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ]
+  },
+  {
+   "instance": "calendar_SE",
+   "port": "clk_cap",
+   "bits": 1,
+   "domain": "stream",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ]
+  },
+  {
+   "instance": "calendar_SE",
+   "port": "clk_mem",
    "bits": 1,
    "domain": "stream",
    "kind": "clock",
@@ -295474,6 +295604,28 @@
   {
    "instance": "calendar_SW",
    "port": "clk",
+   "bits": 1,
+   "domain": "stream",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ]
+  },
+  {
+   "instance": "calendar_SW",
+   "port": "clk_cap",
+   "bits": 1,
+   "domain": "stream",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ]
+  },
+  {
+   "instance": "calendar_SW",
+   "port": "clk_mem",
    "bits": 1,
    "domain": "stream",
    "kind": "clock",
@@ -299289,8 +299441,52 @@
    ]
   },
   {
+   "instance": "epcal_NE",
+   "port": "clk_cap",
+   "bits": 1,
+   "domain": "stream",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ]
+  },
+  {
+   "instance": "epcal_NE",
+   "port": "clk_mem",
+   "bits": 1,
+   "domain": "stream",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ]
+  },
+  {
    "instance": "epcal_NW",
    "port": "clk",
+   "bits": 1,
+   "domain": "stream",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ]
+  },
+  {
+   "instance": "epcal_NW",
+   "port": "clk_cap",
+   "bits": 1,
+   "domain": "stream",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ]
+  },
+  {
+   "instance": "epcal_NW",
+   "port": "clk_mem",
    "bits": 1,
    "domain": "stream",
    "kind": "clock",
@@ -299311,8 +299507,52 @@
    ]
   },
   {
+   "instance": "epcal_SE",
+   "port": "clk_cap",
+   "bits": 1,
+   "domain": "stream",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ]
+  },
+  {
+   "instance": "epcal_SE",
+   "port": "clk_mem",
+   "bits": 1,
+   "domain": "stream",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ]
+  },
+  {
    "instance": "epcal_SW",
    "port": "clk",
+   "bits": 1,
+   "domain": "stream",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ]
+  },
+  {
+   "instance": "epcal_SW",
+   "port": "clk_cap",
+   "bits": 1,
+   "domain": "stream",
+   "kind": "clock",
+   "source": [
+    "hb_ckgen",
+    "pll_stream"
+   ]
+  },
+  {
+   "instance": "epcal_SW",
+   "port": "clk_mem",
    "bits": 1,
    "domain": "stream",
    "kind": "clock",
@@ -334037,7 +334277,7 @@
   {
    "id": "G-HOST-PROGRAM-INSTALL",
    "owner": "H-NETLIST / host programme targets",
-   "missing_rtl": "Programme-target configured proves descriptor bounds and one-launch arm only; no actual loaded-row completeness check is integrated for cp_cal/cp_fill/cp_ep/hc_tgt. Status aggregation PASS does not prove installation readiness. Integrate the actual loaded-row checker and compiled full-image evidence before native qualification.",
+   "missing_rtl": "Basic programme targets now track actual registered write pins, protect header/PC, scan referenced rows and invalidate stale image generations. Their component proof does not close MODE0 SVG programme+descriptor references, MODE1 striped command tables, or all required full production image/operation coverage. These typed loader installation checks remain native completeness gaps.",
    "affects": [],
    "note": "Semantic installation-safety gap; no input tie or fake producer closes it.",
    "region": "host_completion",

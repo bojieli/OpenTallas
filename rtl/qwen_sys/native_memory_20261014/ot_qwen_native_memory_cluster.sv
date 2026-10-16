@@ -10,7 +10,7 @@ module ot_qwen_native_memory_cluster #(
     parameter integer VM_MUT=0, CROM_MUT=0
 )(
     input wire clk,rst_n,
-    input wire [479:0] vm_leaf_ck,
+    input wire [486:0] vm_leaf_ck,     // [480..486] = ck_r7_56..62 (native-bank clock pins, 8808dc648)
     input wire [7:0] crom_ck,cbuf_ck,
     input wire token_start,
     input wire [17:0] token_position,
@@ -33,6 +33,10 @@ module ot_qwen_native_memory_cluster #(
     output wire q_committed,
     output wire [523:0] q,
     output wire q_done,
+    // VM write-commit visibility (39 write ports), to the compute join's visibility calendar
+    output wire [38:0] vm_write_commit_v,
+    output wire [311:0] vm_write_commit_line,
+    output wire [623:0] vm_write_commit_mask,
     input wire [63:0] crom_re,
     input wire [1535:0] crom_addr,
     input wire [5:0] crom_stage,
@@ -524,13 +528,22 @@ module ot_qwen_native_memory_cluster #(
         .ck_r6_61(vm_leaf_ck[477]),
         .ck_r6_62(vm_leaf_ck[478]),
         .ck_r6_63(vm_leaf_ck[479]),
+        .ck_r7_56(vm_leaf_ck[480]),
+        .ck_r7_57(vm_leaf_ck[481]),
+        .ck_r7_58(vm_leaf_ck[482]),
+        .ck_r7_59(vm_leaf_ck[483]),
+        .ck_r7_60(vm_leaf_ck[484]),
+        .ck_r7_61(vm_leaf_ck[485]),
+        .ck_r7_62(vm_leaf_ck[486]),
         .sa(su_request),.sq(su_response),.mx(max_write),
         .rb0(me_row0),.rb1(me_row1),.rb2(me_row2),.mee(me_enable),
         .ld(landed),.mo(),.svr(row_read),.svr_rdy(row_available),
         .svq(row_response),.svq_v(row_response_valid),.svw(row_write),
         .ar(attention_write),.xaw(x_replica_write),
         .q_epoch(q_epoch),.q_start(q_start),.q_committed(q_committed),
-        .q(q),.q_done(q_done),.fault(vm_fault)
+        .q(q),.q_done(q_done),
+        .write_commit_v(vm_write_commit_v),.write_commit_line(vm_write_commit_line),.write_commit_mask(vm_write_commit_mask),
+        .fault(vm_fault)
     );
     genvar group_id;
     generate for(group_id=0;group_id<8;group_id=group_id+1) begin: g_crom
