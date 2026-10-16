@@ -30,7 +30,7 @@
 // edge early.
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_hbm_su_static_pgslice #(
- parameter integer QID=0,G=0,READ_RETURN=10,WRITE_RETURN=7,FETCH_EXTRA_EDGES=2,MLAT=3,ALAT=3,LEAF=0,MUT=0
+ parameter integer QID=0,G=0,READ_RETURN=10,WRITE_RETURN=7,FETCH_EXTRA_EDGES=2,MLAT=3,ALAT=3,LEAF=0,MUT=0,MULTIRATE=0
 )(
  input wire pg_clk,
  input wire [255:0] clk_lane, input wire [127:0] clk_insert, input wire [31:0] rst_lane_n,
@@ -40,6 +40,7 @@ module ot_hbm_su_static_pgslice #(
  input wire clk_ctl,
  input wire [5:0] clk_side,
  input wire rst_n,
+ input wire bridge_rst_n, // phase-zero reset for MULTIRATE boundary only
  input wire [1741:0] control,
  input wire [2*30-1:0] vmr_cmd,
  input wire [2*39-1:0] vmw_cmd,
@@ -52,7 +53,12 @@ module ot_hbm_su_static_pgslice #(
  input wire [2*257-1:0] lg_rr, input wire [1:0] lg_w_done,
  output reg fault
 );
- localparam integer RR=READ_RETURN;
+ // Serial fill destination delay and stream leaf tap return are different
+ // contracts at3:4. n+12 response is sampled into fill at n+13; pinned store
+ // macros commit n+15. Stream leaf retains its native10/7 edge contract.
+ localparam integer RR=MULTIRATE ? 12 : READ_RETURN;
+ initial if(MULTIRATE && (READ_RETURN!=10 || WRITE_RETURN!=7))
+  $fatal(1,"SU multirate candidate requires source-proven stream tap10/7");
  function automatic integer lid(input integer n); lid=(n<16)?16*G+n:64+16*G+(n-16); endfunction
  // ------------------------------------------------------------------ lanes
  wire [31:0] vi_re,vm_we,kv_we,ro_v,l_fault,l_coll;
@@ -105,11 +111,26 @@ module ot_hbm_su_static_pgslice #(
   assign side_v=1'b0; assign side_x=32'd0; assign side_fn=3'd0; assign side_fn_out=3'd0;
  end
  // ------------------------------------------------------------------ VM bank leaves (port group G = banks 2G, 2G+1)
- wire [2*17-1:0] su_rq; wire [2*281-1:0] su_wq; wire [2*257-1:0] su_rr; wire [1:0] su_w_done,leaf_fault;
+ wire [2*17-1:0] su_rq; wire [2*281-1:0] su_wq; wire [2*257-1:0] su_rr; wire [1:0] su_w_done,leaf_fault,bridge_fault;
+ wire [33:0] leaf_rq; wire [561:0] leaf_wq; wire [513:0] leaf_rr; wire [1:0] leaf_done;
  for(genvar h=0;h<2;h=h+1)begin:g_leaf
+  if(MULTIRATE)begin:g_multirate
+   ot_hbm_su_multirate_bridge u_bridge(
+    .serial_clk(clk_ctl),.stream_clk(pg_clk),.rst_n(bridge_rst_n),
+    .serial_rq(su_rq[h*17+:17]),.serial_wq(su_wq[h*281+:281]),
+    .serial_rr(su_rr[h*257+:257]),.serial_done(su_w_done[h]),
+    .stream_rq(leaf_rq[h*17+:17]),.stream_wq(leaf_wq[h*281+:281]),
+    .stream_rr(leaf_rr[h*257+:257]),.stream_done(leaf_done[h]),.fault(bridge_fault[h]));
+  end else begin:g_same_clock
+   assign leaf_rq[h*17+:17]=su_rq[h*17+:17];
+   assign leaf_wq[h*281+:281]=su_wq[h*281+:281];
+   assign su_rr[h*257+:257]=leaf_rr[h*257+:257];
+   assign su_w_done[h]=leaf_done[h];
+   assign bridge_fault[h]=1'b0;
+  end
   ot_hbm_su_static_vm_bank_leaf #(.QID(QID),.B(2*G+h),.READ_RETURN(READ_RETURN),.WRITE_RETURN(WRITE_RETURN)) u_leaf(
-   .clk(pg_clk),.rst_n(rst_n),.su_rq(su_rq[h*17+:17]),.su_wq(su_wq[h*281+:281]),.su_rr(su_rr[h*257+:257]),
-   .su_w_done(su_w_done[h]),.lg_rq(lg_rq[h*17+:17]),.lg_wq(lg_wq[h*281+:281]),.lg_rr(lg_rr[h*257+:257]),
+   .clk(pg_clk),.rst_n(rst_n),.su_rq(leaf_rq[h*17+:17]),.su_wq(leaf_wq[h*281+:281]),.su_rr(leaf_rr[h*257+:257]),
+   .su_w_done(leaf_done[h]),.lg_rq(lg_rq[h*17+:17]),.lg_wq(lg_wq[h*281+:281]),.lg_rr(lg_rr[h*257+:257]),
    .lg_w_done(lg_w_done[h]),.fault(leaf_fault[h]));
  end
  // ------------------------------------------------------------------ FILL: request, destination delay line, one stage
@@ -217,7 +238,7 @@ module ot_hbm_su_static_pgslice #(
  // ------------------------------------------------------------------ sticky fault
  always @(posedge clk_ctl or negedge rst_n)
   if(!rst_n)fault<=1'b0;
-  else if((|l_fault)||(|l_coll)||(|leaf_fault)||(|st_conflict)||(|st_id_fault)||(|cmd_far)||(|rf_src_bad)||
+  else if((|l_fault)||(|l_coll)||(|leaf_fault)||(|bridge_fault)||(|st_conflict)||(|st_id_fault)||(|cmd_far)||(|rf_src_bad)||
           (|rf_drain_bad)||red_bad||side_fault)fault<=1'b1;
 endmodule
 `default_nettype wire
