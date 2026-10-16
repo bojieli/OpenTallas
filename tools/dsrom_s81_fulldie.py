@@ -421,7 +421,8 @@ def bound_views(root=None):
     the view-binding table.  Hard errors: unknown schema, an entry that is not QUALIFIED, a missing file, a file whose
     sha256 differs from the table (the view changed after it was qualified), a LEF whose MACRO is not the master, a
     corner liberty without that cell."""
-    key = (VIEW_BINDING, str(root or ROOT))
+    diagnostic = os.environ.get('OT_S81_DIAGNOSTIC_CLOSED_VIEWS') == '1'
+    key = (VIEW_BINDING, str(root or ROOT), diagnostic)
     if key in _BOUND:
         return _BOUND[key]
     out = {}
@@ -433,9 +434,9 @@ def bound_views(root=None):
         if tab.get('schema') != VIEW_BINDING_SCHEMA:
             raise SystemExit(f'VIEW_BINDING: {tp} schema {tab.get("schema")!r}, expected {VIEW_BINDING_SCHEMA!r}')
         for mst, rec in sorted(tab.get('bound', {}).items()):
-            if rec.get('verdict') != 'QUALIFIED':
+            if rec.get('verdict') != 'QUALIFIED' and not (diagnostic and rec.get('verdict') == 'DIAGNOSTIC_CLOSED'):
                 raise SystemExit(f'VIEW_BINDING: {mst} is in the table without a QUALIFIED verdict ({rec.get("verdict")!r})')
-            r_ = dict(job=rec.get('job'), export_dir=rec.get('export_dir'))
+            r_ = dict(job=rec.get('job'), export_dir=rec.get('export_dir'), binding_scope=rec.get('verdict'))
             for k_ in ('lef', 'tt', 'ff', 'ss'):
                 f_ = rec.get('files', {}).get(k_) or {}
                 fp = _view_path(f_.get('path', ''), root)
@@ -540,7 +541,8 @@ def apply_view_binding(m, pdir):
                 raise SystemExit(f'VIEW_BINDING: {it.master} LEF {v["lef"]} does not match the die netlist ports: '
                                  + '; '.join(faults[:8]))
             r_ = rec[it.master] = dict(lef=v['lef'], libs={c: v[c] for c in ('tt', 'ff', 'ss')}, size_um=[v['w'], v['h']],
-                                       generated_slot_um=[round(it.w, 3), round(it.h, 3)], instances=0)
+                                       generated_slot_um=[round(it.w, 3), round(it.h, 3)], instances=0,
+                                       binding_scope=v.get('binding_scope', 'QUALIFIED'))
         if it.orient != 'R0':
             raise SystemExit(f'VIEW_BINDING: {it.master} instance {it.name} is {it.orient}: bound views are placed R0 only')
         if v['w'] > it.w + 1e-6 or v['h'] > it.h + 1e-6:

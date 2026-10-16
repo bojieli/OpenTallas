@@ -12,7 +12,8 @@ export's job (~/.local/state/closure_loop/jobs/<job>.json):
   current  the job is the latest CLOSED export of that master (newest finished_at); older views are listed, not bound
 
 It never relaxes a gate: native launch/capture/spread audits and production-throughput qualification stay owed per tile
-and are listed as open in the table ('native_open').  The generator still refuses any binding whose pins / outline /
+and are listed as open in the table ('native_open'). Rows use DIAGNOSTIC_CLOSED and require
+OT_S81_DIAGNOSTIC_CLOSED_VIEWS=1, so a trial cannot promote them to native QUALIFIED.  The generator still refuses any binding whose pins / outline /
 orientation do not fit the die (tools/dsrom_s81_fulldie.py apply_view_binding); with OT_S81_VIEW_BINDING_SKIP_MISFIT=1 a
 pathfinding trial records such masters as misfits (pushed to their owners) instead of stopping.
 
@@ -25,6 +26,7 @@ import glob
 import hashlib
 import json
 import re
+from view_binding import export_fix
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -58,6 +60,7 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--out", required=True)
     ap.add_argument("--jobs", default=str(JOBS))
+    ap.add_argument("--exclude-master", action="append", default=[], help="Known functional/native defect: do not bind this master even diagnostically")
     a = ap.parse_args()
     cands = {}
     rejected = {}
@@ -65,7 +68,7 @@ def main():
         ab = Path(ab)
         d = ab.parent
         master = d.name
-        if not S81.match(master):
+        if not S81.match(master) or master in a.exclude_master:
             continue
         rel = d.relative_to(ROOT)
         try:
@@ -93,6 +96,11 @@ def main():
                     continue
                 if not b.get("ok"):
                     why.append(f"bench {bn} not as expected ({b.get('expect')})")
+        # Reuse the strict export identity gate: all bound ETMs must replay
+        # their verdict SDC and match the files recorded by that export.
+        ok_export, export_why = export_fix(dict(master=master, export_dir=str(rel)))
+        if not ok_export:
+            why.append(export_why)
         files = {}
         for k, suf in (("lef", ".lef"), ("tt", "_tt.lib"), ("ff", "_ff.lib"), ("ss", "_ss.lib")):
             p = d / f"{master}{suf}"
@@ -114,7 +122,7 @@ def main():
     for master, es in cands.items():
         es.sort(key=lambda e: str(e.get("finished_at") or ""), reverse=True)
         best = es[0]
-        bound[master] = dict(verdict="QUALIFIED", export_dir=best["export_dir"], job=best["job"], files=best["files"],
+        bound[master] = dict(verdict="DIAGNOSTIC_CLOSED", export_dir=best["export_dir"], job=best["job"], files=best["files"],
                              closure=best["closure"], gate="closed+export+lint+bench+current (view_binding_closed.py)",
                              native_open="tile native launch/capture/spread audit and production-throughput bench stay "
                                          "with the tile owner; this binding is the die-context view, not qualification")
@@ -122,6 +130,8 @@ def main():
             superseded[master] = [e["export_dir"] for e in es[1:]]
     out = dict(schema=SCHEMA, rule=__doc__.split("\n\n")[1].strip(), builder="tools/s81/view_binding_closed.py",
                bound=dict(sorted(bound.items())), superseded=superseded,
+               excluded_masters=sorted(a.exclude_master),
+               scope="CLOSED_ROUTE_DIAGNOSTIC_ONLY_NOT_NATIVE_QUALIFICATION",
                not_bound={k: v for k, v in sorted(rejected.items()) if k not in bound})
     Path(a.out).parent.mkdir(parents=True, exist_ok=True)
     Path(a.out).write_text(json.dumps(out, indent=1) + "\n")
