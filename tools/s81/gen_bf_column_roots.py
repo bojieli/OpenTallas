@@ -7,7 +7,7 @@ physical phi-R delivery. No asynchronous exception or dynamic scheduling exists.
 This is source plumbing for subsequent local physical leaves, not a flat closure.
 """
 from pathlib import Path
-import hashlib,json
+import hashlib,json,re
 ROOT=Path(__file__).resolve().parents[2]
 
 
@@ -41,6 +41,8 @@ def generate():
     start=base.index('    generate for (l = 0; l < 16; l = l + 1) begin : g_l')
     end=base.index('    end endgenerate',start)+len('    end endgenerate')
     body=base[start:end].replace('l < 16','l < 4')
+    for a,b in [('v_s','v_d'),('w_s','w_d'),('x_s','x_d'),('t_p','t_d')]:
+        body=re.sub(r'\b'+a+r'\b',b,body)
     body=body.replace("l == 3 ? 1'b0", "GROUP == 0 && l == 3 ? 1'b0")
     body=body.replace('u_tl (.fclk(fclk)', 'u_tl (.fclk(lane_fclk)')
     header="""`timescale 1ns/1ps
@@ -71,6 +73,12 @@ module ot_v41_bf_lane4 #(
 `else
     wire lane_fclk=fclk;
 `endif
+    // Relocated final parent XST stage: no end-to-end cycle is added.
+    wire bclk,brst;
+    ot_v41_tile_clk u_boundary(.fclk(lane_fclk),.rst_pin(rst_pin),.ze_d(ze_d),.gclk(bclk),.rst_n(brst));
+    reg v_d;reg[63:0]w_d,x_d;reg[TW-1:0]t_d;
+    always @(posedge bclk or negedge brst)if(!brst)v_d<=1'b0;else v_d<=v_s;
+    always @(posedge bclk)begin w_d<=w_s;x_d<=x_s;t_d<=t_p;end
     genvar l;
 """
     leaf=ROOT/'rtl/v41rom/ot_v41_bf_lane4.sv';leaf.write_text(header+body+'\nendmodule\n')
@@ -92,6 +100,13 @@ module ot_v41_bf_lane4 #(
         end
     end endgenerate"""
     s=s[:start]+newbody+s[end:]
+    # Move one uniform operand/tag/valid XST stage into the lane4 pin boundary.
+    # The compiler still prices total XST; both data and tags lose one parent
+    # edge and regain it at the child. Input tag now enters an actual pin flop.
+    bstart=s.index('    localparam integer HW =')
+    head=s[:bstart];body=s[bstart:]
+    body=re.sub(r'\bXST\b','PARENT_XST',body)
+    s=head+'    localparam integer PARENT_XST=XST-1;\n'+body
     # Pairwise reductions form two further real leaves (8 adders, then4+2+1).
     reduction="""`timescale 1ns/1ps
 // GENERATED from the original golden-order pairwise reduction; zero extra edges.
@@ -166,7 +181,6 @@ endmodule
     path=ROOT/'rtl/v41rom/ot_v41_bf_col.sv';base_col=path.read_text()
     s=replace_once(base_col,'module ot_v41_bf_col #(','module ot_v41_bf_col_roots #(')
     # Locate real port declaration without relying on generated text spacing.
-    import re
     m=re.search(r'(    input\s+wire\s+clk\s*,)',s);assert m
     s=s[:m.start()]+'    input wire [8:0] leaf_clk, // fp0, fp1, segment, four lane groups, two reduction roots\n'+s[m.start():]
     a='    // QPIPE: this macro\'s own copy'
@@ -222,7 +236,7 @@ endmodule
     s=replace_once(s,'    wire bk_fault;',"""`ifndef SYNTHESIS
     initial if (!(NSEG==8 && NCH==16 && NCHB==8 && MTP==1 && BP==0 &&
         FAST==1 && PP==1 && QPIPE==1 && QP_CAP==0 && QP_P1==1 && QP_CSAM==10 &&
-        QZ_NS==8 && QX==10 && QBF==2 && TCG==1))
+        QZ_NS==8 && QX==10 && QBF==2 && TCG==1 && BXST==2 && FXST==2))
         $fatal(1, \"ten-root extraction supports the source-pinned production column only\");
 `endif
     wire q_v,q_err;wire[31:0]q_val;wire[TG:0]q_tag_native;
@@ -251,7 +265,7 @@ endmodule
     w=replace_once(w,'    ot_v41_bf_col #(','    ot_v41_bf_col_roots #(')
     w=replace_once(w,'.clk(w_clk),','.clk(w_clk), .leaf_clk(leaf_ck),')
     rp=ROOT/'rtl/dsrom_sys/s81_die_bind/dsfd_bf_col_roots.sv';rp.write_text(w)
-    rec={'status':'SOURCE_ONLY_NOT_PHYSICAL_CLOSURE','cycles_added':0,'clock_contract':'10 same-PLL833.333ps phase0 roots; physical leaf delivery phi-R individually; ordinary synchronous timing on every cross-root path',
+    rec={'status':'SOURCE_ONLY_NOT_PHYSICAL_CLOSURE','cycles_added':0,'relocated_parent_XST_edges':1,'added_RTL_register_bits':50,'register_cost_note':'4x142 data bits+4x2 localclock/reset copies minus526 shared XST bits; mapped area still measured independently','clock_contract':'10 same-PLL833.333ps phase0 roots; physical leaf delivery phi-R individually; ordinary synchronous timing on every cross-root path',
          'inputs':{str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in [path,ROOT/'rtl/v41rom/ot_v41_bf16_lanes3.sv',wp]},
          'outputs':{str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in [leaf,red,fp,segment,lp,cp,rp]},
          'physical_leaf_status':'Actual source hierarchy extracted: lane4 x4, two BF reductions, FP4 chain/pair leaves and segment leaf. Parent retains real control/input pipelines and two ROM macros. Hardening, clock pins, all incident cuts and native boundary proof remain pending.',

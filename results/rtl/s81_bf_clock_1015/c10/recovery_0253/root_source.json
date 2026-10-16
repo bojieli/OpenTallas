@@ -1,6 +1,9 @@
 {
   "status": "SOURCE_ONLY_NOT_PHYSICAL_CLOSURE",
   "cycles_added": 0,
+  "relocated_parent_XST_edges": 1,
+  "added_RTL_register_bits": 50,
+  "register_cost_note": "4x142 data bits+4x2 localclock/reset copies minus526 shared XST bits; mapped area still measured independently",
   "clock_contract": "10 same-PLL833.333ps phase0 roots; physical leaf delivery phi-R individually; ordinary synchronous timing on every cross-root path",
   "inputs": {
     "rtl/v41rom/ot_v41_bf_col.sv": "0364d57adda8738f4aec1437a710dcd079ea0ee81dcbb3e341076ba717673f3a",
@@ -8,12 +11,12 @@
     "rtl/dsrom_sys/s81_die_bind/dsfd_bf_col.sv": "2dc852a281fca190fbfe3ac029ebf67e192340edf66c28e3d7d540e7b00041f3"
   },
   "outputs": {
-    "rtl/v41rom/ot_v41_bf_lane4.sv": "3084eca9a79b186f385f8b2eedcab71cd4402511215c5daf3a81fb73ca7b7bad",
+    "rtl/v41rom/ot_v41_bf_lane4.sv": "fbd93077394044fb2e459b536f8579cd0119dc3468da1dff2397b9e0e3e25981",
     "rtl/v41rom/ot_v41_bf_reduce.sv": "caa181d35e615f8f70a83ae6c5fe39bde58c87afd8b883f2bfe5f93ef43f9166",
     "rtl/v41rom/ot_v41_bf_fp4_leaves.sv": "0b559f5b1e5f115c3c2d3a79e24d6c70fb31576d71d0d9b01f8d0f246b8924ff",
     "rtl/v41rom/ot_v41_bf_segment_leaf.sv": "c350fb583dab9dccce038c001b10f08f6b75092a4fa3d75a7c400b62e3d65212",
-    "rtl/v41rom/ot_v41_bf16_lanes3_roots.sv": "04f4c4f35c235292dd7376320938ca401c35cb933c4500b4977768e27629231e",
-    "rtl/v41rom/ot_v41_bf_col_roots.sv": "2e979068077a95c0d475bee9fdf0e49a85b59695225413e67290edddcaa4582e",
+    "rtl/v41rom/ot_v41_bf16_lanes3_roots.sv": "7d9766df8b941cd29668e35911bd7198ac27a1168888a50df1b9da35955bc0e5",
+    "rtl/v41rom/ot_v41_bf_col_roots.sv": "27502ad036f8c68ab1caebdd115f675b6356e196b295692edb88ea5074299cc1",
     "rtl/dsrom_sys/s81_die_bind/dsfd_bf_col_roots.sv": "7a8dc0f1973982ca6b859dc59e2ebf9a2ad1ab89ad182f0eacd4597c597f2a76"
   },
   "physical_leaf_status": "Actual source hierarchy extracted: lane4 x4, two BF reductions, FP4 chain/pair leaves and segment leaf. Parent retains real control/input pipelines and two ROM macros. Hardening, clock pins, all incident cuts and native boundary proof remain pending.",
