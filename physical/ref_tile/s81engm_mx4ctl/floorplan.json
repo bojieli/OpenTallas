@@ -1,0 +1,97 @@
+{
+ "schema": "opentallas.ref_tile.floorplan.v1",
+ "name": "s81engm_mx4ctl",
+ "top": "ot_s81_mx4_ctl",
+ "kind": "tile",
+ "die": [
+  0,
+  0,
+  172.8,
+  64.8
+ ],
+ "core": [
+  2.16,
+  2.16,
+  170.64000000000001,
+  62.64
+ ],
+ "why": "spec outline (exact: the closed view's sub-slot)",
+ "std_area_um2": null,
+ "layer_contract": {
+  "children": {},
+  "pg_layer": "M5",
+  "rlayers": [
+   "M2",
+   "M5"
+  ],
+  "strap_layer": "M6",
+  "layer_cap": "M5",
+  "cap_basis": "contract"
+ },
+ "pins": {
+  "N": [
+   "cdesc2",
+   "cdesc3"
+  ],
+  "S": [
+   "cdesc0",
+   "cdesc1"
+  ],
+  "W": [
+   "ck",
+   "rst",
+   "c_cmd",
+   "c_done",
+   "c_st"
+  ],
+  "E": [
+   "desc_v",
+   "desc_rv",
+   "desc_d",
+   "cl_done",
+   "cl_fault",
+   "cl_vtag",
+   "cl_wqv",
+   "desc_rq",
+   "desc_row"
+  ]
+ },
+ "clock_port": "ck",
+ "blocks": [],
+ "findings": [],
+ "referenced": [
+  "rtl/dsrom_sys/engram/mix/dsfd_engram_mix4_flat.sv",
+  "rtl/dsrom_sys/s81_ctrl/ot_s81_slab_ep.sv",
+  "rtl/dsrom_sys/s81_ctrl/ot_s81_engine_adapter.sv",
+  "rtl/lib/ot_async_fifo.sv",
+  "rtl/lib/ot_reset_sync.sv",
+  "physical/ref_tile/s81engm_mx4ctl/kit.env",
+  "physical/ref_tile/s81engm_mx4ctl/clock.sdc",
+  "physical/ref_tile/s81engm_mx4ctl/signoff.sdc",
+  "physical/ref_tile/s81engm_mx4ctl/pdn.tcl",
+  "physical/ref_tile/s81engm_mx4ctl/pre_cts.tcl",
+  "physical/ref_tile/s81engm_mx4ctl/post_cts.tcl",
+  "physical/ref_tile/s81engm_mx4ctl/post_grt.tcl",
+  "physical/ref_tile/s81engm_mx4ctl/pre_drt.tcl",
+  "physical/ref_tile/s81engm_mx4ctl/pre_fill.tcl",
+  "physical/ref_tile/s81engm_mx4ctl/post_fill.tcl",
+  "physical/ref_tile/s81engm_mx4ctl/pre_grt.tcl",
+  "physical/ref_tile/s81engm_mx4ctl/post_drt.tcl",
+  "tools/ref_tile/ref_route.sh",
+  "physical/qwen_die_masters/io_ref_skew.sdc",
+  "physical/qwen_die_masters/io_plain.sdc",
+  "physical/qwen_die_masters/repair_budget.tcl",
+  "physical/qwen_die_masters/pre_cts_skew.tcl",
+  "physical/qwen_die_masters/pre_ref_skew.tcl",
+  "physical/qwen_die_masters/post_plain.tcl",
+  "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
+  "physical/common_flow/grt_macro_top_layer.tcl",
+  "physical/qwen_die_masters/io_flop_at_pins.tcl",
+  "physical/qwen_die_masters/out_flop_release.tcl",
+  "physical/dsrom_window_source/leaf_inhold.tcl",
+  "physical/dsrom_window_source/leaf_inhold_release.tcl",
+  "physical/ref_tile/s81engm_mx4ctl/pre_gpl.tcl",
+  "physical/ref_tile/s81engm_mx4ctl/pre_dpl.tcl",
+  "physical/common_flow/pin_reg_split.tcl"
+ ]
+}
