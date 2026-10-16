@@ -27,6 +27,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from view_case import lef_pins, lef_xy  # noqa: E402
+import clock_sites
 import die_clock_tree as dct  # noqa: E402
 
 GRANTS = ROOT / 'results/arch/hier_contract_1015/hbm_v15.json'
@@ -85,7 +86,22 @@ def entry_cap(lib, ff=2.0):
     return n
 
 
-def synth_lef(name, w, h, pins, path):
+def _minus(rects, keepout):
+    """rectangles minus keep-out rectangles (x0, y0, x1, y1), as disjoint rectangles"""
+    for (c0, d0, c1, d1) in keepout:
+        nr = []
+        for (a0, b0, a1, b1) in rects:
+            if c0 >= a1 or c1 <= a0 or d0 >= b1 or d1 <= b0:
+                nr.append((a0, b0, a1, b1)); continue
+            for r in ((a0, b0, c0, b1), (c1, b0, a1, b1), (max(a0, c0), b0, min(a1, c1), d0),
+                      (max(a0, c0), d1, min(a1, c1), b1)):
+                if r[2] - r[0] > 0.01 and r[3] - r[1] > 0.01:
+                    nr.append(r)
+        rects = nr
+    return rects
+
+
+def synth_lef(name, w, h, pins, path, keepout=()):
     """Abstract of a SYNTH view: real outline, pins at the given (face, lo, hi) spans, every bit on a track (M5 N/S at
     x = 0.012 + 0.048 k, M4 E/W at y = 0.012 + 0.048 k), OBS M1..M5 (the die routes M6+ over it, M4/M5 in channels)."""
     L = ['VERSION 5.7 ;', 'BUSBITCHARS "[]" ;', 'DIVIDERCHAR "/" ;', f'MACRO {name}', '  CLASS BLOCK ;',
@@ -112,7 +128,12 @@ def synth_lef(name, w, h, pins, path):
             L += [f'  PIN {bit}', f'    DIRECTION {d.upper()} ;',
                   '    USE CLOCK ;' if re.search(r'clk', pn) else '    USE SIGNAL ;', '    PORT', f'      LAYER {lay} ;',
                   f'      RECT {r[0]:.3f} {r[1]:.3f} {r[2]:.3f} {r[3]:.3f} ;', '    END', f'  END {bit}']
-    L += ['  OBS'] + [f'    LAYER M{k} ;\n    RECT 0 0 {w:.3f} {h:.3f} ;' for k in range(1, 6)] + ['  END', f'END {name}', '', 'END LIBRARY']
+    # die-owned feedthrough column / row (grant reserved_channels, H-SM 10-16 owner 07:30): no OBS on M1-M6 there, so the
+    # die places relays / clock repeaters and routes through; the rest of the outline stays OBS M1-M5 as before
+    ko = [(c['x_um'][0], c['y_um'][0], c['x_um'][1], c['y_um'][1]) for c in keepout]
+    obs = _minus([(0.0, 0.0, w, h)], ko)
+    L += ['  OBS'] + [f'    LAYER M{k} ;\n' + '\n'.join(f'    RECT {r[0]:.3f} {r[1]:.3f} {r[2]:.3f} {r[3]:.3f} ;' for r in obs)
+                      for k in range(1, 6)] + ['  END', f'END {name}', '', 'END LIBRARY']
     Path(path).write_text('\n'.join(L) + '\n')
 
 
@@ -176,6 +197,13 @@ def main():
     ap.add_argument('--paths', type=int, default=200000)
     ap.add_argument('--clock-pads', type=Path)
     ap.add_argument('--ckgen', default='hb_ckgen')
+    ap.add_argument('--clock-mode', default='hbm=quad,stream=htree',
+                    help='per domain: htree = geometric H-tree to <= bin_um bins + one pad level (0030); quad = d1/d2 median '
+                         'bisection. 0030 measured (service+SM case, no repeater in a hard outline): hbm quad 7.9 ns/1.6k '
+                         'bufs vs htree 12.4/2.9k; stream htree 13.8 ns/22k vs quad 19.2/46.7k')
+    ap.add_argument('--clock-bin-um', type=float, default=1600.0)
+    ap.add_argument('--clock-in-reserved-channels', action='store_true',
+                    help='allow die clock repeaters in the slot reserved_channels (only when the views carve them)')
     a = ap.parse_args()
     G = json.loads(GRANTS.read_text()); P = json.loads(PLAN.read_text())
     slots = {s['name']: s for s in G['slots']}
@@ -229,7 +257,7 @@ def main():
     pins, miss, extra = grant_pins(s0, sm_ports)
     assert not miss, ('SM ports whose grant pins do not cover the view port', miss)
     kinds['sm_grant_ports_absent_in_view'] = extra
-    synth_lef(SM_M, s0['outline']['w'], s0['outline']['h'], pins, vd / f'{SM_M}.lef')
+    synth_lef(SM_M, s0['outline']['w'], s0['outline']['h'], pins, vd / f'{SM_M}.lef', keepout=s0.get('reserved_channels', []))
     kinds[SM_M] = 'SYNTH (hierarchical mapped netlist ETM, -DOT_SMH_FC_HIER; outline + pins = v6 grant)'
     MS = [PHY_M, CTL_M, SVG_M, SM_M]
     if a.stn_view:
@@ -438,14 +466,18 @@ def main():
                         nr.append(r)
             rects = nr
         return rects
+    # 10-16 (coordinator + VIS-HBM D1): die clock repeaters never sit inside a hard block outline. The SM grants' reserved
+    # feedthrough column/row are NOT carved out of the SYNTH abstracts (OBS M1-M5 over the whole outline), so d2 put
+    # 15,671 repeaters FIRM on top of SMs. Only --clock-in-reserved-channels (a view that really carves them) restores it.
+    carve = minus_channels if a.clock_in_reserved_channels else (lambda n, x0, y0, w, h, o: [(x0, y0, x0 + w, y0 + h)])
     obs = []
     for l, v in leaves.items():
         if v['m'] == STN_M:      # relay stages are small: the clock wire crosses them (no repeater on them, Grid margin)
             continue
-        obs += minus_channels(l, v['x'], v['y'], v['w'], v['h'], v['o'])
+        obs += carve(l, v['x'], v['y'], v['w'], v['h'], v['o'])
     for n, b in P.items():
         if isinstance(b, dict) and 'x' in b and n.split('_')[0] not in ('phy', 'pc', 'sm'):
-            obs += minus_channels(n, b['x'], b['y'], b['w'], b['h'], b.get('orient', 'R0'))
+            obs += carve(n, b['x'], b['y'], b['w'], b['h'], b.get('orient', 'R0'))
     trees = {}
     clkpins = defaultdict(lambda: defaultdict(list))   # domain -> inst -> [pins]
     for l, v in leaves.items():
@@ -454,8 +486,7 @@ def main():
             if d:
                 clkpins[d][l].append(p)
     for di, (dom, insts) in enumerate(sorted(clkpins.items())):
-        rx = ck['origin']['x'] + ck['outline']['w'] * (0.3 + 0.4 * di)
-        ry = ck['origin']['y'] + ck['outline']['h'] / 2
+        rx, ry = dct.ckgen_pin_xy(ck, f'pll_{dom}')     # the domain's die tree starts at its ckgen output pin
         sinks = []
         for l, pl in insts.items():
             v = leaves[l]
@@ -464,7 +495,7 @@ def main():
             sinks.append((l, sorted(pl)[0], x, y))
         dp = pads.get(dom, {})
         t = dct.build(W, H, obs, (rx, ry), sinks, lambda inst: re.search(r'(SW|SE|NW|NE)', inst).group(1),
-                      leaf_pads=dp.get('leaf'), quad_pads=dp.get('quadrant'))
+                      leaf_pads=dp.get('leaf'), quad_pads=dp.get('quadrant'), mode=dict(kv.split('=') for kv in a.clock_mode.split(',')).get(dom, 'htree'), bin_um=a.clock_bin_um)
         pre = {'hbm': 'dkh', 'stream': 'dks'}[dom]
         ren = lambda s: s.replace('dck_', pre + '_')
         port = f'clk_{dom}'
@@ -480,6 +511,7 @@ def main():
                     l2.append((ld[0], ren(ld[1])))
             tnets.append((ren(n), d2, l2))
         trees[dom] = dict(buffers=bufs, nets=tnets, model=t['model'], port=port)
+    clock_sites.allocate(trees, W, H, obs)
     leafclk = {}
     for dom, t in trees.items():
         for n, d, loads in t['nets']:
@@ -561,7 +593,7 @@ def main():
     pl = [f'place_inst -name {l} -location {{{v["x"]:.3f} {v["y"]:.3f}}} -orientation {v["o"]} -status FIRM'
           for l, v in sorted(leaves.items())]
     for t in trees.values():
-        pl += [f'place_inst -name {b} -location {{{x:.3f} {y:.3f}}} -orientation R0 -status FIRM' for b, c, x, y in t['buffers']]
+        pl += [f'place_inst -name {b} -location {{{x:.3f} {y:.3f}}} -orientation {clock_sites.orientation(y)} -status FIRM' for b, c, x, y in t['buffers']]
     ms = tuple(MS)
     sinks = ' '.join(sorted(leaves))
     tcl = f'''# H-DIE v15 whole-die service+SM GRT + TT/FF STA (generated by tools/hbm_die_v15/die_case.py)

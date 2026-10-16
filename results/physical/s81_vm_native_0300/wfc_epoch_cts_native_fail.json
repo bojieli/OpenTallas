@@ -1,0 +1,42 @@
+{
+ "schema": "opentallas.ref-tile.cts-native-probe.v1",
+ "scope": "CTS placement RC diagnostic; NOT a routed native qualification",
+ "kit": "physical/ref_tile/ot_s81_vm_fault_x43_s_w1_native_1016_r1",
+ "remote_host": "ot-epyc4",
+ "remote_run": "/srv/opentallas-scratch/claude/ref_gate/ot_s81_vm_fault_x43_s_w1_native_1016_r1-20261016-033209",
+ "gate_source_commit": null,
+ "gate_result_sha256": "9de09de51a71ad997d16340cd2fea17013d6419fbf144cc4f27ef7050ae3525a",
+ "library_sha256": "a53721df613471dff9bab74457e5f9f109b5b1a306921ec12bb9088c3583cf32",
+ "insertion_sha256": "b0ca3fcaf3fd42a49542bd77e713a79d45d3186bc2ba08c24929b85be43a6bf8",
+ "probe_tcl_sha256": "03e5b45c2bc10b7745823aa59fc9d3ab21f3a05cd8d27df5bcc4b909c6b53900",
+ "launch": {
+  "ps": 171.53289999999998,
+  "pin": "fault"
+ },
+ "capture": {
+  "ps": 195.45220999999998,
+  "pin": "bpar[1]"
+ },
+ "launch_over": 0,
+ "capture_over": 1,
+ "comb_pins": [],
+ "clock_refs": {
+  "s_ck": {
+   "rise": 47.3,
+   "fall": 51.81766,
+   "min": 45.5373,
+   "max": 47.72022,
+   "src": "insertion.json boundary mean",
+   "bmin": 46.7,
+   "bmax": 47.7,
+   "n": 9
+  }
+ },
+ "spread_ps": {
+  "s_ck": 1.0
+ },
+ "measured_reference_coverage": true,
+ "diagnostic_pass": false,
+ "source_commit": "38272f3ec386ad837472cd5b3608b4075f616bb0",
+ "disposition": "REJECTED_BEFORE_ROUTE; phase-specific input capture successor required"
+}

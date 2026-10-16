@@ -291,6 +291,7 @@ endmodule
 module ot_qfd_xs_leaf #(
     parameter integer EXTERNAL_WD_CAPTURE = 0, // opt-in: WD already captured by actual external512b masters
     parameter integer FILL_PIPE = 0,     // opt-in: separate input/output fill registers (+1 edge per leaf hop)
+    parameter integer READ_PIN_PIPE = 0, // opt-in raw read boundary capture (+1 read edge; writes unchanged)
     parameter integer BANK_PIPE = 0,     // opt-in: four local32-entry banks, registered before final4:1 (+1 read edge)
     parameter integer NCH = 4,           // leaves in a chain
     parameter integer MUT = 0            // 2: tile 1's reads return tile 0's data (swapped tile) -- must FAIL
@@ -321,6 +322,19 @@ module ot_qfd_xs_leaf #(
     output reg  [63:0]   q,
     output reg           q_bad
 );
+    wire rp_v, rp_t, rp_ep;
+    wire [27:0] rp_p;
+    generate if (READ_PIN_PIPE != 0) begin : g_read_pin
+        // Exactly one raw pin capture. No read decoding or muxing precedes it.
+        reg v, t, ep;
+        reg [27:0] p;
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) v <= 1'b0; else v <= r_v;
+        always @(posedge clk) begin t <= r_t; ep <= r_ep; p <= r_p; end
+        assign rp_v=v; assign rp_t=t; assign rp_ep=ep; assign rp_p=p;
+    end else begin : g_read_direct
+        assign rp_v=r_v; assign rp_t=r_t; assign rp_ep=r_ep; assign rp_p=r_p;
+    end endgenerate
     function automatic integer ot_qfd_xs_nrep(input integer w, input integer ln, input integer lv);
         integer loads;
         begin
@@ -428,12 +442,12 @@ module ot_qfd_xs_leaf #(
         end
         // sequencer: the request's element 0 loads the select registers from the pins; elements 1 .. 3 from the held
         // request (this tile's held request hp / hep) on the next three edges
-        wire       req = r_v && (r_t == gt);              // from the pins
+        wire       req = rp_v && (rp_t == gt);              // from the pins
         reg  [1:0] el;                                    // element index now in the select registers
         reg        sv;                                    // select registers hold an element of a request
         reg        hep;                                   // the held request (pin registers of this tile)
         reg [27:0] hp;
-        always @(posedge clk) if (req) begin hep <= r_ep; hp <= r_p; end
+        always @(posedge clk) if (req) begin hep <= rp_ep; hp <= rp_p; end
         always @(posedge clk or negedge rst_n)
             if (!rst_n) begin sv <= 1'b0; el <= 2'd0; end
             else if (req) begin sv <= 1'b1; el <= 2'd0; end
@@ -445,7 +459,7 @@ module ot_qfd_xs_leaf #(
         assign done[gt] = asv && (ael == 2'd3);
         // next element's select: from the pins (new request) or the held request
         wire [1:0] nel   = req ? 2'd0 : el + 1'b1;
-        wire [6:0] nsel  = req ? {r_ep, r_p[5:0]} : {hep, hp[7*nel +: 6]};
+        wire [6:0] nsel  = req ? {rp_ep, rp_p[5:0]} : {hep, hp[7*nel +: 6]};
         localparam integer SRC = (MUT == 2 && gt == 1) ? 0 : gt;
         if (BANK_PIPE == 0) begin : g_flat
             wire [RSW-1:0] sr;
@@ -651,10 +665,11 @@ module ot_qfd_xhead #(
     parameter integer SMIN = 7,
     parameter integer SMAX = 11,
     parameter integer NATIVE_AFFINE = 0,
+    parameter integer LEAF_READ_PIN_PIPE = 0, // explicit extra raw read pin capture, compiler-visible
     parameter integer LEAF_BANK_PIPE = 0, // candidate real leaf pipeline, one extra read edge
     parameter integer REQ_PIPE = 0,       // read-request relay stages after lr (flat column: head -> far leaf ~650 um
                                           // in one edge fails TT; +REQ_PIPE read edges, compiler-visible through DX)
-    parameter integer DX   = 10 + LEAF_BANK_PIPE + REQ_PIPE, // FILL_LEAD + 8 (lr register 1, leaf 5, answer pin register 1, launch 1)
+    parameter integer DX   = 10 + LEAF_READ_PIN_PIPE + LEAF_BANK_PIPE + REQ_PIPE, // FILL_LEAD + 8 (lr register 1, leaf 5, answer pin register 1, launch 1)
     parameter integer FILL_LEAD = 2,     // the tap's two-entry attention-write queue (a queued beat can trail a go by 2)
     parameter integer MUT  = 0           // 3: the TDM sends each line to the wrong station (wrong line);
                                          // 4: reads the other epoch (stale buffer); 6: pooled line without its B half
@@ -698,7 +713,7 @@ module ot_qfd_xhead #(
     localparam integer CW   = 1 + IBW + 128 + 8;
     localparam integer NR   = 2 * NH;            // rows (tiles) of the column
     localparam integer NE   = NH / 2;            // TDM edges a tuple
-    localparam integer QD   = 7 + LEAF_BANK_PIPE + REQ_PIPE;      // read issue -> answer usable: lr 1, (relay), leaf 5, answer pin register 1
+    localparam integer QD   = 7 + LEAF_READ_PIN_PIPE + LEAF_BANK_PIPE + REQ_PIPE;      // read issue -> answer usable: lr 1, (relay), leaf 5, answer pin register 1
     // leaf / tile of row r: N station s in N leaf s / 2 (tile s mod 2), S station s in S leaf (NH-1-s) / 2 (tile
     // (NH-1-s) mod 2): a pooled pair (N s, S NH-1-s) sits at the SAME chain depth, and every read at TDM edge e is of
     // a leaf at depth <= e + 2 (the far leaves are read last: a fill reaches depth d d edges after depth 0)

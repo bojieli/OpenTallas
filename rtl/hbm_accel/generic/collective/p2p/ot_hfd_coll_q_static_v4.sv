@@ -5,6 +5,9 @@
 // External commands/data/epoch/PHY are captured before guard forks; five roots per rail.
 // Frozen V1/V2/V3 sources and their evidence remain separate; physical/PHY latency is compiler-priced.
 module ot_hfd_coll_q_static_v4 #(
+ // INJLAT (H-NETLIST/coll 2026-10-16): SU inject answer latency, request launch P -> qslots capture P+INJLAT.
+ // Default 12 = the closed behaviour; the die value is 10 + request relays + return relays (+2 in SW for the
+ // cij_SW IDX join), sized from the H-DIE layout. Legal INJLAT >= 2.
  parameter integer NPT=3,SOLO=1,INJLAT=12,
  parameter integer NS=2+NPT+4+2,ND=NPT+12+1,SELW=$clog2(NS)
 )(
@@ -334,7 +337,7 @@ module ot_hfd_coll_q_static_v4 #(
   .rr_local_tag(r_rr_local_tag));
 endmodule
 
-module ot_hfd_coll_q3_static_v4(
+module ot_hfd_coll_q3_static_v4 #(parameter integer INJLAT=12)(
  input wire rst_n,
  input wire clk_control,
  input wire [3:0] clk_issue,
@@ -382,10 +385,10 @@ module ot_hfd_coll_q3_static_v4(
  output wire done,
  output wire [31:0] stat_cycles
 );
- ot_hfd_coll_q_static_v4 #(.NPT(3),.SOLO(1)) u_q(.*);
+ ot_hfd_coll_q_static_v4 #(.NPT(3),.SOLO(1),.INJLAT(INJLAT)) u_q(.*);
 endmodule
 
-module ot_hfd_coll_q2_static_v4(
+module ot_hfd_coll_q2_static_v4 #(parameter integer INJLAT=12)(
  input wire rst_n,
  input wire clk_control,
  input wire [3:0] clk_issue,
@@ -433,7 +436,7 @@ module ot_hfd_coll_q2_static_v4(
 );
  wire [33:0] clk_tkm=34'd0;
  wire clk_arg=1'b0;
- ot_hfd_coll_q_static_v4 #(.NPT(2),.SOLO(0)) u_q(.*);
+ ot_hfd_coll_q_static_v4 #(.NPT(2),.SOLO(0),.INJLAT(INJLAT)) u_q(.*);
 endmodule
 
 // Actual hardenable protocol leaf: all parent request/assembly/pipeline state.

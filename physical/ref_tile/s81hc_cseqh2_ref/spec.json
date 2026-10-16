@@ -99,7 +99,8 @@
   "pd": 0.5,
   "threads": 8,
   "peak_ram_gb": 48,
-  "hold_margin_ns": 0.01
+  "hold_margin_ns": 0.01,
+  "macro_halo_um": 2.16
  },
  "sdc_extra": [
   "physical/s81_ph_views/hc_hier/cck_cseq.sdc"
@@ -107,13 +108,18 @@
  "aspect": 1.0,
  "job": {
   "benches_from": "tools/s81_suhc/hc_gate_benches.json",
-  "owner": "Claude:s81-suhc-hier-1011",
-  "branch": "claude/s81-suhc-hier-1011-hc-mp",
-  "tag": "v1",
-  "purpose": "s81-suhc-hier-1011 comb HIER2 (CSPLIT=1 slab: HALF=1 RLY=2 RF=4 DW=6, the configuration of ctileh + crootr/crooty/cpin; full ctile retired 07:42 as textbook class 1, 1067 um single root): ot_s81_hc_cseq at the HIER2 parameters; reference tile flow",
+  "owner": "Claude:S-ELEM-PQ/HC3",
+  "branch": "claude/s81hc3-native-0030",
+  "tag": "pr3spread",
+  "purpose": "S-ELEM-PQ/HC3 native pin re-kit of CLOSED s81hc_cseqh2_ref-v1-70eafa55c (ot_s81_hc_cseq: launch 305.29711 > 220 (88 pins) at phi - R, results/rtl/s81_hc_native_0030/native_audit.json); same outline and pin faces, kit recipe 3 (OWNER RULE 19:50)",
   "no_bench_reason": "bit-exactness is gated on the wires-only wrapper ot_s81_hc_comb in the slab bench (tools/s81_suhc/hc_gate.py NG64 HIER=2 (and 1) m0 PASS + m1/m3 FAIL, NG256 HIER=1 m0 PASS; el1011-s81-suhc-hier-1011.log [hc-split]); the tile alone has no golden",
   "views_to": "physical/ref_tile/s81hc_cseqh2_ref/views",
-  "record_to": "results/rtl/ref_tile/s81hc_cseqh2_ref"
+  "record_to": "results/rtl/ref_tile/s81hc_cseqh2_ref",
+  "reroute_reason": {
+   "kind": "slot_change",
+   "slot_change_request": "GRANTED by S-DIE6e712a1ab, published main3ee815e01: results/physical/die_iter_1012/s81/grants/sdie_codex_hc3_slot_growth_1016.json; leaf routing only, enclosing comb580.312x851.04; actual parent pins/cuts/clock/all incident hops/adoption remain HELD."
+  },
+  "structural_change": "2026-10-16 HC-COMB (S-ENGRAM+NORM helper): pr2shore-f8b71b8b8 route EARLY_FAIL_CONGESTION GRT-0116. Measured: 627 hot regions only in the NW/NE corners (y > 140 um): PPL ordered groups clumped w_fd / e_fd (1,128 + 8 each) into the top ~45 um of the W / E faces (~25 pins/um, gate floorplan image) next to their FIRM output hold stacks (9,560 of 16,000 hot-net refs w_fd/e_fd/ot_outhold). Fix = explicit even pin plan io_spread.tcl (tools/ref_tile/spread_face_pins.py: every face spread evenly, bus bits in order, W/E M4 2-track, N/S M3/M5, clocks sk and cck centred on their faces; S-ELEM-B PQ class) + OT_OUTHOLD_FREE=1 (Q-DVM xcst m5d, CLOSED + native PASS). Same RTL, outline 190.08x190.08 (S-DIE grant), pin faces, 0 cycles."
  },
  "params": {
   "HALF": 1,
@@ -122,5 +128,31 @@
   "DW": 6
  },
  "children": [],
- "inter": []
+ "inter": [],
+ "recipe": 3,
+ "outline": {
+  "w": 190.08,
+  "h": 190.08,
+  "exact": true
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "ot_s81_hc_cseq RTL registers every port at the pin (header: output flops w_fv/w_fd/e_fv/e_fd/c_fv/c_fd and the pin-tile status; inputs captured by inp_q / cv_q / cd_q / rs_v.. seam flops; cck-domain n_cmd_* / n_done_* on cck flops). Measured cause of the 88 launch misses: synthesis merged the three equal forward copies w_fd / e_fd / c_fd (<= fd) into one flop driving W, E and S pins, and state outputs (fault, base, f_q, ngo, n_ypop) also load internal logic. keep_pin_regs + pin_reg_split restore one dedicated flop per pin anchored at its face (0 cycles); a second register would add +1 to the lockstep forward bus (FP, exact register counts) and would need a per-clock split (cck / sk)."
+ },
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "slot_change_request": "GRANTED by S-DIE6e712a1ab, published main3ee815e01: results/physical/die_iter_1012/s81/grants/sdie_codex_hc3_slot_growth_1016.json; leaf routing only, enclosing comb580.312x851.04; actual parent pins/cuts/clock/all incident hops/adoption remain HELD.",
+ "orfs_vars": {
+  "OT_OUTHOLD_FREE": "1"
+ },
+ "io_tcl": "physical/ref_tile/s81hc_cseqh2_ref/io_spread.tcl"
 }

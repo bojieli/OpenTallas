@@ -1,0 +1,41 @@
+{
+ "schema": "opentallas.hsu.sfucore_fit.v1",
+ "author": "Claude H-SU",
+ "date": "2026-10-16",
+ "top": "ot_hgi_sfu_scheduled_engine LG_PATH=24, clock 833 ps (stream)",
+ "synth_std_um2": 84666.40992,
+ "hard": {
+  "lanes_ot_su12_sfu": 16,
+  "opstore_sram_256x256": 80,
+  "prog_sram_1024x256": 22,
+  "hard_outline_mm2": 1.6834
+ },
+ "total_hard_plus_std60_mm2": 1.8245,
+ "granted": {
+  "slots": {
+   "sfucore": [
+    763.56,
+    1936.44
+   ],
+   "sfus": [
+    763.56,
+    524.88
+   ]
+  },
+  "total_mm2": 1.8794
+ },
+ "fit_in_grant": false,
+ "needed": {
+  "w763.56": {
+   "width": 763.56,
+   "height": 3710.88,
+   "area_mm2": 2.8335
+  },
+  "w1100.16": {
+   "width": 1100.16,
+   "height": 2525.04,
+   "area_mm2": 2.7779
+  }
+ },
+ "status": "PLANNING geometry from synth + real macro/lane outlines; no placement/route qualification"
+}

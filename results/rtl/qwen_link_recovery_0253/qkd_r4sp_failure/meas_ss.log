@@ -1,0 +1,241 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[INFO ODB-0227] LEF file: /src/physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.lef, created 1 library cells
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13178, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13211, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13244, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13277, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13310, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13343, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13376, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14772, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14805, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+QDM reference pin abort_drained[0]$_DFF_P_/CLK clock arrival max 776.451294 min 752.420288 skew 90 hold 50
+OT_IO_INTER 0 inputs 0 outputs at 150 ps
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+OT_IOREF clock-port ck (core_clk): data input delays dropped
+OT_IOREF_EDGE core_clk boundary 4871 negedge 0 noarc 0 inverted 0
+OT_IOREF ot_lb_v_core_clk core_clk mean 785.0 min 734.6 max 843.4 n 4871 boundary
+OT_REGS 12115
+OT_REGS_CLOCKED 12115
+OT_CORNER tt
+OT_WS -4.949940457521507e-11
+OT_TNS -6.5747463029453e-10
+Startpoint: u_core.u_rec.epoch_begin$_DFF_PN0_
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: u_core.u_kvn.word_index[0]$_DFF_PN0_
+          (recovery check against rising-edge clock core_clk)
+Path Group: asynchronous
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ ck (in)
+  64.34   64.34 ^ clkbuf_sp_N1527_r1/Y (BUFx24_ASAP7_75t_R)
+  59.44  123.77 ^ clkbuf_sp_N1527_r2/Y (BUFx24_ASAP7_75t_R)
+  81.34  205.12 ^ clkbuf_sp_N1527/Y (BUFx24_ASAP7_75t_R)
+  63.05  268.17 ^ clkbuf_sp_N1526/Y (BUFx24_ASAP7_75t_R)
+  47.15  315.32 ^ clkbuf_sp_N1525/Y (BUFx24_ASAP7_75t_R)
+  37.51  352.84 ^ clkbuf_sp_N1524/Y (BUFx24_ASAP7_75t_R)
+  74.22  427.06 ^ clkbuf_sp_N1523/Y (BUFx24_ASAP7_75t_R)
+  71.44  498.50 ^ clkbuf_sp_N1522/Y (BUFx24_ASAP7_75t_R)
+  26.72  525.22 ^ clkbuf_sp_N1498/Y (BUFx24_ASAP7_75t_R)
+  55.29  580.50 ^ clkbuf_sp_N1486/Y (BUFx24_ASAP7_75t_R)
+  43.76  624.26 ^ clkbuf_sp_N1480/Y (BUFx24_ASAP7_75t_R)
+  48.15  672.41 ^ clkbuf_sp_N1479_r1/Y (BUFx24_ASAP7_75t_R)
+  39.76  712.17 ^ clkbuf_sp_N1479/Y (BUFx24_ASAP7_75t_R)
+  41.18  753.35 ^ clkbuf_sp_N1478/Y (BUFx24_ASAP7_75t_R)
+  26.45  779.80 ^ clkbuf_sp_L615/Y (BUFx24_ASAP7_75t_R)
+   0.58  780.38 ^ u_core.u_rec.epoch_begin$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+  52.55  832.93 ^ u_core.u_rec.epoch_begin$_DFF_PN0_/QN (DFFASRHQNx1_ASAP7_75t_R)
+  30.19  863.12 ^ place20786/Y (BUFx3_ASAP7_75t_R)
+  91.07  954.19 ^ wire23222/Y (BUFx16f_ASAP7_75t_R)
+ 107.21 1061.40 ^ place20785/Y (BUFx3_ASAP7_75t_R)
+  25.89 1087.29 ^ place20784/Y (BUFx6f_ASAP7_75t_R)
+  58.36 1145.65 ^ place20780/Y (BUFx3_ASAP7_75t_R)
+ 105.89 1251.54 ^ place20779/Y (BUFx3_ASAP7_75t_R)
+  60.30 1311.84 ^ _45305_/Y (AND2x2_ASAP7_75t_R)
+  61.92 1373.76 ^ u_core.u_kvn.word_index[0]$_DFF_PN0_/RESETN (DFFASRHQNx1_ASAP7_75t_R)
+        1373.76   data arrival time
+
+ 833.33  833.33   clock core_clk (rise edge)
+   0.00  833.33   clock source latency
+   0.00  833.33 ^ ck (in)
+  62.64  895.98 ^ clkbuf_sp_N1527_r1/Y (BUFx24_ASAP7_75t_R)
+  57.36  953.34 ^ clkbuf_sp_N1527_r2/Y (BUFx24_ASAP7_75t_R)
+  79.40 1032.73 ^ clkbuf_sp_N1527/Y (BUFx24_ASAP7_75t_R)
+  57.38 1090.11 ^ clkbuf_sp_N763/Y (BUFx24_ASAP7_75t_R)
+  48.59 1138.70 ^ clkbuf_sp_N762/Y (BUFx24_ASAP7_75t_R)
+  54.85 1193.55 ^ clkbuf_sp_N761/Y (BUFx24_ASAP7_75t_R)
+  33.13 1226.69 ^ clkbuf_sp_N760/Y (BUFx24_ASAP7_75t_R)
+  26.03 1252.71 ^ clkbuf_sp_N712/Y (BUFx24_ASAP7_75t_R)
+  26.94 1279.66 ^ clkbuf_sp_N688/Y (BUFx24_ASAP7_75t_R)
+  26.70 1306.36 ^ clkbuf_sp_N687/Y (BUFx24_ASAP7_75t_R)
+  24.73 1331.09 ^ clkbuf_sp_N681/Y (BUFx24_ASAP7_75t_R)
+  23.74 1354.83 ^ clkbuf_sp_N678/Y (BUFx24_ASAP7_75t_R)
+  49.90 1404.72 ^ clkbuf_sp_L780_p1/Y (HB4xp67_ASAP7_75t_R)
+  53.44 1458.16 ^ clkbuf_sp_L780_p2/Y (HB4xp67_ASAP7_75t_R)
+  52.26 1510.42 ^ clkbuf_sp_L780_p3/Y (HB4xp67_ASAP7_75t_R)
+  19.71 1530.13 ^ clkbuf_sp_L780_p4/Y (BUFx2_ASAP7_75t_R)
+  16.11 1546.23 ^ clkbuf_sp_L780_p5/Y (BUFx2_ASAP7_75t_R)
+  18.86 1565.10 ^ clkbuf_sp_L780_p6/Y (BUFx2_ASAP7_75t_R)
+  23.84 1588.93 ^ clkbuf_sp_L780/Y (BUFx24_ASAP7_75t_R)
+   0.72 1589.66 ^ u_core.u_kvn.word_index[0]$_DFF_PN0_/CLK (DFFASRHQNx1_ASAP7_75t_R)
+ -60.00 1529.66   clock uncertainty
+   5.72 1535.37   clock reconvergence pessimism
+  26.32 1561.69   library recovery time
+        1561.69   data required time
+---------------------------------------------------------
+        1561.69   data required time
+        -1373.76   data arrival time
+---------------------------------------------------------
+         187.93   slack (MET)
+
+
+Startpoint: u_core.u_end.u_link.g_bank[0].u_store.rq[4]$_DFF_P_
+            (rising edge-triggered flip-flop clocked by core_clk)
+Endpoint: u_core.u_end.u_link.g_bank[0].u_store.dout[7]$_DFF_P_
+          (rising edge-triggered flip-flop clocked by core_clk)
+Path Group: core_clk
+Path Type: max
+
+  Delay    Time   Description
+---------------------------------------------------------
+   0.00    0.00   clock core_clk (rise edge)
+   0.00    0.00   clock source latency
+   0.00    0.00 ^ ck (in)
+  64.34   64.34 ^ clkbuf_sp_N1527_r1/Y (BUFx24_ASAP7_75t_R)
+  59.44  123.77 ^ clkbuf_sp_N1527_r2/Y (BUFx24_ASAP7_75t_R)
+  81.34  205.12 ^ clkbuf_sp_N1527/Y (BUFx24_ASAP7_75t_R)
+  63.05  268.17 ^ clkbuf_sp_N1526/Y (BUFx24_ASAP7_75t_R)
+  47.15  315.32 ^ clkbuf_sp_N1525/Y (BUFx24_ASAP7_75t_R)
+  38.24  353.56 ^ clkbuf_sp_N1334/Y (BUFx24_ASAP7_75t_R)
+  33.69  387.25 ^ clkbuf_sp_N1238/Y (BUFx24_ASAP7_75t_R)
+  29.80  417.05 ^ clkbuf_sp_N1237/Y (BUFx24_ASAP7_75t_R)
+  25.15  442.20 ^ clkbuf_sp_N1236/Y (BUFx24_ASAP7_75t_R)
+  24.32  466.52 ^ clkbuf_sp_N1235/Y (BUFx24_ASAP7_75t_R)
+  24.14  490.66 ^ clkbuf_sp_N1234/Y (BUFx24_ASAP7_75t_R)
+  23.92  514.59 ^ clkbuf_sp_N1231/Y (BUFx24_ASAP7_75t_R)
+  22.71  537.29 ^ clkbuf_sp_N1230/Y (BUFx24_ASAP7_75t_R)
+  52.93  590.22 ^ clkbuf_sp_L603_p1/Y (HB4xp67_ASAP7_75t_R)
+  59.66  649.88 ^ clkbuf_sp_L603_p2/Y (HB4xp67_ASAP7_75t_R)
+  57.78  707.67 ^ clkbuf_sp_L603_p3/Y (HB4xp67_ASAP7_75t_R)
+  21.64  729.31 ^ clkbuf_sp_L603_p4/Y (BUFx2_ASAP7_75t_R)
+  16.58  745.88 ^ clkbuf_sp_L603_p5/Y (BUFx2_ASAP7_75t_R)
+  16.24  762.12 ^ clkbuf_sp_L603_p6/Y (BUFx2_ASAP7_75t_R)
+  20.87  782.99 ^ clkbuf_sp_L603_p7/Y (BUFx2_ASAP7_75t_R)
+  26.73  809.72 ^ clkbuf_sp_L603/Y (BUFx24_ASAP7_75t_R)
+   4.14  813.86 ^ u_core.u_end.u_link.g_bank[0].u_store.rq[4]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+  61.12  874.98 v u_core.u_end.u_link.g_bank[0].u_store.rq[4]$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R)
+  33.82  908.81 v _50162_/Y (XOR2x2_ASAP7_75t_R)
+  38.68  947.48 v _50163_/Y (OR4x1_ASAP7_75t_R)
+  63.55 1011.04 v _50164_/Y (OR4x2_ASAP7_75t_R)
+  34.95 1045.99 v place18224/Y (BUFx6f_ASAP7_75t_R)
+  29.86 1075.85 v wire22705/Y (BUFx16f_ASAP7_75t_R)
+  46.25 1122.10 v wire42144/Y (BUFx16f_ASAP7_75t_R)
+ 126.10 1248.20 v place18223/Y (BUFx12f_ASAP7_75t_R)
+  57.42 1305.62 v place18222/Y (BUFx6f_ASAP7_75t_R)
+  43.65 1349.27 v place18221/Y (BUFx6f_ASAP7_75t_R)
+  51.08 1400.35 v place18220/Y (BUFx4f_ASAP7_75t_R)
+  41.97 1442.32 v place18219/Y (BUFx6f_ASAP7_75t_R)
+  35.07 1477.40 v _50614_/Y (OA211x2_ASAP7_75t_R)
+  20.65 1498.05 v hold26913/Y (BUFx2_ASAP7_75t_R)
+  10.88 1508.93 ^ _50615_/Y (AOI21x1_ASAP7_75t_R)
+  20.70 1529.63 ^ hold26914/Y (BUFx2_ASAP7_75t_R)
+   0.03 1529.66 ^ u_core.u_end.u_link.g_bank[0].u_store.dout[7]$_DFF_P_/D (DFFHQNx1_ASAP7_75t_R)
+        1529.66   data arrival time
+
+ 833.33  833.33   clock core_clk (rise edge)
+   0.00  833.33   clock source latency
+   0.00  833.33 ^ ck (in)
+  62.64  895.98 ^ clkbuf_sp_N1527_r1/Y (BUFx24_ASAP7_75t_R)
+  57.36  953.34 ^ clkbuf_sp_N1527_r2/Y (BUFx24_ASAP7_75t_R)
+  79.40 1032.73 ^ clkbuf_sp_N1527/Y (BUFx24_ASAP7_75t_R)
+  57.38 1090.11 ^ clkbuf_sp_N763/Y (BUFx24_ASAP7_75t_R)
+  45.48 1135.59 ^ clkbuf_sp_N381/Y (BUFx24_ASAP7_75t_R)
+  40.24 1175.83 ^ clkbuf_sp_N380/Y (BUFx24_ASAP7_75t_R)
+  40.81 1216.64 ^ clkbuf_sp_N379/Y (BUFx24_ASAP7_75t_R)
+  45.39 1262.02 ^ clkbuf_sp_N331/Y (BUFx24_ASAP7_75t_R)
+  55.99 1318.01 ^ clkbuf_sp_N307/Y (BUFx24_ASAP7_75t_R)
+  30.03 1348.04 ^ clkbuf_sp_N295/Y (BUFx24_ASAP7_75t_R)
+  27.62 1375.66 ^ clkbuf_sp_N294/Y (BUFx24_ASAP7_75t_R)
+  29.02 1404.69 ^ clkbuf_sp_N291/Y (BUFx24_ASAP7_75t_R)
+  23.18 1427.87 ^ clkbuf_sp_N290/Y (BUFx24_ASAP7_75t_R)
+  49.36 1477.23 ^ clkbuf_sp_L1472_p1/Y (HB4xp67_ASAP7_75t_R)
+  19.70 1496.93 ^ clkbuf_sp_L1472_p2/Y (BUFx2_ASAP7_75t_R)
+  18.66 1515.59 ^ clkbuf_sp_L1472_p3/Y (BUFx2_ASAP7_75t_R)
+  24.79 1540.38 ^ clkbuf_sp_L1472/Y (BUFx24_ASAP7_75t_R)
+   2.67 1543.05 ^ u_core.u_end.u_link.g_bank[0].u_store.dout[7]$_DFF_P_/CLK (DFFHQNx1_ASAP7_75t_R)
+ -60.00 1483.05   clock uncertainty
+   5.72 1488.76   clock reconvergence pessimism
+  -8.61 1480.16   library setup time
+        1480.16   data required time
+---------------------------------------------------------
+        1480.16   data required time
+        -1529.66   data arrival time
+---------------------------------------------------------
+         -49.50   slack (VIOLATED)
+
+
+OT_VIOL_D_PINS 51
+OT_WS_REG_D -49.499405
+OT_WS_OUT 278.847504
+OT_WS_R2R -49.499405
+OT_WS_I2R 255.416916
+OT_PATH u_core.u_end.u_link.g_bank[0].u_store.rq[4]$_DFF_P_/QN u_core.u_end.u_link.g_bank[0].u_store.dout[7]$_DFF_P_/D -49.499405
+OT_PATH u_core.u_end.u_link.g_bank[0].u_store.rq[4]$_DFF_P_/QN u_core.u_end.u_link.g_bank[0].u_store.dout[3]$_DFF_P_/D -39.478199
+OT_PATH u_core.u_end.u_link.g_bank[0].u_store.rq[4]$_DFF_P_/QN u_core.u_end.u_link.g_bank[0].u_store.dout[4]$_DFF_P_/D -33.923088
+OT_PATH u_core.u_end.u_link.g_bank[0].u_store.rq[4]$_DFF_P_/QN u_core.u_end.u_link.g_bank[0].u_store.dout[10]$_DFF_P_/D -27.525427
+OT_PATH u_core.u_end.u_link.g_bank[0].u_store.rq[4]$_DFF_P_/QN u_core.u_end.u_link.g_bank[0].u_store.dout[20]$_DFF_P_/D -25.582758
+OT_PATH u_core.u_end.u_link.g_bank[0].u_store.rq[4]$_DFF_P_/QN u_core.u_end.u_link.g_bank[0].u_store.dout[14]$_DFF_P_/D -24.586555
+OT_PATH u_core.u_end.u_link.g_bank[0].u_store.rq[4]$_DFF_P_/QN u_core.u_end.u_link.g_bank[0].u_store.dout[2]$_DFF_P_/D -24.299784
+OT_PATH u_core.u_end.u_link.g_bank[0].u_store.rq[4]$_DFF_P_/QN u_core.u_end.u_link.g_bank[0].u_store.dout[29]$_DFF_P_/D -21.931568
+OT_PATH u_core.u_end.u_link.g_bank[0].u_store.rq[4]$_DFF_P_/QN u_core.u_end.u_link.g_bank[0].u_store.dout[72]$_DFF_P_/D -21.466829
+OT_PATH u_core.u_end.u_link.g_bank[0].u_store.rq[4]$_DFF_P_/QN u_core.u_end.u_link.g_bank[0].u_store.dout[9]$_DFF_P_/D -21.288748
+OT_PATH u_core.u_end.u_link.g_bank[0].u_store.rq[4]$_DFF_P_/QN u_core.u_end.u_link.g_bank[0].u_store.dout[128]$_DFF_P_/D -20.605740
+OT_PATH u_core.u_end.u_link.g_bank[0].u_store.rq[4]$_DFF_P_/QN u_core.u_end.u_link.g_bank[0].u_store.dout[127]$_DFF_P_/D -20.157654
+OT_PATH u_core.u_end.u_link.g_bank[0].u_store.rq[4]$_DFF_P_/QN u_core.u_end.u_link.g_bank[0].u_store.dout[134]$_DFF_P_/D -19.786949
+OT_PATH u_core.u_end.u_link.g_bank[0].u_store.rq[4]$_DFF_P_/QN u_core.u_end.u_link.g_bank[0].u_store.dout[1]$_DFF_P_/D -19.028112
+OT_PATH u_core.u_end.u_link.g_bank[0].u_store.rq[4]$_DFF_P_/QN u_core.u_end.u_link.g_bank[0].u_store.dout[70]$_DFF_P_/D -18.383406
+OT_PATH u_core.u_end.u_link.g_bank[0].u_store.rq[4]$_DFF_P_/QN u_core.u_end.u_link.g_bank[0].u_store.dout[34]$_DFF_P_/D -18.233637
+OT_PATH u_core.u_end.u_link.g_bank[0].u_store.rq[4]$_DFF_P_/QN u_core.u_end.u_link.g_bank[0].u_store.dout[87]$_DFF_P_/D -15.635493
+OT_PATH u_core.u_end.u_link.g_bank[0].u_store.rq[4]$_DFF_P_/QN u_core.u_end.u_link.g_bank[0].u_store.dout[105]$_DFF_P_/D -15.449641
+OT_PATH u_core.u_end.u_link.g_bank[0].u_store.rq[4]$_DFF_P_/QN u_core.u_end.u_link.g_bank[0].u_store.dout[80]$_DFF_P_/D -14.869217
+OT_PATH u_core.u_end.u_link.g_bank[0].u_store.rq[4]$_DFF_P_/QN u_core.u_end.u_link.g_bank[0].u_store.dout[31]$_DFF_P_/D -14.190760
+OT_PATH u_core.u_end.u_link.g_bank[0].u_store.rq[4]$_DFF_P_/QN u_core.u_end.u_link.g_bank[0].u_store.dout[133]$_DFF_P_/D -13.672841
+OT_PATH u_core.u_end.u_link.g_bank[0].u_store.rq[4]$_DFF_P_/QN u_core.u_end.u_link.g_bank[0].u_store.dout[74]$_DFF_P_/D -11.967094
+OT_PATH u_core.u_end.u_link.g_bank[0].u_store.rq[4]$_DFF_P_/QN u_core.u_end.u_link.g_bank[0].u_store.dout[132]$_DFF_P_/D -11.459611
+OT_PATH u_core.u_end.u_link.g_bank[0].u_store.rq[4]$_DFF_P_/QN u_core.u_end.u_link.g_bank[0].u_store.dout[84]$_DFF_P_/D -11.411538
+OT_PATH u_core.u_end.u_link.g_bank[0].u_store.rq[4]$_DFF_P_/QN u_core.u_end.u_link.g_bank[0].u_store.dout[85]$_DFF_P_/D -10.900169
+OT_PATH u_core.u_end.u_link.g_bank[0].u_store.rq[4]$_DFF_P_/QN u_core.u_end.u_link.g_bank[0].u_store.dout[36]$_DFF_P_/D -9.780953
+OT_PATH u_core.u_end.u_link.g_bank[0].u_store.rq[4]$_DFF_P_/QN u_core.u_end.u_link.g_bank[0].u_store.dout[37]$_DFF_P_/D -9.322209
+OT_PATH u_core.u_end.u_link.g_bank[0].u_store.rq[4]$_DFF_P_/QN u_core.u_end.u_link.g_bank[0].u_store.dout[22]$_DFF_P_/D -9.153123
+OT_PATH u_core.u_end.u_link.g_bank[0].u_store.rq[4]$_DFF_P_/QN u_core.u_end.u_link.g_bank[0].u_store.dout[33]$_DFF_P_/D -9.112377
+OT_PATH u_core.u_end.u_link.g_bank[0].u_store.rq[4]$_DFF_P_/QN u_core.u_end.u_link.g_bank[0].u_store.dout[28]$_DFF_P_/D -8.918532
+OT_PATH u_core.u_end.u_link.g_bank[0].u_store.rq[4]$_DFF_P_/QN u_core.u_end.u_link.g_bank[0].u_store.dout[115]$_DFF_P_/D -8.208989
+OT_PATH u_core.u_end.u_link.g_bank[0].u_store.rq[4]$_DFF_P_/QN u_core.u_end.u_link.g_bank[0].u_store.dout[49]$_DFF_P_/D -7.788548
+OT_PATH u_core.u_end.u_link.g_bank[0].u_store.rq[4]$_DFF_P_/QN u_core.u_end.u_link.g_bank[0].u_store.dout[117]$_DFF_P_/D -7.280621
+OT_PATH u_core.u_end.u_link.g_bank[0].u_store.rq[4]$_DFF_P_/QN u_core.u_end.u_link.g_bank[0].u_store.dout[77]$_DFF_P_/D -7.190692
+OT_PATH u_core.u_end.u_link.g_bank[0].u_store.rq[4]$_DFF_P_/QN u_core.u_end.u_link.g_bank[0].u_store.dout[71]$_DFF_P_/D -6.803891
+OT_PATH u_core.u_end.u_link.g_bank[0].u_store.rq[4]$_DFF_P_/QN u_core.u_end.u_link.g_bank[0].u_store.dout[68]$_DFF_P_/D -5.985878
+OT_PATH u_core.u_end.u_link.g_bank[0].u_store.rq[4]$_DFF_P_/QN u_core.u_end.u_link.g_bank[0].u_store.dout[83]$_DFF_P_/D -5.837775
+OT_PATH u_core.u_end.u_link.g_bank[0].u_store.rq[4]$_DFF_P_/QN u_core.u_end.u_link.g_bank[0].u_store.dout[27]$_DFF_P_/D -5.773604
+OT_PATH u_core.u_end.u_link.g_bank[0].u_store.rq[4]$_DFF_P_/QN u_core.u_end.u_link.g_bank[0].u_store.dout[6]$_DFF_P_/D -5.629164
+OT_PATH u_core.u_end.u_link.g_bank[0].u_store.rq[4]$_DFF_P_/QN u_core.u_end.u_link.g_bank[0].u_store.dout[57]$_DFF_P_/D -4.963918
+OT_PATH u_core.u_end.u_link.g_bank[0].u_store.rq[4]$_DFF_P_/QN u_core.u_end.u_link.g_bank[0].u_store.dout[114]$_DFF_P_/D -3.916201
+OT_PATH u_core.u_end.u_link.g_bank[0].u_store.rq[4]$_DFF_P_/QN u_core.u_end.u_link.g_bank[0].u_store.dout[110]$_DFF_P_/D -3.549716
+OT_PATH u_core.u_end.u_link.g_bank[0].u_store.rq[4]$_DFF_P_/QN u_core.u_end.u_link.g_bank[0].u_store.dout[17]$_DFF_P_/D -3.476886
+OT_PATH u_core.u_end.u_link.g_bank[0].u_store.rq[4]$_DFF_P_/QN u_core.u_end.u_link.g_bank[0].u_store.dout[63]$_DFF_P_/D -2.707501
+OT_PATH u_core.u_end.u_link.g_bank[0].u_store.rq[4]$_DFF_P_/QN u_core.u_end.u_link.g_bank[0].u_store.dout[0]$_DFF_P_/D -2.405631
+OT_PATH u_core.u_end.u_link.g_bank[0].u_store.rq[4]$_DFF_P_/QN u_core.u_end.u_link.g_bank[0].u_store.dout[118]$_DFF_P_/D -2.190470
+OT_PATH u_core.u_end.u_link.g_bank[0].u_store.rq[4]$_DFF_P_/QN u_core.u_end.u_link.g_bank[0].u_store.dout[81]$_DFF_P_/D -1.694089
+OT_PATH u_core.u_end.u_link.g_bank[0].u_store.rq[4]$_DFF_P_/QN u_core.u_end.u_link.g_bank[0].u_store.dout[86]$_DFF_P_/D -0.449640

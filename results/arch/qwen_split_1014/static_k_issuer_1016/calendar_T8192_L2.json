@@ -1,0 +1,670 @@
+{
+  "schema": "qwen-tp8-static-qk-calendar-v1",
+  "scope": "native ECTL3 QK component; external service latency is a required implemented input; excludes ASTK/physical clock/native chip qualification; includes registered K issuer; actual HBM elastic front and complete physical segment still required",
+  "context": 8192,
+  "external_row_latency": 4,
+  "QK_ISSUE_AGE": 34,
+  "ROW_RETURN_LAT": 9,
+  "LANE_D": 4,
+  "capacity": 128,
+  "sources": {
+    "rtl/hdc/nearhbm/ot_qkd_ectl_parts.sv": "3e5b780de95ca1eb1d4a5adfdb7c3355ac27ca6a19ae784ca8adec16acabf3d4",
+    "rtl/qwen_sys/split_20261014/qkd_ectl3_epoch_direct_s.sv": "525216470bcb0cdd6e134368b754d8baf3e917ba037f63e51977315c13830fea",
+    "rtl/qwen_sys/split_20261014/qkd_ectl_a_tp8_epoch_direct.sv": "309e2467c4c8dbe06f2738e8f5b7fdd2aa91ed3d56e08d22968396a12b4a3043",
+    "rtl/qwen_sys/split_20261014/qkd_ectl_native_direct_tp8.sv": "851b537e06aa44a5686ad6c374e13cdc6bfda8bcf380e704698f0f88c551696a",
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "d9801653d16576f40306c1fb1d01928e88e7371a3897b616e31d3e3df917cb2d",
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_k_issuer.sv": "404a42f242aa893696a7dcfcc6ec5e590d89407fa6338db50cb96636101af04d"
+  },
+  "engines": [
+    {
+      "stack": 0,
+      "engine": 0,
+      "rows": 256,
+      "max_occupancy": 23,
+      "first_slot": {
+        "t": 0,
+        "request": 4,
+        "write": 11,
+        "read": 33,
+        "consume": 34
+      },
+      "last_slot": {
+        "t": 7800,
+        "request": 259,
+        "write": 266,
+        "read": 288,
+        "consume": 289
+      }
+    },
+    {
+      "stack": 0,
+      "engine": 1,
+      "rows": 256,
+      "max_occupancy": 23,
+      "first_slot": {
+        "t": 1,
+        "request": 4,
+        "write": 11,
+        "read": 33,
+        "consume": 34
+      },
+      "last_slot": {
+        "t": 7801,
+        "request": 259,
+        "write": 266,
+        "read": 288,
+        "consume": 289
+      }
+    },
+    {
+      "stack": 0,
+      "engine": 2,
+      "rows": 256,
+      "max_occupancy": 23,
+      "first_slot": {
+        "t": 2,
+        "request": 4,
+        "write": 11,
+        "read": 33,
+        "consume": 34
+      },
+      "last_slot": {
+        "t": 7802,
+        "request": 259,
+        "write": 266,
+        "read": 288,
+        "consume": 289
+      }
+    },
+    {
+      "stack": 0,
+      "engine": 3,
+      "rows": 256,
+      "max_occupancy": 23,
+      "first_slot": {
+        "t": 3,
+        "request": 4,
+        "write": 11,
+        "read": 33,
+        "consume": 34
+      },
+      "last_slot": {
+        "t": 7803,
+        "request": 259,
+        "write": 266,
+        "read": 288,
+        "consume": 289
+      }
+    },
+    {
+      "stack": 0,
+      "engine": 4,
+      "rows": 256,
+      "max_occupancy": 23,
+      "first_slot": {
+        "t": 4,
+        "request": 4,
+        "write": 11,
+        "read": 33,
+        "consume": 34
+      },
+      "last_slot": {
+        "t": 7804,
+        "request": 259,
+        "write": 266,
+        "read": 288,
+        "consume": 289
+      }
+    },
+    {
+      "stack": 0,
+      "engine": 5,
+      "rows": 256,
+      "max_occupancy": 23,
+      "first_slot": {
+        "t": 5,
+        "request": 4,
+        "write": 11,
+        "read": 33,
+        "consume": 34
+      },
+      "last_slot": {
+        "t": 7805,
+        "request": 259,
+        "write": 266,
+        "read": 288,
+        "consume": 289
+      }
+    },
+    {
+      "stack": 0,
+      "engine": 6,
+      "rows": 256,
+      "max_occupancy": 23,
+      "first_slot": {
+        "t": 6,
+        "request": 4,
+        "write": 11,
+        "read": 33,
+        "consume": 34
+      },
+      "last_slot": {
+        "t": 7806,
+        "request": 259,
+        "write": 266,
+        "read": 288,
+        "consume": 289
+      }
+    },
+    {
+      "stack": 0,
+      "engine": 7,
+      "rows": 256,
+      "max_occupancy": 23,
+      "first_slot": {
+        "t": 7,
+        "request": 4,
+        "write": 11,
+        "read": 33,
+        "consume": 34
+      },
+      "last_slot": {
+        "t": 7807,
+        "request": 259,
+        "write": 266,
+        "read": 288,
+        "consume": 289
+      }
+    },
+    {
+      "stack": 1,
+      "engine": 0,
+      "rows": 256,
+      "max_occupancy": 23,
+      "first_slot": {
+        "t": 128,
+        "request": 4,
+        "write": 11,
+        "read": 33,
+        "consume": 34
+      },
+      "last_slot": {
+        "t": 7928,
+        "request": 259,
+        "write": 266,
+        "read": 288,
+        "consume": 289
+      }
+    },
+    {
+      "stack": 1,
+      "engine": 1,
+      "rows": 256,
+      "max_occupancy": 23,
+      "first_slot": {
+        "t": 129,
+        "request": 4,
+        "write": 11,
+        "read": 33,
+        "consume": 34
+      },
+      "last_slot": {
+        "t": 7929,
+        "request": 259,
+        "write": 266,
+        "read": 288,
+        "consume": 289
+      }
+    },
+    {
+      "stack": 1,
+      "engine": 2,
+      "rows": 256,
+      "max_occupancy": 23,
+      "first_slot": {
+        "t": 130,
+        "request": 4,
+        "write": 11,
+        "read": 33,
+        "consume": 34
+      },
+      "last_slot": {
+        "t": 7930,
+        "request": 259,
+        "write": 266,
+        "read": 288,
+        "consume": 289
+      }
+    },
+    {
+      "stack": 1,
+      "engine": 3,
+      "rows": 256,
+      "max_occupancy": 23,
+      "first_slot": {
+        "t": 131,
+        "request": 4,
+        "write": 11,
+        "read": 33,
+        "consume": 34
+      },
+      "last_slot": {
+        "t": 7931,
+        "request": 259,
+        "write": 266,
+        "read": 288,
+        "consume": 289
+      }
+    },
+    {
+      "stack": 1,
+      "engine": 4,
+      "rows": 256,
+      "max_occupancy": 23,
+      "first_slot": {
+        "t": 132,
+        "request": 4,
+        "write": 11,
+        "read": 33,
+        "consume": 34
+      },
+      "last_slot": {
+        "t": 7932,
+        "request": 259,
+        "write": 266,
+        "read": 288,
+        "consume": 289
+      }
+    },
+    {
+      "stack": 1,
+      "engine": 5,
+      "rows": 256,
+      "max_occupancy": 23,
+      "first_slot": {
+        "t": 133,
+        "request": 4,
+        "write": 11,
+        "read": 33,
+        "consume": 34
+      },
+      "last_slot": {
+        "t": 7933,
+        "request": 259,
+        "write": 266,
+        "read": 288,
+        "consume": 289
+      }
+    },
+    {
+      "stack": 1,
+      "engine": 6,
+      "rows": 256,
+      "max_occupancy": 23,
+      "first_slot": {
+        "t": 134,
+        "request": 4,
+        "write": 11,
+        "read": 33,
+        "consume": 34
+      },
+      "last_slot": {
+        "t": 7934,
+        "request": 259,
+        "write": 266,
+        "read": 288,
+        "consume": 289
+      }
+    },
+    {
+      "stack": 1,
+      "engine": 7,
+      "rows": 256,
+      "max_occupancy": 23,
+      "first_slot": {
+        "t": 135,
+        "request": 4,
+        "write": 11,
+        "read": 33,
+        "consume": 34
+      },
+      "last_slot": {
+        "t": 7935,
+        "request": 259,
+        "write": 266,
+        "read": 288,
+        "consume": 289
+      }
+    },
+    {
+      "stack": 2,
+      "engine": 0,
+      "rows": 256,
+      "max_occupancy": 23,
+      "first_slot": {
+        "t": 256,
+        "request": 4,
+        "write": 11,
+        "read": 33,
+        "consume": 34
+      },
+      "last_slot": {
+        "t": 8056,
+        "request": 259,
+        "write": 266,
+        "read": 288,
+        "consume": 289
+      }
+    },
+    {
+      "stack": 2,
+      "engine": 1,
+      "rows": 256,
+      "max_occupancy": 23,
+      "first_slot": {
+        "t": 257,
+        "request": 4,
+        "write": 11,
+        "read": 33,
+        "consume": 34
+      },
+      "last_slot": {
+        "t": 8057,
+        "request": 259,
+        "write": 266,
+        "read": 288,
+        "consume": 289
+      }
+    },
+    {
+      "stack": 2,
+      "engine": 2,
+      "rows": 256,
+      "max_occupancy": 23,
+      "first_slot": {
+        "t": 258,
+        "request": 4,
+        "write": 11,
+        "read": 33,
+        "consume": 34
+      },
+      "last_slot": {
+        "t": 8058,
+        "request": 259,
+        "write": 266,
+        "read": 288,
+        "consume": 289
+      }
+    },
+    {
+      "stack": 2,
+      "engine": 3,
+      "rows": 256,
+      "max_occupancy": 23,
+      "first_slot": {
+        "t": 259,
+        "request": 4,
+        "write": 11,
+        "read": 33,
+        "consume": 34
+      },
+      "last_slot": {
+        "t": 8059,
+        "request": 259,
+        "write": 266,
+        "read": 288,
+        "consume": 289
+      }
+    },
+    {
+      "stack": 2,
+      "engine": 4,
+      "rows": 256,
+      "max_occupancy": 23,
+      "first_slot": {
+        "t": 260,
+        "request": 4,
+        "write": 11,
+        "read": 33,
+        "consume": 34
+      },
+      "last_slot": {
+        "t": 8060,
+        "request": 259,
+        "write": 266,
+        "read": 288,
+        "consume": 289
+      }
+    },
+    {
+      "stack": 2,
+      "engine": 5,
+      "rows": 256,
+      "max_occupancy": 23,
+      "first_slot": {
+        "t": 261,
+        "request": 4,
+        "write": 11,
+        "read": 33,
+        "consume": 34
+      },
+      "last_slot": {
+        "t": 8061,
+        "request": 259,
+        "write": 266,
+        "read": 288,
+        "consume": 289
+      }
+    },
+    {
+      "stack": 2,
+      "engine": 6,
+      "rows": 256,
+      "max_occupancy": 23,
+      "first_slot": {
+        "t": 262,
+        "request": 4,
+        "write": 11,
+        "read": 33,
+        "consume": 34
+      },
+      "last_slot": {
+        "t": 8062,
+        "request": 259,
+        "write": 266,
+        "read": 288,
+        "consume": 289
+      }
+    },
+    {
+      "stack": 2,
+      "engine": 7,
+      "rows": 256,
+      "max_occupancy": 23,
+      "first_slot": {
+        "t": 263,
+        "request": 4,
+        "write": 11,
+        "read": 33,
+        "consume": 34
+      },
+      "last_slot": {
+        "t": 8063,
+        "request": 259,
+        "write": 266,
+        "read": 288,
+        "consume": 289
+      }
+    },
+    {
+      "stack": 3,
+      "engine": 0,
+      "rows": 256,
+      "max_occupancy": 23,
+      "first_slot": {
+        "t": 384,
+        "request": 4,
+        "write": 11,
+        "read": 33,
+        "consume": 34
+      },
+      "last_slot": {
+        "t": 8184,
+        "request": 259,
+        "write": 266,
+        "read": 288,
+        "consume": 289
+      }
+    },
+    {
+      "stack": 3,
+      "engine": 1,
+      "rows": 256,
+      "max_occupancy": 23,
+      "first_slot": {
+        "t": 385,
+        "request": 4,
+        "write": 11,
+        "read": 33,
+        "consume": 34
+      },
+      "last_slot": {
+        "t": 8185,
+        "request": 259,
+        "write": 266,
+        "read": 288,
+        "consume": 289
+      }
+    },
+    {
+      "stack": 3,
+      "engine": 2,
+      "rows": 256,
+      "max_occupancy": 23,
+      "first_slot": {
+        "t": 386,
+        "request": 4,
+        "write": 11,
+        "read": 33,
+        "consume": 34
+      },
+      "last_slot": {
+        "t": 8186,
+        "request": 259,
+        "write": 266,
+        "read": 288,
+        "consume": 289
+      }
+    },
+    {
+      "stack": 3,
+      "engine": 3,
+      "rows": 256,
+      "max_occupancy": 23,
+      "first_slot": {
+        "t": 387,
+        "request": 4,
+        "write": 11,
+        "read": 33,
+        "consume": 34
+      },
+      "last_slot": {
+        "t": 8187,
+        "request": 259,
+        "write": 266,
+        "read": 288,
+        "consume": 289
+      }
+    },
+    {
+      "stack": 3,
+      "engine": 4,
+      "rows": 256,
+      "max_occupancy": 23,
+      "first_slot": {
+        "t": 388,
+        "request": 4,
+        "write": 11,
+        "read": 33,
+        "consume": 34
+      },
+      "last_slot": {
+        "t": 8188,
+        "request": 259,
+        "write": 266,
+        "read": 288,
+        "consume": 289
+      }
+    },
+    {
+      "stack": 3,
+      "engine": 5,
+      "rows": 256,
+      "max_occupancy": 23,
+      "first_slot": {
+        "t": 389,
+        "request": 4,
+        "write": 11,
+        "read": 33,
+        "consume": 34
+      },
+      "last_slot": {
+        "t": 8189,
+        "request": 259,
+        "write": 266,
+        "read": 288,
+        "consume": 289
+      }
+    },
+    {
+      "stack": 3,
+      "engine": 6,
+      "rows": 256,
+      "max_occupancy": 23,
+      "first_slot": {
+        "t": 390,
+        "request": 4,
+        "write": 11,
+        "read": 33,
+        "consume": 34
+      },
+      "last_slot": {
+        "t": 8190,
+        "request": 259,
+        "write": 266,
+        "read": 288,
+        "consume": 289
+      }
+    },
+    {
+      "stack": 3,
+      "engine": 7,
+      "rows": 256,
+      "max_occupancy": 23,
+      "first_slot": {
+        "t": 391,
+        "request": 4,
+        "write": 11,
+        "read": 33,
+        "consume": 34
+      },
+      "last_slot": {
+        "t": 8191,
+        "request": 259,
+        "write": 266,
+        "read": 288,
+        "consume": 289
+      }
+    }
+  ],
+  "static_k_issuer": {
+    "segment_latency": 2,
+    "outbound_pin_edges": 1,
+    "return_pin_edges": 1,
+    "total_added_edges": 2,
+    "RESPONSE_LAT": 2,
+    "ROW_RETURN_LAT": 9,
+    "source_producer": "qkd_ectl_a_tp8_epoch_direct STATIC_QK=1"
+  },
+  "artifact_note": "Compact exact compiler receipt; full slots regenerated with --context 8192 --issuer-segment-latency 2 --consume-age 34"
+}

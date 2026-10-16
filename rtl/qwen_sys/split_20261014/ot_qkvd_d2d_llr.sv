@@ -164,14 +164,23 @@ module ot_qkvd_llr_replay_sram_leaf #(
     // all readable queue words are written before their valid reservation.
     // Capture write pins, then commit to the SRAM. Track both collision ages
     // because the macro read is synchronous and read-before-write.
-    reg wq, wqq;
-    reg [QA-1:0] aq, aqq, rq;
+    reg wq;
+    reg [QA-1:0] aq;
+    reg hit_age0, hit_age1;
     reg [W-1:0] dq, dqq;
     wire [511:0] mr;
     always @(posedge ck) begin
         wq <= we; aq <= wa; dq <= din;
-        wqq <= wq; aqq <= aq; dqq <= dq;
-        rq <= ra;
+        dqq <= dq;
+        // Compare at the same edge that captures the matching write/read ages.
+        // Next edge's mux sees exactly the old (wq,aq,rq)/(wqq,aqq,rq)
+        // collision decisions, without a six-bit compare driving all W outputs.
+`ifdef OT_QKD_REPLAY_HIT_MUT
+        hit_age0 <= we && wa != ra; // negative control: corrupt current-age selection
+`else
+        hit_age0 <= we && wa == ra;
+`endif
+        hit_age1 <= wq && aq == ra;
     end
     ot_sram_1r1w_64x512_m1_r2c2 u_sram (
         .clk(ck), .r_ce_in(1'b1), .r_addr_in(ra), .rd_out(mr),
@@ -182,8 +191,8 @@ module ot_qkvd_llr_replay_sram_leaf #(
         // A write arriving after this read reservation is forbidden by the
         // compiler ownership check. Bypass only the two captured write ages;
         // raw write pins must not feed the read-output D cones.
-        dout <= (wq && aq == rq ? dq :
-                 wqq && aqq == rq ? dqq : mr[W-1:0]) ^
+        dout <= (hit_age0 ? dq :
+                 hit_age1 ? dqq : mr[W-1:0]) ^
             (MUT != 0 ? {{(W-1){1'b0}}, 1'b1} : {W{1'b0}});
 
 endmodule

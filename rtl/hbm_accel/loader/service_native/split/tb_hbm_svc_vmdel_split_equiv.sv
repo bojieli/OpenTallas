@@ -4,19 +4,20 @@
 // with protocol violations (duplicate/epoch-wrong fills, early starts, begin conflicts). Every output bit, every cycle.
 module tb_hbm_svc_vmdel_split_equiv;
  parameter integer SEED=1, CYCLES=60000, LAT=0;  // LAT: split interface latency (v3 lane pin registers: 2)
+ parameter integer SLAT=0;  // reference STATUS_LAT (v5 lanes: cross-lane status output + pin flops = 2)
  reg clk=0;always #5 clk=~clk;
  reg rst_n=0,begin_v=0,begin_bank=0,start=0,start_bank=0;
  reg [15:0] begin_epoch=0,start_epoch=0,start_base_sector=0;
  reg [31:0] fill_v=0,fill_bank=0;reg [191:0] fill_slot=0;reg [511:0] fill_epoch=0;reg [8191:0] fill_data=0;
  wire [1:0] br_a,br_b;wire [2247:0] dq_a,dq_b;wire busy_a,busy_b,fault_a,fault_b;
- ot_hbm_svc_static_vm_delivery ref_i(.clk(clk),.rst_n(rst_n),.begin_v(begin_v),.begin_bank(begin_bank),.begin_epoch(begin_epoch),
+ ot_hbm_svc_static_vm_delivery #(.STATUS_LAT(SLAT)) ref_i(.clk(clk),.rst_n(rst_n),.begin_v(begin_v),.begin_bank(begin_bank),.begin_epoch(begin_epoch),
   .fill_v(fill_v),.fill_bank(fill_bank),.fill_slot(fill_slot),.fill_epoch(fill_epoch),.fill_data(fill_data),.block_ready(br_a),
   .start(start),.start_bank(start_bank),.start_epoch(start_epoch),.start_base_sector(start_base_sector),.dq(dq_a),.busy(busy_a),.fault(fault_a));
  ot_hbm_svc_static_vm_delivery_split dut(.clk(clk),.rst_n(rst_n),.begin_v(begin_v),.begin_bank(begin_bank),.begin_epoch(begin_epoch),
   .fill_v(fill_v),.fill_bank(fill_bank),.fill_slot(fill_slot),.fill_epoch(fill_epoch),.fill_data(fill_data),.block_ready(br_b),
   .start(start),.start_bank(start_bank),.start_epoch(start_epoch),.start_base_sector(start_base_sector),.dq(dq_b),.busy(busy_b),.fault(fault_b));
  integer seed=SEED,cyc,p,checks=0,starts=0,valid_dq=0,faults_seen=0,resets=0,completes=0;
- reg [15:0] ep[0:1]; reg [6:0] nxt[0:31][0:1]; reg [1:0] opened; integer viol_at=-1,fault_run=0; reg v; reg run_bank=0; reg open_pend=0; 
+ reg [15:0] ep[0:1]; reg [6:0] nxt[0:31][0:1]; reg [1:0] opened; integer viol_at=-1,fault_run=0; reg v; reg run_bank=0; reg open_pend=0; reg post_rst=0; 
  function integer rnd(input integer n); rnd=$unsigned($random(seed))%n; endfunction
  // reference outputs delayed LAT cycles; the first LAT cycles after each reset release compare nothing (the split's
  // output registers still hold their reset value while the reference already shows its post-reset state)
@@ -42,14 +43,16 @@ module tb_hbm_svc_vmdel_split_equiv;
    begin_v=0;start=0;fill_v=0;
    fault_run=fault_a?fault_run+1:0;
    v=(cyc==viol_at);
-   if(!rst_n) begin rst_n=(rnd(4)!=0); opened=0; for(p=0;p<32;p=p+1)begin nxt[p][0]=0;nxt[p][1]=0;end
+   if(!rst_n) begin rst_n=(rnd(4)!=0); post_rst=rst_n; opened=0; for(p=0;p<32;p=p+1)begin nxt[p][0]=0;nxt[p][1]=0;end
      viol_at=(rnd(3)==0)?cyc+1+rnd(3000):-1; end
    else if(fault_run>40 || rnd(20000)==0) begin rst_n=0; resets=resets+1; end
    else begin
     // begin: mostly on a closed bank, sometimes a conflict
-    if((!opened[0]&&!(busy_a&&run_bank==0)||!opened[1]&&!(busy_a&&run_bank==1))&&rnd(20)==0 || v&&rnd(4)==0) begin
+    // H-NETLIST/kits 10-16: a begin on the FIRST edge after every reset release (directed: the reset-release edge of
+    // the lane state, v4 rst pin flop, is otherwise exercised only by chance)
+    if(post_rst || (!opened[0]&&!(busy_a&&run_bank==0)||!opened[1]&&!(busy_a&&run_bank==1))&&rnd(20)==0 || v&&rnd(4)==0) begin
      begin_bank=v?rnd(2):(!opened[0]?0:1); begin_epoch=$random(seed); if(!v && busy_a && run_bank==begin_bank) begin_bank=!begin_bank;
-     begin_v=1;
+     begin_v=1; post_rst=0;
      if(!opened[begin_bank]) begin ep[begin_bank]=begin_epoch; open_pend=1; end
     end
     // fills: each PC independently, next slot of an opened bank, occasional violations
@@ -72,8 +75,8 @@ module tb_hbm_svc_vmdel_split_equiv;
     end
    end
   end
-  $display("SPLIT_EQUIV PASS LAT=%0d seed=%0d cycles=%0d checks=%0d starts=%0d dq_valid_lanes=%0d fault_cycles=%0d resets=%0d",
-           LAT,seed,CYCLES,checks,starts,valid_dq,faults_seen,resets);
+  $display("SPLIT_EQUIV PASS LAT=%0d SLAT=%0d seed=%0d cycles=%0d checks=%0d starts=%0d dq_valid_lanes=%0d fault_cycles=%0d resets=%0d",
+           LAT,SLAT,seed,CYCLES,checks,starts,valid_dq,faults_seen,resets);
   $finish;
  end
 endmodule

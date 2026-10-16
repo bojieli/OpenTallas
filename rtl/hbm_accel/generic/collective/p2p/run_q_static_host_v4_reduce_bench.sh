@@ -7,6 +7,7 @@ set -euo pipefail
 HERE=$(cd -- "$(dirname -- "$0")" && pwd)
 ROOT=${HCOLL_ROOT:-$(git -C "$HERE" rev-parse --show-toplevel)}
 OUT=$(realpath -m "${1:?output directory}")
+INJLAT=${INJLAT:-12}   # DUT SU inject latency (H-NETLIST/coll 2026-10-16); MUT 3 = SU answer one edge early
 mkdir -p "$OUT"
 p=$ROOT/rtl/hbm_accel/generic/collective/p2p
 vl=$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator; [ -x "$vl" ] || vl=verilator
@@ -20,8 +21,8 @@ src=("$p/tb_hgi_coll_q_static_host_v4_reduce.sv" "$p/ot_hfd_coll_q2_static_host_
    "$ROOT/rtl/hdc/ot_hdc_fp32_add_lat.sv" "$ROOT/rtl/hdc/ot_hdc_prefix.sv" "$ROOT/rtl/hdc/ot_hdc_fastfp.sv"
    "$ROOT/physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v")
 sha256sum "${src[@]}" > "$OUT/sources.sha256"
-for mutant in 0 1 2;do
-  "$vl" --binary --timing -j 8 -Wno-fatal -Wno-lint -Wno-style -GMUT="$mutant" --top-module tb_hgi_coll_q_static_host_v4_reduce \
+for mutant in 0 1 2 3;do
+  "$vl" --binary --timing -j 8 -Wno-fatal -Wno-lint -Wno-style -GMUT="$mutant" -GINJLAT="$INJLAT" --top-module tb_hgi_coll_q_static_host_v4_reduce \
    --Mdir "$OUT/obj$mutant" "${src[@]}" > "$OUT/m$mutant.compile.log" 2>&1 || { tail -20 "$OUT/m$mutant.compile.log";exit 2; }
   set +e
   "$OUT/obj$mutant/Vtb_hgi_coll_q_static_host_v4_reduce" > "$OUT/m$mutant.log" 2>&1
@@ -36,4 +37,4 @@ for mutant in 0 1 2;do
   fi
   rm -rf "$OUT/obj$mutant"
 done
-echo HCOLL_Q2_HOST_V4_REDUCE_GATE_PASS
+echo HCOLL_Q2_HOST_V4_REDUCE_GATE_PASS INJLAT=$INJLAT

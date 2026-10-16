@@ -1,0 +1,250 @@
+{
+  "main": "c1a0bcbfac99192f86d7abe179a8c4fae71fa1df",
+  "head": "a36f859bde10ba692541a77855dfb6885d2b5c2b",
+  "dependencies": [
+    {
+      "path": "physical/common_flow/pin_reg_split.tcl",
+      "branch_blob": "2caf356dcae8a3ad0d6fe2d333d4b4fbd322df60",
+      "main_blob": "2caf356dcae8a3ad0d6fe2d333d4b4fbd322df60",
+      "equal": true
+    },
+    {
+      "path": "physical/dsrom_window_source/leaf_iohold.tcl",
+      "branch_blob": "5f002c5d4afd8d6680dc65bb5f2922da9b042147",
+      "main_blob": "5f002c5d4afd8d6680dc65bb5f2922da9b042147",
+      "equal": true
+    },
+    {
+      "path": "physical/qwen_die_masters/io_flop_at_pins.tcl",
+      "branch_blob": "09e4879787fd8da142087be659db57a51336ea3e",
+      "main_blob": "09e4879787fd8da142087be659db57a51336ea3e",
+      "equal": true
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_ctrl/ot_s81_engine_adapter.sv",
+      "branch_blob": "471d96b7a11ebf322153e4d82f30d94c28a61899",
+      "main_blob": "471d96b7a11ebf322153e4d82f30d94c28a61899",
+      "equal": true
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_caq.sv",
+      "branch_blob": "5fb05a0ed229d1547235eea631e7d6064d9934bf",
+      "main_blob": "5fb05a0ed229d1547235eea631e7d6064d9934bf",
+      "equal": true
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_ccr.sv",
+      "branch_blob": "25f1d6da4daae82759f890a669b6c945eeab2175",
+      "main_blob": "25f1d6da4daae82759f890a669b6c945eeab2175",
+      "equal": true
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_cseq.sv",
+      "branch_blob": "d3a5a2870d9a68c8299995dcccd8bcbd5578cae9",
+      "main_blob": "d3a5a2870d9a68c8299995dcccd8bcbd5578cae9",
+      "equal": true
+    },
+    {
+      "path": "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_stree.sv",
+      "branch_blob": "165b48a20e6c816a50eb73fadd5b166bc27a11d1",
+      "main_blob": "165b48a20e6c816a50eb73fadd5b166bc27a11d1",
+      "equal": true
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_delay.sv",
+      "branch_blob": "4a169c31c0ab65b6d992c87e27971b656cdc4fee",
+      "main_blob": "4a169c31c0ab65b6d992c87e27971b656cdc4fee",
+      "equal": true
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fastfp.sv",
+      "branch_blob": "83a0e3f0423e812ee2a11496d638945b1fbe51f5",
+      "main_blob": "83a0e3f0423e812ee2a11496d638945b1fbe51f5",
+      "equal": true
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+      "branch_blob": "43df8fad7e007027e224037f58f17ca4d80f2f35",
+      "main_blob": "43df8fad7e007027e224037f58f17ca4d80f2f35",
+      "equal": true
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+      "branch_blob": "8ec3f3c48aa559bfd6e5de83b749d79544748260",
+      "main_blob": "8ec3f3c48aa559bfd6e5de83b749d79544748260",
+      "equal": true
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fp32_f12.sv",
+      "branch_blob": "20e66370026819f4dec30569181efa241c93e374",
+      "main_blob": "20e66370026819f4dec30569181efa241c93e374",
+      "equal": true
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+      "branch_blob": "b3d664d7d691d94d0220f7856f1856343ae6b46b",
+      "main_blob": "b3d664d7d691d94d0220f7856f1856343ae6b46b",
+      "equal": true
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+      "branch_blob": "696d2461751e9d2af185333f4635ce858673e726",
+      "main_blob": "696d2461751e9d2af185333f4635ce858673e726",
+      "equal": true
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_fpu.sv",
+      "branch_blob": "4470875788bf7779604211945dbcbac21a389b8e",
+      "main_blob": "4470875788bf7779604211945dbcbac21a389b8e",
+      "equal": true
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_prefix.sv",
+      "branch_blob": "73a8c705c11a9d9a9361163529cbd0652e1e14c6",
+      "main_blob": "73a8c705c11a9d9a9361163529cbd0652e1e14c6",
+      "equal": true
+    },
+    {
+      "path": "rtl/hdc/ot_hdc_sfu.sv",
+      "branch_blob": "738d9c8c2a4c23fe4bb68e3396d7484b09569b8c",
+      "main_blob": "738d9c8c2a4c23fe4bb68e3396d7484b09569b8c",
+      "equal": true
+    },
+    {
+      "path": "rtl/hdc/v41/ot_hdc_actquant.sv",
+      "branch_blob": "367c7cb203c882e484c151084ad46dd743f7ccae",
+      "main_blob": "367c7cb203c882e484c151084ad46dd743f7ccae",
+      "equal": true
+    },
+    {
+      "path": "rtl/hdc/v41/ot_hdc_fdiv.sv",
+      "branch_blob": "a7447b8ba8023fe34a744a9517e0137471c9ef64",
+      "main_blob": "a7447b8ba8023fe34a744a9517e0137471c9ef64",
+      "equal": true
+    },
+    {
+      "path": "rtl/hdc/v41/ot_hdc_fsqrt.sv",
+      "branch_blob": "02284b940cbec70adaff4b583b1420c1bd87f567",
+      "main_blob": "02284b940cbec70adaff4b583b1420c1bd87f567",
+      "equal": true
+    },
+    {
+      "path": "rtl/hdc/v41/ot_hdc_softplus.sv",
+      "branch_blob": "a6c873ddb1fd7be7a36d96438f19164f825206cf",
+      "main_blob": "a6c873ddb1fd7be7a36d96438f19164f825206cf",
+      "equal": true
+    },
+    {
+      "path": "rtl/hdc/v41x/ot_dsrom_aq12.sv",
+      "branch_blob": "02945a7448ccedfa116a04a249cb5d052648e968",
+      "main_blob": "02945a7448ccedfa116a04a249cb5d052648e968",
+      "equal": true
+    },
+    {
+      "path": "rtl/hdc/v41x/ot_dsrom_divc.sv",
+      "branch_blob": "7659b5595f7bf0909a0fedda4a1e723d74535c61",
+      "main_blob": "7659b5595f7bf0909a0fedda4a1e723d74535c61",
+      "equal": true
+    },
+    {
+      "path": "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv",
+      "branch_blob": "f7a3b6ff3121b21f74693117d8a362b428e3927a",
+      "main_blob": "f7a3b6ff3121b21f74693117d8a362b428e3927a",
+      "equal": true
+    },
+    {
+      "path": "rtl/hdc/v41x/ot_dsrom_su_add6.sv",
+      "branch_blob": "f1f7330a3337077b224756c746367d603f57891a",
+      "main_blob": "f1f7330a3337077b224756c746367d603f57891a",
+      "equal": true
+    },
+    {
+      "path": "rtl/hdc/v41x/ot_dsrom_su_hcpost.sv",
+      "branch_blob": "5121a8a1c209a6e49e2daf8b529945a987d8d0e1",
+      "main_blob": "5121a8a1c209a6e49e2daf8b529945a987d8d0e1",
+      "equal": true
+    },
+    {
+      "path": "rtl/hdc/v41x/ot_dsrom_su_norm.sv",
+      "branch_blob": "6d657096e763094c2cbd441df2cab654ce0f19dc",
+      "main_blob": "6d657096e763094c2cbd441df2cab654ce0f19dc",
+      "equal": true
+    },
+    {
+      "path": "rtl/hdc/v41x/ot_hdc_v41x_sfu.sv",
+      "branch_blob": "8c4e55e3fe604df7a3cda7bb528a8b38a1af4c9b",
+      "main_blob": "8c4e55e3fe604df7a3cda7bb528a8b38a1af4c9b",
+      "equal": true
+    },
+    {
+      "path": "rtl/lib/ot_async_fifo.sv",
+      "branch_blob": "72e9bc52ed3a7e996a6cbe94f5ef455506c31035",
+      "main_blob": "72e9bc52ed3a7e996a6cbe94f5ef455506c31035",
+      "equal": true
+    },
+    {
+      "path": "rtl/lib/ot_reset_sync.sv",
+      "branch_blob": "5c5df2ae758f07cf5a59b16148e557cbad582e19",
+      "main_blob": "5c5df2ae758f07cf5a59b16148e557cbad582e19",
+      "equal": true
+    },
+    {
+      "path": "rtl/lib/ot_skid_buffer.sv",
+      "branch_blob": "2bd5d95857d836708a56bc0da7f47f6aad1f229a",
+      "main_blob": "2bd5d95857d836708a56bc0da7f47f6aad1f229a",
+      "equal": true
+    },
+    {
+      "path": "rtl/link/ot_fifo_sram_fwft.sv",
+      "branch_blob": "688ffe6f838e1f82bb0cea0b4dcebf27e1250a60",
+      "main_blob": "688ffe6f838e1f82bb0cea0b4dcebf27e1250a60",
+      "equal": true
+    },
+    {
+      "path": "rtl/proto/ot_fp32_add_rne_pipe.sv",
+      "branch_blob": "cce13fad2aaf8514f270e98dd88b4e1b3f1edd94",
+      "main_blob": "cce13fad2aaf8514f270e98dd88b4e1b3f1edd94",
+      "equal": true
+    },
+    {
+      "path": "tools/s81_suhc/hc_gate.py",
+      "branch_blob": "dcca58a010607babc8e67719998c3df51b4723e6",
+      "main_blob": "dcca58a010607babc8e67719998c3df51b4723e6",
+      "equal": true
+    },
+    {
+      "path": "tools/s81_suhc/hc_gate_bench.sh",
+      "branch_blob": "a5ecfaf28b64f7ec3e0715f2af25b67e386629de",
+      "main_blob": "a5ecfaf28b64f7ec3e0715f2af25b67e386629de",
+      "equal": true
+    },
+    {
+      "path": "tools/s81_suhc/hc_gate_benches.json",
+      "branch_blob": "6b182d5b8a92bd03241a9498fe2d7b2275a72f43",
+      "main_blob": "6b182d5b8a92bd03241a9498fe2d7b2275a72f43",
+      "equal": true
+    }
+  ],
+  "delivery": {
+    "method": "Restore final state of three kit directories plus results/rtl/s81_hc_native_0030/native_audit.json and results/rtl/s81_hc3_recovery_1016 onto an origin/main review worktree, exclude stale source_binding_history for main review. Preserve exact immutable job commits and their gate binding on original branch. Do not merge whole branch.",
+    "kit_paths": [
+      "physical/ref_tile/s81hc_caq_ref",
+      "physical/ref_tile/s81hc_ccrh2_ref",
+      "physical/ref_tile/s81hc_cseqh2_ref"
+    ],
+    "source_rtl_change": "NONE: all source files byte-identical to origin/main",
+    "minimal_logical_cherries": [
+      "c616d7b5c",
+      "53d58744e (path-extract final CAQ state preferred; preimage includes rejected92b7b8e42 job-only override)",
+      "9b4ca2651",
+      "50988b06f",
+      "a36f859bd"
+    ],
+    "skip": [
+      "92b7b8e42 rejected fp threshold override",
+      "69e1a2b72 stale pr1 gate receipts superseded CCR/CSEQ",
+      "040b9550a preserve CAQ exact receipt; no stale source history required for main review"
+    ],
+    "new_gate_receipts": "PENDING CTS completion; will commit final receipts separately"
+  }
+}

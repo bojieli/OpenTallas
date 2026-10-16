@@ -49,7 +49,13 @@ complete slots; provider row words + compiler expectations + fill + core epoch; 
 from real sources (D2D RX payload and record slots, sequencer dc / program_obs / descriptor_obs / cfg_image_ready, TT
 program_obs / control_stores_ready / head context, collective cmd_free / faults, D2D / native59 / result-train faults,
 constant-ROM fault codes).  `pkg_s[1:0]` / `die_ps` of the collective are the TP8 rank straps (rank = 4 die_ps + pkg_s,
-per package position): three `qfd_sigbump` package strap bumps.  Placement: sys_face sited after the homes south of
+per package position): three `qfd_sigbump` package strap bumps.  qfd_sys_face instantiates the Q-LINK sequencer `qfd_d2d_cal_seq` as the ONLY producer of the D2D end's cfg_* /
+cal_start / cal_seg (Q-DVM+LINK ef50aba9b); its T calendar asserts that its layer / token-run flags coincide with the
+sequencer's starts (bench on the production 36-layer START table: 1,512 events exact, START-shift mutant FAIL).  Run
+anchor: first token = forwarded epoch strobe (bump net lnk_fwd_epoch) + a compiled offset from the config ROM, later
+tokens back-to-back at the compiled token period (both dies count from the same strobe).  Program admission (kind-13
+BEGIN/AUTH, then the 1032-word replay and the WITNESS) belongs in a separate admission run, not in every token run;
+CONTEXT (kind 12) and WITNESS may be carried per token.  Placement: sys_face sited after the homes south of
 native59 / embed_prov (`sys_face_bind.place`, 19,541.5 / 6,605.3), bumps beside the collective; to be folded into the
 next homes revision by the die lead (`OT_SPLIT_SYSFACE_XY` overrides).  Production calendar/program images are the
 compiler's (`tools/qwen_split/sys_face_image.py`; Q-FUNC); EMB row record format (kinds 6/7 + kind-8 header) is owed by

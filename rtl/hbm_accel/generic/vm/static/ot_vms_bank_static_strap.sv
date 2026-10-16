@@ -29,6 +29,7 @@
 module ot_vms_bank_static_strap #(
     parameter integer RG = 2,
     parameter integer WG = 2,
+    parameter integer EG_WIDE = 0, // strap6: 1 = egress payload from the wide leaves only (identical eg whenever eg_v)
     parameter integer MUT = 0 // 1: wrong read owner; 2: write-sector permutation; 3: CE population fault; 4: write enable ignores the slot (any active source writes)
 ) (
     input wire clk, rst_n,
@@ -124,25 +125,26 @@ module ot_vms_bank_static_strap #(
     wire [280:0] dq_r = {dq_v, dq_d[279:0]}, kq_r = {kq_v, kq_d[279:0]};
     wire [275:0] xq_r = {xq_v, xq_d[274:0]}, x2_r = {x2_v, x2_d[274:0]};
     wire [284:0] pq_r = {pq_v, pq_d[283:0]};
-    always @(posedge clk) begin rq_d <= rq; wq_d <= wq; dq_d <= dq; kq_d <= kq; xq_d <= xq; x2_d <= xq2; pq_d <= pq; end
+    // strap5 (q3 strap4 TT -111.27: 63 endpoints, every one launched at a write-leaf valid replica lv_rep/sv -> ~350 ps
+    // buffered 32-load mask net -> AND -> write OR tree -> s1w_d / egress pin clones): a WRITE source's payload is
+    // zeroed AT ITS PIN CAPTURE by its own valid pin (D-side AND at the face, same edge), so an inactive source's leaf is
+    // already zero and the payload pin flops feed the OR tree directly.  Only the 12 decoded sector bits (dsec of a
+    // zero sector is not zero) are still masked, by the leaf's pin valid flop (12 loads).  The packet keeps its
+    // unmasked pin flops for reads/tags and gets a separate write-payload capture.  Same edges, same written data.
+    reg [274:0] pqw_d;
+    always @(posedge clk) begin
+        rq_d <= rq; pq_d <= pq;
+        for (integer g = 0; g < WG; g = g + 1) wq_d[g*281 +: 281] <= wq[g*281 + 280] ? wq[g*281 +: 281] : 281'd0;
+        dq_d <= dq[280] ? dq : 281'd0; kq_d <= kq[280] ? kq : 281'd0;
+        xq_d <= xq[275] ? xq : 276'd0; x2_d <= xq2[275] ? xq2 : 276'd0;
+        pqw_d <= (pq[284] && pq[283]) ? pq[282:8] : 275'd0;
+    end
     always @(posedge clk or negedge rn)
         if (!rn) begin rq_v <= '0; wq_v <= '0; dq_v <= 1'b0; kq_v <= 1'b0; xq_v <= 1'b0; x2_v <= 1'b0; pq_v <= 1'b0; end
         else begin
             for (integer g = 0; g < RG; g = g + 1) rq_v[g] <= rq[g*17 + 16];
             for (integer g = 0; g < WG; g = g + 1) wq_v[g] <= wq[g*281 + 280];
             dq_v <= dq[280]; kq_v <= kq[280]; xq_v <= xq[275]; x2_v <= xq2[275]; pq_v <= pq[284];
-        end
-    // strap4 (q0 strap2 TT -149.91: dq_v pin flop -> ~300 ps buffer tree over 276 AND gates -> write OR tree -> s1w_d):
-    // every write-leaf valid is ALSO captured by LVR replica flops at its pin (one per 32-bit payload slice), each
-    // masking only its slice.  Same edge and value as the pin valid (reset 0 like it); kept so synthesis cannot merge them.
-    localparam integer LVR = 9;                        // ceil(276 / 32)
-    (* keep = "true" *) reg [WG+5:0] lv_rep [0:LVR-1]; // [WG-1:0] wq, WG kq, WG+1 xq, WG+2 pq_v, WG+3 x2, WG+4 dq, WG+5 pq[283]
-    always @(posedge clk or negedge rn)
-        if (!rn) begin for (integer k = 0; k < LVR; k = k + 1) lv_rep[k] <= '0; end
-        else for (integer k = 0; k < LVR; k = k + 1) begin
-            for (integer g = 0; g < WG; g = g + 1) lv_rep[k][g] <= wq[g*281 + 280];
-            lv_rep[k][WG] <= kq[280]; lv_rep[k][WG+1] <= xq[275]; lv_rep[k][WG+2] <= pq[284];
-            lv_rep[k][WG+3] <= xq2[275]; lv_rep[k][WG+4] <= dq[280]; lv_rep[k][WG+5] <= pq[283];
         end
     // output registers: control valid + payload
     reg eg_v; reg [274:0] eg_d; reg [RG-1:0] rr_v; reg [RG*256-1:0] rr_d; reg pr_v; reg [264:0] pr_d;
@@ -178,7 +180,7 @@ module ot_vms_bank_static_strap #(
         end else if (wl==WG+1) begin : g_cw
             assign source_payload={1'b0,xq_r[274:0]};
         end else if (wl==WG+2) begin : g_packet
-            assign source_payload={1'b0,pq_r[282:8]};
+            assign source_payload={1'b0,pqw_d};
         end else if (wl==WG+3) begin : g_ccw
             assign source_payload={1'b0,x2_r[274:0]};
         end else if (wl==WG+4) begin : g_dma
@@ -187,13 +189,21 @@ module ot_vms_bank_static_strap #(
             assign source_payload=276'd0;
         end
         if (wl<WG+5) begin : g_mask
-            for (genvar ws = 0; ws < LVR; ws = ws + 1) begin : g_slice
-                localparam integer LO = ws * 32, HI = (ws * 32 + 31 > 275) ? 275 : ws * 32 + 31;
-                wire sv = (wl == WG+2) ? (lv_rep[ws][WG+2] && lv_rep[ws][WG+5]) : lv_rep[ws][wl];
-                assign write_tree[WLEAVES+wl][HI:LO] = source_payload[HI:LO] & {(HI-LO+1){sv}};
-            end
+            // payload [263:0] (and every bit of the ring/packet leaves) is zero unless the source is valid (pin capture)
+            assign write_tree[WLEAVES+wl] = {source_payload[275:264] & {12{w_leaf_v[wl]}}, source_payload[263:0]};
         end
         else assign write_tree[WLEAVES+wl]=276'd0;
+    end
+    // strap6 (q0 strap5 TT -114.94: 21 of 22 violators = packet/COLL leaf -> write OR tree -> egress pin clones across the
+    // SRAM stack): the mirror egress carries ONLY wide writes (eg_v needs the slot's wide source and no other active
+    // source, whose leaves are then zero), so eg_d is the OR of the WG wide leaves alone.  Identical eg whenever eg_v.
+    wire [275:0] eg_or;
+    if (WG == 1) begin : g_eg1
+        assign eg_or = write_tree[WLEAVES];
+    end else begin : g_egn
+        reg [275:0] eo;
+        always @* begin eo = '0; for (integer g = 0; g < WG; g = g + 1) eo = eo | write_tree[WLEAVES+g]; end
+        assign eg_or = eo;
     end
     for (genvar wn=1;wn<WLEAVES;wn=wn+1) begin : g_write_or
         assign write_tree[wn]=write_tree[2*wn] | write_tree[2*wn+1];
@@ -297,7 +307,7 @@ module ot_vms_bank_static_strap #(
         // A qualified capture prevents merging it into the internal S1 data.
         // Unconditional capture (H-ELEM-A 2026-10-15: gate reg->reg -81 / -228 ps ended at the eg_d enable decode):
         // eg_v alone qualifies the egress beat; the payload register carries no enable from the slot/ECC decode.
-        eg_d <= wr_decode[274:0];
+        eg_d <= (EG_WIDE != 0) ? eg_or[274:0] : wr_decode[274:0];
     end
     // ------------------------------------------------------------------ S2: macro pins
     reg [9:0] m_ra, m_wa; reg m_rA, m_rC, m_rB, m_wA, m_wB, m_wC; reg [311:0] m_wd; reg [7:0] m_mA, m_mC; reg [15:0] m_mB;

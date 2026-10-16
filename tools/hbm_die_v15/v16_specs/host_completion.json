@@ -3336,15 +3336,15 @@
     "calendar_SW",
     "client_seq",
     0,
-    8
+    6
    ],
    "dst": [
     "hb_vms_SW",
     "client_seq",
     0,
-    8
+    6
    ],
-   "bits": 8,
+   "bits": 6,
    "clock": "stream",
    "basis": "Universal W187 field contains zero-extended original per-quadrant packed value (tools/hbm_vm_static_calendar.py pack); exact low-field slice preserves all original client lane bits."
   },
@@ -3353,15 +3353,15 @@
     "calendar_SW",
     "response_enable",
     0,
-    4
+    3
    ],
    "dst": [
     "hb_vms_SW",
     "response_enable",
     0,
-    4
+    3
    ],
-   "bits": 4,
+   "bits": 3,
    "clock": "stream",
    "basis": "Universal W187 field contains zero-extended original per-quadrant packed value (tools/hbm_vm_static_calendar.py pack); exact low-field slice preserves all original client lane bits."
   },
@@ -3370,15 +3370,15 @@
     "calendar_SW",
     "response_seq",
     0,
-    8
+    6
    ],
    "dst": [
     "hb_vms_SW",
     "response_seq",
     0,
-    8
+    6
    ],
-   "bits": 8,
+   "bits": 6,
    "clock": "stream",
    "basis": "Universal W187 field contains zero-extended original per-quadrant packed value (tools/hbm_vm_static_calendar.py pack); exact low-field slice preserves all original client lane bits."
   },
@@ -3493,6 +3493,91 @@
    ],
    "dst": [
     "hb_vms_SE",
+    "hub_ring_client",
+    0,
+    2
+   ],
+   "bits": 2,
+   "clock": "stream",
+   "basis": "Universal W187 field contains zero-extended original per-quadrant packed value (tools/hbm_vm_static_calendar.py pack); exact low-field slice preserves all original client lane bits."
+  },
+  {
+   "src": [
+    "calendar_NW",
+    "client_seq",
+    0,
+    2
+   ],
+   "dst": [
+    "hb_vms_NW",
+    "client_seq",
+    0,
+    2
+   ],
+   "bits": 2,
+   "clock": "stream",
+   "basis": "Universal W187 field contains zero-extended original per-quadrant packed value (tools/hbm_vm_static_calendar.py pack); exact low-field slice preserves all original client lane bits."
+  },
+  {
+   "src": [
+    "calendar_NW",
+    "response_enable",
+    0,
+    1
+   ],
+   "dst": [
+    "hb_vms_NW",
+    "response_enable",
+    0,
+    1
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "Universal W187 field contains zero-extended original per-quadrant packed value (tools/hbm_vm_static_calendar.py pack); exact low-field slice preserves all original client lane bits."
+  },
+  {
+   "src": [
+    "calendar_NW",
+    "response_seq",
+    0,
+    2
+   ],
+   "dst": [
+    "hb_vms_NW",
+    "response_seq",
+    0,
+    2
+   ],
+   "bits": 2,
+   "clock": "stream",
+   "basis": "Universal W187 field contains zero-extended original per-quadrant packed value (tools/hbm_vm_static_calendar.py pack); exact low-field slice preserves all original client lane bits."
+  },
+  {
+   "src": [
+    "calendar_NW",
+    "bank_client",
+    0,
+    8
+   ],
+   "dst": [
+    "hb_vms_NW",
+    "bank_client",
+    0,
+    8
+   ],
+   "bits": 8,
+   "clock": "stream",
+   "basis": "Universal W187 field contains zero-extended original per-quadrant packed value (tools/hbm_vm_static_calendar.py pack); exact low-field slice preserves all original client lane bits."
+  },
+  {
+   "src": [
+    "calendar_NW",
+    "hub_ring_client",
+    0,
+    2
+   ],
+   "dst": [
+    "hb_vms_NW",
     "hub_ring_client",
     0,
     2
@@ -3625,6 +3710,18 @@
    "kind": "clock"
   },
   {
+   "inst": "epcal_SW",
+   "port": "clk_cap",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "epcal_SW",
+   "port": "clk_mem",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
    "inst": "cp_ep_SE",
    "port": "clk",
    "domain": "stream",
@@ -3633,6 +3730,18 @@
   {
    "inst": "epcal_SE",
    "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "epcal_SE",
+   "port": "clk_cap",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "epcal_SE",
+   "port": "clk_mem",
    "domain": "stream",
    "kind": "clock"
   },
@@ -3649,6 +3758,18 @@
    "kind": "clock"
   },
   {
+   "inst": "epcal_NW",
+   "port": "clk_cap",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "epcal_NW",
+   "port": "clk_mem",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
    "inst": "cp_ep_NE",
    "port": "clk",
    "domain": "stream",
@@ -3657,42 +3778,6 @@
   {
    "inst": "epcal_NE",
    "port": "clk",
-   "domain": "stream",
-   "kind": "clock"
-  },
-  {
-   "inst": "epcal_SW",
-   "port": "clk_cap",
-   "domain": "stream",
-   "kind": "clock"
-  },
-  {
-   "inst": "epcal_SW",
-   "port": "clk_mem",
-   "domain": "stream",
-   "kind": "clock"
-  },
-  {
-   "inst": "epcal_SE",
-   "port": "clk_cap",
-   "domain": "stream",
-   "kind": "clock"
-  },
-  {
-   "inst": "epcal_SE",
-   "port": "clk_mem",
-   "domain": "stream",
-   "kind": "clock"
-  },
-  {
-   "inst": "epcal_NW",
-   "port": "clk_cap",
-   "domain": "stream",
-   "kind": "clock"
-  },
-  {
-   "inst": "epcal_NW",
-   "port": "clk_mem",
    "domain": "stream",
    "kind": "clock"
   },
@@ -3733,6 +3818,11 @@
   "calendar_SE_response_seq",
   "calendar_SE_bank_client",
   "calendar_SE_hub_ring_client",
+  "calendar_NW_client_seq",
+  "calendar_NW_response_enable",
+  "calendar_NW_response_seq",
+  "calendar_NW_bank_client",
+  "calendar_NW_hub_ring_client",
   "calendar_NE_client_seq",
   "calendar_NE_response_enable",
   "calendar_NE_response_seq",

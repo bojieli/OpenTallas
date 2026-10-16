@@ -7,7 +7,11 @@
 // every request's lane/bank and is the stimulus only (the bank RTL has its own exact benches).
 // -DMUT1 / -DMUT2 (static load mutants) must FAIL.
 module tb_xload_static_lock;
+`ifdef XLOAD_RD_LAT
+    localparam integer RD_LAT = `XLOAD_RD_LAT;   // VM read return latency (6; 7 with the nat2 bank pin registers)
+`else
     localparam integer RD_LAT = 6;
+`endif
 `ifdef MUT1
     localparam integer MS = 1;
 `elsif MUT2
@@ -18,6 +22,8 @@ module tb_xload_static_lock;
     localparam integer MS = 4;
 `elsif MUT5
     localparam integer MS = 5;   // cl2d: ring controls sent on the old (late) edge -> pin-registered ring writes one edge late
+`elsif MUT6
+    localparam integer MS = 6;   // F20 (ctlw): the folded x-load issuer fires one edge late
 `else
     localparam integer MS = 0;
 `endif
@@ -33,13 +39,77 @@ module tb_xload_static_lock;
     wire rdy_a, done_a, f_a, en_a; wire [6:0] ad_a, gr_a; wire [2047:0] d_a;
     wire busy_b, done_b, f_b, en_b, last_b; wire [6:0] ad_b, gr_b; wire [2047:0] d_b;
     wire [4*338-1:0] qa; wire [4*274-1:0] ra; wire [273:0] tra; reg [337:0] tq = 0;
-    ot_hgi_sm_xload #(.BD(1)) ua (.clk(clk), .rst_n(rst_n), .x_xb(x_xb), .x_v(xa_v), .x_rdy(rdy_a), .x_base(x_base), .x_n(x_n), .x_p(x_p),
+    ot_hgi_sm_xload #(.BD(1)) ua (.clk(clk), .rst_n(rst_n), .x_xb(x_xb), .x_v(xa_e), .x_rdy(rdy_a), .x_base(x_base), .x_n(x_n), .x_p(x_p),
         .x_stride(x_stride), .x_space(2'd1), .x_fmt(x_fmt), .xw_ready(1'b1), .xw_last(), .x_done(done_a), .x_fault(f_a),
         .xw_en(en_a), .xw_addr(ad_a), .xw_grp(gr_a), .xw_data(d_a), .vmq(qa), .vmr(ra),
         .rg_req(), .rg_gnt(1'b0), .wrq(), .wrq_cr(32'd0), .wrr({32*257{1'b0}}));
     ot_hgi_vm_unit #(.NC(5)) va (.clk(clk), .rst_n(rst_n), .cq({tq, qa}), .cr({tra, ra}), .status());
     wire [8*17-1:0] rq; reg [8*257-1:0] rr;
-`ifdef XLOAD_CL2
+`ifdef XLOAD_F20
+    // H-SM 2026-10-16 (H-NETLIST/H-DIE option A): the x-load issuer is folded into the ctl die master (ctlw).  The unit
+    // under the lock is the cl2 cluster with the F20-faced ctlw (ot_hgi_sm_xload_static_cl2f), driven ONLY through the
+    // real host ingress (ot_hbm_host_static_ingress, AXI-lite F20..F30): each command is one calendar entry
+    // {cmd108, at32} + descriptor [0,1) x 1 + launch.  The references (cl, credited x-load) receive x_v on the edge the
+    // tb computes independently from the ingress launch: launch_v + 2 + LEAD + at (ot_static_cmd_target contract).
+    localparam integer LEAD = 8;
+    reg awv = 0, wv = 0; reg [11:0] awa = 0; reg [31:0] wd = 0;
+    wire awr, wr, bv; wire [1:0] bresp;
+    wire cfg_v, desc_v, launch_v, ing_fault; wire [7:0] cfg_target; wire [11:0] cfg_addr, desc_base; wire [255:0] cfg_data;
+    wire [12:0] desc_limit; wire [15:0] desc_loops; wire cfgd_b, act_b;
+    ot_hbm_host_static_ingress #(.TARGET_MASK(256'd1 << 100)) ing (
+        .clk(clk), .rst_n(rst_n), .s_awvalid(awv), .s_awready(awr), .s_awaddr(awa), .s_wvalid(wv), .s_wready(wr),
+        .s_wdata(wd), .s_wstrb(4'hf), .s_bvalid(bv), .s_bready(1'b1), .s_bresp(bresp), .s_arvalid(1'b0), .s_arready(),
+        .s_araddr(12'd0), .s_rvalid(), .s_rready(1'b1), .s_rdata(), .block_ready(1'b1), .program_active(act_b),
+        .program_fault(1'b0), .cfg_v(cfg_v), .cfg_target(cfg_target), .cfg_addr(cfg_addr), .cfg_data(cfg_data),
+        .desc_v(desc_v), .desc_base(desc_base), .desc_limit(desc_limit), .desc_loops(desc_loops), .launch_v(launch_v),
+        .fault(ing_fault));
+    integer fire_d = 2 + LEAD; reg [255:0] lsh = 0;
+    always @(posedge clk) lsh <= {lsh[254:0], launch_v};
+    wire xv_ref = lsh[fire_d - 1];
+    wire xa_e = xv_ref;
+    ot_hgi_sm_xload_static_cl2f #(.RD_LAT(RD_LAT), .MUT(MS)) ub (.clk(clk), .clk_eg(clk), .clk_cal(clk), .clk_bf({4{clk}}), .clk_qlo(clk), .clk_qhi(clk), .clk_bd(clk),
+        .rst_n(rst_n), .tgt(8'd100), .cfg_v(cfg_v), .cfg_target(cfg_target), .cfg_addr(cfg_addr), .cfg_data(cfg_data),
+        .desc_v(desc_v), .desc_base(desc_base), .desc_limit(desc_limit), .desc_loops(desc_loops), .launch_v(launch_v),
+        .configured(cfgd_b), .fault(f_b), .active(act_b), .x_done(done_b),
+        .xw_en(en_b), .xw_last(last_b), .xw_addr(ad_b), .xw_grp(gr_b), .xw_data(d_b), .rq(rq), .rr(rr));
+    assign busy_b = act_b;
+    integer t0_f = 0; always @(posedge clk) if (xv_ref) t0_f = cyc;
+    task automatic axw(input [11:0] a, input [31:0] d);
+        reg ad, dd;
+        begin
+            ad = 0; dd = 0; @(negedge clk); awv = 1; awa = a; wv = 1; wd = d;
+            while (!(ad && dd)) begin
+                begin : HS reg ha, hw; ha = awv && awr; hw = wv && wr;
+                @(posedge clk); #0.01; if (ha) begin ad = 1; awv = 0; end if (hw) begin dd = 1; wv = 0; end end
+                @(negedge clk);
+            end
+            begin : BW integer w; w = 0;
+                while (!bv) begin @(posedge clk); w = w + 1;
+                    if (w > 2000) begin $display("XLOAD_STATIC_LOCK FAIL: AXI write %h no bvalid", a); $fflush; $finish; end end
+            end
+            if (bresp != 0) begin $display("ERR bresp %0d at %h data %h", bresp, a, d); errors = errors + 1; end
+            @(posedge clk);
+        end
+    endtask
+    task automatic f20_cmd(input [107:0] pl, input [31:0] at);
+        reg [255:0] row;
+        begin
+            row = {116'd0, pl, at};
+            axw(12'hf20, {12'd0, 12'h800, 8'd100});
+            for (integer p = 0; p < 8; p = p + 1) axw(12'hf24, row[p*32 +: 32]);
+            axw(12'hf20, {12'd0, 12'd0, 8'd100}); axw(12'hf28, {7'd0, 13'd1, 12'd0}); axw(12'hf2c, 32'd1);
+            repeat (10) @(posedge clk);    // ingress install guard (5 edges after a descriptor) before the launch
+            if (!cfgd_b || f_b || ing_fault) begin $display("ERR F20 install: configured %b fault %b ingress fault %b", cfgd_b, f_b, ing_fault); errors = errors + 1; end
+            fire_d = 2 + LEAD + at; t0_f = -1;
+            axw(12'hf30, 32'd1);
+        end
+    endtask
+`else
+    wire xv_ref = xs_v;
+    wire xa_e = xa_v;
+`endif
+`ifdef XLOAD_F20
+`elsif XLOAD_CL2
     // H-SM 2026-10-15: the hardened-leaf cluster successor (ot_hgi_sm_xload_static_cl2) is the unit under the lock;
     // the flat clock-leaf cl runs beside it on the same stimulus and every output must match on every cycle.
     ot_hgi_sm_xload_static_cl2 #(.RD_LAT(RD_LAT), .MUT(MS)) ub (.clk(clk), .clk_eg(clk), .clk_bf({4{clk}}), .clk_qlo(clk), .clk_qhi(clk), .clk_bd(clk),
@@ -51,12 +121,14 @@ module tb_xload_static_lock;
 `else
     ot_hgi_sm_xload_static #(.RD_LAT(RD_LAT), .MUT(MS), .LOCAL_MASK_REGS(LM)) ub (.clk(clk), .rst_n(rst_n), .x_v(xs_v), .x_base(x_base), .x_n(x_n),
 `endif
+`ifndef XLOAD_F20
         .x_p(x_p), .x_stride(x_stride), .x_space(2'd1), .x_fmt(x_fmt), .x_xb(x_xb), .x_busy(busy_b), .x_done(done_b),
         .x_fault(f_b), .xw_en(en_b), .xw_last(last_b), .xw_addr(ad_b), .xw_grp(gr_b), .xw_data(d_b), .rq(rq), .rr(rr));
+`endif
 `ifdef XLOAD_CL2
     wire busy_r, done_r, f_r, en_r, last_r; wire [6:0] ad_r, gr_r; wire [2047:0] d_r; wire [8*17-1:0] rq_r;
     ot_hgi_sm_xload_static_cl #(.RD_LAT(RD_LAT), .MUT(0)) ur (.clk(clk), .clk_bf(clk), .clk_qlo(clk), .clk_qhi(clk), .clk_bd(clk),
-        .rst_n(rst_n), .x_v(xs_v), .x_base(x_base), .x_n(x_n), .x_p(x_p), .x_stride(x_stride), .x_space(2'd1), .x_fmt(x_fmt),
+        .rst_n(rst_n), .x_v(xv_ref), .x_base(x_base), .x_n(x_n), .x_p(x_p), .x_stride(x_stride), .x_space(2'd1), .x_fmt(x_fmt),
         .x_xb(x_xb), .x_busy(busy_r), .x_done(done_r), .x_fault(f_r), .xw_en(en_r), .xw_last(last_r), .xw_addr(ad_r),
         .xw_grp(gr_r), .xw_data(d_r), .rq(rq_r), .rr(rr));
     // owner rule 19:50 (every leaf pin registered): cl2 adds exactly XW_ADD = 2 edges to every xw beat and x_done
@@ -151,7 +223,18 @@ module tb_xload_static_lock;
             x_fmt = (c < 12) ? 2'd0 : (c % 2 == 0) ? 2'd1 : 2'd2;
             if (x_fmt != 0) begin x_n = 32 * (1 + ($unsigned($random(seed)) % 180)); if (c == 12) begin x_p = 1; x_n = 18432; end
                 x_stride = 8 * (((x_n + 7) / 8) + ($unsigned($random(seed)) % 3)); if (c == 12) x_stride = 8 * 2310; end
+`ifdef XLOAD_F20
+            f20_cmd({x_xb, x_fmt, 2'd1, x_stride, x_p, x_n, x_base}, 32'(3 * (c % 7)));
+            begin : FW integer w; w = 0;
+                while (t0_f < 0) begin @(negedge clk); w = w + 1;
+                    if (w > 5000) begin $display("XLOAD_STATIC_LOCK FAIL: cmd %0d never fired (configured %b fault %b active %b ingress fault %b)",
+                                                  c, cfgd_b, f_b, act_b, ing_fault); $fflush; $finish; end end
+            end
+            t0 = t0_f;
+            if (c < 2) begin $display("cmd %0d F20 fired, x_v at the ctl pins at edge %0d", c, t0); $fflush; end
+`else
             @(negedge clk); xa_v = 1; xs_v = 1; t0 = cyc; @(negedge clk); xa_v = 0; xs_v = 0;
+`endif
             t = 0; while ((nda == 0 || ndb == 0) && t < 400000) begin @(posedge clk); t = t + 1; end
             repeat (4) @(posedge clk);
             // the static load's schedule is a function of the command alone
@@ -183,10 +266,15 @@ module tb_xload_static_lock;
                 if (errors < 5) $display("ERR cmd %0d P %0d K %0d write %0d differs (%b %b)", c, x_p, x_n, k, wa[k], wb[k]);
                 errors = errors + 1; end
             $display("cmd %0d fmt %0d P %0d K %0d xb %0d done %0d/%0d beats %0d span %0d", c, x_fmt, x_p, x_n, x_xb, nda, ndb, nbeats_b, last_bc - first_b + 1);
+            $fflush;
         end
 `ifdef XLOAD_CL2
         $display("cl2 vs cl (+%0d edges): %0d cycles compared, %0d differ; fault %b/%b", XW_ADD, cl2_cmp, cl2_diff, f_b, f_r);
         if (cl2_diff || f_r) errors = errors + 1;
+`endif
+`ifdef XLOAD_F20
+        $display("F20 issuer: configured %b fault %b active %b ingress fault %b (fire = launch + 2 + LEAD %0d + at)", cfgd_b, f_b, act_b, ing_fault, LEAD);
+        if (ing_fault || act_b) errors = errors + 1;
 `endif
         if (f_b || lanefault) begin $display("static fault %b lanefault %0d", f_b, lanefault); errors = errors + 1; end
         if (errors == 0) $display("XLOAD_STATIC_LOCK PASS"); else $display("XLOAD_STATIC_LOCK FAIL %0d", errors);

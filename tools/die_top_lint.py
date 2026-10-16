@@ -974,6 +974,16 @@ def dirs_qwen(bid, cls, bits, eps, j, port):
     if cls in ('corridor', 'head_chain', 'tap'):
         return flow(j, bits, bits - 1)               # instruction beats + go + x + clock/reset down, ready back
     bid = bid[:-2] if bid.endswith('_x') else bid      # r18: second half of a bus through a CDC cluster
+    if bid == 'host_fdi':
+        # Q-KVSYS-NETLIST 2026-10-16: the v1.4.1 HOST-north host_fdi is relayed as class spine_local, whose rule ran every
+        # bit host -> SerDes; tx_up / rx_v / rx_flit (1,045 b) run SerDes -> host (strict bind v2: 1,045 bits undriven at
+        # the host, multi-driven at the PHY).  Endpoint 0 = the host side of every hop; the SerDes FDI layout (die bit
+        # order of host_fdi: tx_up, tx_v, tx_flit[W], rx_v, rx_flit[W]) gives each bit's direction, on every relay hop.
+        w_ = (bits - 3) // 2
+        down = [(1, 2 + w_)]                          # tx_v, tx_flit: host -> SerDes
+        up = [(0, 1), (2 + w_, bits)]                 # tx_up, rx_v, rx_flit: SerDes -> host
+        seg = [(a, b, 'out' if j == 0 else 'in') for a, b in down] + [(a, b, 'in' if j == 0 else 'out') for a, b in up]
+        return sorted(seg)
     if cls in ('tree_block', 'tree_spine', 'spine_local', 'hbm_read', 'crom', 'clock_trunk', 'reset', 'kv_land',
                'stack_local', 'kv_oneway'):
         return [(0, bits, 'out' if j == 0 else 'in')]

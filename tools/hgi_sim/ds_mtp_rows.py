@@ -14,11 +14,12 @@ to be replaced by the owner's measured synthesis): every item is timed ALONE on 
 a slot port, VM swap, row-serial draft) and ranked by cycles saved a step per mm2; the cumulative ladder adds them in
 that order and records tok/s on the price table and on the current measured-unit sensitivity after each.
 
-DRAFT row batching (H-MTP, compiler): the DSpark stage bodies (dsa / dsb, the sliding-layer lowering) take the 5
-block rows as P = 5 rows; their cost is the row-serial draft x the batching ratio of a sliding main layer (layer 0
-segment: verify(P = 5) / (5 x AR)) under the same item set -- a MODEL (ratio transfer), the lowered row-batched
-stage bodies are the open compiler item; Markov stays serial (d_{i+1} depends on d_i), DHEAD's 5 LM-head rows share
-the weight stream through the SM slots.
+DRAFT row batching (H-MTP2 decision 4, compiler): the DSpark draft bodies are COMPILED as R-row programmes
+(hgi_sim.ds_mtp_draft: dsa / dsb of the 3 stages and DHEAD at R = 5 block rows, SEED at the P = 6 verify columns,
+by the verify's own compiler pass under the same item configuration and scale table, priced by the simulator's
+launch-body pricing; validated at P = 1 against the row-serial launch trace); Markov stays serial (d_{i+1} depends on
+d_i), demb serial.  'draft_batched' = the compiled draft; 'draft_batched_ratio' = the earlier RATIO MODEL (dsa + dsb
++ dhead + seed x the layer-0 batching ratio verify(P = 5) / (5 x AR)), kept for comparison.
 
     python3 -m hgi_sim.ds_mtp_rows --out REC.json [--jobs N]        (from tools/; ~10 min at 32 jobs)
 """
@@ -37,6 +38,7 @@ ROOT = TOOLS.parent
 sys.path.insert(0, str(TOOLS))
 
 from hgi_sim import ds_mtp_verify as V  # noqa: E402
+from hgi_sim import ds_mtp_draft as D  # noqa: E402
 
 TARGET = 3500.0
 P = 6
@@ -157,6 +159,9 @@ def scales():
 
 def _job(job):
     name, items, P_, scale_name, layer = job
+    if P_ == "draft":                    # the R-row compiled draft + seed of this item set under this scale table
+        d = D.draft_step(cfg_of(items), scales()[scale_name])
+        return name, dict(d, bodies={k: dict(cycles=v["cycles"], records=v["records"]) for k, v in d["bodies"].items()})
     c = _ctx()
     cfg = cfg_of(items)
     recs = c["recs"] if layer is None else [r for r in c["recs"] if r.layer == layer or (r.unit == "CTL" and r.op == "END")]
@@ -172,22 +177,36 @@ def draft_terms():
     return V.draft_terms(DRAFT_SIM, P), sim.get("att_pricing")
 
 
-def compose(verify, ar, ar_l0, v5_l0, draft, scale_k, batched):
-    """step = verify + draft (+ seed + main-hidden stores + control); batched: dsa / dsb / dhead scaled by the layer-0
-    P = 5 batching ratio the block rows' column swaps, demb and Markov kept serial"""
+def compose(verify, ar, ar_l0, v5_l0, draft, scale_k, batched, cdraft=None):
+    """step = verify + draft (+ seed + main-hidden stores + control).  batched with cdraft (the compiled R-row draft
+    of this item set, already under the scale table): draft + seed = the compiled cycles (column swaps inside the
+    R-row segments; demb and Markov serial); batched without cdraft = the RATIO MODEL: dsa / dsb / dhead / seed x the
+    layer-0 P = 5 batching ratio r5, the block rows' column swaps, demb and Markov kept serial, all x scale_k (the AR
+    sensitivity / fixed ratio)"""
     d = draft["draft_by_kind"]
     r5 = v5_l0 / (5 * ar_l0)
-    if batched:
-        dr = (d["dsa"] + d["dsb"] + d["dhead"]) * r5 + d["demb"] + d["markov"] + d["swapin"] + d["swapout"]
+    if batched and cdraft is not None:
+        dr, seed = cdraft["draft_cycles"], cdraft["seed_cycles"]
+        extra = dr + seed + draft["mh_store_cycles"] * scale_k
+        dr_k, seed_k = dr, seed
     else:
-        dr = sum(d.values())
-    seed = draft["seed_cycles"] * (r5 if batched else 1.0)
-    extra = (dr + seed + draft["mh_store_cycles"]) * scale_k
+        if batched:
+            dr = (d["dsa"] + d["dsb"] + d["dhead"]) * r5 + d["demb"] + d["markov"] + d["swapin"] + d["swapout"]
+        else:
+            dr = sum(d.values())
+        seed = draft["seed_cycles"] * (r5 if batched else 1.0)
+        extra = (dr + seed + draft["mh_store_cycles"]) * scale_k
+        dr_k, seed_k = dr * scale_k, seed * scale_k
     ncmd = 40 + 1 + 1 + 3 + 1 + 5
     step = verify + extra + ncmd * V.CTL_CMD
-    return dict(step_cycles=round(step, 1), verify_cycles=verify, draft_cycles=round(dr * scale_k, 1),
-                seed_cycles=round(seed * scale_k, 1), r5=round(r5, 4), mtp_tok_s=round(V.TAU * V.CLK / step, 1),
-                ar_tok_s=round(V.CLK / ar, 1), mtp_over_ar=round(V.TAU * ar / step, 3))
+    out = dict(step_cycles=round(step, 1), verify_cycles=verify, draft_cycles=round(dr_k, 1),
+               seed_cycles=round(seed_k, 1), r5=round(r5, 4), mtp_tok_s=round(V.TAU * V.CLK / step, 1),
+               ar_tok_s=round(V.CLK / ar, 1), mtp_over_ar=round(V.TAU * ar / step, 3),
+               draft_basis="compiled R-row (ds_mtp_draft)" if batched and cdraft is not None else
+               ("ratio model r5" if batched else "row-serial sim launches"))
+    if batched and cdraft is not None:
+        out["draft_by_kind"] = cdraft["draft_by_kind"]
+    return out
 
 
 def main():
@@ -233,6 +252,7 @@ def main():
         nm = "+".join(st)
         for sc in ("fixed", "sens_current", "sens_1010"):
             jobs.append((f"ladder:{nm}|{sc}", st, P, sc, None))
+            jobs.append((f"draft:{nm}|{sc}", st, "draft", sc, None))
         jobs.append((f"ladderL0P5:{nm}|fixed", st, 5, "fixed", 0))
     with mp.Pool(a.jobs) as pool:
         res.update(dict(pool.map(_job, jobs)))
@@ -242,9 +262,10 @@ def main():
         v5 = res[f"ladderL0P5:{nm}|fixed"]["cycles"]
         for sc in ("fixed", "sens_current", "sens_1010"):
             k = res[f"AR|{sc}"]["cycles"] / ar if sc != "fixed" else 1.0
-            for batched in (False, True):
-                row[f"{sc}{'|draft_batched' if batched else ''}"] = compose(
-                    res[f"ladder:{nm}|{sc}"]["cycles"], res[f"AR|{sc}"]["cycles"], ar_l0, v5, draft, k, batched)
+            args = (res[f"ladder:{nm}|{sc}"]["cycles"], res[f"AR|{sc}"]["cycles"], ar_l0, v5, draft, k)
+            row[sc] = compose(*args, False)
+            row[f"{sc}|draft_batched"] = compose(*args, True, res[f"draft:{nm}|{sc}"])
+            row[f"{sc}|draft_batched_ratio"] = compose(*args, True)
         ladder.append(row)
     first = next((r for r in ladder if r["fixed|draft_batched"]["mtp_tok_s"] >= TARGET), None)
     # 3) the smallest set: for each SM option, the full cheap set and every leave-one-out (fixed table, batched draft)
@@ -258,17 +279,22 @@ def main():
     for st in cand:
         nm = "+".join(st)
         jobs += [(f"min:{nm}|fixed", st, P, "fixed", None), (f"minL0P5:{nm}|fixed", st, 5, "fixed", 0),
-                 (f"min:{nm}|sens_current", st, P, "sens_current", None)]
+                 (f"min:{nm}|sens_current", st, P, "sens_current", None),
+                 (f"mindraft:{nm}|fixed", st, "draft", "fixed", None),
+                 (f"mindraft:{nm}|sens_current", st, "draft", "sens_current", None)]
     with mp.Pool(a.jobs) as pool:
         res.update(dict(pool.map(_job, jobs)))
     minimal = []
     for st in cand:
         nm = "+".join(st)
-        f_ = compose(res[f"min:{nm}|fixed"]["cycles"], ar, ar_l0, res[f"minL0P5:{nm}|fixed"]["cycles"], draft, 1.0, True)
+        f_ = compose(res[f"min:{nm}|fixed"]["cycles"], ar, ar_l0, res[f"minL0P5:{nm}|fixed"]["cycles"], draft, 1.0, True,
+                     res[f"mindraft:{nm}|fixed"])
+        f_r = compose(res[f"min:{nm}|fixed"]["cycles"], ar, ar_l0, res[f"minL0P5:{nm}|fixed"]["cycles"], draft, 1.0, True)
         k_ = res["AR|sens_current"]["cycles"] / ar
         s_ = compose(res[f"min:{nm}|sens_current"]["cycles"], res["AR|sens_current"]["cycles"], ar_l0,
-                     res[f"minL0P5:{nm}|fixed"]["cycles"], draft, k_, True)
-        minimal.append(dict(items=list(st), area_mm2=round(sum(ITEMS[i][2] for i in st), 2), fixed=f_, sens_current=s_))
+                     res[f"minL0P5:{nm}|fixed"]["cycles"], draft, k_, True, res[f"mindraft:{nm}|sens_current"])
+        minimal.append(dict(items=list(st), area_mm2=round(sum(ITEMS[i][2] for i in st), 2), fixed=f_, sens_current=s_,
+                            fixed_ratio_model=f_r))
     meet = sorted([m_ for m_ in minimal if m_["fixed"]["mtp_tok_s"] >= TARGET], key=lambda m_: m_["area_mm2"])
     rec = dict(schema="opentallas.hgi_sim.ds_mtp_rows.v1",
                area_scope="unqualified_floor_plus_estimates; no_integrated_fit_or_MTP_rate_claim",
@@ -278,7 +304,9 @@ def main():
                tau=V.TAU, P=P, clock_hz=V.CLK, position=V.DT.POS,
                program=str(V.PROGRAM.relative_to(ROOT)), program_sha256=hashlib.sha256(V.PROGRAM.read_bytes()).hexdigest(),
                source_sha256={f: hashlib.sha256((TOOLS / "hgi_sim" / f).read_bytes()).hexdigest()
-                              for f in ("ds_mtp_verify.py", "ds_mtp_rows.py", "timing.py")},
+                              for f in ("ds_mtp_verify.py", "ds_mtp_rows.py", "ds_mtp_draft.py", "timing.py")},
+               draft_bodies=str(D.BODIES.relative_to(ROOT)),
+               draft_bodies_sha256=hashlib.sha256(D.BODIES.read_bytes()).hexdigest(),
                draft_source=str(DRAFT_SIM.relative_to(ROOT)), draft_att_pricing=att_pr, draft=draft,
                current_measured=CURRENT_MEASURED, scales=scales(),
                items={k: dict(owner=v[0], change=v[1], area_mm2=v[2], area_basis=v[3],
@@ -292,7 +320,8 @@ def main():
                minimal_search=minimal, smallest_meeting_target=meet[0] if meet else None, runs=res)
     for r in ladder:
         print(f"{'+'.join(r['items']):60s} {r['area_mm2']:7.2f} mm2  fixed {r['fixed']['mtp_tok_s']:7.1f} "
-              f"batched-draft {r['fixed|draft_batched']['mtp_tok_s']:7.1f}  sens_cur {r['sens_current|draft_batched']['mtp_tok_s']:7.1f}",
+              f"batched-draft {r['fixed|draft_batched']['mtp_tok_s']:7.1f} (ratio model "
+              f"{r['fixed|draft_batched_ratio']['mtp_tok_s']:7.1f})  sens_cur {r['sens_current|draft_batched']['mtp_tok_s']:7.1f}",
               flush=True)
     if a.out:
         a.out.parent.mkdir(parents=True, exist_ok=True)

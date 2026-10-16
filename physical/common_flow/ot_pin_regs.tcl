@@ -2,15 +2,22 @@
 # Sourced first by ot_keep_regs.tcl (ORFS SYNTH_CANONICALIZE_TCL hook, right after `hierarchy -check -top`) when
 # OT_PIN_REGS=1 (tools/ref_tile/ref_tile.py recipe 3 sets it).  The elaborated top module is renamed <top>__ot_pr_core and
 # a generated wrapper module <top> with the SAME ports puts one flip-flop on every data input and every output (keep),
-# clocked by OT_PIN_REGS_CLOCK.  Excluded (wired straight through): the clock port(s), reset ports (OT_PIN_REGS_RESET
-# regexp, default below), OT_PIN_REGS_EXCLUDE (regexp; the kit records the reason) and inouts.  Latency: +1 cycle per
+# clocked by OT_PIN_REGS_CLOCK. Excluded (wired straight through): literal clock/reset roles
+# (OT_PIN_REGS_CLOCK / required OT_PIN_REGS_RESET_PORTS), OT_PIN_REGS_EXCLUDE (recorded regexp), and inouts.  Latency: +1 cycle per
 # registered input, +1 per registered output; the table goes to $RESULTS_DIR/ot_pin_regs.tsv (port dir width cycles).
 # io_flop_at_pins.tcl then anchors these flops at their pin faces (recipe 2/3 pin hook).
 set ot_pr_top $::env(DESIGN_NAME)
 set ot_pr_clk [split [expr {[info exists ::env(OT_PIN_REGS_CLOCK)] ? $::env(OT_PIN_REGS_CLOCK) : ""}] ","]
 if {![llength $ot_pr_clk]} { error "OT_PIN_REGS: OT_PIN_REGS_CLOCK not set" }
-set ot_pr_rst [expr {[info exists ::env(OT_PIN_REGS_RESET)] && $::env(OT_PIN_REGS_RESET) ne "" ? $::env(OT_PIN_REGS_RESET) :
-                     {(?i)(^|_)(a?s?rst|reset|rstn|resetn|rst_n|rst_ni|reset_n|reset_ni|por|por_n)(_|$)}}]
+if {![info exists ::env(OT_PIN_REGS_RESET_PORTS)]} {
+  error "OT_PIN_REGS: missing literal reset roles (OT_PIN_REGS_RESET_PORTS); regenerate the kit, including an explicit empty list when no resets exist"
+}
+# Legacy regex/default was part of the accepted wrapper contract. Check its
+# population before transformation so adding exact roles cannot silently turn
+# a previously bypassed reset into data. Explicit declarations are required;
+# the regex is a compatibility check, not a new semantic classification.
+set ot_pr_legacy_reset [expr {[info exists ::env(OT_PIN_REGS_RESET)] && $::env(OT_PIN_REGS_RESET) ne "" ? $::env(OT_PIN_REGS_RESET) :
+                            {(?i)(^|_)(a?s?rst|reset|rstn|resetn|rst_n|rst_ni|reset_n|reset_ni|por|por_n)(_|$)}}]
 set ot_pr_exc [expr {[info exists ::env(OT_PIN_REGS_EXCLUDE)] ? $::env(OT_PIN_REGS_EXCLUDE) : ""}]
 set ot_pr_dir [expr {[info exists ::env(RESULTS_DIR)] ? $::env(RESULTS_DIR) : "."}]
 yosys tee -q -o $ot_pr_dir/ot_pin_regs.ports portlist $ot_pr_top
@@ -21,8 +28,52 @@ foreach ln $ot_pr_lines {
 }
 if {![llength $ports]} { error "OT_PIN_REGS: no ports read for $ot_pr_top" }
 set ck [lindex $ot_pr_clk 0]
-foreach c $ot_pr_clk {
-  if {[lsearch -index 3 $ports $c] < 0} { error "OT_PIN_REGS: clock port $c is not a port of $ot_pr_top" }
+# Resolve literal declarations against the elaborated bit ranges. Do not turn
+# a declared clock/reset into data because of a spelling/range mismatch.
+proc ot_pr_resolve_roles {ports names role} {
+  set selected {}
+  foreach name $names {
+    if {$name eq ""} continue
+    if {![regexp {^([A-Za-z_][A-Za-z0-9_$]*)(?:\[([0-9]+)\])?$} $name -> base bit]} {
+      error "OT_PIN_REGS: $role must be a literal port or bit: $name"
+    }
+    set index [lsearch -index 3 -exact $ports $base]
+    if {$index < 0} {error "OT_PIN_REGS: declared $role $name is not an elaborated port"}
+    lassign [lindex $ports $index] dir a b n
+    if {$bit ne "" && ($bit < min($a,$b) || $bit > max($a,$b))} {
+      error "OT_PIN_REGS: declared $role bit out of range: $name"
+    }
+    for {set i [expr {min($a,$b)}]} {$i <= max($a,$b)} {incr i} {
+      if {$bit eq "" || $bit == $i} {dict set selected $base $i 1}
+    }
+  }
+  set whole {}
+  dict for {base bits} $selected {
+    lassign [lindex $ports [lsearch -index 3 -exact $ports $base]] dir a b n
+    if {[dict size $bits] != abs($a-$b)+1} {
+      error "OT_PIN_REGS: mixed-role bus $base needs an explicit boundary wrapper; refusing partial $role classification"
+    }
+    lappend whole $base
+  }
+  return $whole
+}
+set ot_pr_clock_ports [ot_pr_resolve_roles $ports $ot_pr_clk clock]
+set ot_pr_reset_ports {}
+set ot_pr_reset_ports [ot_pr_resolve_roles $ports [split $::env(OT_PIN_REGS_RESET_PORTS) ","] reset]
+foreach p $ports {
+  set name [lindex $p 3]
+  if {[regexp -- $ot_pr_legacy_reset $name] && $name ni $ot_pr_reset_ports && $name ni $ot_pr_clock_ports} {
+    error "OT_PIN_REGS: legacy reset regexp/default matches undeclared reset $name; add its literal reset_ports declaration and regenerate before transformation"
+  }
+}
+foreach name $ot_pr_clock_ports {
+  if {$name in $ot_pr_reset_ports} {error "OT_PIN_REGS: conflicting clock/reset role: $name"}
+}
+# The chosen data clock is one literal bit; a multi-bit bus is ambiguous.
+regexp {^([^\[]+)(?:\[([0-9]+)\])?$} $ck -> ckbase ckbit
+lassign [lindex $ports [lsearch -index 3 -exact $ports $ckbase]] ckdir cka ckb ckn
+if {$ckdir ne "input" || ($ckbit eq "" && $cka != $ckb)} {
+  error "OT_PIN_REGS: data clock must be one literal input bit: $ck"
 }
 set core "${ot_pr_top}__ot_pr_core"
 set v "// generated by physical/common_flow/ot_pin_regs.tcl (OT_PIN_REGS=1)\nmodule $ot_pr_top ([join [lmap p $ports {lindex $p 3}] {, }]);\n"
@@ -30,11 +81,13 @@ set conn {}; set tsv "port\tdir\twidth\tcycles\twhy\n"; set nreg 0
 foreach p $ports {
   lassign $p d a b n
   set w [expr {abs($a - $b) + 1}]
-  append v "  $d \[$a:$b\] $n;\n"
+  # A width-1 port at bit 0 is declared scalar: yosys portlist prints scalars as [0:0], and a [0:0] wrapper port
+  # renames the BTerm to n[0] (vm_native_q* nat2 gate: "ASSIGNED_PIN_EXACT missing BTerm clk").
+  if {$a == 0 && $b == 0} { append v "  $d $n;\n" } else { append v "  $d \[$a:$b\] $n;\n" }
   set why ""
-  if {[lsearch -exact $ot_pr_clk $n] >= 0} { set why clock
+  if {[lsearch -exact $ot_pr_clock_ports $n] >= 0} { set why clock
   } elseif {$d eq "inout"} { set why inout
-  } elseif {[regexp -- $ot_pr_rst $n]} { set why reset
+  } elseif {$n in $ot_pr_reset_ports} { set why reset
   } elseif {$ot_pr_exc ne "" && [regexp -- $ot_pr_exc $n]} { set why excluded }
   if {$why ne ""} {
     lappend conn ".$n\($n\)"; append tsv "$n\t$d\t$w\t0\t$why\n"; continue

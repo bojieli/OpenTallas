@@ -1,0 +1,12 @@
+ot-run: ot-epyc4       admits   430 GB (avail 657, growth 111, headroom 48, waiters 0/0 GB) load 52/128 running 24 disk 839 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/s81-mix4-constant-0341
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/codex/s81-mix4-constant-0341
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-1954110-1792147338 after 0 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+ACTUAL_ODB_AND_LIBERTY_CONSTANT_DRIVER_PROOF
+[('ot_s81_engram_mixq_shcol', 128, 128), ('ot_s81_engram_mul4', 8, 8), ('ot_s81_engram_add8', 128, 128)]
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-1954110-1792147338): exit 0

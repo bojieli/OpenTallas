@@ -2,7 +2,7 @@
 // Real balanced physical branch stages. Logical5 +request1 +return1 =7coreedges.
 // Compiler metadata/actual-return producers, native clocks/views remain mandatory.
 module qkd_static_kv_landing_physical_grp #(
-    parameter integer STACK=0,GROUP=0,MUT=0,HOP_MUT=0
+    parameter integer STACK=0,GROUP=0,MUT=0,HOP_MUT=0,VMAP=0,VREQ=0   // VREQ=1: V get face (+1 edge: 8)
 )(
     input wire ck,input wire [3:0] ck_pc,input wire [3:0] ck_req_rly,ck_rsp_rly,input wire rst_n,
     input wire arm,input wire [15:0] epoch,input wire [5:0] layer,
@@ -11,6 +11,7 @@ module qkd_static_kv_landing_physical_grp #(
     input wire [63:0] actual_epoch,input wire [23:0] actual_layer,input wire [1023:0] actual_data,
     input wire req_valid,input wire [13:0] req_t,input wire req_v,
     input wire [15:0] req_epoch,input wire [5:0] req_layer,
+    input wire vreq_valid,input wire [13:0] vreq_t,
     output wire rsp_valid,output wire [1023:0] rsp_data,output wire [13:0] rsp_t,
     output wire rsp_v,output wire [15:0] rsp_epoch,output wire [5:0] rsp_layer,output wire fault
 );
@@ -35,14 +36,14 @@ module qkd_static_kv_landing_physical_grp #(
         .a({pf[branch],ol[6*branch+:6],oe[16*branch+:16],vv[branch],ot[14*branch+:14],od[256*branch+:256],ov[branch]}),
         .b({pf_d[branch],ol_d[6*branch+:6],oe_d[16*branch+:16],vv_d[branch],ot_d[14*branch+:14],od_d[256*branch+:256],ov_d[branch]}));
     end
-    qkd_static_kv_rowctl u_rowctl(
-      .ck(ck),.rst_n(rst_n),.req_valid(req_valid),.req_t(req_t),.req_v(req_v),.req_epoch(req_epoch),.req_layer(req_layer),
+    qkd_static_kv_rowctl #(.VREQ(VREQ)) u_rowctl(
+      .ck(ck),.rst_n(rst_n),.req_valid(req_valid),.req_t(req_t),.req_v(req_v),.req_epoch(req_epoch),.req_layer(req_layer),.vreq_valid(vreq_valid),.vreq_t(vreq_t),.arm(arm),.epoch(epoch),.layer(layer),
       .pc_get(get),.pc_get_t(gt),.pc_get_v(gv),.pc_get_epoch(ge),.pc_get_layer(gl),
       .pc_valid(ov_d),.pc_data(od_d),.pc_t(ot_d),.pc_v(vv_d),.pc_epoch(oe_d),.pc_layer(ol_d),.pc_fault(pf_d),
       .rsp_valid(rsp_valid),.rsp_data(rsp_data),.rsp_t(rsp_t),.rsp_v(rsp_v),.rsp_epoch(rsp_epoch),.rsp_layer(rsp_layer),.fault(fault));
     genvar q;
     generate for(q=0;q<4;q=q+1)begin:g_pc
-      qkd_static_kv_landing_pc #(.MUT(MUT))u_pc(
+      qkd_static_kv_landing_pc #(.MUT(MUT),.VMAP(VMAP))u_pc(
        .ck(ck_pc[q]),.rst_n(rst_n),.cfg_stack(2'(STACK)),.cfg_group(3'(GROUP)),.arm(arm),.epoch(epoch),.layer(layer),
        .expected_put(expected_put[q]),.expected_sector(expected_sector[10*q+:10]),
        .actual_valid(actual_valid[q]),.actual_sector(actual_sector[10*q+:10]),

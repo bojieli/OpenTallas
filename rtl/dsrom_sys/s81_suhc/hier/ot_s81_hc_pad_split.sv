@@ -7,7 +7,11 @@
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_s81_hc_cpad_split #(
     parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, S_WR = 8, S_RT = 4, ML = 5, AL = 4,
-    parameter integer MUT = 0, AMUT = 0, RF = 5, RT = 1, RW = 2, YD = 16, HALF = 1, RLY = 2, DW = 6, RET_EXTRA = 1
+    parameter integer MUT = 0, AMUT = 0, RF = 5, RT = 1, RW = 2, YD = 16, HALF = 1, RLY = 2, DW = 6, RET_EXTRA = 1,
+    // FWD_TRIM (HC-COMB 2026-10-16, opt-in, default 0): forward pad stages removed from u_f5r1 because the CCF successor
+    // ot_s81_hc_ccf_bankpipe adds exactly FWD_TRIM (= 2) public edges; ch_fv / ch_fd / the centre round trip keep the
+    // old cycle (0 calendar cost).  Only the y push moves FWD_TRIM edges later relative to its pop (HC bench checked).
+    parameter integer FWD_TRIM = 0
 ) (
     input  wire                 sk, srs,
     input  wire [RDW-1:0]       crd_i,
@@ -35,7 +39,7 @@ module ot_s81_hc_cpad_split #(
     localparam integer RP = RT + 2 + PAD + RET_EXTRA * (NP - L1) * (HALF ? 2 : 1);                         // return: relay + send + capture + padding
     // No assembly data/valid flop: each hard child's first/last flop is its boundary.
     localparam integer F0 = (FP-2 > 8) ? 8 : FP-2;
-    localparam integer F1 = FP-2-F0;
+    localparam integer F1 = FP-2-FWD_TRIM-F0;
     localparam integer R0 = (RP-2 > 6) ? 6 : RP-2;
     localparam integer R1 = RP-2-R0;
     wire [FVW-1:0] fm;

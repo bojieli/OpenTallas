@@ -20,7 +20,7 @@ set_max_delay -ignore_clock_latency $ot_rs_x -from [get_clocks hclk] -to [get_cl
 set_min_delay -ignore_clock_latency 0 -from [get_clocks core_clk] -to [get_clocks hclk]
 set_min_delay -ignore_clock_latency 0 -from [get_clocks hclk] -to [get_clocks core_clk]
 set ot_rs_hi [get_ports {controller_co[*] controller_epoch[*] compiled_hbm_put hrst}]
-set ot_rs_ho [get_ports {fault_hbm}]
+set ot_rs_ho [get_ports {fault_hbm idle_hbm}]   ;# mc_r3b: idle_hbm is an hclk-domain output (was left on core_clk)
 catch {unset_input_delay [get_ports pll_hbm]}
 unset_input_delay $ot_rs_hi
 unset_output_delay $ot_rs_ho

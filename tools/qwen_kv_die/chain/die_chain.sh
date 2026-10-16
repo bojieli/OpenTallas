@@ -38,6 +38,12 @@ if [ "$DIE" = kv ]; then
       exit 1
     fi
   }
+  # Q-KVSYS-NETLIST 2026-10-16: the STRICT bit-level bind (tools/die_port_bind.py v2 on the BINDINGS-bound netlist:
+  # unconnected / tied inputs, undriven + multi-driven net bits) is recorded at every launch beside the v1 audit
+  # (RUN/port_bind_v2/port_bind_v2.json, read by tools/die_completeness.py); same diagnostic convention as above.
+  bash "$SRC/tools/qwen_kv_die/kv_port_bind_v2.sh" "$C/die.v" "$R/port_bind_v2" "$C/qkd_kv_relays.sv" "$R/expand.json" \
+    > "$R/port_bind_v2.log" 2>&1
+  say "STRICT PORT BIND v2: $(tail -1 $R/port_bind_v2.log | cut -c1-400)"
 fi
 # Q-COMPUTE-DIE 2026-10-15: OT_PG_OPEN_DIAG=1 lets a DIAGNOSTIC chain reach GRT/STA when pdngen PASSED and only
 # check_power_grid failed (islands listed by master class); run_pdn.tcl must have written floorplan_pdn_prepg.odb.
@@ -96,6 +102,13 @@ for c in $corners; do D=$R/sta_${DIE}_$c; mkdir -p $D/libs
   CP=; [ -s $R/clock/plan.json ] && CP=$R/clock/plan.json
   python3 $H/sta_tcl.py $DIE $c $D/grt_$c.tcl $CP || { say "STA $c Tcl generation FAIL"; sta_failed=1; continue; }
   say "STA $c clock: ${OT_STA_CLOCKS:-${CP:-ideal (no clock plan)}}"
+  # ROOT 2026-10-16 (coordinator, owner-approved): shared die clock check on every die trial (tools/die_clock_check.*);
+  # dumped inside the STA session after the reports, corners in OT_DCC_CORNERS (default tt)
+  DCC=0; case " ${OT_DCC_CORNERS:-tt} " in *" $c "*) DCC=1;; esac
+  if [ "$DCC" = 1 ] && [ -f "$SRC/tools/die_clock_check.tcl" ]; then
+    cp "$SRC/tools/die_clock_check.tcl" $D/die_clock_check.tcl
+    printf '%s\n' 'if {[catch {set ::env(OT_DCC_OUT) /work/die_clock_dump.tsv; source /work/die_clock_check.tcl} err]} { puts "OT_DCC_FAIL $err" } else { puts OT_DCC_DONE }' >> $D/grt_$c.tcl
+  fi
   $ADMIT $P4 -- $H/dietop_run.sh $D grt_$c.tcl 8 $((P4+60)); sta_rc=$?
   [ "$sta_rc" = 0 ] && sta_rc=$(cat "$D/run.exit" 2>/dev/null || echo 1)
   if ! python3 "$H/case_status.py" --log "$D/grt_$c.log" --stage "grt_$c.tcl" --process-exit "$sta_rc"; then
@@ -103,6 +116,10 @@ for c in $corners; do D=$R/sta_${DIE}_$c; mkdir -p $D/libs
     sta_failed=1
   fi
   say "STA $c: $(grep -E '^(wns|tns|worst slack)' $D/grt_$c.log | tr '\n' ' ')"
+  if [ "$DCC" = 1 ] && [ -s $D/die_clock_dump.tsv ]; then
+    python3 "$SRC/tools/die_clock_check.py" report $D/die_clock_dump.tsv --out $D/die_clock_check.json > $D/die_clock_check.txt 2>&1 \
+      && say "DIE CLOCK CHECK $c: $D/die_clock_check.txt" || say "DIE CLOCK CHECK $c report FAIL (see $D/die_clock_check.txt)"
+  elif [ "$DCC" = 1 ]; then say "DIE CLOCK CHECK $c: no dump ($(grep -m1 OT_DCC_FAIL $D/grt_$c.log))"; fi
 done
 [ "$sta_failed" = 0 ] || { say "chain FAIL: one or more STA corners did not complete"; exit 1; }
 say "chain done"
