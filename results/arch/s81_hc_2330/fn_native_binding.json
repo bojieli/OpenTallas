@@ -1,0 +1,60 @@
+{
+ "status": "HELD_FIVE_COMPONENT_NATIVE_SET",
+ "production_parent_adoption": false,
+ "views": {
+  "ot_s81_hc_ctfnq0": {
+   "record": "12e018a9f3f3dbc135d9c527947dae0e20b1983d",
+   "view": "physical/ref_tile/s81hc_ctfnq0_ref/views/ot_s81_hc_ctfnq0",
+   "lib_sha256": "365e5938344ab785d5a6608787ce4d0b3e1c0600a6aa7e7c521cc0b3ff0cd631",
+   "insertion_sha256": "23fd32317c0490d8abb43ac1d0a787f53108862b18c4762259807cbe66badc93",
+   "qualified_scope": "Actual same-source component boundary, TTsetup/FFhold/DRC0 plus native220/190/80 and FFgap>=100"
+  },
+  "ot_s81_hc_ctfnq1": {
+   "record": "57c01808f891cae2708b5ba79dd98bec322271fc",
+   "view": "physical/ref_tile/s81hc_ctfnq1_ref/views/ot_s81_hc_ctfnq1",
+   "lib_sha256": "f9bb623e1d23fe9ae264a061dddddbc4fef7f7d1ae78f9e787e6b0dae4e3d9cd",
+   "insertion_sha256": "b0cfe4a666af8542c8b95a8508629068af2ce8eef3e8a9e1334bcf4268ee8972",
+   "qualified_scope": "Actual same-source component boundary, TTsetup/FFhold/DRC0 plus native220/190/80 and FFgap>=100"
+  },
+  "ot_s81_hc_ctfnq2": {
+   "record": "7722e43191dfb0929ea73d88a8ca0d462b700cc5",
+   "view": "physical/ref_tile/s81hc_ctfnq2_ref/views/ot_s81_hc_ctfnq2",
+   "lib_sha256": "6c03493eca56f7d3ec54772c2f42c104f6a0d722f8b31223657fbfd57eb0ff4a",
+   "insertion_sha256": "79b4bb9c017f16251b3d2694434174dd8e91d3f0c01e575eef1b6e6601d2f7fe",
+   "qualified_scope": "Actual same-source component boundary, TTsetup/FFhold/DRC0 plus native220/190/80 and FFgap>=100"
+  },
+  "ot_s81_hc_ctfnq3": {
+   "record": "36533b94f701644d90ab93012007596ccc80d3e0",
+   "view": "physical/ref_tile/s81hc_ctfnq3_ref/views/ot_s81_hc_ctfnq3",
+   "lib_sha256": "bcb3f208a8762f8b9b92190df90e9176d160dd6cd8d631f7e402a889ffd667f8",
+   "insertion_sha256": "fc37a07a6ee2f68d9deb1736a965bc0b83058ecaed49f52479482c8d654406e7",
+   "qualified_scope": "Actual same-source component boundary, TTsetup/FFhold/DRC0 plus native220/190/80 and FFgap>=100"
+  },
+  "ot_s81_hc_ctfnq_reset": {
+   "record": "c9230a6fa0f6944492f6d0f25fe6d3fa2c339c06",
+   "view": "physical/ref_tile/s81hc_ctfnq_reset_ref/views/ot_s81_hc_ctfnq_reset",
+   "lib_sha256": "66fdde03ddd55c0ecc48573f404c7f5a22774d52906c53e92328703cfb22db75",
+   "insertion_sha256": "4325a0d6d25e868fec0d5bef259c57269a4a16559a45c37f6ca1da90b81fd0f6",
+   "qualified_scope": "Actual same-source component boundary, TTsetup/FFhold/DRC0 plus native220/190/80 and FFgap>=100"
+  }
+ },
+ "source": "85e95731c",
+ "bank_parent_outline_um": [
+  576.72,
+  34.56
+ ],
+ "parent_cth_candidate_outline_um": [
+  576.72,
+  844.56
+ ],
+ "normal_cycle_delta": 0,
+ "init_cycle_delta": 1,
+ "parent_clock_entries": 5,
+ "reset_contract": "FV zero duringreset and4 edges afterrelease; actual five-clock component mutant proof retained on902e line",
+ "routed_pair_screen": "fn_banked_swap_routed_pair_screen.json",
+ "open": [
+  "Whole actual NT RTL parent and every incident net/pin/clock/reset",
+  "Physical parent route and power/clock delivery",
+  "Compiler exact whole-HC schedule and source-native numerical composition"
+ ]
+}
