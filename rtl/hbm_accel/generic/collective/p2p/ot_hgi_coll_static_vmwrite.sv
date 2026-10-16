@@ -20,6 +20,19 @@
 // violation presented at edge C (was C). Data path, kq, launch_done and the
 // compiler calendar are unchanged; fault is a diagnostic/exception output that
 // never steers execution. MUT=3 delays the fault one more edge (bench rejects).
+// MUT=4 drops the high-sector +1 bank rotation, MUT=5 skews the low relay.
+// Two-stage launch (v4, 2026-10-15 17:30, structural fix of the v2 route:
+// TT reg->reg -26.49 ps on 12 kq endpoints = a0 sector decode -> 281-bit
+// fanout -> 10-way AND-OR across the 103.68 x 388.8 pin-limited slot, and
+// native capture 328.3 ps > 190 on rst_n = async reset net from the pin).
+// (1) Relay edge: every bank select is decoded once into a registered
+// one-hot (sel_lo/sel_hi, 80 FF) together with a registered copy of the
+// operand sector/payload/mask; kq is an AND-OR of registers only. Launch
+// moves one edge later: low sector at C+2, high at C+3, launch_done at C+3
+// (compiler write-visibility +1 edge). The checks, their pin capture and
+// fault timing (C+1) are unchanged.
+// (2) rst_n reaches exactly one pin flop (async assert, sync deassert);
+// every other reset flop is reset from that register.
 module ot_hgi_coll_static_vmwrite #(
     parameter integer MUT = 0
 ) (
@@ -46,13 +59,19 @@ module ot_hgi_coll_static_vmwrite #(
     reg [199:0] a0, a1;
     reg [2559:0] d0, d1;
     reg [79:0] m0, m1;
-    reg [8*281-1:0] next_kq;
+    // Relay edge registers (launch stage inputs).
+    reg [39:0] sel_lo, sel_hi;          // [l*8+b] one-hot bank selects
+    reg [79:0] sec_lo, sec_hi;          // [l*16] sectors (high = +1)
+    reg [1279:0] pay_lo, pay_hi;        // [l*256]
+    reg [39:0] msk_lo, msk_hi;          // [l*8]
+    reg [4:0] v2r;                      // high-half valid for launch_done
+    reg [39:0] dsel_lo, dsel_hi;
+    reg [8*281-1:0] launch_kq;
+    reg rst_q;
     reg [7:0] used;
     reg schedule_bad;
     integer l, h, b;
     reg [15:0] sector;
-    reg [255:0] payload;
-    reg [7:0] mask;
     reg present;
     reg [3:0] owner;
     // Per-bank launch decode of this edge (registered for the C+1 check).
@@ -68,7 +87,7 @@ module ot_hgi_coll_static_vmwrite #(
     reg [31:0] bown_q;
     reg addr_bad, sched_bad_q, addr_bad_q;
     always @* begin
-        next_kq = '0; used = '0; schedule_bad = 1'b0; bank_owner = '0; bank_multi = '0;
+        used = '0; schedule_bad = 1'b0; bank_owner = '0; bank_multi = '0;
         // Constant destination slices avoid a 2,248-bit dynamic scatter
         // network. Each physical bank has ten decoded contributors; valid
         // programmes select at most one. Conflicts remain visible as OR data
@@ -78,18 +97,29 @@ module ot_hgi_coll_static_vmwrite #(
             for (l = 0; l < 5; l = l + 1) begin
                 present = h == 0 ? v0[l] : v1[l];
                 sector = h == 0 ? a0[l*40+3 +: 16] : a1[l*40+3 +: 16] + 16'd1;
-                payload = h == 0 ? d0[l*512 +: 256] : d1[l*512+256 +: 256];
-                mask = h == 0 ? m0[l*16 +: 8] : m1[l*16+8 +: 8];
                 owner = 4'(l + 5*h);
                 if (present && sector[2:0] == 3'(b)) begin
                     if (used[b]) bank_multi[b] = 1'b1;
                     bank_owner[b*4 +: 4] = bank_owner[b*4 +: 4] | owner;
                     used[b] = 1'b1;
-                    next_kq[b*281 +: 281] = next_kq[b*281 +: 281] | {1'b1,sector,payload,mask};
                 end
             end
           end
         end
+        dsel_lo = '0; dsel_hi = '0;
+        for (l = 0; l < 5; l = l + 1)
+            for (b = 0; b < 8; b = b + 1) begin
+                if (v0[l] && a0[l*40+3 +: 3] == 3'(b)) dsel_lo[l*8+b] = 1'b1;
+                if (v1[l] && 3'(a1[l*40+3 +: 3] + (MUT == 4 ? 3'd0 : 3'd1)) == 3'(b)) dsel_hi[l*8+b] = 1'b1;
+            end
+        launch_kq = '0;
+        for (b = 0; b < 8; b = b + 1)
+            for (l = 0; l < 5; l = l + 1) begin
+                if (sel_lo[l*8+b]) launch_kq[b*281 +: 281] = launch_kq[b*281 +: 281] |
+                    {1'b1,sec_lo[l*16 +: 16],pay_lo[l*256 +: 256],msk_lo[l*8 +: 8]};
+                if (sel_hi[l*8+b]) launch_kq[b*281 +: 281] = launch_kq[b*281 +: 281] |
+                    {1'b1,sec_hi[l*16 +: 16],pay_hi[l*256 +: 256],msk_hi[l*8 +: 8]};
+            end
         // Checks from registers only: this edge's decode vs the captured
         // reservation of the previous edge (both describe the same launch).
         schedule_bad = (|multi_q) || (used_q != sv_q);
@@ -110,16 +140,30 @@ module ot_hgi_coll_static_vmwrite #(
         // Pin capture: data-only flops, no reset (checks are gated by the
         // reset-cleared valid copies below).
         sid_q <= sid; so_q <= slot_owner; vm_q <= rgx_vm; bown_q <= bank_owner;
-        kq <= next_kq;
+        for (l = 0; l < 5; l = l + 1) begin
+            sec_lo[l*16 +: 16] <= a0[l*40+3 +: 16];
+            sec_hi[l*16 +: 16] <= a1[l*40+3 +: 16] + 16'd1;
+            // MUT=5: relay-stage skew (low payload taken one edge late).
+            pay_lo[l*256 +: 256] <= MUT == 5 ? d1[l*512 +: 256] : d0[l*512 +: 256];
+            pay_hi[l*256 +: 256] <= d1[l*512+256 +: 256];
+            msk_lo[l*8 +: 8] <= m0[l*16 +: 8];
+            msk_hi[l*8 +: 8] <= m1[l*16+8 +: 8];
+        end
+        kq <= launch_kq;
         // Test-only corruption demonstrates that the data scoreboard is live.
-        if (MUT == 1) kq[8] <= ~next_kq[8];
+        if (MUT == 1) kq[8] <= ~launch_kq[8];
     end
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin
-            v0 <= 0; v1 <= 0; launch_done <= 0; fault <= 0;
+    // The only flop on the rst_n pin: async assert, sync deassert.
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) rst_q <= 1'b0; else rst_q <= 1'b1;
+    always @(posedge clk or negedge rst_q) begin
+        if (!rst_q) begin
+            v0 <= 0; v1 <= 0; v2r <= 0; launch_done <= 0; fault <= 0;
+            sel_lo <= 0; sel_hi <= 0;
             islot_q <= 0; sv_q <= 0; used_q <= 0; multi_q <= 0; sched_bad_q <= 0; addr_bad_q <= 0;
         end else begin
-            v0 <= iv; v1 <= v0; launch_done <= v1;
+            v0 <= iv; v1 <= v0; v2r <= v1; launch_done <= v2r;
+            sel_lo <= dsel_lo; sel_hi <= dsel_hi;
             // Reservation/launch check state is reset so no check fires from
             // pre-reset values; so_q/sid_q/vm_q are only read under a reset-
             // cleared valid (used_q, v0).

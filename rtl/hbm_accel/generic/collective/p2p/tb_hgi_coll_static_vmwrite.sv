@@ -21,8 +21,9 @@ module tb_hgi_coll_static_vmwrite;
     reg [199:0] pa=0, ppa=0;
     reg [2559:0] pd=0, ppd=0;
     reg [79:0] pm=0, ppm=0;
-    reg [2247:0] expected;
-    reg [7:0] used;
+    reg [2247:0] expected, exp_d=0;
+    reg [7:0] used, used_d=0;
+    reg [4:0] pppv=0;
     integer checked=0,full_cycles=0;
     task tick(input [4:0] valid, input integer seq, input integer mode);
         reg [15:0] sec;
@@ -61,12 +62,15 @@ module tb_hgi_coll_static_vmwrite;
             if(mode==6) islot=valid | 5'b1;
             @(posedge clk); #1;
             // Only valid payload has meaning. Check every emitted sector bit.
+            // v4 two-stage launch: kq/launch_done one edge after the v2
+            // reservation edge (slots/owners above keep v2 check timing).
             for(bank=0;bank<8;bank=bank+1) begin
-                if(kq[bank*281+280] !== used[bank]) $fatal(1,"valid timing bank %0d",bank);
-                if(used[bank] && kq[bank*281 +:281] !== expected[bank*281 +:281]) $fatal(1,"payload/latency bank %0d",bank);
+                if(kq[bank*281+280] !== used_d[bank]) $fatal(1,"valid timing bank %0d",bank);
+                if(used_d[bank] && kq[bank*281 +:281] !== exp_d[bank*281 +:281]) $fatal(1,"payload/latency bank %0d",bank);
             end
-            if(done !== ppv) $fatal(1,"launch_done latency");
-            if(used==8'hff) full_cycles=full_cycles+1;
+            if(done !== pppv) $fatal(1,"launch_done latency");
+            if(used_d==8'hff) full_cycles=full_cycles+1;
+            exp_d=expected;used_d=used;pppv=ppv;
             checked=checked+1;
             ppv=pv;ppa=pa;ppd=pd;ppm=pm;pv=valid;pa=aa;pd=dd;pm=mm;
         end
@@ -85,7 +89,7 @@ module tb_hgi_coll_static_vmwrite;
     task reset;
         begin
             @(negedge clk);rst_n=0;rv=0;tv=0;islot=0;slots=0;owners=0;
-            pv=0;ppv=0;pa=0;ppa=0;pd=0;ppd=0;pm=0;ppm=0;
+            pv=0;ppv=0;pppv=0;pa=0;ppa=0;pd=0;ppd=0;pm=0;ppm=0;exp_d=0;used_d=0;
             repeat(3) @(negedge clk);
             rst_n=1;
         end
@@ -112,7 +116,7 @@ module tb_hgi_coll_static_vmwrite;
         reset();sid=2;tick(1,0,5);tick(0,1,0);tick(0,2,0);
         if(fault) $fatal(1,"mirror window must use sector sid zero independent of local sid");
         sid=0;
-        $display("STATIC VMWRITE PASS checked=%0d full_bank_cycles=%0d fault_timing_checks=%0d RGX=4x512 TKW=568 low=C+1 high=C+2 fault=C+1",checked,full_cycles,fault_checks);
+        $display("STATIC VMWRITE PASS checked=%0d full_bank_cycles=%0d fault_timing_checks=%0d RGX=4x512 TKW=568 low=C+2 high=C+3 fault=C+1",checked,full_cycles,fault_checks);
         $finish;
     end
 endmodule
