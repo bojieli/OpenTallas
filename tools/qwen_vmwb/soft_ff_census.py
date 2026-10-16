@@ -2,7 +2,7 @@
 """Count every actual remaining sequential Q bit by source name/clock, no hardening credit."""
 import argparse,collections,json,re
 from pathlib import Path
-p=argparse.ArgumentParser();p.add_argument('netlist',type=Path);p.add_argument('--out',type=Path,required=True);a=p.parse_args();mods=json.loads(a.netlist.read_text())['modules'];top='qfd_sp_vector_memory_par_partitioned_ro6';tm=mods[top]
+p=argparse.ArgumentParser();p.add_argument('netlist',type=Path);p.add_argument('--out',type=Path,required=True);p.add_argument('--top',default='qfd_sp_vector_memory_par_partitioned_ro6');a=p.parse_args();mods=json.loads(a.netlist.read_text())['modules'];top=a.top;tm=mods[top]
 labels={b:n if len(v['bits'])==1 else f'{n}[{i}]'for n,v in tm['ports'].items()for i,b in enumerate(v['bits'])};rows=[];physical=collections.Counter()
 seq={'$dff','$adff','$sdff','$dffe','$adffe','$sdffe','$aldff','$dffsr'}
 def base(n):return n.split('\\')[-1]
