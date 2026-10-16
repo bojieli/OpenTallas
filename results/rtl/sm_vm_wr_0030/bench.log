@@ -1,0 +1,4 @@
+TB_HBM_SM_VM_WR_Q PASS MUT=0
+TB_HBM_SM_VM_WR_Q FAIL MUT=1 mismatches+faults=2176
+TB_HBM_SM_VM_WR_Q FAIL MUT=2 mismatches+faults=184
+SM_VM_WR_Q BENCH PASS (positive PASS, mutants 1/2 FAIL)

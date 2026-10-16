@@ -1,0 +1,140 @@
+{
+ "schema": "opentallas.s81.wfc-final-routed-native.v1",
+ "source_commit": "22c8eb651",
+ "scope": "First actual routed leaf PASS; remaining WFC leaves and full-parent qualification open. Daemon final bookkeeping pending.",
+ "rows": [
+  {
+   "cell": "dsfd_vm_wfc_fault_core",
+   "view": "dsfd_vm_wfc_fault_core",
+   "lib_cell": "dsfd_vm_wfc_fault_core",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 47.0,
+   "spread_ps": 1.5,
+   "outputs": 3,
+   "inputs": 5,
+   "launch_ps": 171.7,
+   "launch_pin": "source_fault",
+   "capture_ps": 153.9,
+   "capture_pin": "rn",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "pass": true,
+   "fail_why": "",
+   "raw_native": {
+    "launch_ps": 171.68307,
+    "capture_ps": 153.86066,
+    "spread_ps": {
+     "ck": 1.5
+    }
+   },
+   "child_lint_m5": {
+    "schema": "opentallas.hier_contract.child_lint.v1",
+    "lef": "/home/ubuntu/artifacts/s81-wfc-native-0300/views-final/dsfd_vm_wfc_fault_core/dsfd_vm_wfc_fault_core.lef",
+    "verdict": "PASS",
+    "fails": [],
+    "warns": [],
+    "summary": "dsfd_vm_wfc_fault_core 43.2 x 43.2: PG M5 VDD 8 stripes (88% spread, 100% cov) / VSS 8 stripes (88% spread, 100% cov); strap M6; face pins 9 blocked-above 0 blocked-same 0; clock ck insertion 52 ps; pockets M5 0 (closed)",
+    "info": {
+     "cell": "dsfd_vm_wfc_fault_core",
+     "W": 43.2,
+     "H": 43.2,
+     "pg": {
+      "nets": {
+       "VDD": {
+        "top_layer": "M5",
+        "stripes": 8,
+        "dir": "V",
+        "spread": 0.875,
+        "coverage": 1.0,
+        "shapes_on_top": 8
+       },
+       "VSS": {
+        "top_layer": "M5",
+        "stripes": 8,
+        "dir": "V",
+        "spread": 0.875,
+        "coverage": 1.0,
+        "shapes_on_top": 8
+       }
+      },
+      "top_layer": "M5",
+      "ok": true,
+      "why": []
+     },
+     "pg_layer": "M5",
+     "strap_layer": "M6",
+     "cap": "M5",
+     "face": {
+      "face_pins": 9,
+      "blocked_above": 0,
+      "covered_below": 0,
+      "examples": [],
+      "blocked_same": 0,
+      "same_examples": [],
+      "band_same": 0,
+      "band_examples": []
+     },
+     "clock_insertion": {
+      "ck": {
+       "max_ps": 52.21,
+       "min_ps": 44.62
+      }
+     },
+     "pockets": {
+      "layer": "M5",
+      "d_um": 1.536,
+      "marker": {
+       "layer": "M5",
+       "d_um": 1.536,
+       "added": 2
+      },
+      "count": 0,
+      "area_um2": 0,
+      "examples": []
+     }
+    }
+   },
+   "route": {
+    "TT": 347.77,
+    "FF": 28.17,
+    "DRC": 0,
+    "odb_sha256": "d41e295d6c49649ce11a6e9fd02ab11e3466e3e7beefccc3d956e336b40b6c7d"
+   },
+   "export_route_slack_match": {
+    "tt": {
+     "export_slack_ps": 347.7704235699264,
+     "route_slack_ps": 347.77
+    },
+    "ff": {
+     "export_slack_ps": 28.165435261851,
+     "route_slack_ps": 28.17
+    }
+   },
+   "viewed_images_sha256": {
+    "floorplan.png": "4a2c750bd816b4e0a5c22e346986e8cf7026e5c13078c1f0accf95af1d72fa8b",
+    "density.png": "00f3ece4be4a2e615d3cac9bb529dddb7c72d9b617e0df9052d8be549e65fd76"
+   },
+   "image_source": {
+    "odb": "/srv/opentallas-scratch/claude/closure-loop/dsfd_vm_wfc_fault_core_native_1016_r1-epoch1-22c8eb651/routes/dsfd_vm_wfc_fault_core_native_1016_r1_epoch1_22c8eb651/work/orfs/results/asap7/opentallas_dsfd_vm_wfc_fault_core_asap7_ref_dsfd_vm_wfc_fault_core_native_1016_r1_epoch1_22c8eb651/base/6_final.odb",
+    "stage": "6_final",
+    "sha256": "d41e295d6c49649ce11a6e9fd02ab11e3466e3e7beefccc3d956e336b40b6c7d"
+   },
+   "image_findings": "Actual6_final ODB. Sparse mid-row face clusters, isolated red density cells, no macros or broad hotspot, vertical M5 power pins.",
+   "job": "dsfd_vm_wfc_fault_core_native_1016_r1-epoch1-22c8eb651",
+   "host": "ot-agidock128",
+   "run": "/srv/opentallas-scratch/claude/closure-loop/dsfd_vm_wfc_fault_core_native_1016_r1-epoch1-22c8eb651",
+   "artifact_view": "/home/ubuntu/artifacts/s81-wfc-native-0300/views-final/dsfd_vm_wfc_fault_core",
+   "export_sha256": {
+    "dsfd_vm_wfc_fault_core.lef": "77f0112d2e2ce9404897082a2b8cfae9e2fde71698812fb386f409bcdfc0e919",
+    "dsfd_vm_wfc_fault_core_tt.lib": "0ccd10b9c1b494f43ef0357a2b1463455999ebbf94252d6d8d9f623116be67a0",
+    "dsfd_vm_wfc_fault_core_ss.lib": "07384559a258d51eb906202fb21ce994717e4e70821cc0bd5453c22185a65bbf",
+    "dsfd_vm_wfc_fault_core_ff.lib": "a2bd3b586403f81e708eb09217947431da98ae528f2bcf7f8e6b83e982d0f729"
+   }
+  }
+ ]
+}

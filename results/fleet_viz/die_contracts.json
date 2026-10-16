@@ -6,7 +6,7 @@
    "design": "qwen_compute",
    "label": "Qwen compute die",
    "target": "Qwen ROM",
-   "revision": "C19 / wide27 (PM-H-S blocked, chain runs without it) on contract v1.3 + static successors",
+   "revision": "v1.4 (Q-NETLIST 2026-10-16): r2h floorplan (575.3 mm2), dp tree hosts, held45 tile, system face; strict port-bind PASS",
    "lead": "Q-COMPUTE-DIE",
    "log": "el1014-qwen-split-compute.log",
    "doc": "results/arch/qwen_split_compute_1014/CONTRACT.md",
@@ -14,9 +14,9 @@
    "sources": [
     {
      "kind": "port_bind",
-     "path": "results/arch/qwen_split_compute_1014/c13_smoke/port_bind.json",
-     "macro": "^(ot_qkvd_ucie_x64_phy|qfd_ckbump)$",
-     "evidence": "die chain port-bind (c13 smoke; latest committed compute bind)"
+     "path": "results/arch/qwen_split_compute_1014/netlist_0030/port_bind.json",
+     "macro": "^(ot_qkvd_ucie_x64_phy|ot_qfd_ucie_x64_phy|ot_qfd_serdes_112g_x12_phy_s597|qfd_ckbump|qfd_sigbump)$",
+     "evidence": "Q-NETLIST g2 strict port-bind PASS (39 masters / 1,642 instances, every count 0), CONTRACT.md v1.4"
     },
     {
      "kind": "json_keys",
@@ -46,39 +46,35 @@
     },
     {
      "element": "qfd_io_collective_static",
-     "evidence": "Q-COLL static IO set (el1014-qwen-coll-io.log); superseded_elements.json qfd_io_collective -> qfd_io_collective_static"
-    },
-    {
-     "element": "qfd_io_xfifo_static",
-     "evidence": "CONTRACT.md static CDC twelve-leaf composition (static_cdc/qfd_io_xfifo_static.json)"
+     "evidence": "Q-COLL static IO set (el1014-qwen-coll-io.log); superseded_elements.json qfd_io_collective -> qfd_io_collective_static",
+     "parent": "qfd_collective_static_io_production",
+     "role": "leaf"
     },
     {
      "element": "qfd_static_ch546",
-     "parent": "qfd_io_xfifo_static",
+     "parent": "qfd_collective_static_io_production",
      "role": "leaf",
-     "evidence": "static_cdc/qfd_static_ch546.json"
-    },
-    {
-     "element": "qfd_io_ucie_static",
-     "evidence": "Q-COLL static IO set (qfd_io_ucie_static)"
-    },
-    {
-     "element": "qfd_io_serdes_static",
-     "evidence": "Q-COLL static IO set (qfd_io_serdes_static x3)"
-    },
-    {
-     "element": "qfd_ucie_gearbox_r10",
-     "evidence": "compute log 2026-10-15 05:39/07:16 Q-COLL r10 ABI: gearbox becomes its own hard leaf beside ot_qfd_ucie_x64_phy (slot requested)"
-    },
-    {
-     "element": "ot_qfd_x3_mux_native",
-     "evidence": "CONTRACT.md static Q/KVN mux successor (static_x3/ot_qfd_x3_mux_native.json)"
+     "evidence": "CONTRACT.md v1.4: per-face channel of qfd_coll_static_face under the production collective"
     },
     {
      "element": "qfd_vm_qcommit",
      "parent": "qfd_sp_vector_memory",
      "role": "leaf",
      "evidence": "CONTRACT.md VM raw consume observers (vm_rawcommit/qfd_vm_qcommit.json)"
+    },
+    {
+     "element": "qfd_sys_face",
+     "evidence": "CONTRACT.md v1.4; rtl/qwen_split/qfd_sys_face.sv; bench results/arch/qwen_split_compute_1014/sys_face_0030 (PASS + 3 mutants FAIL)"
+    },
+    {
+     "element": "qfd_embedding_word_provider",
+     "evidence": "CONTRACT.md v1.4: compute-die word-level provider replaces qkd_embedding_static_core_provider"
+    },
+    {
+     "element": "qfd_ucie_six_five",
+     "parent": "qfd_collective_static_io_production",
+     "role": "leaf",
+     "evidence": "CONTRACT.md v1.4: gearbox r12 CLOSED f1f95843f, child of the production collective (was qfd_ucie_gearbox_r10)"
     }
    ],
    "retire": [
@@ -123,9 +119,59 @@
      ],
      "by": "qfd_io_serdes_static",
      "evidence": "Q-COLL static IO set"
+    },
+    {
+     "elements": [
+      "qfd_io_xfifo_static",
+      "qfd_io_ucie_static",
+      "qfd_io_serdes_static"
+     ],
+     "by": "qfd_collective_static_io_production",
+     "evidence": "CONTRACT.md v1.4: not instantiated by the production collective (stale)"
+    },
+    {
+     "elements": [
+      "ot_qfd_x3_mux_native"
+     ],
+     "by": "qfd_native59_compute_service",
+     "evidence": "static_link_bind retired the x3 mux (native59 drives x3); CONTRACT.md v1.4"
+    },
+    {
+     "elements": [
+      "qkd_embedding_static_core_provider"
+     ],
+     "by": "qfd_embedding_word_provider",
+     "evidence": "CONTRACT.md v1.4 (compute die only; the HBM half-beat join stays a KV-die function)"
+    },
+    {
+     "elements": [
+      "qfd_ucie_gearbox_r10"
+     ],
+     "by": "qfd_ucie_six_five",
+     "evidence": "CONTRACT.md v1.4 rename"
     }
    ],
    "streams": [
+    [
+     "^(qfd_sys_face|qfd_embedding_word_provider)$",
+     "Q-NETLIST"
+    ],
+    [
+     "^qfd_tile_n[kl]",
+     "Q-TILE45"
+    ],
+    [
+     "^(qfd_band_upper_tp8|qfd_res_train_issue|qfd_sp_res_train_par_[0-9]|qfd_rly_|qfd_seq_su_static)",
+     "Q-ELEM"
+    ],
+    [
+     "^qfd_sp_vector_memory_par$",
+     "Q-VMWB"
+    ],
+    [
+     "^(qfd_collective_static_io_production|qfd_d2d_static)$",
+     "Q-DVM+LINK"
+    ],
     [
      "^(qfd_(xc|xh|xs_|vm_|sp_vector)|ot_qfd_x)",
      "Q-DVM"
@@ -178,6 +224,11 @@
      ],
      "macro": "(phy|ckbump|pllm|fwdbump)",
      "evidence": "KV die contract v1.4.1 slots"
+    },
+    {
+     "kind": "registry",
+     "path": "results/fleet_viz/element_registry/qwen_kvsys_v143_die_masters_20261016.json",
+     "evidence": "Q-KVSYS-NETLIST 2026-10-16: v1.4.3 die masters absent from the v1.4.1 bind (qkd_hgs, qkd_hss, qkd_rly_t1, qkd_rst_region) + qkd_d2ds (die master of qkd_d2d_static); strict bind v2 results/arch/qwen_split_1014/kvsys_v1_4_3_design/port_bind_v2/"
     }
    ],
    "add": [
@@ -267,6 +318,10 @@
      "Q-KVSYS-DIE"
     ],
     [
+     "^qkh_",
+     "Q-KVSYS-ELEM"
+    ],
+    [
      "^(qkd_|ot_qkh_|ot_qkvd_)",
      "Q-KVSYS-ELEM"
     ]
@@ -280,7 +335,7 @@
    "lead": "S-DIE",
    "log": "el1011-s81die.log",
    "doc": "results/arch/hier_contract_1011/s81_v21_gen18.json",
-   "complete": true,
+   "complete": false,
    "sources": [
     {
      "kind": "port_bind",
@@ -371,7 +426,8 @@
      "^(dsfd_|ot_s81_|ot_p2h_|ot_mtp_)",
      "S-ELEM-B"
     ]
-   ]
+   ],
+   "note": "Current complete master census is pending source-pinned c26b / gen26n GEN and strict port-bind results. Historical bind5 (GEN18) sources remain diagnostic inventory only and must not auto-retire modern unlisted S81 masters. Explicit source-evidenced retirements remain in force."
   },
   {
    "design": "hbm",

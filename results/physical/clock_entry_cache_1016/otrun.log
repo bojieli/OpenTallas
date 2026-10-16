@@ -1,0 +1,26 @@
+ot-run: ot-agidock128  admits    65 GB (avail 99, growth 42, headroom 24, waiters 0/0 GB) load 24/64 running 13 disk 315 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-1375229-1792149381 after 1 s
+CACHE_IDENTITY_PASS positive 3.18 2.913
+CACHE_IDENTITY_PASS related 3.01 2.964
+CACHE_IDENTITY_PASS tie 3.113 3.587
+CACHE_IDENTITY_PASS tie_gate 3.165 2.93
+CACHE_IDENTITY_PASS constant_data 3.036 2.916
+CACHE_IDENTITY_PASS async_reset 3.006 2.958
+CACHE_IDENTITY_PASS wrong_input 2.959 3.01
+CACHE_IDENTITY_PASS wrong_output 2.924 3.013
+CACHE_IDENTITY_PASS unknown_port 3.014 3.027
+CACHE_IDENTITY_PASS cross_data 3.145 3.085
+CACHE_IDENTITY_PASS extra_alias 2.917 2.957
+CACHE_IDENTITY_PASS tie_port 2.985 2.935
+CACHE_IDENTITY_PASS tie_reg 2.973 2.914
+CACHE_IDENTITY_PASS tie_gate_port 2.96 2.968
+CACHE_IDENTITY_PASS async_reset_data 3.002 3.044
+CACHE_IDENTITY_PASS related_wrong_input 3.087 3.106
+CACHE_IDENTITY_PASS related_cut 2.88 3.279
+CACHE_IDENTITY_PASS declared_reset 3.554 3.508
+CACHE_COMPARISON_ALL_PASS 18
+uncached APPLY_PERF 626784 us queries=400
+cached APPLY_PERF 556362 us queries=300
+APPLY_PERF_PASS
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-1375229-1792149381): exit 0

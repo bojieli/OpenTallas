@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "dsfd_vm_static_wfc_ctl",
+ "enable": false,
+ "reason": "every output is a flop and every input lands on a flop in its first stage; extra pin stages would move the fixed 3:4 / 4:3 x43 sample slots of the WFC protocol"
+}

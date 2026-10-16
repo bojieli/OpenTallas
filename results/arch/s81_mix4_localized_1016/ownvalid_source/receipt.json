@@ -1,0 +1,39 @@
+{
+ "status": "CAPTURE_SEQUENTIAL_EQUIVALENCE_ONLY",
+ "baseline_source": "b4ca1edc9",
+ "sources": {
+  "tools/s81_engram_mix/localized_candidate/tb.sv": "f4ae601258cc68f6d8f66463c9c27492fa38447065e86d3ef5febcb1e9174c7a",
+  "rtl/dsrom_sys/engram/mix/dsfd_engram_mix4_localized_candidate.sv": "8df980060d712a3780c530d30d09c5c98bc56979c4293b33ee3b020b201cdc83"
+ },
+ "samples": 1024,
+ "reset_assertions": 17,
+ "replaced_flops": 10560,
+ "bit_comparisons": 10813440,
+ "clock_entries_RS5": 217,
+ "added_clock_entries": 24,
+ "added_flops": 0,
+ "added_edges": 0,
+ "results": [
+  {
+   "mutant": 0,
+   "returncode": 0,
+   "result": "PASS"
+  },
+  {
+   "mutant": 1,
+   "returncode": 1,
+   "result": "ACTUAL_STOPPED_CLOCK_REJECTED"
+  },
+  {
+   "mutant": 2,
+   "returncode": 1,
+   "result": "ACTUAL_STOPPED_CLOCK_REJECTED"
+  }
+ ],
+ "scope": [
+  "Every replaced return/request capture output compared after each edge against literal baseline equations",
+  "Common logical phase required; independent physical insertion/uncertainty not simulated",
+  "No new full numerical/parent/native qualification; baseline193/810 proof remains scoped to its exact source",
+  "Control/descriptor/H-V distribution/reset localization and all physical pin/cut/clock/PG/route remain OPEN"
+ ]
+}

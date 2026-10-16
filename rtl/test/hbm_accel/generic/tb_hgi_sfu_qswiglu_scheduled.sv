@@ -65,7 +65,7 @@ reg io_cfg_we=0,io_start_v=0;
  .io_cfg_we(io_cfg_we),.io_cfg_stripe(io_cfg_stripe),.io_cfg_addr(io_cfg_addr),.io_cfg_data(io_cfg_data),
  .io_start_v(io_start_v),.io_start_base(11'd0),.io_start_limit(12'(IO_ROWS)),.io_start_loops(16'd1),.io_done(io_done),
  .local_rq(rq),.local_rr(rr),.local_wq(wq),.local_w_done(done),
- .vi_q(512'd0),.side_y(512'd0),.fault(fault));
+ .vi_q(512'd0),.fault(fault));
  ot_hbm_vm_lg_static_tap #(.READ_RETURN(14),.WRITE_RETURN(11)) mid(.clk(clk),.rst_n(rst_n),.local_rq(readback?136'd0:rq),.far_rq(136'd0),
  .local_wq(wq),.far_wq(2248'd0),.local_read(readback?8'd0:{rq[135],rq[118],rq[101],rq[84],rq[67],rq[50],rq[33],rq[16]}),.local_write({wq[2247],wq[1966],wq[1685],wq[1404],wq[1123],wq[842],wq[561],wq[280]}),
  .near_rq(nrq1),.near_wq(nwq1),.near_rr(frr0),.near_w_done(fdone0),.local_rr(rr),.local_w_done(done),.fault(t1f));

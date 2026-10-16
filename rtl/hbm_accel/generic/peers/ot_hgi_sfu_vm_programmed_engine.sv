@@ -34,12 +34,15 @@ module ot_hgi_sfu_vm_programmed_engine #(
  input wire [31:0] drain_vm_sector,
  output wire [15:0] vi_re,
  output wire [383:0] vi_addr,
- input wire [511:0] vi_q,side_y,
- output wire [15:0] ro_v,side_v,kv_we,
- output wire [511:0] ro_x,side_x,kv_wdata,
+ input wire [511:0] vi_q,
+ output wire [15:0] ro_v,kv_we,
+ output wire [511:0] ro_x,kv_wdata,
  output wire [383:0] kv_waddr,
  output reg fault
 );
+ // side_v/side_x/side_y REMOVED (H-NETLIST/suport 2026-10-16, H-SU agreed): ot_su12_sfu binds its lane with .side_v(), .side_x(),
+ // .side_y(32'd0) (rtl/hdc/v41x/phys/ot_hdc_v41x_su_c12_phys.sv:152), so these pins were undriven / ignored; KIND1 side
+ // opcodes still fault (ot_hgi_sfu_static_engine).
  wire [7:0] stage_v;
  wire [15:0] stage_group;
  wire [8*LWB-1:0] stage_addr;
@@ -66,7 +69,7 @@ module ot_hgi_sfu_vm_programmed_engine #(
  .scalar_load(scalar_load),.scalar_enable(scalar_enable),.scalar_addr(scalar_load_addr),.scalar_data(scalar_data),
  .stage_v(stage_v),.stage_group(stage_group),.stage_addr(stage_addr),.stage_mask(stage_mask),.stage_data(stage_data),
  .drain_v(drain_v),.drain_addr(drain_addr),.drain_data(drain_data),.drain_result_v(drain_result_v),
- .vi_re(vi_re),.vi_addr(vi_addr),.vi_q(vi_q),.side_y(side_y),.ro_v(ro_v),.ro_x(ro_x),.side_v(side_v),.side_x(side_x),
+ .vi_re(vi_re),.vi_addr(vi_addr),.vi_q(vi_q),.ro_v(ro_v),.ro_x(ro_x),
  .kv_we(kv_we),.kv_waddr(kv_waddr),.kv_wdata(kv_wdata),.fault(engine_fault));
  always @(posedge clk or negedge rst_n)
   if(!rst_n)fault<=0;else if(bridge_fault||engine_fault)fault<=1;

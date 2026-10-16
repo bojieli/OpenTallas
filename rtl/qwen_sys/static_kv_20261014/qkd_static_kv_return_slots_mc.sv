@@ -40,10 +40,17 @@ module qkd_static_kv_return_slots_mc #(parameter integer DEPTH=8)(
  // Both exports plus upstream controller/front quiet are required at the parent.
  // Core publication synchronizers can lag a new HBM write; idle_core alone
  // therefore cannot establish whole-ring or whole-KV drained.
+ // mc_r3b (Q-ELEM 10-16): idle_hbm no longer looks at the raw controller_co[0] / compiled_hbm_put pins (the r3
+ // route failed CTS hold/setup on that pin -> compare -> idle_hbm cone: setup -527 ps / hold -90 ps). It uses only
+ // registered pin captures: observed/write_slot (this edge's pins) and obs_d/ws_d (last edge's), so idle_hbm is the
+ // original observation one pll_hbm edge later and never earlier (drain observation only; no schedule uses it).
+ (* keep *)reg obs_d,ws_d;
  always @(posedge pll_hbm or negedge hr)
-  if(!hr)idle_hbm<=0;
-  else idle_hbm<=(published==done_sync2) && !observed && !write_slot &&
-                  !controller_co[0] && !compiled_hbm_put;
+  if(!hr)begin idle_hbm<=0;obs_d<=0;ws_d<=0;end
+  else begin
+   obs_d<=observed;ws_d<=write_slot;
+   idle_hbm<=(published==done_sync2) && !observed && !write_slot && !obs_d && !ws_d;
+  end
  always @(posedge ck or negedge rs)
   if(!rs)idle_core<=0;
   else idle_core<=(pub_sync2==consumed) && !slot && !expected_put && !actual_valid;
@@ -70,7 +77,20 @@ module qkd_static_kv_return_slots_mc #(parameter integer DEPTH=8)(
  genvar bank;
  generate for(bank=0;bank<4;bank=bank+1)begin:g_storage
   reg [71:0] bank_data[0:DEPTH-1];
-  assign read_data[bank*72+:72]=bank_data[ra];
+  // mc_r3b: the 64:1 read mux select is a per-18-bit pointer copy (4 per bank, 16 total), not the one rp
+  // (mc3b gate: rp[1] drove 18,407 mux loads). Each copy advances on slot exactly as rp (keep_hierarchy).
+  genvar q;
+  for(q=0;q<4;q=q+1)begin:g_rq
+   wire [AW-1:0] rq;
+   (* keep_hierarchy *) qkd_ksr_mc_rp #(.AW(AW),
+`ifdef OT_KV_RETURN_MUT_READ_ADDR
+    .INIT(1)
+`else
+    .INIT(0)
+`endif
+   ) u_rq(.clk(ck),.rst_n(rs),.adv(slot),.q(rq));
+   assign read_data[bank*72+q*18+:18]=bank_data[rq][q*18+:18];
+  end
   always @(posedge pll_hbm_data[bank])
    if(hr && write_slot)bank_data[wa]<=hd[bank*72+:72];
  end endgenerate
@@ -86,4 +106,11 @@ module qkd_static_kv_return_slots_mc #(parameter integer DEPTH=8)(
     if(pub_sync2[ra] !== ~rp[AW] || observed_valid[ra] !== 1'b1 || read_data[287:256] !== meta)fault_core<=1;
    end
   end
+endmodule
+
+// read-pointer copy of the static return ring: advances on slot exactly as the ring's rp (keep_hierarchy: never merged)
+module qkd_ksr_mc_rp #(parameter integer AW=6, parameter integer INIT=0)(input wire clk,input wire rst_n,input wire adv,
+                                                                       output reg [AW-1:0] q);
+ localparam [AW-1:0] C_INIT=INIT;
+ always @(posedge clk or negedge rst_n)if(!rst_n)q<=C_INIT;else if(adv)q<=q+1'b1;
 endmodule

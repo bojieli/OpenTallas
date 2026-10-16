@@ -1,0 +1,778 @@
+{
+ "status": "EXPLICIT_INNER_CLOCK_RESET_TRANSPORT_INVENTORY_OPEN",
+ "graph_sha256": "ccd0cb3f6446de8753b3e30952e6441e4861c9e7267f2d96420a9fd79befe3e1",
+ "data_control_census_scope": "10396 inner interchild joins only;8796 timed plus1600 actual mapped constants. Not fullparent allnets.",
+ "omitted_terminal_bits": 76,
+ "clock_terminal_bits": 38,
+ "reset_terminal_bits": 38,
+ "omitted_interchild_driven_joins": 0,
+ "rows": [
+  {
+   "instance": "mix.control",
+   "master": "ot_s81_engram_mix_control",
+   "declared_port": "arst_n",
+   "bit": 0,
+   "direction": "input",
+   "role": "active_low_async_reset",
+   "top_boundary_port": "rst",
+   "top_boundary_index": 0
+  },
+  {
+   "instance": "mix.control",
+   "master": "ot_s81_engram_mix_control",
+   "declared_port": "clk",
+   "bit": 0,
+   "direction": "input",
+   "role": "clock",
+   "top_boundary_port": "ck",
+   "top_boundary_index": 5
+  },
+  {
+   "instance": "mix.dsum",
+   "master": "ot_s81_engram_sum",
+   "declared_port": "arst_n",
+   "bit": 0,
+   "direction": "input",
+   "role": "active_low_async_reset",
+   "top_boundary_port": "rst",
+   "top_boundary_index": 0
+  },
+  {
+   "instance": "mix.dsum",
+   "master": "ot_s81_engram_sum",
+   "declared_port": "clk",
+   "bit": 0,
+   "direction": "input",
+   "role": "clock",
+   "top_boundary_port": "ck",
+   "top_boundary_index": 31
+  },
+  {
+   "instance": "mix.g_add[0].leaf",
+   "master": "ot_s81_engram_add8",
+   "declared_port": "arst_n",
+   "bit": 0,
+   "direction": "input",
+   "role": "active_low_async_reset",
+   "top_boundary_port": "rst",
+   "top_boundary_index": 0
+  },
+  {
+   "instance": "mix.g_add[0].leaf",
+   "master": "ot_s81_engram_add8",
+   "declared_port": "clk",
+   "bit": 0,
+   "direction": "input",
+   "role": "clock",
+   "top_boundary_port": "ck",
+   "top_boundary_index": 22
+  },
+  {
+   "instance": "mix.g_add[1].leaf",
+   "master": "ot_s81_engram_add8",
+   "declared_port": "arst_n",
+   "bit": 0,
+   "direction": "input",
+   "role": "active_low_async_reset",
+   "top_boundary_port": "rst",
+   "top_boundary_index": 0
+  },
+  {
+   "instance": "mix.g_add[1].leaf",
+   "master": "ot_s81_engram_add8",
+   "declared_port": "clk",
+   "bit": 0,
+   "direction": "input",
+   "role": "clock",
+   "top_boundary_port": "ck",
+   "top_boundary_index": 23
+  },
+  {
+   "instance": "mix.g_add[2].leaf",
+   "master": "ot_s81_engram_add8",
+   "declared_port": "arst_n",
+   "bit": 0,
+   "direction": "input",
+   "role": "active_low_async_reset",
+   "top_boundary_port": "rst",
+   "top_boundary_index": 0
+  },
+  {
+   "instance": "mix.g_add[2].leaf",
+   "master": "ot_s81_engram_add8",
+   "declared_port": "clk",
+   "bit": 0,
+   "direction": "input",
+   "role": "clock",
+   "top_boundary_port": "ck",
+   "top_boundary_index": 24
+  },
+  {
+   "instance": "mix.g_add[3].leaf",
+   "master": "ot_s81_engram_add8",
+   "declared_port": "arst_n",
+   "bit": 0,
+   "direction": "input",
+   "role": "active_low_async_reset",
+   "top_boundary_port": "rst",
+   "top_boundary_index": 0
+  },
+  {
+   "instance": "mix.g_add[3].leaf",
+   "master": "ot_s81_engram_add8",
+   "declared_port": "clk",
+   "bit": 0,
+   "direction": "input",
+   "role": "clock",
+   "top_boundary_port": "ck",
+   "top_boundary_index": 25
+  },
+  {
+   "instance": "mix.g_mult[0].leaf",
+   "master": "ot_s81_engram_mul4",
+   "declared_port": "arst_n",
+   "bit": 0,
+   "direction": "input",
+   "role": "active_low_async_reset",
+   "top_boundary_port": "rst",
+   "top_boundary_index": 0
+  },
+  {
+   "instance": "mix.g_mult[0].leaf",
+   "master": "ot_s81_engram_mul4",
+   "declared_port": "clk",
+   "bit": 0,
+   "direction": "input",
+   "role": "clock",
+   "top_boundary_port": "ck",
+   "top_boundary_index": 6
+  },
+  {
+   "instance": "mix.g_mult[1].leaf",
+   "master": "ot_s81_engram_mul4",
+   "declared_port": "arst_n",
+   "bit": 0,
+   "direction": "input",
+   "role": "active_low_async_reset",
+   "top_boundary_port": "rst",
+   "top_boundary_index": 0
+  },
+  {
+   "instance": "mix.g_mult[1].leaf",
+   "master": "ot_s81_engram_mul4",
+   "declared_port": "clk",
+   "bit": 0,
+   "direction": "input",
+   "role": "clock",
+   "top_boundary_port": "ck",
+   "top_boundary_index": 32
+  },
+  {
+   "instance": "mix.g_mult[2].leaf",
+   "master": "ot_s81_engram_mul4",
+   "declared_port": "arst_n",
+   "bit": 0,
+   "direction": "input",
+   "role": "active_low_async_reset",
+   "top_boundary_port": "rst",
+   "top_boundary_index": 0
+  },
+  {
+   "instance": "mix.g_mult[2].leaf",
+   "master": "ot_s81_engram_mul4",
+   "declared_port": "clk",
+   "bit": 0,
+   "direction": "input",
+   "role": "clock",
+   "top_boundary_port": "ck",
+   "top_boundary_index": 7
+  },
+  {
+   "instance": "mix.g_mult[3].leaf",
+   "master": "ot_s81_engram_mul4",
+   "declared_port": "arst_n",
+   "bit": 0,
+   "direction": "input",
+   "role": "active_low_async_reset",
+   "top_boundary_port": "rst",
+   "top_boundary_index": 0
+  },
+  {
+   "instance": "mix.g_mult[3].leaf",
+   "master": "ot_s81_engram_mul4",
+   "declared_port": "clk",
+   "bit": 0,
+   "direction": "input",
+   "role": "clock",
+   "top_boundary_port": "ck",
+   "top_boundary_index": 33
+  },
+  {
+   "instance": "mix.g_mult[4].leaf",
+   "master": "ot_s81_engram_mul4",
+   "declared_port": "arst_n",
+   "bit": 0,
+   "direction": "input",
+   "role": "active_low_async_reset",
+   "top_boundary_port": "rst",
+   "top_boundary_index": 0
+  },
+  {
+   "instance": "mix.g_mult[4].leaf",
+   "master": "ot_s81_engram_mul4",
+   "declared_port": "clk",
+   "bit": 0,
+   "direction": "input",
+   "role": "clock",
+   "top_boundary_port": "ck",
+   "top_boundary_index": 8
+  },
+  {
+   "instance": "mix.g_mult[5].leaf",
+   "master": "ot_s81_engram_mul4",
+   "declared_port": "arst_n",
+   "bit": 0,
+   "direction": "input",
+   "role": "active_low_async_reset",
+   "top_boundary_port": "rst",
+   "top_boundary_index": 0
+  },
+  {
+   "instance": "mix.g_mult[5].leaf",
+   "master": "ot_s81_engram_mul4",
+   "declared_port": "clk",
+   "bit": 0,
+   "direction": "input",
+   "role": "clock",
+   "top_boundary_port": "ck",
+   "top_boundary_index": 34
+  },
+  {
+   "instance": "mix.g_mult[6].leaf",
+   "master": "ot_s81_engram_mul4",
+   "declared_port": "arst_n",
+   "bit": 0,
+   "direction": "input",
+   "role": "active_low_async_reset",
+   "top_boundary_port": "rst",
+   "top_boundary_index": 0
+  },
+  {
+   "instance": "mix.g_mult[6].leaf",
+   "master": "ot_s81_engram_mul4",
+   "declared_port": "clk",
+   "bit": 0,
+   "direction": "input",
+   "role": "clock",
+   "top_boundary_port": "ck",
+   "top_boundary_index": 9
+  },
+  {
+   "instance": "mix.g_mult[7].leaf",
+   "master": "ot_s81_engram_mul4",
+   "declared_port": "arst_n",
+   "bit": 0,
+   "direction": "input",
+   "role": "active_low_async_reset",
+   "top_boundary_port": "rst",
+   "top_boundary_index": 0
+  },
+  {
+   "instance": "mix.g_mult[7].leaf",
+   "master": "ot_s81_engram_mul4",
+   "declared_port": "clk",
+   "bit": 0,
+   "direction": "input",
+   "role": "clock",
+   "top_boundary_port": "ck",
+   "top_boundary_index": 35
+  },
+  {
+   "instance": "mix.g_norm[0].leaf",
+   "master": "ot_s81_engram_norm",
+   "declared_port": "arst_n",
+   "bit": 0,
+   "direction": "input",
+   "role": "active_low_async_reset",
+   "top_boundary_port": "rst",
+   "top_boundary_index": 0
+  },
+  {
+   "instance": "mix.g_norm[0].leaf",
+   "master": "ot_s81_engram_norm",
+   "declared_port": "clk",
+   "bit": 0,
+   "direction": "input",
+   "role": "clock",
+   "top_boundary_port": "ck",
+   "top_boundary_index": 26
+  },
+  {
+   "instance": "mix.g_norm[1].leaf",
+   "master": "ot_s81_engram_norm",
+   "declared_port": "arst_n",
+   "bit": 0,
+   "direction": "input",
+   "role": "active_low_async_reset",
+   "top_boundary_port": "rst",
+   "top_boundary_index": 0
+  },
+  {
+   "instance": "mix.g_norm[1].leaf",
+   "master": "ot_s81_engram_norm",
+   "declared_port": "clk",
+   "bit": 0,
+   "direction": "input",
+   "role": "clock",
+   "top_boundary_port": "ck",
+   "top_boundary_index": 27
+  },
+  {
+   "instance": "mix.g_reduce[0].g_chunk[0].leaf",
+   "master": "ot_s81_engram_chunk8",
+   "declared_port": "arst_n",
+   "bit": 0,
+   "direction": "input",
+   "role": "active_low_async_reset",
+   "top_boundary_port": "rst",
+   "top_boundary_index": 0
+  },
+  {
+   "instance": "mix.g_reduce[0].g_chunk[0].leaf",
+   "master": "ot_s81_engram_chunk8",
+   "declared_port": "clk",
+   "bit": 0,
+   "direction": "input",
+   "role": "clock",
+   "top_boundary_port": "ck",
+   "top_boundary_index": 10
+  },
+  {
+   "instance": "mix.g_reduce[0].g_chunk[1].leaf",
+   "master": "ot_s81_engram_chunk8",
+   "declared_port": "arst_n",
+   "bit": 0,
+   "direction": "input",
+   "role": "active_low_async_reset",
+   "top_boundary_port": "rst",
+   "top_boundary_index": 0
+  },
+  {
+   "instance": "mix.g_reduce[0].g_chunk[1].leaf",
+   "master": "ot_s81_engram_chunk8",
+   "declared_port": "clk",
+   "bit": 0,
+   "direction": "input",
+   "role": "clock",
+   "top_boundary_port": "ck",
+   "top_boundary_index": 11
+  },
+  {
+   "instance": "mix.g_reduce[0].g_chunk[2].leaf",
+   "master": "ot_s81_engram_chunk8",
+   "declared_port": "arst_n",
+   "bit": 0,
+   "direction": "input",
+   "role": "active_low_async_reset",
+   "top_boundary_port": "rst",
+   "top_boundary_index": 0
+  },
+  {
+   "instance": "mix.g_reduce[0].g_chunk[2].leaf",
+   "master": "ot_s81_engram_chunk8",
+   "declared_port": "clk",
+   "bit": 0,
+   "direction": "input",
+   "role": "clock",
+   "top_boundary_port": "ck",
+   "top_boundary_index": 12
+  },
+  {
+   "instance": "mix.g_reduce[0].g_chunk[3].leaf",
+   "master": "ot_s81_engram_chunk8",
+   "declared_port": "arst_n",
+   "bit": 0,
+   "direction": "input",
+   "role": "active_low_async_reset",
+   "top_boundary_port": "rst",
+   "top_boundary_index": 0
+  },
+  {
+   "instance": "mix.g_reduce[0].g_chunk[3].leaf",
+   "master": "ot_s81_engram_chunk8",
+   "declared_port": "clk",
+   "bit": 0,
+   "direction": "input",
+   "role": "clock",
+   "top_boundary_port": "ck",
+   "top_boundary_index": 13
+  },
+  {
+   "instance": "mix.g_reduce[1].g_chunk[0].leaf",
+   "master": "ot_s81_engram_chunk8",
+   "declared_port": "arst_n",
+   "bit": 0,
+   "direction": "input",
+   "role": "active_low_async_reset",
+   "top_boundary_port": "rst",
+   "top_boundary_index": 0
+  },
+  {
+   "instance": "mix.g_reduce[1].g_chunk[0].leaf",
+   "master": "ot_s81_engram_chunk8",
+   "declared_port": "clk",
+   "bit": 0,
+   "direction": "input",
+   "role": "clock",
+   "top_boundary_port": "ck",
+   "top_boundary_index": 14
+  },
+  {
+   "instance": "mix.g_reduce[1].g_chunk[1].leaf",
+   "master": "ot_s81_engram_chunk8",
+   "declared_port": "arst_n",
+   "bit": 0,
+   "direction": "input",
+   "role": "active_low_async_reset",
+   "top_boundary_port": "rst",
+   "top_boundary_index": 0
+  },
+  {
+   "instance": "mix.g_reduce[1].g_chunk[1].leaf",
+   "master": "ot_s81_engram_chunk8",
+   "declared_port": "clk",
+   "bit": 0,
+   "direction": "input",
+   "role": "clock",
+   "top_boundary_port": "ck",
+   "top_boundary_index": 15
+  },
+  {
+   "instance": "mix.g_reduce[1].g_chunk[2].leaf",
+   "master": "ot_s81_engram_chunk8",
+   "declared_port": "arst_n",
+   "bit": 0,
+   "direction": "input",
+   "role": "active_low_async_reset",
+   "top_boundary_port": "rst",
+   "top_boundary_index": 0
+  },
+  {
+   "instance": "mix.g_reduce[1].g_chunk[2].leaf",
+   "master": "ot_s81_engram_chunk8",
+   "declared_port": "clk",
+   "bit": 0,
+   "direction": "input",
+   "role": "clock",
+   "top_boundary_port": "ck",
+   "top_boundary_index": 16
+  },
+  {
+   "instance": "mix.g_reduce[1].g_chunk[3].leaf",
+   "master": "ot_s81_engram_chunk8",
+   "declared_port": "arst_n",
+   "bit": 0,
+   "direction": "input",
+   "role": "active_low_async_reset",
+   "top_boundary_port": "rst",
+   "top_boundary_index": 0
+  },
+  {
+   "instance": "mix.g_reduce[1].g_chunk[3].leaf",
+   "master": "ot_s81_engram_chunk8",
+   "declared_port": "clk",
+   "bit": 0,
+   "direction": "input",
+   "role": "clock",
+   "top_boundary_port": "ck",
+   "top_boundary_index": 17
+  },
+  {
+   "instance": "mix.g_reduce[2].g_chunk[0].leaf",
+   "master": "ot_s81_engram_chunk8",
+   "declared_port": "arst_n",
+   "bit": 0,
+   "direction": "input",
+   "role": "active_low_async_reset",
+   "top_boundary_port": "rst",
+   "top_boundary_index": 0
+  },
+  {
+   "instance": "mix.g_reduce[2].g_chunk[0].leaf",
+   "master": "ot_s81_engram_chunk8",
+   "declared_port": "clk",
+   "bit": 0,
+   "direction": "input",
+   "role": "clock",
+   "top_boundary_port": "ck",
+   "top_boundary_index": 18
+  },
+  {
+   "instance": "mix.g_reduce[2].g_chunk[1].leaf",
+   "master": "ot_s81_engram_chunk8",
+   "declared_port": "arst_n",
+   "bit": 0,
+   "direction": "input",
+   "role": "active_low_async_reset",
+   "top_boundary_port": "rst",
+   "top_boundary_index": 0
+  },
+  {
+   "instance": "mix.g_reduce[2].g_chunk[1].leaf",
+   "master": "ot_s81_engram_chunk8",
+   "declared_port": "clk",
+   "bit": 0,
+   "direction": "input",
+   "role": "clock",
+   "top_boundary_port": "ck",
+   "top_boundary_index": 19
+  },
+  {
+   "instance": "mix.g_reduce[2].g_chunk[2].leaf",
+   "master": "ot_s81_engram_chunk8",
+   "declared_port": "arst_n",
+   "bit": 0,
+   "direction": "input",
+   "role": "active_low_async_reset",
+   "top_boundary_port": "rst",
+   "top_boundary_index": 0
+  },
+  {
+   "instance": "mix.g_reduce[2].g_chunk[2].leaf",
+   "master": "ot_s81_engram_chunk8",
+   "declared_port": "clk",
+   "bit": 0,
+   "direction": "input",
+   "role": "clock",
+   "top_boundary_port": "ck",
+   "top_boundary_index": 20
+  },
+  {
+   "instance": "mix.g_reduce[2].g_chunk[3].leaf",
+   "master": "ot_s81_engram_chunk8",
+   "declared_port": "arst_n",
+   "bit": 0,
+   "direction": "input",
+   "role": "active_low_async_reset",
+   "top_boundary_port": "rst",
+   "top_boundary_index": 0
+  },
+  {
+   "instance": "mix.g_reduce[2].g_chunk[3].leaf",
+   "master": "ot_s81_engram_chunk8",
+   "declared_port": "clk",
+   "bit": 0,
+   "direction": "input",
+   "role": "clock",
+   "top_boundary_port": "ck",
+   "top_boundary_index": 21
+  },
+  {
+   "instance": "mix.gate_leaf.magnitude",
+   "master": "ot_s81_engram_signed_sqrt",
+   "declared_port": "arst_n",
+   "bit": 0,
+   "direction": "input",
+   "role": "active_low_async_reset",
+   "top_boundary_port": "rst",
+   "top_boundary_index": 0
+  },
+  {
+   "instance": "mix.gate_leaf.magnitude",
+   "master": "ot_s81_engram_signed_sqrt",
+   "declared_port": "clk",
+   "bit": 0,
+   "direction": "input",
+   "role": "clock",
+   "top_boundary_port": "ck",
+   "top_boundary_index": 28
+  },
+  {
+   "instance": "mix.gate_leaf.sigmoid",
+   "master": "ot_s81_engram_sigmoid",
+   "declared_port": "arst_n",
+   "bit": 0,
+   "direction": "input",
+   "role": "active_low_async_reset",
+   "top_boundary_port": "rst",
+   "top_boundary_index": 0
+  },
+  {
+   "instance": "mix.gate_leaf.sigmoid",
+   "master": "ot_s81_engram_sigmoid",
+   "declared_port": "clk",
+   "bit": 0,
+   "direction": "input",
+   "role": "clock",
+   "top_boundary_port": "ck",
+   "top_boundary_index": 36
+  },
+  {
+   "instance": "mix.hsum",
+   "master": "ot_s81_engram_sum",
+   "declared_port": "arst_n",
+   "bit": 0,
+   "direction": "input",
+   "role": "active_low_async_reset",
+   "top_boundary_port": "rst",
+   "top_boundary_index": 0
+  },
+  {
+   "instance": "mix.hsum",
+   "master": "ot_s81_engram_sum",
+   "declared_port": "clk",
+   "bit": 0,
+   "direction": "input",
+   "role": "clock",
+   "top_boundary_port": "ck",
+   "top_boundary_index": 29
+  },
+  {
+   "instance": "mix.ksum",
+   "master": "ot_s81_engram_sum",
+   "declared_port": "arst_n",
+   "bit": 0,
+   "direction": "input",
+   "role": "active_low_async_reset",
+   "top_boundary_port": "rst",
+   "top_boundary_index": 0
+  },
+  {
+   "instance": "mix.ksum",
+   "master": "ot_s81_engram_sum",
+   "declared_port": "clk",
+   "bit": 0,
+   "direction": "input",
+   "role": "clock",
+   "top_boundary_port": "ck",
+   "top_boundary_index": 30
+  },
+  {
+   "instance": "mix.relay",
+   "master": "ot_s81_engram_rly",
+   "declared_port": "arst_n",
+   "bit": 0,
+   "direction": "input",
+   "role": "active_low_async_reset",
+   "top_boundary_port": "rst",
+   "top_boundary_index": 0
+  },
+  {
+   "instance": "mix.relay",
+   "master": "ot_s81_engram_rly",
+   "declared_port": "clk",
+   "bit": 0,
+   "direction": "input",
+   "role": "clock",
+   "top_boundary_port": "ck",
+   "top_boundary_index": 37
+  },
+  {
+   "instance": "shell.col[0].u",
+   "master": "ot_s81_engram_mixq_shcol",
+   "declared_port": "ck",
+   "bit": 0,
+   "direction": "input",
+   "role": "clock",
+   "top_boundary_port": "ck",
+   "top_boundary_index": 1
+  },
+  {
+   "instance": "shell.col[0].u",
+   "master": "ot_s81_engram_mixq_shcol",
+   "declared_port": "rst",
+   "bit": 0,
+   "direction": "input",
+   "role": "active_low_async_reset",
+   "top_boundary_port": "rst",
+   "top_boundary_index": 0
+  },
+  {
+   "instance": "shell.col[1].u",
+   "master": "ot_s81_engram_mixq_shcol",
+   "declared_port": "ck",
+   "bit": 0,
+   "direction": "input",
+   "role": "clock",
+   "top_boundary_port": "ck",
+   "top_boundary_index": 2
+  },
+  {
+   "instance": "shell.col[1].u",
+   "master": "ot_s81_engram_mixq_shcol",
+   "declared_port": "rst",
+   "bit": 0,
+   "direction": "input",
+   "role": "active_low_async_reset",
+   "top_boundary_port": "rst",
+   "top_boundary_index": 0
+  },
+  {
+   "instance": "shell.col[2].u",
+   "master": "ot_s81_engram_mixq_shcol",
+   "declared_port": "ck",
+   "bit": 0,
+   "direction": "input",
+   "role": "clock",
+   "top_boundary_port": "ck",
+   "top_boundary_index": 3
+  },
+  {
+   "instance": "shell.col[2].u",
+   "master": "ot_s81_engram_mixq_shcol",
+   "declared_port": "rst",
+   "bit": 0,
+   "direction": "input",
+   "role": "active_low_async_reset",
+   "top_boundary_port": "rst",
+   "top_boundary_index": 0
+  },
+  {
+   "instance": "shell.col[3].u",
+   "master": "ot_s81_engram_mixq_shcol",
+   "declared_port": "ck",
+   "bit": 0,
+   "direction": "input",
+   "role": "clock",
+   "top_boundary_port": "ck",
+   "top_boundary_index": 4
+  },
+  {
+   "instance": "shell.col[3].u",
+   "master": "ot_s81_engram_mixq_shcol",
+   "declared_port": "rst",
+   "bit": 0,
+   "direction": "input",
+   "role": "active_low_async_reset",
+   "top_boundary_port": "rst",
+   "top_boundary_index": 0
+  },
+  {
+   "instance": "shell.ctl",
+   "master": "ot_s81_engram_mixq_shctl",
+   "declared_port": "ck",
+   "bit": 0,
+   "direction": "input",
+   "role": "clock",
+   "top_boundary_port": "ck",
+   "top_boundary_index": 0
+  },
+  {
+   "instance": "shell.ctl",
+   "master": "ot_s81_engram_mixq_shctl",
+   "declared_port": "rst",
+   "bit": 0,
+   "direction": "input",
+   "role": "active_low_async_reset",
+   "top_boundary_port": "rst",
+   "top_boundary_index": 0
+  }
+ ],
+ "source_semantics": [
+  "All38 inner clocks are distinct direct ck[0..37] boundary bits; fullparent maps copy c to ck[1+38*c+:38].",
+  "Inner rst is active-low despite name: shcol/shctl always blocks use negedge rst; arithmetic uses same direct rst as arst_n. No internal leaf reset relay output is omitted.",
+  "Fullparent rst[0] directly feeds all152 physical child reset terminals; top ck0 reset_sync generates rn for top endpoint and relay/capture helpers. Those fullparent transport paths are outside this inner graph.",
+  "Root217 receipt records fullparent root roles0..216; physical clock tree, reset recovery/removal, asynchronous release synchronization, reset distribution skew, PG and all insertion/native checks remain OPEN.",
+  "No clock/reset path is assigned zero delay or counted in timed data/control joins."
+ ]
+}

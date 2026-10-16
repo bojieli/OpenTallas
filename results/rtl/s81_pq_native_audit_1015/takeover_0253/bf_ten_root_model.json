@@ -1,0 +1,412 @@
+{
+  "schema": "opentallas.s81.bf-ten-root.candidate.v1",
+  "default_off": true,
+  "adopted": false,
+  "source": {
+    "native_component_commit": "ea1b0c30b794aacaa897b3416f90c4824b3617fb",
+    "census_evidence_commit": "7fd9a1f7e",
+    "census_path": "results/rtl/s81_bf_clock_1015/c10/recovery_0253/column_root_census.json",
+    "census_sha256": "97b43328302067df1c82fd53beb1fb2d14f031a28e0daaef4be3af13420a2aa8",
+    "mapped_netlist_sha256_zstd": "1f08ae04f28c453ba17deececc272207ed8dbfe07d6a9ea5809849094a4a2fc5",
+    "routed_def_sha256_zstd": "3aaf5dcc0404ada255164ae2316f0432bf9c08dbc11558e046f627dfbf811f04"
+  },
+  "replicas": {
+    "columns_requested": 1,
+    "roots_per_column": 10,
+    "root_delivery_pins_total": 10,
+    "four_lane_master_per_column": 4,
+    "other_group_instances_per_column": 6,
+    "distinct_master_families_upper_bound": 7
+  },
+  "actual_old_sequential_cells_per_column": 53493,
+  "actual_old_root_groups": {
+    "boundary_memory": {
+      "sinks": 5002,
+      "cells": 28860,
+      "area_um2": 19146.544,
+      "old_sink_bounds_um": [
+        29.754,
+        33.75,
+        446.796,
+        196.29
+      ],
+      "old_span_um": [
+        417.042,
+        162.54
+      ]
+    },
+    "fp4_leg0_chain_pair": {
+      "sinks": 4628,
+      "cells": 34170,
+      "area_um2": 4160.593,
+      "old_sink_bounds_um": [
+        304.506,
+        37.8,
+        446.796,
+        144.99
+      ],
+      "old_span_um": [
+        142.29,
+        107.19
+      ]
+    },
+    "fp4_leg1_chain": {
+      "sinks": 3660,
+      "cells": 26145,
+      "area_um2": 3224.425,
+      "old_sink_bounds_um": [
+        225.882,
+        39.69,
+        446.796,
+        196.29
+      ],
+      "old_span_um": [
+        220.914,
+        156.6
+      ]
+    },
+    "segment_tree": {
+      "sinks": 4874,
+      "cells": 25028,
+      "area_um2": 3198.254,
+      "old_sink_bounds_um": [
+        341.874,
+        2.16,
+        446.796,
+        124.74
+      ],
+      "old_span_um": [
+        104.922,
+        122.58
+      ]
+    },
+    "bf16_lane4_0": {
+      "sinks": 5680,
+      "cells": 34192,
+      "area_um2": 4170.507,
+      "old_sink_bounds_um": [
+        2.268,
+        2.16,
+        370.602,
+        115.29
+      ],
+      "old_span_um": [
+        368.334,
+        113.13
+      ]
+    },
+    "bf16_lane4_1": {
+      "sinks": 5608,
+      "cells": 33647,
+      "area_um2": 4128.429,
+      "old_sink_bounds_um": [
+        2.268,
+        3.78,
+        263.25,
+        133.11
+      ],
+      "old_span_um": [
+        260.982,
+        129.33
+      ]
+    },
+    "bf16_lane4_2": {
+      "sinks": 5608,
+      "cells": 33789,
+      "area_um2": 4127.088,
+      "old_sink_bounds_um": [
+        174.312,
+        21.87,
+        336.582,
+        147.15
+      ],
+      "old_span_um": [
+        162.27,
+        125.28
+      ]
+    },
+    "bf16_lane4_3": {
+      "sinks": 5608,
+      "cells": 33529,
+      "area_um2": 4109.927,
+      "old_sink_bounds_um": [
+        201.42,
+        87.48,
+        413.208,
+        196.29
+      ],
+      "old_span_um": [
+        211.788,
+        108.81
+      ]
+    },
+    "bf16_tree_level0": {
+      "sinks": 6738,
+      "cells": 34327,
+      "area_um2": 4254.619,
+      "old_sink_bounds_um": [
+        10.908,
+        2.16,
+        382.212,
+        196.29
+      ],
+      "old_span_um": [
+        371.304,
+        194.13
+      ]
+    },
+    "bf16_tree_levels1_3": {
+      "sinks": 6087,
+      "cells": 32428,
+      "area_um2": 3925.986,
+      "old_sink_bounds_um": [
+        194.832,
+        2.16,
+        440.046,
+        154.44
+      ],
+      "old_span_um": [
+        245.214,
+        152.28
+      ]
+    }
+  },
+  "compute": {
+    "bf16_macs_per_active_bf_issue": 16,
+    "macs_per_cycle_delta": 0,
+    "production_macs_per_calendar_cycle": null,
+    "basis": "Existing reviewed arithmetic and issue schedule unchanged; native component exactness alone is not a sustained-rate measurement."
+  },
+  "memory": {
+    "roms_per_column": 2,
+    "macro": "ot_rom_4096x274_m8",
+    "read_port_bits_each": 274,
+    "physical_read_port_bits_total": 548,
+    "normal_read_enables_per_column_cycle_max": 1,
+    "normal_raw_read_bytes_per_cycle_max": 34.25,
+    "useful_weight_bytes_per_read": 32,
+    "bf16_macs_per_useful_weight_byte": 0.5,
+    "read_bytes_per_cycle_delta": 0,
+    "write_bytes_per_cycle": 0,
+    "basis": "Two ping-pong 4096x274 real macros; b_a_ctr[0] selects mutually exclusive read enables."
+  },
+  "column_boundary": {
+    "ci_input_bits": 776,
+    "result_output_bits": 64,
+    "clock_pins": 10,
+    "reset_pins": 1,
+    "data_boundary_bits_per_cycle_delta": 0,
+    "added_clock_delivery_pins_per_column": 9
+  },
+  "four_lane_source_interface": {
+    "NCHB": 8,
+    "TRW": 7,
+    "tag_bits": 13,
+    "input_data_bits": 143,
+    "output_data_bits": 172,
+    "clock_and_reset_bits": 2,
+    "total_pin_bits": 317,
+    "source": "ot_v41_bf_lane4 real source-hierarchy extraction; no ABC cone cut substituted"
+  },
+  "historical_flat_cone_cuts": [
+    {
+      "source": 0,
+      "destination": 1,
+      "bits": 769
+    },
+    {
+      "source": 0,
+      "destination": 2,
+      "bits": 638
+    },
+    {
+      "source": 0,
+      "destination": 3,
+      "bits": 506
+    },
+    {
+      "source": 0,
+      "destination": 4,
+      "bits": 912
+    },
+    {
+      "source": 0,
+      "destination": 5,
+      "bits": 1022
+    },
+    {
+      "source": 0,
+      "destination": 6,
+      "bits": 877
+    },
+    {
+      "source": 0,
+      "destination": 7,
+      "bits": 908
+    },
+    {
+      "source": 0,
+      "destination": 8,
+      "bits": 1246
+    },
+    {
+      "source": 0,
+      "destination": 9,
+      "bits": 286
+    },
+    {
+      "source": 1,
+      "destination": 0,
+      "bits": 13
+    },
+    {
+      "source": 1,
+      "destination": 2,
+      "bits": 3
+    },
+    {
+      "source": 1,
+      "destination": 3,
+      "bits": 76
+    },
+    {
+      "source": 2,
+      "destination": 0,
+      "bits": 91
+    },
+    {
+      "source": 2,
+      "destination": 1,
+      "bits": 62
+    },
+    {
+      "source": 3,
+      "destination": 0,
+      "bits": 64
+    },
+    {
+      "source": 4,
+      "destination": 0,
+      "bits": 153
+    },
+    {
+      "source": 4,
+      "destination": 8,
+      "bits": 88
+    },
+    {
+      "source": 5,
+      "destination": 0,
+      "bits": 152
+    },
+    {
+      "source": 5,
+      "destination": 8,
+      "bits": 37
+    },
+    {
+      "source": 6,
+      "destination": 0,
+      "bits": 152
+    },
+    {
+      "source": 6,
+      "destination": 8,
+      "bits": 47
+    },
+    {
+      "source": 7,
+      "destination": 0,
+      "bits": 152
+    },
+    {
+      "source": 7,
+      "destination": 8,
+      "bits": 30
+    },
+    {
+      "source": 8,
+      "destination": 9,
+      "bits": 289
+    },
+    {
+      "source": 9,
+      "destination": 3,
+      "bits": 44
+    }
+  ],
+  "historical_flat_cut_bits_max": 1246,
+  "routing": {
+    "new_parent_actual_pin_edges": null,
+    "new_parent_channel_capacity": null,
+    "new_parent_worst_reach_um": null,
+    "new_parent_cut_ratio": null,
+    "track_count_lower_bound_per_parallel_bit": 1,
+    "lane4_prototype_only": {
+      "outline_um": [
+        95.04,
+        95.04
+      ],
+      "edge_guard_um": 2.16,
+      "M4_pitch_um": 0.048,
+      "usable_face_tracks_before_other_reservations": 1890,
+      "W_input_fraction_before_other_reservations": 0.07566137566137567,
+      "E_output_fraction_before_other_reservations": 0.091005291005291,
+      "source_std_area_um2_max": 4170.507,
+      "core_area_um2": 8230.1184,
+      "source_std_fraction_before_CTS_hold": 0.5067371813265773,
+      "assigned_pins": null,
+      "slot_granted": false,
+      "probe_scope": "Single representative CTS probe only after actual317-bit pin map and full-shape leaf exactness/mutant. Does not admit full-column replication or die adoption."
+    },
+    "scope": "Flat cuts up to 1246 bits and old spans up to 417um are historical failure evidence. Source extraction, actual pins/PG/clock reservations and every incident edge must replace them before capacity is accepted."
+  },
+  "area": {
+    "historical_cells_excluding_clock_um2_per_column": 54446.372,
+    "historical_clock_cells_excluded": 3468,
+    "lane4_historical_area_um2": [
+      4170.507,
+      4128.429,
+      4127.088,
+      4109.927
+    ],
+    "new_local_clock_reset_hold_and_seam_area_um2": null,
+    "new_total_area_um2": null,
+    "parent_outline_um": null,
+    "parent_slot_fit": null,
+    "basis": "Measured original mapped area is a sizing bound, not a new synthesized or placed leaf area."
+  },
+  "fanout_and_mux": {
+    "lane_payload": "One native 64b weight and 64b activation bundle per four-lane master",
+    "shared_tag_and_enable": "Four local copies; real source/driver and parent cut/fanout cost still required",
+    "runtime_arbitration_added": false,
+    "runtime_credits_added": false
+  },
+  "latency": {
+    "added_logical_cycles": 0,
+    "native_component_cycles": 124422,
+    "native_component_rows": 456,
+    "native_component_values": 912,
+    "native_component_config_checks": 448,
+    "compiled_phases": 13,
+    "measured_lag_ns_min_max_mean": [
+      6.664,
+      15.827,
+      9.923
+    ],
+    "actual_clock_stop_mutant": "FAIL transaction16, as required",
+    "new_physical_seam_cycles": null,
+    "compiler_and_token_rate_adopted": false
+  },
+  "clock_contract": "Each real leaf clock is same-PLL/frequency/phase, die delivered at phi-R; preserve all TT setup/FF hold checks. New views must meet launch220/capture190/spread80 and DRC0.",
+  "physical_build_admissible": false,
+  "native_physical_qualified": false,
+  "production_throughput_qualified": false,
+  "fail_closed_reasons": [
+    "new source leaf physical areas and assigned pins/slots absent",
+    "new parent complete actual incident graph/capacity/reach absent",
+    "local physical clock/TT/FF/DRC/native views absent",
+    "any added physical seam stage must enter compiler and rate model"
+  ],
+  "price_policy": "No preset, immutable price, accepted-cost ledger, workload or headline-rate change."
+}

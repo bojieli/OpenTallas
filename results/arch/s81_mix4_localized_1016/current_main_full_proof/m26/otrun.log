@@ -1,0 +1,15 @@
+ot-run: ot-epyc4       admits   493 GB (avail 720, growth 150, headroom 48, waiters 0/0 GB) load 69/128 running 28 disk 855 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/s81-mix4-mainproof-0405/src
+ot-run: ot-agidock128  admits    28 GB (avail 68, growth 70, headroom 24, waiters 0/0 GB) load 43/64 running 16 disk 342 GB 
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-2127832-1792148589 after 1 s
+BAD row=3 word=0
+BAD row=3 word=1
+BAD row=3 word=2
+BAD row=3 word=3
+[1644000] %Fatal: tb_s81_engram_mix4_localized.sv:69: Assertion failed in tb_s81_engram_mix4_localized: FAIL 5120 words
+%Error: /srv/opentallas-scratch/codex/s81-mix4-mainproof-0405/src/rtl/dsrom_sys/engram/mix/tb_s81_engram_mix4_localized.sv:69: Verilog $stop
+Aborting...
+
+ACTUAL_LOCAL_RESULT_VALID_DROP_REJECTED
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-2127832-1792148589): exit 0

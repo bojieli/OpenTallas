@@ -3,7 +3,12 @@
 // among four faces, 128 physical SRAM quarters, ctx8192. Stimuli are at the
 // declared corrected-PC-return boundary. This is a landing component proof,
 // not the missing controller/PHY/full-attention composition qualification.
+// VMAP=1 (Q-ATTN-RATE 2026-10-16): the V phase uses the PV16 layout (writer VMAP=1) and the w16 pairs' actual request
+// walk (ot_qwen_tp8_vrow_wide, both pairs): every group sees at most one V get per edge and its gets arrive in
+// ascending ordinal, loaded 64 ordinals ahead.
 module tb_static_landing;
+ parameter integer VMAP=0;
+ parameter integer DUT_VMAP=VMAP;   // negative control: DUT_VMAP != VMAP must FAIL
  reg ck=0;always #0.416667 ck=~ck;
  reg rst=0,arm=0;
  reg [31:0] put=0,av=0,rq=0;
@@ -17,18 +22,20 @@ module tb_static_landing;
   kt=14'(((i>>3)&15)*512+s*128+((i>>7)&1)*64+(i&7)*8+e);
  endfunction
  function automatic [9:0] js(input integer t,v);
-  js={1'(v),1'b0,1'((t>>6)&1),4'((t>>9)&15),3'((t>>3)&7)};
+  js={1'(v),1'b0,1'((t>>6)&1),4'((t>>9)&15),3'((VMAP!=0&&v!=0)?((t>>1)&7):((t>>3)&7))};
  endfunction
  function automatic [13:0] vt(input integer o,s,e);
-  vt=14'(((o>>4)&15)*512+s*128+((o>>3)&1)*64+(o&7)*8+e);
+  if(VMAP!=0)vt=14'(((o>>4)&15)*512+s*128+((o>>3)&1)*64+(e>>1)*16+(o&7)*2+(e&1));
+  else vt=14'(((o>>4)&15)*512+s*128+((o>>3)&1)*64+(o&7)*8+e);
  endfunction
+ integer nexto[0:31],vreq=0,maxq=0;
  function automatic [1023:0] pattern(input integer t,v);
   for(integer j=0;j<32;j=j+1)pattern[32*j+:32]=32'h19e30000^(32'(t)*32'h9e3779b9)^(32'(v)<<31)^32'(j*71);
  endfunction
  genvar g;
  generate for(g=0;g<32;g=g+1)begin:groups
   wire [15:0] oe;wire [5:0] ol;wire rv;
-  qkd_static_kv_landing_grp #(.STACK(g/8),.GROUP(g%8))dut(
+  qkd_static_kv_landing_grp #(.STACK(g/8),.GROUP(g%8),.VMAP(DUT_VMAP))dut(
    .ck(ck),.ck_pc({4{ck}}),.rst_n(rst),.arm(arm),.epoch(16'd7),.layer(6'd3),
    .expected_put({4{put[g]}}),.expected_sector({4{sec[g]}}),.actual_valid(ap[g]),.actual_sector(as[g]),
    .actual_epoch({4{16'd7}}),.actual_layer({4{6'd3}}),.actual_data(wd[g]),
@@ -86,7 +93,7 @@ module tb_static_landing;
   end
   idle();repeat(8)@(negedge ck);
   for(integer i=0;i<64;i=i+1)begin idle();for(integer g=0;g<32;g=g+1)loadrow(g,i,1);@(negedge ck);end
-  for(integer n=0;n<32;n=n+1)for(integer c=0;c<128;c=c+1)begin
+  if(VMAP==0)for(integer n=0;n<32;n=n+1)for(integer c=0;c<128;c=c+1)begin
    idle();
    for(integer p=0;p<2;p=p+1)begin
     automatic integer t=n*256+p*128+c;
@@ -95,6 +102,27 @@ module tb_static_landing;
     rq[g]=1;tt[g]=14'(t);vv[g]=1;if(o+64<256)loadrow(g,o+64,1);
    end
    @(negedge ck);
+  end
+  else begin
+   for(integer g=0;g<32;g=g+1)nexto[g]=0;
+   for(integer q=0;q<16*33;q=q+1)begin        // both pairs' w16 walk at T=8192 (q < nq = 16*33)
+    idle();
+    for(integer p=0;p<2;p=p+1)for(integer wp=0;wp<8;wp=wp+1)begin
+     automatic integer l=(wp&3)+4*(((q>>4)^(wp>>2))&1);
+     automatic integer n=(q>>4)-(l>>2);
+     automatic integer t=256*n+128*p+16*l+(q&15);
+     if(n>=0&&t<8192)begin
+      automatic integer g=((t>>7)&3)*8+(((t>>4)&3)<<1)+(t&1);
+      automatic integer o=(((t>>9)&15)<<4)|(((t>>6)&1)<<3)|((t>>1)&7);
+      if(rq[g])begin $display("BAD two V gets on group %0d edge q%0d",g,q);errors++;end
+      if(o!=nexto[g])begin $display("BAD group %0d ordinal %0d expected %0d",g,o,nexto[g]);errors++;end
+      nexto[g]=o+1;vreq++;
+      rq[g]=1;tt[g]=14'(t);vv[g]=1;if(o+64<256)loadrow(g,o+64,1);
+     end
+    end
+    @(negedge ck);
+   end
+   if(vreq!=8192)begin $display("BAD V gets %0d",vreq);errors++;end
   end
   idle();repeat(10)@(negedge ck);
   if((|ff)||errors||seen!=16384)begin $display("FAIL staticlanding ctx8192 rows%0d errors%0d fault%h mode%0d",seen,errors,ff,faultmode);$fatal(1);end
