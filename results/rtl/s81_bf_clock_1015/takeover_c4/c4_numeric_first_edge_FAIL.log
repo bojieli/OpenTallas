@@ -1,0 +1,4 @@
+QZ_CHECK FAIL: registered gate enable 0 != cg_en_q 1 at                 2000
+[2000] %Fatal: x_ot_v41_bf_front_core.sv:507: Assertion failed in tb_bfcolumn.test.cand_dut.u_shadow.e0.u_view.g_hc.u_front.g_qz_cg
+%Error: x_ot_v41_bf_front_core.sv:507: Verilog $stop
+Aborting...

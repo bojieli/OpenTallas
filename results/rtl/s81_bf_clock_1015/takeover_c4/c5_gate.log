@@ -1,0 +1,7 @@
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE WARN pins: 1 port group(s) left to the IO placer (ANY): ['xb']  -> FIX: give every bus a face (and an offset range) from the die contract before the die integrates it
+GATE INFO remote: ot-run selected ot-epyc4 for 32 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_dsfd_bf_front_static_ref_20261015-213455.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_dsfd_bf_front_static_ref_20261015-213455.log; host dir ot-epyc4:/srv/opentallas-scratch/claude/ref_gate/dsfd_bf_front_static_ref-20261015-213455
+GATE FAIL floorplan_run: synthesis + floorplan + PDN failed: FAILED: FlowError: ORFS place-and-route through floorplan failed with exit 2:; Error: 1_2_yosys.sdc, 544 OT_MULTI_ROOT: input rs has wrong domain for u_view.g_hc.u_front.g_fcg.fcg_en$_DLATCH_N_; Error: 1_2_yosys.sdc, 544 OT_MULTI_ROOT: input rs has wrong domain for u_view.g_hc.u_front.g_fcg.fcg_en$_DLATCH_N_  -> FIX: read the first [ERROR] above (PDN-0217/0233/0006, PPL-0061, MPL, ...) and fix the kit/RTL
+PRE_ROUTE_GATE: FAIL (1 fail, 1 warn)

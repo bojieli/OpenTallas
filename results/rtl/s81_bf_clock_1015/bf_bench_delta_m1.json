@@ -1,0 +1,80 @@
+{
+ "variant": "recut",
+ "params": "",
+ "cases": {
+  "positive": {
+   "returncode": 0,
+   "ok": true,
+   "markers": [
+    "PASS independent-numerical BF=1 rows=456 value_assertions=912 config_assertions=448",
+    "PASS actual-element BF=1 cycles=124422 partials=232 issues=4288 gated=2893 opened=121525 loads=350",
+    "PASS wake-source BF=1 wake_assertions=1990752 root_capture_events=124418",
+    "TXN LAG ns min=6.664 max=15.827 mean=9.923 n=456",
+    "TXN ref=232/224 shadow=232/224 compared=456 fault=0/0 busy=0/0",
+    "TXN MATCH"
+   ]
+  },
+  "frd_copy": {
+   "returncode": 1,
+   "ok": true,
+   "markers": [
+    "[2284000] %Fatal: cand_ot_v41_pair_w17w10.sv:193: Assertion failed in tb_bfcolumn.test.cand_dut: DIFF TXN lane=0 n=1 ref=34772dd840404010 shadow=347aaf8440404010"
+   ]
+  },
+  "ctl_go": {
+   "returncode": 0,
+   "ok": true,
+   "markers": [
+    "PASS independent-numerical BF=1 rows=456 value_assertions=912 config_assertions=448",
+    "PASS actual-element BF=1 cycles=124422 partials=232 issues=4288 gated=2893 opened=121525 loads=350",
+    "PASS wake-source BF=1 wake_assertions=1990752 root_capture_events=124418",
+    "TXN ref=232/224 shadow=0/0 compared=0 fault=0/1 busy=0/0",
+    "DIFF TXN FINAL"
+   ]
+  },
+  "prog_bypass": {
+   "returncode": 1,
+   "ok": true,
+   "markers": [
+    "[2250000] %Fatal: cand_ot_v41_pair_w17w10.sv:193: Assertion failed in tb_bfcolumn.test.cand_dut: DIFF TXN lane=0 n=0 ref=344d5b5f00400010 shadow=338175cd80400010"
+   ]
+  },
+  "frd_check_positive": {
+   "returncode": 0,
+   "ok": false,
+   "markers": [
+    "PASS independent-numerical BF=1 rows=456 value_assertions=912 config_assertions=448",
+    "PASS actual-element BF=1 cycles=124422 partials=232 issues=4288 gated=2893 opened=121525 loads=350",
+    "PASS wake-source BF=1 wake_assertions=1990752 root_capture_events=124418",
+    "TXN LAG ns min=6.664 max=15.827 mean=9.923 n=456",
+    "TXN ref=232/224 shadow=232/224 compared=456 fault=0/0 busy=0/0",
+    "TXN MATCH"
+   ]
+  },
+  "prod_addr": {
+   "returncode": 0,
+   "ok": true,
+   "markers": [
+    "PASS independent-numerical BF=1 rows=456 value_assertions=912 config_assertions=448",
+    "PASS actual-element BF=1 cycles=124422 partials=232 issues=4288 gated=2893 opened=121525 loads=350",
+    "PASS wake-source BF=1 wake_assertions=1990752 root_capture_events=124418",
+    "TXN LAG ns min=6.664 max=15.827 mean=9.923 n=456",
+    "TXN ref=232/224 shadow=232/224 compared=456 fault=0/1 busy=0/0",
+    "DIFF TXN FINAL"
+   ]
+  }
+ },
+ "pass": false,
+ "refreshed": [
+  "cand_ot_v41_rom_elem_w10.sv",
+  "cand_ot_v41_bf16_lanes2.sv",
+  "cand_ot_v41_bmul2_rne_prepare.sv",
+  "cand_ot_v41_segtree2.sv",
+  "cand_ot_v41_chain2.sv",
+  "cand_ot_v41_fadd.sv",
+  "cand_ot_v41_bterm2_w10.sv",
+  "cand_ot_prefix.sv"
+ ],
+ "source_commit": "ab4214bdfbbe4337532ffb87212f48ef6013eda0",
+ "dirty": true
+}

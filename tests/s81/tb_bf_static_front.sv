@@ -1,9 +1,11 @@
 `timescale 1ns/1ps
 // Actual die-master pins. Functional clocks share a phase; physical skew is a separate gate.
+// 2026-10-15 clock-structure pass: programme pin -> io_clk flop -> lockup latch -> ck core flop -> issue (+1 edge vs
+// the first static front; the producer absorbs it with DELTA -1), so every public age below is one edge later.
 module tb_bf_static_front;
   reg clk=0; always #5 clk=~clk;
   wire io_clk=clk;
-  reg rst=0,cv=0,go=0,bv=0,pi=0;
+  reg rst=0,cv=0,go=0,bv=0,pi=0,qy0=0,qy1=0;
   reg [4:0] ca=0;reg [47:0] cd=0;reg [2:0] bb=0;reg [31:0] bu=0;
   reg [1023:0] bd=0;
   reg [13:0] pa=0;reg [14:0] po=0;reg [3:0] pc=0;
@@ -11,12 +13,12 @@ module tb_bf_static_front;
   wire [37:0] prog={pc,1'b0,3'd0,po,pa,pi};
   genvar m;
   for(m=0;m<3;m=m+1) begin:g
-    dsfd_bf_front_static dut(.ck(clk),.io_clk(io_clk),.rs(rst),.qy0(1'b0),.qy1(1'b0),
+    dsfd_bf_front_static dut(.ck(clk),.io_clk(io_clk),.rs(rst),.qy0(qy0),.qy1(qy1),
       .x0(283'd0),.x1(266'd0),.go(go),.cfg({cv,cd,ca}),
       .xb({bd,bu,4'hf,bb,(bv && m!=1),3'd0,1'b1}),
       .f_prog(prog ^ (m==2 ? 38'd2:38'd0)),.c0(c0[m]),.c1(c1[m]),.st(st[m]));
   end
-  reg [37:0] prev_prog=0,prev2_prog=0,prev3_prog=0;
+  reg [37:0] prev_prog=0,prev2_prog=0,prev3_prog=0,prev4_prog=0;
   reg [37:0] sampled;
   reg [16:0] expected_tag;
   integer n=0,b,j,k;
@@ -24,33 +26,33 @@ module tb_bf_static_front;
   task cfg(input [4:0] a,input [47:0] d);begin cv=1;ca=a;cd=d;tick();end endtask
   always @(posedge clk) begin
     sampled=prog;
-    #1;
+    #9;   // end of cycle (clk low): a seam latch without its CPIN register is transparent here and fails
     if(rst) begin
       for(integer z=0;z<3;z=z+1) begin
-        if(c0[z][0] !== prev_prog[0] || c1[z][0] !== prev_prog[0])
+        if(c0[z][0] !== prev2_prog[0] || c1[z][0] !== prev2_prog[0])
           $fatal(1,"public pin issue edge shifted variant=%d",z);
-        if(prev_prog[0] && (c0[z][14:1] !== prev_prog[14:1] || c1[z][14:1] !== prev_prog[14:1]))
+        if(prev2_prog[0] && (c0[z][14:1] !== prev2_prog[14:1] || c1[z][14:1] !== prev2_prog[14:1]))
           $fatal(1,"public pin address shifted");
-        if(c0[z][15] !== prev2_prog[0] || c1[z][15] !== prev2_prog[0])
+        if(c0[z][15] !== prev3_prog[0] || c1[z][15] !== prev3_prog[0])
           $fatal(1,"public i1 valid shifted");
-        if(prev2_prog[0]) begin
-          expected_tag={prev2_prog[37:34],3'd0,4'd0,
-            prev2_prog[25:23]==3'd0,prev2_prog[25:23]==3'd7,
-            (prev2_prog[25:23]==3'd7 && prev2_prog[22:15]==8'd7),3'd0};
+        if(prev3_prog[0]) begin
+          expected_tag={prev3_prog[37:34],3'd0,4'd0,
+            prev3_prog[25:23]==3'd0,prev3_prog[25:23]==3'd7,
+            (prev3_prog[25:23]==3'd7 && prev3_prog[22:15]==8'd7),3'd0};
           if(c0[z][34:18] !== expected_tag || c1[z][34:18] !== expected_tag)
             $fatal(1,"public source-calendar tag mismatch actual=%h expected=%h",c0[z][34:18],expected_tag);
         end
       end
       // Data traverses PINREG/PINLAT, the real XF8 FIFO, i1/i2x and CPIN.
       // The expected word comes directly from the immutable input programme.
-      if(prev3_prog[0]) begin
-        if(c0[0][290:35] !== 256'(prev3_prog[22:15]+1) ||
-           c1[0][290:35] !== 256'(prev3_prog[22:15]+1))
+      if(prev4_prog[0]) begin
+        if(c0[0][290:35] !== 256'(prev4_prog[22:15]+1) ||
+           c1[0][290:35] !== 256'(prev4_prog[22:15]+1))
           $fatal(1,"public operand payload mismatch or data age shifted");
       end
       if(prev_prog[0]) n=n+1;
     end
-    prev3_prog=prev2_prog;prev2_prog=prev_prog;prev_prog=sampled;
+    prev4_prog=prev3_prog;prev3_prog=prev2_prog;prev2_prog=prev_prog;prev_prog=sampled;
   end
   initial begin
     repeat(3)tick();rst=1;repeat(5)tick();
@@ -72,6 +74,19 @@ module tb_bf_static_front;
     if(n!=64)$fatal(1,"missing public issues %d",n);
     if(st[0][1] !== 1'b0 || st[1][1] !== 1'b1 || st[2][1] !== 1'b1)
       $fatal(1,"public sticky fault qualification %b/%b/%b",st[0],st[1],st[2]);
+    // Each column-return fault is captured at its own face, then the existing
+    // fault OR and boundary status stages. A one-edge pulse exits exactly +3.
+    for(integer q=0;q<2;q=q+1) begin
+      if(q==0) qy0=1; else qy1=1;
+      tick(); qy0=0;qy1=0;
+      if(st[0][1] !== 1'b0)$fatal(1,"fault pin capture first edge shifted");
+      tick();
+      if(st[0][1] !== 1'b0)$fatal(1,"fault pin capture bypass or early status");
+      tick();
+      if(st[0][1] !== 1'b1)$fatal(1,"fault pin capture missing or late status");
+      tick();
+      if(st[0][1] !== 1'b0)$fatal(1,"fault pin capture pulse width shifted");
+    end
     $display("PASS actual BF static die front:64 public-pin slots, fixed pin+programme+CPIN ages; dropped payload and address mutant fault without schedule shifts");
     $finish;
   end

@@ -1,0 +1,16 @@
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE WARN pins: 1 port group(s) left to the IO placer (ANY): ['xb']  -> FIX: give every bus a face (and an offset range) from the die contract before the die integrates it
+GATE INFO remote: ot-run selected ot-epyc1tb for 32 GB memory; disk pick 22 GiB, runtime 22 GiB includes 20 GiB work reserve plus snapshot staging
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_dsfd_bf_front_static_ref_20261015-210204.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_dsfd_bf_front_static_ref_20261015-210204.log; host dir ot-epyc1tb:/srv/opentallas-scratch/claude/ref_gate/dsfd_bf_front_static_ref-20261015-210204
+GATE INFO remote: synth + floorplan + PDN OK on ot-epyc1tb in 103 s (gate total 355 s)
+GATE WARN pins: 1 port group(s) left to the IO placer (ANY): ['xb']  -> FIX: give every bus a face (and an offset range) from the die contract before the die integrates it
+GATE INFO util: synthesized std area 9752 um2 + macros 0 in core 18644: util 52%
+GATE INFO textbook: PASS dsfd_bf_front_static cells 70,804 flops 18,123 depth 458.4 ps util 0.5179 reach 45.8 um (1.3 s)
+GATE FAIL cts_run: placement / CTS of the kit failed:   -> FIX: the route would fail the same way (DPL-0033 / GPL-0305 / CTS-*): fix the floorplan / density before routing
+GATE WARN cts_calibration: CTS rc=2 ck_insertion rc=1
+GATE INFO density: effective global-placement target density 0.600 vs spec PD 0.60
+GATE FAIL clock_rule: actual per-root clock measurement coverage differs from clock_ports (declared clock 'multiple_cts_roots' does not waive it)  -> FIX: hardened leaves with their own clock roots (kind cluster: each leaf <= 15,000 sinks, registered seams); a larger root needs `pre_route_gate.py <kit> --remote <host> --cts` evidence committed as <kit>/gate_result.json
+PRE_ROUTE_GATE: FAIL (2 fail, 3 warn)
+GATE: previous result preserved as unqualified evidence: /home/ubuntu/wt/s81-bf-clk-1825/physical/ref_tile/dsfd_bf_front_static_ref/source_binding_history/6d0ccf051da2818bddc5c889ae2e484fc134b00996746df4eb565cabf20186ef.json
+GATE: dsfd_bf_front_static_ref/gate_result.json written (exact staged source binding; commit it with the kit)

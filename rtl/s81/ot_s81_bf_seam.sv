@@ -4,19 +4,22 @@ module ot_s81_bf_seam #(parameter integer W=776, PIPE=0) (
     input wire clk, rst_n, input wire [W-1:0] d, output wire [W-1:0] q
 );
     if (PIPE != 0) begin : g_pin
-        // One reset relay per face; the wide datapath has no primary reset fanout.
-        (* keep = 1, dont_touch = 1 *) reg rst_local;
+        // Reset relays per face: one relay flop per RG-bit group (gate ec84ce526: a single relay drove 775 loads > 256),
+        // all released on the same edge, so every bit clears and releases exactly as with one relay (0 cycles).
+        localparam integer RG = 160, NRL = (W + RG - 1) / RG;
+        (* keep = 1, dont_touch = 1 *) reg [NRL-1:0] rst_local;
         always @(posedge clk or negedge rst_n)
-            if (!rst_n) rst_local <= 1'b0; else rst_local <= 1'b1;
+            if (!rst_n) rst_local <= '0; else rst_local <= '1;
         (* keep = 1, dont_touch = 1 *) reg [W-1:0] r;
         always @(posedge clk)
-            if (!rst_local) r <= '0;
+            for (int i = 0; i < W; i++)
+                if (!rst_local[i / RG]) r[i] <= 1'b0;
 `ifdef BF_SEAM_MUTANT_DATA
-            else r <= d ^ ({{(W-1){1'b0}},1'b1} << (W/2));
+                else r[i] <= d[i] ^ (i == W/2);
 `elsif BF_SEAM_MUTANT_SLOT
-            else r <= d ^ ({{(W-1){1'b0}},1'b1} << (W-1));
+                else r[i] <= d[i] ^ (i == W-1);
 `else
-            else r <= d;
+                else r[i] <= d[i];
 `endif
         assign q = r;
     end else begin : g_direct

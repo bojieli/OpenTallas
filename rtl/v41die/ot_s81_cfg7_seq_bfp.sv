@@ -15,7 +15,7 @@ module ot_s81_cfg7_seq_bfp #(
     parameter integer NSEG = 8,
     parameter integer PHW = 10,
     parameter integer NROM = 7,
-    parameter integer DELTA = 0
+    parameter integer DELTA = -1
 ) (
     input  wire [0:0]          clk,
     input  wire [0:0]          rst_n,

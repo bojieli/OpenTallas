@@ -18,12 +18,15 @@
 //   [61:60] LU-3 (U = 8 << ...)  [65:62] UMASK-less: unused 0  [68:66] SSH   [71:69] SMASK   [75:72] CMASK   [81:76] 0
 // (fields beyond the measured set are explicit zeros; tools/s81/bf_programme_compile.py writes and checks them.)
 // DELTA (parameter, signed edges) = the go-pin -> core-go age minus the f_prog pin -> core-consume age of the front.
+// Default -1 (2026-10-15 BF clock-structure pass): the static front now registers the programme twice (io_clk pin flop,
+// lockup latch, ck core flop) before the issue cone, one edge more than the DELTA 0 calendar was measured with; the
+// producer emits each word one edge earlier so every compiled issue edge relative to go is unchanged (needs OFF >= 2).
 // go: the pair's go pin (the same net the front's go takes); a phase starts on its rising edge.  A go while a programme still runs is a sticky fault
 // (observation only; the calendar never changes).  N = 0: the phase issues nothing.
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_s81_bf_prog_seq #(
     parameter integer DW = 82,
-    parameter integer DELTA = 0
+    parameter integer DELTA = -1
 ) (
     input  wire          ck,
     input  wire          rst_n,
