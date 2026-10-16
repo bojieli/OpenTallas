@@ -135,6 +135,8 @@ def shift(iv, k):
 FCOLL = 108.6 + 377.6e-9 * CLK + 0.15e-6 * CLK      # perf.coll_cycles fixed part (endpoint + crossing + tail), 741.7
 HBM_RATIO = 136 / 98.96                              # SM line 136 B at 1 line/cycle vs the SM's 98.96 B/cycle HBM share
 SK_PRICE = 0.52778 * 1200                            # Sinkhorn node of the HC_MIX price (ot_hdc_sinkhorn 41 clocks)
+HC_STATIC_C1, HC_STATIC_P6 = 9554.0, 31481.0           # static HC engine measured (see row_ii HC)
+HC_STATIC_II = (HC_STATIC_P6 - HC_STATIC_C1) / 5
 HCP_II = (1578 - 328) / 5                            # HCP RTL spec W256 measured x1 328 / x6 (MTP verify) 1,578 cycles
 ROW_FAMILIES = ("FUSED.PRE", "FUSED.POST", "FUSED.QDQ", "HC", "ATT", "COLL", "IDX.TOPK", "IDX.INDEX", "SU", "DMA",
                 "ARGMAX")
@@ -165,7 +167,10 @@ def row_ii(r, c1, dyn, L, sk_rep=3):
         n = r.desc["A"].n
         return float(math.ceil(n / 32)), float(math.ceil(n / 32)), "quantiser 32 / cycle"
     if fam == "HC":
-        return max(HCP_II, SK_PRICE / sk_rep), None, f"HCP x6 measured II {HCP_II:.0f}; Sinkhorn {SK_PRICE:.0f} / {sk_rep} units"
+        # MEASURED (static HC engine, codex/hc-static-engine-1014 a35449ada, results/rtl/hbm_hc_static_1015, K 20,480,
+        # 24 rows, Sinkhorn 20): P1 engine_967 9,554 cycles; P6 sys1_split92_ee1 31,481 (row period 193 + 160 P,
+        # 128 MAC lanes; tail serial a position) -> a further position (31,481 - 9,554) / 5 = 4,385
+        return max(HCP_II, SK_PRICE / sk_rep), HC_STATIC_II, f"HCP x6 measured II {HCP_II:.0f}; Sinkhorn {SK_PRICE:.0f} / {sk_rep} units"
     if fam == "COLL":
         fixed = FCOLL + (T.first_access() if r.op == "ROW_GATHER" else 0.0)
         return max(c1 - fixed, 1.0), None, "collective fixed part paid once (one message train of P payloads)"

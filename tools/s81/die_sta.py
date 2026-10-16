@@ -730,6 +730,9 @@ def main():
     # macros (S.REAL_FILES: cfg ROM, PHY, SerDes, UCIe, q element -- real LEF by generator constant) are outside the
     # native qualification and keep their liberty by cell name; every master with a GENERATED outline needs the table.
     bound = S.bound_views(vroot) if hasattr(S, 'bound_views') else {}     # --gen-root of an earlier generator: no table
+    # OT_S81_VIEW_BINDING_SKIP_MISFIT (S-DIE 10-16): a table master the generator did not bind (misfit) keeps its
+    # generated outline, so it must not take the table's liberty either
+    bound = {k_: v_ for k_, v_ in bound.items() if k_ not in (m.get('view_binding_misfits') or {})}
     not_bound = {}
 
     def qualified_only():
