@@ -1,0 +1,146 @@
+{
+ "schema": "opentallas.ref_tile.floorplan.v1",
+ "name": "hcoll_vmwrite_static_v6_roots",
+ "top": "ot_hgi_coll_static_vmwrite_roots_v6_physical",
+ "kind": "tile",
+ "die": [
+  0,
+  0,
+  103.68,
+  388.8
+ ],
+ "core": [
+  2.16,
+  2.16,
+  101.52000000000001,
+  386.64
+ ],
+ "why": "contract coll_writer_roots_v6_physical_master",
+ "std_area_um2": 6400.0,
+ "layer_contract": {
+  "children": {},
+  "pg_layer": "M5",
+  "rlayers": [
+   "M2",
+   "M5"
+  ],
+  "strap_layer": "M6",
+  "layer_cap": "M5",
+  "cap_basis": "contract"
+ },
+ "pins": {
+  "W": [
+   "clk_rgx_ctrl",
+   "clk_rgx_data0",
+   "clk_rgx_data1",
+   "clk_rgx_data2",
+   "clk_rgx_data3",
+   "rgx_v",
+   "rgx_addr",
+   "rgx_data0",
+   "rgx_data1",
+   "rgx_data2",
+   "rgx_data3",
+   "rgx_vm"
+  ],
+  "E": [
+   "clk_bank0",
+   "clk_bank3",
+   "clk_bank4",
+   "clk_bank5",
+   "clk_bank6",
+   "clk_bank7",
+   "clk_bank1",
+   "clk_bank2",
+   "kq0",
+   "kq1",
+   "kq2",
+   "kq3",
+   "kq4",
+   "kq5",
+   "kq6",
+   "kq7",
+   "launch_done",
+   "fault"
+  ],
+  "S": [
+   "clk_tkw",
+   "tkw_v",
+   "tkw_d"
+  ],
+  "N": [
+   "clk_body",
+   "clk_meta",
+   "rst_n",
+   "sid",
+   "ingress_slot",
+   "slot_valid",
+   "slot_owner"
+  ]
+ },
+ "clock_port": "clk_body",
+ "clock_ports": [
+  "clk_body",
+  "clk_meta",
+  "clk_rgx_ctrl",
+  "clk_tkw",
+  "clk_rgx_data0",
+  "clk_rgx_data1",
+  "clk_rgx_data2",
+  "clk_rgx_data3",
+  "clk_bank0",
+  "clk_bank1",
+  "clk_bank2",
+  "clk_bank3",
+  "clk_bank4",
+  "clk_bank5",
+  "clk_bank6",
+  "clk_bank7"
+ ],
+ "blocks": [],
+ "findings": [
+  [
+   "WARN",
+   "util",
+   "utilisation 17% outside 45%-60% (std 6400 + macro 0 in core 38202 um2)",
+   "resize the outline to util 0.50-0.55 (drop 'outline', set util)"
+  ]
+ ],
+ "referenced": [
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_vmwrite_roots_v6_physical.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_vmwrite_roots_v6.sv",
+  "physical/ref_tile/hcoll_vmwrite_static_v6_roots/kit.env",
+  "physical/ref_tile/hcoll_vmwrite_static_v6_roots/clock.sdc",
+  "physical/ref_tile/hcoll_vmwrite_static_v6_roots/signoff.sdc",
+  "physical/ref_tile/hcoll_vmwrite_static_v6_roots/pdn.tcl",
+  "physical/ref_tile/hcoll_vmwrite_static_v6_roots/pre_cts.tcl",
+  "physical/ref_tile/hcoll_vmwrite_static_v6_roots/post_cts.tcl",
+  "physical/ref_tile/hcoll_vmwrite_static_v6_roots/post_grt.tcl",
+  "physical/ref_tile/hcoll_vmwrite_static_v6_roots/pre_drt.tcl",
+  "physical/ref_tile/hcoll_vmwrite_static_v6_roots/pre_fill.tcl",
+  "physical/ref_tile/hcoll_vmwrite_static_v6_roots/post_fill.tcl",
+  "physical/ref_tile/hcoll_vmwrite_static_v6_roots/pre_grt.tcl",
+  "physical/ref_tile/hcoll_vmwrite_static_v6_roots/post_drt.tcl",
+  "tools/ref_tile/ref_route.sh",
+  "physical/qwen_die_masters/io_ref_skew.sdc",
+  "physical/qwen_die_masters/io_plain.sdc",
+  "physical/qwen_die_masters/repair_budget.tcl",
+  "physical/qwen_die_masters/pre_cts_skew.tcl",
+  "physical/qwen_die_masters/pre_ref_skew.tcl",
+  "physical/qwen_die_masters/post_plain.tcl",
+  "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
+  "physical/common_flow/grt_macro_top_layer.tcl",
+  "results/arch/hbm_die_v15/writer_roots_v6_1016/assigned_pins.tcl",
+  "physical/qwen_die_masters/io_flop_at_pins.tcl",
+  "physical/qwen_die_masters/out_flop_release.tcl",
+  "physical/dsrom_window_source/leaf_iohold.tcl",
+  "physical/dsrom_window_source/leaf_inhold_release.tcl",
+  "physical/dsrom_window_source/leaf_inhold.tcl",
+  "physical/dsrom_window_source/leaf_inhold_release.tcl",
+  "physical/ref_tile/hcoll_vmwrite_static_v6_roots/pre_gpl.tcl",
+  "physical/ref_tile/hcoll_vmwrite_static_v6_roots/pre_dpl.tcl",
+  "physical/common_flow/pin_reg_split.tcl",
+  "physical/common_flow/clock_entries.tcl",
+  "physical/ref_tile/hcoll_vmwrite_static_v6_roots/clock_entry.sdc"
+ ]
+}

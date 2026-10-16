@@ -43,5 +43,15 @@
     "top": "ot_hgi_coll_static_vmwrite_roots_v6_physical",
     "literal_base_io_domain_validation": "16domainsPASS"
   },
-  "scope": "Component source equivalence and clock ownership only; all physical grant/phase/native gates OPEN"
+  "scope": "Component source equivalence and clock ownership only; all physical grant/phase/native gates OPEN",
+  "standalone_negative": {
+    "host": "ot-epyc4",
+    "unit": "oth-ubuntu-1955964-1792147380",
+    "memory_gb": 2,
+    "threads": 1,
+    "exit": 1,
+    "observed": "FATAL capture clock mapping root=2 lane=2 at10000ps",
+    "script_sha256": "17e54a9d13a6fd1a473108246ea6954e44c2eb7a5251a3216a14d8600a904a4d",
+    "gate_pass": true
+  }
 }
