@@ -1,0 +1,1309 @@
+{
+ "schema": "opentallas.s81.hc_homes_fold64_summary.v1",
+ "scope": "PLANNING SCREEN (no GEN / GRT / timing / native)",
+ "inputs": {
+  "model": {
+   "path": "/tmp/sdiehub/model.json.gz",
+   "sha256": "3e08661ecfa7c141b02d1f54ef0f69592205e577f1f940d0d249ec733c06a357"
+  },
+  "candidate": {
+   "path": "cand.json",
+   "sha256": "e59364c459345939084cf44c43ac4094e2b2920b69e6329ad22723886a180411",
+   "commit": "c74342891"
+  },
+  "group_map": {
+   "path": "map.json",
+   "sha256": "1ab8a5423cd92a40729232ec68da2931a3077abea9e8a74f2125d7724c4d4d35",
+   "branch": "codex/s81-suhc-homes-0811"
+  }
+ },
+ "widths": {
+  "fwd": 3056,
+  "ret_flat": 2164,
+  "ret_col": 4560,
+  "nt_dl": 275,
+  "nt_ul": 33,
+  "hop_fold": 7924,
+  "hop_c26b": 5220
+ },
+ "hop_um": 500.0,
+ "picked": "FM",
+ "picked_meets_all_gates": true,
+ "picked_rule": "least total bit-mm with every HC-internal cut <= 0.60, die gcell max util <= 0.60 and die routing complete",
+ "results": {
+  "baseline": {
+   "die_rows": [
+    {
+     "a": "sp_hc_s",
+     "b": "sp_hc_t",
+     "bits": 15660,
+     "faces": [
+      "S",
+      "N"
+     ],
+     "len_um": 799.2,
+     "bit_mm": 12515.8,
+     "stages": 1,
+     "obstacle_free": true
+    },
+    {
+     "a": "sp_collective",
+     "b": "sp_hc_s",
+     "bits": 8193,
+     "faces": [
+      "E",
+      "W"
+     ],
+     "len_um": 734.4,
+     "bit_mm": 6017.1,
+     "stages": 1,
+     "obstacle_free": true
+    },
+    {
+     "a": "sp_hc_s",
+     "b": "sp_vm",
+     "bits": 5400,
+     "faces": [
+      "W",
+      "E"
+     ],
+     "len_um": 2895.1,
+     "bit_mm": 15633.7,
+     "stages": 5,
+     "obstacle_free": true
+    },
+    {
+     "a": "sp_hc_s",
+     "b": "sp_sseq",
+     "bits": 96,
+     "faces": [
+      "W",
+      "E"
+     ],
+     "len_um": 7350.4,
+     "bit_mm": 705.6,
+     "stages": 14,
+     "obstacle_free": true
+    }
+   ],
+   "totals": {
+    "die_bit_mm": 34872.2,
+    "internal_hops_bit_mm": 0.0,
+    "chain_extra_stages": 1,
+    "seam_bits": 15660,
+    "y_stages": 1,
+    "vm_stages": 5,
+    "nt_seam": "TAIL_SPLIT 1 seam (t_tf 3056 + f_tr 2164 per chain) has NO NORM lanes: dsfd_sp_hc rejects NTREE with TAIL_SPLIT 1; a NORM tree at the seam needs +3 x (275 dl + 33 ul) + srs = 925 b new seam ports"
+   }
+  },
+  "C0": {
+   "envelope_um": [
+    17800.0,
+    9500.0,
+    3676.32,
+    10707.12
+   ],
+   "band_um": [
+    17800,
+    19170.32,
+    3676.32,
+    1036.8
+   ],
+   "die_rows": [
+    {
+     "a": "sp_collective",
+     "b": "sp_hc_s",
+     "bits": 8193,
+     "faces": [
+      "N",
+      "S"
+     ],
+     "len_um": 5424.8,
+     "bit_mm": 44445.1,
+     "stages": 10,
+     "obstacle_free": false
+    },
+    {
+     "a": "sp_hc_s",
+     "b": "sp_vm",
+     "bits": 5400,
+     "faces": [
+      "W",
+      "E"
+     ],
+     "len_um": 2763.3,
+     "bit_mm": 14922.0,
+     "stages": 5,
+     "obstacle_free": false
+    },
+    {
+     "a": "sp_hc_s",
+     "b": "sp_sseq",
+     "bits": 96,
+     "faces": [
+      "S",
+      "E"
+     ],
+     "len_um": 8499.7,
+     "bit_mm": 816.0,
+     "stages": 16,
+     "obstacle_free": false
+    }
+   ],
+   "die_congestion": {
+    "max_util": 1.873,
+    "edges_over_060": 32,
+    "edges_over_100": 12,
+    "channels": {
+     "COLL|HC": 0.611,
+     "VM|HC": 0.611
+    },
+    "routing_complete": false,
+    "hot_edges": [
+     {
+      "grid": [
+       150,
+       221,
+       "h"
+      ],
+      "center_um": [
+       21403.2,
+       19137.6
+      ],
+      "utilisation": 1.87292,
+      "bits": 5309.727,
+      "contributors": [
+       {
+        "flow": "sp_collective->sp_hc_s",
+        "bits": 5213.727
+       },
+       {
+        "flow": "sp_hc_s->sp_sseq",
+        "bits": 96.0
+       }
+      ]
+     },
+     {
+      "grid": [
+       149,
+       221,
+       "h"
+      ],
+      "center_um": [
+       21316.8,
+       19137.6
+      ],
+      "utilisation": 1.785346,
+      "bits": 5061.455,
+      "contributors": [
+       {
+        "flow": "sp_collective->sp_hc_s",
+        "bits": 4965.455
+       },
+       {
+        "flow": "sp_hc_s->sp_sseq",
+        "bits": 96.0
+       }
+      ]
+     },
+     {
+      "grid": [
+       148,
+       221,
+       "h"
+      ],
+      "center_um": [
+       21230.4,
+       19137.6
+      ],
+      "utilisation": 1.697771,
+      "bits": 4813.182,
+      "contributors": [
+       {
+        "flow": "sp_collective->sp_hc_s",
+        "bits": 4717.182
+       },
+       {
+        "flow": "sp_hc_s->sp_sseq",
+        "bits": 96.0
+       }
+      ]
+     },
+     {
+      "grid": [
+       147,
+       221,
+       "h"
+      ],
+      "center_um": [
+       21144.0,
+       19137.6
+      ],
+      "utilisation": 1.610197,
+      "bits": 4564.909,
+      "contributors": [
+       {
+        "flow": "sp_collective->sp_hc_s",
+        "bits": 4468.909
+       },
+       {
+        "flow": "sp_hc_s->sp_sseq",
+        "bits": 96.0
+       }
+      ]
+     }
+    ]
+   },
+   "internal": {
+    "chain_hop": {
+     "n": 61,
+     "bits": 483364,
+     "bit_mm": 344302.4,
+     "max_len_um": 10247.04,
+     "max_stages": 20,
+     "stage_bits": 633920
+    },
+    "root_head": {
+     "n": 3,
+     "bits": 16485,
+     "bit_mm": 47595.5,
+     "max_len_um": 8575.2,
+     "max_stages": 17,
+     "stage_bits": 93415
+    },
+    "tail_ntbot": {
+     "n": 3,
+     "bits": 1137,
+     "bit_mm": 10868.6,
+     "max_len_um": 10910.16,
+     "max_stages": 21,
+     "stage_bits": 20970
+    },
+    "root_comb": {
+     "n": 3,
+     "bits": 6492,
+     "bit_mm": 6707.5,
+     "max_len_um": 1859.76,
+     "max_stages": 3,
+     "stage_bits": 10820
+    },
+    "y_slice": {
+     "n": 3,
+     "bits": 8195,
+     "bit_mm": 12523.6,
+     "max_len_um": 2768.04,
+     "max_stages": 5,
+     "stage_bits": 21768
+    }
+   },
+   "cuts": [
+    {
+     "cut": "band_x1",
+     "where": "band vertical cut at column street 1",
+     "bits": 7542,
+     "tracks": 19440,
+     "ratio": 0.388
+    },
+    {
+     "cut": "band_x2",
+     "where": "band vertical cut at column street 2",
+     "bits": 10197,
+     "tracks": 19440,
+     "ratio": 0.525
+    },
+    {
+     "cut": "band_x3",
+     "where": "band vertical cut at column street 3",
+     "bits": 5472,
+     "tracks": 19440,
+     "ratio": 0.281
+    },
+    {
+     "cut": "band_x4",
+     "where": "band vertical cut at column street 4",
+     "bits": 5304,
+     "tracks": 19440,
+     "ratio": 0.273
+    },
+    {
+     "cut": "band_x5",
+     "where": "band vertical cut at column street 5",
+     "bits": 323,
+     "tracks": 19440,
+     "ratio": 0.017
+    },
+    {
+     "cut": "cth_face",
+     "where": "any chain hop across a CTH N/S face (576.72 um, M3+M5 face pins)",
+     "bits": 7924,
+     "tracks": 25232,
+     "ratio": 0.314
+    }
+   ],
+   "max_cut_ratio": 0.525,
+   "chain_relay_stages_per_chain": [
+    20,
+    20,
+    40
+   ],
+   "totals": {
+    "die_bit_mm": 60183.1,
+    "internal_bit_mm": 421997.6,
+    "total_bit_mm": 482180.7,
+    "y_stages": 10,
+    "vm_stages": 5,
+    "worst_chain_extra_stages": 40,
+    "nt_join_max_stages": 21
+   },
+   "overlaps_with_unmoved_model_blocks": [
+    "sp_wfc",
+    "sp_host"
+   ]
+  },
+  "FN": {
+   "envelope_um": [
+    17800.0,
+    9500.0,
+    3676.32,
+    10707.12
+   ],
+   "band_um": [
+    17800,
+    19170.32,
+    3676.32,
+    1036.8
+   ],
+   "die_rows": [
+    {
+     "a": "sp_collective",
+     "b": "sp_hc_s",
+     "bits": 8193,
+     "faces": [
+      "N",
+      "S"
+     ],
+     "len_um": 5424.8,
+     "bit_mm": 44445.1,
+     "stages": 10,
+     "obstacle_free": false
+    },
+    {
+     "a": "sp_hc_s",
+     "b": "sp_vm",
+     "bits": 5400,
+     "faces": [
+      "W",
+      "E"
+     ],
+     "len_um": 2763.3,
+     "bit_mm": 14922.0,
+     "stages": 5,
+     "obstacle_free": false
+    },
+    {
+     "a": "sp_hc_s",
+     "b": "sp_sseq",
+     "bits": 96,
+     "faces": [
+      "S",
+      "E"
+     ],
+     "len_um": 8499.7,
+     "bit_mm": 816.0,
+     "stages": 16,
+     "obstacle_free": false
+    }
+   ],
+   "die_congestion": {
+    "max_util": 1.873,
+    "edges_over_060": 32,
+    "edges_over_100": 12,
+    "channels": {
+     "COLL|HC": 0.611,
+     "VM|HC": 0.611
+    },
+    "routing_complete": false,
+    "hot_edges": [
+     {
+      "grid": [
+       150,
+       221,
+       "h"
+      ],
+      "center_um": [
+       21403.2,
+       19137.6
+      ],
+      "utilisation": 1.87292,
+      "bits": 5309.727,
+      "contributors": [
+       {
+        "flow": "sp_collective->sp_hc_s",
+        "bits": 5213.727
+       },
+       {
+        "flow": "sp_hc_s->sp_sseq",
+        "bits": 96.0
+       }
+      ]
+     },
+     {
+      "grid": [
+       149,
+       221,
+       "h"
+      ],
+      "center_um": [
+       21316.8,
+       19137.6
+      ],
+      "utilisation": 1.785346,
+      "bits": 5061.455,
+      "contributors": [
+       {
+        "flow": "sp_collective->sp_hc_s",
+        "bits": 4965.455
+       },
+       {
+        "flow": "sp_hc_s->sp_sseq",
+        "bits": 96.0
+       }
+      ]
+     },
+     {
+      "grid": [
+       148,
+       221,
+       "h"
+      ],
+      "center_um": [
+       21230.4,
+       19137.6
+      ],
+      "utilisation": 1.697771,
+      "bits": 4813.182,
+      "contributors": [
+       {
+        "flow": "sp_collective->sp_hc_s",
+        "bits": 4717.182
+       },
+       {
+        "flow": "sp_hc_s->sp_sseq",
+        "bits": 96.0
+       }
+      ]
+     },
+     {
+      "grid": [
+       147,
+       221,
+       "h"
+      ],
+      "center_um": [
+       21144.0,
+       19137.6
+      ],
+      "utilisation": 1.610197,
+      "bits": 4564.909,
+      "contributors": [
+       {
+        "flow": "sp_collective->sp_hc_s",
+        "bits": 4468.909
+       },
+       {
+        "flow": "sp_hc_s->sp_sseq",
+        "bits": 96.0
+       }
+      ]
+     }
+    ]
+   },
+   "internal": {
+    "chain_hop": {
+     "n": 58,
+     "bits": 459592,
+     "bit_mm": 19854.6,
+     "max_len_um": 43.2,
+     "max_stages": 0,
+     "stage_bits": 0
+    },
+    "chain_turn": {
+     "n": 3,
+     "bits": 23772,
+     "bit_mm": 25006.2,
+     "max_len_um": 1051.92,
+     "max_stages": 2,
+     "stage_bits": 47544
+    },
+    "root_head": {
+     "n": 3,
+     "bits": 16485,
+     "bit_mm": 712.1,
+     "max_len_um": 43.2,
+     "max_stages": 0,
+     "stage_bits": 0
+    },
+    "tail_ntbot": {
+     "n": 3,
+     "bits": 1137,
+     "bit_mm": 1058.3,
+     "max_len_um": 1283.04,
+     "max_stages": 2,
+     "stage_bits": 1628
+    },
+    "root_comb": {
+     "n": 3,
+     "bits": 6492,
+     "bit_mm": 6707.5,
+     "max_len_um": 1859.76,
+     "max_stages": 3,
+     "stage_bits": 10820
+    },
+    "y_slice": {
+     "n": 3,
+     "bits": 8195,
+     "bit_mm": 12523.6,
+     "max_len_um": 2768.04,
+     "max_stages": 5,
+     "stage_bits": 21768
+    }
+   },
+   "cuts": [
+    {
+     "cut": "band_x1",
+     "where": "band vertical cut at column street 1",
+     "bits": 7542,
+     "tracks": 19440,
+     "ratio": 0.388
+    },
+    {
+     "cut": "band_x2",
+     "where": "band vertical cut at column street 2",
+     "bits": 10197,
+     "tracks": 19440,
+     "ratio": 0.525
+    },
+    {
+     "cut": "band_x3",
+     "where": "band vertical cut at column street 3",
+     "bits": 5472,
+     "tracks": 19440,
+     "ratio": 0.281
+    },
+    {
+     "cut": "band_x4",
+     "where": "band vertical cut at column street 4",
+     "bits": 5304,
+     "tracks": 19440,
+     "ratio": 0.273
+    },
+    {
+     "cut": "band_x5",
+     "where": "band vertical cut at column street 5",
+     "bits": 323,
+     "tracks": 19440,
+     "ratio": 0.017
+    },
+    {
+     "cut": "turn_c0_S",
+     "where": "chain 0 U-turn channel (S) between its two columns",
+     "bits": 7924,
+     "tracks": 14175,
+     "ratio": 0.559
+    },
+    {
+     "cut": "turn_c1_S",
+     "where": "chain 1 U-turn channel (S) between its two columns",
+     "bits": 7924,
+     "tracks": 14175,
+     "ratio": 0.559
+    },
+    {
+     "cut": "turn_c2_S",
+     "where": "chain 2 U-turn channel (S) between its two columns",
+     "bits": 7924,
+     "tracks": 14175,
+     "ratio": 0.559
+    },
+    {
+     "cut": "cth_face",
+     "where": "any chain hop across a CTH N/S face (576.72 um, M3+M5 face pins)",
+     "bits": 7924,
+     "tracks": 25232,
+     "ratio": 0.314
+    }
+   ],
+   "max_cut_ratio": 0.559,
+   "chain_relay_stages_per_chain": [
+    2,
+    2,
+    2
+   ],
+   "totals": {
+    "die_bit_mm": 60183.1,
+    "internal_bit_mm": 65862.4,
+    "total_bit_mm": 126045.5,
+    "y_stages": 10,
+    "vm_stages": 5,
+    "worst_chain_extra_stages": 2,
+    "nt_join_max_stages": 2
+   },
+   "overlaps_with_unmoved_model_blocks": [
+    "sp_wfc",
+    "sp_host"
+   ]
+  },
+  "FS": {
+   "envelope_um": [
+    17800.0,
+    8420.0,
+    3676.32,
+    10707.12
+   ],
+   "band_um": [
+    17800,
+    8420.0,
+    3676.32,
+    1036.8
+   ],
+   "die_rows": [
+    {
+     "a": "sp_collective",
+     "b": "sp_hc_s",
+     "bits": 8193,
+     "faces": [
+      "S",
+      "W"
+     ],
+     "len_um": 2519.2,
+     "bit_mm": 20640.0,
+     "stages": 5,
+     "obstacle_free": true
+    },
+    {
+     "a": "sp_hc_s",
+     "b": "sp_vm",
+     "bits": 5400,
+     "faces": [
+      "N",
+      "S"
+     ],
+     "len_um": 9346.5,
+     "bit_mm": 50471.3,
+     "stages": 18,
+     "obstacle_free": true
+    },
+    {
+     "a": "sp_hc_s",
+     "b": "sp_sseq",
+     "bits": 96,
+     "faces": [
+      "N",
+      "E"
+     ],
+     "len_um": 11574.8,
+     "bit_mm": 1111.2,
+     "stages": 23,
+     "obstacle_free": false
+    }
+   ],
+   "die_congestion": {
+    "max_util": 1.246,
+    "edges_over_060": 87,
+    "edges_over_100": 6,
+    "channels": {
+     "COLL|HC": 1.246,
+     "VM|HC": 0.346
+    },
+    "routing_complete": true,
+    "hot_edges": [
+     {
+      "grid": [
+       108,
+       109,
+       "h"
+      ],
+      "center_um": [
+       17774.4,
+       9460.8
+      ],
+      "utilisation": 1.245984,
+      "bits": 3532.364,
+      "contributors": [
+       {
+        "flow": "sp_hc_s->sp_vm",
+        "bits": 3436.364
+       },
+       {
+        "flow": "sp_hc_s->sp_sseq",
+        "bits": 96.0
+       }
+      ]
+     },
+     {
+      "grid": [
+       109,
+       109,
+       "h"
+      ],
+      "center_um": [
+       17860.8,
+       9460.8
+      ],
+      "utilisation": 1.159404,
+      "bits": 3286.909,
+      "contributors": [
+       {
+        "flow": "sp_hc_s->sp_vm",
+        "bits": 3190.909
+       },
+       {
+        "flow": "sp_hc_s->sp_sseq",
+        "bits": 96.0
+       }
+      ]
+     },
+     {
+      "grid": [
+       110,
+       109,
+       "h"
+      ],
+      "center_um": [
+       17947.2,
+       9460.8
+      ],
+      "utilisation": 1.159404,
+      "bits": 3286.909,
+      "contributors": [
+       {
+        "flow": "sp_hc_s->sp_vm",
+        "bits": 3190.909
+       },
+       {
+        "flow": "sp_hc_s->sp_sseq",
+        "bits": 96.0
+       }
+      ]
+     },
+     {
+      "grid": [
+       111,
+       109,
+       "h"
+      ],
+      "center_um": [
+       18033.6,
+       9460.8
+      ],
+      "utilisation": 1.072823,
+      "bits": 3041.455,
+      "contributors": [
+       {
+        "flow": "sp_hc_s->sp_vm",
+        "bits": 2945.455
+       },
+       {
+        "flow": "sp_hc_s->sp_sseq",
+        "bits": 96.0
+       }
+      ]
+     }
+    ]
+   },
+   "internal": {
+    "chain_hop": {
+     "n": 58,
+     "bits": 459592,
+     "bit_mm": 19854.6,
+     "max_len_um": 43.2,
+     "max_stages": 0,
+     "stage_bits": 0
+    },
+    "chain_turn": {
+     "n": 3,
+     "bits": 23772,
+     "bit_mm": 25006.2,
+     "max_len_um": 1051.92,
+     "max_stages": 2,
+     "stage_bits": 47544
+    },
+    "root_head": {
+     "n": 3,
+     "bits": 16485,
+     "bit_mm": 712.1,
+     "max_len_um": 43.2,
+     "max_stages": 0,
+     "stage_bits": 0
+    },
+    "tail_ntbot": {
+     "n": 3,
+     "bits": 1137,
+     "bit_mm": 1058.3,
+     "max_len_um": 1283.04,
+     "max_stages": 2,
+     "stage_bits": 1628
+    },
+    "root_comb": {
+     "n": 3,
+     "bits": 6492,
+     "bit_mm": 6707.5,
+     "max_len_um": 1859.76,
+     "max_stages": 3,
+     "stage_bits": 10820
+    },
+    "y_slice": {
+     "n": 3,
+     "bits": 8195,
+     "bit_mm": 12523.6,
+     "max_len_um": 2768.04,
+     "max_stages": 5,
+     "stage_bits": 21768
+    }
+   },
+   "cuts": [
+    {
+     "cut": "band_x1",
+     "where": "band vertical cut at column street 1",
+     "bits": 7542,
+     "tracks": 19440,
+     "ratio": 0.388
+    },
+    {
+     "cut": "band_x2",
+     "where": "band vertical cut at column street 2",
+     "bits": 10197,
+     "tracks": 19440,
+     "ratio": 0.525
+    },
+    {
+     "cut": "band_x3",
+     "where": "band vertical cut at column street 3",
+     "bits": 5472,
+     "tracks": 19440,
+     "ratio": 0.281
+    },
+    {
+     "cut": "band_x4",
+     "where": "band vertical cut at column street 4",
+     "bits": 5304,
+     "tracks": 19440,
+     "ratio": 0.273
+    },
+    {
+     "cut": "band_x5",
+     "where": "band vertical cut at column street 5",
+     "bits": 323,
+     "tracks": 19440,
+     "ratio": 0.017
+    },
+    {
+     "cut": "turn_c0_N",
+     "where": "chain 0 U-turn channel (N) between its two columns",
+     "bits": 7924,
+     "tracks": 14175,
+     "ratio": 0.559
+    },
+    {
+     "cut": "turn_c1_N",
+     "where": "chain 1 U-turn channel (N) between its two columns",
+     "bits": 7924,
+     "tracks": 14175,
+     "ratio": 0.559
+    },
+    {
+     "cut": "turn_c2_N",
+     "where": "chain 2 U-turn channel (N) between its two columns",
+     "bits": 7924,
+     "tracks": 14175,
+     "ratio": 0.559
+    },
+    {
+     "cut": "cth_face",
+     "where": "any chain hop across a CTH N/S face (576.72 um, M3+M5 face pins)",
+     "bits": 7924,
+     "tracks": 25232,
+     "ratio": 0.314
+    }
+   ],
+   "max_cut_ratio": 0.559,
+   "chain_relay_stages_per_chain": [
+    2,
+    2,
+    2
+   ],
+   "totals": {
+    "die_bit_mm": 72222.5,
+    "internal_bit_mm": 65862.4,
+    "total_bit_mm": 138084.9,
+    "y_stages": 5,
+    "vm_stages": 18,
+    "worst_chain_extra_stages": 2,
+    "nt_join_max_stages": 2
+   },
+   "overlaps_with_unmoved_model_blocks": [
+    "sp_wfc",
+    "sp_host"
+   ]
+  },
+  "FM": {
+   "envelope_um": [
+    17800.0,
+    9500.0,
+    3676.32,
+    10707.12
+   ],
+   "band_um": [
+    17800,
+    14774.72,
+    3676.32,
+    1036.8
+   ],
+   "die_rows": [
+    {
+     "a": "sp_collective",
+     "b": "sp_hc_s",
+     "bits": 8193,
+     "faces": [
+      "E",
+      "W"
+     ],
+     "len_um": 1029.2,
+     "bit_mm": 8432.0,
+     "stages": 2,
+     "obstacle_free": true
+    },
+    {
+     "a": "sp_hc_s",
+     "b": "sp_vm",
+     "bits": 5400,
+     "faces": [
+      "W",
+      "E"
+     ],
+     "len_um": 3007.8,
+     "bit_mm": 16242.2,
+     "stages": 6,
+     "obstacle_free": true
+    },
+    {
+     "a": "sp_hc_s",
+     "b": "sp_sseq",
+     "bits": 96,
+     "faces": [
+      "W",
+      "E"
+     ],
+     "len_um": 5220.1,
+     "bit_mm": 501.1,
+     "stages": 10,
+     "obstacle_free": false
+    }
+   ],
+   "die_congestion": {
+    "max_util": 0.48,
+    "edges_over_060": 0,
+    "edges_over_100": 0,
+    "channels": {
+     "COLL|HC": 0.47,
+     "VM|HC": 0.455
+    },
+    "routing_complete": true,
+    "hot_edges": [
+     {
+      "grid": [
+       79,
+       182,
+       "v"
+      ],
+      "center_um": [
+       15268.8,
+       15768.0
+      ],
+      "utilisation": 0.479942,
+      "bits": 1814.182,
+      "contributors": [
+       {
+        "flow": "sp_hc_s->sp_vm",
+        "bits": 1718.182
+       },
+       {
+        "flow": "sp_hc_s->sp_sseq",
+        "bits": 96.0
+       }
+      ]
+     },
+     {
+      "grid": [
+       106,
+       177,
+       "h"
+      ],
+      "center_um": [
+       17601.6,
+       15336.0
+      ],
+      "utilisation": 0.469745,
+      "bits": 1331.727,
+      "contributors": [
+       {
+        "flow": "sp_collective->sp_hc_s",
+        "bits": 744.818
+       },
+       {
+        "flow": "sp_hc_s->sp_vm",
+        "bits": 490.909
+       },
+       {
+        "flow": "sp_hc_s->sp_sseq",
+        "bits": 96.0
+       }
+      ]
+     },
+     {
+      "grid": [
+       107,
+       177,
+       "h"
+      ],
+      "center_um": [
+       17688.0,
+       15336.0
+      ],
+      "utilisation": 0.469745,
+      "bits": 1331.727,
+      "contributors": [
+       {
+        "flow": "sp_collective->sp_hc_s",
+        "bits": 744.818
+       },
+       {
+        "flow": "sp_hc_s->sp_vm",
+        "bits": 490.909
+       },
+       {
+        "flow": "sp_hc_s->sp_sseq",
+        "bits": 96.0
+       }
+      ]
+     },
+     {
+      "grid": [
+       77,
+       183,
+       "h"
+      ],
+      "center_um": [
+       15096.0,
+       15854.4
+      ],
+      "utilisation": 0.466763,
+      "bits": 1323.273,
+      "contributors": [
+       {
+        "flow": "sp_hc_s->sp_vm",
+        "bits": 1227.273
+       },
+       {
+        "flow": "sp_hc_s->sp_sseq",
+        "bits": 96.0
+       }
+      ]
+     }
+    ]
+   },
+   "internal": {
+    "chain_hop": {
+     "n": 52,
+     "bits": 412048,
+     "bit_mm": 17800.6,
+     "max_len_um": 43.2,
+     "max_stages": 0,
+     "stage_bits": 0
+    },
+    "chain_turn": {
+     "n": 6,
+     "bits": 47544,
+     "bit_mm": 50012.5,
+     "max_len_um": 1051.92,
+     "max_stages": 2,
+     "stage_bits": 95088
+    },
+    "chain_cross_band": {
+     "n": 3,
+     "bits": 23772,
+     "bit_mm": 26700.7,
+     "max_len_um": 1123.2,
+     "max_stages": 2,
+     "stage_bits": 47544
+    },
+    "root_head": {
+     "n": 3,
+     "bits": 16485,
+     "bit_mm": 712.1,
+     "max_len_um": 43.2,
+     "max_stages": 0,
+     "stage_bits": 0
+    },
+    "tail_ntbot": {
+     "n": 3,
+     "bits": 1137,
+     "bit_mm": 1362.7,
+     "max_len_um": 1902.96,
+     "max_stages": 3,
+     "stage_bits": 2119
+    },
+    "root_comb": {
+     "n": 3,
+     "bits": 6492,
+     "bit_mm": 6707.5,
+     "max_len_um": 1859.76,
+     "max_stages": 3,
+     "stage_bits": 10820
+    },
+    "y_slice": {
+     "n": 3,
+     "bits": 8195,
+     "bit_mm": 12523.6,
+     "max_len_um": 2768.04,
+     "max_stages": 5,
+     "stage_bits": 21768
+    }
+   },
+   "cuts": [
+    {
+     "cut": "band_x1",
+     "where": "band vertical cut at column street 1",
+     "bits": 8033,
+     "tracks": 19440,
+     "ratio": 0.413
+    },
+    {
+     "cut": "band_x2",
+     "where": "band vertical cut at column street 2",
+     "bits": 10197,
+     "tracks": 19440,
+     "ratio": 0.525
+    },
+    {
+     "cut": "band_x3",
+     "where": "band vertical cut at column street 3",
+     "bits": 5795,
+     "tracks": 19440,
+     "ratio": 0.298
+    },
+    {
+     "cut": "band_x4",
+     "where": "band vertical cut at column street 4",
+     "bits": 5304,
+     "tracks": 19440,
+     "ratio": 0.273
+    },
+    {
+     "cut": "band_x5",
+     "where": "band vertical cut at column street 5",
+     "bits": 0,
+     "tracks": 19440,
+     "ratio": 0.0
+    },
+    {
+     "cut": "turn_c0_S",
+     "where": "chain 0 U-turn channel (S) between its two columns",
+     "bits": 7924,
+     "tracks": 14175,
+     "ratio": 0.559
+    },
+    {
+     "cut": "turn_c0_N",
+     "where": "chain 0 U-turn channel (N) between its two columns",
+     "bits": 7924,
+     "tracks": 14175,
+     "ratio": 0.559
+    },
+    {
+     "cut": "turn_c1_S",
+     "where": "chain 1 U-turn channel (S) between its two columns",
+     "bits": 7924,
+     "tracks": 14175,
+     "ratio": 0.559
+    },
+    {
+     "cut": "turn_c1_N",
+     "where": "chain 1 U-turn channel (N) between its two columns",
+     "bits": 7924,
+     "tracks": 14175,
+     "ratio": 0.559
+    },
+    {
+     "cut": "turn_c2_S",
+     "where": "chain 2 U-turn channel (S) between its two columns",
+     "bits": 7924,
+     "tracks": 14175,
+     "ratio": 0.559
+    },
+    {
+     "cut": "turn_c2_N",
+     "where": "chain 2 U-turn channel (N) between its two columns",
+     "bits": 7924,
+     "tracks": 14175,
+     "ratio": 0.559
+    },
+    {
+     "cut": "cth_face",
+     "where": "any chain hop across a CTH N/S face (576.72 um, M3+M5 face pins)",
+     "bits": 7924,
+     "tracks": 25232,
+     "ratio": 0.314
+    },
+    {
+     "cut": "band_cross",
+     "where": "FM chain hop crossing the band at its column (over band macros, M7)",
+     "bits": 7924,
+     "tracks": 15120,
+     "ratio": 0.524,
+     "note": "macro-free 345.6-um feed-through in the band at columns 1/3/5 (M3+M5); over band macros on M7 only it would be 0.977"
+    }
+   ],
+   "max_cut_ratio": 0.559,
+   "chain_relay_stages_per_chain": [
+    6,
+    6,
+    6
+   ],
+   "totals": {
+    "die_bit_mm": 25175.3,
+    "internal_bit_mm": 115819.8,
+    "total_bit_mm": 140995.1,
+    "y_stages": 2,
+    "vm_stages": 6,
+    "worst_chain_extra_stages": 6,
+    "nt_join_max_stages": 3
+   },
+   "overlaps_with_unmoved_model_blocks": [
+    "sp_wfc",
+    "sp_host"
+   ]
+  }
+ },
+ "leaf_overlap_pairs": 0,
+ "norm_join": {
+  "tail_split1": "The current die TAIL_SPLIT 1 seam (sp_hc_s t_tf* / f_tr*, dsfd_sp_hc_t) has no NORM-tree lane ports: dsfd_sp_hc_t $fatal on NTREE; f_dl / srs were INPUT_UNCONNECTED. It cannot carry NT lanes.",
+  "fold_requirement": "The fold puts every chain head AND tail on the band: NT lanes run inside each CTH hop (dl 275 N->S, ul 33 S->N, included in the 7,924-b hop) and only the 3 tail -> cnbot joins are new wires. This needs ONE combined HC parent (HC_s + HC_t, no die seam; a hardenable TAIL_SPLIT 0 NTREE 1 RETCOL 1 composition with cnbot in the band), not dsfd_sp_hc_c + dsfd_sp_hc_t.",
+  "tail_to_cnbot": {
+   "bits_per_chain": "dl 275 + ul 33 + fv 7 + nv 8 = 323 (chain 0 +168: fc0 104 + eps0 64)",
+   "total_bits": 1137,
+   "faces": "tail CTH chain-out face (band side) -> cnbot face toward the array",
+   "max_stages": 3,
+   "rows": {
+    "n": 3,
+    "bits": 1137,
+    "bit_mm": 1362.7,
+    "max_len_um": 1902.96,
+    "max_stages": 3,
+    "stage_bits": 2119
+   }
+  },
+  "if_two_parents_kept": "If S-DIE keeps two die parents, the seam needs +925 b (3 x 275 dl + 3 x 33 ul + srs) of registered seam ports on dsfd_sp_hc_c and dsfd_sp_hc_t_nt, equal-age with t_tf/f_tr, and the seam must sit where the fold returns to the band (otherwise the lanes ride the full chain).",
+  "norm_to_su": "No die bus carries NT results to SU/NORM today; the NT bottom output stays inside HC (ul scale lanes back up the chains, flt to chain 0). A NORM result export to SU, if the S-NORM swap needs one, is an extra source-defined bus (not in the model) and would leave from the band W face."
+ }
+}
