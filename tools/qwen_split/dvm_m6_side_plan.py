@@ -4,7 +4,8 @@ import argparse,json,collections
 from pathlib import Path
 import dvm_m7_seam_plan as S
 
-LEAF_H=136056
+LEAF_H=138240
+LEAF_W=64800
 
 def generate():
     # Keep824 payload bits on M3/M5; all146 controls and first200 payload
@@ -14,7 +15,7 @@ def generate():
     side=[p for p in old if p['names']['leaf_S'].split('[')[0]!='w_d' or int(p['names']['leaf_S'].split('[')[1][:-1])<200]
     ns=[p for p in old if p not in side]
     assert len(side)==346 and len(ns)==824
-    slots=S.available(0,('M3','M5'))
+    slots=S.available(0,('M3','M5'),LEAF_W)
     payload=[]
     for i,p in enumerate(ns):
         x,layer,w=slots[((2*i+1)*len(slots))//(2*len(ns))]
@@ -44,7 +45,9 @@ def generate():
                 side_available_two_track_slots_per_band=len(bands[0]),contact_cut_per_band=173/len(bands[0]))
     return dict(schema='opentallas.qwen-dvm-m6-side-candidate.v1',qualified=False,adopted=False,
        normal_cycle_change=0,
-       candidate_actual_leaf_outline_um=[64.776,136.056],outline_status='candidate matching prior nominal136.08 export convention; actual gate/export must verify',
+       proposed_leaf_outline_um=[64.8,138.24],actual_exported_leaf_outline_um=None,
+       proposed_head_outline_um=[64.8,345.6],proposed_column_envelope_um=[64.8,1473.12],south_head_gap_um=21.6,
+       outline_status='source candidate only; exact gate/export dimensions remain unmeasured',
        unchanged_word_bits=1170, NS_payload_bits=824,M6_side_bits=346,NS_M3_M5_available_slots=len(slots), NS_pin_cut=824/len(slots),
        side_pins_per_face_per_band=173,side_band_depth_um=43.2,
        parent_M7_additional_bits=200,parent_M9_bits=146,
@@ -63,11 +66,11 @@ def main():
     r['source_rtl_sha256']={p:S.digest(p) for p in ['rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv','rtl/qwen_sys/dvm_20261014/ot_qfd_xslice_slots.sv']}
     homes=json.loads(Path(a.origins).read_text());requests={}
     for name,h in homes['homes'].items():
-        origin=round(h['x']*1000);slots=S.available(origin%64,('M7',))
+        origin=round(h['x']*1000);slots=S.available(origin%64,('M7',),LEAF_W)
         selected=[slots[((2*i+1)*len(slots))//400][0]+origin for i in range(200)]
         assert len(set(selected))==200 and all((x-16)%64==0 for x in selected)
         requests[name]=dict(global_M7_x_nm=selected,available_slots=len(slots),cut=200/len(slots),
-                            required_seam_y_um=[round(h['y']+y,3) for y in [136.08,272.16,408.24,544.32,889.92,1026,1162.08,1298.16]],
+                            required_seam_y_um=[round(h['y']+y,3) for y in [138.24,276.48,414.72,552.96,920.16,1058.4,1196.64,1334.88]],
                             requested_seam_band_y_um=[-43.2,43.2])
     r['parent_M7_track_requests']=requests
     r['source_homes_fixture_sha256']=S.digest(a.origins)
