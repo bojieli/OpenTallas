@@ -133,7 +133,8 @@ module tb_xload_static_lock;
         .xw_grp(gr_r), .xw_data(d_r), .rq(rq_r), .rr(rr));
     // owner rule 19:50 (every leaf pin registered): cl2 adds exactly XW_ADD = 2 edges to every xw beat and x_done
     // (raw rr pin capture + egress pin capture); rq is unchanged.
-    localparam integer XW_ADD = 2;
+    // cl2g (H-SM 10-16, ctlw f20a TT -58.79): + 1 landing stage L1 between the rotation mux and l_d_o / C -> 3
+    localparam integer XW_ADD = 3;
     reg done_d [0:XW_ADD-1]; reg en_d [0:XW_ADD-1]; reg last_d [0:XW_ADD-1];
     reg [6:0] ad_d [0:XW_ADD-1]; reg [6:0] gr_d [0:XW_ADD-1]; reg [2047:0] dd_d [0:XW_ADD-1];
     always @(posedge clk) begin
@@ -184,7 +185,7 @@ module tb_xload_static_lock;
     // block-dot streaming emission model (= tools/hbm_sm_xload_static_timing.py): pair (k, b) decided at
     // E = max(k WB + n(b), E_prev + 2) after the tpair origin; beat (k, b, a) on the xw pins at command + CBD + E + a
 `ifdef XLOAD_CL2
-    localparam integer CBD = 27 + 2 + (RD_LAT - 6);   // cl2: + 2 fixed edges (pin-registered landing and egress); + VM read latency over 6
+    localparam integer CBD = 27 + 3 + (RD_LAT - 6);   // cl2: + 2 fixed edges (pin-registered landing and egress) + 1 (cl2g L1 landing stage); + VM read latency over 6
 `else
     localparam integer CBD = 27 + (RD_LAT - 6);
 `endif

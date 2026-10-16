@@ -84,7 +84,7 @@ module ot_hgi_sm_xload_cl2_ctl #(
 );
     localparam integer XC = 3152, XOFF = 2128;
     localparam integer NBMAX = (PMAX * XC + 2047) / 2048;
-    localparam integer LAND = 3;
+    localparam integer LAND = 4;           // cl2g: + 1 landing stage (L1) between the rotation mux and l_d_o / C
     localparam integer RDP = 7;            // + 1: rw captured at the ctl pins (egress edge)
     localparam integer RB = 2048 / NR;     // data bits per select replica
     // ---- local reset relay
@@ -212,22 +212,29 @@ module ot_hgi_sm_xload_cl2_ctl #(
     always @* for (integer b = 0; b < 8; b = b + 1) rr_v_seen[b] = rr_c[b*257 + 256];
     assign resp_bad = (m_v && rr_v_seen != 8'hFF) || (!m_v && rr_v_seen != 8'h00);
     // ---- L: capture + rotate; the rotation select is replicated (NR copies of md[RD_LAT][9:7], same edge)
+    // cl2g (ctlw f20a route TT -58.79: rr_c / s0r / md -> rotation mux -> ~300 um wire -> l_d_o pin register, 399 paths):
+    // the rotation result lands in L0 next to the rr pins and is re-registered in L1 (plain wire to the l_d_o pin
+    // registers / the C stage).  + 1 edge on EVERY xw beat and x_done of both formats (LAND 3 -> 4, quantiser valids
+    // and the BD tag line follow L1); rq unchanged.
+    reg l0_v; reg [3:0] l0_g; reg [2:0] l0_p, l0_wq; reg [6:0] l0_rem; reg [8*256-1:0] l0_d;
     reg l_v; reg [3:0] l_g; reg [2:0] l_p, l_wq; reg [6:0] l_rem; reg [8*256-1:0] l_d;
     reg [2:0] s0r [0:NR-1];
     always @(posedge clk or negedge rn)
         if (!rn) for (integer k = 0; k < NR; k = k + 1) s0r[k] <= 3'd0;
         else for (integer k = 0; k < NR; k = k + 1) s0r[k] <= md[RD_LAT][9:7];
-    always @(posedge clk or negedge rn) if (!rn) l_v <= 1'b0; else l_v <= m_v;
+    always @(posedge clk or negedge rn) if (!rn) begin l0_v <= 1'b0; l_v <= 1'b0; end else begin l0_v <= m_v; l_v <= l0_v; end
     always @(posedge clk) begin
-        {l_g, l_p, l_wq} <= mr[MW-2 -: 10]; l_rem <= mr[6:0];
+        {l0_g, l0_p, l0_wq} <= mr[MW-2 -: 10]; l0_rem <= mr[6:0];
         for (integer k = 0; k < NR; k = k + 1)
-            l_d[k*RB +: RB] <= rr_c[(3'(s0r[k] + 3'((k*RB) / 256) + ((MUT == 1) ? 3'd1 : 3'd0)))*257 + (k*RB) % 256 +: RB];
+            l0_d[k*RB +: RB] <= rr_c[(3'(s0r[k] + 3'((k*RB) / 256) + ((MUT == 1) ? 3'd1 : 3'd0)))*257 + (k*RB) % 256 +: RB];
+        {l_g, l_p, l_wq} <= {l0_g, l0_p, l0_wq}; l_rem <= l0_rem; l_d <= l0_d;
     end
     assign l_d_o = l_d;
-    // quantiser valids registered on the landing edge (= l_v && bdm && l_wq[2] / [1] of cl)
+    // quantiser valids registered with L1 (= l_v && bdm && l_wq[2] / [1] of cl)
+    reg qv0_lo, qv0_hi;
     always @(posedge clk or negedge rn)
-        if (!rn) begin qv_lo <= 1'b0; qv_hi <= 1'b0; end
-        else begin qv_lo <= m_v && bdm && mr[12]; qv_hi <= m_v && bdm && mr[11]; end
+        if (!rn) begin qv0_lo <= 1'b0; qv0_hi <= 1'b0; qv_lo <= 1'b0; qv_hi <= 1'b0; end
+        else begin qv0_lo <= m_v && bdm && mr[12]; qv0_hi <= m_v && bdm && mr[11]; qv_lo <= qv0_lo; qv_hi <= qv0_hi; end
     // ---- C: BF16 convert (was clk_bf in cl; same edge), with the per-quarter write enables of the W stage
     reg c_v; reg [3:0] c_g; reg [2:0] c_pp, c_wq;
     always @(posedge clk or negedge rn)
