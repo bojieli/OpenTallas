@@ -1,0 +1,32 @@
+{
+ "job": "s81fill2_qbank_s_t-nr1-a0a4982dd",
+ "source": "a0a4982dd96e",
+ "routed_verdict": {
+  "tt_setup_ps": 334.1,
+  "ff_hold_ps": 23.85,
+  "drc": 0
+ },
+ "native": {
+  "launch_ps": 182.1,
+  "capture_ps": 132.3,
+  "spread_ps": 8.0,
+  "limits_ps": [
+   220,
+   190,
+   80
+  ],
+  "pass_all": true
+ },
+ "images": {
+  "personally_viewed": true,
+  "actual_stage": "6_final.odb",
+  "findings": "Scenter clock/reset with all604 Noutputs preserved. Final fill.416; dense/red lower2/3 and sparse upperband persist, no macro/sliver. Source pin register fixes reset capture; area/frame-fit improvement NOT claimed."
+ },
+ "integration": "Conditional die grant255cc2477 only. Current generator frame6.456 does not fit25.92hardtile; require actual1898frame DOWNgrowth preserving Nabsolute pins/cfg7/mirror/chirality/overlap proof before adoption.",
+ "files": {
+  "dsfd_qbank_S.lef": "05f344c239556e4ca1be92cdc69d835fd6e93a5ca3dc1fd88cac4d3e78377f03",
+  "dsfd_qbank_S_tt.lib": "5097c1cf8c0e4e9e36271d5c3a04eb54ff627e5158a1524bf7b69b810f4f94e8",
+  "dsfd_qbank_S_ss.lib": "24f353fcec0f1eeb4ae14bd659fd21980234026adfaefd76a90effa5669a5c57",
+  "dsfd_qbank_S_ff.lib": "7395728c6606435a764772048d745788d1b227713c2c64cbbdf55a70609a83f4"
+ }
+}
