@@ -1,0 +1,195 @@
+{
+  "name": "s81_static_calendar_controller7_resetpins",
+  "orfs_dir": "/srv/opentallas-scratch2/claude/closure-loop/s81coll_calendar7_resetpins_1319-localreset1-9f5af3545/routes/s81coll_calendar7_resetpins_1319_localreset1_9f5af3545/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max -2.790681019604335e-10 min 7.365472121101391e-11",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/s81coll_calendar7_resetpins_1319-localreset1-9f5af3545/routes/s81coll_calendar7_resetpins_1319_localreset1_9f5af3545/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/s81coll_calendar7_resetpins_1319-localreset1-9f5af3545/record/views/s81_static_calendar_controller7_resetpins:/out",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/s81coll_calendar7_resetpins_1319-localreset1-9f5af3545/src/physical/ref_tile/s81coll_calendar7_resetpins_1319/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/s81coll_calendar7_resetpins_1319-localreset1-9f5af3545/routes/s81coll_calendar7_resetpins_1319_localreset1_9f5af3545/work/orfs:/work:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/s81coll_calendar7_resetpins_1319-localreset1-9f5af3545/src:/src:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/s81coll_calendar7_resetpins_1319-localreset1-9f5af3545/cl/routed_ioref.a1_meas:/meas:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/s81coll_calendar7_resetpins_1319-localreset1-9f5af3545/src/physical/asap7_memory_macros/ot_rom_4096x266_m8:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max 5.738642894215218e-11 min 1.1196793492374013e-11",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/s81coll_calendar7_resetpins_1319-localreset1-9f5af3545/routes/s81coll_calendar7_resetpins_1319_localreset1_9f5af3545/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/s81coll_calendar7_resetpins_1319-localreset1-9f5af3545/record/views/s81_static_calendar_controller7_resetpins:/out",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/s81coll_calendar7_resetpins_1319-localreset1-9f5af3545/src/physical/ref_tile/s81coll_calendar7_resetpins_1319/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/s81coll_calendar7_resetpins_1319-localreset1-9f5af3545/routes/s81coll_calendar7_resetpins_1319_localreset1_9f5af3545/work/orfs:/work:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/s81coll_calendar7_resetpins_1319-localreset1-9f5af3545/src:/src:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/s81coll_calendar7_resetpins_1319-localreset1-9f5af3545/cl/routed_ioref.a1_meas:/meas:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/s81coll_calendar7_resetpins_1319-localreset1-9f5af3545/src/physical/asap7_memory_macros/ot_rom_4096x266_m8:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    },
+    "tt": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max 7.4513728520742e-12 min 5.218422916009047e-11",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/s81coll_calendar7_resetpins_1319-localreset1-9f5af3545/routes/s81coll_calendar7_resetpins_1319_localreset1_9f5af3545/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/s81coll_calendar7_resetpins_1319-localreset1-9f5af3545/record/views/s81_static_calendar_controller7_resetpins:/out",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/s81coll_calendar7_resetpins_1319-localreset1-9f5af3545/src/physical/ref_tile/s81coll_calendar7_resetpins_1319/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/s81coll_calendar7_resetpins_1319-localreset1-9f5af3545/routes/s81coll_calendar7_resetpins_1319_localreset1_9f5af3545/work/orfs:/work:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/s81coll_calendar7_resetpins_1319-localreset1-9f5af3545/src:/src:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/s81coll_calendar7_resetpins_1319-localreset1-9f5af3545/cl/routed_ioref.a1_meas:/meas:ro",
+        "-v",
+        "/srv/opentallas-scratch2/claude/closure-loop/s81coll_calendar7_resetpins_1319-localreset1-9f5af3545/src/physical/asap7_memory_macros/ot_rom_4096x266_m8:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_tt.tcl"
+      ]
+    }
+  },
+  "interface_sdc": {
+    "path": "/srv/opentallas-scratch2/claude/closure-loop/s81coll_calendar7_resetpins_1319-localreset1-9f5af3545/src/physical/ref_tile/s81coll_calendar7_resetpins_1319/signoff.sdc",
+    "sha256": "cfdf2434e2288614528e456d64cc07b34715843615b32c1384cdc24a625b897d",
+    "purpose": "interface timing extraction, not a new leaf signoff verdict",
+    "in_verdict_sequence": true
+  },
+  "verdict": {
+    "json": "/srv/opentallas-scratch2/claude/closure-loop/s81coll_calendar7_resetpins_1319-localreset1-9f5af3545/cl/routed_ioref.a1.json",
+    "sha256": "4bbf23d80f553b7433daea7de0f9763536e1741ac8371d2cebe1bd76af2923f9",
+    "expect_ps": {
+      "tt": 7.45,
+      "ff": 11.2
+    },
+    "tol_ps": 0.05,
+    "work": "/srv/opentallas-scratch2/claude/closure-loop/s81coll_calendar7_resetpins_1319-localreset1-9f5af3545/routes/s81coll_calendar7_resetpins_1319_localreset1_9f5af3545/work/orfs",
+    "files": {
+      "/meas/app0_io_ref_routed.sdc": {
+        "host": "/srv/opentallas-scratch2/claude/closure-loop/s81coll_calendar7_resetpins_1319-localreset1-9f5af3545/cl/routed_ioref.a1_meas/app0_io_ref_routed.sdc",
+        "sha256": "cb2805c3a4a622051ebd24447f6898db2d82fdd6060317692dc3180ef5ac6a7e"
+      },
+      "/work/results/asap7/opentallas_s81_static_calendar_controller7_resetpins_asap7_ref_s81coll_calendar7_resetpins_1319_localreset1_9f5af3545/base/6_final.odb": {
+        "host": "/srv/opentallas-scratch2/claude/closure-loop/s81coll_calendar7_resetpins_1319-localreset1-9f5af3545/routes/s81coll_calendar7_resetpins_1319_localreset1_9f5af3545/work/orfs/results/asap7/opentallas_s81_static_calendar_controller7_resetpins_asap7_ref_s81coll_calendar7_resetpins_1319_localreset1_9f5af3545/base/6_final.odb",
+        "sha256": "32533edbf0f6880e545e523158b849941b457b61d0cf44efe2c17c18e45c491a"
+      },
+      "/work/results/asap7/opentallas_s81_static_calendar_controller7_resetpins_asap7_ref_s81coll_calendar7_resetpins_1319_localreset1_9f5af3545/base/6_final.sdc": {
+        "host": "/srv/opentallas-scratch2/claude/closure-loop/s81coll_calendar7_resetpins_1319-localreset1-9f5af3545/routes/s81coll_calendar7_resetpins_1319_localreset1_9f5af3545/work/orfs/results/asap7/opentallas_s81_static_calendar_controller7_resetpins_asap7_ref_s81coll_calendar7_resetpins_1319_localreset1_9f5af3545/base/6_final.sdc",
+        "sha256": "eb83cbd537f0cf67f650f17fc7026d9e1473869350d4444ca2c8230004df06c3"
+      },
+      "/work/results/asap7/opentallas_s81_static_calendar_controller7_resetpins_asap7_ref_s81coll_calendar7_resetpins_1319_localreset1_9f5af3545/base/6_final.spef": {
+        "host": "/srv/opentallas-scratch2/claude/closure-loop/s81coll_calendar7_resetpins_1319-localreset1-9f5af3545/routes/s81coll_calendar7_resetpins_1319_localreset1_9f5af3545/work/orfs/results/asap7/opentallas_s81_static_calendar_controller7_resetpins_asap7_ref_s81coll_calendar7_resetpins_1319_localreset1_9f5af3545/base/6_final.spef",
+        "sha256": "1e2941010d1da7a44b397bda1bac7e8be023583f1c37f5410b094a7cdfefe604"
+      },
+      "/work/w18_extra.sdc": {
+        "host": "/srv/opentallas-scratch2/claude/closure-loop/s81coll_calendar7_resetpins_1319-localreset1-9f5af3545/routes/s81coll_calendar7_resetpins_1319_localreset1_9f5af3545/work/orfs/w18_extra.sdc",
+        "sha256": "cfdf2434e2288614528e456d64cc07b34715843615b32c1384cdc24a625b897d"
+      }
+    },
+    "check": {
+      "ff": {
+        "export_ps": 11.196793492374013,
+        "verdict_ps": 11.2,
+        "ok": true
+      },
+      "tt": {
+        "export_ps": 7.451372852074201,
+        "verdict_ps": 7.45,
+        "ok": true
+      }
+    }
+  },
+  "sdc_sequence": {
+    "ss": {
+      "mode": "verdict",
+      "tcl": [
+        "read_db /work/results/asap7/opentallas_s81_static_calendar_controller7_resetpins_asap7_ref_s81coll_calendar7_resetpins_1319_localreset1_9f5af3545/base/6_final.odb",
+        "set ::ot_ce_corner ss",
+        "read_sdc /work/results/asap7/opentallas_s81_static_calendar_controller7_resetpins_asap7_ref_s81coll_calendar7_resetpins_1319_localreset1_9f5af3545/base/6_final.sdc",
+        "read_spef /work/results/asap7/opentallas_s81_static_calendar_controller7_resetpins_asap7_ref_s81coll_calendar7_resetpins_1319_localreset1_9f5af3545/base/6_final.spef",
+        "set_propagated_clock [all_clocks]",
+        "read_sdc /work/w18_extra.sdc",
+        "read_sdc /meas/app0_io_ref_routed.sdc"
+      ]
+    },
+    "ff": {
+      "mode": "verdict",
+      "tcl": [
+        "read_db /work/results/asap7/opentallas_s81_static_calendar_controller7_resetpins_asap7_ref_s81coll_calendar7_resetpins_1319_localreset1_9f5af3545/base/6_final.odb",
+        "set ::ot_ce_corner ff",
+        "read_sdc /work/results/asap7/opentallas_s81_static_calendar_controller7_resetpins_asap7_ref_s81coll_calendar7_resetpins_1319_localreset1_9f5af3545/base/6_final.sdc",
+        "read_spef /work/results/asap7/opentallas_s81_static_calendar_controller7_resetpins_asap7_ref_s81coll_calendar7_resetpins_1319_localreset1_9f5af3545/base/6_final.spef",
+        "set_propagated_clock [all_clocks]",
+        "read_sdc /work/w18_extra.sdc",
+        "read_sdc /meas/app0_io_ref_routed.sdc"
+      ]
+    },
+    "tt": {
+      "mode": "verdict",
+      "tcl": [
+        "read_db /work/results/asap7/opentallas_s81_static_calendar_controller7_resetpins_asap7_ref_s81coll_calendar7_resetpins_1319_localreset1_9f5af3545/base/6_final.odb",
+        "set ::ot_ce_corner tt",
+        "read_sdc /work/results/asap7/opentallas_s81_static_calendar_controller7_resetpins_asap7_ref_s81coll_calendar7_resetpins_1319_localreset1_9f5af3545/base/6_final.sdc",
+        "read_spef /work/results/asap7/opentallas_s81_static_calendar_controller7_resetpins_asap7_ref_s81coll_calendar7_resetpins_1319_localreset1_9f5af3545/base/6_final.spef",
+        "set_propagated_clock [all_clocks]",
+        "read_sdc /work/w18_extra.sdc",
+        "read_sdc /meas/app0_io_ref_routed.sdc"
+      ]
+    }
+  },
+  "macro_views": [
+    "/srv/opentallas-scratch2/claude/closure-loop/s81coll_calendar7_resetpins_1319-localreset1-9f5af3545/src/physical/asap7_memory_macros/ot_rom_4096x266_m8"
+  ],
+  "files": {
+    "s81_static_calendar_controller7_resetpins.lef": "507558257f0b0fd028ca415b6908a627ab6a58dd40281c8193e8abdd8c03c96d",
+    "s81_static_calendar_controller7_resetpins_ff.lib": "13f1f7286c70d25ab5003cdd5f0697548a6ed9f4b8fe7bd67016bbfdd8fb141d",
+    "s81_static_calendar_controller7_resetpins_ss.lib": "d4534e745de760d5f94bf7659e169328b2c9b6f1b8aa8346acbd555ce55b90c0",
+    "s81_static_calendar_controller7_resetpins_tt.lib": "769af0896c1a8c542de35b5144417c9e8f9650e0a0ad0a941c8ecc6aabd0af70"
+  },
+  "ok": true,
+  "checked": true
+}

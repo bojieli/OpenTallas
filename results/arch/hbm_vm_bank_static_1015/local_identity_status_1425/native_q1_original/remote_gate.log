@@ -1,0 +1,31 @@
+GATE_SOURCE_ARCHIVE_SHA256=88c2ca47e07768baa4f6973efb22bc08002df7e633fc357b2d489838e6b1885c
+GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=["openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29"]
+GATE_TOOL_CTS_MACRO_CLUSTER=
+GATE_FLOW_RC=0 GATE_FLOW_S=50
+GATE_IOP_RC=2
+GATE_DUMP_RC=0
+GATE_TB textbook_lint: WARN hfd_vms_bank_identity_q1_b0 cells 14,053 flops 4,770 depth 435.1 ps util 0.309 reach 0.0 um (0.4 s)
+GATE_TB textbook_lint: INFO clock_roots max_root_sinks=4773 root=port:clk rule=PASS: 4,773 sinks on the largest root <= 15,000; no measured clock tree (no --cts gate evidence)
+GATE_TB textbook_lint: WARN util_channel: utilisation 30.9% outside 45%-65% (std 2285 + macro 36952 um2 in 127002 um2): shrink the outline (long wires / sparse placement)
+GATE_PORTS {"clk": [1, false], "rst_n": [1, false], "rslot_v": [1, false], "rslot": [null, true], "wslot_v": [1, false], "wslot": [null, true], "rq0": [null, true], "rr0": [null, true], "rq1": [null, true], "rr1": [null, true], "rq2": [null, true], "rr2": [null, true], "rq3": [null, true], "rr3": [null, true], "wq0": [null, true], "wq_done0": [1, false], "dq": [null, true], "dq_done": [1, false], "kq": [null, true], "kq_done": [1, false], "xq": [null, true], "xq_done": [1, false], "xq2": [null, true], "xq2_done": [1, false], "eg": [null, true], "pq": [null, true], "pr": [null, true], "status": [null, true]}
+GATE_AREA    Chip area for module '\hfd_vms_bank_identity_q1_b0': 39215.931060
+GATE_CTS_RC=0
+GATE_SPINE OT_SPINE iter 4 (fine) leaves 775 sinks 6064 cells 4252 leaf arrival 571.1..600.8 ps (spread 29.7) pad 73.4 / 16.2 ps
+GATE_SPINE OT_SPINE iter 5 (fine) leaves 775 sinks 6064 cells 4267 leaf arrival 572.2..600.8 ps (spread 28.7) pad 73.4 / 16.5 ps
+GATE_SPINE_DONE OT_SPINE done port clk buffers 4267
+GATE_GPLD global_placement -density 0.5 -pad_left 0 -pad_right 0 -routability_driven -timing_driven -force_center_initial_place -min_phi_coef 0.95 -max_phi_coef 1.05
+GATE_GPLD [INFO GPL-0023] Placement target density:       0.5000
+GATE_CK_RC=0
+GATE_CK ss insertion all 735.8..805.2 ps (spread 69.4), boundary mean 770.2; tt insertion all 569.7..601.0 ps (spread 31.3), boundary mean 582.9; ff insertion all 454.0..487.3 ps (spread 33.3), boundary mean 468.8; macro_clk flag False
+GATE_CK_DOMAIN {"source": "clk", "clock": "core_clk", "tt": {"boundary": {"n": 3352, "mean": 582.9, "min": 570.1, "max": 599.8}, "all": {"n": 6064, "mean": 582.9, "min": 569.7, "max": 601.0}, "errors": [], "macros": {"n": 3, "nets": 3, "max_per_net": 1, "reg_mean": 582.9, "max_slew": 14.2, "max_late": 4.0, "pins": [{"pin": "bank.u_a/clk", "arr": 586.9, "slew": 13.6, "late": 4.0, "net": "clkbuf_sp_L451_net"}, {"pin": "bank.u_b/clk", "arr": 578.0, "slew": 14.2, "late": -4.9, "net": "clkbuf_sp_L450_net"}, {"pin": "bank.u_c/clk", "arr": 578.6, "slew": 13.7, "late": -4.3, "net": "clkbuf_sp_L449_net"}]}, "macro_libs": 1}}
+GATE_PC constraints signoff /src/physical/ref_tile/vm_identity_q1_b0_ref/signoff.sdc (TT placement RC; diagnostic)
+GATE_PC reg->reg      389 paths, worst slack 9.8 ps (e.g. bank.eg_d[263]$_DFF_P_/D)
+GATE_PC in->reg         3 paths, worst slack 358.6 ps (e.g. bank.rst_s1$_DFF_PN0_/RESETN)
+GATE_PC setup WNS 9.798939437644094e-12 hold WNS 4.227579397664272e-11
+GATE_DONE
+
+--- stderr
+ot-run: ot-agidock128  admits    27 GB (avail 68, growth 35, headroom 24, waiters 0/0 GB) load 16/64 running 9 disk 42 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-1678266-1792100680 after 0 s
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-1678266-1792100680): exit 0

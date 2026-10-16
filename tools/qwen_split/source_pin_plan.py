@@ -131,6 +131,11 @@ def apply_slabs(M):
                 f = 'E'
             elif q.name.endswith('_f1') and p in ('cw0', 'rq', 'am', 'tc', 'ty'):
                 f = 'W'
+            elif p == 'tc':
+                # Real TT word enters the primary slab at E. Source taps may
+                # fragment its net before legacy frames, so old['tc'] can vanish;
+                # the source pin contract must not then fall back to W.
+                f = 'E'
             else:
                 s = old.get(p)
                 f = s[2] if s and s[0] in ('face', 'pins') else 'W'

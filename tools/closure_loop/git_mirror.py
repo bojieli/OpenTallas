@@ -70,7 +70,7 @@ def pushed_objects(stderr):
 
 VIEW_MIN_BYTES = 262144
 VIEW_STORE_DIR = ".viewstore"
-_VIEW_LIST_AWK = r"""awk -F'\t' '{split($1, a, " +"); if (a[1] == "100644" && a[4] + 0 >= %d && $2 ~ /^[A-Za-z0-9_.\/+-]+\.(lib|lef)$/) print a[3], a[4], $2}'"""
+_VIEW_LIST_AWK = r"""awk -F'\t' '{split($1, a, " +"); if (a[1] == "100644" && a[4] + 0 >= %d && ($2 ~ /^[A-Za-z0-9_.\/+-]+\.(lib|lef)$/ || $2 ~ /^physical\/ref_tile\/[A-Za-z0-9_.+-]+\/(gate_result\.json|source_binding_history\/[A-Za-z0-9_.+-]+\.json)$/)) print a[3], a[4], $2}'"""
 _VIEW_LINK_SH = r"""python3 - "$M" "$VS" "$S" "$VL" <<'OT_VIEWS'
 import os, subprocess, sys
 m, vs, s, vl = sys.argv[1:5]
@@ -123,7 +123,11 @@ def view_store_script(full, paths):
     <dirname RUN>/.viewstore/<git blob id> (mode 0444) and are hard-linked into the job tree; the archive leaves them
     out (export-ignore through a private core.attributesFile, exact paths).  Content-addressed by blob id, so a commit
     that changes one view adds one file.  An entry whose size differs from the tree's is rebuilt.  At most daily,
-    entries no job links any more (link count 1, older than 6 h) are deleted."""
+    entries no job links any more (link count 1, older than 6 h) are deleted.
+
+    ROOT 2026-10-15: physical/ref_tile also carries 744 gate_result.json (3.1 GB) and 612 source_binding_history/*.json
+    (2.7 GB) receipts >= 256 KiB that no route writes; extracted twice per job (src + bench_src) they made each AGIdock run
+    dir 28 GB and 14 concurrent syncs filled its 993 GB root (17:40).  They are stored and hard-linked like the views."""
     return [
         'VS="$(dirname "$RUN")/' + VIEW_STORE_DIR + '"', 'VL="$S.views"', 'ATTR="$S.attr"', 'mkdir -p "$VS"',
         """trap 'rm -rf "$S" "$T" "$VL" "$ATTR"' EXIT""",

@@ -1,0 +1,16 @@
+place_pin -pin_name {i_fault[0]} -layer M4 -location {0 4.332} -pin_size {.192 .024} -force_to_die_boundary
+place_pin -pin_name {i_fault[1]} -layer M4 -location {0 5.292} -pin_size {.192 .024} -force_to_die_boundary
+place_pin -pin_name {i_fault[2]} -layer M4 -location {0 6.252} -pin_size {.192 .024} -force_to_die_boundary
+place_pin -pin_name {i_fault[3]} -layer M4 -location {0 7.212} -pin_size {.192 .024} -force_to_die_boundary
+place_pin -pin_name {i_fault[4]} -layer M4 -location {0 8.172} -pin_size {.192 .024} -force_to_die_boundary
+place_pin -pin_name {i_fault[5]} -layer M4 -location {0 9.132} -pin_size {.192 .024} -force_to_die_boundary
+place_pin -pin_name {i_fault[6]} -layer M4 -location {0 10.092} -pin_size {.192 .024} -force_to_die_boundary
+place_pin -pin_name {i_fault[7]} -layer M4 -location {0 11.052} -pin_size {.192 .024} -force_to_die_boundary
+place_pin -pin_name {i_fault[8]} -layer M4 -location {0 12.012} -pin_size {.192 .024} -force_to_die_boundary
+place_pin -pin_name {i_fault[9]} -layer M4 -location {0 12.972} -pin_size {.192 .024} -force_to_die_boundary
+place_pin -pin_name {i_fault[10]} -layer M4 -location {0 13.932} -pin_size {.192 .024} -force_to_die_boundary
+place_pin -pin_name {i_fault[11]} -layer M4 -location {0 14.892} -pin_size {.192 .024} -force_to_die_boundary
+place_pin -pin_name {o_fault[0]} -layer M4 -location {21.6 7.212} -pin_size {.192 .024} -force_to_die_boundary
+place_pin -pin_name {o_fault[1]} -layer M4 -location {21.6 10.092} -pin_size {.192 .024} -force_to_die_boundary
+place_pin -pin_name {o_fault[2]} -layer M4 -location {21.6 12.972} -pin_size {.192 .024} -force_to_die_boundary
+place_pin -pin_name {ck} -layer M5 -location {10.812 21.6} -pin_size {.024 .192} -force_to_die_boundary

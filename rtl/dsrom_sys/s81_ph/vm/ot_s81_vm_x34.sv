@@ -168,8 +168,12 @@ module ot_s81_vm_x34_t #(parameter integer W = 512, parameter integer NAT = 0, p
         // enable is a real register (0 in reset, 1 from the first edge after reset).  The core's first active edge is the
         // second edge after t_rst_n, exactly as before (r1 still holds it in reset at the first edge).  tp / r1 / en_b /
         // mk_q stay on t_ck.  (A constant-enable ICG is not traced by the STA: no clock reached its sinks.)
-        reg en_b;
-        always @(posedge t_ck or negedge t_rst_n) if (!t_rst_n) en_b <= 1'b0; else en_b <= 1'b1;
+        // BAL=1 reset retime (r9, S-ELEM-A 2026-10-15): t_rst_n feeds ONLY the D pin of a plain pin flop r1 (gets the input
+        // hold stage).  r8 routed FF -7.22 was t_rst_n -> async RESETN removal on tp/en_b/r1 (pin path, no hold stage possible).
+        // r1 <= t_rst_n gives r1 = 1 right after the first edge after release, as before; tp resets synchronously to 0 under
+        // !r1 (tp after edge 1 = 0, edge 2 = 1 ... exactly as the async form); the core ICG is enabled by r1 itself
+        // (first active core edge = edge 2, unchanged).  Only the reset-asserted interval differs (tp held 0, not 3).
+        wire en_b;
         wire ck_b;
         if (BAL != 0) begin : bal
 `ifdef SYNTHESIS
@@ -182,10 +186,18 @@ module ot_s81_vm_x34_t #(parameter integer W = 512, parameter integer NAT = 0, p
         end else begin : nobal
             assign ck_b = t_ck;
         end
-        reg [1:0] tp;
-        always @(posedge t_ck or negedge t_rst_n) if (!t_rst_n) tp <= 2'd3; else tp <= tp + 2'd1;
-        reg r1;
-        always @(posedge t_ck or negedge t_rst_n) if (!t_rst_n) r1 <= 1'b0; else r1 <= 1'b1;
+        reg [1:0] tp; reg r1;
+        if (BAL != 0) begin : rst_sync
+            always @(posedge t_ck) r1 <= t_rst_n;
+            always @(posedge t_ck) if (!r1) tp <= 2'd0; else tp <= tp + 2'd1;
+            assign en_b = r1;
+        end else begin : rst_async
+            reg en_q;
+            always @(posedge t_ck or negedge t_rst_n) if (!t_rst_n) en_q <= 1'b0; else en_q <= 1'b1;
+            always @(posedge t_ck or negedge t_rst_n) if (!t_rst_n) tp <= 2'd3; else tp <= tp + 2'd1;
+            always @(posedge t_ck or negedge t_rst_n) if (!t_rst_n) r1 <= 1'b0; else r1 <= 1'b1;
+            assign en_b = en_q;
+        end
         reg mk_q;
         always @(posedge t_ck) mk_q <= s_mark;
         reg [W+1:0] c0, c1, c2;          // {bpar[k], b_k}

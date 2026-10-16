@@ -1,0 +1,122 @@
+{
+ "schema": "opentallas.hbm_v15.exposed_inputs.v1",
+ "contract": "results/arch/hbm_die_v15/source_contract/contract.json",
+ "total_ports": 1070,
+ "total_bits": 177247,
+ "excluded": "clock roots (die CTS) and reset ports (staged reset tree)",
+ "by_stream": {
+  "H-DIE": {
+   "ports": 816,
+   "bits": 90772,
+   "instances": 42,
+   "producers": {
+    "actual PHY service band / compiler block command source": {
+     "ports": 816,
+     "bits": 90772,
+     "action": "SM-specific 4-PC service engine (Codex DECISION 14:40, ot_hbm_svc_sm_stack_native) drives the band cmd/K ports; bind its outputs into the die contract"
+    }
+   }
+  },
+  "H-SU": {
+   "ports": 85,
+   "bits": 16763,
+   "instances": 9,
+   "producers": {
+    "actual SFU programme loader / CP and lane reset tree": {
+     "ports": 68,
+     "bits": 2608,
+     "action": "SFU programme loader (4-leaf SFU split)"
+    },
+    "actual SFU operand SRAM / SU join": {
+     "ports": 8,
+     "bits": 4096,
+     "action": "SFU operand store <- whole-SU join"
+    },
+    "actual static SU arithmetic su_rq/su_wq producer (H-ELEM-B)": {
+     "ports": 8,
+     "bits": 9536,
+     "action": "whole-SU arithmetic producer"
+    },
+    "actual SU static logit stream (MTP, H-ELEM-B/s_mtp)": {
+     "ports": 1,
+     "bits": 523,
+     "action": "MTP logit stream"
+    }
+   }
+  },
+  "H-SM": {
+   "ports": 77,
+   "bits": 60630,
+   "instances": 17,
+   "producers": {
+    "actual static client source migration": {
+     "ports": 8,
+     "bits": 9386,
+     "action": "VM client cq/wq static source migration"
+    },
+    "actual VM programme SRAM calendar issuer": {
+     "ports": 68,
+     "bits": 16076,
+     "action": "VM calendar issuer (programme SRAM) into hb_vms/calendar"
+    },
+    "actual service key staging (key_slot/key_index/key_lines)": {
+     "ports": 1,
+     "bits": 35168,
+     "action": "attention-on-SM key staging producer"
+    }
+   }
+  },
+  "H-COLL+IDX": {
+   "ports": 47,
+   "bits": 7346,
+   "instances": 6,
+   "producers": {
+    "OFF-DIE die-to-die/package SerDes link (link-level flow control allowed, HANDOFF 0az)": {
+     "ports": 12,
+     "bits": 5382,
+     "action": "ep_* link-capture group over lk_* ot_pdie_serdes (elastic at the off-die boundary only)"
+    },
+    "actual INDEX programme loader / CP": {
+     "ports": 26,
+     "bits": 1865,
+     "action": "INDEX programme loader"
+    },
+    "actual ARGMAX record issuer (programme loader / CP)": {
+     "ports": 9,
+     "bits": 99,
+     "action": "ARGMAX record issuer"
+    }
+   }
+  },
+  "H-HARDEN": {
+   "ports": 36,
+   "bits": 1416,
+   "instances": 4,
+   "producers": {
+    "actual static DMA dispatcher (cycle/move/issue_at/drain_at)": {
+     "ports": 28,
+     "bits": 1364,
+     "action": "static DMA dispatcher"
+    },
+    "actual service WB band (static block reservation)": {
+     "ports": 8,
+     "bits": 52,
+     "action": "service write-back band reservation"
+    }
+   }
+  },
+  "H-DIE (host_cp)": {
+   "ports": 9,
+   "bits": 320,
+   "instances": 1,
+   "producers": {
+    "actual host/CP loader (NW target 48)": {
+     "ports": 9,
+     "bits": 320,
+     "action": "host_cp programme loader parent over host_cp_ingress"
+    }
+   }
+  }
+ },
+ "rule": "bind to a real producer; never tie, stub or alias (owner 10-14 08:05)"
+}

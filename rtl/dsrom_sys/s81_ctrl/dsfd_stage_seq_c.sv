@@ -95,7 +95,7 @@ module dsfd_stage_seq_c #(
         .clk(ck[0]), .rst_n(rn), .pw_v(pw_v), .pw_a(pw_d[34:28]), .pw_d(pw_d[27:0]), .prog_len(plen_q),
         .job_v(ks_take), .job_rdy(job_rdy), .job_user(ks_d[51:42]), .job_pos(ks_d[20:0]), .job_tok(ks_d[41:21]),
         .job_done(job_done), .job_kdone(job_kdone), .cmd_v(cmd_v), .cmd_d(cmd_d), .dn_v(dnv_q), .dn_tag(dnt_q), .busy(busy), .fault(sfault),
-        .fault_code(fcode), .st_jobs(), .st_cmds(), .st_credit_stall());
+        .fault_code(fcode), .st_jobs(), .st_cmds());
     reg [NENG*85-1:0] c_q;
     always @(posedge ck[0])
         for (i = 0; i < NENG; i = i + 1) c_q[85*i +: 85] <= ENG_PRESENT[i] ? {rn & cmd_v[i], cmd_d[CMDW*i +: CMDW]} : 85'd0;

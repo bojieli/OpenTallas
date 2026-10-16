@@ -1,0 +1,437 @@
+{
+  "status": "REJECTED_NONREGRESSION_NOT_ADOPTED",
+  "scope": "Analytical candidate only, original GEN18p basis, partners fixed. Current c19b/native pair replay remains unmeasured.",
+  "candidate_sha256": "5041c8258ddb6efac7081f98c70be6cdf443af12a43ad59f2b33a273b938ec7e",
+  "orientation_lattice": {
+    "R0": {
+      "master": "dsfd_sp_su_c",
+      "orientation": "R0",
+      "unknown_layers": [],
+      "axes": [
+        {
+          "axis": "x",
+          "period_nm": 432,
+          "legal_site_origin_residues_nm": [
+            0
+          ],
+          "groups": [
+            {
+              "period_nm": 48,
+              "allowed_origin_residues_nm": [
+                0
+              ],
+              "pins": 17138,
+              "examples": [
+                "ck[0]",
+                "rq_row[0]",
+                "rq_row[1]",
+                "rq_row[2]"
+              ]
+            }
+          ]
+        },
+        {
+          "axis": "y",
+          "period_nm": 2160,
+          "legal_site_origin_residues_nm": [
+            0
+          ],
+          "groups": [
+            {
+              "period_nm": 48,
+              "allowed_origin_residues_nm": [
+                0
+              ],
+              "pins": 96,
+              "examples": [
+                "c_cmd[0]",
+                "c_cmd[1]",
+                "c_cmd[2]",
+                "c_cmd[3]"
+              ]
+            }
+          ]
+        }
+      ],
+      "status": "PASS"
+    },
+    "MX": {
+      "master": "dsfd_sp_su_c",
+      "orientation": "MX",
+      "unknown_layers": [],
+      "axes": [
+        {
+          "axis": "x",
+          "period_nm": 432,
+          "legal_site_origin_residues_nm": [
+            0
+          ],
+          "groups": [
+            {
+              "period_nm": 48,
+              "allowed_origin_residues_nm": [
+                0
+              ],
+              "pins": 17138,
+              "examples": [
+                "ck[0]",
+                "rq_row[0]",
+                "rq_row[1]",
+                "rq_row[2]"
+              ]
+            }
+          ]
+        },
+        {
+          "axis": "y",
+          "period_nm": 2160,
+          "legal_site_origin_residues_nm": [
+            0
+          ],
+          "groups": [
+            {
+              "period_nm": 48,
+              "allowed_origin_residues_nm": [
+                0
+              ],
+              "pins": 96,
+              "examples": [
+                "c_cmd[0]",
+                "c_cmd[1]",
+                "c_cmd[2]",
+                "c_cmd[3]"
+              ]
+            }
+          ]
+        }
+      ],
+      "status": "PASS"
+    },
+    "MY": {
+      "master": "dsfd_sp_su_c",
+      "orientation": "MY",
+      "unknown_layers": [],
+      "axes": [
+        {
+          "axis": "x",
+          "period_nm": 432,
+          "legal_site_origin_residues_nm": [
+            0
+          ],
+          "groups": [
+            {
+              "period_nm": 48,
+              "allowed_origin_residues_nm": [
+                0
+              ],
+              "pins": 17138,
+              "examples": [
+                "ck[0]",
+                "rq_row[0]",
+                "rq_row[1]",
+                "rq_row[2]"
+              ]
+            }
+          ]
+        },
+        {
+          "axis": "y",
+          "period_nm": 2160,
+          "legal_site_origin_residues_nm": [
+            0
+          ],
+          "groups": [
+            {
+              "period_nm": 48,
+              "allowed_origin_residues_nm": [
+                0
+              ],
+              "pins": 96,
+              "examples": [
+                "c_cmd[0]",
+                "c_cmd[1]",
+                "c_cmd[2]",
+                "c_cmd[3]"
+              ]
+            }
+          ]
+        }
+      ],
+      "status": "PASS"
+    },
+    "R180": {
+      "master": "dsfd_sp_su_c",
+      "orientation": "R180",
+      "unknown_layers": [],
+      "axes": [
+        {
+          "axis": "x",
+          "period_nm": 432,
+          "legal_site_origin_residues_nm": [
+            0
+          ],
+          "groups": [
+            {
+              "period_nm": 48,
+              "allowed_origin_residues_nm": [
+                0
+              ],
+              "pins": 17138,
+              "examples": [
+                "ck[0]",
+                "rq_row[0]",
+                "rq_row[1]",
+                "rq_row[2]"
+              ]
+            }
+          ]
+        },
+        {
+          "axis": "y",
+          "period_nm": 2160,
+          "legal_site_origin_residues_nm": [
+            0
+          ],
+          "groups": [
+            {
+              "period_nm": 48,
+              "allowed_origin_residues_nm": [
+                0
+              ],
+              "pins": 96,
+              "examples": [
+                "c_cmd[0]",
+                "c_cmd[1]",
+                "c_cmd[2]",
+                "c_cmd[3]"
+              ]
+            }
+          ]
+        }
+      ],
+      "status": "PASS"
+    }
+  },
+  "totals": {
+    "edges": 35,
+    "before": {
+      "sum_bit_um": 391210.4640000001,
+      "over500": 0.0,
+      "over215": 0.0,
+      "fail": 0,
+      "max": 203.88
+    },
+    "after": {
+      "sum_bit_um": 390435.64800000004,
+      "over500": 0.0,
+      "over215": 0.0,
+      "fail": 0,
+      "max": 201.576
+    }
+  },
+  "worsened_edges": [
+    {
+      "bus": "hb_su_s_wq_v_0_3_vm",
+      "bits": 4,
+      "ends": [
+        [
+          "sp_su_s",
+          "wq_v[0:3]"
+        ],
+        [
+          "sp_vm",
+          "f_su_wqv[0:3]"
+        ]
+      ],
+      "max_before": 24.552,
+      "max_after": 26.52,
+      "verdict": [
+        "OK",
+        "OK"
+      ]
+    },
+    {
+      "bus": "hb_su_s_wq_row_0_55_vm",
+      "bits": 56,
+      "ends": [
+        [
+          "sp_su_s",
+          "wq_row[0:55]"
+        ],
+        [
+          "sp_vm",
+          "f_su_wq[0:55]"
+        ]
+      ],
+      "max_before": 38.904,
+      "max_after": 42.792,
+      "verdict": [
+        "OK",
+        "WARN"
+      ]
+    },
+    {
+      "bus": "hb_su_s_wq_v_4_7_vm",
+      "bits": 4,
+      "ends": [
+        [
+          "sp_su_s",
+          "wq_v[4:7]"
+        ],
+        [
+          "sp_vm",
+          "f_su_wqv[4:7]"
+        ]
+      ],
+      "max_before": 24.552,
+      "max_after": 26.52,
+      "verdict": [
+        "OK",
+        "OK"
+      ]
+    },
+    {
+      "bus": "hb_su_s_wq_row_56_111_vm",
+      "bits": 56,
+      "ends": [
+        [
+          "sp_su_s",
+          "wq_row[56:111]"
+        ],
+        [
+          "sp_vm",
+          "f_su_wq[56:111]"
+        ]
+      ],
+      "max_before": 38.904,
+      "max_after": 42.792,
+      "verdict": [
+        "OK",
+        "WARN"
+      ]
+    },
+    {
+      "bus": "hb_su_s_wq_v_8_11_vm",
+      "bits": 4,
+      "ends": [
+        [
+          "sp_su_s",
+          "wq_v[8:11]"
+        ],
+        [
+          "sp_vm",
+          "f_su_wqv[8:11]"
+        ]
+      ],
+      "max_before": 24.552,
+      "max_after": 26.52,
+      "verdict": [
+        "OK",
+        "OK"
+      ]
+    },
+    {
+      "bus": "hb_su_s_wq_row_112_167_vm",
+      "bits": 56,
+      "ends": [
+        [
+          "sp_su_s",
+          "wq_row[112:167]"
+        ],
+        [
+          "sp_vm",
+          "f_su_wq[112:167]"
+        ]
+      ],
+      "max_before": 38.904,
+      "max_after": 42.792,
+      "verdict": [
+        "OK",
+        "WARN"
+      ]
+    },
+    {
+      "bus": "hb_su_s_wq_v_12_15_vm",
+      "bits": 4,
+      "ends": [
+        [
+          "sp_su_s",
+          "wq_v[12:15]"
+        ],
+        [
+          "sp_vm",
+          "f_su_wqv[12:15]"
+        ]
+      ],
+      "max_before": 24.552,
+      "max_after": 26.52,
+      "verdict": [
+        "OK",
+        "OK"
+      ]
+    },
+    {
+      "bus": "hb_su_s_wq_row_168_223_vm",
+      "bits": 56,
+      "ends": [
+        [
+          "sp_su_s",
+          "wq_row[168:223]"
+        ],
+        [
+          "sp_vm",
+          "f_su_wq[168:223]"
+        ]
+      ],
+      "max_before": 38.904,
+      "max_after": 42.792,
+      "verdict": [
+        "OK",
+        "WARN"
+      ]
+    },
+    {
+      "bus": "hb_su_s_c_st_sseq_d0",
+      "bits": 2,
+      "ends": [
+        [
+          "sp_su_s",
+          "c_st"
+        ],
+        [
+          "f_hb_su_s_c_st_sseq_1",
+          "di"
+        ]
+      ],
+      "max_before": 180.024,
+      "max_after": 180.264,
+      "verdict": [
+        "OK",
+        "OK"
+      ]
+    }
+  ],
+  "missing_incident_edges": [],
+  "required": [
+    "No worsening of incident native pair budgets",
+    "Current c19b complete geometry and physical qualification"
+  ],
+  "run": {
+    "host": "ot-epyc4",
+    "unit": "oth-ubuntu-1726292-1792102057",
+    "exit": 0,
+    "declared_memory_gb": 4,
+    "peak_rss_kib": 722676,
+    "wall_seconds": 4.06,
+    "threads": 1
+  },
+  "emit": {
+    "unit": "oth-ubuntu-1726617-1792102083",
+    "exit": 0,
+    "declared_memory_gb": 2
+  },
+  "tool_sha256": {
+    "die_link_repin_search.py": "48cd0d4c7a0fcfdb44ef0b7a767459a11414d609ecd72843d74f9d93e4705088",
+    "repin_lattice.py": "3ae04c2d543b4dadec43879e04fac1d75145feac3acf59f7769579c1c246d80d"
+  }
+}

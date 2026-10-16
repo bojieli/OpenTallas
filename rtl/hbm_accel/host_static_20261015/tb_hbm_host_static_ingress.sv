@@ -7,7 +7,7 @@ module tb_hbm_host_static_ingress;
  wire awr,wr,bv,arr,rv;wire[1:0]bres;wire[31:0]rd;
  wire cv,dv,lv,hf;wire[7:0]target;wire[11:0]addr,base;wire[12:0]limit;wire[15:0]loops;wire[255:0]data;
  wire twe,ts,configured,tf,ready_validated,ready_fault;wire[9:0]ta,tbase;wire[10:0]tlim;wire[15:0]tloops;wire[255:0]td;
- wire[15:0]calendar;wire calendar_v,active,done,pf;wire[31:0]ordinal;
+ wire[201:0]calendar;wire calendar_v,active,done,pf;wire[31:0]ordinal;
  integer seen=0,launches=0,cy=0,lastcy=-1;reg measure=0;reg[31:0] expect_resp=0;
  ot_hbm_host_static_ingress #(.MUT(MUT)) dut(.clk(clk),.rst_n(rst_n),
  .s_awvalid(av),.s_awready(awr),.s_awaddr(aa),.s_wvalid(wv),.s_wready(wr),.s_wdata(wd),.s_wstrb(ws),
@@ -19,13 +19,13 @@ module tb_hbm_host_static_ingress;
  .program_cfg_we(twe),.program_cfg_addr(ta),.program_cfg_data(td),.program_start_v(ts),.program_start_base(tbase),.program_start_limit(tlim),.program_start_loops(tloops),.configured(configured),.fault(tf));
  ot_hbm_program_block_ready #(.TARGET(48),.PCW(10),.MUT(READY_MUT)) readiness(.clk(clk),.rst_n(rst_n),.cfg_we(twe),.cfg_addr(ta),
  .desc_v(dv),.desc_target(target),.desc_base(base),.desc_limit(limit),.desc_loops(loops),.program_active(active),.launch_v(lv),.block_ready(ready_validated),.fault(ready_fault));
- ot_vms_calendar_static #(.W(16)) programme(.clk(clk),.rst_n(rst_n),.cfg_we(twe),.cfg_addr(ta),.cfg_data(td),.start_v(ts),.start_base(tbase),.start_limit(tlim),.start_loops(tloops),
+ ot_vms_calendar_static #(.W(202)) programme(.clk(clk),.rst_n(rst_n),.cfg_we(twe),.cfg_addr(ta),.cfg_data(td),.start_v(ts),.start_base(tbase),.start_limit(tlim),.start_loops(tloops),
  .calendar(calendar),.calendar_v(calendar_v),.ordinal(ordinal),.active(active),.done(done),.fault(pf));
  always @(negedge clk)begin
   cy=cy+1;
   if(lv)launches=launches+1;
   if(measure&&calendar_v)begin
-   if(calendar!==16'(16'h9000+(seen%ROWS)) || ordinal!==seen)$fatal(1,"HOST_STATIC data/ordinal mismatch n=%0d got=%h ord=%d",seen,calendar,ordinal);
+   if(calendar!==expected_payload(seen%ROWS) || ordinal!==seen)$fatal(1,"HOST_STATIC data/ordinal mismatch n=%0d got=%h ord=%d",seen,calendar,ordinal);
    if(lastcy>=0&&cy!=lastcy+1)$fatal(1,"HOST_STATIC runtime calendar gap");
    lastcy=cy;seen=seen+1;
   end
@@ -54,6 +54,16 @@ module tb_hbm_host_static_ingress;
   if(bres!==(bad?2'b10:2'b00))$fatal(1,"HOST_STATIC wrong AXI response %h a=%h",bres,a);
   @(negedge clk);
  end endtask
+ function automatic[201:0] expected_payload(input integer row);
+  reg[31:0]state;
+  begin
+   state=32'h9e3779b9 ^ row;
+   for(integer bitn=0;bitn<202;bitn=bitn+1)begin
+    state={state[30:0],state[31]^state[21]^state[1]^state[0]};
+    expected_payload[bitn]=state[0];
+   end
+  end
+ endfunction
  reg[255:0]word;
  initial begin
   reset_dut();
@@ -63,7 +73,7 @@ module tb_hbm_host_static_ingress;
   reset_dut();
   write32(12'hf20,48,0,0);
   for(integer row=0;row<ROWS;row=row+1)begin
-   word=0;word[255:240]=16'hc7a1;word[233:224]=10'(row);word[15:0]=16'(16'h9000+row);
+   word=0;word[255:240]=16'hc7a1;word[233:224]=10'(row);word[201:0]=expected_payload(row);
    for(integer k=0;k<8;k=k+1)write32(12'hf24,word[k*32+:32],k%3,0);
   end
   write32(12'hf28,ROWS<<12,1,0);write32(12'hf2c,LOOPS,0,0);

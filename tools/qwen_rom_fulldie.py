@@ -843,7 +843,7 @@ def masters(m, k=1, port_bits=None):
         if it.kind != 'spine_block' or it.master in M:
             continue
         b = mk(it.master, it.w, it.h, 7, f'spine reservation slab {it.master}')
-        if it.master == 'qfd_sp_vector_memory':
+        if it.master in ('qfd_sp_vector_memory', 'qfd_sp_vector_memory_par'):
             b.face('xw', CORRIDOR_BITS, 'W', 'M4', b.h / 2, 1)
             b.face('xe', CORRIDOR_BITS, 'E', 'M4', b.h / 2, 1)
             b.face('ar', IO_BITS, 'E', 'M4', b.h / 2 - 60, 2)
@@ -1328,8 +1328,13 @@ def case_real(m, work):
     write_netlist(m, k, work / 'die.v')
     write_pdn_tcl(work / 'pdn.tcl')
     die = m['die']
-    pl = ['set _blk [ord::get_db_block]'] + [f'ot_mts::place [$_blk findInst {it.name}] {it.x:.3f} {it.y:.3f} {it.orient}'
-                                           for it in m['insts']]
+    if os.environ.get('OT_MTS_BULK') == '1':
+        pl = ['set _blk [ord::get_db_block]', 'set _placements {}'] + [
+            f'lappend _placements [list [$_blk findInst {it.name}] {it.x:.3f} {it.y:.3f} {it.orient}]'
+            for it in m['insts']] + ['ot_mts::place_many $_placements', 'unset _placements']
+    else:
+        pl = ['set _blk [ord::get_db_block]'] + [f'ot_mts::place [$_blk findInst {it.name}] {it.x:.3f} {it.y:.3f} {it.orient}'
+                                             for it in m['insts']]
     (work / 'place.tcl').write_text('\n'.join(pl) + '\n')
     tcl = f"""# case (a): real-technology die floorplan, macro placement legality, on-track assert, pin access
 proc mem {{tag}} {{ set f [open /proc/self/status]; set s [read $f]; close $f

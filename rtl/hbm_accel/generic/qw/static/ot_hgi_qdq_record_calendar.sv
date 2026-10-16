@@ -29,7 +29,9 @@ module ot_hgi_qdq_record_calendar #(
         if(!rst_n)begin cfg_q<=0;start_q<=0;end
         else begin cfg_q<=cfg_we;start_q<=start_v;end
     reg running,have,waiting;
-    reg [9:0] next_pc;
+    // The full1024-row capacity needs an11-bit exhausted sentinel;
+    // a10-bit counter wraps to0 and silently replays the programme.
+    reg [10:0] next_pc;
     reg [10:0] limit;
     reg [93:0] current,pending;
     reg pending_v;
@@ -37,12 +39,12 @@ module ot_hgi_qdq_record_calendar #(
     wire due=running && have && cycle>=current[31:0] && beat<current[47:32];
     wire first=due && beat==0;
     wire last=due && beat+16'd1==current[47:32];
-    wire more={1'b0,next_pc}<limit;
+    wire more=next_pc<limit;
     wire legal_launch=!running && !cfg_q && limit_q>{1'b0,base_q} && limit_q<=1024;
     wire read_start=start_q && legal_launch;
     wire read_next=first && more;
     wire read_v=read_start|read_next;
-    wire [9:0] read_addr=read_start?base_q:next_pc;
+    wire [9:0] read_addr=read_start?base_q:next_pc[9:0];
     wire [255:0] macro_word;
     ot_sram_1r1w_1024x256_m2_r2c2 u_program(
         .clk(clk),.r_ce_in(read_v),.r_addr_in(read_addr),.rd_out(macro_word),
@@ -65,7 +67,7 @@ module ot_hgi_qdq_record_calendar #(
             if(start_q)begin
                 if(!legal_launch)fault<=1;
                 else begin running<=1;cycle<=0;have<=0;pending_v<=0;waiting<=1;
-                    next_pc<=base_q+1'b1;limit<=limit_q;beat<=0;end
+                    next_pc<={1'b0,base_q}+11'd1;limit<=limit_q;beat<=0;end
             end else if(running)cycle<=cycle+1;
             if(read_next)next_pc<=next_pc+1'b1;
             if(rv1)begin

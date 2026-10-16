@@ -56,7 +56,7 @@ module ot_hbm_su_reduce_static #(parameter AW=10)(
  .w_ce_in(wr),.w_addr_in(pd[5][9:3]),.wd_in(wdata),.w_mask_in(wm),.rr_en(2'b0),.rr_addr(14'b0),.cr_en(2'b0),.cr_sel(16'b0));
  ot_sram_1r1w_128x256_m1_r2c2 mb(.clk(clk),.r_ce_in(iv),.r_addr_in(ib[9:3]),.rd_out(qb),
  .w_ce_in(wr),.w_addr_in(pd[5][9:3]),.wd_in(wdata),.w_mask_in(wm),.rr_en(2'b0),.rr_addr(14'b0),.cr_en(2'b0),.cr_sel(16'b0));
- ot_hdc_fp32_add_lat #(.LAT(6)) u_add(.clk(clk),.rst_n(rst_local),
+ ot_hdc_fp32_add_lat #(.LAT(6),.DRST(0)) u_add(.clk(clk),.rst_n(rst_local),
  .valid_in(sv && (so==1 || so==2)),.a(av),.b(bv),
  .y(add_y),.err(add_err),.valid_out(add_v));
  // finite FP32 ordered compare, canonical positive zero for equal signed zeros.
@@ -67,14 +67,19 @@ module ot_hbm_su_reduce_static #(parameter AW=10)(
  wire [31:0] rounded=ex+32'h00007fff+{31'b0,ex[16]};
  wire [15:0] ex_bf16=(&ex[30:23])?ex[31:16]:rounded[31:16];
  integer i;
+ // r4: datapath/register identity may be arbitrary until its reset-valid bit arrives.
+ // Reset only valid/control state; tags, addresses and arithmetic data clock freely.
+ // This removes the 1,263-load r3 reset/enable cone without changing command latency.
+ always @(posedge clk) begin
+   po[0]<=so;pd[0]<=sd;pt[0]<=st;
+   px[0]<=(so==0)?sx:((so==3||so==5)?max_y:av);
+   for(i=1;i<6;i=i+1) begin po[i]<=po[i-1];pd[i]<=pd[i-1];pt[i]<=pt[i-1];px[i]<=px[i-1];end
+ end
  always @(posedge clk) begin
   if(!rst_local) begin pv<=0;scalar_valid<=0;fault<=0; end
   else begin
    scalar_valid<=0;
    pv<={pv[4:0],sv};
-   po[0]<=so;pd[0]<=sd;pt[0]<=st;
-   px[0]<=(so==0)?sx:((so==3||so==5)?max_y:av);
-   for(i=1;i<6;i=i+1) begin po[i]<=po[i-1];pd[i]<=pd[i-1];pt[i]<=pt[i-1];px[i]<=px[i-1];end
    if(iv && (iop>5 || ((iop==0||iop==1||iop==3)&&(&ix[30:23])))) fault<=1;
    if(sv && ((so==3||so==5)&&((&av[30:23])||(&bv[30:23])) || so==4&&(&av[30:23]))) fault<=1;
    if(pv[5]) begin

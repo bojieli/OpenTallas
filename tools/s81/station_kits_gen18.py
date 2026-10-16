@@ -64,6 +64,28 @@ def lef_macros(lef: str) -> dict:
     return out
 
 
+def die_pin_alt(mac: dict) -> dict:
+    """pin -> layer, the die generator's --stn-pin-alt rule (tools/dsrom_s81_fulldie.py _station_pin_layers) on the
+    generator slot: density per (face, layer) over the slot face length; > 12 b/um/layer -> every face with > 8 pins
+    alternates, sorted by position along the face, odd index M5 -> M3 / M4 -> M6, same coordinates"""
+    alt = {'M5': 'M3', 'M4': 'M6'}
+    dens = {}
+    for p in mac['pins']:
+        dens[(p['face'], p['layer'])] = dens.get((p['face'], p['layer']), 0) + 1
+    worst = max(n / (mac['h'] if f in 'EW' else mac['w']) for (f, _), n in dens.items())
+    if worst <= 12.0:
+        return {}
+    out = {}
+    for face in 'NSEW':
+        lst = sorted((p for p in mac['pins'] if p['face'] == face), key=lambda q: q['y'] if face in 'EW' else q['x'])
+        if len(lst) <= 8:
+            continue
+        for i, q in enumerate(lst):
+            if i % 2 and q['layer'] in alt:
+                out[q['pin']] = alt[q['layer']]
+    return out
+
+
 def snap(v: float) -> float:
     """outline dimension up to a multiple of 2.16 um (rows 0.27, sites 0.054, M4/M5 tracks): the generator's 17.256 /
     30.216 / ... slots are off that lattice and the exported view lost every full-length M5 PG stripe (child_lint (b)
@@ -98,6 +120,13 @@ def main() -> int:
     ap.add_argument('--snap', action='store_true', help='outline up to the 2.16-um lattice (PG full-length stripes)')
     ap.add_argument('--alt-vlayer', action='store_true', help='N/S-face data pins alternate M3 / M5 by bit index at the '
                     'generator coordinates (10.4 b/um/layer instead of 20.8 on M5 alone; verdict 10:00 pin_density limit 12)')
+    ap.add_argument('--pin-alt-die', action='store_true', help='S-DIE grant 10:35 (--stn-pin-alt, tools/dsrom_s81_fulldie.py '
+                    '_station_pin_layers): a master whose densest face exceeds 12 b/um/layer alternates layers by sorted face '
+                    'position (odd index; faces with > 8 pins): N/S M5 -> M3, W/E M4 -> M6 (PORT-only, needs an m6_pin_grant)')
+    ap.add_argument('--face-cut', action='store_true', help='FILL f6 (verdict 17:32: hstnh/hstnv_513 f5 GRT-0116, M3 95 %% / '
+                    'M4 66 %% on a 30-um face carrying 513 pins): grow the DATA FACE to the pin demand at cut <= 0.6 (N/S: '
+                    'M3/M5 alternation 0.12 um a pin; W/E: M4 0.16 um a pin; + 2 x 4.32 um) and spread every face evenly '
+                    '(tools/ref_tile/spread_face_pins.py); no M6 PORT-only pins needed (W/E <= 6.25 b/um on M4)')
     a = ap.parse_args()
     glue_txt = Path(a.glue).read_text()
     glue_sha = hashlib.sha256(glue_txt.encode()).hexdigest()
@@ -119,6 +148,8 @@ def main() -> int:
         fwd = mst.startswith(('dsfd_stnh_', 'dsfd_stnv_'))
         if fwd:      # forwarded-clock station: one fi0 -> negedge stage(s), fo0 = the kept forwarding INV of slice 0
             assert '.fclk_i(fi0[0])' in txt and '.fclk_o(fo0[0])' in txt and 'fi1' not in txt, mst
+        elif 'always @(posedge ck[0]) q <= di;' in txt:
+            pass     # glue already rendered with --hstn-posedge (GEN19b and later): taken byte-identical
         else:
             assert 'ot_fwd_clk_inv u_ck (.a(ck[0])' in txt, mst      # common-clock form (kept INV, negedge stage)
             # harden the --hstn-posedge form (tools/dsrom_s81_fulldie.py, same header, body = plain posedge flops on ck):
@@ -131,12 +162,27 @@ def main() -> int:
         if a.snap:
             dw, dh = snap(dw), snap(dh)
             grown = grown or ('w' if horiz_of(mst) else 'h')
+        face_grown = False
+        if a.face_cut:
+            per_face = {}
+            for p in mac['pins']:
+                per_face[p['face']] = per_face.get(p['face'], 0) + 1
+            if horiz_of(mst):       # data on W/E: the face length is the height
+                need = snap(max(per_face.get('W', 0), per_face.get('E', 0)) * 0.16 + 2 * 4.32)
+                if need > dh:
+                    dh, face_grown = need, True
+            else:                   # data on N/S: the face length is the width
+                need = snap(max(per_face.get('N', 0), per_face.get('S', 0)) * 0.12 + 2 * 4.32)
+                if need > dw:
+                    dw, face_grown = need, True
+            grown = grown or face_grown
         sha = hashlib.sha256(txt.encode()).hexdigest()
         (ROOT / RTL_DIR / f'{mst}.sv').write_text(txt)
         horiz = mst.startswith(('dsfd_hstnh_', 'dsfd_stnh_'))
         tcl = [f'# {mst}: die generator pin centres ({a.case}, pins.lef); outline {dw} x {dh}'
                + (f' (slot {mac["w"]} x {mac["h"]} grown in depth)' if grown else ' (= generator slot)')]
         faces = {}
+        alt_layer = die_pin_alt(mac) if (a.pin_alt_die and not face_grown) else {}
         scalar = set(re.findall(r'wire \[0:0\] (\w+)', txt))     # 1-bit vectors are scalars after synthesis (PPL-0061)
         for p in mac['pins']:
             x, y = p['x'], p['y']
@@ -149,6 +195,7 @@ def main() -> int:
             if a.alt_vlayer and p['face'] in 'NS' and bit and layer == 'M5' and int(bit.group(1)) % 2 and \
                     re.sub(r'\[\d+\]$', '', p['pin']) not in scalar:
                 layer = 'M3'
+            layer = alt_layer.get(p['pin'], layer)
             p = dict(p, layer=layer)
             pname = re.sub(r'\[0\]$', '', p['pin']) if re.sub(r'\[\d+\]$', '', p['pin']) in scalar else p['pin']
             tcl.append(f'place_pin -pin_name {{{pname}}} -layer {p["layer"]} -location {{{x:.6f} {y:.6f}}} -force_to_die_boundary')
@@ -222,13 +269,27 @@ def main() -> int:
                 ],
             },
         }
+        if face_grown:
+            spec['structural_change'] += (f' | f6 face-cut sizing (verdict 17:32 GRT-0116 on the 513-b f5 pilots): data face '
+                                          f'grown to the pin demand at cut <= 0.6 -> {dw} x {dh}; pins spread evenly per face '
+                                          '(spread_face_pins.py: N/S M3/M5 alternation, W/E M4, clock at face centre); the die '
+                                          'adopts this footprint + pin file (slot_change_request)')
         if grown:
             spec['slot_change_request'] = {
                 'reason': (f'recipe-2 content {AREA_BIT * wb + AREA_FIX:.0f} um2 exceeds util {UTIL_MAX} of the generator '
                            f'slot core {face_area(mac, horiz):.0f} um2; depth-only growth keeps every data pin coordinate'),
                 'outline': [dw, dh], 'generator_slot': [mac['w'], mac['h']]}
+        if face_grown:
+            spec['slot_change_request']['reason'] = ('f6: data face sized to the pin demand at cut <= 0.6 (0.12 um a pin N/S, '
+                                                     '0.16 um a pin W/E, + 8.64 um); pins spread evenly (io_tcl)')
+            spec['slot_change_request']['pins'] = spec['io_tcl']
         p = ROOT / SPEC_DIR / f'{name}.json'
         p.write_text(json.dumps(spec, indent=1) + '\n')
+        if face_grown:
+            r = subprocess.run([sys.executable, str(ROOT / 'tools/ref_tile/spread_face_pins.py'), str(p),
+                                str(ROOT / PIN_DIR / f'{mst}.tcl')], capture_output=True, text=True, cwd=ROOT)
+            if r.returncode:
+                raise SystemExit(f'{mst}: spread_face_pins: {(r.stdout + r.stderr)[-300:]}')
         summary.append((mst, wb, n, mac['w'], mac['h'], dw, dh, bool(grown), layers))
         if a.gen:
             r = subprocess.run([sys.executable, str(ROOT / 'tools/ref_tile/ref_tile.py'), 'gen', str(p)],

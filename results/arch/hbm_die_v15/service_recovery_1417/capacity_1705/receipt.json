@@ -1,0 +1,76 @@
+{
+ "schema": "opentallas.hbm.sm4pc-service-capacity.v1",
+ "decision": "Codex DECISION 2026-10-15 14:40: SM-specific 4-PC service engine, 13 SRAMs/SM (8 landing + 5 cache), 104/stack (+32 native response + 8 programme = 144/stack)",
+ "source_commit_engine": "62108b57c (Codex 8615bcdb9/8a4735880/28f965881 published by H-DIE 17:15 after re-running both archived-image stack benches: stack0 ff 320 records, stack1 1f 200 records, PASS, early-calendar mutant rejected)",
+ "source_sha256": {
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_stack_native.sv": "b89cf62353682bfcf5cd69eaf1662633405c48c4725f79140feb568a571f59b2",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_stack_programmed.sv": "4a8e454fd1e67004156470848af38d33a28e2463711316148db581c8ab33fdf6",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm4pc_cdc.sv": "ce93ef5deba686357d76240dbdc587547a047c86ea1ab19a52f8a71db0c43291",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm8_landing_bank.sv": "c942d942e6f1a922003687da535bdafb8d8ef484c2e5d10735f36fbf0adde2eb",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_native_sector_pipeline_stack.sv": "e64cfb071eb16aca278f75bb0a5bdba6793b8fb74e4928c1a5d217f87697e65d",
+  "rtl/hbm_accel/loader/service_native/tb_hbm_svc_sm_stack_capacity.sv": "c153df367d642c08a252e14cfc560cbb5b61cd90d0f5f8924edb8e14ac30c500",
+  "rtl/hbm_accel/loader/service_native/run_sm_stack_capacity.sh": "8b0b93cb441be15eb9ed68920d124a6c737e8fcac9ecc635da6cadf6e7138809",
+  "tools/hbm_die_v15/svc_capacity_images_1705.py": "414a2ca1524708286a86005b4ea0f596e0b6698be57fac2ea7bb5e5b7af76258",
+  "tools/hbm_svc_packed136_image.py": "cb4542a28de27913557f5f9425e2f82aabf62a155c87684559d685418b4889c4",
+  "results/arch/hbm_die_v15/checkpoint_allocation/book.json": "e39286069d40bdf866931704ab609c4955f77c6143090c32953eafa45c845f04"
+ },
+ "host": "ot-epyc1tb",
+ "bench": "rtl/hbm_accel/loader/service_native/run_sm_stack_capacity.sh <out> <images> <stack> 64",
+ "capacity": {
+  "rows_per_SM": 64,
+  "row_index_bits": 6,
+  "sectors_per_SM": 272,
+  "records_per_stack": 512,
+  "records_per_die": 2048,
+  "sectors_per_die": 8704,
+  "result": "PASS on all 4 stacks x 8 SMs (32 SMs, every SM on its own four PCs 4i..4i+3 checked per K command by the XOR PC hash)",
+  "over_capacity_65_rows": "REFUSED by the DUT at reservation (reserve_ready low -> bench fatal): the 64-row limit is enforced in hardware, fail-closed",
+  "early_calendar_mutant": "rejected on every stack (DUT fault)"
+ },
+ "all_SM_mapping": {
+  "sms": 32,
+  "stacks": 4,
+  "pcs_per_SM": 4,
+  "allocation": "checkpoint_allocation/book.json new_reservations (stack 3 SMs 24-31 are Engram-blocked on ranks 0-7 in the current book; allowed ranks 8-95; engram8 candidate removes the block)"
+ },
+ "measured_ps": {
+  "rows64": {
+   "cold_prefetch": 135415.612,
+   "copy": 69166.639,
+   "fixed_programme": 57499.977
+  },
+  "rows40_archived": {
+   "cold_prefetch": 112082.288,
+   "copy": 44166.649,
+   "fixed_programme": 37499.985
+  },
+  "marginal_prefetch": "24 extra rows = 100 sectors (3,200 B) in 23,333 ps = 137 GB/s per SM ~ the four-PC peak (4 x 32 B / 1.024 ns = 125 GB/s): the cold-fill marginal rate is PC-limited"
+ },
+ "sram": {
+  "per_stack": {
+   "ot_sram_1r1w_128x256_m1_r2c2 (94.824 x 41.064 um)": 136,
+   "ot_sram_1r1w_1024x256_m2_r2c2 (174.744 x 70.488 um)": 8
+  },
+  "per_stack_macro_area_mm2": 0.6281,
+  "per_die_macro_area_mm2": 2.5124,
+  "source": "yosys hierarchy of ot_hbm_svc_sm_stack_native STACK=0 (E1 synth svc_stack0)"
+ },
+ "external_test_data": true,
+ "logs_sha256": {
+  "stack0_early_mutant.log": "43f0e9c1881218f9c3ed53f61e5a574e486f04e88d84e3f5f613311dfc65dcad",
+  "stack0_positive.log": "11109c956e5a916829e757bc2d8e3fc5dcf62b6d49176def0f23ce934af8177f",
+  "stack0_rows65_overcapacity.log": "5ded1767ed3bd1f9f63e62e4e570f2b5f70142da237e459b221f74eb3e8134fe",
+  "stack1_early_mutant.log": "43f0e9c1881218f9c3ed53f61e5a574e486f04e88d84e3f5f613311dfc65dcad",
+  "stack1_positive.log": "4e0b8a8cbf29e13ba59cac888bddaa284f138c7051bcc9668ea79a47ac7821a3",
+  "stack2_early_mutant.log": "43f0e9c1881218f9c3ed53f61e5a574e486f04e88d84e3f5f613311dfc65dcad",
+  "stack2_positive.log": "76db9ccb769367d45eb0d327628d0e05369a8962b469f5f4fa5afc95f72acfd3",
+  "stack3_early_mutant.log": "43f0e9c1881218f9c3ed53f61e5a574e486f04e88d84e3f5f613311dfc65dcad",
+  "stack3_positive.log": "a50ed5c12982294d2f99aeda14eb7da0ecd27ec8442ff9817abe47029fb1d1ab"
+ },
+ "open": [
+  "double-buffer/epoch steady-state overlap throughput vs the 99 B/cycle/SM price (only cold single-epoch measured)",
+  "std-cell area of the 32 real PC controllers + 8 SM groups per stack (mapped synth running E1)",
+  "die structure: the die PHY abstract ot_hbm3e_phy_v41x_aw30_e8p5 still contains the HBM controller (modelled) -> owner rule 10-14 requires the real controller RTL (this engine) with a PHY-only abstract at the row/column boundary",
+  "PV lease / attention command join; physical views"
+ ]
+}

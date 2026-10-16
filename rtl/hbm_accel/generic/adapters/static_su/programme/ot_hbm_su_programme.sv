@@ -26,7 +26,8 @@ module ot_hbm_su_programme #(
   parameter integer LINE_BITS=9688, EDGES=7111,
   parameter integer COLS=(LINE_BITS+255)/256,
   parameter integer INDEX_GROUPS=(COLS+15)/16,
-  parameter integer INDEX_BANKS=(EDGES+127)/128,
+  parameter integer INDEX_PACK=1,
+  parameter integer INDEX_BANKS=(EDGES+128*INDEX_PACK-1)/(128*INDEX_PACK),
   parameter integer DICT_BANKS [0:COLS-1]='{default:1},
   parameter integer MACROS=INDEX_GROUPS*INDEX_BANKS+COLS
 )(input logic clk, rst_n, input logic [MACROS-1:0] clk_macro,
@@ -48,13 +49,24 @@ module ot_hbm_su_programme #(
   initial if(MACROS!=TOTAL_BANKS) $fatal(1,"programme MACROS capacity mismatch");
   logic issue,v1,v2;
   logic [15:0] pc, count, e1,e2;
+  wire [INDEX_GROUPS*256-1:0] index_rows;
   wire [INDEX_GROUPS*256-1:0] indices;
+  localparam integer INDEX_SHIFT=$clog2(INDEX_PACK);
+  initial if(INDEX_PACK<1 || INDEX_PACK>16 || (INDEX_PACK & (INDEX_PACK-1))!=0 || (INDEX_PACK!=1 && COLS!=1))
+    $fatal(1,"packed programme indices require power-of-two pack<=16 and exactly one dictionary column");
+  generate if(INDEX_PACK==1)begin:g_unpacked_index
+    assign indices=index_rows;
+  end else begin:g_packed_index
+    logic [INDEX_SHIFT-1:0] word_slot;
+    always_ff @(posedge clk)if(issue)word_slot<=pc[INDEX_SHIFT-1:0];
+    assign indices={240'd0,index_rows[16*word_slot+:16]};
+  end endgenerate
   wire [COLS*256-1:0] templates;
   wire write_enable=cfg_we && !busy && cfg_bank<TOTAL_BANKS;
   for(genvar g=0;g<INDEX_GROUPS;g=g+1) begin:ix
     ot_hbm_su_programme_mem #(.BANKS(INDEX_BANKS),.BASE(g*INDEX_BANKS)) mem(
-      .clk(clk),.clk_macro(clk_macro[g*INDEX_BANKS+:INDEX_BANKS]),.ren(issue),.addr(pc),.cfg_we(write_enable),.cfg_bank(cfg_bank),
-      .cfg_row(cfg_row),.cfg_data(cfg_data),.data(indices[g*256+:256]));
+      .clk(clk),.clk_macro(clk_macro[g*INDEX_BANKS+:INDEX_BANKS]),.ren(issue),.addr(pc >> INDEX_SHIFT),.cfg_we(write_enable),.cfg_bank(cfg_bank),
+      .cfg_row(cfg_row),.cfg_data(cfg_data),.data(index_rows[g*256+:256]));
   end
   for(genvar c=0;c<COLS;c=c+1) begin:dt
     ot_hbm_su_programme_mem #(.BANKS(DICT_BANKS[c]),.BASE(dict_base(c))) mem(

@@ -19,7 +19,8 @@ import argparse, collections, hashlib, json, sys
 from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import group_placement_opt as G
-from hub_face_repin_search import abacus, edge_stats, along, pack_face
+from hub_face_repin_search import edge_stats, along
+from repin_lattice import pack_lattice_face, translation_period_nm
 PA = G.PA
 # partner-only kinds: hard IP, ROM macros, immutable field children, stations/relays (hop finalization owns them)
 FIXED_KINDS = {'phy', 'link', 'pqrom', 'bf', 'bfcol', 'seq', 'cfg', 'q', 'qbank', 'node', 'rly', 'stn', 'sstn', 'hstn', 'rstg'}
@@ -66,7 +67,8 @@ def run(plan_path, lef_path, out_path, iters, kinds, reorder, only_masters=None)
                   plan_scope=plan.get('scope'), plan_variant_rev=plan.get('variant', {}).get('rev'),
                   rules=dict(kinds=sorted(kinds), fixed_kinds=sorted(FIXED_KINDS), kind_counts=dict(sorted(__import__('collections').Counter(kind.values()).items())), reorder=reorder, master_level=True, partner_side_fixed=True,
                              hub_station_reach_um=215.0, geometry_bound_um=500.0,
-                             anchored='pins without a data edge (clock/reset/exempt/unused) do not move'),
+                             anchored='pins without a data edge (clock/reset/exempt/unused) do not move',
+                             translation_lattice='integer nm LCM of every rigid group member layer pitch; source residues preserved'),
                   missing_edges=m.missing, masters={})
     # (inst, port) -> [(edge, end)]
     use = collections.defaultdict(list)
@@ -128,9 +130,14 @@ def run(plan_path, lef_path, out_path, iters, kinds, reorder, only_masters=None)
                     anchored = any(s['port'] is None for s in g['m'])
                     w = sum(s['w'] for s in g['m'])
                     t = 0.0 if anchored else sum(s['w'] * s['t'] for s in g['m']) / w
-                    rows.append(dict(width=g['hi0'] - g['lo0'], desired=g['lo0'] + t, w=ANCHOR_W if anchored else w,
-                                     anchored=anchored))
-                new = pack_face(rows, flo, fhi, reorder)    # anchors immovable; reorder within anchor intervals
+                    layers = {pp[n][3] for s in g['m'] if s['port'] is not None
+                              for n in ports[s['port']]['names']}
+                    rows.append(dict(start=g['lo0'], width=g['hi0'] - g['lo0'], desired=g['lo0'] + t,
+                                     w=ANCHOR_W if anchored else w, anchored=anchored,
+                                     period_nm=translation_period_nm(layers) if layers else 1))
+                # Preserve source pin residues. Continuous abacus translations,
+                # even rounded to 1 nm, can destroy a master's common origin.
+                new = pack_lattice_face(rows, flo, fhi, reorder)
                 for g, x in zip(groups, new):
                     for s in g['m']:
                         if s['port'] is not None:

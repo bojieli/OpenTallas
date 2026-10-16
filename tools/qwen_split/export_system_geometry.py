@@ -22,11 +22,12 @@ def export(v, model):
     widths = v.port_widths(model, 1)
     pins = {}
     for name, master in masters.items():
-        pins[name] = dict(w=master.w, h=master.h,
+        pins[name] = dict(w=master.w, h=master.h, generated_obstruction_top=master.obs_top,
             pins=[dict(name=n, layer=L, rect=list(r))
                   for n, L, r in v.pin_rects(master, 1,
                       {q: widths.get((name, q), 0) for q in master.order})])
-    return dict(schema='opentallas.qwen.system-geometry.v1',
+    from qwen_split.gfp_homes import source_fingerprint
+    return dict(source_model_sha256=model.get('gfp_source_fingerprint') or source_fingerprint(model), schema='opentallas.qwen.system-geometry.v1',
         scope='complete generated graph and local physical pin rectangles; no routed qualification',
         die=model['die'],
         insts=[dict(n=i.name, m=i.master, x=i.x, y=i.y, w=i.w, h=i.h, o=i.orient)
@@ -39,6 +40,15 @@ def export(v, model):
         relay_equal_groups=model.get('relay_equal_groups', {}),
         centroid_only_pins=[dict(instance=i, port=p, xy=list(xy))
                             for (i,p),xy in (getattr(v,'PIN_POS_EXTRA',None) or {}).items()],
+        routing_capacity_model=dict(
+            scope='Generated die GRT planning contract; actual bound-view OBS, PG shapes, via spacing and detailed route remain authoritative',
+            source='tools/qwen_rom_fulldie.py write_grt_tcl / write_pdn_tcl',
+            disabled_grt_layers=['M2','M3','M4','M5'],
+            directional_layers=dict(horizontal=['M6','M8'],vertical=['M7','M9']),
+            track_geometry_um=dict(v.TRK), via_obs_fraction=v.VIA_OBS,
+            pg_coverage_per_net_by_kind=dict(v.REGION_PG),
+            regional_layer_adjustment={k:v.VIA_OBS+2*cov for k,cov in v.REGION_PG.items()},
+            pg_stripe_width_um=.48, pg_layers=['M8','M9'], regions=model.get('regions', [])),
         constraints=dict(per_hop_um=500, cut_max=.60,
             actual_registered_pin_reach_required=True,
             all_clocks_require_measured_insertion_and_compensated_phase=True,
