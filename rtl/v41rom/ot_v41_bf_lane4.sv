@@ -26,6 +26,12 @@ module ot_v41_bf_lane4 #(
 `else
     wire lane_fclk=fclk;
 `endif
+    // Relocated final parent XST stage: no end-to-end cycle is added.
+    wire bclk,brst;
+    ot_v41_tile_clk u_boundary(.fclk(lane_fclk),.rst_pin(rst_pin),.ze_d(ze_d),.gclk(bclk),.rst_n(brst));
+    reg v_d;reg[63:0]w_d,x_d;reg[TW-1:0]t_d;
+    always @(posedge bclk or negedge brst)if(!brst)v_d<=1'b0;else v_d<=v_s;
+    always @(posedge bclk)begin w_d<=w_s;x_d<=x_s;t_d<=t_p;end
     genvar l;
     generate for (l = 0; l < 4; l = l + 1) begin : g_l
         // lane tile: local gated clock lclk / reset lrst; the lane's own boundary registers (16-bit word and x slices,
@@ -39,8 +45,8 @@ module ot_v41_bf_lane4 #(
 `endif
         reg [15:0] w_r, x_r;
         reg        v_r;
-        always @(posedge lclk or negedge lrst) if (!lrst) v_r <= 1'b0; else v_r <= v_s;
-        always @(posedge lclk) begin w_r <= w_s[16*l +: 16]; x_r <= x_s[16*l +: 16]; end
+        always @(posedge lclk or negedge lrst) if (!lrst) v_r <= 1'b0; else v_r <= v_d;
+        always @(posedge lclk) begin w_r <= w_d[16*l +: 16]; x_r <= x_d[16*l +: 16]; end
         ot_v41_bmul2_rne_prepare #(.GRADUAL_RNE(GRADUAL_RNE), .XS(RC != 0 ? 1 : 0)) u_m (.clk(lclk), .rst_n(lrst), .v(v_r), .a({w_r, 16'd0}), .b({x_r, 16'd0}),
                          .y(prod[l]), .fault(pf[l]));
         reg [PL-1:0] vp;
@@ -48,16 +54,16 @@ module ot_v41_bf_lane4 #(
         assign pv[l] = vp[PL-1];
         if (RC >= 2) begin : g_cu
         ot_v41_chain2u2 #(.NCH(NCHB), .TW(TRW + 1), .CUT(CUT)) u_c (.clk(lclk), .rst_n(lrst), .v(pv[l]),
-            .slot(t_p[TW-1 -: HW]), .first(t_p[TRW+2]), .last(t_p[TRW+1]), .term(prod[l]), .term_f(pf[l]),
-            .tag(t_p[TRW:0]), .ov(cv[l]), .osum(cs[l]), .of(cf[l]), .otag(ct[l]), .fault(cfault[l]));
+            .slot(t_d[TW-1 -: HW]), .first(t_d[TRW+2]), .last(t_d[TRW+1]), .term(prod[l]), .term_f(pf[l]),
+            .tag(t_d[TRW:0]), .ov(cv[l]), .osum(cs[l]), .of(cf[l]), .otag(ct[l]), .fault(cfault[l]));
         end else if (RC != 0) begin : g_c4
         ot_v41_chain4 #(.PD(1), .ND(4), .NCH(NCHB), .TW(TRW + 1), .CUT(CUT)) u_c (.clk(lclk), .rst_n(lrst), .v(pv[l]),
-            .slot(t_p[TW-1 -: HW]), .first(t_p[TRW+2]), .last(t_p[TRW+1]), .term(prod[l]), .term_f(pf[l]),
-            .tag(t_p[TRW:0]), .ov(cv[l]), .osum(cs[l]), .of(cf[l]), .otag(ct[l]), .fault(cfault[l]));
+            .slot(t_d[TW-1 -: HW]), .first(t_d[TRW+2]), .last(t_d[TRW+1]), .term(prod[l]), .term_f(pf[l]),
+            .tag(t_d[TRW:0]), .ov(cv[l]), .osum(cs[l]), .of(cf[l]), .otag(ct[l]), .fault(cfault[l]));
         end else begin : g_c2
         ot_v41_chain2 #(.NCH(NCHB), .TW(TRW + 1), .CUT(CUT)) u_c (.clk(lclk), .rst_n(lrst), .v(pv[l]),
-            .slot(t_p[TW-1 -: HW]), .first(t_p[TRW+2]), .last(t_p[TRW+1]), .term(prod[l]), .term_f(pf[l]),
-            .tag(t_p[TRW:0]), .ov(cv[l]), .osum(cs[l]), .of(cf[l]), .otag(ct[l]), .fault(cfault[l]));
+            .slot(t_d[TW-1 -: HW]), .first(t_d[TRW+2]), .last(t_d[TRW+1]), .term(prod[l]), .term_f(pf[l]),
+            .tag(t_d[TRW:0]), .ov(cv[l]), .osum(cs[l]), .of(cf[l]), .otag(ct[l]), .fault(cfault[l]));
         end
     end endgenerate
 endmodule

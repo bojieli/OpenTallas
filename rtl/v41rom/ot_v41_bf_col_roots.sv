@@ -122,7 +122,7 @@ module ot_v41_bf_col_roots #(
 `ifndef SYNTHESIS
     initial if (!(NSEG==8 && NCH==16 && NCHB==8 && MTP==1 && BP==0 &&
         FAST==1 && PP==1 && QPIPE==1 && QP_CAP==0 && QP_P1==1 && QP_CSAM==10 &&
-        QZ_NS==8 && QX==10 && QBF==2 && TCG==1))
+        QZ_NS==8 && QX==10 && QBF==2 && TCG==1 && BXST==2 && FXST==2))
         $fatal(1, "ten-root extraction supports the source-pinned production column only");
 `endif
     wire q_v,q_err;wire[31:0]q_val;wire[TG:0]q_tag_native;
