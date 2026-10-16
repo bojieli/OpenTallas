@@ -27,6 +27,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from view_case import lef_pins, lef_xy  # noqa: E402
+import clock_sites
 import die_clock_tree as dct  # noqa: E402
 
 GRANTS = ROOT / 'results/arch/hier_contract_1015/hbm_v15.json'
@@ -491,6 +492,7 @@ def main():
                     l2.append((ld[0], ren(ld[1])))
             tnets.append((ren(n), d2, l2))
         trees[dom] = dict(buffers=bufs, nets=tnets, model=t['model'], port=port)
+    clock_sites.allocate(trees, W, H, obs)
     leafclk = {}
     for dom, t in trees.items():
         for n, d, loads in t['nets']:
