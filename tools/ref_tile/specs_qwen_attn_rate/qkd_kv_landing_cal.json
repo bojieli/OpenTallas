@@ -1,0 +1,133 @@
+{
+ "name": "qkd_kv_landing_cal",
+ "top": "qkd_kv_landing_cal",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_sys/static_kv_20261014/qkd_kv_landing_cal.sv"
+ ],
+ "params": {
+  "MUT": 0,
+  "PH0": 0
+ },
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 30.24,
+  "h": 30.24
+ },
+ "layer_cap": "M5",
+ "macros": [],
+ "pins": {
+  "W": [
+   "cfg_we",
+   "cfg_addr",
+   "cfg_data"
+  ],
+  "N": [
+   "ck",
+   "rst_n",
+   "kgo",
+   "vgo",
+   "ctx_t",
+   "epoch",
+   "layer"
+  ],
+  "E": [
+   "r_put",
+   "r_sector",
+   "r_epoch",
+   "r_layer"
+  ],
+  "S": [
+   "arm",
+   "l_epoch",
+   "l_layer",
+   "l_put",
+   "l_sector",
+   "fault"
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 4,
+  "peak_ram_gb": 8,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "m5_pg_pitch": 2.7
+ },
+ "recipe": 3,
+ "purpose": "Q-VMWB 2026-10-16: landing-side KV calendar leaf (KV die MISSING_PRODUCER, Q-KVSYS-DIE request): one master, 32 per die beside each static landing group; drives the group's arm/epoch/layer/expected_put/sector and its 4 return slots' expected_* from compiled kgo/vgo, T and boot cfg. Static: no data/ready/credit input. PH0 = die beat-aligned reset phase (0).",
+ "job": {
+  "owner": "Claude:Q-ATTN-RATE",
+  "branch": "claude/q-vmwb-0030",
+  "tag": "c1",
+  "purpose": "Q-VMWB 2026-10-16: landing-side KV calendar leaf (KV die MISSING_PRODUCER, Q-KVSYS-DIE request): one master, 32 per die beside each static landing group; drives the group's arm/epoch/layer/expected_put/sector and its 4 return slots' expected_* from compiled kgo/vgo, T and boot cfg. Static: no data/ready/credit input. PH0 = die beat-aligned reset phase (0).",
+  "benches": [
+   {
+    "name": "exact_vs_kv_calendar",
+    "cmd": "bash tools/qwen_static_kv/run_landing_cal.sh {RUN}/bench/lc 1 77 2048 4300 4500 8192",
+    "expect": "pass",
+    "pass_regex": "^RESULT OK landing_cal positives_pass=",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "mut_v_sector",
+    "cmd": "MUTONLY=1 bash tools/qwen_static_kv/run_landing_cal.sh {RUN}/bench/m1 2048 8192",
+    "expect": "fail",
+    "pass_regex": "^RESULT OK landing_cal",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "mut_phase",
+    "cmd": "MUTONLY=2 bash tools/qwen_static_kv/run_landing_cal.sh {RUN}/bench/m2 700 8192",
+    "expect": "fail",
+    "pass_regex": "^RESULT OK landing_cal",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ],
+  "extra_paths": [
+   "rtl/qwen_sys/static_kv_20261014",
+   "rtl/test/qwen_static_kv",
+   "tools/qwen_static_kv",
+   "tools/qwen_static_schedule",
+   "tools/qwen_kv_die",
+   "tools/qwen_attention_native",
+   "results/arch/qwen_split_1014/kvsys_v1_4_3_design"
+  ],
+  "views_to": "physical/ref_tile/qkd_kv_landing_cal/views",
+  "record_to": "results/rtl/ref_tile/qkd_kv_landing_cal"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "the RTL registers every input at its pin (rn, kgo_q/vgo_q/we_q, ad_q/cd_q/ctx_q/ep_q/ly_q) and every output is a register"
+ },
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R",
+  "out_cell": "HB1xp67_ASAP7_75t_R"
+ },
+ "structural_change": "Q-VMWB 2026-10-16: landing-side KV calendar leaf (KV die MISSING_PRODUCER, Q-KVSYS-DIE request): one master, 32 per die beside each static landing group; drives the group's arm/epoch/layer/expected_put/sector and its 4 return slots' expected_* from compiled kgo/vgo, T and boot cfg. Static: no data/ready/credit input. PH0 = die beat-aligned reset phase (0)."
+}
