@@ -1067,7 +1067,7 @@ def routed_report(P, nets, W, H, G=100.0, pg=None, router='maze', **kw):
             reach[tuple(sorted((ta, tb)))] += 1
     return dict(model=('PathFinder maze' if router == 'maze' else 'Z-pattern') + ' global route on gcells (bundled, split <= %d bits)' % kw.get('chunk', 64),
                 gcell_um=G, cap_bits_per_gcell_edge=round(cap, 1), connections=len(conns), bundles=nb, pieces=npieces,
-                worst_share=round(max(sh), 3), edges_over_060=sum(v > 0.60 for v in sh), edges=len(sh),
+                worst_share=round(max(sh), 3), edges_over_060=int(sum(v > 0.60 for v in sh)), edges=len(sh),
                 p99_share=round(sorted(sh)[int(0.99 * len(sh))], 3), face_pin_bits=dict(face_bits),
                 worst_horizontal_line=dict(share=round(max(hl)[0], 3), y_um=max(hl)[1],
                                            lines_over_060=sum(v > 0.60 for v, _ in hl), lines=len(hl)),
