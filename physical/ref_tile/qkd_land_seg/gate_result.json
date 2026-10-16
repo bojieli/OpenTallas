@@ -1,14 +1,14 @@
 {
  "schema": "opentallas.ref_tile.gate_result.v2",
  "kit": "qkd_land_seg",
- "verdict": "FAIL",
- "generated": "2026-10-16T02:35:40-0700",
- "host": "ot-epyc1tb",
+ "verdict": "WARN",
+ "generated": "2026-10-16T02:57:15-0700",
+ "host": "ot-epyc4",
  "cts": true,
  "commit": null,
  "source_binding": {
   "schema": "opentallas.ref_tile.source_snapshot.v1",
-  "start_commit": "5ae496da1e791907dfc5a3d8e778bd4aa259e358",
+  "start_commit": "c0f26c8dc3763e97f93a6940a3ebbb8978469d4a",
   "commit": null,
   "identity": "exact_content_snapshot",
   "daemon_tree": "/home/ubuntu/wt-claude-closure-daemon-1010",
@@ -21,8 +21,8 @@
    "tools/orfs_hold_mm.tcl",
    "tools/textbook_lint.py"
   ],
-  "archive_sha256": "26737caa4128308495740a7fc8cec5d21391c8b3a6150f9d862037138bd8ac12",
-  "manifest_sha256": "9f0ae74ba60c2782065b1e5e57b1ada5149d0735fc9aa9388295bc0782ecf04f",
+  "archive_sha256": "ec4b445fd31f28dd19f21efcea3798b207462aa41cfabac4607830ca419decf0",
+  "manifest_sha256": "3d3c9578af5a2cfa55e6b2b6d9f0e1fd4553bba8f4c35a7c2ff47588032ae0b4",
   "files": [
    {
     "path": "physical/common_flow/anchor_row_packing.tcl",
@@ -17939,24 +17939,24 @@
    {
     "path": "physical/ref_tile/qkd_land_seg/floorplan.json",
     "kind": "file",
-    "sha256": "9661e2ede31135caad3fc52369e596561551ce567726acc272286d0a0f25e562",
-    "git_blob": "40faaa9212c7dd72a7c67732f81d71a1116fcea3",
+    "sha256": "c5cde7ab99323ae82f6d7db4b4ac6e4a4cb1ff900c956a2ad8b19adb9282565d",
+    "git_blob": "cffaf0664f1d9767c826b1df94c61c2e5f25cc74",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
    {
     "path": "physical/ref_tile/qkd_land_seg/job.json",
     "kind": "file",
-    "sha256": "76b5de1e1304773e2d9d615398424f293120442f5f2b694184b5cad2e97c1608",
-    "git_blob": "4291d267432b42054697a638fffa0bffbd56c798",
+    "sha256": "435b005ff895f1bd87b30bd0358499eef045a9152f274259088203c7c36140b1",
+    "git_blob": "bef3becbc768e589fb9b8ba30eb33d8b8a4077ce",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
    {
     "path": "physical/ref_tile/qkd_land_seg/kit.env",
     "kind": "file",
-    "sha256": "9ad7aaaad0de1d848b93c5288ae9aed35e08f12989ec2dcfdd24ca948681e157",
-    "git_blob": "b1bf18855cf876f1e4ede6a2c581d8fa16e1a68c",
+    "sha256": "0dc1b4351e4d5a148adc9af33822ce0eda5afc2a52af72e06b7f9d814707cfe7",
+    "git_blob": "ad8bb6a2d56b0a52fb267ad4419d6cf0359737a6",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -18059,8 +18059,8 @@
    {
     "path": "physical/ref_tile/qkd_land_seg/spec.json",
     "kind": "file",
-    "sha256": "bbac8cbb08458ee361053031300e15df2514de64ba7ebc815999cbfe44f385ee",
-    "git_blob": "fed76db6048166c39379e0039bab41106bb3a470",
+    "sha256": "376756b06c17931d651a3c54d50712d21f3710f7e1b9ce2e1540517817233fa4",
+    "git_blob": "9e08a643a3b07d811e28ccb344901f48351c2070",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -55819,8 +55819,8 @@
    {
     "path": "rtl/qwen_sys/split_20261014/qkd_land_seg.sv",
     "kind": "file",
-    "sha256": "250196042b9f591c5ef17d9654441a8a78c69d9fafe63fd8665f59020ef4206f",
-    "git_blob": "eab80ac703a1b458807d8b8bcd27755b5c6e9308",
+    "sha256": "f074ab6ce9df490542498a3b8bb724b85cfbb51d85711a4656bfcfdb7763f76f",
+    "git_blob": "01c154d4d7fe150af38f7c6f50220d4a07b759c0",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -109779,8 +109779,8 @@
    {
     "path": "tools/qwen_kv_die/land_segments.py",
     "kind": "file",
-    "sha256": "236cef31abcccf77ec7da3ca0d2c417a9afe5afc09f05deb3d3d9674caa24e91",
-    "git_blob": "e9058e00a08edc6c1c31315d3e3785c49bb4d8bd",
+    "sha256": "8e8b0aee200eebbd655f89d4df83baf4370ccf653fadb14291b249cf661d329d",
+    "git_blob": "707639eb5fbd97c658c24a27a973fe70d4b35d4f",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -150635,14 +150635,14 @@
   ],
   "disk_admission": {
    "reserve_gb": 20,
-   "archive_bytes": 143006306,
-   "unpacked_bytes": 898027520,
+   "archive_bytes": 143006507,
+   "unpacked_bytes": 898031616,
    "pick_gb": 22,
    "runtime_gb": 22
   },
   "route_overlay_plan": {
    "schema": "opentallas.closure_loop.helper_overlay_plan.v1",
-   "origin_main": "59e22f4dba14cbbf93209125ce99ffa25897cfe4",
+   "origin_main": "b11bbff49761a337d66fc4163133d619934b8327",
    "content_sha256": "0918b61809bbdb2fac88c3e1aa4f0fbff72af4b16806d94b2e532c40d8fbf235",
    "files": [
     {
@@ -152154,8 +152154,8 @@
     "physical/ref_tile/qkd_land_pc/views/qkd_land_pc/qkd_land_pc_tt.lib": "38e91ecc437d5f4df429db8ebc6cca390231097b89cbc9c414d95cdccd5c8991",
     "physical/ref_tile/qkd_land_seg/clock.sdc": "b602f60ee9718cac37a60f109b5cac29f895598672c9b104850baf3725b99d6b",
     "physical/ref_tile/qkd_land_seg/clock_entry.sdc": "1c2a35fb650e7c70e0c88a61c2d48712d583966fd768921d7cec3cac41bf8c8e",
-    "physical/ref_tile/qkd_land_seg/floorplan.json": "9661e2ede31135caad3fc52369e596561551ce567726acc272286d0a0f25e562",
-    "physical/ref_tile/qkd_land_seg/kit.env": "9ad7aaaad0de1d848b93c5288ae9aed35e08f12989ec2dcfdd24ca948681e157",
+    "physical/ref_tile/qkd_land_seg/floorplan.json": "c5cde7ab99323ae82f6d7db4b4ac6e4a4cb1ff900c956a2ad8b19adb9282565d",
+    "physical/ref_tile/qkd_land_seg/kit.env": "0dc1b4351e4d5a148adc9af33822ce0eda5afc2a52af72e06b7f9d814707cfe7",
     "physical/ref_tile/qkd_land_seg/pdn.tcl": "3d41e3aae55c2a65b785273c452671fda020ec6dc8e212c7bef6e6726dbb71fe",
     "physical/ref_tile/qkd_land_seg/pin_regs.json": "416adc801f130058e627d162e32dc39d74dff88cd66bd412c6572cd1b45ee668",
     "physical/ref_tile/qkd_land_seg/place.tcl": "24ec899ec04e3ffcd58c61dc883a02ad3d3e0f728987318e868ccd1a89873dca",
@@ -152168,7 +152168,7 @@
     "physical/ref_tile/qkd_land_seg/pre_fill.tcl": "c1ad6bd65cb4644cafc56cbaf57ff464de4faf4597e5e4bea387bbe4693c8440",
     "physical/ref_tile/qkd_land_seg/pre_grt.tcl": "64264a66feff37a733f80bc09bad7642a84657f27241421c673a7e4ffd75c737",
     "physical/ref_tile/qkd_land_seg/signoff.sdc": "4d1a449244105396d471c819adee67d776c6d868cf1f288075c74b6993c0cd8c",
-    "physical/ref_tile/qkd_land_seg/spec.json": "bbac8cbb08458ee361053031300e15df2514de64ba7ebc815999cbfe44f385ee",
+    "physical/ref_tile/qkd_land_seg/spec.json": "376756b06c17931d651a3c54d50712d21f3710f7e1b9ce2e1540517817233fa4",
     "rtl/hdc/nearhbm/ot_nhb_tiles.sv": "c4a400dfcada2f15c6ed1b32c93474bb71c20d7c98c9bc0f94c6092f19a44fa4",
     "rtl/hdc/nearhbm/ot_qkd_ahub_core.sv": "5e2479bdfc9eb39eeb6e995a0af6dc47a48886dfa948f10eb912c09b1b6a5dfb",
     "rtl/hdc/nearhbm/ot_qkd_ahub_static.sv": "7addde0cfaf04679d32b9e69b35d2240054516f0a496822185ad42bfdfaeaa4c",
@@ -152528,7 +152528,7 @@
     "rtl/qwen_sys/split_20261014/qkd_host_root_pt.sv": "b7a1a282eb02f00dd0b7e70a7a633f59aec7fdcf3f1c961b0e6eeb560b1291f2",
     "rtl/qwen_sys/split_20261014/qkd_land_emb_ifw.sv": "2fa2686027b7366799b1188874510a8f16b0354860e0189c7e1d8a0b6f6d41f3",
     "rtl/qwen_sys/split_20261014/qkd_land_grp_epoch.sv": "01bf061408b4000ece8a59a2f48869b824b2a1c45c9805861ef6319c6a63d582",
-    "rtl/qwen_sys/split_20261014/qkd_land_seg.sv": "250196042b9f591c5ef17d9654441a8a78c69d9fafe63fd8665f59020ef4206f",
+    "rtl/qwen_sys/split_20261014/qkd_land_seg.sv": "f074ab6ce9df490542498a3b8bb724b85cfbb51d85711a4656bfcfdb7763f76f",
     "rtl/qwen_sys/split_20261014/qkd_native59_command_guard.sv": "d0d111ef6d9ab4d99722279fad879e1e31089a6a553ea9b4dd3863c27348baf9",
     "rtl/qwen_sys/split_20261014/qkd_native59_descriptor_producer.sv": "ae0e6f50c68e316271c344f225eb2730bcf54f05fa3d4df4343d684379ca8495",
     "rtl/qwen_sys/split_20261014/qkd_native_attention_programme.sv": "bb89cd9a6f38ffa8243bf363e1faf1085901ad9390c889f9158dde4cc378dd76",
@@ -152956,7 +152956,7 @@
     "tools/qwen_kv_die/kvsys_window.py": "5b85ad346427b34505de9f5d7d12a2011ffb1dc825a76a8ca778a1af309c62ca",
     "tools/qwen_kv_die/kvwq_leaf_reuse_gate.py": "36e5d811e6af5312226746751cea0d44d9f560b15872ab7cccf96d14c8d367a2",
     "tools/qwen_kv_die/land_epoch_bench.sh": "79285905d6dc7136f559192978d7c4c7e5f4509f5f9961638fa3b5a133296864",
-    "tools/qwen_kv_die/land_segments.py": "236cef31abcccf77ec7da3ca0d2c417a9afe5afc09f05deb3d3d9674caa24e91",
+    "tools/qwen_kv_die/land_segments.py": "8e8b0aee200eebbd655f89d4df83baf4370ccf653fadb14291b249cf661d329d",
     "tools/qwen_kv_die/native_attention_record_gate.py": "d2cf615dd11e6bba2b5d05d7e5714da0e22dd86ad3cf4c43b1a66f457277e562",
     "tools/qwen_kv_die/native_command_guard_gate.py": "5ae217e6599489efa4cad16ec359e0cb99aa6a56061d01cc0e71b42d10427aa9",
     "tools/qwen_kv_die/native_er_bench.sh": "f405d87a678a535faf053f820d400a629dd33167873f9f094e459a07a7bdb1c1",
@@ -153175,16 +153175,16 @@
    },
    "digest": "628b2f020b4fa900ede628ccb0af39d4f04a3f8f4d468699d7e36cb43e55c53a"
   },
-  "captured": "2026-10-16T02:23:32-0700",
+  "captured": "2026-10-16T02:48:06-0700",
   "route_hold_context": {
    "HM": "0.03",
    "OT_ROUTE_HOLD_CORNERS": "mm",
    "OT_MM_FF_SDC": "physical/ref_tile/qkd_land_seg/signoff.sdc"
   },
-  "remote_script_sha256": "526ee917ed65b8ed13e38d7f204dc41b6b38f285cf20b0a9bed9c486e3cfd56a",
+  "remote_script_sha256": "f5f344551cb1ddeea7a4b094c191f53a919b4e563f1d830f3d388c6c7fa896a7",
   "tool_image_requested": "openroad/orfs:latest",
-  "remote_host": "ot-epyc1tb",
-  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/qkd_land_seg-20261016-022222",
+  "remote_host": "ot-epyc4",
+  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/qkd_land_seg-20261016-024557",
   "remote_archive_verified": true,
   "runtime_tool_provenance": [
    "GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=[\"openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29\"]",
@@ -153474,10 +153474,10 @@
    "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
   },
   {
-   "severity": "FAIL",
+   "severity": "WARN",
    "check": "fill",
-   "message": "fill 24% = (hard macros 85847.0 + synthesized std cells 0.3) / outline 365783.0 um2; pin demand per face: S 594 pins over 139.5/241.9 um (58%), N 594 pins over 139.5/241.9 um (58%), W 2143 pins over 1134.0/1512.0 um (75%), E 3354 pins over 1248.4/1512.0 um (83%) (< 35%)",
-   "fix": "shrink the outline / regroup the macros, or record \"fill_reason\": {\"pin_bound\": \"<why the perimeter, not the area, sets the outline>\"} if the pin demand above shows the edges are full"
+   "message": "fill 24% = (hard macros 85847.0 + synthesized std cells 0.3) / outline 365783.0 um2; pin demand per face: S 594 pins over 139.5/241.9 um (58%), N 594 pins over 139.5/241.9 um (58%), W 2147 pins over 1188.8/1512.0 um (79%), E 3354 pins over 1248.4/1512.0 um (83%) (pin-bound: the segment pitch is 4 HBM PC pitches (4 x 378 um): each landing PC leaf must sit level with its CDC / controller-strip PC (one <= 200-um hop), so the 1,512-um height is set by the PHY, and the 241.92 width by two 86.4 leaves + the 20-um pin-face rule; the leaves are the whole content (wires-only parent). E face pin demand 83%, W 75% of the face.)",
+   "fix": ""
   }
  ]
 }
