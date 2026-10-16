@@ -1,0 +1,3 @@
+{"name": "hfd_ckgen", "ok": true, "checked": true, "files": {"hfd_ckgen.lef": "55b6025f07f9c0104b2273e47cdab4790ee46b6727ccf0a3f1321343c4eec51e", "hfd_ckgen_ff.lib": "41f505ce3f32c2ed901f893b5be5fdb62c3ed28631b6f6f315afdd587b70ecea", "hfd_ckgen_ss.lib": "8c75cd8da291a1bd9c5879e3dec247168764569cb5bfa809ddbf99b0fb3c57ed", "hfd_ckgen_tt.lib": "f70d5b4d71f26990dfe21b60e33c55b72b879a91fc5f75ee9b5cfb5f937f0e67"}}
+write_sdc must identify each external clock's single source port
+REF_TILE export hfd_ckgen: views rc=0 child_lint PASS (g) clock insertion: no *_clock_tree_path arc on a clock pin in hfd_ckgen_tt.lib
