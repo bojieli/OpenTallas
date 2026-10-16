@@ -8,7 +8,7 @@ class LiteralPinPlan(unittest.TestCase):
         self.tmp=tempfile.TemporaryDirectory();self.root=Path(self.tmp.name)
         (self.root/'dut.sv').write_text('module dut #(parameter N=4, BASE=4)(input wire clk, input wire [BASE+N-1:BASE] d, output wire [0:0] one); assign one=^d; endmodule')
         names=['clk','d[4]','d[5]','d[6]','d[7]','one'];faces=['S','N','N','W','W','S'];layers=['M4','M5','M5','M6','M6','M4']
-        canonical=(RT.ROOT/RT.ASSIGNED_PIN_EXACT_TCL).read_text().rstrip()+'\n'
+        canonical=(RT.ROOT/RT.ASSIGNED_PIN_EXACT_TCL).read_text()
         helper=self.root/RT.ASSIGNED_PIN_EXACT_TCL;helper.parent.mkdir(parents=True);helper.write_text(canonical)
         self.io=canonical+'\n'.join(f'ot_assigned_pin_exact {{{n}}} {l} {f} {i+1}.000000' for i,(n,l,f) in enumerate(zip(names,layers,faces)))+'\n'
         (self.root/'pins.tcl').write_text(self.io)
