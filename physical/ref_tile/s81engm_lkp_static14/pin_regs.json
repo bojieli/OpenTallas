@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "dsfd_engram_lkp_static14",
+ "enable": false,
+ "reason": "RTL dsfd_engram_lkp_static14 already registers every data input and every output at its pin (one flop each, no logic in front/behind); flow pin registers would add a second stage per port"
+}

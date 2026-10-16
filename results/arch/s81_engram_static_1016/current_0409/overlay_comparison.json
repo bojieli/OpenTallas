@@ -1,0 +1,33 @@
+{
+ "status": "PRESERVED_PROGRESSING_GATE_OVERLAY_VS_CURRENT_MAIN",
+ "progressing_source": "acb07d411f44c4ca5eea6f4df1c70eb80497b519",
+ "progressing_gate": "ot-agidock128:/srv/opentallas-scratch/claude/ref_gate/s81engm_lkp_static14-20261016-030019",
+ "new_candidate_base": "4c848475bf976b2e7e21288550e06a1fdaaf4611",
+ "rows": [
+  {
+   "path": "tools/orfs_hold_mm.py",
+   "progressing_sha256": "d34ce8c6de00df77fa712798fb2a99038b641642719516e34cd3b23e5f56203d",
+   "new_sha256": "a6f23785798709adcf733fbfffb2e9cbe39930a469b0a931d8c5f6ed0d5bdd3b",
+   "new_git_blob": "ec6a94b243a23071875ba7b4c77fc5941ff5d6eb"
+  },
+  {
+   "path": "tools/ref_tile/ref_route.sh",
+   "progressing_sha256": "c1a6880be495c76907b4e116c6f31c5383eebecf66992e2368e08debf6fd9a40",
+   "new_sha256": "1cf8d47a64cd6b8279dd066617dc43b2647e4b0352f933541a19cedb22ae3878",
+   "new_git_blob": "a6272b17daadb1c705e790051d5e0fb62288a90d"
+  },
+  {
+   "path": "tools/ref_tile/ref_tile.py",
+   "progressing_sha256": "b34710e853e1e04ffcf3e4fd54d02381afa046610195b4b5578ee0a50f408f8f",
+   "new_sha256": "11887f21e96e30c00c0bcf01bf28d9e9cec6a8c72d1b522da7e2084f4cb3ade8",
+   "new_git_blob": "62c6c38cdcb56211e9b54ac9e74746be7d5e61e5"
+  },
+  {
+   "path": "tools/ref_tile/clock_entry_constraints.py",
+   "progressing_sha256": "c63f314d5ed117b06184525fdc85550793341ead1956c4a933feb26b0c454c27",
+   "new_sha256": "0bb853cebf53772e6bd6bfef9b5e1b6d3be445c84c07e0eee2465858e9e9aa4b",
+   "new_git_blob": "3aa71e07ec6e7861019728718ac05abfd8cb8fc3"
+  }
+ ],
+ "scope": "Actual SHA256 of remote staged helper bytes vs current-main bytes. Old gate is preserved; no verdict or automatic invalidation/qualification. Production submit_exact will decide exact binding after terminal result. No duplicate physical job launched."
+}
