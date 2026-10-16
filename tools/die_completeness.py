@@ -60,7 +60,9 @@ DIES = {
     ),
     'qwen_kvsys': dict(
         label='Qwen KV/system die', lead='Q-KVSYS-DIE', design='qwen_kvsys',
-        bind=[('ot-epyc1tb', '/srv/opentallas-scratch/claude/qwen-kvsys/*/port_bind_launch.json'),
+        bind=[('ot-epyc1tb', '/srv/opentallas-scratch/claude/qwen-kvsys/*/port_bind_v2/port_bind_v2.json'),
+              ('repo', 'results/arch/qwen_split_1014/kvsys_v1_4_3_design/port_bind_v2/current/port_bind_v2.json'),
+              ('ot-epyc1tb', '/srv/opentallas-scratch/claude/qwen-kvsys/*/port_bind_launch.json'),
               ('ot-epyc1tb', '/srv/opentallas-scratch/claude/qwen-kvsys/*/port_bind.json'),
               ('repo', 'results/arch/qwen_split_1014/kvsys_v1_4_1/port_bind.json')],
         view_classify=('ot-epyc1tb', '/srv/opentallas-scratch/claude/qwen-kvsys/*/classify_*.json'),
@@ -195,6 +197,16 @@ def load_bind(cands, exclude=(), remote=True):
                                   open_inputs=list(r.get('input_unconnected') or []),
                                   width=sorted((r.get('width_mismatch') or {}).keys()),
                                   port_fault=list(r.get('die_port_not_in_rtl') or []), tied=list(r.get('input_tied') or []))
+            if d.get('die_masters'):
+                # Qwen KV/system die (tools/qwen_kv_die/kv_port_bind_v2.sh): the strict bind runs on the BOUND netlist
+                # (die masters rewritten into their BINDINGS RTL modules); report per DIE master, each with its module's
+                # verdict and its own instance count
+                by_mod = masters
+                masters = {}
+                for dm, info in d['die_masters'].items():
+                    r = by_mod.get(info.get('module')) or dict(kind='unbound', rtl=None, verdict='FAIL', open_inputs=[],
+                                                                width=[], port_fault=[], tied=[])
+                    masters[dm] = dict(r, instances=info.get('instances', 0), module=info.get('module'))
             s = d['summary']
             summ = dict(verdict=d.get('verdict'), masters=s['masters'], instances=s['instances'],
                         unbound_masters=s['unbound_masters'], stub_masters=s['stub_masters'],
@@ -519,7 +531,8 @@ def die(name, cfg, reg, native, remote=True):
                           registry=(row or {}).get('category'), owner=(row or {}).get('owner_stream') or (row or {}).get('owner'),
                           open_inputs=b['open_inputs'], width=b['width'], port_fault=b['port_fault'],
                           real_view_in_die_run=(None if not phys.get('no_view') else m not in phys['no_view'])))
-    netlist_masters = set(bind['masters'])
+    # a die master bound to a differently named RTL module (KV die: qkd_d2ds = qkd_d2d_static) carries the module too
+    netlist_masters = set(bind['masters']) | {b.get('module') for b in bind['masters'].values() if b.get('module')}
     missing = []
     for m, role in sorted(contract_masters.items()):
         if role != 'master' or m in netlist_masters or re.search(macro_rx, m):
