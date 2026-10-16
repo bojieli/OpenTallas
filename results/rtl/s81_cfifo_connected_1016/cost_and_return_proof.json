@@ -1,0 +1,676 @@
+{
+ "schema": "opentallas.s81.cfifo.connected_alternative_cost.v1",
+ "scope": "UNQUALIFIED_COMPONENT_CYCLE_PROOF_AND_GEOMETRIC_LOWER_BOUNDS",
+ "generated": "2026-10-16T04:20:02.715790-07:00",
+ "unchanged_partition_source_commit": "9a1b4fc3cc12628bf4864566326473416a18a6cc",
+ "source_sha256": {
+  "rtl/dsrom_sys/s81_die_bind/glue/dsfd_cfifo_return_launch70.sv": "5e62407a2f7bf78ed2ac309859535260870e20301cc1883548fb348bad4eae30",
+  "rtl/dsrom_sys/s81_die_bind/glue/dsfd_cfifo_partitioned.sv": "7242f4256d5383a744b791d4e35d2c4f31b1bf9f28246f95fdc2b1655bddd7df",
+  "rtl/dsrom_sys/s81_die_bind/test/tb_cfifo_return_launch.sv": "64f970c37e940599e10cd08afc02768ca11fed1e37afdbbbe42101c1984fbfef",
+  "tools/s81/cfifo_return_launch_gate.sh": "408accc4e053c0bdd10e5c914174e3d9b8003e7b5bb59131edd226643b953157"
+ },
+ "return_pipeline": {
+  "production_selected": false,
+  "master": "dsfd_cfifo_return_launch70",
+  "extra_clock_pin": "ck",
+  "required_literal_OT_PIN_REGS_RESET_PORTS": "",
+  "added_flops_per_parent": 70,
+  "replicas": 128,
+  "added_flops_die": 8960,
+  "added_edges": 1,
+  "added_latency_ps": 833.333,
+  "words_per_edge": 1,
+  "rs_reset_output_delayed": false,
+  "pass_log": [
+   "CFIFO_RETURN_EDGE PASS checks=393 added_edges=1 words_per_edge=1"
+  ],
+  "mutant_log": [
+   "CFIFO_RETURN_EDGE FAIL checks=393 bad=393",
+   "FATAL: /home/ubuntu/wt/coll-cfifo-0100/rtl/dsrom_sys/s81_die_bind/test/tb_cfifo_return_launch.sv:16: ",
+   "       Time: 4019000 Scope: tb_cfifo_return_launch"
+  ],
+  "compiler_change_required": "Price the south return word one stream edge later; rs remains on original epoch; current9a full cfifo does not instantiate this option",
+  "token_rate_loss": "UNMEASURED_NOT_ACCEPTED",
+  "lint": "verilator --lint-only PASS"
+ },
+ "B_incoming_relay_lower_bound": {
+  "failing_data_edges": 16,
+  "columns": [
+   "21",
+   "28",
+   "31",
+   "41",
+   "51",
+   "53",
+   "57",
+   "60",
+   "89",
+   "97",
+   "98",
+   "100",
+   "101",
+   "104",
+   "106",
+   "111"
+  ],
+  "edges": [
+   {
+    "bus": "cx101_x2_d0",
+    "kind": "lane",
+    "bits": 538,
+    "source": [
+     "f_cxE_edge25_x2_8",
+     "do0"
+    ],
+    "target": [
+     "f_cx101_x2_1",
+     "di0"
+    ],
+    "before_rectangle_L1_bounds_um": [
+     379.752,
+     475.584
+    ],
+    "after_rectangle_L1_bounds_um": [
+     506.888,
+     604.856
+    ],
+    "actual_pin_reach_um": null,
+    "actual_cut_ratio": null,
+    "min_full_bus_corridor_width_at_60pct_um": 28.457,
+    "source_pin_names": {
+     "port": "do0",
+     "width": 538,
+     "mapping": "default bus names, no final coordinates"
+    },
+    "target_pin_names": {
+     "port": "di0",
+     "width": 538,
+     "mapping": "default bus names, no final coordinates"
+    },
+    "scope": "RECTANGLE_INTERVAL_ONLY_NOT_ACTUAL_PIN_PROOF"
+   },
+   {
+    "bus": "cx51_x2_d0",
+    "kind": "lane",
+    "bits": 538,
+    "source": [
+     "f_cxW_edge82_x2_8",
+     "do0"
+    ],
+    "target": [
+     "f_cx51_x2_1",
+     "di0"
+    ],
+    "before_rectangle_L1_bounds_um": [
+     402.672,
+     500.64
+    ],
+    "after_rectangle_L1_bounds_um": [
+     594.584,
+     692.552
+    ],
+    "actual_pin_reach_um": null,
+    "actual_cut_ratio": null,
+    "min_full_bus_corridor_width_at_60pct_um": 28.457,
+    "source_pin_names": {
+     "port": "do0",
+     "width": 538,
+     "mapping": "default bus names, no final coordinates"
+    },
+    "target_pin_names": {
+     "port": "di0",
+     "width": 538,
+     "mapping": "default bus names, no final coordinates"
+    },
+    "scope": "RECTANGLE_INTERVAL_ONLY_NOT_ACTUAL_PIN_PROOF"
+   },
+   {
+    "bus": "cx53_x2_d0",
+    "kind": "lane",
+    "bits": 538,
+    "source": [
+     "f_cxW_edge97_x2_8",
+     "do0"
+    ],
+    "target": [
+     "f_cx53_x2_1",
+     "di0"
+    ],
+    "before_rectangle_L1_bounds_um": [
+     379.752,
+     475.584
+    ],
+    "after_rectangle_L1_bounds_um": [
+     506.864,
+     604.832
+    ],
+    "actual_pin_reach_um": null,
+    "actual_cut_ratio": null,
+    "min_full_bus_corridor_width_at_60pct_um": 28.457,
+    "source_pin_names": {
+     "port": "do0",
+     "width": 538,
+     "mapping": "default bus names, no final coordinates"
+    },
+    "target_pin_names": {
+     "port": "di0",
+     "width": 538,
+     "mapping": "default bus names, no final coordinates"
+    },
+    "scope": "RECTANGLE_INTERVAL_ONLY_NOT_ACTUAL_PIN_PROOF"
+   },
+   {
+    "bus": "cx104_x2_d0",
+    "kind": "lane",
+    "bits": 538,
+    "source": [
+     "f_cxW_edge8_x2_3",
+     "do0"
+    ],
+    "target": [
+     "f_cx104_x2_1",
+     "di0"
+    ],
+    "before_rectangle_L1_bounds_um": [
+     336.576,
+     435.84
+    ],
+    "after_rectangle_L1_bounds_um": [
+     507.296,
+     606.56
+    ],
+    "actual_pin_reach_um": null,
+    "actual_cut_ratio": null,
+    "min_full_bus_corridor_width_at_60pct_um": 28.457,
+    "source_pin_names": {
+     "port": "do0",
+     "width": 538,
+     "mapping": "default bus names, no final coordinates"
+    },
+    "target_pin_names": {
+     "port": "di0",
+     "width": 538,
+     "mapping": "default bus names, no final coordinates"
+    },
+    "scope": "RECTANGLE_INTERVAL_ONLY_NOT_ACTUAL_PIN_PROOF"
+   },
+   {
+    "bus": "cx57_x2_d0",
+    "kind": "lane",
+    "bits": 538,
+    "source": [
+     "f_cxW_edge71_x2_1",
+     "do0"
+    ],
+    "target": [
+     "f_cx57_x2_1",
+     "di0"
+    ],
+    "before_rectangle_L1_bounds_um": [
+     480.408,
+     554.64
+    ],
+    "after_rectangle_L1_bounds_um": [
+     594.56,
+     692.528
+    ],
+    "actual_pin_reach_um": null,
+    "actual_cut_ratio": null,
+    "min_full_bus_corridor_width_at_60pct_um": 28.457,
+    "source_pin_names": {
+     "port": "do0",
+     "width": 538,
+     "mapping": "default bus names, no final coordinates"
+    },
+    "target_pin_names": {
+     "port": "di0",
+     "width": 538,
+     "mapping": "default bus names, no final coordinates"
+    },
+    "scope": "RECTANGLE_INTERVAL_ONLY_NOT_ACTUAL_PIN_PROOF"
+   },
+   {
+    "bus": "cx100_x2_d0",
+    "kind": "lane",
+    "bits": 538,
+    "source": [
+     "f_cxW_edge14_x2_3",
+     "do0"
+    ],
+    "target": [
+     "f_cx100_x2_1",
+     "di0"
+    ],
+    "before_rectangle_L1_bounds_um": [
+     336.576,
+     435.84
+    ],
+    "after_rectangle_L1_bounds_um": [
+     507.296,
+     606.56
+    ],
+    "actual_pin_reach_um": null,
+    "actual_cut_ratio": null,
+    "min_full_bus_corridor_width_at_60pct_um": 28.457,
+    "source_pin_names": {
+     "port": "do0",
+     "width": 538,
+     "mapping": "default bus names, no final coordinates"
+    },
+    "target_pin_names": {
+     "port": "di0",
+     "width": 538,
+     "mapping": "default bus names, no final coordinates"
+    },
+    "scope": "RECTANGLE_INTERVAL_ONLY_NOT_ACTUAL_PIN_PROOF"
+   },
+   {
+    "bus": "cx31_x2_d0",
+    "kind": "lane",
+    "bits": 538,
+    "source": [
+     "f_cxE_edge126_x2_8",
+     "do0"
+    ],
+    "target": [
+     "f_cx31_x2_1",
+     "di0"
+    ],
+    "before_rectangle_L1_bounds_um": [
+     379.752,
+     475.584
+    ],
+    "after_rectangle_L1_bounds_um": [
+     506.888,
+     604.856
+    ],
+    "actual_pin_reach_um": null,
+    "actual_cut_ratio": null,
+    "min_full_bus_corridor_width_at_60pct_um": 28.457,
+    "source_pin_names": {
+     "port": "do0",
+     "width": 538,
+     "mapping": "default bus names, no final coordinates"
+    },
+    "target_pin_names": {
+     "port": "di0",
+     "width": 538,
+     "mapping": "default bus names, no final coordinates"
+    },
+    "scope": "RECTANGLE_INTERVAL_ONLY_NOT_ACTUAL_PIN_PROOF"
+   },
+   {
+    "bus": "cx98_x2_d0",
+    "kind": "lane",
+    "bits": 538,
+    "source": [
+     "f_cxW_edge21_x2_3",
+     "do0"
+    ],
+    "target": [
+     "f_cx98_x2_1",
+     "di0"
+    ],
+    "before_rectangle_L1_bounds_um": [
+     336.576,
+     435.84
+    ],
+    "after_rectangle_L1_bounds_um": [
+     507.296,
+     606.56
+    ],
+    "actual_pin_reach_um": null,
+    "actual_cut_ratio": null,
+    "min_full_bus_corridor_width_at_60pct_um": 28.457,
+    "source_pin_names": {
+     "port": "do0",
+     "width": 538,
+     "mapping": "default bus names, no final coordinates"
+    },
+    "target_pin_names": {
+     "port": "di0",
+     "width": 538,
+     "mapping": "default bus names, no final coordinates"
+    },
+    "scope": "RECTANGLE_INTERVAL_ONLY_NOT_ACTUAL_PIN_PROOF"
+   },
+   {
+    "bus": "cx41_x2_d0",
+    "kind": "lane",
+    "bits": 538,
+    "source": [
+     "f_cxE_edge123_x2_8",
+     "do0"
+    ],
+    "target": [
+     "f_cx41_x2_1",
+     "di0"
+    ],
+    "before_rectangle_L1_bounds_um": [
+     379.752,
+     475.584
+    ],
+    "after_rectangle_L1_bounds_um": [
+     506.888,
+     604.856
+    ],
+    "actual_pin_reach_um": null,
+    "actual_cut_ratio": null,
+    "min_full_bus_corridor_width_at_60pct_um": 28.457,
+    "source_pin_names": {
+     "port": "do0",
+     "width": 538,
+     "mapping": "default bus names, no final coordinates"
+    },
+    "target_pin_names": {
+     "port": "di0",
+     "width": 538,
+     "mapping": "default bus names, no final coordinates"
+    },
+    "scope": "RECTANGLE_INTERVAL_ONLY_NOT_ACTUAL_PIN_PROOF"
+   },
+   {
+    "bus": "cx106_x2_d0",
+    "kind": "lane",
+    "bits": 538,
+    "source": [
+     "f_cxW_edge11_x2_8",
+     "do0"
+    ],
+    "target": [
+     "f_cx106_x2_1",
+     "di0"
+    ],
+    "before_rectangle_L1_bounds_um": [
+     402.672,
+     500.64
+    ],
+    "after_rectangle_L1_bounds_um": [
+     594.584,
+     692.552
+    ],
+    "actual_pin_reach_um": null,
+    "actual_cut_ratio": null,
+    "min_full_bus_corridor_width_at_60pct_um": 28.457,
+    "source_pin_names": {
+     "port": "do0",
+     "width": 538,
+     "mapping": "default bus names, no final coordinates"
+    },
+    "target_pin_names": {
+     "port": "di0",
+     "width": 538,
+     "mapping": "default bus names, no final coordinates"
+    },
+    "scope": "RECTANGLE_INTERVAL_ONLY_NOT_ACTUAL_PIN_PROOF"
+   },
+   {
+    "bus": "cx97_x2_d0",
+    "kind": "lane",
+    "bits": 538,
+    "source": [
+     "f_cxW_edge27_x2_3",
+     "do0"
+    ],
+    "target": [
+     "f_cx97_x2_1",
+     "di0"
+    ],
+    "before_rectangle_L1_bounds_um": [
+     336.576,
+     435.84
+    ],
+    "after_rectangle_L1_bounds_um": [
+     507.296,
+     606.56
+    ],
+    "actual_pin_reach_um": null,
+    "actual_cut_ratio": null,
+    "min_full_bus_corridor_width_at_60pct_um": 28.457,
+    "source_pin_names": {
+     "port": "do0",
+     "width": 538,
+     "mapping": "default bus names, no final coordinates"
+    },
+    "target_pin_names": {
+     "port": "di0",
+     "width": 538,
+     "mapping": "default bus names, no final coordinates"
+    },
+    "scope": "RECTANGLE_INTERVAL_ONLY_NOT_ACTUAL_PIN_PROOF"
+   },
+   {
+    "bus": "cx111_x2_d0",
+    "kind": "lane",
+    "bits": 538,
+    "source": [
+     "f_cxE_edge39_x2_8",
+     "do0"
+    ],
+    "target": [
+     "f_cx111_x2_1",
+     "di0"
+    ],
+    "before_rectangle_L1_bounds_um": [
+     379.752,
+     475.584
+    ],
+    "after_rectangle_L1_bounds_um": [
+     506.888,
+     604.856
+    ],
+    "actual_pin_reach_um": null,
+    "actual_cut_ratio": null,
+    "min_full_bus_corridor_width_at_60pct_um": 28.457,
+    "source_pin_names": {
+     "port": "do0",
+     "width": 538,
+     "mapping": "default bus names, no final coordinates"
+    },
+    "target_pin_names": {
+     "port": "di0",
+     "width": 538,
+     "mapping": "default bus names, no final coordinates"
+    },
+    "scope": "RECTANGLE_INTERVAL_ONLY_NOT_ACTUAL_PIN_PROOF"
+   },
+   {
+    "bus": "cx28_x2_d0",
+    "kind": "lane",
+    "bits": 538,
+    "source": [
+     "f_cxE_edge97_x2_8",
+     "do0"
+    ],
+    "target": [
+     "f_cx28_x2_1",
+     "di0"
+    ],
+    "before_rectangle_L1_bounds_um": [
+     379.752,
+     475.584
+    ],
+    "after_rectangle_L1_bounds_um": [
+     506.888,
+     604.856
+    ],
+    "actual_pin_reach_um": null,
+    "actual_cut_ratio": null,
+    "min_full_bus_corridor_width_at_60pct_um": 28.457,
+    "source_pin_names": {
+     "port": "do0",
+     "width": 538,
+     "mapping": "default bus names, no final coordinates"
+    },
+    "target_pin_names": {
+     "port": "di0",
+     "width": 538,
+     "mapping": "default bus names, no final coordinates"
+    },
+    "scope": "RECTANGLE_INTERVAL_ONLY_NOT_ACTUAL_PIN_PROOF"
+   },
+   {
+    "bus": "cx60_x2_d0",
+    "kind": "lane",
+    "bits": 538,
+    "source": [
+     "f_cxW_edge84_x2_8",
+     "do0"
+    ],
+    "target": [
+     "f_cx60_x2_1",
+     "di0"
+    ],
+    "before_rectangle_L1_bounds_um": [
+     379.752,
+     475.584
+    ],
+    "after_rectangle_L1_bounds_um": [
+     506.864,
+     604.832
+    ],
+    "actual_pin_reach_um": null,
+    "actual_cut_ratio": null,
+    "min_full_bus_corridor_width_at_60pct_um": 28.457,
+    "source_pin_names": {
+     "port": "do0",
+     "width": 538,
+     "mapping": "default bus names, no final coordinates"
+    },
+    "target_pin_names": {
+     "port": "di0",
+     "width": 538,
+     "mapping": "default bus names, no final coordinates"
+    },
+    "scope": "RECTANGLE_INTERVAL_ONLY_NOT_ACTUAL_PIN_PROOF"
+   },
+   {
+    "bus": "cx89_x2_d0",
+    "kind": "lane",
+    "bits": 538,
+    "source": [
+     "f_cxE_edge53_x2_8",
+     "do0"
+    ],
+    "target": [
+     "f_cx89_x2_1",
+     "di0"
+    ],
+    "before_rectangle_L1_bounds_um": [
+     379.752,
+     475.584
+    ],
+    "after_rectangle_L1_bounds_um": [
+     506.888,
+     604.856
+    ],
+    "actual_pin_reach_um": null,
+    "actual_cut_ratio": null,
+    "min_full_bus_corridor_width_at_60pct_um": 28.457,
+    "source_pin_names": {
+     "port": "do0",
+     "width": 538,
+     "mapping": "default bus names, no final coordinates"
+    },
+    "target_pin_names": {
+     "port": "di0",
+     "width": 538,
+     "mapping": "default bus names, no final coordinates"
+    },
+    "scope": "RECTANGLE_INTERVAL_ONLY_NOT_ACTUAL_PIN_PROOF"
+   },
+   {
+    "bus": "cx21_x2_d0",
+    "kind": "lane",
+    "bits": 538,
+    "source": [
+     "f_cxE_edge115_x2_8",
+     "do0"
+    ],
+    "target": [
+     "f_cx21_x2_1",
+     "di0"
+    ],
+    "before_rectangle_L1_bounds_um": [
+     379.752,
+     475.584
+    ],
+    "after_rectangle_L1_bounds_um": [
+     506.888,
+     604.856
+    ],
+    "actual_pin_reach_um": null,
+    "actual_cut_ratio": null,
+    "min_full_bus_corridor_width_at_60pct_um": 28.457,
+    "source_pin_names": {
+     "port": "do0",
+     "width": 538,
+     "mapping": "default bus names, no final coordinates"
+    },
+    "target_pin_names": {
+     "port": "di0",
+     "width": 538,
+     "mapping": "default bus names, no final coordinates"
+    },
+    "scope": "RECTANGLE_INTERVAL_ONLY_NOT_ACTUAL_PIN_PROOF"
+   }
+  ],
+  "minimum_extra_stage_per_bad_lane": 1,
+  "coherent_paired_lane_proposal_extra_stations": 32,
+  "extra_data_flops_lower_bound": 17664,
+  "added_source_edges_per_listed_column": 1,
+  "compiler_change_required": "Add same extra stage on both lanes for listed columns, price actual marker/payload and programme visibility; no runtime alignment",
+  "actual_relay_placement": false,
+  "new_relay_rectangle_area_mm2_if_stnh17_256x32_376": 0.017877768191999998
+ },
+ "capacity_lower_bounds": [
+  {
+   "bits": 70,
+   "min_unfragmented_corridor_um": 3.7025282978948484,
+   "nominal_32_4um_cut_ratio": 0.0685653388499046,
+   "scope": "Capacity lower bound only; no actual cumulative/pin-jog/through-traffic cut proof"
+  },
+  {
+   "bits": 512,
+   "min_unfragmented_corridor_um": 27.081349836030892,
+   "nominal_32_4um_cut_ratio": 0.5015064784450165,
+   "scope": "Capacity lower bound only; no actual cumulative/pin-jog/through-traffic cut proof"
+  },
+  {
+   "bits": 538,
+   "min_unfragmented_corridor_um": 28.456574632391835,
+   "nominal_32_4um_cut_ratio": 0.5269736043035524,
+   "scope": "Capacity lower bound only; no actual cumulative/pin-jog/through-traffic cut proof"
+  },
+  {
+   "bits": 566,
+   "min_unfragmented_corridor_um": 29.937585951549774,
+   "nominal_32_4um_cut_ratio": 0.5543997398435143,
+   "scope": "Capacity lower bound only; no actual cumulative/pin-jog/through-traffic cut proof"
+  },
+  {
+   "bits": 1104,
+   "min_unfragmented_corridor_um": 58.39416058394161,
+   "nominal_32_4um_cut_ratio": 1.0813733441470668,
+   "scope": "Capacity lower bound only; no actual cumulative/pin-jog/through-traffic cut proof"
+  }
+ ],
+ "apron_reservation": {
+  "proposed_east_extension_um": 129.576,
+  "reserved_extra_area_mm2": 2.65106276352,
+  "includes_other_bus_through_traffic": false
+ },
+ "open": [
+  "Final pin coordinates absent in current first-pass input",
+  "Actual per-bit incident pin routes/cuts and clock phi-R missing",
+  "Return capture/launch physical leaf homes and PG need grant",
+  "No integration of+1 return edge into9a/compiler yet",
+  "No fresh gate or physical submit"
+ ],
+ "physical_image_review": {
+  "path": "results/rtl/s81_cfifo_connected_1016/connected_group_alternatives.png",
+  "sha256": "e6e12c35211097f709cbbce54919b109557f69da884e3b15beaeaa5d6d07a521",
+  "actually_viewed": true,
+  "findings": "A south lane1 apron falls outside die at11instances; northern first-return homes crowd slot0 station region. B keeps parent/first-return homes while moving inbound groups into east street;64.8um stagger separates source stages. Lines are instance graph connectors only; true pins/routes/cuts unavailable."
+ }
+}

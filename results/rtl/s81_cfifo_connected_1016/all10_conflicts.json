@@ -1,0 +1,838 @@
+{
+ "scope": "FIRST_PASS_PRE_HOP_PRE_FINAL_PINS_NOT_USABLE_FOR_QUALIFICATION",
+ "source": "17b13fb0637869d53580a1084bdd250d18828d9b",
+ "plan_sha256": "ca1f5b419ae1427a7a58d93904bbad440b5e944f77c6a6e59489bd86812e3c56",
+ "conflicts": [
+  {
+   "cfifo": "cf10",
+   "other": "f_cx10_1",
+   "master": "dsfd_stnh_566x1",
+   "overlap_um": [
+    17.256000000001222,
+    3.7600000000000193
+   ],
+   "instance": {
+    "name": "f_cx10_1",
+    "master": "dsfd_stnh_566x1",
+    "x": 26456.976,
+    "y": 86.4,
+    "w": 17.256,
+    "h": 32.376,
+    "orient": "MY",
+    "kind": "stn",
+    "region": "link",
+    "domain": "fwd"
+   },
+   "incident_buses": [
+    [
+     "cx10_f0",
+     "fclk",
+     1,
+     [
+      [
+       "f_cxE_edge137_7",
+       "fo0"
+      ],
+      [
+       "f_cx10_1",
+       "fi0"
+      ]
+     ]
+    ],
+    [
+     "cx10_d0",
+     "lane",
+     566,
+     [
+      [
+       "f_cxE_edge137_7",
+       "do0"
+      ],
+      [
+       "f_cx10_1",
+       "di0"
+      ]
+     ]
+    ],
+    [
+     "cx10_f1",
+     "fclk",
+     1,
+     [
+      [
+       "f_cx10_1",
+       "fo0"
+      ],
+      [
+       "f_cx10_2",
+       "fi0"
+      ]
+     ]
+    ],
+    [
+     "cx10_d1",
+     "lane",
+     566,
+     [
+      [
+       "f_cx10_1",
+       "do0"
+      ],
+      [
+       "f_cx10_2",
+       "di0"
+      ]
+     ]
+    ]
+   ]
+  },
+  {
+   "cfifo": "cf10",
+   "other": "f_cx10_x2_1",
+   "master": "dsfd_stnh_538x1",
+   "overlap_um": [
+    9.503999999997177,
+    3.7600000000000193
+   ],
+   "instance": {
+    "name": "f_cx10_x2_1",
+    "master": "dsfd_stnh_538x1",
+    "x": 26478.576,
+    "y": 86.4,
+    "w": 17.256,
+    "h": 32.376,
+    "orient": "MY",
+    "kind": "stn",
+    "region": "link",
+    "domain": "fwd"
+   },
+   "incident_buses": [
+    [
+     "cx10_x2_f0",
+     "fclk",
+     1,
+     [
+      [
+       "f_cxE_edge137_x2_7",
+       "fo0"
+      ],
+      [
+       "f_cx10_x2_1",
+       "fi0"
+      ]
+     ]
+    ],
+    [
+     "cx10_x2_d0",
+     "lane",
+     538,
+     [
+      [
+       "f_cxE_edge137_x2_7",
+       "do0"
+      ],
+      [
+       "f_cx10_x2_1",
+       "di0"
+      ]
+     ]
+    ],
+    [
+     "cx10_x2_f1",
+     "fclk",
+     1,
+     [
+      [
+       "f_cx10_x2_1",
+       "fo0"
+      ],
+      [
+       "f_cx10_x2_2",
+       "fi0"
+      ]
+     ]
+    ],
+    [
+     "cx10_x2_d1",
+     "lane",
+     538,
+     [
+      [
+       "f_cx10_x2_1",
+       "do0"
+      ],
+      [
+       "f_cx10_x2_2",
+       "di0"
+      ]
+     ]
+    ]
+   ]
+  },
+  {
+   "cfifo": "cf11",
+   "other": "f_cx11_1",
+   "master": "dsfd_stnh_566x1",
+   "overlap_um": [
+    17.256000000001222,
+    3.7600000000000193
+   ],
+   "instance": {
+    "name": "f_cx11_1",
+    "master": "dsfd_stnh_566x1",
+    "x": 27605.232,
+    "y": 86.4,
+    "w": 17.256,
+    "h": 32.376,
+    "orient": "MY",
+    "kind": "stn",
+    "region": "link",
+    "domain": "fwd"
+   },
+   "incident_buses": [
+    [
+     "cx11_f0",
+     "fclk",
+     1,
+     [
+      [
+       "f_cxE_edge140_7",
+       "fo0"
+      ],
+      [
+       "f_cx11_1",
+       "fi0"
+      ]
+     ]
+    ],
+    [
+     "cx11_d0",
+     "lane",
+     566,
+     [
+      [
+       "f_cxE_edge140_7",
+       "do0"
+      ],
+      [
+       "f_cx11_1",
+       "di0"
+      ]
+     ]
+    ],
+    [
+     "cx11_f1",
+     "fclk",
+     1,
+     [
+      [
+       "f_cx11_1",
+       "fo0"
+      ],
+      [
+       "f_cx11_2",
+       "fi0"
+      ]
+     ]
+    ],
+    [
+     "cx11_d1",
+     "lane",
+     566,
+     [
+      [
+       "f_cx11_1",
+       "do0"
+      ],
+      [
+       "f_cx11_2",
+       "di0"
+      ]
+     ]
+    ]
+   ]
+  },
+  {
+   "cfifo": "cf11",
+   "other": "f_cx11_x2_1",
+   "master": "dsfd_stnh_538x1",
+   "overlap_um": [
+    9.504000000000815,
+    3.7600000000000193
+   ],
+   "instance": {
+    "name": "f_cx11_x2_1",
+    "master": "dsfd_stnh_538x1",
+    "x": 27626.832,
+    "y": 86.4,
+    "w": 17.256,
+    "h": 32.376,
+    "orient": "MY",
+    "kind": "stn",
+    "region": "link",
+    "domain": "fwd"
+   },
+   "incident_buses": [
+    [
+     "cx11_x2_f0",
+     "fclk",
+     1,
+     [
+      [
+       "f_cxE_edge140_x2_7",
+       "fo0"
+      ],
+      [
+       "f_cx11_x2_1",
+       "fi0"
+      ]
+     ]
+    ],
+    [
+     "cx11_x2_d0",
+     "lane",
+     538,
+     [
+      [
+       "f_cxE_edge140_x2_7",
+       "do0"
+      ],
+      [
+       "f_cx11_x2_1",
+       "di0"
+      ]
+     ]
+    ],
+    [
+     "cx11_x2_f1",
+     "fclk",
+     1,
+     [
+      [
+       "f_cx11_x2_1",
+       "fo0"
+      ],
+      [
+       "f_cx11_x2_2",
+       "fi0"
+      ]
+     ]
+    ],
+    [
+     "cx11_x2_d1",
+     "lane",
+     538,
+     [
+      [
+       "f_cx11_x2_1",
+       "do0"
+      ],
+      [
+       "f_cx11_x2_2",
+       "di0"
+      ]
+     ]
+    ]
+   ]
+  },
+  {
+   "cfifo": "cf17",
+   "other": "f_cx17_1",
+   "master": "dsfd_stnh_566x1",
+   "overlap_um": [
+    17.256000000001222,
+    3.7600000000000193
+   ],
+   "instance": {
+    "name": "f_cx17_1",
+    "master": "dsfd_stnh_566x1",
+    "x": 29901.744,
+    "y": 86.4,
+    "w": 17.256,
+    "h": 32.376,
+    "orient": "MY",
+    "kind": "stn",
+    "region": "link",
+    "domain": "fwd"
+   },
+   "incident_buses": [
+    [
+     "cx17_f0",
+     "fclk",
+     1,
+     [
+      [
+       "f_cxE_edge146_7",
+       "fo0"
+      ],
+      [
+       "f_cx17_1",
+       "fi0"
+      ]
+     ]
+    ],
+    [
+     "cx17_d0",
+     "lane",
+     566,
+     [
+      [
+       "f_cxE_edge146_7",
+       "do0"
+      ],
+      [
+       "f_cx17_1",
+       "di0"
+      ]
+     ]
+    ],
+    [
+     "cx17_f1",
+     "fclk",
+     1,
+     [
+      [
+       "f_cx17_1",
+       "fo0"
+      ],
+      [
+       "f_cx17_2",
+       "fi0"
+      ]
+     ]
+    ],
+    [
+     "cx17_d1",
+     "lane",
+     566,
+     [
+      [
+       "f_cx17_1",
+       "do0"
+      ],
+      [
+       "f_cx17_2",
+       "di0"
+      ]
+     ]
+    ]
+   ]
+  },
+  {
+   "cfifo": "cf17",
+   "other": "f_cx17_x2_1",
+   "master": "dsfd_stnh_538x1",
+   "overlap_um": [
+    9.503999999997177,
+    3.7600000000000193
+   ],
+   "instance": {
+    "name": "f_cx17_x2_1",
+    "master": "dsfd_stnh_538x1",
+    "x": 29923.344,
+    "y": 86.4,
+    "w": 17.256,
+    "h": 32.376,
+    "orient": "MY",
+    "kind": "stn",
+    "region": "link",
+    "domain": "fwd"
+   },
+   "incident_buses": [
+    [
+     "cx17_x2_f0",
+     "fclk",
+     1,
+     [
+      [
+       "f_cxE_edge146_x2_7",
+       "fo0"
+      ],
+      [
+       "f_cx17_x2_1",
+       "fi0"
+      ]
+     ]
+    ],
+    [
+     "cx17_x2_d0",
+     "lane",
+     538,
+     [
+      [
+       "f_cxE_edge146_x2_7",
+       "do0"
+      ],
+      [
+       "f_cx17_x2_1",
+       "di0"
+      ]
+     ]
+    ],
+    [
+     "cx17_x2_f1",
+     "fclk",
+     1,
+     [
+      [
+       "f_cx17_x2_1",
+       "fo0"
+      ],
+      [
+       "f_cx17_x2_2",
+       "fi0"
+      ]
+     ]
+    ],
+    [
+     "cx17_x2_d1",
+     "lane",
+     538,
+     [
+      [
+       "f_cx17_x2_1",
+       "do0"
+      ],
+      [
+       "f_cx17_x2_2",
+       "di0"
+      ]
+     ]
+    ]
+   ]
+  },
+  {
+   "cfifo": "cf23",
+   "other": "f_cx23_1",
+   "master": "dsfd_stnh_566x1",
+   "overlap_um": [
+    17.255999999999403,
+    3.7600000000002183
+   ],
+   "instance": {
+    "name": "f_cx23_1",
+    "master": "dsfd_stnh_566x1",
+    "x": 9046.512,
+    "y": 3175.2,
+    "w": 17.256,
+    "h": 32.376,
+    "orient": "MY",
+    "kind": "stn",
+    "region": "link",
+    "domain": "fwd"
+   },
+   "incident_buses": [
+    [
+     "cx23_f0",
+     "fclk",
+     1,
+     [
+      [
+       "f_cxW_edge99_7",
+       "fo0"
+      ],
+      [
+       "f_cx23_1",
+       "fi0"
+      ]
+     ]
+    ],
+    [
+     "cx23_d0",
+     "lane",
+     566,
+     [
+      [
+       "f_cxW_edge99_7",
+       "do0"
+      ],
+      [
+       "f_cx23_1",
+       "di0"
+      ]
+     ]
+    ],
+    [
+     "cx23_f1",
+     "fclk",
+     1,
+     [
+      [
+       "f_cx23_1",
+       "fo0"
+      ],
+      [
+       "f_cx23_2",
+       "fi0"
+      ]
+     ]
+    ],
+    [
+     "cx23_d1",
+     "lane",
+     566,
+     [
+      [
+       "f_cx23_1",
+       "do0"
+      ],
+      [
+       "f_cx23_2",
+       "di0"
+      ]
+     ]
+    ]
+   ]
+  },
+  {
+   "cfifo": "cf23",
+   "other": "f_cx23_x2_1",
+   "master": "dsfd_stnh_538x1",
+   "overlap_um": [
+    9.504000000000815,
+    3.7600000000002183
+   ],
+   "instance": {
+    "name": "f_cx23_x2_1",
+    "master": "dsfd_stnh_538x1",
+    "x": 9068.112,
+    "y": 3175.2,
+    "w": 17.256,
+    "h": 32.376,
+    "orient": "MY",
+    "kind": "stn",
+    "region": "link",
+    "domain": "fwd"
+   },
+   "incident_buses": [
+    [
+     "cx23_x2_f0",
+     "fclk",
+     1,
+     [
+      [
+       "f_cxW_edge99_x2_7",
+       "fo0"
+      ],
+      [
+       "f_cx23_x2_1",
+       "fi0"
+      ]
+     ]
+    ],
+    [
+     "cx23_x2_d0",
+     "lane",
+     538,
+     [
+      [
+       "f_cxW_edge99_x2_7",
+       "do0"
+      ],
+      [
+       "f_cx23_x2_1",
+       "di0"
+      ]
+     ]
+    ],
+    [
+     "cx23_x2_f1",
+     "fclk",
+     1,
+     [
+      [
+       "f_cx23_x2_1",
+       "fo0"
+      ],
+      [
+       "f_cx23_x2_2",
+       "fi0"
+      ]
+     ]
+    ],
+    [
+     "cx23_x2_d1",
+     "lane",
+     538,
+     [
+      [
+       "f_cx23_x2_1",
+       "do0"
+      ],
+      [
+       "f_cx23_x2_2",
+       "di0"
+      ]
+     ]
+    ]
+   ]
+  },
+  {
+   "cfifo": "cf72",
+   "other": "f_KW3r_22",
+   "master": "dsfd_stnh_512x1",
+   "overlap_um": [
+    17.256000000000313,
+    30.21600000000035
+   ],
+   "instance": {
+    "name": "f_KW3r_22",
+    "master": "dsfd_stnh_512x1",
+    "x": 7855.056,
+    "y": 16074.72,
+    "w": 17.256,
+    "h": 30.216,
+    "orient": "R0",
+    "kind": "stn",
+    "region": "link",
+    "domain": "fwd"
+   },
+   "incident_buses": [
+    [
+     "KW3r_f21",
+     "fclk",
+     1,
+     [
+      [
+       "f_KW3r_21",
+       "fo0"
+      ],
+      [
+       "f_KW3r_22",
+       "fi0"
+      ]
+     ]
+    ],
+    [
+     "KW3r_d21",
+     "lane",
+     512,
+     [
+      [
+       "f_KW3r_21",
+       "do0"
+      ],
+      [
+       "f_KW3r_22",
+       "di0"
+      ]
+     ]
+    ],
+    [
+     "KW3r_f22",
+     "fclk",
+     1,
+     [
+      [
+       "f_KW3r_22",
+       "fo0"
+      ],
+      [
+       "f_KW3r_23",
+       "fi0"
+      ]
+     ]
+    ],
+    [
+     "KW3r_d22",
+     "lane",
+     512,
+     [
+      [
+       "f_KW3r_22",
+       "do0"
+      ],
+      [
+       "f_KW3r_23",
+       "di0"
+      ]
+     ]
+    ]
+   ]
+  },
+  {
+   "cfifo": "cf106",
+   "other": "f_KW3r_25",
+   "master": "dsfd_stnh_512x1",
+   "overlap_um": [
+    17.255999999999403,
+    30.21600000000035
+   ],
+   "instance": {
+    "name": "f_KW3r_25",
+    "master": "dsfd_stnh_512x1",
+    "x": 8887.968,
+    "y": 15832.8,
+    "w": 17.256,
+    "h": 30.216,
+    "orient": "R0",
+    "kind": "stn",
+    "region": "link",
+    "domain": "fwd"
+   },
+   "incident_buses": [
+    [
+     "KW3r_f24",
+     "fclk",
+     1,
+     [
+      [
+       "f_KW3r_24",
+       "fo0"
+      ],
+      [
+       "f_KW3r_25",
+       "fi0"
+      ]
+     ]
+    ],
+    [
+     "KW3r_d24",
+     "lane",
+     512,
+     [
+      [
+       "f_KW3r_24",
+       "do0"
+      ],
+      [
+       "f_KW3r_25",
+       "di0"
+      ]
+     ]
+    ],
+    [
+     "KW3r_f25",
+     "fclk",
+     1,
+     [
+      [
+       "f_KW3r_25",
+       "fo0"
+      ],
+      [
+       "f_KW3r_26",
+       "fi0"
+      ]
+     ]
+    ],
+    [
+     "KW3r_d25",
+     "lane",
+     512,
+     [
+      [
+       "f_KW3r_25",
+       "do0"
+      ],
+      [
+       "f_KW3r_26",
+       "di0"
+      ]
+     ]
+    ]
+   ]
+  }
+ ],
+ "final_pin_coordinates": false
+}

@@ -1,0 +1,163 @@
+{
+ "source_commit": "17b13fb0637869d53580a1084bdd250d18828d9b",
+ "generator_sha256": "21619615fffc56c109150e89d96ed58a86652336775d341b3be291e639de6570",
+ "plan_sha256": "ca1f5b419ae1427a7a58d93904bbad440b5e944f77c6a6e59489bd86812e3c56",
+ "scope": "FIRST_PASS_PRE_HOP_PRE_FINAL_PINS_NOT_USABLE_FOR_QUALIFICATION",
+ "alternatives": [
+  {
+   "name": "A_south_aprons_rd_north",
+   "scope": "UNQUALIFIED_FULL_FIRST_PASS_CONNECTED_GROUP_SCREEN",
+   "parent_count": 128,
+   "moved_instances": 770,
+   "missing_instances": [],
+   "outline_um": [
+    384.48,
+    159.84
+   ],
+   "parent_area_delta_mm2": 2.612563402752001,
+   "source_cycles_added": 0,
+   "return_cycles_added": 0,
+   "return_added_latency_ps": 0,
+   "return_added_flops_per_parent": 0,
+   "token_rate_loss": "UNMEASURED_NOT_ACCEPTED",
+   "overlap_count": 192,
+   "outside": [
+    "f_cx17_x2_1",
+    "f_cx1_x2_1",
+    "f_cx8_x2_1",
+    "f_cx6_x2_1",
+    "f_cx5_x2_1",
+    "f_cx18_x2_1",
+    "f_cx15_x2_1",
+    "f_cx20_x2_1",
+    "f_cx2_x2_1",
+    "f_cx11_x2_1",
+    "f_cx10_x2_1"
+   ],
+   "incident_buses": 3080,
+   "incident_edges": 101051,
+   "rectangle_lower_bound_over500": 83513,
+   "rectangle_upper_bound_under500": 2858,
+   "actual_pin_reach_qualified_edges": 0,
+   "actual_cut_qualified_edges": 0,
+   "actual_clock_qualified_edges": 0,
+   "reach_by_kind": {
+    "col_clock": {
+     "edges": 56295,
+     "rectangle_lower_bound_over500": 47415,
+     "rectangle_upper_bound_under500": 794
+    },
+    "col_reset": {
+     "edges": 41932,
+     "rectangle_lower_bound_over500": 35842,
+     "rectangle_upper_bound_under500": 794
+    },
+    "col_ret": {
+     "edges": 128,
+     "rectangle_lower_bound_over500": 0,
+     "rectangle_upper_bound_under500": 26
+    },
+    "fclk": {
+     "edges": 1028,
+     "rectangle_lower_bound_over500": 128,
+     "rectangle_upper_bound_under500": 622
+    },
+    "lane": {
+     "edges": 1028,
+     "rectangle_lower_bound_over500": 128,
+     "rectangle_upper_bound_under500": 622
+    },
+    "stat": {
+     "edges": 128,
+     "rectangle_lower_bound_over500": 0,
+     "rectangle_upper_bound_under500": 0
+    },
+    "x_ctl": {
+     "edges": 128,
+     "rectangle_lower_bound_over500": 0,
+     "rectangle_upper_bound_under500": 0
+    },
+    "x_lane": {
+     "edges": 384,
+     "rectangle_lower_bound_over500": 0,
+     "rectangle_upper_bound_under500": 0
+    }
+   }
+  },
+  {
+   "name": "B_east_aprons_rd_south_plus1",
+   "scope": "UNQUALIFIED_FULL_FIRST_PASS_CONNECTED_GROUP_SCREEN",
+   "parent_count": 128,
+   "moved_instances": 642,
+   "missing_instances": [],
+   "outline_um": [
+    384.48,
+    159.84
+   ],
+   "parent_area_delta_mm2": 2.612563402752001,
+   "source_cycles_added": 0,
+   "return_cycles_added": 1,
+   "return_added_latency_ps": 833.333,
+   "return_added_flops_per_parent": 70,
+   "token_rate_loss": "UNMEASURED_NOT_ACCEPTED",
+   "overlap_count": 0,
+   "outside": [],
+   "incident_buses": 2824,
+   "incident_edges": 100795,
+   "rectangle_lower_bound_over500": 83289,
+   "rectangle_upper_bound_under500": 2190,
+   "actual_pin_reach_qualified_edges": 0,
+   "actual_cut_qualified_edges": 0,
+   "actual_clock_qualified_edges": 0,
+   "reach_by_kind": {
+    "col_clock": {
+     "edges": 56295,
+     "rectangle_lower_bound_over500": 47415,
+     "rectangle_upper_bound_under500": 794
+    },
+    "col_reset": {
+     "edges": 41932,
+     "rectangle_lower_bound_over500": 35842,
+     "rectangle_upper_bound_under500": 794
+    },
+    "col_ret": {
+     "edges": 128,
+     "rectangle_lower_bound_over500": 0,
+     "rectangle_upper_bound_under500": 26
+    },
+    "fclk": {
+     "edges": 900,
+     "rectangle_lower_bound_over500": 16,
+     "rectangle_upper_bound_under500": 288
+    },
+    "lane": {
+     "edges": 900,
+     "rectangle_lower_bound_over500": 16,
+     "rectangle_upper_bound_under500": 288
+    },
+    "stat": {
+     "edges": 128,
+     "rectangle_lower_bound_over500": 0,
+     "rectangle_upper_bound_under500": 0
+    },
+    "x_ctl": {
+     "edges": 128,
+     "rectangle_lower_bound_over500": 0,
+     "rectangle_upper_bound_under500": 0
+    },
+    "x_lane": {
+     "edges": 384,
+     "rectangle_lower_bound_over500": 0,
+     "rectangle_upper_bound_under500": 0
+    }
+   }
+  }
+ ],
+ "ranking": "A rejected for collisions/outside. B is preferred as an unqualified zero-overlap footprint, but16 lane edges have >500um rectangle lower bounds; paired extra relay stages and final-pin/clock/cut proof remain required. A preserves return cycles; B pays explicit one-edge return pipeline and preserves S launch.",
+ "open": [
+  "Current final GEN/actual pins not emitted",
+  "Actual routed channels and cumulative cuts",
+  "Actual per-root phi-R/TT/FF/native80 spread",
+  "No fresh gate or physical grant"
+ ]
+}
