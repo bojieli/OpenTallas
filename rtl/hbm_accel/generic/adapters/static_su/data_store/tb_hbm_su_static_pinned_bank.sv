@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
 module tb_hbm_su_static_pinned_bank;
  parameter integer MUT_COHERENCE=0,MUT_RETURN=0;
- reg halt_macro5=0;
+ reg halt_macro5=0,halt_rd=0;
  wire[5:0]clk_macro={clk&&!halt_macro5,{5{clk}}};
  reg clk=0;always #5 clk=~clk;
  reg rst_n=0;reg[5:0]rv=0;reg[53:0]ra=0;
@@ -9,7 +9,7 @@ module tb_hbm_su_static_pinned_bank;
  reg wv=0;reg[8:0]wa=0;reg[31:0]wd=0;
  integer c,r,checks=0,errors=0;
  ot_hbm_su_static_bank6_clock_physical #(.MUT_COHERENCE(MUT_COHERENCE),.MUT_RETURN(MUT_RETURN))d(
- .clk(clk),.clk_macro0(clk_macro[0]),.clk_macro1(clk_macro[1]),.clk_macro2(clk_macro[2]),.clk_macro3(clk_macro[3]),.clk_macro4(clk_macro[4]),.clk_macro5(clk_macro[5]),.rst_n(rst_n),.read_v(rv),.read_addr(ra),.read_data(rd),.read_return(ret),
+ .clk(clk),.clk_rd(clk&&!halt_rd),.clk_macro0(clk_macro[0]),.clk_macro1(clk_macro[1]),.clk_macro2(clk_macro[2]),.clk_macro3(clk_macro[3]),.clk_macro4(clk_macro[4]),.clk_macro5(clk_macro[5]),.rst_n(rst_n),.read_v(rv),.read_addr(ra),.read_data(rd),.read_return(ret),
  .write_v(wv),.write_addr(wa),.write_data(wd));
  function automatic[31:0]word(input integer row);word=32'h12340000+32'(row*31+1);endfunction
  initial begin
@@ -18,6 +18,7 @@ module tb_hbm_su_static_pinned_bank;
   wv=0;@(posedge clk);#1;@(negedge clk);
   for(c=0;c<514;c=c+1)begin
    halt_macro5=$test$plusargs("MUT_CLOCK_HALT")&&(c>=64&&c<80);
+   halt_rd=$test$plusargs("MUT_RD_HALT")&&(c>=96&&c<100);   // r7 read-face root must be live
    rv=c<512?6'h3f:0;
    for(r=0;r<6;r=r+1)ra[r*9+:9]=9'((c+17*r)%512);
    @(posedge clk);#1;
