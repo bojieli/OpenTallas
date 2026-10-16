@@ -13,3 +13,11 @@ hier_block -module "ot_qwen_tp8_pv16_slice"
 hier_block -module "ot_qwen_tp8_pv_join16_static_cal"
 hier_block -module "ot_nhb_zh"
 hier_block -module "ot_qkh_recip_leaf"
+
+// Bound large glue scopes as actual RTL libraries; do not flatten these into
+// the timed bench. Cuts preserve every memory/arithmetic implementation.
+hier_block -module "qkd_native_attention_endpoint"
+hier_block -module "ot_qwen_tp8_attention_native_service_w16_g3s2"
+hier_block -module "ot_qwen_tp8_attention_native_stack_w4_g3s2_cal"
+hier_block -module "qkd_head_g3s2_native"
+hier_block -module "ot_qwen_tp8_pv_wide_pair"

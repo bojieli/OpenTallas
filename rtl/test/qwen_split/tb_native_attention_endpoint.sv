@@ -47,8 +47,8 @@ module tb_native_attention_endpoint;
   repeat(100)@(negedge clk);issue=1;@(negedge clk);issue=0;
   repeat(5)@(negedge clk);run=1;@(negedge clk);run=0;anchor=cyc;
   repeat(END_AGE+6)@(negedge clk);
-  $display("ENDPOINT CTX=%0d mode=%s errors=%0d words=%0d status=%0d fault=%b first=%0d last=%0d expected_first=%0d ctl=%b service=%h",
-   CTX,mode,errors,words,status_count,fault,first_result,last_result,TX_FIRST+1,u.ctl_fault,u.service_fault_cause);
+  $display("ENDPOINT CTX=%0d mode=%s errors=%0d words=%0d status=%0d fault=%b first=%0d last=%0d expected_first=%0d",
+   CTX,mode,errors,words,status_count,fault,first_result,last_result,TX_FIRST+1);
   if(mode=="steady"&&(fault||errors!=0||words!=512||status_count!=1||first_result!=TX_FIRST+1||last_result!=TX_FIRST+32))$fatal(1,"native endpoint exact/timeline gate failed");
   if(mode!="steady"&&!fault&&errors==0)$fatal(1,"injected fault undetected");
   $finish;
