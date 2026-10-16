@@ -96,7 +96,8 @@ module ot_s81_su_ctl #(
     output wire [7:0]          dn_jid,
     // up spine: the tiles' status
     input  wire                up_fu, up_fo, up_alive, up_den, up_rdy,
-    input  wire [7:0]          up_rjid
+    input  wire [7:0]          up_rjid,
+    input wire up_cp_done
 );
     wire e_v, e_r, d_v, a_flt, c_flt;
     wire [83:0] e_d;
@@ -121,14 +122,15 @@ module ot_s81_su_ctl #(
     reg  [S_RD-1:0]    rv_q;
     reg  [S_RD*30-1:0] rf_q;
     reg  [S_WR-1:0]    uv_q;
-    reg                ufu_q, ufo_q, ual_q, ude_q, urd_q;
+    reg                ufu_q, ufo_q, ual_q, ude_q, urd_q, ucp_q;
     reg  [7:0]         urj_q;
     always @(posedge sk) rf_q <= p_rf;
     always @(posedge sk or negedge s1)
-        if (!s1) begin rv_q <= 0; uv_q <= 0; ufu_q <= 0; ufo_q <= 0; ual_q <= 0; ude_q <= 0; urd_q <= 0; urj_q <= 0; end
+        if (!s1) begin rv_q <= 0; uv_q <= 0; ufu_q <= 0; ufo_q <= 0; ual_q <= 0; ude_q <= 0; urd_q <= 0; urj_q <= 0;ucp_q<=0; end
         else begin
             rv_q <= p_rv; uv_q <= p_uv; ufu_q <= up_fu; ufo_q <= up_fo; ual_q <= up_alive; ude_q <= up_den;
             urd_q <= up_rdy; urj_q <= up_rjid;
+            ucp_q<=up_cp_done;
         end
     wire [31:0] jobs;
     wire        bsy;
@@ -138,6 +140,6 @@ module ot_s81_su_ctl #(
         .rq_v(p_rq_v), .rq_row(p_rq_row), .rs_v(rv_q), .rs_f(rf_q), .busy(bsy), .fault(c_flt), .fault_code(fcode),
         .st_jobs(jobs),
         .dn_st(dn_st), .dn_kind(dn_kind), .dn_gsel(dn_gsel), .dn_fp4(dn_fp4), .dn_jid(dn_jid),
-        .up_v(uv_q), .up_fu(ufu_q), .up_fo(ufo_q), .up_alive(ual_q), .up_den(ude_q), .up_rdy(urd_q), .up_rjid(urj_q));
+        .up_v(uv_q), .up_fu(ufu_q), .up_fo(ufo_q), .up_alive(ual_q), .up_den(ude_q), .up_rdy(urd_q), .up_rjid(urj_q),.up_cp_done(ucp_q));
     assign flt = a_flt | c_flt;
 endmodule

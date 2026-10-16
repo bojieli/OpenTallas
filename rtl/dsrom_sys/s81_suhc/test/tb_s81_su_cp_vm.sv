@@ -10,7 +10,7 @@ module tb_s81_su_cp_vm;
         .rst_n(rst_n),.start(start),.descriptor(desc),.rq_v(rqv),.rq_row(rqa),.rs_v(rsv),.rs_d(rsd),
         .wq_v(wv),.wq_row(wa),.wq_d(wd),.wq_mask(wm),.done(dn),.fault(flt),.scheduled_cycles(sch));
     reg[255:0]inp[0:255];reg[127:0]exp[0:127];
-    reg[511:0]mem[0:1023];
+    reg[511:0]mem[0:16383];
     localparam integer LAT=11;
     integer late=LATE;
     reg[1:0]vpipe[0:LAT-1];reg[1023:0]dpipe[0:LAT-1];integer p;
@@ -21,27 +21,32 @@ module tb_s81_su_cp_vm;
         for(p=1;p<LAT;p=p+1)begin vpipe[p]<=rst_n?vpipe[p-1]:0;dpipe[p]<=dpipe[p-1];end
     end
     integer errors=0,nout=0,nreq=0,slot,t,j,k,first=-1,last=-1;
-    string dir;
+    string dir,vm_file;integer descriptor0=-1,descriptor1=-1;
     initial begin
         if(!$value$plusargs("DIR=%s",dir))$fatal(1,"DIR required");
         if($value$plusargs("LATE=%d",late))begin end
         $readmemh({dir,"/in.mem"},inp);$readmemh({dir,"/expected.mem"},exp);
-        for(j=0;j<1024;j=j+1)mem[j]=0;
+        for(j=0;j<16384;j=j+1)mem[j]=0;
         for(slot=0;slot<2;slot=slot+1)
             for(j=0;j<32;j=j+1)for(k=0;k<4;k=k+1)begin
                 mem[100+300*slot+j][128*k+:128]=inp[128*slot+4*j+k][0+:128];
                 mem[200+300*slot+j][128*k+:128]=inp[128*slot+4*j+k][128+:128];
             end
+        if($value$plusargs("VM=%s",vm_file))begin
+            $readmemh(vm_file,mem);
+            if(!$value$plusargs("D0=%d",descriptor0) || !$value$plusargs("D1=%d",descriptor1))$fatal(1,"descriptor rows required");
+        end
         repeat(8)@(negedge clk);rst_n=1;repeat(4)@(negedge clk);
         for(slot=0;slot<2;slot=slot+1)begin
             desc=0;desc[0+:32]=700;desc[32+:32]=100+300*slot;desc[64+:32]=512;
             desc[96+:32]=200+300*slot;desc[128+:32]=32'h10002;desc[160+:32]=slot?3:0;
+            if(descriptor0>=0)desc=mem[slot?descriptor1:descriptor0];
             start=1;@(negedge clk);start=0;
             for(t=1;t<=300;t=t+1)begin
                 @(negedge clk);
                 if(wv)begin
                     if(slot!=1 || nout>=32)errors=errors+1;
-                    else if(wa!=700+nout || wm!=16'hffff || wd!=={exp[4*nout+3],exp[4*nout+2],exp[4*nout+1],exp[4*nout]})begin
+                    else if(wa!=(descriptor1>=0?mem[descriptor1][0+:14]:700)+nout || wm!=16'hffff || wd!=={exp[4*nout+3],exp[4*nout+2],exp[4*nout+1],exp[4*nout]})begin
                         errors=errors+1;
                         if(errors<5)$display("BAD row%0d address%0d got%h",nout,wa,wd);
                     end

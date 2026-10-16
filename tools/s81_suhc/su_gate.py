@@ -41,7 +41,7 @@ SHAPES = dict(reduced=dict(QN_N=64, KV_N=512, QB_NB=4, SW_W=64, SM_H=2, SM_LPH=1
 # the DS HBM SU case set the golden runs draw on: tools/dshbm_baseline_measure.py prep (snapshots sha256 cd0fc866...)
 # -> tools/dshbm_chain_levers.py prep (_il) -> prep2 (_ildr); recorded in results/rtl/hbm_su_fused_compiler_20261005/v2_ildr.json
 CASES_SHA256 = "8c18c0655ccf6a147cde5e8a65e709ad5ccfd62ba9024e2644019289cd8d2108"
-K = dict(QN=0, KV=1, QB=2, SW=3, SE=4, SO=5, GQ=6, GK=7, RA=8, RB=9, QR=10, RW=11, CN=12, IK=13)
+K = dict(QN=0, KV=1, QB=2, SW=3, SE=4, SO=5, GQ=6, GK=7, RA=8, RB=9, QR=10, RW=11, CN=12, IK=13, CP=14)
 RTL = ["rtl/dsrom_sys/s81_suhc/ot_s81_su_core.sv", "rtl/dsrom_sys/s81_suhc/ot_s81_su_rx.sv", "rtl/dsrom_sys/s81_suhc/ot_s81_su_rw.sv",
        "rtl/hdc/v41x/ot_hdc_v41x_spshort.sv", "rtl/dsrom_sys/s81_suhc/dsfd_sp_su.sv",
        "rtl/dsrom_sys/s81_ctrl/ot_s81_engine_adapter.sv", "rtl/lib/ot_async_fifo.sv", "rtl/lib/ot_reset_sync.sv",
@@ -63,7 +63,7 @@ HIER = ["rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_hctl.sv", "rtl/dsrom_sys/s81_suhc
         "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_qn.sv", "rtl/hdc/ot_sram_bank.sv", "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_kv.sv", "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_sm.sv",
         "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v",
         "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_cn_ik.sv", "rtl/hbm_accel/generic/ot_hgi_fp4qdq.sv",
-        "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_rxt.sv", "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_rxh.sv", "rtl/dsrom_sys/s81_suhc/hier/dsfd_sp_su_h.sv"]
+        "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_rxt.sv", "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_rxh.sv", "rtl/dsrom_sys/s81_suhc/hier/ot_s81_su_cpt.sv", "rtl/dsrom_sys/s81_suhc/ot_s81_su_cp.sv", "rtl/dsrom_sys/s81_suhc/ot_s81_su_cp_vm.sv", "rtl/dsrom_sys/s81_suhc/hier/dsfd_sp_su_h.sv"]
 u32, f32, pack, bf16bits = H.u32, H.f32, H.pack, H.bf16bits
 
 
@@ -341,6 +341,31 @@ class Run:
             self.exp[out+4+i]=pack(codes,4)|((int(e)+127)&255)<<128
         self.jexp[len(self.prog)-1]=(out,8)
         return dict(qdq_base=out,raw_base=out+4)
+
+    def cp_slot(self, kv, score, context, slot, pool=False, previous=None):
+        """One actual CP512 store/pool command, explicit finite history identity.
+
+        ``previous`` is solely the independent expected-value oracle. The RTL
+        must receive the preceding store command; it is never initialized here.
+        """
+        import hdc_golden_v41 as V
+        kv,score=np.asarray(kv,F),np.asarray(score,F)
+        if kv.shape!=(512,) or score.shape!=(512,) or not np.isfinite(kv).all() or not np.isfinite(score).all():
+            raise ValueError('CP requires two finite512-dimensional FP32 FIELD outputs')
+        if type(context) is not int or not 0<=context<2**32 or type(slot) is not int or slot not in (0,1):
+            raise ValueError('CP requires uint32 context and physical slot0/1')
+        kb=self.put(rows_of(kv));sb=self.put(rows_of(score));out=self.alloc(32)
+        db=self.desc(out,kb,512,sb,context,extra=[slot+2*bool(pool)])
+        self.job('CP',0,db)
+        if pool:
+            if previous is None:raise ValueError('CP pooling oracle needs prior kv/score')
+            pk,ps=(np.asarray(x,F) for x in previous)
+            if pk.shape!=(512,) or ps.shape!=(512,):raise ValueError('CP history shape')
+            m=np.maximum(ps,score);e0=V.exp(V.add(ps,V.neg(m)));e1=V.exp(V.add(score,V.neg(m)))
+            den=V.add(e0,e1)
+            y=V.to_bf16(V.add(V.mul(pk,V.div(e0,den)),V.mul(kv,V.div(e1,den))))
+            self.expect(out,rows_of(y))
+        return dict(output_base=out,kv_base=kb,score_base=sb,descriptor_base=db,context=context,slot=slot,pool=bool(pool))
 
     def write(self, d, meta):
         d.mkdir(parents=True, exist_ok=True)

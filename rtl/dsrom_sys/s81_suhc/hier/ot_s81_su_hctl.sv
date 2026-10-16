@@ -54,14 +54,15 @@ module ot_s81_su_hctl #(
     input  wire                   up_alive,       // every tile out of reset
     input  wire                   up_den,         // every softmax tile holds this SE job's den
     input  wire                   up_rdy,         // a norm tile's go issued for job up_rjid
-    input  wire [7:0]             up_rjid
+    input  wire [7:0]             up_rjid,
+    input wire up_cp_done
 );
     localparam integer DQ = 1280, DK = 512, NVQ = DQ / QN_N;
     localparam integer SMW = SM_H * SM_LPH;
     localparam integer RQN = QN_N / 16, RKV = KV_N / 16, RQB = 2 * QB_NB, RSW = SW_W / 16, RSM = SMW / 16;
     localparam integer NPV = 512 / SM_LPH;
     localparam [3:0] K_QN = 0, K_KV = 1, K_QB = 2, K_SW = 3, K_SE = 4, K_SO = 5, K_GQ = 6, K_GK = 7;
-    localparam [3:0] K_RA = 8, K_RB = 9, K_QR = 10, K_RW = 11, K_CN = 12, K_IK = 13;   // RW: s81-ftok r3 die item F11 (ffn.weights)
+    localparam [3:0] K_RA = 8, K_RB = 9, K_QR = 10, K_RW = 11, K_CN = 12, K_IK = 13, K_CP = 14;   // RW: s81-ftok r3 die item F11 (ffn.weights)
     localparam integer XSUB = 16 / RAL;
 
     reg         run;
@@ -167,7 +168,7 @@ module ot_s81_su_hctl #(
                 dbase <= c_arg[13:0]; ph <= 0; ri <= 0; rr <= 0; np <= nparams(c_arg[23:20]); cw <= 0;
                 rdy_ok <= 1'b0; jid <= jid + 8'd1;
                 dn_st <= 1'b1; dn_kind <= c_arg[23:20]; dn_gsel <= c_arg[19:18]; dn_fp4 <= c_arg[14]; dn_jid <= jid + 8'd1;
-                if (c_arg[23:20] > K_IK) begin fault <= 1; fault_code <= 3; end
+                if (c_arg[23:20] > K_CP) begin fault <= 1; fault_code <= 3; end
                 if (c_arg[23:20] == K_SO && !(sm_owner_v && sm_owner == e_cmd_d[83])) begin fault <= 1; fault_code <= 6; end
             end
             if (run && !fault) begin
@@ -222,7 +223,10 @@ module ot_s81_su_hctl #(
                         rr <= c;
                     end
                 end
-                if (ph == 2 && !(kind == K_RA || kind == K_RB || kind == K_QR || kind == K_RW)) begin
+                if(ph==2 && kind==K_CP && up_cp_done)begin
+                    run<=0;e_done_v<=1;e_done_tag<=jtag;st_jobs<=st_jobs+1;
+                end
+                if (ph == 2 && !(kind == K_RA || kind == K_RB || kind == K_QR || kind == K_RW || kind==K_CP)) begin
                     if ((kind != K_QN && kind != K_KV) || rdy_ok) begin
                         for (s = 0; s < S_RD; s = s + 1)
                             if (ri + s < nrow) begin rq_v[s] <= 1; rq_row[14 * s +: 14] <= ibase + ri + s; end

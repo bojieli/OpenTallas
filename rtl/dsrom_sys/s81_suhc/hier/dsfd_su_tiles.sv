@@ -35,5 +35,5 @@ module dsfd_su_t_ctl (
         .c_done_tag(c_done_tag), .inp(inp), .flt(flt), .online(online), .fcode(fcode), .rst_o(rst_o),
         .p_rq_v(p_rq_v), .p_rq_row(p_rq_row), .p_rv(p_rv), .p_rf(p_rf), .p_uv(p_uv),
         .dn_st(dn_st), .dn_kind(dn_kind), .dn_gsel(dn_gsel), .dn_fp4(dn_fp4), .dn_jid(dn_jid),
-        .up_fu(up_fu), .up_fo(up_fo), .up_alive(up_alive), .up_den(up_den), .up_rdy(up_rdy), .up_rjid(up_rjid));
+        .up_fu(up_fu), .up_fo(up_fo), .up_alive(up_alive), .up_den(up_den), .up_rdy(up_rdy), .up_rjid(up_rjid),.up_cp_done(1'b0));
 endmodule
