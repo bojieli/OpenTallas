@@ -4,8 +4,8 @@
 // Reduction order (golden tools/hdc_golden.py attend(): matvec_il(V^T, bf16(e), s_pv=256)): chunk c' = t mod 256 is
 // summed sequentially in increasing t from +0, then the 8-level pairwise tree over c' = 0..255. Pair p owns
 // c' = 128p + c, c = 0..127, rows t = 256 n + 128 p + c. The pair splits c over 8 banks: bank l = c[6:4] holds the 16
-// chains c = 16 l + a (a = c[3:0]) in the unchanged ot_qwen_tp8_pv256_slice (16 FP32 lanes, actual 128x256 SRAM macros,
-// local address a). Each chain still adds its rows serially in t order (one step per 16-cycle round >= the 11-edge
+// chains c = 16 l + a (a = c[3:0]) in ot_qwen_tp8_pv16_slice (the pv256 slice datapath byte-identical, 16 FP32 lanes, its 16 chain words in
+// 4 actual ot_sram_1r1w_32x128_m1 macros, local address a). Each chain still adds its rows serially in t order (one step per 16-cycle round >= the 11-edge
 // slice loop), so every leaf is bit-identical to the 1-row/cycle pair.
 //   tree levels 1-4 (c bits 0-3): inside each slice, its own SRAM tree (TRA/TRB/TRADD, nodes 16 -> 1);
 //   tree levels 5-7 (c bits 4-6 = bank bits 0-2): ((b0+b1)+(b2+b3))+((b4+b5)+(b6+b7)) per 16-lane column;
@@ -51,7 +51,7 @@ module ot_qwen_tp8_pv_wide_pair #(
  assign fault=ctl_fault;
 endmodule
 
-// One P.V column: head H, dims 16 GS .. 16 GS + 15 of all 8 banks (8 x ot_qwen_tp8_pv256_slice, 16 SRAM macros) and the
+// One P.V column: head H, dims 16 GS .. 16 GS + 15 of all 8 banks (8 x ot_qwen_tp8_pv16_slice, 32 SRAM macros 32x128) and the
 // 16-lane level 5-7 join. Every input and output port is registered at the pin (one edge each way); the column checks
 // its own slices (commit slots, adder flags) and reports one sticky fault.
 // cmd (60 b, from ot_qwen_tp8_pv_wide_ctl, all broadcast): {join_go, reduce_dst[2:0], reduce_last, reduce_capture,
@@ -79,7 +79,7 @@ module ot_qwen_tp8_pv_col #(parameter integer MUT=0, J_LAT=7)(
   wire[127:0] bv=swap?v_r[128*P1+:128]:v_r[128*P0+:128];
   wire[15:0] be=swap?e_r[16*P1+:16]:e_r[16*P0+:16];
   wire[511:0] raw;
-  ot_qwen_tp8_pv256_slice u_slice(.clk(clk),.rst_n(rst_n),.take(take[l]),.c({3'd0,a}),
+  ot_qwen_tp8_pv16_slice u_slice(.clk(clk),.rst_n(rst_n),.take(take[l]),.c({3'd0,a}),
    .first((l<4)?first_lo:first_hi),.init_zero(init),.init_c({3'd0,init_c}),
    .v(bv),.e(be),.read_leaf(rd_leaf),.leaf_c({3'd0,leaf_c}),
    .reduce_issue(red_issue),.reduce_capture(red_capture),.reduce_last(red_last),.reduce_dst({4'd0,red_dst}),
