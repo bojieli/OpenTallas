@@ -421,6 +421,53 @@
   },
   {
    "design": "s81",
+   "unit": "CAPT.CD_PINREG (dsfd_capt_cd PINREG=1: f_st pin registers, capture DONE toggle t_cd +1 ckv = 1.111 ns, charged as +2 stream cycles (ceil) on every field-capture phase)",
+   "group": "CAPT.CD_PINREG",
+   "measured": 2.0,
+   "price": 1.0,
+   "unit_of_measure": "cycles",
+   "unit_ratio": 2.0,
+   "e2e_loss_pct": 0.07,
+   "binding_workload": "ar",
+   "per_workload": {
+    "ar": {
+     "model": "token-path longest path",
+     "base_cycles": 828866.4,
+     "cycles": 829448.4,
+     "added_cycles": 582.0,
+     "runs_per_token": 337,
+     "critical_runs": 291,
+     "overlapped_runs": 46,
+     "other_price_nodes_skipped": 0,
+     "naive_added_cycles": 674.0,
+     "wave_positions": 0,
+     "wave_added_cycles_per_position": 0.0,
+     "e2e_loss_pct": 0.07
+    },
+    "mtp": {
+     "model": "token-path longest path",
+     "base_cycles": 1177516.1,
+     "cycles": 1178222.1,
+     "added_cycles": 706.0,
+     "runs_per_token": 313,
+     "critical_runs": 313,
+     "overlapped_runs": 0,
+     "other_price_nodes_skipped": 0,
+     "naive_added_cycles": 626.0,
+     "wave_positions": 5,
+     "wave_added_cycles_per_position": 16.0,
+     "e2e_loss_pct": 0.06
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "results/arch/s81_hub_parents_1016/native_audit_capture_1316/native_audit_cd_split1016p.json (job dsfd_capt_cd_split1016p-split1p-4d451d0fb CLOSED TT +342.86/FF +26.90, native PASS 170.1/123.9); RTL ab1d77b6d; capcd_eq PINREG=1 16/16 + capc_split eq 9/9 at a75a12947",
+   "evidence_grade": "committed_bench",
+   "date": "2026-10-16",
+   "status": "proposed",
+   "note": "S-VM 2026-10-16 (S-FUNC not running; priced by S-VM per coordinator). Old cd views failed native capture (214.2 / 203.7 ps on f_st[2] -> ICG ENA); no zero-cycle structure (hold select on arrival edge). Conservative: +2 stream cycles (ceil of 1.333) on EVERY field matvec node incl idx.q/eng.dot/wkv/accept.seed and lm_head, assuming the field sequencer waits on t_cd before the next phase. Exact +1.333 sensitivity: 0.047 % AR / 0.040 % MTP."
+  },
+  {
+   "design": "s81",
    "unit": "ENGRAM.LKP_STATIC14_ST6 (dsfd_engram_lkp_static14 st6 row-read root hop: +1 on every row beat and status; element 156 -> 157, engine 154 -> 155)",
    "group": "ENGRAM.LKP_STATIC14_ST6",
    "measured": 2.0,
@@ -2022,11 +2069,11 @@
   },
   "s81": {
    "accepted_pct": 23.391,
-   "proposed_pct": 1.899,
-   "accepted_plus_proposed_pct": 25.29,
+   "proposed_pct": 1.969,
+   "accepted_plus_proposed_pct": 25.36,
    "limit_pct": 15.0,
    "accepted_rows": 11,
-   "proposed_rows": 9,
+   "proposed_rows": 10,
    "headroom_pct": -8.391,
    "owner_exception_rows": 2,
    "over_limit_by_owner_exception": true

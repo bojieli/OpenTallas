@@ -1,0 +1,21 @@
+{
+ "schema": "opentallas.s81.selem-price.v1",
+ "date": "2026-10-16",
+ "by": "S-VM (S-FUNC not running; coordinator 14:40)",
+ "method": "tools/throughput/accepted_cost.py propose s81 (token-path longest path, results/arch/token_path_20261009 ds_rom + ds_rom_mtp, --node-delta on matched field-capture nodes, MTP wave positions charged); tok/s on the s81_mtp_ledger_1016 89-stage basis hop_only AR 1433.8 / MTP 4209.6 x (1 - sum loss)",
+ "rows_proposed": [
+  {"group": "CAPT.CD_PINREG", "cycles": "+1 ckv (1.111 ns) on the capture DONE toggle t_cd per field-capture phase, charged +2 stream cycles (ceil of 1.333)",
+   "match": "(attn\\.(a_proj|wq_b|wo_a|wo_b|idx\\.q|cmp\\.wk)|ffn\\.(router|experts_gu|down|shared_gu)(\\.r0)?|eng\\.dot|\\.wkv|accept\\.seed|head\\.lm_head)$",
+   "ar": {"runs": 337, "critical_runs": 291, "added_cycles": 582.0, "loss_pct": 0.07},
+   "mtp": {"runs": 313, "critical_runs": 313, "added_cycles": 706.0, "loss_pct": 0.06},
+   "exact_1p333_sensitivity": {"ar_loss_pct": 0.047, "mtp_loss_pct": 0.04},
+   "assumption": "conservative: the field sequencer waits on t_cd before the next phase of every field matvec (incl. lm_head); if DONE is only observed off the issue path the cost is 0",
+   "source": "RTL ab1d77b6d (dsfd_capt_cd PINREG), view dsfd_capt_cd_split1016p CLOSED TT +342.86/FF +26.90, native PASS 170.1/123.9 (native_audit_capture_1316/native_audit_cd_split1016p.json); parent PINREG(1) + bench ref +1 ckv a75a12947 (capc_split eq 9/9, mutants FAIL)"}
+ ],
+ "totals_s81": {
+  "ledger_worst_workload_pct": {"accepted": 23.391, "accepted_plus_proposed_before": 25.29, "accepted_plus_proposed_after": 25.36, "limit": 15.0, "owner_exception": "S81 > 15 % OK while measured MTP > 3,000 tok/s"},
+  "ar": {"tok_s_acc_prop_before": 1073.5, "new_loss_pct": 0.07, "tok_s_acc_prop_after": 1072.5},
+  "mtp": {"tok_s_acc_prop_before": 3317.9, "new_loss_pct": 0.06, "tok_s_acc_prop_after": 3315.4, "above_3000": true}
+ },
+ "grade": "COMPOSED_NOT_NATIVE"
+}
