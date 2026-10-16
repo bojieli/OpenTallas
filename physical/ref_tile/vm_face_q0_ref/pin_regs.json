@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "hfd_vms_bank_face_q0",
+ "enable": false,
+ "reason": "Actual pin capture and output launch flops retained at same data edges; only their clocks split by exact pin face. No wrapper data flops added. Literal component benches prove write3/read6 edges; io_flop_at_pins anchors the actual source flops."
+}
