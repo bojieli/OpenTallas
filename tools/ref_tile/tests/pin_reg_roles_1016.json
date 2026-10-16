@@ -2,7 +2,7 @@
   "scope": "Shared pin-register control-role guard; actual transformed source proof is supplied by issuer stream. No physical or native system closure claim.",
   "source_candidate": "de7085ec6",
   "base": "af3048e286e9cda3cd1b6119a632dbdc1d782258",
-  "final_helper_sha256": "fd53ca5dd8aa2a697bed062de2df5a4a492faa8fc0313752cbfdc56565fb5356",
+  "final_helper_sha256": "f41ed3b095774d33021064dc4fa9c61368a3cbb7099517a16a8eafe8a3250b16",
   "old_c8": {
     "host": "ot-epyc4",
     "remote": "/srv/opentallas-scratch/claude/ref_gate/s81fill2_sseq_c8-20261016-030138",
@@ -40,21 +40,25 @@
     "guard_rejection": "declared clock selected as data or absent: ckv"
   },
   "validation": {
-    "focused_cases": 17,
+    "focused_cases": 19,
     "focused_log": "/home/ubuntu/artifacts/pinroles-0253/focused_tests.log",
     "environment_fixture": "results/arch/hier_contract_1012/qwen_rom_tp8.json materialized narrowly; failed sparse environment case re-run PASS",
-    "baseline_recipe": "Exact base af3048e28 generator replay reproduces same four quoted-string Recipe assertions as candidate (12 cases, 4 failures); no change to those unrelated expectations",
+    "baseline_recipe": "Exact base af3048e28 generator replay originally reproduces four quoted-string Recipe assertions. At root request, only these assertions now compare parsed EXTRA argv with identical expected options; full related 64-case suite passes on source current main256997.",
     "baseline_artifacts": "/home/ubuntu/artifacts/pinroles-0253/base_recipe.log and run_base_recipe.py",
     "baseline_logs": {
       "/home/ubuntu/artifacts/pinroles-0253/base_recipe.log": "de57f476f5b53c3583c5b7dd0d6a520d348f5d1acb1e9aa533c16a1d2309a80f",
       "/home/ubuntu/artifacts/pinroles-0253/run_base_recipe.py": "be1e83411bf5dd8b3913a2eb9509533c8e8d4beda6882a40e11d58d411077a9a",
       "/home/ubuntu/artifacts/pinroles-0253/focused_tests.log": "69602d225be67953b7a7b7f6a5aa8678bb7dc3cc6b0efb1c9eda319a135a4bcf"
-    }
+    },
+    "final_source_current_cases": 64,
+    "final_source_current_log": "/home/ubuntu/artifacts/pinroles-0253/final_full_tests.log",
+    "final_source_current_log_sha256": "bab1d98437211bc9a8e40b74e72f9b957b78bd1061f6c0b572cfd1e9d4a9f64d"
   },
   "dependencies": [
     "New generic pin-register kits must regenerate kit.env to declare OT_PIN_REGS_RESET_PORTS, including explicit empty value when there are no resets.",
     "Deploy kit_orfs_vars.py with gate/publication helpers; no live daemon changes made by worker.",
-    "Native policy secondary clocks use explicit spec clock_ports role list independent of CTS clock policy; clocks must not be misclassified in reset_ports."
+    "Native policy secondary clocks use explicit spec clock_ports role list independent of CTS clock policy; clocks must not be misclassified in reset_ports.",
+    "Legacy effective reset regexp/default remains a compatibility contract: before wrapper generation, every matching non-clock port requires an exact reset declaration or refuses with remediation. No accepted regex is silently ignored."
   ],
   "preserved": "Clock/reset source polarity and semantics use direct wires. Data input/output wrapper stages remain +1 edge each. No physical gate or timing threshold edits.",
   "actual_transformed_proof": {
@@ -116,10 +120,10 @@
     "guard_against_source_pinned_sdcs": "Both actual generated wrappers/TSVs independently passed validate_roles against a66085b03 SDC blobs; clocks ck/ckv and direct resets rst/rsv. SDC SHAs a22bd7a8a473a32f376776f0f56e04f2ae034110d89433ffb8604fbf866cd5dd and 4141118f0f23c9d00ce26a6bda8fe887ee98ea2eceae416b50e2e19e3b353e87."
   },
   "final_exact_rebind": {
-    "ot_run_unit": "oth-ubuntu-1933895-1792147181",
-    "receipt_sha256": "bd9f3d7d778945803a3effcbcee9a5a59c9c7f4fb23606d87d97dbdbba74769f",
+    "ot_run_unit": "oth-ubuntu-1968977-1792147477",
+    "receipt_sha256": "217b3ebba17bf1cb06800cc12861b73f68fad930b746b739f62651524a5fc963",
     "receipt": {
-      "final_hook_sha256": "fd53ca5dd8aa2a697bed062de2df5a4a492faa8fc0313752cbfdc56565fb5356",
+      "final_hook_sha256": "f41ed3b095774d33021064dc4fa9c61368a3cbb7099517a16a8eafe8a3250b16",
       "proven_hook_sha256": "72103f693ab08fa2e2ec22afa49c3150647545023954741bf5aaddf39c120b88",
       "tops": {
         "c8": {
@@ -135,6 +139,171 @@
     "functional_receipt_local": "/home/ubuntu/artifacts/s81-issuer-localtree0253/pinreg_boundary_receipt.json",
     "functional_receipt_sha256": "094464204feaee3f868b5690249dc11772d91faa187e464e5f0a976c97ba2ecb",
     "functional_log_sha256": "01bfb45d39fdcf38aac9b9a777b83dbb34577befff6fd9ac8e0faa7509ffd458",
-    "final_rebind_log_sha256": "d490a4a433d6040aa1571d5468c93102e967ad3394baf63630f826c1becd0835"
+    "final_rebind_log_sha256": "d51d16c39ea4dd669333b81d3a9e832e656a7d76c6ae1d9c16ac0c5e184841ba"
+  },
+  "effective_source_inventory": {
+    "source_main": "256997a6d013ed27ca70769ca09d011fb1c97520",
+    "scope": "Source metadata inventory of effective enabled generic pin-register specs, including recipe3/default apply_recipe and existing-kit recipe retention. Known literal pin names are checked using actual Tcl regexp; this is not elaborated port qualification. Missing/regex-only pin populations remain unresolved. Legacy admitted jobs are preserved.",
+    "enabled_specs": 26,
+    "explicit_enabled_specs": 16,
+    "default_enabled_specs": 10,
+    "known_affected": [
+      {
+        "path": "physical/ref_tile/qfd_tt_core_leaf/spec.json",
+        "top": "qfd_tt_core_leaf",
+        "reset_ports": [
+          "rst_n"
+        ],
+        "clock_ports": [
+          "clk"
+        ],
+        "legacy_regex": "(?i)(^|_)(a?s?rst|reset|rstn|resetn|rst_n|rst_ni|reset_n|reset_ni|por|por_n)(_|$)",
+        "explicit_regex": false,
+        "effective_recipe": 3,
+        "enable_origin": "explicit pin_regs",
+        "emitted_kit_env": "physical/ref_tile/qfd_tt_core_leaf/kit.env",
+        "unresolved_population": false,
+        "legacy_matching_undeclared": [
+          "scale_rst_n"
+        ]
+      }
+    ],
+    "unresolved": [],
+    "remediation": "For a NEW kit, declare all genuine literal reset ports/bits in reset_ports and clocks in clock_ports (never clocks as resets); regenerate kit.env with exact OT_PIN_REGS_RESET_PORTS. A legacy effective regex/default match absent the exact reset role list is refused before wrapper generation. Do not reinterpret polarity/meaning from its name; inspect source. Mixed-role buses require explicit boundary wrappers. Preserve immutable admitted jobs; requalify results using actual transformed wrapper/TSV and source-pinned timing roles.",
+    "all_enabled_spec_paths": [
+      {
+        "path": "physical/ref_tile/ot_s81_vm_x34_s_w1026_1015_n3/spec.json",
+        "effective_recipe": 3,
+        "enable_origin": "explicit pin_regs"
+      },
+      {
+        "path": "physical/ref_tile/qfd_res_train_issue_c2/spec.json",
+        "effective_recipe": 3,
+        "enable_origin": "explicit pin_regs"
+      },
+      {
+        "path": "physical/ref_tile/qfd_sp_res_train_par_0_c1/spec.json",
+        "effective_recipe": 3,
+        "enable_origin": "explicit pin_regs"
+      },
+      {
+        "path": "physical/ref_tile/qfd_sp_res_train_par_1_c1/spec.json",
+        "effective_recipe": 3,
+        "enable_origin": "explicit pin_regs"
+      },
+      {
+        "path": "physical/ref_tile/qfd_sp_res_train_par_2_c1/spec.json",
+        "effective_recipe": 3,
+        "enable_origin": "explicit pin_regs"
+      },
+      {
+        "path": "physical/ref_tile/qfd_tt_core_leaf/spec.json",
+        "effective_recipe": 3,
+        "enable_origin": "explicit pin_regs"
+      },
+      {
+        "path": "physical/ref_tile/qfd_tt_scale_leaf/spec.json",
+        "effective_recipe": 3,
+        "enable_origin": "explicit pin_regs"
+      },
+      {
+        "path": "physical/ref_tile/s81engm_dispatch/spec.json",
+        "effective_recipe": 3,
+        "enable_origin": "explicit pin_regs"
+      },
+      {
+        "path": "physical/ref_tile/s81hc_caq_ref/spec.json",
+        "effective_recipe": 3,
+        "enable_origin": "explicit pin_regs"
+      },
+      {
+        "path": "physical/ref_tile/s81net_r2l_vr_1024x1__ha_sw/spec.json",
+        "effective_recipe": 3,
+        "enable_origin": "explicit pin_regs"
+      },
+      {
+        "path": "tools/ref_tile/examples/val_bad_ck0.json",
+        "effective_recipe": 3,
+        "enable_origin": "recipe/default"
+      },
+      {
+        "path": "tools/ref_tile/specs_qcmp/qfd_res_train_issue_c2.json",
+        "effective_recipe": 3,
+        "enable_origin": "explicit pin_regs"
+      },
+      {
+        "path": "tools/ref_tile/specs_qcmp/qfd_sp_res_train_par_0_c1.json",
+        "effective_recipe": 3,
+        "enable_origin": "explicit pin_regs"
+      },
+      {
+        "path": "tools/ref_tile/specs_qcmp/qfd_sp_res_train_par_1_c1.json",
+        "effective_recipe": 3,
+        "enable_origin": "explicit pin_regs"
+      },
+      {
+        "path": "tools/ref_tile/specs_qcmp/qfd_sp_res_train_par_2_c1.json",
+        "effective_recipe": 3,
+        "enable_origin": "explicit pin_regs"
+      },
+      {
+        "path": "tools/ref_tile/specs_s81_snet/s81net_r2l_vr_1024x1__ha_sw.json",
+        "effective_recipe": 3,
+        "enable_origin": "explicit pin_regs"
+      },
+      {
+        "path": "tools/ref_tile/specs_s81engm/s81engm_dispatch.json",
+        "effective_recipe": 3,
+        "enable_origin": "recipe/default"
+      },
+      {
+        "path": "tools/ref_tile/specs_s81hc/s81hc_caq_ref.json",
+        "effective_recipe": 3,
+        "enable_origin": "recipe/default"
+      },
+      {
+        "path": "tools/ref_tile/specs_s81hc/s81hc_ccrh2_ref.json",
+        "effective_recipe": 3,
+        "enable_origin": "recipe/default"
+      },
+      {
+        "path": "tools/ref_tile/specs_s81hc/s81hc_cseqh2_ref.json",
+        "effective_recipe": 3,
+        "enable_origin": "recipe/default"
+      },
+      {
+        "path": "tools/ref_tile/specs_s81hc_pending/s81hc_cseqh2_pipe_pending.json",
+        "effective_recipe": 3,
+        "enable_origin": "recipe/default"
+      },
+      {
+        "path": "tools/ref_tile/specs_s81vm_cdc_leaves_1015/ot_s81_vm_x34_s_w1026_1015_n3.json",
+        "effective_recipe": 3,
+        "enable_origin": "explicit pin_regs"
+      },
+      {
+        "path": "tools/ref_tile/specs_xp_draft_1013/hgi_xp_qp.json",
+        "effective_recipe": 3,
+        "enable_origin": "recipe/default"
+      },
+      {
+        "path": "tools/ref_tile/specs_xp_draft_1013/hgi_xp_rd_ctl.json",
+        "effective_recipe": 3,
+        "enable_origin": "recipe/default"
+      },
+      {
+        "path": "tools/ref_tile/specs_xp_draft_1013/hgi_xp_sched.json",
+        "effective_recipe": 3,
+        "enable_origin": "recipe/default"
+      },
+      {
+        "path": "tools/ref_tile/specs_xp_draft_1013/hgi_xp_spine.json",
+        "effective_recipe": 3,
+        "enable_origin": "recipe/default"
+      }
+    ],
+    "inventory_full_sha256": "ee5e1e24306507a44e82ce9c75312e4a2446fb174af0ddae41bb164740c31ede",
+    "inventory_full_local": "/home/ubuntu/artifacts/pinroles-0253/current_main_inventory.json",
+    "reviewed_qwen_metadata_candidate": "bbb875d85 adds scale_rst_n to exact reset_ports; root/Qwen parent own metadata publication, no RTL/view/reroute change."
   }
 }
