@@ -111,6 +111,11 @@ module qkd_seq_core_static #(
     reg          lp_seen;
     wire         cmd  = rv && rk == 4'd1;
     wire         qev  = rv && rk == 4'd2;
+    // The Q train is fixed by the CMD slot: the first word is on the raw pins while cmd is seen, then 31 more
+    // words follow on consecutive edges.  Issue from that compiled timeline, and check arrivals separately.
+    // Decoding the raw kind at x_v/x_cls bypassed the input pin flops (native capture >190 ps).
+    wire         q_pin_slot = cmd || (act && a < 8'd31);
+    wire         q_captured_slot = act && a < 8'd32;
     // compiled store / fan events (decoded one edge ahead, registered)
     wire         k_exp  = act && a >= 8'(KVN_A0 - ((MUT == 4) ? 1 : 0)) && a < 8'(KVN_A0 + 4 - ((MUT == 4) ? 1 : 0));
     wire [1:0]   kp_j   = 2'(a - 8'(KP0 - 1));
@@ -166,10 +171,11 @@ module qkd_seq_core_static #(
             // the CMD record's data arrives on the KVN data wires one edge after its event: position = T - 1
             if (act && a == 8'd0 && cd != {5'd0, 13'(a_T - 14'd1), 1'b1}) f_pos <= 1;
             // store pushes: Q at its own (registered) event, KVN at its compiled edge
-            // Q: the beat's data is on the KVN data wires one edge after its event -> push from the event pin
+            // Q: payload arrives one edge after the event, exactly at these compiled store-push edges.
             xk <= k_exp; xk2 <= xk;
-            x_v <= (att_rx_v && att_rx_kind == 4'd2) || k_exp;
-            x_cls <= (att_rx_v && att_rx_kind == 4'd2) ? 3'b001 : 3'b010;
+            x_v <= q_pin_slot || k_exp;
+            x_cls <= q_pin_slot ? 3'b001 : 3'b010;
+            if (qev != q_captured_slot) f_q <= 1;
             if (qev) begin
                 if (!act || rb != 5'(q_seen)) f_q <= 1;
                 q_seen <= q_seen + 1'b1;
