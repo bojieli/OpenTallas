@@ -125,10 +125,10 @@
    "master": "ot_hbm_status_join",
    "source": "rtl/hbm_accel/host_static_20261015/ot_hbm_status_join.sv",
    "params": {
-    "NT": 67,
-    "NF": 100,
+    "NT": 71,
+    "NF": 104,
     "NH": 6,
-    "TGTS": "536'h878685846f6e6d6c6b6a696867666564636261605f5e5d5c5b5a595857565554535251504f4e4d4c4b4a494847464544434241403b3a39387877767574703736353430"
+    "TGTS": "568'ha3a2a1a0878685846f6e6d6c6b6a696867666564636261605f5e5d5c5b5a595857565554535251504f4e4d4c4b4a494847464544434241403b3a39387877767574703736353430"
    },
    "slot": "host_cp_ingress",
    "owner": "host owner (H-NETLIST cp2)",
@@ -6863,6 +6863,210 @@
    "bits": 1,
    "clock": "stream",
    "basis": "TARGET135 actual sticky fault to host status"
+  },
+  {
+   "src": [
+    "cp_smw_SW",
+    "configured",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_ready",
+    67,
+    68
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET160 real collar status (fault incl. writer + its 8 SMs fault/schedule_fault)"
+  },
+  {
+   "src": [
+    "cp_smw_SW",
+    "active",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_active",
+    67,
+    68
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET160 real collar status (fault incl. writer + its 8 SMs fault/schedule_fault)"
+  },
+  {
+   "src": [
+    "cp_smw_SW",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    100,
+    101
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET160 real collar status (fault incl. writer + its 8 SMs fault/schedule_fault)"
+  },
+  {
+   "src": [
+    "cp_smw_SE",
+    "configured",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_ready",
+    68,
+    69
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET161 real collar status (fault incl. writer + its 8 SMs fault/schedule_fault)"
+  },
+  {
+   "src": [
+    "cp_smw_SE",
+    "active",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_active",
+    68,
+    69
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET161 real collar status (fault incl. writer + its 8 SMs fault/schedule_fault)"
+  },
+  {
+   "src": [
+    "cp_smw_SE",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    101,
+    102
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET161 real collar status (fault incl. writer + its 8 SMs fault/schedule_fault)"
+  },
+  {
+   "src": [
+    "cp_smw_NW",
+    "configured",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_ready",
+    69,
+    70
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET162 real collar status (fault incl. writer + its 8 SMs fault/schedule_fault)"
+  },
+  {
+   "src": [
+    "cp_smw_NW",
+    "active",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_active",
+    69,
+    70
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET162 real collar status (fault incl. writer + its 8 SMs fault/schedule_fault)"
+  },
+  {
+   "src": [
+    "cp_smw_NW",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    102,
+    103
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET162 real collar status (fault incl. writer + its 8 SMs fault/schedule_fault)"
+  },
+  {
+   "src": [
+    "cp_smw_NE",
+    "configured",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_ready",
+    70,
+    71
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET163 real collar status (fault incl. writer + its 8 SMs fault/schedule_fault)"
+  },
+  {
+   "src": [
+    "cp_smw_NE",
+    "active",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_active",
+    70,
+    71
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET163 real collar status (fault incl. writer + its 8 SMs fault/schedule_fault)"
+  },
+  {
+   "src": [
+    "cp_smw_NE",
+    "fault",
+    0,
+    1
+   ],
+   "dst": [
+    "host_status",
+    "t_fault",
+    103,
+    104
+   ],
+   "bits": 1,
+   "clock": "stream",
+   "basis": "TARGET163 real collar status (fault incl. writer + its 8 SMs fault/schedule_fault)"
   }
  ],
  "clocks": [
