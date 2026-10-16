@@ -3,7 +3,7 @@
  "block": "ot_hgi_coll_static_pinreg_store",
  "ref_tile": true,
  "owner": "Claude:H-NETLIST/COLL-LANE-1045",
- "purpose": "hard_v5 rail store bank: byte-identical source of CLOSED hcoll-pinreg-store141-44720c8ad-tc (route_master, M6/M7 pins+PG, no exported view) re-kitted on the M5 leaf contract, one-face S pin plan toward the capture-control leaf; real 64x512 SRAM",
+ "purpose": "hard_v5 rail store bank: byte-identical source of CLOSED hcoll-pinreg-store141-44720c8ad-tc (route_master, M6/M7 pins+PG, no exported view) re-kitted on the M5 leaf contract, one-face W pin plan aligned with the SRAM's W-edge rd_out/wd_in columns (balanced, ranged); real 64x512 SRAM",
  "threads": 8,
  "peak_ram_gb": 16,
  "source": {

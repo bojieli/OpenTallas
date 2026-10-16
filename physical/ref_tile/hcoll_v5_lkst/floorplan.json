@@ -29,13 +29,13 @@
   "cap_basis": "contract"
  },
  "pins": {
-  "S": [
+  "W": [
    "clk",
    "we",
    "wa",
    "ra",
-   "din",
-   "dout"
+   "dout",
+   "din"
   ]
  },
  "clock_port": "clk",
