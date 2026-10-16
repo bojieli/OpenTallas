@@ -64,7 +64,7 @@ def transform(fc):
             end''')
     fc = fc.replace('    assign bk_fault = c_qy_bkf; assign qy_bkf = c_qy_bkf;', '    // Dedicated capture at each column-return fault pin. Diagnostic latency +1 edge;\n    // the compiler-owned issue calendar and data/operand stages are unchanged.\n    wire [NB-1:0] qy_pin;\n    if (STATIC_PROGRAM != 0) begin : g_qy_pin\n        reg [NB-1:0] q;\n        always @(posedge fclk) q <= c_qy_bkf;\n        assign qy_pin = q;\n    end else begin : g_qy_direct\n        assign qy_pin = c_qy_bkf;\n    end\n    assign bk_fault = qy_pin; assign qy_bkf = qy_pin;')
     fc = fc.replace('    wire [NB-1:0] bk_fault;', '`ifdef OT_BF_ISSUE_TRACE\n    // S-BIND 2026-10-15 measurement probe (simulation only): the compiled BF programme of this core = every free-clock\n    // edge\'s issue and the identity a static programme must present (pin->consume ages added by the producer).\n    integer tr_fd = 0, tr_cyc = 0, tr_go = -1;\n    initial tr_fd = $fopen("bf_issue_trace.txt", "w");\n    always @(posedge fclk) begin\n        tr_cyc = tr_cyc + 1;\n        if (tr_fd != 0 && go) begin tr_go = tr_cyc; $fwrite(tr_fd, "G %0d %0d %0d\\n", tr_cyc, go_bf, tr_go); end\n        if (tr_fd != 0 && issue_available)\n            $fwrite(tr_fd, "I %0d %0d %0d %0d %0d %0d %0d %0d\\n", tr_cyc, tr_cyc - tr_go, a_ctr, programme_operand, w_s, w_h, w_cnt, go_bf);\n        if (tr_fd != 0 && STATIC_PROGRAM != 0 && prog_issue_u)\n            $fwrite(tr_fd, "P %0d %0d %0d %0d %0d %0d %0d %0d bad=%0d avail=%0d\\n", tr_cyc, tr_cyc - tr_go, prog_addr_u, prog_operand_u,\n                    prog_segment_u, prog_half_u, prog_chain_u, go_bf, programme_bad, issue_available);\n    end\n`endif\n    wire [NB-1:0] bk_fault;')
-    return transform_fclk(transform_frd(fc))
+    return transform_cen(transform_fclk(transform_frd(fc)))
 
 
 def transform_frd(fc):
@@ -174,3 +174,96 @@ def transform_fclk(fc):
     i = fc.index(anchor) + len(anchor)
     fc = fc[:i - len(anchor)] + re.sub(r'prog_(issue|addr|operand|segment|half|chain)_pin', r'prog_\1_u', fc[i - len(anchor):])
     return fc
+
+
+def transform_cen(fc):
+    """BF c10 clock structure (2026-10-16, route s81bf_front_static_clk-c9 measured CTS: ck 13,185 sinks TT 363 ps /
+    spread 116 ps, dominated by the two root ICG cones: the u_fcg ENA low-phase latch (latch 267 ps vs cloned ICG CLK
+    161 ps, routed reg->reg -35 ps at u_fcg ENA) and the gated core's u_ze -> u_cg ENA (140 ps)).  In the static
+    programme the core has NO clock gate: fclk = gclk = clk, one ungated balanced tree.  Every former gclk register
+    loads only when its own kept copy of the registered gate enable is 1 (ot_v41_kreg u_cen_<i>, same d = ze_d, same
+    asynchronous set on rst_n_pin as u_ze).  Exact by construction: the ICG passes edge t iff its latch, transparent
+    while clk is low, holds ze_q(t-1) -- the value a data enable samples at edge t.  Zero cycles."""
+    import re
+
+    def replace(old, new, cnt=1):
+        nonlocal fc
+        assert fc.count(old) == cnt, (old[:80], fc.count(old))
+        fc = fc.replace(old, new)
+
+    # 1. free core clock: no ICG
+    i0 = fc.index('    if (STATIC_PROGRAM != 0) begin : g_fcg\n')
+    i1 = fc.index('    end else begin : g_nofcg\n')
+    fc = fc[:i0] + ('    if (STATIC_PROGRAM != 0) begin : g_fcg\n'
+                    '        // c10: no clock gate in the static programme core (one ungated balanced tree)\n'
+                    '        assign fclk = clk;\n') + fc[i1:]
+    replace('    // fclk: free-running core clock below one always-enabled ICG (static programme), same depth as gclk.\n',
+            '    // fclk: the free-running core clock (static programme: the root clock itself, c10).\n')
+    # 2. gated core: data enables instead of the ICG
+    replace("""    if (CG != 0) begin : g_cg
+        ot_hdc_cg u_cg (.clk(clk), .en(cg_en_g), .gclk(gclk));
+""", """    if (CG != 0 && STATIC_PROGRAM != 0) begin : g_cen_clk
+        // c10: the former gated core is clocked by the root clock and loads under kept enable copies (see u_cen_*)
+        assign gclk = clk;
+    end else if (CG != 0) begin : g_cg
+        ot_hdc_cg u_cg (.clk(clk), .en(cg_en_g), .gclk(gclk));
+""")
+    # 3. every gclk register block -> enabled by its own copy
+    lines = fc.split('\n')
+    out, n = [], 0
+    pat_s = re.compile(r'^(\s*)always @\(posedge gclk\)(.*)$')
+    pat_a = re.compile(r'^(\s*)always @\(posedge gclk or negedge (\w+)\)(.*)$')
+    pending_arst = None
+    for ln in lines:
+        m_a = pat_a.match(ln)
+        m_s = pat_s.match(ln)
+        if m_a:
+            n += 1
+            rst = m_a.group(2)
+            ln2 = ln
+            pending_arst = (n, rst)
+            rest = m_a.group(3)
+            # same-line `if (!rst) A; else B` form
+            if re.search(r'\bif \(!' + rst + r'\)', rest) and ' else ' in rest:
+                k = rest.index(' else ')
+                rest = rest[:k] + f' else if (cen[{n-1}])' + rest[k + 5:]
+                ln2 = f'{m_a.group(1)}always @(posedge gclk or negedge {rst}){rest}'
+                pending_arst = None
+            out.append(ln2)
+            continue
+        if pending_arst is not None:
+            k, rst = pending_arst
+            mm = re.match(r'^(\s*)(end )?else\b(.*)$', ln)
+            if mm:
+                out.append(f'{mm.group(1)}{mm.group(2) or ""}else if (cen[{k-1}]){mm.group(3)}')
+                pending_arst = None
+                continue
+            assert 'else' not in ln, ln
+            out.append(ln)
+            continue
+        if m_s:
+            n += 1
+            out.append(f'{m_s.group(1)}always @(posedge gclk) if (cen[{n-1}]){m_s.group(2)}')
+            continue
+        out.append(ln)
+    assert pending_arst is None
+    fc = '\n'.join(out)
+    # enable copies, declared before first use (next to the gate)
+    replace('    wire gclk;\n', f'    wire gclk;\n    localparam integer NCEN = {n};\n'
+            '    wire [NCEN-1:0] cen;              // c10: one kept registered gate-enable copy per former gclk register block\n')
+    decl = ('    if (CG != 0 && STATIC_PROGRAM != 0) begin : g_cen\n'
+            '        for (genvar ce = 0; ce < NCEN; ce = ce + 1) begin : g_c\n'
+            '            ot_v41_kreg #(.W(1), .AR(1), .RV(1\'b1)) u_cen (.clk(clk), .arst_n(rst_n_pin), .d(tcg_ze_d), .q(cen[ce]));\n'
+            '        end\n'
+            '`ifdef QP_CHECK\n'
+            '        always @(negedge clk) if (rst_n_pin && cen !== {NCEN{cg_en_g}}) begin\n'
+            '            $display("CEN_CHECK FAIL: enable copies %b != gate enable %b at %t", cen, cg_en_g, $time); $fatal(1);\n'
+            '        end\n'
+            '`endif\n'
+            '    end else begin : g_ncen\n'
+            '        assign cen = {NCEN{1\'b1}};\n'
+            '    end\n')
+    anchor = '    if (CG != 0 && STATIC_PROGRAM != 0) begin : g_cen_clk\n'
+    replace(anchor, decl + anchor)
+    return fc
+
