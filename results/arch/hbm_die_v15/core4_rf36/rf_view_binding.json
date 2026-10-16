@@ -15,7 +15,20 @@
     "hbfd_rly_48_WE.lef": "84a7fb8e0d6d67001284859d6f135b0784bbf99d28dd0de9a555511b40eb8c72",
     "hbfd_rly_48_WE_tt.lib": "422ef4ec7531424d7e3f4601672ba77a44c349bcd901004df7e0ea784bdf2268",
     "hbfd_rly_48_WE_ff.lib": "91f56974eba68a994770a38f59543fb75d4e422d70402543dd62305205208af7",
-    "insertion.json": "29c11ef6931c7705c307089073438282d97273ad20c2f78843a0370dabc999ec"
+    "insertion.json": "29c11ef6931c7705c307089073438282d97273ad20c2f78843a0370dabc999ec",
+    "abstract.json": "d1acc2e0a72858863d104b502541ea39f7eaad301ec88f4cd04e1c6fe2993f3e"
+   },
+   "export_matches_routed_verdict": {
+    "ff": {
+     "export_ps": 38.58730002193056,
+     "verdict_ps": 38.59,
+     "ok": true
+    },
+    "tt": {
+     "export_ps": 303.96499206553074,
+     "verdict_ps": 303.96,
+     "ok": true
+    }
    },
    "lef_pins": {
     "ck": [
@@ -2247,7 +2260,20 @@
     "hbfd_rly_48_EW.lef": "87e8247aecbb01b80a81f425aed78fce6e7e5858cf247888c3db3ee5c278720a",
     "hbfd_rly_48_EW_tt.lib": "db0394059a76c5059cc2fadd901cff7069fb60146130b49d2df411aa3ecd3e3d",
     "hbfd_rly_48_EW_ff.lib": "24379d375af8aafa2acdce7c6122cee2b550a040951b4aee7719c36c9a7d004a",
-    "insertion.json": "13ddbbcbe476ca6791a58e2afa202ec7db98f5a017a17b08230cc92dc094942b"
+    "insertion.json": "13ddbbcbe476ca6791a58e2afa202ec7db98f5a017a17b08230cc92dc094942b",
+    "abstract.json": "18d9a044834a24bceb8cf617bcbf4ca38bf839191a4ff03109b15f796d424857"
+   },
+   "export_matches_routed_verdict": {
+    "ff": {
+     "export_ps": 32.911423586412525,
+     "verdict_ps": 32.91,
+     "ok": true
+    },
+    "tt": {
+     "export_ps": 302.5692751901232,
+     "verdict_ps": 302.57,
+     "ok": true
+    }
    },
    "lef_pins": {
     "ck": [
@@ -4479,7 +4505,20 @@
     "hbfd_rly_48_SN.lef": "e2f801ce3bde35b7f2dad5c199830eec6cc7eec1245bdc796524958d30db34b6",
     "hbfd_rly_48_SN_tt.lib": "84565f789ea8e0d5db8f59b6623792467721c84068bb0b3c878728f9150608b2",
     "hbfd_rly_48_SN_ff.lib": "656022f88556319756b852b077c1831a915f4bebe5e3931eae288fa169363263",
-    "insertion.json": "c99bda0c11e949a3719f896d69e9f378ec225dc1213fe3f0e77a349af580ab23"
+    "insertion.json": "c99bda0c11e949a3719f896d69e9f378ec225dc1213fe3f0e77a349af580ab23",
+    "abstract.json": "954fa0f11d4b22da828821946f844e84547184208df3d9467b1344a3065a7216"
+   },
+   "export_matches_routed_verdict": {
+    "ff": {
+     "export_ps": 34.23413635905703,
+     "verdict_ps": 34.23,
+     "ok": true
+    },
+    "tt": {
+     "export_ps": 302.68654249709925,
+     "verdict_ps": 302.69,
+     "ok": true
+    }
    },
    "lef_pins": {
     "ck": [
@@ -6711,7 +6750,20 @@
     "hbfd_rly_48_NS.lef": "8f6bd1b1bf964db30ec1fbe5e5a96591fdabcf392841bb60702ea39dd2f7f146",
     "hbfd_rly_48_NS_tt.lib": "35b1e0a36d3ee39d4050a5233f3667aa9e219d012a38e7eb83f4e92e08a506e4",
     "hbfd_rly_48_NS_ff.lib": "22904760f89f2ad8cf95f61d76242b8cf9dead99721a4ab3acdab5382eb0e40e",
-    "insertion.json": "8fc92e3a82695e8fdca7c9a58271ce59bebe2378f32c67ec5bc3d6206aa13805"
+    "insertion.json": "8fc92e3a82695e8fdca7c9a58271ce59bebe2378f32c67ec5bc3d6206aa13805",
+    "abstract.json": "a0f23755f4c2250247f9431f8d7f09a352714e1817150202574c9dc376e9e702"
+   },
+   "export_matches_routed_verdict": {
+    "ff": {
+     "export_ps": 27.58188816232021,
+     "verdict_ps": 27.58,
+     "ok": true
+    },
+    "tt": {
+     "export_ps": 301.8567618084944,
+     "verdict_ps": 301.86,
+     "ok": true
+    }
    },
    "lef_pins": {
     "ck": [

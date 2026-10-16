@@ -28,8 +28,11 @@ def main():
         master='hbfd_rly_48_'+flow
         base=f'physical/ref_tile/hbfd_rly_48_{flow.lower()}/views/{master}/'
         files={n:subprocess.check_output(['git','-C',str(ROOT),'show',a.ref+':'+base+n])
-               for n in [master+'.lef',master+'_tt.lib',master+'_ff.lib','insertion.json']}
+               for n in [master+'.lef',master+'_tt.lib',master+'_ff.lib','insertion.json','abstract.json']}
         ins=json.loads(files['insertion.json'])
+        abstract=json.loads(files['abstract.json'])
+        export=abstract.get('verdict',{}).get('check',{})
+        assert all(export.get(c,{}).get('ok') for c in ['tt','ff']), (master,'export must match actual routed verdict')
         timings={}
         for corner in ['tt','ff']:
             with tempfile.NamedTemporaryFile(suffix='.lib') as f:
@@ -42,7 +45,7 @@ def main():
             if m:
                 x0,y0,x1,y1=map(float,m.groups());pins[match[1]]=[(x0+x1)/2,(y0+y1)/2]
         views[master]=dict(view=base,source_ref=a.ref,sha256={n:hashlib.sha256(b).hexdigest() for n,b in files.items()},
-                           lef_pins=pins,timing=timings)
+                           export_matches_routed_verdict=export,lef_pins=pins,timing=timings)
     # Timing-safe conservative envelope: centre polyline plus both endpoint
     # offsets bounded by2*21.6um. Actual source/sink per-bit routing is still open.
     wire_bound=alloc['max_allocated_hop_um']+43.2
