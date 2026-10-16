@@ -1,0 +1,403 @@
+{
+ "schema": "opentallas.s81.host_split.uarch.v1",
+ "scope": "Initialization/offchip ingress component source model; NOT normal-token reservation/native-throughput qualification",
+ "source_sha256": {
+  "rtl/dsrom_sys/s81_ingest/dsfd_host_c_sliced.sv": "ad1727dee56f745d677bb94c302ee2296e9221f57b5be145bcf11efa1e4d1725",
+  "rtl/dsrom_sys/s81_ingest/dsfd_host_sd_sliced.sv": "f23ad311c9f4ef0f664639dd564eb06f096bf97d0fe0bf6c458bf3a3c1cdb69c",
+  "rtl/dsrom_sys/s81_ingest/dsfd_host_sd.sv": "42fb60c08775f37b7ca35e90cd15f4a153fc584e11610f144204036a762bece8"
+ },
+ "baseline": {
+  "host_master": "dsfd_host_c",
+  "outline_um": [
+   453.6,
+   77.76
+  ],
+  "declared_sd_fifo_bits": 2312,
+  "whole_host_measured_initial_std_area_um2": 18612.7,
+  "old_sd_only_measured_std_area_um2": null,
+  "whole_host_measurement_stage": "b2f33895e actual3_place ODB, unqualified baseline"
+ },
+ "interfaces": {
+  "external_host_in_bits_per_edge": 515,
+  "external_host_out_bits_per_edge": 77,
+  "host_write_out_bits_per_edge": 292,
+  "host_write_payload_bytes_per_edge": 32,
+  "host_write_header_valid_bits": 36,
+  "physical_return_in_bits_per_edge": 9,
+  "native_ingest_write_bus_bits_per_edge": 290,
+  "source_graph": "physical/s81_die_pins/host_sd_sliced_1016/source_graph.json",
+  "abi_mapping": "Every bit0..291 enumerated; bit0 is data0.valid, bits1..256 four64-data leaves, bits257..291 ECTLheader"
+ },
+ "replicas": {
+  "data64": 4,
+  "ectrl": 1,
+  "native_ingest": 1,
+  "total_actual_parent_children": 6,
+  "sd_state_projections": 5,
+  "old_sd_projection": 1
+ },
+ "storage": {
+  "original_sd_fifo_bits": 2312,
+  "data_fifo_bits": [
+   792,
+   776,
+   792,
+   792
+  ],
+  "control_fifo_bits": 280,
+  "new_projected_sd_fifo_bits": 3432,
+  "added_sd_fifo_bits": 1120,
+  "derivation": "Eachdata stores64payload+32address+we; threeleaves also2markerclassbits. Control stores32address+we+2markerclass. All8entries.",
+  "pointer_decode_replication": {
+   "wp_bits": 3,
+   "rp_bits": 3,
+   "count_bits": 4,
+   "copies": 5,
+   "shared_cross_leaf_pointer_wires": 0,
+   "invariant": "Independent reset/identicalnativepacket snapshot; bench asserts wp/rp/n equality everyedge",
+   "credit_state": "availability/fault accounting, cannot defer STATIC1 service; queue-nonempty head service limited to ingress scope"
+  }
+ },
+ "capacity": {
+  "max_sector_payload_bytes_per_active_edge": 32,
+  "normal_reserved_sector_rate": "UNQUALIFIED",
+  "MACs_per_edge": 0,
+  "arithmetic": "unchanged actualnativeFP8/IKEY/ROWS engine; decoder pointers/compare/selection replicated"
+ },
+ "geometry": {
+  "parent_outline_um": [
+   453.6,
+   77.76
+  ],
+  "parent_area_um2": 35271.936,
+  "data_leaf_outline_um": [
+   93.96,
+   25.92
+  ],
+  "data_instances": [
+   {
+    "instance": "data0",
+    "box_um": [
+     23.76,
+     0,
+     117.72,
+     25.92
+    ]
+   },
+   {
+    "instance": "data1",
+    "box_um": [
+     117.72,
+     0,
+     211.67999999999998,
+     25.92
+    ]
+   },
+   {
+    "instance": "data2",
+    "box_um": [
+     211.67999999999998,
+     0,
+     305.64,
+     25.92
+    ]
+   },
+   {
+    "instance": "data3",
+    "box_um": [
+     305.64,
+     0,
+     399.59999999999997,
+     25.92
+    ]
+   }
+  ],
+  "E_CTL_box_um": [
+   399.6,
+   0,
+   453.6,
+   77.76
+  ],
+  "native_ingest_box_um": [
+   0,
+   25.92,
+   399.6,
+   77.76
+  ],
+  "local_new_die_area_um2": 0,
+  "slot_grant": "PENDING die_live request S81-HOST-SD-SPLIT-1016",
+  "native_ingest_ECTL_measurement": "OPEN"
+ },
+ "cuts": {
+  "parent_N_to_S_data_payload_bits": 256,
+  "conservative_proposed_Sband_signal_crossings_upper_bound": 420,
+  "nominal_single_vertical_layer_pitch_um": 0.144,
+  "nominal_tracks_across_native_width": 2775,
+  "nominal_unblocked_upper_bound_utilization": 0.15135135135135136,
+  "actual_tracks_after_PG_and_pin_escape": "OPEN: require actualassignedpin segments/blockages plus parenttrial GRT; nominal arithmetic is sizing only",
+  "longest_logical_parent_span_um": 453.6,
+  "parent_wire_latency_budget": "OPEN: measured launch/capture, actualpin Manhattan reach, phi-R, fixedrelays must be bound"
+ },
+ "latency": {
+  "old_input_capture_edges": 1,
+  "new_input_capture_edges": 1,
+  "old_registered_output_launch": true,
+  "new_registered_output_launch": true,
+  "added_payload_ACK_service_edges": 0,
+  "added_native_fault_host_edges": 1,
+  "diagnostic_f_st_first_capture": "C0",
+  "diagnostic_t_collective_status_visible": "C0+2ck",
+  "normal_token_compiler_reservations": "OPEN; nonempty service is not a normalexecutioncalendar",
+  "whole_native_IKEY_component_proof": "fixed60000edge run,1090hostpackets,544sectors,1physicalwritecompletion,59989exactproduceredges; sourcepayloadmutantfails"
+ },
+ "measured_gates": [
+  {
+   "master": "s81_host_sd_data64_s0",
+   "quantity": 1,
+   "gate_source_commit": null,
+   "gate_verdict": "WARN",
+   "gate_receipt": "physical/ref_tile/s81_host_sd_data64_s0/gate_result.json",
+   "gate_receipt_sha256": "b20a024471ee46d8ff91a7cf546780dd42fe540ed14c4e3980654882ca8e5c1d",
+   "synth_std_area_um2": 606.0,
+   "clock": {
+    "max_root_sinks": 979,
+    "root": "port:ck",
+    "cts": true,
+    "tt_insertion_ps": 110.7,
+    "tt_spread_ps": 9.6,
+    "declared_clock": "ck",
+    "limits": {
+     "sinks": 15000,
+     "insertion_ps": 300.0,
+     "spread_ps": 80.0
+    },
+    "clock_measurements": [
+     {
+      "source": "ck",
+      "clock": "core_clk",
+      "tt": {
+       "boundary": {
+        "n": 169,
+        "mean": 107.2,
+        "min": 102.0,
+        "max": 110.7
+       },
+       "all": {
+        "n": 1044,
+        "mean": 106.4,
+        "min": 101.1,
+        "max": 110.7
+       },
+       "errors": [],
+       "macros": null,
+       "macro_libs": 0
+      }
+     }
+    ],
+    "measured_clock": "core_clk",
+    "verdict": "PASS",
+    "text": "979 sinks on the largest root <= 15,000; measured TT insertion 110.7 ps, leaf spread 9.6 ps"
+   },
+   "role": "production_data_leaf"
+  },
+  {
+   "master": "s81_host_sd_data64_s1",
+   "quantity": 1,
+   "gate_source_commit": null,
+   "gate_verdict": "WARN",
+   "gate_receipt": "physical/ref_tile/s81_host_sd_data64_s1/gate_result.json",
+   "gate_receipt_sha256": "98ffa5e6d429394a18d57652d909dd3aeafa44f85cf7f76c14d3478c4e364620",
+   "synth_std_area_um2": 596.0,
+   "clock": {
+    "max_root_sinks": 961,
+    "root": "port:ck",
+    "cts": true,
+    "tt_insertion_ps": 111.4,
+    "tt_spread_ps": 7.8,
+    "declared_clock": "ck",
+    "limits": {
+     "sinks": 15000,
+     "insertion_ps": 300.0,
+     "spread_ps": 80.0
+    },
+    "clock_measurements": [
+     {
+      "source": "ck",
+      "clock": "core_clk",
+      "tt": {
+       "boundary": {
+        "n": 167,
+        "mean": 107.7,
+        "min": 103.7,
+        "max": 110.6
+       },
+       "all": {
+        "n": 1026,
+        "mean": 107.1,
+        "min": 103.6,
+        "max": 111.4
+       },
+       "errors": [],
+       "macros": null,
+       "macro_libs": 0
+      }
+     }
+    ],
+    "measured_clock": "core_clk",
+    "verdict": "PASS",
+    "text": "961 sinks on the largest root <= 15,000; measured TT insertion 111.4 ps, leaf spread 7.8 ps"
+   },
+   "role": "production_data_leaf"
+  },
+  {
+   "master": "s81_host_sd_data64_s2",
+   "quantity": 1,
+   "gate_source_commit": null,
+   "gate_verdict": "WARN",
+   "gate_receipt": "physical/ref_tile/s81_host_sd_data64_s2/gate_result.json",
+   "gate_receipt_sha256": "eaf676814f155eee3ca622aa5bf6e44ff8cd952b7920d6b648b8728801649286",
+   "synth_std_area_um2": 601.0,
+   "clock": {
+    "max_root_sinks": 979,
+    "root": "port:ck",
+    "cts": true,
+    "tt_insertion_ps": 111.8,
+    "tt_spread_ps": 9.2,
+    "declared_clock": "ck",
+    "limits": {
+     "sinks": 15000,
+     "insertion_ps": 300.0,
+     "spread_ps": 80.0
+    },
+    "clock_measurements": [
+     {
+      "source": "ck",
+      "clock": "core_clk",
+      "tt": {
+       "boundary": {
+        "n": 169,
+        "mean": 107.7,
+        "min": 104.8,
+        "max": 110.8
+       },
+       "all": {
+        "n": 1044,
+        "mean": 107.3,
+        "min": 102.6,
+        "max": 111.8
+       },
+       "errors": [],
+       "macros": null,
+       "macro_libs": 0
+      }
+     }
+    ],
+    "measured_clock": "core_clk",
+    "verdict": "PASS",
+    "text": "979 sinks on the largest root <= 15,000; measured TT insertion 111.8 ps, leaf spread 9.2 ps"
+   },
+   "role": "production_data_leaf"
+  },
+  {
+   "master": "s81_host_sd_data64_s3",
+   "quantity": 1,
+   "gate_source_commit": null,
+   "gate_verdict": "WARN",
+   "gate_receipt": "physical/ref_tile/s81_host_sd_data64_s3/gate_result.json",
+   "gate_receipt_sha256": "364f5568c1200d2d55221d62066387f0b51c433c434b4af131f8b84388f6c12d",
+   "synth_std_area_um2": 601.0,
+   "clock": {
+    "max_root_sinks": 979,
+    "root": "port:ck",
+    "cts": true,
+    "tt_insertion_ps": 111.8,
+    "tt_spread_ps": 9.2,
+    "declared_clock": "ck",
+    "limits": {
+     "sinks": 15000,
+     "insertion_ps": 300.0,
+     "spread_ps": 80.0
+    },
+    "clock_measurements": [
+     {
+      "source": "ck",
+      "clock": "core_clk",
+      "tt": {
+       "boundary": {
+        "n": 169,
+        "mean": 107.7,
+        "min": 104.8,
+        "max": 110.8
+       },
+       "all": {
+        "n": 1044,
+        "mean": 107.3,
+        "min": 102.6,
+        "max": 111.8
+       },
+       "errors": [],
+       "macros": null,
+       "macro_libs": 0
+      }
+     }
+    ],
+    "measured_clock": "core_clk",
+    "verdict": "PASS",
+    "text": "979 sinks on the largest root <= 15,000; measured TT insertion 111.8 ps, leaf spread 9.2 ps"
+   },
+   "role": "production_data_leaf"
+  },
+  {
+   "master": "s81_host_sd_control",
+   "quantity": 1,
+   "gate_source_commit": null,
+   "gate_verdict": "WARN",
+   "gate_receipt": "physical/ref_tile/s81_host_sd_control/gate_result.json",
+   "gate_receipt_sha256": "3615edf969ba8355e6af0958cfb2cb031d929912f097b9d927a142c6f8864d61",
+   "synth_std_area_um2": 249.0,
+   "clock": {
+    "max_root_sinks": 391,
+    "root": "port:ck",
+    "cts": true,
+    "tt_insertion_ps": 95.7,
+    "tt_spread_ps": 6.3,
+    "declared_clock": "ck",
+    "limits": {
+     "sinks": 15000,
+     "insertion_ps": 300.0,
+     "spread_ps": 80.0
+    },
+    "clock_measurements": [
+     {
+      "source": "ck",
+      "clock": "core_clk",
+      "tt": {
+       "boundary": {
+        "n": 93,
+        "mean": 93.5,
+        "min": 91.3,
+        "max": 95.7
+       },
+       "all": {
+        "n": 427,
+        "mean": 91.9,
+        "min": 89.4,
+        "max": 95.7
+       },
+       "errors": [],
+       "macros": null,
+       "macro_libs": 0
+      }
+     }
+    ],
+    "measured_clock": "core_clk",
+    "verdict": "PASS",
+    "text": "391 sinks on the largest root <= 15,000; measured TT insertion 95.7 ps, leaf spread 6.3 ps"
+   },
+   "role": "projection_diagnostic_absorbed_into_ECTL"
+  }
+ ],
+ "measured_new_sd_projection_std_area_um2": 2653.0,
+ "accepted_cost_ledger": "NO new acceptance/reprice; measuredtokenloss and parentactualarea remain OPEN",
+ "route_admission": "No full leaf route until unifiedmodel owner incorporates row and actual parent cuts/pin slots accepted; preserve current gates"
+}

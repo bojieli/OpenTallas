@@ -1,0 +1,202 @@
+{
+ "schema": "opentallas.s81.host_sliced.source_graph.v1",
+ "qualification": "SOURCE_ONLY_INITIALIZATION_COMPONENT; normalcompiledexecution/nativeclockpin/die/fulltokenOPEN",
+ "top": "dsfd_host_c_sliced",
+ "source": "rtl/dsrom_sys/s81_ingest/dsfd_host_c_sliced.sv",
+ "parent_registers": 0,
+ "actual_children": [
+  {
+   "instance": "control",
+   "master": "dsfd_host_c_ectl",
+   "clocks": [
+    "ck",
+    "ckv",
+    "ck_boot",
+    "ck_return"
+   ],
+   "box_um": [
+    399.6,
+    0,
+    453.6,
+    77.76
+   ]
+  },
+  {
+   "instance": "ingest",
+   "master": "dsfd_host_native_leaf",
+   "clocks": [
+    "ck_launch",
+    "ck_ingest[0]",
+    "ck_ingest[1]",
+    "ck_native"
+   ],
+   "box_um": [
+    0,
+    25.92,
+    399.6,
+    77.76
+   ]
+  },
+  {
+   "instance": "g_data[0].leaf",
+   "master": "dsfd_host_sd_data64",
+   "params": {
+    "NS": 1,
+    "KVS": 1,
+    "ENG": -1,
+    "SLICE": 0
+   },
+   "clocks": [
+    "ck_data[0]"
+   ],
+   "box_um": [
+    23.76,
+    0,
+    117.72,
+    25.92
+   ]
+  },
+  {
+   "instance": "g_data[1].leaf",
+   "master": "dsfd_host_sd_data64",
+   "params": {
+    "NS": 1,
+    "KVS": 1,
+    "ENG": -1,
+    "SLICE": 1
+   },
+   "clocks": [
+    "ck_data[1]"
+   ],
+   "box_um": [
+    117.72,
+    0,
+    211.67999999999998,
+    25.92
+   ]
+  },
+  {
+   "instance": "g_data[2].leaf",
+   "master": "dsfd_host_sd_data64",
+   "params": {
+    "NS": 1,
+    "KVS": 1,
+    "ENG": -1,
+    "SLICE": 2
+   },
+   "clocks": [
+    "ck_data[2]"
+   ],
+   "box_um": [
+    211.67999999999998,
+    0,
+    305.64,
+    25.92
+   ]
+  },
+  {
+   "instance": "g_data[3].leaf",
+   "master": "dsfd_host_sd_data64",
+   "params": {
+    "NS": 1,
+    "KVS": 1,
+    "ENG": -1,
+    "SLICE": 3
+   },
+   "clocks": [
+    "ck_data[3]"
+   ],
+   "box_um": [
+    305.64,
+    0,
+    399.59999999999997,
+    25.92
+   ]
+  }
+ ],
+ "clock_sources": {
+  "total_physical_entry_pins": 12,
+  "old_entry_pins": 5,
+  "added_entry_pins": 7,
+  "fast_div3": [
+   "ck",
+   "ck_return",
+   "ck_launch",
+   "ck_native",
+   "ck_ingest[0]",
+   "ck_ingest[1]",
+   "ck_data[0]",
+   "ck_data[1]",
+   "ck_data[2]",
+   "ck_data[3]"
+  ],
+  "serial_div4": [
+   "ckv"
+  ],
+  "boot_div12": [
+   "ck_boot"
+  ],
+  "pll": "Existing fixed3.6GHzVCO family; actualnewdie fanout/phase source not yet bound",
+  "delivery": "For every child/root pin, die delivers phi minus its own measured TTboundary meanR; no equalcommonphase at packagepins assumption",
+  "reset": "Raw rst to each ownlocalconditioner; rsv additionally conditions ECTLserial/boot. No reset relay in wiresparent."
+ },
+ "edges": [
+  {
+   "source": "control.native_host_word",
+   "target": "ingest.host_word",
+   "bits": 515,
+   "source_register": "fi",
+   "capture": "sourcephase lockup inside actualnativeleaf; inputdelay must be physically audited"
+  },
+  {
+   "source": "control.native_tcr",
+   "target": "ingest.t_cr",
+   "bits": 1,
+   "source_register": "tcr_l"
+  },
+  {
+   "source": "ingest.{o_v,o_we,o_addr,o_d}",
+   "target": "data0..3/control",
+   "bits": 290,
+   "source_register": "actualnative ingestoutputregs",
+   "topology": "four64data projections, repeated32addr+we/v+markerclass2"
+  },
+  {
+   "source": "control.{native_ocr,native_ack}",
+   "target": "ingest",
+   "bits": 9,
+   "source_register": "actuallocaldecoder outputs"
+  },
+  {
+   "source": "ingest.{t_v,t_d,fault}",
+   "target": "control",
+   "bits": 66,
+   "source_register": "actualnativefenceoutregs; fault newlyregistered+1hostedge"
+  },
+  {
+   "source": "data0..3.fault",
+   "target": "control.data_fault",
+   "bits": 4,
+   "capture": "data_fault_q then registeredto; no combinational parentfaultOR"
+  }
+ ],
+ "full292_ABI_mapping": "source_graph.json; used control35header, data0valid, fourdata64",
+ "calendar": {
+  "normal_payload_ACK_delta_edges": 0,
+  "new_native_fault_host_delta_edges": 1,
+  "f_st_capture_to_collective": "firstcaptureC0 -> C0+2ck",
+  "new_data_fault_diagnostic": "firstECTLcaptureC0 -> C0+1ck",
+  "normal_compile_reservations": "OPEN; queue-nonempty on admittedinitFIFO is not a production execution schedule"
+ },
+ "physical_gate_views": {
+  "data4": "measured at97069e10d; actualsameleafRTL",
+  "whole_ECTL": "NOT_YET_BUILT",
+  "native_ingest": "NOT_YET_BUILT"
+ },
+ "scope": {
+  "modeled": "Declared external packets, expectedanswers, offchipHBM+ACK only",
+  "on_chip": "Actual sourceFIFO/arithmetic/nativeingest/visibilityfence/bootbridges/decoder localreplicas",
+  "legacy": "Originaldsfd_host_c used only exactcomponentreference; cannotgeneratecandidateinternalresults",
+  "native_completion": "NoKIT/t_kd/rawEND consumer. t_collective tv/td are physicalwritecompletions, NOTtokensuccess. Actualcollectiveparent fixedverdict edge OPEN"
+ }
+}
