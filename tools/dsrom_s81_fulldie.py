@@ -7305,6 +7305,11 @@ def _hub_bus_chain(m, CH8, cor, a_, b_, bits, pa, pb, dom=None, reach_um=None):
                                                      floor_added=max(0, math.ceil(L / LINK_STAGE_UM - 1e-9) - 1))
         return
     xcol = [cor[k_] for k_ in ('ecolS', 'ecolN', 'vmW', 'vmE', 'hrtxG') if k_ in cor]
+    if wide_hub():
+        # All incident interfaces must follow the relocated cluster, including
+        # WFC/host/status/control legs that do not name VM or SU. The old VCH-only
+        # placement region strands their receivers on the relocated S floor.
+        xcol += [cor[k_] for k_ in ('capfree','hub_w','above_su','vm_s','su_under','seam_rect') if k_ in cor]
     wpath_ = _wide_hub_path(m, A, Bk) if (wide_hub() and {a_, b_} & {'vm', 'su_s'}) else None
     if wpath_ is not None:
         # wide hub (S-DIE 10-15): SU | VM | capture column side by side -- abutting faces wire directly, VM / SU reach the

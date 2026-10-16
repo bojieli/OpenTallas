@@ -138,6 +138,16 @@ class WideHubLayout(unittest.TestCase):
         self.assertLess(mix[1]+mix[3],14000)
         self.assertGreater(b['sp_vm'][1],7900)
 
+    def test_relocated_host_status_lane_uses_the_capture_free_floor(self):
+        r=json.loads((ROOT/'results/physical/die_iter_1012/s81/canonical_widehub_1015/hub_layout_rm5.json').read_text())
+        # Actual GEN24w3 failure: WFC->host4b receiver at S floor. Its horizontal
+        # tail is clear of all reservations but outside the legacy VCH region.
+        p=(17903,5143);x0,y0,x1,y1=r['wide']['capfree']
+        self.assertTrue(x0<p[0]<x1 and y0<p[1]<y1)
+        for n,(x,y,w,h,*_) in r['blocks'].items():
+            self.assertFalse(x<p[0]<x+w and y<p[1]<y+h,n)
+        self.assertLess(p[0],r['wide']['x_vch'])
+
     def test_render_preserves_all_six_hcp_homes(self):
         sys.path.insert(0,str(ROOT/'tools'))
         from die_layout_render import from_s81
