@@ -271,10 +271,10 @@ module ot_v41_bf_front_core #(
     // fclk: free-running core clock below one always-enabled ICG (static programme), same depth as gclk.
     wire fclk;
     if (STATIC_PROGRAM != 0) begin : g_fcg
-        // Reset-dependent ENA remains real logic after synthesis. Clock during reset, then
-        // arm on the first free-clock edge; no production issue occurs during reset release.
+        // Low-phase reset-dependent ENA remains real logic after synthesis and settles
+        // before the first rising edge after reset; clock reset cycles through the OR term.
         (* keep *) reg fcg_en;
-        always @(posedge clk or negedge rst_n_pin) if (!rst_n_pin) fcg_en <= 1'b0; else fcg_en <= 1'b1;
+        always_latch if (!clk) fcg_en <= rst_n_pin;
         ot_hdc_cg u_fcg (.clk(clk), .en(fcg_en | !rst_n_pin), .gclk(fclk));
     end else begin : g_nofcg
         assign fclk = clk;
