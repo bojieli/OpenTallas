@@ -235,6 +235,11 @@ if {$ot_native ne ""} {
   if {![regexp {^[0-9a-f]{64}$} $ot_native_sha] || [lindex [exec sha256sum $ot_native] 0] ne $ot_native_sha} {
     error "native normalization source hash mismatch"
   }
+  # Reconnected sinks keep their instance location/master, so the dirty census
+  # below would miss their nets: kept or frozen wires would be stale topology.
+  if {[envd OT_KEEP_UNTOUCHED 0] || [envd OT_FREEZE_MACRO_NETS 0]} {
+    error "native normalization rejects OT_KEEP_UNTOUCHED/OT_FREEZE_MACRO_NETS (full strip required; OT_KEEP_CLOCK allowed)"
+  }
   if {![envd OT_ALLOW_FRESH_GRT 0] || ![envd OT_NATIVE_FRESH_GRT 0]} {
     error "native normalization requires explicitly authorized fresh GRT"
   }

@@ -34,6 +34,11 @@ if [ -n "${NATIVE_NORMALIZE_TCL:-}" ]; then
   NATIVE_REAL=$(realpath "$NATIVE_NORMALIZE_TCL")
   case "$NATIVE_REAL" in "$PWD"/*) ;; *) echo "native normalization must be inside source snapshot"; exit 2 ;; esac
   [ -f "$NATIVE_REAL" ] || { echo "native normalization source missing"; exit 2; }
+  # Normalization reconnects sinks without moving/resizing their instances, so the
+  # dirty-instance census cannot see the changed nets: kept wires would be stale.
+  # Only a full strip is valid (KEEPCLK=1 is allowed: no clock net is touched).
+  [ "${KEEPWIRES:-0}" = 0 ] || { echo "native normalization rejects KEEPWIRES (OT_KEEP_UNTOUCHED)"; exit 2; }
+  [ "${FREEZE:-0}" = 0 ] || { echo "native normalization rejects FREEZE (OT_FREEZE_MACRO_NETS)"; exit 2; }
   [ "$(sha256sum "$NATIVE_REAL" | cut -d ' ' -f 1)" = "$NATIVE_NORMALIZE_SHA256" ] || { echo "native normalization hash mismatch"; exit 2; }
   NATIVE_REL=${NATIVE_REAL#"$PWD"/}
   NATIVE_NORMALIZE_ENV=(-e OT_NATIVE_FRESH_GRT=${NATIVE_FRESH_GRT:-0} -e OT_ECO_NATIVE_NORMALIZE=/src/$NATIVE_REL -e OT_ECO_NATIVE_NORMALIZE_SHA256=$NATIVE_NORMALIZE_SHA256)
