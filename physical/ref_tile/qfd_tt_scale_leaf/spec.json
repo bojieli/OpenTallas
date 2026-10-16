@@ -111,9 +111,9 @@
  "structural_change": "Actual functional CORE/SCALE partition of the failing 10622-FF/4-SRAM TT tree; separate clock roots, each owns two real SRAMs in a W column with >=20um corridors, existing registered 93-bit seam across21.6um candidate gap, all output stations retained, zero added data edges. Replaces t4 congestion3405 and insertion382/spread107.6; no inherited clock/native qualification.",
  "slot_change_request": "Q-COMPUTE-DIE 14:33-14:36 candidate two345.6x216 homes inside777.6x1814.4; physical/qwen_tt_partition_1015/pin_plan.json",
  "job": {
-  "owner": "Codex:Q-COMPUTE-ELEM1417",
-  "branch": "codex/qwen-compute-elements-1417",
-  "tag": "fs1",
+  "owner": "claude:Q-ELEM 1705",
+  "branch": "claude/qelem-tt-1705",
+  "tag": "fs2",
   "hold_merge": true,
   "purpose": "TT real functional partition candidate, native clocks/pins unqualified until measured",
   "benches": [
@@ -155,7 +155,8 @@
    "rtl/qwen_sys/tt_tree_partition_20261015",
    "physical/qwen_tt_partition_1015",
    "tools/qwen_split/derive_tt_tree_partition.py"
-  ]
+  ],
+  "structural_change": "fs2 (Q-ELEM 1705): fs1 scale route DRT-0255 on seam pins tag_payload[0]/rst_n: 93 seam pins on every M5 track (0.096 pitch, 168.4..177.2) overlapped the M5 PG pair at x~173.1; seam now 3-track pitch on PG-free tracks 157.8..188.6 on BOTH leaves (identical x, straight seam), RTL/outline/cycles unchanged."
  },
  "children": [],
  "inter": []
