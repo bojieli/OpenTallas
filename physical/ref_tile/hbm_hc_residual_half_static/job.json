@@ -2,12 +2,12 @@
  "name": "hbm_hc_residual_half_static-native1-COMMIT",
  "block": "ot_hgi_hc_residual_half_static",
  "ref_tile": true,
- "owner": "Codex:/root/h_hc_physical",
- "purpose": "Actual PRIMARY92root HC ot_hgi_hc_residual_half_static source; explicitgeometryassignedpins andpublishedrowpacking; measurelocalclockspan andboundarySTA, no wholeHCclaim",
+ "owner": "Claude:H-NETLIST/kits (for HC owner)",
+ "purpose": "Actual PRIMARY92root HC ot_hgi_hc_residual_half_static source; explicitgeometryassignedpins andpublishedrowpacking; measurelocalclockspan andboundarySTA, no wholeHCclaim | H-NETLIST/kits 10-16: regenerated + regated on current main (gate 10-15 04:59 predates flow overlays); leaf of the static HC engine (codex/hc-static-engine-1014 ot_hgi_hc_projection_sys1_split_static; v16 gap G-HC-ENG).",
  "threads": 16,
  "peak_ram_gb": 16,
  "source": {
-  "branch": "codex/hc-physical-1015",
+  "branch": "claude/hnl-kits-0030",
   "commit": "COMMIT",
   "extra_paths": [
    "physical/hbm_hc",
