@@ -4895,6 +4895,12 @@ def build_r8(variant=None):
         h = up(HUB_MM2[name] * 1e6 / w, GY)
         x = up((gap_x0 + gap_x1) / 2 - w / 2, GX)
         y = band_ys[side] if side == 'S' else band_ys[side] + SVC_D - h
+        bb_ = (HUB_LAYOUT or {}).get('band_blocks', {}).get(f'bk_{name}')
+        if bb_:
+            # --hub-layout vmk (S-DIE-HUB 10-16): the layout moves the band block (selector and collector stacked beside
+            # the SW IO under the SU); the outline stays the generator's own
+            assert abs(bb_[2] - (w - SHAVE)) < 0.5 and abs(bb_[3] - (h - SHAVE)) < 0.5, ('band block outline', name, bb_, w, h)
+            x, y = up(bb_[0], GX), up(bb_[1], GY)
         it = Inst(f'bk_{name}', f'dsfd_bk_{name}', x, y, w - SHAVE, h - SHAVE, kind='band_blk', region='svc')
         insts.append(it)
         hub[name] = it
@@ -5429,7 +5435,10 @@ def buses_r8(m):
     starts = {}
     for side in 'WE':
         nm, w, h = end_spec('l2r', [LSW], 'vr')
-        it = hub_block(f'hx_{side}', nm, 'hend', w, h, x_sp if side == 'W' else x_vch + 0.0, vmc,
+        fx_ = x_sp if side == 'W' else x_vch + 0.0
+        if wide_hub() and wide_hub().get('variant') == 'vmk':
+            fx_ = xsrc.x if side == 'W' else xsrc.x + xsrc.w     # vmk: the broadcast start blocks stand on the PQ faces
+        it = hub_block(f'hx_{side}', nm, 'hend', w, h, fx_, vmc,
                        side, [cor['s14W'] if side == 'W' else cor['vch']])
         starts[side] = it
         bus(f'xr_{side}', 'local', LSW + 1, [(xsrc.name, f'x{side.lower()}'), (it.name, 'i')])
@@ -8798,7 +8807,14 @@ def _svc_chains(m, CH8, P, cor, end_spec, hub_block):
             # The C5 service floor is not the vmc SU|VM channel.  Derive
             # this relocated band-to-VM connection from its actual end faces
             # rather than retaining C5's intermediate point inside the SU.
-            path = _vmc_route(m, (bx, by_), 'N' if name == 'sel' else 'S',
+            fs_ = 'N' if name == 'sel' else 'S'
+            if HUB_LAYOUT.get('band_blocks'):
+                # vmk: a moved band block leaves from its ASSIGNED vd face / pin span (record), not the C5 face
+                from s81 import hub_router as HR_
+                rec_ = _assigned_record(blk.master)
+                if rec_ and HR_.assigned_face(rec_, 'vd'):
+                    fs_, (bx, by_) = HR_.endpoint(blk, 'vd', rec_, he)
+            path = _vmc_route(m, (bx, by_), fs_,
                               endpoint, 'S', skip=(blk.name, he.name))
         else:
             path = _wide_vm_band_path(m, cor, name, (bx, by_), endpoint, yo)

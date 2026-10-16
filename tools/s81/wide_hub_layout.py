@@ -65,11 +65,23 @@ def main():
     ap.add_argument('--vmc-vch', type=float, default=432.0, help='vmc: collective column | HC channel (VCH) width um')
     ap.add_argument('--su-offset', type=float, default=3153.7,
                     help='vmc: SU W edge offset from the hub W edge (um); the VM, capture stack, MIX4 and sseq follow it')
-    ap.add_argument('--mode', choices=('c5', 'vmc'), default='c5',
-                    help='c5 = side-by-side strip (historical); vmc = VM-centred cluster from real port faces (S81-AGGRO vmc + S-DIE D1/D2)')
+    ap.add_argument('--mode', choices=('c5', 'vmc', 'vmk'), default='c5',
+                    help='c5 = side-by-side strip (historical); vmc = VM-centred cluster from real port faces (S81-AGGRO vmc + S-DIE D1/D2); '
+                         'vmk = compacted VM cluster (S-DIE-HUB 10-16: every big-flow pair face to face, band blocks beside the SW IO)')
+    ap.add_argument('--k-hc-floor', type=float, default=216.0, help='vmk: hc_t S edge (um); the whole cluster height follows')
+    ap.add_argument('--k-vm-hc', type=float, default=172.8, help='vmk: VM E face | hc_s W face seam (um, <= one hub reach)')
+    ap.add_argument('--k-su-vm', type=float, default=432.0, help='vmk: SU N face | VM S face channel (um; W links, WFC, svc)')
+    ap.add_argument('--k-corr', type=float, default=302.4, help='vmk: HC corridor hc_t | hc_s (um; the E links cross it)')
+    ap.add_argument('--k-w-frac', type=float, default=0.649,
+                    help='vmk: share of the spare hub width given to S14W (field-tree demand W 7,779 b : E 4,207 b)')
+    ap.add_argument('--k-host-shift', type=float, default=864.0,
+                    help='vmk: host shifted W under the collective by this much (opens the collective S face E part)')
+    ap.add_argument('--k-bk-gap', type=float, default=21.6, help='vmk: SU foot | bk_selector | bk_collector gaps (um)')
     a = ap.parse_args()
     if a.mode == 'vmc':
         return vmc_main(a)
+    if a.mode == 'vmk':
+        return vmk_main(a)
     B = dict(BLOCKS)
     for o in a.block:
         n, wh = o.split('=')
@@ -250,6 +262,123 @@ def vmc_main(a):
     for i, p in enumerate(bxs):
         for q in bxs[i + 1:]:
             assert not (p[1] < q[1] + q[3] and q[1] < p[1] + p[3] and p[2] < q[2] + q[4] and q[2] < p[2] + p[4]), (p[0], q[0])
+
+
+def vmk_main(a):
+    """Compacted VM cluster (S-DIE-HUB, owner order 10-16 07:30).  Every big-flow pair is face to face:
+
+      * VM (VM-centred v2 outline) with capture / gather / PQ on its N face exactly as vmc (capture at the VM pin
+        record's peer origin delta), MIX4 on its W face above the WFC (R0: WFC data E face onto the VM W face),
+        the sequencer under the WFC, below the SU|VM channel;
+      * SU under the VM W part (N face -> VM S face across the SU|VM channel, which also carries the W links, WFC and
+        svc lanes E-W under the VM);
+      * collective under the VM E part (N face abuts the VM S face, E face flush with the VM E face), host under it,
+        shifted W so the collective S face E part stays open for the E links coming through the HC corridor;
+      * HC tower (hc_t low, corridor, hc_s high) on the VM E face across a <= one-reach seam: hc_s W face faces the
+        VM (5.4 kb) and the collective (8.2 kb); hc_s top 60 um under the gather (vmc D2: E returns run straight W
+        over it);
+      * bk_selector / bk_collector stacked under the SU / collective, beside the SW PHY/CTRL/SVC band ('band_blocks':
+        the generator moves the band blocks only when the layout carries them).
+    The cluster height is fixed by the HC tower from --k-hc-floor; the field columns and die outline are untouched."""
+    B = dict(BLOCKS)
+    B.update(VMC)
+    for o in a.block:
+        n, wh = o.split('=')
+        B[n] = tuple(float(v) for v in wh.split(','))
+    cap = json.loads((ROOT / a.canonical if not Path(a.canonical).is_absolute() else Path(a.canonical)).read_text())
+    hx0, hx1 = cap['wide_hub']['hub_x_um']
+    vw, vh = B['vm']
+    hw_ = B['hc_s'][0]
+    io_x1 = a.phy_sw_x + 8500.032                  # SW PHY / CTRL / SVC band E edge
+    # ---- x: W column (WFC / sseq; MIX4 E-aligned) | VM | seam | HC, spare width split between S14W and S14E
+    wcol = max(B['wfc'][0], B['sseq'][0], B['mix4'][0])
+    blocks_w = wcol + a.abut + vw + a.k_vm_hc + hw_
+    spare = hx1 - hx0 - blocks_w
+    assert spare > 2 * a.s14e_min, ('vmk: hub too narrow', spare)
+    wc_x = up(hx0 + spare * a.k_w_frac, GX)
+    vm_x = up(wc_x + wcol + a.abut, GX)
+    hc_x = up(vm_x + vw + a.k_vm_hc, GX)
+    s14e = hx1 - (hc_x + hw_)
+    assert s14e >= a.s14e_min - 1e-6, ('S14E below its 0.50 width', s14e)
+    # ---- y: from the HC tower floor up (hc_t | corridor | hc_s, hc_s top 60 um under the gather)
+    hct_y = up(a.k_hc_floor, GY)
+    c0 = hct_y + B['hc_t'][1]
+    c1 = up(c0 + a.k_corr, GY)
+    hcs_y = c1
+    ga_y = up(hcs_y + B['hc_s'][1] + 60.0, GY)
+    cap_y = dn(ga_y - a.seam - B['capture'][1], GY)
+    vm_y = dn(cap_y - 21.624 - vh, GY)                 # VM pin record (vmc2_2330): capture origin = VM origin + (1654.56, h + 21.624)
+    cap_x = up(vm_x + 1654.56, GX)
+    pq_y = up(ga_y + B['gather'][1] + a.pq_gap, GY)
+    assert hcs_y <= vm_y - B['collective'][1] - a.abut, 'vmk: hc_s must face the whole collective'
+    # SU under the VM W part (pins generator-laid toward the VM), collective under the VM E part
+    su_y = dn(vm_y - a.k_su_vm - B['su_s'][1], GY)
+    su_x = vm_x
+    col_x = dn(vm_x + vw - B['collective'][0], GX)
+    col_y = dn(vm_y - a.abut - B['collective'][1], GY)
+    assert col_x - (su_x + B['su_s'][0]) >= 600.0, 'vmk: no free column between the SU and the collective'
+    host = (dn(col_x - a.k_host_shift, GX), dn(col_y - a.abut - B['host'][1], GY), *B['host'])
+    # W column on the VM W face: WFC (R0) at the VM floor, MIX4 above it, sseq under the SU|VM channel
+    wfc = (up(vm_x - a.abut - B['wfc'][0], GX), vm_y, *B['wfc'])
+    mix4 = (up(vm_x - a.abut - B['mix4'][0], GX), up(vm_y + B['wfc'][1] + 2 * a.abut, GY), *B['mix4'])
+    assert mix4[1] + mix4[3] <= vm_y + vh + 1e-6, 'vmk: MIX4 overruns the VM W face'
+    sseq = (up(vm_x - a.k_vm_hc - B['sseq'][0], GX), dn(vm_y - a.k_su_vm - a.abut - B['sseq'][1], GY), *B['sseq'])
+    # band blocks: selector under the SU foot, collector under it; both clear of hc_t and of the SW IO band
+    bk_w = B['bk_selector'][0]
+    bk_x = dn(hc_x - a.k_bk_gap - bk_w, GX)
+    assert bk_x >= io_x1 + a.k_bk_gap, ('vmk: band blocks into the SW IO band', bk_x, io_x1)
+    sel_y = dn(su_y - a.k_bk_gap - B['bk_selector'][1], GY)
+    colr_y = dn(sel_y - a.k_bk_gap - B['bk_collector'][1], GY)
+    assert colr_y >= 200.0, ('vmk: band blocks below the die edge', colr_y)
+    blocks = {INST['su_s']: [su_x, su_y, *B['su_s'], False], INST['vm']: [vm_x, vm_y, *B['vm'], True],
+              INST['capture']: [cap_x, cap_y, *B['capture'], False], INST['gather']: [cap_x, ga_y, *B['gather'], False],
+              INST['pq']: [cap_x, pq_y, *B['pq'], False], INST['sseq']: [*sseq, False],
+              INST['collective']: [col_x, col_y, *B['collective'], False],
+              INST['host']: [*host, False], INST['wfc']: [*wfc, False],
+              INST['hc_s']: [hc_x, hcs_y, *B['hc_s'], False], INST['hc_t']: [hc_x, hct_y, *B['hc_t'], False],
+              INST['bk_selector']: [bk_x, sel_y, *B['bk_selector'], True],
+              INST['bk_collector']: [bk_x, colr_y, *B['bk_collector'], True]}
+    hub_all = [up(hx0 + 400.0, GX), 200.0, dn(hx1 - 400.0, GX), 25800.0]
+    # generator spine convention (vmc): x_sp = the collective column, x_vch = its E edge (= the VM E face), VCH = the
+    # VM|HC seam (E links run in it from the collective E face down to the HC corridor), x_fe = x_sp + 2 cw + VCH
+    x_vch = up(col_x + a.cw, GX)
+    vch = round(hc_x - x_vch, 3)
+    rec = dict(
+        schema='opentallas.s81.hub_layout.v2', source='tools/s81/wide_hub_layout.py --mode vmk', canonical=a.canonical,
+        order='S14W | W col (sseq, WFC, MIX4) | VM (capture+gather+PQ N, SU S-W, collective S-E, host) | %g | '
+              'HC (hc_t low, corridor %g, hc_s high, top under the gather) | S14E; bk_selector/collector under the SU'
+              % (a.k_vm_hc, a.k_corr),
+        blocks=blocks,
+        # [x, y, w, h, orient, data faces]: the collector's VM read-out (vd / vf) leaves by its W face (die-assigned
+        # record physical/s81_die_pins/vmk_26e: its N face sits under the selector, its S face on the die edge)
+        band_blocks={'bk_selector': [bk_x, sel_y, *B['bk_selector'], 'R0', {'vd': 'N', 'iSW': 'W', 'c_cmd': 'E'}],
+                     'bk_collector': [bk_x, colr_y, *B['bk_collector'], 'R0', {'vd': 'W', 'cSW': 'W', 'c_cmd': 'E'}]},
+        corridor=[hc_x, c0, hw_, c1 - c0],
+        mix4_slot=list(mix4),
+        wide=dict(mode='vmc', variant='vmk', x_sp=col_x, x_fe=up(col_x + 2 * a.cw + vch, GX), x_vch=x_vch,
+                  vch=vch, cw=a.cw, s14w=[hx0, wc_x], s14e=[dn(hx1 - s14e, GX), hx1],
+                  corr_w=[ga_y + 60.0, ga_y + B['gather'][1] - 60.0],
+                  strip_w=[wc_x, ga_y, cap_x, pq_y + B['pq'][1]],
+                  hub_w=hub_all, capfree=hub_all, above_su=hub_all, vm_s=hub_all, su_under=hub_all,
+                  phy_x=dict(SW=a.phy_sw_x, SE=33000.0 - a.phy_sw_x - 8500.056)),
+        checks=dict(hub_um=[hx0, hx1], hub_width_um=round(hx1 - hx0, 3), s14w_um=round(wc_x - hx0, 3),
+                    s14e_um=round(s14e, 3), top_um=round(pq_y + B['pq'][1], 3), vm=[vm_y, round(vm_y + vh, 3)],
+                    gather=[ga_y, round(ga_y + B['gather'][1], 3)], hc_s=[hcs_y, round(hcs_y + B['hc_s'][1], 3)],
+                    hc_t=[hct_y, round(hct_y + B['hc_t'][1], 3)], corridor=[round(c0, 3), round(c1, 3)],
+                    vm_hc_um=round(hc_x - (vm_x + vw), 3), su_vm_um=round(vm_y - (su_y + B['su_s'][1]), 3),
+                    collective_vm_um=round(vm_y - (col_y + B['collective'][1]), 3),
+                    collective_hc_um=round(hc_x - (col_x + B['collective'][0]), 3),
+                    free_column_um=[round(su_x + B['su_s'][0], 3), round(col_x, 3)],
+                    capture_gather_um=round(ga_y - (cap_y + B['capture'][1]), 3)))
+    a.out.parent.mkdir(parents=True, exist_ok=True)
+    a.out.write_text(json.dumps(rec, indent=1) + '\n')
+    print(json.dumps(rec['checks']))
+    bxs = [(k, *v[:4]) for k, v in blocks.items()] + [('mix4', *mix4)]
+    for i, p in enumerate(bxs):
+        for q in bxs[i + 1:]:
+            assert not (p[1] < q[1] + q[3] and q[1] < p[1] + p[3] and p[2] < q[2] + q[4] and q[2] < p[2] + p[4]), (p[0], q[0])
+        assert hx0 <= p[1] and p[1] + p[3] <= hx1 and 0 <= p[2] and p[2] + p[4] <= 26000.0, ('vmk: block outside the hub', p)
+        assert not (p[1] < io_x1 and p[2] < 3041.256), ('vmk: block in the SW IO band', p)
 
 
 if __name__ == '__main__':
