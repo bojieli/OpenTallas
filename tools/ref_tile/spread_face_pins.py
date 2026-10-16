@@ -10,7 +10,7 @@ whole face (bus bits in order, buses in the spec's face order), on legal tracks:
 Usage: spread_face_pins.py SPEC.json OUT.tcl [--src-root ROOT] [--margin UM]
 Port widths come from verilator --json-only on the spec's sources/top/params/defines.
 """
-import argparse, json, os, subprocess, tempfile
+import argparse, json, os, re, subprocess, tempfile
 from pathlib import Path
 
 V = os.environ.get("OT_VERILATOR", str(Path.home() / ".local/opentallas-tools/verilator-5.050/bin/verilator"))
@@ -86,9 +86,13 @@ def main():
         # Clock ports go to the CENTRE of their face, not to the face's first slot: the CTS root sits at the clock
         # pin, so a corner pin on a wide tile stretches every leaf path across the whole face (CALCAP c3, clk at
         # (4.5, 0) of a 432 um face: TT insertion 419 ps / spread 115.9 vs 257.5 / 70.9 with the pin near its flops).
-        clocks = [b for b in bits if b in clock_ports]
+        # match by BASE name: a 1-bit vector clock port (fi0[0:0]) is emitted as fi0[0] and was missed, leaving the
+        # forwarded clock at the face end (stnv_566x1-f8: NE-corner clock entry, 35 um of root wire).  Forwarded-clock
+        # stations also centre their clock OUTPUTS (fo*, fn*), which travel with the data to the next capture face.
+        fwd = {b.split("[")[0] for b in bits if spec.get("forwarded_clock") and re.match(r"f[on]\d+(\[|$)", b)}
+        clocks = [b for b in bits if b.split("[")[0] in clock_ports or b.split("[")[0] in fwd]
         if clocks:
-            bits = [b for b in bits if b not in clock_ports]
+            bits = [b for b in bits if b not in clocks]
             mid = len(bits) // 2
             bits[mid:mid] = clocks
         horiz = face in ("N", "S")
