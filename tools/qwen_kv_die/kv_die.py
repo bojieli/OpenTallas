@@ -249,7 +249,9 @@ V144_AHUB_MAX = float(__import__('os').environ.get('OT_KV_V144_AHUB_MAX', '1e9')
 PV_TILE, PV_GAP, PV_CTL = 172.8, 21.6, 43.2
 PV_BLK = 3 * PV_TILE + 2 * PV_GAP                 # 561.6: one column = 8 slices around its join
 PV_ARR = (2 * PV_BLK + PV_GAP, 16 * PV_BLK + 15 * PV_GAP)   # 1,144.8 x 9,309.6
-PV_STRIP = 216.0
+# control strip: the 43.2-um control tile + 21.6-um clearances (the command / start / reset trunks and the column-flag
+# collection run in the side relay channels, PV_TREE); OT_KV_V144_STRIP overrides (the 10-16 WIP reserved 216)
+PV_STRIP = float(__import__('os').environ.get('OT_KV_V144_STRIP', '86.4'))
 PVW = (PV_ARR[0], round(PV_ARR[1] + PV_GAP + PV_STRIP, 6))   # 1,144.8 x 9,547.2
 PV_CLEAR = 21.6                                   # envelope <-> hub / gateway / SerDes clearance (sliver rule >= 20 um)
 PV_GRANT_Y0 = 1844.346                            # pv_wide_grant.json pvw_0 (kept when the full height fits under the hub)
@@ -1209,8 +1211,9 @@ def _build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_w
             if dy_ or gr_:
                 return _build(**_args)
         x_ = up(xc - PVW[0] / 2, GX)
-        y_s = PV_GRANT_Y0 if PV_GRANT_Y0 >= s_lo and PV_GRANT_Y0 + PVW[1] <= s_hi else \
-            math.floor((s_hi - PVW[1]) / GY + 1e-9) * GY
+        # the S envelope sits at the TOP of its room (strip at the hub): every um of spare goes to the band under it, where
+        # the HOST FDI and the S-band chains cross from the side channels to the SerDes / gateway pins
+        y_s = math.floor((s_hi - PVW[1]) / GY + 1e-9) * GY
         y_n = up(n_lo, GY)
         if y_s < s_lo - 1e-6 or y_n + PVW[1] > n_hi + 1e-6:
             raise ValueError(f'v1.4.4 PV envelope does not fit: south {s_lo:.1f}..{s_hi:.1f}, north {n_lo:.1f}..{n_hi:.1f}, '
@@ -1225,7 +1228,7 @@ def _build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_w
                       die_growth_um=V144S['grow'], centre_widening_um=V144_DW,
                       die_area_delta_mm2=round((Wk * Hk - (Wk - V144_DW) * (Hk - V144S['grow'])) / 1e6, 4),
                       envelope_um=list(PVW), array_um=list(PV_ARR), strip_um=PV_STRIP,
-                      pvw_0=dict(xy=[x_, y_s], orient='R0', stacks=['WS', 'ES'], kept_grant_y=y_s == PV_GRANT_Y0,
+                      pvw_0=dict(xy=[x_, y_s], orient='R0', stacks=['WS', 'ES'], band_under_um=round(y_s - (byc['serdes_host'].y + byc['serdes_host'].h), 3),
                                  south_room_um=[round(s_lo, 3), round(s_hi, 3)]),
                       pvw_1=dict(xy=[x_, y_n], orient='MX', stacks=['WN', 'EN'], north_room_um=[round(n_lo, 3), round(n_hi, 3)]),
                       centre_column_um=[round(lft, 3), round(rgt, 3), round(rgt - lft, 3)],
@@ -1254,7 +1257,7 @@ def _build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_w
         pv_geo['vport_homes'] = homes
         pv_geo['vport_status'] = ('RESERVED_KEEPOUT: qkd_pv16_vport instances + ring / pair wiring wait for the Q-VMWB landing '
                                   'ring faces and pin file (the landing strip RTL has no return-ring face today)')
-        m_keep = keep
+        m_keep = [] if __import__('os').environ.get('DBG_NOVP') else keep
     # v1.2 candidate lanes are OFF by default (kvs2 T2 try: window fine H 1.37 -> 1.25, coarse 1.32 -> 1.17 H but 0.80 -> 1.10 V,
     # lx 1 -> 2 stages, one re-plan reach miss): OT_KV_LANES=1 turns them on for the next revision's work
     m['geo'] = dict(grp_y=grp_y, split=split, land_width_um=LAND_W, static_memory_reservation=LAND_W > 172.8, lanes=bool(split and __import__('os').environ.get('OT_KV_LANES', '2') in ('1', '2')), stack_pitch=sp, band_shift=band_shift, x_land=x_land, x_grp=x_grp, grp_w=grp_w, centre_w=centre_w, stack_h=stack_h, band_dy=band_dy,
@@ -1764,7 +1767,8 @@ def _relays(m):
                     prev[q] = c
                     dq.append(q)
         if hit is None:
-            raise ValueError(f'kv die: no route {a} -> {b}')
+            raise ValueError(f'kv die: no route {a} -> {b} (src {len(src)} cells, dst {len(dst)} cells, avoid relays {SP["on"]}, '
+                             f'src0 {sorted(src)[:3]}, dst0 {sorted(dst)[:3]})')
         path, c = [], hit
         while c is not None:
             path.append(((c[0] + 0.5) * G, (c[1] + 0.5) * G))
@@ -1845,6 +1849,12 @@ def _relays(m):
         # the link bridge <-> sequencer words (lx / lr = the measured link cost's K_ST) take their relay spots first, so
         # other chains' relays never push them from one stage to two
         order_.sort(key=lambda b_: b_[0] not in ('lx', 'lr'))
+        if V144:
+            # v1.4.4: the PV pairs fill the centre column; the 2,089-b HOST FDI (north root -> south SerDes, ~22 mm) takes its
+            # side-channel relay spots right after lx / lr, before the stack chains fill the 274-um side channels
+            pri_ = [p_ for p_ in __import__('os').environ.get('OT_KV_V144_RLY_FIRST', 'krs_,krq_').split(',') if p_]
+            order_.sort(key=lambda b_: (b_[0] not in ('lx', 'lr'), b_[0] != 'host_fdi',
+                                        not any(b_[0].startswith(p_) for p_ in pri_)))
     for bid, cl, bits, eps in order_:
         if cl in ABUT or cl in ('clock_trunk', 'reset', 'constant') or len(eps) != 2:
             nb.append((bid, cl, bits, eps))
@@ -1871,6 +1881,10 @@ def _relays(m):
                     # host -> E lane cell below the host -> E lane cell above the SerDes -> W-face pins
                     sb_ = by['serdes_host']
                     lx_ = hb_.x + hb_.w + CHAN
+                    if 'pvw_1' in by:
+                        # v1.4.4: the PV pairs hold the centre column: the FDI runs down the middle of the EAST side channel
+                        pv_ = by['pvw_1']
+                        lx_ = pv_.x + pv_.w + m['geo']['pv144']['side_channel_um'][1] / 2
 
                     def lane_cell(x_, y_):
                         wy_ = int(y_ // G)
@@ -1881,11 +1895,15 @@ def _relays(m):
                                     return (wx_, wy_)
                         raise ValueError('no lane cell')
                     w1, w2 = lane_cell(lx_, hb_.y - 2 * CHAN), lane_cell(lx_, sb_.y + sb_.h + 2 * CHAN)
+                    if __import__('os').environ.get('DBG_FDI'):
+                        print('DBG_FDI', lx_, w1, w2, G, file=__import__('sys').stderr)
                     q1 = route_(a, 'fdi_w1', near_pin(ring(by[a]), a, pa), {w1})
                     q2 = route_('fdi_w1', 'fdi_w2', [w1], {w2})
                     q3 = route_('fdi_w2', b, [w2], set(near_pin(ring(by[b]), b, pb)))
                     path = q1 + q2[1:] + q3[1:]
-            except ValueError:
+            except ValueError as e_:
+                if V144:
+                    print(f'kv die v1.4.4: host_fdi east-lane route failed ({e_}); shortest path', file=sys.stderr)
                 path = None
         if path is None:
             path = route(a, b, pa, pb)
@@ -2046,7 +2064,9 @@ def _relays(m):
             try:
                 chain_()
                 break
-            except ValueError:
+            except ValueError as e0_:
+                if __import__('os').environ.get('DBG_FDI'):
+                    print('DBG_RETRY', bid, str(e0_)[:300], file=__import__('sys').stderr)
                 if attempt or not m['geo'].get('split'):
                     raise
                 # v1.1 (split): the chain ran out of relay spots in a corridor other chains fill: re-route it around
