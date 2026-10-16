@@ -25,7 +25,7 @@ module tb_hbm_vm_hbm_path_q;
  wire[7:0]full0,full1,pcbad,lfault,lbusy;wire[1:0]bready[0:7];wire[2247:0]dq;
  genvar b,k;
  generate for(b=0;b<8;b=b+1)begin:lane
-  ot_hbm_svc_vmdel_lane u(.clk(sc),.rst_n(sr),.bank_id(3'(b)),
+  ot_hbm_svc_vmdel_lane u(.clk(sc),.clk_cap(sc),.rst_n(sr),.bank_id(3'(b)),
    .begin_v_i(cal[0]),.begin_bank_i(cal[1]),.begin_epoch_i(cal[17:2]),.start_i(cal[18]),.start_bank_i(cal[19]),
    .start_epoch_i(cal[35:20]),.start_base_sector_i(cal[51:36]),
    .fill_v_i({fv[24+b],fv[16+b],fv[8+b],fv[b]}),.fill_bank_i({fb[24+b],fb[16+b],fb[8+b],fb[b]}),

@@ -4,7 +4,7 @@
 #  MUT=0: the production delivery bench run against the SPLIT (module renamed in a scratch copy) + lockstep
 #         equivalence vs the monolithic module (every output bit, every cycle, legal + violating traffic);
 #  MUT=1: bank-leaf group select swapped (groups 0/1); MUT=2: bank-leaf SRAM read slot corrupted;
-#  MUT=3 (v4 rst pin flop): lane state released one edge late (two-stage reset release). HBM-V15-HARDEN 10-15
+#  MUT=3 (v4 rst pin flop; v6 rst_s sync pin flop): lane state released one edge late (two-stage reset release). HBM-V15-HARDEN 10-15
 #  MUT=4 (v5 H-NETLIST/vmdel 10-16): cross-lane status pin flops bypassed (lanes see status 1 edge early vs STATUS_LAT=2).
 set -euo pipefail
 out=${1:?out}; mut=${2:-0}; cyc=${CYCLES:-4000}; LAT=2; SLAT=2; mkdir -p "$out"  # v3 lane pin registers: interface latency 2; v5 cross-lane status output+pin flops: status latency 2
@@ -15,8 +15,8 @@ cp $sp "$out/split.sv"
 case "$mut" in
  1) sed -i 's/({256{out_group==2.d0}}&macro_data\[0+:256\])/({256{out_group==2\x27d0}}\&macro_data[256+:256])/' "$out/split.sv";;
  2) sed -i 's/\.r_addr_in({rb,rs})/.r_addr_in({rb,rs ^ 6\x27d1})/' "$out/split.sv";;
- 3) sed -i 's/ else rst_ctl<=1.b1;/ else rst_ctl<=rst_ctl2; reg rst_ctl2; always @(posedge clk or negedge rst_n) if(!rst_n) rst_ctl2<=0; else rst_ctl2<=1;/' "$out/split.sv";;  # v4: lane control state released one edge late
- 4) sed -i 's/ wire landing_fault=sticky || pcbad_q;/ wire landing_fault=sticky || |pcbad_all;/; s/owned\[1\] \&\& full1_q,owned\[0\] \&\& full0_q/owned[1] \&\& (\&full1_all),owned[0] \&\& (\&full0_all)/' "$out/split.sv";;  # v5: cross-lane status pin flops bypassed (status latency 1, not the reference 2)
+ 3) sed -i 's/^  rst_s<=rst_n;/  rst_s<=rst_s2; rst_s2<=rst_n;/; s/^ reg rst_s;/ reg rst_s,rst_s2;/' "$out/split.sv";;  # v6: body reset released one edge late (two-stage rst_n capture)
+ 4) sed -i 's/ wire full0_q=\&full0_p, full1_q=\&full1_p, pcbad_q=|pcbad_p;/ wire full0_q=\&full0_all, full1_q=\&full1_all, pcbad_q=|pcbad_all;/' "$out/split.sv";;  # v6: cross-lane status pin flops bypassed (status latency 1, not the reference 2)
 esac
 if [ "$mut" != 0 ]; then cmp -s "$out/split.sv" $sp && { echo 'mutant not applied'; exit 3; }; fi
 sed 's/module ot_hbm_svc_static_vm_delivery_split /module ot_hbm_svc_static_vm_delivery /' "$out/split.sv" > "$out/as_delivery.sv"
