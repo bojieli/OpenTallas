@@ -20,7 +20,7 @@ module tb_hbm_sm_mtp_k2;
   integer lane,idx;reg[531:0] z;begin z=0;
   for(lane=0;lane<2;lane=lane+1)begin
    for(idx=0;idx<32;idx=idx+1)z[256*lane+8*idx+:8]=8'h20+((a*13+b*7+c*3+idx+lane*5)%24);
-   z[512+lane*10+:10]=10'd127;
+   z[512+lane*10+:10]=10'd0;
   end operand=z;end
  endfunction
  always @(negedge clk) if(rst_n)begin
