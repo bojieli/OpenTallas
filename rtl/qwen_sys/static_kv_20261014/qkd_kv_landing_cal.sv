@@ -27,7 +27,7 @@
 // l_sector: return slot output register + relays).  At most one HBM edge per core edge, so one put per edge.
 //
 // Boot constants (cfg_we / cfg_addr / cfg_data, written once at boot by the programme loader):
-//   0: {stack[1:0], group[2:0]}   1: XU[9:0]   2: H0[7:0]   3: {LD[3:0], RC[3:0]}
+//   0: {stack[1:0], group[2:0]}   1: XU[9:0]   2: H0[7:0]   3: {LD[3:0] (0..8), RC[3:0]}
 //   4: K pacing {GAP[3:0], P0[8:0]}   5: V pacing {GAP[3:0], P0[8:0]}   (P0 >= 256: none)
 // Faults (sticky, never move a slot): a pass start while a pass is still putting, vgo before the layer's kgo.
 // MUT (bench negative controls): 1 = V sector uses o[7] for the 128 bit, 2 = phase drifts one unit a beat,
@@ -134,19 +134,19 @@ module qkd_kv_landing_cal #(parameter integer MUT = 0, parameter integer PH0 = 0
         end
     // ---- outputs: return slots now, landing LD edges later (all registered) ----
     wire put_now = emit && i < n && !start;
-    reg [10:0] dl [0:15];
+    reg [10:0] dl [0:7];                                // LD 0..8 (return slot output register + <= 6 relays)
     integer k;
     always @(posedge ck or negedge rn)
-        if (!rn) begin r_put <= 0; l_put <= 0; for (k = 0; k < 16; k = k + 1) dl[k] <= 0; end
+        if (!rn) begin r_put <= 0; l_put <= 0; for (k = 0; k < 8; k = k + 1) dl[k] <= 0; end
         else begin
             r_put <= {4{put_now}};
             dl[0] <= {put_now, sec};
-            for (k = 1; k < 16; k = k + 1) dl[k] <= dl[k-1];
-            l_put <= {4{(ld_c == 0) ? put_now : dl[ld_c - 1][10]}};
+            for (k = 1; k < 8; k = k + 1) dl[k] <= dl[k-1];
+            l_put <= {4{(ld_c == 0) ? put_now : dl[3'(ld_c - 4'd1)][10]}};
         end
     always @(posedge ck) begin
         r_sector <= {4{sec}};
-        l_sector <= {4{(ld_c == 0) ? sec : dl[ld_c - 1][9:0]}};
+        l_sector <= {4{(ld_c == 0) ? sec : dl[3'(ld_c - 4'd1)][9:0]}};
         if (start) begin r_epoch <= ep_q; r_layer <= ly_q; end
         if (kgo_q) begin l_epoch <= ep_q; l_layer <= ly_q; end
     end
