@@ -255,11 +255,16 @@ def main():
     for q in Q:
         b = P[f'phy_{q}']; north = b['y'] > 10000
         phy = f'phy_{q}'
-        leaves[phy] = dict(m=PHY_M, x=b['x'], y=b['y'], o='MX' if north else 'R0', w=b['w'], h=b['h'])
+        east = b['x'] > W / 2
+        # east PHYs mirrored so channel order runs with the PC band boxes (grants v5 lesson: SE/NE channel order is
+        # reversed vs the box order otherwise; v4 had 9.1 mm PHY-PC hops)
+        po = ('R180' if east else 'MX') if north else ('MY' if east else 'R0')
+        leaves[phy] = dict(m=PHY_M, x=b['x'], y=b['y'], o=po, w=b['w'], h=b['h'])
         lp = vxy[PHY_M]
         for pc in range(32):
             xs = [lp[f'{n}[{pc * w + k}]'][0] for n, w, _ in per for k in range(w)]
-            cx = b['x'] + sum(xs) / len(xs)
+            mx = sum(xs) / len(xs)
+            cx = b['x'] + (b['w'] - mx if po in ('MY', 'R180') else mx)
             l = f'ctl_{q}_p{pc:02d}'
             y = round(b['y'] - 10.8 - ch, 3) if north else round(b['y'] + b['h'] + 10.8, 3)
             leaves[l] = dict(m=CTL_M, x=round(round((cx - cw / 2) / 0.216) * 0.216, 3), y=y, o='MX' if north else 'R0',
@@ -296,6 +301,14 @@ def main():
                 net(f'pk_{q}{k}_{j}', (g, f'sm_packet[{j}]'), [(f'sm_{q}{k}', f'packet[{j}]')])
             for j in range(83):
                 net(f'cm_{q}{k}_{j}', (g, f'sm_command[{j}]'), [(f'sm_{q}{k}', f'command[{j}]')])
+    worst = 0
+    for q in Q:
+        for k in range(8):
+            g = leaves[f'svg_{q}{k}']
+            for lane in range(4):
+                c = leaves[f'ctl_{q}_p{4 * k + lane:02d}']
+                worst = max(worst, abs(g['x'] + g['w'] / 2 - c['x'] - c['w'] / 2) + abs(g['y'] + g['h'] / 2 - c['y'] - c['h'] / 2))
+    print(f'max group-controller centre distance {worst:.0f} um')
     ls = list(leaves.items())
     for i, (l1, v1) in enumerate(ls):
         for l2, v2 in ls[i + 1:]:
