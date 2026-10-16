@@ -87,7 +87,7 @@ module ot_hgi_sm_xload_xq_pegress #(
     end endgenerate
     reg [EW-1:0] e6;
     always @(posedge clk or negedge rn) if (!rn) e6 <= '0; else e6 <= ede;
-    reg [7:0] e5r [0:NR-1];
+    (* keep = 1 *) reg [7:0] e5r [0:NR-1];   // replicas kept (gate: merged bqvr drove 4,125 loads)
     always @(posedge clk or negedge rn)
         if (!rn) for (integer k = 0; k < NR; k = k + 1) e5r[k] <= 8'd0;
         else for (integer k = 0; k < NR; k = k + 1) e5r[k] <= ed5;
@@ -96,7 +96,7 @@ module ot_hgi_sm_xload_xq_pegress #(
         xbeat[k*RB +: RB] <= {RB{1'b0}};
         if (e5r[k][7]) for (integer x = 0; x < NBMAX; x = x + 1) if (e5r[k][6:0] == 7'(x)) xbeat[k*RB +: RB] <= beats[x][k*RB +: RB];
     end
-    reg bc_v, bc_last; reg [6:0] bc_addr, bc_b; reg [2047:0] bq_c; reg [NR-1:0] bqvr;
+    reg bc_v, bc_last; reg [6:0] bc_addr, bc_b; reg [2047:0] bq_c; (* keep = 1 *) reg [NR-1:0] bqvr;
     always @(posedge clk or negedge rn) begin
         if (!rn) begin bc_v <= 1'b0; bc_last <= 1'b0; bqvr <= '0; end
         else begin bc_v <= bq_v; bc_last <= bq_last; bqvr <= {NR{bq_v}}; end
