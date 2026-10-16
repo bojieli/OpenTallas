@@ -74,8 +74,8 @@
  "job": {
   "owner": "Codex:H-DIE-2330",
   "branch": "claude/hdie-2210",
-  "tag": "cfg-wact",
-  "purpose": "Physical-slot bank/BG onehots and registered age relations remove queue rotation, dynamic bank-state lookup and decode after priority on the measured -208.2ps write ACT path; same-cycle policy proved against PHYS_WACT0 over54018edges/3850pushes/3818pops/120wraps/1129simultaneous, reversed age mutant rejected. Added state up to2208FF, no normal edges; actual mapped area/clock/route remain to measure. HBM v15 die: ONE configured physical per-PC controller master for all 128 PCs (Codex 2116 configured-PC identity: pc_id/refresh_reload straps, die constants captured in flops at reset); real ot_hbm_r14_stream_pc_strap sequencer + same-row FIFO32 + 32 reserved responses in a real 128x256 SRAM + (WPAY=1, H-DIE 22:50) the 256-bit write payload in a second 128x256 SRAM: 8,192 queue flops and the 32:1x256 head mux removed, clock root 15,219 -> ~7k sinks (hdie_pc_ctrl gate FAIL: CTS rc=137 + 15,219-sink root). Service rate unchanged (issued steady 69,583.3 ps/epoch, capacity PASS, cfg PC/PHASE mutants rejected; write path WR640 exact, stale_head mutant rejected). K side N face (SM service group), PHY row/column/data S face, straps E. Flow control k_rdy/kr_rdy = HBM-stack boundary (owner 10-14). Signs off at die 833.333 ps (runs at 1024 ps).",
+  "tag": "cfg-wact2-spine",
+  "purpose": "H2 uses registered physical bank onehots for both oldest-write ACT and current queue PRE exclusion, removing remaining1669-load rotated rp network with no normal edges/extra state; full same-cycle policy and full service proof retained. Replace measured H1 TritonCTS97.7ps spread with supported explicit equal-delay balanced clock spine, including each real SRAM clock as its own leaf, preserving all timing constraints/ports/outline. Clock delay/area and setup require fresh measurement; H1 is unqualified at setup-122.9ps.",
   "extra_paths": [
    "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
@@ -165,5 +165,7 @@
   "h": 185.76
  },
  "io_tcl": "physical/ref_tile_specs/hdie_pc_ctrl_cfg/hdie_pc_ctrl_cfg_spread_pins.tcl",
- "structural_change": "Physical-slot bank/BG onehots and registered age relations remove queue rotation, dynamic bank-state lookup and decode after priority on the measured -208.2ps write ACT path; same-cycle policy proved against PHYS_WACT0 over54018edges/3850pushes/3818pops/120wraps/1129simultaneous, reversed age mutant rejected. Added state up to2208FF, no normal edges; actual mapped area/clock/route remain to measure."
+ "structural_change": "H2 uses registered physical bank onehots for both oldest-write ACT and current queue PRE exclusion, removing remaining1669-load rotated rp network with no normal edges/extra state; full same-cycle policy and full service proof retained. Replace measured H1 TritonCTS97.7ps spread with supported explicit equal-delay balanced clock spine, including each real SRAM clock as its own leaf, preserving all timing constraints/ports/outline. Clock delay/area and setup require fresh measurement; H1 is unqualified at setup-122.9ps.",
+ "clock": "spine",
+ "spine_macro_leaf": true
 }
