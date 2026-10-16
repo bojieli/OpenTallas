@@ -1,0 +1,59 @@
+{
+  "schema": "opentallas.s81.fixed-status-observation.v1",
+  "scope": "raw source RTL actual c8/c10 wrappers; physical phase and recipe3 pin-stage compiler binding still required",
+  "qualified": false,
+  "native_completion_status": "BLOCKED until actual production consumer/compiler binds a fixed observation edge",
+  "end_is_success": false,
+  "kit_is_success": false,
+  "runtime_local_capture_to_sticky_fault_ck_edges": 1,
+  "diagnostic_changes_issue_KIT_END_cycles": false,
+  "normal_runtime_wait_or_backpressure": false,
+  "minimum_legal_end_minus_last_done_rows": 1,
+  "source_sha256": {
+    "rtl/dsrom_sys/s81_static_control/ot_s81_fixed_issue.sv": "5cf56524db619c7f1bddc73815f622132358436529e324c82954b89013dbbf07",
+    "rtl/dsrom_sys/s81_static_control/ot_s81_fixed_mailbox.sv": "e9629558b211dd2000ebb8970f87176d0648a00e3da2195201bbd135539412b7",
+    "rtl/dsrom_sys/s81_static_control/dsfd_stage_seq_static_c.sv": "3fc9e5cd96970d49788e9a5a06fce3a31fb4984baa8cd505ad49084ada338521",
+    "rtl/dsrom_sys/s81_static_control/dsfd_stage_seq_static_c8.sv": "c10293192d5859139181269994dd2caa0930a569e4785f8613ace66db8bfddd8",
+    "rtl/dsrom_sys/s81_static_control/dsfd_stage_seq_static_c10.sv": "08bd9bf3123f065785ba6b6cc3946845688fde907b9bffd5b97cac949db6fe64",
+    "rtl/dsrom_sys/s81_static_control/test/tb_s81_issuer_status_contract.sv": "332912442000cb6a19240f6bf58a7e78dd31820ae2ed5ec17260a2669b6729ac"
+  },
+  "bench": "rtl/dsrom_sys/s81_static_control/test/run_issuer_status_contract.sh",
+  "profile": {
+    "kind": "ideal related3:4 clocks, not measured physical proof",
+    "ck_first_rise_ns": 3,
+    "ck_period_ns": 6,
+    "ckv_first_rise_ns": 4,
+    "ckv_period_ns": 8,
+    "reset_release_ns": 30,
+    "NOPS": 128,
+    "STAGE": 7,
+    "external_f_ks_sample_serial_edge": 200,
+    "issuer_job_sample_ck_edge": 270,
+    "last_done_row": 4,
+    "END_row": 5,
+    "END_visible_ck_edge": 276,
+    "missing_completion_sticky_fault_visible_ck_edge": 277,
+    "KIT_port_visible_serial_edge": 209,
+    "c8_fault_status_port_visible_serial_edge": 209,
+    "c10_fault_status_port_visible_serial_edge": 210,
+    "c8_fixed_registered_consumer_sample_serial_edge": 210,
+    "c10_fixed_registered_consumer_sample_serial_edge": 211,
+    "accept_requires": [
+      "KIT observed by assigned fixed edge",
+      "sampled t_st[5]==0",
+      "sampled t_st[0]==0"
+    ],
+    "early_KIT_only_consumer_mutant": "must fail"
+  },
+  "external_boundary_audit": {
+    "dsfd_host_c": "No KIT/t_kd input. t_collective ACK is write completion, not token success. f_sseq_st forwards through3 ck registers; phase-specific status sample must include this latency.",
+    "full_layer_diagnostic": "Bare issuer fault monitored continuously through600-edge drain; not an actual production KIT-success consumer.",
+    "production_consumer": "not yet bound; no HOST success inferred"
+  },
+  "required_physical_binding": [
+    "related-clock measured epoch and actual clock-pin insertion",
+    "recipe3 +1ck input/+1ck output on affected data ports; native ckv mailbox ports unchanged",
+    "all actual downstream status registers and physical relays",
+    "source-pinned fixed success sample cycle in emitted compiler program; fail closed if absent"
+  ]
+}
