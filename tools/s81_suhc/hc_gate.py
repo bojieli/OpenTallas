@@ -593,7 +593,7 @@ def main():
     p.add_argument("--pad-hard", type=int, default=0, help="1: define OT_S81_HC_PAD_HARD (pad leaves at their hardened defaults)")
     p.add_argument("--tmax", type=int, default=0, help="testbench cycle cap (default: the bench's 400000); a mutant that hangs then fails in minutes")
     p.add_argument("--tile-probe", default="", help="comma list of TILES (or all): report every instance + parameters; the run fails unless all are routed tuples")
-    p.add_argument("--ccf-bp", type=int, default=0, help="HC-COMB 2026-10-16: 1 = CCF successor ot_s81_hc_ccf_bankpipe + forward pad trim 2 (must PASS at NG 256 production shape); 2 = bankpipe without the trim (negative control: must FAIL)")
+    p.add_argument("--ccf-bp", type=int, default=0, help="HC-COMB 2026-10-16: 1 = CCF successor ot_s81_hc_ccf_bankpipe + forward pad trim 2 (must PASS at NG 256 production shape); 2 = bankpipe without the trim (negative control: must FAIL); 3 = PINREG bankpipe (all leaf pins registered, +3) + trim 3 (must PASS); 4 = PINREG untrimmed (must FAIL)")
     p.add_argument("--tile-mut", default=None, help="one of TILES: build with that module's mutant (the run must fail)")
     a = ap.parse_args()
     return dict(prep=cmd_prep, run=cmd_run)[a.cmd](a)

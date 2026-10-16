@@ -3,7 +3,12 @@
 module ot_s81_hc_ccf_bankpipe #(
     parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, S_WR = 8, S_RT = 4, ML = 5, AL = 4,
     parameter integer FIFO_SLICE = 512, KEEP_POP = 1, Y_RELAY = 1,
-    parameter integer MUT = 0, AMUT = 0, RF = 5, RT = 1, RW = 2, YD = 16, HALF = 1, RLY = 2, DW = 6
+    parameter integer MUT = 0, AMUT = 0, RF = 5, RT = 1, RW = 2, YD = 16, HALF = 1, RLY = 2, DW = 6,
+    // PINREG (HC-COMB 2026-10-16, OWNER RULE 19:50 every leaf registers every input and output at its pin): 1 registers
+    // the two remaining unregistered leaf inputs -- the bank status (hv / ovf) at the N capture leaf and the bank heads at
+    // the S controller -- with every sibling input of that leaf delayed alike, so the leaf's internal phase relations are
+    // unchanged and every public output (data, valid, reset, fault) moves uniformly +3 edges (II 1).  0 = the +2 source.
+    parameter integer PINREG = 0
 ) (
     input wire sk_n,sk_s,srs,
     input wire [4:0] bank_ck,
@@ -42,7 +47,7 @@ module ot_s81_hc_ccf_bankpipe #(
     initial if(NG!=256 || D!=5120 || NCOL!=3 || GS!=8 || S_RD!=2 ||
                FIFO_SLICE!=512 || KEEP_POP!=1 || Y_RELAY!=1 || HALF!=1 || RLY!=2 || RF!=5 || DW!=6)
         $fatal(1,"CCF bankpipe: only measured production shape is supported");
-    ot_s81_hc_ccf_bankpipe_capture #(.FVW(FVW),.FSW(FSW),.YS(YS1),.DEPTH(YDC),.POPBIT(S_RD)) u_n(
+    ot_s81_hc_ccf_bankpipe_capture #(.FVW(FVW),.FSW(FSW),.YS(YS1),.DEPTH(YDC),.POPBIT(S_RD),.PINREG(PINREG)) u_n(
       .clk(sk_n),.srs(srs),.fv(fv_i),.fd(fd_i),.yv(n_yacc),.y(n_y),
       .srs_q(psrs),.fv_q(pfv),.fd_q(pfd),.yv_q(pyacc),.y_q(py),
       .bank_valid(valid),.bank_overflow(overflow),.yfl(yfl));
@@ -72,22 +77,32 @@ module ot_s81_hc_ccf_bankpipe #(
       .YD(YD),
       .HALF(HALF),
       .RLY(RLY),
-      .DW(DW)
-    ) u_s(.sk(sk_s),.srs(psrs),.fv_i(pfv),.fd_i(pfd),.n_yacc(pyacc),
-      .bank_heads(heads),
+      .DW(DW),
+      .PINREG(PINREG)
+    ) u_s(.sk(sk_s),.srs_pin(psrs),.fv_pin(pfv),.fd_pin(pfd),.n_yacc_pin(pyacc),
+      .bank_heads_pin(heads),
       .ch_rst(ch_rst),.ch_fv(ch_fv),.ch_fd(ch_fd));
 endmodule
 
 // Input capture plus the actual north-local fault observer; all public timing stays +2.
-module ot_s81_hc_ccf_bankpipe_capture #(parameter FVW=7,FSW=1128,YS=2560,DEPTH=32,POPBIT=2)(
+module ot_s81_hc_ccf_bankpipe_capture #(parameter FVW=7,FSW=1128,YS=2560,DEPTH=32,POPBIT=2,PINREG=0)(
  input wire clk,srs,input wire[FVW-1:0]fv,input wire[FSW-1:0]fd,input wire yv,input wire[YS-1:0]y,
  input wire[4:0]bank_valid,bank_overflow,
  output reg srs_q,output reg[FVW-1:0]fv_q,output reg[FSW-1:0]fd_q,output reg yv_q,output reg[YS-1:0]y_q,
  output reg yfl);
  always @(posedge clk) begin srs_q<=srs;fv_q<=fv;fd_q<=fd;yv_q<=yv;y_q<=y;end
  // Match S's real reset/control phases; this is the original observer moved, not a prediction.
- reg[2:0]rsr;always @(posedge clk)rsr<={rsr[1:0],srs_q};
+ reg[3:0]rsr;always @(posedge clk)rsr<={rsr[2:0],srs_q};
  reg pop_mid,ya_mid,pop_p,ya_p;
+ // PINREG: bank status captured at the pin; the observer's pop / ya and its reset take one more stage to match
+ reg[4:0] bv_q,bo_q;always @(posedge clk)begin bv_q<=bank_valid;bo_q<=bank_overflow;end
+ reg pop_p2,ya_p2;
+ wire rso=PINREG ? rsr[3] : rsr[2];
+ always @(posedge clk or negedge rsr[3])
+  if(!rsr[3])begin pop_p2<=0;ya_p2<=0;end
+  else begin pop_p2<=pop_p;ya_p2<=ya_p;end
+ wire pop_o=PINREG ? pop_p2 : pop_p, ya_o=PINREG ? ya_p2 : ya_p;
+ wire[4:0] bv=PINREG ? bv_q : bank_valid, bo=PINREG ? bo_q : bank_overflow;
  always @(posedge clk or negedge rsr[1])
   if(!rsr[1])begin pop_mid<=0;ya_mid<=0;end
   else begin pop_mid<=fv_q[POPBIT];ya_mid<=yv_q;end
@@ -96,13 +111,13 @@ module ot_s81_hc_ccf_bankpipe_capture #(parameter FVW=7,FSW=1128,YS=2560,DEPTH=3
   else begin pop_p<=pop_mid;ya_p<=ya_mid;end
  localparam integer YB=$clog2(DEPTH);
  reg[YB:0]yn1;
- wire yf_hv=&bank_valid;
- wire yf_ovf=|bank_overflow;
- always @(posedge clk or negedge rsr[2])
-  if(!rsr[2])begin yn1<=0;yfl<=0;end
+ wire yf_hv=&bv;
+ wire yf_ovf=|bo;
+ always @(posedge clk or negedge rso)
+  if(!rso)begin yn1<=0;yfl<=0;end
   else begin
-   yn1<=yn1+ya_p-pop_p;
-   if((ya_p && !pop_p && yn1==DEPTH) || (pop_p && yn1==0) || (pop_p && !yf_hv) || yf_ovf) yfl<=1;
+   yn1<=yn1+ya_o-pop_o;
+   if((ya_o && !pop_o && yn1==DEPTH) || (pop_o && yn1==0) || (pop_o && !yf_hv) || yf_ovf) yfl<=1;
   end
 endmodule
 
@@ -128,13 +143,14 @@ endmodule
 module ot_s81_hc_ccf_bankpipe_control #(
     parameter integer NG = 256, D = 5120, NCOL = 3, GS = 8, S_RD = 2, S_WR = 8, S_RT = 4, ML = 5, AL = 4,
     parameter integer FIFO_SLICE = 512, KEEP_POP = 1, Y_RELAY = 1,
-    parameter integer MUT = 0, AMUT = 0, RF = 5, RT = 1, RW = 2, YD = 16, HALF = 1, RLY = 2, DW = 6
+    parameter integer MUT = 0, AMUT = 0, RF = 5, RT = 1, RW = 2, YD = 16, HALF = 1, RLY = 2, DW = 6,
+    parameter integer PINREG = 0
 ) (
-    input wire sk,srs,
-    input wire [FVW-1:0] fv_i,
-    input wire [FSW-1:0] fd_i,
-    input wire n_yacc,
-    input wire [YS1-1:0] bank_heads,
+    input wire sk,srs_pin,
+    input wire [FVW-1:0] fv_pin,
+    input wire [FSW-1:0] fd_pin,
+    input wire n_yacc_pin,
+    input wire [YS1-1:0] bank_heads_pin,
         output wire ch_rst,
     output reg [FVW-1:0] ch_fv,
     output reg [FDW-1:0] ch_fd
@@ -154,6 +170,13 @@ module ot_s81_hc_ccf_bankpipe_control #(
     localparam integer PAD = HOP * (NP - L1) * (HALF ? 2 : 1);    // the centre chain is short by NP - L1 octets
     localparam integer FP = 2 + RF + PAD;                         // forward: send + capture + RF + padding
     localparam integer RP = RT + 2 + PAD;                         // return: relay + send + capture + padding
+    // PINREG: every input captured at the pin first (uniform +1: the S leaf's internal phases are unchanged)
+    reg srs_q, ya_q; reg [FVW-1:0] fv_q; reg [FSW-1:0] fd_q; reg [YS1-1:0] bh_q;
+    always @(posedge sk) begin srs_q <= srs_pin; ya_q <= n_yacc_pin; fv_q <= fv_pin; fd_q <= fd_pin; bh_q <= bank_heads_pin; end
+    wire srs = PINREG ? srs_q : srs_pin, n_yacc = PINREG ? ya_q : n_yacc_pin;
+    wire [FVW-1:0] fv_i = PINREG ? fv_q : fv_pin;
+    wire [FSW-1:0] fd_i = PINREG ? fd_q : fd_pin;
+    wire [YS1-1:0] bank_heads = PINREG ? bh_q : bank_heads_pin;
     reg [2:0] rsr;                                                // tile-local reset relay (2 flops at the pin)
     always @(posedge sk) rsr <= {rsr[1:0], srs};
     wire rs_n = rsr[2];

@@ -27,6 +27,8 @@ module ot_s81_hc_comb #(
     // CCF_BP (HC-COMB 2026-10-16, opt-in, default 0 = unchanged): 1 = CCF successor ot_s81_hc_ccf_bankpipe (7 leaf roots,
     // +2 public edges) with the forward pad trimmed by 2 (ot_s81_hc_cpad_split FWD_TRIM 2): same centre-chain cycle.
     // 2 = bankpipe WITHOUT the trim: negative control, the HC composition must FAIL (centre chain 2 edges late).
+    // 3 = bankpipe PINREG 1 (every leaf pin registered, uniform +3) with the forward pad trimmed by 3 (production
+    // candidate); 4 = PINREG 1 without the trim (negative control).
     parameter integer CCF_BP = 0
 ) (
     input  wire                 cck, crs, sk, srs,
@@ -209,10 +211,12 @@ module ot_s81_hc_comb #(
     end else begin : g_cf_bp
     ot_s81_hc_cpad_split #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .S_WR(S_WR), .S_RT(S_RT), .ML(ML), .AL(AL),
         .MUT(MUT), .AMUT(AMUT), .RF(RF), .RT(RT), .RW(RW), .YD(YD), .HALF(HALF), .RLY(RLY), .DW(DW), .RET_EXTRA(RET_EXTRA),
-        .FWD_TRIM(CCF_BP == 1 ? 2 : 0)) u_pd (
+        .FWD_TRIM(CCF_BP == 1 ? 2 : CCF_BP == 3 ? 3 : 0)) u_pd (
         .sk(sk), .srs(srs), .crd_i(r_crd), .crd_o(p_crd), .fv_i(c_fv), .fd_i(c_fd), .fv_o(p_fv), .fd_o(p_fd));
 
-    ot_s81_hc_ccf_bankpipe `OT_HCC_F u_cf (
+    ot_s81_hc_ccf_bankpipe #(.NG(NG), .D(D), .NCOL(NCOL), .GS(GS), .S_RD(S_RD), .S_WR(S_WR), .S_RT(S_RT), .ML(ML), .AL(AL),
+        .MUT(MUT), .AMUT(AMUT), .RF(RF), .RT(RT), .RW(RW), .YD(YD), .HALF(HALF), .RLY(RLY), .DW(DW),
+        .FIFO_SLICE(512), .KEEP_POP(1), .Y_RELAY(1), .PINREG(CCF_BP >= 3)) u_cf (
         .sk_n(sk), .sk_s(sk), .bank_ck({5{sk}}), .srs(srs), .fv_i(p_fv), .fd_i(p_fd), .n_yacc(n_yacc), .n_y(n_y),
         .ch_rst(ch_rst), .ch_fv(ch_fv), .ch_fd(ch_fd), .yfl(c_yfl));
     end endgenerate
