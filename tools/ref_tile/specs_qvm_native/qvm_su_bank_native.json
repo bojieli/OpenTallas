@@ -5,8 +5,8 @@
  "job": {
   "owner": "Claude:Q-VMWB (el1015-qwen-attn.log)",
   "branch": "claude/q-vmwb-vm-1705",
-  "tag": "su1",
-  "purpose": "SU operand-bank native successor cluster (48 x in qfd_sp_vector_memory_par): ctrl + 6 data256 leaves + 2 x 1024x256 macros, 9 clock entries.",
+  "tag": "su2",
+  "purpose": "SU operand-bank native successor cluster, su2: macro->capture phase by entry geometry.",
   "views_to": "physical/ref_tile/qvm_su_bank_native/views",
   "record_to": "results/rtl/ref_tile/qvm_su_bank_native",
   "cycles_added": 0,
@@ -54,7 +54,7 @@
     ]
    }
   ],
-  "structural_change": "NEW cluster: successor of ot_qfd_vm_su_t per qvm_su_bank_native (cycle-exact vs the reference, tb_qvm_su_bank_native); geometry follows ne3 (entries at their children: ck_ctrl/rst_n W at u_ctrl, ck_in W at u_in, q E facing u_out, ck_mem/cap/out S)."
+  "structural_change": "su2 after su1-fbf815ea5 NEEDS_RTL TT -8.81 (FF +19.1, DRC 0): the only failing class is the 1024x256 macro read (rd_out 569 ps) -> u_cap leaf, inter-entry 150 ps; launch u_hi clk 97.5 ps (S-face entry at x 272.6, 141 um to the MY macro clk pin at x 248.2) vs capture u_cap_hi clk 28.2 ps; cap->out has +358 ps and ctrl/in->macro +165/+186. Fix (geometry, 0 cycles, same RTL/children/outline): ck_mem_lo/hi on the S face directly under the macro clk column (x 245.5-250.5), ck_cap_lo/hi on the N face above the capture leaves so the capture entry is later; ck_out stays S. Moves slack from the cap->out stage to the macro read stage."
  },
  "name": "qvm_su_bank_native",
  "top": "qvm_su_bank_native",
@@ -103,10 +103,12 @@
   "S": [
    "ck_mem_lo",
    "ck_mem_hi",
-   "ck_cap_lo",
-   "ck_cap_hi",
    "ck_out_lo",
    "ck_out_hi"
+  ],
+  "N": [
+   "ck_cap_lo",
+   "ck_cap_hi"
   ]
  },
  "route": {
@@ -248,6 +250,22 @@
   "q": [
    24.0,
    170.0
+  ],
+  "ck_mem_lo": [
+   245.5,
+   247.5
+  ],
+  "ck_mem_hi": [
+   248.5,
+   250.5
+  ],
+  "ck_cap_lo": [
+   271.0,
+   273.0
+  ],
+  "ck_cap_hi": [
+   274.0,
+   276.0
   ]
  }
 }

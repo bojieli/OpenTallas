@@ -394,17 +394,36 @@
    "price": 0.0,
    "unit_of_measure": "cycles",
    "unit_ratio": null,
-   "e2e_loss_pct": 0.272,
+   "e2e_loss_pct": 0.626,
    "binding_workload": "ar",
    "per_workload": {
     "ar": {
-     "model": "S81 stage programs (golden ASAP, exact recomposition of all 59 committed makespans), every fld phase +18 edges",
-     "base_cycles": 1868531,
-     "cycles": 1873625,
-     "added_cycles": 5094,
-     "program_records": 332,
-     "added_cycles_per_record": 18,
-     "e2e_loss_pct": 0.272
+     "model": "token-path longest path, +18 on every field node (return node r2, 6 levels x 3)",
+     "base_cycles": 828866.4,
+     "cycles": 834086.4,
+     "added_cycles": 5220.0,
+     "runs_per_token": 336,
+     "critical_runs": 290,
+     "overlapped_runs": 46,
+     "other_price_nodes_skipped": 0,
+     "naive_added_cycles": 6048.0,
+     "wave_positions": 0,
+     "wave_added_cycles_per_position": 0.0,
+     "e2e_loss_pct": 0.626
+    },
+    "mtp": {
+     "model": "token-path longest path, +18 on every field node (return node r2, 6 levels x 3)",
+     "base_cycles": 1177516.1,
+     "cycles": 1183852.1,
+     "added_cycles": 6336.0,
+     "runs_per_token": 312,
+     "critical_runs": 312,
+     "overlapped_runs": 0,
+     "other_price_nodes_skipped": 0,
+     "naive_added_cycles": 5616.0,
+     "wave_positions": 5,
+     "wave_added_cycles_per_position": 144.0,
+     "e2e_loss_pct": 0.535
     }
    },
    "within_unit_limit": true,
@@ -412,7 +431,7 @@
    "evidence_grade": "committed_bench",
    "date": "2026-10-15",
    "status": "proposed",
-   "note": "S-NET 2026-10-15 structural fix of the static return node (n2 routes TT -798..-2034 ps; logic depth 1,615 -> 512 ps): P1 port / P2 normalised-tag / P3 issue registers, exit early+WIN+10+RST (was +7), static_return_calendar.PIPE_C 10. Frame return trees over 2 x pairs leaves are 5..6 levels (dsfd_s81_fulldie return_tree); worst 6 -> +18 edges per field phase, +5,094 cycles a token over 59 stage programs (5 levels: +4,245 = 0.227 %). Compiler carries it: engine_pipeline_abi fld return_node_exit_edges 10 / return_node_levels_max 6 (stale field durations refused). Composed analytically on the fixed schedule (fixed latency, no stall), not a die run."
+   "note": "S-NET 2026-10-15 structural fix of the static return node (n2 routes TT -798..-2034 ps; logic depth 1,615 -> 512 ps): P1 port / P2 normalised-tag / P3 issue registers, exit early+WIN+10+RST (was +7), static_return_calendar.PIPE_C 10. Frame return trees over 2 x pairs leaves are 5..6 levels (dsfd_s81_fulldie return_tree); worst 6 -> +18 edges per field phase, +5,094 cycles a token over 59 stage programs (5 levels: +4,245 = 0.227 %). Compiler carries it: engine_pipeline_abi fld return_node_exit_edges 10 / return_node_levels_max 6 (stale field durations refused). Composed analytically on the fixed schedule (fixed latency, no stall), not a die run. RE-PRICED on the ledger basis (token_path_20261009 rom_loss, the method of every S81 row): AR 0.626 % / MTP 0.535 %; the 59-stage-program composition (0.272 %) is a lower bound (not every phase on the token critical path there)."
   },
   {
    "design": "s81",
@@ -835,6 +854,39 @@
    "accepted_date": "2026-10-13",
    "share_basis": "modelled",
    "acceptance_note": "owner-accepted 2026-10-14 at total ~11.05% of 15%; basis as recorded (measured unit ratio x modelled share where stated)"
+  },
+  {
+   "design": "s81",
+   "unit": "VM.A2_COMMIT_REMAINDER (A2 +2 write edges + A2-F commit relay +3 per VM job, not charged by VM.RELAY +25)",
+   "group": "VM.A2_COMMIT_REMAINDER",
+   "measured": 30.0,
+   "price": 25.0,
+   "unit_of_measure": "cycles",
+   "unit_ratio": 1.2,
+   "e2e_loss_pct": 0.98,
+   "binding_workload": "ar",
+   "per_workload": {
+    "ar": {
+     "model": "token-path longest path, VM-class nodes: +30 (read 16 + A2 write 2 + relay write 9 + commit 3) minus the +25 already charged by accepted VM.RELAY",
+     "base_cycles": 872041.4,
+     "cycles": 880676.4,
+     "added_cycles": 8635.0,
+     "e2e_loss_pct": 0.98
+    },
+    "mtp": {
+     "model": "token-path longest path, VM-class nodes: +30 (read 16 + A2 write 2 + relay write 9 + commit 3) minus the +25 already charged by accepted VM.RELAY",
+     "base_cycles": 1231166.1,
+     "cycles": 1241896.1,
+     "added_cycles": 10730.0,
+     "e2e_loss_pct": 0.864
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "results/arch/s81_vm_a2f_1015/reach_price_a2f_midcapd.json",
+   "evidence_grade": "committed_bench",
+   "date": "2026-10-15",
+   "status": "proposed",
+   "note": "accepted VM.RELAY charges +25 (read 16 + write 9) per VM-class node; the producer done fence is the RETURNED commit (b8->seq +3) and A2 adds +2 stream write edges (Codex DECISION 14:47; 0.431 % AR alone), so a job that lands its result pays +30. This row charges the +5 remainder on the same token path (VM.RELAY basis). Compiler: engine_pipeline_abi vm record (2/9/16/3) required on every VM-touching job."
   },
   {
    "design": "s81",
@@ -1589,11 +1641,11 @@
   },
   "s81": {
    "accepted_pct": 22.618,
-   "proposed_pct": 0.272,
-   "accepted_plus_proposed_pct": 22.89,
+   "proposed_pct": 1.606,
+   "accepted_plus_proposed_pct": 24.224,
    "limit_pct": 15.0,
    "accepted_rows": 11,
-   "proposed_rows": 1,
+   "proposed_rows": 2,
    "headroom_pct": -7.618,
    "owner_exception_rows": 2,
    "over_limit_by_owner_exception": true

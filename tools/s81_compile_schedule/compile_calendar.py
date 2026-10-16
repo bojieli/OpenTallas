@@ -48,6 +48,10 @@ def check_pipeline_abi(job):
     if want is not None and job.get('pipeline_abi') != want:
         raise ValueError(f"duration measured against a stale {job.get('engine')} pipeline; re-measure with "
                          f"{sorted(want)} (tools/s81/engine_pipeline_abi.json)")
+    vm = PIPELINE_ABI.get('vm')
+    if vm is not None and job.get('accesses') and job.get('vm_pipeline_abi') != vm:
+        raise ValueError("duration of a VM-touching job measured against a stale VM pipeline; re-measure with the "
+                         f"A2-F record {sorted(k for k in vm if k.endswith('edges'))} (tools/s81/engine_pipeline_abi.json vm)")
 
 
 KIT_PORT_LATENCY_SCHEMA = 'opentallas.ref_tile.port_latency.v1'
