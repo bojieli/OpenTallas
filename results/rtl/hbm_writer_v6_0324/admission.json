@@ -20,13 +20,13 @@
   "functional": {
     "host": "ot-epyc4",
     "run": "/srv/opentallas-scratch/codex/writer6_proof_0324",
-    "unit": "oth-ubuntu-808451-1792146586",
+    "unit": "oth-ubuntu-826818-1792146780",
     "memory_gb": 4,
     "threads": 1,
     "exit": 0,
     "all25_rows_pass": true,
-    "source_dir": "src_scalar",
-    "proof_dir": "proof_scalar",
+    "source_dir": "src_physical",
+    "proof_dir": "proof_physical",
     "top_clock_ports": "16 scalar",
     "production_counts": {
       "checked": 83,
@@ -39,7 +39,9 @@
       "fault": "C+1"
     },
     "miter_edges": 4096,
-    "clock_mapping_checks": 19
+    "clock_mapping_checks": 19,
+    "top": "ot_hgi_coll_static_vmwrite_roots_v6_physical",
+    "literal_base_io_domain_validation": "16domainsPASS"
   },
   "scope": "Component source equivalence and clock ownership only; all physical grant/phase/native gates OPEN"
 }

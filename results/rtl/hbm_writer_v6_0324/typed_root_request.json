@@ -1,13 +1,20 @@
 {
   "status": "REQUESTED_NOT_GRANTED",
-  "new_master": "ot_hgi_coll_static_vmwrite_roots_v6",
+  "new_master": "ot_hgi_coll_static_vmwrite_roots_v6_physical",
   "die_instances": "coll_*_writer0",
   "outline_um": [
     103.68,
     388.8
   ],
   "clock_mode": "multiple_cts_roots",
-  "clock_relationship": "related_same_frequency phase0; ordinary full setup/hold across all roots; per-root actual phi-R at die entry",
+  "clock_relationship": {
+    "kind": "same_pll_fixed_phase",
+    "ratio": [
+      1,
+      1
+    ],
+    "phase_ps": 0
+  },
   "ports": [
     {
       "port": "clk_rgx_ctrl",
@@ -123,7 +130,7 @@
     }
   ],
   "pin_changes": [
-    "Remove old clk; restore rgx_data[942] from N52.044 to original W194.412; new16clockports require die-owned exact PG-clear track assignments and data pin rebalance.",
+    "Remove oldclk; restore oldrgx_data[942] as rgx_data1[430] atW194.412; inputrgx_dataB[i]=oldrgx_data[B*512+i],outputkqB[i]=oldkq[B*281+i]. New16scalarclockports need die-owned exact PG-clear tracks and data rebalance.",
     "Proposed centers are placement targets, not assigned legal tracks or an approved grant."
   ],
   "normal_cycles_added": 0,
@@ -137,5 +144,245 @@
   },
   "physical_gates": "OPEN actualsource CTS/per-root insertion+spread, phi-R crossing STA, layout inspection, routeTT/FF/DRC, native220/190/80; no submission before grant",
   "adoption": "Additive source candidate only; no production netlist/calendar update or existing view alias.",
-  "top_ports_scalar": true
+  "top_ports_scalar": true,
+  "logical_core": "ot_hgi_coll_static_vmwrite_roots_v6",
+  "physical_adapter": "Pure concatenation of4x512b RGX inputs and8x281b bank outputs; literal base IO root ownership. No logic/register/edge added.",
+  "clock_entry_domains": {
+    "core": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_body"
+      ],
+      "inputs": [],
+      "outputs": [
+        "launch_done",
+        "fault"
+      ]
+    },
+    "meta": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_meta"
+      ],
+      "inputs": [
+        "rst_n",
+        "sid",
+        "ingress_slot",
+        "slot_valid",
+        "slot_owner",
+        "rgx_vm"
+      ],
+      "outputs": []
+    },
+    "rgx_ctrl": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_rgx_ctrl"
+      ],
+      "inputs": [
+        "rgx_v",
+        "rgx_addr"
+      ],
+      "outputs": []
+    },
+    "tkw": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_tkw"
+      ],
+      "inputs": [
+        "tkw_v",
+        "tkw_d"
+      ],
+      "outputs": []
+    },
+    "rgx_data0": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_rgx_data0"
+      ],
+      "inputs": [
+        "rgx_data0"
+      ],
+      "outputs": []
+    },
+    "rgx_data1": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_rgx_data1"
+      ],
+      "inputs": [
+        "rgx_data1"
+      ],
+      "outputs": []
+    },
+    "rgx_data2": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_rgx_data2"
+      ],
+      "inputs": [
+        "rgx_data2"
+      ],
+      "outputs": []
+    },
+    "rgx_data3": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_rgx_data3"
+      ],
+      "inputs": [
+        "rgx_data3"
+      ],
+      "outputs": []
+    },
+    "bank0": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_bank0"
+      ],
+      "inputs": [],
+      "outputs": [
+        "kq0"
+      ]
+    },
+    "bank1": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_bank1"
+      ],
+      "inputs": [],
+      "outputs": [
+        "kq1"
+      ]
+    },
+    "bank2": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_bank2"
+      ],
+      "inputs": [],
+      "outputs": [
+        "kq2"
+      ]
+    },
+    "bank3": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_bank3"
+      ],
+      "inputs": [],
+      "outputs": [
+        "kq3"
+      ]
+    },
+    "bank4": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_bank4"
+      ],
+      "inputs": [],
+      "outputs": [
+        "kq4"
+      ]
+    },
+    "bank5": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_bank5"
+      ],
+      "inputs": [],
+      "outputs": [
+        "kq5"
+      ]
+    },
+    "bank6": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_bank6"
+      ],
+      "inputs": [],
+      "outputs": [
+        "kq6"
+      ]
+    },
+    "bank7": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "clk_bank7"
+      ],
+      "inputs": [],
+      "outputs": [
+        "kq7"
+      ]
+    }
+  },
+  "clock_port": "clk_body",
+  "clock_ports": [
+    "clk_body",
+    "clk_meta",
+    "clk_rgx_ctrl",
+    "clk_tkw",
+    "clk_rgx_data0",
+    "clk_rgx_data1",
+    "clk_rgx_data2",
+    "clk_rgx_data3",
+    "clk_bank0",
+    "clk_bank1",
+    "clk_bank2",
+    "clk_bank3",
+    "clk_bank4",
+    "clk_bank5",
+    "clk_bank6",
+    "clk_bank7"
+  ],
+  "clock_data_paths": "related_same_frequency"
 }
