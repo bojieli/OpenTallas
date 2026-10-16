@@ -37,7 +37,11 @@ def emit(name,face,pos,clock=False):
  y=0 if face=='S' else s['outline']['h'] if face=='N' else pos
  size=(.084,.024) if clock and face in ['W','E'] else (.192,.024) if face in ['W','E'] else (.024,.084)
  assert name not in pins,name
- pins[name]={'face':face,'layer':layer,'position_um':pos,'clock':clock}
+ rect=[x-size[0]/2,y-size[1]/2,x+size[0]/2,y+size[1]/2]
+ if face=='W':rect[0]=0;rect[2]=size[0]
+ if face=='E':rect[0]=x-size[0];rect[2]=x
+ if face=='N':rect[1]=y-size[1];rect[3]=y
+ pins[name]={'face':face,'layer':layer,'position_um':pos,'clock':clock,'rectangle_um':[round(z,6) for z in rect]}
  lines.append(f'place_pin -pin_name {{{name}}} -layer {layer} -location {{{x:.3f} {y:.3f}}} -pin_size {{{size[0]:.3f} {size[1]:.3f}}} -force_to_die_boundary')
 for label,face,ports,a,b in windows:
  bits=[]
@@ -55,17 +59,31 @@ for label,face,ports,a,b in windows:
  metrics.append({'window':label,'data_bits':len(bits),'span_um':[a,b],'reserved_clock_centres_um':notches,'usable_face_um':round(usable,6),'allocation_um_per_bit':.096,'cut':cut,'minimum_physical_pin_pitch_um':round(min(y-x for x,y in zip(chosen,chosen[1:])),6)})
 for p,(face,pos) in clocks.items():emit(p,face,pos,True)
 # Verify the actual DB after literal placement, including the actual layer grid.
-lines += ['set fp_b [ord::get_db_block]', 'set fp_u [$fp_b getDbUnitsPerMicron]', 'set fp_bad 0']
+lines += ['set fp_b [ord::get_db_block]', 'set fp_u [$fp_b getDbUnitsPerMicron]', 'set fp_bad 0', 'set fp_checked 0', '''
+proc writer_pin_check {name layer axis pos rect} {
+ global fp_b fp_u fp_bad fp_checked
+ set t [$fp_b findBTerm $name]
+ if {$t eq "NULL" || $t eq ""} {incr fp_bad; puts "WRITER_FACE_PIN_MISSING $name";return}
+ if {[llength [$t getBPins]] != 1} {incr fp_bad; puts "WRITER_FACE_BPIN_COUNT $name";return}
+ set p [lindex [$t getBPins] 0]
+ if {[llength [$p getBoxes]] != 1} {incr fp_bad; puts "WRITER_FACE_BOX_COUNT $name";return}
+ set q [lindex [$p getBoxes] 0]
+ incr fp_checked
+ set l [$q getTechLayer]
+ set actual [list [expr {[$q xMin]/double($fp_u)}] [expr {[$q yMin]/double($fp_u)}] [expr {[$q xMax]/double($fp_u)}] [expr {[$q yMax]/double($fp_u)}]]
+ foreach a $actual e $rect {if {abs($a-$e)>0.0001} {incr fp_bad; puts "WRITER_FACE_RECT_ERROR $name $actual expected $rect";break}}
+ if {$axis eq "Y"} {set c [expr {([$q yMin]+[$q yMax])/2.0}]} else {set c [expr {([$q xMin]+[$q xMax])/2.0}]}
+ set g [[$fp_b findTrackGrid $l] getGrid$axis]
+ if {abs($c/double($fp_u)-$pos)>0.0001 || [$l getName] ne $layer || [lsearch -exact $g [expr {int(round($c))}]]<0} {
+  incr fp_bad; puts "WRITER_FACE_PIN_ERROR $name"
+ }
+}
+''']
 for name,v in pins.items():
  face=v['face'];pos=v['position_um'];layer=v['layer'];axis='Y' if face in ['W','E'] else 'X'
- lines += [f'set fp_t [$fp_b findBTerm {{{name}}}]',
-           'foreach fp_p [$fp_t getBPins] {foreach fp_q [$fp_p getBoxes] {',
-           f' set fp_c [expr {{([$fp_q {"yMin" if axis=="Y" else "xMin"}]+[$fp_q {"yMax" if axis=="Y" else "xMax"}])/2.0}}]',
-           ' set fp_l [$fp_q getTechLayer]',
-           f' set fp_g [[$fp_b findTrackGrid $fp_l] getGrid{axis}]',
-           f' if {{abs($fp_c/double($fp_u)-{pos:.3f})>0.0001 || [$fp_l getName] ne "{layer}" || [lsearch -exact $fp_g [expr {{int(round($fp_c))}}]]<0}} {{incr fp_bad; puts "WRITER_FACE_PIN_ERROR {name}"}}',
-           '}}']
-lines += ['puts "WRITER_FACE_PIN_READBACK checked=4756 violations=$fp_bad"', 'if {$fp_bad} {error "Writer literal pins violate actual track/location"}']
+ rect=' '.join(f'{x:.3f}' for x in v['rectangle_um'])
+ lines += [f'writer_pin_check {{{name}}} {layer} {axis} {pos:.3f} {{{rect}}}']
+lines += [f'if {{$fp_checked != {len(pins)}}} {{incr fp_bad}}', 'puts "WRITER_FACE_PIN_READBACK checked=$fp_checked violations=$fp_bad"', 'if {$fp_bad} {error "Writer literal pins violate actual track/location"}']
 expected=sum(n for n,_ in widths.values());assert len(pins)==expected,(len(pins),expected)
 pf=ROOT/'physical/ref_tile_specs/smh/smvm_writer_faces4_pins.tcl';pf.write_text('\n'.join(lines)+'\n');s['io_tcl']=str(pf.relative_to(ROOT))
 p=ROOT/'physical/ref_tile/hsm_smvm_wrq_t_r4';p.mkdir(exist_ok=True);(p/'spec.json').write_text(json.dumps(s,indent=2)+'\n')
