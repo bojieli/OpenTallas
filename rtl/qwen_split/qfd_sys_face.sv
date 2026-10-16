@@ -295,11 +295,11 @@ module qfd_sys_face #(
     // D2D link calendars: the Q-LINK sequencer (compiler images as constants) is the ONLY producer of the link end's
     // cfg_* / cal_start / cal_seg; its token start is this face's t_go; reload = the first epoch strobe after an epoch
     // abort (the HOST's recovery: the images are re-written before the new epoch's first token, first_ofs > 2 NE + 2).
-    wire cal_ready, cs_running, cs_fault; wire [5:0] cs_layer;
+    wire cal_ready, cs_running, cs_fault, cs_adm_done; wire [5:0] cs_layer;   // r2: admission run once per epoch (D2D_ADM_OFS after fwd_epoch)
     qfd_d2d_cal_seq #(.GO_OFS(GO_OFS), .START_ADJ(START_ADJ)) u_cseq (.ck(ck), .rst_n(rst_n),
-        .reload(fwd_epoch && !fe_q && aborted), .tok_go(t_go), .halt(halt),
+        .reload(fwd_epoch && !fe_q && aborted), .tok_go(t_go), .epoch_go(fwd_epoch), .halt(halt),
         .cfg_tx_we(cfg_tx_we), .cfg_rx_we(cfg_rx_we), .cfg_addr(cfg_addr), .cfg_data(cfg_data),
-        .cal_start(cal_start), .cal_seg(cal_seg), .cal_ready(cal_ready), .running(cs_running), .layer(cs_layer), .fault(cs_fault));
+        .cal_start(cal_start), .cal_seg(cal_seg), .cal_ready(cal_ready), .running(cs_running), .layer(cs_layer), .adm_done(cs_adm_done), .tok_start(), .fault(cs_fault));
     // bench mutant 1: T events one edge late
     reg t_ev_d; reg [2:0] t_p_d; reg [3:0] t_k_d; reg [4:0] t_b_d;
     always @(posedge ck) begin t_ev_d <= t_ev; t_p_d <= t_p; t_k_d <= t_k; t_b_d <= t_b; end
@@ -439,6 +439,9 @@ module qfd_sys_face #(
 
     // ================================================================ STATUS / RESULT (D2D kind 15) + fab
     reg cal_fault;
+    // the sequencer's per-epoch ADMISSION start (layer 63, D2D_ADM_OFS after fwd_epoch) is not a T-calendar event;
+    // every token / layer start must still coincide with the T image
+    wire cal_adm = cal_start && cs_layer == 6'h3f, cal_tok = cal_start && cs_layer != 6'h3f;
     always @(posedge ck or negedge rst_n) begin
         if (!rst_n) begin
             status_epoch16 <= 16'd0; vm_drained <= 1'b0; collective_drained <= 1'b0; collective_busy <= 1'b0; crom_fault <= 1'b0;
@@ -462,7 +465,7 @@ module qfd_sys_face #(
             end
             if (t_bad || l_bad || e_bad || lev_clash || (ev_res && !seq_dc[50]) || t_cf || l_cf || e_cf ||
                 (ev_lay && l_run) || (ev_tok && e_run) || (t_go && !boot_done) || cs_fault ||
-                cal_start !== cal_exp || (cal_start && cal_seg !== seg_exp))
+                cal_tok !== cal_exp || (cal_tok && cal_seg !== seg_exp) || (cal_adm && t_running_q))
                 cal_fault <= 1'b1;
             tt_fab <= io_fault | io_shared_fault | d2d_fault | native_fault | res_issue_fault | face_fault;
         end

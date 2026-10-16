@@ -124,7 +124,8 @@ def handoff_windows(path):
     return out
 
 
-PREC_K0 = 3   # first S->C program-record slot of the token run (token-run cycle)
+PREC_K0 = 3   # first S->C program-record slot of the token / admission run (run cycle)
+ADM_REPLAY = 1056   # admission: AUTH accepted -> 1,032-word replay + ledger commit (~1,045, Q-NETLIST) + margin
 
 
 def program_profile(txl, phy, tp_path, emb_window=None, host_stages=None, st_ofs=38, handoff=None):
@@ -160,17 +161,27 @@ def program_profile(txl, phy, tp_path, emb_window=None, host_stages=None, st_ofs
     # program-record slots (port 1, every token run; a slot without a HOST / face record carries observed = 0):
     # S->C kind 13 beat 1 BEGIN, kind 13 beat 2 AUTH, kind 12 CONTEXT; C->S kind 14 WITNESS after the context is out
     # of the compute RX (arrival + 2) plus 2 face edges, with slack for the pin registers
-    m1 += [dict(seg=1, src="K", cyc=PREC_K0 + i, tx_port=1, rx_port=1, kind=k, beat=b)
-           for i, (k, b) in enumerate(((13, 1), (13, 2), (12, 0)))]
-    prec_w = PREC_K0 + 2 + txl + phy + 12
+    # token run: S->C kind 12 CONTEXT (token / position for the face) and C->S kind 14 beat 0 per-token WITNESS
+    # (ready / digest or not-ready: always a record)
+    m1.append(dict(seg=1, src="K", cyc=PREC_K0, tx_port=1, rx_port=1, kind=12, beat=0))
+    prec_w = PREC_K0 + txl + phy + 12
     m1.append(dict(seg=1, src="C", cyc=prec_w, tx_port=1, rx_port=1, kind=14, beat=0))
+    # ADMISSION run (segment 2; once per epoch, before the first token; Q-NETLIST 2026-10-16): S->C kind 13 beat 1
+    # BEGIN, beat 2 AUTH; the compute face replays the 1,032-word program from one edge after AUTH and commits its
+    # ledgers ~1,040 edges later, so the C->S kind 14 beat 1 admission WITNESS leaves AUTH arrival + ADM_REPLAY edges
+    m2 = [dict(seg=2, src="K", cyc=PREC_K0 + i, tx_port=1, rx_port=1, kind=13, beat=1 + i) for i in range(2)]
+    adm_w = PREC_K0 + 1 + txl + phy + 4 + ADM_REPLAY
+    m2.append(dict(seg=2, src="C", cyc=adm_w, tx_port=1, rx_port=1, kind=14, beat=1))
     ml0, l0 = layer_msgs(1, l0_start, win[lay[0]], txl, phy, st_ofs)
     layout = dict(source=tp_path, layers=[dict(id=g["id"], start=int(g["start"]), cycles=int(g["cycles"])) for g in groups],
                   embed=dict(start=0, cycles=emb), windows=dict(L0=dict(zip(ops, map(int, win[lay[0]]))),
                   L1_35=dict(zip(ops, map(int, win[lay[1]])))), layer=l1, token_run_L0=l0,
                   emb_send=[e_last - 63, e_last], emb_header_send=e_last - 64,
-                  program_records=dict(k_send=[PREC_K0, PREC_K0 + 2], kinds="13/1 BEGIN, 13/2 AUTH, 12 CONTEXT S->C; 14 WITNESS C->S",
+                  program_records=dict(k_send=[PREC_K0, PREC_K0], kinds="token run: 12 CONTEXT S->C, 14/0 WITNESS C->S",
                                        witness_send=prec_w),
+                  admission=dict(k_send=[PREC_K0, PREC_K0 + 1], kinds="13/1 BEGIN, 13/2 AUTH S->C; 14/1 WITNESS C->S",
+                                 witness_send=adm_w, replay_edges=ADM_REPLAY),
+                  token_period=int(d["totals"]["cycles"]),
                   result_handoff=(dict(source=handoff, op="qkv", pc=hw["qkv"][1], visible_after_go=hw["qkv"][0],
                                        priced_qkv=int(priced_qkv[lay[1]]), qkv_window=int(win[lay[1]][1]),
                                        q_send_shift=int(win[lay[1]][1] - priced_qkv[lay[1]]),
@@ -183,15 +194,15 @@ def program_profile(txl, phy, tp_path, emb_window=None, host_stages=None, st_ofs
                       first_emb_send=e_last - 63,
                       note="the KV-die embedding provider must hold the staged row (one ready per buffer block at the HBM "
                            "boundary) by first_emb_send; a late row is a schedule fault, never a stretched timeline"))
-    return m0 + m1 + ml0, layout
+    return m0 + m1 + ml0 + m2, layout
 
 
 def compile_cal(msgs, txl, phy, ofs, txd):
     """txd: {'C': [..], 'K': [..]} per-end producer codec latency; txl = slot-to-pin latency at codec latency 1."""
     segs = sorted({m.get("seg", 0) for m in msgs})
-    assert set(segs) <= {0, 1}, segs
-    out_imgs, out_tab, base = {}, [], {}
-    for sg in (0, 1):
+    assert set(segs) <= {0, 1, 2}, segs
+    out_imgs, out_tab, base, base2 = {}, [], {}, {}
+    for sg in (0, 1, 2):
         sm = [m for m in msgs if m.get("seg", 0) == sg]
         if not sm:
             continue
@@ -199,13 +210,17 @@ def compile_cal(msgs, txl, phy, ofs, txd):
         for k, v in imgs.items():
             if sg == 1:
                 base[k] = len(out_imgs.get(k, []))
+            if sg == 2:
+                base2[k] = len(out_imgs.get(k, []))
             out_imgs[k] = out_imgs.get(k, []) + v
             if len(out_imgs[k]) > NE:
                 raise SystemExit(f"{k}: {len(out_imgs[k])} entries > NE {NE}")
         out_tab += [dict(t, seg=sg) for t in tab]
     if 1 in segs and set(base) != set(out_imgs):
         raise SystemExit(f"segment 1 must reserve every calendar (an empty segment cannot start): {sorted(base)}")
-    return out_imgs, out_tab, base
+    if 2 in segs and set(base2) != set(out_imgs):
+        raise SystemExit(f"the admission segment must reserve every calendar: {sorted(base2)}")
+    return out_imgs, out_tab, (base, base2)
 
 
 def compile_seg(msgs, txl, phy, ofs, txd):
@@ -279,7 +294,7 @@ def main():
         msgs = dies_layer() + token_run()
     else:
         msgs = dies_layer() if a.profile == "dies" else bench_layer()
-    imgs, table, base = compile_cal(msgs, a.txl, phy_c, a.ofs, txd)
+    imgs, table, (base, base2) = compile_cal(msgs, a.txl, phy_c, a.ofs, txd)
     import os
     os.makedirs(a.out, exist_ok=True)
     for k, v in imgs.items():
@@ -287,9 +302,12 @@ def main():
             f.write("\n".join(f"{x:08x}" for x in v + [0] * (NE - len(v))) + "\n")
         with open(f"{a.out}/cal_{k}_seg1.memh", "w") as f:
             f.write(f"{base.get(k, 0):08x}\n")
+        if base2:
+            with open(f"{a.out}/cal_{k}_seg2.memh", "w") as f:
+                f.write(f"{base2.get(k, 0):08x}\n")
     spans = {sg: max(max(t["rx_out"], t["cyc"]) for t in table if t["seg"] == sg) for sg in {t["seg"] for t in table}}
     rec = dict(txl=a.txl, phy=a.phy, phy_compiled=phy_c, pinreg=a.pinreg, ofs=a.ofs, txd=txd, entries={k: len(v) for k, v in imgs.items()},
-               seg1_base=base, span=spans.get(0, 0), spans=spans, messages=table)
+               seg1_base=base, seg2_base=base2, span=spans.get(0, 0), spans=spans, messages=table)
     if layout:
         # absolute program: segment 0 replayed at every priced layer start, segment 1 at token start (cycle 0)
         L = layout["layers"]
@@ -301,6 +319,11 @@ def main():
         if busy[1] >= L[1]["start"] or busy[0] >= min(l["cycles"] for l in L[1:]):
             raise SystemExit(f"run overlap: token run (embed + L0) busy to {busy[1]} vs L1 start {L[1]['start']}, layer run busy {busy[0]}")
         layout["cal_busy"] = busy
+        if 2 in busy:
+            # admission run: every calendar idle (incl. the last RX expectation's 2-edge checked output) + settle edges
+            adm_len = max(max(t["rx_out"], t["cyc"]) for t in table if t["seg"] == 2) + 4
+            adm_ofs = 2 * NE + 8                 # after a sequencer (re)load (2 NE + 2) on the same epoch strobe
+            layout["admission"].update(len=adm_len, ofs=adm_ofs, first_token_ofs=adm_ofs + adm_len + 4)
         frames = {"C": 0, "K": 0}
         for t in table:
             frames[t["src"]] += 35 if t["seg"] == 0 else 1
