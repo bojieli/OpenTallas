@@ -125,10 +125,15 @@ def main():
     L = {}
     for f in (c / 'views').glob('*.lef'):
         L.update(lef(f))
-    pl = man['placement']
+    pl = {n: dict(v, orient=v.get('orient', v.get('o')), master=v.get('master', v.get('m')))
+          for n, v in man['placement'].items()}
     # nets from die.v: instance blocks with .port({...}) or .port(net)
     txt = (c / 'die.v').read_text()
+    top_inputs = set()
+    for hi, lo, name in re.findall(r'\binput\s+(?:wire\s+)?(?:\[(\d+):(\d+)\]\s*)?(\w+)', txt):
+        top_inputs.update([f'{name}[{k}]' for k in range(int(lo), int(hi) + 1)] if hi else [name])
     pinloc, directions, skipped = {}, {}, []
+    excluded = Counter()
     nets = defaultdict(list)
     for m in re.finditer(r'^\s+(\w+) (\w+) \(\n(.*?)\n\s+\);', txt, re.M | re.S):
         mas, inst = m.group(1), m.group(2)
@@ -143,18 +148,28 @@ def main():
                 n = len(parts)
                 for i, s in enumerate(parts):
                     if s.startswith('nc_'):
+                        excluded['explicit_unconnected_nc'] += 1
                         continue
                     bit = n - 1 - i
                     pn = f'{p}[{bit}]'
                     if pn in lv['pins'] and lv['uses'][pn] != 'CLOCK' and (inst, pn) not in clock_pins:
                         nets[s].append((inst, pn, xf(v, lv['w'], lv['h'], *lv['pins'][pn])))
                         directions[(inst, pn)] = lv['directions'][pn]
-            elif e and not e.startswith('nc_') and e not in ('clk_hbm', 'rst_n'):
+                    elif pn in lv['pins']:
+                        excluded['typed_or_LEF_clock_pin'] += 1
+            elif e and not e.startswith('nc_'):
                 if p in lv['pins'] and lv['uses'][p] != 'CLOCK' and (inst, p) not in clock_pins:
                     nets[e].append((inst, p, xf(v, lv['w'], lv['h'], *lv['pins'][p])))
                     directions[(inst, p)] = lv['directions'][p]
-    length, all_branches, ambiguous = {}, {}, {}
+                elif p in lv['pins']:
+                    excluded['typed_or_LEF_clock_pin'] += 1
+    length, all_branches, ambiguous, top_driven = {}, {}, {}, {}
     for n, ends in nets.items():
+        if n in top_inputs:
+            top_driven[n] = dict(loads=[dict(instance=e[0], pin=e[1], xy_um=e[2]) for e in ends],
+                                 coverage='UNMEASURED_TOP_ENTRY_LOCATION: cannot infer a branch from sinks alone',
+                                 reset_forest='UNQUALIFIED' if re.search(r'rst|reset|por', n, re.I) else 'not classified reset')
+            continue
         if len(ends) < 2:
             continue
         bs = branches(ends, directions)
@@ -177,7 +192,9 @@ def main():
                branches=sum(len(b) for b in all_branches.values()),
                branches_over_reach=sum(d > a.reach for bs in all_branches.values() for _, _, d in bs),
                ambiguous_nets=ambiguous, skipped_instances=skipped,
-               qualification='GEOMETRY_ONLY; unresolved directions/instances and calendar ages remain explicit.',
+               declared_top_input_bits=len(top_inputs), top_driven_nets=top_driven,
+               excluded_endpoint_counts=dict(excluded),
+               qualification='GEOMETRY_ONLY; top-driven nets, unresolved directions/instances and calendars remain explicit. No full reset-forest qualification.',
                multicast={n: dict(sinks=len(bs), longest_um=max(b[2] for b in bs),
                                   branches=[dict(driver=f'{d[0]}/{d[1]}', sink=f'{l[0]}/{l[1]}', length_um=v)
                                             for d, l, v in bs],
