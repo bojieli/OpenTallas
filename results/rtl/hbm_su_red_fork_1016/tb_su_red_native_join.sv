@@ -56,7 +56,7 @@ module tb_su_red_native_join;
   end
   if(p==350)begin
    if(seen!=1||errors||qfault||cxfault)$fatal(1,"SU_RED_NATIVE_JOIN FAIL seen=%0d errors=%0d faults=%b%b",seen,errors,qfault,cxfault);
-   $display("SU_RED_NATIVE_JOIN PASS actual_qcore_two_mapped_SRAM cxport rc_edge161 words8");$finish;
+   $display("SU_RED_NATIVE_JOIN PASS actual_qcore_two_mapped_SRAM cxport rc_edge%0d words8",$test$plusargs("LATE")?162:161);$finish;
   end
  end
  always @(negedge ss)if(rst)begin
