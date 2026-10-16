@@ -149,7 +149,7 @@
  "inhold": true,
  "outhold": true,
  "clock": "spine",
- "structural_change": "New explicit master/source wrapper for current native45 source dependency. Wire-only wrapper adds no state or latency. Separate current gate/actualpin-cost qualification required before parent binds.",
+ "structural_change": "New explicit master/source wrapper for current native45 source dependency. Wire-only wrapper adds no state or latency. Separate current gate/actualpin-cost qualification required before parent binds. | r2 (Q-ELEM-SU 10-16): clock spine balanced with symmetric insertion-aware topology, subtree-common padding and bounded measured balancing (OT_SPINE_SYM/TREE_PAD/SAFE_BALANCE, as CLOSED qfd_su_cbuf_g_tp8r on the same SRAM): the unbounded fine pass learned a 3 ps/pad estimate from the coarse pads and inserted ~17,600 pad cells (6,180 -> 23,785 spine cells, +2,870 um2 fixed, util 53% -> 67%), leaf arrival 460 -> 655 ps, and detailed placement failed DPL-0033 after hold repair",
  "slot_change_request": "Historicaloutline retained as gate-only candidate screen, not assigned. Actual64copies source currentnative4/5; no diefit/PG/phase assertion.",
  "reroute_reason": {
   "kind": "dependency_source_change",
@@ -169,5 +169,10 @@
  "pin_reg_split": true,
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "orfs_vars": {
+  "OT_SPINE_SYM": "1",
+  "OT_SPINE_TREE_PAD": "1",
+  "OT_SPINE_SAFE_BALANCE": "1"
  }
 }
