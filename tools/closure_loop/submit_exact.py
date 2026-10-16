@@ -239,6 +239,18 @@ def main(argv=None):
         print("REFUSED LOCALLY (INVALID spec, the daemon would reject it): " + "; ".join(mcr_bad))
         return 1
     git(root, "fetch", "-q", "origin", "main", check=False)
+    # BENCH-LINT (ROOT 2026-10-16): git in benches (non-git export), unverified/unmatched fail_regex -- before the gate
+    bcommit = (spec.get("source") or {}).get("commit", "")
+
+    def bshow(p):
+        r = subprocess.run(["git", "-C", str(root), "show", f"{bcommit}:{p}"], capture_output=True, text=True)
+        return r.stdout if r.returncode == 0 else None
+    blint_err, blint_warn = bench_count.bench_lint(st.get("bench", []), bshow if bcommit else None)
+    for w in blint_warn:
+        print(f"BENCH-LINT WARN: {w}")
+    if blint_err:
+        print("REFUSED LOCALLY (BENCH-LINT, the daemon would refuse it at intake): " + "; ".join(blint_err))
+        return 1
     for attempt in (1, 2):
         commit = git(root, "rev-parse", f"{spec['source']['commit']}^{{commit}}")
         paths = consumed_paths(spec)

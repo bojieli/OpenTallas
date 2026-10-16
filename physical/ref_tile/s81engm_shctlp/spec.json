@@ -94,7 +94,7 @@
  "job": {
   "owner": "Claude:S-ENGRAM+NORM-ENGRAM-3",
   "branch": "claude/s81-mix4-parent-0600",
-  "tag": "p29",
+  "tag": "p29b",
   "purpose": "S81 Engram MIX4 shell control at production params (VM_LAT 29, WRITE_COMMIT_LAT 12)",
   "benches": [
    {
@@ -159,8 +159,12 @@
   "cell": "HB2xp67_ASAP7_75t_R"
  },
  "reroute_reason": {
-  "kind": "rtl_change",
-  "reason": "parameter change VM_LAT 3->29, WRITE_COMMIT_LAT 1->12 (production MIX4 cluster); the closed view's expected-return line does not match the production VM latency"
+  "kind": "param_change",
+  "params": {
+   "VM_LAT": "3 -> 29",
+   "WRITE_COMMIT_LAT": "1 -> 12"
+  },
+  "reason": "RTL byte-identical to closed startq eea61ffca; the closed view was elaborated at module defaults VM_LAT 3 / WRITE_COMMIT_LAT 1 while the production banded cluster needs 29 / 12. Netlist differs: closed gate 332 clock sinks vs 462 at 29/12 (+130 = 5-bit expected-return line x 26 extra stages)"
  },
  "pin_regs": {
   "enable": false,

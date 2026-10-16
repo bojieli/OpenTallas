@@ -21,6 +21,11 @@ if [ "$mode" = build ];then
  echo BUILT
 else
  name=$3;images=$4;shift 4
- "$out/obj/Vtb_b2_lane_route" +OT_ROM_DIR="$images/rank0/masks" "$@" > "$out/$name.log" 2>&1 && echo "$name PASS" || echo "$name FAIL rc=$?"
- grep -E "^PASS|^FAIL|MISMATCH|FAULT" "$out/$name.log" | head -5
+ if "$out/obj/Vtb_b2_lane_route" +OT_ROM_DIR="$images/rank0/masks" "$@" > "$out/$name.log" 2>&1;then
+  rc=0;echo "$name PASS"
+ else
+  rc=$?;echo "$name FAIL rc=$rc"
+ fi
+ grep -E "^PASS|^FAIL|MISMATCH|FAULT" "$out/$name.log" | head -5 || true
+ exit "$rc"
 fi

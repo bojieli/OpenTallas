@@ -4,24 +4,24 @@
   "status": "PASS",
   "input": {
     "path": "provenance/raw/ot_hgi_coll_qslots_capture_pin_v2.lef",
-    "sha256": "c4c4f6850a84a70aa2b3d7a0995557ef31f2436c14da4c4b95f0f73e96b9e3c4"
+    "sha256": "86a158d37af7e18159b37ec634a061eac038cc79f10e8a5a606bf42c5d52eca9"
   },
   "environment": {
     "OT_OBS_CLOSE": null,
     "OT_OBS_CLOSE_UM": null
   },
   "helper": {
-    "path": "/srv/opentallas-scratch2/claude/closure-loop/hcoll_v5_qcap-qs1045-f5c09abd9/src/tools/hier_contract/abstract_pin_stub.py",
+    "path": "/srv/opentallas-scratch2/claude/closure-loop/hcoll_v5_qcap-qs1045-607c15b25/src/tools/hier_contract/abstract_pin_stub.py",
     "sha256": "c3cae85e3aa1a8da5374284fe57418b2230ceb208aa76eff4567c6993bbe0c05"
   },
   "command": [
     "/usr/bin/python3",
-    "/srv/opentallas-scratch2/claude/closure-loop/hcoll_v5_qcap-qs1045-f5c09abd9/src/tools/hier_contract/abstract_pin_stub.py",
-    "/srv/opentallas-scratch2/claude/closure-loop/hcoll_v5_qcap-qs1045-f5c09abd9/record/views/ot_hgi_coll_qslots_capture_pin_v2/provenance/raw/ot_hgi_coll_qslots_capture_pin_v2.lef",
-    "/srv/opentallas-scratch2/claude/closure-loop/hcoll_v5_qcap-qs1045-f5c09abd9/record/views/ot_hgi_coll_qslots_capture_pin_v2/provenance/ot_hgi_coll_qslots_capture_pin_v2.candidate.lef"
+    "/srv/opentallas-scratch2/claude/closure-loop/hcoll_v5_qcap-qs1045-607c15b25/src/tools/hier_contract/abstract_pin_stub.py",
+    "/srv/opentallas-scratch2/claude/closure-loop/hcoll_v5_qcap-qs1045-607c15b25/record/views/ot_hgi_coll_qslots_capture_pin_v2/provenance/raw/ot_hgi_coll_qslots_capture_pin_v2.lef",
+    "/srv/opentallas-scratch2/claude/closure-loop/hcoll_v5_qcap-qs1045-607c15b25/record/views/ot_hgi_coll_qslots_capture_pin_v2/provenance/ot_hgi_coll_qslots_capture_pin_v2.candidate.lef"
   ],
   "returncode": 0,
-  "stdout": "pinstub: 0 OBS rects moved into 0 pins: ; pockets: 34 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
+  "stdout": "pinstub: 0 OBS rects moved into 0 pins: ; pockets: 69 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
   "stderr": "",
   "invariants": {
     "macro_outline": "PASS",
@@ -30,32 +30,32 @@
   },
   "child_lint": {
     "schema": "opentallas.hier_contract.child_lint.v1",
-    "lef": "/srv/opentallas-scratch2/claude/closure-loop/hcoll_v5_qcap-qs1045-f5c09abd9/record/views/ot_hgi_coll_qslots_capture_pin_v2/provenance/ot_hgi_coll_qslots_capture_pin_v2.candidate.lef",
+    "lef": "/srv/opentallas-scratch2/claude/closure-loop/hcoll_v5_qcap-qs1045-607c15b25/record/views/ot_hgi_coll_qslots_capture_pin_v2/provenance/ot_hgi_coll_qslots_capture_pin_v2.candidate.lef",
     "verdict": "PASS",
     "fails": [],
     "warns": [],
-    "summary": "ot_hgi_coll_qslots_capture_pin_v2 17.28 x 99.36: PG M5 VDD 3 stripes (62% spread, 100% cov) / VSS 3 stripes (62% spread, 100% cov); strap M6; face pins 1096 blocked-above 0 blocked-same 0; clock clk insertion 109 ps; pockets M5 0 (closed)",
+    "summary": "ot_hgi_coll_qslots_capture_pin_v2 25.92 x 129.6: PG M5 VDD 4 stripes (62% spread, 100% cov) / VSS 4 stripes (62% spread, 100% cov); strap M6; face pins 1096 blocked-above 0 blocked-same 0; clock clk insertion 121 ps; pockets M5 0 (closed)",
     "info": {
       "cell": "ot_hgi_coll_qslots_capture_pin_v2",
-      "W": 17.28,
-      "H": 99.36,
+      "W": 25.92,
+      "H": 129.6,
       "pg": {
         "nets": {
           "VDD": {
             "top_layer": "M5",
-            "stripes": 3,
+            "stripes": 4,
             "dir": "V",
             "spread": 0.625,
             "coverage": 1.0,
-            "shapes_on_top": 3
+            "shapes_on_top": 4
           },
           "VSS": {
             "top_layer": "M5",
-            "stripes": 3,
+            "stripes": 4,
             "dir": "V",
             "spread": 0.625,
             "coverage": 1.0,
-            "shapes_on_top": 3
+            "shapes_on_top": 4
           }
         },
         "top_layer": "M5",
@@ -77,8 +77,8 @@
       },
       "clock_insertion": {
         "clk": {
-          "max_ps": 108.77,
-          "min_ps": 86.56
+          "max_ps": 120.94,
+          "min_ps": 91.88
         }
       },
       "pockets": {
@@ -87,7 +87,7 @@
         "marker": {
           "layer": "M5",
           "d_um": 1.536,
-          "added": 34
+          "added": 69
         },
         "count": 0,
         "area_um2": 0,
@@ -97,6 +97,6 @@
   },
   "output": {
     "path": "ot_hgi_coll_qslots_capture_pin_v2.lef",
-    "sha256": "44fa2bc3a02417d490f5e59b40e8b008fae0a7b90a3f08a3dedc4f09d7a7b585"
+    "sha256": "03b7f93faebd586ab19a3be0dabc78a76d3a89efc6edafc6b90f621652c2d495"
   }
 }
