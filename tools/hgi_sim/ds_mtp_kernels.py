@@ -1067,6 +1067,51 @@ class Engine:
         return res, [None] * len(res)
 
 
+def rows_replay(Mach, progs, units, rows, mutant=None):
+    """H-MTP2 P-ROW PROOF: run one layer body ONCE as P-row records over `rows` = [(token, pos, vm_images_per_die)]:
+    record-major (record k runs its P rows, then record k + 1), row r with its own VM image (the per-position VM copy
+    of the P-row form) and its own doorbell DYN (POS = its position, WIN), the HBM shared by all rows (so every
+    attention row sees ALL P positions' KV appends of the layer: the causal superset of the batched verify).  Returns
+    the per-row final VM images.  mutant 'pos0': every row runs at row 0's POS (must FAIL)."""
+    dies = Mach.dies
+    keep = [d.vm for d in dies]
+    imgs = [[im.copy() for im in r[2]] for r in rows]
+    nrec = len(progs[0])
+    if any(p[k].unit == "CTL" and p[k].op in ("LOOP", "ENDLOOP") for p in progs for k in range(nrec)):
+        raise RuntimeError("rows_replay: loops in the body (not a sliding layer)")
+    try:
+        for k in range(nrec):
+            r0 = progs[0][k]
+            if r0.unit == "CTL":
+                continue
+            for j, (tok, pos, _) in enumerate(rows):
+                for i, d in enumerate(dies):
+                    d.vm = imgs[j][i]
+                Mach.doorbell(tok, rows[0][1] if mutant == "pos0" else pos)
+                for d in dies:
+                    d.dyn[4] = 0
+                if r0.unit == "COLL":
+                    Mach.die_recs = {d.rank: progs[i][k] for i, d in enumerate(dies)}
+                    Mach.cur = r0
+                    try:
+                        units[(r0.unit, r0.op)](Mach, r0, 0)
+                    finally:
+                        Mach.die_recs = None
+                else:
+                    for i, die in enumerate(dies):
+                        r = progs[i][k]
+                        Mach.dies = [die]
+                        Mach.cur = r
+                        try:
+                            units[(r.unit, r.op)](Mach, r, 0)
+                        finally:
+                            Mach.dies = dies
+    finally:
+        for d, v in zip(dies, keep):
+            d.vm = v
+    return imgs
+
+
 def sim(a):
     """Build the kernels, run one DSpark job (prefill p0 + one draft / verify step) on 96 simulated dies through the
     shipped control loop (v41_dspark.ctl_loop), check every column's L0 output, (spec) every DSpark window row, every
@@ -1195,7 +1240,37 @@ def sim(a):
         h = [d.hbm.view((s_ << 35) | (lb + ro * 64), SW * 4).view(np.uint32) for s_, ro in rows]
         return np.concatenate(h + [d.hbm.view(lb + 81920, 16).view(np.uint32)]).copy()
 
+    rows_pre, rows_post, rows_res = {}, {}, {}
+
+    def rows_proof():
+        """the batched layer-0 verify: the six verify columns' layer-0 body as ONE pass of P-row records (rows_replay)
+        from each column's pre-layer VM image; every row's final VM (all 96 dies, whole VM incl. the HC aperture)
+        must equal that column's column-serial post-layer VM, whose h / PRE are checked against the golden (A)"""
+        vp = sorted(rows_pre)
+        progs = [K.body[d.rank][(3, 0)] for d in dies]
+        rows = [(rows_pre[p][0], p, rows_pre[p][1]) for p in vp]
+        for mut in (None, "pos0"):
+            t1 = time.time()
+            imgs = rows_replay(Mach, progs, units, rows, mutant=mut)
+            bad = {}
+            for j, p in enumerate(vp):
+                nd = [int(np.count_nonzero(imgs[j][i] != rows_post[p][i])) for i in range(len(dies))]
+                if any(nd):
+                    bad[p] = dict(dies_differing=sum(1 for x in nd if x), words_differing_max=max(nd))
+            rows_res["mutant_pos0" if mut else "p_row"] = dict(rows=len(vp), positions=vp, bad=bad,
+                                                              equal=not bad, wall_s=round(time.time() - t1, 1))
+            print(f"P-ROW PROOF{' (mutant ' + mut + ')' if mut else ''}: {len(vp)} rows, layer-0 body "
+                  f"{sum(1 for r in progs[0] if r.unit != 'CTL')} records, 96 dies: "
+                  f"{'ALL ROWS EQUAL the column-serial VM' if not bad else 'DIFFER ' + str(bad)}", flush=True)
+        rows_pre.clear()
+
     def on_launch(e):
+        if rows_on and K_cur["L"] == 0 and e["kind"] == "embed" and e["pos"] >= plen:
+            rows_pre[e["pos"]] = (e["token"], [d.vm.copy() for d in dies])
+        if rows_on and K_cur["L"] == 0 and e["kind"] == "layer" and e["pos"] in rows_pre:
+            rows_post[e["pos"]] = [d.vm.copy() for d in dies]
+            if len(rows_post) == len(gd["verify_tokens"]) and len(rows_pre) == len(rows_post):
+                rows_proof()
         if e["kind"] == "swapout" and K_cur["L"] == 0:
             c = e["token"]
             col_out[e["pos"]] = [col_read(d, c) for d in dies]
@@ -1228,6 +1303,7 @@ def sim(a):
     dbg = {}
     eng.on_launch = on_launch
     plen = len(gd["prompt"])
+    rows_on = bool(getattr(a, "rows_proof", False))
     forced = None
     if not spec:
         forced_d = gd["drafts"]
@@ -1401,6 +1477,9 @@ def sim(a):
                   stack_sha256=[hashlib.sha256(x.tobytes()).hexdigest() for x in cs], file="colslots_rank0.npz")
     np.savez_compressed(out / "colslots_rank0.npz", **{f"stack{s_}": x for s_, x in enumerate(cs)})
     ok_all = bool(swapchk["bad"] == 0 and accept_ok and all(c["bit_exact_all_ranks"] for c in colres) and (not spec or draft_checks["all_ok"]))
+    if rows_on:
+        ok_all = ok_all and bool(rows_res.get("p_row", {}).get("equal")) and \
+            not rows_res.get("mutant_pos0", {}).get("equal", True)
     rec = dict(schema="opentallas.hgi_sim.ds_mtp_sim.v2", golden=str(a.golden),
                drafter="dspark (real, lowered)" if spec else "FORCED (golden drafts; draft kinds END stubs)",
                golden_summary={k_: gd[k_] for k_ in ("prompt", "y", "verify_tokens", "drafts", "targets", "accepted",
@@ -1417,7 +1496,7 @@ def sim(a):
                            for k_ in KINDS},
                kernel_records={f"{KINDS[k_]}{'' if Lp == 0 else Lp}": len([r for r in K.body[0][(k_, Lp)] if r.unit != "CTL"])
                                for (k_, Lp) in K.body[0] if (k_ not in (3,) or Lp in (0, 1, 37))},
-               hc_plan=plan["name"], fused_hll=int(DN.FUSED_HLL),
+               hc_plan=plan["name"], fused_hll=int(DN.FUSED_HLL), rows_proof=rows_res or None,
                s2_first_launch_cycles={k_: v for k_, v in r0_kern.items() if not k_.startswith("layer") or k_ in (
                    "layer", "layer1", "layer37")},
                hc_row_rank=dict(rank=hc_rank, s2_job_cycles=round(sum(own.values()), 1),
@@ -1551,6 +1630,9 @@ def main():
                    "the functional run and its checks are unchanged)")
     q.add_argument("--att-b", help="b_measured_model.json: price ATT records by the measured SM attention spans (option B)")
     q.add_argument("--att-b-var", default="exposed", choices=("exposed", "prefetch"))
+    q.add_argument("--rows-proof", action="store_true",
+                   help="H-MTP2: re-run the verify's layer 0 as ONE pass of P-row records (rows_replay) and require "
+                        "every row's VM == the column-serial VM (all dies); mutant pos0 must differ")
     a = ap.parse_args()
     if a.cmd == "golden":
         return golden(a)

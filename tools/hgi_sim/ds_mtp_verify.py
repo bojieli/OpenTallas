@@ -128,6 +128,10 @@ def shift(iv, k):
 # c1 = the single-row record (its price / measured cost), II = the per-row initiation interval of the binding resource
 # AFTER the hardware change (the latency, fixed and broadcast parts are paid once).  Two bases: II_price (the price
 # table's own structure), II_meas (the measured RTL structure; None = ratio x II_price).
+# Window ring: a P-row DMA.KVWB_DS appends all P rows before the P attention rows; a 128-slot ring (= the window) then
+# lets position p+j's append overwrite a slot inside row p's window (test_mtp_rows: FAILS at 1M); the batched verify
+# needs a ring of 256 slots (power of two >= 128 + P - 1: KVWB O.m = ATT B.m = 256, no ISA change, +128 rows of HBM a
+# layer).  Row r of a P-row record runs with POS = POS0 + r (and WIN, POS1 from it).
 FCOLL = 108.6 + 377.6e-9 * CLK + 0.15e-6 * CLK      # perf.coll_cycles fixed part (endpoint + crossing + tail), 741.7
 HBM_RATIO = 136 / 98.96                              # SM line 136 B at 1 line/cycle vs the SM's 98.96 B/cycle HBM share
 SK_PRICE = 0.52778 * 1200                            # Sinkhorn node of the HC_MIX price (ot_hdc_sinkhorn 41 clocks)
