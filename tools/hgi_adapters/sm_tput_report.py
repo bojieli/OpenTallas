@@ -12,10 +12,16 @@ import subprocess
 from pathlib import Path
 
 PAT = re.compile(r"TPUT (\d+) disp (\d+) ret (\d+) service (\d+) lines (\d+) (\d+)")
+# track-B engine bench (tb_hgi_smmv_tput, run_smmv_tput.sh): no per-SM line counters in its TPUT line
+PAT_SMMV = re.compile(r"TPUT (\d+) disp (\d+) ret (\d+) service (\d+) xi ")
+SMMV = False
 
 
 def parse(log):
     t = Path(log).read_text()
+    if SMMV:
+        rows = [tuple(map(int, m.groups())) + (None, None) for m in PAT_SMMV.finditer(t)]
+        return rows, ("HGI_SMMV_TPUT PASS" in t), [ln for ln in t.splitlines() if ln.startswith(("x loaded", "summary", "HGI_SM"))]
     rows = [tuple(map(int, m.groups())) for m in PAT.finditer(t)]
     return rows, ("HGI_SM_TPUT PASS" in t), [ln for ln in t.splitlines() if ln.startswith(("x loaded", "summary", "HGI_SM"))]
 
@@ -29,8 +35,12 @@ def main():
     ap.add_argument('--extra', nargs='*', default=[], help='NAME=run_log sensitivity runs')
     ap.add_argument('--commit', default='')
     ap.add_argument('--xbd', action='store_true', help='run built with +define+XBD (native block-dot x, xload BD 1)')
+    ap.add_argument('--smmv', action='store_true', help='log of tb_hgi_smmv_tput (ot_hgi_smmv engine, run_smmv_tput.sh)')
+    ap.add_argument('--bench', default='', help='override the bench provenance string')
     ap.add_argument('--token', nargs='*', help='combine: report.json files -> per-token extrapolation over the priced program')
     a = ap.parse_args()
+    global SMMV
+    SMMV = a.smmv
     if a.token is not None:
         return token(a)
     run = Path(a.run)
@@ -48,7 +58,7 @@ def main():
     for s in a.mutants:
         n, p = s.split('=', 1)
         t = Path(p).read_text()
-        muts[n] = 'FAIL (as required)' if 'HGI_SM_TPUT FAIL' in t else ('PASS (MUTANT NOT CAUGHT)' if 'PASS' in t else 'no verdict')
+        muts[n] = 'FAIL (as required)' if re.search(r'HGI_SMM?V?_TPUT FAIL|DEADLOCK', t) else ('PASS (MUTANT NOT CAUGHT)' if 'PASS' in t else 'no verdict')
     extra = {}
     for s in a.extra:
         n, p = s.split('=', 1)
@@ -61,7 +71,7 @@ def main():
         per_unit=dict(SM=dict(records=len(recs), real=len(recs), exact=len(recs) if ok else 0, rtl_busy=busy, sim_cost=cost)),
         records=recs, mutants=muts, sensitivity=extra, rtl_lines=lines, vehicle=meta['vehicle'], price_source=meta['source'],
         source_commit=a.commit,
-        bench='rtl/hbm_accel/generic/adapters/tb/tb_hgi_sm_tput.sv (run_sm_tput.sh; vectors tools/hgi_adapters/sm_tput_bench.py)',
+        bench=a.bench or 'rtl/hbm_accel/generic/adapters/tb/tb_hgi_sm_tput.sv (run_sm_tput.sh; vectors tools/hgi_adapters/sm_tput_bench.py)',
         scaling=('NSM 32 adapter + publication at full width; SMs 0, 1 REAL ot_hbm_accel_smh at the production slice '
                  'Q = ceil(M / 32) rows x full K; SMs 2..31 replay real SM (s mod 2) port for port (identical op fields, '
                  'broadcast x, equal per-SM HBM share => identical timing); the publication serialises all 32 SMs\' rows '
