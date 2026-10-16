@@ -22,7 +22,7 @@ for a in range(171):
   for p in range(8):
    index=s*2736+a*16+p*2
    two=sum((keys[index+j] if index+j<n else 0)<<(j*544) for j in range(2))
-   payload=(two<<11)|(((a*8+p)&1023)<<1)|1
+   payload=(two<<11)|(((p*128+a)&1023)<<1)|1   # service tag (128*port + beat) % 1024 (ot_hbm_idx_score_static)
    packed|=payload<<(s*8792+p*1099)
  lines.append(packed)
 (out/'keylines.hex').write_text(''.join(f'{x:08792x}\n' for x in lines))

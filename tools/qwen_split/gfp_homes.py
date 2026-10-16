@@ -61,8 +61,12 @@ def _overlaps(rects, eps=1e-3):
 def apply(model, path):
     raw = Path(path).read_bytes()
     d = json.loads(raw)
-    if d.get('schema') not in ('opentallas.qwen.globalfp-homes.v1', 'opentallas.qwen.globalfp-q-homes.1705.v1'):
+    if d.get('schema') not in ('opentallas.qwen.globalfp-homes.v1', 'opentallas.qwen.globalfp-q-homes.1705.v1',
+                               'opentallas.qwen.globalfp-q-homes.2210.v1'):
         raise ValueError('OT_SPLIT_HOMES: unexpected schema')
+    if d.get('schema') == 'opentallas.qwen.globalfp-q-homes.2210.v1':
+        # re-packed-tile homes (Q-COMPUTE-DIE 2210) carry their own die outline: the field is re-derived, not translated
+        model['die']['w'], model['die']['h'] = float(d['die']['w']), float(d['die']['h'])
     if isinstance(d.get('reserve'), list):
         # GLOBAL-FP-Q 1705 homes name their reserved channels (slab vertical channels) without rectangles: they are
         # the gaps the homes leave free, so there is nothing extra to reserve here; the names stay in the receipt
@@ -112,7 +116,7 @@ def apply(model, path):
         raise ValueError(f'OT_SPLIT_HOMES: outside={outside[:4]}, overlaps={overlap[:4]}')
     for n, h in proposed.items():
         by[n].x, by[n].y, by[n].orient = h['x'], h['y'], h['o']
-    return dict(path=str(path), sha256=hashlib.sha256(raw).hexdigest(), source_model_sha256=digest,
+    return dict(path=str(path), schema=d.get('schema'), sha256=hashlib.sha256(raw).hexdigest(), source_model_sha256=digest,
                 candidate=d.get('candidate'), moved=len(moved), moved_names=moved,
                 reserve=reserve, reserve_names=d.get('reserve_names', []), rebase=rebase, qualified=False,
                 open=['actual pins and legal orientations', 'relay allocation and cut capacity',

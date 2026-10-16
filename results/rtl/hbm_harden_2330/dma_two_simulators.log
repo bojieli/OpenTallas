@@ -1,0 +1,25 @@
+ot-run: ot-epyc1tb     admits   282 GB (avail 805, growth 459, headroom 64, waiters 0/0 GB) load 34/128 running 13 disk 504 GB 
+ot-run: ot-epyc4       admits   515 GB (avail 741, growth 40, headroom 48, waiters 0/0 GB) load 47/128 running 10 disk 779 GB 
+ot-run: ot-pve1        admits   169 GB (avail 216, growth 9, headroom 32, waiters 0/0 GB) load 23/28 running 4 disk 1351 GB 
+ot-run: ot-agidock128  admits    77 GB (avail 114, growth 15, headroom 24, waiters 0/0 GB) load 14/64 running 3 disk 435 GB 
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-3500671-1792132571 after 1 s
+DMA_VP_EQUIV PASS DESC_LAT=4 cases=20 bad_cases=11 fault_cycles=88 checks=1921 beats=6790
+rtl/hbm_accel/generic/peers/static/tb_dma_back_vp4_banks_equiv.sv:89: $finish called at 19350000 (1ps)
+STATIC_DESC_LAT4_PRE_COMMAND_ADVANCE_2_DATA_CALENDAR_UNCHANGED
+PASS production   MAIN STORE20480words+PRE8: real32VMbanks/96macros+32landingmacros;2561exactsectors,postedsourceoverwrite,fenceafter2561acks;firstcommand->fence=173cycles
+PASS production MIRROR STORE20480words+PRE8: real32VMbanks/96macros+32landingmacros;2561exactsectors,postedsourceoverwrite,fenceafter2561acks;firstcommand->fence=173cycles
+PASS DMA static actual production both main/mirror, no runtime VM credits/ready/group lease or dynamic onchip issue
+out/icarus/production_tb.sv:114: $finish called at 5400000 (1ps)
+DMA_VP4_BANKS_BENCH_PASS
+ICARUS_RC=0
+VLT_BUILD_RC=0
+PASS production   MAIN STORE20480words+PRE8: real32VMbanks/96macros+32landingmacros;2561exactsectors,postedsourceoverwrite,fenceafter2561acks;firstcommand->fence=173cycles
+PASS production MIRROR STORE20480words+PRE8: real32VMbanks/96macros+32landingmacros;2561exactsectors,postedsourceoverwrite,fenceafter2561acks;firstcommand->fence=173cycles
+PASS DMA static actual production both main/mirror, no runtime VM credits/ready/group lease or dynamic onchip issue
+- out/icarus/production_tb.sv:114: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 5us; walltime 0.041 s; speed 127.615 us/s
+- Verilator: cpu 0.042 s on 1 threads; alloced 1023 MB
+VLT_RUN_RC=0
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-3500671-1792132571): exit 0

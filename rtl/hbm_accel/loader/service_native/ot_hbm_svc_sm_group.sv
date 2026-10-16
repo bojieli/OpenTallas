@@ -5,7 +5,10 @@
 // the actual issuer (ot_hbm_svc_sm_issuer).  Its only non-clock inputs are initialization (programme + descriptor
 // tables, from the host loader), one run launch, and the four K ports of its own controllers.  It drives the SM's
 // packet and command.  The observation outputs of the feed's S1 consumer copy are kept for benches.
-module ot_hbm_svc_sm_group #(parameter[1:0]STACK=0,parameter integer SM=0,LBANKS=4,parameter integer LB=(LBANKS>2)?2:1)(
+// FIXED_GO=1: programme go on the descriptor's compiler slot (ot_hbm_svc_sm_issuer), so sm_packet is on the die calendar
+// (required when the packet also feeds hb_idx.key_lines: the eight groups of a stack must be cycle-aligned).
+module ot_hbm_svc_sm_group #(parameter[1:0]STACK=0,parameter integer SM=0,LBANKS=4,parameter integer LB=(LBANKS>2)?2:1,
+ parameter integer FIXED_GO=0)(
  input wire stream_clk,stream_rst_n,hbm_clk,hbm_rst_n,
  input wire[1:0]stream_bank_clk,hbm_fifo_clk,input wire[3:0]hbm_pc_clk,
  input wire program_cfg_we,input wire[9:0]program_cfg_addr,input wire[255:0]program_cfg_data,
@@ -24,7 +27,7 @@ module ot_hbm_svc_sm_group #(parameter[1:0]STACK=0,parameter integer SM=0,LBANKS
  wire[15:0]reserve_epoch,start_epoch,program_start_loops;wire[6:0]reserve_rows;wire[9:0]reserve_tag_base,program_start_base;
  wire[10:0]program_start_limit;wire[LBANKS-1:0]block_ready;wire[1:0]cache_ready,cache_owned;
  assign fault=feed_fault||issuer_fault;
- ot_hbm_svc_sm_issuer #(.LBANKS(LBANKS)) issuer(
+ ot_hbm_svc_sm_issuer #(.LBANKS(LBANKS),.FIXED_GO(FIXED_GO)) issuer(
   .clk(stream_clk),.rst_n(stream_rst_n),.desc_we(desc_we),.desc_addr(desc_addr),.desc_data(desc_data),
   .run_v(run_v),.run_base(run_base),.run_count(run_count),.running(running),.run_done(run_done),.fault(issuer_fault),
   .reserve_v(reserve_v),.reserve_ready(reserve_ready),.reserve_base(reserve_base),.reserve_row_base(reserve_row_base),

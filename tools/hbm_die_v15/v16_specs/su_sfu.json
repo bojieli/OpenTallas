@@ -41102,318 +41102,6 @@
    "note": "outputs busy/valid/done/fault/edge_index unconsumed (status sink = same host/CP owner)."
   },
   {
-   "id": "G-SU-DRAIN-NOW-SW",
-   "owner": "H-SU",
-   "missing_rtl": "ot_hbm_su_static_quarter computes qcore.rf_drain_now = vmw_cmd[38] && vmw_cmd[37] (an AND gate in the composition module, no die home). Fix: qcore takes vmw_cmd[38:37] of slice 0 port 0 as a 2-bit input and gates internally (or the programme emits the bit).",
-   "affects": [
-    [
-     "sucore_SW",
-     "rf_drain_now",
-     0,
-     1
-    ]
-   ],
-   "note": "source bits = su_prog command[0+128+37 .. +38]"
-  },
-  {
-   "id": "G-SU-BRIDGE-EPOCH-SW",
-   "owner": "H-SU + H-DIE (hb_ckgen)",
-   "missing_rtl": "bridge_rst_n = common 3:4 phase-zero epoch release (released at epoch_half-1, after the programme start; tools/hbm_static/su_multirate_top_contract.json new_port). hfd_ckgen has only por_* releases; no epoch-aligned reset generator exists on main.",
-   "affects": [
-    [
-     "su_SW0",
-     "bridge_rst_n",
-     0,
-     1
-    ],
-    [
-     "su_SW1",
-     "bridge_rst_n",
-     0,
-     1
-    ],
-    [
-     "su_SW2",
-     "bridge_rst_n",
-     0,
-     1
-    ],
-    [
-     "su_SW3",
-     "bridge_rst_n",
-     0,
-     1
-    ]
-   ],
-   "note": "not mapped to por_serial on purpose: the EPOCH mutant (191,827 errors) shows the release phase is functional."
-  },
-  {
-   "id": "G-SU-DRAIN-NOW-SE",
-   "owner": "H-SU",
-   "missing_rtl": "ot_hbm_su_static_quarter computes qcore.rf_drain_now = vmw_cmd[38] && vmw_cmd[37] (an AND gate in the composition module, no die home). Fix: qcore takes vmw_cmd[38:37] of slice 0 port 0 as a 2-bit input and gates internally (or the programme emits the bit).",
-   "affects": [
-    [
-     "sucore_SE",
-     "rf_drain_now",
-     0,
-     1
-    ]
-   ],
-   "note": "source bits = su_prog command[2422+128+37 .. +38]"
-  },
-  {
-   "id": "G-SU-BRIDGE-EPOCH-SE",
-   "owner": "H-SU + H-DIE (hb_ckgen)",
-   "missing_rtl": "bridge_rst_n = common 3:4 phase-zero epoch release (released at epoch_half-1, after the programme start; tools/hbm_static/su_multirate_top_contract.json new_port). hfd_ckgen has only por_* releases; no epoch-aligned reset generator exists on main.",
-   "affects": [
-    [
-     "su_SE0",
-     "bridge_rst_n",
-     0,
-     1
-    ],
-    [
-     "su_SE1",
-     "bridge_rst_n",
-     0,
-     1
-    ],
-    [
-     "su_SE2",
-     "bridge_rst_n",
-     0,
-     1
-    ],
-    [
-     "su_SE3",
-     "bridge_rst_n",
-     0,
-     1
-    ]
-   ],
-   "note": "not mapped to por_serial on purpose: the EPOCH mutant (191,827 errors) shows the release phase is functional."
-  },
-  {
-   "id": "G-SU-DRAIN-NOW-NW",
-   "owner": "H-SU",
-   "missing_rtl": "ot_hbm_su_static_quarter computes qcore.rf_drain_now = vmw_cmd[38] && vmw_cmd[37] (an AND gate in the composition module, no die home). Fix: qcore takes vmw_cmd[38:37] of slice 0 port 0 as a 2-bit input and gates internally (or the programme emits the bit).",
-   "affects": [
-    [
-     "sucore_NW",
-     "rf_drain_now",
-     0,
-     1
-    ]
-   ],
-   "note": "source bits = su_prog command[4844+128+37 .. +38]"
-  },
-  {
-   "id": "G-SU-BRIDGE-EPOCH-NW",
-   "owner": "H-SU + H-DIE (hb_ckgen)",
-   "missing_rtl": "bridge_rst_n = common 3:4 phase-zero epoch release (released at epoch_half-1, after the programme start; tools/hbm_static/su_multirate_top_contract.json new_port). hfd_ckgen has only por_* releases; no epoch-aligned reset generator exists on main.",
-   "affects": [
-    [
-     "su_NW0",
-     "bridge_rst_n",
-     0,
-     1
-    ],
-    [
-     "su_NW1",
-     "bridge_rst_n",
-     0,
-     1
-    ],
-    [
-     "su_NW2",
-     "bridge_rst_n",
-     0,
-     1
-    ],
-    [
-     "su_NW3",
-     "bridge_rst_n",
-     0,
-     1
-    ]
-   ],
-   "note": "not mapped to por_serial on purpose: the EPOCH mutant (191,827 errors) shows the release phase is functional."
-  },
-  {
-   "id": "G-SU-DRAIN-NOW-NE",
-   "owner": "H-SU",
-   "missing_rtl": "ot_hbm_su_static_quarter computes qcore.rf_drain_now = vmw_cmd[38] && vmw_cmd[37] (an AND gate in the composition module, no die home). Fix: qcore takes vmw_cmd[38:37] of slice 0 port 0 as a 2-bit input and gates internally (or the programme emits the bit).",
-   "affects": [
-    [
-     "sucore_NE",
-     "rf_drain_now",
-     0,
-     1
-    ]
-   ],
-   "note": "source bits = su_prog command[7266+128+37 .. +38]"
-  },
-  {
-   "id": "G-SU-BRIDGE-EPOCH-NE",
-   "owner": "H-SU + H-DIE (hb_ckgen)",
-   "missing_rtl": "bridge_rst_n = common 3:4 phase-zero epoch release (released at epoch_half-1, after the programme start; tools/hbm_static/su_multirate_top_contract.json new_port). hfd_ckgen has only por_* releases; no epoch-aligned reset generator exists on main.",
-   "affects": [
-    [
-     "su_NE0",
-     "bridge_rst_n",
-     0,
-     1
-    ],
-    [
-     "su_NE1",
-     "bridge_rst_n",
-     0,
-     1
-    ],
-    [
-     "su_NE2",
-     "bridge_rst_n",
-     0,
-     1
-    ],
-    [
-     "su_NE3",
-     "bridge_rst_n",
-     0,
-     1
-    ]
-   ],
-   "note": "not mapped to por_serial on purpose: the EPOCH mutant (191,827 errors) shows the release phase is functional."
-  },
-  {
-   "id": "G-SU-RFR-VALID-SW",
-   "owner": "H-SU",
-   "missing_rtl": "relay head valid = red_sv && red_tag[8] is an AND gate in ot_hbm_su_static_top (no die home). Fix: qcore emits the RF-write valid (red_sv & tag[8]) as an output port.",
-   "affects": [
-    [
-     "rfr_SW_SW_00",
-     "i",
-     40,
-     41
-    ],
-    [
-     "rfr_SW_SE_00",
-     "i",
-     40,
-     41
-    ],
-    [
-     "rfr_SW_NW_00",
-     "i",
-     40,
-     41
-    ],
-    [
-     "rfr_SW_NE_00",
-     "i",
-     40,
-     41
-    ]
-   ],
-   "note": "sucore_SW red_sv and red_tag[8] stay unconsumed until then"
-  },
-  {
-   "id": "G-SU-RFR-VALID-SE",
-   "owner": "H-SU",
-   "missing_rtl": "relay head valid = red_sv && red_tag[8] is an AND gate in ot_hbm_su_static_top (no die home). Fix: qcore emits the RF-write valid (red_sv & tag[8]) as an output port.",
-   "affects": [
-    [
-     "rfr_SE_SW_00",
-     "i",
-     40,
-     41
-    ],
-    [
-     "rfr_SE_SE_00",
-     "i",
-     40,
-     41
-    ],
-    [
-     "rfr_SE_NW_00",
-     "i",
-     40,
-     41
-    ],
-    [
-     "rfr_SE_NE_00",
-     "i",
-     40,
-     41
-    ]
-   ],
-   "note": "sucore_SE red_sv and red_tag[8] stay unconsumed until then"
-  },
-  {
-   "id": "G-SU-RFR-VALID-NW",
-   "owner": "H-SU",
-   "missing_rtl": "relay head valid = red_sv && red_tag[8] is an AND gate in ot_hbm_su_static_top (no die home). Fix: qcore emits the RF-write valid (red_sv & tag[8]) as an output port.",
-   "affects": [
-    [
-     "rfr_NW_SW_00",
-     "i",
-     40,
-     41
-    ],
-    [
-     "rfr_NW_SE_00",
-     "i",
-     40,
-     41
-    ],
-    [
-     "rfr_NW_NW_00",
-     "i",
-     40,
-     41
-    ],
-    [
-     "rfr_NW_NE_00",
-     "i",
-     40,
-     41
-    ]
-   ],
-   "note": "sucore_NW red_sv and red_tag[8] stay unconsumed until then"
-  },
-  {
-   "id": "G-SU-RFR-VALID-NE",
-   "owner": "H-SU",
-   "missing_rtl": "relay head valid = red_sv && red_tag[8] is an AND gate in ot_hbm_su_static_top (no die home). Fix: qcore emits the RF-write valid (red_sv & tag[8]) as an output port.",
-   "affects": [
-    [
-     "rfr_NE_SW_00",
-     "i",
-     40,
-     41
-    ],
-    [
-     "rfr_NE_SE_00",
-     "i",
-     40,
-     41
-    ],
-    [
-     "rfr_NE_NW_00",
-     "i",
-     40,
-     41
-    ],
-    [
-     "rfr_NE_NE_00",
-     "i",
-     40,
-     41
-    ]
-   ],
-   "note": "sucore_NE red_sv and red_tag[8] stay unconsumed until then"
-  },
-  {
    "id": "G-SFU-LOADER-SW",
    "owner": "H-SU + host owner",
    "missing_rtl": "SFU programme / IO-calendar loader and start issuer (cfg_*, start_*, io_cfg_*, io_start_*); no producer on main (v15 unbound \"actual SFU programme loader / CP\")",
@@ -41495,7 +41183,7 @@
      "side_y"
     ]
    ],
-   "note": "outputs vi_re/vi_addr/ro_v/ro_x/side_v/side_x/kv_we/kv_waddr/kv_wdata unconsumed"
+   "note": "H-NETLIST/su 10-15 analysis: vi_re/vi_addr/vi_q is the lane INDEXED-address read (aind != IND_NONE; the lane g2 adder adds vi_q << gsh), side_y the side-function result (used when cs_sfu != SFU_NONE). In the static SU pgslice both are internal: vi is the pinned store bank 5th read port (ra[4]/rv[4] <- vi_addr/vi_re), side_y the side pipe in QID0 G0 only (other slices drive it 0 inside the leaf). ot_hgi_sfu_static_engine has neither: its operand store has 4 read ports a lane and no index port, and KIND1 lanes have no side pipe (header: side pins reserved, side opcodes must fault). Closing needs an SFU-engine-internal join (H-SU): (a) side_y internal like the non-side pgslices, with a fault on any cs_sfu side class; (b) vi: either a 5th (index) read port in ot_hgi_sfu_static_operand_store, or fault on aind != IND_NONE and the SFU compiler never emits indexed addressing. QUESTION (H-SU): does any SFU programme need indexed addressing? Not a die-netlist producer."
   },
   {
    "id": "G-SFU-LOADER-SE",
@@ -41579,7 +41267,7 @@
      "side_y"
     ]
    ],
-   "note": "outputs vi_re/vi_addr/ro_v/ro_x/side_v/side_x/kv_we/kv_waddr/kv_wdata unconsumed"
+   "note": "H-NETLIST/su 10-15 analysis: vi_re/vi_addr/vi_q is the lane INDEXED-address read (aind != IND_NONE; the lane g2 adder adds vi_q << gsh), side_y the side-function result (used when cs_sfu != SFU_NONE). In the static SU pgslice both are internal: vi is the pinned store bank 5th read port (ra[4]/rv[4] <- vi_addr/vi_re), side_y the side pipe in QID0 G0 only (other slices drive it 0 inside the leaf). ot_hgi_sfu_static_engine has neither: its operand store has 4 read ports a lane and no index port, and KIND1 lanes have no side pipe (header: side pins reserved, side opcodes must fault). Closing needs an SFU-engine-internal join (H-SU): (a) side_y internal like the non-side pgslices, with a fault on any cs_sfu side class; (b) vi: either a 5th (index) read port in ot_hgi_sfu_static_operand_store, or fault on aind != IND_NONE and the SFU compiler never emits indexed addressing. QUESTION (H-SU): does any SFU programme need indexed addressing? Not a die-netlist producer."
   },
   {
    "id": "G-SFU-LOADER-NW",
@@ -41663,7 +41351,7 @@
      "side_y"
     ]
    ],
-   "note": "outputs vi_re/vi_addr/ro_v/ro_x/side_v/side_x/kv_we/kv_waddr/kv_wdata unconsumed"
+   "note": "H-NETLIST/su 10-15 analysis: vi_re/vi_addr/vi_q is the lane INDEXED-address read (aind != IND_NONE; the lane g2 adder adds vi_q << gsh), side_y the side-function result (used when cs_sfu != SFU_NONE). In the static SU pgslice both are internal: vi is the pinned store bank 5th read port (ra[4]/rv[4] <- vi_addr/vi_re), side_y the side pipe in QID0 G0 only (other slices drive it 0 inside the leaf). ot_hgi_sfu_static_engine has neither: its operand store has 4 read ports a lane and no index port, and KIND1 lanes have no side pipe (header: side pins reserved, side opcodes must fault). Closing needs an SFU-engine-internal join (H-SU): (a) side_y internal like the non-side pgslices, with a fault on any cs_sfu side class; (b) vi: either a 5th (index) read port in ot_hgi_sfu_static_operand_store, or fault on aind != IND_NONE and the SFU compiler never emits indexed addressing. QUESTION (H-SU): does any SFU programme need indexed addressing? Not a die-netlist producer."
   },
   {
    "id": "G-SFU-LOADER-NE",
@@ -41747,11 +41435,11 @@
      "side_y"
     ]
    ],
-   "note": "outputs vi_re/vi_addr/ro_v/ro_x/side_v/side_x/kv_we/kv_waddr/kv_wdata unconsumed"
+   "note": "H-NETLIST/su 10-15 analysis: vi_re/vi_addr/vi_q is the lane INDEXED-address read (aind != IND_NONE; the lane g2 adder adds vi_q << gsh), side_y the side-function result (used when cs_sfu != SFU_NONE). In the static SU pgslice both are internal: vi is the pinned store bank 5th read port (ra[4]/rv[4] <- vi_addr/vi_re), side_y the side pipe in QID0 G0 only (other slices drive it 0 inside the leaf). ot_hgi_sfu_static_engine has neither: its operand store has 4 read ports a lane and no index port, and KIND1 lanes have no side pipe (header: side pins reserved, side opcodes must fault). Closing needs an SFU-engine-internal join (H-SU): (a) side_y internal like the non-side pgslices, with a fault on any cs_sfu side class; (b) vi: either a 5th (index) read port in ot_hgi_sfu_static_operand_store, or fault on aind != IND_NONE and the SFU compiler never emits indexed addressing. QUESTION (H-SU): does any SFU programme need indexed addressing? Not a die-netlist producer."
   },
   {
    "id": "G-SU-MTP-LOGIT",
-   "owner": "H-SU",
+   "owner": "H-SM (SM_OUT stream adapter) + MTP owner; was H-SU",
    "missing_rtl": "static-SU logit stream producer for hb_argmax.am_stream (523 b); ot_hbm_su_static_top/pgslice have no logit-stream output (only the legacy ot_hgi_su_unit drives am_stream)",
    "affects": [
     [
@@ -41761,8 +41449,8 @@
      523
     ]
    ],
-   "note": "v15 unbound \"actual SU static logit stream (MTP)\""
+   "note": "H-NETLIST/su 10-15: the am_stream producer is NOT the SU. tools/hgi_sim/ds_native.py:500 (fuse) sends the LM-head SM MATVEC output O to space STREAM base 2 = the argmax stream; the static SU has no logits (its reducer emits single FP32 scalars). The static producer is an SM result (rv/rrow/rdata 256 = 8 FP32 a beat, gap G-SMVM-SMOUT) -> am_stream adapter {v, last from the record row count, mask8 from the row bounds, vals256 = rdata, bias256/bias_en from the MTP Markov-bias VM row}. Reassign to H-SM (+MTP owner). Unfused fallback = ARGMAX VM mode (mode 0, 1 element a cycle vs 16 for STREAM, tools/hgi_sim/calibration.json)."
   }
  ],
- "notes": "SU: 16 x ot_hbm_su_static_pgslice + 4 x ot_hbm_su_static_qcore lifted 1:1 from ot_hbm_su_static_quarter/top (QID SW0 SE1 NW2 NE3 = v15 hb_su QIDs). Params = the only whole-SU proof with the die RF_RELAY: MR1 multirate d9507c056 (receipt results/arch/hbm_su_f2_static_1014/multirate_native_d9507c056: MULTIRATE=1, MLAT=4, ALAT=3, LEAF=1, RF_RELAY=36, RR10/WR7). DOUBT: the RTL default is still MULTIRATE=0/MLAT=3/LEAF=0 (su_multirate_top_contract.json default_parameter 0, candidate 1); MULTIRATE=1 is required by the v7 die clocking (slices serial 900 + pg_clk stream 1200). H-SU branch claude/hsu-k0r2-1705 (PIN_REG lane, programme 7116->7120) is NOT on main and not used. Command source: ot_hbm_su_programme (serial plane, 9688-bit line = 4 x {control1742,vmr240,vmw312,rf54,red74}, MSB->LSB, so quarter q red_cmd=[q*2422+0,+74), rf_rd=[+74,+128), vmw=[+128,+440), vmr=[+440,+680), control=[+680,+2422)); one central instance fans 9688 bits to all four quadrants -- it has NO die slot and its fixed S+4 timing assumes a direct registered boundary, so any die relay on that fan-out must be absorbed by the compiler epoch (H-SU/H-DIE). The stream programme plane (64-bit VM calendar cal_rd/cal_wr) belongs to the VM/calendar region, not here. Quarter glue: red_sel is pure wiring (bound as bit-slice edges); rf_drain_now (AND) and the relay head valid (red_sv&&red_tag[8], AND) have no die home -> gaps G-SU-DRAIN-NOW-*, G-SU-RFR-VALID-*. RF relays: 16 routes x 36 = 576 x hbfd_rly_48_<flow> (one register stage each, async active-low clear of ALL 48 bits from rs; the top's st_v reset is a subset, data reset is harmless); ck = clk_relay[w] = serial, rs = rst_n. PAD: stage 0 i[41:48] tied 0 (straps), last-stage o[41:48] open; logical width 41 = {v, addr8, data32} at bits 40, 39:32, 31:0. Flow per stage from su_rf_relays_v7 home deltas (next-home direction). SFU: RTL on main says the core IS ot_hgi_sfu_scheduled_engine with LG_PATH=1+R (ot_hgi_sfu_split_engine is a composition with no own logic; leaves+relays are die instances; H-SU 72130e7c9, Qswiglu exact at R=0/R=9). R=11 per sfu_core_request_v7 (LG_PATH 12; the compiler's SFU_LG_PATH IO calendar must be regenerated for 12 -- only R=9 was benched). SFU relays use the DEDUPE standard hbfd_rly_624 (fwd 596 b = rq34+wq562, bwd 516 b = rr514+done2) x 11 stages x 2 directions x 16 pairs = 352; PAD fwd 28 b, bwd 108 b. SFU core has NO slot (PROPOSED strip; H-SM must shrink SM rows) and the relay stages have no homes -> placement open (H-DIE). SFU rst_lane_n/rst_map_n are given as stream resets (v15 listed them under the loader/CP owner; if a programme-controlled lane reset is intended they move into G-SFU-LOADER). Faults: pgslice/qcore/sfucore fault outputs unconsumed (no die status aggregator in this region). hb_argmax.am_stream gap is recorded here per H-SU ownership (instance is the coordinator's)."
+ "notes": "SU: 16 x ot_hbm_su_static_pgslice + 4 x ot_hbm_su_static_qcore lifted 1:1 from ot_hbm_su_static_quarter/top (QID SW0 SE1 NW2 NE3 = v15 hb_su QIDs). Params = the only whole-SU proof with the die RF_RELAY: MR1 multirate d9507c056 (receipt results/arch/hbm_su_f2_static_1014/multirate_native_d9507c056: MULTIRATE=1, MLAT=4, ALAT=3, LEAF=1, RF_RELAY=36, RR10/WR7). DOUBT: the RTL default is still MULTIRATE=0/MLAT=3/LEAF=0 (su_multirate_top_contract.json default_parameter 0, candidate 1); MULTIRATE=1 is required by the v7 die clocking (slices serial 900 + pg_clk stream 1200). H-SU branch claude/hsu-k0r2-1705 (PIN_REG lane, programme 7116->7120) is NOT on main and not used. Command source: ot_hbm_su_programme (serial plane, 9688-bit line = 4 x {control1742,vmr240,vmw312,rf54,red74}, MSB->LSB, so quarter q red_cmd=[q*2422+0,+74), rf_rd=[+74,+128), vmw=[+128,+440), vmr=[+440,+680), control=[+680,+2422)); one central instance fans 9688 bits to all four quadrants -- it has NO die slot and its fixed S+4 timing assumes a direct registered boundary, so any die relay on that fan-out must be absorbed by the compiler epoch (H-SU/H-DIE). The stream programme plane (64-bit VM calendar cal_rd/cal_wr) belongs to the VM/calendar region, not here. Quarter glue: red_sel is pure wiring (bound as bit-slice edges); rf_drain_now and the relay head valid were AND gates in the compositions: CLOSED by H-NETLIST/su 10-15 (qcore rf_drain_cmd[1:0] input + red_rf_v output, edges in su.json); bridge_rst_n CLOSED by the leaf ot_hbm_su_bridge_release x4 (su.json). RF relays: 16 routes x 36 = 576 x hbfd_rly_48_<flow> (one register stage each, async active-low clear of ALL 48 bits from rs; the top's st_v reset is a subset, data reset is harmless); ck = clk_relay[w] = serial, rs = rst_n. PAD: stage 0 i[41:48] tied 0 (straps), last-stage o[41:48] open; logical width 41 = {v, addr8, data32} at bits 40, 39:32, 31:0. Flow per stage from su_rf_relays_v7 home deltas (next-home direction). SFU: RTL on main says the core IS ot_hgi_sfu_scheduled_engine with LG_PATH=1+R (ot_hgi_sfu_split_engine is a composition with no own logic; leaves+relays are die instances; H-SU 72130e7c9, Qswiglu exact at R=0/R=9). R=11 per sfu_core_request_v7 (LG_PATH 12; the compiler's SFU_LG_PATH IO calendar must be regenerated for 12 -- only R=9 was benched). SFU relays use the DEDUPE standard hbfd_rly_624 (fwd 596 b = rq34+wq562, bwd 516 b = rr514+done2) x 11 stages x 2 directions x 16 pairs = 352; PAD fwd 28 b, bwd 108 b. SFU core has NO slot (PROPOSED strip; H-SM must shrink SM rows) and the relay stages have no homes -> placement open (H-DIE). SFU rst_lane_n/rst_map_n are given as stream resets (v15 listed them under the loader/CP owner; if a programme-controlled lane reset is intended they move into G-SFU-LOADER). Faults: pgslice/qcore/sfucore fault outputs unconsumed (no die status aggregator in this region). hb_argmax.am_stream gap is recorded here per H-SU ownership (instance is the coordinator's)."
 }

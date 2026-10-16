@@ -1,0 +1,280 @@
+{
+  "schema": "opentallas.pv-parent-pin-screen.v1",
+  "scope": "necessary matched-bit Manhattan screen; no obstacle route, PG, clock, native or die-home claim",
+  "source_sha256": {
+    "physical/ref_tile/qkd_pv_slice/views/ot_qwen_tp8_pv_slice_t/ot_qwen_tp8_pv_slice_t.lef": "5d5d79bfcd07ad802d136ed1b2ab06a1b4d5c1c613c7ec7ef7d706fc60271bcd",
+    "physical/ref_tile/qkd_pv_join/io_spread.tcl": "1be4799b94c80d2363f998eff440e58d0d4b900dd707c2124054dd1d29fa8844"
+  },
+  "candidates": [
+    {
+      "gap_um": 0.0,
+      "block_outline_um": [
+        518.4000000000001,
+        518.4000000000001
+      ],
+      "worst_pin_manhattan_um": 227.16000000000008,
+      "banks": [
+        {
+          "bank": 0,
+          "x": 0.0,
+          "y": 0.0,
+          "orient": "R0",
+          "width": 172.8,
+          "height": 172.8,
+          "join_bus": "ts0",
+          "join_offset": 0,
+          "worst_pin_manhattan_um": 172.8,
+          "mean_pin_manhattan_um": 132.00562499999998
+        },
+        {
+          "bank": 1,
+          "x": 172.8,
+          "y": 0.0,
+          "orient": "R0",
+          "width": 172.8,
+          "height": 172.8,
+          "join_bus": "ts0",
+          "join_offset": 512,
+          "worst_pin_manhattan_um": 82.07999999999998,
+          "mean_pin_manhattan_um": 41.28562499999998
+        },
+        {
+          "bank": 2,
+          "x": 0.0,
+          "y": 172.8,
+          "orient": "MX",
+          "width": 172.8,
+          "height": 172.8,
+          "join_bus": "ts1",
+          "join_offset": 0,
+          "worst_pin_manhattan_um": 172.659,
+          "mean_pin_manhattan_um": 131.40178124999997
+        },
+        {
+          "bank": 3,
+          "x": 0.0,
+          "y": 345.6,
+          "orient": "R180",
+          "width": 172.8,
+          "height": 172.8,
+          "join_bus": "ts1",
+          "join_offset": 512,
+          "worst_pin_manhattan_um": 174.072,
+          "mean_pin_manhattan_um": 132.8334375000001
+        },
+        {
+          "bank": 4,
+          "x": 172.8,
+          "y": 345.6,
+          "orient": "MX",
+          "width": 172.8,
+          "height": 172.8,
+          "join_bus": "ts2",
+          "join_offset": 0,
+          "worst_pin_manhattan_um": 81.79200000000003,
+          "mean_pin_manhattan_um": 40.962375
+        },
+        {
+          "bank": 5,
+          "x": 345.6,
+          "y": 345.6,
+          "orient": "MX",
+          "width": 172.8,
+          "height": 172.8,
+          "join_bus": "ts2",
+          "join_offset": 512,
+          "worst_pin_manhattan_um": 172.51200000000006,
+          "mean_pin_manhattan_um": 131.68237499999992
+        },
+        {
+          "bank": 6,
+          "x": 345.6,
+          "y": 0.0,
+          "orient": "MY",
+          "width": 172.8,
+          "height": 172.8,
+          "join_bus": "ts3",
+          "join_offset": 0,
+          "worst_pin_manhattan_um": 172.755,
+          "mean_pin_manhattan_um": 118.28990624999997
+        },
+        {
+          "bank": 7,
+          "x": 345.6,
+          "y": 172.8,
+          "orient": "R0",
+          "width": 172.8,
+          "height": 172.8,
+          "join_bus": "ts3",
+          "join_offset": 512,
+          "worst_pin_manhattan_um": 227.16000000000008,
+          "mean_pin_manhattan_um": 172.66134375000001
+        }
+      ],
+      "join": {
+        "x": 172.8,
+        "y": 172.8,
+        "width": 172.8,
+        "height": 172.8,
+        "orient": "R0"
+      }
+    },
+    {
+      "gap_um": 21.6,
+      "block_outline_um": [
+        561.6000000000001,
+        561.6000000000001
+      ],
+      "worst_pin_manhattan_um": 248.76,
+      "banks": [
+        {
+          "bank": 0,
+          "x": 0.0,
+          "y": 0.0,
+          "orient": "R0",
+          "width": 172.8,
+          "height": 172.8,
+          "join_bus": "ts0",
+          "join_offset": 0,
+          "worst_pin_manhattan_um": 216.0,
+          "mean_pin_manhattan_um": 175.20562500000005
+        },
+        {
+          "bank": 1,
+          "x": 194.4,
+          "y": 0.0,
+          "orient": "R0",
+          "width": 172.8,
+          "height": 172.8,
+          "join_bus": "ts0",
+          "join_offset": 512,
+          "worst_pin_manhattan_um": 103.68,
+          "mean_pin_manhattan_um": 62.88562500000003
+        },
+        {
+          "bank": 2,
+          "x": 0.0,
+          "y": 194.4,
+          "orient": "MX",
+          "width": 172.8,
+          "height": 172.8,
+          "join_bus": "ts1",
+          "join_offset": 0,
+          "worst_pin_manhattan_um": 194.259,
+          "mean_pin_manhattan_um": 153.00178124999985
+        },
+        {
+          "bank": 3,
+          "x": 0.0,
+          "y": 388.8,
+          "orient": "R180",
+          "width": 172.8,
+          "height": 172.8,
+          "join_bus": "ts1",
+          "join_offset": 512,
+          "worst_pin_manhattan_um": 217.27199999999996,
+          "mean_pin_manhattan_um": 176.03343749999993
+        },
+        {
+          "bank": 4,
+          "x": 194.4,
+          "y": 388.8,
+          "orient": "MX",
+          "width": 172.8,
+          "height": 172.8,
+          "join_bus": "ts2",
+          "join_offset": 0,
+          "worst_pin_manhattan_um": 103.392,
+          "mean_pin_manhattan_um": 62.562374999999946
+        },
+        {
+          "bank": 5,
+          "x": 388.8,
+          "y": 388.8,
+          "orient": "MX",
+          "width": 172.8,
+          "height": 172.8,
+          "join_bus": "ts2",
+          "join_offset": 512,
+          "worst_pin_manhattan_um": 215.71199999999993,
+          "mean_pin_manhattan_um": 174.88237499999988
+        },
+        {
+          "bank": 6,
+          "x": 388.8,
+          "y": 0.0,
+          "orient": "MY",
+          "width": 172.8,
+          "height": 172.8,
+          "join_bus": "ts3",
+          "join_offset": 0,
+          "worst_pin_manhattan_um": 215.9549999999999,
+          "mean_pin_manhattan_um": 161.48990624999993
+        },
+        {
+          "bank": 7,
+          "x": 388.8,
+          "y": 194.4,
+          "orient": "R0",
+          "width": 172.8,
+          "height": 172.8,
+          "join_bus": "ts3",
+          "join_offset": 512,
+          "worst_pin_manhattan_um": 248.76,
+          "mean_pin_manhattan_um": 194.26134374999984
+        }
+      ],
+      "join": {
+        "x": 194.4,
+        "y": 194.4,
+        "width": 172.8,
+        "height": 172.8,
+        "orient": "R0"
+      }
+    }
+  ],
+  "parent_frames": [
+    {
+      "column_blocks": 2,
+      "row_blocks": 16,
+      "outline_um": [
+        1144.8000000000002,
+        9309.600000000002
+      ],
+      "child_tiles": 288,
+      "independent_clock_entries": 289,
+      "control_tile_um": [
+        43.2,
+        43.2
+      ],
+      "control_and_external_channels_included": false
+    },
+    {
+      "column_blocks": 3,
+      "row_blocks": 11,
+      "outline_um": [
+        1728.0,
+        6393.6
+      ],
+      "child_tiles": 288,
+      "independent_clock_entries": 289,
+      "control_tile_um": [
+        43.2,
+        43.2
+      ],
+      "control_and_external_channels_included": false
+    }
+  ],
+  "join_east_face": {
+    "bits": 1538,
+    "length_um": 172.8,
+    "guarded_one_layer_cut": 0.8544444444444443,
+    "guarded_two_layer_cut": 0.42722222222222217
+  },
+  "open": [
+    "all incident V/e/command/output/reset and clock nets",
+    "actual upper-layer eligibility, obstacles and routing",
+    "625 current relay homes overlap enlarged die envelopes",
+    "source-bound mapped parent plus native child views"
+  ]
+}
