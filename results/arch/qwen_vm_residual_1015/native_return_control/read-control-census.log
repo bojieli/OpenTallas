@@ -1,0 +1,368 @@
+
+-- Running command `read_verilog -sv rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv; hierarchy -top ot_qfd_vm_su_read_control; proc; opt_clean; stat; write_json ../read-control-census.json' --
+
+1. Executing Verilog-2005 frontend: rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv
+Parsing SystemVerilog input from `rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv' to AST representation.
+Generating RTLIL representation for module `\ot_qfd_vm_rowbank_s'.
+Generating RTLIL representation for module `\ot_qfd_sp_vector_memory_bv'.
+Warning: Replacing memory \q_data with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:882
+Warning: Replacing memory \q_mask with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:882
+Warning: Replacing memory \q_row with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:882
+Warning: Replacing memory \lg_row with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:880
+Warning: Replacing memory \q_late with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:867
+Warning: Replacing memory \q_v with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:867
+Warning: Replacing memory \lr_kr with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1360
+Warning: Replacing memory \k1_mb with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:603
+Warning: Replacing memory \k1_data with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:557
+Warning: Replacing memory \k1_mask with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:557
+Warning: Replacing memory \k1_row with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:557
+Warning: Replacing memory \h_span with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:467
+Warning: Replacing memory \h_b with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:467
+Warning: Replacing memory \h_sp with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:467
+Warning: Replacing memory \h_d with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:467
+Warning: Replacing memory \h_dc with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:467
+Generating RTLIL representation for module `\ot_qfd_vm_bank_t'.
+Generating RTLIL representation for module `\ot_qfd_vm_su_t'.
+Generating RTLIL representation for module `\ot_qfd_vm_grp'.
+Warning: Replacing memory \g_fs[127].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[126].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[125].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[124].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[123].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[122].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[121].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[120].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[119].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[118].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[117].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[116].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[115].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[114].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[113].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[112].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[111].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[110].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[109].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[108].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[107].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[106].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[105].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[104].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[103].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[102].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[101].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[100].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[99].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[98].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[97].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[96].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[95].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[94].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[93].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[92].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[91].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[90].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[89].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[88].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[87].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[86].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[85].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[84].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[83].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[82].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[81].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[80].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[79].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[78].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[77].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[76].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[75].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[74].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[73].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[72].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[71].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[70].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[69].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[68].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[67].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[66].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[65].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[64].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[63].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[62].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[61].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[60].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[59].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[58].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[57].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[56].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[55].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[54].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[53].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[52].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[51].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[50].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[49].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[48].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[47].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[46].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[45].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[44].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[43].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[42].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[41].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[40].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[39].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[38].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[37].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[36].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[35].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[34].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[33].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[32].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[31].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[30].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[29].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[28].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[27].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[26].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[25].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[24].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[23].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[22].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[21].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[20].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[19].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[18].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[17].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[16].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[15].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[14].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[13].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[12].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[11].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[10].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[9].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[8].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[7].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[6].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[5].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[4].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[3].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[2].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[1].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Warning: Replacing memory \g_fs[0].fe with list of registers. See rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1735
+Generating RTLIL representation for module `\ot_qfd_vm_su_return_plane'.
+Generating RTLIL representation for module `\ot_qfd_vm_su_read_control'.
+Successfully finished Verilog frontend.
+
+2. Executing HIERARCHY pass (managing design hierarchy).
+
+2.1. Analyzing design hierarchy..
+Top module:  \ot_qfd_vm_su_read_control
+
+2.2. Analyzing design hierarchy..
+Top module:  \ot_qfd_vm_su_read_control
+Removing unused module `\ot_qfd_vm_su_return_plane'.
+Removing unused module `\ot_qfd_vm_grp'.
+Removing unused module `\ot_qfd_vm_su_t'.
+Removing unused module `\ot_qfd_vm_bank_t'.
+Removing unused module `\ot_qfd_sp_vector_memory_bv'.
+Removing unused module `\ot_qfd_vm_rowbank_s'.
+Removed 6 unused modules.
+
+3. Executing PROC pass (convert processes to netlists).
+
+3.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+3.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 1 switch rules as full_case in process $proc$rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1798$95683 in module ot_qfd_vm_su_read_control.
+Removed a total of 0 dead cases.
+
+3.3. Executing PROC_PRUNE pass (remove redundant assignments in processes).
+Removed 3 redundant assignments.
+Promoted 41 assignments to connections.
+
+3.4. Executing PROC_INIT pass (extract init attributes).
+
+3.5. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \rst_n in `\ot_qfd_vm_su_read_control.$proc$rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1798$95683'.
+
+3.6. Executing PROC_ROM pass (convert switches to ROMs).
+Converted 0 switches.
+
+3.7. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\ot_qfd_vm_su_read_control.$proc$rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1818$95777'.
+Creating decoders for process `\ot_qfd_vm_su_read_control.$proc$rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1818$95772'.
+Creating decoders for process `\ot_qfd_vm_su_read_control.$proc$rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1818$95767'.
+Creating decoders for process `\ot_qfd_vm_su_read_control.$proc$rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1818$95762'.
+Creating decoders for process `\ot_qfd_vm_su_read_control.$proc$rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1818$95757'.
+Creating decoders for process `\ot_qfd_vm_su_read_control.$proc$rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1818$95752'.
+Creating decoders for process `\ot_qfd_vm_su_read_control.$proc$rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1818$95747'.
+Creating decoders for process `\ot_qfd_vm_su_read_control.$proc$rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1818$95742'.
+Creating decoders for process `\ot_qfd_vm_su_read_control.$proc$rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1818$95737'.
+Creating decoders for process `\ot_qfd_vm_su_read_control.$proc$rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1818$95732'.
+Creating decoders for process `\ot_qfd_vm_su_read_control.$proc$rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1818$95727'.
+Creating decoders for process `\ot_qfd_vm_su_read_control.$proc$rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1818$95722'.
+Creating decoders for process `\ot_qfd_vm_su_read_control.$proc$rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1818$95717'.
+Creating decoders for process `\ot_qfd_vm_su_read_control.$proc$rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1818$95712'.
+Creating decoders for process `\ot_qfd_vm_su_read_control.$proc$rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1818$95707'.
+Creating decoders for process `\ot_qfd_vm_su_read_control.$proc$rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1818$95702'.
+Creating decoders for process `\ot_qfd_vm_su_read_control.$proc$rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1827$95699'.
+Creating decoders for process `\ot_qfd_vm_su_read_control.$proc$rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1806$95692'.
+Creating decoders for process `\ot_qfd_vm_su_read_control.$proc$rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1798$95683'.
+     1/3: $0\d2_bad[0:0]
+     2/3: $0\d2_v[0:0]
+     3/3: $0\d1_v[0:0]
+
+3.8. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+3.9. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\ot_qfd_vm_su_read_control.\sb_re [15]' using process `\ot_qfd_vm_su_read_control.$proc$rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1818$95777'.
+  created $dff cell `$procdff$95780' with positive edge clock.
+Creating register for signal `\ot_qfd_vm_su_read_control.\sb_ra [159:150]' using process `\ot_qfd_vm_su_read_control.$proc$rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1818$95777'.
+  created $dff cell `$procdff$95781' with positive edge clock.
+Creating register for signal `\ot_qfd_vm_su_read_control.\sb_re [14]' using process `\ot_qfd_vm_su_read_control.$proc$rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1818$95772'.
+  created $dff cell `$procdff$95782' with positive edge clock.
+Creating register for signal `\ot_qfd_vm_su_read_control.\sb_ra [149:140]' using process `\ot_qfd_vm_su_read_control.$proc$rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1818$95772'.
+  created $dff cell `$procdff$95783' with positive edge clock.
+Creating register for signal `\ot_qfd_vm_su_read_control.\sb_re [13]' using process `\ot_qfd_vm_su_read_control.$proc$rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1818$95767'.
+  created $dff cell `$procdff$95784' with positive edge clock.
+Creating register for signal `\ot_qfd_vm_su_read_control.\sb_ra [139:130]' using process `\ot_qfd_vm_su_read_control.$proc$rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1818$95767'.
+  created $dff cell `$procdff$95785' with positive edge clock.
+Creating register for signal `\ot_qfd_vm_su_read_control.\sb_re [12]' using process `\ot_qfd_vm_su_read_control.$proc$rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1818$95762'.
+  created $dff cell `$procdff$95786' with positive edge clock.
+Creating register for signal `\ot_qfd_vm_su_read_control.\sb_ra [129:120]' using process `\ot_qfd_vm_su_read_control.$proc$rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1818$95762'.
+  created $dff cell `$procdff$95787' with positive edge clock.
+Creating register for signal `\ot_qfd_vm_su_read_control.\sb_re [11]' using process `\ot_qfd_vm_su_read_control.$proc$rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1818$95757'.
+  created $dff cell `$procdff$95788' with positive edge clock.
+Creating register for signal `\ot_qfd_vm_su_read_control.\sb_ra [119:110]' using process `\ot_qfd_vm_su_read_control.$proc$rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1818$95757'.
+  created $dff cell `$procdff$95789' with positive edge clock.
+Creating register for signal `\ot_qfd_vm_su_read_control.\sb_re [10]' using process `\ot_qfd_vm_su_read_control.$proc$rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1818$95752'.
+  created $dff cell `$procdff$95790' with positive edge clock.
+Creating register for signal `\ot_qfd_vm_su_read_control.\sb_ra [109:100]' using process `\ot_qfd_vm_su_read_control.$proc$rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1818$95752'.
+  created $dff cell `$procdff$95791' with positive edge clock.
+Creating register for signal `\ot_qfd_vm_su_read_control.\sb_re [9]' using process `\ot_qfd_vm_su_read_control.$proc$rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1818$95747'.
+  created $dff cell `$procdff$95792' with positive edge clock.
+Creating register for signal `\ot_qfd_vm_su_read_control.\sb_ra [99:90]' using process `\ot_qfd_vm_su_read_control.$proc$rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1818$95747'.
+  created $dff cell `$procdff$95793' with positive edge clock.
+Creating register for signal `\ot_qfd_vm_su_read_control.\sb_re [8]' using process `\ot_qfd_vm_su_read_control.$proc$rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1818$95742'.
+  created $dff cell `$procdff$95794' with positive edge clock.
+Creating register for signal `\ot_qfd_vm_su_read_control.\sb_ra [89:80]' using process `\ot_qfd_vm_su_read_control.$proc$rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1818$95742'.
+  created $dff cell `$procdff$95795' with positive edge clock.
+Creating register for signal `\ot_qfd_vm_su_read_control.\sb_re [7]' using process `\ot_qfd_vm_su_read_control.$proc$rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1818$95737'.
+  created $dff cell `$procdff$95796' with positive edge clock.
+Creating register for signal `\ot_qfd_vm_su_read_control.\sb_ra [79:70]' using process `\ot_qfd_vm_su_read_control.$proc$rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1818$95737'.
+  created $dff cell `$procdff$95797' with positive edge clock.
+Creating register for signal `\ot_qfd_vm_su_read_control.\sb_re [6]' using process `\ot_qfd_vm_su_read_control.$proc$rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1818$95732'.
+  created $dff cell `$procdff$95798' with positive edge clock.
+Creating register for signal `\ot_qfd_vm_su_read_control.\sb_ra [69:60]' using process `\ot_qfd_vm_su_read_control.$proc$rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1818$95732'.
+  created $dff cell `$procdff$95799' with positive edge clock.
+Creating register for signal `\ot_qfd_vm_su_read_control.\sb_re [5]' using process `\ot_qfd_vm_su_read_control.$proc$rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1818$95727'.
+  created $dff cell `$procdff$95800' with positive edge clock.
+Creating register for signal `\ot_qfd_vm_su_read_control.\sb_ra [59:50]' using process `\ot_qfd_vm_su_read_control.$proc$rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1818$95727'.
+  created $dff cell `$procdff$95801' with positive edge clock.
+Creating register for signal `\ot_qfd_vm_su_read_control.\sb_re [4]' using process `\ot_qfd_vm_su_read_control.$proc$rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1818$95722'.
+  created $dff cell `$procdff$95802' with positive edge clock.
+Creating register for signal `\ot_qfd_vm_su_read_control.\sb_ra [49:40]' using process `\ot_qfd_vm_su_read_control.$proc$rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1818$95722'.
+  created $dff cell `$procdff$95803' with positive edge clock.
+Creating register for signal `\ot_qfd_vm_su_read_control.\sb_re [3]' using process `\ot_qfd_vm_su_read_control.$proc$rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1818$95717'.
+  created $dff cell `$procdff$95804' with positive edge clock.
+Creating register for signal `\ot_qfd_vm_su_read_control.\sb_ra [39:30]' using process `\ot_qfd_vm_su_read_control.$proc$rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1818$95717'.
+  created $dff cell `$procdff$95805' with positive edge clock.
+Creating register for signal `\ot_qfd_vm_su_read_control.\sb_re [2]' using process `\ot_qfd_vm_su_read_control.$proc$rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1818$95712'.
+  created $dff cell `$procdff$95806' with positive edge clock.
+Creating register for signal `\ot_qfd_vm_su_read_control.\sb_ra [29:20]' using process `\ot_qfd_vm_su_read_control.$proc$rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1818$95712'.
+  created $dff cell `$procdff$95807' with positive edge clock.
+Creating register for signal `\ot_qfd_vm_su_read_control.\sb_re [1]' using process `\ot_qfd_vm_su_read_control.$proc$rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1818$95707'.
+  created $dff cell `$procdff$95808' with positive edge clock.
+Creating register for signal `\ot_qfd_vm_su_read_control.\sb_ra [19:10]' using process `\ot_qfd_vm_su_read_control.$proc$rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1818$95707'.
+  created $dff cell `$procdff$95809' with positive edge clock.
+Creating register for signal `\ot_qfd_vm_su_read_control.\sb_re [0]' using process `\ot_qfd_vm_su_read_control.$proc$rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1818$95702'.
+  created $dff cell `$procdff$95810' with positive edge clock.
+Creating register for signal `\ot_qfd_vm_su_read_control.\sb_ra [9:0]' using process `\ot_qfd_vm_su_read_control.$proc$rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1818$95702'.
+  created $dff cell `$procdff$95811' with positive edge clock.
+Creating register for signal `\ot_qfd_vm_su_read_control.\dvv' using process `\ot_qfd_vm_su_read_control.$proc$rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1827$95699'.
+  created $dff cell `$procdff$95812' with positive edge clock.
+Creating register for signal `\ot_qfd_vm_su_read_control.\dsv' using process `\ot_qfd_vm_su_read_control.$proc$rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1827$95699'.
+  created $dff cell `$procdff$95813' with positive edge clock.
+Creating register for signal `\ot_qfd_vm_su_read_control.\dav' using process `\ot_qfd_vm_su_read_control.$proc$rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1827$95699'.
+  created $dff cell `$procdff$95814' with positive edge clock.
+Creating register for signal `\ot_qfd_vm_su_read_control.\d1_r1' using process `\ot_qfd_vm_su_read_control.$proc$rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1806$95692'.
+  created $dff cell `$procdff$95815' with positive edge clock.
+Creating register for signal `\ot_qfd_vm_su_read_control.\d1_a0' using process `\ot_qfd_vm_su_read_control.$proc$rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1806$95692'.
+  created $dff cell `$procdff$95816' with positive edge clock.
+Creating register for signal `\ot_qfd_vm_su_read_control.\d1_a1' using process `\ot_qfd_vm_su_read_control.$proc$rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1806$95692'.
+  created $dff cell `$procdff$95817' with positive edge clock.
+Creating register for signal `\ot_qfd_vm_su_read_control.\d2_si' using process `\ot_qfd_vm_su_read_control.$proc$rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1806$95692'.
+  created $dff cell `$procdff$95818' with positive edge clock.
+Creating register for signal `\ot_qfd_vm_su_read_control.\d2_a0' using process `\ot_qfd_vm_su_read_control.$proc$rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1806$95692'.
+  created $dff cell `$procdff$95819' with positive edge clock.
+Creating register for signal `\ot_qfd_vm_su_read_control.\d2_nr' using process `\ot_qfd_vm_su_read_control.$proc$rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1806$95692'.
+  created $dff cell `$procdff$95820' with positive edge clock.
+Creating register for signal `\ot_qfd_vm_su_read_control.\d2_bad' using process `\ot_qfd_vm_su_read_control.$proc$rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1798$95683'.
+  created $adff cell `$procdff$95825' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qfd_vm_su_read_control.\d1_v' using process `\ot_qfd_vm_su_read_control.$proc$rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1798$95683'.
+  created $adff cell `$procdff$95830' with positive edge clock and positive level reset.
+Creating register for signal `\ot_qfd_vm_su_read_control.\d2_v' using process `\ot_qfd_vm_su_read_control.$proc$rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1798$95683'.
+  created $adff cell `$procdff$95835' with positive edge clock and positive level reset.
+
+3.10. Executing PROC_MEMWR pass (convert process memory writes to cells).
+
+3.11. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `ot_qfd_vm_su_read_control.$proc$rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1818$95777'.
+Removing empty process `ot_qfd_vm_su_read_control.$proc$rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1818$95772'.
+Removing empty process `ot_qfd_vm_su_read_control.$proc$rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1818$95767'.
+Removing empty process `ot_qfd_vm_su_read_control.$proc$rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1818$95762'.
+Removing empty process `ot_qfd_vm_su_read_control.$proc$rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1818$95757'.
+Removing empty process `ot_qfd_vm_su_read_control.$proc$rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1818$95752'.
+Removing empty process `ot_qfd_vm_su_read_control.$proc$rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1818$95747'.
+Removing empty process `ot_qfd_vm_su_read_control.$proc$rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1818$95742'.
+Removing empty process `ot_qfd_vm_su_read_control.$proc$rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1818$95737'.
+Removing empty process `ot_qfd_vm_su_read_control.$proc$rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1818$95732'.
+Removing empty process `ot_qfd_vm_su_read_control.$proc$rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1818$95727'.
+Removing empty process `ot_qfd_vm_su_read_control.$proc$rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1818$95722'.
+Removing empty process `ot_qfd_vm_su_read_control.$proc$rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1818$95717'.
+Removing empty process `ot_qfd_vm_su_read_control.$proc$rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1818$95712'.
+Removing empty process `ot_qfd_vm_su_read_control.$proc$rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1818$95707'.
+Removing empty process `ot_qfd_vm_su_read_control.$proc$rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1818$95702'.
+Removing empty process `ot_qfd_vm_su_read_control.$proc$rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1827$95699'.
+Removing empty process `ot_qfd_vm_su_read_control.$proc$rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1806$95692'.
+Removing empty process `ot_qfd_vm_su_read_control.$proc$rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv:1798$95683'.
+Cleaned up 0 empty switches.
+
+3.12. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_qfd_vm_su_read_control.
+<suppressed ~8 debug messages>
+
+4. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_qfd_vm_su_read_control..
+Removed 4 unused cells and 84 unused wires.
+<suppressed ~5 debug messages>
+
+5. Printing statistics.
+
+=== ot_qfd_vm_su_read_control ===
+
+   Number of wires:                114
+   Number of wire bits:           1470
+   Number of public wires:          70
+   Number of public wire bits:    1206
+   Number of ports:                 17
+   Number of port bits:            306
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                119
+     $add                           18
+     $adff                           3
+     $dff                           41
+     $eq                             1
+     $gt                             1
+     $logic_and                     19
+     $lt                            16
+     $mux                            1
+     $sub                           19
+
+6. Executing JSON backend.

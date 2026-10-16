@@ -185,10 +185,23 @@ module ot_qfd_sp_vector_memory_bv #(
     // `end` beats.  PMUT (bench negative control): 1 = lane 1 takes lane 2's data.
     parameter integer PAR_RB = 0,
     parameter integer PMUT = 0,
+    parameter integer USE_NATIVE_CLOCKS = 0,
+    parameter integer READ_CONTROL_LEAVES = 0,
+    parameter integer RETURN_LEAVES = 0, // opt-in: existing E6/E7/E8 registers in 32 standard bit-plane leaves per copy
+    parameter integer RETURN_CLOCKS = 0, // 1: independent return_ck pin per leaf; 0: component equivalence on clk
     parameter integer NATIVE_BANKS = 0   // Q-VMWB 2026-10-15: native storage successors in every region (ot_qfd_vm_region_nx)
 ) (
     input  wire                    clk,
+`ifdef OT_QFD_VM_PARTITIONED_CLOCKS
+    input wire [NSU*32-1:0] return_ck,
+`endif
+`ifdef OT_QFD_VM_PARTITIONED_CLOCKS
+    input wire [NSU-1:0] read_control_ck,
+`endif
 `ifdef OT_QFD_VM_NOX
+`ifdef OT_QFD_VM_PARTITIONED_CLOCKS
+    input wire [(NRB+NSU*NRBS)*9-1:0] native_ck,
+`endif
     input  wire [(NRB/8)*56-1:0]    leaf_ck,
     input wire [NRB-1:0] observer_ck,
     output wire [511:0]             qr_commit_mask,
@@ -259,6 +272,16 @@ module ot_qfd_sp_vector_memory_bv #(
     output reg                     w_fault,
     output reg                     w_hazard
 );
+`ifndef OT_QFD_VM_PARTITIONED_CLOCKS
+    // Q-VMWB 0030: the partitioned clock ABI (Codex 51fc824c0) exists only under OT_QFD_VM_PARTITIONED_CLOCKS; the
+    // production port list is unchanged (no unbound/tied pins in die consumers).  Without it the opt-in clock modes are refused.
+    wire [NSU*32-1:0] return_ck = {NSU*32{1'b0}};
+    wire [NSU-1:0] read_control_ck = {NSU{1'b0}};
+    wire [(NRB+NSU*NRBS)*9-1:0] native_ck = {(NRB+NSU*NRBS)*9{1'b0}};
+    if (USE_NATIVE_CLOCKS != 0 || RETURN_CLOCKS != 0) begin : g_need_partitioned_clocks
+        initial $fatal(1, "ot_qfd_sp_vector_memory_bv: USE_NATIVE_CLOCKS / RETURN_CLOCKS need +define+OT_QFD_VM_PARTITIONED_CLOCKS");
+    end
+`endif
 `ifdef OT_QFD_VM_NOX
     // no x read: the descriptor is the constant "no tuple"; x_q / x_rdy / x_fault / x_hazard have no consumer
     wire                    me_en_t = 1'b0;
@@ -987,7 +1010,10 @@ module ot_qfd_sp_vector_memory_bv #(
             wire [8*512-1:0] xo; wire [511:0] ro_t; wire [NSU*NSB*512-1:0] so_t; wire ovf_t;
 `ifdef OT_QFD_VM_NOX
             `OT_QFD_VM_TILE_MOD #(.NBK(8), .NSB(NSB), .NSU(NSU), .DEPTH(DEPTH), .LAW(LAW), .DEPTHS(DEPTHS), .LAWS(LAWS),
-                .USE_OBSERVER_CLOCKS(USE_OBSERVER_CLOCKS), .BANK_BASE(8*g), .TOTAL_BANKS(NRB), .USE_MACRO(USE_MACRO), .USE_LEAF_CLOCKS(USE_LEAF_CLOCKS), .NRI(TNI), .NRX(TNX), .NRS(TNS), .NATIVE_BANKS(NATIVE_BANKS)) u_t (
+                .USE_OBSERVER_CLOCKS(USE_OBSERVER_CLOCKS), .BANK_BASE(8*g), .TOTAL_BANKS(NRB), .USE_MACRO(USE_MACRO), .USE_LEAF_CLOCKS(USE_LEAF_CLOCKS), .NRI(TNI), .NRX(TNX), .NRS(TNS), .NATIVE_BANKS(NATIVE_BANKS),.USE_NATIVE_CLOCKS(USE_NATIVE_CLOCKS)) u_t (
+`ifdef OT_QFD_VM_PARTITIONED_CLOCKS
+                .native_ck(native_ck[g*(8+NSU*NSB)*9+:(8+NSU*NSB)*9]),
+`endif
                 .clk(clk), .rst_n(rst_n), .leaf_ck(leaf_ck[56*g +: 56]), .observer_ck(observer_ck[8*g+:8]),
                 .re(d_re), .ra(d_ra), .we(d_we), .wl(d_wl), .wm(d_wm), .wd(d_wd), .rq(d_rq), .rqb(d_rqb),
                 .sre(d_sre), .sra(d_sra), .sv(d_sv), .swe(d_swe), .swl(d_swl), .swm(d_swm), .swd(d_swd),
@@ -1208,18 +1234,30 @@ module ot_qfd_sp_vector_memory_bv #(
     // ---- SU operand copies ----
     wire [NSU-1:0] su_hz;
     generate for (gc = 0; gc < NSU; gc = gc + 1) begin : g_cp
+        wire [NRBS-1:0] sb_re;
+        wire [NRBS*LAWS-1:0] sb_ra;
+        wire d2_bad,d3_v,d5_v,d6_v,d7_v,d7_si;
+        wire [AW-1:0] d5_a0,d6_a0,d7_a0;
+        if (READ_CONTROL_LEAVES != 0) begin : g_read_control_leaf
+            ot_qfd_vm_su_read_control #(.AW(AW),.SW(SW),.NRBS(NRBS),.LAWS(LAWS),.SX(SX)) u_control (
+                .ck((RETURN_CLOCKS != 0) ? read_control_ck[gc] : clk),.rst_n(rst_n),
+                .re0(s_re0[gc]),.re1(s_re1[gc]),.a0(s_a0[gc*AW+:AW]),.a1(s_a1[gc*AW+:AW]),
+                .sb_re(sb_re),.sb_ra(sb_ra),.d2_bad(d2_bad),
+                .ov3(d3_v),.ov5(d5_v),.ov6(d6_v),.ov7(d7_v),.osi7(d7_si),
+                .oa5(d5_a0),.oa6(d6_a0),.oa7(d7_a0));
+        end else begin : g_read_control_flat
         // E1: descriptor registers; E2: broadcast registers (window rows, offset, stride)
         reg           d1_v, d1_r1;
         reg  [AW-1:0] d1_a0, d1_a1;
         reg           d2_v, d2_si;
         reg  [AW-1:0] d2_a0;
         reg  [3:0]    d2_nr;
-        reg           d2_bad;
+        reg           d2_bad_flat;
         always @(posedge clk or negedge rst_n) begin
-            if (!rst_n) begin d1_v <= 1'b0; d2_v <= 1'b0; d2_bad <= 1'b0; end
+            if (!rst_n) begin d1_v <= 1'b0; d2_v <= 1'b0; d2_bad_flat <= 1'b0; end
             else begin
                 d1_v <= s_re0[gc]; d2_v <= d1_v;
-                d2_bad <= d1_v && d1_r1 && (d1_a1 - d1_a0) > 1;
+                d2_bad_flat <= d1_v && d1_r1 && (d1_a1 - d1_a0) > 1;
             end
         end
         wire si1 = d1_r1 && (d1_a1 - d1_a0) == 1;
@@ -1229,15 +1267,15 @@ module ot_qfd_sp_vector_memory_bv #(
             d2_nr <= si1 ? ((d1_a0[3:0] + SW - 1) >> 4) + 1 : 4'd1;
         end
         // E3: per-bank read registers (beside the macros)
-        reg  [NRBS-1:0]      sb_re;
-        reg  [NRBS*LAWS-1:0] sb_ra;
+        reg  [NRBS-1:0]      sb_re_flat;
+        reg  [NRBS*LAWS-1:0] sb_ra_flat;
         wire [RW-1:0]        d2_r0 = d2_a0[AW-1:4];
         for (g = 0; g < NRBS; g = g + 1) begin : g_ra
             wire [LNRBS-1:0] kk = g[LNRBS-1:0] - d2_r0[LNRBS-1:0];
             wire [RW-1:0]    rr = d2_r0 + kk;
             always @(posedge clk) begin
-                sb_re[g] <= d2_v && (kk < d2_nr);
-                sb_ra[g*LAWS +: LAWS] <= rr[LNRBS +: LAWS];
+                sb_re_flat[g] <= d2_v && (kk < d2_nr);
+                sb_ra_flat[g*LAWS +: LAWS] <= rr[LNRBS +: LAWS];
             end
         end
         //: d3 .. d(7 + SX): VMT adds SX edges between the bank read registers and the coarse rotate (the tile seam)
@@ -1247,15 +1285,42 @@ module ot_qfd_sp_vector_memory_bv #(
         always @(posedge clk) begin
             dvv <= {dvv, d2_v}; dsv <= {dsv, d2_si}; dav <= {dav, d2_a0};
         end
-        wire          d3_v  = dvv[0];
-        wire          d5_v  = dvv[2 + SX], d6_v = dvv[3 + SX], d7_v = dvv[4 + SX];
-        wire [AW-1:0] d5_a0 = dav[(2 + SX)*AW +: AW], d6_a0 = dav[(3 + SX)*AW +: AW], d7_a0 = dav[(4 + SX)*AW +: AW];
-        wire          d7_si = dsv[4 + SX];
-        // E4: macro read; E5: capture beside the macros (g_flat) or in the bank-group tiles (g_tile)
-        assign su_re[gc*NRBS +: NRBS] = sb_re;
-        assign su_ra[gc*NRBS*LAWS +: NRBS*LAWS] = sb_ra;
-        assign su_v3[gc] = d3_v;
+        wire          d3_v_flat  = dvv[0];
+        wire          d5_v_flat  = dvv[2 + SX], d6_v_flat = dvv[3 + SX], d7_v_flat = dvv[4 + SX];
+        wire [AW-1:0] d5_a0_flat = dav[(2 + SX)*AW +: AW], d6_a0_flat = dav[(3 + SX)*AW +: AW], d7_a0_flat = dav[(4 + SX)*AW +: AW];
+        wire          d7_si_flat = dsv[4 + SX];
+            assign sb_re=sb_re_flat;
+            assign sb_ra=sb_ra_flat;
+            assign d2_bad=d2_bad_flat;
+            assign d3_v=d3_v_flat;
+            assign d5_v=d5_v_flat;
+            assign d6_v=d6_v_flat;
+            assign d7_v=d7_v_flat;
+            assign d7_si=d7_si_flat;
+            assign d5_a0=d5_a0_flat;
+            assign d6_a0=d6_a0_flat;
+            assign d7_a0=d7_a0_flat;
+        end
+        assign su_re[gc*NRBS+:NRBS]=sb_re;
+        assign su_ra[gc*NRBS*LAWS+:NRBS*LAWS]=sb_ra;
+        assign su_v3[gc]=d3_v;
         wire [NRBS*512-1:0] scap = su_cap[gc*NRBS*512 +: NRBS*512];
+        if (RETURN_LEAVES != 0) begin : g_return_leaves
+            for (genvar plane = 0; plane < 32; plane = plane + 1) begin : g_plane
+                wire [NRBS*16-1:0] pd;
+                wire [SW-1:0] pq;
+                for (genvar elem = 0; elem < NRBS*16; elem = elem + 1) begin : g_unpack
+                    assign pd[elem] = scap[elem*32 + plane];
+                end
+                ot_qfd_vm_su_return_plane #(.ELEMS(ELEMS), .AW(AW), .SW(SW), .NRBS(NRBS), .MUT(MUT)) u_plane (
+                    .ck((RETURN_CLOCKS != 0) ? return_ck[gc*32+plane] : clk),
+                    .v5(d5_v), .v6(d6_v), .v7(d7_v), .a5(d5_a0), .a6(d6_a0), .a7(d7_a0),
+                    .stride1(d7_si), .d(pd), .q(pq));
+                for (genvar lane = 0; lane < SW; lane = lane + 1) begin : g_pack
+                    assign s_q[(gc*SW+lane)*32+plane] = pq[lane];
+                end
+            end
+        end else begin : g_return_flat
         // E6: coarse rotate (by the window's first bank, rounded down to 8), E7: fine (by its low 3 bits)
         reg  [NPS*512-1:0] pos;
         reg  [NWR*512-1:0] win;
@@ -1272,6 +1337,7 @@ module ot_qfd_sp_vector_memory_bv #(
             for (i = 0; i < SW; i = i + 1)
                 q8[i*32 +: 32] <= ((d7_a0 + (d7_si ? i : 0)) < ELEMS) ? win[(off7 + (d7_si ? i : 0))*32 +: 32] : 32'd0;
         assign s_q[gc*SW*32 +: SW*32] = q8;
+        end
         // hazard: this copy reads (macro edge next) a row with a late write pending
         reg hz;
         always @(*) begin
@@ -1697,4 +1763,96 @@ module ot_qfd_vm_grp #(
         end
         always @(posedge clk) if (pop_k) xo[k*FSW +: FSW] <= rd;
     end endgenerate
+endmodule
+
+// Standard return leaf. The old E6/E7/E8 registers are moved, with zero added edges.
+// Existing first/last registers own data pins; physical opt-out must cite this RTL
+// and verify native launch/capture after CTS, rather than add hidden wrapper stages.
+module ot_qfd_vm_su_return_plane #(
+    parameter integer ELEMS=177808, AW=24, SW=64, NRBS=16, MUT=0
+)(
+    input wire ck, v5, v6, v7,
+    input wire [AW-1:0] a5, a6, a7,
+    input wire stride1,
+    input wire [NRBS*16-1:0] d,
+    output reg [SW-1:0] q
+);
+    localparam integer NWR=(SW+30)/16;
+    localparam integer NPS=(NWR+7<NRBS)?NWR+7:NRBS;
+    localparam integer LNRBS=$clog2(NRBS);
+    reg [NPS*16-1:0] pos;
+    reg [NWR*16-1:0] win;
+    wire [LNRBS-1:0] r5=a5[4+:LNRBS], r6=a6[4+:LNRBS];
+    wire [3:0] off7=a7[3:0]+((MUT==1)?4'd1:4'd0);
+    integer row,lane;
+    always @(posedge ck) begin
+        if(v5) for(row=0;row<NPS;row=row+1)
+            pos[row*16+:16] <= d[((row+(r5 & ~7))%NRBS)*16+:16];
+        if(v6) for(row=0;row<NWR;row=row+1)
+            win[row*16+:16] <= pos[(row+(r6 & 7))*16+:16];
+        if(v7) for(lane=0;lane<SW;lane=lane+1)
+            q[lane] <= ((a7+(stride1?lane:0))<ELEMS) ? win[off7+(stride1?lane:0)] : 1'b0;
+    end
+endmodule
+
+// Owns the original E1/E2/E3 descriptor/read controls and fixed-age valid/address pipeline.
+// Every functional input and output terminates in an existing register; no added edges.
+module ot_qfd_vm_su_read_control #(
+    parameter integer AW=24,SW=64,NRBS=16,LAWS=10,SX=8
+)(
+    input wire ck,rst_n,re0,re1,
+    input wire [AW-1:0] a0,a1,
+    output reg [NRBS-1:0] sb_re,
+    output reg [NRBS*LAWS-1:0] sb_ra,
+    output reg d2_bad,
+    output wire ov3,ov5,ov6,ov7,osi7,
+    output wire [AW-1:0] oa5,oa6,oa7
+);
+    localparam integer RW=AW-4,LNRBS=$clog2(NRBS);
+        // E1: descriptor registers; E2: broadcast registers (window rows, offset, stride)
+        reg           d1_v, d1_r1;
+        reg  [AW-1:0] d1_a0, d1_a1;
+        reg           d2_v, d2_si;
+        reg  [AW-1:0] d2_a0;
+        reg  [3:0]    d2_nr;
+
+        always @(posedge ck or negedge rst_n) begin
+            if (!rst_n) begin d1_v <= 1'b0; d2_v <= 1'b0; d2_bad <= 1'b0; end
+            else begin
+                d1_v <= re0; d2_v <= d1_v;
+                d2_bad <= d1_v && d1_r1 && (d1_a1 - d1_a0) > 1;
+            end
+        end
+        wire si1 = d1_r1 && (d1_a1 - d1_a0) == 1;
+        always @(posedge ck) begin
+            d1_r1 <= re1; d1_a0 <= a0; d1_a1 <= a1;
+            d2_a0 <= d1_a0; d2_si <= si1;
+            d2_nr <= si1 ? ((d1_a0[3:0] + SW - 1) >> 4) + 1 : 4'd1;
+        end
+        // E3: per-bank read registers (beside the macros)
+
+
+        wire [RW-1:0]        d2_r0 = d2_a0[AW-1:4];
+        for (genvar g = 0; g < NRBS; g = g + 1) begin : g_ra
+            wire [LNRBS-1:0] kk = g[LNRBS-1:0] - d2_r0[LNRBS-1:0];
+            wire [RW-1:0]    rr = d2_r0 + kk;
+            always @(posedge ck) begin
+                sb_re[g] <= d2_v && (kk < d2_nr);
+                sb_ra[g*LAWS +: LAWS] <= rr[LNRBS +: LAWS];
+            end
+        end
+        //: d3 .. d(7 + SX): VMT adds SX edges between the bank read registers and the coarse rotate (the tile seam)
+        localparam integer DN = 5 + SX;                     // stages d3 .. d(7 + SX)
+        reg  [DN-1:0]    dvv, dsv;
+        reg  [DN*AW-1:0] dav;
+        always @(posedge ck) begin
+            dvv <= {dvv, d2_v}; dsv <= {dsv, d2_si}; dav <= {dav, d2_a0};
+        end
+        wire          d3_v  = dvv[0];
+        wire          d5_v  = dvv[2 + SX], d6_v = dvv[3 + SX], d7_v = dvv[4 + SX];
+        wire [AW-1:0] d5_a0 = dav[(2 + SX)*AW +: AW], d6_a0 = dav[(3 + SX)*AW +: AW], d7_a0 = dav[(4 + SX)*AW +: AW];
+        wire          d7_si = dsv[4 + SX];
+
+    assign {ov3,ov5,ov6,ov7,osi7}={d3_v,d5_v,d6_v,d7_v,d7_si};
+    assign {oa5,oa6,oa7}={d5_a0,d6_a0,d7_a0};
 endmodule
