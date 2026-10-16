@@ -1,0 +1,53 @@
+{
+  "schema": "opentallas.hbm-source-binding-ledger.v1",
+  "updated": "2026-10-16T04:25:28.035944-07:00",
+  "critical_vm_default": {
+    "source_S": "a89a10d1fc2200a6f6d556dda2efc905cecbac77",
+    "source_contract_sha256": "77df74f1df6a2060723cee8bb5764f9dd20db62ba6b30b65ce1363bdb1e9d205",
+    "parent_params": {},
+    "actual_STRAP_BANKS_default": 0,
+    "actual_bank_path": "generic one-clock ot_vms_bank_static",
+    "native_qualification": false,
+    "nine_clock_component_scope": "STRAP_BANKS=1 opt-in only, not S default",
+    "fifteen_clock_candidate": "requires explicit new parent/source/params and120roots/quad=480die; generatedABI/binding/count/clocktree/cost required",
+    "source_path": "/home/ubuntu/wt/hnl-0030/rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static.sv",
+    "source_sha256": "0403a44dccd1b9da4b0e1a21784fc046f2904dbc28e2ad34f48e692de7686a5c"
+  },
+  "programme": {
+    "S_global_macros": 301,
+    "S_local_component_macros": 474,
+    "actual_RF36_image_global_macros": 302,
+    "actual_RF36_local_candidate_macros": 476,
+    "qualification": false,
+    "image_sha256": "ef51677866608d14c080d0aef73939220f5e18230a566a015d511c0f07daff2a",
+    "mapped_candidate_commit": "9c3a9a9f9",
+    "actual_image_functional_and_cost_proof": "RUNNING sourceownerunit2169100"
+  },
+  "quartet": {
+    "old_delivery_inject_data_qualification": "REVOKED",
+    "actual_old_delivery_writes": 0,
+    "reported600": "loop attempts, not writes",
+    "cause": "VL_URANDOM_SEEDED_II(1U) reseeded everylane everycycle; mod4=0 skipsdelivery",
+    "corrected_stimulus_commit": "dcfe79462",
+    "qualification": false
+  },
+  "HC": {
+    "candidate_source_root": "/tmp/hdie-hceng-binding-0425-v2",
+    "new_instances": 3,
+    "host_admission_bits": [
+      164,
+      165
+    ],
+    "status_targets": [
+      103,
+      105
+    ],
+    "status_faults": [
+      148,
+      151
+    ],
+    "functional_physical_cost_qualification": false,
+    "strict_binding": "pending collector27344"
+  },
+  "adoption": false
+}

@@ -32,8 +32,9 @@ area is 12,667.35186 um²; SRAM area is excluded from that number.
 The first source-shaped 7,116-row functional run failed its final test-harness
 aggregate: the expected count was still 282 instead of E+21=7,137. No per-row
 data or timing mismatch fired, but the run is not counted as a PASS. The failed
-log is preserved. The corrected positive-only run is active; its verdict must
-be collected separately. All three failing mutants are proved by the component
+log is preserved. The corrected positive-only run passed all 7,137 rows over three starts,
+including full-width words and exact +2 startup/II1/retirement checks. It used
+301 baseline and 474 candidate actual SRAM instances. All three failing mutants are proved by the component
 fixture, without a full-shape mutant claim. There is no
 routed/native qualification, real pin/clock allocation, programme home, compiler
 calendar release proof, full token cost or adoption. The large index-bank read
