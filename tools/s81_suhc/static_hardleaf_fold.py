@@ -10,7 +10,7 @@ import argparse,copy,collections,hashlib,json
 from pathlib import Path
 
 def integer(p,k,default=0):return int(p.get(k,format(default,'b')),2)
-def build(d):
+def build(d,scalar_owner_internals=False):
  old=d['modules']['dsfd_sp_su_static'];cells=old['cells'];source_clk=old['ports']['sk']['bits'][0]
  seq={n:c for n,c in cells.items() if c['type'] in ('$dff','$adff')}
  native={n:c for n,c in cells.items() if not c['type'].startswith('$')}
@@ -101,14 +101,16 @@ def build(d):
  modules['dsfd_sp_su_static_hardleaf_candidate']=top
  # Give the backend actual packed buses, avoiding millions of temporary scalar
  # declarations without changing a single cell/port/connection.
- for module in modules.values():
+ for module_name,module in modules.items():
   portbits={b for p in module['ports'].values() for b in p['bits'] if isinstance(b,int)}
   module['netnames']={n:dict(hide_name=0,bits=p['bits'],attributes={}) for n,p in module['ports'].items()}
   bits=sorted({b for c in module['cells'].values() for v in c['connections'].values() for b in v if isinstance(b,int)}-portbits)
-  if bits:module['netnames']['internal_bus']=dict(hide_name=0,bits=bits,attributes={})
+  if scalar_owner_internals and module_name!='dsfd_sp_su_static_hardleaf_candidate':
+   for bit in bits:module['netnames']['internal_'+str(bit)]=dict(hide_name=0,bits=[bit],attributes={})
+  elif bits:module['netnames']['internal_bus']=dict(hide_name=0,bits=bits,attributes={})
  report=dict(schema='opentallas.s81.static-hardleaf-fold.v1',qualified=False,owners=owners,clock_entries=len(clocks),owner_count=len(owners),original_native_cells=len(native),original_parent_state_bits=sum(o['state_bits'] for o in owners),parent_own_cells=0,parent_wires_only=True,comb_original_cells=len(comb),comb_owned_copies=sum(comb_uses.values()),comb_unconsumed_cells=len(set(comb)-set(comb_uses)),max_glue_owner_state_bits=max(o['state_bits'] for o in owners),added_logical_state_bits=0,added_normal_edges=0,scope='Source-derived elaboration graph and actual RTL reparenting. Arithmetic/native source modules remain real RTL at functional build. Exact proof/realviews/cuts/clock insertion/calendar/native integration required.',open=['RX exposes38actual roots; IK three and MOE six existing roots retained. Composite internal physical leaf/memory ownership remains source-bound integration work.','Native historical view reuse requires exact current port/parameter/body match; new norm_v/norm_y outputs differ from historical KVE wrappers.','Combinational cones copied into receiving owners change physical area/pins; measure native area and gate actual views.','Every actual owner boundary needs native per-pin audit; no extra boundary combinational owner is present when all outputs already come from native/state leaves.','Every clock root has source provenance; no timing insertion or physical clock delivery is inferred.'])
  return {'creator':'source-bound static SU native hardleaf fold','modules':modules},report
 
 def main():
- p=argparse.ArgumentParser();p.add_argument('--census',required=True);p.add_argument('--out',required=True);a=p.parse_args();raw=Path(a.census).read_bytes();d=json.loads(raw);out=Path(a.out);out.mkdir(parents=True,exist_ok=True);design,report=build(d);report['census_sha256']=hashlib.sha256(raw).hexdigest();(out/'hardleaf.json').write_text(json.dumps(design,separators=(',',':'))+'\n');(out/'manifest.json').write_text(json.dumps(report,indent=1)+'\n');print(json.dumps({k:v for k,v in report.items() if k!='owners'}))
+ p=argparse.ArgumentParser();p.add_argument('--census',required=True);p.add_argument('--out',required=True);p.add_argument('--scalar-owner-internals',action='store_true');a=p.parse_args();raw=Path(a.census).read_bytes();d=json.loads(raw);out=Path(a.out);out.mkdir(parents=True,exist_ok=True);design,report=build(d,a.scalar_owner_internals);report['census_sha256']=hashlib.sha256(raw).hexdigest();(out/'hardleaf.json').write_text(json.dumps(design,separators=(',',':'))+'\n');(out/'manifest.json').write_text(json.dumps(report,indent=1)+'\n');print(json.dumps({k:v for k,v in report.items() if k!='owners'}))
 if __name__=='__main__':main()
