@@ -2214,14 +2214,14 @@ def io_constraints_tcl(pin_regions: list[dict[str, str]], exhaustive: bool = Fal
             # CORNER AVOIDANCE (ROOT 2026-10-16, H-SM ot_hgi_sm_xload_cl2_ctl cl2d DRC 4): place_pin bypasses place_pins
             # -corner_avoidance, so a balanced full face put its first/last pin 0.04 um from the tile corner, where it
             # met the perpendicular face's corner pin (M5 spacing x4).  Balanced positions stay inside
-            # [d0 + C, d1 - C] of the edge, C = OT_PIN_CORNER_UM (default 1.0 um, 0 = off).
+            # [d0 + C, d1 - C] of the edge, C = OT_PIN_CORNER_UM (default 1.0 um, 0 = off).  Only a FULL-FACE region
+            # is clipped: an explicit range is the author's placement (b2_dma_mv_*_wface 0.2-0.82 um, qfd_xcst_* corner
+            # windows; 27 ranges on main sit inside 1 um of a corner) and stays as written.
             corner = float(os.environ.get("OT_PIN_CORNER_UM", "1.0"))
             if corner < 0:
                 raise ValueError("OT_PIN_CORNER_UM must be nonnegative")
-            e0, e1 = (dy0, dy1) if edge in ("left", "right") else (dx0, dx1)
-            lo, hi = max(lo, e0 + corner), min(hi, e1 - corner)
-            if hi <= lo:
-                raise ValueError(f"pin region {region['regex']} on {edge} lies inside the {corner:g} um corner margin")
+            if "range_um" not in region and hi - lo > 2 * corner:
+                lo, hi = lo + corner, hi - corner
             layers = balanced_h if edge in ("left", "right") else balanced_v
             location = (f"[list {dx1 if edge == 'right' else dx0:g} $ot_pos]"
                         if edge in ("left", "right") else
