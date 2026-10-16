@@ -263,9 +263,9 @@
  "job": {
   "owner": "Claude H-SM",
   "branch": "claude/hbm-sm-attention-1015",
-  "tag": "strap1",
+  "tag": "strap3",
   "purpose": "Strap-identity quadrant master (coordinator decision per DEDUPE, 2026-10-15): bank / slice identity is a registered strap input (bid[2:0] / sid[1:0] pins, tied to die constants per instance, captured by pin flops), so the 8 banks of the quadrant use this ONE view; replaces the 8 literal-identity masters. Same data calendars and edges as identity2. Pins: identity2 r2 grant (actual tracks, PG-clear, explicit centres) + 5 strap pins on free N-face tracks beside the clock pair (proposal for H-DIE).",
-  "structural_change": "Strap-identity quadrant master (coordinator decision per DEDUPE, 2026-10-15): bank / slice identity is a registered strap input (bid[2:0] / sid[1:0] pins, tied to die constants per instance, captured by pin flops), so the 8 banks of the quadrant use this ONE view; replaces the 8 literal-identity masters. Same data calendars and edges as identity2. Pins: identity2 r2 grant (actual tracks, PG-clear, explicit centres) + 5 strap pins on free N-face tracks beside the clock pair (proposal for H-DIE).",
+  "structural_change": "Strap-identity quadrant master (coordinator decision per DEDUPE, 2026-10-15): bank / slice identity is a registered strap input (bid[2:0] / sid[1:0] pins, tied to die constants per instance, captured by pin flops), so the 8 banks of the quadrant use this ONE view; replaces the 8 literal-identity masters. Same data calendars and edges as identity2. Pins: identity2 r2 grant (actual tracks, PG-clear, explicit centres) + 5 strap pins on free N-face tracks beside the clock pair (proposal for H-DIE). strap3: SECDED single-bit flip mask decoded on the D edge (q2 strap1 / q3 strap2 TT -71.17 at d_syn -> column match -> flip -> face wire -> pr_d/rr_d); R = one XOR; same edges.",
   "extra_paths": [
    "rtl/hbm_accel/generic/vm/static",
    "physical/hbm_vm_strap_1015/q2",

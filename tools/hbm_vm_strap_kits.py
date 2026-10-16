@@ -156,6 +156,13 @@ def make():
             s2 = json.loads((ROOT / "physical/ref_tile/vm_identity_q2_b0_ref/spec.json").read_text())
             s["macros"] = s2["macros"]; s["floorplan_note"] = s2.get("floorplan_note", "")
             s["job"]["tag"] = "strap2" if q in (0, 1, 3) else s["job"]["tag"]
+        # strap3 (q2 strap1 / q3 strap2 NEEDS_RTL TT -71.17, FF -4.52, DRC 0: d_syn -> 7-b SECDED column match -> flip ->
+        # ~430 ps of face wire -> pr_d / rr_d): the flip mask is decoded on the D edge, R keeps one XOR (same edges;
+        # 2,000,000-word old/new equivalence incl. single/double errors, 0 mismatches; strap bench + mutants PASS).
+        if q in (2, 3):
+            s["job"]["tag"] = "strap3"
+            s["job"]["structural_change"] = (purpose + " strap3: SECDED single-bit flip mask decoded on the D edge "
+                "(q2 strap1 / q3 strap2 TT -71.17 at d_syn -> column match -> flip -> face wire -> pr_d/rr_d); R = one XOR; same edges.")
         kd.mkdir(parents=True, exist_ok=True)
         (kd / "spec.json").write_text(json.dumps(s, indent=1) + "\n")
         print(json.dumps(RT.gen(str(kd / "spec.json"))))

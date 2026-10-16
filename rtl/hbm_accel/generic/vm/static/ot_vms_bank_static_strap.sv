@@ -330,7 +330,7 @@ module ot_vms_bank_static_strap #(
     // ------------------------------------------------------------------ M (macro edge) -> C (capture) -> D -> R
     reg mr_v; reg [3:0] mr_p; reg mr_mir; reg [7:0] mr_tag; reg mw_v; reg [3:0] mw_p; reg [7:0] mw_tag;
     reg c_v; reg [3:0] c_p; reg c_mir; reg [7:0] c_tag; reg [255:0] c_a, c_c; reg [111:0] c_b; reg cw_v; reg [3:0] cw_p; reg [7:0] cw_tag;
-    reg d_v; reg [3:0] d_p; reg [7:0] d_tag; reg [255:0] d_dat; reg [55:0] d_syn; reg dw_v; reg [3:0] dw_p; reg [7:0] dw_tag;
+    reg d_v; reg [3:0] d_p; reg [7:0] d_tag; reg [255:0] d_dat; reg [55:0] d_syn; reg [255:0] d_flip; reg dw_v; reg [3:0] dw_p; reg [7:0] dw_tag;
     always @(posedge clk or negedge rn)
         if (!rn) begin
             mr_v <= 1'b0; mw_v <= 1'b0; c_v <= 1'b0; cw_v <= 1'b0; d_v <= 1'b0; dw_v <= 1'b0;
@@ -352,7 +352,14 @@ module ot_vms_bank_static_strap #(
         d_p <= c_p; d_tag <= c_tag; dw_tag <= cw_tag;
         dat = c_mir ? c_c : c_a; ck = c_mir ? c_b[111:56] : c_b[55:0];
         d_dat <= dat;
-        for (integer k = 0; k < 8; k = k + 1) d_syn[k*7 +: 7] <= chk(dat[k*32 +: 32]) ^ ck[k*7 +: 7];
+        for (integer k = 0; k < 8; k = k + 1) begin : dk
+            reg [6:0] sk; sk = chk(dat[k*32 +: 32]) ^ ck[k*7 +: 7];
+            d_syn[k*7 +: 7] <= sk;
+            // strap3 (vm_strap_q2 strap1 TT -71.17: d_syn -> 7-b column match -> flip -> 2-face wire -> pr_d/rr_d):
+            // the single-bit flip mask is decoded on the D edge (COLS are weight-3, never 0, so s == 0 flips nothing);
+            // R keeps one XOR before the long face wires.  Same edges, bit-exact.
+            for (integer i = 0; i < 32; i = i + 1) d_flip[k*32 + i] <= (sk == COLS[i*7 +: 7]);
+        end
     end
     // R: correct, count, respond. Explicit balanced CE population tree keeps
     // the same response/count edge and avoids serial eight-word accumulation.
@@ -366,11 +373,11 @@ module ot_vms_bank_static_strap #(
     end
     assign nce={1'b0,ce_quad[0]}+{1'b0,(MUT==3?3'd0:ce_quad[1])};
     always @* begin
-        cor = d_dat; ce_word = 8'd0; nue = 1'b0;
+        cor = d_dat ^ d_flip; ce_word = 8'd0; nue = 1'b0;
         for (integer k = 0; k < 8; k = k + 1) begin : wk
             reg [6:0] s; reg hit; s = d_syn[k*7 +: 7]; hit = 1'b0;
             if (s != 7'd0) begin
-                for (integer i = 0; i < 32; i = i + 1) if (s == COLS[i*7 +: 7]) begin cor[k*32 + i] = ~cor[k*32 + i]; hit = 1'b1; end
+                hit = |d_flip[k*32 +: 32];
                 if (s == 7'd1 || s == 7'd2 || s == 7'd4 || s == 7'd8 || s == 7'd16 || s == 7'd32 || s == 7'd64) hit = 1'b1;
                 if (hit) ce_word[k] = 1'b1; else nue = 1'b1;
             end
