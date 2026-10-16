@@ -1,0 +1,118 @@
+{
+  "scope": "DIAGNOSTIC_LEAF_PIN_GRANT_ALL128_PEER_JOINS_OPEN",
+  "grant": "S-DIE message 2026-10-16: same280.8x69.12/Npins unchanged, xd pitch.096, explicit noncolliding xd2/xf2, hold/root/cycles preserved; all128 source-peer/reach/cut OPEN",
+  "source_commit": "66cca05ae7ef",
+  "new_outline": [
+    280.8,
+    69.12
+  ],
+  "north_pins_unchanged": 1170,
+  "total_pins": 2347,
+  "groups": {
+    "xd": {
+      "old": [
+        [
+          "M5",
+          98.604,
+          0.042
+        ],
+        [
+          "M5",
+          125.724,
+          0.042
+        ]
+      ],
+      "new": [
+        [
+          "M5",
+          98.604,
+          0.042
+        ],
+        [
+          "M5",
+          152.844,
+          0.042
+        ]
+      ]
+    },
+    "xd2": {
+      "old": [
+        [
+          "M5",
+          126.732,
+          0.042
+        ],
+        [
+          "M5",
+          178.284,
+          0.042
+        ]
+      ],
+      "new": [
+        [
+          "M5",
+          153.948,
+          0.042
+        ],
+        [
+          "M5",
+          205.5,
+          0.042
+        ]
+      ]
+    }
+  },
+  "clock_delta": {
+    "cr": {
+      "old": [
+        "M5",
+        94.38,
+        69.078
+      ],
+      "new": [
+        "M5",
+        94.38,
+        69.078
+      ]
+    },
+    "xf": {
+      "old": [
+        "M5",
+        98.508,
+        0.042
+      ],
+      "new": [
+        "M5",
+        98.508,
+        0.042
+      ]
+    },
+    "xf2": {
+      "old": [
+        "M5",
+        152.508,
+        0.042
+      ],
+      "new": [
+        "M5",
+        179.724,
+        0.042
+      ]
+    }
+  },
+  "old_pin_tcl_sha256": "df01cad3813ec781e653b12e7373de42ba4d0d5f8e6d42acd85fa4d851c1aaa8",
+  "new_pin_tcl_sha256": "b6059829e833f395049021558caae8c3564683f6538b3a4030edc9cff87383bd",
+  "required_hold_stages": "retained",
+  "cycle_delta": 0,
+  "area_delta_um2": 0,
+  "necessary_single_M5_face_cut": {
+    "old_xd": 1.0,
+    "new_xd": 0.5,
+    "new_xd2": 0.5
+  },
+  "visual_review": {
+    "path": "/home/ubuntu/artifacts/s81-netfill-0811/cfifo_g69_diagnostic/density.png",
+    "personally_viewed": true,
+    "stage": "3_place not final route"
+  }
+}
