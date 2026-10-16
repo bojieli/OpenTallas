@@ -1,0 +1,79 @@
+{
+ "schema": "opentallas.hbm.sm_column_pack.v1",
+ "agent": "Claude H-SM",
+ "date": "2026-10-15",
+ "plans": [
+  {
+   "width_um": 1036.8,
+   "sms": 1,
+   "leaves": "closed",
+   "half_um": [
+    328.32,
+    387.912
+   ],
+   "halves_per_row": 2,
+   "rows": 16,
+   "spine_um": 216.0,
+   "front_band_um": 713.6,
+   "height_um": 7287.4,
+   "area_per_sm_mm2": 7.556,
+   "sm32_mm2": 241.8,
+   "content_fill": 0.292,
+   "leaf_outline_fill": 0.412
+  },
+  {
+   "width_um": 1036.8,
+   "sms": 1,
+   "leaves": "d62",
+   "half_um": [
+    328.32,
+    362.904
+   ],
+   "halves_per_row": 2,
+   "rows": 16,
+   "spine_um": 216.0,
+   "front_band_um": 713.6,
+   "height_um": 6887.3,
+   "area_per_sm_mm2": 7.141,
+   "sm32_mm2": 228.5,
+   "content_fill": 0.309,
+   "leaf_outline_fill": 0.402
+  },
+  {
+   "width_um": 2073.6,
+   "sms": 2,
+   "leaves": "closed",
+   "half_um": [
+    328.32,
+    387.912
+   ],
+   "halves_per_row": 5,
+   "rows": 13,
+   "spine_um": 216.0,
+   "front_band_um": 713.6,
+   "height_um": 6058.9,
+   "area_per_sm_mm2": 6.282,
+   "sm32_mm2": 201.0,
+   "content_fill": 0.352,
+   "leaf_outline_fill": 0.495
+  },
+  {
+   "width_um": 2073.6,
+   "sms": 2,
+   "leaves": "d62",
+   "half_um": [
+    328.32,
+    362.904
+   ],
+   "halves_per_row": 5,
+   "rows": 13,
+   "spine_um": 216.0,
+   "front_band_um": 713.6,
+   "height_um": 5733.8,
+   "area_per_sm_mm2": 5.945,
+   "sm32_mm2": 190.2,
+   "content_fill": 0.372,
+   "leaf_outline_fill": 0.483
+  }
+ ]
+}
