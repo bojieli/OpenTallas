@@ -1,0 +1,15 @@
+{
+ "schema":"opentallas.s81.hc-programme-source-sizing.v1",
+ "candidate_only":true,
+ "memory":{"master":"ot_rom_4096x72_m8","instances":1,"words_per_command":11,"commands":128,"used_rows":1408,"bits_per_command":768,"spare_bits_per_command":24},
+ "boundary_bits":{"source_command":85,"serial_command_and_metadata":853,"metadata":128,"POST_ages":640},
+ "state_upper_bits":{"source_bundle":792,"source_command":84,"destination_bundle":852,"counters_and_control":40,"total_logic_state_upper":1768},
+ "source_delivery_stream_edges":16,
+ "source_lease_stream_edges":4,
+ "serial_delivery_edges_at_phase0_launch":14,
+ "minimum_command_spacing_stream_edges":24,
+ "clocks":{"stream_period_ps":833.3333333333334,"serial_period_ps":1111.111111111111,"source_launch_phase_mod4":0,"serial_capture_phase_mod3":2,"reset_epoch":"first active source/serial edges coincide; actual physical clock proof OPEN"},
+ "requested_die_grant":"one real4096x72 ROM + source leaf + serial capture leaf; actual pin faces/outline/map and all incident reach required",
+ "physical_qualified":false,"native_qualified":false,"rate_change_adopted":false,
+ "remaining":["actual six-kind arithmetic/VM/POST traces and source-bound compiler profiles","actual controller c2 integration and HC dynamic POST-age input","native completion fixed serial-to-stream bridge","mapped area and real outline/pin grant","actual compensated clock timing and full target workload"]
+}
