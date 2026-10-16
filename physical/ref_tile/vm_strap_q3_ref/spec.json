@@ -14,6 +14,10 @@
  ],
  "pins": {
   "N": [
+   "clk",
+   "rst_n",
+   "bid",
+   "sid",
    "rslot_v",
    "rslot",
    "wslot_v",
@@ -24,11 +28,7 @@
    "kq_done",
    "status",
    "wq2",
-   "kq",
-   "clk",
-   "rst_n",
-   "bid",
-   "sid"
+   "kq"
   ],
   "S": [
    "rq3",
@@ -61,188 +61,188 @@
   ]
  },
  "pin_ranges": {
-  "rq0": [
-   2.124,
-   7.452
-  ],
-  "rr0": [
-   7.644,
-   91.26
-  ],
-  "rq4": [
-   91.5,
-   96.78
-  ],
-  "rr4": [
-   97.02,
-   180.636
-  ],
-  "wq0": [
-   180.876,
-   272.268
-  ],
-  "wq_done0": [
-   272.508,
-   272.604
-  ],
-  "xq": [
-   272.844,
-   362.604
-  ],
-  "xq_done": [
-   362.844,
-   362.94
-  ],
-  "rq1": [
-   2.076,
-   6.348
-  ],
-  "rr1": [
-   6.54,
-   73.452
-  ],
-  "rq5": [
-   73.596,
-   77.916
-  ],
-  "rr5": [
-   78.06,
-   144.972
-  ],
-  "wq1": [
-   145.164,
-   218.364
-  ],
-  "wq_done1": [
-   218.508,
-   218.604
-  ],
-  "xq2": [
-   218.796,
-   290.652
-  ],
-  "xq2_done": [
-   290.844,
-   290.94
-  ],
-  "eg": [
-   291.084,
-   362.988
-  ],
-  "rq3": [
-   2.124,
-   7.356
-  ],
-  "rr3": [
-   7.548,
-   89.436
-  ],
-  "dq": [
-   89.628,
-   178.572
-  ],
-  "dq_done": [
-   178.764,
-   178.86
-  ],
-  "pq": [
-   179.052,
-   269.58
-  ],
-  "pr": [
-   269.772,
-   354.3
-  ],
-  "rslot_v": [
-   2.22,
-   2.316
-  ],
-  "rslot": [
-   3.18,
-   4.332
-  ],
-  "wslot_v": [
-   4.764,
-   4.86
-  ],
-  "wslot": [
-   5.292,
-   6.492
-  ],
-  "rq2": [
-   6.924,
-   16.332
-  ],
-  "rr2": [
-   16.764,
-   164.076
-  ],
-  "wq_done2": [
-   164.94,
-   165.036
-  ],
-  "kq_done": [
-   165.468,
-   165.564
-  ],
-  "status": [
-   165.996,
-   175.98
-  ],
-  "wq2": [
-   180.444,
-   267.516
-  ],
-  "kq": [
-   267.66,
-   354.348
-  ],
   "clk": [
-   178.14,
-   178.236
+   134.94,
+   135.036
   ],
   "rst_n": [
-   178.332,
-   178.428
+   135.132,
+   135.228
   ],
   "bid": [
-   178.428,
-   178.716
+   135.228,
+   135.516
   ],
   "sid": [
-   178.716,
-   178.908
+   135.516,
+   135.708
+  ],
+  "rslot_v": [
+   2.172,
+   2.268
+  ],
+  "rslot": [
+   2.556,
+   3.612
+  ],
+  "wslot_v": [
+   3.9,
+   3.996
+  ],
+  "wslot": [
+   4.284,
+   5.34
+  ],
+  "rq2": [
+   5.628,
+   12.828
+  ],
+  "rr2": [
+   13.116,
+   125.724
+  ],
+  "wq_done2": [
+   126.204,
+   126.3
+  ],
+  "kq_done": [
+   126.588,
+   126.684
+  ],
+  "status": [
+   126.972,
+   134.556
+  ],
+  "wq2": [
+   135.948,
+   201.708
+  ],
+  "kq": [
+   201.996,
+   267.756
+  ],
+  "rq3": [
+   2.172,
+   6.108
+  ],
+  "rr3": [
+   6.204,
+   67.74
+  ],
+  "dq": [
+   68.028,
+   135.324
+  ],
+  "dq_done": [
+   135.42,
+   135.516
+  ],
+  "pq": [
+   135.612,
+   203.868
+  ],
+  "pr": [
+   204.156,
+   267.804
+  ],
+  "rq0": [
+   2.172,
+   6.108
+  ],
+  "rr0": [
+   6.204,
+   67.74
+  ],
+  "rq4": [
+   68.028,
+   71.964
+  ],
+  "rr4": [
+   72.06,
+   133.596
+  ],
+  "wq0": [
+   133.692,
+   200.988
+  ],
+  "wq_done0": [
+   201.276,
+   201.372
+  ],
+  "xq": [
+   201.468,
+   267.612
+  ],
+  "xq_done": [
+   267.708,
+   267.804
+  ],
+  "rq1": [
+   2.172,
+   5.292
+  ],
+  "rr1": [
+   5.484,
+   54.684
+  ],
+  "rq5": [
+   54.876,
+   57.996
+  ],
+  "rr5": [
+   58.044,
+   107.388
+  ],
+  "wq1": [
+   107.436,
+   161.388
+  ],
+  "wq_done1": [
+   161.436,
+   161.532
+  ],
+  "xq2": [
+   161.58,
+   214.524
+  ],
+  "xq2_done": [
+   214.716,
+   214.812
+  ],
+  "eg": [
+   214.86,
+   267.804
   ]
  },
  "outline": {
-  "w": 356.4,
-  "h": 365.04,
+  "w": 270.0,
+  "h": 270.0,
   "exact": true
  },
- "layer_cap": "M5",
+ "layer_cap": "M6",
  "recipe": 2,
  "macros": [
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
    "at": [
-    90.72,
-    76.752
+    47.52,
+    29.232
    ],
    "at_exact": true
   },
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
    "at": [
-    90.72,
-    147.264
+    47.52,
+    99.744
    ],
    "at_exact": true
   },
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
    "at": [
-    90.72,
-    217.776
+    47.52,
+    170.256
    ],
    "at_exact": true
   }
@@ -263,13 +263,13 @@
  "job": {
   "owner": "Claude H-SM",
   "branch": "claude/hbm-sm-attention-1015",
-  "tag": "strap3",
+  "tag": "strap4",
   "purpose": "Strap-identity quadrant master (coordinator decision per DEDUPE, 2026-10-15): bank / slice identity is a registered strap input (bid[2:0] / sid[1:0] pins, tied to die constants per instance, captured by pin flops), so the 8 banks of the quadrant use this ONE view; replaces the 8 literal-identity masters. Same data calendars and edges as identity2. Pins: identity2 r2 grant (actual tracks, PG-clear, explicit centres) + 5 strap pins on free N-face tracks beside the clock pair (proposal for H-DIE).",
-  "structural_change": "Strap-identity quadrant master (coordinator decision per DEDUPE, 2026-10-15): bank / slice identity is a registered strap input (bid[2:0] / sid[1:0] pins, tied to die constants per instance, captured by pin flops), so the 8 banks of the quadrant use this ONE view; replaces the 8 literal-identity masters. Same data calendars and edges as identity2. Pins: identity2 r2 grant (actual tracks, PG-clear, explicit centres) + 5 strap pins on free N-face tracks beside the clock pair (proposal for H-DIE). strap3: SECDED single-bit flip mask decoded on the D edge (q2 strap1 / q3 strap2 TT -71.17 at d_syn -> column match -> flip -> face wire -> pr_d/rr_d); R = one XOR; same edges.",
+  "structural_change": "Strap-identity quadrant master (coordinator decision per DEDUPE, 2026-10-15): bank / slice identity is a registered strap input (bid[2:0] / sid[1:0] pins, tied to die constants per instance, captured by pin flops), so the 8 banks of the quadrant use this ONE view; replaces the 8 literal-identity masters. Same data calendars and edges as identity2. Pins: identity2 r2 grant (actual tracks, PG-clear, explicit centres) + 5 strap pins on free N-face tracks beside the clock pair (proposal for H-DIE). strap4: H-DIE v4 270 x 270 slot (pin-perimeter bound; PG M6, pins M4 W/E, M5 N/S at 0.192/0.144 um), 3-array stack re-centred; SECDED flip mask on the D edge (strap3); write-leaf valids replicated at the pins per 32-b slice (q0 strap2 TT -149.91: dq_v -> 300 ps buffer tree -> write OR tree -> s1w_d). Same edges.",
   "extra_paths": [
    "rtl/hbm_accel/generic/vm/static",
    "physical/hbm_vm_strap_1015/q3",
-   "results/arch/hbm_die_v15/vm_strap_grants_1015.json",
+   "results/arch/hbm_die_v15/vm_strap_grants_2210.json",
    "physical/common_flow/assigned_pin_exact.tcl"
   ],
   "record_to": "results/rtl/ref_tile/vm_strap_q3_ref",
@@ -309,7 +309,7 @@
  },
  "clock": "spine",
  "contract": {
-  "file": "results/arch/hbm_die_v15/vm_strap_grants_1015.json",
+  "file": "results/arch/hbm_die_v15/vm_strap_grants_2210.json",
   "slot": "vmb_NE_strap_master"
  },
  "io_tcl": "physical/hbm_vm_strap_1015/q3/io.tcl",
@@ -320,5 +320,7 @@
   "enable": false,
   "reason": "COORDINATOR DECISION 2026-10-15 (keep the opt-out): this tile already satisfies OWNER RULE 19:50 (every input and every output registered at its pin) in RTL; a recipe-3 register would be a SECOND stage and add +2 VM edges (request +1, response +1) with no timing benefit. Evidence, rtl/hbm_accel/generic/vm/static/ot_vms_bank_static_strap.sv (the wrapper physical/hfd_vms_bank_strap_q*.sv is wiring only): INPUTS -- L118 bid/sid strap registers; L127 payload pin flops rq_d/wq_d/dq_d/kq_d/xq_d/x2_d/pq_d <= rq/wq/dq/kq/xq/xq2/pq; L128-133 valid pin flops rq_v/wq_v/dq_v/kq_v/xq_v/x2_v/pq_v; L183-186 slot pin flops rslot_d/wslot_d/rslot_v_d/wslot_v_d; rst_n only into the 3-flop reset relay (L107-112). OUTPUTS -- L135-141 rr = {rr_v, rr_d}, eg = {eg_v, eg_d}, pr = {pr_v, pr_d} are registers (rr_d L415, pr_d L416, eg_d L282, rr_v/pr_v/status L400-409); wq_done/dq_done/kq_done/xq_done/xq2_done are output reg (L44-52, set L337-343); status output reg (L56, L409). Recipe-2 keep_pin_regs + io_flop_at_pins anchor these flops at their pins; synthesized output-flop census: physical/audit_bank_output_flops.py."
  },
- "floorplan_note": "q2 identity2 --cts gate failed GPL-0305 (NaN) twice with the generated 3-macro column (20 um macro-macro channels, 5.4 um halos -> 9.5 um cell rows between arrays; overflow stuck at 0.115 for 12k iterations). Structural: the three arrays (pins only on W/E faces) form one abutted N-S stack (pitch = array height + 0.024 um) centred in the core, so no narrow inter-array channel exists; two ~70 um N/S channels carry the cross traffic."
+ "floorplan_note": "q2 identity2 --cts gate failed GPL-0305 (NaN) twice with the generated 3-macro column (20 um macro-macro channels, 5.4 um halos -> 9.5 um cell rows between arrays; overflow stuck at 0.115 for 12k iterations). Structural: the three arrays (pins only on W/E faces) form one abutted N-S stack (pitch = array height + 0.024 um) centred in the core, so no narrow inter-array channel exists; two ~70 um N/S channels carry the cross traffic.",
+ "pg_layer": "M6",
+ "layer_cap_grant": "H-DIE 2210 v4: VM bank strap masters are pin-perimeter bound (270 x 270, ~1,260 b per face): PG moves to M6 so M5 pins need no stripe clearance; parent strap M7 (H-DIE 2210, H-SM proposal)"
 }

@@ -15,7 +15,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "tools/ref_tile"))
 import ref_tile as RT
 
-GRANT = "results/arch/hbm_die_v15/vm_strap_grants_1015.json"
+GRANT = "results/arch/hbm_die_v15/vm_strap_grants_2210.json"   # strap4: H-DIE v4 270 x 270, layer_cap M6 (PG M6), pins M4 W/E / M5 N/S
 
 AUDIT = r'''
 set vb [ord::get_db_block]
@@ -163,6 +163,16 @@ def make():
             s["job"]["tag"] = "strap3"
             s["job"]["structural_change"] = (purpose + " strap3: SECDED single-bit flip mask decoded on the D edge "
                 "(q2 strap1 / q3 strap2 TT -71.17 at d_syn -> column match -> flip -> face wire -> pr_d/rr_d); R = one XOR; same edges.")
+        # strap4 (v4 grant, 270 x 270): cap M6 / PG M6 per the die-lead layer_cap_grant; the abutted 3-array stack
+        # re-centred (x -43.2, y -47.52); write-leaf valids replicated per 32-b slice at the pins (q0 strap2 -149.91).
+        s["layer_cap"] = slot["layer_cap"]; s["pg_layer"] = slot["pg_layer"]
+        s["layer_cap_grant"] = f"H-DIE 2210 v{grant.get('version')}: {slot['layer_cap_grant']['reason']}"
+        for m in s["macros"]:
+            m["at"] = [round(m["at"][0] - 43.2, 3), round(m["at"][1] - 47.52, 3)]
+        s["job"]["tag"] = "strap4"
+        s["job"]["structural_change"] = (purpose + " strap4: H-DIE v4 270 x 270 slot (pin-perimeter bound; PG M6, pins M4 W/E, M5 N/S "
+            "at 0.192/0.144 um), 3-array stack re-centred; SECDED flip mask on the D edge (strap3); write-leaf valids replicated "
+            "at the pins per 32-b slice (q0 strap2 TT -149.91: dq_v -> 300 ps buffer tree -> write OR tree -> s1w_d). Same edges.")
         kd.mkdir(parents=True, exist_ok=True)
         (kd / "spec.json").write_text(json.dumps(s, indent=1) + "\n")
         print(json.dumps(RT.gen(str(kd / "spec.json"))))

@@ -132,6 +132,18 @@ module ot_vms_bank_static_strap #(
             for (integer g = 0; g < WG; g = g + 1) wq_v[g] <= wq[g*281 + 280];
             dq_v <= dq[280]; kq_v <= kq[280]; xq_v <= xq[275]; x2_v <= xq2[275]; pq_v <= pq[284];
         end
+    // strap4 (q0 strap2 TT -149.91: dq_v pin flop -> ~300 ps buffer tree over 276 AND gates -> write OR tree -> s1w_d):
+    // every write-leaf valid is ALSO captured by LVR replica flops at its pin (one per 32-bit payload slice), each
+    // masking only its slice.  Same edge and value as the pin valid (reset 0 like it); kept so synthesis cannot merge them.
+    localparam integer LVR = 9;                        // ceil(276 / 32)
+    (* keep = "true" *) reg [WG+5:0] lv_rep [0:LVR-1]; // [WG-1:0] wq, WG kq, WG+1 xq, WG+2 pq_v, WG+3 x2, WG+4 dq, WG+5 pq[283]
+    always @(posedge clk or negedge rn)
+        if (!rn) begin for (integer k = 0; k < LVR; k = k + 1) lv_rep[k] <= '0; end
+        else for (integer k = 0; k < LVR; k = k + 1) begin
+            for (integer g = 0; g < WG; g = g + 1) lv_rep[k][g] <= wq[g*281 + 280];
+            lv_rep[k][WG] <= kq[280]; lv_rep[k][WG+1] <= xq[275]; lv_rep[k][WG+2] <= pq[284];
+            lv_rep[k][WG+3] <= xq2[275]; lv_rep[k][WG+4] <= dq[280]; lv_rep[k][WG+5] <= pq[283];
+        end
     // output registers: control valid + payload
     reg eg_v; reg [274:0] eg_d; reg [RG-1:0] rr_v; reg [RG*256-1:0] rr_d; reg pr_v; reg [264:0] pr_d;
     assign eg = {eg_v, eg_d}; assign pr = {pr_v, pr_d};
@@ -174,7 +186,13 @@ module ot_vms_bank_static_strap #(
         end else begin : g_padding
             assign source_payload=276'd0;
         end
-        if (wl<WG+5) assign write_tree[WLEAVES+wl]=source_payload & {276{w_leaf_v[wl]}};
+        if (wl<WG+5) begin : g_mask
+            for (genvar ws = 0; ws < LVR; ws = ws + 1) begin : g_slice
+                localparam integer LO = ws * 32, HI = (ws * 32 + 31 > 275) ? 275 : ws * 32 + 31;
+                wire sv = (wl == WG+2) ? (lv_rep[ws][WG+2] && lv_rep[ws][WG+5]) : lv_rep[ws][wl];
+                assign write_tree[WLEAVES+wl][HI:LO] = source_payload[HI:LO] & {(HI-LO+1){sv}};
+            end
+        end
         else assign write_tree[WLEAVES+wl]=276'd0;
     end
     for (genvar wn=1;wn<WLEAVES;wn=wn+1) begin : g_write_or
