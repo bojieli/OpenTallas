@@ -459,7 +459,7 @@ def validate_literal_pin_plan(s: dict, ports=None, root=None) -> dict:
     canonical = root / ASSIGNED_PIN_EXACT_TCL
     if not canonical.is_file():
         raise SpecError("literal pin canonical placement helper is missing from the source archive")
-    prefix = canonical.read_text().rstrip() + "\n"
+    prefix = canonical.read_text()
     text = (root/rel).read_text()
     if not text.startswith(prefix):
         raise SpecError("literal pin IO Tcl must inline the byte-exact canonical placement helper")
