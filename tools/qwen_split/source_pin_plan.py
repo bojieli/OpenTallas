@@ -186,11 +186,21 @@ def apply_slabs(M):
                 s = old.get(p)
                 f = s[2] if s and s[0] in ('face', 'pins') else 'W'
             faces[f].append((p, n))
+        spread = os.environ.get('OT_SPLIT_BW_SPREAD', '0') == '1'
         for f, groups in faces.items():
             L = q.w if f in 'NS' else q.h
             need = sum(n * .096 + 1.0 for _, n in groups)
             if need > L - 8:
                 raise ValueError(f'{q.name}.{f}: {need:.1f}um pins exceed {L-8:.1f}um face')
+            if spread and f in 'WE' and groups and all(p.startswith('bw') for p, _ in groups):
+                # Q-COMPUTE-DIE r2h: a face carrying only the tile-tree words (8 x 514 b) spreads them evenly over
+                # the face (router: the 401-um packed block was the 0.665 cut window beside the W tile column)
+                gap = (L - 240.0 - need) / max(1, len(groups) - 1)
+                cursor = 120.0
+                for p, n in groups:
+                    q.face(p, n, f, 'M4', snap(cursor + n * .096 / 2), 2)
+                    cursor += n * .096 + 1. + gap
+                continue
             cursor = (L - need) / 2
             for p, n in groups:
                 q.face(p, n, f, 'M5' if f in 'NS' else 'M4', snap(cursor + n * .096 / 2), 2)

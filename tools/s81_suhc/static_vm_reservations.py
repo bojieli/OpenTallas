@@ -17,6 +17,7 @@ from pathlib import Path
 import sys
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import vm_service_profile as VSP  # noqa: E402
+import vm_slice_affinity as VSA  # noqa: E402
 
 
 def bank_of(row: int, contract: dict) -> int:
@@ -84,6 +85,14 @@ def check(schedule: dict, contract: dict, source_root: Path | None = None) -> di
     # opt-in exact service profile (selected native VM 4/2/W1 etc.): absent = legacy minima behaviour unchanged
     profile, profile_bad = VSP.resolve(contract, source_root)
     invalid += profile_bad
+    # opt-in client-affine banking (vm_slice_affinity): absent = historical striped rows, one bank per logical row
+    affinity = contract.get('slice_affinity')
+    regions = []
+    if affinity is not None:
+        if contract.get('bank_mapping') != 'xor_row7_5_shift2' or contract.get('banks') != 32:
+            invalid.append('slice_affinity_requires_xor_32_banks')
+        regions, affinity_bad = VSA.validate(affinity)
+        invalid += affinity_bad
     if invalid:
         return dict(status='fail', violations=[dict(kind='invalid_contract', fields=invalid)], qualified=False, events=0)
     def when(cycle, domain):
@@ -140,8 +149,19 @@ def check(schedule: dict, contract: dict, source_root: Path | None = None) -> di
             if type(raw_cycle) is int and raw_cycle >= 0 and service != when(raw_cycle, 'stream'):
                 error('profile_service_raw_edge_mismatch', event=eid,
                       service_cycle=event['service_cycle'], raw_cycle=raw_cycle)
-        bank = bank_of(event['row'], contract)
-        bank_use[(event['service_cycle'], bank)].append(eid)
+        if affinity is None:
+            banks_hit = [bank_of(event['row'], contract)]
+        else:
+            region = VSA.region_of(event['row'], regions)
+            if region is None:
+                error('affinity_row_unmapped', event=eid, row=event['row']); continue
+            wired = (affinity['client_reach'].get(event['client']) or {}).get(kind)
+            if wired is None or not set(region['slices']) <= set(wired):
+                error('affinity_unwired_access', event=eid, client=event['client'], operation=kind,
+                      region=region['name'], slices=region['slices'], wired=wired)
+            banks_hit = [(sl, bk) for sl, _, bk in VSA.chunks(event['row'], region)]
+        for bank in banks_hit:
+            bank_use[(event['service_cycle'], bank)].append(eid)
         if 'bank_enqueue_cycle' not in event:
             error('missing_bank_enqueue', event=eid)
         elif type(event['bank_enqueue_cycle']) is not int or event['bank_enqueue_cycle'] < 0:
@@ -151,7 +171,8 @@ def check(schedule: dict, contract: dict, source_root: Path | None = None) -> di
             if enqueue < ingress or enqueue > service:
                 error('bank_enqueue_outside_path', event=eid)
             elif enqueue < service:
-                bank_queues[bank].append((enqueue, service, eid))
+                for bank in banks_hit:
+                    bank_queues[bank].append((enqueue, service, eid))
         if ingress_caps is None:
             ingress_use[(event['ingress_cycle'], kind)].append(eid)
         else:
@@ -297,7 +318,8 @@ def check(schedule: dict, contract: dict, source_root: Path | None = None) -> di
     contradictory = any(x['kind'] not in gaps for x in errors)
     status = 'fail' if contradictory else 'pass' if not errors and measured and coverage else 'incomplete'
     return dict(status=status, qualified=False, events=len(schedule.get('events', [])), violations=errors,
-                slot_peaks=peaks, bank_queue_peaks=bank_peaks, vm_service_profile=(contract.get('vm_service_profile') or {}).get('name'), bank_mapping=contract.get('bank_mapping', 'rowmod'), measured_native_bounds=measured, trace_complete=coverage,
+                slot_peaks=peaks, bank_queue_peaks=bank_peaks if affinity is None else {f'slice{k[0]}/bank{k[1]}': v for k, v in bank_peaks.items()},
+                slice_affinity=None if affinity is None else dict(regions=len(regions)), vm_service_profile=(contract.get('vm_service_profile') or {}).get('name'), bank_mapping=contract.get('bank_mapping', 'rowmod'), measured_native_bounds=measured, trace_complete=coverage,
                 note='Static reservation check only; native RTL, die timing and performance gates remain required.')
 
 
