@@ -185,12 +185,14 @@ module ot_qfd_sp_vector_memory_bv #(
     // `end` beats.  PMUT (bench negative control): 1 = lane 1 takes lane 2's data.
     parameter integer PAR_RB = 0,
     parameter integer PMUT = 0,
+    parameter integer READ_CONTROL_LEAVES = 0,
     parameter integer RETURN_LEAVES = 0, // opt-in: existing E6/E7/E8 registers in 32 standard bit-plane leaves per copy
     parameter integer RETURN_CLOCKS = 0, // 1: independent return_ck pin per leaf; 0: component equivalence on clk
     parameter integer NATIVE_BANKS = 0   // Q-VMWB 2026-10-15: native storage successors in every region (ot_qfd_vm_region_nx)
 ) (
     input  wire                    clk,
     input wire [NSU*32-1:0] return_ck,
+    input wire [NSU-1:0] read_control_ck,
 `ifdef OT_QFD_VM_NOX
     input  wire [(NRB/8)*56-1:0]    leaf_ck,
     input wire [NRB-1:0] observer_ck,
@@ -1211,18 +1213,30 @@ module ot_qfd_sp_vector_memory_bv #(
     // ---- SU operand copies ----
     wire [NSU-1:0] su_hz;
     generate for (gc = 0; gc < NSU; gc = gc + 1) begin : g_cp
+        wire [NRBS-1:0] sb_re;
+        wire [NRBS*LAWS-1:0] sb_ra;
+        wire d2_bad,d3_v,d5_v,d6_v,d7_v,d7_si;
+        wire [AW-1:0] d5_a0,d6_a0,d7_a0;
+        if (READ_CONTROL_LEAVES != 0) begin : g_read_control_leaf
+            ot_qfd_vm_su_read_control #(.AW(AW),.SW(SW),.NRBS(NRBS),.LAWS(LAWS),.SX(SX)) u_control (
+                .ck((RETURN_CLOCKS != 0) ? read_control_ck[gc] : clk),.rst_n(rst_n),
+                .re0(s_re0[gc]),.re1(s_re1[gc]),.a0(s_a0[gc*AW+:AW]),.a1(s_a1[gc*AW+:AW]),
+                .sb_re(sb_re),.sb_ra(sb_ra),.d2_bad(d2_bad),
+                .ov3(d3_v),.ov5(d5_v),.ov6(d6_v),.ov7(d7_v),.osi7(d7_si),
+                .oa5(d5_a0),.oa6(d6_a0),.oa7(d7_a0));
+        end else begin : g_read_control_flat
         // E1: descriptor registers; E2: broadcast registers (window rows, offset, stride)
         reg           d1_v, d1_r1;
         reg  [AW-1:0] d1_a0, d1_a1;
         reg           d2_v, d2_si;
         reg  [AW-1:0] d2_a0;
         reg  [3:0]    d2_nr;
-        reg           d2_bad;
+        reg           d2_bad_flat;
         always @(posedge clk or negedge rst_n) begin
-            if (!rst_n) begin d1_v <= 1'b0; d2_v <= 1'b0; d2_bad <= 1'b0; end
+            if (!rst_n) begin d1_v <= 1'b0; d2_v <= 1'b0; d2_bad_flat <= 1'b0; end
             else begin
                 d1_v <= s_re0[gc]; d2_v <= d1_v;
-                d2_bad <= d1_v && d1_r1 && (d1_a1 - d1_a0) > 1;
+                d2_bad_flat <= d1_v && d1_r1 && (d1_a1 - d1_a0) > 1;
             end
         end
         wire si1 = d1_r1 && (d1_a1 - d1_a0) == 1;
@@ -1232,15 +1246,15 @@ module ot_qfd_sp_vector_memory_bv #(
             d2_nr <= si1 ? ((d1_a0[3:0] + SW - 1) >> 4) + 1 : 4'd1;
         end
         // E3: per-bank read registers (beside the macros)
-        reg  [NRBS-1:0]      sb_re;
-        reg  [NRBS*LAWS-1:0] sb_ra;
+        reg  [NRBS-1:0]      sb_re_flat;
+        reg  [NRBS*LAWS-1:0] sb_ra_flat;
         wire [RW-1:0]        d2_r0 = d2_a0[AW-1:4];
         for (g = 0; g < NRBS; g = g + 1) begin : g_ra
             wire [LNRBS-1:0] kk = g[LNRBS-1:0] - d2_r0[LNRBS-1:0];
             wire [RW-1:0]    rr = d2_r0 + kk;
             always @(posedge clk) begin
-                sb_re[g] <= d2_v && (kk < d2_nr);
-                sb_ra[g*LAWS +: LAWS] <= rr[LNRBS +: LAWS];
+                sb_re_flat[g] <= d2_v && (kk < d2_nr);
+                sb_ra_flat[g*LAWS +: LAWS] <= rr[LNRBS +: LAWS];
             end
         end
         //: d3 .. d(7 + SX): VMT adds SX edges between the bank read registers and the coarse rotate (the tile seam)
@@ -1250,14 +1264,25 @@ module ot_qfd_sp_vector_memory_bv #(
         always @(posedge clk) begin
             dvv <= {dvv, d2_v}; dsv <= {dsv, d2_si}; dav <= {dav, d2_a0};
         end
-        wire          d3_v  = dvv[0];
-        wire          d5_v  = dvv[2 + SX], d6_v = dvv[3 + SX], d7_v = dvv[4 + SX];
-        wire [AW-1:0] d5_a0 = dav[(2 + SX)*AW +: AW], d6_a0 = dav[(3 + SX)*AW +: AW], d7_a0 = dav[(4 + SX)*AW +: AW];
-        wire          d7_si = dsv[4 + SX];
-        // E4: macro read; E5: capture beside the macros (g_flat) or in the bank-group tiles (g_tile)
-        assign su_re[gc*NRBS +: NRBS] = sb_re;
-        assign su_ra[gc*NRBS*LAWS +: NRBS*LAWS] = sb_ra;
-        assign su_v3[gc] = d3_v;
+        wire          d3_v_flat  = dvv[0];
+        wire          d5_v_flat  = dvv[2 + SX], d6_v_flat = dvv[3 + SX], d7_v_flat = dvv[4 + SX];
+        wire [AW-1:0] d5_a0_flat = dav[(2 + SX)*AW +: AW], d6_a0_flat = dav[(3 + SX)*AW +: AW], d7_a0_flat = dav[(4 + SX)*AW +: AW];
+        wire          d7_si_flat = dsv[4 + SX];
+            assign sb_re=sb_re_flat;
+            assign sb_ra=sb_ra_flat;
+            assign d2_bad=d2_bad_flat;
+            assign d3_v=d3_v_flat;
+            assign d5_v=d5_v_flat;
+            assign d6_v=d6_v_flat;
+            assign d7_v=d7_v_flat;
+            assign d7_si=d7_si_flat;
+            assign d5_a0=d5_a0_flat;
+            assign d6_a0=d6_a0_flat;
+            assign d7_a0=d7_a0_flat;
+        end
+        assign su_re[gc*NRBS+:NRBS]=sb_re;
+        assign su_ra[gc*NRBS*LAWS+:NRBS*LAWS]=sb_ra;
+        assign su_v3[gc]=d3_v;
         wire [NRBS*512-1:0] scap = su_cap[gc*NRBS*512 +: NRBS*512];
         if (RETURN_LEAVES != 0) begin : g_return_leaves
             for (genvar plane = 0; plane < 32; plane = plane + 1) begin : g_plane
@@ -1747,4 +1772,66 @@ module ot_qfd_vm_su_return_plane #(
         if(v7) for(lane=0;lane<SW;lane=lane+1)
             q[lane] <= ((a7+(stride1?lane:0))<ELEMS) ? win[off7+(stride1?lane:0)] : 1'b0;
     end
+endmodule
+
+// Owns the original E1/E2/E3 descriptor/read controls and fixed-age valid/address pipeline.
+// Every functional input and output terminates in an existing register; no added edges.
+module ot_qfd_vm_su_read_control #(
+    parameter integer AW=24,SW=64,NRBS=16,LAWS=10,SX=8
+)(
+    input wire ck,rst_n,re0,re1,
+    input wire [AW-1:0] a0,a1,
+    output reg [NRBS-1:0] sb_re,
+    output reg [NRBS*LAWS-1:0] sb_ra,
+    output reg d2_bad,
+    output wire ov3,ov5,ov6,ov7,osi7,
+    output wire [AW-1:0] oa5,oa6,oa7
+);
+    localparam integer RW=AW-4,LNRBS=$clog2(NRBS);
+        // E1: descriptor registers; E2: broadcast registers (window rows, offset, stride)
+        reg           d1_v, d1_r1;
+        reg  [AW-1:0] d1_a0, d1_a1;
+        reg           d2_v, d2_si;
+        reg  [AW-1:0] d2_a0;
+        reg  [3:0]    d2_nr;
+        
+        always @(posedge ck or negedge rst_n) begin
+            if (!rst_n) begin d1_v <= 1'b0; d2_v <= 1'b0; d2_bad <= 1'b0; end
+            else begin
+                d1_v <= re0; d2_v <= d1_v;
+                d2_bad <= d1_v && d1_r1 && (d1_a1 - d1_a0) > 1;
+            end
+        end
+        wire si1 = d1_r1 && (d1_a1 - d1_a0) == 1;
+        always @(posedge ck) begin
+            d1_r1 <= re1; d1_a0 <= a0; d1_a1 <= a1;
+            d2_a0 <= d1_a0; d2_si <= si1;
+            d2_nr <= si1 ? ((d1_a0[3:0] + SW - 1) >> 4) + 1 : 4'd1;
+        end
+        // E3: per-bank read registers (beside the macros)
+        
+        
+        wire [RW-1:0]        d2_r0 = d2_a0[AW-1:4];
+        for (genvar g = 0; g < NRBS; g = g + 1) begin : g_ra
+            wire [LNRBS-1:0] kk = g[LNRBS-1:0] - d2_r0[LNRBS-1:0];
+            wire [RW-1:0]    rr = d2_r0 + kk;
+            always @(posedge ck) begin
+                sb_re[g] <= d2_v && (kk < d2_nr);
+                sb_ra[g*LAWS +: LAWS] <= rr[LNRBS +: LAWS];
+            end
+        end
+        //: d3 .. d(7 + SX): VMT adds SX edges between the bank read registers and the coarse rotate (the tile seam)
+        localparam integer DN = 5 + SX;                     // stages d3 .. d(7 + SX)
+        reg  [DN-1:0]    dvv, dsv;
+        reg  [DN*AW-1:0] dav;
+        always @(posedge ck) begin
+            dvv <= {dvv, d2_v}; dsv <= {dsv, d2_si}; dav <= {dav, d2_a0};
+        end
+        wire          d3_v  = dvv[0];
+        wire          d5_v  = dvv[2 + SX], d6_v = dvv[3 + SX], d7_v = dvv[4 + SX];
+        wire [AW-1:0] d5_a0 = dav[(2 + SX)*AW +: AW], d6_a0 = dav[(3 + SX)*AW +: AW], d7_a0 = dav[(4 + SX)*AW +: AW];
+        wire          d7_si = dsv[4 + SX];
+
+    assign {ov3,ov5,ov6,ov7,osi7}={d3_v,d5_v,d6_v,d7_v,d7_si};
+    assign {oa5,oa6,oa7}={d5_a0,d6_a0,d7_a0};
 endmodule
