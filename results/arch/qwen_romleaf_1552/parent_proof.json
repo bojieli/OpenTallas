@@ -1,0 +1,52 @@
+{
+  "schema": "opentallas.qwen.romleaf.parent_proof.v1",
+  "state": "functional exactness only; parent placement/clock/route not qualified",
+  "ancestor_sources": {
+    "prior_wrapper": "qtile45-r6 3692f3390 reviewed g4 wrappers and native benchmarks",
+    "reference": "independent qfd_tile_nk_rp1 all64MAC/10mappedROM production body"
+  },
+  "sources": {
+    "rtl/hdc/ot_qwen_rom_tile_w12.sv": "0c29108d3c027cc60c84abec333a8a75cd43d240cd81b99d98fb3e755396fbeb",
+    "rtl/physical/ot_qwen_tile_romleaf.sv": "c747da4ffd6c85722aed78db991e98723c084efa6a842c4bcc53848adecbe5c4",
+    "rtl/physical/qfd_tile_nk_rp2_romleaf.sv": "b21e576087fdb7b62c6af66d68e94983967c484cc1f294f0ac7e49c2a29a7e92",
+    "rtl/physical/qfd_tile_nl_rp2_romleaf.sv": "c182965f1960bcb201629c39b909843e80e63015355731d1055cc6eb20877195",
+    "rtl/test/tb_qwen_romleaf_parent_native.sv": "d07b2db326a336972668268c00ae56f080bd56c031306d3acad7d41f892b3acc",
+    "rtl/test/tb_qwen_romleaf_parent_nk_native.sv": "c21e0da59d2b43c01289f27e6257efa0fbe390764e97a3ebab4a03ab1de60342",
+    "tools/qwen_romleaf/parent_bench.sh": "d17686e189cf39c29fbfa0069142a31899962cda8357b784f862a0256f88dba2",
+    "tools/qwen_romleaf/parent_nk_bench.sh": "69363dc0bdec836af614c6e55fa7e8a0e8cc6c4bc06b9bafce14e0d5b3ff5b9e"
+  },
+  "positive_nk": {
+    "checks": 6399,
+    "valids": 2560,
+    "nonzero": 2560,
+    "issue_operations": 5,
+    "physical_banks": 5,
+    "mac_lanes": 64,
+    "added_edges": 0,
+    "receipt": "bench/parent_nk_positive.log"
+  },
+  "positive_nl": {
+    "checks": 6399,
+    "valids": 2560,
+    "nonzero": 2560,
+    "issue_operations": 5,
+    "physical_banks": 5,
+    "mac_lanes": 64,
+    "added_edges": 0,
+    "receipt": "bench/parent_positive.log"
+  },
+  "mutant": {
+    "mechanism": "Stop actual first single-ROM leaf clock ck_rp0; affects real request/capture/arithmetic output",
+    "expected": "FAIL",
+    "nk_mismatches": 1200,
+    "nl_mismatches": 1200,
+    "nk_receipt": "bench/parent_nk_clock_mutant.log",
+    "nl_receipt": "bench/parent_clock_mutant.log"
+  },
+  "scope_limits": [
+    "All five code banks, both columns, eight actual LSL bodies, native fixed command issue calendar; ROM via arrays populated only as declared input stimulus.",
+    "No production die per-layer tok/s qualification; +0latency shown by exact output equality every compared cycle.",
+    "Existing g4 source parent had no CLOSED qualification; no retune or closed-master reroute.",
+    "Final TX consumer hook exists but awaits actual hardened parent synthesis and capacity/physical audit."
+  ]
+}

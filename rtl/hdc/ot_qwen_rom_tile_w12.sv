@@ -491,7 +491,21 @@ module ot_qwen_rom_tile_logic_w12 #(
             for (b = 0; b < CODE_BANKS; b = b + 1) begin : g_rb
                 assign ce_pre[b] = (b < SB) ? rq_ce_s[ROM_ARELAY-1][b] : rq_ce_n[ROM_ARELAY-1][b];
                 wire [2*2*PWB-1:0] r_q;
-                if (RPH == 2) begin : g_hd
+                if (RPH == 3) begin : g_single
+                    if (PWB != 256 || ROM_CAP2 != 1 || ROM_CAPX != 2 || BAW != 12 || ROM_MUT != 0 || TMUT != 0) begin : g_bad_leaf
+                        initial $fatal(1,"RPH3 differs from fixed single-ROM leaf");
+                    end
+                    for (genvar col=0;col<2;col=col+1) begin : g_col
+                        ot_qwen_tile_romleaf
+`ifndef SYNTHESIS
+                            #(.ROM_TILE(ROM_TILE),.ROM_BANK(b),.ROM_COL(col))
+`endif
+                            u_leaf (.clk(CHILD_CLOCKS ? (col==0 ? ck_rpair[b] : ck_pair1[b]) : clk),.rst_n(rst_n),.ce_d(ce_pre[b]),
+                                .any_d((b<SB)?any_s:any_n),.ad_d((b<SB)?adm_pre:adm_pre_n),.r_q(r_q[512*col +: 512]));
+                    end
+                    assign rom_req_m[13*b +: 13]=13'd0;
+                    assign rom_req_m[13*(CODE_BANKS+b) +: 13]=13'd0;
+                end else if (RPH == 2) begin : g_hd
                     if (PWB != 256 || ROM_CAP2 != 1 || ROM_CAPX != 2 || BAW != 12 || ROM_MUT != 0 || TMUT != 0) begin : g_hbad
                         initial begin $display("FAIL RPH = 2: parameters differ from the hardened leaf ot_qwen_tile_rpair"); $finish; end
                     end
@@ -810,7 +824,7 @@ module ot_qwen_rom_tile_w12 #(
     generate
         //: BAW 12 keeps the original macro path g_col[p].g_bank[b].u_rom (floorplan scripts, die views, runtime
         //: array binding); BAW 11 half-depth banks live under g_colh (zero-trip loops, no extra scope level)
-        for (p = 0; p < ((BAW == 12 && RPH != 2) ? 2 : 0); p = p + 1) begin : g_col
+        for (p = 0; p < ((BAW == 12 && RPH != 2 && RPH != 3) ? 2 : 0); p = p + 1) begin : g_col
             for (b = 0; b < CODE_BANKS; b = b + 1) begin : g_bank
                 ot_rom_4096x266_m8 u_rom (.clk((CHILD_CLOCKS != 0 && RPH == 1) ? ck_rom[p*CODE_BANKS+b] : clk), .ce_in((MPR != 0) ? rom_req_m[13*(p*CODE_BANKS+b)+12] : rom_ce[b]),
                     .addr_in((MPR != 0) ? rom_req_m[13*(p*CODE_BANKS+b) +: 12] : (ARPB != 0) ? rom_addr_b[12*b +: 12] : (ROM_PIPE != 0 && b >= (CODE_BANKS + 1) / 2) ? rom_addr_n : rom_addr),
