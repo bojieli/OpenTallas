@@ -87,7 +87,7 @@ module ot_hgi_qw_ovs #(
         else begin yc_v <= d_vo; yc_f <= d_vo && d_f; yc_df <= d_df; end
     always @(posedge clk) yc <= d_y;
     reg [14:0] mq_sec [0:OD-1]; reg [2:0] mq_n [0:OD-1];
-    reg [OW-1:0] od_h, od_t; reg [OW:0] od_n;
+    reg [OW-1:0] od_h, od_h1, od_t; reg [OW:0] od_n;           // od_h1 = od_h + 1 (registered)
     // write credits (take last cycle's hit vector)
     reg [31:0] ev_wcr, hit_w; reg [CW-1:0] wcr [0:31];
     always @(posedge clk or negedge rr_n[1])
@@ -104,19 +104,24 @@ module ot_hgi_qw_ovs #(
     always @* for (integer b = 0; b < 32; b = b + 1) w_ok_l[b] = wcr[b] > CW'(hit_w[b]);
     wire w_cr_ok = &(~hd_ln | w_ok_l);
     wire w_fire = !d_bad && wg_ok && od_n != 0 && w_cr_ok;   // wg_ok implies busy
-    wire [OW-1:0] od_hn = w_fire ? od_h + 1'b1 : od_h;
+    // B3 (ovs gate reg->reg -0.8 ps: od_n -> w_fire -> od_h + 1 -> 64:1 meta read -> lanes() -> hd_ln, 15 levels): both
+    // candidate heads (od_h, od_h + 1) are read from REGISTERED pointers and decoded in parallel with the fire cone; the
+    // fire only selects (one kept 2:1 per bit).  Same value every edge, no cycle.
+    (* keep = 1 *) wire [14:0] c0_sec = mq_sec[od_h];  (* keep = 1 *) wire [2:0] c0_n = mq_n[od_h];
+    (* keep = 1 *) wire [14:0] c1_sec = mq_sec[od_h1]; (* keep = 1 *) wire [2:0] c1_n = mq_n[od_h1];
+    wire [31:0] c0_ln = lanes(c0_sec[4:0], c0_n), c1_ln = lanes(c1_sec[4:0], c1_n);
     always @(posedge clk) begin
-        hd_sec <= mq_sec[od_hn]; hd_n <= mq_n[od_hn]; hd_ln <= lanes(mq_sec[od_hn][4:0], mq_n[od_hn]);
+        hd_sec <= w_fire ? c1_sec : c0_sec; hd_n <= w_fire ? c1_n : c0_n; hd_ln <= w_fire ? c1_ln : c0_ln;
         if (mw_v) begin mq_sec[mw_a] <= mw_sec; mq_n[mw_a] <= mw_n; end
     end
     always @(posedge clk or negedge rr_n[0])
-        if (!rr_n[0]) begin od_h <= 0; od_t <= 0; od_n <= 0; hit_w <= 0; d_bad <= 0; d_wf <= 0; end
+        if (!rr_n[0]) begin od_h <= 0; od_h1 <= 1; od_t <= 0; od_n <= 0; hit_w <= 0; d_bad <= 0; d_wf <= 0; end
         else begin
             hit_w <= w_fire ? hd_ln : 32'd0; d_wf <= w_fire;
             if (yc_v) begin od_t <= od_t + 1'b1; if (yc_f) d_bad <= 1'b1; end
             if (yc_df) d_bad <= 1'b1;
             od_n <= od_n + (OW+1)'(yc_v) - (OW+1)'(w_fire);
-            if (w_fire) od_h <= od_h + 1'b1;
+            if (w_fire) begin od_h <= od_h1; od_h1 <= od_h1 + 1'b1; end
         end
     // registered SRAM read issue (next to u_od): rf_* = w_fire / od_h / head meta one edge later
     reg rf_v; reg [OW-1:0] rf_a; reg [14:0] rf_sec; reg [2:0] rf_n;
