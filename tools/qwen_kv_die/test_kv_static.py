@@ -46,6 +46,15 @@ endmodule
         self.assertFalse(report['native_qualified']);self.assertFalse(report['physical_qualified'])
         self.assertNotIn('blackbox',text)
 
+    def test_pc_path_clock_entry_recorded(self):
+        _,report=self.compile()
+        self.assertEqual(report['clock_entries'],[dict(instance='u',port='ck',domain='core',source='clk')])
+
+    def test_pc_path_clock_entry_must_be_die_clock(self):
+        self.graph['external_inputs'].append(dict(name='rst2',width=1,kind='reset'))
+        self.graph['instances'][0]['inputs']['ck']=[dict(external='rst2',lo=0,width=1)]
+        with self.assertRaisesRegex(ValueError,'clock entry'):self.compile()
+
     def test_missing_operand(self):
         del self.graph['instances'][0]['inputs']['pi']
         with self.assertRaisesRegex(ValueError,'all exact input'):self.compile()

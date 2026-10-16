@@ -10,7 +10,7 @@ module tb_controller_calendar_native;
  wire [327:0]po;wire[293:0]co;wire[260:0]er;wire fault,cf;wire[15:0]oe;
  reg[288:0]pi=0;
  qkd_ctrl_pc_host_static #(.PROFILE(0),.ELASTIC(1),.RAW_WD(256),.TQD(64))dut(
- .pll_hbm(ck),.hrst(rn),.ck(ck),.rsi(rn),.pc(5'd13),.ci(319'b0),.co(co),.es(288'b0),.er(er),.po(po),.pi(pi),.ki(33'b0),.ko(),.fi(1'b0),.fo(fault),
+ .pll_hbm(ck), .pll_hbm_port(ck), .pll_hbm_ecc(ck),.hrst(rn),.ck(ck),.rsi(rn),.pc(5'd13),.ci(319'b0),.co(co),.es(288'b0),.er(er),.po(po),.pi(pi),.ki(33'b0),.ko(),.fi(1'b0),.fo(fault),
  .static_cmd_owner(owner),.static_cmd(cmd),.reserved_rd(rd),.reserved_static_col(sr),.reserved_write_col(wr),.static_epoch(epoch),.expected_raw_valid(raw),
  .cfg_stack(2'b0),.es_context(318'b0),.es_expected_valid(1'b0),.es_expected_identity(61'b0),.es_expected_address(29'b0),.es_expected_pc(5'b0),.es_expected_stack(2'b0),
  .native_commit_valid(),.native_commit_identity(),.native_commit_address(),.corrected_epoch(oe),.completion_v(),.completion_we(),.completion_fault(cf),.idle_core(),.idle_hbm(),.drain_fault_core(),.drain_fault_hbm());

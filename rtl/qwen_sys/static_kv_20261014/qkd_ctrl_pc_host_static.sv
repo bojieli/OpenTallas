@@ -39,6 +39,11 @@ module qkd_ctrl_pc_host_static #(
     parameter integer STATIC_REFRESH = 0
 ) (
     input  wire         pll_hbm,
+    // Clock entries (lead 2026-10-16 option A, wires-only cluster rule: one top clock port per hard-child clock pin):
+    // pll_hbm -> u_core, pll_hbm_port -> u_port, pll_hbm_ecc -> u_ecc. All three carry the SAME HBM clock; the die
+    // clock tree delivers each as its own entry (phi - R_i). Data ports and module name unchanged.
+    input  wire         pll_hbm_port,
+    input  wire         pll_hbm_ecc,
     input  wire         hrst,
     input  wire         ck,
     input  wire         rsi,
@@ -92,11 +97,11 @@ module qkd_ctrl_pc_host_static #(
         .p_wd(p_wd), .p_kv_v(p_kv_v), .p_em_v(p_em_v), .p_em_d(p_em_d), .p_fault(p_fault),
         .e_sec(e_sec), .e_row(e_row), .e_l_v(e_l_v), .e_fault(e_fault));
     qkd_ctrl_pc_port_child #(.RQD(TQD), .MUT(MUT == 2 ? 4 : 0)) u_port (
-        .hclk(pll_hbm), .hrst(hrst), .col_v_e(p_col_v), .col_we_e(p_col_we), .col_sr_e(p_col_sr),
+        .hclk(pll_hbm_port), .hrst(hrst), .col_v_e(p_col_v), .col_we_e(p_col_we), .col_sr_e(p_col_sr),
         .w_v(p_w_v), .w_d(p_w_d), .kw_vi(ci[28]), .kw_di(ci[308:53]), .pi(pi),
         .wd(p_wd), .kv_v(p_kv_v), .kv_d(p_kv_d), .em_v(p_em_v), .em_d(p_em_d), .fault(p_fault));
     qkd_ctrl_pc_ecc_child u_ecc (
-        .hclk(pll_hbm), .hrst(hrst), .i_v(p_kv_v), .i_code(p_kv_d), .i_sec(e_sec), .i_row(e_row),
+        .hclk(pll_hbm_ecc), .hrst(hrst), .i_v(p_kv_v), .i_code(p_kv_d), .i_sec(e_sec), .i_row(e_row),
         .o_v(e_l_v), .o_data(l_data), .o_sec(l_sec), .o_row(l_row), .fault(e_fault));
     assign co = {co_c, l_data, l_row, l_sec, e_l_v};
 endmodule

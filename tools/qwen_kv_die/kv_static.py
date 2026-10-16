@@ -39,6 +39,30 @@ ROLES = {
     'link': ('rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies.sv', 'qkd_d2d_static', 1),
 }
 IDENT = re.compile(r'^[A-Za-z_]\w*$')
+# Clock entries of the per-PC wires-only parent qkd_static_kv_pc_path (lead 2026-10-16 option A): every hard child
+# clock pin has its own parent port, and the die clock tree delivers each one as a SEPARATE entry (phi - R_i, R_i =
+# entry wire + that child's routed insertion), never a tie to a shared net inside the parent.  pll_hbm / pll_hbm_port /
+# pll_hbm_ecc are the hardened controller cluster's core / port / ECC HBM entries (same HBM clock, three entries).
+PC_PATH_CLOCK_ENTRIES = {'pll_hbm': 'hbm', 'pll_hbm_port': 'hbm', 'pll_hbm_ecc': 'hbm', 'cal_hck': 'hbm',
+                         'front_hck': 'hbm', 'return_hck': 'hbm', 'ck': 'core', 'return_ck': 'core'}
+
+
+def pc_path_clock_entries(ins, specs, tops):
+    """One die clock-tree entry per pc_path clock port, each fed by a whole external clock (fail closed)."""
+    out = []
+    for n, i in ins.items():
+        if i.get('role') != 'pc_path':
+            continue
+        for p, dom in PC_PATH_CLOCK_ENTRIES.items():
+            if p not in specs[n]:
+                continue
+            items = i['inputs'].get(p)
+            if (not isinstance(items, list) or len(items) != 1 or 'external' not in items[0]
+                    or tops.get(items[0]['external'], {}).get('kind') != 'clock' or specs[n][p]['width'] != 1
+                    or items[0].get('width') != 1):
+                raise ValueError(f'{n}.{p}: a pc_path clock entry must be one whole external die clock (separate entry)')
+            out.append(dict(instance=n, port=p, domain=dom, source=items[0]['external']))
+    return out
 
 
 def identifier(name):
@@ -279,6 +303,7 @@ def compile_graph(graph, root=ROOT):
                 raise ValueError(f'unconnected native fault observation: {n}.{p}')
     # Require an explicit source-bound input AND output port for every emitted
     # operation; an operation name/count or precomputed answer is not coverage.
+    clock_entries=pc_path_clock_entries(ins,specs,tops)
     operations=image['operations']
     if not operations:raise ValueError('empty programme operation map')
     opids=set()
@@ -297,7 +322,7 @@ def compile_graph(graph, root=ROOT):
     lines+=['endmodule','']
     return '\n'.join(lines),dict(schema='opentallas.qwen_kv_static.bind.v1',status='CONNECTED_SOURCE_GRAPH_ONLY',coverage_scope='static_KV_subsystem_source_graph_not_full_native_die',
         source_hashes={n:i['sha256'] for n,i in ins.items()},dependency_hashes=pinned,counts=dict(counts),edges=edges,
-        emitted_operations=len(operations),native_qualified=False,physical_qualified=False,
+        emitted_operations=len(operations),clock_entries=clock_entries,native_qualified=False,physical_qualified=False,
         compiler_image=image)
 
 
