@@ -169,6 +169,26 @@ class CompileTest(unittest.TestCase):
         self.binding['jobs']['su']['pipeline_abi']=dict(PIPELINE_ABI['hc'])
         self.assertTrue(self.run_compile()['dispatch_eligible'])
 
+    def test_coll_cal7_v3_and_pincap_record_is_the_collective_controller_profile(self):
+        # the S81 compiler's coll record must equal the bound collective controller ROM profile (CAL7 v3 + PINCAP 1)
+        import importlib.util
+        spec=importlib.util.spec_from_file_location('cimg',ROOT/'tools/s81_static_collective/resetpins/controller_image.py')
+        cimg=importlib.util.module_from_spec(spec); spec.loader.exec_module(cimg)
+        rec=PIPELINE_ABI['coll']
+        self.assertEqual(rec['control_rom_abi'],cimg.ABI)
+        for k in ('control_rom_output_capture_edges_hidden_by_prefetch','control_rom_initialization_extra_edges','vm_boundary_pin_capture_edges'):
+            self.assertEqual(rec[k],cimg.LATENCIES[k],k)
+        self.assertEqual(rec['vm_boundary_pin_capture_edges'],1)
+        # a coll job measured on the v2 ROM / PINCAP 0 boundary is refused, the current record accepted
+        self.binding['jobs']['su']['engine']='coll'; self.program['ops'][1]['eng']='coll'
+        for stale in (None, dict(rec,vm_boundary_pin_capture_edges=0), dict(rec,control_rom_abi='opentallas.s81.collective-fixed-edge-rom.v2')):
+            if stale is None: self.binding['jobs']['su'].pop('pipeline_abi',None)
+            else: self.binding['jobs']['su']['pipeline_abi']=stale
+            self.assertFalse(self.run_compile()['dispatch_eligible'])
+            with self.assertRaises(ValueError): schedule_jobs(self.program,self.binding)
+        self.binding['jobs']['su']['pipeline_abi']=dict(rec)
+        self.assertTrue(self.run_compile()['dispatch_eligible'])
+
     def test_sa2x2rp_floorplan_stages_require_remeasured_durations(self):
         # SA_2x2_RP: SU-VM link +3 relay edges, field round trip 140 -> 118: old measurements are refused
         self.assertEqual(PIPELINE_ABI['su']['vm_link_relay_extra_edges'],3)
