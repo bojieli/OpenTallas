@@ -53,8 +53,13 @@ src=(rtl/hbm_accel/index/ot_hbm_idx_scheduled_static.sv rtl/hbm_accel/index/ot_h
  physical/asap7_memory_macros/ot_sram_1r1w_256x256_m2_r2c2/ot_sram_1r1w_256x256_m2_r2c2.v
  physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v
  rtl/test/hbm_idx_static/tb_idx_scheduled_static.sv rtl/test/hbm_idx_static/parent.vlt)
+vldef=()
+if [ "${IDX_DENSE_LINK:-0}" = 1 ]; then
+ src+=(rtl/hbm_accel/index/ot_hbm_idx_topk_link_static_dense.sv)
+ vldef=(-DOT_IDX_DENSE_LINK)
+fi
 sha256sum "${src[@]}" tools/hbm_idx_static_calendar.py tools/hbm_idx_static_parent_vectors.py rtl/test/hbm_idx_static/run_scheduled.sh > "$out/sources.sha256"
-"$vl" --hierarchical --binary --timing -j 8 -O1 -Wno-fatal -Wno-lint -Wno-style --top-module tb_idx_scheduled_static --Mdir "$out/obj" "${src[@]}" > "$out/build.log" 2>&1
+"$vl" "${vldef[@]}" --hierarchical --binary --timing -j 8 -O1 -Wno-fatal -Wno-lint -Wno-style --top-module tb_idx_scheduled_static --Mdir "$out/obj" "${src[@]}" > "$out/build.log" 2>&1
 pred(){ python3 -c 'import json,sys;p=json.load(open(sys.argv[1]))["predicted"];print(p["first_key_instruction"]+3,p["first_tx_from_instruction0"]+3)' "$1/calendar.json"; }
 len(){ python3 -c 'import json,sys;print(json.load(open(sys.argv[1]))["length"])' "$1/calendar.json"; }
 run(){ # tag caldir mut expect(pass|fail)
