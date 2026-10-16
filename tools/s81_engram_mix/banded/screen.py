@@ -27,7 +27,7 @@ import pinreg_audit as A  # noqa: E402
 LEAFS = ['mul4', 'chunk8', 'add8', 'norm', 'sum', 'signed_sqrt', 'sigmoid', 'mix_control', 'rly', 'mixq_shcol_b', 'mixq_shctl']
 SRC = ['rtl/dsrom_sys/engram/mix/ot_s81_engram_mix.sv', 'rtl/dsrom_sys/engram/mix/dsfd_engram_mix4_c.sv',
        'rtl/dsrom_sys/engram/mix/dsfd_engram_mix4_banded.sv']
-TOP = 'ot_s81_engram_mixq_b'
+TOP = 'ot_s81_engram_mixq_bc'
 PERIOD, UNC, WIRE = 833.333, 60.0, .76
 CLEAR = 21.6
 SHCOLB_PINS_OVERRIDE = None
