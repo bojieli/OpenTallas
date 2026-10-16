@@ -9,7 +9,7 @@ ROOT=pathlib.Path(__file__).resolve().parents[4]
 sys.path.insert(0,str(ROOT/'tools/hier_contract'))
 import pinreg_audit as pa
 ART=pathlib.Path(sys.argv[1] if len(sys.argv)>1 else '/tmp/s81_native_collect_1705')
-RECORDS=[('s81coll_calendar7_resetpins_1319-localreset1-9f5af3545','393f54ffc','s81_static_calendar_controller7_resetpins','rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller7_resetpins.sv'),('s81pq_qb_headpc_native-p8-exactcts-1515-3d298fbc5','8ecf89cbf','ot_s81_pq_qb_headpc_native','rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_qb_pinread_native.sv')]
+RECORDS=[('s81coll_calendar7_resetpins_1319-localreset1-9f5af3545','393f54ffc','s81_static_calendar_controller7_resetpins','rtl/dsrom_sys/s81_static_collective/s81_static_calendar_controller7_resetpins.sv'),('s81pq_qb_headpc_native-p8-exactcts-1515-3d298fbc5','8ecf89cbf','ot_s81_pq_qb_headpc_native','rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_qb_pinread_native.sv'),('s81pq_qb_align_native-p3-040b3fe3c','2cae9d85b','ot_s81_pq_qb_align_native','rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_qb_pipe_native.sv')]
 def git(*a):
  p=subprocess.run(['git','-C',str(ROOT),*a],capture_output=True,text=True)
  return p.stdout.strip() if p.returncode==0 else None
