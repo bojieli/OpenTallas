@@ -1,0 +1,104 @@
+{
+ "name": "s81_a2f_field4_pilot_2118_r1",
+ "top": "s81_a2f_field4",
+ "kind": "tile",
+ "sources": [
+  "tools/s81_vm/area_a2f.sv",
+  "tools/s81_vm/area_a2f_split4_composed.sv",
+  "tools/s81_vm/area_a2_controlled.sv",
+  "tools/s81_vm/area_id_native.sv",
+  "tools/s81_vm/area_id_native_join.sv",
+  "tools/s81_vm/area_a2_hardmasters.sv",
+  "tools/s81_vm/area_a2f_field4.sv"
+ ],
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 86.4,
+  "h": 129.6,
+  "exact": true
+ },
+ "pins": {
+  "S": [
+   "i_data"
+  ],
+  "N": [
+   "o_data",
+   "o_v"
+  ],
+  "W": [
+   "ck",
+   "rst_n",
+   "i_sel"
+  ],
+  "E": [
+   "i_drain_v",
+   "i_drain_slot",
+   "fault"
+  ]
+ },
+ "io_tcl": "physical/s81_vm_a2f_split4_2118/s81_a2f_field4.tcl",
+ "macros": [],
+ "route": {
+  "pd": 0.4,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "period_ps": 770,
+  "hold_margin_ns": 0.03
+ },
+ "recipe": 2,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "structural_change": "s81_a2f_field4: field16 whole-body congestion split into four independent field4 clock/placement leaves. Input pipeline partitions by bit; selector/drain state replicated; full53/4quarters/3slots unchanged. Zero added cycles.",
+ "slot_change_request": {
+  "contract": "S81 VM A2-F front geometry candidate",
+  "version": "a2f-1015",
+  "why": "new hardened leaf; VM parent plan a2f_route_plan.py"
+ },
+ "job": {
+  "owner": "codex:S81 VM structural",
+  "branch": "codex/s81-vm-structural-2118",
+  "tag": "split4",
+  "extra_paths": [
+   "tools/s81_vm",
+   "physical/s81_vm_a2f_split4_2118"
+  ],
+  "purpose": "A2-F pilot: measured area/closure of the planned outline (cut screen input).",
+  "benches": [
+   {
+    "name": "a2f_field4_equiv",
+    "cmd": "python3 tools/s81_vm/area_a2f_split4_equiv_gate.py --seeds 1 --bench gold",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "A2F_EQUIV PASS gold"
+   },
+   {
+    "name": "a2f_field4_mut_sel",
+    "cmd": "python3 tools/s81_vm/area_a2f_split4_equiv_gate.py --seeds 1 --bench S81_A2F_MUT_SEL_SWAP",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "A2F_EQUIV FAIL S81_A2F_MUT_SEL_SWAP"
+   }
+  ],
+  "cycles_added": 0
+ }
+}
