@@ -1,0 +1,220 @@
+{
+ "name": "qkd_d2d_static_r7r",
+ "top": "qkd_d2d_static",
+ "kind": "tile",
+ "sources": [
+  "rtl/lib/ot_rst_pipe.sv",
+  "rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv",
+  "rtl/qwen_sys/split_20261014/ot_qwen_static_slot_link.sv",
+  "rtl/qwen_sys/split_20261014/ot_qkvd_d2d_llr.sv",
+  "rtl/qwen_sys/split_20261014/qkd_native_attention_record.sv",
+  "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_static.sv",
+  "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_services.sv",
+  "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies.sv",
+  "rtl/qwen_split/qfd_kvn_static_transport.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "por_n",
+  "rst_n"
+ ],
+ "outline": {
+  "w": 475.2,
+  "h": 280.8
+ },
+ "recipe": 3,
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "at": [
+    36.72,
+    41.04
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "at": [
+    267.192,
+    41.04
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "at": [
+    36.72,
+    162.0
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "at": [
+    267.192,
+    162.0
+   ]
+  }
+ ],
+ "pins": {
+  "N": [
+   "fdi_tx_up",
+   "fdi_tx_v",
+   "fdi_tx_flit",
+   "fdi_rx_v",
+   "fdi_rx_flit",
+   "phy_rst_n"
+  ],
+  "S": [
+   "att_tx_slot",
+   "att_tx_kind",
+   "att_tx_beat",
+   "att_tx_v",
+   "att_tx_payload",
+   "att_rx_v",
+   "att_rx_slot",
+   "att_rx_kind",
+   "att_rx_beat",
+   "rx_payload",
+   "record_tx_observed_v",
+   "record_tx",
+   "record_send_kind",
+   "record_witness_slot",
+   "record_rx_v",
+   "record_rx"
+  ],
+  "W": [
+   "emb_tx_slot",
+   "emb_tx_v",
+   "emb_tx_payload",
+   "kvn_compiled_identity",
+   "kvn_compiled_generation",
+   "kvn_word_valid",
+   "kvn_word_tag",
+   "kvn_word_data",
+   "kvn_word_identity",
+   "kvn_word_generation",
+   "kvn_word_slot",
+   "kvn_word_index"
+  ],
+  "E": [
+   "ck",
+   "por_n",
+   "rst_n",
+   "cfg_tx_we",
+   "cfg_rx_we",
+   "cfg_addr",
+   "cfg_data",
+   "cal_start",
+   "cal_seg",
+   "host_link_reset_req",
+   "host_recovery_clear",
+   "host_boot_begin",
+   "fwd_epoch",
+   "fwd_link_rst_n",
+   "status_epoch16",
+   "serdes_up",
+   "kv_drained_local",
+   "kv_flush_local",
+   "host_drained_local",
+   "kv_active_local",
+   "link_up",
+   "transport_fault",
+   "native_links_drained",
+   "native_link_reset_seen",
+   "native_retrained",
+   "abort_drained",
+   "native_kv_drained",
+   "native_vm_drained",
+   "native_collective_drained",
+   "native_host_drained",
+   "native_collective_busy",
+   "native_kv_flush",
+   "native_admit_ready",
+   "crom_fault",
+   "execution_active",
+   "engine_result_v",
+   "engine_result_done",
+   "engine_result_fault",
+   "engine_result_cause",
+   "engine_result_tag",
+   "engine_result_gen",
+   "engine_result_token",
+   "engine_result_value",
+   "engine_result_cycles",
+   "epoch_abort",
+   "recovery_cycles",
+   "fault"
+  ]
+ },
+ "layer_cap": "M5",
+ "route": {
+  "threads": 16,
+  "peak_ram_gb": 48,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "cts_sink": {
+   "extra": "-no_obstruction_aware -distance_between_buffers 40 -sink_clustering_levels 2 -delay_buffer_derate 0"
+  }
+ },
+ "job": {
+  "owner": "Claude:Q-DVM+LINK",
+  "branch": "codex/qwen-link-recovery-0253",
+  "tag": "r7r",
+  "purpose": "Q-LINK static D2D link end qkd_d2d_static (compiler calendars, 583-bit PHY word slot link with 4x137 SRAM store, explicit recovery mode; no credits/backpressure). PHY on face N.",
+  "extra_paths": [
+   "rtl/qwen_sys",
+   "rtl/qwen_split",
+   "rtl/test/qwen_split",
+   "tools/qwen_split",
+   "physical/qwen_kv_die_phy",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "rtl/lib/ot_rst_pipe.sv"
+  ],
+  "benches": [
+   {
+    "name": "d2d_dies_exact",
+    "cmd": "bash rtl/test/qwen_split/run_d2d_dies.sh {RUN}/bench/d0 0",
+    "expect": "pass",
+    "pass_regex": "D2D_DIES_PASS",
+    "threads": 1,
+    "peak_ram_gb": 8
+   },
+   {
+    "name": "d2d_dies_mut_slot",
+    "cmd": "bash rtl/test/qwen_split/run_d2d_dies.sh {RUN}/bench/m1 1",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 8
+   }
+  ],
+  "views_to": "physical/ref_tile/qkd_d2d_static_r5_native/views",
+  "record_to": "results/rtl/ref_tile/qkd_d2d_static_r5_native"
+ },
+ "pinreg_r4": "r4 (2026-10-15): die master is pin-registered (PR=1, tools/qwen_split/d2d_pinreg_gen.py): every functional port has one flop at its pin, placed FIRM at the pin by recipe-2 io_flop_at_pins; fixes qkd r1 EARLY_FAIL_SETUP (-434 ps, all boundary paths) and qfd r1 TT -79 / FF -32.6.",
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "Production PR=1 wrapper already has one register per functional port; no extra port edges."
+ },
+ "structural_change": "r7r (Q-LINK-D2D 2026-10-16): route CTS of r7q/r7f \"Balancing latency for clock core_clk: inserted 8 delay buffers\" padded the whole std tree to the SRAM macro clock latency (input pin-flop clock median 480.5 ps, 12,104 regs) -> qkd r7q EARLY_FAIL_HOLD at 4_1_cts (hold stuck -24.1 ps on c_att_tx_payload[332] / status_epoch16 / serdes_up while setup sat at +1.5: in->reg window squeezed). Fix: -delay_buffer_derate 0 (no latency balancing of registers to the macro tree; SRAM<->flop paths keep ordinary STA). The named ports already are pure pin registers (PR=1 wrapper q_* flops, FIRM at the pin). 43.2 um SRAM channel and por-only anchor kept. | r7q (Q-DVM+LINK 2026-10-16): r7j (por-only reset anchor) + 43.2 um SRAM row channel (macro rows at y 41.04 / 162.0; was 21.6 um channel with 51.8 um top/bottom margins): clock and pin-flop logic cross between the SRAM rows (VIS-ROM r3 review: needs a >= 40 um channel); r6 route hold stuck -24 ps on ~2,800 late-clock boundary flops | r7j (Q-DVM+LINK 2026-10-16): r5n pins/RTL/CTS + por-only reset-capture anchor (u_por_region s0/s1 at por_n): r5n capture por_n 239.6; r7h (4 anchors) spread 132.6 / launch 259.9 | r4sp failed TT-49.5ps on SRAM rq compare/forward mux, FF-12.45ps calendar, M4clock short, native spread108.8ps. Precompute exact SRAM forwarding-hit ages alongside existing addresses (zero cycles,512-check real-macro equivalence and mutant proof); replace hand spine by r4 balanced TritonCTS clustering. Coherently spread ALL281 Eface pins to .144um centers preserving order to avoid44-only neighboring collisions. Body/macros unchanged; all endpoints require fresh actual/native qualification. Full36 source program PASS, wrong-slot fails.",
+ "io_tcl": "physical/ref_tile/qkd_d2d_static_r7r/assigned_pins.tcl",
+ "pin_hook_before_flops": [
+  "physical/ref_tile/qkd_d2d_static_r7r/local_reset_capture.tcl"
+ ]
+}
