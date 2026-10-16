@@ -25,10 +25,12 @@ def main():
  H=835.92;W=576.72;instances=[]
  for r in new:
   for col,x in enumerate(r.get('x_cols',old['x_cols']) if r.get('per_col') else [0.]):
-   inst=dict(name=r['tile'].replace('[c]',str(col)).replace('[l]',str(col)),cell=r['cell'],x=x,y_from_N=r['y'],w=r['w'],h=r['h'],orient='R0',row_reservation=True)
+   name=r['tile'].replace('[c]',f'[c={col}]').replace('[l]',f'[l={col}]').replace('[g]',f'[g={col}]')
+   inst=dict(name=name,cell=r['cell'],x=x,y_from_N=r['y'],w=r['w'],h=r['h'],orient='R0',row_reservation=True,instantiation_status='SOURCE_BINDING_OPEN')
    if r['tile'].startswith('ctnl'):inst['cell']=f'ot_s81_hc_ctnl_l{col}';inst['native_view_binding']='OPEN: actual native successor LEF must be bound, no inherited view'
    if r['cell'].endswith('_column'):inst['params']={'COLUMN':col}
    instances.append(inst)
+ assert len({i['name'] for i in instances})==len(instances)
  overlaps=[]
  for i,x in enumerate(instances):
   assert 0<=x['x'] and x['x']+x['w']<=W+.001 and x['y_from_N']+x['h']<=H+.001

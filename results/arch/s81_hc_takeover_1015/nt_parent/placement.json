@@ -162,10 +162,11 @@
       "w": 576.72,
       "h": 12.96,
       "orient": "R0",
-      "row_reservation": true
+      "row_reservation": true,
+      "instantiation_status": "SOURCE_BINDING_OPEN"
     },
     {
-      "name": "ctnl[j=0]0",
+      "name": "ctnl[j=0][l=0]",
       "cell": "ot_s81_hc_ctnl_l0",
       "x": 0.0,
       "y_from_N": 12.96,
@@ -173,10 +174,11 @@
       "h": 99.36,
       "orient": "R0",
       "row_reservation": true,
+      "instantiation_status": "SOURCE_BINDING_OPEN",
       "native_view_binding": "OPEN: actual native successor LEF must be bound, no inherited view"
     },
     {
-      "name": "ctnl[j=0]1",
+      "name": "ctnl[j=0][l=1]",
       "cell": "ot_s81_hc_ctnl_l1",
       "x": 144.72,
       "y_from_N": 12.96,
@@ -184,10 +186,11 @@
       "h": 99.36,
       "orient": "R0",
       "row_reservation": true,
+      "instantiation_status": "SOURCE_BINDING_OPEN",
       "native_view_binding": "OPEN: actual native successor LEF must be bound, no inherited view"
     },
     {
-      "name": "ctnl[j=0]2",
+      "name": "ctnl[j=0][l=2]",
       "cell": "ot_s81_hc_ctnl_l2",
       "x": 289.44,
       "y_from_N": 12.96,
@@ -195,10 +198,11 @@
       "h": 99.36,
       "orient": "R0",
       "row_reservation": true,
+      "instantiation_status": "SOURCE_BINDING_OPEN",
       "native_view_binding": "OPEN: actual native successor LEF must be bound, no inherited view"
     },
     {
-      "name": "ctnl[j=0]3",
+      "name": "ctnl[j=0][l=3]",
       "cell": "ot_s81_hc_ctnl_l3",
       "x": 434.16,
       "y_from_N": 12.96,
@@ -206,10 +210,11 @@
       "h": 99.36,
       "orient": "R0",
       "row_reservation": true,
+      "instantiation_status": "SOURCE_BINDING_OPEN",
       "native_view_binding": "OPEN: actual native successor LEF must be bound, no inherited view"
     },
     {
-      "name": "ctnl[j=1]0",
+      "name": "ctnl[j=1][l=0]",
       "cell": "ot_s81_hc_ctnl_l0",
       "x": 0.0,
       "y_from_N": 112.32,
@@ -217,10 +222,11 @@
       "h": 99.36,
       "orient": "R0",
       "row_reservation": true,
+      "instantiation_status": "SOURCE_BINDING_OPEN",
       "native_view_binding": "OPEN: actual native successor LEF must be bound, no inherited view"
     },
     {
-      "name": "ctnl[j=1]1",
+      "name": "ctnl[j=1][l=1]",
       "cell": "ot_s81_hc_ctnl_l1",
       "x": 144.72,
       "y_from_N": 112.32,
@@ -228,10 +234,11 @@
       "h": 99.36,
       "orient": "R0",
       "row_reservation": true,
+      "instantiation_status": "SOURCE_BINDING_OPEN",
       "native_view_binding": "OPEN: actual native successor LEF must be bound, no inherited view"
     },
     {
-      "name": "ctnl[j=1]2",
+      "name": "ctnl[j=1][l=2]",
       "cell": "ot_s81_hc_ctnl_l2",
       "x": 289.44,
       "y_from_N": 112.32,
@@ -239,10 +246,11 @@
       "h": 99.36,
       "orient": "R0",
       "row_reservation": true,
+      "instantiation_status": "SOURCE_BINDING_OPEN",
       "native_view_binding": "OPEN: actual native successor LEF must be bound, no inherited view"
     },
     {
-      "name": "ctnl[j=1]3",
+      "name": "ctnl[j=1][l=3]",
       "cell": "ot_s81_hc_ctnl_l3",
       "x": 434.16,
       "y_from_N": 112.32,
@@ -250,50 +258,55 @@
       "h": 99.36,
       "orient": "R0",
       "row_reservation": true,
+      "instantiation_status": "SOURCE_BINDING_OPEN",
       "native_view_binding": "OPEN: actual native successor LEF must be bound, no inherited view"
     },
     {
-      "name": "ctpl[g][half0]",
+      "name": "ctpl[g=0][half0]",
       "cell": "ot_s81_hc_ctpl",
       "x": 0.0,
       "y_from_N": 211.68,
       "w": 142.56,
       "h": 118.8,
       "orient": "R0",
-      "row_reservation": true
+      "row_reservation": true,
+      "instantiation_status": "SOURCE_BINDING_OPEN"
     },
     {
-      "name": "ctpl[g][half0]",
+      "name": "ctpl[g=1][half0]",
       "cell": "ot_s81_hc_ctpl",
       "x": 144.72,
       "y_from_N": 211.68,
       "w": 142.56,
       "h": 118.8,
       "orient": "R0",
-      "row_reservation": true
+      "row_reservation": true,
+      "instantiation_status": "SOURCE_BINDING_OPEN"
     },
     {
-      "name": "ctpl[g][half0]",
+      "name": "ctpl[g=2][half0]",
       "cell": "ot_s81_hc_ctpl",
       "x": 289.44,
       "y_from_N": 211.68,
       "w": 142.56,
       "h": 118.8,
       "orient": "R0",
-      "row_reservation": true
+      "row_reservation": true,
+      "instantiation_status": "SOURCE_BINDING_OPEN"
     },
     {
-      "name": "ctpl[g][half0]",
+      "name": "ctpl[g=3][half0]",
       "cell": "ot_s81_hc_ctpl",
       "x": 434.16,
       "y_from_N": 211.68,
       "w": 142.56,
       "h": 118.8,
       "orient": "R0",
-      "row_reservation": true
+      "row_reservation": true,
+      "instantiation_status": "SOURCE_BINDING_OPEN"
     },
     {
-      "name": "ctra_column0",
+      "name": "ctra_column[c=0]",
       "cell": "ot_s81_hc_ctra_column",
       "x": 0.0,
       "y_from_N": 330.48,
@@ -301,12 +314,13 @@
       "h": 30.24,
       "orient": "R0",
       "row_reservation": true,
+      "instantiation_status": "SOURCE_BINDING_OPEN",
       "params": {
         "COLUMN": 0
       }
     },
     {
-      "name": "ctra_column1",
+      "name": "ctra_column[c=1]",
       "cell": "ot_s81_hc_ctra_column",
       "x": 144.18,
       "y_from_N": 330.48,
@@ -314,12 +328,13 @@
       "h": 30.24,
       "orient": "R0",
       "row_reservation": true,
+      "instantiation_status": "SOURCE_BINDING_OPEN",
       "params": {
         "COLUMN": 1
       }
     },
     {
-      "name": "ctra_column2",
+      "name": "ctra_column[c=2]",
       "cell": "ot_s81_hc_ctra_column",
       "x": 288.36,
       "y_from_N": 330.48,
@@ -327,12 +342,13 @@
       "h": 30.24,
       "orient": "R0",
       "row_reservation": true,
+      "instantiation_status": "SOURCE_BINDING_OPEN",
       "params": {
         "COLUMN": 2
       }
     },
     {
-      "name": "ctra_column3",
+      "name": "ctra_column[c=3]",
       "cell": "ot_s81_hc_ctra_column",
       "x": 432.54,
       "y_from_N": 330.48,
@@ -340,12 +356,13 @@
       "h": 30.24,
       "orient": "R0",
       "row_reservation": true,
+      "instantiation_status": "SOURCE_BINDING_OPEN",
       "params": {
         "COLUMN": 3
       }
     },
     {
-      "name": "ctrb_column0",
+      "name": "ctrb_column[c=0]",
       "cell": "ot_s81_hc_ctrb_column",
       "x": 0.0,
       "y_from_N": 360.72,
@@ -353,12 +370,13 @@
       "h": 25.92,
       "orient": "R0",
       "row_reservation": true,
+      "instantiation_status": "SOURCE_BINDING_OPEN",
       "params": {
         "COLUMN": 0
       }
     },
     {
-      "name": "ctrb_column1",
+      "name": "ctrb_column[c=1]",
       "cell": "ot_s81_hc_ctrb_column",
       "x": 144.18,
       "y_from_N": 360.72,
@@ -366,12 +384,13 @@
       "h": 25.92,
       "orient": "R0",
       "row_reservation": true,
+      "instantiation_status": "SOURCE_BINDING_OPEN",
       "params": {
         "COLUMN": 1
       }
     },
     {
-      "name": "ctrb_column2",
+      "name": "ctrb_column[c=2]",
       "cell": "ot_s81_hc_ctrb_column",
       "x": 288.36,
       "y_from_N": 360.72,
@@ -379,12 +398,13 @@
       "h": 25.92,
       "orient": "R0",
       "row_reservation": true,
+      "instantiation_status": "SOURCE_BINDING_OPEN",
       "params": {
         "COLUMN": 2
       }
     },
     {
-      "name": "ctrb_column3",
+      "name": "ctrb_column[c=3]",
       "cell": "ot_s81_hc_ctrb_column",
       "x": 432.54,
       "y_from_N": 360.72,
@@ -392,6 +412,7 @@
       "h": 25.92,
       "orient": "R0",
       "row_reservation": true,
+      "instantiation_status": "SOURCE_BINDING_OPEN",
       "params": {
         "COLUMN": 3
       }
@@ -404,7 +425,8 @@
       "w": 576.72,
       "h": 25.92,
       "orient": "R0",
-      "row_reservation": true
+      "row_reservation": true,
+      "instantiation_status": "SOURCE_BINDING_OPEN"
     },
     {
       "name": "ctfl_nt",
@@ -414,7 +436,8 @@
       "w": 576.72,
       "h": 25.92,
       "orient": "R0",
-      "row_reservation": true
+      "row_reservation": true,
+      "instantiation_status": "SOURCE_BINDING_OPEN"
     },
     {
       "name": "ctfn_nt",
@@ -424,50 +447,55 @@
       "w": 576.72,
       "h": 25.92,
       "orient": "R0",
-      "row_reservation": true
+      "row_reservation": true,
+      "instantiation_status": "SOURCE_BINDING_OPEN"
     },
     {
-      "name": "ctpl[g][half1]",
+      "name": "ctpl[g=0][half1]",
       "cell": "ot_s81_hc_ctpl",
       "x": 0.0,
       "y_from_N": 464.4,
       "w": 142.56,
       "h": 118.8,
       "orient": "R0",
-      "row_reservation": true
+      "row_reservation": true,
+      "instantiation_status": "SOURCE_BINDING_OPEN"
     },
     {
-      "name": "ctpl[g][half1]",
+      "name": "ctpl[g=1][half1]",
       "cell": "ot_s81_hc_ctpl",
       "x": 144.72,
       "y_from_N": 464.4,
       "w": 142.56,
       "h": 118.8,
       "orient": "R0",
-      "row_reservation": true
+      "row_reservation": true,
+      "instantiation_status": "SOURCE_BINDING_OPEN"
     },
     {
-      "name": "ctpl[g][half1]",
+      "name": "ctpl[g=2][half1]",
       "cell": "ot_s81_hc_ctpl",
       "x": 289.44,
       "y_from_N": 464.4,
       "w": 142.56,
       "h": 118.8,
       "orient": "R0",
-      "row_reservation": true
+      "row_reservation": true,
+      "instantiation_status": "SOURCE_BINDING_OPEN"
     },
     {
-      "name": "ctpl[g][half1]",
+      "name": "ctpl[g=3][half1]",
       "cell": "ot_s81_hc_ctpl",
       "x": 434.16,
       "y_from_N": 464.4,
       "w": 142.56,
       "h": 118.8,
       "orient": "R0",
-      "row_reservation": true
+      "row_reservation": true,
+      "instantiation_status": "SOURCE_BINDING_OPEN"
     },
     {
-      "name": "ctnl[j=2]0",
+      "name": "ctnl[j=2][l=0]",
       "cell": "ot_s81_hc_ctnl_l0",
       "x": 0.0,
       "y_from_N": 583.2,
@@ -475,10 +503,11 @@
       "h": 99.36,
       "orient": "R0",
       "row_reservation": true,
+      "instantiation_status": "SOURCE_BINDING_OPEN",
       "native_view_binding": "OPEN: actual native successor LEF must be bound, no inherited view"
     },
     {
-      "name": "ctnl[j=2]1",
+      "name": "ctnl[j=2][l=1]",
       "cell": "ot_s81_hc_ctnl_l1",
       "x": 144.72,
       "y_from_N": 583.2,
@@ -486,10 +515,11 @@
       "h": 99.36,
       "orient": "R0",
       "row_reservation": true,
+      "instantiation_status": "SOURCE_BINDING_OPEN",
       "native_view_binding": "OPEN: actual native successor LEF must be bound, no inherited view"
     },
     {
-      "name": "ctnl[j=2]2",
+      "name": "ctnl[j=2][l=2]",
       "cell": "ot_s81_hc_ctnl_l2",
       "x": 289.44,
       "y_from_N": 583.2,
@@ -497,10 +527,11 @@
       "h": 99.36,
       "orient": "R0",
       "row_reservation": true,
+      "instantiation_status": "SOURCE_BINDING_OPEN",
       "native_view_binding": "OPEN: actual native successor LEF must be bound, no inherited view"
     },
     {
-      "name": "ctnl[j=2]3",
+      "name": "ctnl[j=2][l=3]",
       "cell": "ot_s81_hc_ctnl_l3",
       "x": 434.16,
       "y_from_N": 583.2,
@@ -508,10 +539,11 @@
       "h": 99.36,
       "orient": "R0",
       "row_reservation": true,
+      "instantiation_status": "SOURCE_BINDING_OPEN",
       "native_view_binding": "OPEN: actual native successor LEF must be bound, no inherited view"
     },
     {
-      "name": "ctnl[j=3]0",
+      "name": "ctnl[j=3][l=0]",
       "cell": "ot_s81_hc_ctnl_l0",
       "x": 0.0,
       "y_from_N": 682.56,
@@ -519,10 +551,11 @@
       "h": 99.36,
       "orient": "R0",
       "row_reservation": true,
+      "instantiation_status": "SOURCE_BINDING_OPEN",
       "native_view_binding": "OPEN: actual native successor LEF must be bound, no inherited view"
     },
     {
-      "name": "ctnl[j=3]1",
+      "name": "ctnl[j=3][l=1]",
       "cell": "ot_s81_hc_ctnl_l1",
       "x": 144.72,
       "y_from_N": 682.56,
@@ -530,10 +563,11 @@
       "h": 99.36,
       "orient": "R0",
       "row_reservation": true,
+      "instantiation_status": "SOURCE_BINDING_OPEN",
       "native_view_binding": "OPEN: actual native successor LEF must be bound, no inherited view"
     },
     {
-      "name": "ctnl[j=3]2",
+      "name": "ctnl[j=3][l=2]",
       "cell": "ot_s81_hc_ctnl_l2",
       "x": 289.44,
       "y_from_N": 682.56,
@@ -541,10 +575,11 @@
       "h": 99.36,
       "orient": "R0",
       "row_reservation": true,
+      "instantiation_status": "SOURCE_BINDING_OPEN",
       "native_view_binding": "OPEN: actual native successor LEF must be bound, no inherited view"
     },
     {
-      "name": "ctnl[j=3]3",
+      "name": "ctnl[j=3][l=3]",
       "cell": "ot_s81_hc_ctnl_l3",
       "x": 434.16,
       "y_from_N": 682.56,
@@ -552,6 +587,7 @@
       "h": 99.36,
       "orient": "R0",
       "row_reservation": true,
+      "instantiation_status": "SOURCE_BINDING_OPEN",
       "native_view_binding": "OPEN: actual native successor LEF must be bound, no inherited view"
     },
     {
@@ -562,7 +598,8 @@
       "w": 576.72,
       "h": 51.84,
       "orient": "R0",
-      "row_reservation": true
+      "row_reservation": true,
+      "instantiation_status": "SOURCE_BINDING_OPEN"
     }
   ],
   "overlap_count": 0,
