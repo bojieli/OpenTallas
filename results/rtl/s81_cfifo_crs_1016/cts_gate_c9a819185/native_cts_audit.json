@@ -1,0 +1,111 @@
+{
+ "cell": "dsfd_cfifo_crs",
+ "view": "view",
+ "lib_cell": "dsfd_cfifo_crs",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 111.3,
+ "spread_ps": 20.1,
+ "outputs": 1171,
+ "inputs": 1173,
+ "launch_ps": 215.7,
+ "launch_pin": "xa[278]",
+ "capture_ps": 134.6,
+ "capture_pin": "xd[137]",
+ "launch_over": 0,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pass": true,
+ "fail_why": "",
+ "refs": {
+  "cr": {
+   "rise": 111.3,
+   "fall": 117.51451999999999,
+   "min": 96.15723,
+   "max": 123.64596,
+   "src": "insertion.json boundary mean",
+   "bmin": 103.5,
+   "bmax": 123.6,
+   "n": 1171
+  },
+  "cr_s": {
+   "rise": 212.8,
+   "fall": 226.61120000000003,
+   "min": 185.22626,
+   "max": 214.97296,
+   "src": "insertion.json boundary mean",
+   "bmin": 211.3,
+   "bmax": 213.9,
+   "n": 70
+  },
+  "xf": {
+   "rise": 171.6,
+   "fall": 182.812765,
+   "min": 150.45126,
+   "max": 179.0874,
+   "src": "insertion.json boundary mean",
+   "bmin": 162.2,
+   "bmax": 177.5,
+   "n": 566
+  },
+  "xf2": {
+   "rise": 149.4,
+   "fall": 158.18012000000002,
+   "min": 132.81599,
+   "max": 154.57117,
+   "src": "insertion.json boundary mean",
+   "bmin": 146.2,
+   "bmax": 152.8,
+   "n": 538
+  }
+ },
+ "spreads": {
+  "cr": 20.1,
+  "cr_s": 2.6,
+  "xf": 15.3,
+  "xf2": 6.6
+ },
+ "rst": {
+  "dir": "input",
+  "out": null,
+  "lmin": null,
+  "inp": 121.92307,
+  "hold": -101.22967,
+  "comb": [],
+  "clk": [
+   "cr"
+  ]
+ },
+ "rs_pins": {
+  "rs": {
+   "dir": "output",
+   "out": 176.37743,
+   "lmin": 172.52873999999997,
+   "inp": null,
+   "hold": null,
+   "comb": [],
+   "clk": [
+    "cr"
+   ]
+  },
+  "rst": {
+   "dir": "input",
+   "out": null,
+   "lmin": null,
+   "inp": 121.92307,
+   "hold": -101.22967,
+   "comb": [],
+   "clk": [
+    "cr"
+   ]
+  }
+ },
+ "rd_worst_launch": [
+  "rd[33]",
+  191.3868
+ ],
+ "scope": "CTS placement RC diagnostic (isolated master, gate c9a819185); not routed qualification"
+}
