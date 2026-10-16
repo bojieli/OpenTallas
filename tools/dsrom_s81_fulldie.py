@@ -499,14 +499,72 @@ def bound_view_pin_faults(mst, view, ports):
 # LEF; the per-instance orientation is recorded and the facing audit (pin_align) judges it
 BOUND_TOL = SHAVE + 1e-6
 BOUND_ORIENTS = ('R0', 'MY', 'MX', 'R180')
+# S-DIE 2026-10-16: the second, evidence-backed source of permitted orientations (tools/s81/orientation_qualify.py).
+# Off unless --orientation-qualification / OT_S81_ORIENTATION_QUALIFICATION names a table: then an orientation the
+# literal LEF SYMMETRY does not declare is supported only if the table has an entry for that master with the exact
+# sha256 of the bound LEF text, that orientation's verdict is PASS and every one of ORIENT_QUAL_CHECKS is PASS.
+ORIENT_QUAL = os.environ.get('OT_S81_ORIENTATION_QUALIFICATION') or None
+ORIENT_QUAL_SCHEMA = 's81-orientation-qualification-v1'
+ORIENT_QUAL_CHECKS = ('signal_track_lattice', 'pg_die_grid', 'row_parity', 'timing_clock')
+_ORIENT_QUAL = {}
 
 
-def bound_view_orientation_contract(view, master=None):
+def orientation_qualification(path=None):
+    """{(master, lef_sha256): entry} of an orientation qualification table, plus its provenance; None when no table
+    is configured.  Fail closed: a configured table that is missing, of another schema, or with duplicate entries is
+    a hard error, never an empty table."""
+    path = path or ORIENT_QUAL
+    if not path:
+        return None
+    if path in _ORIENT_QUAL:
+        return _ORIENT_QUAL[path]
+    tp = _view_path(path)
+    if not tp.is_file():
+        raise SystemExit(f'ORIENTATION_QUALIFICATION: table {tp} not found')
+    raw = tp.read_bytes()
+    try:
+        tab = json.loads(raw)
+    except ValueError as e:
+        raise SystemExit(f'ORIENTATION_QUALIFICATION: {tp} is not JSON: {e}')
+    if not isinstance(tab, dict) or tab.get('schema') != ORIENT_QUAL_SCHEMA or not isinstance(tab.get('entries'), list):
+        raise SystemExit(f'ORIENTATION_QUALIFICATION: {tp} schema {tab.get("schema") if isinstance(tab, dict) else None!r}, '
+                         f'expected {ORIENT_QUAL_SCHEMA!r} with an entries list')
+    ent = {}
+    for e in tab['entries']:
+        k = (e.get('master'), e.get('lef_sha256'))
+        if not all(isinstance(x, str) and x for x in k) or k in ent:
+            raise SystemExit(f'ORIENTATION_QUALIFICATION: {tp} has a malformed or duplicate entry {k}')
+        ent[k] = e
+    q = dict(path=str(path), sha256=hashlib.sha256(raw).hexdigest(), tag=tab.get('tag'), entries=ent)
+    _ORIENT_QUAL[path] = q
+    return q
+
+
+def qualified_orientations(qual, master, lef_text):
+    """orientations of BOUND_ORIENTS that qual's entry for (master, sha256 of lef_text) qualifies: verdict PASS and
+    every ORIENT_QUAL_CHECKS check present with verdict PASS.  [] for no entry (or a different LEF sha256)."""
+    e = qual['entries'].get((master, hashlib.sha256(lef_text.encode()).hexdigest()))
+    if e is None:
+        return []
+    out = []
+    for o, v in (e.get('orientations') or {}).items():
+        chk = v.get('checks') or {}
+        if (o in BOUND_ORIENTS and v.get('verdict') == 'PASS'
+                and all((chk.get(c) or {}).get('verdict') == 'PASS' for c in ORIENT_QUAL_CHECKS)):
+            out.append(o)
+    return out
+
+
+def bound_view_orientation_contract(view, master=None, qualification=None):
     """Declared transforms of this hash-verified LEF, within placer support.
 
     No SYMMETRY declares R0 only. A placer accepting MY/MX is not evidence that
     an individual hard macro permits those transforms. This does not add any
     physical symmetry or qualify mirrored clock/PG/native timing invariants.
+    With an orientation qualification table (qualification, else the configured
+    --orientation-qualification), an orientation is also supported when the table
+    qualifies it for this master and the exact sha256 of this LEF text
+    (qualified_orientations); the literal contract itself is unchanged.
     """
     lines = view['text'].splitlines()
     macros = [(j, z.group(1)) for j, line in enumerate(lines)
@@ -551,9 +609,17 @@ def bound_view_orientation_contract(view, master=None):
         legal.update(('R90', 'R180', 'R270'))
         if 'X' in symmetry or 'Y' in symmetry:
             legal.update(('MX', 'MY', 'MXR90', 'MYR90'))
-    return dict(symmetry=symmetry, declared=sorted(legal) if not errors else [],
-                supported=[o for o in BOUND_ORIENTS if o in legal] if not errors else [],
-                errors=errors)
+    out = dict(symmetry=symmetry, declared=sorted(legal) if not errors else [],
+               supported=[o for o in BOUND_ORIENTS if o in legal] if not errors else [],
+               errors=errors)
+    qual = qualification if qualification is not None else orientation_qualification()
+    if qual is not None:
+        name = master if master is not None else (targets[0][1] if len(targets) == 1 else None)
+        q = qualified_orientations(qual, name, view['text']) if not errors and name else []
+        out['qualified'] = [o for o in BOUND_ORIENTS if o in q and o not in legal]
+        out['supported'] = [o for o in BOUND_ORIENTS if o in out['supported'] or o in out['qualified']]
+        out['qualification'] = dict(table=qual['path'], sha256=qual['sha256'], tag=qual.get('tag'))
+    return out
 
 
 def apply_view_binding(m, pdir):
@@ -11353,6 +11419,10 @@ def die_options(ap):
     ap.add_argument('--contract', help='s81-die-iter 2026-10-12: hier contract JSON (repo path): SU / HC / VM / centre slab outlines')
     ap.add_argument('--view-binding', help='S81 DIE 2026-10-13: by-name real view table (tools/s81/view_binding.py; repo path or '
                     'absolute); default OT_S81_VIEW_BINDING or ' + VIEW_BINDING_DEFAULT + "; 'none' binds nothing")
+    ap.add_argument('--orientation-qualification', help='S-DIE 2026-10-16: orientation qualification table '
+                    '(tools/s81/orientation_qualify.py; repo path or absolute); default OT_S81_ORIENTATION_QUALIFICATION '
+                    'or none.  A bound view orientation the literal LEF SYMMETRY does not declare is then accepted only '
+                    'for a table entry with the exact LEF sha256 and every check PASS')
     ap.add_argument('--suhc-v2', action='store_true', help='s81die-1011: su_hc contract v2 (one SU in su_s, one HC in hc_s, VM '
                     'row slots, collective y 8,192 to HC); needs --suhc-1011 --ctrl-adapters')
     ap.add_argument('--suhc-v2-hc-north', action='store_true', help='s81die-1011: with --suhc-v2, the HC in the slot above '
@@ -11464,10 +11534,12 @@ def die_options(ap):
 
 def apply_options(a):
     """configure the module globals for the die variant in `a` (die_options)"""
-    global CTRL_SLAB, CTRL_ROLE, CTRL_BINDINGS, VIEW_BINDING
+    global CTRL_SLAB, CTRL_ROLE, CTRL_BINDINGS, VIEW_BINDING, ORIENT_QUAL
     global CANONICAL_LAYOUT, PAIRS, BF_PAIRS, NV_PAIRS
     if getattr(a, 'view_binding', None):
         VIEW_BINDING = a.view_binding
+    if getattr(a, 'orientation_qualification', None):
+        ORIENT_QUAL = a.orientation_qualification
     CTRL_SLAB = bool(getattr(a, 'ctrl_slab', False))
     CTRL_ROLE = getattr(a, 'ctrl_role', 'layer')
     CTRL_BINDINGS = None
