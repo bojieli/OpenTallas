@@ -261,9 +261,9 @@
   "macro_halo_um": 5.4
  },
  "job": {
-  "owner": "Claude H-SM",
-  "branch": "claude/hbm-sm-attention-1015",
-  "tag": "strap4",
+  "owner": "Codex H-SM 2330",
+  "branch": "codex/hbm-sm-2330",
+  "tag": "strap4hookfix",
   "purpose": "Strap-identity quadrant master (coordinator decision per DEDUPE, 2026-10-15): bank / slice identity is a registered strap input (bid[2:0] / sid[1:0] pins, tied to die constants per instance, captured by pin flops), so the 8 banks of the quadrant use this ONE view; replaces the 8 literal-identity masters. Same data calendars and edges as identity2. Pins: identity2 r2 grant (actual tracks, PG-clear, explicit centres) + 5 strap pins on free N-face tracks beside the clock pair (proposal for H-DIE).",
   "structural_change": "Strap-identity quadrant master (coordinator decision per DEDUPE, 2026-10-15): bank / slice identity is a registered strap input (bid[2:0] / sid[1:0] pins, tied to die constants per instance, captured by pin flops), so the 8 banks of the quadrant use this ONE view; replaces the 8 literal-identity masters. Same data calendars and edges as identity2. Pins: identity2 r2 grant (actual tracks, PG-clear, explicit centres) + 5 strap pins on free N-face tracks beside the clock pair (proposal for H-DIE). strap4: H-DIE v4 270 x 270 slot (pin-perimeter bound; PG M6, pins M4 W/E, M5 N/S at 0.192/0.144 um), 3-array stack re-centred; SECDED flip mask on the D edge (strap3); write-leaf valids replicated at the pins per 32-b slice (q0 strap2 TT -149.91: dq_v -> 300 ps buffer tree -> write OR tree -> s1w_d). Same edges.",
   "extra_paths": [
