@@ -1,0 +1,145 @@
+{
+ "name": "hep_static_w5e_1016-w5e-COMMIT",
+ "block": "hfd_ep_static",
+ "ref_tile": true,
+ "owner": "Claude:H-LKEP",
+ "purpose": "HBM v15 link endpoint master (ep_N0..N3/ep_S0..S4): static lane gearbox + 0az off-die elastic RX boundary; replaces hfd_lk_ep v14",
+ "threads": 8,
+ "peak_ram_gb": 32,
+ "source": {
+  "branch": "claude/h-lkep-1015",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/hbm_accel/tu/ep_static_20261015",
+   "rtl/dsrom_sys/s81_link",
+   "rtl/qwen_sys/split_20261014/ot_qwen_crc_parallel.sv",
+   "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; hfd_ep_static #(.IDLE_K(204), .MUT(0)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/tu/ep_static_20261015/hfd_ep_static.sv rtl/hbm_accel/tu/ep_static_20261015/ot_hep_rx_store.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "ep_exact_2dies_fec",
+    "cmd": "bash rtl/hbm_accel/tu/ep_static_20261015/run_hfd_ep_static_bench.sh . {RUN}/bench 0",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "pass_regex": "^TB_HFD_EP_STATIC .* PASS$",
+    "min_count_regex": "got=(768) bad=0"
+   },
+   {
+    "name": "ep_mut_tx_tail",
+    "cmd": "bash rtl/hbm_accel/tu/ep_static_20261015/run_hfd_ep_static_bench.sh . {RUN}/bench 1",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "pass_regex": "^TB_HFD_EP_STATIC .* PASS$",
+    "fail_regex": "^TB_HFD_EP_STATIC MUT=[1-4] .*\\| FAIL$"
+   },
+   {
+    "name": "ep_mut_rx_noidle",
+    "cmd": "bash rtl/hbm_accel/tu/ep_static_20261015/run_hfd_ep_static_bench.sh . {RUN}/bench 2",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "pass_regex": "^TB_HFD_EP_STATIC .* PASS$",
+    "fail_regex": "^TB_HFD_EP_STATIC MUT=[1-4] .*\\| FAIL$"
+   },
+   {
+    "name": "ep_mut_rx_swap",
+    "cmd": "bash rtl/hbm_accel/tu/ep_static_20261015/run_hfd_ep_static_bench.sh . {RUN}/bench 3",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "pass_regex": "^TB_HFD_EP_STATIC .* PASS$",
+    "fail_regex": "^TB_HFD_EP_STATIC MUT=[1-4] .*\\| FAIL$"
+   },
+   {
+    "name": "ep_mut_rxblock_bank",
+    "cmd": "bash rtl/hbm_accel/tu/ep_static_20261015/run_hfd_ep_static_bench.sh . {RUN}/bench 4",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "pass_regex": "^TB_HFD_EP_STATIC .* PASS$",
+    "fail_regex": "^TB_HFD_EP_STATIC MUT=[1-4] .*\\| FAIL$"
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.01 OT_MM_FF_SDC='physical/ref_tile/hep_static_w5e_1016/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/hep_static_w5e_1016/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 32
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/hep_static_w5e_1016 --out {RUN}/record/views/hfd_ep_static --macro-view physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/hep_static_w5e_1016/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/hep_static_ref_1015/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/hep_static_ref_1015/hep_static_w5e_1016-w5e-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.01,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "v15 successor of the retired flat hfd_lk_ep (13 failed routes): one ~8k-flop master for all 9 ep windows, lane gearbox 613b->512b fixed 4-in-5 format + off-die elastic RX pingpong (0az boundary), every port pin-registered, one clock root. Route-2 fix of route-1 EARLY_FAIL_HOLD (setup/hold conflict at enable-mux D pins with one 612-load select): selects replicated per 64-b slice, bypass-free SRAM leaf, macro columns facing one centre datapath channel, logic band at the COLL/SerDes faces. Route-3 fix of route-2 EARLY_FAIL_CONGESTION (12 zero-capacity M2/M4 gcells on 3 nets at the inward SRAM faces of the 47 um centre channel; abutted N-S macro pairs left no horizontal corridor): the two macro rows are separated by a 21.6 um horizontal channel (outline 434.72 x 315.36 inside the 434.72 x 515.2 window), giving the face escapes and the band->channel nets a crossing corridor. Route-4 native fix (route 3 CLOSED TT +128.49 / FF +7.69 but native launch 223.2 ps on 3 sd_tx pins, capture 212.7 ps on sd_rx[1]): sd_rx[1] (SerDes IDLE bit) loads ONE pin flop (it fed 9), the per-slice data copies and the RX gearbox beat move one edge later (+1 RX cycle at the off-die boundary, +520 flops); clk entry moved west on the S face to x 151.2-153.36 um (between tx_frame and the controls) to cut the late W-face boundary arrival. Route-5 fix of route-4 native FAIL (launch 259.7 on 25 sd_tx pins at W y 2-8, capture 221.3 on tx_frame S x 16-19; R 429.6 spread 100.8): SW corner pin-flop crowding where the W SerDes and S COLL pin-flop fields meet -> 19.44 um corner keep-out on both faces, sd_tx 512 pins over 77.8 um (6.6/um, was 7.5), S pins shifted +19.44 um (rx_pin unchanged); same RTL, same outline. Route-5b (parallel to route 5 bc6c91699): route-5 gate showed the sd_rx pin flops squeezed into the 17 um W channel beside the lower-left macro (red strip); both macro rows move N by 56.16 um (outline 434.72 x 371.52, inside the 434.72 x 515.2 window) so the whole W SerDes pin field (y 21.6-172.8) faces the logic band, not a macro. Route-5d (5b outline/pins/RTL): route 5b native capture FAIL 213.6 on 517 inputs; each input path carries the kit pad (HB2+BUFx4f) plus 2-4 route hold buffers (netlist: tx_frame[47] -> HB2 -> BUFx4f -> HB2 -> 3x BUFx2 -> p_tx_f D), and FF input->reg hold slack is +35.6 ps (pre-ECO +20.1): the inputs are over-padded for hold. Fix: route hold margin 30 -> 10 ps and no kit input hold pad (repair sizes input hold itself). | 5e (H-LKEP 1315, 10-16): 5d kit + output hold pad HB1xp67 (was HB2) on the leaf_iohold output stage; target native launch <= 215 with capture <= 190 (5d 186.8, no input pad). Same RTL, outline 434.72 x 371.52, pins.",
+ "reroute_reason": {
+  "kind": "pin_register",
+  "cell": "hfd_ep_static",
+  "source": "results/arch/hep_static_1015/native_audit_route5d.json",
+  "launch_ps": 221.1,
+  "capture_ps": 186.8,
+  "fix": "route-5d native launch 221.1 on 2 rx_pin_flit pins (1.1 ps over). Probe of the 5d routed ODB: every rx_pin_flit launch flop is already at its S pin (mean |dx| 0.3 um, y 4 um) and their clock arrivals are uniform (512-524 ps), so placement/pin moves cannot help; the fixed ~105 ps output stage QN->INV->BUFx4f->HB2xp67 (36.5 ps)->BUFx4f->BUFx2 dominates. 5e = 5d kit unchanged except the OUTPUT hold pad HB2 -> HB1 (hold_pad.out_cell, ~-15 ps launch on every output); input pad stays off (capture 186.8 kept)."
+ }
+}
