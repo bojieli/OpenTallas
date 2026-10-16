@@ -1,9 +1,18 @@
 `timescale 1ns/1ps
 module tb;
- reg ck=0,rst_n=0; reg[41:0]a=0;wire[41:0]b0,b1;
+`ifdef OT_TEST_SELECTOR_FORK
+ localparam integer WIDTH=26;
+`else
+ localparam integer WIDTH=42;
+`endif
+ reg ck=0,rst_n=0; reg[WIDTH-1:0]a=0;wire[WIDTH-1:0]b0,b1;
+`ifdef OT_TEST_SELECTOR_FORK
+ qfd_static_selector_fork26 dut(.*);
+`else
  qfd_static_command_fork42 dut(.*);
+`endif
  always #5 ck=~ck;
- integer k,checked=0;reg[41:0]expected;
+ integer k,checked=0;reg[WIDTH-1:0]expected;
  initial begin
   #1;rst_n=1;#1;rst_n=0;
   repeat(3)@(negedge ck);
