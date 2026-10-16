@@ -124,6 +124,27 @@ def ft_record(o):
                  owner='die (relay stations)', master_keepout='hard placement + M5/M6 route')]
 
 
+SM_CARVE = None      # H-DIE-V790 10-16 (OWNER feedthrough carve, H-SM rp4c): um width of the SM frame's W-edge column and
+                     # N-edge row (40.32); None = the centred v15 column/row of ft_forbid/ft_record
+
+
+def ft_forbid_sm(o):
+    """SM slots: pins stay out of the carve footprint on the faces it touches (W-column foot on N/S, N-row foot on E/W)"""
+    if SM_CARVE is None:
+        return ft_forbid(o)
+    c = SM_CARVE + FT_MARGIN
+    return dict(N=[(0.0, c)], S=[(0.0, c)], E=[(o['h'] - c, o['h'])], W=[(o['h'] - c, o['h'])])
+
+
+def ft_record_sm(o):
+    if SM_CARVE is None:
+        return ft_record(o)
+    return [dict(kind='feedthrough_relay_column', x_um=[0.0, SM_CARVE], y_um=[0.0, o['h']], edge='W',
+                 owner='die (relay stations; OWNER SM feedthrough carve, H-SM rp4c frame)', master_keepout='hard placement + route'),
+            dict(kind='feedthrough_relay_row', x_um=[0.0, o['w']], y_um=[round(o['h'] - SM_CARVE, 3), o['h']], edge='N',
+                 owner='die (relay stations; OWNER SM feedthrough carve)', master_keepout='hard placement; ports cross on M5 only')]
+
+
 def windows(s, cls):
     return [w for w in s.get('pin_windows', []) if w['cls'] == cls]
 
@@ -238,14 +259,14 @@ def grant_sm(s, P, ref, sha):
     faces = {f: v for f, v in faces.items() if v}
     got = {n.split('[')[0] for f in faces.values() for n, _, _ in f}
     assert got == set(P), set(P) ^ got
-    pins, dens = mkpins(o, faces, ft_forbid(o))
+    pins, dens = mkpins(o, faces, ft_forbid_sm(o))
     common(s, 'sm', TOP['sm'], {}, ref, sha,
            'static SM successor ot_hbm_accel_smh_static (compiler 83-bit command + 1099-bit packet, no req/d ready); '
            f'packet/expected_request at the PC (SM_HBM {hf}), xw_data bank b at its SM_X window, results at SM_OUT, '
            'command at the KV_DESC/VM-hub window; die feedthrough column+row reserved. Attention ports (KV_DESC 64 b, '
            'ot_hbm_accel_smh_attn) re-pin on landing in main.')
     s.update(pins=pins, face_density=dens, clock_entry=dict(pin='clk', face=hf, layer='M5',
-             offset=next(p['offset'] for p in pins if p['name'] == 'clk')), reserved_channels=ft_record(o))
+             offset=next(p['offset'] for p in pins if p['name'] == 'clk')), reserved_channels=ft_record_sm(o))
 
 
 def grant_quant(c, S, ref, sha_lg, sha_x):

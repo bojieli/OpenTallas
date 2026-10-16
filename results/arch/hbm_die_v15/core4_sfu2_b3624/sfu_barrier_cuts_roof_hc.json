@@ -5,17 +5,17 @@
  "rows": [
   {
    "quarter": "SW",
-   "cut_x_um": 4895.68,
+   "cut_x_um": 4838.08,
    "sm_bounded_y_um": [
-    5258.4,
-    8922.88
+    5272.8,
+    8937.28
    ],
    "hard_su_y_um": [
-    5278.4,
-    8103.68
+    5292.8,
+    8118.08
    ],
-   "free_channel_um": 1109.92,
-   "conditional_roof_extra_um": 270.72,
+   "free_channel_um": 1076.8,
+   "conditional_roof_extra_um": 237.6,
    "crossing": [
     {
      "source": "sfucore_SW",
@@ -80,23 +80,23 @@
    ],
    "known_demand_bits": 4900,
    "tracks_per_um": 14.0625,
-   "utilization": 0.313937,
+   "utilization": 0.323593,
    "passes_060": true,
    "channel_needed_at_060_um": 580.740741
   },
   {
    "quarter": "SE",
-   "cut_x_um": 28094.32,
+   "cut_x_um": 28151.920000000002,
    "sm_bounded_y_um": [
-    5258.4,
-    8922.88
+    5272.8,
+    8937.28
    ],
    "hard_su_y_um": [
-    5278.4,
-    8103.68
+    5292.8,
+    8118.08
    ],
-   "free_channel_um": 1109.92,
-   "conditional_roof_extra_um": 270.72,
+   "free_channel_um": 1076.8,
+   "conditional_roof_extra_um": 237.6,
    "crossing": [
     {
      "source": "sfucore_SE",
@@ -161,23 +161,23 @@
    ],
    "known_demand_bits": 4900,
    "tracks_per_um": 14.0625,
-   "utilization": 0.313937,
+   "utilization": 0.323593,
    "passes_060": true,
    "channel_needed_at_060_um": 580.740741
   },
   {
    "quarter": "NW",
-   "cut_x_um": 5084.736000000001,
+   "cut_x_um": 5027.136,
    "sm_bounded_y_um": [
-    16184.728,
-    19849.208
+    16227.922,
+    19892.402
    ],
    "hard_su_y_um": [
-    17003.928,
-    19829.208
+    17047.122,
+    19872.402
    ],
-   "free_channel_um": 1109.92,
-   "conditional_roof_extra_um": 270.72,
+   "free_channel_um": 1076.8,
+   "conditional_roof_extra_um": 237.6,
    "crossing": [
     {
      "source": "sfucore_NW",
@@ -242,23 +242,23 @@
    ],
    "known_demand_bits": 4900,
    "tracks_per_um": 14.0625,
-   "utilization": 0.313937,
+   "utilization": 0.323593,
    "passes_060": true,
    "channel_needed_at_060_um": 580.740741
   },
   {
    "quarter": "NE",
-   "cut_x_um": 28094.32,
+   "cut_x_um": 28151.920000000002,
    "sm_bounded_y_um": [
-    16184.728,
-    19849.208
+    16227.922,
+    19892.402
    ],
    "hard_su_y_um": [
-    17003.928,
-    19829.208
+    17047.122,
+    19872.402
    ],
-   "free_channel_um": 1109.92,
-   "conditional_roof_extra_um": 270.72,
+   "free_channel_um": 1076.8,
+   "conditional_roof_extra_um": 237.6,
    "crossing": [
     {
      "source": "sfucore_NE",
@@ -323,12 +323,12 @@
    ],
    "known_demand_bits": 4900,
    "tracks_per_um": 14.0625,
-   "utilization": 0.313937,
+   "utilization": 0.323593,
    "passes_060": true,
    "channel_needed_at_060_um": 580.740741
   }
  ],
- "roof_witness_sha256": "d309eaf291344b8f17aa102e71d268a4217b5fe6cada4c51bb74282f611af271",
+ "roof_witness_sha256": "524620079fd9635e76df1a42fadb88afffd6439f9902bea3b7a4f46a943526fa",
  "roof_scope": "Conditional geometric roof only; actual source-connected parent OBS/layer/PG and all incident clocks unqualified",
  "station_leaf_count": 9568,
  "station_reset_ff_added": 11040,

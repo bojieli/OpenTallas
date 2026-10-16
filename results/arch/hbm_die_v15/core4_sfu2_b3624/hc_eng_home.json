@@ -28,49 +28,49 @@
  "links": {
   "hc_SW>hc_eng:HC_ENG": {
    "bits": 2100,
-   "route_um": 6943.4,
+   "route_um": 6929.0,
    "stages": 13,
    "engine_face": "S"
   },
   "hc_eng>hc_SW:HC_ENG": {
    "bits": 772,
-   "route_um": 4459.2,
+   "route_um": 4444.8,
    "stages": 8,
    "engine_face": "S"
   },
   "hc_SE>hc_eng:HC_ENG": {
    "bits": 2100,
-   "route_um": 4459.2,
+   "route_um": 4444.8,
    "stages": 8,
    "engine_face": "S"
   },
   "hc_eng>hc_SE:HC_ENG": {
    "bits": 772,
-   "route_um": 4830.6,
-   "stages": 9,
+   "route_um": 6016.2,
+   "stages": 12,
    "engine_face": "S"
   },
   "hc_NW>hc_eng:HC_ENG": {
    "bits": 2100,
-   "route_um": 6109.7,
+   "route_um": 6152.9,
    "stages": 12,
    "engine_face": "N"
   },
   "hc_eng>hc_NW:HC_ENG": {
    "bits": 772,
-   "route_um": 6172.5,
+   "route_um": 6152.9,
    "stages": 12,
    "engine_face": "N"
   },
   "hc_NE>hc_eng:HC_ENG": {
    "bits": 2100,
-   "route_um": 6885.3,
-   "stages": 13,
+   "route_um": 6152.9,
+   "stages": 12,
    "engine_face": "N"
   },
   "hc_eng>hc_NE:HC_ENG": {
    "bits": 772,
-   "route_um": 7681.1,
+   "route_um": 7724.3,
    "stages": 15,
    "engine_face": "N"
   }
