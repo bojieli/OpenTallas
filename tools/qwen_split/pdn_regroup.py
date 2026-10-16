@@ -79,6 +79,8 @@ def tie_local(case, lines, p8):
             raise SystemExit('r8: run_pdn.tcl hooks not found')
         t = t.replace(a, a + f'source /work/die_tie_rows.tcl\not_tie_rows {p8:.3f} 0.48 {p9:.3f} {w9:.3f}\nmem tie_rows\n', 1)
         t = t.replace(b, f'ot_tie_rows_verify {p8:.3f} 0.48; ' + b, 1)
+        if 'mem pdn\n' in t:   # pre-PG database for an explicitly DIAGNOSTIC continuation (die_chain OT_PG_OPEN_DIAG)
+            t = t.replace('mem pdn\n', 'mem pdn\nwrite_db /work/floorplan_pdn_prepg.odb\n', 1)
         run.write_text(t)
     (case / 'die_tie_rows.tcl').write_text((Path(__file__).parent / 'die_tie_rows.tcl').read_text())
     return keep, dict(dropped_ladder_lines=len(dropped), m9_pitch=p9, m9_width=w9)

@@ -11,7 +11,7 @@ set -euo pipefail
 out=$1; mut=${2:-0}; tile=${3:-}
 NT_K=${NT_K:-67}
 PKL_SHA=8c18c0655ccf6a14
-for c in "${S81_SU_CASES:-}" /srv/opentallas-scratch/claude/s81-suhc/su_cases_v2_ildr.pkl \
+for c in "${S81_SU_CASES:-}" tools/s81_suhc/fixtures/su_cases_v2_ildr.pkl /srv/opentallas-scratch/claude/s81-suhc/su_cases_v2_ildr.pkl \
          /srv/opentallas-scratch2/claude/s81-suhc/su_cases_v2_ildr.pkl "$HOME/s81-suhc/su_cases_v2_ildr.pkl"; do
     [ -n "$c" ] && [ -s "$c" ] && { pkl=$c; break; }
 done
