@@ -2502,11 +2502,29 @@
      "reported": "2026-10-16 01:15"
     },
     "2": {
-     "id": "S81F-10",
-     "outcome": "open",
-     "evidence": "The S-NET+FILL 86x1 2-track window proposal is waiting on S-DIE. No re-route.",
-     "before": null,
-     "after": null
+     "outcome": "confirmed",
+     "before": {
+      "pins_per_um": 20.8,
+      "window_um": 3.5,
+      "bits": 70,
+      "tracks": "every M4 track"
+     },
+     "after": {
+      "jobs": "s81fill_stnh_86x1-f10-884a902b1 / s81fill_stnv_86x1-f10-ae282bdde CLOSED (main 203d89dd8)",
+      "bits": 86,
+      "window_um": 8.26,
+      "pins_per_um": 10.4,
+      "tracks": "2-track pitch, same window both faces",
+      "tt_ps": [
+       36.86,
+       29.41
+      ],
+      "ff_ps": 388,
+      "drc": 0,
+      "native": "PASS",
+      "image": "img_r2/S81F-10__stnh86_f10_floorplan.png"
+     },
+     "evidence": "03:45 S-NET+FILL: stn86 f10 routed on 2-track pins and closed; VIS-ROM LOOKED at floorplan/density: 86 bits per face in an 8.26 um window (2-track), identical W/E windows, clock at the W window foot; placement dense but tile is 17.3 um and closed. Die binding via c26b (--stn-pin-pitch2)."
     }
    }
   },
@@ -3442,17 +3460,17 @@
  "round2": {
   "date": "2026-10-16",
   "scored": {
-   "confirmed": 5,
+   "confirmed": 6,
    "refuted": 2,
-   "open": 42,
+   "open": 41,
    "confirmed-partial": 5,
    "retired": 2
   },
   "hit_rate": {
-   "hits_confirmed_incl_partial": 10,
+   "hits_confirmed_incl_partial": 11,
    "refuted": 2,
-   "decided": 12,
-   "hit_rate": 0.833,
+   "decided": 13,
+   "hit_rate": 0.846,
    "open": 43,
    "retired": 2,
    "note": "refuted: QC-03 gearbox E face (r13 routed overflow 0, no hot wall; M6 impossible, M5 cap), S81H-13 bank128_e timing (bke1 TT +343/FF +27.5). Owner-refuted parts of open findings: D-QC-01 3W/3E port split (cut 1.096), D-QC-02 reset fan-out is a relay-skip artefact (code-verified; full-relay r2h1/r2h2 pending). S81H-08 moved to partial 02:30 (native clock R 173.7->158.1, spread 38.0->31.1)."
