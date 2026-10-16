@@ -65,7 +65,7 @@ def test_die_render_adapters(tmp_path):
     import die_layout_render as DL
     blocks = [["a", 0, 0, 100, 100], ["b", 1100, 0, 1200, 100], ["c", 0, 300, 100, 400]]
     bus = DL._buses(blocks, [("a", "b", 64, None), ("b", "a", 64, None), ("a", "c", 8, 1), ("a", "x", 9, None)], 500)
-    assert sorted(bus) == [["a", "b", 128, 1], ["a", "c", 8, 1]]   # merged per pair; 1100 um -> 1 stage; unknown dropped
+    assert sorted(bus) == [["a", "b", 128, 2], ["a", "c", 8, 1]]   # merged per pair; 1100 um -> 2 relays; unknown dropped
     assert DL.grt_table("Total   10  5  3.72%   0 /  0 /  2")[0]["overflow"] == 2
     p = tmp_path / "plan.json"
     p.write_text(json.dumps({"die_outline_um": [3000, 2000], "hard_fixed_boxes": [["hub", 100, 100, 500, 500]],
