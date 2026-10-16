@@ -1,0 +1,27 @@
+{
+  "verdict": "COMPONENT_PASS",
+  "source_commit": "e86b08e5e",
+  "job": "oth-ubuntu-125637-1792168547",
+  "actual_parts": [
+    "ot_s81_fixed_issue PW36 issuer",
+    "ot_s81_hc_programme_source actual4096x72 ROM",
+    "ot_s81_fixed_mailbox W8 actualcompletionreturn"
+  ],
+  "commands": 6,
+  "kind_ids": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "metadata_fields": 144,
+  "scope": "Controller/metadata-format composition only. HC arithmetic absent, completion input supplied at declared HC component boundary; no nativeHC/chip or measuredrate claim.",
+  "native_qualified": false,
+  "physical_qualified": false,
+  "logs_sha256": {
+    "results/arch/s81_compiler_profiles_1016/hc_issuer_programme/source.sha256": "0a5cdc8f757208d7feb6feb1aa00928440c3244374d0cbbb4c9db3174f0c1c4c",
+    "results/arch/s81_compiler_profiles_1016/hc_issuer_programme/run.log": "3076a41cd205b954fb00dd4768d102607e38ef1d07b4e4211e6db20e8ea1033d"
+  }
+}
