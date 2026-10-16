@@ -215,7 +215,8 @@ def main():
             files[fn]=candify((ROOT/n).read_text(), names)
             extra.append(fn)
         fn='x_bf_die_pair_static.sv'
-        files[fn]=files[fn].replace('cand_dsfd_bf_col #(', 'cand_dsfd_bf_col_roots #(')
+        files[fn], count=re.subn(r'(?<![\w$])(?:cand_)?dsfd_bf_col #\(', 'cand_dsfd_bf_col_roots #(', files[fn])
+        assert count==2, count
         files[fn]=files[fn].replace('e0w (.ck(clk)', 'e0w (.leaf_ck({9{clk}}), .ck(clk)').replace('e0e (.ck(clk)', 'e0e (.leaf_ck({9{clk}}), .ck(clk)')
     if a.mapped_rom_candidate:
         from bf_mapped_rom_images import write_images
