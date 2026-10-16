@@ -20,8 +20,8 @@ module tb_hbm_su_collport #(parameter integer QID=1, INJ_RET=11, SD=0, MUT_CX=0,
  localparam integer B39=(QID==0);
  reg clk_s=0, clk_q=0, rst=0;
  // phase-zero clocks: rising stream edges at 3p, serial at 4n (t from 0)
- initial forever begin #1.5 clk_s=~clk_s; end
- initial forever begin #2 clk_q=~clk_q; end
+ initial begin clk_s=1; forever begin #1.5 clk_s=~clk_s; end end
+ initial begin clk_q=1; forever begin #2 clk_q=~clk_q; end end
  // ------------------------------------------------------------------ DUT
  reg [1:0] inj_rd=0; reg [159:0] inj_addr=0; wire [1023:0] inj_d;
  reg [3:0] del_valid=0; reg [2179:0] del_flit=0; reg [159:0] del_obase=0;
