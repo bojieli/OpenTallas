@@ -7586,7 +7586,7 @@
   "cts_sink": {
    "size": 12,
    "diameter_um": 8,
-   "extra": "-balance_levels"
+   "extra": "-balance_levels -num_static_layers 1"
   }
  },
  "pin_source": "Exact source candidate. R0 origin-y phase0 and MX phase32 reuse one M6 frame at H138.24; actual exported outline and all parent tracks are unqualified.",
@@ -7594,7 +7594,7 @@
  "job": {
   "owner": "Claude:el1014-qwen-dvm-build",
   "branch": "codex/qwen-link-recovery-0253",
-  "tag": "m6r",
+  "tag": "m6s",
   "purpose": "Qwen TP8 distributed x slice COLUMN HEAD r3 (owner 08:20 PT 10-14; el1014-qwen-dvm-build.log 16:15): head-row station (onward copy = input pin registers) for {fill, ib, go}, column slice control (epochs, 16 tile windows from the tids strap, pooled pairs, leaf write control), serial-read TDM sequencer, N / S corridor launch, fault chain inward; one clock root.",
   "benches": [
    {
@@ -7655,7 +7655,7 @@
   "cell": "HB2xp67_ASAP7_75t_R"
  },
  "io_tcl": "physical/ref_tile/qfd_xhead_w_m6_138/assigned_pins.tcl",
- "structural_change": "m6r (Q-DVM+LINK helper heads 2026-10-16): gate-CTS native diag of m6a FAIL (E launch 297.6/293 pins, capture 510.0 rst_n + 84 w_d; W 276.0/469.6) classified on the CTS DB: 150/185 (E) and 276/341 (W) launch misses are boundary flops on late clock leaves (boundary clock 207-261 ps, leaf buffers of 32 sinks strung on 16-27 um H-tree taps), output datapath median 173 ps; w_d capture misses are early-clock (197 ps) capture flops; rst_n is a recovery path across the tile; 3-5 e_d pass-through bits shared the f_q flop with the fill logic (INVx13 fanout). Fix: (1) LOCAL_RST=1: rst_n -> ot_rst_pipe 2-flop synchroniser anchored at the rst_n pin (local_reset_capture.tcl) + 1 regional stage; reset release +3 edges, cold init only, 0 normal edges; (2) ONWARD_REG=1: e_d/w_d onward copy leaves from its own pin registers (duplicate of f_q/ib_pin/g_pin on the same edge, 0 cycles); (3) CTS sink clustering 12 sinks / 8 um + balance_levels (CTS-only trial on the m6a placement: output-flop clock spread 57.7 -> 28.3 ps); (4) LEAF_READ_PIN_PIPE=1 + LEAF_FILL_PIPE=1 (FILL_LEAD 5, DX 14) to match leaf m6c and the production array. Port list, faces, spans and contacts identical.",
+ "structural_change": "m6s (Q-DVM+LINK helper heads 2026-10-16): m6r gate native E launch 333.4 (139) / W 274.7 (36), capture PASS 184.2/180.8 (rst_n fixed), spread 37.3; m6s keeps the internal f_q/ib_pin/g_pin copies (yosys folded them INTO the kept onward registers, so e_d/w_d 459-478 still drove the fill logic) and adds -num_static_layers 1 (CTS-only trial on the m6r placement: output-flop spread 33.8 -> 23.1 ps). m6r: gate-CTS native diag of m6a FAIL (E launch 297.6/293 pins, capture 510.0 rst_n + 84 w_d; W 276.0/469.6) classified on the CTS DB: 150/185 (E) and 276/341 (W) launch misses are boundary flops on late clock leaves (boundary clock 207-261 ps, leaf buffers of 32 sinks strung on 16-27 um H-tree taps), output datapath median 173 ps; w_d capture misses are early-clock (197 ps) capture flops; rst_n is a recovery path across the tile; 3-5 e_d pass-through bits shared the f_q flop with the fill logic (INVx13 fanout). Fix: (1) LOCAL_RST=1: rst_n -> ot_rst_pipe 2-flop synchroniser anchored at the rst_n pin (local_reset_capture.tcl) + 1 regional stage; reset release +3 edges, cold init only, 0 normal edges; (2) ONWARD_REG=1: e_d/w_d onward copy leaves from its own pin registers (duplicate of f_q/ib_pin/g_pin on the same edge, 0 cycles); (3) CTS sink clustering 12 sinks / 8 um + balance_levels (CTS-only trial on the m6a placement: output-flop clock spread 57.7 -> 28.3 ps); (4) LEAF_READ_PIN_PIPE=1 + LEAF_FILL_PIPE=1 (FILL_LEAD 5, DX 14) to match leaf m6c and the production array. Port list, faces, spans and contacts identical.",
  "m6_pin_grant": {
   "schema": "opentallas.m6_pin_grant.v1",
   "master": "qfd_xhead_w",

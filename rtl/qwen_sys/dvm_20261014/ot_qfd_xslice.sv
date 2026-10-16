@@ -740,9 +740,10 @@ module ot_qfd_xhead #(
     end endgenerate
 
     // ---- input pin registers = the onward copy (head-row station), ready ----
-    reg              g_pin;
-    reg  [IBW-1:0]   ib_pin;
-    reg  [FW-1:0]    f_q;
+    // keep: with ONWARD_REG the internal copies must not be folded into the onward pin registers (same D)
+    (* keep = "true" *) reg              g_pin;
+    (* keep = "true" *) reg  [IBW-1:0]   ib_pin;
+    (* keep = "true" *) reg  [FW-1:0]    f_q;
     always @(posedge ck or negedge rst_i)
         if (!rst_i) g_pin <= 1'b0; else g_pin <= a_d[0];
     always @(posedge ck) begin ib_pin <= a_d[1 +: IBW]; f_q <= a_d[1 + IBW +: FW]; end
