@@ -21,6 +21,19 @@ PLACE = re.compile(
 )
 
 
+def outline(geometry):
+    """Only known, finite positive physical widths/heights prove an outline."""
+    try:
+        geometry = geometry or {}
+        values = [geometry.get(key) for key in ("FW", "FH")]
+        if not all(isinstance(v, str) and re.fullmatch(NUMBER, v) for v in values):
+            return None
+        result = list(map(float, values))
+        return result if all(math.isfinite(v) and v > 0 for v in result) else None
+    except (ValueError, TypeError):
+        return None
+
+
 def regions(value):
     """Canonical port->face map for generated literal --pin-region rules.
 

@@ -152,6 +152,48 @@ class ActualSourceGate(unittest.TestCase):
         result = store.check()
         self.assertEqual(result["verdict"], "PASS", result)
 
+    def test_actual_kit_layer_and_exclusion_only_changes_do_not_justify_reroute(self):
+        for key, value in (("PIN_H", "'M2'"), ("PIN_V", "'M3'"), ("PINEX", "0")):
+            with self.subTest(key=key):
+                store = Store(CASES[3])
+                old, new = store.snapshots["old"], store.snapshots["new"]
+                old_path = next(p for p in old["files"] if p.endswith("kit.env"))
+                new_path = next(p for p in new["files"] if p.endswith("kit.env"))
+                text, count = re.subn(r"^" + key + r"=.*$", lambda _: key + "=" + value,
+                                      old["files"][old_path], flags=re.M)
+                self.assertEqual(count, 1)
+                self.assertNotEqual(text, old["files"][old_path])
+                new["files"][new_path] = text
+                result = store.check()
+                self.assertEqual(result["verdict"], "REFUSE", result)
+                self.assertIn("outline and pin faces equal", result["message"])
+
+    def test_missing_closed_outline_fields_fail_closed_for_ref_tile(self):
+        store = Store(CASES[3])
+        old = store.snapshots["old"]
+        path = next(p for p in old["files"] if p.endswith("kit.env"))
+        old["files"][path] = re.sub(r"^FW=.*$", "", old["files"][path], flags=re.M)
+        result = store.check()
+        self.assertEqual(result["verdict"], "REFUSE", result)
+        self.assertIn("outline geometry", result["message"])
+
+    def test_outline_numeric_formatting_is_not_a_physical_change(self):
+        store = Store(CASES[3])
+        old, new = store.snapshots["old"], store.snapshots["new"]
+        old_path = next(p for p in old["files"] if p.endswith("kit.env"))
+        new_path = next(p for p in new["files"] if p.endswith("kit.env"))
+        new["files"][new_path] = old["files"][old_path].replace("FW=15.12\n", "FW=15.12000\n")
+        self.assertEqual(store.check()["verdict"], "REFUSE")
+
+    def test_non_ref_tile_legacy_behavior_is_outside_this_repair(self):
+        store = Store(CASES[3])
+        new = store.snapshots["new"]
+        new["job"]["ref_tile"] = False
+        del new["files"][next(p for p in new["files"] if p.endswith("kit.env"))]
+        result = store.check()
+        self.assertEqual(result["verdict"], "PASS", result)
+        self.assertIn("not verifiable", result["message"])
+
 
 if __name__ == "__main__":
     unittest.main()
