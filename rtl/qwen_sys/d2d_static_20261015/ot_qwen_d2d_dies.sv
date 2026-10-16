@@ -228,12 +228,17 @@ module qkd_d2d_static_core #(parameter integer MUT = 0, parameter integer NL = 2
     wire [3:0] local_rst_n;
     ot_rst_pipe #(.REGIONS(4), .STAGES(2)) u_reset_regions
         (.clk(ck), .rst_n_in(rst_n), .rst_n(local_rst_n));
+    // Cold POR is captured locally just like the ordinary reset pin. Four
+    // exceptional release edges; no change to the compiled normal calendar.
+    wire [0:0] local_por_n;
+    ot_rst_pipe #(.REGIONS(1), .STAGES(2)) u_por_region
+        (.clk(ck), .rst_n_in(por_n), .rst_n(local_por_n));
     localparam integer FW = 548;
     wire [3:0] txs, rxe, rxs; wire [3:0] tk, rk; wire [4:0] tb, rb; wire [FW-1:0] rxp;
     wire [3:0] tv; wire [4*FW-1:0] tp;
     wire eb, ab, endf, lu, dr, seen, rt, rec; wire [7:0] ep, fc, tf;
     wire s_vm, s_co, s_cb, s_cf, s_ea, s_ar, s_fr, s_f, kvn_f;
-    ot_qwen_d2d_recovery #(.MASTER(1)) u_rec (.ck(ck), .por_n(por_n), .rst_n(local_rst_n[0]), .abort(ab | endf),
+    ot_qwen_d2d_recovery #(.MASTER(1)) u_rec (.ck(ck), .por_n(local_por_n[0]), .rst_n(local_rst_n[0]), .abort(ab | endf),
         .fault_cause(fc), .end_fault(endf), .p_tx_up(fdi_tx_up), .p_tx_v(fdi_tx_v), .p_rx_v(fdi_rx_v),
         .reset_req(host_link_reset_req), .recovery_clear(host_recovery_clear), .boot_begin(host_boot_begin),
         .fwd_epoch_i(1'b0), .fwd_epoch_o(fwd_epoch), .fwd_link_rst_n(fwd_link_rst_n), .phy_rst_n(phy_rst_n),
