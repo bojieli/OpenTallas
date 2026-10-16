@@ -26,8 +26,8 @@
 // SRAM leaves, every wide select replicated per 64-b slice -- route-1 hold fix).  A frame arriving while
 // the armed block is not ready cannot wait (the SerDes never stalls): sticky fault (the compiler arms in time).
 //
-// Latencies: tx pin -> SerDes tx pin: 2 edges (pin reg, beat reg).  SerDes rx pin -> pingpong phy input: 2 edges
-// (pin reg, slot-cut reg).  COLL control pins: +1 edge (pin reg) before the pingpong; block_ready / fault / phy_up
+// Latencies: tx pin -> SerDes tx pin: 2 edges (pin reg, beat reg).  SerDes rx pin -> pingpong phy input: 3 edges
+// (pin reg, beat/data-copy reg, slot-cut reg; route 4: +1 so sd_rx[1] has one pin flop).  COLL control pins: +1 edge (pin reg) before the pingpong; block_ready / fault / phy_up
 // leave through output registers (+1).  Pingpong: slot S -> rx_pin S+4 (its own contract) + 1 input pin edge.
 // MUT (bench only): 1 TX slot-2 tail offset off by one bit, 2 RX does not skip IDLE beats, 3 RX swaps the prev/cur
 // part of slot 1, 4 pingpong slot-bank mutant (H-COLL MUT 2).
@@ -190,19 +190,23 @@ module hfd_ep_static #(parameter integer IDLE_K = 204, parameter integer MUT = 0
     reg p_tx_v; reg [611:0] p_tx_f;
     reg p_arm_v, p_arm_b, p_rel_v, p_rel_b, p_slot_v, p_slot_b;
     reg [6:0] p_words; reg [5:0] p_slot_i;
-    reg [511:0] p_rx; reg [1:0] p_st; (* keep *) reg [7:0] p_rxd;
+    reg [511:0] p_rx; reg [1:0] p_st;
+    // route-4 native fix: sd_rx[1] (the SerDes IDLE bit) loads ONE pin flop (route 3 loaded it into 9 flops -> capture
+    // 212.7 ps > 190); the 8 per-slice data copies and the beat the RX gearbox reads are one edge later (+1 RX cycle).
+    reg [511:0] q_rx; (* keep *) reg [7:0] p_rxd;
     always @(posedge clk) begin
         p_tx_v <= tx_v; p_tx_f <= tx_frame;
         p_arm_v <= rx_arm_v; p_arm_b <= rx_arm_bank; p_words <= rx_block_words;
         p_rel_v <= rx_release_v; p_rel_b <= rx_release_bank;
         p_slot_v <= rx_slot_v; p_slot_b <= rx_slot_bank; p_slot_i <= rx_slot_index;
-        p_rx <= sd_rx; p_st <= sd_st; p_rxd <= {8{!sd_rx[1]}};
+        p_rx <= sd_rx; p_st <= sd_st;
+        q_rx <= p_rx; p_rxd <= {8{!p_rx[1]}};
     end
     wire cal_fault;
     ot_hep_tx_gbx #(.IDLE_K(IDLE_K), .MUT(MUT == 1 ? 1 : 0)) u_tx (.clk(clk), .rst_n(rn_tx), .tx_v(p_tx_v),
         .tx_frame(p_tx_f), .beat(sd_tx), .cal_fault(cal_fault));
     wire f_v, locked, lock_lost; wire [611:0] f_d;
-    ot_hep_rx_gbx #(.MUT((MUT == 2 || MUT == 3) ? MUT : 0)) u_rx (.clk(clk), .rst_n(rn_rx), .beat(p_rx), .data_r(p_rxd),
+    ot_hep_rx_gbx #(.MUT((MUT == 2 || MUT == 3) ? MUT : 0)) u_rx (.clk(clk), .rst_n(rn_rx), .beat(q_rx), .data_r(p_rxd),
         .f_v(f_v), .f_d(f_d), .locked(locked), .lock_lost(lock_lost));
     wire phy_ready, bd_fault; wire [1:0] bready; wire [6:0] bd_cause;
     ot_hep_rx_pingpong #(.MUT(MUT == 4 ? 2 : 0)) u_rxb (.clk(clk), .rst_n(rn_bd),
