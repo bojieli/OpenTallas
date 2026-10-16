@@ -1,0 +1,103 @@
+{
+  "schema": "qwen.static_k.exact_head_proof.v1",
+  "tested_source_commit": "9ae48c437",
+  "all_current_DUT_bench_runner_bytes_match": true,
+  "source_hashes_measured_after_actual_execution": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_k_issuer.sv": "404a42f242aa893696a7dcfcc6ec5e590d89407fa6338db50cb96636101af04d",
+    "rtl/test/qwen_static_kv/tb_qkd_static_k_issuer.sv": "c2da97dbf62d9130e3c0b922ea006de7a3af598e0371e3686e321a2cf344ca3a",
+    "tools/qwen_kv_die/static_k_issuer_bench.sh": "a70227918dfc5f92c9c25c812b6d95f16aaca88891d7df0fa00ce68d0c71410d"
+  },
+  "frozen_archive_source_hashes": {
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "d9801653d16576f40306c1fb1d01928e88e7371a3897b616e31d3e3df917cb2d",
+    "rtl/hdc/nearhbm/ot_qkd_ectl_parts.sv": "3e5b780de95ca1eb1d4a5adfdb7c3355ac27ca6a19ae784ca8adec16acabf3d4",
+    "rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_h.sv": "4f44dcdf9c5c704846d0d54d136f5aafed5be1425a850c7ee9621050fa997e5b",
+    "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+    "rtl/qwen_sys/split_20261014/qkd_ectl3_epoch_direct_s.sv": "525216470bcb0cdd6e134368b754d8baf3e917ba037f63e51977315c13830fea",
+    "rtl/qwen_sys/split_20261014/qkd_ectl_a_tp8_epoch_direct.sv": "309e2467c4c8dbe06f2738e8f5b7fdd2aa91ed3d56e08d22968396a12b4a3043",
+    "rtl/qwen_sys/split_20261014/qkd_ectl_native_direct_tp8.sv": "851b537e06aa44a5686ad6c374e13cdc6bfda8bcf380e704698f0f88c551696a",
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_k_issuer.sv": "404a42f242aa893696a7dcfcc6ec5e590d89407fa6338db50cb96636101af04d",
+    "rtl/test/qwen_static_kv/tb_qkd_static_k_issuer.sv": "c2da97dbf62d9130e3c0b922ea006de7a3af598e0371e3686e321a2cf344ca3a",
+    "tools/qwen_kv_die/static_k_issuer_bench.sh": "a70227918dfc5f92c9c25c812b6d95f16aaca88891d7df0fa00ce68d0c71410d"
+  },
+  "source_archive_sha256": "9fda0e1f353e12a1e071f3fe50e05ac35062d4fe6ab6542b2ff7c4442e66fb13",
+  "host": "ot-pve1",
+  "unit": "oth-ubuntu-2094745-1792164620",
+  "ot_run_status": "RAN exit0",
+  "resources": {
+    "requested_gb": 2,
+    "threads": 2,
+    "runtime_report_allocated_mb": 217
+  },
+  "tool": "Verilator5.032; task-private AGI tool/runtime copy; gcc onPVE; no shared host-system change",
+  "profile": {
+    "RESPONSE_LAT": 2,
+    "ECTL_ROW_RETURN_LAT": 9,
+    "QK_ISSUE_AGE": 34,
+    "layers": 36,
+    "rows_each": 256,
+    "exact_rows": 9216,
+    "shape": "actual ECTL A/B/C and mapped SRAM macro models; external response stimulus only"
+  },
+  "normal_cycle_edges": {
+    "ECTL_request": 7,
+    "bridge_segment_request": 8,
+    "external_response": 10,
+    "bridge_ECTL_rs": 11,
+    "ring_write": 14,
+    "first_consume": 37
+  },
+  "negative_controls": {
+    "missing_response": "eachlayer255rs,256unchangedconsume,bridgefault1",
+    "wrong_row": "256unchangedconsume,bridgefault1",
+    "wrong_layer": "256unchangedconsume,bridgefault1",
+    "payload_mutant": "actual SRAM row mismatch atc37; processnonzero",
+    "request_layer_mutant": "actual request identity mismatch atc8; processnonzero"
+  },
+  "qualification_scope": "Native ECTL K bridge component with declared external service. No physical segment roundtrip, full arithmetic head, staticdie or whole-token qualification. L2 is a test profile, not a measured physical latency.",
+  "all_instantiated_source_files_match_actual_remote_bytes": true,
+  "actual_remote_source_hashes": {
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "d9801653d16576f40306c1fb1d01928e88e7371a3897b616e31d3e3df917cb2d",
+    "rtl/hdc/nearhbm/ot_qkd_ectl_parts.sv": "3e5b780de95ca1eb1d4a5adfdb7c3355ac27ca6a19ae784ca8adec16acabf3d4",
+    "rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_h.sv": "4f44dcdf9c5c704846d0d54d136f5aafed5be1425a850c7ee9621050fa997e5b",
+    "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+    "rtl/qwen_sys/split_20261014/qkd_ectl3_epoch_direct_s.sv": "525216470bcb0cdd6e134368b754d8baf3e917ba037f63e51977315c13830fea",
+    "rtl/qwen_sys/split_20261014/qkd_ectl_a_tp8_epoch_direct.sv": "309e2467c4c8dbe06f2738e8f5b7fdd2aa91ed3d56e08d22968396a12b4a3043",
+    "rtl/qwen_sys/split_20261014/qkd_ectl_native_direct_tp8.sv": "851b537e06aa44a5686ad6c374e13cdc6bfda8bcf380e704698f0f88c551696a",
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_k_issuer.sv": "404a42f242aa893696a7dcfcc6ec5e590d89407fa6338db50cb96636101af04d",
+    "rtl/test/qwen_static_kv/tb_qkd_static_k_issuer.sv": "c2da97dbf62d9130e3c0b922ea006de7a3af598e0371e3686e321a2cf344ca3a",
+    "tools/qwen_kv_die/static_k_issuer_bench.sh": "a70227918dfc5f92c9c25c812b6d95f16aaca88891d7df0fa00ce68d0c71410d"
+  },
+  "runtime_profiles": {
+    "source": "9ae48c437",
+    "host": "ot-pve1",
+    "unit": "oth-ubuntu-2096795-1792164753",
+    "ot_run_status": "RAN exit0",
+    "reused_exact_binary": true,
+    "profiles": 288,
+    "layers": 10368,
+    "exact_rows": 1094724,
+    "contexts": [
+      1,
+      128,
+      1000,
+      2048,
+      4096,
+      4300,
+      4500,
+      6144,
+      8192
+    ],
+    "stacks": 4,
+    "engines_per_stack": 8,
+    "independent_compiler_row_counts_match": true,
+    "binary_sha256": "f03672f59e20e92a51bf552b45c4863747af1b4e952027ca89c3afac43d14988"
+  },
+  "superseded_old_source_waiter": {
+    "pid": 3330854,
+    "state": "cancelled_before_admission",
+    "ot_run_terminal": "interrupted(signal15) while waiting for memory; waiter cancelled: NOT RUN; exit143",
+    "authority": "root explicitly requested cancellation of unstarted superseded waiter"
+  }
+}

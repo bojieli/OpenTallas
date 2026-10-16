@@ -43,7 +43,7 @@ module hfd_vms_bank_native_q1(
  assign rr3=rr[771+:257];
  assign wq_done0=wq_done[0];
  assign wq_done1=wq_done[1];
- ot_vms_bank_static_strap #(.RG(4),.WG(2)) bank(
+ ot_vms_bank_static_strap #(.RG(4),.WG(2),.EG_WIDE(1)) bank(
  .bid(bid),
  .sid(sid),
  .clk(clk),

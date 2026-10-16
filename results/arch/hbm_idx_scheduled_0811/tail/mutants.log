@@ -1,0 +1,12 @@
+ot-run: ot-epyc4       admits   287 GB (avail 514, growth 179, headroom 48, waiters 0/0 GB) load 62/128 running 35 disk 906 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/hidx-tail-0854/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/codex/hidx-tail-0854/src
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-4105094-1792166005 after 1 s
+IDX_TAIL_EXACT MUT1 issued256 checked256 lanes1024 errors23 latency16
+TAIL_MUTANT 1 rejected
+IDX_TAIL_EXACT MUT2 issued256 checked256 lanes1024 errors52 latency16
+TAIL_MUTANT 2 rejected
+IDX_TAIL_EXACT MUT3 issued256 checked255 lanes1020 errors16 latency16
+TAIL_MUTANT 3 rejected
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-4105094-1792166005): exit 0

@@ -1,0 +1,243 @@
+{
+ "schema": "opentallas.view_lineage.v1",
+ "kind": "scalar_pin_rename",
+ "master": "ot_s81_vm_x34_s",
+ "view": "physical/ref_tile/ot_s81_vm_x34_s_w1026_1015_n3/views_scalar/ot_s81_vm_x34_s",
+ "parent_view": "physical/ref_tile/ot_s81_vm_x34_s_w1026_1015_n3/views/ot_s81_vm_x34_s",
+ "parent_files": {
+  "ot_s81_vm_x34_s.lef": "9cced217b877d28bd96e42e1a7399830b93f294bdce8e2baf1fcc4213ea54a6f",
+  "ot_s81_vm_x34_s_tt.lib": "ba4edeefb99fa9dae96de4c83d95b1acc8d90cb2e967831acb4bba1d03b4ddec",
+  "ot_s81_vm_x34_s_ff.lib": "d6d233ba899ee7bea39d6707ed6656b0e6e6096488949c071cfca50c6351bbe2",
+  "ot_s81_vm_x34_s_ss.lib": "07e48672cbd3bef2876b1711119bf073ee8c370ab0297e999f1019854b6ddfd3",
+  "abstract.json": "e824d45a85aecbbfd4d8666e8ee765880653b860b20158a8bf121cd507e93a82"
+ },
+ "original_job": "ot_s81_vm_x34_s_w1026_1015_n3-n3-COMMIT-557a0c89e",
+ "closed": {
+  "job": "ot_s81_vm_x34_s_w1026_1015_n3-n3-COMMIT-557a0c89e",
+  "status": "CLOSED",
+  "reason": "CLOSED TT +56.99 / FF +16.70 ps DRC 0; SS sensitivity -144.41 ps | record claude/s81-vm-clockabi-1015 16f089b65 (19 files) | AUTO-MERGED into main 12e9400e1",
+  "state_sha256": "f0d474115b0e859677c26a074cdc5045c9af4fe869f15e85bcf4a606402b2f9d"
+ },
+ "renamed": [
+  {
+   "pin": "s_ck[0]",
+   "to": "s_ck",
+   "rtl": {
+    "verdict": "scalar",
+    "dir": "input",
+    "ranged": false,
+    "decl": "input wire s_ck",
+    "file": "rtl/dsrom_sys/s81_ph/vm/ot_s81_vm_x34.sv"
+   }
+  },
+  {
+   "pin": "s_mark[0]",
+   "to": "s_mark",
+   "rtl": {
+    "verdict": "scalar",
+    "dir": "output",
+    "ranged": false,
+    "decl": "output reg s_mark",
+    "file": "rtl/dsrom_sys/s81_ph/vm/ot_s81_vm_x34.sv"
+   }
+  },
+  {
+   "pin": "s_rst_n[0]",
+   "to": "s_rst_n",
+   "rtl": {
+    "verdict": "scalar",
+    "dir": "input",
+    "ranged": false,
+    "decl": "s_rst_n",
+    "file": "rtl/dsrom_sys/s81_ph/vm/ot_s81_vm_x34.sv"
+   }
+  },
+  {
+   "pin": "s_v[0]",
+   "to": "s_v",
+   "rtl": {
+    "verdict": "scalar",
+    "dir": "input",
+    "ranged": false,
+    "decl": "input wire s_v",
+    "file": "rtl/dsrom_sys/s81_ph/vm/ot_s81_vm_x34.sv"
+   }
+  }
+ ],
+ "kept_bus": [],
+ "gates": {
+  "native_parent": {
+   "cell": "ot_s81_vm_x34_s",
+   "view": ".",
+   "lib_cell": "ot_s81_vm_x34_s",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 238.6,
+   "spread_ps": 42.7,
+   "outputs": 3085,
+   "inputs": 1028,
+   "launch_ps": 233.9,
+   "launch_pin": "b0[697]",
+   "capture_ps": 150.8,
+   "capture_pin": "s_d[49]",
+   "launch_over": 59,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "pass": false,
+   "fail_why": "launch 233.86219 > 220 (59 pins)"
+  },
+  "native_derived": {
+   "cell": "ot_s81_vm_x34_s",
+   "view": ".",
+   "lib_cell": "ot_s81_vm_x34_s",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 238.6,
+   "spread_ps": 42.7,
+   "outputs": 3085,
+   "inputs": 1028,
+   "launch_ps": 233.9,
+   "launch_pin": "b0[697]",
+   "capture_ps": 150.8,
+   "capture_pin": "s_d[49]",
+   "launch_over": 59,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "pass": false,
+   "fail_why": "launch 233.86219 > 220 (59 pins)"
+  },
+  "liberty_pin_metrics": {
+   "tt": "identical",
+   "ff": "identical",
+   "ss": "identical"
+  },
+  "bind": {
+   "rtl_ports": 9,
+   "lef_bases": 9,
+   "missing_in_lef": [],
+   "not_in_rtl": [],
+   "scalars_bind": true
+  },
+  "export_parse": {
+   "tool": "openroad (orfs asap7lock) read_lef + read_liberty",
+   "corners": {
+    "tt": "OK 4121",
+    "ff": "OK 8242",
+    "ss": "OK 12363"
+   },
+   "ok": true
+  },
+  "die_port_bind": {
+   "tool": "tools/die_port_bind.py one-instance die vs kit SRCS",
+   "rc": 0,
+   "counts": {},
+   "tail": "DIE_PORT_BIND PASS masters=1 instances=1 unbound_masters=0 stub_masters=0 ambiguous_masters=0 port_not_in_rtl=0 width_mismatch=0 input_unconnected=0 input_tied=0 unparsed_connections=0 duplicate_port_connections=0 undriven_net_bits=0 multi_driven_net_bits=0 top_assigns=0 params_not_in_rtl=0 strap_ports=0 pad_bits=0\n",
+   "ok": true
+  },
+  "pin_name_bind": {
+   "rule": "RTL scalar x -> LEF pin x; RTL bus x -> LEF pins x[i]",
+   "derived": {
+    "rtl_ports": 9,
+    "mismatches": 0,
+    "first": [],
+    "ok": true
+   },
+   "parent": {
+    "rtl_ports": 9,
+    "mismatches": 4,
+    "first": [
+     "s_ck: RTL scalar, LEF has s_ck[0]",
+     "s_mark: RTL scalar, LEF has s_mark[0]",
+     "s_rst_n: RTL scalar, LEF has s_rst_n[0]",
+     "s_v: RTL scalar, LEF has s_v[0]"
+    ],
+    "ok": false
+   }
+  }
+ },
+ "file_map": {
+  "abstract.json": {
+   "how": "copied",
+   "from_sha256": "e824d45a85aecbbfd4d8666e8ee765880653b860b20158a8bf121cd507e93a82",
+   "sha256": "e824d45a85aecbbfd4d8666e8ee765880653b860b20158a8bf121cd507e93a82"
+  },
+  "child_lint.json": {
+   "how": "renamed",
+   "from_sha256": "12de548f993fdeba192a645932505dc66ff85f251b87ee51050b17149e404070",
+   "sha256": "9467bc2b458c47b8c0898321f3239d3b259ba0b6d8a25b0ae971699fce082bd2"
+  },
+  "export_ff.log": {
+   "how": "copied",
+   "from_sha256": "dc65501468be13a4d0ccbb709d23113e951ae92e5aa7f59a44cf42af41fc0cf2",
+   "sha256": "dc65501468be13a4d0ccbb709d23113e951ae92e5aa7f59a44cf42af41fc0cf2"
+  },
+  "export_ff.tcl": {
+   "how": "copied",
+   "from_sha256": "8e7a6c74dc88a80f4724ed8c6a2c69091226bce04ff01810573856cf4a6d2e74",
+   "sha256": "8e7a6c74dc88a80f4724ed8c6a2c69091226bce04ff01810573856cf4a6d2e74"
+  },
+  "export_ss.log": {
+   "how": "copied",
+   "from_sha256": "12cbf8e3edccec9062448d80580de09489cd6581442dd69998a88e194d5d41a9",
+   "sha256": "12cbf8e3edccec9062448d80580de09489cd6581442dd69998a88e194d5d41a9"
+  },
+  "export_ss.tcl": {
+   "how": "copied",
+   "from_sha256": "63ef05f23f22449d563acb8d4a44bd3667c4086510fc45084eaae861c499733e",
+   "sha256": "63ef05f23f22449d563acb8d4a44bd3667c4086510fc45084eaae861c499733e"
+  },
+  "export_tt.log": {
+   "how": "copied",
+   "from_sha256": "cb3ea1e7fbf3490c17575ae2b145c27febd55f82ebf39587a0b3ccf3603e5d93",
+   "sha256": "cb3ea1e7fbf3490c17575ae2b145c27febd55f82ebf39587a0b3ccf3603e5d93"
+  },
+  "export_tt.tcl": {
+   "how": "copied",
+   "from_sha256": "5ed88c66a0487e7f56d0d1bdb8e2659b4ba9b912c0d8ccb6fcc1ccd48464975d",
+   "sha256": "5ed88c66a0487e7f56d0d1bdb8e2659b4ba9b912c0d8ccb6fcc1ccd48464975d"
+  },
+  "insertion.json": {
+   "how": "renamed",
+   "from_sha256": "26b4102bf31e5aae50fe02a6754e4b5c3cf9617972c72cedcb96d78bbafbcf40",
+   "sha256": "0a3f96cb3742f400b76080195eae3233a388367ac68b11db5e2088a7c6d537b7"
+  },
+  "ot_s81_vm_x34_s.lef": {
+   "how": "renamed",
+   "from_sha256": "9cced217b877d28bd96e42e1a7399830b93f294bdce8e2baf1fcc4213ea54a6f",
+   "sha256": "db7fcefa031e229551c96e5b3020e2d525a133e04519e7e902504c25a105e4f5"
+  },
+  "ot_s81_vm_x34_s_ff.lib": {
+   "how": "renamed",
+   "from_sha256": "d6d233ba899ee7bea39d6707ed6656b0e6e6096488949c071cfca50c6351bbe2",
+   "sha256": "a13129c3f75fe27b6ab04fdcd4a5a183c1b00cdc13f9c728bc68ffa7e07e9b39"
+  },
+  "ot_s81_vm_x34_s_ss.lib": {
+   "how": "renamed",
+   "from_sha256": "07e48672cbd3bef2876b1711119bf073ee8c370ab0297e999f1019854b6ddfd3",
+   "sha256": "c08d5729f835c0b9abc16595a50cae66993093df58f13da2e75cec30aa0039fc"
+  },
+  "ot_s81_vm_x34_s_tt.lib": {
+   "how": "renamed",
+   "from_sha256": "ba4edeefb99fa9dae96de4c83d95b1acc8d90cb2e967831acb4bba1d03b4ddec",
+   "sha256": "fde6ea1bdfe4c188428acdf6302e7aa51d4369d1a3af847e6677c9970abf210f"
+  }
+ },
+ "tool": "tools/ref_tile/scalar_pin_view.py",
+ "tool_sha256": "8308fa90c2b580a8bb3cc996451ed9d030b19b892d7016cf5ab8f8dd54765ae9",
+ "rule": "pin names only (recipe-3 ot_pin_regs [0:0] defect, fixed e3919f90e); geometry and arcs unchanged",
+ "files": {
+  "ot_s81_vm_x34_s.lef": "db7fcefa031e229551c96e5b3020e2d525a133e04519e7e902504c25a105e4f5",
+  "ot_s81_vm_x34_s_tt.lib": "fde6ea1bdfe4c188428acdf6302e7aa51d4369d1a3af847e6677c9970abf210f",
+  "ot_s81_vm_x34_s_ff.lib": "a13129c3f75fe27b6ab04fdcd4a5a183c1b00cdc13f9c728bc68ffa7e07e9b39",
+  "ot_s81_vm_x34_s_ss.lib": "c08d5729f835c0b9abc16595a50cae66993093df58f13da2e75cec30aa0039fc",
+  "abstract.json": "e824d45a85aecbbfd4d8666e8ee765880653b860b20158a8bf121cd507e93a82"
+ },
+ "verdict": "PASS",
+ "why": []
+}

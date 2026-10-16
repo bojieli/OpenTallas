@@ -8,15 +8,15 @@ Same pattern as die_case.py (d2: service engine + SM), extended to EVERY v16 sou
 nets bit-exact from the contract edges, die clock trees per contract clock domain (die_clock_tree.py), die repeaters
 (repair_design -max_wire_length 400), global route, TT setup / FF hold STA.  Open inputs stay open (manifest, with
 owner); straps are constants of the design and stay open in this timing case (listed); nothing is tied or stubbed.
-The source contract's current strict port-bind result is reported in the manifest. Open inputs or unqualified views
-keep the case diagnostic; this tool does not qualify a die by matching view ports alone.
+The v16 strict port bind FAILs (51 exposed input ports) -> every result of this case is labelled NOT_A_DIE_RESULT.
 
 Views: REAL = closed routed view (LEF + TT/FF ETM); SYNTH = current-source mapped-netlist ETM (ideal clocks, no wires,
 clock pin re-capped to one 2 fF entry) with a generated abstract: outline = the instance's grant slot when it is the
 only instance of that slot, else std area / 0.60 + 1.3 x macro area, square, grown until every port bit fits one
 0.048 um track per face over 90 % of the face (pin-bound outlines are flagged); every port on the face that points to
 the bit-weighted centroid of its peers (spill to the next face when full), ordered along the face by peer position.
-hfd_ckgen is placed at hb_ckgen. Domain clocks originate at its pll_<domain> output pins; the analog PLL is modeled.
+hfd_ckgen (PLL = the allowed analog model, no Liberty) is out of the case: the domain clocks and resets enter as die
+ports at its grant slot, as in d2.
 
 Placement order (every generated home is reported in manifest.json 'homes'):
   1. PHY at its grant slot; PC controller leaves over their PHY channel and service groups in their PC band box (d2
@@ -133,6 +133,48 @@ def pin(port, bits, k):
     return f'{port}[{k}]' if bits > 1 else port
 
 
+def communicating_pairs(nets, dom_of, clique_limit=8):
+    """Every source-to-sink branch participates, including wide multicast control."""
+    pairs = defaultdict(set)
+    for driver, ends in nets.items():
+        source = driver[0]
+        tiles = sorted({end[0] for end in ends})
+        edges = {(source, sink) for sink in tiles if sink != source}
+        if 2 <= len(tiles) <= clique_limit:
+            edges.update((x, y) for i, x in enumerate(tiles) for y in tiles[i + 1:])
+        for x, y in edges:
+            for domain in dom_of[x] & dom_of[y]:
+                pairs[domain].add(tuple(sorted((x, y))))
+    return {domain: sorted(edges) for domain, edges in pairs.items()}
+
+
+def clock_entries(insts, placement, cell_of, pin_xy, tile_pairs):
+    """Plan each literal clock pin; tile names alone hide long intra-tile stubs.
+
+    Source port-to-clock ownership is not yet proven, so communicating tiles use
+    all entry combinations conservatively, including pairs within each tile.
+    """
+    entries, aliases, by_tile = [], {}, defaultdict(list)
+    for tile, pins in sorted(insts.items()):
+        v = placement[tile]
+        for i, port in enumerate(sorted(pins)):
+            alias = tile if i == 0 else f'{tile}__ckp{i:03}'
+            if alias in aliases or (i and alias in insts):
+                raise ValueError(f'clock entry alias collision: {alias}')
+            # A missing physical clock pin is an input error, not a centre sink.
+            px, py = pin_xy[cell_of[tile]][port]
+            x, y = rect_of(v['x'], v['y'], v['w'], v['h'], v['o'], px, py)
+            entries.append((alias, port, x, y))
+            aliases[alias] = (tile, port)
+            by_tile[tile].append(alias)
+    pairs = set()
+    for names in by_tile.values():
+        pairs.update((x, y) for i, x in enumerate(names) for y in names[i + 1:])
+    for left, right in tile_pairs:
+        pairs.update(tuple(sorted((x, y))) for x in by_tile[left] for y in by_tile[right])
+    return entries, aliases, sorted(pairs)
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument('--views', required=True, type=Path)
@@ -146,7 +188,8 @@ def main():
     ap.add_argument('--clock-mode', default='hbm=auto,stream=graph,serial=auto',
                     help="per domain htree|quad|lane|graph|auto (auto = graph when the domain has communicating tile pairs, "
                          "else htree; OWNER 07:30 10-16 low-skew die clock)")
-    ap.add_argument('--pair-max-tiles', type=int, default=8, help='a data net joining 2..N tiles makes clock pairs')
+    ap.add_argument('--pair-max-tiles', type=int, default=8,
+                    help='clique expansion limit; every source-to-sink branch is always a clock pair')
     ap.add_argument('--clock-bin-um', type=float, default=1600.0)
     ap.add_argument('--no-clock', action='store_true', help='placement/images only (skip die clock trees and run files)')
     a = ap.parse_args()
@@ -170,12 +213,18 @@ def main():
             size[c] = lef_size(vd / f'{c}.lef')
         else:
             sd = a.views / 'synth' / c
-            libs = {k: sd / f"{e['wrapper']}_synth_{k}.lib" for k in ('tt', 'ff')}
+            synth_top = e.get('synth_top', e['wrapper'])
+            if synth_top != e['wrapper']:
+                receipt = json.loads((sd / 'meta.json').read_text())
+                assert (e['params'] == {} and synth_top == e['master'] == c
+                        and receipt['actual_top'] == synth_top
+                        and receipt['parameter_binding'] == 'EXACT_DIRECT_MASTER_PARAMS_EMPTY_NO_RENAME'), c
+            libs = {k: sd / f"{synth_top}_synth_{k}.lib" for k in ('tt', 'ff')}
             if not all(p.exists() for p in libs.values()):
                 excluded[c] = 'SYNTH view not built (see VIEWS/drive/<cell>.json)'
                 continue
             for k, p in libs.items():
-                t = p.read_text().replace(e['wrapper'], c)
+                t = p.read_text().replace(synth_top, c)
                 (vd / f'{c}_{k}.lib').write_text(t)
             ecap[c] = [entry_cap(vd / f'{c}_{k}.lib') for k in ('tt', 'ff')]
             kinds[c] = 'SYNTH'
@@ -621,42 +670,30 @@ def main():
     # every hard outline (relays too), minus the carved die-owned feedthrough channels (clock repeaters may sit there)
     obs = [r for n, v in pl.items() for r in solid(n, v['x'], v['y'], v['w'], v['h'], v['o'])]
     quad = {n: ('N' if centre(n)[1] > H / 2 else 'S') + ('E' if centre(n)[0] > W / 2 else 'W') for n in inst}
-    # communicating tile pairs per clock domain (OWNER 07:30): two instances that share a signal net (<= N tiles) and both
-    # take a clock of the domain; the 'graph' die tree is a spanning tree of these pairs
+    # Every communicating source-to-sink branch participates, regardless of fanout.
+    # Small nets additionally form cliques; large fanouts avoid quadratic expansion.
     dom_of = defaultdict(set)
     for d_, ii in clk.items():
         for n_ in ii:
             dom_of[n_].add(d_)
-    pairs = defaultdict(set)
-    for d, ends in nets.items():
-        tiles = sorted({e_[0] for e_ in ends})
-        if not 2 <= len(tiles) <= a.pair_max_tiles:
-            continue
-        for i_, x_ in enumerate(tiles):
-            for y_ in tiles[i_ + 1:]:
-                for d_ in dom_of[x_] & dom_of[y_]:
-                    pairs[d_].add((x_, y_))
-    pairs = {d_: sorted(v) for d_, v in pairs.items()}
-    trees, checks = {}, {}
+    pairs = communicating_pairs(nets, dom_of, a.pair_max_tiles)
+    trees, checks, entry_maps, literal_pairs = {}, {}, {}, []
     for di, (dom, insts) in enumerate(sorted(clk.items())):
         # the domain tree starts at the placed REAL hfd_ckgen's pll_<dom> output pin (routed LEF), cross-checked with the grant
         vk = pl[CKGEN]; cp = vxy[cell_of[CKGEN]][f'pll_{dom}']
         rx, ry = rect_of(vk['x'], vk['y'], vk['w'], vk['h'], vk['o'], cp[0], cp[1])
         gx, gy = dct.ckgen_pin_xy(ck, f'pll_{dom}')
         assert abs(rx - gx) + abs(ry - gy) < 5.0, (dom, (rx, ry), (gx, gy))
-        sinks = []
-        for n, pl_ in insts.items():
-            v = pl[n]; p0 = sorted(pl_)[0]
-            px, py = vxy[cell_of[n]].get(p0, (v['w'] / 2, v['h'] / 2))
-            x, y = rect_of(v['x'], v['y'], v['w'], v['h'], v['o'], px, py)
-            sinks.append((n, p0, x, y))
+        sinks, entry_map, entry_pairs = clock_entries(insts, pl, cell_of, vxy, pairs.get(dom, []))
+        entry_maps[dom] = entry_map
+        literal_pairs.extend(['/'.join(entry_map[x]), '/'.join(entry_map[y]), dom] for x, y in entry_pairs)
         mode = dict(kv.split('=') for kv in a.clock_mode.split(',')).get(dom, 'htree')
         if mode == 'auto':
             mode = 'graph' if pairs.get(dom) else 'htree'
-        t = dct.build(W, H, obs, (rx, ry), sinks, lambda n: quad[n], mode=mode, bin_um=a.clock_bin_um,
-                      pairs=pairs.get(dom, []))
-        checks[dom] = dict(mode=mode, model=t['model'], pairs=len(pairs.get(dom, [])),
-                           **dct.clock_check(t, pairs.get(dom, [])))
+        t = dct.build(W, H, obs, (rx, ry), sinks, lambda n: quad[entry_map[n][0]], mode=mode, bin_um=a.clock_bin_um,
+                      pairs=entry_pairs)
+        checks[dom] = dict(mode=mode, model=t['model'], pairs=len(entry_pairs),
+                           **dct.clock_check(t, entry_pairs))
         print('clock_check', dom, mode, json.dumps(checks[dom]['summary']), flush=True)
         inside = [b for b in t['buffers'] if any(o[0] < b[2] < o[2] and o[1] < b[3] < o[3] for o in obs)]
         assert not inside, (dom, len(inside), inside[:3])   # H-DIE 02:20: no die clock buffer inside any hard outline
@@ -670,13 +707,23 @@ def main():
             l2 = []
             for ld in loads:
                 if ld[0] == 'pin':
-                    l2 += [('pin', ld[1], p) for p in insts[ld[1]]]
+                    tile, actual_pin = entry_map[ld[1]]
+                    assert actual_pin == ld[2], (ld, actual_pin)
+                    l2.append(('pin', tile, actual_pin))
                 else:
                     l2.append((ld[0], ren(ld[1])))
             tnets.append((ren(nn), d2, l2))
         trees[dom] = dict(buffers=bufs, nets=tnets, model=t['model'], port=port)
         print('clock', dom, 'sinks', len(sinks), 'buffers', len(bufs), flush=True)
 
+    manifest['clock_entry_map'] = entry_maps
+    manifest['clock_entry_scope'] = 'Each literal clock pin planned separately; conservative all-entry communicating pairs. Native phase/ownership qualification remains OPEN.'
+    (out / 'die_clock_check_pairs.json').write_text(json.dumps(dict(
+        pairs=[[x, y, dom] for dom, edges in sorted(pairs.items()) for x, y in edges],
+        entry_pairs=literal_pairs,
+        scope='Every source-to-sink branch plus conservative same-domain literal entry combinations and intra-tile entries. '
+              'Tile-pair summaries select their worst combination; literal entry pairs preserve actual domain geometry. '
+              'Actual STA and native phase/port ownership qualification remain required.'), indent=1))
     clock_sites.allocate(trees, W, H, obs)
     render(out, manifest, P, W, H, trees)
     # ---------------- die.v ----------------

@@ -1,0 +1,2 @@
+PASS COMMAND_FORK checked=2048 fixed_latency=1 branches=2
+rtl/test/qwen_command_fork/tb.sv:21: $finish called at 20521000 (1ps)

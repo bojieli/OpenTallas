@@ -1,0 +1,34 @@
+{
+  "schema": "qwen.static_k.proof.v1",
+  "tested_source_commit": "70ad1c5e7",
+  "production_head": "9c366c371",
+  "differences_after_test": "runtime context checker generalized b4e91bbdf; default RESPONSE_LAT 6->0 fail-closed 9c366c371; proof explicit RESPONSE_LAT2 unchanged",
+  "host": "ot-agidock128",
+  "unit": "oth-ubuntu-2181750-1792163971",
+  "scope": "actual ECTL A/B/C + K issuer + mapped SRAM, declared external response stimulus; not actual landing/native die",
+  "normal": {
+    "layers": 36,
+    "rows_each": 256,
+    "exact_rows_total": 9216,
+    "req_edge_first": 7,
+    "segment_req_edge_first": 8,
+    "segment_rsp_edge_first": 10,
+    "ECTL_rs_edge_first": 11,
+    "ring_write_edge_first": 14,
+    "consume_edge_first": 37,
+    "consume_cycles": 256,
+    "fault": 0
+  },
+  "negative_controls": {
+    "missing_response": "bridge fault=1,255 actual rs,256 unchanged consumes",
+    "wrong_row": "bridge fault=1,256 unchanged consumes",
+    "wrong_layer": "bridge fault=1,256 unchanged consumes",
+    "payload_mutant": "process FAIL at first consumed actual SRAM row c37",
+    "request_layer_mutant": "process FAIL at actual request identity c8"
+  },
+  "source_hashes_at_test": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_k_issuer.sv": "669a3506d73fd0862f17da0f14e734f98e98ad2891f5f7bf20616a2e7234b5c1",
+    "rtl/test/qwen_static_kv/tb_qkd_static_k_issuer.sv": "90b41b3a4aa97f5509748188c0afa3bcd9e3ba7ff1887cfa3d8fd1fa6a121067",
+    "tools/qwen_kv_die/static_k_issuer_bench.sh": "a70227918dfc5f92c9c25c812b6d95f16aaca88891d7df0fa00ce68d0c71410d"
+  }
+}

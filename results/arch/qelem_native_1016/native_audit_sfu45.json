@@ -1,0 +1,82 @@
+{
+ "schema": "opentallas.native_pin_audit.view.v1",
+ "date": "2026-10-16T10:05-07:00",
+ "by": "Q-ELEM 0945 (Claude)",
+ "tool": "tools/hier_contract/native_pin_audit.py audit_one (TT, launch<=220 / capture<=190 ps); views as on origin/main a99edb016 (auto-merged 3e7a9e36d / b4447aa4b / 3443ec80b)",
+ "jobs": {
+  "qfd_su_sfu_rcp_native45": "qfd_su_sfu_rcp_native45-native45-8f1b566a8 TT +62.42 / FF +22.46 / DRC 0",
+  "qfd_su_sfu_rsq_native45": "qfd_su_sfu_rsq_native45-native45-907c95502 TT +58.66 / FF +23.19 / DRC 0",
+  "qfd_su_sfu_exp_native45": "qfd_su_sfu_exp_native45-native45-96319b51b TT +67.14 / FF +20.79 / DRC 0"
+ },
+ "views": {
+  "qfd_su_sfu_rcp_native45": {
+   "cell": "qfd_su_sfu_rcp_native45",
+   "view": "physical/ref_tile/qfd_su_sfu_rcp_native45/views/qfd_su_sfu_rcp_native45",
+   "lib_cell": "qfd_su_sfu_rcp_native45",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 299.8,
+   "spread_ps": 16.4,
+   "outputs": 34,
+   "inputs": 34,
+   "launch_ps": 177.6,
+   "launch_pin": "y[8]",
+   "capture_ps": 138.9,
+   "capture_pin": "x[3]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "pass": true,
+   "fail_why": ""
+  },
+  "qfd_su_sfu_rsq_native45": {
+   "cell": "qfd_su_sfu_rsq_native45",
+   "view": "physical/ref_tile/qfd_su_sfu_rsq_native45/views/qfd_su_sfu_rsq_native45",
+   "lib_cell": "qfd_su_sfu_rsq_native45",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 335.5,
+   "spread_ps": 16.2,
+   "outputs": 34,
+   "inputs": 34,
+   "launch_ps": 176.6,
+   "launch_pin": "y[3]",
+   "capture_ps": 133.9,
+   "capture_pin": "x[16]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "pass": true,
+   "fail_why": ""
+  },
+  "qfd_su_sfu_exp_native45": {
+   "cell": "qfd_su_sfu_exp_native45",
+   "view": "physical/ref_tile/qfd_su_sfu_exp_native45/views/qfd_su_sfu_exp_native45",
+   "lib_cell": "qfd_su_sfu_exp_native45",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 337.1,
+   "spread_ps": 32.5,
+   "outputs": 34,
+   "inputs": 34,
+   "launch_ps": 180.0,
+   "launch_pin": "y[30]",
+   "capture_ps": 146.7,
+   "capture_pin": "x[28]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "pass": true,
+   "fail_why": ""
+  }
+ }
+}

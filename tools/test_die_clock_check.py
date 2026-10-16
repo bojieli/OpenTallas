@@ -43,6 +43,20 @@ class DieClockCheck(unittest.TestCase):
         self.assertTrue(os.path.exists(os.path.join(self.d, "r.txt")))
         self.assertEqual([x["lca"] for x in r["pairs"] if x["a"] == "m0" and x["b"] == "m2"], ["b0/Y"])
 
+    def test_literal_entries_preserve_intra_tile_and_specific_branches(self):
+        with open(self.f, 'a') as f:
+            f.write('T\tm0/clk2\tmaster\t900\t800\tb2/Y\t1500\t1490\n')
+        pj = os.path.join(self.d, 'entries.json')
+        with open(pj, 'w') as f:
+            json.dump({'entry_pairs': [['m0/clk', 'm0/clk2', 'same domain'],
+                                       ['m0/clk2', 'm2/clk'], ['m0/missing', 'm2/clk']]}, f)
+        r = D.report(self.f, pj)
+        exact = [p for p in r['pairs'] if p['source'] == 'literal_entry_list']
+        self.assertEqual(len(exact), 2)
+        p = next(p for p in exact if p['a'] == 'm0/clk2')
+        self.assertEqual((p['entry_a'], p['entry_b'], p['lca']), ('m0/clk2', 'm2/clk', 'b2/Y'))
+        self.assertEqual(r['noncommon']['unmatched_pairs'], 1)
+
 
 if __name__ == "__main__":
     unittest.main()

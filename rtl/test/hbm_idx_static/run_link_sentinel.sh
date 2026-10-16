@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+# Unit bench of the tile CORES (ot_hbm_idx_*_static_core, unchanged arithmetic); the pin-registered tiles are benched
+# in run_scheduled.sh (calendar + parent from the compiled program).
 set -euo pipefail
 root=$(cd "$(dirname "$0")/../../.." && pwd);cd "$root"
 out=${1:?out};mkdir -p "$out"

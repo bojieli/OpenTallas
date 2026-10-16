@@ -1,0 +1,100 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[INFO ODB-0394] Duplicate site asap7sc7p5t in asap7sc7p5t_28_L_1x_220121a already seen in asap7sc7p5t_28_R_1x_220121a
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_L_1x_220121a.lef, created 212 library cells
+[INFO ODB-0227] LEF file: /mv0/ot_sram_1r1w_1024x256_m2_r2c2.lef, created 1 library cells
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13178, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13211, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13244, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13277, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13310, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13343, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13376, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14772, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14805, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_LVT_TT_nldm_211120.lib.gz line 13178, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_LVT_TT_nldm_211120.lib.gz line 13211, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_LVT_TT_nldm_211120.lib.gz line 13244, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_LVT_TT_nldm_211120.lib.gz line 13277, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_LVT_TT_nldm_211120.lib.gz line 13310, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_LVT_TT_nldm_211120.lib.gz line 13343, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_LVT_TT_nldm_211120.lib.gz line 13376, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_LVT_TT_nldm_211120.lib.gz line 14772, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_LVT_TT_nldm_211120.lib.gz line 14805, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_LVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
+[WARNING STA-0450] virtual clock core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_cap can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_mem can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_tgt can not be propagated.
+[WARNING STA-0450] virtual clock core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_cap can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_mem can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_tgt can not be propagated.
+OT_DIRECT_MACRO ACCESSOR source_sha256=61aaf3f8c874867d13acbca9ef2f8d861a8217793d5b3605318886f8fd9f5777 executable_sha256=21eda99eeae7eccb22ca64ad28949c08a6c01dcece3ccb23e2206d635f8d2846 module_sha256=b3221367ae6d71774163a505c69426a7ccd4b817b5c989460e5860b145a6dfe9 compiler=g++ (Ubuntu 11.4.0-1ubuntu1~22.04.3) 11.4.0
+OT_DIRECT_MACRO RAW_LIBERTY_PIN tt clk_mem -> u_calendar.u_programme.u_program/clk wire=14.345490998303006 library=ot_sram_1r1w_1024x256_m2_r2c2_tt/ot_sram_1r1w_1024x256_m2_r2c2 (internal arcs retained)
+OT_HYBRID CTS_MEASURE tt clk sinks=651 reference_scope=boundary boundary_sinks=225 min=177.1189590965213 mean=184.77300220545985 max=202.38161227802587 all_mean=186.30766034977313
+OT_HYBRID CTS_MEASURE tt clk_cap sinks=633 reference_scope=boundary boundary_sinks=328 min=212.29341980351654 mean=231.2206384537658 max=247.08230005251875 all_mean=224.49740212586488
+OT_HYBRID CTS_MEASURE tt clk_tgt sinks=1399 reference_scope=boundary boundary_sinks=4 min=195.8521408439343 mean=196.72311427967995 max=197.46142300234663 all_mean=211.04924535038188
+OT_ENTRIES LEVEL clk_mem deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_mem -> u_calendar.u_programme.u_program/clk wire=14.345490998303006 R=0 latency=216.87514745546278 phi=231.2206384537658
+OT_ENTRIES LEVEL clk deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk -> u_calendar.rst_meta$_DFF_PN0_/CLK wire=0 R=184.77300220545985 latency=46.44763624830594 phi=231.2206384537658
+OT_ENTRIES LEVEL clk_cap deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_cap -> u_calendar.u_programme.cfg_addr_q[0]$_DFF_P_/CLK wire=0 R=231.2206384537658 latency=0.0 phi=231.2206384537658
+OT_ENTRIES LEVEL clk_tgt deep=0 basis=TT timing-graph entry arrival + child R (physical proof required for route/signoff)
+OT_ENTRIES COMP tt clk_tgt -> ot_prs_00002_ff/CLK wire=0 R=196.72311427967995 latency=34.49752417408584 phi=231.2206384537658
+OT_ENTRIES DOMAIN core 833.333008ps IO1/223 boundary=223.56659534482722..248.82924852633178
+OT_ENTRIES DOMAIN cap 833.333008ps IO328/0 boundary=212.29341980351654..247.08230005251875
+OT_ENTRIES DOMAIN mem 833.333008ps IO0/0 boundary=231.2206384537658..231.2206384537658
+OT_ENTRIES DOMAIN tgt 833.333008ps IO0/2 boundary=230.34966501802015..231.95894717643247
+OT_MULTI_ROOT RELATED_PATH core -> tgt max slack=135.966019 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH core -> tgt min slack=83.487411 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH cap -> tgt max slack=25.037140 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH cap -> tgt min slack=88.123978 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH cap -> core max slack=30.790871 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH cap -> core min slack=81.380127 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH mem -> core max slack=103.535126 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH mem -> core min slack=405.942810 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH tgt -> cap max slack=218.074173 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH tgt -> cap min slack=60.596584 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH core -> mem max slack=293.861389 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH core -> mem min slack=92.289291 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH cap -> mem max slack=326.614899 (ordinary synchronous timing retained)
+OT_MULTI_ROOT RELATED_PATH cap -> mem min slack=88.180466 (ordinary synchronous timing retained)
+OT_MULTI_ROOT OWNERSHIP PASS roots=3 registers=2684 inputs=329 outputs=225 async_control_pins=2312
+OT_ENTRIES COMP DONE tt 4 entries phi=231.2206384537658 boundary=212.29341980351654..248.82924852633178
+[WARNING STA-0450] virtual clock core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_cap can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_mem can not be propagated.
+[WARNING STA-0450] virtual clock ot_io_tgt can not be propagated.
+OT_IOREF clock-port clk (ot_entry_0): data input delays dropped
+OT_IOREF clock-port clk_cap (ot_entry_1): data input delays dropped
+OT_IOREF clock-port clk_mem (ot_entry_2): data input delays dropped
+OT_IOREF clock-port clk_tgt (ot_entry_3): data input delays dropped
+OT_IOREF_EDGE ot_entry_0 boundary 225 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_1 boundary 328 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_2 boundary 0 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_3 boundary 4 negedge 0 noarc 0 inverted 0
+OT_IOREF keep core_clk (not an insertion-reference clock)
+OT_IOREF keep ot_io_cap (not an insertion-reference clock)
+OT_IOREF keep ot_io_mem (not an insertion-reference clock)
+OT_IOREF keep ot_io_tgt (not an insertion-reference clock)
+OT_IOREF clock-port clk (ot_entry_0): data input delays dropped
+OT_IOREF clock-port clk_cap (ot_entry_1): data input delays dropped
+OT_IOREF clock-port clk_mem (ot_entry_2): data input delays dropped
+OT_IOREF clock-port clk_tgt (ot_entry_3): data input delays dropped
+OT_IOREF_EDGE ot_entry_0 boundary 225 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_1 boundary 328 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_2 boundary 0 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE ot_entry_3 boundary 4 negedge 0 noarc 0 inverted 0
+OT_IOREF keep core_clk (not an insertion-reference clock)
+OT_IOREF keep ot_io_cap (not an insertion-reference clock)
+OT_IOREF keep ot_io_mem (not an insertion-reference clock)
+OT_IOREF keep ot_io_tgt (not an insertion-reference clock)
+OT_WS max 2.5037139028682986e-11 min 4.275715892454457e-11
+OT_EXPORT_DONE
