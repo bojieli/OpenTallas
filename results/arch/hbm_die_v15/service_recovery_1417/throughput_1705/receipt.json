@@ -1,0 +1,119 @@
+{
+ "schema": "opentallas.hbm.sm4pc-service-steady-throughput.v1",
+ "bench": "tb_hbm_svc_sm_stack_steady: all 8 SMs of stack 0, 64 rows (8,704 B) per SM per epoch, 8 epochs alternating landing/cache banks, compiler-style static issue (reserve/start/go as soon as the resource is free), actual engine + controller; steady = mean of epochs 2..7",
+ "price": "99 B/cycle/SM (HBM physical BW price) -> 73.3 ns per 64-row epoch",
+ "runs": {
+  "steady_dc00": {
+   "decouple": 0,
+   "overlap": 0,
+   "steady_epoch_ps": 139305.499833,
+   "GBps_per_SM": 62.48,
+   "B_per_stream_cycle": 52.1,
+   "vs_price_99": 0.526
+  },
+  "steady_dc01": {
+   "decouple": 0,
+   "overlap": 1,
+   "steady_epoch_ps": 139027.722167,
+   "GBps_per_SM": 62.61,
+   "B_per_stream_cycle": 52.2,
+   "vs_price_99": 0.527
+  },
+  "steady_dc10": {
+   "decouple": 1,
+   "overlap": 0,
+   "steady_epoch_ps": 130833.281,
+   "GBps_per_SM": 66.53,
+   "B_per_stream_cycle": 55.4,
+   "vs_price_99": 0.56
+  },
+  "steady_dc11": {
+   "decouple": 1,
+   "overlap": 1,
+   "steady_epoch_ps": 108888.845333,
+   "GBps_per_SM": 79.93,
+   "B_per_stream_cycle": 66.6,
+   "vs_price_99": 0.673
+  },
+  "steady_l4": {
+   "lbanks": 4,
+   "decouple": 1,
+   "overlap": 1,
+   "steady_epoch_ps": 69583.3055,
+   "GBps_per_SM": 125.09,
+   "B_per_stream_cycle": 104.2,
+   "vs_price_99": 1.053
+  },
+  "steady_l2": {
+   "lbanks": 2,
+   "decouple": 1,
+   "overlap": 1,
+   "steady_epoch_ps": 108888.845333,
+   "GBps_per_SM": 79.93,
+   "B_per_stream_cycle": 66.6,
+   "vs_price_99": 0.673
+  }
+ },
+ "diagnosis": {
+  "codex_1447": "OVERLAP=0: the hbm side takes the next descriptor only after the whole block has RETURNED (desc_rd_ready=!h_active), so every block pays the full ~150 ns fill latency serially; DECOUPLE=0: a landing bank can only be re-reserved after the SAME-index cache bank retired (reserve_ready required !cache_owned)",
+  "fix_h_die": "OVERLAP=1 (ot_hbm_svc_prefetch_overlap_owner + per-bank return counters: next block issues once every owner has issued; responses carry bank/epoch per tag) + DECOUPLE=1 (cache ownership checked at open/start, where packed136 already faults an open into an owned bank): 139.3 -> 108.9 ns/epoch",
+  "remaining": "none at the service stage for 64-row blocks: PC-peak limited",
+  "fix_lbanks4": "LBANKS=4 (default): four 64-row landing blocks per landing bank in one actual ot_sram_1r1w_256x256_m2_r2c2 (2-bit landing index; cache bank = landing index LSB): 69.58 ns/epoch = 104.2 B/cycle/SM = 1.053 x price, now limited by the four-PC transfer floor (68 sectors/PC x 1.024 ns = 69.6 ns)"
+ },
+ "mutants": {
+  "early_calendar": "rejected (all four configurations)",
+  "copy_into_owned_cache_bank": "rejected (DECOUPLE=1 relies on the open-time ownership fault: programme delayed 300 cycles, start ignores ownership -> DUT fault)"
+ },
+ "regression": {
+  "native_stack0": "PASS 320 records (archived images), early mutant rejected",
+  "native_stack1": "PASS 200 records, early mutant rejected",
+  "capacity_stack3": "PASS 64 rows x 8 SMs, early mutant rejected",
+  "note": "with OVERLAP=1 DECOUPLE=1 defaults",
+  "lbanks4": "archived native stack0 320 / stack1 200 records PASS, capacity stack2 64 rows x 8 SMs PASS, steady PASS; early-calendar and copy-into-owned-cache mutants rejected"
+ },
+ "qualified": "THROUGHPUT within price (1.053x, bench production-shape 8 SM x 64 rows x 8 epochs); physical/native whole-die qualification still open",
+ "ledger": "no ledger row needed for the service stage (>= price)",
+ "source_sha256": {
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_overlap_owner.sv": "2abea1273679627e1a1eda5688f8ac5ff42f8ebd70271a83c33fb5fdc5f89a51",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_prefetch_mapped4_owner.sv": "908f6d6f72db0db49874094e43db6ab227e20ccead9e6c904013b44c57fcd9ab",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm4pc_cdc.sv": "c12b30f5d284da472fbd4ef37ede8499c2ffce68f9944dab8b0b293e43b4f36f",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_feed_programmed.sv": "3059c99228e2c1e7d93140e0fb5f34885f9cd68469debc7ea2d3f45171db7811",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_stack_programmed.sv": "066ada6f5b02ed65f995e7337b5f90c3037a87fe395dfdef42c22013282830b5",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_stack_native.sv": "d1a87cccef4d5810ba9c63ad047b8e9a83af95fa4ed517601cc07abcb0f1e9b5",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_static_sm_packed136.sv": "05ea0bddc5a9ea27f0e3ca7d3882ee5f61748c43539f1569994f7ebcb85eaa87",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm8_landing_bank.sv": "0e5758877b638f01372ec223eeb4410f9123f45fd3de54f56f8bce1c0ca9057c",
+  "rtl/hbm_accel/loader/service_native/tb_hbm_svc_sm_stack_steady.sv": "e6945b11d15b0d47adc06946effcd46b05175584096f40bfd82d2b128131fe71",
+  "rtl/hbm_accel/loader/service_native/run_sm_stack_steady.sh": "1c851798768365aa9114d3f87a4cf17252508a9480d32c514bdb02368a43f825",
+  "rtl/hbm_accel/loader/service_native/tb_hbm_svc_sm_stack_native.sv": "7f5c0c73c61ea6dfba7b4b6ab35892273489f54fdad73b4c368607bd85350452",
+  "rtl/hbm_accel/loader/service_native/tb_hbm_svc_sm_stack_capacity.sv": "346448871bd3bec644ea64154e83903a9e8ea06fe6c26bf6bb174669b509e991",
+  "rtl/hbm_accel/loader/service_native/tb_hbm_svc_sm_stack_programmed.sv": "29bb0d859f9e46b79aca5b0eff39ca308d180946a8a6fcb75932d7f3cfc74e58"
+ },
+ "logs_sha256": {
+  "l4_cap_s2_positive.log": "deb17d0f0ea43fc3ee85fb8bbf0ddf24c3c0f2bb5f2e01e2acb0b8e8305eae7b",
+  "l4_native_s0_positive.log": "17c4832bdc898ed9a0ade686ba3c7838547313ebe6859daaaa792c473ac9cbe9",
+  "l4_native_s1_positive.log": "5d222fc8638a22bec1da728c7a977c2074143ce0fcb8349ca74be4df3d9c2928",
+  "ov_cap_s3_positive.log": "e2289bdd4970d9cc7a61f11a71f7aa308ff3c878c5be794cc8e5b6a525ee7d4d",
+  "ov_native_s0_positive.log": "17c4832bdc898ed9a0ade686ba3c7838547313ebe6859daaaa792c473ac9cbe9",
+  "ov_native_s1_positive.log": "5d222fc8638a22bec1da728c7a977c2074143ce0fcb8349ca74be4df3d9c2928",
+  "steady_dc00_positive.log": "b5c364c81e28e33a5b83c1ee3b6d192d572d4f061e6357986ef9e99ea4a6cdca",
+  "steady_dc01_positive.log": "e2ba60aa4bdb04c387a677b14dda891114f27235d77be6ac2578e0dd0561b1af",
+  "steady_dc10_positive.log": "33c2a985cacf3baef3926ac11c1a6fc2168cf845f7d5c15996480c5175894f04",
+  "steady_dc11_early_mutant.log": "4b6eca31b0a5c89a5e90f3a389792c1b19855fc7e8735fd55f9b4cdaa1e574f7",
+  "steady_dc11_earlystart_mutant.log": "ea7f73561119a204f470b7d7c33d7dec141398cc8c3f03179a58930efe597fa2",
+  "steady_dc11_positive.log": "3706911a213839e5f97453c03edf6cb9c2581a1ab3bf0cd5d205e6cf7f9f5196",
+  "steady_l2_positive.log": "de80649be61236da74af69187c1ad236a07d5251e67273d3b4fae90e32e8a38e",
+  "steady_l4_early_mutant.log": "cf3c6b8ec7ecc534c52af98cca36d0b122fd400d0232307c9132bae65c6fcdaa",
+  "steady_l4_earlystart_mutant.log": "4a9be53b7dad76679d4695357f8c9de610c4e37a963a589a3ed74720bfba4f1d",
+  "steady_l4_positive.log": "b4f8da3dc3649e2a1a96310056a0385ff6841e5109254d0a4d12b6db159b7bed"
+ },
+ "sram_area": {
+  "per_stack": {
+   "landing ot_sram_1r1w_256x256_m2_r2c2 172.824x41.064": 64,
+   "cache+native response ot_sram_1r1w_128x256_m1_r2c2 94.824x41.064": 72,
+   "programme ot_sram_1r1w_1024x256_m2_r2c2 174.744x70.488": 8
+  },
+  "per_stack_mm2": 0.8331,
+  "per_die_mm2": 3.3324,
+  "delta_vs_two_block_mm2_per_die": 0.82
+ }
+}

@@ -27,6 +27,11 @@ module ot_s81_static_ratio_cross #(
     parameter integer DEPTH = 8,          // power of two, >= 2*NS
     parameter integer LAG = (NS < ND) ? 1 : 0,   // source edges of extra lag (3:4: >= 3 VCO ticks for the read mux)
     parameter integer VBIT = 0,           // valid bit of the source word (for the skipped-phase check); -1: none
+    parameter integer WRN = 0,            // 1: bank/ident writes are NOT gated by the epoch marker (r2l, S-NET n5): the
+                                          // marker is a negedge pin flop (forwarded-clock hop), and gating 4,104 write
+                                          // enables with it made a half-cycle, high-fanout path (n3 TT -46.69 ps).
+                                          // Before the release wc is held at 0, so slot 0 is rewritten until edge 0 --
+                                          // the read side starts after the marker, identity checks are unchanged.
     parameter integer MUT = 0             // bench mutants only: 1 mapping off by one source edge
 ) (
     input  wire         w_ck,
@@ -48,12 +53,20 @@ module ot_s81_static_ratio_cross #(
     always @(posedge w_ck or negedge w_rst_n)
         if (!w_rst_n) begin wc <= 0; wp <= 0; wskip_v <= 1'b0; end
         else begin
-            bank[wc[AW-1:0]] <= i;
-            ident[wc[AW-1:0]] <= wc[AW+1:0];
+            if (WRN == 0) begin
+                bank[wc[AW-1:0]] <= i;
+                ident[wc[AW-1:0]] <= wc[AW+1:0];
+            end
             wc <= wc + 1'b1;
             wp <= (wp == NS - 1) ? 0 : wp + 1'b1;
             if (NS > ND && wp >= ND && VBIT >= 0 && i[VBIT >= 0 ? VBIT : 0]) wskip_v <= 1'b1;
         end
+    generate if (WRN != 0) begin : g_wrn
+        always @(posedge w_ck) begin
+            bank[wc[AW-1:0]] <= i;
+            ident[wc[AW-1:0]] <= wc[AW+1:0];
+        end
+    end endgenerate
     (* async_reg = "true" *) reg [1:0] ep;
     always @(posedge r_ck or negedge r_rst_n)
         if (!r_rst_n) ep <= 2'b00; else ep <= {ep[0], w_rst_n};

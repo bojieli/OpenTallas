@@ -34,11 +34,13 @@ def rtl_index():
 
 
 def header(text, mod):
+    # Comments can contain ); before the actual end of the ANSI header.
+    # Remove them before searching so such text cannot truncate the ports.
+    text = re.sub(r'/\*.*?\*/|//[^\n]*', ' ', text, flags=re.S)
     m = re.search(r'^\s*module\s+' + mod + r'\b(.*?)\);', text, re.M | re.S)
     if not m:
         return None, None
-    h = re.sub(r'//[^\n]*', '', m.group(1))
-    h = re.sub(r'/\*.*?\*/', '', h, flags=re.S)
+    h = m.group(1)
     params = {}
     pm = re.match(r'\s*#\s*\((.*?)\)\s*\(', h, re.S)
     body = h

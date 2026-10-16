@@ -17,7 +17,12 @@ module tb_qkh_head_native;
   ot_qwen_nearhbm_head_hs u_ref (.clk(clk),.rst_n(rst_n),.c_in(c),.row_in(row),
     .e_in(e),.lt_in(lt),.hid(hid),.q_valid_in(qv),.q_beat_in(qb),.q_data_in(qd),
     .sc_d(rsc),.sc_f(rsf),.g_f(rgf),.nb_d(rnb));
-`ifdef QKH_STAGED
+`ifdef QKH_G3S2
+  // kvsys v1.4.3 G3S2: one head pair (near r4_ft + far r4) behind G/T1/T2 + S1/S2; BOTH heads compared to the reference,
+  // score +5 (3 in + 2 out), nb +3 (input stages only).  The far head's T1/S2 are the near frame's feed-through leaves.
+  wire [33:0] gs_f; wire [1023:0] gnb_f;
+  qkh_head_pair_g3s2 #(.MUT(MUT)) u_dut (.clk(clk),.hid_f(hid),.e_f(e),.s_f(gs_f),.nb_f(gnb_f),
+`elsif QKH_STAGED
   // v1.4 head stages: DUT = 2 t/e stages + r4 head + 1 score stage; the reference is compared +3 (score) / +2 (nb).
   ot_qkh_head_native_r4_staged #(.Q_FP32(1),.MUT(MUT)) u_dut
     (.ck_front({4{clk}}),.ck_score(clk),.ck_kt(clk),.ck_stin({16{clk}}),.ck_stk({16{clk}}),
@@ -36,7 +41,14 @@ module tb_qkh_head_native;
 `endif
      .rst_n(rst_n),.c_in(c),.row_in(row),.e_in(e),.lt_in(lt),.hid(hid),
      .q_valid_in(qv),.q_beat_in(qb),.q_data_in(qd),.sc_d(dsc),.sc_f(dsf),.g_f(dgf),.nb_d(dnb));
-`ifdef QKH_STAGED
+`ifdef QKH_G3S2
+  reg [33:0] rs_d [0:4]; reg [1023:0] rnb_d [0:2]; integer qi;
+  always @(posedge clk) begin
+    rs_d[0]<={rsc,rsf,rgf}; for(qi=1;qi<5;qi=qi+1) rs_d[qi]<=rs_d[qi-1];
+    rnb_d[0]<=rnb; for(qi=1;qi<3;qi=qi+1) rnb_d[qi]<=rnb_d[qi-1];
+  end
+  wire [31:0] csc=rs_d[4][33:2]; wire csf=rs_d[4][1], cgf=rs_d[4][0]; wire [1023:0] cnb=rnb_d[2];
+`elsif QKH_STAGED
   reg [33:0] rs_q1=0,rs_q2=0,rs_q3=0; reg [1023:0] rnb_q1=0,rnb_q2=0;
   always @(posedge clk) begin
     rs_q1<={rsc,rsf,rgf}; rs_q2<=rs_q1; rs_q3<=rs_q2; rnb_q1<=rnb; rnb_q2<=rnb_q1;
@@ -50,6 +62,12 @@ module tb_qkh_head_native;
   reg [31:0] last_score=0;
   integer score_changes=0,node_changes=0;
   reg [1023:0] last_node=0;
+`ifdef QKH_G3S2
+  integer ferrors=0;
+  always @(posedge clk) begin #0.06; if(check_on && {gs_f,gnb_f} !== {rs_d[4],rnb_d[2]}) begin
+    if(ferrors<8) $display("HEAD_G3S2_FAR_MISMATCH cycle=%0d s=%h/%h nb_equal=%b",cycles,rs_d[4],gs_f,rnb_d[2]===gnb_f);
+    ferrors=ferrors+1; errors=errors+1; end end
+`endif
   always @(posedge clk) begin
     #0.05;
     cycles=cycles+1;
