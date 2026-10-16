@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """cth_ntc parent plan + top-down pins of its NEW leaves (HC-COLUMN 10-16, option A).
 
-Parent = ot_s81_hc_cth_ntc, 576.72 x 874.26 um (10-16: was 844.56; ctrn_col 12.96->25.92, ret row 56.16->72.90 for post-CTS density; rows below shift), R0 rows (y from N): ctrn_col slices 0, ctnl j0 12.96 / j1 112.32,
+Parent = ot_s81_hc_cth_ntc, 576.72 x 882.90 um (10-16 a4: ctrn_col 25.92->34.56, +8.64; a3 874.26; was 844.56; ctrn_col 12.96->25.92, ret row 56.16->72.90 for post-CTS density; rows below shift), R0 rows (y from N): ctrn_col slices 0, ctnl j0 12.96 / j1 112.32,
 ctpl half0 211.68, ret_column row 330.48 (h 56.16), ctfxs 386.64, ctfn banks 412.56, ctfl 447.12, ctpl half1 473.04,
 ctnl j2 591.84 / j3 691.2, ctfs 790.56 (Codex 844.56 plan, the 2x30.24/25.92 return strips merged into one 56.16 leaf).
 The return chain runs bottom -> top: row p's slices (its N edge) feed row p-1's return leaves (457.9 um up).
@@ -10,7 +10,7 @@ New leaves get exact pins placed against the actual pins they join (closed LEFs:
 ctpl v3, ctfl_nt s6; ctnl_l2io from its pin file):
   ot_s81_hc_ret_column_c{0..3}  144.18 x 56.16   N: lanes j0/j1 + requests + slice outputs; S: lanes j2/j3 + chain + fv/fdx;
                                                  W/E: y-beat / flag / cs / hov peer nets
-  ot_s81_hc_ctrn_col_{e,w}      144.18 x 12.96   S: own + partner (partner E for columns 0/1, W for 2/3); N: bundle
+  ot_s81_hc_ctrn_col_{e,w}      144.18 x 34.56   S: own + partner (partner E for columns 0/1, W for 2/3); N: bundle
 Pin x = the joined pin's x, then packed per face/layer at 0.096 um (M5 + M3 on N/S, M4 on W/E).
 Audit: every join of a new-leaf pin (driver -> each sink) with Manhattan length; target 0 over 500 um.
 
@@ -22,14 +22,21 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / 'tools/s81'))
 import v19_pins_1014 as V  # noqa: E402
 
-H, W = 874.26, 576.72      # 10-16 outline growth: +12.96 (ctrn_col 25.92) +16.74 (ret row 72.90)
+# 10-16 outline growth: +12.96 (ctrn_col 25.92) +16.74 (ret row 72.90) -> 874.26 (a3 plan, the row tops below).
+# 10-16 a4 (ctrncol e/w a3 GRT-0116: overflow only in the N-face output band, 1-4 M3/M5 tracks over in one gcell row,
+# total usage 23-25%; output flop + 2-3 hold cells per bit crammed into the top ~4 um): slice 25.92 -> 34.56 (SL_GROW),
+# every row below the slice moves down by SL_GROW; RET_GROW likewise moves the rows below the ret row.
+SL_H = 34.56
+RET_H = 72.90
+SL_GROW, RET_GROW = round(SL_H - 25.92, 3), round(RET_H - 72.90, 3)
+H, W = round(874.26 + SL_GROW + RET_GROW, 3), 576.72
 CW, LW = 144.18, 144.72          # new-leaf column pitch / closed lane-tile pitch
-RET_T, RET_H = 343.44, 72.90
-SL_H = 25.92
-CTNL_T = [25.92, 125.28, 621.54, 720.90]
+RET_T = round(343.44 + SL_GROW, 3)
+_LO = SL_GROW + RET_GROW         # rows below the ret row
+CTNL_T = [round(25.92 + SL_GROW, 3), round(125.28 + SL_GROW, 3), round(621.54 + _LO, 3), round(720.90 + _LO, 3)]
 CTNL_H = [95.04, 95.04, 99.36, 99.36]
-CTPL_T = [224.64, 502.74]
-CTFL_T = 476.82
+CTPL_T = [round(224.64 + SL_GROW, 3), round(502.74 + _LO, 3)]
+CTFL_T = round(476.82 + _LO, 3)
 PITCH = 0.096
 HELD_L3 = '/home/ubuntu/artifacts/s81-hccol-0600/heldviews/ctnl_l3_native_ref-np2-granted-57b4f1931/physical/ref_tile/s81hc_ctnl_l3_native_ref/views/ot_s81_hc_ctnl_l3/ot_s81_hc_ctnl_l3.lef'
 

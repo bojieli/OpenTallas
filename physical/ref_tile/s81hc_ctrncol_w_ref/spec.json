@@ -39,10 +39,10 @@
  "reset_ports": [],
  "outline": {
   "w": 144.18,
-  "h": 25.92,
+  "h": 34.56,
   "exact": true
  },
- "why_floorplan": "Per-column return slice, 25.92 tall (10-16: 12.96 failed DPL-0038 util 101% with recipe-2 pin flops on N+S) (one register stage, 1,140 b: valid, header, own + partner (column c+2) payload); partner inputs on the W side (columns 2/3).",
+ "why_floorplan": "Per-column return slice, 34.56 tall (10-16 a4: a3 at 25.92 failed GRT-0116 only in the N-face output band, 1-4 M3/M5 tracks over in one gcell row at y 20.5-22.8, total usage 23-25%: output flop + hold stage per bit crammed into the top ~4 um; earlier 10-16: 12.96 failed DPL-0038 util 101% with recipe-2 pin flops on N+S) (one register stage, 1,140 b: valid, header, own + partner (column c+2) payload); partner inputs on the W side (columns 2/3).",
  "macros": [],
  "pins": {
   "S": [
@@ -79,7 +79,7 @@
  "job": {
   "owner": "Claude:S-ENGRAM+NORM/HC-COLUMN",
   "branch": "claude/s81-hccol-b-1016",
-  "tag": "a3",
+  "tag": "a4",
   "purpose": "New cth_ntc return slice replacing the 576.72-um ctrn strip: per-column bundles so every chain join stays inside its column.",
   "views_to": "physical/ref_tile/s81hc_ctrncol_w_ref/views",
   "record_to": "results/rtl/ref_tile/s81hc_ctrncol_w_ref",
@@ -92,7 +92,8 @@
  "layer_cap": "M5",
  "orfs_vars": {
   "POST_IO_PLACEMENT_TCL": "tools/s81_suhc/inherited_exact_iop.tcl",
-  "OT_HC_NATIVE_IO_TCL": "/src/physical/s81_die_pins/v28_hc_cthntc/ot_s81_hc_ctrn_col_w.tcl"
+  "OT_HC_NATIVE_IO_TCL": "/src/physical/s81_die_pins/v28_hc_cthntc/ot_s81_hc_ctrn_col_w.tcl",
+  "OT_OUTHOLD_ABSORB_INV": "1"
  },
  "recipe": 2,
  "io_tcl": "physical/s81_die_pins/v28_hc_cthntc/ot_s81_hc_ctrn_col_w.tcl",
@@ -111,6 +112,6 @@
   "enable": false,
   "reason": "Real RTL registers the boundary at its own stage (chain rd/rv -> rdq/rvq, y beat / cs relays, ybuf / psb captures, rdm / header / request / flag registers); a generic pin register would add a cycle to the fixed return calendar. hrq feeds the same-cycle merge (bank round trip) by design."
  },
- "structural_change": "ctrn (one register) split into four per-column slices with header / valid x4 and payload x2 replication; 0 cycles.",
- "slot_change_request": "New cth_ntc leaf (top-down parent plan tools/s81/hc_cthntc_plan.py, physical/s81_die_pins/v28_hc_cthntc: outline growth 10-16: parent 576.72 x 874.26)."
+ "structural_change": "ctrn (one register) split into four per-column slices with header / valid x4 and payload x2 replication; 0 cycles. | 10-16 a4: outline 25.92 -> 34.56 (core 21.6 -> 30.24 um: the N output band gets room for flop + stage depth), OT_OUTHOLD_ABSORB_INV=1 (QN INV + lead BUF/HB2/BUF output stage FIRM at the pin, the hbfd_rly_624 / CCR pr5abs pattern), N/S pins already alternate M5/M3 at 0.048 um offsets (plan tool), each bit keeps its x; same RTL, 0 cycles. Parent cth_ntc 874.26 -> 882.90 (rows below the slice keep their distance from the tile bottom: every parent leg length unchanged).",
+ "slot_change_request": "New cth_ntc leaf (top-down parent plan tools/s81/hc_cthntc_plan.py, physical/s81_die_pins/v28_hc_cthntc: outline growth 10-16 a4: parent 576.72 x 882.90)."
 }

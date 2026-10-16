@@ -1,5 +1,5 @@
 {
- "name": "s81hc_ctrncol_w_ref-a3-COMMIT",
+ "name": "s81hc_ctrncol_w_ref-a4-COMMIT",
  "block": "ot_s81_hc_ctrn_col_w",
  "ref_tile": true,
  "owner": "Claude:S-ENGRAM+NORM/HC-COLUMN",
@@ -71,7 +71,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81hc_ctrncol_w_ref/s81hc_ctrncol_w_ref-a3-COMMIT"
+   "to": "results/rtl/ref_tile/s81hc_ctrncol_w_ref/s81hc_ctrncol_w_ref-a4-COMMIT"
   }
  ],
  "cycles_added": 0,
@@ -82,5 +82,5 @@
  "merge_target": null,
  "benched_by": "s81hc_ng256_retcol",
  "hold_merge": "cth_ntc parent component: the parent kit binds it after every child closes with native PASS; exactness = two-row chain proof + exact HC gate (RETCOL)",
- "structural_change": "ctrn (one register) split into four per-column slices with header / valid x4 and payload x2 replication; 0 cycles."
+ "structural_change": "ctrn (one register) split into four per-column slices with header / valid x4 and payload x2 replication; 0 cycles. | 10-16 a4: outline 25.92 -> 34.56 (core 21.6 -> 30.24 um: the N output band gets room for flop + stage depth), OT_OUTHOLD_ABSORB_INV=1 (QN INV + lead BUF/HB2/BUF output stage FIRM at the pin, the hbfd_rly_624 / CCR pr5abs pattern), N/S pins already alternate M5/M3 at 0.048 um offsets (plan tool), each bit keeps its x; same RTL, 0 cycles. Parent cth_ntc 874.26 -> 882.90 (rows below the slice keep their distance from the tile bottom: every parent leg length unchanged)."
 }
