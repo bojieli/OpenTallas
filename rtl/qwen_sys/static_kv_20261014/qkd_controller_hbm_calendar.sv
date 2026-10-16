@@ -17,6 +17,7 @@ module qkd_controller_hbm_calendar #(parameter integer N=16, ROW0=64, MUT=0)(
  output reg [15:0] static_epoch,output wire expected_raw_valid,
  output reg fault,output reg idle
 );
+ initial if(N<1 || N>16)$fatal(1,"calendar descriptor capacity must be 1..16");
  (* keep *) reg rn;
  always @(posedge hck)rn<=rst_n;
  reg we_q,seal_q,go_q;reg [4:0] addr_q;reg [63:0] data_q;

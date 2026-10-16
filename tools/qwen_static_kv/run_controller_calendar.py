@@ -34,7 +34,11 @@ for bad in ([Run(1)],[Run(4),Run(4)],[Run(4,mask=3)],[Run(65535,count=2)],[Run(1
  try:compile_image(bad)
  except ValueError:pass
  else:raise AssertionError('invalid image accepted')
-receipt=dict(scope='compressed controller producer component, 36 fixed frame repeats; not full memory/native layer',source_sha256={f:hashlib.sha256((ROOT/f).read_bytes()).hexdigest()for f in files},storage_bits=z['storage_bits'],events_per_frame=len(z['events']),results=result,invalid_image_controls=5,native_full_layer=False)
+for capacity in (0,17,-1,True):
+ try:compile_image([],capacity=capacity)
+ except ValueError:pass
+ else:raise AssertionError('invalid hardware capacity accepted')
+receipt=dict(scope='compressed controller producer component, 36 fixed frame repeats; not full memory/native layer',source_sha256={f:hashlib.sha256((ROOT/f).read_bytes()).hexdigest()for f in files},storage_bits=z['storage_bits'],events_per_frame=len(z['events']),results=result,invalid_image_controls=9,native_full_layer=False)
 (out/'receipt.json').write_text(json.dumps(receipt,indent=2)+'\n');print(json.dumps(receipt,indent=2))
 
 if x.mutant_only:raise SystemExit(1)
