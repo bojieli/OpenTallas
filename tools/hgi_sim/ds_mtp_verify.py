@@ -346,6 +346,40 @@ def draft_terms(sim, P):
                      "at the sim's --price-pos")
 
 
+CTL_CMD = 16                 # dspark ctl command round trip budget MD-1 (closed ot_dshbm_dspark_ctl / accept_a0)
+
+
+def compose(rec, P):
+    """one DSpark step = verify(P) + draft (3 stages x 5 rows, dhead, gamma Markov) + seed(P columns) + the verify
+    columns' main-hidden stores (L37..39) + the control plane's commands (40 VLAYER + VHEAD + SEED + 3 DSTAGE + DHEAD +
+    gamma MARKOV, MD-1 budget each); tok/s = tau x clock / step.  AR = the same program's P = 1 token (same segmented
+    timing).  The sensitivity rows scale the draft + seed terms by the AR sensitivity / fixed ratio (the sim prices
+    those kernels on the fixed tables only)."""
+    runs, tau, gamma = rec["runs"], rec["tau"], rec["gamma"]
+    ncmd = 40 + 1 + 1 + 3 + 1 + gamma
+    table = []
+    for key, r in runs.items():
+        f = key.split("|")
+        if f[1] == "AR" or len(f) > 5:
+            continue
+        att, _, sm, swap, sc = f
+        ar = runs[f"{att}|AR|{sc}"]["cycles"]
+        dk = "option B" if att.startswith("B") else "ATT tabl"
+        d = rec["draft"].get(dk)
+        if not d:
+            continue
+        k = ar / runs[f"{att}|AR|fixed"]["cycles"] if sc != "fixed" else 1.0
+        extra = (d["draft_cycles"] + d["seed_cycles"] + d["mh_store_cycles"]) * k + ncmd * CTL_CMD
+        step = r["cycles"] + extra
+        table.append(dict(case=key, attention=att, sm=sm, vm=swap, prices=sc, verify_cycles=r["cycles"],
+                          draft_cycles=round(d["draft_cycles"] * k, 1), seed_cycles=round(d["seed_cycles"] * k, 1),
+                          mh_store_cycles=round(d["mh_store_cycles"] * k, 1), control_cycles=ncmd * CTL_CMD,
+                          step_cycles=round(step, 1), step_us=round(step / CLK * 1e6, 2),
+                          mtp_tok_s=round(tau * CLK / step, 1), ar_cycles=ar, ar_tok_s=round(CLK / ar, 1),
+                          mtp_over_ar=round(tau * ar / step, 3)))
+    return dict(rule=compose.__doc__, commands_a_step=ncmd, table=table)
+
+
 def main():
     import multiprocessing as mp
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
@@ -396,7 +430,9 @@ def main():
         sim = json.loads(dpath.read_text())
         rec["draft"][sim.get("att_pricing", "?")[:8]] = dict(source=str(dpath), verdict=sim["verdict"],
                                                           price_pos=sim.get("price_pos"), **draft_terms(dpath, P))
+    rec["steps"] = compose(rec, P)
     print(json.dumps({k: v["cycles"] for k, v in res.items()}, indent=1))
+    print(json.dumps(rec["steps"]["table"], indent=1))
     if a.out:
         a.out.parent.mkdir(parents=True, exist_ok=True)
         a.out.write_text(json.dumps(rec, indent=1) + "\n")
