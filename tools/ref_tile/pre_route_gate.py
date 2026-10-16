@@ -448,6 +448,36 @@ def stale_native_cts_sdcs(kd: Path, spec: dict) -> list:
             if not (kd / name).is_file() or (kd / name).read_bytes() != text.encode()]
 
 
+PIN_REGS_FAIL_AFTER = "2026-10-16T19:50:00-07:00"   # OWNER RULE 19:50 PT 10-15 + 24 h of WARN
+
+
+def check_pin_regs(g: Gate, kd: Path, spec: dict, now=None):
+    """OWNER RULE 19:50 PT 2026-10-15: every new tile registers every input and every output at its pin.  A leaf-tile
+    kit whose route does not insert pin registers (kit.env without OT_PIN_REGS=1) and records no opt-out reason is WARNed
+    until PIN_REGS_FAIL_AFTER and refused after it; re-kit it (ref_tile.py gen with recipe 3).  CLOSED tiles stand (they
+    are not re-routed); a loop successor of an already-routed parent stays a WARN."""
+    import datetime as dt
+    if spec.get("kind", "tile") != "tile":
+        return
+    try:
+        env = (kd / "kit.env").read_text()
+    except OSError:
+        return
+    pr = spec.get("pin_regs") or {}
+    if "--orfs-var OT_PIN_REGS=1" in env:
+        g.add("INFO", "pin_regs", "pin registers on every data input and output (+1 cycle each; kit pin_regs.json)")
+        return
+    if pr.get("enable") is False and str(pr.get("reason", "")).strip():
+        g.add("INFO", "pin_regs", f"pin registers opted out: {pr['reason'][:300]}")
+        return
+    late = (now or dt.datetime.now().astimezone()) >= dt.datetime.fromisoformat(PIN_REGS_FAIL_AFTER)
+    sev = "FAIL" if late and not spec.get("auto_react_parent") else "WARN"
+    g.add(sev, "pin_regs", f"{RT.PIN_REGS_RULE}: this kit's ports are not registered at the pins and no opt-out is recorded"
+          + ("" if late else f" (WARN until {PIN_REGS_FAIL_AFTER}, then refused)"),
+          "re-kit with recipe 3 (python3 tools/ref_tile/ref_tile.py gen <spec> with \"recipe\": 3, or delete kit.env "
+          "for a new kit), or record \"pin_regs\": {\"enable\": false, \"reason\": \"...\"}")
+
+
 def check_kit(g: Gate, kd: Path, job: dict | None, commit=None):
     stale = stale_multi_root_sdcs(kd)
     if stale:
@@ -470,6 +500,7 @@ def check_kit(g: Gate, kd: Path, job: dict | None, commit=None):
               "and submit a new normal successor; preserve original accepted/frozen jobs")
     for sev, chk, msg, fix in fresh["findings"]:
         g.add(sev, chk, msg, fix)
+    check_pin_regs(g, kd, spec)
     fp = json.loads((kd / "floorplan.json").read_text())
     if [round(x, 3) for x in fp["die"][2:]] != [round(x, 3) for x in fresh["outline"]]:
         g.add("FAIL", "kit", f"kit outline {fp['die'][2:]} != regenerated {fresh['outline']}", "re-run ref_tile.py gen")

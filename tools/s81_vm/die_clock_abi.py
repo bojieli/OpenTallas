@@ -54,6 +54,31 @@ VIEWS = {
     'ck_read_data_t': ('dsfd_vm_static_read_q0..q7_p (READ_PIPE 2)', 'ck', 'dsfd_vm_static_read_q0_p_native_1015_p2|dsfd_vm_static_read_q1_p_native_1015_p1|dsfd_vm_static_read_q2_p_native_1015_p1|dsfd_vm_static_read_q3_p_native_1015_p1|dsfd_vm_static_read_q4_p_native_1015_p1|dsfd_vm_static_read_q5_p_native_1015_p1|dsfd_vm_static_read_q6_p_native_1015_p1|dsfd_vm_static_read_q7_p_native_1015_p1'),
     'ck_read_valid_t': ('dsfd_vm_static_read_v0..v7_p (READ_PIPE 2)', 'ck', 'dsfd_vm_static_read_v0_p_native_1015_p2|dsfd_vm_static_read_v1_p_native_1015_p2|dsfd_vm_static_read_v2_p_native_1015_p2|dsfd_vm_static_read_v3_p_native_1015_p2|dsfd_vm_static_read_v4_p_native_1015_p2|dsfd_vm_static_read_v5_p_native_1015_p2|dsfd_vm_static_read_v6_p_native_1015_p2|dsfd_vm_static_read_v7_p_native_1015_p2'),
 }
+# Categories with no bindable closed view at READ_PIPE 4 / CAP_PIPE 2, each with its disposition (S-VM 2026-10-15 late).
+DISPOSITION = {
+    'ck_core_t': ('NO_SINK', 'native-read production (READ_PIPE 4): cks drives only the legacy READ_PIPE 0 output stage '
+                  '(dsfd_vm_static_core.sv legacy_read, a5031e72f): no sink, no die root; the port stays for READ_PIPE 0'),
+    'ck_landing_t': ('BIND_ON_ADOPTION', 'production u_land is the monolith dsfd_vm_static_landing (no native-PASS view: r4 '
+                     'FF -7.1); the joined form dsfd_vm_static_landing_joined = lanes 0..3 + fault join, five CLOSED '
+                     'native-PASS 1417 views (R 162 ps lane0), port widens 1 -> 5 roots; adopted with the A2-F write '
+                     'front because both change the core files pinned by service profile s81_vm_r4_c2_w1'),
+    'ck_landing_x34_s': ('FIX_IN_FLIGHT', 'W514 u_xsel/u_xcol -> ot_s81_vm_x34_s_w514_1015_f4; W1026 u_xsw n1 view CLOSED '
+                         'TT +29.68 / FF +14.59 DRC 0 but native FAIL launch 234.5 > 220 (74 bank pins, R 250.1): '
+                         'kit n2 (86.4-um outline) submitted'),
+    'ck_write_control_t': ('RETIRED_BY_A2F', 'legacy wcontrol (no view, never hardened) replaced by the A2-F front roots'),
+    'ck_write_dispatch_t': ('RETIRED_BY_A2F', 'legacy wdispatch128 x16 replaced by s81_a2f_control4 x4 (pilot in flight)'),
+    'ck_write_stage_t': ('RETIRED_BY_A2F', 'legacy wstage128 x128 replaced by s81_a2f_field16 x32 + s81_a2f_meta26 x4 '
+                         '(pilots in flight)'),
+    'ck_write_header_t': ('RETIRED_BY_A2F', 'legacy W0 header replaced by s81_a2_w0_header (A2-F keeps it; view owed)'),
+    'ck_write_payload_t': ('RETIRED_BY_A2F', 'legacy W0 payloads replaced by s81_a2_w0_payload x4 (A2-F keeps them; '
+                           'views owed)'),
+    'ck_wfc_control_s': ('OPEN_GLUE', 'dsfd_vm_static_wfc control flops (decode/return/t_err) are parent glue: extract to a '
+                         'two-root hard leaf dsfd_vm_static_wfc_ctl (owed, S-VM)'),
+    'ck_wfc_control_t': ('OPEN_GLUE', 'as ck_wfc_control_s (stream half of the same leaf)'),
+    'ck_xio_control_s': ('OPEN_GLUE', 'dsfd_vm_static_xio control flops are parent glue: extract to hard leaf '
+                         'dsfd_vm_static_xio_ctl (owed, S-VM)'),
+    'ck_xio_control_t': ('OPEN_GLUE', 'as ck_xio_control_s'),
+}
 
 
 def insertion_r(kit, pin):
@@ -79,7 +104,9 @@ def main():
             clocks[n] = dict(p, domain=dom, master=v[0] if v else None, child_pin=v[1] if v else None,
                              routed_R=(insertion_r(v[2], v[1]) if v else None),
                              delivery='phi - wire - R per root (R from the bound routed view)' if v else
-                             'OPEN: no closed native view; parent leaf/CTS root pending')
+                             'OPEN: no closed native view; parent leaf/CTS root pending',
+                             disposition=DISPOSITION.get(n, ('BOUND', ''))[0] if v else DISPOSITION.get(n, ('OPEN', ''))[0],
+                             disposition_why=DISPOSITION.get(n, ('', ''))[1])
         elif n.startswith(('rss', 'rst_')):
             resets[n] = dict(p, domain='serial' if n.startswith('rst_') else 'stream')
         else:
@@ -115,7 +142,7 @@ def main():
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(rec, indent=1) + '\n')
     print(json.dumps({'legacy40': stat, 'counts': rec['counts'],
-                      'open_clock_categories': sorted(n for n, c in clocks.items() if not c['routed_R'])}))
+                      'open_clock_categories': {n: c['disposition'] for n, c in sorted(clocks.items()) if not c['routed_R']}}))
 
 
 if __name__ == '__main__':
