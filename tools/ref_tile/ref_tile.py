@@ -189,7 +189,7 @@ def pin_regs_plan(s: dict) -> dict | None:
     roles = [s["clock_port"]] + declared + resets
     if any(not isinstance(p, str) or not re.fullmatch(literal, p) for p in roles):
         raise SpecError("spec: clock/reset roles require explicit literal port names or bits")
-    cks = list(dict.fromkeys([s["clock_port"]] + declared))
+    cks = declared_clock_ports(s)
     if set(cks) & set(resets):
         raise SpecError("spec: clock/reset roles conflict; clocks must not be listed as reset_ports")
     ck = pr.get("clock") or (cks[0] if len(cks) == 1 else None)
@@ -381,7 +381,7 @@ def load_spec(path: str) -> dict:
         if s["top"] not in mods:
             raise SpecError(f"pins auto: top {s['top']} not found in the sources")
         dirs = TL.module_port_dirs(mods[s["top"]])
-        side = set(clock_ports(s) + list(s["reset_ports"]))
+        side = set(declared_clock_ports(s) + list(s["reset_ports"]))
         s["pins"] = {"S": [p for p, d in dirs.items() if d == "input" and p not in side],
                      "N": [p for p, d in dirs.items() if d != "input" and p not in side],
                      "W": [p for p in dirs if p in side]}
@@ -978,6 +978,11 @@ def floorplan_checks(s: dict, W: float, H: float, blocks: list, std_area: float 
 def clock_ports(s: dict) -> list:
     """the clock source ports: every entry of a "clock": "entries" cluster, else the one clock_port"""
     return list(s["clock_ports"]) if s.get("clock") in ("entries", "hybrid_entries", "multiple_cts_roots") else [s["clock_port"]]
+
+
+def declared_clock_ports(s: dict) -> list:
+    """Literal control roles, independent of the policy generating CTS/SDC."""
+    return list(dict.fromkeys([s["clock_port"]] + list(s.get("clock_ports", []))))
 
 
 def clock_ports_sdc(s: dict) -> str:
