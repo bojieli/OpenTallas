@@ -17,9 +17,11 @@ module ot_hgi_qdq_native_program_leaf #(parameter integer COMPACT=0)(
     output wire [47:0] command,
     output wire command_v,
     output wire [31:0] ordinal,
-    output wire active,done,configured,fault
+    output wire active,done,configured,fault,
+    output wire installed_cfg_we,output wire[9:0] installed_cfg_addr
 );
     wire cfg_we,start_v;
+    assign installed_cfg_we=cfg_we;assign installed_cfg_addr=address;
     wire [9:0] address,base;
     wire [10:0] limit;
     wire [15:0] loops;

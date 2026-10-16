@@ -1,0 +1,1719 @@
+{
+ "schema": "opentallas.hier_contract.v1",
+ "die": "hbm_v15",
+ "version": 5,
+ "rules": {
+  "step_um_per_bit": 0.096,
+  "face_cap": 0.6,
+  "grid": 2.16,
+  "std_util": 0.5,
+  "macro_halo": 1.25,
+  "face_layer": {
+   "N": "M5",
+   "S": "M5",
+   "E": "M4",
+   "W": "M4"
+  },
+  "homes": "adopted block origin if the measured outline fits, else nearest free"
+ },
+ "clock_period_ps": 833.333,
+ "slots": [
+  {
+   "name": "vmb_SE0_local_status_diagnostic",
+   "cell": "hfd_vms_bank_local_status_rg4wg1",
+   "kind": "tile",
+   "parent": "vmb_SE0",
+   "source": "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_local_status_rg4wg1.sv",
+   "source_prerequisite": "5384ecd1f",
+   "source_sha256": "e49a8a7a1af20a9f151718cbc5ddf959776480c7e6a03ba8493b6b8e28296efd",
+   "source_dependencies_sha256": {
+    "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_local_status_rg4wg1.sv": "e49a8a7a1af20a9f151718cbc5ddf959776480c7e6a03ba8493b6b8e28296efd",
+    "rtl/hbm_accel/generic/vm/static/ot_vms_bank_static_wdecode_local_status.sv": "5f5fe5fe0ad99d66025e16bbe3d252ce0489c44006e7e85f4e8a52367b787c63",
+    "rtl/hbm_accel/generic/vm/static/ot_vms_ce_counter_pipe.sv": "de10f3eea0f6b8bb0a652ec30621ba4d919b64f7a96651dbc94a4fc7b7ff09fa"
+   },
+   "params": {},
+   "outline": {
+    "w": 356.4,
+    "h": 365.04
+   },
+   "origin": {
+    "x": 228.204,
+    "y": 0,
+    "orient": "R0"
+   },
+   "pins": [
+    {
+     "name": "clk",
+     "face": "N",
+     "layer": "M5",
+     "offset": 149.976,
+     "span_um": [
+      149.928,
+      150.024
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "rst_n",
+     "face": "N",
+     "layer": "M5",
+     "offset": 150.072,
+     "span_um": [
+      150.024,
+      150.12
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "bid[2:0]",
+     "face": "N",
+     "layer": "M5",
+     "offset": 150.264,
+     "span_um": [
+      150.12,
+      150.408
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "sid[1:0]",
+     "face": "N",
+     "layer": "M5",
+     "offset": 150.504,
+     "span_um": [
+      150.408,
+      150.6
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "rslot_v",
+     "face": "N",
+     "layer": "M5",
+     "offset": 150.648,
+     "span_um": [
+      150.6,
+      150.696
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "rslot[2:0]",
+     "face": "N",
+     "layer": "M5",
+     "offset": 150.84,
+     "span_um": [
+      150.696,
+      150.984
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "wslot_v",
+     "face": "N",
+     "layer": "M5",
+     "offset": 151.032,
+     "span_um": [
+      150.984,
+      151.08
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "wslot[2:0]",
+     "face": "N",
+     "layer": "M5",
+     "offset": 151.224,
+     "span_um": [
+      151.08,
+      151.368
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "rq2[16:0]",
+     "face": "N",
+     "layer": "M5",
+     "offset": 152.184,
+     "span_um": [
+      151.368,
+      153.0
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "rr2[256:0]",
+     "face": "N",
+     "layer": "M5",
+     "offset": 165.336,
+     "span_um": [
+      153.0,
+      177.672
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "kq[280:0]",
+     "face": "N",
+     "layer": "M5",
+     "offset": 191.16,
+     "span_um": [
+      177.672,
+      204.648
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "kq_done",
+     "face": "N",
+     "layer": "M5",
+     "offset": 204.696,
+     "span_um": [
+      204.648,
+      204.744
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "status[17:0]",
+     "face": "N",
+     "layer": "M5",
+     "offset": 205.608,
+     "span_um": [
+      204.744,
+      206.472
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "rq3[16:0]",
+     "face": "S",
+     "layer": "M5",
+     "offset": 125.88,
+     "span_um": [
+      125.064,
+      126.696
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "rr3[256:0]",
+     "face": "S",
+     "layer": "M5",
+     "offset": 139.032,
+     "span_um": [
+      126.696,
+      151.368
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "dq[280:0]",
+     "face": "S",
+     "layer": "M5",
+     "offset": 164.856,
+     "span_um": [
+      151.368,
+      178.344
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "dq_done",
+     "face": "S",
+     "layer": "M5",
+     "offset": 178.392,
+     "span_um": [
+      178.344,
+      178.44
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "pq[284:0]",
+     "face": "S",
+     "layer": "M5",
+     "offset": 192.12,
+     "span_um": [
+      178.44,
+      205.8
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "pr[265:0]",
+     "face": "S",
+     "layer": "M5",
+     "offset": 218.568,
+     "span_um": [
+      205.8,
+      231.336
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "rq1[16:0]",
+     "face": "E",
+     "layer": "M4",
+     "offset": 143.64,
+     "span_um": [
+      142.824,
+      144.456
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "rr1[256:0]",
+     "face": "E",
+     "layer": "M4",
+     "offset": 156.792,
+     "span_um": [
+      144.456,
+      169.128
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "xq2[275:0]",
+     "face": "E",
+     "layer": "M4",
+     "offset": 182.376,
+     "span_um": [
+      169.128,
+      195.624
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "xq2_done",
+     "face": "E",
+     "layer": "M4",
+     "offset": 195.672,
+     "span_um": [
+      195.624,
+      195.72
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "eg[275:0]",
+     "face": "E",
+     "layer": "M4",
+     "offset": 208.968,
+     "span_um": [
+      195.72,
+      222.216
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "rq0[16:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 143.352,
+     "span_um": [
+      142.536,
+      144.168
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "rr0[256:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 156.504,
+     "span_um": [
+      144.168,
+      168.84
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "wq0[280:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 182.328,
+     "span_um": [
+      168.84,
+      195.816
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "wq_done0",
+     "face": "W",
+     "layer": "M4",
+     "offset": 195.864,
+     "span_um": [
+      195.816,
+      195.912
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "xq[275:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 209.16,
+     "span_um": [
+      195.912,
+      222.408
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "xq_done",
+     "face": "W",
+     "layer": "M4",
+     "offset": 222.456,
+     "span_um": [
+      222.408,
+      222.504
+     ],
+     "offset_pending_view": false
+    }
+   ],
+   "pin_ranges": {
+    "clk": [
+     149.928,
+     150.024
+    ],
+    "rst_n": [
+     150.024,
+     150.12
+    ],
+    "bid": [
+     150.12,
+     150.408
+    ],
+    "sid": [
+     150.408,
+     150.6
+    ],
+    "rslot_v": [
+     150.6,
+     150.696
+    ],
+    "rslot": [
+     150.696,
+     150.984
+    ],
+    "wslot_v": [
+     150.984,
+     151.08
+    ],
+    "wslot": [
+     151.08,
+     151.368
+    ],
+    "rq2": [
+     151.368,
+     153.0
+    ],
+    "rr2": [
+     153.0,
+     177.672
+    ],
+    "kq": [
+     177.672,
+     204.648
+    ],
+    "kq_done": [
+     204.648,
+     204.744
+    ],
+    "status": [
+     204.744,
+     206.472
+    ],
+    "rq3": [
+     125.064,
+     126.696
+    ],
+    "rr3": [
+     126.696,
+     151.368
+    ],
+    "dq": [
+     151.368,
+     178.344
+    ],
+    "dq_done": [
+     178.344,
+     178.44
+    ],
+    "pq": [
+     178.44,
+     205.8
+    ],
+    "pr": [
+     205.8,
+     231.336
+    ],
+    "rq1": [
+     142.824,
+     144.456
+    ],
+    "rr1": [
+     144.456,
+     169.128
+    ],
+    "xq2": [
+     169.128,
+     195.624
+    ],
+    "xq2_done": [
+     195.624,
+     195.72
+    ],
+    "eg": [
+     195.72,
+     222.216
+    ],
+    "rq0": [
+     142.536,
+     144.168
+    ],
+    "rr0": [
+     144.168,
+     168.84
+    ],
+    "wq0": [
+     168.84,
+     195.816
+    ],
+    "wq_done0": [
+     195.816,
+     195.912
+    ],
+    "xq": [
+     195.912,
+     222.408
+    ],
+    "xq_done": [
+     222.408,
+     222.504
+    ]
+   },
+   "face_density": {
+    "N": 0.15865319865319868,
+    "S": 0.2981818181818182,
+    "E": 0.2174884944115713,
+    "W": 0.21906640368178829
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "N",
+    "layer": "M5",
+    "offset": 149.976
+   },
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "layer_rule": "tile",
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "version": 5,
+   "grant": "independent_bank_local_status_diagnostic_1417",
+   "parent_plan_window": {
+    "x": 29565.592,
+    "y": 5502.56,
+    "w": 812.808,
+    "h": 365.04,
+    "orient": "R0"
+   },
+   "diagnostic_only": true,
+   "source_graph_adopted": false,
+   "parent_and_die_qualified": false,
+   "status_cycles_added": 1,
+   "data_cycles_added": 0,
+   "scope": "One representative per actual RG/WG master, no32bank adoption. New source-specific assignments use four faces; current-source clock/CTS/native checks mandatory. Actual hub+8bank incident pin paths/fixed returns and internal macro/PG access remain unqualified; no historical VSH1 pins or views reused."
+  },
+  {
+   "name": "vmb_SW0_local_status_diagnostic",
+   "cell": "hfd_vms_bank_local_status_rg5wg1",
+   "kind": "tile",
+   "parent": "vmb_SW0",
+   "source": "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_local_status_rg5wg1.sv",
+   "source_prerequisite": "5384ecd1f",
+   "source_sha256": "858b1765240fba8b8a1fb1f8935f952ccb86619efb34ee92aa7a78555d6c8b03",
+   "source_dependencies_sha256": {
+    "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_local_status_rg5wg1.sv": "858b1765240fba8b8a1fb1f8935f952ccb86619efb34ee92aa7a78555d6c8b03",
+    "rtl/hbm_accel/generic/vm/static/ot_vms_bank_static_wdecode_local_status.sv": "5f5fe5fe0ad99d66025e16bbe3d252ce0489c44006e7e85f4e8a52367b787c63",
+    "rtl/hbm_accel/generic/vm/static/ot_vms_ce_counter_pipe.sv": "de10f3eea0f6b8bb0a652ec30621ba4d919b64f7a96651dbc94a4fc7b7ff09fa"
+   },
+   "params": {},
+   "outline": {
+    "w": 356.4,
+    "h": 365.04
+   },
+   "origin": {
+    "x": 228.204,
+    "y": 0,
+    "orient": "R0"
+   },
+   "pins": [
+    {
+     "name": "clk",
+     "face": "N",
+     "layer": "M5",
+     "offset": 149.976,
+     "span_um": [
+      149.928,
+      150.024
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "rst_n",
+     "face": "N",
+     "layer": "M5",
+     "offset": 150.072,
+     "span_um": [
+      150.024,
+      150.12
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "bid[2:0]",
+     "face": "N",
+     "layer": "M5",
+     "offset": 150.264,
+     "span_um": [
+      150.12,
+      150.408
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "sid[1:0]",
+     "face": "N",
+     "layer": "M5",
+     "offset": 150.504,
+     "span_um": [
+      150.408,
+      150.6
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "rslot_v",
+     "face": "N",
+     "layer": "M5",
+     "offset": 150.648,
+     "span_um": [
+      150.6,
+      150.696
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "rslot[2:0]",
+     "face": "N",
+     "layer": "M5",
+     "offset": 150.84,
+     "span_um": [
+      150.696,
+      150.984
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "wslot_v",
+     "face": "N",
+     "layer": "M5",
+     "offset": 151.032,
+     "span_um": [
+      150.984,
+      151.08
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "wslot[2:0]",
+     "face": "N",
+     "layer": "M5",
+     "offset": 151.224,
+     "span_um": [
+      151.08,
+      151.368
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "rq2[16:0]",
+     "face": "N",
+     "layer": "M5",
+     "offset": 152.184,
+     "span_um": [
+      151.368,
+      153.0
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "rr2[256:0]",
+     "face": "N",
+     "layer": "M5",
+     "offset": 165.336,
+     "span_um": [
+      153.0,
+      177.672
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "kq[280:0]",
+     "face": "N",
+     "layer": "M5",
+     "offset": 191.16,
+     "span_um": [
+      177.672,
+      204.648
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "kq_done",
+     "face": "N",
+     "layer": "M5",
+     "offset": 204.696,
+     "span_um": [
+      204.648,
+      204.744
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "status[17:0]",
+     "face": "N",
+     "layer": "M5",
+     "offset": 205.608,
+     "span_um": [
+      204.744,
+      206.472
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "rq3[16:0]",
+     "face": "S",
+     "layer": "M5",
+     "offset": 125.88,
+     "span_um": [
+      125.064,
+      126.696
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "rr3[256:0]",
+     "face": "S",
+     "layer": "M5",
+     "offset": 139.032,
+     "span_um": [
+      126.696,
+      151.368
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "dq[280:0]",
+     "face": "S",
+     "layer": "M5",
+     "offset": 164.856,
+     "span_um": [
+      151.368,
+      178.344
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "dq_done",
+     "face": "S",
+     "layer": "M5",
+     "offset": 178.392,
+     "span_um": [
+      178.344,
+      178.44
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "pq[284:0]",
+     "face": "S",
+     "layer": "M5",
+     "offset": 192.12,
+     "span_um": [
+      178.44,
+      205.8
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "pr[265:0]",
+     "face": "S",
+     "layer": "M5",
+     "offset": 218.568,
+     "span_um": [
+      205.8,
+      231.336
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "rq1[16:0]",
+     "face": "E",
+     "layer": "M4",
+     "offset": 143.64,
+     "span_um": [
+      142.824,
+      144.456
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "rr1[256:0]",
+     "face": "E",
+     "layer": "M4",
+     "offset": 156.792,
+     "span_um": [
+      144.456,
+      169.128
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "xq2[275:0]",
+     "face": "E",
+     "layer": "M4",
+     "offset": 182.376,
+     "span_um": [
+      169.128,
+      195.624
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "xq2_done",
+     "face": "E",
+     "layer": "M4",
+     "offset": 195.672,
+     "span_um": [
+      195.624,
+      195.72
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "eg[275:0]",
+     "face": "E",
+     "layer": "M4",
+     "offset": 208.968,
+     "span_um": [
+      195.72,
+      222.216
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "rq0[16:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 130.2,
+     "span_um": [
+      129.384,
+      131.016
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "rr0[256:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 143.352,
+     "span_um": [
+      131.016,
+      155.688
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "rq4[16:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 156.504,
+     "span_um": [
+      155.688,
+      157.32
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "rr4[256:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 169.656,
+     "span_um": [
+      157.32,
+      181.992
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "wq0[280:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 195.48,
+     "span_um": [
+      181.992,
+      208.968
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "wq_done0",
+     "face": "W",
+     "layer": "M4",
+     "offset": 209.016,
+     "span_um": [
+      208.968,
+      209.064
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "xq[275:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 222.312,
+     "span_um": [
+      209.064,
+      235.56
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "xq_done",
+     "face": "W",
+     "layer": "M4",
+     "offset": 235.608,
+     "span_um": [
+      235.56,
+      235.656
+     ],
+     "offset_pending_view": false
+    }
+   ],
+   "pin_ranges": {
+    "clk": [
+     149.928,
+     150.024
+    ],
+    "rst_n": [
+     150.024,
+     150.12
+    ],
+    "bid": [
+     150.12,
+     150.408
+    ],
+    "sid": [
+     150.408,
+     150.6
+    ],
+    "rslot_v": [
+     150.6,
+     150.696
+    ],
+    "rslot": [
+     150.696,
+     150.984
+    ],
+    "wslot_v": [
+     150.984,
+     151.08
+    ],
+    "wslot": [
+     151.08,
+     151.368
+    ],
+    "rq2": [
+     151.368,
+     153.0
+    ],
+    "rr2": [
+     153.0,
+     177.672
+    ],
+    "kq": [
+     177.672,
+     204.648
+    ],
+    "kq_done": [
+     204.648,
+     204.744
+    ],
+    "status": [
+     204.744,
+     206.472
+    ],
+    "rq3": [
+     125.064,
+     126.696
+    ],
+    "rr3": [
+     126.696,
+     151.368
+    ],
+    "dq": [
+     151.368,
+     178.344
+    ],
+    "dq_done": [
+     178.344,
+     178.44
+    ],
+    "pq": [
+     178.44,
+     205.8
+    ],
+    "pr": [
+     205.8,
+     231.336
+    ],
+    "rq1": [
+     142.824,
+     144.456
+    ],
+    "rr1": [
+     144.456,
+     169.128
+    ],
+    "xq2": [
+     169.128,
+     195.624
+    ],
+    "xq2_done": [
+     195.624,
+     195.72
+    ],
+    "eg": [
+     195.72,
+     222.216
+    ],
+    "rq0": [
+     129.384,
+     131.016
+    ],
+    "rr0": [
+     131.016,
+     155.688
+    ],
+    "rq4": [
+     155.688,
+     157.32
+    ],
+    "rr4": [
+     157.32,
+     181.992
+    ],
+    "wq0": [
+     181.992,
+     208.968
+    ],
+    "wq_done0": [
+     208.968,
+     209.064
+    ],
+    "xq": [
+     209.064,
+     235.56
+    ],
+    "xq_done": [
+     235.56,
+     235.656
+    ]
+   },
+   "face_density": {
+    "N": 0.15865319865319868,
+    "S": 0.2981818181818182,
+    "E": 0.2174884944115713,
+    "W": 0.2911242603550296
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "N",
+    "layer": "M5",
+    "offset": 149.976
+   },
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "layer_rule": "tile",
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "version": 5,
+   "grant": "independent_bank_local_status_diagnostic_1417",
+   "parent_plan_window": {
+    "x": 640.0,
+    "y": 5502.56,
+    "w": 812.808,
+    "h": 365.04,
+    "orient": "R0"
+   },
+   "diagnostic_only": true,
+   "source_graph_adopted": false,
+   "parent_and_die_qualified": false,
+   "status_cycles_added": 1,
+   "data_cycles_added": 0,
+   "scope": "One representative per actual RG/WG master, no32bank adoption. New source-specific assignments use four faces; current-source clock/CTS/native checks mandatory. Actual hub+8bank incident pin paths/fixed returns and internal macro/PG access remain unqualified; no historical VSH1 pins or views reused."
+  },
+  {
+   "name": "vmb_NW0_local_status_diagnostic",
+   "cell": "hfd_vms_bank_local_status_rg6wg3",
+   "kind": "tile",
+   "parent": "vmb_NW0",
+   "source": "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_local_status_rg6wg3.sv",
+   "source_prerequisite": "5384ecd1f",
+   "source_sha256": "ab27089945a5a49ea18dad35ca55dd8227887bdd5865dfadfee20b60ed101a3e",
+   "source_dependencies_sha256": {
+    "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_local_status_rg6wg3.sv": "ab27089945a5a49ea18dad35ca55dd8227887bdd5865dfadfee20b60ed101a3e",
+    "rtl/hbm_accel/generic/vm/static/ot_vms_bank_static_wdecode_local_status.sv": "5f5fe5fe0ad99d66025e16bbe3d252ce0489c44006e7e85f4e8a52367b787c63",
+    "rtl/hbm_accel/generic/vm/static/ot_vms_ce_counter_pipe.sv": "de10f3eea0f6b8bb0a652ec30621ba4d919b64f7a96651dbc94a4fc7b7ff09fa"
+   },
+   "params": {},
+   "outline": {
+    "w": 356.4,
+    "h": 365.04
+   },
+   "origin": {
+    "x": 246.56400000000002,
+    "y": 0,
+    "orient": "R0"
+   },
+   "pins": [
+    {
+     "name": "clk",
+     "face": "N",
+     "layer": "M5",
+     "offset": 136.44,
+     "span_um": [
+      136.392,
+      136.488
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "rst_n",
+     "face": "N",
+     "layer": "M5",
+     "offset": 136.536,
+     "span_um": [
+      136.488,
+      136.584
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "bid[2:0]",
+     "face": "N",
+     "layer": "M5",
+     "offset": 136.728,
+     "span_um": [
+      136.584,
+      136.872
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "sid[1:0]",
+     "face": "N",
+     "layer": "M5",
+     "offset": 136.968,
+     "span_um": [
+      136.872,
+      137.064
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "rslot_v",
+     "face": "N",
+     "layer": "M5",
+     "offset": 137.112,
+     "span_um": [
+      137.064,
+      137.16
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "rslot[2:0]",
+     "face": "N",
+     "layer": "M5",
+     "offset": 137.304,
+     "span_um": [
+      137.16,
+      137.448
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "wslot_v",
+     "face": "N",
+     "layer": "M5",
+     "offset": 137.496,
+     "span_um": [
+      137.448,
+      137.544
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "wslot[2:0]",
+     "face": "N",
+     "layer": "M5",
+     "offset": 137.688,
+     "span_um": [
+      137.544,
+      137.832
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "rq2[16:0]",
+     "face": "N",
+     "layer": "M5",
+     "offset": 138.648,
+     "span_um": [
+      137.832,
+      139.464
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "rr2[256:0]",
+     "face": "N",
+     "layer": "M5",
+     "offset": 151.8,
+     "span_um": [
+      139.464,
+      164.136
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "wq2[280:0]",
+     "face": "N",
+     "layer": "M5",
+     "offset": 177.624,
+     "span_um": [
+      164.136,
+      191.112
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "wq_done2",
+     "face": "N",
+     "layer": "M5",
+     "offset": 191.16,
+     "span_um": [
+      191.112,
+      191.208
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "kq[280:0]",
+     "face": "N",
+     "layer": "M5",
+     "offset": 204.696,
+     "span_um": [
+      191.208,
+      218.184
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "kq_done",
+     "face": "N",
+     "layer": "M5",
+     "offset": 218.232,
+     "span_um": [
+      218.184,
+      218.28
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "status[17:0]",
+     "face": "N",
+     "layer": "M5",
+     "offset": 219.144,
+     "span_um": [
+      218.28,
+      220.008
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "rq3[16:0]",
+     "face": "S",
+     "layer": "M5",
+     "offset": 125.88,
+     "span_um": [
+      125.064,
+      126.696
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "rr3[256:0]",
+     "face": "S",
+     "layer": "M5",
+     "offset": 139.032,
+     "span_um": [
+      126.696,
+      151.368
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "dq[280:0]",
+     "face": "S",
+     "layer": "M5",
+     "offset": 164.856,
+     "span_um": [
+      151.368,
+      178.344
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "dq_done",
+     "face": "S",
+     "layer": "M5",
+     "offset": 178.392,
+     "span_um": [
+      178.344,
+      178.44
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "pq[284:0]",
+     "face": "S",
+     "layer": "M5",
+     "offset": 192.12,
+     "span_um": [
+      178.44,
+      205.8
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "pr[265:0]",
+     "face": "S",
+     "layer": "M5",
+     "offset": 218.568,
+     "span_um": [
+      205.8,
+      231.336
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "rq1[16:0]",
+     "face": "E",
+     "layer": "M4",
+     "offset": 116.952,
+     "span_um": [
+      116.136,
+      117.768
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "rr1[256:0]",
+     "face": "E",
+     "layer": "M4",
+     "offset": 130.104,
+     "span_um": [
+      117.768,
+      142.44
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "rq5[16:0]",
+     "face": "E",
+     "layer": "M4",
+     "offset": 143.256,
+     "span_um": [
+      142.44,
+      144.072
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "rr5[256:0]",
+     "face": "E",
+     "layer": "M4",
+     "offset": 156.408,
+     "span_um": [
+      144.072,
+      168.744
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "wq1[280:0]",
+     "face": "E",
+     "layer": "M4",
+     "offset": 182.232,
+     "span_um": [
+      168.744,
+      195.72
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "wq_done1",
+     "face": "E",
+     "layer": "M4",
+     "offset": 195.768,
+     "span_um": [
+      195.72,
+      195.816
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "xq2[275:0]",
+     "face": "E",
+     "layer": "M4",
+     "offset": 209.064,
+     "span_um": [
+      195.816,
+      222.312
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "xq2_done",
+     "face": "E",
+     "layer": "M4",
+     "offset": 222.36,
+     "span_um": [
+      222.312,
+      222.408
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "eg[275:0]",
+     "face": "E",
+     "layer": "M4",
+     "offset": 235.656,
+     "span_um": [
+      222.408,
+      248.904
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "rq0[16:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 130.2,
+     "span_um": [
+      129.384,
+      131.016
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "rr0[256:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 143.352,
+     "span_um": [
+      131.016,
+      155.688
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "rq4[16:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 156.504,
+     "span_um": [
+      155.688,
+      157.32
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "rr4[256:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 169.656,
+     "span_um": [
+      157.32,
+      181.992
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "wq0[280:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 195.48,
+     "span_um": [
+      181.992,
+      208.968
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "wq_done0",
+     "face": "W",
+     "layer": "M4",
+     "offset": 209.016,
+     "span_um": [
+      208.968,
+      209.064
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "xq[275:0]",
+     "face": "W",
+     "layer": "M4",
+     "offset": 222.312,
+     "span_um": [
+      209.064,
+      235.56
+     ],
+     "offset_pending_view": false
+    },
+    {
+     "name": "xq_done",
+     "face": "W",
+     "layer": "M4",
+     "offset": 235.608,
+     "span_um": [
+      235.56,
+      235.656
+     ],
+     "offset_pending_view": false
+    }
+   ],
+   "pin_ranges": {
+    "clk": [
+     136.392,
+     136.488
+    ],
+    "rst_n": [
+     136.488,
+     136.584
+    ],
+    "bid": [
+     136.584,
+     136.872
+    ],
+    "sid": [
+     136.872,
+     137.064
+    ],
+    "rslot_v": [
+     137.064,
+     137.16
+    ],
+    "rslot": [
+     137.16,
+     137.448
+    ],
+    "wslot_v": [
+     137.448,
+     137.544
+    ],
+    "wslot": [
+     137.544,
+     137.832
+    ],
+    "rq2": [
+     137.832,
+     139.464
+    ],
+    "rr2": [
+     139.464,
+     164.136
+    ],
+    "wq2": [
+     164.136,
+     191.112
+    ],
+    "wq_done2": [
+     191.112,
+     191.208
+    ],
+    "kq": [
+     191.208,
+     218.184
+    ],
+    "kq_done": [
+     218.184,
+     218.28
+    ],
+    "status": [
+     218.28,
+     220.008
+    ],
+    "rq3": [
+     125.064,
+     126.696
+    ],
+    "rr3": [
+     126.696,
+     151.368
+    ],
+    "dq": [
+     151.368,
+     178.344
+    ],
+    "dq_done": [
+     178.344,
+     178.44
+    ],
+    "pq": [
+     178.44,
+     205.8
+    ],
+    "pr": [
+     205.8,
+     231.336
+    ],
+    "rq1": [
+     116.136,
+     117.768
+    ],
+    "rr1": [
+     117.768,
+     142.44
+    ],
+    "rq5": [
+     142.44,
+     144.072
+    ],
+    "rr5": [
+     144.072,
+     168.744
+    ],
+    "wq1": [
+     168.744,
+     195.72
+    ],
+    "wq_done1": [
+     195.72,
+     195.816
+    ],
+    "xq2": [
+     195.816,
+     222.312
+    ],
+    "xq2_done": [
+     222.312,
+     222.408
+    ],
+    "eg": [
+     222.408,
+     248.904
+    ],
+    "rq0": [
+     129.384,
+     131.016
+    ],
+    "rr0": [
+     131.016,
+     155.688
+    ],
+    "rq4": [
+     155.688,
+     157.32
+    ],
+    "rr4": [
+     157.32,
+     181.992
+    ],
+    "wq0": [
+     181.992,
+     208.968
+    ],
+    "wq_done0": [
+     208.968,
+     209.064
+    ],
+    "xq": [
+     209.064,
+     235.56
+    ],
+    "xq_done": [
+     235.56,
+     235.656
+    ]
+   },
+   "face_density": {
+    "N": 0.23461279461279463,
+    "S": 0.2981818181818182,
+    "E": 0.3637080867850098,
+    "W": 0.2911242603550296
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "N",
+    "layer": "M5",
+    "offset": 136.44
+   },
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "layer_rule": "tile",
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "version": 5,
+   "grant": "independent_bank_local_status_diagnostic_1417",
+   "parent_plan_window": {
+    "x": 640.0,
+    "y": 15436.013,
+    "w": 849.528,
+    "h": 339.12,
+    "orient": "R0"
+   },
+   "diagnostic_only": true,
+   "source_graph_adopted": false,
+   "parent_and_die_qualified": false,
+   "status_cycles_added": 1,
+   "data_cycles_added": 0,
+   "scope": "One representative per actual RG/WG master, no32bank adoption. New source-specific assignments use four faces; current-source clock/CTS/native checks mandatory. Actual hub+8bank incident pin paths/fixed returns and internal macro/PG access remain unqualified; no historical VSH1 pins or views reused."
+  }
+ ],
+ "scope": "Three source-exact diagnostic alternatives only. Parent windows are planning rectangles; bank/hub partition and full source graph remain OPEN.",
+ "source_request_sha256": "3345348943c5683f88130d2a97fc9b2d476dbfba3b9d36a93729c52fbe381427",
+ "clock_architecture": "one logical clk, existing balanced-spine macro-leaf architecture; actual insertion/sinks require freshCTS. Prior native rootR>700ps; no<=300ps claim.",
+ "required_keep_hook": "physical/common_flow/ot_keep_regs.tcl",
+ "canonical_die_contract_mutated": false
+}

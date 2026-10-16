@@ -3385,7 +3385,7 @@ class Placer:
         step = cross_step or (h if horiz else w) + 2.16
         cands = _near_cands(span, rows, step)
         if span >= 600.0:
-            cands = _near_reachable_prefix(cands, span, rows, step, cx, cy, w, h, allowed, prev, reach, nxt, nreach, horiz)
+            cands = _near_reachable_candidates(cands, span, rows, step, cx, cy, w, h, allowed, prev, reach, nxt, nreach, horiz)
         for a, c in cands:
             dx, dy = (a, c) if horiz else (c, a)
             x = dn(cx + dx - w / 2, GX)
@@ -3458,6 +3458,44 @@ def _near_reachable_prefix(cands, span, rows, step, cx, cy, w, h, allowed, prev,
     if key not in _NEAR_COSTS:
         _NEAR_COSTS[key] = [abs(a) + 0.6 * abs(c) for a, c in cands]
     return cands[:bisect.bisect_right(_NEAR_COSTS[key], maximum_cost + eps)]
+
+
+def _near_reachable_candidates(cands, span, rows, step, cx, cy, w, h, allowed, prev, reach, nxt, nreach, horiz):
+    """Enumerate only axis-feasible offsets, preserving the original first-hit order.
+
+    Each axis check is necessary for rectangle containment and Manhattan reach.
+    Filtering the original along/across lists before their Cartesian product
+    preserves the stable tie order of _near_cands. The final placement checks
+    still enforce the joint rectangle, both full reaches and all occupancy.
+    """
+    # Try the closest offsets lazily: open placements avoid filter construction.
+    initial = cands[:32]
+    yield from initial
+    seen = set(initial)
+    eps = 2e-6
+    def feasible(offset, axis):
+        center, size, grid = (cx, w, GX) if axis == 0 else (cy, h, GY)
+        lo = dn(center + offset - size / 2, grid)
+        mid = lo + size / 2
+        if not any(lo >= r[axis] - eps and lo + size <= r[axis + 2] + eps for r in allowed):
+            return False
+        if prev is not None and abs(mid - prev[axis]) > reach + eps:
+            return False
+        if nxt is not None and abs(mid - nxt[axis]) > nreach + eps:
+            return False
+        return True
+    along = [0.0]
+    for i in range(1, int(span / 4.32) + 1):
+        along.extend((-4.32 * i, 4.32 * i))
+    across = [0.0]
+    for i in range(1, rows + 1):
+        across.extend((step * i, -step * i))
+    aa = [v for v in along if feasible(v, 0 if horiz else 1)]
+    cc = [v for v in across if feasible(v, 1 if horiz else 0)]
+    if not aa or not cc:
+        return
+    yield from sorted(((a, c) for a in aa for c in cc if (a, c) not in seen),
+                      key=lambda t_: abs(t_[0]) + 0.6 * abs(t_[1]))
 
 
 def _poly_len(P):
@@ -5985,14 +6023,14 @@ BANK_PORTS = {}
 RLY_FACES = {}
 
 
-def _q_port_face(rq, port):
+def _q_port_face(rq, port, port_map=None):
     """'S' or 'N': face of a q element port group (from the LEF pin y)"""
-    nm = real_ports_r8()[rq['name']][port][0]
+    nm = (real_ports_r8()[rq['name']] if port_map is None else port_map)[port][0]
     return 'S' if rq['pins'][nm][1][1] < rq['h'] / 2 else 'N'
 
 
-def _q_port_xc(rq, port):
-    nms = real_ports_r8()[rq['name']][port]
+def _q_port_xc(rq, port, port_map=None):
+    nms = (real_ports_r8()[rq['name']] if port_map is None else port_map)[port]
     xs = [(rq['pins'][n][1][0] + rq['pins'][n][1][2]) / 2 for n in nms if n in rq['pins']]
     return sum(xs) / len(xs)
 
@@ -6027,27 +6065,29 @@ def _q_banks(p, ex, ey, rq, region, mirror=False):
     """one bank per element face (S below, N above), at the centre of its ports' pins.  --q-x1b (option B, s81-gen
     2026-10-10): x1 is its own S-face bank 'bx' at the x1 pins' centre (element x 400.08-505.44: over the slot station,
     not the packed cfg ROM row), and a mirrored (MY, right-lane) element mirrors the bank x."""
+    # One current, authoritative map per element; no cache survives a view change.
+    port_map = real_ports_r8()[rq['name']]
     out = []
     groups = []
     if Q_X1B:
         # A default/legacy q LEF must never silently stand in for the selected
         # split x1 face plan.  A stub is allowed for integration, not closure.
-        assert _q_port_face(rq, 'x1') == 'S', '--q-x1b requires x1 on the S face'
-        x1c = _q_port_xc(rq, 'x1')
+        assert _q_port_face(rq, 'x1', port_map) == 'S', '--q-x1b requires x1 on the S face'
+        x1c = _q_port_xc(rq, 'x1', port_map)
         assert 400.08 <= x1c <= 505.44, ('--q-x1b requires the east-end x1 view', x1c)
     for face in 'SN':
-        ports = [q_ for q_ in QBANK_IN + QBANK_OUT if _q_port_face(rq, q_) == face]
+        ports = [q_ for q_ in QBANK_IN + QBANK_OUT if _q_port_face(rq, q_, port_map) == face]
         if Q_X1B and face == 'S' and 'x1' in ports:
             ports.remove('x1')
             groups.append(('S', 'bx', ['x1']))
         if ports:
             groups.append((face, f'b{face.lower()}', ports))
     for face, tag, ports in groups:
-        xc = sum(_q_port_xc(rq, q_) for q_ in ports) / len(ports)
+        xc = sum(_q_port_xc(rq, q_, port_map) for q_ in ports) / len(ports)
         if PIN_ALIGN:
             # --pin-align: the bank stands under the EXTENT of its element pins (S bank: x0 / x1 / cfg / go pins span
             # 226.1-284.6, the unweighted port-centroid mean put the 60.5-um bank at 213.8-274.3, 10 um short of x0)
-            xs_ = [(rq['pins'][n][1][0] + rq['pins'][n][1][2]) / 2 for q_ in ports for n in real_ports_r8()[rq['name']][q_]
+            xs_ = [(rq['pins'][n][1][0] + rq['pins'][n][1][2]) / 2 for q_ in ports for n in port_map[q_]
                    if n in rq['pins']]
             assert max(xs_) - min(xs_) <= 60.48 - SHAVE - 0.4, ('qbank narrower than its element pins', face, min(xs_), max(xs_))
             xc = (min(xs_) + max(xs_)) / 2
@@ -8866,6 +8906,16 @@ def _assigned_record(master):
         rec = json.loads(path.read_text()) if path.exists() else None
         if rec:
             assert rec['master'] == master and rec['schema'] == 'opentallas.s81.assigned_pins.v1', path
+            # Reject an impossible shared origin before constructing thousands
+            # of stations. This never moves assigned pins. The complete
+            # actual-platform track/site gate still owns physical qualification.
+            from s81.assigned_pin_lattice import local_residue_conflicts
+            # Qualified bound views use their measured LEF pins; assigned
+            # records may still supply clock/reset metadata for those views.
+            conflicts = [] if master in bound_views() else local_residue_conflicts(rec)
+            if conflicts:
+                raise ValueError('assigned pins have no common track origin: '
+                                 + str(path) + ': ' + json.dumps(conflicts, sort_keys=True))
         _ASSIGNED_PIN_CACHE[master] = rec
     return _ASSIGNED_PIN_CACHE[master]
 

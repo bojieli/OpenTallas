@@ -38,10 +38,20 @@ NODE = {"PC1": "qkv", "PC11": "attn_kv", "PC12": "o_proj", "PC16": "gate_up", "P
 def fields(line):
     pc, *args = line.split()
     f = dict(nout=0, tiles=1, k=1, ts=0, split=0, oen=0, obase=0, ots=0, ojs=0)
+    supported = set("nout tiles k ts split oen obase ots ojs wsrc round mmode wbase ks js xbase xks xjs xcs wcs".split())
+    seen = set()
     for a in args:
-        m = re.match(r"\+(\w+)=(\d+)", a)
-        if m and m.group(1).lower() in f:
-            f[m.group(1).lower()] = int(m.group(2))
+        m = re.fullmatch(r"\+(\w+)=(\d+)", a)
+        if not m or m.group(1).lower() not in supported:
+            raise ValueError(f"{pc}: invalid workload argument {a}")
+        key = m.group(1).lower()
+        if key in seen:
+            raise ValueError(f"{pc}: duplicate workload argument {key}")
+        seen.add(key)
+        if key in f:
+            f[key] = int(m.group(2))
+    if f["nout"] <= 0:
+        raise ValueError(f"{pc}: positive NOUT is required by the RTL bench")
     return pc, f
 
 
@@ -145,7 +155,10 @@ def check_rtl_rows(pc, f, rows_dir):
         if line.startswith("ROW"):
             d = dict(re.findall(r"(\w+)=(\w+)", line))
             if d["we"] == "1":
-                got[(int(d["cap"]), int(d["band"]), int(d["slot"]))] = int(d["addr"]) & 0xFFFFF
+                key = (int(d["cap"]), int(d["band"]), int(d["slot"]))
+                if key in got:
+                    raise ValueError(f"{pc}: duplicate RTL row {key}")
+                got[key] = int(d["addr"]) & 0xFFFFF
     return got == rows(f), len(got)
 
 
@@ -172,6 +185,33 @@ STRUCTS = {
 }
 
 
+def read_program(path, dec):
+    """Require the complete pinned decoder result-op contract, including VM-weight PC11.
+
+    --pcs supplies workload fields, not permission to reduce the production shape.
+    Capture profiles remain measured inputs; changing the shape requires new profiles.
+    """
+    program = {}
+    for line in Path(path).read_text().splitlines():
+        if not line.strip():
+            continue
+        pc, f = fields(line)
+        if pc not in NODE:
+            raise ValueError(f"unsupported result op {pc}")
+        if pc in program:
+            raise ValueError(f"duplicate result op {pc}")
+        if not 1 <= f["tiles"] <= 8 or not 0 <= f["split"] <= 15 or f["oen"] not in (0, 1):
+            raise ValueError(f"{pc}: fields outside the serializer contract")
+        caps = dec[pc]["capture_cycles_after_go"]
+        expected = [caps[0] + (k // 8) * f["ts"] + k % 8 for k in range(8 * f["tiles"])]
+        if caps != expected:
+            raise ValueError(f"{pc}: workload capture shape differs from measured profile")
+        program[pc] = f
+    if set(program) != set(NODE):
+        raise ValueError(f"incomplete decoder result programme: missing {sorted(set(NODE) - set(program))}")
+    return program
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--pcs", default=str(PCS))
@@ -180,13 +220,9 @@ def main(argv=None):
     a = ap.parse_args(argv)
     dec = json.loads(DECISION.read_text())["link_handoff"]["ops"]
     ops, ok = {}, True
-    for line in Path(a.pcs).read_text().splitlines():
-        if not line.strip():
-            continue
-        pc, f = fields(line)
+    for pc, f in read_program(a.pcs, dec).items():
         caps = dec[pc]["capture_cycles_after_go"]
         c0 = caps[0]
-        assert caps == [c0 + (k // 8) * f["ts"] + k % 8 for k in range(len(caps))], pc
         rw = rows(f)
         rec = dict(fields=f, train=train(f), real_rows=len(rw), first_capture_after_go=c0,
                    last_capture_after_go=caps[-1], unconstrained_last_landing=caps[-1] + D + 25)

@@ -55,9 +55,9 @@
  },
  "job": {
   "owner": "Claude:HBM-V15-HARDEN",
-  "branch": "claude/hbm-hardening-1215",
-  "tag": "l1",
-  "purpose": "DMA STORE back landing bank leaf ot_hgi_dma_back_landing_bank (one real 128x256 SRAM, own related clock entry): one master, 8 per hb_dbk parent x4 stacks (32 inst), floorplan-independent leaf of the DESC_LAT4 successor (controller + 8 banks, wires-only parent requested from H-DIE in the hb_dbk 432x360.72 slot). Bench: vp4 lockstep vs cursor + production; bank write-address mutant and drain-stride mutant FAIL.",
+  "branch": "claude/hbm-harden-1415",
+  "tag": "nl1",
+  "purpose": "DMA STORE back landing bank leaf ot_hgi_dma_back_landing_bank, native-launch structural fix: routed pfx4 bank (TT +256.75/FF +23.80/DRC 0) failed native launch wd[288] 252.2 ps > 220 from the only async-reset flop; wd_valid is now a plain flop with reset folded into D (rst_n&output_en), 0 cycles. One real 128x256 SRAM, own related clock entry; 8 per hb_dbk parent x4 stacks. Bench: vp4 lockstep vs cursor + actual 32VM/128SRAM production; bank write-address mutant and drain-stride mutant FAIL.",
   "extra_paths": [
    "tools/hbm_v15_harden",
    "rtl/hbm_accel/generic/peers/static",

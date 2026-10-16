@@ -1,0 +1,48 @@
+{
+  "timestamp": "2026-10-15T21:57:45.166925+00:00",
+  "base_commit": "145a6a20875d0132991ff0ab76703e2c3e91e507",
+  "api": "ot_assigned_pin_exact name layer face center_um",
+  "behavior": "Reject off-track grants before placement; preserve actual ordinary seed rectangle dimensions, construct BPin around already-legal assigned centre in ODB; verify actual centre/layer/shape; refuse PG mutation. No snapping, no timing exceptions, no routing/closed-view changes. Enclosing kit still audits all port coverage, pin spacing and PG clearance.",
+  "fixture_odb": "/home/ubuntu/vm-local-1427/q1_io_actual/3_2_place_iop.odb",
+  "fixture_sha256": "5254aed59ab518d856a01032cfc151c6656bc383ef8376ab4cd095322101409c",
+  "tool_image_id": "sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29",
+  "tool": "OpenROAD26Q3-1510-g6cb3f2b704",
+  "host": "ot-agidock128",
+  "unit": "oth-ubuntu-1719597-1792101405",
+  "exit": 0,
+  "actual_test": "12actualODBpins,3eachN/S/E/W; exactcentre+samewidth/height+idempotence;12unplaced-seedcases correctedaftercachedplace_pin movedthem;12illegalrequests reproducedsilentPPLsnap;13offtrack/PGnegativeguardsPASS.",
+  "cause_classification": "Original3351pinVMIOmismatch includes3068off-trackgrantcentres plus283legalNcentres shiftedinfullIOcontext. Initial12legalrequests preservedalongcentres; afterunplacing/reseedingwithPPLcache12legalrequests shiftedbeforehelperrepair. Distinguish grant quantization from context-dependent cached placement. Neither requested coordinates nor genericPPLcalls alone prove native correctness.",
+  "actual_tracks": {
+    "M4_Y": {
+      "first_dbu": 12,
+      "next_dbu": 60,
+      "last_dbu": 365004,
+      "count": 7605,
+      "units_per_um": 1000,
+      "width_dbu": 24,
+      "spacing_dbu": 24
+    },
+    "M5_X": {
+      "first_dbu": 12,
+      "next_dbu": 60,
+      "last_dbu": 356364,
+      "count": 7425,
+      "units_per_um": 1000,
+      "width_dbu": 24,
+      "spacing_dbu": 24
+    }
+  },
+  "initial_probe": "Kept initiallegal-onlyprobe: its12helperchecks+13negativeguardsworked; testfinalassertrequiredplace_pindisplacementthatinitialcontextdidnotshow. Correctedintegrationtestexplicitlydistinguishesinitiallegalcalls,illegalrequests,andcachedunplacedseeds.",
+  "potential_callers": "906Tclfiles/493parentdirs;520currentref_tilespecs/398distincttops directlyreferencea matchingio_tcl. These are potentialauditcallers, not demonstratedfailedmasters; closedviewsstand.",
+  "reproduce": "Set ASSIGNED_PIN_TEST_ODB to actualsavedODB, ASSIGNED_PIN_HELPER to physical/common_flow/assigned_pin_exact.tcl, ASSIGNED_PIN_TEST_OUT to TSV output, then openroad -exit tools/ref_tile/test_assigned_pin_exact.tcl under recordedimage.",
+  "source_sha256": {
+    "physical/common_flow/assigned_pin_exact.tcl": "589889eadc308de12eece8f08157ac569d7b96e12672b9eb76e1d518b7d78831",
+    "tools/ref_tile/test_assigned_pin_exact.tcl": "9ed678852ebe5c8b05f78222ecc72de28a2b42454845685115ba4c0261fb849a"
+  },
+  "artifact_sha256": {
+    "initial_legal_only_probe.log": "a01e2ae369162e632751ba5dfcd61a6c90ec196f482e7da50d4e82b2e61959db",
+    "actual_odb_readback.tsv": "2e18a268b0d90c0a46d30f4156f3b2812f5d5d27866305b344792834782bdb51",
+    "potential_callers.json": "c2af9b902e27ea34ebe264ffefa5a4e6a283a279a44201621451fa2775844aa8",
+    "actual_odb_test.log": "649bc62f8480424df78ecf717bffad98d3f8731069339a3547e7bfb9c35c52bd"
+  }
+}

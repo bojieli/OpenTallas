@@ -1,0 +1,188 @@
+{
+ "schema": "opentallas.s81.assigned_pins.v1",
+ "master": "dsfd_sp_su_c",
+ "case": "v26_su_lattice",
+ "outline_um": [
+  1889.976,
+  10709.256
+ ],
+ "rule": "S-DIE 2026-10-15 17:20 PT: v21_geo_s_gen18p SU record with c_done (9b) and c_st (2b) E-face M4 groups moved +0.016 um onto the c_cmd M4 lattice (all 96 E-face M4 centres at local y = 24 nm mod 48). The GEO-S repin search translated c_cmd/c_done/c_st by +.396/+2.252/+.284 um (not multiples of 48 nm), leaving no common y origin; c19b PLACE failed \"sp_su_s y has no legal origin\". Smallest legal correction (16 nm, 11 pins); spacing c_done end 10702.920 -> c_st 10703.016 (2 tracks), c_st end -> c_cmd 10705.176. All other ports byte-identical to the v21 record.",
+ "source": {
+  "report": "87d2e60828bac1514a4a18254ce100138a0e1932f108e955c00c33ee9af66897",
+  "construction_pass0_plan.json.gz": "e8a4f7e9939a6cebefef02fa1fa34f23077af4259cc62d88c9f057c1117fb8fe",
+  "construction_pass0_pins.lef.gz": "01617d67e144bf58218a019908775f0265644a3839a7d6beeb2efbefba131590",
+  "parent_record": {
+   "path": "physical/s81_die_pins/v21_geo_s_gen18p/dsfd_sp_su_c.json",
+   "sha256": "537eb30eaf2c36a1f7c95b4add5c380ecb780929396eec467d9c0ed193f01912"
+  }
+ },
+ "non_die_port_pins": [],
+ "ports": {
+  "c_cmd": {
+   "face": "E",
+   "layer": "M4",
+   "bits": 85,
+   "at": [
+    10705.176,
+    0.048
+   ],
+   "uniform": true,
+   "depth": 0.192
+  },
+  "c_done": {
+   "face": "E",
+   "layer": "M4",
+   "bits": 9,
+   "at": [
+    10702.536,
+    0.048
+   ],
+   "uniform": true,
+   "depth": 0.192
+  },
+  "c_st": {
+   "face": "E",
+   "layer": "M4",
+   "bits": 2,
+   "at": [
+    10703.016,
+    0.048
+   ],
+   "uniform": true,
+   "depth": 0.192
+  },
+  "ck": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "at": [
+    1708.572,
+    0.0
+   ],
+   "uniform": true,
+   "depth": 0.192
+  },
+  "rq_row": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 224,
+   "at": [
+    1422.444,
+    0.048
+   ],
+   "uniform": true,
+   "depth": 0.192
+  },
+  "rq_v": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 16,
+   "at": [
+    1435.212,
+    0.048
+   ],
+   "uniform": true,
+   "depth": 0.192
+  },
+  "rs_d": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 8192,
+   "at": [
+    1027.212,
+    0.048
+   ],
+   "uniform": true,
+   "depth": 0.192
+  },
+  "rs_v": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 16,
+   "at": [
+    1467.756,
+    0.048
+   ],
+   "uniform": true,
+   "depth": 0.192
+  },
+  "rst": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 1,
+   "at": [
+    1470.54,
+    0.0
+   ],
+   "uniform": true,
+   "depth": 0.192
+  },
+  "wq_d": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 8192,
+   "at": [
+    632.028,
+    0.048
+   ],
+   "uniform": true,
+   "depth": 0.192
+  },
+  "wq_mask": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 256,
+   "at": [
+    1450.716,
+    0.048
+   ],
+   "uniform": true,
+   "depth": 0.192
+  },
+  "wq_row": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 224,
+   "at": [
+    1437.948,
+    0.048
+   ],
+   "uniform": true,
+   "depth": 0.192
+  },
+  "wq_v": {
+   "face": "N",
+   "layer": "M5",
+   "bits": 16,
+   "at": [
+    1465.02,
+    0.048
+   ],
+   "uniform": true,
+   "depth": 0.192
+  }
+ },
+ "moved": {
+  "c_cmd": [
+   0.396
+  ],
+  "c_done": [
+   2.268
+  ],
+  "c_st": [
+   0.3
+  ],
+  "rs_v": [
+   29.808
+  ],
+  "wq_mask": [
+   9.984
+  ],
+  "wq_row": [
+   -17.088
+  ],
+  "wq_v": [
+   -2.736
+  ]
+ }
+}
