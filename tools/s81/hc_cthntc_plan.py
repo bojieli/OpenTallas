@@ -75,8 +75,14 @@ class Leaf:
     def add(self, port, face, desired, layer=None):
         self.p.setdefault(port, []).append([face, layer, desired])
 
-    def pack(self):
+    def pack(self, spread_we=False):
         groups = collections.defaultdict(list)
+        if spread_we:
+            # a3: W/E peer nets (y beat / cs / flags) evenly over the face height instead of packed from mid-height
+            for face in 'WE':
+                bits = sorted((b[2], port, i) for port, bb in self.p.items() for i, b in enumerate(bb) if b[0] == face)
+                for k, (d, port, i) in enumerate(bits):
+                    self.p[port][i][2] = 1.0 + (self.h - 2.0) * (k + 0.5) / len(bits)
         for port, bits in self.p.items():
             for i, b in enumerate(bits):
                 groups[b[0]].append((b[2], port, i))
@@ -124,6 +130,58 @@ class Leaf:
         return '\n'.join(out) + '\n'
 
 
+# a3 bundle positions (one x per bundle bit, shared by the ret column and both slices, identical in every column):
+# own bits (rv, hdr, a, b) spread over the face, thinner in the kind's hrq / fdx zones (ZONES) (the closed ctnl lanes' hrq pins sit at x 12..60
+# on both ret faces, ~10.7 pins/um), and partner a/b bit i at the x of own a/b bit i, so in the ret ao[i], ap[i] and
+# a_rdm[i] share one x (straight-through, no corner funnel); every parent leg of a bundle has one length: own legs
+# vertical (ret -> slice 317.5 um, slice -> next ret 457.9 um), partner legs ~288 horizontal + 317.5 = ~606 um.
+# thin zones per slice kind (x from the joined closed pins): e = columns 0/1 (hrq 20..60, fdx/fv 131..144 on S),
+# w = columns 2/3 (hrq 11..56, fdx 0..7 on S); weight = bundle density there relative to the rest of the face
+ZONES = {True: [(20.0, 60.0, 0.5), (131.0, CW - 1.0, 0.55)], False: [(1.0, 8.0, 0.45), (11.0, 56.0, 0.5)]}
+OWN_G = [('rv', 8), ('hdr', 108), ('a', 256), ('b', 256)]
+NAMES = {'in': {'rv': 'rv_in', 'hdr': 'hdr_in', 'a': 'ao_in', 'b': 'bo_in'}, 'out': {'rv': 'rvm', 'hdr': 'hdr', 'a': 'a_rdm', 'b': 'b_rdm'},
+         'slice': {'rv': ('rv_c', 'rv_out'), 'hdr': ('hdr_c', 'hdr_out'), 'a': ('a_own', 'a_own_out'), 'b': ('b_own', 'b_own_out')}}
+PNAMES = {'in': {'a': 'ap_in', 'b': 'bp_in'}, 'slice': {'a': ('a_par', 'a_par_out'), 'b': ('b_par', 'b_par_out')}}
+
+
+def _zone_x(u, part_e):
+    """u in [0, 1) -> x over [1, 143.18] with the kind's thin zones weighted (piecewise-linear inverse CDF)"""
+    lo, hi = 1.0, CW - 1.0
+    segs, x = [], lo
+    for z0, z1, w in ZONES[part_e]:
+        if z0 > x:
+            segs.append((x, z0, 1.0))
+        segs.append((max(z0, lo), min(z1, hi), w)); x = min(z1, hi)
+    if x < hi:
+        segs.append((x, hi, 1.0))
+    tot = sum((b - a) * w for a, b, w in segs)
+    d = u * tot
+    for a, b, w in segs:
+        if d <= (b - a) * w:
+            return round(a + d / w, 4)
+        d -= (b - a) * w
+    return round(hi, 4)
+
+
+def own_x(part_e):
+    """one x per own slot; a / b slots weigh 2 (own + partner pin on the S face and in the slice), rv / hdr 1"""
+    wt = {'rv': 1, 'hdr': 1, 'a': 2, 'b': 2}
+    tot = sum(wt[g] * w for g, w in OWN_G); out = {}; cum = 0
+    for g, w in OWN_G:
+        for b in range(w):
+            out[(g, b)] = _zone_x((cum + wt[g] / 2) / tot, part_e); cum += wt[g]
+    return out
+
+
+def own_bundle(kind, part_e):
+    X = own_x(part_e)
+    return [(NAMES[kind][g], X[(g, b)]) for g, w in OWN_G for b in range(w)]
+
+
+def par_bundle(kind, part_e):
+    X = own_x(part_e)
+    return [(PNAMES[kind][g], X[(g, b)]) for g in ('a', 'b') for b in range(256)]
+
 SCALAR = {'clk', 'rst_in', 'last', 'hs_run', 'hov_in', 'hov_rel', 'hov_fwd', 'hnz_n', 'hnz_s', 'pflt_n', 'pflt_s',
           'flag_fault', 'flag_hnz'}
 
@@ -166,17 +224,17 @@ def build():
         for port, bits in (('tid', 8), ('last', 1), ('rst_in', 1)):
             for b in range(bits):
                 L.add(port, 'S', CW / 2)
-        # chain inputs from the previous row's slice (its N face, directly below): bundle order, own then partner
-        for port, bits in (('rv_in', 8), ('hdr_in', 108), ('ao_in', 256), ('bo_in', 256)):
-            for b in range(bits):
-                L.add(port, 'S', 4.0 if part_e else CW - 4.0)          # packed from the edge AWAY from the partner
-        for port in ('ap_in', 'bp_in'):
-            for b in range(256):
-                L.add(port, 'S', CW - 4.0 if part_e else 4.0)
-        # outputs to this row's slices (N): own slice directly above, partner slice (c+2) across -> pack toward partner
-        for port, bits in (('rvm', 8), ('hdr', 108), ('a_rdm', 256), ('b_rdm', 256)):
-            for b in range(bits):
-                L.add(port, 'N', CW - 2.0 if part_e else 2.0)
+        # chain inputs from the previous row's slice (its N face, directly below) and outputs to this row's slices.
+        # 10-16 a3 (a2 GRT-0116 on all four columns, M3 70-73% / M5 29-33%, overflow at the partner-side N corner):
+        # a2 packed the 512 a/b_rdm outputs + hdr/rvm into a ~30 um N window (21 pins/um, pin flops + hold stages
+        # 20 um deep) directly above the 512-bit ap/bp input window, so ~1,140 vertical wires shared ~36 um of M3/M5.
+        # a3: one shared x per bundle bit (see own_x): ao[i] / ap[i] / a_rdm[i] on one x, outside the hrq zone.
+        for port, x in own_bundle('in', part_e):
+            L.add(port, 'S', x)
+        for port, x in par_bundle('in', part_e):
+            L.add(port, 'S', x)
+        for port, x in own_bundle('out', part_e):
+            L.add(port, 'N', x)
         # cs: column 3 takes the column-3 accumulators (E face of ctnl l3, 2 tiles above / 2 below)
         for b in range(128):
             j = b // 32
@@ -200,7 +258,7 @@ def build():
             for pi, pc in enumerate([x for x in range(4) if x != c]):
                 L.add(p, 'W' if pc < c else 'E', 5.0)
         L.add('clk', 'N', CW / 2)
-        L.pack()
+        L.pack(spread_we=True)
         rets.append(L)
     # slices: E (columns 0/1) and W (2/3).  10-16 (a2 GRT-0116 on both slices: every bit was packed into ~50 um
     # windows at the face ends, ~10.5 pins/um, M2 85% / M3 71%): straight-through register columns instead -- bit i's
@@ -211,19 +269,8 @@ def build():
         S = Leaf(f'ot_s81_hc_ctrn_col_{kind}', CW, SL_H)
         own = [('rv_c', 'rv_out', 8), ('hdr_c', 'hdr_out', 108), ('a_own', 'a_own_out', 256), ('b_own', 'b_own_out', 256)]
         par = [('a_par', 'a_par_out', 256), ('b_par', 'b_par_out', 256)]
-        def spread(groups, lo, hi):
-            n = sum(g[2] for g in groups); k = 0
-            for pin, pout, w in groups:
-                for b in range(w):
-                    x = lo + (hi - lo) * (k + 0.5) / n; k += 1
-                    S.add(pin, 'S', x); S.add(pout, 'N', x)
-        # windows from the two parent legs (ret row -> slice ~317 um, slice -> next row's ret ~458 um vertical, both
-        # <= 500 um): own bits sit at the end of the next ret's chain inputs, partner bits at the partner end
-        OW, PW = 40.0, 32.0
-        if part_e:
-            spread(own, 1.0, OW); spread(par, CW - PW, CW - 1.0)
-        else:
-            spread(par, 1.0, PW); spread(own, CW - OW, CW - 1.0)
+        for port, x in own_bundle('slice', part_e) + par_bundle('slice', part_e):
+            S.add(port[0], 'S', x); S.add(port[1], 'N', x)
         S.add('clk', 'W', SL_H / 2)
         S.add('rst_in', 'W', SL_H / 2 - 1)
         S.pack()

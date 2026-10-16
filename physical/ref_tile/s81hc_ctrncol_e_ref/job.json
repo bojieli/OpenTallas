@@ -1,5 +1,5 @@
 {
- "name": "s81hc_ctrncol_e_ref-a2-COMMIT",
+ "name": "s81hc_ctrncol_e_ref-a3-COMMIT",
  "block": "ot_s81_hc_ctrn_col_e",
  "ref_tile": true,
  "owner": "Claude:S-ENGRAM+NORM/HC-COLUMN",
@@ -7,7 +7,7 @@
  "threads": 8,
  "peak_ram_gb": 24,
  "source": {
-  "branch": "claude/s81-hccol-1016",
+  "branch": "claude/s81-hccol-b-1016",
   "commit": "COMMIT"
  },
  "stages": {
@@ -71,7 +71,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81hc_ctrncol_e_ref/s81hc_ctrncol_e_ref-a2-COMMIT"
+   "to": "results/rtl/ref_tile/s81hc_ctrncol_e_ref/s81hc_ctrncol_e_ref-a3-COMMIT"
   }
  ],
  "cycles_added": 0,

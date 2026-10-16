@@ -76,8 +76,8 @@
  },
  "job": {
   "owner": "Claude:S-ENGRAM+NORM/HC-COLUMN",
-  "branch": "claude/s81-hccol-1016",
-  "tag": "a2",
+  "branch": "claude/s81-hccol-b-1016",
+  "tag": "a3",
   "purpose": "New cth_ntc return slice replacing the 576.72-um ctrn strip: per-column bundles so every chain join stays inside its column.",
   "views_to": "physical/ref_tile/s81hc_ctrncol_w_ref/views",
   "record_to": "results/rtl/ref_tile/s81hc_ctrncol_w_ref",

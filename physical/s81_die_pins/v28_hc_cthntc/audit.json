@@ -6,31 +6,31 @@
  },
  "total": {
   "joins": 16540,
-  "over500": 0,
-  "max_um": 499.464
+  "over500": 2048,
+  "max_um": 623.256
  },
  "by_kind": {
   "hrq": {
    "n": 4096,
-   "max_um": 422.766,
+   "max_um": 406.158,
    "over500": 0,
    "over440": 0
   },
   "yb_loc": {
    "n": 256,
-   "max_um": 429.774,
+   "max_um": 404.574,
    "over500": 0,
    "over440": 0
   },
   "nflt": {
    "n": 16,
-   "max_um": 415.854,
+   "max_um": 404.658,
    "over500": 0,
    "over440": 0
   },
   "request": {
    "n": 1296,
-   "max_um": 379.122,
+   "max_um": 379.662,
    "over500": 0,
    "over440": 0
   },
@@ -48,61 +48,61 @@
   },
   "ctpl_flag": {
    "n": 16,
-   "max_um": 207.672,
+   "max_um": 207.6,
    "over500": 0,
    "over440": 0
   },
   "hov_src": {
    "n": 1,
-   "max_um": 26.496,
+   "max_um": 0.096,
    "over500": 0,
    "over440": 0
   },
   "to_slice": {
    "n": 2512,
-   "max_um": 460.08,
+   "max_um": 320.448,
    "over500": 0,
-   "over440": 232
+   "over440": 0
   },
   "to_partner_slice": {
    "n": 2048,
-   "max_um": 499.464,
-   "over500": 0,
+   "max_um": 623.256,
+   "over500": 2048,
    "over440": 2048
   },
   "chain": {
    "n": 4560,
-   "max_um": 497.232,
+   "max_um": 462.48,
    "over500": 0,
    "over440": 4560
   },
   "yb_peer": {
    "n": 768,
-   "max_um": 306.888,
+   "max_um": 323.112,
    "over500": 0,
    "over440": 0
   },
   "flags": {
    "n": 12,
-   "max_um": 288.744,
+   "max_um": 289.32,
    "over500": 0,
    "over440": 0
   },
   "cs_rel": {
    "n": 384,
-   "max_um": 288.456,
+   "max_um": 288.552,
    "over500": 0,
    "over440": 0
   },
   "hov_rel": {
    "n": 3,
-   "max_um": 288.456,
+   "max_um": 288.552,
    "over500": 0,
    "over440": 0
   },
   "cs_src": {
    "n": 128,
-   "max_um": 315.762,
+   "max_um": 316.242,
    "over500": 0,
    "over440": 0
   }
