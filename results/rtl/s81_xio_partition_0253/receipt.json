@@ -1,0 +1,102 @@
+{
+  "status": "COMPONENT_DIFFERENTIAL_PASS_NOT_NATIVE_OR_PARENT_QUALIFICATION",
+  "source_sha256": {
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_xio.sv": "7ef7c42928536da0f973abdaff828b8436caea5eb2e788a16e1a0ebed67e2ae0",
+    "rtl/dsrom_sys/s81_ph/vm/ot_s81_vm_x43.sv": "db36f2611d91193aa7b9fe8031b75c9ad901d0449aa90fbe77db0a12109c1b52",
+    "rtl/dsrom_sys/s81_ph/vm/ot_s81_vm_x34.sv": "db4810e343feccefb7a2cf3a010e99cced012e985e2635d55425c65a596a6e37",
+    "rtl/dsrom_sys/s81_ph/vm/ot_s81_vm_fault_transports.sv": "6a30738f0744ecfead55f56e28f41b62b71c689d3cbf5ff45da20a161e7a0d7f",
+    "tools/s81_vm/xio_ref_legacy.sv": "35e3aec07081c1a89320e97b3f7f4b55ff5aa33dd6141681570d7c6b9e6c073a",
+    "tools/s81_vm/tb_xio_partition_0253.sv": "bf5fab3ca382a21bb67b4ca13416cd1b89b532b4294ef6e71107bd3bc2846e88",
+    "tools/s81_vm/xio_partition_gate_0253.sh": "b6f83b169e671e6d62964428667f45a0976389d3db33b43ab79700f301b0b7b2"
+  },
+  "gold_configurations": [
+    {
+      "RLAT": 13,
+      "phase_offset": 0
+    },
+    {
+      "RLAT": 13,
+      "phase_offset": 1
+    },
+    {
+      "RLAT": 13,
+      "phase_offset": 2
+    },
+    {
+      "RLAT": 13,
+      "phase_offset": 3
+    },
+    {
+      "RLAT": 15,
+      "phase_offset": 0
+    },
+    {
+      "RLAT": 15,
+      "phase_offset": 1
+    },
+    {
+      "RLAT": 15,
+      "phase_offset": 2
+    },
+    {
+      "RLAT": 15,
+      "phase_offset": 3
+    }
+  ],
+  "mutants": [
+    {
+      "mutant": "OT_VM_XIO_MUT_REQUEST",
+      "returncode": 1,
+      "observed_failure": "FATAL: tools/s81_vm/tb_xio_partition_0253.sv:19: REQUEST DELTA cycle76 new1 olddelay0"
+    },
+    {
+      "mutant": "OT_VM_XIO_MUT_RETURN",
+      "returncode": 1,
+      "observed_failure": "FATAL: tools/s81_vm/tb_xio_partition_0253.sv:21: COLLECTIVE DELTA cycle91 gotxXXXXxxxXXXXXxxxXXXXXxxxxXXXXxxxXXXXXxxxXXXXXxxxXXXXXxxxxXXXXxxxXXXXXxxxXXXXXxxxXXXXXxxxxXXXXxxxXXXXXxxxXXXXXxxxXXXXXxxxxXXXXxxxX expected12756ed1b2756ec152756ef0f2756ee092756e9032756e87d2756eb772756ea712756e56b2756e4652756e75f2756e6592756e1532756e04d2756e3472756e247"
+    },
+    {
+      "mutant": "OT_VM_XIO_MUT_GATHER",
+      "returncode": 1,
+      "observed_failure": "FATAL: tools/s81_vm/tb_xio_partition_0253.sv:35: GATHER SERIAL DELTA serial300 got2756d49b2756d5952756d68f2756d7892756d0832756d1fd2756d2f72756d3f12756dceb2756dde52756dedf2756dfd92756d8d32756d9cd2756dac72756dbcf expected93ab6a4d93ab6aca93ab6b4793ab6bc493ab684193ab68fe93ab697b93ab69f893ab6e7593ab6ef293ab6f6f93ab6fec93ab6c6993ab6ce693ab6d6393ab6de3"
+    },
+    {
+      "mutant": "OT_VM_XIO_MUT_TAG",
+      "returncode": 1,
+      "observed_failure": "FATAL: tools/s81_vm/tb_xio_partition_0253.sv:22: TUPLE tag/row/mask/data mismatch"
+    },
+    {
+      "mutant": "OT_VM_XIO_MUT_FAULT",
+      "returncode": 1,
+      "observed_failure": "FATAL: tools/s81_vm/tb_xio_partition_0253.sv:56: FAULT reflection missing old1 new0"
+    },
+    {
+      "mutant": "OT_VM_XIO_MUT_WARM",
+      "returncode": 1,
+      "observed_failure": "FATAL: tools/s81_vm/tb_xio_partition_0253.sv:25: VALID PROGRAM FAULT cycle715 old0 new1 req0 ret0 serial0"
+    }
+  ],
+  "measured": {
+    "request_core_delta": 1,
+    "collective_return_core_delta": 3,
+    "query_gather_return_core_delta": 4,
+    "query_gather_return_serial_delta": 3,
+    "collective_II": 1,
+    "collective_per_run": 144,
+    "query_per_run": 40,
+    "gather_per_run": 32,
+    "tuple_edge_delta": 0,
+    "warm_reset": "common-epoch reset; six-core-edge exceptional diagnostic transport flush"
+  },
+  "new_parent_ports": [
+    "ck_return_t",
+    "rss_return_t",
+    "ck_fault_t",
+    "ck_fault_s",
+    "rss_fault_t",
+    "rst_fault_s",
+    "ck_fault_join_t",
+    "rss_fault_join_t"
+  ],
+  "shared_W1_source_commit": "5095b4dc5",
+  "scope": "Declared memory boundary uses deterministic fixed-latency stimuli. Actual XIO request/return/control/serial/W1 transport RTL instantiated. No mapped SRAM/full parent/compiler/TT/FF/DRC qualification claim."
+}
