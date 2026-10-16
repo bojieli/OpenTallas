@@ -13,8 +13,9 @@ def prepare(out):
     env=dict(os.environ,PREP_ONLY='1')
     subprocess.run(['bash',str(ROOT/'tools/qwen_static_kv/run_kv_hbm_elastic_boundary.sh'),str(out),'HEAD'],env=env,check=True)
     # Use the actual candidate RTL; the immutable manifest below pins all bytes.
-    rel='rtl/qwen_sys/static_kv_20261014/qkd_ctrl_pc_host_static.sv'
-    shutil.copy2(ROOT/rel,out/'source'/rel)
+    # KVCTRL split 2026-10-16: wires-only parent + hardened core / port / ECC children.
+    for rel in ['rtl/qwen_sys/static_kv_20261014/qkd_ctrl_pc_host_static.sv','rtl/qwen_sys/static_kv_20261014/qkd_ctrl_pc_host_static_core.sv','rtl/qwen_sys/static_kv_20261014/qkd_ctrl_pc_children.sv']:
+      shutil.copy2(ROOT/rel,out/'source'/rel)
     p=out/'source/rtl/test/qwen_static_kv/tb_kv_hbm_elastic_boundary.sv'
     text=p.read_text().replace('wire predicted_raw,predicted_corrected;',
       'wire [1:0] idle_core,idle_hbm,drain_fault_core,drain_fault_hbm;\n wire predicted_raw,predicted_corrected;')
@@ -63,7 +64,7 @@ def prepare(out):
 
 
 def execute(out):
-    controller=out/'source/rtl/qwen_sys/static_kv_20261014/qkd_ctrl_pc_host_static.sv'
+    controller=out/'source/rtl/qwen_sys/static_kv_20261014/qkd_ctrl_pc_host_static_core.sv'
     good=controller.read_text()
     sources=[str(p) for p in sorted((out/'source').rglob('*.sv'))]
     variants={'production':good,
@@ -72,6 +73,7 @@ def execute(out):
       'missing_kv_debt':good.replace('ctl_phase_idle&&t_empty&&raw_out==0&&drain_kv==0','ctl_phase_idle').replace('hgo&&ctl_phase_idle&&t_empty&&hbm_debt_zero_q&&\n          (&hbm_quiet_q)&&!hbm_drain_activity','hgo&&ctl_phase_idle')}
     receipt={'scope':'COMPONENT_ONLY actual controller, pcport/ECC, front and ring; die bind/adoption remains OPEN','cases':[]}
     for name,source in variants.items():
+      if name!='production' and source==good: raise RuntimeError('mutant did not apply '+name)
       controller.write_text(source)
       with (out/(name+'.build.log')).open('w') as log:
        subprocess.run(['verilator','--binary','--timing','-Wno-fatal','-j','2','--top-module','tb_kv_hbm_elastic_boundary','--Mdir',str(out/('obj_'+name)),*sources],stdout=log,stderr=subprocess.STDOUT,check=True)
