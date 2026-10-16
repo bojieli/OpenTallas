@@ -353,7 +353,7 @@ def hop1(P, nets):
     return new
 
 
-def arrange(P, W, H, struct, arr):
+def arrange(P, W, H, struct, arr, capture_hints=None):
     """returns the (possibly new) outline"""
     if arr == 'caprow':
         # the capture lanes leave the two E columns and form a capture ROW across the top of the body (directly
@@ -368,6 +368,8 @@ def arrange(P, W, H, struct, arr):
             col = 0 if x >= W - (capw / 2) - 1e-6 else 1
             rows[(col, round(y, 1))].append(i)
         groups = sorted(rows.values(), key=lambda g: (P.pos[g[0]][1], -P.pos[g[0]][0]))
+        if capture_hints:
+            groups.sort(key=lambda g: min(capture_hints.get(i, float('inf')) for i in g))
         per = CAPROW_PER
         gw = max(max(P.pos[i][0] + P.leaves[i]['w'] for i in g) - min(P.pos[i][0] for i in g) for g in groups)
         gh = max(max(P.pos[i][1] + P.leaves[i]['h'] for i in g) - min(P.pos[i][1] for i in g) for g in groups)
@@ -376,7 +378,7 @@ def arrange(P, W, H, struct, arr):
         assert roww <= body + 1e-6, ('capture row wider than the body', roww, body)
         x0 = (body - roww) / 2
         for n, g in enumerate(groups):
-            r, c = n // per, n % per
+            r, c = (n % nrow, n // nrow) if capture_hints else (n // per, n % per)
             gx0 = min(P.pos[i][0] for i in g)
             gy0 = min(P.pos[i][1] for i in g)
             for i in g:
@@ -436,6 +438,7 @@ def main():
     ap.add_argument('--caprow-per', type=int, default=8)
     ap.add_argument('--assigned-pins', help='actual per-bit parent pin record; supplied ports override span packing')
     ap.add_argument('--hub-plan', help='exact current die hub_layout.json; overrides nominal peer spans')
+    ap.add_argument('--capture-order', action='store_true', help='place capture lane groups by actual assigned external-bit medians')
     ap.add_argument('--center-band', action='store_true', help='center the actual control/landing/CDC band in its empty middle strip')
     ap.add_argument('--meta4', action='store_true', help='seven standard field4 metadata leaves per slice')
     ap.add_argument('--hop1', action='store_true', help='remove the b4 relay level (b8 drives the banks)')
@@ -450,7 +453,19 @@ def main():
     rows = [r.split(',') for r in a.rows.split('/')] if a.rows else None
     P, nets, W, H, struct, baseface = build_split4(a.width - 734.4, rows, a.read_near, a.return_far, a.meta4)
     print('outline', W, H, struct, flush=True)
-    W, H = arrange(P, W, H, struct, a.arr)
+    assigned=json.loads(Path(a.assigned_pins).read_text()) if a.assigned_pins else None
+    capture_hints=None
+    if a.capture_order:
+        assert assigned and 'f_capture' in assigned['ports'], 'capture ordering requires actual f_capture assignment'
+        coords=collections.defaultdict(list)
+        for net in nets:
+            bits=[e[2] for e in net if e[0]<0 and e[1]=='f_capture']
+            caps=[e[0] for e in net if e[0]>=0 and 'cap_leaf' in P.leaves[e[0]]['master']]
+            for i in caps:
+                coords[i].extend(assigned['ports']['f_capture']['per_bit'][b][2] for b in bits)
+        capture_hints={i:sorted(c)[len(c)//2] for i,c in coords.items()}
+        assert len(capture_hints)==16, ('not all actual capture lanes assigned',len(capture_hints))
+    W, H = arrange(P, W, H, struct, a.arr, capture_hints)
     if a.center_band:
         # The old E-aligned cluster funnels landing/payload and read/return traffic
         # through one E gcell column. Center its intact connected group in the
@@ -479,12 +494,11 @@ def main():
     if sp is None:          # split4 reference: the grant's face map, free spans
         cdc = ('aSW', 't_wfc', 'f_wfc', 'sel', 'col', 'qSW', 't_gather')
         R.port_face = lambda p: 'E' if p.startswith(cdc) else baseface(p)
-    assigned=json.loads(Path(a.assigned_pins).read_text()) if a.assigned_pins else None
     install_spans(sp, assigned)
     bad, outside = P.check(W, H)
     res = dict(schema='opentallas.s81.vm-a2f-hub-faces.v1', status='SCREEN_NOT_GRT', hub=a.hub, arrangement=a.arr,
                rectangle_um=[W, H], area_mm2=round(W * H / 1e6, 4), legality=dict(spacing=bad, outside=outside),
-               spans=sp, by_reach={}, metadata_standard_field4=a.meta4, center_band=a.center_band, structure=struct)
+               spans=sp, by_reach={}, metadata_standard_field4=a.meta4, center_band=a.center_band, capture_order=a.capture_order, structure=struct)
     if a.assigned_pins:
         res['assigned_pins']=dict(path=a.assigned_pins,sha256=hashlib.sha256(Path(a.assigned_pins).read_bytes()).hexdigest(),
                                   ports=sorted(assigned['ports']),outline_um=assigned['outline_um'],scope='Partial grant; other ports retain peer-span planning positions. Parent fit and remaining pin/clock assignment open.')
