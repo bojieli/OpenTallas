@@ -441,6 +441,46 @@ def routing_range(dump, layers):
 
 
 # ------------------------------------------------------------------------------------------------------ the lint
+def pin_track_access(dump):
+    """Pins need at least one preferred track with a full min-width landing.
+
+    Check actual finite DEF grids; a multi-shape pin passes if any routing
+    shape provides access. Old dumps without grids retain their old behavior.
+    This does not repair or snap an assigned pin.
+    """
+    layers = {l["name"]: l for l in dump["layers"]}
+    bad = []
+    checked = 0
+    for name, net, sig, io, boxes in dump["bterms"]:
+        if sig not in ("SIGNAL", "CLOCK"):
+            continue
+        seen = accessible = unknown = False
+        details = []
+        for layer, rect in boxes:
+            info = layers.get(layer, {})
+            patterns = info.get("track_patterns")
+            if not patterns:
+                unknown = True
+                continue
+            seen = True
+            axis = 0 if info["dir"] == "VERTICAL" else 1
+            half = info["width"] / 2
+            lo, hi = rect[axis] + half, rect[axis + 2] - half
+            for origin, count, pitch in patterns:
+                if count <= 0 or pitch <= 0:
+                    continue
+                first = max(0, math.ceil((lo - origin - 1e-7) / pitch))
+                if first < count and origin + first * pitch <= hi + 1e-7:
+                    accessible = True
+                    break
+            details.append(f"{layer} {rect}")
+        if seen:
+            checked += 1
+        if seen and not accessible and not unknown:
+            bad.append((name, "; ".join(details)))
+    return checked, bad
+
+
 def lint(dump, th=None):
     T = dict(THRESHOLDS, **(th or {}))
     die, core = dump["die"], dump["core"]
@@ -505,6 +545,13 @@ def lint(dump, th=None):
             e, p = edge_of(die, r)
             pins.append((name, net, e, layer, p, r))
     met["n_pins"] = len(pins)
+    checked, bad_tracks = pin_track_access(dump)
+    met["pin_track_checked"] = checked
+    met["pin_track_inaccessible"] = len(bad_tracks)
+    if bad_tracks:
+        fails.append(("pin_track", f"{len(bad_tracks)} signal/clock pins have no full min-width landing on any actual "
+                      f"preferred routing track ({'; '.join(n + ': ' + r for n, r in bad_tracks[:3])}): "
+                      "correct the die-assigned pin coordinates against the DEF track grid; do not silently snap a grant"))
 
     # density
     dens = pin_density([(e, l, p) for _, _, e, l, p, _ in pins], T["pin_density_window_um"], T["pin_density_min_pins"])

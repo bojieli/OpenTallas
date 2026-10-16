@@ -1,0 +1,201 @@
+{
+ "name": "qkd_ectl_a_tp8_epoch_direct_h5",
+ "top": "qkd_ectl_a_tp8_epoch_direct",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_sys/split_20261014/qkd_ectl_a_tp8_epoch_direct.sv",
+  "rtl/qwen_sys/split_20261014/qkd_ectl_native_direct_tp8.sv",
+  "rtl/hdc/nearhbm/ot_qkd_ectl_parts.sv",
+  "rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_h.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+  "rtl/lib/ot_rst_relay.sv"
+ ],
+ "params": {
+  "STATIC_QK": 1,
+  "QK_ISSUE_AGE": 34,
+  "ROW_RETURN_LAT": 21,
+  "HXK": 5
+ },
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 254.88,
+  "h": 129.6
+ },
+ "layer_cap": "M5",
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_rows*g_macro?0?*u_s",
+   "at": [
+    22.464,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_rows*g_macro?1?*u_s",
+   "at": [
+    137.592,
+    43.2
+   ],
+   "orient": "R0"
+  }
+ ],
+ "pins": {
+  "W": [
+   "rq",
+   "rs"
+  ],
+  "E": [
+   "rs_o",
+   "x_i"
+  ],
+  "S": [
+   "cfg",
+   "rst_n",
+   "t0_row"
+  ],
+  "N": [
+   "ck",
+   "t1_row"
+  ]
+ },
+ "pin_ranges": {
+  "rq": [
+   2.2,
+   4.2
+  ],
+  "rs": [
+   6.0,
+   124.0
+  ],
+  "rs_o": [
+   6.0,
+   110.0
+  ],
+  "x_i": [
+   112.0,
+   124.0
+  ],
+  "cfg": [
+   6.0,
+   8.0
+  ],
+  "rst_n": [
+   10.0,
+   11.0
+  ],
+  "t0_row": [
+   150.0,
+   250.0
+  ],
+  "ck": [
+   126.9,
+   127.9
+  ],
+  "t1_row": [
+   150.0,
+   250.0
+  ]
+ },
+ "route": {
+  "pd": 0.45,
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "pin_balance": {
+   "group_max": 32,
+   "v": "M5",
+   "h": "M4"
+  },
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "recipe": 3,
+ "structural_change": "Landing future-layer request race: parity bit16 added to request wire; ingress128-entry queue holds requests until matching layer context, DQ128 matches actual native ECTL credits. Production named-native KL12 PASS2471 exact responses/16384words and parity-bypass GM4 FAIL; producer36layers9170requests PASS and inverted-parity FAIL1005. Same-input local cost9596->9597cycles; fresh native successor, no alias of old16-bit views. Assigned die pins403f9a8f6 results/arch/qwen_split_1014/kvsys_v1_3_candidate/pins/qkd_ectl_a_tp8_epoch_direct.json",
+ "job": {
+  "owner": "claude:Q-ELEM 1705",
+  "branch": "claude/qelem-ectl-h5-1705",
+  "tag": "h5",
+  "purpose": "Native rq17 layer-parity successor for die landing fence race; fresh pin/clock qualification.",
+  "benches": [
+   {
+    "name": "ectl_epoch_production",
+    "cmd": "SPLIT_CLOCK=1 ECTL_DIRECT=1 ECTL_EPOCH=1 NL=36 bash tools/qwen_kv_die/ectl3_tp8_bench.sh {RUN}/bench/positive",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "pass_regex": "^ECTL3 PASS layers 36",
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "ectl_epoch_mutant",
+    "cmd": "SPLIT_CLOCK=1 ECTL_DIRECT=1 ECTL_EPOCH=1 EPOCH_MUT=1 NL=4 bash tools/qwen_kv_die/ectl3_tp8_bench.sh {RUN}/bench/mutant",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "fail_regex": "^ECTL3 FAIL lockstep",
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "extra_paths": [
+   "rtl/test/qwen_split",
+   "rtl/test/qwen_kv_die",
+   "rtl/qwen_sys",
+   "rtl/hdc",
+   "rtl/lib",
+   "tools/qwen_kv_die",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "views_to": "physical/ref_tile/qkd_ectl_a_tp8_epoch_direct_h5/views",
+  "record_to": "results/rtl/ref_tile/qkd_ectl_a_tp8_epoch_direct_h5",
+  "hosts": [
+   "ot-epyc1tb",
+   "ot-epyc4",
+   "ot-pve1"
+  ],
+  "structural_change": "KV die v1.4.3 (G3S2 head stages, Q-KVSYS-DIE request 10-15 ~20:30): production parameters STATIC_QK 1, QK_ISSUE_AGE 34, ROW_RETURN_LAT 21, HXK 5 (head extra score latency in v1.4.3; was 8 in s8). RTL, outline, pins identical to qkd_ectl_a_tp8_epoch_direct. Leaf benches are the closed kit's exact/mutant benches (default-parameter control exactness, as s8); HXK 5 composition proof is the stack owner's. Macro instance patterns follow STATIC_QK=1: rows are ot_qkd_static_row_ring u_rows.g_macro[m].u_s (h5 attempt 1 failed macro_place: no g_m[*] instances)."
+ },
+ "boundary_tcl": [
+  "physical/qwen_die_masters/sram_edge_guard.tcl"
+ ],
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "clock": "spine",
+ "slot_change_request": "qkd_ectl slot unchanged (647.976 x 129.576, three abutting leaves A 254.88 | B 254.88 | C 138.24); parent becomes rtl/qwen_sys/split_20261014/qkd_ectl3_direct_s.sv (wires only, ck[2:0]); C.x_a (W 94-106) -> A.x_i (E 112-124) and A.rs_o[0] -> C.rsv_i are parent nets over the B slot on M6+ (<= 255 um).",
+ "children": [],
+ "inter": [],
+ "pin_regs": {
+  "enable": false,
+  "reason": "ECTL static calendar: QK_ISSUE_AGE, ROW_RETURN_LAT (=K_EXT 16 + RQD 2 + 3 response pin stages) and HXK count every boundary edge of the K-pass / row-return loop inside the RTL; synthesis-only pin registers (+1 per port) would shift the fixed-cycle issue/return by edges the RTL constants and the native benches do not see (age fault). Pin registration for this leaf must be done in RTL with the constants re-derived (KV die lead / Q-ATTN decision). Pin geometry, outline and io_flop_at_pins unchanged from the closed kit."
+ },
+ "reroute_reason": {
+  "kind": "param_change",
+  "params": {
+   "STATIC_QK": 1,
+   "QK_ISSUE_AGE": 34,
+   "ROW_RETURN_LAT": 21,
+   "HXK": 5
+  },
+  "why": "KV die v1.4.3 production parameters (Q-KVSYS-DIE 10-15 request): closed qkd_ectl_a_tp8_epoch_direct ep1 used defaults STATIC_QK 0 / ROW_RETURN_LAT 9 / HXK 0"
+ }
+}

@@ -1,0 +1,34 @@
+{
+ "source": "457ceeea1",
+ "actual_odb": "ot-epyc1tb:/srv/opentallas-scratch/claude/ref_gate/qfd_tile_nk_rp1_a1-20261015-200725/routes/gate/work/orfs/results/asap7/opentallas_qfd_tile_nk_rp1_asap7_ref_gate/base/3_5_place_dp.odb",
+ "odb_sha256": "84f32770661c212638d01e16aea1e1cc0c3ac58e994ee3d7740afbd1a8af051f",
+ "state": "failed25-entry physical placement; all original standard-cell FF sinks and xy; hard macro internals excluded",
+ "clock_counts": {
+  "ck": 12989,
+  "ck_rp0": 4398,
+  "ck_rp1": 5422,
+  "ck_rp2": 4398,
+  "ck_rp3": 4398,
+  "ck_rp4": 5422
+ },
+ "clock_tt": {
+  "ck": {
+   "boundary_min": 666.9731460468037,
+   "boundary_R": 722.6492342035136,
+   "boundary_max": 935.0269484956261,
+   "pass": false
+  },
+  "bank_roots": {
+   "mean_range": [
+    399.6052890967198,
+    419.54439480125615
+   ],
+   "spread_range": [
+    122.8105122508341,
+    161.9193674504292
+   ],
+   "pass": false
+  }
+ },
+ "normal_edges_added_by_candidate": 0
+}

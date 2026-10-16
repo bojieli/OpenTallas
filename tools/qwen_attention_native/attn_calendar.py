@@ -115,9 +115,9 @@ def hub(z, lmax):
 
 
 # ---- Q-ATTN-RATE 2026-10-15: 16-row/cycle P.V (ot_qwen_tp8_attention_native_service_w16, 2 x ot_qwen_tp8_pv_wide_pair) ----
-W16_FIRST = 20          # pair cycle of the q = 0 arrival: request cycle 1 + V_EXT 16 + ER3 3
-W16_DRAIN, W16_TREE, W16_JOIN = 13, 73, 24   # last arrival -> TRA; in-bank tree 16 -> 1 (31+19+13+10); 512-lane join L5-L7
-W16_PV_AFTER_EXP = 188   # PV_START - EXP - zwalk(T): e of the last EP group visible to the 16-row walk (measured, below)
+W16_FIRST = 22          # pair cycle of the q = 0 arrival: start pin reg 1 + request cycle 1 + request pin reg 1 + V_EXT 16 + ER3 3
+W16_DRAIN, W16_TREE, W16_JOIN = 13, 73, 30   # last arrival -> TRA; in-bank tree 16 -> 1; join 24 behind cmd + bank-out + join-in pin regs (+6)
+W16_PV_AFTER_EXP = 186   # PV_START - EXP - zwalk(T): e of the last EP group visible to the 16-row walk (measured, below)
 
 
 def w16_nq(T, p):
@@ -132,12 +132,12 @@ def w16_pair_out(T, p):
     return W16_FIRST + w16_nq(T, p) - 1 + W16_DRAIN + W16_TREE + W16_JOIN
 
 
-def calendar(T, lmax=None, exp_gap=None, z_k=None, pv_gap=None, pv="w16", w16_gap=None):
+def calendar(T, lmax=None, exp_gap=None, z_k=None, pv_gap=None, pv="w16", w16_gap=None, head_g3s2=False):
     """lmax: LMAX start (default lmax_min); exp_gap: EXP - LMAX; z_k: Z - (EXP + zwalk); pv_gap: PV_START - Z;
     pv: 'w1' (1 row/cycle pairs, ot_qwen_tp8_attention_native_service) or 'w16' (16 rows/cycle, _service_w16);
     w16_gap: w16 only, PV_START - EXP override (default: the measured law pv_after_exp_w16)"""
     if pv == "w16":
-        return calendar_w16(T, lmax, exp_gap, z_k, w16_gap)
+        return calendar_w16(T, lmax, exp_gap, z_k, w16_gap, head_g3s2)
     if not 1 <= T <= 8192:
         raise ValueError("context 1..8192")
     if lmax is None:
@@ -157,8 +157,15 @@ def calendar(T, lmax=None, exp_gap=None, z_k=None, pv_gap=None, pv="w16", w16_ga
     return c
 
 
-def calendar_w16(T, lmax=None, exp_gap=None, z_k=None, w16_gap=None):
+HEAD_G3S2_SHIFT = 5   # KV-die v1.4.3 G3S2 head staging (3 ingress + 2 score stages) with ECTL HXK = 8 + 5 = 13: every age
+                      # after start_qk moves +5 (measured: exact at +5, fault at +4, T=1..8192; HXK 5 is numerically wrong)
+
+
+def calendar_w16(T, lmax=None, exp_gap=None, z_k=None, w16_gap=None, head_g3s2=False):
     c = calendar(T, lmax, exp_gap, z_k, pv="w1")   # QK / softmax / hub ages are shared; P.V replaced below
+    if head_g3s2:
+        for f in ("LMAX", "EXP", "Z", "HUB_LMAX", "HUB_Z", "HUB_RECIP", "HUB_PUB"):
+            c[f] += HEAD_G3S2_SHIFT
     po = [w16_pair_out(T, 0), w16_pair_out(T, 1)]
     gap = w16_gap if w16_gap is not None else pv_after_exp_w16(T)
     pv = max(c["EXP"] + gap, c["HUB_PUB"] + RZ_MARGIN - max(po))
@@ -168,10 +175,11 @@ def calendar_w16(T, lmax=None, exp_gap=None, z_k=None, w16_gap=None):
 
 
 def pv_after_exp_w16(T):
-    """PV_START - EXP of the 16-row walk: zwalk(T) + 188.  Measured on the w16 production binary (55a5f5a98,
-    fault = the stack e-read visibility check): d = PV_START - EXP - zwalk faults at 182 / 184 / 186 and is exact at
-    184 / 186 / 188 for T = 6144 / 7000-7168 / 8000-8192; below ~6000 rows the published reciprocal (R) binds the
-    capture, so the law only has to stay above the visibility boundary (exact from d = 80 at 4096, 100 at 5000)."""
+    """PV_START - EXP of the 16-row walk: zwalk(T) + 186.  Measured at 1-edge resolution on the production binary with
+    pin registers on every P.V port (4c026e895; fault = the stack e-read visibility check): d = PV_START - EXP - zwalk
+    is exact from 182 (T=6144), 184 (7000, 7168), 186 (8000, 8192) and faults one edge below; from ~5000 rows down the
+    published reciprocal (R) binds the capture (exact from 174 at 5000).  The 1-row/cycle-era receipt (55a5f5a98, no
+    request pin register) had the same boundaries 2 edges later."""
     return zwalk(T) + W16_PV_AFTER_EXP
 
 
@@ -207,10 +215,11 @@ def main(argv=None):
     ap.add_argument("--json", action="store_true")
     ap.add_argument("--pv", choices=("w1", "w16"), default="w16")
     ap.add_argument("--pv-after-exp", type=int, default=None)
+    ap.add_argument("--head-g3s2", action="store_true", help="KV-die v1.4.3 staged heads (ECTL HXK 13): ages +5")
     a = ap.parse_args(argv)
     out = {}
     for T in a.ctx:
-        c = calendar(T, a.lmax, a.exp_gap, a.z_k, a.pv_gap, pv=a.pv, w16_gap=a.pv_after_exp)
+        c = calendar(T, a.lmax, a.exp_gap, a.z_k, a.pv_gap, pv=a.pv, w16_gap=a.pv_after_exp, head_g3s2=a.head_g3s2)
         out[T] = dict(cal=hexcal(c), fields=c)
     print(json.dumps(out, indent=1) if a.json else "\n".join(f"{T} {v['cal']}" for T, v in out.items()))
 

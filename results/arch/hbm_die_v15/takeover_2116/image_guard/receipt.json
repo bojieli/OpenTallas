@@ -1,0 +1,17 @@
+{
+ "schema": "opentallas.hbm_service_image_guard.v1",
+ "cause": "Missing Verilator readmem images previously warned and allowed zero-filled DUT/expected arrays to falsely PASS. Invalid run is not qualification.",
+ "invalid_example": "%Warning: /srv/opentallas-scratch/claude/hdie-1705/svc_53959c7/cap_images/s0/sm00/backing.hex:0: $readmem file not found",
+ "checks": [
+  "Runner validates eight record files exactly ROWS136-byte hex lines and exactly ceil(ROWS*136/32) unique backing32-byte sectors",
+  "SV fopen must succeed for every required file before readmem",
+  "Actual compiled missing-image negative fails required image unavailable",
+  "Shell missing-image negative fails before compilation",
+  "Corrected actual32-controller RREG1 source replay with real images passes exact8SMx64rowsx8epochs andearly/residency mutants"
+ ],
+ "files_sha256": {
+  "rtl/hbm_accel/loader/service_native/run_sm_groups_issued.sh": "f75b95056e873326eab57c586cea9634a6731e8126092f389a4a6f412aa242a3",
+  "rtl/hbm_accel/loader/service_native/tb_hbm_svc_sm_groups_issued.sv": "6fbf6b0fc173268638f83a39d046460bf785f8a6d69d90b537f15b25fdfab279"
+ },
+ "historical_scope": "Existing logs lacking missing-image warnings remain historical within their prior scope; no general proof inheritance. DUT PHYreturn source proof is separate."
+}

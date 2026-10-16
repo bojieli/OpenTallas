@@ -1,0 +1,193 @@
+{
+  "name": "qfd_tt_core_leaf",
+  "top": "qfd_tt_core_leaf",
+  "kind": "tile",
+  "sources": [
+    "rtl/qwen_sys/static_schedule_20261014/qfd_tt_ctlm_static_s.sv",
+    "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_static_parent.sv",
+    "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv",
+    "rtl/hdc/ot_hdc_delay.sv",
+    "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctl_static.sv",
+    "rtl/hdc/ot_qwen_me_spine_h_w12.sv",
+    "rtl/hdc/ot_hdc_prefix.sv",
+    "rtl/hdc/ot_qwen_w12_arith.sv",
+    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+    "rtl/hdc/ot_hdc_sfu.sv",
+    "rtl/hdc/ot_qwen_w12_matvec.sv",
+    "rtl/qwen_sys/missing_masters_20261007/ot_qfd_spine_masters.sv",
+    "rtl/physical/ot_qfd_tt_ctlm_split.sv",
+    "rtl/qwen_sys/missing_masters_20261007/ot_qfd_split_exact.sv",
+    "rtl/qwen_sys/static_schedule_20261014/ot_qwen_rom_core_ctrl_static.sv",
+    "rtl/hdc/ot_hdc_cg.sv",
+    "rtl/hdc/ot_hdc_qwen_int8_embed_decode.sv",
+    "rtl/hdc/ot_hdc_dyn_ttiles.sv",
+    "rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_pw.sv",
+    "rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue.sv",
+    "rtl/qwen_sys/static_schedule_20261014/ot_qwen_fixed_issue_dense_pw.sv",
+    "rtl/qwen_sys/program_receiver_20261014/qkd_program_commit.sv",
+    "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2_bb.v",
+    "rtl/qwen_sys/static_schedule_20261014/ot_qfd_native_cmd_route.sv",
+    "rtl/qwen_sys/static_schedule_20261014/ot_qwen_tp8_rom_relocate.sv",
+    "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_static_schedule.sv",
+    "rtl/qwen_sys/dvm_20261014/ot_qfd_xpf_dense_pw_loader.sv",
+    "rtl/lib/ot_reset_sync.sv",
+    "rtl/qwen_sys/tt_tree_partition_20261015/ot_qwen_tt_core_spctl.sv",
+    "rtl/qwen_sys/tt_tree_partition_20261015/qfd_tt_core_leaf.sv",
+    "rtl/qwen_sys/tt_tree_partition_20261015/qfd_tt_tree_partition.sv",
+    "rtl/qwen_sys/tt_tree_partition_20261015/qfd_tt_scale_leaf.sv",
+    "rtl/qwen_sys/tt_tree_partition_20261015/ot_qwen_tt_core_ctl.sv"
+  ],
+  "params": {},
+  "clock_port": "clk",
+  "reset_ports": [
+    "rst_n"
+  ],
+  "outline": {
+    "w": 345.6,
+    "h": 216
+  },
+  "recipe": 3,
+  "layer_cap": "M5",
+  "pins": {
+    "W": [
+      "p_am",
+      "p_fault",
+      "p_f_e2",
+      "p_v_e2",
+      "t_sel_e",
+      "t_tv_e",
+      "up_fault"
+    ],
+    "S": [
+      "mx_we",
+      "mx_addr",
+      "mx_mask",
+      "mx_data",
+      "land_cnt"
+    ],
+    "E": [
+      "cmd",
+      "ret",
+      "me_acc_o",
+      "me_idle_o",
+      "me_prog_o",
+      "ov",
+      "fab_fault",
+      "tr_fault",
+      "clk",
+      "rst_n"
+    ],
+    "N": [
+      "scale_tag",
+      "scale_v",
+      "scale_rst_n"
+    ]
+  },
+  "io_tcl": "physical/qwen_tt_partition_1015/core_pins.tcl",
+  "macros": [
+    {
+      "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+      "count": 1,
+      "at": [
+        32.4,
+        43.2
+      ],
+      "orient": "R0",
+      "inst": "*u_tag*g_b?0?*u_m"
+    },
+    {
+      "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+      "count": 1,
+      "at": [
+        32.4,
+        129.6
+      ],
+      "orient": "R0",
+      "inst": "*u_tag*g_b?1?*u_m"
+    }
+  ],
+  "route": {
+    "pd": 0.5,
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "hold_margin_ns": 0.03,
+    "macro_halo_um": 5.4
+  },
+  "io_flop_at_pins": {
+    "cols": 4,
+    "allow_none": false
+  },
+  "inhold": true,
+  "outhold": true,
+  "keep_pin_regs": true,
+  "pin_reg_split": true,
+  "hold_pad": {
+    "cell": "HB2xp67_ASAP7_75t_R"
+  },
+  "orfs_vars": {
+    "POST_IO_PLACEMENT_TCL": "physical/common_flow/macro_channel_block.tcl",
+    "POST_RESIZE_TCL": "physical/common_flow/post_resize_relocate.tcl",
+    "OT_CHANNEL_BLOCK_UM": "20",
+    "OT_ROW_MIN_UM": "6"
+  },
+  "structural_change": "Measured fs4 ODB has all thin M4/M5 manual pins 12nm off preferred track (M4 Y/M5 X =0.012+n*0.048um); repair pin coordinates to measured track lattice, preserving PG-clean 12-track seam and five-track core south spread, real two-SRAM functional partition and recipe3 input/output registers. No additional RTL cycles/area; recipe3 boundary +1 edge per input/output (+2 core-to-scale seam) remains explicit. Diagnostic translated BPin shapes remove first-iteration DRT0255 failure; fresh exact source CTS/route required.",
+  "slot_change_request": "Q-COMPUTE-DIE 14:33-14:36 candidate two345.6x216 homes inside777.6x1814.4; physical/qwen_tt_partition_1015/pin_plan.json",
+  "job": {
+    "owner": "codex:QWEN-TT-boundary2116",
+    "branch": "codex/qwen-tt-boundary-2116",
+    "tag": "tg1",
+    "hold_merge": true,
+    "purpose": "TT real functional partition candidate, native clocks/pins unqualified until measured",
+    "benches": [
+      {
+        "name": "tt_split_m0_p1",
+        "cmd": "bash physical/qwen_tt_partition_1015/run_exact.sh 0 1 {RUN}/bench/tt_m0",
+        "expect": "pass",
+        "threads": 4,
+        "peak_ram_gb": 8,
+        "needs": [
+          "verilator"
+        ],
+        "pass_regex": "TT_SPLIT_PASS.*PROD=1"
+      },
+      {
+        "name": "tt_split_m1_p0",
+        "cmd": "bash physical/qwen_tt_partition_1015/run_exact.sh 1 0 {RUN}/bench/tt_m1",
+        "expect": "fail",
+        "threads": 4,
+        "peak_ram_gb": 8,
+        "needs": [
+          "verilator"
+        ],
+        "fail_regex": "TT_SPLIT_FAIL.*valid_scale_errors=[1-9]"
+      },
+      {
+        "name": "tt_split_m2_p0",
+        "cmd": "bash physical/qwen_tt_partition_1015/run_exact.sh 2 0 {RUN}/bench/tt_m2",
+        "expect": "fail",
+        "threads": 4,
+        "peak_ram_gb": 8,
+        "needs": [
+          "verilator"
+        ],
+        "fail_regex": "TT_SPLIT_FAIL.*valid_scale_errors=[1-9]"
+      }
+    ],
+    "extra_paths": [
+      "rtl/qwen_sys/tt_tree_partition_20261015",
+      "physical/qwen_tt_partition_1015",
+      "tools/qwen_split/derive_tt_tree_partition.py"
+    ],
+    "structural_change": "fs2 (Q-ELEM 1705): fs1 scale route DRT-0255 on seam pins tag_payload[0]/rst_n: 93 seam pins on every M5 track (0.096 pitch, 168.4..177.2) overlapped the M5 PG pair at x~173.1; seam now 3-track pitch on PG-free tracks 157.8..188.6 on BOTH leaves (identical x, straight seam), RTL/outline/cycles unchanged. | fs3 (Q-ELEM 1705): fs2 core route DRT-0255 on S-face mx_*/land_cnt: 95 of 569 M5 pins sat on the M5 PG pair windows; S face respaced on PG-free 4-track M5 positions (same order). Recipe 3 (owner 19:50): one pin register on every data input/output at synthesis (+1 cycle per port, table in the route ot_pin_regs.tsv) for the compiler. | fs4: seam (N) at 12-track pitch 110.3..234.4 matching scale; S face 5-track 19.2..326.1 to thin the face band.",
+    "hosts": [
+      "ot-epyc1tb",
+      "ot-epyc4",
+      "ot-pve1"
+    ]
+  },
+  "children": [],
+  "inter": [],
+  "pin_regs": {
+    "enable": true
+  }
+}

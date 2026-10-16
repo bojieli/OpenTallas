@@ -2741,68 +2741,180 @@
    "grant": "wires_only_cluster_v7",
    "children": [
     {
-     "inst": "u_bank0",
+     "inst": "L[0].u_bank",
      "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
      "at": [
       0,
       0
-     ]
+     ],
+     "outline": {
+      "w": 140.4,
+      "h": 87.48
+     },
+     "cell": "ot_hgi_dma_back_landing_bank",
+     "source": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv",
+     "source_sha256": "c3668975847f08665bed917a9c88b84307da55a3ad02ee8c3cee2a8e47dabf4b",
+     "view_files_sha256": {
+      "ot_hgi_dma_back_landing_bank.lef": "3cdab7979aa8f65ce3361c8d46c1837b005cc10f215364fa2d53bcb9de6e19ff",
+      "ot_hgi_dma_back_landing_bank_tt.lib": "8ebaf54c73da50a9da97a676a6ae8cc7c9e127943f4057c9ea3659081ce7c139",
+      "ot_hgi_dma_back_landing_bank_ff.lib": "3d9e572cd30cd3b1f45e7d598e68816d47c20b45cda8db6c54c08013d344e9a9",
+      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2"
+     },
+     "qualified_scope": "native-qualified child only; parent incident paths, clocks and die timing remain OPEN"
     },
     {
-     "inst": "u_bank1",
+     "inst": "L[1].u_bank",
      "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
      "at": [
       172.8,
       0
-     ]
+     ],
+     "outline": {
+      "w": 140.4,
+      "h": 87.48
+     },
+     "cell": "ot_hgi_dma_back_landing_bank",
+     "source": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv",
+     "source_sha256": "c3668975847f08665bed917a9c88b84307da55a3ad02ee8c3cee2a8e47dabf4b",
+     "view_files_sha256": {
+      "ot_hgi_dma_back_landing_bank.lef": "3cdab7979aa8f65ce3361c8d46c1837b005cc10f215364fa2d53bcb9de6e19ff",
+      "ot_hgi_dma_back_landing_bank_tt.lib": "8ebaf54c73da50a9da97a676a6ae8cc7c9e127943f4057c9ea3659081ce7c139",
+      "ot_hgi_dma_back_landing_bank_ff.lib": "3d9e572cd30cd3b1f45e7d598e68816d47c20b45cda8db6c54c08013d344e9a9",
+      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2"
+     },
+     "qualified_scope": "native-qualified child only; parent incident paths, clocks and die timing remain OPEN"
     },
     {
-     "inst": "u_bank2",
+     "inst": "L[2].u_bank",
      "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
      "at": [
       345.6,
       0
-     ]
+     ],
+     "outline": {
+      "w": 140.4,
+      "h": 87.48
+     },
+     "cell": "ot_hgi_dma_back_landing_bank",
+     "source": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv",
+     "source_sha256": "c3668975847f08665bed917a9c88b84307da55a3ad02ee8c3cee2a8e47dabf4b",
+     "view_files_sha256": {
+      "ot_hgi_dma_back_landing_bank.lef": "3cdab7979aa8f65ce3361c8d46c1837b005cc10f215364fa2d53bcb9de6e19ff",
+      "ot_hgi_dma_back_landing_bank_tt.lib": "8ebaf54c73da50a9da97a676a6ae8cc7c9e127943f4057c9ea3659081ce7c139",
+      "ot_hgi_dma_back_landing_bank_ff.lib": "3d9e572cd30cd3b1f45e7d598e68816d47c20b45cda8db6c54c08013d344e9a9",
+      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2"
+     },
+     "qualified_scope": "native-qualified child only; parent incident paths, clocks and die timing remain OPEN"
     },
     {
-     "inst": "u_bank3",
+     "inst": "L[3].u_bank",
      "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
      "at": [
       0,
       129.6
-     ]
+     ],
+     "outline": {
+      "w": 140.4,
+      "h": 87.48
+     },
+     "cell": "ot_hgi_dma_back_landing_bank",
+     "source": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv",
+     "source_sha256": "c3668975847f08665bed917a9c88b84307da55a3ad02ee8c3cee2a8e47dabf4b",
+     "view_files_sha256": {
+      "ot_hgi_dma_back_landing_bank.lef": "3cdab7979aa8f65ce3361c8d46c1837b005cc10f215364fa2d53bcb9de6e19ff",
+      "ot_hgi_dma_back_landing_bank_tt.lib": "8ebaf54c73da50a9da97a676a6ae8cc7c9e127943f4057c9ea3659081ce7c139",
+      "ot_hgi_dma_back_landing_bank_ff.lib": "3d9e572cd30cd3b1f45e7d598e68816d47c20b45cda8db6c54c08013d344e9a9",
+      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2"
+     },
+     "qualified_scope": "native-qualified child only; parent incident paths, clocks and die timing remain OPEN"
     },
     {
-     "inst": "u_bank4",
+     "inst": "L[4].u_bank",
      "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
      "at": [
       172.8,
       129.6
-     ]
+     ],
+     "outline": {
+      "w": 140.4,
+      "h": 87.48
+     },
+     "cell": "ot_hgi_dma_back_landing_bank",
+     "source": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv",
+     "source_sha256": "c3668975847f08665bed917a9c88b84307da55a3ad02ee8c3cee2a8e47dabf4b",
+     "view_files_sha256": {
+      "ot_hgi_dma_back_landing_bank.lef": "3cdab7979aa8f65ce3361c8d46c1837b005cc10f215364fa2d53bcb9de6e19ff",
+      "ot_hgi_dma_back_landing_bank_tt.lib": "8ebaf54c73da50a9da97a676a6ae8cc7c9e127943f4057c9ea3659081ce7c139",
+      "ot_hgi_dma_back_landing_bank_ff.lib": "3d9e572cd30cd3b1f45e7d598e68816d47c20b45cda8db6c54c08013d344e9a9",
+      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2"
+     },
+     "qualified_scope": "native-qualified child only; parent incident paths, clocks and die timing remain OPEN"
     },
     {
-     "inst": "u_bank5",
+     "inst": "L[5].u_bank",
      "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
      "at": [
       345.6,
       129.6
-     ]
+     ],
+     "outline": {
+      "w": 140.4,
+      "h": 87.48
+     },
+     "cell": "ot_hgi_dma_back_landing_bank",
+     "source": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv",
+     "source_sha256": "c3668975847f08665bed917a9c88b84307da55a3ad02ee8c3cee2a8e47dabf4b",
+     "view_files_sha256": {
+      "ot_hgi_dma_back_landing_bank.lef": "3cdab7979aa8f65ce3361c8d46c1837b005cc10f215364fa2d53bcb9de6e19ff",
+      "ot_hgi_dma_back_landing_bank_tt.lib": "8ebaf54c73da50a9da97a676a6ae8cc7c9e127943f4057c9ea3659081ce7c139",
+      "ot_hgi_dma_back_landing_bank_ff.lib": "3d9e572cd30cd3b1f45e7d598e68816d47c20b45cda8db6c54c08013d344e9a9",
+      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2"
+     },
+     "qualified_scope": "native-qualified child only; parent incident paths, clocks and die timing remain OPEN"
     },
     {
-     "inst": "u_bank6",
+     "inst": "L[6].u_bank",
      "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
      "at": [
       0,
       259.2
-     ]
+     ],
+     "outline": {
+      "w": 140.4,
+      "h": 87.48
+     },
+     "cell": "ot_hgi_dma_back_landing_bank",
+     "source": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv",
+     "source_sha256": "c3668975847f08665bed917a9c88b84307da55a3ad02ee8c3cee2a8e47dabf4b",
+     "view_files_sha256": {
+      "ot_hgi_dma_back_landing_bank.lef": "3cdab7979aa8f65ce3361c8d46c1837b005cc10f215364fa2d53bcb9de6e19ff",
+      "ot_hgi_dma_back_landing_bank_tt.lib": "8ebaf54c73da50a9da97a676a6ae8cc7c9e127943f4057c9ea3659081ce7c139",
+      "ot_hgi_dma_back_landing_bank_ff.lib": "3d9e572cd30cd3b1f45e7d598e68816d47c20b45cda8db6c54c08013d344e9a9",
+      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2"
+     },
+     "qualified_scope": "native-qualified child only; parent incident paths, clocks and die timing remain OPEN"
     },
     {
-     "inst": "u_bank7",
+     "inst": "L[7].u_bank",
      "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
      "at": [
       172.8,
       259.2
-     ]
+     ],
+     "outline": {
+      "w": 140.4,
+      "h": 87.48
+     },
+     "cell": "ot_hgi_dma_back_landing_bank",
+     "source": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv",
+     "source_sha256": "c3668975847f08665bed917a9c88b84307da55a3ad02ee8c3cee2a8e47dabf4b",
+     "view_files_sha256": {
+      "ot_hgi_dma_back_landing_bank.lef": "3cdab7979aa8f65ce3361c8d46c1837b005cc10f215364fa2d53bcb9de6e19ff",
+      "ot_hgi_dma_back_landing_bank_tt.lib": "8ebaf54c73da50a9da97a676a6ae8cc7c9e127943f4057c9ea3659081ce7c139",
+      "ot_hgi_dma_back_landing_bank_ff.lib": "3d9e572cd30cd3b1f45e7d598e68816d47c20b45cda8db6c54c08013d344e9a9",
+      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2"
+     },
+     "qualified_scope": "native-qualified child only; parent incident paths, clocks and die timing remain OPEN"
     },
     {
      "inst": "u_control",
@@ -2811,9 +2923,12 @@
       345.6,
       259.2
      ],
-     "dedupe": "one master for all stacks: stk[1:0] strap pin (H-HARDEN RTL)"
+     "dedupe": "Registered stk strap remains requested; actual parent still specializes STK/QID. No new per-stack routes."
     }
-   ]
+   ],
+   "controller_binding_status": "STK0 routed controller only; registered stk strap is still absent from actual RTL. No inherited STK1..3 view qualification.",
+   "parent_qualified": false,
+   "child_binding_refresh_2116": "Eight actual L[b].u_bank instances use geo1 CLOSED/native PASS 140.4x87.48 view. Parent size/child homes/ports preserved; parent packing and seams remain OPEN."
   },
   {
    "name": "hb_dbk_SE",
@@ -3193,68 +3308,180 @@
    "grant": "wires_only_cluster_v7",
    "children": [
     {
-     "inst": "u_bank0",
+     "inst": "L[0].u_bank",
      "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
      "at": [
       0,
       0
-     ]
+     ],
+     "outline": {
+      "w": 140.4,
+      "h": 87.48
+     },
+     "cell": "ot_hgi_dma_back_landing_bank",
+     "source": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv",
+     "source_sha256": "c3668975847f08665bed917a9c88b84307da55a3ad02ee8c3cee2a8e47dabf4b",
+     "view_files_sha256": {
+      "ot_hgi_dma_back_landing_bank.lef": "3cdab7979aa8f65ce3361c8d46c1837b005cc10f215364fa2d53bcb9de6e19ff",
+      "ot_hgi_dma_back_landing_bank_tt.lib": "8ebaf54c73da50a9da97a676a6ae8cc7c9e127943f4057c9ea3659081ce7c139",
+      "ot_hgi_dma_back_landing_bank_ff.lib": "3d9e572cd30cd3b1f45e7d598e68816d47c20b45cda8db6c54c08013d344e9a9",
+      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2"
+     },
+     "qualified_scope": "native-qualified child only; parent incident paths, clocks and die timing remain OPEN"
     },
     {
-     "inst": "u_bank1",
+     "inst": "L[1].u_bank",
      "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
      "at": [
       172.8,
       0
-     ]
+     ],
+     "outline": {
+      "w": 140.4,
+      "h": 87.48
+     },
+     "cell": "ot_hgi_dma_back_landing_bank",
+     "source": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv",
+     "source_sha256": "c3668975847f08665bed917a9c88b84307da55a3ad02ee8c3cee2a8e47dabf4b",
+     "view_files_sha256": {
+      "ot_hgi_dma_back_landing_bank.lef": "3cdab7979aa8f65ce3361c8d46c1837b005cc10f215364fa2d53bcb9de6e19ff",
+      "ot_hgi_dma_back_landing_bank_tt.lib": "8ebaf54c73da50a9da97a676a6ae8cc7c9e127943f4057c9ea3659081ce7c139",
+      "ot_hgi_dma_back_landing_bank_ff.lib": "3d9e572cd30cd3b1f45e7d598e68816d47c20b45cda8db6c54c08013d344e9a9",
+      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2"
+     },
+     "qualified_scope": "native-qualified child only; parent incident paths, clocks and die timing remain OPEN"
     },
     {
-     "inst": "u_bank2",
+     "inst": "L[2].u_bank",
      "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
      "at": [
       345.6,
       0
-     ]
+     ],
+     "outline": {
+      "w": 140.4,
+      "h": 87.48
+     },
+     "cell": "ot_hgi_dma_back_landing_bank",
+     "source": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv",
+     "source_sha256": "c3668975847f08665bed917a9c88b84307da55a3ad02ee8c3cee2a8e47dabf4b",
+     "view_files_sha256": {
+      "ot_hgi_dma_back_landing_bank.lef": "3cdab7979aa8f65ce3361c8d46c1837b005cc10f215364fa2d53bcb9de6e19ff",
+      "ot_hgi_dma_back_landing_bank_tt.lib": "8ebaf54c73da50a9da97a676a6ae8cc7c9e127943f4057c9ea3659081ce7c139",
+      "ot_hgi_dma_back_landing_bank_ff.lib": "3d9e572cd30cd3b1f45e7d598e68816d47c20b45cda8db6c54c08013d344e9a9",
+      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2"
+     },
+     "qualified_scope": "native-qualified child only; parent incident paths, clocks and die timing remain OPEN"
     },
     {
-     "inst": "u_bank3",
+     "inst": "L[3].u_bank",
      "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
      "at": [
       0,
       129.6
-     ]
+     ],
+     "outline": {
+      "w": 140.4,
+      "h": 87.48
+     },
+     "cell": "ot_hgi_dma_back_landing_bank",
+     "source": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv",
+     "source_sha256": "c3668975847f08665bed917a9c88b84307da55a3ad02ee8c3cee2a8e47dabf4b",
+     "view_files_sha256": {
+      "ot_hgi_dma_back_landing_bank.lef": "3cdab7979aa8f65ce3361c8d46c1837b005cc10f215364fa2d53bcb9de6e19ff",
+      "ot_hgi_dma_back_landing_bank_tt.lib": "8ebaf54c73da50a9da97a676a6ae8cc7c9e127943f4057c9ea3659081ce7c139",
+      "ot_hgi_dma_back_landing_bank_ff.lib": "3d9e572cd30cd3b1f45e7d598e68816d47c20b45cda8db6c54c08013d344e9a9",
+      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2"
+     },
+     "qualified_scope": "native-qualified child only; parent incident paths, clocks and die timing remain OPEN"
     },
     {
-     "inst": "u_bank4",
+     "inst": "L[4].u_bank",
      "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
      "at": [
       172.8,
       129.6
-     ]
+     ],
+     "outline": {
+      "w": 140.4,
+      "h": 87.48
+     },
+     "cell": "ot_hgi_dma_back_landing_bank",
+     "source": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv",
+     "source_sha256": "c3668975847f08665bed917a9c88b84307da55a3ad02ee8c3cee2a8e47dabf4b",
+     "view_files_sha256": {
+      "ot_hgi_dma_back_landing_bank.lef": "3cdab7979aa8f65ce3361c8d46c1837b005cc10f215364fa2d53bcb9de6e19ff",
+      "ot_hgi_dma_back_landing_bank_tt.lib": "8ebaf54c73da50a9da97a676a6ae8cc7c9e127943f4057c9ea3659081ce7c139",
+      "ot_hgi_dma_back_landing_bank_ff.lib": "3d9e572cd30cd3b1f45e7d598e68816d47c20b45cda8db6c54c08013d344e9a9",
+      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2"
+     },
+     "qualified_scope": "native-qualified child only; parent incident paths, clocks and die timing remain OPEN"
     },
     {
-     "inst": "u_bank5",
+     "inst": "L[5].u_bank",
      "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
      "at": [
       345.6,
       129.6
-     ]
+     ],
+     "outline": {
+      "w": 140.4,
+      "h": 87.48
+     },
+     "cell": "ot_hgi_dma_back_landing_bank",
+     "source": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv",
+     "source_sha256": "c3668975847f08665bed917a9c88b84307da55a3ad02ee8c3cee2a8e47dabf4b",
+     "view_files_sha256": {
+      "ot_hgi_dma_back_landing_bank.lef": "3cdab7979aa8f65ce3361c8d46c1837b005cc10f215364fa2d53bcb9de6e19ff",
+      "ot_hgi_dma_back_landing_bank_tt.lib": "8ebaf54c73da50a9da97a676a6ae8cc7c9e127943f4057c9ea3659081ce7c139",
+      "ot_hgi_dma_back_landing_bank_ff.lib": "3d9e572cd30cd3b1f45e7d598e68816d47c20b45cda8db6c54c08013d344e9a9",
+      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2"
+     },
+     "qualified_scope": "native-qualified child only; parent incident paths, clocks and die timing remain OPEN"
     },
     {
-     "inst": "u_bank6",
+     "inst": "L[6].u_bank",
      "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
      "at": [
       0,
       259.2
-     ]
+     ],
+     "outline": {
+      "w": 140.4,
+      "h": 87.48
+     },
+     "cell": "ot_hgi_dma_back_landing_bank",
+     "source": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv",
+     "source_sha256": "c3668975847f08665bed917a9c88b84307da55a3ad02ee8c3cee2a8e47dabf4b",
+     "view_files_sha256": {
+      "ot_hgi_dma_back_landing_bank.lef": "3cdab7979aa8f65ce3361c8d46c1837b005cc10f215364fa2d53bcb9de6e19ff",
+      "ot_hgi_dma_back_landing_bank_tt.lib": "8ebaf54c73da50a9da97a676a6ae8cc7c9e127943f4057c9ea3659081ce7c139",
+      "ot_hgi_dma_back_landing_bank_ff.lib": "3d9e572cd30cd3b1f45e7d598e68816d47c20b45cda8db6c54c08013d344e9a9",
+      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2"
+     },
+     "qualified_scope": "native-qualified child only; parent incident paths, clocks and die timing remain OPEN"
     },
     {
-     "inst": "u_bank7",
+     "inst": "L[7].u_bank",
      "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
      "at": [
       172.8,
       259.2
-     ]
+     ],
+     "outline": {
+      "w": 140.4,
+      "h": 87.48
+     },
+     "cell": "ot_hgi_dma_back_landing_bank",
+     "source": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv",
+     "source_sha256": "c3668975847f08665bed917a9c88b84307da55a3ad02ee8c3cee2a8e47dabf4b",
+     "view_files_sha256": {
+      "ot_hgi_dma_back_landing_bank.lef": "3cdab7979aa8f65ce3361c8d46c1837b005cc10f215364fa2d53bcb9de6e19ff",
+      "ot_hgi_dma_back_landing_bank_tt.lib": "8ebaf54c73da50a9da97a676a6ae8cc7c9e127943f4057c9ea3659081ce7c139",
+      "ot_hgi_dma_back_landing_bank_ff.lib": "3d9e572cd30cd3b1f45e7d598e68816d47c20b45cda8db6c54c08013d344e9a9",
+      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2"
+     },
+     "qualified_scope": "native-qualified child only; parent incident paths, clocks and die timing remain OPEN"
     },
     {
      "inst": "u_control",
@@ -3263,9 +3490,12 @@
       345.6,
       259.2
      ],
-     "dedupe": "one master for all stacks: stk[1:0] strap pin (H-HARDEN RTL)"
+     "dedupe": "Registered stk strap remains requested; actual parent still specializes STK/QID. No new per-stack routes."
     }
-   ]
+   ],
+   "controller_binding_status": "STK0 routed controller only; registered stk strap is still absent from actual RTL. No inherited STK1..3 view qualification.",
+   "parent_qualified": false,
+   "child_binding_refresh_2116": "Eight actual L[b].u_bank instances use geo1 CLOSED/native PASS 140.4x87.48 view. Parent size/child homes/ports preserved; parent packing and seams remain OPEN."
   },
   {
    "name": "hb_dbk_NW",
@@ -3645,68 +3875,180 @@
    "grant": "wires_only_cluster_v7",
    "children": [
     {
-     "inst": "u_bank0",
+     "inst": "L[0].u_bank",
      "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
      "at": [
       0,
       0
-     ]
+     ],
+     "outline": {
+      "w": 140.4,
+      "h": 87.48
+     },
+     "cell": "ot_hgi_dma_back_landing_bank",
+     "source": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv",
+     "source_sha256": "c3668975847f08665bed917a9c88b84307da55a3ad02ee8c3cee2a8e47dabf4b",
+     "view_files_sha256": {
+      "ot_hgi_dma_back_landing_bank.lef": "3cdab7979aa8f65ce3361c8d46c1837b005cc10f215364fa2d53bcb9de6e19ff",
+      "ot_hgi_dma_back_landing_bank_tt.lib": "8ebaf54c73da50a9da97a676a6ae8cc7c9e127943f4057c9ea3659081ce7c139",
+      "ot_hgi_dma_back_landing_bank_ff.lib": "3d9e572cd30cd3b1f45e7d598e68816d47c20b45cda8db6c54c08013d344e9a9",
+      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2"
+     },
+     "qualified_scope": "native-qualified child only; parent incident paths, clocks and die timing remain OPEN"
     },
     {
-     "inst": "u_bank1",
+     "inst": "L[1].u_bank",
      "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
      "at": [
       172.8,
       0
-     ]
+     ],
+     "outline": {
+      "w": 140.4,
+      "h": 87.48
+     },
+     "cell": "ot_hgi_dma_back_landing_bank",
+     "source": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv",
+     "source_sha256": "c3668975847f08665bed917a9c88b84307da55a3ad02ee8c3cee2a8e47dabf4b",
+     "view_files_sha256": {
+      "ot_hgi_dma_back_landing_bank.lef": "3cdab7979aa8f65ce3361c8d46c1837b005cc10f215364fa2d53bcb9de6e19ff",
+      "ot_hgi_dma_back_landing_bank_tt.lib": "8ebaf54c73da50a9da97a676a6ae8cc7c9e127943f4057c9ea3659081ce7c139",
+      "ot_hgi_dma_back_landing_bank_ff.lib": "3d9e572cd30cd3b1f45e7d598e68816d47c20b45cda8db6c54c08013d344e9a9",
+      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2"
+     },
+     "qualified_scope": "native-qualified child only; parent incident paths, clocks and die timing remain OPEN"
     },
     {
-     "inst": "u_bank2",
+     "inst": "L[2].u_bank",
      "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
      "at": [
       345.6,
       0
-     ]
+     ],
+     "outline": {
+      "w": 140.4,
+      "h": 87.48
+     },
+     "cell": "ot_hgi_dma_back_landing_bank",
+     "source": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv",
+     "source_sha256": "c3668975847f08665bed917a9c88b84307da55a3ad02ee8c3cee2a8e47dabf4b",
+     "view_files_sha256": {
+      "ot_hgi_dma_back_landing_bank.lef": "3cdab7979aa8f65ce3361c8d46c1837b005cc10f215364fa2d53bcb9de6e19ff",
+      "ot_hgi_dma_back_landing_bank_tt.lib": "8ebaf54c73da50a9da97a676a6ae8cc7c9e127943f4057c9ea3659081ce7c139",
+      "ot_hgi_dma_back_landing_bank_ff.lib": "3d9e572cd30cd3b1f45e7d598e68816d47c20b45cda8db6c54c08013d344e9a9",
+      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2"
+     },
+     "qualified_scope": "native-qualified child only; parent incident paths, clocks and die timing remain OPEN"
     },
     {
-     "inst": "u_bank3",
+     "inst": "L[3].u_bank",
      "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
      "at": [
       0,
       129.6
-     ]
+     ],
+     "outline": {
+      "w": 140.4,
+      "h": 87.48
+     },
+     "cell": "ot_hgi_dma_back_landing_bank",
+     "source": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv",
+     "source_sha256": "c3668975847f08665bed917a9c88b84307da55a3ad02ee8c3cee2a8e47dabf4b",
+     "view_files_sha256": {
+      "ot_hgi_dma_back_landing_bank.lef": "3cdab7979aa8f65ce3361c8d46c1837b005cc10f215364fa2d53bcb9de6e19ff",
+      "ot_hgi_dma_back_landing_bank_tt.lib": "8ebaf54c73da50a9da97a676a6ae8cc7c9e127943f4057c9ea3659081ce7c139",
+      "ot_hgi_dma_back_landing_bank_ff.lib": "3d9e572cd30cd3b1f45e7d598e68816d47c20b45cda8db6c54c08013d344e9a9",
+      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2"
+     },
+     "qualified_scope": "native-qualified child only; parent incident paths, clocks and die timing remain OPEN"
     },
     {
-     "inst": "u_bank4",
+     "inst": "L[4].u_bank",
      "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
      "at": [
       172.8,
       129.6
-     ]
+     ],
+     "outline": {
+      "w": 140.4,
+      "h": 87.48
+     },
+     "cell": "ot_hgi_dma_back_landing_bank",
+     "source": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv",
+     "source_sha256": "c3668975847f08665bed917a9c88b84307da55a3ad02ee8c3cee2a8e47dabf4b",
+     "view_files_sha256": {
+      "ot_hgi_dma_back_landing_bank.lef": "3cdab7979aa8f65ce3361c8d46c1837b005cc10f215364fa2d53bcb9de6e19ff",
+      "ot_hgi_dma_back_landing_bank_tt.lib": "8ebaf54c73da50a9da97a676a6ae8cc7c9e127943f4057c9ea3659081ce7c139",
+      "ot_hgi_dma_back_landing_bank_ff.lib": "3d9e572cd30cd3b1f45e7d598e68816d47c20b45cda8db6c54c08013d344e9a9",
+      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2"
+     },
+     "qualified_scope": "native-qualified child only; parent incident paths, clocks and die timing remain OPEN"
     },
     {
-     "inst": "u_bank5",
+     "inst": "L[5].u_bank",
      "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
      "at": [
       345.6,
       129.6
-     ]
+     ],
+     "outline": {
+      "w": 140.4,
+      "h": 87.48
+     },
+     "cell": "ot_hgi_dma_back_landing_bank",
+     "source": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv",
+     "source_sha256": "c3668975847f08665bed917a9c88b84307da55a3ad02ee8c3cee2a8e47dabf4b",
+     "view_files_sha256": {
+      "ot_hgi_dma_back_landing_bank.lef": "3cdab7979aa8f65ce3361c8d46c1837b005cc10f215364fa2d53bcb9de6e19ff",
+      "ot_hgi_dma_back_landing_bank_tt.lib": "8ebaf54c73da50a9da97a676a6ae8cc7c9e127943f4057c9ea3659081ce7c139",
+      "ot_hgi_dma_back_landing_bank_ff.lib": "3d9e572cd30cd3b1f45e7d598e68816d47c20b45cda8db6c54c08013d344e9a9",
+      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2"
+     },
+     "qualified_scope": "native-qualified child only; parent incident paths, clocks and die timing remain OPEN"
     },
     {
-     "inst": "u_bank6",
+     "inst": "L[6].u_bank",
      "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
      "at": [
       0,
       259.2
-     ]
+     ],
+     "outline": {
+      "w": 140.4,
+      "h": 87.48
+     },
+     "cell": "ot_hgi_dma_back_landing_bank",
+     "source": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv",
+     "source_sha256": "c3668975847f08665bed917a9c88b84307da55a3ad02ee8c3cee2a8e47dabf4b",
+     "view_files_sha256": {
+      "ot_hgi_dma_back_landing_bank.lef": "3cdab7979aa8f65ce3361c8d46c1837b005cc10f215364fa2d53bcb9de6e19ff",
+      "ot_hgi_dma_back_landing_bank_tt.lib": "8ebaf54c73da50a9da97a676a6ae8cc7c9e127943f4057c9ea3659081ce7c139",
+      "ot_hgi_dma_back_landing_bank_ff.lib": "3d9e572cd30cd3b1f45e7d598e68816d47c20b45cda8db6c54c08013d344e9a9",
+      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2"
+     },
+     "qualified_scope": "native-qualified child only; parent incident paths, clocks and die timing remain OPEN"
     },
     {
-     "inst": "u_bank7",
+     "inst": "L[7].u_bank",
      "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
      "at": [
       172.8,
       259.2
-     ]
+     ],
+     "outline": {
+      "w": 140.4,
+      "h": 87.48
+     },
+     "cell": "ot_hgi_dma_back_landing_bank",
+     "source": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv",
+     "source_sha256": "c3668975847f08665bed917a9c88b84307da55a3ad02ee8c3cee2a8e47dabf4b",
+     "view_files_sha256": {
+      "ot_hgi_dma_back_landing_bank.lef": "3cdab7979aa8f65ce3361c8d46c1837b005cc10f215364fa2d53bcb9de6e19ff",
+      "ot_hgi_dma_back_landing_bank_tt.lib": "8ebaf54c73da50a9da97a676a6ae8cc7c9e127943f4057c9ea3659081ce7c139",
+      "ot_hgi_dma_back_landing_bank_ff.lib": "3d9e572cd30cd3b1f45e7d598e68816d47c20b45cda8db6c54c08013d344e9a9",
+      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2"
+     },
+     "qualified_scope": "native-qualified child only; parent incident paths, clocks and die timing remain OPEN"
     },
     {
      "inst": "u_control",
@@ -3715,9 +4057,12 @@
       345.6,
       259.2
      ],
-     "dedupe": "one master for all stacks: stk[1:0] strap pin (H-HARDEN RTL)"
+     "dedupe": "Registered stk strap remains requested; actual parent still specializes STK/QID. No new per-stack routes."
     }
-   ]
+   ],
+   "controller_binding_status": "STK0 routed controller only; registered stk strap is still absent from actual RTL. No inherited STK1..3 view qualification.",
+   "parent_qualified": false,
+   "child_binding_refresh_2116": "Eight actual L[b].u_bank instances use geo1 CLOSED/native PASS 140.4x87.48 view. Parent size/child homes/ports preserved; parent packing and seams remain OPEN."
   },
   {
    "name": "hb_dbk_NE",
@@ -4092,68 +4437,180 @@
    "grant": "wires_only_cluster_v7",
    "children": [
     {
-     "inst": "u_bank0",
+     "inst": "L[0].u_bank",
      "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
      "at": [
       0,
       0
-     ]
+     ],
+     "outline": {
+      "w": 140.4,
+      "h": 87.48
+     },
+     "cell": "ot_hgi_dma_back_landing_bank",
+     "source": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv",
+     "source_sha256": "c3668975847f08665bed917a9c88b84307da55a3ad02ee8c3cee2a8e47dabf4b",
+     "view_files_sha256": {
+      "ot_hgi_dma_back_landing_bank.lef": "3cdab7979aa8f65ce3361c8d46c1837b005cc10f215364fa2d53bcb9de6e19ff",
+      "ot_hgi_dma_back_landing_bank_tt.lib": "8ebaf54c73da50a9da97a676a6ae8cc7c9e127943f4057c9ea3659081ce7c139",
+      "ot_hgi_dma_back_landing_bank_ff.lib": "3d9e572cd30cd3b1f45e7d598e68816d47c20b45cda8db6c54c08013d344e9a9",
+      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2"
+     },
+     "qualified_scope": "native-qualified child only; parent incident paths, clocks and die timing remain OPEN"
     },
     {
-     "inst": "u_bank1",
+     "inst": "L[1].u_bank",
      "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
      "at": [
       172.8,
       0
-     ]
+     ],
+     "outline": {
+      "w": 140.4,
+      "h": 87.48
+     },
+     "cell": "ot_hgi_dma_back_landing_bank",
+     "source": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv",
+     "source_sha256": "c3668975847f08665bed917a9c88b84307da55a3ad02ee8c3cee2a8e47dabf4b",
+     "view_files_sha256": {
+      "ot_hgi_dma_back_landing_bank.lef": "3cdab7979aa8f65ce3361c8d46c1837b005cc10f215364fa2d53bcb9de6e19ff",
+      "ot_hgi_dma_back_landing_bank_tt.lib": "8ebaf54c73da50a9da97a676a6ae8cc7c9e127943f4057c9ea3659081ce7c139",
+      "ot_hgi_dma_back_landing_bank_ff.lib": "3d9e572cd30cd3b1f45e7d598e68816d47c20b45cda8db6c54c08013d344e9a9",
+      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2"
+     },
+     "qualified_scope": "native-qualified child only; parent incident paths, clocks and die timing remain OPEN"
     },
     {
-     "inst": "u_bank2",
+     "inst": "L[2].u_bank",
      "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
      "at": [
       345.6,
       0
-     ]
+     ],
+     "outline": {
+      "w": 140.4,
+      "h": 87.48
+     },
+     "cell": "ot_hgi_dma_back_landing_bank",
+     "source": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv",
+     "source_sha256": "c3668975847f08665bed917a9c88b84307da55a3ad02ee8c3cee2a8e47dabf4b",
+     "view_files_sha256": {
+      "ot_hgi_dma_back_landing_bank.lef": "3cdab7979aa8f65ce3361c8d46c1837b005cc10f215364fa2d53bcb9de6e19ff",
+      "ot_hgi_dma_back_landing_bank_tt.lib": "8ebaf54c73da50a9da97a676a6ae8cc7c9e127943f4057c9ea3659081ce7c139",
+      "ot_hgi_dma_back_landing_bank_ff.lib": "3d9e572cd30cd3b1f45e7d598e68816d47c20b45cda8db6c54c08013d344e9a9",
+      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2"
+     },
+     "qualified_scope": "native-qualified child only; parent incident paths, clocks and die timing remain OPEN"
     },
     {
-     "inst": "u_bank3",
+     "inst": "L[3].u_bank",
      "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
      "at": [
       0,
       129.6
-     ]
+     ],
+     "outline": {
+      "w": 140.4,
+      "h": 87.48
+     },
+     "cell": "ot_hgi_dma_back_landing_bank",
+     "source": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv",
+     "source_sha256": "c3668975847f08665bed917a9c88b84307da55a3ad02ee8c3cee2a8e47dabf4b",
+     "view_files_sha256": {
+      "ot_hgi_dma_back_landing_bank.lef": "3cdab7979aa8f65ce3361c8d46c1837b005cc10f215364fa2d53bcb9de6e19ff",
+      "ot_hgi_dma_back_landing_bank_tt.lib": "8ebaf54c73da50a9da97a676a6ae8cc7c9e127943f4057c9ea3659081ce7c139",
+      "ot_hgi_dma_back_landing_bank_ff.lib": "3d9e572cd30cd3b1f45e7d598e68816d47c20b45cda8db6c54c08013d344e9a9",
+      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2"
+     },
+     "qualified_scope": "native-qualified child only; parent incident paths, clocks and die timing remain OPEN"
     },
     {
-     "inst": "u_bank4",
+     "inst": "L[4].u_bank",
      "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
      "at": [
       172.8,
       129.6
-     ]
+     ],
+     "outline": {
+      "w": 140.4,
+      "h": 87.48
+     },
+     "cell": "ot_hgi_dma_back_landing_bank",
+     "source": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv",
+     "source_sha256": "c3668975847f08665bed917a9c88b84307da55a3ad02ee8c3cee2a8e47dabf4b",
+     "view_files_sha256": {
+      "ot_hgi_dma_back_landing_bank.lef": "3cdab7979aa8f65ce3361c8d46c1837b005cc10f215364fa2d53bcb9de6e19ff",
+      "ot_hgi_dma_back_landing_bank_tt.lib": "8ebaf54c73da50a9da97a676a6ae8cc7c9e127943f4057c9ea3659081ce7c139",
+      "ot_hgi_dma_back_landing_bank_ff.lib": "3d9e572cd30cd3b1f45e7d598e68816d47c20b45cda8db6c54c08013d344e9a9",
+      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2"
+     },
+     "qualified_scope": "native-qualified child only; parent incident paths, clocks and die timing remain OPEN"
     },
     {
-     "inst": "u_bank5",
+     "inst": "L[5].u_bank",
      "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
      "at": [
       345.6,
       129.6
-     ]
+     ],
+     "outline": {
+      "w": 140.4,
+      "h": 87.48
+     },
+     "cell": "ot_hgi_dma_back_landing_bank",
+     "source": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv",
+     "source_sha256": "c3668975847f08665bed917a9c88b84307da55a3ad02ee8c3cee2a8e47dabf4b",
+     "view_files_sha256": {
+      "ot_hgi_dma_back_landing_bank.lef": "3cdab7979aa8f65ce3361c8d46c1837b005cc10f215364fa2d53bcb9de6e19ff",
+      "ot_hgi_dma_back_landing_bank_tt.lib": "8ebaf54c73da50a9da97a676a6ae8cc7c9e127943f4057c9ea3659081ce7c139",
+      "ot_hgi_dma_back_landing_bank_ff.lib": "3d9e572cd30cd3b1f45e7d598e68816d47c20b45cda8db6c54c08013d344e9a9",
+      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2"
+     },
+     "qualified_scope": "native-qualified child only; parent incident paths, clocks and die timing remain OPEN"
     },
     {
-     "inst": "u_bank6",
+     "inst": "L[6].u_bank",
      "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
      "at": [
       0,
       259.2
-     ]
+     ],
+     "outline": {
+      "w": 140.4,
+      "h": 87.48
+     },
+     "cell": "ot_hgi_dma_back_landing_bank",
+     "source": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv",
+     "source_sha256": "c3668975847f08665bed917a9c88b84307da55a3ad02ee8c3cee2a8e47dabf4b",
+     "view_files_sha256": {
+      "ot_hgi_dma_back_landing_bank.lef": "3cdab7979aa8f65ce3361c8d46c1837b005cc10f215364fa2d53bcb9de6e19ff",
+      "ot_hgi_dma_back_landing_bank_tt.lib": "8ebaf54c73da50a9da97a676a6ae8cc7c9e127943f4057c9ea3659081ce7c139",
+      "ot_hgi_dma_back_landing_bank_ff.lib": "3d9e572cd30cd3b1f45e7d598e68816d47c20b45cda8db6c54c08013d344e9a9",
+      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2"
+     },
+     "qualified_scope": "native-qualified child only; parent incident paths, clocks and die timing remain OPEN"
     },
     {
-     "inst": "u_bank7",
+     "inst": "L[7].u_bank",
      "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
      "at": [
       172.8,
       259.2
-     ]
+     ],
+     "outline": {
+      "w": 140.4,
+      "h": 87.48
+     },
+     "cell": "ot_hgi_dma_back_landing_bank",
+     "source": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv",
+     "source_sha256": "c3668975847f08665bed917a9c88b84307da55a3ad02ee8c3cee2a8e47dabf4b",
+     "view_files_sha256": {
+      "ot_hgi_dma_back_landing_bank.lef": "3cdab7979aa8f65ce3361c8d46c1837b005cc10f215364fa2d53bcb9de6e19ff",
+      "ot_hgi_dma_back_landing_bank_tt.lib": "8ebaf54c73da50a9da97a676a6ae8cc7c9e127943f4057c9ea3659081ce7c139",
+      "ot_hgi_dma_back_landing_bank_ff.lib": "3d9e572cd30cd3b1f45e7d598e68816d47c20b45cda8db6c54c08013d344e9a9",
+      "insertion.json": "5990466703a49b950c3472ebc14acb1d633f5243908400add9b36c603e1e97e2"
+     },
+     "qualified_scope": "native-qualified child only; parent incident paths, clocks and die timing remain OPEN"
     },
     {
      "inst": "u_control",
@@ -4162,9 +4619,12 @@
       345.6,
       259.2
      ],
-     "dedupe": "one master for all stacks: stk[1:0] strap pin (H-HARDEN RTL)"
+     "dedupe": "Registered stk strap remains requested; actual parent still specializes STK/QID. No new per-stack routes."
     }
-   ]
+   ],
+   "controller_binding_status": "STK0 routed controller only; registered stk strap is still absent from actual RTL. No inherited STK1..3 view qualification.",
+   "parent_qualified": false,
+   "child_binding_refresh_2116": "Eight actual L[b].u_bank instances use geo1 CLOSED/native PASS 140.4x87.48 view. Parent size/child homes/ports preserved; parent packing and seams remain OPEN."
   },
   {
    "name": "svc_SW_s0",
@@ -125090,45 +125550,43 @@
    "children": [
     {
      "inst": "u_pll",
+     "cell": "ot_hbm_pll_bb",
      "view": "physical/hbm_pll_views/ot_hbm_pll_bb",
      "at": [
-      22.32,
+      43.2,
       23.76
-     ]
+     ],
+     "outline": {
+      "w": 172.8,
+      "h": 172.8
+     },
+     "qualification": "allowed analog PHY/PLL abstract"
     },
     {
-     "inst": "u_rel0",
-     "view": "physical/ref_tile/hbm_ckgen_rel/views/hfd_ckgen_rel",
+     "inst": "u_rel",
      "at": [
-      215.28,
+      0,
       23.76
-     ]
-    },
-    {
-     "inst": "u_rel1",
-     "view": "physical/ref_tile/hbm_ckgen_rel/views/hfd_ckgen_rel",
-     "at": [
-      215.28,
-      65.36
-     ]
-    },
-    {
-     "inst": "u_rel2",
-     "view": "physical/ref_tile/hbm_ckgen_rel/views/hfd_ckgen_rel",
-     "at": [
-      215.28,
-      106.96
-     ]
-    },
-    {
-     "inst": "u_rel3",
-     "view": "physical/ref_tile/hbm_ckgen_rel/views/hfd_ckgen_rel",
-     "at": [
-      215.28,
-      148.56
-     ]
+     ],
+     "outline": {
+      "w": 21.6,
+      "h": 21.6
+     },
+     "view": "physical/ref_tile/hbm_ckgen_rel4/views/hfd_ckgen_rel4",
+     "cell": "hfd_ckgen_rel4",
+     "source": "rtl/hbm_accel/control/hfd_ckgen.sv",
+     "source_sha256": "8b94242114190216d1769bd344b4bdd0a40d3b721ed5a06397e9bd76be75df4f",
+     "view_files_sha256": {
+      "hfd_ckgen_rel4.lef": "3c92c105c9347689d5a857b50eb4d7baddee0a8c8f5b86f46d662867438035a1",
+      "hfd_ckgen_rel4_tt.lib": "5bd0344fadf0a1e73dee812e4712467ebc28c1cc427466c8fec3bc90c910d9fb",
+      "hfd_ckgen_rel4_ff.lib": "1baf43eff9018fada27a5fa32ad62642c808734ab6e8471b77c5074c54d3049f",
+      "insertion.json": "a9f8764c20058d2a417c919090228de7d4217269619c3cf366a74532d03890ce"
+     },
+     "qualified_scope": "native-qualified child only; parent incident paths, clocks and die timing remain OPEN"
     }
-   ]
+   ],
+   "child_binding_refresh_2116": "Actual hfd_ckgen u_rel is ONE hfd_ckgen_rel4, replacing stale u_rel0..3 grant. Leaf west of PLL W-edge pins with 21.6 um gap; existing parent outline and ports unchanged.",
+   "parent_qualified": false
   },
   {
    "name": "quant_NW0_lg",
@@ -132364,5 +132822,56 @@
    "sfu leaves x16 216x216 real RTL pins",
    "SFU core: no free area, PROPOSED strip (H-SM)"
   ]
+ },
+ "vm_bank_resize_v7_proposal": {
+  "date": "2026-10-15",
+  "owner": "H-DIE",
+  "status": "PROPOSED to H-SM (strap masters routing at 356.4 x 365.04)",
+  "finding": "vm bank slot is PIN-PERIMETER bound, not area bound: W/E faces carry rq/rr/wq/... at 0.288 um PG-clear bit pitch up to 362.9 of 365.04 um, N/S to 354.3 of 356.4; content = 3 x ot_sram_1r1w_1024x256 (174.744 x 70.488, 36,950 um2) + std -> ~31 % fill",
+  "proposal": {
+   "outline_um": [
+    270.0,
+    270.0
+   ],
+   "fill_estimate": "~55-60 % (macros 36,950 um2 + std, of 72,900 um2)",
+   "pins": "W/E pin-dense faces on TWO layers (M4 + M6, alternating per bit at 0.288 um per layer) under a die-lead layer_cap M6 grant for the bank tiles (ref_tile layer_cap_grant: pin-dense edge); N/S stay M5; same face assignment and bit order",
+   "macros": "abutted centred 3-SRAM stack (as vm_strap_q2): 174.744 x 211.512, ~47 um ring for pin escape on every side",
+   "freed_area_mm2": 1.83,
+   "use": "channels around the bank pairs and the SFU core strip"
+  },
+  "needs_from_H_SM": [
+   "bank std area per strap master (post-synth)",
+   "OK on the M6 pin layer for W/E",
+   "switch point: after the running strap routes report (keep closed ones as diagnostics)"
+  ]
+ },
+ "native_child_refresh_2116": {
+  "owner": "Codex HBM takeover",
+  "date": "2026-10-15",
+  "outline_changes": false,
+  "production_latency_changes": false,
+  "source_rule": "Source paths and all LEF/TT/FF/insertion identities pinned; child qualification does not qualify parent.",
+  "changes": [
+   "hb_ckgen actual one release child and west-pin adjacency",
+   "32 DMA bank child identities/outline and actual generated hierarchy names",
+   "Controller strap implementation gap explicit"
+  ]
+ },
+ "vm_strap_child_grants_2116": {
+  "file": "results/arch/hbm_die_v15/vm_strap_grants_2116.json",
+  "sha256": "163c24c4c3cf7213ea6b2622783c201f3734ad19f35d65719fcc2657bd49d33b",
+  "distinct_masters": 4,
+  "instances": 32,
+  "registered_constant_pins": [
+   "bid[2:0]",
+   "sid[1:0]"
+  ],
+  "parent_source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vms_static.sv",
+  "parent_opt_in": {
+   "STRAP_BANKS": 1
+  },
+  "production_binding_adopted": false,
+  "parent_and_die_qualified": false,
+  "note": "Accepts original exact strap pin proposal; live source-frozen strap routes unchanged. No270x270/M6 resize adopted while current routes run."
  }
 }

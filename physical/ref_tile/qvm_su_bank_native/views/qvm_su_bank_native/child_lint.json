@@ -1,0 +1,99 @@
+{
+ "schema": "opentallas.hier_contract.child_lint.v1",
+ "lef": "/srv/opentallas-scratch2/claude/closure-loop/qvm_su_bank_native-su3-COMMIT-b025a43b6/record/views/qvm_su_bank_native/qvm_su_bank_native.lef",
+ "verdict": "PASS",
+ "fails": [],
+ "warns": [],
+ "summary": "qvm_su_bank_native 371.52 x 241.92: PG M7 VDD 34 stripes (96% spread, 100% cov) / VSS 34 stripes (96% spread, 100% cov); strap M8; face pins 1072 blocked-above 0 blocked-same 0; clock ck_cap_hi insertion 11 ps; clock ck_cap_lo insertion 29 ps; clock ck_ctrl insertion 1 ps; clock ck_in_hi insertion 1 ps; clock ck_in_lo insertion 2 ps; clock ck_mem_hi insertion 7 ps; clock ck_mem_lo insertion 3 ps; clock ck_out_hi insertion 19 ps; clock ck_out_lo insertion 5 ps; pockets M7 0 (closed)",
+ "info": {
+  "cell": "qvm_su_bank_native",
+  "W": 371.52,
+  "H": 241.92,
+  "pg": {
+   "nets": {
+    "VDD": {
+     "top_layer": "M7",
+     "stripes": 34,
+     "dir": "V",
+     "spread": 0.959,
+     "coverage": 1.0,
+     "shapes_on_top": 34
+    },
+    "VSS": {
+     "top_layer": "M7",
+     "stripes": 34,
+     "dir": "V",
+     "spread": 0.959,
+     "coverage": 1.0,
+     "shapes_on_top": 34
+    }
+   },
+   "top_layer": "M7",
+   "ok": true,
+   "why": []
+  },
+  "pg_layer": "M7",
+  "strap_layer": "M8",
+  "cap": null,
+  "face": {
+   "face_pins": 1072,
+   "blocked_above": 0,
+   "covered_below": 242,
+   "examples": [],
+   "blocked_same": 0,
+   "same_examples": [],
+   "band_same": 0,
+   "band_examples": []
+  },
+  "clock_insertion": {
+   "ck_cap_hi": {
+    "max_ps": 10.76,
+    "min_ps": 10.76
+   },
+   "ck_cap_lo": {
+    "max_ps": 29.47,
+    "min_ps": 29.47
+   },
+   "ck_ctrl": {
+    "max_ps": 1.13,
+    "min_ps": 1.13
+   },
+   "ck_in_hi": {
+    "max_ps": 1.2,
+    "min_ps": 1.2
+   },
+   "ck_in_lo": {
+    "max_ps": 1.71,
+    "min_ps": 1.71
+   },
+   "ck_mem_hi": {
+    "max_ps": 6.55,
+    "min_ps": 6.55
+   },
+   "ck_mem_lo": {
+    "max_ps": 3.12,
+    "min_ps": 3.12
+   },
+   "ck_out_hi": {
+    "max_ps": 18.59,
+    "min_ps": 18.59
+   },
+   "ck_out_lo": {
+    "max_ps": 4.75,
+    "min_ps": 4.75
+   }
+  },
+  "pockets": {
+   "layer": "M7",
+   "d_um": 2.048,
+   "marker": {
+    "layer": "M7",
+    "d_um": 2.048,
+    "added": 47
+   },
+   "count": 0,
+   "area_um2": 0,
+   "examples": []
+  }
+ }
+}

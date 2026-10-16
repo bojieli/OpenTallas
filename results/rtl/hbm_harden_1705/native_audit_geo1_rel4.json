@@ -1,0 +1,35 @@
+{
+ "ot_hgi_dma_back_landing_bank (geo1)": {
+  "job": "hv15_dbk_bank-geo1-bda78a0ad",
+  "record": "7909bce54",
+  "routed": {
+   "TT_ps": 331.49,
+   "FF_ps": 21.55,
+   "DRC": 0
+  },
+  "R_ps": 125.9,
+  "spread_ps": 17.4,
+  "launch_max_ps": 181.2,
+  "capture_max_ps": 138.3,
+  "over": 0,
+  "comb": 0,
+  "pass": true,
+  "visual": "logic packed at the W face between the pins and the SRAM pin edge; the 120 um read-bus crossing of pf1 is gone; E/N/S empty = 20 um channel-rule minimum outline (fill 36%)"
+ },
+ "hfd_ckgen_rel4": {
+  "job": "hbm_ckgen_rel4-one1-089f3f97c",
+  "record": "f2974a412",
+  "routed": {
+   "TT_ps": 238.38,
+   "FF_ps": 29.92,
+   "DRC": 0
+  },
+  "R_ps_ck_stream": 43.4,
+  "launch_max_ps": 170.8,
+  "capture_max_ps": 111.4,
+  "over": 0,
+  "comb": 0,
+  "pass": true,
+  "note": "ck_serial/ck_hbm/ck_link referenced at lib midrange (single measured clock)"
+ }
+}

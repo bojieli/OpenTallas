@@ -31,7 +31,6 @@
  },
  "pins": {
   "N": [
-   "clk",
    "clk_macro3",
    "clk_macro4",
    "clk_macro5",
@@ -40,12 +39,14 @@
   "W": [
    "read_v",
    "read_addr",
+   "clk",
    "write_v",
    "write_addr",
    "write_data"
   ],
   "E": [
    "read_data",
+   "clk_rd",
    "read_return"
   ],
   "S": [
@@ -57,6 +58,7 @@
  "clock_port": "clk",
  "clock_ports": [
   "clk",
+  "clk_rd",
   "clk_macro0",
   "clk_macro1",
   "clk_macro2",
@@ -65,7 +67,8 @@
   "clk_macro5"
  ],
  "clock_cts_roots": [
-  "clk"
+  "clk",
+  "clk_rd"
  ],
  "blocks": [
   {

@@ -5,8 +5,8 @@
  "job": {
   "owner": "Claude:Q-VMWB (el1015-qwen-attn.log)",
   "branch": "claude/q-vmwb-vm-1705",
-  "tag": "su1",
-  "purpose": "SU operand-bank native successor cluster (48 x in qfd_sp_vector_memory_par): ctrl + 6 data256 leaves + 2 x 1024x256 macros, 9 clock entries.",
+  "tag": "su3",
+  "purpose": "SU operand-bank native successor cluster, su2: macro->capture phase by entry geometry.",
   "views_to": "physical/ref_tile/qvm_su_bank_native/views",
   "record_to": "results/rtl/ref_tile/qvm_su_bank_native",
   "cycles_added": 0,
@@ -54,7 +54,7 @@
     ]
    }
   ],
-  "structural_change": "NEW cluster: successor of ot_qfd_vm_su_t per qvm_su_bank_native (cycle-exact vs the reference, tb_qvm_su_bank_native); geometry follows ne3 (entries at their children: ck_ctrl/rst_n W at u_ctrl, ck_in W at u_in, q E facing u_out, ck_mem/cap/out S)."
+  "structural_change": "su3 after su2-ee983ad21 TT -2.70 (su1 -8.81): still only u_hi -> u_cap_hi (1024x256 rd_out 561 ps); the hi macro clk pin sat 117 um above the S face (entry wire 76.9 ps). su3 turns the hi macro R180 so its clk and rd_out pins sit on its right edge near the TOP (y ~186, 56 um below the N face) and takes ck_mem_hi from the N face above that column; rd_out still faces the capture leaves. ck_mem_lo stays S under the lo macro clk, ck_cap_lo/hi N (later capture; cap->out +358 ps). Same RTL/children/outline/entries, 0 cycles."
  },
  "name": "qvm_su_bank_native",
  "top": "qvm_su_bank_native",
@@ -102,11 +102,13 @@
   ],
   "S": [
    "ck_mem_lo",
-   "ck_mem_hi",
-   "ck_cap_lo",
-   "ck_cap_hi",
    "ck_out_lo",
    "ck_out_hi"
+  ],
+  "N": [
+   "ck_mem_hi",
+   "ck_cap_lo",
+   "ck_cap_hi"
   ]
  },
  "route": {
@@ -211,7 +213,7 @@
     "pin": "clk",
     "reference": "raw_liberty_clock_pin"
    },
-   "orient": "MY"
+   "orient": "R180"
   }
  ],
  "child_lattice_um": 4.32,
@@ -248,6 +250,22 @@
   "q": [
    24.0,
    170.0
+  ],
+  "ck_mem_lo": [
+   245.5,
+   247.5
+  ],
+  "ck_mem_hi": [
+   247.0,
+   249.0
+  ],
+  "ck_cap_lo": [
+   271.0,
+   273.0
+  ],
+  "ck_cap_hi": [
+   274.0,
+   276.0
   ]
  }
 }

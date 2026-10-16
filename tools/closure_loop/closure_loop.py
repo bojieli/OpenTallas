@@ -1208,8 +1208,7 @@ def ref_gate_at_submit(j, jobs=None):
     if mode == "off":
         return
     try:
-        sys.path.insert(0, str(HERE.parent / "ref_tile"))
-        import pre_route_gate  # noqa: E402
+        pre_route_gate = ref_gate_modules()
         kw = {}
         if j["spec"].get("ref_tile"):
             # MEASURED CLOCK RULE (owner 2026-10-13; constants + rule text in tools/textbook_lint.py).  ref_gate.json
@@ -2641,10 +2640,46 @@ def inprocess_stale_sync(head=None):
                         if getattr(m, "__file__", None) and Path(m.__file__).resolve() == (root / rel).resolve())
         log(f"INPROCESS-SYNC vs origin/main {head[:9]}: {len(synced)} stale/missing file(s) replaced by main's copy: "
             + ", ".join(synced[:20]) + (f" (+{len(synced) - 20} more)" if len(synced) > 20 else "")
-            + (f"; already imported {loaded}: daemon restarts at the next idle tick start" if loaded else ""))
+            + (f"; already imported {loaded}: re-imported before the next submit check" if loaded else ""))
         if loaded:
-            _RESTART["why"] = f"in-process modules synced to main {head[:9]}: {', '.join(loaded)}"
+            _INPROC["gen"] += 1             # ref_gate_modules re-imports them before the next submit check
     return synced
+
+
+_INPROC = {"head": None, "gen": 0, "loaded_gen": 0, "lock": threading.Lock()}
+
+
+def inprocess_sync_on_main_move():
+    """every tick: when origin/main moved since the last INPROCESS-SYNC, re-sync the daemon's tools/ref_tile and
+    tools/hier_contract at once (not hourly): the submit check judges kits with these generators, and a kit generated on
+    a newer main was refused 'native_cts_sdc' while the daemon still held the older generator (hgi_sm_xl2_ctl-cl2b 20:51
+    10-15).  Changed in-process modules are re-imported before the next submit check (ref_gate_modules)."""
+    head = _ovl_head()
+    if not head or head == _INPROC["head"]:
+        return
+    synced = inprocess_stale_sync(head)
+    _INPROC["head"] = head
+    if synced:
+        _INPROC["gen"] += 1
+
+
+def ref_gate_modules():
+    """the pre_route_gate module for the submit check, re-imported (with every tools/ref_tile / hier_contract module it
+    loaded) after an INPROCESS-SYNC changed those files"""
+    with _INPROC["lock"]:
+        if _INPROC["loaded_gen"] != _INPROC["gen"]:
+            root = (HERE.parents[1]).resolve()
+            for name, m in list(sys.modules.items()):
+                f = getattr(m, "__file__", None)
+                if f and any(str(Path(f).resolve()).startswith(str(root / d) + "/") for d in INPROCESS_SYNC_DIRS):
+                    del sys.modules[name]
+            _INPROC["loaded_gen"] = _INPROC["gen"]
+            import importlib
+            importlib.invalidate_caches()
+            log(f"INPROCESS-SYNC: ref_tile / hier_contract modules re-imported (generation {_INPROC['gen']})")
+        sys.path.insert(0, str(HERE.parent / "ref_tile"))
+        import pre_route_gate  # noqa: E402
+        return pre_route_gate
 
 
 def restart_if_requested():
@@ -3343,6 +3378,23 @@ def remote_ok(j, cmd, timeout=300):
     return r.returncode == 0, (r.stdout + r.stderr)[-400:]
 
 
+def bench_input_error(full):
+    """A simulator may warn about missing memory images and still exit zero.
+
+    HBM PC proof 2026-10-15 falsely compared zero-filled actual/expected arrays
+    after '$readmem file not found'. Missing stimuli prove neither a positive
+    nor a detected mutant. Ignore ordinary readmem messages and short images
+    that a bench may intentionally load into a larger memory.
+    """
+    for line in full.splitlines():
+        if re.search(r"\b(?:FATAL|ERROR)\b.*(?:required image unavailable|incomplete (?:records|backing) image|duplicate backing sector address)", line, re.I):
+            return line.strip()[:500]
+        if re.search(r"\breadmem(?:[hb]|\s+file)?\b", line, re.I) and re.search(
+                r"file\s+not\s+found|(?:unable|cannot|could\s+not|can't)\s+(?:to\s+)?open|no\s+such\s+file", line, re.I):
+            return line.strip()[:500]
+    return ""
+
+
 def bench_outcome(j, st, rc, ok_extra=True):
     """pass: rc 0 (+ ok, + pass_regex); fail: rc != 0 (+ fail_regex).  Regexes are MULTILINE over the whole stage log
     (last 20000 lines), so ^FAIL matches any line."""
@@ -3350,7 +3402,11 @@ def bench_outcome(j, st, rc, ok_extra=True):
     for _ in range(4):  # an ssh hiccup returns an empty log and mis-judged benches (code-pair 10-07); fetch until it reads
         # drive-resume 2026-10-09: a bench that prints nothing (qkd_d2d *_record: a python -c exit-code check) left an
         # EMPTY log, read as an ssh hiccup 10x -> NEEDS_HUMAN.  A marker line proves the file was read: empty is valid.
-        r = ssh(j["host"], f"f={j['run']}/cl/{j['stage_tag']}.log; [ -f $f ] && echo OT_BENCH_LOG_READ && tail -n 20000 $f",
+        # Initialization warnings may precede more than 20,000 comparison
+        # lines. Scan the whole log for missing readmem inputs before its tail.
+        errors = r"readmem.*(file[[:space:]]+not[[:space:]]+found|unable.*open|cannot.*open|could[[:space:]]+not.*open|no[[:space:]]+such[[:space:]]+file)|((FATAL|ERROR).*(required image unavailable|incomplete (records|backing) image|duplicate backing sector address))"
+        r = ssh(j["host"], f"f={j['run']}/cl/{j['stage_tag']}.log; [ -f $f ] && {{ echo OT_BENCH_LOG_READ; "
+                f"LC_ALL=C grep -i -m 3 -E {shlex.quote(errors)} \"$f\" || true; tail -n 20000 \"$f\"; }}",
                 timeout=180)
         if r.returncode == 0 and r.stdout.startswith("OT_BENCH_LOG_READ"):
             full = r.stdout.split("\n", 1)[1] if "\n" in r.stdout else ""
@@ -3358,6 +3414,10 @@ def bench_outcome(j, st, rc, ok_extra=True):
         time.sleep(15)
     else:
         raise RuntimeError(f"bench log unreadable on {j['host']}: {j['run']}/cl/{j['stage_tag']}.log")
+    input_error = bench_input_error(full)
+    if input_error:
+        j.setdefault("bench_work", {})[st["key"]] = "input error: " + input_error
+        return False
     if st["expect"] == "pass":
         ok = rc == 0 and ok_extra and (not st.get("pass_regex") or re.search(st["pass_regex"], full, re.M) is not None)
         if ok:
@@ -3373,11 +3433,13 @@ def bench_why(j, st, rc, ok_extra=True):
     """Why a bench with expect PASS was judged not passed, for the verdict reason.  rc=0 alone read as 'expected PASS
     but rc=0' (5 jobs 2026-10-15: pass_regex not matching the bench's actual verdict line, or a min_count_regex the
     bench never prints) and was triaged as a flow bug."""
+    note = (j.get("bench_work") or {}).get(st["key"], "")
+    if note.startswith("input error:"):
+        return f" ({note})"
     if st.get("expect") != "pass" or rc != 0:
         return ""
     if not ok_extra:
         return " (ok check failed)"
-    note = (j.get("bench_work") or {}).get(st["key"], "")
     if note.startswith("vacuous"):
         return f" ({note})"
     if st.get("pass_regex"):
@@ -3389,6 +3451,8 @@ def expected_fail_seen(st, rc, full):
     """expect FAIL (negative control): the log's own verdict decides, regardless of rc -- a mutant bench that prints
     FAIL but exits 0 was read as "expected FAIL but rc=0" (LOOP-GAPS 2026-10-08).  With fail_regex: it must match (a
     crash with rc != 0 and no FAIL verdict is not a detected mutant).  Without: rc != 0 or a conventional ^FAIL line."""
+    if bench_input_error(full):
+        return False
     if st.get("fail_regex"):
         return re.search(st["fail_regex"], full, re.M) is not None
     return rc != 0 or re.search(r"^FAIL\b", full, re.M) is not None
@@ -5327,6 +5391,14 @@ def step(j, fleet):
             elif rc != 0 or not ok_extra:
                 return crash(j, st, fleet, f"rc={rc}{'' if ok_extra else ' ok-check failed: ' + okout.strip()[-200:]}")
             event(j, f"{st['key']} done (rc={rc})")
+            if st["kind"] == "route":
+                # LAYOUT IMAGES (owner rule 20:45 10-15): ref_route.sh renders floorplan / density / congestion PNGs
+                # beside the route; the paths go into the job record so the owner LOOKS at them with the verdict
+                r = ssh(j["host"], f"ls {j['run']}/routes/*/layout/*.png 2>/dev/null", timeout=60)
+                pngs = [x for x in (r.stdout or "").split() if x.endswith(".png")]
+                if pngs:
+                    j["layout_images"] = {"host": j["host"], "paths": pngs}
+                    event(j, f"LAYOUT images ({j['host']}): " + " ".join(pngs))
             if st["kind"] == "calibrate":
                 r = ssh(j["host"], f"cat {j['run']}/cl/calib.json", timeout=60)
                 if r.returncode == 255:
@@ -8074,6 +8146,10 @@ def host_down_requeue(j, kind, now=None):
 
 def tick(fleet):
     restart_if_requested()
+    try:
+        inprocess_sync_on_main_move()
+    except Exception:  # noqa: BLE001
+        log("inprocess_sync_on_main_move error:\n" + traceback.format_exc())
     t_ph = time.time()
     overlay_drift_check()
     _slow_phase("overlay_drift_check", t_ph)

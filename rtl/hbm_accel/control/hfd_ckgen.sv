@@ -16,12 +16,20 @@ module hfd_ckgen (
     wire locked;
     ot_hbm_pll_bb u_pll (.refclk(refclk), .reset_n(por_n), .clk_stream(pll_stream), .clk_serial(pll_serial),
                          .clk_hbm(pll_hbm), .clk_link(pll_link), .locked(locked));
-    // One hardened release leaf per domain (H-HARDEN 10-15): each takes por_n and the PLL lock itself, so the
-    // hb_ckgen group is the PLL hard macro + four identical leaves and wires only (no glue gate in the parent).
-    hfd_ckgen_rel u_rs (.ck(pll_stream), .por_n(por_n), .locked(locked), .rst_n(por_stream));
-    hfd_ckgen_rel u_rr (.ck(pll_serial), .por_n(por_n), .locked(locked), .rst_n(por_serial));
-    hfd_ckgen_rel u_rh (.ck(pll_hbm),    .por_n(por_n), .locked(locked), .rst_n(por_hbm));
-    hfd_ckgen_rel u_rl (.ck(pll_link),   .por_n(por_n), .locked(locked), .rst_n(por_link));
+    // ONE hardened release leaf beside the PLL (coordinator 10-15 dedupe): four domain synchronisers, each clocked by
+    // its own PLL output; the die reset tree fans the four releases out.  por_n & lock is formed inside the leaf.
+    hfd_ckgen_rel4 u_rel (.ck_stream(pll_stream), .ck_serial(pll_serial), .ck_hbm(pll_hbm), .ck_link(pll_link),
+                          .por_n(por_n), .locked(locked),
+                          .rst_stream(por_stream), .rst_serial(por_serial), .rst_hbm(por_hbm), .rst_link(por_link));
+endmodule
+
+// hb_ckgen reset-release leaf: four domains, one tile (each synchroniser in its own domain clock)
+module hfd_ckgen_rel4 (input wire ck_stream, ck_serial, ck_hbm, ck_link, input wire por_n, locked,
+                       output wire rst_stream, rst_serial, rst_hbm, rst_link);
+    hfd_ckgen_rel u_rs (.ck(ck_stream), .por_n(por_n), .locked(locked), .rst_n(rst_stream));
+    hfd_ckgen_rel u_rr (.ck(ck_serial), .por_n(por_n), .locked(locked), .rst_n(rst_serial));
+    hfd_ckgen_rel u_rh (.ck(ck_hbm),    .por_n(por_n), .locked(locked), .rst_n(rst_hbm));
+    hfd_ckgen_rel u_rl (.ck(ck_link),   .por_n(por_n), .locked(locked), .rst_n(rst_link));
 endmodule
 
 // asynchronous assert, two-flop synchronous release in the domain clock

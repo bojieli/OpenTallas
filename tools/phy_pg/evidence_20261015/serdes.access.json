@@ -1,0 +1,27 @@
+{
+  "schema": "opentallas.assumed-phy-pg-access.v1",
+  "status": "ASSUMED_UNQUALIFIED",
+  "source_sha256": "275757af990df783f797bc56182f486015667abd7f064324c3692d8e0900e711",
+  "candidate_sha256": "369030fb971e41f3751d2fee8c72c90fec99fa7f1544da2447343df73d4b51f9",
+  "width_um": "2320.056",
+  "height_um": "1563.570",
+  "area_delta_um2": 0,
+  "interface_delta": "none; original M4 PG pins preserved",
+  "m5_reserved_columns_um": [
+    [
+      "2317.876",
+      "2318.276"
+    ],
+    [
+      "2318.884",
+      "2319.284"
+    ]
+  ],
+  "m5_reserved_area_um2": "1250.5360",
+  "strap_width_um": ".12",
+  "strap_spacing_um": ".888",
+  "strap_pitch_um": "2.016",
+  "offset_r0_mx_um": "2318.076",
+  "offset_my_r180_um": "0.972",
+  "claim": "Modeled PHY access reservation only; needs actual PDN connectivity, short/obstruction checks and eventual vendor confirmation."
+}

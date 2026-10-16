@@ -11,11 +11,21 @@ from qwen_static_schedule.calendar import compile_calendar, ScheduleError, sha
 class Attention(unittest.TestCase):
     def test_service_lengths_are_the_measured_w16(self):
         # measured on the w16 production binary (results/arch/qwen_attention_rate_1015/receipt.json)
-        self.assertEqual(A.per_layer_table((1, 1000, 8192)), {1: 882, 1000: 943, 8192: 1555})
+        self.assertEqual(A.per_layer_table((1, 1000, 8192)), {1: 887, 1000: 948, 8192: 1566})
         with self.assertRaises(ScheduleError):
             A.service(8192, pv='w1')
         with self.assertRaises(ScheduleError):
             A.service(0)
+
+    def test_staged_head_shifts_internal_programme_not_only_duration(self):
+        s = A.service(8192)
+        # Measured G3S2/HXK13 composition: +4 faults, +5 exact. These fields
+        # used to remain at406/421/... even while service_edges included +5.
+        self.assertEqual({k: s['fields'][k] for k in ('LMAX', 'EXP', 'Z', 'HUB_LMAX', 'HUB_Z', 'HUB_RECIP', 'HUB_PUB', 'PV_START')},
+                         dict(LMAX=411, EXP=426, Z=916, HUB_LMAX=418, HUB_Z=1177, HUB_RECIP=1258, HUB_PUB=1331, PV_START=852))
+        self.assertEqual(s['calendar_hex'], A.AC.hexcal(s['fields']))
+        self.assertEqual(s['service_edges'], A.AC.service_cycles(s['fields']))
+        self.assertEqual(s['service_edges'] - s['measured_w16_edges'], 5)
 
     def test_link_ages_required(self):
         rec = dict(stage=0, pc=0, word='1', unit=1)
@@ -42,7 +52,7 @@ class Attention(unittest.TestCase):
             out = compile_calendar([prog], contract, root)
             t = [i['time_fs'] for i in out['issues']]
             self.assertEqual(t[0], P)                                 # strictly after the reset-boundary q
-            self.assertEqual(t[1], t[0] + (30 + 1555 + 35) * P + P)  # strictly after the landed result
+            self.assertEqual(t[1], t[0] + (30 + 1566 + 35) * P + P)  # strictly after the landed result
             self.assertEqual(out['buffer_peaks'], {'attn.service': 1})
             instr[1]['events'][0]['requires'] = ['q:L0']             # overlap: second request while the service is busy
             with self.assertRaises(ScheduleError):

@@ -20,6 +20,11 @@ AC = importlib.util.module_from_spec(_spec)
 _spec.loader.exec_module(AC)
 SERVICE_RTL = ('u_kvd.u_attention', 'ot_qwen_tp8_attention_native_service_w16')
 Q_BEATS = 32
+# KV-die v1.4.3 head stages (el1014-qwen-split-kvsys.log, Q-KVSYS-DIE G3S2): +3 gather in, +2 score back = +5 edges per
+# attention request. ECTL HXK=13 includes the native r4 head's eight edges and these five stages.
+# The full composition at 22ff95ba0 passes 53 contexts only when every dependent age moves +5;
+# increasing the final duration alone emits an early, incorrect internal programme.
+V143_HEAD_EDGES = 5
 RESULT_BEATS = 32
 
 
@@ -28,10 +33,12 @@ def service(T, pv='w16'):
     if pv != 'w16':
         raise ScheduleError('production attention is the w16 service; w1 is reference only')
     try:
-        c = AC.calendar(T, pv='w16')
+        c = AC.calendar(T, pv='w16', head_g3s2=True)
     except ValueError as error:
         raise ScheduleError(f'attention calendar refused: {error}') from error
-    return dict(T=T, fields=c, calendar_hex=AC.hexcal(c), service_edges=AC.service_cycles(c))
+    edges = AC.service_cycles(c)
+    return dict(T=T, fields=c, calendar_hex=AC.hexcal(c), service_edges=edges,
+                measured_w16_edges=edges - V143_HEAD_EDGES, head_stage_edges=V143_HEAD_EDGES)
 
 
 def _age(link, name):
@@ -64,7 +71,7 @@ def pc11_implementation(record, T, layer, link, clock='core', period_fs=None):
     return dict(stage=record['stage'], pc=record['pc'], word=record['word'], unit=1, clock=clock,
                 rtl_instance=SERVICE_RTL[0], rtl_module=SERVICE_RTL[1], events=ev,
                 attention=dict(T=T, calendar_hex=s['calendar_hex'], service_edges=n, request_edges=req, result_edges=res,
-                               source='tools/qwen_attention_native/attn_calendar.py pv=w16'))
+                               source='tools/qwen_attention_native/attn_calendar.py pv=w16 head_g3s2=True HXK=13'))
 
 
 def resources(clock='core'):

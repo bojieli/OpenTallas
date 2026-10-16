@@ -78,7 +78,7 @@
  "job": {
   "owner": "Claude H-SM",
   "branch": "claude/hbm-sm-attention-1015",
-  "tag": "ctlr2",
+  "tag": "ctlr2b",
   "purpose": "Native-audit successor of the closed ctl (capture 304.0 ps on 33 pins: cmd_src/cmd_dst/cmd_op/cmd_block feed the constant-port pack and range-check adders before the first flop). r2 registers every cmd_* bit at its pin (one capture flop, the only load of the pin; keep_pin_regs anchors it at the W face) and runs the unchanged controller from the registers: +1 edge on the whole controller, measured in the exact QUANT bench (TSPLIT=2 LG=2).",
   "benches": [
    {
@@ -133,5 +133,12 @@
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
  },
- "structural_change": "Native-audit successor of the closed ctl (capture 304.0 ps on 33 pins: cmd_src/cmd_dst/cmd_op/cmd_block feed the constant-port pack and range-check adders before the first flop). r2 registers every cmd_* bit at its pin (one capture flop, the only load of the pin; keep_pin_regs anchors it at the W face) and runs the unchanged controller from the registers: +1 edge on the whole controller, measured in the exact QUANT bench (TSPLIT=2 LG=2)."
+ "structural_change": "Native-audit successor of the closed ctl (capture 304.0 ps on 33 pins: cmd_src/cmd_dst/cmd_op/cmd_block feed the constant-port pack and range-check adders before the first flop). r2 registers every cmd_* bit at its pin (one capture flop, the only load of the pin; keep_pin_regs anchors it at the W face) and runs the unchanged controller from the registers: +1 edge on the whole controller, measured in the exact QUANT bench (TSPLIT=2 LG=2).",
+ "reroute_reason": {
+  "kind": "pin_register",
+  "source": "results/hbm_sm_attention_1015/elem_r8/native_audit_quant_r2_vmq3.json",
+  "cell": "ot_hgi_qdq_transport_ctl_r2",
+  "capture_ps": 213.8,
+  "fix": "local reset relay: rst_n drives only a 3-flop relay (async assert, synchronous release), every controller flop resets from the relay output; the only failing pin of the closed r2 view was rst_n (capture 213.8 ps)"
+ }
 }

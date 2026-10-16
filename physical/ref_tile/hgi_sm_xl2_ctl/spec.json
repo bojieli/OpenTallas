@@ -1,0 +1,263 @@
+{
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  },
+  "cts_sink": {
+   "size": 16,
+   "diameter_um": 30,
+   "extra": "-balance_levels"
+  }
+ },
+ "recipe": 2,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "pg_layer": "M6",
+ "layer_cap": "M5",
+ "name": "hgi_sm_xl2_ctl",
+ "top": "ot_hgi_sm_xload_cl2_ctl",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv"
+ ],
+ "defines": [],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "pins": {
+  "N": [
+   "clk",
+   "clk_eg",
+   "rst_n",
+   "x_v",
+   "x_base",
+   "x_n",
+   "x_p",
+   "x_stride",
+   "x_space",
+   "x_fmt",
+   "x_xb",
+   "x_busy",
+   "x_done",
+   "x_fault",
+   "xw_en",
+   "xw_last",
+   "xw_addr",
+   "xw_grp",
+   "xw_data"
+  ],
+  "S": [
+   "r_wsel",
+   "zlo",
+   "zhi",
+   "lane_en",
+   "bq_d",
+   "bsel"
+  ],
+  "E": [
+   "rn_o",
+   "qv_lo",
+   "qv_hi",
+   "qo_lo",
+   "qo_hi",
+   "qf_lo",
+   "qf_hi",
+   "l_d_o",
+   "rwq"
+  ],
+  "W": [
+   "rr",
+   "rq",
+   "c_d",
+   "c_wce",
+   "c_mhi",
+   "c_mlo",
+   "c_wa",
+   "r_ce",
+   "r_a"
+  ]
+ },
+ "params": {},
+ "children": [],
+ "inter": [],
+ "job": {
+  "owner": "Claude H-SM",
+  "branch": "claude/hbm-sm-attention-1015",
+  "tag": "cl2c",
+  "purpose": "x-load cl2 leaf (H-SM 2026-10-15): the flat clock-leaf cl failed its --cts gate (multiple_cts_roots source on 32 SRAMs; bs_a 8,642 / md 5,635 / bq_v 4,125-load nets; bw->rq 21 levels). cl2 = cluster of hardened leaves (ctl, 4 x BF quarter of one master, 2 x the CLOSED tree13 quantiser tile, BD ring), one clock root each < 15k sinks, every leaf pin registered (owner 19:50), running issue-word registers (no multiply), replicated selects; +2 fixed edges on every xw beat (lock bench vs cl shifted 2).",
+  "structural_change": "x-load cl2 leaf (H-SM 2026-10-15): the flat clock-leaf cl failed its --cts gate (multiple_cts_roots source on 32 SRAMs; bs_a 8,642 / md 5,635 / bq_v 4,125-load nets; bw->rq 21 levels). cl2 = cluster of hardened leaves (ctl, 4 x BF quarter of one master, 2 x the CLOSED tree13 quantiser tile, BD ring), one clock root each < 15k sinks, every leaf pin registered (owner 19:50), running issue-word registers (no multiply), replicated selects; +2 fixed edges on every xw beat (lock bench vs cl shifted 2).",
+  "extra_paths": [
+   "physical/asap7_memory_macros",
+   "physical/hbm_xp_aq_tree13_1014",
+   "rtl/hbm_accel/generic/adapters/tb",
+   "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload.sv",
+   "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static.sv",
+   "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl.sv",
+   "rtl/hbm_accel/generic/vm",
+   "rtl/hdc",
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/link/ot_fifo_sram_fwft.sv",
+   "tools/hbm_sm_xload_static_timing.py"
+  ],
+  "benches": [
+   {
+    "name": "cl2_lock_exact",
+    "cmd": "XLOAD_CL2=1 XLOAD_CLOCK_LEAVES=1 bash rtl/hbm_accel/generic/adapters/tb/run_xload_static_lock.sh {RUN}/cl2_lock_exact",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16
+   },
+   {
+    "name": "cl2_lock_rotation_mutant",
+    "cmd": "XLOAD_CL2=1 XLOAD_CLOCK_LEAVES=1 bash rtl/hbm_accel/generic/adapters/tb/run_xload_static_lock.sh {RUN}/cl2_lock_rotation_mutant MUT1",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16
+   },
+   {
+    "name": "cl2_lock_bd_early_mutant",
+    "cmd": "XLOAD_CL2=1 XLOAD_CLOCK_LEAVES=1 bash rtl/hbm_accel/generic/adapters/tb/run_xload_static_lock.sh {RUN}/cl2_lock_bd_early_mutant MUT2",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16
+   },
+   {
+    "name": "cl2_lock_bd_lane_mutant",
+    "cmd": "XLOAD_CL2=1 XLOAD_CLOCK_LEAVES=1 bash rtl/hbm_accel/generic/adapters/tb/run_xload_static_lock.sh {RUN}/cl2_lock_bd_lane_mutant MUT3",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16
+   },
+   {
+    "name": "cl2_lock_halfmask_mutant",
+    "cmd": "XLOAD_CL2=1 XLOAD_CLOCK_LEAVES=1 bash rtl/hbm_accel/generic/adapters/tb/run_xload_static_lock.sh {RUN}/cl2_lock_halfmask_mutant MUT4",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16
+   }
+  ],
+  "views_to": "physical/ref_tile/hgi_sm_xl2_ctl/views",
+  "record_to": "results/rtl/ref_tile/hgi_sm_xl2_ctl"
+ },
+ "macros": [],
+ "outline": {
+  "w": 345.6,
+  "h": 345.6
+ },
+ "slot_change_request": "NEW leaf of the x-load cluster (replaces the 640.8 x 604.8 flat x-load slot): slot + pins from H-DIE",
+ "pin_ranges": {
+  "clk": [
+   172.512,
+   172.608
+  ],
+  "clk_eg": [
+   173.088,
+   173.184
+  ]
+ },
+ "clock": "multiple_cts_roots",
+ "clock_ports": [
+  "clk",
+  "clk_eg"
+ ],
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "clock_data_paths": "related_same_frequency",
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk"
+   ],
+   "inputs": [
+    "rst_n",
+    "x_v",
+    "x_base",
+    "x_n",
+    "x_p",
+    "x_stride",
+    "x_space",
+    "x_fmt",
+    "x_xb",
+    "rr",
+    "qo_lo",
+    "qo_hi",
+    "qf_lo",
+    "qf_hi"
+   ],
+   "outputs": [
+    "x_busy",
+    "x_fault",
+    "rq",
+    "rn_o",
+    "c_d",
+    "c_wce",
+    "c_mhi",
+    "c_mlo",
+    "c_wa",
+    "r_ce",
+    "r_a",
+    "l_d_o",
+    "qv_lo",
+    "qv_hi",
+    "r_wsel",
+    "zlo",
+    "zhi",
+    "lane_en",
+    "bsel"
+   ]
+  },
+  "eg": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_eg"
+   ],
+   "inputs": [
+    "rwq",
+    "bq_d"
+   ],
+   "outputs": [
+    "x_done",
+    "xw_en",
+    "xw_last",
+    "xw_addr",
+    "xw_grp",
+    "xw_data"
+   ]
+  }
+ },
+ "floorplan_note": "cl2a EARLY_FAIL_HOLD at CTS: one clk root of 16,281 sinks (>15k) entering at the N-face corner, input pin-flop clock arrival 375..526 ps vs the boundary reference (IO hold class: bq_c[1984] on the far S face stuck at -20.8 ps). cl2b: two related phase-0 roots (clk core ~9k, clk_eg egress ~7.3k: rw / BD-beat pin capture, beat select, xw pins), both entering at the N-face centre, balanced sink clustering (size 16, 30 um, -balance_levels). cl2c: BD beat select exported one-hot from ctl (bdring cl2a TT -78.67: bsb replica -> 13-way decode -> 2,048-b mux, 292-ps slew buffer tree); ring leaf keeps 64 pin-register replicas of the 26-b one-hot, AND-OR select; same edges.",
+ "pin_regs": {
+  "enable": false,
+  "reason": "OWNER RULE 19:50 met in RTL (rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv, x-load cl2 rewritten for this rule; +2 edges accepted by the coordinator): inputs land in pin flops c_base..c_xb / cmd_v (x_*), rr_c (rr), rw (rwq), bq_c (bq_d), qo_*_c/qf_*_c (quantiser flags); every output is a register (q_v/q_s, x_busy/x_fault/x_done, xw_*, c_d/c_wce/c_mhi/c_mlo/c_wa, r_ce/r_a, l_d, qv_*, r_wsel/zlo/zhi, ea/eb2, lane_en, rn); a recipe-3 register would add a second stage on every port."
+ }
+}

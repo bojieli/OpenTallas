@@ -1,0 +1,12 @@
+{
+  "schema": "opentallas.tt.corrected_pin_audit.v1",
+  "preferred_track_offset_dbu": 12,
+  "pitch_dbu": 48,
+  "dbu_per_um": 1000,
+  "counts": {
+    "core": 1651,
+    "scale": 695
+  },
+  "track_misses": 0,
+  "seam_identity": "all core.scale_tag[k] and scale.tag_payload[k] X match"
+}
