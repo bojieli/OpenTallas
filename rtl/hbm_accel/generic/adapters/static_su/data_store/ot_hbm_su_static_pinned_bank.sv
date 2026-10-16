@@ -7,7 +7,16 @@ module ot_hbm_su_static_pinned_bank #(
  parameter integer READERS=6,RB=9,MUT_COHERENCE=0,MUT_RETURN=0,
  // RD_ROOT 1 (H-SU 10-15, bank clock7 r7): the read-side output registers (read_data, read_return) take their own
  // related root clk_rd entering at the read face, so no register-clock net crosses the SRAM columns
- parameter integer RD_ROOT=0
+ parameter integer RD_ROOT=0,
+ // WS_RD 1 (H-SU 10-15 22:30, bank r10): the 18 word-select flops (ks) also move to clk_rd, so clk reaches only the
+ // W-face pin registers (r9 native: clk tree spanned the macro columns for ks, R 196.6 / spread 74.7 -> capture 224 > 190)
+ parameter integer WS_RD=0,
+ // PIN_RST 1 (bank r10): rst_n is a synchronous data input registered at the W face like every other input
+ // (r_pin/w_pin gate on it directly, so the first command after release is taken on the same edge as before); the
+ // internal valid stages use registered copies (rst_w on clk, rst_r on clk_rd). Requires >= 2 clock edges in reset;
+ // reset is entered from idle (a read sampled before the asserting edge may still return within 2 edges).
+ parameter integer PIN_RST=0,
+ parameter integer MUT_RESET=0 // bench mutant: a write issued during reset lands (reset gate dropped on w_pin)
 )(
  input wire clk,rst_n,
  input wire clk_rd, // same serial clock as clk (related root); used only when RD_ROOT=1
@@ -25,17 +34,33 @@ module ot_hbm_su_static_pinned_bank #(
   a_pin<=read_addr;wa_pin<=write_addr;wd_pin<=write_data;
  end
  always @(posedge c_rd)read_data<=raw_data;
- always @(posedge clk or negedge rst_n)begin
-  if(!rst_n)begin r_pin<=0;r_macro<=0;w_pin<=0;end
-  else begin r_pin<=read_v;r_macro<=r_pin;w_pin<=write_v;end
- end
- always @(posedge c_rd or negedge rst_n)begin
-  if(!rst_n)begin r_return<=0;r_late<=0;end
-  else begin r_return<=r_macro;r_late<=r_return;end
+ wire c_ws=(WS_RD!=0)?c_rd:clk;
+ if(PIN_RST!=0)begin:g_pin_rst
+  reg rst_w,rst_r;
+  always @(posedge clk)begin
+   rst_w<=rst_n;
+   r_pin<=read_v&{READERS{rst_n}};
+   w_pin<=write_v&&(rst_n||MUT_RESET!=0);
+   r_macro<=r_pin&{READERS{rst_w}};
+  end
+  always @(posedge c_rd)begin
+   rst_r<=rst_w;
+   r_return<=r_macro&{READERS{rst_r}};
+   r_late<=r_return&{READERS{rst_r}};
+  end
+ end else begin:g_async_rst
+  always @(posedge clk or negedge rst_n)begin
+   if(!rst_n)begin r_pin<=0;r_macro<=0;w_pin<=0;end
+   else begin r_pin<=read_v;r_macro<=r_pin;w_pin<=write_v;end
+  end
+  always @(posedge c_rd or negedge rst_n)begin
+   if(!rst_n)begin r_return<=0;r_late<=0;end
+   else begin r_return<=r_macro;r_late<=r_return;end
+  end
  end
  assign read_return=MUT_RETURN!=0?r_late:r_return;
  ot_hbm_su_static_replicated_bank #(.READERS(READERS),.RB(RB),.MUT_COHERENCE(MUT_COHERENCE))u_data(
-  .clk(clk),.clk_macro(clk_macro),.read_v(r_pin),.read_addr(a_pin),.read_data(raw_data),
+  .clk(c_ws),.clk_macro(clk_macro),.read_v(r_pin),.read_addr(a_pin),.read_data(raw_data),
   .write_v(w_pin),.write_addr(wa_pin),.write_data(wd_pin));
 endmodule
 `default_nettype wire
