@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hbm_accel_smh_xs",
+ "enable": false,
+ "reason": "Unchanged closed XS RTL: source landing registers capture rl1,bk1,ohl1; XS memory/issue stages drive registered outputs, existing HDly hold delays retained. Exact die_window clock repin only; zero edges added and every actual non-clock signal boundary rectangle preserved."
+}

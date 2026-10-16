@@ -52,7 +52,7 @@ one('.rsv(rsv), .f_gather(f_gather), .t_vm(t_vm), .t_cd(dc));',
         if (!rse[0]) begin st_x <= 64'd0; nsr <= 0; end
         else begin nsr <= nsr + 1; if (nsr >= 2) case (ep_s) 2'd0: st_x <= m2; 2'd1: st_x <= m3; default: st_x <= m0; endcase end
     // the reference's t_cd logic (ctrl_c/dsfd_sp_capture_c.sv, verbatim) on st_x
-    reg [1:0] xv_s; reg xdr, xarm; reg [11:0] cx, cx_q = 12'd0;
+    reg [1:0] xv_s; reg xdr, xarm; reg [11:0] cx, cx_q = 12'd0, cx_p = 12'd0;
     always @(posedge ckv[0] or negedge rse[0]) if (!rse[0]) xv_s <= 2'b00; else xv_s <= {xv_s[0], 1'b1};
     always @(posedge ckv[0] or negedge xv_s[1])
         if (!xv_s[1]) begin xdr <= 1'b0; xarm <= 1'b0; cx <= 12'd0; end
@@ -66,7 +66,7 @@ one('.rsv(rsv), .f_gather(f_gather), .t_vm(t_vm), .t_cd(dc));',
     // (either side may toggle first: the x43 status lane is not slower than the elastic FIFO, so events pair by index)
     reg [9:0] evr [0:4095]; reg [9:0] evd [0:4095]; time etr [0:4095]; time etd [0:4095]; integer cdmin = 1 << 30, cdmax = -(1 << 30); integer ner = 0, ned = 0, ncmp = 0, sqm = 0, smm = 0; reg rtq = 1'b0, dtq = 1'b0;
     always @(posedge ckv[0]) begin
-        cx_q <= cx;
+        cx_p <= cx; cx_q <= cx_p;   // +1 ckv: dsfd_capt_cd PINREG=1 (f_st pin registers, ab1d77b6d)
         if (rc[11] !== rtq) begin rtq <= rc[11]; evr[ner % 4096] = rc[9:0]; etr[ner % 4096] = $time; ner = ner + 1; end
         if (dc[11] !== dtq) begin dtq <= dc[11]; evd[ned % 4096] = dc[9:0]; etd[ned % 4096] = $time; ned = ned + 1; end
         while (ncmp < ner && ncmp < ned) begin

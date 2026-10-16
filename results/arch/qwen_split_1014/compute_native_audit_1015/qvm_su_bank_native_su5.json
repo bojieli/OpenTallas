@@ -1,0 +1,37 @@
+{
+ "schema": "kvctrl.native_pin_audit_one.v1",
+ "tool": "tools/hier_contract/native_pin_audit.py audit_one",
+ "limits": {
+  "launch_ps": 220.0,
+  "capture_ps": 190.0
+ },
+ "job": "qvm_su_bank_native-su5-d625218dc",
+ "source_commit": "536d1bb6147cbdd996b2db2211104ea3c11eda90",
+ "views": {
+  "qvm_su_bank_native": {
+   "cell": "qvm_su_bank_native",
+   "view": "physical/ref_tile/qvm_su_bank_native/views/qvm_su_bank_native",
+   "lib_cell": "qvm_su_bank_native",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean",
+    "lib midrange"
+   ],
+   "R_ps": 130.8,
+   "spread_ps": 5.8,
+   "outputs": 512,
+   "inputs": 551,
+   "launch_ps": 182.5,
+   "launch_pin": "q[286]",
+   "capture_ps": 130.2,
+   "capture_pin": "wd[251]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "pass": true,
+   "fail_why": ""
+  }
+ },
+ "verdict": "PASS"
+}

@@ -222,19 +222,27 @@ endmodule
  localparam integer NCH=4,NKT=4,FPL=7;
 
     localparam integer LV = (NCH <= 1) ? 0 : $clog2(NCH);
+    // reset (H-NETLIST/TAIL 1300): the rst_n PORT drives only ot_rst_relay (async assert, synchronous release after
+    // SYNC_STAGES + TREE_STAGES = 3 edges).  Region 0 resets the valid line (rv, u_vl, o_v); region 1+g resets key g's
+    // adder tree.  The adders are DRST 0 (only their valid bits reset; data flops plain, qualified by the tail's own
+    // reset valid line vl), so no copy drives more than the 9 x 14 valid-line flops.  The port no longer gates data
+    // (was rv <= i_v && rst_n: a 5,228-load async net + datapath AND, native capture 402.8 ps).  Data timing unchanged.
+    localparam integer RR = NKT + 1;
+    wire [RR-1:0]        rr;
+    ot_rst_relay #(.REGIONS(RR), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr (.clk(clk), .rst_n_in(rst_n), .rst_n(rr));
     reg                  rv;
     reg [NKT-1:0]        rkv, rkeep;
     reg [NKT*NCH*32-1:0] rsum;
     reg [NKT*NCH-1:0]    rf;
     always @(posedge clk) begin
-        rv <= i_v && rst_n;
+        rv <= i_v && rr[0];
         rkv <= i_kv;
         rkeep <= i_keep;
         rsum <= i_sum;
         rf <= i_fault;
     end
     wire [2*NKT:0] vl;
-    ot_hdc_delay #(.W(2 * NKT + 1), .D(FPL * LV), .RESET(1)) u_vl (.clk(clk), .rst_n(rst_n),
+    ot_hdc_delay #(.W(2 * NKT + 1), .D(FPL * LV), .RESET(1)) u_vl (.clk(clk), .rst_n(rr[0]),
         .d({rkeep, rkv, rv}), .q(vl));
     genvar g, l, i;
     generate
@@ -251,11 +259,11 @@ endmodule
                 for (i = 0; i < (NCH >> (l + 1)); i = i + 1) begin : g_add
                     wire [1:0] err;
                     wire       vo_unused;
-                    ot_hdc_v41x_faddl #(.LAT(FPL)) u_a (.clk(clk), .rst_n(rst_n), .valid_in(1'b1),
+                    ot_hdc_fp32_add_lat #(.LAT(FPL), .DRST(0)) u_a (.clk(clk), .rst_n(rr[1 + g]), .valid_in(1'b1),
                         .a(t[32*(l*NCH+2*i) +: 32]), .b(t[32*(l*NCH+2*i+1) +: 32]),
                         .y(t[32*((l+1)*NCH+i) +: 32]), .err(err), .valid_out(vo_unused));
                     wire pf;
-                    ot_hdc_delay #(.W(1), .D(FPL)) u_pf (.clk(clk), .rst_n(rst_n),
+                    ot_hdc_delay #(.W(1), .D(FPL)) u_pf (.clk(clk), .rst_n(rr[1 + g]),
                         .d(tf[l*NCH+2*i] || tf[l*NCH+2*i+1]), .q(pf));
                     assign tf[(l+1)*NCH+i] = pf || (err != 2'd0);
                 end
@@ -270,7 +278,7 @@ endmodule
         end
     endgenerate
     always @(posedge clk) begin
-        o_v <= vl[0] && rst_n;
+        o_v <= vl[0] && rr[0];
         o_kv <= vl[NKT:1];
     end
 endmodule
