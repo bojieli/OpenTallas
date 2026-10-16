@@ -30,7 +30,7 @@ module tb_static_landing_physical;
  generate for(g=0;g<32;g=g+1)begin:groups
   wire [15:0] oe;wire [5:0] ol;wire rv;
   qkd_static_kv_landing_physical_grp #(.STACK(g/8),.GROUP(g%8),.HOP_MUT(HOP_MUT))dut(
-   .ck(ck),.ck_pc({4{ck}}),.ck_req_rly({4{ck}}),.ck_rsp_rly({4{ck}}),.rst_n(rst),.arm(arm),.epoch(16'd7),.layer(6'd3),
+   .ck(ck),.ck_pc({4{ck}}),.ck_req_rly({4{ck}}),.ck_rsp_rly({4{ck}}),.rst_n(rst),.arm(arm),.epoch(16'd7),.layer(6'd3),.ctx_t(14'd8192),
    .expected_put({4{put[g]}}),.expected_sector({4{sec[g]}}),.actual_valid(ap[g]),.actual_sector(as[g]),
    .actual_epoch({4{16'd7}}),.actual_layer({4{6'd3}}),.actual_data(wd[g]),
    .req_valid(rq[g]),.req_t(tt[g]),.req_v(vv[g]),.req_epoch(16'd7),.req_layer(6'd3),.vreq_valid(1'b0),.vreq_t(14'd0),
