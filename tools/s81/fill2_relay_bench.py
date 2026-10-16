@@ -7,7 +7,11 @@ right after reset).  Mutants are DUT copies: mut_payload flips bit 0 of the firs
 reset of the first register.  Prints "RELAY BENCH PASS <mode> ..." or "RELAY BENCH FAIL <mode> ..."."""
 import re, subprocess, sys, os, random
 from pathlib import Path
+# Optional fifth argument is an explicitly priced initialization reset-release edge,
+# never an extension of the normal one-edge data schedule.
 src, mod, mode, out = sys.argv[1:5]
+release_edges = int(sys.argv[5]) if len(sys.argv) > 5 else 0
+assert release_edges in (0, 1), 'supported initialization release edges: 0 or 1'
 out = Path(out); out.mkdir(parents=True, exist_ok=True)
 txt = Path(src).read_text()
 body = re.search(r'^module %s \((.*?)^endmodule' % mod, txt, re.S | re.M).group(0)
@@ -22,19 +26,26 @@ if mode == 'mut_payload':
     dut = dut.replace(f'{r0} <= {i0};', f'{r0} <= {i0} ^ 1;', 1)
 elif mode == 'mut_noreset':
     r0, i0 = regs[0]
-    dut = re.sub(r'always @\(posedge ck\[0\] or negedge rs\[0\]\) if \(!rs\[0\]\) %s <= [^;]+; else %s <= %s;' % (r0, r0, i0),
+    reset_expr = r'rn' if release_edges else r'rs\[0\]'
+    dut = re.sub(r'always @\(posedge ck\[0\] or negedge %s\) if \(!%s\) %s <= [^;]+; else %s <= %s;' % (reset_expr, reset_expr, r0, r0, i0),
                  f'always @(posedge ck[0]) {r0} <= {i0};', dut, count=1)
+elif mode == 'mut_rstreg_bypass':
+    assert release_edges == 1
+    dut = dut.replace('or negedge rn) if (!rn)', 'or negedge rs[0]) if (!rs[0])')
 assert mode == 'pass' or dut != body, 'mutant not applied'
 (out / 'dut.sv').write_text(dut)
 decl = '\n'.join(f'  reg [{w-1}:0] {i}; wire [{w-1}:0] {o}; reg [{w-1}:0] exp_{o};' for i, o, w in pairs)
 conn = ', '.join([f'.{i}({i})' for i, o, w in pairs] + [f'.{o}({o})' for i, o, w in pairs] + ['.ck(ck)', '.rs(rs)'])
 rnd = '\n'.join(f'      {i} = {{' + ','.join(['$urandom'] * ((w + 31) // 32)) + '};' for i, o, w in pairs)
 chk = '\n'.join(f'      if ({o} !== exp_{o}) begin errs = errs + 1; if (errs < 5) $display("MISMATCH %0d {o} got %h exp %h", cyc, {o}, exp_{o}); end' for i, o, w in pairs)
-upd = '\n'.join(f'      exp_{o} = rs ? {i} : 0;' for i, o, w in pairs)
+async_chk = '\n'.join(f'        if ({o} !== {w}\'d0) begin errs = errs + 1; if (errs < 5) $display("ASYNC RESET MISMATCH %0d {o}", cyc); end' for i, o, w in pairs)
+upd = '\n'.join(f'      exp_{o} = (rs && release_ok) ? {i} : 0;' for i, o, w in pairs)
+upd += '\n      release_ok = rs;' if release_edges else ''
 z = '\n'.join(f'      exp_{o} = 0;' for i, o, w in pairs)
 tb = f'''`timescale 1ns/1ps
 module tb;
   reg ck = 0; reg rs = 0; integer cyc, errs, checks;
+  reg release_ok = {0 if release_edges else 1};
 {decl}
   {mod} dut ({conn});
   always #0.4166 ck = ~ck;
@@ -45,7 +56,10 @@ module tb;
     repeat (3) @(negedge ck);
     rs = 1;
     for (cyc = 0; cyc < 4000; cyc = cyc + 1) begin
-      if (cyc == 1500 || cyc == 2900) rs = 0;
+      if (cyc == 1500 || cyc == 2900) begin
+        rs = 0; #0.05;
+{async_chk}
+      end
       if (cyc == 1503 || cyc == 2902) rs = 1;
 {rnd}
       @(posedge ck); #0.05;
@@ -54,7 +68,7 @@ module tb;
 {chk}
       checks = checks + 1;
     end
-    if (errs == 0) $display("RELAY BENCH PASS {mode} {mod} checks=%0d pairs={len(pairs)} bits={sum(w for _,_,w in pairs)} resets=2", checks);
+    if (errs == 0) $display("RELAY BENCH PASS {mode} {mod} checks=%0d pairs={len(pairs)} bits={sum(w for _,_,w in pairs)} resets=2 init_release_edges={release_edges} normal_data_edges=1", checks);
     else $display("RELAY BENCH FAIL {mode} {mod} errors=%0d", errs);
     $finish;
   end

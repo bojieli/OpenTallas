@@ -12,11 +12,11 @@
  ],
  "pins": {
   "S": [
-   "fill_v",
-   "fill_bank",
-   "fill_slot",
-   "fill_epoch",
-   "fill_data"
+   "fill_v_i",
+   "fill_bank_i",
+   "fill_slot_i",
+   "fill_epoch_i",
+   "fill_data_i"
   ],
   "N": [
    "dq"
@@ -25,13 +25,13 @@
    "clk",
    "rst_n",
    "bank_id",
-   "begin_v",
-   "begin_bank",
-   "begin_epoch",
-   "start",
-   "start_bank",
-   "start_epoch",
-   "start_base_sector"
+   "begin_v_i",
+   "begin_bank_i",
+   "begin_epoch_i",
+   "start_i",
+   "start_bank_i",
+   "start_epoch_i",
+   "start_base_sector_i"
   ],
   "E": [
    "full0_all",
@@ -59,13 +59,16 @@
   "threads": 8,
   "peak_ram_gb": 24,
   "hold_margin_ns": 0.03,
+  "pin_balance": {
+   "group_max": 1
+  },
   "macro_halo_um": 5.4
  },
  "job": {
-  "owner": "Claude:HBM-V15-HARDEN",
-  "branch": "claude/hbm-v15-harden-1015",
+  "owner": "Claude:H-NETLIST/kits",
+  "branch": "claude/hnl-kits-0030",
   "tag": "hv15",
-  "purpose": "structural split of delivery_<q> (monolithic gate: 8,960 fill pins on one face = 124 % of slots, > 600 um clock span, 2,048-bit runtime group mux): 8 identical VM-bank lane leaves + 1 control leaf under a wires-only parent, cycle- and bit-identical (lockstep equivalence + production bench); cost 0 cycles. v2 lane leaf (v1 control leaf refused: in->out -57.9 ps feed-through): PCs b,8+b,16+b,24+b (4 real SRAMs) + dq[b] + replicated control; cross-lane = 3 registered status bits per lane; hardened once, 8 per quadrant.",
+  "purpose": "v4 lane leaf of the split VM delivery (v16 die: vmdel_<q><b> x32). Measured failure hv15_vmdel_lane-countvisible-flow4536 (v2 RTL): TT -184.64 in->reg / -171.07 reg->out, DRC 2, util 32%. Structural fix: v3 pin registers on every input and output (+2 interface cycles, II=1, outputs == monolithic delayed 2) + v4 kept rst_n pin flops for the control region and each PC group (rst_n reaches 7 valid + 5 copies + 5 output status flops, was 640; dq payload flops unreset; 0 cycles; v4b d60a91855 NEEDS_RTL: its output-register reset copy failed LAT=2 equivalence under the loop's Icarus 12, now PASS on Icarus 11 and 12) + pins spread over the faces (pin_balance; gate 01:19 PNG: S fill pins and N dq crowded into narrow strips) + outline 302.4x172.8 -> 257.04x151.2 (util ~46%, 20-um macro channels). Bench: production + LAT=2 lockstep equivalence; mutants group-select, SRAM slot, late reset release FAIL.",
   "extra_paths": [
    "tools/hbm_v15_harden",
    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
@@ -106,12 +109,52 @@
     "needs": [
      "iverilog"
     ]
+   },
+   {
+    "name": "mutant3",
+    "cmd": "bash tools/hbm_v15_harden/bench_delivery_split.sh {RUN}/bench/mut3 3",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 8,
+    "needs": [
+     "iverilog"
+    ]
    }
   ]
  },
  "outline": {
-  "w": 302.4,
-  "h": 172.8
+  "w": 257.04,
+  "h": 151.2
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "RTL already registers every pin (v3/v4): begin/start/fill inputs captured in pin flops, dq/block_ready/busy/fault leave from flops (LAT=2 lockstep-equivalent to the monolithic module); rst_n reaches one pin flop + the 7 valid pin flops. The 27 cross-lane status bits (full0/full1/pcbad out = AND of 4 count flops; full*_all/pcbad_all in) stay single-level so the eight lanes' replicated state stays cycle-consistent; synthesis pin registers would add a second, unpriced stage."
+ },
+ "pin_ranges": {
+  "fill_v_i": [
+   8.64,
+   12.96
+  ],
+  "fill_bank_i": [
+   12.96,
+   17.28
+  ],
+  "fill_slot_i": [
+   17.28,
+   28.08
+  ],
+  "fill_epoch_i": [
+   28.08,
+   49.68
+  ],
+  "fill_data_i": [
+   49.68,
+   248.4
+  ],
+  "dq": [
+   12.96,
+   244.08
+  ]
  },
  "params": {},
  "children": [],

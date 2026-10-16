@@ -29,6 +29,10 @@ RES_WH = (777.6, 518.4)
 LANES_WH = (881.28, 1131.84)
 SU_WH = (3240.0, 3672.0)        # qfd_sp_su64_sfu: 64-lane component 4.84 mm2 children + reducer + glue (Codex 3434 x 2570 bbox)
 VM_WH = (4708.8, 2203.2)        # TRIMMED central VM (owner 08:20 PT 10-14: distributed x slices adopted; banks / SU ports / row reads only, M7 cap, no wall)
+# OT_SPLIT_VM_WH=W,H (Q-COMPUTE-DIE r2h, 00:30 10-16): the VM parent outline Q-VMWB adopted (paired-bank 4872 x 3239.36,
+# main b73b3e82c results/arch/qwen_vm_residual_1015/outline_0030.json); the router cut PASS (0.592) assumes it
+if os.environ.get('OT_SPLIT_VM_WH', '').strip():
+    VM_WH = tuple(float(z) for z in os.environ['OT_SPLIT_VM_WH'].split(','))
 CTLM_WH = (777.6, 1814.4)
 UP4_WH = (345.6, 388.8)
 CLKRX_WH = (412.488, 412.488)
@@ -154,7 +158,8 @@ def _link_words(m, rec):
           for b, c, n, e in nb]
     m['buses'] = nb
     ties = m.setdefault('ties', [])
-    have_tt = {i for b, c, n, e in m['buses'] for i, p in e if p == 'tt'}
+    from qwen_split.tt_input_binding import connected_bands
+    have_tt = connected_bands(m, bands)
     for x in bands:
         k = int(x.rsplit('_', 1)[1])
         ties.append((x, 'b0', 1, 1 if k == 0 else 0))
@@ -512,7 +517,9 @@ def place(v, m, G):
     we = xf - CH - xe
     rec['e_area'] = [round(xe, 3), round(we, 3)]
     rec['slab_cols'] = dict(W=round(xa, 3), E=round(xf, 3))
-    if we < VM_WH[0]:
+    if we < VM_WH[0] and not os.environ.get('OT_SPLIT_HOMES'):
+        # with OT_SPLIT_HOMES the source-pinned homes own every block position (their own overlap/outside checks
+        # run in gfp_homes.apply); the baseline spine only has to carry the instances there
         raise SystemExit(f'split compute spine: E sub-area {we:.1f} um < VM {VM_WH[0]} (raise OT_TP8_SPLIT_SPINE)')
     cx = xe + we / 2
     # die link at the N edge (centred on the E sub-area): PHY on the edge, adapter under it, bump + reset sync W of it
@@ -664,6 +671,10 @@ def place(v, m, G):
         if os.environ.get('OT_SPLIT_RES_TRAIN', '1') != '0':
             from qwen_split.res_train_bind import apply as res_train_apply
             rec['res_train_bind'] = res_train_apply(m)
+        # Q-NETLIST 2026-10-16: compute-die system face + rank straps close every open functional input (strict bind)
+        if os.environ.get('OT_SPLIT_SYS_FACE', '1') != '0' and 'static_link_bind' in m:
+            from qwen_split.sys_face_bind import apply as sys_face_apply
+            rec['sys_face_bind'] = sys_face_apply(m)
     # Freeze pre-pin source identity: later master installation adds derived pin receipts.
     from qwen_split.gfp_homes import source_fingerprint
     m['gfp_source_fingerprint'] = source_fingerprint(m)
@@ -671,9 +682,15 @@ def place(v, m, G):
     if os.environ.get('OT_SPLIT_HOMES'):
         from qwen_split.gfp_homes import apply as gfp_homes_apply
         rec['gfp_homes'] = gfp_homes_apply(m, os.environ['OT_SPLIT_HOMES'])
+        if 'sys_face_bind' in m:
+            from qwen_split.sys_face_bind import place as sys_face_place
+            rec['sys_face_place'] = sys_face_place(m, rec['gfp_homes'].get('named_new', ()))
         if rec['gfp_homes'].get('schema') == 'opentallas.qwen.globalfp-q-homes.2210.v1':
             from qwen_split.relay_geometry import rebuild as rebuild_relay_geometry
             rec['relay_geometry'] = rebuild_relay_geometry(v, m)
+    if 'sys_face_bind' in m and not os.environ.get('OT_SPLIT_HOMES'):
+        from qwen_split.sys_face_bind import place as sys_face_place
+        rec['sys_face_place'] = sys_face_place(m)
     if os.environ.get('OT_SPLIT_DUMP'):
         ins = [dict(n=i.name, m=i.master, x=i.x, y=i.y, w=i.w, h=i.h, o=i.orient) for i in m['insts']]
         bus = [dict(b=b_, c=c_, n=n_, e=[list(x) for x in e_]) for b_, c_, n_, e_ in m.get('buses', [])]

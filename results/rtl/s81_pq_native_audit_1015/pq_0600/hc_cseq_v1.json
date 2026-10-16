@@ -1,0 +1,39 @@
+{
+ "cell": "ot_s81_hc_cseq",
+ "view": "physical/ref_tile/s81hc_cseqh2_ref/views/ot_s81_hc_cseq",
+ "lib_cell": "ot_s81_hc_cseq",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean",
+  "lib midrange"
+ ],
+ "R_ps": 99.1,
+ "spread_ps": 19.2,
+ "outputs": 3472,
+ "inputs": 1102,
+ "launch_ps": 305.3,
+ "launch_pin": "w_fd[74]",
+ "capture_ps": 141.6,
+ "capture_pin": "x_f4",
+ "launch_over": 88,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pass": false,
+ "fail_why": "launch 305.29711 > 220 (88 pins)",
+ "record_commit": "219bfc066",
+ "closed_job": "s81hc_cseqh2_ref-v1-70eafa55c",
+ "over_classes": [
+  "lau w_fd[*] 34 305.3",
+  "lau f_q 1 251.7",
+  "lau c_fd[*] 18 250.2",
+  "lau e_fd[*] 28 249.3",
+  "lau base[*] 2 240.0",
+  "lau c_fv[*] 1 234.8",
+  "lau e_fv[*] 1 231.0",
+  "lau n_ypop 1 228.8",
+  "lau fault 1 225.7",
+  "lau ngo 1 222.8"
+ ],
+ "audited": "S-ELEM-PQ r5 2026-10-16 native_pin_audit.audit_one on the closed v1 record view"
+}

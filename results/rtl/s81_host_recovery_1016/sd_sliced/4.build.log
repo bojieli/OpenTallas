@@ -1,0 +1,4 @@
+tests/s81/tb_host_sd_sliced.sv:14: warning: Port 8 (hw) of dsfd_host_sd expects 584 bits, got 292.
+tests/s81/tb_host_sd_sliced.sv:14:        : Padding 292 high bits of the port.
+tests/s81/tb_host_sd_sliced.sv:14: warning: Port 9 (hc) of dsfd_host_sd expects 18 bits, got 9.
+tests/s81/tb_host_sd_sliced.sv:14:        : Padding 9 high bits of the port.

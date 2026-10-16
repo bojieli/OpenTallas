@@ -1,0 +1,102 @@
+{
+  "schema": 1,
+  "kind": "abstract_pin_stub",
+  "status": "PASS",
+  "input": {
+    "path": "provenance/raw/ot_hgi_hc_residual_half_static.lef",
+    "sha256": "9f411327af67c109902902715ac10fdd5b5b891ccdb171f611e1f1f92db8fa06"
+  },
+  "environment": {
+    "OT_OBS_CLOSE": null,
+    "OT_OBS_CLOSE_UM": null
+  },
+  "helper": {
+    "path": "/srv/opentallas-scratch2/claude/closure-loop/hbm_hc_residual_half_static-native1-36070f827/src/tools/hier_contract/abstract_pin_stub.py",
+    "sha256": "c3cae85e3aa1a8da5374284fe57418b2230ceb208aa76eff4567c6993bbe0c05"
+  },
+  "command": [
+    "/usr/bin/python3",
+    "/srv/opentallas-scratch2/claude/closure-loop/hbm_hc_residual_half_static-native1-36070f827/src/tools/hier_contract/abstract_pin_stub.py",
+    "/srv/opentallas-scratch2/claude/closure-loop/hbm_hc_residual_half_static-native1-36070f827/record/views/ot_hgi_hc_residual_half_static/provenance/raw/ot_hgi_hc_residual_half_static.lef",
+    "/srv/opentallas-scratch2/claude/closure-loop/hbm_hc_residual_half_static-native1-36070f827/record/views/ot_hgi_hc_residual_half_static/provenance/ot_hgi_hc_residual_half_static.candidate.lef"
+  ],
+  "returncode": 0,
+  "stdout": "pinstub: 0 OBS rects moved into 0 pins: ; pockets: 83 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
+  "stderr": "",
+  "invariants": {
+    "macro_outline": "PASS",
+    "pin_names_directions_uses": "PASS",
+    "original_pin_rectangles_retained": "PASS"
+  },
+  "child_lint": {
+    "schema": "opentallas.hier_contract.child_lint.v1",
+    "lef": "/srv/opentallas-scratch2/claude/closure-loop/hbm_hc_residual_half_static-native1-36070f827/record/views/ot_hgi_hc_residual_half_static/provenance/ot_hgi_hc_residual_half_static.candidate.lef",
+    "verdict": "PASS",
+    "fails": [],
+    "warns": [],
+    "summary": "ot_hgi_hc_residual_half_static 220.32 x 125.28: PG M5 VDD 40 stripes (96% spread, 100% cov) / VSS 40 stripes (96% spread, 100% cov); strap M6; face pins 538 blocked-above 0 blocked-same 0; clock clk insertion 262 ps; pockets M5 0 (closed)",
+    "info": {
+      "cell": "ot_hgi_hc_residual_half_static",
+      "W": 220.32,
+      "H": 125.28,
+      "pg": {
+        "nets": {
+          "VDD": {
+            "top_layer": "M5",
+            "stripes": 40,
+            "dir": "V",
+            "spread": 0.956,
+            "coverage": 1.0,
+            "shapes_on_top": 40
+          },
+          "VSS": {
+            "top_layer": "M5",
+            "stripes": 40,
+            "dir": "V",
+            "spread": 0.956,
+            "coverage": 1.0,
+            "shapes_on_top": 40
+          }
+        },
+        "top_layer": "M5",
+        "ok": true,
+        "why": []
+      },
+      "pg_layer": "M5",
+      "strap_layer": "M6",
+      "cap": null,
+      "face": {
+        "face_pins": 538,
+        "blocked_above": 0,
+        "covered_below": 27,
+        "examples": [],
+        "blocked_same": 0,
+        "same_examples": [],
+        "band_same": 0,
+        "band_examples": []
+      },
+      "clock_insertion": {
+        "clk": {
+          "max_ps": 262.32,
+          "min_ps": 169.13
+        }
+      },
+      "pockets": {
+        "layer": "M5",
+        "d_um": 1.536,
+        "marker": {
+          "layer": "M5",
+          "d_um": 1.536,
+          "added": 83
+        },
+        "count": 0,
+        "area_um2": 0,
+        "examples": []
+      }
+    }
+  },
+  "output": {
+    "path": "ot_hgi_hc_residual_half_static.lef",
+    "sha256": "2493ab46c93b9859bd95f6ba72c6e7125c62f9fdfde563fbf9c5709f5ab5d055"
+  }
+}

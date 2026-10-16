@@ -31,8 +31,16 @@ SOURCE = 'rtl/physical/ot_qfd_collective_static_io_production.sv'
 ABI = 'results/arch/qwen_coll_io_1014/block_stage_r10_1015/production_boundary.json'
 UCIE = 'ot_qfd_ucie_x64_phy'
 UCIE_VIEW = 'physical/qwen_missing_phy/tp8_1013/ot_qfd_ucie_x64_phy'
+# OT_SPLIT_PHY_NFACE=1 (Q-COMPUTE-DIE r2h S, 00:30 10-16): shoreline PHYs with the FDI block on the core-facing top edge
+# (tools/qwen_missing/link_phy_gen.py --nface), one south-edge row under the collective; the collective's FDI groups
+# move to its S face straight above each PHY's block
+PHY_NFACE = __import__('os').environ.get('OT_SPLIT_PHY_NFACE', '0') == '1'
+NFACE_ROOT = 'physical/qwen_missing_phy/nface_0030'
 SERDES = 'ot_qfd_serdes_112g_x12_phy_s597'
 SERDES_VIEW = 'physical/qwen_missing_phy/ot_qfd_serdes_112g_x12_phy_s597'
+if PHY_NFACE:
+    UCIE_VIEW = NFACE_ROOT + '/ot_qfd_ucie_x64_phy'
+    SERDES_VIEW = NFACE_ROOT + '/ot_qfd_serdes_112g_x12_phy_s597'
 SERDES_WH = (2320.056, 1563.57)
 UCIE_WH = (777.6, 777.6)
 FW_U, FW_S = 1043, 597
@@ -145,6 +153,11 @@ def apply(model):
         new.append(('clk_coll_blk', 'clock_trunk', 1, [('clk_rx', 'pll_coll_blk')] +
                     [('io_collective', f'blk_ck{k}') for k in range(ports['blk_ck'][0])]))
     model['buses'] = [q for q in kept if q[0] not in ('clk_ucie', 'clk_coll')] + new
+    # These retained production PHY paths run on the actual 1 GHz FDI roots
+    # above. Legacy instance domains (serial_0p9 / link_serdes) are not their
+    # clock contract after replacing the collective with its native RTL.
+    model.setdefault('relay_clock_by_bus', {}).update(
+        {b: 'clk_ucie' for b, c, _, _ in new if c == 'coll_fdi'})
     split = model.setdefault('port_split', {})
     split[MASTER] = dict(cd=[('in_data', 512), ('in_last', 1), ('in_mode', 1), ('in_tag', 32), ('in_valid', 1)],
                          cc=[('out_data', 512), ('out_last', 1), ('out_rank', 3), ('out_err', 1), ('out_valid', 1)])
@@ -217,8 +230,30 @@ def install_master(M, model, Master):
                 pos[(p, b)] = (face, 'M4', round(.012 + round((y - .012) / .048) * .048, 4))
                 y += .048
         return y
-    end = column('E', phy_order(0), win)                 # SerDes0, abutting the E PHY window
-    column('E', EU, max(end, win + 60.0) + 8.0)           # UCIe, over SerDes0 (M6+) to the PHY beyond it
+    by_ = {i.name: i for i in model['insts']}
+    if PHY_NFACE:
+        # each PHY's top-edge FDI block (2 empty slots for clk / rst_n, then the phy_order bits at 0.048) lands on the
+        # collective S face at the same die x (clamped inside the face): straight M5 tracks across the PHY/collective gap
+        phys = {'io_serdes': phy_order(0), 'io_serdes_1': phy_order(1), 'io_serdes_2': phy_order(2), 'io_ucie': EU}
+        for pn, items in phys.items():
+            ph = by_[pn]
+            if ph.y + ph.h > inst.y + 1e-3 or ph.orient != 'R0':
+                raise ValueError(f'{MASTER}: OT_SPLIT_PHY_NFACE needs {pn} R0 below the collective')
+            nb = 2 + sum(len(list(b)) for _, b in items)
+            x = ph.x + ph.w / 2 - nb * .048 / 2 - inst.x
+            x = min(max(x, 4.0), inst.w - 4.0 - nb * .048) + 2 * .048
+            for p, bits in items:
+                for b in bits:
+                    pos[(p, b)] = ('S', 'M5', round(.012 + round((x - .012) / .048) * .048, 4))
+                    x += .048
+    elif 'io_ucie' in by_ and 'io_serdes' in by_ and by_['io_ucie'].x < by_['io_serdes'].x:
+        # Q-COMPUTE-DIE r2h (00:30 10-16): the UCIe PHY abuts the E face (homes order collective|ucie|serdes0), so it
+        # owns the aligned window; SerDes0 follows above it and crosses the UCIe PHY on upper metal
+        end = column('E', EU, win)
+        column('E', phy_order(0), max(end, win + 60.0) + 8.0)
+    else:
+        end = column('E', phy_order(0), win)             # SerDes0, abutting the E PHY window
+        column('E', EU, max(end, win + 60.0) + 8.0)       # UCIe, over SerDes0 (M6+) to the PHY beyond it
     end = column('W', phy_order(1), win)                 # SerDes1 (MY PHY, window faces E)
     column('W', phy_order(2), end + 8.0)                 # SerDes2, over SerDes1
     placed = {p for p, _ in pos}
@@ -231,11 +266,13 @@ def install_master(M, model, Master):
             pos[(p, b)] = ('N', 'M5', snap(x))
             x += .096
         x += 2.0
-    for f in 'NEW':
+    for f in 'NEWS':
         zs = [z for (p, b), (ff, _, z) in pos.items() if ff == f]
         if len(zs) != len(set(zs)):
             raise ValueError(f'{MASTER}: overlapping assigned pins on face {f}')
-        lim = q.w if f == 'N' else q.h
+        if not zs:
+            continue
+        lim = q.w if f in 'NS' else q.h
         if min(zs) < 1.0 or max(zs) > lim - 1.0:
             raise ValueError(f'{MASTER}: pin outside face {f}')
     from qwen_split.direct_up4 import partition_master
@@ -244,7 +281,7 @@ def install_master(M, model, Master):
         for k in range(n):
             f, L, z = pos[(p, k)]
             r = {'W': (0, z - .012, .192, z + .012), 'E': (q.w - .192, z - .012, q.w, z + .012),
-                 'N': (z - .012, q.h - .192, z + .012, q.h)}[f]
+                 'N': (z - .012, q.h - .192, z + .012, q.h), 'S': (z - .012, 0, z + .012, .192)}[f]
             rects.append((p if n == 1 else f'{p}[{k}]', L, r))
         faces = {pos[(p, k)][0] for k in range(n)}
         if len(faces) == 1:

@@ -45,7 +45,16 @@ Y_CH0 = round(311.04 + 157.68, 3)          # channel bottom = xs1 top (468.72)
 # parent sinks ~10.4k, channel +138.24 um.
 VARIANT = os.environ.get("SMH_RP", "rp1")
 LAND = V.format("smh_tr_group_land_ref", "ot_smh_tr_group_land")
-if VARIANT == "rp2":
+if VARIANT == "rp3":
+    # rp3 (21:06 verdict: rp1 18,690 sinks > 15k): rp1 channel and height, the two CLOSED landing masters at the channel
+    # edges (W part), both beat_e masters moved E by 8.64 (tile +8.64 wide) so landings and beats share the channel
+    # height; per bin bit ONE horizontal trunk (pin reg -> transit) with vertical drops to the landing d faces.
+    VIEWS["land"] = LAND
+    DIM["land"] = lef_size(LAND)
+    W = 406.08
+    Y_LAND_S, Y_BEAT, Y_LAND_N, Y_XS0, H = 492.48, 492.48, 665.28, 734.4, 1192.32
+    X_LAND = 25.92
+elif VARIANT == "rp2":
     VIEWS["land"] = LAND
     DIM["land"] = lef_size(LAND)
     Y_LAND_S, Y_BEAT, Y_LAND_N, Y_XS0, H = 492.48, 561.6, 803.52, 872.64, 1330.56
@@ -56,8 +65,8 @@ else:
     H = 1192.32                            # tcl0 top 1,166.4 + 25.92 (138 x 8.64)
 DY0 = round(Y_XS0 - 734.4, 3)              # leaf-0 shift vs rp1
 BEAT_W = DIM["beat"][0]
-X_BEATE = 328.32                           # E beat stage (bout launch), 23.76 um from the E core edge
-X_TRANSIT = 259.2                         # W transit (2 edges) beside it, 25.92-um channel
+X_BEATE = round(W - 69.12, 3)              # E beat stage (bout launch), 23.76 um from the E core edge
+X_TRANSIT = round(X_BEATE - 69.12, 3)      # W transit (2 edges) beside it, 25.92-um channel
 
 
 def children():
@@ -69,7 +78,7 @@ def children():
     for kind, inst, dx, y, o in LEAF1:
         w, h = DIM[kind]
         out.append((kind, f"*g_lf?1?.u_lh.{inst}", round(X0 + dx, 3), y, w, h, o))
-    if VARIANT == "rp2":
+    if VARIANT in ("rp2", "rp3"):
         lw, lh = DIM["land"]
         out.append(("land", "*u_ptw.u_groups.u_land_s", X_LAND, Y_LAND_S, lw, lh, "MX"))
         out.append(("land", "*u_ptw.u_groups.u_land_n", X_LAND, Y_LAND_N, lw, lh, "R0"))

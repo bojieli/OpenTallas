@@ -1,0 +1,61 @@
+{
+  "scope": "actual source P.V pair, mapped SRAM models, common-phase component",
+  "source_commit": "ea749bd75",
+  "actual_child_clock_entries": 289,
+  "ctl_reset_pin": 1,
+  "leaf_reset_pin": 1,
+  "cold_reset_release_edges_added": 1,
+  "normal_cycle_delta": 0,
+  "contexts_exact": 8,
+  "hardware_mutant": {
+    "join_order_errors": 115,
+    "expected": "FAIL observed"
+  },
+  "runs": [
+    {
+      "run": "run0",
+      "line": "PV_PAIR PASS T=1 pair=0 mode=steady words=512 errors=0 fault=0 out_age=169 got_age=169 rows=1"
+    },
+    {
+      "run": "run0",
+      "line": "PV_PAIR PASS T=100 pair=0 mode=steady words=512 errors=0 fault=0 out_age=169 got_age=169 rows=100"
+    },
+    {
+      "run": "run0",
+      "line": "PV_PAIR PASS T=1000 pair=0 mode=steady words=512 errors=0 fault=0 out_age=217 got_age=217 rows=512"
+    },
+    {
+      "run": "run0",
+      "line": "PV_PAIR PASS T=8192 pair=0 mode=steady words=512 errors=0 fault=0 out_age=665 got_age=665 rows=4096"
+    },
+    {
+      "run": "run1",
+      "line": "PV_PAIR PASS T=1 pair=1 mode=steady words=512 errors=0 fault=0 out_age=137 got_age=137 rows=0"
+    },
+    {
+      "run": "run1",
+      "line": "PV_PAIR PASS T=129 pair=1 mode=steady words=512 errors=0 fault=0 out_age=169 got_age=169 rows=1"
+    },
+    {
+      "run": "run1",
+      "line": "PV_PAIR PASS T=2049 pair=1 mode=steady words=512 errors=0 fault=0 out_age=281 got_age=281 rows=1024"
+    },
+    {
+      "run": "run1",
+      "line": "PV_PAIR PASS T=8192 pair=1 mode=steady words=512 errors=0 fault=0 out_age=665 got_age=665 rows=4096"
+    },
+    {
+      "run": "runm",
+      "line": "PV_PAIR FAIL T=1000 pair=0 mode=steady words=512 errors=115 fault=0 out_age=217 got_age=217 rows=512"
+    }
+  ],
+  "native_full_layer": false,
+  "native_full_token": false,
+  "physical_pair_qualified": false,
+  "open": [
+    "actual per-child phi-R clock delivery",
+    "native reset-capture successor route views",
+    "V/e/command fanout relays and compiler ages",
+    "whole-die homes/cuts/PG/GRT/STA"
+  ]
+}

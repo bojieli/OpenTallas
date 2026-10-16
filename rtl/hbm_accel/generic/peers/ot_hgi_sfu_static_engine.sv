@@ -25,12 +25,15 @@ module ot_hgi_sfu_static_engine #(parameter integer LWB=15)(
  output wire [1:0] drain_result_v,
  output wire [15:0] vi_re,
  output wire [383:0] vi_addr,
- input wire [511:0] vi_q,side_y,
- output wire [15:0] ro_v,side_v,kv_we,
- output wire [511:0] ro_x,side_x,kv_wdata,
+ input wire [511:0] vi_q,
+ output wire [15:0] ro_v,kv_we,
+ output wire [511:0] ro_x,kv_wdata,
  output wire [383:0] kv_waddr,
  output reg fault
 );
+ // side_v/side_x/side_y REMOVED (H-NETLIST/suport 2026-10-16, H-SU agreed): ot_su12_sfu binds its lane with .side_v(), .side_x(),
+ // .side_y(32'd0) (rtl/hdc/v41x/phys/ot_hdc_v41x_su_c12_phys.sv:152), so these pins were undriven / ignored; KIND1 side
+ // opcodes still fault (ot_hgi_sfu_static_engine).
  wire [63:0] rd_re;
  wire [1535:0] rd_addr;
  wire [127:0] rd_src;
@@ -42,10 +45,10 @@ module ot_hgi_sfu_static_engine #(parameter integer LWB=15)(
  ot_hgi_sfu_static_quarter u_arithmetic(
   .clk_control(clk),.rst_control_n(rst_n),.compiler_control(compiler_control),
   .clk_lane(clk_lane),.clk_map(clk_map),.rst_lane_n(rst_lane_n),.rst_map_n(rst_map_n),
-  .vi_q(vi_q),.side_y(side_y),.rd_q(rd_q),.vi_re(vi_re),.vi_addr(vi_addr),
+  .vi_q(vi_q),.rd_q(rd_q),.vi_re(vi_re),.vi_addr(vi_addr),
   .rd_re(rd_re),.rd_addr(rd_addr),.rd_src(rd_src),.vm_we(vm_we),.vm_waddr(vm_addr),.vm_wdata(vm_data),
   .kv_we(kv_we),.kv_waddr(kv_waddr),.kv_wdata(kv_wdata),.ro_v(ro_v),.ro_x(ro_x),
-  .side_v(side_v),.side_x(side_x),.fault(lane_fault),.coll(lane_coll));
+  .fault(lane_fault),.coll(lane_coll));
  ot_hgi_sfu_static_operand_store #(.LWB(LWB)) u_memory(
   .clk(clk),.rst_n(rst_n),.rd_re(rd_re),.rd_addr(rd_addr),.rd_src(rd_src),.rd_q(rd_q),
   .vm_we(vm_we),.vm_waddr(vm_addr),.vm_wdata(vm_data),

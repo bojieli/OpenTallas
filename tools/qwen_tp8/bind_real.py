@@ -22,6 +22,7 @@ import argparse
 import collections
 import hashlib
 import json
+import os
 import re
 import shutil
 import sys
@@ -143,6 +144,9 @@ def find_view(root, master, explicit):
         return Path(explicit[master])
     cands = [root / 'physical/ref_tile' / master / 'views' / master]
     cands += sorted((root / 'physical/ref_tile').glob(f'*/views/{master}'))
+    if os.environ.get('OT_SPLIT_PHY_NFACE', '0') == '1':
+        # Q-COMPUTE-DIE r2h S: the case was generated against the top-edge FDI PHY revision; bind that exact view
+        cands.insert(0, root / 'physical/qwen_missing_phy/nface_0030' / master)
     cands += [root / 'physical/qwen_die_masters/views' / master, root / 'physical/qwen_missing_phy/tp8_1013' / master,
               root / 'physical/qwen_missing_phy' / master]
     for c in cands:
@@ -162,7 +166,12 @@ def main():
     ap.add_argument('--dry', action='store_true', help='report only: the case LEF is not rewritten')
     a = ap.parse_args()
     case, root = Path(a.case), Path(a.repo).resolve()
-    explicit = dict(q.split('=', 1) for q in a.view)
+    explicit = {}
+    sel = os.environ.get('OT_BIND_VIEW_SELECT')
+    if sel:                                  # recorded per-master choice when several closed revisions carry one name
+        sp = Path(sel) if Path(sel).is_absolute() else root / sel
+        explicit.update({k: str(root / v) for k, v in json.loads(sp.read_text()).get('views', {}).items()})
+    explicit.update(dict(q.split('=', 1) for q in a.view))
     src = case / 'elements.lef.gen'          # not *.lef: the case readers glob the LEFs
     if not src.exists():
         shutil.copy(case / 'elements.lef', src)
@@ -186,6 +195,10 @@ def main():
             r['reason'] = 'no view by this name'
             continue
         r['view'] = str(vd.relative_to(root)) if vd.is_absolute() and root in vd.parents else str(vd)
+        alt = [str(c.relative_to(root)) for c in sorted((root / 'physical/ref_tile').glob(f'*/views/{mst}'))
+               if (c / f'{mst}.lef').exists() and c.resolve() != vd.resolve()]
+        if alt:                               # visible, never silent: another closed revision of this name exists
+            r['other_views'] = alt
         vt = (vd / f'{mst}.lef').read_text()
         vm = macros(vt).get(mst)
         if vm is None:
