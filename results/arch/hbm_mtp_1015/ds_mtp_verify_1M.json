@@ -1,0 +1,1351 @@
+{
+ "schema": "opentallas.hgi_sim.ds_mtp_verify.v1",
+ "generated_utc": "2026-10-16T03:14:56Z",
+ "position": 1048575,
+ "gamma": 5,
+ "P": 6,
+ "tau": 4.159,
+ "union": 23.9,
+ "clock_hz": 1200000000.0,
+ "program": "results/arch/hgi_programs_20261010/inputs/ds_rank0_program.json",
+ "program_sha256": "e888a21dddef6881120d1c232174a67a0c2c53a205873f33000d989577376bef",
+ "b_model": "results/hbm_sm_attention_1015/b_measured_model.json",
+ "calibration": "results/arch/hgi_sim_20261009/e2e_calibration.json",
+ "ar_whole_token_fixed_A": 562095.5,
+ "sensitivity_scale": {
+  "FUSED.HC_PRE_NORM": 6.514,
+  "COLL.ALL_GATHER": 0.716,
+  "SU.VOP": 1.067,
+  "FUSED.QDQ_FP8": 14.573,
+  "COLL.GROUP_REDUCE_MCAST": 0.908,
+  "FUSED.HC_POST": 20.085,
+  "IDX.TOPK": 0.644,
+  "HC.HC_MIX_POST": 1.282
+ },
+ "runs": {
+  "A|AR|fixed": {
+   "cycles": 569840.2,
+   "records": 3952,
+   "unit_busy": {
+    "FUSED": 71369.3,
+    "SM": 126650.7,
+    "COLL": 259471.7,
+    "SU": 136388.0,
+    "DMA": 40327.8,
+    "ATT": 26364.0,
+    "HC": 92800.0,
+    "IDX": 18833.7,
+    "CTL": 0.0,
+    "ARGMAX": 4913.6
+   },
+   "timing": "per layer segment, summed",
+   "compile": {
+    "shared": 3108,
+    "per_position": 844,
+    "expert_slots": 6,
+    "union_records": 0
+   }
+  },
+  "A|verify6|pport|swap|fixed": {
+   "cycles": 1962908.6,
+   "records": 11578,
+   "unit_busy": {
+    "DMA": 264011.0,
+    "FUSED": 428216.0,
+    "SM": 219062.2,
+    "COLL": 596897.8,
+    "SU": 236344.0,
+    "ATT": 158180.0,
+    "HC": 556804.0,
+    "IDX": 124325.1,
+    "CTL": 0.0,
+    "ARGMAX": 5627.0
+   },
+   "timing": "per layer segment, summed",
+   "compile": {
+    "shared": 5988,
+    "per_position": 5064,
+    "expert_slots": 24,
+    "union_records": 40
+   }
+  },
+  "A|verify6|pport|vmres|fixed": {
+   "cycles": 1935975.7,
+   "records": 11092,
+   "unit_busy": {
+    "FUSED": 428216.0,
+    "SM": 219062.2,
+    "COLL": 596897.8,
+    "SU": 236344.0,
+    "DMA": 123083.8,
+    "ATT": 158180.0,
+    "HC": 556804.0,
+    "IDX": 124325.1,
+    "CTL": 0.0,
+    "ARGMAX": 5627.0
+   },
+   "timing": "per layer segment, summed",
+   "compile": {
+    "shared": 5988,
+    "per_position": 5064,
+    "expert_slots": 24,
+    "union_records": 40
+   }
+  },
+  "A|verify6|serial|swap|fixed": {
+   "cycles": 2364422.7,
+   "records": 14853,
+   "unit_busy": {
+    "DMA": 264011.0,
+    "FUSED": 428216.0,
+    "SM": 759911.5,
+    "COLL": 596897.8,
+    "SU": 236344.0,
+    "ATT": 158180.0,
+    "HC": 556804.0,
+    "IDX": 113001.9,
+    "CTL": 0.0,
+    "ARGMAX": 5627.0
+   },
+   "timing": "per layer segment, summed",
+   "compile": {
+    "shared": 2733,
+    "per_position": 11634,
+    "expert_slots": 24,
+    "union_records": 0
+   }
+  },
+  "A|verify6|serial|vmres|fixed": {
+   "cycles": 2337489.9,
+   "records": 14367,
+   "unit_busy": {
+    "FUSED": 428216.0,
+    "SM": 759911.5,
+    "COLL": 596897.8,
+    "SU": 236344.0,
+    "DMA": 123083.8,
+    "ATT": 158180.0,
+    "HC": 556804.0,
+    "IDX": 113001.9,
+    "CTL": 0.0,
+    "ARGMAX": 5627.0
+   },
+   "timing": "per layer segment, summed",
+   "compile": {
+    "shared": 2733,
+    "per_position": 11634,
+    "expert_slots": 24,
+    "union_records": 0
+   }
+  },
+  "A|AR|sensitivity": {
+   "cycles": 1169511.3,
+   "records": 3952,
+   "unit_busy": {
+    "FUSED": 714389.7,
+    "SM": 126650.7,
+    "COLL": 207440.2,
+    "SU": 145525.6,
+    "DMA": 40327.8,
+    "ATT": 26364.0,
+    "HC": 92800.0,
+    "IDX": 14804.9,
+    "CTL": 0.0,
+    "ARGMAX": 4913.6
+   },
+   "timing": "per layer segment, summed",
+   "compile": {
+    "shared": 3108,
+    "per_position": 844,
+    "expert_slots": 6,
+    "union_records": 0
+   }
+  },
+  "A|verify6|pport|swap|sensitivity": {
+   "cycles": 5750083.8,
+   "records": 11578,
+   "unit_busy": {
+    "DMA": 264011.0,
+    "FUSED": 4286334.5,
+    "SM": 219062.2,
+    "COLL": 507480.2,
+    "SU": 252180.3,
+    "ATT": 158180.0,
+    "HC": 556804.0,
+    "IDX": 96113.2,
+    "CTL": 0.0,
+    "ARGMAX": 5627.0
+   },
+   "timing": "per layer segment, summed",
+   "compile": {
+    "shared": 5988,
+    "per_position": 5064,
+    "expert_slots": 24,
+    "union_records": 40
+   }
+  },
+  "A|verify6|pport|vmres|sensitivity": {
+   "cycles": 5723151.0,
+   "records": 11092,
+   "unit_busy": {
+    "FUSED": 4286334.5,
+    "SM": 219062.2,
+    "COLL": 507480.2,
+    "SU": 252180.3,
+    "DMA": 123083.8,
+    "ATT": 158180.0,
+    "HC": 556804.0,
+    "IDX": 96113.2,
+    "CTL": 0.0,
+    "ARGMAX": 5627.0
+   },
+   "timing": "per layer segment, summed",
+   "compile": {
+    "shared": 5988,
+    "per_position": 5064,
+    "expert_slots": 24,
+    "union_records": 40
+   }
+  },
+  "A|verify6|serial|swap|sensitivity": {
+   "cycles": 6100943.9,
+   "records": 14853,
+   "unit_busy": {
+    "DMA": 264011.0,
+    "FUSED": 4286334.5,
+    "SM": 759911.5,
+    "COLL": 507480.2,
+    "SU": 252180.3,
+    "ATT": 158180.0,
+    "HC": 556804.0,
+    "IDX": 88821.9,
+    "CTL": 0.0,
+    "ARGMAX": 5627.0
+   },
+   "timing": "per layer segment, summed",
+   "compile": {
+    "shared": 2733,
+    "per_position": 11634,
+    "expert_slots": 24,
+    "union_records": 0
+   }
+  },
+  "A|verify6|serial|vmres|sensitivity": {
+   "cycles": 6074011.1,
+   "records": 14367,
+   "unit_busy": {
+    "FUSED": 4286334.5,
+    "SM": 759911.5,
+    "COLL": 507480.2,
+    "SU": 252180.3,
+    "DMA": 123083.8,
+    "ATT": 158180.0,
+    "HC": 556804.0,
+    "IDX": 88821.9,
+    "CTL": 0.0,
+    "ARGMAX": 5627.0
+   },
+   "timing": "per layer segment, summed",
+   "compile": {
+    "shared": 2733,
+    "per_position": 11634,
+    "expert_slots": 24,
+    "union_records": 0
+   }
+  },
+  "B_exposed|AR|fixed": {
+   "cycles": 596948.7,
+   "records": 3952,
+   "unit_busy": {
+    "FUSED": 71369.3,
+    "SM": 180122.7,
+    "COLL": 259471.7,
+    "SU": 136388.0,
+    "DMA": 40327.8,
+    "HC": 92800.0,
+    "IDX": 18833.7,
+    "CTL": 0.0,
+    "ARGMAX": 4913.6
+   },
+   "timing": "per layer segment, summed",
+   "compile": {
+    "shared": 3108,
+    "per_position": 844,
+    "expert_slots": 6,
+    "union_records": 0
+   }
+  },
+  "B_exposed|verify6|pport|swap|fixed": {
+   "cycles": 2125559.4,
+   "records": 11578,
+   "unit_busy": {
+    "DMA": 264011.0,
+    "FUSED": 428216.0,
+    "SM": 539894.2,
+    "COLL": 596897.8,
+    "SU": 236344.0,
+    "HC": 556804.0,
+    "IDX": 124325.1,
+    "CTL": 0.0,
+    "ARGMAX": 5627.0
+   },
+   "timing": "per layer segment, summed",
+   "compile": {
+    "shared": 5988,
+    "per_position": 5064,
+    "expert_slots": 24,
+    "union_records": 40
+   }
+  },
+  "B_exposed|verify6|pport|vmres|fixed": {
+   "cycles": 2098626.6,
+   "records": 11092,
+   "unit_busy": {
+    "FUSED": 428216.0,
+    "SM": 539894.2,
+    "COLL": 596897.8,
+    "SU": 236344.0,
+    "DMA": 123083.8,
+    "HC": 556804.0,
+    "IDX": 124325.1,
+    "CTL": 0.0,
+    "ARGMAX": 5627.0
+   },
+   "timing": "per layer segment, summed",
+   "compile": {
+    "shared": 5988,
+    "per_position": 5064,
+    "expert_slots": 24,
+    "union_records": 40
+   }
+  },
+  "B_exposed|verify6|serial|swap|fixed": {
+   "cycles": 2527073.6,
+   "records": 14853,
+   "unit_busy": {
+    "DMA": 264011.0,
+    "FUSED": 428216.0,
+    "SM": 1080743.5,
+    "COLL": 596897.8,
+    "SU": 236344.0,
+    "HC": 556804.0,
+    "IDX": 113001.9,
+    "CTL": 0.0,
+    "ARGMAX": 5627.0
+   },
+   "timing": "per layer segment, summed",
+   "compile": {
+    "shared": 2733,
+    "per_position": 11634,
+    "expert_slots": 24,
+    "union_records": 0
+   }
+  },
+  "B_exposed|verify6|serial|vmres|fixed": {
+   "cycles": 2500140.8,
+   "records": 14367,
+   "unit_busy": {
+    "FUSED": 428216.0,
+    "SM": 1080743.5,
+    "COLL": 596897.8,
+    "SU": 236344.0,
+    "DMA": 123083.8,
+    "HC": 556804.0,
+    "IDX": 113001.9,
+    "CTL": 0.0,
+    "ARGMAX": 5627.0
+   },
+   "timing": "per layer segment, summed",
+   "compile": {
+    "shared": 2733,
+    "per_position": 11634,
+    "expert_slots": 24,
+    "union_records": 0
+   }
+  },
+  "B_exposed|AR|sensitivity": {
+   "cycles": 1196619.8,
+   "records": 3952,
+   "unit_busy": {
+    "FUSED": 714389.7,
+    "SM": 180122.7,
+    "COLL": 207440.2,
+    "SU": 145525.6,
+    "DMA": 40327.8,
+    "HC": 92800.0,
+    "IDX": 14804.9,
+    "CTL": 0.0,
+    "ARGMAX": 4913.6
+   },
+   "timing": "per layer segment, summed",
+   "compile": {
+    "shared": 3108,
+    "per_position": 844,
+    "expert_slots": 6,
+    "union_records": 0
+   }
+  },
+  "B_exposed|verify6|pport|swap|sensitivity": {
+   "cycles": 5912734.7,
+   "records": 11578,
+   "unit_busy": {
+    "DMA": 264011.0,
+    "FUSED": 4286334.5,
+    "SM": 539894.2,
+    "COLL": 507480.2,
+    "SU": 252180.3,
+    "HC": 556804.0,
+    "IDX": 96113.2,
+    "CTL": 0.0,
+    "ARGMAX": 5627.0
+   },
+   "timing": "per layer segment, summed",
+   "compile": {
+    "shared": 5988,
+    "per_position": 5064,
+    "expert_slots": 24,
+    "union_records": 40
+   }
+  },
+  "B_exposed|verify6|pport|vmres|sensitivity": {
+   "cycles": 5885801.9,
+   "records": 11092,
+   "unit_busy": {
+    "FUSED": 4286334.5,
+    "SM": 539894.2,
+    "COLL": 507480.2,
+    "SU": 252180.3,
+    "DMA": 123083.8,
+    "HC": 556804.0,
+    "IDX": 96113.2,
+    "CTL": 0.0,
+    "ARGMAX": 5627.0
+   },
+   "timing": "per layer segment, summed",
+   "compile": {
+    "shared": 5988,
+    "per_position": 5064,
+    "expert_slots": 24,
+    "union_records": 40
+   }
+  },
+  "B_exposed|verify6|serial|swap|sensitivity": {
+   "cycles": 6263594.8,
+   "records": 14853,
+   "unit_busy": {
+    "DMA": 264011.0,
+    "FUSED": 4286334.5,
+    "SM": 1080743.5,
+    "COLL": 507480.2,
+    "SU": 252180.3,
+    "HC": 556804.0,
+    "IDX": 88821.9,
+    "CTL": 0.0,
+    "ARGMAX": 5627.0
+   },
+   "timing": "per layer segment, summed",
+   "compile": {
+    "shared": 2733,
+    "per_position": 11634,
+    "expert_slots": 24,
+    "union_records": 0
+   }
+  },
+  "B_exposed|verify6|serial|vmres|sensitivity": {
+   "cycles": 6236662.0,
+   "records": 14367,
+   "unit_busy": {
+    "FUSED": 4286334.5,
+    "SM": 1080743.5,
+    "COLL": 507480.2,
+    "SU": 252180.3,
+    "DMA": 123083.8,
+    "HC": 556804.0,
+    "IDX": 88821.9,
+    "CTL": 0.0,
+    "ARGMAX": 5627.0
+   },
+   "timing": "per layer segment, summed",
+   "compile": {
+    "shared": 2733,
+    "per_position": 11634,
+    "expert_slots": 24,
+    "union_records": 0
+   }
+  },
+  "B_prefetch|AR|fixed": {
+   "cycles": 588628.7,
+   "records": 3952,
+   "unit_busy": {
+    "FUSED": 71369.3,
+    "SM": 171802.7,
+    "COLL": 259471.7,
+    "SU": 136388.0,
+    "DMA": 40327.8,
+    "HC": 92800.0,
+    "IDX": 18833.7,
+    "CTL": 0.0,
+    "ARGMAX": 4913.6
+   },
+   "timing": "per layer segment, summed",
+   "compile": {
+    "shared": 3108,
+    "per_position": 844,
+    "expert_slots": 6,
+    "union_records": 0
+   }
+  },
+  "B_prefetch|verify6|pport|swap|fixed": {
+   "cycles": 2075639.4,
+   "records": 11578,
+   "unit_busy": {
+    "DMA": 264011.0,
+    "FUSED": 428216.0,
+    "SM": 489974.2,
+    "COLL": 596897.8,
+    "SU": 236344.0,
+    "HC": 556804.0,
+    "IDX": 124325.1,
+    "CTL": 0.0,
+    "ARGMAX": 5627.0
+   },
+   "timing": "per layer segment, summed",
+   "compile": {
+    "shared": 5988,
+    "per_position": 5064,
+    "expert_slots": 24,
+    "union_records": 40
+   }
+  },
+  "B_prefetch|verify6|pport|vmres|fixed": {
+   "cycles": 2048706.6,
+   "records": 11092,
+   "unit_busy": {
+    "FUSED": 428216.0,
+    "SM": 489974.2,
+    "COLL": 596897.8,
+    "SU": 236344.0,
+    "DMA": 123083.8,
+    "HC": 556804.0,
+    "IDX": 124325.1,
+    "CTL": 0.0,
+    "ARGMAX": 5627.0
+   },
+   "timing": "per layer segment, summed",
+   "compile": {
+    "shared": 5988,
+    "per_position": 5064,
+    "expert_slots": 24,
+    "union_records": 40
+   }
+  },
+  "B_prefetch|verify6|serial|swap|fixed": {
+   "cycles": 2477153.6,
+   "records": 14853,
+   "unit_busy": {
+    "DMA": 264011.0,
+    "FUSED": 428216.0,
+    "SM": 1030823.5,
+    "COLL": 596897.8,
+    "SU": 236344.0,
+    "HC": 556804.0,
+    "IDX": 113001.9,
+    "CTL": 0.0,
+    "ARGMAX": 5627.0
+   },
+   "timing": "per layer segment, summed",
+   "compile": {
+    "shared": 2733,
+    "per_position": 11634,
+    "expert_slots": 24,
+    "union_records": 0
+   }
+  },
+  "B_prefetch|verify6|serial|vmres|fixed": {
+   "cycles": 2450220.8,
+   "records": 14367,
+   "unit_busy": {
+    "FUSED": 428216.0,
+    "SM": 1030823.5,
+    "COLL": 596897.8,
+    "SU": 236344.0,
+    "DMA": 123083.8,
+    "HC": 556804.0,
+    "IDX": 113001.9,
+    "CTL": 0.0,
+    "ARGMAX": 5627.0
+   },
+   "timing": "per layer segment, summed",
+   "compile": {
+    "shared": 2733,
+    "per_position": 11634,
+    "expert_slots": 24,
+    "union_records": 0
+   }
+  },
+  "B_prefetch|AR|sensitivity": {
+   "cycles": 1188299.8,
+   "records": 3952,
+   "unit_busy": {
+    "FUSED": 714389.7,
+    "SM": 171802.7,
+    "COLL": 207440.2,
+    "SU": 145525.6,
+    "DMA": 40327.8,
+    "HC": 92800.0,
+    "IDX": 14804.9,
+    "CTL": 0.0,
+    "ARGMAX": 4913.6
+   },
+   "timing": "per layer segment, summed",
+   "compile": {
+    "shared": 3108,
+    "per_position": 844,
+    "expert_slots": 6,
+    "union_records": 0
+   }
+  },
+  "B_prefetch|verify6|pport|swap|sensitivity": {
+   "cycles": 5862814.7,
+   "records": 11578,
+   "unit_busy": {
+    "DMA": 264011.0,
+    "FUSED": 4286334.5,
+    "SM": 489974.2,
+    "COLL": 507480.2,
+    "SU": 252180.3,
+    "HC": 556804.0,
+    "IDX": 96113.2,
+    "CTL": 0.0,
+    "ARGMAX": 5627.0
+   },
+   "timing": "per layer segment, summed",
+   "compile": {
+    "shared": 5988,
+    "per_position": 5064,
+    "expert_slots": 24,
+    "union_records": 40
+   }
+  },
+  "B_prefetch|verify6|pport|vmres|sensitivity": {
+   "cycles": 5835881.9,
+   "records": 11092,
+   "unit_busy": {
+    "FUSED": 4286334.5,
+    "SM": 489974.2,
+    "COLL": 507480.2,
+    "SU": 252180.3,
+    "DMA": 123083.8,
+    "HC": 556804.0,
+    "IDX": 96113.2,
+    "CTL": 0.0,
+    "ARGMAX": 5627.0
+   },
+   "timing": "per layer segment, summed",
+   "compile": {
+    "shared": 5988,
+    "per_position": 5064,
+    "expert_slots": 24,
+    "union_records": 40
+   }
+  },
+  "B_prefetch|verify6|serial|swap|sensitivity": {
+   "cycles": 6213674.8,
+   "records": 14853,
+   "unit_busy": {
+    "DMA": 264011.0,
+    "FUSED": 4286334.5,
+    "SM": 1030823.5,
+    "COLL": 507480.2,
+    "SU": 252180.3,
+    "HC": 556804.0,
+    "IDX": 88821.9,
+    "CTL": 0.0,
+    "ARGMAX": 5627.0
+   },
+   "timing": "per layer segment, summed",
+   "compile": {
+    "shared": 2733,
+    "per_position": 11634,
+    "expert_slots": 24,
+    "union_records": 0
+   }
+  },
+  "B_prefetch|verify6|serial|vmres|sensitivity": {
+   "cycles": 6186742.0,
+   "records": 14367,
+   "unit_busy": {
+    "FUSED": 4286334.5,
+    "SM": 1030823.5,
+    "COLL": 507480.2,
+    "SU": 252180.3,
+    "DMA": 123083.8,
+    "HC": 556804.0,
+    "IDX": 88821.9,
+    "CTL": 0.0,
+    "ARGMAX": 5627.0
+   },
+   "timing": "per layer segment, summed",
+   "compile": {
+    "shared": 2733,
+    "per_position": 11634,
+    "expert_slots": 24,
+    "union_records": 0
+   }
+  },
+  "B_exposed|verify6|pport|swap|fixed|U36": {
+   "cycles": 2206999.4,
+   "records": 13498,
+   "unit_busy": {
+    "DMA": 264011.0,
+    "FUSED": 428216.0,
+    "SM": 601498.6,
+    "COLL": 653837.1,
+    "SU": 236344.0,
+    "HC": 556804.0,
+    "IDX": 124325.1,
+    "CTL": 0.0,
+    "ARGMAX": 5627.0
+   },
+   "timing": "per layer segment, summed",
+   "compile": {
+    "shared": 7908,
+    "per_position": 5064,
+    "expert_slots": 36,
+    "union_records": 40
+   }
+  },
+  "B_exposed|verify6|pport|swap|fixed|batch_FUSED": {
+   "cycles": 1769551.2,
+   "records": 11578,
+   "unit_busy": {
+    "DMA": 264011.0,
+    "FUSED": 71369.3,
+    "SM": 539894.2,
+    "COLL": 596897.8,
+    "SU": 236344.0,
+    "HC": 556804.0,
+    "IDX": 124325.1,
+    "CTL": 0.0,
+    "ARGMAX": 5627.0
+   },
+   "timing": "per layer segment, summed",
+   "compile": {
+    "shared": 5988,
+    "per_position": 5064,
+    "expert_slots": 24,
+    "union_records": 40
+   }
+  },
+  "B_exposed|verify6|pport|swap|fixed|batch_HC": {
+   "cycles": 1815016.7,
+   "records": 11578,
+   "unit_busy": {
+    "DMA": 264011.0,
+    "FUSED": 428216.0,
+    "SM": 539894.2,
+    "COLL": 596897.8,
+    "SU": 236344.0,
+    "HC": 92800.0,
+    "IDX": 124325.1,
+    "CTL": 0.0,
+    "ARGMAX": 5627.0
+   },
+   "timing": "per layer segment, summed",
+   "compile": {
+    "shared": 5988,
+    "per_position": 5064,
+    "expert_slots": 24,
+    "union_records": 40
+   }
+  },
+  "B_exposed|verify6|pport|swap|fixed|batch_COLL": {
+   "cycles": 1923550.6,
+   "records": 11578,
+   "unit_busy": {
+    "DMA": 264011.0,
+    "FUSED": 428216.0,
+    "SM": 539894.2,
+    "COLL": 394888.7,
+    "SU": 236344.0,
+    "HC": 556804.0,
+    "IDX": 124325.1,
+    "CTL": 0.0,
+    "ARGMAX": 5627.0
+   },
+   "timing": "per layer segment, summed",
+   "compile": {
+    "shared": 5988,
+    "per_position": 5064,
+    "expert_slots": 24,
+    "union_records": 40
+   }
+  },
+  "B_exposed|verify6|pport|swap|fixed|batch_IDX": {
+   "cycles": 2031462.3,
+   "records": 11578,
+   "unit_busy": {
+    "DMA": 264011.0,
+    "FUSED": 428216.0,
+    "SM": 539894.2,
+    "COLL": 596897.8,
+    "SU": 236344.0,
+    "HC": 556804.0,
+    "IDX": 30153.7,
+    "CTL": 0.0,
+    "ARGMAX": 5627.0
+   },
+   "timing": "per layer segment, summed",
+   "compile": {
+    "shared": 5988,
+    "per_position": 5064,
+    "expert_slots": 24,
+    "union_records": 40
+   }
+  },
+  "B_exposed|verify6|pport|swap|fixed|batch_SM": {
+   "cycles": 1858199.4,
+   "records": 11578,
+   "unit_busy": {
+    "DMA": 264011.0,
+    "FUSED": 428216.0,
+    "SM": 272534.2,
+    "COLL": 596897.8,
+    "SU": 236344.0,
+    "HC": 556804.0,
+    "IDX": 124325.1,
+    "CTL": 0.0,
+    "ARGMAX": 5627.0
+   },
+   "timing": "per layer segment, summed",
+   "compile": {
+    "shared": 5988,
+    "per_position": 5064,
+    "expert_slots": 24,
+    "union_records": 40
+   }
+  },
+  "B_exposed|verify6|pport|swap|fixed|batch_SU": {
+   "cycles": 2083869.5,
+   "records": 11578,
+   "unit_busy": {
+    "DMA": 264011.0,
+    "FUSED": 428216.0,
+    "SM": 539894.2,
+    "COLL": 596897.8,
+    "SU": 164344.0,
+    "HC": 556804.0,
+    "IDX": 124325.1,
+    "CTL": 0.0,
+    "ARGMAX": 5627.0
+   },
+   "timing": "per layer segment, summed",
+   "compile": {
+    "shared": 5988,
+    "per_position": 5064,
+    "expert_slots": 24,
+    "union_records": 40
+   }
+  },
+  "B_exposed|verify6|pport|swap|fixed|batch_DMA": {
+   "cycles": 2121303.3,
+   "records": 11578,
+   "unit_busy": {
+    "DMA": 198738.1,
+    "FUSED": 428216.0,
+    "SM": 539894.2,
+    "COLL": 596897.8,
+    "SU": 236344.0,
+    "HC": 556804.0,
+    "IDX": 124325.1,
+    "CTL": 0.0,
+    "ARGMAX": 5627.0
+   },
+   "timing": "per layer segment, summed",
+   "compile": {
+    "shared": 5988,
+    "per_position": 5064,
+    "expert_slots": 24,
+    "union_records": 40
+   }
+  }
+ },
+ "draft": {
+  "ATT tabl": {
+   "source": "/srv/opentallas-scratch/claude/hbm-mtp-1015/src-18598739b/sims/A/sim.json",
+   "verdict": "PASS",
+   "price_pos": 1048575,
+   "draft_cycles": 321890.5,
+   "draft_by_kind": {
+    "swapin": 11756.5,
+    "demb": 1630.0,
+    "dsa": 66105.0,
+    "swapout": 7230.0,
+    "dsb": 195454.0,
+    "dhead": 24887.5,
+    "markov": 14827.5
+   },
+   "seed_cycles": 43663.2,
+   "seed_columns": 6,
+   "mh_store_cycles": 7002.0,
+   "note": "row-serial DSpark draft as lowered (5 block rows one at a time per stage, column swaps), priced at the sim's --price-pos"
+  },
+  "option B": {
+   "source": "/srv/opentallas-scratch/claude/hbm-mtp-1015/src-18598739b/sims/B/sim.json",
+   "verdict": "PASS",
+   "price_pos": 1048575,
+   "draft_cycles": 330664.0,
+   "draft_by_kind": {
+    "swapin": 11756.5,
+    "demb": 1630.0,
+    "dsa": 66105.0,
+    "swapout": 7230.0,
+    "dsb": 204227.5,
+    "dhead": 24887.5,
+    "markov": 14827.5
+   },
+   "seed_cycles": 43663.2,
+   "seed_columns": 6,
+   "mh_store_cycles": 7002.0,
+   "note": "row-serial DSpark draft as lowered (5 block rows one at a time per stage, column swaps), priced at the sim's --price-pos"
+  }
+ },
+ "steps": {
+  "rule": "one DSpark step = verify(P) + draft (3 stages x 5 rows, dhead, gamma Markov) + seed(P columns) + the verify\ncolumns' main-hidden stores (L37..39) + the control plane's commands (40 VLAYER + VHEAD + SEED + 3 DSTAGE + DHEAD +\ngamma MARKOV, MD-1 budget each); tok/s = tau x clock / step.  AR = the same program's P = 1 token (same segmented\ntiming).  The sensitivity rows scale the draft + seed terms by the AR sensitivity / fixed ratio (the sim prices\nthose kernels on the fixed tables only).",
+  "commands_a_step": 51,
+  "table": [
+   {
+    "case": "A|verify6|pport|swap|fixed",
+    "attention": "A",
+    "sm": "pport",
+    "vm": "swap",
+    "prices": "fixed",
+    "verify_cycles": 1962908.6,
+    "draft_cycles": 321890.5,
+    "seed_cycles": 43663.2,
+    "mh_store_cycles": 7002.0,
+    "control_cycles": 816,
+    "step_cycles": 2336280.3,
+    "step_us": 1946.9,
+    "mtp_tok_s": 2136.2,
+    "ar_cycles": 569840.2,
+    "ar_tok_s": 2105.9,
+    "mtp_over_ar": 1.014
+   },
+   {
+    "case": "A|verify6|pport|vmres|fixed",
+    "attention": "A",
+    "sm": "pport",
+    "vm": "vmres",
+    "prices": "fixed",
+    "verify_cycles": 1935975.7,
+    "draft_cycles": 321890.5,
+    "seed_cycles": 43663.2,
+    "mh_store_cycles": 7002.0,
+    "control_cycles": 816,
+    "step_cycles": 2309347.4,
+    "step_us": 1924.46,
+    "mtp_tok_s": 2161.1,
+    "ar_cycles": 569840.2,
+    "ar_tok_s": 2105.9,
+    "mtp_over_ar": 1.026
+   },
+   {
+    "case": "A|verify6|serial|swap|fixed",
+    "attention": "A",
+    "sm": "serial",
+    "vm": "swap",
+    "prices": "fixed",
+    "verify_cycles": 2364422.7,
+    "draft_cycles": 321890.5,
+    "seed_cycles": 43663.2,
+    "mh_store_cycles": 7002.0,
+    "control_cycles": 816,
+    "step_cycles": 2737794.4,
+    "step_us": 2281.5,
+    "mtp_tok_s": 1822.9,
+    "ar_cycles": 569840.2,
+    "ar_tok_s": 2105.9,
+    "mtp_over_ar": 0.866
+   },
+   {
+    "case": "A|verify6|serial|vmres|fixed",
+    "attention": "A",
+    "sm": "serial",
+    "vm": "vmres",
+    "prices": "fixed",
+    "verify_cycles": 2337489.9,
+    "draft_cycles": 321890.5,
+    "seed_cycles": 43663.2,
+    "mh_store_cycles": 7002.0,
+    "control_cycles": 816,
+    "step_cycles": 2710861.6,
+    "step_us": 2259.05,
+    "mtp_tok_s": 1841.0,
+    "ar_cycles": 569840.2,
+    "ar_tok_s": 2105.9,
+    "mtp_over_ar": 0.874
+   },
+   {
+    "case": "A|verify6|pport|swap|sensitivity",
+    "attention": "A",
+    "sm": "pport",
+    "vm": "swap",
+    "prices": "sensitivity",
+    "verify_cycles": 5750083.8,
+    "draft_cycles": 660631.8,
+    "seed_cycles": 89612.2,
+    "mh_store_cycles": 14370.6,
+    "control_cycles": 816,
+    "step_cycles": 6515514.3,
+    "step_us": 5429.6,
+    "mtp_tok_s": 766.0,
+    "ar_cycles": 1169511.3,
+    "ar_tok_s": 1026.1,
+    "mtp_over_ar": 0.747
+   },
+   {
+    "case": "A|verify6|pport|vmres|sensitivity",
+    "attention": "A",
+    "sm": "pport",
+    "vm": "vmres",
+    "prices": "sensitivity",
+    "verify_cycles": 5723151.0,
+    "draft_cycles": 660631.8,
+    "seed_cycles": 89612.2,
+    "mh_store_cycles": 14370.6,
+    "control_cycles": 816,
+    "step_cycles": 6488581.5,
+    "step_us": 5407.15,
+    "mtp_tok_s": 769.2,
+    "ar_cycles": 1169511.3,
+    "ar_tok_s": 1026.1,
+    "mtp_over_ar": 0.75
+   },
+   {
+    "case": "A|verify6|serial|swap|sensitivity",
+    "attention": "A",
+    "sm": "serial",
+    "vm": "swap",
+    "prices": "sensitivity",
+    "verify_cycles": 6100943.9,
+    "draft_cycles": 660631.8,
+    "seed_cycles": 89612.2,
+    "mh_store_cycles": 14370.6,
+    "control_cycles": 816,
+    "step_cycles": 6866374.4,
+    "step_us": 5721.98,
+    "mtp_tok_s": 726.8,
+    "ar_cycles": 1169511.3,
+    "ar_tok_s": 1026.1,
+    "mtp_over_ar": 0.708
+   },
+   {
+    "case": "A|verify6|serial|vmres|sensitivity",
+    "attention": "A",
+    "sm": "serial",
+    "vm": "vmres",
+    "prices": "sensitivity",
+    "verify_cycles": 6074011.1,
+    "draft_cycles": 660631.8,
+    "seed_cycles": 89612.2,
+    "mh_store_cycles": 14370.6,
+    "control_cycles": 816,
+    "step_cycles": 6839441.6,
+    "step_us": 5699.53,
+    "mtp_tok_s": 729.7,
+    "ar_cycles": 1169511.3,
+    "ar_tok_s": 1026.1,
+    "mtp_over_ar": 0.711
+   },
+   {
+    "case": "B_exposed|verify6|pport|swap|fixed",
+    "attention": "B_exposed",
+    "sm": "pport",
+    "vm": "swap",
+    "prices": "fixed",
+    "verify_cycles": 2125559.4,
+    "draft_cycles": 330664.0,
+    "seed_cycles": 43663.2,
+    "mh_store_cycles": 7002.0,
+    "control_cycles": 816,
+    "step_cycles": 2507704.6,
+    "step_us": 2089.75,
+    "mtp_tok_s": 1990.2,
+    "ar_cycles": 596948.7,
+    "ar_tok_s": 2010.2,
+    "mtp_over_ar": 0.99
+   },
+   {
+    "case": "B_exposed|verify6|pport|vmres|fixed",
+    "attention": "B_exposed",
+    "sm": "pport",
+    "vm": "vmres",
+    "prices": "fixed",
+    "verify_cycles": 2098626.6,
+    "draft_cycles": 330664.0,
+    "seed_cycles": 43663.2,
+    "mh_store_cycles": 7002.0,
+    "control_cycles": 816,
+    "step_cycles": 2480771.8,
+    "step_us": 2067.31,
+    "mtp_tok_s": 2011.8,
+    "ar_cycles": 596948.7,
+    "ar_tok_s": 2010.2,
+    "mtp_over_ar": 1.001
+   },
+   {
+    "case": "B_exposed|verify6|serial|swap|fixed",
+    "attention": "B_exposed",
+    "sm": "serial",
+    "vm": "swap",
+    "prices": "fixed",
+    "verify_cycles": 2527073.6,
+    "draft_cycles": 330664.0,
+    "seed_cycles": 43663.2,
+    "mh_store_cycles": 7002.0,
+    "control_cycles": 816,
+    "step_cycles": 2909218.8,
+    "step_us": 2424.35,
+    "mtp_tok_s": 1715.5,
+    "ar_cycles": 596948.7,
+    "ar_tok_s": 2010.2,
+    "mtp_over_ar": 0.853
+   },
+   {
+    "case": "B_exposed|verify6|serial|vmres|fixed",
+    "attention": "B_exposed",
+    "sm": "serial",
+    "vm": "vmres",
+    "prices": "fixed",
+    "verify_cycles": 2500140.8,
+    "draft_cycles": 330664.0,
+    "seed_cycles": 43663.2,
+    "mh_store_cycles": 7002.0,
+    "control_cycles": 816,
+    "step_cycles": 2882286.0,
+    "step_us": 2401.91,
+    "mtp_tok_s": 1731.5,
+    "ar_cycles": 596948.7,
+    "ar_tok_s": 2010.2,
+    "mtp_over_ar": 0.861
+   },
+   {
+    "case": "B_exposed|verify6|pport|swap|sensitivity",
+    "attention": "B_exposed",
+    "sm": "pport",
+    "vm": "swap",
+    "prices": "sensitivity",
+    "verify_cycles": 5912734.7,
+    "draft_cycles": 662836.0,
+    "seed_cycles": 87525.5,
+    "mh_store_cycles": 14035.9,
+    "control_cycles": 816,
+    "step_cycles": 6677948.2,
+    "step_us": 5564.96,
+    "mtp_tok_s": 747.4,
+    "ar_cycles": 1196619.8,
+    "ar_tok_s": 1002.8,
+    "mtp_over_ar": 0.745
+   },
+   {
+    "case": "B_exposed|verify6|pport|vmres|sensitivity",
+    "attention": "B_exposed",
+    "sm": "pport",
+    "vm": "vmres",
+    "prices": "sensitivity",
+    "verify_cycles": 5885801.9,
+    "draft_cycles": 662836.0,
+    "seed_cycles": 87525.5,
+    "mh_store_cycles": 14035.9,
+    "control_cycles": 816,
+    "step_cycles": 6651015.4,
+    "step_us": 5542.51,
+    "mtp_tok_s": 750.4,
+    "ar_cycles": 1196619.8,
+    "ar_tok_s": 1002.8,
+    "mtp_over_ar": 0.748
+   },
+   {
+    "case": "B_exposed|verify6|serial|swap|sensitivity",
+    "attention": "B_exposed",
+    "sm": "serial",
+    "vm": "swap",
+    "prices": "sensitivity",
+    "verify_cycles": 6263594.8,
+    "draft_cycles": 662836.0,
+    "seed_cycles": 87525.5,
+    "mh_store_cycles": 14035.9,
+    "control_cycles": 816,
+    "step_cycles": 7028808.3,
+    "step_us": 5857.34,
+    "mtp_tok_s": 710.0,
+    "ar_cycles": 1196619.8,
+    "ar_tok_s": 1002.8,
+    "mtp_over_ar": 0.708
+   },
+   {
+    "case": "B_exposed|verify6|serial|vmres|sensitivity",
+    "attention": "B_exposed",
+    "sm": "serial",
+    "vm": "vmres",
+    "prices": "sensitivity",
+    "verify_cycles": 6236662.0,
+    "draft_cycles": 662836.0,
+    "seed_cycles": 87525.5,
+    "mh_store_cycles": 14035.9,
+    "control_cycles": 816,
+    "step_cycles": 7001875.5,
+    "step_us": 5834.9,
+    "mtp_tok_s": 712.8,
+    "ar_cycles": 1196619.8,
+    "ar_tok_s": 1002.8,
+    "mtp_over_ar": 0.711
+   },
+   {
+    "case": "B_prefetch|verify6|pport|swap|fixed",
+    "attention": "B_prefetch",
+    "sm": "pport",
+    "vm": "swap",
+    "prices": "fixed",
+    "verify_cycles": 2075639.4,
+    "draft_cycles": 330664.0,
+    "seed_cycles": 43663.2,
+    "mh_store_cycles": 7002.0,
+    "control_cycles": 816,
+    "step_cycles": 2457784.6,
+    "step_us": 2048.15,
+    "mtp_tok_s": 2030.6,
+    "ar_cycles": 588628.7,
+    "ar_tok_s": 2038.6,
+    "mtp_over_ar": 0.996
+   },
+   {
+    "case": "B_prefetch|verify6|pport|vmres|fixed",
+    "attention": "B_prefetch",
+    "sm": "pport",
+    "vm": "vmres",
+    "prices": "fixed",
+    "verify_cycles": 2048706.6,
+    "draft_cycles": 330664.0,
+    "seed_cycles": 43663.2,
+    "mh_store_cycles": 7002.0,
+    "control_cycles": 816,
+    "step_cycles": 2430851.8,
+    "step_us": 2025.71,
+    "mtp_tok_s": 2053.1,
+    "ar_cycles": 588628.7,
+    "ar_tok_s": 2038.6,
+    "mtp_over_ar": 1.007
+   },
+   {
+    "case": "B_prefetch|verify6|serial|swap|fixed",
+    "attention": "B_prefetch",
+    "sm": "serial",
+    "vm": "swap",
+    "prices": "fixed",
+    "verify_cycles": 2477153.6,
+    "draft_cycles": 330664.0,
+    "seed_cycles": 43663.2,
+    "mh_store_cycles": 7002.0,
+    "control_cycles": 816,
+    "step_cycles": 2859298.8,
+    "step_us": 2382.75,
+    "mtp_tok_s": 1745.5,
+    "ar_cycles": 588628.7,
+    "ar_tok_s": 2038.6,
+    "mtp_over_ar": 0.856
+   },
+   {
+    "case": "B_prefetch|verify6|serial|vmres|fixed",
+    "attention": "B_prefetch",
+    "sm": "serial",
+    "vm": "vmres",
+    "prices": "fixed",
+    "verify_cycles": 2450220.8,
+    "draft_cycles": 330664.0,
+    "seed_cycles": 43663.2,
+    "mh_store_cycles": 7002.0,
+    "control_cycles": 816,
+    "step_cycles": 2832366.0,
+    "step_us": 2360.3,
+    "mtp_tok_s": 1762.1,
+    "ar_cycles": 588628.7,
+    "ar_tok_s": 2038.6,
+    "mtp_over_ar": 0.864
+   },
+   {
+    "case": "B_prefetch|verify6|pport|swap|sensitivity",
+    "attention": "B_prefetch",
+    "sm": "pport",
+    "vm": "swap",
+    "prices": "sensitivity",
+    "verify_cycles": 5862814.7,
+    "draft_cycles": 667531.1,
+    "seed_cycles": 88145.5,
+    "mh_store_cycles": 14135.4,
+    "control_cycles": 816,
+    "step_cycles": 6633442.7,
+    "step_us": 5527.87,
+    "mtp_tok_s": 752.4,
+    "ar_cycles": 1188299.8,
+    "ar_tok_s": 1009.8,
+    "mtp_over_ar": 0.745
+   },
+   {
+    "case": "B_prefetch|verify6|pport|vmres|sensitivity",
+    "attention": "B_prefetch",
+    "sm": "pport",
+    "vm": "vmres",
+    "prices": "sensitivity",
+    "verify_cycles": 5835881.9,
+    "draft_cycles": 667531.1,
+    "seed_cycles": 88145.5,
+    "mh_store_cycles": 14135.4,
+    "control_cycles": 816,
+    "step_cycles": 6606509.9,
+    "step_us": 5505.42,
+    "mtp_tok_s": 755.4,
+    "ar_cycles": 1188299.8,
+    "ar_tok_s": 1009.8,
+    "mtp_over_ar": 0.748
+   },
+   {
+    "case": "B_prefetch|verify6|serial|swap|sensitivity",
+    "attention": "B_prefetch",
+    "sm": "serial",
+    "vm": "swap",
+    "prices": "sensitivity",
+    "verify_cycles": 6213674.8,
+    "draft_cycles": 667531.1,
+    "seed_cycles": 88145.5,
+    "mh_store_cycles": 14135.4,
+    "control_cycles": 816,
+    "step_cycles": 6984302.8,
+    "step_us": 5820.25,
+    "mtp_tok_s": 714.6,
+    "ar_cycles": 1188299.8,
+    "ar_tok_s": 1009.8,
+    "mtp_over_ar": 0.708
+   },
+   {
+    "case": "B_prefetch|verify6|serial|vmres|sensitivity",
+    "attention": "B_prefetch",
+    "sm": "serial",
+    "vm": "vmres",
+    "prices": "sensitivity",
+    "verify_cycles": 6186742.0,
+    "draft_cycles": 667531.1,
+    "seed_cycles": 88145.5,
+    "mh_store_cycles": 14135.4,
+    "control_cycles": 816,
+    "step_cycles": 6957370.0,
+    "step_us": 5797.81,
+    "mtp_tok_s": 717.3,
+    "ar_cycles": 1188299.8,
+    "ar_tok_s": 1009.8,
+    "mtp_over_ar": 0.71
+   }
+  ]
+ }
+}

@@ -1,0 +1,241 @@
+{
+ "schema": "opentallas.hbm_v15.smcol_v8_comparison",
+ "status": "PLAN ONLY (coordinator): no die shrink / die run until the owner (660 mm2 basis) decides",
+ "tool": "tools/hbm_die_v15/smcol_plan.py --mid 1200 --smgap 300 --channel 930",
+ "die": {
+  "v5": {
+   "um": [
+    31018.4,
+    21277.693
+   ],
+   "mm2": 660.0,
+   "placed_mm2": 535.17,
+   "density": 0.811
+  },
+  "v8": {
+   "um": [
+    31678.4,
+    14176.8
+   ],
+   "mm2": 449.1,
+   "placed_mm2": 264.29,
+   "density": 0.588,
+   "channels": "1.2 mm between halves, 0.3 mm SM->band, 0.93 mm centre channels; 412 mm2 at 0.6/0.02 mm, cut unchanged"
+  }
+ },
+ "bit_weighted_mean_stages": {
+  "v5": 6.43,
+  "v8": 5.51
+ },
+ "per_class": {
+  "HBM_K": {
+   "bits": 70784,
+   "v5_mean": 0.0,
+   "v5_max": 0,
+   "v8_mean": 0.0,
+   "v8_max": 0
+  },
+  "SM_X": {
+   "bits": 69888,
+   "v5_mean": 5.6,
+   "v5_max": 17,
+   "v8_mean": 6.4,
+   "v8_max": 18
+  },
+  "SM_HBM": {
+   "bits": 36224,
+   "v5_mean": 8.7,
+   "v5_max": 17,
+   "v8_mean": 0.0,
+   "v8_max": 0
+  },
+  "LG_SU": {
+   "bits": 17792,
+   "v5_mean": 0.0,
+   "v5_max": 0,
+   "v8_mean": 0.0,
+   "v8_max": 0
+  },
+  "LG_SFU": {
+   "bits": 17792,
+   "v5_mean": 0.0,
+   "v5_max": 0,
+   "v8_mean": 0.0,
+   "v8_max": 0
+  },
+  "LG_HC": {
+   "bits": 17792,
+   "v5_mean": 0.0,
+   "v5_max": 0,
+   "v8_mean": 0.0,
+   "v8_max": 0
+  },
+  "VM_RING": {
+   "bits": 17792,
+   "v5_mean": 11.0,
+   "v5_max": 14,
+   "v8_mean": 5.5,
+   "v8_max": 10
+  },
+  "COLL_VM": {
+   "bits": 17760,
+   "v5_mean": 13.2,
+   "v5_max": 22,
+   "v8_mean": 13.2,
+   "v8_max": 22
+  },
+  "VM_HUB": {
+   "bits": 17216,
+   "v5_mean": 15.1,
+   "v5_max": 23,
+   "v8_mean": 15.2,
+   "v8_max": 24
+  },
+  "COLL_EP": {
+   "bits": 11016,
+   "v5_mean": 13.8,
+   "v5_max": 16,
+   "v8_mean": 13.7,
+   "v8_max": 15
+  },
+  "EP_SERDES": {
+   "bits": 9504,
+   "v5_mean": 1.0,
+   "v5_max": 2,
+   "v8_mean": 1.0,
+   "v8_max": 2
+  },
+  "SM_OUT": {
+   "bits": 8640,
+   "v5_mean": 8.1,
+   "v5_max": 17,
+   "v8_mean": 14.9,
+   "v8_max": 23
+  },
+  "HBM_VM": {
+   "bits": 8192,
+   "v5_mean": 21.3,
+   "v5_max": 29,
+   "v8_mean": 20.7,
+   "v8_max": 29
+  },
+  "VM_HBM": {
+   "bits": 8192,
+   "v5_mean": 21.3,
+   "v5_max": 29,
+   "v8_mean": 20.8,
+   "v8_max": 29
+  },
+  "IDX_INT": {
+   "bits": 8064,
+   "v5_mean": 3.6,
+   "v5_max": 10,
+   "v8_mean": 6.5,
+   "v8_max": 13
+  },
+  "COLL_RING": {
+   "bits": 6608,
+   "v5_mean": 15.0,
+   "v5_max": 19,
+   "v8_mean": 9.0,
+   "v8_max": 12
+  },
+  "QUANT_VM": {
+   "bits": 4440,
+   "v5_mean": 0.0,
+   "v5_max": 0,
+   "v8_mean": 0.0,
+   "v8_max": 0
+  },
+  "SU_CORE": {
+   "bits": 3072,
+   "v5_mean": 7.8,
+   "v5_max": 14,
+   "v8_mean": 7.8,
+   "v8_max": 14
+  },
+  "SFU_CORE": {
+   "bits": 3072,
+   "v5_mean": 9.5,
+   "v5_max": 15,
+   "v8_mean": 9.5,
+   "v8_max": 15
+  },
+  "HC_CORE": {
+   "bits": 3072,
+   "v5_mean": 9.5,
+   "v5_max": 15,
+   "v8_mean": 9.5,
+   "v8_max": 15
+  },
+  "IDX_VM": {
+   "bits": 2192,
+   "v5_mean": 14.0,
+   "v5_max": 22,
+   "v8_mean": 14.0,
+   "v8_max": 22
+  },
+  "IDX_COLL": {
+   "bits": 2180,
+   "v5_mean": 15.0,
+   "v5_max": 15,
+   "v8_mean": 9.0,
+   "v8_max": 9
+  },
+  "KV_DESC": {
+   "bits": 2048,
+   "v5_mean": 8.2,
+   "v5_max": 17,
+   "v8_mean": 14.9,
+   "v8_max": 23
+  },
+  "HC_ENG": {
+   "bits": 2048,
+   "v5_mean": 39.0,
+   "v5_max": 52,
+   "v8_mean": 33.8,
+   "v8_max": 41
+  }
+ },
+ "worst_cut": {
+  "v5": {
+   "worst_v": 1.052,
+   "windows_over_060": 1531
+  },
+  "v8": {
+   "worst_v": {
+    "ratio": 1.107,
+    "x": 6700.0,
+    "y": [
+     4800.0,
+     5800.0
+    ]
+   },
+   "worst_h": {
+    "ratio": 0.531,
+    "y": 6700.0,
+    "x": [
+     12400.0,
+     13400.0
+    ]
+   },
+   "lines_over_060": 167,
+   "windows_over_060": 2301
+  }
+ },
+ "relay_flops": {
+  "v5": 2234230.0,
+  "v8": 1875966.0
+ },
+ "observations": [
+  "SM_HBM 8.7 -> 0 stages (every SM on its own PC box); VM_RING 11 -> 5, COLL_RING 15 -> 8.5, IDX_COLL 15 -> 9",
+  "SM_OUT 8.1 -> 14.2 and KV_DESC 8.2 -> 14.3 WORSE: the v5 band (copied unchanged) keeps the VM hub at the band inner end, 3+ mm beyond the 8.3-mm SM columns; next step = hub at the middle of the band over the SM columns",
+  "SM_X ~unchanged (all 8 SMs x 8 banks along the band)",
+  "band-internal vertical cut 1.05 (v5) -> 1.11 (v8): the band is the hot spot in both; channels do not fix it (sweep 412-495 mm2 plateaus at ~2,200 windows > 0.6); lane plan (v5 0.68-0.73) applies to both",
+  "visual: band 13.2 mm vs SM columns 8.3 mm -> the band overhangs the columns; centre region whitespace; IDX scorers sit beside PHY/columns in their own quadrant"
+ ],
+ "needs": [
+  "H-SM: SM tile 1036.8 x 2750 feasibility (re-pack)",
+  "owner: 660 mm2 basis vs ~450 mm2"
+ ]
+}
