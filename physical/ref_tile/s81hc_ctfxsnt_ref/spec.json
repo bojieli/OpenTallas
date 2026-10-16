@@ -73,10 +73,10 @@
  },
  "job": {
   "benches_from": "tools/s81_suhc/hc_owned_nt_benches.json",
-  "owner": "Claude:s81-engnorm-2210",
-  "branch": "claude/s81-norm-2210",
-  "tag": "s4-dlpin",
-  "structural_change": "s4 DL_PIN (S-ENGRAM+NORM 2210): s3 routed CLOSED TT +233.97 / FF +18.99 but native capture FAIL 49 pins (dl_in 33 up to 219.6, cs 16 up to 203.7 ps, R 130.1): each dl_in / cs bit reached its dl_out flop through the slot-select decode (vs[DS]&&farq, oct[0]) and the collision OR, in series with 5-7 FF-hold pads. The two slot selects are now registers decoded one cycle early from the ctq valid line (vs[DS-1]); every lane input sees ONE AND-OR level to its flop. Same word, same cycle, same outline/pins/clocks. A pure dl_in pin register was measured and rejected: +1 cycle per crossed strip makes same-parity octets collide (hc_gate NG256 exact FAIL lane fault cyc 1896 on 2d4856e45). | s3 pin-register defect repair: measured s2 launch229.30/capture231.34 violate220/190. Lane pins x8..118 and core x170..398 instead of10b/um groups; two roots, same outline and cycles. TWO CTS ROOTS + straight feed-through (S-NORM 2026-10-15): s1 routed native FAIL (R 271.9, spread 65.7; capture cs 283 / dl_in 226 / ul_in 227 / fd_in 219, launch fdx 236.5): one root over two disjoint sink clusters (NORM lanes x 40-86, data rows x 227-342) gives every single-flop feed-through the whole-tile spread. clk_l now clocks the lane registers (rr, ul_out, dl_out, farq/oct, ctq replica), clk the data rows (fv, fdx); each root has its own boundary R (phi - R per entry). fd_in / fv_in re-pinned at the fdx / fv x of the same bit (v23: internal cut 129 -> 0, max lateral 83.8 -> 0). Same registers and cycles (RTL: clock ports only); crossing hooks (clock_split, local_clock_tap, capture_driver_size) dropped.",
+  "owner": "Codex:S81-HC-2330",
+  "branch": "codex/s81-hc-2330",
+  "tag": "s5-dlpin-fence",
+  "structural_change": "Combine exact s4 early slot-select RTL 8ce8c2234 with exclusive site-aligned ctq replica fence f6d27f593. Routed s4 TT+251.41/FF+20.92/DRC0 still native capture250.58ps; localize remaining lane-root ctq sinks beside actual lane pins before evaluating native margins. No RTL/port/cycle change from s4.",
   "no_bench_reason": "bit-exactness is gated on the HC slab composition with dsfd_sp_hc NTREE 1 (tools/s81_suhc/hc_ntree_bench.sh: NG 256 production shape exact PASS + mutant 3 FAIL; tools/s81_suhc/hc_gate.py --ntree 1 NG 256 exact 0/1940 x3 + per-tile mutants); the tile alone has no golden",
   "purpose": "el1014-s81-norm-tree: ctfx_nt broadcast source without the local re-register (LOCAL_SPLIT 1)",
   "views_to": "physical/ref_tile/s81hc_ctfxsnt_ref/views",
@@ -95,8 +95,12 @@
    }
   ],
   "reroute_reason": {
-   "kind": "rtl_change",
-   "reason": "ctfx_nt2 DL_PIN=1 in ot_s81_hc_ctfxs_nt: registered slot selects, one logic level per lane input (s3 native capture FAIL 219.6 ps, results/arch/s81_engnorm_2210/norm_native_audits_2210.json)"
+   "kind": "pin_register",
+   "source": "results/arch/s81_hc_2330/xs_s4_native.json",
+   "cell": "ot_s81_hc_ctfxs_nt",
+   "launch_ps": 172.8,
+   "capture_ps": 250.58,
+   "fix": "Combine early slot decode with exclusive site-aligned lane-root ctq replica compaction. Exact core RTL and normal cycle timeline unchanged."
   },
   "hold_merge": "v25 NORM-tree candidate: adoption with the v25 set after native PASS and S-DIE pin grant."
  },
@@ -181,5 +185,8 @@
  "reroute_reason": {
   "kind": "rtl_change",
   "reason": "ctfx_nt2 DL_PIN=1 in ot_s81_hc_ctfxs_nt: registered slot selects, one logic level per lane input (s3 native capture FAIL 219.6 ps, results/arch/s81_engnorm_2210/norm_native_audits_2210.json)"
- }
+ },
+ "pin_hook_before_flops": [
+  "physical/ref_tile/s81hc_ctfxsnt_ref/lane_ctq_fence.tcl"
+ ]
 }
