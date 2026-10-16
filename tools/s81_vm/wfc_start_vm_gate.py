@@ -8,7 +8,7 @@ from wfc_guard_gate import instance
 from wfc_start_gate import FILES,START_PHASE
 
 def main():
- p=argparse.ArgumentParser();p.add_argument('--root',type=Path,required=True);p.add_argument('--source',type=Path,required=True);p.add_argument('--out',type=Path,required=True);a=p.parse_args();a.out.mkdir(parents=True,exist_ok=True)
+ p=argparse.ArgumentParser();p.add_argument('--root',type=Path,required=True);p.add_argument('--source',type=Path,required=True);p.add_argument('--out',type=Path,required=True);p.add_argument('--diagnostic-phase-file',type=Path);a=p.parse_args();a.out.mkdir(parents=True,exist_ok=True)
  pkg=json.loads((a.source/'source_manifest.json').read_text());files=[];pins={}
  for entry in pkg['files']:
   f=a.source/Path(entry['path']).name
@@ -59,12 +59,16 @@ def main():
  # Calibration runs diagnose only the immutable input schedule and are not
  # qualification. Then each actual programme is loaded before its START.
  phases=[]
- for phase in range(8):
-  r=subprocess.run([str(a.out/'obj/sim'),f'+PHASE={phase}','+CAL=1'],capture_output=True,text=True)
-  (a.out/f'cal{phase}.log').write_text(r.stdout+r.stderr)
-  m=re.search(r'START_CAL phase=\d+ sp=(\d+)',r.stdout)
-  if not m:raise RuntimeError('missing real producer calendar epoch')
-  phases.append(int(m.group(1)))
+ if a.diagnostic_phase_file:
+  phases=json.loads(a.diagnostic_phase_file.read_text())
+  if len(phases)!=8 or any(type(v)is not int or not 0<=v<4 for v in phases):raise ValueError('eight diagnostic phase literals required')
+ else:
+  for phase in range(8):
+   r=subprocess.run([str(a.out/'obj/sim'),f'+PHASE={phase}','+CAL=1'],capture_output=True,text=True)
+   (a.out/f'cal{phase}.log').write_text(r.stdout+r.stderr)
+   m=re.search(r'START_CAL phase=\d+ sp=(\d+)',r.stdout)
+   if not m:raise RuntimeError('missing real producer calendar epoch')
+   phases.append(int(m.group(1)))
  (a.out/'compiled_phase.json').write_text(json.dumps(phases)+'\n')
  for phase,sp in enumerate(phases):
   r=subprocess.run([str(a.out/'obj/sim'),f'+PHASE={phase}',f'+SP={sp}'],capture_output=True,text=True)
@@ -78,6 +82,6 @@ def main():
   (a.out/f'wrongwrite{phase}.log').write_text(r.stdout+r.stderr)
   if not r.returncode or 'actual consumer-command mapped SRAM stale'not in r.stdout:raise RuntimeError('wrongwrite escaped actual SRAM consumer')
   negative.append(dict(phase=phase,rc=r.returncode,failure='actual mapped SRAM read payload mismatch'))
- rec=dict(wrong_write_negative=negative,schema='opentallas.s81.posted-start-mapped-functional.v1' ,qualified=False,source_sha256=pins,compiler_phase=phases,compiler_extra_write_to_start_guard_core_edges=0,scope='actual producer,40generated station semantics,static_c8 PW36,currentWFC+128mappedSRAM; c0-command toVMread is explicit benchadapter, notnativeengine',rows=rows,physical_clocks_qualified=False,early_start_commit_failure_proven=False)
+ rec=dict(wrong_write_negative=negative,schema='opentallas.s81.posted-start-mapped-functional.v1' ,qualified=False,source_sha256=pins,diagnostic_per_offset_phase=phases,production_admissible=False,physical_compiler_epoch_bound=False,per_calibrated_epoch_extra_write_to_start_guard_core_edges=0,scope='actual producer,40generated station semantics,static_c8 PW36,currentWFC+128mappedSRAM; c0-command toVMread is explicit benchadapter, notnativeengine',rows=rows,physical_clocks_qualified=False,early_start_commit_failure_proven=False)
  (a.out/'receipt.json').write_text(json.dumps(rec,indent=2)+'\n');print('START_VM PASS',len(rows))
 if __name__=='__main__':main()

@@ -1,0 +1,4 @@
+WFC_GUARD_RESULT phase=0 gap=3 new=0 old=1 errors=0 write_serial=80 read_serial=83 reply_serial=104 xi=125 source=127 raw_write=138 raw_read=137 commit=140
+[2569000] %Fatal: tb_wfc_guard.sv:188: Assertion failed in tb_wfc_guard: WFC_GUARD EARLY
+%Error: /srv/opentallas-scratch/codex/s81-wfc-guard-1016/guard_final/tb_wfc_guard.sv:188: Verilog $stop
+Aborting...

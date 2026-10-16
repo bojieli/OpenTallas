@@ -1,0 +1,51 @@
+{
+  "package": "/home/ubuntu/artifacts/s81-vm-recovery-0253/a2f-final-617f3f44a",
+  "package_manifest_sha256": "b2064493b88a5916530bb5a7c11541825fe60b7f9ed9b331d6ba38dcf37a1cbc",
+  "minimum_measured_read_guard_serial_edges": [
+    4,
+    5,
+    5,
+    4,
+    5,
+    5,
+    4,
+    5
+  ],
+  "tested_direct_read_gaps_serial_edges": [
+    3,
+    4,
+    5
+  ],
+  "conservative_direct_read_guard_serial_edges": 5,
+  "reply_age_serial_edges": 21,
+  "one_edge_early_read_returns": "OLD sentinel at actual mapped SRAM",
+  "joined_per_calibrated_offset_commit_to_read_core_edges": [
+    30,
+    29,
+    29,
+    29,
+    30,
+    29,
+    29,
+    29
+  ],
+  "production_admissible": false,
+  "physical_compiler_epoch_bound": false,
+  "arbitrary_source_phase_single_programme": "offsets0and4 accepted; other6 fault5 for PWstart_phase1",
+  "per_offset_calibration_is_diagnostic_only": true,
+  "native_physical_image": null,
+  "native_engine_read_path_instantiated": false,
+  "current_unqualified_paths": [
+    "final physical clock/reset epoch and phi-R",
+    "later finalGEN WFC\u2192VM relay chain",
+    "actual native engine command\u2192read path",
+    "native fixed calendar for existing producer FIFO/link"
+  ],
+  "scope": "bounded related ideal clocks; actual components and mapped SRAM; no final die/native qualification",
+  "direct_read_write_reference": "serial posedge W samples dsfd_vm_static_wfc.f_wfc[0]=1 (final non-doorbell data write)",
+  "direct_read_request_reference": "serial posedge R samples same endpoint f_wfc[528]=1",
+  "direct_read_conservative_rule": "R >= W+5 for all8 tested source offsets; no incoming physical relay transport included",
+  "reply_age_reference": "f_wfc[528] sampled serial R -> t_wfc[514] valid/data observed after NBA at serial R+21",
+  "request_profile": "WFC core capture-to-decoded write output source-xi=2 currentcore edges (legacy1); totalreply+4core/+3serial includes request, never+5",
+  "production_epoch_proposal": "off-default future FIRST_SLOT_S/PERIOD_S multiple3/SLOT_COUNT, serial counter from declared srst_n epoch and pending52bit metadata; emit every reserved slot regardless pending/availability; commonphysicalepoch/compilerparamproducer stillUNBOUND"
+}

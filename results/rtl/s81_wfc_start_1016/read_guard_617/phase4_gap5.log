@@ -1,0 +1,6 @@
+WFC_GUARD_RESULT phase=4 gap=5 new=1 old=0 errors=0 write_serial=84 read_serial=89 reply_serial=110 xi=131 source=133 raw_write=144 raw_read=145 commit=146
+WFC_GUARD PASS
+- /srv/opentallas-scratch/codex/s81-wfc-guard-1016/guard_final/tb_wfc_guard.sv:189: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 3us; walltime 11.300 s; speed 230.176 ns/s
+- Verilator: cpu 11.300 s on 1 threads; allocated 41 MB

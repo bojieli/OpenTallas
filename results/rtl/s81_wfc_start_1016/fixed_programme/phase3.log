@@ -1,0 +1,4 @@
+START_CAL phase=3 sp=0 tc=253
+START_RESULT phase=3 sp=1 door=157 tks=158 fks=187 doors=1 pulses=1 commands=0 kits=0 errors=0 status=2a ft=0
+FATAL: /srv/opentallas-scratch/codex/s81-wfc-guard-1016/start/wfc_start_bench.sv:54: START actual producer/consumer failed
+       Time: 4009000  Scope: tb_wfc_start

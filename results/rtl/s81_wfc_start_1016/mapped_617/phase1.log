@@ -1,0 +1,7 @@
+START_CAL phase=1 sp=0 tc=253
+START_VM_RESULT phase=1 write=213 commit=226 firstread=255 replies=1 vmfault=0 wfcfault=0 sourceinput=201 outgoingwrite=156 rawwrite=224
+START_RESULT phase=1 sp=0 door=157 tks=158 fks=187 doors=1 pulses=1 commands=1 kits=1 errors=0 status=00 ft=0
+- /srv/opentallas-scratch/codex/s81-wfc-guard-1016/start_vm_final/tb_start_vm.sv:207: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 4us; walltime 15.590 s; speed 257.157 ns/s
+- Verilator: cpu 15.589 s on 1 threads; allocated 39 MB

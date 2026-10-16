@@ -1,0 +1,34 @@
+{
+  "scope": "source-visible launch epoch audit; no global phase inferred",
+  "source_sha256": {
+    "rtl/dsrom_sys/mtp/dsfd_wfc_stg_cl.sv": "289cde28ff543d3ae18302e212313ec05961b7b66b404f6ddf8b2e15138688c7",
+    "rtl/dsrom_sys/mtp/rtt/ot_dsrom_mtp_rstsync.sv": "08ae0f922a82d1ca82c6e9ef81a71a955e0b97b491341a094bd14163522181b6",
+    "rtl/dsrom_sys/s81_static_control/ot_s81_fixed_issue.sv": "a13de720755895b5f443dd8bb4b10dbfbc5cde5af059841bc10270f408d0df23",
+    "rtl/dsrom_sys/s81_static_control/dsfd_stage_seq_static_c.sv": "3fc9e5cd96970d49788e9a5a06fce3a31fb4984baa8cd505ad49084ada338521"
+  },
+  "existing_state": {
+    "vmx_w": "local reset synchronizers, FIFO pointers, busy, wcnt; no absolute epoch counter or reserved slot",
+    "f_cs_abi": "{start1,user10,token21,pos21}; no clock phase or epoch",
+    "static_cluster_st_edge": "fast counter reset by st_live; RX JOB end reserves TX at st_edge+TX_OFF; not connected to u_vp/u_vw",
+    "consumer": "fixed_issue free-running phase_q from local synchronized reset, checks phase_q+1 against sealed PW start_phase"
+  },
+  "missing": [
+    "source-visible common core/serial physical reset epoch",
+    "compiler producer of absolute START slot and phase contract",
+    "final die station clock/phi-R and later WFC\u2192VM relay ages"
+  ],
+  "candidate": {
+    "status": "AUTHORIZED OFF-DEFAULT NEXT; not implemented in sealed guard branch",
+    "parameters": [
+      "FIRST_SLOT_S",
+      "PERIOD_S multiple3",
+      "SLOT_COUNT"
+    ],
+    "state": "serial epoch counter from declared srst_n origin, pending52bit metadata, fixed slot counter",
+    "normal": "emit registered53bit at every configured slot independently of ready or pending; missing/late/overrun metadata faults without moving edge",
+    "initial_functional_example": "FIRST_SLOT_S148/PERIOD_S12/SLOT_COUNT1 under explicitly declared ideal common reset; proposed one PW phase3 for8 source arrivals; must measure actual counter edge before claiming",
+    "production_binding": "UNBOUND; no default production admission",
+    "scope": "future source-visible logical epoch mechanism only; physical common epoch still external"
+  },
+  "production_admissible": false
+}

@@ -1,0 +1,4 @@
+START_CAL phase=0 sp=3 tc=252
+[3222000] %Fatal: tb_start_vm.sv:32: Assertion failed in tb_wfc_start: actual consumer-command mapped SRAM stale
+%Error: /srv/opentallas-scratch/codex/s81-wfc-guard-1016/start_vm_negative_final/tb_start_vm.sv:32: Verilog $stop
+Aborting...

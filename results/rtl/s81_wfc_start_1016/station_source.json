@@ -1,0 +1,13 @@
+{
+  "scope": "initial17b generator semantics; final generated netlist absent",
+  "commit": "17b13fb0637869d53580a1084bdd250d18828d9b",
+  "path": "tools/dsrom_s81_fulldie.py",
+  "git_blob": "235e2206948dcc0b3fff196426f102e6a41ac480",
+  "sha256": "21619615fffc56c109150e89d96ed58a86652336775d341b3be291e639de6570",
+  "line": 10680,
+  "source_snippet": "        elif mst.startswith('dsfd_hstn') and HSTN_POSEDGE:\n            # --hstn-posedge: the same function (dq(t+1) = di(t) at the rising ck edge, 0 cycles) as plain posedge flops.\n            # The INV + negedge form below puts every sink behind an inverted clock: the ref_tile IO reference / link\n            # budget then reads the FALLING edge (struct-close 10-09 dsfd_hstnh_515_pe; FILL-S 10-15 gates: 'OT_LINK_BUDGET\n            # no latency for core_clk', median sink arrival 462.7 ps on all 54 stations), so no station hardens.\n            w = ports['di'][1]\n            body.append(f'    reg [{w - 1}:0] q;   // common-clock station: every di bit captured at the rising edge of ck')\n            body.append('    always @(posedge ck[0]) q <= di;')\n            body.append('    assign dq = q;')\n",
+  "station_count": 40,
+  "bus_records": 41,
+  "width": 53,
+  "physical_clock_qualified": false
+}

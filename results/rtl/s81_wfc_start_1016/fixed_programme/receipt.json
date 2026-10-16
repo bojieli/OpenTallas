@@ -1,0 +1,60 @@
+{
+  "scope": "one fixed PW start_phase1 across all8 source launch offsets",
+  "production_admissible": false,
+  "physical_compiler_epoch_bound": false,
+  "source_sha256": {
+    "rtl/dsrom_sys/mtp/dsfd_wfc_stg_cl.sv": "289cde28ff543d3ae18302e212313ec05961b7b66b404f6ddf8b2e15138688c7",
+    "rtl/common/ot_ratio_cdc_fifo.sv": "056f400898f3c1d669b9ba7a17083e63a39da980d0d4647a5ec96b11ba03300f",
+    "rtl/dsrom_sys/mtp/ot_dsrom_mtp_link_pair.sv": "9cee04525e5159f6046ebeeffff9e01f1f5130908658ee6910d4e8cccce577ee",
+    "rtl/dsrom_sys/mtp/ot_dsrom_mtp_skid.sv": "fe43c9c8afcc19ef27870da54405869d390f0565bccec12fcdb865a6d5d9fe09",
+    "rtl/dsrom_sys/mtp/rtt/ot_dsrom_mtp_rstsync.sv": "08ae0f922a82d1ca82c6e9ef81a71a955e0b97b491341a094bd14163522181b6",
+    "rtl/dsrom_sys/s81_static_control/ot_s81_fixed_issue.sv": "a13de720755895b5f443dd8bb4b10dbfbc5cde5af059841bc10270f408d0df23",
+    "rtl/dsrom_sys/s81_static_control/ot_s81_fixed_mailbox.sv": "e9629558b211dd2000ebb8970f87176d0648a00e3da2195201bbd135539412b7",
+    "rtl/dsrom_sys/s81_static_control/dsfd_stage_seq_static_c.sv": "3fc9e5cd96970d49788e9a5a06fce3a31fb4984baa8cd505ad49084ada338521",
+    "rtl/dsrom_sys/s81_static_control/dsfd_stage_seq_static_c8.sv": "c10293192d5859139181269994dd2caa0930a569e4785f8613ace66db8bfddd8",
+    "tools/s81_vm/wfc_start_bench.sv": "d60942ae6c68b08a5281ae2202a36f173ca077c771c8752057e68ee814e3f992"
+  },
+  "rows": [
+    {
+      "phase": 0,
+      "result": "phase=0 sp=1 door=155 tks=156 fks=185 doors=1 pulses=1 commands=1 kits=1 errors=0 status=00 ft=0",
+      "accepted": true
+    },
+    {
+      "phase": 1,
+      "result": "phase=1 sp=1 door=156 tks=157 fks=186 doors=1 pulses=1 commands=0 kits=0 errors=0 status=2a ft=0",
+      "accepted": false
+    },
+    {
+      "phase": 2,
+      "result": "phase=2 sp=1 door=156 tks=157 fks=186 doors=1 pulses=1 commands=0 kits=0 errors=0 status=2a ft=0",
+      "accepted": false
+    },
+    {
+      "phase": 3,
+      "result": "phase=3 sp=1 door=157 tks=158 fks=187 doors=1 pulses=1 commands=0 kits=0 errors=0 status=2a ft=0",
+      "accepted": false
+    },
+    {
+      "phase": 4,
+      "result": "phase=4 sp=1 door=158 tks=159 fks=188 doors=1 pulses=1 commands=1 kits=1 errors=0 status=00 ft=0",
+      "accepted": true
+    },
+    {
+      "phase": 5,
+      "result": "phase=5 sp=1 door=159 tks=160 fks=189 doors=1 pulses=1 commands=0 kits=0 errors=0 status=2a ft=0",
+      "accepted": false
+    },
+    {
+      "phase": 6,
+      "result": "phase=6 sp=1 door=159 tks=160 fks=189 doors=1 pulses=1 commands=0 kits=0 errors=0 status=2a ft=0",
+      "accepted": false
+    },
+    {
+      "phase": 7,
+      "result": "phase=7 sp=1 door=160 tks=161 fks=190 doors=1 pulses=1 commands=0 kits=0 errors=0 status=2a ft=0",
+      "accepted": false
+    }
+  ],
+  "classification": "Only offsets0and4 accepted; all6 incompatible source phases produce real fixed_issue fault5. Calibrated per-offset PW phases are diagnostic only."
+}
