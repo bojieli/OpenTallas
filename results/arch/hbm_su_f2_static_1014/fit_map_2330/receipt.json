@@ -24,6 +24,29 @@
    "raw_std_total_mm2": 0.026624013119999998,
    "source_hashes_match_immutable_commit": true,
    "normalized_netlist_sha256": "76ed36fc51e6774bb9c8e18979e6a5031471549ba23f2618e7a013f7d023e5f1"
+  },
+  "SIDE": {
+   "count": 1,
+   "area_um2": 33545.56194,
+   "cell_count": 249606,
+   "FF": 41296,
+   "max_clock_sinks": 9997,
+   "used_roots": 6,
+   "raw_std_total_mm2": 0.03354556194,
+   "source_hashes_match_immutable_commit": true,
+   "normalized_netlist_sha256": "2831cafd601cbb66a46c24fbbf09a41c38a1f83ca850f84efe927716dacb435d"
+  },
+  "RF": {
+   "count": 256,
+   "area_um2": 316.80882,
+   "cell_count": 2197,
+   "FF": 577,
+   "max_clock_sinks": 577,
+   "used_roots": 1,
+   "raw_std_total_mm2": 0.08110305792000001,
+   "source_hashes_match_immutable_commit": true,
+   "normalized_netlist_sha256": "42267e46cd30788c11b5b96e3de83e35b8601523ccb3d112842410f49e3c2790"
   }
- }
+ },
+ "RF_note": "Actual mapped RFbank has577 FF vs declared six coherent replicas; synthesis can merge identical written payload while preserving six real read ports. Counts are from actual cell instances and support no physically qualified view inheritance."
 }

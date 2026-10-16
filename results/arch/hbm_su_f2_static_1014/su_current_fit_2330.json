@@ -29,7 +29,12 @@
   "VM_leafs": 32,
   "broadcast_replicas_per_pg": 32,
   "broadcast_bits_per_replica": 1742,
-  "broadcast_FF": 891904
+  "broadcast_FF": 891904,
+  "broadcast_count_scope": "Declared RTL storage bits before merging identical replicas, not measured physical FF",
+  "broadcast_mapped_FF": null,
+  "RF_base_logical_words": 1024,
+  "RF_payload_replicas_declared": 6,
+  "RF_total_mapped_FF": 147712
  },
  "outline_candidates": {
   "bank": {
