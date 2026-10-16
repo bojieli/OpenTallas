@@ -16,7 +16,7 @@ module tb_qfd_xdvm_prod;
     parameter integer NCOL = 48, NH = 8, TG = 4;
     parameter integer GT = NCOL * 2 * NH * TG;
     parameter integer SMIN = 7, SMAX = 11, TCUT = 3;
-    parameter integer LEAF_READ_PIN_PIPE = 0,
+    parameter integer LEAF_READ_PIN_PIPE = 0;
     parameter integer LEAF_FILL_PIPE = 0, LEAF_BANK_PIPE = 0, REQ_PIPE = 0;
     parameter integer HB = 3, DX = 10 + LEAF_READ_PIN_PIPE + LEAF_BANK_PIPE + REQ_PIPE + (NH/2-1)*LEAF_FILL_PIPE, FILL_LEAD = 2 + (NH/2-1)*LEAF_FILL_PIPE, TIDM = 1, XOFF = 3, XVMR = 12;
     parameter integer NLAYER = 2, NRAND = 6, SEED = 1, GAP = 4;
