@@ -30,6 +30,13 @@ module tb_dsfd_sp_vm_static;
 `else
     localparam integer CAP_PIPE=0;
 `endif
+    // S-VM 0030: the master bench used to ignore OT_VM_NATIVE_WSCATTER (always WSCATTER_PIPE 0), so the 10-16 "pipe 1"
+    // receipt (results/rtl/s81_vm_master_current_scatter_20261016) ran pipe 0 twice.  The define now reaches the DUT.
+`ifdef OT_VM_NATIVE_WSCATTER
+    localparam integer WSCATTER_PIPE=1;
+`else
+    localparam integer WSCATTER_PIPE=0;
+`endif
 
     reg s_ck = 1, t_ck = 1, rst = 0, rss = 0;
     always #556 s_ck = ~s_ck;
@@ -43,7 +50,7 @@ module tb_dsfd_sp_vm_static;
     reg [2203:0] fcol = 0; reg [14:0] crq = 0; wire [512:0] crs;
     reg [514:0] sel = 0, col = 0; reg [1026:0] asw = 0;
     wire [511:0] tgat; reg [10:0] xgo = 0; wire [512:0] qsw; reg [2:0] qsws = 3'b011;
-    dsfd_sp_vm #(.CAP_PIPE(CAP_PIPE), .READ_PIPE(READ_PIPE)) dut (
+    dsfd_sp_vm #(.CAP_PIPE(CAP_PIPE), .READ_PIPE(READ_PIPE), .WSCATTER_PIPE(WSCATTER_PIPE)) dut (
         .ck_read_data_t({64{t_ck}}), .ck_read_valid_t({8{t_ck}}), .rss_read_data_t({64{rss}}), .rss_read_valid_t({8{rss}}),
         .ck_core_t(t_ck), .ck_rsched_t(t_ck), .ck_seq_t(t_ck), .ck_landing_t(t_ck),
         .ck_mem_fsr_t({16{t_ck}}), .ck_mem_return_t({16{t_ck}}), .ck_mem_bank_t({128{t_ck}}),
