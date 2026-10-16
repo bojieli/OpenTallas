@@ -1,0 +1,18 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "dsfd_stage_seq_static_c10",
+ "enable": true,
+ "clock": "ck",
+ "clock_ports": [
+  "ck"
+ ],
+ "exclude": "^(f_ks|f_pw|f_pq_pw|t_kd|t_st)(\\[.*\\])?$",
+ "reset": "",
+ "reason": "These four serial-domain ports terminate in explicit ckv mailbox registers; ck pin flops would create an incorrect clock-domain crossing. Their ckv paths retain the related 3:4 clock signoff.",
+ "latency_cycles": {
+  "input": 1,
+  "output": 1
+ },
+ "rule": "OWNER RULE 19:50 PT 2026-10-15: every new tile registers every input and every output at its pin",
+ "per_port_table": "$RESULTS_DIR/ot_pin_regs.tsv (route synthesis: port dir width cycles why)"
+}
