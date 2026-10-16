@@ -1,0 +1,23 @@
+{
+ "cell": "ot_hgi_dma_back_landing_bank",
+ "view": "ot_hgi_dma_back_landing_bank",
+ "lib_cell": "ot_hgi_dma_back_landing_bank",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 155.1,
+ "spread_ps": 39.4,
+ "outputs": 289,
+ "inputs": 306,
+ "launch_ps": 181.5,
+ "launch_pin": "wd[49]",
+ "capture_ps": 191.5,
+ "capture_pin": "read_slot[0]",
+ "launch_over": 0,
+ "capture_over": 4,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pass": false,
+ "fail_why": "capture 191.4728 > 190 (4 pins)"
+}
