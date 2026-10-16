@@ -45,7 +45,7 @@ def main():
     candidate=body
     for port in outputs:
         candidate=re.sub(r'\.'+re.escape(port)+r'\([^()]*\)',f'.{port}(joint_candidate_{port})',candidate)
-    candidate=candidate.replace('.ck_ctl(clk)','.ck_ctl(joint_ctl_clk)').replace('.ck_lane(clk)','.ck_lane(joint_lane_clk)')
+    candidate=candidate.replace('.ck_ctl(clk)','.ck_ctl(joint_ctl_clk)').replace('.ck_lane(clk)','.ck_lane(joint_lane_clk)').replace('.ck_cmd(clk)','.ck_cmd(joint_cmd_clk)').replace('.ck_calendar(clk)','.ck_calendar(joint_calendar_clk)')
     replacement='dsfd_sp_pq_produced dut('+body+');\n dsfd_sp_pq_joint_candidate candidate('+candidate+');'
     fixture=fixture[:match.start()]+replacement+fixture[match.end():]
     fixture=fixture.replace('module tb_s81_pq_produced_pins;','module tb_s81_pq_joint_lockstep;')
@@ -58,6 +58,8 @@ def main():
  always @(negedge clk)joint_tick=joint_tick+1;
  wire joint_ctl_clk=(joint_mut==1&&joint_tick>=280)?1'b0:clk;
  wire joint_lane_clk=(joint_mut==2&&joint_tick>=280)?1'b0:clk;
+ wire joint_cmd_clk=(joint_mut==3&&joint_tick>=280)?1'b0:clk;
+ wire joint_calendar_clk=(joint_mut==4&&joint_tick>=280)?1'b0:clk;
  always @(posedge clk)begin
   #2;if(rst_n)begin
    joint_compared=joint_compared+1;
@@ -79,7 +81,7 @@ def main():
     cmd=[verilator,'--binary','--timing','-j','8','--top-module','tb_s81_pq_joint_lockstep','--Mdir',str(executable.parent),'-Wno-fatal','-Wno-lint','-Wno-style',*[f'+define+{d}'for d in h['defines']],*[str(f)for f in sources],str((a.extract/'candidate.v').resolve()),str(bench)]
     with(a.out/'build.log').open('w')as log:subprocess.run(cmd,stdout=log,stderr=subprocess.STDOUT,check=True)
     cases=[]
-    for mode in [0,1,2]:
+    for mode in [0,1,2,3,4]:
         with(a.out/f'mode{mode}.log').open('w')as log:
             rc=subprocess.run([str(executable),f'+mut={mode}','+OT_ROM_DIR='+str(a.out.resolve())],stdout=log,stderr=subprocess.STDOUT).returncode
         text=(a.out/f'mode{mode}.log').read_text()
