@@ -45,8 +45,14 @@ EDGE = 120.0
 SC_GAP = 100.0                         # relay row between the two scorers of a die half (cross-column relay homes)
 
 
-def build(G0, area_mm2, channel=CHANNEL, band=None, hub_w=0.0):
+def build(G0, area_mm2, channel=CHANNEL, band=None, hub_w=0.0, su_w=None, su_h=None, smw=None, smh=None, carry=False, layout='v5'):
+    """v6 (H-DIE-V6PLAN 10-16, OWNER 02:15 die may grow): su_w/su_h = SU slice outline (default 1250 x 1780), smw/smh = SM
+    slot (default 6609.6 x 1712.08), carry = also place the v5 grants that are not graph nodes (sfucore_<q> 763.56 x
+    1936.44 after the SU core; DMA back at its granted 511.92 width, shifted 79.92 um west as hb_dbk_<q>).  Defaults
+    reproduce compact660_v5 exactly."""
     BAND = band or globals()['BAND']
+    SU_W = su_w or globals()['SU_W']; SU_H = su_h or globals()['SU_H']
+    SMW = smw or globals()['SMW']; SMH = smh or globals()['SMH']
     G = copy.deepcopy(G0)
     N = G['nodes']
     P = {}
@@ -87,6 +93,8 @@ def build(G0, area_mm2, channel=CHANNEL, band=None, hub_w=0.0):
         sms = sorted([k for k in N if k.startswith(f'sm_{q}')], key=lambda s: int(s[len(f'sm_{q}'):]))
         rows = [y_a, y_b, y_c, y_d]
         for k, s in enumerate(sms):
+            if smw or smh:
+                setn(s, SMW, SMH, f'SM slot v6 {SMW} x {SMH} (H-SM real single-row body + front)')
             put(s, EDGE + (k % 2) * (SMW + GAP), rows[k // 2], q)
         # VM band
         x = EDGE
@@ -97,6 +105,29 @@ def build(G0, area_mm2, channel=CHANNEL, band=None, hub_w=0.0):
         for g in range(4):
             bw = N[banks[2 * g]]['w']
             bh = N[banks[2 * g]]['h']
+            if layout == 'col':
+                # v6 'col' group (H-DIE-V6PLAN): bank pair stacked at the band's SM side, HC shell | SFU group side by
+                # side on top of the pair (both abut bank 1, <= 385 um from bank 0), QUANT (NW) over the HC; the SU
+                # slice takes the full band height to the right, so the band grows by SU area / SU_W only
+                cw = max(bw, 2 * HC + GAP)
+                put(banks[2 * g], x, y_band, q)
+                put(banks[2 * g + 1], x, y_band + bh + GAP, q)
+                yh = y_band + 2 * (bh + GAP)
+                setn(hc[g], HC, HC, 'HC combined shell 500 x 500 (GEO-H)')
+                put(hc[g], x, yh, q)
+                sh = round(SFU_A / HC, 3)
+                setn(sfu[g], HC, sh, 'SFU port group 0.40 mm2 (quadrant macro floor 0.838 mm2 x1.25 + logic, Codex 0bd)')
+                put(sfu[g], x + HC + GAP, yh, q)
+                top_c = yh + sh
+                if q == 'NW':
+                    put(f'quant_NW{g}', x, yh + HC + GAP, q)
+                    top_c = max(top_c, yh + HC + GAP + 245)
+                assert top_c <= y_band + BAND + 1e-6, (q, g, 'col group taller than band', top_c - y_band)
+                x += cw + GAP
+                setn(su[g], SU_W, SU_H, 'SU slice v6 (H-SU 77 mm2 at 60 % util: 4.8 mm2 per port group)')
+                put(su[g], x, y_band, q)
+                x += SU_W + GAP
+                continue
             # left column (500 wide): HC shell / QUANT (NW) / SFU group, each within 500 um of BOTH banks of the pair
             setn(hc[g], HC, HC, 'HC combined shell 500 x 500 (GEO-H)')
             put(hc[g], x, y_band, q)
@@ -119,6 +150,11 @@ def build(G0, area_mm2, channel=CHANNEL, band=None, hub_w=0.0):
         setn(f'sucore_{q}', CORE_W, SU_H, 'SU:ot_hbm_su_static_qcore RF replica + reducer (H-ELEM-B)')
         put(f'sucore_{q}', x, y_band, q)
         x += CORE_W + GAP
+        if carry:   # granted SFU core (main 818f005b6): band gap between the SU core and the COLL/DMA-back stack
+            x += 1.6
+            setn(f'sfucore_{q}', 763.56, 1936.44, 'SFU core grant sfucore_<q> (H-SU accepted 10-16)')
+            put(f'sfucore_{q}', x, y_band + 21.77, q)
+            x += 763.56
         if hub_w:
             # TALL HUB (H-DIE r2 cut fix): hub reshaped to hub_w x (BAND - 2 GAP) at the quadrant's inner edge, so its
             # band-facing (W) and channel-facing (E) faces are ~1.8 mm long (pin density and the face cut both drop by
@@ -130,8 +166,14 @@ def build(G0, area_mm2, channel=CHANNEL, band=None, hub_w=0.0):
             assert slack >= -1e-6, (q, 'band too long for the tall hub', slack)
             setn(f'coll_{q}', COLL_W, COLL_H, 'COLL v15 grant')
             put(f'coll_{q}', cx, y_band + GAP, q)
-            setn(f'dbk_{q}', DBK_W, DBK_H, 'DMA:ot_hgi_dma_back_static v15 grant (no T_band2 block)')
-            put(f'dbk_{q}', cx, y_band + GAP + COLL_H + GAP, q)
+            if carry:   # granted vp4 DMA parent home 511.92 x 360.72, 79.92 um west of the COLL column (hardening_grants_2330)
+                setn(f'dbk_{q}', 511.92, DBK_H, 'DMA:ot_hgi_dma_back_static_vp4_banks grant 2330')
+                put(f'dbk_{q}', cx - 79.92, y_band + GAP + COLL_H + GAP, q)
+                slack = cx - 79.92 - 21.6 - x
+                assert slack >= -1e-6, (q, 'band too long for sfucore + granted DMA back', slack)
+            else:
+                setn(f'dbk_{q}', DBK_W, DBK_H, 'DMA:ot_hgi_dma_back_static v15 grant (no T_band2 block)')
+                put(f'dbk_{q}', cx, y_band + GAP + COLL_H + GAP, q)
             if q == 'SW':
                 setn('idx_op', 360.72, 317.52, 'IDX:ot_hbm_idx_vm_query_static grant')
                 put('idx_op', cx + DBK_W + GAP, y_band + GAP + COLL_H + GAP, q)
@@ -194,18 +236,23 @@ def main():
     ap.add_argument('--band', type=float, default=BAND, help='VM band height (SM row 2 to row 3 gap) in um')
     ap.add_argument('--hub-w', type=float, default=0.0, help='tall VM hub of this width (0 = 1.1 mm square hub)')
     ap.add_argument('--fit', action='store_true', help='grow --area to the smallest outline that fits (10 mm2 steps of 0.1)')
+    ap.add_argument('--su-w', type=float); ap.add_argument('--su-h', type=float)
+    ap.add_argument('--smw', type=float); ap.add_argument('--smh', type=float)
+    ap.add_argument('--layout', default='v5', choices=('v5', 'col'), help="band group layout ('col' = v6 bank-pair column)")
+    ap.add_argument('--carry', action='store_true', help='place the non-graph v5 grants (sfucore, granted DMA back width)')
     ap.add_argument('--out', required=True)
     a = ap.parse_args()
+    kw = dict(su_w=a.su_w, su_h=a.su_h, smw=a.smw, smh=a.smh, carry=a.carry, layout=a.layout)
     G0 = json.loads((ROOT / a.graph).read_text())
     if a.fit:
         area = a.area
         while True:
             try:
-                G, P, W, H = build(G0, area, a.channel, a.band, a.hub_w); break
+                G, P, W, H = build(G0, area, a.channel, a.band, a.hub_w, **kw); break
             except SystemExit:
                 area = round(area + 0.1, 1)
     else:
-        G, P, W, H = build(G0, a.area, a.channel, a.band, a.hub_w)
+        G, P, W, H = build(G0, a.area, a.channel, a.band, a.hub_w, **kw)
     F.W_DIE, F.H_DIE = W, H
     missing = [i for i in G['nodes'] if i not in P]
     ov = F.overlaps(P)
