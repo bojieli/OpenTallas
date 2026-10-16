@@ -179,7 +179,10 @@
  "merge_target": null,
  "structural_change": "New explicit master/source wrapper for current native45 source dependency. Wire-only wrapper adds no state or latency. Separate current gate/actualpin-cost qualification required before parent binds. | r2 (Q-ELEM-SU 10-16): clock spine balanced with symmetric insertion-aware topology, subtree-common padding and bounded measured balancing (OT_SPINE_SYM/TREE_PAD/SAFE_BALANCE, as CLOSED qfd_su_cbuf_g_tp8r on the same SRAM): the unbounded fine pass learned a 3 ps/pad estimate from the coarse pads and inserted ~17,600 pad cells (6,180 -> 23,785 spine cells, +2,870 um2 fixed, util 53% -> 67%), leaf arrival 460 -> 655 ps, and detailed placement failed DPL-0033 after hold repair | B (Q-ELEM-SU 10-16 06:55): SRAM macro moved from the centre (x 38.9) to the pin-free E side (x 55.7, 20 um E channel): the A gate density map showed the 765-input W pin-flop band red (>1.0) in a 37 um strip W of the macro and an empty 37 um region E of it; the W band gets 54 um | g (Q-ELEM 10-16 10:55): boundary balance: spine tol 25->5 ps, bins 30 um, leaf 4 sinks, 30 iters; e routed native FAIL launch 243.6/capture 197.3 from in-flow IO hold cells on early boundary flops (boundary FF clk 243..312 vs mean 286); same RTL/pins/outline/0 cycles",
  "reroute_reason": {
-  "kind": "native-fail",
-  "why_route": "e (6a8658bf3) CLOSED but native FAIL launch 243.6 l_raddr / capture 197.3 crom_q: boundary clock spread 66 ps -> hold cells on pin paths"
+  "kind": "native_launch",
+  "source": "results/arch/qelem_native_1016/native_audit_lane_h_e.json",
+  "cell": "qfd_su_lane_h_native_crom5",
+  "launch_ps": 243.6,
+  "fix": "boundary clock balance (spine tol/bins) removes in-flow IO hold cells on early boundary flops; same RTL/pins/outline, 0 cycles"
  }
 }
