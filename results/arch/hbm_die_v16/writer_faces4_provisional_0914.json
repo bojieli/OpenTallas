@@ -2,7 +2,7 @@
  "schema": "opentallas.hbm.provisional_native_child_grant.v1",
  "status": "PROVISIONAL_ISOLATED_SUCCESSOR_MEASUREMENT_ONLY",
  "cell": "ot_hbm_sm_vm_wr_q_t_faces4",
- "source_snapshot": "b75a3b5a0",
+ "source_snapshot": "49133eccd",
  "params": {
   "DEPTH": 4,
   "MUT": 0
@@ -13,10 +13,10 @@
   "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv": "9276c7b41a9ff684e6e2db3fe4d0b22310cae08c3ddfbeaaf08fc19d7d0fb6b0",
   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v": "5f736eaf4e9b3ad93fb728861f29a8da6bf626e53d8facb9e1e5e8af738d6571",
   "physical/ref_tile/hsm_smvm_wrq_t_r4/spec.json": "8eff659894ba61500a8351446c871d2c3f695aa5820f6e0625ce3c99ccad746f",
-  "physical/ref_tile_specs/smh/smvm_writer_faces4_pins.tcl": "a1af36c248b51b3ab674683f3ed466b4b4fa0df7948a4d52fb29c152a573dea5",
-  "results/physical/hsm_takeover_0825/writer_faces4_pins.json": "d16e10004485b1b67b79c1b097fc4fa5534ed8096c94460c8cfd83634762c7f0",
+  "physical/ref_tile_specs/smh/smvm_writer_faces4_pins.tcl": "df74f277c68f6ac0387d9747ef6b4bd90700789c54a44b9311a1812c0f558d0e",
+  "results/physical/hsm_takeover_0825/writer_faces4_pins.json": "3dc46d5825c6bcc126cc2dcbb2e659eb989bd67d028818010d2f98652d7a71c1",
   "results/physical/hsm_takeover_0825/writer_faces4_bench.log": "5b366678c5af41d433f3b0b3933e1de406988bb4562a25d6d39ef2bb145ab548",
-  "tools/hbm_sm_repack_1015/writer_faces4_plan.py": "c6973d6874b93557ddeeda7f39eb1e8e0fd3ce244e5f4080413c0969441ace1c"
+  "tools/hbm_sm_repack_1015/writer_faces4_plan.py": "4b20c364a2afd2a0e2a95f9c90a899ca3b643a9d990508b0ac89098241d4d813"
  },
  "outline": {
   "w": 142.56,
@@ -157,7 +157,7 @@
     191.244
    ],
    "reserved_clock_centres_um": [
-    97.212
+    97.236
    ],
    "usable_face_um": 184.752,
    "allocation_um_per_bit": 0.096,
@@ -172,8 +172,8 @@
     384.468
    ],
    "reserved_clock_centres_um": [
-    291.612,
-    300.012
+    291.636,
+    300.036
    ],
    "usable_face_um": 182.592,
    "allocation_um_per_bit": 0.096,
@@ -188,7 +188,7 @@
     191.244
    ],
    "reserved_clock_centres_um": [
-    97.212
+    97.236
    ],
    "usable_face_um": 184.752,
    "allocation_um_per_bit": 0.096,
@@ -203,7 +203,7 @@
     384.468
    ],
    "reserved_clock_centres_um": [
-    291.612
+    291.636
    ],
    "usable_face_um": 184.752,
    "allocation_um_per_bit": 0.096,
@@ -245,7 +245,7 @@
  ],
  "raw_calendar_clock": {
   "parent_entry_face": "W",
-  "parent_entry_offset_um": 300.012,
+  "parent_entry_offset_um": 300.036,
   "macro_clock_local_um": [
    0.012,
    0.78
@@ -254,15 +254,16 @@
    23.34,
    303.18
   ],
-  "nominal_boundary_manhattan_um": 26.508,
+  "nominal_boundary_manhattan_um": 26.484,
   "qualification": "Actual stub slew/cap and real Liberty/native gates required; geometric length alone does not qualify."
  },
  "normal_data_edge_delta": 0,
- "receipt_review": "4756 literal pins all on0.048-grid offset0.012, in outline, unique, W/E minsep0.144/N0.384. Four data-window cuts<=0.584048 including actual clock notches; source-bound two positives/seven negatives reviewed.",
+ "receipt_review": "4756 literal pins on actual layer-specific tracks: M4 phase0.036/M5 phase0.012 at0.048 pitch; bounds/unique/minsep audit PASS. Max notch-aware cut0.584048. Two positives/seven negatives unchanged source proof reviewed.",
  "physical_requirements": [
   "Fresh current generator, actual six clock entries (five soft CTS roots plus raw SRAM clk_cal); no ideal clock substitution or input ownership exemption.",
   "Native entry R/latency/spread/slew and related phase paths require actual measurement; TT>=0, FF>=0, DRC0 and density/congestion/image inspection.",
   "Preserve actual macro, PG rules and literal pin locations; no clock/source/Liberty alias or hidden normal-data edge added."
  ],
- "adoption": "No frozen d4/default flip or full four-parent homes adopted; actual parent clock entries/source/port wiring and packing required before native admission."
+ "adoption": "No frozen d4/default flip or full four-parent homes adopted; actual parent clock entries/source/port wiring and packing required before native admission.",
+ "supersedes": "9aad2c81e had incorrect common0.012 phase for M4; NEVER submit its old pinfile. Source/bench unchanged, literal M4 plan corrected before gate."
 }
