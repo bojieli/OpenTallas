@@ -1,7 +1,8 @@
 `timescale 1ps/1ps
 module tb_s81_static_collective_slab;
  parameter integer MUT=0;
- parameter integer VMB_PINCAP=1;   // VM boundary write path pin capture: t_vm +1 edge (reads unchanged)
+ parameter integer VMB_PINCAP=1;
+ parameter integer VMB_NARROW=0;  // VM boundary takes only the bits it reads (tags [7:0], host_rx {515,0})   // VM boundary write path pin capture: t_vm +1 edge (reads unchanged)
  localparam integer WL=VMB_PINCAP;
  import ot_fp32_rne_pkg::*;
  reg clk=0;always #417 clk=~clk;reg s_ck=0;always #556 s_ck=~s_ck;
@@ -10,7 +11,7 @@ module tb_s81_static_collective_slab;
  wire[7:0]tv,rv;wire[4095:0]td,rd;
  reg[513:0]f_wfc=0;wire[513:0]t_wfc;reg[76:0]f_host=0;wire[514:0]t_host;
  wire[8191:0]hc_y;wire hc_v;
- s81_static_collective_slab #(.ROM_FILE("calendar.mem"),.CYCLES(2141),.MUT(MUT),.VMB_PINCAP(VMB_PINCAP)) dut(
+ s81_static_collective_slab #(.ROM_FILE("calendar.mem"),.CYCLES(2141),.MUT(MUT),.VMB_PINCAP(VMB_PINCAP),.VMB_NARROW(VMB_NARROW)) dut(
  .ck_control({5{clk}}),.ck_lane({8{clk}}),.ck_hc_lane({16{clk}}),.rst_n(rst_n),.f_rank(2'd0),
  .c_cmd(c_cmd),.c_done(done),.c_st(status),.t_crq(crq),.f_crs(crs),.t_vm(writes),
  .phy_rx_valid(rv),.phy_rx_data(rd),.phy_rx_fault(8'd0),.phy_rx_live(8'hff),
