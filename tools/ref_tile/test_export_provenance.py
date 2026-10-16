@@ -97,7 +97,9 @@ class ExportProvenanceTest(unittest.TestCase):
 
     def test_lint_failure_no_final_publication(self):
         self.lint.lint.return_value = {'verdict': 'FAIL', 'fails': ['PG fixture']}
-        self.assertEqual(self.run_export()['verdict'], 'FAIL')
+        result = self.run_export()
+        self.assertEqual(result['verdict'], 'FAIL')
+        self.assertIn('PG fixture', result['fails'][0])
         self.assert_failed()
 
     def test_exporter_nonzero_stops_before_helper_or_clock_measurement(self):

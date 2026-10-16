@@ -187,8 +187,13 @@ module ot_qfd_sp_vector_memory_bv #(
     parameter integer PAR_RB = 0,
     parameter integer PMUT = 0,
     parameter integer USE_NATIVE_CLOCKS = 0,
+    // Opt-in E3 write ownership: two existing data256 masters and one control master per bank.
+    // Selection remains parent logic; no new edge or native-bank pin stage.
+    parameter integer WRITE_LEAVES = 0,
+    parameter integer WRITE_CLOCKS = 0,
     parameter integer READ_CONTROL_LEAVES = 0,
     parameter integer RETURN_LEAVES = 0, // opt-in: existing E6/E7/E8 registers in 32 standard bit-plane leaves per copy
+    parameter integer RETURN_PIN_INPUT = 0, // actual local input-pin stage, +1 SU answer edge only
     parameter integer RETURN_CLOCKS = 0, // 1: independent return_ck pin per leaf; 0: component equivalence on clk
     // Q-VMWB 0030: 1 = the resetless region relays (u_id RV, u_rr / u_sr RO, u_rb) built from the CLOSED 256-bit register
     // master qvm_data256_native (padded; D>1 chains fold through the same tiles), zero added edges.  Needs VMT 1 (any RV / RO).
@@ -201,6 +206,7 @@ module ot_qfd_sp_vector_memory_bv #(
     input wire [NSU*32-1:0] return_ck,
 `endif
 `ifdef OT_QFD_VM_PARTITIONED_CLOCKS
+    input wire [(NRB+NRBS)*3-1:0] write_ck,
     input wire [NSU-1:0] read_control_ck,
     input wire [RELAY_NCK-1:0] relay_ck,
 `endif
@@ -794,6 +800,31 @@ module ot_qfd_sp_vector_memory_bv #(
             else if (gm && m_row[LNRB-1:0] == g) src = 3'd5;
             else if (|lh) src = 3'd5;
         end
+        if (WRITE_LEAVES != 0) begin : g_write_leaf
+            reg [LAW-1:0] next_line;
+            reg [15:0] next_mask;
+            reg [511:0] next_data;
+            always @* begin
+            case (src)
+                3'd1: begin next_line = srow[LNRB +: LAW]; next_mask = f_m[kk*16 +: 16];
+                            next_data = f_d[kk*512 +: 512]; end
+                3'd2, 3'd3, 3'd4, 3'd6: begin next_line = er[LNRB +: LAW]; next_mask = em;
+                            next_data = ed; end
+                default: begin next_line = lr[LNRB +: LAW]; next_mask = lm;
+                            next_data = ld; end
+            endcase
+            end
+            wire [2:0] owned_ck;
+`ifdef OT_QFD_VM_PARTITIONED_CLOCKS
+            assign owned_ck = (WRITE_CLOCKS != 0) ? write_ck[(g)*3 +: 3] : {3{clk}};
+`else
+            assign owned_ck = {3{clk}};
+            initial if (WRITE_CLOCKS != 0) $fatal(1,"WRITE_CLOCKS requires PARTITIONED_CLOCKS");
+`endif
+            ot_qfd_vm_write_register_t #(.CW(LAW+19)) u_write (
+                .ck(owned_ck),.rst_n(rst_n),.we(src != 0),.data(next_data),.ctrl({src,next_line,next_mask}),
+                .qwe(bw_we[g]),.qdata(bw_data[g*512 +: 512]),.qctrl({bw_src[g*3 +: 3],bw_line[g*LAW +: LAW],bw_mask[g*16 +: 16]}));
+        end else begin : g_original
         always @(posedge clk or negedge rst_n) if (!rst_n) bw_we[g] <= 1'b0; else bw_we[g] <= (src != 0);
         always @(posedge clk) begin
             bw_src[g*3 +: 3] <= src;
@@ -805,6 +836,7 @@ module ot_qfd_sp_vector_memory_bv #(
                 default: begin bw_line[g*LAW +: LAW] <= lr[LNRB +: LAW]; bw_mask[g*16 +: 16] <= lm;
                             bw_data[g*512 +: 512] <= ld; end
             endcase
+        end
         end
     end endgenerate
     // per-bank write registers of the SU replica copies (NRBS banks, beside them)
@@ -847,6 +879,31 @@ module ot_qfd_sp_vector_memory_bv #(
             else if (gm && m_row[LNRBS-1:0] == g) src = 3'd5;
             else if (|lh) src = 3'd5;
         end
+        if (WRITE_LEAVES != 0) begin : g_write_leaf
+            reg [LAWS-1:0] next_line;
+            reg [15:0] next_mask;
+            reg [511:0] next_data;
+            always @* begin
+            case (src)
+                3'd1: begin next_line = srow[LNRBS +: LAWS]; next_mask = f_m[kk*16 +: 16];
+                            next_data = f_d[kk*512 +: 512]; end
+                3'd2: begin next_line = er[LNRBS +: LAWS]; next_mask = em;
+                            next_data = ed; end
+                default: begin next_line = lr[LNRBS +: LAWS]; next_mask = lm;
+                            next_data = ld; end
+            endcase
+            end
+            wire [2:0] owned_ck;
+`ifdef OT_QFD_VM_PARTITIONED_CLOCKS
+            assign owned_ck = (WRITE_CLOCKS != 0) ? write_ck[(NRB+g)*3 +: 3] : {3{clk}};
+`else
+            assign owned_ck = {3{clk}};
+            initial if (WRITE_CLOCKS != 0) $fatal(1,"WRITE_CLOCKS requires PARTITIONED_CLOCKS");
+`endif
+            ot_qfd_vm_write_register_t #(.CW(LAWS+16)) u_write (
+                .ck(owned_ck),.rst_n(rst_n),.we(src != 0),.data(next_data),.ctrl({next_line,next_mask}),
+                .qwe(ws_we[g]),.qdata(ws_data[g*512 +: 512]),.qctrl({ws_line[g*LAWS +: LAWS],ws_mask[g*16 +: 16]}));
+        end else begin : g_original
         always @(posedge clk or negedge rst_n) if (!rst_n) ws_we[g] <= 1'b0; else ws_we[g] <= (src != 0);
         always @(posedge clk) begin
             case (src)
@@ -857,6 +914,7 @@ module ot_qfd_sp_vector_memory_bv #(
                 default: begin ws_line[g*LAWS +: LAWS] <= lr[LNRBS +: LAWS]; ws_mask[g*16 +: 16] <= lm;
                             ws_data[g*512 +: 512] <= ld; end
             endcase
+        end
         end
     end endgenerate
     // skid queue state: granted entries leave (any of them), the survivors close up in age order and are late, the
@@ -1335,10 +1393,17 @@ module ot_qfd_sp_vector_memory_bv #(
                 for (genvar elem = 0; elem < NRBS*16; elem = elem + 1) begin : g_unpack
                     assign pd[elem] = scap[elem*32 + plane];
                 end
+                if (RETURN_PIN_INPUT != 0) begin : g_pin_input
+                qvm_return_plane_pin_native #(.ELEMS(ELEMS), .AW(AW), .SW(SW), .NRBS(NRBS), .MUT(MUT)) u_plane (
+                    .ck((RETURN_CLOCKS != 0) ? return_ck[gc*32+plane] : clk),
+                    .v5(d5_v), .v6(d6_v), .v7(d7_v), .a5(d5_a0), .a6(d6_a0), .a7(d7_a0),
+                    .stride1(d7_si), .d(pd), .q(pq));
+                end else begin : g_existing
                 ot_qfd_vm_su_return_plane #(.ELEMS(ELEMS), .AW(AW), .SW(SW), .NRBS(NRBS), .MUT(MUT)) u_plane (
                     .ck((RETURN_CLOCKS != 0) ? return_ck[gc*32+plane] : clk),
                     .v5(d5_v), .v6(d6_v), .v7(d7_v), .a5(d5_a0), .a6(d6_a0), .a7(d7_a0),
                     .stride1(d7_si), .d(pd), .q(pq));
+                end
                 for (genvar lane = 0; lane < SW; lane = lane + 1) begin : g_pack
                     assign s_q[(gc*SW+lane)*32+plane] = pq[lane];
                 end
@@ -1910,4 +1975,23 @@ module ot_qfd_vm_relay256 #(
         end
         assign q = s[W*(D-1) +: W];
     end
+endmodule
+
+// E3 write state only. All payload registers capture every edge, including idle/default
+// values, exactly as the original BW/WS always blocks. No enable or reset added to data.
+// The data masters are the actual existing CLOSED qvm_data256_native source.
+module ot_qfd_vm_write_register_t #(parameter integer CW=27)(
+ input wire [2:0] ck,input wire rst_n,we,input wire [511:0] data,
+ input wire [CW-1:0] ctrl,output wire qwe,output wire [511:0] qdata,
+ output wire [CW-1:0] qctrl);
+ qvm_data256_native u_lo(.clk(ck[0]),.d(data[255:0]),.q(qdata[255:0]));
+ qvm_data256_native u_hi(.clk(ck[1]),.d(data[511:256]),.q(qdata[511:256]));
+ ot_qfd_vm_write_control_t #(.W(CW)) u_control(.clk(ck[2]),.rst_n(rst_n),
+     .we(we),.d(ctrl),.qwe(qwe),.q(qctrl));
+endmodule
+module ot_qfd_vm_write_control_t #(parameter integer W=27)(
+ input wire clk,rst_n,we,input wire [W-1:0] d,
+ output reg qwe,output reg [W-1:0] q);
+ always @(posedge clk or negedge rst_n) if(!rst_n) qwe<=1'b0;else qwe<=we;
+ always @(posedge clk) q<=d;
 endmodule

@@ -125,13 +125,18 @@ module ot_s81_pq_ix_rb_native (
     wire [0:0] rst_l;
     ot_rst_relay #(.REGIONS(1),.SYNC_STAGES(2),.TREE_STAGES(1)) u_rr
         (.clk(clk),.rst_n_in(rst_n),.rst_n(rst_l));
-    wire [255:0] bw_rn;
-    reg [255:0] bw_d;
+    // r2 (10-16 S-ELEM-PQ/PQN): native capture FAIL 240.9 ps on 224 ba_hi/ba_inc pins (wv1/g1 views): the 16-bit
+    // rounding incrementer sat between the pin and its capture flop. The pins now land in plain capture flops
+    // (hi_c/inc_c, same edge as the former bw_d) and the incrementer moves onto the flop -> SRAM write-data path
+    // (bw_d = round(hi_c, inc_c) is the same value on the same edge): 0 added cycles, bit-exact.
+    reg [255:0] hi_c;
+    reg [15:0] inc_c;
+    always @(posedge clk) begin hi_c <= ba_hi; inc_c <= ba_inc; end
+    wire [255:0] bw_d;
     genvar k;
     generate for(k=0;k<16;k=k+1) begin:g_round
-        ot_v41_inc #(.W(16)) u_rn (.a(ba_hi[16*k +: 16]),.inc(ba_inc[k]),.y(bw_rn[16*k +: 16]),.co());
+        ot_v41_inc #(.W(16)) u_rn (.a(hi_c[16*k +: 16]),.inc(inc_c[k]),.y(bw_d[16*k +: 16]),.co());
     end endgenerate
-    always @(posedge clk) bw_d <= bw_rn;
     reg [7:0] write_blk;
     reg write_valid, consume_1, consume_2;
     always @(posedge clk or negedge rst_l[0]) begin

@@ -1,0 +1,215 @@
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 5.597 MB sources in 118 modules, into 679.365 MB in 580 C++ files needing 0.000 MB
+- Verilator: Walltime 330.395 s (elab=4.863, cvt=303.731, bld=0.000); cpu 285.228 s on 1 threads; allocated 14030.742 MB
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_sfu.sv:532:32: Operator VAR 'TWO' expects 32 bits on the Initial value, but Initial value's LTS generates 1 bits.
+                                                            : ... note: In instance 'dsfd_engram_mix4_localized_candidate.cl[3].u.mix.gate_leaf.sigmoid.divide'
+  532 |             localparam integer TWO = (2 * j + 1 < QB);
+      |                                ^~~
+                      ... For warning description see https://verilator.org/warn/WIDTHEXPAND?v=5.050
+                      ... Use "/* verilator lint_off WIDTHEXPAND */" and lint_on around source to disable this message.
+%Warning-WIDTHEXPAND: rtl/hdc/ot_hdc_fp32_f12.sv:247:23: Operator VAR 'CUTS' expects 32 bits on the Initial value, but Initial value's CONST '8'h6a' generates 8 bits.
+  247 |     parameter integer CUTS = 8'b01101010
+      |                       ^~~~
+%Warning-WIDTHEXPAND: rtl/hdc/ot_hdc_fp32_f12.sv:58:23: Operator VAR 'CUTS' expects 32 bits on the Initial value, but Initial value's CONST '6'h2a' generates 6 bits.
+   58 |     parameter integer CUTS = 6'b101010
+      |                       ^~~~
+%Warning-WIDTHTRUNC: rtl/hdc/ot_hdc_fp32_f12.sv:43:14: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'CUT' generates 32 bits.
+                                                     : ... note: In instance 'dsfd_engram_mix4_localized_candidate.cl[3].u.mix.gate_leaf.sigmoid.exp.g_h[6].u_m...g_l5.u.u.u_k0'
+   43 |     generate if (CUT) begin : g_r
+      |              ^~
+                     ... For warning description see https://verilator.org/warn/WIDTHTRUNC?v=5.050
+                     ... Use "/* verilator lint_off WIDTHTRUNC */" and lint_on around source to disable this message.
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_sfu.sv:383:79: Input port connection 'b' expects 32 bits on the pin connection, but pin connection's REPLICATE generates 46 bits.
+                                                           : ... note: In instance 'dsfd_engram_mix4_localized_candidate.cl[3].u.mix.gate_leaf.sigmoid.exp'
+  383 |     ot_hdc_kadd #(.W(32), .K((LM != 3 || LA != 3) ? 1 : 0)) u_yn (.a(pa[6]), .b({{14{nint_d[8]}}, nint_d, 23'd0}), .cin(1'b0),
+      |                                                                               ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_hdc_v41x_sfu.sv:486:47: Operator SUB expects 10 bits on the LHS, but LHS's VARREF 'e' generates 8 bits.
+                                                            : ... note: In instance 'dsfd_engram_mix4_localized_candidate.cl[3].u.mix.gate_leaf.sigmoid.divide'
+  486 |             if (e != 8'd0) norm = {1'b1, f, e - 10'sd127};
+      |                                               ^
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_sfu.sv:537:37: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'TWO' generates 32 bits.
+                                                           : ... note: In instance 'dsfd_engram_mix4_localized_candidate.cl[3].u.mix.gate_leaf.sigmoid.divide'
+  537 |                                 TWO ? {r_rem[j-1][24:0], 2'b0} : {1'b0, r_rem[j-1][24:0], 1'b0};
+      |                                     ^
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_hdc_v41x_sfu.sv:545:34: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'TWO' generates 32 bits.
+                                                           : ... note: In instance 'dsfd_engram_mix4_localized_candidate.cl[3].u.mix.gate_leaf.sigmoid.divide'
+  545 |                 r_q[j]    <= TWO ? {qin[QB-3:0], q} : {qin[QB-2:0], q[0]};
+      |                                  ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41/ot_hdc_fsqrt.sv:122:38: Operator ADD expects 32 bits on the RHS, but RHS's ARRAYSEL generates 12 bits.
+                                                        : ... note: In instance 'dsfd_engram_mix4_localized_candidate.cl[3].u.mix.gate_leaf.magnitude.sqrt'
+  122 |             f_unb    <= $signed(TOP) + half_stage[STAGES] - $signed(FRAC_SHIFT);
+      |                                      ^
+%Warning-WIDTHTRUNC: rtl/hdc/v41/ot_hdc_fsqrt.sv:122:22: Operator ASSIGNDLY expects 12 bits on the Assign RHS, but Assign RHS's SUB generates 32 bits.
+                                                       : ... note: In instance 'dsfd_engram_mix4_localized_candidate.cl[3].u.mix.gate_leaf.magnitude.sqrt'
+  122 |             f_unb    <= $signed(TOP) + half_stage[STAGES] - $signed(FRAC_SHIFT);
+      |                      ^~
+%Warning-WIDTHEXPAND: rtl/hdc/v41/ot_hdc_fsqrt.sv:127:42: Operator ADD expects 32 bits on the RHS, but RHS's ARRAYSEL generates 12 bits.
+                                                        : ... note: In instance 'dsfd_engram_mix4_localized_candidate.cl[3].u.mix.gate_leaf.magnitude.sqrt'
+  127 |             f_unb    <= $signed(TOP - 1) + half_stage[STAGES] - $signed(FRAC_SHIFT);
+      |                                          ^
+%Warning-WIDTHTRUNC: rtl/hdc/v41/ot_hdc_fsqrt.sv:127:22: Operator ASSIGNDLY expects 12 bits on the Assign RHS, but Assign RHS's SUB generates 32 bits.
+                                                       : ... note: In instance 'dsfd_engram_mix4_localized_candidate.cl[3].u.mix.gate_leaf.magnitude.sqrt'
+  127 |             f_unb    <= $signed(TOP - 1) + half_stage[STAGES] - $signed(FRAC_SHIFT);
+      |                      ^~
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/engram/mix/ot_s81_engram_mix.sv:121:23: Logical operator LOGOR expects 1 bit on the RHS, but RHS's MODDIVS generates 32 bits.
+                                                                         : ... note: In instance 'dsfd_engram_mix4_localized_candidate.cl[3].u.mix.control.core'
+  121 |   if(N!=32 || D!=5120 || D%N || N<8 || (N&(N-1))) $fatal(1,"Engram shape must use whole power-of-two chunk8 beats");
+      |                       ^~
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/engram/mix/ot_s81_engram_mix.sv:121:37: Logical operator LOGOR expects 1 bit on the RHS, but RHS's AND generates 32 bits.
+                                                                         : ... note: In instance 'dsfd_engram_mix4_localized_candidate.cl[3].u.mix.control.core'
+  121 |   if(N!=32 || D!=5120 || D%N || N<8 || (N&(N-1))) $fatal(1,"Engram shape must use whole power-of-two chunk8 beats");
+      |                                     ^~
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/engram/mix/ot_s81_engram_mix.sv:125:79: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'nadd' generates 16 bits.
+                                                                          : ... note: In instance 'dsfd_engram_mix4_localized_candidate.cl[3].u.mix.control.core'
+  125 |  wire input_ok=epoch && copy==epoch_copy && (phase?((gate_ready||gate_v)&&nadd<NV):(nreduce<NV&&!gate_ready));
+      |                                                                               ^
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/engram/mix/ot_s81_engram_mix.sv:125:92: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'nreduce' generates 16 bits.
+                                                                          : ... note: In instance 'dsfd_engram_mix4_localized_candidate.cl[3].u.mix.control.core'
+  125 |  wire input_ok=epoch && copy==epoch_copy && (phase?((gate_ready||gate_v)&&nadd<NV):(nreduce<NV&&!gate_ready));
+      |                                                                                            ^
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/engram/mix/ot_s81_engram_mix.sv:139:84: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'nout' generates 16 bits.
+                                                                          : ... note: In instance 'dsfd_engram_mix4_localized_candidate.cl[3].u.mix.control.core'
+  139 |   if(avalid[0])begin if(add_copy!={4{copy}})protocol_fault<=1; nout<=nout+1;if(nout==NV-1)epoch<=0;end
+      |                                                                                    ^~
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_dsrom_divc.sv:131:20: Operator SUB expects 32 bits on the LHS, but LHS's VARREF 's4_eu' generates 11 bits.
+                                                          : ... note: In instance 'dsfd_engram_mix4_localized_candidate.cl[3].u.mix.g_norm[1].leaf.divide'
+  131 |         er = s4_eu - 11'sd49 - K + $signed({5'd0, lead});
+      |                    ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_dsrom_divc.sv:131:20: Operator SUB expects 32 bits on the RHS, but RHS's CONST '11'sh31' generates 11 bits.
+                                                          : ... note: In instance 'dsfd_engram_mix4_localized_candidate.cl[3].u.mix.g_norm[1].leaf.divide'
+  131 |         er = s4_eu - 11'sd49 - K + $signed({5'd0, lead});
+      |                    ^
+%Warning-WIDTHEXPAND: rtl/hdc/v41x/ot_dsrom_divc.sv:131:34: Operator ADD expects 32 bits on the RHS, but RHS's SIGNED generates 11 bits.
+                                                          : ... note: In instance 'dsfd_engram_mix4_localized_candidate.cl[3].u.mix.g_norm[1].leaf.divide'
+  131 |         er = s4_eu - 11'sd49 - K + $signed({5'd0, lead});
+      |                                  ^
+%Warning-WIDTHTRUNC: rtl/hdc/v41x/ot_dsrom_divc.sv:131:12: Operator ASSIGN expects 11 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                         : ... note: In instance 'dsfd_engram_mix4_localized_candidate.cl[3].u.mix.g_norm[1].leaf.divide'
+  131 |         er = s4_eu - 11'sd49 - K + $signed({5'd0, lead});
+      |            ^
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/engram/mix/dsfd_engram_mix4_c.sv:333:87: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'kb' generates 14 bits.
+                                                                           : ... note: In instance 'dsfd_engram_mix4_localized_candidate.cl[3].u.shell.ctl'
+  333 |      rq_row[14*(lane+1)+:14]<=banked?striped_row(kb,req,5'(5*COPY+lane+1),1'b0):14'(kb+2*req+lane);
+      |                                                                                       ^
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/engram/mix/dsfd_engram_mix4_c.sv:334:87: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'wb' generates 14 bits.
+                                                                           : ... note: In instance 'dsfd_engram_mix4_localized_candidate.cl[3].u.shell.ctl'
+  334 |      rq_row[14*(lane+3)+:14]<=banked?striped_row(wb,req,5'(5*COPY+lane+3),1'b0):14'(wb+2*req+lane);
+      |                                                                                       ^
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/engram/mix/dsfd_engram_mix4_c.sv:347:109: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'vb' generates 14 bits.
+                                                                            : ... note: In instance 'dsfd_engram_mix4_localized_candidate.cl[3].u.shell.ctl'
+  347 |     for(lane=0;lane<2;lane=lane+1)rq_row[14*(lane+1)+:14]<=banked?striped_row(vb,req,5'(lane+1),1'b1):14'(vb+2*req+lane);
+      |                                                                                                             ^
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/engram/mix/dsfd_engram_mix4_c.sv:366:28: Operator COND expects 14 bits on the Conditional False, but Conditional False's VARREF 'written' generates 9 bits.
+                                                                           : ... note: In instance 'dsfd_engram_mix4_localized_candidate.cl[3].u.shell.ctl'
+  366 |    wq_row<=ob+((HLAYOUT!=0)?14'd4*written:written);
+      |                            ^
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/engram/mix/dsfd_engram_mix4_c.sv:368:47: Operator ASSIGNDLY expects 16 bits on the Assign RHS, but Assign RHS's VARREF 'WRITE_COMMIT_LAT' generates 32 bits.
+                                                                          : ... note: In instance 'dsfd_engram_mix4_localized_candidate.cl[3].u.shell.ctl'
+  368 |    if(written==159)begin ns=FINISH;commit_left<=WRITE_COMMIT_LAT;end
+      |                                               ^~
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_ctrl/ot_s81_engine_adapter.sv:47:24: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'count' generates 4 bits.
+                                                                           : ... note: In instance 'dsfd_engram_mix4_localized_candidate.ep.u_ad.u_done'
+   47 |  assign i_accept=(count<QD)||pop;
+      |                        ^
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/engram/mix/ot_s81_engram_mix.sv:212:46: Operator ASSIGNDLY expects 9 bits on the Assign RHS, but Assign RHS's VARREF 'NV' generates 32 bits.
+                                                                         : ... note: In instance 'dsfd_engram_mix4_localized_candidate.cl[3].u.mix.dsum'
+  212 |  else if(vd[DS]&&si==NV-1)begin pad<=NV<NP;pi<=NV;end
+      |                                              ^~
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/engram/mix/ot_s81_engram_mix.sv:213:34: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'pi' generates 9 bits.
+                                                                          : ... note: In instance 'dsfd_engram_mix4_localized_candidate.cl[3].u.mix.dsum'
+  213 |  else if(pad)begin pi<=pi+1;if(pi==NP-1)pad<=0;end
+      |                                  ^~
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/engram/mix/ot_s81_engram_mix.sv:212:20: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'si' generates 8 bits.
+                                                                          : ... note: In instance 'dsfd_engram_mix4_localized_candidate.cl[3].u.mix.dsum'
+  212 |  else if(vd[DS]&&si==NV-1)begin pad<=NV<NP;pi<=NV;end
+      |                    ^~
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/engram/mix/ot_s81_engram_mix.sv:215:83: Operator COND expects 9 bits on the Conditional False, but Conditional False's VARREF 'si' generates 8 bits.
+                                                                          : ... note: In instance 'dsfd_engram_mix4_localized_candidate.cl[3].u.mix.dsum'
+  215 |  assign val[0]=pad?32'd0:tv[LT][0];assign pulse[0]=pad||vd[DS];assign index[0]=pad?pi:si;
+      |                                                                                   ^
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/engram/mix/dsfd_engram_mix4_clocked_candidate.sv:237:65: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's MODDIVS generates 32 or 2 bits.
+                                                                                          : ... note: In instance 'dsfd_engram_mix4_localized_candidate.cl[3].u.mix'
+  237 |   ot_s81_engram_mul4 #(.LM(LM),.MUT(MUT)) leaf(ck_leaf[(group%2)?(26+group/2):(group/2)],arst_n,in_v,phase,
+      |                                                                 ^
+%Warning-WIDTHTRUNC: rtl/dsrom_sys/engram/mix/dsfd_engram_mix4_clocked_candidate.sv:237:65: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's MODDIVS generates 32 or 3 bits.
+                                                                                          : ... note: In instance 'dsfd_engram_mix4_localized_candidate.cl[3].u.mix'
+  237 |   ot_s81_engram_mul4 #(.LM(LM),.MUT(MUT)) leaf(ck_leaf[(group%2)?(26+group/2):(group/2)],arst_n,in_v,phase,
+      |                                                                 ^
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_ctrl/ot_s81_engine_adapter.sv:130:58: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'cused' generates 4 bits.
+                                                                            : ... note: In instance 'dsfd_engram_mix4_localized_candidate.ep.u_ad'
+  130 |  wire admit=c_cmd_v&&cmd_accept&&!cpending[ctag]&&((cused<QD)||return_ok);
+      |                                                          ^
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_ctrl/ot_s81_engine_adapter.sv:148:62: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'eused' generates 4 bits.
+                                                                            : ... note: In instance 'dsfd_engram_mix4_localized_candidate.ep.u_ad'
+  148 |  assign e_cmd_v=rv&&e_inputs_present&&!epending[etag]&&(eused<QD);
+      |                                                              ^
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_ctrl/ot_s81_slab_ep.sv:51:22: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'n' generates 2 bits.
+                                                                    : ... note: In instance 'dsfd_engram_mix4_localized_candidate.ep'
+   51 |     assign e_cr = (n < JQ);
+      |                      ^
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_ctrl/ot_s81_slab_ep.sv:66:54: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'wp' generates 1 bits.
+                                                                    : ... note: In instance 'dsfd_engram_mix4_localized_candidate.ep'
+   66 |             if (push) begin q[wp] <= e_cd; wp <= (wp == JQ - 1) ? 0 : wp + 1'b1; end
+      |                                                      ^~
+%Warning-WIDTHEXPAND: rtl/dsrom_sys/s81_ctrl/ot_s81_slab_ep.sv:67:38: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'rp' generates 1 bits.
+                                                                    : ... note: In instance 'dsfd_engram_mix4_localized_candidate.ep'
+   67 |             if (pop) begin rp <= (rp == JQ - 1) ? 0 : rp + 1'b1; cnt1 <= 1'b1; end
+      |                                      ^~
+%Warning-MULTIDRIVEN: rtl/dsrom_sys/engram/mix/ot_s81_engram_mix.sv:391:20: Signal has multiple driving blocks with different clocking: 'dsfd_engram_mix4_localized_candidate.cl[3].u.mix.__Vcellout__relay____pinNumber5'
+                      rtl/dsrom_sys/engram/mix/ot_s81_engram_mix.sv:395:13: ... Location of first driving block
+  395 |  else begin up_o[68:32]<=up_i[68:32];dn_o[3:0]<=dn_i[3:0];end
+      |             ^~~~
+                      rtl/dsrom_sys/engram/mix/ot_s81_engram_mix.sv:396:29: ... Location of other driving block
+  396 |  always @(posedge clk)begin up_o[31:0]<=up_i[31:0];dn_o[35:4]<=dn_i[35:4];end
+      |                             ^~~~
+                      ... For warning description see https://verilator.org/warn/MULTIDRIVEN?v=5.050
+                      ... Use "/* verilator lint_off MULTIDRIVEN */" and lint_on around source to disable this message.
+%Warning-MULTIDRIVEN: rtl/dsrom_sys/engram/mix/ot_s81_engram_mix.sv:391:43: Signal has multiple driving blocks with different clocking: 'dsfd_engram_mix4_localized_candidate.cl[3].u.mix.__Vcellout__relay____pinNumber6'
+                      rtl/dsrom_sys/engram/mix/ot_s81_engram_mix.sv:395:38: ... Location of first driving block
+  395 |  else begin up_o[68:32]<=up_i[68:32];dn_o[3:0]<=dn_i[3:0];end
+      |                                      ^~~~
+                      rtl/dsrom_sys/engram/mix/ot_s81_engram_mix.sv:396:52: ... Location of other driving block
+  396 |  always @(posedge clk)begin up_o[31:0]<=up_i[31:0];dn_o[35:4]<=dn_i[35:4];end
+      |                                                    ^~~~
+%Warning-MULTIDRIVEN: rtl/dsrom_sys/engram/mix/ot_s81_engram_mix.sv:391:20: Signal has multiple driving blocks with different clocking: 'dsfd_engram_mix4_localized_candidate.cl[2].u.mix.__Vcellout__relay____pinNumber5'
+                      rtl/dsrom_sys/engram/mix/ot_s81_engram_mix.sv:395:13: ... Location of first driving block
+  395 |  else begin up_o[68:32]<=up_i[68:32];dn_o[3:0]<=dn_i[3:0];end
+      |             ^~~~
+                      rtl/dsrom_sys/engram/mix/ot_s81_engram_mix.sv:396:29: ... Location of other driving block
+  396 |  always @(posedge clk)begin up_o[31:0]<=up_i[31:0];dn_o[35:4]<=dn_i[35:4];end
+      |                             ^~~~
+%Warning-MULTIDRIVEN: rtl/dsrom_sys/engram/mix/ot_s81_engram_mix.sv:391:43: Signal has multiple driving blocks with different clocking: 'dsfd_engram_mix4_localized_candidate.cl[2].u.mix.__Vcellout__relay____pinNumber6'
+                      rtl/dsrom_sys/engram/mix/ot_s81_engram_mix.sv:395:38: ... Location of first driving block
+  395 |  else begin up_o[68:32]<=up_i[68:32];dn_o[3:0]<=dn_i[3:0];end
+      |                                      ^~~~
+                      rtl/dsrom_sys/engram/mix/ot_s81_engram_mix.sv:396:52: ... Location of other driving block
+  396 |  always @(posedge clk)begin up_o[31:0]<=up_i[31:0];dn_o[35:4]<=dn_i[35:4];end
+      |                                                    ^~~~
+%Warning-MULTIDRIVEN: rtl/dsrom_sys/engram/mix/ot_s81_engram_mix.sv:391:20: Signal has multiple driving blocks with different clocking: 'dsfd_engram_mix4_localized_candidate.cl[1].u.mix.__Vcellout__relay____pinNumber5'
+                      rtl/dsrom_sys/engram/mix/ot_s81_engram_mix.sv:395:13: ... Location of first driving block
+  395 |  else begin up_o[68:32]<=up_i[68:32];dn_o[3:0]<=dn_i[3:0];end
+      |             ^~~~
+                      rtl/dsrom_sys/engram/mix/ot_s81_engram_mix.sv:396:29: ... Location of other driving block
+  396 |  always @(posedge clk)begin up_o[31:0]<=up_i[31:0];dn_o[35:4]<=dn_i[35:4];end
+      |                             ^~~~
+%Warning-MULTIDRIVEN: rtl/dsrom_sys/engram/mix/ot_s81_engram_mix.sv:391:43: Signal has multiple driving blocks with different clocking: 'dsfd_engram_mix4_localized_candidate.cl[1].u.mix.__Vcellout__relay____pinNumber6'
+                      rtl/dsrom_sys/engram/mix/ot_s81_engram_mix.sv:395:38: ... Location of first driving block
+  395 |  else begin up_o[68:32]<=up_i[68:32];dn_o[3:0]<=dn_i[3:0];end
+      |                                      ^~~~
+                      rtl/dsrom_sys/engram/mix/ot_s81_engram_mix.sv:396:52: ... Location of other driving block
+  396 |  always @(posedge clk)begin up_o[31:0]<=up_i[31:0];dn_o[35:4]<=dn_i[35:4];end
+      |                                                    ^~~~
+%Warning-MULTIDRIVEN: rtl/dsrom_sys/engram/mix/ot_s81_engram_mix.sv:391:20: Signal has multiple driving blocks with different clocking: 'dsfd_engram_mix4_localized_candidate.cl[0].u.mix.__Vcellout__relay____pinNumber5'
+                      rtl/dsrom_sys/engram/mix/ot_s81_engram_mix.sv:395:13: ... Location of first driving block
+  395 |  else begin up_o[68:32]<=up_i[68:32];dn_o[3:0]<=dn_i[3:0];end
+      |             ^~~~
+                      rtl/dsrom_sys/engram/mix/ot_s81_engram_mix.sv:396:29: ... Location of other driving block
+  396 |  always @(posedge clk)begin up_o[31:0]<=up_i[31:0];dn_o[35:4]<=dn_i[35:4];end
+      |                             ^~~~
+%Warning-MULTIDRIVEN: rtl/dsrom_sys/engram/mix/ot_s81_engram_mix.sv:391:43: Signal has multiple driving blocks with different clocking: 'dsfd_engram_mix4_localized_candidate.cl[0].u.mix.__Vcellout__relay____pinNumber6'
+                      rtl/dsrom_sys/engram/mix/ot_s81_engram_mix.sv:395:38: ... Location of first driving block
+  395 |  else begin up_o[68:32]<=up_i[68:32];dn_o[3:0]<=dn_i[3:0];end
+      |                                      ^~~~
+                      rtl/dsrom_sys/engram/mix/ot_s81_engram_mix.sv:396:52: ... Location of other driving block
+  396 |  always @(posedge clk)begin up_o[31:0]<=up_i[31:0];dn_o[35:4]<=dn_i[35:4];end
+      |                                                    ^~~~
