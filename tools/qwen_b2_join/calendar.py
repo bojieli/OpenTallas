@@ -69,6 +69,6 @@ def main():
  mutants={pc:bool(compile_op(f,lag=False)['faults'])for pc,f in program.items()if not f['wsrc']}
  if not all(mutants.values()):raise ValueError('bank-calendar mutant survived')
  sources=['rtl/qwen_split/qfd_res_train_half_b2.sv','rtl/qwen_split/qfd_res_train_issue_b2.sv','rtl/qwen_sys/vm_nox_20261014/qfd_sp_vector_memory_b2.sv']
- result=dict(status='COMPONENT_CALENDAR_PASS'if okay else'FAIL',native_qualification=False,sources={x:hashlib.sha256((R/x).read_bytes()).hexdigest()for x in sources},ops=records,mutants=mutants,limits=['Actual port row dump not yet cross-checked','Die relays/clock phases/all other VM writers absent until source-bound route profile','No full-layer or token throughput claim'])
+ result=dict(status='COMPONENT_CALENDAR_PASS'if okay else'FAIL',native_qualification=False,sources={x:hashlib.sha256((R/x).read_bytes()).hexdigest()for x in sources},ops=records,mutants=mutants,limits=['Actual released-ROM port rows now cross-checked for PCs1/12/16/20 and64burst head; composed issuer/E3 operation gate pending','Die relays/clock phases/all other VM writers absent until source-bound route profile','No full-layer or token throughput claim'])
  Path(a.out).write_text(json.dumps(result,indent=2)+'\n');print(result['status'],{pc:r.get('delta_component_cycles')for pc,r in records.items()});return 0 if okay else 1
 if __name__=='__main__':sys.exit(main())
