@@ -27,6 +27,7 @@ import argparse
 import hashlib
 import json
 import re
+import subprocess
 import sys
 from pathlib import Path
 
@@ -42,7 +43,7 @@ def sha(p: Path) -> str:
 
 def view_files(d: Path, master: str) -> dict:
     out = {}
-    for f in [f"{master}.lef", f"{master}_tt.lib", f"{master}_ff.lib", f"{master}_ss.lib", "abstract.json"]:
+    for f in [f"{master}.lef", f"{master}_tt.lib", f"{master}_ff.lib", f"{master}_ss.lib", "abstract.json", "insertion.json"]:
         p = d / f
         if p.is_file():
             out[f] = sha(p)
@@ -87,6 +88,39 @@ def export_gate(d: Path, master: str, ab: dict) -> tuple[bool, str]:
     return True, "verdict replay ok (TT %s / FF %s ps)" % (chk["tt"].get("export_ps"), chk["ff"].get("export_ps"))
 
 
+def archive_gate(archive: Path | None, job: str, commit: str) -> dict:
+    """Authenticate replay inputs against the immutable closed archive, including raw compressed bytes."""
+    if archive is None:
+        raise ValueError("closed archive required")
+    man = archive / "manifest.json"
+    m = json.loads(man.read_text())
+    if m.get("job") != job or m.get("commit") != commit or (archive / "commit.txt").read_text().strip() != commit:
+        raise ValueError("archive job/source commit mismatch")
+    metrics = m.get("metrics") or {}
+    if metrics.get("tt_ps", -1) < 0 or metrics.get("ff_ps", -1) < 0 or metrics.get("drc") != 0:
+        raise ValueError("archive does not attest TT>=0/FF>=0/DRC0")
+    required = [m["final_base"] + "/6_final." + ext for ext in ("odb", "sdc", "spef")]
+    entries = {f["path"]: f for f in m["files"]}
+    verified = {}
+    for rel in required:
+        f = entries.get(rel) or {}
+        if not re.fullmatch(r"[0-9a-f]{64}", f.get("sha256", "")):
+            raise ValueError(f"archive missing raw hash: {rel}")
+        p = (archive / "run" / f["stored"]).resolve()
+        if not p.is_relative_to((archive / "run").resolve()):
+            raise ValueError("archive file escapes run directory")
+        if f.get("compression") == "zstd":
+            raw = subprocess.run(["zstd", "-dc", str(p)], capture_output=True, check=True).stdout
+        elif not f.get("compression"):
+            raw = p.read_bytes()
+        else:
+            raise ValueError("unsupported archive compression")
+        if len(raw) != f.get("raw_size") or hashlib.sha256(raw).hexdigest() != f["sha256"]:
+            raise ValueError(f"archive bytes changed: {rel}")
+        verified[rel] = f["sha256"]
+    return dict(path=str(archive), manifest_sha256=sha(man), commit=commit, replay_inputs=verified)
+
+
 def build_archive_reexport(d: Path, archive: Path | None, jobs: Path = JOBS) -> dict:
     master = d.name
     ab = json.loads((d / "abstract.json").read_text())
@@ -102,14 +136,12 @@ def build_archive_reexport(d: Path, archive: Path | None, jobs: Path = JOBS) -> 
     if not ok_e:
         why.append(txt_e)
     arch = None
-    if archive:
-        man = archive / "manifest.json"
-        arch = dict(path=str(archive), manifest_sha256=sha(man) if man.is_file() else None,
-                    commit=(archive / "commit.txt").read_text().strip() if (archive / "commit.txt").is_file() else None)
-        if not man.is_file():
-            why.append(f"archive manifest missing: {man}")
-        elif job and archive.name != job:
-            why.append(f"archive dir {archive.name} is not job {job}")
+    try:
+        arch = archive_gate(archive, job, v.get("commit"))
+    except (OSError, ValueError, KeyError, subprocess.SubprocessError) as e:
+        why.append(f"archive provenance: {e}")
+    if not (d / "insertion.json").is_file():
+        why.append("insertion.json missing")
     nat = native(d, master)
     if not nat.get("pass"):
         why.append(f"native audit: {nat.get('fail_why') or nat.get('error')}")
@@ -131,9 +163,21 @@ def verify(d: Path, jobs: Path = JOBS) -> tuple[bool, str, dict]:
     now = view_files(d, r.get("master") or d.name)
     if now != r.get("files"):
         return False, f"{RECEIPT}: view files changed since the receipt", r
-    ok, txt, _ = closed_job(r.get("original_job") or "", jobs)
+    ok, txt, current = closed_job(r.get("original_job") or "", jobs)
     if not ok:
         return False, f"{RECEIPT}: {txt}", r
+    if current.get("state_sha256") != (r.get("closed") or {}).get("state_sha256"):
+        return False, f"{RECEIPT}: CLOSED job state changed since receipt", r
+    if r.get("kind") == "archive_reexport":
+        try:
+            old = r.get("archive") or {}
+            now_archive = archive_gate(Path(old["path"]), r["original_job"], r["export_check"]["verdict_commit"])
+            if now_archive != old:
+                raise ValueError("archive receipt differs from verified replay inputs")
+        except (OSError, ValueError, KeyError, subprocess.SubprocessError) as e:
+            return False, f"{RECEIPT}: archive provenance: {e}", r
+    elif r.get("kind") != "scalar_pin_rename":
+        return False, f"{RECEIPT}: unsupported lineage kind", r
     if r.get("kind") == "scalar_pin_rename":
         par = ROOT / (r.get("parent_view") or "")
         if not par.is_dir():

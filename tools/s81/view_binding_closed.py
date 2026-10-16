@@ -205,7 +205,7 @@ def main():
         js = Path(a.jobs) / f"{job}.json" if job else None
         jd = json.loads(js.read_text()) if js and js.exists() else None
         lineage_rcpt = None
-        if jd is None and (d / VL.RECEIPT).is_file():
+        if (d / VL.RECEIPT).is_file():
             # RECEIPT-BACKED LINEAGE (ROOT 10-16): a strict re-export from the closed archive (or a derived scalar-pin
             # rename) has no loop job of its own; it binds through the CLOSED job its verified view_lineage.json names
             ok_l, why_l, rcpt = VL.verify(d, Path(a.jobs))
