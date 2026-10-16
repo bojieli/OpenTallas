@@ -1,0 +1,17 @@
+{
+  "schema": "opentallas.writer_v7.literal_sid_root_grant_request.v1",
+  "new_source": "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_vmwrite_roots_v7_sid.sv",
+  "new_source_sha256": "eaf097098dfdcd4bb532ece62cda590fe56186849886b14ec059696f6861fd01",
+  "new_masters": [
+    "ot_hgi_coll_static_vmwrite_roots_v7_sid0",
+    "ot_hgi_coll_static_vmwrite_roots_v7_sid1",
+    "ot_hgi_coll_static_vmwrite_roots_v7_sid2",
+    "ot_hgi_coll_static_vmwrite_roots_v7_sid3"
+  ],
+  "template_grant": "863313e0a:results/arch/hbm_die_v15/writer_roots_v6_wmid_1016/grant.json",
+  "clock_entry_domains": "Identical 16 literal scalar roots to v6; remove sid from meta input list only",
+  "request": "Retain exact mid-W body root and all15 other roots, outline103.68x388.8; remove two SID pins; remaining5098 pins keep measured exact geometry wherever possible. New exact source/master grant for each configured-SID master; no inherited-view alias or die adoption.",
+  "actual_die_binding": "results/rtl/hbm_writer_v7_sid_0430/actual_die_sid_binding.json",
+  "bench": "All104 rows passed; four4096-edge old-v4 fixed-SID miters, four83-check production (23 full-bank cycles,6fault checks), four19-check root mappings, all64clock drops,20semantic+4mapping+4wrong-literal-binding mutants reject.",
+  "native_qualification": "OPEN; source-only candidate"
+}

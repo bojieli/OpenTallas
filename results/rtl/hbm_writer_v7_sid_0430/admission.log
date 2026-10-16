@@ -1,0 +1,212 @@
+ot-run: ot-epyc4       admits   296 GB (avail 534, growth 194, headroom 48, waiters 0/0 GB) load 84/128 running 26 disk 871 GB 
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-2261688-1792150235 after 0 s
+sid0_sameedge_miter PASS VMWRITE_V6_EQUIV PASS edges=4096 full_shape=RGX4x512_TKW568 resets=241 invalid_slots=enabled clock_roots=16 same_edge=1 fault_latency=equal checked_fault_edges=3372
+proof/tb_miter_sid0.sv:37: $finish called at 45056000 (1ps)
+sid0_production_exact PASS STATIC VMWRITE PASS checked=83 full_bank_cycles=23 fault_timing_checks=6 RGX=4x512 TKW=568 low=C+2 high=C+3 fault=C+1
+proof/tb_production_sid0.sv:123: $finish called at 1196000 (1ps)
+sid0_clock_mapping PASS VMWRITE_V6_MAPPING PASS checks=19 capture_roots=7 swap_detected=required
+proof/tb_mapping_sid0.sv:31: $finish called at 18000 (1ps)
+sid0_clock_mapping_mutant PASS FATAL: proof/tb_mapping_sid0.sv:21: capture clock mapping root=2 lane=2
+       Time: 10000  Scope: tb_vmwrite_v6_mapping
+sid0_wrong_literal_binding_mutant PASS FATAL: proof/tb_wrong_sid0.sv:105: legal production schedule fault or insufficient load
+       Time: 616000  Scope: tb_hgi_coll_static_vmwrite
+sid0_semantic_mutant_1 PASS FATAL: proof/tb_production_sid0.sv:72: payload/latency bank 0
+       Time: 76000  Scope: tb_hgi_coll_static_vmwrite.tick
+sid0_semantic_mutant_2 PASS FATAL: proof/tb_production_sid0.sv:88: extra reserved resource undetected at C+1
+       Time: 676000  Scope: tb_hgi_coll_static_vmwrite.fault_next
+sid0_semantic_mutant_3 PASS FATAL: proof/tb_production_sid0.sv:88: extra reserved resource undetected at C+1
+       Time: 676000  Scope: tb_hgi_coll_static_vmwrite.fault_next
+sid0_semantic_mutant_4 PASS FATAL: proof/tb_production_sid0.sv:72: payload/latency bank 0
+       Time: 86000  Scope: tb_hgi_coll_static_vmwrite.tick
+sid0_semantic_mutant_5 PASS FATAL: proof/tb_production_sid0.sv:72: payload/latency bank 0
+       Time: 76000  Scope: tb_hgi_coll_static_vmwrite.tick
+sid0_clock_drop_1 PASS FATAL: proof/tb_production_sid0.sv:72: payload/latency bank 0
+       Time: 76000  Scope: tb_hgi_coll_static_vmwrite.tick
+sid0_clock_drop_2 PASS FATAL: proof/tb_production_sid0.sv:72: payload/latency bank 2
+       Time: 76000  Scope: tb_hgi_coll_static_vmwrite.tick
+sid0_clock_drop_3 PASS FATAL: proof/tb_production_sid0.sv:72: payload/latency bank 4
+       Time: 76000  Scope: tb_hgi_coll_static_vmwrite.tick
+sid0_clock_drop_4 PASS FATAL: proof/tb_production_sid0.sv:72: payload/latency bank 6
+       Time: 76000  Scope: tb_hgi_coll_static_vmwrite.tick
+sid0_clock_drop_5 PASS FATAL: proof/tb_production_sid0.sv:71: valid timing bank 0
+       Time: 76000  Scope: tb_hgi_coll_static_vmwrite.tick
+sid0_clock_drop_6 PASS FATAL: proof/tb_production_sid0.sv:71: valid timing bank 1
+       Time: 346000  Scope: tb_hgi_coll_static_vmwrite.tick
+sid0_clock_drop_7 PASS FATAL: proof/tb_production_sid0.sv:88: extra reserved resource undetected at C+1
+       Time: 676000  Scope: tb_hgi_coll_static_vmwrite.fault_next
+sid0_clock_drop_8 PASS FATAL: proof/tb_production_sid0.sv:71: valid timing bank 0
+       Time: 76000  Scope: tb_hgi_coll_static_vmwrite.tick
+sid0_clock_drop_9 PASS FATAL: proof/tb_production_sid0.sv:71: valid timing bank 0
+       Time: 56000  Scope: tb_hgi_coll_static_vmwrite.tick
+sid0_clock_drop_10 PASS FATAL: proof/tb_production_sid0.sv:71: valid timing bank 1
+       Time: 56000  Scope: tb_hgi_coll_static_vmwrite.tick
+sid0_clock_drop_11 PASS FATAL: proof/tb_production_sid0.sv:71: valid timing bank 2
+       Time: 56000  Scope: tb_hgi_coll_static_vmwrite.tick
+sid0_clock_drop_12 PASS FATAL: proof/tb_production_sid0.sv:71: valid timing bank 3
+       Time: 56000  Scope: tb_hgi_coll_static_vmwrite.tick
+sid0_clock_drop_13 PASS FATAL: proof/tb_production_sid0.sv:71: valid timing bank 4
+       Time: 56000  Scope: tb_hgi_coll_static_vmwrite.tick
+sid0_clock_drop_14 PASS FATAL: proof/tb_production_sid0.sv:71: valid timing bank 5
+       Time: 56000  Scope: tb_hgi_coll_static_vmwrite.tick
+sid0_clock_drop_15 PASS FATAL: proof/tb_production_sid0.sv:71: valid timing bank 6
+       Time: 56000  Scope: tb_hgi_coll_static_vmwrite.tick
+sid0_clock_drop_16 PASS FATAL: proof/tb_production_sid0.sv:71: valid timing bank 7
+       Time: 56000  Scope: tb_hgi_coll_static_vmwrite.tick
+sid1_sameedge_miter PASS VMWRITE_V6_EQUIV PASS edges=4096 full_shape=RGX4x512_TKW568 resets=241 invalid_slots=enabled clock_roots=16 same_edge=1 fault_latency=equal checked_fault_edges=3372
+proof/tb_miter_sid1.sv:37: $finish called at 45056000 (1ps)
+sid1_production_exact PASS STATIC VMWRITE PASS checked=83 full_bank_cycles=23 fault_timing_checks=6 RGX=4x512 TKW=568 low=C+2 high=C+3 fault=C+1
+proof/tb_production_sid1.sv:123: $finish called at 1196000 (1ps)
+sid1_clock_mapping PASS VMWRITE_V6_MAPPING PASS checks=19 capture_roots=7 swap_detected=required
+proof/tb_mapping_sid1.sv:31: $finish called at 18000 (1ps)
+sid1_clock_mapping_mutant PASS FATAL: proof/tb_mapping_sid1.sv:21: capture clock mapping root=2 lane=2
+       Time: 10000  Scope: tb_vmwrite_v6_mapping
+sid1_wrong_literal_binding_mutant PASS FATAL: proof/tb_wrong_sid1.sv:105: legal production schedule fault or insufficient load
+       Time: 616000  Scope: tb_hgi_coll_static_vmwrite
+sid1_semantic_mutant_1 PASS FATAL: proof/tb_production_sid1.sv:72: payload/latency bank 0
+       Time: 76000  Scope: tb_hgi_coll_static_vmwrite.tick
+sid1_semantic_mutant_2 PASS FATAL: proof/tb_production_sid1.sv:88: extra reserved resource undetected at C+1
+       Time: 676000  Scope: tb_hgi_coll_static_vmwrite.fault_next
+sid1_semantic_mutant_3 PASS FATAL: proof/tb_production_sid1.sv:88: extra reserved resource undetected at C+1
+       Time: 676000  Scope: tb_hgi_coll_static_vmwrite.fault_next
+sid1_semantic_mutant_4 PASS FATAL: proof/tb_production_sid1.sv:72: payload/latency bank 0
+       Time: 86000  Scope: tb_hgi_coll_static_vmwrite.tick
+sid1_semantic_mutant_5 PASS FATAL: proof/tb_production_sid1.sv:72: payload/latency bank 0
+       Time: 76000  Scope: tb_hgi_coll_static_vmwrite.tick
+sid1_clock_drop_1 PASS FATAL: proof/tb_production_sid1.sv:72: payload/latency bank 0
+       Time: 76000  Scope: tb_hgi_coll_static_vmwrite.tick
+sid1_clock_drop_2 PASS FATAL: proof/tb_production_sid1.sv:72: payload/latency bank 2
+       Time: 76000  Scope: tb_hgi_coll_static_vmwrite.tick
+sid1_clock_drop_3 PASS FATAL: proof/tb_production_sid1.sv:72: payload/latency bank 4
+       Time: 76000  Scope: tb_hgi_coll_static_vmwrite.tick
+sid1_clock_drop_4 PASS FATAL: proof/tb_production_sid1.sv:72: payload/latency bank 6
+       Time: 76000  Scope: tb_hgi_coll_static_vmwrite.tick
+sid1_clock_drop_5 PASS FATAL: proof/tb_production_sid1.sv:71: valid timing bank 0
+       Time: 76000  Scope: tb_hgi_coll_static_vmwrite.tick
+sid1_clock_drop_6 PASS FATAL: proof/tb_production_sid1.sv:71: valid timing bank 1
+       Time: 346000  Scope: tb_hgi_coll_static_vmwrite.tick
+sid1_clock_drop_7 PASS FATAL: proof/tb_production_sid1.sv:88: extra reserved resource undetected at C+1
+       Time: 676000  Scope: tb_hgi_coll_static_vmwrite.fault_next
+sid1_clock_drop_8 PASS FATAL: proof/tb_production_sid1.sv:71: valid timing bank 0
+       Time: 76000  Scope: tb_hgi_coll_static_vmwrite.tick
+sid1_clock_drop_9 PASS FATAL: proof/tb_production_sid1.sv:71: valid timing bank 0
+       Time: 56000  Scope: tb_hgi_coll_static_vmwrite.tick
+sid1_clock_drop_10 PASS FATAL: proof/tb_production_sid1.sv:71: valid timing bank 1
+       Time: 56000  Scope: tb_hgi_coll_static_vmwrite.tick
+sid1_clock_drop_11 PASS FATAL: proof/tb_production_sid1.sv:71: valid timing bank 2
+       Time: 56000  Scope: tb_hgi_coll_static_vmwrite.tick
+sid1_clock_drop_12 PASS FATAL: proof/tb_production_sid1.sv:71: valid timing bank 3
+       Time: 56000  Scope: tb_hgi_coll_static_vmwrite.tick
+sid1_clock_drop_13 PASS FATAL: proof/tb_production_sid1.sv:71: valid timing bank 4
+       Time: 56000  Scope: tb_hgi_coll_static_vmwrite.tick
+sid1_clock_drop_14 PASS FATAL: proof/tb_production_sid1.sv:71: valid timing bank 5
+       Time: 56000  Scope: tb_hgi_coll_static_vmwrite.tick
+sid1_clock_drop_15 PASS FATAL: proof/tb_production_sid1.sv:71: valid timing bank 6
+       Time: 56000  Scope: tb_hgi_coll_static_vmwrite.tick
+sid1_clock_drop_16 PASS FATAL: proof/tb_production_sid1.sv:71: valid timing bank 7
+       Time: 56000  Scope: tb_hgi_coll_static_vmwrite.tick
+sid2_sameedge_miter PASS VMWRITE_V6_EQUIV PASS edges=4096 full_shape=RGX4x512_TKW568 resets=241 invalid_slots=enabled clock_roots=16 same_edge=1 fault_latency=equal checked_fault_edges=3372
+proof/tb_miter_sid2.sv:37: $finish called at 45056000 (1ps)
+sid2_production_exact PASS STATIC VMWRITE PASS checked=83 full_bank_cycles=23 fault_timing_checks=6 RGX=4x512 TKW=568 low=C+2 high=C+3 fault=C+1
+proof/tb_production_sid2.sv:123: $finish called at 1196000 (1ps)
+sid2_clock_mapping PASS VMWRITE_V6_MAPPING PASS checks=19 capture_roots=7 swap_detected=required
+proof/tb_mapping_sid2.sv:31: $finish called at 18000 (1ps)
+sid2_clock_mapping_mutant PASS FATAL: proof/tb_mapping_sid2.sv:21: capture clock mapping root=2 lane=2
+       Time: 10000  Scope: tb_vmwrite_v6_mapping
+sid2_wrong_literal_binding_mutant PASS FATAL: proof/tb_wrong_sid2.sv:105: legal production schedule fault or insufficient load
+       Time: 616000  Scope: tb_hgi_coll_static_vmwrite
+sid2_semantic_mutant_1 PASS FATAL: proof/tb_production_sid2.sv:72: payload/latency bank 0
+       Time: 76000  Scope: tb_hgi_coll_static_vmwrite.tick
+sid2_semantic_mutant_2 PASS FATAL: proof/tb_production_sid2.sv:88: extra reserved resource undetected at C+1
+       Time: 676000  Scope: tb_hgi_coll_static_vmwrite.fault_next
+sid2_semantic_mutant_3 PASS FATAL: proof/tb_production_sid2.sv:88: extra reserved resource undetected at C+1
+       Time: 676000  Scope: tb_hgi_coll_static_vmwrite.fault_next
+sid2_semantic_mutant_4 PASS FATAL: proof/tb_production_sid2.sv:72: payload/latency bank 0
+       Time: 86000  Scope: tb_hgi_coll_static_vmwrite.tick
+sid2_semantic_mutant_5 PASS FATAL: proof/tb_production_sid2.sv:72: payload/latency bank 0
+       Time: 76000  Scope: tb_hgi_coll_static_vmwrite.tick
+sid2_clock_drop_1 PASS FATAL: proof/tb_production_sid2.sv:72: payload/latency bank 0
+       Time: 76000  Scope: tb_hgi_coll_static_vmwrite.tick
+sid2_clock_drop_2 PASS FATAL: proof/tb_production_sid2.sv:72: payload/latency bank 2
+       Time: 76000  Scope: tb_hgi_coll_static_vmwrite.tick
+sid2_clock_drop_3 PASS FATAL: proof/tb_production_sid2.sv:72: payload/latency bank 4
+       Time: 76000  Scope: tb_hgi_coll_static_vmwrite.tick
+sid2_clock_drop_4 PASS FATAL: proof/tb_production_sid2.sv:72: payload/latency bank 6
+       Time: 76000  Scope: tb_hgi_coll_static_vmwrite.tick
+sid2_clock_drop_5 PASS FATAL: proof/tb_production_sid2.sv:71: valid timing bank 0
+       Time: 76000  Scope: tb_hgi_coll_static_vmwrite.tick
+sid2_clock_drop_6 PASS FATAL: proof/tb_production_sid2.sv:71: valid timing bank 1
+       Time: 346000  Scope: tb_hgi_coll_static_vmwrite.tick
+sid2_clock_drop_7 PASS FATAL: proof/tb_production_sid2.sv:88: extra reserved resource undetected at C+1
+       Time: 676000  Scope: tb_hgi_coll_static_vmwrite.fault_next
+sid2_clock_drop_8 PASS FATAL: proof/tb_production_sid2.sv:71: valid timing bank 0
+       Time: 76000  Scope: tb_hgi_coll_static_vmwrite.tick
+sid2_clock_drop_9 PASS FATAL: proof/tb_production_sid2.sv:71: valid timing bank 0
+       Time: 56000  Scope: tb_hgi_coll_static_vmwrite.tick
+sid2_clock_drop_10 PASS FATAL: proof/tb_production_sid2.sv:71: valid timing bank 1
+       Time: 56000  Scope: tb_hgi_coll_static_vmwrite.tick
+sid2_clock_drop_11 PASS FATAL: proof/tb_production_sid2.sv:71: valid timing bank 2
+       Time: 56000  Scope: tb_hgi_coll_static_vmwrite.tick
+sid2_clock_drop_12 PASS FATAL: proof/tb_production_sid2.sv:71: valid timing bank 3
+       Time: 56000  Scope: tb_hgi_coll_static_vmwrite.tick
+sid2_clock_drop_13 PASS FATAL: proof/tb_production_sid2.sv:71: valid timing bank 4
+       Time: 56000  Scope: tb_hgi_coll_static_vmwrite.tick
+sid2_clock_drop_14 PASS FATAL: proof/tb_production_sid2.sv:71: valid timing bank 5
+       Time: 56000  Scope: tb_hgi_coll_static_vmwrite.tick
+sid2_clock_drop_15 PASS FATAL: proof/tb_production_sid2.sv:71: valid timing bank 6
+       Time: 56000  Scope: tb_hgi_coll_static_vmwrite.tick
+sid2_clock_drop_16 PASS FATAL: proof/tb_production_sid2.sv:71: valid timing bank 7
+       Time: 56000  Scope: tb_hgi_coll_static_vmwrite.tick
+sid3_sameedge_miter PASS VMWRITE_V6_EQUIV PASS edges=4096 full_shape=RGX4x512_TKW568 resets=241 invalid_slots=enabled clock_roots=16 same_edge=1 fault_latency=equal checked_fault_edges=3372
+proof/tb_miter_sid3.sv:37: $finish called at 45056000 (1ps)
+sid3_production_exact PASS STATIC VMWRITE PASS checked=83 full_bank_cycles=23 fault_timing_checks=6 RGX=4x512 TKW=568 low=C+2 high=C+3 fault=C+1
+proof/tb_production_sid3.sv:123: $finish called at 1196000 (1ps)
+sid3_clock_mapping PASS VMWRITE_V6_MAPPING PASS checks=19 capture_roots=7 swap_detected=required
+proof/tb_mapping_sid3.sv:31: $finish called at 18000 (1ps)
+sid3_clock_mapping_mutant PASS FATAL: proof/tb_mapping_sid3.sv:21: capture clock mapping root=2 lane=2
+       Time: 10000  Scope: tb_vmwrite_v6_mapping
+sid3_wrong_literal_binding_mutant PASS FATAL: proof/tb_wrong_sid3.sv:105: legal production schedule fault or insufficient load
+       Time: 616000  Scope: tb_hgi_coll_static_vmwrite
+sid3_semantic_mutant_1 PASS FATAL: proof/tb_production_sid3.sv:72: payload/latency bank 0
+       Time: 76000  Scope: tb_hgi_coll_static_vmwrite.tick
+sid3_semantic_mutant_2 PASS FATAL: proof/tb_production_sid3.sv:88: extra reserved resource undetected at C+1
+       Time: 676000  Scope: tb_hgi_coll_static_vmwrite.fault_next
+sid3_semantic_mutant_3 PASS FATAL: proof/tb_production_sid3.sv:88: extra reserved resource undetected at C+1
+       Time: 676000  Scope: tb_hgi_coll_static_vmwrite.fault_next
+sid3_semantic_mutant_4 PASS FATAL: proof/tb_production_sid3.sv:72: payload/latency bank 0
+       Time: 86000  Scope: tb_hgi_coll_static_vmwrite.tick
+sid3_semantic_mutant_5 PASS FATAL: proof/tb_production_sid3.sv:72: payload/latency bank 0
+       Time: 76000  Scope: tb_hgi_coll_static_vmwrite.tick
+sid3_clock_drop_1 PASS FATAL: proof/tb_production_sid3.sv:72: payload/latency bank 0
+       Time: 76000  Scope: tb_hgi_coll_static_vmwrite.tick
+sid3_clock_drop_2 PASS FATAL: proof/tb_production_sid3.sv:72: payload/latency bank 2
+       Time: 76000  Scope: tb_hgi_coll_static_vmwrite.tick
+sid3_clock_drop_3 PASS FATAL: proof/tb_production_sid3.sv:72: payload/latency bank 4
+       Time: 76000  Scope: tb_hgi_coll_static_vmwrite.tick
+sid3_clock_drop_4 PASS FATAL: proof/tb_production_sid3.sv:72: payload/latency bank 6
+       Time: 76000  Scope: tb_hgi_coll_static_vmwrite.tick
+sid3_clock_drop_5 PASS FATAL: proof/tb_production_sid3.sv:71: valid timing bank 0
+       Time: 76000  Scope: tb_hgi_coll_static_vmwrite.tick
+sid3_clock_drop_6 PASS FATAL: proof/tb_production_sid3.sv:71: valid timing bank 1
+       Time: 346000  Scope: tb_hgi_coll_static_vmwrite.tick
+sid3_clock_drop_7 PASS FATAL: proof/tb_production_sid3.sv:88: extra reserved resource undetected at C+1
+       Time: 676000  Scope: tb_hgi_coll_static_vmwrite.fault_next
+sid3_clock_drop_8 PASS FATAL: proof/tb_production_sid3.sv:71: valid timing bank 0
+       Time: 76000  Scope: tb_hgi_coll_static_vmwrite.tick
+sid3_clock_drop_9 PASS FATAL: proof/tb_production_sid3.sv:71: valid timing bank 0
+       Time: 56000  Scope: tb_hgi_coll_static_vmwrite.tick
+sid3_clock_drop_10 PASS FATAL: proof/tb_production_sid3.sv:71: valid timing bank 1
+       Time: 56000  Scope: tb_hgi_coll_static_vmwrite.tick
+sid3_clock_drop_11 PASS FATAL: proof/tb_production_sid3.sv:71: valid timing bank 2
+       Time: 56000  Scope: tb_hgi_coll_static_vmwrite.tick
+sid3_clock_drop_12 PASS FATAL: proof/tb_production_sid3.sv:71: valid timing bank 3
+       Time: 56000  Scope: tb_hgi_coll_static_vmwrite.tick
+sid3_clock_drop_13 PASS FATAL: proof/tb_production_sid3.sv:71: valid timing bank 4
+       Time: 56000  Scope: tb_hgi_coll_static_vmwrite.tick
+sid3_clock_drop_14 PASS FATAL: proof/tb_production_sid3.sv:71: valid timing bank 5
+       Time: 56000  Scope: tb_hgi_coll_static_vmwrite.tick
+sid3_clock_drop_15 PASS FATAL: proof/tb_production_sid3.sv:71: valid timing bank 6
+       Time: 56000  Scope: tb_hgi_coll_static_vmwrite.tick
+sid3_clock_drop_16 PASS FATAL: proof/tb_production_sid3.sv:71: valid timing bank 7
+       Time: 56000  Scope: tb_hgi_coll_static_vmwrite.tick
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-2261688-1792150235): exit 0

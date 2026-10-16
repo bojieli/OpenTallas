@@ -1,0 +1,79 @@
+{
+  "schema": "opentallas.writer_v7.literal_sid_binding.v1",
+  "actual_die_contract": "/home/ubuntu/wt/hnl-0030/results/arch/hbm_die_v16/source_compact_0253/contract.json",
+  "actual_die_contract_sha256": "77df74f1df6a2060723cee8bb5764f9dd20db62ba6b30b65ce1363bdb1e9d205",
+  "generating_source": "a89a10d1f",
+  "instances": {
+    "hb_coll_SW": {
+      "master": "ot_hfd_coll_q3_static_host_v4",
+      "source": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q3_static_host_v4.sv",
+      "params": {
+        "QID": "2'd0"
+      }
+    },
+    "hb_coll_SE": {
+      "master": "ot_hfd_coll_q2_static_host_v4",
+      "source": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q2_static_host_v4.sv",
+      "params": {
+        "QID": "2'd1"
+      }
+    },
+    "hb_coll_NW": {
+      "master": "ot_hfd_coll_q2_static_host_v4",
+      "source": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q2_static_host_v4.sv",
+      "params": {
+        "QID": "2'd2"
+      }
+    },
+    "hb_coll_NE": {
+      "master": "ot_hfd_coll_q2_static_host_v4",
+      "source": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q2_static_host_v4.sv",
+      "params": {
+        "QID": "2'd3"
+      }
+    }
+  },
+  "chain": [
+    "host wrapper parameter QID -> u_q.qid(QID)",
+    "q3/q2_static_v4 passes qid via u_q(.*)",
+    "q_static_v4 u_writer.sid(qid)"
+  ],
+  "full_endpoint": "hb_coll_Q.u_q.u_q.u_writer.sid",
+  "identity": [
+    {
+      "quadrant": "SW",
+      "sid": 0,
+      "new_candidate_master": "ot_hgi_coll_static_vmwrite_roots_v7_sid0"
+    },
+    {
+      "quadrant": "SE",
+      "sid": 1,
+      "new_candidate_master": "ot_hgi_coll_static_vmwrite_roots_v7_sid1"
+    },
+    {
+      "quadrant": "NW",
+      "sid": 2,
+      "new_candidate_master": "ot_hgi_coll_static_vmwrite_roots_v7_sid2"
+    },
+    {
+      "quadrant": "NE",
+      "sid": 3,
+      "new_candidate_master": "ot_hgi_coll_static_vmwrite_roots_v7_sid3"
+    }
+  ],
+  "source_hashes": {
+    "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q3_static_host_v4.sv": {
+      "sha256": "bd68bc18fd5831c650c2e41cd9cd83f3149c78a24a65e32fa84f94935a78da22",
+      "source_ref": "a89a10d1f"
+    },
+    "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q2_static_host_v4.sv": {
+      "sha256": "12ef51847298bdb0aa5673389aa38222f4ed7185732e6d23ab8e65d0cbb48ea7",
+      "source_ref": "a89a10d1f"
+    },
+    "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_static_v4.sv": {
+      "sha256": "38a4a5cac4a0bcf820202d22ee539fe283a6350fa1ae32f5fc4a861efef6691b",
+      "source_ref": "a89a10d1f"
+    }
+  },
+  "scope": "Candidate exact literal identity only; no die binding/view adoption. New master and source grant required."
+}

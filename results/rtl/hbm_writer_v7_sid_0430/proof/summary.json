@@ -1,0 +1,645 @@
+{
+  "scope": "Four configured-SID sources only; no die adoption or routed/native qualification",
+  "clock_roots": 16,
+  "configured_sid": [
+    0,
+    1,
+    2,
+    3
+  ],
+  "source_sha256": {
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_vmwrite.sv": "ed96d18598476002c332eba1a8ae302eb258a2e152ab415db13c7e730efbce8b",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_vmwrite_roots_v6.sv": "c5d90d5dcd02e7bdbbc99755225f053d1a5ab4ce2c1a8969ebe7898d2b8f7abd",
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_vmwrite_roots_v7_sid.sv": "eaf097098dfdcd4bb532ece62cda590fe56186849886b14ec059696f6861fd01",
+    "rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_static_vmwrite.sv": "c001a7873e68aa690940f0454d925506bf29481dc1caf6a13e6d4671338a57ff",
+    "tools/hbm_coll_static/tb_vmwrite_v6_equiv.sv": "aaec0399457ce2e18d4995dd1801d9af9c1b98d951daba22c4f181482ead6ec7",
+    "tools/hbm_coll_static/tb_vmwrite_v6_mapping.sv": "ab0506a55cc94bbc504ebc823ea5f407c6c8a6e76092524cd60b141c6cc7d8ed",
+    "tools/hbm_coll_static/run_vmwrite_v7_sid_gate.py": "61f1236512b2dd7c791f69f10d63a0c82cbd13942d7dc80f849b0804ababe5fa"
+  },
+  "results": [
+    {
+      "name": "sid0_sameedge_miter",
+      "expected_pass": true,
+      "exit_code": 0,
+      "gate_pass": true
+    },
+    {
+      "name": "sid0_production_exact",
+      "expected_pass": true,
+      "exit_code": 0,
+      "gate_pass": true
+    },
+    {
+      "name": "sid0_clock_mapping",
+      "expected_pass": true,
+      "exit_code": 0,
+      "gate_pass": true
+    },
+    {
+      "name": "sid0_clock_mapping_mutant",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "sid0_wrong_literal_binding_mutant",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "sid0_semantic_mutant_1",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "sid0_semantic_mutant_2",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "sid0_semantic_mutant_3",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "sid0_semantic_mutant_4",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "sid0_semantic_mutant_5",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "sid0_clock_drop_1",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "sid0_clock_drop_2",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "sid0_clock_drop_3",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "sid0_clock_drop_4",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "sid0_clock_drop_5",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "sid0_clock_drop_6",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "sid0_clock_drop_7",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "sid0_clock_drop_8",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "sid0_clock_drop_9",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "sid0_clock_drop_10",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "sid0_clock_drop_11",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "sid0_clock_drop_12",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "sid0_clock_drop_13",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "sid0_clock_drop_14",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "sid0_clock_drop_15",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "sid0_clock_drop_16",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "sid1_sameedge_miter",
+      "expected_pass": true,
+      "exit_code": 0,
+      "gate_pass": true
+    },
+    {
+      "name": "sid1_production_exact",
+      "expected_pass": true,
+      "exit_code": 0,
+      "gate_pass": true
+    },
+    {
+      "name": "sid1_clock_mapping",
+      "expected_pass": true,
+      "exit_code": 0,
+      "gate_pass": true
+    },
+    {
+      "name": "sid1_clock_mapping_mutant",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "sid1_wrong_literal_binding_mutant",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "sid1_semantic_mutant_1",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "sid1_semantic_mutant_2",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "sid1_semantic_mutant_3",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "sid1_semantic_mutant_4",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "sid1_semantic_mutant_5",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "sid1_clock_drop_1",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "sid1_clock_drop_2",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "sid1_clock_drop_3",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "sid1_clock_drop_4",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "sid1_clock_drop_5",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "sid1_clock_drop_6",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "sid1_clock_drop_7",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "sid1_clock_drop_8",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "sid1_clock_drop_9",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "sid1_clock_drop_10",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "sid1_clock_drop_11",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "sid1_clock_drop_12",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "sid1_clock_drop_13",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "sid1_clock_drop_14",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "sid1_clock_drop_15",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "sid1_clock_drop_16",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "sid2_sameedge_miter",
+      "expected_pass": true,
+      "exit_code": 0,
+      "gate_pass": true
+    },
+    {
+      "name": "sid2_production_exact",
+      "expected_pass": true,
+      "exit_code": 0,
+      "gate_pass": true
+    },
+    {
+      "name": "sid2_clock_mapping",
+      "expected_pass": true,
+      "exit_code": 0,
+      "gate_pass": true
+    },
+    {
+      "name": "sid2_clock_mapping_mutant",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "sid2_wrong_literal_binding_mutant",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "sid2_semantic_mutant_1",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "sid2_semantic_mutant_2",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "sid2_semantic_mutant_3",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "sid2_semantic_mutant_4",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "sid2_semantic_mutant_5",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "sid2_clock_drop_1",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "sid2_clock_drop_2",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "sid2_clock_drop_3",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "sid2_clock_drop_4",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "sid2_clock_drop_5",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "sid2_clock_drop_6",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "sid2_clock_drop_7",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "sid2_clock_drop_8",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "sid2_clock_drop_9",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "sid2_clock_drop_10",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "sid2_clock_drop_11",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "sid2_clock_drop_12",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "sid2_clock_drop_13",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "sid2_clock_drop_14",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "sid2_clock_drop_15",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "sid2_clock_drop_16",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "sid3_sameedge_miter",
+      "expected_pass": true,
+      "exit_code": 0,
+      "gate_pass": true
+    },
+    {
+      "name": "sid3_production_exact",
+      "expected_pass": true,
+      "exit_code": 0,
+      "gate_pass": true
+    },
+    {
+      "name": "sid3_clock_mapping",
+      "expected_pass": true,
+      "exit_code": 0,
+      "gate_pass": true
+    },
+    {
+      "name": "sid3_clock_mapping_mutant",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "sid3_wrong_literal_binding_mutant",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "sid3_semantic_mutant_1",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "sid3_semantic_mutant_2",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "sid3_semantic_mutant_3",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "sid3_semantic_mutant_4",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "sid3_semantic_mutant_5",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "sid3_clock_drop_1",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "sid3_clock_drop_2",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "sid3_clock_drop_3",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "sid3_clock_drop_4",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "sid3_clock_drop_5",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "sid3_clock_drop_6",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "sid3_clock_drop_7",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "sid3_clock_drop_8",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "sid3_clock_drop_9",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "sid3_clock_drop_10",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "sid3_clock_drop_11",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "sid3_clock_drop_12",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "sid3_clock_drop_13",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "sid3_clock_drop_14",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "sid3_clock_drop_15",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "sid3_clock_drop_16",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    }
+  ]
+}

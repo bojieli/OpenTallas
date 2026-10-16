@@ -1,0 +1,914 @@
+{
+  "hb_coll_SW": {
+    "master": "ot_hfd_coll_q3_static_host_v4",
+    "source": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q3_static_host_v4.sv",
+    "params": {
+      "QID": "2'd0"
+    },
+    "slot": "coll_SW",
+    "owner": "H-COLL+IDX",
+    "region": "coll_idx_link",
+    "note": "v16 master CHANGE (was ot_hfd_coll_q3_static in v15): H-COLL production parent (tb_hgi_coll_sw_slice_parent.sv:3 \"WHOLE production COLL parent\"; slice-parent gate PASS el1014-hbm-p2p-coll.log 13:11) = program_target(52+QID) + ot_hfd_coll_q3_static_v4 (ALL-input-capture TX6/RX2 link endpoints ot_hgi_coll_static_link_capture x3 INSIDE, 612-b pin frame per link) ; QID is a parameter (no qid port)",
+    "replaces_v15": "ot_hfd_coll_q3_static",
+    "ports": {
+      "rst_n": {
+        "direction": "input",
+        "bits": 1
+      },
+      "clk_program": {
+        "direction": "input",
+        "bits": 1
+      },
+      "clk_control": {
+        "direction": "input",
+        "bits": 1
+      },
+      "clk_issue": {
+        "direction": "input",
+        "bits": 4
+      },
+      "clk_qslots": {
+        "direction": "input",
+        "bits": 2
+      },
+      "clk_ring": {
+        "direction": "input",
+        "bits": 17
+      },
+      "clk_reduce": {
+        "direction": "input",
+        "bits": 33
+      },
+      "clk_arg": {
+        "direction": "input",
+        "bits": 1
+      },
+      "clk_tkm": {
+        "direction": "input",
+        "bits": 34
+      },
+      "clk_vmwrite": {
+        "direction": "input",
+        "bits": 1
+      },
+      "clk_link": {
+        "direction": "input",
+        "bits": 15
+      },
+      "cfg_v": {
+        "direction": "input",
+        "bits": 1
+      },
+      "cfg_target": {
+        "direction": "input",
+        "bits": 8
+      },
+      "cfg_addr": {
+        "direction": "input",
+        "bits": 12
+      },
+      "cfg_data": {
+        "direction": "input",
+        "bits": 256
+      },
+      "desc_v": {
+        "direction": "input",
+        "bits": 1
+      },
+      "desc_base": {
+        "direction": "input",
+        "bits": 12
+      },
+      "desc_limit": {
+        "direction": "input",
+        "bits": 13
+      },
+      "desc_loops": {
+        "direction": "input",
+        "bits": 16
+      },
+      "launch_v": {
+        "direction": "input",
+        "bits": 1
+      },
+      "program_configured": {
+        "direction": "output",
+        "bits": 1
+      },
+      "program_init_busy": {
+        "direction": "output",
+        "bits": 1
+      },
+      "program_fault": {
+        "direction": "output",
+        "bits": 1
+      },
+      "hgi_busy": {
+        "direction": "output",
+        "bits": 1
+      },
+      "hgi_done": {
+        "direction": "output",
+        "bits": 1
+      },
+      "hgi_fault": {
+        "direction": "output",
+        "bits": 1
+      },
+      "inj_rd": {
+        "direction": "output",
+        "bits": 2
+      },
+      "inj_idx": {
+        "direction": "output",
+        "bits": 32
+      },
+      "hgi_inj_addr": {
+        "direction": "output",
+        "bits": 160
+      },
+      "inj_d": {
+        "direction": "input",
+        "bits": 1024
+      },
+      "del_valid": {
+        "direction": "output",
+        "bits": 4
+      },
+      "del_flit": {
+        "direction": "output",
+        "bits": 2180
+      },
+      "hgi_del_obase": {
+        "direction": "output",
+        "bits": 160
+      },
+      "rc_v": {
+        "direction": "input",
+        "bits": 1
+      },
+      "rc_tag": {
+        "direction": "input",
+        "bits": 3
+      },
+      "rc_d": {
+        "direction": "input",
+        "bits": 256
+      },
+      "rr_v": {
+        "direction": "output",
+        "bits": 1
+      },
+      "rr_tag": {
+        "direction": "output",
+        "bits": 3
+      },
+      "rr_d": {
+        "direction": "output",
+        "bits": 256
+      },
+      "phy_up": {
+        "direction": "input",
+        "bits": 3
+      },
+      "tx_pin_v": {
+        "direction": "output",
+        "bits": 3
+      },
+      "tx_pin_flit": {
+        "direction": "output",
+        "bits": 1836
+      },
+      "rx_pin_v": {
+        "direction": "input",
+        "bits": 3
+      },
+      "rx_pin_flit": {
+        "direction": "input",
+        "bits": 1836
+      },
+      "retry_requested": {
+        "direction": "output",
+        "bits": 3
+      },
+      "pr_cw_i": {
+        "direction": "input",
+        "bits": 280
+      },
+      "pr_ccw_i": {
+        "direction": "input",
+        "bits": 280
+      },
+      "pr_cw_o": {
+        "direction": "output",
+        "bits": 280
+      },
+      "pr_ccw_o": {
+        "direction": "output",
+        "bits": 280
+      },
+      "vm_rq": {
+        "direction": "output",
+        "bits": 136
+      },
+      "vm_rr": {
+        "direction": "input",
+        "bits": 2056
+      },
+      "vm_kq": {
+        "direction": "output",
+        "bits": 2248
+      },
+      "fault": {
+        "direction": "output",
+        "bits": 1
+      },
+      "done": {
+        "direction": "output",
+        "bits": 1
+      },
+      "stat_cycles": {
+        "direction": "output",
+        "bits": 32
+      }
+    }
+  },
+  "hb_coll_SE": {
+    "master": "ot_hfd_coll_q2_static_host_v4",
+    "source": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q2_static_host_v4.sv",
+    "params": {
+      "QID": "2'd1"
+    },
+    "slot": "coll_SE",
+    "owner": "H-COLL+IDX",
+    "region": "coll_idx_link",
+    "note": "v16 master CHANGE (was ot_hfd_coll_q2_static in v15): q2 host V4 parent, QID param 1 (q2 $fatal on QID 0), program_target TARGET 53; 2 link endpoints inside (612-b pin frame)",
+    "replaces_v15": "ot_hfd_coll_q2_static",
+    "ports": {
+      "rst_n": {
+        "direction": "input",
+        "bits": 1
+      },
+      "clk_program": {
+        "direction": "input",
+        "bits": 1
+      },
+      "clk_control": {
+        "direction": "input",
+        "bits": 1
+      },
+      "clk_issue": {
+        "direction": "input",
+        "bits": 4
+      },
+      "clk_qslots": {
+        "direction": "input",
+        "bits": 2
+      },
+      "clk_ring": {
+        "direction": "input",
+        "bits": 17
+      },
+      "clk_reduce": {
+        "direction": "input",
+        "bits": 33
+      },
+      "clk_vmwrite": {
+        "direction": "input",
+        "bits": 1
+      },
+      "clk_link": {
+        "direction": "input",
+        "bits": 10
+      },
+      "cfg_v": {
+        "direction": "input",
+        "bits": 1
+      },
+      "cfg_target": {
+        "direction": "input",
+        "bits": 8
+      },
+      "cfg_addr": {
+        "direction": "input",
+        "bits": 12
+      },
+      "cfg_data": {
+        "direction": "input",
+        "bits": 256
+      },
+      "desc_v": {
+        "direction": "input",
+        "bits": 1
+      },
+      "desc_base": {
+        "direction": "input",
+        "bits": 12
+      },
+      "desc_limit": {
+        "direction": "input",
+        "bits": 13
+      },
+      "desc_loops": {
+        "direction": "input",
+        "bits": 16
+      },
+      "launch_v": {
+        "direction": "input",
+        "bits": 1
+      },
+      "program_configured": {
+        "direction": "output",
+        "bits": 1
+      },
+      "program_init_busy": {
+        "direction": "output",
+        "bits": 1
+      },
+      "program_fault": {
+        "direction": "output",
+        "bits": 1
+      },
+      "hgi_busy": {
+        "direction": "output",
+        "bits": 1
+      },
+      "hgi_done": {
+        "direction": "output",
+        "bits": 1
+      },
+      "hgi_fault": {
+        "direction": "output",
+        "bits": 1
+      },
+      "inj_rd": {
+        "direction": "output",
+        "bits": 2
+      },
+      "inj_idx": {
+        "direction": "output",
+        "bits": 32
+      },
+      "hgi_inj_addr": {
+        "direction": "output",
+        "bits": 160
+      },
+      "inj_d": {
+        "direction": "input",
+        "bits": 1024
+      },
+      "del_valid": {
+        "direction": "output",
+        "bits": 4
+      },
+      "del_flit": {
+        "direction": "output",
+        "bits": 2180
+      },
+      "hgi_del_obase": {
+        "direction": "output",
+        "bits": 160
+      },
+      "rc_v": {
+        "direction": "input",
+        "bits": 1
+      },
+      "rc_tag": {
+        "direction": "input",
+        "bits": 3
+      },
+      "rc_d": {
+        "direction": "input",
+        "bits": 256
+      },
+      "rr_v": {
+        "direction": "output",
+        "bits": 1
+      },
+      "rr_tag": {
+        "direction": "output",
+        "bits": 3
+      },
+      "rr_d": {
+        "direction": "output",
+        "bits": 256
+      },
+      "phy_up": {
+        "direction": "input",
+        "bits": 2
+      },
+      "tx_pin_v": {
+        "direction": "output",
+        "bits": 2
+      },
+      "tx_pin_flit": {
+        "direction": "output",
+        "bits": 1224
+      },
+      "rx_pin_v": {
+        "direction": "input",
+        "bits": 2
+      },
+      "rx_pin_flit": {
+        "direction": "input",
+        "bits": 1224
+      },
+      "retry_requested": {
+        "direction": "output",
+        "bits": 2
+      },
+      "pr_cw_i": {
+        "direction": "input",
+        "bits": 280
+      },
+      "pr_ccw_i": {
+        "direction": "input",
+        "bits": 280
+      },
+      "pr_cw_o": {
+        "direction": "output",
+        "bits": 280
+      },
+      "pr_ccw_o": {
+        "direction": "output",
+        "bits": 280
+      },
+      "vm_rq": {
+        "direction": "output",
+        "bits": 136
+      },
+      "vm_rr": {
+        "direction": "input",
+        "bits": 2056
+      },
+      "vm_kq": {
+        "direction": "output",
+        "bits": 2248
+      },
+      "fault": {
+        "direction": "output",
+        "bits": 1
+      },
+      "done": {
+        "direction": "output",
+        "bits": 1
+      },
+      "stat_cycles": {
+        "direction": "output",
+        "bits": 32
+      }
+    }
+  },
+  "hb_coll_NW": {
+    "master": "ot_hfd_coll_q2_static_host_v4",
+    "source": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q2_static_host_v4.sv",
+    "params": {
+      "QID": "2'd2"
+    },
+    "slot": "coll_NW",
+    "owner": "H-COLL+IDX",
+    "region": "coll_idx_link",
+    "note": "v16 master CHANGE (was ot_hfd_coll_q2_static in v15): q2 host V4 parent, QID param 2 (q2 $fatal on QID 0), program_target TARGET 54; 2 link endpoints inside (612-b pin frame)",
+    "replaces_v15": "ot_hfd_coll_q2_static",
+    "ports": {
+      "rst_n": {
+        "direction": "input",
+        "bits": 1
+      },
+      "clk_program": {
+        "direction": "input",
+        "bits": 1
+      },
+      "clk_control": {
+        "direction": "input",
+        "bits": 1
+      },
+      "clk_issue": {
+        "direction": "input",
+        "bits": 4
+      },
+      "clk_qslots": {
+        "direction": "input",
+        "bits": 2
+      },
+      "clk_ring": {
+        "direction": "input",
+        "bits": 17
+      },
+      "clk_reduce": {
+        "direction": "input",
+        "bits": 33
+      },
+      "clk_vmwrite": {
+        "direction": "input",
+        "bits": 1
+      },
+      "clk_link": {
+        "direction": "input",
+        "bits": 10
+      },
+      "cfg_v": {
+        "direction": "input",
+        "bits": 1
+      },
+      "cfg_target": {
+        "direction": "input",
+        "bits": 8
+      },
+      "cfg_addr": {
+        "direction": "input",
+        "bits": 12
+      },
+      "cfg_data": {
+        "direction": "input",
+        "bits": 256
+      },
+      "desc_v": {
+        "direction": "input",
+        "bits": 1
+      },
+      "desc_base": {
+        "direction": "input",
+        "bits": 12
+      },
+      "desc_limit": {
+        "direction": "input",
+        "bits": 13
+      },
+      "desc_loops": {
+        "direction": "input",
+        "bits": 16
+      },
+      "launch_v": {
+        "direction": "input",
+        "bits": 1
+      },
+      "program_configured": {
+        "direction": "output",
+        "bits": 1
+      },
+      "program_init_busy": {
+        "direction": "output",
+        "bits": 1
+      },
+      "program_fault": {
+        "direction": "output",
+        "bits": 1
+      },
+      "hgi_busy": {
+        "direction": "output",
+        "bits": 1
+      },
+      "hgi_done": {
+        "direction": "output",
+        "bits": 1
+      },
+      "hgi_fault": {
+        "direction": "output",
+        "bits": 1
+      },
+      "inj_rd": {
+        "direction": "output",
+        "bits": 2
+      },
+      "inj_idx": {
+        "direction": "output",
+        "bits": 32
+      },
+      "hgi_inj_addr": {
+        "direction": "output",
+        "bits": 160
+      },
+      "inj_d": {
+        "direction": "input",
+        "bits": 1024
+      },
+      "del_valid": {
+        "direction": "output",
+        "bits": 4
+      },
+      "del_flit": {
+        "direction": "output",
+        "bits": 2180
+      },
+      "hgi_del_obase": {
+        "direction": "output",
+        "bits": 160
+      },
+      "rc_v": {
+        "direction": "input",
+        "bits": 1
+      },
+      "rc_tag": {
+        "direction": "input",
+        "bits": 3
+      },
+      "rc_d": {
+        "direction": "input",
+        "bits": 256
+      },
+      "rr_v": {
+        "direction": "output",
+        "bits": 1
+      },
+      "rr_tag": {
+        "direction": "output",
+        "bits": 3
+      },
+      "rr_d": {
+        "direction": "output",
+        "bits": 256
+      },
+      "phy_up": {
+        "direction": "input",
+        "bits": 2
+      },
+      "tx_pin_v": {
+        "direction": "output",
+        "bits": 2
+      },
+      "tx_pin_flit": {
+        "direction": "output",
+        "bits": 1224
+      },
+      "rx_pin_v": {
+        "direction": "input",
+        "bits": 2
+      },
+      "rx_pin_flit": {
+        "direction": "input",
+        "bits": 1224
+      },
+      "retry_requested": {
+        "direction": "output",
+        "bits": 2
+      },
+      "pr_cw_i": {
+        "direction": "input",
+        "bits": 280
+      },
+      "pr_ccw_i": {
+        "direction": "input",
+        "bits": 280
+      },
+      "pr_cw_o": {
+        "direction": "output",
+        "bits": 280
+      },
+      "pr_ccw_o": {
+        "direction": "output",
+        "bits": 280
+      },
+      "vm_rq": {
+        "direction": "output",
+        "bits": 136
+      },
+      "vm_rr": {
+        "direction": "input",
+        "bits": 2056
+      },
+      "vm_kq": {
+        "direction": "output",
+        "bits": 2248
+      },
+      "fault": {
+        "direction": "output",
+        "bits": 1
+      },
+      "done": {
+        "direction": "output",
+        "bits": 1
+      },
+      "stat_cycles": {
+        "direction": "output",
+        "bits": 32
+      }
+    }
+  },
+  "hb_coll_NE": {
+    "master": "ot_hfd_coll_q2_static_host_v4",
+    "source": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q2_static_host_v4.sv",
+    "params": {
+      "QID": "2'd3"
+    },
+    "slot": "coll_NE",
+    "owner": "H-COLL+IDX",
+    "region": "coll_idx_link",
+    "note": "v16 master CHANGE (was ot_hfd_coll_q2_static in v15): q2 host V4 parent, QID param 3 (q2 $fatal on QID 0), program_target TARGET 55; 2 link endpoints inside (612-b pin frame)",
+    "replaces_v15": "ot_hfd_coll_q2_static",
+    "ports": {
+      "rst_n": {
+        "direction": "input",
+        "bits": 1
+      },
+      "clk_program": {
+        "direction": "input",
+        "bits": 1
+      },
+      "clk_control": {
+        "direction": "input",
+        "bits": 1
+      },
+      "clk_issue": {
+        "direction": "input",
+        "bits": 4
+      },
+      "clk_qslots": {
+        "direction": "input",
+        "bits": 2
+      },
+      "clk_ring": {
+        "direction": "input",
+        "bits": 17
+      },
+      "clk_reduce": {
+        "direction": "input",
+        "bits": 33
+      },
+      "clk_vmwrite": {
+        "direction": "input",
+        "bits": 1
+      },
+      "clk_link": {
+        "direction": "input",
+        "bits": 10
+      },
+      "cfg_v": {
+        "direction": "input",
+        "bits": 1
+      },
+      "cfg_target": {
+        "direction": "input",
+        "bits": 8
+      },
+      "cfg_addr": {
+        "direction": "input",
+        "bits": 12
+      },
+      "cfg_data": {
+        "direction": "input",
+        "bits": 256
+      },
+      "desc_v": {
+        "direction": "input",
+        "bits": 1
+      },
+      "desc_base": {
+        "direction": "input",
+        "bits": 12
+      },
+      "desc_limit": {
+        "direction": "input",
+        "bits": 13
+      },
+      "desc_loops": {
+        "direction": "input",
+        "bits": 16
+      },
+      "launch_v": {
+        "direction": "input",
+        "bits": 1
+      },
+      "program_configured": {
+        "direction": "output",
+        "bits": 1
+      },
+      "program_init_busy": {
+        "direction": "output",
+        "bits": 1
+      },
+      "program_fault": {
+        "direction": "output",
+        "bits": 1
+      },
+      "hgi_busy": {
+        "direction": "output",
+        "bits": 1
+      },
+      "hgi_done": {
+        "direction": "output",
+        "bits": 1
+      },
+      "hgi_fault": {
+        "direction": "output",
+        "bits": 1
+      },
+      "inj_rd": {
+        "direction": "output",
+        "bits": 2
+      },
+      "inj_idx": {
+        "direction": "output",
+        "bits": 32
+      },
+      "hgi_inj_addr": {
+        "direction": "output",
+        "bits": 160
+      },
+      "inj_d": {
+        "direction": "input",
+        "bits": 1024
+      },
+      "del_valid": {
+        "direction": "output",
+        "bits": 4
+      },
+      "del_flit": {
+        "direction": "output",
+        "bits": 2180
+      },
+      "hgi_del_obase": {
+        "direction": "output",
+        "bits": 160
+      },
+      "rc_v": {
+        "direction": "input",
+        "bits": 1
+      },
+      "rc_tag": {
+        "direction": "input",
+        "bits": 3
+      },
+      "rc_d": {
+        "direction": "input",
+        "bits": 256
+      },
+      "rr_v": {
+        "direction": "output",
+        "bits": 1
+      },
+      "rr_tag": {
+        "direction": "output",
+        "bits": 3
+      },
+      "rr_d": {
+        "direction": "output",
+        "bits": 256
+      },
+      "phy_up": {
+        "direction": "input",
+        "bits": 2
+      },
+      "tx_pin_v": {
+        "direction": "output",
+        "bits": 2
+      },
+      "tx_pin_flit": {
+        "direction": "output",
+        "bits": 1224
+      },
+      "rx_pin_v": {
+        "direction": "input",
+        "bits": 2
+      },
+      "rx_pin_flit": {
+        "direction": "input",
+        "bits": 1224
+      },
+      "retry_requested": {
+        "direction": "output",
+        "bits": 2
+      },
+      "pr_cw_i": {
+        "direction": "input",
+        "bits": 280
+      },
+      "pr_ccw_i": {
+        "direction": "input",
+        "bits": 280
+      },
+      "pr_cw_o": {
+        "direction": "output",
+        "bits": 280
+      },
+      "pr_ccw_o": {
+        "direction": "output",
+        "bits": 280
+      },
+      "vm_rq": {
+        "direction": "output",
+        "bits": 136
+      },
+      "vm_rr": {
+        "direction": "input",
+        "bits": 2056
+      },
+      "vm_kq": {
+        "direction": "output",
+        "bits": 2248
+      },
+      "fault": {
+        "direction": "output",
+        "bits": 1
+      },
+      "done": {
+        "direction": "output",
+        "bits": 1
+      },
+      "stat_cycles": {
+        "direction": "output",
+        "bits": 32
+      }
+    }
+  }
+}
