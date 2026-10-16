@@ -222,14 +222,6 @@ if {$ot_eco_meg} { puts "OT_ECO macro-edge via guard: add"; ot_meg_apply add }
 set guides [expr {[envd OT_GUIDES 1] && [grt::have_routes]}]
 set allow_fresh [envd OT_ALLOW_FRESH_GRT 0]
 puts "OT_ECO route guides from the db: $guides"
-if {$guides} {
-  puts "OT_ECO route_strategy incremental_original_guides"
-  global_route -start_incremental
-} elseif {$allow_fresh} {
-  puts "OT_ECO route_strategy fresh_global reason missing_original_guides explicit_opt_in 1"
-} else {
-  error "OT_ECO original guides unavailable; fresh GRT requires OT_ALLOW_FRESH_GRT=1"
-}
 set snap [dict create]
 foreach i [$block getInsts] { dict set snap [$i getName] [list {*}[$i getLocation] [$i getOrient] [[$i getMaster] getName]] }
 # Source-pinned opt-in for the diagnosed A input overpadding only. It changes
@@ -243,8 +235,26 @@ if {$ot_native ne ""} {
   if {![regexp {^[0-9a-f]{64}$} $ot_native_sha] || [lindex [exec sha256sum $ot_native] 0] ne $ot_native_sha} {
     error "native normalization source hash mismatch"
   }
+  if {![envd OT_ALLOW_FRESH_GRT 0] || ![envd OT_NATIVE_FRESH_GRT 0]} {
+    error "native normalization requires explicitly authorized fresh GRT"
+  }
   source $ot_native
   puts "OT_ECO native normalization applied; canonical route/signoff still required"
+}
+
+# A removal plan deliberately changes net topology. Use fresh GRT only under
+# the explicit, source-bound recovery option; never reuse stale guide IDs.
+if {$ot_native ne ""} {
+  set guides 0
+}
+if {$guides} {
+  puts "OT_ECO route_strategy incremental_original_guides"
+  global_route -start_incremental
+} elseif {$allow_fresh} {
+  set native_reason [expr {$ot_native ne "" ? "native_topology_normalization" : "missing_original_guides"}]
+  puts "OT_ECO route_strategy fresh_global reason $native_reason explicit_opt_in 1"
+} else {
+  error "OT_ECO original guides unavailable; fresh GRT requires OT_ALLOW_FRESH_GRT=1"
 }
 
 if {[llength [dict get $win fixable]]} {
