@@ -33,7 +33,7 @@ module tb_qfd_vm_bv_ports;
     parameter integer ND = 9;
     parameter integer MEE = 0, VMT = 0, RV = 1, RO = 2;   // el1011-q-sp: me_en one edge early / hardened bank tiles
                                                            // (VMT: pass XVM + RV + RO + 7 and VL = 7 + RV + RO + 5)
-    parameter integer USE_NATIVE_CLOCKS=0,
+    parameter integer USE_NATIVE_CLOCKS=0;
     parameter integer RETURN_LEAVES=0, READ_CONTROL_LEAVES=0, NATIVE_BANKS=0, USE_MACRO=0;
     parameter integer XQT = 0;                 // ot_qfd_sp_vector_memory_bv XQT (fe-push-qwen-1010)
     parameter integer XPR = 0;                 // bit-plane x transport (qwen-tp8-vm 1013): pass XVM + XPR + 1 - RO
