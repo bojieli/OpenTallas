@@ -109,10 +109,27 @@ def layer_msgs(seg, base, w, txl, phy, st_ofs=38):
     return m, dict(q_send=q0, attn_end=a_end, result_send=[r0, r_last])
 
 
-def program_profile(txl, phy, tp_path, emb_window=None, host_stages=None, st_ofs=38):
+def handoff_windows(path):
+    """Q-ATTN result-serializer decision (results/arch/qwen_split_compute_1014/res_train_decision_1015/decision.json):
+    per token-path op, the measured end-beat landing of its LAST result burst on the VM result face, in edges after the
+    op's ME go edge. A link message that reads the op's result is legal only from the edge after that landing (VM write
+    visibility +1); the compiler places Q/KVN no earlier. Returns {token_path_op: (last_landing+1, pc)}."""
+    d = json.load(open(path))
+    ops = d["link_handoff"]["ops"]
+    out = {}
+    for p in d["per_op"]:
+        op, pc = p.get("token_path_op"), p["pc"]
+        if op and pc in ops:
+            out[op] = (int(max(ops[pc]["end_beat_landing_after_go"])) + 1, pc)
+    return out
+
+
+def program_profile(txl, phy, tp_path, emb_window=None, host_stages=None, st_ofs=38, handoff=None):
     """Full 36-layer decode-token program from the priced token path (layer-relative op windows).
     Segment 0 = L1..L35 (identical windows: the KV fill of layer n+1 is hidden behind layer n); segment 1 = the token
-    run = terminal RESULT + embedding row + L0 (its KV fill is exposed: attn_kv 2,038 vs 1,816 cycles)."""
+    run = terminal RESULT + embedding row + L0 (its KV fill is exposed: attn_kv 2,038 vs 1,816 cycles).
+    handoff (--link-handoff): the qkv window becomes max(priced, measured last result landing + 1) so Q/KVN are sent only
+    after the actual producer's last qkv row is visible in the VM (no ready/credit: a late row is a schedule fault)."""
     if host_stages is not None and (type(host_stages) is not int or host_stages < 0):
         raise ValueError("host_stages must be a measured nonnegative integer or None (pending)")
     d = json.load(open(tp_path))
@@ -122,6 +139,11 @@ def program_profile(txl, phy, tp_path, emb_window=None, host_stages=None, st_ofs
     assert len(lay) == 36, len(lay)
     ops = ("rmsnorm1", "qkv", "qknorm_rope", "attn_kv")
     win = {L: [nodes[f"{L}.{o}"]["cycles"] for o in ops] for L in lay}
+    hw = handoff_windows(handoff) if handoff else {}
+    priced_qkv = {L: win[L][1] for L in lay}
+    if "qkv" in hw:
+        for L in lay:
+            win[L][1] = max(win[L][1], hw["qkv"][0])
     if not all(win[L] == win[lay[1]] for L in lay[2:]):
         raise SystemExit("L1..L35 op windows differ: one replayed segment-0 image cannot serve them")
     m0, l1 = layer_msgs(0, 0, win[lay[1]], txl, phy, st_ofs)
@@ -135,6 +157,11 @@ def program_profile(txl, phy, tp_path, emb_window=None, host_stages=None, st_ofs
                   embed=dict(start=0, cycles=emb), windows=dict(L0=dict(zip(ops, map(int, win[lay[0]]))),
                   L1_35=dict(zip(ops, map(int, win[lay[1]])))), layer=l1, token_run_L0=l0,
                   emb_send=[e_last - 63, e_last],
+                  result_handoff=(dict(source=handoff, op="qkv", pc=hw["qkv"][1], visible_after_go=hw["qkv"][0],
+                                       priced_qkv=int(priced_qkv[lay[1]]), qkv_window=int(win[lay[1]][1]),
+                                       q_send_shift=int(win[lay[1]][1] - priced_qkv[lay[1]]),
+                                       note="the shift is the VM result-face cost (Q-ATTN ledger), not a link cost")
+                                  if "qkv" in hw else None),
                   host_relay_stages=dict(value=host_stages, status="measured (KV die lead)" if host_stages is not None else
                       "PENDING: KV die lead re-measure after the HOST core moves next to the D2D end (coordinator: the "
                       "54-57-stage HOST<->D2D relay figure is a floorplan defect, not a calendar input); compiled with 0"),
@@ -209,6 +236,9 @@ def main():
     ap.add_argument("--pinreg", action="store_true",
                     help="pin-registered die masters (PR=1, d2d_pinreg_gen.py): PHY hop +2 (TX + far RX pin flops), producer "
                          "capture +2 (slot out + payload in), consumer outputs +1; production default for the r4 masters")
+    ap.add_argument("--link-handoff", default=None,
+                    help="Q-ATTN result-serializer decision.json (link_handoff + per_op): Q/KVN sends wait for the measured last "
+                         "qkv result landing (+1 visibility) instead of the priced qkv window")
     ap.add_argument("--allow-unmeasured-host", action="store_true",
                     help="diagnostic program images only: retain PENDING HOST stages and compile with zero; never production-qualified")
     a = ap.parse_args()
@@ -228,7 +258,7 @@ def main():
         msgs = json.load(open(a.spec))
     elif a.profile == "program":
         msgs, layout = program_profile(txl_p, phy_p, a.token_path, host_stages=a.host_stages,
-                                        st_ofs=40 if a.pinreg else 38)   # STATUS capture after the (+2) KVN captures
+                                        st_ofs=40 if a.pinreg else 38, handoff=a.link_handoff)   # STATUS capture after the (+2) KVN captures
         if a.host_stages:
             txd["K"][1] += a.host_stages   # HOST record words reach the end's capture edge host_stages later
     elif a.profile == "dies_token":
