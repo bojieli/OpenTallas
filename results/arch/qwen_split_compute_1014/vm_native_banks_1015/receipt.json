@@ -1,0 +1,18 @@
+{
+ "schema": "qwen-vm-native-banks-v1",
+ "date": "2026-10-15",
+ "owner": "Q-VMWB",
+ "change": "qfd_sp_vector_memory_par binds NATIVE_BANKS=1: the 64 ot_qfd_vm_bank_t row banks -> qvm_bank_banked_native (hard view qvm_bank_entries_my_native ne3 CLOSED), the 48 ot_qfd_vm_su_t operand banks -> qvm_su_bank_native (new cluster kit, job qvm_su_bank_native-su1-COMMIT-fbf815ea5); all 9 entry clocks of each successor on the leaf clock of the replaced bank",
+ "source": "48155cb29 + tb fix (branch claude/q-vmwb-vm-1705)",
+ "evidence": {
+  "tb_vmwb": "5 decoder ME result ops (PC1/11/12/16/20) PASS at NATIVE_BANKS 0 and 1 with IDENTICAL landings (311/1334/347/563/411); VPMUT1 mutant fails 4/5 (PC11 lane-swap non-rejection as audited)",
+  "tb_qfd_vm_die_static": "MEM=1 PASS at NATIVE_BANKS 0 and 1 (real Q rows 64, words 1024, commits 8/9 edges, seq 256 fixed RL 13); OBS_MUT=1 at NATIVE_BANKS 1 FAILS",
+  "unit": "tb_qvm_bank_banked_native / tb_qvm_su_bank_native: cycle-exact vs ot_qfd_vm_bank_t / ot_qfd_vm_su_t, mutants fail"
+ },
+ "cycles_added": 0,
+ "host": "ot-epyc1tb /srv/opentallas-scratch/claude/q-vmwb/nb-48155cb29",
+ "open": [
+  "native launch of the bank clusters (ne3 audit L298 at the parent with raw child R; root owns nested-R composition)",
+  "VM parent kit (residual partition) and die view"
+ ]
+}
