@@ -1,0 +1,27 @@
+{
+ "signal_pins": 1210,
+ "unique_names": 1210,
+ "north_outputs": 604,
+ "north_exported_pin_rectangles_equal_old": true,
+ "old_view_source": "798b4eb52:physical/ref_tile/s81fill2_qbank_s_t/views/dsfd_qbank_S/dsfd_qbank_S.lef",
+ "new_job": "s81fill2_qbank_s_t-nr1-a0a4982dd",
+ "note": "Requested Tcl coordinates and realized rectangles differ by layer snapping; compare actual LEF rectangles for adoption. All604 element-facing Noutput rectangles preserved exactly, not only requested centers.",
+ "actual_clock_rectangles": [
+  [
+   "M5",
+   "30.24",
+   "0",
+   "30.264",
+   "0.084"
+  ]
+ ],
+ "actual_reset_rectangles": [
+  [
+   "M3",
+   "30.348",
+   "0",
+   "30.366",
+   "0.038"
+  ]
+ ]
+}
