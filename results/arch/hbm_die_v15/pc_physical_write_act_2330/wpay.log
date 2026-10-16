@@ -1,0 +1,5 @@
+PC_CTRL_WRITE_PHASE PASS
+NATIVE_QUEUED_WRITE640 first=13 final_ACK=69 elapsed_HBM_cycles=56 max_PC0_pending=16
+PC_CTRL_WRITE_PHASE PASS
+FATAL: /srv/opentallas-scratch/codex/hdie-2330/full-8e8df5ff2/wpay/tb_leaves_production.sv:48: queued write payload/identity
+PC_CTRL_WPAY PASS (WPAY=1 and WPAY=0 production WR640 exact payload + true ACK; stale_head mutant rejected)

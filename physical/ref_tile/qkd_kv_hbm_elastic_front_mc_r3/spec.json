@@ -1,0 +1,126 @@
+{
+ "name": "qkd_kv_hbm_elastic_front_mc_r3",
+ "top": "qkd_kv_hbm_elastic_front_mc",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_sys/static_kv_20261014/qkd_kv_hbm_elastic_front_mc.sv"
+ ],
+ "params": {
+  "NBLK": 16,
+  "BLK": 8,
+  "STRIDE": 1
+ },
+ "clock_port": "pll_hbm",
+ "reset_ports": [
+  "hrst"
+ ],
+ "outline": {
+  "w": 259.2,
+  "h": 216,
+  "exact": true
+ },
+ "pins": {
+  "W": [
+   "co_in",
+   "epoch_in",
+   "blk_go"
+  ],
+  "E": [
+   "co_out",
+   "epoch_out",
+   "compiled_hbm_put"
+  ],
+  "N": [
+   "blk_freed",
+   "hold",
+   "idle",
+   "fault_overflow",
+   "fault_go",
+   "stall_edges",
+   "occupancy"
+  ],
+  "S": [
+   "pll_hbm",
+   "hrst",
+   "pll_hbm_data"
+  ]
+ },
+ "io_tcl": "results/arch/qwen_split_1014/static_memory_mc_grant_2330/qkd_kv_hbm_elastic_front_mc_r3.tcl",
+ "layer_cap": "M5",
+ "route": {
+  "pd": 0.52,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "slot_change_request": "Official local pin grant d61fc4215; candidate only. Whole-die static boundary homes and integration remain open.",
+ "job": {
+  "owner": "Codex:Q-KV-2330",
+  "branch": "codex/qwen-kv-2330",
+  "tag": "mc3",
+  "purpose": "Four actual independent phase-aligned pll_hbm_data storage roots: fixed bit slices replace a single >15k storage root; no clock gating, no timing exception between same-phase roots, no normal-cycle delta. Front width259.2 removes measured66.4% utilization failure.",
+  "benches": [
+   {
+    "name": "elastic_boundary_parent_proof",
+    "cmd": "NBLK=16 RDEPTH=64 JOBS=2 bash tools/qwen_static_kv/run_kv_hbm_elastic_boundary_mc.sh {RUN}/bench/exact",
+    "expect": "pass",
+    "pass_regex": "^PASS 0az elastic boundary",
+    "threads": 2,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "elastic_front_mutant_release_ignores_ready",
+    "cmd": "mkdir -p {RUN}/bench/mut && PREP_ONLY=1 bash tools/qwen_static_kv/run_kv_hbm_elastic_boundary_mc.sh {RUN}/bench/mut && verilator --binary --timing -Wno-fatal -j 2 --top-module tb_kv_hbm_elastic_boundary_mc -GNBLK=16 -GRDEPTH=64 -GFRONT_MUT=3 --Mdir {RUN}/bench/mut/obj $(find {RUN}/bench/mut/source -name '*.sv') > {RUN}/bench/mut/build.log 2>&1 && {RUN}/bench/mut/obj/Vtb_kv_hbm_elastic_boundary_mc +jit=16 +faultmode=2 +late=304",
+    "expect": "fail",
+    "fail_regex": "OBSERVED_FAIL",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "extra_paths": [
+   "results/arch/qwen_split_1014/kvsys_v1_4_3_design/static_io",
+   "results/arch/qwen_split_1014/kvsys_v1_4_candidate/static_io",
+   "rtl/lib",
+   "rtl/qwen_sys/emb_hbm_20261008",
+   "rtl/qwen_sys/host_20261013",
+   "rtl/qwen_sys/kv_die_20261009",
+   "rtl/qwen_sys/q5_20261009",
+   "rtl/qwen_sys/static_kv_20261014",
+   "rtl/test/qwen_static_kv",
+   "tools/qwen_static_kv",
+   "results/arch/qwen_split_1014/static_memory_mc_grant_2330"
+  ],
+  "views_to": "physical/ref_tile/qkd_kv_hbm_elastic_front_mc_r3/views",
+  "record_to": "results/rtl/ref_tile/qkd_kv_hbm_elastic_front_mc_r3"
+ },
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "recipe": 3,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": false
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "structural_change": "Four actual independent phase-aligned pll_hbm_data storage roots: fixed bit slices replace a single >15k storage root; no clock gating, no timing exception between same-phase roots, no normal-cycle delta. Front width259.2 removes measured66.4% utilization failure.",
+ "sdc_extra": [
+  "physical/qwen_kv_die_native_static_pins/qkd_kv_hbm_elastic_front_mc_r3.sdc"
+ ],
+ "pin_regs": {
+  "enable": false,
+  "reason": "Actual RTL captures the data boundary in each original domain; explicit four phase-aligned storage clock inputs split sink count without any normal-cycle delta. The component production bench accounts every existing register. Clock/reset ports are domain controls."
+ }
+}

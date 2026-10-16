@@ -1,0 +1,49 @@
+{
+  "scope": "capacity evidence corrected; historical receipt is not a complete 36-layer schedule",
+  "counterexample": {
+    "layer": {
+      "T": 8192,
+      "pcs": 128,
+      "k_sectors": 256,
+      "qk_start_after_prefetch_core": 111,
+      "ring_peak": 48,
+      "ring_ok": true,
+      "k_rd_hbm_edges": 256,
+      "k_rd_core_edges": 315,
+      "front_credit_rate": 1.0,
+      "front_blocks_for_full_rate": 10,
+      "qk_consume_core_edges": 256
+    },
+    "layers": 36,
+    "period_hbm": 5402,
+    "pc_busy_hbm_per_layer": 514,
+    "refresh_edges_per_layer": 0,
+    "scope": "necessary capacity screen only",
+    "hbm_fits_period": true,
+    "own_row_pcs": 4,
+    "own_row_scan_index": [
+      255
+    ],
+    "own_row_rd_issue_hbm_after_prefetch": [
+      255
+    ],
+    "write_ready_core": 1000000,
+    "write_ready_origin": "prefetch_start",
+    "write_readiness_checked": true,
+    "own_row_read_after_write_ok": false,
+    "capacity_feasible": true,
+    "production_schedule_qualified": false,
+    "qualification_blockers": [
+      "actual 36 layer timelines not emitted/checked",
+      "actual concurrent-write JEDEC programme not checked",
+      "actual V consumer order and service ports not joined",
+      "own-row read precedes declared write readiness"
+    ],
+    "feasible": false
+  },
+  "historical_own_row_issue_used_raw_index": true,
+  "actual_36_timelines_emitted": false,
+  "actual_concurrent_write_JEDEC_checked": false,
+  "V_order_joined": false,
+  "fullprogramme_qualified": false
+}
