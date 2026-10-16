@@ -1,0 +1,1264 @@
+{
+ "source_commit": "6599c1558 (origin/codex/qwen-context-calendar-1016)",
+ "run_by": "Claude Q-VMWB 2026-10-16 ~10:00 PT, localhost iverilog",
+ "positives": {
+  "n": 32,
+  "all_exit0": true,
+  "reads_each": 6626,
+  "note": "strict PROFILE0, STATIC_REFRESH=1 RR REFpb, all 32 PC straps x 36 persistent changing-T frames, exact address+reservation timeline"
+ },
+ "mutants": {
+  "m1pc13": {
+   "exit": 1,
+   "first": "FATAL: /home/ubuntu/wt/qwen-context-calendar-1016/rtl/test/qwen_static_kv/tb_refresh_context_controller.sv:38: FAIL refresh context controller calendar timeline edge370"
+  },
+  "m1pc6": {
+   "exit": 1,
+   "first": "FATAL: /home/ubuntu/wt/qwen-context-calendar-1016/rtl/test/qwen_static_kv/tb_refresh_context_controller.sv:38: FAIL refresh context controller calendar timeline edge345"
+  },
+  "m2pc13": {
+   "exit": 1,
+   "first": "FATAL: /home/ubuntu/wt/qwen-context-calendar-1016/rtl/test/qwen_static_kv/tb_refresh_context_controller.sv:38: FAIL refresh context controller calendar timeline edge374"
+  },
+  "m2pc6": {
+   "exit": 1,
+   "first": "FATAL: /home/ubuntu/wt/qwen-context-calendar-1016/rtl/test/qwen_static_kv/tb_refresh_context_controller.sv:38: FAIL refresh context controller calendar timeline edge374"
+  },
+  "m3pc13": {
+   "exit": 1,
+   "first": "FATAL: /home/ubuntu/wt/qwen-context-calendar-1016/rtl/test/qwen_static_kv/tb_refresh_context_controller.sv:38: FAIL refresh context controller calendar timeline edge1188"
+  },
+  "m3pc6": {
+   "exit": 1,
+   "first": "FATAL: /home/ubuntu/wt/qwen-context-calendar-1016/rtl/test/qwen_static_kv/tb_refresh_context_controller.sv:38: FAIL refresh context controller calendar timeline edge1163"
+  },
+  "m4pc13": {
+   "exit": 1,
+   "first": "FATAL: /home/ubuntu/wt/qwen-context-calendar-1016/rtl/test/qwen_static_kv/tb_refresh_context_controller.sv:42: FAIL refresh context controller layer0 address[1] bank1 col0 expected512 row64"
+  },
+  "m4pc6": {
+   "exit": 1,
+   "first": "FATAL: /home/ubuntu/wt/qwen-context-calendar-1016/rtl/test/qwen_static_kv/tb_refresh_context_controller.sv:42: FAIL refresh context controller layer0 address[1] bank1 col0 expected512 row64"
+  },
+  "m5pc13": {
+   "exit": 1,
+   "first": "FATAL: /home/ubuntu/wt/qwen-context-calendar-1016/rtl/test/qwen_static_kv/tb_refresh_context_controller.sv:45: FAIL refresh context controller V banksets4/5 protection"
+  },
+  "m5pc6": {
+   "exit": 1,
+   "first": "FATAL: /home/ubuntu/wt/qwen-context-calendar-1016/rtl/test/qwen_static_kv/tb_refresh_context_controller.sv:45: FAIL refresh context controller V banksets4/5 protection"
+  }
+ },
+ "wrong_profile_image_only": {
+  "d118pc13": {
+   "exit": 1,
+   "first": "FATAL: /home/ubuntu/wt/qwen-context-calendar-1016/rtl/test/qwen_static_kv/tb_refresh_context_controller.sv:38: FAIL refresh context controller calendar timeline edge370"
+  },
+  "d118pc6": {
+   "exit": 1,
+   "first": "FATAL: /home/ubuntu/wt/qwen-context-calendar-1016/rtl/test/qwen_static_kv/tb_refresh_context_controller.sv:38: FAIL refresh context controller calendar timeline edge345"
+  },
+  "d1888pc13": {
+   "exit": 1,
+   "first": "FATAL: /home/ubuntu/wt/qwen-context-calendar-1016/rtl/test/qwen_static_kv/tb_refresh_context_controller.sv:38: FAIL refresh context controller calendar timeline edge179"
+  },
+  "d1888pc6": {
+   "exit": 1,
+   "first": "FATAL: /home/ubuntu/wt/qwen-context-calendar-1016/rtl/test/qwen_static_kv/tb_refresh_context_controller.sv:38: FAIL refresh context controller calendar timeline edge179"
+  },
+  "d59pc13": {
+   "exit": 1,
+   "first": "FATAL: /home/ubuntu/wt/qwen-context-calendar-1016/rtl/test/qwen_static_kv/tb_refresh_context_controller.sv:38: FAIL refresh context controller calendar timeline edge370"
+  },
+  "d59pc6": {
+   "exit": 1,
+   "first": "FATAL: /home/ubuntu/wt/qwen-context-calendar-1016/rtl/test/qwen_static_kv/tb_refresh_context_controller.sv:38: FAIL refresh context controller calendar timeline edge345"
+  }
+ },
+ "wrong_profile_image_and_compiler": {
+  "c118pc13": {
+   "exit": 1,
+   "first": "DETAIL sf1 ref0 legal0 open00fe0000 stale00000000 blk00010000 rcdffffffff ccdf running1 k4 last5"
+  },
+  "c118pc6": {
+   "exit": 1,
+   "first": "DETAIL sf1 ref0 legal0 open00fe0000 stale00000000 blk00010000 rcdffffffff ccdf running1 k4 last5"
+  },
+  "c1888pc13": {
+   "exit": 1,
+   "first": "DETAIL sf1 ref0 legal0 open0000003f stale00000000 blk00000080 rcdffffffff ccdf running1 k1 last1"
+  },
+  "c1888pc6": {
+   "exit": 1,
+   "first": "DETAIL sf1 ref0 legal0 open0000003f stale00000000 blk00000000 rcdffffffff ccdf running1 k1 last1"
+  },
+  "c59pc13": {
+   "exit": 0,
+   "first": "PASS refresh context controller PROFILE0 persistent36layers total6626 exact address and slots"
+  },
+  "c59pc6": {
+   "exit": 0,
+   "first": "PASS refresh context controller PROFILE0 persistent36layers total6626 exact address and slots"
+  }
+ },
+ "findings": [
+  "all 32 PCs PASS; mutants 1-5 FAIL at PC6 and PC13",
+  "due phase off by +118 (one bank) or +1888 (half cycle) in BOTH image and compiler -> real JEDEC schedule fault (sf1 legal0): the strap/reset epoch binding is load-bearing",
+  "due phase off by +59 in both PASSES on this stimulus (36 go phases): the quiet windows had >=59 edges of slack at every sampled phase; stimulus is sampled, not exhaustive over (now-due) phase",
+  "scope: component only (calendar + JEDEC core); PHY service profile, ring64, write visibility, native attention calendar, pins/area/cost OPEN"
+ ],
+ "receipts": {
+  "m1pc13": {
+   "mutant": 1,
+   "pc": 13,
+   "exit": 1,
+   "output": "FATAL: /home/ubuntu/wt/qwen-context-calendar-1016/rtl/test/qwen_static_kv/tb_refresh_context_controller.sv:38: FAIL refresh context controller calendar timeline edge370",
+   "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_controller_context_calendar.sv": "1078d8d98884c77b7c070480b9fb9caecc7dbfd56289ec8ed2705ce71106b37f",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_shape.sv": "df879146dd7dc1e375c0223c2daa622025458632b81a7a3e9f65779b9f84971b",
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "89bc7a0f33d0b2e071f3cba55e236d9d262cc6659b820319acb9767b1bd9fe5b",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "e055b8cc7362ee61a74238aca6dc4ef8046593a34211719fce74aaa4fadd4840",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_refresh_roots.sv": "0fb7006338ef90386d43da310c328d61d0d7870cfe71010e547808d17c97db72",
+    "rtl/test/qwen_static_kv/tb_refresh_context_controller.sv": "c31f02e3f188b1721a3ccea457f473fdc3242c182fa6b9db73772049bb201f09"
+   },
+   "binary_sha256": "324a8f29c329e8311ca31a20e81bcdcc53b60ddc7e7620aad101f3994525fa7b",
+   "image_sha256": "74ec5d4f1e7fb2f1e0424e79c1a9b0a667e58b88b9da613ca38a2fec7c1954db",
+   "expected_sha256": "7c5cc9d56dbd7e342b50c0a36acbe1f45ae90ef7b46d8c091e0d79ea6350291d",
+   "image_compiler_sha256": "33e8d03ec8fc2f68925cfc47f23d79844ff5cd29fc5ed562318da8509a3037ad",
+   "compiler_sha256": "c6bd012988fd9b31b80ded2682209cc7c2621276cea29c52483f302c84edbd50",
+   "scope": "component actual deterministicRR calendar+PROFILE0 JEDEC core;36persistentlayers changingT; source-derived176warmup quietwindows; excludes PHY/clock/other onchip/native chip"
+  },
+  "m1pc6": {
+   "mutant": 1,
+   "pc": 6,
+   "exit": 1,
+   "output": "FATAL: /home/ubuntu/wt/qwen-context-calendar-1016/rtl/test/qwen_static_kv/tb_refresh_context_controller.sv:38: FAIL refresh context controller calendar timeline edge345",
+   "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_controller_context_calendar.sv": "1078d8d98884c77b7c070480b9fb9caecc7dbfd56289ec8ed2705ce71106b37f",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_shape.sv": "df879146dd7dc1e375c0223c2daa622025458632b81a7a3e9f65779b9f84971b",
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "89bc7a0f33d0b2e071f3cba55e236d9d262cc6659b820319acb9767b1bd9fe5b",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "e055b8cc7362ee61a74238aca6dc4ef8046593a34211719fce74aaa4fadd4840",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_refresh_roots.sv": "0fb7006338ef90386d43da310c328d61d0d7870cfe71010e547808d17c97db72",
+    "rtl/test/qwen_static_kv/tb_refresh_context_controller.sv": "c31f02e3f188b1721a3ccea457f473fdc3242c182fa6b9db73772049bb201f09"
+   },
+   "binary_sha256": "6808c27a832ca2b3ffae137492d2e89a053a36a07c75638176d963826225524b",
+   "image_sha256": "5debb8fe7f11bd2c5c12e933fed7b2793c4def38d066590a38dbf124b0989a5f",
+   "expected_sha256": "b98a7a23fe88f591ec6e9f76b1d332f5949d4ff7363811bf441b78cc48d59ded",
+   "image_compiler_sha256": "33e8d03ec8fc2f68925cfc47f23d79844ff5cd29fc5ed562318da8509a3037ad",
+   "compiler_sha256": "c6bd012988fd9b31b80ded2682209cc7c2621276cea29c52483f302c84edbd50",
+   "scope": "component actual deterministicRR calendar+PROFILE0 JEDEC core;36persistentlayers changingT; source-derived176warmup quietwindows; excludes PHY/clock/other onchip/native chip"
+  },
+  "m2pc13": {
+   "mutant": 2,
+   "pc": 13,
+   "exit": 1,
+   "output": "FATAL: /home/ubuntu/wt/qwen-context-calendar-1016/rtl/test/qwen_static_kv/tb_refresh_context_controller.sv:38: FAIL refresh context controller calendar timeline edge374",
+   "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_controller_context_calendar.sv": "1078d8d98884c77b7c070480b9fb9caecc7dbfd56289ec8ed2705ce71106b37f",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_shape.sv": "df879146dd7dc1e375c0223c2daa622025458632b81a7a3e9f65779b9f84971b",
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "89bc7a0f33d0b2e071f3cba55e236d9d262cc6659b820319acb9767b1bd9fe5b",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "e055b8cc7362ee61a74238aca6dc4ef8046593a34211719fce74aaa4fadd4840",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_refresh_roots.sv": "0fb7006338ef90386d43da310c328d61d0d7870cfe71010e547808d17c97db72",
+    "rtl/test/qwen_static_kv/tb_refresh_context_controller.sv": "c31f02e3f188b1721a3ccea457f473fdc3242c182fa6b9db73772049bb201f09"
+   },
+   "binary_sha256": "507b1b4493ef90b8435cd5543a18bc4ce4741f3e624966056e7005fc0e678d18",
+   "image_sha256": "74ec5d4f1e7fb2f1e0424e79c1a9b0a667e58b88b9da613ca38a2fec7c1954db",
+   "expected_sha256": "7c5cc9d56dbd7e342b50c0a36acbe1f45ae90ef7b46d8c091e0d79ea6350291d",
+   "image_compiler_sha256": "33e8d03ec8fc2f68925cfc47f23d79844ff5cd29fc5ed562318da8509a3037ad",
+   "compiler_sha256": "c6bd012988fd9b31b80ded2682209cc7c2621276cea29c52483f302c84edbd50",
+   "scope": "component actual deterministicRR calendar+PROFILE0 JEDEC core;36persistentlayers changingT; source-derived176warmup quietwindows; excludes PHY/clock/other onchip/native chip"
+  },
+  "m2pc6": {
+   "mutant": 2,
+   "pc": 6,
+   "exit": 1,
+   "output": "FATAL: /home/ubuntu/wt/qwen-context-calendar-1016/rtl/test/qwen_static_kv/tb_refresh_context_controller.sv:38: FAIL refresh context controller calendar timeline edge374",
+   "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_controller_context_calendar.sv": "1078d8d98884c77b7c070480b9fb9caecc7dbfd56289ec8ed2705ce71106b37f",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_shape.sv": "df879146dd7dc1e375c0223c2daa622025458632b81a7a3e9f65779b9f84971b",
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "89bc7a0f33d0b2e071f3cba55e236d9d262cc6659b820319acb9767b1bd9fe5b",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "e055b8cc7362ee61a74238aca6dc4ef8046593a34211719fce74aaa4fadd4840",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_refresh_roots.sv": "0fb7006338ef90386d43da310c328d61d0d7870cfe71010e547808d17c97db72",
+    "rtl/test/qwen_static_kv/tb_refresh_context_controller.sv": "c31f02e3f188b1721a3ccea457f473fdc3242c182fa6b9db73772049bb201f09"
+   },
+   "binary_sha256": "073a827f62c15701fa9036397ffa33ec48b08bb82361fc6a14b3abab56ad7929",
+   "image_sha256": "5debb8fe7f11bd2c5c12e933fed7b2793c4def38d066590a38dbf124b0989a5f",
+   "expected_sha256": "b98a7a23fe88f591ec6e9f76b1d332f5949d4ff7363811bf441b78cc48d59ded",
+   "image_compiler_sha256": "33e8d03ec8fc2f68925cfc47f23d79844ff5cd29fc5ed562318da8509a3037ad",
+   "compiler_sha256": "c6bd012988fd9b31b80ded2682209cc7c2621276cea29c52483f302c84edbd50",
+   "scope": "component actual deterministicRR calendar+PROFILE0 JEDEC core;36persistentlayers changingT; source-derived176warmup quietwindows; excludes PHY/clock/other onchip/native chip"
+  },
+  "m3pc13": {
+   "mutant": 3,
+   "pc": 13,
+   "exit": 1,
+   "output": "FATAL: /home/ubuntu/wt/qwen-context-calendar-1016/rtl/test/qwen_static_kv/tb_refresh_context_controller.sv:38: FAIL refresh context controller calendar timeline edge1188",
+   "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_controller_context_calendar.sv": "1078d8d98884c77b7c070480b9fb9caecc7dbfd56289ec8ed2705ce71106b37f",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_shape.sv": "df879146dd7dc1e375c0223c2daa622025458632b81a7a3e9f65779b9f84971b",
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "89bc7a0f33d0b2e071f3cba55e236d9d262cc6659b820319acb9767b1bd9fe5b",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "e055b8cc7362ee61a74238aca6dc4ef8046593a34211719fce74aaa4fadd4840",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_refresh_roots.sv": "0fb7006338ef90386d43da310c328d61d0d7870cfe71010e547808d17c97db72",
+    "rtl/test/qwen_static_kv/tb_refresh_context_controller.sv": "c31f02e3f188b1721a3ccea457f473fdc3242c182fa6b9db73772049bb201f09"
+   },
+   "binary_sha256": "00a7da67a7b3259f235ba49119062920757474c7f77aa16ed7fed370d7a7f0c8",
+   "image_sha256": "74ec5d4f1e7fb2f1e0424e79c1a9b0a667e58b88b9da613ca38a2fec7c1954db",
+   "expected_sha256": "7c5cc9d56dbd7e342b50c0a36acbe1f45ae90ef7b46d8c091e0d79ea6350291d",
+   "image_compiler_sha256": "33e8d03ec8fc2f68925cfc47f23d79844ff5cd29fc5ed562318da8509a3037ad",
+   "compiler_sha256": "c6bd012988fd9b31b80ded2682209cc7c2621276cea29c52483f302c84edbd50",
+   "scope": "component actual deterministicRR calendar+PROFILE0 JEDEC core;36persistentlayers changingT; source-derived176warmup quietwindows; excludes PHY/clock/other onchip/native chip"
+  },
+  "m3pc6": {
+   "mutant": 3,
+   "pc": 6,
+   "exit": 1,
+   "output": "FATAL: /home/ubuntu/wt/qwen-context-calendar-1016/rtl/test/qwen_static_kv/tb_refresh_context_controller.sv:38: FAIL refresh context controller calendar timeline edge1163",
+   "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_controller_context_calendar.sv": "1078d8d98884c77b7c070480b9fb9caecc7dbfd56289ec8ed2705ce71106b37f",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_shape.sv": "df879146dd7dc1e375c0223c2daa622025458632b81a7a3e9f65779b9f84971b",
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "89bc7a0f33d0b2e071f3cba55e236d9d262cc6659b820319acb9767b1bd9fe5b",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "e055b8cc7362ee61a74238aca6dc4ef8046593a34211719fce74aaa4fadd4840",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_refresh_roots.sv": "0fb7006338ef90386d43da310c328d61d0d7870cfe71010e547808d17c97db72",
+    "rtl/test/qwen_static_kv/tb_refresh_context_controller.sv": "c31f02e3f188b1721a3ccea457f473fdc3242c182fa6b9db73772049bb201f09"
+   },
+   "binary_sha256": "770391a6f47a2b979032ecdfe64de91907094bb303b3684bd64435cdee8ef342",
+   "image_sha256": "5debb8fe7f11bd2c5c12e933fed7b2793c4def38d066590a38dbf124b0989a5f",
+   "expected_sha256": "b98a7a23fe88f591ec6e9f76b1d332f5949d4ff7363811bf441b78cc48d59ded",
+   "image_compiler_sha256": "33e8d03ec8fc2f68925cfc47f23d79844ff5cd29fc5ed562318da8509a3037ad",
+   "compiler_sha256": "c6bd012988fd9b31b80ded2682209cc7c2621276cea29c52483f302c84edbd50",
+   "scope": "component actual deterministicRR calendar+PROFILE0 JEDEC core;36persistentlayers changingT; source-derived176warmup quietwindows; excludes PHY/clock/other onchip/native chip"
+  },
+  "m4pc13": {
+   "mutant": 4,
+   "pc": 13,
+   "exit": 1,
+   "output": "FATAL: /home/ubuntu/wt/qwen-context-calendar-1016/rtl/test/qwen_static_kv/tb_refresh_context_controller.sv:42: FAIL refresh context controller layer0 address[1] bank1 col0 expected512 row64",
+   "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_controller_context_calendar.sv": "1078d8d98884c77b7c070480b9fb9caecc7dbfd56289ec8ed2705ce71106b37f",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_shape.sv": "df879146dd7dc1e375c0223c2daa622025458632b81a7a3e9f65779b9f84971b",
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "89bc7a0f33d0b2e071f3cba55e236d9d262cc6659b820319acb9767b1bd9fe5b",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "e055b8cc7362ee61a74238aca6dc4ef8046593a34211719fce74aaa4fadd4840",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_refresh_roots.sv": "0fb7006338ef90386d43da310c328d61d0d7870cfe71010e547808d17c97db72",
+    "rtl/test/qwen_static_kv/tb_refresh_context_controller.sv": "c31f02e3f188b1721a3ccea457f473fdc3242c182fa6b9db73772049bb201f09"
+   },
+   "binary_sha256": "ac7af7d895a1d7a95a156f4e181ca25be1ba7aa76f756bf89d8d720f0df4f750",
+   "image_sha256": "74ec5d4f1e7fb2f1e0424e79c1a9b0a667e58b88b9da613ca38a2fec7c1954db",
+   "expected_sha256": "7c5cc9d56dbd7e342b50c0a36acbe1f45ae90ef7b46d8c091e0d79ea6350291d",
+   "image_compiler_sha256": "33e8d03ec8fc2f68925cfc47f23d79844ff5cd29fc5ed562318da8509a3037ad",
+   "compiler_sha256": "c6bd012988fd9b31b80ded2682209cc7c2621276cea29c52483f302c84edbd50",
+   "scope": "component actual deterministicRR calendar+PROFILE0 JEDEC core;36persistentlayers changingT; source-derived176warmup quietwindows; excludes PHY/clock/other onchip/native chip"
+  },
+  "m4pc6": {
+   "mutant": 4,
+   "pc": 6,
+   "exit": 1,
+   "output": "FATAL: /home/ubuntu/wt/qwen-context-calendar-1016/rtl/test/qwen_static_kv/tb_refresh_context_controller.sv:42: FAIL refresh context controller layer0 address[1] bank1 col0 expected512 row64",
+   "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_controller_context_calendar.sv": "1078d8d98884c77b7c070480b9fb9caecc7dbfd56289ec8ed2705ce71106b37f",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_shape.sv": "df879146dd7dc1e375c0223c2daa622025458632b81a7a3e9f65779b9f84971b",
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "89bc7a0f33d0b2e071f3cba55e236d9d262cc6659b820319acb9767b1bd9fe5b",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "e055b8cc7362ee61a74238aca6dc4ef8046593a34211719fce74aaa4fadd4840",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_refresh_roots.sv": "0fb7006338ef90386d43da310c328d61d0d7870cfe71010e547808d17c97db72",
+    "rtl/test/qwen_static_kv/tb_refresh_context_controller.sv": "c31f02e3f188b1721a3ccea457f473fdc3242c182fa6b9db73772049bb201f09"
+   },
+   "binary_sha256": "6c4fc67b52ab3a1f5a8d93d7084389904e222aaace2fb59be94c9d8088e0b010",
+   "image_sha256": "5debb8fe7f11bd2c5c12e933fed7b2793c4def38d066590a38dbf124b0989a5f",
+   "expected_sha256": "b98a7a23fe88f591ec6e9f76b1d332f5949d4ff7363811bf441b78cc48d59ded",
+   "image_compiler_sha256": "33e8d03ec8fc2f68925cfc47f23d79844ff5cd29fc5ed562318da8509a3037ad",
+   "compiler_sha256": "c6bd012988fd9b31b80ded2682209cc7c2621276cea29c52483f302c84edbd50",
+   "scope": "component actual deterministicRR calendar+PROFILE0 JEDEC core;36persistentlayers changingT; source-derived176warmup quietwindows; excludes PHY/clock/other onchip/native chip"
+  },
+  "m5pc13": {
+   "mutant": 5,
+   "pc": 13,
+   "exit": 1,
+   "output": "FATAL: /home/ubuntu/wt/qwen-context-calendar-1016/rtl/test/qwen_static_kv/tb_refresh_context_controller.sv:45: FAIL refresh context controller V banksets4/5 protection",
+   "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_controller_context_calendar.sv": "1078d8d98884c77b7c070480b9fb9caecc7dbfd56289ec8ed2705ce71106b37f",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_shape.sv": "df879146dd7dc1e375c0223c2daa622025458632b81a7a3e9f65779b9f84971b",
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "89bc7a0f33d0b2e071f3cba55e236d9d262cc6659b820319acb9767b1bd9fe5b",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "e055b8cc7362ee61a74238aca6dc4ef8046593a34211719fce74aaa4fadd4840",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_refresh_roots.sv": "0fb7006338ef90386d43da310c328d61d0d7870cfe71010e547808d17c97db72",
+    "rtl/test/qwen_static_kv/tb_refresh_context_controller.sv": "c31f02e3f188b1721a3ccea457f473fdc3242c182fa6b9db73772049bb201f09"
+   },
+   "binary_sha256": "5408f47c2747593436474fe9946fc4d2b6a0cb526917a7747739f34c965ee026",
+   "image_sha256": "74ec5d4f1e7fb2f1e0424e79c1a9b0a667e58b88b9da613ca38a2fec7c1954db",
+   "expected_sha256": "7c5cc9d56dbd7e342b50c0a36acbe1f45ae90ef7b46d8c091e0d79ea6350291d",
+   "image_compiler_sha256": "33e8d03ec8fc2f68925cfc47f23d79844ff5cd29fc5ed562318da8509a3037ad",
+   "compiler_sha256": "c6bd012988fd9b31b80ded2682209cc7c2621276cea29c52483f302c84edbd50",
+   "scope": "component actual deterministicRR calendar+PROFILE0 JEDEC core;36persistentlayers changingT; source-derived176warmup quietwindows; excludes PHY/clock/other onchip/native chip"
+  },
+  "m5pc6": {
+   "mutant": 5,
+   "pc": 6,
+   "exit": 1,
+   "output": "FATAL: /home/ubuntu/wt/qwen-context-calendar-1016/rtl/test/qwen_static_kv/tb_refresh_context_controller.sv:45: FAIL refresh context controller V banksets4/5 protection",
+   "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_controller_context_calendar.sv": "1078d8d98884c77b7c070480b9fb9caecc7dbfd56289ec8ed2705ce71106b37f",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_shape.sv": "df879146dd7dc1e375c0223c2daa622025458632b81a7a3e9f65779b9f84971b",
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "89bc7a0f33d0b2e071f3cba55e236d9d262cc6659b820319acb9767b1bd9fe5b",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "e055b8cc7362ee61a74238aca6dc4ef8046593a34211719fce74aaa4fadd4840",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_refresh_roots.sv": "0fb7006338ef90386d43da310c328d61d0d7870cfe71010e547808d17c97db72",
+    "rtl/test/qwen_static_kv/tb_refresh_context_controller.sv": "c31f02e3f188b1721a3ccea457f473fdc3242c182fa6b9db73772049bb201f09"
+   },
+   "binary_sha256": "aeeb04843bea7ee09927eb13a30ae719fa1acbf58a478044811620c82da3b3db",
+   "image_sha256": "5debb8fe7f11bd2c5c12e933fed7b2793c4def38d066590a38dbf124b0989a5f",
+   "expected_sha256": "b98a7a23fe88f591ec6e9f76b1d332f5949d4ff7363811bf441b78cc48d59ded",
+   "image_compiler_sha256": "33e8d03ec8fc2f68925cfc47f23d79844ff5cd29fc5ed562318da8509a3037ad",
+   "compiler_sha256": "c6bd012988fd9b31b80ded2682209cc7c2621276cea29c52483f302c84edbd50",
+   "scope": "component actual deterministicRR calendar+PROFILE0 JEDEC core;36persistentlayers changingT; source-derived176warmup quietwindows; excludes PHY/clock/other onchip/native chip"
+  },
+  "pc0": {
+   "mutant": 0,
+   "pc": 0,
+   "exit": 0,
+   "output": "PASS refresh context controller PROFILE0 persistent36layers total6626 exact address and slots",
+   "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_controller_context_calendar.sv": "1078d8d98884c77b7c070480b9fb9caecc7dbfd56289ec8ed2705ce71106b37f",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_shape.sv": "df879146dd7dc1e375c0223c2daa622025458632b81a7a3e9f65779b9f84971b",
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "89bc7a0f33d0b2e071f3cba55e236d9d262cc6659b820319acb9767b1bd9fe5b",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "e055b8cc7362ee61a74238aca6dc4ef8046593a34211719fce74aaa4fadd4840",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_refresh_roots.sv": "0fb7006338ef90386d43da310c328d61d0d7870cfe71010e547808d17c97db72",
+    "rtl/test/qwen_static_kv/tb_refresh_context_controller.sv": "c31f02e3f188b1721a3ccea457f473fdc3242c182fa6b9db73772049bb201f09"
+   },
+   "binary_sha256": "9045b8c809186f8596bf33add8e4db4ead183122a83e14726efb5828e056a897",
+   "image_sha256": "8c1a23f05c4e5440f3e86ed867769be946526a829e76f2c34ca66976ae806460",
+   "expected_sha256": "df221c2aae9b184364b11291b61bff8d32ddf59dcabd40e7dea3449c09447e19",
+   "image_compiler_sha256": "33e8d03ec8fc2f68925cfc47f23d79844ff5cd29fc5ed562318da8509a3037ad",
+   "compiler_sha256": "c6bd012988fd9b31b80ded2682209cc7c2621276cea29c52483f302c84edbd50",
+   "scope": "component actual deterministicRR calendar+PROFILE0 JEDEC core;36persistentlayers changingT; source-derived176warmup quietwindows; excludes PHY/clock/other onchip/native chip"
+  },
+  "pc1": {
+   "mutant": 0,
+   "pc": 1,
+   "exit": 0,
+   "output": "PASS refresh context controller PROFILE0 persistent36layers total6626 exact address and slots",
+   "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_controller_context_calendar.sv": "1078d8d98884c77b7c070480b9fb9caecc7dbfd56289ec8ed2705ce71106b37f",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_shape.sv": "df879146dd7dc1e375c0223c2daa622025458632b81a7a3e9f65779b9f84971b",
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "89bc7a0f33d0b2e071f3cba55e236d9d262cc6659b820319acb9767b1bd9fe5b",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "e055b8cc7362ee61a74238aca6dc4ef8046593a34211719fce74aaa4fadd4840",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_refresh_roots.sv": "0fb7006338ef90386d43da310c328d61d0d7870cfe71010e547808d17c97db72",
+    "rtl/test/qwen_static_kv/tb_refresh_context_controller.sv": "c31f02e3f188b1721a3ccea457f473fdc3242c182fa6b9db73772049bb201f09"
+   },
+   "binary_sha256": "f2749461bcda884452bcdff6a0151c3a2b26f13b5ccc87d1bbaa2ddc54c6164c",
+   "image_sha256": "99dfd6697e54f4d4728e256a0243419346f877010d42d727a8cd4fff1c828137",
+   "expected_sha256": "ed6547dacc05deb139c7298c2cac100da983930802c6929ee6eeef7e0339a694",
+   "image_compiler_sha256": "33e8d03ec8fc2f68925cfc47f23d79844ff5cd29fc5ed562318da8509a3037ad",
+   "compiler_sha256": "c6bd012988fd9b31b80ded2682209cc7c2621276cea29c52483f302c84edbd50",
+   "scope": "component actual deterministicRR calendar+PROFILE0 JEDEC core;36persistentlayers changingT; source-derived176warmup quietwindows; excludes PHY/clock/other onchip/native chip"
+  },
+  "pc10": {
+   "mutant": 0,
+   "pc": 10,
+   "exit": 0,
+   "output": "PASS refresh context controller PROFILE0 persistent36layers total6626 exact address and slots",
+   "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_controller_context_calendar.sv": "1078d8d98884c77b7c070480b9fb9caecc7dbfd56289ec8ed2705ce71106b37f",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_shape.sv": "df879146dd7dc1e375c0223c2daa622025458632b81a7a3e9f65779b9f84971b",
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "89bc7a0f33d0b2e071f3cba55e236d9d262cc6659b820319acb9767b1bd9fe5b",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "e055b8cc7362ee61a74238aca6dc4ef8046593a34211719fce74aaa4fadd4840",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_refresh_roots.sv": "0fb7006338ef90386d43da310c328d61d0d7870cfe71010e547808d17c97db72",
+    "rtl/test/qwen_static_kv/tb_refresh_context_controller.sv": "c31f02e3f188b1721a3ccea457f473fdc3242c182fa6b9db73772049bb201f09"
+   },
+   "binary_sha256": "e413d1e4fa7c5c39730bc6a82a306f7cfedb2a45aadf6f0032a21ee58833c4c0",
+   "image_sha256": "7f7b3e4dbe4c7519778bc85efd62f55a92df26a3769f8ea2703526753f6182ac",
+   "expected_sha256": "c66285c82de63d12253cd7c9fbc60e3f095b2afedf7bb394f4753412ea97c052",
+   "image_compiler_sha256": "33e8d03ec8fc2f68925cfc47f23d79844ff5cd29fc5ed562318da8509a3037ad",
+   "compiler_sha256": "c6bd012988fd9b31b80ded2682209cc7c2621276cea29c52483f302c84edbd50",
+   "scope": "component actual deterministicRR calendar+PROFILE0 JEDEC core;36persistentlayers changingT; source-derived176warmup quietwindows; excludes PHY/clock/other onchip/native chip"
+  },
+  "pc11": {
+   "mutant": 0,
+   "pc": 11,
+   "exit": 0,
+   "output": "PASS refresh context controller PROFILE0 persistent36layers total6626 exact address and slots",
+   "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_controller_context_calendar.sv": "1078d8d98884c77b7c070480b9fb9caecc7dbfd56289ec8ed2705ce71106b37f",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_shape.sv": "df879146dd7dc1e375c0223c2daa622025458632b81a7a3e9f65779b9f84971b",
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "89bc7a0f33d0b2e071f3cba55e236d9d262cc6659b820319acb9767b1bd9fe5b",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "e055b8cc7362ee61a74238aca6dc4ef8046593a34211719fce74aaa4fadd4840",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_refresh_roots.sv": "0fb7006338ef90386d43da310c328d61d0d7870cfe71010e547808d17c97db72",
+    "rtl/test/qwen_static_kv/tb_refresh_context_controller.sv": "c31f02e3f188b1721a3ccea457f473fdc3242c182fa6b9db73772049bb201f09"
+   },
+   "binary_sha256": "4c357e87ed5d64e99320afd9e4f8d111c4abba3496dc013247120a548a2ed034",
+   "image_sha256": "eebd67d9b52b35e0445e270c4be78950ab832cd8c3b91adc4273fba60ff1feb7",
+   "expected_sha256": "15a4d6b4b80aa982ff9004361803d6fc5a6620af82016d4141b80a303e9e2e98",
+   "image_compiler_sha256": "33e8d03ec8fc2f68925cfc47f23d79844ff5cd29fc5ed562318da8509a3037ad",
+   "compiler_sha256": "c6bd012988fd9b31b80ded2682209cc7c2621276cea29c52483f302c84edbd50",
+   "scope": "component actual deterministicRR calendar+PROFILE0 JEDEC core;36persistentlayers changingT; source-derived176warmup quietwindows; excludes PHY/clock/other onchip/native chip"
+  },
+  "pc12": {
+   "mutant": 0,
+   "pc": 12,
+   "exit": 0,
+   "output": "PASS refresh context controller PROFILE0 persistent36layers total6626 exact address and slots",
+   "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_controller_context_calendar.sv": "1078d8d98884c77b7c070480b9fb9caecc7dbfd56289ec8ed2705ce71106b37f",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_shape.sv": "df879146dd7dc1e375c0223c2daa622025458632b81a7a3e9f65779b9f84971b",
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "89bc7a0f33d0b2e071f3cba55e236d9d262cc6659b820319acb9767b1bd9fe5b",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "e055b8cc7362ee61a74238aca6dc4ef8046593a34211719fce74aaa4fadd4840",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_refresh_roots.sv": "0fb7006338ef90386d43da310c328d61d0d7870cfe71010e547808d17c97db72",
+    "rtl/test/qwen_static_kv/tb_refresh_context_controller.sv": "c31f02e3f188b1721a3ccea457f473fdc3242c182fa6b9db73772049bb201f09"
+   },
+   "binary_sha256": "c62e00350cda8693476e4f252004b12d2b6eb065d5c64330ae30ea0c6c32cc59",
+   "image_sha256": "f685e1b86fa270b2262565634738283f3eb1ca311810f42dd10cbd55e2854966",
+   "expected_sha256": "832e4b10df3ecf13b7580ff7f4508a92baa8711f705fcacb433df96e649f922e",
+   "image_compiler_sha256": "33e8d03ec8fc2f68925cfc47f23d79844ff5cd29fc5ed562318da8509a3037ad",
+   "compiler_sha256": "c6bd012988fd9b31b80ded2682209cc7c2621276cea29c52483f302c84edbd50",
+   "scope": "component actual deterministicRR calendar+PROFILE0 JEDEC core;36persistentlayers changingT; source-derived176warmup quietwindows; excludes PHY/clock/other onchip/native chip"
+  },
+  "pc13": {
+   "mutant": 0,
+   "pc": 13,
+   "exit": 0,
+   "output": "PASS refresh context controller PROFILE0 persistent36layers total6626 exact address and slots",
+   "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_controller_context_calendar.sv": "1078d8d98884c77b7c070480b9fb9caecc7dbfd56289ec8ed2705ce71106b37f",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_shape.sv": "df879146dd7dc1e375c0223c2daa622025458632b81a7a3e9f65779b9f84971b",
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "89bc7a0f33d0b2e071f3cba55e236d9d262cc6659b820319acb9767b1bd9fe5b",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "e055b8cc7362ee61a74238aca6dc4ef8046593a34211719fce74aaa4fadd4840",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_refresh_roots.sv": "0fb7006338ef90386d43da310c328d61d0d7870cfe71010e547808d17c97db72",
+    "rtl/test/qwen_static_kv/tb_refresh_context_controller.sv": "c31f02e3f188b1721a3ccea457f473fdc3242c182fa6b9db73772049bb201f09"
+   },
+   "binary_sha256": "6bd4122041072c12ad46ab39aa3981b95d4f17c09746805dc1518dd8b9e2ae07",
+   "image_sha256": "74ec5d4f1e7fb2f1e0424e79c1a9b0a667e58b88b9da613ca38a2fec7c1954db",
+   "expected_sha256": "7c5cc9d56dbd7e342b50c0a36acbe1f45ae90ef7b46d8c091e0d79ea6350291d",
+   "image_compiler_sha256": "33e8d03ec8fc2f68925cfc47f23d79844ff5cd29fc5ed562318da8509a3037ad",
+   "compiler_sha256": "c6bd012988fd9b31b80ded2682209cc7c2621276cea29c52483f302c84edbd50",
+   "scope": "component actual deterministicRR calendar+PROFILE0 JEDEC core;36persistentlayers changingT; source-derived176warmup quietwindows; excludes PHY/clock/other onchip/native chip"
+  },
+  "pc14": {
+   "mutant": 0,
+   "pc": 14,
+   "exit": 0,
+   "output": "PASS refresh context controller PROFILE0 persistent36layers total6626 exact address and slots",
+   "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_controller_context_calendar.sv": "1078d8d98884c77b7c070480b9fb9caecc7dbfd56289ec8ed2705ce71106b37f",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_shape.sv": "df879146dd7dc1e375c0223c2daa622025458632b81a7a3e9f65779b9f84971b",
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "89bc7a0f33d0b2e071f3cba55e236d9d262cc6659b820319acb9767b1bd9fe5b",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "e055b8cc7362ee61a74238aca6dc4ef8046593a34211719fce74aaa4fadd4840",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_refresh_roots.sv": "0fb7006338ef90386d43da310c328d61d0d7870cfe71010e547808d17c97db72",
+    "rtl/test/qwen_static_kv/tb_refresh_context_controller.sv": "c31f02e3f188b1721a3ccea457f473fdc3242c182fa6b9db73772049bb201f09"
+   },
+   "binary_sha256": "cf642c7c9616c4855cc2736ec810c2a6a45c4a69f1256319fbc0ea2cb5b1526a",
+   "image_sha256": "0c35183eb8b25ae551d5560e0aff8c6bc051002f68c457578581eb76a5b84543",
+   "expected_sha256": "9e7087edc118480ab247c5999ddc902a06c9abb0d361db4cd10e6b5574066fd4",
+   "image_compiler_sha256": "33e8d03ec8fc2f68925cfc47f23d79844ff5cd29fc5ed562318da8509a3037ad",
+   "compiler_sha256": "c6bd012988fd9b31b80ded2682209cc7c2621276cea29c52483f302c84edbd50",
+   "scope": "component actual deterministicRR calendar+PROFILE0 JEDEC core;36persistentlayers changingT; source-derived176warmup quietwindows; excludes PHY/clock/other onchip/native chip"
+  },
+  "pc15": {
+   "mutant": 0,
+   "pc": 15,
+   "exit": 0,
+   "output": "PASS refresh context controller PROFILE0 persistent36layers total6626 exact address and slots",
+   "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_controller_context_calendar.sv": "1078d8d98884c77b7c070480b9fb9caecc7dbfd56289ec8ed2705ce71106b37f",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_shape.sv": "df879146dd7dc1e375c0223c2daa622025458632b81a7a3e9f65779b9f84971b",
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "89bc7a0f33d0b2e071f3cba55e236d9d262cc6659b820319acb9767b1bd9fe5b",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "e055b8cc7362ee61a74238aca6dc4ef8046593a34211719fce74aaa4fadd4840",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_refresh_roots.sv": "0fb7006338ef90386d43da310c328d61d0d7870cfe71010e547808d17c97db72",
+    "rtl/test/qwen_static_kv/tb_refresh_context_controller.sv": "c31f02e3f188b1721a3ccea457f473fdc3242c182fa6b9db73772049bb201f09"
+   },
+   "binary_sha256": "9447c62bf5abf74ae03f17310d3db68b2fb9cf70c0d14b7746d49ac3e25fa0ff",
+   "image_sha256": "82aa99b218e04642358b429f112540c474940f7ace71c5b23784e2f356bc0a78",
+   "expected_sha256": "85c9470081706684f9448050e4a29aba8d2b121715f9e9c847007e4f200b0ba2",
+   "image_compiler_sha256": "33e8d03ec8fc2f68925cfc47f23d79844ff5cd29fc5ed562318da8509a3037ad",
+   "compiler_sha256": "c6bd012988fd9b31b80ded2682209cc7c2621276cea29c52483f302c84edbd50",
+   "scope": "component actual deterministicRR calendar+PROFILE0 JEDEC core;36persistentlayers changingT; source-derived176warmup quietwindows; excludes PHY/clock/other onchip/native chip"
+  },
+  "pc16": {
+   "mutant": 0,
+   "pc": 16,
+   "exit": 0,
+   "output": "PASS refresh context controller PROFILE0 persistent36layers total6626 exact address and slots",
+   "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_controller_context_calendar.sv": "1078d8d98884c77b7c070480b9fb9caecc7dbfd56289ec8ed2705ce71106b37f",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_shape.sv": "df879146dd7dc1e375c0223c2daa622025458632b81a7a3e9f65779b9f84971b",
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "89bc7a0f33d0b2e071f3cba55e236d9d262cc6659b820319acb9767b1bd9fe5b",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "e055b8cc7362ee61a74238aca6dc4ef8046593a34211719fce74aaa4fadd4840",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_refresh_roots.sv": "0fb7006338ef90386d43da310c328d61d0d7870cfe71010e547808d17c97db72",
+    "rtl/test/qwen_static_kv/tb_refresh_context_controller.sv": "c31f02e3f188b1721a3ccea457f473fdc3242c182fa6b9db73772049bb201f09"
+   },
+   "binary_sha256": "e4c0753810ebbecbe4221d46b292ab0876e59bd9d38131a4cc6f2778430ef30c",
+   "image_sha256": "1a87b0e0db2a849065efd2b018fe6db556e1d7db1257d8d535da651f3b325915",
+   "expected_sha256": "30eb34769f643d52fbd250d5049e58e47a344427da9c2890528d46dd4ba3b859",
+   "image_compiler_sha256": "33e8d03ec8fc2f68925cfc47f23d79844ff5cd29fc5ed562318da8509a3037ad",
+   "compiler_sha256": "c6bd012988fd9b31b80ded2682209cc7c2621276cea29c52483f302c84edbd50",
+   "scope": "component actual deterministicRR calendar+PROFILE0 JEDEC core;36persistentlayers changingT; source-derived176warmup quietwindows; excludes PHY/clock/other onchip/native chip"
+  },
+  "pc17": {
+   "mutant": 0,
+   "pc": 17,
+   "exit": 0,
+   "output": "PASS refresh context controller PROFILE0 persistent36layers total6626 exact address and slots",
+   "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_controller_context_calendar.sv": "1078d8d98884c77b7c070480b9fb9caecc7dbfd56289ec8ed2705ce71106b37f",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_shape.sv": "df879146dd7dc1e375c0223c2daa622025458632b81a7a3e9f65779b9f84971b",
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "89bc7a0f33d0b2e071f3cba55e236d9d262cc6659b820319acb9767b1bd9fe5b",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "e055b8cc7362ee61a74238aca6dc4ef8046593a34211719fce74aaa4fadd4840",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_refresh_roots.sv": "0fb7006338ef90386d43da310c328d61d0d7870cfe71010e547808d17c97db72",
+    "rtl/test/qwen_static_kv/tb_refresh_context_controller.sv": "c31f02e3f188b1721a3ccea457f473fdc3242c182fa6b9db73772049bb201f09"
+   },
+   "binary_sha256": "333d3352c36251634a94a06146276df4e71e60c90ab97db0fdda6a6504bebdb9",
+   "image_sha256": "03bfa3f131fda261f05b905c76c8a26f7bb430bc73ecb8d422d6815fb8f58bfc",
+   "expected_sha256": "44b91dbe47442ada521ceec0acd3ccff85f1db57a315ef2553cfe921d3eaad11",
+   "image_compiler_sha256": "33e8d03ec8fc2f68925cfc47f23d79844ff5cd29fc5ed562318da8509a3037ad",
+   "compiler_sha256": "c6bd012988fd9b31b80ded2682209cc7c2621276cea29c52483f302c84edbd50",
+   "scope": "component actual deterministicRR calendar+PROFILE0 JEDEC core;36persistentlayers changingT; source-derived176warmup quietwindows; excludes PHY/clock/other onchip/native chip"
+  },
+  "pc18": {
+   "mutant": 0,
+   "pc": 18,
+   "exit": 0,
+   "output": "PASS refresh context controller PROFILE0 persistent36layers total6626 exact address and slots",
+   "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_controller_context_calendar.sv": "1078d8d98884c77b7c070480b9fb9caecc7dbfd56289ec8ed2705ce71106b37f",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_shape.sv": "df879146dd7dc1e375c0223c2daa622025458632b81a7a3e9f65779b9f84971b",
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "89bc7a0f33d0b2e071f3cba55e236d9d262cc6659b820319acb9767b1bd9fe5b",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "e055b8cc7362ee61a74238aca6dc4ef8046593a34211719fce74aaa4fadd4840",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_refresh_roots.sv": "0fb7006338ef90386d43da310c328d61d0d7870cfe71010e547808d17c97db72",
+    "rtl/test/qwen_static_kv/tb_refresh_context_controller.sv": "c31f02e3f188b1721a3ccea457f473fdc3242c182fa6b9db73772049bb201f09"
+   },
+   "binary_sha256": "aa7c525a13fb31188f483d175f7c9bc233e60e3965039c05b6e4e2359b6101bd",
+   "image_sha256": "e0420f0a92d8cc73a4558f0ac54e1f798bd1e7e2f8098c70fceeade4becd5356",
+   "expected_sha256": "e6677ce2833bc4e722f7d7ae94934d54c705157d709f4c6cda1518b21771981b",
+   "image_compiler_sha256": "33e8d03ec8fc2f68925cfc47f23d79844ff5cd29fc5ed562318da8509a3037ad",
+   "compiler_sha256": "c6bd012988fd9b31b80ded2682209cc7c2621276cea29c52483f302c84edbd50",
+   "scope": "component actual deterministicRR calendar+PROFILE0 JEDEC core;36persistentlayers changingT; source-derived176warmup quietwindows; excludes PHY/clock/other onchip/native chip"
+  },
+  "pc19": {
+   "mutant": 0,
+   "pc": 19,
+   "exit": 0,
+   "output": "PASS refresh context controller PROFILE0 persistent36layers total6626 exact address and slots",
+   "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_controller_context_calendar.sv": "1078d8d98884c77b7c070480b9fb9caecc7dbfd56289ec8ed2705ce71106b37f",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_shape.sv": "df879146dd7dc1e375c0223c2daa622025458632b81a7a3e9f65779b9f84971b",
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "89bc7a0f33d0b2e071f3cba55e236d9d262cc6659b820319acb9767b1bd9fe5b",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "e055b8cc7362ee61a74238aca6dc4ef8046593a34211719fce74aaa4fadd4840",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_refresh_roots.sv": "0fb7006338ef90386d43da310c328d61d0d7870cfe71010e547808d17c97db72",
+    "rtl/test/qwen_static_kv/tb_refresh_context_controller.sv": "c31f02e3f188b1721a3ccea457f473fdc3242c182fa6b9db73772049bb201f09"
+   },
+   "binary_sha256": "f2f51d8441579707619149f95f07faa4d40e988892bbe8a72f647060750be270",
+   "image_sha256": "5673a4b7ea28761e0c94391fcf9ebe15e356bce1bca90a75f398cd61c59270b3",
+   "expected_sha256": "e8c11e32ed6701898e4a7f61c0484966e4e458e678d6606bf43e2feac3a4aa6e",
+   "image_compiler_sha256": "33e8d03ec8fc2f68925cfc47f23d79844ff5cd29fc5ed562318da8509a3037ad",
+   "compiler_sha256": "c6bd012988fd9b31b80ded2682209cc7c2621276cea29c52483f302c84edbd50",
+   "scope": "component actual deterministicRR calendar+PROFILE0 JEDEC core;36persistentlayers changingT; source-derived176warmup quietwindows; excludes PHY/clock/other onchip/native chip"
+  },
+  "pc2": {
+   "mutant": 0,
+   "pc": 2,
+   "exit": 0,
+   "output": "PASS refresh context controller PROFILE0 persistent36layers total6626 exact address and slots",
+   "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_controller_context_calendar.sv": "1078d8d98884c77b7c070480b9fb9caecc7dbfd56289ec8ed2705ce71106b37f",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_shape.sv": "df879146dd7dc1e375c0223c2daa622025458632b81a7a3e9f65779b9f84971b",
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "89bc7a0f33d0b2e071f3cba55e236d9d262cc6659b820319acb9767b1bd9fe5b",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "e055b8cc7362ee61a74238aca6dc4ef8046593a34211719fce74aaa4fadd4840",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_refresh_roots.sv": "0fb7006338ef90386d43da310c328d61d0d7870cfe71010e547808d17c97db72",
+    "rtl/test/qwen_static_kv/tb_refresh_context_controller.sv": "c31f02e3f188b1721a3ccea457f473fdc3242c182fa6b9db73772049bb201f09"
+   },
+   "binary_sha256": "8f404a32abb47da5630e161a3bad32b2ded60d582b32f057c93e906f1720c328",
+   "image_sha256": "7e2aea91a2eb854bc5aa845adb4bc545b6c25bad2a1e8f2d326c9f8621bc833f",
+   "expected_sha256": "caf84eea431f6a133b0e4edaf978fa59f9cd39906811d22d45508389781edfd5",
+   "image_compiler_sha256": "33e8d03ec8fc2f68925cfc47f23d79844ff5cd29fc5ed562318da8509a3037ad",
+   "compiler_sha256": "c6bd012988fd9b31b80ded2682209cc7c2621276cea29c52483f302c84edbd50",
+   "scope": "component actual deterministicRR calendar+PROFILE0 JEDEC core;36persistentlayers changingT; source-derived176warmup quietwindows; excludes PHY/clock/other onchip/native chip"
+  },
+  "pc20": {
+   "mutant": 0,
+   "pc": 20,
+   "exit": 0,
+   "output": "PASS refresh context controller PROFILE0 persistent36layers total6626 exact address and slots",
+   "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_controller_context_calendar.sv": "1078d8d98884c77b7c070480b9fb9caecc7dbfd56289ec8ed2705ce71106b37f",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_shape.sv": "df879146dd7dc1e375c0223c2daa622025458632b81a7a3e9f65779b9f84971b",
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "89bc7a0f33d0b2e071f3cba55e236d9d262cc6659b820319acb9767b1bd9fe5b",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "e055b8cc7362ee61a74238aca6dc4ef8046593a34211719fce74aaa4fadd4840",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_refresh_roots.sv": "0fb7006338ef90386d43da310c328d61d0d7870cfe71010e547808d17c97db72",
+    "rtl/test/qwen_static_kv/tb_refresh_context_controller.sv": "c31f02e3f188b1721a3ccea457f473fdc3242c182fa6b9db73772049bb201f09"
+   },
+   "binary_sha256": "5b507f64cdf77aaa93ca0371653f98c39b3c35803a31e76c4fb9349651e3bfcf",
+   "image_sha256": "5bbd808b8103012ebdfb0f6e407cf8ac302525bf0d76737c3c8c38e98d387689",
+   "expected_sha256": "c0c2b02eaaf76fab067f8876c2d9c8b5e19cf872afd217c35b3a1fd1b4c95b8d",
+   "image_compiler_sha256": "33e8d03ec8fc2f68925cfc47f23d79844ff5cd29fc5ed562318da8509a3037ad",
+   "compiler_sha256": "c6bd012988fd9b31b80ded2682209cc7c2621276cea29c52483f302c84edbd50",
+   "scope": "component actual deterministicRR calendar+PROFILE0 JEDEC core;36persistentlayers changingT; source-derived176warmup quietwindows; excludes PHY/clock/other onchip/native chip"
+  },
+  "pc21": {
+   "mutant": 0,
+   "pc": 21,
+   "exit": 0,
+   "output": "PASS refresh context controller PROFILE0 persistent36layers total6626 exact address and slots",
+   "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_controller_context_calendar.sv": "1078d8d98884c77b7c070480b9fb9caecc7dbfd56289ec8ed2705ce71106b37f",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_shape.sv": "df879146dd7dc1e375c0223c2daa622025458632b81a7a3e9f65779b9f84971b",
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "89bc7a0f33d0b2e071f3cba55e236d9d262cc6659b820319acb9767b1bd9fe5b",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "e055b8cc7362ee61a74238aca6dc4ef8046593a34211719fce74aaa4fadd4840",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_refresh_roots.sv": "0fb7006338ef90386d43da310c328d61d0d7870cfe71010e547808d17c97db72",
+    "rtl/test/qwen_static_kv/tb_refresh_context_controller.sv": "c31f02e3f188b1721a3ccea457f473fdc3242c182fa6b9db73772049bb201f09"
+   },
+   "binary_sha256": "81c7a01d8ca07c6e22ae8c19cc6790fde726bb5c47f815eb71382f706a469a09",
+   "image_sha256": "6764e99c55793b73f4bb988145e615b0e302aceda4acb18b028c85811152f32e",
+   "expected_sha256": "d5a8107a68ceaf40674d88ea30047ed61396bb8394568a73a620218170d58946",
+   "image_compiler_sha256": "33e8d03ec8fc2f68925cfc47f23d79844ff5cd29fc5ed562318da8509a3037ad",
+   "compiler_sha256": "c6bd012988fd9b31b80ded2682209cc7c2621276cea29c52483f302c84edbd50",
+   "scope": "component actual deterministicRR calendar+PROFILE0 JEDEC core;36persistentlayers changingT; source-derived176warmup quietwindows; excludes PHY/clock/other onchip/native chip"
+  },
+  "pc22": {
+   "mutant": 0,
+   "pc": 22,
+   "exit": 0,
+   "output": "PASS refresh context controller PROFILE0 persistent36layers total6626 exact address and slots",
+   "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_controller_context_calendar.sv": "1078d8d98884c77b7c070480b9fb9caecc7dbfd56289ec8ed2705ce71106b37f",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_shape.sv": "df879146dd7dc1e375c0223c2daa622025458632b81a7a3e9f65779b9f84971b",
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "89bc7a0f33d0b2e071f3cba55e236d9d262cc6659b820319acb9767b1bd9fe5b",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "e055b8cc7362ee61a74238aca6dc4ef8046593a34211719fce74aaa4fadd4840",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_refresh_roots.sv": "0fb7006338ef90386d43da310c328d61d0d7870cfe71010e547808d17c97db72",
+    "rtl/test/qwen_static_kv/tb_refresh_context_controller.sv": "c31f02e3f188b1721a3ccea457f473fdc3242c182fa6b9db73772049bb201f09"
+   },
+   "binary_sha256": "cdfdc6717b9294d681bea2560e95e712b403417b337f67a6568ea41430729e08",
+   "image_sha256": "48f13a839f28ae785fac84876112ad6eede69c2cd4a9f458f909523680a79bbc",
+   "expected_sha256": "4b4da7336e55138e17f94c67fc1033a87f06e4052b4b719f2adf8954b8629b33",
+   "image_compiler_sha256": "33e8d03ec8fc2f68925cfc47f23d79844ff5cd29fc5ed562318da8509a3037ad",
+   "compiler_sha256": "c6bd012988fd9b31b80ded2682209cc7c2621276cea29c52483f302c84edbd50",
+   "scope": "component actual deterministicRR calendar+PROFILE0 JEDEC core;36persistentlayers changingT; source-derived176warmup quietwindows; excludes PHY/clock/other onchip/native chip"
+  },
+  "pc23": {
+   "mutant": 0,
+   "pc": 23,
+   "exit": 0,
+   "output": "PASS refresh context controller PROFILE0 persistent36layers total6626 exact address and slots",
+   "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_controller_context_calendar.sv": "1078d8d98884c77b7c070480b9fb9caecc7dbfd56289ec8ed2705ce71106b37f",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_shape.sv": "df879146dd7dc1e375c0223c2daa622025458632b81a7a3e9f65779b9f84971b",
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "89bc7a0f33d0b2e071f3cba55e236d9d262cc6659b820319acb9767b1bd9fe5b",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "e055b8cc7362ee61a74238aca6dc4ef8046593a34211719fce74aaa4fadd4840",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_refresh_roots.sv": "0fb7006338ef90386d43da310c328d61d0d7870cfe71010e547808d17c97db72",
+    "rtl/test/qwen_static_kv/tb_refresh_context_controller.sv": "c31f02e3f188b1721a3ccea457f473fdc3242c182fa6b9db73772049bb201f09"
+   },
+   "binary_sha256": "86b077894bded53f504a6ad27ce584dccb864ac44ece09e0be07cbc17c2b0e16",
+   "image_sha256": "02a87120523187f1e0411ab6421f3ff145120bd1549351a5d11bbea36b797ae8",
+   "expected_sha256": "61e6b90cf9cd7b6d9c06d1a35fdff14fdb81995710d9bb356ac3d886e7bdf94d",
+   "image_compiler_sha256": "33e8d03ec8fc2f68925cfc47f23d79844ff5cd29fc5ed562318da8509a3037ad",
+   "compiler_sha256": "c6bd012988fd9b31b80ded2682209cc7c2621276cea29c52483f302c84edbd50",
+   "scope": "component actual deterministicRR calendar+PROFILE0 JEDEC core;36persistentlayers changingT; source-derived176warmup quietwindows; excludes PHY/clock/other onchip/native chip"
+  },
+  "pc24": {
+   "mutant": 0,
+   "pc": 24,
+   "exit": 0,
+   "output": "PASS refresh context controller PROFILE0 persistent36layers total6626 exact address and slots",
+   "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_controller_context_calendar.sv": "1078d8d98884c77b7c070480b9fb9caecc7dbfd56289ec8ed2705ce71106b37f",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_shape.sv": "df879146dd7dc1e375c0223c2daa622025458632b81a7a3e9f65779b9f84971b",
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "89bc7a0f33d0b2e071f3cba55e236d9d262cc6659b820319acb9767b1bd9fe5b",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "e055b8cc7362ee61a74238aca6dc4ef8046593a34211719fce74aaa4fadd4840",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_refresh_roots.sv": "0fb7006338ef90386d43da310c328d61d0d7870cfe71010e547808d17c97db72",
+    "rtl/test/qwen_static_kv/tb_refresh_context_controller.sv": "c31f02e3f188b1721a3ccea457f473fdc3242c182fa6b9db73772049bb201f09"
+   },
+   "binary_sha256": "de587237c6be049793949a48f4c24698734f2610265482f624730d50eec5e486",
+   "image_sha256": "10c9d2d04cf84b4d4b9595838fe024b3eaebc74afb72bc5e1c4fc3185be30084",
+   "expected_sha256": "f3de33d2afbe75fe21da72acc7cc653b1ae176081a68e7dc5690cb82e0bc6ddb",
+   "image_compiler_sha256": "33e8d03ec8fc2f68925cfc47f23d79844ff5cd29fc5ed562318da8509a3037ad",
+   "compiler_sha256": "c6bd012988fd9b31b80ded2682209cc7c2621276cea29c52483f302c84edbd50",
+   "scope": "component actual deterministicRR calendar+PROFILE0 JEDEC core;36persistentlayers changingT; source-derived176warmup quietwindows; excludes PHY/clock/other onchip/native chip"
+  },
+  "pc25": {
+   "mutant": 0,
+   "pc": 25,
+   "exit": 0,
+   "output": "PASS refresh context controller PROFILE0 persistent36layers total6626 exact address and slots",
+   "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_controller_context_calendar.sv": "1078d8d98884c77b7c070480b9fb9caecc7dbfd56289ec8ed2705ce71106b37f",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_shape.sv": "df879146dd7dc1e375c0223c2daa622025458632b81a7a3e9f65779b9f84971b",
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "89bc7a0f33d0b2e071f3cba55e236d9d262cc6659b820319acb9767b1bd9fe5b",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "e055b8cc7362ee61a74238aca6dc4ef8046593a34211719fce74aaa4fadd4840",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_refresh_roots.sv": "0fb7006338ef90386d43da310c328d61d0d7870cfe71010e547808d17c97db72",
+    "rtl/test/qwen_static_kv/tb_refresh_context_controller.sv": "c31f02e3f188b1721a3ccea457f473fdc3242c182fa6b9db73772049bb201f09"
+   },
+   "binary_sha256": "9a6002b5439a509a3ec67189f5fd469315dcfaa6d71ffe2b1fe393f4966bee67",
+   "image_sha256": "fc3ab43afe559800ec51fc6d87ab12fb70e43468c33050bcea3bf208a2f56b45",
+   "expected_sha256": "967c6cf5fe84a2f7dbe7c8bf9c12faf3537ca1912e92c4dbea2a90d4ba78ea36",
+   "image_compiler_sha256": "33e8d03ec8fc2f68925cfc47f23d79844ff5cd29fc5ed562318da8509a3037ad",
+   "compiler_sha256": "c6bd012988fd9b31b80ded2682209cc7c2621276cea29c52483f302c84edbd50",
+   "scope": "component actual deterministicRR calendar+PROFILE0 JEDEC core;36persistentlayers changingT; source-derived176warmup quietwindows; excludes PHY/clock/other onchip/native chip"
+  },
+  "pc26": {
+   "mutant": 0,
+   "pc": 26,
+   "exit": 0,
+   "output": "PASS refresh context controller PROFILE0 persistent36layers total6626 exact address and slots",
+   "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_controller_context_calendar.sv": "1078d8d98884c77b7c070480b9fb9caecc7dbfd56289ec8ed2705ce71106b37f",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_shape.sv": "df879146dd7dc1e375c0223c2daa622025458632b81a7a3e9f65779b9f84971b",
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "89bc7a0f33d0b2e071f3cba55e236d9d262cc6659b820319acb9767b1bd9fe5b",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "e055b8cc7362ee61a74238aca6dc4ef8046593a34211719fce74aaa4fadd4840",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_refresh_roots.sv": "0fb7006338ef90386d43da310c328d61d0d7870cfe71010e547808d17c97db72",
+    "rtl/test/qwen_static_kv/tb_refresh_context_controller.sv": "c31f02e3f188b1721a3ccea457f473fdc3242c182fa6b9db73772049bb201f09"
+   },
+   "binary_sha256": "8920648fe9fd1c6d653f60010cb111eab8b088c4c074e8510d23df5ac7c562a1",
+   "image_sha256": "80ac905f58bcdd8105f7c569409b01221b12803307512c0f7a42c4549453a120",
+   "expected_sha256": "6f058fbde4faee86710441c9734fbef972fd71b304d3b5ec14da18e07aaf57c6",
+   "image_compiler_sha256": "33e8d03ec8fc2f68925cfc47f23d79844ff5cd29fc5ed562318da8509a3037ad",
+   "compiler_sha256": "c6bd012988fd9b31b80ded2682209cc7c2621276cea29c52483f302c84edbd50",
+   "scope": "component actual deterministicRR calendar+PROFILE0 JEDEC core;36persistentlayers changingT; source-derived176warmup quietwindows; excludes PHY/clock/other onchip/native chip"
+  },
+  "pc27": {
+   "mutant": 0,
+   "pc": 27,
+   "exit": 0,
+   "output": "PASS refresh context controller PROFILE0 persistent36layers total6626 exact address and slots",
+   "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_controller_context_calendar.sv": "1078d8d98884c77b7c070480b9fb9caecc7dbfd56289ec8ed2705ce71106b37f",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_shape.sv": "df879146dd7dc1e375c0223c2daa622025458632b81a7a3e9f65779b9f84971b",
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "89bc7a0f33d0b2e071f3cba55e236d9d262cc6659b820319acb9767b1bd9fe5b",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "e055b8cc7362ee61a74238aca6dc4ef8046593a34211719fce74aaa4fadd4840",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_refresh_roots.sv": "0fb7006338ef90386d43da310c328d61d0d7870cfe71010e547808d17c97db72",
+    "rtl/test/qwen_static_kv/tb_refresh_context_controller.sv": "c31f02e3f188b1721a3ccea457f473fdc3242c182fa6b9db73772049bb201f09"
+   },
+   "binary_sha256": "aa709c780a097445bc7db0aa63b1f5324c4cf046643565eda212225936393ff7",
+   "image_sha256": "f0e5a748b4c5a45c1b12004bcb5bfa936b698869478ad9156d2b3614ff32ab45",
+   "expected_sha256": "6b5aad6d506c50aa515d001d79924d6fe596c616ae2bb9c1c7be081a6b02efbf",
+   "image_compiler_sha256": "33e8d03ec8fc2f68925cfc47f23d79844ff5cd29fc5ed562318da8509a3037ad",
+   "compiler_sha256": "c6bd012988fd9b31b80ded2682209cc7c2621276cea29c52483f302c84edbd50",
+   "scope": "component actual deterministicRR calendar+PROFILE0 JEDEC core;36persistentlayers changingT; source-derived176warmup quietwindows; excludes PHY/clock/other onchip/native chip"
+  },
+  "pc28": {
+   "mutant": 0,
+   "pc": 28,
+   "exit": 0,
+   "output": "PASS refresh context controller PROFILE0 persistent36layers total6626 exact address and slots",
+   "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_controller_context_calendar.sv": "1078d8d98884c77b7c070480b9fb9caecc7dbfd56289ec8ed2705ce71106b37f",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_shape.sv": "df879146dd7dc1e375c0223c2daa622025458632b81a7a3e9f65779b9f84971b",
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "89bc7a0f33d0b2e071f3cba55e236d9d262cc6659b820319acb9767b1bd9fe5b",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "e055b8cc7362ee61a74238aca6dc4ef8046593a34211719fce74aaa4fadd4840",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_refresh_roots.sv": "0fb7006338ef90386d43da310c328d61d0d7870cfe71010e547808d17c97db72",
+    "rtl/test/qwen_static_kv/tb_refresh_context_controller.sv": "c31f02e3f188b1721a3ccea457f473fdc3242c182fa6b9db73772049bb201f09"
+   },
+   "binary_sha256": "0078ca8649bd9412cb3d83a2143250e3250c5ca8586d6262ac7e5a9e83b212d0",
+   "image_sha256": "055e9fcb754ac5e7c0f7b04f5a1567c2d2b96d2684e039f4ff76783f172a70de",
+   "expected_sha256": "3e379ba473a3b3c63add00c59b28da066695e40c5dbc0eae99cd70ca9d8220ff",
+   "image_compiler_sha256": "33e8d03ec8fc2f68925cfc47f23d79844ff5cd29fc5ed562318da8509a3037ad",
+   "compiler_sha256": "c6bd012988fd9b31b80ded2682209cc7c2621276cea29c52483f302c84edbd50",
+   "scope": "component actual deterministicRR calendar+PROFILE0 JEDEC core;36persistentlayers changingT; source-derived176warmup quietwindows; excludes PHY/clock/other onchip/native chip"
+  },
+  "pc29": {
+   "mutant": 0,
+   "pc": 29,
+   "exit": 0,
+   "output": "PASS refresh context controller PROFILE0 persistent36layers total6626 exact address and slots",
+   "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_controller_context_calendar.sv": "1078d8d98884c77b7c070480b9fb9caecc7dbfd56289ec8ed2705ce71106b37f",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_shape.sv": "df879146dd7dc1e375c0223c2daa622025458632b81a7a3e9f65779b9f84971b",
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "89bc7a0f33d0b2e071f3cba55e236d9d262cc6659b820319acb9767b1bd9fe5b",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "e055b8cc7362ee61a74238aca6dc4ef8046593a34211719fce74aaa4fadd4840",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_refresh_roots.sv": "0fb7006338ef90386d43da310c328d61d0d7870cfe71010e547808d17c97db72",
+    "rtl/test/qwen_static_kv/tb_refresh_context_controller.sv": "c31f02e3f188b1721a3ccea457f473fdc3242c182fa6b9db73772049bb201f09"
+   },
+   "binary_sha256": "00ac549edf4aa336c96ae2de499feea8b892997dc1325dd37f7c3a613baac195",
+   "image_sha256": "f986596527a22c7b2025204f90daeb4dc62e449d9f5cfa067cde45885805fb27",
+   "expected_sha256": "844fdf14963a84782b39d7df6e7ce9550ce723bab2d2553f65158790ee6cadaf",
+   "image_compiler_sha256": "33e8d03ec8fc2f68925cfc47f23d79844ff5cd29fc5ed562318da8509a3037ad",
+   "compiler_sha256": "c6bd012988fd9b31b80ded2682209cc7c2621276cea29c52483f302c84edbd50",
+   "scope": "component actual deterministicRR calendar+PROFILE0 JEDEC core;36persistentlayers changingT; source-derived176warmup quietwindows; excludes PHY/clock/other onchip/native chip"
+  },
+  "pc3": {
+   "mutant": 0,
+   "pc": 3,
+   "exit": 0,
+   "output": "PASS refresh context controller PROFILE0 persistent36layers total6626 exact address and slots",
+   "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_controller_context_calendar.sv": "1078d8d98884c77b7c070480b9fb9caecc7dbfd56289ec8ed2705ce71106b37f",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_shape.sv": "df879146dd7dc1e375c0223c2daa622025458632b81a7a3e9f65779b9f84971b",
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "89bc7a0f33d0b2e071f3cba55e236d9d262cc6659b820319acb9767b1bd9fe5b",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "e055b8cc7362ee61a74238aca6dc4ef8046593a34211719fce74aaa4fadd4840",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_refresh_roots.sv": "0fb7006338ef90386d43da310c328d61d0d7870cfe71010e547808d17c97db72",
+    "rtl/test/qwen_static_kv/tb_refresh_context_controller.sv": "c31f02e3f188b1721a3ccea457f473fdc3242c182fa6b9db73772049bb201f09"
+   },
+   "binary_sha256": "8dd6f681c69ff7417e1a0bbe220c9d9732275b9d5601f47e9fde7bc101e36540",
+   "image_sha256": "f8b1b9ab93af472f05fb8b9dc0fcaea5e001a302e8779c49940030ae308d6bd5",
+   "expected_sha256": "8793b08de7b9737944901b243f5734921d674dd84e88f9bd0265a5a659ff0719",
+   "image_compiler_sha256": "33e8d03ec8fc2f68925cfc47f23d79844ff5cd29fc5ed562318da8509a3037ad",
+   "compiler_sha256": "c6bd012988fd9b31b80ded2682209cc7c2621276cea29c52483f302c84edbd50",
+   "scope": "component actual deterministicRR calendar+PROFILE0 JEDEC core;36persistentlayers changingT; source-derived176warmup quietwindows; excludes PHY/clock/other onchip/native chip"
+  },
+  "pc30": {
+   "mutant": 0,
+   "pc": 30,
+   "exit": 0,
+   "output": "PASS refresh context controller PROFILE0 persistent36layers total6626 exact address and slots",
+   "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_controller_context_calendar.sv": "1078d8d98884c77b7c070480b9fb9caecc7dbfd56289ec8ed2705ce71106b37f",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_shape.sv": "df879146dd7dc1e375c0223c2daa622025458632b81a7a3e9f65779b9f84971b",
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "89bc7a0f33d0b2e071f3cba55e236d9d262cc6659b820319acb9767b1bd9fe5b",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "e055b8cc7362ee61a74238aca6dc4ef8046593a34211719fce74aaa4fadd4840",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_refresh_roots.sv": "0fb7006338ef90386d43da310c328d61d0d7870cfe71010e547808d17c97db72",
+    "rtl/test/qwen_static_kv/tb_refresh_context_controller.sv": "c31f02e3f188b1721a3ccea457f473fdc3242c182fa6b9db73772049bb201f09"
+   },
+   "binary_sha256": "7065a6aa97384ce84fc8ad5feba62ea076ae049a54ab158d47877ff3f7a1ff14",
+   "image_sha256": "27051f8aca589cc9b9e94fa206c701b6abde88280a99b180f9c3644b271dd0b3",
+   "expected_sha256": "958d3393ec4fbfd68527c8cbee11ed782850800ea1dfe74d80827064be1b5e3f",
+   "image_compiler_sha256": "33e8d03ec8fc2f68925cfc47f23d79844ff5cd29fc5ed562318da8509a3037ad",
+   "compiler_sha256": "c6bd012988fd9b31b80ded2682209cc7c2621276cea29c52483f302c84edbd50",
+   "scope": "component actual deterministicRR calendar+PROFILE0 JEDEC core;36persistentlayers changingT; source-derived176warmup quietwindows; excludes PHY/clock/other onchip/native chip"
+  },
+  "pc31": {
+   "mutant": 0,
+   "pc": 31,
+   "exit": 0,
+   "output": "PASS refresh context controller PROFILE0 persistent36layers total6626 exact address and slots",
+   "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_controller_context_calendar.sv": "1078d8d98884c77b7c070480b9fb9caecc7dbfd56289ec8ed2705ce71106b37f",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_shape.sv": "df879146dd7dc1e375c0223c2daa622025458632b81a7a3e9f65779b9f84971b",
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "89bc7a0f33d0b2e071f3cba55e236d9d262cc6659b820319acb9767b1bd9fe5b",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "e055b8cc7362ee61a74238aca6dc4ef8046593a34211719fce74aaa4fadd4840",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_refresh_roots.sv": "0fb7006338ef90386d43da310c328d61d0d7870cfe71010e547808d17c97db72",
+    "rtl/test/qwen_static_kv/tb_refresh_context_controller.sv": "c31f02e3f188b1721a3ccea457f473fdc3242c182fa6b9db73772049bb201f09"
+   },
+   "binary_sha256": "4eda5dda8dc6b8df2f02977b8fd6179cfb01cf5f7351f13c626cc892fefc1497",
+   "image_sha256": "854c83fc7747c1ae01ec19862dcef356f56b3ecca9226523dd1ac06bcd8bb333",
+   "expected_sha256": "a3a6b4761344f63f2845ac9fdbc1e6306b7791ebe478f3bd48d7bfa082595a2c",
+   "image_compiler_sha256": "33e8d03ec8fc2f68925cfc47f23d79844ff5cd29fc5ed562318da8509a3037ad",
+   "compiler_sha256": "c6bd012988fd9b31b80ded2682209cc7c2621276cea29c52483f302c84edbd50",
+   "scope": "component actual deterministicRR calendar+PROFILE0 JEDEC core;36persistentlayers changingT; source-derived176warmup quietwindows; excludes PHY/clock/other onchip/native chip"
+  },
+  "pc4": {
+   "mutant": 0,
+   "pc": 4,
+   "exit": 0,
+   "output": "PASS refresh context controller PROFILE0 persistent36layers total6626 exact address and slots",
+   "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_controller_context_calendar.sv": "1078d8d98884c77b7c070480b9fb9caecc7dbfd56289ec8ed2705ce71106b37f",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_shape.sv": "df879146dd7dc1e375c0223c2daa622025458632b81a7a3e9f65779b9f84971b",
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "89bc7a0f33d0b2e071f3cba55e236d9d262cc6659b820319acb9767b1bd9fe5b",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "e055b8cc7362ee61a74238aca6dc4ef8046593a34211719fce74aaa4fadd4840",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_refresh_roots.sv": "0fb7006338ef90386d43da310c328d61d0d7870cfe71010e547808d17c97db72",
+    "rtl/test/qwen_static_kv/tb_refresh_context_controller.sv": "c31f02e3f188b1721a3ccea457f473fdc3242c182fa6b9db73772049bb201f09"
+   },
+   "binary_sha256": "d5c8befce3e40f7b880c320f8d30d3ab697af5ee8be5c3c97c9a6c6c178e5ae8",
+   "image_sha256": "cfdd86bee3a91df8a36fd02cacfe457dcf51f7b8e0ab0cdc9ab51f472a6d8402",
+   "expected_sha256": "d4e6a47cd0984ee538450387c163e2fb8b19f0730990c1b336d63b59114c5f57",
+   "image_compiler_sha256": "33e8d03ec8fc2f68925cfc47f23d79844ff5cd29fc5ed562318da8509a3037ad",
+   "compiler_sha256": "c6bd012988fd9b31b80ded2682209cc7c2621276cea29c52483f302c84edbd50",
+   "scope": "component actual deterministicRR calendar+PROFILE0 JEDEC core;36persistentlayers changingT; source-derived176warmup quietwindows; excludes PHY/clock/other onchip/native chip"
+  },
+  "pc5": {
+   "mutant": 0,
+   "pc": 5,
+   "exit": 0,
+   "output": "PASS refresh context controller PROFILE0 persistent36layers total6626 exact address and slots",
+   "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_controller_context_calendar.sv": "1078d8d98884c77b7c070480b9fb9caecc7dbfd56289ec8ed2705ce71106b37f",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_shape.sv": "df879146dd7dc1e375c0223c2daa622025458632b81a7a3e9f65779b9f84971b",
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "89bc7a0f33d0b2e071f3cba55e236d9d262cc6659b820319acb9767b1bd9fe5b",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "e055b8cc7362ee61a74238aca6dc4ef8046593a34211719fce74aaa4fadd4840",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_refresh_roots.sv": "0fb7006338ef90386d43da310c328d61d0d7870cfe71010e547808d17c97db72",
+    "rtl/test/qwen_static_kv/tb_refresh_context_controller.sv": "c31f02e3f188b1721a3ccea457f473fdc3242c182fa6b9db73772049bb201f09"
+   },
+   "binary_sha256": "83898f027c182d2708f3f2eea56a2f4c50f00c42c02381b52493ac26d860eb97",
+   "image_sha256": "2b52c8bc4d550acf5298363690eafb7b291f5da1c9af8887a1aeac32bef8549d",
+   "expected_sha256": "3372b0cab638d4b467c8823df9fbda0a6b7902c9b2164f4b74d0c7b2fb2c07f0",
+   "image_compiler_sha256": "33e8d03ec8fc2f68925cfc47f23d79844ff5cd29fc5ed562318da8509a3037ad",
+   "compiler_sha256": "c6bd012988fd9b31b80ded2682209cc7c2621276cea29c52483f302c84edbd50",
+   "scope": "component actual deterministicRR calendar+PROFILE0 JEDEC core;36persistentlayers changingT; source-derived176warmup quietwindows; excludes PHY/clock/other onchip/native chip"
+  },
+  "pc6": {
+   "mutant": 0,
+   "pc": 6,
+   "exit": 0,
+   "output": "PASS refresh context controller PROFILE0 persistent36layers total6626 exact address and slots",
+   "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_controller_context_calendar.sv": "1078d8d98884c77b7c070480b9fb9caecc7dbfd56289ec8ed2705ce71106b37f",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_shape.sv": "df879146dd7dc1e375c0223c2daa622025458632b81a7a3e9f65779b9f84971b",
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "89bc7a0f33d0b2e071f3cba55e236d9d262cc6659b820319acb9767b1bd9fe5b",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "e055b8cc7362ee61a74238aca6dc4ef8046593a34211719fce74aaa4fadd4840",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_refresh_roots.sv": "0fb7006338ef90386d43da310c328d61d0d7870cfe71010e547808d17c97db72",
+    "rtl/test/qwen_static_kv/tb_refresh_context_controller.sv": "c31f02e3f188b1721a3ccea457f473fdc3242c182fa6b9db73772049bb201f09"
+   },
+   "binary_sha256": "8a3bfba95ccc23cf551dad0572eca7c44b7288fadb63ebe1d39d7e6079f25cc6",
+   "image_sha256": "5debb8fe7f11bd2c5c12e933fed7b2793c4def38d066590a38dbf124b0989a5f",
+   "expected_sha256": "b98a7a23fe88f591ec6e9f76b1d332f5949d4ff7363811bf441b78cc48d59ded",
+   "image_compiler_sha256": "33e8d03ec8fc2f68925cfc47f23d79844ff5cd29fc5ed562318da8509a3037ad",
+   "compiler_sha256": "c6bd012988fd9b31b80ded2682209cc7c2621276cea29c52483f302c84edbd50",
+   "scope": "component actual deterministicRR calendar+PROFILE0 JEDEC core;36persistentlayers changingT; source-derived176warmup quietwindows; excludes PHY/clock/other onchip/native chip"
+  },
+  "pc7": {
+   "mutant": 0,
+   "pc": 7,
+   "exit": 0,
+   "output": "PASS refresh context controller PROFILE0 persistent36layers total6626 exact address and slots",
+   "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_controller_context_calendar.sv": "1078d8d98884c77b7c070480b9fb9caecc7dbfd56289ec8ed2705ce71106b37f",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_shape.sv": "df879146dd7dc1e375c0223c2daa622025458632b81a7a3e9f65779b9f84971b",
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "89bc7a0f33d0b2e071f3cba55e236d9d262cc6659b820319acb9767b1bd9fe5b",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "e055b8cc7362ee61a74238aca6dc4ef8046593a34211719fce74aaa4fadd4840",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_refresh_roots.sv": "0fb7006338ef90386d43da310c328d61d0d7870cfe71010e547808d17c97db72",
+    "rtl/test/qwen_static_kv/tb_refresh_context_controller.sv": "c31f02e3f188b1721a3ccea457f473fdc3242c182fa6b9db73772049bb201f09"
+   },
+   "binary_sha256": "96baa2cf194797167a01e508f81b5a7ae41e5adc09dd969d6a50dba4c85b0392",
+   "image_sha256": "c6452913d1c2febeaaf0f208fc175cf48b03f89a5977df8f9331441542a7def4",
+   "expected_sha256": "8441250a72d69f3c39028e4f69944f79f51316abae2d0e5f68973dbe0a7822d0",
+   "image_compiler_sha256": "33e8d03ec8fc2f68925cfc47f23d79844ff5cd29fc5ed562318da8509a3037ad",
+   "compiler_sha256": "c6bd012988fd9b31b80ded2682209cc7c2621276cea29c52483f302c84edbd50",
+   "scope": "component actual deterministicRR calendar+PROFILE0 JEDEC core;36persistentlayers changingT; source-derived176warmup quietwindows; excludes PHY/clock/other onchip/native chip"
+  },
+  "pc8": {
+   "mutant": 0,
+   "pc": 8,
+   "exit": 0,
+   "output": "PASS refresh context controller PROFILE0 persistent36layers total6626 exact address and slots",
+   "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_controller_context_calendar.sv": "1078d8d98884c77b7c070480b9fb9caecc7dbfd56289ec8ed2705ce71106b37f",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_shape.sv": "df879146dd7dc1e375c0223c2daa622025458632b81a7a3e9f65779b9f84971b",
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "89bc7a0f33d0b2e071f3cba55e236d9d262cc6659b820319acb9767b1bd9fe5b",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "e055b8cc7362ee61a74238aca6dc4ef8046593a34211719fce74aaa4fadd4840",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_refresh_roots.sv": "0fb7006338ef90386d43da310c328d61d0d7870cfe71010e547808d17c97db72",
+    "rtl/test/qwen_static_kv/tb_refresh_context_controller.sv": "c31f02e3f188b1721a3ccea457f473fdc3242c182fa6b9db73772049bb201f09"
+   },
+   "binary_sha256": "331badd8ba37544c543ca2de7b513a1538abae1fdcf44618261b31f72468b7ed",
+   "image_sha256": "f41b776b33a3057dcc0479c2c99050654aa5396dce0d12bb86b7e1b320262d67",
+   "expected_sha256": "53a332d05cc1865c5954188edd23baaf05d891326282344e2b7158e5ae1e7e1a",
+   "image_compiler_sha256": "33e8d03ec8fc2f68925cfc47f23d79844ff5cd29fc5ed562318da8509a3037ad",
+   "compiler_sha256": "c6bd012988fd9b31b80ded2682209cc7c2621276cea29c52483f302c84edbd50",
+   "scope": "component actual deterministicRR calendar+PROFILE0 JEDEC core;36persistentlayers changingT; source-derived176warmup quietwindows; excludes PHY/clock/other onchip/native chip"
+  },
+  "pc9": {
+   "mutant": 0,
+   "pc": 9,
+   "exit": 0,
+   "output": "PASS refresh context controller PROFILE0 persistent36layers total6626 exact address and slots",
+   "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_controller_context_calendar.sv": "1078d8d98884c77b7c070480b9fb9caecc7dbfd56289ec8ed2705ce71106b37f",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_shape.sv": "df879146dd7dc1e375c0223c2daa622025458632b81a7a3e9f65779b9f84971b",
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "89bc7a0f33d0b2e071f3cba55e236d9d262cc6659b820319acb9767b1bd9fe5b",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "e055b8cc7362ee61a74238aca6dc4ef8046593a34211719fce74aaa4fadd4840",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_refresh_roots.sv": "0fb7006338ef90386d43da310c328d61d0d7870cfe71010e547808d17c97db72",
+    "rtl/test/qwen_static_kv/tb_refresh_context_controller.sv": "c31f02e3f188b1721a3ccea457f473fdc3242c182fa6b9db73772049bb201f09"
+   },
+   "binary_sha256": "8b7fe2795524a5198474623ca7744ec3a04dda57d2fde645f148046365882c51",
+   "image_sha256": "6e98b9f0d63e374d1d1aad30321ea99e6bda4877c5b4fac4f0fb991ea0a44fa7",
+   "expected_sha256": "ae825e142b5f4ee864c42d65456f3f428eebd8bbad2621d8485bec87b28ed17f",
+   "image_compiler_sha256": "33e8d03ec8fc2f68925cfc47f23d79844ff5cd29fc5ed562318da8509a3037ad",
+   "compiler_sha256": "c6bd012988fd9b31b80ded2682209cc7c2621276cea29c52483f302c84edbd50",
+   "scope": "component actual deterministicRR calendar+PROFILE0 JEDEC core;36persistentlayers changingT; source-derived176warmup quietwindows; excludes PHY/clock/other onchip/native chip"
+  },
+  "c118pc13": {
+   "mutant": 0,
+   "pc": 13,
+   "due_offset": 118,
+   "compiler_too": true,
+   "exit": 1,
+   "output": "DETAIL sf1 ref0 legal0 open00fe0000 stale00000000 blk00010000 rcdffffffff ccdf running1 k4 last5",
+   "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_controller_context_calendar.sv": "1078d8d98884c77b7c070480b9fb9caecc7dbfd56289ec8ed2705ce71106b37f",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_shape.sv": "df879146dd7dc1e375c0223c2daa622025458632b81a7a3e9f65779b9f84971b",
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "89bc7a0f33d0b2e071f3cba55e236d9d262cc6659b820319acb9767b1bd9fe5b",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "e055b8cc7362ee61a74238aca6dc4ef8046593a34211719fce74aaa4fadd4840",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_refresh_roots.sv": "0fb7006338ef90386d43da310c328d61d0d7870cfe71010e547808d17c97db72",
+    "rtl/test/qwen_static_kv/tb_refresh_context_controller.sv": "c31f02e3f188b1721a3ccea457f473fdc3242c182fa6b9db73772049bb201f09"
+   },
+   "binary_sha256": "168c9cfd28721f715bb0dbb903f791595ef2a559cff23684d46c8116f759e248",
+   "image_sha256": "b58e43cca8bbccd5b1ffdaaa256bfeefd209b5b964b0506c8a453783ac0474f5",
+   "expected_sha256": "3bd4b9d0068309680b1a16363304ca02202cff9b0a306ae3d1c9398ee545c69d",
+   "image_compiler_sha256": "33e8d03ec8fc2f68925cfc47f23d79844ff5cd29fc5ed562318da8509a3037ad",
+   "compiler_sha256": "6668c31cb2014a0002c47848dd5cb3dccbc8cea2f6affc1f84ad7528d4205d51",
+   "scope": "component actual deterministicRR calendar+PROFILE0 JEDEC core;36persistentlayers changingT; source-derived176warmup quietwindows; excludes PHY/clock/other onchip/native chip"
+  },
+  "c118pc6": {
+   "mutant": 0,
+   "pc": 6,
+   "due_offset": 118,
+   "compiler_too": true,
+   "exit": 1,
+   "output": "DETAIL sf1 ref0 legal0 open00fe0000 stale00000000 blk00010000 rcdffffffff ccdf running1 k4 last5",
+   "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_controller_context_calendar.sv": "1078d8d98884c77b7c070480b9fb9caecc7dbfd56289ec8ed2705ce71106b37f",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_shape.sv": "df879146dd7dc1e375c0223c2daa622025458632b81a7a3e9f65779b9f84971b",
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "89bc7a0f33d0b2e071f3cba55e236d9d262cc6659b820319acb9767b1bd9fe5b",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "e055b8cc7362ee61a74238aca6dc4ef8046593a34211719fce74aaa4fadd4840",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_refresh_roots.sv": "0fb7006338ef90386d43da310c328d61d0d7870cfe71010e547808d17c97db72",
+    "rtl/test/qwen_static_kv/tb_refresh_context_controller.sv": "c31f02e3f188b1721a3ccea457f473fdc3242c182fa6b9db73772049bb201f09"
+   },
+   "binary_sha256": "a9309e52ed6d0666c4b3657d6e69c49e05ae653a6c7e1db1686eed69949b6b35",
+   "image_sha256": "e04a87fe235e8b153886bf020e3f06b88c938810693bbdc55d0dde8f1fc44a7d",
+   "expected_sha256": "f636ac45db483cb2dbf02f27daeed8ce5c554642b6b90ce7f2eb1160eccd5785",
+   "image_compiler_sha256": "33e8d03ec8fc2f68925cfc47f23d79844ff5cd29fc5ed562318da8509a3037ad",
+   "compiler_sha256": "6668c31cb2014a0002c47848dd5cb3dccbc8cea2f6affc1f84ad7528d4205d51",
+   "scope": "component actual deterministicRR calendar+PROFILE0 JEDEC core;36persistentlayers changingT; source-derived176warmup quietwindows; excludes PHY/clock/other onchip/native chip"
+  },
+  "c1888pc13": {
+   "mutant": 0,
+   "pc": 13,
+   "due_offset": 1888,
+   "compiler_too": true,
+   "exit": 1,
+   "output": "DETAIL sf1 ref0 legal0 open0000003f stale00000000 blk00000080 rcdffffffff ccdf running1 k1 last1",
+   "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_controller_context_calendar.sv": "1078d8d98884c77b7c070480b9fb9caecc7dbfd56289ec8ed2705ce71106b37f",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_shape.sv": "df879146dd7dc1e375c0223c2daa622025458632b81a7a3e9f65779b9f84971b",
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "89bc7a0f33d0b2e071f3cba55e236d9d262cc6659b820319acb9767b1bd9fe5b",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "e055b8cc7362ee61a74238aca6dc4ef8046593a34211719fce74aaa4fadd4840",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_refresh_roots.sv": "0fb7006338ef90386d43da310c328d61d0d7870cfe71010e547808d17c97db72",
+    "rtl/test/qwen_static_kv/tb_refresh_context_controller.sv": "c31f02e3f188b1721a3ccea457f473fdc3242c182fa6b9db73772049bb201f09"
+   },
+   "binary_sha256": "5f212e7a196147dd9ceaf374a6d27baf59aa3978a8346b0e81e1faeee76d9a99",
+   "image_sha256": "298add40e9ab6033975d39b4b2a048cd28194a3541d2211febec785b0746da54",
+   "expected_sha256": "ae57a6b6d4ca4cccb00c99a43bf9a64bb791a84915212823630dc524c381bc55",
+   "image_compiler_sha256": "33e8d03ec8fc2f68925cfc47f23d79844ff5cd29fc5ed562318da8509a3037ad",
+   "compiler_sha256": "6668c31cb2014a0002c47848dd5cb3dccbc8cea2f6affc1f84ad7528d4205d51",
+   "scope": "component actual deterministicRR calendar+PROFILE0 JEDEC core;36persistentlayers changingT; source-derived176warmup quietwindows; excludes PHY/clock/other onchip/native chip"
+  },
+  "c1888pc6": {
+   "mutant": 0,
+   "pc": 6,
+   "due_offset": 1888,
+   "compiler_too": true,
+   "exit": 1,
+   "output": "DETAIL sf1 ref0 legal0 open0000003f stale00000000 blk00000000 rcdffffffff ccdf running1 k1 last1",
+   "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_controller_context_calendar.sv": "1078d8d98884c77b7c070480b9fb9caecc7dbfd56289ec8ed2705ce71106b37f",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_shape.sv": "df879146dd7dc1e375c0223c2daa622025458632b81a7a3e9f65779b9f84971b",
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "89bc7a0f33d0b2e071f3cba55e236d9d262cc6659b820319acb9767b1bd9fe5b",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "e055b8cc7362ee61a74238aca6dc4ef8046593a34211719fce74aaa4fadd4840",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_refresh_roots.sv": "0fb7006338ef90386d43da310c328d61d0d7870cfe71010e547808d17c97db72",
+    "rtl/test/qwen_static_kv/tb_refresh_context_controller.sv": "c31f02e3f188b1721a3ccea457f473fdc3242c182fa6b9db73772049bb201f09"
+   },
+   "binary_sha256": "e7039f691793a8df553dfd5016eb4cffefb9f30da204fc111d760fc8429998b1",
+   "image_sha256": "bbdb6fca8e64c758fed7f929e748e0a907f4dac013529a6cb4179a1f8ca07294",
+   "expected_sha256": "43b6886fb59330ba1beea63719259945dd8d263ecac49ea51bf57a8cd72ea710",
+   "image_compiler_sha256": "33e8d03ec8fc2f68925cfc47f23d79844ff5cd29fc5ed562318da8509a3037ad",
+   "compiler_sha256": "6668c31cb2014a0002c47848dd5cb3dccbc8cea2f6affc1f84ad7528d4205d51",
+   "scope": "component actual deterministicRR calendar+PROFILE0 JEDEC core;36persistentlayers changingT; source-derived176warmup quietwindows; excludes PHY/clock/other onchip/native chip"
+  },
+  "c59pc13": {
+   "mutant": 0,
+   "pc": 13,
+   "due_offset": 59,
+   "compiler_too": true,
+   "exit": 0,
+   "output": "PASS refresh context controller PROFILE0 persistent36layers total6626 exact address and slots",
+   "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_controller_context_calendar.sv": "1078d8d98884c77b7c070480b9fb9caecc7dbfd56289ec8ed2705ce71106b37f",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_shape.sv": "df879146dd7dc1e375c0223c2daa622025458632b81a7a3e9f65779b9f84971b",
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "89bc7a0f33d0b2e071f3cba55e236d9d262cc6659b820319acb9767b1bd9fe5b",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "e055b8cc7362ee61a74238aca6dc4ef8046593a34211719fce74aaa4fadd4840",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_refresh_roots.sv": "0fb7006338ef90386d43da310c328d61d0d7870cfe71010e547808d17c97db72",
+    "rtl/test/qwen_static_kv/tb_refresh_context_controller.sv": "c31f02e3f188b1721a3ccea457f473fdc3242c182fa6b9db73772049bb201f09"
+   },
+   "binary_sha256": "ca133628cbf9dfbb1e6b7d8904556462afc414456e4764e3f36ce60f5da42ce6",
+   "image_sha256": "2b4a28f0a629ab0ca45ba1aa978551e9ea78aad9eb7fadc4291d87bde67161db",
+   "expected_sha256": "e0df418219872852d474ef87a5a8d5cf80902b2affe30a4dc748a27e600d6c94",
+   "image_compiler_sha256": "33e8d03ec8fc2f68925cfc47f23d79844ff5cd29fc5ed562318da8509a3037ad",
+   "compiler_sha256": "6668c31cb2014a0002c47848dd5cb3dccbc8cea2f6affc1f84ad7528d4205d51",
+   "scope": "component actual deterministicRR calendar+PROFILE0 JEDEC core;36persistentlayers changingT; source-derived176warmup quietwindows; excludes PHY/clock/other onchip/native chip"
+  },
+  "c59pc6": {
+   "mutant": 0,
+   "pc": 6,
+   "due_offset": 59,
+   "compiler_too": true,
+   "exit": 0,
+   "output": "PASS refresh context controller PROFILE0 persistent36layers total6626 exact address and slots",
+   "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_controller_context_calendar.sv": "1078d8d98884c77b7c070480b9fb9caecc7dbfd56289ec8ed2705ce71106b37f",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_shape.sv": "df879146dd7dc1e375c0223c2daa622025458632b81a7a3e9f65779b9f84971b",
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "89bc7a0f33d0b2e071f3cba55e236d9d262cc6659b820319acb9767b1bd9fe5b",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "e055b8cc7362ee61a74238aca6dc4ef8046593a34211719fce74aaa4fadd4840",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_refresh_roots.sv": "0fb7006338ef90386d43da310c328d61d0d7870cfe71010e547808d17c97db72",
+    "rtl/test/qwen_static_kv/tb_refresh_context_controller.sv": "c31f02e3f188b1721a3ccea457f473fdc3242c182fa6b9db73772049bb201f09"
+   },
+   "binary_sha256": "8fa052c0b106a95bfbcca80ff14f70dfde490b4af73e0b12db831fb252fc59c4",
+   "image_sha256": "35a1de9ecd155d604c263a4bf59fa76f9330aab980e8c83aada035e3af06bda9",
+   "expected_sha256": "9299bad110f62d103cd5a76248709c7fd796cfff4cb270d957c2887154767ace",
+   "image_compiler_sha256": "33e8d03ec8fc2f68925cfc47f23d79844ff5cd29fc5ed562318da8509a3037ad",
+   "compiler_sha256": "6668c31cb2014a0002c47848dd5cb3dccbc8cea2f6affc1f84ad7528d4205d51",
+   "scope": "component actual deterministicRR calendar+PROFILE0 JEDEC core;36persistentlayers changingT; source-derived176warmup quietwindows; excludes PHY/clock/other onchip/native chip"
+  },
+  "d118pc13": {
+   "mutant": 0,
+   "pc": 13,
+   "due_offset": 118,
+   "exit": 1,
+   "output": "FATAL: /home/ubuntu/wt/qwen-context-calendar-1016/rtl/test/qwen_static_kv/tb_refresh_context_controller.sv:38: FAIL refresh context controller calendar timeline edge370",
+   "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_controller_context_calendar.sv": "1078d8d98884c77b7c070480b9fb9caecc7dbfd56289ec8ed2705ce71106b37f",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_shape.sv": "df879146dd7dc1e375c0223c2daa622025458632b81a7a3e9f65779b9f84971b",
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "89bc7a0f33d0b2e071f3cba55e236d9d262cc6659b820319acb9767b1bd9fe5b",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "e055b8cc7362ee61a74238aca6dc4ef8046593a34211719fce74aaa4fadd4840",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_refresh_roots.sv": "0fb7006338ef90386d43da310c328d61d0d7870cfe71010e547808d17c97db72",
+    "rtl/test/qwen_static_kv/tb_refresh_context_controller.sv": "c31f02e3f188b1721a3ccea457f473fdc3242c182fa6b9db73772049bb201f09"
+   },
+   "binary_sha256": "d783f2b335a31a948dfd7327d011994d49b0f321da8842f930c9849fddb8fb4d",
+   "image_sha256": "b58e43cca8bbccd5b1ffdaaa256bfeefd209b5b964b0506c8a453783ac0474f5",
+   "expected_sha256": "7c5cc9d56dbd7e342b50c0a36acbe1f45ae90ef7b46d8c091e0d79ea6350291d",
+   "image_compiler_sha256": "33e8d03ec8fc2f68925cfc47f23d79844ff5cd29fc5ed562318da8509a3037ad",
+   "compiler_sha256": "8902c17d55ee95041a992e704b1ec38614becb213b165ea9011acd6f608fe816",
+   "scope": "component actual deterministicRR calendar+PROFILE0 JEDEC core;36persistentlayers changingT; source-derived176warmup quietwindows; excludes PHY/clock/other onchip/native chip"
+  },
+  "d118pc6": {
+   "mutant": 0,
+   "pc": 6,
+   "due_offset": 118,
+   "exit": 1,
+   "output": "FATAL: /home/ubuntu/wt/qwen-context-calendar-1016/rtl/test/qwen_static_kv/tb_refresh_context_controller.sv:38: FAIL refresh context controller calendar timeline edge345",
+   "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_controller_context_calendar.sv": "1078d8d98884c77b7c070480b9fb9caecc7dbfd56289ec8ed2705ce71106b37f",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_shape.sv": "df879146dd7dc1e375c0223c2daa622025458632b81a7a3e9f65779b9f84971b",
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "89bc7a0f33d0b2e071f3cba55e236d9d262cc6659b820319acb9767b1bd9fe5b",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "e055b8cc7362ee61a74238aca6dc4ef8046593a34211719fce74aaa4fadd4840",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_refresh_roots.sv": "0fb7006338ef90386d43da310c328d61d0d7870cfe71010e547808d17c97db72",
+    "rtl/test/qwen_static_kv/tb_refresh_context_controller.sv": "c31f02e3f188b1721a3ccea457f473fdc3242c182fa6b9db73772049bb201f09"
+   },
+   "binary_sha256": "ef6ee24cb24ac039c6b2198fd127585ae8521f23d65cb17ea27ad0cff929c0c2",
+   "image_sha256": "e04a87fe235e8b153886bf020e3f06b88c938810693bbdc55d0dde8f1fc44a7d",
+   "expected_sha256": "b98a7a23fe88f591ec6e9f76b1d332f5949d4ff7363811bf441b78cc48d59ded",
+   "image_compiler_sha256": "33e8d03ec8fc2f68925cfc47f23d79844ff5cd29fc5ed562318da8509a3037ad",
+   "compiler_sha256": "8902c17d55ee95041a992e704b1ec38614becb213b165ea9011acd6f608fe816",
+   "scope": "component actual deterministicRR calendar+PROFILE0 JEDEC core;36persistentlayers changingT; source-derived176warmup quietwindows; excludes PHY/clock/other onchip/native chip"
+  },
+  "d1888pc13": {
+   "mutant": 0,
+   "pc": 13,
+   "due_offset": 1888,
+   "exit": 1,
+   "output": "FATAL: /home/ubuntu/wt/qwen-context-calendar-1016/rtl/test/qwen_static_kv/tb_refresh_context_controller.sv:38: FAIL refresh context controller calendar timeline edge179",
+   "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_controller_context_calendar.sv": "1078d8d98884c77b7c070480b9fb9caecc7dbfd56289ec8ed2705ce71106b37f",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_shape.sv": "df879146dd7dc1e375c0223c2daa622025458632b81a7a3e9f65779b9f84971b",
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "89bc7a0f33d0b2e071f3cba55e236d9d262cc6659b820319acb9767b1bd9fe5b",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "e055b8cc7362ee61a74238aca6dc4ef8046593a34211719fce74aaa4fadd4840",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_refresh_roots.sv": "0fb7006338ef90386d43da310c328d61d0d7870cfe71010e547808d17c97db72",
+    "rtl/test/qwen_static_kv/tb_refresh_context_controller.sv": "c31f02e3f188b1721a3ccea457f473fdc3242c182fa6b9db73772049bb201f09"
+   },
+   "binary_sha256": "f71cf145db8717c98eb69bf3e26fc3ae1a6ee5a2a02941497272c2324964b6f3",
+   "image_sha256": "298add40e9ab6033975d39b4b2a048cd28194a3541d2211febec785b0746da54",
+   "expected_sha256": "7c5cc9d56dbd7e342b50c0a36acbe1f45ae90ef7b46d8c091e0d79ea6350291d",
+   "image_compiler_sha256": "33e8d03ec8fc2f68925cfc47f23d79844ff5cd29fc5ed562318da8509a3037ad",
+   "compiler_sha256": "8902c17d55ee95041a992e704b1ec38614becb213b165ea9011acd6f608fe816",
+   "scope": "component actual deterministicRR calendar+PROFILE0 JEDEC core;36persistentlayers changingT; source-derived176warmup quietwindows; excludes PHY/clock/other onchip/native chip"
+  },
+  "d1888pc6": {
+   "mutant": 0,
+   "pc": 6,
+   "due_offset": 1888,
+   "exit": 1,
+   "output": "FATAL: /home/ubuntu/wt/qwen-context-calendar-1016/rtl/test/qwen_static_kv/tb_refresh_context_controller.sv:38: FAIL refresh context controller calendar timeline edge179",
+   "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_controller_context_calendar.sv": "1078d8d98884c77b7c070480b9fb9caecc7dbfd56289ec8ed2705ce71106b37f",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_shape.sv": "df879146dd7dc1e375c0223c2daa622025458632b81a7a3e9f65779b9f84971b",
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "89bc7a0f33d0b2e071f3cba55e236d9d262cc6659b820319acb9767b1bd9fe5b",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "e055b8cc7362ee61a74238aca6dc4ef8046593a34211719fce74aaa4fadd4840",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_refresh_roots.sv": "0fb7006338ef90386d43da310c328d61d0d7870cfe71010e547808d17c97db72",
+    "rtl/test/qwen_static_kv/tb_refresh_context_controller.sv": "c31f02e3f188b1721a3ccea457f473fdc3242c182fa6b9db73772049bb201f09"
+   },
+   "binary_sha256": "d07b2a635da13d37fc726c8fdaaf28f2fecde467233910612170f0bdbe49c718",
+   "image_sha256": "bbdb6fca8e64c758fed7f929e748e0a907f4dac013529a6cb4179a1f8ca07294",
+   "expected_sha256": "b98a7a23fe88f591ec6e9f76b1d332f5949d4ff7363811bf441b78cc48d59ded",
+   "image_compiler_sha256": "33e8d03ec8fc2f68925cfc47f23d79844ff5cd29fc5ed562318da8509a3037ad",
+   "compiler_sha256": "8902c17d55ee95041a992e704b1ec38614becb213b165ea9011acd6f608fe816",
+   "scope": "component actual deterministicRR calendar+PROFILE0 JEDEC core;36persistentlayers changingT; source-derived176warmup quietwindows; excludes PHY/clock/other onchip/native chip"
+  },
+  "d59pc13": {
+   "mutant": 0,
+   "pc": 13,
+   "due_offset": 59,
+   "exit": 1,
+   "output": "FATAL: /home/ubuntu/wt/qwen-context-calendar-1016/rtl/test/qwen_static_kv/tb_refresh_context_controller.sv:38: FAIL refresh context controller calendar timeline edge370",
+   "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_controller_context_calendar.sv": "1078d8d98884c77b7c070480b9fb9caecc7dbfd56289ec8ed2705ce71106b37f",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_shape.sv": "df879146dd7dc1e375c0223c2daa622025458632b81a7a3e9f65779b9f84971b",
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "89bc7a0f33d0b2e071f3cba55e236d9d262cc6659b820319acb9767b1bd9fe5b",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "e055b8cc7362ee61a74238aca6dc4ef8046593a34211719fce74aaa4fadd4840",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_refresh_roots.sv": "0fb7006338ef90386d43da310c328d61d0d7870cfe71010e547808d17c97db72",
+    "rtl/test/qwen_static_kv/tb_refresh_context_controller.sv": "c31f02e3f188b1721a3ccea457f473fdc3242c182fa6b9db73772049bb201f09"
+   },
+   "binary_sha256": "abf4f046dcb05ed0ed26d6fd6ffda1dd19b5bce2457eea5badd886849b8d2ce2",
+   "image_sha256": "2b4a28f0a629ab0ca45ba1aa978551e9ea78aad9eb7fadc4291d87bde67161db",
+   "expected_sha256": "7c5cc9d56dbd7e342b50c0a36acbe1f45ae90ef7b46d8c091e0d79ea6350291d",
+   "image_compiler_sha256": "33e8d03ec8fc2f68925cfc47f23d79844ff5cd29fc5ed562318da8509a3037ad",
+   "compiler_sha256": "8902c17d55ee95041a992e704b1ec38614becb213b165ea9011acd6f608fe816",
+   "scope": "component actual deterministicRR calendar+PROFILE0 JEDEC core;36persistentlayers changingT; source-derived176warmup quietwindows; excludes PHY/clock/other onchip/native chip"
+  },
+  "d59pc6": {
+   "mutant": 0,
+   "pc": 6,
+   "due_offset": 59,
+   "exit": 1,
+   "output": "FATAL: /home/ubuntu/wt/qwen-context-calendar-1016/rtl/test/qwen_static_kv/tb_refresh_context_controller.sv:38: FAIL refresh context controller calendar timeline edge345",
+   "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_controller_context_calendar.sv": "1078d8d98884c77b7c070480b9fb9caecc7dbfd56289ec8ed2705ce71106b37f",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_context_shape.sv": "df879146dd7dc1e375c0223c2daa622025458632b81a7a3e9f65779b9f84971b",
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv": "89bc7a0f33d0b2e071f3cba55e236d9d262cc6659b820319acb9767b1bd9fe5b",
+    "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv": "e055b8cc7362ee61a74238aca6dc4ef8046593a34211719fce74aaa4fadd4840",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_refresh_roots.sv": "0fb7006338ef90386d43da310c328d61d0d7870cfe71010e547808d17c97db72",
+    "rtl/test/qwen_static_kv/tb_refresh_context_controller.sv": "c31f02e3f188b1721a3ccea457f473fdc3242c182fa6b9db73772049bb201f09"
+   },
+   "binary_sha256": "1af8b25ccf6e5d1576fff8f1bdaab2afac80ef913de0c5c6a6ffb43a73ad690a",
+   "image_sha256": "35a1de9ecd155d604c263a4bf59fa76f9330aab980e8c83aada035e3af06bda9",
+   "expected_sha256": "b98a7a23fe88f591ec6e9f76b1d332f5949d4ff7363811bf441b78cc48d59ded",
+   "image_compiler_sha256": "33e8d03ec8fc2f68925cfc47f23d79844ff5cd29fc5ed562318da8509a3037ad",
+   "compiler_sha256": "8902c17d55ee95041a992e704b1ec38614becb213b165ea9011acd6f608fe816",
+   "scope": "component actual deterministicRR calendar+PROFILE0 JEDEC core;36persistentlayers changingT; source-derived176warmup quietwindows; excludes PHY/clock/other onchip/native chip"
+  }
+ }
+}

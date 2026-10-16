@@ -1,0 +1,44 @@
+{
+  "scope": "Actual second gate floorplan ODB dump; no routed/native claim.",
+  "source_commit": "bb557ca99",
+  "grant_source": "863313e0a",
+  "expected_bits": 5100,
+  "matched_single_shapes": 5100,
+  "geometry_errors": [],
+  "same_layer_pg_overlaps": [],
+  "pass": true,
+  "body_actual": [
+    [
+      "clk_body",
+      "M4",
+      0.0,
+      194.4,
+      0.084,
+      194.424
+    ]
+  ],
+  "adjacent_data": {
+    "rgx_data1[429]": [
+      [
+        "rgx_data1[429]",
+        "M4",
+        0.0,
+        194.592,
+        0.084,
+        194.616
+      ]
+    ],
+    "rgx_data1[430]": [
+      [
+        "rgx_data1[430]",
+        "M4",
+        0.0,
+        193.632,
+        0.084,
+        193.656
+      ]
+    ]
+  },
+  "dump_sha256": "a06e8ab75db30131517dc85616e3dd59fc69532b149bf2a4b0f4ff2a656f9a4d",
+  "assigned_tcl_sha256": "c471842d0cceaae45a946852d7cf1766417874eafabe5c35f57104c5b1d0b8e1"
+}

@@ -1,0 +1,14 @@
+{
+ "schema": "s81-l2r1100-kcopy-v1",
+ "decision": "dsfd_l2r_vr_1100x1__hx_E / __hx_W = 2 side-by-side instances of the CLOSED dsfd_l2r_vr_564x1__hx_E / __hx_W, same role. No 1100 tile.",
+ "why": "Both 1100 routes on their own faces failed GRT-0116 (hx_e-r1, hx_w_ie-r1ie). Coordinator 10-16: no seed retries; take the k-copy route.",
+ "map": {
+  "A": {"master": "564 same role", "i": "i[564:0]", "od": "oa[565:0]", "fo": "fo", "st": "st"},
+  "B": {"master": "564 same role", "i": "{28'b0 PAD, i[1100:565], i[0]}", "od[537:0]": "ob[537:0]", "od[565:538]": "NC (28 pad outputs)", "fo": "fo2", "st": "NC"},
+  "shared": "ck, cks, rs, rss to both"
+ },
+ "proof": "tb.sv: 1100 generator module vs the k-copy wrapper, all 1,110 outputs compared every cycle for 4,000 cycles with random data, including a mid-run rs/rss reset; L2R1100_KCOPY_EXACT PASS. The mutant (B lane-0 bit taken from i[1]) is rejected with L2R1100_KCOPY_MISMATCH. Run on ot-epyc4 (iverilog).",
+ "cycles": "identical: one input flop (ck), one output flop (cks), per-instance 2-flop reset synchronisers from the same rs/rss",
+ "owner_change": "S-DIE generator: add to the k-copy map (results/arch/native_pin_audit_snetfill_1015/resid_kcopy_1016.json on claude/snf-resid-1016)",
+ "views": "physical/ref_tile/s81net_l2r_vr_564x1__hx_e and __hx_w (CLOSED, on main)"
+}
