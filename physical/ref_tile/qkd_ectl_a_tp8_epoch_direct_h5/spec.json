@@ -30,7 +30,7 @@
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
    "count": 1,
-   "inst": "*u_rows*g_m?0?*u_s",
+   "inst": "*u_rows*g_macro?0?*u_s",
    "at": [
     22.464,
     43.2
@@ -40,7 +40,7 @@
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
    "count": 1,
-   "inst": "*u_rows*g_m?1?*u_s",
+   "inst": "*u_rows*g_macro?1?*u_s",
    "at": [
     137.592,
     43.2
@@ -164,7 +164,7 @@
    "ot-epyc4",
    "ot-pve1"
   ],
-  "structural_change": "KV die v1.4.3 (G3S2 head stages, Q-KVSYS-DIE request 10-15 ~20:30): production parameters STATIC_QK 1, QK_ISSUE_AGE 34, ROW_RETURN_LAT 21, HXK 5 (head extra score latency in v1.4.3; was 8 in s8). RTL, outline, pins identical to qkd_ectl_a_tp8_epoch_direct. Leaf benches are the closed kit's exact/mutant benches (default-parameter control exactness, as s8); HXK 5 composition proof is the stack owner's."
+  "structural_change": "KV die v1.4.3 (G3S2 head stages, Q-KVSYS-DIE request 10-15 ~20:30): production parameters STATIC_QK 1, QK_ISSUE_AGE 34, ROW_RETURN_LAT 21, HXK 5 (head extra score latency in v1.4.3; was 8 in s8). RTL, outline, pins identical to qkd_ectl_a_tp8_epoch_direct. Leaf benches are the closed kit's exact/mutant benches (default-parameter control exactness, as s8); HXK 5 composition proof is the stack owner's. Macro instance patterns follow STATIC_QK=1: rows are ot_qkd_static_row_ring u_rows.g_macro[m].u_s (h5 attempt 1 failed macro_place: no g_m[*] instances)."
  },
  "boundary_tcl": [
   "physical/qwen_die_masters/sram_edge_guard.tcl"
@@ -187,5 +187,15 @@
  "pin_regs": {
   "enable": false,
   "reason": "ECTL static calendar: QK_ISSUE_AGE, ROW_RETURN_LAT (=K_EXT 16 + RQD 2 + 3 response pin stages) and HXK count every boundary edge of the K-pass / row-return loop inside the RTL; synthesis-only pin registers (+1 per port) would shift the fixed-cycle issue/return by edges the RTL constants and the native benches do not see (age fault). Pin registration for this leaf must be done in RTL with the constants re-derived (KV die lead / Q-ATTN decision). Pin geometry, outline and io_flop_at_pins unchanged from the closed kit."
+ },
+ "reroute_reason": {
+  "kind": "param_change",
+  "params": {
+   "STATIC_QK": 1,
+   "QK_ISSUE_AGE": 34,
+   "ROW_RETURN_LAT": 21,
+   "HXK": 5
+  },
+  "why": "KV die v1.4.3 production parameters (Q-KVSYS-DIE 10-15 request): closed qkd_ectl_a_tp8_epoch_direct ep1 used defaults STATIC_QK 0 / ROW_RETURN_LAT 9 / HXK 0"
  }
 }
