@@ -118,7 +118,8 @@
   "reroute_reason": {
    "kind": "pin_register",
    "why": "p3 native launch FAIL bc_hr_q[295] 223.65 ps > 220: clock pin W face (y=18.4) -> S-face centre; RTL unchanged"
-  }
+  },
+  "hold_merge": "S-DIE pin-face grant (clk/rst_n W -> S centre) requested 17:3x 10-15; no adoption until granted and native audit PASS"
  },
  "defines": [
   "OT_PQ_ROM_PORTS"
