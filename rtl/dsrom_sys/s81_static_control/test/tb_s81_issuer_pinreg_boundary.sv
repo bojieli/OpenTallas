@@ -9,6 +9,15 @@ module tb_s81_issuer_pinreg_boundary;
  integer fault_fast=-1,fault_serial=-1,end_fast=-1;
 
  reg ck=0,cvk=0;always #3 ck=~ck;always #4 cvk=~cvk;
+`ifdef OT_S81_ISSUER_SPLIT_PW
+ integer root_mut=0;
+ initial begin if($value$plusargs("root_mut=%d",root_mut))begin end end
+ wire actual_ck=(root_mut==1&&fast>=260)?1'b0:ck;
+ wire actual_ckv=(root_mut==2&&serial>=10&&serial<24)?1'b0:cvk;
+ wire actual_ck_pw=(root_mut==3&&fast>=20&&fast<120)?1'b0:ck;
+`else
+ wire actual_ck=ck,actual_ckv=cvk;
+`endif
  reg rn=0;reg[52:0]ks=0;reg[35:0]pw=0;reg[7:0]plen=4;
  wire[53:0]kd;wire[5:0]st;wire[84:0]c[0:13];reg[8:0]d[0:13];reg[1:0]s[0:13];
  wire[35:0]pq_desc;wire cal_prime,cal_start;wire[11:0]cal_base;wire[12:0]cal_len;
@@ -17,13 +26,16 @@ module tb_s81_issuer_pinreg_boundary;
  always @(posedge ck)if(cal_prime)primed<=1;else if(cal_start)primed<=0;
 `ifdef S81_STATUS_C8
  dsfd_stage_seq_static_c8 dut(
- .ck(ck),.rst(rn),.ckv(cvk),.rsv(rn),.f_ks(ks),.t_kd(kd),.f_pw(pw),.f_plen(plen),.t_st(st),
+ .ck(actual_ck),.rst(rn),.ckv(actual_ckv),.rsv(rn),.f_ks(ks),.t_kd(kd),.f_pw(pw),.f_plen(plen),.t_st(st),
  .c0(c[0]),.c1(c[1]),.c2(c[2]),.c3(c[3]),.c4(c[4]),.c5(c[5]),.c6(c[6]),.c7(c[7]),.c12(c[12]),
  .d0(d[0]),.d1(d[1]),.d2(d[2]),.d3(d[3]),.d4(d[4]),.d5(d[5]),.d6(d[6]),.d7(d[7]),.d12(d[12]),
  .s0(s[0]),.s1(s[1]),.s2(s[2]),.s3(s[3]),.s4(s[4]),.s5(s[5]),.s6(s[6]),.s7(s[7]),.s12(s[12]));
 `else
  dsfd_stage_seq_static_c10 dut(
- .ck(ck),.rst(rn),.ckv(cvk),.rsv(rn),.f_ks(ks),.t_kd(kd),.f_pw(pw),.f_plen(plen),.t_st(st),
+`ifdef OT_S81_ISSUER_SPLIT_PW
+ .ck_pw(actual_ck_pw),
+`endif
+ .ck(actual_ck),.rst(rn),.ckv(actual_ckv),.rsv(rn),.f_ks(ks),.t_kd(kd),.f_pw(pw),.f_plen(plen),.t_st(st),
  .f_pq_pw(pqw),.t_pq_desc_pw(pq_desc),.calendar_prime(cal_prime),.stage_start(cal_start),.calendar_base(cal_base),
  .calendar_length(cal_len),.pq_image_sealed(1'b1),.pq_calendar_primed(primed),.pq_calendar_fault(1'b0),
  .c0(c[0]),.c1(c[1]),.c2(c[2]),.c3(c[3]),.c4(c[4]),.c5(c[5]),.c6(c[6]),.c7(c[7]),.c10(c[10]),.c12(c[12]),.c13(c[13]),

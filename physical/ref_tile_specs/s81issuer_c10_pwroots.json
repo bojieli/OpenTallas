@@ -1,0 +1,289 @@
+{
+  "name": "s81issuer_c10_pwroots",
+  "top": "dsfd_stage_seq_static_c10",
+  "kind": "tile",
+  "sources": [
+    "rtl/dsrom_sys/s81_static_control/ot_s81_fixed_issue.sv",
+    "rtl/dsrom_sys/s81_static_control/ot_s81_fixed_mailbox.sv",
+    "rtl/dsrom_sys/s81_static_control/dsfd_stage_seq_static_c.sv",
+    "rtl/dsrom_sys/s81_static_control/dsfd_stage_seq_static_c10.sv",
+    "rtl/dsrom_sys/s81_static_control/ot_s81_pq_boot_control.sv"
+  ],
+  "params": {},
+  "clock_port": "ck",
+  "reset_ports": [
+    "rst",
+    "rsv"
+  ],
+  "outline": {
+    "w": 540.0,
+    "h": 86.4,
+    "exact": true
+  },
+  "layer_cap": "M5",
+  "pins": {
+    "E": [
+      "c0",
+      "c1",
+      "c12",
+      "c2",
+      "c6",
+      "d0",
+      "d1",
+      "d12",
+      "d2",
+      "d3",
+      "d6",
+      "f_plen",
+      "f_pw",
+      "s1",
+      "s12",
+      "s2",
+      "s3",
+      "s6",
+      "s7",
+      "t_kd",
+      "t_st",
+      "c13",
+      "d13",
+      "s13",
+      "f_pq_pw",
+      "t_pq_desc_pw",
+      "calendar_prime",
+      "stage_start",
+      "calendar_base",
+      "calendar_length",
+      "pq_image_sealed",
+      "pq_calendar_primed",
+      "pq_calendar_fault"
+    ],
+    "N": [
+      "c3",
+      "c4",
+      "d4",
+      "s4",
+      "c10",
+      "d10",
+      "s10"
+    ],
+    "S": [
+      "c5",
+      "c7",
+      "ck",
+      "ckv",
+      "d5",
+      "d7",
+      "f_ks",
+      "rst",
+      "rsv",
+      "s0",
+      "s5",
+      "ck_pw"
+    ]
+  },
+  "io_tcl": "physical/s81_die_pins/issuer_pwroots/dsfd_stage_seq_static_c10.tcl",
+  "recipe": 3,
+  "outhold": false,
+  "route": {
+    "pd": 0.5,
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "pin_h": "M4",
+    "pin_v": "M3 M5",
+    "m5_pg_pitch": 2.7,
+    "hold_margin_ns": 0.03,
+    "macro_halo_um": 5.4
+  },
+  "slot_change_request": {
+    "reason": "Fresh v2b source26ab48895 CTS measured 15730 core sinks, TT insertion314.1ps/sp37.5, strict clock FAIL. Split actual9728 PW storage FF onto genuine ck_pw root, same PLL1.2GHz phase0. Registered write tuple and actual storage read feed existing scheduler at identical edges. Loaded clearing, BEGIN/SEAL, scan and command clocks unchanged. No normal or initialization edge changes versus v2b (seal->armed131). Existing serial ckv related4/3 retained. S-DIE grants added S/M5 ck_pw at271.212, old1319 requested contacts unchanged. No timing waiver; actual CTS/native/static joins owed.",
+    "outline": [
+      540,
+      86.4
+    ],
+    "generator_slot": [
+      1727.976,
+      88.536
+    ],
+    "pin_addition": {
+      "ck_pw": {
+        "face": "S",
+        "layer": "M5",
+        "x": 271.212,
+        "y": 0
+      }
+    }
+  },
+  "structural_change": "Fresh v2b source26ab48895 CTS measured 15730 core sinks, TT insertion314.1ps/sp37.5, strict clock FAIL. Split actual9728 PW storage FF onto genuine ck_pw root, same PLL1.2GHz phase0. Registered write tuple and actual storage read feed existing scheduler at identical edges. Loaded clearing, BEGIN/SEAL, scan and command clocks unchanged. No normal or initialization edge changes versus v2b (seal->armed131). Existing serial ckv related4/3 retained. S-DIE grants added S/M5 ck_pw at271.212, old1319 requested contacts unchanged. No timing waiver; actual CTS/native/static joins owed.",
+  "job": {
+    "owner": "Codex:S81 PQ control",
+    "branch": "codex/s81-issuer-v2b-0818",
+    "tag": "pw1",
+    "purpose": "c10 production stage controller, issuer v2 (2 context trees), native MIX4/PQboot faces",
+    "views_to": "physical/ref_tile/s81issuer_c10_pwroots/views",
+    "record_to": "results/rtl/ref_tile/s81issuer_c10_pwroots",
+    "extra_paths": [
+      "rtl/dsrom_sys/s81_static_control",
+      "tools/s81_static_control",
+      "tools/s81/fill2_c8_bench.sh",
+      "physical/s81_fill2",
+      "physical/s81_die_pins/fill2_gen19b/dsfd_stage_seq_static_c8.tcl",
+      "physical/s81_die_pins/fill2_gen19b/dsfd_stage_seq_static_c10_localtree.tcl",
+      "tools/s81_compile_schedule",
+      "tools/s81/issuer_pinreg_boundary_gate.py",
+      "physical/s81_die_pins/issuer_pwroots"
+    ],
+    "benches": [
+      {
+        "name": "actual_three_root_boundary_and_stop_mutants",
+        "cmd": "python3 tools/s81/issuer_pinreg_boundary_gate.py {RUN}/actual_boundary --kind c10 --spec physical/ref_tile/s81issuer_c10_pwroots/spec.json",
+        "expect": "pass",
+        "pass_regex": "ISSUER_PINREG_BOUNDARY PASS",
+        "threads": 1,
+        "peak_ram_gb": 4,
+        "needs": [
+          "yosys",
+          "iverilog"
+        ]
+      },
+      {
+        "name": "actual_pw_root_boot_runtime_exact",
+        "cmd": "python3 tools/s81_static_control/issue_pw_roots_gate.py {RUN}/pw_roots",
+        "expect": "pass",
+        "pass_regex": "ISSUE_PW_ROOTS PASS",
+        "threads": 2,
+        "peak_ram_gb": 2,
+        "needs": [
+          "iverilog"
+        ]
+      }
+    ],
+    "cycles_added": 2,
+    "notes": "Exact split of actual PW storage clock; zero edges versus v2b. Seal->armed131, stream metadata132. Command/done pin boundary +1each retained. Full static age, native3root insertion and token timing unqualified."
+  },
+  "std_area_um2": 14000,
+  "pin_regs": {
+    "clock": "ck",
+    "exclude": "^ckv$|^ck_pw$|^(f_ks|f_pw|f_pq_pw|t_kd|t_st)(\\[.*\\])?$",
+    "reason": "ckv is the actual related3:4 serial CLOCK and passes directly; rst/rsv are explicit core/serial asynchronous RESET roles and pass directly. Serial mailbox data already terminate in ckv registers and are excluded from ck data-pin stages. Measured previous transformation incorrectly flopped ckv/rsv; this correction restores actual clock/reset topology, not an exception to data pin registers.",
+    "reset": "^(rst|rsv)(\\[.*\\])?$"
+  },
+  "clock_ports": [
+    "ck",
+    "ck_pw",
+    "ckv"
+  ],
+  "macros": [],
+  "children": [],
+  "inter": [],
+  "io_flop_at_pins": {
+    "cols": 4,
+    "allow_none": true
+  },
+  "inhold": true,
+  "keep_pin_regs": true,
+  "pin_reg_split": true,
+  "hold_pad": {
+    "cell": "HB2xp67_ASAP7_75t_R"
+  },
+  "clock": "multiple_cts_roots",
+  "clock_data_paths": "related_pll_ratio",
+  "clock_relationship": {
+    "kind": "same_pll_fixed_phase",
+    "ratio": [
+      4,
+      3
+    ],
+    "phase_ps": 0
+  },
+  "defines": [
+    "OT_S81_ISSUER_SPLIT_PW"
+  ],
+  "clock_entry_domains": {
+    "core": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "ck"
+      ],
+      "inputs": [
+        "rst",
+        "f_plen",
+        "pq_image_sealed",
+        "pq_calendar_primed",
+        "pq_calendar_fault",
+        "d0",
+        "d1",
+        "d2",
+        "d3",
+        "d4",
+        "d5",
+        "d6",
+        "d7",
+        "d10",
+        "d12",
+        "d13",
+        "s0",
+        "s1",
+        "s2",
+        "s3",
+        "s4",
+        "s5",
+        "s6",
+        "s7",
+        "s10",
+        "s12",
+        "s13"
+      ],
+      "outputs": [
+        "c0",
+        "c1",
+        "c2",
+        "c3",
+        "c4",
+        "c5",
+        "c6",
+        "c7",
+        "c10",
+        "c12",
+        "c13",
+        "t_pq_desc_pw",
+        "calendar_prime",
+        "stage_start",
+        "calendar_base",
+        "calendar_length"
+      ]
+    },
+    "memory": {
+      "ratio": [
+        1,
+        1
+      ],
+      "ports": [
+        "ck_pw"
+      ],
+      "inputs": [],
+      "outputs": []
+    },
+    "serial": {
+      "ratio": [
+        4,
+        3
+      ],
+      "ports": [
+        "ckv"
+      ],
+      "inputs": [
+        "rsv",
+        "f_ks",
+        "f_pw",
+        "f_pq_pw"
+      ],
+      "outputs": [
+        "t_kd",
+        "t_st"
+      ]
+    }
+  }
+}

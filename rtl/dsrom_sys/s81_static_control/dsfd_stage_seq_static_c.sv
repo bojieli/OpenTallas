@@ -9,6 +9,9 @@ module dsfd_stage_seq_static_c #(
  parameter[13:0]ENG_PRESENT=14'h1fff
 )(
  input wire[0:0]ckv,rsv,ck,rst,
+`ifdef OT_S81_ISSUER_SPLIT_PW
+ input wire ck_pw,
+`endif
  input wire[52:0]f_ks,output wire[53:0]t_kd,
  input wire[35:0]f_pw,input wire[7:0]f_plen,output wire[5:0]t_st,
  output wire[84:0]c0,c1,c2,c3,c4,c5,c6,c7,c8,c9,c10,c11,c12,c13,
@@ -44,7 +47,10 @@ module dsfd_stage_seq_static_c #(
    cv[4],cd[336+:84],cv[3],cd[252+:84],cv[2],cd[168+:84],cv[1],cd[84+:84],cv[0],cd[0+:84]};
  wire done,kdone,slot,busy,fault;wire[3:0]code;wire[20:0]tok;wire[1:0]phase;
  ot_s81_fixed_issue #(.NOPS(NOPS),.NENG(14),.STAGE(STAGE),.ENG_PRESENT(ENG_PRESENT),.MUT(MUT))u_issue(
-  .clk(ck[0]),.rst_n(rn),.pw_v(pv),.pw_a(pd[34:28]),.pw_d(pd[27:0]),.prog_len(l2),
+  .clk(ck[0]),.rst_n(rn),
+`ifdef OT_S81_ISSUER_SPLIT_PW
+  .clk_pw(ck_pw),
+`endif.pw_v(pv),.pw_a(pd[34:28]),.pw_d(pd[27:0]),.prog_len(l2),
   .job_v(kv),.job_user(kd[51:42]),.job_pos(kd[20:0]),.job_tok(kd[41:21]),.job_rdy(),
   .busy(busy),.job_done(done),.job_kdone(kdone),.done_slot(slot),.kit_tok(tok),
   .cmd_v(cv),.cmd_d(cd),.engine_available(av),.dn_v(dv),.dn_tag(dt),

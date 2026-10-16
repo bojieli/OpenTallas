@@ -33,6 +33,9 @@ module ot_s81_fixed_issue #(
  parameter integer MUT=0
 )(
  input wire clk,rst_n,
+`ifdef OT_S81_ISSUER_SPLIT_PW
+ input wire clk_pw,
+`endif
  input wire pw_v,input wire[6:0]pw_a,input wire[27:0]pw_d,
  input wire[7:0]prog_len,
  input wire job_v,input wire[9:0]job_user,input wire[20:0]job_pos,job_tok,
@@ -187,6 +190,24 @@ module ot_s81_fixed_issue #(
   end
  end endgenerate
 
+ // The registered boot write tuple crosses a fixed same-PLL, same-phase
+ // clock boundary. Storage has no reset in the original design. Its write
+ // enable still samples rst_n and the old wr_q on exactly the original edge.
+ // No command, KIT, END, scan, seal or fault edge changes.
+`ifdef OT_S81_ISSUER_SPLIT_PW
+ wire memory_clk=clk_pw;
+`else
+ wire memory_clk=clk;
+`endif
+ always @(posedge memory_clk)begin
+  if(rst_n&&wr_q)begin
+   case(wr_p_q)
+    0:mem[wr_a_q][25:0]<=wr_d_q;
+    1:mem[wr_a_q][51:26]<=wr_d_q;
+    default:mem[wr_a_q][75:52]<=wr_d_q[23:0];
+   endcase
+  end
+ end
  always @(posedge clk or negedge rst_n)begin
   if(!rst_n)begin
    length_q<=0;phase_q<=0;start_phase_q<=0;begun<=0;sealed<=0;cfg_fault<=0;run_fault<=0;
@@ -204,14 +225,7 @@ module ot_s81_fixed_issue #(
    job_done<=0;job_kdone<=0;issued=0;wr_q<=0;
    for(e=0;e<NENG;e=e+1)if(cmd_v[e])issued=issued+1;
    // Registered row write: accepted on the previous edge by the original rules.
-   if(wr_q)begin
-    case(wr_p_q)
-     0:mem[wr_a_q][25:0]<=wr_d_q;
-     1:mem[wr_a_q][51:26]<=wr_d_q;
-     default:mem[wr_a_q][75:52]<=wr_d_q[23:0];
-    endcase
-    loaded[wr_a_q][wr_p_q]<=1'b1;
-   end
+   if(wr_q)loaded[wr_a_q][wr_p_q]<=1'b1;
    if(pw_v)begin
     if(busy||validating)begin cfg_fault<=1;if(fault_code==0)fault_code<=1;end
     else if(pw_d[27:26]==3)begin

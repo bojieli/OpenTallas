@@ -9,6 +9,9 @@
 // Mutants: OT_SSEQS_MUT_PQ_ABSENT (engine 13 masked), OT_SSEQS_MUT_ENG_ABSENT (engine 10 masked).
 module dsfd_stage_seq_static_c10 #(parameter integer NOPS=128,STAGE=0)(
  input wire ckv,rsv,ck,rst,
+`ifdef OT_S81_ISSUER_SPLIT_PW
+ input wire ck_pw,
+`endif
  input wire[52:0]f_ks,output wire[53:0]t_kd,
  input wire[35:0]f_pw,input wire[7:0]f_plen,output reg[5:0]t_st,
  input wire[35:0]f_pq_pw,output wire[35:0]t_pq_desc_pw,
@@ -46,6 +49,9 @@ module dsfd_stage_seq_static_c10 #(parameter integer NOPS=128,STAGE=0)(
 `endif
  wire[84:0]c8_nc,c9_nc,c11_nc; // absent engines: no command consumer on this die kind
  dsfd_stage_seq_static_c #(.NOPS(NOPS),.STAGE(STAGE),.ENG_PRESENT(PRESENT))u_s(
+`ifdef OT_S81_ISSUER_SPLIT_PW
+  .ck_pw(ck_pw),
+`endif
   .ckv(ckv),.rsv(rsv),.ck(ck),.rst(rst),.f_ks(f_ks),.t_kd(t_kd),.f_pw(f_pw),.f_plen(f_plen),.t_st(core_st),.job_launch(job_launch),.job_busy(job_busy),
   .c0(c0),.c1(c1),.c2(c2),.c3(c3),.c4(c4),.c5(c5),.c6(c6),.c7(c7),.c8(c8_nc),.c9(c9_nc),.c10(c10),.c11(c11_nc),.c12(c12),.c13(c13),
   .d0(d0),.d1(d1),.d2(d2),.d3(d3),.d4(d4),.d5(d5),.d6(d6),.d7(d7),.d10(d10),.d12(d12),.d13(d13),

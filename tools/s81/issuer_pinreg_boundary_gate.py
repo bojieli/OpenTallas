@@ -11,7 +11,7 @@ ROOT=Path(__file__).resolve().parents[2]
 def digest(p):return hashlib.sha256(Path(p).read_bytes()).hexdigest()
 def run(cmd,**kw):return subprocess.run(cmd,check=True,**kw)
 def main():
- a=argparse.ArgumentParser();a.add_argument('out');a.add_argument('--hook');a.add_argument('--writer',help='read-only production config writer candidate');a.add_argument('--old-wrapper');a.add_argument('--serial-wrapper',help='actual historical Make-corrupted serial data wrapper negative control');a.add_argument('--bind-existing',help='byte-bind Make/Yosys outputs to an already completed functional proof');a.add_argument('--kind',choices=['c8','c10','all'],default='all');a=a.parse_args()
+ a=argparse.ArgumentParser();a.add_argument('out');a.add_argument('--spec',type=Path,help='explicit c10 successor spec including source defines');a.add_argument('--hook');a.add_argument('--writer',help='read-only production config writer candidate');a.add_argument('--old-wrapper');a.add_argument('--serial-wrapper',help='actual historical Make-corrupted serial data wrapper negative control');a.add_argument('--bind-existing',help='byte-bind Make/Yosys outputs to an already completed functional proof');a.add_argument('--kind',choices=['c8','c10','all'],default='all');a=a.parse_args()
  out=Path(a.out).resolve();out.mkdir(parents=True,exist_ok=True)
  hook=Path(a.hook).resolve()if a.hook else ROOT/'physical/common_flow/ot_pin_regs.tcl'
  yosys=os.environ.get('YOSYS')or str(Path.home()/'.local/opentallas-tools/yosys-0.68/bin/yosys')
@@ -20,7 +20,7 @@ def main():
  sources={};receipt={'hook':str(hook),'hook_sha256':digest(hook),'qualified':False,'scope':'actual generated boundary + actual sourceRTL simulation; physicalphase/route/productionconsumer still unqualified','tops':{}}
  for kind,stem in [('c8','s81fill2_sseq_c8'),('c10','s81issuer_c10_localtree')]:
   if a.kind!='all'and a.kind!=kind:continue
-  spec=json.loads((ROOT/'tools/ref_tile/specs_s81_fill2'/f'{stem}.json').read_text());top=spec['top'];d=out/kind;d.mkdir(exist_ok=True)
+  spec=json.loads((a.spec.resolve()if a.spec else ROOT/'tools/ref_tile/specs_s81_fill2'/f'{stem}.json').read_text());top=spec['top'];d=out/kind;d.mkdir(exist_ok=True)
   kit=ROOT/'physical/ref_tile'/spec['name']/'kit.env'
   # Let bash parse the actual generated array, then pass each literal value
   # through subprocess's environment without a second shell evaluation.
@@ -52,12 +52,12 @@ def main():
   if set(env.get('OT_PIN_REGS_CLOCK','').split(','))!=wanted_clocks:raise RuntimeError('generated clock roles differ from literal declarations')
   if set(env.get('OT_PIN_REGS_RESET_PORTS','').split(','))!=set(spec['reset_ports']):raise RuntimeError('generated reset roles differ from literal declarations')
   src=[ROOT/p for p in spec['sources']];sources.update({str(p.relative_to(ROOT)):digest(p)for p in src})
-  script=d/'generate.tcl';script.write_text('yosys read_verilog -sv -DSYNTHESIS '+' '.join(map(str,src))+'\nsource {'+str(hook)+'}\n')
+  script=d/'generate.tcl';script.write_text('yosys read_verilog -sv -DSYNTHESIS '+' '.join('-D'+x for x in spec.get('defines',[]))+' '+' '.join(map(str,src))+'\nsource {'+str(hook)+'}\n')
   with (d/'yosys.log').open('w')as f:run([yosys,'-Q','-T','-c',str(script)],env=env,stdout=f,stderr=subprocess.STDOUT)
   table=(d/'ot_pin_regs.tsv').read_text();rows={}
   for l in table.splitlines()[1:]:
    v=l.split('\t');rows[v[0]]=dict(direction=v[1],width=int(v[2]),cycles=int(v[3]),why=v[4])
-  for n in ['ck','ckv','rst','rsv']:
+  for n in sorted(wanted_clocks|set(spec['reset_ports'])):
    if rows[n]['cycles']!=0 or rows[n]['why']!=('clock'if n in wanted_clocks else'reset'):raise RuntimeError('actual transformed clock/reset not direct: '+n)
   for n in ['f_ks','f_pw','t_kd','t_st']+(['f_pq_pw']if kind=='c10'else[]):
    if rows[n]['cycles']!=0:raise RuntimeError('serial data got wrong-domain pin register: '+n)
@@ -75,7 +75,7 @@ def main():
    (d/'actual_core.sv').write_text(renamed)
    actual_src=[p if p!=top_src else d/'actual_core.sv'for p in src]
    tb=ROOT/'rtl/dsrom_sys/s81_static_control/test/tb_s81_issuer_pinreg_boundary.sv'
-   compile_cmd=['iverilog','-g2012']+(['-DS81_STATUS_C8']if kind=='c8'else[])+['-s','tb_s81_issuer_pinreg_boundary','-o',str(d/'sim')]
+   compile_cmd=['iverilog','-g2012']+['-D'+x for x in spec.get('defines',[])]+(['-DS81_STATUS_C8']if kind=='c8'else[])+['-s','tb_s81_issuer_pinreg_boundary','-o',str(d/'sim')]
    compile_src=list(map(str,actual_src))+[str(d/'ot_pin_regs_wrapper.v'),str(tb)]
    run(compile_cmd+compile_src)
    sys.path.insert(0,str(ROOT/'tools/s81_static_control'))
@@ -85,6 +85,15 @@ def main():
    for mode in [0,1]:
     with (d/f'mode{mode}.log').open('w')as f:run(['vvp','-n',str(d/'sim'),f'+mode={mode}'],cwd=d,stdout=f,stderr=subprocess.STDOUT)
     print((d/f'mode{mode}.log').read_text().strip(),flush=True)
+   if 'OT_S81_ISSUER_SPLIT_PW'in spec.get('defines',[]):
+    root_cases=[]
+    for root_mut in [1,2,3]:
+     logfile=d/f'root_stop_{root_mut}.log'
+     with logfile.open('w')as f:r=subprocess.run(['vvp','-n',str(d/'sim'),'+mode=0',f'+root_mut={root_mut}'],cwd=d,stdout=f,stderr=subprocess.STDOUT)
+     text=logfile.read_text();ok=r.returncode!=0 and 'FATAL:'in text
+     if not ok:raise RuntimeError('Actual clock root-stop mutant escaped: '+str(root_mut))
+     root_cases.append(dict(root=['ck','ckv','ck_pw'][root_mut-1],exit_code=r.returncode,PASS=ok,log_sha256=digest(logfile)))
+    receipt.setdefault('root_stop_mutants',{})[kind]=root_cases
    if kind=='c8'and a.old_wrapper:
     old=Path(a.old_wrapper).resolve();run(compile_cmd[:-1]+[str(d/'old_mutant')]+list(map(str,actual_src))+[str(old),str(tb)])
     with (d/'old_registered_clock_reset_mutant.log').open('w')as f:r=subprocess.run(['vvp','-n',str(d/'old_mutant'),'+mode=0'],cwd=d,stdout=f,stderr=subprocess.STDOUT)

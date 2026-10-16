@@ -4,12 +4,24 @@ module tb_s81_fixed_issue;
 `define ISSUER_MUT 0
 `endif
  reg clk=0;always #5 clk=~clk;
+`ifdef OT_S81_ISSUER_SPLIT_PW
+ integer root_mut=0;
+ initial begin if($value$plusargs("root_mut=%d",root_mut))begin end end
+ wire issue_clock=(root_mut==1&&tick>=1000)?1'b0:clk;
+ wire memory_clock=(root_mut==2&&tick>=100&&tick<200)?1'b0:clk;
+`else
+ wire issue_clock=clk;
+`endif
  reg rst_n=0,pw_v=0,job_v=0;reg[6:0]pw_a=0;reg[27:0]pw_d=0;
  reg[7:0]plen=128;reg[9:0]user=0;reg[20:0]pos=0,tok=0;
  wire jr,busy,done,kdone,slot,fault;wire[20:0]ktok;wire[3:0]code;wire[1:0]phase;
  wire[12:0]cv;wire[1091:0]cd;reg[12:0]av=13'h1fff,dv=0;reg[103:0]dt=0;
  wire[31:0]nj,nc;
- ot_s81_fixed_issue #(.STAGE(7),.MUT(`ISSUER_MUT))dut(.clk(clk),.rst_n(rst_n),.pw_v(pw_v),.pw_a(pw_a),.pw_d(pw_d),.prog_len(plen),
+ ot_s81_fixed_issue #(.STAGE(7),.MUT(`ISSUER_MUT))dut(.clk(issue_clock),
+`ifdef OT_S81_ISSUER_SPLIT_PW
+ .clk_pw(memory_clock),
+`endif
+ .rst_n(rst_n),.pw_v(pw_v),.pw_a(pw_a),.pw_d(pw_d),.prog_len(plen),
  .job_v(job_v),.job_user(user),.job_pos(pos),.job_tok(tok),.job_rdy(jr),.busy(busy),.job_done(done),.job_kdone(kdone),.done_slot(slot),.kit_tok(ktok),
  .cmd_v(cv),.cmd_d(cd),.engine_available(av),.dn_v(dv),.dn_tag(dt),.fault(fault),.fault_code(code),.st_jobs(nj),.st_cmds(nc),.phase(phase));
  reg[34:0]pwmem[0:385];reg[12:0]due[0:1599];reg[103:0]tags[0:1599];
