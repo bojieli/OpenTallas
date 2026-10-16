@@ -3335,7 +3335,8 @@
    "images_committed": [
     "img_r3/S81H-15_bank128_floorplan.png",
     "img_r3/S81H-15_bank128_density.png"
-   ]
+   ],
+   "owner_ack": "S-ENGRAM+NORM 10:05: HC-COMB-3 bank128 split variants with (b) SRAM R90 ~130x216 preferred, (a)/(c) fallbacks"
   },
   {
    "id": "S81F-16",
@@ -3367,7 +3368,8 @@
    "images_committed": [
     "img_r3/S81F-16_sstn_x2_gate_floorplan.png",
     "img_r3/S81F-16_sstn_x2_gate_density.png"
-   ]
+   ],
+   "owner_ack": "S-NET+FILL 10:00: x2 retired (main 1aed11f67), 1,119 inst -> closed base566+payload536 split; S-DIE rebind requested"
   },
   {
    "id": "D-S81-04",
