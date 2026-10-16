@@ -485,6 +485,53 @@
   },
   {
    "design": "s81",
+   "unit": "HC.CTR_COLUMN_YBEAT (ctra/ctrb_column return: y-beat register stage, +1 return cycle on every HC NORM pre job; removes 3,558 joins > 500 um, worst 815.7 um)",
+   "group": "HC.CTR_COLUMN_YBEAT",
+   "measured": 2.0,
+   "price": 1.0,
+   "unit_of_measure": "cycles",
+   "unit_ratio": 2.0,
+   "e2e_loss_pct": 0.01,
+   "binding_workload": "ar",
+   "per_workload": {
+    "ar": {
+     "model": "token-path longest path",
+     "base_cycles": 828866.4,
+     "cycles": 828947.4,
+     "added_cycles": 81.0,
+     "runs_per_token": 81,
+     "critical_runs": 81,
+     "overlapped_runs": 0,
+     "other_price_nodes_skipped": 0,
+     "naive_added_cycles": 81.0,
+     "wave_positions": 0,
+     "wave_added_cycles_per_position": 0.0,
+     "e2e_loss_pct": 0.01
+    },
+    "mtp": {
+     "model": "token-path longest path",
+     "base_cycles": 1177516.1,
+     "cycles": 1177613.1,
+     "added_cycles": 97.0,
+     "runs_per_token": 87,
+     "critical_runs": 87,
+     "overlapped_runs": 0,
+     "other_price_nodes_skipped": 0,
+     "naive_added_cycles": 87.0,
+     "wave_positions": 5,
+     "wave_added_cycles_per_position": 2.0,
+     "e2e_loss_pct": 0.008
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "",
+   "evidence_grade": "committed_bench",
+   "date": "2026-10-16",
+   "status": "proposed",
+   "note": "S-ENGRAM+NORM HC-COLUMN (coordinator-approved 10-16 ~07:00; el1015-s81-surx-engram.log 06:59): column RTL 82424ff85 + proposed y-beat relay; on top of the +1 already accepted for the columns. Priced +1 cycle on every hc_pre token-path node (upper: no overlap credit). Native/physical not yet built."
+  },
+  {
+   "design": "s81",
    "unit": "HC.H_MAT_ENGRAM (same-stage h materialization for the Engram layers: H_STORE before eng.dot/hh + H_LOAD of the Engram-updated h before the NORM, unpriced serial HC jobs)",
    "group": "HC.H_MAT_ENGRAM",
    "measured": 723.0,
@@ -568,6 +615,53 @@
    "share_basis": "modelled",
    "accepted_date": "2026-10-14",
    "acceptance_note": "owner-accepted 2026-10-14 at total ~11.05% of 15%; basis as recorded (measured unit ratio x modelled share where stated)"
+  },
+  {
+   "design": "s81",
+   "unit": "MIX4.BANDED_COPY (dsfd_engram_mix4_banded: chunk8->sum band-relay stage, MIX4 pin-to-pin 810 -> 811; write span 640..799; RS/VM_LAT/BC/WRITE_COMMIT unchanged)",
+   "group": "MIX4.BANDED_COPY",
+   "measured": 811.0,
+   "price": 810.0,
+   "unit_of_measure": "cycles",
+   "unit_ratio": 1.0012,
+   "e2e_loss_pct": 0.0,
+   "binding_workload": "ar",
+   "per_workload": {
+    "ar": {
+     "model": "token-path longest path",
+     "base_cycles": 828866.4,
+     "cycles": 828870.4,
+     "added_cycles": 4.0,
+     "runs_per_token": 6,
+     "critical_runs": 4,
+     "overlapped_runs": 2,
+     "other_price_nodes_skipped": 0,
+     "naive_added_cycles": 6.0,
+     "wave_positions": 0,
+     "wave_added_cycles_per_position": 0.0,
+     "e2e_loss_pct": 0.0
+    },
+    "mtp": {
+     "model": "token-path longest path",
+     "base_cycles": 1177516.1,
+     "cycles": 1177520.1,
+     "added_cycles": 4.0,
+     "runs_per_token": 4,
+     "critical_runs": 4,
+     "overlapped_runs": 0,
+     "other_price_nodes_skipped": 0,
+     "naive_added_cycles": 4.0,
+     "wave_positions": 5,
+     "wave_added_cycles_per_position": 0.0,
+     "e2e_loss_pct": 0.0
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "",
+   "evidence_grade": "committed_bench",
+   "date": "2026-10-16",
+   "status": "proposed",
+   "note": "S-ENGRAM+NORM MIX4-PARENT claude/s81-mix4-parent-0600 1ce30c65c/e1a3198b2/880dc9d88: exact 20480 w/640 wr/4161 rd PASS at 811 cycles (plain + VM-banked), MUT1/26/27/28 rejected; 0 TT-negative joins (was 248, worst -146.99 ps). Priced +1 on every eng.gate/hh/add node (upper). Compiler: die_layer_stim --mix-p2p 811 once the banded cluster is on main."
   },
   {
    "design": "s81",
@@ -1637,11 +1731,11 @@
   },
   "s81": {
    "accepted_pct": 23.391,
-   "proposed_pct": 1.247,
-   "accepted_plus_proposed_pct": 24.638,
+   "proposed_pct": 1.257,
+   "accepted_plus_proposed_pct": 24.648,
    "limit_pct": 15.0,
    "accepted_rows": 11,
-   "proposed_rows": 2,
+   "proposed_rows": 4,
    "headroom_pct": -8.391,
    "owner_exception_rows": 2,
    "over_limit_by_owner_exception": true
