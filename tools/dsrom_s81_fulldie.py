@@ -10162,16 +10162,98 @@ def masters_r8(m, k=1):
         _apply_pin_overrides(Mx, it)
         if k == 1:
             _assigned_physical_pins(Mx, ports)
+            _resolve_pin_collisions(Mx)
         if PEER_PIN_POS and it.kind in PEER_PIN_KINDS:
             m['_laid_all'][mst] = Mx
         if CK_RULE:
             _ck_rule(Mx)
+    if k == 1:
+        m['pin_collisions'] = {k_: v_ for k_, v_ in PIN_COLLISIONS.items() if k_ in M}
     if STN_PIN_ALT and k == 1:
         m['stn_pin_alt'] = _station_pin_layers(M)
     if k > 1:
         for name, ports in real_ports_r8().items():
             M[name] = _spread_ports(_real_master_bundled(REAL_FILES[name], k, ports), k)
     return M
+
+
+PIN_COLLISIONS = {}     # master -> {'moved': [...], 'fixed_conflicts': [...]} (S-DIE 0600 10-16, c26b_r DRT-0073)
+
+
+def _resolve_pin_collisions(Mx):
+    """S-DIE 0600 10-16 (c26b_r pin access DRT-0073): a generated face group laid by the face rule after the exact
+    pins (closed-view pins of populate(), die-assigned 'rects') can sit ON another port's pins: dsfd_bf_front_static
+    f_prog[1] / [3] on x0[175] / [176] (S face, M5), dsfd_sp_vm t_pqx[2] on f_capture[9116].  Two nets on one rectangle
+    have no access point.  Every movable ('face') group that touches a pin of ANOTHER port on the same layer moves, at
+    its own pitch, to the free stretch of its face nearest its old centre (then the other faces); conflicts between two
+    fixed groups ('rects') are recorded, not moved (they are the record owner's defect)."""
+    def rects_of():
+        by = defaultdict(list)
+        for nm, ly, r in pin_rects(Mx, 1, {}):
+            by[nm.rsplit('[', 1)[0]].append((ly, r))
+        return by
+    def hit(a, b):
+        return a[0] < b[2] - 1e-6 and b[0] < a[2] - 1e-6 and a[1] < b[3] - 1e-6 and b[1] < a[3] - 1e-6
+    movable = lambda q_: Mx.ports[q_][0] == 'face' and '+' not in str(Mx.ports[q_][3])
+    by = rects_of()
+    grid = defaultdict(list)          # (layer, 0.5-um cell x, cell y) -> [(port, rect)]
+    pairs = set()
+    for q_, lst in by.items():
+        for ly, r in lst:
+            cells = {(ly, i_, j_) for i_ in range(int(r[0] // 0.5), int(r[2] // 0.5) + 1)
+                     for j_ in range(int(r[1] // 0.5), int(r[3] // 0.5) + 1)}
+            for c_ in cells:
+                for q2, r2 in grid[c_]:
+                    if q2 != q_ and hit(r, r2):
+                        pairs.add(tuple(sorted((q_, q2))))
+            for c_ in cells:
+                grid[c_].append((q_, r))
+    clash = set(); fixed_bad = []
+    for a, b in sorted(pairs):
+        if movable(b):
+            clash.add(b)
+        elif movable(a):
+            clash.add(a)
+        else:
+            fixed_bad.append((a, b))
+    moved = []
+    for port in sorted(clash):
+        _, w, f0, ly, c0, pt = Mx.ports[port]
+        off, p = TRK[ly]
+        span = w * p * pt
+        others = [(l_, r_) for q_, lst in rects_of().items() if q_ != port for l_, r_ in lst if l_ == ly]
+        best = None
+        for f in (f0,) + tuple(x for x in 'NSEW' if x != f0):
+            L = Mx.h if f in 'EW' else Mx.w
+            if span + 4 * p > L:
+                continue
+            band = (lambda r: r[1] <= 0.2) if f == 'S' else (lambda r: r[3] >= Mx.h - 0.2) if f == 'N' else \
+                   (lambda r: r[0] <= 0.2) if f == 'W' else (lambda r: r[2] >= Mx.w - 0.2)
+            busy = sorted(((r[0], r[2]) if f in 'NS' else (r[1], r[3])) for l_, r in others if band(r))
+            gap = 2 * p
+            cands = [2 * p] + [e + gap for _, e in busy]
+            cands += [s - gap - span for s, _ in busy]
+            for st in cands:
+                if st < 2 * p or st + span > L - 2 * p:
+                    continue
+                if any(st - gap < e and s < st + span + gap for s, e in busy):
+                    continue
+                c = st + span / 2
+                d = abs(c - c0) + (0 if f == f0 else 1e6)
+                if best is None or d < best[0]:
+                    best = (d, f, c)
+            if best is not None and best[1] == f0:
+                break
+        if best is None:
+            raise ValueError(f'{Mx.name}.{port}: no free stretch for {w} pins on any face (pin collision)')
+        Mx.ports[port] = ('face', w, best[1], ly, best[2], pt)
+        moved.append(dict(port=port, bits=w, layer=ly, face_from=f0, face_to=best[1], centre_from=round(c0, 3),
+                          centre_to=round(best[2], 3)))
+    if moved or fixed_bad:
+        PIN_COLLISIONS[Mx.name] = dict(moved=moved, fixed_conflicts=[list(x) for x in fixed_bad[:20]],
+                                       fixed_conflict_pairs=len(fixed_bad))
+        print('OT_PIN_COLLISION %s moved %d fixed_conflicts %d %s' % (Mx.name, len(moved), len(fixed_bad),
+              [mv['port'] for mv in moved][:6]), file=sys.stderr, flush=True)
 
 
 def _ck_rule(Mx, min_l=300.0):
