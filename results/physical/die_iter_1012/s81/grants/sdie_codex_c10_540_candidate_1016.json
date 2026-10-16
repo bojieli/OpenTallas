@@ -1,0 +1,67 @@
+{
+ "schema": "opentallas.s81.die_lead_grant.v1",
+ "time": "2026-10-16T03:04:38.948921-07:00",
+ "by": "Codex S-DIE under coordinator delegation",
+ "decision": "PROVISIONAL GRANT c10 measured-candidate geometry inside current reservation; actual CTS/placed image/strict native gates and peer endpoint regeneration required before routing/adoption. Distinct from c8.",
+ "master": "dsfd_stage_seq_static_c10",
+ "params": {
+  "NOPS": 128,
+  "STAGE": 0
+ },
+ "source_commit": "24c3147d8",
+ "candidate_outline_um": [
+  540,
+  86.4
+ ],
+ "reservation_geometry_source": "17b13fb0637869d53580a1084bdd250d18828d9b:results/physical/die_iter_1012/s81/canonical_widehub_1015/vmc_26b/hub_layout.json",
+ "reservation_um": [
+  10887.264,
+  15806.88,
+  1727.976,
+  88.536
+ ],
+ "candidate_origin": "reservation SW corner",
+ "pin_tcl": "physical/s81_die_pins/fill2_gen19b/dsfd_stage_seq_static_c10_localtree.tcl",
+ "pin_tcl_sha256": "c5a8b404611d37f401cdf613dd2a92494ed1cd279bf893788503bd45e249a4c4",
+ "clock_reset_sha256": "d141db3e5be57f430ae6d789fbb7968c5251a335cd18d0597f8aaaab8c52c8f3",
+ "south_M5_clock_reset_um": {
+  "ck": [
+   270.384,
+   0
+  ],
+  "ckv": [
+   270.528,
+   0
+  ],
+  "rst": [
+   270.192,
+   0
+  ],
+  "rsv": [
+   270,
+   0
+  ]
+ },
+ "limitations": [
+  "Exact source24c3147d8 source-pinned CTS/placement still running; route only if physical/native prerequisites pass.",
+  "Current c26b immutable c8 stays unchanged. Additional c10 engine/PQ ports have no inherited c8 qualification.",
+  "Future GEN must regenerate all actual incident paths/stages on the shorter outline and new port lattice.",
+  "No TT/FF/DRC/clock/bench/mutant/price/throughput requirement waived."
+ ],
+ "peer_directions": {
+  "engine10_c_d_s": "N toward MIX4 S-W command face",
+  "engine13_c_d_s_and_PQboot_calendar": "E through existing under-VM floor and east seam toward PQ",
+  "host_f_pq_pw": "E toward host W peer"
+ },
+ "geometric_E_M4_census": {
+  "pins": 791,
+  "span_um": 84,
+  "min_pitch_um": 0.096,
+  "single_layer_track_cut": 0.4514
+ },
+ "visual_inspection": {
+  "path": "/home/ubuntu/artifacts/s81-issuer-localtree0253/c10_pinplan.png",
+  "personally_viewed": true,
+  "finding": "N/S ports span full width with centered two-clock south entries, crowded E face uses 2-track lattice. Empty core has no placed cells/clock evidence yet; geometry alone not qualification."
+ }
+}
