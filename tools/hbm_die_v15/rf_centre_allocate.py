@@ -83,13 +83,15 @@ def main():
                 failures.append(dict(route=name,index=k,reason='no legal footprint before480um deadline'))
                 break
         route['allocated_hop_um']=chain+[total-previous]
+    routes=[dict(route=x['source']+'>'+x['destination'],path=x['path'],length_um=x['length_um'],
+                 allocated_hop_um=[round(v,3) for v in x.get('allocated_hop_um',[])]) for x in r['routes']]
     out=dict(schema='opentallas.hbm.rf_centre_allocation.v1',qualification='GEOMETRIC_FOOTPRINTS_ONLY',
-             cells=cells,expected_cells=576,placed_cells=len(cells),failures=failures,
+             routes=routes,cells=cells,expected_cells=576,placed_cells=len(cells),failures=failures,
              area_mm2=len(cells)*side*side/1e6,physical_view='hbfd_rly_48 must be source-bound and native-audited before adoption',
              max_allocated_hop_um=max((max(x.get('allocated_hop_um',[0])) for x in r['routes']),default=0),
              all_36_stage_routes_allocated=len(cells)==576 and not failures)
     (d/'rf_centre_allocation.json').write_text(json.dumps(out,indent=1)+'\n')
-    print(json.dumps({k:v for k,v in out.items() if k!='cells'}))
+    print(json.dumps({k:v for k,v in out.items() if k not in ('cells','routes')}))
     import matplotlib
     matplotlib.use('Agg')
     import matplotlib.pyplot as plt

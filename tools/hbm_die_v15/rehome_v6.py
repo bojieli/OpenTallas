@@ -16,6 +16,18 @@ Rules:
     grant_sm / grant_core: same faces and order, new pin windows from the plan's pin file);
  4. audit: every die-level footprint inside the die (20 um edge), no overlap between die-level footprints or with plan
     blocks they do not represent, every relay/PC home point outside foreign hard footprints.
+H-DIE-V790 10-16 (core4_sfu2_su2825; the tall 480-um hub covers the v5 translation targets).  Structural homes:
+ 5. a plan-block slot granted only pin WINDOWS (no exact pins, e.g. hc_eng) takes the plan outline as well as its origin;
+ 6. a translated slot that sat on the 20-um die edge in the old plan keeps that edge exactly (v5 host_N overhung it by
+    0.024 um through rounding; translation alone cannot repair that);
+ 7. calendar_<q> (hfd_hgi_vm_calendar; E face = 187-bit hub schedule, W = cfg, S = status) is homed AGAINST the band-side
+    face of vmh_<q> across a 21.6-um channel, at the first y (from the quadrant's die-edge end of the hub) whose span
+    clears every plan block, the hub's face pin windows and the RF footprints; orient mirrors per quadrant (SW R0,
+    SE MY, NW MX, NE R180) so the E face always faces the hub;
+ 8. with <plan>/rf_centre_allocation.json (tools/hbm_die_v15/rf_centre_routes.py + rf_centre_allocate.py on the plan)
+    the SU RF relay homes are the allocated standard-48 footprint centres (production 36 stages); every footprint is
+    audited as a rectangle against hard footprints and against the other footprints.  Without that file (v6b) the v5
+    homes are translated as before.
 """
 import argparse, copy, json, math, subprocess, sys
 from pathlib import Path
@@ -71,6 +83,7 @@ def main():
     pd, od = ROOT / a.plan, ROOT / a.old
     P6 = json.loads((pd / 'compact.P.json').read_text()); P5 = json.loads((od / 'compact.P.json').read_text())
     M6 = json.loads((pd / 'compact.metrics.json').read_text()); W, H = M6['die_um']
+    M5 = json.loads((od / 'compact.metrics.json').read_text())
     pins6 = json.loads(next((pd / 'pins').glob('*.pins.json')).read_text())
     cp = ROOT / a.contract
     C = json.loads(cp.read_text())
@@ -92,7 +105,7 @@ def main():
         s['origin'] = dict(x=round(b['x'], 3), y=round(b['y'], 3), orient=o.get('orient', 'R0'))
         if s.get('placed_footprint'):
             s['placed_footprint'] = dict(s['placed_footprint'])
-        if s['name'].startswith(('sm_', 'su_', 'sucore_', 'vmh_')) and \
+        if (s['name'].startswith(('sm_', 'su_', 'sucore_', 'vmh_')) or (s.get('pin_windows') and not s.get('pins'))) and \
                 (abs(s['outline']['w'] - b['w']) > 1e-3 or abs(s['outline']['h'] - b['h']) > 1e-3):
             log['resized'].append(dict(slot=s['name'], old=s['outline'], new=dict(w=b['w'], h=b['h'])))
             s['outline'] = dict(w=b['w'], h=b['h'])
@@ -124,12 +137,80 @@ def main():
         fp = s.get('placed_footprint') or s['outline']
         cx, cy = o['x'] + fp['w'] / 2, o['y'] + fp['h'] / 2
         dx, dy, k = anchor(cx, cy, P5, P6)
-        s['origin'] = dict(x=round(o['x'] + dx, 3), y=round(o['y'] + dy, 3), orient=o.get('orient', 'R0'))
-        log['translated'].append(dict(slot=s['name'], anchor=k, dx=round(dx, 3), dy=round(dy, 3)))
+        nx, ny = round(o['x'] + dx, 3), round(o['y'] + dy, 3)
+        W5, H5 = M5['die_um']
+        edge = []                                            # rule 6
+        if abs(o['y'] + fp['h'] - (H5 - 20)) < 1.0:
+            ny = round(H - 20 - fp['h'], 3); edge.append('N')
+        if abs(o['y'] - 20) < 1.0:
+            ny = 20.0; edge.append('S')
+        if abs(o['x'] + fp['w'] - (W5 - 20)) < 1.0:
+            nx = round(W - 20 - fp['w'], 3); edge.append('E')
+        if abs(o['x'] - 20) < 1.0:
+            nx = 20.0; edge.append('W')
+        s['origin'] = dict(x=nx, y=ny, orient=o.get('orient', 'R0'))
+        log['translated'].append(dict(slot=s['name'], anchor=k, dx=round(nx - o['x'], 3), dy=round(ny - o['y'], 3),
+                                      **(dict(edge_kept=edge) if edge else {})))
+    # 8. RF relay footprints from the plan's RF route allocation
+    rfa_path = pd / 'rf_centre_allocation.json'
+    rf_fp = []
+    if rfa_path.exists():
+        rfa = json.loads(rfa_path.read_text())
+        assert rfa['all_36_stage_routes_allocated'] and not rfa['failures'], 'RF allocation incomplete'
+        rf_fp = [(c['name'], c['rect']) for c in rfa['cells']]
+    # 7. calendar homes against the hub's band-side face
+    MIRROR = dict(SW='R0', SE='MY', NW='MX', NE='R180')
+    for q in ('SW', 'SE', 'NW', 'NE'):
+        s = S.get(f'calendar_{q}')
+        if not s or f'vmh_{q}' not in P6:
+            continue
+        hb, cw, chh, ch = P6[f'vmh_{q}'], s['outline']['w'], s['outline']['h'], 21.6
+        east = q.endswith('E')                               # SE/NE: band lies east of the hub
+        hubface = 'E' if east else 'W'
+        x = hb['x'] + hb['w'] + ch if east else hb['x'] - ch - cw
+        wins = [(p['offset_um'], p['offset_um'] + p['span_um']) for p in pins6['blocks'][f'vmh_{q}']['faces'].get(hubface, {}).get('pins', [])]
+        north = q.startswith('N')
+        obst = [b for k, b in P6.items() if k != f'vmh_{q}'] + [r for _, r in rf_fp]
+        found = None
+        for step in range(int(hb['h'] / 2.16)):
+            off = step * 2.16                                 # from the die-edge end of the hub
+            y = hb['y'] + hb['h'] - off - chh if north else hb['y'] + off
+            lo = y - hb['y']
+            if lo < 0 or lo + chh > hb['h']:
+                continue
+            if any(a < lo + chh and lo < b for a, b in wins):
+                continue
+            if any(x - ch < b['x'] + b['w'] and b['x'] < x + cw + ch and y - ch < b['y'] + b['h'] and b['y'] < y + chh + ch for b in obst):
+                continue
+            found = (round(x, 3), round(y, 3)); break
+        assert found, ('no calendar home beside', q)
+        o = s['origin']
+        oc = (o['x'] + cw / 2, o['y'] + chh / 2); nc = (found[0] + cw / 2, found[1] + chh / 2)
+        s['origin'] = dict(x=found[0], y=found[1], orient=MIRROR[q])
+        s['home_rule'] = (f'H-DIE-V790 10-16: against vmh_{q} {hubface} face across a 21.6-um channel, clear of plan blocks, '
+                          f'hub face pin windows and RF footprints; E (hub) face toward the hub')
+        for t in log['translated']:
+            if t['slot'] == s['name']:
+                t.update(rehomed=dict(rule='calendar beside hub', origin=s['origin'],
+                                      move_um=round(abs(nc[0] - oc[0]) + abs(nc[1] - oc[1]), 3), hub_gap_um=ch))
     for h in C['pc_homes']['homes'].values():
         h['x'], h['y'], _ = tr(h['x'], h['y'])
-    for r in C['su_rf_relays_v7']['routes']:
-        r['homes'] = [list(tr(x, y)[:2]) for x, y in r['homes']]
+    if rf_fp:
+        rr = {x['route']: x for x in rfa['routes']}
+        for r in C['su_rf_relays_v7']['routes']:
+            key = f"{r['src']}>{r['dst']}"
+            cells = sorted((c for c in rfa['cells'] if c['route'] == key), key=lambda c: c['index'])
+            assert len(cells) == r['stages'] == 36, (key, len(cells))
+            r['homes'] = [[round(c['rect']['x'] + c['rect']['w'] / 2, 3), round(c['rect']['y'] + c['rect']['h'] / 2, 3)] for c in cells]
+            r['footprints'] = [dict(name=c['name'], cell=c['cell'], **c['rect']) for c in cells]
+            r['path'] = rr[key]['path']; r['length_um'] = rr[key]['length_um']
+            hops = rr[key]['allocated_hop_um']
+            r['max_hop_um'] = max(hops) if hops else r.get('max_hop_um')
+        C['su_rf_relays_v7']['rule'] = (f'H-DIE-V790 10-16: allocated standard-48 footprints on the centre-route witness '
+                                       f'({a.plan}/rf_centre_routes.json + rf_centre_allocation.json; geometry only)')
+    else:
+        for r in C['su_rf_relays_v7']['routes']:
+            r['homes'] = [list(tr(x, y)[:2]) for x, y in r['homes']]
     for r in C.get('request_slots', []):
         for key in ('groups', 'port_groups'):
             for g in r.get(key, []) or []:
@@ -211,6 +292,19 @@ def main():
             hit = inside(x, y)
             if hit:
                 bad_pts.append((f"rf {r['src']}>{r['dst']}", hit)); break
+    tops_rects = tops + others                           # RF footprints may not overlap ANY die-level footprint
+    for n, b in rf_fp:
+        x, y, w, h = b['x'], b['y'], b['w'], b['h']
+        hit = [t[0] for t in tops_rects if x < t[1] + t[3] - 1e-6 and t[1] < x + w - 1e-6 and y < t[2] + t[4] - 1e-6 and t[2] < y + h - 1e-6]
+        if x < 20 - 1e-6 or y < 20 - 1e-6 or x + w > W - 20 + 1e-6 or y + h > H - 20 + 1e-6:
+            outside.append(n)
+        if hit:
+            bad_pts.append((n, hit))
+    for i in range(len(rf_fp)):
+        for j in range(i + 1, len(rf_fp)):
+            p_, q_ = rf_fp[i][1], rf_fp[j][1]
+            if p_['x'] < q_['x'] + q_['w'] - 1e-6 and q_['x'] < p_['x'] + p_['w'] - 1e-6 and p_['y'] < q_['y'] + q_['h'] - 1e-6 and q_['y'] < p_['y'] + p_['h'] - 1e-6:
+                ov.append((rf_fp[i][0], rf_fp[j][0]))
     C['version'] = int(C.get('version', 1)) + 1
     C['floorplan'] = dict(file=str(a.plan) + '/compact.P.json', candidate=Path(a.plan).name, adopted=a.adopted,
                           die_um=[round(W, 3), round(H, 3)], metrics=M6.get('metrics'), previous=C.get('floorplan'))
