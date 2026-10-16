@@ -374,6 +374,67 @@ module ot_vms_bank_static_face_roots #(
     end
     always @(posedge clk_local[10] or negedge rn)if(!rn)dq_done<=0;else dq_done<=s2w_v&&s2w_p==4'(WG+4);
     always @(posedge clk_local[8] or negedge rn)if(!rn)kq_done<=0;else kq_done<=s2w_v&&s2w_p==4'(WG);
+    always @(posedge clk_local[11] or negedge rn)if(!rn)xq_done<=0;else xq_done<=s2w_v&&s2w_p==4'(WG+1);
+    always @(posedge clk_local[9] or negedge rn)if(!rn)xq2_done<=0;else xq2_done<=s2w_v&&s2w_p==4'(WG+3);
+    // capture flops: the only load of the macro outputs (no enable, no reset)
+    always @(posedge clk_local[7]) begin : mcd
+        reg [255:0] dat; reg [55:0] ck;
+        mr_p <= s2r_p; mr_mir <= s2r_mir; mr_tag <= s2r_tag; mw_p <= s2w_p; mw_tag <= s2w_tag;
+        c_p <= mr_p; c_mir <= mr_mir; c_tag <= mr_tag; c_a <= rdA; c_b <= rdB[111:0]; c_c <= rdC; cw_tag <= mw_tag;
+        d_p <= c_p; d_tag <= c_tag; dw_tag <= cw_tag;
+        dat = c_mir ? c_c : c_a; ck = c_mir ? c_b[111:56] : c_b[55:0];
+        d_dat <= dat;
+        for (integer k = 0; k < 8; k = k + 1) begin : dk
+            reg [6:0] sk; sk = chk(dat[k*32 +: 32]) ^ ck[k*7 +: 7];
+            d_syn[k*7 +: 7] <= sk;
+            // strap3 (vm_strap_q2 strap1 TT -71.17: d_syn -> 7-b column match -> flip -> 2-face wire -> pr_d/rr_d):
+            // the single-bit flip mask is decoded on the D edge (COLS are weight-3, never 0, so s == 0 flips nothing);
+            // R keeps one XOR before the long face wires.  Same edges, bit-exact.
+            for (integer i = 0; i < 32; i = i + 1) d_flip[k*32 + i] <= (sk == COLS[i*7 +: 7]);
+        end
+    end
+    // R: correct, count, respond. Explicit balanced CE population tree keeps
+    // the same response/count edge and avoids serial eight-word accumulation.
+    reg [255:0] cor; wire [3:0] nce; reg [7:0] ce_word; reg nue;
+    wire [1:0] ce_pair[0:3];wire [2:0] ce_quad[0:1];
+    for(genvar cp=0;cp<4;cp=cp+1)begin:g_ce_pair
+        assign ce_pair[cp]={1'b0,ce_word[2*cp]}+{1'b0,ce_word[2*cp+1]};
+    end
+    for(genvar cq=0;cq<2;cq=cq+1)begin:g_ce_quad
+        assign ce_quad[cq]={1'b0,ce_pair[2*cq]}+{1'b0,ce_pair[2*cq+1]};
+    end
+    assign nce={1'b0,ce_quad[0]}+{1'b0,(MUT==3?3'd0:ce_quad[1])};
+    always @* begin
+        cor = d_dat ^ d_flip; ce_word = 8'd0; nue = 1'b0;
+        for (integer k = 0; k < 8; k = k + 1) begin : wk
+            reg [6:0] s; reg hit; s = d_syn[k*7 +: 7]; hit = 1'b0;
+            if (s != 7'd0) begin
+                hit = |d_flip[k*32 +: 32];
+                if (s == 7'd1 || s == 7'd2 || s == 7'd4 || s == 7'd8 || s == 7'd16 || s == 7'd32 || s == 7'd64) hit = 1'b1;
+                if (hit) ce_word[k] = 1'b1; else nue = 1'b1;
+            end
+        end
+    end
+    // nce is bounded by eight codewords. Split the low-nibble add from a
+    // carry-prefix increment of the upper bits; preserve exact saturation and
+    // the existing response/count edge without a full16bit add+compare path.
+    function automatic [15:0] sat_ce_add(input [15:0] count, input [3:0] step);
+        reg [4:0] low;
+        reg [11:0] upper, prefix_mask;
+        begin
+            low = {1'b0,count[3:0]} + {1'b0,step};
+            for (integer b = 0; b < 12; b = b + 1) begin
+                prefix_mask = (12'd1 << b) - 12'd1;
+                upper[b] = count[b+4] ^ (low[4] && ((count[15:4] & prefix_mask) == prefix_mask));
+            end
+            sat_ce_add = (low[4] && (&count[15:4])) ? 16'hffff : {upper,low[3:0]};
+        end
+    endfunction
+    wire [15:0] ce;
+    // Diagnostic CE status is delayed one extra edge. Low-nibble event accumulation and
+    // upper carry propagation occupy independent edges; no long event-to-full-counter cone.
+    ot_vms_ce_counter_pipe ce_pipe(.clk(clk_local[8]),.rst_n(rn),.event_v(ce_v_q),.event_count(ce_n_q),.count(ce));
+    reg ue; reg ce_v_q, ue_q; reg [3:0] ce_n_q;
     for(genvar g=0;g<RG;g=g+1)begin:g_face_response
         always @(posedge clk_local[8+R_FACE[g*2+:2]] or negedge rn)
             if(!rn)rr_v[g]<=0;else rr_v[g]<=d_v&&d_p==4'(g);

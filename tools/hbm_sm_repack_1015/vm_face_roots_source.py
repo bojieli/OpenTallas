@@ -51,7 +51,7 @@ done='''    for(genvar g=0;g<WG;g=g+1)begin:g_face_write_done
 for signal,face,owner in [('dq_done',2,'WG+4'),('kq_done',0,'WG'),('xq_done',3,'WG+1'),('xq2_done',1,'WG+3')]:done+=f"    always @(posedge clk_local[{8+face}] or negedge rn)if(!rn){signal}<=0;else {signal}<=s2w_v&&s2w_p==4'({owner});\n"
 s=s[:pos]+done+s[pos:]
 # Response valid/data retained per logical owner, on the matching physical face.
-a=s.index('    always @(posedge clk_local[11] or negedge rn)');s=s[:a]+'''    for(genvar g=0;g<RG;g=g+1)begin:g_face_response
+a=s.index('    always @(posedge clk_local[11] or negedge rn)',s.index('    // R: correct'));s=s[:a]+'''    for(genvar g=0;g<RG;g=g+1)begin:g_face_response
         always @(posedge clk_local[8+R_FACE[g*2+:2]] or negedge rn)
             if(!rn)rr_v[g]<=0;else rr_v[g]<=d_v&&d_p==4'(g);
         always @(posedge clk_local[8+R_FACE[g*2+:2]])
@@ -70,6 +70,7 @@ a=s.index('    always @(posedge clk_local[11] or negedge rn)');s=s[:a]+'''    fo
 endmodule
 `default_nettype wire
 '''
+assert 'd_syn[k*7 +: 7] <= sk;' in s and 'ot_vms_ce_counter_pipe ce_pipe' in s and s.count('endmodule')==1
 (D/'ot_vms_bank_static_face_roots.sv').write_text(s)
 clocks=['clk_in_n','clk_in_e','clk_in_s','clk_in_w','clk_ctrl','clk_s1','clk_s2','clk_ecc','clk_out_n','clk_out_e','clk_out_s','clk_out_w']
 slots=json.loads((R/'results/arch/hbm_die_v15/vm_native_local_grants_1016.json').read_text())['slots'];maps=[]
