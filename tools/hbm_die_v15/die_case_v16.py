@@ -233,7 +233,7 @@ def main():
                 ln['h'] = round(fy(ln['h']), 3)
         for n_, v_ in I.items():
             m_ = re.search(r'home \(([\d.]+), ([\d.]+)\) um', v_.get('note', ''))
-            if m_:
+            if m_ and not re.match(r'rly\d+_', n_):  # station homes already include the d4b PC strips
                 v_['note'] = v_['note'].replace(m_.group(0), f'home ({m_.group(1)}, {fy(float(m_.group(2))):.3f}) um')
         H = round(H + 2 * dh, 3)
         strip = dict(dh_um=dh, s_strip_at_y=ys, n_strip_at_y=yn, die_um=[W, H], die_mm2=round(W * H / 1e6, 2))
@@ -924,6 +924,7 @@ make_tracks M1 -x_offset 0.009 -x_pitch 0.036 -y_offset 0.009 -y_pitch 0.036
 {chr(10).join(plc)}
 {cks}
 place_pins -hor_layers M4 -ver_layers M5 -min_distance 2
+write_db /work/out/place.odb
 source {plat}/setRC.tcl
 set blk [ord::get_db_block]
 foreach n [$blk getNets] {{ if {{[string match dk?_* [$n getName]] || [string match n_dk?_* [$n getName]] || [string match ckg_pll_* [$n getName]]}} {{ $n setSigType CLOCK }} }}
