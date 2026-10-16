@@ -94,7 +94,8 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg #(
     wire same_row=incoming_row==active_row;
     wire dr,wr,cv,cwe,caq;wire[4:0]cb,cc;
     reg[63:0]push_q;reg[4:0]ep1;reg[4:0]response_rp1;
-    wire[319:0]head={queue[rp],head_wdata},push={(QREG!=0)?push_q:queue[ep],256'b0};
+    reg[63:0]head_q;reg[4:0]rp1;      // QREG: == queue[rp] / rp+1 on every edge (head metadata from a register)
+    wire[319:0]head={(QREG!=0)?head_q:queue[rp],head_wdata},push={(QREG!=0)?push_q:queue[ep],256'b0};
     wire push_read=!push[319];
     wire enqueue=state==RUN && unposted!=0 && (!push_read || read_reserved<32) && !sticky;
     wire accepted=i_v&&i_rdy;wire posted=enqueue&&wr;
@@ -177,18 +178,27 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg #(
     wire[4:0]ep_off=ep_n-wp;
     wire ep_hit=ep_off<5'd4 && count+6'(ep_off)<6'd32;
     wire[63:0]push_n=ep_hit?qentry[ep_off[1:0]*64+:64]:(posted?queue[ep1]:push_q);
+    wire[4:0]rp_n=cv?rp1:rp;
+    wire[4:0]rp_off=rp_n-wp;
+    wire rp_hit=rp_off<5'd4 && count+6'(rp_off)<6'd32;
+    wire[63:0]head_n=rp_hit?qentry[rp_off[1:0]*64+:64]:(cv?queue[rp1]:head_q);
+    // push_q/head_q track queue[ep]/queue[rp] exactly, also through reset (ep = rp = 0 while lrst_n is low).
+    always @(posedge clk) if(QREG!=0)begin
+        push_q<=lrst_n?push_n:queue[0];
+        head_q<=lrst_n?head_n:queue[0];
+    end
     wire[20:0]rid_rp=response_identity[response_rp],rid_rp1=response_identity[response_rp1];
     always @(posedge clk or negedge lrst_n)begin
         if(!lrst_n)begin
             state<=IDLE;sticky<=0;active_row<=0;observed_open<=0;wp<=0;rp<=0;ep<=0;count<=0;unposted<=0;
             read_reserved<=0;pending_count<=0;response_count<=0;pending_wp<=0;pending_rp<=0;response_wp<=0;response_rp<=0;
-            head_identity<=0;head_valid<=0;k_wr_done<=0;fresh_v<=0;fresh_slot<=0;ep1<=5'd1;response_rp1<=5'd1;
+            head_identity<=0;head_valid<=0;k_wr_done<=0;fresh_v<=0;fresh_slot<=0;ep1<=5'd1;response_rp1<=5'd1;rp1<=5'd1;
         end else begin
             k_wr_done<=0;
             if(i_v&&!legal)sticky<=1;
             if(QREG!=0)begin
                 for(integer b=0;b<4;b=b+1)if(count+6'(b)<6'd32)queue[5'(wp+b)]<=qentry[b*64+:64];
-                push_q<=push_n;
+                if(cv)rp1<=rp1+1'b1;
                 if(posted)ep1<=ep1+1'b1;
                 if(response_take)response_rp1<=response_rp1+1'b1;
             end

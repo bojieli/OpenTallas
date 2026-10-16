@@ -40,6 +40,8 @@ module tb;
       $fatal(1,"QREG miter state mismatch edge%0d",edges);
     if(impl[1].dut.unposted!=0 && impl[1].dut.push_q!==impl[1].dut.queue[impl[1].dut.ep])
       $fatal(1,"QREG push_q invariant broken edge%0d",edges);
+    if(impl[1].dut.head_q!==impl[1].dut.queue[impl[1].dut.rp] && impl[1].dut.queue[impl[1].dut.rp]!==64'bx)
+      $fatal(1,"QREG head_q invariant broken edge%0d",edges);
   end
   always @(posedge clk) begin
     now=now+1;

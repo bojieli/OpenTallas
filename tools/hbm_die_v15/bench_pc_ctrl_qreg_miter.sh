@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # H-HARDEN 2026-10-16: lockstep miter of the configured PC controller leaf, QREG=0 (H6 exactly) vs QREG=1 (free-slot
 # queue writes, registered push entry, late identity select, controller PHYS_WACT 2), every output on every edge,
-# plus four QREG-specific mutants that must be rejected (output mismatch or the push_q == queue[ep] invariant).
+# plus five QREG-specific mutants that must be rejected (output mismatch or the push_q == queue[ep] invariant).
 #   bench_pc_ctrl_qreg_miter.sh <out>
 set -euo pipefail
 out=${1:?out}; mkdir -p "$out"
@@ -19,13 +19,14 @@ s=Path(sys.argv[1]).read_text(); out=Path(sys.argv[2])
 m={'no_push_forward':("wire[63:0]push_n=ep_hit?","wire[63:0]push_n=(1'b0)?"),
    'unguarded_free_slot':("if(count+6'(b)<6'd32)queue","if(1'b1)queue"),
    'identity_swap':("(response_take?rid_rp1:rid_rp)","(response_take?rid_rp:rid_rp1)"),
-   'stale_ep1':("if(posted)ep1<=ep1+1'b1;","")}
+   'stale_ep1':("if(posted)ep1<=ep1+1'b1;",""),
+   'no_head_forward':("wire[63:0]head_n=rp_hit?","wire[63:0]head_n=(1'b0)?")}
 for k,(a,b) in m.items():
     assert s.count(a)==1,(k,a); (out/(k+'.sv')).write_text(s.replace(a,b))
 PY
-for k in no_push_forward unguarded_free_slot identity_swap stale_ep1; do
+for k in no_push_forward unguarded_free_slot identity_swap stale_ep1 no_head_forward; do
   iverilog -g2012 -s tb -o "$out/$k.vvp" "${base[@]}" "$out/$k.sv" "$tb" > "$out/$k.build.log" 2>&1
   if vvp "$out/$k.vvp" +ncyc=3000 > "$out/$k.log" 2>&1; then echo "mutant $k survived"; exit 1; fi
-  grep -m1 -E 'QREG (miter|push_q)' "$out/$k.log" | sed "s/^/$k REJECTED: /"
+  grep -m1 -E 'QREG (miter|push_q|head_q)' "$out/$k.log" | sed "s/^/$k REJECTED: /"
 done
-echo 'PC_CTRL_QREG_GATE PASS (QREG lockstep miter + 4 mutants rejected)'
+echo 'PC_CTRL_QREG_GATE PASS (QREG lockstep miter + 5 mutants rejected)'
