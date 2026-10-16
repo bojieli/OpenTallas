@@ -134,3 +134,4 @@ rtl/qwen_sys/static_schedule_20261014/qfd_tt_ctlm_tree_b2.sv
 rtl/qwen_split/qfd_slab_result_half_b2.sv
 rtl/qwen_split/qfd_port_half_b2.sv
 tools/qwen_b2_join/tb_b2_rom_port.sv
+rtl/qwen_split/qfd_slab_port_leaf_b2.sv
