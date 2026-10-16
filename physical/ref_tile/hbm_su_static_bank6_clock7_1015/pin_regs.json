@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hbm_su_static_bank6_clock_physical",
+ "enable": false,
+ "reason": "the RTL (ot_hbm_su_static_pinned_bank) already registers every input (a_pin/r_pin/wa_pin/wd_pin/w_pin) and every output (read_data, r_return) at the boundary; a kit-level flop stage would add a redundant read edge"
+}
