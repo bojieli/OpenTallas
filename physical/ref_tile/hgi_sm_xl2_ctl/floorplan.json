@@ -31,6 +31,7 @@
  "pins": {
   "N": [
    "clk",
+   "clk_eg",
    "rst_n",
    "x_v",
    "x_base",
@@ -82,6 +83,10 @@
   ]
  },
  "clock_port": "clk",
+ "clock_ports": [
+  "clk",
+  "clk_eg"
+ ],
  "blocks": [],
  "findings": [],
  "referenced": [
@@ -115,6 +120,8 @@
   "physical/dsrom_window_source/leaf_inhold_release.tcl",
   "physical/ref_tile/hgi_sm_xl2_ctl/pre_gpl.tcl",
   "physical/ref_tile/hgi_sm_xl2_ctl/pre_dpl.tcl",
-  "physical/common_flow/pin_reg_split.tcl"
+  "physical/common_flow/pin_reg_split.tcl",
+  "physical/common_flow/clock_entries.tcl",
+  "physical/ref_tile/hgi_sm_xl2_ctl/clock_entry.sdc"
  ]
 }

@@ -66,6 +66,31 @@ foreach w $pgw {
   lassign $w lv n ln a b c d
   if {$lv == $toplvl && [llength $pg] < 4000} { lappend pg "\[[ot_ld_q $n], [ot_ld_q $ln], [ot_ld_um $a], [ot_ld_um $b], [ot_ld_um $c], [ot_ld_um $d]\]" }
 }
+# OT_LAYOUT_LINKS=1 (die dumps, tools/die_layout_render.py --dump): every signal net joining hard blocks counts one bit
+# on each (driver block, load block) pair -> links [a b bits]
+set links {}
+if {[info exists ::env(OT_LAYOUT_LINKS)] && $::env(OT_LAYOUT_LINKS) eq "1"} {
+  array set ot_ld_l {}
+  foreach net [$ot_ld_block getNets] {
+    if {[$net getSigType] eq "POWER" || [$net getSigType] eq "GROUND"} { continue }
+    set drv ""; set lds {}
+    foreach it [$net getITerms] {
+      set in [$it getInst]
+      if {![[$in getMaster] isBlock]} { continue }
+      if {[$it isOutputSignal]} { set drv [$in getName] } else { lappend lds [$in getName] }
+    }
+    if {$drv eq ""} { continue }
+    foreach l [lsort -unique $lds] {
+      if {$l eq $drv} { continue }
+      set k "$drv\t$l"
+      if {[info exists ot_ld_l($k)]} { incr ot_ld_l($k) } else { set ot_ld_l($k) 1 }
+    }
+  }
+  foreach k [array names ot_ld_l] {
+    lassign [split $k "\t"] a b
+    lappend links "\[[ot_ld_q $a], [ot_ld_q $b], $ot_ld_l($k)\]"
+  }
+}
 set clocks {}
 if {[info exists ::env(OT_LAYOUT_CLOCKS)]} { foreach c [split $::env(OT_LAYOUT_CLOCKS) ","] { if {$c ne ""} { lappend clocks [ot_ld_q $c] } } }
 set dA [expr {double($X1 - $X0) * ($Y1 - $Y0)}]
@@ -77,6 +102,6 @@ puts $f " \"clocks\": \[[join $clocks ", "]\],"
 puts $f " \"blocks\": \[[join $blocks ",\n  "]\],"
 puts $f " \"pins\": \[[join $pins ",\n  "]\],"
 puts $f " \"pg\": \[[join $pg ",\n  "]\],"
-puts $f " \"density\": {\"nx\": $nb, \"ny\": $nb, \"grid\": \[[join $grid ", "]\]}}"
+puts $f " \"links\": \[[join $links ",\n  "]\],\n \"density\": {\"nx\": $nb, \"ny\": $nb, \"grid\": \[[join $grid ", "]\]}}"
 close $f
 puts "OT_LAYOUT_DUMP $::env(OT_LAYOUT_OUT) blocks [llength $blocks] pins [llength $pins] pg [llength $pg] fill [format %.3f [expr {($std + $barea) / $dA}]]"

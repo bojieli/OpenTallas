@@ -58,3 +58,18 @@ def test_gen_fill_check():
     assert RT.fill_check({"kind": "tile", "macros": [1]}, 100, 100, bl[:1], 100) is None            # a leaf tile
     assert RT.fill_check({"kind": "cluster", "macros": [1] * 4}, 100, 100, bl, 2500)[0] == "WARN"   # 41 %
     assert RT.fill_check({"kind": "cluster", "macros": [1] * 4}, 100, 100, bl, 4000) is None        # 56 %
+
+
+def test_die_render_adapters(tmp_path):
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+    import die_layout_render as DL
+    blocks = [["a", 0, 0, 100, 100], ["b", 1100, 0, 1200, 100], ["c", 0, 300, 100, 400]]
+    bus = DL._buses(blocks, [("a", "b", 64, None), ("b", "a", 64, None), ("a", "c", 8, 1), ("a", "x", 9, None)], 500)
+    assert sorted(bus) == [["a", "b", 128, 2], ["a", "c", 8, 1]]   # merged per pair; 1100 um -> 2 relays; unknown dropped
+    assert DL.grt_table("Total   10  5  3.72%   0 /  0 /  2")[0]["overflow"] == 2
+    p = tmp_path / "plan.json"
+    p.write_text(json.dumps({"die_outline_um": [3000, 2000], "hard_fixed_boxes": [["hub", 100, 100, 500, 500]],
+                             "hcp_homes": [{"name": "h", "at_um": [1000, 100], "outline": {"w": 200, "h": 200}}],
+                             "columns": [{"x_um": 2000, "y0_um": 20, "y1_um": 1980, "roots": 7}]}))
+    assert DL.main(["--s81", str(p), "--out", str(tmp_path / "o")]) == 0
+    assert _png_ok(tmp_path / "o" / "die_floorplan.png")
