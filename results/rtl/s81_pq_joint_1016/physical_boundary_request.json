@@ -1,0 +1,259 @@
+{
+  "ot_s81_pq_control_joint": {
+    "ports": {
+      "rq0": {
+        "direction": "input",
+        "width": 64
+      },
+      "rq1": {
+        "direction": "input",
+        "width": 16
+      },
+      "ck_ctl": {
+        "direction": "input",
+        "width": 1
+      },
+      "rst": {
+        "direction": "input",
+        "width": 1
+      },
+      "ck_cmd": {
+        "direction": "input",
+        "width": 1
+      },
+      "ck_calendar": {
+        "direction": "input",
+        "width": 1
+      },
+      "c_cmd": {
+        "direction": "input",
+        "width": 85
+      },
+      "f_desc_pw": {
+        "direction": "input",
+        "width": 36
+      },
+      "c_done": {
+        "direction": "output",
+        "width": 9
+      },
+      "c_st": {
+        "direction": "output",
+        "width": 2
+      },
+      "image_sealed": {
+        "direction": "output",
+        "width": 1
+      },
+      "calendar_prime": {
+        "direction": "input",
+        "width": 1
+      },
+      "stage_start": {
+        "direction": "input",
+        "width": 1
+      },
+      "calendar_base": {
+        "direction": "input",
+        "width": 12
+      },
+      "calendar_length": {
+        "direction": "input",
+        "width": 13
+      },
+      "calendar_primed": {
+        "direction": "output",
+        "width": 1
+      },
+      "calendar_fault": {
+        "direction": "output",
+        "width": 1
+      },
+      "stream_end_v": {
+        "direction": "output",
+        "width": 1
+      },
+      "stream_end_tag": {
+        "direction": "output",
+        "width": 2
+      },
+      "t_iss": {
+        "direction": "output",
+        "width": 38
+      },
+      "t_vm": {
+        "direction": "output",
+        "width": 20
+      },
+      "f_vm": {
+        "direction": "input",
+        "width": 1
+      },
+      "ra0": {
+        "direction": "output",
+        "width": 10
+      },
+      "ra2": {
+        "direction": "output",
+        "width": 12
+      },
+      "rc2": {
+        "direction": "output",
+        "width": 4
+      },
+      "rq2": {
+        "direction": "input",
+        "width": 192
+      },
+      "t_cnt": {
+        "direction": "output",
+        "width": 458
+      },
+      "f_cnt": {
+        "direction": "input",
+        "width": 204
+      },
+      "u_datapath.u_core.u_ctl.u_state.u_aqi_v.genblk1.g_line.line": {
+        "direction": "output",
+        "width": 2
+      },
+      "u_datapath.u_core.u_ctl.u_state.u_aqi_b.genblk1.g_line.line": {
+        "direction": "output",
+        "width": 8
+      },
+      "u_datapath.u_core.u_ctl.u_state.he": {
+        "direction": "output",
+        "width": 77
+      },
+      "u_datapath.u_core.u_ctl.u_state.bc_hd": {
+        "direction": "output",
+        "width": 590
+      },
+      "u_datapath.u_core.u_ctl.u_state.bc_hc": {
+        "direction": "output",
+        "width": 20
+      },
+      "u_datapath.u_core.q_consume": {
+        "direction": "output",
+        "width": 1
+      },
+      "u_datapath.u_core.g_aq[1].u_aq.fault": {
+        "direction": "input",
+        "width": 1
+      },
+      "u_datapath.u_core.g_aq[0].u_aq.fault": {
+        "direction": "input",
+        "width": 1
+      },
+      "u_datapath.u_core.fault_to_ctl": {
+        "direction": "input",
+        "width": 1
+      },
+      "u_datapath.u_core.ba_wv": {
+        "direction": "output",
+        "width": 2
+      },
+      "u_datapath.u_core.ba_blk": {
+        "direction": "output",
+        "width": 8
+      },
+      "u_datapath.u_core.b_consume": {
+        "direction": "output",
+        "width": 1
+      },
+      "u_datapath.u_core.aq_vin": {
+        "direction": "output",
+        "width": 1
+      }
+    },
+    "sequential_bits_by_root": {
+      "ck_calendar": 950,
+      "ck_cmd": 8321,
+      "ck_ctl": 4535
+    },
+    "cell_types": {
+      "$add": 57,
+      "$mux": 3900,
+      "$eq": 5000,
+      "$logic_not": 195,
+      "$gt": 6,
+      "$le": 1,
+      "$logic_and": 35,
+      "$logic_or": 46,
+      "$lt": 8,
+      "$reduce_bool": 10,
+      "$ne": 12,
+      "$dff": 224,
+      "$adff": 203,
+      "$pmux": 80,
+      "$sub": 7,
+      "$and": 4214,
+      "$ge": 3,
+      "$neg": 130,
+      "$not": 70,
+      "$or": 2422,
+      "$reduce_or": 8,
+      "$shift": 130,
+      "$shiftx": 8,
+      "$div": 1,
+      "$shl": 2,
+      "$xor": 183,
+      "ot_rom_4096x72_m8": 2
+    }
+  },
+  "ot_s81_pq_lane_joint": {
+    "ports": {
+      "xw": {
+        "direction": "output",
+        "width": 1101
+      },
+      "ck_lane": {
+        "direction": "input",
+        "width": 1
+      },
+      "rst": {
+        "direction": "input",
+        "width": 1
+      },
+      "c_st": {
+        "direction": "input",
+        "width": 1
+      },
+      "xe": {
+        "direction": "output",
+        "width": 1101
+      },
+      "u_datapath.u_core.g_bc[3].qs3": {
+        "direction": "input",
+        "width": 407
+      },
+      "u_datapath.u_core.g_bc[3].qs2": {
+        "direction": "input",
+        "width": 407
+      },
+      "u_datapath.u_core.g_bc[3].qs1": {
+        "direction": "input",
+        "width": 408
+      },
+      "u_datapath.u_core.g_bc[3].qs0": {
+        "direction": "input",
+        "width": 410
+      },
+      "u_datapath.f_fault_c": {
+        "direction": "output",
+        "width": 1
+      }
+    },
+    "sequential_bits_by_root": {
+      "ck_lane": 2204
+    },
+    "cell_types": {
+      "$logic_and": 2,
+      "$logic_or": 3,
+      "$or": 5,
+      "$adff": 2,
+      "$dff": 2,
+      "$mux": 3
+    }
+  }
+}

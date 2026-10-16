@@ -1,0 +1,6 @@
+/srv/opentallas-scratch/codex/s81-pq-parent-0830/aq_parity_component/bench
+PQ_CORE_PIPE TIMING test=0 baseline_cycles=936 candidate_cycles=940 delta=4 baseline_phase=904 candidate_phase=908 packets=772
+PQ_CORE_PIPE TIMING test=1 baseline_cycles=992 candidate_cycles=996 delta=4 baseline_phase=960 candidate_phase=964 packets=772
+PQ_CORE_PIPE TIMING test=2 baseline_cycles=1917 candidate_cycles=1933 delta=16 baseline_phase=1885 candidate_phase=1901 packets=1540
+PQ_CORE_PIPE TIMING test=3 baseline_cycles=2012 candidate_cycles=2016 delta=4 baseline_phase=1980 candidate_phase=1984 packets=1540
+PQ_CORE_PIPE PASS component_diagnostic=1 baseline_cycles=5857 candidate_cycles=5885 loss_pct=0.478060 native_full_token_qualified=0
