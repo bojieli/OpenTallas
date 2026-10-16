@@ -1,0 +1,140 @@
+{
+  "scope": "Shared pin-register control-role guard; actual transformed source proof is supplied by issuer stream. No physical or native system closure claim.",
+  "source_candidate": "de7085ec6",
+  "base": "af3048e286e9cda3cd1b6119a632dbdc1d782258",
+  "final_helper_sha256": "fd53ca5dd8aa2a697bed062de2df5a4a492faa8fc0313752cbfdc56565fb5356",
+  "old_c8": {
+    "host": "ot-epyc4",
+    "remote": "/srv/opentallas-scratch/claude/ref_gate/s81fill2_sseq_c8-20261016-030138",
+    "source_commit": "1cf40ef7c77965736c3764a30260987c6d11a8e3",
+    "files": {
+      "/home/ubuntu/artifacts/s81-issuer-localtree0253/old_c8_pin_regs.tsv": "aba966a8035015c617e0a3a1765b39fddba4e9f7a7765a348bb4e182e3b2da94",
+      "/home/ubuntu/artifacts/s81-issuer-localtree0253/old_c8_pin_regs_wrapper.v": "b3be8fd9f707863ea0b92f10c327417b78a15d51c8851e3ccc958eb61987e7e7"
+    },
+    "actual_table": {
+      "ck": {
+        "dir": "input",
+        "register_edges": 0,
+        "width": 1,
+        "reason": "clock"
+      },
+      "ckv": {
+        "dir": "input",
+        "register_edges": 1,
+        "width": 1,
+        "reason": "pin register"
+      },
+      "rst": {
+        "dir": "input",
+        "register_edges": 0,
+        "width": 1,
+        "reason": "reset"
+      },
+      "rsv": {
+        "dir": "input",
+        "register_edges": 1,
+        "width": 1,
+        "reason": "pin register"
+      }
+    },
+    "guard_rejection": "declared clock selected as data or absent: ckv"
+  },
+  "validation": {
+    "focused_cases": 17,
+    "focused_log": "/home/ubuntu/artifacts/pinroles-0253/focused_tests.log",
+    "environment_fixture": "results/arch/hier_contract_1012/qwen_rom_tp8.json materialized narrowly; failed sparse environment case re-run PASS",
+    "baseline_recipe": "Exact base af3048e28 generator replay reproduces same four quoted-string Recipe assertions as candidate (12 cases, 4 failures); no change to those unrelated expectations",
+    "baseline_artifacts": "/home/ubuntu/artifacts/pinroles-0253/base_recipe.log and run_base_recipe.py",
+    "baseline_logs": {
+      "/home/ubuntu/artifacts/pinroles-0253/base_recipe.log": "de57f476f5b53c3583c5b7dd0d6a520d348f5d1acb1e9aa533c16a1d2309a80f",
+      "/home/ubuntu/artifacts/pinroles-0253/run_base_recipe.py": "be1e83411bf5dd8b3913a2eb9509533c8e8d4beda6882a40e11d58d411077a9a",
+      "/home/ubuntu/artifacts/pinroles-0253/focused_tests.log": "69602d225be67953b7a7b7f6a5aa8678bb7dc3cc6b0efb1c9eda319a135a4bcf"
+    }
+  },
+  "dependencies": [
+    "New generic pin-register kits must regenerate kit.env to declare OT_PIN_REGS_RESET_PORTS, including explicit empty value when there are no resets.",
+    "Deploy kit_orfs_vars.py with gate/publication helpers; no live daemon changes made by worker.",
+    "Native policy secondary clocks use explicit spec clock_ports role list independent of CTS clock policy; clocks must not be misclassified in reset_ports."
+  ],
+  "preserved": "Clock/reset source polarity and semantics use direct wires. Data input/output wrapper stages remain +1 edge each. No physical gate or timing threshold edits.",
+  "actual_transformed_proof": {
+    "host": "ot-epyc4",
+    "source_commit": "a66085b0323df694c6634051ae24d5ac24a3f932",
+    "remote": "/srv/opentallas-scratch/claude/s81issuer-boundary-roles2/proof",
+    "ot_run_unit": "oth-ubuntu-850782-1792146894",
+    "receipt_sha256": "094464204feaee3f868b5690249dc11772d91faa187e464e5f0a976c97ba2ecb",
+    "initial_helper_sha256": "72103f693ab08fa2e2ec22afa49c3150647545023954741bf5aaddf39c120b88",
+    "old_actual_wrapper_sha256": "b3be8fd9f707863ea0b92f10c327417b78a15d51c8851e3ccc958eb61987e7e7",
+    "source_sha256": {
+      "rtl/dsrom_sys/s81_static_control/ot_s81_fixed_issue.sv": "5cf56524db619c7f1bddc73815f622132358436529e324c82954b89013dbbf07",
+      "rtl/dsrom_sys/s81_static_control/ot_s81_fixed_mailbox.sv": "e9629558b211dd2000ebb8970f87176d0648a00e3da2195201bbd135539412b7",
+      "rtl/dsrom_sys/s81_static_control/dsfd_stage_seq_static_c.sv": "3fc9e5cd96970d49788e9a5a06fce3a31fb4984baa8cd505ad49084ada338521",
+      "rtl/dsrom_sys/s81_static_control/dsfd_stage_seq_static_c8.sv": "c10293192d5859139181269994dd2caa0930a569e4785f8613ace66db8bfddd8",
+      "rtl/dsrom_sys/s81_static_control/dsfd_stage_seq_static_c10.sv": "08bd9bf3123f065785ba6b6cc3946845688fde907b9bffd5b97cac949db6fe64",
+      "rtl/dsrom_sys/s81_static_control/ot_s81_pq_boot_control.sv": "32ecceb7c7d91cb541d1d25c8cd2ee1a4be83b1a1c0eed0031502bc53d4fb747"
+    },
+    "tops": {
+      "c8": {
+        "top": "dsfd_stage_seq_static_c8",
+        "NOPS": 128,
+        "STAGE": 0,
+        "kit_sha256": "e66f30357142c411e54a5636f16b8e8346c053e54b94353c6caf1e2672471572",
+        "wrapper_sha256": "bd4f01ae263e4426f36e543e8a2acf138cd6d0d43bb49087996b7e66116bfaed",
+        "table_sha256": "65764f015c4458f5171338f028504bf0181ed711b43bddb9dd70da962f6fbd4f",
+        "role_env": {
+          "OT_PIN_REGS": "1",
+          "OT_PIN_REGS_CLOCK": "ck,ckv",
+          "OT_PIN_REGS_RESET_PORTS": "rst,rsv",
+          "OT_PIN_REGS_EXCLUDE": "^ckv$|^(f_ks|f_pw|t_kd|t_st)(\\[.*\\])?$",
+          "OT_PIN_REGS_RESET": "^(rst|rsv)(\\[.*\\])?$"
+        }
+      },
+      "c10": {
+        "top": "dsfd_stage_seq_static_c10",
+        "NOPS": 128,
+        "STAGE": 0,
+        "kit_sha256": "558de27ba9846eebb79d604b7dd119182b1d9fe7647c3d7c185a3ca64b17692e",
+        "wrapper_sha256": "4c3d9e0ba97d773e7879b484de35561a4323e3bc8acccde6c9d1bf7905deff6a",
+        "table_sha256": "23dae681c315cbd31554096dc7082c550f24302fd50d7db8c4d0e6b939b6414d",
+        "role_env": {
+          "OT_PIN_REGS": "1",
+          "OT_PIN_REGS_CLOCK": "ck,ckv",
+          "OT_PIN_REGS_RESET_PORTS": "rst,rsv",
+          "OT_PIN_REGS_EXCLUDE": "^ckv$|^(f_ks|f_pw|f_pq_pw|t_kd|t_st)(\\[.*\\])?$",
+          "OT_PIN_REGS_RESET": "^(rst|rsv)(\\[.*\\])?$"
+        }
+      }
+    },
+    "log_actual_lines": [
+      "PINREG_BOUNDARY mode0 PASS ENDfast278 faultfast-1 faultserial-1 KITserial211 consumeredge212 success1 reject0",
+      "PINREG_BOUNDARY mode1 PASS ENDfast278 faultfast279 faultserial211 KITserial211 consumeredge212 success0 reject1",
+      "PINREG_BOUNDARY mode0 PASS ENDfast278 faultfast-1 faultserial-1 KITserial211 consumeredge213 success1 reject0",
+      "PINREG_BOUNDARY mode1 PASS ENDfast278 faultfast279 faultserial212 KITserial211 consumeredge213 success0 reject1",
+      "ISSUER_PINREG_BOUNDARY PASS actual128-row c8/c10 wrappers, exact clocks/reset release, +1ck dataIO and fixed fault observation",
+      "ot-run: RAN on ot-epyc4 (unit oth-ubuntu-850782-1792146894): exit 0"
+    ],
+    "guard_against_source_pinned_sdcs": "Both actual generated wrappers/TSVs independently passed validate_roles against a66085b03 SDC blobs; clocks ck/ckv and direct resets rst/rsv. SDC SHAs a22bd7a8a473a32f376776f0f56e04f2ae034110d89433ffb8604fbf866cd5dd and 4141118f0f23c9d00ce26a6bda8fe887ee98ea2eceae416b50e2e19e3b353e87."
+  },
+  "final_exact_rebind": {
+    "ot_run_unit": "oth-ubuntu-1933895-1792147181",
+    "receipt_sha256": "bd9f3d7d778945803a3effcbcee9a5a59c9c7f4fb23606d87d97dbdbba74769f",
+    "receipt": {
+      "final_hook_sha256": "fd53ca5dd8aa2a697bed062de2df5a4a492faa8fc0313752cbfdc56565fb5356",
+      "proven_hook_sha256": "72103f693ab08fa2e2ec22afa49c3150647545023954741bf5aaddf39c120b88",
+      "tops": {
+        "c8": {
+          "ot_pin_regs_wrapper.v": "bd4f01ae263e4426f36e543e8a2acf138cd6d0d43bb49087996b7e66116bfaed",
+          "ot_pin_regs.tsv": "65764f015c4458f5171338f028504bf0181ed711b43bddb9dd70da962f6fbd4f"
+        },
+        "c10": {
+          "ot_pin_regs_wrapper.v": "4c3d9e0ba97d773e7879b484de35561a4323e3bc8acccde6c9d1bf7905deff6a",
+          "ot_pin_regs.tsv": "23dae681c315cbd31554096dc7082c550f24302fd50d7db8c4d0e6b939b6414d"
+        }
+      }
+    },
+    "functional_receipt_local": "/home/ubuntu/artifacts/s81-issuer-localtree0253/pinreg_boundary_receipt.json",
+    "functional_receipt_sha256": "094464204feaee3f868b5690249dc11772d91faa187e464e5f0a976c97ba2ecb",
+    "functional_log_sha256": "01bfb45d39fdcf38aac9b9a777b83dbb34577befff6fd9ac8e0faa7509ffd458",
+    "final_rebind_log_sha256": "d490a4a433d6040aa1571d5468c93102e967ad3394baf63630f826c1becd0835"
+  }
+}
