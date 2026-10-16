@@ -1,0 +1,43 @@
+{
+  "source_commit": "d17e18c1d",
+  "scope": "Actual mapped SRAM and native-bank source functional test in common simulation phase; independent bank pin connections audited through actual Yosys region elaboration. No physical phi-R/timing/die qualification",
+  "configuration": {
+    "RO": 1,
+    "VL": 14,
+    "RETURN_CLOCKS": 1,
+    "RETURN_LEAVES": 1,
+    "READ_CONTROL_LEAVES": 1,
+    "USE_NATIVE_CLOCKS": 1,
+    "NATIVE_BANKS": 1,
+    "USE_MACRO": 1,
+    "ELEMS": 177808,
+    "NRB": 64,
+    "SW": 64,
+    "CYCLES": 40000,
+    "SEED": 9
+  },
+  "positive": {
+    "SU_reads": 59937,
+    "row_reads": 10291,
+    "bursts": 1565,
+    "numerical_fault_errors": 0
+  },
+  "mutant": {
+    "kind": "lane-select MUT1",
+    "SU_errors": 59936,
+    "other_errors": 0
+  },
+  "clock_audit": {
+    "pins": 126,
+    "correct_unique_bank_connections": 126,
+    "tied_clock_mutant_connections": 14,
+    "tied_clock_mutant_rejected": true,
+    "clock_DUT_source_commit": "8808dc648; unchanged through d17e18c1d"
+  },
+  "full_source_archive_sha256": "2b4b7353051da8f5b1381de2bb3bd920852363df461479eca8f20bfb440bd238",
+  "source_sha256": {
+    "rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv": "7c33183eea5dd0367f3f5afceace6204b4d1767600b80be9eaae448377b0b7b0",
+    "rtl/qwen_sys/vm_nox_20261014/ot_qfd_vm_region_nx.sv": "82c5fc48c51e6fe153632804fbf2486b21cc3f3b01ac46298797bf6f533b7092",
+    "rtl/test/qwen_vm_me/tb_qfd_vm_bv_ports.sv": "8d5dcaa8c33c56a62634889fb2db2924112a35c62b2b6971bea9f6a88bde7beb"
+  }
+}
