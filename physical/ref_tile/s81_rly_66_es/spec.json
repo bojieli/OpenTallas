@@ -35,13 +35,18 @@
   "peak_ram_gb": 8,
   "m5_pg_pitch": 2.7,
   "hold_margin_ns": 0.03,
-  "macro_halo_um": 5.4
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "group_max": 66,
+   "h": "M4",
+   "v": "M5"
+  }
  },
  "job": {
   "owner": "Claude:s81-net-fill",
-  "branch": "claude/el1015-snetfill-2215",
-  "tag": "r4",
-  "purpose": "S81 die relay master dsfd_rly_66_ES (153 instances in the GEN18r placement, generated outline + interim timing there): real hard tile, 66 b in E / out S, ck+rs N, scalar ck/rs, M5 cap, one register stage, minimum output delay at the pin (outhold BUF-HB4-BUF) for the >= 65 ps abutted-seam budget; r4: reset pin register (RSREG=1) for the native pin audit",
+  "branch": "claude/snf-s81f14",
+  "tag": "r5",
+  "purpose": "S81 die relay master dsfd_rly_66_ES (153 instances in the GEN18r placement, generated outline + interim timing there): real hard tile, 66 b in E / out S, ck+rs N, scalar ck/rs, M5 cap, one register stage, minimum output delay at the pin (outhold BUF-HB4-BUF) for the >= 65 ps abutted-seam budget; r4: reset pin register (RSREG=1) for the native pin audit; r5: S81F-14 centred bit-ordered pin bands (i/o at the same coordinate, 3-track)",
   "benches": [
    {
     "name": "exact_words",
@@ -88,9 +93,28 @@
   "enable": false,
   "reason": "OWNER RULE 19:50 opt-out (coordinator APPROVED 2026-10-15): this relay IS one flip-flop per bit between its input and output pins (ot_s81_rly: i -> r -> o, no logic); a flow pin register would add a second stage per bit and a cycle the die calendar does not price"
  },
- "structural_change": "r4 (S-NET+FILL 2026-10-15 23:00, native audit of the CLOSED view: rs capture 243.8; DEDUPE standard of its flow): ot_s81_rly RSREG=1 -- rs drives ONE reset pin register (async assert, release +1 edge, initialization only, no data edge), the data flops clear from it; same outline / pin faces, same die function (one register stage)",
+ "structural_change": "r5 S81F-14 (S-NET+FILL 2026-10-16, VIS-ROM): centred, bit-ordered data pin bands -- bit k of i and o at 4.188 + k*0.144 um (3-track) along its face on BOTH data faces (pin_ranges + route.pin_balance, exact place_pin), so a straight hop has zero jog and 63/66 masters align bit for bit; ck at the face-centre track 8.652, rs +0.144. Was: place_pins chose i and o windows up to 4.66 um apart with scrambled bit order. Same RTL / outline / pin faces / one register stage.",
  "reroute_reason": {
-  "kind": "rtl_change",
-  "why": "native audit fail of the CLOSED view: reset pin register (RSREG=1)"
+  "kind": "slot_change",
+  "slot_change_request": "PENDING",
+  "why": "VIS-ROM S81F-14: i/o pin bands offset ~4.5 um (every straight relay hop jogs); die-agreed centred pin plan"
+ },
+ "pin_ranges": {
+  "i": [
+   4.116,
+   13.62
+  ],
+  "o": [
+   4.116,
+   13.62
+  ],
+  "ck": [
+   8.58,
+   8.724
+  ],
+  "rs": [
+   8.724,
+   8.868
+  ]
  }
 }
