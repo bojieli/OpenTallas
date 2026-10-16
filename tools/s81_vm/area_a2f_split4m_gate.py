@@ -11,5 +11,7 @@ G.BENCH = G.BENCH.replace('s81_a2f_controlled_split4 dut(', 's81_a2f_controlled_
 # Only DUT metadata ABI changes; reference A2 still has16 quarter roots.
 G.BENCH = G.BENCH.replace('.ck_control({4{ck}}),.ck_meta({4{ck}})', '.ck_control({4{ck}}),.ck_meta({28{ck}})')
 G.BENCH = G.BENCH.replace('.rst_control_n({4{rst}}),.rst_meta_n({4{rst}})', '.rst_control_n({4{rst}}),.rst_meta_n({28{rst}})')
+base_sha = G.sha
+G.sha = lambda p: base_sha('tools/s81_vm/area_a2f_split4m_gate.py' if p == 'tools/s81_vm/area_a2f_split4_equiv_gate.py' else p)
 G.OUT = G.ROOT / 'results/arch/s81_vm_split4m_2330'
 if __name__ == '__main__': G.main()
