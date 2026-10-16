@@ -19,7 +19,7 @@ for p in nw['ports']:
  elif p['name']=='hub_ring_client':p['bits']=4
 old={'base':7,'loops':3,'cycles':[dict(client_seq=packed([1,2,3,0,2],2),response_enable=0b10111,
  response_seq=packed([2,1,3,0,1],2),bank_enable=255,bank_client=packed([0,1,2,4,4,2,1,0],3),
- hub_ring_enable=3,hub_ring_client=packed([4,2],3),rslot_v=255,rslot=packed([0,1,2,3,5,6,5,1],3))]}
+ hub_ring_enable=3,hub_ring_client=packed([4,2],3),rslot_v=255,rslot=packed([0,1,2,4,5,6,5,1],3))]}
 out=migrate(old,'NW');v=out['cycles'][0]
 assert (out['base'],out['loops'],len(out['cycles']))==(7,3,1)
 assert v['client_seq']==packed([1,2,3,2],2)
@@ -37,7 +37,7 @@ for q in ['SW','SE']:
  s=dict(cycles=[dict(wslot_v=255,wslot=packed([0,1,2,3,4,5,0,1],3))])
  n=migrate(s,q);assert n['cycles'][0]['wslot']==packed([0,2,3,4,5,6,0,2],3)
  compile_schedule(layout(new,q,True),n)
-for field,value in [('bank_client',3),('rslot',4),('client_seq',1<<6)]:
+for field,value in [('bank_client',3),('rslot',3),('client_seq',1<<6)]:
  bad=copy.deepcopy(old);bad['cycles'][0][field]=value
  try:migrate(bad,'NW')
  except ValueError:pass

@@ -35,9 +35,9 @@ def migrate(schedule,quadrant):
             values=chunks(cycle['rslot'],3,8)
             for bank,v in enumerate(values):
                 if v>6:raise ValueError('read code exceeds old ABI')
-                # LG is0; rq group3 had code4; later owners decrement by1.
-                if v==4 and (cycle.get('rslot_v',0)>>bank)&1:raise ValueError('active retired read group3')
-            cycle['rslot']=packed([v-1 if v>=5 else (0 if v==4 else v) for v in values],3)
+                # Request groups are zero-based; retired group3 has code3. Packet codeRG also decrements.
+                if v==3 and (cycle.get('rslot_v',0)>>bank)&1:raise ValueError('active retired read group3')
+            cycle['rslot']=packed([v-1 if v>=4 else (0 if v==3 else v) for v in values],3)
         if quadrant in ('SW','SE') and 'wslot' in cycle:
             values=chunks(cycle['wslot'],3,8)
             for v in values:
