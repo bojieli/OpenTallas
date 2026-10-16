@@ -116,14 +116,23 @@ def apply_tcl(plan):
              f'if {{[lindex [exec sha256sum $::env(ECTL_ECO_INPUT_ODB)] 0] ne {q(plan["input_odb_sha256"])}}} {{error "source ODB hash mismatch"}}',
              'set blk [ord::get_db_block]',
              'if {[$blk getName] ne ' + q(CELL) + '} {error "wrong A top"}',
+             '''proc ectl_inst {blk name} {
+  set direct [$blk findInst $name]
+  set enc [string map [list {[} {\[} {]} {\]}] $name]
+  set encoded [$blk findInst $enc]
+  if {$direct ne "NULL" && $encoded ne "NULL" && $direct ne $encoded} {error "ambiguous ODB instance name"}
+  if {$direct ne "NULL"} {return $direct}
+  if {$encoded ne "NULL"} {return $encoded}
+  error "missing ODB instance $name"
+}''',
              'set removed 0']
     # Validate the complete plan before making the first mutation.
     for c in plan['candidates']:
         a,b=c['remove']; n0,n1=c['dead_nets']; sn,st=c['sink']
         for name,master in zip((a,b),c['masters']):
-            lines += [f'set i [$blk findInst {q(name)}]',
+            lines += [f'set i [ectl_inst $blk {q(name)}]',
                       f'if {{$i eq "NULL" || [[$i getMaster] getName] ne {q(master)}}} {{error "ECO master mismatch"}}']
-        lines += [f'set a [$blk findInst {q(a)}]; set b [$blk findInst {q(b)}]',
+        lines += [f'set a [ectl_inst $blk {q(a)}]; set b [ectl_inst $blk {q(b)}]',
                   f'if {{[[[$a findITerm A] getNet] getName] ne {q(c["keep_net"])}}} {{error "ECO upstream net mismatch"}}',
                   f'if {{[[[$a findITerm Y] getNet] getName] ne {q(n0)} || [[[$b findITerm A] getNet] getName] ne {q(n0)}}} {{error "ECO pair not adjacent"}}',
                   f'set n [$blk findNet {q(n0)}]',
@@ -131,15 +140,15 @@ def apply_tcl(plan):
                   f'if {{[[[$b findITerm Y] getNet] getName] ne {q(n1)}}} {{error "ECO output net mismatch"}}',
                   f'set n [$blk findNet {q(n1)}]',
                   'if {[llength [$n getITerms]] != 2 || [llength [$n getBTerms]] != 0} {error "ECO output fanout"}',
-                  f'set s [[$blk findInst {q(sn)}] findITerm {q(st)}]',
+                  f'set s [[ectl_inst $blk {q(sn)}] findITerm {q(st)}]',
                   f'if {{[[$s getNet] getName] ne {q(n1)}}} {{error "ECO sink mismatch"}}']
     for c in plan['candidates']:
         a,b=c['remove'];sn,st=c['sink']
         lines += [f'set keep [$blk findNet {q(c["keep_net"])}]',
-                  f'set s [[$blk findInst {q(sn)}] findITerm {q(st)}]',
+                  f'set s [[ectl_inst $blk {q(sn)}] findITerm {q(st)}]',
                   '$s disconnect; $s connect $keep',
-                  f'odb::dbInst_destroy [$blk findInst {q(a)}]',
-                  f'odb::dbInst_destroy [$blk findInst {q(b)}]']
+                  f'odb::dbInst_destroy [ectl_inst $blk {q(a)}]',
+                  f'odb::dbInst_destroy [ectl_inst $blk {q(b)}]']
         for n in c['dead_nets']:
             lines += [f'set n [$blk findNet {q(n)}]',
                       'if {[llength [$n getITerms]] || [llength [$n getBTerms]]} {error "dead net still connected"}',

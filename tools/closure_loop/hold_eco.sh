@@ -36,7 +36,7 @@ if [ -n "${NATIVE_NORMALIZE_TCL:-}" ]; then
   [ -f "$NATIVE_REAL" ] || { echo "native normalization source missing"; exit 2; }
   [ "$(sha256sum "$NATIVE_REAL" | cut -d ' ' -f 1)" = "$NATIVE_NORMALIZE_SHA256" ] || { echo "native normalization hash mismatch"; exit 2; }
   NATIVE_REL=${NATIVE_REAL#"$PWD"/}
-  NATIVE_NORMALIZE_ENV=(-e OT_ECO_NATIVE_NORMALIZE=/src/$NATIVE_REL -e OT_ECO_NATIVE_NORMALIZE_SHA256=$NATIVE_NORMALIZE_SHA256)
+  NATIVE_NORMALIZE_ENV=(-e OT_NATIVE_FRESH_GRT=${NATIVE_FRESH_GRT:-0} -e OT_ECO_NATIVE_NORMALIZE=/src/$NATIVE_REL -e OT_ECO_NATIVE_NORMALIZE_SHA256=$NATIVE_NORMALIZE_SHA256)
 fi
 ECO_SESSION=${ECO_SESSION:-mm}
 case "$ECO_SESSION" in mm|ff|auto) ;; *) echo "ECO_SESSION must be mm, ff or auto"; exit 2 ;; esac
