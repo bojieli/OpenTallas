@@ -89,10 +89,13 @@ for p in J1:
     used_s.add(k)
     k += 10
 assert max(new.values()) < 164.16 - 1.0 and min(new.values()) > 138.24 + 1.0, new
+OFF = {"xs_a1": 9, "xs_a2": 7, "xs_g1": 5, "xs_g2": 5}
 for p in pins:
     if p[0] in new:
         assert p[3] == H, p
         p[2], p[3] = new[p[0]], 0.0
+        b, i = p[0][:-1].split("[")
+        p[0] = f"xss_{b[3:]}[{int(i) - OFF[b]}]"   # leaf-1 slice -> its own S-face port (one face per port)
 
 
 def fmt(port, layer, x, y):
@@ -106,7 +109,7 @@ io = "physical/ref_tile_specs/smh/smh_tile_rp4d_pins.tcl"
      "# in the x 138-164 channel below leaf 1's x store (all strap stages on clk_region[2])"] +
     [fmt(*p) for p in pins]) + "\n")
 
-spec["pins"]["S"] = sorted(set(spec["pins"]["S"]) | {"xs_a1", "xs_g1", "xs_a2", "xs_g2"})
+spec["pins"]["S"] = list(spec["pins"]["S"]) + ["xss_a1", "xss_g1", "xss_a2", "xss_g2"]
 spec["io_flop_at_pins"]["cols"] = 10
 spec["job"].update(
     owner="Claude H-SM rp4d helper 0945", tag="rp4d",
