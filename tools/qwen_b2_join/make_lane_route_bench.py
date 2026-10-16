@@ -48,11 +48,11 @@ wire[8*65-1:0]{X}_face[0:5],{X}_faced[0:5];wire[7:0]{X}_ffault[0:5],{X}_ffaultd[
 wire[8*194-1:0]{X}_ret_u,{X}_ret_ud;wire[7:0]{X}_uf;
 for(genvar h=0;h<6;h=h+1)begin:{X}_g
  assign {X}_tc[h]={{X}_scale_addr[192*(h/2)+:192],{X}_gre[8*(h/2)+:8],{X}_scale_re,{X}_pf,{X}_pv,{X}_tv,{X}_sel};
- tb_lr_dly #(341) r_tc(clk,{X}_t_TC,{X}_tc[h],{X}_tcd[h]);
- tb_lr_dly #(52) r_am(clk,{X}_t_AM,{X}_am[h],{X}_amd[h]);
- tb_lr_dly #(2048) r_ty(clk,{X}_t_TY,{X}_ty[h],{X}_tyd[h]);
- tb_lr_dly #(8*65) r_f(clk,{X}_t_F,{X}_face[h],{X}_faced[h]);
- tb_lr_dly #(8) r_ff(clk,{X}_t_F,{X}_ffault[h],{X}_ffaultd[h]);
+ tb_lr_dly #(341) dl_tc(clk,{X}_t_TC,{X}_tc[h],{X}_tcd[h]);
+ tb_lr_dly #(52) dl_am(clk,{X}_t_AM,{X}_am[h],{X}_amd[h]);
+ tb_lr_dly #(2048) dl_ty(clk,{X}_t_TY,{X}_ty[h],{X}_tyd[h]);
+ tb_lr_dly #(8*65) dl_f(clk,{X}_t_F,{X}_face[h],{X}_faced[h]);
+ tb_lr_dly #(8) dl_ff(clk,{X}_t_F,{X}_ffault[h],{X}_ffaultd[h]);
  qfd_port_half_b2 #(.ROM_BAND(h/2),.ROM_HALF(h%2))port(
   .hb(3'(h)),.ck(clk),.rst_n(rs),
   .ck_bw0(clk),.ck_bw1(clk),.ck_bw2(clk),.ck_bw3(clk),.ck_bw4(clk),.ck_bw5(clk),.ck_bw6(clk),.ck_bw7(clk),
