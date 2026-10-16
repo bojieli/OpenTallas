@@ -1,0 +1,61 @@
+{
+ "schema": "opentallas.native_pin_audit.receipt.v1",
+ "tool": "tools/hier_contract/native_pin_audit.py audit_one (main)",
+ "budget": {
+  "launch_ps": 220,
+  "capture_ps": 190,
+  "spread_ps": 80
+ },
+ "audits": [
+  {
+   "cell": "ot_s81_mx4_rq",
+   "view": "physical/ref_tile/s81engm_mx4rq0/views/ot_s81_mx4_rq",
+   "lib_cell": "ot_s81_mx4_rq",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 89.3,
+   "spread_ps": 14.9,
+   "outputs": 78,
+   "inputs": 92,
+   "launch_ps": 174.6,
+   "launch_pin": "rq_row[67]",
+   "capture_ps": 202.1,
+   "capture_pin": "desc_rq",
+   "launch_over": 0,
+   "capture_over": 1,
+   "comb_pins": 0,
+   "comb_first": [],
+   "pass": false,
+   "fail_why": "capture 202.06791 > 190 (1 pins)",
+   "job": "s81engm_mx4rq0-p17b-f3147e50e",
+   "commit": "148fd98793c04ee1914c394f3673b420c3a44ed9"
+  },
+  {
+   "cell": "ot_s81_mx4_rq",
+   "view": "physical/ref_tile/s81engm_mx4rq1/views/ot_s81_mx4_rq",
+   "lib_cell": "ot_s81_mx4_rq",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 89.9,
+   "spread_ps": 18.4,
+   "outputs": 78,
+   "inputs": 92,
+   "launch_ps": 172.4,
+   "launch_pin": "rq_row[68]",
+   "capture_ps": 200.0,
+   "capture_pin": "desc_rq",
+   "launch_over": 0,
+   "capture_over": 1,
+   "comb_pins": 0,
+   "comb_first": [],
+   "pass": false,
+   "fail_why": "capture 199.9741 > 190 (1 pins)",
+   "job": "s81engm_mx4rq1-p17b-f3147e50e",
+   "commit": "6c50b2bc320f93f289cd06f5ebf84209306f9956"
+  }
+ ]
+}
