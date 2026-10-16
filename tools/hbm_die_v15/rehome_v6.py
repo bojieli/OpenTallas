@@ -79,6 +79,7 @@ def main():
     ap.add_argument('--plan', required=True); ap.add_argument('--old', default='results/arch/hbm_die_v15/compact660_v5')
     ap.add_argument('--contract', default='results/arch/hier_contract_1015/hbm_v15.json')
     ap.add_argument('--adopted', default='H-DIE 0300 10-16, owner 02:15 growth (v6b: SU 77 mm2 at 60 % util, SM 7,050 x 1,780)')
+    ap.add_argument('--sm-carve', type=float, help='SM frame edge feedthrough carve width (W column + N row, OWNER/H-SM rp4c 40.32)')
     ap.add_argument('--dry-run', action='store_true')
     ap.add_argument('--out', help='write an explicitly unqualified proposal here, preserving the active contract')
     a = ap.parse_args()
@@ -273,11 +274,16 @@ def main():
         # H-SM 10-16 03:2x: SM slot 7,200 x 1,800 with NO in-slot 40-um feedthrough (relays use die channels)
         ff, fr = R.ft_forbid, R.ft_record
         R.ft_forbid, R.ft_record = (lambda o: {}), (lambda o: [])
+        R.SM_CARVE = a.sm_carve
+        if a.sm_carve is None:      # v6b..v5: no SM feedthrough; with --sm-carve grant_sm uses the edge carve
+            R.ft_forbid_sm, R.ft_record_sm = R.ft_forbid, R.ft_record
         try:
             for i in range(8):
                 R.grant_sm(S[f'sm_{q}{i}'], R.ports('sm', {}), ref, sha['sm']); regrant.append(f'sm_{q}{i}')
                 S[f'sm_{q}{i}']['notes'] = S[f'sm_{q}{i}']['notes'].replace('die feedthrough column+row reserved',
-                                                                              'no in-slot feedthrough (H-SM 10-16; relays in die channels)')
+                                                                              'no in-slot feedthrough (H-SM 10-16; relays in die channels)'
+                                                                              if a.sm_carve is None else
+                                                                              f'OWNER feedthrough carve: W-edge column + N-edge row {a.sm_carve} um (H-SM rp4c)')
         finally:
             R.ft_forbid, R.ft_record = ff, fr
     # 4. audit

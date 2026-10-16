@@ -1,0 +1,247 @@
+{
+ "schema": "opentallas.hbm.sm_hbm_layout_options.v1",
+ "base": "v5 core4_sfu2_b3624 BEFORE the rp4c carve frame (SM 7200x1800, edge 100)",
+ "reach_um": 480,
+ "rows": {
+  "base_legs": {
+   "desc": "v5 plan as adopted (SM 7200x1800, lanes legs)",
+   "die_mm2": 828.3,
+   "cut_v": 0.535,
+   "cut_h": 0.577,
+   "lines_over_060": 0,
+   "stages_bw": 9.364,
+   "per_class": {
+    "SM_HBM": 12.03,
+    "SM_X": 9.74,
+    "SM_OUT": 10.56,
+    "VM_HUB": 22.19,
+    "HBM_VM": 26.06,
+    "VM_HBM": 26.41,
+    "COLL_VM": 17.69,
+    "COLL_RING": 21.38,
+    "COLL_EP": 14.44,
+    "KV_DESC": 10.91
+   },
+   "hops": {
+    "chains": 32,
+    "hops": 237,
+    "hops_over_600": 80,
+    "max_hop_um": 4367.4,
+    "max_route_um": 11213.9,
+    "stages_bw": 6.406,
+    "ideal_stages_bw": 12.031
+   },
+   "ds": null
+  },
+  "base_homes": {
+   "desc": "v5 + SM_HBM lanes forced to relay-legal routes (homescls=SM_HBM)",
+   "die_mm2": 828.3,
+   "cut_v": 0.633,
+   "cut_h": 0.559,
+   "lines_over_060": 3,
+   "stages_bw": 9.403,
+   "per_class": {
+    "SM_HBM": 12.22,
+    "SM_X": 9.91,
+    "SM_OUT": 10.56,
+    "VM_HUB": 22.31,
+    "HBM_VM": 26.06,
+    "VM_HBM": 26.25,
+    "COLL_VM": 17.66,
+    "COLL_RING": 21.38,
+    "COLL_EP": 14.44,
+    "KV_DESC": 10.75
+   },
+   "hops": {
+    "chains": 32,
+    "hops": 315,
+    "hops_over_600": 74,
+    "max_hop_um": 1804.1,
+    "max_route_um": 10943.1,
+    "stages_bw": 8.844,
+    "ideal_stages_bw": 12.219
+   },
+   "ds": {
+    "sm_leg_delta": 0.19,
+    "AR_tok_pct": -0.045,
+    "MTP_design_tok_pct": -0.086,
+    "AR_dcycles": 268.1
+   }
+  },
+  "opt1_smcarve": {
+   "desc": "(1) SM feedthrough carve: relays legal inside SM frames + homes routes",
+   "die_mm2": 828.3,
+   "cut_v": 0.53,
+   "cut_h": 0.559,
+   "lines_over_060": 0,
+   "stages_bw": 9.443,
+   "per_class": {
+    "SM_HBM": 12.47,
+    "SM_X": 10.0,
+    "SM_OUT": 10.53,
+    "VM_HUB": 22.22,
+    "HBM_VM": 26.03,
+    "VM_HBM": 26.06,
+    "COLL_VM": 17.78,
+    "COLL_RING": 21.38,
+    "COLL_EP": 14.44,
+    "KV_DESC": 10.41
+   },
+   "hops": {
+    "chains": 32,
+    "hops": 422,
+    "hops_over_600": 10,
+    "max_hop_um": 1416.1,
+    "max_route_um": 10943.1,
+    "stages_bw": 12.188,
+    "ideal_stages_bw": 12.469
+   },
+   "ds": {
+    "sm_leg_delta": 0.44,
+    "AR_tok_pct": -0.157,
+    "MTP_design_tok_pct": -0.214,
+    "AR_dcycles": 936.7
+   }
+  },
+  "opt2_svg_at_sm": {
+   "desc": "(2) svg_<q><k> adjacent to its SM: long link svg<->vmks/ctl 2,488 b",
+   "die_mm2": 828.3,
+   "cut_v": 0.518,
+   "cut_h": 0.579,
+   "lines_over_060": 0,
+   "stages_bw": 9.535,
+   "per_class": {
+    "SM_HBM": 11.72,
+    "SM_X": 9.57,
+    "SM_OUT": 10.16,
+    "VM_HUB": 22.06,
+    "HBM_VM": 26.56,
+    "VM_HBM": 26.16,
+    "COLL_VM": 17.59,
+    "COLL_RING": 21.38,
+    "COLL_EP": 14.44,
+    "KV_DESC": 10.31
+   },
+   "hops": {
+    "chains": 32,
+    "hops": 220,
+    "hops_over_600": 79,
+    "max_hop_um": 4367.0,
+    "max_route_um": 11213.9,
+    "stages_bw": 5.875,
+    "ideal_stages_bw": 11.719
+   },
+   "ds": {
+    "sm_leg_delta": -0.31,
+    "AR_tok_pct": 0.117,
+    "MTP_design_tok_pct": 0.234,
+    "AR_dcycles": -697.2
+   }
+  },
+  "opt3_smcol420_sface": {
+   "desc": "(3) SM columns 1785 x 7260 over the PC row, 420-um chain channel, HBM port on the PC-facing face",
+   "die_mm2": 854.7,
+   "cut_v": 0.587,
+   "cut_h": 0.499,
+   "lines_over_060": 0,
+   "stages_bw": 8.404,
+   "per_class": {
+    "SM_HBM": 2.12,
+    "SM_X": 9.81,
+    "SM_OUT": 15.91,
+    "VM_HUB": 21.97,
+    "HBM_VM": 35.5,
+    "VM_HBM": 35.34,
+    "COLL_VM": 17.88,
+    "COLL_RING": 13.62,
+    "COLL_EP": 22.89,
+    "KV_DESC": 15.09
+   },
+   "hops": {
+    "chains": 32,
+    "hops": 100,
+    "hops_over_600": 0,
+    "max_hop_um": 480.0,
+    "max_route_um": 3376.0,
+    "stages_bw": 2.125,
+    "ideal_stages_bw": 2.125
+   },
+   "ds": {
+    "sm_leg_delta": -2.22,
+    "AR_tok_pct": -0.917,
+    "MTP_design_tok_pct": -1.057,
+    "AR_dcycles": 5521.8
+   }
+  },
+  "opt3_smcol20_sface": {
+   "desc": "(3b) SM columns, 20-um channel (no die growth)",
+   "die_mm2": 828.3,
+   "cut_v": 0.603,
+   "cut_h": 0.485,
+   "lines_over_060": 1,
+   "stages_bw": 8.293,
+   "per_class": {
+    "SM_HBM": 1.94,
+    "SM_X": 9.75,
+    "SM_OUT": 15.94,
+    "VM_HUB": 21.97,
+    "HBM_VM": 34.72,
+    "VM_HBM": 34.44,
+    "COLL_VM": 17.84,
+    "COLL_RING": 13.62,
+    "COLL_EP": 22.11,
+    "KV_DESC": 16.0
+   },
+   "hops": {
+    "chains": 32,
+    "hops": 88,
+    "hops_over_600": 12,
+    "max_hop_um": 1038.6,
+    "max_route_um": 3112.8,
+    "stages_bw": 1.75,
+    "ideal_stages_bw": 1.938
+   },
+   "ds": {
+    "sm_leg_delta": -2.28,
+    "AR_tok_pct": -0.773,
+    "MTP_design_tok_pct": -0.867,
+    "AR_dcycles": 4650.3
+   }
+  },
+  "opt4_smcol_bandlow": {
+   "desc": "(4) SM columns ABOVE the band, band next to the PC row",
+   "die_mm2": 834.9,
+   "cut_v": 1.071,
+   "cut_h": 0.649,
+   "lines_over_060": 159,
+   "stages_bw": 10.595,
+   "per_class": {
+    "SM_HBM": 10.72,
+    "SM_X": 15.61,
+    "SM_OUT": 13.97,
+    "VM_HUB": 21.66,
+    "HBM_VM": 20.19,
+    "VM_HBM": 19.62,
+    "COLL_VM": 17.44,
+    "COLL_RING": 28.0,
+    "COLL_EP": 8.56,
+    "KV_DESC": 14.41
+   },
+   "hops": {
+    "chains": 32,
+    "hops": 370,
+    "hops_over_600": 11,
+    "max_hop_um": 2828.4,
+    "max_route_um": 7829.9,
+    "stages_bw": 10.562,
+    "ideal_stages_bw": 10.719
+   },
+   "ds": {
+    "sm_leg_delta": 3.58,
+    "AR_tok_pct": -1.182,
+    "MTP_design_tok_pct": -1.569,
+    "AR_dcycles": 7143.2
+   }
+  }
+ }
+}

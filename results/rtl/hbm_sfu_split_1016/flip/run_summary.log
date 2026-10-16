@@ -1,7 +1,6 @@
-SFU_SPLIT_EQUIV_MISMATCH edge=6214 out=1 status=0
-SFU_SPLIT_EQUIV_MISMATCH edge=6215 out=1 status=0
-SFU_SPLIT_EQUIV_MISMATCH edge=6216 out=1 status=0
-SFU_SPLIT_EQUIV_MISMATCH edge=6217 out=1 status=0
-[5441000] %Fatal: tb_hgi_sfu_split_equiv.sv:206: Assertion failed in tb_hgi_sfu_split_equiv: SFU_SPLIT_EQUIV FAIL mismatching_edges=192 of 6489
-Aborting...
+SFU_SPLIT_EQUIV_MISMATCH edge=6223 out=0 lg_ro=1 status=0
+SFU_SPLIT_EQUIV_MISMATCH edge=6224 out=0 lg_ro=1 status=0
+SFU_SPLIT_EQUIV_MISMATCH edge=6225 out=0 lg_ro=1 status=0
+SFU_SPLIT_EQUIV_MISMATCH edge=6226 out=0 lg_ro=1 status=0
+[5448000] %Fatal: tb_hgi_sfu_split_equiv.sv:210: Assertion failed in tb_hgi_sfu_split_equiv: SFU_SPLIT_EQUIV FAIL mismatching_edges=192 of 6497
 SFU_SPLIT_GATE MUTANT flip REJECTED (expected)

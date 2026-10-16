@@ -7,7 +7,11 @@
 // every request's lane/bank and is the stimulus only (the bank RTL has its own exact benches).
 // -DMUT1 / -DMUT2 (static load mutants) must FAIL.
 module tb_xload_static_lock;
+`ifdef XLOAD_RD_LAT
+    localparam integer RD_LAT = `XLOAD_RD_LAT;   // VM read return latency (6; 7 with the nat2 bank pin registers)
+`else
     localparam integer RD_LAT = 6;
+`endif
 `ifdef MUT1
     localparam integer MS = 1;
 `elsif MUT2
@@ -63,7 +67,7 @@ module tb_xload_static_lock;
     always @(posedge clk) lsh <= {lsh[254:0], launch_v};
     wire xv_ref = lsh[fire_d - 1];
     wire xa_e = xv_ref;
-    ot_hgi_sm_xload_static_cl2f #(.RD_LAT(RD_LAT), .MUT(MS)) ub (.clk(clk), .clk_eg(clk), .clk_bf({4{clk}}), .clk_qlo(clk), .clk_qhi(clk), .clk_bd(clk),
+    ot_hgi_sm_xload_static_cl2f #(.RD_LAT(RD_LAT), .MUT(MS)) ub (.clk(clk), .clk_eg(clk), .clk_cal(clk), .clk_bf({4{clk}}), .clk_qlo(clk), .clk_qhi(clk), .clk_bd(clk),
         .rst_n(rst_n), .tgt(8'd100), .cfg_v(cfg_v), .cfg_target(cfg_target), .cfg_addr(cfg_addr), .cfg_data(cfg_data),
         .desc_v(desc_v), .desc_base(desc_base), .desc_limit(desc_limit), .desc_loops(desc_loops), .launch_v(launch_v),
         .configured(cfgd_b), .fault(f_b), .active(act_b), .x_done(done_b),
