@@ -1,6 +1,9 @@
 `timescale 1ns/1ps
 module tb_qfd_vm_die_static;
 parameter integer OBS_MUT=0,PACK_MUT=0,MEM=0,CONFLICT_MUT=0,NATIVE_BANKS=0;
+parameter integer RETURN_RO=1,PARTITIONED=0,EXPECTED_RO=RETURN_RO;
+localparam integer NCK=8*(22+14*RETURN_RO)+(6*(10+RETURN_RO)+255)/256;
+localparam integer DELTA=EXPECTED_RO-1;
 integer COMMIT_MUT=0;
 initial void'($value$plusargs("COMMIT_MUT=%d",COMMIT_MUT));
 integer epoch=0;
@@ -47,8 +50,12 @@ reg [532:0] svw=0; reg [20:0] svr=0; reg [519:0] ar=0;
 reg qe=0,qs=0;wire qsr,qd,fault,svq_v;wire [511:0] svq;wire [523:0] q;
 integer beats=0,errors=0,cycles=0,start_cycle=0,requests=0,responses=0,req_start=0;
 
-qfd_sp_vector_memory #(.USE_MACRO(MEM),.USE_LEAF_CLOCKS(1),.OBS_MUT(OBS_MUT),.NATIVE_BANKS(NATIVE_BANKS)) dut(
+qfd_sp_vector_memory #(.USE_MACRO(MEM),.USE_LEAF_CLOCKS(1),.OBS_MUT(OBS_MUT),.NATIVE_BANKS(NATIVE_BANKS),.RETURN_RO(RETURN_RO),.PAR_RB(PARTITIONED),
+ .USE_NATIVE_CLOCKS(PARTITIONED),.RETURN_LEAVES(PARTITIONED),.READ_CONTROL_LEAVES(PARTITIONED),.RETURN_CLOCKS(PARTITIONED),.RELAY_TILES(PARTITIONED)) dut(
 .ck(clk),.rst_n(rst_n),
+`ifdef OT_QFD_VM_PARTITIONED_CLOCKS
+.native_ck({1008{clk}}),.return_ck({96{clk}}),.read_control_ck({3{clk}}),.relay_ck({NCK{clk}}),
+`endif
 .ck_r0_0(clk),
 .ck_r0_1(clk),
 .ck_r0_2(clk),
@@ -559,12 +566,12 @@ for(integer b=7;b<39;b=b+1)if(cv[b] && cl[8*b+:8]==49)begin
 end
 if(q[523])begin
  if(q[516:512]!==beats[4:0] || q[511:0]!==image(856+beats))begin errors=errors+1;$display("FAIL beat=%0d tag=%0d",beats,q[516:512]);end
- if(cycles!=start_cycle+15+beats)begin errors=errors+1;$display("FAIL Q cadence cycle%0d expected%0d",cycles,start_cycle+15+beats);end
+ if(cycles!=start_cycle+15+DELTA+beats)begin errors=errors+1;$display("FAIL Q cadence cycle%0d expected%0d",cycles,start_cycle+15+DELTA+beats);end
  beats=beats+1;
 end
 if(svq_v)begin
- if(responses>=requests || svq!==image(3167+responses%32) || cycles!=req_start+13+responses)begin
-  errors=errors+1;$display("FAIL seq response%0d cycle=%0d expected=%0d",responses,cycles,req_start+13+responses);
+ if(responses>=requests || svq!==image(3167+responses%32) || cycles!=req_start+13+DELTA+responses)begin
+  errors=errors+1;$display("FAIL seq response%0d cycle=%0d expected=%0d",responses,cycles,req_start+13+DELTA+responses);
  end
  responses=responses+1;
 end
@@ -588,13 +595,13 @@ svw=0;ar=0;
 // Compiler reserves16 drain/visibility edges; commit coverage is checked,never used to move this start.
 repeat(16)@(negedge clk);
 qs=1;@(negedge clk);qs=0;
-repeat(46)@(negedge clk);
+repeat(46+DELTA)@(negedge clk);
 if(fence_commits!=32 || ff || !fc)$fatal(1,"FAIL fence commits=%0d fault=%0d complete=%0d",fence_commits,ff,fc);
 if(commits!=32)begin errors=errors+1;$display("FAIL commits=%0d",commits);end
 if(beats!=32 || fault)begin errors=errors+1;$display("FAIL beats=%0d fault=%0d",beats,fault);end
 // Fixed interval1 row service:256 requests in256 consecutive cycles,exact13-edge responses.
 for(i=0;i<256;i=i+1)begin svr={1'b1,20'(3167+i%32)};@(negedge clk);end
-svr=0;repeat(16)@(negedge clk);
+svr=0;repeat(16+DELTA)@(negedge clk);
 if(responses!=256)begin errors=errors+1;$display("FAIL responsecount%0d",responses);end
 // Repeat via the REAL shared native SU producer pack; fresh coverage cannot inherit the prior epoch.
 repeat(3)@(negedge clk);epoch=1;beats=0;qe=1;@(negedge clk);qe=0;
@@ -606,9 +613,9 @@ end
 swmask=0;
 repeat(16)@(negedge clk);
 qs=1;@(negedge clk);qs=0;
-repeat(46)@(negedge clk);
+repeat(46+DELTA)@(negedge clk);
 if(beats!=32 || fault)begin errors=errors+1;$display("FAIL SU beats=%0d fault=%0d",beats,fault);end
-if(errors==0)$display("PASS vm_die_static real_Q_rows=64 words=1024 attention_rows=32 actual_commit_edges=8 fenced_commit_edges=9 TAG59=checked seq_requests=%0d fixed_RL=13 Q_cadence=1",requests);
+if(errors==0)$display("PASS vm_die_static real_Q_rows=64 words=1024 attention_rows=32 actual_commit_edges=8 fenced_commit_edges=9 TAG59=checked seq_requests=%0d fixed_RL=%0d Q_cadence=1 RO=%0d real_relay_tiles=%0d",requests,12+EXPECTED_RO,RETURN_RO,PARTITIONED?NCK:0);
 else $display("FAIL vm_die_static errors=%0d",errors);
 $finish;
 end
