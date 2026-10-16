@@ -29,7 +29,7 @@ always @(negedge clk)if(rst_n)begin
  for(integer h=0;h<6;h=h+1)if(rb[h][550])begin
   if(!rb[h][548])rows_emitted=rows_emitted+1;
   if(rb[h][549])begin
-   expected_end=op_start+2+5*op_ns+(op_ends/8)*((8*op_ns>op_stride)?8*op_ns:op_stride)+(op_ends%8)*op_ns+op_ns-1+2;
+   expected_end=op_start+2+5*op_ns+(op_ends/8)*((8*op_ns>op_stride)?8*op_ns:op_stride)+(op_ends%8)*op_ns+op_ns-1+(op_payload?2:1);
    if(cycle!=expected_end)$fatal(1,"end cycle got%0d expected%0d op%0d burst%0d",cycle,expected_end,op_id,op_ends);
    op_ends=op_ends+1;
   end
