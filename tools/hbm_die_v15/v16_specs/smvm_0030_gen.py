@@ -59,6 +59,10 @@ s['notes'] = [
  'on the writer emission cycles; one owner per bank per cycle is the calendar word itself (a single code per bank per cycle), and '
  'SM k only ever writes bank k, so the 8 lanes cannot collide; any calendar/writer phase error is a bank schedule FAULT (bench MUT=2).',
  'Descriptor calendar cp_smw_<q> TARGET 160+QID (parent allocation 160..163).',
+ 'COMPILER ROW-DEALING RULE (attn 2026-10-16, ARGMAX.LOCAL index = word position): VM word = 64*(base_row+p*stride_row+r[11:3])+8k+r[2:0]. '
+ 'For position == global row (the LM head read by hb_argmax via mirror=1 / a_mirror), quadrant q takes contiguous 64-row blocks '
+ '(base_row_q = q*Bq) and SM k computes the rows g with ((g>>3)&7)==k at local row r = 8*((g>>6)-base_blk)+(g&7). The default contiguous '
+ 'per-SM shard s*Q+r gives wrong ids and tie order. DS head n=1347 = 22 blocks (6/6/5/5), SM imbalance at most 8 rows; logits unchanged.',
  'VM write group: NW wq1 (was CP), NE wq1 (was retired ATT). NE wq2 (HC engine) and NE rq3/rq4, NW rq3, NW cq, SW cq client1 stay '
  'G-SMVM-VMCLIENT (no static producer; retirement requested from H-SM).']
 (SP / 'smvm_0030.json').write_text(json.dumps(s, indent=1) + '\n')
