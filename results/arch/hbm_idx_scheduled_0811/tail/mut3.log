@@ -1,0 +1,9 @@
+TAIL_TIMELINE cycle97 expected1 got0
+TAIL_DATA cycle98 expected00ff80ff80c036ff80 got203e11ff80ff80c5e4
+TAIL_DATA cycle99 expectedff0000000000000000 got00ff80ff80c036ff80
+TAIL_DATA cycle100 expected90ff80ff80ff804516 gotff0000000000000000
+TAIL_DATA cycle101 expected50ff80ff80ff80ff80 got90ff80ff80ff804516
+IDX_TAIL_EXACT MUT3 issued256 checked255 lanes1020 errors16 latency16
+[3780000] %Fatal: tb_idx_tail_exact_0811.sv:42: Assertion failed in tb_idx_tail_exact_0811: actual static tail data or fixed-timeline mismatch
+%Error: rtl/test/hbm_idx_static/tb_idx_tail_exact_0811.sv:42: Verilog $stop
+Aborting...

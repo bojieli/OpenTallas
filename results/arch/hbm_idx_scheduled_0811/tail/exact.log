@@ -1,0 +1,12 @@
+ot-run: ot-epyc4       admits   252 GB (avail 478, growth 178, headroom 48, waiters 0/0 GB) load 72/128 running 37 disk 910 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/hidx-tail-0854/src
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/codex/hidx-tail-0854/src
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-4093008-1792165921 after 0 s
+IDX_TAIL_EXACT MUT0 issued256 checked256 lanes1024 errors0 latency16
+IDX_TAIL_EXACT PASS
+- rtl/test/hbm_idx_static/tb_idx_tail_exact_0811.sv:43: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 4us; walltime 0.003 s; speed 1.449 ms/s
+- Verilator: cpu 0.003 s on 1 threads; allocated 7 MB
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-4093008-1792165921): exit 0
