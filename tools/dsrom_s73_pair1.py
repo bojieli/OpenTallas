@@ -19,7 +19,7 @@ def save(p, x):
 
 class RaggedPool(C.Pool):
     """Same ordered source segments and word packing, contiguous real sites, no ROM ECC."""
-    def __init__(self, pairs=2682, bf=576, balance_raw=True, regions=None, bf_sites=None):
+    def __init__(self, pairs=2682, bf=576, balance_raw=True, regions=None):
         self.pairs=self.np=pairs; self.bfcount=bf
         self.balance_raw=balance_raw
         self.bounds=[r*pairs//128 for r in range(129)]
@@ -31,12 +31,6 @@ class RaggedPool(C.Pool):
             for n,_ in regions:self.bounds.append(self.bounds[-1]+n)
             self.bf={lo+(i*n)//b for (n,b),lo in zip(regions,self.bounds) for i in range(b)}
             assert len(self.bf)==bf
-        if bf_sites is not None:
-            sites=set(bf_sites)
-            assert len(sites)==bf and all(0<=p<pairs for p in sites)
-            if regions is not None:
-                assert all(sum(lo<=p<hi for p in sites)==r[1] for r,lo,hi in zip(regions,self.bounds,self.bounds[1:]))
-            self.bf=sites
         self.byreg={}
         for r in range(128):
             ps=list(range(self.bounds[r],self.bounds[r+1]))
@@ -98,9 +92,9 @@ def physical_address(m,rank,row,k):
                 ordered_K_range=[e,e+length],ROM_ECC=False,
                 owner_result_multicast_required=owner!=rank,conversion=m['conversion'])
 
-def mapping(out,reference_unsplit=False,stages=73,pairs=2682,bf=576,regions=None,homes_override=None,bf_sites=None):
+def mapping(out,reference_unsplit=False,stages=73,pairs=2682,bf=576,regions=None,homes_override=None):
     headers=C.load_headers(ROOT/'results/uarch/dsrom_fixed4096_owner_compiler_20261002/inputs/tensor_headers.jsonl.gz')
-    pools=[RaggedPool(pairs,bf,balance_raw=not reference_unsplit,regions=regions,bf_sites=bf_sites) for _ in range(stages)]
+    pools=[RaggedPool(pairs,bf,balance_raw=not reference_unsplit,regions=regions) for _ in range(stages)]
     decls=[C.declarations(headers,L) for L in range(40)]
     providers=[];homes={};covered=set()
     for L,(_,cs,he,_,names) in enumerate(decls):
@@ -205,12 +199,11 @@ def main():
     ap.add_argument('--regions-json',type=Path,help='ragged roots: JSON list of 128 [pairs, bf] (sum = --pairs / --bf)')
     ap.add_argument('--homes-from',type=Path,help='home_order_check.json of a previous run: home every layer\'s providers '
                     'on its first dense stage (fixed point: the check of this run must PASS)')
-    ap.add_argument('--bf-sites-from',type=Path,help='Exact allocator stage_map.json BF_site_IDs; preserves literal BF homes rather than redistributing within ragged regions')
     a=ap.parse_args()
     regions=json.loads(a.regions_json.read_text()) if a.regions_json else None
     a.out.mkdir(parents=True,exist_ok=False)
     homes=None
     if a.homes_from:
         homes={int(L):s for L,s in json.loads(a.homes_from.read_text())['first_dense_stage'].items()}
-    mapping(a.out,a.reference_unsplit,a.stages,a.pairs,a.bf,regions,homes,json.loads(a.bf_sites_from.read_text())['BF_site_IDs'] if a.bf_sites_from else None)
+    mapping(a.out,a.reference_unsplit,a.stages,a.pairs,a.bf,regions,homes)
 if __name__=='__main__':main()

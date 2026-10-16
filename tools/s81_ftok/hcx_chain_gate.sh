@@ -36,7 +36,7 @@ POSTF="rtl/hdc/v41/ot_hdc_sk_arith.sv rtl/hdc/v41/ot_hdc_sk_recip_rom.sv rtl/hdc
  physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v
  physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v
  physical/asap7_memory_macros/ot_rom_4096x72_m8/ot_rom_4096x72_m8.v
- rtl/dsrom_sys/s81_hcx/ot_s81_hcx_pre_forward.sv rtl/dsrom_sys/s81_hcx/ot_s81_hcx_vm_scheduled.sv rtl/dsrom_sys/s81_hcx/ot_s81_hcx_post_native.sv
+ rtl/dsrom_sys/s81_hcx/ot_s81_hcx_vm_scheduled.sv rtl/dsrom_sys/s81_hcx/ot_s81_hcx_post_native.sv
  rtl/dsrom_sys/s81_native_head_connect/ot_s81_head_gain_stream.sv rtl/dsrom_sys/s81_hcx/ot_s81_hcx_post_gain_native.sv"
 FILES="rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/proto/ot_fp32_add_rne_pipe.sv
  rtl/hdc/ot_hdc_sfu.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fastfp_lat.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv
