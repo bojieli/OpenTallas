@@ -161,7 +161,14 @@ def main():
             aa={k:val for k,val in aa.items()if k not in('uv','uv_pair','tt_uv')}
             partition_master(q,aa,rects)
     m['buses']=data+control
-    m['relay_equal_groups']={}
+    original_bids={b[0] for b in m['buses']}
+    groups={k:list(bs) for k,bs in m.get('relay_equal_groups',{}).items()
+            if set(bs)<=original_bids}
+    if a.mode=='b2':
+        for hb in range(6):
+            groups[f'b2_word_{hb}']=[f'b2_pword_{hb}_{kind}{u}'for u in range(4)for kind in ('l','v')]
+        groups['b2_return']=[f'b2_return_l{u}'for u in range(4)]+['b2_return_use','b2_return_v']
+    m['relay_equal_groups']=groups
     m.pop('r21_relays',None)
     # Freeze source pin frames before the allocator wraps the master family.
     def fixed(model,k=1,port_bits=None):return dict(M)
@@ -198,7 +205,8 @@ def main():
         prices.append(dict(bword=bid,halfband=hb,buses=chain,stages=[S(k)for k in chain],transport_hops=sum(S(k)for k in chain)))
     prices.sort(key=lambda x:-x['transport_hops'])
     result=dict(mode=a.mode,status='PARTIAL_REAL_ALLOCATOR_DIAGNOSTIC_NOT_NATIVE_DIE',source_receipts=source_receipts,
-                notes=notes,stage_of=st,relays=m.get('r21_relays',{}),
+                notes=notes,equal_groups=groups,stage_of=st,relays=m.get('r21_relays',{}),
+                unequal_groups={k:{bb:st.get(bb,1)for bb in bs}for k,bs in groups.items()if len({st.get(bb,1)for bb in bs})!=1},
                 reduction_transport_paths=prices,
                 measured_scope='registered wire hops from bword producer to upper input only; excludes source arithmetic latencies and incomplete native result/control paths',
                 omitted='tc/am/rb/LC/new controller and VM source interfaces and other data relay contention')
