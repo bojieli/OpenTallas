@@ -26,7 +26,8 @@ module tb_kv_refresh_rdrate;
   localparam integer O=g%NO, PCI=g/NO;
   wire dv=(t==G0+O-64), go=(t==G0+O);
   wire [4:0] cb,cc;
-  ot_qkd_static_kv_timing #(.ENABLE(1),.PC(PCI),.REF_PHASE(0),.PROFILE(PROFILE)) u(
+  ot_qkd_static_kv_timing #(.ENABLE(1),.PC(PCI),.REF_PHASE(0),.PROFILE(PROFILE),
+   .SROW(1),.READY_CUT(1),.WR_EN(1),.AQ_RD(0),.PULLIN(0)) u(
    .clk(ck),.rst_n(rst),.desc_v(dv),.desc_r(),.desc_row(19'd67),.desc_n(11'd256),.desc_first(10'd0),.go(go),.next_posted(1'b0),
    .reserved_rd(PROFILE==0 ? compiled_slots[t][g] : 1'b0),.reserved_static_col(1'b0),.reserved_write_col(1'b0),.schedule_fault(sf[g]),.phase_idle(),
    .row_v(),.row_prio(),.row_gnt(1'b1),.row_op(),.row_bank(),.row_row(),

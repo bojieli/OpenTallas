@@ -11,6 +11,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 CORE = 'rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv'
 TB = 'rtl/test/qwen_static_kv/tb_kv_refresh_rdrate.sv'
+WRAPPER = 'rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv'
 
 
 def main():
@@ -22,7 +23,7 @@ def main():
     src = out/'source'
     src.mkdir(exist_ok=True)
     manifest = {}
-    for name in (CORE, TB):
+    for name in (CORE, TB, WRAPPER):
         data = (ROOT/name).read_bytes()
         (src/Path(name).name).write_bytes(data)
         manifest[name] = hashlib.sha256(data).hexdigest()
@@ -68,6 +69,8 @@ def main():
     assert negative.returncode != 0 and 'FAIL kv refresh rdrate' in negative.stdout, 'hardware mutant escaped'
     receipt = dict(scope='actual timing-controller 118 phases x two PC parities; compiled strict PROFILE0 replay',
                    source_sha256=manifest, contexts=236, sectors_each=256,
+                   parameters=dict(SROW=1,READY_CUT=1,WR_EN=1,AQ_RD=0,PULLIN=0,REF_MODE=1),
+                   static_and_write_queue_stimulus="idle during pure K read pass",
                    refresh_rd_block_hbm=0, first_read_after_go_hbm=sorted({int(x[2]) for x in records}), compiled_image_sha256=hashlib.sha256(image.read_bytes()).hexdigest(),
                    production_exit=production.returncode, mutant_exit=negative.returncode,
                    mutant='extra ref_c<=8 read blocker; actual RTL permission differs from reserved slots',
