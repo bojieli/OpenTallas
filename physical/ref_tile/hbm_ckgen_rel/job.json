@@ -1,5 +1,5 @@
 {
- "name": "hbm_ckgen_rel-r1-COMMIT",
+ "name": "hbm_ckgen_rel-r1-4d4e2f518",
  "block": "hfd_ckgen_rel",
  "ref_tile": true,
  "owner": "Claude:H-HARDEN",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 4,
  "source": {
   "branch": "claude/hbm-harden-1705",
-  "commit": "COMMIT",
+  "commit": "4d4e2f5189e6a80ceb46d235cb72396a6aab7d70",
   "extra_paths": [
    "rtl/hbm_accel/control",
    "tools/hbm_v15_harden"
@@ -97,7 +97,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hbm_ckgen_rel/hbm_ckgen_rel-r1-COMMIT"
+   "to": "results/rtl/ref_tile/hbm_ckgen_rel/hbm_ckgen_rel-r1-4d4e2f518"
   }
  ],
  "cycles_added": 0,
