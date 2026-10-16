@@ -1,0 +1,203 @@
+{
+ "name": "dsfd_vm_wfc_return_hop1_native_1016_r3",
+ "top": "dsfd_vm_wfc_return",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_wfc.sv"
+ ],
+ "params": {
+  "RESPONSE_PAD": 2
+ },
+ "defines": [],
+ "clock": "core",
+ "clock_port": "ck",
+ "reset_ports": [
+  "rn"
+ ],
+ "outline": {
+  "w": 129.6,
+  "h": 151.2,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "pins": {
+  "W": [
+   "ck",
+   "rn",
+   "return_valid",
+   "return_lane"
+  ],
+  "E": [
+   "e_v",
+   "e_d"
+  ],
+  "N": [
+   "s_v",
+   "s_d",
+   "r_bad"
+  ]
+ },
+ "macros": [],
+ "route": {
+  "pd": 0.4,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "period_ps": 770,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_h": "M2 M4"
+ },
+ "recipe": 2,
+ "pin_regs": {
+  "enable": false,
+  "reason": "Explicit first-stage capture and registered outputs in RTL; fixed +1core request/+4core total response proven by independent parent differential gate."
+ },
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": false
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "structural_change": "r3 (new kit, never routed; RTL 320d5b77d byte-identical): r2 gate WARN -- outline 194.4x324 sized by the old band slot, std 3,183 um2 at util 5%, logic packed on the E/N faces with the W half empty, clock at the W-face centre ~150 um from the sinks (TT insertion up to 293.8 ps). Outline now sized by the pin perimeter: E face e_v+e_d = 2,052 pins on M2+M4 (pin_h, precedent dsfd_hrow_r2079_m5 CLOSED at 2,079 pins / 129.6 um on M2 M4) -> 2,052/(2 x 8 pins/um/layer) = 128.3 um min, quantised up to 151.2 um (7 x 21.6) = 6.79 pins/um/layer for PPL section margin and the recipe-2 hold/flop band; N face s_v+s_d+r_bad = 1,028 pins on M5 -> 1,028/8 = 128.5 um min -> 129.6 um (6 x 21.6) = 7.93 pins/um. Outline 129.6x151.2 = 19,596 um2 (r2 62,986 um2, -69%), expected util ~16-17%, still pin-limited. Clock + rn stay at the W-face centre: in a 129.6 um wide tile the W centre is 129.6 um from the E pin column and <= 205 um Manhattan from any sink (r2: up to ~356 um); the S-face centre would be <= 216 um, no better. tq[1] sync-clear fan-out (~4.1k loads on r_q/pad) left in RTL (frozen, proven source); buffered by repair_design.",
+ "slot_change_request": {
+  "contract": "S81 VM WFC structural native successor",
+  "version": "hop1-r7-1016",
+  "why": "Return leaf re-sized from the band slot 194.4x324 to the pin perimeter 129.6x151.2 (21.6/10.8 um quantised): E face 2,052 pins / (151.2 um x 2 layers M2+M4) = 6.79 pins/um/layer, N face 1,028 pins / 129.6 um on M5 = 7.93 pins/um/layer (<= 8). Area 19,596 um2 vs 62,986 um2; std 3,183 um2 -> util ~16-17%. Request 194.4x129.6 and fault 43.2x43.2 leaves unchanged; parent home must re-place the return leaf at the new outline. Ports, faces, params RLAT15/PAD2 and cycles unchanged."
+ },
+ "job": {
+  "owner": "claude:S-VM-RET",
+  "branch": "claude/s81-vm-wfcret-0615",
+  "tag": "valid2",
+  "extra_paths": [
+   "tools/s81_vm",
+   "rtl/dsrom_sys/s81_ph/vm",
+   "physical/s81_vm_ctl_native_1015",
+   "tools/s81_wfc_hop1",
+   "tools/s81_wfc_valid"
+  ],
+  "purpose": "ACTUAL A2F HOP1/READ4 WFC profile RPE2: requestRLAT15/returnPAD2, source-pinned full WFC component gold and observed mutants; legacy17/0 view must not be inherited.",
+  "benches": [
+   {
+    "name": "pipeline_epoch",
+    "cmd": "bash tools/s81_wfc_hop1/gate.sh {RUN}/pipeline",
+    "expect": "pass",
+    "pass_regex": "WFC_HOP1_PIPELINE_GATE PASS",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "ot_vm_wfc_ctl_mut_lane",
+    "cmd": "bash tools/s81_wfc_hop1/gate.sh {RUN}/OT_VM_WFC_CTL_MUT_LANE OT_VM_WFC_CTL_MUT_LANE",
+    "expect": "fail",
+    "fail_regex": "FATAL:",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "ot_vm_wfc_ctl_mut_fault",
+    "cmd": "bash tools/s81_wfc_hop1/gate.sh {RUN}/OT_VM_WFC_CTL_MUT_FAULT OT_VM_WFC_CTL_MUT_FAULT",
+    "expect": "fail",
+    "fail_regex": "FATAL:",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "ot_vm_wfc_ctl_mut_capture",
+    "cmd": "bash tools/s81_wfc_hop1/gate.sh {RUN}/OT_VM_WFC_CTL_MUT_CAPTURE OT_VM_WFC_CTL_MUT_CAPTURE",
+    "expect": "fail",
+    "fail_regex": "FATAL:",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "ot_vm_wfc_ctl_mut_cdc",
+    "cmd": "bash tools/s81_wfc_hop1/gate.sh {RUN}/OT_VM_WFC_CTL_MUT_CDC OT_VM_WFC_CTL_MUT_CDC",
+    "expect": "fail",
+    "fail_regex": "FATAL:",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "ot_vm_wfc_ctl_mut_epoch",
+    "cmd": "bash tools/s81_wfc_hop1/gate.sh {RUN}/OT_VM_WFC_CTL_MUT_EPOCH OT_VM_WFC_CTL_MUT_EPOCH",
+    "expect": "fail",
+    "fail_regex": "FATAL:",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "valid_gold",
+    "cmd": "bash tools/s81_wfc_valid/gate.sh {RUN}/valid_gold gold",
+    "expect": "pass",
+    "pass_regex": "WFC_VALID_EQUIVALENCE PASS",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "valid_drop_read",
+    "cmd": "bash tools/s81_wfc_valid/gate.sh {RUN}/valid_drop_read drop_read",
+    "expect": "fail",
+    "fail_regex": "FATAL:",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "valid_drop_write",
+    "cmd": "bash tools/s81_wfc_valid/gate.sh {RUN}/valid_drop_write drop_write",
+    "expect": "fail",
+    "fail_regex": "FATAL:",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "valid_idle_request",
+    "cmd": "bash tools/s81_wfc_valid/gate.sh {RUN}/valid_idle_request idle_request",
+    "expect": "fail",
+    "fail_regex": "FATAL:",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ],
+  "cycles_added": 3
+ },
+ "orfs_vars": {
+  "GPL_ROUTABILITY_DRIVEN": "0"
+ },
+ "children": [],
+ "inter": []
+}
