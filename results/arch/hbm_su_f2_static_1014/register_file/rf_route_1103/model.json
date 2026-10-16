@@ -1,0 +1,84 @@
+{
+  "schema": "opentallas.hbm.su_rf_route.candidate.v1",
+  "production_adopted": false,
+  "scope": "explicit RF41 tuple routes through existing physical48bitwidthclass relays; not yet instantiated by historical inline top",
+  "tuple": {
+    "bits": 41,
+    "layout": "valid1,address8,FP32data32",
+    "physical_bits_per_stage": 48,
+    "spare_bits": 7
+  },
+  "master_names": [
+    "hbfd_rly_48_WE",
+    "hbfd_rly_48_EW",
+    "hbfd_rly_48_SN",
+    "hbfd_rly_48_NS"
+  ],
+  "logical_latency": "one serial edge per physical stage; no retry/ready",
+  "clocks": "one distinct clock/reset pin per stage; intended serial1111.111ps; physical phase/delivery unproven",
+  "source_pins": {
+    "rtl/lib/ot_rst_relay.sv": {
+      "sha256": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+      "identical_to_recorded_relay_source_212c3439c": true
+    },
+    "rtl/hbm_accel/die_glue/ot_hbm_rly.sv": {
+      "sha256": "f38be06321d90ba5660d783ddba2d5a4f95e4c355b5b87d84b6bc03f63a37053",
+      "identical_to_recorded_relay_source_212c3439c": true
+    },
+    "rtl/hbm_accel/die_glue/hbfd_rly_masters.sv": {
+      "sha256": "5fdbc01ad0bdbfe4e4e6baab63711e42eceba25958eb79eb6a3628f961293439",
+      "identical_to_recorded_relay_source_212c3439c": true
+    }
+  },
+  "geometry": {
+    "master_outline_um": [
+      21.6,
+      21.6
+    ],
+    "maximum_hop_um": 500,
+    "actual_pin_and_route_home_assignment": null,
+    "RF_RELAY8": "historical inline component parameter, not physical geometry",
+    "die_lead_coarse_minimums": [
+      41,
+      64
+    ],
+    "test_candidate_stages_per_route": 64,
+    "routes": 16,
+    "physical_master_instances": 1024,
+    "physical_FF": 49152,
+    "outlined_area_mm2": 0.47775744000000003
+  },
+  "functional_gate": {
+    "status": "PASS",
+    "source_pin": "882660d0ee30c5b49b092fac95468a6d10e5ab90",
+    "unit": "oth-ubuntu-1066721-1792089332",
+    "host": "ot-epyc1tb",
+    "routes": 16,
+    "stages": 64,
+    "actual48bitmasters": 1024,
+    "checks": 33856,
+    "reset_and_bubbles": true,
+    "mutants": {
+      "payload_single_stage": {
+        "exit": 1,
+        "mismatches": 1699
+      },
+      "valid_single_stage": {
+        "exit": 1,
+        "mismatches": 1699
+      },
+      "one_stopped_stage_clock": {
+        "exit": 1,
+        "mismatches": 1665
+      }
+    },
+    "scope": "same-clock route functional contract only; no placement or physical phase qualification"
+  },
+  "guards": [
+    "actual assigned geometry sets stage count",
+    "all incident RF core-to-slice legs remain separate obligations",
+    "physical view identity/native L/C/TTsetup/FFhold/DRC0 remain unadopted",
+    "cycle effects and RF read deadlines must be recompiled from actual route depth"
+  ],
+  "quarter_integration": "Die may instantiate quarters directly: scalar red_sv/red_tag[8,7:0]/red_x -> each destination rf_wv/rf_wa/rf_wd; the historical simulation top retains inline RF_RELAY8."
+}

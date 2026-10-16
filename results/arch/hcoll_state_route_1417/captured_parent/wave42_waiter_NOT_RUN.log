@@ -1,0 +1,4 @@
+ot-run: ot-epyc4       admits    18 GB (avail 304, growth 239, headroom 48, waiters 1/168 GB) load 137/128 running 40 disk 336 GB 
+ot-run: -> ot-epyc4 (will queue: admits -150 GB < 24 GB)
+ot-heavy: waiting for memory on regular-crane: need 24 GB, admissible 18 GB: available 304 GB, growth charged 238 GB, young 21 GB, headroom 48 GB, real floor 227 GB
+ot-run: interrupted (signal 2) while waiting for memory on ot-epyc4; waiter cancelled: NOT RUN

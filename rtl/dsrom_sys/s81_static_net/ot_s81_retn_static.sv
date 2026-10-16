@@ -53,18 +53,26 @@ module ot_s81_retn_static #(
 );
     // ot_v41_ret_pkg norm / complete / sibling / parent, copied verbatim (the ORFS yosys front end has no package import)
     localparam integer TW = 3 + 16 + 5 + 3 + 5;   // {position, row, lo, k, nseg}
+    // norm(): the ot_v41_ret_pkg loop "k++ while C(k)" (5 iterations, k < 5 only) in closed form (n5b: the serial loop
+    // synthesised to 35 levels / ~1,275 ps).  C(j) for j = 0..4 are independent; k_final = the first j >= k with !C(j),
+    // else 5; k >= 5 is never incremented.  Bit-identical to the loop (exhaustive check tools/s81/static_return_calendar.py
+    // norm_closed_check).
     function automatic [TW-1:0] norm(input [TW-1:0] t);
         reg [18:0] row;
-        reg [4:0] lo, n;
-        reg [2:0] k;
-        integer i;
+        reg [4:0] lo, n, c;
+        reg [2:0] k, kf;
+        integer j;
         begin
             {row, lo, k, n} = t;
-            for (i = 0; i < 5; i = i + 1)
-                if (!(lo == 5'd0 && (6'd1 << k) >= {1'b0, n}) && lo[k] == 1'b0 &&
-                    ({1'b0, lo} + (6'd1 << k)) >= {1'b0, n})
-                    k = k + 3'd1;
-            norm = {row, lo, k, n};
+            for (j = 0; j < 5; j = j + 1)
+                c[j] = !(lo == 5'd0 && (6'd1 << j) >= {1'b0, n}) && lo[j] == 1'b0 && ({1'b0, lo} + (6'd1 << j)) >= {1'b0, n};
+            kf = k;
+            if (k < 3'd5) begin
+                kf = 3'd5;
+                for (j = 4; j >= 0; j = j - 1)
+                    if (j >= k && !c[j]) kf = j;
+            end
+            norm = {row, lo, kf, n};
         end
     endfunction
     function automatic complete(input [TW-1:0] t);
