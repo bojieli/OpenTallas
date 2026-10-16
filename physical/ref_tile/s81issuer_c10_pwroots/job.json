@@ -1,0 +1,118 @@
+{
+ "name": "s81issuer_c10_pwroots-pw1-COMMIT",
+ "block": "dsfd_stage_seq_static_c10",
+ "ref_tile": true,
+ "owner": "Codex:S81 PQ control",
+ "purpose": "c10 production stage controller, issuer v2 (2 context trees), native MIX4/PQboot faces",
+ "threads": 4,
+ "peak_ram_gb": 8,
+ "source": {
+  "branch": "codex/s81-issuer-v2b-0818",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/dsrom_sys/s81_static_control",
+   "tools/s81_static_control",
+   "tools/s81/fill2_c8_bench.sh",
+   "physical/s81_fill2",
+   "physical/s81_die_pins/fill2_gen19b/dsfd_stage_seq_static_c8.tcl",
+   "physical/s81_die_pins/fill2_gen19b/dsfd_stage_seq_static_c10_localtree.tcl",
+   "tools/s81_compile_schedule",
+   "tools/s81/issuer_pinreg_boundary_gate.py",
+   "physical/s81_die_pins/issuer_pwroots"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; dsfd_stage_seq_static_c10 u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS -DOT_S81_ISSUER_SPLIT_PW --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/dsrom_sys/s81_static_control/ot_s81_fixed_issue.sv rtl/dsrom_sys/s81_static_control/ot_s81_fixed_mailbox.sv rtl/dsrom_sys/s81_static_control/dsfd_stage_seq_static_c.sv rtl/dsrom_sys/s81_static_control/dsfd_stage_seq_static_c10.sv rtl/dsrom_sys/s81_static_control/ot_s81_pq_boot_control.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "actual_three_root_boundary_and_stop_mutants",
+    "cmd": "python3 tools/s81/issuer_pinreg_boundary_gate.py {RUN}/actual_boundary --kind c10 --spec physical/ref_tile/s81issuer_c10_pwroots/spec.json",
+    "expect": "pass",
+    "pass_regex": "ISSUER_PINREG_BOUNDARY PASS",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "yosys",
+     "iverilog"
+    ]
+   },
+   {
+    "name": "actual_pw_root_boot_runtime_exact",
+    "cmd": "python3 tools/s81_static_control/issue_pw_roots_gate.py {RUN}/pw_roots",
+    "expect": "pass",
+    "pass_regex": "ISSUE_PW_ROOTS PASS",
+    "threads": 2,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/s81issuer_c10_pwroots/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/s81issuer_c10_pwroots/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 4,
+   "peak_ram_gb": 8
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/s81issuer_c10_pwroots --out {RUN}/record/views/dsfd_stage_seq_static_c10  > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/s81issuer_c10_pwroots/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": []
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/s81issuer_c10_pwroots/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/s81issuer_c10_pwroots/s81issuer_c10_pwroots-pw1-COMMIT"
+  }
+ ],
+ "cycles_added": 2,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "Exact split of actual PW storage clock; zero edges versus v2b. Seal->armed131, stream metadata132. Command/done pin boundary +1each retained. Full static age, native3root insertion and token timing unqualified.",
+ "merge_target": null,
+ "structural_change": "Fresh v2b source26ab48895 CTS measured 15730 core sinks, TT insertion314.1ps/sp37.5, strict clock FAIL. Split actual9728 PW storage FF onto genuine ck_pw root, same PLL1.2GHz phase0. Registered write tuple and actual storage read feed existing scheduler at identical edges. Loaded clearing, BEGIN/SEAL, scan and command clocks unchanged. No normal or initialization edge changes versus v2b (seal->armed131). Existing serial ckv related4/3 retained. S-DIE grants added S/M5 ck_pw at271.212, old1319 requested contacts unchanged. No timing waiver; actual CTS/native/static joins owed."
+}
