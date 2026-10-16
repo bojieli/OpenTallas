@@ -379,6 +379,28 @@
    "disposition": "BOUND",
    "disposition_why": ""
   },
+  "ck_cap_fault_s": {
+   "dir": "input",
+   "bits": 1,
+   "domain": "serial",
+   "master": null,
+   "child_pin": null,
+   "routed_R": null,
+   "delivery": "OPEN: no closed native view; parent leaf/CTS root pending",
+   "disposition": "LEAF_IN_FLIGHT",
+   "disposition_why": "Serial81-input captured sticky diagnostic summary; no normaldata edges. Native/source phase proof pending"
+  },
+  "ck_cap_fault_t": {
+   "dir": "input",
+   "bits": 1,
+   "domain": "stream",
+   "master": null,
+   "child_pin": null,
+   "routed_R": null,
+   "delivery": "OPEN: no closed native view; parent leaf/CTS root pending",
+   "disposition": "LEAF_IN_FLIGHT",
+   "disposition_why": "Core16x34 fault captured summary through existing seq m_flt[4]; no normaldata edges. End-to-end fault age proof pending"
+  },
   "ck_cap_lane_s": {
    "dir": "input",
    "bits": 16,
@@ -1281,6 +1303,11 @@
   }
  },
  "reset_entries": {
+  "rss_cap_fault_t": {
+   "dir": "input",
+   "bits": 1,
+   "domain": "stream"
+  },
   "rss_cap_x34_t": {
    "dir": "input",
    "bits": 16,
@@ -1451,6 +1478,11 @@
    "bits": 1,
    "domain": "serial"
   },
+  "rst_cap_fault_s": {
+   "dir": "input",
+   "bits": 1,
+   "domain": "serial"
+  },
   "rst_cap_x34_s": {
    "dir": "input",
    "bits": 16,
@@ -1508,12 +1540,12 @@
   }
  },
  "counts": {
-  "ports": 136,
+  "ports": 140,
   "functional": 44,
-  "clock_ports": 47,
-  "clock_bits": 552,
-  "reset_ports": 45,
-  "reset_bits": 504
+  "clock_ports": 49,
+  "clock_bits": 554,
+  "reset_ports": 47,
+  "reset_bits": 506
  },
  "generator_requirements": [
   "drop RTL_HUB_EXTRA vm->collective t_collective 592 / tcs 3 (no RTL port, backpressure-era)",

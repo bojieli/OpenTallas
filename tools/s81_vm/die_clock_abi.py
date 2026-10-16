@@ -106,6 +106,8 @@ VIEWS_A2F = {
     'ck_write_control_t': ('s81_a2f_control4_resetlocal (bit = slice)', 'ck_control', 's81_a2f_control4_resetlocal_pilot_2118_r3'),
 }
 DISPOSITION_A2F = {
+    'ck_cap_fault_s': ('LEAF_IN_FLIGHT', 'Serial81-input captured sticky diagnostic summary; no normaldata edges. Native/source phase proof pending'),
+    'ck_cap_fault_t': ('LEAF_IN_FLIGHT', 'Core16x34 fault captured summary through existing seq m_flt[4]; no normaldata edges. End-to-end fault age proof pending'),
     'ck_landing_t': ('BOUND_NATIVE_COMPONENT', 'Five native source-identical hard leaves adopted in A2F source; data age2/II1, diagnostic flags +2 edges; full new parent gate and die binding still required'),
     'ck_rsched_t': ('VIEW_OWED', 'dsfd_vm_a2f_rsched_p (REL 8, hop-1 release) is a new netlist: the closed '
                     'dsfd_vm_static_rsched_p_native_1015_l16 view is REL 10 and does not bind; build a kit from the same recipe'),

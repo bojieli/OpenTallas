@@ -98,9 +98,10 @@ module dsfd_sp_vm #(parameter integer CAP_PIPE=0, parameter integer READ_PIPE=0,
     // ---------------------------------------------------------------- edge services
     wire [15:0] cp_v; wire [223:0] cp_row; wire [255:0] cp_m; wire [8191:0] cp_d; wire cap_f;
     dsfd_vm_static_cap #(.CAP_PIPE(CAP_PIPE)) u_cap (
+        .ck_fault_s(ck_cap_control_s),.rst_fault_s(rst_cap_control_s),.ck_fault_t(ck_cap_x34_t[0]),.rss_fault_t(rss_cap_x34_t[0]),
         .ck_control_s(ck_cap_control_s), .rst_control_s(rst_cap_control_s), .ck_lane_s(ck_cap_lane_s),
         .ck_x34_s(ck_cap_x34_s), .ck_x34_t(ck_cap_x34_t), .rst_x34_s(rst_cap_x34_s), .rss_x34_t(rss_cap_x34_t), .f_capture(f_capture),
-        .w_v(cp_v), .w_row(cp_row), .w_m(cp_m), .w_d(cp_d), .fault(cap_f));
+        .w_v(cp_v), .w_row(cp_row), .w_m(cp_m), .w_d(cp_d), .fault(cap_f),.fault_core());
     wire wf_v; wire [13:0] wf_row; wire [511:0] wf_d; wire [3:0] wa_v; wire [55:0] wa_row; wire wfc_f;
     wire [7:0] x_rv; wire [4095:0] x_rd; wire [3:0] xa_v; wire [55:0] xa_row; wire xio_f; wire vm_fault;
     wire n_v; wire [83:0] n_d;

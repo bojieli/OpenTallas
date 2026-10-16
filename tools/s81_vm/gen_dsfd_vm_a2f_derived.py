@@ -83,6 +83,7 @@ def bench():
         ('12+READ_PIPE]', '12+RPE]', 4),
         ('e_tc[tk + 1 + 16+READ_PIPE]', 'e_tc[tk + 1 + 16+RPE]'),
         ('e_w[sk + 1 + 18+3*((READ_PIPE+3)/4)]', 'e_w[sk + 1 + 18+3*((RPE+3)/4)]'),
+        ('.ck_cap_control_s(s_ck)', '.ck_cap_fault_s(s_ck), .rst_cap_fault_s(rst), .ck_cap_fault_t(t_ck), .rss_cap_fault_t(rss), .ck_cap_control_s(s_ck)'),
         ('.ck_landing_t(t_ck)', '.ck_landing_t({5{t_ck}})'),
         ('.ck_mem_fsr_t({16{t_ck}})', '.ck_write_summary_t(t_ck), .rss_write_summary_t(rss), .ck_mem_native_diag_t({4{t_ck}}), .rss_mem_native_diag_t({4{rss}}), .ck_mem_fsr_t({16{t_ck}})'),
         ('stream(1, (READ_PIPE == 2) ? 1100 : 1101, 2);', 'stream(1, (RPE == 2) ? 1100 : 1101, 2);')])

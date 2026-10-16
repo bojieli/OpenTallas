@@ -77,7 +77,7 @@ module tb_dsfd_sp_vm_a2f;
         .rss_write_header_t(rss), .rss_write_payload_t({16{rss}}), .rss_write_control_t({4{rss}}), .rss_write_fault_t({4{rss}}),
         .rss_write_meta_t({28{rss}}), .rss_write_data_t({128{rss}}),
         .rst_landing_x34_s({3{rst}}), .rss_landing_x34_t({3{rss}}),
-        .ck_cap_control_s(s_ck), .rst_cap_control_s(rst), .ck_cap_lane_s({16{s_ck}}),
+        .ck_cap_fault_s(s_ck), .rst_cap_fault_s(rst), .ck_cap_fault_t(t_ck), .rss_cap_fault_t(rss), .ck_cap_control_s(s_ck), .rst_cap_control_s(rst), .ck_cap_lane_s({16{s_ck}}),
         .ck_cap_x34_s({16{s_ck}}), .ck_cap_x34_t({16{t_ck}}), .rst_cap_x34_s({16{rst}}), .rss_cap_x34_t({16{rss}}),
         .ck_wfc_fault_s(s_ck), .ck_wfc_fault_t(t_ck), .rst_wfc_fault_s(rst), .rss_wfc_fault_t(rss),
         .ck_wfc_return_t(t_ck), .rss_wfc_return_t(rss),

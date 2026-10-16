@@ -50,7 +50,8 @@ module dsfd_sp_vm_a2f
     input  wire [27:0]   rss_write_meta_t,
     input  wire [127:0]  rss_write_data_t,
     input  wire [2:0]    rst_landing_x34_s, rss_landing_x34_t,
-    input  wire          ck_cap_control_s, rst_cap_control_s,
+    input  wire          ck_cap_control_s,
+    input wire ck_cap_fault_s, rst_cap_fault_s, ck_cap_fault_t, rss_cap_fault_t, rst_cap_control_s,
     input  wire [15:0]   ck_cap_lane_s, ck_cap_x34_s, ck_cap_x34_t,
     input  wire [15:0]   rst_cap_x34_s, rss_cap_x34_t,
     input  wire          ck_wfc_control_s, ck_wfc_control_t, ck_wfc_fault_s, ck_wfc_fault_t, ck_wfc_return_t,
@@ -98,11 +99,12 @@ module dsfd_sp_vm_a2f
         .t_ck(ck_landing_x34_t[2]), .t_rst_n(rss_landing_x34_t[2]), .o_v(xw_v), .o_d(xw_d), .fault(x_al[2]));
     // landing header checks and the edge-fault levels are registered in the engine-12 tile (dsfd_vm_seq_tile, ck_seq_t)
     // ---------------------------------------------------------------- edge services
-    wire [15:0] cp_v; wire [223:0] cp_row; wire [255:0] cp_m; wire [8191:0] cp_d; wire cap_f;
-    dsfd_vm_static_cap #(.CAP_PIPE(CAP_PIPE)) u_cap (
+    wire [15:0] cp_v; wire [223:0] cp_row; wire [255:0] cp_m; wire [8191:0] cp_d; wire cap_f, cap_xf;
+    dsfd_vm_static_cap #(.CAP_PIPE(CAP_PIPE),.SPLIT_FAULT(1)) u_cap (
+        .ck_fault_s(ck_cap_fault_s),.rst_fault_s(rst_cap_fault_s),.ck_fault_t(ck_cap_fault_t),.rss_fault_t(rss_cap_fault_t),
         .ck_control_s(ck_cap_control_s), .rst_control_s(rst_cap_control_s), .ck_lane_s(ck_cap_lane_s),
         .ck_x34_s(ck_cap_x34_s), .ck_x34_t(ck_cap_x34_t), .rst_x34_s(rst_cap_x34_s), .rss_x34_t(rss_cap_x34_t), .f_capture(f_capture),
-        .w_v(cp_v), .w_row(cp_row), .w_m(cp_m), .w_d(cp_d), .fault(cap_f));
+        .w_v(cp_v), .w_row(cp_row), .w_m(cp_m), .w_d(cp_d), .fault(cap_f),.fault_core(cap_xf));
     wire wf_v; wire [13:0] wf_row; wire [511:0] wf_d; wire [3:0] wa_v; wire [55:0] wa_row; wire wfc_f;
     wire [7:0] x_rv; wire [4095:0] x_rd; wire [3:0] xa_v; wire [55:0] xa_row; wire xio_f; wire vm_fault;
     wire n_v; wire [83:0] n_d;
@@ -159,6 +161,6 @@ module dsfd_sp_vm_a2f
         .cp_v(cp_v), .cp_row(cp_row), .cp_m(cp_m), .cp_d(cp_d), .cl_v(cl_v), .cl_row(cl_row), .cl_m(cl_m), .cl_d(cl_d), .cl_t(cl_t),
         .wf_v(wf_v), .wf_row(wf_row), .wf_d(wf_d),
         .x_al(x_al), .x_hdr({xw_v, xw_d[1025:1024], xc_v, xc_d[513:512], xs_v, xs_d[513:512]}),
-        .edge_f({xio_f, wfc_f, cap_f}), .vm_fault(vm_fault));
+        .edge_cap_xfault(cap_xf),.edge_f({xio_f, wfc_f, cap_f}), .vm_fault(vm_fault));
 endmodule
 `default_nettype wire

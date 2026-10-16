@@ -80,7 +80,7 @@ module dsfd_vm_a2f_core #(parameter integer READ_PIPE=4, parameter integer HOP1=
     input  wire          wf_v, input wire [13:0] wf_row, input wire [511:0] wf_d,
     // external service fault sources, checked/registered in the engine-12 tile: 3:4 landing transfer alarms and
     // headers {xw_v, xw_d[1025:1024], xc_v, xc_d[513:512], xs_v, xs_d[513:512]}, edge leaf faults {xio, wfc, cap}
-    input  wire [2:0]    x_al, input wire [8:0] x_hdr, input wire [2:0] edge_f,
+    input  wire [2:0]    x_al, input wire [8:0] x_hdr, input wire [2:0] edge_f, input wire edge_cap_xfault,
     output wire          vm_fault
 );
 
@@ -165,7 +165,10 @@ module dsfd_vm_a2f_core #(parameter integer READ_PIPE=4, parameter integer HOP1=
 
     // ---------------------------------------------------------------- native memory
     wire [71:0] nat_v; wire [9215:0] nat_d; wire [127:0] grp_v; wire [16383:0] grp_d; wire [11:0] grp_id;
-    wire [127:0] cm_v; wire [1151:0] cm_a; wire [511:0] cm_m; wire [1023:0] cm_t; wire [39:0] m_flt;
+    wire [127:0] cm_v; wire [1151:0] cm_a; wire [511:0] cm_m; wire [1023:0] cm_t; wire [39:0] m_flt, memory_fault;
+    // Preserve the exact hardened seq-tile interface: bit4 was freed when raw
+    // scatter faults moved into each slice captured diagnostic bit9.
+    assign m_flt={memory_fault[39:5],edge_cap_xfault,memory_fault[3:0]};
     dsfd_vm_a2f_mem #(.RET_PINREG(READ_PIPE >= 4), .HOP1(HOP1)) u_mem (
         .ck_native_diag(ck_mem_native_diag), .rst_native_diag_n(rst_mem_native_diag_n),
         .ck_wf_header(ck_write_header), .ck_wf_payload(ck_write_payload), .ck_wf_control(ck_write_control),
@@ -183,7 +186,7 @@ module dsfd_vm_a2f_core #(parameter integer READ_PIPE=4, parameter integer HOP1=
         .prepare_v(pre_v), .prepare_group(pre_g), .prepare_mask(pre_m),
         .native_expected_v(exp_v), .native_release_slot(rel_s),
         .native_v(nat_v), .native_data(nat_d), .group_v(grp_v), .group_data(grp_d), .group_id(grp_id),
-        .commit_v(cm_v), .commit_addr(cm_a), .commit_mask(cm_m), .commit_tag(cm_t), .fault(m_flt), .w_fault(wf_flt));
+        .commit_v(cm_v), .commit_addr(cm_a), .commit_mask(cm_m), .commit_tag(cm_t), .fault(memory_fault), .w_fault(wf_flt));
 
     // ---------------------------------------------------------------- die output registers (P+12)
     wire [7:0] out_fault;

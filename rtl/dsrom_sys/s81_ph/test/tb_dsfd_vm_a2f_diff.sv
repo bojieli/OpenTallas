@@ -82,7 +82,7 @@ module tb_dsfd_vm_a2f_diff;
         .cp_v(cp_v), .cp_row(cp_row), .cp_m(cp_m), .cp_d(cp_d), .cl_v(cl_v), .cl_row(cl_row), .cl_m(cl_m), .cl_d(cl_d), .cl_t(cl_t),
         .wf_v(wf_v), .wf_row(wf_row), .wf_d(wf_d), .x_al(3'd0), .x_hdr(9'd0), .edge_f(3'd0), .vm_fault(r_flt));
     dsfd_vm_a2f_core #(.READ_PIPE(RP), .HOP1(HOP1)) dut_vm (.cks(t_ck), .rss(rss),
-        .ck_write_summary(t_ck), .rst_write_summary_n(rss),
+        .edge_cap_xfault(1'b0),.ck_write_summary(t_ck), .rst_write_summary_n(rss),
     .ck_mem_native_diag({4{t_ck}}), .rst_mem_native_diag_n({4{rss}}),
         .ck_rsched(t_ck), .ck_seq(t_ck), .ck_landing({5{t_ck}}), .ck_mem_fsr({16{t_ck}}), .ck_mem_return({16{t_ck}}),
         .ck_mem_bank({128{t_ck}}), .ck_mem_wscatter({16{t_ck}}),
