@@ -45,3 +45,27 @@ class Admit(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class DieFirst(unittest.TestCase):
+    """DIE-FIRST (owner 2026-10-15 23:50): a waiting die trial's charge is held against non-die requests."""
+    def test_hold_only_for_a_die_trial_that_fits_the_host(self):
+        from unittest.mock import patch
+        with patch.object(R, "prio_waiters", return_value=[(10, 400), (20, 100)]):
+            self.assertEqual(R.die_hold(1024, 300, 32, 205, {}), 400)        # oldest waiter, fits 1024-205-32
+        with patch.object(R, "prio_waiters", return_value=[(10, 900), (20, 100)]):
+            self.assertEqual(R.die_hold(1024, 300, 32, 205, {}), 100)        # 900 can never start here: skipped
+        with patch.object(R, "prio_waiters", return_value=[]):
+            self.assertEqual(R.die_hold(1024, 300, 32, 205, {}), 0)
+
+    def test_prio_waiters_reads_environ(self):
+        import os
+        from unittest.mock import patch
+        files = {"/proc/7/cmdline": "/bin/bash\x00/usr/local/bin/ot-heavy\x00--mem\x00400\x00--\x00bash\x00die.sh\x00",
+                 "/proc/7/environ": "PATH=/bin\x00OT_HEAVY_PRIO=die\x00",
+                 "/proc/7/stat": "7 (bash) S 1 7 7 0 -1 0 0 0 0 0 0 0 0 0 20 0 1 0 555 0 0",
+                 "/proc/8/cmdline": "/bin/bash\x00/usr/local/bin/ot-heavy\x00--mem\x00300\x00--\x00bash\x00route.sh\x00",
+                 "/proc/8/environ": "PATH=/bin\x00", "/proc/8/stat": "8 (bash) S 1 8 8 0 -1 0 0 0 0 0 0 0 0 0 20 0 1 0 444 0 0"}
+        with patch.object(os, "listdir", return_value=["7", "8", "self"]), \
+                patch.object(R, "rd", side_effect=lambda p: files.get(p, "")):
+            self.assertEqual(R.prio_waiters({}), [(555, 400)])
