@@ -1,0 +1,217 @@
+{
+ "name": "hsm_xcal224_r3",
+ "top": "ot_hbm_svc_sm_xcal",
+ "kind": "tile",
+ "params": {
+  "MUT": 0
+ },
+ "sources": [
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_sm_xcal.sv",
+  "rtl/hbm_accel/sm/static/ot_smh_calendar_static.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v",
+  "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 224.64,
+  "h": 216,
+  "exact": true
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "at": [
+    24.192,
+    23.76
+   ],
+   "inst": "u_cal.u_program"
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "at": [
+    60.48,
+    114.48
+   ],
+   "inst": "u_tab"
+  }
+ ],
+ "pins": {
+  "S": [
+   "cmd_ext",
+   "kv_desc",
+   "active",
+   "done",
+   "fault"
+  ],
+  "N": [
+   "cfg_we",
+   "cfg_addr",
+   "cfg_data"
+  ],
+  "W": [
+   "clk",
+   "rst_n",
+   "desc_we",
+   "desc_addr",
+   "desc_data",
+   "run_v",
+   "run_base",
+   "run_count"
+  ]
+ },
+ "layer_cap": "M5",
+ "route": {
+  "pd": 0.52,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M3 M5"
+  },
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "Claude:H-SM-svc-0630",
+  "branch": "claude/hsm-svc-0630",
+  "tag": "r3",
+  "purpose": "ot_hbm_svc_sm_xcal native capture repair: closed r1 (hbm_xcal216_r1-r1-a380caec1, TT +89.98/FF +0.96/DRC 0) fails native capture 254.0 ps > 190 at rst_n (only failing pin; launch 203.9, spread 49.0). Fix: local reset release at the rst_n pin (one async-clear flop, every other flop + u_cal clear from rst_q; +1 release edge, no operation edge). Pins spread per r2's uniform face ranges (r1 packed outputs into ~30% of S). MUT3 = release never happens.",
+  "extra_paths": [
+   "rtl/test/hbm_netlist_v16",
+   "rtl/hbm_accel/loader/service_native",
+   "tools/hbm_die_v15"
+  ],
+  "benches": [
+   {
+    "name": "xcal_exact",
+    "cmd": "bash tools/hbm_die_v15/run_xcal_physical_bench.sh 0 {RUN}/bench/xcal0",
+    "expect": "pass",
+    "pass_regex": "XCAL_LOCKSTEP PASS",
+    "min_count_regex": "words matched (38) / expected 38",
+    "threads": 1,
+    "peak_ram_gb": 2
+   },
+   {
+    "name": "xcal_late_mutant",
+    "cmd": "bash tools/hbm_die_v15/run_xcal_physical_bench.sh 1 {RUN}/bench/xcal1",
+    "expect": "fail",
+    "fail_regex": "XCAL_LOCKSTEP FAIL",
+    "threads": 1,
+    "peak_ram_gb": 2
+   },
+   {
+    "name": "xcal_field_mutant",
+    "cmd": "bash tools/hbm_die_v15/run_xcal_physical_bench.sh 2 {RUN}/bench/xcal2",
+    "expect": "fail",
+    "fail_regex": "XCAL_LOCKSTEP FAIL",
+    "threads": 1,
+    "peak_ram_gb": 2
+   },
+   {
+    "name": "xcal_reset_mutant",
+    "cmd": "bash tools/hbm_die_v15/run_xcal_physical_bench.sh 3 {RUN}/bench/xcal3",
+    "expect": "fail",
+    "fail_regex": "XCAL_LOCKSTEP FAIL",
+    "threads": 1,
+    "peak_ram_gb": 2
+   }
+  ],
+  "views_to": "physical/ref_tile/hsm_xcal224_r3/views",
+  "record_to": "results/rtl/ref_tile/hsm_xcal224_r3",
+  "reroute_reason": {
+   "kind": "rtl_change",
+   "why_route": "Closed r1 view fails the native pin audit: capture 253.96 ps > 190 at rst_n (tools/hier_contract/native_pin_audit.py audit_one on physical/ref_tile/hbm_xcal216_r1/views/ot_hbm_svc_sm_xcal; results/arch/hbm_die_v16/master_owners_0600.json). RTL change: rst_n lands on one local reset-release flop at the pin; all other async clears (incl. u_cal) move to rst_q."
+  }
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "Every XC data input already lands in the source RTL pin rung (cfg in u_cal, desc/run at top); all outputs are source flop outputs. Keep compiler-fixed exact lockstep edges proved by native issuer/calendar bench; duplicate synthesis-added input/output registers would break alignment."
+ },
+ "pin_ranges": {
+  "cmd_ext": [
+   5,
+   136
+  ],
+  "kv_desc": [
+   139,
+   216
+  ],
+  "active": [
+   217,
+   217.7
+  ],
+  "done": [
+   218,
+   218.7
+  ],
+  "fault": [
+   219,
+   219.7
+  ],
+  "cfg_data": [
+   5,
+   204
+  ],
+  "cfg_addr": [
+   205,
+   215
+  ],
+  "cfg_we": [
+   216,
+   217
+  ],
+  "desc_data": [
+   5,
+   176
+  ],
+  "desc_addr": [
+   177,
+   182
+  ],
+  "run_base": [
+   184,
+   189
+  ],
+  "run_count": [
+   190,
+   196
+  ],
+  "desc_we": [
+   198,
+   199
+  ],
+  "run_v": [
+   200,
+   201
+  ],
+  "rst_n": [
+   204,
+   205
+  ],
+  "clk": [
+   208,
+   209
+  ]
+ },
+ "structural_change": "RTL: local reset release flop at rst_n (capture 254 -> one pin flop); pins spread over disjoint face ranges (r2 plan).",
+ "children": [],
+ "inter": [],
+ "recipe": 3,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}
