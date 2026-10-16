@@ -1,0 +1,23 @@
+{
+  "status": "SOURCE_CANDIDATE_UNPROVEN",
+  "payload_cycles_added": 0,
+  "boot_reset_release_edges_added": 1,
+  "roots": {
+    "ck": "existing core and core-source seam lockup",
+    "io_clk": "south primary capture/status/programme and IO-source lockups",
+    "io_n": "north xb primary capture",
+    "io_w": "west c0 seam flops",
+    "io_e": "east c1 seam flops"
+  },
+  "inputs": {
+    "rtl/s81/ot_s81_bf_front.sv": "514ef6c3d2570eece1f5df5cf42a1612d765e71e7945562eb76ebe75046d9856",
+    "rtl/dsrom_sys/s81_die_bind/dsfd_bf_front_static.sv": "75b505b94b3295c731daa543a778776647b281a117599525bda7c2166bf072e5"
+  },
+  "outputs": {
+    "rtl/s81/ot_s81_bf_front_roots.sv": "dc3d716e186b4dcbc78f6c31776887b92e18f731e026ddb2cb1800d131047d3b",
+    "rtl/dsrom_sys/s81_die_bind/dsfd_bf_front_roots.sv": "714e5cd5b14dc95547f36c689ee17b72762ab8ad724d47fb4bb631d7b0ab33d0"
+  },
+  "physical_qualification": false,
+  "clock_pins_homes_and_slot_grant": "PENDING",
+  "native_capture": "PENDING"
+}
