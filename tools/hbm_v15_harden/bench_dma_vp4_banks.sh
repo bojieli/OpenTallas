@@ -13,7 +13,7 @@ cp "$d/ot_hgi_dma_back_static_vp4_banks.sv" "$out/vp.sv"
 cp "$d/ot_hgi_dma_back_static_vp_banks.sv" "$out/banks.sv"   # landing bank leaf ot_hgi_dma_back_landing_bank
 case "$mut" in
  1) sed -i "s/drain_row_hbm+37'(hbm_stride)/drain_row_hbm+37'(hbm_stride)+37'd256/g" "$out/vp.sv";;
- 3) sed -i "s/wd_payload<={capture_addr,capture};/wd_payload<={capture_addr^32'd1,capture};/" "$out/banks.sv";;
+ 3) sed -i "s/wd_payload<={capture_addr,macro_data};/wd_payload<={capture_addr^32'd1,macro_data};/" "$out/banks.sv";;
  2) sed -i "s/wire \[6:0\] a_rows_m1=7'(a_mv\[192:186\]-7'd1);/wire [6:0] a_rows_m1=7'(6'(a_mv[191:186]-6'd1));/" "$out/vp.sv";;
 esac
 if [ "$mut" != 0 ];then if cmp -s "$out/vp.sv" "$d/ot_hgi_dma_back_static_vp4_banks.sv" && cmp -s "$out/banks.sv" "$d/ot_hgi_dma_back_static_vp_banks.sv";then echo MUTANT_NOT_APPLIED;exit 3;fi;fi
@@ -41,7 +41,7 @@ import pathlib,sys
 s=pathlib.Path(sys.argv[1]).read_text()
 a='while(cycle<drain_at+84)';b='while(cycle<drain_at+82)'
 assert s.count(a)==1
-pathlib.Path(sys.argv[2]).write_text(s.replace(a,b))
+pathlib.Path(sys.argv[2]).write_text(s.replace(a,b).replace("clear();repeat(3)@(negedge clk);rst_n=1;", "clear();repeat(3)@(negedge clk);rst_n=1;repeat(3)@(negedge clk);"))
 PYCODE
 echo STATIC_DESC_LAT4_PRE_COMMAND_ADVANCE_2_DATA_CALENDAR_UNCHANGED
 mr=physical/asap7_memory_macros

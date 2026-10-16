@@ -148,6 +148,8 @@ def main() -> int:
         fwd = mst.startswith(('dsfd_stnh_', 'dsfd_stnv_'))
         if fwd:      # forwarded-clock station: one fi0 -> negedge stage(s), fo0 = the kept forwarding INV of slice 0
             assert '.fclk_i(fi0[0])' in txt and '.fclk_o(fo0[0])' in txt and 'fi1' not in txt, mst
+        elif 'always @(posedge ck[0]) q <= di;' in txt:
+            pass     # glue already rendered with --hstn-posedge (GEN19b and later): taken byte-identical
         else:
             assert 'ot_fwd_clk_inv u_ck (.a(ck[0])' in txt, mst      # common-clock form (kept INV, negedge stage)
             # harden the --hstn-posedge form (tools/dsrom_s81_fulldie.py, same header, body = plain posedge flops on ck):

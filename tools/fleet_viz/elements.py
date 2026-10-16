@@ -638,8 +638,28 @@ class Elements:
             elif r['target'] in contract_targets and r['category'] != 'superseded':
                 r['contract'] = 'not in current contract (contract incomplete: unlisted rows keep their loop state)'
         added = 0
+        sup = self.superseded()
         for e, x in E.items():
             if e in by_name or all(v in ('macro', 'soft') for v in x['roles'].values()): continue
+            # S-NET+FILL 10-15: a contract element retired with source evidence in superseded_elements.json (e.g. a
+            # GEN18-bind master the current die case no longer instantiates) was re-added as NOT_STARTED here, so 34
+            # evidence-backed retirements never left the open count.  Honour the declaration as for job rows.
+            sv = sup.get(e)
+            if sv and isinstance(sv.get('source_evidence'), dict):
+                d0 = x['designs'][0]
+                rows.append(dict(element=e, target=dz[d0]['target'], variants=[], category='superseded',
+                                 via='superseded by %s' % sv.get('by'),
+                                 purpose=self.desc.get(e, [e], []) or e, **self.desc.info(e), jobs=0, live=0, failed=0,
+                                 closed_jobs=0, best=dict(tt=None, ff=None, ss=None, drc=None, job=None, corner=None,
+                                                          source_commit=None),
+                                 area=None, revoked=None, latest=None, closed_t=None, owner=x.get('stream') or '',
+                                 owner_orig='', evidence_history=[], qualification=None,
+                                 superseded=dict(by=sv.get('by'), reason=sv.get('reason')),
+                                 supersession_source_evidence_missing=False, throughput=None,
+                                 gate=gate_text('superseded', None), _host=None, _base=None,
+                                 dies=die_rows(x, x['designs']), owner_stream=None, native=None,
+                                 contract='in a contract source, retired with evidence (superseded_elements.json)'))
+                continue
             d0 = x['designs'][0]
             kids = [by_name[k] for k, y in E.items() if k in by_name and any(e in y['parents'].get(d, ()) for d in y['designs'])]
             kids += [by_name[k] for k, y in L.items() if k in by_name and e in y['parents']]
