@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "hbfd_rst_13_candidate",
+ "enable": false,
+ "reason": "The source already contains exact2synchronizer+13kept reset flops. Additional data pin registers alter 3edge release semantics. Reset rs retains asynchronous assertion and recovery/removal checks; outputrn must be audited as reset signals with explicit async-assert arcs, not treated as arbitrary payload."
+}

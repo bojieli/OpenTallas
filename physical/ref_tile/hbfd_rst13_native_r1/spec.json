@@ -1,0 +1,106 @@
+{
+ "name": "hbfd_rst13_native_r1",
+ "top": "hbfd_rst_13_candidate",
+ "kind": "tile",
+ "sources": [
+  "rtl/test/hbm_sfu_relay_0330/hbfd_rly_624_split48_physical_candidate.sv",
+  "rtl/lib/ot_rst_relay.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rs"
+ ],
+ "outline": {
+  "w": 21.6,
+  "h": 21.6
+ },
+ "macros": [],
+ "pins": {
+  "S": [
+   "ck",
+   "rs"
+  ],
+  "E": [
+   "rn"
+  ]
+ },
+ "outhold": false,
+ "route": {
+  "pd": 0.45,
+  "threads": 4,
+  "peak_ram_gb": 8,
+  "m5_pg_pitch": 2.7,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "Codex HBM physical reset prerequisite",
+  "branch": "codex/hbm-reset13-0430",
+  "tag": "rst1",
+  "purpose": "Actual 13peer reset leaf;2synchronizer+13keptregionFF, asyncactive-lowassert and3edge release. New unique view/outline, no inherited624geometry. Each output drives one actual48payload reset pin; fullparent13peer reset route/14clock delivery OPEN. No data service edges added beyond existing3reset release edges.",
+  "structural_change": "Replace anonymous/raw15FF reset assumption in split13x48 relay parent by real native reset leaf with exact mapped13output ABI and common keep-reg flow.",
+  "views_to": "physical/ref_tile/hbfd_rst13_native_r1/views",
+  "record_to": "results/rtl/ref_tile/hbfd_rst13_native_r1",
+  "extra_paths": [
+   "rtl/test/hbm_sfu_relay_0330",
+   "rtl/hbm_accel/die_glue",
+   "tools/hbm_die_v15/sfu_split48_physical_abi_gate.py"
+  ],
+  "benches": [
+   {
+    "name": "actual_composition_reset_cycles",
+    "cmd": "python3 tools/hbm_die_v15/sfu_split48_physical_abi_gate.py --out {RUN}/proof",
+    "expect": "pass",
+    "pass_regex": "SPLIT48_PHYSICAL_ABI_GATE PASS",
+    "threads": 1,
+    "peak_ram_gb": 4
+   }
+  ]
+ },
+ "children": [],
+ "inter": [],
+ "recipe": 2,
+ "io_flop_at_pins": {
+  "cols": 2,
+  "allow_none": true
+ },
+ "inhold": false,
+ "clock": "cts",
+ "clock_ports": [
+  "ck"
+ ],
+ "pin_ranges": {
+  "ck": [
+   10.75,
+   10.85
+  ],
+  "rs": [
+   8.7,
+   8.8
+  ],
+  "rn": [
+   3.0,
+   18.0
+  ]
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "The source already contains exact2synchronizer+13kept reset flops. Additional data pin registers alter 3edge release semantics. Reset rs retains asynchronous assertion and recovery/removal checks; outputrn must be audited as reset signals with explicit async-assert arcs, not treated as arbitrary payload."
+ },
+ "orfs_vars": {
+  "SYNTH_CANONICALIZE_TCL": "/src/physical/common_flow/ot_keep_regs.tcl"
+ },
+ "sizing_model": {
+  "actual_FF": 15,
+  "external_bits_per_cycle": 13,
+  "added_data_edges": 0,
+  "reset_release_edges": 3,
+  "one_replica_per_station": true,
+  "boundary_track_need_um": 1.248,
+  "chosen_Eface_um": 21.6,
+  "source_ref": "d78d342fe",
+  "scope": "Source-exact first physical leaf; mapped area/clock/perpin/TTFF/route required before qualification."
+ },
+ "keep_pin_regs": true
+}
