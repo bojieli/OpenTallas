@@ -13,7 +13,17 @@ set -uo pipefail
 KITENV=$1; NAME=$2; OUT=$3; STOP=${4:-}
 SRC=${SRC:?}; W=$OUT/$NAME; mkdir -p $W; cd $SRC
 OT_ENV_PD=${PD:-}; OT_ENV_NC=${NC:-}
-source $KITENV
+# A partly sourced kit must never fall through to default PG, pins or hooks.
+# Bash can print a compound-array parse error yet return 0 (and a later
+# assignment can also hide it when sourced). Syntax diagnostics are fatal too.
+if ! KIT_SYNTAX=$(bash -n "$KITENV" 2>&1) || [ -n "$KIT_SYNTAX" ]; then
+  printf 'REF_TILE invalid kit shell syntax: %s\n%s\n' "$KITENV" "$KIT_SYNTAX" >&2
+  exit 2
+fi
+if ! source "$KITENV"; then
+  printf 'REF_TILE could not load kit: %s\n' "$KITENV" >&2
+  exit 2
+fi
 [ -n "$OT_ENV_PD" ] && PD=$OT_ENV_PD; [ -n "$OT_ENV_NC" ] && NC=$OT_ENV_NC
 # PIN GROUPS (flowfix 2026-10-13): every run of this script -- the route, the gate's floorplan smoke and its --cts run --
 # chunks the --pin-region groups alike.  The job's route command set OT_PIN_GROUP_MAX=32 and the gate did not, so a
