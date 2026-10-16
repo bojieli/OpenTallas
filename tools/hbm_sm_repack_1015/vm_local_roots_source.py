@@ -25,10 +25,10 @@ for q in range(4):
  p=D/'physical'/f'hfd_vms_bank_native_q{q}.sv';text=p.read_text()
  text=text.replace(f'module hfd_vms_bank_native_q{q}',f'module hfd_vms_bank_local_q{q}',1)
  assert text.count('input wire clk,')==1
- text=text.replace('input wire clk,','input wire [5:0] clk_local, input wire [2:0] clk_macro,',1)
+ text=text.replace('input wire clk,','input wire clk_pin,clk_ctrl,clk_s1,clk_s2,clk_ecc,clk_out,clk_ma,clk_mb,clk_mc,',1)
  text=text.replace('ot_vms_bank_static_strap #(', 'ot_vms_bank_static_local_roots #(',1)
  assert text.count('.clk(clk)')==1
- text=text.replace('.clk(clk)', '.clk_local(clk_local),.clk_macro(clk_macro)',1)
+ text=text.replace('.clk(clk)', '.clk_local({clk_out,clk_ecc,clk_s2,clk_s1,clk_ctrl,clk_pin}),.clk_macro({clk_mc,clk_mb,clk_ma})',1)
  (D/'physical'/f'hfd_vms_bank_local_q{q}.sv').write_text(text)
 text=(D/'ot_vms_bank_native_physical.sv').read_text().replace('module ot_vms_bank_native_physical','module ot_vms_bank_local_physical',1)
 assert text.count('input wire clk, rst_n,')==1
@@ -36,5 +36,5 @@ text=text.replace('input wire clk, rst_n,','input wire [5:0] clk_local, input wi
 text=text.replace("wire die_clk=MUT==5&&bid==7?1'b0:clk;", "wire[2:0]die_macro=MUT==5&&bid==7?(clk_macro&3'b110):clk_macro;")
 for q in range(4):text=text.replace(f'hfd_vms_bank_native_q{q}',f'hfd_vms_bank_local_q{q}')
 assert text.count('.clk(die_clk)')==4
-text=text.replace('.clk(die_clk)', '.clk_local(clk_local),.clk_macro(die_macro)')
+text=text.replace('.clk(die_clk)', '.clk_pin(clk_local[0]),.clk_ctrl(clk_local[1]),.clk_s1(clk_local[2]),.clk_s2(clk_local[3]),.clk_ecc(clk_local[4]),.clk_out(clk_local[5]),.clk_ma(die_macro[0]),.clk_mb(die_macro[1]),.clk_mc(die_macro[2])')
 (D/'ot_vms_bank_local_physical.sv').write_text(text)

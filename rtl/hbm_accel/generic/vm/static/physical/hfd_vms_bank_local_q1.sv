@@ -17,7 +17,7 @@ module hfd_vms_bank_local_q1(
 
     input wire [2:0] bid,
     input wire [1:0] sid,
-    input wire [5:0] clk_local, input wire [2:0] clk_macro,
+    input wire clk_pin,clk_ctrl,clk_s1,clk_s2,clk_ecc,clk_out,clk_ma,clk_mb,clk_mc,
     input wire rst_n,
     input wire rslot_v,
     input wire [2:0] rslot,
@@ -46,7 +46,7 @@ module hfd_vms_bank_local_q1(
  ot_vms_bank_static_local_roots #(.RG(4),.WG(2)) bank(
  .bid(bid),
  .sid(sid),
- .clk_local(clk_local),.clk_macro(clk_macro),
+ .clk_local({clk_out,clk_ecc,clk_s2,clk_s1,clk_ctrl,clk_pin}),.clk_macro({clk_mc,clk_mb,clk_ma}),
  .rst_n(rst_n),
  .rslot_v(rslot_v),
  .rslot(rslot),
