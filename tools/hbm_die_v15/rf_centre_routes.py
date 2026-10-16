@@ -24,8 +24,13 @@ def main():
     north = min(p[f'vmh_{q}']['y'] for q in ['NW', 'NE']) - 20
     xw = (p['vmh_SW']['x'] + p['vmh_SW']['w'] + p['idx_s0']['x']) / 2
     xe = (p['idx_s0']['x'] + p['idx_s0']['w'] + p['vmh_SE']['x']) / 2
-    cross = (p['idx_s1']['y'] + p['idx_s1']['h'] + p['idx_q']['y']) / 2
-    cross_n = (p['idx_q']['y'] + p['idx_q']['h'] + p['idx_s3']['y']) / 2
+    # cross corridors: mid-gap between idx_s1 and the lowest centre-column block above it, and between the highest
+    # block below idx_s3 and idx_s3 (= the idx_q gaps when only the IDX glue row sits there; a centre hc_eng moves them)
+    s1t, s3b = p['idx_s1']['y'] + p['idx_s1']['h'], p['idx_s3']['y']
+    x0c, x1c = p['idx_s1']['x'], p['idx_s1']['x'] + p['idx_s1']['w']
+    mid = [b for b in p.values() if b['x'] < x1c and b['x'] + b['w'] > x0c and b['y'] >= s1t - 1e-6 and b['y'] + b['h'] <= s3b + 1e-6]
+    cross = (s1t + min(b['y'] for b in mid)) / 2
+    cross_n = (max(b['y'] + b['h'] for b in mid) + s3b) / 2
 
     def pin(q, index):
         b = p[f'sucore_{q}']

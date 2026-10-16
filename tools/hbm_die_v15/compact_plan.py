@@ -46,7 +46,7 @@ EDGE = 120.0
 SC_GAP = 100.0                         # relay row between the two scorers of a die half (cross-column relay homes)
 
 
-def build(G0, area_mm2, channel=CHANNEL, band=None, hub_w=0.0, su_w=None, su_h=None, smw=None, smh=None, carry=False, layout='v5', core_at=4, sfu_at_hub=False, mirror_east=False, sfu_at_group=None, core_w=None, core_h=None, core_column_w=None, sfu_store_side=False):
+def build(G0, area_mm2, channel=CHANNEL, band=None, hub_w=0.0, su_w=None, su_h=None, smw=None, smh=None, carry=False, layout='v5', core_at=4, sfu_at_hub=False, mirror_east=False, sfu_at_group=None, core_w=None, core_h=None, core_column_w=None, sfu_store_side=False, hc_eng_mm2=None, hc_links_v16=False, hc_x_beats=1):
     """v6 (H-DIE-V6PLAN 10-16, OWNER 02:15 die may grow): su_w/su_h = SU slice outline (default 1250 x 1780), smw/smh = SM
     slot (default 6609.6 x 1712.08), carry = also place the v5 grants that are not graph nodes (sfucore_<q> 763.56 x
     1936.44 after the SU core; DMA back at its granted 511.92 width, shifted 79.92 um west as hb_dbk_<q>).  Defaults
@@ -295,6 +295,35 @@ def build(G0, area_mm2, channel=CHANNEL, band=None, hub_w=0.0, su_w=None, su_h=N
     yn = yg + 449.28 + GAP
     if layout == 'col':
         yn = round(H - ys - 2 * SC_H - SC_GAP, 3) - 0.001
+    if hc_eng_mm2:
+        # H-DIE-V790 10-16 (H-NETLIST main 406a2d5f9: hc_eng = ot_hbm_hc_eng_static, ~9.5 mm2): the engine takes the
+        # centre-column void between the S and N scorer stacks, full column width, with a SC_GAP relay row (RF cross
+        # corridor) against idx_s1 and one against idx_s3; the IDX glue row moves above the engine and the two programme
+        # collars hc_eng_tgt / hc_tbl_tgt (ot_static_program_target, candidate 86.4 x 64.8) close the glue row on the E.
+        assert layout == 'col', 'centre hc_eng needs the col layout'
+        s1_top = ys + 2 * SC_H + SC_GAP
+        hw = COLUMN_W
+        hh = round(hc_eng_mm2 * 1e6 / hw, 3)
+        setn('hc_eng', hw, hh, 'HC:ot_hbm_hc_eng_static (H-NETLIST 406a2d5f9, ~9.5 mm2 model hbm_hc_eng_0030) centre-column void')
+        P['hc_eng'] = dict(x=c0, y=round(s1_top + SC_GAP, 3), w=hw, h=hh, orient='R0')
+        yg = round(s1_top + SC_GAP + hh + GAP, 3)
+        if yg + 449.28 + SC_GAP > yn + 1e-6:
+            raise SystemExit(f'centre void too short for hc_eng {hh:.0f} + glue: {yg + 449.28 + SC_GAP:.0f} > {yn:.0f}')
+        for g, _, _ in glue:
+            P[g]['y'] = yg
+        for k, t in enumerate(('hc_eng_tgt', 'hc_tbl_tgt')):
+            setn(t, 86.4, 64.8, 'PROG:ot_static_program_target collar (H-NETLIST hceng, TARGET 164/165); candidate outline, synth pending')
+            P[t] = dict(x=round(c0 + COLUMN_W - 86.4, 3), y=round(yg + k * (64.8 + 21.6), 3), w=86.4, h=64.8, orient='R0')
+    if hc_links_v16:
+        # H-NETLIST v16 edges hceng_30..: per quadrant x_wave_v 1 + x_wave_word 10 + x_wave 8192 + gathered_mix (v 1, row 5,
+        # pos 3, data 32) = 8,244 b to the engine every 4 edges; result_v 1 + pos 3 + result 768 = 772 b back
+        for l in list(G['links']):
+            if l['dst'] == 'hc_eng' and l['cls'] == 'HC_ENG':
+                # hc_x_beats > 1: UNADOPTED what-if, x_wave serialised over that many of its 4 edges (needs an RTL change)
+                l.update(bits=8192 // hc_x_beats + 52, provenance=f'v16 hceng_30..: x_wave 8192/{hc_x_beats} beat(s) + word/valid 11 + gathered_mix 41 (H-NETLIST 406a2d5f9)')
+                G['links'].append(dict(l, id=f"hc_eng>{l['src']}:HC_ENG", src='hc_eng', dst=l['src'], bits=772,
+                                       bytes_per_token={k: v * 772 / 8244 for k, v in l['bytes_per_token'].items()},
+                                       provenance='v16: result_v 1 + position 3 + result 768 (bytes scaled from the forward link; estimate)'))
     for i, sc in enumerate(('idx_s3', 'idx_s2')):       # NE, NW from the north half
         setn(sc, SC_W, SC_H, 'IDX scorer (v15 grant, rotated)')
         P[sc] = dict(x=c0 + (COLUMN_W - SC_W) / 2, y=yn + i * (SC_H + SC_GAP), w=SC_W, h=SC_H, orient='R90')
@@ -326,6 +355,9 @@ def main():
     ap.add_argument('--sfucore-h', type=float, default=1936.44, help='sfucore_<q> height (width 763.56)')
     ap.add_argument('--sfus-wh', nargs=2, type=float, default=[763.56, 524.88], help='sfus_<q> SU SFU store w h')
     ap.add_argument('--sfus-yoff', type=float, help='sfus_<q> y offset from the band bottom (default: on top of sfucore)')
+    ap.add_argument('--hc-eng-mm2', type=float, help='col layout: ot_hbm_hc_eng_static of this area in the centre-column void (+ collars)')
+    ap.add_argument('--hc-links-v16', action='store_true', help='HC_ENG links at the v16 widths (8,244 b in, 772 b back per quadrant)')
+    ap.add_argument('--hc-x-beats', type=int, default=1, choices=(1, 2, 4), help='what-if: x_wave serialised over N of its 4 edges (RTL change, unadopted)')
     ap.add_argument('--carry', action='store_true', help='place the non-graph v5 grants (sfucore, granted DMA back width)')
     ap.add_argument('--out', required=True)
     a = ap.parse_args()
@@ -335,7 +367,7 @@ def main():
     if a.column is not None:
         COLUMN_W = a.column
     SFU_DIM.update(core_h=a.sfucore_h, store_w=a.sfus_wh[0], store_h=a.sfus_wh[1], store_yoff=a.sfus_yoff)
-    kw = dict(su_w=a.su_w, su_h=a.su_h, smw=a.smw, smh=a.smh, carry=a.carry, layout=a.layout, core_at=a.core_at, sfu_at_hub=a.sfu_at_hub, mirror_east=a.mirror_east,sfu_at_group=a.sfu_at_group,core_w=a.core_w,core_h=a.core_h,core_column_w=a.core_column_w,sfu_store_side=a.sfu_store_side)
+    kw = dict(su_w=a.su_w, su_h=a.su_h, smw=a.smw, smh=a.smh, carry=a.carry, layout=a.layout, core_at=a.core_at, sfu_at_hub=a.sfu_at_hub, mirror_east=a.mirror_east,sfu_at_group=a.sfu_at_group,core_w=a.core_w,core_h=a.core_h,core_column_w=a.core_column_w,sfu_store_side=a.sfu_store_side,hc_eng_mm2=a.hc_eng_mm2,hc_links_v16=a.hc_links_v16,hc_x_beats=a.hc_x_beats)
     G0 = json.loads((ROOT / a.graph).read_text())
     if a.fit:
         area = a.area

@@ -15,6 +15,7 @@ def main():
     ap.add_argument('--borrow-roof',action='store_true',help='conditional lower-SM roof from exact RP4b carve witness; actual OBS/PG still unqualified')
     ap.add_argument('--plan',default='results/arch/hbm_die_v15/core4_sfu2')
     ap.add_argument('--contract',default='/home/ubuntu/wt/hnl-0030/results/arch/hbm_die_v16/source_compact_0253/contract.json')
+    ap.add_argument('--graph-cls',nargs='*',default=[],help="also count the plan graph's links of these classes (e.g. HC_ENG) crossing the cut")
     ap.add_argument('--out',default='results/arch/hbm_die_v15/core4_sfu2/sfu_barrier_cuts.json')
     a=ap.parse_args();p=json.loads((ROOT/a.plan/'compact.P.json').read_text());raw=Path(a.contract).read_bytes();c=json.loads(raw)
     for q in ['SW','SE','NW','NE']:
@@ -27,6 +28,11 @@ def main():
         s,t=e['source'][0],e['sink'][0]
         if ((s.startswith('sucore_') and t.startswith('su_')) or (t.startswith('sucore_') and s.startswith('su_'))) and s in p and t in p:
             links.append(dict(source=s,sink=t,bits=e['bits'],kind='actual core/slice '+e['source'][1]))
+    if a.graph_cls:
+        g=json.loads((ROOT/a.plan/'compact.graph.json').read_text())
+        for l in g['links']:
+            if l['cls'] in a.graph_cls and l['src'] in p and l['dst'] in p:
+                links.append(dict(source=l['src'],sink=l['dst'],bits=l['bits'],kind='plan graph '+l['cls']+': '+l.get('provenance','')[:80]))
     roof_path=ROOT/'results/arch/hbm_die_v15/xc_rp4b_frame_1016/witness.json'
     roof_raw=roof_path.read_bytes() if a.borrow_roof else None
     roof=json.loads(roof_raw)['roof'] if roof_raw else None
@@ -46,7 +52,7 @@ def main():
             free+=roof_extra
         crossing=[]
         for e in links:
-            if not e['source'].startswith(('sfucore_'+q,'sucore_'+q,'su_'+q)):continue
+            if not any(n.startswith(('sfucore_'+q,'sucore_'+q,'su_'+q,'hc_'+q)) for n in (e['source'],e['sink'])):continue
             s,t=p[e['source']],p[e['sink']]
             def side(b):return -1 if b['x']+b['w']<xc else 1 if b['x']>xc else 0
             if side(s)*side(t)==-1:crossing.append(e)

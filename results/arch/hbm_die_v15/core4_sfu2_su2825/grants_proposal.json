@@ -3,7 +3,7 @@
  "die": "hbm_v15",
  "version": 7,
  "owner": "H-DIE",
- "updated": "2026-10-16T06:08:41-07:00",
+ "updated": "2026-10-16T06:21:16-07:00",
  "clock_period_ps": 833.333,
  "floorplan": {
   "file": "results/arch/hbm_die_v15/core4_sfu2_su2825/compact.P.json",
@@ -14,17 +14,17 @@
    23949.682
   ],
   "metrics": {
-   "sum_bits_mm": 1359820.3524170553,
+   "sum_bits_mm": 1981498.4350980006,
    "traffic_mm_qwen": 10768099890.833672,
-   "traffic_mm_ds": 4014896803.888329,
-   "relay_flops": 2574544.0,
-   "bits_over_500": 213120.0,
+   "traffic_mm_ds": 4011776452.7982254,
+   "relay_flops": 3799588.0,
+   "bits_over_500": 245975.0,
    "fixed_return_violation_bits": 0,
    "fixed_return_violations": 0,
    "overlaps": 0,
    "outside": 0,
-   "J": 6.478240329045002,
-   "n_long_returns": 455
+   "J": 7.345805554886372,
+   "n_long_returns": 461
   },
   "previous": {
    "file": "results/arch/hbm_die_v15/compact660_v5/compact.P.json",
@@ -69000,7 +69000,7 @@
    },
    "origin": {
     "x": 15439.28,
-    "y": 11750.201,
+    "y": 13305.93,
     "orient": "R90"
    },
    "io_budget": {
@@ -69222,7 +69222,7 @@
    },
    "origin": {
     "x": 16623.52,
-    "y": 11750.201,
+    "y": 13305.93,
     "orient": "R90"
    },
    "io_budget": {
@@ -69433,7 +69433,7 @@
    },
    "origin": {
     "x": 14970.0,
-    "y": 11750.201,
+    "y": 13305.93,
     "orient": "R0"
    },
    "io_budget": {
@@ -87484,8 +87484,28 @@
     {
      "face": "W",
      "layer": "M4",
-     "offset": 237.2,
-     "span_um": 25.6,
+     "offset": 0.0,
+     "span_um": 421.3,
+     "bits": 8244,
+     "peer": "hc_eng",
+     "cls": "HC_ENG",
+     "link": "hc_NE0>hc_eng:HC_ENG"
+    },
+    {
+     "face": "W",
+     "layer": "M4",
+     "offset": 421.3,
+     "span_um": 39.45,
+     "bits": 772,
+     "peer": "hc_eng",
+     "cls": "HC_ENG",
+     "link": "hc_eng>hc_NE0:HC_ENG"
+    },
+    {
+     "face": "W",
+     "layer": "M4",
+     "offset": 460.75,
+     "span_um": 13.08,
      "bits": 256,
      "peer": "hc_NE1",
      "cls": "HC_CORE",
@@ -87494,8 +87514,8 @@
     {
      "face": "W",
      "layer": "M4",
-     "offset": 262.8,
-     "span_um": 25.6,
+     "offset": 473.83,
+     "span_um": 13.08,
      "bits": 256,
      "peer": "hc_NE2",
      "cls": "HC_CORE",
@@ -87504,22 +87524,12 @@
     {
      "face": "W",
      "layer": "M4",
-     "offset": 288.4,
-     "span_um": 25.6,
+     "offset": 486.92,
+     "span_um": 13.08,
      "bits": 256,
      "peer": "hc_NE3",
      "cls": "HC_CORE",
      "link": "hc_NE3>hc_NE0:HC_CORE"
-    },
-    {
-     "face": "W",
-     "layer": "M4",
-     "offset": 314.0,
-     "span_um": 51.2,
-     "bits": 512,
-     "peer": "hc_eng",
-     "cls": "HC_ENG",
-     "link": "hc_NE0>hc_eng:HC_ENG"
     }
    ],
    "plan_block": "hc_NE0"
@@ -87774,8 +87784,28 @@
     {
      "face": "E",
      "layer": "M4",
-     "offset": 237.2,
-     "span_um": 25.6,
+     "offset": 0.0,
+     "span_um": 421.3,
+     "bits": 8244,
+     "peer": "hc_eng",
+     "cls": "HC_ENG",
+     "link": "hc_NW0>hc_eng:HC_ENG"
+    },
+    {
+     "face": "E",
+     "layer": "M4",
+     "offset": 421.3,
+     "span_um": 39.45,
+     "bits": 772,
+     "peer": "hc_eng",
+     "cls": "HC_ENG",
+     "link": "hc_eng>hc_NW0:HC_ENG"
+    },
+    {
+     "face": "E",
+     "layer": "M4",
+     "offset": 460.75,
+     "span_um": 13.08,
      "bits": 256,
      "peer": "hc_NW1",
      "cls": "HC_CORE",
@@ -87784,8 +87814,8 @@
     {
      "face": "E",
      "layer": "M4",
-     "offset": 262.8,
-     "span_um": 25.6,
+     "offset": 473.83,
+     "span_um": 13.08,
      "bits": 256,
      "peer": "hc_NW2",
      "cls": "HC_CORE",
@@ -87794,22 +87824,12 @@
     {
      "face": "E",
      "layer": "M4",
-     "offset": 288.4,
-     "span_um": 25.6,
+     "offset": 486.92,
+     "span_um": 13.08,
      "bits": 256,
      "peer": "hc_NW3",
      "cls": "HC_CORE",
      "link": "hc_NW3>hc_NW0:HC_CORE"
-    },
-    {
-     "face": "E",
-     "layer": "M4",
-     "offset": 314.0,
-     "span_um": 51.2,
-     "bits": 512,
-     "peer": "hc_eng",
-     "cls": "HC_ENG",
-     "link": "hc_NW0>hc_eng:HC_ENG"
     }
    ],
    "plan_block": "hc_NW0"
@@ -88064,8 +88084,8 @@
     {
      "face": "W",
      "layer": "M4",
-     "offset": 237.2,
-     "span_um": 25.6,
+     "offset": 0.0,
+     "span_um": 13.08,
      "bits": 256,
      "peer": "hc_SE1",
      "cls": "HC_CORE",
@@ -88074,8 +88094,8 @@
     {
      "face": "W",
      "layer": "M4",
-     "offset": 262.8,
-     "span_um": 25.6,
+     "offset": 13.08,
+     "span_um": 13.08,
      "bits": 256,
      "peer": "hc_SE2",
      "cls": "HC_CORE",
@@ -88084,8 +88104,8 @@
     {
      "face": "W",
      "layer": "M4",
-     "offset": 288.4,
-     "span_um": 25.6,
+     "offset": 26.17,
+     "span_um": 13.08,
      "bits": 256,
      "peer": "hc_SE3",
      "cls": "HC_CORE",
@@ -88094,12 +88114,22 @@
     {
      "face": "W",
      "layer": "M4",
-     "offset": 448.8,
-     "span_um": 51.2,
-     "bits": 512,
+     "offset": 39.25,
+     "span_um": 421.3,
+     "bits": 8244,
      "peer": "hc_eng",
      "cls": "HC_ENG",
      "link": "hc_SE0>hc_eng:HC_ENG"
+    },
+    {
+     "face": "W",
+     "layer": "M4",
+     "offset": 460.55,
+     "span_um": 39.45,
+     "bits": 772,
+     "peer": "hc_eng",
+     "cls": "HC_ENG",
+     "link": "hc_eng>hc_SE0:HC_ENG"
     }
    ],
    "plan_block": "hc_SE0"
@@ -88354,8 +88384,8 @@
     {
      "face": "E",
      "layer": "M4",
-     "offset": 237.2,
-     "span_um": 25.6,
+     "offset": 0.0,
+     "span_um": 13.08,
      "bits": 256,
      "peer": "hc_SW1",
      "cls": "HC_CORE",
@@ -88364,8 +88394,8 @@
     {
      "face": "E",
      "layer": "M4",
-     "offset": 262.8,
-     "span_um": 25.6,
+     "offset": 13.08,
+     "span_um": 13.08,
      "bits": 256,
      "peer": "hc_SW2",
      "cls": "HC_CORE",
@@ -88374,8 +88404,8 @@
     {
      "face": "E",
      "layer": "M4",
-     "offset": 288.4,
-     "span_um": 25.6,
+     "offset": 26.17,
+     "span_um": 13.08,
      "bits": 256,
      "peer": "hc_SW3",
      "cls": "HC_CORE",
@@ -88384,12 +88414,22 @@
     {
      "face": "E",
      "layer": "M4",
-     "offset": 448.8,
-     "span_um": 51.2,
-     "bits": 512,
+     "offset": 39.25,
+     "span_um": 421.3,
+     "bits": 8244,
      "peer": "hc_eng",
      "cls": "HC_ENG",
      "link": "hc_SW0>hc_eng:HC_ENG"
+    },
+    {
+     "face": "E",
+     "layer": "M4",
+     "offset": 460.55,
+     "span_um": 39.45,
+     "bits": 772,
+     "peer": "hc_eng",
+     "cls": "HC_ENG",
+     "link": "hc_eng>hc_SW0:HC_ENG"
     }
    ],
    "plan_block": "hc_SW0"
@@ -88591,16 +88631,16 @@
   },
   {
    "name": "hc_eng",
-   "cell": null,
+   "cell": "ot_hbm_hc_eng_static",
    "kind": "tile",
    "parent": "die",
    "outline": {
-    "w": 410.0,
-    "h": 2439.024
+    "w": 3050.0,
+    "h": 3114.754
    },
    "origin": {
-    "x": 18040.0,
-    "y": 16232.258,
+    "x": 14970.0,
+    "y": 10171.176,
     "orient": "R0"
    },
    "clock_entry": {
@@ -88619,14 +88659,14 @@
    "version": 5,
    "grant": "window",
    "rtl_owner": "HC owner: HC engine",
-   "notes": "HC engine 1.0 mm2 estimate",
+   "notes": "HC:ot_hbm_hc_eng_static (H-NETLIST 406a2d5f9, ~9.5 mm2 model hbm_hc_eng_0030) centre-column void; H-DIE-V790 centre-column home, pins from the plan pin windows (v16 widths)",
    "pin_windows": [
     {
      "face": "W",
      "layer": "M4",
      "offset": 0.0,
-     "span_um": 51.2,
-     "bits": 512,
+     "span_um": 824.4,
+     "bits": 8244,
      "peer": "hc_SW0",
      "cls": "HC_ENG",
      "link": "hc_SW0>hc_eng:HC_ENG"
@@ -88634,19 +88674,39 @@
     {
      "face": "W",
      "layer": "M4",
-     "offset": 1445.18,
-     "span_um": 51.2,
-     "bits": 512,
+     "offset": 824.4,
+     "span_um": 77.2,
+     "bits": 772,
+     "peer": "hc_SW0",
+     "cls": "HC_ENG",
+     "link": "hc_eng>hc_SW0:HC_ENG"
+    },
+    {
+     "face": "W",
+     "layer": "M4",
+     "offset": 2213.15,
+     "span_um": 824.4,
+     "bits": 8244,
      "peer": "hc_NW0",
      "cls": "HC_ENG",
      "link": "hc_NW0>hc_eng:HC_ENG"
     },
     {
+     "face": "W",
+     "layer": "M4",
+     "offset": 3037.55,
+     "span_um": 77.2,
+     "bits": 772,
+     "peer": "hc_NW0",
+     "cls": "HC_ENG",
+     "link": "hc_eng>hc_NW0:HC_ENG"
+    },
+    {
      "face": "E",
      "layer": "M4",
      "offset": 0.0,
-     "span_um": 51.2,
-     "bits": 512,
+     "span_um": 824.4,
+     "bits": 8244,
      "peer": "hc_SE0",
      "cls": "HC_ENG",
      "link": "hc_SE0>hc_eng:HC_ENG"
@@ -88654,16 +88714,37 @@
     {
      "face": "E",
      "layer": "M4",
-     "offset": 1445.18,
-     "span_um": 51.2,
-     "bits": 512,
+     "offset": 824.4,
+     "span_um": 77.2,
+     "bits": 772,
+     "peer": "hc_SE0",
+     "cls": "HC_ENG",
+     "link": "hc_eng>hc_SE0:HC_ENG"
+    },
+    {
+     "face": "E",
+     "layer": "M4",
+     "offset": 2213.15,
+     "span_um": 824.4,
+     "bits": 8244,
      "peer": "hc_NE0",
      "cls": "HC_ENG",
      "link": "hc_NE0>hc_eng:HC_ENG"
+    },
+    {
+     "face": "E",
+     "layer": "M4",
+     "offset": 3037.55,
+     "span_um": 77.2,
+     "bits": 772,
+     "peer": "hc_NE0",
+     "cls": "HC_ENG",
+     "link": "hc_eng>hc_NE0:HC_ENG"
     }
    ],
    "rtl_pending": "HC owner: HC engine",
-   "plan_block": "hc_eng"
+   "plan_block": "hc_eng",
+   "source": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_eng_static.sv"
   },
   {
    "name": "lk_N0",
@@ -128735,7 +128816,7 @@
    ],
    "source": "rtl/hbm_accel/sm/static/ot_hbm_accel_smh_static.sv",
    "source_sha256": "9d0881905034429d2a28cfca96dd6318313dedc6e0c5a10576ab501690e50736",
-   "source_prerequisite": "720a97f3e",
+   "source_prerequisite": "ca0a2d04c",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -129136,7 +129217,7 @@
    ],
    "source": "rtl/hbm_accel/sm/static/ot_hbm_accel_smh_static.sv",
    "source_sha256": "9d0881905034429d2a28cfca96dd6318313dedc6e0c5a10576ab501690e50736",
-   "source_prerequisite": "720a97f3e",
+   "source_prerequisite": "ca0a2d04c",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -129537,7 +129618,7 @@
    ],
    "source": "rtl/hbm_accel/sm/static/ot_hbm_accel_smh_static.sv",
    "source_sha256": "9d0881905034429d2a28cfca96dd6318313dedc6e0c5a10576ab501690e50736",
-   "source_prerequisite": "720a97f3e",
+   "source_prerequisite": "ca0a2d04c",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -129939,7 +130020,7 @@
    ],
    "source": "rtl/hbm_accel/sm/static/ot_hbm_accel_smh_static.sv",
    "source_sha256": "9d0881905034429d2a28cfca96dd6318313dedc6e0c5a10576ab501690e50736",
-   "source_prerequisite": "720a97f3e",
+   "source_prerequisite": "ca0a2d04c",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -130341,7 +130422,7 @@
    ],
    "source": "rtl/hbm_accel/sm/static/ot_hbm_accel_smh_static.sv",
    "source_sha256": "9d0881905034429d2a28cfca96dd6318313dedc6e0c5a10576ab501690e50736",
-   "source_prerequisite": "720a97f3e",
+   "source_prerequisite": "ca0a2d04c",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -130742,7 +130823,7 @@
    ],
    "source": "rtl/hbm_accel/sm/static/ot_hbm_accel_smh_static.sv",
    "source_sha256": "9d0881905034429d2a28cfca96dd6318313dedc6e0c5a10576ab501690e50736",
-   "source_prerequisite": "720a97f3e",
+   "source_prerequisite": "ca0a2d04c",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -131142,7 +131223,7 @@
    ],
    "source": "rtl/hbm_accel/sm/static/ot_hbm_accel_smh_static.sv",
    "source_sha256": "9d0881905034429d2a28cfca96dd6318313dedc6e0c5a10576ab501690e50736",
-   "source_prerequisite": "720a97f3e",
+   "source_prerequisite": "ca0a2d04c",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -131542,7 +131623,7 @@
    ],
    "source": "rtl/hbm_accel/sm/static/ot_hbm_accel_smh_static.sv",
    "source_sha256": "9d0881905034429d2a28cfca96dd6318313dedc6e0c5a10576ab501690e50736",
-   "source_prerequisite": "720a97f3e",
+   "source_prerequisite": "ca0a2d04c",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -131942,7 +132023,7 @@
    ],
    "source": "rtl/hbm_accel/sm/static/ot_hbm_accel_smh_static.sv",
    "source_sha256": "9d0881905034429d2a28cfca96dd6318313dedc6e0c5a10576ab501690e50736",
-   "source_prerequisite": "720a97f3e",
+   "source_prerequisite": "ca0a2d04c",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -132343,7 +132424,7 @@
    ],
    "source": "rtl/hbm_accel/sm/static/ot_hbm_accel_smh_static.sv",
    "source_sha256": "9d0881905034429d2a28cfca96dd6318313dedc6e0c5a10576ab501690e50736",
-   "source_prerequisite": "720a97f3e",
+   "source_prerequisite": "ca0a2d04c",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -132744,7 +132825,7 @@
    ],
    "source": "rtl/hbm_accel/sm/static/ot_hbm_accel_smh_static.sv",
    "source_sha256": "9d0881905034429d2a28cfca96dd6318313dedc6e0c5a10576ab501690e50736",
-   "source_prerequisite": "720a97f3e",
+   "source_prerequisite": "ca0a2d04c",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -133146,7 +133227,7 @@
    ],
    "source": "rtl/hbm_accel/sm/static/ot_hbm_accel_smh_static.sv",
    "source_sha256": "9d0881905034429d2a28cfca96dd6318313dedc6e0c5a10576ab501690e50736",
-   "source_prerequisite": "720a97f3e",
+   "source_prerequisite": "ca0a2d04c",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -133548,7 +133629,7 @@
    ],
    "source": "rtl/hbm_accel/sm/static/ot_hbm_accel_smh_static.sv",
    "source_sha256": "9d0881905034429d2a28cfca96dd6318313dedc6e0c5a10576ab501690e50736",
-   "source_prerequisite": "720a97f3e",
+   "source_prerequisite": "ca0a2d04c",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -133949,7 +134030,7 @@
    ],
    "source": "rtl/hbm_accel/sm/static/ot_hbm_accel_smh_static.sv",
    "source_sha256": "9d0881905034429d2a28cfca96dd6318313dedc6e0c5a10576ab501690e50736",
-   "source_prerequisite": "720a97f3e",
+   "source_prerequisite": "ca0a2d04c",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -134349,7 +134430,7 @@
    ],
    "source": "rtl/hbm_accel/sm/static/ot_hbm_accel_smh_static.sv",
    "source_sha256": "9d0881905034429d2a28cfca96dd6318313dedc6e0c5a10576ab501690e50736",
-   "source_prerequisite": "720a97f3e",
+   "source_prerequisite": "ca0a2d04c",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -134749,7 +134830,7 @@
    ],
    "source": "rtl/hbm_accel/sm/static/ot_hbm_accel_smh_static.sv",
    "source_sha256": "9d0881905034429d2a28cfca96dd6318313dedc6e0c5a10576ab501690e50736",
-   "source_prerequisite": "720a97f3e",
+   "source_prerequisite": "ca0a2d04c",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -135149,7 +135230,7 @@
    ],
    "source": "rtl/hbm_accel/sm/static/ot_hbm_accel_smh_static.sv",
    "source_sha256": "9d0881905034429d2a28cfca96dd6318313dedc6e0c5a10576ab501690e50736",
-   "source_prerequisite": "720a97f3e",
+   "source_prerequisite": "ca0a2d04c",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -135550,7 +135631,7 @@
    ],
    "source": "rtl/hbm_accel/sm/static/ot_hbm_accel_smh_static.sv",
    "source_sha256": "9d0881905034429d2a28cfca96dd6318313dedc6e0c5a10576ab501690e50736",
-   "source_prerequisite": "720a97f3e",
+   "source_prerequisite": "ca0a2d04c",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -135951,7 +136032,7 @@
    ],
    "source": "rtl/hbm_accel/sm/static/ot_hbm_accel_smh_static.sv",
    "source_sha256": "9d0881905034429d2a28cfca96dd6318313dedc6e0c5a10576ab501690e50736",
-   "source_prerequisite": "720a97f3e",
+   "source_prerequisite": "ca0a2d04c",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -136353,7 +136434,7 @@
    ],
    "source": "rtl/hbm_accel/sm/static/ot_hbm_accel_smh_static.sv",
    "source_sha256": "9d0881905034429d2a28cfca96dd6318313dedc6e0c5a10576ab501690e50736",
-   "source_prerequisite": "720a97f3e",
+   "source_prerequisite": "ca0a2d04c",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -136755,7 +136836,7 @@
    ],
    "source": "rtl/hbm_accel/sm/static/ot_hbm_accel_smh_static.sv",
    "source_sha256": "9d0881905034429d2a28cfca96dd6318313dedc6e0c5a10576ab501690e50736",
-   "source_prerequisite": "720a97f3e",
+   "source_prerequisite": "ca0a2d04c",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -137156,7 +137237,7 @@
    ],
    "source": "rtl/hbm_accel/sm/static/ot_hbm_accel_smh_static.sv",
    "source_sha256": "9d0881905034429d2a28cfca96dd6318313dedc6e0c5a10576ab501690e50736",
-   "source_prerequisite": "720a97f3e",
+   "source_prerequisite": "ca0a2d04c",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -137556,7 +137637,7 @@
    ],
    "source": "rtl/hbm_accel/sm/static/ot_hbm_accel_smh_static.sv",
    "source_sha256": "9d0881905034429d2a28cfca96dd6318313dedc6e0c5a10576ab501690e50736",
-   "source_prerequisite": "720a97f3e",
+   "source_prerequisite": "ca0a2d04c",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -137956,7 +138037,7 @@
    ],
    "source": "rtl/hbm_accel/sm/static/ot_hbm_accel_smh_static.sv",
    "source_sha256": "9d0881905034429d2a28cfca96dd6318313dedc6e0c5a10576ab501690e50736",
-   "source_prerequisite": "720a97f3e",
+   "source_prerequisite": "ca0a2d04c",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -138356,7 +138437,7 @@
    ],
    "source": "rtl/hbm_accel/sm/static/ot_hbm_accel_smh_static.sv",
    "source_sha256": "9d0881905034429d2a28cfca96dd6318313dedc6e0c5a10576ab501690e50736",
-   "source_prerequisite": "720a97f3e",
+   "source_prerequisite": "ca0a2d04c",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -138757,7 +138838,7 @@
    ],
    "source": "rtl/hbm_accel/sm/static/ot_hbm_accel_smh_static.sv",
    "source_sha256": "9d0881905034429d2a28cfca96dd6318313dedc6e0c5a10576ab501690e50736",
-   "source_prerequisite": "720a97f3e",
+   "source_prerequisite": "ca0a2d04c",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -139158,7 +139239,7 @@
    ],
    "source": "rtl/hbm_accel/sm/static/ot_hbm_accel_smh_static.sv",
    "source_sha256": "9d0881905034429d2a28cfca96dd6318313dedc6e0c5a10576ab501690e50736",
-   "source_prerequisite": "720a97f3e",
+   "source_prerequisite": "ca0a2d04c",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -139560,7 +139641,7 @@
    ],
    "source": "rtl/hbm_accel/sm/static/ot_hbm_accel_smh_static.sv",
    "source_sha256": "9d0881905034429d2a28cfca96dd6318313dedc6e0c5a10576ab501690e50736",
-   "source_prerequisite": "720a97f3e",
+   "source_prerequisite": "ca0a2d04c",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -139962,7 +140043,7 @@
    ],
    "source": "rtl/hbm_accel/sm/static/ot_hbm_accel_smh_static.sv",
    "source_sha256": "9d0881905034429d2a28cfca96dd6318313dedc6e0c5a10576ab501690e50736",
-   "source_prerequisite": "720a97f3e",
+   "source_prerequisite": "ca0a2d04c",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -140363,7 +140444,7 @@
    ],
    "source": "rtl/hbm_accel/sm/static/ot_hbm_accel_smh_static.sv",
    "source_sha256": "9d0881905034429d2a28cfca96dd6318313dedc6e0c5a10576ab501690e50736",
-   "source_prerequisite": "720a97f3e",
+   "source_prerequisite": "ca0a2d04c",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -140763,7 +140844,7 @@
    ],
    "source": "rtl/hbm_accel/sm/static/ot_hbm_accel_smh_static.sv",
    "source_sha256": "9d0881905034429d2a28cfca96dd6318313dedc6e0c5a10576ab501690e50736",
-   "source_prerequisite": "720a97f3e",
+   "source_prerequisite": "ca0a2d04c",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -141163,7 +141244,7 @@
    ],
    "source": "rtl/hbm_accel/sm/static/ot_hbm_accel_smh_static.sv",
    "source_sha256": "9d0881905034429d2a28cfca96dd6318313dedc6e0c5a10576ab501690e50736",
-   "source_prerequisite": "720a97f3e",
+   "source_prerequisite": "ca0a2d04c",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -141503,7 +141584,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "33e20b53b147e1a7c203e68dea2042b51220edb7a3be4dad0f0e1ac85433d063",
-   "source_prerequisite": "720a97f3e",
+   "source_prerequisite": "ca0a2d04c",
    "params": {
     "QID": 3,
     "G": 0,
@@ -141934,7 +142015,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "33e20b53b147e1a7c203e68dea2042b51220edb7a3be4dad0f0e1ac85433d063",
-   "source_prerequisite": "720a97f3e",
+   "source_prerequisite": "ca0a2d04c",
    "params": {
     "QID": 3,
     "G": 1,
@@ -142365,7 +142446,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "33e20b53b147e1a7c203e68dea2042b51220edb7a3be4dad0f0e1ac85433d063",
-   "source_prerequisite": "720a97f3e",
+   "source_prerequisite": "ca0a2d04c",
    "params": {
     "QID": 3,
     "G": 2,
@@ -142796,7 +142877,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "33e20b53b147e1a7c203e68dea2042b51220edb7a3be4dad0f0e1ac85433d063",
-   "source_prerequisite": "720a97f3e",
+   "source_prerequisite": "ca0a2d04c",
    "params": {
     "QID": 3,
     "G": 3,
@@ -143247,7 +143328,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "33e20b53b147e1a7c203e68dea2042b51220edb7a3be4dad0f0e1ac85433d063",
-   "source_prerequisite": "720a97f3e",
+   "source_prerequisite": "ca0a2d04c",
    "params": {
     "QID": 2,
     "G": 0,
@@ -143678,7 +143759,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "33e20b53b147e1a7c203e68dea2042b51220edb7a3be4dad0f0e1ac85433d063",
-   "source_prerequisite": "720a97f3e",
+   "source_prerequisite": "ca0a2d04c",
    "params": {
     "QID": 2,
     "G": 1,
@@ -144109,7 +144190,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "33e20b53b147e1a7c203e68dea2042b51220edb7a3be4dad0f0e1ac85433d063",
-   "source_prerequisite": "720a97f3e",
+   "source_prerequisite": "ca0a2d04c",
    "params": {
     "QID": 2,
     "G": 2,
@@ -144540,7 +144621,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "33e20b53b147e1a7c203e68dea2042b51220edb7a3be4dad0f0e1ac85433d063",
-   "source_prerequisite": "720a97f3e",
+   "source_prerequisite": "ca0a2d04c",
    "params": {
     "QID": 2,
     "G": 3,
@@ -144991,7 +145072,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "33e20b53b147e1a7c203e68dea2042b51220edb7a3be4dad0f0e1ac85433d063",
-   "source_prerequisite": "720a97f3e",
+   "source_prerequisite": "ca0a2d04c",
    "params": {
     "QID": 1,
     "G": 0,
@@ -145422,7 +145503,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "33e20b53b147e1a7c203e68dea2042b51220edb7a3be4dad0f0e1ac85433d063",
-   "source_prerequisite": "720a97f3e",
+   "source_prerequisite": "ca0a2d04c",
    "params": {
     "QID": 1,
     "G": 1,
@@ -145853,7 +145934,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "33e20b53b147e1a7c203e68dea2042b51220edb7a3be4dad0f0e1ac85433d063",
-   "source_prerequisite": "720a97f3e",
+   "source_prerequisite": "ca0a2d04c",
    "params": {
     "QID": 1,
     "G": 2,
@@ -146284,7 +146365,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "33e20b53b147e1a7c203e68dea2042b51220edb7a3be4dad0f0e1ac85433d063",
-   "source_prerequisite": "720a97f3e",
+   "source_prerequisite": "ca0a2d04c",
    "params": {
     "QID": 1,
     "G": 3,
@@ -146735,7 +146816,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "33e20b53b147e1a7c203e68dea2042b51220edb7a3be4dad0f0e1ac85433d063",
-   "source_prerequisite": "720a97f3e",
+   "source_prerequisite": "ca0a2d04c",
    "params": {
     "QID": 0,
     "G": 0,
@@ -147166,7 +147247,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "33e20b53b147e1a7c203e68dea2042b51220edb7a3be4dad0f0e1ac85433d063",
-   "source_prerequisite": "720a97f3e",
+   "source_prerequisite": "ca0a2d04c",
    "params": {
     "QID": 0,
     "G": 1,
@@ -147597,7 +147678,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "33e20b53b147e1a7c203e68dea2042b51220edb7a3be4dad0f0e1ac85433d063",
-   "source_prerequisite": "720a97f3e",
+   "source_prerequisite": "ca0a2d04c",
    "params": {
     "QID": 0,
     "G": 2,
@@ -148028,7 +148109,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "33e20b53b147e1a7c203e68dea2042b51220edb7a3be4dad0f0e1ac85433d063",
-   "source_prerequisite": "720a97f3e",
+   "source_prerequisite": "ca0a2d04c",
    "params": {
     "QID": 0,
     "G": 3,
@@ -148428,7 +148509,7 @@
    "pin_windows": [],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_qcore.sv",
    "source_sha256": "1008484c5e9155a72eb81b37e0f910baf3405a2830c775fdc791c9b258b2dc94",
-   "source_prerequisite": "720a97f3e",
+   "source_prerequisite": "ca0a2d04c",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -148685,7 +148766,7 @@
    "pin_windows": [],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_qcore.sv",
    "source_sha256": "1008484c5e9155a72eb81b37e0f910baf3405a2830c775fdc791c9b258b2dc94",
-   "source_prerequisite": "720a97f3e",
+   "source_prerequisite": "ca0a2d04c",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -148942,7 +149023,7 @@
    "pin_windows": [],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_qcore.sv",
    "source_sha256": "1008484c5e9155a72eb81b37e0f910baf3405a2830c775fdc791c9b258b2dc94",
-   "source_prerequisite": "720a97f3e",
+   "source_prerequisite": "ca0a2d04c",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -149199,7 +149280,7 @@
    "pin_windows": [],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_qcore.sv",
    "source_sha256": "1008484c5e9155a72eb81b37e0f910baf3405a2830c775fdc791c9b258b2dc94",
-   "source_prerequisite": "720a97f3e",
+   "source_prerequisite": "ca0a2d04c",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -161934,7 +162015,7 @@
    },
    "origin": {
     "x": 17426.8,
-    "y": 11875.825,
+    "y": 13431.554,
     "orient": "R0"
    },
    "version": 7,
@@ -164552,7 +164633,7 @@
    "parent": "die",
    "outline": {
     "w": 763.56,
-    "h": 1936.44
+    "h": 3001.91
    },
    "origin": {
     "x": 5814.24,
@@ -164594,7 +164675,7 @@
    "parent": "die",
    "outline": {
     "w": 763.56,
-    "h": 1936.44
+    "h": 3001.91
    },
    "origin": {
     "x": 26412.2,
@@ -164636,11 +164717,11 @@
    "parent": "die",
    "outline": {
     "w": 763.56,
-    "h": 1936.44
+    "h": 3001.91
    },
    "origin": {
     "x": 6003.296,
-    "y": 16713.072,
+    "y": 15647.602,
     "orient": "R0"
    },
    "clock_entry": {
@@ -164678,11 +164759,11 @@
    "parent": "die",
    "outline": {
     "w": 763.56,
-    "h": 1936.44
+    "h": 3001.91
    },
    "origin": {
     "x": 26412.2,
-    "y": 16713.072,
+    "y": 15647.602,
     "orient": "R0"
    },
    "clock_entry": {
@@ -164870,6 +164951,222 @@
     "W": "sucore_NE (sucx_NE) inject inj_d 1,024 b, COLL->SU 194 b"
    },
    "notes": "COLL inject/IDX join leaf in the 21.6 + 43.2 + 21.6 um channel between sucore and COLL: COLL<->SU 0 relay stages",
+   "pins": [],
+   "pin_status": "FACES_ONLY"
+  },
+  {
+   "name": "sfus_SW",
+   "cell": null,
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 1020.0,
+    "h": 1412.0
+   },
+   "origin": {
+    "x": 6599.4,
+    "y": 6890.08,
+    "orient": "R0"
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "W",
+    "layer": "M4"
+   },
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "version": 1,
+   "grant": "v790_plan_block_1016",
+   "rtl_owner": "H-SU: store partition of ot_hgi_sfu_scheduled_engine (sfucore_sizing_0600, side-upper bay)",
+   "plan_block": "sfus_SW",
+   "qualified": false,
+   "notes": "SU SFU store ot_hbm_su_static_sfustore (abuts sfucore, 0 relays); candidate outline, pins FACES_ONLY",
+   "pins": [],
+   "pin_status": "FACES_ONLY"
+  },
+  {
+   "name": "sfus_SE",
+   "cell": null,
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 1020.0,
+    "h": 1412.0
+   },
+   "origin": {
+    "x": 25370.6,
+    "y": 6890.08,
+    "orient": "R0"
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "W",
+    "layer": "M4"
+   },
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "version": 1,
+   "grant": "v790_plan_block_1016",
+   "rtl_owner": "H-SU: store partition of ot_hgi_sfu_scheduled_engine (sfucore_sizing_0600, side-upper bay)",
+   "plan_block": "sfus_SE",
+   "qualified": false,
+   "notes": "SU SFU store ot_hbm_su_static_sfustore (abuts sfucore, 0 relays); candidate outline, pins FACES_ONLY",
+   "pins": [],
+   "pin_status": "FACES_ONLY"
+  },
+  {
+   "name": "sfus_NW",
+   "cell": null,
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 1020.0,
+    "h": 1412.0
+   },
+   "origin": {
+    "x": 6788.456,
+    "y": 15647.602,
+    "orient": "R0"
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "W",
+    "layer": "M4"
+   },
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "version": 1,
+   "grant": "v790_plan_block_1016",
+   "rtl_owner": "H-SU: store partition of ot_hgi_sfu_scheduled_engine (sfucore_sizing_0600, side-upper bay)",
+   "plan_block": "sfus_NW",
+   "qualified": false,
+   "notes": "SU SFU store ot_hbm_su_static_sfustore (abuts sfucore, 0 relays); candidate outline, pins FACES_ONLY",
+   "pins": [],
+   "pin_status": "FACES_ONLY"
+  },
+  {
+   "name": "sfus_NE",
+   "cell": null,
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 1020.0,
+    "h": 1412.0
+   },
+   "origin": {
+    "x": 25370.6,
+    "y": 15647.602,
+    "orient": "R0"
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "W",
+    "layer": "M4"
+   },
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "version": 1,
+   "grant": "v790_plan_block_1016",
+   "rtl_owner": "H-SU: store partition of ot_hgi_sfu_scheduled_engine (sfucore_sizing_0600, side-upper bay)",
+   "plan_block": "sfus_NE",
+   "qualified": false,
+   "notes": "SU SFU store ot_hbm_su_static_sfustore (abuts sfucore, 0 relays); candidate outline, pins FACES_ONLY",
+   "pins": [],
+   "pin_status": "FACES_ONLY"
+  },
+  {
+   "name": "hc_eng_tgt",
+   "cell": "ot_static_program_target",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 86.4,
+    "h": 64.8
+   },
+   "origin": {
+    "x": 17933.6,
+    "y": 13305.93,
+    "orient": "R0"
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "W",
+    "layer": "M4"
+   },
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "version": 1,
+   "grant": "v790_plan_block_1016",
+   "rtl_owner": "HC owner (H-NETLIST hceng) TARGET 164",
+   "plan_block": "hc_eng_tgt",
+   "qualified": false,
+   "notes": "PROG:ot_static_program_target collar (H-NETLIST hceng, TARGET 164/165); candidate outline, synth pending; candidate outline, pins FACES_ONLY",
+   "pins": [],
+   "pin_status": "FACES_ONLY"
+  },
+  {
+   "name": "hc_tbl_tgt",
+   "cell": "ot_static_program_target",
+   "kind": "tile",
+   "parent": "die",
+   "outline": {
+    "w": 86.4,
+    "h": 64.8
+   },
+   "origin": {
+    "x": 17933.6,
+    "y": 13392.33,
+    "orient": "R0"
+   },
+   "clock_entry": {
+    "pin": "clk",
+    "face": "W",
+    "layer": "M4"
+   },
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "io_budget": {
+    "in_delay_frac": 0.2,
+    "out_delay_frac": 0.2
+   },
+   "version": 1,
+   "grant": "v790_plan_block_1016",
+   "rtl_owner": "HC owner (H-NETLIST hceng) TARGET 165",
+   "plan_block": "hc_tbl_tgt",
+   "qualified": false,
+   "notes": "PROG:ot_static_program_target collar (H-NETLIST hceng, TARGET 164/165); candidate outline, synth pending; candidate outline, pins FACES_ONLY",
    "pins": [],
    "pin_status": "FACES_ONLY"
   }
@@ -168895,152 +169192,152 @@
     "src": "SW",
     "dst": "SE",
     "bits": 41,
-    "length_um": 13670.258,
+    "length_um": 12091.232,
     "stages": 36,
-    "max_hop_um": 401,
+    "max_hop_um": 377,
     "homes": [
      [
-      12591.88,
+      12549.88,
       8323.68
      ],
      [
-      12961.88,
+      12876.88,
       8323.68
      ],
      [
-      13330.88,
+      13202.88,
       8323.68
      ],
      [
-      13700.88,
+      13529.88,
       8323.68
      ],
      [
-      14069.88,
+      13856.88,
       8323.68
      ],
      [
-      14439.88,
+      14183.88,
+      8323.68
+     ],
+     [
+      14510.88,
       8323.68
      ],
      [
       14755.28,
-      8377.28
+      8422.28
      ],
      [
       14755.28,
-      8747.28
+      8732.28
      ],
      [
       14755.28,
-      9116.28
+      9059.28
      ],
      [
       14755.28,
-      9486.28
+      9386.28
      ],
      [
       14755.28,
-      9855.28
+      9712.28
      ],
      [
       14755.28,
-      10225.28
+      10039.28
      ],
      [
-      14755.28,
-      10594.28
+      14982.384,
+      10121.176
      ],
      [
-      14814.871,
-      10910.689
+      15327.384,
+      10121.176
      ],
      [
-      15164.871,
-      10910.689
+      15654.384,
+      10121.176
      ],
      [
-      15546.871,
-      10910.689
+      15954.384,
+      10121.176
      ],
      [
-      15916.871,
-      10910.689
+      16307.384,
+      10121.176
      ],
      [
-      16285.871,
-      10910.689
+      16634.384,
+      10121.176
      ],
      [
-      16673.871,
-      10910.689
+      16961.384,
+      10121.176
      ],
      [
-      17023.871,
-      10910.689
+      17303.384,
+      10121.176
      ],
      [
-      17394.871,
-      10910.689
+      17614.384,
+      10121.176
      ],
      [
-      17793.871,
-      10910.689
-     ],
-     [
-      18133.871,
-      10910.689
+      17971.384,
+      10121.176
      ],
      [
       18234.72,
-      10642.538
+      10087.512
      ],
      [
       18234.72,
-      10272.538
+      9760.512
      ],
      [
       18234.72,
-      9903.538
+      9433.512
      ],
      [
       18234.72,
-      9533.538
+      9101.512
      ],
      [
       18234.72,
-      9132.538
+      8813.512
      ],
      [
       18234.72,
-      8794.538
+      8437.512
      ],
      [
-      18234.72,
-      8425.538
-     ],
-     [
-      18501.862,
+      18452.888,
       8323.68
      ],
      [
-      18871.862,
+      18740.888,
       8323.68
      ],
      [
-      19240.862,
+      19117.888,
       8323.68
      ],
      [
-      19610.862,
+      19404.888,
       8323.68
      ],
      [
-      19979.862,
+      19736.888,
       8323.68
      ],
      [
-      20349.862,
+      20065.888,
+      8323.68
+     ],
+     [
+      20391.888,
       8323.68
      ]
     ],
@@ -169048,7 +169345,7 @@
      {
       "name": "rfr_SW_SE_00",
       "cell": "hbfd_rly_48_WE",
-      "x": 12581.08,
+      "x": 12539.08,
       "y": 8312.88,
       "w": 21.6,
       "h": 21.6
@@ -169056,7 +169353,7 @@
      {
       "name": "rfr_SW_SE_01",
       "cell": "hbfd_rly_48_WE",
-      "x": 12951.08,
+      "x": 12866.08,
       "y": 8312.88,
       "w": 21.6,
       "h": 21.6
@@ -169064,7 +169361,7 @@
      {
       "name": "rfr_SW_SE_02",
       "cell": "hbfd_rly_48_WE",
-      "x": 13320.08,
+      "x": 13192.08,
       "y": 8312.88,
       "w": 21.6,
       "h": 21.6
@@ -169072,7 +169369,7 @@
      {
       "name": "rfr_SW_SE_03",
       "cell": "hbfd_rly_48_WE",
-      "x": 13690.08,
+      "x": 13519.08,
       "y": 8312.88,
       "w": 21.6,
       "h": 21.6
@@ -169080,7 +169377,7 @@
      {
       "name": "rfr_SW_SE_04",
       "cell": "hbfd_rly_48_WE",
-      "x": 14059.08,
+      "x": 13846.08,
       "y": 8312.88,
       "w": 21.6,
       "h": 21.6
@@ -169088,7 +169385,7 @@
      {
       "name": "rfr_SW_SE_05",
       "cell": "hbfd_rly_48_WE",
-      "x": 14429.08,
+      "x": 14173.08,
       "y": 8312.88,
       "w": 21.6,
       "h": 21.6
@@ -169096,8 +169393,8 @@
      {
       "name": "rfr_SW_SE_06",
       "cell": "hbfd_rly_48_WE",
-      "x": 14744.48,
-      "y": 8366.48,
+      "x": 14500.08,
+      "y": 8312.88,
       "w": 21.6,
       "h": 21.6
      },
@@ -169105,7 +169402,7 @@
       "name": "rfr_SW_SE_07",
       "cell": "hbfd_rly_48_WE",
       "x": 14744.48,
-      "y": 8736.48,
+      "y": 8411.48,
       "w": 21.6,
       "h": 21.6
      },
@@ -169113,7 +169410,7 @@
       "name": "rfr_SW_SE_08",
       "cell": "hbfd_rly_48_WE",
       "x": 14744.48,
-      "y": 9105.48,
+      "y": 8721.48,
       "w": 21.6,
       "h": 21.6
      },
@@ -169121,7 +169418,7 @@
       "name": "rfr_SW_SE_09",
       "cell": "hbfd_rly_48_WE",
       "x": 14744.48,
-      "y": 9475.48,
+      "y": 9048.48,
       "w": 21.6,
       "h": 21.6
      },
@@ -169129,7 +169426,7 @@
       "name": "rfr_SW_SE_10",
       "cell": "hbfd_rly_48_WE",
       "x": 14744.48,
-      "y": 9844.48,
+      "y": 9375.48,
       "w": 21.6,
       "h": 21.6
      },
@@ -169137,7 +169434,7 @@
       "name": "rfr_SW_SE_11",
       "cell": "hbfd_rly_48_WE",
       "x": 14744.48,
-      "y": 10214.48,
+      "y": 9701.48,
       "w": 21.6,
       "h": 21.6
      },
@@ -169145,87 +169442,87 @@
       "name": "rfr_SW_SE_12",
       "cell": "hbfd_rly_48_WE",
       "x": 14744.48,
-      "y": 10583.48,
+      "y": 10028.48,
       "w": 21.6,
       "h": 21.6
      },
      {
       "name": "rfr_SW_SE_13",
       "cell": "hbfd_rly_48_WE",
-      "x": 14804.071,
-      "y": 10899.889,
+      "x": 14971.584,
+      "y": 10110.376,
       "w": 21.6,
       "h": 21.6
      },
      {
       "name": "rfr_SW_SE_14",
       "cell": "hbfd_rly_48_WE",
-      "x": 15154.071,
-      "y": 10899.889,
+      "x": 15316.584,
+      "y": 10110.376,
       "w": 21.6,
       "h": 21.6
      },
      {
       "name": "rfr_SW_SE_15",
       "cell": "hbfd_rly_48_WE",
-      "x": 15536.071,
-      "y": 10899.889,
+      "x": 15643.584,
+      "y": 10110.376,
       "w": 21.6,
       "h": 21.6
      },
      {
       "name": "rfr_SW_SE_16",
       "cell": "hbfd_rly_48_WE",
-      "x": 15906.071,
-      "y": 10899.889,
+      "x": 15943.584,
+      "y": 10110.376,
       "w": 21.6,
       "h": 21.6
      },
      {
       "name": "rfr_SW_SE_17",
       "cell": "hbfd_rly_48_WE",
-      "x": 16275.071,
-      "y": 10899.889,
+      "x": 16296.584,
+      "y": 10110.376,
       "w": 21.6,
       "h": 21.6
      },
      {
       "name": "rfr_SW_SE_18",
       "cell": "hbfd_rly_48_WE",
-      "x": 16663.071,
-      "y": 10899.889,
+      "x": 16623.584,
+      "y": 10110.376,
       "w": 21.6,
       "h": 21.6
      },
      {
       "name": "rfr_SW_SE_19",
       "cell": "hbfd_rly_48_WE",
-      "x": 17013.071,
-      "y": 10899.889,
+      "x": 16950.584,
+      "y": 10110.376,
       "w": 21.6,
       "h": 21.6
      },
      {
       "name": "rfr_SW_SE_20",
       "cell": "hbfd_rly_48_WE",
-      "x": 17384.071,
-      "y": 10899.889,
+      "x": 17292.584,
+      "y": 10110.376,
       "w": 21.6,
       "h": 21.6
      },
      {
       "name": "rfr_SW_SE_21",
       "cell": "hbfd_rly_48_WE",
-      "x": 17783.071,
-      "y": 10899.889,
+      "x": 17603.584,
+      "y": 10110.376,
       "w": 21.6,
       "h": 21.6
      },
      {
       "name": "rfr_SW_SE_22",
       "cell": "hbfd_rly_48_WE",
-      "x": 18123.071,
-      "y": 10899.889,
+      "x": 17960.584,
+      "y": 10110.376,
       "w": 21.6,
       "h": 21.6
      },
@@ -169233,7 +169530,7 @@
       "name": "rfr_SW_SE_23",
       "cell": "hbfd_rly_48_WE",
       "x": 18223.92,
-      "y": 10631.738,
+      "y": 10076.712,
       "w": 21.6,
       "h": 21.6
      },
@@ -169241,7 +169538,7 @@
       "name": "rfr_SW_SE_24",
       "cell": "hbfd_rly_48_WE",
       "x": 18223.92,
-      "y": 10261.738,
+      "y": 9749.712,
       "w": 21.6,
       "h": 21.6
      },
@@ -169249,7 +169546,7 @@
       "name": "rfr_SW_SE_25",
       "cell": "hbfd_rly_48_WE",
       "x": 18223.92,
-      "y": 9892.738,
+      "y": 9422.712,
       "w": 21.6,
       "h": 21.6
      },
@@ -169257,7 +169554,7 @@
       "name": "rfr_SW_SE_26",
       "cell": "hbfd_rly_48_WE",
       "x": 18223.92,
-      "y": 9522.738,
+      "y": 9090.712,
       "w": 21.6,
       "h": 21.6
      },
@@ -169265,7 +169562,7 @@
       "name": "rfr_SW_SE_27",
       "cell": "hbfd_rly_48_WE",
       "x": 18223.92,
-      "y": 9121.738,
+      "y": 8802.712,
       "w": 21.6,
       "h": 21.6
      },
@@ -169273,22 +169570,22 @@
       "name": "rfr_SW_SE_28",
       "cell": "hbfd_rly_48_WE",
       "x": 18223.92,
-      "y": 8783.738,
+      "y": 8426.712,
       "w": 21.6,
       "h": 21.6
      },
      {
       "name": "rfr_SW_SE_29",
       "cell": "hbfd_rly_48_WE",
-      "x": 18223.92,
-      "y": 8414.738,
+      "x": 18442.088,
+      "y": 8312.88,
       "w": 21.6,
       "h": 21.6
      },
      {
       "name": "rfr_SW_SE_30",
       "cell": "hbfd_rly_48_WE",
-      "x": 18491.062,
+      "x": 18730.088,
       "y": 8312.88,
       "w": 21.6,
       "h": 21.6
@@ -169296,7 +169593,7 @@
      {
       "name": "rfr_SW_SE_31",
       "cell": "hbfd_rly_48_WE",
-      "x": 18861.062,
+      "x": 19107.088,
       "y": 8312.88,
       "w": 21.6,
       "h": 21.6
@@ -169304,7 +169601,7 @@
      {
       "name": "rfr_SW_SE_32",
       "cell": "hbfd_rly_48_WE",
-      "x": 19230.062,
+      "x": 19394.088,
       "y": 8312.88,
       "w": 21.6,
       "h": 21.6
@@ -169312,7 +169609,7 @@
      {
       "name": "rfr_SW_SE_33",
       "cell": "hbfd_rly_48_WE",
-      "x": 19600.062,
+      "x": 19726.088,
       "y": 8312.88,
       "w": 21.6,
       "h": 21.6
@@ -169320,7 +169617,7 @@
      {
       "name": "rfr_SW_SE_34",
       "cell": "hbfd_rly_48_WE",
-      "x": 19969.062,
+      "x": 20055.088,
       "y": 8312.88,
       "w": 21.6,
       "h": 21.6
@@ -169328,7 +169625,7 @@
      {
       "name": "rfr_SW_SE_35",
       "cell": "hbfd_rly_48_WE",
-      "x": 20339.062,
+      "x": 20381.088,
       "y": 8312.88,
       "w": 21.6,
       "h": 21.6
@@ -169349,11 +169646,11 @@
      ],
      [
       14755.28,
-      10910.689
+      10121.176
      ],
      [
       18234.72,
-      10910.689
+      10121.176
      ],
      [
       18234.72,
@@ -169375,39 +169672,39 @@
     "bits": 41,
     "length_um": 11965.01,
     "stages": 36,
-    "max_hop_um": 377,
+    "max_hop_um": 383,
     "homes": [
      [
-      12545.88,
+      12527.88,
       8323.68
      ],
      [
-      12869.88,
+      12854.88,
       8323.68
      ],
      [
-      13192.88,
+      13180.88,
       8323.68
      ],
      [
-      13525.88,
+      13481.88,
       8323.68
      ],
      [
-      13839.88,
+      13834.88,
       8323.68
      ],
      [
-      14162.88,
+      14161.88,
       8323.68
      ],
      [
-      14487.88,
+      14486.88,
       8323.68
      ],
      [
       14755.28,
-      8331.28
+      8377.28
      ],
      [
       14755.28,
@@ -169423,7 +169720,7 @@
      ],
      [
       14755.28,
-      9696.28
+      9612.28
      ],
      [
       14755.28,
@@ -169479,15 +169776,15 @@
      ],
      [
       14755.28,
-      14203.28
+      14199.28
      ],
      [
       14755.28,
-      14485.28
+      14522.28
      ],
      [
       14755.28,
-      14792.28
+      14813.28
      ],
      [
       14755.28,
@@ -169518,7 +169815,7 @@
       15626.002
      ],
      [
-      12939.002,
+      12948.002,
       15626.002
      ]
     ],
@@ -169526,7 +169823,7 @@
      {
       "name": "rfr_SW_NW_00",
       "cell": "hbfd_rly_48_WE",
-      "x": 12535.08,
+      "x": 12517.08,
       "y": 8312.88,
       "w": 21.6,
       "h": 21.6
@@ -169534,7 +169831,7 @@
      {
       "name": "rfr_SW_NW_01",
       "cell": "hbfd_rly_48_WE",
-      "x": 12859.08,
+      "x": 12844.08,
       "y": 8312.88,
       "w": 21.6,
       "h": 21.6
@@ -169542,7 +169839,7 @@
      {
       "name": "rfr_SW_NW_02",
       "cell": "hbfd_rly_48_WE",
-      "x": 13182.08,
+      "x": 13170.08,
       "y": 8312.88,
       "w": 21.6,
       "h": 21.6
@@ -169550,7 +169847,7 @@
      {
       "name": "rfr_SW_NW_03",
       "cell": "hbfd_rly_48_WE",
-      "x": 13515.08,
+      "x": 13471.08,
       "y": 8312.88,
       "w": 21.6,
       "h": 21.6
@@ -169558,7 +169855,7 @@
      {
       "name": "rfr_SW_NW_04",
       "cell": "hbfd_rly_48_WE",
-      "x": 13829.08,
+      "x": 13824.08,
       "y": 8312.88,
       "w": 21.6,
       "h": 21.6
@@ -169566,7 +169863,7 @@
      {
       "name": "rfr_SW_NW_05",
       "cell": "hbfd_rly_48_WE",
-      "x": 14152.08,
+      "x": 14151.08,
       "y": 8312.88,
       "w": 21.6,
       "h": 21.6
@@ -169574,7 +169871,7 @@
      {
       "name": "rfr_SW_NW_06",
       "cell": "hbfd_rly_48_WE",
-      "x": 14477.08,
+      "x": 14476.08,
       "y": 8312.88,
       "w": 21.6,
       "h": 21.6
@@ -169583,7 +169880,7 @@
       "name": "rfr_SW_NW_07",
       "cell": "hbfd_rly_48_SN",
       "x": 14744.48,
-      "y": 8320.48,
+      "y": 8366.48,
       "w": 21.6,
       "h": 21.6
      },
@@ -169615,7 +169912,7 @@
       "name": "rfr_SW_NW_11",
       "cell": "hbfd_rly_48_SN",
       "x": 14744.48,
-      "y": 9685.48,
+      "y": 9601.48,
       "w": 21.6,
       "h": 21.6
      },
@@ -169727,7 +170024,7 @@
       "name": "rfr_SW_NW_25",
       "cell": "hbfd_rly_48_SN",
       "x": 14744.48,
-      "y": 14192.48,
+      "y": 14188.48,
       "w": 21.6,
       "h": 21.6
      },
@@ -169735,7 +170032,7 @@
       "name": "rfr_SW_NW_26",
       "cell": "hbfd_rly_48_SN",
       "x": 14744.48,
-      "y": 14474.48,
+      "y": 14511.48,
       "w": 21.6,
       "h": 21.6
      },
@@ -169743,7 +170040,7 @@
       "name": "rfr_SW_NW_27",
       "cell": "hbfd_rly_48_SN",
       "x": 14744.48,
-      "y": 14781.48,
+      "y": 14802.48,
       "w": 21.6,
       "h": 21.6
      },
@@ -169806,7 +170103,7 @@
      {
       "name": "rfr_SW_NW_35",
       "cell": "hbfd_rly_48_EW",
-      "x": 12928.202,
+      "x": 12937.202,
       "y": 15615.202,
       "w": 21.6,
       "h": 21.6
@@ -169888,44 +170185,44 @@
       10061.28
      ],
      [
-      14755.28,
-      10488.28
+      15122.384,
+      10121.176
      ],
      [
-      14759.871,
-      10910.689
+      15549.384,
+      10121.176
      ],
      [
-      15186.871,
-      10910.689
+      15976.384,
+      10121.176
      ],
      [
-      15613.871,
-      10910.689
+      16403.384,
+      10121.176
      ],
      [
-      16040.871,
-      10910.689
+      16830.384,
+      10121.176
      ],
      [
-      16467.871,
-      10910.689
+      17257.384,
+      10121.176
      ],
      [
-      16894.871,
-      10910.689
+      17684.384,
+      10121.176
      ],
      [
-      17321.871,
-      10910.689
+      18111.384,
+      10121.176
      ],
      [
-      17748.871,
-      10910.689
+      18234.72,
+      10424.84
      ],
      [
-      18175.871,
-      10910.689
+      18234.72,
+      10851.84
      ],
      [
       18234.72,
@@ -170076,80 +170373,80 @@
      {
       "name": "rfr_SW_NE_10",
       "cell": "hbfd_rly_48_SN",
-      "x": 14744.48,
-      "y": 10477.48,
+      "x": 15111.584,
+      "y": 10110.376,
       "w": 21.6,
       "h": 21.6
      },
      {
       "name": "rfr_SW_NE_11",
       "cell": "hbfd_rly_48_SN",
-      "x": 14749.071,
-      "y": 10899.889,
+      "x": 15538.584,
+      "y": 10110.376,
       "w": 21.6,
       "h": 21.6
      },
      {
       "name": "rfr_SW_NE_12",
       "cell": "hbfd_rly_48_SN",
-      "x": 15176.071,
-      "y": 10899.889,
+      "x": 15965.584,
+      "y": 10110.376,
       "w": 21.6,
       "h": 21.6
      },
      {
       "name": "rfr_SW_NE_13",
       "cell": "hbfd_rly_48_SN",
-      "x": 15603.071,
-      "y": 10899.889,
+      "x": 16392.584,
+      "y": 10110.376,
       "w": 21.6,
       "h": 21.6
      },
      {
       "name": "rfr_SW_NE_14",
       "cell": "hbfd_rly_48_SN",
-      "x": 16030.071,
-      "y": 10899.889,
+      "x": 16819.584,
+      "y": 10110.376,
       "w": 21.6,
       "h": 21.6
      },
      {
       "name": "rfr_SW_NE_15",
       "cell": "hbfd_rly_48_SN",
-      "x": 16457.071,
-      "y": 10899.889,
+      "x": 17246.584,
+      "y": 10110.376,
       "w": 21.6,
       "h": 21.6
      },
      {
       "name": "rfr_SW_NE_16",
       "cell": "hbfd_rly_48_SN",
-      "x": 16884.071,
-      "y": 10899.889,
+      "x": 17673.584,
+      "y": 10110.376,
       "w": 21.6,
       "h": 21.6
      },
      {
       "name": "rfr_SW_NE_17",
       "cell": "hbfd_rly_48_SN",
-      "x": 17311.071,
-      "y": 10899.889,
+      "x": 18100.584,
+      "y": 10110.376,
       "w": 21.6,
       "h": 21.6
      },
      {
       "name": "rfr_SW_NE_18",
       "cell": "hbfd_rly_48_SN",
-      "x": 17738.071,
-      "y": 10899.889,
+      "x": 18223.92,
+      "y": 10414.04,
       "w": 21.6,
       "h": 21.6
      },
      {
       "name": "rfr_SW_NE_19",
       "cell": "hbfd_rly_48_SN",
-      "x": 18165.071,
-      "y": 10899.889,
+      "x": 18223.92,
+      "y": 10841.04,
       "w": 21.6,
       "h": 21.6
      },
@@ -170297,11 +170594,11 @@
      ],
      [
       14755.28,
-      10910.689
+      10121.176
      ],
      [
       18234.72,
-      10910.689
+      10121.176
      ],
      [
       18234.72,
@@ -170321,152 +170618,152 @@
     "src": "SE",
     "dst": "SW",
     "bits": 41,
-    "length_um": 13610.258,
+    "length_um": 12031.232,
     "stages": 36,
-    "max_hop_um": 426,
+    "max_hop_um": 398,
     "homes": [
      [
       20303.12,
       8323.68
      ],
      [
-      19958.12,
+      20010.12,
       8323.68
      ],
      [
-      19589.12,
+      19679.12,
       8323.68
      ],
      [
-      19219.12,
+      19348.12,
       8323.68
      ],
      [
-      18850.12,
+      19140.12,
       8323.68
      ],
      [
-      18480.12,
+      18785.12,
+      8323.68
+     ],
+     [
+      18409.12,
       8323.68
      ],
      [
       18234.72,
-      8447.28
+      8481.28
      ],
      [
       18234.72,
-      8816.28
+      8714.28
      ],
      [
       18234.72,
-      9206.28
+      9079.28
      ],
      [
       18234.72,
-      9511.28
+      9411.28
      ],
      [
       18234.72,
-      9925.28
+      9738.28
      ],
      [
       18234.72,
-      10294.28
+      10065.28
      ],
      [
-      18234.72,
-      10664.28
+      17903.616,
+      10121.176
      ],
      [
-      18112.129,
-      10910.689
+      17636.616,
+      10121.176
      ],
      [
-      17727.129,
-      10910.689
+      17325.616,
+      10121.176
      ],
      [
-      17417.129,
-      10910.689
+      16983.616,
+      10121.176
      ],
      [
-      17002.129,
-      10910.689
+      16612.616,
+      10121.176
      ],
      [
-      16696.129,
-      10910.689
+      16329.616,
+      10121.176
      ],
      [
-      16308.129,
-      10910.689
+      16028.616,
+      10121.176
      ],
      [
-      15939.129,
-      10910.689
+      15676.616,
+      10121.176
      ],
      [
-      15569.129,
-      10910.689
+      15349.616,
+      10121.176
      ],
      [
-      15143.129,
-      10910.689
-     ],
-     [
-      14837.129,
-      10910.689
+      15049.616,
+      10121.176
      ],
      [
       14755.28,
-      10616.538
+      10017.512
      ],
      [
       14755.28,
-      10247.538
+      9734.512
      ],
      [
       14755.28,
-      9877.538
+      9408.512
      ],
      [
       14755.28,
-      9508.538
+      9081.512
      ],
      [
       14755.28,
-      9138.538
+      8754.512
      ],
      [
       14755.28,
-      8725.538
+      8444.512
      ],
      [
-      14755.28,
-      8421.538
-     ],
-     [
-      14466.138,
+      14535.112,
       8323.68
      ],
      [
-      14098.138,
+      14210.112,
       8323.68
      ],
      [
-      13730.138,
+      13885.112,
       8323.68
      ],
      [
-      13362.138,
+      13579.112,
       8323.68
      ],
      [
-      12994.138,
+      13234.112,
       8323.68
      ],
      [
-      12627.138,
+      12909.112,
+      8323.68
+     ],
+     [
+      12584.112,
       8323.68
      ]
     ],
@@ -170482,7 +170779,7 @@
      {
       "name": "rfr_SE_SW_01",
       "cell": "hbfd_rly_48_EW",
-      "x": 19947.32,
+      "x": 19999.32,
       "y": 8312.88,
       "w": 21.6,
       "h": 21.6
@@ -170490,7 +170787,7 @@
      {
       "name": "rfr_SE_SW_02",
       "cell": "hbfd_rly_48_EW",
-      "x": 19578.32,
+      "x": 19668.32,
       "y": 8312.88,
       "w": 21.6,
       "h": 21.6
@@ -170498,7 +170795,7 @@
      {
       "name": "rfr_SE_SW_03",
       "cell": "hbfd_rly_48_EW",
-      "x": 19208.32,
+      "x": 19337.32,
       "y": 8312.88,
       "w": 21.6,
       "h": 21.6
@@ -170506,7 +170803,7 @@
      {
       "name": "rfr_SE_SW_04",
       "cell": "hbfd_rly_48_EW",
-      "x": 18839.32,
+      "x": 19129.32,
       "y": 8312.88,
       "w": 21.6,
       "h": 21.6
@@ -170514,7 +170811,7 @@
      {
       "name": "rfr_SE_SW_05",
       "cell": "hbfd_rly_48_EW",
-      "x": 18469.32,
+      "x": 18774.32,
       "y": 8312.88,
       "w": 21.6,
       "h": 21.6
@@ -170522,8 +170819,8 @@
      {
       "name": "rfr_SE_SW_06",
       "cell": "hbfd_rly_48_EW",
-      "x": 18223.92,
-      "y": 8436.48,
+      "x": 18398.32,
+      "y": 8312.88,
       "w": 21.6,
       "h": 21.6
      },
@@ -170531,7 +170828,7 @@
       "name": "rfr_SE_SW_07",
       "cell": "hbfd_rly_48_EW",
       "x": 18223.92,
-      "y": 8805.48,
+      "y": 8470.48,
       "w": 21.6,
       "h": 21.6
      },
@@ -170539,7 +170836,7 @@
       "name": "rfr_SE_SW_08",
       "cell": "hbfd_rly_48_EW",
       "x": 18223.92,
-      "y": 9195.48,
+      "y": 8703.48,
       "w": 21.6,
       "h": 21.6
      },
@@ -170547,7 +170844,7 @@
       "name": "rfr_SE_SW_09",
       "cell": "hbfd_rly_48_EW",
       "x": 18223.92,
-      "y": 9500.48,
+      "y": 9068.48,
       "w": 21.6,
       "h": 21.6
      },
@@ -170555,7 +170852,7 @@
       "name": "rfr_SE_SW_10",
       "cell": "hbfd_rly_48_EW",
       "x": 18223.92,
-      "y": 9914.48,
+      "y": 9400.48,
       "w": 21.6,
       "h": 21.6
      },
@@ -170563,7 +170860,7 @@
       "name": "rfr_SE_SW_11",
       "cell": "hbfd_rly_48_EW",
       "x": 18223.92,
-      "y": 10283.48,
+      "y": 9727.48,
       "w": 21.6,
       "h": 21.6
      },
@@ -170571,87 +170868,87 @@
       "name": "rfr_SE_SW_12",
       "cell": "hbfd_rly_48_EW",
       "x": 18223.92,
-      "y": 10653.48,
+      "y": 10054.48,
       "w": 21.6,
       "h": 21.6
      },
      {
       "name": "rfr_SE_SW_13",
       "cell": "hbfd_rly_48_EW",
-      "x": 18101.329,
-      "y": 10899.889,
+      "x": 17892.816,
+      "y": 10110.376,
       "w": 21.6,
       "h": 21.6
      },
      {
       "name": "rfr_SE_SW_14",
       "cell": "hbfd_rly_48_EW",
-      "x": 17716.329,
-      "y": 10899.889,
+      "x": 17625.816,
+      "y": 10110.376,
       "w": 21.6,
       "h": 21.6
      },
      {
       "name": "rfr_SE_SW_15",
       "cell": "hbfd_rly_48_EW",
-      "x": 17406.329,
-      "y": 10899.889,
+      "x": 17314.816,
+      "y": 10110.376,
       "w": 21.6,
       "h": 21.6
      },
      {
       "name": "rfr_SE_SW_16",
       "cell": "hbfd_rly_48_EW",
-      "x": 16991.329,
-      "y": 10899.889,
+      "x": 16972.816,
+      "y": 10110.376,
       "w": 21.6,
       "h": 21.6
      },
      {
       "name": "rfr_SE_SW_17",
       "cell": "hbfd_rly_48_EW",
-      "x": 16685.329,
-      "y": 10899.889,
+      "x": 16601.816,
+      "y": 10110.376,
       "w": 21.6,
       "h": 21.6
      },
      {
       "name": "rfr_SE_SW_18",
       "cell": "hbfd_rly_48_EW",
-      "x": 16297.329,
-      "y": 10899.889,
+      "x": 16318.816,
+      "y": 10110.376,
       "w": 21.6,
       "h": 21.6
      },
      {
       "name": "rfr_SE_SW_19",
       "cell": "hbfd_rly_48_EW",
-      "x": 15928.329,
-      "y": 10899.889,
+      "x": 16017.816,
+      "y": 10110.376,
       "w": 21.6,
       "h": 21.6
      },
      {
       "name": "rfr_SE_SW_20",
       "cell": "hbfd_rly_48_EW",
-      "x": 15558.329,
-      "y": 10899.889,
+      "x": 15665.816,
+      "y": 10110.376,
       "w": 21.6,
       "h": 21.6
      },
      {
       "name": "rfr_SE_SW_21",
       "cell": "hbfd_rly_48_EW",
-      "x": 15132.329,
-      "y": 10899.889,
+      "x": 15338.816,
+      "y": 10110.376,
       "w": 21.6,
       "h": 21.6
      },
      {
       "name": "rfr_SE_SW_22",
       "cell": "hbfd_rly_48_EW",
-      "x": 14826.329,
-      "y": 10899.889,
+      "x": 15038.816,
+      "y": 10110.376,
       "w": 21.6,
       "h": 21.6
      },
@@ -170659,7 +170956,7 @@
       "name": "rfr_SE_SW_23",
       "cell": "hbfd_rly_48_EW",
       "x": 14744.48,
-      "y": 10605.738,
+      "y": 10006.712,
       "w": 21.6,
       "h": 21.6
      },
@@ -170667,7 +170964,7 @@
       "name": "rfr_SE_SW_24",
       "cell": "hbfd_rly_48_EW",
       "x": 14744.48,
-      "y": 10236.738,
+      "y": 9723.712,
       "w": 21.6,
       "h": 21.6
      },
@@ -170675,7 +170972,7 @@
       "name": "rfr_SE_SW_25",
       "cell": "hbfd_rly_48_EW",
       "x": 14744.48,
-      "y": 9866.738,
+      "y": 9397.712,
       "w": 21.6,
       "h": 21.6
      },
@@ -170683,7 +170980,7 @@
       "name": "rfr_SE_SW_26",
       "cell": "hbfd_rly_48_EW",
       "x": 14744.48,
-      "y": 9497.738,
+      "y": 9070.712,
       "w": 21.6,
       "h": 21.6
      },
@@ -170691,7 +170988,7 @@
       "name": "rfr_SE_SW_27",
       "cell": "hbfd_rly_48_EW",
       "x": 14744.48,
-      "y": 9127.738,
+      "y": 8743.712,
       "w": 21.6,
       "h": 21.6
      },
@@ -170699,22 +170996,22 @@
       "name": "rfr_SE_SW_28",
       "cell": "hbfd_rly_48_EW",
       "x": 14744.48,
-      "y": 8714.738,
+      "y": 8433.712,
       "w": 21.6,
       "h": 21.6
      },
      {
       "name": "rfr_SE_SW_29",
       "cell": "hbfd_rly_48_EW",
-      "x": 14744.48,
-      "y": 8410.738,
+      "x": 14524.312,
+      "y": 8312.88,
       "w": 21.6,
       "h": 21.6
      },
      {
       "name": "rfr_SE_SW_30",
       "cell": "hbfd_rly_48_EW",
-      "x": 14455.338,
+      "x": 14199.312,
       "y": 8312.88,
       "w": 21.6,
       "h": 21.6
@@ -170722,7 +171019,7 @@
      {
       "name": "rfr_SE_SW_31",
       "cell": "hbfd_rly_48_EW",
-      "x": 14087.338,
+      "x": 13874.312,
       "y": 8312.88,
       "w": 21.6,
       "h": 21.6
@@ -170730,7 +171027,7 @@
      {
       "name": "rfr_SE_SW_32",
       "cell": "hbfd_rly_48_EW",
-      "x": 13719.338,
+      "x": 13568.312,
       "y": 8312.88,
       "w": 21.6,
       "h": 21.6
@@ -170738,7 +171035,7 @@
      {
       "name": "rfr_SE_SW_33",
       "cell": "hbfd_rly_48_EW",
-      "x": 13351.338,
+      "x": 13223.312,
       "y": 8312.88,
       "w": 21.6,
       "h": 21.6
@@ -170746,7 +171043,7 @@
      {
       "name": "rfr_SE_SW_34",
       "cell": "hbfd_rly_48_EW",
-      "x": 12983.338,
+      "x": 12898.312,
       "y": 8312.88,
       "w": 21.6,
       "h": 21.6
@@ -170754,7 +171051,7 @@
      {
       "name": "rfr_SE_SW_35",
       "cell": "hbfd_rly_48_EW",
-      "x": 12616.338,
+      "x": 12573.312,
       "y": 8312.88,
       "w": 21.6,
       "h": 21.6
@@ -170775,11 +171072,11 @@
      ],
      [
       18234.72,
-      10910.689
+      10121.176
      ],
      [
       14755.28,
-      10910.689
+      10121.176
      ],
      [
       14755.28,
@@ -171298,44 +171595,44 @@
       10014.28
      ],
      [
-      18234.72,
-      10430.28
+      17925.616,
+      10121.176
      ],
      [
-      18234.72,
-      10847.28
+      17508.616,
+      10121.176
      ],
      [
-      17881.129,
-      10910.689
+      17091.616,
+      10121.176
      ],
      [
-      17464.129,
-      10910.689
+      16674.616,
+      10121.176
      ],
      [
-      17046.129,
-      10910.689
+      16256.616,
+      10121.176
      ],
      [
-      16629.129,
-      10910.689
+      15839.616,
+      10121.176
      ],
      [
-      16211.129,
-      10910.689
+      15421.616,
+      10121.176
      ],
      [
-      15794.129,
-      10910.689
+      15004.616,
+      10121.176
      ],
      [
-      15377.129,
-      10910.689
+      14755.28,
+      10288.84
      ],
      [
-      14959.129,
-      10910.689
+      14755.28,
+      10706.84
      ],
      [
       14755.28,
@@ -171486,80 +171783,80 @@
      {
       "name": "rfr_SE_NW_10",
       "cell": "hbfd_rly_48_SN",
-      "x": 18223.92,
-      "y": 10419.48,
+      "x": 17914.816,
+      "y": 10110.376,
       "w": 21.6,
       "h": 21.6
      },
      {
       "name": "rfr_SE_NW_11",
       "cell": "hbfd_rly_48_SN",
-      "x": 18223.92,
-      "y": 10836.48,
+      "x": 17497.816,
+      "y": 10110.376,
       "w": 21.6,
       "h": 21.6
      },
      {
       "name": "rfr_SE_NW_12",
       "cell": "hbfd_rly_48_SN",
-      "x": 17870.329,
-      "y": 10899.889,
+      "x": 17080.816,
+      "y": 10110.376,
       "w": 21.6,
       "h": 21.6
      },
      {
       "name": "rfr_SE_NW_13",
       "cell": "hbfd_rly_48_SN",
-      "x": 17453.329,
-      "y": 10899.889,
+      "x": 16663.816,
+      "y": 10110.376,
       "w": 21.6,
       "h": 21.6
      },
      {
       "name": "rfr_SE_NW_14",
       "cell": "hbfd_rly_48_SN",
-      "x": 17035.329,
-      "y": 10899.889,
+      "x": 16245.816,
+      "y": 10110.376,
       "w": 21.6,
       "h": 21.6
      },
      {
       "name": "rfr_SE_NW_15",
       "cell": "hbfd_rly_48_SN",
-      "x": 16618.329,
-      "y": 10899.889,
+      "x": 15828.816,
+      "y": 10110.376,
       "w": 21.6,
       "h": 21.6
      },
      {
       "name": "rfr_SE_NW_16",
       "cell": "hbfd_rly_48_SN",
-      "x": 16200.329,
-      "y": 10899.889,
+      "x": 15410.816,
+      "y": 10110.376,
       "w": 21.6,
       "h": 21.6
      },
      {
       "name": "rfr_SE_NW_17",
       "cell": "hbfd_rly_48_SN",
-      "x": 15783.329,
-      "y": 10899.889,
+      "x": 14993.816,
+      "y": 10110.376,
       "w": 21.6,
       "h": 21.6
      },
      {
       "name": "rfr_SE_NW_18",
       "cell": "hbfd_rly_48_SN",
-      "x": 15366.329,
-      "y": 10899.889,
+      "x": 14744.48,
+      "y": 10278.04,
       "w": 21.6,
       "h": 21.6
      },
      {
       "name": "rfr_SE_NW_19",
       "cell": "hbfd_rly_48_SN",
-      "x": 14948.329,
-      "y": 10899.889,
+      "x": 14744.48,
+      "y": 10696.04,
       "w": 21.6,
       "h": 21.6
      },
@@ -171707,11 +172004,11 @@
      ],
      [
       18234.72,
-      10910.689
+      10121.176
      ],
      [
       14755.28,
-      10910.689
+      10121.176
      ],
      [
       14755.28,
@@ -171733,10 +172030,10 @@
     "bits": 41,
     "length_um": 12259.122,
     "stages": 36,
-    "max_hop_um": 368,
+    "max_hop_um": 361,
     "homes": [
      [
-      20372.12,
+      20364.12,
       8323.68
      ],
      [
@@ -171769,15 +172066,15 @@
      ],
      [
       18234.72,
-      8860.28
+      8845.28
      ],
      [
       18234.72,
-      9228.28
+      9206.28
      ],
      [
       18234.72,
-      9489.28
+      9508.28
      ],
      [
       18234.72,
@@ -171793,7 +172090,7 @@
      ],
      [
       18234.72,
-      10869.28
+      10829.28
      ],
      [
       18234.72,
@@ -171825,15 +172122,15 @@
      ],
      [
       18234.72,
-      13502.28
+      13484.28
      ],
      [
       18234.72,
-      13863.28
+      13796.28
      ],
      [
       18234.72,
-      14131.28
+      14146.28
      ],
      [
       18234.72,
@@ -171876,7 +172173,7 @@
       15626.002
      ],
      [
-      20404.998,
+      20399.998,
       15626.002
      ]
     ],
@@ -171884,7 +172181,7 @@
      {
       "name": "rfr_SE_NE_00",
       "cell": "hbfd_rly_48_EW",
-      "x": 20361.32,
+      "x": 20353.32,
       "y": 8312.88,
       "w": 21.6,
       "h": 21.6
@@ -171949,7 +172246,7 @@
       "name": "rfr_SE_NE_08",
       "cell": "hbfd_rly_48_SN",
       "x": 18223.92,
-      "y": 8849.48,
+      "y": 8834.48,
       "w": 21.6,
       "h": 21.6
      },
@@ -171957,7 +172254,7 @@
       "name": "rfr_SE_NE_09",
       "cell": "hbfd_rly_48_SN",
       "x": 18223.92,
-      "y": 9217.48,
+      "y": 9195.48,
       "w": 21.6,
       "h": 21.6
      },
@@ -171965,7 +172262,7 @@
       "name": "rfr_SE_NE_10",
       "cell": "hbfd_rly_48_SN",
       "x": 18223.92,
-      "y": 9478.48,
+      "y": 9497.48,
       "w": 21.6,
       "h": 21.6
      },
@@ -171997,7 +172294,7 @@
       "name": "rfr_SE_NE_14",
       "cell": "hbfd_rly_48_SN",
       "x": 18223.92,
-      "y": 10858.48,
+      "y": 10818.48,
       "w": 21.6,
       "h": 21.6
      },
@@ -172061,7 +172358,7 @@
       "name": "rfr_SE_NE_22",
       "cell": "hbfd_rly_48_SN",
       "x": 18223.92,
-      "y": 13491.48,
+      "y": 13473.48,
       "w": 21.6,
       "h": 21.6
      },
@@ -172069,7 +172366,7 @@
       "name": "rfr_SE_NE_23",
       "cell": "hbfd_rly_48_SN",
       "x": 18223.92,
-      "y": 13852.48,
+      "y": 13785.48,
       "w": 21.6,
       "h": 21.6
      },
@@ -172077,7 +172374,7 @@
       "name": "rfr_SE_NE_24",
       "cell": "hbfd_rly_48_SN",
       "x": 18223.92,
-      "y": 14120.48,
+      "y": 14135.48,
       "w": 21.6,
       "h": 21.6
      },
@@ -172164,7 +172461,7 @@
      {
       "name": "rfr_SE_NE_35",
       "cell": "hbfd_rly_48_WE",
-      "x": 20394.198,
+      "x": 20389.198,
       "y": 15615.202,
       "w": 21.6,
       "h": 21.6
@@ -172203,10 +172500,10 @@
     "bits": 41,
     "length_um": 11941.01,
     "stages": 36,
-    "max_hop_um": 387,
+    "max_hop_um": 424,
     "homes": [
      [
-      12916.992,
+      12923.992,
       15626.002
      ],
      [
@@ -172235,15 +172532,15 @@
      ],
      [
       14755.28,
-      15147.29
+      15198.29
      ],
      [
       14755.28,
-      14923.29
+      14880.29
      ],
      [
       14755.28,
-      14563.29
+      14553.29
      ],
      [
       14755.28,
@@ -172291,7 +172588,7 @@
      ],
      [
       14755.28,
-      10680.29
+      10729.29
      ],
      [
       14755.28,
@@ -172299,19 +172596,19 @@
      ],
      [
       14755.28,
-      10034.29
+      9973.29
      ],
      [
       14755.28,
-      9718.29
+      9756.29
      ],
      [
       14755.28,
-      9389.29
+      9430.29
      ],
      [
       14755.28,
-      9066.29
+      9103.29
      ],
      [
       14755.28,
@@ -172319,34 +172616,34 @@
      ],
      [
       14755.28,
-      8443.29
+      8466.29
      ],
      [
-      14529.89,
+      14556.89,
       8323.68
      ],
      [
-      14206.89,
+      14231.89,
       8323.68
      ],
      [
-      13884.89,
+      13906.89,
       8323.68
      ],
      [
-      13579.89,
+      13600.89,
       8323.68
      ],
      [
-      13238.89,
+      13255.89,
       8323.68
      ],
      [
-      12915.89,
+      12930.89,
       8323.68
      ],
      [
-      12569.89,
+      12605.89,
       8323.68
      ]
     ],
@@ -172354,7 +172651,7 @@
      {
       "name": "rfr_NW_SW_00",
       "cell": "hbfd_rly_48_WE",
-      "x": 12906.192,
+      "x": 12913.192,
       "y": 15615.202,
       "w": 21.6,
       "h": 21.6
@@ -172411,7 +172708,7 @@
       "name": "rfr_NW_SW_07",
       "cell": "hbfd_rly_48_NS",
       "x": 14744.48,
-      "y": 15136.49,
+      "y": 15187.49,
       "w": 21.6,
       "h": 21.6
      },
@@ -172419,7 +172716,7 @@
       "name": "rfr_NW_SW_08",
       "cell": "hbfd_rly_48_NS",
       "x": 14744.48,
-      "y": 14912.49,
+      "y": 14869.49,
       "w": 21.6,
       "h": 21.6
      },
@@ -172427,7 +172724,7 @@
       "name": "rfr_NW_SW_09",
       "cell": "hbfd_rly_48_NS",
       "x": 14744.48,
-      "y": 14552.49,
+      "y": 14542.49,
       "w": 21.6,
       "h": 21.6
      },
@@ -172523,7 +172820,7 @@
       "name": "rfr_NW_SW_21",
       "cell": "hbfd_rly_48_NS",
       "x": 14744.48,
-      "y": 10669.49,
+      "y": 10718.49,
       "w": 21.6,
       "h": 21.6
      },
@@ -172539,7 +172836,7 @@
       "name": "rfr_NW_SW_23",
       "cell": "hbfd_rly_48_NS",
       "x": 14744.48,
-      "y": 10023.49,
+      "y": 9962.49,
       "w": 21.6,
       "h": 21.6
      },
@@ -172547,7 +172844,7 @@
       "name": "rfr_NW_SW_24",
       "cell": "hbfd_rly_48_NS",
       "x": 14744.48,
-      "y": 9707.49,
+      "y": 9745.49,
       "w": 21.6,
       "h": 21.6
      },
@@ -172555,7 +172852,7 @@
       "name": "rfr_NW_SW_25",
       "cell": "hbfd_rly_48_NS",
       "x": 14744.48,
-      "y": 9378.49,
+      "y": 9419.49,
       "w": 21.6,
       "h": 21.6
      },
@@ -172563,7 +172860,7 @@
       "name": "rfr_NW_SW_26",
       "cell": "hbfd_rly_48_NS",
       "x": 14744.48,
-      "y": 9055.49,
+      "y": 9092.49,
       "w": 21.6,
       "h": 21.6
      },
@@ -172579,14 +172876,14 @@
       "name": "rfr_NW_SW_28",
       "cell": "hbfd_rly_48_EW",
       "x": 14744.48,
-      "y": 8432.49,
+      "y": 8455.49,
       "w": 21.6,
       "h": 21.6
      },
      {
       "name": "rfr_NW_SW_29",
       "cell": "hbfd_rly_48_EW",
-      "x": 14519.09,
+      "x": 14546.09,
       "y": 8312.88,
       "w": 21.6,
       "h": 21.6
@@ -172594,7 +172891,7 @@
      {
       "name": "rfr_NW_SW_30",
       "cell": "hbfd_rly_48_EW",
-      "x": 14196.09,
+      "x": 14221.09,
       "y": 8312.88,
       "w": 21.6,
       "h": 21.6
@@ -172602,7 +172899,7 @@
      {
       "name": "rfr_NW_SW_31",
       "cell": "hbfd_rly_48_EW",
-      "x": 13874.09,
+      "x": 13896.09,
       "y": 8312.88,
       "w": 21.6,
       "h": 21.6
@@ -172610,7 +172907,7 @@
      {
       "name": "rfr_NW_SW_32",
       "cell": "hbfd_rly_48_EW",
-      "x": 13569.09,
+      "x": 13590.09,
       "y": 8312.88,
       "w": 21.6,
       "h": 21.6
@@ -172618,7 +172915,7 @@
      {
       "name": "rfr_NW_SW_33",
       "cell": "hbfd_rly_48_EW",
-      "x": 13228.09,
+      "x": 13245.09,
       "y": 8312.88,
       "w": 21.6,
       "h": 21.6
@@ -172626,7 +172923,7 @@
      {
       "name": "rfr_NW_SW_34",
       "cell": "hbfd_rly_48_EW",
-      "x": 12905.09,
+      "x": 12920.09,
       "y": 8312.88,
       "w": 21.6,
       "h": 21.6
@@ -172634,7 +172931,7 @@
      {
       "name": "rfr_NW_SW_35",
       "cell": "hbfd_rly_48_EW",
-      "x": 12559.09,
+      "x": 12595.09,
       "y": 8312.88,
       "w": 21.6,
       "h": 21.6
@@ -172740,44 +173037,44 @@
       11101.29
      ],
      [
-      14981.679,
-      10910.689
+      14755.28,
+      10684.29
      ],
      [
-      15399.679,
-      10910.689
+      14755.28,
+      10266.29
      ],
      [
-      15816.679,
-      10910.689
+      15027.166,
+      10121.176
      ],
      [
-      16233.679,
-      10910.689
+      15444.166,
+      10121.176
      ],
      [
-      16651.679,
-      10910.689
+      15862.166,
+      10121.176
      ],
      [
-      17068.679,
-      10910.689
+      16279.166,
+      10121.176
      ],
      [
-      17486.679,
-      10910.689
+      16697.166,
+      10121.176
      ],
      [
-      17903.679,
-      10910.689
+      17114.166,
+      10121.176
      ],
      [
-      18234.72,
-      10824.73
+      17531.166,
+      10121.176
      ],
      [
-      18234.72,
-      10406.73
+      17949.166,
+      10121.176
      ],
      [
       18234.72,
@@ -172952,80 +173249,80 @@
      {
       "name": "rfr_NW_SE_16",
       "cell": "hbfd_rly_48_NS",
-      "x": 14970.879,
-      "y": 10899.889,
+      "x": 14744.48,
+      "y": 10673.49,
       "w": 21.6,
       "h": 21.6
      },
      {
       "name": "rfr_NW_SE_17",
       "cell": "hbfd_rly_48_NS",
-      "x": 15388.879,
-      "y": 10899.889,
+      "x": 14744.48,
+      "y": 10255.49,
       "w": 21.6,
       "h": 21.6
      },
      {
       "name": "rfr_NW_SE_18",
       "cell": "hbfd_rly_48_NS",
-      "x": 15805.879,
-      "y": 10899.889,
+      "x": 15016.366,
+      "y": 10110.376,
       "w": 21.6,
       "h": 21.6
      },
      {
       "name": "rfr_NW_SE_19",
       "cell": "hbfd_rly_48_NS",
-      "x": 16222.879,
-      "y": 10899.889,
+      "x": 15433.366,
+      "y": 10110.376,
       "w": 21.6,
       "h": 21.6
      },
      {
       "name": "rfr_NW_SE_20",
       "cell": "hbfd_rly_48_NS",
-      "x": 16640.879,
-      "y": 10899.889,
+      "x": 15851.366,
+      "y": 10110.376,
       "w": 21.6,
       "h": 21.6
      },
      {
       "name": "rfr_NW_SE_21",
       "cell": "hbfd_rly_48_NS",
-      "x": 17057.879,
-      "y": 10899.889,
+      "x": 16268.366,
+      "y": 10110.376,
       "w": 21.6,
       "h": 21.6
      },
      {
       "name": "rfr_NW_SE_22",
       "cell": "hbfd_rly_48_WE",
-      "x": 17475.879,
-      "y": 10899.889,
+      "x": 16686.366,
+      "y": 10110.376,
       "w": 21.6,
       "h": 21.6
      },
      {
       "name": "rfr_NW_SE_23",
       "cell": "hbfd_rly_48_WE",
-      "x": 17892.879,
-      "y": 10899.889,
+      "x": 17103.366,
+      "y": 10110.376,
       "w": 21.6,
       "h": 21.6
      },
      {
       "name": "rfr_NW_SE_24",
       "cell": "hbfd_rly_48_WE",
-      "x": 18223.92,
-      "y": 10813.93,
+      "x": 17520.366,
+      "y": 10110.376,
       "w": 21.6,
       "h": 21.6
      },
      {
       "name": "rfr_NW_SE_25",
       "cell": "hbfd_rly_48_WE",
-      "x": 18223.92,
-      "y": 10395.93,
+      "x": 17938.366,
+      "y": 10110.376,
       "w": 21.6,
       "h": 21.6
      },
@@ -173125,11 +173422,11 @@
      ],
      [
       14755.28,
-      10910.689
+      10121.176
      ],
      [
       18234.72,
-      10910.689
+      10121.176
      ],
      [
       18234.72,
@@ -173603,33 +173900,37 @@
     "src": "NW",
     "dst": "NE",
     "bits": 41,
-    "length_um": 13316.146,
+    "length_um": 11760.416,
     "stages": 36,
-    "max_hop_um": 391,
+    "max_hop_um": 359,
     "homes": [
      [
-      12960.992,
+      12901.992,
       15626.002
      ],
      [
-      13320.992,
+      13223.992,
       15626.002
      ],
      [
-      13680.992,
+      13546.992,
       15626.002
      ],
      [
-      14040.992,
+      13830.992,
       15626.002
      ],
      [
-      14399.992,
+      14189.992,
+      15626.002
+     ],
+     [
+      14507.992,
       15626.002
      ],
      [
       14755.28,
-      15621.29
+      15555.29
      ],
      [
       14755.28,
@@ -173637,118 +173938,114 @@
      ],
      [
       14755.28,
-      14901.29
+      14919.29
      ],
      [
       14755.28,
-      14541.29
+      14602.29
      ],
      [
       14755.28,
-      14181.29
+      14284.29
      ],
      [
       14755.28,
-      13821.29
+      13966.29
      ],
      [
-      14755.28,
-      13461.29
+      14923.848,
+      13816.858
      ],
      [
-      14755.28,
-      13101.29
+      15241.848,
+      13816.858
      ],
      [
-      15052.983,
-      13038.993
+      15559.848,
+      13816.858
      ],
      [
-      15411.983,
-      13038.993
+      15877.848,
+      13816.858
      ],
      [
-      15771.983,
-      13038.993
+      16194.848,
+      13816.858
      ],
      [
-      16131.983,
-      13038.993
+      16512.848,
+      13816.858
      ],
      [
-      16491.983,
-      13038.993
+      16830.848,
+      13816.858
      ],
      [
-      16851.983,
-      13038.993
+      17148.848,
+      13816.858
      ],
      [
-      17211.983,
-      13038.993
+      17466.848,
+      13816.858
      ],
      [
-      17571.983,
-      13038.993
+      17784.848,
+      13816.858
      ],
      [
-      17931.983,
-      13038.993
-     ],
-     [
-      18234.72,
-      13096.256
+      18102.848,
+      13816.858
      ],
      [
       18234.72,
-      13458.256
+      14001.986
      ],
      [
       18234.72,
-      13796.256
+      14319.986
      ],
      [
       18234.72,
-      14175.256
+      14637.986
      ],
      [
       18234.72,
-      14535.256
+      14955.986
      ],
      [
       18234.72,
-      14895.256
+      15273.986
      ],
      [
       18234.72,
-      15255.256
+      15591.986
      ],
      [
-      18234.72,
-      15615.256
-     ],
-     [
-      18606.974,
+      18517.704,
       15626.002
      ],
      [
-      18943.974,
+      18835.704,
       15626.002
      ],
      [
-      19303.974,
+      19153.704,
       15626.002
      ],
      [
-      19662.974,
+      19471.704,
       15626.002
      ],
      [
-      20022.974,
+      19789.704,
       15626.002
      ],
      [
-      20382.974,
+      20107.704,
+      15626.002
+     ],
+     [
+      20425.704,
       15626.002
      ]
     ],
@@ -173756,7 +174053,7 @@
      {
       "name": "rfr_NW_NE_00",
       "cell": "hbfd_rly_48_WE",
-      "x": 12950.192,
+      "x": 12891.192,
       "y": 15615.202,
       "w": 21.6,
       "h": 21.6
@@ -173764,7 +174061,7 @@
      {
       "name": "rfr_NW_NE_01",
       "cell": "hbfd_rly_48_WE",
-      "x": 13310.192,
+      "x": 13213.192,
       "y": 15615.202,
       "w": 21.6,
       "h": 21.6
@@ -173772,7 +174069,7 @@
      {
       "name": "rfr_NW_NE_02",
       "cell": "hbfd_rly_48_WE",
-      "x": 13670.192,
+      "x": 13536.192,
       "y": 15615.202,
       "w": 21.6,
       "h": 21.6
@@ -173780,7 +174077,7 @@
      {
       "name": "rfr_NW_NE_03",
       "cell": "hbfd_rly_48_WE",
-      "x": 14030.192,
+      "x": 13820.192,
       "y": 15615.202,
       "w": 21.6,
       "h": 21.6
@@ -173788,7 +174085,7 @@
      {
       "name": "rfr_NW_NE_04",
       "cell": "hbfd_rly_48_WE",
-      "x": 14389.192,
+      "x": 14179.192,
       "y": 15615.202,
       "w": 21.6,
       "h": 21.6
@@ -173796,8 +174093,8 @@
      {
       "name": "rfr_NW_NE_05",
       "cell": "hbfd_rly_48_WE",
-      "x": 14744.48,
-      "y": 15610.49,
+      "x": 14497.192,
+      "y": 15615.202,
       "w": 21.6,
       "h": 21.6
      },
@@ -173805,7 +174102,7 @@
       "name": "rfr_NW_NE_06",
       "cell": "hbfd_rly_48_WE",
       "x": 14744.48,
-      "y": 15219.49,
+      "y": 15544.49,
       "w": 21.6,
       "h": 21.6
      },
@@ -173813,7 +174110,7 @@
       "name": "rfr_NW_NE_07",
       "cell": "hbfd_rly_48_WE",
       "x": 14744.48,
-      "y": 14890.49,
+      "y": 15219.49,
       "w": 21.6,
       "h": 21.6
      },
@@ -173821,7 +174118,7 @@
       "name": "rfr_NW_NE_08",
       "cell": "hbfd_rly_48_WE",
       "x": 14744.48,
-      "y": 14530.49,
+      "y": 14908.49,
       "w": 21.6,
       "h": 21.6
      },
@@ -173829,7 +174126,7 @@
       "name": "rfr_NW_NE_09",
       "cell": "hbfd_rly_48_WE",
       "x": 14744.48,
-      "y": 14170.49,
+      "y": 14591.49,
       "w": 21.6,
       "h": 21.6
      },
@@ -173837,7 +174134,7 @@
       "name": "rfr_NW_NE_10",
       "cell": "hbfd_rly_48_WE",
       "x": 14744.48,
-      "y": 13810.49,
+      "y": 14273.49,
       "w": 21.6,
       "h": 21.6
      },
@@ -173845,95 +174142,95 @@
       "name": "rfr_NW_NE_11",
       "cell": "hbfd_rly_48_WE",
       "x": 14744.48,
-      "y": 13450.49,
+      "y": 13955.49,
       "w": 21.6,
       "h": 21.6
      },
      {
       "name": "rfr_NW_NE_12",
       "cell": "hbfd_rly_48_WE",
-      "x": 14744.48,
-      "y": 13090.49,
+      "x": 14913.048,
+      "y": 13806.058,
       "w": 21.6,
       "h": 21.6
      },
      {
       "name": "rfr_NW_NE_13",
       "cell": "hbfd_rly_48_WE",
-      "x": 15042.183,
-      "y": 13028.193,
+      "x": 15231.048,
+      "y": 13806.058,
       "w": 21.6,
       "h": 21.6
      },
      {
       "name": "rfr_NW_NE_14",
       "cell": "hbfd_rly_48_WE",
-      "x": 15401.183,
-      "y": 13028.193,
+      "x": 15549.048,
+      "y": 13806.058,
       "w": 21.6,
       "h": 21.6
      },
      {
       "name": "rfr_NW_NE_15",
       "cell": "hbfd_rly_48_WE",
-      "x": 15761.183,
-      "y": 13028.193,
+      "x": 15867.048,
+      "y": 13806.058,
       "w": 21.6,
       "h": 21.6
      },
      {
       "name": "rfr_NW_NE_16",
       "cell": "hbfd_rly_48_WE",
-      "x": 16121.183,
-      "y": 13028.193,
+      "x": 16184.048,
+      "y": 13806.058,
       "w": 21.6,
       "h": 21.6
      },
      {
       "name": "rfr_NW_NE_17",
       "cell": "hbfd_rly_48_WE",
-      "x": 16481.183,
-      "y": 13028.193,
+      "x": 16502.048,
+      "y": 13806.058,
       "w": 21.6,
       "h": 21.6
      },
      {
       "name": "rfr_NW_NE_18",
       "cell": "hbfd_rly_48_WE",
-      "x": 16841.183,
-      "y": 13028.193,
+      "x": 16820.048,
+      "y": 13806.058,
       "w": 21.6,
       "h": 21.6
      },
      {
       "name": "rfr_NW_NE_19",
       "cell": "hbfd_rly_48_WE",
-      "x": 17201.183,
-      "y": 13028.193,
+      "x": 17138.048,
+      "y": 13806.058,
       "w": 21.6,
       "h": 21.6
      },
      {
       "name": "rfr_NW_NE_20",
       "cell": "hbfd_rly_48_WE",
-      "x": 17561.183,
-      "y": 13028.193,
+      "x": 17456.048,
+      "y": 13806.058,
       "w": 21.6,
       "h": 21.6
      },
      {
       "name": "rfr_NW_NE_21",
       "cell": "hbfd_rly_48_WE",
-      "x": 17921.183,
-      "y": 13028.193,
+      "x": 17774.048,
+      "y": 13806.058,
       "w": 21.6,
       "h": 21.6
      },
      {
       "name": "rfr_NW_NE_22",
       "cell": "hbfd_rly_48_WE",
-      "x": 18223.92,
-      "y": 13085.456,
+      "x": 18092.048,
+      "y": 13806.058,
       "w": 21.6,
       "h": 21.6
      },
@@ -173941,7 +174238,7 @@
       "name": "rfr_NW_NE_23",
       "cell": "hbfd_rly_48_WE",
       "x": 18223.92,
-      "y": 13447.456,
+      "y": 13991.186,
       "w": 21.6,
       "h": 21.6
      },
@@ -173949,7 +174246,7 @@
       "name": "rfr_NW_NE_24",
       "cell": "hbfd_rly_48_WE",
       "x": 18223.92,
-      "y": 13785.456,
+      "y": 14309.186,
       "w": 21.6,
       "h": 21.6
      },
@@ -173957,7 +174254,7 @@
       "name": "rfr_NW_NE_25",
       "cell": "hbfd_rly_48_WE",
       "x": 18223.92,
-      "y": 14164.456,
+      "y": 14627.186,
       "w": 21.6,
       "h": 21.6
      },
@@ -173965,7 +174262,7 @@
       "name": "rfr_NW_NE_26",
       "cell": "hbfd_rly_48_WE",
       "x": 18223.92,
-      "y": 14524.456,
+      "y": 14945.186,
       "w": 21.6,
       "h": 21.6
      },
@@ -173973,7 +174270,7 @@
       "name": "rfr_NW_NE_27",
       "cell": "hbfd_rly_48_WE",
       "x": 18223.92,
-      "y": 14884.456,
+      "y": 15263.186,
       "w": 21.6,
       "h": 21.6
      },
@@ -173981,22 +174278,22 @@
       "name": "rfr_NW_NE_28",
       "cell": "hbfd_rly_48_WE",
       "x": 18223.92,
-      "y": 15244.456,
+      "y": 15581.186,
       "w": 21.6,
       "h": 21.6
      },
      {
       "name": "rfr_NW_NE_29",
       "cell": "hbfd_rly_48_WE",
-      "x": 18223.92,
-      "y": 15604.456,
+      "x": 18506.904,
+      "y": 15615.202,
       "w": 21.6,
       "h": 21.6
      },
      {
       "name": "rfr_NW_NE_30",
       "cell": "hbfd_rly_48_WE",
-      "x": 18596.174,
+      "x": 18824.904,
       "y": 15615.202,
       "w": 21.6,
       "h": 21.6
@@ -174004,7 +174301,7 @@
      {
       "name": "rfr_NW_NE_31",
       "cell": "hbfd_rly_48_WE",
-      "x": 18933.174,
+      "x": 19142.904,
       "y": 15615.202,
       "w": 21.6,
       "h": 21.6
@@ -174012,7 +174309,7 @@
      {
       "name": "rfr_NW_NE_32",
       "cell": "hbfd_rly_48_WE",
-      "x": 19293.174,
+      "x": 19460.904,
       "y": 15615.202,
       "w": 21.6,
       "h": 21.6
@@ -174020,7 +174317,7 @@
      {
       "name": "rfr_NW_NE_33",
       "cell": "hbfd_rly_48_WE",
-      "x": 19652.174,
+      "x": 19778.904,
       "y": 15615.202,
       "w": 21.6,
       "h": 21.6
@@ -174028,7 +174325,7 @@
      {
       "name": "rfr_NW_NE_34",
       "cell": "hbfd_rly_48_WE",
-      "x": 20012.174,
+      "x": 20096.904,
       "y": 15615.202,
       "w": 21.6,
       "h": 21.6
@@ -174036,7 +174333,7 @@
      {
       "name": "rfr_NW_NE_35",
       "cell": "hbfd_rly_48_WE",
-      "x": 20372.174,
+      "x": 20414.904,
       "y": 15615.202,
       "w": 21.6,
       "h": 21.6
@@ -174057,11 +174354,11 @@
      ],
      [
       14755.28,
-      13038.993
+      13816.858
      ],
      [
       18234.72,
-      13038.993
+      13816.858
      ],
      [
       18234.72,
@@ -174150,44 +174447,44 @@
       11301.402
      ],
      [
-      18198.433,
-      10910.689
+      18234.72,
+      10874.402
      ],
      [
-      17771.433,
-      10910.689
+      18234.72,
+      10447.402
      ],
      [
-      17344.433,
-      10910.689
+      18133.946,
+      10121.176
      ],
      [
-      16917.433,
-      10910.689
+      17706.946,
+      10121.176
      ],
      [
-      16491.433,
-      10910.689
+      17280.946,
+      10121.176
      ],
      [
-      16066.433,
-      10910.689
+      16855.946,
+      10121.176
      ],
      [
-      15641.433,
-      10910.689
+      16430.946,
+      10121.176
      ],
      [
-      15217.433,
-      10910.689
+      16006.946,
+      10121.176
      ],
      [
-      14792.433,
-      10910.689
+      15581.946,
+      10121.176
      ],
      [
-      14755.28,
-      10522.842
+      15156.946,
+      10121.176
      ],
      [
       14755.28,
@@ -174362,80 +174659,80 @@
      {
       "name": "rfr_NE_SW_16",
       "cell": "hbfd_rly_48_NS",
-      "x": 18187.633,
-      "y": 10899.889,
+      "x": 18223.92,
+      "y": 10863.602,
       "w": 21.6,
       "h": 21.6
      },
      {
       "name": "rfr_NE_SW_17",
       "cell": "hbfd_rly_48_NS",
-      "x": 17760.633,
-      "y": 10899.889,
+      "x": 18223.92,
+      "y": 10436.602,
       "w": 21.6,
       "h": 21.6
      },
      {
       "name": "rfr_NE_SW_18",
       "cell": "hbfd_rly_48_NS",
-      "x": 17333.633,
-      "y": 10899.889,
+      "x": 18123.146,
+      "y": 10110.376,
       "w": 21.6,
       "h": 21.6
      },
      {
       "name": "rfr_NE_SW_19",
       "cell": "hbfd_rly_48_NS",
-      "x": 16906.633,
-      "y": 10899.889,
+      "x": 17696.146,
+      "y": 10110.376,
       "w": 21.6,
       "h": 21.6
      },
      {
       "name": "rfr_NE_SW_20",
       "cell": "hbfd_rly_48_NS",
-      "x": 16480.633,
-      "y": 10899.889,
+      "x": 17270.146,
+      "y": 10110.376,
       "w": 21.6,
       "h": 21.6
      },
      {
       "name": "rfr_NE_SW_21",
       "cell": "hbfd_rly_48_NS",
-      "x": 16055.633,
-      "y": 10899.889,
+      "x": 16845.146,
+      "y": 10110.376,
       "w": 21.6,
       "h": 21.6
      },
      {
       "name": "rfr_NE_SW_22",
       "cell": "hbfd_rly_48_EW",
-      "x": 15630.633,
-      "y": 10899.889,
+      "x": 16420.146,
+      "y": 10110.376,
       "w": 21.6,
       "h": 21.6
      },
      {
       "name": "rfr_NE_SW_23",
       "cell": "hbfd_rly_48_EW",
-      "x": 15206.633,
-      "y": 10899.889,
+      "x": 15996.146,
+      "y": 10110.376,
       "w": 21.6,
       "h": 21.6
      },
      {
       "name": "rfr_NE_SW_24",
       "cell": "hbfd_rly_48_EW",
-      "x": 14781.633,
-      "y": 10899.889,
+      "x": 15571.146,
+      "y": 10110.376,
       "w": 21.6,
       "h": 21.6
      },
      {
       "name": "rfr_NE_SW_25",
       "cell": "hbfd_rly_48_EW",
-      "x": 14744.48,
-      "y": 10512.042,
+      "x": 15146.146,
+      "y": 10110.376,
       "w": 21.6,
       "h": 21.6
      },
@@ -174535,11 +174832,11 @@
      ],
      [
       18234.72,
-      10910.689
+      10121.176
      ],
      [
       14755.28,
-      10910.689
+      10121.176
      ],
      [
       14755.28,
@@ -174561,14 +174858,14 @@
     "bits": 41,
     "length_um": 12283.122,
     "stages": 36,
-    "max_hop_um": 369,
+    "max_hop_um": 353,
     "homes": [
      [
-      20361.12,
+      20363.12,
       15626.002
      ],
      [
-      20045.12,
+      20031.12,
       15626.002
      ],
      [
@@ -174613,15 +174910,15 @@
      ],
      [
       18234.72,
-      13752.402
+      13770.402
      ],
      [
       18234.72,
-      13391.402
+      13458.402
      ],
      [
       18234.72,
-      13118.402
+      13106.402
      ],
      [
       18234.72,
@@ -174653,7 +174950,7 @@
      ],
      [
       18234.72,
-      10452.402
+      10469.402
      ],
      [
       18234.72,
@@ -174669,15 +174966,15 @@
      ],
      [
       18234.72,
-      9110.402
+      9123.402
      ],
      [
       18234.72,
-      8838.402
+      8791.402
      ],
      [
       18234.72,
-      8469.402
+      8459.402
      ],
      [
       18430.998,
@@ -174712,7 +175009,7 @@
      {
       "name": "rfr_NE_SE_00",
       "cell": "hbfd_rly_48_EW",
-      "x": 20350.32,
+      "x": 20352.32,
       "y": 15615.202,
       "w": 21.6,
       "h": 21.6
@@ -174720,7 +175017,7 @@
      {
       "name": "rfr_NE_SE_01",
       "cell": "hbfd_rly_48_EW",
-      "x": 20034.32,
+      "x": 20020.32,
       "y": 15615.202,
       "w": 21.6,
       "h": 21.6
@@ -174809,7 +175106,7 @@
       "name": "rfr_NE_SE_12",
       "cell": "hbfd_rly_48_NS",
       "x": 18223.92,
-      "y": 13741.602,
+      "y": 13759.602,
       "w": 21.6,
       "h": 21.6
      },
@@ -174817,7 +175114,7 @@
       "name": "rfr_NE_SE_13",
       "cell": "hbfd_rly_48_NS",
       "x": 18223.92,
-      "y": 13380.602,
+      "y": 13447.602,
       "w": 21.6,
       "h": 21.6
      },
@@ -174825,7 +175122,7 @@
       "name": "rfr_NE_SE_14",
       "cell": "hbfd_rly_48_NS",
       "x": 18223.92,
-      "y": 13107.602,
+      "y": 13095.602,
       "w": 21.6,
       "h": 21.6
      },
@@ -174889,7 +175186,7 @@
       "name": "rfr_NE_SE_22",
       "cell": "hbfd_rly_48_NS",
       "x": 18223.92,
-      "y": 10441.602,
+      "y": 10458.602,
       "w": 21.6,
       "h": 21.6
      },
@@ -174921,7 +175218,7 @@
       "name": "rfr_NE_SE_26",
       "cell": "hbfd_rly_48_NS",
       "x": 18223.92,
-      "y": 9099.602,
+      "y": 9112.602,
       "w": 21.6,
       "h": 21.6
      },
@@ -174929,7 +175226,7 @@
       "name": "rfr_NE_SE_27",
       "cell": "hbfd_rly_48_NS",
       "x": 18223.92,
-      "y": 8827.602,
+      "y": 8780.602,
       "w": 21.6,
       "h": 21.6
      },
@@ -174937,7 +175234,7 @@
       "name": "rfr_NE_SE_28",
       "cell": "hbfd_rly_48_WE",
       "x": 18223.92,
-      "y": 8458.602,
+      "y": 8448.602,
       "w": 21.6,
       "h": 21.6
      },
@@ -175029,152 +175326,152 @@
     "src": "NE",
     "dst": "NW",
     "bits": 41,
-    "length_um": 13208.146,
+    "length_um": 11652.416,
     "stages": 36,
-    "max_hop_um": 406,
+    "max_hop_um": 420,
     "homes": [
      [
-      20338.12,
+      20341.12,
       15626.002
      ],
      [
-      19981.12,
+      20009.12,
       15626.002
      ],
      [
-      19624.12,
+      19759.12,
       15626.002
      ],
      [
-      19267.12,
+      19494.12,
       15626.002
      ],
      [
-      18910.12,
+      19120.12,
       15626.002
      ],
      [
-      18540.12,
+      18805.12,
+      15626.002
+     ],
+     [
+      18490.12,
       15626.002
      ],
      [
       18234.72,
-      15587.402
+      15614.402
      ],
      [
       18234.72,
-      15230.402
+      15251.402
      ],
      [
       18234.72,
-      14873.402
+      14933.402
      ],
      [
       18234.72,
-      14513.402
+      14615.402
      ],
      [
       18234.72,
-      14153.402
+      14297.402
      ],
      [
       18234.72,
-      13774.402
+      13979.402
      ],
      [
-      18234.72,
-      13480.402
+      18080.264,
+      13816.858
      ],
      [
-      18234.72,
-      13074.402
+      17762.264,
+      13816.858
      ],
      [
-      17910.129,
-      13038.993
+      17444.264,
+      13816.858
      ],
      [
-      17550.129,
-      13038.993
+      17171.264,
+      13816.858
      ],
      [
-      17234.129,
-      13038.993
+      16853.264,
+      13816.858
      ],
      [
-      16874.129,
-      13038.993
+      16535.264,
+      13816.858
      ],
      [
-      16514.129,
-      13038.993
+      16217.264,
+      13816.858
      ],
      [
-      16154.129,
-      13038.993
+      15900.264,
+      13816.858
      ],
      [
-      15794.129,
-      13038.993
+      15582.264,
+      13816.858
      ],
      [
-      15434.129,
-      13038.993
+      15264.264,
+      13816.858
      ],
      [
-      15075.129,
-      13038.993
-     ],
-     [
-      14755.28,
-      13079.144
+      14946.264,
+      13816.858
      ],
      [
       14755.28,
-      13436.144
+      13940.874
      ],
      [
       14755.28,
-      13793.144
+      14255.874
      ],
      [
       14755.28,
-      14150.144
+      14575.874
      ],
      [
       14755.28,
-      14507.144
+      14941.874
      ],
      [
       14755.28,
-      14814.144
+      15146.874
      ],
      [
       14755.28,
-      15208.144
+      15469.874
      ],
      [
-      14755.28,
-      15578.144
-     ],
-     [
-      14446.138,
+      14587.408,
       15626.002
      ],
      [
-      14089.138,
+      14167.408,
       15626.002
      ],
      [
-      13732.138,
+      13963.408,
       15626.002
      ],
      [
-      13375.138,
+      13617.408,
       15626.002
      ],
      [
-      12996.138,
+      13294.408,
+      15626.002
+     ],
+     [
+      12976.408,
       15626.002
      ]
     ],
@@ -175182,7 +175479,7 @@
      {
       "name": "rfr_NE_NW_00",
       "cell": "hbfd_rly_48_EW",
-      "x": 20327.32,
+      "x": 20330.32,
       "y": 15615.202,
       "w": 21.6,
       "h": 21.6
@@ -175190,7 +175487,7 @@
      {
       "name": "rfr_NE_NW_01",
       "cell": "hbfd_rly_48_EW",
-      "x": 19970.32,
+      "x": 19998.32,
       "y": 15615.202,
       "w": 21.6,
       "h": 21.6
@@ -175198,7 +175495,7 @@
      {
       "name": "rfr_NE_NW_02",
       "cell": "hbfd_rly_48_EW",
-      "x": 19613.32,
+      "x": 19748.32,
       "y": 15615.202,
       "w": 21.6,
       "h": 21.6
@@ -175206,7 +175503,7 @@
      {
       "name": "rfr_NE_NW_03",
       "cell": "hbfd_rly_48_EW",
-      "x": 19256.32,
+      "x": 19483.32,
       "y": 15615.202,
       "w": 21.6,
       "h": 21.6
@@ -175214,7 +175511,7 @@
      {
       "name": "rfr_NE_NW_04",
       "cell": "hbfd_rly_48_EW",
-      "x": 18899.32,
+      "x": 19109.32,
       "y": 15615.202,
       "w": 21.6,
       "h": 21.6
@@ -175222,7 +175519,7 @@
      {
       "name": "rfr_NE_NW_05",
       "cell": "hbfd_rly_48_EW",
-      "x": 18529.32,
+      "x": 18794.32,
       "y": 15615.202,
       "w": 21.6,
       "h": 21.6
@@ -175230,8 +175527,8 @@
      {
       "name": "rfr_NE_NW_06",
       "cell": "hbfd_rly_48_EW",
-      "x": 18223.92,
-      "y": 15576.602,
+      "x": 18479.32,
+      "y": 15615.202,
       "w": 21.6,
       "h": 21.6
      },
@@ -175239,7 +175536,7 @@
       "name": "rfr_NE_NW_07",
       "cell": "hbfd_rly_48_EW",
       "x": 18223.92,
-      "y": 15219.602,
+      "y": 15603.602,
       "w": 21.6,
       "h": 21.6
      },
@@ -175247,7 +175544,7 @@
       "name": "rfr_NE_NW_08",
       "cell": "hbfd_rly_48_EW",
       "x": 18223.92,
-      "y": 14862.602,
+      "y": 15240.602,
       "w": 21.6,
       "h": 21.6
      },
@@ -175255,7 +175552,7 @@
       "name": "rfr_NE_NW_09",
       "cell": "hbfd_rly_48_EW",
       "x": 18223.92,
-      "y": 14502.602,
+      "y": 14922.602,
       "w": 21.6,
       "h": 21.6
      },
@@ -175263,7 +175560,7 @@
       "name": "rfr_NE_NW_10",
       "cell": "hbfd_rly_48_EW",
       "x": 18223.92,
-      "y": 14142.602,
+      "y": 14604.602,
       "w": 21.6,
       "h": 21.6
      },
@@ -175271,7 +175568,7 @@
       "name": "rfr_NE_NW_11",
       "cell": "hbfd_rly_48_EW",
       "x": 18223.92,
-      "y": 13763.602,
+      "y": 14286.602,
       "w": 21.6,
       "h": 21.6
      },
@@ -175279,95 +175576,95 @@
       "name": "rfr_NE_NW_12",
       "cell": "hbfd_rly_48_EW",
       "x": 18223.92,
-      "y": 13469.602,
+      "y": 13968.602,
       "w": 21.6,
       "h": 21.6
      },
      {
       "name": "rfr_NE_NW_13",
       "cell": "hbfd_rly_48_EW",
-      "x": 18223.92,
-      "y": 13063.602,
+      "x": 18069.464,
+      "y": 13806.058,
       "w": 21.6,
       "h": 21.6
      },
      {
       "name": "rfr_NE_NW_14",
       "cell": "hbfd_rly_48_EW",
-      "x": 17899.329,
-      "y": 13028.193,
+      "x": 17751.464,
+      "y": 13806.058,
       "w": 21.6,
       "h": 21.6
      },
      {
       "name": "rfr_NE_NW_15",
       "cell": "hbfd_rly_48_EW",
-      "x": 17539.329,
-      "y": 13028.193,
+      "x": 17433.464,
+      "y": 13806.058,
       "w": 21.6,
       "h": 21.6
      },
      {
       "name": "rfr_NE_NW_16",
       "cell": "hbfd_rly_48_EW",
-      "x": 17223.329,
-      "y": 13028.193,
+      "x": 17160.464,
+      "y": 13806.058,
       "w": 21.6,
       "h": 21.6
      },
      {
       "name": "rfr_NE_NW_17",
       "cell": "hbfd_rly_48_EW",
-      "x": 16863.329,
-      "y": 13028.193,
+      "x": 16842.464,
+      "y": 13806.058,
       "w": 21.6,
       "h": 21.6
      },
      {
       "name": "rfr_NE_NW_18",
       "cell": "hbfd_rly_48_EW",
-      "x": 16503.329,
-      "y": 13028.193,
+      "x": 16524.464,
+      "y": 13806.058,
       "w": 21.6,
       "h": 21.6
      },
      {
       "name": "rfr_NE_NW_19",
       "cell": "hbfd_rly_48_EW",
-      "x": 16143.329,
-      "y": 13028.193,
+      "x": 16206.464,
+      "y": 13806.058,
       "w": 21.6,
       "h": 21.6
      },
      {
       "name": "rfr_NE_NW_20",
       "cell": "hbfd_rly_48_EW",
-      "x": 15783.329,
-      "y": 13028.193,
+      "x": 15889.464,
+      "y": 13806.058,
       "w": 21.6,
       "h": 21.6
      },
      {
       "name": "rfr_NE_NW_21",
       "cell": "hbfd_rly_48_EW",
-      "x": 15423.329,
-      "y": 13028.193,
+      "x": 15571.464,
+      "y": 13806.058,
       "w": 21.6,
       "h": 21.6
      },
      {
       "name": "rfr_NE_NW_22",
       "cell": "hbfd_rly_48_EW",
-      "x": 15064.329,
-      "y": 13028.193,
+      "x": 15253.464,
+      "y": 13806.058,
       "w": 21.6,
       "h": 21.6
      },
      {
       "name": "rfr_NE_NW_23",
       "cell": "hbfd_rly_48_EW",
-      "x": 14744.48,
-      "y": 13068.344,
+      "x": 14935.464,
+      "y": 13806.058,
       "w": 21.6,
       "h": 21.6
      },
@@ -175375,7 +175672,7 @@
       "name": "rfr_NE_NW_24",
       "cell": "hbfd_rly_48_EW",
       "x": 14744.48,
-      "y": 13425.344,
+      "y": 13930.074,
       "w": 21.6,
       "h": 21.6
      },
@@ -175383,7 +175680,7 @@
       "name": "rfr_NE_NW_25",
       "cell": "hbfd_rly_48_EW",
       "x": 14744.48,
-      "y": 13782.344,
+      "y": 14245.074,
       "w": 21.6,
       "h": 21.6
      },
@@ -175391,7 +175688,7 @@
       "name": "rfr_NE_NW_26",
       "cell": "hbfd_rly_48_EW",
       "x": 14744.48,
-      "y": 14139.344,
+      "y": 14565.074,
       "w": 21.6,
       "h": 21.6
      },
@@ -175399,7 +175696,7 @@
       "name": "rfr_NE_NW_27",
       "cell": "hbfd_rly_48_EW",
       "x": 14744.48,
-      "y": 14496.344,
+      "y": 14931.074,
       "w": 21.6,
       "h": 21.6
      },
@@ -175407,7 +175704,7 @@
       "name": "rfr_NE_NW_28",
       "cell": "hbfd_rly_48_EW",
       "x": 14744.48,
-      "y": 14803.344,
+      "y": 15136.074,
       "w": 21.6,
       "h": 21.6
      },
@@ -175415,22 +175712,22 @@
       "name": "rfr_NE_NW_29",
       "cell": "hbfd_rly_48_EW",
       "x": 14744.48,
-      "y": 15197.344,
+      "y": 15459.074,
       "w": 21.6,
       "h": 21.6
      },
      {
       "name": "rfr_NE_NW_30",
       "cell": "hbfd_rly_48_EW",
-      "x": 14744.48,
-      "y": 15567.344,
+      "x": 14576.608,
+      "y": 15615.202,
       "w": 21.6,
       "h": 21.6
      },
      {
       "name": "rfr_NE_NW_31",
       "cell": "hbfd_rly_48_EW",
-      "x": 14435.338,
+      "x": 14156.608,
       "y": 15615.202,
       "w": 21.6,
       "h": 21.6
@@ -175438,7 +175735,7 @@
      {
       "name": "rfr_NE_NW_32",
       "cell": "hbfd_rly_48_EW",
-      "x": 14078.338,
+      "x": 13952.608,
       "y": 15615.202,
       "w": 21.6,
       "h": 21.6
@@ -175446,7 +175743,7 @@
      {
       "name": "rfr_NE_NW_33",
       "cell": "hbfd_rly_48_EW",
-      "x": 13721.338,
+      "x": 13606.608,
       "y": 15615.202,
       "w": 21.6,
       "h": 21.6
@@ -175454,7 +175751,7 @@
      {
       "name": "rfr_NE_NW_34",
       "cell": "hbfd_rly_48_EW",
-      "x": 13364.338,
+      "x": 13283.608,
       "y": 15615.202,
       "w": 21.6,
       "h": 21.6
@@ -175462,7 +175759,7 @@
      {
       "name": "rfr_NE_NW_35",
       "cell": "hbfd_rly_48_EW",
-      "x": 12985.338,
+      "x": 12965.608,
       "y": 15615.202,
       "w": 21.6,
       "h": 21.6
@@ -175483,11 +175780,11 @@
      ],
      [
       18234.72,
-      13038.993
+      13816.858
      ],
      [
       14755.28,
-      13038.993
+      13816.858
      ],
      [
       14755.28,
@@ -176225,8 +176522,8 @@
      "h": 1785.714
     },
     "new": {
-     "w": 410.0,
-     "h": 2439.024
+     "w": 3050.0,
+     "h": 3114.754
     }
    },
    {
@@ -176800,13 +177097,63 @@
      "w": 330.48,
      "h": 330.48
     }
+   },
+   {
+    "slot": "sfucore_SW",
+    "old": {
+     "w": 763.56,
+     "h": 1936.44
+    },
+    "new": {
+     "w": 763.56,
+     "h": 3001.91
+    }
+   },
+   {
+    "slot": "sfucore_SE",
+    "old": {
+     "w": 763.56,
+     "h": 1936.44
+    },
+    "new": {
+     "w": 763.56,
+     "h": 3001.91
+    }
+   },
+   {
+    "slot": "sfucore_NW",
+    "old": {
+     "w": 763.56,
+     "h": 1936.44
+    },
+    "new": {
+     "w": 763.56,
+     "h": 3001.91
+    }
+   },
+   {
+    "slot": "sfucore_NE",
+    "old": {
+     "w": 763.56,
+     "h": 1936.44
+    },
+    "new": {
+     "w": 763.56,
+     "h": 3001.91
+    }
    }
   ],
   "new": [
    "cij_SW",
    "cij_SE",
    "cij_NW",
-   "cij_NE"
+   "cij_NE",
+   "sfus_SW",
+   "sfus_SE",
+   "sfus_NW",
+   "sfus_NE",
+   "hc_eng_tgt",
+   "hc_tbl_tgt"
   ],
   "translated": [
    {
@@ -176849,7 +177196,7 @@
     "slot": "hb_ckgen",
     "anchor": "idx_link",
     "dx": 1010.8,
-    "dy": 1659.025
+    "dy": 3214.754
    },
    {
     "slot": "quant_NW_xp",
@@ -176986,12 +177333,18 @@
     "h": 23949.682
    },
    "mapped": 163,
-   "resized": 53,
+   "resized": 57,
    "new": [
     "cij_SW",
     "cij_SE",
     "cij_NW",
-    "cij_NE"
+    "cij_NE",
+    "sfus_SW",
+    "sfus_SE",
+    "sfus_NW",
+    "sfus_NE",
+    "hc_eng_tgt",
+    "hc_tbl_tgt"
    ],
    "translated": 11,
    "regranted": 52,

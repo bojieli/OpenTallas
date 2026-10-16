@@ -1,0 +1,237 @@
+{
+ "schema": "opentallas.hbm.hc_eng_home.v1",
+ "qualification": "GEOMETRY_ONLY",
+ "plan": "results/arch/hbm_die_v15/core4_sfu2_su2825",
+ "hc_eng": {
+  "x": 14970.0,
+  "y": 10171.176,
+  "w": 3050.0,
+  "h": 3114.754,
+  "orient": "R0"
+ },
+ "collars": {
+  "hc_eng_tgt": {
+   "x": 17933.6,
+   "y": 13305.93,
+   "w": 86.4,
+   "h": 64.8,
+   "orient": "R0"
+  },
+  "hc_tbl_tgt": {
+   "x": 17933.6,
+   "y": 13392.33,
+   "w": 86.4,
+   "h": 64.8,
+   "orient": "R0"
+  }
+ },
+ "links": {
+  "hc_SW0>hc_eng:HC_ENG": {
+   "bits": 8244,
+   "route_um": 18655.0,
+   "stages": 37,
+   "engine_face": "W"
+  },
+  "hc_eng>hc_SW0:HC_ENG": {
+   "bits": 772,
+   "route_um": 18875.4,
+   "stages": 37,
+   "engine_face": "W"
+  },
+  "hc_SE0>hc_eng:HC_ENG": {
+   "bits": 8244,
+   "route_um": 18655.0,
+   "stages": 37,
+   "engine_face": "E"
+  },
+  "hc_eng>hc_SE0:HC_ENG": {
+   "bits": 772,
+   "route_um": 18875.4,
+   "stages": 37,
+   "engine_face": "E"
+  },
+  "hc_NW0>hc_eng:HC_ENG": {
+   "bits": 8244,
+   "route_um": 19237.2,
+   "stages": 38,
+   "engine_face": "W"
+  },
+  "hc_eng>hc_NW0:HC_ENG": {
+   "bits": 772,
+   "route_um": 19016.8,
+   "stages": 38,
+   "engine_face": "W"
+  },
+  "hc_NE0>hc_eng:HC_ENG": {
+   "bits": 8244,
+   "route_um": 19237.2,
+   "stages": 38,
+   "engine_face": "E"
+  },
+  "hc_eng>hc_NE0:HC_ENG": {
+   "bits": 772,
+   "route_um": 19016.8,
+   "stages": 38,
+   "engine_face": "E"
+  }
+ },
+ "max_stages": 38,
+ "engine_face_cut": {
+  "W": {
+   "bits": 18032,
+   "face_um": 3114.754,
+   "utilization": 0.4117
+  },
+  "E": {
+   "bits": 18032,
+   "face_um": 3114.754,
+   "utilization": 0.4117
+  }
+ },
+ "ablation": {
+  "centre_v16": {
+   "cut_lanes": {
+    "worst_v": {
+     "ratio": 0.874,
+     "x": 14200.0,
+     "y": [
+      8000.0,
+      9000.0
+     ]
+    },
+    "worst_h": {
+     "ratio": 0.929,
+     "y": 6600.0,
+     "x": [
+      600.0,
+      1600.0
+     ]
+    },
+    "lines_over_060": 376,
+    "windows_over_060": 5705
+   },
+   "stages_bw": 11.337,
+   "hc_eng_stages_bw": 39.0
+  },
+  "nechannel_512b": {
+   "cut_lanes": {
+    "worst_v": {
+     "ratio": 0.493,
+     "x": 13700.0,
+     "y": [
+      4300.0,
+      5300.0
+     ]
+    },
+    "worst_h": {
+     "ratio": 0.574,
+     "y": 18700.0,
+     "x": [
+      13800.0,
+      14800.0
+     ]
+    },
+    "lines_over_060": 0,
+    "windows_over_060": 0
+   },
+   "stages_bw": 8.778,
+   "hc_eng_stages_bw": 43.0
+  },
+  "centre_512b": {
+   "cut_lanes": {
+    "worst_v": {
+     "ratio": 0.493,
+     "x": 13700.0,
+     "y": [
+      4300.0,
+      5300.0
+     ]
+    },
+    "worst_h": {
+     "ratio": 0.595,
+     "y": 18700.0,
+     "x": [
+      13800.0,
+      14800.0
+     ]
+    },
+    "lines_over_060": 0,
+    "windows_over_060": 0
+   },
+   "stages_bw": 8.773,
+   "hc_eng_stages_bw": 37.5
+  },
+  "nechannel_v16": {
+   "cut_lanes": {
+    "worst_v": {
+     "ratio": 0.992,
+     "x": 15500.0,
+     "y": [
+      11200.0,
+      12200.0
+     ]
+    },
+    "worst_h": {
+     "ratio": 1.33,
+     "y": 15200.0,
+     "x": [
+      18000.0,
+      19000.0
+     ]
+    },
+    "lines_over_060": 430,
+    "windows_over_060": 5978
+   },
+   "stages_bw": 11.793,
+   "hc_eng_stages_bw": 43.67
+  },
+  "centre_v16_x2beats": {
+   "cut_lanes": {
+    "worst_v": {
+     "ratio": 0.586,
+     "x": 15300.0,
+     "y": [
+      5900.0,
+      6900.0
+     ]
+    },
+    "worst_h": {
+     "ratio": 0.664,
+     "y": 5200.0,
+     "x": [
+      13100.0,
+      14100.0
+     ]
+    },
+    "lines_over_060": 4,
+    "windows_over_060": 8
+   },
+   "stages_bw": 10.124,
+   "hc_eng_stages_bw": 38.5
+  },
+  "centre_v16_x4beats": {
+   "cut_lanes": {
+    "worst_v": {
+     "ratio": 0.493,
+     "x": 13700.0,
+     "y": [
+      4300.0,
+      5300.0
+     ]
+    },
+    "worst_h": {
+     "ratio": 0.664,
+     "y": 5200.0,
+     "x": [
+      13100.0,
+      14100.0
+     ]
+    },
+    "lines_over_060": 4,
+    "windows_over_060": 8
+   },
+   "stages_bw": 9.502,
+   "hc_eng_stages_bw": 38.5
+  }
+ }
+}

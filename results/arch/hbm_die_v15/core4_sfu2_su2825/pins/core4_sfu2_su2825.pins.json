@@ -2226,8 +2226,8 @@
     },
     "E": {
      "face_len_um": 500.0,
-     "bits": 1280,
-     "utilisation": 0.256,
+     "bits": 9784,
+     "utilisation": 1.957,
      "pins": [
       {
        "link": "hc_SW1>hc_SW0:HC_CORE",
@@ -2235,10 +2235,10 @@
        "peer": "hc_SW1",
        "dir": "in",
        "bits": 256,
-       "offset_um": 237.2,
-       "span_um": 25.6,
+       "offset_um": 0.0,
+       "span_um": 13.08,
        "x": 600.0,
-       "y": 6298.5
+       "y": 6055.0
       },
       {
        "link": "hc_SW2>hc_SW0:HC_CORE",
@@ -2246,10 +2246,10 @@
        "peer": "hc_SW2",
        "dir": "in",
        "bits": 256,
-       "offset_um": 262.8,
-       "span_um": 25.6,
+       "offset_um": 13.08,
+       "span_um": 13.08,
        "x": 600.0,
-       "y": 6324.1
+       "y": 6068.1
       },
       {
        "link": "hc_SW3>hc_SW0:HC_CORE",
@@ -2257,21 +2257,32 @@
        "peer": "hc_SW3",
        "dir": "in",
        "bits": 256,
-       "offset_um": 288.4,
-       "span_um": 25.6,
+       "offset_um": 26.17,
+       "span_um": 13.08,
        "x": 600.0,
-       "y": 6349.7
+       "y": 6081.2
       },
       {
        "link": "hc_SW0>hc_eng:HC_ENG",
        "cls": "HC_ENG",
        "peer": "hc_eng",
        "dir": "out",
-       "bits": 512,
-       "offset_um": 448.8,
-       "span_um": 51.2,
+       "bits": 8244,
+       "offset_um": 39.25,
+       "span_um": 421.3,
        "x": 600.0,
-       "y": 6522.9
+       "y": 6298.4
+      },
+      {
+       "link": "hc_eng>hc_SW0:HC_ENG",
+       "cls": "HC_ENG",
+       "peer": "hc_eng",
+       "dir": "in",
+       "bits": 772,
+       "offset_um": 460.55,
+       "span_um": 39.45,
+       "x": 600.0,
+       "y": 6528.8
       }
      ]
     }
@@ -2973,17 +2984,17 @@
    "x": 5814.2,
    "y": 5300.2,
    "w": 763.56,
-   "h": 1936.44,
+   "h": 3001.91,
    "kind": "SFU core grant sfucore_<q> (H-SU accepted 10-16)",
    "orient": "R0",
    "faces": {}
   },
   "sfus_SW": {
-   "x": 5814.2,
-   "y": 7258.2,
-   "w": 763.56,
-   "h": 524.88,
-   "kind": "SU SFU store ot_hbm_su_static_sfustore (~0.40 mm2, abuts sfucore, 0 relays)",
+   "x": 6599.4,
+   "y": 6890.1,
+   "w": 1020.0,
+   "h": 1412.0,
+   "kind": "SU SFU store ot_hbm_su_static_sfustore (abuts sfucore, 0 relays)",
    "orient": "R0",
    "faces": {}
   },
@@ -7160,8 +7171,8 @@
     },
     "W": {
      "face_len_um": 500.0,
-     "bits": 1280,
-     "utilisation": 0.256,
+     "bits": 9784,
+     "utilisation": 1.957,
      "pins": [
       {
        "link": "hc_SE1>hc_SE0:HC_CORE",
@@ -7169,10 +7180,10 @@
        "peer": "hc_SE1",
        "dir": "in",
        "bits": 256,
-       "offset_um": 237.2,
-       "span_um": 25.6,
+       "offset_um": 0.0,
+       "span_um": 13.08,
        "x": 32390.0,
-       "y": 6298.5
+       "y": 6055.0
       },
       {
        "link": "hc_SE2>hc_SE0:HC_CORE",
@@ -7180,10 +7191,10 @@
        "peer": "hc_SE2",
        "dir": "in",
        "bits": 256,
-       "offset_um": 262.8,
-       "span_um": 25.6,
+       "offset_um": 13.08,
+       "span_um": 13.08,
        "x": 32390.0,
-       "y": 6324.1
+       "y": 6068.1
       },
       {
        "link": "hc_SE3>hc_SE0:HC_CORE",
@@ -7191,21 +7202,32 @@
        "peer": "hc_SE3",
        "dir": "in",
        "bits": 256,
-       "offset_um": 288.4,
-       "span_um": 25.6,
+       "offset_um": 26.17,
+       "span_um": 13.08,
        "x": 32390.0,
-       "y": 6349.7
+       "y": 6081.2
       },
       {
        "link": "hc_SE0>hc_eng:HC_ENG",
        "cls": "HC_ENG",
        "peer": "hc_eng",
        "dir": "out",
-       "bits": 512,
-       "offset_um": 448.8,
-       "span_um": 51.2,
+       "bits": 8244,
+       "offset_um": 39.25,
+       "span_um": 421.3,
        "x": 32390.0,
-       "y": 6522.9
+       "y": 6298.4
+      },
+      {
+       "link": "hc_eng>hc_SE0:HC_ENG",
+       "cls": "HC_ENG",
+       "peer": "hc_eng",
+       "dir": "in",
+       "bits": 772,
+       "offset_um": 460.55,
+       "span_um": 39.45,
+       "x": 32390.0,
+       "y": 6528.8
       }
      ]
     }
@@ -7885,17 +7907,17 @@
    "x": 26412.2,
    "y": 5300.2,
    "w": 763.56,
-   "h": 1936.44,
+   "h": 3001.91,
    "kind": "SFU core grant sfucore_<q> (H-SU accepted 10-16)",
    "orient": "R0",
    "faces": {}
   },
   "sfus_SE": {
-   "x": 26412.2,
-   "y": 7258.2,
-   "w": 763.56,
-   "h": 524.88,
-   "kind": "SU SFU store ot_hbm_su_static_sfustore (~0.40 mm2, abuts sfucore, 0 relays)",
+   "x": 25370.6,
+   "y": 6890.1,
+   "w": 1020.0,
+   "h": 1412.0,
+   "kind": "SU SFU store ot_hbm_su_static_sfustore (abuts sfucore, 0 relays)",
    "orient": "R0",
    "faces": {}
   },
@@ -11905,19 +11927,41 @@
     },
     "E": {
      "face_len_um": 500.0,
-     "bits": 1280,
-     "utilisation": 0.256,
+     "bits": 9784,
+     "utilisation": 1.957,
      "pins": [
+      {
+       "link": "hc_NW0>hc_eng:HC_ENG",
+       "cls": "HC_ENG",
+       "peer": "hc_eng",
+       "dir": "out",
+       "bits": 8244,
+       "offset_um": 0.0,
+       "span_um": 421.3,
+       "x": 600.0,
+       "y": 17663.7
+      },
+      {
+       "link": "hc_eng>hc_NW0:HC_ENG",
+       "cls": "HC_ENG",
+       "peer": "hc_eng",
+       "dir": "in",
+       "bits": 772,
+       "offset_um": 421.3,
+       "span_um": 39.45,
+       "x": 600.0,
+       "y": 17894.1
+      },
       {
        "link": "hc_NW1>hc_NW0:HC_CORE",
        "cls": "HC_CORE",
        "peer": "hc_NW1",
        "dir": "in",
        "bits": 256,
-       "offset_um": 237.2,
-       "span_um": 25.6,
+       "offset_um": 460.75,
+       "span_um": 13.08,
        "x": 600.0,
-       "y": 17703.0
+       "y": 17920.3
       },
       {
        "link": "hc_NW2>hc_NW0:HC_CORE",
@@ -11925,10 +11969,10 @@
        "peer": "hc_NW2",
        "dir": "in",
        "bits": 256,
-       "offset_um": 262.8,
-       "span_um": 25.6,
+       "offset_um": 473.83,
+       "span_um": 13.08,
        "x": 600.0,
-       "y": 17728.6
+       "y": 17933.4
       },
       {
        "link": "hc_NW3>hc_NW0:HC_CORE",
@@ -11936,21 +11980,10 @@
        "peer": "hc_NW3",
        "dir": "in",
        "bits": 256,
-       "offset_um": 288.4,
-       "span_um": 25.6,
+       "offset_um": 486.92,
+       "span_um": 13.08,
        "x": 600.0,
-       "y": 17754.2
-      },
-      {
-       "link": "hc_NW0>hc_eng:HC_ENG",
-       "cls": "HC_ENG",
-       "peer": "hc_eng",
-       "dir": "out",
-       "bits": 512,
-       "offset_um": 314.0,
-       "span_um": 51.2,
-       "x": 600.0,
-       "y": 17792.6
+       "y": 17946.5
       }
      ]
     }
@@ -12728,19 +12761,19 @@
   },
   "sfucore_NW": {
    "x": 6003.3,
-   "y": 16713.1,
+   "y": 15647.6,
    "w": 763.56,
-   "h": 1936.44,
+   "h": 3001.91,
    "kind": "SFU core grant sfucore_<q> (H-SU accepted 10-16)",
    "orient": "R0",
    "faces": {}
   },
   "sfus_NW": {
-   "x": 6003.3,
-   "y": 16166.6,
-   "w": 763.56,
-   "h": 524.88,
-   "kind": "SU SFU store ot_hbm_su_static_sfustore (~0.40 mm2, abuts sfucore, 0 relays)",
+   "x": 6788.5,
+   "y": 15647.6,
+   "w": 1020.0,
+   "h": 1412.0,
+   "kind": "SU SFU store ot_hbm_su_static_sfustore (abuts sfucore, 0 relays)",
    "orient": "R0",
    "faces": {}
   },
@@ -16850,19 +16883,41 @@
     },
     "W": {
      "face_len_um": 500.0,
-     "bits": 1280,
-     "utilisation": 0.256,
+     "bits": 9784,
+     "utilisation": 1.957,
      "pins": [
+      {
+       "link": "hc_NE0>hc_eng:HC_ENG",
+       "cls": "HC_ENG",
+       "peer": "hc_eng",
+       "dir": "out",
+       "bits": 8244,
+       "offset_um": 0.0,
+       "span_um": 421.3,
+       "x": 32390.0,
+       "y": 17663.7
+      },
+      {
+       "link": "hc_eng>hc_NE0:HC_ENG",
+       "cls": "HC_ENG",
+       "peer": "hc_eng",
+       "dir": "in",
+       "bits": 772,
+       "offset_um": 421.3,
+       "span_um": 39.45,
+       "x": 32390.0,
+       "y": 17894.1
+      },
       {
        "link": "hc_NE1>hc_NE0:HC_CORE",
        "cls": "HC_CORE",
        "peer": "hc_NE1",
        "dir": "in",
        "bits": 256,
-       "offset_um": 237.2,
-       "span_um": 25.6,
+       "offset_um": 460.75,
+       "span_um": 13.08,
        "x": 32390.0,
-       "y": 17703.0
+       "y": 17920.3
       },
       {
        "link": "hc_NE2>hc_NE0:HC_CORE",
@@ -16870,10 +16925,10 @@
        "peer": "hc_NE2",
        "dir": "in",
        "bits": 256,
-       "offset_um": 262.8,
-       "span_um": 25.6,
+       "offset_um": 473.83,
+       "span_um": 13.08,
        "x": 32390.0,
-       "y": 17728.6
+       "y": 17933.4
       },
       {
        "link": "hc_NE3>hc_NE0:HC_CORE",
@@ -16881,21 +16936,10 @@
        "peer": "hc_NE3",
        "dir": "in",
        "bits": 256,
-       "offset_um": 288.4,
-       "span_um": 25.6,
+       "offset_um": 486.92,
+       "span_um": 13.08,
        "x": 32390.0,
-       "y": 17754.2
-      },
-      {
-       "link": "hc_NE0>hc_eng:HC_ENG",
-       "cls": "HC_ENG",
-       "peer": "hc_eng",
-       "dir": "out",
-       "bits": 512,
-       "offset_um": 314.0,
-       "span_um": 51.2,
-       "x": 32390.0,
-       "y": 17792.6
+       "y": 17946.5
       }
      ]
     }
@@ -17573,19 +17617,19 @@
   },
   "sfucore_NE": {
    "x": 26412.2,
-   "y": 16713.1,
+   "y": 15647.6,
    "w": 763.56,
-   "h": 1936.44,
+   "h": 3001.91,
    "kind": "SFU core grant sfucore_<q> (H-SU accepted 10-16)",
    "orient": "R0",
    "faces": {}
   },
   "sfus_NE": {
-   "x": 26412.2,
-   "y": 16166.6,
-   "w": 763.56,
-   "h": 524.88,
-   "kind": "SU SFU store ot_hbm_su_static_sfustore (~0.40 mm2, abuts sfucore, 0 relays)",
+   "x": 25370.6,
+   "y": 15647.6,
+   "w": 1020.0,
+   "h": 1412.0,
+   "kind": "SU SFU store ot_hbm_su_static_sfustore (abuts sfucore, 0 relays)",
    "orient": "R0",
    "faces": {}
   },
@@ -19378,68 +19422,112 @@
    }
   },
   "hc_eng": {
-   "x": 18040.0,
-   "y": 16232.3,
-   "w": 410.0,
-   "h": 2439.024,
+   "x": 14970.0,
+   "y": 10171.2,
+   "w": 3050.0,
+   "h": 3114.754,
    "kind": "HC_ENGINE",
    "orient": "R0",
    "faces": {
     "W": {
-     "face_len_um": 2439.0,
-     "bits": 1024,
-     "utilisation": 0.042,
+     "face_len_um": 3114.8,
+     "bits": 18032,
+     "utilisation": 0.579,
      "pins": [
       {
        "link": "hc_SW0>hc_eng:HC_ENG",
        "cls": "HC_ENG",
        "peer": "hc_SW0",
        "dir": "in",
-       "bits": 512,
+       "bits": 8244,
        "offset_um": 0.0,
-       "span_um": 51.2,
-       "x": 18040.0,
-       "y": 16257.9
+       "span_um": 824.4,
+       "x": 14970.0,
+       "y": 10583.4
+      },
+      {
+       "link": "hc_eng>hc_SW0:HC_ENG",
+       "cls": "HC_ENG",
+       "peer": "hc_SW0",
+       "dir": "out",
+       "bits": 772,
+       "offset_um": 824.4,
+       "span_um": 77.2,
+       "x": 14970.0,
+       "y": 11034.2
       },
       {
        "link": "hc_NW0>hc_eng:HC_ENG",
        "cls": "HC_ENG",
        "peer": "hc_NW0",
        "dir": "in",
-       "bits": 512,
-       "offset_um": 1445.18,
-       "span_um": 51.2,
-       "x": 18040.0,
-       "y": 17703.0
+       "bits": 8244,
+       "offset_um": 2213.15,
+       "span_um": 824.4,
+       "x": 14970.0,
+       "y": 12796.5
+      },
+      {
+       "link": "hc_eng>hc_NW0:HC_ENG",
+       "cls": "HC_ENG",
+       "peer": "hc_NW0",
+       "dir": "out",
+       "bits": 772,
+       "offset_um": 3037.55,
+       "span_um": 77.2,
+       "x": 14970.0,
+       "y": 13247.3
       }
      ]
     },
     "E": {
-     "face_len_um": 2439.0,
-     "bits": 1024,
-     "utilisation": 0.042,
+     "face_len_um": 3114.8,
+     "bits": 18032,
+     "utilisation": 0.579,
      "pins": [
       {
        "link": "hc_SE0>hc_eng:HC_ENG",
        "cls": "HC_ENG",
        "peer": "hc_SE0",
        "dir": "in",
-       "bits": 512,
+       "bits": 8244,
        "offset_um": 0.0,
-       "span_um": 51.2,
-       "x": 18450.0,
-       "y": 16257.9
+       "span_um": 824.4,
+       "x": 18020.0,
+       "y": 10583.4
+      },
+      {
+       "link": "hc_eng>hc_SE0:HC_ENG",
+       "cls": "HC_ENG",
+       "peer": "hc_SE0",
+       "dir": "out",
+       "bits": 772,
+       "offset_um": 824.4,
+       "span_um": 77.2,
+       "x": 18020.0,
+       "y": 11034.2
       },
       {
        "link": "hc_NE0>hc_eng:HC_ENG",
        "cls": "HC_ENG",
        "peer": "hc_NE0",
        "dir": "in",
-       "bits": 512,
-       "offset_um": 1445.18,
-       "span_um": 51.2,
-       "x": 18450.0,
-       "y": 17703.0
+       "bits": 8244,
+       "offset_um": 2213.15,
+       "span_um": 824.4,
+       "x": 18020.0,
+       "y": 12796.5
+      },
+      {
+       "link": "hc_eng>hc_NE0:HC_ENG",
+       "cls": "HC_ENG",
+       "peer": "hc_NE0",
+       "dir": "out",
+       "bits": 772,
+       "offset_um": 3037.55,
+       "span_um": 77.2,
+       "x": 18020.0,
+       "y": 13247.3
       }
      ]
     }
@@ -20191,7 +20279,7 @@
   },
   "idx_q": {
    "x": 14970.0,
-   "y": 11750.2,
+   "y": 13305.9,
    "w": 449.28,
    "h": 449.28,
    "kind": "IDX",
@@ -20211,7 +20299,7 @@
        "offset_um": 0.0,
        "span_um": 104.8,
        "x": 15022.4,
-       "y": 11750.2
+       "y": 13305.9
       },
       {
        "link": "idx_q>idx_s0:IDX_INT",
@@ -20222,7 +20310,7 @@
        "offset_um": 206.47,
        "span_um": 56.9,
        "x": 15204.9,
-       "y": 11750.2
+       "y": 13305.9
       },
       {
        "link": "idx_q>idx_s1:IDX_INT",
@@ -20233,7 +20321,7 @@
        "offset_um": 263.37,
        "span_um": 56.9,
        "x": 15261.8,
-       "y": 11750.2
+       "y": 13305.9
       }
      ]
     },
@@ -20251,7 +20339,7 @@
        "offset_um": 206.47,
        "span_um": 56.9,
        "x": 15204.9,
-       "y": 12199.5
+       "y": 13755.2
       },
       {
        "link": "idx_q>idx_s3:IDX_INT",
@@ -20262,7 +20350,7 @@
        "offset_um": 263.37,
        "span_um": 56.9,
        "x": 15261.8,
-       "y": 12199.5
+       "y": 13755.2
       }
      ]
     }
@@ -20270,7 +20358,7 @@
   },
   "idx_sel": {
    "x": 15439.3,
-   "y": 11750.2,
+   "y": 13305.9,
    "w": 1164.24,
    "h": 317.52,
    "kind": "IDX",
@@ -20290,7 +20378,7 @@
        "offset_um": 552.52,
        "span_um": 59.2,
        "x": 16021.4,
-       "y": 11750.2
+       "y": 13305.9
       },
       {
        "link": "idx_s1>idx_sel:IDX_INT",
@@ -20301,7 +20389,7 @@
        "offset_um": 611.72,
        "span_um": 59.2,
        "x": 16080.6,
-       "y": 11750.2
+       "y": 13305.9
       }
      ]
     },
@@ -20319,7 +20407,7 @@
        "offset_um": 552.52,
        "span_um": 59.2,
        "x": 16021.4,
-       "y": 12067.7
+       "y": 13623.5
       },
       {
        "link": "idx_s3>idx_sel:IDX_INT",
@@ -20330,7 +20418,7 @@
        "offset_um": 611.72,
        "span_um": 59.2,
        "x": 16080.6,
-       "y": 12067.7
+       "y": 13623.5
       }
      ]
     },
@@ -20348,7 +20436,7 @@
        "offset_um": 40.16,
        "span_um": 237.2,
        "x": 16603.5,
-       "y": 11909.0
+       "y": 13464.7
       }
      ]
     }
@@ -20356,7 +20444,7 @@
   },
   "idx_link": {
    "x": 16623.5,
-   "y": 11750.2,
+   "y": 13305.9,
    "w": 745.2,
    "h": 317.52,
    "kind": "IDX",
@@ -20376,7 +20464,7 @@
        "offset_um": 40.16,
        "span_um": 237.2,
        "x": 16623.5,
-       "y": 11909.0
+       "y": 13464.7
       }
      ]
     },
@@ -20394,11 +20482,29 @@
        "offset_um": 0.0,
        "span_um": 218.0,
        "x": 16732.5,
-       "y": 11750.2
+       "y": 13305.9
       }
      ]
     }
    }
+  },
+  "hc_eng_tgt": {
+   "x": 17933.6,
+   "y": 13305.9,
+   "w": 86.4,
+   "h": 64.8,
+   "kind": "PROG",
+   "orient": "R0",
+   "faces": {}
+  },
+  "hc_tbl_tgt": {
+   "x": 17933.6,
+   "y": 13392.3,
+   "w": 86.4,
+   "h": 64.8,
+   "kind": "PROG",
+   "orient": "R0",
+   "faces": {}
   },
   "idx_s3": {
    "x": 14990.6,
@@ -20480,6 +20586,30 @@
   }
  },
  "faces_over_1": [
+  {
+   "block": "hc_SW0",
+   "face": "E",
+   "utilisation": 1.957,
+   "bits": 9784
+  },
+  {
+   "block": "hc_SE0",
+   "face": "W",
+   "utilisation": 1.957,
+   "bits": 9784
+  },
+  {
+   "block": "hc_NW0",
+   "face": "E",
+   "utilisation": 1.957,
+   "bits": 9784
+  },
+  {
+   "block": "hc_NE0",
+   "face": "W",
+   "utilisation": 1.957,
+   "bits": 9784
+  },
   {
    "block": "vmh_SW",
    "face": "N",

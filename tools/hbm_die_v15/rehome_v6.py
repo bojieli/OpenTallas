@@ -17,7 +17,9 @@ Rules:
  4. audit: every die-level footprint inside the die (20 um edge), no overlap between die-level footprints or with plan
     blocks they do not represent, every relay/PC home point outside foreign hard footprints.
 H-DIE-V790 10-16 (core4_sfu2_su2825; the tall 480-um hub covers the v5 translation targets).  Structural homes:
- 5. a plan-block slot granted only pin WINDOWS (no exact pins, e.g. hc_eng) takes the plan outline as well as its origin;
+ 5. a plan-block slot without exact pins (pin windows only or none: hc_eng, sfucore_<q>) takes the plan outline as well
+    as its origin; plan blocks without a slot (sfus_<q> SU SFU store, hc_eng_tgt / hc_tbl_tgt programme collars) get a
+    FACES_ONLY slot; a plan hc_eng that is the v16 ot_hbm_hc_eng_static (graph node provenance) takes that cell;
  6. a translated slot that sat on the 20-um die edge in the old plan keeps that edge exactly (v5 host_N overhung it by
     0.024 um through rounding; translation alone cannot repair that);
  7. calendar_<q> (hfd_hgi_vm_calendar; E face = 187-bit hub schedule, W = cfg, S = status) is homed AGAINST the band-side
@@ -105,7 +107,7 @@ def main():
         s['origin'] = dict(x=round(b['x'], 3), y=round(b['y'], 3), orient=o.get('orient', 'R0'))
         if s.get('placed_footprint'):
             s['placed_footprint'] = dict(s['placed_footprint'])
-        if (s['name'].startswith(('sm_', 'su_', 'sucore_', 'vmh_')) or (s.get('pin_windows') and not s.get('pins'))) and \
+        if (s['name'].startswith(('sm_', 'su_', 'sucore_', 'vmh_')) or not s.get('pins')) and \
                 (abs(s['outline']['w'] - b['w']) > 1e-3 or abs(s['outline']['h'] - b['h']) > 1e-3):
             log['resized'].append(dict(slot=s['name'], old=s['outline'], new=dict(w=b['w'], h=b['h'])))
             s['outline'] = dict(w=b['w'], h=b['h'])
@@ -126,6 +128,26 @@ def main():
                       notes='COLL inject/IDX join leaf in the 21.6 + 43.2 + 21.6 um channel between sucore and COLL: COLL<->SU 0 relay stages',
                       pins=[], pin_status='FACES_ONLY')
             slots.append(ns); S[k] = ns; log['new'].append(k)
+    G6 = json.loads((pd / 'compact.graph.json').read_text())
+    NEWCELL = {'sfus_': (None, 'H-SU: store partition of ot_hgi_sfu_scheduled_engine (sfucore_sizing_0600, side-upper bay)'),
+               'hc_eng_tgt': ('ot_static_program_target', 'HC owner (H-NETLIST hceng) TARGET 164'),
+               'hc_tbl_tgt': ('ot_static_program_target', 'HC owner (H-NETLIST hceng) TARGET 165')}
+    for k, b in P6.items():
+        pre = next((x for x in NEWCELL if k.startswith(x)), None)
+        if pre and k not in S:
+            cell, owner = NEWCELL[pre]
+            ns = dict(name=k, cell=cell, kind='tile', parent='die', outline=dict(w=b['w'], h=b['h']),
+                      origin=dict(x=b['x'], y=b['y'], orient='R0'), clock_entry=dict(pin='clk', face='W', layer='M4'),
+                      pg_layer='M5', strap_layer='M6', signal_max_layer='M5', layer_cap='M5',
+                      io_budget=dict(in_delay_frac=0.2, out_delay_frac=0.2), version=1, grant='v790_plan_block_1016',
+                      rtl_owner=owner, plan_block=k, qualified=False,
+                      notes=G6['nodes'].get(k, {}).get('provenance', 'plan block') + '; candidate outline, pins FACES_ONLY',
+                      pins=[], pin_status='FACES_ONLY')
+            slots.append(ns); S[k] = ns; log['new'].append(k)
+    he = G6['nodes'].get('hc_eng', {})
+    if 'ot_hbm_hc_eng_static' in he.get('provenance', '') and 'hc_eng' in S:
+        S['hc_eng'].update(cell='ot_hbm_hc_eng_static', source='rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_eng_static.sv',
+                           notes=he['provenance'] + '; H-DIE-V790 centre-column home, pins from the plan pin windows (v16 widths)')
     # 2. translations
     def tr(x, y, skip=()):
         dx, dy, k = anchor(x, y, P5, P6, skip)
