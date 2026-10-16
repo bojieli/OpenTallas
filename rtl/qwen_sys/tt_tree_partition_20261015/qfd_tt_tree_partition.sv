@@ -60,7 +60,9 @@ module qfd_tt_tree_partition #(parameter integer MUT=0, PORT_AM_EXTRA_EDGES=0,
       ot_qwen_tt_scale_body u_scale(.clk(ck_scale),.rst_n(scale_rst_n),.tag_payload(scale_tag_m),
         .s3_v(scale_v),.scale_re(scale_re),.scale_gre(scale_gre),.scale_addr(scale_addr));
     end else begin:g_scale
-      qfd_tt_scale_leaf u_scale(.clk(ck_scale),.rst_n(scale_rst_n),.tag_payload(scale_tag_m),
+      // MUT 3/4 (Q-TT-LEAF r3 reset-capture negative controls): scale leaf RSTMUT 1 (no internal reset
+      // distribution) / 2 (release 4096 edges late)
+      qfd_tt_scale_leaf #(.RSTMUT((MUT==3) ? 1 : (MUT==4) ? 2 : 0)) u_scale(.clk(ck_scale),.rst_n(scale_rst_n),.tag_payload(scale_tag_m),
         .s3_v(scale_v),.scale_re(scale_re),.scale_gre(scale_gre),.scale_addr(scale_addr));
     end endgenerate
 endmodule

@@ -67,7 +67,7 @@
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
    "count": 1,
    "at": [
-    226.8,
+    32.4,
     43.2
    ],
    "orient": "R0",
@@ -77,7 +77,7 @@
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
    "count": 1,
    "at": [
-    226.8,
+    32.4,
     129.6
    ],
    "orient": "R0",
@@ -111,12 +111,12 @@
   "OT_CHANNEL_BLOCK_UM": "20",
   "OT_ROW_MIN_UM": "6"
  },
- "structural_change": "tc2 structural composition of measured independent repairs: actual tc1 route hit incremental GRT0183 again on _04269_ after its one fresh-process resume; preserve active attempt2. Move only SCALE two real pretag SRAMs from x32.4 to x226.8, same y/R0/outline/pins, opening the W-face pin and logic channel (602 W outputs formerly shared32um channel with SRAM face). Keep tc1 -no_obstruction_aware CTS: standalone east-SRAM tg2 had112.7ps boundary spread, while this tree correction gave tc1 scale30.5ps. Do not move CORE SRAMs (measured setup-114ps). Same actual RTL, two mapped SRAMs, full4096x4096 workload and recipe3 +1 per input/output (+2 core-scale seam), zero extra cycles or area. Actual fresh CTS, TT setup/FFhold/DRC0/native220/190/80 still required.",
+ "structural_change": "tc3 (Q-TT-LEAF r3 2026-10-16): routed tc1 f9c257836 CLOSED TT +117.83/FF +0.07/DRC0 and passed every native check (601 launches worst 210.1 ps, 92/93 captures, spread 48.8 ps) EXCEPT the raw reset capture: rst_n fed all 322 async-clear flops (valid line 216, ring pointer 8, a_act/b_act 48, scale_re/gre 50) through one tile-wide buffer tree, capture 356.99 ps > 190. Structural fix in RTL: rst_n lands on ONE reset-station flop at the S-face pin (async assert, release one edge later) and only that flop drives the leaf's internal reset tree (now an internal timed recovery/removal path). Cold init: assertion unchanged; scale release E+1 vs core (first scale_v is 23 edges after release in the full-shape bench); a scale_v inside the release window is a simulation fault; normal calendar 0 cycles; +1 flop area. Core leaf scale_rst_n now launches from its own dedicated kept station flop (same IS release edge). Placement/CTS = tc1 (west SRAMs x32.4, -no_obstruction_aware); tc2 east-SRAM move dropped (it did not address reset and its gate spread was 78.9 ps). New benches: warm reset with scale words in flight (pass) and negative controls MUT3 (no internal reset distribution) / MUT4 (release 4096 edges late).",
  "slot_change_request": "Q-COMPUTE-DIE 14:33-14:36 candidate two345.6x216 homes inside777.6x1814.4; physical/qwen_tt_partition_1015/pin_plan.json",
  "job": {
-  "owner": "codex:Q-ELEM-2330",
+  "owner": "claude:Q-TT-LEAF",
   "branch": "claude/qtt-2210",
-  "tag": "tc2",
+  "tag": "tc3",
   "hold_merge": true,
   "purpose": "TT real functional partition candidate, native clocks/pins unqualified until measured",
   "benches": [
@@ -152,6 +152,39 @@
      "verilator"
     ],
     "fail_regex": "TT_SPLIT_FAIL.*valid_scale_errors=[1-9]"
+   },
+   {
+    "name": "tt_split_m0_p0_warm",
+    "cmd": "bash physical/qwen_tt_partition_1015/run_exact.sh 0 0 {RUN}/bench/tt_m0w 5000",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "TT_SPLIT_PASS MUT=0 PROD=0"
+   },
+   {
+    "name": "tt_split_m3_p0_warm",
+    "cmd": "bash physical/qwen_tt_partition_1015/run_exact.sh 3 0 {RUN}/bench/tt_m3w 5000",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "TT_SPLIT_FAIL MUT=3 errors=[1-9]"
+   },
+   {
+    "name": "tt_split_m4_p1",
+    "cmd": "bash physical/qwen_tt_partition_1015/run_exact.sh 4 1 {RUN}/bench/tt_m4",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "TT_SPLIT_FAIL MUT=4 errors=[1-9]"
    }
   ],
   "extra_paths": [
@@ -159,7 +192,7 @@
    "physical/qwen_tt_partition_1015",
    "tools/qwen_split/derive_tt_tree_partition.py"
   ],
-  "structural_change": "tc2 structural composition of measured independent repairs: actual tc1 route hit incremental GRT0183 again on _04269_ after its one fresh-process resume; preserve active attempt2. Move only SCALE two real pretag SRAMs from x32.4 to x226.8, same y/R0/outline/pins, opening the W-face pin and logic channel (602 W outputs formerly shared32um channel with SRAM face). Keep tc1 -no_obstruction_aware CTS: standalone east-SRAM tg2 had112.7ps boundary spread, while this tree correction gave tc1 scale30.5ps. Do not move CORE SRAMs (measured setup-114ps). Same actual RTL, two mapped SRAMs, full4096x4096 workload and recipe3 +1 per input/output (+2 core-scale seam), zero extra cycles or area. Actual fresh CTS, TT setup/FFhold/DRC0/native220/190/80 still required.",
+  "structural_change": "tc3 (Q-TT-LEAF r3 2026-10-16): routed tc1 f9c257836 CLOSED TT +117.83/FF +0.07/DRC0 and passed every native check (601 launches worst 210.1 ps, 92/93 captures, spread 48.8 ps) EXCEPT the raw reset capture: rst_n fed all 322 async-clear flops (valid line 216, ring pointer 8, a_act/b_act 48, scale_re/gre 50) through one tile-wide buffer tree, capture 356.99 ps > 190. Structural fix in RTL: rst_n lands on ONE reset-station flop at the S-face pin (async assert, release one edge later) and only that flop drives the leaf's internal reset tree (now an internal timed recovery/removal path). Cold init: assertion unchanged; scale release E+1 vs core (first scale_v is 23 edges after release in the full-shape bench); a scale_v inside the release window is a simulation fault; normal calendar 0 cycles; +1 flop area. Core leaf scale_rst_n now launches from its own dedicated kept station flop (same IS release edge). Placement/CTS = tc1 (west SRAMs x32.4, -no_obstruction_aware); tc2 east-SRAM move dropped (it did not address reset and its gate spread was 78.9 ps). New benches: warm reset with scale words in flight (pass) and negative controls MUT3 (no internal reset distribution) / MUT4 (release 4096 edges late). | history: tc1 (Q-TT-LEAF 2026-10-15): tg1 scale CTS gate boundary spread 371.3..450.0 = 78.7 ps (marginal to the 80 ps native limit); the late sinks are the seam (S face x100-160, 436-445 ps) behind the same obstruction-aware H-tree detour around the SRAM pair as the core leaf. Structural tree fix: route.cts_sink.extra -no_obstruction_aware. Replay of CTS on the identical placement: pin registers 383.0..405.4 (was 382.5..444.7), all registers 369.7..411.9, seam flops 397..403 ps. tg1 route NEEDS_HUMAN was the shared-flow incremental GRT-0183 inside repair_design (full GRT 0 overflow, 9.0 % usage), fixed centrally by ROOT GRT183-RESUME; same RTL, outline, pins, macros; no area or cycle cost. | history: fs2 (Q-ELEM 1705): fs1 scale route DRT-0255 on seam pins tag_payload[0]/rst_n: 93 seam pins on every M5 track (0.096 pitch, 168.4..177.2) overlapped the M5 PG pair at x~173.1; seam now 3-track pitch on PG-free tracks 157.8..188.6 on BOTH leaves (identical x, straight seam), RTL/outline/cycles unchanged. | fs4 (Q-ELEM 1705): fs2r DRT-0255 on tag_payload at the S face (516 cells in the 6 um face band under a 31 um seam): seam 12-track pitch 110.3..234.4 matching core; recipe 3 pin registers (owner 19:50).",
   "hosts": [
    "ot-epyc1tb",
    "ot-epyc4",

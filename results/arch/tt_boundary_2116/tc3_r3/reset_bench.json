@@ -1,0 +1,43 @@
+{
+ "schema": "opentallas.qtt_reset_capture_bench.v1",
+ "agent": "Q-TT-LEAF r3",
+ "date": "2026-10-16",
+ "simulator": "verilator 5.050 (daemon toolchain), host ot-epyc1tb",
+ "source": "worktree claude/qtt-2210 pre-commit tree of the tc3 commit (RTL identical)",
+ "classification": {
+  "scale_rst_n_endpoints": {
+   "u_prev valid line": 216,
+   "u_pretag ring wp": 8,
+   "a_act": 24,
+   "b_act": 24,
+   "body scale_re/gre": 25,
+   "leaf scale_re/gre": 25,
+   "total": 322
+  },
+  "tc1_scale_native": "capture rst_n[0] 356.99 ps > 190 (ETM setup_rising -11.71 + R 368.7); every other native check PASS",
+  "old_tg1_core_native": "scale_rst_n launch 257.91 ps > 220: pin hung off core internal reset root rs"
+ },
+ "fix": {
+  "scale": "rst_n -> one ot_qfd_rst_stn (D=1) flop at the pin -> internal reset tree",
+  "core": "scale_rst_n from a dedicated (* keep *) station copy, same IS release edge",
+  "cold_init": "assert unchanged (async); scale release E+1 vs core; first scale_v 23 edges after release; scale_v in release window = sim $fatal",
+  "calendar_cycles": 0,
+  "area": "+1 flop each leaf"
+ },
+ "runs": {
+  "m0p0w.log": "TT_SPLIT_COLD first scale_v 23 edges after rst_n release;TT_SPLIT_WARM reset at 6089 with scale words in flight;TT_SPLIT_PASS MUT=0 PROD=0 checks=29199 scale=368;",
+  "m0p1.log": "TT_SPLIT_COLD first scale_v 23 edges after rst_n release;TT_SPLIT_PASS MUT=0 PROD=1 checks=89199 scale=16;",
+  "m1p0.log": "TT_SPLIT_COLD first scale_v 23 edges after rst_n release;[25027000] %Fatal: tb_tt_tree_partition.sv:74: Assertion failed in tb_tt_tree_partition: TT_SPLIT_FAIL MUT=1 errors=29199 checks=29199 scale=384 valid_scale_errors=384;",
+  "m2p0.log": "TT_SPLIT_COLD first scale_v 23 edges after rst_n release;[25027000] %Fatal: tb_tt_tree_partition.sv:74: Assertion failed in tb_tt_tree_partition: TT_SPLIT_FAIL MUT=2 errors=619 checks=29199 scale=384 valid_scale_errors=384;",
+  "m3p0w.log": "TT_SPLIT_COLD first scale_v 23 edges after rst_n release;TT_SPLIT_WARM reset at 6089 with scale words in flight;[25027000] %Fatal: tb_tt_tree_partition.sv:74: Assertion failed in tb_tt_tree_partition: TT_SPLIT_FAIL MUT=3 errors=48 checks=29199 scale=368 valid_scale_errors=0;",
+  "m4p1.log": "TT_SPLIT_COLD first scale_v 23 edges after rst_n release;[75067000] %Fatal: tb_tt_tree_partition.sv:74: Assertion failed in tb_tt_tree_partition: TT_SPLIT_FAIL MUT=4 errors=3512 checks=89199 scale=16 valid_scale_errors=0;"
+ },
+ "expect": {
+  "m0p1.log": "pass",
+  "m0p0w.log": "pass",
+  "m1p0.log": "fail",
+  "m2p0.log": "fail",
+  "m3p0w.log": "fail (no internal reset distribution observed after warm reset)",
+  "m4p1.log": "fail (late release observed)"
+ }
+}

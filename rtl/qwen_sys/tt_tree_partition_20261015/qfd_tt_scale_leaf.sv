@@ -214,17 +214,38 @@ module ot_qwen_tt_scale_body (
 
 endmodule
 
-module qfd_tt_scale_leaf (
+// Q-TT-LEAF r3 (2026-10-16): LOCAL RESET CAPTURE.  The routed tc1 leaf (f9c257836) closed TT/FF/DRC0 but failed the
+// native input-capture check on its raw reset pin: rst_n drove all 322 async-clear flops (u_prev valid line 216, ring
+// pointer 8, a_act/b_act 48, scale_re/gre 50) through one buffer tree across the tile, capture 356.99 ps > 190.
+// Structure: rst_n now lands on ONE kept reset-station flop at the pin (ot_qfd_rst_stn, asserts asynchronously,
+// releases one clk edge later) and that flop alone drives the leaf's internal reset tree, which is then an internal
+// timed recovery/removal path.  Cold-init edges (explicit): assertion is unchanged (asynchronous, same edge); release
+// of every scale flop moves from core-release edge E to E+1.  The core never raises scale_v before the first command
+// go, which the static schedule issues >= 16 edges after release, so no valid scale word can be dropped; the
+// simulation check below makes a scale_v during the scale reset window a hard fault.  Normal calendar: 0 cycles.
+// RSTMUT (bench negative controls, 0 = production): 1 = internal reset never asserted (no distribution);
+// 2 = release 4096 edges late (a station that misses the first scale words).
+module qfd_tt_scale_leaf #(parameter integer RSTMUT = 0) (
     input wire clk, input wire rst_n,
     input wire [90:0] tag_payload, input wire s3_v,
     output reg scale_re, output reg [23:0] scale_gre,
     output reg [575:0] scale_addr
 );
+    wire rs;
+    generate if (RSTMUT == 1) begin : g_rst_none
+        assign rs = 1'b1;
+    end else begin : g_rst_stn
+        ot_qfd_rst_stn #(.D((RSTMUT == 2) ? 4096 : 1)) u_rs (.clk(clk), .rst_n(rst_n), .rst_q(rs));
+    end endgenerate
+`ifndef SYNTHESIS
+    always @(posedge clk) if (RSTMUT == 0 && rst_n && !rs && s3_v)
+        $fatal(1, "QFD_TT_SCALE_COLD_INIT_FAULT: scale_v during the scale reset release edge");
+`endif
     wire raw_re; wire [23:0]raw_gre; wire [575:0]raw_addr;
-    ot_qwen_tt_scale_body u_scale(.clk(clk),.rst_n(rst_n),.tag_payload(tag_payload),
+    ot_qwen_tt_scale_body u_scale(.clk(clk),.rst_n(rs),.tag_payload(tag_payload),
       .s3_v(s3_v),.scale_re(raw_re),.scale_gre(raw_gre),.scale_addr(raw_addr));
-    always @(posedge clk or negedge rst_n)
-      if(!rst_n)begin scale_re<=0;scale_gre<=0;end
+    always @(posedge clk or negedge rs)
+      if(!rs)begin scale_re<=0;scale_gre<=0;end
       else begin scale_re<=raw_re;scale_gre<=raw_gre;end
     always @(posedge clk)scale_addr<=raw_addr;
 endmodule
