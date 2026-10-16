@@ -38,14 +38,21 @@ def join(canonical, catalogue, manifest, root):
     violations, compiled, coverage = [], [], Counter()
     def reject(kind, **witness):
         violations.append(dict(kind=kind, **witness))
+    # Legacy exports have no counts and remain the historical81 topology.
+    # New exports declare the allocator topology; never infer it from a partial
+    # list of programmes, which would conceal absent tail stages.
+    counts = canonical.get('counts', {'stages': 81, 'rank_dies': 324})
+    nstages = counts.get('stages')
+    if type(nstages) is not int or nstages <= 0 or counts.get('rank_dies') != 4*nstages:
+        raise ValueError('invalid allocator stage/rank topology')
     ranks = {}
     for die in canonical['rank_programme_bindings']:
         key = die['stage'], die['rank']
         if key in ranks:
             raise ValueError('duplicate canonical rank')
         ranks[key] = die['die_id']
-    if set(ranks) != {(s,r) for s in range(81) for r in range(4)} or len(set(ranks.values())) != 324:
-        raise ValueError('canonical81 stages/324 unique rank dies required')
+    if set(ranks) != {(s,r) for s in range(nstages) for r in range(4)} or len(set(ranks.values())) != 4*nstages:
+        raise ValueError('complete allocator stages and unique physical rank dies required')
     nodes = {n['node']: n for n in catalogue['source_SU_nodes']}
     if len(nodes) != len(catalogue['source_SU_nodes']) or not nodes:
         raise ValueError('duplicate or empty literal source operation catalogue')

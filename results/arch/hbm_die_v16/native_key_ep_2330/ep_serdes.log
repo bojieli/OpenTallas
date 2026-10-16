@@ -1,0 +1,24 @@
+ot-run: ot-epyc4       admits   381 GB (avail 607, growth 85, headroom 48, waiters 0/0 GB) load 48/128 running 13 disk 766 GB 
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-3256309-1792130395 after 0 s
+TB_HFD_EP_STATIC MUT=0 A: sent=384 got=384 bad=0 fault=0 cause=00000000000 up=1 | B: sent=384 got=384 bad=0 fault=0 cause=00000000000 up=1 | stA=10 stB=10 | lane A->B 384 frames in 659 beats | PASS
+EP MUT=0 rc=0
+SIDE0 ERR frame 6
+SIDE0 ERR frame 9
+SIDE0 ERR frame 12
+TB_HFD_EP_STATIC MUT=1 A: sent=384 got=384 bad=97 fault=0 cause=00000000000 up=1 | B: sent=384 got=384 bad=92 fault=0 cause=00000000000 up=1 | stA=10 stB=10 | lane A->B 384 frames in 659 beats | FAIL
+EP MUT=1 rc=1
+SIDE0 ERR frame 247
+SIDE1 ERR frame 246
+TB_HFD_EP_STATIC TIMEOUT (receivers incomplete)
+TB_HFD_EP_STATIC MUT=2 A: sent=384 got=320 bad=75 fault=1 cause=00110000000 up=1 | B: sent=384 got=320 bad=76 fault=1 cause=00110000000 up=1 | stA=10 stB=10 | lane A->B 380 frames in 659 beats | FAIL
+EP MUT=2 rc=1
+SIDE0 ERR frame 5
+SIDE1 ERR frame 17
+SIDE0 ERR frame 8
+TB_HFD_EP_STATIC MUT=3 A: sent=384 got=384 bad=94 fault=0 cause=00000000000 up=1 | B: sent=384 got=384 bad=97 fault=0 cause=00000000000 up=1 | stA=10 stB=10 | lane A->B 384 frames in 659 beats | FAIL
+EP MUT=3 rc=1
+TB_HFD_EP_STATIC TIMEOUT (receivers incomplete)
+TB_HFD_EP_STATIC MUT=4 A: sent=384 got=0 bad=0 fault=1 cause=00100000100 up=1 | B: sent=384 got=0 bad=0 fault=1 cause=00100000100 up=1 | stA=10 stB=10 | lane A->B 384 frames in 659 beats | FAIL
+EP MUT=4 rc=1
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-3256309-1792130395): exit 0

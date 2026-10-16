@@ -38,7 +38,7 @@ coll_own.mem (record r, die d at line 4r+d), y_gold.mem (the all-reduce words th
 vm_boot.mem (gain rows), coef.mem (row data written by hcx ops: "@row" + data), payload.mem (640 h rows),
 expa.mem / expd.mem (golden VM rows: NORM outputs + H_STORE), n.mem, meta.json.
 """
-import argparse, json, pickle, random, sys
+import argparse, hashlib, json, pickle, random, sys
 from pathlib import Path
 
 import numpy as np
@@ -291,7 +291,7 @@ def main():
                     'block\'s hc.fn/sumsq/rsqrt/pre_post/sinkhorn leave the dynamic program (one compiled engine-9 command '
                     'per block in fixed_program.mem); NO golden coefficient rows are written (the HC COEF job reads the '
                     'rows the real post writes)')
-    ap.add_argument('--hcx-issue', default='', help='compiled issuer ages of the attn,ffn chain commands (phase-2 edges): A,F or per layer L1=A,F/L14=A,F')
+    ap.add_argument('--hcx-issue', default='', help='attn,ffn chain command issue ages: A,F (typed), or ready:A,F (each dependency-ready age; the issue is the first row at/after it in the phase compile_calendar.command_issue_phase derives from the bench reset/context edges); per layer L1=...;/L14=...')
     ap.add_argument('--hcx-p2p', type=int, default=0, help='measured chain command-pin -> done-pin latency (tb_s81_hcx_chain)')
     ap.add_argument('--hcx-set', type=int, default=-1, help='resident HC ROM set index (default: the layer number)')
     ap.add_argument('--program-layer', default=None, help='take the stage program of this backbone layer (e.g. L0) '
@@ -331,8 +331,10 @@ def main():
     payload = run.h_rows(np.asarray(ch.get('h_in', ch['h']), np.float32).reshape(HG.HC, D))
     eng_rows = run.h_rows(h) if fx is not None and fx['engram'] else None
     gold = {}
+    hcx_hin = {}                                        # the H rows each HC coefficient chain must read (check only)
     for b, blk in enumerate(('attn', 'ffn')):
         pre, w, eps, comb, post, y = ch[blk]
+        hcx_hin[blk] = run.h_rows(h)
         yn = HG.g_norm(h, pre, w, eps)
         run.norm_rows(O_BASE + 512 * b, yn, 1, 1 if blk == 'ffn' else 0)
         h = HG.g_post(h, np.asarray(y, np.float32), np.asarray(comb, np.float32).reshape(4, 4), np.asarray(post, np.float32))
@@ -530,15 +532,29 @@ def main():
         hi = a.hcx_issue
         if '=' in hi:                                   # per-layer calendar: 'L1=A,F/L14=A,F' (one bench build, many layers)
             hi = dict(e.split('=', 1) for e in hi.split('/')).get(L, '')
-        iss = [int(x) for x in hi.split(',')] if hi else []
-        assert len(iss) == 2 and a.hcx_p2p > 0, '--hcx-issue A,F and --hcx-p2p required'
+        if hi.startswith('ready:'):                     # compiler-derived: earliest row at/after each dependency
+            sys.path.insert(0, str(ROOT/'tools/s81_compile_schedule'))     # whose phase the reset/command clock ABI
+            from compile_calendar import command_issue_phase                # allows (no typed issue ages)
+            srcs = ['rtl/dsrom_sys/s81_static_control/ot_s81_fixed_issue.sv', 'rtl/dsrom_sys/s81_hcx/ot_s81_hcx_controller.sv',
+                    'rtl/dsrom_sys/s81_hcx/ot_s81_hcx_prefetch.sv']
+            clock = dict(stream_period_ps='2500/3', serial_period_ps='10000/9', first_active_stream_edge=1000,
+                         context_accept_stream_edge=1250, issuer_to_engine_sample_edges=2, required_counter_phase=2,
+                         evidence=[dict(path=q, sha256=hashlib.sha256((ROOT/q).read_bytes()).hexdigest()) for q in srcs])
+            per, ph = command_issue_phase(clock, ROOT)
+            ready = [int(x) for x in hi[6:].split(',')]
+            iss = [r + (ph - r) % per for r in ready]
+            hcx_phase = dict(period=per, phase=ph, ready=ready, issue=iss, clock_abi=clock)
+        else:
+            iss = [int(x) for x in hi.split(',')] if hi else []
+            hcx_phase = None
+        assert len(iss) == 2 and a.hcx_p2p > 0, '--hcx-issue A,F (or ready:A,F) and --hcx-p2p required'
         hset = a.hcx_set if a.hcx_set >= 0 else int(L[1:]) if L[0] == 'L' else -1
         assert 0 <= hset < 43, hset
         sys.path.insert(0, str(ROOT/'tools/s81_static_control'))
         from program import issuer_done_row
         fixed_rows.extend(dict(engine=11, arg=(hset << 15) | (hl_base << 1) | b, issue=iss[b],
                                done=issuer_done_row(iss[b], a.hcx_p2p), pin_to_pin=a.hcx_p2p) for b in range(2))
-        hcx_meta = dict(members=hcx_members, rom_set=hset, issue=iss, pin_to_pin=a.hcx_p2p, h_base=hl_base,
+        hcx_meta = dict(members=hcx_members, rom_set=hset, issue=iss, issue_phase=hcx_phase, pin_to_pin=a.hcx_p2p, h_base=hl_base,
                         coef_rows=[C_BASE, C_BASE + 1, C_BASE + COEF_STRIDE, C_BASE + COEF_STRIDE + 1],
                         golden_coefficient_injection=False, native_qualified=False,
                         declared_boundaries=['ideal bench VM', 'TP4 raw gather bench transport (collective glue)',
@@ -604,6 +620,15 @@ def main():
     with open(a.out / 'coef.mem', 'w') as f:
         for r in sorted(coef):
             f.write(f'@{r:x}\n{coef[r]:0128x}\n')
+    if a.hcx_real:                                      # CHECK files (never written into the VM): chain input H rows
+        with open(a.out / 'hcx_hin.mem', 'w') as f:     # at each command and the coefficient rows at each chain done
+            for blk in ('attn', 'ffn'):
+                f.write(''.join(f'{int(r):0128x}\n' for r in hcx_hin[blk]))
+        with open(a.out / 'hcx_coef.mem', 'w') as f:
+            for blk in ('attn', 'ffn'):
+                g = gold[blk]
+                f.write(f"{HG.pack(HG.u32(np.asarray(g['comb'], np.float32).reshape(-1)), 32):0128x}\n")
+                f.write(f"{HG.pack(list(HG.u32(g['pre'])) + list(HG.u32(g['post'])) + [int(HG.u32([g['eps']])[0])], 32):0128x}\n")
     su_meta = None
     if sub is not None:
         assert min(sub['vm']) >= su_layer.SU_BASE and sub['top'] <= 16384, (min(sub['vm']), sub['top'])

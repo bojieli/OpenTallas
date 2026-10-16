@@ -1933,8 +1933,10 @@ def tt_overlay_fallback(cmd):
     overlay copy (kept at main on every host) instead; a snapshot that carries the file keeps its own."""
     if TT_OVERLAY_REL not in cmd:
         return cmd
-    pick = ("python3 \"$(test -f tools/closure_loop/tt_overlay.py && echo tools/closure_loop/tt_overlay.py || "
-            f"ls -d {' '.join(TT_OVERLAY_FLEET)} 2>/dev/null | head -1)\" ")
+    # FLEET-FIRST 2026-10-15 23:2x: the fleet copy (kept at main) wins over the snapshot's own -- a snapshot's buggy
+    # overlay (65529c027..3c31fb285 deleted GRT183_HOOK from run_abi3_physical.py) cannot be fixed by its pinned commit
+    pick = (f"python3 \"$(ls -d {' '.join(TT_OVERLAY_FLEET)} 2>/dev/null | head -1 | grep . || "
+            "echo tools/closure_loop/tt_overlay.py)\" ")
     return cmd.replace(TT_OVERLAY_REL, pick)
 
 

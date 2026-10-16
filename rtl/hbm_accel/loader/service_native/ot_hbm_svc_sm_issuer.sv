@@ -13,7 +13,15 @@
 // [64:49] epoch, [71:65] rows, [81:72] tag_base, [91:82] prog_base, [102:92] prog_limit, [118:103] loops,
 // [255:240] magic 5d15, [239:233] row identity, other bits zero.  total = ceil(rows*136/128)*4 sectors (the feed's rule).
 // fault: bad word, an issue the feed refuses, or a launch while running.
-module ot_hbm_svc_sm_issuer #(parameter integer LBANKS=4, parameter integer LB=(LBANKS>2)?2:1, parameter integer QD=4)(
+// FIXED_GO=1 (H-NETLIST idxcoll 2026-10-15, owner rule 10-14 static schedule): go is a COMPILER SLOT, not an event --
+// descriptor [142:119] go_at = the stream edge (counted from the run launch) on which programme i starts; the issuer
+// never waits: a go whose cache bank is not ready (block not resident + copied: the HBM boundary missed its deadline),
+// whose previous programme is still running, or whose descriptor reaches the go queue after go_at is a sticky fault.
+// The HBM boundary stays elastic up to the landing / cache banks (reserve and start remain residency events); every
+// packet / SM command after go is on the fixed calendar, so the eight groups of a stack (and the IDX key calendar
+// reading their packets as key_lines) are cycle-aligned.  FIXED_GO=0 keeps the event go (bit-identical to before).
+module ot_hbm_svc_sm_issuer #(parameter integer LBANKS=4, parameter integer LB=(LBANKS>2)?2:1, parameter integer QD=4,
+ parameter integer FIXED_GO=0)(
  input wire clk,rst_n,
  input wire desc_we,input wire[6:0]desc_addr,input wire[255:0]desc_data,
  input wire run_v,input wire[6:0]run_base,input wire[7:0]run_count,
@@ -36,7 +44,7 @@ module ot_hbm_svc_sm_issuer #(parameter integer LBANKS=4, parameter integer LB=(
   .w_ce_in(desc_we_q&&!running),.w_addr_in(desc_addr_q),.wd_in(desc_data_q),.w_mask_in({256{1'b1}}),
   .rr_en(2'b0),.rr_addr(14'b0),.cr_en(2'b0),.cr_sel(16'b0));
  // reserve stage
- reg[7:0]n_res,n_go;reg st_v;reg[118:0]st;
+ reg[7:0]n_res,n_go;reg st_v;reg[142:0]st;reg[23:0]rc;
  wire[6:0]st_rows=st[71:65];
  wire[12:0]st_total=(((st_rows*136)+127)>>7)<<2;
  assign rd_go=running&&n_res!=0&&!st_v&&!rd_q;
@@ -44,7 +52,7 @@ module ot_hbm_svc_sm_issuer #(parameter integer LBANKS=4, parameter integer LB=(
  assign reserve_base=st[31:0];assign reserve_row_base=st[46:32];assign reserve_total=st_total[11:0];
  assign reserve_bank=st[47+:LB];assign reserve_epoch=st[64:49];assign reserve_rows=st_rows;assign reserve_tag_base=st[81:72];
  // start / go queues: {loops16,limit11,base10,epoch16,landing LB}
- localparam integer QW=16+11+10+16+LB;
+ localparam integer QW=24+16+11+10+16+LB;
  reg[QW-1:0]sq[0:QD-1],gq[0:QD-1];reg[2:0]sq_n,gq_n;reg[1:0]sq_r,sq_w,gq_r,gq_w;
  wire[QW-1:0]sh=sq[sq_r],gh=gq[gq_r];
  wire[LB-1:0]sh_land=sh[LB-1:0];wire[LB-1:0]gh_land=gh[LB-1:0];
@@ -55,27 +63,29 @@ module ot_hbm_svc_sm_issuer #(parameter integer LBANKS=4, parameter integer LB=(
 `endif
  assign start_bank=sh_land;assign start_epoch=sh[LB+:16];
  reg go_busy;
- assign program_start_v=gq_n!=0&&!go_busy&&cache_ready[gh_land[0]];
+ wire[23:0]gh_at=gh[LB+53+:24];
+ assign program_start_v=(FIXED_GO!=0)?(gq_n!=0&&rc==gh_at):(gq_n!=0&&!go_busy&&cache_ready[gh_land[0]]);
  assign program_start_base=gh[LB+16+:10];assign program_start_limit=gh[LB+26+:11];assign program_start_loops=gh[LB+37+:16];
  wire push_s=reserve_v,pop_s=start_v,push_g=start_v,pop_g=program_start_v;
  always @(posedge clk or negedge rst_n)begin
   if(!rst_n)begin
-   running<=0;run_done<=0;fault<=0;rd_q<=0;rp<=0;rp_q<=0;n_res<=0;n_go<=0;st_v<=0;st<=0;
+   running<=0;run_done<=0;fault<=0;rd_q<=0;rp<=0;rp_q<=0;n_res<=0;n_go<=0;st_v<=0;st<=0;rc<=0;
    sq_n<=0;gq_n<=0;sq_r<=0;sq_w<=0;gq_r<=0;gq_w<=0;go_busy<=0;
   end else begin
    run_done<=0;
    if(run_v)begin
     if(running||run_count==0)fault<=1;
-    else begin running<=1;rp<=run_base;n_res<=run_count;n_go<=run_count;end
+    else begin running<=1;rp<=run_base;n_res<=run_count;n_go<=run_count;rc<=0;end
    end
    rd_q<=rd_go;rp_q<=rp;
+   if(running&&!run_v)rc<=rc+24'd1;
    if(rd_go)rp<=rp+7'd1;
    if(rd_q)begin
-    st<=rd[118:0];st_v<=1;
-    if(rd[255:240]!=16'h5d15||rd[239:233]!=rp_q||rd[232:119]!=0)fault<=1;
+    st<=rd[142:0];st_v<=1;
+    if(rd[255:240]!=16'h5d15||rd[239:233]!=rp_q||rd[232:143]!=0||(FIXED_GO==0&&rd[142:119]!=0))fault<=1;
    end
    if(reserve_v)begin st_v<=0;n_res<=n_res-8'd1;end
-   if(push_s)begin sq[sq_w]<={st[118:103],st[102:92],st[91:82],st[64:49],st[47+:LB]};sq_w<=sq_w+2'd1;end
+   if(push_s)begin sq[sq_w]<={st[142:119],st[118:103],st[102:92],st[91:82],st[64:49],st[47+:LB]};sq_w<=sq_w+2'd1;end
    if(pop_s)sq_r<=sq_r+2'd1;
    sq_n<=sq_n+(push_s?3'd1:3'd0)-(pop_s?3'd1:3'd0);
    if(push_g)begin gq[gq_w]<=sh;gq_w<=gq_w+2'd1;end
@@ -83,6 +93,7 @@ module ot_hbm_svc_sm_issuer #(parameter integer LBANKS=4, parameter integer LB=(
    gq_n<=gq_n+(push_g?3'd1:3'd0)-(pop_g?3'd1:3'd0);
    if(push_s&&sq_n==QD&&!pop_s)fault<=1;
    if(pop_g)go_busy<=1;
+   if(FIXED_GO!=0&&gq_n!=0&&(rc==gh_at&&(go_busy||!cache_ready[gh_land[0]])||rc>gh_at))fault<=1;   // missed slot: never waits
    if(program_done)begin
     if(!go_busy)fault<=1;
     go_busy<=0;
