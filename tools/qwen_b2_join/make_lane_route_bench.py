@@ -112,7 +112,7 @@ localparam integer QN=1<<16;
 reg[2212:0]rq_q[0:5][0:QN-1];integer rq_w[0:5],rq_r[0:5];
 reg[51:0]am_q[0:5][0:QN-1];integer am_w[0:5],am_r[0:5];
 reg[551:0]mx_q[0:QN-1];integer mx_w=0,mx_r=0;
-integer nrq=0,nam=0,nmx=0,errors=0;reg[31:0]first_rq;integer distinct=0;
+integer nrq=0,nam=0,nmx=0,errors=0;reg[50:0]sa_q[0:QN-1];integer sa_w=0,sa_r=0;reg[50:0]r_sa_l=0,d_sa_l=0;reg[31:0]first_rq;integer distinct=0;
 initial for(integer h=0;h<6;h=h+1)begin rq_w[h]=0;rq_r[h]=0;am_w[h]=0;am_r[h]=0;end
 always @(negedge clk)if(rs)begin
  for(integer h=0;h<6;h=h+1)begin
@@ -129,6 +129,8 @@ always @(negedge clk)if(rs)begin
    am_r[h]=am_r[h]+1;nam=nam+1;
   end
  end
+ if(r_ret[77:27]!==r_sa_l)begin r_sa_l=r_ret[77:27];sa_q[sa_w%QN]=r_sa_l;sa_w=sa_w+1;end
+ if(d_ret[77:27]!==d_sa_l)begin d_sa_l=d_ret[77:27];if(sa_r>=sa_w||d_sa_l!==sa_q[sa_r%QN])begin if(errors<8)$display("MISMATCH scalar argmax event %0d",sa_r);errors=errors+1;end sa_r=sa_r+1;end
  if(r_mxwe)begin mx_q[mx_w%QN]={r_mxa,r_mxm,r_mxd};mx_w=mx_w+1;end
  if(d_mxwe)begin if(mx_r>=mx_w||{d_mxa,d_mxm,d_mxd}!==mx_q[mx_r%QN])begin if(errors<8)$display("MISMATCH mx write %0d",mx_r);errors=errors+1;end mx_r=mx_r+1;nmx=nmx+1;end
 end
@@ -136,13 +138,10 @@ task automatic op(input integer pc,nout,tiles,ksize,spacing,wbase,split,wcs,obas
  begin
  cmd={24'd0,1'b0,1'(amax_en),1'(output_en),1'b0,24'(ojs),24'(ots),24'(obase),1'(rounds),24'(wcs),4'(split),3'd0,24'(xcs),24'd0,24'd1,24'(xbase),24'd1,24'd8,24'(spacing),24'(wbase),1'b0,18'(ksize),18'(tiles),18'(nout),1'b1};
  @(negedge clk);#0.01;cmd[0]=0;
- // back to back: the next op issues as soon as BOTH controllers are idle again (no reset)
- repeat(20)@(negedge clk);
- while(!(r_idle&&d_idle))@(negedge clk);
+ // back to back: the next op issues on the first edge BOTH controllers are ready again (no reset, no idle wait)
+ repeat(2)@(negedge clk);
+ while(!(r_ret[0]&&d_ret[0]))@(negedge clk);
  #0.01;
- if(amax_en)begin
-  if(r_ret[77:27]!==d_ret[77:27])begin $display("MISMATCH scalar argmax pc%0d ref%h dut%h",pc,r_ret[77:27],d_ret[77:27]);errors=errors+1;end
- end
  if(r_ret[94]||d_ret[94]||(|r_pfault)||(|d_pfault))begin $display("FAULT pc%0d ref%0d dut%0d pref%b pdut%b",pc,r_ret[94],d_ret[94],r_pfault,d_pfault);errors=errors+1;end
  $display("OP pc%0d split%0d tiles%0d rq_ref%0d rq_dut%0d am%0d mx%0d errors%0d",pc,split,tiles,rq_w[0],rq_r[0],nam,nmx,errors);
  end
@@ -155,13 +154,18 @@ initial begin
  rs=0;repeat(8)@(negedge clk);#0.01;rs=1;repeat(40)@(negedge clk);#0.01;
  for(integer rep=0;rep<2;rep=rep+1)begin
   op(1,768,1,8,64,0,9,0,768,8,1,1,4096,8,1,1);
+  op(2,384,1,8,64,0,10,0,768,8,1,1,4096,8,1,1);
   op(12,4096,3,2,16,64,8,48,0,8,1,1,50672,2,1,1);
+  op(3,128,1,8,64,0,11,0,768,8,1,1,4096,8,1,1);
   op(16,3072,1,32,256,112,7,336,2975,8,1,1,4096,32,1,1);
   op(20,4096,3,6,48,368,8,528,0,8,1,1,55280,6,1,1);
+  op(4,384,2,8,64,0,10,0,768,8,1,1,4096,8,1,1);
   op(103,6144,8,8,64,0,9,29376,0,8,1,1,8192,8,1,1);
  end
+ while(!(r_idle&&d_idle))@(negedge clk);
  repeat(400)@(negedge clk);
  for(integer h=0;h<6;h=h+1)if(rq_r[h]!=rq_w[h]||am_r[h]!=am_w[h])begin $display("MISMATCH stream length h%0d rq ref%0d dut%0d am ref%0d dut%0d",h,rq_w[h],rq_r[h],am_w[h],am_r[h]);errors=errors+1;end
+ if(sa_r!=sa_w)begin $display("MISMATCH scalar stream ref%0d dut%0d",sa_w,sa_r);errors=errors+1;end
  if(mx_r!=mx_w)begin $display("MISMATCH mx stream ref%0d dut%0d",mx_w,mx_r);errors=errors+1;end
  if(nrq<100||distinct<10)begin $display("FAIL vacuous comparison rq%0d distinct%0d",nrq,distinct);$fatal(1);end
  if(errors)begin $display("FAIL b2 lane route equivalence errors%0d",errors);$fatal(1);end
