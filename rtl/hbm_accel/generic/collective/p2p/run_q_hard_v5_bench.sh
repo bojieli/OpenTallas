@@ -35,19 +35,33 @@ build(){ # name defines...
   --top-module tb_hgi_coll_q_hard_v5 "${QD[@]}" "$@" -Mdir "$OUT/obj_$n" "${src[@]}" > "$OUT/$n.build.log" 2>&1 \
   || { tail -30 "$OUT/$n.build.log"; exit 2; }
 }
+vmsel_witness(){
+ # A crash or failed build cannot qualify this negative: require the actual swapped-payload observation.
+ ! grep -q '^HCOLL_Q_HARD_V5 PASS' "$1" &&
+ grep -Eq '^MISMATCH .*dd_eq0' "$1" &&
+ grep -Eq 'lockstep: [1-9][0-9]* cycles with a non-fault output difference' "$1"
+}
 run(){ # name scen expect
  local n=$1 s=$2 e=$3 rc
  sha256sum "$OUT/obj_$n/Vtb_hgi_coll_q_hard_v5" > "$OUT/${n}.compiled.sha256"
  set +e; "$OUT/obj_$n/Vtb_hgi_coll_q_hard_v5" +SCEN=$s > "$OUT/${n}_s$s.log" 2>&1; rc=$?; set -e
  grep -E 'HCOLL_Q_HARD_V5|MISMATCH|Fatal|fatal' "$OUT/${n}_s$s.log" | head -4
  if [ "$e" = pass ]; then { [ $rc = 0 ] && grep -q '^HCOLL_Q_HARD_V5 PASS' "$OUT/${n}_s$s.log"; } || { echo "POSITIVE $n scen$s FAILED"; fail=1; }
- else { [ $rc != 0 ] && ! grep -q '^HCOLL_Q_HARD_V5 PASS' "$OUT/${n}_s$s.log"; } && echo "MUTANT $n scen$s rejected" || { echo "MUTANT $n scen$s SURVIVED"; fail=1; }; fi
+ else
+  if [ $rc != 0 ] && ! grep -q '^HCOLL_Q_HARD_V5 PASS' "$OUT/${n}_s$s.log" &&
+     { [ "$n" != mut_vmsel ] || vmsel_witness "$OUT/${n}_s$s.log"; }; then
+   echo "MUTANT $n scen$s rejected"
+  else echo "MUTANT $n scen$s SURVIVED_OR_NO_WITNESS"; fail=1; fi
+ fi
 }
 fail=0
 declare -A MS=([droplink]="OT_COLL_V5_MUT_DROP_LINK 1" [nomask]="OT_COLL_V5_MUT_NOMASK 0" [causeswap]="OT_COLL_V5_MUT_CAUSE_SWAP 4" [droptkm]="OT_COLL_V5_MUT_DROP_TKM 3" [vmsel]="OT_COLL_V6_MUT_VMSEL 7")
 if [ "$MODE" != all ] && [ "$MODE" != pos ] && [ "$MODE" != vmpos ]; then
  set -- ${MS[$MODE]:?unknown mode $MODE}
  build "m_$MODE" -D$1; run "m_$MODE" $2 pass; rm -rf "$OUT/obj_m_$MODE"
+ if [ "$MODE" = vmsel ] && [ "$fail" != 0 ] && ! vmsel_witness "$OUT/m_vmsel_s$2.log"; then
+  echo "HCOLL_Q_HARD_V5_MUTANT_INVALID vmsel missing swapped-payload witness"; exit 2
+ fi
  [ $fail = 0 ] && { echo "HCOLL_Q_HARD_V5_MUTANT_SURVIVED $MODE"; exit 0; } || { echo "HCOLL_Q_HARD_V5_MUTANT_REJECTED $MODE"; exit 1; }
 fi
 build base
