@@ -89,7 +89,7 @@
       "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
       "count": 1,
       "at": [
-        32.4,
+        124.2,
         43.2
       ],
       "orient": "R0",
@@ -99,7 +99,7 @@
       "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
       "count": 1,
       "at": [
-        32.4,
+        124.2,
         129.6
       ],
       "orient": "R0",
@@ -130,12 +130,12 @@
     "OT_CHANNEL_BLOCK_UM": "20",
     "OT_ROW_MIN_UM": "6"
   },
-  "structural_change": "Measured fs4 ODB has all thin M4/M5 manual pins 12nm off preferred track (M4 Y/M5 X =0.012+n*0.048um); repair pin coordinates to measured track lattice, preserving PG-clean 12-track seam and five-track core south spread, real two-SRAM functional partition and recipe3 input/output registers. No additional RTL cycles/area; recipe3 boundary +1 edge per input/output (+2 core-to-scale seam) remains explicit. Diagnostic translated BPin shapes remove first-iteration DRT0255 failure; fresh exact source CTS/route required.",
+  "structural_change": "TG2 MACRO PLACEMENT (Q-ELEM 2026-10-15, owner rule 20:45): both tag SRAMs move from the W column (x 32.4, a 32-um channel shared with the W-face pin field) to the tile centre x 124.2 (W/E channels 124/119 um): the core gate showed boundary clock spread 94.6 ps (> 80 native) with W-face boundary flops beside the macros. Measured fs4 ODB has all thin M4/M5 manual pins 12nm off preferred track (M4 Y/M5 X =0.012+n*0.048um); repair pin coordinates to measured track lattice, preserving PG-clean 12-track seam and five-track core south spread, real two-SRAM functional partition and recipe3 input/output registers. No additional RTL cycles/area; recipe3 boundary +1 edge per input/output (+2 core-to-scale seam) remains explicit. Diagnostic translated BPin shapes remove first-iteration DRT0255 failure; fresh exact source CTS/route required.",
   "slot_change_request": "Q-COMPUTE-DIE 14:33-14:36 candidate two345.6x216 homes inside777.6x1814.4; physical/qwen_tt_partition_1015/pin_plan.json",
   "job": {
-    "owner": "codex:QWEN-TT-boundary2116",
-    "branch": "codex/qwen-tt-boundary-2116",
-    "tag": "tg1",
+    "owner": "Claude:Q-ELEM-2210",
+    "branch": "claude/qelem-tt-2215",
+    "tag": "tg2",
     "hold_merge": true,
     "purpose": "TT real functional partition candidate, native clocks/pins unqualified until measured",
     "benches": [

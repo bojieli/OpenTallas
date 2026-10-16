@@ -100,7 +100,7 @@ def main():
           reset_ports=['rst_n'], outline=dict(w=345.6, h=216), recipe=2, layer_cap='M5',
           pins=faces, io_tcl=f'{P.relative_to(ROOT)}/{which}_pins.tcl',
           macros=[dict(view='physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2',
-            count=1, at=[32.4, y], orient='R0', inst=f'*u_{"tag" if which=="core" else "pretag"}*g_b?{b}?*u_m')
+            count=1, at=[124.2 if which == 'core' else 226.8, y], orient='R0', inst=f'*u_{"tag" if which=="core" else "pretag"}*g_b?{b}?*u_m')
             for b, y in enumerate([43.2, 129.6])],
           route=dict(pd=.5, threads=8, peak_ram_gb=16, hold_margin_ns=.03, macro_halo_um=5.4),
           io_flop_at_pins=dict(cols=4, allow_none=False), inhold=True, outhold=True,

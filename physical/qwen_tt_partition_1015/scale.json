@@ -67,7 +67,7 @@
       "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
       "count": 1,
       "at": [
-        32.4,
+        226.8,
         43.2
       ],
       "orient": "R0",
@@ -77,7 +77,7 @@
       "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
       "count": 1,
       "at": [
-        32.4,
+        226.8,
         129.6
       ],
       "orient": "R0",
@@ -108,12 +108,12 @@
     "OT_CHANNEL_BLOCK_UM": "20",
     "OT_ROW_MIN_UM": "6"
   },
-  "structural_change": "Measured fs4 ODB has all thin M4/M5 manual pins 12nm off preferred track (M4 Y/M5 X =0.012+n*0.048um); repair pin coordinates to measured track lattice, preserving PG-clean 12-track seam and five-track core south spread, real two-SRAM functional partition and recipe3 input/output registers. No additional RTL cycles/area; recipe3 boundary +1 edge per input/output (+2 core-to-scale seam) remains explicit. Diagnostic translated BPin shapes remove first-iteration DRT0255 failure; fresh exact source CTS/route required.",
+  "structural_change": "TG2 MACRO PLACEMENT (Q-ELEM 2026-10-15, owner rule 20:45): both pretag SRAMs move from the W column (x 32.4) to an E column x 226.8 (R0: clk/addr/rd_out/wdata pins face W into the logic; E channel 21.8 um >= 20). tg1 died twice on GRT-0183 on scale_addr nets whose driver (x~147) and sink (x~26, in the 32-um W channel between the W-face pin field and the SRAM) straddle the SRAM M1-M4 footprint (_04208_ bank 1, _04241_ bank 0): the W channel held the 602 W-face pins, their pin registers and the SRAM W-face pins. Measured fs4 ODB has all thin M4/M5 manual pins 12nm off preferred track (M4 Y/M5 X =0.012+n*0.048um); repair pin coordinates to measured track lattice, preserving PG-clean 12-track seam and five-track core south spread, real two-SRAM functional partition and recipe3 input/output registers. No additional RTL cycles/area; recipe3 boundary +1 edge per input/output (+2 core-to-scale seam) remains explicit. Diagnostic translated BPin shapes remove first-iteration DRT0255 failure; fresh exact source CTS/route required.",
   "slot_change_request": "Q-COMPUTE-DIE 14:33-14:36 candidate two345.6x216 homes inside777.6x1814.4; physical/qwen_tt_partition_1015/pin_plan.json",
   "job": {
-    "owner": "codex:QWEN-TT-boundary2116",
-    "branch": "codex/qwen-tt-boundary-2116",
-    "tag": "tg1",
+    "owner": "Claude:Q-ELEM-2210",
+    "branch": "claude/qelem-tt-2215",
+    "tag": "tg2",
     "hold_merge": true,
     "purpose": "TT real functional partition candidate, native clocks/pins unqualified until measured",
     "benches": [
