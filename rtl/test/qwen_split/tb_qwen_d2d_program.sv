@@ -213,7 +213,7 @@ module tb_qwen_d2d_program;
     integer seq_starts = 0;
     always @(posedge ck) if (DRV && rst_n) begin
         if (q_c_cs && q_c_l == 6'h3f || q_k_cs && q_k_l == 6'h3f) begin
-            if (!(q_c_cs && q_k_cs && q_c_sg && q_k_sg && q_c_l == q_k_l)) begin errs = errs + 1; $display("ERR admission starts differ cyc %0d", cyc); end
+            if (!(q_c_cs && q_k_cs && q_c_sg && q_k_sg && q_c_l == q_k_l)) begin errs = errs + 1; $display("ERR admission starts differ cyc %0d", cyc); $fatal(1,"D2D_PROGRAM_FAIL admission anchor mismatch"); end
         end else if ({q_c_cs, q_k_cs} !== {2{cstart}} || (cstart && {q_c_sg, q_k_sg} !== {2{cseg}})) begin
             errs = errs + 1; $display("ERR sequencer start cyc %0d expected %0d/%0d got C %0d/%0d K %0d/%0d", cyc, cstart, cseg, q_c_cs, q_c_sg, q_k_cs, q_k_sg);
         end
