@@ -213,12 +213,12 @@ module ot_s81_ctrl #(
         .users_done(users_done), .st_jobs_done(p_jd), .proto_fault(p_f), .fault_code(p_fc));
     // ---- stage program sequencer ----
     wire [NENG-1:0] s_cv; wire [NENG*CMDW-1:0] s_cd; wire [NENG-1:0] s_dv; wire [NENG*TAGW-1:0] s_dt;
-    wire s_busy, s_f; wire [3:0] s_fc; wire [31:0] s_cmds, s_cs;
+    wire s_busy, s_f; wire [3:0] s_fc; wire [31:0] s_cmds;
     ot_s81_stage_seq #(.NOPS(NOPS), .NENG(NENG), .ARGW(ARGW), .USER_W(SUW), .NW(NW), .QD(QD)) u_seq (
         .clk(clk), .rst_n(ctrl_rst_n), .pw_v(pw_v), .pw_a(pw_a), .pw_d(pw_d), .prog_len(prog_len),
         .job_v(j_v && j_r), .job_rdy(seq_ready), .job_user(j_u[SUW-1:0]), .job_pos(j_p), .job_tok(j_t), .job_done(j_done),
         .cmd_v(s_cv), .cmd_d(s_cd), .dn_v(s_dv), .dn_tag(s_dt), .busy(s_busy), .fault(s_f), .fault_code(s_fc),
-        .st_jobs(st_jobs), .st_cmds(s_cmds), .st_credit_stall(s_cs));
+        .st_jobs(st_jobs), .st_cmds(s_cmds));
     // ---- hop port ----
     wire h_dv; wire [OPW:0] h_dt; wire h_f; wire [3:0] h_fc; wire [31:0] h_msgs;
     wire r_v, r_stop; wire [NW-1:0] r_tok; wire [31:0] r_val;
@@ -263,7 +263,7 @@ module ot_s81_ctrl #(
     end endgenerate
     // ---- stall export: named blocker of a hang ----
     wire [15:0] cause = {s_f, h_f, p_f, g_f, hq_wd, 3'b0,
-                         in_valid && !in_ready, out_valid && !out_ready, s_busy && (s_cs != 0), s_busy,
+                         in_valid && !in_ready, out_valid && !out_ready, 1'b0 /* credit-stall cause retired with the counter */, s_busy,
                          j_v && !j_r, hq_act, rh_v, |s_cv};
     wire progress = (|s_cv) || (|s_dv) || (in_valid && in_ready) || (out_valid && out_ready) || j_done;
     wire [16*32-1:0] scnt; wire [31:0] scyc, idle_run, idle_max, tdrop; wire tv; wire [47:0] tdat;
