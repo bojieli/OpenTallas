@@ -74,8 +74,9 @@ foreach target $targets {
     set input [$cell findITerm A];set output [$cell findITerm Y]
     if {$input eq "NULL" || $output eq "NULL"} {error {LOCAL_MACRO_CLK BUFx24 pin ABI mismatch}}
     set leaf [odb::dbNet_create $mb ot_local_macro_clk_${bank}_net]
-    $leaf setSigType CLOCK;$leaf setDoNotTouch 1
+    $leaf setSigType CLOCK
     $clock disconnect;$clock connect $leaf;$input connect $source_net;$output connect $leaf
+    $leaf setDoNotTouch 1
     dict set free $ri [ot_anchor_pack::cut [dict get $free $ri] $x [expr {$x+$width}]]
     lappend added $cell
     puts "LOCAL_MACRO_CLK bank$bank pin=[[$clock getInst] getName]/clk station=[$cell getName] xy=($x,$y) orient=$orient reach_dbu=$score source=[$source_net getName]"
