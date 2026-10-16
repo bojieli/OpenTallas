@@ -237,5 +237,67 @@
  "needs": [
   "H-SM: SM tile 1036.8 x 2750 feasibility (re-pack)",
   "owner: 660 mm2 basis vs ~450 mm2"
- ]
+ ],
+ "sm_size_sensitivity": {
+  "column_w_um": 1036.8,
+  "rows": [
+   {
+    "smh_um": 2750,
+    "sm_mm2": 2.85,
+    "source": "60% fill of synth SM 1.70 mm2 (no design)",
+    "die_um": [
+     31678.4,
+     14176.8
+    ],
+    "die_mm2": 449.1,
+    "reticle_ok": true
+   },
+   {
+    "smh_um": 3565,
+    "sm_mm2": 3.7,
+    "source": "60% fill of audited content 2.21 mm2 (no design)",
+    "die_um": [
+     31678.4,
+     15806.8
+    ],
+    "die_mm2": 500.73,
+    "reticle_ok": true
+   },
+   {
+    "smh_um": 6079,
+    "sm_mm2": 6.3,
+    "source": "break-even with 660",
+    "die_um": [
+     31678.4,
+     20834.8
+    ],
+    "die_mm2": 660.01,
+    "reticle_ok": true
+   },
+   {
+    "smh_um": 8536,
+    "sm_mm2": 8.85,
+    "source": "M8-granted v5 tile, H-SM estimate 8.5-9.2 (6 new masters + die M8)",
+    "die_um": [
+     31678.4,
+     25748.8
+    ],
+    "die_mm2": 815.68,
+    "reticle_ok": true
+   },
+   {
+    "smh_um": 9925,
+    "sm_mm2": 10.29,
+    "source": "rp2 closable frame, closed children only (route running)",
+    "die_um": [
+     31678.4,
+     28526.8
+    ],
+    "die_mm2": 903.68,
+    "reticle_ok": false
+   }
+  ],
+  "break_even_sm_mm2": 6.3,
+  "verdict": "v8 < 660 only if SM <= ~6.3 mm2; closable SM today 10.29 (rp2) -> 904 mm2, 28.5 mm tall > 26 mm reticle. Recommendation (H-DIE 22:40 PT 10-15): keep 660, park v8; owner page https://claude.ai/artifact/EmNKFc49rvCRHT5W74DaMd"
+ }
 }
