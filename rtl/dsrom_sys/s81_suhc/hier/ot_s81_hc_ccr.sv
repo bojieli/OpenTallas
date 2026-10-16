@@ -13,7 +13,10 @@ module ot_s81_hc_ccr #(
     // RF 4, DW 6, RET_EXTRA 0): the hard-pad parent (ot_s81_hc_ccr_align under OT_S81_HC_PAD_HARD) instantiates this
     // module with no parameters, so the defaults ARE the hard configuration.  (Until s81hc-1013 r6 they were the
     // retired HIER1 tuple HALF 0 / RLY 1 / RF 1 / DW 5, and the hard-pad composition ran to TMAX.)
-    parameter integer MUT = 0, AMUT = 0, RF = 4, RT = 1, RW = 2, YD = 16, HALF = 1, RLY = 2, DW = 6, RET_EXTRA = 0
+    parameter integer MUT = 0, AMUT = 0, RF = 4, RT = 1, RW = 2, YD = 16, HALF = 1, RLY = 2, DW = 6, RET_EXTRA = 0,
+    // HC-COMB-3 2026-10-16: OREG 1 = crd_o is a second register (crd = W-pin capture, crd_q = E-pin launch); the pad
+    // split (ot_s81_hc_cpad_split / _roots20) is one return stage shorter, so the centre return depth is unchanged.
+    parameter integer OREG = 1
 ) (
     input  wire                 sk, srs,
     input  wire [RVW-1:0]       ch_rv,
@@ -79,7 +82,13 @@ module ot_s81_hc_ccr #(
     reg [RDW-1:0] crd;
     always @(posedge sk or negedge rs_n) if (!rs_n) crv <= 0; else crv <= ch_rv;
     always @(posedge sk) crd <= ch_rd;
-    assign crd_o = crd;
+    generate if (OREG) begin : g_oreg
+        reg [RDW-1:0] crd_q;
+        always @(posedge sk) crd_q <= crd;
+        assign crd_o = crd_q;
+    end else begin : g_noreg
+        assign crd_o = crd;
+    end endgenerate
     wire [NE1*32-1:0] ex1;
     wire              tf1;
     ot_s81_hc_stree #(.NS(NS), .NP(NP), .LA(AL), .OWN(1)) u_tree1 (.clk(sk), .rst_n(rs_n), .v(crv[S_RT]),

@@ -162,7 +162,13 @@ module qfd_sys_face #(
     reg  [11:0] rom_a;
     reg         rom_ce;
     wire [71:0] rom_q;
+    // The hard macro's netlist cell carries no parameters (the image is its via map, layout content-independent;
+    // OpenROAD's netlist reader rejects instance parameters): synthesis binds the blackbox view, simulation the model.
+`ifdef SYNTHESIS
+    ot_rom_4096x72_m8 u_rom (.clk(ck), .ce_in(rom_ce), .addr_in(rom_a), .rd_out(rom_q));
+`else
     ot_rom_4096x72_m8 #(.VIAMAP(ROM_VIAMAP), .INSTANCE(ROM_INSTANCE)) u_rom (.clk(ck), .ce_in(rom_ce), .addr_in(rom_a), .rd_out(rom_q));
+`endif
 
     // ================================================================ boot / program replay
     // Read pipeline: issue registers (rom_ce / rom_a + iss_*) at edge k, the macro samples at k+1, rom_q is decoded at

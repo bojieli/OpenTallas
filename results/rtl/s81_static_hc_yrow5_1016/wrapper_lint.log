@@ -1,0 +1,114 @@
+%Warning-MODDUP: rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane_pipeline.sv:25:8: Duplicate declaration of module: 'ot_s81ph_coll_lane'
+   25 | module ot_s81ph_coll_lane #(
+      |        ^~~~~~~~~~~~~~~~~~
+                 rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane_head.sv:25:8: ... Location of original declaration
+   25 | module ot_s81ph_coll_lane #(
+      |        ^~~~~~~~~~~~~~~~~~
+                 ... For warning description see https://verilator.org/warn/MODDUP?v=5.050
+                 ... Use "/* verilator lint_off MODDUP */" and lint_on around source to disable this message.
+%Warning-MODDUP: rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane_pipeline.sv:92:8: Duplicate declaration of module: 'dsfd_coll_lane_w'
+   92 | module dsfd_coll_lane_w (
+      |        ^~~~~~~~~~~~~~~~
+                 rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane_head.sv:92:8: ... Location of original declaration
+   92 | module dsfd_coll_lane_w (
+      |        ^~~~~~~~~~~~~~~~
+%Warning-MODDUP: rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane_pipeline.sv:99:8: Duplicate declaration of module: 'dsfd_coll_lane_e'
+   99 | module dsfd_coll_lane_e (
+      |        ^~~~~~~~~~~~~~~~
+                 rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane_head.sv:99:8: ... Location of original declaration
+   99 | module dsfd_coll_lane_e (
+      |        ^~~~~~~~~~~~~~~~
+%Warning-MODDUP: rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane_reset.sv:25:8: Duplicate declaration of module: 'ot_s81ph_coll_lane'
+   25 | module ot_s81ph_coll_lane #(
+      |        ^~~~~~~~~~~~~~~~~~
+                 rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane_head.sv:25:8: ... Location of original declaration
+   25 | module ot_s81ph_coll_lane #(
+      |        ^~~~~~~~~~~~~~~~~~
+%Warning-MODDUP: rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane_reset.sv:92:8: Duplicate declaration of module: 'dsfd_coll_lane_w'
+   92 | module dsfd_coll_lane_w (
+      |        ^~~~~~~~~~~~~~~~
+                 rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane_head.sv:92:8: ... Location of original declaration
+   92 | module dsfd_coll_lane_w (
+      |        ^~~~~~~~~~~~~~~~
+%Warning-MODDUP: rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane_reset.sv:99:8: Duplicate declaration of module: 'dsfd_coll_lane_e'
+   99 | module dsfd_coll_lane_e (
+      |        ^~~~~~~~~~~~~~~~
+                 rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane_head.sv:99:8: ... Location of original declaration
+   99 | module dsfd_coll_lane_e (
+      |        ^~~~~~~~~~~~~~~~
+%Warning-MODDUP: rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane.sv:38:8: Duplicate declaration of module: 'ot_s81ph_coll_lane'
+   38 | module ot_s81ph_coll_lane #(
+      |        ^~~~~~~~~~~~~~~~~~
+                 rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane_head.sv:25:8: ... Location of original declaration
+   25 | module ot_s81ph_coll_lane #(
+      |        ^~~~~~~~~~~~~~~~~~
+%Warning-MODDUP: rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane.sv:139:8: Duplicate declaration of module: 'dsfd_coll_lane_w'
+  139 | module dsfd_coll_lane_w #(parameter integer GFMT = 0, parameter integer EPPIPE = -1,
+      |        ^~~~~~~~~~~~~~~~
+                 rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane_head.sv:92:8: ... Location of original declaration
+   92 | module dsfd_coll_lane_w (
+      |        ^~~~~~~~~~~~~~~~
+%Warning-MODDUP: rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane.sv:149:8: Duplicate declaration of module: 'dsfd_coll_lane_e'
+  149 | module dsfd_coll_lane_e #(parameter integer GFMT = 0, parameter integer EPPIPE = -1,
+      |        ^~~~~~~~~~~~~~~~
+                 rtl/dsrom_sys/s81_ph/coll/ot_s81ph_coll_lane_head.sv:99:8: ... Location of original declaration
+   99 | module dsfd_coll_lane_e (
+      |        ^~~~~~~~~~~~~~~~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_ph/coll/dsfd_coll_core.sv:49:67: Instance has missing pin: 'bw_v'
+   49 |     ot_s81ph_coll_core #(.EXT(1), .OQPIPE(OQPIPE), .QPIPE(QPIPE)) u_core (.clk(clk), .rst_n(rst_n), .lane_rx({8*515{1'b0}}), .lane_tx(), .f_vm(fv_r),
+      |                                                                   ^~~~~~
+                     rtl/dsrom_sys/s81_ph/ot_s81ph_coll_core.sv:120:30: ... Location of port declaration
+  120 |     output reg               bw_v,
+      |                              ^~~~
+                     ... For warning description see https://verilator.org/warn/PINMISSING?v=5.050
+                     ... Use "/* verilator lint_off PINMISSING */" and lint_on around source to disable this message.
+%Warning-PINMISSING: rtl/dsrom_sys/s81_ph/coll/dsfd_coll_core.sv:49:67: Instance has missing pin: 'bw_d'
+   49 |     ot_s81ph_coll_core #(.EXT(1), .OQPIPE(OQPIPE), .QPIPE(QPIPE)) u_core (.clk(clk), .rst_n(rst_n), .lane_rx({8*515{1'b0}}), .lane_tx(), .f_vm(fv_r),
+      |                                                                   ^~~~~~
+                     rtl/dsrom_sys/s81_ph/ot_s81ph_coll_core.sv:121:30: ... Location of port declaration
+  121 |     output reg  [2099:1]     bw_d,
+      |                              ^~~~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_ph/coll/dsfd_coll_core.sv:49:67: Instance has missing pin: 'bw_cr'
+   49 |     ot_s81ph_coll_core #(.EXT(1), .OQPIPE(OQPIPE), .QPIPE(QPIPE)) u_core (.clk(clk), .rst_n(rst_n), .lane_rx({8*515{1'b0}}), .lane_tx(), .f_vm(fv_r),
+      |                                                                   ^~~~~~
+                     rtl/dsrom_sys/s81_ph/ot_s81ph_coll_core.sv:122:30: ... Location of port declaration
+  122 |     input  wire              bw_cr,
+      |                              ^~~~~
+%Warning-PINMISSING: rtl/dsrom_sys/s81_ph/coll/dsfd_coll_core.sv:49:67: Instance has missing pin: 'bw_flt'
+   49 |     ot_s81ph_coll_core #(.EXT(1), .OQPIPE(OQPIPE), .QPIPE(QPIPE)) u_core (.clk(clk), .rst_n(rst_n), .lane_rx({8*515{1'b0}}), .lane_tx(), .f_vm(fv_r),
+      |                                                                   ^~~~~~
+                     rtl/dsrom_sys/s81_ph/ot_s81ph_coll_core.sv:123:30: ... Location of port declaration
+  123 |     input  wire              bw_flt
+      |                              ^~~~~~
+%Warning-WIDTHCONCAT: rtl/link/ot_link_crc32.sv:29:26: Replication of more that --replication-limit 8192 is suspect: 18016
+                                                     : ... note: In instance 'dsfd_sp_collective_static_c.slab.tp4.L[2].lane.c.rhi'
+   29 |             masks = {32*W{1'b0}};
+      |                          ^
+                      rtl/dsrom_sys/s81_static_collective/s81_static_fmt1_codec_dynamic.sv:14:1: ... note: In file included from 's81_static_fmt1_codec_dynamic.sv'
+                      ... For warning description see https://verilator.org/warn/WIDTHCONCAT?v=5.050
+                      ... Use "/* verilator lint_off WIDTHCONCAT */" and lint_on around source to disable this message.
+%Warning-UNDRIVEN: rtl/dsrom_sys/s81_ph/ot_s81_pll_bb.sv:22:69: Signal is not driven: 'ck_stream'
+                                                              : ... note: In instance 'dsfd_sp_collective_static_c.clocks.u_pll'
+   22 | module ot_s81_pll_bb (input wire refclk, input wire pd, output wire ck_stream, output wire ck_serial,
+      |                                                                     ^~~~~~~~~
+                   rtl/dsrom_sys/s81_ph/coll/dsfd_coll_ck.sv:14:1: ... note: In file included from 'dsfd_coll_ck.sv'
+                   ... For warning description see https://verilator.org/warn/UNDRIVEN?v=5.050
+                   ... Use "/* verilator lint_off UNDRIVEN */" and lint_on around source to disable this message.
+%Warning-UNDRIVEN: rtl/dsrom_sys/s81_ph/ot_s81_pll_bb.sv:22:92: Signal is not driven: 'ck_serial'
+                                                              : ... note: In instance 'dsfd_sp_collective_static_c.clocks.u_pll'
+   22 | module ot_s81_pll_bb (input wire refclk, input wire pd, output wire ck_stream, output wire ck_serial,
+      |                                                                                            ^~~~~~~~~
+                   rtl/dsrom_sys/s81_ph/coll/dsfd_coll_ck.sv:14:1: ... note: In file included from 'dsfd_coll_ck.sv'
+%Warning-UNDRIVEN: rtl/dsrom_sys/s81_ph/ot_s81_pll_bb.sv:23:35: Signal is not driven: 'ck_hbm'
+                                                              : ... note: In instance 'dsfd_sp_collective_static_c.clocks.u_pll'
+   23 |                       output wire ck_hbm, output wire lock);
+      |                                   ^~~~~~
+                   rtl/dsrom_sys/s81_ph/coll/dsfd_coll_ck.sv:14:1: ... note: In file included from 'dsfd_coll_ck.sv'
+%Warning-UNDRIVEN: rtl/dsrom_sys/s81_ph/ot_s81_pll_bb.sv:23:55: Signal is not driven: 'lock'
+                                                              : ... note: In instance 'dsfd_sp_collective_static_c.clocks.u_pll'
+   23 |                       output wire ck_hbm, output wire lock);
+      |                                                       ^~~~
+                   rtl/dsrom_sys/s81_ph/coll/dsfd_coll_ck.sv:14:1: ... note: In file included from 'dsfd_coll_ck.sv'
+- V e r i l a t i o n   R e p o r t: Verilator 5.050 2026-07-01 rev v5.050
+- Verilator: Built from 12.589 MB sources in 128 modules, into 15.914 MB in 22 C++ files needing 0.000 MB
+- Verilator: Walltime 5.245 s (elab=2.525, cvt=2.480, bld=0.000); cpu 5.232 s on 1 threads; allocated 332.766 MB

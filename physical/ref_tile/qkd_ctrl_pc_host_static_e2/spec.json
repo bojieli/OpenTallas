@@ -1,0 +1,163 @@
+{
+ "name": "qkd_ctrl_pc_host_static_e2",
+ "top": "qkd_ctrl_pc_host_static",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_emb_cdc.sv",
+  "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_write_observer.sv",
+  "rtl/qwen_sys/static_kv_20261014/qkd_ctrl_pc_host_static.sv",
+  "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_ctrl_pc_emb.sv",
+  "rtl/qwen_sys/static_kv_20261014/ot_qkd_static_kv_timing.sv",
+  "rtl/qwen_sys/kv_die_20261009/ot_qkvd_kcmd_tap.sv",
+  "rtl/qwen_sys/emb_hbm_20261008/synth/ot_qfd_emb_pcport.sv",
+  "rtl/qwen_sys/emb_hbm_20261008/ot_qfd_emb_cdc.sv",
+  "rtl/qwen_sys/host_20261013/qkd_host_static_pc.sv",
+  "rtl/lib/ot_async_fifo.sv",
+  "rtl/lib/ot_reset_sync.sv",
+  "rtl/qwen_sys/q5_20261009/synth/ot_qfd_kv_landing_ecc.sv"
+ ],
+ "params": {
+  "PROFILE": 0,
+  "ELASTIC": 1,
+  "RAW_WD": 256,
+  "TQD": 64,
+  "DRAIN_PIPE": 1
+ },
+ "clock_port": "ck",
+ "reset_ports": [],
+ "outline": {
+  "w": 129.6,
+  "h": 216,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "macros": [],
+ "pins": {
+  "W": [
+   "ci",
+   "co",
+   "es",
+   "er",
+   "hrst",
+   "rsi",
+   "pc",
+   "static_cmd_owner",
+   "static_cmd",
+   "reserved_rd",
+   "reserved_static_col",
+   "reserved_write_col",
+   "static_epoch",
+   "expected_raw_valid",
+   "cfg_stack",
+   "es_context",
+   "es_expected_valid",
+   "es_expected_identity",
+   "es_expected_address",
+   "es_expected_pc",
+   "es_expected_stack",
+   "native_commit_valid",
+   "native_commit_identity",
+   "native_commit_address",
+   "corrected_epoch",
+   "completion_v",
+   "completion_we",
+   "completion_fault",
+   "idle_core",
+   "idle_hbm",
+   "drain_fault_core",
+   "drain_fault_hbm"
+  ],
+  "E": [
+   "po",
+   "pi"
+  ],
+  "N": [
+   "ki",
+   "fo",
+   "pll_hbm",
+   "ck"
+  ],
+  "S": [
+   "ko",
+   "fi"
+  ]
+ },
+ "sdc_extra": [
+  "physical/qkd_ctrl_strip/qkd_ctrl_pc_host_static_hclk.sdc"
+ ],
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  },
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "recipe": 3,
+ "slot_change_request": "Q-KVSYS-DIE v1.5 measured local connected group: controller129.6x216 replaces oversized246.24x302.4(18%util) inside247.512x378 slot. Coherent calendar64.8+21.6gap+controller129.6=216wide; candidate x30.24/116.64, controller localY162 andcalendar244.08. Actual allincident nativepin/readout/homes await source CTS and die allocator.",
+ "job": {
+  "owner": "Codex:Q-KVSYS-DIE",
+  "branch": "claude/qkvsys-lead-0600",
+  "tag": "e2",
+  "purpose": "Measured e1 CTS setup repair stalls at idle_core/D WNS-183ps. DRAIN_PIPE1 registers48bit debt-zero summaries and requires two quiet edges plus eager current activity veto, conservatively delays drain observation by up to2edges without changing traffic/data. Measured13063um2 std area sizes129.6x216~49%coreutil, shorter wires and room for nearby producer; no clock/timing waiver.",
+  "extra_paths": [
+   "rtl/lib",
+   "rtl/qwen_sys/emb_hbm_20261008",
+   "rtl/qwen_sys/host_20261013",
+   "rtl/qwen_sys/kv_die_20261009",
+   "rtl/qwen_sys/q5_20261009",
+   "rtl/qwen_sys/static_kv_20261014",
+   "rtl/test/qwen_static_kv",
+   "tools/qwen_static_kv",
+   "physical/qkd_ctrl_strip"
+  ],
+  "benches": [
+   {
+    "name": "actual_controller_conservative_drain",
+    "cmd": "python3 tools/qwen_static_kv/check_controller_drain.py {RUN}/bench/drain && cat {RUN}/bench/drain/production_j0.log",
+    "expect": "pass",
+    "pass_regex": "DRAIN_PASS boundary checks[1-9]",
+    "threads": 2,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "missing_actual_host_read_debt",
+    "cmd": "{RUN}/bench/drain/obj_missing_host_read_debt/Vtb_kv_hbm_elastic_boundary +jit=16 +seed=2",
+    "expect": "fail",
+    "fail_regex": "DRAIN_EARLY_CORE",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "peak_ram_gb": 16
+ },
+ "structural_change": "Measured e1 CTS setup repair stalls at idle_core/D WNS-183ps. DRAIN_PIPE1 registers48bit debt-zero summaries and requires two quiet edges plus eager current activity veto, conservatively delays drain observation by up to2edges without changing traffic/data. Measured13063um2 std area sizes129.6x216~49%coreutil, shorter wires and room for nearby producer; no clock/timing waiver.",
+ "pin_regs": {
+  "enable": false,
+  "reason": "Existing controller explicit boundary pin FFs; no extra wrapper edges permitted without compiler ABI update. Actual pre-route/native pin audit must reject remaining raw combinational input or output cones."
+ },
+ "std_area_um2": 13063,
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}

@@ -7,16 +7,20 @@ module s81_static_hc_assemble_clocked #(parameter integer MUT=0)(
  input wire word_valid,
  input wire [511:0] word_data,
  input wire [31:0] word_tag,
+ input wire [4:0] word_row,   // additive y_row5 (10-16): the reduced word's seq[8:4], latched with the tag
  input wire word_error,
  input wire emit_slot,
  input wire [31:0] emit_tag,
  output reg row_valid,
  output wire [8191:0] row_data,
  output reg [31:0] row_tag,
+ output reg [4:0] row_y5,     // registered at the existing emit_good edge: aligned with row_valid/row_tag/row_data
  output reg fault
 
 );
- reg[15:0]seen;reg[31:0]assembly_tag;
+ reg[15:0]seen;reg[31:0]assembly_tag;reg[4:0]assembly_row;
+ // MUT 3: row ordinal registered one edge late (off emit_good); MUT 4: tag registered one edge late.
+ reg emit_good_q;
  wire[3:0]destination_index=(MUT==1)?(word_index^4'd1):word_index;
  wire write_good=write_slot&&word_valid&&!word_error&&!seen[word_index]&&((seen==0)||(assembly_tag==word_tag));
  wire emit_good=emit_slot&&!write_slot&&(&seen)&&(assembly_tag==emit_tag);
@@ -31,7 +35,13 @@ module s81_static_hc_assemble_clocked #(parameter integer MUT=0)(
  end
  always @(posedge clk_control)begin
   if(write_good&&(seen==0))assembly_tag<=word_tag;
-  if(emit_good)row_tag<=assembly_tag;
+  if((MUT==4)?emit_good_q:emit_good)row_tag<=assembly_tag;
+ end
+ // y_row5: same capture edges as the tag (first write of the row / emit_good); no new state on any existing path
+ always @(posedge clk_control)begin
+  emit_good_q<=emit_good;
+  if(write_good&&(seen==0))assembly_row<=word_row;
+  if((MUT==3)?emit_good_q:emit_good)row_y5<=assembly_row;
  end
  genvar g,w;
  generate for(g=0;g<16;g=g+1)begin:L
@@ -63,17 +73,19 @@ module s81_static_hc_assemble #(parameter integer MUT=0)(
  input wire word_valid,
  input wire [511:0] word_data,
  input wire [31:0] word_tag,
+ input wire [4:0] word_row,
  input wire word_error,
  input wire emit_slot,
  input wire [31:0] emit_tag,
  output wire row_valid,
  output wire [8191:0] row_data,
  output wire [31:0] row_tag,
+ output wire [4:0] row_y5,
  output wire fault
 
 );
  s81_static_hc_assemble_clocked #(.MUT(MUT)) core(.clk_lane({16{clk}}),.clk_control(clk),
   .rst_n(rst_n),.write_slot(write_slot),.word_index(word_index),.word_valid(word_valid),.word_data(word_data),
-  .word_tag(word_tag),.word_error(word_error),.emit_slot(emit_slot),.emit_tag(emit_tag),
-  .row_valid(row_valid),.row_data(row_data),.row_tag(row_tag),.fault(fault));
+  .word_tag(word_tag),.word_row(word_row),.word_error(word_error),.emit_slot(emit_slot),.emit_tag(emit_tag),
+  .row_valid(row_valid),.row_data(row_data),.row_tag(row_tag),.row_y5(row_y5),.fault(fault));
 endmodule

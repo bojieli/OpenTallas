@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hgi_coll_qso_q2_b1",
+ "enable": false,
+ "reason": "Actual RTL already registers every port at the face: qslots_output captures captured/captured_slot/sink_slot/sink_select into _p flops before any logic; dst_v/dst_d/select_fault/unavailable_fault are flop Q. Recipe-2 output stage on: io_flop_at_pins anchors only the OUTPUT launch flops at their pins (OT_OFLOP_PORT_RE), pin_reg_split + keep_pin_regs give one launch flop per output pin; inputs keep their inhold pad."
+}
