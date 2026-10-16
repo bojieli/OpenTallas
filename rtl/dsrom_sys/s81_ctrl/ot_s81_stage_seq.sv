@@ -1,5 +1,7 @@
 `timescale 1ns/1ps
 // ---------------------------------------------------------------------------
+// HISTORICAL (owner 2026-10-14, static cycle schedule): this credit-issue sequencer is NOT the S81 production path; the die
+// binds dsfd_stage_seq_static_c (compiler-fixed cycles).  Kept for historical benches and the peer-issue bench glue only.
 // ot_s81_stage_seq (stream ds-control, 2026-10-08): the S81 die's stage program sequencer.  It replaces the reduced
 // array's hardwired decode core (ot_hdc_core) behind the package controller's start / done handshake: a stage of the
 // S81 array is a static program of engine JOBS (field phases through the PQ core, SU / HC chains, collectives, the
@@ -77,8 +79,7 @@ module ot_s81_stage_seq #(
     output reg                     fault,
     output reg  [3:0]              fault_code,
     output reg  [31:0]             st_jobs,
-    output reg  [31:0]             st_cmds,
-    output reg  [31:0]             st_credit_stall     // HISTORICAL dynamic sequencer diagnostic: cycles any port had a queued descriptor but no credit (not a production static-schedule path)
+    output reg  [31:0]             st_cmds              // (st_credit_stall removed 2026-10-15: no credit-stall counter in S81 RTL; static schedule)
 );
     localparam integer FB = (FQ > 1) ? $clog2(FQ) : 1;
     localparam integer CB = $clog2(QD + 1);
@@ -147,7 +148,6 @@ module ot_s81_stage_seq #(
     wire              can_fetch = iss_v && (ip < len_q) && f_free && !(MUT == 1 && (prev_open || f_v));
 
     integer e, k;
-    reg cs_any;   // HISTORICAL/DIAGNOSTIC credit-stall observation: one count per cycle, not per port
     reg [NENG-1:0]    pop;                        // port FIFO -> command register
     always @(*) begin
         for (e = 0; e < NENG; e = e + 1)
@@ -163,7 +163,7 @@ module ot_s81_stage_seq #(
             iss_v <= 1'b0; iss_s <= 1'b0; ip <= 0;
             f_v <= 1'b0; f_s <= 1'b0; f_op <= 0; f_e <= 0;
             cmd_v <= 0; cmd_d <= 0; job_done <= 1'b0;
-            fault <= 1'b0; fault_code <= 4'd0; st_jobs <= 0; st_cmds <= 0; st_credit_stall <= 0;
+            fault <= 1'b0; fault_code <= 4'd0; st_jobs <= 0; st_cmds <= 0;
             prev_open <= 1'b0;
             outst[0] <= 0; outst[1] <= 0;
             js_dn[0] <= 0; js_dn[1] <= 0;
@@ -203,7 +203,6 @@ module ot_s81_stage_seq #(
                 if (MUT == 1) prev_open <= 1'b1;
             end
             // ---- per port: FIFO -> command register under credit ----
-            cs_any = 1'b0;
             for (e = 0; e < NENG; e = e + 1) begin
                 cmd_v[e] <= 1'b0;
                 if (pop[e]) begin
@@ -215,13 +214,10 @@ module ot_s81_stage_seq #(
                                              fq_d[e][fq_r[e]][ARGW-1:0],
                                              fq_d[e][fq_r[e]][ARGW +: OPW]};
                     fq_r[e] <= fq_r[e] + 1'b1;
-                end else if (fq_n[e] != 0) begin
-                    cs_any = 1'b1;
                 end
                 fq_n[e] <= fq_n[e] + ((f_take && f_eng == e) ? 1'b1 : 1'b0) - (pop[e] ? 1'b1 : 1'b0);
                 cred[e] <= cred[e] - (pop[e] ? 1'b1 : 1'b0) + (dv_q[e] ? 1'b1 : 1'b0);
             end
-            if (cs_any) st_credit_stall <= st_credit_stall + 1;   // single NBA per cycle (guard-clean; was per stalled port under Verilator)
             st_cmds <= st_cmds + $countones(pop);
             // ---- completions ----
             add0 = 0; add1 = 0;
