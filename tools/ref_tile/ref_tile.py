@@ -2049,6 +2049,19 @@ def export(orfs_dir: str, kit: str, out: str, macro_views: list) -> int:
                    lint_kwargs=dict(cap="M5" if grant else None, pin_grant=grant, routed_def=routed_def,
                        tech_lef=str(o / "pin_only_tech.lef") if grant and (o / "pin_only_tech.lef").exists() else None),
                    transform=not bool(grant))
+    # SCALAR-PIN LINT (ROOT 10-16, coordinator): a scalar RTL port must export as pin x, never x[0] (recipe-3 wrapper
+    # declared [0:0] before e3919f90e; such a view mis-binds every die netlist that connects .x(...))
+    try:
+        sys.path.insert(0, str(ROOT / "tools/ref_tile"))
+        from scalar_pin_view import scalar_pin_lint
+        bad_sc = scalar_pin_lint(o / f"{top}.lef", ROOT / kit, top) if (o / f"{top}.lef").is_file() else []
+    except Exception as e:  # noqa: BLE001
+        bad_sc = []
+        res.setdefault("warns", []).append(f"scalar_pin_lint not run: {type(e).__name__}: {e}")
+    if bad_sc:
+        res.setdefault("fails", []).append(f"scalar_pin_lint: RTL-scalar ports exported as one-bit buses {bad_sc[:8]} "
+                                           f"({len(bad_sc)}): rebuild with ot_pin_regs.tcl >= e3919f90e")
+        res["verdict"] = "FAIL"
     (o / "child_lint.json").write_text(json.dumps(res, indent=1) + "\n")
     print(f"REF_TILE export {top}: views rc={rc} child_lint {res['verdict']} "
           + "; ".join(res.get("fails", []) + res.get("warns", []))[:800])
