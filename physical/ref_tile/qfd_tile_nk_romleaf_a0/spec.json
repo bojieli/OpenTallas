@@ -437,7 +437,8 @@
     "fail_witness": "results/arch/qwen_romleaf_1552/bench/parent_nk_clock_mutant.log"
    }
   ],
-  "cycles_added": 0
+  "cycles_added": 0,
+  "hold_merge": "DIAGNOSTIC ONLY: legacy node child native launch233.3ps exceeds220; parent pins/CTS/cuts unmeasured. Root assigned a separate current-node repair owner; never publish this parent as qualified."
  },
  "slot_change_request": "Conservative closure candidate root approved2026-10-16:457.92x1166.4, 129.6um die rowcorridor preserved; projected full die700.030692mm2 below858. Not adopted until actualphysical qualification.",
  "io_tcl": "tools/qwen_romleaf/parent_nk_assigned_pins.tcl",
