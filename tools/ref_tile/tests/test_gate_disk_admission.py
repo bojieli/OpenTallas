@@ -23,6 +23,40 @@ def archive(size=8193):
     return buf.getvalue()
 
 
+class RemoteDisconnectLog(unittest.TestCase):
+    def test_original_measurement_finishes_and_logs_after_reader_disconnect(self):
+        with tempfile.TemporaryDirectory() as td:
+            # Execute the real shipped redirection, then close the same pipe
+            # SSH owns after the first message. No hardware or network needed.
+            redirection = next(ln for ln in PG.REMOTE_SH.splitlines() if ln.startswith('exec > >('))
+            code = 'R="$1"\n' + redirection + '\necho STARTED\nsleep 0.05\necho GATE_CTS_RC=0\necho GATE_DONE\n'
+            p = subprocess.Popen(['bash', '-c', code, 'gate-test', td], stdout=subprocess.PIPE)
+            self.assertEqual(p.stdout.readline(), b'STARTED\n')
+            p.stdout.close()
+            self.assertEqual(p.wait(timeout=5), 0)
+            self.assertIn('GATE_DONE', (Path(td) / 'execution.log').read_text())
+
+
+class EarlyTerminalFailure(unittest.TestCase):
+    def test_actual_bad_pin_early_exit_retains_floorplan_failure(self):
+        # Use the actual shell EXIT trap. A real flow may intentionally exit0
+        # after recording its own failed status; transport still completed.
+        trap = next(ln for ln in PG.REMOTE_SH.splitlines() if ln.startswith("trap 'rc=$?;"))
+        command = trap + '\necho GATE_SOURCE_ARCHIVE_SHA256=sha\necho GATE_FLOW_RC=1\necho "GATE_FLOWERR invalid pin rectangle"\nexit 0\n'
+        run = subprocess.run(['bash', '-c', command], capture_output=True, text=True)
+        self.assertEqual(run.returncode, 0)
+        self.assertIn('GATE_SCRIPT_RC=0\nGATE_DONE', run.stdout)
+        with tempfile.TemporaryDirectory() as td:
+            kd = Path(td); (kd / 'floorplan.json').write_text('{}')
+            g = PG.Gate()
+            PG.analyse_remote(g, kd, {}, run.stdout, True,
+                              {'archive_sha256': 'sha'}, 60, 'original-host')
+            self.assertEqual(g.verdict, 'FAIL')
+            self.assertTrue(any(i['check'] == 'floorplan_run' and 'invalid pin rectangle' in i['message']
+                                for i in g.items))
+            self.assertFalse(any(i['check'] == 'remote_incomplete' for i in g.items))
+
+
 class DiskBudget(unittest.TestCase):
     def test_default_retains_twenty_gib_work_reserve_and_prices_staging(self):
         data = archive()
@@ -54,7 +88,7 @@ class DiskBudget(unittest.TestCase):
 
 
 class RemoteAdmission(unittest.TestCase):
-    def exercise(self, host='auto', disk=None, reject=False, held=False):
+    def exercise(self, host='auto', disk=None, reject=False, held=False, interrupted=False, missing_done=False):
         with tempfile.TemporaryDirectory() as td, contextlib.ExitStack() as stack:
             root = Path(td)
             kd = root / 'physical/kit'
@@ -80,6 +114,10 @@ class RemoteAdmission(unittest.TestCase):
                         return subprocess.CompletedProcess(cmd, 75, '', 'ot-run: load hold')
                     return subprocess.CompletedProcess(cmd, 1 if reject else 0,
                                                        '' if reject else 'ot-test\n', 'disk too small' if reject else '')
+                if cmd[0] == 'ot-run':
+                    return subprocess.CompletedProcess(cmd, 255 if interrupted else 0,
+                        b'GATE_FLOW_RC=0\n' if interrupted or missing_done else b'GATE_SCRIPT_RC=0\nGATE_DONE\n',
+                        b'ot-run: NOT COMPLETED: ssh status 255' if interrupted else b'')
                 return subprocess.CompletedProcess(cmd, 0, b'', b'')
             stack.enter_context(patch.object(PG.subprocess, 'run', side_effect=run))
             gate = PG.Gate()
@@ -88,6 +126,11 @@ class RemoteAdmission(unittest.TestCase):
             if reject:
                 self.assertEqual(gate.verdict, 'FAIL')
                 self.assertEqual(len(calls), 1)  # no upload, no started job
+                analyse.assert_not_called()
+            elif interrupted or missing_done:
+                self.assertEqual(gate.verdict, 'FAIL')
+                self.assertEqual(gate.clock['status'], 'REMOTE_INCOMPLETE')
+                self.assertTrue(any(i['check'] == 'remote_incomplete' for i in gate.items))
                 analyse.assert_not_called()
             else:
                 self.assertEqual(gate.source_binding['disk_admission']['reserve_gb'], 30 if disk is None else 7)
@@ -120,6 +163,12 @@ class RemoteAdmission(unittest.TestCase):
         calls = self.exercise(held=True)
         self.assertEqual(calls[0], calls[1])
         self.assertEqual(calls[2][0], 'ssh')
+
+    def test_started_job_with_ssh_disconnect_never_becomes_clock_evidence(self):
+        self.exercise(interrupted=True)
+
+    def test_success_exit_without_terminal_marker_is_also_incomplete(self):
+        self.exercise(missing_done=True)
 
     def test_no_disk_qualifying_host_does_not_ship_or_run(self):
         self.exercise(reject=True)

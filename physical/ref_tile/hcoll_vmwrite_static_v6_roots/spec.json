@@ -1,0 +1,407 @@
+{
+ "name": "hcoll_vmwrite_static_v6_roots",
+ "top": "ot_hgi_coll_static_vmwrite_roots_v6_physical",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_vmwrite_roots_v6_physical.sv",
+  "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_static_vmwrite_roots_v6.sv"
+ ],
+ "clock_port": "clk_body",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 103.68,
+  "h": 388.8,
+  "exact": true
+ },
+ "pins": {
+  "W": [
+   "clk_rgx_ctrl",
+   "clk_rgx_data0",
+   "clk_rgx_data1",
+   "clk_rgx_data2",
+   "clk_rgx_data3",
+   "rgx_v",
+   "rgx_addr",
+   "rgx_data0",
+   "rgx_data1",
+   "rgx_data2",
+   "rgx_data3",
+   "rgx_vm"
+  ],
+  "E": [
+   "clk_bank0",
+   "clk_bank3",
+   "clk_bank4",
+   "clk_bank5",
+   "clk_bank6",
+   "clk_bank7",
+   "clk_bank1",
+   "clk_bank2",
+   "kq0",
+   "kq1",
+   "kq2",
+   "kq3",
+   "kq4",
+   "kq5",
+   "kq6",
+   "kq7",
+   "launch_done",
+   "fault"
+  ],
+  "S": [
+   "clk_tkw",
+   "tkw_v",
+   "tkw_d"
+  ],
+  "N": [
+   "clk_body",
+   "clk_meta",
+   "rst_n",
+   "sid",
+   "ingress_slot",
+   "slot_valid",
+   "slot_owner"
+  ]
+ },
+ "layer_cap": "M5",
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "period_ps": 833.333333,
+  "hold_margin_ns": 0.03,
+  "pin_min_tracks": 2,
+  "pin_group_max": 32,
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "Codex:H-HARDEN-0324",
+  "branch": "codex/hbm-writer-v6-0324",
+  "tag": "roots0324",
+  "purpose": "Structural native-clock repair with16 independently measured related phase0 roots. Actual physicalwrapper,0normaledges, no parent/die qualification. Preserve writer5 genericCLOSED/nativeFAIL.",
+  "extra_paths": [
+   "tools/hbm_coll_static",
+   "rtl/hbm_accel/generic/collective/p2p",
+   "results/rtl/hbm_writer_v6_0324",
+   "results/rtl/hbm_harden_0253/writer5_native.json",
+   "results/arch/hbm_die_v15/writer_roots_v6_1016",
+   "physical/common_flow/assigned_pin_exact.tcl"
+  ],
+  "benches": [
+   {
+    "name": "v6_source_exact",
+    "cmd": "python3 tools/hbm_coll_static/run_vmwrite_v6_gate.py {RUN}/bench/v6_exact",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "production_exact PASS"
+   },
+   {
+    "name": "v6_clock_mapping_mutant",
+    "cmd": "bash tools/hbm_coll_static/run_vmwrite_v6_mapping_mutant.sh {RUN}/bench/v6_mapping_mutant",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ],
+  "views_to": "physical/ref_tile/hcoll_vmwrite_static_v6_roots/views",
+  "record_to": "results/rtl/ref_tile/hcoll_vmwrite_static_v6_roots",
+  "reroute_reason": {
+   "kind": "rtl_change",
+   "source": "results/rtl/hbm_harden_0253/writer5_native.json",
+   "why": "Writer5 genericCLOSED17.53/3.79DRC0 failsnative capture226.5/833pins andspread99.5. Structural16scalar-root source partition + literalbaseIO adapter and exact die-owned grant, no addednormal edges."
+  }
+ },
+ "std_area_um2": 6400.0,
+ "params": {
+  "MUT": 0
+ },
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "recipe": 2,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "io_tcl": "results/arch/hbm_die_v15/writer_roots_v6_1016/assigned_pins.tcl",
+ "pin_regs": {
+  "enable": false,
+  "reason": "Actual v6 core captures every input and owns registered outputs; physical wrapper is pure wiring. Source-exact4096edge miter and25 proof rows show0 added normal edges. Scalar related roots and base IO domains preserve ordinary cross-root setup+hold."
+ },
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "source": "results/rtl/hbm_harden_0253/writer5_native.json",
+  "why": "Writer5 genericCLOSED17.53/3.79DRC0 failsnative capture226.5/833pins andspread99.5. Structural16scalar-root source partition + literalbaseIO adapter and exact die-owned grant, no addednormal edges."
+ },
+ "slot_change_request": "Future typed source-bound16root physical master grant07638f0ab at results/arch/hbm_die_v15/writer_roots_v6_1016/grant.json; existingdiecontract unchanged. Actual phi-R/rootCTS/TTsetup/FFhold/DRC/nativearc gates required; no existing viewalias.",
+ "clock": "multiple_cts_roots",
+ "clock_ports": [
+  "clk_body",
+  "clk_meta",
+  "clk_rgx_ctrl",
+  "clk_tkw",
+  "clk_rgx_data0",
+  "clk_rgx_data1",
+  "clk_rgx_data2",
+  "clk_rgx_data3",
+  "clk_bank0",
+  "clk_bank1",
+  "clk_bank2",
+  "clk_bank3",
+  "clk_bank4",
+  "clk_bank5",
+  "clk_bank6",
+  "clk_bank7"
+ ],
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_body"
+   ],
+   "inputs": [],
+   "outputs": [
+    "launch_done",
+    "fault"
+   ]
+  },
+  "meta": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_meta"
+   ],
+   "inputs": [
+    "rst_n",
+    "sid",
+    "ingress_slot",
+    "slot_valid",
+    "slot_owner",
+    "rgx_vm"
+   ],
+   "outputs": []
+  },
+  "rgx_ctrl": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_rgx_ctrl"
+   ],
+   "inputs": [
+    "rgx_v",
+    "rgx_addr"
+   ],
+   "outputs": []
+  },
+  "tkw": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_tkw"
+   ],
+   "inputs": [
+    "tkw_v",
+    "tkw_d"
+   ],
+   "outputs": []
+  },
+  "rgx_data0": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_rgx_data0"
+   ],
+   "inputs": [
+    "rgx_data0"
+   ],
+   "outputs": []
+  },
+  "rgx_data1": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_rgx_data1"
+   ],
+   "inputs": [
+    "rgx_data1"
+   ],
+   "outputs": []
+  },
+  "rgx_data2": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_rgx_data2"
+   ],
+   "inputs": [
+    "rgx_data2"
+   ],
+   "outputs": []
+  },
+  "rgx_data3": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_rgx_data3"
+   ],
+   "inputs": [
+    "rgx_data3"
+   ],
+   "outputs": []
+  },
+  "bank0": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_bank0"
+   ],
+   "inputs": [],
+   "outputs": [
+    "kq0"
+   ]
+  },
+  "bank1": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_bank1"
+   ],
+   "inputs": [],
+   "outputs": [
+    "kq1"
+   ]
+  },
+  "bank2": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_bank2"
+   ],
+   "inputs": [],
+   "outputs": [
+    "kq2"
+   ]
+  },
+  "bank3": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_bank3"
+   ],
+   "inputs": [],
+   "outputs": [
+    "kq3"
+   ]
+  },
+  "bank4": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_bank4"
+   ],
+   "inputs": [],
+   "outputs": [
+    "kq4"
+   ]
+  },
+  "bank5": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_bank5"
+   ],
+   "inputs": [],
+   "outputs": [
+    "kq5"
+   ]
+  },
+  "bank6": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_bank6"
+   ],
+   "inputs": [],
+   "outputs": [
+    "kq6"
+   ]
+  },
+  "bank7": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_bank7"
+   ],
+   "inputs": [],
+   "outputs": [
+    "kq7"
+   ]
+  }
+ },
+ "clock_data_paths": "related_same_frequency",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "contract": {
+  "file": "results/arch/hbm_die_v15/writer_roots_v6_1016/grant.json",
+  "slot": "coll_writer_roots_v6_physical_master"
+ },
+ "fill_reason": {
+  "pin_bound": "5100 actual source bits including16typedclock entries occupyfullW/E/Sedge strips in thedie-assigned103.68x388.8slot. Source-bound grant face occupancies W54.8/E55.9/S52.8% below60% trackcut; outline follows the assigned source pin interface."
+ },
+ "structural_change": "Writer5 genericCLOSED17.53/3.79DRC0 failsnative capture226.5/833pins andspread99.5. Structural16scalar-root source partition + literalbaseIO adapter and exact die-owned grant, no addednormal edges."
+}

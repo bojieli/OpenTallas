@@ -35,7 +35,7 @@ module qkd_controller_context_calendar #(parameter integer REFRESH_ROOTS=0,CONTE
  else begin we_q<=cfg_we;seal_q<=seal;go_q<=go;end
  reg [127:0] image[0:N-1];reg [N-1:0] low_seen,high_seen;
  reg [11:0] rr_phase;
- always @(posedge hck or negedge rn)if(!rn)rr_phase<=0;else rr_phase<=rr_phase==12'd3775?12'd0:rr_phase+12'd1;
+ always @(posedge hck or negedge rn)if(!rn)rr_phase<=0;else rr_phase<=(rr_phase == 12'd3775) ? 12'd0 : rr_phase + 12'd1;
  wire [15:0] root_wait[0:6];wire root_invalid;
  assign root_wait[0]=0;
  generate if(REFRESH_ROOTS!=0)begin:root_math

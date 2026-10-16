@@ -13,6 +13,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'hier_contract'))
 import child_lint
 import direct_macro_clock_entries
+import async_gray_fifo_constraints
 
 MODES = ("entries", "hybrid_entries", "multiple_cts_roots")
 
@@ -42,6 +43,9 @@ def related_data(spec):
     if policy == 'independent':
         if relationship is not None:
             raise ValueError('independent leaf datapaths do not consume a clock_relationship declaration')
+        return False
+    if policy == 'async_gray_fifo':
+        async_gray_fifo_constraints.relationship(spec)
         return False
     if policy == 'related_pll_ratio':
         # One die PLL, stream /3 and serial /4 of the VCO, common epoch origin (3 serial = 4 stream cycles): the
@@ -107,6 +111,9 @@ def domains(spec):
                              inputs=['*'], outputs=['*'])}
     if not isinstance(declared, dict) or 'core' not in declared:
         raise ValueError('entries: explicit domains require core ratio1/1')
+    asynchronous = spec.get('clock_data_paths') == 'async_gray_fifo'
+    if asynchronous:
+        async_gray_fifo_constraints.relationship(spec)
     divided = spec.get('clock_data_paths') == 'related_pll_dividers'
     if divided:
         pll_divider_ratios(spec)
@@ -118,10 +125,14 @@ def domains(spec):
         if set(data) - {'ratio', 'ports', 'inputs', 'outputs', 'io_budget'}:
             raise ValueError('entries: unsupported domain policy (no clock exceptions)')
         ratio = data.get('ratio')
-        if not divided and ratio not in ([1, 1], [4, 3]):
+        if asynchronous:
+            expected_ratio = [1, 1] if name == 'core' else [3072000, 2499999]
+            if ratio != expected_ratio:
+                raise ValueError('async_gray_fifo requires actual stream833.333 / HBM1024 periods')
+        if not (divided or asynchronous) and ratio not in ([1, 1], [4, 3]):
             raise ValueError('entries: only related CK1/1 and CKV4/3 are supported')
         pll = leaf and spec.get('clock_data_paths') == 'related_pll_ratio'
-        if leaf and (ratio != [1, 1] and not (divided or pll and ratio == [4, 3] and name != 'core') or len(data.get('ports', [])) != 1):
+        if leaf and (ratio != [1, 1] and not (divided or asynchronous or pll and ratio == [4, 3] and name != 'core') or not asynchronous and len(data.get('ports', [])) != 1):
             raise ValueError('multiple_cts_roots requires one actual related phase0 root per domain '
                              '(samefrequency, or a non-core 4/3 domain under related_pll_ratio)')
         if name == 'core' and ratio != [1, 1]:
@@ -251,6 +262,8 @@ def generate(spec, root):
         domain_rows.append("{" + name + "} {clock " + virtual_clock(name) + " io_budget_ps " + str(round(period * fin, 3)) + out_row + " inputs {" + patterns(d["inputs"]) + "} outputs {" + patterns(d["outputs"]) + "}}")
         owner_rows.extend(f"{{{p}}} {{{name}}}" for p in d['ports'])
     body = LEAF_BODY if native_leaf(spec) else BODY
+    if spec.get('clock_data_paths') == 'async_gray_fifo':
+        body = async_gray_fifo_constraints.extend(body, spec, root)
     if direct['entries']:
         body = direct_body(body, direct)
     return (f'# OT_CLOCK_ENTRY_DOMAIN_API_VERSION {ENTRY_DOMAIN_API_VERSION}\n'
