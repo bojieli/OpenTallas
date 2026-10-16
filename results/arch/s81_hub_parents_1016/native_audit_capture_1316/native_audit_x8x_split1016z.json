@@ -76,6 +76,43 @@
      147.2
     ]
    }
+  },
+  {
+   "cell": "dsfd_capt_x8x_s_w",
+   "view": "physical/ref_tile/dsfd_capt_x8x_s_w_split1016z/views/dsfd_capt_x8x_s_w",
+   "lib_cell": "dsfd_capt_x8x_s_w",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 147.3,
+   "spread_ps": 24.8,
+   "outputs": 848,
+   "inputs": 1665,
+   "launch_ps": 197.2,
+   "launch_pin": "t_vm[53]",
+   "capture_ps": 172.5,
+   "capture_pin": "b[121]",
+   "launch_over": 0,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "pass": true,
+   "fail_why": "",
+   "record_commit": "728153063",
+   "job": "dsfd_capt_x8x_s_w_split1016z-x43-750db493b",
+   "etm_insertion_per_clock_pin_ps_ss_ff_tt": {
+    "ckv[0]": [
+     203.3,
+     104.1,
+     144.2
+    ],
+    "ckvb[0]": [
+     206.5,
+     109.9,
+     147.8
+    ]
+   }
   }
  ]
 }
