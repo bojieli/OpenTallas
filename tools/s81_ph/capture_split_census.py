@@ -69,6 +69,10 @@ def census():
                             tied_child_input_bits=0, unloaded_child_output_bits=0,
                             clock_entry_bits=sum(len(v["bits"]) for p, v in module["ports"].items() if p.startswith("ck"))),
                 cell_types=dict(types),
+                ports=module["ports"],
+                children={n: dict(master=c["type"], connections=c["connections"],
+                                  port_directions=c["port_directions"], parameters=c.get("parameters", {}))
+                          for n, c in module["cells"].items()},
                 source_sha256={p: hashlib.sha256((ROOT/p).read_bytes()).hexdigest() for p in [*GROUPS, PARENT]},
                 consumer_proof=dict(retained_status="Original g_t[3].u_x0/t_st[63:0] = new u_status/t_st[63:0], consumed by t_vm[13375:13312] and u_cd/f_st[13:0]",
                                     removed_status="Other 15 x8 t_st[63:0] have no consumers in original source; 896 f_sn bits were constants, one duplicate input64 fed the unused g_t[3].u_x1 status cone",

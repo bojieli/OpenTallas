@@ -11,8 +11,8 @@
     "dsfd_capt_x8_data": {
       "count": 16,
       "requested_outline_um": [
-        123.12,
-        136.08
+        108,
+        162
       ],
       "outline_status": "candidate, actual synth/CTS/physical gate required",
       "clocks": [
@@ -21,7 +21,8 @@
       ],
       "source": "rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_capt_split.sv",
       "source_sha256": "ea64587376f4c4c31a05c30ec01ca02c0c5410089cd48b120059c1b366d653e5",
-      "pin_proposal": "Retain existing x8_dual data/fault/clock/reset pins on same outline; omit f_sn/t_st ports, no data-stage change."
+      "pin_proposal": "Retain existing x8_dual data/fault/clock/reset pins on same outline; omit f_sn/t_st ports, no data-stage change.",
+      "outline_cost": "+4.4% area versus123.12x136.08; zero normal or initialization edges; actual mapped utilization/CTS/route required"
     },
     "dsfd_capt_g2_dualho": {
       "count": 8,
@@ -118,5 +119,35 @@
     "g2/ctl M5 views recovered from archive lineage but pre-corrected export; cannot bind until reexport/native audit",
     "cd reset capture207.2>190 needs native repair"
   ],
-  "no_adoption_note": "Existing die/place topology retained until owner reviews new hub candidate. No parent hardened against old geometry."
+  "no_adoption_note": "Existing die/place topology retained until owner reviews new hub candidate. No parent hardened against old geometry.",
+  "additional_requested_rebuilds": {
+    "dsfd_capt_ctl": {
+      "count": 1,
+      "requested_outline_um": [
+        324,
+        86.4
+      ],
+      "why": "Existing86.4x324controlcannotfit86.4Hband; source-identicalcompactrehardeningandactualpins/nativeproofrequired",
+      "native_state": "old M5 export provisional; L-H94.6beforecorrectedexport"
+    },
+    "dsfd_capt_cd": {
+      "count": 1,
+      "requested_outline_um": [
+        15.12,
+        15.12
+      ],
+      "why": "Actualclosedviewresetcapture207.2>190; nativepin/resetrepairrequiredwithoutnormaledgechange"
+    }
+  },
+  "proposed_group_home": {
+    "group_column": "g//2",
+    "group_row": "g%2",
+    "x_um": "15.108+439.92*(g//2)",
+    "y_um": "129.6+183.6*(g%2)",
+    "within_group": "data0 x108wide, g2 x+129.6 width118.8, data1 x+270 width108; allR0",
+    "why": "Keeps8literalgatherbundlesneartheiroriginalhorizontalorder",
+    "inter_group_road_um": 61.92,
+    "group_width_um": 378
+  },
+  "grant": "S-DIE message2026-10-16:108x162 data-only candidate +61.92um roads inside unchanged1697.76/1727.976 width; compactctl/status/cd leafonly grant. Parent not adopted."
 }
