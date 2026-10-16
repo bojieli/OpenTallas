@@ -2,12 +2,12 @@
  "schema": "opentallas.ref_tile.gate_result.v1",
  "kit": "dsfd_vm_fcn_m5",
  "verdict": "WARN",
- "generated": "2026-10-13T18:55:05-0700",
+ "generated": "2026-10-13T19:41:23-0700",
  "host": "ot-epyc1tb",
  "cts": true,
- "commit": "024b3686f",
+ "commit": "cd7811146",
  "clock": {
-  "max_root_sinks": 4442,
+  "max_root_sinks": 4444,
   "root": "port:ck[0]",
   "cts": true,
   "tt_insertion_ps": null,
@@ -19,7 +19,7 @@
    "spread_ps": 80.0
   },
   "verdict": "PASS",
-  "text": "4,442 sinks on the largest root <= 15,000; no measured clock tree (no --cts gate evidence)"
+  "text": "4,444 sinks on the largest root <= 15,000; no measured clock tree (no --cts gate evidence)"
  },
  "items": [
   {
@@ -31,19 +31,19 @@
   {
    "severity": "WARN",
    "check": "util",
-   "message": "synthesized std area 4154 um2 + macros 0 in core 11188: util 37%",
-   "fix": "set \"std_area_um2\": 4154 and drop 'outline' (gen sizes to util 0.52)"
+   "message": "synthesized std area 4144 um2 + macros 0 in core 11188: util 37%",
+   "fix": "set \"std_area_um2\": 4144 and drop 'outline' (gen sizes to util 0.52)"
   },
   {
    "severity": "WARN",
    "check": "textbook.boundary",
-   "message": "14 input->register endpoint(s) > 3 levels (worst c_wr[0]->sl_rp[3]$_SDFF_PN0_/D 6 lv, c_wr[0]->sl_rp[2]$_SDFF_PN0_/D 5 lv, c_wr[0]->sl_rp[1]$_SDFF_PN0_/D 4 lv): register the boundary (pin flops / registered outputs)",
+   "message": "13 input->register endpoint(s) > 3 levels (worst c_wr[0]->sl_rp[3]$_SDFF_PN0_/D 5 lv, c_wr[0]->sl_rp[1]$_SDFF_PN0_/D 4 lv, c_wr[0]->c_wv$_SDFFE_PN0P_/D 4 lv): register the boundary (pin flops / registered outputs)",
    "fix": "register every boundary: pin flop in, flop out; never an ICG enable from a port"
   },
   {
    "severity": "WARN",
    "check": "textbook.logic_depth",
-   "message": "reg->reg stage k_pc[110]$_DFF_P_ -> k2_g[15][6]$_SDFF_PN0_/D: ~740 ps estimated (20 logic levels) > 600 ps: pipeline / restructure the stage",
+   "message": "reg->reg stage k_pc[110]$_DFF_P_ -> k2_g[3][6]$_SDFF_PN0_/D: ~762 ps estimated (20 logic levels) > 600 ps: pipeline / restructure the stage",
    "fix": "pipeline to ~700 ps a stage: trees, 2-3 rungs for wide compare / mux / arbitration"
   },
   {
