@@ -17343,3 +17343,64 @@ def s81_hcx_pre_forward_model():
         open=['post-owner placement and exact pins/cut/clock/TT/FF/DRC',
               'real inter-layer incoming/outgoing pre transport on the fixed compiler calendar',
               'native full-layer replay and end-to-end measured rate'])
+
+
+def s81_bf_ten_root_candidate_model(**kwargs):
+    """Source-pinned opt-in sizing; unknown physical capacity fails closed."""
+    from uarch_model_s81_bf_ten_root import model
+    return model(**kwargs)
+
+
+def s81_host_native_split_candidate_model(**kwargs):
+    """Source-pinned opt-in sizing; unknown physical capacity fails closed."""
+    from uarch_model_s81_host_split import model
+    return model(**kwargs)
+# Qwen VM opt-in parent physical relay binding, 2026-10-16. Existing register
+# stages are packed into the closed 256-bit relay master without extra edges.
+QWEN_VM_PARTITIONED_RELAY_1016 = dict(
+    source_state_bits=72666, relay_tiles=289, bits_per_tile=256,
+    padding_bits=1318, added_cycles=0, sustained_rate_change=0,
+    relay_area_um2=388327, parent_outline_um=(4872, 3239.36),
+    independent_relay_clock_entries=289, physical_qualified=False,
+    open="Actual placement, assigned pins, incident cuts, phi-R timing and write/control hardening")
+
+# Necessary return transport margin candidate (unadopted): paired-layout actual
+# 96-plane source radius >=2697.84um. Six relay stages give seven nominal
+# 400um segments; actual clock/pin/route budgets remain a hard admission gate.
+QWEN_VM_RETURN_RO6_1016 = dict(return_ro=6, old_return_ro=1,
+    source_radius_lower_bound_um=2697.84, nominal_segment_um=400,
+    relay_tiles=849, extra_relay_tiles=560, relay_area_um2=1140795.1872,
+    normal_latency_delta_cycles=5, su_vl=19, row_read_rl=18,
+    status="Historical pin0 component candidate; explicit input-pin successor has SU_VL20",
+    full_shape_sram_unchanged=True, physical_qualified=False, compiler_adopted=False)
+
+# Compute-die provisional LOCAL pin-bound leaves (not a global parent grant).
+QWEN_VM_LOCAL_RETURN_LEAVES_1016 = dict(
+    return_plane=dict(instances=96, ff_bits=668, signal_pins=397, outline_um=(64.8,64.8)),
+    read_control_ro6=dict(instances=3, ff_bits=699, signal_pins=306, outline_um=(64.8,64.8)),
+    total_outline_mm2=0.41570496, added_normal_edges=dict(SU_return=1,read_control=0), hard_memory_macros=0,
+    pins="W data / E outputs, S control and centered clock; M4 side faces and PG-excluded M5 S contacts",
+    cell_area_status="Unmapped; actual CTS/native220/190/80 and route required",
+    global_parent_homes_adopted=False, physical_qualified=False)
+
+# Real input-pin register wrapper for the return leaf, opt-in only. The read
+# control leaf already owns all first/last flops and adds no wrapper stages.
+QWEN_VM_RETURN_PIN_INPUT_1016 = dict(
+    instances=96, original_ff_per_leaf=336, input_pin_ff_per_leaf=332,
+    source_ff_per_leaf=668, additional_SU_edges=1, row_read_edges_added=0,
+    RO6_SU_VL=20, RO6_row_RL=18, source_widths_unchanged=True,
+    outline_um=(64.8,64.8), physical_qualified=False, compiler_adopted=False)
+
+
+def s81_qb_read_root_candidate_model(**kwargs):
+    """Size separate real QB read-output clocks before RTL or physical build."""
+    from uarch_model_s81_qb_read_root import model
+    return model(**kwargs)
+
+# Source-only composition of existing E3 write storage; no added cycles.
+QWEN_VM_RO6_PIN_E3_COMPOSITION_1016 = dict(
+    existing_write_state_bits=43184, existing_data256_instances_added=160,
+    new_write_control_instances=80, write_clock_ports=240,
+    parent_clock_ff_before=55382, parent_clock_ff_after=12198,
+    unmapped_memory_bits=80, all_leaf_clocks=2571, additional_edges=0,
+    SU_VL=20, row_RL=18, compiler_adopted=False, physical_qualified=False)

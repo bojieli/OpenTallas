@@ -1,5 +1,6 @@
 """tools/ref_tile (ref-flow-1011): kit generation invariants and gate checks that need no fleet host."""
 import json
+import shlex
 import sys
 import tempfile
 import unittest
@@ -13,6 +14,19 @@ import pre_route_gate as G  # noqa: E402
 import textbook_lint as TL  # noqa: E402
 
 EX = HERE / "examples"
+
+
+def extra_argv(env):
+    # Canonical generated EXTRA is one literal array; compare its shell argv,
+    # preserving option/value boundaries while allowing safe shell quoting.
+    line = next(line for line in env.splitlines() if line.startswith("EXTRA=("))
+    return shlex.split(line[len("EXTRA=("):-1])
+
+
+def assert_extra_args(test, env, *expected):
+    argv = extra_argv(env)
+    test.assertTrue(any(argv[i:i+len(expected)] == list(expected) for i in range(len(argv))),
+                    f"expected consecutive EXTRA arguments {expected!r}, got {argv!r}")
 
 
 def spec(_ex, **kw):
@@ -266,7 +280,7 @@ class Recipe(unittest.TestCase):
         self.assertNotIn("pre_gpl.tcl", old)
         self.assertNotIn("OT_OFLOP", old["kit.env"])
         self.assertNotIn("leaf_iohold", old["kit.env"])
-        self.assertIn("--macro-place-halo 2.16 2.16", old["kit.env"])
+        assert_extra_args(self, old["kit.env"], "--macro-place-halo", "2.16", "2.16")
         job = json.loads(old["job.json"])
         self.assertEqual(job["route_hold_margin_ns"], 0.010)
         self.assertIn("HM=0.01 ", job["stages"]["route"]["cmd"])
@@ -304,13 +318,14 @@ class Recipe(unittest.TestCase):
         env = new["kit.env"]
         self.assertIn(f"\nRECIPE={RT.RECIPE_LATEST}\n", env)
         kd = f"{RT.KIT_ROOT}/{json.loads(new['spec.json'])['name']}"
-        self.assertIn(f"--step-tcl PRE_GLOBAL_PLACE={kd}/pre_gpl.tcl", env)
-        self.assertIn(f"--step-tcl PRE_DETAIL_PLACE={kd}/pre_dpl.tcl", env)
+        assert_extra_args(self, env, "--step-tcl", f"PRE_GLOBAL_PLACE={kd}/pre_gpl.tcl")
+        assert_extra_args(self, env, "--step-tcl", f"PRE_DETAIL_PLACE={kd}/pre_dpl.tcl")
         self.assertEqual(env.count("PRE_GLOBAL_PLACE="), 1)      # ORFS takes ONE hook per step
         self.assertEqual(env.count("PRE_DETAIL_PLACE="), 1)
         for k in ("OT_OFLOP_HOPS=8", "OT_OFLOP_ALLOW_NONE=1", "OT_OFLOP_COLS=4", "OT_IOHOLD_IN=1",
-                  "OT_INHOLD_DRV=BUFx4f_ASAP7_75t_R", "--macro-place-halo 5.4 5.4"):
-            self.assertIn(k, env)
+                  "OT_INHOLD_DRV=BUFx4f_ASAP7_75t_R"):
+            self.assertIn(k, extra_argv(env))
+        assert_extra_args(self, env, "--macro-place-halo", "5.4", "5.4")
         gpl = [x for x in new["pre_gpl.tcl"].splitlines() if x.startswith("source ")]
         self.assertEqual(gpl, ["source /src/physical/common_flow/pin_reg_split.tcl",          # one flop per pin FIRST
                                "source /src/physical/dsrom_window_source/leaf_iohold.tcl",      # then the hold stages
@@ -388,7 +403,7 @@ class Recipe(unittest.TestCase):
             self.assertIn("PRE_GLOBAL_PLACE=physical/qwen_die_masters/io_flop_at_pins.tcl", env)
             self.assertNotIn("OT_OFLOP_HOPS", env)
             self.assertNotIn("OT_IOHOLD_IN", env)
-            self.assertIn("--macro-place-halo 3.24 3.24", env)
+            assert_extra_args(self, env, "--macro-place-halo", "3.24", "3.24")
             self.assertEqual(json.loads(k["job.json"])["route_hold_margin_ns"], 0.02)
             k = self.kit(a, name="rcp_b", io_flop_at_pins=None)   # hold stages alone
             self.assertNotIn("pre_gpl.tcl", k)
@@ -418,7 +433,7 @@ class Recipe(unittest.TestCase):
                                                       "basis": "job x-r1: FF -7.1 ps on n_y[*] with HB2"})
             env = k["kit.env"]
             self.assertIn("OT_INHOLD_MASTER=HB2xp67_ASAP7_75t_R", env)
-            self.assertIn("OT_HOLD_PAD_STRONG_RE='^(n_y|rq_row)'", env)
+            self.assertIn("OT_HOLD_PAD_STRONG_RE=^(n_y|rq_row)", extra_argv(env))
             self.assertIn("OT_HOLD_PAD_STRONG_MASTER=HB4xp67_ASAP7_75t_R", env)
             k = self.kit(a, name="rcp_hp2", hold_pad={"cell": "HB4xp67_ASAP7_75t_R"})   # an explicit pad wins
             self.assertIn("OT_INHOLD_MASTER=HB4xp67_ASAP7_75t_R", k["kit.env"])
@@ -493,7 +508,7 @@ class PinRegs(unittest.TestCase):
         s = {"kind": "tile", "clock_port": "clk", "pin_regs": {"enable": True}}
         p = RT.pin_regs_plan(s)
         self.assertEqual((p["clock"], p["latency_cycles"]), ("clk", {"input": 1, "output": 1}))
-        self.assertEqual(RT.pin_regs_vars(s), ["--orfs-var OT_PIN_REGS=1", "--orfs-var OT_PIN_REGS_CLOCK=clk"])
+        self.assertEqual(RT.pin_regs_vars(s), ["--orfs-var OT_PIN_REGS=1", "--orfs-var OT_PIN_REGS_CLOCK='clk'", "--orfs-var OT_PIN_REGS_RESET_PORTS=''"])
         self.assertIsNone(RT.pin_regs_plan({"kind": "tile", "clock_port": "clk"}))
         with self.assertRaises(RT.SpecError):
             RT.pin_regs_plan({"kind": "tile", "clock_port": "clk", "pin_regs": {"enable": False}})       # no reason

@@ -103,7 +103,7 @@ module ot_rom_host_ingest #(
     wire [HFA:0] hx_freed, hx_cnt;
     wire [513:0] hx_head;
     reg          hx_pop;
-    ot_link_afifo #(.W(514), .AW(HFA)) u_hx (
+    ot_link_afifo #(.W(514), .AW(HFA), .RCOPY(32)) u_hx (   // 32 kept read-address copies (8,230-load select)
         .wclk(clk_h), .wrst_n(rn_h), .wr(hv_q), .wdata({hc_q, hd_q}), .wfull(hx_full), .wfreed(hx_freed), .ovf(hx_ovf),
         .rclk(clk_i), .rrst_n(rn_i), .rd(hx_pop), .rempty(hx_empty), .rdata(hx_head), .rcount(hx_cnt));
     always @(posedge clk_h or negedge rn_h) if (!rn_h) h_crn <= 0; else h_crn <= hx_freed;
@@ -228,15 +228,27 @@ module ot_rom_host_ingest #(
             end
         end
     end
+`ifdef OT_S81_HOST_PHASESAFE
+    reg hx_ovf_seam,rx_ovf_seam,csr_seam,fa_seam;
+    reg [8:0] share_seam;
+    always @* if (!clk_h) hx_ovf_seam=hx_ovf;
+    always @* if (!ck) rx_ovf_seam=rx_ovf;
+    always @* if (!clk_i) begin csr_seam=csr_tgl;share_seam=share_i;fa_seam=f_any;end
+`else
+    wire hx_ovf_seam=hx_ovf,rx_ovf_seam=rx_ovf,csr_seam=csr_tgl,fa_seam=f_any;
+    wire [8:0]share_seam=share_i;
+`endif
     // overflow flags from the other domains, synchronised (sticky at their source)
     (* async_reg = "true" *) reg [1:0] hov_s, rov_s;
     assign hx_ovf_i = hov_s[1];
     assign rx_ovf_i = rov_s[1];
     always @(posedge clk_i or negedge rn_i)
         if (!rn_i) begin hov_s <= 0; rov_s <= 0; end
-        else begin hov_s <= {hov_s[0], hx_ovf}; rov_s <= {rov_s[0], rx_ovf}; end
+        else begin hov_s <= {hov_s[0], hx_ovf_seam}; rov_s <= {rov_s[0], rx_ovf_seam}; end
 
-    ot_link_afifo #(.W(AW + 257), .AW(OFA)) u_ox (
+    // Actual mapped HOST native leaf: the output FIFO rbin[1] drove4631
+    // mux loads. Kept local read selectors preserve the same head/cycle.
+    ot_link_afifo #(.W(AW + 257), .AW(OFA), .RCOPY(32)) u_ox (
         .wclk(clk_i), .wrst_n(rn_i), .wr(ox_wr), .wdata(ox_w), .wfull(ox_full), .wfreed(ox_freed), .ovf(ox_ovf),
         .rclk(ck), .rrst_n(rn_c), .rd(ox_pop), .rempty(ox_empty), .rdata(ox_head), .rcount(ox_cnt));
     ot_link_afifo #(.W(256), .AW(RFA)) u_rx (
@@ -270,8 +282,8 @@ module ot_rom_host_ingest #(
     always @(posedge ck or negedge rn_c)
         if (!rn_c) begin tg_s <= 0; share_c <= 0; end
         else begin
-            tg_s <= {tg_s[1:0], csr_tgl};
-            if (tg_s[2] != tg_s[1]) share_c <= share_i;        // share_i stable since the toggle (>= 2 ck earlier)
+            tg_s <= {tg_s[1:0], csr_seam};
+            if (tg_s[2] != tg_s[1]) share_c <= share_seam;        // share_i stable since the toggle (>= 2 ck earlier)
         end
     localparam integer PW = $clog2(PCAP * 256 + 512) + 1;
     reg  [PW-1:0] tok;
@@ -298,6 +310,6 @@ module ot_rom_host_ingest #(
     reg         fault_c;
     always @(posedge ck or negedge rn_c)
         if (!rn_c) begin fs <= 0; fault_c <= 1'b0; end
-        else begin fs <= {fs[0], f_any}; fault_c <= fault_c | fs[1]; end   // ox_ovf cannot happen (writes need !ox_full)
+        else begin fs <= {fs[0], fa_seam}; fault_c <= fault_c | fs[1]; end   // ox_ovf cannot happen (writes need !ox_full)
     assign fault = fault_c;
 endmodule

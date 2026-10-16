@@ -1,0 +1,51 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7_tech_1x_201209.lef, created 30 layers, 9 vias
+[INFO ODB-0227] LEF file: /OpenROAD-flow-scripts/flow/platforms/asap7/lef/asap7sc7p5t_28_R_1x_220121a.lef, created 212 library cells
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13178, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13211, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13244, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13277, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13310, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13343, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 13376, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14772, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14805, timing group from output port.
+[WARNING STA-1212] /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz line 14838, timing group from output port.
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_hdata_0 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_hdata_1 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_hdata_2 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_hdata_3 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_hdata_0 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_hdata_1 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_hdata_2 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_hdata_3 can not be propagated.
+QDM PINFLOP reference: 312 input pin flops, median arrival 295.960297 (range 289.785553 .. 315.759674)
+QDM reference pin land_d[79]$_DFF_P_/CLK clock arrival max 295.960297 min 282.983490 skew 90 hold 50
+OT_IO_INTER 0 inputs 0 outputs at 150 ps
+[WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_hdata_0 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_hdata_1 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_hdata_2 can not be propagated.
+[WARNING STA-0450] virtual clock ot_lb_v_hdata_3 can not be propagated.
+OT_IOREF clock-port pll_hbm (core_clk): data input delays dropped
+OT_IOREF clock-port pll_hbm_data[0] (hdata_0): data input delays dropped
+OT_IOREF clock-port pll_hbm_data[1] (hdata_1): data input delays dropped
+OT_IOREF clock-port pll_hbm_data[2] (hdata_2): data input delays dropped
+OT_IOREF clock-port pll_hbm_data[3] (hdata_3): data input delays dropped
+OT_IOREF_EDGE core_clk boundary 652 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE hdata_0 boundary 0 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE hdata_1 boundary 0 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE hdata_2 boundary 0 negedge 0 noarc 0 inverted 0
+OT_IOREF_EDGE hdata_3 boundary 0 negedge 0 noarc 0 inverted 0
+OT_IOREF ot_lb_v_core_clk core_clk mean 296.8 min 288.5 max 315.8 n 652 boundary
+OT_IOREF ot_lb_v_hdata_0 hdata_0 mean 198.0 min 186.5 max 210.9 n 9600 all
+OT_IOREF ot_lb_v_hdata_1 hdata_1 mean 211.7 min 199.2 max 231.1 n 9600 all
+OT_IOREF ot_lb_v_hdata_2 hdata_2 mean 232.5 min 220.7 max 250.6 n 9600 all
+OT_IOREF ot_lb_v_hdata_3 hdata_3 mean 249.7 min 236.5 max 267.9 n 9216 all
+OT_WS max 2.477607008444238e-11 min 2.188627057364556e-11
+OT_EXPORT_DONE

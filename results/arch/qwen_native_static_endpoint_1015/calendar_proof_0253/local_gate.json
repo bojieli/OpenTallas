@@ -1,0 +1,17 @@
+{
+ "verdict": "PASS",
+ "items": [
+  {
+   "severity": "INFO",
+   "check": "pin_regs",
+   "message": "pin registers opted out: Explicit source captures every active functional input once; actual qkd_d2d_cal_seq output FFs are the output pin FFs. Local epoch capture compensated by raw EP_SKEW-1. No generic extra stage permitted. Source exact72-layer two-token proof plus failing anchor mutant; AUTO tok_go is internally0 and n",
+   "fix": ""
+  },
+  {
+   "severity": "INFO",
+   "check": "layer",
+   "message": "tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)",
+   "fix": ""
+  }
+ ]
+}

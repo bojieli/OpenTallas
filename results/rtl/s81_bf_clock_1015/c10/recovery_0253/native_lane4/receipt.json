@@ -1,0 +1,20 @@
+{
+  "scope": "Full-shape extracted four-lane real RTL exercised in native mapped-ROM BF pair; no physical/token throughput claim",
+  "source_commit": "c328499edcdf85ac773d56ad24ee8971f29c8e0f",
+  "candidate_root": "dsfd_bf_col_roots with actual ot_v41_bf_lane4 x4 and existing other groups",
+  "leaf_source_sha256": "3084eca9a79b186f385f8b2eedcab71cd4402511215c5daf3a81fb73ca7b7bad",
+  "production_params": {
+    "NCHB": 8,
+    "TRW": 7,
+    "CUT": 379,
+    "RC": 1,
+    "GRADUAL_RNE": 1
+  },
+  "clock_reset_data_abi_bits": 317,
+  "data_inputs": 143,
+  "data_outputs": 172,
+  "positive": "456rows/912values/448configs TXN MATCH;124422cycles;lag6.664/15.827/9.923ns unchanged",
+  "negative": "BF_ROOT_MUTANT_STOP FAIL DIFFtxn16",
+  "physical_qualification": false,
+  "later_source_status": "Additional FP4/reduction/segment leaf extractions are not covered by this receipt until rerun."
+}

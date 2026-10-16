@@ -1,0 +1,58 @@
+[
+ {
+  "label": "candidate",
+  "mode": "pass",
+  "rc": 0,
+  "expected": "PASS",
+  "ok": true,
+  "log": "candidate_pass.log"
+ },
+ {
+  "label": "candidate",
+  "mode": "mut_payload",
+  "rc": 1,
+  "expected": "FAIL",
+  "ok": true,
+  "log": "candidate_mut_payload.log"
+ },
+ {
+  "label": "candidate",
+  "mode": "mut_noreset",
+  "rc": 1,
+  "expected": "FAIL",
+  "ok": true,
+  "log": "candidate_mut_noreset.log"
+ },
+ {
+  "label": "candidate",
+  "mode": "mut_rstreg_bypass",
+  "rc": 1,
+  "expected": "FAIL",
+  "ok": true,
+  "log": "candidate_mut_rstreg_bypass.log"
+ },
+ {
+  "label": "unchanged_default",
+  "mode": "pass",
+  "rc": 0,
+  "expected": "PASS",
+  "ok": true,
+  "log": "unchanged_default_pass.log"
+ },
+ {
+  "label": "unchanged_default",
+  "mode": "mut_payload",
+  "rc": 1,
+  "expected": "FAIL",
+  "ok": true,
+  "log": "unchanged_default_mut_payload.log"
+ },
+ {
+  "label": "unchanged_default",
+  "mode": "mut_noreset",
+  "rc": 1,
+  "expected": "FAIL",
+  "ok": true,
+  "log": "unchanged_default_mut_noreset.log"
+ }
+]

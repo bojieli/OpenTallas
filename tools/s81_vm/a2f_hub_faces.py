@@ -374,6 +374,9 @@ def center_ctl(P, W, H, step=21.6):
         tg = [k for k in P.pos if served in L[k]['master']]
         cx = sum(P.rect(k)[0] + P.rect(k)[2] / 2 for k in tg) / len(tg)
         cy = sum(P.rect(k)[1] + P.rect(k)[3] / 2 for k in tg) / len(tg)
+        tgt = __import__('os').environ.get('OT_CTL_TARGET_' + key.upper())   # optional explicit 'x,y' target (screens)
+        if tgt:
+            cx, cy = (float(v) for v in tgt.split(','))
         old = P.pos.pop(i)
         w, h = L[i]['w'], L[i]['h']
         others = [P.rect(k) for k in P.pos]

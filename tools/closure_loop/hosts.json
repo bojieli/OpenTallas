@@ -24,7 +24,8 @@
    "external_jobs": [],
    "git_mirror": "/srv/opentallas-scratch/claude/git-mirror/OpenTallas.git",
    "git_mirror_upstream": "https://github.com/bojieli/OpenTallas",
-   "note": " | 2026-10-10 11:5x drive-1010: run root moved to /srv/opentallas (2.7 TB free) -- /srv/opentallas-scratch hit 95 % (152 GB < the 200 GB floor) and EPYC1 admitted nothing at load 59/128 with 437 GB RAM free; running jobs keep their scratch run dirs (floor 50 GB there)."
+   "note": " | 2026-10-10 11:5x drive-1010: run root moved to /srv/opentallas (2.7 TB free) -- /srv/opentallas-scratch hit 95 % (152 GB < the 200 GB floor) and EPYC1 admitted nothing at load 59/128 with 437 GB RAM free; running jobs keep their scratch run dirs (floor 50 GB there). | 2026-10-16 02:50 OWNER: DRAIN for release (hourly rental): smoke_only = no new jobs; running jobs finish. Revert: remove smoke_only.",
+   "smoke_only": true
   },
   {
    "name": "ot-epyc4",
