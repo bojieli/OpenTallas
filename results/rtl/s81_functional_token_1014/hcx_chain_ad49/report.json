@@ -1,0 +1,24 @@
+{
+ "schema": "opentallas.s81.hcx_chain_gate.v1",
+ "source_commit": "ad49e6d63 (sources.sha256 = git blobs of ad49e6d63, checked)",
+ "status": "HCX_CHAIN_GATE PASS (base + canon PASS, mut_layout + mut_post FAIL on coefficient rows). g1b's own verdict line said FAIL because the gate grep missed the %Fatal-prefixed FAIL line; parser fixed in 5380bfb1a (grep -o), verdicts re-derived from the unchanged run logs",
+ "chain": "real HC coefficient chain on engine 11 (ot_s81_hcx_chain_seq: projection -> gather -> gatherpack -> post), fixed issuer, layer1 attn+ffn, 4 coefficient rows exact, no golden coefficient injection",
+ "measured_ages": {
+  "cmd_phase": 2,
+  "proj_done": 484,
+  "raw": 481,
+  "gatherpack_done": 510,
+  "post_start": 521,
+  "post_seen": 1245,
+  "chain_done": 1254,
+  "pin_to_pin": 1254,
+  "canon_HLAYOUT0_proj_done": 479
+ },
+ "price": "behavioural price of the five HC coefficient ops ~1530-1544 cycles per block; measured pin-to-pin 1254 (-18 %)",
+ "mutants": {
+  "mut_layout (HLAYOUT 0 on h_rows)": "FAIL coef row 2560 mismatch",
+  "mut_post (MUT_POST 1)": "FAIL coef row 2560 mismatch"
+ },
+ "hosts": "EPYC1 /srv/opentallas-scratch/claude/s81-hcx-chain-1015/g1a, EPYC4 .../g1b",
+ "scope": "component chain bench (ideal bench VM); native_qualified=false; layer integration run at 5380bfb1a pending"
+}
