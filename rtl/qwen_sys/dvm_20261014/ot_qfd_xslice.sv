@@ -748,11 +748,9 @@ module ot_qfd_xhead #(
         if (!rst_i) g_pin <= 1'b0; else g_pin <= a_d[0];
     always @(posedge ck) begin ib_pin <= a_d[1 +: IBW]; f_q <= a_d[1 + IBW +: FW]; end
     generate if (ONWARD_REG != 0) begin : g_onward
-        (* keep = "true" *) reg [HW-1:1] b_q;
-        (* keep = "true" *) reg          b_g;
-        always @(posedge ck) b_q <= a_d[HW-1:1];
-        always @(posedge ck or negedge rst_i) if (!rst_i) b_g <= 1'b0; else b_g <= a_d[0];
-        assign b_d = {b_q, b_g};
+        // a keep_hierarchy module: wire-level keep did not stop synthesis folding f_q into these (m6s: e_d[454] = fep
+        // still drove the fill logic), a hierarchy boundary does
+        ot_qfd_onward_reg #(.W(HW)) u_onward (.ck(ck), .rst_n(rst_i), .d(a_d), .q(b_d));
     end else begin : g_shared
         assign b_d = {f_q, ib_pin, g_pin};
     end endgenerate
@@ -1130,6 +1128,21 @@ module ot_qfd_xhead #(
     end
     assign n_d = n_q;
     assign s_d = s_q;
+endmodule
+
+// onward-copy pin registers of the DVM head (ONWARD_REG): own hierarchy so synthesis cannot merge them with the head's
+// internal copies of the same input; bit 0 (go) resets, the rest are plain data flops.  0 cycles.
+(* keep_hierarchy = "yes" *) module ot_qfd_onward_reg #(parameter integer W = 2) (
+    input  wire         ck,
+    input  wire         rst_n,
+    input  wire [W-1:0] d,
+    output wire [W-1:0] q
+);
+    reg [W-1:1] qd;
+    reg         qg;
+    always @(posedge ck) qd <= d[W-1:1];
+    always @(posedge ck or negedge rst_n) if (!rst_n) qg <= 1'b0; else qg <= d[0];
+    assign q = {qd, qg};
 endmodule
 
 // --------------------------------------------------------------------------------------------------------------------
