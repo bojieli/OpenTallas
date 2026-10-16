@@ -691,6 +691,17 @@ def place(v, m, G):
     if 'sys_face_bind' in m and not os.environ.get('OT_SPLIT_HOMES'):
         from qwen_split.sys_face_bind import place as sys_face_place
         rec['sys_face_place'] = sys_face_place(m)
+    # A homes override moves these instances after put() captured their origins.
+    # Export the final placement rather than mixing pre-homes slots with the
+    # actual case outline (r2h5 had SU y=20856.96 here vs actual y=8320.32).
+    rec['die'] = [m['die']['w'], m['die']['h']]
+    by_final = {i.name: i for i in m['insts']}
+    rec['slots'] = {n: [by_final[n].x, by_final[n].y, round(by_final[n].w, 3), round(by_final[n].h, 3)]
+                    for n in rec['slots'] if n in by_final}
+    if 'x3_mux' in rec['slots']:
+        rec['x3_mux'] = list(rec['slots']['x3_mux'])
+    if 'dvm' in rec and 'xs_tap' in rec['slots']:
+        rec['dvm']['tap'] = list(rec['slots']['xs_tap'])
     if os.environ.get('OT_SPLIT_DUMP'):
         ins = [dict(n=i.name, m=i.master, x=i.x, y=i.y, w=i.w, h=i.h, o=i.orient) for i in m['insts']]
         bus = [dict(b=b_, c=c_, n=n_, e=[list(x) for x in e_]) for b_, c_, n_, e_ in m.get('buses', [])]
