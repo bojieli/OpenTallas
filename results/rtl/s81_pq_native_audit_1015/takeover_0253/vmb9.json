@@ -1,0 +1,51 @@
+{
+  "schema": "s81.takeover.native_receipt.v1",
+  "job": "s81coll_vm_boundary_b9-b9-81f67e112",
+  "source_commit": "81f67e112",
+  "materialized_from": "closure_loop/s81coll_vm_boundary_b9-b9-81f67e112/record/views/s81_static_vm_boundary",
+  "files_sha256": {
+    "s81_static_vm_boundary_tt.lib": "545d333045fa2324cf79ff18ac827a7949bd8b8478856669caee114cf199b5c6",
+    "s81_static_vm_boundary.lef": "b61c649e31428bea2bb990f85ee1590a48b318c1761f63418bd8d197986f064b",
+    "export_tt.tcl": "46490f52c6ce5a0f6dfa6e080ecccf40405328248eb7bbd5ee652e68e6afbb8f",
+    "s81_static_vm_boundary_ss.lib": "a941ce52c6f95da929c46b7989b419ae1ac210b990f5469c511e2cbfb242ada1",
+    "abstract.json": "6e8d16d83e3de78b66e4cd2397119c00cd9e01b1418346b0154205fc1ff5a1d2",
+    "export_ff.tcl": "4a3e736275215b0de70dbd354f9c4049e2b524a195b10eccc8e93a2000947089",
+    "insertion.json": "9c2026e1c1805e83783fb64edc4547b2a05972db276c1b8246e3e857499f66b5",
+    "export_tt.log": "ff9199f9beaa58cad66dcc85b0ff8ba13af5497455f471755fd463c30053826e",
+    "export_ss.log": "9000fccb9a94938a03f27484fca69cb84984abac9076c508f4f1c350f758a6e5",
+    "export_ff.log": "b5a0a27467188e65b68d7d7a7f4b4609c1e4c89817572455f054505d589c046d",
+    "export_ss.tcl": "2cb31f0ac9c1f183c2de176db00eed61d329ab5edfe188c46153d40727ddabb4",
+    "child_lint.json": "97f52583f709ae220a75c152c5c0410c176433b5db03b1854af5d830e9bae662",
+    "s81_static_vm_boundary_ff.lib": "529e6ae7af2e2b61b956814a4df470e820883f21fbe85fb5d3dfd7aa6012261b"
+  },
+  "physical": {
+    "tt_ps": 54.15,
+    "ff_ps": 13.17,
+    "drc": 0
+  },
+  "native": {
+    "cell": "s81_static_vm_boundary",
+    "view": "physical/vmb9",
+    "lib_cell": "s81_static_vm_boundary",
+    "insertion": true,
+    "ref_src": [
+      "insertion.json boundary mean"
+    ],
+    "R_ps": 228.0,
+    "spread_ps": 57.2,
+    "outputs": 2221,
+    "inputs": 3829,
+    "launch_ps": 207.0,
+    "launch_pin": "t_vm[30]",
+    "capture_ps": 175.6,
+    "capture_pin": "gather_data[140]",
+    "launch_over": 0,
+    "capture_over": 0,
+    "comb_pins": 0,
+    "comb_first": [],
+    "pass": true,
+    "fail_why": ""
+  },
+  "scope": "Component physical/native boundary only; no full-layer/full-token qualification.",
+  "layout_review": "Boundary flop bands, sparse pin-bound interior and diagonal raw-bus corner turn; DRC0. Density PNG inspected."
+}

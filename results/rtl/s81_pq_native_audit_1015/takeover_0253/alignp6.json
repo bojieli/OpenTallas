@@ -1,0 +1,51 @@
+{
+  "schema": "s81.takeover.native_receipt.v1",
+  "job": "s81pq_qb_align_native-p6oh-4d19ff6fe",
+  "source_commit": "4d19ff6fe",
+  "materialized_from": "closure_loop/s81pq_qb_align_native-p6oh-4d19ff6fe/record/views/ot_s81_pq_qb_align_native",
+  "files_sha256": {
+    "export_tt.tcl": "a2774e4243a95ec19f3809fade03b5b75ba7ac7bb6f8bc7469d3010b9cb26a85",
+    "abstract.json": "5470901fa8d1d21f51364f51420860783c6a7f3c2340aa179c997b3ed369c09f",
+    "ot_s81_pq_qb_align_native.lef": "d4644d1a463be1c5a46d601364dab4431e066efb87d3ce76b7424cfd9e6d1ca7",
+    "ot_s81_pq_qb_align_native_ff.lib": "446f88f11b6141ce73a8821da6ca5f0c05fa1ac510166ad95fd78eacc5b33d5c",
+    "export_ff.tcl": "2da0ac8243d07d2973cc7e49f9c2f577ae05386772c65b19ba7fbc61f82a1084",
+    "insertion.json": "a7b4bb40adbd680ab8a2785850d9f7bc5d19f6f6b41e1b3226b9b2e94866499f",
+    "export_tt.log": "70cb2273f8740995c3cc3ac5afd0ae07a55a91b68c9bf564d73a6b81bdb418c6",
+    "export_ss.log": "2ef0ce69382b5d228634662675069a72bed00d33e44976c893f9c10c64f9110a",
+    "export_ff.log": "2e99ab289e707810eb1c66e5bd9422ef0ccfce15173fc1f0164384fc9a98e34d",
+    "export_ss.tcl": "d3dcdf20e20caae2cc6b419618f6a583bdb30a12e7b6a1fdaffc8ddca12ee8e3",
+    "child_lint.json": "c0864166ac703c7c3ba6690d15614f9134e9bde73f85fc9d235f18b20c86f015",
+    "ot_s81_pq_qb_align_native_ss.lib": "c01e0edfcc81a81bee8f08b5da1aa7d62826d9efcfcfd75008fd9e0afb4d9227",
+    "ot_s81_pq_qb_align_native_tt.lib": "ff37ebf7c6f779ae437de7f4ff138536bdc856242e6bfbf308e1a2c5a6ff5be8"
+  },
+  "physical": {
+    "tt_ps": 46.46,
+    "ff_ps": 9.66,
+    "drc": 0
+  },
+  "native": {
+    "cell": "ot_s81_pq_qb_align_native",
+    "view": "physical/alignp6",
+    "lib_cell": "ot_s81_pq_qb_align_native",
+    "insertion": true,
+    "ref_src": [
+      "insertion.json boundary mean"
+    ],
+    "R_ps": 152.3,
+    "spread_ps": 20.2,
+    "outputs": 1634,
+    "inputs": 1635,
+    "launch_ps": 159.9,
+    "launch_pin": "bt_d_q[349]",
+    "capture_ps": 132.5,
+    "capture_pin": "bt_d[846]",
+    "launch_over": 0,
+    "capture_over": 0,
+    "comb_pins": 0,
+    "comb_first": [],
+    "pass": true,
+    "fail_why": ""
+  },
+  "scope": "Component physical/native boundary only; no full-layer/full-token qualification.",
+  "layout_review": "Previous gate layout inspected by submitting owner; routed native ETM independently audited here."
+}
