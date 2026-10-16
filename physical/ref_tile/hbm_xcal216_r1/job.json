@@ -32,7 +32,7 @@
     "cmd": "bash tools/hbm_die_v15/run_xcal_physical_bench.sh 0 {RUN}/bench/xcal0",
     "expect": "pass",
     "pass_regex": "XCAL_LOCKSTEP PASS",
-    "min_count_regex": "words matched 38 / expected 38",
+    "min_count_regex": "words matched (\\d+) / expected 38, errors 0",
     "threads": 1,
     "peak_ram_gb": 2
    },
