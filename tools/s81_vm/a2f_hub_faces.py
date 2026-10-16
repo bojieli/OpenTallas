@@ -82,6 +82,38 @@ def spans_for(hub, W, H):
     raise SystemExit('unknown hub ' + hub)
 
 
+def spans_from_plan(plan, W, H):
+    """Project each declared peer's actual box onto its agreed VM face.
+
+    This binds planning pins to the current die graph. It does not establish a
+    collision-free route from the peer to that face; the die preflight owns it.
+    """
+    d = json.loads(Path(plan).read_text())
+    boxes = d['blocks']
+    vx, vy, vw, vh = boxes['sp_vm'][:4]
+    assert abs(vw-W) < 0.1 and abs(vh-H) < 0.1, ('VM outline mismatch', vw, vh, W, H)
+    def span(name, face):
+        x, y, w, h = (d['mix4_slot'] if name == 'mix4_slot' else boxes[name])[:4]
+        lo, hi, cap = (x-vx, x+w-vx, W) if face in 'NS' else (y-vy, y+h-vy, H)
+        lo, hi = max(0.0, lo), min(cap, hi)
+        assert hi > lo, ('peer has no face overlap', name, face, lo, hi)
+        return (face, round(lo, 4), round(hi, 4))
+    assignments = [
+        ('sp_su_s', 'S', ('f_su','t_su','t_inp_su')),
+        ('sp_capture', 'N', ('f_capture',)),
+        ('sp_gather', 'N', ('t_gather',)),
+        ('bk_collector', 'N', ('col',)),
+        ('sp_pq', 'N', ('f_pqx','t_pqx')),
+        ('mix4_slot', 'W', ('f_mx','t_mx')),
+        ('sp_sseq', 'S', ('c_',)),
+        ('sp_collective', 'E', ('t_crs',)),
+        ('sp_wfc', 'E', ('f_wfc','t_wfc')),
+        ('sp_hc_s', 'E', ('f_hc','t_hc','t_inp_hc')),
+        ('bk_selector', 'S', ('aSW','qSW','sel')),
+    ]
+    return {p: span(name, face) for name,face,ports in assignments for p in ports}
+
+
 def install_spans(spans):
     """replace R.port_face / R.connections port placement by the span-clipped version (same Prim tree otherwise)."""
     if spans is None:
@@ -391,6 +423,7 @@ def main():
     ap.add_argument('--out', required=True)
     ap.add_argument('--width', type=float, default=4104.0, help='total VM width (body = width - capture columns)')
     ap.add_argument('--caprow-per', type=int, default=8)
+    ap.add_argument('--hub-plan', help='exact current die hub_layout.json; overrides nominal peer spans')
     ap.add_argument('--hop1', action='store_true', help='remove the b4 relay level (b8 drives the banks)')
     ap.add_argument('--read-near', action='store_true')
     ap.add_argument('--return-far', action='store_true', help='with --read-near: return lanes stay at the outer end (beside the storage)')
@@ -412,7 +445,7 @@ def main():
         RP.PATHS['read'].insert(RP.PATHS['read'].index(next(h for h in RP.PATHS['read'] if h[0] == 'b8_return')),
                                 ('b8_bank', {('b8', 'bank')}))
     print('arranged', W, H, flush=True)
-    sp = spans_for(a.hub, W, H)
+    sp = spans_from_plan(a.hub_plan, W, H) if a.hub_plan else spans_for(a.hub, W, H)
     if sp is None:          # split4 reference: the grant's face map, free spans
         cdc = ('aSW', 't_wfc', 'f_wfc', 'sel', 'col', 'qSW', 't_gather')
         R.port_face = lambda p: 'E' if p.startswith(cdc) else baseface(p)
@@ -421,6 +454,9 @@ def main():
     res = dict(schema='opentallas.s81.vm-a2f-hub-faces.v1', status='SCREEN_NOT_GRT', hub=a.hub, arrangement=a.arr,
                rectangle_um=[W, H], area_mm2=round(W * H / 1e6, 4), legality=dict(spacing=bad, outside=outside),
                spans=sp, by_reach={})
+    if a.hub_plan:
+        res['peer_plan'] = dict(path=a.hub_plan, sha256=hashlib.sha256(Path(a.hub_plan).read_bytes()).hexdigest(),
+                                source=json.loads(Path(a.hub_plan).read_text()))
     for rr in a.reach:
         m = RP.measure(P, nets, W, H, rr)
         m['price'] = RP.price(m['write']['added_edges'], m['read']['added_edges'])
