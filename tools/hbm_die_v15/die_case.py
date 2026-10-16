@@ -440,6 +440,8 @@ def main():
         return rects
     obs = []
     for l, v in leaves.items():
+        if v['m'] == STN_M:      # relay stages are small: the clock wire crosses them (no repeater on them, Grid margin)
+            continue
         obs += minus_channels(l, v['x'], v['y'], v['w'], v['h'], v['o'])
     for n, b in P.items():
         if isinstance(b, dict) and 'x' in b and n.split('_')[0] not in ('phy', 'pc', 'sm'):
