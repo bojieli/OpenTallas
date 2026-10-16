@@ -77,7 +77,15 @@ FACES = {"N": "top", "S": "bottom", "E": "right", "W": "left"}
 #                      anchors every one of them at its own pin (R2: one flop -> INV fanout 7 -> 7 pins, unanchored).
 #        keep_pin_regs true: OT_KEEP_PIN_REGS=1 for physical/common_flow/ot_keep_regs.tcl -- synthesis keeps every top-level
 #                      register that drives an output port (opt_merge no longer folds equal pin registers).
-RECIPE_LATEST = 2
+#   3  (OWNER RULE 19:50 PT 2026-10-15) recipe 2 + PIN REGISTERS: every data input and every output of a leaf tile gets
+#      one flip-flop at its pin (physical/common_flow/ot_pin_regs.tcl, OT_PIN_REGS=1, run at synthesis on the elaborated
+#      top), clocked by the tile clock; clock / reset ports (and inouts) pass straight through.  +1 cycle per registered
+#      input and per registered output -- the compiler schedule absorbs it (pin_regs.json in the kit; the exact per-port
+#      table is $RESULTS_DIR/ot_pin_regs.tsv of the route).  io_flop_at_pins anchors them at the pin face.  Opt-out only
+#      with a recorded reason: "pin_regs": {"enable": false, "reason": "..."}; per-port: "pin_regs": {"exclude":
+#      "<regexp>", "reason": "..."}; a multi-clock tile names the data clock: "pin_regs": {"clock": "<port>"}.
+RECIPE_LATEST = 3
+PIN_REGS_RULE = "OWNER RULE 19:50 PT 2026-10-15: every new tile registers every input and every output at its pin"
 RECIPE_HOLD_PAD = "HB2xp67_ASAP7_75t_R"
 HOLD_PAD_STRONG = "HB4xp67_ASAP7_75t_R"
 PIN_REG_SPLIT_TCL = "physical/common_flow/pin_reg_split.tcl"
@@ -148,6 +156,8 @@ def apply_recipe(s: dict, recipe: int) -> dict:
         if not r.get("hold_delay"):
             s.setdefault("inhold", True)
             s.setdefault("outhold", True)
+    if recipe >= 3 and s.get("kind") == "tile":
+        s.setdefault("pin_regs", {"enable": True})
     if s.get("io_flop_at_pins"):
         s.setdefault("keep_pin_regs", True)
         if s.get("inhold") or s.get("outhold"):       # the split runs inside the recipe-2 pin hook (pre_gpl.tcl)
@@ -155,6 +165,42 @@ def apply_recipe(s: dict, recipe: int) -> dict:
     if (s.get("inhold") or s.get("outhold")) and "OT_INHOLD_MASTER" not in s.get("orfs_vars", {}):
         s.setdefault("hold_pad", {"cell": RECIPE_HOLD_PAD})
     return s
+
+
+def pin_regs_plan(s: dict) -> dict | None:
+    """the kit's pin-register plan (recipe 3) or None; SpecError on an opt-out / exclusion without a reason"""
+    pr = s.get("pin_regs")
+    if pr is None:
+        return None
+    if not isinstance(pr, dict):
+        raise SpecError('spec: pin_regs must be an object ({"enable": true} | {"enable": false, "reason": ...})')
+    if pr.get("enable") is False:
+        if not str(pr.get("reason", "")).strip():
+            raise SpecError(f"spec: pin_regs opt-out needs a recorded reason ({PIN_REGS_RULE})")
+        return {"enable": False, "reason": pr["reason"]}
+    if pr.get("exclude") and not str(pr.get("reason", "")).strip():
+        raise SpecError("spec: pin_regs.exclude needs a recorded reason")
+    cks = clock_ports(s)
+    ck = pr.get("clock") or (cks[0] if len(cks) == 1 else None)
+    if not ck:
+        raise SpecError(f"spec: multi-clock tile ({', '.join(cks)}): name the data clock in pin_regs.clock, or opt out "
+                        "with a reason")
+    return {"enable": True, "clock": ck, "clock_ports": cks, "exclude": pr.get("exclude", ""),
+            "reset": pr.get("reset", ""), "reason": pr.get("reason", ""),
+            "latency_cycles": {"input": 1, "output": 1}, "rule": PIN_REGS_RULE,
+            "per_port_table": "$RESULTS_DIR/ot_pin_regs.tsv (route synthesis: port dir width cycles why)"}
+
+
+def pin_regs_vars(s: dict) -> list:
+    plan = pin_regs_plan(s)
+    if not plan or not plan["enable"]:
+        return []
+    out = ["--orfs-var OT_PIN_REGS=1", f"--orfs-var OT_PIN_REGS_CLOCK={','.join([plan['clock']] + [c for c in plan['clock_ports'] if c != plan['clock']])}"]
+    if plan["exclude"]:
+        out.append(f"--orfs-var OT_PIN_REGS_EXCLUDE={shq(plan['exclude'])}")
+    if plan["reset"]:
+        out.append(f"--orfs-var OT_PIN_REGS_RESET={shq(plan['reset'])}")
+    return out
 
 
 def hold_pad_vars(s: dict) -> list:
@@ -652,6 +698,41 @@ def outline(s: dict, slot: dict | None, area_um2: float | None, blocks: list) ->
         w = max(w, b["w"] + 2 * CHANNEL_UM + 2 * CORE_MARGIN)
         h = max(h, b["h"] + 2 * CHANNEL_UM + 2 * CORE_MARGIN)
     return snap_up(w, og), snap_up(h, og), f"util {util} of std {area:.0f} + macros {mac:.0f} um2"
+
+
+PG_MIN_STRIPES, PG_MIN_SPREAD = 2, 0.50     # child_lint (b): MIN_STRIPES per net, first..last stripe >= MIN_SPREAD of the span
+
+
+def pg_stripe_spread(s: dict, lc: dict, W: float, H: float):
+    """(layer, per-net full stripes, spread) the generated pdn.tcl gives a leaf tile, or None (cluster / M7 tiles).
+    Mirrors gen_pdn: M5 stripes (vertical, across W) start CORE_MARGIN + 0.300 (+0.192 for the second net) at the
+    route.m5_pg_pitch; M6 stripes (horizontal, across H) start CORE_MARGIN + 2.0 (+0.384) at route.pg_pitch; a stripe is
+    made while it fits inside the core.  hbm_ckgen_rel-r1 (W 15.12, M5 at 5.4): 2 stripes, 36% -> export child_lint (b)
+    FAIL after a clean route, so gen sizes / refuses such outlines BEFORE the route (ROOT 2026-10-15)."""
+    if s["kind"] != "tile":
+        return None
+    pg = lc.get("pg_layer")
+    r = s.get("route", {})
+    if pg == "M5":
+        pitch, off, width, step, span = float(r.get("m5_pg_pitch", 5.4)), 0.300, 0.12, 0.192, W
+    elif pg == "M6":
+        pitch, off, width, step, span = float(r.get("pg_pitch", 10.8)), 2.0, 0.288, 0.384, H
+    else:
+        return None
+    n_min, spread_min = None, None
+    for d in (0.0, step):
+        xs, x = [], CORE_MARGIN + off + d
+        while x < span - CORE_MARGIN - 1e-6:          # OpenROAD makes a stripe whose start lies inside the core
+            xs.append(x)
+            x += pitch
+        sp = (xs[-1] - xs[0]) / span if len(xs) > 1 else 0.0
+        n_min = len(xs) if n_min is None else min(n_min, len(xs))
+        spread_min = sp if spread_min is None else min(spread_min, sp)
+    return pg, n_min, spread_min
+
+
+def pg_spread_ok(rec) -> bool:
+    return rec is None or (rec[1] >= PG_MIN_STRIPES and rec[2] + 1e-9 >= PG_MIN_SPREAD)
 
 
 def blocks_of(s: dict) -> list:
@@ -1310,6 +1391,7 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
             if not wrap:
                 extra.append("--step-tcl PRE_DETAIL_PLACE=physical/dsrom_window_source/leaf_inhold_release.tcl")
     extra += hold_pad_vars(s)
+    extra += pin_regs_vars(s)
     if s.get("keep_pin_regs"):
         extra.append("--orfs-var OT_KEEP_PIN_REGS=1")
     if s.get("pin_reg_split") and not wrap:
@@ -1599,9 +1681,25 @@ def gen(spec_path: str, area_um2: float | None = None, commit: str | None = None
         s["m6_pin_grant"] = lc["m6_pin_grant"]
     blocks = blocks_of(s)
     W, H, why = outline(s, slot, area_um2, blocks)
+    if not slot and not s.get("outline"):
+        # an auto-sized outline grows (on its grid) until the PDN gives the export's PG stripe spread
+        W0, H0 = W, H
+        while not pg_spread_ok(pg_stripe_spread(s, lc, W, H)) and max(W, H) < 4 * max(W0, H0, 21.6):
+            if lc.get("pg_layer") == "M6":
+                H = snap_up(H + GRID_Y, GRID_Y)
+            else:
+                W = snap_up(W + GRID_Y, GRID_Y)
+        if (W, H) != (W0, H0):
+            why += f"; grown {W0:g}x{H0:g} -> {W:g}x{H:g} for >= {PG_MIN_STRIPES} PG stripes per net spanning >= {PG_MIN_SPREAD:.0%}"
     place_blocks(s, W, H, blocks)
     std = area_um2 or s.get("std_area_um2")
     findings = floorplan_checks(s, W, H, blocks, std)
+    pgs = pg_stripe_spread(s, lc, W, H)
+    if not pg_spread_ok(pgs):
+        findings.append(("FAIL", "pg_spread",
+                         f"{pgs[0]} PG: {pgs[1]} stripes per net spanning {pgs[2]:.0%} of the outline (export child_lint (b) "
+                         f"needs >= {PG_MIN_STRIPES} spanning >= {PG_MIN_SPREAD:.0%}); the route would close and the export fail",
+                         "widen the outline across the stripes, or set route.m5_pg_pitch 2.7 (M5) / route.pg_pitch 5.4 (M6)"))
     kd = kit_dir(s)
     fp = {"schema": "opentallas.ref_tile.floorplan.v1", "name": s["name"], "top": s["top"], "kind": s["kind"],
           "die": [0, 0, W, H], "core": [CORE_MARGIN, CORE_MARGIN, W - CORE_MARGIN, H - CORE_MARGIN], "why": why,
@@ -1618,6 +1716,10 @@ def gen(spec_path: str, area_um2: float | None = None, commit: str | None = None
              **gen_hooks(s, kd), "floorplan.json": json.dumps(fp, indent=1) + "\n",
              "spec.json": json.dumps(({**raw_spec, "m6_pin_grant": lc["m6_pin_grant"]} if lc.get("m6_pin_grant")
                                       else {k: v for k, v in s.items()}), indent=1) + "\n"}
+    prp = pin_regs_plan(s)
+    if prp is not None:
+        files["pin_regs.json"] = json.dumps({"schema": "opentallas.ref_tile.pin_regs.v1", "top": s["top"], **prp},
+                                            indent=1) + "\n"
     ffr = gen_signoff_ffrepair(s, s.get("refglob", "*"), ",".join(s["inter"]) or "none_*")
     if ffr:
         files["signoff_ffrepair.sdc"] = ffr

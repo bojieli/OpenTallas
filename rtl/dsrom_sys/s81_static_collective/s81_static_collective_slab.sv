@@ -5,7 +5,7 @@
 // Configuration ROM/memory macro and production placement/phase/image are open
 // qualification gates. Missing ROM fails closed, never fabricates a schedule.
 module s81_static_collective_slab #(
- parameter ROM_FILE="",parameter integer CYCLES=1,parameter integer MUT=0
+ parameter ROM_FILE="",parameter integer CYCLES=1,parameter integer MUT=0,parameter integer VMB_PINCAP=1
 )(
  input wire[4:0]ck_control,input wire[7:0]ck_lane,input wire[15:0]ck_hc_lane,
  input wire rst_n,input wire[1:0]f_rank,
@@ -78,8 +78,23 @@ module s81_static_collective_slab #(
  wire boundary_fault;
  wire pack_bad;
  wire datapath_fault=transport_fault|channel_fault|raw_fault|reduce_fault|assemble_fault|boundary_fault|host_queue_fault;
- s81_static_calendar_controller #(.ROM_FILE(ROM_FILE),.CYCLES(CYCLES)) calendar(
- .clk(ck_control[0]),.rst_n(rn_control[0]),.c_cmd(c_cmd),.c_done(c_done),.c_st(controller_status),
+ // Calendar = CAL7 per-root reset controller (s81_static_calendar_controller7_resetpins, ROM ABI v3 RW565, record
+ // 9bbe3b9bb): its ROM banks and its three output roots are clocked from the sequencer clock ck_control[0], and
+ // each output root gets its own reset pin from a dedicated per-root synchronizer here (one load per reset net;
+ // the die delivers the same three pins from its reset tree). MUT=4 holds output root 1 in reset (must FAIL).
+ wire[2:0]ck_cal_out={3{ck_control[0]}};
+ wire[2:0]rn_cal_out;
+ generate for(root=0;root<3;root=root+1)begin:cal_reset_root
+  reg[1:0]rr;
+  always @(posedge ck_cal_out[root] or negedge rst_n)
+   if(!rst_n)rr<=0;else rr<={rr[0],!(MUT==4&&root==1)};
+  assign rn_cal_out[root]=rr[1];
+ end endgenerate
+ s81_static_calendar_controller7_resetpins #(.ROM_FILE(ROM_FILE),.CYCLES(CYCLES)) calendar(
+ .clk(ck_control[0]),.rst_n(rn_control[0]),
+ .rst_outputs0_n(rn_cal_out[0]),.rst_outputs1_n(rn_cal_out[1]),.rst_outputs2_n(rn_cal_out[2]),
+ .clk_rom({3{ck_control[0]}}),.clk_outputs(ck_cal_out),
+ .c_cmd(c_cmd),.c_done(c_done),.c_st(controller_status),
  .datapath_fault(datapath_fault),.busy(busy),
  .read_slot(read_slot),
  .read_row(read_row),
@@ -211,7 +226,9 @@ module s81_static_collective_slab #(
  // Native host ingress omits the historical credit bit. Its wire reservation
  // remains zero; accepting a nonzero bit would silently restore flow control.
  assign t_host=host_rx[514:0];
- s81_static_vm_boundary #(.MUT(MUT)) vm_boundary(
+ // VMB_PINCAP=1: native-qualified boundary leaf b7 (write path pin-captured, collective->VM write +1 fixed edge;
+ // the v3 calendar image prices it: gather_to_vm_source 2, hc_reduce_to_write 19)
+ s81_static_vm_boundary #(.MUT(MUT),.PINCAP(VMB_PINCAP)) vm_boundary(
  .clk(ck_control[2]),.rst_n(rn_control[2]),.read_slot(read_slot),.read_row(read_row),.t_crq(t_crq),.t_vm(t_vm),
  .commit_gather(commit_gather),.hc_reduce_slot(hc_reduce_slot),.gather_we(gather_we),.gather_rows(gather_rows),.gather_data(gather_data),.gather_tag(gather_tag),
  .hc_write_slot(hc_write_slot),.reduced_valid(reduced_valid),.reduced_error(reduced_error),.reduced_last(reduced_last),.reduced_seq(reduced_seq),

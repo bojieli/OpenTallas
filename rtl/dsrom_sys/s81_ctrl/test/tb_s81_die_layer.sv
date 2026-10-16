@@ -554,8 +554,18 @@ module tb_s81_die_layer;
         for (int i = 1; i < 4; i++) begin hcx_sap[i] <= hcx_sap[i-1]; hcx_smp[i] <= hcx_smp[i-1]; hcx_swp[i] <= hcx_swp[i-1]; end
         if (hcx_sc[3]) begin
             for (int w = 0; w < 16; w++) if (hcx_smp[3][w]) vm[hcx_sap[3]][32*w+:32] = hcx_swp[3][32*w+:32];
-            mark(hcx_sap[3]); hcx_writes++;
+            // coefficient rows become visible to the HC COEF job at the chain's compiled DONE (static schedule), never on a
+            // partial post write (the post writes a row in masked parts: marking on the first part let COEF read a half row)
+            if (!hcx_is_coef(hcx_sap[3])) mark(hcx_sap[3]);
+            hcx_writes++;
         end
+    end
+    function automatic bit hcx_is_coef(input [13:0] r);
+        return r == C_BASE || r == C_BASE + 1 || r == C_BASE + C_STRIDE || r == C_BASE + C_STRIDE + 1;
+    endfunction
+    integer hcx_dn = 0;
+    always @(posedge ck) if (rst && hcx_d[8]) begin
+        mark(C_BASE + C_STRIDE * hcx_dn); mark(C_BASE + C_STRIDE * hcx_dn + 1); hcx_dn <= hcx_dn + 1;
     end
     always @(posedge ck) if (rst && hcx_st[0]) $fatal(1, "HCX chain fault cycle=%0d cfault=%0d post=%0d gather=%0d proj_st=%b ctl_c=%0d ctl_s=%0d",
         cyc, u_hcx.cfault, hcx_sf, hcx_gf, hcx_pst[0], g_hx[0].u_p.controller.cfault, g_hx[0].u_p.controller.sfault);

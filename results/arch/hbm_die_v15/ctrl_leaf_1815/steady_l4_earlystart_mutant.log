@@ -1,0 +1,4 @@
+SM_STACK fault sources sm0: descriptor=0 cdc=0 cache=1 programme=0 feed=0 reserve_v=00 rbank=aaaa ready=00000000 cache_ready=ffff owned=ffff start_v=00 go=00 active=00
+[427085000] %Fatal: tb_hbm_svc_sm_stack_steady.sv:74: Assertion failed in tb_hbm_svc_sm_stack_steady: SM_STACK DUT fault cycle513 maskff
+%Error: rtl/hbm_accel/loader/service_native/tb_hbm_svc_sm_stack_steady.sv:74: Verilog $stop
+Aborting...

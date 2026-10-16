@@ -37,7 +37,12 @@ module tb_xload_static_lock;
         .rg_req(), .rg_gnt(1'b0), .wrq(), .wrq_cr(32'd0), .wrr({32*257{1'b0}}));
     ot_hgi_vm_unit #(.NC(5)) va (.clk(clk), .rst_n(rst_n), .cq({tq, qa}), .cr({tra, ra}), .status());
     wire [8*17-1:0] rq; reg [8*257-1:0] rr;
-`ifdef XLOAD_CLOCK_LEAVES
+`ifdef XLOAD_CL2
+    // H-SM 2026-10-15: the hardened-leaf cluster successor (ot_hgi_sm_xload_static_cl2) is the unit under the lock;
+    // the flat clock-leaf cl runs beside it on the same stimulus and every output must match on every cycle.
+    ot_hgi_sm_xload_static_cl2 #(.RD_LAT(RD_LAT), .MUT(MS)) ub (.clk(clk), .clk_bf(clk), .clk_qlo(clk), .clk_qhi(clk), .clk_bd(clk),
+        .rst_n(rst_n), .x_v(xs_v), .x_base(x_base), .x_n(x_n),
+`elsif XLOAD_CLOCK_LEAVES
     // five related phase-0 roots of the clock-leaf successor, all from the die clock (local mask capture built in)
     ot_hgi_sm_xload_static_cl #(.RD_LAT(RD_LAT), .MUT(MS)) ub (.clk(clk), .clk_bf(clk), .clk_qlo(clk), .clk_qhi(clk), .clk_bd(clk),
         .rst_n(rst_n), .x_v(xs_v), .x_base(x_base), .x_n(x_n),
@@ -46,6 +51,28 @@ module tb_xload_static_lock;
 `endif
         .x_p(x_p), .x_stride(x_stride), .x_space(2'd1), .x_fmt(x_fmt), .x_xb(x_xb), .x_busy(busy_b), .x_done(done_b),
         .x_fault(f_b), .xw_en(en_b), .xw_last(last_b), .xw_addr(ad_b), .xw_grp(gr_b), .xw_data(d_b), .rq(rq), .rr(rr));
+`ifdef XLOAD_CL2
+    wire busy_r, done_r, f_r, en_r, last_r; wire [6:0] ad_r, gr_r; wire [2047:0] d_r; wire [8*17-1:0] rq_r;
+    ot_hgi_sm_xload_static_cl #(.RD_LAT(RD_LAT), .MUT(0)) ur (.clk(clk), .clk_bf(clk), .clk_qlo(clk), .clk_qhi(clk), .clk_bd(clk),
+        .rst_n(rst_n), .x_v(xs_v), .x_base(x_base), .x_n(x_n), .x_p(x_p), .x_stride(x_stride), .x_space(2'd1), .x_fmt(x_fmt),
+        .x_xb(x_xb), .x_busy(busy_r), .x_done(done_r), .x_fault(f_r), .xw_en(en_r), .xw_last(last_r), .xw_addr(ad_r),
+        .xw_grp(gr_r), .xw_data(d_r), .rq(rq_r), .rr(rr));
+    integer cl2_diff = 0, cl2_cmp = 0;
+    always @(posedge clk) if (rst_n) begin : cl2cmp
+        reg bad; bad = 1'b0;
+        if (busy_b !== busy_r || done_b !== done_r || f_b !== f_r || en_b !== en_r || last_b !== last_r) bad = 1'b1;
+        if (en_r && (ad_b !== ad_r || gr_b !== gr_r || d_b !== d_r)) bad = 1'b1;
+        for (integer b = 0; b < 8; b = b + 1) begin
+            if (rq[b*17 + 16] !== rq_r[b*17 + 16]) bad = 1'b1;
+            if (rq_r[b*17 + 16] && rq[b*17 +: 16] !== rq_r[b*17 +: 16]) bad = 1'b1;
+        end
+        cl2_cmp = cl2_cmp + 1;
+        if (bad) begin
+            if (cl2_diff < 5) $display("ERR cl2 differs from cl at cycle %0d (en %b/%b busy %b/%b done %b/%b fault %b/%b)", cyc, en_b, en_r, busy_b, busy_r, done_b, done_r, f_b, f_r);
+            cl2_diff = cl2_diff + 1;
+        end
+    end
+`endif
     // ---- static VM read group model (declared boundary): word memory mirrored from the VM unit writes
     reg [31:0] mem [0:32767];
     integer z; initial for (z = 0; z < 32768; z = z + 1) mem[z] = 0;
@@ -140,6 +167,10 @@ module tb_xload_static_lock;
                 errors = errors + 1; end
             $display("cmd %0d fmt %0d P %0d K %0d xb %0d done %0d/%0d beats %0d span %0d", c, x_fmt, x_p, x_n, x_xb, nda, ndb, nbeats_b, last_bc - first_b + 1);
         end
+`ifdef XLOAD_CL2
+        $display("cl2 vs cl: %0d cycles compared, %0d differ", cl2_cmp, cl2_diff);
+        if (cl2_diff) errors = errors + 1;
+`endif
         if (f_b || lanefault) begin $display("static fault %b lanefault %0d", f_b, lanefault); errors = errors + 1; end
         if (errors == 0) $display("XLOAD_STATIC_LOCK PASS"); else $display("XLOAD_STATIC_LOCK FAIL %0d", errors);
         $finish;
