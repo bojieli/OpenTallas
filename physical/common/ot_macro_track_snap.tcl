@@ -17,6 +17,8 @@
 #   ot_mts::snap_origin master orient x y   nearest legal {x y} (um) on the site/row grid
 #   ot_mts::place inst x y orient ?status?  snap to the nearest legal origin that overlaps no placed
 #                                           macro and stays in the die; set orient, location, status (FIRM)
+#   ot_mts::place_many rows             synchronous list of {inst x y orient ?status?}; identical placement
+#                                      rules with one initial/final DB walk instead of a walk per instance
 #   ot_mts::assert_on_track ?-insts L? ?-label S? ?-warn_only?
 #       every placed CLASS BLOCK instance: every signal pin centre must lie on a preferred-direction
 #       track of its layer, using the block's own track grids (independent of the parsed file and of
@@ -32,6 +34,9 @@ namespace eval ot_mts {
     variable cache       ;# master,orient -> rule dict
     array set cache {}
     variable dbu 0
+    variable bulk_active 0
+    variable bulk_boxes {}
+    variable bulk_grid {}
 }
 
 proc ot_mts::gcd {a b} { while {$b} { set t [expr {$a % $b}]; set a $b; set b $t }; return $a }
@@ -205,6 +210,13 @@ proc ot_mts::snap_axis {target grid0 gpitch P S what} {
 }
 
 proc ot_mts::site_grid {} {
+    variable bulk_active
+    variable bulk_grid
+    if {$bulk_active} { return $bulk_grid }
+    return [db_site_grid]
+}
+
+proc ot_mts::db_site_grid {} {
     set block [ord::get_db_block]
     set row0 [lindex [$block getRows] 0]
     if {$row0 eq ""} { error "ot_mts: block has no rows" }
@@ -227,6 +239,15 @@ proc ot_mts::snap_origin {master orient x y} {
 
 # Placed macro footprints other than inst, as {x1 y1 x2 y2} (DBU).
 proc ot_mts::placed_macro_boxes {skip} {
+    variable bulk_active
+    variable bulk_boxes
+    if {$bulk_active} {
+        set out {}
+        dict for {i box} $bulk_boxes {
+            if {$i ne $skip} { lappend out $box }
+        }
+        return $out
+    }
     set out {}
     foreach i [[ord::get_db_block] getInsts] {
         if {$i eq $skip || ![[$i getMaster] isBlock]} { continue }
@@ -236,6 +257,52 @@ proc ot_mts::placed_macro_boxes {skip} {
         lappend out [list [$b xMin] [$b yMin] [$b xMax] [$b yMax]]
     }
     return $out
+}
+
+# A synchronous transaction: no caller code runs between placements. Snapshot existing
+# placed macros once, then maintain their actual DB bounding boxes after every placement.
+# The final independent DB walk detects stale/extra/missing footprints before returning.
+# An error clears the cache; successful earlier placements retain the ordinary place semantics.
+proc ot_mts::place_many {placements} {
+    variable bulk_active
+    variable bulk_boxes
+    variable bulk_grid
+    if {$bulk_active} { error "ot_mts::place_many: nested transaction" }
+    set bulk_boxes [dict create]
+    set bulk_grid [db_site_grid]
+    foreach i [[ord::get_db_block] getInsts] {
+        if {![[$i getMaster] isBlock]} { continue }
+        if {[$i getPlacementStatus] in {NONE UNPLACED}} { continue }
+        set b [$i getBBox]
+        dict set bulk_boxes $i [list [$b xMin] [$b yMin] [$b xMax] [$b yMax]]
+    }
+    set bulk_active 1
+    try {
+        set result {}
+        foreach p $placements {
+            if {[llength $p] ni {4 5}} { error "ot_mts::place_many: expected inst x y orient ?status?" }
+            lappend result [place {*}$p]
+        }
+        set actual [dict create]
+        foreach i [[ord::get_db_block] getInsts] {
+            if {![[$i getMaster] isBlock]} { continue }
+            if {[$i getPlacementStatus] in {NONE UNPLACED}} { continue }
+            set b [$i getBBox]
+            dict set actual $i [list [$b xMin] [$b yMin] [$b xMax] [$b yMax]]
+        }
+        if {[dict size $actual] != [dict size $bulk_boxes]} { error "ot_mts::place_many: footprint count drift" }
+        if {[db_site_grid] ne $bulk_grid} { error "ot_mts::place_many: site grid drift" }
+        dict for {i box} $actual {
+            if {![dict exists $bulk_boxes $i] || [dict get $bulk_boxes $i] ne $box} {
+                error "ot_mts::place_many: footprint drift for $i"
+            }
+        }
+        return $result
+    } finally {
+        set bulk_active 0
+        set bulk_boxes {}
+        set bulk_grid {}
+    }
 }
 
 # Snap to the nearest legal origin whose footprint overlaps no other placed macro and stays inside
@@ -283,6 +350,16 @@ proc ot_mts::place {inst x y orient {status FIRM}} {
     $inst setOrient $orient
     $inst setLocation $bx $by
     $inst setPlacementStatus $status
+    variable bulk_active
+    variable bulk_boxes
+    if {$bulk_active && [$m isBlock]} {
+        if {[$inst getPlacementStatus] in {NONE UNPLACED}} {
+            dict unset bulk_boxes $inst
+        } else {
+            set bb [$inst getBBox]
+            dict set bulk_boxes $inst [list [$bb xMin] [$bb yMin] [$bb xMax] [$bb yMax]]
+        }
+    }
     set px [expr {double($bx)/$dbu}]; set py [expr {double($by)/$dbu}]
     puts [format "OT_MTS_PLACE %s %s %s requested (%.3f, %.3f) placed (%.3f, %.3f)" \
               [$inst getName] [$m getName] $orient $x $y $px $py]

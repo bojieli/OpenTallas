@@ -1,0 +1,75 @@
+{
+  "verdict": "PASS",
+  "source_revision": "36732083b",
+  "scope": "CURRENT production full128SRAM die-name VM master, READ_PIPE4/CAP_PIPE2, explicit WSCATTER_PIPE0 and1",
+  "source_binding": "48sourcefiles exported directly once from36732083b into unique immutablepackage. Every postrunhash equals stagedmanifest. All8actualcompilecommands andbinary/archivehashes retained. No older-source qualification inherited.",
+  "remote_package": "ot-agidock128:/srv/opentallas-scratch/codex/s81vm-master-current36732083b",
+  "qualification": {
+    "WSCATTER_PIPE0": {
+      "base_seeds": [
+        1,
+        2
+      ],
+      "named_fault_modes": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "rejected_mutants": [
+        "capword",
+        "wfcpair",
+        "x43phase"
+      ],
+      "gate_exit": 0,
+      "base_markers": [
+        "TB_SPVM RESULT mode 0 records 32 qSW 20 gather 4 wfc_rd 32 su_rd 245 cl_rows 101 dones 5 bad 0",
+        "TB_SPVM RESULT mode 0 records 32 qSW 20 gather 4 wfc_rd 32 su_rd 237 cl_rows 93 dones 5 bad 0"
+      ]
+    },
+    "WSCATTER_PIPE1": {
+      "base_seeds": [
+        1,
+        2
+      ],
+      "named_fault_modes": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "rejected_mutants": [
+        "capword",
+        "wfcpair",
+        "x43phase"
+      ],
+      "gate_exit": 0,
+      "base_markers": [
+        "TB_SPVM RESULT mode 0 records 32 qSW 20 gather 4 wfc_rd 32 su_rd 245 cl_rows 101 dones 5 bad 0",
+        "TB_SPVM RESULT mode 0 records 32 qSW 20 gather 4 wfc_rd 32 su_rd 237 cl_rows 93 dones 5 bad 0"
+      ]
+    }
+  },
+  "admission": {
+    "host": "ot-agidock128",
+    "unit": "oth-ubuntu-951635-1792088828",
+    "memory_GB": 32,
+    "threads": 16,
+    "parallel_gates": 2,
+    "actual_aggregate_exit": 0
+  },
+  "reset": "Same warm reset as prior correction: assert3337ps, release13244ps, bench_active only at release.",
+  "source_switches": "PIPE1 bench explicitly passes WSCATTER_PIPE1 via dsfd_sp_vm/core/static512/slice down to scatter_b8_out.PIPE. PIPE0 passes0. Source default remains0.",
+  "limitations": [
+    "Functional exactness only; no new physical timing claim.",
+    "Original6588c611c resetproof remains separately preserved; this receipt exclusively qualifies36732083b."
+  ]
+}

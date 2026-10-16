@@ -48,5 +48,16 @@
   "b2_swap_grp_static",
   "ot_vms_bank_static",
   "three actual SRAM macro models"
- ]
+ ],
+ "clock_ownership": {
+  "checks": 64,
+  "independent_bank_roots": 8,
+  "collapsed_and_rotated_root_mutants": "both reject at first incorrect pulse",
+  "scope": "component clock ownership, not full compensated related-phase timing"
+ },
+ "exceptional_over_ack": {
+  "checks": 4,
+  "fault_visibility_added_edges": 1,
+  "normal_fence_and_data_edges": "unchanged; explicitly typed exceptional fault delay"
+ }
 }

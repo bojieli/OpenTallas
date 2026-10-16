@@ -1,5 +1,6 @@
 `timescale 1ns/1ps
 module tb_hbm_svc_static_vm_delivery;
+ parameter integer LAT=0;  // interface latency of the implementation under test (v3 split lanes: 2)
  reg clk=0;always #5 clk=~clk;
  reg rst_n=0,begin_v=0,begin_bank=0,start=0,start_bank=0;
  reg [15:0] begin_epoch=77,start_epoch=77,start_base_sector=16'h2800;
@@ -28,14 +29,14 @@ module tb_hbm_svc_static_vm_delivery;
    end
    tick();@(negedge clk);
   end
-  fill_v=0;if(block_ready!==1||fault)$fatal(1,"fill");
-  start=1;tick();check_slot(0);@(negedge clk);start=0;
+  fill_v=0;repeat(LAT) tick();if(block_ready!==1||fault)$fatal(1,"fill");
+  start=1;tick();if(LAT==0)check_slot(0);@(negedge clk);start=0;if(LAT>0)begin repeat(LAT) tick();check_slot(0);end
   for(n=1;n<256;n=n+1)begin tick();check_slot(n);end
   if(busy||fault)$fatal(1,"256 cycle duration");
   tick();for(p=0;p<8;p=p+1)if(dq[p*281+280])$fatal(1,"extra slot");
   // Cross-sid blocks must fail without producing any delivery.
-  @(negedge clk);start=1;start_base_sector=16'h3fe0;tick();
+  @(negedge clk);start=1;start_base_sector=16'h3fe0;tick();if(LAT>0)begin @(negedge clk);start=0;repeat(LAT) tick();end
   if(!fault||busy)$fatal(1,"aperture crossing accepted");
-  $display("STATIC_VM_DELIVERY PASS sectors=2048 slots=256 II=1 dq_bits=2248 aperture_fault=1");$finish;
+  $display("STATIC_VM_DELIVERY PASS LAT=%0d sectors=2048 slots=256 II=1 dq_bits=2248 aperture_fault=1",LAT);$finish;
  end
 endmodule

@@ -20,6 +20,11 @@ def main():
  ap=argparse.ArgumentParser();ap.add_argument('--out',required=True);ap.add_argument('--mutant',choices=['none','width','reset'],default='none');a=ap.parse_args()
  plan=json.loads((ROOT/'results/arch/hbm_io_native_1014/source_plan.json').read_text());errors=[];checks=0
  ld=ports(plan['source_loader'],'ot_hfd_loader_hgi');ctl=ports('rtl/hbm_accel/io_native_20261014/ot_hbm_host_packet.sv','ot_hbm_host_packet');sd=ports('rtl/hbm_accel/io_native_20261014/hfd_serdes487.sv','hfd_serdes487');ep=ports('rtl/hbm_accel/tu/lk_ep_20261010/hfd_lk_ep.sv','hfd_lk_ep')
+ # Static ingress adds a real response port beyond the historical 787-bit
+ # loader face. It is explicit on both wrappers; never assume h carries it.
+ for master in ('ot_hbm_host_packet','hfd_host_packet_face','hfd_host_native'):
+  actual=ports('rtl/hbm_accel/io_native_20261014/'+master+'.sv',master);checks+=1
+  if actual.get('s_bresp')!=('input',2):errors.append(f'{master} missing static BRESP extension')
  if a.mutant=='width':plan['loader_ports'][0]['width']+=1
  if a.mutant=='reset':sd.pop('rst_n')
  used=set()

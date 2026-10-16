@@ -1,0 +1,8 @@
+read_verilog -sv source.sv
+hierarchy -top qfd_res_train_static -chparam BAND 2
+synth -top qfd_res_train_static -noabc
+dfflibmap -liberty SEQ.lib
+abc -liberty COMB.lib
+clean
+stat -liberty SEQ.lib -liberty COMB.lib
+write_json parent_mapped.json

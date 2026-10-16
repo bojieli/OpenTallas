@@ -205,13 +205,21 @@ def spread(mac: dict, dw: float, dh: float, clock: str, resets: list):
         c = trk(L / 2)
         # the clock group sits at the centre: data pins within 0.2 um of it move off by one track pair
         cks = [trk(c + TRK * 2 * k) for k in range(len(ck))]
-        taken = set(cks)
+        # data pins: strictly increasing by >= 1 track, never within 2 tracks of the clock group; the face stays inside
+        # [EDGE, L - EDGE] (the 13:4x qbank_S_t GRT-0209: a pass that also avoided earlier data pins pushed pins off the
+        # face end when the pitch was below 2 tracks)
+        prev = -1.0
         for i, v in enumerate(coords):
-            while any(abs(v - t) < 0.0955 for t in taken):
-                v = trk(v + TRK * 2)
+            v = max(v, round(prev + TRK, 3))
+            while any(abs(v - t) < 2 * TRK - 0.0005 for t in cks):
+                v = trk(v + TRK)
             coords[i] = v
-            taken.add(v)
+            prev = v
+        assert coords[-1] <= L - TRK if coords else True, (f, coords[-1], L)
         assert len(set(coords + cks)) == n + len(ck), f
+        lay = {}
+        for p, v in zip(data, coords):
+            lay.setdefault(p['layer'], []).append(v)
         tracks = int((L - 2 * EDGE) / TRK)
         rep[f] = dict(pins=n + len(ck), pitch_um=round(pitch, 4), b_per_um=round((n + len(ck)) / (L - 2 * EDGE), 2),
                       cut=round((n + len(ck)) / tracks, 3))
@@ -336,7 +344,8 @@ def main() -> int:
                     'purpose': f'S81 FILL-S2: die master {d["master"]} ({d["inst"]} replicas, hardened once): exact '
                                f'lockstep bench + failing mutant; recipe 2, M5 cap, GEN19b pins evenly spread',
                     'views_to': f'physical/ref_tile/{name}/views', 'record_to': f'results/rtl/ref_tile/{name}',
-                    'extra_paths': d['extra'], 'benches': benches},
+                    'extra_paths': [x if x != PIN_DIR else f'{PIN_DIR}/{pin_name(name, d)}.tcl' for x in d['extra']],
+                    'benches': benches},
         }
         p = ROOT / SPEC_DIR / f'{name}.json'
         p.write_text(json.dumps(spec, indent=1) + '\n')

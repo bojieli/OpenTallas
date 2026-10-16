@@ -20,6 +20,7 @@ of the shipped programme, results/arch/qwen_split_compute_1014/res_train_decisio
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import re
 import sys
@@ -28,20 +29,56 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "tools/throughput"))
 import accepted_cost as ac  # noqa: E402
+sys.path.insert(0, str(ROOT / "tools"))
+import hdc_isa as isa  # noqa: E402
 
 GT, TB, D, NB = 3072, 10, 2, 3
 DECISION = ROOT / "results/arch/qwen_split_compute_1014/res_train_decision_1015/decision.json"
 PCS = ROOT / "results/arch/qwen_split_compute_1014/vmwb_1015/pcs.txt"
 NODE = {"PC1": "qkv", "PC11": "attn_kv", "PC12": "o_proj", "PC16": "gate_up", "PC20": "down"}
+NATIVE_ROUTE = ROOT / "rtl/qwen_sys/static_schedule_20261014/ot_qfd_native_cmd_route.sv"
+
+
+def check_native_route(text=None):
+    text = NATIVE_ROUTE.read_text() if text is None else text
+    compact = re.sub(r"\s+", "", text)
+    required = ("assignrom_cmd={cmd[379:1],cmd[0]&&!cmd[55]};",
+                "assignnative_cmd={cmd[379:1],cmd[0]&&cmd[55]};")
+    if not all(statement in compact for statement in required):
+        raise ValueError("native WSRC dispatch changed: source-specific route classification requires review")
+
+
+def shipped_me_operations(stage="decoder"):
+    path = ROOT / f"tools/qwen_producer_train/{stage}_program.hex"
+    operations = {}
+    for pc, word in enumerate(path.read_text().splitlines()):
+        if not word.strip():
+            continue
+        fields = isa.decode(int(word, 16))
+        if fields["unit"] == isa.UNIT_ME:
+            operations[f"PC{pc}"] = fields
+    return operations
 
 
 def fields(line):
     pc, *args = line.split()
     f = dict(nout=0, tiles=1, k=1, ts=0, split=0, oen=0, obase=0, ots=0, ojs=0)
+    supported = set("nout tiles k ts split oen obase ots ojs wsrc round mmode wbase ks js xbase xks xjs xcs wcs".split())
+    for key in supported:
+        f.setdefault(key, 0)
+    seen = set()
     for a in args:
-        m = re.match(r"\+(\w+)=(\d+)", a)
-        if m and m.group(1).lower() in f:
-            f[m.group(1).lower()] = int(m.group(2))
+        m = re.fullmatch(r"\+(\w+)=(\d+)", a)
+        if not m or m.group(1).lower() not in supported:
+            raise ValueError(f"{pc}: invalid workload argument {a}")
+        key = m.group(1).lower()
+        if key in seen:
+            raise ValueError(f"{pc}: duplicate workload argument {key}")
+        seen.add(key)
+        if key in f:
+            f[key] = int(m.group(2))
+    if f["nout"] <= 0:
+        raise ValueError(f"{pc}: positive NOUT is required by the RTL bench")
     return pc, f
 
 
@@ -138,6 +175,56 @@ def conflicts(f, ed, rw):
     return bad
 
 
+def route_binding(profile):
+    """Bind one issuer TE to three explicitly measured physical path ages.
+
+    Ages have a common origin: the TT result-tag output. Missing ages refuse
+    binding. This checks a supplied route model, never qualifies physical timing.
+    """
+    def age(value, name):
+        if type(value) is not int or value < 0:
+            raise ValueError(f"unassigned or invalid route age: {name}")
+        return value
+    issue = age(profile.get("tag_to_issue_edges"), "tag_to_issue_edges")
+    bands = profile.get("bands", [])
+    if len(bands) != NB or {band.get("band") for band in bands} != set(range(NB)):
+        raise ValueError("route profile requires exactly bands 0, 1, 2")
+    bands = sorted(bands, key=lambda band: band["band"])
+    delays, offsets = [], []
+    for band in bands:
+        capture = age(band.get("tag_to_capture_edges"), "tag_to_capture_edges")
+        fanout = age(band.get("train_fanout_edges"), "train_fanout_edges")
+        if capture < 13:
+            raise ValueError("route capture precedes measured 13-edge component path")
+        delays.append(capture - issue - fanout)
+        offsets.append(capture - 13)
+    if len(set(delays)) != 1 or delays[0] < 2:
+        raise ValueError("one TRAIN_EDGES cannot align all three band captures; explicit path padding required")
+    return dict(TRAIN_EDGES=delays[0], band_capture_offsets=offsets,
+                scope="Supplied fixed-edge route model only; physical/source evidence remains external")
+
+
+def routed_calendar(f, c0, profile):
+    binding = route_binding(profile)
+    ed, _, late = calendar(f, c0)
+    offsets = binding["band_capture_offsets"]
+    ed = {key: edge + offsets[key[1]] for key, edge in ed.items()}
+    bad = conflicts(f, ed, rows(f))
+    # Band 2 owns end markers. Matching each band's train-start to its capture
+    # does not suffice: an early end could expose a burst before another band.
+    ns = train(f)["slot_count"]
+    ending = {}
+    for k in range(8 * f["tiles"]):
+        end = ed[(k, NB - 1, ns - 1)]
+        ending[k] = end
+        pending = [key for key in rows(f) if key[0] <= k and ed[key] > end]
+        if pending:
+            bad.append(("end before all prior rows", k, pending))
+    return dict(binding=binding, bank_or_end_conflicts=bad,
+                last_landing_after_go=c0 + max(ending.values()) + 3,
+                capture_after_emission=len(late), ok=not bad and not late)
+
+
 def check_rtl_rows(pc, f, rows_dir):
     p = Path(rows_dir) / f"{pc}.log"
     got = {}
@@ -145,7 +232,10 @@ def check_rtl_rows(pc, f, rows_dir):
         if line.startswith("ROW"):
             d = dict(re.findall(r"(\w+)=(\w+)", line))
             if d["we"] == "1":
-                got[(int(d["cap"]), int(d["band"]), int(d["slot"]))] = int(d["addr"]) & 0xFFFFF
+                key = (int(d["cap"]), int(d["band"]), int(d["slot"]))
+                if key in got:
+                    raise ValueError(f"{pc}: duplicate RTL row {key}")
+                got[key] = int(d["addr"]) & 0xFFFFF
     return got == rows(f), len(got)
 
 
@@ -172,28 +262,64 @@ STRUCTS = {
 }
 
 
+def read_program(path, dec):
+    """Require the complete pinned decoder result-op contract, including VM-weight PC11.
+
+    --pcs supplies workload fields, not permission to reduce the production shape.
+    Capture profiles remain measured inputs; changing the shape requires new profiles.
+    """
+    program = {}
+    check_native_route()
+    shipped = shipped_me_operations()
+    if set(shipped) != set(NODE):
+        raise ValueError("shipped decoder ME operations differ from the supported measured profile")
+    for line in Path(path).read_text().splitlines():
+        if not line.strip():
+            continue
+        pc, f = fields(line)
+        if pc not in NODE:
+            raise ValueError(f"unsupported result op {pc}")
+        if pc in program:
+            raise ValueError(f"duplicate result op {pc}")
+        if not 1 <= f["tiles"] <= 8 or not 0 <= f["split"] <= 15 or f["oen"] not in (0, 1):
+            raise ValueError(f"{pc}: fields outside the serializer contract")
+        caps = dec[pc]["capture_cycles_after_go"]
+        expected = [caps[0] + (k // 8) * f["ts"] + k % 8 for k in range(8 * f["tiles"])]
+        if caps != expected:
+            raise ValueError(f"{pc}: workload capture shape differs from measured profile")
+        if any(value != shipped[pc]["me_" + key] for key, value in f.items()):
+            raise ValueError(f"{pc}: workload fields differ from the actual shipped programme")
+        program[pc] = f
+    if set(program) != set(NODE):
+        raise ValueError(f"incomplete decoder result programme: missing {sorted(set(NODE) - set(program))}")
+    return program
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--pcs", default=str(PCS))
     ap.add_argument("--rows-dir", help="tb_vmwb_rows logs: cross-check the row law against the actual RTL ports")
     ap.add_argument("--out", help="write the calendar/cost JSON here")
+    ap.add_argument("--route-profile", help="actual per-band fixed-edge path ages; missing or inconsistent ages refuse binding")
     a = ap.parse_args(argv)
     dec = json.loads(DECISION.read_text())["link_handoff"]["ops"]
     ops, ok = {}, True
-    for line in Path(a.pcs).read_text().splitlines():
-        if not line.strip():
-            continue
-        pc, f = fields(line)
+    for pc, f in read_program(a.pcs, dec).items():
         caps = dec[pc]["capture_cycles_after_go"]
         c0 = caps[0]
-        assert caps == [c0 + (k // 8) * f["ts"] + k % 8 for k in range(len(caps))], pc
         rw = rows(f)
         rec = dict(fields=f, train=train(f), real_rows=len(rw), first_capture_after_go=c0,
                    last_capture_after_go=caps[-1], unconstrained_last_landing=caps[-1] + D + 25)
+        native = shipped_me_operations()[pc]["me_wsrc"] != 0
+        rec["actual_native_route"] = "native59_service_to_vm_ar" if native else "rom_ports_to_serializer_to_vm_rb"
+        rec["component_serializer_path_is_production_route"] = not native
         if a.rows_dir:
             same, n = check_rtl_rows(pc, f, a.rows_dir)
             rec["row_law_matches_rtl"] = same
             ok &= same
+        if a.route_profile:
+            rec["route_calendar"] = routed_calendar(f, c0, json.loads(Path(a.route_profile).read_text()))
+            ok &= rec["route_calendar"]["ok"]
         rec["structures"] = {}
         for name, st in STRUCTS.items():
             ed, last, late = calendar(f, c0, **st)
@@ -214,6 +340,9 @@ def main(argv=None):
                              face_cycles_per_layer_token_ops=sum(d_tok.values()),
                              e2e_loss_pct_incl_pc11=e2e(d)[0], e2e_loss_pct_token_ops=e2e(d_tok)[0])
     out = dict(schema="opentallas.qwen.vm_writeback_calendar.v1", tool="tools/qwen_vmwb/wb_calendar.py",
+               decoder_program_sha256=hashlib.sha256((ROOT / "tools/qwen_producer_train/decoder_program.hex").read_bytes()).hexdigest(),
+               native_dispatch_source_sha256=hashlib.sha256(NATIVE_ROUTE.read_bytes()).hexdigest(),
+               routing_scope="PC11 standalone serializer evidence is diagnostic: native WSRC dispatch bypasses rom_cmd/serializer. The incl-PC11 price is a conservative component envelope, not measured native-layer latency.",
                law=dict(row="obase + (k//8)*ots*(GT>>split) + (k%8)*ojs + g(split,pt)*ots",
                         emission="c0 + D + b*NS + (k//8)*P + (k%8)*NS + s, P = max(8NS, stride)",
                         bank="distinct mod 16 and mod 64 per edge (proved)"),

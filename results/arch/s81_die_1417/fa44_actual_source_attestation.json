@@ -1,0 +1,33 @@
+{
+  "scope": "ACTUAL_COMPLETE_IMMUTABLE_SOURCE_TREE_BYTES_VERIFIED_NO_MODEL_REPLAY_QUALIFICATION",
+  "at": "2026-10-15T14:59:12.467813-07:00",
+  "source_commit": "fa44c38ee1803df8ef56b3007a38d3ddfd279155",
+  "source_manifest_sha256": "d102d752a2fc8dc82716e29f22b06d8e7a52d873891cff78599101c142ff65ca",
+  "source_manifest_reproduce": "tools/s81/die_source_manifest.py make --repo <repo> --commit fa44c38ee --out manifest.json",
+  "source_root": "ot-epyc4:/srv/opentallas-scratch/codex/s81-die-1417/src",
+  "actual": {
+    "files": 151403,
+    "bytes": 24893186291,
+    "external_files": 0,
+    "git_tree": "1bd8cdce9f8964dabacc7058b92de510bc14d2b7"
+  },
+  "lfs_objects": [
+    {
+      "path": "results/uarch/qwen_rom_reset_producer_g0_20261002/die_proc.json.gz",
+      "mode": "100644",
+      "git_blob": "678316b2356fd988e3193f5d45fa125b68c805ce",
+      "bytes": 138265595,
+      "lfs_sha256": "3c841a0b9e96c932ade50fdebc94eb9a9142bda9705a02c19b7cf0f9595cfb98"
+    }
+  ],
+  "external_files": [],
+  "execution": {
+    "host": "ot-epyc4",
+    "unit": "oth-ubuntu-1707281-1792101369",
+    "exit": 0,
+    "mem_gb": 4,
+    "threads": 1
+  },
+  "cache_cleanup": "only untracked .pytest_cache removed from own terminal snapshot; original Claude sources untouched",
+  "replay_status": "NOT_USED: fa44 GEN21g failed before finalized model capture; full emitter byte-equivalence remains pending"
+}

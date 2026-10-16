@@ -1,0 +1,43 @@
+{
+ "cell": "ot_hbm_host_static_ingress",
+ "view": "physical/ref_tile/hbm_host_static_ingress_pin2_ref/views/ot_hbm_host_static_ingress",
+ "lib_cell": "ot_hbm_host_static_ingress",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 204.5,
+ "spread_ps": 35.1,
+ "outputs": 359,
+ "inputs": 69,
+ "launch_ps": 196.4,
+ "launch_pin": "cfg_data[175]",
+ "capture_ps": 184.8,
+ "capture_pin": "s_rready",
+ "launch_over": 0,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pass": true,
+ "fail_why": "",
+ "source_commit": "4e16b003e",
+ "source_sha256": "0ffcaf501a08d69ffe4af48cad2aa4f2eacd0cebd0dffbd6b4ed3e78c502a0ee",
+ "record_commit": "6bf16b61b",
+ "view_files_sha256": {
+  "ot_hbm_host_static_ingress.lef": "708ec7cc90a79c5ae3568264f0494dea775cf65f41111299f3cf066d12cc3107",
+  "ot_hbm_host_static_ingress_tt.lib": "b5a3a30eff0eb095fcfaf409f7c121c6bb664fcff429daad21bdeaa74138135f",
+  "ot_hbm_host_static_ingress_ff.lib": "2493a2c729f260a7e876c5bfd144d4d3711e668fb74eb0009662735429c87174",
+  "insertion.json": "df589feb8d66e6d966c155ba7b1e54fc2a0394d4e8b59a2cb453f7ce811a9d7f"
+ },
+ "routed": {
+  "TT_ps": 181.4,
+  "FF_ps": 23.86,
+  "DRC": 0,
+  "SS_sensitivity_ps": -87.25
+ },
+ "source_LEF_port_bind": {
+  "pass_": true,
+  "signals": 430
+ },
+ "parent_and_die_qualified": false
+}
