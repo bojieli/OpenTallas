@@ -24,6 +24,14 @@ def main():
     ap.add_argument('out', type=Path)
     a = ap.parse_args()
     binary, vec, out = a.binary.resolve(), a.vectors.resolve(), a.out.resolve()
+    build = binary.parent.parent
+    source_manifest = build/'source.sha256'
+    for line in source_manifest.read_text().splitlines():
+        expected, name = line.split(maxsplit=1)
+        if sha(Path(name.strip())) != expected:
+            raise ValueError(f'built source hash mismatch: {name}')
+    if (build/'binary.sha256').read_text().split()[0] != sha(binary):
+        raise ValueError('built binary hash mismatch')
     meta = json.loads((vec/'meta.json').read_text())
     if [meta.get(k) for k in ('q_heads', 'kv_heads', 'hd', 'groups')] != [4, 1, 128, 3072]:
         raise ValueError('requires actual TP8 four-head/one-KV-head, 3072-group vectors')
@@ -45,13 +53,14 @@ def main():
         log = r.stdout+r.stderr
         (out/(mode+'.log')).write_text(log)
         terminal = [line for line in log.splitlines() if line.startswith('ENDPOINT ')]
-        passed = bool(terminal) and (r.returncode != 0 if mode == 'tx_first_late' else r.returncode == 0)
+        passed = bool(terminal) and ((r.returncode != 0 and 'native endpoint exact/timeline gate failed' in log)
+                                     if mode == 'tx_first_late' else r.returncode == 0)
         records.append(dict(mode=mode, command=cmd, exit_code=r.returncode, passed=passed,
                             terminal=terminal, log_sha256=sha(out/(mode+'.log'))))
         if not passed:
             break  # fault controls cannot qualify a nonfunctional positive
     receipt = dict(scope='ACTUAL_SOURCE_ENDPOINT_COMPONENT_ONLY', binary_sha256=sha(binary),
-                   vector_meta=meta, programme=programme, records=records,
+                   source_manifest_sha256=sha(source_manifest), vector_meta=meta, programme=programme, records=records,
                    passed=len(records)==7 and all(r['passed'] for r in records),
                    native_full_layer=False, native_full_token=False, physical_qualified=False)
     (out/'receipt.json').write_text(json.dumps(receipt, indent=2)+'\n')
