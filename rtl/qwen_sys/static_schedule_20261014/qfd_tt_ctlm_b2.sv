@@ -213,7 +213,7 @@ module qfd_tt_ctlm_b2 #(parameter integer XPF_TRANSPORT_EDGES=-1) (
        .start(dvm_stage_start),.stop(xpf_active&&xpf_cycle==stop_cycle),.stage(xpf_stage),
        .cp_issue(monitor_me[15]&&monitor_me[13:12]==3),.cp_pc(xpf_me_pc),.me_issue(xpf_me_event&&monitor_me[13:12]==1),.me_pc(xpf_me_pc),.su_issue(monitor_su[15]),.su_pc(monitor_su[11:0]),
        .xpf(xpf),.image_ready(xpf_monitor_ready),.fault(xpf_schedule_fault),.active(xpf_active),.cycle(xpf_cycle));
-    ot_qfd_tt_ctlm_static_parent u_body (
+    ot_qfd_tt_ctlm_b2_parent u_body (
         .ck_me_sched(ck_me_sched),
         .cp_active(cp_active),.cp(cp),
         .me_image_ready(me_image_ready),.program_obs(program_obs),

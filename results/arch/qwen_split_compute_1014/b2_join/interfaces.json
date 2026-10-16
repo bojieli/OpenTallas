@@ -2,6 +2,702 @@
   "status": "SOURCE_ONLY_UNQUALIFIED",
   "sources": [
     {
+      "source": "rtl/qwen_split/qfd_res_train_half_b2_wrappers.sv",
+      "sha256": "469c76349d43c32122e0a27ce7c7595b198205f71869b53f954ff420edf3f97a",
+      "top": "qfd_res_train_half_b2_0",
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_bank": {
+          "direction": "input",
+          "bits": 24
+        },
+        "train_start": {
+          "direction": "input",
+          "bits": 1
+        },
+        "train_count": {
+          "direction": "input",
+          "bits": 4
+        },
+        "capture_stride": {
+          "direction": "input",
+          "bits": 32
+        },
+        "payload_write": {
+          "direction": "input",
+          "bits": 1
+        },
+        "slot_count": {
+          "direction": "input",
+          "bits": 4
+        },
+        "rq": {
+          "direction": "input",
+          "bits": 2213
+        },
+        "rb": {
+          "direction": "output",
+          "bits": 551
+        },
+        "fault": {
+          "direction": "output",
+          "bits": 1
+        }
+      }
+    },
+    {
+      "source": "rtl/qwen_split/qfd_res_train_half_b2_wrappers.sv",
+      "sha256": "469c76349d43c32122e0a27ce7c7595b198205f71869b53f954ff420edf3f97a",
+      "top": "qfd_res_train_half_b2_1",
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_bank": {
+          "direction": "input",
+          "bits": 24
+        },
+        "train_start": {
+          "direction": "input",
+          "bits": 1
+        },
+        "train_count": {
+          "direction": "input",
+          "bits": 4
+        },
+        "capture_stride": {
+          "direction": "input",
+          "bits": 32
+        },
+        "payload_write": {
+          "direction": "input",
+          "bits": 1
+        },
+        "slot_count": {
+          "direction": "input",
+          "bits": 4
+        },
+        "rq": {
+          "direction": "input",
+          "bits": 2213
+        },
+        "rb": {
+          "direction": "output",
+          "bits": 551
+        },
+        "fault": {
+          "direction": "output",
+          "bits": 1
+        }
+      }
+    },
+    {
+      "source": "rtl/qwen_split/qfd_res_train_half_b2_wrappers.sv",
+      "sha256": "469c76349d43c32122e0a27ce7c7595b198205f71869b53f954ff420edf3f97a",
+      "top": "qfd_res_train_half_b2_2",
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_bank": {
+          "direction": "input",
+          "bits": 24
+        },
+        "train_start": {
+          "direction": "input",
+          "bits": 1
+        },
+        "train_count": {
+          "direction": "input",
+          "bits": 4
+        },
+        "capture_stride": {
+          "direction": "input",
+          "bits": 32
+        },
+        "payload_write": {
+          "direction": "input",
+          "bits": 1
+        },
+        "slot_count": {
+          "direction": "input",
+          "bits": 4
+        },
+        "rq": {
+          "direction": "input",
+          "bits": 2213
+        },
+        "rb": {
+          "direction": "output",
+          "bits": 551
+        },
+        "fault": {
+          "direction": "output",
+          "bits": 1
+        }
+      }
+    },
+    {
+      "source": "rtl/qwen_split/qfd_res_train_half_b2_wrappers.sv",
+      "sha256": "469c76349d43c32122e0a27ce7c7595b198205f71869b53f954ff420edf3f97a",
+      "top": "qfd_res_train_half_b2_3",
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_bank": {
+          "direction": "input",
+          "bits": 24
+        },
+        "train_start": {
+          "direction": "input",
+          "bits": 1
+        },
+        "train_count": {
+          "direction": "input",
+          "bits": 4
+        },
+        "capture_stride": {
+          "direction": "input",
+          "bits": 32
+        },
+        "payload_write": {
+          "direction": "input",
+          "bits": 1
+        },
+        "slot_count": {
+          "direction": "input",
+          "bits": 4
+        },
+        "rq": {
+          "direction": "input",
+          "bits": 2213
+        },
+        "rb": {
+          "direction": "output",
+          "bits": 551
+        },
+        "fault": {
+          "direction": "output",
+          "bits": 1
+        }
+      }
+    },
+    {
+      "source": "rtl/qwen_split/qfd_res_train_half_b2_wrappers.sv",
+      "sha256": "469c76349d43c32122e0a27ce7c7595b198205f71869b53f954ff420edf3f97a",
+      "top": "qfd_res_train_half_b2_4",
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_bank": {
+          "direction": "input",
+          "bits": 24
+        },
+        "train_start": {
+          "direction": "input",
+          "bits": 1
+        },
+        "train_count": {
+          "direction": "input",
+          "bits": 4
+        },
+        "capture_stride": {
+          "direction": "input",
+          "bits": 32
+        },
+        "payload_write": {
+          "direction": "input",
+          "bits": 1
+        },
+        "slot_count": {
+          "direction": "input",
+          "bits": 4
+        },
+        "rq": {
+          "direction": "input",
+          "bits": 2213
+        },
+        "rb": {
+          "direction": "output",
+          "bits": 551
+        },
+        "fault": {
+          "direction": "output",
+          "bits": 1
+        }
+      }
+    },
+    {
+      "source": "rtl/qwen_split/qfd_res_train_half_b2_wrappers.sv",
+      "sha256": "469c76349d43c32122e0a27ce7c7595b198205f71869b53f954ff420edf3f97a",
+      "top": "qfd_res_train_half_b2_5",
+      "ports": {
+        "ck": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_bank": {
+          "direction": "input",
+          "bits": 24
+        },
+        "train_start": {
+          "direction": "input",
+          "bits": 1
+        },
+        "train_count": {
+          "direction": "input",
+          "bits": 4
+        },
+        "capture_stride": {
+          "direction": "input",
+          "bits": 32
+        },
+        "payload_write": {
+          "direction": "input",
+          "bits": 1
+        },
+        "slot_count": {
+          "direction": "input",
+          "bits": 4
+        },
+        "rq": {
+          "direction": "input",
+          "bits": 2213
+        },
+        "rb": {
+          "direction": "output",
+          "bits": 551
+        },
+        "fault": {
+          "direction": "output",
+          "bits": 1
+        }
+      }
+    },
+    {
+      "source": "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_b2_parent.sv",
+      "sha256": "a5a6319ac120f3bb04c26513308719a1517805d2676f77951d0710e35c7b3d92",
+      "top": "ot_qfd_tt_ctlm_b2_parent",
+      "ports": {
+        "ck_me_sched": {
+          "direction": "input",
+          "bits": 1
+        },
+        "cp_active": {
+          "direction": "input",
+          "bits": 1
+        },
+        "cp": {
+          "direction": "output",
+          "bits": 56
+        },
+        "me_image_ready": {
+          "direction": "output",
+          "bits": 1
+        },
+        "program_obs": {
+          "direction": "output",
+          "bits": 76
+        },
+        "layer_context_v": {
+          "direction": "output",
+          "bits": 1
+        },
+        "native_tok": {
+          "direction": "output",
+          "bits": 18
+        },
+        "native_pos": {
+          "direction": "output",
+          "bits": 18
+        },
+        "rom_cmd": {
+          "direction": "output",
+          "bits": 380
+        },
+        "command_stage": {
+          "direction": "output",
+          "bits": 6
+        },
+        "native_cmd": {
+          "direction": "output",
+          "bits": 380
+        },
+        "me_observe": {
+          "direction": "output",
+          "bits": 16
+        },
+        "native_ret": {
+          "direction": "input",
+          "bits": 95
+        },
+        "ck_head": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ck_tree": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "h_start": {
+          "direction": "input",
+          "bits": 1
+        },
+        "token": {
+          "direction": "input",
+          "bits": 18
+        },
+        "pos": {
+          "direction": "input",
+          "bits": 18
+        },
+        "prog_base": {
+          "direction": "input",
+          "bits": 12
+        },
+        "pw_v": {
+          "direction": "input",
+          "bits": 1
+        },
+        "pw_addr": {
+          "direction": "input",
+          "bits": 10
+        },
+        "pw_data": {
+          "direction": "input",
+          "bits": 64
+        },
+        "x_oacc": {
+          "direction": "input",
+          "bits": 24
+        },
+        "x_oidle": {
+          "direction": "input",
+          "bits": 1
+        },
+        "x_oprog": {
+          "direction": "input",
+          "bits": 16
+        },
+        "x_orows": {
+          "direction": "input",
+          "bits": 16
+        },
+        "kv_ok": {
+          "direction": "input",
+          "bits": 1
+        },
+        "kv_write_drained": {
+          "direction": "input",
+          "bits": 1
+        },
+        "me_mem_ok": {
+          "direction": "input",
+          "bits": 1
+        },
+        "me_acc_o": {
+          "direction": "output",
+          "bits": 24
+        },
+        "me_idle_o": {
+          "direction": "output",
+          "bits": 1
+        },
+        "me_prog_o": {
+          "direction": "output",
+          "bits": 16
+        },
+        "m_fin_o": {
+          "direction": "output",
+          "bits": 1
+        },
+        "m_fidx_o": {
+          "direction": "output",
+          "bits": 18
+        },
+        "m_fval_o": {
+          "direction": "output",
+          "bits": 32
+        },
+        "kvd_v": {
+          "direction": "output",
+          "bits": 1
+        },
+        "kvd_wbase": {
+          "direction": "output",
+          "bits": 24
+        },
+        "kvd_ts": {
+          "direction": "output",
+          "bits": 24
+        },
+        "kvd_ks": {
+          "direction": "output",
+          "bits": 24
+        },
+        "kvd_js": {
+          "direction": "output",
+          "bits": 24
+        },
+        "kvd_wcs": {
+          "direction": "output",
+          "bits": 24
+        },
+        "kvd_split": {
+          "direction": "output",
+          "bits": 4
+        },
+        "kvd_jsh": {
+          "direction": "output",
+          "bits": 3
+        },
+        "kvd_tiles": {
+          "direction": "output",
+          "bits": 18
+        },
+        "kvd_k": {
+          "direction": "output",
+          "bits": 18
+        },
+        "kvd_nout": {
+          "direction": "output",
+          "bits": 18
+        },
+        "kvd_kindk": {
+          "direction": "output",
+          "bits": 1
+        },
+        "kvd_pos": {
+          "direction": "output",
+          "bits": 18
+        },
+        "me_clk_en": {
+          "direction": "output",
+          "bits": 1
+        },
+        "c_fault": {
+          "direction": "output",
+          "bits": 1
+        },
+        "up_fault": {
+          "direction": "input",
+          "bits": 1
+        },
+        "land_cnt": {
+          "direction": "input",
+          "bits": 16
+        },
+        "scale_re": {
+          "direction": "output",
+          "bits": 1
+        },
+        "scale_gre": {
+          "direction": "output",
+          "bits": 24
+        },
+        "scale_addr": {
+          "direction": "output",
+          "bits": 576
+        },
+        "t_sel_e": {
+          "direction": "output",
+          "bits": 13
+        },
+        "t_tv_e": {
+          "direction": "output",
+          "bits": 13
+        },
+        "tr_fault": {
+          "direction": "input",
+          "bits": 16
+        },
+        "p_v_e2": {
+          "direction": "output",
+          "bits": 1
+        },
+        "p_f_e2": {
+          "direction": "output",
+          "bits": 113
+        },
+        "p_am": {
+          "direction": "input",
+          "bits": 306
+        },
+        "p_fault": {
+          "direction": "input",
+          "bits": 6
+        },
+        "fab_fault": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ov": {
+          "direction": "output",
+          "bits": 1
+        },
+        "mx_we": {
+          "direction": "output",
+          "bits": 1
+        },
+        "mx_addr": {
+          "direction": "output",
+          "bits": 24
+        },
+        "mx_mask": {
+          "direction": "output",
+          "bits": 16
+        },
+        "mx_data": {
+          "direction": "output",
+          "bits": 512
+        }
+      }
+    },
+    {
+      "source": "rtl/qwen_sys/static_schedule_20261014/qfd_tt_ctlm_tree_b2.sv",
+      "sha256": "eb62544f3e78d493137e85d286fb515a25a00d01a34d6bb39815c4eb22c611c5",
+      "top": "qfd_tt_ctlm_tree_b2",
+      "ports": {
+        "clk": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "me_acc_o": {
+          "direction": "output",
+          "bits": 24
+        },
+        "me_idle_o": {
+          "direction": "output",
+          "bits": 1
+        },
+        "me_prog_o": {
+          "direction": "output",
+          "bits": 16
+        },
+        "up_fault": {
+          "direction": "input",
+          "bits": 1
+        },
+        "land_cnt": {
+          "direction": "input",
+          "bits": 16
+        },
+        "scale_re": {
+          "direction": "output",
+          "bits": 1
+        },
+        "scale_gre": {
+          "direction": "output",
+          "bits": 24
+        },
+        "scale_addr": {
+          "direction": "output",
+          "bits": 576
+        },
+        "t_sel_e": {
+          "direction": "output",
+          "bits": 13
+        },
+        "t_tv_e": {
+          "direction": "output",
+          "bits": 13
+        },
+        "tr_fault": {
+          "direction": "input",
+          "bits": 16
+        },
+        "p_v_e2": {
+          "direction": "output",
+          "bits": 1
+        },
+        "p_f_e2": {
+          "direction": "output",
+          "bits": 113
+        },
+        "p_am": {
+          "direction": "input",
+          "bits": 306
+        },
+        "p_fault": {
+          "direction": "input",
+          "bits": 6
+        },
+        "fab_fault": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ov": {
+          "direction": "output",
+          "bits": 1
+        },
+        "mx_we": {
+          "direction": "output",
+          "bits": 1
+        },
+        "mx_addr": {
+          "direction": "output",
+          "bits": 24
+        },
+        "mx_mask": {
+          "direction": "output",
+          "bits": 16
+        },
+        "mx_data": {
+          "direction": "output",
+          "bits": 512
+        },
+        "cmd": {
+          "direction": "input",
+          "bits": 380
+        },
+        "ret": {
+          "direction": "output",
+          "bits": 95
+        }
+      }
+    },
+    {
       "source": "rtl/qwen_split/qfd_b2_train_source.sv",
       "sha256": "bdc6548ab2ba729ecf2d4ee15e43f13e9fd9a9472ffd9ee26d76553c3b8e5804",
       "top": "qfd_b2_train_source",
@@ -58,7 +754,7 @@
     },
     {
       "source": "rtl/qwen_sys/static_schedule_20261014/qfd_tt_ctlm_b2.sv",
-      "sha256": "6f44046288b038dd4cbd49f32d3bab144b8d11a1186b55e297b675faf99fc821",
+      "sha256": "c14943557d2492e3041e9e9d0864dfa8a226181d1e9efb7b4787032b0ae5c387",
       "top": "qfd_tt_ctlm_b2",
       "ports": {
         "ck_xpf": {

@@ -4,7 +4,7 @@ import sys,json,hashlib,re
 from pathlib import Path
 R=Path(__file__).resolve().parents[2];sys.path.insert(0,str(R/'tools'))
 from die_port_bind import parse_modules
-files=['rtl/qwen_split/qfd_b2_train_source.sv','rtl/qwen_sys/static_schedule_20261014/qfd_tt_ctlm_b2.sv','rtl/qwen_sys/vm_nox_20261014/qfd_sp_vector_memory_b2.sv','rtl/qwen_sys/vm_nox_20261014/qfd_sp_vector_memory_b2_partitioned_ro6_pin_e3.sv','rtl/qwen_split/qfd_res_train_half_b2.sv','rtl/qwen_split/qfd_res_train_issue_b2.sv']
+files=['rtl/qwen_split/qfd_res_train_half_b2_wrappers.sv','rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_b2_parent.sv','rtl/qwen_sys/static_schedule_20261014/qfd_tt_ctlm_tree_b2.sv','rtl/qwen_split/qfd_b2_train_source.sv','rtl/qwen_sys/static_schedule_20261014/qfd_tt_ctlm_b2.sv','rtl/qwen_sys/vm_nox_20261014/qfd_sp_vector_memory_b2.sv','rtl/qwen_sys/vm_nox_20261014/qfd_sp_vector_memory_b2_partitioned_ro6_pin_e3.sv','rtl/qwen_split/qfd_res_train_half_b2.sv','rtl/qwen_split/qfd_res_train_issue_b2.sv']
 out=[]
 for x in files:
  t=(R/x).read_text()
