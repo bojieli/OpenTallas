@@ -1426,6 +1426,12 @@
      "date": "2026-10-16T01:15",
      "status": "open",
      "evidence": "owner adopted a structural change (route 3 kit e4e436536: macro rows separated by a 21.6-um horizontal channel), route queued; gate shows a new clock problem (R2-1)"
+    },
+    {
+     "round": 2,
+     "date": "2026-10-16T01:35",
+     "status": "confirmed-provisional",
+     "evidence": "route 2 GRT-0116 with 12 overflow edges at the inward SRAM faces -> route-3 kit e4e436536 (21.6-um channel between macro rows) trial GRT overflow 0, M2 16% (H-LKEP). Route itself pending. 90-um channel / outward rotation infeasible at the fixed 434.72 width (owner)."
     }
    ]
   },
@@ -1493,6 +1499,12 @@
      "round": 2,
      "date": "2026-10-16T01:15",
      "status": "new"
+    },
+    {
+     "round": 2,
+     "date": "2026-10-16T01:35",
+     "status": "clock-rule claim refuted; native risk open",
+     "evidence": "H-LKEP: the 300/80 ps measured-form limit applies only above 15k sinks/root; 7,194 sinks -> gate PASS (memory clock-rule-measured-form agrees). Remaining measured risk: boundary insertion 348.3-396.4 ps (mean 370.9) vs native launch <= 220 / capture <= 190 ps -> native audit likely FAILs. Owner gating compact variant hep_static_cmp_1016 434.72 x 224.64, fill ~59%, rows 20 um from S face (my height fix adopted); clk stays S-centre (parent contract)."
     }
    ]
   }
@@ -1510,7 +1522,7 @@
    "refuted": 0,
    "withdrawn": 1,
    "open": 13,
-   "hit_rate": "1 of 1 decided (provisional, gate-level; 0 refuted); 13 open because the owners' revisions (d3, strap5, cl2e, rp4, SU r12) had not produced a gate or route 15 min after pass 1; T9 area estimate corrected by owner (5.5% real vs ~20% claimed): direction confirmed, magnitude refuted",
+   "hit_rate": "1 of 1 decided (provisional, gate-level; 0 refuted); 13 open because the owners' revisions (d3, strap5, cl2e, rp4, SU r12) had not produced a gate or route 15 min after pass 1; T9 area estimate corrected by owner (5.5% real vs ~20% claimed): direction confirmed, magnitude refuted; T12 confirmed at trial GRT (12 overflow edges -> 0); R2-1 clock-rule wording refuted by owner (limit is >15k sinks only), area part adopted as compact variant",
    "new_findings": 1
   }
  }
