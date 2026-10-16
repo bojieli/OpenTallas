@@ -1,0 +1,312 @@
+{
+ "schema": "s81-dedupe-kcopy-proof-v1",
+ "date": "2026-10-16",
+ "author": "S-DIE-KCOPY (Claude)",
+ "scope": "The generator's own k-copy (tools/dsrom_s81_fulldie.py _dedupe_kcopy + write_netlist) on one instance of each of the 7 FROM masters, each wired through a pass-through io block (so the cut nets also slice a non-copied endpoint), versus the FROM master itself (byte-exact c26b die_glue.sv modules, from_modules.sv). TO masters = the CLOSED views' hardening RTL (physical/ref_tile/<job>/spec.json sources, to_modules.f). Every output compared after every rising and falling edge, random data each cycle, reset released at cycle 3, re-asserted at 1000-1010.",
+ "source_commit": "318183db6",
+ "map": "results/arch/tile_dedupe_1015/s81_pad_map_kcopy_1016.json",
+ "cycles": 2000,
+ "simulation": {
+  "host": "ot-epyc4",
+  "tool": "iverilog -g2012",
+  "units": [
+   "oth-ubuntu-974685-1792174463",
+   "oth-ubuntu-974972-1792174465",
+   "oth-ubuntu-975935-1792174467"
+  ],
+  "positive": "PASS (KCOPY_EXACT PASS 7 FROM masters 2000 cycles every output both edges incl. mid-run reset)",
+  "mutant_swap": "REJECTED (hstnv_4096 copies take each other's di slice: KCOPY_MISMATCH dsfd_hstnv_4096.dq from cycle 0)",
+  "mutant_droppad": "REJECTED (l2r hx_E copy B loses its lane-valid chunk i[0]: KCOPY_MISMATCH dsfd_l2r_vr_1100x1__hx_E.ob from cycle 1)"
+ },
+ "kcopy": {
+  "file": "kcopy_map",
+  "instances": 7,
+  "copies": 16,
+  "split_nets": 12,
+  "by_master": {
+   "dsfd_hstnh_1101": 1,
+   "dsfd_hstnh_515": 1,
+   "dsfd_hstnv_1101": 1,
+   "dsfd_hstnv_292": 1,
+   "dsfd_hstnv_4096": 1,
+   "dsfd_l2r_vr_1100x1__hx_E": 1,
+   "dsfd_l2r_vr_1100x1__hx_W": 1
+  },
+  "records": [
+   {
+    "inst": "u0",
+    "frm": "dsfd_hstnh_1101",
+    "at": [
+     0.0,
+     1000.0
+    ],
+    "slot": [
+     60.0,
+     60.0
+    ],
+    "copies": [
+     [
+      "u0__k0",
+      "dsfd_hstnh_1029",
+      0.0,
+      1000.0
+     ],
+     [
+      "u0__k1",
+      "dsfd_hstnh_77",
+      0.0,
+      1036.72
+     ]
+    ],
+    "placed": "in_place",
+    "combined": [
+     70.0,
+     81.72
+    ],
+    "orient": [
+     "R0",
+     "R0"
+    ]
+   },
+   {
+    "inst": "u1",
+    "frm": "dsfd_hstnh_515",
+    "at": [
+     400.0,
+     1000.0
+    ],
+    "slot": [
+     60.0,
+     60.0
+    ],
+    "copies": [
+     [
+      "u1__k0",
+      "dsfd_hstnh_514",
+      400.0,
+      1000.0
+     ],
+     [
+      "u1__k1",
+      "dsfd_hstnh_1",
+      400.0,
+      1041.04
+     ]
+    ],
+    "placed": "in_place",
+    "combined": [
+     60.0,
+     71.04
+    ],
+    "orient": [
+     "R0",
+     "R0"
+    ]
+   },
+   {
+    "inst": "u2",
+    "frm": "dsfd_hstnv_1101",
+    "at": [
+     800.0,
+     1000.0
+    ],
+    "slot": [
+     60.0,
+     60.0
+    ],
+    "copies": [
+     [
+      "u2__k0",
+      "dsfd_hstnv_1029",
+      800.0,
+      1000.0
+     ],
+     [
+      "u2__k1",
+      "dsfd_hstnv_77",
+      881.216,
+      1000.0
+     ]
+    ],
+    "placed": "in_place",
+    "combined": [
+     181.216,
+     60.0
+    ],
+    "orient": [
+     "R0",
+     "R0"
+    ]
+   },
+   {
+    "inst": "u3",
+    "frm": "dsfd_hstnv_292",
+    "at": [
+     1200.0,
+     1000.0
+    ],
+    "slot": [
+     60.0,
+     60.0
+    ],
+    "copies": [
+     [
+      "u3__k0",
+      "dsfd_hstnv_77",
+      1200.0,
+      1000.0
+     ],
+     [
+      "u3__k1",
+      "dsfd_hstnv_77",
+      1301.088,
+      1000.0
+     ],
+     [
+      "u3__k2",
+      "dsfd_hstnv_77",
+      1402.176,
+      1000.0
+     ],
+     [
+      "u3__k3",
+      "dsfd_hstnv_77",
+      1503.264,
+      1000.0
+     ]
+    ],
+    "placed": "in_place",
+    "combined": [
+     403.264,
+     60.0
+    ],
+    "orient": [
+     "R0",
+     "R0"
+    ]
+   },
+   {
+    "inst": "u4",
+    "frm": "dsfd_hstnv_4096",
+    "at": [
+     1600.0,
+     1000.0
+    ],
+    "slot": [
+     60.0,
+     60.0
+    ],
+    "copies": [
+     [
+      "u4__k0",
+      "dsfd_hstnv_2049",
+      1539.216,
+      941.76
+     ],
+     [
+      "u4__k1",
+      "dsfd_hstnv_2049",
+      1630.368,
+      941.76
+     ]
+    ],
+    "placed": "moved_span120",
+    "combined": [
+     181.152,
+     55.0
+    ],
+    "orient": [
+     "R0",
+     "R0"
+    ]
+   },
+   {
+    "inst": "hx_E",
+    "frm": "dsfd_l2r_vr_1100x1__hx_E",
+    "at": [
+     2000.0,
+     1000.0
+    ],
+    "slot": [
+     60.0,
+     60.0
+    ],
+    "copies": [
+     [
+      "hx_E__k0",
+      "dsfd_l2r_vr_564x1__hx_E",
+      2000.0,
+      1000.0
+     ],
+     [
+      "hx_E__k1",
+      "dsfd_l2r_vr_564x1__hx_E",
+      2111.024,
+      1066.96
+     ]
+    ],
+    "placed": "in_place",
+    "combined": [
+     221.024,
+     131.96
+    ],
+    "orient": [
+     "R0",
+     "R0"
+    ]
+   },
+   {
+    "inst": "hx_W",
+    "frm": "dsfd_l2r_vr_1100x1__hx_W",
+    "at": [
+     2400.0,
+     1000.0
+    ],
+    "slot": [
+     60.0,
+     60.0
+    ],
+    "copies": [
+     [
+      "hx_W__k0",
+      "dsfd_l2r_vr_564x1__hx_W",
+      2400.0,
+      1000.0
+     ],
+     [
+      "hx_W__k1",
+      "dsfd_l2r_vr_564x1__hx_W",
+      2400.0,
+      1071.28
+     ]
+    ],
+    "placed": "in_place",
+    "combined": [
+     120.0,
+     141.28
+    ],
+    "orient": [
+     "R0",
+     "R0"
+    ]
+   }
+  ]
+ },
+ "pad_declarations": 6,
+ "port_bind": "tools/s81/test_dedupe_kcopy.py: die_port_bind PASS on this netlist vs the closed RTL with die.v.pads.json; spare pad tied 1 -> INPUT_TIED",
+ "files": {
+  "die.v": "ccacc21c5d6090c1247ce1342bde83587e625b05c666d7e723b9426941332496",
+  "die.v.pads.json": "837259f7b103e441921f019708efdb852a6fbb1422003093617005ce72142701",
+  "exact.log": "f30aeff03528cbf0458be4400b9bab0e9ea566c9148e1629e74181b13b0dc346",
+  "from_modules.sv": "1474485c45267eebab49ac9d7095a1fdbd77ae89864dbaead43fd4de166f9a11",
+  "io.sv": "1c47987cd227a46c799749dcd41ebbf3605b598a982f263d16c3a06a9db0f08f",
+  "model.json": "b3368f3909ff061f4f53f654400ff89645c3d6b8d9a79d00e89a903d8e6480b4",
+  "mutant_droppad.diff": "986d39fda64754c5bba66177b666a42c116d7c42159c5db57ba168f627519c52",
+  "mutant_droppad.log": "3cc0c527a3d0ec7f42c2d7e148c52e47f2f3059ba5f857e5b04dc07bc6281c8c",
+  "mutant_swap.diff": "ff2e644f2f4accc40c3a9ee47d5bc275e344d6926965dbec76f42b3ba1d44029",
+  "mutant_swap.log": "9cb616698698caa301e4fa738fd38adefebc863e63cb720bd4a3c1b2b949315f",
+  "run.sh": "607256dde18eae06a571ed98053ae0f7961219e7641317c70415c5f571f0f893",
+  "tb.sv": "5dafa0e02bd7be91462c85c535b24afb43f5274a98b6bbfb8983f75cc98ba2ca",
+  "to_modules.f": "73ee6af76521745008069084e5e2ae7c90fa18e9221ceeb8f0bd414a14b87b40"
+ }
+}

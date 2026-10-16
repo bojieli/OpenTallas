@@ -1,0 +1,17 @@
+70,71c70
+<   wire [0:0] n_q5_i;
+<   wire [563:0] n_q5_i__kc1;
+---
+>   wire [564:0] n_q5_i;
+96c95
+<   kcio5 io5 (.t_ck(p5_ck), .ck(n_q5_ck), .t_cks(p5_cks), .cks(n_q5_cks), .fo(n_q5_fo), .t_fo(p5_fo), .t_i(p5_i), .oa(n_q5_oa), .t_oa(p5_oa), .ob(n_q5_ob), .t_ob(p5_ob), .t_rs(p5_rs), .rs(n_q5_rs), .t_rss(p5_rss), .rss(n_q5_rss), .st(n_q5_st), .t_st(p5_st), .fo2(n_q5_fo2), .t_fo2(p5_fo2), .i({n_q5_i__kc565, n_q5_i__kc1, n_q5_i}));
+---
+>   kcio5 io5 (.t_ck(p5_ck), .ck(n_q5_ck), .t_cks(p5_cks), .cks(n_q5_cks), .fo(n_q5_fo), .t_fo(p5_fo), .t_i(p5_i), .oa(n_q5_oa), .t_oa(p5_oa), .ob(n_q5_ob), .t_ob(p5_ob), .t_rs(p5_rs), .rs(n_q5_rs), .t_rss(p5_rss), .rss(n_q5_rss), .st(n_q5_st), .t_st(p5_st), .fo2(n_q5_fo2), .t_fo2(p5_fo2), .i({n_q5_i__kc565, n_q5_i}));
+114c113
+<   dsfd_l2r_vr_564x1__hx_E hx_E__k0 (.ck(n_q5_ck), .cks(n_q5_cks), .fo(n_q5_fo), .od(n_q5_oa), .rs(n_q5_rs), .rss(n_q5_rss), .st(n_q5_st), .i({n_q5_i__kc1, n_q5_i}));
+---
+>   dsfd_l2r_vr_564x1__hx_E hx_E__k0 (.ck(n_q5_ck), .cks(n_q5_cks), .fo(n_q5_fo), .i(n_q5_i), .od(n_q5_oa), .rs(n_q5_rs), .rss(n_q5_rss), .st(n_q5_st));
+117c116
+<   dsfd_l2r_vr_564x1__hx_E hx_E__k1 (.ck(n_q5_ck), .cks(n_q5_cks), .od({n_pad_hx_E__k1_od, n_q5_ob}), .rs(n_q5_rs), .rss(n_q5_rss), .fo(n_q5_fo2), .i({28'b0, n_q5_i__kc565, n_q5_i}), .st(n_kcnc_hx_E__k1_st));
+---
+>   dsfd_l2r_vr_564x1__hx_E hx_E__k1 (.ck(n_q5_ck), .cks(n_q5_cks), .i({29'b0, n_q5_i__kc565}), .od({n_pad_hx_E__k1_od, n_q5_ob}), .rs(n_q5_rs), .rss(n_q5_rss), .fo(n_q5_fo2), .st(n_kcnc_hx_E__k1_st));

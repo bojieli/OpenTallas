@@ -1,0 +1,13 @@
+rtl/common/ot_fwd_link_stage.sv
+rtl/dsrom_sys/s81_station_native/gen18r/dsfd_hstnh_1.sv
+rtl/dsrom_sys/s81_station_native/gen18r/dsfd_hstnh_1029.sv
+rtl/dsrom_sys/s81_station_native/gen18r/dsfd_hstnh_514.sv
+rtl/dsrom_sys/s81_station_native/gen18r/dsfd_hstnh_77.sv
+rtl/dsrom_sys/s81_station_native/gen18r/dsfd_hstnv_1029.sv
+rtl/dsrom_sys/s81_station_native/gen18r/dsfd_hstnv_2049.sv
+rtl/dsrom_sys/s81_station_native/gen18r/dsfd_hstnv_77.sv
+rtl/dsrom_sys/s81_die_bind/ot_s81_static_lane_cross.sv
+rtl/dsrom_sys/s81_static_net/ot_s81_static_lane_end.sv
+rtl/dsrom_sys/s81_static_net/ot_s81_static_ratio_cross.sv
+rtl/dsrom_sys/s81_static_net/gen/dsfd_l2r_vr_564x1__hx_E.sv
+rtl/dsrom_sys/s81_static_net/gen/dsfd_l2r_vr_564x1__hx_W.sv

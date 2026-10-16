@@ -1,0 +1,59 @@
+{
+ "schema": "s81-instance-padding-v1",
+ "instances": {
+  "hx_E__k1": {
+   "master": "dsfd_l2r_vr_564x1__hx_E",
+   "reason": "DEDUPE --dedupe-pad: spare standard input bits tied low; logical bits unchanged",
+   "ports": {
+    "i": {
+     "logical_width": 537
+    }
+   }
+  },
+  "hx_W__k1": {
+   "master": "dsfd_l2r_vr_564x1__hx_W",
+   "reason": "DEDUPE --dedupe-pad: spare standard input bits tied low; logical bits unchanged",
+   "ports": {
+    "i": {
+     "logical_width": 537
+    }
+   }
+  },
+  "u0__k1": {
+   "master": "dsfd_hstnh_77",
+   "reason": "DEDUPE --dedupe-pad: spare standard input bits tied low; logical bits unchanged",
+   "ports": {
+    "di": {
+     "logical_width": 72
+    }
+   }
+  },
+  "u2__k1": {
+   "master": "dsfd_hstnv_77",
+   "reason": "DEDUPE --dedupe-pad: spare standard input bits tied low; logical bits unchanged",
+   "ports": {
+    "di": {
+     "logical_width": 72
+    }
+   }
+  },
+  "u3__k3": {
+   "master": "dsfd_hstnv_77",
+   "reason": "DEDUPE --dedupe-pad: spare standard input bits tied low; logical bits unchanged",
+   "ports": {
+    "di": {
+     "logical_width": 61
+    }
+   }
+  },
+  "u4__k1": {
+   "master": "dsfd_hstnv_2049",
+   "reason": "DEDUPE --dedupe-pad: spare standard input bits tied low; logical bits unchanged",
+   "ports": {
+    "di": {
+     "logical_width": 2047
+    }
+   }
+  }
+ }
+}

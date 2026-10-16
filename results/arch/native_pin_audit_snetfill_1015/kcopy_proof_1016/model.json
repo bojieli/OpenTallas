@@ -1,0 +1,423 @@
+{
+ "kcopy": {
+  "file": "kcopy_map",
+  "instances": 7,
+  "copies": 16,
+  "split_nets": 12,
+  "by_master": {
+   "dsfd_hstnh_1101": 1,
+   "dsfd_hstnh_515": 1,
+   "dsfd_hstnv_1101": 1,
+   "dsfd_hstnv_292": 1,
+   "dsfd_hstnv_4096": 1,
+   "dsfd_l2r_vr_1100x1__hx_E": 1,
+   "dsfd_l2r_vr_1100x1__hx_W": 1
+  },
+  "records": [
+   {
+    "inst": "u0",
+    "frm": "dsfd_hstnh_1101",
+    "at": [
+     0.0,
+     1000.0
+    ],
+    "slot": [
+     60.0,
+     60.0
+    ],
+    "copies": [
+     [
+      "u0__k0",
+      "dsfd_hstnh_1029",
+      0.0,
+      1000.0
+     ],
+     [
+      "u0__k1",
+      "dsfd_hstnh_77",
+      0.0,
+      1036.72
+     ]
+    ],
+    "placed": "in_place",
+    "combined": [
+     70.0,
+     81.72
+    ],
+    "orient": [
+     "R0",
+     "R0"
+    ]
+   },
+   {
+    "inst": "u1",
+    "frm": "dsfd_hstnh_515",
+    "at": [
+     400.0,
+     1000.0
+    ],
+    "slot": [
+     60.0,
+     60.0
+    ],
+    "copies": [
+     [
+      "u1__k0",
+      "dsfd_hstnh_514",
+      400.0,
+      1000.0
+     ],
+     [
+      "u1__k1",
+      "dsfd_hstnh_1",
+      400.0,
+      1041.04
+     ]
+    ],
+    "placed": "in_place",
+    "combined": [
+     60.0,
+     71.04
+    ],
+    "orient": [
+     "R0",
+     "R0"
+    ]
+   },
+   {
+    "inst": "u2",
+    "frm": "dsfd_hstnv_1101",
+    "at": [
+     800.0,
+     1000.0
+    ],
+    "slot": [
+     60.0,
+     60.0
+    ],
+    "copies": [
+     [
+      "u2__k0",
+      "dsfd_hstnv_1029",
+      800.0,
+      1000.0
+     ],
+     [
+      "u2__k1",
+      "dsfd_hstnv_77",
+      881.216,
+      1000.0
+     ]
+    ],
+    "placed": "in_place",
+    "combined": [
+     181.216,
+     60.0
+    ],
+    "orient": [
+     "R0",
+     "R0"
+    ]
+   },
+   {
+    "inst": "u3",
+    "frm": "dsfd_hstnv_292",
+    "at": [
+     1200.0,
+     1000.0
+    ],
+    "slot": [
+     60.0,
+     60.0
+    ],
+    "copies": [
+     [
+      "u3__k0",
+      "dsfd_hstnv_77",
+      1200.0,
+      1000.0
+     ],
+     [
+      "u3__k1",
+      "dsfd_hstnv_77",
+      1301.088,
+      1000.0
+     ],
+     [
+      "u3__k2",
+      "dsfd_hstnv_77",
+      1402.176,
+      1000.0
+     ],
+     [
+      "u3__k3",
+      "dsfd_hstnv_77",
+      1503.264,
+      1000.0
+     ]
+    ],
+    "placed": "in_place",
+    "combined": [
+     403.264,
+     60.0
+    ],
+    "orient": [
+     "R0",
+     "R0"
+    ]
+   },
+   {
+    "inst": "u4",
+    "frm": "dsfd_hstnv_4096",
+    "at": [
+     1600.0,
+     1000.0
+    ],
+    "slot": [
+     60.0,
+     60.0
+    ],
+    "copies": [
+     [
+      "u4__k0",
+      "dsfd_hstnv_2049",
+      1539.216,
+      941.76
+     ],
+     [
+      "u4__k1",
+      "dsfd_hstnv_2049",
+      1630.368,
+      941.76
+     ]
+    ],
+    "placed": "moved_span120",
+    "combined": [
+     181.152,
+     55.0
+    ],
+    "orient": [
+     "R0",
+     "R0"
+    ]
+   },
+   {
+    "inst": "hx_E",
+    "frm": "dsfd_l2r_vr_1100x1__hx_E",
+    "at": [
+     2000.0,
+     1000.0
+    ],
+    "slot": [
+     60.0,
+     60.0
+    ],
+    "copies": [
+     [
+      "hx_E__k0",
+      "dsfd_l2r_vr_564x1__hx_E",
+      2000.0,
+      1000.0
+     ],
+     [
+      "hx_E__k1",
+      "dsfd_l2r_vr_564x1__hx_E",
+      2111.024,
+      1066.96
+     ]
+    ],
+    "placed": "in_place",
+    "combined": [
+     221.024,
+     131.96
+    ],
+    "orient": [
+     "R0",
+     "R0"
+    ]
+   },
+   {
+    "inst": "hx_W",
+    "frm": "dsfd_l2r_vr_1100x1__hx_W",
+    "at": [
+     2400.0,
+     1000.0
+    ],
+    "slot": [
+     60.0,
+     60.0
+    ],
+    "copies": [
+     [
+      "hx_W__k0",
+      "dsfd_l2r_vr_564x1__hx_W",
+      2400.0,
+      1000.0
+     ],
+     [
+      "hx_W__k1",
+      "dsfd_l2r_vr_564x1__hx_W",
+      2400.0,
+      1071.28
+     ]
+    ],
+    "placed": "in_place",
+    "combined": [
+     120.0,
+     141.28
+    ],
+    "orient": [
+     "R0",
+     "R0"
+    ]
+   }
+  ]
+ },
+ "pads": {
+  "schema": "s81-instance-padding-v1",
+  "instances": {
+   "hx_E__k1": {
+    "master": "dsfd_l2r_vr_564x1__hx_E",
+    "reason": "DEDUPE --dedupe-pad: spare standard input bits tied low; logical bits unchanged",
+    "ports": {
+     "i": {
+      "logical_width": 537
+     }
+    }
+   },
+   "hx_W__k1": {
+    "master": "dsfd_l2r_vr_564x1__hx_W",
+    "reason": "DEDUPE --dedupe-pad: spare standard input bits tied low; logical bits unchanged",
+    "ports": {
+     "i": {
+      "logical_width": 537
+     }
+    }
+   },
+   "u0__k1": {
+    "master": "dsfd_hstnh_77",
+    "reason": "DEDUPE --dedupe-pad: spare standard input bits tied low; logical bits unchanged",
+    "ports": {
+     "di": {
+      "logical_width": 72
+     }
+    }
+   },
+   "u2__k1": {
+    "master": "dsfd_hstnv_77",
+    "reason": "DEDUPE --dedupe-pad: spare standard input bits tied low; logical bits unchanged",
+    "ports": {
+     "di": {
+      "logical_width": 72
+     }
+    }
+   },
+   "u3__k3": {
+    "master": "dsfd_hstnv_77",
+    "reason": "DEDUPE --dedupe-pad: spare standard input bits tied low; logical bits unchanged",
+    "ports": {
+     "di": {
+      "logical_width": 61
+     }
+    }
+   },
+   "u4__k1": {
+    "master": "dsfd_hstnv_2049",
+    "reason": "DEDUPE --dedupe-pad: spare standard input bits tied low; logical bits unchanged",
+    "ports": {
+     "di": {
+      "logical_width": 2047
+     }
+    }
+   }
+  }
+ },
+ "kcopy_nc": {
+  "hx_E__k1": {
+   "st": 3
+  },
+  "hx_W__k1": {
+   "st": 3
+  }
+ },
+ "pad": {
+  "u0__k1": {
+   "frm": "dsfd_hstnh_1101",
+   "std": 77,
+   "stdp": {
+    "di": 77,
+    "dq": 77
+   },
+   "ports": {
+    "di": 72,
+    "dq": 72
+   },
+   "kcopy": "u0"
+  },
+  "u2__k1": {
+   "frm": "dsfd_hstnv_1101",
+   "std": 77,
+   "stdp": {
+    "di": 77,
+    "dq": 77
+   },
+   "ports": {
+    "di": 72,
+    "dq": 72
+   },
+   "kcopy": "u2"
+  },
+  "u3__k3": {
+   "frm": "dsfd_hstnv_292",
+   "std": 77,
+   "stdp": {
+    "di": 77,
+    "dq": 77
+   },
+   "ports": {
+    "di": 61,
+    "dq": 61
+   },
+   "kcopy": "u3"
+  },
+  "u4__k1": {
+   "frm": "dsfd_hstnv_4096",
+   "std": 2049,
+   "stdp": {
+    "di": 2049,
+    "dq": 2049
+   },
+   "ports": {
+    "di": 2047,
+    "dq": 2047
+   },
+   "kcopy": "u4"
+  },
+  "hx_E__k1": {
+   "frm": "dsfd_l2r_vr_1100x1__hx_E",
+   "std": 566,
+   "stdp": {
+    "i": 565,
+    "od": 566
+   },
+   "ports": {
+    "i": 537,
+    "od": 538
+   },
+   "kcopy": "hx_E"
+  },
+  "hx_W__k1": {
+   "frm": "dsfd_l2r_vr_1100x1__hx_W",
+   "std": 566,
+   "stdp": {
+    "i": 565,
+    "od": 566
+   },
+   "ports": {
+    "i": 537,
+    "od": 538
+   },
+   "kcopy": "hx_W"
+  }
+ }
+}

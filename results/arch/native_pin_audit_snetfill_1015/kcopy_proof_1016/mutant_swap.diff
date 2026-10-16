@@ -1,0 +1,18 @@
+63,64c63,64
+<   wire [2048:0] n_q4_di;
+<   wire [2046:0] n_q4_di__kc2049;
+---
+>   wire [2046:0] n_q4_di;
+>   wire [2048:0] n_q4_di__kc2047;
+95c95
+<   kcio4 io4 (.t_ck(p4_ck), .ck(n_q4_ck), .t_di(p4_di), .t_dq(p4_dq), .di({n_q4_di__kc2049, n_q4_di}), .dq({n_q4_dq__kc2049, n_q4_dq}));
+---
+>   kcio4 io4 (.t_ck(p4_ck), .ck(n_q4_ck), .t_di(p4_di), .t_dq(p4_dq), .di({n_q4_di__kc2047, n_q4_di}), .dq({n_q4_dq__kc2049, n_q4_dq}));
+111c111
+<   dsfd_hstnv_2049 u4__k0 (.ck(n_q4_ck), .di(n_q4_di), .dq(n_q4_dq));
+---
+>   dsfd_hstnv_2049 u4__k0 (.ck(n_q4_ck), .di(n_q4_di__kc2047), .dq(n_q4_dq));
+113c113
+<   dsfd_hstnv_2049 u4__k1 (.ck(n_q4_ck), .di({2'b0, n_q4_di__kc2049}), .dq({n_pad_u4__k1_dq, n_q4_dq__kc2049}));
+---
+>   dsfd_hstnv_2049 u4__k1 (.ck(n_q4_ck), .di({2'b0, n_q4_di}), .dq({n_pad_u4__k1_dq, n_q4_dq__kc2049}));
