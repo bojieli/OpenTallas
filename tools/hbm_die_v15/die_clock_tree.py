@@ -140,6 +140,21 @@ def stage_ps(L):
 PAD_PS = 20.0
 
 
+def ckgen_pin_xy(slot, pin):
+    """Die coordinate (um) of a hb_ckgen output pin (H-DIE-CKGEN 2026-10-16): the die tree of a domain starts at the
+    ckgen's pll_<domain> pin (the generated clock of the hardened hfd_ckgen parent), not at the slot centre.  The slot
+    pin carries face + offset (um from the W edge for N/S, from the S edge for E/W); R0 slots only (every ckgen grant)."""
+    o, w, h = slot['origin'], slot['outline']['w'], slot['outline']['h']
+    if o.get('orient', 'R0') != 'R0':
+        raise ValueError(f"ckgen slot orient {o.get('orient')}: only R0 is mapped")
+    p = next((q for q in slot.get('pins', []) if q['name'] == pin), None)
+    if p is None or 'offset' not in p:
+        raise KeyError(f"ckgen slot has no placed pin {pin}")
+    f, off = p['face'], float(p['offset'])
+    return {'S': (o['x'] + off, o['y']), 'N': (o['x'] + off, o['y'] + h),
+            'W': (o['x'], o['y'] + off), 'E': (o['x'] + w, o['y'] + off)}[f]
+
+
 def build(W, H, obstacles, root_xy, sinks, quadrant_of, leaf_pads=None, quad_pads=None, root_search_um=3000.0,
           mode='htree', bin_um=1600.0):
     """sinks: [(inst, pin, x, y)]; quadrant_of(inst) -> 'SW'|'SE'|'NW'|'NE'.

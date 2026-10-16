@@ -1,0 +1,129 @@
+{
+  "scope": "Candidate local placement geometry only. Parent PG/track/wholegraph and routed timing unqualified.",
+  "leaf_outline_um": [
+    64.8,
+    138.24
+  ],
+  "head_outline_um": [
+    64.8,
+    345.6
+  ],
+  "envelope_um": [
+    64.8,
+    1473.12
+  ],
+  "required_parent_origin_y_mod64_nm": 32,
+  "source_parent": "r2h4 placed column origin Y7192.8 um; coordinator measured",
+  "south_head_gap_um": 21.6,
+  "head": {
+    "origin_local_um": [
+      0,
+      574.56
+    ],
+    "orientation": "R0",
+    "global_y_phase64_nm": 0
+  },
+  "leaves": [
+    {
+      "chain": "south",
+      "index_from_bottom": 0,
+      "origin_local_um": [
+        0,
+        0
+      ],
+      "orientation": "MX",
+      "global_y_phase64_nm": 32
+    },
+    {
+      "chain": "south",
+      "index_from_bottom": 1,
+      "origin_local_um": [
+        0,
+        138.24
+      ],
+      "orientation": "MX",
+      "global_y_phase64_nm": 32
+    },
+    {
+      "chain": "south",
+      "index_from_bottom": 2,
+      "origin_local_um": [
+        0,
+        276.48
+      ],
+      "orientation": "MX",
+      "global_y_phase64_nm": 32
+    },
+    {
+      "chain": "south",
+      "index_from_bottom": 3,
+      "origin_local_um": [
+        0,
+        414.72
+      ],
+      "orientation": "MX",
+      "global_y_phase64_nm": 32
+    },
+    {
+      "chain": "north",
+      "index_from_bottom": 0,
+      "origin_local_um": [
+        0,
+        920.16
+      ],
+      "orientation": "R0",
+      "global_y_phase64_nm": 0
+    },
+    {
+      "chain": "north",
+      "index_from_bottom": 1,
+      "origin_local_um": [
+        0,
+        1058.4
+      ],
+      "orientation": "R0",
+      "global_y_phase64_nm": 0
+    },
+    {
+      "chain": "north",
+      "index_from_bottom": 2,
+      "origin_local_um": [
+        0,
+        1196.64
+      ],
+      "orientation": "R0",
+      "global_y_phase64_nm": 0
+    },
+    {
+      "chain": "north",
+      "index_from_bottom": 3,
+      "origin_local_um": [
+        0,
+        1334.88
+      ],
+      "orientation": "R0",
+      "global_y_phase64_nm": 0
+    }
+  ],
+  "seams_local_y_um": [
+    138.24,
+    276.48,
+    414.72,
+    563.76,
+    920.16,
+    1058.4,
+    1196.64,
+    1334.88
+  ],
+  "south_head_gap_m7_reserved_band_local_y_um": [
+    509.76,
+    617.76
+  ],
+  "normal_seam_m7_half_band_um": 43.2,
+  "local_common_M6_y_offset_mod64_nm": 16,
+  "limitations": [
+    "Parent r2b2 origin phase0 requires a different local M6 offset48 master and is not granted by this candidate.",
+    "No actual exported leaf dimensions, clock insertion, native timing, TT/FF/DRC or parent M7/M9 reservation qualified.",
+    "Head remains R0 only; original per-port M4 head read/headrow/clock ranges retained exactly on legal local tracks."
+  ]
+}

@@ -4,7 +4,7 @@
  "top": "hbm_v16_die",
  "generated_by": "tools/hbm_die_v15/full_die_v16.py",
  "basis": {
-  "commit": "80f0120d3",
+  "commit": "bd5fa393c",
   "v15_contract": "results/arch/hbm_die_v15/source_contract/contract.json",
   "v15_contract_sha256": "eac5bff7d49473de7a7d8f0b993e427d4d004991e56670c8552f35e2b9a6b6cd",
   "grants": "results/arch/hier_contract_1015/hbm_v15.json",
@@ -136,7 +136,7 @@
   "edges": 12200,
   "edge_bits": 1211109,
   "clock_reset_ports": 3590,
-  "straps": 224,
+  "straps": 352,
   "die_pins": 43,
   "exposed_input_ports": 0,
   "exposed_input_bits": 0,
@@ -88793,8 +88793,9 @@
    "master": "ot_hbm_vm_lg_static_bank",
    "source": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv",
    "params": {
-    "READ_RETURN": 10,
-    "WRITE_RETURN": 7
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15,
+    "RET_PIN": 1
    },
    "slot": null,
    "owner": null,
@@ -88809,6 +88810,14 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "rret": {
+     "direction": "input",
+     "bits": 5
+    },
+    "wret": {
+     "direction": "input",
+     "bits": 5
     },
     "local_rq": {
      "direction": "input",
@@ -88876,8 +88885,9 @@
    "master": "ot_hbm_vm_lg_static_bank",
    "source": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv",
    "params": {
-    "READ_RETURN": 10,
-    "WRITE_RETURN": 7
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15,
+    "RET_PIN": 1
    },
    "slot": null,
    "owner": null,
@@ -88892,6 +88902,14 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "rret": {
+     "direction": "input",
+     "bits": 5
+    },
+    "wret": {
+     "direction": "input",
+     "bits": 5
     },
     "local_rq": {
      "direction": "input",
@@ -88959,8 +88977,9 @@
    "master": "ot_hbm_vm_lg_static_bank",
    "source": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv",
    "params": {
-    "READ_RETURN": 10,
-    "WRITE_RETURN": 7
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15,
+    "RET_PIN": 1
    },
    "slot": null,
    "owner": null,
@@ -88975,6 +88994,14 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "rret": {
+     "direction": "input",
+     "bits": 5
+    },
+    "wret": {
+     "direction": "input",
+     "bits": 5
     },
     "local_rq": {
      "direction": "input",
@@ -89042,8 +89069,9 @@
    "master": "ot_hbm_vm_lg_static_bank",
    "source": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv",
    "params": {
-    "READ_RETURN": 10,
-    "WRITE_RETURN": 7
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15,
+    "RET_PIN": 1
    },
    "slot": null,
    "owner": null,
@@ -89058,6 +89086,14 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "rret": {
+     "direction": "input",
+     "bits": 5
+    },
+    "wret": {
+     "direction": "input",
+     "bits": 5
     },
     "local_rq": {
      "direction": "input",
@@ -89125,8 +89161,9 @@
    "master": "ot_hbm_vm_lg_static_bank",
    "source": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv",
    "params": {
-    "READ_RETURN": 10,
-    "WRITE_RETURN": 7
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15,
+    "RET_PIN": 1
    },
    "slot": null,
    "owner": null,
@@ -89141,6 +89178,14 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "rret": {
+     "direction": "input",
+     "bits": 5
+    },
+    "wret": {
+     "direction": "input",
+     "bits": 5
     },
     "local_rq": {
      "direction": "input",
@@ -89208,8 +89253,9 @@
    "master": "ot_hbm_vm_lg_static_bank",
    "source": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv",
    "params": {
-    "READ_RETURN": 10,
-    "WRITE_RETURN": 7
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15,
+    "RET_PIN": 1
    },
    "slot": null,
    "owner": null,
@@ -89224,6 +89270,14 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "rret": {
+     "direction": "input",
+     "bits": 5
+    },
+    "wret": {
+     "direction": "input",
+     "bits": 5
     },
     "local_rq": {
      "direction": "input",
@@ -89291,8 +89345,9 @@
    "master": "ot_hbm_vm_lg_static_bank",
    "source": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv",
    "params": {
-    "READ_RETURN": 10,
-    "WRITE_RETURN": 7
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15,
+    "RET_PIN": 1
    },
    "slot": null,
    "owner": null,
@@ -89307,6 +89362,14 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "rret": {
+     "direction": "input",
+     "bits": 5
+    },
+    "wret": {
+     "direction": "input",
+     "bits": 5
     },
     "local_rq": {
      "direction": "input",
@@ -89374,8 +89437,9 @@
    "master": "ot_hbm_vm_lg_static_bank",
    "source": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv",
    "params": {
-    "READ_RETURN": 10,
-    "WRITE_RETURN": 7
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15,
+    "RET_PIN": 1
    },
    "slot": null,
    "owner": null,
@@ -89390,6 +89454,14 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "rret": {
+     "direction": "input",
+     "bits": 5
+    },
+    "wret": {
+     "direction": "input",
+     "bits": 5
     },
     "local_rq": {
      "direction": "input",
@@ -89457,8 +89529,9 @@
    "master": "ot_hbm_vm_lg_static_bank",
    "source": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv",
    "params": {
-    "READ_RETURN": 14,
-    "WRITE_RETURN": 11
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15,
+    "RET_PIN": 1
    },
    "slot": null,
    "owner": null,
@@ -89473,6 +89546,14 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "rret": {
+     "direction": "input",
+     "bits": 5
+    },
+    "wret": {
+     "direction": "input",
+     "bits": 5
     },
     "local_rq": {
      "direction": "input",
@@ -89540,8 +89621,9 @@
    "master": "ot_hbm_vm_lg_static_bank",
    "source": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv",
    "params": {
-    "READ_RETURN": 14,
-    "WRITE_RETURN": 11
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15,
+    "RET_PIN": 1
    },
    "slot": null,
    "owner": null,
@@ -89556,6 +89638,14 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "rret": {
+     "direction": "input",
+     "bits": 5
+    },
+    "wret": {
+     "direction": "input",
+     "bits": 5
     },
     "local_rq": {
      "direction": "input",
@@ -89623,8 +89713,9 @@
    "master": "ot_hbm_vm_lg_static_bank",
    "source": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv",
    "params": {
-    "READ_RETURN": 14,
-    "WRITE_RETURN": 11
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15,
+    "RET_PIN": 1
    },
    "slot": null,
    "owner": null,
@@ -89639,6 +89730,14 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "rret": {
+     "direction": "input",
+     "bits": 5
+    },
+    "wret": {
+     "direction": "input",
+     "bits": 5
     },
     "local_rq": {
      "direction": "input",
@@ -89706,8 +89805,9 @@
    "master": "ot_hbm_vm_lg_static_bank",
    "source": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv",
    "params": {
-    "READ_RETURN": 14,
-    "WRITE_RETURN": 11
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15,
+    "RET_PIN": 1
    },
    "slot": null,
    "owner": null,
@@ -89722,6 +89822,14 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "rret": {
+     "direction": "input",
+     "bits": 5
+    },
+    "wret": {
+     "direction": "input",
+     "bits": 5
     },
     "local_rq": {
      "direction": "input",
@@ -89789,8 +89897,9 @@
    "master": "ot_hbm_vm_lg_static_bank",
    "source": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv",
    "params": {
-    "READ_RETURN": 14,
-    "WRITE_RETURN": 11
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15,
+    "RET_PIN": 1
    },
    "slot": null,
    "owner": null,
@@ -89805,6 +89914,14 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "rret": {
+     "direction": "input",
+     "bits": 5
+    },
+    "wret": {
+     "direction": "input",
+     "bits": 5
     },
     "local_rq": {
      "direction": "input",
@@ -89872,8 +89989,9 @@
    "master": "ot_hbm_vm_lg_static_bank",
    "source": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv",
    "params": {
-    "READ_RETURN": 14,
-    "WRITE_RETURN": 11
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15,
+    "RET_PIN": 1
    },
    "slot": null,
    "owner": null,
@@ -89888,6 +90006,14 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "rret": {
+     "direction": "input",
+     "bits": 5
+    },
+    "wret": {
+     "direction": "input",
+     "bits": 5
     },
     "local_rq": {
      "direction": "input",
@@ -89955,8 +90081,9 @@
    "master": "ot_hbm_vm_lg_static_bank",
    "source": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv",
    "params": {
-    "READ_RETURN": 14,
-    "WRITE_RETURN": 11
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15,
+    "RET_PIN": 1
    },
    "slot": null,
    "owner": null,
@@ -89971,6 +90098,14 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "rret": {
+     "direction": "input",
+     "bits": 5
+    },
+    "wret": {
+     "direction": "input",
+     "bits": 5
     },
     "local_rq": {
      "direction": "input",
@@ -90038,8 +90173,9 @@
    "master": "ot_hbm_vm_lg_static_bank",
    "source": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv",
    "params": {
-    "READ_RETURN": 14,
-    "WRITE_RETURN": 11
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15,
+    "RET_PIN": 1
    },
    "slot": null,
    "owner": null,
@@ -90054,6 +90190,14 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "rret": {
+     "direction": "input",
+     "bits": 5
+    },
+    "wret": {
+     "direction": "input",
+     "bits": 5
     },
     "local_rq": {
      "direction": "input",
@@ -90657,8 +90801,9 @@
    "master": "ot_hbm_vm_lg_static_bank",
    "source": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv",
    "params": {
-    "READ_RETURN": 10,
-    "WRITE_RETURN": 7
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15,
+    "RET_PIN": 1
    },
    "slot": null,
    "owner": null,
@@ -90673,6 +90818,14 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "rret": {
+     "direction": "input",
+     "bits": 5
+    },
+    "wret": {
+     "direction": "input",
+     "bits": 5
     },
     "local_rq": {
      "direction": "input",
@@ -90740,8 +90893,9 @@
    "master": "ot_hbm_vm_lg_static_bank",
    "source": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv",
    "params": {
-    "READ_RETURN": 10,
-    "WRITE_RETURN": 7
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15,
+    "RET_PIN": 1
    },
    "slot": null,
    "owner": null,
@@ -90756,6 +90910,14 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "rret": {
+     "direction": "input",
+     "bits": 5
+    },
+    "wret": {
+     "direction": "input",
+     "bits": 5
     },
     "local_rq": {
      "direction": "input",
@@ -90823,8 +90985,9 @@
    "master": "ot_hbm_vm_lg_static_bank",
    "source": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv",
    "params": {
-    "READ_RETURN": 10,
-    "WRITE_RETURN": 7
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15,
+    "RET_PIN": 1
    },
    "slot": null,
    "owner": null,
@@ -90839,6 +91002,14 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "rret": {
+     "direction": "input",
+     "bits": 5
+    },
+    "wret": {
+     "direction": "input",
+     "bits": 5
     },
     "local_rq": {
      "direction": "input",
@@ -90906,8 +91077,9 @@
    "master": "ot_hbm_vm_lg_static_bank",
    "source": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv",
    "params": {
-    "READ_RETURN": 10,
-    "WRITE_RETURN": 7
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15,
+    "RET_PIN": 1
    },
    "slot": null,
    "owner": null,
@@ -90922,6 +91094,14 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "rret": {
+     "direction": "input",
+     "bits": 5
+    },
+    "wret": {
+     "direction": "input",
+     "bits": 5
     },
     "local_rq": {
      "direction": "input",
@@ -90989,8 +91169,9 @@
    "master": "ot_hbm_vm_lg_static_bank",
    "source": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv",
    "params": {
-    "READ_RETURN": 10,
-    "WRITE_RETURN": 7
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15,
+    "RET_PIN": 1
    },
    "slot": null,
    "owner": null,
@@ -91005,6 +91186,14 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "rret": {
+     "direction": "input",
+     "bits": 5
+    },
+    "wret": {
+     "direction": "input",
+     "bits": 5
     },
     "local_rq": {
      "direction": "input",
@@ -91072,8 +91261,9 @@
    "master": "ot_hbm_vm_lg_static_bank",
    "source": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv",
    "params": {
-    "READ_RETURN": 10,
-    "WRITE_RETURN": 7
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15,
+    "RET_PIN": 1
    },
    "slot": null,
    "owner": null,
@@ -91088,6 +91278,14 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "rret": {
+     "direction": "input",
+     "bits": 5
+    },
+    "wret": {
+     "direction": "input",
+     "bits": 5
     },
     "local_rq": {
      "direction": "input",
@@ -91155,8 +91353,9 @@
    "master": "ot_hbm_vm_lg_static_bank",
    "source": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv",
    "params": {
-    "READ_RETURN": 10,
-    "WRITE_RETURN": 7
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15,
+    "RET_PIN": 1
    },
    "slot": null,
    "owner": null,
@@ -91171,6 +91370,14 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "rret": {
+     "direction": "input",
+     "bits": 5
+    },
+    "wret": {
+     "direction": "input",
+     "bits": 5
     },
     "local_rq": {
      "direction": "input",
@@ -91238,8 +91445,9 @@
    "master": "ot_hbm_vm_lg_static_bank",
    "source": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv",
    "params": {
-    "READ_RETURN": 10,
-    "WRITE_RETURN": 7
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15,
+    "RET_PIN": 1
    },
    "slot": null,
    "owner": null,
@@ -91254,6 +91462,14 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "rret": {
+     "direction": "input",
+     "bits": 5
+    },
+    "wret": {
+     "direction": "input",
+     "bits": 5
     },
     "local_rq": {
      "direction": "input",
@@ -91321,8 +91537,9 @@
    "master": "ot_hbm_vm_lg_static_bank",
    "source": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv",
    "params": {
-    "READ_RETURN": 14,
-    "WRITE_RETURN": 11
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15,
+    "RET_PIN": 1
    },
    "slot": null,
    "owner": null,
@@ -91337,6 +91554,14 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "rret": {
+     "direction": "input",
+     "bits": 5
+    },
+    "wret": {
+     "direction": "input",
+     "bits": 5
     },
     "local_rq": {
      "direction": "input",
@@ -91404,8 +91629,9 @@
    "master": "ot_hbm_vm_lg_static_bank",
    "source": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv",
    "params": {
-    "READ_RETURN": 14,
-    "WRITE_RETURN": 11
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15,
+    "RET_PIN": 1
    },
    "slot": null,
    "owner": null,
@@ -91420,6 +91646,14 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "rret": {
+     "direction": "input",
+     "bits": 5
+    },
+    "wret": {
+     "direction": "input",
+     "bits": 5
     },
     "local_rq": {
      "direction": "input",
@@ -91487,8 +91721,9 @@
    "master": "ot_hbm_vm_lg_static_bank",
    "source": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv",
    "params": {
-    "READ_RETURN": 14,
-    "WRITE_RETURN": 11
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15,
+    "RET_PIN": 1
    },
    "slot": null,
    "owner": null,
@@ -91503,6 +91738,14 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "rret": {
+     "direction": "input",
+     "bits": 5
+    },
+    "wret": {
+     "direction": "input",
+     "bits": 5
     },
     "local_rq": {
      "direction": "input",
@@ -91570,8 +91813,9 @@
    "master": "ot_hbm_vm_lg_static_bank",
    "source": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv",
    "params": {
-    "READ_RETURN": 14,
-    "WRITE_RETURN": 11
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15,
+    "RET_PIN": 1
    },
    "slot": null,
    "owner": null,
@@ -91586,6 +91830,14 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "rret": {
+     "direction": "input",
+     "bits": 5
+    },
+    "wret": {
+     "direction": "input",
+     "bits": 5
     },
     "local_rq": {
      "direction": "input",
@@ -91653,8 +91905,9 @@
    "master": "ot_hbm_vm_lg_static_bank",
    "source": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv",
    "params": {
-    "READ_RETURN": 14,
-    "WRITE_RETURN": 11
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15,
+    "RET_PIN": 1
    },
    "slot": null,
    "owner": null,
@@ -91669,6 +91922,14 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "rret": {
+     "direction": "input",
+     "bits": 5
+    },
+    "wret": {
+     "direction": "input",
+     "bits": 5
     },
     "local_rq": {
      "direction": "input",
@@ -91736,8 +91997,9 @@
    "master": "ot_hbm_vm_lg_static_bank",
    "source": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv",
    "params": {
-    "READ_RETURN": 14,
-    "WRITE_RETURN": 11
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15,
+    "RET_PIN": 1
    },
    "slot": null,
    "owner": null,
@@ -91752,6 +92014,14 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "rret": {
+     "direction": "input",
+     "bits": 5
+    },
+    "wret": {
+     "direction": "input",
+     "bits": 5
     },
     "local_rq": {
      "direction": "input",
@@ -91819,8 +92089,9 @@
    "master": "ot_hbm_vm_lg_static_bank",
    "source": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv",
    "params": {
-    "READ_RETURN": 14,
-    "WRITE_RETURN": 11
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15,
+    "RET_PIN": 1
    },
    "slot": null,
    "owner": null,
@@ -91835,6 +92106,14 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "rret": {
+     "direction": "input",
+     "bits": 5
+    },
+    "wret": {
+     "direction": "input",
+     "bits": 5
     },
     "local_rq": {
      "direction": "input",
@@ -91902,8 +92181,9 @@
    "master": "ot_hbm_vm_lg_static_bank",
    "source": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv",
    "params": {
-    "READ_RETURN": 14,
-    "WRITE_RETURN": 11
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15,
+    "RET_PIN": 1
    },
    "slot": null,
    "owner": null,
@@ -91918,6 +92198,14 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "rret": {
+     "direction": "input",
+     "bits": 5
+    },
+    "wret": {
+     "direction": "input",
+     "bits": 5
     },
     "local_rq": {
      "direction": "input",
@@ -92521,8 +92809,9 @@
    "master": "ot_hbm_vm_lg_static_bank",
    "source": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv",
    "params": {
-    "READ_RETURN": 10,
-    "WRITE_RETURN": 7
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15,
+    "RET_PIN": 1
    },
    "slot": null,
    "owner": null,
@@ -92537,6 +92826,14 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "rret": {
+     "direction": "input",
+     "bits": 5
+    },
+    "wret": {
+     "direction": "input",
+     "bits": 5
     },
     "local_rq": {
      "direction": "input",
@@ -92604,8 +92901,9 @@
    "master": "ot_hbm_vm_lg_static_bank",
    "source": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv",
    "params": {
-    "READ_RETURN": 10,
-    "WRITE_RETURN": 7
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15,
+    "RET_PIN": 1
    },
    "slot": null,
    "owner": null,
@@ -92620,6 +92918,14 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "rret": {
+     "direction": "input",
+     "bits": 5
+    },
+    "wret": {
+     "direction": "input",
+     "bits": 5
     },
     "local_rq": {
      "direction": "input",
@@ -92687,8 +92993,9 @@
    "master": "ot_hbm_vm_lg_static_bank",
    "source": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv",
    "params": {
-    "READ_RETURN": 10,
-    "WRITE_RETURN": 7
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15,
+    "RET_PIN": 1
    },
    "slot": null,
    "owner": null,
@@ -92703,6 +93010,14 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "rret": {
+     "direction": "input",
+     "bits": 5
+    },
+    "wret": {
+     "direction": "input",
+     "bits": 5
     },
     "local_rq": {
      "direction": "input",
@@ -92770,8 +93085,9 @@
    "master": "ot_hbm_vm_lg_static_bank",
    "source": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv",
    "params": {
-    "READ_RETURN": 10,
-    "WRITE_RETURN": 7
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15,
+    "RET_PIN": 1
    },
    "slot": null,
    "owner": null,
@@ -92786,6 +93102,14 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "rret": {
+     "direction": "input",
+     "bits": 5
+    },
+    "wret": {
+     "direction": "input",
+     "bits": 5
     },
     "local_rq": {
      "direction": "input",
@@ -92853,8 +93177,9 @@
    "master": "ot_hbm_vm_lg_static_bank",
    "source": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv",
    "params": {
-    "READ_RETURN": 10,
-    "WRITE_RETURN": 7
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15,
+    "RET_PIN": 1
    },
    "slot": null,
    "owner": null,
@@ -92869,6 +93194,14 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "rret": {
+     "direction": "input",
+     "bits": 5
+    },
+    "wret": {
+     "direction": "input",
+     "bits": 5
     },
     "local_rq": {
      "direction": "input",
@@ -92936,8 +93269,9 @@
    "master": "ot_hbm_vm_lg_static_bank",
    "source": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv",
    "params": {
-    "READ_RETURN": 10,
-    "WRITE_RETURN": 7
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15,
+    "RET_PIN": 1
    },
    "slot": null,
    "owner": null,
@@ -92952,6 +93286,14 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "rret": {
+     "direction": "input",
+     "bits": 5
+    },
+    "wret": {
+     "direction": "input",
+     "bits": 5
     },
     "local_rq": {
      "direction": "input",
@@ -93019,8 +93361,9 @@
    "master": "ot_hbm_vm_lg_static_bank",
    "source": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv",
    "params": {
-    "READ_RETURN": 10,
-    "WRITE_RETURN": 7
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15,
+    "RET_PIN": 1
    },
    "slot": null,
    "owner": null,
@@ -93035,6 +93378,14 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "rret": {
+     "direction": "input",
+     "bits": 5
+    },
+    "wret": {
+     "direction": "input",
+     "bits": 5
     },
     "local_rq": {
      "direction": "input",
@@ -93102,8 +93453,9 @@
    "master": "ot_hbm_vm_lg_static_bank",
    "source": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv",
    "params": {
-    "READ_RETURN": 10,
-    "WRITE_RETURN": 7
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15,
+    "RET_PIN": 1
    },
    "slot": null,
    "owner": null,
@@ -93118,6 +93470,14 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "rret": {
+     "direction": "input",
+     "bits": 5
+    },
+    "wret": {
+     "direction": "input",
+     "bits": 5
     },
     "local_rq": {
      "direction": "input",
@@ -93185,8 +93545,9 @@
    "master": "ot_hbm_vm_lg_static_bank",
    "source": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv",
    "params": {
-    "READ_RETURN": 14,
-    "WRITE_RETURN": 11
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15,
+    "RET_PIN": 1
    },
    "slot": null,
    "owner": null,
@@ -93201,6 +93562,14 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "rret": {
+     "direction": "input",
+     "bits": 5
+    },
+    "wret": {
+     "direction": "input",
+     "bits": 5
     },
     "local_rq": {
      "direction": "input",
@@ -93268,8 +93637,9 @@
    "master": "ot_hbm_vm_lg_static_bank",
    "source": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv",
    "params": {
-    "READ_RETURN": 14,
-    "WRITE_RETURN": 11
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15,
+    "RET_PIN": 1
    },
    "slot": null,
    "owner": null,
@@ -93284,6 +93654,14 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "rret": {
+     "direction": "input",
+     "bits": 5
+    },
+    "wret": {
+     "direction": "input",
+     "bits": 5
     },
     "local_rq": {
      "direction": "input",
@@ -93351,8 +93729,9 @@
    "master": "ot_hbm_vm_lg_static_bank",
    "source": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv",
    "params": {
-    "READ_RETURN": 14,
-    "WRITE_RETURN": 11
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15,
+    "RET_PIN": 1
    },
    "slot": null,
    "owner": null,
@@ -93367,6 +93746,14 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "rret": {
+     "direction": "input",
+     "bits": 5
+    },
+    "wret": {
+     "direction": "input",
+     "bits": 5
     },
     "local_rq": {
      "direction": "input",
@@ -93434,8 +93821,9 @@
    "master": "ot_hbm_vm_lg_static_bank",
    "source": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv",
    "params": {
-    "READ_RETURN": 14,
-    "WRITE_RETURN": 11
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15,
+    "RET_PIN": 1
    },
    "slot": null,
    "owner": null,
@@ -93450,6 +93838,14 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "rret": {
+     "direction": "input",
+     "bits": 5
+    },
+    "wret": {
+     "direction": "input",
+     "bits": 5
     },
     "local_rq": {
      "direction": "input",
@@ -93517,8 +93913,9 @@
    "master": "ot_hbm_vm_lg_static_bank",
    "source": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv",
    "params": {
-    "READ_RETURN": 14,
-    "WRITE_RETURN": 11
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15,
+    "RET_PIN": 1
    },
    "slot": null,
    "owner": null,
@@ -93533,6 +93930,14 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "rret": {
+     "direction": "input",
+     "bits": 5
+    },
+    "wret": {
+     "direction": "input",
+     "bits": 5
     },
     "local_rq": {
      "direction": "input",
@@ -93600,8 +94005,9 @@
    "master": "ot_hbm_vm_lg_static_bank",
    "source": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv",
    "params": {
-    "READ_RETURN": 14,
-    "WRITE_RETURN": 11
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15,
+    "RET_PIN": 1
    },
    "slot": null,
    "owner": null,
@@ -93616,6 +94022,14 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "rret": {
+     "direction": "input",
+     "bits": 5
+    },
+    "wret": {
+     "direction": "input",
+     "bits": 5
     },
     "local_rq": {
      "direction": "input",
@@ -93683,8 +94097,9 @@
    "master": "ot_hbm_vm_lg_static_bank",
    "source": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv",
    "params": {
-    "READ_RETURN": 14,
-    "WRITE_RETURN": 11
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15,
+    "RET_PIN": 1
    },
    "slot": null,
    "owner": null,
@@ -93699,6 +94114,14 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "rret": {
+     "direction": "input",
+     "bits": 5
+    },
+    "wret": {
+     "direction": "input",
+     "bits": 5
     },
     "local_rq": {
      "direction": "input",
@@ -93766,8 +94189,9 @@
    "master": "ot_hbm_vm_lg_static_bank",
    "source": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv",
    "params": {
-    "READ_RETURN": 14,
-    "WRITE_RETURN": 11
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15,
+    "RET_PIN": 1
    },
    "slot": null,
    "owner": null,
@@ -93782,6 +94206,14 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "rret": {
+     "direction": "input",
+     "bits": 5
+    },
+    "wret": {
+     "direction": "input",
+     "bits": 5
     },
     "local_rq": {
      "direction": "input",
@@ -94385,8 +94817,9 @@
    "master": "ot_hbm_vm_lg_static_bank",
    "source": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv",
    "params": {
-    "READ_RETURN": 10,
-    "WRITE_RETURN": 7
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15,
+    "RET_PIN": 1
    },
    "slot": null,
    "owner": null,
@@ -94401,6 +94834,14 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "rret": {
+     "direction": "input",
+     "bits": 5
+    },
+    "wret": {
+     "direction": "input",
+     "bits": 5
     },
     "local_rq": {
      "direction": "input",
@@ -94468,8 +94909,9 @@
    "master": "ot_hbm_vm_lg_static_bank",
    "source": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv",
    "params": {
-    "READ_RETURN": 10,
-    "WRITE_RETURN": 7
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15,
+    "RET_PIN": 1
    },
    "slot": null,
    "owner": null,
@@ -94484,6 +94926,14 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "rret": {
+     "direction": "input",
+     "bits": 5
+    },
+    "wret": {
+     "direction": "input",
+     "bits": 5
     },
     "local_rq": {
      "direction": "input",
@@ -94551,8 +95001,9 @@
    "master": "ot_hbm_vm_lg_static_bank",
    "source": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv",
    "params": {
-    "READ_RETURN": 10,
-    "WRITE_RETURN": 7
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15,
+    "RET_PIN": 1
    },
    "slot": null,
    "owner": null,
@@ -94567,6 +95018,14 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "rret": {
+     "direction": "input",
+     "bits": 5
+    },
+    "wret": {
+     "direction": "input",
+     "bits": 5
     },
     "local_rq": {
      "direction": "input",
@@ -94634,8 +95093,9 @@
    "master": "ot_hbm_vm_lg_static_bank",
    "source": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv",
    "params": {
-    "READ_RETURN": 10,
-    "WRITE_RETURN": 7
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15,
+    "RET_PIN": 1
    },
    "slot": null,
    "owner": null,
@@ -94650,6 +95110,14 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "rret": {
+     "direction": "input",
+     "bits": 5
+    },
+    "wret": {
+     "direction": "input",
+     "bits": 5
     },
     "local_rq": {
      "direction": "input",
@@ -94717,8 +95185,9 @@
    "master": "ot_hbm_vm_lg_static_bank",
    "source": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv",
    "params": {
-    "READ_RETURN": 10,
-    "WRITE_RETURN": 7
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15,
+    "RET_PIN": 1
    },
    "slot": null,
    "owner": null,
@@ -94733,6 +95202,14 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "rret": {
+     "direction": "input",
+     "bits": 5
+    },
+    "wret": {
+     "direction": "input",
+     "bits": 5
     },
     "local_rq": {
      "direction": "input",
@@ -94800,8 +95277,9 @@
    "master": "ot_hbm_vm_lg_static_bank",
    "source": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv",
    "params": {
-    "READ_RETURN": 10,
-    "WRITE_RETURN": 7
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15,
+    "RET_PIN": 1
    },
    "slot": null,
    "owner": null,
@@ -94816,6 +95294,14 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "rret": {
+     "direction": "input",
+     "bits": 5
+    },
+    "wret": {
+     "direction": "input",
+     "bits": 5
     },
     "local_rq": {
      "direction": "input",
@@ -94883,8 +95369,9 @@
    "master": "ot_hbm_vm_lg_static_bank",
    "source": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv",
    "params": {
-    "READ_RETURN": 10,
-    "WRITE_RETURN": 7
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15,
+    "RET_PIN": 1
    },
    "slot": null,
    "owner": null,
@@ -94899,6 +95386,14 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "rret": {
+     "direction": "input",
+     "bits": 5
+    },
+    "wret": {
+     "direction": "input",
+     "bits": 5
     },
     "local_rq": {
      "direction": "input",
@@ -94966,8 +95461,9 @@
    "master": "ot_hbm_vm_lg_static_bank",
    "source": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv",
    "params": {
-    "READ_RETURN": 10,
-    "WRITE_RETURN": 7
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15,
+    "RET_PIN": 1
    },
    "slot": null,
    "owner": null,
@@ -94982,6 +95478,14 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "rret": {
+     "direction": "input",
+     "bits": 5
+    },
+    "wret": {
+     "direction": "input",
+     "bits": 5
     },
     "local_rq": {
      "direction": "input",
@@ -95049,8 +95553,9 @@
    "master": "ot_hbm_vm_lg_static_bank",
    "source": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv",
    "params": {
-    "READ_RETURN": 14,
-    "WRITE_RETURN": 11
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15,
+    "RET_PIN": 1
    },
    "slot": null,
    "owner": null,
@@ -95065,6 +95570,14 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "rret": {
+     "direction": "input",
+     "bits": 5
+    },
+    "wret": {
+     "direction": "input",
+     "bits": 5
     },
     "local_rq": {
      "direction": "input",
@@ -95132,8 +95645,9 @@
    "master": "ot_hbm_vm_lg_static_bank",
    "source": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv",
    "params": {
-    "READ_RETURN": 14,
-    "WRITE_RETURN": 11
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15,
+    "RET_PIN": 1
    },
    "slot": null,
    "owner": null,
@@ -95148,6 +95662,14 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "rret": {
+     "direction": "input",
+     "bits": 5
+    },
+    "wret": {
+     "direction": "input",
+     "bits": 5
     },
     "local_rq": {
      "direction": "input",
@@ -95215,8 +95737,9 @@
    "master": "ot_hbm_vm_lg_static_bank",
    "source": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv",
    "params": {
-    "READ_RETURN": 14,
-    "WRITE_RETURN": 11
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15,
+    "RET_PIN": 1
    },
    "slot": null,
    "owner": null,
@@ -95231,6 +95754,14 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "rret": {
+     "direction": "input",
+     "bits": 5
+    },
+    "wret": {
+     "direction": "input",
+     "bits": 5
     },
     "local_rq": {
      "direction": "input",
@@ -95298,8 +95829,9 @@
    "master": "ot_hbm_vm_lg_static_bank",
    "source": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv",
    "params": {
-    "READ_RETURN": 14,
-    "WRITE_RETURN": 11
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15,
+    "RET_PIN": 1
    },
    "slot": null,
    "owner": null,
@@ -95314,6 +95846,14 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "rret": {
+     "direction": "input",
+     "bits": 5
+    },
+    "wret": {
+     "direction": "input",
+     "bits": 5
     },
     "local_rq": {
      "direction": "input",
@@ -95381,8 +95921,9 @@
    "master": "ot_hbm_vm_lg_static_bank",
    "source": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv",
    "params": {
-    "READ_RETURN": 14,
-    "WRITE_RETURN": 11
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15,
+    "RET_PIN": 1
    },
    "slot": null,
    "owner": null,
@@ -95397,6 +95938,14 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "rret": {
+     "direction": "input",
+     "bits": 5
+    },
+    "wret": {
+     "direction": "input",
+     "bits": 5
     },
     "local_rq": {
      "direction": "input",
@@ -95464,8 +96013,9 @@
    "master": "ot_hbm_vm_lg_static_bank",
    "source": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv",
    "params": {
-    "READ_RETURN": 14,
-    "WRITE_RETURN": 11
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15,
+    "RET_PIN": 1
    },
    "slot": null,
    "owner": null,
@@ -95480,6 +96030,14 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "rret": {
+     "direction": "input",
+     "bits": 5
+    },
+    "wret": {
+     "direction": "input",
+     "bits": 5
     },
     "local_rq": {
      "direction": "input",
@@ -95547,8 +96105,9 @@
    "master": "ot_hbm_vm_lg_static_bank",
    "source": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv",
    "params": {
-    "READ_RETURN": 14,
-    "WRITE_RETURN": 11
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15,
+    "RET_PIN": 1
    },
    "slot": null,
    "owner": null,
@@ -95563,6 +96122,14 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "rret": {
+     "direction": "input",
+     "bits": 5
+    },
+    "wret": {
+     "direction": "input",
+     "bits": 5
     },
     "local_rq": {
      "direction": "input",
@@ -95630,8 +96197,9 @@
    "master": "ot_hbm_vm_lg_static_bank",
    "source": "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv",
    "params": {
-    "READ_RETURN": 14,
-    "WRITE_RETURN": 11
+    "READ_RETURN": 18,
+    "WRITE_RETURN": 15,
+    "RET_PIN": 1
    },
    "slot": null,
    "owner": null,
@@ -95646,6 +96214,14 @@
     "rst_n": {
      "direction": "input",
      "bits": 1
+    },
+    "rret": {
+     "direction": "input",
+     "bits": 5
+    },
+    "wret": {
+     "direction": "input",
+     "bits": 5
     },
     "local_rq": {
      "direction": "input",
@@ -394356,6 +394932,1158 @@
    "lo": 0,
    "hi": 2,
    "master": "ot_hbm_sm_vm_wr_q_t"
+  },
+  {
+   "inst": "lg_SW_0_b0",
+   "port": "rret",
+   "value": 10,
+   "reason": "identity: tap read return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_SW_0_b0",
+   "port": "wret",
+   "value": 7,
+   "reason": "identity: tap write return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_SW_0_b1",
+   "port": "rret",
+   "value": 10,
+   "reason": "identity: tap read return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_SW_0_b1",
+   "port": "wret",
+   "value": 7,
+   "reason": "identity: tap write return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_SW_0_b2",
+   "port": "rret",
+   "value": 10,
+   "reason": "identity: tap read return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_SW_0_b2",
+   "port": "wret",
+   "value": 7,
+   "reason": "identity: tap write return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_SW_0_b3",
+   "port": "rret",
+   "value": 10,
+   "reason": "identity: tap read return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_SW_0_b3",
+   "port": "wret",
+   "value": 7,
+   "reason": "identity: tap write return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_SW_0_b4",
+   "port": "rret",
+   "value": 10,
+   "reason": "identity: tap read return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_SW_0_b4",
+   "port": "wret",
+   "value": 7,
+   "reason": "identity: tap write return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_SW_0_b5",
+   "port": "rret",
+   "value": 10,
+   "reason": "identity: tap read return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_SW_0_b5",
+   "port": "wret",
+   "value": 7,
+   "reason": "identity: tap write return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_SW_0_b6",
+   "port": "rret",
+   "value": 10,
+   "reason": "identity: tap read return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_SW_0_b6",
+   "port": "wret",
+   "value": 7,
+   "reason": "identity: tap write return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_SW_0_b7",
+   "port": "rret",
+   "value": 10,
+   "reason": "identity: tap read return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_SW_0_b7",
+   "port": "wret",
+   "value": 7,
+   "reason": "identity: tap write return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_SW_1_b0",
+   "port": "rret",
+   "value": 14,
+   "reason": "identity: tap read return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_SW_1_b0",
+   "port": "wret",
+   "value": 11,
+   "reason": "identity: tap write return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_SW_1_b1",
+   "port": "rret",
+   "value": 14,
+   "reason": "identity: tap read return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_SW_1_b1",
+   "port": "wret",
+   "value": 11,
+   "reason": "identity: tap write return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_SW_1_b2",
+   "port": "rret",
+   "value": 14,
+   "reason": "identity: tap read return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_SW_1_b2",
+   "port": "wret",
+   "value": 11,
+   "reason": "identity: tap write return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_SW_1_b3",
+   "port": "rret",
+   "value": 14,
+   "reason": "identity: tap read return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_SW_1_b3",
+   "port": "wret",
+   "value": 11,
+   "reason": "identity: tap write return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_SW_1_b4",
+   "port": "rret",
+   "value": 14,
+   "reason": "identity: tap read return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_SW_1_b4",
+   "port": "wret",
+   "value": 11,
+   "reason": "identity: tap write return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_SW_1_b5",
+   "port": "rret",
+   "value": 14,
+   "reason": "identity: tap read return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_SW_1_b5",
+   "port": "wret",
+   "value": 11,
+   "reason": "identity: tap write return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_SW_1_b6",
+   "port": "rret",
+   "value": 14,
+   "reason": "identity: tap read return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_SW_1_b6",
+   "port": "wret",
+   "value": 11,
+   "reason": "identity: tap write return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_SW_1_b7",
+   "port": "rret",
+   "value": 14,
+   "reason": "identity: tap read return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_SW_1_b7",
+   "port": "wret",
+   "value": 11,
+   "reason": "identity: tap write return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_SE_0_b0",
+   "port": "rret",
+   "value": 10,
+   "reason": "identity: tap read return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_SE_0_b0",
+   "port": "wret",
+   "value": 7,
+   "reason": "identity: tap write return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_SE_0_b1",
+   "port": "rret",
+   "value": 10,
+   "reason": "identity: tap read return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_SE_0_b1",
+   "port": "wret",
+   "value": 7,
+   "reason": "identity: tap write return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_SE_0_b2",
+   "port": "rret",
+   "value": 10,
+   "reason": "identity: tap read return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_SE_0_b2",
+   "port": "wret",
+   "value": 7,
+   "reason": "identity: tap write return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_SE_0_b3",
+   "port": "rret",
+   "value": 10,
+   "reason": "identity: tap read return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_SE_0_b3",
+   "port": "wret",
+   "value": 7,
+   "reason": "identity: tap write return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_SE_0_b4",
+   "port": "rret",
+   "value": 10,
+   "reason": "identity: tap read return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_SE_0_b4",
+   "port": "wret",
+   "value": 7,
+   "reason": "identity: tap write return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_SE_0_b5",
+   "port": "rret",
+   "value": 10,
+   "reason": "identity: tap read return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_SE_0_b5",
+   "port": "wret",
+   "value": 7,
+   "reason": "identity: tap write return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_SE_0_b6",
+   "port": "rret",
+   "value": 10,
+   "reason": "identity: tap read return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_SE_0_b6",
+   "port": "wret",
+   "value": 7,
+   "reason": "identity: tap write return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_SE_0_b7",
+   "port": "rret",
+   "value": 10,
+   "reason": "identity: tap read return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_SE_0_b7",
+   "port": "wret",
+   "value": 7,
+   "reason": "identity: tap write return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_SE_1_b0",
+   "port": "rret",
+   "value": 14,
+   "reason": "identity: tap read return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_SE_1_b0",
+   "port": "wret",
+   "value": 11,
+   "reason": "identity: tap write return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_SE_1_b1",
+   "port": "rret",
+   "value": 14,
+   "reason": "identity: tap read return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_SE_1_b1",
+   "port": "wret",
+   "value": 11,
+   "reason": "identity: tap write return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_SE_1_b2",
+   "port": "rret",
+   "value": 14,
+   "reason": "identity: tap read return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_SE_1_b2",
+   "port": "wret",
+   "value": 11,
+   "reason": "identity: tap write return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_SE_1_b3",
+   "port": "rret",
+   "value": 14,
+   "reason": "identity: tap read return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_SE_1_b3",
+   "port": "wret",
+   "value": 11,
+   "reason": "identity: tap write return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_SE_1_b4",
+   "port": "rret",
+   "value": 14,
+   "reason": "identity: tap read return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_SE_1_b4",
+   "port": "wret",
+   "value": 11,
+   "reason": "identity: tap write return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_SE_1_b5",
+   "port": "rret",
+   "value": 14,
+   "reason": "identity: tap read return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_SE_1_b5",
+   "port": "wret",
+   "value": 11,
+   "reason": "identity: tap write return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_SE_1_b6",
+   "port": "rret",
+   "value": 14,
+   "reason": "identity: tap read return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_SE_1_b6",
+   "port": "wret",
+   "value": 11,
+   "reason": "identity: tap write return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_SE_1_b7",
+   "port": "rret",
+   "value": 14,
+   "reason": "identity: tap read return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_SE_1_b7",
+   "port": "wret",
+   "value": 11,
+   "reason": "identity: tap write return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_NW_0_b0",
+   "port": "rret",
+   "value": 10,
+   "reason": "identity: tap read return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_NW_0_b0",
+   "port": "wret",
+   "value": 7,
+   "reason": "identity: tap write return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_NW_0_b1",
+   "port": "rret",
+   "value": 10,
+   "reason": "identity: tap read return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_NW_0_b1",
+   "port": "wret",
+   "value": 7,
+   "reason": "identity: tap write return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_NW_0_b2",
+   "port": "rret",
+   "value": 10,
+   "reason": "identity: tap read return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_NW_0_b2",
+   "port": "wret",
+   "value": 7,
+   "reason": "identity: tap write return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_NW_0_b3",
+   "port": "rret",
+   "value": 10,
+   "reason": "identity: tap read return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_NW_0_b3",
+   "port": "wret",
+   "value": 7,
+   "reason": "identity: tap write return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_NW_0_b4",
+   "port": "rret",
+   "value": 10,
+   "reason": "identity: tap read return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_NW_0_b4",
+   "port": "wret",
+   "value": 7,
+   "reason": "identity: tap write return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_NW_0_b5",
+   "port": "rret",
+   "value": 10,
+   "reason": "identity: tap read return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_NW_0_b5",
+   "port": "wret",
+   "value": 7,
+   "reason": "identity: tap write return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_NW_0_b6",
+   "port": "rret",
+   "value": 10,
+   "reason": "identity: tap read return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_NW_0_b6",
+   "port": "wret",
+   "value": 7,
+   "reason": "identity: tap write return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_NW_0_b7",
+   "port": "rret",
+   "value": 10,
+   "reason": "identity: tap read return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_NW_0_b7",
+   "port": "wret",
+   "value": 7,
+   "reason": "identity: tap write return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_NW_1_b0",
+   "port": "rret",
+   "value": 14,
+   "reason": "identity: tap read return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_NW_1_b0",
+   "port": "wret",
+   "value": 11,
+   "reason": "identity: tap write return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_NW_1_b1",
+   "port": "rret",
+   "value": 14,
+   "reason": "identity: tap read return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_NW_1_b1",
+   "port": "wret",
+   "value": 11,
+   "reason": "identity: tap write return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_NW_1_b2",
+   "port": "rret",
+   "value": 14,
+   "reason": "identity: tap read return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_NW_1_b2",
+   "port": "wret",
+   "value": 11,
+   "reason": "identity: tap write return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_NW_1_b3",
+   "port": "rret",
+   "value": 14,
+   "reason": "identity: tap read return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_NW_1_b3",
+   "port": "wret",
+   "value": 11,
+   "reason": "identity: tap write return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_NW_1_b4",
+   "port": "rret",
+   "value": 14,
+   "reason": "identity: tap read return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_NW_1_b4",
+   "port": "wret",
+   "value": 11,
+   "reason": "identity: tap write return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_NW_1_b5",
+   "port": "rret",
+   "value": 14,
+   "reason": "identity: tap read return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_NW_1_b5",
+   "port": "wret",
+   "value": 11,
+   "reason": "identity: tap write return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_NW_1_b6",
+   "port": "rret",
+   "value": 14,
+   "reason": "identity: tap read return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_NW_1_b6",
+   "port": "wret",
+   "value": 11,
+   "reason": "identity: tap write return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_NW_1_b7",
+   "port": "rret",
+   "value": 14,
+   "reason": "identity: tap read return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_NW_1_b7",
+   "port": "wret",
+   "value": 11,
+   "reason": "identity: tap write return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_NE_0_b0",
+   "port": "rret",
+   "value": 10,
+   "reason": "identity: tap read return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_NE_0_b0",
+   "port": "wret",
+   "value": 7,
+   "reason": "identity: tap write return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_NE_0_b1",
+   "port": "rret",
+   "value": 10,
+   "reason": "identity: tap read return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_NE_0_b1",
+   "port": "wret",
+   "value": 7,
+   "reason": "identity: tap write return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_NE_0_b2",
+   "port": "rret",
+   "value": 10,
+   "reason": "identity: tap read return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_NE_0_b2",
+   "port": "wret",
+   "value": 7,
+   "reason": "identity: tap write return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_NE_0_b3",
+   "port": "rret",
+   "value": 10,
+   "reason": "identity: tap read return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_NE_0_b3",
+   "port": "wret",
+   "value": 7,
+   "reason": "identity: tap write return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_NE_0_b4",
+   "port": "rret",
+   "value": 10,
+   "reason": "identity: tap read return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_NE_0_b4",
+   "port": "wret",
+   "value": 7,
+   "reason": "identity: tap write return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_NE_0_b5",
+   "port": "rret",
+   "value": 10,
+   "reason": "identity: tap read return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_NE_0_b5",
+   "port": "wret",
+   "value": 7,
+   "reason": "identity: tap write return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_NE_0_b6",
+   "port": "rret",
+   "value": 10,
+   "reason": "identity: tap read return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_NE_0_b6",
+   "port": "wret",
+   "value": 7,
+   "reason": "identity: tap write return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_NE_0_b7",
+   "port": "rret",
+   "value": 10,
+   "reason": "identity: tap read return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_NE_0_b7",
+   "port": "wret",
+   "value": 7,
+   "reason": "identity: tap write return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_NE_1_b0",
+   "port": "rret",
+   "value": 14,
+   "reason": "identity: tap read return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_NE_1_b0",
+   "port": "wret",
+   "value": 11,
+   "reason": "identity: tap write return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_NE_1_b1",
+   "port": "rret",
+   "value": 14,
+   "reason": "identity: tap read return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_NE_1_b1",
+   "port": "wret",
+   "value": 11,
+   "reason": "identity: tap write return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_NE_1_b2",
+   "port": "rret",
+   "value": 14,
+   "reason": "identity: tap read return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_NE_1_b2",
+   "port": "wret",
+   "value": 11,
+   "reason": "identity: tap write return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_NE_1_b3",
+   "port": "rret",
+   "value": 14,
+   "reason": "identity: tap read return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_NE_1_b3",
+   "port": "wret",
+   "value": 11,
+   "reason": "identity: tap write return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_NE_1_b4",
+   "port": "rret",
+   "value": 14,
+   "reason": "identity: tap read return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_NE_1_b4",
+   "port": "wret",
+   "value": 11,
+   "reason": "identity: tap write return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_NE_1_b5",
+   "port": "rret",
+   "value": 14,
+   "reason": "identity: tap read return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_NE_1_b5",
+   "port": "wret",
+   "value": 11,
+   "reason": "identity: tap write return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_NE_1_b6",
+   "port": "rret",
+   "value": 14,
+   "reason": "identity: tap read return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_NE_1_b6",
+   "port": "wret",
+   "value": 11,
+   "reason": "identity: tap write return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_NE_1_b7",
+   "port": "rret",
+   "value": 14,
+   "reason": "identity: tap read return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
+  },
+  {
+   "inst": "lg_NE_1_b7",
+   "port": "wret",
+   "value": 11,
+   "reason": "identity: tap write return edge",
+   "lo": 0,
+   "hi": 5,
+   "master": "ot_hbm_vm_lg_static_bank"
   }
  ],
  "die_pins": [

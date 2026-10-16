@@ -1,0 +1,11 @@
+{
+ "source_commit": "380721a92",
+ "status": "UNQUALIFIED",
+ "cts": "owned nonprogressing gate terminated after >6600 hold buffers without setup improvement; rc137 is termination not signoff",
+ "diagnostic_only": true,
+ "frozen_cts_repair_disabled_hold_ps": -80.54,
+ "worst_from": "rx3",
+ "worst_to": "padbad/D",
+ "successor_source": "b5c6b010f",
+ "successor_kit_commit": "d70930cb5"
+}
