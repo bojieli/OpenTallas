@@ -674,7 +674,8 @@ module ot_qfd_xhead #(
     parameter integer LOCAL_RST = 0,     // opt-in: rst_n captured by a 2-flop synchroniser at the pin + 1 regional
                                          // stage (ot_rst_pipe); release +3 edges, cold init only, 0 normal edges
     parameter integer ONWARD_REG = 0,    // opt-in: b_d leaves from its own pin registers (duplicate of f_q / ib_pin /
-                                         // g_pin on the same edge: 0 cycles), the internal copies feed only logic
+                                         // g_pin on the same edge: 0 cycles), the internal copies feed only logic;
+                                         // 2: input + output onward registers (+1 edge per head-row hop)
     parameter integer MUT  = 0           // 3: the TDM sends each line to the wrong station (wrong line);
                                          // 4: reads the other epoch (stale buffer); 6: pooled line without its B half
 ) (
@@ -747,7 +748,14 @@ module ot_qfd_xhead #(
     always @(posedge ck or negedge rst_i)
         if (!rst_i) g_pin <= 1'b0; else g_pin <= a_d[0];
     always @(posedge ck) begin ib_pin <= a_d[1 +: IBW]; f_q <= a_d[1 + IBW +: FW]; end
-    generate if (ONWARD_REG != 0) begin : g_onward
+    generate if (ONWARD_REG >= 2) begin : g_onward2
+        // ONWARD_REG 2 (Q-ELEM 2026-10-16, 129.6-um head): the onward copy takes TWO edges, an input pin register at the
+        // a_d face and an output pin register at the b_d face, so neither leg crosses the full 129.6 um (w1 gate: one
+        // register crossing it put capture at 243.6 ps).  +1 edge per head-row hop; the head's own copies are unchanged.
+        wire [HW-1:0] b_mid;
+        ot_qfd_onward_reg #(.W(HW)) u_onward_i (.ck(ck), .rst_n(rst_i), .d(a_d), .q(b_mid));
+        ot_qfd_onward_reg #(.W(HW)) u_onward_o (.ck(ck), .rst_n(rst_i), .d(b_mid), .q(b_d));
+    end else if (ONWARD_REG != 0) begin : g_onward
         // a keep_hierarchy module: wire-level keep did not stop synthesis folding f_q into these (m6s: e_d[454] = fep
         // still drove the fill logic), a hierarchy boundary does
         ot_qfd_onward_reg #(.W(HW)) u_onward (.ck(ck), .rst_n(rst_i), .d(a_d), .q(b_d));
