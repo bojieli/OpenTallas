@@ -1,8 +1,8 @@
 {
- "name": "qfd_upper_b2_l2_s4_1016-s4r1-COMMIT",
+ "name": "qfd_upper_b2_l2_s4_1016-s4r2-COMMIT",
  "block": "qfd_band_upper_b2_l2_s4",
  "ref_tile": true,
- "owner": "codex:Q-PORTMAP-b2",
+ "owner": "claude:Q-B2",
  "purpose": "NEW compact4-selector ABI two-lane b2 upper; exact source-specific candidate pin/slot grant; no inherited view or normal latency change.",
  "threads": 8,
  "peak_ram_gb": 24,
@@ -32,7 +32,7 @@
      "verilator"
     ],
     "pass_regex": "^PASS primary8xNL2_s4",
-    "min_count_regex": "words=330800"
+    "min_count_regex": "words=(330800)\\b"
    },
    {
     "name": "b2_return_mutant",
@@ -94,7 +94,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qfd_upper_b2_l2_s4_1016/qfd_upper_b2_l2_s4_1016-s4r1-COMMIT"
+   "to": "results/rtl/ref_tile/qfd_upper_b2_l2_s4_1016/qfd_upper_b2_l2_s4_1016-s4r2-COMMIT"
   }
  ],
  "cycles_added": 0,

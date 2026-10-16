@@ -64,7 +64,7 @@
  "job": {
   "owner": "claude:Q-B2",
   "branch": "codex/q-portmap-b2-0812",
-  "tag": "s4h1",
+  "tag": "s4h2",
   "hold_merge": true,
   "purpose": "NEW compact4-selector ABI two-lane b2 upper; exact source-specific candidate pin/slot grant; no inherited view or normal latency change.",
   "benches": [
@@ -78,7 +78,7 @@
      "verilator"
     ],
     "pass_regex": "^PASS primary8xNL2_s4",
-    "min_count_regex": "words=330800"
+    "min_count_regex": "words=(330800)\\b"
    },
    {
     "name": "b2_return_mutant",
