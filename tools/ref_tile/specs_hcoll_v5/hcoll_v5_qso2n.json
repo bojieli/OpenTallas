@@ -11,8 +11,8 @@
   "rst_n"
  ],
  "outline": {
-  "w": 17.28,
-  "h": 17.28
+  "w": 21.6,
+  "h": 21.6
  },
  "pins": {
   "W": [
@@ -48,7 +48,7 @@
   "macro_halo_um": 5.4
  },
  "fill_reason": {
-  "pin_bound": "127 pin bits: N 79 (sink_slot/select + clk/rst/faults) on M5 over 17.28 um = 48% of slots sets the width; 17.28 also = minimum for >=3 M5 PG stripes per net."
+  "pin_bound": "127 pin bits: N 79 (sink_slot/select + clk/rst/faults) on M5 over 21.6 um = 38% of slots; outline 21.6x21.6 (17.28 gate: std 93 um2 = util 56% and post-place density saturated over the whole core; qso3n twin GPL-0301 at 17.28)."
  },
  "job": {
   "owner": "Claude:H-NETLIST/COLL-QS-1045",
