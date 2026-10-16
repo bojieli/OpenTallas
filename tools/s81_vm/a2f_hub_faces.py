@@ -98,13 +98,22 @@ def spans_from_plan(plan, W, H):
         lo, hi = max(0.0, lo), min(cap, hi)
         assert hi > lo, ('peer has no face overlap', name, face, lo, hi)
         return (face, round(lo, 4), round(hi, 4))
+    # MIX4 face from its actual box (S-DIE 2330 holds two reservations: A_W_1x4 west of the VM, B_NW_2x2 above its
+    # NW corner).  The face is the VM edge the box sits beyond; anything else (overlap / diagonal) fails closed.
+    mx, my, mw, mh = d['mix4_slot'][:4]
+    if mx + mw <= vx + 1e-3 and my < vy + vh and my + mh > vy:
+        mix4_face = 'W'
+    elif my >= vy + vh - 1e-3 and mx < vx + vw and mx + mw > vx:
+        mix4_face = 'N'
+    else:
+        raise AssertionError(('MIX4 box neither W of nor N of the VM', d['mix4_slot'], boxes['sp_vm']))
     assignments = [
         ('sp_su_s', 'S', ('f_su','t_su','t_inp_su')),
         ('sp_capture', 'N', ('f_capture',)),
         ('sp_gather', 'N', ('t_gather',)),
         ('bk_collector', 'N', ('col',)),
         ('sp_pq', 'N', ('f_pqx','t_pqx')),
-        ('mix4_slot', 'W', ('f_mx','t_mx')),
+        ('mix4_slot', mix4_face, ('f_mx','t_mx')),
         ('sp_sseq', 'S', ('c_',)),
         ('sp_collective', 'E', ('t_crs',)),
         ('sp_wfc', 'E', ('f_wfc','t_wfc')),
