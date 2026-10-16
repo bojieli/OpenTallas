@@ -29,5 +29,26 @@
   "tools/s81_wfc_valid/gate.sh": "59625635eec4461196b35e38a789e723791ad915173afe9704591a077e20ebf3",
   "tools/s81_wfc_valid/bench.sv": "b099f13407a5d9f9c4587d7710ffc4b931356d76ed8cdea4640b556128900bc1",
   "tools/s81_wfc_valid/ref.sv": "adc74be969d4e0445884d4e553a20bfc9c7cf603710d6b815a2869595cc84edb"
+ },
+ "synthesis_icg_behavioral_check": {
+  "model_sha256": "27f5d54481e47949e2c76fdd7156c23afb24e3ff89681baccd25214f85e2e837",
+  "description": "Latch low enable model of actual SYNTHESIS ICG bank-capture and balanced reader clocks; distinct from ungated simulation branch.",
+  "runs": [
+   {
+    "top": "tb_wfc_pipeline",
+    "rc": 0,
+    "output": "WFC_PIPELINE PASS seed1 edges2500 reads633 writes647 request_delta1 core_return_delta4 serial_return_delta3 fault_both_directions\n"
+   },
+   {
+    "top": "tb_wfc_fault_epoch",
+    "rc": 0,
+    "output": "WFC_FAULT_EPOCH PASS direction0 phase0 core_delay_ns31 serial_delay_ns123\nWFC_FAULT_EPOCH PASS direction0 phase1 core_delay_ns31 serial_delay_ns127\nWFC_FAULT_EPOCH PASS direction0 phase2 core_delay_ns31 serial_delay_ns131\nWFC_FAULT_EPOCH PASS direction0 phase3 core_delay_ns31 serial_delay_ns119\nWFC_FAULT_EPOCH PASS direction1 phase0 core_delay_ns89 serial_delay_ns57\nWFC_FAULT_EPOCH PASS direction1 phase1 core_delay_ns85 serial_delay_ns57\nWFC_FAULT_EPOCH PASS direction1 phase2 core_delay_ns81 serial_delay_ns57\nWFC_FAULT_EPOCH_GATE PASS cases7\n"
+   },
+   {
+    "top": "tb_wfc_valid",
+    "rc": 0,
+    "output": "WFC_VALID_CASE PASS mode0\nWFC_VALID_CASE PASS mode1\nWFC_VALID_CASE PASS mode2\nWFC_VALID_CASE PASS mode3\nWFC_VALID_CASE PASS mode4\nWFC_VALID_CASE PASS mode5\nWFC_VALID_CASE PASS mode6\nWFC_VALID_CASE PASS mode7\nWFC_VALID_CASE PASS mode8\nWFC_VALID_CASE PASS mode9\nWFC_VALID_EQUIVALENCE PASS checks3520 writes780 reads1099\n"
+   }
+  ]
  }
 }
