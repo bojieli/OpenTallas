@@ -113,8 +113,8 @@
   "benches_from": "tools/s81_suhc/hc_tile_benches_ccf.json",
   "owner": "Claude:S-ELEM-PQ/CCF",
   "branch": "claude/s81hc-ccf-native-0030",
-  "tag": "v6-native-spine",
-  "purpose": "v6 native (S-ELEM-PQ/CCF 2026-10-16, audit results/rtl/s81_hc_ccf_native_0030/native_audit_s81_hc_hrow_0030.json: R 539.1 / spread 171.2 / launch 408.2 ch_rst / capture 544.3 fv_i[2]). Measured on the v5 routed ODB: (1) clock = TritonCTS H-tree of 13-15 BUFx24 stages (fanout 1-2, 25-37 ps each, avg sink wire 479 um, 602 dummy loads) -> boundary 497..668 ps; CTS-only replays on the same placement: -distance_between_buffers 80/120 cut depth to 6-8 but leave boundary spread 187-233 ps; the balanced symmetric spine (clock_spine.tcl SYM, fan 16, merge 80, leaf 16 sinks / 40 um, SRAM clk pins own leaves) gives 622..652 ps over all 14,186 sinks (spread 30). Single W-mid entry on 410 x 542 um: the unpadded spine already spans 342..630 ps, so <=300 ps needs a second clock entry (die pin) -- not taken; 14,186 sinks < 15k. (2) capture fv_i[2] = one input feeding 24 distributed g_pop_keep copies through 8 buffers (435 ps): the current io_flop_at_pins anchors every capture flop of a multi-load input at its pin. (3) launch ch_rst = rsr[1] shared with the internal reset fan-out: pin_reg_split clones a dedicated launch flop. (4) recipe-3 pads HB2 instead of HB4 (in 117 -> ~60 ps). Pins = die-assigned v18 rectangles (physical/s81_die_pins/v18/ot_s81_hc_ccf.tcl, identical to the closed view); outline, macro plan, RTL and cycle counts unchanged.",
+  "tag": "v7-native-boundary-band",
+  "purpose": "v7 measured structural boundary-band correction: v6 trial GRT overflow998 (M3 877) localized at N capture/hold band ends in inspected congestion/density. Actual N auto-placement177 flops/10um, gap4.3um,34rows leaves local dense interleaving. Reserve a12um hold-to-flop gap and64rows (17.28um deep) for pin flops behind each face; grows usable boundary placement depth from~13.5um to29.28um, keeps die-assigned v18 pins, five SRAMs, same outline and RTL,0cycles. Interior channels were uncongested. V6 setup estimate-41.5ps on SRAM FIFO elastic bank remains a separate unresolved gate; no threshold/exception change and no route submission unless measured gates justify it.",
   "views_to": "physical/ref_tile/s81hc_ccfh2_ref/views",
   "record_to": "results/rtl/ref_tile/s81hc_ccfh2_ref"
  },
@@ -141,10 +141,11 @@
   "OT_SPINE_SYM_MERGE": 80,
   "OT_SPINE_LEAF_N": 16,
   "OT_SPINE_BIN": 40,
-  "OT_SPINE_MACRO_LEAF": 1
+  "OT_SPINE_MACRO_LEAF": 1,
+  "OT_OFLOP_GAP": 12.0
  },
  "io_tcl": "physical/s81_die_pins/v18/ot_s81_hc_ccf.tcl",
- "structural_change": "v6 native (S-ELEM-PQ/CCF 2026-10-16, audit results/rtl/s81_hc_ccf_native_0030/native_audit_s81_hc_hrow_0030.json: R 539.1 / spread 171.2 / launch 408.2 ch_rst / capture 544.3 fv_i[2]). Measured on the v5 routed ODB: (1) clock = TritonCTS H-tree of 13-15 BUFx24 stages (fanout 1-2, 25-37 ps each, avg sink wire 479 um, 602 dummy loads) -> boundary 497..668 ps; CTS-only replays on the same placement: -distance_between_buffers 80/120 cut depth to 6-8 but leave boundary spread 187-233 ps; the balanced symmetric spine (clock_spine.tcl SYM, fan 16, merge 80, leaf 16 sinks / 40 um, SRAM clk pins own leaves) gives 622..652 ps over all 14,186 sinks (spread 30). Single W-mid entry on 410 x 542 um: the unpadded spine already spans 342..630 ps, so <=300 ps needs a second clock entry (die pin) -- not taken; 14,186 sinks < 15k. (2) capture fv_i[2] = one input feeding 24 distributed g_pop_keep copies through 8 buffers (435 ps): the current io_flop_at_pins anchors every capture flop of a multi-load input at its pin. (3) launch ch_rst = rsr[1] shared with the internal reset fan-out: pin_reg_split clones a dedicated launch flop. (4) recipe-3 pads HB2 instead of HB4 (in 117 -> ~60 ps). Pins = die-assigned v18 rectangles (physical/s81_die_pins/v18/ot_s81_hc_ccf.tcl, identical to the closed view); outline, macro plan, RTL and cycle counts unchanged.",
+ "structural_change": "v7 measured structural boundary-band correction: v6 trial GRT overflow998 (M3 877) localized at N capture/hold band ends in inspected congestion/density. Actual N auto-placement177 flops/10um, gap4.3um,34rows leaves local dense interleaving. Reserve a12um hold-to-flop gap and64rows (17.28um deep) for pin flops behind each face; grows usable boundary placement depth from~13.5um to29.28um, keeps die-assigned v18 pins, five SRAMs, same outline and RTL,0cycles. Interior channels were uncongested. V6 setup estimate-41.5ps on SRAM FIFO elastic bank remains a separate unresolved gate; no threshold/exception change and no route submission unless measured gates justify it.",
  "recipe": 3,
  "boundary_tcl": [
   "physical/s81_hc_pinplan/ccf_sram_edge_strip.tcl"
@@ -158,11 +159,15 @@
   "kind": "pin_register",
   "source": "results/rtl/s81_hc_ccf_native_0030/native_audit_s81_hc_hrow_0030.json",
   "cell": "ot_s81_hc_ccf",
-  "fix": "balanced symmetric clock spine (boundary spread 171 -> ~30 ps) + every capture flop of fv_i[2] anchored at its pin + dedicated ch_rst launch flop (pin_reg_split) + HB2 pin pads; same RTL, pins and outline",
+  "fix": "v7 measured structural boundary-band correction: v6 trial GRT overflow998 (M3 877) localized at N capture/hold band ends in inspected congestion/density. Actual N auto-placement177 flops/10um, gap4.3um,34rows leaves local dense interleaving. Reserve a12um hold-to-flop gap and64rows (17.28um deep) for pin flops behind each face; grows usable boundary placement depth from~13.5um to29.28um, keeps die-assigned v18 pins, five SRAMs, same outline and RTL,0cycles. Interior channels were uncongested. V6 setup estimate-41.5ps on SRAM FIFO elastic bank remains a separate unresolved gate; no threshold/exception change and no route submission unless measured gates justify it.",
   "launch_ps": 408.2,
   "capture_ps": 544.3
  },
  "fill_reason": {
   "pin_bound": "N face carries 3,697 input pins (fd_i 1,128 + n_y 2,560 + fv_i 7 + n_yacc + yfl) and S face 2,924 outputs, channel-only (no pin over the 171 um macro column): 3,697 / 239 um = 15.5 pins/um on M3+M5 at the die-assigned v18 rectangles; the 410.4 um width is set by the pins, not the cells (v2 302.4 um: PPL-0111, 3,135 slots < 3,697). Outline unchanged from the closed v5 view and the die slot."
+ },
+ "io_flop_at_pins": {
+  "allow_none": true,
+  "cols": 64
  }
 }
