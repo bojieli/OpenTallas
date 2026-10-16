@@ -1,0 +1,32 @@
+{
+  "collected_at": "2026-10-16T16:24:44.109525-07:00",
+  "source_commit": "c84f852b6",
+  "positive": {
+    "result": "PASS",
+    "ops": 40,
+    "cycles": 9488,
+    "operand_checks": 232704
+  },
+  "swapped_tile_mutant": {
+    "result": "FAIL as required",
+    "errors": 113622,
+    "operand_checks": 66816,
+    "wrapper_exit": 0,
+    "criterion": "actual nonzero FAIL errors witness, not wrapper exit"
+  },
+  "prod36": {
+    "status": "RUNNING",
+    "host": "ot-epyc4",
+    "unit": "3045170",
+    "binary_pid": 3083680,
+    "path": "/srv/opentallas-scratch/claude/qwen-io-1602/prod36"
+  },
+  "w3p": {
+    "actual_contact_count": 791,
+    "contacts_identical_to": "c84f852b6",
+    "assigned_pins_byte_identical": true,
+    "shared_flow": "f181bfa99+c9ca0be2d",
+    "status": "local_gate_WARN_0_fail_existing_recipe2_pin_regs_warning",
+    "native_qualified": false
+  }
+}

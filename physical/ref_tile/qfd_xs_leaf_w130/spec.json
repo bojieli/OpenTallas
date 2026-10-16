@@ -2481,8 +2481,8 @@
  "pin_source": "Exact source candidate. R0 origin-y phase0 and MX phase32 reuse one M6 frame at H138.24; actual exported outline and all parent tracks are unqualified.",
  "slot_change_request": "Q-XSLEAF 2026-10-16: leaf slot 64.8x138.24 -> 129.6x69.12 (same 8,958 um2). Measured m6c..m6f GRT: N-band vertical demand ~2,490 tracks vs ~2,385 derated on 64.8 um (1.04); needs >=113 um face for <=0.60. AGREED by Q-COMPUTE-DIE 2026-10-16 (heads 129.6x345.6; column body 920.16 um).",
  "job": {
-  "owner": "Codex:Q-IO-1602",
-  "branch": "codex/qwen-io-1602",
+  "owner": "Codex:Q-IO-1626",
+  "branch": "codex/qwen-io-collect-1626",
   "tag": "w3p",
   "purpose": "Qwen TP8 distributed x slice LEAF r3 (owner 08:20 PT 10-14; el1014-qwen-dvm-build.log 16:15): 2 tiles x 2 epochs x one 64-position slot of BF16 operands (+ per-element valid), footprints > 64 pooled over a tile pair by the column head; ONE 128:1 x 17-b serial read tree per tile (r2: four 512:1 trees, 2.7x the slot); write chain pin-registered pass-through (18-b control a leaf); answer pin flops at R + 4.",
   "benches": [
@@ -2538,10 +2538,10 @@
  "m6_pin_grant": {
   "schema": "opentallas.m6_pin_grant.v1",
   "master": "ot_qfd_xs_leaf",
-  "granted_by": "AGREED by Q-COMPUTE-DIE (abc382c495167c39e) 2026-10-16 ~13:45, proposed by Q-XSLEAF (same-area reshape 129.6x69.12; contacts = m6 grant ports/faces/sizes, spans re-centred on the 69.12 um faces). Q-COMPUTE-DIE Codex coordinator 2026-10-16; refreshed by Q-DVM+LINK 2026-10-16 for the m6b/m6c params-only changes (READ_PIN_PIPE=1, FILL_PIPE=1 add internal flops; port list, faces, spans and contacts identical); m6f: OT_OUTHOLD_FREE placement only, contacts identical (source a2cc7551f: DVM head opt-in params 6886146c7 only, leaf defaults unchanged)",
+  "granted_by": "AGREED by Q-COMPUTE-DIE (abc382c495167c39e) 2026-10-16 ~13:45, proposed by Q-XSLEAF (same-area reshape 129.6x69.12; contacts = m6 grant ports/faces/sizes, spans re-centred on the 69.12 um faces). Q-COMPUTE-DIE Codex coordinator 2026-10-16; refreshed by Q-DVM+LINK 2026-10-16 for the m6b/m6c params-only changes (READ_PIN_PIPE=1, FILL_PIPE=1 add internal flops; port list, faces, spans and contacts identical); m6f: OT_OUTHOLD_FREE placement only, contacts identical (source a2cc7551f: DVM head opt-in params 6886146c7 only, leaf defaults unchanged); Q-IO-1626 refreshes source-spec digest for unchanged exact contacts and root-approved corrected flow/selected benches only.",
   "reason": "Source-bound local M6 PORT-only contacts split actual1170-bit seam pressure across faces; M5 signal/PG interior cap stands. Candidate leaf local64.8x138.24; heads64.8x345.6 R0 only. No parent M7/M9 reservation or whole-die geometry/timing qualification; actual routed DEF/vias/LEF/native220/190/80 gates required.",
-  "source_commit": "0100bf2c1db7e1c7dbc107e4e815822785d202fe",
-  "source_spec_sha256": "0b9bd6aa413f6137844336d255af137a0d7b623487c19be44eff07b12eaa95da",
+  "source_commit": "a43e59a977252102bf6fd55b6ed9cd2cda22d923",
+  "source_spec_sha256": "11454f9d6896d3f8ea05470b98d911ad7a37b38c3be8578073b2f596da9e57ae",
   "ports": [
    {
     "name": "w_v",
