@@ -240,7 +240,7 @@ module ot_hgi_fused_record #(
     wire [41:0] rw_a_end = {2'd0, dA[47:8]} + 42'(rA[3:0]) * 42'(4 * HCD);
     wire [41:0] rw_o_end = {2'd0, dO[47:8]} + 42'(rA[3:0]) * 42'(HCD);
     wire [41:0] rw_c_end = {2'd0, dC[47:8]} + 42'(rA[3:0]) * 42'd8;
-    // HGI descriptor row field zero denotes one row, as does explicit one.
+    // FUSED broadcast gain accepts historical omitted raw m=0 or explicit m=1.
     wire rw_ok = (rA <= 20'd8) && (dB[87:68] <= 20'd1) && (dC[67:48] == 20'd4) &&
                  (rw_a_end <= 42'd262144) && (rw_o_end <= 42'd262144) && (rw_c_end <= 42'd262144) &&
                  (dA[119:88] == {9'd0, d, 2'b00}) && (dC[87:68] == rA) && (dC[119:88] == 32'd8) &&

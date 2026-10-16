@@ -14,7 +14,7 @@ import shutil
 
 # Record layout: hdr128, A256, B256, C256, O256, nA/nB/nO21.
 CHANGES = {'gain_rows': (384 + 68, 20, 2), 'pre_width': (640 + 48, 20, 3),
-           'a_extent': (128 + 8, 40, 200000), 'o_extent': (896 + 8, 40, 240000),
+           'a_extent': (128 + 8, 40, 200192), 'o_extent': (896 + 8, 40, 240128),
            'c_extent': (640 + 8, 40, 262104)}
 
 
