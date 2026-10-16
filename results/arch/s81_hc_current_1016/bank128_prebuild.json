@@ -1,0 +1,34 @@
+{
+  "scope": "opt-in source candidate; retain memory/cycles and actual payload",
+  "measured_failure": {
+    "TT_ps": -34.990345,
+    "negative_TT_endpoints": 1,
+    "path": "SRAM.rd_out383 to elastic slice1.b1[127]",
+    "dominant_delay": "INVx1 247.10ps; upstream buffer(23.112,21.330) -> inverter(195.912,43.740) -> two mux loads(~161.6,21), before real prefetch capture",
+    "DRC": 2,
+    "DRC_cause": "clocknet shorts against macro M4 east pin geometry"
+  },
+  "correction": {
+    "macro": "same actual64x512 1r1w",
+    "prefetch_groups_old": 2,
+    "prefetch_groups_new": 4,
+    "bits_per_group_old": 256,
+    "bits_per_group_new": 128,
+    "added_control_ff_per_bank": 6,
+    "added_payload_ff": 0,
+    "data_cycle_delta": 0,
+    "added_bank_clock_roots": 0,
+    "face_bandwidth_delta": 0,
+    "parent_fivebank_control_ff_delta": 30
+  },
+  "placement_request": {
+    "group_locations": "four128b groups next to each actual SRAM west-face read-pin quarter",
+    "west_channel_width_um": 21.6,
+    "macro_read_span_each_um": 12.288,
+    "pergroup_rectangle_area_um2": 265.4208,
+    "population": "256data FF plus3control FF; exact mapped area/feasible sites to be measured before gate",
+    "clock_DRC": "restrict CTS global trunk away from M4 macro pin access; legal same macro clock entry required"
+  },
+  "admission": "component proof before physical kit; no unchanged retry; no threshold/SDC/clock or price change",
+  "die_slot_grant": "S-DIE directly granted candidate216x125.28/samepinfile; newactualmaster required; source/component only, full20/static parent held"
+}
