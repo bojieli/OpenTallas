@@ -2,18 +2,22 @@
  "schema": "opentallas.hbm.provisional_native_child_grant.v1",
  "status": "PROVISIONAL_ISOLATED_SUCCESSOR_MEASUREMENT_ONLY",
  "cell": "hfd_vms_bank_native_q0_faces",
- "source_snapshot": "2523e7c9d",
+ "source_snapshot": "f9cb3af6e",
  "source_sha256": {
   "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv": "8a37dc1eb1e2bcf8a799eec37301ffe913f76e58ec9bd70cce12d6efa1ed361d",
   "rtl/hbm_accel/generic/vm/static/faces_q0/ot_vms_bank_q0_faces_core.sv": "d8ca47c2235396be839cdc99b9a9f8341254de670b81892755814dff4cfbe0c4",
   "rtl/hbm_accel/generic/vm/static/faces_q0/ot_vms_bank_q0_faces_body.sv": "7cc36b7bdf52ad1c4647589acede3efd20cf4ee996a429319f0e807165d4aa97",
   "rtl/hbm_accel/generic/vm/static/ot_vms_ce_counter_pipe.sv": "de10f3eea0f6b8bb0a652ec30621ba4d919b64f7a96651dbc94a4fc7b7ff09fa",
   "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v": "d5e85b370f1d8ae53306c35faf463d328a9b20181f5cf27fa381da779b5b4676",
-  "physical/ref_tile/vm_native_q0_faces/spec.json": "7b885e7bb61bfca6726fa8246ea82d1a4d78694a287f56aaaa978091b41ed2d9",
+  "physical/ref_tile/vm_native_q0_faces/spec.json": "e48672d8a9783e010f167d692cedbf25840067397e4b23aa5c475589593dc1ef",
   "results/physical/hsm_takeover_0825/q0_faces_pins.json": "6886b4cd5954fee8311d2464b7a3d7f458e72dfad9b6188aa3b22bee58f97428",
   "physical/ref_tile_specs/smh/vm_q0_faces_pins.tcl": "14428de63efe64c2f0d4a6d3125a476a9ddbd2a1e268ccb1d608ad4e446cd32f",
   "physical/common_flow/assigned_pin_exact.tcl": "589889eadc308de12eece8f08157ac569d7b96e12672b9eb76e1d518b7d78831",
-  "results/physical/hsm_takeover_0825/q0_faces_bench.log": "0fa5eddf1d45812afc4d6233fe3f0ba13acd6b5be9b45b8949b0cca875a0f949"
+  "results/physical/hsm_takeover_0825/q0_faces_bench.log": "0fa5eddf1d45812afc4d6233fe3f0ba13acd6b5be9b45b8949b0cca875a0f949",
+  "physical/ref_tile_specs/smh/vm_q0_faces_post_iop.tcl": "fc88f60e1115281b7eecf958350465746f482e70786e68552768eb217081f129",
+  "tools/fp_margin_lint.tcl": "43e9e7f2633bd55619f7f6b5b9fd71862a310e30ff68eab2ad123e5064635cf5",
+  "physical/ref_tile/vm_native_q0_faces/kit.env": "ad0173ca5aea3afb33372bb61facb452c9ab8b7d67db62ce3bd0cff72f645dfc",
+  "physical/ref_tile/vm_native_q0_faces/floorplan.json": "85ebc6dcd766cfd82ed8a887dd5f1f09841186940c500edc427ed31ac8dd4843"
  },
  "params": {},
  "outline": {
@@ -222,5 +226,6 @@
   "Read back every actual literal pin rectangle/face/layer/bounds and all3SRAM placements/PG; unique input ownership and actual five raw clock ports required.",
   "Fresh CTS/native launch/capture/phase/O-R/S+R/slew and TT>=0/FF>=0/DRC0, inspect actual layout/density/congestion; old q0 TT50.28/FF10.06/DRC0 nativeFAIL L258.5/C207.5/spread88.3 cannot qualify candidate."
  ],
- "adoption": "No nat2/d4/default/allbank parent change or compiler latency claim beyond exact component edges; current failed q0 view preserved. Actual parent five-clock source/geometry binding required before adoption."
+ "adoption": "No nat2/d4/default/allbank parent change or compiler latency claim beyond exact component edges; current failed q0 view preserved. Actual parent five-clock source/geometry binding required before adoption.",
+ "supplemental": "Source/pins unchanged from2523. f9cb adds actual post-I/O pin inventory/BPin/box/layer/centre/actual-grid/PG-projection fail-closed verifier and ships source-pinned hook. Native/final route proof still required."
 }
