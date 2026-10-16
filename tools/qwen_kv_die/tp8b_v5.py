@@ -996,6 +996,34 @@ def _tear_overlapped(v, m, over=()):
 DEOVERLAP_PARENTS = ('qfd_sp_vector_memory_par',)
 
 
+def _apply_pin_grant(M, grant):
+    """Move named port groups of unclosed masters to a granted face (and optional centre); returns touched masters."""
+    touched = []
+    for mname, ports in grant.get('masters', {}).items():
+        q = M.get(mname)
+        if q is None:
+            raise ValueError(f'OT_SPLIT_PIN_GRANT: master {mname} not on this die')
+        if mname in VIEWS:
+            raise ValueError(f'OT_SPLIT_PIN_GRANT: {mname} has a closed view; its pins are not re-assignable here')
+        for pn, g in ports.items():
+            sp = q.ports.get(pn)
+            if sp is None or sp[0] not in ('face', 'pins'):
+                raise ValueError(f'OT_SPLIT_PIN_GRANT: {mname}.{pn} is not a face/pins group')
+            f = g['face']
+            if f not in 'WENS' or (f in 'WE') != (sp[2] in 'WE'):
+                raise ValueError(f'OT_SPLIT_PIN_GRANT: {mname}.{pn} {sp[2]}->{f} changes the pin-layer direction')
+            if sp[0] == 'face':
+                q.ports[pn] = ('face', sp[1], f, sp[3], float(g.get('centre', sp[4])), sp[5])
+            else:
+                pos = list(sp[4])
+                if 'centre' in g:
+                    d = float(g['centre']) - (min(pos) + max(pos)) / 2
+                    pos = [round(z + d, 4) for z in pos]
+                q.ports[pn] = ('pins', sp[1], f, sp[3], pos, sp[5])
+        touched.append(mname)
+    return tuple(touched)
+
+
 def _deoverlap_faces(mst, pin_rects, gap=0.5):
     """Move only the movable 'face' groups that actually overlap another pin (rect level) to the nearest free span of
     their own face edge / layer; every other pin stays where it is.  Fails closed."""
@@ -1872,7 +1900,14 @@ def _wrap(v, m, G, peers):
             # faces, replan, link-word widening, native ports) can end with groups on top of each other (C22s:
             # qfd_sp_vector_memory_par write_commit_mask over ar[377..], 145 pairs). Top-down pin assignment owns
             # these pins: re-pack movable face groups along each face (fixed 'pins' fragments stay), fail closed.
-            for name_ in DEOVERLAP_PARENTS:
+            # OT_SPLIT_PIN_GRANT=<json> (Q-COMPUTE-DIE r2h, top-down pin assignment of UNCLOSED masters only):
+            # {"masters": {master: {port: {"face": F[, "centre": um]}}}} moves whole face/pins groups to the face
+            # that looks at their consumer; any resulting overlap is re-packed by _deoverlap_faces (fails closed)
+            _grant_path = _os.environ.get('OT_SPLIT_PIN_GRANT', '').strip()
+            _granted = ()
+            if _grant_path:
+                _granted = _apply_pin_grant(M, json.loads(Path(_grant_path).read_text()))
+            for name_ in tuple(DEOVERLAP_PARENTS) + tuple(n_ for n_ in _granted if n_ not in DEOVERLAP_PARENTS):
                 if name_ in M:
                     _deoverlap_faces(M[name_], v.pin_rects)
 
