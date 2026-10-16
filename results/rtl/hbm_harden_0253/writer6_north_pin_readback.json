@@ -1,0 +1,22 @@
+{
+  "scope": "Actual gate floorplan ODB dump readback. No routed pin access or native qualification.",
+  "source_commit": "310ab8d39",
+  "grant_source": "07638f0ab",
+  "expected_bits": 5100,
+  "matched_single_shapes": 5100,
+  "geometry_errors": [],
+  "same_layer_pg_overlaps": [],
+  "pass": true,
+  "data942_actual": [
+    [
+      "rgx_data1[430]",
+      "M4",
+      0.0,
+      194.448,
+      0.084,
+      194.472
+    ]
+  ],
+  "dump_sha256": "3f32b3a070e7cee3f0016a4e42750ebaee4d9dad2ac9cb9498ee6a93f8470e3f",
+  "assigned_tcl_sha256": "8f708171f3b8d8d84526ae0732cd8d34655e6729c6a2ca89798e4b90565860cb"
+}
