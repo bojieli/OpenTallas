@@ -1,4 +1,4 @@
-"""36-layer static KV calendar at the 0az elastic HBM boundary (Qwen TP8 KV/system die).
+"""Static KV capacity screen at the 0az elastic HBM boundary (Qwen TP8 KV/system die).
 
 What is static and what is elastic (owner 0az, 2026-10-15): the HBM stack/PHY return time is not compile-time fixed, so
 corrected read sectors land in the per-PC elastic front (rtl/qwen_sys/static_kv_20261014/qkd_kv_hbm_elastic_front.sv,
@@ -113,9 +113,10 @@ def receipt(contexts=(1, 128, 1000, 2048, 4096, 6144, 8192), layer_period_core=6
     for name, q in cases.items():
         out[name] = {}
         for T in contexts:
-            r = compile_36(T, q)
+            r = screen_36_capacity(T, q)
             l = r['layer']
-            out[name][str(T)] = dict(feasible=r['feasible'], qk_start_after_prefetch=l['qk_start_after_prefetch_core'],
+            out[name][str(T)] = dict(capacity_feasible=r['capacity_feasible'], production_schedule_qualified=False,
+                                     qualification_blockers=r['qualification_blockers'], qk_start_after_prefetch=l['qk_start_after_prefetch_core'],
                                      ring_peak=l['ring_peak'], ring_depth=q['ring_depth'], front_nblk=q['front_nblk'],
                                      k_rd_core=l['k_rd_core_edges'], credit_rate=l['front_credit_rate'],
                                      pc_busy_hbm=r['pc_busy_hbm_per_layer'], refresh_edges=r['refresh_edges_per_layer'],
@@ -196,9 +197,16 @@ def compile_layer(T, p):
                 qk_consume_core_edges=max(v[4] for v in per.values()))
 
 
-def compile_36(T, p, layers=36):
-    """periodic 36-layer check: per PC the K prefetch of layer L+1 + the K/V writes of layer L+1 + V reads of layer L fit
-    one layer period of HBM edges, the token's own new K row is written before its RD, ring/credit constraints hold."""
+def screen_36_capacity(T, p, layers=36):
+    """Necessary periodic capacity bound, not an emitted or qualified 36-layer programme.
+
+    K storage/credit and aggregate per-period bandwidth are screened here. This
+    function does not construct V ordering, concurrent write/JEDEC events or 36
+    actual timelines. ``feasible`` therefore fails closed. Consumers exploring
+    capacity must use the explicitly named ``capacity_feasible`` field.
+    ``write_ready_core`` is checked only with explicit origin ``prefetch_start``;
+    missing origin is unqualified evidence rather than an inferred time base.
+    """
     _need(p)
     one = compile_layer(T, p)
     period_hbm = math.floor(p['layer_period_core'] * p['core_ps'] / p['hbm_ps'])
@@ -211,9 +219,36 @@ def compile_36(T, p, layers=36):
     # the new token's own K row: its RD must issue after its WR commit
     ks = k_streams(T, p)
     own = [(pc, i) for pc, s in ks.items() for i, (_, _, t) in enumerate(s) if t == T - 1]
+    actual_issue = {pc: pc_schedule(stream, p, 0)['issue'] for pc, stream in ks.items()}
+    own_issue = sorted({actual_issue[pc][i] for pc, i in own})
+    origin = p.get('write_ready_origin')
+    if origin is not None and origin != 'prefetch_start':
+        raise ScheduleError('write_ready_origin must explicitly name prefetch_start')
+    ready = p['write_ready_core']
+    if type(ready) is not int or ready < 0:
+        raise ScheduleError('write_ready_core must be a nonnegative integer')
+    readiness_checked = origin == 'prefetch_start'
+    ready_hbm = math.ceil(ready * p['core_ps'] / p['hbm_ps'])
+    write_ok = all(t >= ready_hbm for t in own_issue) if readiness_checked else None
+    blockers = ['actual 36 layer timelines not emitted/checked',
+                'actual concurrent-write JEDEC programme not checked',
+                'actual V consumer order and service ports not joined']
+    if not readiness_checked:
+        blockers.append('write readiness has no explicit source-bound time origin')
+    elif not write_ok:
+        blockers.append('own-row read precedes declared write readiness')
     return dict(layer=one, layers=layers, period_hbm=period_hbm, pc_busy_hbm_per_layer=busy, refresh_edges_per_layer=ref_edges,
+                scope='necessary capacity screen only',
                 hbm_fits_period=busy <= period_hbm, own_row_pcs=len(own),
                 own_row_scan_index=sorted({i for _, i in own}),
-                own_row_rd_issue_hbm_after_prefetch=[i for _, i in own][:1],
-                write_ready_core=p['write_ready_core'],
-                feasible=one['ring_ok'] and busy <= period_hbm)
+                own_row_rd_issue_hbm_after_prefetch=own_issue,
+                write_ready_core=ready, write_ready_origin=origin,
+                write_readiness_checked=readiness_checked, own_row_read_after_write_ok=write_ok,
+                capacity_feasible=one['ring_ok'] and busy <= period_hbm,
+                production_schedule_qualified=False, qualification_blockers=blockers,
+                feasible=False)
+
+
+def compile_36(T, p, layers=36):
+    """Legacy entry point: capacity diagnostic only, never programme qualification."""
+    return screen_36_capacity(T, p, layers)
