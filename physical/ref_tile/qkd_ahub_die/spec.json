@@ -250,7 +250,7 @@
  "floorplan_note": "Q-KVSYS-STRIP 2026-10-16 (VIS-ROM QKV-07): the hub parent over its 14 CLOSED leaves on its own clock entries (no cluster clock over hard tiles: the q8/q13 failure). Rows: pbst S (y 43.2, next to the S stack inputs pi_data), pvlg middle (302.4), zh N (561.6); columns 43.2 / 259.2 | centre 475.2-691.2 | 756 / 972 (64.8-um channels). Centre column: the reciprocal leaf (216^2, y 259.2) under the core (151.2^2, x 518.4, y 561.6) which sits IN the Z row between zh1 and zh2: core hd3 faces W (zw_*) -> zh0/zh1, E (ze_*, rc_*) -> zh2/zh3 + recip, N -> hub outputs, S -> stack inputs + pvlg/pbst.",
  "job": {
   "owner": "Claude:Q-KVSYS-STRIP",
-  "branch": "claude/qkvsys-strip",
+  "branch": "claude/qkvsys-seg",
   "tag": "hp1",
   "purpose": "KV/system die attention hub PARENT ot_qkd_ahub_die (VIS-ROM QKV-07): core hd3 + 4 ot_nhb_zh + 4 ot_nhb_pbst + 4 ot_nhb_pvlg + ot_qkh_recip_leaf (all CLOSED), 14 clock entries (6 CTS roots carry the composition's relay flops), slot 1,175.04 x 760.32 unchanged",
   "benches": [
