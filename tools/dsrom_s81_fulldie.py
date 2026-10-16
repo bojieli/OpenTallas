@@ -4046,6 +4046,9 @@ def _kcopy_pieces(e, frm_ports, to_ports, frm):
     return pieces, shared, logical, nc
 
 
+KCOPY_TARGETS = set()           # --dedupe-pad kcopy: the closed standards k-copies were bound to (this GEN)
+
+
 def _dedupe_kcopy(m, km):
     """--dedupe-pad kcopy (S-DIE-KCOPY 2026-10-16; spec results/arch/native_pin_audit_snetfill_1015/resid_kcopy_1016.json,
     DEDUPE owner rule 19:50 10-15): an instance of FROM becomes k side-by-side instances <inst>__k<j> of CLOSED
@@ -4062,6 +4065,7 @@ def _dedupe_kcopy(m, km):
             return it.master
         k_ = f'{it.master}__{it.name}'
         return k_ if it.kind == 'hend' and k_ in km else None
+    KCOPY_TARGETS.update(c['to'] for e in km.values() for c in e['copies'])
     victims = [it for it in m['insts'] if key(it)]
     if not victims:
         m['kcopy'] = dict(instances=0, by_master={}, records=[])
@@ -10522,7 +10526,9 @@ def _assigned_physical_pins(Mx, ports):
     rec = _assigned_record(Mx.name)
     if not rec:
         return
-    if HEND_BOUND_FOOTPRINT and '__' in Mx.name:
+    if (HEND_BOUND_FOOTPRINT or Mx.name in KCOPY_TARGETS) and '__' in Mx.name:
+        # (--dedupe-pad kcopy: a hub-end k-copy master IS its CLOSED view; a pin assignment recorded for an older
+        # generated master of the same name is moot when the view's outline is in place)
         # --hend-bound-footprint: a hub end resized to its bound view's outline keeps the view's measured pins (the
         # bound view replaces this generated master in write_lefs); the assignment made for the estimated outline is moot
         v_ = bound_views().get(Mx.name)
