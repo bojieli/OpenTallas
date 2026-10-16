@@ -87,6 +87,14 @@ proc q4r::overlap {rect boxes} {
  foreach box $boxes {lassign $box a b c d;if {$x<$c && $u>$a && $y<$d && $v>$b} {return 1}}
  return 0
 }
+proc q4r::gap {rect boxes} {
+ # Manhattan distance (dbu) from a cell rectangle to the nearest fence box (0 when it overlaps one)
+ lassign $rect x y u v;set best Inf
+ foreach box $boxes {lassign $box a b c d
+  set dx [expr {$u<$a ? $a-$u : ($x>$c ? $x-$c : 0)}];set dy [expr {$v<$b ? $b-$v : ($y>$d ? $y-$d : 0)}]
+  set best [expr {min($best,$dx+$dy)}]
+ };return $best
+}
 proc q4r::subtract {rows free_name rect maxheight} {
  upvar 1 $free_name free
  lassign $rect x0 y0 x1 y1
@@ -140,13 +148,19 @@ proc q4r::run {} {
   dict set boxes [$g getName] $bs;dict set groups [$g getName] $g;lappend allboxes {*}$bs
  }
  if {![dict size $groups]} {error "Q4R no actual q45 sink groups"}
- set attached [dict create];set shared 0;set seed [dict create]
+ set attached [dict create];set shared 0;set seed [dict create];set legcells [dict create]
+ set leg [expr {round(([info exists ::env(Q4R_LEG_UM)] ? $::env(Q4R_LEG_UM) : 20.0)*$dbu)}]
  dict for {name roots} $owners {
   set roots [lsort -unique $roots];if {[llength $roots]!=1} {incr shared;continue}
   set gn q45_[lindex $roots 0]
   if {![dict exists $groups $gn]} continue
   set i [dict get $cells $name]
   if {[$i getGroup] ne "NULL"} continue
+  # Q-TILE45c 2026-10-16: a repeater placed on an inbound leg (> leg_um outside its owner's fence) serves the leg, not
+  # the sink cluster; pulling it into the fence collapses the leg (NK g4u 3_4: 10,628 of 13,100 ck_rs cone cells, 2,067
+  # of 2,245 um2, sat a mean 123 um away -> Q4R ck_rs fill 0.61).  It stays ungrouped on its leg (seeded OUTSIDE only
+  # if it overlaps an exclusive fence).
+  if {[regexp {^(BUF|INV|HB)} [[$i getMaster] getName]] && [q4r::gap [q4r::rect $i] [dict get $boxes $gn]] > $leg} {dict incr legcells $gn;continue}
   if {[$i getPlacementStatus] in {FIRM LOCKED COVER}} {error "Q4R refuses to regroup a fixed repair cell $name"}
   [dict get $groups $gn] addInst $i;dict incr attached $gn
   if {![q4r::inside [q4r::rect $i] [dict get $boxes $gn]]} {dict set seed $name [list $i $gn]}
@@ -205,7 +219,7 @@ proc q4r::run {} {
  }
  set free $fixedfree
  dict for {ri intervals} $cuts {dict set free $ri [q4r::subtract_sorted [dict get $fixedfree $ri] $intervals]}
- puts "Q4R_SEED_BEGIN selected=[dict size $seed] attached=$attached shared=$shared"
+ puts "Q4R_SEED_BEGIN selected=[dict size $seed] attached=$attached shared=$shared leg_repeaters_left_on_leg=$legcells"
  set report [expr {[info exists ::env(Q4R_REPORT)] ? $::env(Q4R_REPORT) : "q4_reconcile_seeds.tsv"}]
  set f [open $report w];puts $f "name\towner\told_x\told_y\tnew_x\tnew_y\tmove_um"
  set maximum 0
