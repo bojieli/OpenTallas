@@ -1,0 +1,6 @@
+PASS canonical Qswiglu actual exp/div/multiply/BF16 16 C12 lanes 80 operand SRAMs 16 programme SRAMs 24 protected VM SRAMs 6 IOprogramme SRAMs actualtap14 real scalar-route capture words=3072 exact_VM_committed_words=3072 one_start=1 actual_IO_rows=848 actual_arithmetic_rows=368 no_manual_prefetch_drain=1 golden=actualcanonicalhgiMachine
+SFU_COST R=23 launch=5796 io_done_delta=851 last_bank_delta=858 last_ack_delta=858 sector_commits=372
+- /srv/opentallas-scratch/codex/hbm-sfu-S-r23-0355/run_r23_split48_v2/tb_binding.sv:152: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 6us; walltime 87.089 s; speed 64.315 ns/s
+- Verilator: cpu 87.084 s on 1 threads; allocated 77 MB

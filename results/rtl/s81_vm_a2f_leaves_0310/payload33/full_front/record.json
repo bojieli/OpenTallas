@@ -1,0 +1,48 @@
+{
+ "schema": "opentallas.payload33-full-front-normal.v1",
+ "status": "PASS_FULL53_SOURCE_3SLOT_16384BIT_NORMAL_FRONT_DIFFERENTIAL",
+ "source_commit": "99b7ba5e5",
+ "source_sha256": {
+  "tools/s81_vm/area_a2_controlled.sv": "f2f67f2a35bd91745e8314f8478b6ce6aafacbbbe9bb35567de7bcb1146ca595",
+  "tools/s81_vm/area_id_native.sv": "8c2a49d5b9563cf593f7650fa7bea960542609a959e312f47fa53c7bebe6ab6b",
+  "tools/s81_vm/area_id_native_join.sv": "ea9fdb8d223455fbc90a4c10bc2049c413d97abf3657a6760ffabc4e6594d513",
+  "tools/s81_vm/area_a2_hardmasters.sv": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+  "tools/s81_vm/area_a2f.sv": "87ac2c197d4bfefa87289de73525565c5aae4b6a20f55f62015354dde00f59b7",
+  "tools/s81_vm/area_a2f_field4.sv": "3e21f264b0a2bf36efcb5b3f5a3f8df2185ea19d9b158e4174b8e44a4279f86d",
+  "tools/s81_vm/area_a2f_control_resetlocal.sv": "59907c651f325341ec872da56ae3fa965ae01eac3a2fb8d40ade35aa73841d62",
+  "tools/s81_vm/area_a2f_split4m_composed.sv": "02f9182a2b5f13f356541023418f615717fba0329799a3c5180d98bd26504f34",
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_a2f_payload33.sv": "62cd34802bcb72928c369ecc12c548e6913ebd62bee383d8476a3c02b25b2eb0",
+  "tools/s81_vm/area_a2f_payload33_composed.sv": "1f328900083c0a4e0fecc24cd6e159e0e4479c24b293216c696cd57db6060d09",
+  "tools/s81_vm/a2f_payload33_front_gate.py": "69be2fd6f4d47f508bd25829712fc4c9840255680ea520ac4653a94eb9e66f91",
+  "tools/s81_vm/area_a2f_split4m_gate.py": "ce99ce3c5fc63ccea04ce429c6d039a34954eb5a948530aed51aaedff6e18f7a",
+  "tools/s81_vm/area_a2f_split4_equiv_gate.py": "30413080d83d13a8c2f5e398b0965031328494e3c4ec152442f57b8cc8d17f45"
+ },
+ "runs": [
+  {
+   "seed": 1,
+   "result": [
+    "PASS a2f==a2 seed1 edges267 writes5252 valid_edges197 fault_edges26"
+   ]
+  },
+  {
+   "seed": 2,
+   "result": [
+    "PASS a2f==a2 seed2 edges267 writes5236 valid_edges197 fault_edges28"
+   ]
+  },
+  {
+   "seed": 3,
+   "result": [
+    "PASS a2f==a2 seed3 edges267 writes5289 valid_edges197 fault_edges28"
+   ]
+  }
+ ],
+ "simulator": "Verilator 5.050 2026-07-01 rev v5.050",
+ "admission": {
+  "host": "ot-agidock128",
+  "unit": "oth-ubuntu-1150760-1792146742",
+  "mem_gb": 16,
+  "threads": 2
+ },
+ "scope": "Actual A2 reference versus full actual threshold-control/metadata split4m/payload33 front. All normal-clock output data, valid, row, tag, mask and16fault bits compared every edge, including legal traffic, overflow and normal held reset/restart. Independent short/held reset of each16payload roots and parent-visible global OR have a separate actual-hardware component proof. No full memory/native parent, die timing or production adoption claimed."
+}

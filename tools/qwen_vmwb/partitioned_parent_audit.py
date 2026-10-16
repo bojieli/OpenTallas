@@ -3,25 +3,25 @@
 import argparse,json,re
 from collections import Counter
 from pathlib import Path
-p=argparse.ArgumentParser();p.add_argument('netlist',type=Path);p.add_argument('--out',type=Path,required=True);p.add_argument('--expect',choices=['pass','fail'],default='pass');a=p.parse_args()
-x=json.loads(a.netlist.read_text());mods=x['modules'];top='qfd_sp_vector_memory_par_partitioned';tm=mods[top]
+p=argparse.ArgumentParser();p.add_argument('netlist',type=Path);p.add_argument('--out',type=Path,required=True);p.add_argument('--expect',choices=['pass','fail'],default='pass');p.add_argument('--return-ro',type=int,default=1);p.add_argument("--return-pin-input",type=int,choices=[0,1],default=0);p.add_argument('--write-leaves',type=int,choices=[0,1],default=0);a=p.parse_args();e3=a.write_leaves;pin=a.return_pin_input;ro=a.return_ro;relay_clocks=8*(22+14*ro)+(6*(10+ro)+255)//256
+x=json.loads(a.netlist.read_text());mods=x['modules'];top='qfd_sp_vector_memory_par_partitioned'+('' if ro==1 else f'_ro{ro}')+('_pin'if pin else'')+('_e3'if e3 else'');tm=mods[top]
 labels={}
 for n,v in tm['ports'].items():
  for i,b in enumerate(v['bits']):labels[b]=n if len(v['bits'])==1 else f'{n}[{i}]'
 clock_rows=[];ff=Counter();owned=Counter();leaf_counts=Counter()
-physical=['ot_qfd_vm_bctl_nx','ot_qfd_vm_delay1_t','ot_qfd_vm_delay2_t','ot_qfd_vm_rr2_nx','ot_qfd_vm_rr4_t','ot_qfd_vm_sctl_t','ot_qfd_vm_su1024_t','qfd_vm_qcommit','qvm_bank_banked_native','qvm_su_bank_native']
+physical=['ot_qfd_vm_bctl_nx','ot_qfd_vm_delay1_t','ot_qfd_vm_delay2_t','ot_qfd_vm_rr2_nx','ot_qfd_vm_rr4_t','ot_qfd_vm_sctl_t','ot_qfd_vm_su1024_t','qfd_vm_qcommit','qvm_bank_banked_native','qvm_su_bank_native','qvm_data256_native']
 roles=['ck_ctrl','ck_in_lo','ck_in_hi','ck_mem_lo','ck_mem_hi','ck_cap_lo','ck_cap_hi','ck_out_lo','ck_out_hi']
-def basename(n):return n.split('\\')[-1]
+def basename(n):return n.split('\\')[1]if n.startswith('$paramod\\')else n.split('\\')[-1]
 def mapbit(b,mp,path):return mp.get(b,f'{path}::bit{b}') if isinstance(b,int) else f'constant:{b}'
-def walk(name,mp,path):
+def walk(name,mp,path,in_pin=False):
  m=mods[name]
  for n,c in m.get('cells',{}).items():
   t=c['type'];base=basename(t);cp=path+'.'+n;cc={k:[mapbit(b,mp,path) for b in v] for k,v in c['connections'].items()}
   if t in ['$dff','$adff','$sdff','$dffe','$adffe','$sdffe','$aldff','$dffsr']:
    count=len(c['connections']['Q']);ff[cc['CLK'][0]]+=count;owned[basename(name)]+=count
-  if base in physical or base in ['ot_qfd_vm_su_return_plane','ot_qfd_vm_su_read_control']:
+  if base in physical or (base=='ot_qfd_vm_su_return_plane'and not in_pin)or base in ['ot_qfd_vm_su_read_control','qvm_return_plane_pin_native','ot_qfd_vm_write_control_t']:
    leaf_counts[base]+=1
-   pins=roles if base.startswith('qvm_') else (['ck'] if base.startswith('ot_qfd_vm_su_return') or base in ['ot_qfd_vm_su_read_control','qfd_vm_qcommit'] else ['clk'])
+   pins=roles if base in ['qvm_bank_banked_native','qvm_su_bank_native'] else (['ck'] if base.startswith('ot_qfd_vm_su_return') or base in ['ot_qfd_vm_su_read_control','qfd_vm_qcommit','qvm_return_plane_pin_native'] else ['clk'])
    for pin in pins:
     assert len(cc[pin])==1
     clock_rows.append({'instance':cp,'master':base,'pin':pin,'parent_clock_port':cc[pin][0]})
@@ -29,14 +29,26 @@ def walk(name,mp,path):
    cm={}
    for pn,pv in mods[t]['ports'].items():
     for b,label in zip(pv['bits'],cc.get(pn,[])):cm[b]=label
-   walk(t,cm,cp)
+   walk(t,cm,cp,in_pin or base=='qvm_return_plane_pin_native')
 walk(top,labels,top)
 ports=Counter(r['parent_clock_port'] for r in clock_rows);all_used=set(ports)|set(ff);legacy={n:ports.get(n,0)+ff.get(n,0) for n in tm['ports'] if re.fullmatch(r'ck_r\d+_\d+',n)}
 actual={'source_ports':sum(len(v['bits']) for v in tm['ports'].values()),'physical_clock_endpoints':len(clock_rows),'unique_physical_leaf_clock_inputs':len(ports),'all_active_clock_inputs_including_residual':len(all_used),'legacy_retained_clock_pins':len(legacy),'legacy_retained_used':sum(v>0 for v in legacy.values()),'legacy_unused_pins':[n for n,v in legacy.items() if not v],'source_ff_bits_total':sum(ff.values()),'source_ff_bits_by_parent_clock':dict(ff),'source_ff_bits_by_module':dict(owned),'leaf_counts':dict(leaf_counts),'clock_endpoints':clock_rows,'phase_status':'Every endpoint needs exact source/view insertion R and leaf/parent composition audit; no default phase or assumed equal R. No physical qualification.'}
-checks={'port_bits':actual['source_ports']==15864,'row_bank_count':leaf_counts['qvm_bank_banked_native']==64,'operand_bank_count':leaf_counts['qvm_su_bank_native']==48,'return_planes':leaf_counts['ot_qfd_vm_su_return_plane']==96,'read_controls':leaf_counts['ot_qfd_vm_su_read_control']==3}
-for prefix,want in [('native_ck[',1008),('return_ck[',96),('read_control_ck[',3)]:
+checks={'port_bits':actual['source_ports']==15864+relay_clocks+240*e3,'row_bank_count':leaf_counts['qvm_bank_banked_native']==64,'operand_bank_count':leaf_counts['qvm_su_bank_native']==48,'relay_tiles':leaf_counts['qvm_data256_native']==relay_clocks+160*e3,'return_planes':leaf_counts['qvm_return_plane_pin_native'if pin else'ot_qfd_vm_su_return_plane']==96,'read_controls':leaf_counts['ot_qfd_vm_su_read_control']==3}
+for prefix,want in [('native_ck[',1008),('return_ck[',96),('read_control_ck[',3),('relay_ck[',relay_clocks)]+([('write_ck[',240)]if e3 else[]):
  vals=[r['parent_clock_port'] for r in clock_rows if r['parent_clock_port'].startswith(prefix)];checks[prefix]=len(vals)==want and len(set(vals))==want
-checks.update({'unique_leaf_clocks':actual['unique_physical_leaf_clock_inputs']==1482,'active_clocks':actual['all_active_clock_inputs_including_residual']==1483,'all_retained_legacy_pins_used':not actual['legacy_unused_pins'],'no_constant_clock':all(not r['parent_clock_port'].startswith('constant:') for r in clock_rows)})
+write_index_errors=[]
+if e3:
+ for r in clock_rows:
+  if not r['parent_clock_port'].startswith('write_ck['):continue
+  m=re.search(r'\.g_(bw|ws)\[(\d+)\]\.g_write_leaf\.u_write\.(u_lo|u_hi|u_control)$',r['instance'])
+  if not m:write_index_errors.append(dict(r,expected='recognized E3 bank/role'));continue
+  bank=int(m[2])+(64 if m[1]=='ws'else 0);role={'u_lo':0,'u_hi':1,'u_control':2}[m[3]];want=f'write_ck[{3*bank+role}]'
+  if r['parent_clock_port']!=want:write_index_errors.append(dict(r,expected=want))
+actual['E3_write_clock_index_errors']=write_index_errors
+checks['E3_exact_bank_role_clocks']=not write_index_errors
+checks['E3_control_count']=leaf_counts['ot_qfd_vm_write_control_t']==80*e3
+if e3: checks['E3_parent_ff_residual']=ff['ck']==12198
+checks.update({'unique_leaf_clocks':actual['unique_physical_leaf_clock_inputs']==1482+relay_clocks+240*e3,'active_clocks':actual['all_active_clock_inputs_including_residual']==1483+relay_clocks+240*e3,'all_retained_legacy_pins_used':not actual['legacy_unused_pins'],'no_constant_clock':all(not r['parent_clock_port'].startswith('constant:') for r in clock_rows)})
 actual['checks']=checks;actual['passed']=all(checks.values())
 a.out.write_text(json.dumps(actual,indent=2)+'\n');print(json.dumps({k:v for k,v in actual.items() if k not in ['clock_endpoints','source_ff_bits_by_parent_clock','source_ff_bits_by_module']},indent=2))
 assert actual['passed']==(a.expect=='pass'), 'Actual clock-port ledger does not match expected result'

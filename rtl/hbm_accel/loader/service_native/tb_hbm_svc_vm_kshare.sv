@@ -25,6 +25,7 @@ module tb_hbm_svc_vm_kshare;
   .c_k_v(c_k_v),.c_k_rdy(c_k_rdy),.c_k_addr(c_k_addr),.c_k_len(c_k_len),.c_k_tag(c_k_tag),.c_k_we(c_k_we),.c_k_wdata(c_k_wdata),
   .c_k_wstrb(c_k_wstrb),.c_k_wr_done(4'b0),.c_kr_v(c_kr_v),.c_kr_rdy(c_kr_rdy),.c_kr_tag(c_kr_tag),.c_kr_beat(c_kr_beat),.c_kr_data(c_kr_data),
   .vm_v(vm_v),.vm_bank(vm_bank),.vm_epoch(vm_epoch),.vm_row(vm_row),.vm_col(vm_col),
+  .wbw_v(1'b0),.wbw_base(30'd0),.wbw_total(12'd0),.w_k_v(4'b0),.w_k_rdy(),.w_k_addr(120'd0),.w_k_wdata(1024'd0),.w_k_wr_done(),
   .fill_v(fill_v),.fill_bank(fill_bank),.fill_slot(fill_slot),.fill_epoch(fill_epoch),.fill_data(fill_data),.fault(fault));
  function automatic [255:0] f(input [29:0] a, input [3:0] b);
   reg[255:0]r;integer i;begin for(i=0;i<8;i=i+1)r[32*i+:32]=32'h9e3779b9*(a+b+1)+i*32'h85ebca6b^{a[13:0],b,i[3:0],10'h2a5};f=r;end

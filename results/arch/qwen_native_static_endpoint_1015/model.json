@@ -56,5 +56,21 @@
       "input": 1390,
       "output": 1303
     }
+  },
+  "actual_service_composition": {
+    "new_arithmetic": false,
+    "new_memory": false,
+    "reuse": "existing native w16, ASTK/ECTL and head stage leaves; no new tile master",
+    "V_bytes_per_core_edge_per_stack": 512,
+    "K_bytes_per_core_edge_per_stack": 1024,
+    "phase_overlap": false,
+    "P_V_model_area_mm2": 9.5,
+    "P_V_granted_existing_slot_um": [
+      1080,
+      7344
+    ],
+    "P_V_replicas": 2,
+    "head_extra_edges": 5,
+    "unbound": "physical service clocks and all incident K/V/link faces"
   }
 }

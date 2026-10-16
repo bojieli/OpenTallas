@@ -5,8 +5,8 @@ The KV die generator emits one relay master per bus width, qkd_rly_<W> (21 maste
 an unrouted frame whose pins sit on M4 at minimum pitch (20.9 pins/um).  With OT_KV_RLY_STD=1 every relay stage binds to
 replicas of FOUR hardened standards (rtl/qwen_sys/kv_rly_std_20261016/qkd_rlys.sv, kits physical/ref_tile/qkd_rlys_<S>):
 
-    qkd_rlys_1    10.8  x 10.8 um     1 b   (reset / boot tree hops qkd_rly_t1, 1-bit words, reverse bits)
-    qkd_rlys_36   10.8  x 10.8 um    36 b
+    qkd_rlys_1    12.96 x 12.96 um    1 b   (reset / boot tree hops qkd_rly_t1, 1-bit words, reverse bits)
+    qkd_rlys_36   12.96 x 12.96 um   36 b
     qkd_rlys_296  21.6  x 47.52 um  296 b
     qkd_rlys_528  21.6  x 82.08 um  528 b   (face <= 86.4 um = a 129.6-um relay channel minus 2 x 21.6-um block keep-outs)
 
@@ -35,14 +35,20 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 RT = 'physical/ref_tile'
 RTL = 'rtl/qwen_sys/kv_rly_std_20261016/qkd_rlys.sv'
-STD = {1: (10.8, 10.8), 36: (10.8, 10.8), 296: (21.6, 47.52), 528: (21.6, 82.08)}
+STD = {1: (12.96, 12.96), 36: (12.96, 12.96), 296: (21.6, 47.52), 528: (21.6, 82.08)}
 REPLICA_GAP = 10.8
 GY = 2.16
 CORNERS = ('tt', 'ff', 'ss')
 FLIP = dict(R0=(0, 0), MX=(0, 1), MY=(1, 0), R180=(1, 1))
+ORIENT = {v: k for k, v in FLIP.items()}
 # buses whose die direction model carries reverse bits (kvs11-v143c relays.json: kvn 1048 / hb 284 / emf 289 / emr 521, one
 # bit each): their frames reserve one qkd_rlys_1 slot; the netlist pass refuses a relay with more reverse bits than reserved
-REV_BUS = re.compile(r'^(kvn|hb|emf|emr)(?:_|$)')
+# reverse bits per relayed bus (the die direction model, tools/die_top_lint.py endpoint_dirs, as relays.json measures it):
+# kvs11-v143c kvn 1048 / hb 284 / emf 289 / emr 521 carry one reverse bit each; Q-KVSYS-NETLIST 7ffb0ff53 made host_fdi
+# (2089 b) per-bit: 1,044 host -> SerDes forward, 1,045 (tx_up, rx_v, rx_flit) SerDes -> host reverse.  The frame reserves
+# these; the netlist pass refuses a relay whose measured reverse count differs (fail closed)
+REV_BITS = (('host_fdi', 1045), ('kvn', 1), ('hb', 1), ('emf', 1), ('emr', 1))
+REV_BUS = re.compile(r'^(' + '|'.join(b for b, _ in REV_BITS) + r')(?:_|$)')
 # replica choice: minimum (outline area + PAD_COST per tied bit + INST_COST per instance), at most 5 replicas
 PAD_COST, INST_COST = 1.0, 60.0
 
@@ -70,7 +76,8 @@ def replicas(w):
 
 def layout(w, rev=0):
     """(frame w, frame h, [(std, dx, dy, role)]) of a w-bit relay stage with rev reverse bits"""
-    reps = [(s, 'fwd') for s in replicas(w - rev)] + [(1, 'rev')] * rev
+    # reverse bits ride their own replicas, MIRRORED (MY: a on the E face, b on the W face)
+    reps = [(s, 'fwd') for s in replicas(w - rev)] + [(s, 'rev') for s in replicas(rev)]
     fh = max(STD[s][1] for s, _ in reps)
     out, x = [], 0.0
     for s, role in reps:
@@ -81,7 +88,8 @@ def layout(w, rev=0):
 
 
 def frame_rev(bid):
-    return 1 if REV_BUS.match(bid) else 0
+    m = REV_BUS.match(bid)
+    return dict(REV_BITS)[m.group(1)] if m else 0
 
 
 # ---- die.v helpers (the kv_expand.py conventions) ---------------------------------------------------------------------
@@ -132,6 +140,10 @@ def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument('--run', type=Path, required=True)
     ap.add_argument('--dry-run', action='store_true', help='check and report only (no closed views needed, nothing rewritten)')
+    ap.add_argument('--netlist-only', action='store_true',
+                    help='rewrite die.v / place.tcl / pads / expand.json leaves even where a standard has no closed view yet '
+                         '(LEF / libs untouched, RUN/case_kv/RLY_STD_NETLIST_ONLY written): port-bind checks only, never a '
+                         'physical die run')
     a = ap.parse_args(argv)
     case, libs = a.run / 'case_kv', a.run / 'libs'
     rel = json.loads((a.run / 'relays.json').read_text())['masters']
@@ -198,10 +210,11 @@ def main(argv=None):
                 bout = [B[i] for i in idx]
                 min_used[s] = min(min_used.get(s, s), len(idx))
             else:
-                i = rv[k_r]
-                k_r += 1
-                ain, bout = [B[i]], [A[i]]                # reverse bit: b -> flop -> a
-                min_used[1] = min(min_used.get(1, 1), 1)
+                idx = rv[k_r:k_r + s]                     # reverse bits: b -> flop -> a (mirrored replica)
+                k_r += len(idx)
+                ain = [B[i] for i in idx] + ['0'] * (s - len(idx))
+                bout = [A[i] for i in idx]
+                min_used[s] = min(min_used.get(s, s), len(idx))
             if len(bout) < s:
                 sp = f'n_{nm}__spare'
                 add_wires.append(f'  wire [{s - len(bout) - 1}:0] {sp};')
@@ -210,7 +223,8 @@ def main(argv=None):
             # a mirrored frame (kv_pin_repair.py relays are MY: a on the E face) mirrors the row and every replica
             px = fw_ - dx - STD[s][0] if flx else dx
             py = oy + (fh_ - dy - STD[s][1] if fly else dy)
-            add_place.append(f'ot_mts::place [$_blk findInst {nm}] {fx + px:.3f} {fy + py:.3f} {fo}')
+            ro = ORIENT[(flx ^ (role == 'rev'), fly)]
+            add_place.append(f'ot_mts::place [$_blk findInst {nm}] {fx + px:.3f} {fy + py:.3f} {ro}')
             used_std[s] += 1
             rep['totals']['pad_bits'] += ain.count('0')
         if k_f != len(fwd) or k_r != len(rv):
@@ -240,6 +254,8 @@ def main(argv=None):
         vd = f'{RT}/{name(s)}/views/{name(s)}'
         lef = ROOT / vd / f'{name(s)}.lef'
         if not lef.exists():
+            if a.netlist_only:
+                continue
             raise FileNotFoundError(f'{name(s)}: no closed view {lef} (route the standard first)')
         blk, sz = lef_macro(lef)
         if abs(sz[0] - STD[s][0]) > 0.001 or abs(sz[1] - STD[s][1]) > 0.001:
@@ -276,7 +292,10 @@ def main(argv=None):
     (libs / 'views.json').write_text(json.dumps(vj, indent=1) + '\n')
     ex = a.run / 'expand.json'
     ej = json.loads(ex.read_text()) if ex.exists() else dict(schema='opentallas.qwen_kvsys_expand.v1', frames={})
-    ej.setdefault('leaves', {}).update({name(s): dict(view=views[s][0], rtl=RTL) for s in views})
+    ej.setdefault('leaves', {}).update({name(s): dict(view=f'{RT}/{name(s)}/views/{name(s)}', rtl=RTL) for s in used_std})
+    if a.netlist_only:
+        (case / 'RLY_STD_NETLIST_ONLY').write_text('kv_rly_std.py --netlist-only: standards without closed views: '
+                                                  + ' '.join(name(s) for s in sorted(set(used_std) - set(views))) + '\n')
     ex.write_text(json.dumps(ej, indent=1) + '\n')
     (a.run / 'rly_std.json').write_text(json.dumps(rep, indent=1) + '\n')
     print(json.dumps(dict(removed=len(drop), added=len(add_place), **rep['totals'])))

@@ -20,7 +20,7 @@ rejected).
 usage: sys_face_image.py --events EVENTS.json --program PROGRAM.hex|--bench-program --out DIR
   -> DIR/sys_face_cfg.viamap.hex (the ROM via map), DIR/sys_face_image.json (rows, digest, expected cfg writes / events)
 """
-import argparse, json, sys
+import argparse, json, re, sys
 from pathlib import Path
 
 NE = dict(T=64, L=32, E=16)
@@ -101,7 +101,7 @@ def bench_program():
     return w
 
 
-def build(events, program):
+def build(events, program, d2d_image=None):
     if len(program) != PW + DW:
         raise ValueError('program image must be PW1024 + DW8 words')
     rows = {i: w for i, w in enumerate(program)}
@@ -111,6 +111,16 @@ def build(events, program):
     if not 66 < first < 1 << 32:
         raise ValueError('first_token (edges from the epoch strobe) must exceed the D2D sequencer init (2 NE + 2)')
     recs.append((TARGET['FIRST'], 0, first))
+    if d2d_image:
+        # one value per program shared with the D2D sequencers (Q-LINK d2d_cal_image.svh): the token go lands the token
+        # cal_start on D2D_FIRST_TOKEN, and the T calendar's END is the compiled token period
+        img = Path(d2d_image).read_text()
+        iv = lambda n: int(re.search(rf'{n} = (\d+)', img).group(1))
+        if first + GO_OFS != iv('D2D_FIRST_TOKEN'):
+            raise ValueError(f'first_token {first} + GO_OFS {GO_OFS} != D2D_FIRST_TOKEN {iv("D2D_FIRST_TOKEN")}')
+        ends = [c for c, k, a in events.get('T', []) if k == 1 and a & 4]
+        if ends != [iv('D2D_TOKEN_PERIOD')]:
+            raise ValueError(f'T END {ends} != D2D_TOKEN_PERIOD {iv("D2D_TOKEN_PERIOD")}')
     tr = [c for c, k, a in events.get('T', []) if k in (0, 5) and a & 128]
     if tr and tr[0] != GO_OFS:
         raise ValueError(f'T token-run flag at cycle {tr[0]}, the RTL D2D sequencer starts at GO_OFS {GO_OFS}')
@@ -135,6 +145,7 @@ def main():
     ap.add_argument('--events', required=True)
     ap.add_argument('--program')
     ap.add_argument('--bench-program', action='store_true')
+    ap.add_argument('--d2d-image', help='d2d_cal_image.svh: enforce D2D_FIRST_TOKEN / D2D_TOKEN_PERIOD')
     ap.add_argument('--out', required=True)
     a = ap.parse_args()
     ev = json.loads(Path(a.events).read_text())
@@ -142,7 +153,7 @@ def main():
         prog = bench_program()
     else:
         prog = [int(x, 16) for x in Path(a.program).read_text().split()]
-    rows, rec = build(ev, prog)
+    rows, rec = build(ev, prog, a.d2d_image)
     out = Path(a.out); out.mkdir(parents=True, exist_ok=True)
     (out / 'sys_face_cfg.viamap.hex').write_text(viamap(rows))
     (out / 'program.memh').write_text(''.join(f'{w:016x}\n' for w in prog))

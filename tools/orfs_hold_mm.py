@@ -2,7 +2,8 @@
 """FLOW-HOLD (2026-10-07): patch a DISPOSABLE ORFS flow container's load.tcl / util.tcl so that, when the ORFS config
 exports OT_HOLD_MM=1, every stage loads a multi-mode session (scene WC = SS setup, scene BC = FF hold, each under its own
 constraints) and repair_timing_helper repairs SS setup and FF hold together (tools/orfs_hold_mm.tcl).  Without
-OT_HOLD_MM=1 the patched scripts behave exactly as the originals.  Applied like tools/orfs_allcorner_spef.py: inside a new
+OT_HOLD_MM=1 the multi-mode changes are inert. Detailed placement always receives ordinary final legalization after
+DPO/mirroring and before its unchanged placement check. Applied like tools/orfs_allcorner_spef.py: inside a new
 --rm container only; images, work dirs and evidence are never modified.
    orfs_hold_mm.py <ORFS scripts dir> [<helper tcl, default /src/tools/orfs_hold_mm.tcl>]"""
 import hashlib
@@ -59,6 +60,31 @@ def patch(scripts: Path, helper: str) -> dict:
     util.write_text(ut)
     out.update(status="patched", load_after=sha(lt), util_after=sha(ut))
     return out
+
+
+# The detailed optimizer can create off-site cells after ordinary legalization
+# (Q-TILE45 r5: NK33/NL3 cells, almost all one DBU before a fence edge).
+# Run ordinary legalization after the final optimizer/mirroring mutation, before
+# the original mandatory placement check. No errors or checks are suppressed.
+FINAL_DPL_ANCHOR = ('  log_cmd optimize_mirroring\n\n'
+                    '  utl::info FLW 12 "Placement violations [check_placement -verbose]."')
+FINAL_DPL_BLOCK = ('  log_cmd optimize_mirroring\n\n'
+                   '  puts "OT_FINAL_DPL: ordinary legalization after final optimizer/mirroring"\n'
+                   '  log_cmd detailed_placement {*}$dpl_args\n\n'
+                   '  utl::info FLW 12 "Placement violations [check_placement -verbose]."')
+
+
+def patch_final_dpl(scripts: Path) -> str:
+    """Fail closed unless the final mutation/check sequence is exactly recognized."""
+    target = scripts / "detail_place.tcl"
+    text = target.read_text()
+    if (text.count(FINAL_DPL_BLOCK) == 1 and text.count("OT_FINAL_DPL") == 1
+            and FINAL_DPL_ANCHOR not in text):
+        return "already patched"
+    if "OT_FINAL_DPL" in text or text.count(FINAL_DPL_ANCHOR) != 1:
+        raise SystemExit("orfs_hold_mm: final legalization anchor not found exactly once in detail_place.tcl; refusing")
+    target.write_text(text.replace(FINAL_DPL_ANCHOR, FINAL_DPL_BLOCK, 1))
+    return "patched"
 
 
 STAGE_LOGS = {"cts": ["4_1_cts.log"], "globalroute": ["5_1_grt.log"]}
@@ -176,6 +202,7 @@ def patch_abc_no_dch(scripts: Path, env=None) -> str:
 
 
 if __name__ == "__main__":
+    print("orfs_hold_mm: final legalization", patch_final_dpl(Path(sys.argv[1])))
     print("orfs_hold_mm:", json.dumps(patch(Path(sys.argv[1]), sys.argv[2] if len(sys.argv) > 2 else "/src/tools/orfs_hold_mm.tcl")))
     try:
         print("orfs_hold_mm: abc no-dch", patch_abc_no_dch(Path(sys.argv[1])))

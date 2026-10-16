@@ -1,0 +1,146 @@
+{
+ "schema": "opentallas.s81.wfc-pipeline-proof.v1",
+ "status": "PASS_COMPONENT_EPOCH_FUNCTION_AND_FIXED_DELTAS_NOT_PHYSICAL_OR_FULL_VM",
+ "source_sha256": {
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_wfc.sv": "1da737a110d1001124a190628b73bc2cea196f129191d352e10ff212d54200b0",
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_sp_vm_static.sv": "651bc8ff11197114dc5b161e39381623381ed6401952be2e76e2e50e410ec8c6",
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_sp_vm_a2f.sv": "e76ff9ea2f46093cc827674a73af940345d80151b7189c1f8af12bf9a88a4d73",
+  "tools/s81_vm/wfc_pipeline_bench.sv": "d581ff7ab20bba41b8240d9429908325a485d34f72cbc6615dd1f9ec2f2559ad",
+  "tools/s81_vm/wfc_pipeline_ref_r5.sv": "b2b27269a82ff3362a4b2f172daeab4db67c85113b45db21b029b7449b0e105f",
+  "tools/s81_vm/wfc_pipeline_gate.sh": "38761d9a1d61651fc1538b6b1affca1fdc3e29150bfb06cba33b3439cd3a20d3",
+  "tools/s81_vm/die_clock_abi.py": "037f49289d16d5ba3f3c99821d25ef9055161949d03e188002f6747779c7475e",
+  "rtl/dsrom_sys/s81_ph/vm/ot_s81_vm_fault_transports.sv": "1000c3c7dea9ecbe6c81ab4819c32787afa1b8d1ac1fa5f05ee6e2cd5852ba75",
+  "rtl/dsrom_sys/s81_ph/vm/ot_s81_vm_x34.sv": "db4810e343feccefb7a2cf3a010e99cced012e985e2635d55425c65a596a6e37",
+  "rtl/dsrom_sys/s81_ph/vm/ot_s81_vm_x43.sv": "db36f2611d91193aa7b9fe8031b75c9ad901d0449aa90fbe77db0a12109c1b52",
+  "tools/s81_vm/wfc_fault_epoch_bench.sv": "259604fd65238b75db16e349156e73466b8ec37b597115e21ba0c2d3492d4d11"
+ },
+ "runs": [
+  {
+   "mode": "gold",
+   "rc": 0,
+   "output": "WFC_PIPELINE PASS seed1 edges2500 reads633 writes647 request_delta1 core_return_delta4 serial_return_delta3 fault_both_directions\nWFC_PIPELINE PASS seed2 edges2500 reads620 writes628 request_delta1 core_return_delta4 serial_return_delta3 fault_both_directions\nWFC_PIPELINE PASS seed1 edges2500 reads633 writes647 request_delta1 core_return_delta4 serial_return_delta3 fault_both_directions\nWFC_PIPELINE PASS seed2 edges2500 reads620 writes628 request_delta1 core_return_delta4 serial_return_delta3 fault_both_directions\nWFC_FAULT_EPOCH PASS direction0 phase0 core_delay_ns31 serial_delay_ns107\nWFC_FAULT_EPOCH PASS direction0 phase1 core_delay_ns31 serial_delay_ns111\nWFC_FAULT_EPOCH PASS direction0 phase2 core_delay_ns31 serial_delay_ns115\nWFC_FAULT_EPOCH PASS direction0 phase3 core_delay_ns31 serial_delay_ns103\nWFC_FAULT_EPOCH PASS direction1 phase0 core_delay_ns89 serial_delay_ns57\nWFC_FAULT_EPOCH PASS direction1 phase1 core_delay_ns85 serial_delay_ns57\nWFC_FAULT_EPOCH PASS direction1 phase2 core_delay_ns81 serial_delay_ns57\nWFC_FAULT_EPOCH_GATE PASS cases7\nWFC_PIPELINE_GATE PASS\n"
+  },
+  {
+   "mode": "OT_VM_WFC_CTL_MUT_LANE",
+   "rc": 1,
+   "output": "FATAL: tools/s81_vm/wfc_pipeline_bench.sv:29: return +4 mismatch 42\n       Time: 709000 Scope: tb_wfc_pipeline\n"
+  },
+  {
+   "mode": "OT_VM_WFC_CTL_MUT_FAULT",
+   "rc": 1,
+   "output": "FATAL: tools/s81_vm/wfc_pipeline_bench.sv:39: core diagnostic not reported to BOTH domains\n       Time: 30385000 Scope: tb_wfc_pipeline\n"
+  },
+  {
+   "mode": "OT_VM_WFC_CTL_MUT_CAPTURE",
+   "rc": 1,
+   "output": "FATAL: tools/s81_vm/wfc_pipeline_bench.sv:50: serial +3 mismatch 41\n       Time: 696000 Scope: tb_wfc_pipeline\n"
+  },
+  {
+   "mode": "OT_VM_WFC_CTL_MUT_CDC",
+   "rc": 1,
+   "output": "FATAL: tools/s81_vm/wfc_pipeline_bench.sv:39: core diagnostic not reported to BOTH domains\n       Time: 30385000 Scope: tb_wfc_pipeline\n"
+  },
+  {
+   "mode": "OT_VM_WFC_CTL_MUT_EPOCH",
+   "rc": 1,
+   "output": "FATAL: tools/s81_vm/wfc_pipeline_bench.sv:26: spurious fault under legal fixed schedule 41\n       Time: 697000 Scope: tb_wfc_pipeline\n"
+  },
+  {
+   "mode": "OT_VM_FAULT_X34S_MUT_BANK",
+   "rc": 1,
+   "output": "WFC_PIPELINE PASS seed1 edges2500 reads633 writes647 request_delta1 core_return_delta4 serial_return_delta3 fault_both_directions\nWFC_PIPELINE PASS seed2 edges2500 reads620 writes628 request_delta1 core_return_delta4 serial_return_delta3 fault_both_directions\nWFC_PIPELINE PASS seed1 edges2500 reads633 writes647 request_delta1 core_return_delta4 serial_return_delta3 fault_both_directions\nWFC_PIPELINE PASS seed2 edges2500 reads620 writes628 request_delta1 core_return_delta4 serial_return_delta3 fault_both_directions\nWFC_FAULT_EPOCH PASS direction0 phase0 core_delay_ns31 serial_delay_ns107\nWFC_FAULT_EPOCH PASS direction0 phase1 core_delay_ns31 serial_delay_ns111\nWFC_FAULT_EPOCH PASS direction0 phase2 core_delay_ns31 serial_delay_ns115\nWFC_FAULT_EPOCH PASS direction0 phase3 core_delay_ns31 serial_delay_ns103\nWFC_FAULT_EPOCH PASS direction1 phase0 core_delay_ns89 serial_delay_ns57\nFATAL: tools/s81_vm/wfc_fault_epoch_bench.sv:31: diagnostic fixed-edge mismatch dir1 phase1 actual97/57 expected85/57\n       Time: 4408000 Scope: tb_wfc_fault_epoch.observe\n"
+  },
+  {
+   "mode": "OT_VM_FAULT_X34T_MUT_BANK",
+   "rc": 1,
+   "output": "WFC_PIPELINE PASS seed1 edges2500 reads633 writes647 request_delta1 core_return_delta4 serial_return_delta3 fault_both_directions\nWFC_PIPELINE PASS seed2 edges2500 reads620 writes628 request_delta1 core_return_delta4 serial_return_delta3 fault_both_directions\nWFC_PIPELINE PASS seed1 edges2500 reads633 writes647 request_delta1 core_return_delta4 serial_return_delta3 fault_both_directions\nWFC_PIPELINE PASS seed2 edges2500 reads620 writes628 request_delta1 core_return_delta4 serial_return_delta3 fault_both_directions\nWFC_FAULT_EPOCH PASS direction0 phase0 core_delay_ns31 serial_delay_ns107\nWFC_FAULT_EPOCH PASS direction0 phase1 core_delay_ns31 serial_delay_ns111\nWFC_FAULT_EPOCH PASS direction0 phase2 core_delay_ns31 serial_delay_ns115\nWFC_FAULT_EPOCH PASS direction0 phase3 core_delay_ns31 serial_delay_ns103\nWFC_FAULT_EPOCH PASS direction1 phase0 core_delay_ns89 serial_delay_ns57\nWFC_FAULT_EPOCH PASS direction1 phase1 core_delay_ns85 serial_delay_ns57\nFATAL: tools/s81_vm/wfc_fault_epoch_bench.sv:31: diagnostic fixed-edge mismatch dir1 phase2 actual69/57 expected81/57\n       Time: 5096000 Scope: tb_wfc_fault_epoch.observe\n"
+  },
+  {
+   "mode": "OT_VM_FAULT_X43T_MUT_BANK",
+   "rc": 1,
+   "output": "WFC_PIPELINE PASS seed1 edges2500 reads633 writes647 request_delta1 core_return_delta4 serial_return_delta3 fault_both_directions\nWFC_PIPELINE PASS seed2 edges2500 reads620 writes628 request_delta1 core_return_delta4 serial_return_delta3 fault_both_directions\nWFC_PIPELINE PASS seed1 edges2500 reads633 writes647 request_delta1 core_return_delta4 serial_return_delta3 fault_both_directions\nWFC_PIPELINE PASS seed2 edges2500 reads620 writes628 request_delta1 core_return_delta4 serial_return_delta3 fault_both_directions\nFATAL: tools/s81_vm/wfc_fault_epoch_bench.sv:31: diagnostic fixed-edge mismatch dir0 phase0 actual31/123 expected31/107\n       Time: 742000 Scope: tb_wfc_fault_epoch.observe\n"
+  },
+  {
+   "mode": "OT_VM_FAULT_X43S_MUT_BANK",
+   "rc": 1,
+   "output": "WFC_PIPELINE PASS seed1 edges2500 reads633 writes647 request_delta1 core_return_delta4 serial_return_delta3 fault_both_directions\nWFC_PIPELINE PASS seed2 edges2500 reads620 writes628 request_delta1 core_return_delta4 serial_return_delta3 fault_both_directions\nWFC_PIPELINE PASS seed1 edges2500 reads633 writes647 request_delta1 core_return_delta4 serial_return_delta3 fault_both_directions\nWFC_PIPELINE PASS seed2 edges2500 reads620 writes628 request_delta1 core_return_delta4 serial_return_delta3 fault_both_directions\nFATAL: tools/s81_vm/wfc_fault_epoch_bench.sv:31: diagnostic fixed-edge mismatch dir0 phase0 actual31/91 expected31/107\n       Time: 742000 Scope: tb_wfc_fault_epoch.observe\n"
+  }
+ ],
+ "request_delta_core": 1,
+ "response_delta_core": 4,
+ "response_delta_serial": 3,
+ "new_parent_ports": [
+  "ck_wfc_fault_s",
+  "ck_wfc_fault_t",
+  "rst_wfc_fault_s",
+  "rss_wfc_fault_t",
+  "ck_wfc_return_t",
+  "rss_wfc_return_t",
+  "ck_wfc_fault_x34_s",
+  "ck_wfc_fault_x34_t",
+  "ck_wfc_fault_x43_t",
+  "ck_wfc_fault_x43_s",
+  "rst_wfc_fault_x34_s",
+  "rss_wfc_fault_x34_t",
+  "rss_wfc_fault_x43_t",
+  "rst_wfc_fault_x43_s"
+ ],
+ "diagnostic": "Actual original x34/x43 fixed-phase bank transfers W1, each side separately hardened and clocked, plus same-domain registered core/serial joins. Raw two-flop/negedge predecessor retained as physical FAIL. Seven directed source-phase cases assert exact edge-derived diagnostic latency, and both flags stay zero under valid data schedule. No raw crossing, credits, dynamic issue or on-chip reference substitution.",
+ "scope": "Frozen r5 data reference remains independent of DUT mutants. Diagnostic reference uses explicit legacy BOTH-domain assertions; does not inherit known r5 lost-fault behavior. Ideal direct component boundary stimuli model core response shifted one edge; actual full parent timing validation owned by VMstream.",
+ "physical_partition": "Request194.4x129.6, return194.4x324, six independent43.2square diagnostic leaves (four real W1 transfer sides and two joins). All fit345.6um band height individually; full connected homes and crossing STA remain OPEN. ck_wfc_control_s stays legacy NO_SINK; all new clock/reset ports are scalar.",
+ "valid_traffic_fault_check": "All measured legal data traffic after warmup asserts both core fault and serial t_err remain zero before directed fault injections.",
+ "diagnostic_phase_edges": {
+  "bench_periods_ns": {
+   "core": 12,
+   "serial": 16
+  },
+  "physical_periods_ps": {
+   "core": 833.333,
+   "serial": 1111.110666667
+  },
+  "sampling_offset_ns": 1,
+  "injection": "Fault pin set at source negative edge; listed observed delay includes one-ns test sampling offset. Expected delays derive from the first native input capture, sticky source, epoch bank write/read, receive pin and summary/error registers. Subtract one ns before converting scaled simulation units to physical ps.",
+  "core_fault_cases": [
+   {
+    "phase": 0,
+    "core_delay_ns": 31,
+    "serial_delay_ns": 107
+   },
+   {
+    "phase": 1,
+    "core_delay_ns": 31,
+    "serial_delay_ns": 111
+   },
+   {
+    "phase": 2,
+    "core_delay_ns": 31,
+    "serial_delay_ns": 115
+   },
+   {
+    "phase": 3,
+    "core_delay_ns": 31,
+    "serial_delay_ns": 103
+   }
+  ],
+  "serial_fault_cases": [
+   {
+    "phase": 0,
+    "core_delay_ns": 89,
+    "serial_delay_ns": 57
+   },
+   {
+    "phase": 1,
+    "core_delay_ns": 85,
+    "serial_delay_ns": 57
+   },
+   {
+    "phase": 2,
+    "core_delay_ns": 81,
+    "serial_delay_ns": 57
+   }
+  ],
+  "no_data_path_delta_from_fault_transfer": true
+ },
+ "clock_phase": "Both test clocks initialize high: first rising edges after release190.5ns occur at common192ns, then common48ns epochs. Old initial-low bench had misaligned first physical edges; corrected to actual phase0 common origin.",
+ "parent_timing_requirement": "Pin-source-bound per-bank write/read schedule and actual parent timing must justify the existing epoch crossing semantics at real pins/phases/reach. Standalone native child views do not prove related-clock parent timing; no falsepath/multicycle exception invented here."
+}

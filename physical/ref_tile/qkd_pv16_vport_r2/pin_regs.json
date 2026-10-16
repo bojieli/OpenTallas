@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "qkd_pv16_vport",
+ "enable": false,
+ "reason": "the RTL registers every port at the module boundary: every input (slot/sel/in_v*/in_t*/in_d*) -> *_q, every output (out_valid/out_t/out_v/fault) a flop"
+}

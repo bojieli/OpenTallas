@@ -1899,6 +1899,9 @@ def _relays(m):
             # v1.4.2: a reset / boot tree hop is ONE flop: its own 10.8-um relay master qkd_rly_t1 (same RTL rule: one flop a
             # bit, no reset), so it fits the 43.2-um channels between the stack-column blocks the 52.68-um frame cannot
             fw, fh, mst = 10.8, 10.8, 'qkd_rly_t1'
+            if __import__('os').environ.get('OT_KV_RLY_STD', '0') == '1':
+                import kv_rly_std as RS      # Q-KVSYS-RLY: the tree hop binds one qkd_rlys_1 (12.96 um: PG / pin access)
+                fw, fh = RS.STD[1][0] + SHAVE, RS.STD[1][1] + SHAVE
         elif __import__('os').environ.get('OT_KV_RLY_STD', '0') == '1':
             # Q-KVSYS-RLY 2026-10-16 (owner 'fewer distinct tiles', VIS-ROM QKV-04): the frame is the ROW of relay-standard
             # replicas (qkd_rlys_1 / 36 / 296 / 528, M4 pins <= 6.94 /um, face <= 82.08 um) that kv_rly_std.py binds

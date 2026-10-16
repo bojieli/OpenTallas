@@ -13,14 +13,19 @@ R, OUT = sys.argv[1], sys.argv[2]
 b = json.load(open(f'{R}/rtl/test/qwen_split/sys_face_bench_events.json'))
 v = int(re.search(r"D2D_CAL_START = 720'h([0-9a-f]+)", open(f'{R}/rtl/qwen_sys/d2d_static_20261015/d2d_cal_image.svh').read()).group(1), 16)
 st = [(v >> (20 * l)) & ((1 << 20) - 1) for l in range(36)]
-C0, L0, EMB, TOK = b['go_ofs'], b['l0_start'], b['emb_stage'], b['token_cycles']
+img = open(f'{R}/rtl/qwen_sys/d2d_static_20261015/d2d_cal_image.svh').read()
+iv = lambda n: int(re.search(rf'{n} = (\d+)', img).group(1))
+PERIOD, FIRST = iv('D2D_TOKEN_PERIOD'), iv('D2D_FIRST_TOKEN')
+C0, L0, EMB = b['go_ofs'], b['l0_start'], b['emb_stage']
+TOK = PERIOD - 40 - C0                    # LM-head stage + RESULT capture 40 edges before the compiled END
 T = [(C0, 5, 128), (C0 + EMB, 0, 0), (C0 + L0, 0, 1 | 64), (C0 + L0 + 2, 1, 3)]
 T += [(C0 + st[l], 0, (l + 1) | 64) for l in range(1, 36)]
-T += [(C0 + TOK, 0, 37 | 256), (C0 + TOK + 30, 1, 4)]
-ev = dict(first_token=b['first_token'], T=T, L=b['L'], E=b['E'], go_ofs=C0, cal=[(C0, 1)] + [(C0 + st[l], 0) for l in range(1, 36)])
+T += [(C0 + TOK, 0, 37 | 256), (PERIOD, 1, 4)]  # END at the compiled token period (D2D_TOKEN_PERIOD)
+ev = dict(first_token=FIRST - C0,  # t_go edges after the strobe: the token cal_start lands at D2D_FIRST_TOKEN
+          d2d_first_token=FIRST, d2d_adm_ofs=iv('D2D_ADM_OFS'), T=T, L=b['L'], E=b['E'], go_ofs=C0, cal=[(C0, 1)] + [(C0 + st[l], 0) for l in range(1, 36)])
 json.dump(ev, open(f'{OUT}/events.json', 'w'))
 PY
-python3 $R/tools/qwen_split/sys_face_image.py --events $OUT/events.json --bench-program --out $OUT/img > $OUT/img.json
+python3 $R/tools/qwen_split/sys_face_image.py --events $OUT/events.json --bench-program --d2d-image $R/rtl/qwen_sys/d2d_static_20261015/d2d_cal_image.svh --out $OUT/img > $OUT/img.json
 python3 - $OUT/events.json $OUT/tb_qfd_sys_face_events.svh <<'PY'
 import json, sys
 ev = json.load(open(sys.argv[1]))
@@ -42,7 +47,8 @@ for c, k, a in sorted(timeline):
     else:
         out.append((c, k, a))
 end_c = max(c for c, k, a in ev['T'] if k == 1 and a & 4)
-hdr = f'localparam integer GO_OFS = {ev["go_ofs"]}, TOKEN_PERIOD = {end_c};'
+hdr = (f'localparam integer GO_OFS = {ev["go_ofs"]}, TOKEN_PERIOD = {end_c}, '
+       f'ADM_TO_TOKEN = {ev["d2d_first_token"] - ev["d2d_adm_ofs"]};')
 open(sys.argv[2], 'w').write('\n'.join([hdr, 'initial begin'] + [f'    add({c}, {k}, {a});' for c, k, a in out] + ['end', '']))
 PY
 # Icarus 11 has no typed string parameters: the bench compiles a copy of the ROM model with untyped ones

@@ -20,7 +20,7 @@ module tb_qwen_d2d_program;
     wire integer re = P_RE + (lay == 0 ? P_RDELTA : 0);
     localparam integer ks = P_QS + 33, ss = P_SS;
     reg [31:0] layer_starts [0:35];
-    parameter integer MUT = 0, DRV = 0, PR = 1, TXL = 6, PHY = 5, P = 110, NLAY = 36, BAD_LAYER = -1;
+    parameter integer MUT = 0, DRV = 0, KV_PIN_SEQ = 0, PR = 1, TXL = 6, PHY = 5, P = 110, NLAY = 36, BAD_LAYER = -1;
     parameter CALDIR = "cal";
     localparam integer FW = 548, PW = 583;
     reg ck = 0; always #0.4167 ck = ~ck;
@@ -89,17 +89,41 @@ module tb_qwen_d2d_program;
     // flop); a consumer sees a frame 4 edges later than the unregistered end (net TX +1, PHY pin flops +2, RX pin flop +1)
     // DRV = 1: the die-name calendar sequencers (qfd/qkd_d2d_cal_seq, compiler images as constants) drive cfg_* /
     // cal_start / cal_seg; the bench's own compiled sequence becomes the cycle-exact reference they must match.
-    // MUT 6: sequencer start table one edge late at layer 7 (must FAIL).
+    // MUT 6: sequencer start table one edge late at layer 7 (must FAIL). MUT 7: KV anchor skew one edge short (must FAIL).
     reg tok_go = 0;
     wire q_c_tx, q_c_rx, q_k_tx, q_k_rx, q_c_cs, q_c_sg, q_k_cs, q_k_sg, q_c_rdy, q_k_rdy, q_c_run, q_k_run, q_c_f, q_k_f;
     wire [5:0] q_c_a, q_k_a, q_c_l, q_k_l; wire [31:0] q_c_d, q_k_d;
     localparam [20*36-1:0] SADJ = (MUT == 6) ? (720'd1 << (20 * 7)) : 720'd0;
-    qfd_d2d_cal_seq #(.START_ADJ(SADJ)) u_cseq (.ck(ck), .rst_n(rst_n), .reload(1'b0), .tok_go(tok_go), .halt(c_abort),
-        .cfg_tx_we(q_c_tx), .cfg_rx_we(q_c_rx), .cfg_addr(q_c_a), .cfg_data(q_c_d), .cal_start(q_c_cs), .cal_seg(q_c_sg),
-        .cal_ready(q_c_rdy), .running(q_c_run), .layer(q_c_l), .fault(q_c_f));
-    qkd_d2d_cal_seq u_kseq (.ck(ck), .rst_n(rst_n), .reload(1'b0), .tok_go(tok_go), .halt(k_abort),
+    // r2: both sequencers run the ADMISSION segment once per epoch at D2D_ADM_OFS after the forwarded epoch strobe; the
+    // compute one sees the strobe at its fwd_epoch pin (after the package bump, bump_ep[2]), the KV one at its own
+    // fwd_epoch output EP_SKEW = 3 edges earlier.  KV token starts are AUTO (D2D_FIRST_TOKEN, then D2D_TOKEN_PERIOD);
+    // the compute token go is the face's (here: the bench issues it on the KV's internal token go, and checks the
+    // anchor offset to the compute strobe separately).
+    wire q_c_ad, q_k_ad, q_c_ts, q_k_ts;
+    qfd_d2d_cal_seq #(.START_ADJ(SADJ)) u_cseq (.ck(ck), .rst_n(rst_n), .reload(1'b0), .tok_go(tok_go), .epoch_go(bump_ep[2]),
+        .halt(c_abort), .cfg_tx_we(q_c_tx), .cfg_rx_we(q_c_rx), .cfg_addr(q_c_a), .cfg_data(q_c_d), .cal_start(q_c_cs), .cal_seg(q_c_sg),
+        .cal_ready(q_c_rdy), .running(q_c_run), .layer(q_c_l), .adm_done(q_c_ad), .tok_start(q_c_ts), .fault(q_c_f));
+    generate if(KV_PIN_SEQ) begin: pin_calendar
+    qkd_d2d_cal_seq_pin #(.EP_SKEW(MUT == 7 ? 2 : 3)) u_kseq (.ck(ck), .rst_n(rst_n), .reload(1'b0), .epoch_go(fwd_ep), .halt(k_abort),
         .cfg_tx_we(q_k_tx), .cfg_rx_we(q_k_rx), .cfg_addr(q_k_a), .cfg_data(q_k_d), .cal_start(q_k_cs), .cal_seg(q_k_sg),
-        .cal_ready(q_k_rdy), .running(q_k_run), .layer(q_k_l), .fault(q_k_f));
+        .cal_ready(q_k_rdy), .running(q_k_run), .layer(q_k_l), .adm_done(q_k_ad), .tok_start(q_k_ts), .fault(q_k_f));
+    end else begin: raw_calendar
+    qkd_d2d_cal_seq #(.EP_SKEW(MUT == 7 ? 2 : 3)) u_kseq (.ck(ck), .rst_n(rst_n), .reload(1'b0), .tok_go(1'b0), .epoch_go(fwd_ep), .halt(k_abort),
+        .cfg_tx_we(q_k_tx), .cfg_rx_we(q_k_rx), .cfg_addr(q_k_a), .cfg_data(q_k_d), .cal_start(q_k_cs), .cal_seg(q_k_sg),
+        .cal_ready(q_k_rdy), .running(q_k_run), .layer(q_k_l), .adm_done(q_k_ad), .tok_start(q_k_ts), .fault(q_k_f));
+    end endgenerate
+    integer c_ep_rise = -1, adm_c = -1, adm_k = -1, adm_auth = 0, adm_w = 0, adm_ctx = 0; reg bep_q = 0;
+    always @(posedge ck) begin
+        bep_q <= bump_ep[2];
+        if (bump_ep[2] && !bep_q) c_ep_rise = cyc;
+        if (q_c_cs && q_c_l == 6'h3f) adm_c = cyc;
+        if (q_k_cs && q_k_l == 6'h3f) adm_k = cyc;
+        if (!tok && lay < 0) begin
+            if (c_prog_auth) adm_auth = adm_auth + 1;
+            if (c_prog_ctx) adm_ctx = adm_ctx + 1;
+            if (h_wv) adm_w = adm_w + 1;
+        end
+    end
     localparam integer LEAD = 2 * PR, XL = TXL + PHY + 4 * PR,
                        XS = TXL + PHY + 2 * PR;   // compute STATUS codec is inside the master: no slot/payload pin flops
     qfd_d2d_static #(.MUT(MUT == 1 ? 1 : 0), .PR(PR)) u_c (.ck(ck), .por_n(por_n), .rst_n(rst_n),
@@ -188,10 +212,12 @@ module tb_qwen_d2d_program;
     integer errs = 0, frames_ck = 0, frames_kc = 0, statuses = 0, results = 0, normal_aborts = 0;
     integer seq_starts = 0;
     always @(posedge ck) if (DRV && rst_n) begin
-        if ({q_c_cs, q_k_cs} !== {2{cstart}} || (cstart && {q_c_sg, q_k_sg} !== {2{cseg}})) begin
+        if (q_c_cs && q_c_l == 6'h3f || q_k_cs && q_k_l == 6'h3f) begin
+            if (!(q_c_cs && q_k_cs && q_c_sg && q_k_sg && q_c_l == q_k_l)) begin errs = errs + 1; $display("ERR admission starts differ cyc %0d", cyc); $fatal(1,"D2D_PROGRAM_FAIL admission anchor mismatch"); end
+        end else if ({q_c_cs, q_k_cs} !== {2{cstart}} || (cstart && {q_c_sg, q_k_sg} !== {2{cseg}})) begin
             errs = errs + 1; $display("ERR sequencer start cyc %0d expected %0d/%0d got C %0d/%0d K %0d/%0d", cyc, cstart, cseg, q_c_cs, q_c_sg, q_k_cs, q_k_sg);
         end
-        if (q_c_cs) seq_starts = seq_starts + 1;
+        if (q_c_cs && q_c_l != 6'h3f) seq_starts = seq_starts + 1;
         if (q_c_f || q_k_f) begin errs = errs + 1; $display("ERR sequencer fault cyc %0d", cyc); end
     end
     integer aborted_layer = -1;
@@ -296,7 +322,15 @@ module tb_qwen_d2d_program;
         // Exact compiler cal_starts for the full 36-layer link composition.
         // The token segment already includes L0: do not issue a second L0 start.
         $readmemh({CALDIR, "/layer_starts.memh"}, layer_starts);
+        if (DRV) begin
+            wait (q_k_ts); @(negedge ck);           // the KV AUTO token go; the face issues the compute go on the same edge
+            if (adm_c < 0 || adm_c != adm_k || adm_c - c_ep_rise != D2D_ADM_OFS + 1 ||   // cal_start is sampled the edge after the e == ADM_OFS decision
+                !q_c_ad || !q_k_ad) begin
+                errs = errs + 1; $display("ERR admission start C %0d K %0d (compute strobe %0d) done %0d%0d", adm_c, adm_k, c_ep_rise, q_c_ad, q_k_ad); end
+            $display("ADMISSION start %0d edges after the compute epoch strobe; records BEGIN/AUTH %0d witness %0d", adm_c - c_ep_rise, adm_auth, adm_w);
+        end
         tok_go = DRV; tick(DRV); tok_go = 0;     // the sequencer registers tok_go: its cal_start meets the reference edge
+        if (DRV && cyc - c_ep_rise != D2D_FIRST_TOKEN) begin errs = errs + 1; $display("ERR first token %0d edges after the strobe", cyc - c_ep_rise); end
         tok = 1; tstart = cyc + 1 + LEAD; cstart = 1; cseg = 1;
         tick(1); cstart = 0; cseg = 0;
         while (cyc < tstart + P_L0 + 5) tick(1);
@@ -311,11 +345,12 @@ module tb_qwen_d2d_program;
         while (cyc < tstart + P_FINISH) tick(1);
         if (statuses != 36) begin errs = errs + 1; $display("ERR HOST status checks %0d", statuses); end
         lay = -1; tick(20);
-        $display("token run: embedding words %0d header %0d program records S->C %0d (auth %0d context %0d) witness %0d", emb_ok, emb_hdr, prec_c, prec_auth, prec_ctx, prec_w);
+        $display("token run: embedding words %0d header %0d program records S->C %0d (auth %0d context %0d) witness %0d; admission BEGIN/AUTH %0d witness %0d", emb_ok, emb_hdr, prec_c, prec_auth, prec_ctx, prec_w, adm_auth, adm_w);
         $display("frames C->S %0d S->C %0d kvn %0d results %0d host-checks %0d normal-epoch faults %0d errors %0d",
             frames_ck, frames_kc, kvn_ok, results, statuses, normal_aborts, errs);
         if (errs == 0 && normal_aborts == 0 && frames_ck == 33 * NLAY && frames_kc == 33 * NLAY && kvn_ok == 4 * NLAY && results == NLAY &&
-            emb_ok == 64 && emb_hdr == 1 && prec_c == 3 && prec_auth == 2 && prec_ctx == 1 && prec_w == 1 && tok_res == 1 && (!DRV || seq_starts == NLAY))
+            emb_ok == 64 && emb_hdr == 1 && prec_c == 1 && prec_auth == 0 && prec_ctx == 1 && prec_w == 1 && tok_res == 1 &&
+            adm_auth == (DRV ? 2 : 0) && adm_ctx == 0 && adm_w == (DRV ? 1 : 0) && (!DRV || seq_starts == NLAY))
             $display("D2D_PROGRAM_PASS");
         else $display("D2D_PROGRAM_FAIL");
         $finish;
