@@ -1,0 +1,140 @@
+{
+ "tag": "nechannel_v16",
+ "die_um": [
+  32990.0,
+  23949.682
+ ],
+ "die_mm2": 790.1,
+ "placed_mm2": 649.31,
+ "cut_lanes": {
+  "worst_v": {
+   "ratio": 0.992,
+   "x": 15500.0,
+   "y": [
+    11200.0,
+    12200.0
+   ]
+  },
+  "worst_h": {
+   "ratio": 1.33,
+   "y": 15200.0,
+   "x": [
+    18000.0,
+    19000.0
+   ]
+  },
+  "lines_over_060": 430,
+  "windows_over_060": 5978
+ },
+ "cut_no_lanes": 1.365,
+ "faces_over_1": 8,
+ "stages_bw": 11.793,
+ "per_class": {
+  "HBM_K": {
+   "bits": 70784,
+   "stages_bw": 0.0
+  },
+  "SM_X": {
+   "bits": 69888,
+   "stages_bw": 9.88
+  },
+  "SM_HBM": {
+   "bits": 36224,
+   "stages_bw": 11.47
+  },
+  "HC_ENG": {
+   "bits": 36064,
+   "stages_bw": 43.67
+  },
+  "LG_SU": {
+   "bits": 17792,
+   "stages_bw": 0.0
+  },
+  "LG_HC": {
+   "bits": 17792,
+   "stages_bw": 0.0
+  },
+  "LG_SFU": {
+   "bits": 17792,
+   "stages_bw": 0.0
+  },
+  "VM_RING": {
+   "bits": 17792,
+   "stages_bw": 13.38
+  },
+  "COLL_VM": {
+   "bits": 17760,
+   "stages_bw": 17.41
+  },
+  "VM_HUB": {
+   "bits": 17216,
+   "stages_bw": 21.12
+  },
+  "COLL_EP": {
+   "bits": 11016,
+   "stages_bw": 14.44
+  },
+  "EP_SERDES": {
+   "bits": 9504,
+   "stages_bw": 3.11
+  },
+  "SM_OUT": {
+   "bits": 8640,
+   "stages_bw": 10.69
+  },
+  "HBM_VM": {
+   "bits": 8192,
+   "stages_bw": 24.22
+  },
+  "VM_HBM": {
+   "bits": 8192,
+   "stages_bw": 24.09
+  },
+  "IDX_INT": {
+   "bits": 8064,
+   "stages_bw": 7.62
+  },
+  "COLL_RING": {
+   "bits": 6608,
+   "stages_bw": 21.0
+  },
+  "QUANT_VM": {
+   "bits": 4440,
+   "stages_bw": 0.0
+  },
+  "HC_CORE": {
+   "bits": 3072,
+   "stages_bw": 15.42
+  },
+  "SFU_CORE": {
+   "bits": 3072,
+   "stages_bw": 15.58
+  },
+  "SU_CORE": {
+   "bits": 3072,
+   "stages_bw": 12.92
+  },
+  "IDX_VM": {
+   "bits": 2192,
+   "stages_bw": 20.62
+  },
+  "IDX_COLL": {
+   "bits": 2180,
+   "stages_bw": 18.0
+  },
+  "KV_DESC": {
+   "bits": 2048,
+   "stages_bw": 10.88
+  }
+ },
+ "relay_flops": 3952192.0,
+ "su_slice": [
+  1797.12,
+  2825.28
+ ],
+ "sm": [
+  7200.0,
+  1800.0
+ ],
+ "fits_reticle": true
+}

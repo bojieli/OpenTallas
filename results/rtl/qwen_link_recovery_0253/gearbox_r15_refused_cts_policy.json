@@ -1,0 +1,40 @@
+{
+ "source": "a073bc05b",
+ "job": "qfd_ucie_gearbox_r15-r15-a073bc05b",
+ "status": "REFUSED",
+ "events": [
+  "2026-10-16T04:28:58-07:00 ingested from /tmp/claude-review-20261003/closure_jobs/qfd_ucie_gearbox_r15-r15-a073bc05b.json",
+  "2026-10-16T04:29:07-07:00 CLOSED-STANDS PASS: qfd_ucie_six_five is CLOSED with a published view (qfd_ucie_gearbox_r10-r13-428ab16dd @ 428ab16dd and 1 more); reroute_reason rtl_change: 1 of 1 RTL source file(s) differ from 428ab16dd: rtl/physical/ot_qfd_ucie_six_five.sv (verified)",
+  "2026-10-16T04:29:44-07:00 CLOCK-RULE at submit: 8,425 sinks on the largest root <= 15,000; measured TT insertion 254.9 ps, leaf spread 35.0 ps",
+  "2026-10-16T04:29:44-07:00 SUBMIT_LINT REF_GATE: native_cts_sdc: ['clock.sdc', 'clock_entry.sdc', 'signoff.sdc'] differ from current generated native CTS stage policy (4af58769b): declared standard CTS roots must be ideal before CTS, while raw hard-entry roots and require-wire/postCTS checks retain actual propagation; a marker alone is insufficient (fix: rebase on main; run python3 tools/ref_tile/ref_tile.py gen <this kit's spec.json>; review unchanged RTL/pins/periods, commit regenerated kit, then run a fresh source-bound --cts gate and submit a new normal successor; preserve original accepted/frozen jobs)"
+ ],
+ "submit_checks": {
+  "closed_stands": {
+   "verdict": "PASS",
+   "mode": "refuse",
+   "kind": "rtl_change",
+   "closed": [
+    "qfd_ucie_gearbox_r10-r12-COMMIT-b10299672",
+    "qfd_ucie_gearbox_r10-r13-428ab16dd"
+   ],
+   "facts": {
+    "closed_job": "qfd_ucie_gearbox_r10-r13-428ab16dd",
+    "closed_commit": "428ab16dd",
+    "params": {},
+    "rtl": "differs",
+    "rtl_detail": "1 of 1 RTL source file(s) differ from 428ab16dd: rtl/physical/ot_qfd_ucie_six_five.sv",
+    "evidence_gap": null
+   },
+   "message": "qfd_ucie_six_five is CLOSED with a published view (qfd_ucie_gearbox_r10-r13-428ab16dd @ 428ab16dd and 1 more); reroute_reason rtl_change: 1 of 1 RTL source file(s) differ from 428ab16dd: rtl/physical/ot_qfd_ucie_six_five.sv (verified)"
+  },
+  "bench_gate": {
+   "verdict": "PASS"
+  },
+  "ref_gate": {
+   "verdict": "REFUSE",
+   "mode": "refuse",
+   "message": "native_cts_sdc: ['clock.sdc', 'clock_entry.sdc', 'signoff.sdc'] differ from current generated native CTS stage policy (4af58769b): declared standard CTS roots must be ideal before CTS, while raw hard-entry roots and require-wire/postCTS checks retain actual propagation; a marker alone is insufficient (fix: rebase on main; run python3 tools/ref_tile/ref_tile.py gen <this kit's spec.json>; review unchanged RTL/pins/periods, commit regenerated kit, then run a fresh source-bound --cts gate and submit a new normal successor; preserve original accepted/frozen jobs)"
+  }
+ },
+ "qualification": "NO ROUTE, source snapshot and CTS native preserved historically; r16 regenerates current source policy"
+}

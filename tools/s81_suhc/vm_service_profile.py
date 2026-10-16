@@ -34,11 +34,11 @@ PROFILES = {
         read_raw=7, read_return=16, write_raw=10, write_return=12, max_lane=2,
         receipts=['results/rtl/s81_vm_raw_read_calendar_20261015/record.json',
                   'results/rtl/s81_vm_scatter_pipe1_raw_20261015/record.json',
-                  'results/rtl/s81_vm_master_current_scatter_bc297977c/record.json']),
+                  'results/rtl/s81_vm_master_current_scatter_419d72270/record.json']),
     's81_vm_r4_c2_w0': dict(
         rtl_tuple={'READ_PIPE': 4, 'CAP_PIPE': 2, 'WSCATTER_PIPE': 0},
         read_raw=7, read_return=16, write_raw=9, write_return=11, max_lane=2,
-        receipts=['results/rtl/s81_vm_master_current_scatter_bc297977c/record.json']),
+        receipts=['results/rtl/s81_vm_master_current_scatter_419d72270/record.json']),
 }
 # The A2-F measurement embeds its exact staged-source manifest in the immutable
 # parent receipt. Keep legacy profiles attached to their original measurement.
@@ -46,13 +46,15 @@ PROFILES = {
 # after the cap-diagnostic / WFC r5 / XIO-leaf / payload33 changes; same LAT lines: write P+11+n, commit P+12+n, read
 # raw Q+6, return Q+14; 23/23 runs incl. 8 fault witnesses and 6 mutants). The 0200 receipt (8849603a6) stays as
 # historical evidence.
-A2F_RECEIPT = 'results/rtl/s81_vm_a2f_parent_bc297977c/record.json'
-A2F_RECEIPT_SHA256 = '95efc5049bb8c3f4e261c641e43b01a030fa5a9f255b3953af308ae54674b301'
+A2F_RECEIPT = 'results/rtl/s81_vm_a2f_parent_419d72270/record.json'
+A2F_RECEIPT_SHA256 = '50a35a811ab8d49bb5e89df3ed97d07d8df6951f1d5691077565fa34755bdcef'
 PROFILES['s81_vm_a2f_hop1_r4_c2_w1'] = dict(
     rtl_tuple={'READ_PIPE': 4, 'CAP_PIPE': 2, 'WSCATTER_PIPE': 1, 'HOP1': 1},
     read_raw=6, read_return=14, write_raw=11, write_return=12, max_lane=2,
     receipts=[A2F_RECEIPT], embedded_manifest='source_sha256')
 
+# 2026-10-16 ~08:30 S-FUNC: both profiles re-measured on main 419d72270 (XIO return r3, A2-F u_xsw x34_sw2): legacy
+# master gate PASS both pipes, A2-F parent gate 30/30 PASS, identical LAT; bc297977c receipts kept as historical.
 # 2026-10-16 ~07:00 S-FUNC: re-measured again on bc297977c (XIO leaves 2222002d4/643419d7d, wfc_ctl r2-r5, capture
 # diagnostic split, parent/tb witness paths): full master gate PASS both WSCATTER_PIPE, same markers/calendar; the
 # 20261016 (89c48ea9d) receipt is kept as historical evidence.
@@ -61,8 +63,8 @@ PROFILES['s81_vm_a2f_hop1_r4_c2_w1'] = dict(
 # These measurements are immutable evidence, rather than caller-provided
 # claims about the current checkout. A changed measurement needs a reviewed
 # new profile; evidence_for() cannot create a new measurement by rehashing RTL.
-MEASURED_MANIFEST = 'results/rtl/s81_vm_master_current_scatter_bc297977c/source_manifest.json'
-MEASURED_ARTIFACT_SHA256 = {'results/rtl/s81_vm_master_current_scatter_bc297977c/source_manifest.json': '8e307608e750bacac8b4d1f7fcff346c2b6d3f4dbc1e8ef223c0c7ac74a4b1ee', 'results/rtl/s81_vm_raw_read_calendar_20261015/record.json': 'aa3e5047b8261c0a0b87142f19fbc5634029fab94ad60ddd7b0b131c747c7b51', 'results/rtl/s81_vm_scatter_pipe1_raw_20261015/record.json': '6f4e4b93032c35ab6f9d9a34de018bd5acd8bbbb8531d979ba3ed3e11a66f057', 'results/rtl/s81_vm_master_current_scatter_bc297977c/record.json': 'bd0b6020dfcd47bf0b2fc2ec352a1f66b7ff3cb700aff07236cc076c9f31cf67'}
+MEASURED_MANIFEST = 'results/rtl/s81_vm_master_current_scatter_419d72270/source_manifest.json'
+MEASURED_ARTIFACT_SHA256 = {'results/rtl/s81_vm_master_current_scatter_419d72270/source_manifest.json': 'a0e89a55da203e3d22077b43467f90191f13ae6a8e22a7fdec1ab464c57f7fca', 'results/rtl/s81_vm_raw_read_calendar_20261015/record.json': 'aa3e5047b8261c0a0b87142f19fbc5634029fab94ad60ddd7b0b131c747c7b51', 'results/rtl/s81_vm_scatter_pipe1_raw_20261015/record.json': '6f4e4b93032c35ab6f9d9a34de018bd5acd8bbbb8531d979ba3ed3e11a66f057', 'results/rtl/s81_vm_master_current_scatter_419d72270/record.json': '793b8099b9b22c35108e071cdbbf832309cdbd50cd440e7f03855b3cee15f7c6'}
 # The profile starts at read pins / core write-source pins. The serial CDC
 # adapter's reset implementation lies outside that boundary; its own fixed
 # phase, startup and physical proof remain separate. The testbench is evidence

@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_s81_cfg7_seq_bfp",
+ "enable": false,
+ "reason": "the RTL registers every pin itself (ot_s81_cfg7_seq_bfp PINREG 1: loader pin flops for lc/q0..q6[47:0], spare q*[71:48] pin flops, a/ce/cfg/go_e from loader pin flops, st re-registered, f_prog from u_prog flops; exact gate tools/s81/cfg7_bfp_bench.sh pr); a recipe-3 wrapper would add 2 more edges per boundary"
+}

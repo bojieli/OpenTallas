@@ -20,7 +20,8 @@ class CommandPhaseTest(unittest.TestCase):
         self.assertEqual(command_issue_phase(clock,self.root),(4,2))
         job=self.binding['jobs']['su']
         job.update(command_clock_abi=clock, phase_period_stream=4,start_phase_stream=2)
-        # MIX4 native pin->pin 810 at issue656 completes1467; next HCX row1470.
+        # MIX4 native pin->pin 810 at issue656 completes1467; next HCX row1470 (production dsfd_engram_mix4_c; the banded
+        # cluster dsfd_engram_mix4_banded measures 811 = +1 chunk8->sum stage, and replaces it with the flat MIX4 parent).
         self.binding['jobs']['field']['duration_cycles']=810
         self.program['ops'][0]['ext']=656
         self.program['ops'][1]['ext']=1467

@@ -299,7 +299,7 @@ module tb_static_paced_v_landing_full128;
   end
   qkd_static_kv_landing_physical_grp #(.STACK(S),.GROUP(G))u_landing(
    .ck(core[0]),.ck_pc({4{core[0]}}),.ck_req_rly({4{core[0]}}),.ck_rsp_rly({4{core[0]}}),.rst_n(reset_n[0]),
-   .arm(arm),.epoch(16'd7),.layer(6'd3),.expected_put(pp),.expected_sector(eps),.actual_valid(vv),.actual_sector(obs),
+   .arm(arm),.epoch(16'd7),.layer(6'd3),.ctx_t(14'd8192),.expected_put(pp),.expected_sector(eps),.actual_valid(vv),.actual_sector(obs),
    .actual_epoch(epoch),.actual_layer(layer),.actual_data(data),.req_valid(rq[n]),.req_t(rt[n]),.req_v(rv[n]),
    .req_epoch(16'd7 ^ ((mode==9&&n==0)?16'd1:16'd0)),.req_layer(6'd3),.vreq_valid(1'b0),.vreq_t(14'd0),
    .rsp_valid(ov[n]),.rsp_data(od[n]),.rsp_t(ot[n]),.rsp_v(kind[n]),.rsp_epoch(oe[n]),.rsp_layer(ol[n]),.fault(fault[n]));

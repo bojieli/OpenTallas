@@ -69,14 +69,19 @@ def verdict_ok(reason: str):
 _LAST = None
 
 
+# S-DIE 0600 10-16: re-exports of closed views from the closed archive (no re-route, e.g. dsfd_stnh_566x1 main 57fe5b94b)
+# live under physical/s81_die_views/views; the same gates apply (job state, export, lint, bench, current)
+VIEW_ABSTRACT_GLOBS = ("physical/ref_tile/*/views/*/abstract.json", "physical/s81_die_views/views/*/abstract.json")
+
+
 def last_commits(paths):
     """{path: commit sha} of the last commit that wrote each view file (one git log over physical/ref_tile views)"""
     global _LAST
     if _LAST is None:
         _LAST = {}
         out = subprocess.run(["git", "-C", str(ROOT), "log", "--format=C %H", "--name-only", "--",
-                              "physical/ref_tile/*/views/*/abstract.json", "physical/ref_tile/*/views/*/*.lef",
-                              "physical/ref_tile/*/views/*/*.lib"], capture_output=True, text=True, check=True).stdout
+                              *[pat_.replace("abstract.json", f_) for pat_ in VIEW_ABSTRACT_GLOBS
+                                for f_ in ("abstract.json", "*.lef", "*.lib")]], capture_output=True, text=True, check=True).stdout
         cur = None
         for ln in out.split("\n"):
             if ln.startswith("C "):
@@ -155,7 +160,7 @@ def main():
         from concurrent.futures import ProcessPoolExecutor
         last_commits([])
         todo = []
-        for ab in sorted(glob.glob(str(ROOT / "physical/ref_tile/*/views/*/abstract.json"))):
+        for ab in sorted(g_ for pat_ in VIEW_ABSTRACT_GLOBS for g_ in glob.glob(str(ROOT / pat_))):
             d_, m_ = Path(ab).parent, Path(ab).parent.name
             if not S81.match(m_) or m_ in a.exclude_master:
                 continue
@@ -168,7 +173,7 @@ def main():
         with ProcessPoolExecutor(max_workers=28) as ex:
             for (m_, d_, _r), res in zip(todo, ex.map(_ps_job, todo)):
                 ps_cache[str(d_)] = res
-    for ab in sorted(glob.glob(str(ROOT / "physical/ref_tile/*/views/*/abstract.json"))):
+    for ab in sorted(g_ for pat_ in VIEW_ABSTRACT_GLOBS for g_ in glob.glob(str(ROOT / pat_))):
         ab = Path(ab)
         d = ab.parent
         master = d.name
