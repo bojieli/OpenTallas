@@ -80,123 +80,11 @@
    "rtl/dsrom_sys/s81_ph/vm",
    "physical/s81_vm_ctl_native_1015",
    "tools/s81_wfc_hop1",
-   "tools/s81_wfc_valid"
+   "tools/s81_wfc_valid",
+   "tools/s81_wfc_return256"
   ],
   "purpose": "Structural256bit WFC return data slice after r6 CTS native launch221.409ps failure. Two identical masters plus reused native diagnostic leaf; unchanged normal pipeline stages, +2diagnostic edges only. Standalone candidate not parent adoption.",
   "benches": [
-   {
-    "name": "pipeline_epoch",
-    "cmd": "bash tools/s81_wfc_hop1/gate.sh {RUN}/pipeline",
-    "expect": "pass",
-    "pass_regex": "WFC_HOP1_PIPELINE_GATE PASS",
-    "threads": 1,
-    "peak_ram_gb": 2,
-    "needs": [
-     "iverilog"
-    ]
-   },
-   {
-    "name": "ot_vm_wfc_ctl_mut_lane",
-    "cmd": "bash tools/s81_wfc_hop1/gate.sh {RUN}/OT_VM_WFC_CTL_MUT_LANE OT_VM_WFC_CTL_MUT_LANE",
-    "expect": "fail",
-    "fail_regex": "FATAL:",
-    "threads": 1,
-    "peak_ram_gb": 2,
-    "needs": [
-     "iverilog"
-    ]
-   },
-   {
-    "name": "ot_vm_wfc_ctl_mut_fault",
-    "cmd": "bash tools/s81_wfc_hop1/gate.sh {RUN}/OT_VM_WFC_CTL_MUT_FAULT OT_VM_WFC_CTL_MUT_FAULT",
-    "expect": "fail",
-    "fail_regex": "FATAL:",
-    "threads": 1,
-    "peak_ram_gb": 2,
-    "needs": [
-     "iverilog"
-    ]
-   },
-   {
-    "name": "ot_vm_wfc_ctl_mut_capture",
-    "cmd": "bash tools/s81_wfc_hop1/gate.sh {RUN}/OT_VM_WFC_CTL_MUT_CAPTURE OT_VM_WFC_CTL_MUT_CAPTURE",
-    "expect": "fail",
-    "fail_regex": "FATAL:",
-    "threads": 1,
-    "peak_ram_gb": 2,
-    "needs": [
-     "iverilog"
-    ]
-   },
-   {
-    "name": "ot_vm_wfc_ctl_mut_cdc",
-    "cmd": "bash tools/s81_wfc_hop1/gate.sh {RUN}/OT_VM_WFC_CTL_MUT_CDC OT_VM_WFC_CTL_MUT_CDC",
-    "expect": "fail",
-    "fail_regex": "FATAL:",
-    "threads": 1,
-    "peak_ram_gb": 2,
-    "needs": [
-     "iverilog"
-    ]
-   },
-   {
-    "name": "ot_vm_wfc_ctl_mut_epoch",
-    "cmd": "bash tools/s81_wfc_hop1/gate.sh {RUN}/OT_VM_WFC_CTL_MUT_EPOCH OT_VM_WFC_CTL_MUT_EPOCH",
-    "expect": "fail",
-    "fail_regex": "FATAL:",
-    "threads": 1,
-    "peak_ram_gb": 2,
-    "needs": [
-     "iverilog"
-    ]
-   },
-   {
-    "name": "valid_gold",
-    "cmd": "bash tools/s81_wfc_valid/gate.sh {RUN}/valid_gold gold",
-    "expect": "pass",
-    "pass_regex": "WFC_VALID_EQUIVALENCE PASS",
-    "threads": 1,
-    "peak_ram_gb": 2,
-    "needs": [
-     "iverilog"
-    ]
-   },
-   {
-    "name": "valid_drop_read",
-    "cmd": "bash tools/s81_wfc_valid/gate.sh {RUN}/valid_drop_read drop_read",
-    "expect": "fail",
-    "fail_regex": "FATAL:",
-    "threads": 1,
-    "peak_ram_gb": 2,
-    "needs": [
-     "iverilog"
-    ]
-   },
-   {
-    "name": "valid_drop_write",
-    "cmd": "bash tools/s81_wfc_valid/gate.sh {RUN}/valid_drop_write drop_write",
-    "expect": "fail",
-    "fail_regex": "FATAL:",
-    "threads": 1,
-    "peak_ram_gb": 2,
-    "needs": [
-     "iverilog"
-    ]
-   },
-   {
-    "name": "valid_idle_request",
-    "cmd": "bash tools/s81_wfc_valid/gate.sh {RUN}/valid_idle_request idle_request",
-    "expect": "fail",
-    "fail_regex": "FATAL:",
-    "threads": 1,
-    "peak_ram_gb": 2,
-    "needs": [
-     "iverilog"
-    ]
-   }
-  ],
-  "cycles_added": 0,
-  "bench": [
    {
     "name": "return256_gold",
     "cmd": "bash tools/s81_wfc_return256/gate.sh {RUN}/return256_gold",
@@ -253,6 +141,7 @@
     ]
    }
   ],
+  "cycles_added": 0,
   "peak_ram_gb": 12,
   "structural_change": "Split full2048input/1026output/7196FF return root into two1024input/514output256bit lane slices, each own local root; repeated tq clear fanout halves and longest corner shrinks184->129.6um. Same exact data stages; actual independent faultcopies observed through existing native diagnostic master in wrapper (+2 diagnostic edges). Two64.8x129.6 reservations equal old86.4x194.4 data area; plus21.6square diagnostic=+466.56um2/+2roots. Oldr6 measured CTS launch221.409/3pins, capture163.278/sp32.8; no r6 route."
  },

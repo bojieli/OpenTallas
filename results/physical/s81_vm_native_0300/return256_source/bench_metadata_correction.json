@@ -1,0 +1,18 @@
+{
+  "reason": "Generator consumes plural job.benches; corrected actual slice gold+four observed mutants and shipped new tools/s81_wfc_return256 path before submission.",
+  "previous_gate": "12GB admission wait canceled before compute; ot-run confirmed NOT RUN. Source/pins unchanged; no route or CTS result existed.",
+  "unchanged": [
+    "RTL source",
+    "outline",
+    "pin IO Tcl",
+    "normal cycle count"
+  ],
+  "actual_job_benches": [
+    "lint",
+    "return256_gold",
+    "return256_high",
+    "return256_tail",
+    "return256_fault_hi",
+    "return256_fault_lo"
+  ]
+}

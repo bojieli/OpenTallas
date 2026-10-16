@@ -14,7 +14,8 @@
    "rtl/dsrom_sys/s81_ph/vm",
    "physical/s81_vm_ctl_native_1015",
    "tools/s81_wfc_hop1",
-   "tools/s81_wfc_valid"
+   "tools/s81_wfc_valid",
+   "tools/s81_wfc_return256"
   ]
  },
  "stages": {
@@ -30,10 +31,10 @@
     ]
    },
    {
-    "name": "pipeline_epoch",
-    "cmd": "bash tools/s81_wfc_hop1/gate.sh {RUN}/pipeline",
+    "name": "return256_gold",
+    "cmd": "bash tools/s81_wfc_return256/gate.sh {RUN}/return256_gold",
     "expect": "pass",
-    "pass_regex": "WFC_HOP1_PIPELINE_GATE PASS",
+    "pass_regex": "RETURN256 PASS",
     "threads": 1,
     "peak_ram_gb": 2,
     "needs": [
@@ -41,8 +42,8 @@
     ]
    },
    {
-    "name": "ot_vm_wfc_ctl_mut_lane",
-    "cmd": "bash tools/s81_wfc_hop1/gate.sh {RUN}/OT_VM_WFC_CTL_MUT_LANE OT_VM_WFC_CTL_MUT_LANE",
+    "name": "return256_high",
+    "cmd": "SEEDS=1 bash tools/s81_wfc_return256/gate.sh {RUN}/return256_high S81_RETURN256_MUT_HIGH",
     "expect": "fail",
     "fail_regex": "FATAL:",
     "threads": 1,
@@ -52,8 +53,8 @@
     ]
    },
    {
-    "name": "ot_vm_wfc_ctl_mut_fault",
-    "cmd": "bash tools/s81_wfc_hop1/gate.sh {RUN}/OT_VM_WFC_CTL_MUT_FAULT OT_VM_WFC_CTL_MUT_FAULT",
+    "name": "return256_tail",
+    "cmd": "SEEDS=1 bash tools/s81_wfc_return256/gate.sh {RUN}/return256_tail S81_RETURN256_MUT_TAIL",
     "expect": "fail",
     "fail_regex": "FATAL:",
     "threads": 1,
@@ -63,8 +64,8 @@
     ]
    },
    {
-    "name": "ot_vm_wfc_ctl_mut_capture",
-    "cmd": "bash tools/s81_wfc_hop1/gate.sh {RUN}/OT_VM_WFC_CTL_MUT_CAPTURE OT_VM_WFC_CTL_MUT_CAPTURE",
+    "name": "return256_fault_hi",
+    "cmd": "SEEDS=1 bash tools/s81_wfc_return256/gate.sh {RUN}/return256_fault_hi S81_RETURN256_MUT_FAULT_HI",
     "expect": "fail",
     "fail_regex": "FATAL:",
     "threads": 1,
@@ -74,63 +75,8 @@
     ]
    },
    {
-    "name": "ot_vm_wfc_ctl_mut_cdc",
-    "cmd": "bash tools/s81_wfc_hop1/gate.sh {RUN}/OT_VM_WFC_CTL_MUT_CDC OT_VM_WFC_CTL_MUT_CDC",
-    "expect": "fail",
-    "fail_regex": "FATAL:",
-    "threads": 1,
-    "peak_ram_gb": 2,
-    "needs": [
-     "iverilog"
-    ]
-   },
-   {
-    "name": "ot_vm_wfc_ctl_mut_epoch",
-    "cmd": "bash tools/s81_wfc_hop1/gate.sh {RUN}/OT_VM_WFC_CTL_MUT_EPOCH OT_VM_WFC_CTL_MUT_EPOCH",
-    "expect": "fail",
-    "fail_regex": "FATAL:",
-    "threads": 1,
-    "peak_ram_gb": 2,
-    "needs": [
-     "iverilog"
-    ]
-   },
-   {
-    "name": "valid_gold",
-    "cmd": "bash tools/s81_wfc_valid/gate.sh {RUN}/valid_gold gold",
-    "expect": "pass",
-    "pass_regex": "WFC_VALID_EQUIVALENCE PASS",
-    "threads": 1,
-    "peak_ram_gb": 2,
-    "needs": [
-     "iverilog"
-    ]
-   },
-   {
-    "name": "valid_drop_read",
-    "cmd": "bash tools/s81_wfc_valid/gate.sh {RUN}/valid_drop_read drop_read",
-    "expect": "fail",
-    "fail_regex": "FATAL:",
-    "threads": 1,
-    "peak_ram_gb": 2,
-    "needs": [
-     "iverilog"
-    ]
-   },
-   {
-    "name": "valid_drop_write",
-    "cmd": "bash tools/s81_wfc_valid/gate.sh {RUN}/valid_drop_write drop_write",
-    "expect": "fail",
-    "fail_regex": "FATAL:",
-    "threads": 1,
-    "peak_ram_gb": 2,
-    "needs": [
-     "iverilog"
-    ]
-   },
-   {
-    "name": "valid_idle_request",
-    "cmd": "bash tools/s81_wfc_valid/gate.sh {RUN}/valid_idle_request idle_request",
+    "name": "return256_fault_lo",
+    "cmd": "SEEDS=1 bash tools/s81_wfc_return256/gate.sh {RUN}/return256_fault_lo S81_RETURN256_MUT_FAULT_LO",
     "expect": "fail",
     "fail_regex": "FATAL:",
     "threads": 1,
