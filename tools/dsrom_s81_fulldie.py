@@ -7662,7 +7662,13 @@ def _vmc_reroute(m, path, ends, name=''):
     """vmc: keep a caller's polyline when it crosses no macro (its end blocks excepted), else route its two ends around
     every macro, leaving / entering along the original first / last leg directions"""
     from s81 import hub_router as HR_
-    boxes = _vmc_boxes(m)
+    # Canonical FIELD roads already carry their own station/track construction.
+    # Their legal upper-metal wires may pass over leaf bodies; treating every
+    # leaf as a new vmc obstacle sends FIELD returns around entire ROM columns.
+    # Normalize only crossings of the relocated hub and its reserved homes.
+    # Explicit hub routes in _vmc_route still use the complete obstacle set.
+    hub_names = set(HUB_LAYOUT.get('blocks', {}))
+    boxes = [b for b in _vmc_boxes(m) if b[0] in hub_names or b[0].startswith('rsv_')]
     if len(path) < 2 or not HR_.path_hits(path, boxes, skip=ends):
         return path
     def dir_(p_, q_):
