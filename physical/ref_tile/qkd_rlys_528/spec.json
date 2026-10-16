@@ -53,7 +53,7 @@
  "job": {
   "owner": "Claude:Q-KVSYS-DIE",
   "branch": "claude/qkvsys-rly-std",
-  "tag": "v1",
+  "tag": "v2",
   "purpose": "Qwen KV/system die relay STANDARD qkd_rlys_528: one register stage of width class 528 b (a W face in, b E face out, ck S), 21.6 x 82.08 um, M5 cap, W/E pins on M4 at 3 tracks (<= 6.79 pins/um, rule <= 8 pins/um/layer, VIS-ROM QKV-04), no reset (flush rule), 1 cycle/stage as the die plan; replaces the 21 generated qkd_rly_<W> masters as replicas (tools/qwen_kv_die/kv_rly_std.py, OT_KV_RLY_STD=1)",
   "benches": [
    {
@@ -88,5 +88,16 @@
  "pin_reg_split": true,
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "orfs_vars": {
+  "OT_OFLOP_PORT_RE": "^b"
+ },
+ "reroute_reason": {
+  "kind": "pin_register",
+  "source": "results/arch/qwen_kv_rly_std_1016/native_audit.json",
+  "cell": "qkd_rlys_528",
+  "launch_ps": 256.1,
+  "capture_ps": 126.7,
+  "fix": "io_flop_at_pins anchors each bit flop at its OUTPUT pin only (OT_OFLOP_PORT_RE ^b): in v1 the single relay flop of bits 192-527 was anchored at the W input face, so b paid 21.6 um of wire (launch 233-256 ps vs 183 ps for bits 0-191); capture had 63 ps of budget left (126.7 <= 190)"
  }
 }
