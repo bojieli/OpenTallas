@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "dsfd_vm_wfc_fault_bridge",
+ "enable": false,
+ "reason": "Explicit same-domain sticky capture registers on every input and registered summary outputs. Related-clock paths retained through negedge lockup and two rising destination stages; no falsepaths/asyncgroups."
+}

@@ -1,0 +1,2 @@
+estimate_parasitics -placement
+source /src/physical/ref_tile/dsfd_vm_static_wfc_ctl_native_1016_r6/clock_entry.sdc
