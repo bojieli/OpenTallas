@@ -1,0 +1,604 @@
+{
+ "schema": "opentallas.hc_bank_cluster_clock_entries.v1",
+ "date": "2026-10-16",
+ "owner": "H-NETLIST/H-ELEM (HC engine)",
+ "status": "PLAN, parked until H-DIE grants the hc_eng region (slot_request 560a7a271)",
+ "cluster": "ot_hbm_hc_bank_static (x8 in hc_eng), column layout per leaf pair [leaf 2p][wmem 2p][xmem p][leaf 2p+1][wmem 2p+1], sum W->E",
+ "entries_total": 97,
+ "by_kind": {
+  "hard_child": 32,
+  "macro": 48,
+  "std_region": 17
+ },
+ "rtl_changes_needed": [
+  "bank: clk -> entry ports (clk_lane[31:0], clk_wmem[31:0], clk_xmem[15:0], clk_shell[15:0], clk_ctl); same logical edge (die distributes as related entries, hybrid clock_entries contract)",
+  "bank: stage shell (ot_hdc_v41x_hcp_stage g_lg branch) re-instantiated per pair so lane enables / capture regs sit on clk_shell[p]; descriptor + w/x address replicated per pair (+0 edges: replicas of the same flops)",
+  "bank: rst_n -> ot_rst_relay REGIONS 16 (one per pair) -> lane leaf rst_n (leaf view native rst_n capture 209.0 > 190 at die level; inside the cluster it is a 1-flop-local relay)",
+  "hc_eng: 8 banks x 97 entries = 776 bank entries + core/tail/table entries -> the die-facing hc_eng master exposes them as entry ports (die ABI), or hc_eng hardens as a cluster of 8 bank clusters with its own entry tree (H-DIE choice)"
+ ],
+ "benches": "HC engine P1/G22 bit-exact (results/rtl/hbm_hc_eng_static_1016) + MUT1/MUT3 must stay rejected after the bank restructure",
+ "entries": [
+  {
+   "port": "clk_lane[0]",
+   "sinks": "lane leaf u_st.g_lg.g_grp[0].u_lg (ot_hdc_v41x_hcp_lanes, own CTS root, ~13k sinks inside, insertion from its view)",
+   "region": "pair0",
+   "kind": "hard_child"
+  },
+  {
+   "port": "clk_wmem[0]",
+   "sinks": "weight macro g_w[0].u_m clk pin (raw Liberty clock pin)",
+   "region": "pair0",
+   "kind": "macro"
+  },
+  {
+   "port": "clk_lane[1]",
+   "sinks": "lane leaf u_st.g_lg.g_grp[1].u_lg (ot_hdc_v41x_hcp_lanes, own CTS root, ~13k sinks inside, insertion from its view)",
+   "region": "pair0",
+   "kind": "hard_child"
+  },
+  {
+   "port": "clk_wmem[1]",
+   "sinks": "weight macro g_w[1].u_m clk pin (raw Liberty clock pin)",
+   "region": "pair0",
+   "kind": "macro"
+  },
+  {
+   "port": "clk_xmem[0]",
+   "sinks": "x macro g_x[0].u_m clk pin",
+   "region": "pair0",
+   "kind": "macro"
+  },
+  {
+   "port": "clk_shell[0]",
+   "sinks": "pair-0 shell flops: read capture wdat/xdat for groups 0,1 (768 b) + write pin regs slice (512 b wd + we) + lane enables lvs/sss (16 b) + relayed rst flop",
+   "region": "pair0",
+   "kind": "std_region"
+  },
+  {
+   "port": "clk_lane[2]",
+   "sinks": "lane leaf u_st.g_lg.g_grp[2].u_lg (ot_hdc_v41x_hcp_lanes, own CTS root, ~13k sinks inside, insertion from its view)",
+   "region": "pair1",
+   "kind": "hard_child"
+  },
+  {
+   "port": "clk_wmem[2]",
+   "sinks": "weight macro g_w[2].u_m clk pin (raw Liberty clock pin)",
+   "region": "pair1",
+   "kind": "macro"
+  },
+  {
+   "port": "clk_lane[3]",
+   "sinks": "lane leaf u_st.g_lg.g_grp[3].u_lg (ot_hdc_v41x_hcp_lanes, own CTS root, ~13k sinks inside, insertion from its view)",
+   "region": "pair1",
+   "kind": "hard_child"
+  },
+  {
+   "port": "clk_wmem[3]",
+   "sinks": "weight macro g_w[3].u_m clk pin (raw Liberty clock pin)",
+   "region": "pair1",
+   "kind": "macro"
+  },
+  {
+   "port": "clk_xmem[1]",
+   "sinks": "x macro g_x[1].u_m clk pin",
+   "region": "pair1",
+   "kind": "macro"
+  },
+  {
+   "port": "clk_shell[1]",
+   "sinks": "pair-1 shell flops: read capture wdat/xdat for groups 2,3 (768 b) + write pin regs slice (512 b wd + we) + lane enables lvs/sss (16 b) + relayed rst flop",
+   "region": "pair1",
+   "kind": "std_region"
+  },
+  {
+   "port": "clk_lane[4]",
+   "sinks": "lane leaf u_st.g_lg.g_grp[4].u_lg (ot_hdc_v41x_hcp_lanes, own CTS root, ~13k sinks inside, insertion from its view)",
+   "region": "pair2",
+   "kind": "hard_child"
+  },
+  {
+   "port": "clk_wmem[4]",
+   "sinks": "weight macro g_w[4].u_m clk pin (raw Liberty clock pin)",
+   "region": "pair2",
+   "kind": "macro"
+  },
+  {
+   "port": "clk_lane[5]",
+   "sinks": "lane leaf u_st.g_lg.g_grp[5].u_lg (ot_hdc_v41x_hcp_lanes, own CTS root, ~13k sinks inside, insertion from its view)",
+   "region": "pair2",
+   "kind": "hard_child"
+  },
+  {
+   "port": "clk_wmem[5]",
+   "sinks": "weight macro g_w[5].u_m clk pin (raw Liberty clock pin)",
+   "region": "pair2",
+   "kind": "macro"
+  },
+  {
+   "port": "clk_xmem[2]",
+   "sinks": "x macro g_x[2].u_m clk pin",
+   "region": "pair2",
+   "kind": "macro"
+  },
+  {
+   "port": "clk_shell[2]",
+   "sinks": "pair-2 shell flops: read capture wdat/xdat for groups 4,5 (768 b) + write pin regs slice (512 b wd + we) + lane enables lvs/sss (16 b) + relayed rst flop",
+   "region": "pair2",
+   "kind": "std_region"
+  },
+  {
+   "port": "clk_lane[6]",
+   "sinks": "lane leaf u_st.g_lg.g_grp[6].u_lg (ot_hdc_v41x_hcp_lanes, own CTS root, ~13k sinks inside, insertion from its view)",
+   "region": "pair3",
+   "kind": "hard_child"
+  },
+  {
+   "port": "clk_wmem[6]",
+   "sinks": "weight macro g_w[6].u_m clk pin (raw Liberty clock pin)",
+   "region": "pair3",
+   "kind": "macro"
+  },
+  {
+   "port": "clk_lane[7]",
+   "sinks": "lane leaf u_st.g_lg.g_grp[7].u_lg (ot_hdc_v41x_hcp_lanes, own CTS root, ~13k sinks inside, insertion from its view)",
+   "region": "pair3",
+   "kind": "hard_child"
+  },
+  {
+   "port": "clk_wmem[7]",
+   "sinks": "weight macro g_w[7].u_m clk pin (raw Liberty clock pin)",
+   "region": "pair3",
+   "kind": "macro"
+  },
+  {
+   "port": "clk_xmem[3]",
+   "sinks": "x macro g_x[3].u_m clk pin",
+   "region": "pair3",
+   "kind": "macro"
+  },
+  {
+   "port": "clk_shell[3]",
+   "sinks": "pair-3 shell flops: read capture wdat/xdat for groups 6,7 (768 b) + write pin regs slice (512 b wd + we) + lane enables lvs/sss (16 b) + relayed rst flop",
+   "region": "pair3",
+   "kind": "std_region"
+  },
+  {
+   "port": "clk_lane[8]",
+   "sinks": "lane leaf u_st.g_lg.g_grp[8].u_lg (ot_hdc_v41x_hcp_lanes, own CTS root, ~13k sinks inside, insertion from its view)",
+   "region": "pair4",
+   "kind": "hard_child"
+  },
+  {
+   "port": "clk_wmem[8]",
+   "sinks": "weight macro g_w[8].u_m clk pin (raw Liberty clock pin)",
+   "region": "pair4",
+   "kind": "macro"
+  },
+  {
+   "port": "clk_lane[9]",
+   "sinks": "lane leaf u_st.g_lg.g_grp[9].u_lg (ot_hdc_v41x_hcp_lanes, own CTS root, ~13k sinks inside, insertion from its view)",
+   "region": "pair4",
+   "kind": "hard_child"
+  },
+  {
+   "port": "clk_wmem[9]",
+   "sinks": "weight macro g_w[9].u_m clk pin (raw Liberty clock pin)",
+   "region": "pair4",
+   "kind": "macro"
+  },
+  {
+   "port": "clk_xmem[4]",
+   "sinks": "x macro g_x[4].u_m clk pin",
+   "region": "pair4",
+   "kind": "macro"
+  },
+  {
+   "port": "clk_shell[4]",
+   "sinks": "pair-4 shell flops: read capture wdat/xdat for groups 8,9 (768 b) + write pin regs slice (512 b wd + we) + lane enables lvs/sss (16 b) + relayed rst flop",
+   "region": "pair4",
+   "kind": "std_region"
+  },
+  {
+   "port": "clk_lane[10]",
+   "sinks": "lane leaf u_st.g_lg.g_grp[10].u_lg (ot_hdc_v41x_hcp_lanes, own CTS root, ~13k sinks inside, insertion from its view)",
+   "region": "pair5",
+   "kind": "hard_child"
+  },
+  {
+   "port": "clk_wmem[10]",
+   "sinks": "weight macro g_w[10].u_m clk pin (raw Liberty clock pin)",
+   "region": "pair5",
+   "kind": "macro"
+  },
+  {
+   "port": "clk_lane[11]",
+   "sinks": "lane leaf u_st.g_lg.g_grp[11].u_lg (ot_hdc_v41x_hcp_lanes, own CTS root, ~13k sinks inside, insertion from its view)",
+   "region": "pair5",
+   "kind": "hard_child"
+  },
+  {
+   "port": "clk_wmem[11]",
+   "sinks": "weight macro g_w[11].u_m clk pin (raw Liberty clock pin)",
+   "region": "pair5",
+   "kind": "macro"
+  },
+  {
+   "port": "clk_xmem[5]",
+   "sinks": "x macro g_x[5].u_m clk pin",
+   "region": "pair5",
+   "kind": "macro"
+  },
+  {
+   "port": "clk_shell[5]",
+   "sinks": "pair-5 shell flops: read capture wdat/xdat for groups 10,11 (768 b) + write pin regs slice (512 b wd + we) + lane enables lvs/sss (16 b) + relayed rst flop",
+   "region": "pair5",
+   "kind": "std_region"
+  },
+  {
+   "port": "clk_lane[12]",
+   "sinks": "lane leaf u_st.g_lg.g_grp[12].u_lg (ot_hdc_v41x_hcp_lanes, own CTS root, ~13k sinks inside, insertion from its view)",
+   "region": "pair6",
+   "kind": "hard_child"
+  },
+  {
+   "port": "clk_wmem[12]",
+   "sinks": "weight macro g_w[12].u_m clk pin (raw Liberty clock pin)",
+   "region": "pair6",
+   "kind": "macro"
+  },
+  {
+   "port": "clk_lane[13]",
+   "sinks": "lane leaf u_st.g_lg.g_grp[13].u_lg (ot_hdc_v41x_hcp_lanes, own CTS root, ~13k sinks inside, insertion from its view)",
+   "region": "pair6",
+   "kind": "hard_child"
+  },
+  {
+   "port": "clk_wmem[13]",
+   "sinks": "weight macro g_w[13].u_m clk pin (raw Liberty clock pin)",
+   "region": "pair6",
+   "kind": "macro"
+  },
+  {
+   "port": "clk_xmem[6]",
+   "sinks": "x macro g_x[6].u_m clk pin",
+   "region": "pair6",
+   "kind": "macro"
+  },
+  {
+   "port": "clk_shell[6]",
+   "sinks": "pair-6 shell flops: read capture wdat/xdat for groups 12,13 (768 b) + write pin regs slice (512 b wd + we) + lane enables lvs/sss (16 b) + relayed rst flop",
+   "region": "pair6",
+   "kind": "std_region"
+  },
+  {
+   "port": "clk_lane[14]",
+   "sinks": "lane leaf u_st.g_lg.g_grp[14].u_lg (ot_hdc_v41x_hcp_lanes, own CTS root, ~13k sinks inside, insertion from its view)",
+   "region": "pair7",
+   "kind": "hard_child"
+  },
+  {
+   "port": "clk_wmem[14]",
+   "sinks": "weight macro g_w[14].u_m clk pin (raw Liberty clock pin)",
+   "region": "pair7",
+   "kind": "macro"
+  },
+  {
+   "port": "clk_lane[15]",
+   "sinks": "lane leaf u_st.g_lg.g_grp[15].u_lg (ot_hdc_v41x_hcp_lanes, own CTS root, ~13k sinks inside, insertion from its view)",
+   "region": "pair7",
+   "kind": "hard_child"
+  },
+  {
+   "port": "clk_wmem[15]",
+   "sinks": "weight macro g_w[15].u_m clk pin (raw Liberty clock pin)",
+   "region": "pair7",
+   "kind": "macro"
+  },
+  {
+   "port": "clk_xmem[7]",
+   "sinks": "x macro g_x[7].u_m clk pin",
+   "region": "pair7",
+   "kind": "macro"
+  },
+  {
+   "port": "clk_shell[7]",
+   "sinks": "pair-7 shell flops: read capture wdat/xdat for groups 14,15 (768 b) + write pin regs slice (512 b wd + we) + lane enables lvs/sss (16 b) + relayed rst flop",
+   "region": "pair7",
+   "kind": "std_region"
+  },
+  {
+   "port": "clk_lane[16]",
+   "sinks": "lane leaf u_st.g_lg.g_grp[16].u_lg (ot_hdc_v41x_hcp_lanes, own CTS root, ~13k sinks inside, insertion from its view)",
+   "region": "pair8",
+   "kind": "hard_child"
+  },
+  {
+   "port": "clk_wmem[16]",
+   "sinks": "weight macro g_w[16].u_m clk pin (raw Liberty clock pin)",
+   "region": "pair8",
+   "kind": "macro"
+  },
+  {
+   "port": "clk_lane[17]",
+   "sinks": "lane leaf u_st.g_lg.g_grp[17].u_lg (ot_hdc_v41x_hcp_lanes, own CTS root, ~13k sinks inside, insertion from its view)",
+   "region": "pair8",
+   "kind": "hard_child"
+  },
+  {
+   "port": "clk_wmem[17]",
+   "sinks": "weight macro g_w[17].u_m clk pin (raw Liberty clock pin)",
+   "region": "pair8",
+   "kind": "macro"
+  },
+  {
+   "port": "clk_xmem[8]",
+   "sinks": "x macro g_x[8].u_m clk pin",
+   "region": "pair8",
+   "kind": "macro"
+  },
+  {
+   "port": "clk_shell[8]",
+   "sinks": "pair-8 shell flops: read capture wdat/xdat for groups 16,17 (768 b) + write pin regs slice (512 b wd + we) + lane enables lvs/sss (16 b) + relayed rst flop",
+   "region": "pair8",
+   "kind": "std_region"
+  },
+  {
+   "port": "clk_lane[18]",
+   "sinks": "lane leaf u_st.g_lg.g_grp[18].u_lg (ot_hdc_v41x_hcp_lanes, own CTS root, ~13k sinks inside, insertion from its view)",
+   "region": "pair9",
+   "kind": "hard_child"
+  },
+  {
+   "port": "clk_wmem[18]",
+   "sinks": "weight macro g_w[18].u_m clk pin (raw Liberty clock pin)",
+   "region": "pair9",
+   "kind": "macro"
+  },
+  {
+   "port": "clk_lane[19]",
+   "sinks": "lane leaf u_st.g_lg.g_grp[19].u_lg (ot_hdc_v41x_hcp_lanes, own CTS root, ~13k sinks inside, insertion from its view)",
+   "region": "pair9",
+   "kind": "hard_child"
+  },
+  {
+   "port": "clk_wmem[19]",
+   "sinks": "weight macro g_w[19].u_m clk pin (raw Liberty clock pin)",
+   "region": "pair9",
+   "kind": "macro"
+  },
+  {
+   "port": "clk_xmem[9]",
+   "sinks": "x macro g_x[9].u_m clk pin",
+   "region": "pair9",
+   "kind": "macro"
+  },
+  {
+   "port": "clk_shell[9]",
+   "sinks": "pair-9 shell flops: read capture wdat/xdat for groups 18,19 (768 b) + write pin regs slice (512 b wd + we) + lane enables lvs/sss (16 b) + relayed rst flop",
+   "region": "pair9",
+   "kind": "std_region"
+  },
+  {
+   "port": "clk_lane[20]",
+   "sinks": "lane leaf u_st.g_lg.g_grp[20].u_lg (ot_hdc_v41x_hcp_lanes, own CTS root, ~13k sinks inside, insertion from its view)",
+   "region": "pair10",
+   "kind": "hard_child"
+  },
+  {
+   "port": "clk_wmem[20]",
+   "sinks": "weight macro g_w[20].u_m clk pin (raw Liberty clock pin)",
+   "region": "pair10",
+   "kind": "macro"
+  },
+  {
+   "port": "clk_lane[21]",
+   "sinks": "lane leaf u_st.g_lg.g_grp[21].u_lg (ot_hdc_v41x_hcp_lanes, own CTS root, ~13k sinks inside, insertion from its view)",
+   "region": "pair10",
+   "kind": "hard_child"
+  },
+  {
+   "port": "clk_wmem[21]",
+   "sinks": "weight macro g_w[21].u_m clk pin (raw Liberty clock pin)",
+   "region": "pair10",
+   "kind": "macro"
+  },
+  {
+   "port": "clk_xmem[10]",
+   "sinks": "x macro g_x[10].u_m clk pin",
+   "region": "pair10",
+   "kind": "macro"
+  },
+  {
+   "port": "clk_shell[10]",
+   "sinks": "pair-10 shell flops: read capture wdat/xdat for groups 20,21 (768 b) + write pin regs slice (512 b wd + we) + lane enables lvs/sss (16 b) + relayed rst flop",
+   "region": "pair10",
+   "kind": "std_region"
+  },
+  {
+   "port": "clk_lane[22]",
+   "sinks": "lane leaf u_st.g_lg.g_grp[22].u_lg (ot_hdc_v41x_hcp_lanes, own CTS root, ~13k sinks inside, insertion from its view)",
+   "region": "pair11",
+   "kind": "hard_child"
+  },
+  {
+   "port": "clk_wmem[22]",
+   "sinks": "weight macro g_w[22].u_m clk pin (raw Liberty clock pin)",
+   "region": "pair11",
+   "kind": "macro"
+  },
+  {
+   "port": "clk_lane[23]",
+   "sinks": "lane leaf u_st.g_lg.g_grp[23].u_lg (ot_hdc_v41x_hcp_lanes, own CTS root, ~13k sinks inside, insertion from its view)",
+   "region": "pair11",
+   "kind": "hard_child"
+  },
+  {
+   "port": "clk_wmem[23]",
+   "sinks": "weight macro g_w[23].u_m clk pin (raw Liberty clock pin)",
+   "region": "pair11",
+   "kind": "macro"
+  },
+  {
+   "port": "clk_xmem[11]",
+   "sinks": "x macro g_x[11].u_m clk pin",
+   "region": "pair11",
+   "kind": "macro"
+  },
+  {
+   "port": "clk_shell[11]",
+   "sinks": "pair-11 shell flops: read capture wdat/xdat for groups 22,23 (768 b) + write pin regs slice (512 b wd + we) + lane enables lvs/sss (16 b) + relayed rst flop",
+   "region": "pair11",
+   "kind": "std_region"
+  },
+  {
+   "port": "clk_lane[24]",
+   "sinks": "lane leaf u_st.g_lg.g_grp[24].u_lg (ot_hdc_v41x_hcp_lanes, own CTS root, ~13k sinks inside, insertion from its view)",
+   "region": "pair12",
+   "kind": "hard_child"
+  },
+  {
+   "port": "clk_wmem[24]",
+   "sinks": "weight macro g_w[24].u_m clk pin (raw Liberty clock pin)",
+   "region": "pair12",
+   "kind": "macro"
+  },
+  {
+   "port": "clk_lane[25]",
+   "sinks": "lane leaf u_st.g_lg.g_grp[25].u_lg (ot_hdc_v41x_hcp_lanes, own CTS root, ~13k sinks inside, insertion from its view)",
+   "region": "pair12",
+   "kind": "hard_child"
+  },
+  {
+   "port": "clk_wmem[25]",
+   "sinks": "weight macro g_w[25].u_m clk pin (raw Liberty clock pin)",
+   "region": "pair12",
+   "kind": "macro"
+  },
+  {
+   "port": "clk_xmem[12]",
+   "sinks": "x macro g_x[12].u_m clk pin",
+   "region": "pair12",
+   "kind": "macro"
+  },
+  {
+   "port": "clk_shell[12]",
+   "sinks": "pair-12 shell flops: read capture wdat/xdat for groups 24,25 (768 b) + write pin regs slice (512 b wd + we) + lane enables lvs/sss (16 b) + relayed rst flop",
+   "region": "pair12",
+   "kind": "std_region"
+  },
+  {
+   "port": "clk_lane[26]",
+   "sinks": "lane leaf u_st.g_lg.g_grp[26].u_lg (ot_hdc_v41x_hcp_lanes, own CTS root, ~13k sinks inside, insertion from its view)",
+   "region": "pair13",
+   "kind": "hard_child"
+  },
+  {
+   "port": "clk_wmem[26]",
+   "sinks": "weight macro g_w[26].u_m clk pin (raw Liberty clock pin)",
+   "region": "pair13",
+   "kind": "macro"
+  },
+  {
+   "port": "clk_lane[27]",
+   "sinks": "lane leaf u_st.g_lg.g_grp[27].u_lg (ot_hdc_v41x_hcp_lanes, own CTS root, ~13k sinks inside, insertion from its view)",
+   "region": "pair13",
+   "kind": "hard_child"
+  },
+  {
+   "port": "clk_wmem[27]",
+   "sinks": "weight macro g_w[27].u_m clk pin (raw Liberty clock pin)",
+   "region": "pair13",
+   "kind": "macro"
+  },
+  {
+   "port": "clk_xmem[13]",
+   "sinks": "x macro g_x[13].u_m clk pin",
+   "region": "pair13",
+   "kind": "macro"
+  },
+  {
+   "port": "clk_shell[13]",
+   "sinks": "pair-13 shell flops: read capture wdat/xdat for groups 26,27 (768 b) + write pin regs slice (512 b wd + we) + lane enables lvs/sss (16 b) + relayed rst flop",
+   "region": "pair13",
+   "kind": "std_region"
+  },
+  {
+   "port": "clk_lane[28]",
+   "sinks": "lane leaf u_st.g_lg.g_grp[28].u_lg (ot_hdc_v41x_hcp_lanes, own CTS root, ~13k sinks inside, insertion from its view)",
+   "region": "pair14",
+   "kind": "hard_child"
+  },
+  {
+   "port": "clk_wmem[28]",
+   "sinks": "weight macro g_w[28].u_m clk pin (raw Liberty clock pin)",
+   "region": "pair14",
+   "kind": "macro"
+  },
+  {
+   "port": "clk_lane[29]",
+   "sinks": "lane leaf u_st.g_lg.g_grp[29].u_lg (ot_hdc_v41x_hcp_lanes, own CTS root, ~13k sinks inside, insertion from its view)",
+   "region": "pair14",
+   "kind": "hard_child"
+  },
+  {
+   "port": "clk_wmem[29]",
+   "sinks": "weight macro g_w[29].u_m clk pin (raw Liberty clock pin)",
+   "region": "pair14",
+   "kind": "macro"
+  },
+  {
+   "port": "clk_xmem[14]",
+   "sinks": "x macro g_x[14].u_m clk pin",
+   "region": "pair14",
+   "kind": "macro"
+  },
+  {
+   "port": "clk_shell[14]",
+   "sinks": "pair-14 shell flops: read capture wdat/xdat for groups 28,29 (768 b) + write pin regs slice (512 b wd + we) + lane enables lvs/sss (16 b) + relayed rst flop",
+   "region": "pair14",
+   "kind": "std_region"
+  },
+  {
+   "port": "clk_lane[30]",
+   "sinks": "lane leaf u_st.g_lg.g_grp[30].u_lg (ot_hdc_v41x_hcp_lanes, own CTS root, ~13k sinks inside, insertion from its view)",
+   "region": "pair15",
+   "kind": "hard_child"
+  },
+  {
+   "port": "clk_wmem[30]",
+   "sinks": "weight macro g_w[30].u_m clk pin (raw Liberty clock pin)",
+   "region": "pair15",
+   "kind": "macro"
+  },
+  {
+   "port": "clk_lane[31]",
+   "sinks": "lane leaf u_st.g_lg.g_grp[31].u_lg (ot_hdc_v41x_hcp_lanes, own CTS root, ~13k sinks inside, insertion from its view)",
+   "region": "pair15",
+   "kind": "hard_child"
+  },
+  {
+   "port": "clk_wmem[31]",
+   "sinks": "weight macro g_w[31].u_m clk pin (raw Liberty clock pin)",
+   "region": "pair15",
+   "kind": "macro"
+  },
+  {
+   "port": "clk_xmem[15]",
+   "sinks": "x macro g_x[15].u_m clk pin",
+   "region": "pair15",
+   "kind": "macro"
+  },
+  {
+   "port": "clk_shell[15]",
+   "sinks": "pair-15 shell flops: read capture wdat/xdat for groups 30,31 (768 b) + write pin regs slice (512 b wd + we) + lane enables lvs/sss (16 b) + relayed rst flop",
+   "region": "pair15",
+   "kind": "std_region"
+  },
+  {
+   "port": "clk_ctl",
+   "sinks": "descriptor pipe cv/cd (NC 8 taps x 31 b), w/x address flops (fan-out 48 macros: replicated per pair in clk_shell), fault join fin_q/f_out, ot_rst_relay root (REGIONS 16)",
+   "region": "ctl",
+   "kind": "std_region"
+  }
+ ]
+}
