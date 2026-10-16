@@ -671,6 +671,10 @@ module ot_qfd_xhead #(
                                           // in one edge fails TT; +REQ_PIPE read edges, compiler-visible through DX)
     parameter integer DX   = 10 + LEAF_READ_PIN_PIPE + LEAF_BANK_PIPE + REQ_PIPE, // FILL_LEAD + 8 (lr register 1, leaf 5, answer pin register 1, launch 1)
     parameter integer FILL_LEAD = 2,     // the tap's two-entry attention-write queue (a queued beat can trail a go by 2)
+    parameter integer LOCAL_RST = 0,     // opt-in: rst_n captured by a 2-flop synchroniser at the pin + 1 regional
+                                         // stage (ot_rst_pipe); release +3 edges, cold init only, 0 normal edges
+    parameter integer ONWARD_REG = 0,    // opt-in: b_d leaves from its own pin registers (duplicate of f_q / ib_pin /
+                                         // g_pin on the same edge: 0 cycles), the internal copies feed only logic
     parameter integer MUT  = 0           // 3: the TDM sends each line to the wrong station (wrong line);
                                          // 4: reads the other epoch (stale buffer); 6: pooled line without its B half
 ) (
@@ -704,6 +708,14 @@ module ot_qfd_xhead #(
     input  wire [NH-1:0] lq_bad,
     output reg           fault
 );
+    wire rst_i;
+    generate if (LOCAL_RST != 0) begin : g_lrst
+        wire [0:0] rq;
+        ot_rst_pipe #(.REGIONS(1), .STAGES(1)) u_rst (.clk(ck), .rst_n_in(rst_n), .rst_n(rq));
+        assign rst_i = rq[0];
+    end else begin : g_prst
+        assign rst_i = rst_n;
+    end endgenerate
     localparam integer IBW  = 3 * NW + 13 * AW + 13;
     localparam integer BW   = AW - 6;
     localparam integer DESC = 2 + AW + 2 * XCW + 4 + NW + 1;
@@ -731,13 +743,21 @@ module ot_qfd_xhead #(
     reg              g_pin;
     reg  [IBW-1:0]   ib_pin;
     reg  [FW-1:0]    f_q;
-    always @(posedge ck or negedge rst_n)
-        if (!rst_n) g_pin <= 1'b0; else g_pin <= a_d[0];
+    always @(posedge ck or negedge rst_i)
+        if (!rst_i) g_pin <= 1'b0; else g_pin <= a_d[0];
     always @(posedge ck) begin ib_pin <= a_d[1 +: IBW]; f_q <= a_d[1 + IBW +: FW]; end
-    assign b_d = {f_q, ib_pin, g_pin};
+    generate if (ONWARD_REG != 0) begin : g_onward
+        (* keep = "true" *) reg [HW-1:1] b_q;
+        (* keep = "true" *) reg          b_g;
+        always @(posedge ck) b_q <= a_d[HW-1:1];
+        always @(posedge ck or negedge rst_i) if (!rst_i) b_g <= 1'b0; else b_g <= a_d[0];
+        assign b_d = {b_q, b_g};
+    end else begin : g_shared
+        assign b_d = {f_q, ib_pin, g_pin};
+    end endgenerate
     reg br_q, nr_q, sr_q, ar_q, fi_q;
-    always @(posedge ck or negedge rst_n)
-        if (!rst_n) begin br_q <= 1'b0; nr_q <= 1'b0; sr_q <= 1'b0; ar_q <= 1'b0; fi_q <= 1'b0; end
+    always @(posedge ck or negedge rst_i)
+        if (!rst_i) begin br_q <= 1'b0; nr_q <= 1'b0; sr_q <= 1'b0; ar_q <= 1'b0; fi_q <= 1'b0; end
         else begin br_q <= b_r; nr_q <= n_r; sr_q <= s_r; ar_q <= br_q & nr_q & sr_q; fi_q <= fault_i; end
     assign a_r = ar_q;
     reg [16*NR-1:0] tid_q;                         // strap register (a constant tie at the die)
@@ -748,8 +768,8 @@ module ot_qfd_xhead #(
     //      previous op's last edge faults), so hold registers (ib_q for the check, ib_c + one stage ib_c2 on the way
     //      out, DX - FILL_LEAD = 8 > 7) replace DX x IBW delay flops ----
     wire             g_q, g_dx;
-    ot_hdc_delay #(.W(1), .D(FILL_LEAD), .RESET(1)) u_fill_go (.clk(ck), .rst_n(rst_n), .d(g_pin), .q(g_q));
-    ot_hdc_delay #(.W(1), .D(DX - FILL_LEAD), .RESET(1)) u_gdx (.clk(ck), .rst_n(rst_n), .d(g_q), .q(g_dx));
+    ot_hdc_delay #(.W(1), .D(FILL_LEAD), .RESET(1)) u_fill_go (.clk(ck), .rst_n(rst_i), .d(g_pin), .q(g_q));
+    ot_hdc_delay #(.W(1), .D(DX - FILL_LEAD), .RESET(1)) u_gdx (.clk(ck), .rst_n(rst_i), .d(g_q), .q(g_dx));
     reg  [IBW-1:0]   ib_q, ib_c, ib_c2;            // ib of the go being checked / the go on its way to the corridors
     always @(posedge ck) begin
         if (g_pin) ib_q <= ib_pin;
@@ -804,8 +824,8 @@ module ot_qfd_xhead #(
     reg [12:0] go_bad_bits;
     reg  [AW-1:0]     dp_fm;                        // footprint - 1
     integer r, e, i;
-    always @(posedge ck or negedge rst_n)
-        if (!rst_n) begin da_v <= 1'b0; dp_v <= 1'b0; end else begin da_v <= d_v; dp_v <= da_v; end
+    always @(posedge ck or negedge rst_i)
+        if (!rst_i) begin da_v <= 1'b0; dp_v <= 1'b0; end else begin da_v <= d_v; dp_v <= da_v; end
     always @(posedge ck) begin
         da_ep <= d_ep; da_xb <= d_xb; da_xcs <= d_xcs; da_xks <= d_xks; da_km1 <= d_k - 1'b1; da_k<=d_k;
         // quad q = (tile id) mod (S / TG)
@@ -864,8 +884,8 @@ module ot_qfd_xhead #(
     reg  [5:0]   dq_k;
     reg          e_pbad [0:1];
     reg          pbad_n;
-    always @(posedge ck or negedge rst_n)
-        if (!rst_n) dq_v <= 1'b0; else dq_v <= dp_v;
+    always @(posedge ck or negedge rst_i)
+        if (!rst_i) dq_v <= 1'b0; else dq_v <= dp_v;
     always @(posedge ck) begin dq_ep <= dp_ep; dq_pool <= pool_n; dq_k <= dp_k; end
     always @* begin
         pbad_n = 1'b0;
@@ -908,8 +928,8 @@ module ot_qfd_xhead #(
                 wo[fep][r]};
         end
     end
-    always @(posedge ck or negedge rst_n)
-        if (!rst_n) begin lw_v <= 1'b0; lc_v <= 1'b0; end
+    always @(posedge ck or negedge rst_i)
+        if (!rst_i) begin lw_v <= 1'b0; lc_v <= 1'b0; end
         else begin
             lw_v <= {2{fv && (st[fep] != 2'd0)}};
             lc_v <= {2{d_v}};
@@ -1001,23 +1021,23 @@ module ot_qfd_xhead #(
     reg  [NH*28-1:0] lr0_p;
     always @(posedge ck) begin lr0_t <= rt; lr0_ep <= {NH{rep_now}}; lr0_p <= rp; end
     // read-request relay (REQ_PIPE stages; 0 = the lr register drives the leaf pins directly)
-    ot_hdc_delay #(.W(NH), .D(REQ_PIPE), .RESET(1)) u_lrv (.clk(ck), .rst_n(rst_n), .d(lr0_v), .q(lr_v));
-    ot_hdc_delay #(.W(2*NH+NH*28), .D(REQ_PIPE)) u_lrd (.clk(ck), .rst_n(rst_n), .d({lr0_t, lr0_ep, lr0_p}),
+    ot_hdc_delay #(.W(NH), .D(REQ_PIPE), .RESET(1)) u_lrv (.clk(ck), .rst_n(rst_i), .d(lr0_v), .q(lr_v));
+    ot_hdc_delay #(.W(2*NH+NH*28), .D(REQ_PIPE)) u_lrd (.clk(ck), .rst_n(rst_i), .d({lr0_t, lr0_ep, lr0_p}),
         .q({lr_t, lr_ep, lr_p}));
 
     // ---- answers -> corridor launch (the leaf q pins feed the corridor's output flops through one mux) ----
     // the answer of a read issued at TDM edge e is usable QD edges later: carry the edge and the mode along
     wire [2:0] phd;
     wire       vd, pd;
-    ot_hdc_delay #(.W(3), .D(QD)) u_phd (.clk(ck), .rst_n(rst_n), .d(ph_now), .q(phd));
-    ot_hdc_delay #(.W(1), .D(QD), .RESET(1)) u_vd (.clk(ck), .rst_n(rst_n), .d(rd_now && ph_now < NE), .q(vd));
-    ot_hdc_delay #(.W(1), .D(QD)) u_pd (.clk(ck), .rst_n(rst_n), .d(pool_now), .q(pd));
+    ot_hdc_delay #(.W(3), .D(QD)) u_phd (.clk(ck), .rst_n(rst_i), .d(ph_now), .q(phd));
+    ot_hdc_delay #(.W(1), .D(QD), .RESET(1)) u_vd (.clk(ck), .rst_n(rst_i), .d(rd_now && ph_now < NE), .q(vd));
+    ot_hdc_delay #(.W(1), .D(QD)) u_pd (.clk(ck), .rst_n(rst_i), .d(pool_now), .q(pd));
     // the leaves' answers are registered at this tile's pins (register -> wire -> register: r3 gate boundary)
     reg  [NH*64-1:0] lqp;
     reg  [NH-1:0]    lqvp, lqbp;
     always @(posedge ck) lqp <= lq;
-    always @(posedge ck or negedge rst_n)
-        if (!rst_n) begin lqvp <= {NH{1'b0}}; lqbp <= {NH{1'b0}}; end else begin lqvp <= lq_v; lqbp <= lq_bad; end
+    always @(posedge ck or negedge rst_i)
+        if (!rst_i) begin lqvp <= {NH{1'b0}}; lqbp <= {NH{1'b0}}; end else begin lqvp <= lq_v; lqbp <= lq_bad; end
     reg [127:0] xn, xs;
     reg [7:0]   tn, ts;
     reg [2:0]   na, nb, sa, sb;
@@ -1049,16 +1069,16 @@ module ot_qfd_xhead #(
             ts = {1'b1, sb, 1'b1, sa};
         end else miss = 1'b0;
     end
-    always @(posedge ck or negedge rst_n)
-        if(!rst_n)go_bad_bits<=0;
+    always @(posedge ck or negedge rst_i)
+        if(!rst_i)go_bad_bits<=0;
         else go_bad_bits<=g_q ? {
             busy && !last,b_k==0,b_tiles==0,b_round!=e_rnd[ep_rd],b_k!=e_k[ep_rd],
             b_split!=e_sp[ep_rd],b_xks!={{(AW-XCW){1'b0}},e_xks[ep_rd]},
             b_xcs!={{(AW-XCW){1'b0}},e_xcs[ep_rd]},b_xbase!=e_xb[ep_rd],
             b_xjs!=0,b_wsrc,st[ep_rd]!=1,1'b0} : 13'd0;
     reg flt;
-    always @(posedge ck or negedge rst_n)
-        if (!rst_n) begin
+    always @(posedge ck or negedge rst_i)
+        if (!rst_i) begin
             st[0] <= 2'd0; st[1] <= 2'd0; ep_rd <= 1'b0; busy <= 1'b0; flt <= 1'b0; lr0_v <= {NH{1'b0}};
             ph <= 3'd0; rep <= 1'b0; fault <= 1'b0;
         end else begin
