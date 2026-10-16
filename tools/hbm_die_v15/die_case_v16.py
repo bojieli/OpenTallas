@@ -136,6 +136,26 @@ def pin(port, bits, k):
     return f'{port}[{k}]' if bits > 1 else port
 
 
+def validate_view_coverage(instances, views):
+    """A missing receipt may be diagnostic; stale instance membership is an error."""
+    owners = {}
+    for cell, entry in views.items():
+        for name in entry['instances']:
+            if name in owners:
+                raise ValueError(f'duplicate view membership: {name}')
+            owners[name] = cell
+    missing = sorted(set(instances) - set(owners))
+    if missing:
+        raise ValueError(f'stale views.json: {len(missing)} contract instances have no view membership; '
+                         f'regenerate the view plan against the exact contract; examples {missing[:5]}')
+    for name, instance in instances.items():
+        entry = views[owners[name]]
+        representative = instances.get(entry.get('representative'))
+        if representative is not None and (instance['master'] != entry['master'] or
+                                            instance['ports'] != representative['ports']):
+            raise ValueError(f'view ABI mismatch: {name} -> {owners[name]}')
+
+
 def communicating_pairs(nets, dom_of, clique_limit=8):
     """Every source-to-sink branch participates, including wide multicast control."""
     pairs = defaultdict(set)
@@ -194,6 +214,7 @@ def main():
     ap.add_argument('--pair-max-tiles', type=int, default=8,
                     help='clique expansion limit; every source-to-sink branch is always a clock pair')
     ap.add_argument('--clock-bin-um', type=float, default=1600.0)
+    ap.add_argument('--no-plot', action='store_true', help='defer PNG rendering; manifest retains exact geometry for later rendering')
     ap.add_argument('--no-clock', action='store_true', help='placement/images only (skip die clock trees and run files)')
     ap.add_argument('--pc-strip', type=float, default=0.0,
                     help='d4b (H-DIE 10-16): grow every PC band box by this height (um) toward its SM row -- the S boxes '
@@ -208,6 +229,7 @@ def main():
     a = ap.parse_args()
     C = json.loads(a.contract.read_text()); G = json.loads(a.grants.read_text()); P = json.loads(a.plan.read_text())
     V = json.loads((a.views / 'views.json').read_text())
+    validate_view_coverage(C['instances'], V)
     lanes = json.loads(a.lanes.read_text())
     slots = {s['name']: s for s in G['slots']}
     W, H = G['floorplan']['die_um']
@@ -753,7 +775,9 @@ def main():
     manifest['native_complete'] = False
     manifest['pc_strip'] = strip
     manifest['d4b_homes'] = bool(a.d4b_homes)
-    render(out, manifest, P, W, H)
+    manifest['layout_image_status'] = 'DEFERRED' if a.no_plot else 'GENERATED'
+    if not a.no_plot:
+        render(out, manifest, P, W, H)
     if a.no_clock:
         (out / 'manifest.json').write_text(json.dumps(manifest, indent=1))
         print(json.dumps(dict(insts=len(inst), nets=len(nets), excluded=len(excluded), homes=len(homes), problems=len(bad))))
