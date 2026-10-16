@@ -44,8 +44,9 @@ phase and physical proofs remain separate. Absent profiles retain the historical
 checks; these mechanisms do not adopt a pipeline for the die.
 
 The opt-in profile `s81_vm_a2f_hop1_r4_c2_w1` binds the independent
-A2-F parent measurement in `results/rtl/s81_vm_a2f_parent_0200/record.json`.
-It requires that receipt's immutable digest and all 59 staged source hashes,
+A2-F parent measurement in `results/rtl/s81_vm_a2f_parent_bc297977c/record.json`
+(re-measured on bc297977c; the 0200 receipt is historical).
+It requires that receipt's immutable digest and all 71 staged source hashes,
 including the actual SRAM model. Its core-source write pin P reaches raw SRAM
 at P+11+n and returns commit at P+12+n; a read pin Q reaches raw SRAM at Q+6
 and returns at Q+14. New-value visibility requires Q >= P+6+n. Reusing the
