@@ -75,7 +75,7 @@
  "job": {
   "owner": "Claude:S-ENGRAM+NORM/HC-COLUMN",
   "branch": "claude/s81-hccol-b-1016",
-  "tag": "a5",
+  "tag": "a6",
   "purpose": "cth_ntc return slice, stacked split (retrow CTRN_SPLIT 1): own leaf N: rv (row flag merge) + hdr + own a/b, 628 b",
   "views_to": "physical/ref_tile/s81hc_ctrnown_e_ref/views",
   "record_to": "results/rtl/ref_tile/s81hc_ctrnown_e_ref",
@@ -89,7 +89,8 @@
  "orfs_vars": {
   "POST_IO_PLACEMENT_TCL": "tools/s81_suhc/inherited_exact_iop.tcl",
   "OT_HC_NATIVE_IO_TCL": "/src/physical/s81_die_pins/v28_hc_cthntc_split/ot_s81_hc_ctrn_own_e.tcl",
-  "OT_OUTHOLD_ABSORB_INV": "1"
+  "OT_OUTHOLD_ABSORB_INV": "1",
+  "OT_OFLOP_PORT_RE": "^(rv_|flg_|a_own|b_own|hdr_out)"
  },
  "recipe": 2,
  "io_tcl": "physical/s81_die_pins/v28_hc_cthntc_split/ot_s81_hc_ctrn_own_e.tcl",
@@ -108,6 +109,6 @@
   "enable": false,
   "reason": "Real RTL registers the boundary at its own stage (chain rd/rv -> rdq/rvq, y beat / cs relays, ybuf / psb captures, rdm / header / request / flag registers); a generic pin register would add a cycle to the fixed return calendar. hrq feeds the same-cycle merge (bank round trip) by design."
  },
- "structural_change": "ctrn_col_{e,w} (one register, 1,140 b) split into ctrn_own (rv/flag merge/hdr/own a,b) + ctrn_par (partner a,b): identical registers, reset and flag merge (ot_s81_hc_ctrn_own / ot_s81_hc_ctrn_par, retrow CTRN_SPLIT 1), 0 cycles. Parent cth_ntc 874.26 -> 900.18 (slice row 51.84); rows below keep their distance from the tile bottom; chain legs +25.92 (max 488.3 um), to_slice max 346.4, partner legs unchanged (623.4).",
+ "structural_change": "ctrn_col_{e,w} (one register, 1,140 b) split into ctrn_own (rv/flag merge/hdr/own a,b) + ctrn_par (partner a,b): identical registers, reset and flag merge (ot_s81_hc_ctrn_own / ot_s81_hc_ctrn_par, retrow CTRN_SPLIT 1), 0 cycles. Parent cth_ntc 874.26 -> 900.18 (slice row 51.84); rows below keep their distance from the tile bottom; chain legs +25.92 (max 488.3 um), to_slice max 346.4, partner legs unchanged (623.4). | 10-16 a6: a5 CLOSED (TT +284.54 / FF +16.92) but native launch 224.7 > 220 at hdr_out[37] (2 pins, the hdr cluster x 0-13, 8.8 pins/um; capture 171.5 OK): each hdr flop was anchored at its hdr_c INPUT pin (first BTerm seen), so the N-face launch carried the 22-um crossing. OT_OFLOP_PORT_RE ^(rv_|flg_|a_own|b_own|hdr_out) (every port but hdr_c): the hdr flops anchor at their hdr_out pins instead (capture side has 18 ps margin). Same RTL, pins, outline, 0 cycles.",
  "slot_change_request": "New cth_ntc leaf (top-down parent plan tools/s81/hc_cthntc_plan.py --split, physical/s81_die_pins/v28_hc_cthntc_split: 10-16 a5: parent 576.72 x 900.18)."
 }
