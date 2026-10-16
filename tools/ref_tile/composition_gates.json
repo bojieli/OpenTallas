@@ -4,28 +4,106 @@
   "s81hc_ng64": {
    "what": "S81 HC slab composition, NG64, hierarchical (root tile + column chains): bit-exact against the DPI golden; mutant 1 (no write-back) must fail",
    "benches": [
-    {"name": "exact", "expect": "pass", "threads": 16, "peak_ram_gb": 32, "pass_regex": "RUN ng64_dpi_m0_a0_hier2 pass",
-     "cmd": "export PATH=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin:$PATH; python3 tools/s81_suhc/hc_gate.py prep --cases /srv/opentallas-scratch/claude/s81-suhc/su_cases_v2_ildr.pkl --out {RUN}/bench/cg_ng64 --ng 64 && python3 tools/s81_suhc/hc_gate.py run --out {RUN}/bench/cg_ng64 --ng 64 --hier 2"},
-    {"name": "mutant", "expect": "fail", "threads": 16, "peak_ram_gb": 32, "fail_regex": "RUN ng64_dpi_m1_a0_hier2 fail",
-     "cmd": "export PATH=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin:$PATH; python3 tools/s81_suhc/hc_gate.py prep --cases /srv/opentallas-scratch/claude/s81-suhc/su_cases_v2_ildr.pkl --out {RUN}/bench/cg_ng64m1 --ng 64 && python3 tools/s81_suhc/hc_gate.py run --out {RUN}/bench/cg_ng64m1 --ng 64 --hier 2 --mut 1"}
+    {
+     "name": "exact",
+     "expect": "pass",
+     "threads": 16,
+     "peak_ram_gb": 32,
+     "pass_regex": "RUN ng64_dpi_m0_a0_hier2 pass",
+     "cmd": "export PATH=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin:$PATH; python3 tools/s81_suhc/hc_gate.py prep --cases /srv/opentallas-scratch/claude/s81-suhc/su_cases_v2_ildr.pkl --out {RUN}/bench/cg_ng64 --ng 64 && python3 tools/s81_suhc/hc_gate.py run --out {RUN}/bench/cg_ng64 --ng 64 --hier 2"
+    },
+    {
+     "name": "mutant",
+     "expect": "fail",
+     "threads": 16,
+     "peak_ram_gb": 32,
+     "fail_regex": "RUN ng64_dpi_m1_a0_hier2 fail",
+     "cmd": "export PATH=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin:$PATH; python3 tools/s81_suhc/hc_gate.py prep --cases /srv/opentallas-scratch/claude/s81-suhc/su_cases_v2_ildr.pkl --out {RUN}/bench/cg_ng64m1 --ng 64 && python3 tools/s81_suhc/hc_gate.py run --out {RUN}/bench/cg_ng64m1 --ng 64 --hier 2 --mut 1"
+    }
    ]
   },
   "s81hc_ng256": {
    "what": "S81 HC slab composition, NG256 (production shape), hierarchical: bit-exact against the DPI golden; mutant 1 must fail",
    "benches": [
-    {"name": "exact", "expect": "pass", "threads": 16, "peak_ram_gb": 64, "pass_regex": "RUN ng256_dpi_m0_a0_hier2 pass",
-     "cmd": "export PATH=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin:$PATH; python3 tools/s81_suhc/hc_gate.py prep --cases /srv/opentallas-scratch/claude/s81-suhc/su_cases_v2_ildr.pkl --out {RUN}/bench/cg_ng256 --ng 256 && python3 tools/s81_suhc/hc_gate.py run --out {RUN}/bench/cg_ng256 --ng 256 --hier 2"},
-    {"name": "mutant", "expect": "fail", "threads": 16, "peak_ram_gb": 64, "fail_regex": "RUN ng256_dpi_m1_a0_hier2 fail",
-     "cmd": "export PATH=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin:$PATH; python3 tools/s81_suhc/hc_gate.py prep --cases /srv/opentallas-scratch/claude/s81-suhc/su_cases_v2_ildr.pkl --out {RUN}/bench/cg_ng256m1 --ng 256 && python3 tools/s81_suhc/hc_gate.py run --out {RUN}/bench/cg_ng256m1 --ng 256 --hier 2 --mut 1"}
+    {
+     "name": "exact",
+     "expect": "pass",
+     "threads": 16,
+     "peak_ram_gb": 64,
+     "pass_regex": "RUN ng256_dpi_m0_a0_hier2 pass",
+     "cmd": "export PATH=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin:$PATH; python3 tools/s81_suhc/hc_gate.py prep --cases /srv/opentallas-scratch/claude/s81-suhc/su_cases_v2_ildr.pkl --out {RUN}/bench/cg_ng256 --ng 256 && python3 tools/s81_suhc/hc_gate.py run --out {RUN}/bench/cg_ng256 --ng 256 --hier 2"
+    },
+    {
+     "name": "mutant",
+     "expect": "fail",
+     "threads": 16,
+     "peak_ram_gb": 64,
+     "fail_regex": "RUN ng256_dpi_m1_a0_hier2 fail",
+     "cmd": "export PATH=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin:$PATH; python3 tools/s81_suhc/hc_gate.py prep --cases /srv/opentallas-scratch/claude/s81-suhc/su_cases_v2_ildr.pkl --out {RUN}/bench/cg_ng256m1 --ng 256 && python3 tools/s81_suhc/hc_gate.py run --out {RUN}/bench/cg_ng256m1 --ng 256 --hier 2 --mut 1"
+    }
    ]
   },
   "s81su_full": {
    "what": "S81 SU combined gate, full shape, hierarchical: bit-exact against the DPI golden; mutant 5 (stale denominator) must fail",
    "benches": [
-    {"name": "exact", "expect": "pass", "threads": 8, "peak_ram_gb": 48, "pass_regex": "RUN full_dpi_m0_a0_h pass",
-     "cmd": "export PATH=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin:$PATH; python3 tools/s81_suhc/su_gate.py prep --cases /srv/opentallas-scratch/claude/s81-suhc/su_cases_v2_ildr.pkl --out {RUN}/bench/cg_su --shape full && python3 tools/s81_suhc/su_gate.py run --out {RUN}/bench/cg_su --shape full --hier"},
-    {"name": "mutant", "expect": "fail", "threads": 8, "peak_ram_gb": 48, "fail_regex": "RUN full_dpi_m5_a0_h fail",
-     "cmd": "export PATH=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin:$PATH; python3 tools/s81_suhc/su_gate.py prep --cases /srv/opentallas-scratch/claude/s81-suhc/su_cases_v2_ildr.pkl --out {RUN}/bench/cg_su5 --shape full && python3 tools/s81_suhc/su_gate.py run --out {RUN}/bench/cg_su5 --shape full --hier --mut 5"}
+    {
+     "name": "exact",
+     "expect": "pass",
+     "threads": 8,
+     "peak_ram_gb": 48,
+     "pass_regex": "RUN full_dpi_m0_a0_h pass",
+     "cmd": "export PATH=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin:$PATH; python3 tools/s81_suhc/su_gate.py prep --cases /srv/opentallas-scratch/claude/s81-suhc/su_cases_v2_ildr.pkl --out {RUN}/bench/cg_su --shape full && python3 tools/s81_suhc/su_gate.py run --out {RUN}/bench/cg_su --shape full --hier"
+    },
+    {
+     "name": "mutant",
+     "expect": "fail",
+     "threads": 8,
+     "peak_ram_gb": 48,
+     "fail_regex": "RUN full_dpi_m5_a0_h fail",
+     "cmd": "export PATH=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin:$PATH; python3 tools/s81_suhc/su_gate.py prep --cases /srv/opentallas-scratch/claude/s81-suhc/su_cases_v2_ildr.pkl --out {RUN}/bench/cg_su5 --shape full && python3 tools/s81_suhc/su_gate.py run --out {RUN}/bench/cg_su5 --shape full --hier --mut 5"
+    }
+   ]
+  },
+  "quant_wide_wq3": {
+   "what": "HBM quant_wide cluster composition, record-overlap variant (WQ=3, OVERLAP=1, DEC3; ot_hgi_quant_wide_ov with its rq/wq/dec3 children): the eight production DS-shape records, all 3,328 output words bit-exact against the released golden; the wide lane-to-sector mutant (WMUT=1) must mismatch in simulation. Exactness only: the cycle count is read from the same log against the immutable price 168 and is not judged here",
+   "benches": [
+    {
+     "name": "exact",
+     "expect": "pass",
+     "threads": 16,
+     "peak_ram_gb": 32,
+     "pass_regex": "^PASS HGI_QDQ_WIDE_TPUT records=8 words=3328 ",
+     "cmd": "export PATH=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin:$PATH; V=/srv/opentallas-scratch/claude/hgi-tput-1010/vec/qdqvec; [ \"$(cd $V && find . -type f | sort | xargs sha256sum | sha256sum | cut -d' ' -f1)\" = af24e0e245041455d83de87ded84c0495b6a7990d802634f35ad6bc7643dfd8c ] || { echo QW_GATE_VECTORS_BAD; exit 97; }; WQ=3 OVERLAP=1 QDQ_DEFS=+define+OT_QW_DEC3 bash tools/hgi_unit_tput/run_qdq_wide.sh $V {RUN}/bench/cg_qw3 && cat {RUN}/bench/cg_qw3/m0.log && [ \"$(cat {RUN}/bench/cg_qw3/m0.rc)\" = 0 ]"
+    },
+    {
+     "name": "mutant",
+     "expect": "fail",
+     "threads": 16,
+     "peak_ram_gb": 32,
+     "fail_regex": "^MISMATCH rec 0 word 0",
+     "cmd": "export PATH=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin:$PATH; V=/srv/opentallas-scratch/claude/hgi-tput-1010/vec/qdqvec; [ \"$(cd $V && find . -type f | sort | xargs sha256sum | sha256sum | cut -d' ' -f1)\" = af24e0e245041455d83de87ded84c0495b6a7990d802634f35ad6bc7643dfd8c ] || { echo QW_GATE_VECTORS_BAD; exit 97; }; WQ=3 OVERLAP=1 QDQ_DEFS=+define+OT_QW_DEC3 bash tools/hgi_unit_tput/run_qdq_wide.sh $V {RUN}/bench/cg_qw3m; cat {RUN}/bench/cg_qw3m/w1.log; [ \"$(cat {RUN}/bench/cg_qw3m/w1.rc)\" = 0 ]"
+    }
+   ]
+  },
+  "quant_wide_wq2": {
+   "what": "HBM quant_wide cluster composition, canonical serial variant (WQ=2, OVERLAP=0, DEC3; ot_hgi_quant_wide_h): the eight production DS-shape records, all 3,328 output words bit-exact; the wide lane-to-sector mutant (WMUT=1) must mismatch in simulation. Exactness only: this variant measures 4.47x its price and is NOT throughput-qualified",
+   "benches": [
+    {
+     "name": "exact",
+     "expect": "pass",
+     "threads": 16,
+     "peak_ram_gb": 32,
+     "pass_regex": "^PASS HGI_QDQ_WIDE_TPUT records=8 words=3328 ",
+     "cmd": "export PATH=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin:$PATH; V=/srv/opentallas-scratch/claude/hgi-tput-1010/vec/qdqvec; [ \"$(cd $V && find . -type f | sort | xargs sha256sum | sha256sum | cut -d' ' -f1)\" = af24e0e245041455d83de87ded84c0495b6a7990d802634f35ad6bc7643dfd8c ] || { echo QW_GATE_VECTORS_BAD; exit 97; }; WQ=2 OVERLAP=0 QDQ_DEFS=+define+OT_QW_DEC3 bash tools/hgi_unit_tput/run_qdq_wide.sh $V {RUN}/bench/cg_qw2 && cat {RUN}/bench/cg_qw2/m0.log && [ \"$(cat {RUN}/bench/cg_qw2/m0.rc)\" = 0 ]"
+    },
+    {
+     "name": "mutant",
+     "expect": "fail",
+     "threads": 16,
+     "peak_ram_gb": 32,
+     "fail_regex": "^MISMATCH rec 0 word 0",
+     "cmd": "export PATH=/home/ubuntu/.local/opentallas-tools/verilator-5.050/bin:$PATH; V=/srv/opentallas-scratch/claude/hgi-tput-1010/vec/qdqvec; [ \"$(cd $V && find . -type f | sort | xargs sha256sum | sha256sum | cut -d' ' -f1)\" = af24e0e245041455d83de87ded84c0495b6a7990d802634f35ad6bc7643dfd8c ] || { echo QW_GATE_VECTORS_BAD; exit 97; }; WQ=2 OVERLAP=0 QDQ_DEFS=+define+OT_QW_DEC3 bash tools/hgi_unit_tput/run_qdq_wide.sh $V {RUN}/bench/cg_qw2m; cat {RUN}/bench/cg_qw2m/w1.log; [ \"$(cat {RUN}/bench/cg_qw2m/w1.rc)\" = 0 ]"
+    }
    ]
   }
  }
