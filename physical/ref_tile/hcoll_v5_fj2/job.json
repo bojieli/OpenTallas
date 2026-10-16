@@ -3,7 +3,7 @@
  "block": "ot_hgi_coll_fj_q2",
  "ref_tile": true,
  "owner": "Claude:H-NETLIST/COLL-CTL-1045",
- "purpose": "H-NETLIST/COLL hard_v5 q2 leaf ot_hgi_coll_fj_q2: actual ot_hgi_coll_static_program_target (TARGET 52, qid strap identity remap) + aggregate sticky fault + fault_cause[15:0] incl. q2 illegal arg/tkm reservation checks. Benched by the hard_v5 q2 lockstep/fault-ABI gate vs production host_v4.",
+ "purpose": "H-NETLIST/COLL hard_v5 q2 leaf ot_hgi_coll_fj_q2: actual ot_hgi_coll_static_program_target behind RTL pin registers (TARGET 52, qid strap identity remap) + aggregate sticky fault + fault_cause[15:0] incl. q2 illegal arg/tkm reservation checks. Benched by the hard_v5 q2 lockstep/fault-ABI gate vs production host_v4.",
  "threads": 8,
  "peak_ram_gb": 16,
  "source": {
