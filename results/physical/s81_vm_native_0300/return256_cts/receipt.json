@@ -1,0 +1,63 @@
+{
+  "schema": "opentallas.ref-tile.cts-native-probe.v1",
+  "scope": "CTS placement RC diagnostic; NOT a routed native qualification",
+  "kit": "physical/ref_tile/dsfd_vm_wfc_return256_native_1016_r1",
+  "remote_host": "ot-epyc4",
+  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/dsfd_vm_wfc_return256_native_1016_r1-20261016-083235",
+  "gate_source_commit": "c15649a1268dbe57f197f2248cec4078ba78e282",
+  "gate_result_sha256": "ac846e2466317802fb2e6fcc68954b466ff88f77b159c6fb3682409ca1373254",
+  "library_sha256": "446464f4b8b3ab1096a227dc40728c8634d38db8e83ed9a3ad5924d2ea1b3264",
+  "insertion_sha256": "eb144b4ad19ddf964a2947c5ba08c08cd647aab735aff19e39cd6c3f94581a4c",
+  "probe_tcl_sha256": "03e5b45c2bc10b7745823aa59fc9d3ab21f3a05cd8d27df5bcc4b909c6b53900",
+  "launch": {
+    "ps": 202.855,
+    "pin": "s_d[499]"
+  },
+  "capture": {
+    "ps": 156.65836000000002,
+    "pin": "e_d[253]"
+  },
+  "launch_over": 0,
+  "capture_over": 0,
+  "comb_pins": [],
+  "clock_refs": {
+    "ck": {
+      "rise": 136.9,
+      "fall": 145.87199999999999,
+      "min": 117.2448,
+      "max": 147.51334,
+      "src": "insertion.json boundary mean",
+      "bmin": 124.9,
+      "bmax": 147.5,
+      "n": 1552
+    }
+  },
+  "spread_ps": {
+    "ck": 22.599999999999994
+  },
+  "measured_reference_coverage": true,
+  "diagnostic_pass": true,
+  "actual_sinks_per_slice": 3612,
+  "old_full_return_sinks": 7196,
+  "new_data_pair_sinks": 7224,
+  "reused_diag_sinks": 145,
+  "net_extra_sinks_with_diag": 173,
+  "actual_std_area_per_slice_um2": 1598,
+  "old_full_std_area_um2": 3183,
+  "new_data_pair_std_um2": 3196,
+  "data_pair_std_delta_um2": 13,
+  "proposed_reserved_data_area_um2": 16796.16,
+  "reused_diag_reserved_area_um2": 466.56,
+  "roots_before": 1,
+  "roots_after": 3,
+  "normal_data_cycle_delta": 0,
+  "diagnostic_cycle_delta": 2,
+  "images_actually_viewed": true,
+  "image_review": "Actual64.8x129.6 gate: dense north output band and east input/mux distribution; west-half sparse but clock is west-centre and measured native launch202.855/capture156.658/spread22.6 now pass without relaxing budget.",
+  "images_sha256": {
+    "floorplan.png": "e96c4133b017b9675f5a279d7d7c1d562368fcbafa471694eebf01e345ce13fb",
+    "density.png": "be02eaee714b3bd8c227183c2378d10e6d4208dc73f61422b754c0221c9868a5"
+  },
+  "probe_lib_sha256": "446464f4b8b3ab1096a227dc40728c8634d38db8e83ed9a3ad5924d2ea1b3264",
+  "qualification": "Strict CTS native PASS; NOT routed physical qualification. Actual routed views and parent/compiler binding remain pending."
+}

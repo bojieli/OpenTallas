@@ -1,0 +1,68 @@
+{
+  "name": "dsfd_vm_wfc_return256_native_1016_r1-valid2-d84acacda",
+  "status": "FLOORPLAN_MARGIN",
+  "reason": "pin_track: 38 signal/clock pins have no full min-width landing on any actual preferred routing track (e_d[1005]: M2 [64.762, 129.906, 64.8, 129.924]; e_d[1006]: M2 [64.762, 130.446, 64.8, 130.464]; e_d[1007]: M2 [64.762, 130.986, 64.8, 131.004]): correct the die-assigned pin coordinates against the DEF track grid; do not silently snap a grant",
+  "events": [
+    "2026-10-16T08:41:20-07:00 ingested from /tmp/claude-review-20261003/closure_jobs/dsfd_vm_wfc_return256_native_1016_r1-valid2-d84acacda.json",
+    "2026-10-16T08:41:32-07:00 CLOCK-RULE at submit: 3,612 sinks on the largest root <= 15,000; measured TT insertion 147.5 ps, leaf spread 23.2 ps",
+    "2026-10-16T08:41:32-07:00 ref gate PASS: pre-route gate PASS",
+    "2026-10-16T08:41:54-07:00 benches run in parallel with calibrate/route (6 benches; spec bench_first opts out)",
+    "2026-10-16T08:42:25-07:00 git-mirror sync d84acacda7d6 via upstream in 2s + extract 23s; 6408 views / 14.8 GB hard-linked from the host view store",
+    "2026-10-16T08:42:25-07:00 source d84acacda7d6 synced to ot-agidock128:/srv/opentallas-scratch/claude/closure-loop/dsfd_vm_wfc_return256_native_1016_r1-valid2-d84acacda/src",
+    "2026-10-16T08:42:26-07:00 bench track: launched bench_lint (bench_lint.a1b1) beside None",
+    "2026-10-16T08:42:32-07:00 launched route (attempt 1) on ot-agidock128",
+    "2026-10-16T08:43:30-07:00 bench track: bench_lint PASS (rc=0) WARN: pass log has no count line (set min_count_regex)",
+    "2026-10-16T08:43:30-07:00 bench track: launched bench_return256_gold (bench_return256_gold.a1b1) beside route",
+    "2026-10-16T08:43:30-07:00 TEXTBOOK-LINT route.a1: WARN dsfd_vm_wfc_return256 cells 9,926 flops 3,612 depth 183.4 ps util 0.2575 reach 0.0 um (0.3 s) || INFO clock_roots max_root_sinks=3612 root=port:ck rule=PASS: 3,612 sinks on the largest root <= 15,000; measured TT insertion 147.5 ps, leaf spread 23.2 ps || WARN util_channel: utilisation 25.7% outside 45%-65% (std 1951 + macro 0 um2 in 7577 um2): shrink the outline (long wires / sparse placement)",
+    "2026-10-16T08:43:31-07:00 FLOORPLAN_MARGIN: pin_track: 38 signal/clock pins have no full min-width landing on any actual preferred routing track (e_d[1005]: M2 [64.762, 129.906, 64.8, 129.924]; e_d[1006]: M2 [64.762, 130.446, 64.8, 130.464]; e_d[1007]: M2 [64.762, 130.986, 64.8, 131.004]): correct the die-assigned pin coordinates against the DEF track grid; do not silently snap a grant",
+    "2026-10-16T08:44:33-07:00 auto-react: floorplan lint unparsed; structural fix needed (noted in mtp-wfc-1010.log)",
+    "2026-10-16T08:51:36-07:00 src release (33366 MB): src/ + bench_src*/ snapshots cut to receipt-named paths (git archive d84acacda7d6 re-creates them)"
+  ],
+  "clock_rule": {
+    "evidence": {
+      "max_root_sinks": 3612,
+      "root": "port:ck",
+      "cts": true,
+      "tt_insertion_ps": 147.5,
+      "tt_spread_ps": 23.2,
+      "declared_clock": "core",
+      "limits": {
+        "sinks": 15000,
+        "insertion_ps": 300.0,
+        "spread_ps": 80.0
+      },
+      "clock_measurements": [
+        {
+          "source": "ck",
+          "clock": "core_clk",
+          "tt": {
+            "boundary": {
+              "n": 1552,
+              "mean": 136.9,
+              "min": 124.9,
+              "max": 147.5
+            },
+            "all": {
+              "n": 3613,
+              "mean": 133.4,
+              "min": 124.3,
+              "max": 147.5
+            },
+            "errors": [],
+            "macros": null,
+            "macro_libs": 0
+          }
+        }
+      ],
+      "measured_clock": "core_clk",
+      "verdict": "PASS",
+      "text": "3,612 sinks on the largest root <= 15,000; measured TT insertion 147.5 ps, leaf spread 23.2 ps"
+    },
+    "sinks": 3612,
+    "ok": true,
+    "text": "3,612 sinks on the largest root <= 15,000; measured TT insertion 147.5 ps, leaf spread 23.2 ps",
+    "closed_stands": false,
+    "mode": "refuse"
+  },
+  "finished_at": "2026-10-16T08:43:31-07:00"
+}

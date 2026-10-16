@@ -1,0 +1,51 @@
+{
+ "schema": "s81-dedupe-pad-proof-v1",
+ "scope": "Byte-exact actual c26b original station/relay modules versus padded canonical station RTL, both clock edges; full die physical integration remains open.",
+ "maps": 30,
+ "source_census_instances": 3799,
+ "cycles": 2000,
+ "simulation": {
+  "host": "ot-pve1",
+  "unit": "oth-ubuntu-2090982-1792164445",
+  "mem_gb": 2,
+  "threads": 1,
+  "positive": "PASS",
+  "logical_payload_mutant": "REJECTED"
+ },
+ "binder": {
+  "verdict": "PASS",
+  "masters": 21,
+  "instances": 30,
+  "spare_input_bits": 1545
+ },
+ "regressions": {
+  "passed": 12,
+  "negative_cases": [
+   "logical bit16 tied in17-bit replica sharing20-bit master with16-bit replica",
+   "spare constant one",
+   "missing instance padding permission",
+   "cross-clock-family rebind",
+   "omitted logical output declaration"
+  ]
+ },
+ "open": [
+  "Full current die regeneration and actual placement/pins/hops",
+  "Reconcile inherited map instance counts with current live die census"
+ ],
+ "files": {
+  "exact.log": "4715a0241a71e6a3a50c84876a83a39b1817f770ae7319a539dc07764823ea93",
+  "die.v": "317537e8de7d33edd3770e34f6c8c61541c3a563b28defa09c5e696eba54e701",
+  "die.v.pads.json": "175f6e17e3841ea3a7c1f7199300ff9bcfee45e0a7a9425209cc54cb0f05fd2f",
+  "mapping.json": "d62c48706a167f5b92f5d7490e99a606066cf5cdcb1c398db29e0545746188b7",
+  "actual_modules.sv": "2596b9df9f86dc42799a06e7827c4b979b2a308274d4968c78f299d41347f8f0",
+  "mutant.log": "032370fbb3977c8068be1493487041c34133b32641d30739127113991e681eaf",
+  "masters.sv": "2596b9df9f86dc42799a06e7827c4b979b2a308274d4968c78f299d41347f8f0",
+  "actual_module_sources.json": "1c4d04668139d39978b084f2f95083c43ef7574f7bbd6495bf4bdaadc395389b",
+  "tb.sv": "a482aabcadd6abdcaf3e96bc5769490c6835ad153bb933a58b110acb3d01dc87",
+  "binder.json": "1412f2529838f8870253e5acfb74cd9ecc3c782c3b342f82d0ed32c50887a440",
+  "ot_fwd_link_stage.sv": "dcd1ec4292f5d9061b14a5ce79f50f8c1f939dae3ac9e21e4acf5970a009d49a",
+  "run.sh": "41f8792b30bf323ef53ca18c7ee982b8dbdb3f85b2b5a372bc6b980daf52b11c"
+ },
+ "initialization_scope": "The first rising observation is before a forwarded lane has any declared falling capture; comparison begins at its first valid falling capture. Thereafter both edges are checked every cycle.",
+ "abi_resolution": "Actual c26b horizontal512/514/538/566 all have fi0/di0/fo0/do0 and no fn0. The exact archived stnh566 source is used as canonical, removing the initial fixture extra fn0 assumption. Canonical vertical566 includes an extra output fn0 which may be unconsumed by narrower source instances; no extra input is allowed."
+}

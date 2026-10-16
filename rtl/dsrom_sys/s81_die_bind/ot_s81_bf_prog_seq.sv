@@ -77,7 +77,13 @@ module ot_s81_bf_prog_seq #(
                 if (run) fault <= 1'b1;
                 dq <= desc;
                 run <= desc[13:0] != 14'd0; i <= 14'd0; t <= 16'd0; next_t <= first_e[15:0];
-                if (first_e < 0) fault <= 1'b1;                  // DELTA larger than the compiled offset: not realisable
+`ifdef OT_S81_BF_PROG_MUT_EMPTY_FAULT
+                if (first_e < 0) fault <= 1'b1;
+`else
+                // An empty phase has no first issue edge. Preserve the literal
+                // zero descriptor without interpreting its unused OFF field.
+                if (desc[13:0] != 14'd0 && first_e < 0) fault <= 1'b1;
+`endif
             end else if (run) begin
                 t <= t + 16'd1;
                 if (t == next_t) begin

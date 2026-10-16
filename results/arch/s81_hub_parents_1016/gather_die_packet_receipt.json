@@ -1,0 +1,273 @@
+{
+  "schema": "opentallas.s81.gather_die_packet.v1",
+  "adopted": false,
+  "physical_qualified": false,
+  "note": "Current source connectivity and closed child views only; die homes, seam cuts, clocks and timing remain required.",
+  "parent_master": "dsfd_sp_gather_c",
+  "counts": {
+    "instances": 214,
+    "masters": 13,
+    "ports": 26,
+    "external_bits": 16651
+  },
+  "plan_sha256": "35c345af1885156b88e40bddec9e0da1029b35ac23183044bfd32bdaa3e45c87",
+  "elaboration_sources": {
+    "rtl/dsrom_sys/s81_ph/ot_s81ph_root_leaf.sv": "bc8cb78045b281dc3d79279e64cf9ca1709a4b15127e55f1d1645b7cc373cb2e",
+    "rtl/dsrom_sys/s81_ph/dsfd_gth_ctl.sv": "f260fd4226703408f7409ae123b7fce692d0be7d0d2a36420886174b6da7da11",
+    "rtl/dsrom_sys/s81_glue/dsfd_rly_masters.sv": "711feddaee9446a08088936e6190d3920a6f5fc74e15da35cb32bcd12460ef6a",
+    "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_gth_lane.sv": "59a1b33b02c78b7936cd5b55ab4b3ec063127a8df07c9c823b7d9802b35e4231",
+    "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_gth_res.sv": "33a359f8c1984325808c8af27474f616bd02ba27d6b49abc44855ed0ac1fc0b4",
+    "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_gth_strip.sv": "f5849b7256235fdcfed3274ebfbee67f69c1496fc58d23ae1c95990c869a72e6",
+    "rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_sp_gather_c_cl.sv": "3d513d0333e177f4d5e186acde67d127b2cefd2fe4086adefb78ad2eec2f803e",
+    "rtl/dsrom_sys/s81_ph/dsfd_gth_strip.sv": "0ccb1226843cd496ea9b267d464163b243253622b2e445b6e3bab91fbbe8fc95"
+  },
+  "source_commit": "de0fe57b772811a9091efeddb1686162a9087703",
+  "artifacts": {
+    "/home/ubuntu/artifacts/s81-hub-parents-0811/gather_die_packet.json": "53faa7ca20391256cd1e6886f5f483fe2c7c768f2020549546b14ab2464af3aa",
+    "/home/ubuntu/artifacts/s81-hub-parents-0811/gather_die_packet.v": "e8d23fceb8b83323982bd9945192de7a6e487d161adf6d8d70358513b899de4c"
+  },
+  "validation": {
+    "current_wrapper_exact_graph": true,
+    "emitted_verilog_reelaboration_exact_graph": true,
+    "stale_rtl_sha_mutant_rejected": true,
+    "stale_lef_sha_mutant_rejected": true,
+    "wrong_child_net_mutant_rejected": true,
+    "tests": 4
+  },
+  "views": {
+    "dsfd_gth_ctl": {
+      "view": "physical/ref_tile/dsfd_gth_ctl/views/dsfd_gth_ctl",
+      "closure_job": "dsfd_gth_ctl-g4-6cb5bd842",
+      "sha256": {
+        "abstract.json": "3090687d0e0ecbfc7a40629013b2f4b7530aebd47f13aa430e266756160431db",
+        "insertion.json": "15d1a3dba07efa1940a7e6be6413ef675cda150f419e47290c5c37e1ee100379",
+        "dsfd_gth_ctl.lef": "149bc4d8f88ce6f9ca852c9193279f97eac4b9b07b489b63904e08670a071b1d",
+        "dsfd_gth_ctl_tt.lib": "ccb347cee173667341269de8f2cc0e1c89891d280e4a42c7e8ea1c9bd8365bac",
+        "dsfd_gth_ctl_ff.lib": "724163331aea71290d9f86b491ffcdb2341271606bf683130b75e8f157da8882",
+        "dsfd_gth_ctl_ss.lib": "c661407cfb0351d47fcb5e94d6815a9636d0b4c8801b6fcbc7c8c10cbce311c3"
+      },
+      "tt_boundary": {
+        "n": 320,
+        "mean": 143.6,
+        "min": 134.4,
+        "max": 152.4
+      }
+    },
+    "dsfd_gth_rw": {
+      "view": "physical/ref_tile/dsfd_gth_rw/views/dsfd_gth_rw",
+      "closure_job": "dsfd_gth_rw_pin_repair_1015-pinrepair1-e74771a9c",
+      "sha256": {
+        "abstract.json": "56624b6779184b3f0d28b3a25237be0d0753e0c6123fc6e3e9bbabd70603ab18",
+        "insertion.json": "9c8a714e27d939b4e5a40276b5a500cf8af5df95abdd2e398e0843766c22ff33",
+        "dsfd_gth_rw.lef": "04fa0cdf4943583a30be34ee5c37c46c2d56bb66659bd1ae255942ff61311c42",
+        "dsfd_gth_rw_tt.lib": "16373c987daa9b04484ac20c93665948fbe4a31e61521c4d4cba8c1dc8d90e24",
+        "dsfd_gth_rw_ff.lib": "6b9cf8b43727a05cba08cb7e4eeb479cdb6a05d8248833d0e945a831c34b9f03",
+        "dsfd_gth_rw_ss.lib": "81d1496a1d977978aef7441192b53583675b9cd2e4137c8ad7949bfa2827ed46"
+      },
+      "tt_boundary": {
+        "n": 493,
+        "mean": 260.7,
+        "min": 209.1,
+        "max": 280.2
+      }
+    },
+    "dsfd_gth_re": {
+      "view": "physical/ref_tile/dsfd_gth_re/views/dsfd_gth_re",
+      "closure_job": "dsfd_gth_re_transverse_1015-transverse1-d399415d2",
+      "sha256": {
+        "abstract.json": "93854ef0caffdd69ffb6316a171427afa0e3738c05568eb29eb095eb0b60f36d",
+        "insertion.json": "f813548c52366ed0f691ac4e00dc157f3a7822eb9f075208d37d38955146da9f",
+        "dsfd_gth_re.lef": "9981a64a2c1885c6be743dd675a59341ff87f3b5f07a0768faa171ec107b2c89",
+        "dsfd_gth_re_tt.lib": "17e22440b9bf48af5f855fd75b12049250bcb0120da1288d6a1eb9b1a328cca7",
+        "dsfd_gth_re_ff.lib": "23549d08d925ad912262ad25b8f6b61a98c3c1a7ee06452250852c8b81088264",
+        "dsfd_gth_re_ss.lib": "af232a35a951f5ea7a6571ca24b76bc367fd123d4e3a5ac44308fcc8252048f2"
+      },
+      "tt_boundary": {
+        "n": 493,
+        "mean": 267.9,
+        "min": 250.0,
+        "max": 292.1
+      }
+    },
+    "dsfd_rly_276_EW": {
+      "view": "physical/ref_tile/s81_rly_276_ew/views/dsfd_rly_276_EW",
+      "closure_job": "s81_rly_276_ew-gth4-6cb5bd842",
+      "sha256": {
+        "abstract.json": "8ee6d147eb0dce17fdc9512ca95a2790ce3f50a69f7f54be17826c905a49b139",
+        "insertion.json": "8eac78445bcf3bfb5d936feab8cb556058f032defbb07c477d1afa150e0f304b",
+        "dsfd_rly_276_EW.lef": "43dda42e71f808df0fdb1634c17047b197ca32ea4da4c070aacebf9dfdfa9f92",
+        "dsfd_rly_276_EW_tt.lib": "aa45028ed6dcd235eb547914176e2e9fedd0a9f5c0344d2bfafa1703b28327c9",
+        "dsfd_rly_276_EW_ff.lib": "4bf6e70255f69ef47f2e8d9cb13effdcddc10c2ebba42701981d6e20422daa95",
+        "dsfd_rly_276_EW_ss.lib": "fe288f1084020f97c37103ce3e0daf67752107acda7b86d5ee78b9d28ef7e5a8"
+      },
+      "tt_boundary": {
+        "n": 276,
+        "mean": 85.1,
+        "min": 83.1,
+        "max": 86.8
+      }
+    },
+    "dsfd_rly_276_WE": {
+      "view": "physical/ref_tile/s81_rly_276_we/views/dsfd_rly_276_WE",
+      "closure_job": "s81_rly_276_we-gth4-6cb5bd842",
+      "sha256": {
+        "abstract.json": "5ea011a595ea73d81a910f20a3c8fafa1cb41a61d76fc2cf35c31d55dc7d4426",
+        "insertion.json": "9eae96bb57f7c839b3c63d1362a8ca2853ac4ecb4484a6d174d9d0ed1e859e4a",
+        "dsfd_rly_276_WE.lef": "4620064233cbc754185b661d6a114c4bb37596b4b864fed588d4e8865c7e31c4",
+        "dsfd_rly_276_WE_tt.lib": "509b442be35e558ccf795b0321e457274e1247b08664af091b73c4c6a759e33d",
+        "dsfd_rly_276_WE_ff.lib": "d9251390ecefda490ec95c40e0443aa7915aa57af6dbf052af3f4bb612489d00",
+        "dsfd_rly_276_WE_ss.lib": "240f0d285a3f85a9e15677165aeaba86b5e76700990898f853087ba09c6510de"
+      },
+      "tt_boundary": {
+        "n": 276,
+        "mean": 82.8,
+        "min": 80.7,
+        "max": 85.5
+      }
+    },
+    "dsfd_rly_214_NS": {
+      "view": "physical/ref_tile/s81_rly_214_ns/views/dsfd_rly_214_NS",
+      "closure_job": "s81_rly_214_ns-gth4-6cb5bd842",
+      "sha256": {
+        "abstract.json": "1b2d4cbc4fd61263204796267b784cd9dc1bf19672a9e8ea69c29cd239245616",
+        "insertion.json": "ab8117cedb915194e28f7d50f317840ca8a4af1133ec942b275a114c5caacb3f",
+        "dsfd_rly_214_NS.lef": "59b88b50a64d53d4b38a77cf5fb30a2ba48f94b7912c7ca5ec3f2b5290a4f592",
+        "dsfd_rly_214_NS_tt.lib": "14d7640ab7122a2b582521cdd17a4fd551ff11902435631211eba0ad98d075e9",
+        "dsfd_rly_214_NS_ff.lib": "2348082e84ff8ebd5e8dca8da502e4ec4bf384bc7368c042e32f3971dc467dcf",
+        "dsfd_rly_214_NS_ss.lib": "57f0398f92ad89b51228c799d86e19967d3cb37ffff5e4cd69d8b06a7bb22e05"
+      },
+      "tt_boundary": {
+        "n": 214,
+        "mean": 81.0,
+        "min": 78.0,
+        "max": 82.9
+      }
+    },
+    "dsfd_rly_9_WE": {
+      "view": "physical/ref_tile/s81_rly_9_we/views/dsfd_rly_9_WE",
+      "closure_job": "s81_rly_9_we-gth4-1fc725ee5",
+      "sha256": {
+        "abstract.json": "d3953808e7a3e925e35860a012d1bcb32eac0c9245b0e958c2c2f8eacbef9039",
+        "insertion.json": "023460557bd400b063a8bca1593f6c388d2367a43be551c9621c5f584b490676",
+        "dsfd_rly_9_WE.lef": "ee3a646d982eea24a15e1bab70ff64431fe892256fe52feb165885433956df5c",
+        "dsfd_rly_9_WE_tt.lib": "e0e75682b493c525d0b9170fb19aea25cffad7a4352c3da7139bb0d88647d318",
+        "dsfd_rly_9_WE_ff.lib": "12a0404f9425b2b297c38b55f7b50b0147019c53c5563ced8d904e71b5e74983",
+        "dsfd_rly_9_WE_ss.lib": "200eb7e209b5de5a34449de2f5824b5e86280addf5011bd31173ffe679f6fff3"
+      },
+      "tt_boundary": {
+        "n": 9,
+        "mean": 38.3,
+        "min": 37.9,
+        "max": 38.8
+      }
+    },
+    "dsfd_rly_12_EN": {
+      "view": "physical/ref_tile/s81_rly_12_en/views/dsfd_rly_12_EN",
+      "closure_job": "s81_rly_12_en-gth4-1fc725ee5",
+      "sha256": {
+        "abstract.json": "903dbdf516698f9473a6886b520113e44ac9a10d0eebbe39426dbdbbb62ae8cd",
+        "insertion.json": "ab429c9d7ef0f50ec8cb0fab107f0873d2fa8dc1b1370a583c0d441eb0af91db",
+        "dsfd_rly_12_EN.lef": "8da7ef98881d67e8e7a4ca96173c655766133a6e908489fbf9aea351db94435e",
+        "dsfd_rly_12_EN_tt.lib": "87452703d56db2e389e212cce08bccbb0cd4b0187023833bac8b133743d05f30",
+        "dsfd_rly_12_EN_ff.lib": "f1be3caf9379abffc0d01ecefa315ad4f6285964373784f065ce02ebb724acd9",
+        "dsfd_rly_12_EN_ss.lib": "5df95dbf71eec1cb908793565aade243a93c44564b7be990b9fd8e3f24eab457"
+      },
+      "tt_boundary": {
+        "n": 12,
+        "mean": 39.2,
+        "min": 39.2,
+        "max": 39.3
+      }
+    },
+    "dsfd_rly_1_EW": {
+      "view": "physical/ref_tile/s81_rly_1_ew/views/dsfd_rly_1_EW",
+      "closure_job": "s81_rly_1_ew-v3-faf093855",
+      "sha256": {
+        "abstract.json": "6b7e2fcba74fd664d897eb936f0bd08dca536a460cb3fb17cdcf379753160298",
+        "insertion.json": "ef61b40309997ad28a0266644b599cdd17b698ed22f7787922cd031df9e813e6",
+        "dsfd_rly_1_EW.lef": "510c9c401f98054a41994b317a778b7ada6c93d313c262249565cfe45c5705ed",
+        "dsfd_rly_1_EW_tt.lib": "eb06c3a4d0e2d84c2f462ba19cec56d1db0b69a7831e67c890a65cf35a78f33d",
+        "dsfd_rly_1_EW_ff.lib": "ce41c869765319189befe9ef207fdc39bf002395aee743355747eba065d4d40c",
+        "dsfd_rly_1_EW_ss.lib": "2e2530580675f18a1b3d7579f1f7fa9b682918b089339d2135523d10b4a84468"
+      },
+      "tt_boundary": {
+        "n": 1,
+        "mean": 0.1,
+        "min": 0.1,
+        "max": 0.1
+      }
+    },
+    "dsfd_rly_1_WE": {
+      "view": "physical/ref_tile/s81_rly_1_we/views/dsfd_rly_1_WE",
+      "closure_job": "s81_rly_1_we-v3-faf093855",
+      "sha256": {
+        "abstract.json": "423246caa33c624de5b71cb1c0e0a35267529344f9cd6c9741b9280bc59b3d82",
+        "insertion.json": "d7655e4bacaf3cac8c3613914bfce6e714e749f824dc3f539a022df8e599affb",
+        "dsfd_rly_1_WE.lef": "f2b82c0269f91aba5adc1b1664cb4c482d144905f66ba49e3473cc8182cb6225",
+        "dsfd_rly_1_WE_tt.lib": "8c6f228ae37f29470749bb8e7345221a9f494e166fdf8905575daf2d0969c4e0",
+        "dsfd_rly_1_WE_ff.lib": "3969633e13e923829c4829318054a48e6b38e2ff348bbd58000580e218543aa1",
+        "dsfd_rly_1_WE_ss.lib": "b2e2b98fcc4a5b20cef7aec087d906d7cb91adb4d332099cc0f4a7338dc9b593"
+      },
+      "tt_boundary": {
+        "n": 1,
+        "mean": 0.1,
+        "min": 0.1,
+        "max": 0.1
+      }
+    },
+    "dsfd_rly_54_EW": {
+      "view": "physical/ref_tile/s81_rly_54_ew/views/dsfd_rly_54_EW",
+      "closure_job": "s81_rly_54_ew-v2-88e22fcbf",
+      "sha256": {
+        "abstract.json": "84ab34f5b8b292c1028e2675f39f0960b8cf587ea44443cf2b4791425e35983e",
+        "insertion.json": "4adca802603f53b70728f0fbbc1484de6cfce46951d232bc6dd0a6ff26210af9",
+        "dsfd_rly_54_EW.lef": "be7ffd80f7ad9317e251b400b6a4323234685f6bebb72f52e2f9240f306d9813",
+        "dsfd_rly_54_EW_tt.lib": "913ebcf71694da604d9d588da3b11a776d337f1e4bd16c3a6610ec50d5f38b3f",
+        "dsfd_rly_54_EW_ff.lib": "9680ac56a0208f5e8dbcd491b7207d9da60bb75e09b6ebbe4face7ab3da0662b",
+        "dsfd_rly_54_EW_ss.lib": "5d77b37120f54513c30bb6cd94cb16b8e6f6f652995078320f75c0b2d1185d0f"
+      },
+      "tt_boundary": {
+        "n": 54,
+        "mean": 56.6,
+        "min": 55.9,
+        "max": 57.2
+      }
+    },
+    "dsfd_rly_2_WE": {
+      "view": "physical/ref_tile/s81_rly_2_we/views/dsfd_rly_2_WE",
+      "closure_job": "s81_rly_2_we-v3-faf093855",
+      "sha256": {
+        "abstract.json": "a683c68c025b26955837bcfe057b9908de33560b7e22c9dbf00d89ec875790a0",
+        "insertion.json": "2a56178165d875f40b009c563d40160fe23a0d34ff8366d0958e24bcb632d308",
+        "dsfd_rly_2_WE.lef": "0e67aa436e7e19d7f986b18d0476e06e8fd15e35090e866386110df9f871d411",
+        "dsfd_rly_2_WE_tt.lib": "7cb694b375fd4732be1796a106778e94e742b3e6c4cc3ecc346a51997ca89d43",
+        "dsfd_rly_2_WE_ff.lib": "e4e2eff3004d6b421b00a4cd57cc6b49f90d1e77cbdea2b84a8fffeb85635b87",
+        "dsfd_rly_2_WE_ss.lib": "e86e58da6a82e738653ac8028df2c5584443a9bc752a59ba97b99d1433adea96"
+      },
+      "tt_boundary": {
+        "n": 2,
+        "mean": 32.3,
+        "min": 32.3,
+        "max": 32.4
+      }
+    },
+    "dsfd_rly_2_EW": {
+      "view": "physical/ref_tile/s81_rly_2_ew/views/dsfd_rly_2_EW",
+      "closure_job": "s81_rly_2_ew-v3-faf093855",
+      "sha256": {
+        "abstract.json": "fecd1299efda2cf85d4d4772932141748e4765c0bc44fce63043c48a4edbdf37",
+        "insertion.json": "1d22ae2b6d9f280623a6d72618d04dd96d33992fae84b88e1a55edf526755d83",
+        "dsfd_rly_2_EW.lef": "392ac57eb07123abefac0debc7960fe1451f432d27bedc926818daf6226284ff",
+        "dsfd_rly_2_EW_tt.lib": "d5dfa8063a405c7334bd9a007f7c7df6036bcf1ede458b8ef58404c72bef9caa",
+        "dsfd_rly_2_EW_ff.lib": "ac7c1b23f6dbe800ce37c640f27d3a91dc3b40e611797a6a427b26eaf0e9cbd6",
+        "dsfd_rly_2_EW_ss.lib": "fecac1d0d8cea59112934f2839d338be5168c27c55b2b98e598cb774468551fa"
+      },
+      "tt_boundary": {
+        "n": 2,
+        "mean": 32.4,
+        "min": 32.3,
+        "max": 32.4
+      }
+    }
+  }
+}

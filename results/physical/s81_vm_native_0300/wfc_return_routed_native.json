@@ -1,0 +1,164 @@
+{
+ "schema": "opentallas.s81.wfc-final-routed-native.v1",
+ "source_commit": "2986a61e5",
+ "scope": "WFC return leaf dsfd_vm_wfc_return routed native audit rows, one per routed job (failed rows kept).",
+ "rows": [
+  {
+   "cell": "dsfd_vm_wfc_return",
+   "view": "dsfd_vm_wfc_return",
+   "lib_cell": "dsfd_vm_wfc_return",
+   "insertion": true,
+   "ref_src": [
+    "insertion.json boundary mean"
+   ],
+   "R_ps": 206.2,
+   "spread_ps": 44.2,
+   "outputs": 1028,
+   "inputs": 2059,
+   "launch_ps": 238.2,
+   "launch_pin": "s_d[1005]",
+   "capture_ps": 177.1,
+   "capture_pin": "e_d[1871]",
+   "launch_over": 8,
+   "capture_over": 0,
+   "comb_pins": 0,
+   "comb_first": [],
+   "pass": false,
+   "fail_why": "launch 238.22957 > 220 (8 pins)",
+   "job": "dsfd_vm_wfc_return_hop1_native_1016_r5-valid2-2986a61e5",
+   "host": "ot-agidock128",
+   "run": "/srv/opentallas-scratch/claude/closure-loop/dsfd_vm_wfc_return_hop1_native_1016_r5-valid2-2986a61e5",
+   "artifact_view": "/home/ubuntu/artifacts/s81-vm-0600/ret/views-final/dsfd_vm_wfc_return",
+   "raw_native": {
+    "launch_ps": 238.22957000000002,
+    "capture_ps": 177.09464,
+    "spread_ps": {
+     "ck": 44.19999999999999
+    }
+   },
+   "native_pass": false,
+   "child_lint_m5": {
+    "schema": "opentallas.hier_contract.child_lint.v1",
+    "lef": "/home/ubuntu/artifacts/s81-vm-0600/ret/views-final/dsfd_vm_wfc_return/dsfd_vm_wfc_return.lef",
+    "verdict": "PASS",
+    "fails": [],
+    "warns": [],
+    "summary": "dsfd_vm_wfc_return 108.0 x 237.6: PG M5 VDD 20 stripes (95% spread, 100% cov) / VSS 20 stripes (95% spread, 100% cov); strap M6; face pins 3088 blocked-above 0 blocked-same 0; clock ck insertion 250 ps; pockets M5 0 (closed)",
+    "info": {
+     "cell": "dsfd_vm_wfc_return",
+     "W": 108.0,
+     "H": 237.6,
+     "pg": {
+      "nets": {
+       "VDD": {
+        "top_layer": "M5",
+        "stripes": 20,
+        "dir": "V",
+        "spread": 0.95,
+        "coverage": 1.0,
+        "shapes_on_top": 20
+       },
+       "VSS": {
+        "top_layer": "M5",
+        "stripes": 20,
+        "dir": "V",
+        "spread": 0.95,
+        "coverage": 1.0,
+        "shapes_on_top": 20
+       }
+      },
+      "top_layer": "M5",
+      "ok": true,
+      "why": []
+     },
+     "pg_layer": "M5",
+     "strap_layer": "M6",
+     "cap": "M5",
+     "face": {
+      "face_pins": 3088,
+      "blocked_above": 0,
+      "covered_below": 431,
+      "examples": [],
+      "blocked_same": 0,
+      "same_examples": [],
+      "band_same": 0,
+      "band_examples": []
+     },
+     "clock_insertion": {
+      "ck": {
+       "max_ps": 249.76,
+       "min_ps": 174.07
+      }
+     },
+     "pockets": {
+      "layer": "M5",
+      "d_um": 1.536,
+      "marker": {
+       "layer": "M5",
+       "d_um": 1.536,
+       "added": 435
+      },
+      "count": 0,
+      "area_um2": 0,
+      "examples": []
+     }
+    }
+   },
+   "actual_routed_def": {
+    "sha256": "e549830330ed6740fe3bc5ae5db1ad62198b4bf68a63f982705c59a8cbc1279b",
+    "pg_layers": [
+     "M1",
+     "M2",
+     "M3",
+     "M4",
+     "M5"
+    ],
+    "signal_layers": [
+     "M1",
+     "M2",
+     "M3",
+     "M4",
+     "M5"
+    ]
+   },
+   "route": {
+    "TT": 217.81,
+    "FF": 13.48,
+    "DRC": 0,
+    "odb_sha256": "4357ae87268bec78e453a5a8061e09aa465253b5fb5dc8dade74e86ccfac640e"
+   },
+   "export_route_slack_match": {
+    "tt": {
+     "export_slack_ps": 217.81321191127745,
+     "route_slack_ps": 217.81
+    },
+    "ff": {
+     "export_slack_ps": 13.478773652764175,
+     "route_slack_ps": 13.48
+    }
+   },
+   "image_source": {
+    "odb": "/srv/opentallas-scratch/claude/closure-loop/dsfd_vm_wfc_return_hop1_native_1016_r5-valid2-2986a61e5/routes/dsfd_vm_wfc_return_hop1_native_1016_r5_valid2_2986a61e5/work/orfs/results/asap7/opentallas_dsfd_vm_wfc_return_asap7_ref_dsfd_vm_wfc_return_hop1_native_1016_r5_valid2_2986a61e5/base/6_final.odb",
+    "stage": "6_final",
+    "sha256": "4357ae87268bec78e453a5a8061e09aa465253b5fb5dc8dade74e86ccfac640e"
+   },
+   "image_paths": {
+    "floorplan.png": "/home/ubuntu/artifacts/s81-vm-0600/ret/layout-final/dsfd_vm_wfc_return/floorplan.png",
+    "density.png": "/home/ubuntu/artifacts/s81-vm-0600/ret/layout-final/dsfd_vm_wfc_return/density.png"
+   },
+   "image_sha256": {
+    "floorplan.png": "2474e37682fd52475ef75cb5d180783e2616c9b28583692dc9e95f469474f5d9",
+    "density.png": "526dfcc5da044a94f60d1e305c24a38950ee0c75db8c22cd9a957f77d06a56b3"
+   },
+   "images_actually_viewed": true,
+   "export_sha256": {
+    "dsfd_vm_wfc_return_ff.lib": "27cde3c6e3d76f64f658b28b8655fca1c7771dc5ddc5d9d4e47bbc61b4c13d12",
+    "dsfd_vm_wfc_return.lef": "b0c22d1dedba4c58864674cfdc0730bd9f6d2323d3db754c79e8c76a3d35aae0",
+    "dsfd_vm_wfc_return_tt.lib": "5cb4d3ef7b99024c5f803824385c18098d3e4ceee701147f493e2b78f06e99c2",
+    "dsfd_vm_wfc_return_ss.lib": "91f2e5fdcfca9a5dd8afaf04a2c1baa388c521dd374145d1569eee88b42bf091"
+   },
+   "image_notes": "viewed 2026-10-16 (S-VM-RET): logic in the N/NE triangle, S half only the E pin column (lane512 candidates e_d[j],[512+j],[1024+j],[1536+j] sit in four face quarters), SW empty; NE corner densest.",
+   "verdict": "ROUTE CLOSED (TT +217.81 / FF +13.48 ps DRC 0) but NATIVE FAIL: launch 238.2 ps > 220 on 8 east-end N outputs (s_d[1005]); clock W-centre 227 um from the NE sinks (R 206.2 ps). Superseded by r6 (86.4x194.4, interleaved exact pins)."
+  }
+ ]
+}

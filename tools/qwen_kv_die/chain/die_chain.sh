@@ -122,4 +122,17 @@ for c in $corners; do D=$R/sta_${DIE}_$c; mkdir -p $D/libs
   elif [ "$DCC" = 1 ]; then say "DIE CLOCK CHECK $c: no dump ($(grep -m1 OT_DCC_FAIL $D/grt_$c.log))"; fi
 done
 [ "$sta_failed" = 0 ] || { say "chain FAIL: one or more STA corners did not complete"; exit 1; }
+# Every completed KV die trial carries its endpoint cause table and actual GRT
+# congestion/pin/channel readout. The enclosing ot-run scope admits this work;
+# standalone callers retain the normal stage admission rather than running a
+# memory-heavy endpoint/guide walk outside the resource book.
+if [ "$DIE" = kv ]; then
+  if $ADMIT 8 -- python3 "$SRC/tools/qwen_kv_die/kvsys_classify.py" --run "$R" --out "$R/classify.json" > "$R/classify.log" 2>&1 &&
+     $ADMIT 8 -- python3 "$SRC/tools/qwen_kv_die/kv_readout.py" --run "$R" --classify "$R/classify.json" --out "$R/readout" > "$R/readout.log" 2>&1; then
+    say "KV READOUT: $R/classify.json $R/readout/readout.md"
+  else
+    say "KV READOUT FAIL: see $R/classify.log and $R/readout.log (physical/STA logs preserved)"
+    exit 1
+  fi
+fi
 say "chain done"

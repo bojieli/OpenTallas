@@ -1,0 +1,143 @@
+{
+ "schema": "opentallas.qwen.compute-portmap-proposal.v1",
+ "qualified": false,
+ "claim": "geometric stage estimate (pm_h_cycle_price method), not relay allocator / route ages; no RTL built",
+ "input": {
+  "bus_graph": "ot-epyc4:/srv/opentallas-scratch/claude/qwen-split-compute/r2h5/out_skip/rom_tp8b.json",
+  "sha256": "96b3ccc043dfacd73b5e2247b0319132ae89f50be65cca9d29aa7bf28f562c5b",
+  "rtl": [
+   "rtl/qwen_split/qfd_port_tiles.sv",
+   "rtl/qwen_split/qfd_slab_word_half.sv",
+   "rtl/qwen_split/qfd_slab_result_half.sv",
+   "rtl/physical/ot_qwen_band_lanes_slots.sv",
+   "rtl/qwen_sys/lane_band_20261008/ot_qfd_band_lanes.sv",
+   "rtl/qwen_split/qfd_band_upper_tp8.sv",
+   "rtl/qwen_split/qfd_res_ser_static.sv",
+   "rtl/hdc/ot_qwen_me_spine_h_w12.sv"
+  ]
+ },
+ "pair_link_bits": {
+  "per_pair": 6704,
+  "east_to_west": {
+   "pfrag_cw": 2050,
+   "slab_rq": 2213,
+   "slab_am": 52
+  },
+  "west_to_east": {
+   "slab_tc": 341,
+   "slab_ty": 2048
+  },
+  "meaning": "no arithmetic: k concatenates the E half level-7 word into tw (4096 -> band lanes), the E result slots into rq (4425 -> res_ser), the E argmax head into tf (104 -> tt_ctlm); k forwards tc (scale requests) and ty[4095:2048] (E result-position words) to k_f1; align_fault XORs the two halves valids",
+  "cross_half_arithmetic": "only the band-lane level-10 FP32 add (positions 0..3 = W, 4..7 = E; L8/L9 pair within a side), 16 adders per band"
+ },
+ "me_ops_per_ar_token": 217,
+ "base_cycles_per_token": 249431,
+ "geometry": {
+  "pair_link_um": 6760.240000000003,
+  "half_lane_link_um": 6656.5599999999995,
+  "max_bword_um": {
+   "0": {
+    "W": 12402.72,
+    "E": 12360.079999999996
+   },
+   "1": {
+    "W": 12886.560000000001,
+    "E": 12843.919999999998
+   },
+   "2": {
+    "W": 12342.24,
+    "E": 12299.599999999997
+   }
+  },
+  "max_bword_um_today_E": {
+   "0": 17560.799999999996,
+   "1": 18044.64,
+   "2": 17500.32
+  },
+  "units": "stages: ceil(manhattan_um/490) per bus (relay reach 490 um + 1 register hop, pm_h_cycle_price method); bit_mm in kbit*mm, instance centres"
+ },
+ "options": {
+  "today_r2h5": {
+   "reduction_stages": 56,
+   "result_stages": 19,
+   "per_me_op": 75,
+   "cross_centre_bits": 12336,
+   "cross_centre_bit_mm": 71.1,
+   "notes": "east bwords (12,336 b) run from the east array to k_f1 west of VM: they cross the centre column today",
+   "delta_stages_per_me_op_vs_today": 0,
+   "delta_cycles_per_ar_token_vs_today": 0,
+   "delta_pct_of_249431": 0.0,
+   "port_subsystem_kbit_mm": 368.4
+  },
+  "a_pair_split": {
+   "reduction_stages": 56,
+   "result_stages": 39,
+   "per_me_op": 95,
+   "cross_centre_bits": 20112,
+   "cross_centre_bit_mm": 136.0,
+   "notes": "pfrag 2050 + slab_rq 2213 + slab_am 52 (E->W) and slab_tc 341 + slab_ty 2048 (W->E), x3 pairs",
+   "delta_stages_per_me_op_vs_today": 20,
+   "delta_cycles_per_ar_token_vs_today": 4340,
+   "delta_pct_of_249431": 1.74,
+   "port_subsystem_kbit_mm": 408.8
+  },
+  "b0_remap_only": {
+   "reduction_stages": 56,
+   "result_stages": 39,
+   "per_me_op": 95,
+   "cross_centre_bits": 6704,
+   "cross_centre_bit_mm": 45.3,
+   "notes": "bands 0/2 one-sided by ROM placement + bword netlist; band 1 pair still crosses and sets the per-op max (geometric, same as (a))",
+   "delta_stages_per_me_op_vs_today": 20,
+   "delta_cycles_per_ar_token_vs_today": 4340,
+   "delta_pct_of_249431": 1.74,
+   "port_subsystem_kbit_mm": 339.1
+  },
+  "b1_half_lanes_L10_west": {
+   "reduction_stages": 56,
+   "result_stages": 11,
+   "per_me_op": 67,
+   "cross_centre_bits": 1539,
+   "cross_centre_bit_mm": 10.2,
+   "notes": "E half-band L9 word (16 lanes x 32 + valid) crosses to the W half for L10",
+   "delta_stages_per_me_op_vs_today": -8,
+   "delta_cycles_per_ar_token_vs_today": -1736,
+   "delta_pct_of_249431": -0.7,
+   "port_subsystem_kbit_mm": 303.1
+  },
+  "b2_half_lanes_upper_nb6": {
+   "reduction_stages": 44,
+   "result_stages": 20,
+   "per_me_op": 64,
+   "cross_centre_bits": 0,
+   "cross_centre_bit_mm": 0.0,
+   "notes": "no west<->east link; W and E half-band L9 words (513 b each) end in the centre tree top",
+   "delta_stages_per_me_op_vs_today": -11,
+   "delta_cycles_per_ar_token_vs_today": -2387,
+   "delta_pct_of_249431": -0.96,
+   "port_subsystem_kbit_mm": 311.7
+  }
+ },
+ "recommended": "b2_half_lanes_upper_nb6",
+ "b2": {
+  "frame": "BANDF 2: half-band hb = 2b+h, position p = 4hb+k; split s<=9: g = hb*2^(9-s)+k (k<2^(9-s)); s>=10: g = k on hb 0 (k < 3072>>s). Same g and same word values as BANDF 1; only the port position of s=8,9,10 results moves",
+  "tree_order": "L8 (2p,2p+1) and L9 inside each half; upper NB 6 inputs (W0,E0,W1,E1,W2,E2): level 1 = L10 (Wb+Eb), level 2 = L11 (band0+band1, band2 held): identical to TP8 today",
+  "upper_params": "ot_qfd_band_upper NL 4 NB 6 TCUT 6 LG 12 (NU 2): existing parameterisation (TP4 used NB 6 NU 2)",
+  "area_mm2": {
+   "logic_flops_delta": -30000,
+   "logic_mm2": -0.02,
+   "outline_mm2_range": [
+    0.3,
+    0.6
+   ],
+   "fp32_adders_delta": 0,
+   "basis": "k slab-master registers removed (13,062 flops x3); added tc copy 1,023 + VM face 1,653 + upper inputs 1,548 + half-lane control ~5k; band-lane and res_ser slots split into W/E halves (halo/perimeter)"
+  },
+  "cycles": {
+   "stages_per_me_op_vs_today": -11,
+   "stages_per_me_op_vs_a": -31,
+   "cycles_per_ar_token_vs_a": -6727,
+   "logic_edges_delta": 0
+  }
+ }
+}

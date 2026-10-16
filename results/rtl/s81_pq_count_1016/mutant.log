@@ -1,0 +1,10 @@
+RWBC MISMATCH cyc=8 ga15 2100/2100 q2f15 1/1 ga2 0100/0000 q2f2 0/0
+RWBC MISMATCH cyc=11 ga15 1102/1101 q2f15 1/1 ga2 0000/0000 q2f2 0/0
+RWBC MISMATCH cyc=13 ga15 0000/0000 q2f15 1/1 ga2 0100/0000 q2f2 0/0
+RWBC MISMATCH cyc=15 ga15 1110/1100 q2f15 1/1 ga2 1000/1000 q2f2 1/1
+RWBC MISMATCH cyc=17 ga15 0122/0112 q2f15 1/1 ga2 0020/0010 q2f2 0/0
+RWBC_GATE FAIL errs=133371 count_cycles=186523 q2f_cycles=147122
+- rtl/dsrom_sys/s81_ph/pq/test/tb_ot_s81_pq_rwbc.sv:63: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 167us; walltime 0.228 s; speed 732.505 us/s
+- Verilator: cpu 0.228 s on 1 threads; allocated 7 MB

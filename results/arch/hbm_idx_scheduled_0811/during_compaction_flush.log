@@ -1,0 +1,12 @@
+ot-run: ot-epyc4       admits   186 GB (avail 527, growth 293, headroom 48, waiters 9/530 GB) load 66/128 running 31 disk 930 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/codex/hidx-schedule-suite-0819/early_flush
+ot-run: ot-agidock128  admits    47 GB (avail 93, growth 22, headroom 24, waiters 13/584 GB) load 16/64 running 7 disk 341 GB 
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-3792713-1792164182 after 0 s
+DIAG link-core flush edge1091 total0 ingests0 first-189 last-189 selected_observe00000000000000
+DIAG faults(first edge from start; -1 never) calendar-1 operand-1 query-1 scorer-1 selector-1 link1093 parent_cal-1 | errors spacing0 seq0 ord0 record0 missing0
+IDX_SCHEDULED_STATIC N1397 mutation0 scores10928 records512 flits64 errors0 fault1 status0 firstkey315 firstscore438 lastscore608 firsttx1272 lasttx1392 done1399 (edges from start; expected key315 tx1272)
+[16260000000] %Fatal: tb_idx_scheduled_static.sv:119: Assertion failed in tb_idx_scheduled_static: fullshape scheduled INDEX (pin-registered tiles) mismatch
+%Error: rtl/test/hbm_idx_static/tb_idx_scheduled_static.sv:119: Verilog $stop
+Aborting...
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-3792713-1792164182): exit 1

@@ -6,7 +6,7 @@ module tb_query_static;
  reg [4:0]block_head=0,emit_head=0;reg[1:0]block_number=0;
  reg [1023:0]block_data=0;reg[15:0]head_weight=0;
  wire ql_v;wire[7:0]ql_head;wire[511:0]ql_codes;wire[31:0]ql_sc;wire[15:0]ql_w;wire fault;
- ot_hbm_idx_query_static dut(.clk(clk),.clk_quant(clk),.clk_quant_delay(clk),.clk_bank({4{clk}}),.*);
+ ot_hbm_idx_query_static_core dut(.clk(clk),.clk_quant(clk),.clk_quant_delay(clk),.clk_bank({4{clk}}),.*);
  reg[1023:0]x[0:127];reg[559:0]gold[0:31];integer errors=0,checked=0;
  always @(negedge clk)begin
   if(ql_v)begin
