@@ -3115,9 +3115,27 @@ def _slice_pins(m, mm, down=False):
     unknown = set(rest) - centres.keys()
     if unknown:
         raise ValueError(f'{mm.name}: no face grant for slice ports {sorted(unknown)}')
+    # KVDIE 2026-10-16 (kvs13c real case DRT-0073: under OT_KV_HOP the dn slice's ctrl_es band moved onto host_rst_n,
+    # ctrl_es[41] and host_rst_n[0] on one M4 track): a single-bit face pin steps clear of every bus band on its face
+    busy = []
+    for q_, (kind_, *r_) in mm.ports.items():
+        if kind_ == 'face' and len(r_) >= 5 and r_[2] == 'M4':
+            wid_, f_, _, c_, t_ = r_[0], r_[1], r_[2], r_[3], r_[4]
+            half_ = wid_ * F.TRK['M4'][1] * t_ / 2
+            busy.append((f_, c_ - half_ - 1.0, c_ + half_ + 1.0))
     for p in rest:
         face, offset = centres[p]
-        mm.face(p, w[p], face, 'M4', round(mm.h / 2 + offset, 3), 4)
+        y_ = mm.h / 2 + offset
+        if HOP:
+            step_ = 4 * F.TRK['M4'][1]
+            for _ in range(2000):
+                hit_ = [b_ for b_ in busy if b_[0] == face and b_[1] <= y_ <= b_[2]]
+                if not hit_:
+                    break
+                y_ = hit_[0][2] + step_ if offset >= 0 else hit_[0][1] - step_
+        mm.face(p, w[p], face, 'M4', round(y_, 3), 4)
+        if HOP:
+            busy.append((face, y_ - 1.0, y_ + 1.0))
 
 
 def _covered_faces(m, it, gap=4.32, peer=None):

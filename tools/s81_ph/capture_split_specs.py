@@ -9,6 +9,8 @@ writes nothing and exits 1 on any difference or unclassified file):
   * this script: the ten base split1016 specs (SPECS below);
   * tools/s81_ph/capx43_kits.py: dsfd_capt_x8x_{t,s}_{e,w}.json + their pin Tcl
     (DECISION B x8 leaves, incl. the recorded pin_regs opt-out);
+  * tools/s81_ph/capx43_status_kits.py: dsfd_capt_status_x43_{t,s}.json + their pin Tcl
+    (DECISION B status leaves, which dsfd_capt_split.sv's status_dual wrapper instantiates);
   * PRESERVED: successor specs derived by hand from a base spec at the listed
     commit; --check only requires them to exist.
 Pin Tcl of the base specs is the die lead's assigned input, not an output.
@@ -28,8 +30,7 @@ PRESERVED={
   'dsfd_capt_x8_data_w_b.json':('2314b2b4d','split1016b ck/rst entry on S face'),
   'dsfd_capt_rly_64_EW_r.json':('596843a47','split1016r RSREG=1 reset pin register'),
   'dsfd_capt_cd_n.json':('fc877d660 / 7f35da146','split1016n native-capture dsfd_capt_cd'),
-  'dsfd_capt_status_x43_t.json':('cd7c02a09 / 61d167710','DECISION B status x43 stream leaf (+ pin_regs opt-out)'),
-  'dsfd_capt_status_x43_s.json':('cd7c02a09 / 61d167710','DECISION B status x43 serial leaf (+ pin_regs opt-out)'),
+  'dsfd_capt_cd_p.json':('S-VM-CAPT-CD2 1016','split1016p dsfd_capt_cd PINREG=1 (f_st pin registers, +1 ckv)'),
 }
 
 def dump(spec):
@@ -47,6 +48,8 @@ def outputs(pins_dir=PINS_DIR):
         for half in 'ts':
             tcl,faces=k.pins(side,half);top=f'dsfd_capt_x8x_{half}_{side}'
             out[k.PINS/(top+'.tcl')]=tcl;out[k.SPECS/(top+'.json')]=json.dumps(k.spec(side,half,faces),indent=1)+'\n'
+    import capx43_status_kits as ks
+    out.update(ks.outputs())
     return out
 
 def check():

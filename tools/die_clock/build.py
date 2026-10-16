@@ -322,18 +322,33 @@ def build(a):
         for tn, lv in by_tree.items():
             k = tree_group.get(tn, tn)
             gT[k] = max(gT[k], max(lv.values()))
+        root_deficit = {}
         for tn, lv in by_tree.items():
-            T = gT[tree_group.get(tn, tn)]
+            Tt = max(lv.values())
+            # group alignment goes on the tree's COMMON path (pads before its top buffer), leaf trim only within the
+            # tree: a serial tree 1 ns faster than its seam partner must not carry 1 ns of pads at every leaf
+            root_deficit[tn] = gT[tree_group.get(tn, tn)] - Tt
             pv = [flop[p] for p in flop if sink_pins[p]['tree'] == tn]
             pa = [arr[p][0] for p in flop if sink_pins[p]['tree'] == tn]
             stats[tn] = dict(flop_spread=round(max(pv) - min(pv), 1), pin_min=round(min(pa), 1), pin_max=round(max(pa), 1),
-                             flop_max=round(max(pv), 1))
+                             flop_max=round(max(pv), 1), group_offset=round(root_deficit[tn], 1))
             for lb, m in lv.items():
-                deficit[lb] = T - m
-        rec['iterations'].append(dict(iter=it_, pad_ps=round(pad_ps, 2), pads=pad_n, trees=stats))
-        worst = max((s['flop_spread'] for s in stats.values()), default=0)
-        log('iter', it_, 'pad_ps', round(pad_ps, 1), 'pads', pad_n, 'worst flop spread', worst,
-            json.dumps({k: v for k, v in list(stats.items())[:4]}))
+                deficit[lb] = Tt - m
+        gstats = {}
+        for tn, st in stats.items():
+            k = tree_group.get(tn)
+            if k:
+                g_ = gstats.setdefault(k, dict(flop_min=1e18, flop_max=-1e18))
+                pv = [flop[p] for p in flop if sink_pins[p]['tree'] == tn]
+                g_['flop_min'] = min(g_['flop_min'], min(pv)); g_['flop_max'] = max(g_['flop_max'], max(pv))
+        for g_ in gstats.values():
+            g_['flop_spread'] = round(g_['flop_max'] - g_['flop_min'], 1)
+        rec['iterations'].append(dict(iter=it_, pad_ps=round(pad_ps, 2), pads=pad_n, trees=stats, groups=gstats))
+        worst = max([s['flop_spread'] for s in stats.values()] + [g_['flop_spread'] for g_ in gstats.values()], default=0)
+        cols = [v['flop_spread'] for k, v in stats.items() if k.startswith('col_')]
+        log('iter', it_, 'pad_ps', round(pad_ps, 1), 'pads', pad_n, 'worst flop spread', worst, 'groups', json.dumps(gstats),
+            json.dumps({k: v for k, v in stats.items() if not k.startswith('col_')}),
+            'col trees', len(cols), 'col flop spread max', max(cols, default=None))
         if it_ == a.iters or worst <= a.tol:
             break
         # calibrate the pad delay on the previous iteration's padded leaves
@@ -346,34 +361,41 @@ def build(a):
             if len(ratios) >= 3:
                 pad_ps = max(5.0, statistics.median(ratios))
         prev_added, prev_mean = {}, {}
-        for lb, d in deficit.items():
-            k = int(d / pad_ps + 0.5)
-            if k <= 0:
-                continue
-            leaf = insts[lb]
-            ai = leaf.findITerm('A')
-            net = ai.getNet()
+        def pad_before(bname, k, tree, tag):
+            ai = insts[bname].findITerm('A')
+            drv_net = ai.getNet()
             ai.disconnect()
-            drv_net = net
-            x, y = cell_xy[lb]
+            x, y = cell_xy[bname]
             for j in range(k):
-                leaf_pads[lb] += 1
-                pn = f'{lb}_tp{leaf_pads[lb]}'
+                leaf_pads[bname] += 1
+                pn = f'{bname}_{tag}{leaf_pads[bname]}'
                 pi = mk(pn, rt.PAD, x, y)
                 insts[pn] = pi
-                rec['cell_tree'][pn] = rec['leaves'][lb]['tree']
+                rec['cell_tree'][pn] = tree
                 pi.findITerm('A').connect(drv_net)
                 nn = odb.dbNet.create(blk, f'n_{pn}')
                 nn.setSigType('CLOCK')
                 pi.findITerm('Y').connect(nn)
-                rec['parent'][pn] = rec['parent'][lb]
-                rec['parent'][lb] = pn
+                rec['parent'][pn] = rec['parent'][bname]
+                rec['parent'][bname] = pn
                 drv_net = nn
             ai.connect(drv_net)
+
+        for lb, d in deficit.items():
+            k = int(d / pad_ps + 0.5)
+            if k <= 0:
+                continue
+            pad_before(lb, k, rec['leaves'][lb]['tree'], 'tp')
             pad_n += k
             prev_added[lb] = k
             v = [flop[p] for p in rec['leaves'][lb]['pins'] if p in flop]
             prev_mean[lb] = statistics.mean(v) if v else 0.0
+        for tn, d in root_deficit.items():
+            k = int(d / pad_ps + 0.5)
+            if k > 0:
+                pad_before(rec['trees'][tn]['model']['top'], k, tn, 'gp')
+                pad_n += k
+                rec['trees'][tn]['group_pads'] = rec['trees'][tn].get('group_pads', 0) + k
     # final: arrivals at every sink and every clock-cell output, slews, DRV
     allpins = sorted(sink_pins) + [f'{c[0]}/Y' for c in rec['cells']]
     D.measure(allpins, out / f'arrivals_{a.corner}.tsv')

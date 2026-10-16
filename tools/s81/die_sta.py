@@ -49,6 +49,58 @@ REL_CLK = {'dsfd_xstg': {'i': 'cw'}}
 # endpoints at -519..-577 ps (xa / xb / cc launched 548 ps before the column relays' clock).  Inputs AND outputs of a
 # multi-clock glue master are related to the clock that captures / launches them (REL_CLK_COLCK applies with --cfifo-colck).
 REL_CLK_COLCK = {'dsfd_cfifo': dict(xd='xf', st='cr', ri='cr', xa='cr', xb='cr', cc='cr', rs='cr', rd='cr', rf='cr')}
+# DIE-CLOCK 2026-10-16 (coordinator: fixed 3:4 seams): stream 833.333 / serial 1111.111 share the 3.333 ns epoch (4:3
+# edges, 12 VCO ticks of 277.8 ps).  The fixed-bank seams -- VM x34 / x43 (ot_s81_vm_x34_[ts], ot_s81_vm_x43_[ts]),
+# capture x8x and status x43 (dsfd_capt_x8x_[ts]_*, dsfd_capt_status_x43_[ts]) -- move each word on a compiled edge pair
+# whose window is >= 1.389 ns setup (5 ticks) with the bank's next write >= 1.111 ns (4 ticks) after the read edge
+# (rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_capt_x8_x43.sv bank table).  The die STA therefore relates serial and stream (no
+# set_clock_groups -asynchronous between them) and times every cross-root path INTO a seam leaf against that compiled
+# window: set_max_delay SEAM_SETUP_PS / set_min_delay -SEAM_HOLD_PS, clock latencies included (the physical tree's skew
+# counts).  Any OTHER serial <-> stream path keeps the default (tightest-edge, 277.8 ps) relationship and shows up as a
+# failure: only a scheduled seam may cross.  The seam leaves' reset nets are NOT false-pathed (both capture resets must
+# release on the common epoch edge): they are timed like data into the seam leaf (same-root single cycle, cross-root
+# the seam window); every other endpoint of a shared reset net stays false-pathed.  _t = stream root, _s = serial root.
+SEAM_RE = re.compile(r'(?:^|_)x(?:34|43|8x)_([ts])(?=_|$)')
+SEAM_SETUP_PS, SEAM_HOLD_PS = 1388.889, 1111.111
+RESET_NET_GLOBS = ('n_rst_*', 'n_rs_col_*', 'por_n')
+
+
+def seam_constraints(m):
+    """-> (sdc lines replacing the serial|stream async group and the blanket reset false path, record)"""
+    import fnmatch
+    side = {'t': set(), 's': set()}
+    for it in m['insts']:
+        mm = SEAM_RE.search(it.master)
+        if mm:
+            side[mm.group(1)].add(it.name)
+    seam = side['t'] | side['s']
+    plain, seam_rst = [], {}
+    for bid, cls, bits, eps in m['buses']:
+        net = bid if cls in ('top_in', 'top_out') else f'n_{bid}'
+        if not any(fnmatch.fnmatchcase(net, g) for g in RESET_NET_GLOBS):
+            continue
+        loads = [(i, p) for i, p in eps[1:]]
+        if any(i in seam for i, _ in loads):
+            seam_rst[net] = [f'{i}/{p}' for i, p in loads if i not in seam]
+        else:
+            plain.append(net)
+    if not seam:   # a die without fixed-ratio seam leaves (c26b and earlier): unchanged, serial asynchronous to stream
+        return (['set_clock_groups -asynchronous -group {clk_serial} -group {clk_hbm} -group [get_clocks -quiet {clk_stream ck_col_*}]',
+                 'set_false_path -through [get_nets -quiet {%s}]' % ' '.join(RESET_NET_GLOBS)], dict(seam_instances=0))
+    L = ['set_clock_groups -asynchronous -group {clk_hbm} -group [get_clocks -quiet {clk_serial clk_stream ck_col_*}]']
+    for cap, src in (('s', 'clk_stream'), ('t', 'clk_serial')):
+        if not side[cap]:
+            continue
+        pins = ' '.join(f'{i}/*' for i in sorted(side[cap]))
+        L += [f'set_max_delay {SEAM_SETUP_PS} -from [get_clocks {src}] -to [get_pins -quiet {{{pins}}}]',
+              f'set_min_delay {-SEAM_HOLD_PS} -from [get_clocks {src}] -to [get_pins -quiet {{{pins}}}]']
+    if plain:
+        L.append('set_false_path -through [get_nets -quiet {%s}]' % ' '.join(sorted(plain)))
+    for net, other in sorted(seam_rst.items()):
+        if other:
+            L.append('set_false_path -through [get_nets {%s}] -to [get_pins -quiet {%s}]' % (net, ' '.join(sorted(other))))
+    return L, dict(seam_instances=len(seam), stream_side=sorted(side['t']), serial_side=sorted(side['s']),
+                   timed_reset_nets=sorted(seam_rst), setup_window_ps=SEAM_SETUP_PS, hold_window_ps=SEAM_HOLD_PS)
 
 
 def hold_pad_sites(m):
@@ -969,6 +1021,7 @@ def main():
                                  nearest=len(lat) - sum(1 for s in sinks if f'{s[1]}/{s[2]}' in si))
     # with the CTS plan: setup 60 + 25 plan tolerance, hold 25 + 25 plan tolerance (rule H1: the die-link hold term
     # (+50) is not counted at the die, the receiver block signs off its input min at L; was 75)
+    seam_lines, rec['ratio_seams'] = seam_constraints(m)
     for corner, (us, uh) in ((('ss', (85.0, 50.0)), ('tt', (85.0, 50.0)), ('ff', (85.0, 50.0))) if lat else
                              (('ss', (210.0, 75.0)), ('tt', (210.0, 75.0)), ('ff', (210.0, 75.0)))):
         T = ['set libs [split [string trim [read [open /kit/libs_%s.txt]]] "\\n"]' % corner,
@@ -991,8 +1044,7 @@ def main():
                         T.append(f'set_clock_latency -source {lat[root][ci] + cod:.1f} [get_clocks {n_}]')
         T += [f'set_clock_uncertainty -setup {us} [all_clocks]', f'set_clock_uncertainty -hold {uh} [all_clocks]',
               'if {[file exists /kit/deep_uncertainty.tcl]} { source /kit/deep_uncertainty.tcl }' if lat else '',
-              'set_clock_groups -asynchronous -group {clk_serial} -group {clk_hbm} -group [get_clocks -quiet {clk_stream ck_col_*}]',
-              'set_false_path -through [get_nets -quiet {n_rst_* n_rs_col_* por_n}]',
+              *seam_lines,
               f'report_checks -path_delay {"min" if corner == "ff" else "max"} -group_path_count 200 -endpoint_path_count 1 '
               f'-fields {{fanout}} -digits 1 > /kit/paths_{corner}.rpt',
               f'report_checks -path_delay {"min" if corner == "ff" else "max"} -group_path_count 100000 '
