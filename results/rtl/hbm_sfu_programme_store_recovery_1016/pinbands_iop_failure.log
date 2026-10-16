@@ -1,0 +1,380 @@
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 3_1_place_gp_skip_io global_place_skip_io
+Running global_place_skip_io.tcl, stage 3_1_place_gp_skip_io
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty /src/physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_tt.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_liberty /src/physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_ff.lib
+read_db /work/results/asap7/opentallas_ot_hgi_sfu_programme_store_asap7_ref_gate/base/2_floorplan.odb
+read_sdc -mode ss /work/results/asap7/opentallas_ot_hgi_sfu_programme_store_asap7_ref_gate/base/2_floorplan.sdc
+read_sdc -mode ff /work/results/asap7/opentallas_ot_hgi_sfu_programme_store_asap7_ref_gate/base/2_floorplan.sdc
+OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /work/results/asap7/opentallas_ot_hgi_sfu_programme_store_asap7_ref_gate/base/2_floorplan.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+global_placement -skip_io -density 0.5 -pad_left 0 -pad_right 0
+[INFO GPL-0001] ---- Initialize GPL Main Data Structures
+[INFO GPL-0002] DBU: 1000
+[INFO GPL-0003] SiteSize: (  0.054  0.270 ) um
+[INFO GPL-0004] CoreBBox: (  2.160  2.160 ) ( 444.960 1021.680 ) um
+[INFO GPL-0016] Core area:                  451443.456 um^2
+[INFO GPL-0036] Movable instances area:       5639.180 um^2
+[INFO GPL-0037] Total instances area:       277403.381 um^2
+[INFO GPL-0035] Pin density area adjust:       219.793 um^2
+[INFO GPL-0032] ---- Initialize Region: Top-level
+[INFO GPL-0006] Number of instances:             83497
+[INFO GPL-0007] Movable instances:               42435
+[INFO GPL-0008] Fixed instances:                 29226
+[INFO GPL-0009] Dummy instances:                 11836
+[INFO GPL-0010] Number of nets:                  48689
+[INFO GPL-0011] Number of pins:                 133545
+[INFO GPL-0012] Die BBox:       (  0.000  0.000 ) ( 447.120 1023.840 ) um
+[INFO GPL-0013] Placement BBox: (  2.160  2.160 ) ( 444.960 1021.680 ) um
+[INFO GPL-0014] Region name: top-level.
+[INFO GPL-0015] Region area:                451443.456 um^2
+[INFO GPL-0017] Fixed instances area:       295124.511 um^2
+[INFO GPL-0018] Movable instances area:       5858.973 um^2
+[INFO GPL-0019] Utilization:                     3.748 %
+[INFO GPL-0020] Standard cells area:          5858.973 um^2
+[INFO GPL-0021] Large instances area:            0.000 um^2
+[INFO GPL-0005] ---- Execute Conjugate Gradient Initial Placement.
+[INFO GPL-0051] Source of initial instance position counters:
+	Odb location = 0	Core center = 42435	Region center = 0
+[INFO GPL-0033] ---- Initialize Nesterov Region: Top-level
+[INFO GPL-0023] Placement target density:       0.5000
+[INFO GPL-0024] Movable insts average area:      0.138 um^2
+[INFO GPL-0025] Ideal bin area:                  0.276 um^2
+[INFO GPL-0026] Ideal bin count:               1634847
+[INFO GPL-0027] Total bin area:             451443.456 um^2
+[INFO GPL-0028] Bin count (X, Y):         512 ,   1024
+[INFO GPL-0029] Bin size (W * H):       0.865 *  0.996 um
+[INFO GPL-0030] Number of bins:                 524288
+[INFO GPL-0084] ---- Execute Nesterov Global Placement.
+[INFO GPL-0031] HPWL: Half-Perimeter Wirelength
+Iteration | Overflow |     HPWL (um) |  HPWL(%) |   Penalty | Group
+---------------------------------------------------------------
+        0 |   0.9840 |  3.132065e+06 |   +0.00% |  6.88e-13 |      
+       10 |   0.7991 |  1.643553e+06 |  -47.52% |  1.12e-12 |      
+       20 |   0.7594 |  1.141336e+06 |  -30.56% |  1.83e-12 |      
+       30 |   0.7327 |  8.498973e+05 |  -25.53% |  2.98e-12 |      
+       40 |   0.6989 |  6.806609e+05 |  -19.91% |  4.85e-12 |      
+       50 |   0.7108 |  6.391628e+05 |   -6.10% |  7.89e-12 |      
+       60 |   0.7262 |  6.000745e+05 |   -6.12% |  1.29e-11 |      
+       70 |   0.7419 |  5.697054e+05 |   -5.06% |  2.09e-11 |      
+       80 |   0.7406 |  5.837650e+05 |   +2.47% |  3.41e-11 |      
+       90 |   0.7442 |  5.677409e+05 |   -2.74% |  5.55e-11 |      
+      100 |   0.7375 |  5.451570e+05 |   -3.98% |  9.04e-11 |      
+      110 |   0.7301 |  5.506372e+05 |   +1.01% |  1.47e-10 |      
+      120 |   0.7391 |  5.445145e+05 |   -1.11% |  2.40e-10 |      
+      130 |   0.7429 |  5.382767e+05 |   -1.15% |  3.90e-10 |      
+      140 |   0.7270 |  5.484566e+05 |   +1.89% |  6.35e-10 |      
+      150 |   0.7115 |  5.531791e+05 |   +0.86% |  1.03e-09 |      
+      160 |   0.6921 |  5.578060e+05 |   +0.84% |  1.68e-09 |      
+      170 |   0.6665 |  5.700009e+05 |   +2.19% |  2.74e-09 |      
+      180 |   0.6315 |  5.729694e+05 |   +0.52% |  4.46e-09 |      
+      190 |   0.6013 |  5.713031e+05 |   -0.29% |  7.26e-09 |      
+      200 |   0.5716 |  5.647884e+05 |   -1.14% |  1.18e-08 |      
+      210 |   0.5372 |  5.661572e+05 |   +0.24% |  1.92e-08 |      
+      220 |   0.5021 |  5.671302e+05 |   +0.17% |  3.13e-08 |      
+      230 |   0.4548 |  5.640114e+05 |   -0.55% |  5.10e-08 |      
+      240 |   0.4169 |  5.617061e+05 |   -0.41% |  8.31e-08 |      
+      250 |   0.3753 |  5.554816e+05 |   -1.11% |  1.35e-07 |      
+      260 |   0.3375 |  5.506040e+05 |   -0.88% |  2.16e-07 |      
+      270 |   0.3050 |  5.437091e+05 |   -1.25% |  3.18e-07 |      
+      280 |   0.2821 |  5.395465e+05 |   -0.77% |  4.69e-07 |      
+      290 |   0.2567 |  5.361751e+05 |   -0.62% |  6.91e-07 |      
+      300 |   0.2340 |  5.331251e+05 |   -0.57% |  1.02e-06 |      
+      310 |   0.2114 |  5.303697e+05 |   -0.52% |  1.50e-06 |      
+      320 |   0.1924 |  5.278395e+05 |   -0.48% |  2.21e-06 |      
+      330 |   0.1731 |  5.261303e+05 |   -0.32% |  3.25e-06 |      
+      340 |   0.1520 |  5.191621e+05 |   -1.32% |  4.79e-06 |      
+      350 |   0.1387 |  5.193484e+05 |   +0.04% |  7.06e-06 |      
+      360 |   0.1246 |  5.197328e+05 |   +0.07% |  1.04e-05 |      
+      370 |   0.1129 |  5.204349e+05 |   +0.14% |  1.53e-05 |      
+      380 |   0.1027 |  5.214744e+05 |   +0.20% |  2.26e-05 |      
+      383 |   0.0998 |  5.218941e+05 |          |  2.63e-05 |      
+---------------------------------------------------------------
+[INFO GPL-1001] Global placement finished at iteration 383
+[INFO GPL-1002] Placed Cell Area             5858.9726
+[INFO GPL-1003] Available Free Area         156318.9451
+[INFO GPL-1004] Minimum Feasible Density        0.0400 (cell_area / free_area)
+[INFO GPL-1006]   Suggested Target Densities:
+[INFO GPL-1007]     - For 90% usage of free space: 0.0416
+[INFO GPL-1008]     - For 80% usage of free space: 0.0469
+[INFO GPL-1009]     - For 50% usage of free space: 0.0750
+[INFO GPL-1014] Final placement area: 5858.97 (+0.00%)
+Took 385 seconds: global_placement -skip_io -density 0.5 -pad_left 0 -pad_right 0
+Design area 277403 um^2 61% utilization.
+write_db /work/results/asap7/opentallas_ot_hgi_sfu_programme_store_asap7_ref_gate/base/3_1_place_gp_skip_io.odb
+Elapsed time: 6:34.16[h:]min:sec. CPU time: user 714.48 sys 1.88 (181%). Peak memory: 698844KB.
+Log                       Ext     Elapsed/s Peak Memory/MB sha1sum result [0:20)
+3_1_place_gp_skip_io      .odb          394            682 f4f09388f33ce3cc3a47
+/OpenROAD-flow-scripts/flow/scripts/flow.sh 3_2_place_iop io_placement
+Running io_placement.tcl, stage 3_2_place_iop
+source /OpenROAD-flow-scripts/flow/platforms/asap7/liberty_suppressions.tcl
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_TT_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_TT_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_TT_nldm_220123.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_TT_nldm_211120.lib.gz
+read_liberty /src/physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_tt.lib
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_AO_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_INVBUF_RVT_FF_nldm_220122.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
+read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
+read_liberty /src/physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_ff.lib
+read_db /work/results/asap7/opentallas_ot_hgi_sfu_programme_store_asap7_ref_gate/base/3_1_place_gp_skip_io.odb
+read_sdc -mode ss /work/results/asap7/opentallas_ot_hgi_sfu_programme_store_asap7_ref_gate/base/2_floorplan.sdc
+read_sdc -mode ff /work/results/asap7/opentallas_ot_hgi_sfu_programme_store_asap7_ref_gate/base/2_floorplan.sdc
+OT_HOLD_MM: scenes WC (mode ss) / BC (mode ff) from /work/results/asap7/opentallas_ot_hgi_sfu_programme_store_asap7_ref_gate/base/2_floorplan.sdc
+source /OpenROAD-flow-scripts/flow/platforms/asap7/setRC.tcl
+place_pins -hor_layers M4 -ver_layers "M3 M5" -min_distance 2 -min_distance_in_tracks
+Found 22 macro blocks.
+[INFO PPL-0044] Pin group: [ io_word[0] io_word[1] io_word[2] io_word[3] io_word[4] ... ]
+[INFO PPL-0044] Pin group: [ io_word[16] io_word[17] io_word[18] io_word[19] io_word[20] ... ]
+[INFO PPL-0044] Pin group: [ io_word[32] io_word[33] io_word[34] io_word[35] io_word[36] ... ]
+[INFO PPL-0044] Pin group: [ io_word[48] io_word[49] io_word[50] io_word[51] io_word[52] ... ]
+[INFO PPL-0044] Pin group: [ io_word[64] io_word[65] io_word[66] io_word[67] io_word[68] ... ]
+[INFO PPL-0044] Pin group: [ io_word[80] io_word[81] io_word[82] io_word[83] io_word[84] ... ]
+[INFO PPL-0044] Pin group: [ io_word[96] io_word[97] io_word[98] io_word[99] io_word[100] ... ]
+[INFO PPL-0044] Pin group: [ io_word[112] io_word[113] io_word[114] io_word[115] io_word[116] ... ]
+[INFO PPL-0044] Pin group: [ io_word[128] io_word[129] io_word[130] io_word[131] io_word[132] ... ]
+[INFO PPL-0044] Pin group: [ io_word[144] io_word[145] io_word[146] io_word[147] io_word[148] ... ]
+[INFO PPL-0044] Pin group: [ io_word[160] io_word[161] io_word[162] io_word[163] io_word[164] ... ]
+[INFO PPL-0044] Pin group: [ io_word[176] io_word[177] io_word[178] io_word[179] io_word[180] ... ]
+[INFO PPL-0044] Pin group: [ io_word[192] io_word[193] io_word[194] io_word[195] io_word[196] ... ]
+[INFO PPL-0044] Pin group: [ io_word[208] io_word[209] io_word[210] io_word[211] io_word[212] ... ]
+[INFO PPL-0044] Pin group: [ io_word[224] io_word[225] io_word[226] io_word[227] io_word[228] ... ]
+[INFO PPL-0044] Pin group: [ io_word[240] io_word[241] io_word[242] io_word[243] io_word[244] ... ]
+[INFO PPL-0044] Pin group: [ io_word[256] io_word[257] io_word[258] io_word[259] io_word[260] ... ]
+[INFO PPL-0044] Pin group: [ io_word[272] io_word[273] io_word[274] io_word[275] io_word[276] ... ]
+[INFO PPL-0044] Pin group: [ io_word[288] io_word[289] io_word[290] io_word[291] io_word[292] ... ]
+[INFO PPL-0044] Pin group: [ io_word[304] io_word[305] io_word[306] io_word[307] io_word[308] ... ]
+[INFO PPL-0044] Pin group: [ io_word[320] io_word[321] io_word[322] io_word[323] io_word[324] ... ]
+[INFO PPL-0044] Pin group: [ io_word[336] io_word[337] io_word[338] io_word[339] io_word[340] ... ]
+[INFO PPL-0044] Pin group: [ io_word[352] io_word[353] io_word[354] io_word[355] io_word[356] ... ]
+[INFO PPL-0044] Pin group: [ io_word[368] io_word[369] io_word[370] io_word[371] io_word[372] ... ]
+[INFO PPL-0044] Pin group: [ io_word[384] io_word[385] io_word[386] io_word[387] io_word[388] ... ]
+[INFO PPL-0044] Pin group: [ io_word[400] io_word[401] io_word[402] io_word[403] io_word[404] ... ]
+[INFO PPL-0044] Pin group: [ io_word[416] io_word[417] io_word[418] io_word[419] io_word[420] ... ]
+[INFO PPL-0044] Pin group: [ io_word[432] io_word[433] io_word[434] io_word[435] io_word[436] ... ]
+[INFO PPL-0044] Pin group: [ io_word[448] io_word[449] io_word[450] io_word[451] io_word[452] ... ]
+[INFO PPL-0044] Pin group: [ io_word[464] io_word[465] io_word[466] io_word[467] io_word[468] ... ]
+[INFO PPL-0044] Pin group: [ clk ]
+[INFO PPL-0044] Pin group: [ rst_n ]
+[INFO PPL-0044] Pin group: [ compiler_control[0] compiler_control[1] compiler_control[2] compiler_control[3] compiler_control[4] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[16] compiler_control[17] compiler_control[18] compiler_control[19] compiler_control[20] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[32] compiler_control[33] compiler_control[34] compiler_control[35] compiler_control[36] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[48] compiler_control[49] compiler_control[50] compiler_control[51] compiler_control[52] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[64] compiler_control[65] compiler_control[66] compiler_control[67] compiler_control[68] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[80] compiler_control[81] compiler_control[82] compiler_control[83] compiler_control[84] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[96] compiler_control[97] compiler_control[98] compiler_control[99] compiler_control[100] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[112] compiler_control[113] compiler_control[114] compiler_control[115] compiler_control[116] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[128] compiler_control[129] compiler_control[130] compiler_control[131] compiler_control[132] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[144] compiler_control[145] compiler_control[146] compiler_control[147] compiler_control[148] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[160] compiler_control[161] compiler_control[162] compiler_control[163] compiler_control[164] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[176] compiler_control[177] compiler_control[178] compiler_control[179] compiler_control[180] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[192] compiler_control[193] compiler_control[194] compiler_control[195] compiler_control[196] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[208] compiler_control[209] compiler_control[210] compiler_control[211] compiler_control[212] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[224] compiler_control[225] compiler_control[226] compiler_control[227] compiler_control[228] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[240] compiler_control[241] compiler_control[242] compiler_control[243] compiler_control[244] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[256] compiler_control[257] compiler_control[258] compiler_control[259] compiler_control[260] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[272] compiler_control[273] compiler_control[274] compiler_control[275] compiler_control[276] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[288] compiler_control[289] compiler_control[290] compiler_control[291] compiler_control[292] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[304] compiler_control[305] compiler_control[306] compiler_control[307] compiler_control[308] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[320] compiler_control[321] compiler_control[322] compiler_control[323] compiler_control[324] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[336] compiler_control[337] compiler_control[338] compiler_control[339] compiler_control[340] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[352] compiler_control[353] compiler_control[354] compiler_control[355] compiler_control[356] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[368] compiler_control[369] compiler_control[370] compiler_control[371] compiler_control[372] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[384] compiler_control[385] compiler_control[386] compiler_control[387] compiler_control[388] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[400] compiler_control[401] compiler_control[402] compiler_control[403] compiler_control[404] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[416] compiler_control[417] compiler_control[418] compiler_control[419] compiler_control[420] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[432] compiler_control[433] compiler_control[434] compiler_control[435] compiler_control[436] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[448] compiler_control[449] compiler_control[450] compiler_control[451] compiler_control[452] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[464] compiler_control[465] compiler_control[466] compiler_control[467] compiler_control[468] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[480] compiler_control[481] compiler_control[482] compiler_control[483] compiler_control[484] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[496] compiler_control[497] compiler_control[498] compiler_control[499] compiler_control[500] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[512] compiler_control[513] compiler_control[514] compiler_control[515] compiler_control[516] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[528] compiler_control[529] compiler_control[530] compiler_control[531] compiler_control[532] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[544] compiler_control[545] compiler_control[546] compiler_control[547] compiler_control[548] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[560] compiler_control[561] compiler_control[562] compiler_control[563] compiler_control[564] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[576] compiler_control[577] compiler_control[578] compiler_control[579] compiler_control[580] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[592] compiler_control[593] compiler_control[594] compiler_control[595] compiler_control[596] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[608] compiler_control[609] compiler_control[610] compiler_control[611] compiler_control[612] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[624] compiler_control[625] compiler_control[626] compiler_control[627] compiler_control[628] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[640] compiler_control[641] compiler_control[642] compiler_control[643] compiler_control[644] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[656] compiler_control[657] compiler_control[658] compiler_control[659] compiler_control[660] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[672] compiler_control[673] compiler_control[674] compiler_control[675] compiler_control[676] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[688] compiler_control[689] compiler_control[690] compiler_control[691] compiler_control[692] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[704] compiler_control[705] compiler_control[706] compiler_control[707] compiler_control[708] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[720] compiler_control[721] compiler_control[722] compiler_control[723] compiler_control[724] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[736] compiler_control[737] compiler_control[738] compiler_control[739] compiler_control[740] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[752] compiler_control[753] compiler_control[754] compiler_control[755] compiler_control[756] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[768] compiler_control[769] compiler_control[770] compiler_control[771] compiler_control[772] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[784] compiler_control[785] compiler_control[786] compiler_control[787] compiler_control[788] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[800] compiler_control[801] compiler_control[802] compiler_control[803] compiler_control[804] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[816] compiler_control[817] compiler_control[818] compiler_control[819] compiler_control[820] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[832] compiler_control[833] compiler_control[834] compiler_control[835] compiler_control[836] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[848] compiler_control[849] compiler_control[850] compiler_control[851] compiler_control[852] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[864] compiler_control[865] compiler_control[866] compiler_control[867] compiler_control[868] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[880] compiler_control[881] compiler_control[882] compiler_control[883] compiler_control[884] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[896] compiler_control[897] compiler_control[898] compiler_control[899] compiler_control[900] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[912] compiler_control[913] compiler_control[914] compiler_control[915] compiler_control[916] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[928] compiler_control[929] compiler_control[930] compiler_control[931] compiler_control[932] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[944] compiler_control[945] compiler_control[946] compiler_control[947] compiler_control[948] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[960] compiler_control[961] compiler_control[962] compiler_control[963] compiler_control[964] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[976] compiler_control[977] compiler_control[978] compiler_control[979] compiler_control[980] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[992] compiler_control[993] compiler_control[994] compiler_control[995] compiler_control[996] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[1008] compiler_control[1009] compiler_control[1010] compiler_control[1011] compiler_control[1012] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[1024] compiler_control[1025] compiler_control[1026] compiler_control[1027] compiler_control[1028] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[1040] compiler_control[1041] compiler_control[1042] compiler_control[1043] compiler_control[1044] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[1056] compiler_control[1057] compiler_control[1058] compiler_control[1059] compiler_control[1060] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[1072] compiler_control[1073] compiler_control[1074] compiler_control[1075] compiler_control[1076] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[1088] compiler_control[1089] compiler_control[1090] compiler_control[1091] compiler_control[1092] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[1104] compiler_control[1105] compiler_control[1106] compiler_control[1107] compiler_control[1108] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[1120] compiler_control[1121] compiler_control[1122] compiler_control[1123] compiler_control[1124] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[1136] compiler_control[1137] compiler_control[1138] compiler_control[1139] compiler_control[1140] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[1152] compiler_control[1153] compiler_control[1154] compiler_control[1155] compiler_control[1156] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[1168] compiler_control[1169] compiler_control[1170] compiler_control[1171] compiler_control[1172] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[1184] compiler_control[1185] compiler_control[1186] compiler_control[1187] compiler_control[1188] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[1200] compiler_control[1201] compiler_control[1202] compiler_control[1203] compiler_control[1204] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[1216] compiler_control[1217] compiler_control[1218] compiler_control[1219] compiler_control[1220] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[1232] compiler_control[1233] compiler_control[1234] compiler_control[1235] compiler_control[1236] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[1248] compiler_control[1249] compiler_control[1250] compiler_control[1251] compiler_control[1252] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[1264] compiler_control[1265] compiler_control[1266] compiler_control[1267] compiler_control[1268] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[1280] compiler_control[1281] compiler_control[1282] compiler_control[1283] compiler_control[1284] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[1296] compiler_control[1297] compiler_control[1298] compiler_control[1299] compiler_control[1300] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[1312] compiler_control[1313] compiler_control[1314] compiler_control[1315] compiler_control[1316] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[1328] compiler_control[1329] compiler_control[1330] compiler_control[1331] compiler_control[1332] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[1344] compiler_control[1345] compiler_control[1346] compiler_control[1347] compiler_control[1348] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[1360] compiler_control[1361] compiler_control[1362] compiler_control[1363] compiler_control[1364] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[1376] compiler_control[1377] compiler_control[1378] compiler_control[1379] compiler_control[1380] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[1392] compiler_control[1393] compiler_control[1394] compiler_control[1395] compiler_control[1396] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[1408] compiler_control[1409] compiler_control[1410] compiler_control[1411] compiler_control[1412] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[1424] compiler_control[1425] compiler_control[1426] compiler_control[1427] compiler_control[1428] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[1440] compiler_control[1441] compiler_control[1442] compiler_control[1443] compiler_control[1444] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[1456] compiler_control[1457] compiler_control[1458] compiler_control[1459] compiler_control[1460] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[1472] compiler_control[1473] compiler_control[1474] compiler_control[1475] compiler_control[1476] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[1488] compiler_control[1489] compiler_control[1490] compiler_control[1491] compiler_control[1492] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[1504] compiler_control[1505] compiler_control[1506] compiler_control[1507] compiler_control[1508] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[1520] compiler_control[1521] compiler_control[1522] compiler_control[1523] compiler_control[1524] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[1536] compiler_control[1537] compiler_control[1538] compiler_control[1539] compiler_control[1540] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[1552] compiler_control[1553] compiler_control[1554] compiler_control[1555] compiler_control[1556] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[1568] compiler_control[1569] compiler_control[1570] compiler_control[1571] compiler_control[1572] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[1584] compiler_control[1585] compiler_control[1586] compiler_control[1587] compiler_control[1588] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[1600] compiler_control[1601] compiler_control[1602] compiler_control[1603] compiler_control[1604] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[1616] compiler_control[1617] compiler_control[1618] compiler_control[1619] compiler_control[1620] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[1632] compiler_control[1633] compiler_control[1634] compiler_control[1635] compiler_control[1636] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[1648] compiler_control[1649] compiler_control[1650] compiler_control[1651] compiler_control[1652] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[1664] compiler_control[1665] compiler_control[1666] compiler_control[1667] compiler_control[1668] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[1680] compiler_control[1681] compiler_control[1682] compiler_control[1683] compiler_control[1684] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[1696] compiler_control[1697] compiler_control[1698] compiler_control[1699] compiler_control[1700] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[1712] compiler_control[1713] compiler_control[1714] compiler_control[1715] compiler_control[1716] ... ]
+[INFO PPL-0044] Pin group: [ compiler_control[1728] compiler_control[1729] compiler_control[1730] compiler_control[1731] compiler_control[1732] ... ]
+[INFO PPL-0044] Pin group: [ cfg_we ]
+[INFO PPL-0044] Pin group: [ cfg_stripe[0] cfg_stripe[1] cfg_stripe[2] ]
+[INFO PPL-0044] Pin group: [ cfg_addr[0] cfg_addr[1] cfg_addr[2] cfg_addr[3] cfg_addr[4] ... ]
+[INFO PPL-0044] Pin group: [ cfg_data[0] cfg_data[1] cfg_data[2] cfg_data[3] cfg_data[4] ... ]
+[INFO PPL-0044] Pin group: [ cfg_data[16] cfg_data[17] cfg_data[18] cfg_data[19] cfg_data[20] ... ]
+[INFO PPL-0044] Pin group: [ cfg_data[32] cfg_data[33] cfg_data[34] cfg_data[35] cfg_data[36] ... ]
+[INFO PPL-0044] Pin group: [ cfg_data[48] cfg_data[49] cfg_data[50] cfg_data[51] cfg_data[52] ... ]
+[INFO PPL-0044] Pin group: [ cfg_data[64] cfg_data[65] cfg_data[66] cfg_data[67] cfg_data[68] ... ]
+[INFO PPL-0044] Pin group: [ cfg_data[80] cfg_data[81] cfg_data[82] cfg_data[83] cfg_data[84] ... ]
+[INFO PPL-0044] Pin group: [ cfg_data[96] cfg_data[97] cfg_data[98] cfg_data[99] cfg_data[100] ... ]
+[INFO PPL-0044] Pin group: [ cfg_data[112] cfg_data[113] cfg_data[114] cfg_data[115] cfg_data[116] ... ]
+[INFO PPL-0044] Pin group: [ cfg_data[128] cfg_data[129] cfg_data[130] cfg_data[131] cfg_data[132] ... ]
+[INFO PPL-0044] Pin group: [ cfg_data[144] cfg_data[145] cfg_data[146] cfg_data[147] cfg_data[148] ... ]
+[INFO PPL-0044] Pin group: [ cfg_data[160] cfg_data[161] cfg_data[162] cfg_data[163] cfg_data[164] ... ]
+[INFO PPL-0044] Pin group: [ cfg_data[176] cfg_data[177] cfg_data[178] cfg_data[179] cfg_data[180] ... ]
+[INFO PPL-0044] Pin group: [ cfg_data[192] cfg_data[193] cfg_data[194] cfg_data[195] cfg_data[196] ... ]
+[INFO PPL-0044] Pin group: [ cfg_data[208] cfg_data[209] cfg_data[210] cfg_data[211] cfg_data[212] ... ]
+[INFO PPL-0044] Pin group: [ cfg_data[224] cfg_data[225] cfg_data[226] cfg_data[227] cfg_data[228] ... ]
+[INFO PPL-0044] Pin group: [ cfg_data[240] cfg_data[241] cfg_data[242] cfg_data[243] cfg_data[244] ... ]
+[INFO PPL-0044] Pin group: [ start_base[0] start_base[1] start_base[2] start_base[3] start_base[4] ... ]
+[INFO PPL-0044] Pin group: [ start_limit[0] start_limit[1] start_limit[2] start_limit[3] start_limit[4] ... ]
+[INFO PPL-0044] Pin group: [ start_loops[0] start_loops[1] start_loops[2] start_loops[3] start_loops[4] ... ]
+[INFO PPL-0044] Pin group: [ io_cfg_we ]
+[INFO PPL-0044] Pin group: [ io_cfg_stripe[0] io_cfg_stripe[1] ]
+[INFO PPL-0044] Pin group: [ io_cfg_addr[0] io_cfg_addr[1] io_cfg_addr[2] io_cfg_addr[3] io_cfg_addr[4] ... ]
+[INFO PPL-0044] Pin group: [ io_cfg_data[0] io_cfg_data[1] io_cfg_data[2] io_cfg_data[3] io_cfg_data[4] ... ]
+[INFO PPL-0044] Pin group: [ io_cfg_data[16] io_cfg_data[17] io_cfg_data[18] io_cfg_data[19] io_cfg_data[20] ... ]
+[INFO PPL-0044] Pin group: [ io_cfg_data[32] io_cfg_data[33] io_cfg_data[34] io_cfg_data[35] io_cfg_data[36] ... ]
+[INFO PPL-0044] Pin group: [ io_cfg_data[48] io_cfg_data[49] io_cfg_data[50] io_cfg_data[51] io_cfg_data[52] ... ]
+[INFO PPL-0044] Pin group: [ io_cfg_data[64] io_cfg_data[65] io_cfg_data[66] io_cfg_data[67] io_cfg_data[68] ... ]
+[INFO PPL-0044] Pin group: [ io_cfg_data[80] io_cfg_data[81] io_cfg_data[82] io_cfg_data[83] io_cfg_data[84] ... ]
+[INFO PPL-0044] Pin group: [ io_cfg_data[96] io_cfg_data[97] io_cfg_data[98] io_cfg_data[99] io_cfg_data[100] ... ]
+[INFO PPL-0044] Pin group: [ io_cfg_data[112] io_cfg_data[113] io_cfg_data[114] io_cfg_data[115] io_cfg_data[116] ... ]
+[INFO PPL-0044] Pin group: [ io_cfg_data[128] io_cfg_data[129] io_cfg_data[130] io_cfg_data[131] io_cfg_data[132] ... ]
+[INFO PPL-0044] Pin group: [ io_cfg_data[144] io_cfg_data[145] io_cfg_data[146] io_cfg_data[147] io_cfg_data[148] ... ]
+[INFO PPL-0044] Pin group: [ io_cfg_data[160] io_cfg_data[161] io_cfg_data[162] io_cfg_data[163] io_cfg_data[164] ... ]
+[INFO PPL-0044] Pin group: [ io_cfg_data[176] io_cfg_data[177] io_cfg_data[178] io_cfg_data[179] io_cfg_data[180] ... ]
+[INFO PPL-0044] Pin group: [ io_cfg_data[192] io_cfg_data[193] io_cfg_data[194] io_cfg_data[195] io_cfg_data[196] ... ]
+[INFO PPL-0044] Pin group: [ io_cfg_data[208] io_cfg_data[209] io_cfg_data[210] io_cfg_data[211] io_cfg_data[212] ... ]
+[INFO PPL-0044] Pin group: [ io_cfg_data[224] io_cfg_data[225] io_cfg_data[226] io_cfg_data[227] io_cfg_data[228] ... ]
+[INFO PPL-0044] Pin group: [ io_cfg_data[240] io_cfg_data[241] io_cfg_data[242] io_cfg_data[243] io_cfg_data[244] ... ]
+[INFO PPL-0044] Pin group: [ io_start_v ]
+[INFO PPL-0044] Pin group: [ io_start_base[0] io_start_base[1] io_start_base[2] io_start_base[3] io_start_base[4] ... ]
+[INFO PPL-0044] Pin group: [ io_start_limit[0] io_start_limit[1] io_start_limit[2] io_start_limit[3] io_start_limit[4] ... ]
+[INFO PPL-0044] Pin group: [ io_start_loops[0] io_start_loops[1] io_start_loops[2] io_start_loops[3] io_start_loops[4] ... ]
+[INFO PPL-0044] Pin group: [ programme_active ]
+[INFO PPL-0044] Pin group: [ programme_done ]
+[INFO PPL-0044] Pin group: [ programme_ordinal[0] programme_ordinal[1] programme_ordinal[2] programme_ordinal[3] programme_ordinal[4] ... ]
+[INFO PPL-0044] Pin group: [ programme_ordinal[16] programme_ordinal[17] programme_ordinal[18] programme_ordinal[19] programme_ordinal[20] ... ]
+[INFO PPL-0044] Pin group: [ io_active ]
+[INFO PPL-0044] Pin group: [ io_done ]
+[INFO PPL-0044] Pin group: [ io_ordinal[0] io_ordinal[1] io_ordinal[2] io_ordinal[3] io_ordinal[4] ... ]
+[INFO PPL-0044] Pin group: [ io_ordinal[16] io_ordinal[17] io_ordinal[18] io_ordinal[19] io_ordinal[20] ... ]
+[INFO PPL-0044] Pin group: [ fault ]
+[INFO PPL-0067] Restrict pins [ cfg_addr[0] cfg_addr[10] cfg_addr[1] cfg_addr[2] cfg_addr[3] ... ] to region 0.30u-19.70u at the TOP edge.
+[INFO PPL-0067] Restrict pins [ cfg_data[0] cfg_data[100] cfg_data[101] cfg_data[102] cfg_data[103] ... ] to region 20.00u-215.00u at the TOP edge.
+[INFO PPL-0067] Restrict pins [ io_cfg_data[0] io_cfg_data[100] io_cfg_data[101] io_cfg_data[102] io_cfg_data[103] ... ] to region 232.00u-427.00u at the TOP edge.
+[INFO PPL-0067] Restrict pins [ fault io_active io_cfg_addr[0] io_cfg_addr[10] io_cfg_addr[1] ... ] to region 427.30u-446.70u at the TOP edge.
+[INFO PPL-0067] Restrict pins [ io_word[0] io_word[100] io_word[101] io_word[102] io_word[103] ... ] to region 23.00u-290.00u at the LEFT edge.
+[INFO PPL-0067] Restrict pins [ compiler_control[0] compiler_control[1000] compiler_control[1001] compiler_control[1002] compiler_control[1003] ... ] to region 296.00u-1004.00u at the LEFT edge.
+[INFO PPL-0067] Restrict pins [ clk ] to region 506.00u-514.00u at the LEFT edge.
+[INFO PPL-0067] Restrict pins [ rst_n ] to region 515.00u-519.00u at the LEFT edge.
+[INFO PPL-0001] Number of available slots 42976
+[INFO PPL-0002] Number of I/O             2904
+[INFO PPL-0003] Number of I/O w/sink      2904
+[INFO PPL-0004] Number of I/O w/o sink    0
+[INFO PPL-0006] Number of I/O Groups    195
+[INFO PPL-0005] Slots per section         200
+[WARNING PPL-0078] Not enough available positions (8) in section (214.965, 1023.84)-(200.637, 1023.84) at edge TOP to place the pin group of size 16.
+[WARNING PPL-0078] Not enough available positions (8) in section (214.965, 1023.84)-(200.637, 1023.84) at edge TOP to place the pin group of size 16.
+[WARNING PPL-0078] Not enough available positions (8) in section (214.965, 1023.84)-(200.637, 1023.84) at edge TOP to place the pin group of size 16.
+[WARNING PPL-0078] Not enough available positions (8) in section (214.965, 1023.84)-(200.637, 1023.84) at edge TOP to place the pin group of size 16.
+[WARNING PPL-0078] Not enough available positions (15) in section (234.972, 1023.84)-(232.092, 1023.84) at edge TOP to place the pin group of size 16.
+[WARNING PPL-0078] Not enough available positions (15) in section (234.972, 1023.84)-(232.092, 1023.84) at edge TOP to place the pin group of size 16.
+[WARNING PPL-0078] Not enough available positions (15) in section (234.972, 1023.84)-(232.092, 1023.84) at edge TOP to place the pin group of size 16.
+[WARNING PPL-0078] Not enough available positions (15) in section (234.972, 1023.84)-(232.092, 1023.84) at edge TOP to place the pin group of size 16.
+[WARNING PPL-0078] Not enough available positions (15) in section (234.972, 1023.84)-(232.092, 1023.84) at edge TOP to place the pin group of size 16.
+[WARNING PPL-0078] Not enough available positions (15) in section (234.972, 1023.84)-(232.092, 1023.84) at edge TOP to place the pin group of size 16.
+[WARNING PPL-0078] Not enough available positions (12) in section (239.733, 1023.84)-(232.029, 1023.84) at edge TOP to place the pin group of size 16.
+[WARNING PPL-0078] Not enough available positions (15) in section (234.972, 1023.84)-(232.092, 1023.84) at edge TOP to place the pin group of size 16.
+[WARNING PPL-0078] Not enough available positions (12) in section (239.733, 1023.84)-(232.029, 1023.84) at edge TOP to place the pin group of size 16.
+[WARNING PPL-0078] Not enough available positions (15) in section (234.972, 1023.84)-(232.092, 1023.84) at edge TOP to place the pin group of size 16.
+[WARNING PPL-0078] Not enough available positions (12) in section (239.733, 1023.84)-(232.029, 1023.84) at edge TOP to place the pin group of size 16.
+[WARNING PPL-0078] Not enough available positions (15) in section (234.972, 1023.84)-(232.092, 1023.84) at edge TOP to place the pin group of size 16.
+[WARNING PPL-0078] Not enough available positions (12) in section (239.733, 1023.84)-(232.029, 1023.84) at edge TOP to place the pin group of size 16.
+[WARNING PPL-0078] Not enough available positions (15) in section (234.972, 1023.84)-(232.092, 1023.84) at edge TOP to place the pin group of size 16.
+[WARNING PPL-0078] Not enough available positions (12) in section (239.733, 1023.84)-(232.029, 1023.84) at edge TOP to place the pin group of size 16.
+[WARNING PPL-0078] Not enough available positions (15) in section (234.972, 1023.84)-(232.092, 1023.84) at edge TOP to place the pin group of size 16.
+[WARNING PPL-0078] Not enough available positions (12) in section (239.733, 1023.84)-(232.029, 1023.84) at edge TOP to place the pin group of size 16.
+[WARNING PPL-0078] Not enough available positions (15) in section (234.972, 1023.84)-(232.092, 1023.84) at edge TOP to place the pin group of size 16.
+[WARNING PPL-0078] Not enough available positions (12) in section (239.733, 1023.84)-(232.029, 1023.84) at edge TOP to place the pin group of size 16.
+[WARNING PPL-0078] Not enough available positions (15) in section (234.972, 1023.84)-(232.092, 1023.84) at edge TOP to place the pin group of size 16.
+[WARNING PPL-0078] Not enough available positions (12) in section (239.733, 1023.84)-(232.029, 1023.84) at edge TOP to place the pin group of size 16.
+[WARNING PPL-0078] Not enough available positions (11) in section (432.117, 1023.84)-(427.365, 1023.84) at edge TOP to place the pin group of size 16.
+[WARNING PPL-0078] Not enough available positions (11) in section (432.117, 1023.84)-(427.365, 1023.84) at edge TOP to place the pin group of size 16.
+[ERROR PPL-0086] Pin group of size 11 was not assigned.
+Error: io_placement.tcl, 21 PPL-0086
+Elapsed time: 0:06.99[h:]min:sec. CPU time: user 6.67 sys 0.33 (99%). Peak memory: 456804KB.
+make[1]: *** [Makefile:495: do-3_2_place_iop] Error 1
+make: *** [Makefile:495: /work/results/asap7/opentallas_ot_hgi_sfu_programme_store_asap7_ref_gate/base/3_2_place_iop.odb] Error 2
