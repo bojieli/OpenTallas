@@ -33,6 +33,13 @@ module ot_s81_fixed_issue #(
  reg begun,sealed,cfg_fault,run_fault,has_kit,validating;
  reg[7:0]scan_index,scan_native;reg scan_bad;reg[1:0]scan_ends,scan_kits;
  reg[23:0]scan_max_done,scan_end_cycle,scan_kit_cycle;
+`ifdef OT_S81_ISSUE_SCANPIPE
+ // Boot-only native scan: capture each real row and its loaded/active tag,
+ // accumulate next edge, and evaluate final totals on a separate flush edge.
+ // Exactly NOPS+2 validation edges; command/KIT/END calendars are unchanged.
+ reg[75:0]scan_row_q;reg[2:0]scan_loaded_q;
+ reg scan_active_q,scan_row_valid;
+`endif
  reg[1:0]active;reg next_slot;
  reg[9:0]users[0:1];reg[20:0]positions[0:1],tokens[0:1];
  reg[23:0]age[0:1];reg[NOPS-1:0]pending[0:1];
@@ -135,6 +142,9 @@ module ot_s81_fixed_issue #(
  always @(posedge clk or negedge rst_n)begin
   if(!rst_n)begin
    length_q<=0;phase_q<=0;start_phase_q<=0;begun<=0;sealed<=0;cfg_fault<=0;run_fault<=0;
+`ifdef OT_S81_ISSUE_SCANPIPE
+   scan_row_valid<=0;
+`endif
    validating<=0;scan_index<=0;scan_native<=0;scan_bad<=0;scan_ends<=0;scan_kits<=0;scan_max_done<=0;scan_end_cycle<=0;scan_kit_cycle<=0;
    active<=0;next_slot<=0;has_kit<=0;job_done<=0;job_kdone<=0;done_slot<=0;kit_tok<=0;
    fev_q<=0;st_jobs<=0;st_cmds<=0;dv_q<=0;dt_q<=0;
@@ -155,6 +165,9 @@ module ot_s81_fixed_issue #(
      end else begin
       // Fixed boot scan: one row per stream edge, independent of data.
       // This removes a 128-row max/reduction from the runtime clock path.
+`ifdef OT_S81_ISSUE_SCANPIPE
+      scan_row_valid<=0;
+`endif
       validating<=1;sealed<=0;scan_index<=0;scan_native<=0;scan_ends<=0;scan_kits<=0;
       scan_max_done<=0;scan_end_cycle<=0;scan_kit_cycle<=0;
       scan_bad<=!begun||length_q!=pw_d[16:9]||start_phase_q!=pw_d[8:7]||prog_len!=length_q;
@@ -170,6 +183,39 @@ module ot_s81_fixed_issue #(
      loaded[pw_a][pw_d[27:26]]<=1'b1;
     end
    end
+`ifdef OT_S81_ISSUE_SCANPIPE
+   if(validating)begin
+    if(scan_index<NOPS)begin
+     scan_row_q<=mem[scan_index];scan_loaded_q<=loaded[scan_index];
+     scan_active_q<=scan_index<length_q;scan_row_valid<=1;
+     scan_index<=scan_index+1'b1;
+    end else begin scan_row_valid<=0;scan_index<=scan_index+1'b1;end
+    bad=scan_bad;end_count=scan_ends;kit_count=scan_kits;n=scan_native;
+    max_done=scan_max_done;end_cycle=scan_end_cycle;kit_cycle=scan_kit_cycle;
+    if(scan_row_valid&&scan_active_q)begin
+     if(scan_loaded_q!=3'b111)bad=1;
+     eng=scan_row_q[27:24];
+     if(eng==15)begin end_count=end_count+1;end_cycle=scan_row_q[51:28];if(scan_row_q[75:52]!=0||scan_row_q[23:0]!=0)bad=1;end
+     else if(eng==14)begin kit_count=kit_count+1;kit_cycle=scan_row_q[51:28];if(scan_row_q[75:52]!=0||scan_row_q[23:0]!=0)bad=1;end
+     else if(eng>=NENG||!ENG_PRESENT[eng])bad=1;
+     else begin
+      n=n+1;if(scan_row_q[75:52]<=scan_row_q[51:28])bad=1;
+      if(scan_row_q[75:52]>max_done)max_done=scan_row_q[75:52];
+     end
+    end
+    scan_bad<=bad;scan_native<=8'(n);scan_ends<=end_count>2?2'd3:2'(end_count);scan_kits<=kit_count>2?2'd3:2'(kit_count);
+    scan_max_done<=24'(max_done);scan_end_cycle<=end_cycle;scan_kit_cycle<=kit_cycle;
+    if(scan_index==NOPS+1)begin
+     validating<=0;
+     // All last-row results have committed. Keep the final24-bit bound
+     // comparisons out of the real128-row mux / decode / accumulation cone.
+     bad=scan_bad||scan_ends!=1||scan_kits>1||scan_native==0||scan_end_cycle<=scan_max_done||
+         (scan_kits==1&&scan_kit_cycle>=scan_end_cycle);
+     sealed<=!bad&&!cfg_fault;has_kit<=scan_kits==1;
+     if(bad)fev[3]=1'b1;
+    end
+   end
+`else
    if(validating)begin
     bad=scan_bad;end_count=scan_ends;kit_count=scan_kits;n=scan_native;
     max_done=scan_max_done;end_cycle=scan_end_cycle;kit_cycle=scan_kit_cycle;
@@ -193,6 +239,7 @@ module ot_s81_fixed_issue #(
      if(bad)begin fev[3]=1'b1;end
     end else scan_index<=scan_index+1'b1;
    end
+`endif
    if(job_v)begin
     if(!sealed||cfg_fault||active[next_slot]||prog_len!=length_q||((phase_q+2'd1)!=start_phase_q)||pw_v)begin
      fev[5]=1'b1;

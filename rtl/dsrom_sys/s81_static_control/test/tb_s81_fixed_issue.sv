@@ -5,6 +5,11 @@ module tb_s81_fixed_issue;
 `endif
  reg clk=0;always #5 clk=~clk;
  reg rst_n=0,pw_v=0,job_v=0;reg[6:0]pw_a=0;reg[27:0]pw_d=0;
+`ifdef OT_S81_ISSUE_SCANPIPE
+ localparam integer SCAN_EDGES=130;
+`else
+ localparam integer SCAN_EDGES=128;
+`endif
  reg[7:0]plen=128;reg[9:0]user=0;reg[20:0]pos=0,tok=0;
  wire jr,busy,done,kdone,slot,fault;wire[20:0]ktok;wire[3:0]code;wire[1:0]phase;
  wire[12:0]cv;wire[1091:0]cd;reg[12:0]av=13'h1fff,dv=0;reg[103:0]dt=0;
@@ -41,8 +46,8 @@ module tb_s81_fixed_issue;
   else begin
    tick=tick+1;#1;
    if(pw_v&&pw_d[27:26]==3&&pw_d[25])seal_tick=tick;
-   if(seal_tick>=0&&tick==seal_tick+127&&dut.sealed)$fatal(1,"boot scan armed early");
-   if(seal_tick>=0&&tick==seal_tick+128&&dut.sealed!==(mode!=4))$fatal(1,"boot scan fixed arm edge lost");
+   if(seal_tick>=0&&tick==seal_tick+SCAN_EDGES-1&&dut.sealed)$fatal(1,"boot scan armed early");
+   if(seal_tick>=0&&tick==seal_tick+SCAN_EDGES&&dut.sealed!==(mode!=4))$fatal(1,"boot scan fixed arm edge lost");
    for(e=0;e<13;e=e+1)if(cv[e])begin
     cmd=cd[84*e+:84];s=cmd[83];op=cmd[6:0];arg=arg_for(op);expected=1001+4*s+op;
     if(op>=126||e!=op%13||tick!=expected||cmd[30:7]!=arg||cmd[82:73]!=(s?38:37)||cmd[72:52]!=1048575||cmd[51:31]!=(s?128999:21946))begin

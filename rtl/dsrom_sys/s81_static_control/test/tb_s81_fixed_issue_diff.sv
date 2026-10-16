@@ -20,10 +20,12 @@ module tb_s81_fixed_issue_diff;
  // program image: n words {addr7,data28}, from the generator
  reg[34:0]pwmem[0:399];initial for(i=0;i<400;i=i+1)pwmem[i]=0;reg[31:0]meta[0:7];
  reg[12:0]due[0:65535];reg[103:0]tags[0:65535];reg[12:0]lat[0:127];
+ integer scanpipe=0;
  integer tick=-1,i,e,op,seed,nw,errs=0,cmds=0,jobs=0,faults=0,dones=0,cycles,pwi=-1,pert,concurrent=0,mism_first=-1,sph;
  reg[83:0]cmd;
  initial begin
   if(!$value$plusargs("seed=%d",seed))seed=1;
+  if($test$plusargs("scanpipe"))scanpipe=1;
   if($test$plusargs("concurrent"))concurrent=1;
   $readmemh("prog.hex",pwmem);$readmemh("meta.hex",meta);
   nw=meta[0];plen=meta[1];cycles=meta[2];pert=meta[3];sph=meta[4];
@@ -36,11 +38,14 @@ module tb_s81_fixed_issue_diff;
   pw_v=0;job_v=0;
   if(pwi<nw-1 && !busy0 && ($urandom%4)!=0)begin
    pwi=pwi+1;pw_v=1;pw_a=pwmem[pwi][34:28];pw_d=pwmem[pwi][27:0];
-  end else if(pert && ($urandom%997)==0)begin   // illegal write (while busy or random), exercises cfg faults
+  end else if(pert && (!scanpipe||(!ref0.validating&&!dut.validating)) && ($urandom%997)==0)begin   // illegal write (while busy or random), exercises cfg faults
    pw_v=1;pw_a=$urandom%128;pw_d=$urandom;
   end
-  // legal starts: next phase == programmed start phase and the next context free; pert adds random illegal starts
-  if((ref0.sealed&&jr0&&((ph0+2'd1)==sph[1:0])&&($urandom%3==0))||(pert&&($urandom%300==0)))begin
+  // The scanpipe profile explicitly has two more initialization edges.
+ // A legal profile start waits for both complete scans; every output remains
+ // compared on every edge, including all runtime completion/availability faults.
+ // legal starts: next phase == programmed start phase and the next context free; pert adds random illegal starts
+  if((ref0.sealed&&(!scanpipe||dut.sealed)&&jr0&&((ph0+2'd1)==sph[1:0])&&($urandom%3==0))||(pert&&(!scanpipe||(ref0.sealed==dut.sealed))&&($urandom%300==0)))begin
    job_v=1;user=$urandom;pos=$urandom;tok=$urandom;
    if(!concurrent&&pw_v&&!busy0)job_v=0;
   end
