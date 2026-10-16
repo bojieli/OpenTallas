@@ -14,8 +14,9 @@
 //   ot_hgi_sm_xload_cl2_bfq    clk_bf  one lane quarter of the x-store: 8 SRAMs (t 0..7) with their per-macro pin
 //                                      registers, gated capture and OR-4 tree; outputs the quarter's rw word.  4 instances
 //                                      of ONE master (the quarter index is wiring at the parent).
-//   ot_hdc_actquant            clk_qlo / clk_qhi  the two block-dot quantisers (input S0 register at the pins), 2 x ONE
-//                                      master.
+//   ot_hbm_xp_aq_tree13        clk_qlo / clk_qhi  the two block-dot quantisers: the CLOSED quantiser tile (kit hgi_xp_aq,
+//                                      TT +21.56 / FF +14.95; same ports and 13-edge latency as ot_hdc_actquant, input S0
+//                                      and output registers at its pins), reused (fewer distinct tiles, owner 19:50).
 //   ot_hgi_sm_xload_cl2_bdring clk_bd  block-dot lane ring (2 x 16 x 266), beat assembly and the beat register, with
 //                                      local replicated parity / beat selects and a local lane-enable copy.
 // OWNER RULE 2026-10-15 19:50: every input and output of every leaf is registered AT ITS PIN (an enable flop counts;
@@ -624,9 +625,9 @@ module ot_hgi_sm_xload_static_cl2 #(
         ot_hgi_sm_xload_cl2_bfq u_bfq (.clk(clk_bf), .rst_n(rn), .c_d(c_d), .wce(c_wce[gq]), .mhi(c_mhi), .mlo(c_mlo),
             .wa(c_wa), .r_ce(r_ce), .r_a(r_a), .rwq(rwq[256*gq +: 256]));
     end endgenerate
-    ot_hdc_actquant u_aq_lo (.clk(clk_qlo), .rst_n(rn), .v(qv_lo), .fp4(1'b0), .x(l_d[1023:0]), .vo(qo_lo), .q(qq_lo),
+    ot_hbm_xp_aq_tree13 u_aq_lo (.clk(clk_qlo), .rst_n(rn), .v(qv_lo), .fp4(1'b0), .x(l_d[1023:0]), .vo(qo_lo), .q(qq_lo),
                              .e(qe_lo), .y(), .fault(qf_lo));
-    ot_hdc_actquant u_aq_hi (.clk(clk_qhi), .rst_n(rn), .v(qv_hi), .fp4(1'b0), .x(l_d[2047:1024]), .vo(qo_hi), .q(qq_hi),
+    ot_hbm_xp_aq_tree13 u_aq_hi (.clk(clk_qhi), .rst_n(rn), .v(qv_hi), .fp4(1'b0), .x(l_d[2047:1024]), .vo(qo_hi), .q(qq_hi),
                              .e(qe_hi), .y(), .fault(qf_hi));
     ot_hgi_sm_xload_cl2_bdring #(.PMAX(PMAX)) u_bd (.clk(clk_bd), .r_wsel(r_wsel), .zlo(zlo), .zhi(zhi), .qq_lo(qq_lo),
         .qq_hi(qq_hi), .qe_lo(qe_lo), .qe_hi(qe_hi), .ea(ea),
