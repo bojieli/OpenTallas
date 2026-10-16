@@ -24,10 +24,10 @@
    "rs_d"
   ],
   "S": [
+   "h",
    "kv_own",
    "kv_sh",
-   "w",
-   "h"
+   "w"
   ],
   "W": [
    "ck",
@@ -50,14 +50,17 @@
   "pin_h": "M4",
   "pin_min_tracks": 1,
   "hold_margin_ns": 0.03,
-  "macro_halo_um": 5.4
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "group_max": 1
+  }
  },
- "why_floorplan": "MIX4 flat parent column merge tile: one per shell payload column (16), directly under the cluster's shcol_b (same 164.16 width; rs_v/rs_d on N toward the shcol_b S face, operand halves on S from the transport channel, valids/tags W)",
+ "why_floorplan": "MIX4 flat parent column merge tile: one per shell payload column (16), directly under the cluster's shcol_b (same 164.16 width; rs_v/rs_d on N toward the shcol_b S face, operand halves on S from the transport channel, valids/tags W) | f2: f1 EARLY_FAIL_CONGESTION GRT-0116 (2336 gcells) because the placer packed the 645 N and 896 S pins into ~30 um at mid-face (floorplan/density/congestion PNGs viewed): pin_balance spreads every face over its full 164.16 um, S operands ordered h|kv_own|kv_sh|w under the N rs_d fields {w,kv,h}",
  "structural_change": "S-ENGRAM+NORM ENGRAM-3 10-16: new tile of the MIX4 flat parent (dsfd_engram_mix4_flat 1b429b606): top-level glue hardened as tiles so the parent is wires-only",
  "job": {
   "owner": "Claude:S-ENGRAM+NORM-ENGRAM-3",
   "branch": "claude/s81-mix4-parent-0600",
-  "tag": "f1",
+  "tag": "f2spread",
   "purpose": "S81 Engram MIX4 flat parent tile ot_s81_mx4_mcol",
   "benches": [
    {
@@ -123,7 +126,7 @@
  },
  "reroute_reason": {
   "kind": "rtl_change",
-  "reason": "new master ot_s81_mx4_mcol (MIX4 flat parent tile)"
+  "reason": "new master ot_s81_mx4_mcol (f1 failed GRT congestion: pin clump; f2 spreads pins)"
  },
  "defines": [
   "DSFD_ENGRAM_STATIC_ISSUE"
@@ -131,5 +134,67 @@
  "pin_regs": {
   "enable": false,
   "reason": "the RTL registers every port at the tile boundary (input and output registers); flow pin stages would add an unmodelled cycle to the fixed calendar"
+ },
+ "pin_ranges": {
+  "rs_v": [
+   0.5,
+   3.5
+  ],
+  "rs_d": [
+   4.5,
+   163.5
+  ],
+  "h": [
+   0.5,
+   23.0
+  ],
+  "kv_own": [
+   23.5,
+   70.0
+  ],
+  "kv_sh": [
+   70.5,
+   116.5
+  ],
+  "w": [
+   117.0,
+   163.5
+  ],
+  "v_own": [
+   2.0,
+   6.0
+  ],
+  "d_own": [
+   7.0,
+   8.0
+  ],
+  "v_sh": [
+   9.0,
+   11.0
+  ],
+  "vtag": [
+   12.0,
+   13.0
+  ],
+  "h_src_v": [
+   14.0,
+   15.0
+  ],
+  "h_dtag": [
+   16.0,
+   17.0
+  ],
+  "ck": [
+   21.0,
+   22.0
+  ],
+  "rst": [
+   24.0,
+   25.0
+  ],
+  "fault": [
+   28.0,
+   30.0
+  ]
  }
 }

@@ -1,5 +1,5 @@
 {
- "name": "s81engm_mx4mcol-f1-COMMIT",
+ "name": "s81engm_mx4mcol-f2spread-COMMIT",
  "block": "ot_s81_mx4_mcol",
  "ref_tile": true,
  "owner": "Claude:S-ENGRAM+NORM-ENGRAM-3",
@@ -113,7 +113,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81engm_mx4mcol/s81engm_mx4mcol-f1-COMMIT"
+   "to": "results/rtl/ref_tile/s81engm_mx4mcol/s81engm_mx4mcol-f2spread-COMMIT"
   }
  ],
  "cycles_added": 0,
@@ -126,6 +126,6 @@
  "structural_change": "S-ENGRAM+NORM ENGRAM-3 10-16: new tile of the MIX4 flat parent (dsfd_engram_mix4_flat 1b429b606): top-level glue hardened as tiles so the parent is wires-only",
  "reroute_reason": {
   "kind": "rtl_change",
-  "reason": "new master ot_s81_mx4_mcol (MIX4 flat parent tile)"
+  "reason": "new master ot_s81_mx4_mcol (f1 failed GRT congestion: pin clump; f2 spreads pins)"
  }
 }
