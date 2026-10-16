@@ -162,6 +162,17 @@ module tb_qfd_sys_face;
     endtask
     reg kok_q = 0, kwd_q = 0, trace_on = 0; integer t1 = -1, ep_cyc = -1;
     always @(posedge ck) if (fwd_epoch && ep_cyc < 0) ep_cyc = cyc;
+    // admission (sequencer layer 63) and first-token D2D starts: the same compiled distance as the KV sequencer's
+    integer adm_cyc = -1, tok_cyc = -1;
+    always @(posedge ck) if (rst_n && cal_start) begin
+        if (u_dut.cs_layer == 6'd63 && adm_cyc < 0) adm_cyc = cyc;
+        else if (cal_seg && tok_cyc < 0) begin
+            tok_cyc = cyc;
+            if (adm_cyc < 0 || tok_cyc - adm_cyc != ADM_TO_TOKEN) begin
+                $display("  admission->token %0d, compiled %0d", tok_cyc - adm_cyc, ADM_TO_TOKEN); err("first token off D2D_FIRST_TOKEN");
+            end
+        end
+    end
     always @(posedge ck) if (rst_n) begin
         if (u_dut.t_go && t0 < 0) begin
             t0 = cyc;
@@ -247,6 +258,7 @@ module tb_qfd_sys_face;
         for (i = 0; i < n_ev; i = i + 1) if (!ev_seen[i]) begin
             $display("  missing event class %0d arg %0d at T+%0d", ev_k[i], ev_a[i], ev_t[i]); err("compiled event missing"); end
         if (face_fault || prov_fault || a_f || c_f || w_f || fab) err("fault raised");
+        if (adm_cyc < 0 || tok_cyc < 0) err("admission / first-token D2D start not seen");
         if (errs == 0) $display("SYS_FACE_PASS MUT=%0d boot %0d records, PW %0d DW %0d, %0d events exact, row 64+scale exact",
                                 MUT, wi, pw_seen, dw_seen, n_ev);
         else $display("SYS_FACE_FAIL MUT=%0d errors %0d (face_fault %0d prov_fault %0d)", MUT, errs, face_fault, prov_fault);
