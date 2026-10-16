@@ -127,16 +127,34 @@ def main():
         output={b for port,bits in cell['connections'].items() if cell['port_directions'][port]=='output' for b in bits if isinstance(b,int)}
         if output & observable:raise ValueError('Observable logic removed: '+name)
 
+    # Yosys rename does not rewrite instances. Bind both declarations and
+    # references in one JSON transaction, retaining exact macro parameters.
+    for logical,actual in groups.items():partition['modules'][logical]=partition['modules'].pop(actual)
+    macro_restorations=[]
+    for modname,mod in list(partition['modules'].items()):
+        for cellname,cell in mod.get('cells',{}).items():
+            if cell['type'] in groups.values():
+                cell['type']=next(logical for logical,actual in groups.items() if actual==cell['type'])
+            definition=partition['modules'].get(cell['type'],{})
+            original=definition.get('attributes',{}).get('hdlname','').split()
+            if original and original[0] in ('ot_rom_4096x72_m8','ot_sram_1r1w_128x256_m1_r2c2') and cell['type']!=original[0]:
+                params=dict(definition.get('parameter_default_values',{}))
+                # Yosys serializes an empty untyped string as one blank. The
+                # real macro's declared VIAMAP default is exactly empty; omit
+                # that no-op override while preserving actual INSTANCE names.
+                omitted=params.get('VIAMAP')==' '
+                if omitted:del params['VIAMAP']
+                macro_restorations.append(dict(module=modname,cell=cellname,derived=cell['type'],master=original[0],parameters=params,omitted_empty_viamap=omitted))
+                cell['type']=original[0];cell['parameters'].update(params)
+    (a.out/'named_partition.json').write_text(json.dumps(partition))
     selected=['dsfd_sp_pq_joint_candidate',*groups]
-    export='read_json '+str((a.out/'partition.json').resolve())+'; '
-    export+=''.join('rename '+actual+' '+logical+'; ' for logical,actual in groups.items())
-    export+='write_json '+str((a.out/'named_partition.json').resolve())+'; select '+' '.join(selected)+'; write_verilog -selected -noattr '+str((a.out/'candidate.v').resolve())+';\n'
+    export='read_json '+str((a.out/'named_partition.json').resolve())+'; select '+' '.join(selected)+'; write_verilog -selected -noattr '+str((a.out/'candidate.v').resolve())+';\n'
     run(a.yosys,export,a.out/'export')
     receipt=dict(scope='Source partition only. Existing clocks/cycles unchanged; physical candidate unqualified.',
                  extraction_tool_sha256=hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
                  yosys_version=subprocess.check_output([a.yosys,'-V'],text=True).strip(),
                  hierarchy_sha256=hashlib.sha256(a.hierarchy.read_bytes()).hexdigest(),
-                 physical_elaboration_transforms=transforms,source_sha256=h['source_sha256'],defines=h['defines'],blackbox_datapath_modules=blackboxes,
+                 physical_macro_restorations=macro_restorations,physical_elaboration_transforms=transforms,source_sha256=h['source_sha256'],defines=h['defines'],blackbox_datapath_modules=blackboxes,
                  moved_control_cells=len(actual_control),moved_lane_cells=len(actual_lane),retained_hard_leaf_instances=len(retained),
                  unobservable_cleanup=dict(cells=sorted(dead),count=len(dead),types=sorted({cells[n]['type'] for n in dead}),proof='Every removed cell is AND/OR carry logic; its outputs feed only other removed cells and no surviving input or external output. No sequential state or memory removed.'),
                  candidate_sha256=hashlib.sha256((a.out/'candidate.v').read_bytes()).hexdigest(),
