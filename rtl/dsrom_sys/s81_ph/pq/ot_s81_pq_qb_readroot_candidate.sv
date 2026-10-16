@@ -73,3 +73,29 @@ module ot_s81_pq_qb_pipe_readroot (
  .wq0(wq0[b]),.wq1(wq1[b]),.aq_q(aq_q),.i0(i0),.i1(i1),.rq0(rq0[b]),.rq1(rq1[b]),.rd(rd[256*b+:256]));
  end endgenerate
 endmodule
+
+// Current production P10 parent; canonical SHA256 b1b2142eef1ad0da73bf3c363bc8084231e43f08d9b03ba7ab312067c8e9ff03
+module ot_s81_pq_qb_pinread_readroot (
+ input wire clk,rst_n,consume,input wire[3:0] clk_bank,clk_rd,
+ input wire[9:0] aqi_d,input wire[511:0] aq_q,input wire[19:0] aq_e,input wire[9:0] aq_p,
+ input wire[15:0] h_b0,h_b1,input wire[1:0] hw_sv,
+ output wire[255:0] hq0,hq1,output wire[9:0] he0,he1,output wire fault
+);
+ wire[9:0] parity;
+`ifdef OT_PQ_AQ_SIDE_PARITY
+ assign parity=aq_p;
+`else
+ assign parity={^aq_e[19:10],^aq_q[511:448],^aq_q[447:384],^aq_q[383:320],^aq_q[319:256],
+                ^aq_e[9:0],^aq_q[255:192],^aq_q[191:128],^aq_q[127:64],^aq_q[63:0]};
+`endif
+ wire[1023:0] rd;
+ wire[6:0] wr0,wr1;wire[3:0] wq0,wq1,rq0,rq1;wire[15:0] i0,i1;
+ ot_s81_pq_qb_headpc_native u_head (.clk(clk),.rst_n(rst_n),.consume(consume),.aqi_d(aqi_d),
+ .h_b0(h_b0),.h_b1(h_b1),.hw_sv(hw_sv),.rd_data(rd),.aq_e(aq_e),.aq_p(parity),
+ .wr0(wr0),.wr1(wr1),.wq0(wq0),.wq1(wq1),.i0(i0),.i1(i1),.rq0(rq0),.rq1(rq1),
+ .hq0(hq0),.hq1(hq1),.he0(he0),.he1(he1),.fault(fault));
+ generate for(genvar b=0;b<4;b=b+1) begin:g_bank
+ ot_s81_pq_qb_bankp_readroot u_bank(.clk(clk_bank[b]),.clk_rd(clk_rd[b]),.rst_n(rst_n),.wr0(wr0),.wr1(wr1),
+ .wq0(wq0[b]),.wq1(wq1[b]),.aq_q(aq_q),.i0(i0),.i1(i1),.rq0(rq0[b]),.rq1(rq1[b]),.rd(rd[256*b+:256]));
+ end endgenerate
+endmodule
