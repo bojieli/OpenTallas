@@ -293,6 +293,10 @@ def main():
             cell_of[n] = c
     inst = [n for n in I if n in cell_of]
     out_inst = sorted(set(I) - set(inst))
+    view_owner = {n: c for c, e in V.items() for n in e['instances']}
+    exclusion_details = {n: dict(master=I[n]['master'], source=I[n]['source'],
+                                  view_cell=view_owner[n], reason=excluded[view_owner[n]],
+                                  qualification='EXCLUDED_DIAGNOSTIC_NOT_NATIVE') for n in out_inst}
     ports = {c: {p: v['bits'] for p, v in I[V[c]['representative']]['ports'].items()} for c in kinds}
     dirs = {c: {p: v['direction'] for p, v in I[V[c]['representative']]['ports'].items()} for c in kinds}
     for c in kinds:     # view ports must equal the contract ports (REAL checked in v16_views; SYNTH = wrapper ports)
@@ -756,6 +760,7 @@ def main():
                           'full native/physical qualification remains OPEN)', die_um=[W, H], contract=str(a.contract),
                     plan=str(a.plan), grants=str(a.grants), lanes=str(a.lanes), views=kinds, flags=flags,
                     excluded_cells=excluded, excluded_instances=out_inst,
+                    excluded_instance_details=exclusion_details,
                     instances={c: sum(1 for n in inst if cell_of[n] == c) for c in kinds},
                     homes=homes, placeholder_slots_ignored=placeholder, placement_problems=bad, face_bits=face_report,
                     dropped_edge_bits={f'{k[0]}:{k[1]}': v for k, v in dropped.items()},
