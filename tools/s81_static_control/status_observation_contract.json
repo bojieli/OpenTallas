@@ -19,7 +19,7 @@
     "rtl/dsrom_sys/s81_static_control/ot_s81_pq_boot_control.sv": "32ecceb7c7d91cb541d1d25c8cd2ee1a4be83b1a1c0eed0031502bc53d4fb747",
     "rtl/dsrom_sys/s81_static_control/test/run_issuer_status_contract.sh": "e7734475ffd59c7904f0005316eebbeea5a17327d6db1615eb58ff2e4cd508a4",
     "tools/s81_static_control/program.py": "0cc4b547f0251cd8e1a18fb5c5ca8cd95f4244216ce2236645c9a94e8bdd6ccb",
-    "physical/common_flow/ot_pin_regs.tcl": "fd53ca5dd8aa2a697bed062de2df5a4a492faa8fc0313752cbfdc56565fb5356",
+    "physical/common_flow/ot_pin_regs.tcl": "f41ed3b095774d33021064dc4fa9c61368a3cbb7099517a16a8eafe8a3250b16",
     "rtl/dsrom_sys/s81_static_control/test/tb_s81_issuer_pinreg_boundary.sv": "30680b5ffcaa655b423b6699f08b63d3434ea7dd9c0d6ed3d6f2598867c60082"
   },
   "bench": "rtl/dsrom_sys/s81_static_control/test/run_issuer_status_contract.sh",
@@ -91,7 +91,7 @@
     "actual_STAGE": 0,
     "actual_target_defaults": true,
     "source_archive_commit": "a66085b03",
-    "final_role_hook_sha256": "fd53ca5dd8aa2a697bed062de2df5a4a492faa8fc0313752cbfdc56565fb5356",
+    "final_role_hook_sha256": "f41ed3b095774d33021064dc4fa9c61368a3cbb7099517a16a8eafe8a3250b16",
     "actual_Yosys_wrapper_receipt": "results/rtl/s81_static_status_1016/pinreg_boundary_receipt.json",
     "final_helper_actual_Yosys_byte_equality_receipt": "results/rtl/s81_static_status_1016/pinreg_final_rebind_receipt.json",
     "true_clock_ports_zero_pin_cycles": [

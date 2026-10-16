@@ -196,7 +196,9 @@
      "iverilog"
     ]
    }
-  ]
+  ],
+  "cycles_added": 2,
+  "notes": "cycles_added=2 describes ck data command/done roundtrip only (+1 output pin and +1 input pin); compiler done rows add2. Runtime diagnostics add1ck separately; c8/c10 serial status observation profile and all downstream registers/relays must be bound from tools/s81_static_control/status_observation_contract.json. Total layer/token performance remains UNMEASURED and native consumer remains BLOCKED until actual physical/compiler binding; never infer total cost from this scalar."
  },
  "std_area_um2": 24000,
  "pin_regs": {
