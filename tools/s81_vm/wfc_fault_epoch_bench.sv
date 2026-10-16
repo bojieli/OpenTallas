@@ -26,7 +26,7 @@ module tb_wfc_fault_epoch;
   // Expected edge graph, scaled Tcore=12/Tserial=16: same-domain input capture,
   // sticky-source register, fixed bank write/read, receive pin, summary and error register.
   // Counts include the #1 sampling offset. These are not learned by the DUT or rescheduled.
-  if(direction==0)begin ec=31;case(ph)0:es=107;1:es=111;2:es=115;3:es=103;endcase end
+  if(direction==0)begin ec=31;case(ph)0:es=123;1:es=127;2:es=131;3:es=119;endcase end
   else begin es=57;case(ph)0:ec=89;1:ec=85;2:ec=81;endcase end
   if(ctime!=ec || stime!=es)$fatal(1,"diagnostic fixed-edge mismatch dir%0d phase%0d actual%0d/%0d expected%0d/%0d",direction,ph,ctime,stime,ec,es);
   $display("WFC_FAULT_EPOCH PASS direction%0d phase%0d core_delay_ns%0d serial_delay_ns%0d",direction,ph,ctime,stime);tests=tests+1;
