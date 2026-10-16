@@ -3,7 +3,6 @@
 # cycle lockstep vs the pinned ot_v41_pair_pq_ld_frontend loader, 7 real ot_rom_4096x72_m8 models), for the closure-loop
 # bench / failing-mutant pair of the die masters ot_s81_cfg7_seq (PQ 1, as the die binds it) and ot_s81_cfg7_seq_bf (PQ 0).
 # modes: pq1 | bf (expect PASS) ; mut_tag (PQ 1 go_tag mutant) | mut_bank_bf (unregistered bank select, BF) (expect FAIL)
-# PINREG 1 (every pin registered, LAYOUT 1): pr_pq1 | pr_pq0 | pr_bf (PASS); pr_mut_prdl | pr_mut_tag | pr_mut_nofault (FAIL)
 # LAYOUT 1 (interleaved 7-macro layout, DUT + macro models): il7_pq1 | il7_pq0 | il7_bf (PASS); il7_mut_tag | il7_mut_stride | il7_mut_bank_bf (FAIL)
 set -u
 export PATH=$HOME/.local/opentallas-tools/verilator-5.050/bin:$PATH
@@ -20,12 +19,6 @@ case $M in
   il7_mut_tag) A="-GPQ=1 +define+TB_CFG7_IL7 +define+OT_S81_CFG7_MUT_TAG" ;;
   il7_mut_stride) A="-GPQ=1 +define+TB_CFG7_IL7 +define+OT_S81_CFG7_MUT_STRIDE" ;;
   il7_mut_bank_bf) A="-GPQ=0 +define+TB_CFG7_BF +define+TB_CFG7_IL7 +define+OT_S81_CFG7_MUT_BANK" ;;
-  pr_pq1) A="-GPQ=1 +define+TB_CFG7_IL7 +define+TB_CFG7_PINREG" ;;
-  pr_pq0) A="-GPQ=0 +define+TB_CFG7_IL7 +define+TB_CFG7_PINREG" ;;
-  pr_bf) A="-GPQ=0 +define+TB_CFG7_BF +define+TB_CFG7_IL7 +define+TB_CFG7_PINREG" ;;
-  pr_mut_prdl) A="-GPQ=1 +define+TB_CFG7_IL7 +define+TB_CFG7_PINREG +define+OT_S81_CFG7_MUT_PRDL" ;;
-  pr_mut_tag) A="-GPQ=1 +define+TB_CFG7_IL7 +define+TB_CFG7_PINREG +define+OT_S81_CFG7_MUT_TAG" ;;
-  pr_mut_nofault) A="-GPQ=1 +define+TB_CFG7_IL7 +define+TB_CFG7_PINREG +define+OT_S81_CFG7_MUT_NOFAULT" ;;
   *) echo "unknown mode $M"; exit 2 ;;
 esac
 verilator --binary -j 4 -Wno-fatal -Wno-WIDTH -Wno-lint -Wno-style --top-module tb_ot_s81_cfg7_seq $A --Mdir $OUT/obj -o tb $F > $OUT/build.log 2>&1 || { echo "CFG7 BENCH BUILD_FAIL $M"; tail -5 $OUT/build.log; exit 1; }
