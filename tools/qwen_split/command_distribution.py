@@ -86,7 +86,7 @@ def apply(model,sinks,issuer='res_train_issue'):
   cold_reset_release_extra_edges=1,nodes=[dict(name=i.name,x=i.x,y=i.y,w=i.w,h=i.h)for i in nodes],
   sinks=list(sinks),equal_groups=groups,retired_unrelayed_fanouts=found,
   clock_contract='one compensated clock entry per fork, phi minus measured insertion; actual CTS pending',
-  compiled_latency='depth logic edges plus actual allocator stage_of per level, assert equal fields and consumers',
+  compiled_latency='sum actual stage_of per level includes fork register edges and final consumer capture; added vs direct = depth plus sum(stage_of minus1); assert equal fields/consumers',
   qualification=False)
  model['command_distribution']=rec;return rec
 
