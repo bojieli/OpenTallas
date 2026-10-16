@@ -1,0 +1,50 @@
+== pass
+CFIFO_X2 PASS pha=2 phb=2 words=390 first=1 offset=197000 warm=0 cold_words=0
+CFIFO_X2 PASS pha=0 phb=0 words=390 first=1 offset=197000 warm=0 cold_words=0
+CFIFO_X2 PASS pha=3 phb=4 words=391 first=1 offset=187000 warm=0 cold_words=0
+CFIFO_X2 PASS pha=7 phb=7 words=391 first=1 offset=187000 warm=0 cold_words=0
+CFIFO_X2 PASS pha=9 phb=8 words=391 first=1 offset=187000 warm=0 cold_words=0
+CFIFO_X2_GATE PASS 5 phase pairs
+RC pass 0
+== warm
+CFIFO_X2 PASS pha=2 phb=2 words=390 first=1 offset=4397000 warm=1 cold_words=390
+CFIFO_X2 PASS pha=0 phb=0 words=390 first=1 offset=4397000 warm=1 cold_words=390
+CFIFO_X2 PASS pha=3 phb=4 words=391 first=1 offset=4387000 warm=1 cold_words=391
+CFIFO_X2 PASS pha=7 phb=7 words=391 first=1 offset=4387000 warm=1 cold_words=391
+CFIFO_X2 PASS pha=9 phb=8 words=391 first=1 offset=4387000 warm=1 cold_words=391
+CFIFO_X2_GATE PASS 5 phase pairs
+RC warm 0
+== mut_payload
+CFIFO_X2 FAIL unrecognised first record t=207000
+CFIFO_X2_GATE FAIL
+RC mut_payload 1
+== mut_valid
+CFIFO_X2 FAIL bad=220 words=390
+CFIFO_X2_GATE FAIL
+RC mut_valid 1
+== mut_clock
+CFIFO_X2 FAIL unrecognised first record t=197000
+CFIFO_X2_GATE FAIL
+RC mut_clock 1
+== mut_ripin
+CFIFO_X2 FAIL bad=390 words=390
+CFIFO_X2_GATE FAIL
+RC mut_ripin 1
+== mut_stop_s
+CFIFO_X2 FAIL bad=755 words=390
+CFIFO_X2_GATE FAIL
+RC mut_stop_s 1
+== mut_reset_frontier
+CFIFO_X2 FAIL bad=2 words=390
+CFIFO_X2_GATE FAIL
+RC mut_reset_frontier 1
+== mut_hstage
+CFIFO_X2 FAIL bad=1 words=391
+CFIFO_X2 FAIL bad=1 words=392
+CFIFO_X2_GATE FAIL
+RC mut_hstage 1
+== mut_hsel
+CFIFO_X2 FAIL bad=1 words=390
+CFIFO_X2 FAIL bad=1 words=391
+CFIFO_X2_GATE FAIL
+RC mut_hsel 1

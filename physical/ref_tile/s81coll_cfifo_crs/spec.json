@@ -4,8 +4,8 @@
  "kind": "tile",
  "sources": [
   "rtl/dsrom_sys/s81_die_bind/glue/dsfd_cfifo_crs.sv",
-  "rtl/dsrom_sys/s81_die_bind/ot_s81_static_column_ingress.sv",
-  "rtl/dsrom_sys/s81_die_bind/ot_s81_static_lane_cross.sv"
+  "rtl/dsrom_sys/s81_die_bind/ot_s81_static_column_ingress_hr.sv",
+  "rtl/dsrom_sys/s81_die_bind/ot_s81_static_lane_cross_hr.sv"
  ],
  "params": {},
  "clock": "multiple_cts_roots",
@@ -147,12 +147,12 @@
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
  },
- "structural_change": "ISOLATED ADDITIVE MASTER dsfd_cfifo_crs. RESET FRONTIER r4 over r3 CR ROOT SPLIT: raw north rst terminates only in north rsync_q; south rsyncs_q observes registered rsync. Original crs1 CTS signoff TT setup+138.796ps / FF hold+19.511ps passes, but native CTS rst capture251.881ps FAIL (all data capture and launch pass). +2 fixed initialization cr edges before south reset release (four after raw rst), zero new FF, zero streaming/status edges versus r3. Same PLL phase0 and continuous roots; south recovery/removal paths remain timed. Forwarded marker must start after fourth reset edge. Fresh exact-source CTS gate and native audit REQUIRED; original gate not transferable.",
+ "structural_change": "r5 HALF-CYCLE READ over r4 (S-ELEM CFIFO-HOLD 2026-10-16): route s81coll_cfifo_crs-crs2isolated-COMMIT EARLY_FAIL_HOLD (4_1_cts 21.7k hold buffers, WNS -78.4 -> -56.4 stalled); gate replay of the same CTS needed 38,574 hold buffers, 32k on the two full-cycle cross-root hops bank(xf/xf2)->o(cr_s) and o(cr_s)->xa/xb/x2/cc(cr) that carry the 100 ps die-skew hold reserve. Column read register now: bank -> h (negedge cr_s, one-hot select registered a full cycle ahead) -> o (posedge cr); both cross-root hops half-cycle. Zero stream/status/initialization edge change (bench calendars identical), +1118 FF per instance. r4 RESET FRONTIER and r3 CR ROOT SPLIT retained. Fresh exact-source CTS gate and native audit REQUIRED.",
  "job": {
-  "owner": "Codex:S81-CFIFO-physical",
-  "branch": "codex/s81-cfifo-crs-isolated-1308",
-  "tag": "crs2isolated",
-  "purpose": "Additive opt-in dsfd_cfifo_crs: split cr roots, pin-capture ri (+1 status edge), reset frontier (+2 initialization edges). No default parent adoption.",
+  "owner": "Claude:S-ELEM-CFIFO-HOLD",
+  "branch": "main",
+  "tag": "hr5",
+  "purpose": "Additive opt-in dsfd_cfifo_crs r5: split cr roots, pin-capture ri (+1 status edge), reset frontier (+2 init edges), half-cycle column read (0 edges; removes the cross-root full-cycle hold flood). No default parent adoption.",
   "views_to": "physical/ref_tile/s81coll_cfifo_crs/views",
   "record_to": "results/rtl/ref_tile/s81coll_cfifo_crs",
   "extra_paths": [
@@ -171,7 +171,8 @@
     "peak_ram_gb": 2,
     "needs": [
      "iverilog"
-    ]
+    ],
+    "min_count_regex": "CFIFO_X2_GATE PASS (\\d+) phase pairs"
    },
    {
     "name": "x2_payload_mutant",
@@ -204,7 +205,8 @@
     "peak_ram_gb": 2,
     "needs": [
      "iverilog"
-    ]
+    ],
+    "min_count_regex": "CFIFO_X2_GATE PASS (\\d+) phase pairs"
    },
    {
     "name": "wrong_forwarded_clock_mutant",
@@ -249,11 +251,33 @@
     "needs": [
      "iverilog"
     ]
+   },
+   {
+    "name": "half_cycle_stage_bypass_mutant",
+    "cmd": "bash tools/s81/cfifo_crs_gate.sh mut_hstage {RUN}/bench_hs",
+    "expect": "fail",
+    "fail_regex": "CFIFO_X2 FAIL",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "half_cycle_select_mutant",
+    "cmd": "bash tools/s81/cfifo_crs_gate.sh mut_hsel {RUN}/bench_hl",
+    "expect": "fail",
+    "fail_regex": "CFIFO_X2 FAIL",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
    }
   ]
  },
  "reroute_reason": {
   "kind": "rtl_change",
-  "why": "RESET FRONTIER r4 over r3 CR ROOT SPLIT: raw north rst terminates only in north rsync_q; south rsyncs_q observes registered rsync. Original crs1 CTS signoff TT setup+138.796ps / FF hold+19.511ps passes, but native CTS rst capture251.881ps FAIL (all data capture and launch pass). +2 fixed initialization cr edges before south reset release (four after raw rst), zero new FF, zero streaming/status edges versus r3. Same PLL phase0 and continuous roots; south recovery/removal paths remain timed. Forwarded marker must start after fourth reset edge. Fresh exact-source CTS gate and native audit REQUIRED; original gate not transferable."
+  "why": "r5 HALF-CYCLE READ over r4 (S-ELEM CFIFO-HOLD 2026-10-16): route s81coll_cfifo_crs-crs2isolated-COMMIT EARLY_FAIL_HOLD (4_1_cts 21.7k hold buffers, WNS -78.4 -> -56.4 stalled); gate replay of the same CTS needed 38,574 hold buffers, 32k on the two full-cycle cross-root hops bank(xf/xf2)->o(cr_s) and o(cr_s)->xa/xb/x2/cc(cr) that carry the 100 ps die-skew hold reserve. Column read register now: bank -> h (negedge cr_s, one-hot select registered a full cycle ahead) -> o (posedge cr); both cross-root hops half-cycle. Zero stream/status/initialization edge change (bench calendars identical), +1118 FF per instance. r4 RESET FRONTIER and r3 CR ROOT SPLIT retained. Fresh exact-source CTS gate and native audit REQUIRED."
  }
 }
