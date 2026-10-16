@@ -75,8 +75,12 @@ module ot_qwen_me_array_w12 #(
     parameter integer FAST_ISSUE = 0,     // 1.2 GHz issue loop (ot_qwen_w12_matvec_part FAST_ISSUE)
     parameter integer KV_PREP = 0,        // KV-op offset pipeline cycles (ot_qwen_w12_matvec_part KV_PREP)
     parameter integer MUL_LAT = 5,        // lane BF16 product latency (ot_qwen_w12_matvec_part MUL_LAT)
-    parameter integer TREE_LAT = 3        // split-tree pair adder latency (ot_qwen_w12_matvec_part TREE_LAT)
+    parameter integer TREE_LAT = 3,       // split-tree pair adder latency (ot_qwen_w12_matvec_part TREE_LAT)
+    // die lead r12 (2026-10-14, x-line delivery): XEXT = 1 takes every tile's quad line from xl_ext (the die's per-tile
+    // line-indexed x delivery, ot_qwen_xroot_fabric) instead of the broadcast selection xl_d[(t % NXL) ...]; default 0
+    parameter integer XEXT = 0
 ) (
+    input  wire [GT/TG*TG*32-1:0] xl_ext,
     input  wire              clk,
     input  wire              rst_n,
     input  wire              go,
@@ -223,7 +227,7 @@ module ot_qwen_me_array_w12 #(
                 .CODE_BANKS(CODE_BANKS), .IREG(IREG), .NREG(NREG), .KV_LOCAL(KV_LOCAL), .MEM_EXTRA(MEM_EXTRA), .ROM_PIPE(ROM_PIPE), .ROM_ARELAY(ROM_ARELAY), .ROM_MUT(ROM_MUT), .ROM_CAP2(ROM_CAP2), .ROM_CAPX(ROM_CAPX), .LRST(LRST), .ARPB(ARPB), .MPR(MPR), .HIER(HIER), .HIER_HARD(HIER_HARD), .TOREG(TOREG), .TIDR(TIDR), .LRR(LRR), .RPH(RPH), .RQR(RQR), .XTX(XTX), .NDH(NDH), .BMUT(BMUT), .TMUT(TMUT), .ANR(ANR), .BAW(BAW),
                 .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT)) u_t (
                 .clk(clk), .rst_n(rst_n), .tile_id(t[15:0]), .ib_go(tgo), .ib(tb),
-                .xl(xl_d[(t % NXL)*TG*32 +: TG*32]),
+                .xl((XEXT != 0) ? xl_ext[t*TG*32 +: TG*32] : xl_d[(t % NXL)*TG*32 +: TG*32]),
                 .t_out(lw[LT][t*W*32 +: W*32]), .t_vout(lvv[LT][t]),
                 .n_a(na), .n_b(nb), .n_va(nva), .n_y(ny), .n_vy(nvy), .fault(tile_fault[t]),
                 .rom_ce(t_rom_ce[t*CODE_BANKS +: CODE_BANKS]), .rom_addr(t_rom_addr[t*12 +: 12]),
