@@ -154,6 +154,9 @@ task automatic op(input integer pc,nout,tiles,ksize,spacing,wbase,split,wcs,obas
   if(!d_ret[0])dut_busy_seen=1;
  end
  while(!(r_ret[0]&&d_ret[0]))@(negedge clk);
+ // ready covers issue only; idle also covers in-flight port results, argmax,
+ // mx writes and LANDED accounting. Drain both before the next command.
+ while(!(r_idle&&d_idle))@(negedge clk);
  #0.01;
  if(r_ret[94]||d_ret[94]||(|r_pfault)||(|d_pfault))begin $display("FAULT pc%0d ref%0d dut%0d pref%b pdut%b",pc,r_ret[94],d_ret[94],r_pfault,d_pfault);errors=errors+1;end
  $display("OP pc%0d split%0d tiles%0d rq_ref%0d rq_dut%0d am%0d mx%0d errors%0d",pc,split,tiles,rq_w[0],rq_r[0],nam,nmx,errors);
