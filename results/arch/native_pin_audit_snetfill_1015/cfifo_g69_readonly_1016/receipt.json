@@ -1,0 +1,34 @@
+{
+  "schema": "s81-cfifo-g69-readonly-diagnostic-v1",
+  "job": "s81coll_cfifo_x2-g69-66cca05ae",
+  "source_commit": "66cca05ae",
+  "owner": "s81_export_provenance (physical successor), s81_pq_control (logical source)",
+  "pin_file": "physical/s81_die_pins/cfifo_x2pair/dsfd_cfifo.tcl",
+  "pin_file_sha256": "df01cad3813ec781e653b12e7373de42ba4d0d5f8e6d42acd85fa4d851c1aaa8",
+  "geometry_um": [
+    280.8,
+    69.12
+  ],
+  "actual_final_report_sha256": "99a77e8ecb07375bc041d5cd9292e3cb05eb9804dc0a3342d41fcc7a78d478a9",
+  "all_overflow677": "Final congestion.rpt:197tiles, H221/V456. All at bottomy0..10, x80..140; bands421/201/55. Dominant xd/ot_inhold/ot_ihdrv. Intermediate congestion-30 is710 and is not the final report.",
+  "pin_spans": {
+    "xd566": {
+      "layer": "M5",
+      "pitch_um": 0.048,
+      "first_x_um": 98.604,
+      "last_x_um": 125.724,
+      "span_um": 27.12
+    },
+    "xd2_538": {
+      "layer": "M5",
+      "pitch_um": 0.096,
+      "first_x_um": 126.732,
+      "last_x_um": 178.284,
+      "span_um": 51.552
+    }
+  },
+  "images_inspected": true,
+  "visual": "fill0.386, saturated bottom hold band at xd coordinates, dense top-left outputs, no macro slivers.",
+  "structural_recommendation": "Spread xd to pitch2>=0.096 or source-coherent alternatingM3/M5, move adjacent input groups consistently and retain receiver input-hold. Actual S-DIE grants, all peer/pin joins, fresh exact gate/native and actual route decide acceptance. Source-current direct cr/xf/xf2 clocks; no legacy co/rf alias.",
+  "actions": "Read-only analysis. No successor source edits, no job launch, no old CLOSED tile modification."
+}

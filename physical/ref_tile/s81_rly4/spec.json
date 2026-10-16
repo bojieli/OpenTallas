@@ -1,0 +1,126 @@
+{
+ "name": "s81_rly4",
+ "top": "ot_s81_rly4",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/s81_glue/ot_s81_rly4.sv"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rs"
+ ],
+ "outline": {
+  "w": 17.28,
+  "h": 17.28,
+  "exact": true
+ },
+ "layer_cap": "M5",
+ "pins": {
+  "N": [
+   "iN",
+   "oN"
+  ],
+  "S": [
+   "iS",
+   "oS"
+  ],
+  "E": [
+   "iE",
+   "oE"
+  ],
+  "W": [
+   "iW",
+   "oW",
+   "ck",
+   "rs"
+  ]
+ },
+ "io_tcl": "physical/s81_die_pins/rly4/ot_s81_rly4.tcl",
+ "recipe": 2,
+ "pin_regs": {
+  "enable": false,
+  "reason": "One real RTL capture flop; additional pin registers would add an unpriced cycle."
+ },
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "route": {
+  "pd": 0.45,
+  "threads": 4,
+  "peak_ram_gb": 8,
+  "pin_h": "M4",
+  "pin_v": "M3 M5",
+  "m5_pg_pitch": 2.7,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "structural_change": "S-DIE independent 17.28-square scalar four-face diagnostic grant. All 16 face pairs preserve original RSREG0 posedge/asynchronous-reset behavior. Three unused inputs require explicit per-instance zero proof; three unused outputs explicit NC. Default OFF, no parent adoption or rotation grant. Existing seven qualified scalar leaves retained.",
+ "job": {
+  "owner": "Codex:s81-net-fill",
+  "branch": "claude/el1015-snetfill-2215",
+  "tag": "face4",
+  "purpose": "Canonical four-face static scalar relay diagnostic; no parent adoption",
+  "views_to": "physical/ref_tile/s81_rly4/views",
+  "record_to": "results/rtl/ref_tile/s81_rly4",
+  "extra_paths": [
+   "rtl/dsrom_sys/s81_glue",
+   "tools/s81_static_net",
+   "physical/s81_die_pins/rly4"
+  ],
+  "benches": [
+   {
+    "name": "rly4_pass",
+    "cmd": "bash tools/s81_static_net/bench_rly4.sh pass {RUN}/rly4_pass",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "pass_regex": "RLY4_EXACT PASS",
+    "min_count_regex": "checked_bits=(\\d+)"
+   },
+   {
+    "name": "rly4_input",
+    "cmd": "bash tools/s81_static_net/bench_rly4.sh input {RUN}/rly4_input",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "fail_regex": "RLY4_MUTANT_REJECTED"
+   },
+   {
+    "name": "rly4_output",
+    "cmd": "bash tools/s81_static_net/bench_rly4.sh output {RUN}/rly4_output",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "fail_regex": "RLY4_MUTANT_REJECTED"
+   },
+   {
+    "name": "rly4_edge",
+    "cmd": "bash tools/s81_static_net/bench_rly4.sh edge {RUN}/rly4_edge",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "fail_regex": "RLY4_MUTANT_REJECTED"
+   },
+   {
+    "name": "rly4_reset",
+    "cmd": "bash tools/s81_static_net/bench_rly4.sh reset {RUN}/rly4_reset",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "fail_regex": "RLY4_MUTANT_REJECTED"
+   }
+  ]
+ },
+ "macros": [],
+ "children": [],
+ "inter": []
+}
