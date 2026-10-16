@@ -6,7 +6,7 @@ module tb_hbm_sm_mtp_k2;
  reg rst_n=0,iv=0,first=0,last=0,fp4=0;
  reg [15:0] tag0=0,tag1=0;reg [531:0] w=0,x0=0,x1=0;
  wire [1:0] ov,ff;wire[63:0] yy;wire[31:0] tt;
- ot_hbm_sm_mtp_k2 #(.MUT_SLOT_ALIAS(MUT==1)) dut(.clk(clk),.rst_n(rst_n),.iv(iv),.first(first),.last(last),
+ ot_hbm_sm_mtp_k2 #(.MUT_SLOT_ALIAS(MUT==1),.MUT_CONTEXT_ALIAS(MUT==2)) dut(.clk(clk),.rst_n(rst_n),.iv(iv),.first(first),.last(last),
   .fp4(fp4),.tag0(tag0),.tag1(tag1),.weight(w),.x0(x0),.x1(x1),.ov(ov),.fault(ff),.result(yy),.otag(tt));
  reg sv=0,sfirst=0,slast=0;reg[15:0] stag=0;reg[531:0] sw=0,sx=0;
  wire sov,sf;wire[31:0] sy;wire[15:0] st;
