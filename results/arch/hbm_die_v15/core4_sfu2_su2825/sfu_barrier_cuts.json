@@ -8,13 +8,13 @@
    "cut_x_um": 4895.68,
    "sm_bounded_y_um": [
     5258.4,
-    8343.68
+    8451.68
    ],
    "hard_su_y_um": [
     5278.4,
     8103.68
    ],
-   "free_channel_um": 260.0,
+   "free_channel_um": 368.0,
    "conditional_roof_extra_um": 0,
    "crossing": [
     {
@@ -56,8 +56,8 @@
    ],
    "known_demand_bits": 2676,
    "tracks_per_um": 14.0625,
-   "utilization": 0.731897,
-   "passes_060": false,
+   "utilization": 0.517101,
+   "passes_060": true,
    "channel_needed_at_060_um": 317.155556
   },
   {
@@ -65,13 +65,13 @@
    "cut_x_um": 28094.32,
    "sm_bounded_y_um": [
     5258.4,
-    8343.68
+    8451.68
    ],
    "hard_su_y_um": [
     5278.4,
     8103.68
    ],
-   "free_channel_um": 260.0,
+   "free_channel_um": 368.0,
    "conditional_roof_extra_um": 0,
    "crossing": [
     {
@@ -113,22 +113,22 @@
    ],
    "known_demand_bits": 2676,
    "tracks_per_um": 14.0625,
-   "utilization": 0.731897,
-   "passes_060": false,
+   "utilization": 0.517101,
+   "passes_060": true,
    "channel_needed_at_060_um": 317.155556
   },
   {
    "quarter": "NW",
    "cut_x_um": 5084.736000000001,
    "sm_bounded_y_um": [
-    15606.002,
-    18691.282
+    15713.218,
+    18906.498
    ],
    "hard_su_y_um": [
-    15846.002,
-    18671.282
+    16061.218,
+    18886.498
    ],
-   "free_channel_um": 260.0,
+   "free_channel_um": 368.0,
    "conditional_roof_extra_um": 0,
    "crossing": [
     {
@@ -170,22 +170,22 @@
    ],
    "known_demand_bits": 2676,
    "tracks_per_um": 14.0625,
-   "utilization": 0.731897,
-   "passes_060": false,
+   "utilization": 0.517101,
+   "passes_060": true,
    "channel_needed_at_060_um": 317.155556
   },
   {
    "quarter": "NE",
    "cut_x_um": 28094.32,
    "sm_bounded_y_um": [
-    15606.002,
-    18691.282
+    15713.218,
+    18906.498
    ],
    "hard_su_y_um": [
-    15846.002,
-    18671.282
+    16061.218,
+    18886.498
    ],
-   "free_channel_um": 260.0,
+   "free_channel_um": 368.0,
    "conditional_roof_extra_um": 0,
    "crossing": [
     {
@@ -227,8 +227,8 @@
    ],
    "known_demand_bits": 2676,
    "tracks_per_um": 14.0625,
-   "utilization": 0.731897,
-   "passes_060": false,
+   "utilization": 0.517101,
+   "passes_060": true,
    "channel_needed_at_060_um": 317.155556
   }
  ],

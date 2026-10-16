@@ -1,12 +1,98 @@
-# core4_sfu2_su2825 v3: inner HC client and 4-beat x_wave
+# core4_sfu2_su2825 v4: band 3153.28, hub pins spread, lane legs charged
 
 Status: **UNADOPTED GEOMETRY PROPOSAL.** The active contract
 `results/arch/hier_contract_1015/hbm_v15.json` is unchanged; the H-DIE lead adopts after review.
 
-**Grants audit: PASS** (0 outside / 0 overlaps / 0 points in hard blocks). **Die cut: FAIL by 0.023.** The worst window
-is not HC traffic; see the v3 section.
+**Results:**
+- Grants audit: PASS (0 outside / 0 overlaps / 0 points in hard blocks).
+- Die cut: PASS, 0 lines over 0.60.
+- HC-inclusive band barrier: PASS only with the conditional rp4c roof.
 
-## v3 (H-DIE decision 10-16): HC client at the band's inner end, x_wave over 4 beats
+## v4 (H-DIE decisions 10-16)
+
+### What changed
+1. **Band grows by 108 µm**, from 3,045.28 to 3,153.28. The SU slot is unchanged at 1,797.12 × 2,825.28.
+   - Die: 32,990 × 24,164.898 µm = **797.2 mm²**, up 7.1 mm². The width is unchanged against the 33,000 reticle.
+   - The tall hub grows with the band to 480 × 3,113.28.
+2. **Hub-corner window fixed at the hub face and in the lanes**, picked by measured cut. Neither change widens the die.
+   - `v6_eval.py --spread vmh_SW:W:159.84 vmh_NW:W:159.84 vmh_SE:W vmh_NE:W` spreads the hub W-face pin windows over
+     the full 3,113-µm face instead of packing them at the corner nearest their peers.
+   - On SW/NW the spread keeps a 159.84-µm pin-free window at the centre of the band-side face for the calendar
+     (116.64 + 2 × 21.6).
+   - `--lanes-mode legs` makes `band_lanes.py` charge each lane's two pin-to-lane legs against the 1-mm windows they
+     cross. Without it, the router can pick a lane whose vertical legs overload a hub corner.
+   - Both options default to off, so v5, v6 and earlier plans reproduce.
+3. **SUCX** stays at the plan's 216 × 194.4 µm. **PENDING:** the barrier tool models the source-compact 720 × 720 SUCX
+   (COLL top + 742), which overlaps hc_<q> by 54 µm in x. If H-NETLIST/H-SU adopt that size, the pocket west of the
+   calendar is only 358 µm wide, so hc_<q> must reshape (358 wide) or move above the SUCX.
+
+### Hub-corner options, measured on the v4 geometry
+
+| Option | Worst V/H cut | Lines over 0.60 | Weighted stages |
+|---|---|---|---|
+| none (v3 method) | 0.530 / 0.648 | 5 | 9.205 |
+| lane legs only | 0.592 / 0.614 | 1 | 9.024 |
+| spread band-side face only (SW/NW W, SE/NE E) | 0.521 / 0.614 | 1 | 9.344 |
+| spread band-side face + legs | 0.585 / 0.557 | 0 | 9.202 |
+| **spread hub W faces + legs, calendar window (adopted)** | **0.554 / 0.560** | **0** | **9.100** |
+
+### Final v4 numbers (`eval.json`, slack 1200)
+- **Cut:** V 0.554 at x 20,400, y 17,500–18,500; H 0.560 at y 6,300, x 13,100–14,100. 0 lines and 0 windows over
+  0.60. Weighted stages 9.100.
+- **Worst H window** (`cut_worst_window.json`, 0.560):
+
+| Class | Bits |
+|---|---:|
+| VM_HUB | 2,152 |
+| HC_CORE | 1,628 |
+| VM_HBM | 1,536 |
+| IDX_VM | 1,096 |
+| COLL_RING | 826 |
+| HBM_VM | 512 |
+| KV_DESC | 128 |
+
+- **Old corners:** the v3 corner window (y 5,300) is now 0.388. The NW mirror corner is no longer over 0.60.
+- **HC_ENG** (`hc_eng_home.json`, 4-beat x_wave), in / back / round trip in stages:
+
+| Quadrant | In | Back | Round trip |
+|---|---:|---:|---:|
+| SW | 12 | 8 | 20 |
+| SE | 13 | 8 | 21 |
+| NW | 15 | 11 | 26 |
+| NE | 12 | 10 | 22 |
+
+  Add 3 cycles for the serialisation. The engine-face cut is 0.134.
+
+### Band barrier through su_<q>1 at band 3153.28 (368 µm free over and under the slices)
+
+| Traffic | No roof (record) | With rp4c roof (270.72 µm, 638.72 µm total) |
+|---|---|---|
+| SFU/SU only, 2,676 b | 0.517 | 0.298 |
+| Plus HC, 4,900 b | **0.947 (fails)** | **0.546 (passes)** |
+
+The HC-inclusive pass depends on qualifying the roof: parent OBS/PG and the clocks of the roof area. Without the roof,
+HC needs 580.7 µm of channel against 368 µm.
+
+### Grants and visual check
+- Calendars: SW (13798.08, 6672.16) and NW (13798.08, 17417.14) sit in the reserved hub-face windows; SE and NE are
+  against the E face.
+- hc_<q>: SW (13342.32, 6762.88), mirrored.
+- RF: 576/576 footprints at 36 stages (33 required), max hop 452 µm.
+- XC witness at rp4c regenerated for the v4 SM positions.
+- Personally inspected: `layout/`, `layout_centre/`, `layout_sw_band/die_floorplan.png` and
+  `sfu_barrier_cuts_roof_hc.png`. No overlaps and no homes on blocks; the only conflict is the 720-SUCX model above.
+
+### Reproduce
+
+```sh
+P=results/arch/hbm_die_v15/core4_sfu2_su2825
+python3 tools/hbm_die_v15/compact_plan.py --layout col --core-at 4 --sfu-at-group 2 --core-w 330.48 --core-h 330.48 --core-column-w 276.48 --band 3153.28 --su-w 1797.12 --su-h 2825.28 --smw 7200 --smh 1800 --edge 100 --column 3050 --channel 450 --hub-w 480 --fit --carry --sfucore-h 3001.91 --sfu-store-side --sfus-wh 1020 1412 --sfus-yoff 1611.68 --hc-eng-mm2 9.5 --hc-links-v16 --hc-x-beats 4 --hc-client-inner --out $P
+python3 tools/hbm_die_v15/v6_eval.py $P --slack 1200 --spread vmh_SW:W:159.84 vmh_NW:W:159.84 vmh_SE:W vmh_NE:W --lanes-mode legs
+python3 tools/hbm_die_v15/xc_rp4b_frame_witness_1016.py --tile rp4c --ref e15f1ee76 --candidates core4_sfu2_su2825 --out results/arch/hbm_die_v15/xc_rp4c_frame_1016
+# then the barrier cuts, rf_centre_routes/allocate, rehome_v6 --out, hc_eng_home_1016, cut_window_who (h 6300 13100) and the renders, as in the v3 block below
+```
+
+## v3 history (H-DIE decision 10-16; numbers are v3's, band 3045.28): HC client at the band's inner end, x_wave over 4 beats
 
 ### What changed
 - **HC client.** `hc_<q>` (ot_hbm_hc_q_static, the x_wave source) is a new plan block with slot.

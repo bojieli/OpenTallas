@@ -2,33 +2,33 @@
  "tag": "core4_sfu2_su2825",
  "die_um": [
   32990.0,
-  23949.682
+  24164.898
  ],
- "die_mm2": 790.1,
- "placed_mm2": 658.57,
+ "die_mm2": 797.2,
+ "placed_mm2": 658.77,
  "cut_lanes": {
   "worst_v": {
-   "ratio": 0.53,
-   "x": 13700.0,
+   "ratio": 0.554,
+   "x": 20400.0,
    "y": [
-    4300.0,
-    5300.0
+    17500.0,
+    18500.0
    ]
   },
   "worst_h": {
-   "ratio": 0.623,
-   "y": 5300.0,
+   "ratio": 0.56,
+   "y": 6300.0,
    "x": [
     13100.0,
     14100.0
    ]
   },
-  "lines_over_060": 5,
-  "windows_over_060": 23
+  "lines_over_060": 0,
+  "windows_over_060": 0
  },
- "cut_no_lanes": 0.95,
+ "cut_no_lanes": 0.873,
  "faces_over_1": 8,
- "stages_bw": 9.161,
+ "stages_bw": 9.1,
  "per_class": {
   "HBM_K": {
    "bits": 70784,
@@ -36,11 +36,11 @@
   },
   "SM_X": {
    "bits": 69888,
-   "stages_bw": 10.1
+   "stages_bw": 9.35
   },
   "SM_HBM": {
    "bits": 36224,
-   "stages_bw": 11.47
+   "stages_bw": 11.53
   },
   "LG_SU": {
    "bits": 17792,
@@ -56,23 +56,23 @@
   },
   "HC_CORE": {
    "bits": 17792,
-   "stages_bw": 20.4
+   "stages_bw": 19.65
   },
   "VM_RING": {
    "bits": 17792,
-   "stages_bw": 12.5
+   "stages_bw": 12.25
   },
   "COLL_VM": {
    "bits": 17760,
-   "stages_bw": 17.34
+   "stages_bw": 18.0
   },
   "VM_HUB": {
    "bits": 17216,
-   "stages_bw": 20.47
+   "stages_bw": 21.88
   },
   "HC_ENG": {
    "bits": 11488,
-   "stages_bw": 11.47
+   "stages_bw": 12.49
   },
   "COLL_EP": {
    "bits": 11016,
@@ -80,27 +80,27 @@
   },
   "EP_SERDES": {
    "bits": 9504,
-   "stages_bw": 3.11
+   "stages_bw": 2.11
   },
   "SM_OUT": {
    "bits": 8640,
-   "stages_bw": 11.03
+   "stages_bw": 10.66
   },
   "HBM_VM": {
    "bits": 8192,
-   "stages_bw": 24.22
+   "stages_bw": 25.38
   },
   "VM_HBM": {
    "bits": 8192,
-   "stages_bw": 24.09
+   "stages_bw": 25.97
   },
   "IDX_INT": {
    "bits": 8064,
-   "stages_bw": 7.64
+   "stages_bw": 7.12
   },
   "COLL_RING": {
    "bits": 6608,
-   "stages_bw": 20.25
+   "stages_bw": 19.62
   },
   "QUANT_VM": {
    "bits": 4440,
@@ -108,15 +108,15 @@
   },
   "SFU_CORE": {
    "bits": 3072,
-   "stages_bw": 14.75
+   "stages_bw": 14.08
   },
   "SU_CORE": {
    "bits": 3072,
-   "stages_bw": 12.17
+   "stages_bw": 11.67
   },
   "IDX_VM": {
    "bits": 2192,
-   "stages_bw": 19.88
+   "stages_bw": 18.12
   },
   "IDX_COLL": {
    "bits": 2180,
@@ -124,10 +124,10 @@
   },
   "KV_DESC": {
    "bits": 2048,
-   "stages_bw": 11.09
+   "stages_bw": 11.0
   }
  },
- "relay_flops": 2852548.0,
+ "relay_flops": 2858036.0,
  "su_slice": [
   1797.12,
   2825.28

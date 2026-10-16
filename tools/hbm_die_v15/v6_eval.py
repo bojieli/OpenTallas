@@ -44,6 +44,8 @@ def stages(pins, lanes):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('plan'); ap.add_argument('--slack', default='1200'); ap.add_argument('--tag', default=None)
+    ap.add_argument('--spread', nargs='*', default=[], help="BLOCK_PREFIX:FACES[:RESERVE_UM] - spread that face's pin segments evenly over the full face (order kept), leaving a free RESERVE_UM window at the face centre (calendar home), e.g. vmh_SW:W:159.84")
+    ap.add_argument('--lanes-mode', default=None, help="band_lanes 5th arg, e.g. 'legs' (H-DIE-V790: lane legs charged to cut windows)")
     ap.add_argument('--ref', default='results/arch/hbm_globalfp_1015/noatt/ref_sm.json')
     a = ap.parse_args()
     d = Path(a.plan); tag = a.tag or d.name
@@ -54,6 +56,27 @@ def main():
     Pg = {k: v for k, v in P.items() if k in G['nodes']}
     m = F.score(G, Pg, json.loads((ROOT / a.ref).read_text()), cut_detail=False)
     pp, faces = PINS.pins(G, Pg, m)
+    for spec in a.spread:          # H-DIE-V790 10-16: hub-face pin windows over the full face height (not packed at a corner)
+        pre, fs, *rv = spec.split(':')
+        res = float(rv[0]) if rv else 0.0
+        for b, fx in pp.items():
+            if not b.startswith(pre):
+                continue
+            for f, v in fx.items():
+                if f not in fs:
+                    continue
+                L = sorted(v['pins'], key=lambda q: q['offset_um']); flen = v['face_len_um']
+                tot = sum(q['span_um'] for q in L); gap = max(0.0, (flen - tot - res) / (len(L) + 1)); cur = gap
+                r = Pg[b]; half = len(L) // 2
+                for k, q in enumerate(L):
+                    if res and k == half:
+                        cur += res           # reserved centre window (no pins): the calendar sits here
+                    q['offset_um'] = round(cur, 2); c = cur + q['span_um'] / 2
+                    if f in 'WE':
+                        q['y'] = round(r['y'] + c, 1)
+                    else:
+                        q['x'] = round(r['x'] + c, 1)
+                    cur += q['span_um'] + gap
     # non-graph blocks (carried grants) are obstacles for lanes/cut: give them an empty face set
     blocks = {b: dict(x=round(P[b]['x'], 1), y=round(P[b]['y'], 1), w=P[b]['w'], h=P[b]['h'],
                       kind=G['nodes'].get(b, {}).get('kind', 'GRANT'), orient=P[b].get('orient', 'R0'), faces=pp.get(b, {}))
@@ -64,7 +87,7 @@ def main():
     (d / 'pins').mkdir(exist_ok=True)
     pf = d / 'pins' / f'{tag}.pins.json'; pf.write_text(json.dumps(doc, indent=1))
     lf = d / 'lanes.json'
-    subprocess.run([sys.executable, str(ROOT / 'tools/hbm_die_v15/band_lanes.py'), str(pf), str(d / 'compact.P.json'), str(lf), a.slack],
+    subprocess.run([sys.executable, str(ROOT / 'tools/hbm_die_v15/band_lanes.py'), str(pf), str(d / 'compact.P.json'), str(lf), a.slack] + ([a.lanes_mode] if a.lanes_mode else []),
                    check=True, stdout=subprocess.DEVNULL)
     lanes = json.loads(lf.read_text())
     cut, _ = pin_cut.run(doc, P, lanes)

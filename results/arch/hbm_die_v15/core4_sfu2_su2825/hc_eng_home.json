@@ -28,54 +28,54 @@
  "links": {
   "hc_SW>hc_eng:HC_ENG": {
    "bits": 2100,
-   "route_um": 5809.2,
-   "stages": 11,
+   "route_um": 6143.4,
+   "stages": 12,
    "engine_face": "S"
   },
   "hc_eng>hc_SW:HC_ENG": {
    "bits": 772,
-   "route_um": 6722.0,
-   "stages": 13,
-   "engine_face": "S"
-  },
-  "hc_SE>hc_eng:HC_ENG": {
-   "bits": 2100,
    "route_um": 4459.2,
    "stages": 8,
    "engine_face": "S"
   },
+  "hc_SE>hc_eng:HC_ENG": {
+   "bits": 2100,
+   "route_um": 6917.8,
+   "stages": 13,
+   "engine_face": "S"
+  },
   "hc_eng>hc_SE:HC_ENG": {
    "bits": 772,
-   "route_um": 5522.0,
-   "stages": 11,
+   "route_um": 4459.2,
+   "stages": 8,
    "engine_face": "S"
   },
   "hc_NW>hc_eng:HC_ENG": {
    "bits": 2100,
-   "route_um": 6501.8,
-   "stages": 13,
+   "route_um": 7651.2,
+   "stages": 15,
    "engine_face": "N"
   },
   "hc_eng>hc_NW:HC_ENG": {
    "bits": 772,
-   "route_um": 7323.2,
-   "stages": 14,
+   "route_um": 5629.8,
+   "stages": 11,
    "engine_face": "N"
   },
   "hc_NE>hc_eng:HC_ENG": {
    "bits": 2100,
-   "route_um": 4951.8,
-   "stages": 9,
+   "route_um": 6425.6,
+   "stages": 12,
    "engine_face": "N"
   },
   "hc_eng>hc_NE:HC_ENG": {
    "bits": 772,
-   "route_um": 5614.6,
-   "stages": 11,
+   "route_um": 5229.8,
+   "stages": 10,
    "engine_face": "N"
   }
  },
- "max_stages": 14,
+ "max_stages": 15,
  "engine_face_cut": {
   "S": {
    "bits": 5744,
@@ -88,174 +88,5 @@
    "utilization": 0.1339
   }
  },
- "ablation": {
-  "v3_inner_client_x4": {
-   "cut_lanes": {
-    "worst_v": {
-     "ratio": 0.53,
-     "x": 13700.0,
-     "y": [
-      4300.0,
-      5300.0
-     ]
-    },
-    "worst_h": {
-     "ratio": 0.623,
-     "y": 5300.0,
-     "x": [
-      13100.0,
-      14100.0
-     ]
-    },
-    "lines_over_060": 5,
-    "windows_over_060": 23
-   },
-   "stages_bw": 9.161,
-   "hc_eng_stages_bw": 11.47
-  },
-  "nechannel_512b": {
-   "cut_lanes": {
-    "worst_v": {
-     "ratio": 0.493,
-     "x": 13700.0,
-     "y": [
-      4300.0,
-      5300.0
-     ]
-    },
-    "worst_h": {
-     "ratio": 0.574,
-     "y": 18700.0,
-     "x": [
-      13800.0,
-      14800.0
-     ]
-    },
-    "lines_over_060": 0,
-    "windows_over_060": 0
-   },
-   "stages_bw": 8.778,
-   "hc_eng_stages_bw": 43.0
-  },
-  "centre_512b": {
-   "cut_lanes": {
-    "worst_v": {
-     "ratio": 0.493,
-     "x": 13700.0,
-     "y": [
-      4300.0,
-      5300.0
-     ]
-    },
-    "worst_h": {
-     "ratio": 0.595,
-     "y": 18700.0,
-     "x": [
-      13800.0,
-      14800.0
-     ]
-    },
-    "lines_over_060": 0,
-    "windows_over_060": 0
-   },
-   "stages_bw": 8.773,
-   "hc_eng_stages_bw": 37.5
-  },
-  "nechannel_v16": {
-   "cut_lanes": {
-    "worst_v": {
-     "ratio": 0.992,
-     "x": 15500.0,
-     "y": [
-      11200.0,
-      12200.0
-     ]
-    },
-    "worst_h": {
-     "ratio": 1.33,
-     "y": 15200.0,
-     "x": [
-      18000.0,
-      19000.0
-     ]
-    },
-    "lines_over_060": 430,
-    "windows_over_060": 5978
-   },
-   "stages_bw": 11.793,
-   "hc_eng_stages_bw": 43.67
-  },
-  "centre_v16_x1": {
-   "cut_lanes": {
-    "worst_v": {
-     "ratio": 0.874,
-     "x": 14200.0,
-     "y": [
-      8000.0,
-      9000.0
-     ]
-    },
-    "worst_h": {
-     "ratio": 0.929,
-     "y": 6600.0,
-     "x": [
-      600.0,
-      1600.0
-     ]
-    },
-    "lines_over_060": 376,
-    "windows_over_060": 5705
-   },
-   "stages_bw": 11.337,
-   "hc_eng_stages_bw": 39.0
-  },
-  "centre_v16_x2beats": {
-   "cut_lanes": {
-    "worst_v": {
-     "ratio": 0.586,
-     "x": 15300.0,
-     "y": [
-      5900.0,
-      6900.0
-     ]
-    },
-    "worst_h": {
-     "ratio": 0.664,
-     "y": 5200.0,
-     "x": [
-      13100.0,
-      14100.0
-     ]
-    },
-    "lines_over_060": 4,
-    "windows_over_060": 8
-   },
-   "stages_bw": 10.124,
-   "hc_eng_stages_bw": 38.5
-  },
-  "centre_v16_x4beats": {
-   "cut_lanes": {
-    "worst_v": {
-     "ratio": 0.493,
-     "x": 13700.0,
-     "y": [
-      4300.0,
-      5300.0
-     ]
-    },
-    "worst_h": {
-     "ratio": 0.664,
-     "y": 5200.0,
-     "x": [
-      13100.0,
-      14100.0
-     ]
-    },
-    "lines_over_060": 4,
-    "windows_over_060": 8
-   },
-   "stages_bw": 9.502,
-   "hc_eng_stages_bw": 38.5
-  }
- }
+ "ablation": {}
 }

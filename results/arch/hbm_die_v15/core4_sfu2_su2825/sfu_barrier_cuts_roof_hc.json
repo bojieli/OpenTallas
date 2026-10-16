@@ -8,13 +8,13 @@
    "cut_x_um": 4895.68,
    "sm_bounded_y_um": [
     5258.4,
-    8343.68
+    8451.68
    ],
    "hard_su_y_um": [
     5278.4,
     8103.68
    ],
-   "free_channel_um": 530.72,
+   "free_channel_um": 638.72,
    "conditional_roof_extra_um": 270.72,
    "crossing": [
     {
@@ -80,8 +80,8 @@
    ],
    "known_demand_bits": 4900,
    "tracks_per_um": 14.0625,
-   "utilization": 0.65655,
-   "passes_060": false,
+   "utilization": 0.545536,
+   "passes_060": true,
    "channel_needed_at_060_um": 580.740741
   },
   {
@@ -89,13 +89,13 @@
    "cut_x_um": 28094.32,
    "sm_bounded_y_um": [
     5258.4,
-    8343.68
+    8451.68
    ],
    "hard_su_y_um": [
     5278.4,
     8103.68
    ],
-   "free_channel_um": 530.72,
+   "free_channel_um": 638.72,
    "conditional_roof_extra_um": 270.72,
    "crossing": [
     {
@@ -161,22 +161,22 @@
    ],
    "known_demand_bits": 4900,
    "tracks_per_um": 14.0625,
-   "utilization": 0.65655,
-   "passes_060": false,
+   "utilization": 0.545536,
+   "passes_060": true,
    "channel_needed_at_060_um": 580.740741
   },
   {
    "quarter": "NW",
    "cut_x_um": 5084.736000000001,
    "sm_bounded_y_um": [
-    15606.002,
-    18691.282
+    15713.218,
+    18906.498
    ],
    "hard_su_y_um": [
-    15846.002,
-    18671.282
+    16061.218,
+    18886.498
    ],
-   "free_channel_um": 530.72,
+   "free_channel_um": 638.72,
    "conditional_roof_extra_um": 270.72,
    "crossing": [
     {
@@ -242,22 +242,22 @@
    ],
    "known_demand_bits": 4900,
    "tracks_per_um": 14.0625,
-   "utilization": 0.65655,
-   "passes_060": false,
+   "utilization": 0.545536,
+   "passes_060": true,
    "channel_needed_at_060_um": 580.740741
   },
   {
    "quarter": "NE",
    "cut_x_um": 28094.32,
    "sm_bounded_y_um": [
-    15606.002,
-    18691.282
+    15713.218,
+    18906.498
    ],
    "hard_su_y_um": [
-    15846.002,
-    18671.282
+    16061.218,
+    18886.498
    ],
-   "free_channel_um": 530.72,
+   "free_channel_um": 638.72,
    "conditional_roof_extra_um": 270.72,
    "crossing": [
     {
@@ -323,12 +323,12 @@
    ],
    "known_demand_bits": 4900,
    "tracks_per_um": 14.0625,
-   "utilization": 0.65655,
-   "passes_060": false,
+   "utilization": 0.545536,
+   "passes_060": true,
    "channel_needed_at_060_um": 580.740741
   }
  ],
- "roof_witness_sha256": "90c95103e0ac5e7203a4198405824da00f95762354ee6e5384e72254dae3e16f",
+ "roof_witness_sha256": "1481f76ad7b928a3c20a9c0c4e86b40959d5d126bfcf236a2eea0dff384e358d",
  "roof_scope": "Conditional geometric roof only; actual source-connected parent OBS/layer/PG and all incident clocks unqualified",
  "station_leaf_count": 9568,
  "station_reset_ff_added": 11040,
