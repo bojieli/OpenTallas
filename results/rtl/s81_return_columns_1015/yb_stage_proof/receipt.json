@@ -1,0 +1,68 @@
+{
+ "status": "PASS",
+ "scope": "component delayed equivalence of YB_STAGE 1 (reference = monolithic ctra/ctrb); not canonical programme or physical closure",
+ "cycles_per_positive": 2500,
+ "added_return_cycles": 2,
+ "added_request_cycles": 1,
+ "yb_stage_added_cycles": 1,
+ "source_sha256": "a8bb96222f2053ae169004c655f05b9423bede9a9e9b95357c2c7de0c90bb975",
+ "results": [
+  {
+   "variant": "positive",
+   "half": "a",
+   "returncode": 0,
+   "expected_verdict": true,
+   "log": "/srv/opentallas-scratch/claude/hccol-0600/ybproof/out/positive_a.log"
+  },
+  {
+   "variant": "positive",
+   "half": "b",
+   "returncode": 0,
+   "expected_verdict": true,
+   "log": "/srv/opentallas-scratch/claude/hccol-0600/ybproof/out/positive_b.log"
+  },
+  {
+   "variant": "positive",
+   "half": "rel",
+   "returncode": 0,
+   "expected_verdict": true,
+   "log": "/srv/opentallas-scratch/claude/hccol-0600/ybproof/out/positive_rel.log"
+  },
+  {
+   "variant": "unrelayed_own_y",
+   "half": "a",
+   "returncode": 1,
+   "expected_verdict": true,
+   "log": "/srv/opentallas-scratch/claude/hccol-0600/ybproof/out/unrelayed_own_y_a.log"
+  },
+  {
+   "variant": "missing_fv_stage",
+   "half": "a",
+   "returncode": 1,
+   "expected_verdict": true,
+   "log": "/srv/opentallas-scratch/claude/hccol-0600/ybproof/out/missing_fv_stage_a.log"
+  },
+  {
+   "variant": "relay_lane_order",
+   "half": "rel",
+   "returncode": 1,
+   "expected_verdict": true,
+   "log": "/srv/opentallas-scratch/claude/hccol-0600/ybproof/out/relay_lane_order_rel.log"
+  },
+  {
+   "variant": "bad_lane",
+   "half": "a",
+   "returncode": 1,
+   "expected_verdict": true,
+   "log": "/srv/opentallas-scratch/claude/hccol-0600/ybproof/out/bad_lane_a.log"
+  },
+  {
+   "variant": "bad_lane",
+   "half": "b",
+   "returncode": 1,
+   "expected_verdict": true,
+   "log": "/srv/opentallas-scratch/claude/hccol-0600/ybproof/out/bad_lane_b.log"
+  }
+ ],
+ "note": "positive display text \"unchanged requests\" is inherited wording: the check compares every request output to the reference one cycle later (prev_) and rvm/rdm two cycles later (prev2_). ot-run unit oth-ubuntu-3030459-1792159494 on ot-epyc4."
+}
