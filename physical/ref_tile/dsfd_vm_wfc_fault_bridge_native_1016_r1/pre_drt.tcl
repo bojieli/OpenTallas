@@ -1,2 +1,0 @@
-estimate_parasitics -placement
-source /src/physical/ref_tile/dsfd_vm_wfc_fault_bridge_native_1016_r1/clock_entry.sdc

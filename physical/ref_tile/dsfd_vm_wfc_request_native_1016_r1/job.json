@@ -3,7 +3,7 @@
  "block": "dsfd_vm_wfc_request",
  "ref_tile": true,
  "owner": "codex:S81-WFC-native",
- "purpose": "Native WFC control leaf: differential bench vs the r9 parent body + observed DUT mutants, native CTS.",
+ "purpose": "Native WFC request leaf: fixed +1 core request/+4 core and +3 serial response, real W1 epoch fault transfers; independent source-pinned pipeline/fault-phase gate and observed mutants.",
  "threads": 8,
  "peak_ram_gb": 16,
  "source": {
@@ -28,7 +28,7 @@
     ]
    },
    {
-    "name": "pipeline",
+    "name": "pipeline_epoch",
     "cmd": "bash tools/s81_vm/wfc_pipeline_gate.sh {RUN}/pipeline",
     "expect": "pass",
     "pass_regex": "WFC_PIPELINE_GATE PASS",
@@ -39,8 +39,8 @@
     ]
    },
    {
-    "name": "mut_lane",
-    "cmd": "bash tools/s81_vm/wfc_pipeline_gate.sh {RUN}/mut_LANE OT_VM_WFC_CTL_MUT_LANE",
+    "name": "ot_vm_wfc_ctl_mut_lane",
+    "cmd": "bash tools/s81_vm/wfc_pipeline_gate.sh {RUN}/OT_VM_WFC_CTL_MUT_LANE OT_VM_WFC_CTL_MUT_LANE",
     "expect": "fail",
     "fail_regex": "FATAL:",
     "threads": 1,
@@ -50,8 +50,8 @@
     ]
    },
    {
-    "name": "mut_fault",
-    "cmd": "bash tools/s81_vm/wfc_pipeline_gate.sh {RUN}/mut_FAULT OT_VM_WFC_CTL_MUT_FAULT",
+    "name": "ot_vm_wfc_ctl_mut_fault",
+    "cmd": "bash tools/s81_vm/wfc_pipeline_gate.sh {RUN}/OT_VM_WFC_CTL_MUT_FAULT OT_VM_WFC_CTL_MUT_FAULT",
     "expect": "fail",
     "fail_regex": "FATAL:",
     "threads": 1,
@@ -61,8 +61,8 @@
     ]
    },
    {
-    "name": "mut_capture",
-    "cmd": "bash tools/s81_vm/wfc_pipeline_gate.sh {RUN}/mut_CAPTURE OT_VM_WFC_CTL_MUT_CAPTURE",
+    "name": "ot_vm_wfc_ctl_mut_capture",
+    "cmd": "bash tools/s81_vm/wfc_pipeline_gate.sh {RUN}/OT_VM_WFC_CTL_MUT_CAPTURE OT_VM_WFC_CTL_MUT_CAPTURE",
     "expect": "fail",
     "fail_regex": "FATAL:",
     "threads": 1,
@@ -72,8 +72,19 @@
     ]
    },
    {
-    "name": "mut_cdc",
-    "cmd": "bash tools/s81_vm/wfc_pipeline_gate.sh {RUN}/mut_CDC OT_VM_WFC_CTL_MUT_CDC",
+    "name": "ot_vm_wfc_ctl_mut_cdc",
+    "cmd": "bash tools/s81_vm/wfc_pipeline_gate.sh {RUN}/OT_VM_WFC_CTL_MUT_CDC OT_VM_WFC_CTL_MUT_CDC",
+    "expect": "fail",
+    "fail_regex": "FATAL:",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "ot_vm_wfc_ctl_mut_epoch",
+    "cmd": "bash tools/s81_vm/wfc_pipeline_gate.sh {RUN}/OT_VM_WFC_CTL_MUT_EPOCH OT_VM_WFC_CTL_MUT_EPOCH",
     "expect": "fail",
     "fail_regex": "FATAL:",
     "threads": 1,

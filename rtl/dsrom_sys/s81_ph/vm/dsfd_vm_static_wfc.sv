@@ -132,47 +132,73 @@ module dsfd_vm_wfc_return #(parameter integer RESPONSE_PAD=0) (
     end endgenerate
 endmodule
 
-// Fault-only bridge. Related-clock paths remain ordinary timed paths, never false paths.
-// Each sender has a negative-edge lockup; both receiver stages use the destination rising edge.
-// Sticky summaries preserve both legacy diagnostic directions; they never gate production issue.
-module dsfd_vm_wfc_fault_bridge (
- input wire ck_t, ck_s, rst_t, rst_s, core_fault, core_fault_b, serial_fault,
- output reg core_summary, serial_summary, g_q, e_q
-);
- reg core_pin, serial_pin, core_lock, serial_lock;
- reg core_s1, core_s2, serial_t1, serial_t2;
- reg[1:0] sq;
- always @(posedge ck_s or negedge rst_s)if(!rst_s)sq<=0;else sq<={sq[0],1'b1};
- always @(posedge ck_s)begin g_q<=sq[1];e_q<=sq[1]&&serial_summary;end
- always @(posedge ck_t or negedge rst_t) if (!rst_t) core_pin <= 0; else
+// Sticky diagnostic joins capture every incoming pin in its own native domain.
+// Real W1 epoch transports carry fault levels, using the already implemented
+// 3:4 bank/parity/marker schedule. Raw 4:3 two-flop crossing failed measured STA.
+module dsfd_vm_wfc_fault_core(input wire ck,rn,core_fault,core_fault_b,transfer_fault,remote_fault,
+ output reg source_fault,summary,tx_valid);
+ reg req_pin,ret_pin,transfer_pin,remote_pin;reg[7:0] warm;reg[1:0] phase;
+ always @(posedge ck or negedge rn)begin
+  if(!rn)begin req_pin<=0;ret_pin<=0;transfer_pin<=0;remote_pin<=0;warm<=0;phase<=3;source_fault<=0;summary<=0;tx_valid<=0;end
+  else begin
+   req_pin<=core_fault;ret_pin<=core_fault_b;transfer_pin<=transfer_fault;remote_pin<=remote_fault;
+   warm<={warm[6:0],1'b1};phase<=phase+2'd1;
+   // At the NEXT edge x43 consumes this v: phase1 is the permanently idle slot.
+`ifdef OT_VM_WFC_CTL_MUT_EPOCH
+   tx_valid<=1'b1;
+`else
+   tx_valid<=phase!=2'd3;
+`endif
 `ifdef OT_VM_WFC_CTL_MUT_FAULT
- core_pin <= core_pin | core_fault;
+   source_fault<=source_fault|req_pin|transfer_pin;
 `else
- core_pin <= core_pin | core_fault | core_fault_b;
+   source_fault<=source_fault|req_pin|ret_pin|transfer_pin;
 `endif
- always @(posedge ck_s or negedge rst_s) if (!rst_s) serial_pin <= 0; else serial_pin <= serial_pin | serial_fault;
- always @(negedge ck_t or negedge rst_t) if (!rst_t) core_lock <= 0; else core_lock <= core_pin;
- always @(negedge ck_s or negedge rst_s) if (!rst_s) serial_lock <= 0; else serial_lock <= serial_pin;
- always @(posedge ck_s or negedge rst_s) begin
-  if (!rst_s) begin core_s1<=0; core_s2<=0; serial_summary<=0; end
-  else begin core_s1<=core_lock; core_s2<=core_s1;
-`ifdef OT_VM_WFC_CTL_MUT_CDC
-   serial_summary <= serial_pin;
-`else
-   serial_summary <= serial_summary | serial_pin | core_s2;
-`endif
+   summary<=summary|source_fault|(warm[7]&&remote_pin);
   end
  end
- always @(posedge ck_t or negedge rst_t) begin
-  if (!rst_t) begin serial_t1<=0; serial_t2<=0; core_summary<=0; end
-  else begin serial_t1<=serial_lock; serial_t2<=serial_t1; core_summary<=core_summary | core_pin | serial_t2; end
+endmodule
+module dsfd_vm_wfc_fault_serial(input wire ck,rn,serial_fault,transfer_fault,remote_fault,
+ output reg source_fault,g_q,e_q);
+ reg own_pin,transfer_pin,remote_pin,summary;reg[5:0] warm;reg[1:0] sq;
+ always @(posedge ck or negedge rn)begin
+  if(!rn)begin own_pin<=0;transfer_pin<=0;remote_pin<=0;summary<=0;source_fault<=0;warm<=0;sq<=0;g_q<=0;e_q<=0;end
+  else begin
+   own_pin<=serial_fault;transfer_pin<=transfer_fault;remote_pin<=remote_fault;
+   warm<={warm[4:0],1'b1};sq<={sq[0],1'b1};source_fault<=source_fault|own_pin|transfer_pin;
+`ifdef OT_VM_WFC_CTL_MUT_CDC
+   summary<=summary|source_fault;
+`else
+   summary<=summary|source_fault|(warm[5]&&remote_pin);
+`endif
+   g_q<=sq[1];e_q<=sq[1]&&summary;
+  end
  end
+endmodule
+module dsfd_vm_wfc_fault_bridge (
+ input wire ck_t,ck_s,rst_t,rst_s,
+ input wire ck_x34_s,ck_x34_t,ck_x43_t,ck_x43_s,
+ input wire rst_x34_s,rss_x34_t,rss_x43_t,rst_x43_s,
+ input wire core_fault,core_fault_b,serial_fault,
+ output wire core_summary,g_q,e_q
+);
+ wire core_source,serial_source,core_receive,serial_receive,tx_v;
+ wire xf34,xf43;wire unused_v34,unused_v43;
+ wire[1:0] b340,b341,b342,b430,b432,b433;wire[2:0] bp34,bp43;wire m34,m43,p43;
+ dsfd_vm_wfc_fault_core u_core(ck_t,rst_t,core_fault,core_fault_b,xf34,core_receive,core_source,core_summary,tx_v);
+ dsfd_vm_wfc_fault_serial u_serial(ck_s,rst_s,serial_fault,xf43,serial_receive,serial_source,g_q,e_q);
+ ot_s81_vm_fault_x34_s_w1 u_x34_s(ck_x34_s,rst_x34_s,1'b1,serial_source,b340,b341,b342,bp34,m34);
+ ot_s81_vm_fault_x34_t_w1 u_x34_t(ck_x34_t,rss_x34_t,b340,b341,b342,bp34,m34,unused_v34,core_receive,xf34);
+ ot_s81_vm_fault_x43_t_w1 u_x43_t(ck_x43_t,rss_x43_t,tx_v,core_source,b430,b432,b433,bp43,m43,p43);
+ ot_s81_vm_fault_x43_s_w1 u_x43_s(ck_x43_s,rst_x43_s,b430,b432,b433,bp43,m43,p43,unused_v43,serial_receive,xf43);
 endmodule
 
 module dsfd_vm_static_wfc #(parameter integer RLAT = 13, parameter integer RESPONSE_PAD = 0) (
     input wire ck_control_s, ck_control_t,
     input wire ck_fault_s, ck_fault_t, rst_fault_s, rss_fault_t,
     input wire ck_return_t,rss_return_t,
+    input wire ck_fault_x34_s,ck_fault_x34_t,ck_fault_x43_t,ck_fault_x43_s,
+    input wire rst_fault_x34_s,rss_fault_x34_t,rss_fault_x43_t,rst_fault_x43_s,
     input wire ck_x34_s, ck_x34_t, ck_x43_s, ck_x43_t,
     input wire rst_control_s, rss_control_t,
     input wire rst_x34_s, rss_x34_t, rst_x43_s, rss_x43_t,
@@ -186,7 +212,7 @@ module dsfd_vm_static_wfc #(parameter integer RLAT = 13, parameter integer RESPO
     output wire          fault                                  // core summary from u_fault; diagnostic delay only
 );
     // Wires only: x34, request/return control leaf, fault bridge and x43.
-    wire xv; wire [559:0] xd; wire x34f; wire ov; wire [1025:0] od; wire x43f; wire sv; wire [1025:0] sd; wire g_q, e_q; wire native_core_fault, serial_fault;
+    wire xv; wire [559:0] xd; wire x34f; wire ov; wire [1025:0] od; wire x43f; wire sv; wire [1025:0] sd; wire g_q, e_q; wire native_core_fault;
     ot_s81_vm_x34 #(.W(560)) u_xi (.s_ck(ck_x34_s), .s_rst_n(rst_x34_s), .s_v(f_wfc[0] | f_wfc[528]), .s_d(f_wfc),
         .t_ck(ck_x34_t), .t_rst_n(rss_x34_t), .o_v(xv), .o_d(xd), .fault(x34f));
     wire [1:0] return_valid;wire[3:0] return_lane;wire return_fault;
@@ -198,8 +224,10 @@ module dsfd_vm_static_wfc #(parameter integer RLAT = 13, parameter integer RESPO
       .ck(ck_return_t),.rn(rss_return_t),.return_valid(return_valid),.return_lane(return_lane),
       .e_v(e_v),.e_d(e_d),.s_v(sv),.s_d(sd),.r_bad(return_fault));
     dsfd_vm_wfc_fault_bridge u_fault (.ck_t(ck_fault_t), .ck_s(ck_fault_s),
-      .rst_t(rss_fault_t), .rst_s(rst_fault_s), .core_fault(native_core_fault),.core_fault_b(return_fault),.serial_fault(x43f),
-      .core_summary(fault), .serial_summary(serial_fault),.g_q(g_q),.e_q(e_q));
+      .rst_t(rss_fault_t), .rst_s(rst_fault_s),
+      .ck_x34_s(ck_fault_x34_s),.ck_x34_t(ck_fault_x34_t),.ck_x43_t(ck_fault_x43_t),.ck_x43_s(ck_fault_x43_s),
+      .rst_x34_s(rst_fault_x34_s),.rss_x34_t(rss_fault_x34_t),.rss_x43_t(rss_fault_x43_t),.rst_x43_s(rst_fault_x43_s), .core_fault(native_core_fault),.core_fault_b(return_fault),.serial_fault(x43f),
+      .core_summary(fault),.g_q(g_q),.e_q(e_q));
     ot_s81_vm_x43 #(.W(1026)) u_xo (.t_ck(ck_x43_t), .t_rst_n(rss_x43_t), .s_v(sv), .s_d(sd),
         .s_ck(ck_x43_s), .s_rst_n(rst_x43_s), .o_v(ov), .o_d(od), .fault(x43f));
     assign t_wfc = {e_q, od, g_q, g_q};
