@@ -214,9 +214,19 @@ V143B = __import__('os').environ.get('OT_KV_V143B', '0') == '1'
 # G_n->T1n 291.6, T1n->T2n 372.6, T2n->near fronts 479.6, G_f->T1f 432.0, score->S1n 215.7, S1n->S2n 37.1, S2n->ECTL 110.9
 # (all <= 500; v1.4.3: 285.9 / 314.0 / 34.6 / 125.3 / 436.4 / 337.0).  Far T2f / S1f band (5.4-um gaps) unchanged.
 V143C = __import__('os').environ.get('OT_KV_V143C', '0') == '1'
+# v1.4.3d (Q-KVSYS-HOP 2026-10-16, OT_KV_V143D=1, needs OT_KV_V143C=1): THREE-ROW band (one more 43.2-um row a side).
+# kvs11-v143c TT failed real->real on the G3S2 stage hops (ECTL a/b -> G multicast -72.45 / -47.99, G_far -> FT -60.78 /
+# -42.59, T2 -> front q -51.55, T1 -> T2 -14.16; 6,983 violators): in two rows no placement gets every hop under the
+# calibrated realized reach (exhaustive search over all four 324-um stages x 10.8-um x / row on the realized kvs11 pins
+# and bit order: best = 481 um 2-pin, 307 um ECTL-multicast HPWL).  Three rows: worst 2-pin 367 um (T2 -> front),
+# G_far -> FT 259, G_near -> T1 356, ECTL -> {G_n, G_f} HPWL 200 (kvs11: 524 / 524 / 292 / 372).  Same leaves, same
+# cycles; the band grows 43.2 um a side.  Search: results/arch/qwen_kv_hop_1016.
+V143D = V143C and __import__('os').environ.get('OT_KV_V143D', '0') == '1'
 V143_ROW = 43.2 if (V143B or V143C) else 28.08
 V143_GAP = 21.6 if (V143B or V143C) else 6.48
 V143_BAND_LO, V143_BAND_HI = (195.48, 194.4) if V143B else ((111.24, 108.0) if V143C else (119.88, 118.8))
+if V143D:
+    V143_BAND_LO, V143_BAND_HI = V143_BAND_LO + V143_ROW, V143_BAND_HI + V143_ROW
 V143_NF_LO, V143_NF_HI = (64.8, 65.88) if V143B else (32.4, 33.48)
 V143_X = (dict(g=226.8, t1n=-54.0, t2n=108.0, t2f=108.0, s1n=486.0, s2n=556.2, s1f=486.0) if V143B else
           dict(g=226.8, t1n=226.8, t2n=108.0, t2f=108.0, s1n=437.4, s2n=556.2, s1f=437.4))   # ECTL-local x (R0 ECTL)
@@ -943,10 +953,12 @@ def build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_wq
     _PIN_HINT.clear()
     m = _build(**kw)
     best = None
+    passes_ = []          # Q-KVSYS-HOP: every planned pass, so a pass whose pin repair fails can fall back to another
     for _ in range(3):                      # re-plan from the drawn pins; keep the pass with the fewest pin-hop violations
         M = masters(m, 1)
         nv = pin_reach(m, M)['violations']
         print(f'kv die: plan pass pin-hop violations {nv}', file=sys.stderr)
+        passes_.append((nv, len(passes_), m))
         if best is None or nv < best[0]:
             best = (nv, m)
         if nv == 0:
@@ -990,8 +1002,20 @@ def build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_wq
     _PIN_HINT.clear()
     if split and best[0]:
         import kv_pin_repair
+        snap_ = copy.deepcopy(best[1]) if HOP else None
         repaired = kv_pin_repair.repair(sys.modules[__name__], best[1])
         failures = pin_reach(repaired, masters(repaired, 1))
+        if failures['violations'] and HOP:
+            # OT_KV_HOP: the best pass's repair can be boxed in (d2d_kv fwd_* pins under the abutted UCIe PHY, first
+            # relay 1,208 um west): repair the other planned passes in order of pin-hop violations
+            for nv_, _, m_ in sorted(passes_, key=lambda t: t[:2]):
+                if m_ is best[1] or (snap_ is not None and m_ is snap_):
+                    continue
+                r_ = kv_pin_repair.repair(sys.modules[__name__], m_)
+                f_ = pin_reach(r_, masters(r_, 1))
+                print(f'kv die: OT_KV_HOP fallback pass ({nv_} pin-hop violations) -> {f_["violations"]} after repair', file=sys.stderr)
+                if not f_['violations']:
+                    return r_
         if failures['violations']:
             raise ValueError(f"split KV die has {failures['violations']} unrepaired pin hops: {failures['worst'][:3]}")
         return repaired
@@ -1182,7 +1206,14 @@ def _v143_stages(add, se, cx, ey, col):
         add(f'hst_{se}_{name}', mst, round(x, 4), round(y, 4), w - SHAVE, h - SHAVE, o, 'head_stage', 'attn')
     for lower, near, far in ((True, 1, 0), (False, 2, 3)):
         row = (lambda k: cy - V143_ROW * k) if lower else (lambda k: cy + ECTL[1] + V143_GAP + V143_ROW * (k - 1))
-        if V143C:
+        if V143D:
+            put(f'{near}_g', 'qkd_hgs', 172.8, row(1), lower)
+            put(f'{far}_g', 'qkd_hgs', 183.6, row(2), lower)
+            put(f'{near}_t1', 'qkd_hgs', -162.0, row(2), lower)
+            put(f'{near}_t2', 'qkd_hgs', 32.4, row(3), lower)
+            put(f'{near}_s1', 'qkd_hss', 480.6, row(3), lower)
+            put(f'{near}_s2', 'qkd_hss', 540.0, row(3), lower)
+        elif V143C:
             put(f'{near}_g', 'qkd_hgs', 54.0, row(1), lower)
             put(f'{far}_g', 'qkd_hgs', 405.0, row(1), lower)
             put(f'{near}_t1', 'qkd_hgs', -216.0, row(2), lower)
@@ -2268,6 +2299,10 @@ def masters(m, k=1, port_bits=None):
                 face = 'S' if p in ('ti_a', 'e_a') else 'N' if p in ('ti_b', 'e_b') else 'W'
             if mst == 'qkd_hss':
                 face = 'W' if p == 's_a' else 'E' if p == 's_b' else 'S'
+            if HOP and mst in ('qkd_d2d', 'qkd_d2ds') and face in _covered_faces(m, inst0, peer=pe):
+                # OT_KV_HOP: a face covered by an abutting block (the UCIe PHY on the D2D frame's N face) has no die
+                # routing: the fwd_epoch / fwd_link_rst_n words were drawn there, 1,208 um from their first relay
+                face = ('E' if dxp > 0 else 'W') if face in 'NS' else ('N' if dyp > 0 else 'S')
             if mst in ('qkd_land', 'qkd_land_n') and face in 'NS':
                 # the landing is a 172.8 um x 12 mm column: its short faces cannot hold its words (die_kv7: 3,186
                 # overlapping pin shapes, PA DRT-0073); every word leaves on the long face toward its peer
@@ -2657,9 +2692,20 @@ def _slice_pins(m, mm, down=False):
     w = {p: sp[1] for p, sp in mm.ports.items()}
     mm.ports.clear()
     mm.order.clear()
+    # OT_KV_HOP (kvs11 TT: ctrl_pc er -> slice ctrl_er -97.0 ps, 869 violators; slice ctrl_es -> ctrl_pc es -38.1): the
+    # slice's controller-face words were at 6 M4 tracks a bit while the closed pc leaf's er / es are at 2, and the S
+    # strips' pc leaves are MX (bit order descending): realized dy grew to 101 (er) / 215 um (es) on a 423.5-um dx hop.
+    # Under the flag they take the leaf's 2-track pitch and order, centred on the leaf's words (measured kvs11 offsets of
+    # the middle bit, identical for all 32 PCs of a stack): every bit's dy <= ~14 um
+    hop_ = dict(qkd_hslice=dict(ctrl_er=-50.9, ctrl_es=159.4), qkd_hslice_dn=dict(ctrl_er=-28.9, ctrl_es=120.5)) if HOP else {}
     for p, face, centre in (('ctrl_es', 'W', STRIP_ES_Y - 12.96), ('ctrl_er', 'W', STRIP_ER_Y - 12.96),
                             ('land_es', 'E', STRIP_ES_Y - 12.96), ('land_er', 'E', STRIP_ER_Y - 12.96)):
         if p in w:
+            if p in hop_.get(mm.name, {}):
+                mm.face(p, w[p], face, 'M4', round(centre + hop_[mm.name][p], 3), 2)
+                if not down:
+                    F.PIN_REVERSE.add((mm.name, p))
+                continue
             mm.face(p, w[p], face, 'M4', round(centre, 3), 6)
     south = ['fi', 'co', 'ao', 'fault_o', 'sko', 'sdo', 'soo', 'sfo', 'bgi']
     north = ['fo', 'ci', 'ai', 'fault_i', 'ski', 'sdi', 'soi', 'sfi', 'bgo']
@@ -2686,6 +2732,29 @@ def _slice_pins(m, mm, down=False):
     for p in rest:
         face, offset = centres[p]
         mm.face(p, w[p], face, 'M4', round(mm.h / 2 + offset, 3), 4)
+
+
+def _covered_faces(m, it, gap=4.32, peer=None):
+    """OT_KV_HOP: faces of instance it (in its own frame) that another block abuts over more than half their length."""
+    out = set()
+    for o in m['insts']:
+        if o is it or o is peer or o.kind == 'relay':
+            continue
+        ox = min(it.x + it.w, o.x + o.w) - max(it.x, o.x)
+        oy = min(it.y + it.h, o.y + o.h) - max(it.y, o.y)
+        if ox > it.w / 2 and 0 <= o.y - (it.y + it.h) <= gap:
+            out.add('N')
+        if ox > it.w / 2 and 0 <= it.y - (o.y + o.h) <= gap:
+            out.add('S')
+        if oy > it.h / 2 and 0 <= o.x - (it.x + it.w) <= gap:
+            out.add('E')
+        if oy > it.h / 2 and 0 <= it.x - (o.x + o.w) <= gap:
+            out.add('W')
+    if it.orient in ('MY', 'R180'):
+        out = {dict(E='W', W='E').get(f, f) for f in out}
+    if it.orient in ('MX', 'R180'):
+        out = {dict(N='S', S='N').get(f, f) for f in out}
+    return out
 
 
 def _land_level_pins(m, mm, inst0, face_load, by):
