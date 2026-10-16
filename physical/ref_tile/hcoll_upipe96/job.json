@@ -1,5 +1,5 @@
 {
- "name": "hcoll_upipe96-u96-COMMIT",
+ "name": "hcoll_upipe96-u96-c3658c05f",
  "block": "ot_hgi_coll_uop_slice96",
  "ref_tile": true,
  "owner": "Codex:H-COLL-UPIPE96-1635",
@@ -8,12 +8,13 @@
  "peak_ram_gb": 8,
  "source": {
   "branch": "codex/hbm-upipe-leaf-1635",
-  "commit": "COMMIT",
+  "commit": "c3658c05f",
   "extra_paths": [
    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_slice_v7.sv",
    "rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_slice_v7.sv",
    "rtl/hbm_accel/generic/collective/p2p/run_slice_v7.sh",
-   "physical/hbm_coll_upipe96"
+   "physical/hbm_coll_upipe96",
+   "results/arch/hbm_coll_hard_v5_1045/upipe96_1635"
   ]
  },
  "stages": {
@@ -37,7 +38,8 @@
     "peak_ram_gb": 1,
     "needs": [
      "iverilog"
-    ]
+    ],
+    "pass_witness": "results/arch/hbm_coll_hard_v5_1045/upipe96_1635/pos/run.log"
    },
    {
     "name": "slice_delay",
@@ -49,7 +51,8 @@
     "needs": [
      "iverilog"
     ],
-    "fail_regex": "SLICE_V7 FAIL mismatches1987 checks1987"
+    "fail_regex": "SLICE_V7 FAIL mismatches1987 checks1987",
+    "fail_witness": "results/arch/hbm_coll_hard_v5_1045/upipe96_1635/delay/run.log"
    }
   ],
   "calibrate": {
@@ -100,7 +103,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hcoll_upipe96/hcoll_upipe96-u96-COMMIT"
+   "to": "results/rtl/ref_tile/hcoll_upipe96/hcoll_upipe96-u96-c3658c05f"
   }
  ],
  "cycles_added": 0,
