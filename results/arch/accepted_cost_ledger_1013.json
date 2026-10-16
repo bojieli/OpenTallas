@@ -45,26 +45,26 @@
    "design": "qwen_rom",
    "unit": "ATTN.NATIVE_STATIC service (QK+softmax+PV+finalize, T=8192, minimal per-context calendar; link/landing excluded => lower bound)",
    "group": "ATTN.NATIVE",
-   "measured": 1620.0,
+   "measured": 1624.0,
    "price": 1816.0,
    "unit_of_measure": "cycles",
-   "unit_ratio": 0.8921,
-   "e2e_loss_pct": -2.911,
+   "unit_ratio": 0.8943,
+   "e2e_loss_pct": -2.85,
    "binding_workload": "ar",
    "per_workload": {
     "ar": {
      "model": "token-path longest path",
      "base_cycles": 249431.0,
-     "cycles": 242375.0,
-     "added_cycles": -7056.0,
+     "cycles": 242519.0,
+     "added_cycles": -6912.0,
      "runs_per_token": 36,
      "critical_runs": 36,
      "overlapped_runs": 0,
      "other_price_nodes_skipped": 0,
-     "naive_added_cycles": -7056.0,
+     "naive_added_cycles": -6912.0,
      "wave_positions": 0,
      "wave_added_cycles_per_position": 0.0,
-     "e2e_loss_pct": -2.911
+     "e2e_loss_pct": -2.85
     }
    },
    "within_unit_limit": true,
@@ -72,7 +72,7 @@
    "evidence_grade": "committed_bench",
    "date": "2026-10-15",
    "status": "proposed",
-   "note": "Q-ATTN-RATE 2026-10-15 RE-MEASURED after the structural P.V redesign (16 V rows/cycle, ot_qwen_tp8_attention_native_service_w16, 8-bank ot_qwen_tp8_pv_wide_pair x2): service 1555 cyc at T=8192 (53/53 contexts exact, 14 mutants fail) + 65 link (LINK.md 5b) = 1620 vs price 1816 = 0.892x -> QUALIFIES within 1.10x, e2e -2.9 % vs price. History (never overwritten, results/arch/qwen_attention_native_calendar_1015/receipt.json): the 1-row/cycle pairs measured 5362 (2.95x, 33.85 % e2e)."
+   "note": "Q-ATTN-RATE 2026-10-15 (owner approved 21:05) PRODUCTION FORM: 16 V rows/cycle P.V, physical partition 64 x ot_qwen_tp8_pv_col + 2 x ctl, pin registers on every port, 32x128 slice macros (4c026e895): service 1559 cyc at T=8192 (53/53 exact, 15 mutants fail) + 65 link (LINK.md 5b) = 1624 vs price 1816 = 0.894x -> QUALIFIES within 1.10x. History: 1-row/cycle pairs 5362 (2.95x, 33.85 % e2e, results/arch/qwen_attention_native_calendar_1015/receipt.json); first 16-row form 1555 (55a5f5a98)."
   },
   {
    "design": "qwen_rom",

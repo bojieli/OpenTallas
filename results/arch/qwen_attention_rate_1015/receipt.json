@@ -3,15 +3,15 @@
  "date": "2026-10-15",
  "owner": "Q-ATTN-RATE",
  "scope": "static native Qwen TP8 attention service with 16-row/cycle P.V (ot_qwen_tp8_attention_native_service_w16): 4 native QK stacks (ECTL3 RL21/HXK8, zfix static ASTK CTL) + 4-wide EP e read + static AHUB + 2 x ot_qwen_tp8_pv_wide_pair + finalize; common phase, one request; Verilator production binary; NOT physical qualification",
- "source_commit": "55a5f5a98 (branch claude/q-attn-rate-1015)",
- "build": "tools/qwen_attention_native/rate_1015/build_w16.sh on ot-epyc1tb, /srv/opentallas-scratch/claude/q-attn-rate-1015/b_55a5f5a98",
+ "source_commit": "4c026e895 (branch claude/q-attn-rate-1015, merged to main)",
+ "build": "tools/qwen_attention_native/rate_1015/build_w16.sh on ot-epyc1tb, /srv/opentallas-scratch/claude/q-attn-rate-1015/b_4c026e895",
  "binaries": [
-  "c9c69e37e0581c75bc2c1403f94b258ffebac461fddcb436e843d3bdc20d7dab  /srv/opentallas-scratch/claude/q-attn-rate-1015/b_55a5f5a98/cp/libqattn_cp_w4.a",
-  "d6e5c0981403a55e8736f819004f3d2fb046e9d2403940556b1ca0ff6fb0d77a  /srv/opentallas-scratch/claude/q-attn-rate-1015/b_55a5f5a98/parent0/Vtb_qwen_tp8_attention_native_service_w16",
-  "37233d8f42c1afc9d55c02c4837b1b51834a4d8e52b21f32e6f6af41b8ace4d1  /srv/opentallas-scratch/claude/q-attn-rate-1015/b_55a5f5a98/parent1/Vtb_qwen_tp8_attention_native_service_w16",
-  "38006ab2ed6c3f55f69b0afa4b9084d41455dd5af2911bf857967a8015cb49c5  /srv/opentallas-scratch/claude/q-attn-rate-1015/b_55a5f5a98/parent2/Vtb_qwen_tp8_attention_native_service_w16",
-  "291cd1a91bf3291629c66d3a4b3fe9c052cf659f252d700a5daff56972312fa6  /srv/opentallas-scratch/claude/q-attn-rate-1015/b_55a5f5a98/cp_w4.sv",
-  "581ef006e2844693dc6e757000dd62b50f00bbd5e5007863fcfdf88adc74db8f  /srv/opentallas-scratch/claude/q-attn-rate-1015/b_55a5f5a98/service.sv",
+  "d62f6b1e87df74abe4266d6f2f8d0cd04ccd542ccb30878841ffeca3121666dc  /srv/opentallas-scratch/claude/q-attn-rate-1015/b_4c026e895/cp/libqattn_cp_w4.a",
+  "630d8451c82fb38a093dbf2ae73686974cfe9b5b336434bf7f68a4ca56dad7ed  /srv/opentallas-scratch/claude/q-attn-rate-1015/b_4c026e895/parent0/Vtb_qwen_tp8_attention_native_service_w16",
+  "4b3dbf3ffc2f05a9314bca4aca45c6de7e5cedd4bd2710146527c3a0212d9da2  /srv/opentallas-scratch/claude/q-attn-rate-1015/b_4c026e895/parent1/Vtb_qwen_tp8_attention_native_service_w16",
+  "f2e7709f4dcbad8175303b1cdbe731acf5ad2ae140ecde978f43f4f02d81e7ca  /srv/opentallas-scratch/claude/q-attn-rate-1015/b_4c026e895/parent2/Vtb_qwen_tp8_attention_native_service_w16",
+  "291cd1a91bf3291629c66d3a4b3fe9c052cf659f252d700a5daff56972312fa6  /srv/opentallas-scratch/claude/q-attn-rate-1015/b_4c026e895/cp_w4.sv",
+  "2de13ff4f29aacb7700f5936b1b1308f908221853edd092f19e85313a9158b17  /srv/opentallas-scratch/claude/q-attn-rate-1015/b_4c026e895/service.sv",
   ""
  ],
  "budget": {
@@ -31,7 +31,7 @@
   "mac_lanes": 8192,
   "join_adders": 1024,
   "slices": 512,
-  "sram_macros": "1024 x ot_sram_1r1w_128x256 (16 of 128 rows used; a 16/32-deep macro would cut ~3.5 mm2)",
+  "sram_macros": "512 slices x 4 x ot_sram_1r1w_32x128_m1 (2,048 macros, 1,069 um2 each)",
   "v_ports": 16,
   "v_bytes_per_cycle": 2048,
   "hbm_per_stack_bytes_per_cycle": 512,
@@ -46,16 +46,18 @@
    "rtl/test/nearhbm/tb_qwen_tp8_attention_native_service_w16.sv (mk_tb_w16.py)"
   ]
  },
- "calendar": "tools/qwen_attention_native/attn_calendar.py --pv w16: P = 20 + NQ - 1 + 13 + 73 + 24, NQ = 16(ceil((T-128p)/256)+1); PV_START = max(EXP + zwalk + 188, HUB_PUB + 2 - P); R = max(P, HUB_PUB + 2 - PV_START)",
+ "calendar": "tools/qwen_attention_native/attn_calendar.py --pv w16: P = 22 + NQ - 1 + 13 + 73 + 28, NQ = 16(ceil((T-128p)/256)+1); PV_START = max(EXP + zwalk + 186, HUB_PUB + 2 - P); R = max(P, HUB_PUB + 2 - PV_START)",
  "pv_start_boundary": {
-  "note": "d = PV_START - EXP - zwalk; fault (e visibility) / exact",
-  "T6144": "182 F / 184 exact",
-  "T7000": "184 F / 186",
-  "T7168": "184 F / 186",
-  "T8000": "186 F / 188",
-  "T8192": "186 F / 188"
+  "note": "d = PV_START - EXP - zwalk at 1-edge resolution (runs_4c026e895/sweep3.out): minimal exact",
+  "T5000": "<=174 (R binds)",
+  "T6144": 182,
+  "T7000": 184,
+  "T7168": 184,
+  "T8000": 186,
+  "T8192": 186,
+  "law": 186
  },
- "positives_exact": "53/53 (same vector set as qwen_attention_native_calendar_1015: T=1..8192 + 6 kinds)",
+ "positives_exact": "53/53",
  "service_cycles": {
   "flat5000": 1239,
   "full1": 882,
@@ -91,40 +93,33 @@
   "full512": 912,
   "full5120": 1239,
   "full513": 914,
-  "full6000": 1335,
-  "full6143": 1335,
-  "full6144": 1335,
-  "full6145": 1352,
+  "full6000": 1339,
+  "full6143": 1339,
+  "full6144": 1339,
+  "full6145": 1356,
   "full640": 943,
   "full7": 882,
-  "full7000": 1445,
-  "full7167": 1445,
-  "full7168": 1445,
+  "full7000": 1449,
+  "full7167": 1449,
+  "full7168": 1449,
   "full8": 882,
-  "full8000": 1555,
-  "full8191": 1555,
-  "full8192": 1555,
+  "full8000": 1559,
+  "full8191": 1559,
+  "full8192": 1559,
   "full9": 884,
-  "mixed6145": 1352,
+  "mixed6145": 1356,
   "peaky3000": 1067,
   "precision_ties1000": 943,
   "tiny129": 912,
-  "wide7000": 1445
+  "wide7000": 1449
  },
  "negatives": {
-  "n_vswap_T1000": {
-   "exact": false,
-   "fault": 0,
-   "fault_cause": "0000000000000000",
-   "data_errors": 504,
-   "first_fault_age": -1
-  },
   "n_vlate_T1000": {
    "exact": false,
    "fault": 1,
    "fault_cause": "0011100000000000",
    "data_errors": 0,
-   "first_fault_age": 742
+   "first_fault_age": 740
   },
   "n_P1m1_T1000": {
    "exact": false,
@@ -132,6 +127,13 @@
    "fault_cause": "0011000000000000",
    "data_errors": 0,
    "first_fault_age": 894
+  },
+  "n_vswap_T1000": {
+   "exact": false,
+   "fault": 0,
+   "fault_cause": "0000000000000000",
+   "data_errors": 504,
+   "first_fault_age": -1
   },
   "n_dmut2join_T1000": {
    "exact": false,
@@ -147,12 +149,12 @@
    "data_errors": 93,
    "first_fault_age": -1
   },
-  "n_klate_T8192": {
+  "n_law181_T6144": {
    "exact": false,
    "fault": 1,
-   "fault_cause": "0000000011000010",
-   "data_errors": 512,
-   "first_fault_age": 86
+   "fault_cause": "0000000010000011",
+   "data_errors": 0,
+   "first_fault_age": 794
   },
   "n_precision_T8192": {
    "exact": false,
@@ -161,12 +163,19 @@
    "data_errors": 512,
    "first_fault_age": -1
   },
-  "n_P0m1_T8192": {
+  "n_vlate_T8192": {
    "exact": false,
    "fault": 1,
-   "fault_cause": "0011000000000000",
+   "fault_cause": "0011100000000000",
    "data_errors": 0,
-   "first_fault_age": 1506
+   "first_fault_age": 910
+  },
+  "n_vswap_T8192": {
+   "exact": false,
+   "fault": 0,
+   "fault_cause": "0000000000000000",
+   "data_errors": 504,
+   "first_fault_age": -1
   },
   "n_qlate_T8192": {
    "exact": false,
@@ -175,19 +184,26 @@
    "data_errors": 128,
    "first_fault_age": 11
   },
-  "n_PVm2_T8192": {
+  "n_klate_T8192": {
+   "exact": false,
+   "fault": 1,
+   "fault_cause": "0000000011000010",
+   "data_errors": 512,
+   "first_fault_age": 86
+  },
+  "n_law185_T8192": {
    "exact": false,
    "fault": 1,
    "fault_cause": "0000000010000011",
    "data_errors": 0,
-   "first_fault_age": 889
+   "first_fault_age": 890
   },
-  "n_vlate_T8192": {
+  "n_P0m1_T8192": {
    "exact": false,
    "fault": 1,
-   "fault_cause": "0011100000000000",
+   "fault_cause": "0011000000000000",
    "data_errors": 0,
-   "first_fault_age": 906
+   "first_fault_age": 1512
   },
   "n_kdrop_T8192": {
    "exact": false,
@@ -195,13 +211,6 @@
    "fault_cause": "0000000011000001",
    "data_errors": 512,
    "first_fault_age": 132
-  },
-  "n_vswap_T8192": {
-   "exact": false,
-   "fault": 0,
-   "fault_cause": "0000000000000000",
-   "data_errors": 504,
-   "first_fault_age": -1
   },
   "n_dmut2join_T8192": {
    "exact": false,
@@ -230,8 +239,19 @@
   ]
  },
  "ratio_vs_price": {
-  "service_8192": 1555,
-  "with_link": 1620,
-  "ratio": 0.892
+  "service_8192": 1559,
+  "with_link": 1624,
+  "ratio": 0.894
+ },
+ "history_r1": {
+  "source_commit": "55a5f5a98 (branch claude/q-attn-rate-1015)",
+  "service_cycles_8192": 1555,
+  "note": "first measurement: pairs without pin registers, 128x256 macros (runs/)"
+ },
+ "physical_partition": {
+  "master": "ot_qwen_tp8_pv_col (64 instances per KV die: 2 pairs x 32 columns), every port registered; 8 x ot_qwen_tp8_pv16_slice (4 x ot_sram_1r1w_32x128_m1 each, 32 macros per column) + 16-lane L5-L7 join",
+  "control": "ot_qwen_tp8_pv_wide_ctl (2 per die), every port registered",
+  "pair": "ot_qwen_tp8_pv_wide_pair = wires only",
+  "cost_cycles": "+4 per P (column cmd/pin regs) + 2 (start and request pin regs), absorbed: T=8192 1559"
  }
 }
