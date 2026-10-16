@@ -295,5 +295,9 @@
  "io_tcl": "physical/hbm_vm_strap_1015/q3/io.tcl",
  "orfs_vars": {
   "POST_IO_PLACEMENT_TCL": "physical/hbm_vm_strap_1015/q3/post_iop.tcl"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "the RTL already registers every data input and output at its pin: ot_vms_bank_static_strap pin flops rq_d / wq_d / dq_d / kq_d / xq_d / x2_d / pq_d + valid flops, slot pins into plain pin flops (wslot_d / wslot_v_d), bid / sid strap registers; every output (rr / eg / pr / *_done / status) is a register (audit_bank_output_flops.py); recipe-2 keep_pin_regs + io_flop_at_pins anchor them at the pins. A recipe-3 register would add a 2nd stage and +2 VM edges."
  }
 }

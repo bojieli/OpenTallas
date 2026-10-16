@@ -138,6 +138,11 @@ def make():
                                          f"../ot_vms_bank_static_strap.sv ../physical/hfd_vms_bank_strap_q{q}.sv ../../../../../../physical/asap7_memory_macros_v2/"
                                          "ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v tb_hbm_vm_strap_wrappers.sv && vvp {RUN}/mut3.vvp"),
                                  "expect": "fail", "fail_regex": r"FATAL: .*bank fault", "threads": 1, "peak_ram_gb": 2}]}
+        s["pin_regs"] = {"enable": False, "reason": (
+            "the RTL already registers every data input and output at its pin: ot_vms_bank_static_strap pin flops rq_d / wq_d / "
+            "dq_d / kq_d / xq_d / x2_d / pq_d + valid flops, slot pins into plain pin flops (wslot_d / wslot_v_d), bid / sid strap "
+            "registers; every output (rr / eg / pr / *_done / status) is a register (audit_bank_output_flops.py); recipe-2 "
+            "keep_pin_regs + io_flop_at_pins anchor them at the pins. A recipe-3 register would add a 2nd stage and +2 VM edges.")}
         if q == 2:   # identity2 q2 structural floorplan (GPL-0305 twice with the generated column): abutted centred stack
             s2 = json.loads((ROOT / "physical/ref_tile/vm_identity_q2_b0_ref/spec.json").read_text())
             s["macros"] = s2["macros"]; s["floorplan_note"] = s2.get("floorplan_note", "")

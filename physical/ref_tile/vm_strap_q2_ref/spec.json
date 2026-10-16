@@ -316,5 +316,9 @@
  "orfs_vars": {
   "POST_IO_PLACEMENT_TCL": "physical/hbm_vm_strap_1015/q2/post_iop.tcl"
  },
+ "pin_regs": {
+  "enable": false,
+  "reason": "the RTL already registers every data input and output at its pin: ot_vms_bank_static_strap pin flops rq_d / wq_d / dq_d / kq_d / xq_d / x2_d / pq_d + valid flops, slot pins into plain pin flops (wslot_d / wslot_v_d), bid / sid strap registers; every output (rr / eg / pr / *_done / status) is a register (audit_bank_output_flops.py); recipe-2 keep_pin_regs + io_flop_at_pins anchor them at the pins. A recipe-3 register would add a 2nd stage and +2 VM edges."
+ },
  "floorplan_note": "q2 identity2 --cts gate failed GPL-0305 (NaN) twice with the generated 3-macro column (20 um macro-macro channels, 5.4 um halos -> 9.5 um cell rows between arrays; overflow stuck at 0.115 for 12k iterations). Structural: the three arrays (pins only on W/E faces) form one abutted N-S stack (pitch = array height + 0.024 um) centred in the core, so no narrow inter-array channel exists; two ~70 um N/S channels carry the cross traffic."
 }
