@@ -1,0 +1,241 @@
+{
+  "status": "ISOLATED_FULL53SOURCE_QUARTER_EXACTNESS_ONLY_NOT_INTEGRATED_OR_PHYSICALLY_QUALIFIED",
+  "model": "8x16bit payload stripes +26bit metadata stripe +registered shared selector",
+  "clock_scope": "Separate leaf pins; simulation ties only. No insertion/relatedclock evidence.",
+  "age": "Source pin atE0 ->registered drain atE5+lane, compared with existingE3+lane; +2streamedges",
+  "checks": "20 gold cases across4BASE:3slotburst,II1lane0,duplicate,invalidlane,emptydrain,reset;8 mutant failures",
+  "sources": {
+    "tools/s81_vm/area_stripe_candidate.sv": "053a73db712904aaaafbe5be5728ecc4034d08942e7d888d42a9e426b347917c",
+    "tools/s81_vm/area_stripe_bench.sv": "8ee4287e1c532312087128242cbe867d7f00a0d1def84054e33ea1af228e4756",
+    "tools/s81_vm/area_stripe_gate.py": "b8c55eb31a4398bb0b1721de9761a952614a2c2b0929e7369426bf7d558017c1",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_wdispatch128.sv": "28bd561ffe0bf79ccd9de80b657f5ac04c1f2678741233eb6f19240c4d82ea81",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_wstage128.sv": "effa6053cf176b39cc7e237045c8505c4ee8343ea979cd22ef3bc542cd989457",
+    "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_write_capture128.sv": "be5afc68ba562ac9f6a00908e5ed1fadd59818d4679e933aab8e37472e8c35f9"
+  },
+  "records": [
+    {
+      "base": 0,
+      "variant": "gold",
+      "mode": 0,
+      "exit_code": 0,
+      "stdout": "PASS full53sources banks8 slots3 records480 mode0 BASE0 first_age5 II1_ports_preserved\n",
+      "stderr": ""
+    },
+    {
+      "base": 0,
+      "variant": "gold",
+      "mode": 1,
+      "exit_code": 0,
+      "stdout": "PASS full53sources banks8 slots3 records480 mode1 BASE0 first_age5 II1_ports_preserved\n",
+      "stderr": ""
+    },
+    {
+      "base": 0,
+      "variant": "gold",
+      "mode": 2,
+      "exit_code": 0,
+      "stdout": "PASS full53sources banks8 slots3 records480 mode2 BASE0 first_age5 II1_ports_preserved\n",
+      "stderr": ""
+    },
+    {
+      "base": 0,
+      "variant": "gold",
+      "mode": 3,
+      "exit_code": 0,
+      "stdout": "PASS full53sources banks8 slots3 records480 mode3 BASE0 first_age5 II1_ports_preserved\n",
+      "stderr": ""
+    },
+    {
+      "base": 0,
+      "variant": "gold",
+      "mode": 4,
+      "exit_code": 0,
+      "stdout": "PASS full53sources banks8 slots3 records1440 mode4 BASE0 first_age5 II1_ports_preserved\n",
+      "stderr": ""
+    },
+    {
+      "base": 0,
+      "variant": "selector",
+      "mode": 0,
+      "exit_code": 1,
+      "stdout": "FATAL: tools/s81_vm/area_stripe_bench.sv:71: payload cycle5 bank0\n       Time: 126000 Scope: tb\n",
+      "stderr": ""
+    },
+    {
+      "base": 0,
+      "variant": "data",
+      "mode": 0,
+      "exit_code": 1,
+      "stdout": "FATAL: tools/s81_vm/area_stripe_bench.sv:71: payload cycle5 bank0\n       Time: 126000 Scope: tb\n",
+      "stderr": ""
+    },
+    {
+      "base": 8,
+      "variant": "gold",
+      "mode": 0,
+      "exit_code": 0,
+      "stdout": "PASS full53sources banks8 slots3 records480 mode0 BASE8 first_age5 II1_ports_preserved\n",
+      "stderr": ""
+    },
+    {
+      "base": 8,
+      "variant": "gold",
+      "mode": 1,
+      "exit_code": 0,
+      "stdout": "PASS full53sources banks8 slots3 records480 mode1 BASE8 first_age5 II1_ports_preserved\n",
+      "stderr": ""
+    },
+    {
+      "base": 8,
+      "variant": "gold",
+      "mode": 2,
+      "exit_code": 0,
+      "stdout": "PASS full53sources banks8 slots3 records480 mode2 BASE8 first_age5 II1_ports_preserved\n",
+      "stderr": ""
+    },
+    {
+      "base": 8,
+      "variant": "gold",
+      "mode": 3,
+      "exit_code": 0,
+      "stdout": "PASS full53sources banks8 slots3 records480 mode3 BASE8 first_age5 II1_ports_preserved\n",
+      "stderr": ""
+    },
+    {
+      "base": 8,
+      "variant": "gold",
+      "mode": 4,
+      "exit_code": 0,
+      "stdout": "PASS full53sources banks8 slots3 records1440 mode4 BASE8 first_age5 II1_ports_preserved\n",
+      "stderr": ""
+    },
+    {
+      "base": 8,
+      "variant": "selector",
+      "mode": 0,
+      "exit_code": 1,
+      "stdout": "FATAL: tools/s81_vm/area_stripe_bench.sv:71: payload cycle5 bank0\n       Time: 126000 Scope: tb\n",
+      "stderr": ""
+    },
+    {
+      "base": 8,
+      "variant": "data",
+      "mode": 0,
+      "exit_code": 1,
+      "stdout": "FATAL: tools/s81_vm/area_stripe_bench.sv:71: payload cycle5 bank0\n       Time: 126000 Scope: tb\n",
+      "stderr": ""
+    },
+    {
+      "base": 16,
+      "variant": "gold",
+      "mode": 0,
+      "exit_code": 0,
+      "stdout": "PASS full53sources banks8 slots3 records480 mode0 BASE16 first_age5 II1_ports_preserved\n",
+      "stderr": ""
+    },
+    {
+      "base": 16,
+      "variant": "gold",
+      "mode": 1,
+      "exit_code": 0,
+      "stdout": "PASS full53sources banks8 slots3 records480 mode1 BASE16 first_age5 II1_ports_preserved\n",
+      "stderr": ""
+    },
+    {
+      "base": 16,
+      "variant": "gold",
+      "mode": 2,
+      "exit_code": 0,
+      "stdout": "PASS full53sources banks8 slots3 records480 mode2 BASE16 first_age5 II1_ports_preserved\n",
+      "stderr": ""
+    },
+    {
+      "base": 16,
+      "variant": "gold",
+      "mode": 3,
+      "exit_code": 0,
+      "stdout": "PASS full53sources banks8 slots3 records480 mode3 BASE16 first_age5 II1_ports_preserved\n",
+      "stderr": ""
+    },
+    {
+      "base": 16,
+      "variant": "gold",
+      "mode": 4,
+      "exit_code": 0,
+      "stdout": "PASS full53sources banks8 slots3 records1440 mode4 BASE16 first_age5 II1_ports_preserved\n",
+      "stderr": ""
+    },
+    {
+      "base": 16,
+      "variant": "selector",
+      "mode": 0,
+      "exit_code": 1,
+      "stdout": "FATAL: tools/s81_vm/area_stripe_bench.sv:71: payload cycle5 bank0\n       Time: 126000 Scope: tb\n",
+      "stderr": ""
+    },
+    {
+      "base": 16,
+      "variant": "data",
+      "mode": 0,
+      "exit_code": 1,
+      "stdout": "FATAL: tools/s81_vm/area_stripe_bench.sv:71: payload cycle5 bank0\n       Time: 126000 Scope: tb\n",
+      "stderr": ""
+    },
+    {
+      "base": 24,
+      "variant": "gold",
+      "mode": 0,
+      "exit_code": 0,
+      "stdout": "PASS full53sources banks8 slots3 records480 mode0 BASE24 first_age5 II1_ports_preserved\n",
+      "stderr": ""
+    },
+    {
+      "base": 24,
+      "variant": "gold",
+      "mode": 1,
+      "exit_code": 0,
+      "stdout": "PASS full53sources banks8 slots3 records480 mode1 BASE24 first_age5 II1_ports_preserved\n",
+      "stderr": ""
+    },
+    {
+      "base": 24,
+      "variant": "gold",
+      "mode": 2,
+      "exit_code": 0,
+      "stdout": "PASS full53sources banks8 slots3 records480 mode2 BASE24 first_age5 II1_ports_preserved\n",
+      "stderr": ""
+    },
+    {
+      "base": 24,
+      "variant": "gold",
+      "mode": 3,
+      "exit_code": 0,
+      "stdout": "PASS full53sources banks8 slots3 records480 mode3 BASE24 first_age5 II1_ports_preserved\n",
+      "stderr": ""
+    },
+    {
+      "base": 24,
+      "variant": "gold",
+      "mode": 4,
+      "exit_code": 0,
+      "stdout": "PASS full53sources banks8 slots3 records1440 mode4 BASE24 first_age5 II1_ports_preserved\n",
+      "stderr": ""
+    },
+    {
+      "base": 24,
+      "variant": "selector",
+      "mode": 0,
+      "exit_code": 1,
+      "stdout": "FATAL: tools/s81_vm/area_stripe_bench.sv:71: payload cycle5 bank0\n       Time: 126000 Scope: tb\n",
+      "stderr": ""
+    },
+    {
+      "base": 24,
+      "variant": "data",
+      "mode": 0,
+      "exit_code": 1,
+      "stdout": "FATAL: tools/s81_vm/area_stripe_bench.sv:71: payload cycle5 bank0\n       Time: 126000 Scope: tb\n",
+      "stderr": ""
+    }
+  ]
+}

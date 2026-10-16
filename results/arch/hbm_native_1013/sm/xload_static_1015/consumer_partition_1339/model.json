@@ -1,0 +1,368 @@
+{
+  "scope": "CONDITIONAL BF16 consumer-stripe packing/port/capacity model; no actual die stripe map, RTL integration or timing claim",
+  "integration_scope": "Current SM_X graph links collapse vms rr -> SM xw_data2048=8banks*256 (+rq17); these are planning provenance, not elaborated source bindings. Static xload exists only in component test; historical xload throughput bench has one producer feeding32SMs via relay. Proposed stripe banking requires real integration selection before adoption.",
+  "source_layout": {
+    "XC": 3152,
+    "XOFF": 2128,
+    "Pmax": 8,
+    "token_t": 8,
+    "groups": 16,
+    "word_bits": 1024,
+    "output_bits": 2048
+  },
+  "chunks": [
+    [
+      {
+        "p": 0,
+        "beat": 1,
+        "dest": 80,
+        "source": 0,
+        "width": 176
+      },
+      {
+        "p": 1,
+        "beat": 3,
+        "dest": 0,
+        "source": 864,
+        "width": 160
+      },
+      {
+        "p": 2,
+        "beat": 4,
+        "dest": 240,
+        "source": 0,
+        "width": 16
+      },
+      {
+        "p": 3,
+        "beat": 6,
+        "dest": 0,
+        "source": 704,
+        "width": 256
+      },
+      {
+        "p": 5,
+        "beat": 9,
+        "dest": 0,
+        "source": 544,
+        "width": 256
+      },
+      {
+        "p": 7,
+        "beat": 12,
+        "dest": 0,
+        "source": 384,
+        "width": 256
+      }
+    ],
+    [
+      {
+        "p": 0,
+        "beat": 1,
+        "dest": 0,
+        "source": 176,
+        "width": 256
+      },
+      {
+        "p": 2,
+        "beat": 4,
+        "dest": 0,
+        "source": 16,
+        "width": 256
+      },
+      {
+        "p": 3,
+        "beat": 6,
+        "dest": 0,
+        "source": 960,
+        "width": 64
+      },
+      {
+        "p": 4,
+        "beat": 7,
+        "dest": 144,
+        "source": 0,
+        "width": 112
+      },
+      {
+        "p": 5,
+        "beat": 9,
+        "dest": 0,
+        "source": 800,
+        "width": 224
+      },
+      {
+        "p": 7,
+        "beat": 12,
+        "dest": 0,
+        "source": 640,
+        "width": 256
+      }
+    ],
+    [
+      {
+        "p": 0,
+        "beat": 1,
+        "dest": 0,
+        "source": 432,
+        "width": 256
+      },
+      {
+        "p": 2,
+        "beat": 4,
+        "dest": 0,
+        "source": 272,
+        "width": 256
+      },
+      {
+        "p": 4,
+        "beat": 7,
+        "dest": 0,
+        "source": 112,
+        "width": 256
+      },
+      {
+        "p": 6,
+        "beat": 10,
+        "dest": 48,
+        "source": 0,
+        "width": 208
+      },
+      {
+        "p": 7,
+        "beat": 12,
+        "dest": 0,
+        "source": 896,
+        "width": 128
+      }
+    ],
+    [
+      {
+        "p": 0,
+        "beat": 1,
+        "dest": 0,
+        "source": 688,
+        "width": 256
+      },
+      {
+        "p": 2,
+        "beat": 4,
+        "dest": 0,
+        "source": 528,
+        "width": 256
+      },
+      {
+        "p": 4,
+        "beat": 7,
+        "dest": 0,
+        "source": 368,
+        "width": 256
+      },
+      {
+        "p": 6,
+        "beat": 10,
+        "dest": 0,
+        "source": 208,
+        "width": 256
+      }
+    ],
+    [
+      {
+        "p": 0,
+        "beat": 1,
+        "dest": 0,
+        "source": 944,
+        "width": 80
+      },
+      {
+        "p": 1,
+        "beat": 2,
+        "dest": 160,
+        "source": 0,
+        "width": 96
+      },
+      {
+        "p": 2,
+        "beat": 4,
+        "dest": 0,
+        "source": 784,
+        "width": 240
+      },
+      {
+        "p": 4,
+        "beat": 7,
+        "dest": 0,
+        "source": 624,
+        "width": 256
+      },
+      {
+        "p": 6,
+        "beat": 10,
+        "dest": 0,
+        "source": 464,
+        "width": 256
+      }
+    ],
+    [
+      {
+        "p": 1,
+        "beat": 2,
+        "dest": 0,
+        "source": 96,
+        "width": 256
+      },
+      {
+        "p": 3,
+        "beat": 5,
+        "dest": 64,
+        "source": 0,
+        "width": 192
+      },
+      {
+        "p": 4,
+        "beat": 7,
+        "dest": 0,
+        "source": 880,
+        "width": 144
+      },
+      {
+        "p": 5,
+        "beat": 8,
+        "dest": 224,
+        "source": 0,
+        "width": 32
+      },
+      {
+        "p": 6,
+        "beat": 10,
+        "dest": 0,
+        "source": 720,
+        "width": 256
+      }
+    ],
+    [
+      {
+        "p": 1,
+        "beat": 2,
+        "dest": 0,
+        "source": 352,
+        "width": 256
+      },
+      {
+        "p": 3,
+        "beat": 5,
+        "dest": 0,
+        "source": 192,
+        "width": 256
+      },
+      {
+        "p": 5,
+        "beat": 8,
+        "dest": 0,
+        "source": 32,
+        "width": 256
+      },
+      {
+        "p": 6,
+        "beat": 10,
+        "dest": 0,
+        "source": 976,
+        "width": 48
+      },
+      {
+        "p": 7,
+        "beat": 11,
+        "dest": 128,
+        "source": 0,
+        "width": 128
+      }
+    ],
+    [
+      {
+        "p": 1,
+        "beat": 2,
+        "dest": 0,
+        "source": 608,
+        "width": 256
+      },
+      {
+        "p": 3,
+        "beat": 5,
+        "dest": 0,
+        "source": 448,
+        "width": 256
+      },
+      {
+        "p": 5,
+        "beat": 8,
+        "dest": 0,
+        "source": 288,
+        "width": 256
+      },
+      {
+        "p": 7,
+        "beat": 11,
+        "dest": 0,
+        "source": 128,
+        "width": 256
+      }
+    ]
+  ],
+  "chunk_counts": [
+    6,
+    6,
+    5,
+    4,
+    5,
+    5,
+    5,
+    4
+  ],
+  "rows_per_t_bank": [
+    96,
+    96,
+    80,
+    64,
+    80,
+    80,
+    80,
+    64
+  ],
+  "max_rows": 96,
+  "write_proof": {
+    "input_bits_per_t_wave": 128,
+    "simultaneous_t": 8,
+    "max_destination_stripes_per_wave": 2,
+    "max_writes_per_t_bank_per_edge": 1,
+    "independent_t_write_ports_per_leaf": 8
+  },
+  "proposed": {
+    "consumer_leaves": 8,
+    "SRAMs_per_leaf": 8,
+    "total_SRAMs": 64,
+    "SRAMs_added": 32,
+    "extra_macro_outline_um2": 124530.46272,
+    "extra_macro_outline_mm2": 0.12453046272,
+    "replicas": "must bind actual die hierarchy; no multiplied design-area claim"
+  },
+  "checks": {
+    "exact_output_stripes": 61440,
+    "swapped_consumer_stripe_mutant_mismatches": 27648,
+    "aliased_chunk_row_mutant_mismatches": 23040
+  },
+  "rejected_shortcuts": [
+    "8 t-leaves x 4 old macros leave global 1024-bit OR and 2048-bit pack, so do not localize final consumer pins",
+    "40 capacity-pooled macros do not supply 8 simultaneous t writes per consumer leaf"
+  ],
+  "remaining": [
+    "actual static xload source integration, replica count and source-pinned consumer mapping first",
+    "actual distributed input routes, clocks and fixed compiler calendar",
+    "real RTL plus 64 mapped SRAM models and failing mutants",
+    "BD quantizers and 8512-FF ring distribution, including exact arithmetic",
+    "local partial-word masks must zero inactive output bits; no assumed SRAM initialization",
+    "actual views and child window placement; no assumed added-stage latency",
+    "actual total clock sink partition; predecessor mapped 57188 FFs",
+    "current grant, native pins, TT setup/FF hold/DRC0, composition and total cost"
+  ],
+  "source_sha256": "74c07d308c0c1840b1b5338b028b3a125073d240d452364edea1faa1c9bb8fd8"
+}

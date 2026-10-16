@@ -112,7 +112,12 @@ def apply(model):
             kept.append((b, c, n, es))
             continue
         inside = [node_of.get(i) for i, _ in es]
-        legacy = any(k in ports and p.lstrip('*') not in ports[k] and k != 'io' for (i, p), k in zip(es, inside))
+        # Existing source-backed aliases (e.g. upper-leaf fault -> TT uf[k])
+        # are real ports. Resolve them before deciding an old bus is obsolete.
+        existing_aliases = model.get('port_join', {})
+        legacy = any(k in ports and existing_aliases.get(by[i].master, {}).get(
+            p.lstrip('*'), (p.lstrip('*'), None))[0] not in ports[k] and k != 'io'
+            for (i, p), k in zip(es, inside))
         if (all(k is not None for k in inside) and any(k in OWNED for k in inside)) or legacy:
             if 'io' in inside and b.startswith(('coll_', 'ucie_', 'serdes')):
                 if b in ('coll_cd', 'coll_cc'):
