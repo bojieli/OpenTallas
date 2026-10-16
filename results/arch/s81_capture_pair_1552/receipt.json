@@ -1,0 +1,252 @@
+{
+  "schema": "opentallas.s81.capture_rehome_receipt.v1",
+  "recommended_candidate": "candidate4",
+  "scope": "Analytical TT setup/FF hold internal-pair preflight only. Wire contribution is the 0.76 ps/um planning model, never measured routed timing. First/lightest-load ETM output entries; die RC/load/fanout/clock/reset source delivery and all external seams remain unqualified.",
+  "frozen_inventory": {
+    "leaves": 70,
+    "masters": 17,
+    "parent_clock_bits": 70,
+    "literal_clock_contacts": 86,
+    "all_native_master_audits_pass": true
+  },
+  "cost": {
+    "added_cycles": 0,
+    "added_area_um2": 0,
+    "added_instances": 0,
+    "added_clock_contacts": 0,
+    "rehomed_relays": 5
+  },
+  "method": {
+    "literal_clocks": "Every dynamic ETM related_pin matches the exact literal clock entry; insertion.json per-clock boundary mean references. Legacy single-entry records are accepted only with matching literal SDC clock name. No nearest entry inference.",
+    "setup": "TT max launch residual + max setup residual + 0.76*Manhattan <= native period -60uncertainty -90same-level skew; scheduled cross-domain bank seams use1388.889window -60 -150.",
+    "hold": "FF earliest launch residual - latest hold residual >=100ps, conservatively crediting zero minimum wire delay. Scheduled bank seams add1111.111ps hold window. Any deficit would mean required min-wire delay UNPROVEN, not intrinsic leaf failure.",
+    "static": "2 joins source-proven constant/unused; no invented arcs. Full proof and pinned RTL hashes in each report."
+  },
+  "cases": {
+    "baseline": {
+      "counts": {
+        "requested_bit_joins": 35518,
+        "timed_bit_joins": 35516,
+        "unresolved_bit_joins": 0,
+        "source_proven_static_joins": 2,
+        "setup_fails": 50,
+        "hold_zero_wire_unproven": 0
+      },
+      "geometry": {
+        "outside": [],
+        "overlaps": [],
+        "moved_child_pairs_below20um_gap": []
+      },
+      "min_setup_ps": {
+        "same_serial": 315.0517200000001,
+        "same_stream": -37.310959999999966,
+        "scheduled_3to4_bank": 721.5060699999999
+      },
+      "min_hold_zero_wire_ps": {
+        "same_serial": 65.66473000000002,
+        "same_stream": 53.61909,
+        "scheduled_3to4_bank": 1182.7824500000002
+      },
+      "home_changes_um": {}
+    },
+    "candidate1": {
+      "counts": {
+        "requested_bit_joins": 35518,
+        "timed_bit_joins": 35516,
+        "unresolved_bit_joins": 0,
+        "source_proven_static_joins": 2,
+        "setup_fails": 0,
+        "hold_zero_wire_unproven": 0
+      },
+      "geometry": {
+        "outside": [],
+        "overlaps": [],
+        "moved_child_pairs_below20um_gap": []
+      },
+      "min_setup_ps": {
+        "same_serial": 315.0517200000001,
+        "same_stream": 1.4556199999998967,
+        "scheduled_3to4_bank": 721.5060699999999
+      },
+      "min_hold_zero_wire_ps": {
+        "same_serial": 65.66473000000002,
+        "same_stream": 53.61909,
+        "scheduled_3to4_bank": 1182.7824500000002
+      },
+      "home_changes_um": {
+        "g_t[1].g_w.u_ka": [
+          331.2,
+          61.56
+        ],
+        "g_t[3].g_w.u_ka": [
+          561.024,
+          61.56
+        ],
+        "g_t[7].g_e.u_kb": [
+          1286.616,
+          83.16
+        ]
+      }
+    },
+    "candidate2": {
+      "counts": {
+        "requested_bit_joins": 35518,
+        "timed_bit_joins": 35516,
+        "unresolved_bit_joins": 0,
+        "source_proven_static_joins": 2,
+        "setup_fails": 0,
+        "hold_zero_wire_unproven": 0
+      },
+      "geometry": {
+        "outside": [],
+        "overlaps": [],
+        "moved_child_pairs_below20um_gap": []
+      },
+      "min_setup_ps": {
+        "same_serial": 315.0517200000001,
+        "same_stream": 11.029290000000003,
+        "scheduled_3to4_bank": 721.5060699999999
+      },
+      "min_hold_zero_wire_ps": {
+        "same_serial": 65.66473000000002,
+        "same_stream": 53.61909,
+        "scheduled_3to4_bank": 1182.7824500000002
+      },
+      "home_changes_um": {
+        "g_t[1].g_w.u_ka": [
+          305.28,
+          61.56
+        ],
+        "g_t[3].g_w.u_ka": [
+          561.024,
+          83.16
+        ],
+        "g_t[7].g_e.u_kb": [
+          1289.856,
+          102.6
+        ]
+      }
+    },
+    "candidate3": {
+      "counts": {
+        "requested_bit_joins": 35518,
+        "timed_bit_joins": 35516,
+        "unresolved_bit_joins": 0,
+        "source_proven_static_joins": 2,
+        "setup_fails": 0,
+        "hold_zero_wire_unproven": 0
+      },
+      "geometry": {
+        "outside": [],
+        "overlaps": [],
+        "moved_child_pairs_below20um_gap": []
+      },
+      "min_setup_ps": {
+        "same_serial": 315.0517200000001,
+        "same_stream": 17.11863999999997,
+        "scheduled_3to4_bank": 721.5060699999999
+      },
+      "min_hold_zero_wire_ps": {
+        "same_serial": 65.66473000000002,
+        "same_stream": 53.61909,
+        "scheduled_3to4_bank": 1182.7824500000002
+      },
+      "home_changes_um": {
+        "g_t[1].g_w.u_ka": [
+          331.2,
+          87.48
+        ],
+        "g_t[3].g_w.u_ka": [
+          561.024,
+          83.16
+        ],
+        "g_t[7].g_e.u_kb": [
+          1289.856,
+          102.6
+        ],
+        "g_t[7].g_e.u_sb": [
+          1440.72,
+          61.56
+        ]
+      }
+    },
+    "candidate4": {
+      "counts": {
+        "requested_bit_joins": 35518,
+        "timed_bit_joins": 35516,
+        "unresolved_bit_joins": 0,
+        "source_proven_static_joins": 2,
+        "setup_fails": 0,
+        "hold_zero_wire_unproven": 0
+      },
+      "geometry": {
+        "outside": [],
+        "overlaps": [],
+        "moved_child_pairs_below20um_gap": []
+      },
+      "min_setup_ps": {
+        "same_serial": 315.0517200000001,
+        "same_stream": 20.001849999999934,
+        "scheduled_3to4_bank": 721.5060699999999
+      },
+      "min_hold_zero_wire_ps": {
+        "same_serial": 65.66473000000002,
+        "same_stream": 53.61909,
+        "scheduled_3to4_bank": 1182.7824500000002
+      },
+      "home_changes_um": {
+        "g_t[1].g_w.u_ka": [
+          331.2,
+          87.48
+        ],
+        "g_t[3].g_w.u_ka": [
+          561.024,
+          83.16
+        ],
+        "g_t[7].g_e.u_kb": [
+          1289.856,
+          102.6
+        ],
+        "g_t[7].g_e.u_sb": [
+          1440.72,
+          61.56
+        ],
+        "g_t[3].g_w.u_kb": [
+          486.144,
+          66.96
+        ]
+      }
+    }
+  },
+  "candidate2_limitation": "Extra-left g1ka creates ctl->ka planning length up to503.67um; min setup11.029ps. Preserved diagnostic, not recommended.",
+  "candidate4_files": {
+    "packet": "physical/s81_die_pins/capture_rehome_1552/candidate4_packet.json.gz",
+    "layout_png": "physical/s81_die_pins/capture_rehome_1552/candidate4_homes.png",
+    "report": "results/arch/s81_capture_pair_1552/candidate4_report.json",
+    "all_dynamic_pairs": "results/arch/s81_capture_pair_1552/candidate4_all_pairs.json.gz"
+  },
+  "fleet_receipt": {
+    "host": "ot-epyc4",
+    "requested_memory_gb": 3,
+    "requested_threads": 1,
+    "source_root": "/srv/opentallas-scratch/codex/s81-die-1552/source_3f21ae39b",
+    "remote_outputs": "/srv/opentallas-scratch/codex/s81-capture-pair-1552",
+    "baseline_and_candidate1_final_unit": "oth-ubuntu-3075899-1792192872",
+    "candidate2_unit": "oth-ubuntu-3076122-1792192905",
+    "candidate3_unit": "oth-ubuntu-3078783-1792192941",
+    "candidate4_unit": "oth-ubuntu-3079316-1792192958",
+    "exit_code": 0
+  },
+  "original_packet_unchanged": true,
+  "live_GEN_unchanged": true,
+  "original_layout_png": "/home/ubuntu/artifacts/s81_capture_binding_1552.png",
+  "personally_viewed": [
+    "candidate1_homes.png",
+    "candidate4_homes.png"
+  ],
+  "sha256": {
+    "physical/s81_die_pins/capture_rehome_1552/candidate1_packet.json.gz": "c341f47078fb78d479953304c2c169d194a53a115068037da39b874fb45c4f4d",
+    "physical/s81_die_pins/capture_rehome_1552/candidate4_packet.json.gz": "10dae87429b1f228c941c2101a03f3fd067b394c939e08b96eff593e44985ad6",
+    "tools/s81/capture_pair_preflight.py": "21921e2576f0b7e69cc47305e722060888dffe3cd8bc190bca771bcffcb529d0"
+  }
+}
