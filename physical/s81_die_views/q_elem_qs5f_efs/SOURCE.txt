@@ -1,5 +1,7 @@
-ROUTED q-element abstract (ds-1010 2026-10-10): gzip -n of results/rtl/dsrom_qelem_pq_20261006/closed_qs5f/view/q_elem.lef,
-the abstract of the CLOSED route dsrom-qelem-qs5f-efs-7fb23b7ff-tc-hm10-cl (ot_v41_rom_elem_q_qxpq_w10, TT +98.72 /
-FF +12.04 ps, DRC 0; source 7fb23b7ff, OT_Q_EF_SOUTH=1).  Replaces the planned stand-in installed at 00b42f25d
-(same outline 510.84 x 221.4; the router's pin placement differs: S-face inputs x 226.08-284.54 incl. x0/x1 at
-235.2-284.26, bank_free/sh_free S; N-face outputs x 151.2-163.5).  x1 is on the S face in the middle (not option B).
+PLANNED q-element abstract (cont-takeover 2026-10-09) = q_elem_qs5f/q_elem.lef.gz with the PQ loader handshake outputs
+bank_free / sh_free moved from the N face (x 208.6 / 221.0) to the S face beside go / go_tag (x 226.080 / 284.544, M5,
+y 0-0.084), i.e. the bottom pin group of tools/dsrom_qelem_cl/launch.sh with OT_Q_EF_SOUTH=1.  Their only consumer is the
+pair's own ot_s81_cfg7_seq in the cfg band BELOW the q frame: on the N face each ef bit crossed the 221.4 um frame plus
+the band (> the 215 um cc reach) and took a 2-bit hop relay in the band above (rly_2_*), which filled the packed frame_0
+bands and trapped the return-tree relay rt_0_8a_y1 (m221pq_r4c GEN_FAIL).  Geometry/size otherwise byte-identical;
+replaced by the routed view of the OT_Q_EF_SOUTH q route when it closes.

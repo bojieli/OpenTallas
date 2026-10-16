@@ -1582,7 +1582,7 @@
    "hgi_adp_sm_finr-c113fa577-tc-rvt-hm10-cl-r2": "record only a8b0cf1ce: redesign-hbm's FINR fix of the same -404 path conflicts with main's adopted e9600091f (completion condition) and costs +1 edge per record; not merged",
    "qfd_link_rx128_rxp_a-4941a227d-tc": "source on main; record 429c9eb69; TT +33.98 / FF +2.86",
    "qfd_link_rx128_rxp_b-4941a227d-tc-lvt": "variant of rxp_a (TT +80.14 / FF +3.73); its record writes the same variant_fill paths -> not recorded",
-   "bfh_front280_28fa6290c-cl": "EVIDENCE ONLY (owner 2026-10-10 late): compact hierarchical full-rate BF (bfh_compact220 front/col, claude/bf-compact-1011) approved as BF of record, superseding the col600 plan and HALF_PHL; record kept as evidence.",
+   "bfh_front280_28fa6290c-cl": "ADOPTED: BF hardened front/column hierarchy (ot_s81_bf_front, bf_col, tile_clk, bf16_lanes3; TCG/BXST/FXST/HCOL opt-in, defaults unchanged in ot_v41_rom_elem_qx_w10) from 28fa6290c + bench evidence results/rtl/s81_bf_arch_20261009 (bf_txn_bench recut L2 TXN MATCH 456 rows, mutants detected); record d079fe72f; TT +1.47 / FF +7.10",
    "bfh_front280i222_28fa6290c-cl": "same source; record b61adb215; TT +97.56 / FF +7.38",
    "hbm_attn_quad_cg-c891a57cf-tc-hm01-grta-cl": "ADOPTED: route_qb_cl.sh GRTA (c891a57cf; gated quad RTL already on main); record 089d5bac3; TT +69.95 / FF +43.84; loop benches PASS",
    "hbm_attn_quad_cg-c891a57cf-tc-hm03-grta-cl": "variant of hm01 (TT +66.98 / FF +42.48); same view paths -> not recorded",
@@ -1601,12 +1601,7 @@
    "hbm_svc_SE_s6_pspr_ecaae581c_tc_hm10-cl": "SUPERSEDED (drive-1010 2026-10-10 06:50, not merged): CLOSED on ecaae581c, RTL predating the svc fixes 13e43398e (reset on held SM/PS boundary payloads) and 6daac135b (ot_svs_eps pending-stream slot; legacy commands starved); sb4 scoreboard FAILED at 7b5f36e22; hbm-phys-1010 requeued all 34 svc routes at 982804de3 (scoreboard PASS: 208 SM / 16 KV / 16 IK, 4 mutants FAIL).",
    "hbm_svc_SE_s8_pspr_ecaae581c_tc_hm0-cl": "SUPERSEDED (drive-1010 2026-10-10 06:50, not merged): CLOSED on ecaae581c, RTL predating the svc fixes 13e43398e (reset on held SM/PS boundary payloads) and 6daac135b (ot_svs_eps pending-stream slot; legacy commands starved); sb4 scoreboard FAILED at 7b5f36e22; hbm-phys-1010 requeued all 34 svc routes at 982804de3 (scoreboard PASS: 208 SM / 16 KV / 16 IK, 4 mutants FAIL).",
    "hbm_svc_SE_s8_pspr_ecaae581c_tc_hm10-cl": "SUPERSEDED (drive-1010 2026-10-10 06:50, not merged): CLOSED on ecaae581c, RTL predating the svc fixes 13e43398e (reset on held SM/PS boundary payloads) and 6daac135b (ot_svs_eps pending-stream slot; legacy commands starved); sb4 scoreboard FAILED at 7b5f36e22; hbm-phys-1010 requeued all 34 svc routes at 982804de3 (scoreboard PASS: 208 SM / 16 KV / 16 IK, 4 mutants FAIL).",
-   "hbm_svc_SW_s4_pspr_ecaae581c_tc_hm10-cl": "SUPERSEDED (drive-1010 2026-10-10 06:50, not merged): CLOSED on ecaae581c, RTL predating the svc fixes 13e43398e (reset on held SM/PS boundary payloads) and 6daac135b (ot_svs_eps pending-stream slot; legacy commands starved); sb4 scoreboard FAILED at 7b5f36e22; hbm-phys-1010 requeued all 34 svc routes at 982804de3 (scoreboard PASS: 208 SM / 16 KV / 16 IK, 4 mutants FAIL).",
-   "bfj_halfphl_nopd_a730_hm0_f5363befb": "SUPERSEDED (owner 2026-10-10 late): compact hierarchical full-rate BF is the BF of record.",
-   "bfh_col600_28fa6290c-cl": "EVIDENCE ONLY (owner 2026-10-10 late): compact hierarchical full-rate BF (bfh_compact220 front/col, claude/bf-compact-1011) approved as BF of record, superseding the col600 plan and HALF_PHL; record kept as evidence."
-  },
-  "notes_bf_of_record": [
-   "2026-10-10 late: BF of record = compact hierarchical full-rate BF (bfh_compact220_{front,col}_a1200_84d63c93f-cl routing; auto-merged on CLOSED via the external-bench waiver)"
-  ]
+   "hbm_svc_SW_s4_pspr_ecaae581c_tc_hm10-cl": "SUPERSEDED (drive-1010 2026-10-10 06:50, not merged): CLOSED on ecaae581c, RTL predating the svc fixes 13e43398e (reset on held SM/PS boundary payloads) and 6daac135b (ot_svs_eps pending-stream slot; legacy commands starved); sb4 scoreboard FAILED at 7b5f36e22; hbm-phys-1010 requeued all 34 svc routes at 982804de3 (scoreboard PASS: 208 SM / 16 KV / 16 IK, 4 mutants FAIL)."
+  }
  }
 }

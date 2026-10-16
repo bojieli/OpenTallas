@@ -178,21 +178,10 @@ module hfd_idx_score #(
       st <= {fault, active, qloaded, 1'b0};
     end
   end
-  // hgi-1010/g: the array's i_index is per SLOT (NS x NK ids; it scores with each slice's first id and checks that the
-  // slice's NK ids are consecutive).  bfirst carries one id a slice: expand it (slot g of slice s = first + g; the NK keys
-  // of a slice sit inside one 8-key group, so they are consecutive by the ID rule).  The bare bfirst left slots 1..NK-1
-  // at zero (port width mismatch) -> the array's consecutive-id check fired on the T4 / L4 taps.
-  wire [NS*NK*IW-1:0] bidx;
-  genvar bs, bg;
-  for (bs = 0; bs < NS; bs = bs + 1) begin : g_bidx
-    for (bg = 0; bg < NK; bg = bg + 1) begin : g_s
-      assign bidx[(bs*NK + bg)*IW +: IW] = bfirst[bs*IW +: IW] + IW'(bg);
-    end
-  end
   ot_hdc_v41x_idx_array_l #(.NS(NS), .NK(NK), .NB(4), .IH(32), .IW(IW), .MD(MD), .FPL(FPL), .FML(FML), .QL(QL), .SAFE_QUERY_GATE(SAFE_QUERY_GATE)) u_arr (
     .clk(ck), .rst_n(rn),
     .ql_v(ql_v), .ql_ready(ql_ready), .ql_head(ql_head), .ql_codes(ql_codes), .ql_sc(ql_sc), .ql_w(ql_w),
-    .i_valid(bv), .i_ready(a_ready), .i_last(blast), .i_kv(bkv), .i_ref(bref), .i_keep(bkeep), .i_index(bidx),
+    .i_valid(bv), .i_ready(a_ready), .i_last(blast), .i_kv(bkv), .i_ref(bref), .i_keep(bkeep), .i_index(bfirst),
     .i_key(bkey),
     .o_valid(o_v), .o_ready(o_take), .o_last(o_last), .o_kv(o_kv), .o_fault(o_fault), .o_score(o_score),
     .o_index(o_index), .protocol_fault(pfault));

@@ -164,15 +164,6 @@ def ds_rom():
         variant="selected P2 path (routes queued, not closed); the composition's draft is the DP1-EP5 recovery placement",
         note="per draft block the rank prefix replaces only the expert return hop; the block's combine all-reduce stays "
              "(no record replaces it): upper bound. Blocks are serial (block k+1 consumes block k's hc_post), so critical."))
-    # mtp-fixlat-1011: P2 die-bus link ends (dsfd_p2_lnk at the core pins + dsfd_coll_p2_ep / dsfd_vm_p2_ep): grant
-    # protocol RTT-sized to draft A's relay stations + transaction gate; the plain valid / ready core is not exact over them
-    p2_lnk = 6122 - 6113
-    ch.append(charge(
-        "p2.link_ends", "P2 link ends (dsfd_p2_lnk + collective / VM ends, RTT-sized grant links)", p2_lnk * len(p2),
-        anchor="draft.blocks", phase="draft", grade="measured (bench log)",
-        formula=f"{len(p2)} P2 transactions x (+{p2_lnk}: tb_mtp_p2_fixlat NOSTALL 0 stations, link ends 6,122 vs core direct 6,113)",
-        source=["tools/mtp_fixlat_gate.py p2_lat_lnk0 / p2_lat_direct0", "~/claude-takeover-20261007/mtp-fixlat-1011.log"],
-        note="the relay stations themselves are die wire stages (already the hop latency); this is the link-end pipeline only"))
     # ---- Markov head (MD-6): the composition's transfer ratio vs the measured row-pipeline latency
     mq = J(MARKOV_Q)
     mk_model = next(n["cycles"] for n in mtp["nodes"] if n["id"] == "draft.markov0")

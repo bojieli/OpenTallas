@@ -30,7 +30,6 @@ module ot_hgi_fused_record #(
     parameter integer UNIT = 0,            // 1: the D1 die body: the micro-ops run on an internal ot_hgi_su_unit (stage /
                                            //    vec / drain through the vmq / vmr VM client); 0: the vec op port (op_*)
     parameter integer UN = 32, UM = 8, ULV = 7,
-    parameter integer SCR_WORDS = 0,       // F10: words reserved at cfg_scratch (0 = up to the end of VM); over -> fault
     parameter integer UWIDE = 0,           // hgi-unitrate: 1 = the internal die body is the wide successor (32-lane VM stage
                                            //    / drain, record pipeline: ot_hgi_su_unit WIDE); its lanes leave on wrq / wwq
     parameter integer ULWB = 17,
@@ -165,11 +164,6 @@ module ot_hgi_fused_record #(
         suh = {4'd2, 6'd0, 16'd0, 2'd0, opnd, 1'b1, 92'd0};
     endfunction
     reg  [17:0] scr_q; always @(posedge clk) scr_q <= cfg_scratch;      // static strap, registered
-    // F10: the end of the scratch this record uses (exclusive), against the reserved limit (SCR_WORDS words from the base,
-    // 0 = up to the end of VM): an over-size record FAULTS instead of wrapping its scratch over live VM words
-    wire [20:0] scr_end = {3'd0, scr_q} + d + ((op == 6'd0) ? (21'd2 + d) : {4'd0, nseg, 1'b0});
-    wire [20:0] SCR_LIMIT_W = (SCR_WORDS == 0) ? 21'd262144 : ({3'd0, scr_q} + 21'(SCR_WORDS));
-
     wire [17:0] g_b = scr_q;
     reg [1:0] sudone;
     always @(posedge clk or negedge rst_n) begin
@@ -205,10 +199,7 @@ module ot_hgi_fused_record #(
                         if (!hq_ok) begin rec_fault <= 1'b1; st <= S_HALT; end
                         else begin hk <= 3'd0; st <= S_PM; end
                     end else if (op == 6'd1 || op == 6'd0) begin
-                        // F10 (hgi-unitrate): the scratch the micro-sequence uses must fit the reserved region and VM:
-                        // ROW_NORM G (d) + S (nseg) + S2 (nseg); HC_PRE_NORM G (d) + S + S2 + the mixed x (d)
                         if (op == 6'd1 ? !rn_ok : !hp_ok) begin rec_fault <= 1'b1; st <= S_HALT; end
-                        else if (scr_end > SCR_LIMIT_W) begin rec_fault <= 1'b1; st <= S_HALT; end
                         else begin                    // (0) gain -> G: {m 1, n d, dst VM FP32 G, src HBM BF16 B}
                             mv <= {d, 20'd1, 16'd1, 32'd0, {22'd0, g_b}, 3'd0, 2'd1, 16'd1, 32'd0, dB[47:8], 3'd1, 2'd0};
                             mv_v <= 1'b1; st <= S_MVW;

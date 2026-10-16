@@ -32,11 +32,6 @@ module tb_hgi_att_tput;
         $readmemh({dir, "/au_vmi.mem"}, vmim); $readmemh({dir, "/au_hbm.mem"}, hbmm); $readmemh({dir, "/au_exp.mem"}, expm);
     end
     integer errors = 0, cyc = 0, seed = 7; always @(posedge clk) cyc <= cyc + 1;
-`ifdef ATT_TRACE
-    always @(posedge clk) if (cyc % 20000 == 0) begin
-        $display("TRACE cyc %0d st %0d scn %0d tb %0d sc_hold %0d sfr %0d sfw %0d vo_n %0d so_h %0d so_r %0d fi_row %0d co_row %0d blk0 %0d kv_v %0d",
-            cyc, u.st, u.scn, u.tb, u.sc_hold, u.sfr, u.sfw, u.vo_n, u.so_h, u.so_r, u.fi_row, u.co_row, u.blk0, u.kv_v); $fflush; end
-`endif
 `ifdef MUT_RING
     localparam integer MR = 1;
 `else

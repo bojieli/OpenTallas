@@ -58,9 +58,7 @@ module ot_s81ph_coll_lane #(
     // three-tile collective core in CR mode: lo_v / lo_d land in pin flops + an 8-deep FIFO (OREG), lo_r is a credit pulse
     // per freed slot; li_v / li_d leave from sender flops under credits, li_r is the receiver's credit pulse.  No pin
     // drives a wide enable on either side.  Same ports and pin plan; +2..3 cycles each way.
-    parameter integer LCR = `ifdef OT_S81PH_LANE_CR 1 `else 0 `endif,
-    parameter integer EPRX = `ifdef OT_S81PH_EP_RXPIPE 1 `else 0 `endif,  // ds-1010: ot_s81ph_link_ep RXPIPE
-    parameter integer EPTO = `ifdef OT_S81PH_EP_TOREG 1 `else 0 `endif    // ds-1010: ot_s81ph_link_ep TOREG
+    parameter integer LCR = `ifdef OT_S81PH_LANE_CR 1 `else 0 `endif
 ) (
     input  wire          clk,
     input  wire          rs_n,       // stream reset (async assert), synchronised here
@@ -113,7 +111,7 @@ module ot_s81ph_coll_lane #(
     end endgenerate
     wire ftv, rtv, frv, rrv; wire [FFW-1:0] ft, fr; wire [RFW-1:0] rt, rr; wire ep_f, gb_f, gb_l;
     ot_s81ph_link_ep #(.FLIT_BYTES(FB), .TX_STAGES(2), .RX_STAGES(3), .CHANNEL_CYCLES(CH_UCIE), .CHANNEL_CYCLES_B(CH_BOARD),
-        .CREDITS(CREDITS), .SEQW(SEQW), .PHY_NUM(PNUM), .PHY_DEN(PDEN), .SRAM(SRAM), .PIPE(EPPIPE < 0 ? 1 : EPPIPE), .RXPIPE(EPRX), .TOREG(EPTO)) u_ep (
+        .CREDITS(CREDITS), .SEQW(SEQW), .PHY_NUM(PNUM), .PHY_DEN(PDEN), .SRAM(SRAM), .PIPE(EPPIPE < 0 ? 1 : EPPIPE)) u_ep (
         .clk(clk), .rst_n(rst_n), .ch_b(ch_b),
         .in_valid(iv && (UPGATE == 0 || up)), .in_ready(ir), .in_data(id), .in_last(il),
         .out_valid(ov), .out_ready(orr), .out_data(od), .out_last(ol),
@@ -133,20 +131,18 @@ endmodule
 
 // tile tops (pin plans differ: W lanes face the slab's W edge, E lanes the E edge)
 module dsfd_coll_lane_w #(parameter integer GFMT = `OT_S81PH_GFMT_DEF, parameter integer EPPIPE = `OT_S81PH_EPPIPE_DEF,
-    parameter integer LCR = `ifdef OT_S81PH_LANE_CR 1 `else 0 `endif, parameter integer EPRX = `ifdef OT_S81PH_EP_RXPIPE 1 `else 0 `endif,
-    parameter integer EPTO = `ifdef OT_S81PH_EP_TOREG 1 `else 0 `endif) (
+    parameter integer LCR = `ifdef OT_S81PH_LANE_CR 1 `else 0 `endif) (
     input wire [0:0] ck, input wire [0:0] rs, input wire [0:0] chb, input wire [514:0] rx, output wire [511:0] tx,
     output wire [0:0] tf, input wire [0:0] lo_v, output wire [0:0] lo_r, input wire [552:0] lo_d,
     output wire [0:0] li_v, input wire [0:0] li_r, output wire [552:0] li_d, output wire [2:0] flt);
-    ot_s81ph_coll_lane #(.GFMT(GFMT), .EPPIPE(EPPIPE), .LCR(LCR), .EPRX(EPRX), .EPTO(EPTO)) u (.clk(ck[0]), .rs_n(rs[0]), .ch_b(chb[0]), .rx(rx), .tx(tx), .tf(tf[0]), .lo_v(lo_v[0]),
+    ot_s81ph_coll_lane #(.GFMT(GFMT), .EPPIPE(EPPIPE), .LCR(LCR)) u (.clk(ck[0]), .rs_n(rs[0]), .ch_b(chb[0]), .rx(rx), .tx(tx), .tf(tf[0]), .lo_v(lo_v[0]),
         .lo_r(lo_r[0]), .lo_d(lo_d), .li_v(li_v[0]), .li_r(li_r[0]), .li_d(li_d), .flt(flt));
 endmodule
 module dsfd_coll_lane_e #(parameter integer GFMT = `OT_S81PH_GFMT_DEF, parameter integer EPPIPE = `OT_S81PH_EPPIPE_DEF,
-    parameter integer LCR = `ifdef OT_S81PH_LANE_CR 1 `else 0 `endif, parameter integer EPRX = `ifdef OT_S81PH_EP_RXPIPE 1 `else 0 `endif,
-    parameter integer EPTO = `ifdef OT_S81PH_EP_TOREG 1 `else 0 `endif) (
+    parameter integer LCR = `ifdef OT_S81PH_LANE_CR 1 `else 0 `endif) (
     input wire [0:0] ck, input wire [0:0] rs, input wire [0:0] chb, input wire [514:0] rx, output wire [511:0] tx,
     output wire [0:0] tf, input wire [0:0] lo_v, output wire [0:0] lo_r, input wire [552:0] lo_d,
     output wire [0:0] li_v, input wire [0:0] li_r, output wire [552:0] li_d, output wire [2:0] flt);
-    ot_s81ph_coll_lane #(.GFMT(GFMT), .EPPIPE(EPPIPE), .LCR(LCR), .EPRX(EPRX), .EPTO(EPTO)) u (.clk(ck[0]), .rs_n(rs[0]), .ch_b(chb[0]), .rx(rx), .tx(tx), .tf(tf[0]), .lo_v(lo_v[0]),
+    ot_s81ph_coll_lane #(.GFMT(GFMT), .EPPIPE(EPPIPE), .LCR(LCR)) u (.clk(ck[0]), .rs_n(rs[0]), .ch_b(chb[0]), .rx(rx), .tx(tx), .tf(tf[0]), .lo_v(lo_v[0]),
         .lo_r(lo_r[0]), .lo_d(lo_d), .li_v(li_v[0]), .li_r(li_r[0]), .li_d(li_d), .flt(flt));
 endmodule

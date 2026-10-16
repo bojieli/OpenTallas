@@ -43,7 +43,7 @@ module tb_hgi_row_gather_store;
         .rec_hdr(cur[127:0]), .rec_a(cur[383:128]), .rec_o(cur[639:384]), .rec_n_a(cur[660:640]), .rec_n_o(cur[681:661]),
         .rec_pos1(cur[702:682]), .rec_done(done), .rec_fault(fault), .halted(halted), .lg_mv_v(1'b0), .lg_mv_rdy(),
         .lg_mv(227'd0), .lg_fence_v(1'b0), .lg_fence_rdy(), .mv_v(mv_v), .mv_rdy(mv_rdy), .mv(mv), .mv_done(mv_done),
-        .mv_fault(mv_fault), .mv_src(mv_src), .mv_pdone(mv_done), .mv_fdone(1'b0), .rec_ilist(32'd0), .is_v(), .is_rdy(1'b0), .is_cmd(), .fence_v(fence_v), .fence_rdy(fence_rdy), .fence_done(fence_done));
+        .mv_fault(mv_fault), .mv_src(mv_src), .mv_pdone(mv_done), .mv_fdone(1'b0), .fence_v(fence_v), .fence_rdy(fence_rdy), .fence_done(fence_done));
     wire k_req_v, k_req_we, k_rsp_rdy; reg k_req_rdy = 0, k_rsp_v = 0, k_rsp_we = 0; reg [255:0] k_rsp_data = 0;
     wire [36:0] k_addr; wire [255:0] k_wd; wire [31:0] k_ws; wire [15:0] k_tag;
     wire [337:0] vmq; wire [273:0] vmr0, vmr1; reg [337:0] tq = 0;

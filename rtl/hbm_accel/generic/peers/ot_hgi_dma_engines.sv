@@ -9,18 +9,9 @@
 //   ot_hgi_dma_mover  the rest (STORE, VM -> VM, strided, unaligned, KV ops) on its kport lane + VM client; its one
 //                     VM wide lane goes out on its bank's lane (the engines never run together: one move outstanding).
 // FRONT = 0 sends every move to the mover (the comparison point).  Fence: the mover's (the front is idle at a fence).
-// INDEXED ROW STREAM (hgi-1010/c, spec 3.3): is_cmd {ilist 32, ix_cmd 176} from the DMA record adapter (the stream form:
-// A indexed + n_sel N_FROM_VM).  The I-list reader reads the cnt ids U32(VM[ilist + e]) through the mover's VM packet
-// client (taken only while the mover is idle: a posted STORE may still own it), up to 4 sector reads in flight (responses
-// into a 4-entry FIFO: VM answers are not back-pressured), into a 32-entry id FIFO.  FRONT = 1: the front runs the stream
-// (ix_cmd + the id list).  FRONT = 0: a row sequencer issues one mover LOAD per row (row e: source abase + (id_e - id_0)
-// x dyn_mul with rebase, m 1, n, destination dbase + e x dstride), so the stream form also runs without the svc stream.
-// Completion: mv_done / mv_fdone (front), or the last row move's mv_done / mv_pdone (mover); row moves before it are
-// internal.  MUT_IL (bench): the reader skips the id at list position 1 (duplicates id 2): must FAIL.
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_hgi_dma_engines #(
     parameter integer FRONT = 1,
-    parameter integer MUT_IL = 0,
     parameter integer SBIT = 35,
     parameter [35:0] STACK_BYTES = 36'd22500000000
 ) (
@@ -34,10 +25,6 @@ module ot_hgi_dma_engines #(
     output wire                mv_src,      // the mover's source-consumed pulse (posted STORE / KVWB retire)
     output wire                mv_pdone,    // the mover's done
     output wire                mv_fdone,    // the front's done
-    // indexed row stream command (hgi-1010/c)
-    input  wire                is_v,
-    output wire                is_rdy,
-    input  wire [207:0]        is_cmd,
     input  wire                fence_v,
     output wire                fence_rdy,
     output wire                fence_done,
@@ -72,42 +59,19 @@ module ot_hgi_dma_engines #(
                 ((sf == 3'd0 || sf == 3'd5) ? mv[208:206] == 3'd0 : (sf == 3'd1) ? mv[209:206] == 4'd0 : mv[210:206] == 5'd0) &&
                 mv[205:186] != 20'd0 && mv[226:206] != 21'd0;
     wire to_f = (FRONT != 0) && elig;
-    // ---------------------------------------------------------------- I-list reader state
-    reg rd_act; reg [31:0] rd_w; reg [19:0] rd_left;           // next id word to request, ids not yet requested
-    reg [2:0] rd_out; reg [5:0] rd_fl;                         // sector reads in flight, ids in flight + buffered
-    reg [2:0] ro_off [0:3]; reg [3:0] ro_k [0:3]; reg [1:0] ro_h, ro_t;    // per read: first word, ids in it
-    reg [255:0] rb_d [0:3]; reg [1:0] rb_h, rb_t; reg [2:0] rb_n;          // response FIFO
-    reg [2:0] u_off; reg [3:0] u_k; reg [19:0] u_e;            // unpack position in the head response, list position
-    reg [31:0] idf [0:31]; reg [4:0] idf_h, idf_t; reg [5:0] idf_n;
-    reg [337:0] r_vmq;
-    wire [337:0] m_vmq;
-    wire ix_rdy_f, id_rdy_f; reg ixf_v; reg [175:0] ixf_cmd;
-    wire s_id_v = idf_n != 6'd0;
-    wire s_id_take;
-    reg [3:0] iss_k; reg iss_go;
-    always @* begin
-        iss_k = 4'd8 - {1'b0, rd_w[2:0]};
-        if ({16'd0, iss_k} > rd_left) iss_k = rd_left[3:0];
-        iss_go = rd_act && rd_left != 20'd0 && rd_out < 3'd4 && ({2'd0, iss_k} <= 6'd32 - rd_fl);
-    end
-    // row sequencer (FRONT 0)
-    reg [175:0] sc; reg sq_act, sq_last, sq_mv_v, sq_wait; reg [226:0] sq_mv; reg [19:0] sq_e;
-    reg sq_p0v; reg [59:0] sq_p0; reg [1:0] sq_ph; reg [59:0] sq_p; reg [42:0] sq_lo, sq_hi; reg [31:0] sq_id;
-    assign vmq = rd_act ? r_vmq : m_vmq;
     wire f_rdy, f_done, f_fault, m_rdy, m_done, m_fault, m_src; wire [279:0] m_wl; wire [32*280-1:0] f_wl;
-    assign mv_rdy = !rd_act && !sq_act && (to_f ? f_rdy : m_rdy);
-    assign mv_done = f_done | (m_done && (!sq_act || sq_last));
+    assign mv_rdy = to_f ? f_rdy : m_rdy;
+    assign mv_done = f_done | m_done;
     assign mv_fault = f_fault | m_fault;
-    assign mv_src = m_src && !sq_act; assign mv_pdone = m_done && (!sq_act || sq_last); assign mv_fdone = f_done;
+    assign mv_src = m_src; assign mv_pdone = m_done; assign mv_fdone = f_done;
     generate if (FRONT != 0) begin : g_front
         ot_hgi_dma_front #(.SBIT(SBIT), .STACK_BYTES(STACK_BYTES)) u_front (.clk(clk), .rst_n(rst_n), .mv_v(mv_v && to_f),
             .mv_rdy(f_rdy), .mv(mv), .mv_done(f_done), .mv_fault(f_fault),
-            .ix_v(ixf_v), .ix_rdy(ix_rdy_f), .ix_cmd(ixf_cmd), .id_v(s_id_v), .id_rdy(id_rdy_f), .id(idf[idf_h]),
+            .ix_v(1'b0), .ix_rdy(), .ix_cmd(176'd0), .id_v(1'b0), .id_rdy(), .id(32'd0),   // indexed stream: OPEN (needs the CP's I-list address + an I-list reader; hgi-1010/c)
             .dq(dq), .dq_rdy(dq_rdy), .dd(dd), .dd_cr(dd_cr),
             .wl(f_wl), .wl_done(wl_done));
     end else begin : g_nofront
         assign f_rdy = 1'b0; assign f_done = 1'b0; assign f_fault = 1'b0; assign dq = '0; assign dd_cr = '0; assign f_wl = '0;
-        assign ix_rdy_f = 1'b0; assign id_rdy_f = 1'b0;
     end endgenerate
     // the mover's lane goes out on the lane of its sector's bank (the VM takes lane b into bank b); its done pulses come
     // one a cycle at most, so any lane's done is the mover's while the front is idle
@@ -118,86 +82,11 @@ module ot_hgi_dma_engines #(
     generate for (gl = 0; gl < 32; gl = gl + 1) begin : g_wl
         assign wl[gl*280 +: 280] = f_wl[gl*280 + 279] ? f_wl[gl*280 +: 280] : m_wlx[gl*280 +: 280];
     end endgenerate
-    ot_hgi_dma_mover u_mover (.clk(clk), .rst_n(rst_n), .mv_v(sq_act ? sq_mv_v : (mv_v && !to_f && !rd_act)), .mv_rdy(m_rdy),
-        .mv(sq_act ? sq_mv : mv), .mv_done(m_done),
+    ot_hgi_dma_mover u_mover (.clk(clk), .rst_n(rst_n), .mv_v(mv_v && !to_f), .mv_rdy(m_rdy), .mv(mv), .mv_done(m_done),
         .mv_fault(m_fault), .mv_src(m_src), .fence_v(fence_v), .fence_rdy(fence_rdy), .fence_done(fence_done),
         .k_req_v(k_req_v), .k_req_rdy(k_req_rdy), .k_req_we(k_req_we), .k_req_addr(k_req_addr), .k_req_wdata(k_req_wdata),
         .k_req_wstrb(k_req_wstrb), .k_req_tag(k_req_tag), .k_rsp_v(k_rsp_v), .k_rsp_rdy(k_rsp_rdy), .k_rsp_we(k_rsp_we),
-        .k_rsp_data(k_rsp_data), .k_fault(1'b0), .vmq(m_vmq), .vmr(rd_act ? 274'd0 : vmr), .wl(m_wl), .wl_done(|wl_done));
-    // ---------------------------------------------------------------- stream command, I-list reader, row sequencer
-    assign is_rdy = !rd_act && !sq_act && m_rdy && ((FRONT != 0) ? (ix_rdy_f && f_rdy) : 1'b1) && !ixf_v;
-    assign s_id_take = (FRONT != 0) ? (s_id_v && id_rdy_f) : (sq_act && !sq_wait && sq_ph == 2'd0 && s_id_v);
-    always @(posedge clk or negedge rst_n) begin
-        if (!rst_n) begin
-            rd_act <= 1'b0; rd_out <= 3'd0; rd_fl <= 6'd0; ro_h <= 2'd0; ro_t <= 2'd0; idf_h <= 5'd0; idf_t <= 5'd0;
-            idf_n <= 6'd0; r_vmq <= 338'd0; rb_h <= 2'd0; rb_t <= 2'd0; rb_n <= 3'd0; u_k <= 4'd0; u_e <= 20'd0; ixf_v <= 1'b0;
-            sq_act <= 1'b0; sq_mv_v <= 1'b0; sq_wait <= 1'b0; sq_last <= 1'b0; sq_ph <= 2'd0;
-        end else begin : rdr
-            reg push, rsp_in, upop;
-            ixf_v <= 1'b0; r_vmq[337] <= 1'b0; push = 1'b0;
-            if (is_v && is_rdy) begin
-                sc <= is_cmd[175:0]; rd_act <= is_cmd[174:155] != 20'd0; rd_w <= is_cmd[207:176]; rd_left <= is_cmd[174:155]; u_e <= 20'd0;
-                if (FRONT != 0) begin ixf_v <= 1'b1; ixf_cmd <= is_cmd[175:0]; end
-                else begin
-                    sq_act <= is_cmd[174:155] != 20'd0; sq_e <= 20'd0; sq_p0v <= 1'b0; sq_wait <= 1'b0; sq_ph <= 2'd0; sq_last <= 1'b0;
-                end
-            end
-            if (iss_go) begin
-                r_vmq <= {1'b1, 1'b0, rd_w[29:3], 5'd0, 256'd0, 32'd0, 16'h4944};   // byte address = sector x 32
-                ro_off[ro_t] <= rd_w[2:0]; ro_k[ro_t] <= iss_k; ro_t <= ro_t + 2'd1;
-                rd_w <= rd_w + {28'd0, iss_k}; rd_left <= rd_left - {16'd0, iss_k};
-            end
-            rsp_in = rd_act && vmr[273];
-            if (rsp_in) begin rb_d[rb_t] <= vmr[255:0]; rb_t <= rb_t + 2'd1; end
-            upop = 1'b0;
-            if (rb_n != 3'd0) begin : unp
-                reg [2:0] o; reg [3:0] kk;
-                o = (u_k == 4'd0) ? ro_off[ro_h] : u_off; kk = (u_k == 4'd0) ? ro_k[ro_h] : u_k;
-                idf[idf_t] <= rb_d[rb_h][{((MUT_IL != 0 && u_e == 20'd1) ? o + 3'd1 : o), 5'd0} +: 32];
-                idf_t <= idf_t + 5'd1; push = 1'b1; u_e <= u_e + 20'd1;
-                u_off <= o + 3'd1; u_k <= kk - 4'd1;
-                if (kk == 4'd1) begin upop = 1'b1; rb_h <= rb_h + 2'd1; ro_h <= ro_h + 2'd1; u_k <= 4'd0; end
-            end
-            rb_n <= rb_n + {2'd0, rsp_in} - {2'd0, upop};
-            rd_out <= rd_out + {2'd0, iss_go} - {2'd0, rsp_in};
-            if (s_id_take) idf_h <= idf_h + 5'd1;
-            idf_n <= idf_n + {5'd0, push} - {5'd0, s_id_take};
-            rd_fl <= rd_fl + (iss_go ? {2'd0, iss_k} : 6'd0) - {5'd0, s_id_take};
-            if (rd_act && rd_left == 20'd0 && rd_out == 3'd0 && !iss_go && !rsp_in && rb_n == 3'd0) rd_act <= 1'b0;
-            // row sequencer (FRONT 0): id -> partial products -> address -> one mover LOAD, wait for its done
-            sq_mv_v <= sq_mv_v && !m_rdy;
-            if (sq_act) begin
-                if (sq_ph == 2'd0 && !sq_wait && s_id_v) begin sq_id <= idf[idf_h]; sq_ph <= 2'd1; end
-                if (sq_ph == 2'd1) begin
-                    sq_lo <= {16'd0, sq_id[15:0]} * {16'd0, sc[69:43]}; sq_hi <= {16'd0, sq_id[31:16]} * {16'd0, sc[69:43]};
-                    sq_ph <= 2'd2;
-                end
-                if (sq_ph == 2'd2) begin : ps
-                    reg [59:0] p;
-                    p = {17'd0, sq_lo} + ({17'd0, sq_hi} << 16);
-                    if (!sq_p0v) begin sq_p0 <= p; sq_p0v <= 1'b1; end
-                    sq_p <= p - (sc[175] ? (sq_p0v ? sq_p0 : p) : 60'd0);
-                    sq_ph <= 2'd3;
-                end
-                if (sq_ph == 2'd3) begin : mvw
-                    reg [59:0] a; reg [31:0] dw;
-                    a = {20'd0, sc[42:3]} + sq_p; dw = sc[122:91] + sq_e * sc[154:123];
-                    // move word {n 21, m 20, dst istride 16, dst stride 32, dst base 40, dst fmt 3, dst space 2,
-                    //            src istride 16, src stride 32, src base 40, src fmt 3, src space 2}
-                    sq_mv <= {sc[90:70], 20'd1, 16'd1, 32'd0, {8'd0, dw}, (sc[2:0] == 3'd5) ? 3'd5 : 3'd0, 2'd1,
-                              16'd1, 32'd0, a[39:0], sc[2:0], 2'd0};
-                    sq_mv_v <= 1'b1; sq_wait <= 1'b1; sq_ph <= 2'd0;
-                    sq_last <= sq_e + 20'd1 == sc[174:155];
-                    sq_e <= sq_e + 20'd1;
-                end
-                if (sq_wait && m_done) begin
-                    sq_wait <= 1'b0;
-                    if (sq_last) sq_act <= 1'b0;
-                end
-                if (m_fault) begin sq_act <= 1'b0; sq_wait <= 1'b0; end
-            end
-        end
-    end
+        .k_rsp_data(k_rsp_data), .k_fault(1'b0), .vmq(vmq), .vmr(vmr), .wl(m_wl), .wl_done(|wl_done));
 `ifndef SYNTHESIS
     reg trc; initial trc = $test$plusargs("DMA_TRACE");
     always @(posedge clk) if (trc && rst_n && mv_v && mv_rdy)

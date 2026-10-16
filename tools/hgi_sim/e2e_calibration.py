@@ -79,43 +79,6 @@ def ratios(reports):
     return dict(out), runs
 
 
-def unit_ratios(reports):
-    """production-width unit throughput benches (results/rtl/hgi_unit_tput_*/<unit>/report.json, same per-record format
-    as the e2e reports): unit.op -> {ratio, records, run}.  They take precedence over the die-level bench ratios, whose
-    SU/SFU/FUSED vehicles are reduced width and whose other ops are often a single record."""
-    import hbm_generic_iface as HGI
-    acc = {}
-    for p in reports:
-        d = json.loads(p.read_text())
-        if not d.get("pass_", d.get("pass", True)):
-            continue
-        for (u, op), v in service(d["records"]).items():
-            if v["sim"] > 0:
-                name = f"{u}.{HGI.D_OPS[u][op]}" if u in HGI.D_OPS and op < len(HGI.D_OPS[u]) else f"{u}.{op}"
-                a = acc.setdefault(name, dict(rtl=0.0, sim=0.0, n=0, runs=[], grade=d.get("grade", "production_width")))
-                a["rtl"] += v["rtl"]; a["sim"] += v["sim"]; a["n"] += v["n"]; a["runs"].append(str(p))
-    return {k: dict(rtl_service=round(a["rtl"], 1), sim_cost=round(a["sim"], 1), ratio=round(a["rtl"] / a["sim"], 3),
-                    records=a["n"], runs=a["runs"], grade=a["grade"]) for k, a in acc.items()}
-
-
-REDUCED_E2E_UNITS = ("SU.", "SFU.", "FUSED.")      # the die bench builds these at reduced stream-unit width
-
-
-def merged_scale(rt, veh, prod):
-    """scale + per-op grade: production-width unit bench > e2e multi-record > e2e single record (reduced-width SU/SFU/FUSED
-    entries are graded as such); ops with no measurement keep the model cost (grade 'model')."""
-    k, grade = {}, {}
-    for u, v in rt.items():
-        if veh in v:
-            k[u] = v[veh]["ratio"]
-            grade[u] = ("e2e_reduced_width" if u.startswith(REDUCED_E2E_UNITS) else
-                        "e2e_single_record" if v[veh]["records"] == 1 else "e2e_measured")
-    for u, v in prod.items():
-        k[u] = v["ratio"]
-        grade[u] = v["grade"]
-    return k, grade
-
-
 def scaled(base_cost, k):
     """scale each record's cost by the measured ratio of its unit.op (unmeasured ops keep the simulator's cost)"""
     def cf(r, dyn, L):
@@ -124,11 +87,10 @@ def scaled(base_cost, k):
     return cf
 
 
-def coverage(recs, k, grade=None):
+def coverage(recs, k):
     """Service-ratio replay is only calibrated for operations present in this vehicle's RTL report."""
     ops = {f"{r.unit}.{r.op}" for r in recs if r.unit != "CTL"}
-    g = {o: (grade or {}).get(o, "measured") if o in k else "model (stub in RTL bench or unmeasured)" for o in sorted(ops)}
-    return dict(measured_ops=sorted(ops & k.keys()), uncalibrated_ops=sorted(ops - k.keys()), grade_per_op=g,
+    return dict(measured_ops=sorted(ops & k.keys()), uncalibrated_ops=sorted(ops - k.keys()),
                 scope="measured unit-service ratios replayed on the modelled token; uncalibrated operations "
                       "retain their model costs (not a measured whole-token rate)")
 
@@ -140,16 +102,10 @@ def main():
     ap.add_argument("--ds-run", type=Path, help="the ds_native result of that program (ROW_GATHER stats)")
     ap.add_argument("--dflash", action="store_true", help="also re-time the DFlash block-16 step")
     ap.add_argument("--reports", type=Path, nargs="*", help="hgi-e2e report.json files (default: results/rtl/hgi_e2e_*)")
-    ap.add_argument("--unit-reports", type=Path, nargs="*",
-                    help="production-width unit benches (default: results/rtl/hgi_unit_tput_*/**/report.json, merged per unit.op)")
     a = ap.parse_args()
     reports = sorted(a.reports) if a.reports else sorted(ROOT.glob("results/rtl/hgi_e2e_*/runs/*/report.json"))
-    ureports = sorted(a.unit_reports) if a.unit_reports is not None else \
-        sorted(ROOT.glob("results/rtl/hgi_unit_tput_*/**/report.json"))
     rt, runs = ratios(reports)
-    prod = unit_ratios(ureports)
-    res = dict(runs=runs, per_unit=rt, production_width_units=prod, unit_reports=[str(p) for p in ureports],
-               open_defects=OPEN_DEFECTS)
+    res = dict(runs=runs, per_unit=rt, open_defects=OPEN_DEFECTS)
     if any("e2e_reports_cad18afa7" in str(p) for p in reports):
         res["calibration_vehicle_limits"] = CAD18_VEHICLE_LIMITS
     # sensitivity: today's RTL ratios applied to the whole tokens
@@ -163,21 +119,20 @@ def main():
             for x in json.loads(a.ds_run.read_text())["results"]:
                 for s_ in x.get("row_gather") or []:
                     rg[x["layer"]] = s_
-        DT.apply_dyn_counts(recs, rg)
         cf = DT.NativeCost(d["ops"], recs, row_gather=rg)
-        k, kg = merged_scale(rt, "ds_L0", prod)
+        k = {u: v["ds_L0"]["ratio"] for u, v in rt.items() if "ds_L0" in v}
         s0 = T.schedule(recs, DT.POS, "S2", cost_fn=cf)["total_cycles"]
         s1 = T.schedule(recs, DT.POS, "S2", cost_fn=scaled(cf, k))["total_cycles"]
-        sens["ds_1M"] = dict(scale=k, calibration_coverage=coverage(recs, k, kg),
+        sens["ds_1M"] = dict(scale=k, calibration_coverage=coverage(recs, k),
                              fixed_rtl_cycles=round(s0, 1), fixed_rtl_tok_s=round(1.2e9 / s0, 1),
                              current_rtl_cycles=round(s1, 1), current_rtl_tok_s=round(1.2e9 / s1, 1))
     from hgi_sim import qwen_compiler as QC
     cfg = json.loads((ROOT / "compiler/models/qwen3-8b/config.json").read_text())
     qrecs = QC.program(QC.Geometry(cfg, 8192), QC.qwen_params(cfg), cfg["num_hidden_layers"])
-    k, qg = merged_scale(rt, "qwen_L0", prod)
+    k = {u: v["qwen_L0"]["ratio"] for u, v in rt.items() if "qwen_L0" in v}
     s0 = T.schedule(qrecs, 8191, "S2")["total_cycles"]
     s1 = T.schedule(qrecs, 8191, "S2", cost_fn=scaled(T.cost, k))["total_cycles"]
-    sens["qwen_P8191"] = dict(scale=k, calibration_coverage=coverage(qrecs, k, qg),
+    sens["qwen_P8191"] = dict(scale=k, calibration_coverage=coverage(qrecs, k),
                               fixed_rtl_cycles=round(s0, 1), fixed_rtl_tok_s=round(1.2e9 / s0, 1),
                               current_rtl_cycles=round(s1, 1), current_rtl_tok_s=round(1.2e9 / s1, 1))
     # variants with DMA at full bandwidth (hgi-takeover is building the wide bank-parallel DMA -> VM write port)
@@ -207,7 +162,7 @@ def main():
                        ("current_rtl", sens["qwen_P8191"]["scale"])):
             st = T.schedule(drecs, 8192 - 16, "S2", cost_fn=scaled(base, kk))["total_cycles"]
             out[nm] = dict(step_cycles=round(st, 1), tok_s_tau_8_01=round(8.01 * 1.2e9 / st, 1),
-                           calibration_coverage=coverage(drecs, kk, qg))
+                           calibration_coverage=coverage(drecs, kk))
         sens["dflash_b16"] = out
     res["sensitivity"] = sens
     res["reading"] = ("ratios > 1 are the RTL's extra cycles over the simulator's price on the same records; the HBM "

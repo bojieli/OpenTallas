@@ -159,33 +159,23 @@ module tb_mtp_rom_s0_rtt;
         .t_hv(p_hv), .t_hd(p_hd), .f_hg(p_hg), .f_qv(p_qv), .f_qd(p_qd), .t_qg(p_qg), .t_acc(s_acc));
     // bench-side grant adapters: transmitters as the blocks use; receivers RTT-sized to their chains
     reg br_v = 0; reg [FLIT-1:0] br_d = 0; wire br_r;                 // RESULT -> seq
-    wire bh_v; wire [DW-1:0] bh_d;                                      // draft-head steps
-    reg bw_v = 0; reg [USER_W-1:0] bw_d = 0; wire bw_r;                 // rows ready
-    reg bq_v = 0; reg [DW-1:0] bq_d = 0; wire bq_r;                     // draft-head results
-`ifdef OT_MTP_PARTNER_EP
-    // mtp-fixlat-1011: the capture / VM slab ends as RTL (rtl/dsrom_sys/mtp/dsfd_mtp_partner_ep.sv) at the same chains
-    dsfd_cap_mtp_ep e_cap (.ck(fclk), .rst(rst_n), .c_rv(br_v), .c_rr(br_r), .c_rd(br_d), .t_rv(s_rv), .t_rd(s_rd), .f_rg(s_rg));
-    dsfd_vm_mtp_ep #(.FWD_H(RV), .RET_H(FV)) e_vm (.ck(fclk), .rst(rst_n),
-        .f_hv(s_hv), .f_hd(s_hd), .t_hg(s_hg), .c_hv(bh_v), .c_hr(1'b1), .c_hd(bh_d),
-        .c_wv(bw_v), .c_wr(bw_r), .c_wd(bw_d), .t_wv(s_wv), .t_wd(s_wd), .f_wg(s_wg),
-        .c_qv(bq_v), .c_qr(bq_r), .c_qd(bq_d), .t_qv(s_qv), .t_qd(s_qd), .f_qg(s_qg));
-`else
     ot_rom_pkg_ctrl_wfc_ltx #(.W(FLIT)) a_r (.clk(fclk), .rst_n(rst_n), .c_valid(br_v), .c_ready(br_r), .c_data(br_d),
         .l_valid(s_rv), .l_ready(s_rg), .l_data(s_rd));
-    ot_rom_pkg_ctrl_wfc_ltx #(.W(USER_W)) a_w (.clk(fclk), .rst_n(rst_n), .c_valid(bw_v), .c_ready(bw_r), .c_data(bw_d),
-        .l_valid(s_wv), .l_ready(s_wg), .l_data(s_wd));
-    ot_dsrom_mtp_lrx_rtt #(.W(DW), .D(RV+FV+4), .ENABLE_RTT(1), .FORWARD_HOPS(RV), .RETURN_HOPS(FV)) a_h (.clk(fclk), .rst_n(rst_n), .l_valid(s_hv), .l_ready(s_hg), .l_data(s_hd),
-        .c_valid(bh_v), .c_ready(1'b1), .c_data(bh_d));
-    ot_rom_pkg_ctrl_wfc_ltx #(.W(DW)) a_q (.clk(fclk), .rst_n(rst_n), .c_valid(bq_v), .c_ready(bq_r), .c_data(bq_d),
-        .l_valid(s_qv), .l_ready(s_qg), .l_data(s_qd));
-
-`endif
     wire bt_v; wire [FLIT-1:0] bt_d; reg bt_r = 0;                      // seq -> token-return link
     ot_dsrom_mtp_lrx_rtt #(.W(FLIT), .D(FL+RL+4), .ENABLE_RTT(1), .FORWARD_HOPS(FL), .RETURN_HOPS(RL)) a_t (.clk(fclk), .rst_n(rst_n), .l_valid(s_tv), .l_ready(s_tg), .l_data(s_td),
         .c_valid(bt_v), .c_ready(bt_r), .c_data(bt_d));
     wire bs_v; wire [SW-1:0] bs_d;                                      // seeds
     ot_dsrom_mtp_lrx_rtt #(.W(SW), .D(FL+RL+4), .ENABLE_RTT(1), .FORWARD_HOPS(FL), .RETURN_HOPS(RL)) a_s (.clk(fclk), .rst_n(rst_n), .l_valid(s_sv), .l_ready(s_sg), .l_data(s_sd),
         .c_valid(bs_v), .c_ready(1'b1), .c_data(bs_d));
+    reg bw_v = 0; reg [USER_W-1:0] bw_d = 0; wire bw_r;                 // rows ready
+    ot_rom_pkg_ctrl_wfc_ltx #(.W(USER_W)) a_w (.clk(fclk), .rst_n(rst_n), .c_valid(bw_v), .c_ready(bw_r), .c_data(bw_d),
+        .l_valid(s_wv), .l_ready(s_wg), .l_data(s_wd));
+    wire bh_v; wire [DW-1:0] bh_d;                                      // draft-head steps
+    ot_dsrom_mtp_lrx_rtt #(.W(DW), .D(RV+FV+4), .ENABLE_RTT(1), .FORWARD_HOPS(RV), .RETURN_HOPS(FV)) a_h (.clk(fclk), .rst_n(rst_n), .l_valid(s_hv), .l_ready(s_hg), .l_data(s_hd),
+        .c_valid(bh_v), .c_ready(1'b1), .c_data(bh_d));
+    reg bq_v = 0; reg [DW-1:0] bq_d = 0; wire bq_r;                     // draft-head results
+    ot_rom_pkg_ctrl_wfc_ltx #(.W(DW)) a_q (.clk(fclk), .rst_n(rst_n), .c_valid(bq_v), .c_ready(bq_r), .c_data(bq_d),
+        .l_valid(s_qv), .l_ready(s_qg), .l_data(s_qd));
 
     // ------------------------------------------------------------------ slow side: VM + S0 core
     reg [FLIT-1:0] vmem [0:63];

@@ -36,7 +36,7 @@ module tb_hgi_dma_record;
         .rec_rdy(rec_rdy), .rec_hdr(cur[127:0]), .rec_a(cur[383:128]), .rec_o(cur[639:384]), .rec_n_a(cur[660:640]),
         .rec_n_o(cur[681:661]), .rec_pos1(cur[702:682]), .rec_done(done), .rec_fault(fault), .halted(halted),
         .lg_mv_v(1'b0), .lg_mv_rdy(), .lg_mv(227'd0), .lg_fence_v(1'b0), .lg_fence_rdy(), .mv_v(mv_v), .mv_rdy(mv_rdy),
-        .mv(mv), .mv_done(mv_done), .mv_fault(1'b0), .mv_src(1'b0), .mv_pdone(1'b0), .mv_fdone(1'b0), .rec_ilist(32'd0), .is_v(), .is_rdy(1'b0), .is_cmd(), .fence_v(fence_v), .fence_rdy(fence_rdy), .fence_done(fence_done));
+        .mv(mv), .mv_done(mv_done), .mv_fault(1'b0), .mv_src(1'b0), .mv_pdone(1'b0), .mv_fdone(1'b0), .fence_v(fence_v), .fence_rdy(fence_rdy), .fence_done(fence_done));
     // legacy identity
     reg [226:0] lmv; reg lv, lf, lr, lfr; integer q, lock_n = 0;
     wire l_mv_v, l_f_v, l_lr, l_lfr, l_rdy, l_done, l_fault; wire [226:0] l_mv;
@@ -44,7 +44,7 @@ module tb_hgi_dma_record;
         .rec_rdy(l_rdy), .rec_hdr(cur[127:0]), .rec_a(cur[383:128]), .rec_o(cur[639:384]), .rec_n_a(cur[660:640]),
         .rec_n_o(cur[681:661]), .rec_pos1(cur[702:682]), .rec_done(l_done), .rec_fault(l_fault), .halted(),
         .lg_mv_v(lv), .lg_mv_rdy(l_lr), .lg_mv(lmv), .lg_fence_v(lf), .lg_fence_rdy(l_lfr), .mv_v(l_mv_v), .mv_rdy(lr),
-        .mv(l_mv), .mv_done(1'b0), .mv_fault(1'b0), .mv_src(1'b0), .mv_pdone(1'b0), .mv_fdone(1'b0), .rec_ilist(32'd0), .is_v(), .is_rdy(1'b0), .is_cmd(), .fence_v(l_f_v), .fence_rdy(lfr), .fence_done(1'b0));
+        .mv(l_mv), .mv_done(1'b0), .mv_fault(1'b0), .mv_src(1'b0), .mv_pdone(1'b0), .mv_fdone(1'b0), .fence_v(l_f_v), .fence_rdy(lfr), .fence_done(1'b0));
     always @(posedge clk) begin
         for (q = 0; q < 227; q = q + 32) lmv[q +: 32] <= $random(seed);
         {lv, lf, lr, lfr} <= $random(seed);

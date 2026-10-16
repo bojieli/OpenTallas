@@ -27,7 +27,6 @@ function automatic [31:0] hgi_used(input [5:0] w);   // used bits of a word (res
         6'd40: hgi_used = 32'h0003FFFF;
         6'd41: hgi_used = 32'h001FFFFF;
         6'd46: hgi_used = 32'h000000FF;
-        6'd47: hgi_used = 32'h00FFFFFF;
         6'd49: hgi_used = 32'hFFFFFFFF;
         6'd53: hgi_used = 32'h0003FFFF;
         6'd56: hgi_used = 32'hFFFFFFFF;
@@ -54,7 +53,6 @@ localparam [9*32-1:0] HGI_RST_C = {HGI_RST_W48, HGI_RST_W47, HGI_RST_W46, HGI_RS
 localparam integer HGI_CP_VOCAB_W = 40, HGI_CP_VOCAB_L = 0, HGI_CP_VOCAB_N = 18;
 localparam integer HGI_CP_CTX_MAX_W = 41, HGI_CP_CTX_MAX_L = 0, HGI_CP_CTX_MAX_N = 21;
 localparam integer HGI_COLL_GROUP_SIZE_W = 46, HGI_COLL_GROUP_SIZE_L = 0, HGI_COLL_GROUP_SIZE_N = 8;
-localparam integer HGI_LINK_SESSION_W = 47, HGI_LINK_SESSION_L = 0, HGI_LINK_SESSION_N = 24;
 function automatic hgi_c_legal(input [5:0] w, input [31:0] d);
     reg ok;
     begin

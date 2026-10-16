@@ -52,19 +52,3 @@ class MemGuard(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-
-
-class Protected(unittest.TestCase):
-    def test_protected_prefix_never_stopped(self):
-        import json as _j
-        d = Path(tempfile.mkdtemp()); (d / "jobs").mkdir()
-        (d / "protected_jobs.json").write_text(_j.dumps({"prefixes": ["bfh_compact"]}))
-        with patch.object(cl, "STATE", d), patch.object(cl, "hosts_table", return_value=[{"name": "hx", "ram_gb": 1000}]), \
-                patch.object(cl, "host_cfg", return_value={"label": "HX"}), patch.object(cl, "log"), patch.object(cl, "kill_own_stage") as k:
-            cl._MEM_GUARD_LAST.clear()
-            j = dict(name="bfh_compact220_col", status="RUNNING", host="hx", stage_tag="route.a1", stage_key="route",
-                     stage_started=iso(0.1), run="/r/x", events=[], spec={"name": "bfh_compact220_col", "peak_ram_gb": 400, "source": {}})
-            cl.save_job(j)
-            self.assertEqual(cl.mem_guard(cl.all_jobs(), F(5)), [])
-            k.assert_not_called()
-            self.assertEqual(cl.stale24_candidates([dict(j, stage_started=iso(30))]), [])

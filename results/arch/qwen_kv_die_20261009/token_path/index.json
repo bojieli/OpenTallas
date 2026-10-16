@@ -5,12 +5,13 @@
    "design": "qwen_kvdie",
    "title": "Qwen3-8B ROM + KV die, 8K context, AR (TP4 pairs)",
    "file": "qwen_kvdie.json",
-   "tok_s": 5038.2,
-   "cycles": 238181.0,
+   "tok_s": 4810.9,
+   "cycles": 249431.0,
    "mtp": {
     "available": false,
     "reason": "no qualified speculative composition implemented"
-   }
+   },
+   "exactness": "stationed-exact on L0-L2 (option-4 masters); die closure pending (2026-10-10): the option-4 actual masters (seq_su_bi ICUT+VRL, ctlm_i, SU stations + endpoint counter) are token-exact on the L0-L2 chain at r22ko4 relays 16/16/16 with the sequencer <-> VM AR read bus and a round-trip-sized read queue (main 6359dc7dc; XMUT and VRL-1 mutants fail); plan of record r22ko4 = 4,908.6 tok/s typical at FEC +100 cycles per all-reduce (4,714.2 at FEC +240) until the FEC term is pinned"
   }
  ]
 }

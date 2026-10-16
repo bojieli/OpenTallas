@@ -100,13 +100,13 @@ class Layout:
                  RK=8, RST=8, DOTR=8, GATE=8, cmp=1024, iwr=32, iq=4096, SELIDX=2048, SLOTKV=1024, SLOTSC=1024, MXC=512, EC=1024,
                  DENC=512, PC=1024, P2=1024, POOL=512, LAT0=512, LAT=512, GCN=512, KIN=128, GKN=128, KN=128, KR=128,
                  LR=512, IK=128, CK=512, ROPE2=64, logits=1352,
-                 IWS=32, SELT=1024, CANDM=4096, MIXRAW=24, OWNL=64, MCNT=8, RGCNT=16)   # G18: frame outputs / merge tables (rows: ids | values)
-
-    ALIAS_SPAN = ["ea", "eg_kv", "eg_rows"] + [f"e{e}.{x}" for e in range(7) for x in "gud"]
+                 IWS=32, SELT=1024, CANDM=4096)   # G18: frame outputs / merge tables (rows: ids | values)
 
     def __init__(self):
         self.vm, cur = {}, 0
-        names = [nm for nm in self.SIZES if nm not in ("ea", "eg_kv", "eg_rows")] + self.ALIAS_SPAN
+        names = list(self.SIZES)
+        for e in range(7):
+            names += [f"e{e}.g", f"e{e}.u", f"e{e}.d"]
         for nm in names:
             n = self.SIZES.get(nm, 2304 if nm.endswith((".g", ".u")) else D)
             cur = -(-cur // 64) * 64
@@ -117,12 +117,6 @@ class Layout:
         # the layer-20 candidate table [ids | values] (2 x 2,048) lives in zpart: zpart is dead between the indexer
         # frame and wo_a; its hazards use the region name zpart (ordered against every zpart use)
         self.vm["CANDT"] = self.vm["zpart"]
-        # the software ROW_GATHER's gather buffer (G21 c = 2: 96 x 2 rows x 512 words) lives in a contiguous span of
-        # FFN / Engram buffers that are dead between the indexer and the attention; its hazards name every buffer of
-        # the span (GALL_NAMES), so it is ordered against all their uses
-        self.vm["GALL"] = self.vm["ea"]
-        span = self.vm["e6.d"] + D - self.vm["ea"]
-        assert span >= RG_C * TP * 512, span
 
     def V(self, name, n, off=0, m=1, stride=0, istride=0, fmt="FP32", ibcast=0):
         return MDesc(space="VM", fmt=fmt, base=self.vm[name] + off, n=n, m=m, stride=stride, istride=istride,
@@ -217,7 +211,7 @@ class Lower:
             add(Rec("SU", "VOP", sut=sut(**t), desc=desc, tag=tag, family=fam), rd, wr, run)
 
         def tab(name):
-            return MDesc(space="HBM", fmt=TABLE_FMT[name], base=TBASE + TABLE_OFF[name], n=TABLE_N[name])
+            return MDesc(space="HBM", fmt="FP32", base=TBASE + TABLE_OFF[name], n=TABLE_N[name])
 
         def mv(op, x_desc, rows, out, n, w_key, fmt, out_fmt, run=True, col0=0, kcols=None, expert_slot=None,
                tag=None, rd=None, wcols=None):
@@ -251,23 +245,7 @@ class Lower:
             if k == "local":
                 fn = op["fn"]
                 w = op.get("which")
-                if fn == "hc_mixes" and self.fuse:
-                    # G22: the 24 mix rows are sharded by the ALL_GATHER even-split rule (24 over 96: ranks 3, 7, ...
-                    # own one row); one exact 24-word gather; every die runs the post stage (sigmoid + Sinkhorn)
-                    mix = "MIXa" if w == "attn" else "MIXf"
-                    hcw = self.W(f"{P}hc_{w}", 1, 1, "bf16")
-                    Bw = MDesc(space="HBM", fmt="BF16", base=hcw["base"], n=1)
-                    lo, hi = 24 * rank // TP, 24 * (rank + 1) // TP
-                    add(Rec("HC", "HC_MIX_ROWS", imm_a=lo, desc=dict(A=V("h", HC * D), B=Bw, O=V("MIXRAW", max(hi - lo, 1),
-                                                                                              off=lo)),
-                            tag=op["tag"] + " rows", family="hc_mixes"), ["h"], ["MIXRAW"], hi > lo)
-                    add(Rec("COLL", "ALL_GATHER", desc=dict(A=V("MIXRAW", 24), O=V("MIXRAW", 24)),
-                            tag=op["tag"] + " gather", family="hc_mixes"), ["MIXRAW"], ["MIXRAW"])
-                    add(Rec("HC", "HC_MIX_POST", desc=dict(A=V("MIXRAW", 24), B=Bw, O=V(mix, 24)),
-                            tag=op["tag"] + " post", family="hc_mixes"), ["MIXRAW"], [mix])
-                    su(f"{w}.res_copy", "hc_mixes", dict(A=V("h", HC * D), O=V("RES", HC * D)), ["h"], ["RES"],
-                       dst=I.DST_VM)
-                elif fn == "hc_mixes":
+                if fn == "hc_mixes":
                     mix = "MIXa" if w == "attn" else "MIXf"
                     hcw = self.W(f"{P}hc_{w}", 1, 1, "bf16")
                     add(Rec("HC", "HC_MIX", desc=dict(
@@ -494,8 +472,6 @@ class Lower:
                     add(Rec("COLL", "TOPK_MERGE", imm_a=op["k"], tag=op["tag"], family="candidates", desc=dict(
                         A=V("CANDT", kc, off=2048), B=U32V(lay.vm["CANDT"], kc), O=U32V(lay.vm["CANDM"], op["k"]),
                         R=V("CANDM", op["k"], off=2048))), ["zpart"], ["CANDM"])
-            elif k == "kv_gather" and self.fuse:
-                self.row_gather_sw(add, op, rank, head)
             elif k == "kv_gather":
                 kk, si = op["elems"] // 512, SOURCES.index(op["src"])
                 add(Rec("COLL", "ROW_GATHER", param=W.KEY_BLOCK, imm_a=kk, imm_b=HEADS, desc=dict(
@@ -509,59 +485,6 @@ class Lower:
             else:
                 raise NotImplementedError(k)
         return b.recs
-
-    # -- the software ROW_GATHER (G21 + G24 provisional), c = 2 slots a gather ----------------------------------------
-    def row_gather_sw(self, add, op, rank, head):
-        """IDX.OWNED -> LOOP (count = ceil(M / 2) from VM) { 2 x indexed DMA.LOAD of this rank's rows -> its GALL
-        segment; one exact ALL_GATHER of 96 x 2 rows; 2 x DMA.STORE of 96 rows to the slot-major array (row j * 96 + r)
-        } -> per 64 list entries: indexed row-stream DMA.LOAD (I = the per-entry table R) -> DMA.STORE to the
-        selected-row store in list order (what ATT C reads).  Head dies only for the last step."""
-        V, lay = self.lay.V, self.lay
-        kk, si = op["elems"] // 512, SOURCES.index(op["src"])
-        c, me = RG_C, rank % TP
-        assert kk % 64 == 0, kk                      # (the chunk-count table holds 64s)
-        src = MDesc(space="HBM", fmt="FP32", base=CKBASE + si * CK_CAP[0], n=512, indexed=1, dyn_mul=2048)
-        add(Rec("DMA", "LOAD", desc=dict(A=MDesc(space="HBM", fmt="U32", base=TBASE + TABLE_OFF["RGCNT"], n=16),
-                                         O=U32V(lay.vm["RGCNT"], 16)), tag="row_gather.counts", family="kv_gather"),
-            [], ["RGCNT"])
-        add(Rec("IDX", "OWNED", param=W.KEY_BLOCK | (TP << 8) | (c << 16), desc=dict(
-            A=U32V(lay.vm["SELIDX"], kk), O=U32V(lay.vm["OWNL"], RG_SLOTS), R=U32V(lay.vm["SELT"], kk),
-            D=U32V(lay.vm["MCNT"], 2)), tag="row_gather.owned", family="kv_gather"), ["SELIDX"], ["OWNL", "SELT", "MCNT"])
-        add(Rec("CTL", "LOOP", param=MC.LOOP_COUNT_FROM_VM, imm_a=lay.vm["MCNT"] + 1, tag="row_gather.slots",
-                family="kv_gather"), ["MCNT"], [])
-        for t in range(c):
-            add(Rec("DMA", "LOAD", desc=dict(
-                A=src, O=V("GALL", 512, off=me * c * 512 + t * 512),
-                I=MDesc(space="VM", fmt="U32", base=lay.vm["OWNL"] + t, n=1, lstride=1)),
-                tag=f"row_gather.load{t}", family="kv_gather"), ["OWNL", "kvstore"], GALL_NAMES)
-        add(Rec("COLL", "ALL_GATHER", desc=dict(A=V("GALL", TP * c * 512), O=V("GALL", TP * c * 512)),
-                tag="row_gather.gather", family="kv_gather"), GALL_NAMES, GALL_NAMES)
-        for t in range(c):
-            add(Rec("DMA", "STORE", desc=dict(
-                A=V("GALL", 512, off=t * 512, m=TP, stride=c * 512),
-                O=MDesc(space="HBM", fmt="FP32", base=GBASE + t * TP * 2048, n=512, m=TP, stride=2048,
-                        lstride=c * TP * 2048)), tag=f"row_gather.store{t}", family="kv_gather"),
-                GALL_NAMES, [f"GROWS{op['src']}"])
-        add(Rec("CTL", "ENDLOOP", tag="row_gather.slots", family="kv_gather"), [], [])
-        add(Rec("DMA", "FENCE", tag="row_gather.fence (slot-major rows visible)", family="kv_gather"),
-            [f"GROWS{op['src']}"], [f"GROWS{op['src']}"])
-        # list order: 64 entries a chunk through VM (head dies: the attention's selected-row store)
-        nch = -(-kk // 64)
-        for q in range(nch):
-            cnt = min(64, kk - 64 * q)
-            ib = lay.vm["SELT"] + 64 * q
-            add(Rec("DMA", "LOAD", desc=dict(
-                A=MDesc(space="HBM", fmt="FP32", base=GBASE, n=512, indexed=1, dyn_mul=2048, n_sel=MC.HGI.NSEL_FROM_VM),
-                O=V("GALL", 512, m=64, stride=512),
-                I=MDesc(space="VM", fmt="U32", base=ib, n=cnt, stride=lay.vm["RGCNT"] + q - ib)),
-                tag=f"row_gather.list{q}", family="kv_gather"), ["SELT", "RGCNT", f"GROWS{op['src']}"], GALL_NAMES,
-                head)
-            add(Rec("DMA", "STORE", desc=dict(
-                A=V("GALL", 512, m=cnt, stride=512),
-                O=MDesc(space="HBM", fmt="FP32", base=SBASE + si * SELB + 64 * q * 2048, n=512, m=cnt, stride=2048)),
-                tag=f"row_gather.place{q}", family="kv_gather"), GALL_NAMES, [f"SELROWS{op['src']}"], head)
-        add(Rec("DMA", "FENCE", tag="row_gather.selected_fence (list-order rows visible)", family="kv_gather"),
-            [f"SELROWS{op['src']}"], [f"SELROWS{op['src']}"], head)
 
     # -- Engram (layers 1, 14): rows by host-hashed ids through indexed descriptors, decoded on the SU ----------------
     def engram_fetch(self, add, su, L):
@@ -683,7 +606,7 @@ class Lower:
     def rmsnorm(self, su, tag, x, n, g, out, gname, run=True):
         """dshbm_baseline_measure.lower_rmsnorm as SU records: ss, rsqrt(ss / n + eps), bf16(w * (x * rs))."""
         V = self.lay.V
-        su(f"{tag}.gain", tag, dict(A=MDesc(space="HBM", fmt=TABLE_FMT[gname], base=TBASE + TABLE_OFF[gname], n=n),
+        su(f"{tag}.gain", tag, dict(A=MDesc(space="HBM", fmt="FP32", base=TBASE + TABLE_OFF[gname], n=n),
                                     O=V(g, n)), [], [g], run=run, dst=I.DST_VM)
         seg = 8 if n % 64 == 0 else 1
         su(f"{tag}.ss", tag, dict(A=V(x, n // seg, m=seg, stride=n // seg), R=V("SS", 1)), [x], ["SS"], run=run,
@@ -771,15 +694,8 @@ class Lower:
            e1=I.E1_MULIMM, imm2=f32u(m.route_scale), dst=I.DST_VM)
 
 
-GBASE = (1 << 35) + (1 << 33)        # the software ROW_GATHER's slot-major gathered rows (row j * 96 + r), per die
-RG_C = 2                             # slots per ALL_GATHER (hgi-takeover 10-10: 2 slots = 393 KB VM)
-RG_SLOTS = 64                        # gathered-row capacity per source pass (M <= 64; a larger M faults)
-GALL_NAMES = ["GALL", "ea", "eg_kv", "eg_rows"] + [f"ea.s{e}" for e in range(7)] + \
-    [f"e{e}.{x}" for e in range(7) for x in "gud"]
-
 TABLE_N = {}
 TABLE_OFF = {}
-TABLE_FMT = {}
 CK_CAP = [0, 0]          # per-die row-store bytes per KV source; index-key rows per source (set in main)
 
 
@@ -796,8 +712,7 @@ def build_tables(m, st, L, pos, rank):
              ("ROPE", np.concatenate([cos, sin])), ("BIAS", m.lw(L, "ffn.gate.bias")),
              ("SINK", m.lw(L, "attn.attn_sink")[rank:rank + 1] if rank < HEADS else np.zeros(1)),
              ("WIN", np.concatenate([np.asarray(st.win[L], F).reshape(-1), np.zeros(512, F)])),
-             ("norm.weight", m.w["norm.weight"]), ("ONE", np.ones(1, F)),
-             ("RGCNT", np.full(16, 64, dtype=np.uint32).view(F))]
+             ("norm.weight", m.w["norm.weight"]), ("ONE", np.ones(1, F))]
     if L in m.engram.layer_ids:
         li = m.engram.layer_ids.index(L)
         ids = m.engram.hashes(hist_of[0], li).reshape(-1)             # host-provided per token (G13)
@@ -819,21 +734,12 @@ def build_tables(m, st, L, pos, rank):
     for name, arr in items:
         a = np.asarray(arr, dtype=F).reshape(-1)
         off = -(-off // 32) * 32
-        # norm gains are BF16 checkpoint weights: stored as BF16 (the FUSED norms take a BF16 gain; die bench F7);
-        # exact, checked here
-        fmt = "BF16" if name.endswith("norm.weight") else "FP32"
-        if fmt == "BF16":
-            if not np.array_equal(MC.A.to_bf16(a).view(np.uint32), a.view(np.uint32)):
-                raise ValueError(f"table {name}: not exactly BF16")
-            raw = MC.encode_fmt(a, "BF16")
-        else:
-            raw = a.view(np.uint8)
-        TABLE_OFF[name], TABLE_N[name], TABLE_FMT[name] = off, a.size, fmt
-        blobs.append((off, raw))
-        off += raw.size
-    buf = np.zeros(-(-off // 32) * 32, dtype=np.uint8)
-    for o, raw in blobs:
-        buf[o:o + raw.size] = raw
+        TABLE_OFF[name], TABLE_N[name] = off, a.size
+        blobs.append((off, a))
+        off += a.size * 4
+    buf = np.zeros(off, dtype=np.uint8)
+    for o, a in blobs:
+        buf[o:o + a.nbytes] = a.view(np.uint8)
     return buf
 
 
@@ -882,53 +788,6 @@ def ds_units(m, man, golib):
             M.vm_write(r.desc["O"], die, L, np.concatenate([np.asarray(pre, F), np.asarray(post, F),
                                                             np.asarray(comb, F).reshape(-1)]))
 
-    def hc_layer_of(r):
-        e, _, _, _ = man.find(r.desc["B"].base)
-        pre_, which = e["key"].rsplit("hc_", 1)
-        parts = pre_.strip(".").split(".")
-        return (int(parts[1]) if parts[0] == "layers" else m.L + int(parts[1])), which
-
-    def hc_mix_rows(M, r, L):
-        """HC_MIX_ROWS (G22): rows imm_a .. imm_a + O.n - 1 of the raw mixes (x . fn row) x rsqrt(mean(x^2) + eps)
-        -- the golden's per-row arithmetic (matvec_c rows are independent dot products)"""
-        Lw, which = hc_layer_of(r)
-        fn = m.lw(Lw, f"hc_{which}_fn")
-        for die in M.dies:
-            rd = M.rec_of(die, r)
-            flat = M.read(rd.desc["A"], die, L).astype(F)
-            rr = V_.rsqrt(V_.add(V_.div(V_.split_sum(V_.mul(flat, flat), V_.HC_SS_SPLIT), F(flat.size)), m.eps))
-            mixes = V_.mul(V_.matvec_c(fn, flat, V_.HC_SPLIT, cls="he"), rr)
-            lo, n = rd.imm_a, rd.desc["O"].n
-            M.vm_write(rd.desc["O"], die, L, np.asarray(mixes[lo:lo + n], F))
-
-    def hc_mix_post(M, r, L):
-        """HC_MIX_POST (G22): the 24 gathered raw mixes -> [pre | post | comb] (golden hc_mixes after the matvec)"""
-        Lw, which = hc_layer_of(r)
-        scale, base = (m.lw(Lw, f"hc_{which}_{s_}") for s_ in ("scale", "base"))
-        h = m.hc
-        for die in M.dies:
-            mixes = M.read(M.rec_of(die, r).desc["A"], die, L).astype(F)
-            pre = V_.add(V_.sigmoid(V_.add(V_.mul(mixes[:h], scale[0]), base[:h])), m.hc_eps)
-            post = V_.mul(V_.sigmoid(V_.add(V_.mul(mixes[h:2 * h], scale[1]), base[h:2 * h])), F(2.0))
-            comb = V_.add(V_.mul(mixes[2 * h:], scale[2]), base[2 * h:]).reshape(h, h)
-            mx = np.max(comb, axis=1, keepdims=True)
-            e = V_.exp(V_.add(comb, V_.neg(mx)))
-            rs = V_.seqsum([e[:, k] for k in range(h)])
-            comb = V_.add(V_.div(e, rs[:, None]), m.hc_eps)
-
-            def cols(cm):
-                cs = V_.seqsum([cm[j, :] for j in range(h)])
-                return V_.div(cm, V_.add(cs, m.hc_eps)[None, :])
-
-            def rows(cm):
-                rs_ = V_.seqsum([cm[:, k] for k in range(h)])
-                return V_.div(cm, V_.add(rs_, m.hc_eps)[:, None])
-            comb = cols(comb)
-            for _ in range(m.sinkhorn_iters - 1):
-                comb = cols(rows(comb))
-            M.vm_write(M.rec_of(die, r).desc["O"], die, L, np.concatenate([np.asarray(pre, F), np.asarray(post, F),
-                                                                           np.asarray(comb, F).reshape(-1)]))
-
     def hc_pre_norm(M, r, L):
         for die in M.dies:
             h = M.read(r.desc["A"], die, L).reshape(HC, D)
@@ -972,16 +831,6 @@ def ds_units(m, man, golib):
     def topk(M, r, L):
         return MC.u_idx_topk(M, r, L)
 
-    def idx_owned(M, r, L):
-        """IDX.OWNED (generic unit) + the selection statistics the timing uses (M of the group)"""
-        MC.u_idx_owned(M, r, L)
-        d0 = M.dies[0]
-        rd = M.rec_of(d0, r)
-        db, _, _, _, _ = M.eff(rd.desc["D"], d0, L)
-        st = getattr(M, "row_gather_stats", None)
-        if st is not None and d0.rank == 0:              # (records run die by die; rank 0's M is the group's)
-            st.append(dict(tag=r.tag, k=rd.desc["A"].n, G=TP, max_owned=int(d0.vm[db]), rounds=int(d0.vm[db + 1])))
-
     base_load, base_store = MC.UNITS[("DMA", "LOAD")], MC.UNITS[("DMA", "STORE")]
 
     def dma_load(M, r, L):
@@ -1019,19 +868,19 @@ def ds_units(m, man, golib):
                 golib.st.ckv[src][g] = M.read(r.desc["A"], die, L)   # the indexer engine's row count / model
             golib.st.n[src] = g + 1
 
-    U.update({("IDX", "INDEX"): index_frame, ("IDX", "TOPK"): topk, ("IDX", "OWNED"): idx_owned,
+    U.update({("IDX", "INDEX"): index_frame, ("IDX", "TOPK"): topk,
               ("COLL", "TOPK_MERGE"): topk_merge, ("DMA", "LOAD"): dma_load, ("DMA", "STORE"): dma_store,
               ("SM", "MATVEC"): sm, ("HC", "HC_MIX"): hc_mix, ("FUSED", "HC_PRE_NORM"): hc_pre_norm,
-              ("FUSED", "HC_POST"): hc_post, ("HC", "HC_MIX_ROWS"): hc_mix_rows, ("HC", "HC_MIX_POST"): hc_mix_post})
+              ("FUSED", "HC_POST"): hc_post})
     return U
 
 
-def _eff_trace(Mach, die, r, L=0):
+def _eff_trace(Mach, die, r):
     """The effective operands the dispatcher hands the unit (spec 3.3; indexed ids read from VM before the record runs)."""
     cur, Mach.cur = Mach.cur, r
     dies, Mach.dies = Mach.dies, [die]
     try:
-        return {k: list(Mach.eff(d, die, L)) + [d.space, d.fmt] for k, d in r.desc.items()}
+        return {k: list(Mach.eff(d, die, 0)) + [d.space, d.fmt] for k, d in r.desc.items()}
     finally:
         Mach.cur, Mach.dies = cur, dies
 
@@ -1049,12 +898,8 @@ def schedule_layer(rank_recs, ops, L):
         x.src_key = None if not r.src else f"{r.src[0]}:{r.src[1]}"
         x.src_extra = [f"{r.src[0]}:{e}" for e in r.src[2]] if r.src and len(r.src) > 2 else []
         # hazards = the union over ranks (a record that is CTL.NOP here may run on another rank)
-        x.hz_reads = sorted({n for rr in rank_recs for n in getattr(rr[i], "reads", ())}) + ["~BARRIER"]  # legality
+        x.hz_reads = sorted({n for rr in rank_recs for n in getattr(rr[i], "reads", ())})     # legality
         x.hz_writes = sorted({n for rr in rank_recs for n in getattr(rr[i], "writes", ())})
-        if x.unit == "CTL" and x.op in ("LOOP", "ENDLOOP", "END", "FENCE"):
-            x.hz_writes = x.hz_writes + ["~BARRIER"]       # loops / fences stay put; nothing crosses them
-        if x.unit == "CTL" and x.op == "LOOP" and x.param & MC.LOOP_COUNT_FROM_VM:
-            x.dyn_count = 7                                 # scheduling estimate (M ~ 13 at c = 2); data-dependent
         x.reads, x.writes = list(getattr(r, "reads", ())), list(getattr(r, "writes", ()))   # rank 0's own
         r0.append(x)
     opd = {f"{L}:{o.get('id')}": o for o in ops}
@@ -1062,18 +907,6 @@ def schedule_layer(rank_recs, ops, L):
     sig = hashlib.sha256(json.dumps([[x.unit, x.op, x.tag, x.hz_reads, x.hz_writes, x.reads, x.writes,
                                       {k: [d.space, d.n, d.m] for k, d in x.desc.items()}] for x in r0],
                                     default=str).encode()).hexdigest()
-    # optional on-disk cache (HGI_SCHED_CACHE dir): keyed by the structure AND the cost model's source, so parallel
-    # single-layer runs can seed a full run; a hit is the same permutation the search would return
-    cdir = os.environ.get("HGI_SCHED_CACHE")
-    cfile = None
-    if cdir:
-        here = Path(__file__).resolve().parent
-        cm = hashlib.sha256(b"".join((here / f).read_bytes() for f in
-                                     ("timing.py", "ds_native_timing.py", "calibration.json"))).hexdigest()[:16]
-        cfile = Path(cdir) / f"{sig[:32]}-{cm}-{POS_DEFAULT[0]}.json"
-        if sig not in SCHED_CACHE and cfile.exists():
-            c_ = json.loads(cfile.read_text())
-            SCHED_CACHE[sig] = (c_["perm"], dict(c_["info"], disk_cache=cfile.name))
     if sig in SCHED_CACHE:
         perm, info0 = SCHED_CACHE[sig]
         info = dict(info0, reused_from_layer=info0.get("layer"))
@@ -1083,11 +916,6 @@ def schedule_layer(rank_recs, ops, L):
         perm = [x._cid for x in out]
         info = dict(info, layer=L)
         SCHED_CACHE[sig] = (perm, info)
-        if cfile is not None:
-            cfile.parent.mkdir(parents=True, exist_ok=True)
-            tmp = cfile.with_suffix(f".tmp{os.getpid()}")
-            tmp.write_text(json.dumps(dict(perm=perm, info=info), default=str))
-            tmp.replace(cfile)
     assert sorted(perm) == list(range(len(r0)))
     res = []
     for recs in rank_recs:
@@ -1108,50 +936,26 @@ SCHED_CACHE = {}
 
 def run_per_die(Mach, progs, units, pos, token, hook=None, trace=None):
     """Execute per-die programs of identical structure: record k of die d on die d; collectives on all dies.
-    Loops (CTL.LOOP / ENDLOOP, level 0 only; count static or from VM, G24) run the same on every die.
-    trace: a per-die list that receives [k, L, unit.op, {operand: [base, n, m, stride, istride, space, fmt]}] for every
+    trace: a per-die list that receives [k, unit.op, {operand: [base, n, m, stride, istride, space, fmt]}] for every
     dispatched (non-CTL) record."""
     nrec = len(progs[0])
     assert all(len(p) == nrec for p in progs)
     dies = Mach.dies
     Mach.doorbell(token, pos)
-    loops = []
-    k = 0
-    while k < nrec:
+    for k in range(nrec):
         r0 = progs[0][k]
         if any((p[k].unit, p[k].op) != (r0.unit, r0.op) and p[k].unit != "CTL" and r0.unit != "CTL" for p in progs):
             raise MC.Fault(3, f"per-die images differ in structure at record {k}")
-        L = loops[-1]["i"] if loops else 0
-        for die in dies:
-            die.dyn[4] = L
-        if r0.unit == "CTL" and r0.op == "LOOP":
-            Mach.cur = r0
-            cnt = MC.loop_count(Mach, r0)
-            if cnt == 0:
-                k = MC.matching_endloop(progs[0], k) + 1
-                continue
-            loops.append(dict(start=k + 1, count=cnt, i=0))
-            k += 1
-            continue
-        if r0.unit == "CTL" and r0.op == "ENDLOOP":
-            lp = loops[-1]
-            lp["i"] += 1
-            if lp["i"] < lp["count"]:
-                k = lp["start"]
-                continue
-            loops.pop()
-            k += 1
-            continue
         if trace is not None:
             for i, die in enumerate(dies):
                 r = progs[i][k]
                 if r.unit != "CTL":
-                    trace[i].append([k, L, f"{r.unit}.{r.op}", _eff_trace(Mach, die, r, L)])
+                    trace[i].append([k, f"{r.unit}.{r.op}", _eff_trace(Mach, die, r)])
         if r0.unit == "COLL":                       # one collective across the group, each die with its own record
             Mach.die_recs = {d.rank: progs[i][k] for i, d in enumerate(dies)}
             Mach.cur = r0
             try:
-                units[(r0.unit, r0.op)](Mach, r0, L)
+                units[(r0.unit, r0.op)](Mach, r0, 0)
             finally:
                 Mach.die_recs = None
         else:
@@ -1162,12 +966,11 @@ def run_per_die(Mach, progs, units, pos, token, hook=None, trace=None):
                 Mach.dies = [die]
                 Mach.cur = r
                 try:
-                    units[(r.unit, r.op)](Mach, r, L)
+                    units[(r.unit, r.op)](Mach, r, 0)
                 finally:
                     Mach.dies = dies
         if hook:
             hook(k, r0)
-        k += 1
 
 
 def main():
@@ -1257,7 +1060,7 @@ def main():
     for d in dies:
         d.vm[lay.vm["h"]:lay.vm["h"] + HC * D] = np.asarray(h0, F).reshape(-1).view(np.uint32)
         d.vm[lay.vm["PRE"]:lay.vm["PRE"] + 4] = np.asarray(pre0, F).view(np.uint32)
-    sel_hbm, g_hbm = {}, {}
+    sel_hbm = {}
     results = []
     for L in list(layers) + (["head"] if a.head else []):
         tl = time.time()
@@ -1295,9 +1098,6 @@ def main():
                 sel_hbm[r] = np.zeros(SELB * len(SOURCES), dtype=np.uint8)
             d.hbm.add(SBASE, sel_hbm[r], "SELROWS")
             d.hbm.add(CKBASE, ck_regs[r], "CKSTORE")
-            if r not in g_hbm:                     # the software ROW_GATHER's slot-major rows (j * 96 + r), M <= RG_SLOTS
-                g_hbm[r] = np.zeros(-(-RG_SLOTS // RG_C) * RG_C * TP * 2048, dtype=np.uint8)
-            d.hbm.add(GBASE, g_hbm[r], "GROWS")
         Mach = MC.Machine(dies, units)
         Mach.row_gather_stats = []
         snaps = {}
@@ -1395,8 +1195,7 @@ def main():
             fams[f"{r_.unit}.{r_.op}"] = fams.get(f"{r_.unit}.{r_.op}", 0) + 1
         results.append(dict(layer=L, kind=js["kind"], verdict="pass" if ok else "fail", fault=fault, regions=regs,
                             records_per_die=len(progs[0]), image_bytes_all_dies=nbytes, unit_ops=fams,
-                            schedule=sched_info,
-                            row_gather=Mach.row_gather_stats,
+                            schedule=sched_info, row_gather=Mach.row_gather_stats,
                             wall_s=round(time.time() - tl, 1)))
         print(f"L{L:02d} {js['kind']:28s} {'PASS' if ok else 'FAIL'} records {len(progs[0])} "
               f"{time.time() - tl:.0f} s fault {fault} bad {[x['region'] for x in regs if not x['bit_exact']]}",

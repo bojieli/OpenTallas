@@ -180,10 +180,7 @@ class WalkCost:
 
     def __init__(self):
         import dshbm_1m_allmeasured as DA
-        from hgi_sim.timing import fp
         self.DA = DA
-        # re-floorplan (10-10): index score array ingest scales with its lanes (the measured basis is 64 keys / cycle)
-        DA.Local.INGEST_SCALE = fp("idx_score_lanes", 64) / fp("idx_score_lanes_basis", 64)
         self.sm = DA.WC.SMTable([json.loads((DA.ROOT / "results/rtl/w19_sm_real_ops.json").read_text()),
                                  json.loads((DA.BASE / "sm_real_ops.json").read_text())], "ar")
         self.su1, _, _, _ = DA.su_tables()

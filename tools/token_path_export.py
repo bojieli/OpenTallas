@@ -293,12 +293,7 @@ KVD = "results/arch/qwen_kv_die_20261009/reprice.json"
 # qwen-1010/a 2026-10-10: r22ko4 (option 4) is the Qwen ROM plan of record; FEC base +100 a collective (bound +240)
 O4P = "results/arch/qwen_kv_die_20261009/reprice_o4.json"
 O4 = json.loads((ROOT / O4P).read_text()) if (ROOT / O4P).exists() else None
-if O4 is not None and O4.get("kv_basis"):
-    KVD = O4["kv_basis"]        # the KV-die basis the option-4 price is applied to (qwen-1010/b relays + leaf plan + DQ)
-# the extra board-leg FEC per all-reduce: tools/qwen_kv_die/fec_derivation.json (headline 0: the collective LAT 339 already
-# carries the RS-inclusive board hop; band 0 / +100 / +240)
-O4_FEC = json.loads((ROOT / "tools/qwen_kv_die/fec_derivation.json").read_text())["extra_fec_cycles_per_allreduce"]["headline"] \
-    if (ROOT / "tools/qwen_kv_die/fec_derivation.json").exists() else 100
+O4_FEC = 100
 
 
 EXACTNESS_QWEN_ROM = 'stationed-exact on L0-L2 (option-4 masters); die closure pending (2026-10-10): the option-4 actual masters (seq_su_bi ICUT+VRL, ctlm_i, SU stations + endpoint counter) are token-exact on the L0-L2 chain at r22ko4 relays 16/16/16 with the sequencer <-> VM AR read bus and a round-trip-sized read queue (main 6359dc7dc; XMUT and VRL-1 mutants fail); plan of record r22ko4 = 4,908.6 tok/s typical at FEC +100 cycles per all-reduce (4,714.2 at FEC +240) until the FEC term is pinned'
@@ -432,10 +427,10 @@ def qwen(kv=None):
                                               note="ROM-die split structure (pin stations + compensation + SU ML) + the r22k issue / status relays, "
                                                    "L0-L2 chain vs base (token-exact + split_relays.json); charged on the layer's last op")]
             if kv and O4 is not None and oid in ("allreduce1", "allreduce2"):
-                adders = list(adders) + ([] if O4_FEC == 0 else [
+                adders = list(adders) + [
                     dict(item="board_leg_fec", cycles=O4_FEC, grade="priced",
                          record="budget audit qrom_ar_link_fec (DS RS(544,514) rule; bound +240 = HBM 0.2 us rule)",
-                         note="board-SerDes FEC per all-reduce: half of each TP4 ring is a board leg; base +100, bound +240")]) + [
+                         note="board-SerDes FEC per all-reduce: half of each TP4 ring is a board leg; base +100, bound +240"),
                     dict(item="seq_vm_ar_path", cycles=O4["vm_ar"]["stages_r22ko4"], grade="priced", record=O4P + " vm_ar",
                          note="sequencer <-> VM all-reduce word path relays (r22ko4 1 / 1 / 2), once per all-reduce")]
             li = Q_LINK[oid] if i else ("embedding row -> VM" if L == 0 else "layer hand-off (registered, 1 cycle)")
@@ -484,15 +479,8 @@ def qwen(kv=None):
                         measured_cycles=None, priced_cycles=None)
         if O4 is not None:
             headline.update(basis=f"{O4P} (plan of record r22ko4: option-4 control plane, stationed-exact masters; FEC +{O4_FEC} "
-                                  f"a collective, tools/qwen_kv_die/fec_derivation.json) over {KVD}", source=O4P + " cases.typical",
-                            fec_band_tok_s={f"fec+{f}": round(1.2e9 / (total + 72 * (f - O4_FEC)), 1) for f in (0, 100, 240)},
-                            fec_cycles_per_allreduce=O4_FEC, fec_derivation="tools/qwen_kv_die/fec_derivation.json")
-            if O4.get("kv_refresh_provisional"):
-                kr = O4["kv_refresh_provisional"]
-                headline.update(kv_die_status="PROVISIONAL", kv_refresh_provisional=dict(
-                    note=kr["status"], step_increase_per_layer=kr["step_increase_per_layer"],
-                    tok_s=dict(mean=round(1.2e9 / (total + 36 * kr["step_increase_per_layer"]["mean"]), 1),
-                               worst=round(1.2e9 / (total + 36 * kr["step_increase_per_layer"]["worst"]), 1))))
+                                  f"a collective) over {KVD}", source=O4P + " cases.typical",
+                            fec_bound_tok_s=round(1.2e9 / (total + 72 * (240 - O4_FEC)), 1), fec_cycles_per_allreduce=[O4_FEC, 240])
         notes = ["EXACTNESS: " + EXACTNESS_QWEN_ROM + ".",
                  f"COST: {kv['per_user_cost']['statement']} (reprice.json per_user_cost / silicon).",
                  "Owner decision 2026-10-09: ROM die + KV die pair; attention (near-HBM row engines) on the KV die; only q, the "

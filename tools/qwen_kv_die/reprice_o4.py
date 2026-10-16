@@ -26,7 +26,6 @@ D = ROOT / 'results/arch/qwen_kv_die_20261009'
 CLOCK = 1.2e9
 AR_PER_TOKEN = 72
 FEC = dict(ds_rule=100, hbm_rule=240)
-FECD = json.loads((ROOT / 'tools/qwen_kv_die/fec_derivation.json').read_text())   # extra FEC per all-reduce: headline 0
 
 
 def sha16(p):
@@ -39,13 +38,8 @@ def main():
     ap.add_argument('--o4-name', default='o4')
     ap.add_argument('--extra', type=str, nargs='*', default=[], help='further L3 runs (sensitivities), name=path')
     ap.add_argument('--out', type=Path, required=True)
-    ap.add_argument('--kv-basis', type=Path, default=D / 'reprice.json',
-                    help="the KV-die reprice the option-4 term is applied to (e.g. (b)'s relay + leaf-plan basis)")
-    ap.add_argument('--refresh-step', type=int, nargs=2, default=None, metavar=('MEAN', 'WORST'),
-                    help='PROVISIONAL timed-REFpb KV step increase per layer (cycles, mean / worst)')
     a = ap.parse_args()
-    a.kv_basis = a.kv_basis.resolve()
-    rp = json.loads(a.kv_basis.read_text())
+    rp = json.loads((D / 'reprice.json').read_text())
     sr = json.loads((D / 'split_relays.json').read_text())
     o4rec = json.loads((D / 'rom_r22ko4.json').read_text())
     svrec = json.loads((D / 'rom_r22ksv.json').read_text())
@@ -64,7 +58,7 @@ def main():
                     vs_s22ml7=dict(L0=sc['L0'] - ref['L0'], L1=sc['L1'] - ref['L1']))
     o4 = run_of(a.o4)
     out = dict(schema='opentallas.qwen-kv-die.reprice-o4.v1', date='2026-10-10', clock_hz=CLOCK,
-               inputs={str(p.relative_to(ROOT)): sha16(p) for p in (a.kv_basis, D / 'split_relays.json',
+               inputs={str(p.relative_to(ROOT)): sha16(p) for p in (D / 'reprice.json', D / 'split_relays.json',
                                                                       D / 'rom_r22ko4.json', D / 'rom_r22ksv.json')} | {str(a.o4): sha16(a.o4)},
                r22k_relay_term=dict(run=sr['adopted_for_price'], L0=adopted['L0'], layer=adopted['L1'],
                                     token=adopted['L0'] + 35 * adopted['L1']),
@@ -88,9 +82,7 @@ def main():
             r22k_fec_vmar_tok_s=round(CLOCK / (base + fec + vmar_r22k), 1),
             r22k_fecb_vmar_tok_s=round(CLOCK / (base + fec_b + vmar_r22k), 1),
             o4_fec_vmar_tok_s=round(CLOCK / (tok + fec + vmar_o4), 1),
-            o4_fecb_vmar_tok_s=round(CLOCK / (tok + fec_b + vmar_o4), 1),
-            r22k_fec0_vmar_tok_s=round(CLOCK / (base + vmar_r22k), 1),
-            o4_fec0_vmar_tok_s=round(CLOCK / (tok + vmar_o4), 1))
+            o4_fecb_vmar_tok_s=round(CLOCK / (tok + fec_b + vmar_o4), 1))
     out['vm_ar'] = dict(per_token_r22k=vmar_r22k, per_token_o4=vmar_o4, stages_r22ksv=vm_ar(svrec), stages_r22ko4=vm_ar(o4rec),
                         note='the sequencer <-> VM all-reduce word path (read request, word back, write) was not in the r22k '
                              'die or price; each of the 72 all-reduces pays its die relays once (the stream rate is kept: '
@@ -112,22 +104,9 @@ def main():
     c = out['cases']['typical']
     out['headline'] = dict(o4_tok_s=c['o4_tok_s'], o4_fec_tok_s=c['o4_fec_tok_s'], r22k_tok_s=c['r22k_tok_s'],
                            r22k_fec_tok_s=c['r22k_fec_tok_s'], o4_exact=o4['exact'],
-                           fec_headline_cycles=FECD['extra_fec_cycles_per_allreduce']['headline'],
-                           fec_verdict=FECD['verdict'][:120],
-                           price_fec0=dict(r22k=c['r22k_fec0_vmar_tok_s'], o4=c['o4_fec0_vmar_tok_s']),
                            price_fec100=dict(r22k=c['r22k_fec_vmar_tok_s'], o4=c['o4_fec_vmar_tok_s']),
                            price_fec240=dict(r22k=c['r22k_fecb_vmar_tok_s'], o4=c['o4_fecb_vmar_tok_s']),
                            layer_relay_cycles=dict(r22k=adopted['L1'], o4=o4['vs_s22ml7']['L1']))
-    if a.refresh_step:
-        mean_c, worst_c = (36 * x for x in a.refresh_step)
-        tok0 = CLOCK / c['o4_fec0_vmar_tok_s']
-        out['kv_refresh_provisional'] = dict(
-            status='PROVISIONAL: DQ128 / P8 + SRAM row buffer on timed REFpb HBM (qwen-1010/b); the controller RTL refreshes in '
-                   'a fixed rotation, so these may be optimistic; refresh-aware REFpb RTL in progress',
-            step_increase_per_layer=dict(mean=a.refresh_step[0], worst=a.refresh_step[1]),
-            o4_fec0_tok_s=dict(mean=round(CLOCK / (tok0 + mean_c), 1), worst=round(CLOCK / (tok0 + worst_c), 1)))
-        out['headline']['kv_refresh_provisional'] = out['kv_refresh_provisional']['o4_fec0_tok_s']
-    out['kv_basis'] = str(a.kv_basis.relative_to(ROOT))
     a.out.write_text(json.dumps(out, indent=1) + '\n')
     print(json.dumps(out['headline']))
 

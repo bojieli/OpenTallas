@@ -37,8 +37,6 @@ TAKEOVER = Path(os.environ.get("CL_TAKEOVER", "/home/ubuntu/claude-takeover-2026
 FAILTRIG = TAKEOVER / "failtrig"
 HIST = cl.STATE / "stuckscan_hist.json"
 LIVE = ("RUNNING", "ECO", "ECO_INSTALL")
-STALL_SP_S = 4 * 3600          # synth / floorplan / place step stall (coordinator 2026-10-10)
-STALL_SP_QUIET_S = 1800
 SIGNOFF_PS = 833.333
 HUNG_QUIET_S = 45 * 60
 # coordinator 2026-10-08: CRITICAL_PATH item 1 (S81 BF and its half-rate fallbacks) is never auto-stopped: report only
@@ -879,18 +877,6 @@ def diagnose(j, o, hist, jobs, closed, now):
             return d
         d["why"].append(f"quiet {quiet / 60:.0f} min but {cpu} cores busy")
         d["kind"] = "quiet_busy"
-    # 3b) SYNTH / PLACE STALL (coordinator 2026-10-10: hgi_adp_hc_unit_a 14 h in yosys on a flattened flop array,
-    # hgi_adp_pub_b 7 h in placement): a synthesis / floorplan / placement step past STALL_SP_S with its log quiet for
-    # > STALL_SP_QUIET_S (no progress), or past 2 x STALL_SP_S regardless, is a design problem (array flattening,
-    # unplaceable outline), not a slow run -> terminal EARLY_FAIL_STALL, reported to the owner as redesign work.
-    cur = (b or {}).get("current") or ""
-    if b and j["status"] == "RUNNING" and cur.startswith(("1_", "2_", "3_")):
-        el = now - step_start(b)
-        if el > STALL_SP_S and ((quiet is not None and quiet > STALL_SP_QUIET_S) or el > 2 * STALL_SP_S):
-            d.update(action="early_fail", kind="stall", verdict="EARLY_FAIL_STALL")
-            d["why"].append(f"{cur[:-8]} for {el / 3600:.1f} h (log quiet {(quiet or 0) / 60:.0f} min): synthesis / "
-                            f"placement stall past {STALL_SP_S / 3600:.0f} h -> redesign (flattened arrays, outline)")
-            return d
     # 4) stalled margin chase (old flow, no hold guard)
     hd = (b or {}).get("hold") or {}
     if b and hd.get("cur_last") and not hd.get("guard") and (b.get("current") or "").startswith(("4_1_cts", "5_1_grt")):

@@ -34,13 +34,8 @@ proc ot_of_sink {net} {
 set ot_list {}; set ot_n 0; set ot_ni 0; set ot_skip 0
 set cand {}
 set ot_seen [dict create]
-# OT_OFLOP_PORT_RE (ds-1010 2026-10-10, optional): anchor only the ports whose name matches this regexp (default: all).
-# coll lane LCR: anchoring the 1,027 link-side rx/tx gearbox flops as well stretched the endpoint's seq/fill logic across
-# the tile (lcrpe -560 exp_seq -> fill); only the new core-face credit links (li_* / lo_*) need anchoring there.
-set ot_port_re [expr {[info exists ::env(OT_OFLOP_PORT_RE)] ? $::env(OT_OFLOP_PORT_RE) : {}}]
 foreach bt [$ot_blk getBTerms] {
   set io [$bt getIoType]
-  if {$ot_port_re ne "" && ![regexp -- $ot_port_re [$bt getName]]} continue
   set net [$bt getNet]; if {$net eq "NULL"} continue
   set ff ""
   if {$io eq "OUTPUT"} {

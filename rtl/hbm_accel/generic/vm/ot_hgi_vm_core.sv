@@ -301,21 +301,14 @@ module ot_hgi_vm_core #(
     // response flop: the client pipeline's 4 edges
     reg [NB-1:0] r1_v, rm_v, r2_v; reg [311:0] r2_raw [0:NB-1]; reg [1:0] r1_g [0:NB-1], rm_g [0:NB-1], r2_g [0:NB-1];
     reg [33:0] dwr, dwc; reg [15:0] ce_w; reg ue_w;
-    // hardcore-1010/c: with RP = 0 the body below constant-folds to nothing, iverilog then finds no sensitivity and never
-    // runs the block (ce_w / ue_w stay x -> ce = x: tb_hgi_vm_core 'fault-free phase reported ce=x'); RP = 0 now drives
-    // constants (same logic as before for every RP: no wide read lane, no wide-lane correction count)
-    if (RP > 0) begin : g_cew
-        always @* begin                               // wide-lane corrected / uncorrectable words this edge
-            ce_w = 16'd0; ue_w = 1'b0;
-            for (integer lb = 0; lb < NB; lb = lb + 1)
-                if (r2_v[lb]) for (integer q = 0; q < 8; q = q + 1) begin
-                    dwc = dec(r2_raw[lb][q*39 +: 39]);
-                    if (dwc[32]) ce_w = ce_w + 16'd1;
-                    if (dwc[33]) ue_w = 1'b1;
-                end
-        end
-    end else begin : g_cew0
-        always_comb begin ce_w = 16'd0; ue_w = 1'b0; end   // always_comb runs at time 0 (an @* with no inputs never does)
+    always @* begin                                   // wide-lane corrected / uncorrectable words this edge
+        ce_w = 16'd0; ue_w = 1'b0;
+        for (integer lb = 0; lb < NB; lb = lb + 1)
+            if (RP > 0 && r2_v[lb]) for (integer q = 0; q < 8; q = q + 1) begin
+                dwc = dec(r2_raw[lb][q*39 +: 39]);
+                if (dwc[32]) ce_w = ce_w + 16'd1;
+                if (dwc[33]) ue_w = 1'b1;
+            end
     end
     reg [(W2>0?W2:1)-1:0] w2_d1;
     always @(posedge clk or negedge rst_n)

@@ -88,12 +88,6 @@ def main():
                 res[key] = dict(error="no OT_CORNER line to append before")
                 continue
             out[k:k] = [f"read_sdc /meas/{n}" for n in app]
-        # UNDER-CONSTRAINED census (drive-1010 2026-10-10): how many registers are clocked by a defined clock
-        census = ['puts "OT_REGS [llength [all_registers]]"',
-                  'if {[llength [all_clocks]]} { puts "OT_REGS_CLOCKED [llength [all_registers -clock [all_clocks]]]" } '
-                  'else { puts "OT_REGS_CLOCKED 0" }']
-        k = next((i for i, ln in enumerate(out) if ln.startswith('puts "OT_CORNER')), len(out))
-        out[k:k] = census
         text = "\n".join(out) + "\n"
         if corner == "ss":
             text = re.sub(r"_(R|L|SL)VT_SS_nldm", r"_\1VT_TT_nldm", text).replace("_ss.lib", "_tt.lib")
@@ -109,8 +103,6 @@ def main():
         res[key] = dict(corner="tt" if corner == "ss" else "ff", worst_slack_ps=ps(g(s, "OT_WS")), tns_ps=ps(g(s, "OT_TNS")),
                         worst_reg_to_reg_slack_ps=ps(g(s, "OT_WS_R2R")), worst_input_to_reg_slack_ps=ps(g(s, "OT_WS_I2R")),
                         worst_output_port_slack_ps=ps(g(s, "OT_WS_OUT")), violating_d_pins=g(s, "OT_VIOL_D_PINS"),
-                        registers=int(g(s, "OT_REGS")) if g(s, "OT_REGS") else None,
-                        registers_clocked=int(g(s, "OT_REGS_CLOCKED")) if g(s, "OT_REGS_CLOCKED") else None,
                         ioref={m[0]: dict(clock=m[1], mean=float(m[2]), min=float(m[3]), max=float(m[4]), n=int(m[5]), kind=m[6])
                                for m in re.findall(r"^OT_IOREF (\S+) (\S+) mean (\S+) min (\S+) max (\S+) n (\d+) (\S+)", s, re.M)},
                         # FLOW-FIX-0410: active-edge census of the boundary sinks per real clock (io_ref_routed.sdc)

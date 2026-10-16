@@ -28,9 +28,7 @@ module ot_hgi_coll_record #(
     parameter integer PIPE = 0,            // hgi-unitrate: 1 = ALL_GATHER records pipeline (epoch-tagged; the block
                                            // ot_hgi_coll_ep PIPE retires them in order), every other op waits until
                                            // no pipelined gather is open
-    parameter integer RGXHW = 0,           // 1: ROW_GATHER param[8] runs the hardware form (G25, ot_hgi_coll_rgx_src / _sink)
-    parameter integer RFMT = 1             // 0: no row formatter on this die (hfd_coll RGXHW views): ROW_GATHER param[8] = 0 faults (E_RANGE)
-                                           //    instead of waiting on an unbound formatter (hgi-1010/c)
+    parameter integer RGXHW = 0            // 1: ROW_GATHER param[8] runs the hardware form (G25, ot_hgi_coll_rgx_src / _sink)
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -239,7 +237,6 @@ module ot_hgi_coll_record #(
                                 ep_pf <= MUT_PF ? n_a_q[15:0] : a_rowwords[15:0];
                                 ep_a_base <= a_q[47:8]; ep_o_base <= o_base_q; st <= S_EPGO;
                             end
-                        end else if (dc_op == 6'd5 && RFMT == 0) begin rec_fault <= 1'b1; st <= S_HALT;
                         end else if (dc_op == 6'd5) begin
                             rf_group_size <= dc_g; rf_owner_block <= dc_blk; rf_destinations <= dc_dest;
                             rf_row_count <= dc_rows; rf_row_words <= a_rowwords[15:0];

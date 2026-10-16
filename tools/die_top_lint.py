@@ -126,7 +126,7 @@ QWEN_R22KCS = dict(QWEN_R21C, before_relays=_R22K.surgery_cs)
 # r22ks (qwen-1010/d 2026-10-10, opt-in): r22k with seam-free default pin faces (qwen_rom_fulldie_b3r2._abutter): the
 # r22k4 full-die GRT put all 159,448 overflow in one window where the tree top's ty and the VM's rb3-rb5 left the
 # zero-width tree-top / VM abutment seam
-QWEN_R22KS = dict(QWEN_R22K, before_relays=_R22K.surgery_s, seam_free=True)   # + non-overlapping face pin groups (qwen-1010/a)
+QWEN_R22KS = dict(QWEN_R22K, seam_free=True)
 # r22ko4 (qwen-1010/a 2026-10-10, opt-in): r22k with the option-4 control plane (tree-top control tile + 4 upper tiles,
 # seq_su by the SU, constant buffer / ROM group tiles; rom_r22k._option4), seam-free pin faces as r22ks (the control
 # tile's S face meets the VM)
@@ -836,7 +836,7 @@ def dirs_hbm(bid, cls, bits, eps, j, port):
 
 def dirs_hbm_base(bid, cls, bits, eps, j, port, V):
     if cls in ('x_trunk', 'x_leaf', 'result_leaf', 'result_trunk', 'expert_req', 'kv_rows', 'attn_chain', 'attn_root',
-               'idx_sel',                    # R25GQ 10-10: one class a net type, endpoint 0 drives
+               'cp_mtp', 'idx_sel',          # R25GQ 10-10: one class a net type, endpoint 0 drives
                'attn_kv', 'attn_out', 'attn_operand', 'attn_input', 'attn_query', 'attn_packet'):
         return [(0, bits, 'out' if j == 0 else 'in')]
     if cls == 'weight':     # line + tag + valid down, ready back (TF7 / r15 sm_rtl_w: no ready)
@@ -857,13 +857,6 @@ def dirs_hbm_base(bid, cls, bits, eps, j, port, V):
         return seg
     if cls == 'hub':        # r17 fwd hub chains: a station's a / b port drives when it is the bus driver (j = 0)
         return [(0, bits, 'out' if port.startswith('t_') or (j == 0 and port in ('a', 'b')) else 'in')]
-    if cls == 'link_flit':          # R25GQ decision (b): coll <-> link endpoint TU flit bus, {v, flit 545, credit} each
-        #                             way (endpoint 0 = coll), then session[23:0] down and {fault, locked} up
-        d_, u_ = ('out', 'in') if j == 0 else ('in', 'out')
-        seg = [(0, 547, d_), (547, 1094, u_)]
-        if bits >= 1120:
-            seg += [(1094, 1118, d_), (1118, 1120, u_)]
-        return seg
     if cls in ('link', 'host'):                     # endpoint 0 = collective / loader: tx out, rx in
         if cls == 'host' and V.get('host_h') and bits == sum(V['host_h']):
             # R25GQ ([svc] 2026-10-10): the host port is sized exactly (HOST_H_HGI tx / rx); the even split gave the

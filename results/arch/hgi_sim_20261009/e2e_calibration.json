@@ -1,80 +1,68 @@
 {
  "schema": "opentallas.hgi_sim.e2e_calibration.v1",
- "generated_utc": "2026-10-11T01:35:40Z",
+ "generated_utc": "2026-10-10T10:14:58Z",
  "reports": [
-  "../results/rtl/hgi_e2e_20261010/runs/ds_L0_g24_allreal_4bc04ba93/report.json"
+  "../results/arch/hgi_sim_20261009/e2e_reports_cad18afa7/ds_L0_coll_dma_idx_quant_f40k40/report.json",
+  "../results/arch/hgi_sim_20261009/e2e_reports_cad18afa7/qwen_L0_coll_dma_sfu_su_f40k40/report.json"
  ],
  "result": {
   "runs": {
    "ds_L0": {
-    "run": "../results/rtl/hgi_e2e_20261010/runs/ds_L0_g24_allreal_4bc04ba93/report.json",
-    "cycles": 263722,
-    "real_records": 62
+    "run": "../results/arch/hgi_sim_20261009/e2e_reports_cad18afa7/ds_L0_coll_dma_idx_quant_f40k40/report.json",
+    "cycles": 20467,
+    "real_records": 23
+   },
+   "qwen_L0": {
+    "run": "../results/arch/hgi_sim_20261009/e2e_reports_cad18afa7/qwen_L0_coll_dma_sfu_su_f40k40/report.json",
+    "cycles": 35818,
+    "real_records": 22
    }
   },
   "per_unit": {
-   "FUSED.HC_PRE_NORM": {
-    "ds_L0": {
-     "rtl_service": 37998.0,
-     "sim_cost": 1298.6,
-     "ratio": 29.261,
-     "records": 2
-    }
-   },
    "COLL.ALL_GATHER": {
     "ds_L0": {
-     "rtl_service": 10467.0,
-     "sim_cost": 5522.2,
-     "ratio": 1.895,
-     "records": 14
+     "rtl_service": 9019.0,
+     "sim_cost": 3991.2,
+     "ratio": 2.26,
+     "records": 12
     }
    },
    "DMA.LOAD": {
     "ds_L0": {
-     "rtl_service": 389.0,
-     "sim_cost": 625.7,
-     "ratio": 0.622,
+     "rtl_service": 1763.0,
+     "sim_cost": 626.8,
+     "ratio": 2.813,
      "records": 6
-    }
-   },
-   "SU.VOP": {
-    "ds_L0": {
-     "rtl_service": 85887.0,
-     "sim_cost": 3230.0,
-     "ratio": 26.59,
-     "records": 33
+    },
+    "qwen_L0": {
+     "rtl_service": 5838.0,
+     "sim_cost": 634.3,
+     "ratio": 9.204,
+     "records": 6
     }
    },
    "FUSED.QDQ_FP8": {
     "ds_L0": {
-     "rtl_service": 396.0,
+     "rtl_service": 381.0,
      "sim_cost": 24.0,
-     "ratio": 16.5,
+     "ratio": 15.875,
      "records": 1
     }
    },
    "DMA.KVWB_DS": {
     "ds_L0": {
-     "rtl_service": 229.0,
+     "rtl_service": 376.0,
      "sim_cost": 60.0,
-     "ratio": 3.817,
+     "ratio": 6.267,
      "records": 1
     }
    },
    "COLL.GROUP_REDUCE_MCAST": {
     "ds_L0": {
-     "rtl_service": 1204.0,
+     "rtl_service": 1205.0,
      "sim_cost": 1325.9,
-     "ratio": 0.908,
+     "ratio": 0.909,
      "records": 1
-    }
-   },
-   "FUSED.HC_POST": {
-    "ds_L0": {
-     "rtl_service": 129466.0,
-     "sim_cost": 445.4,
-     "ratio": 290.674,
-     "records": 2
     }
    },
    "IDX.TOPK": {
@@ -91,118 +79,47 @@
      "sim_cost": 60.0,
      "ratio": 0.117,
      "records": 1
+    },
+    "qwen_L0": {
+     "rtl_service": 7.0,
+     "sim_cost": 60.0,
+     "ratio": 0.117,
+     "records": 1
+    }
+   },
+   "SU.VOP": {
+    "qwen_L0": {
+     "rtl_service": 3869.0,
+     "sim_cost": 1336.0,
+     "ratio": 2.896,
+     "records": 10
+    }
+   },
+   "DMA.STORE": {
+    "qwen_L0": {
+     "rtl_service": 258.0,
+     "sim_cost": 60.0,
+     "ratio": 4.3,
+     "records": 2
+    }
+   },
+   "COLL.ALL_REDUCE_SUM": {
+    "qwen_L0": {
+     "rtl_service": 2460.0,
+     "sim_cost": 2700.0,
+     "ratio": 0.911,
+     "records": 2
+    }
+   },
+   "SFU.GLU": {
+    "qwen_L0": {
+     "rtl_service": 151.0,
+     "sim_cost": 60.0,
+     "ratio": 2.517,
+     "records": 1
     }
    }
   },
-  "production_width_units": {
-   "COLL.ALL_GATHER": {
-    "rtl_service": 2949.0,
-    "sim_cost": 4117.4,
-    "ratio": 0.716,
-    "records": 13,
-    "runs": [
-     "/home/ubuntu/wt/hgi-reprice/results/rtl/hgi_unit_tput_20261010/coll/report.json"
-    ],
-    "grade": "measured_unit_bench"
-   },
-   "HC.HC_MIX_ROWS": {
-    "rtl_service": 24197.0,
-    "sim_cost": 193.3,
-    "ratio": 125.155,
-    "records": 4,
-    "runs": [
-     "/home/ubuntu/wt/hgi-reprice/results/rtl/hgi_unit_tput_20261010/hc/ds_L0_tput/report.json"
-    ],
-    "grade": "production_width"
-   },
-   "HC.HC_MIX_POST": {
-    "rtl_service": 2769.0,
-    "sim_cost": 2160.0,
-    "ratio": 1.282,
-    "records": 4,
-    "runs": [
-     "/home/ubuntu/wt/hgi-reprice/results/rtl/hgi_unit_tput_20261010/hc/ds_L0_tput/report.json"
-    ],
-    "grade": "production_width"
-   },
-   "HC.HC_MIX": {
-    "rtl_service": 75320.0,
-    "sim_cost": 1160.0,
-    "ratio": 64.931,
-    "records": 1,
-    "runs": [
-     "/home/ubuntu/wt/hgi-reprice/results/rtl/hgi_unit_tput_20261010/hc/ds_L0_tput/report.json"
-    ],
-    "grade": "production_width"
-   },
-   "IDX.TOPK": {
-    "rtl_service": 7277.0,
-    "sim_cost": 1698.0,
-    "ratio": 4.286,
-    "records": 6,
-    "runs": [
-     "/home/ubuntu/wt/hgi-reprice/results/rtl/hgi_unit_tput_20261010/idx/ds_L0_tput/report.json"
-    ],
-    "grade": "production_width"
-   },
-   "IDX.OWNED": {
-    "rtl_service": 6994.0,
-    "sim_cost": 6964.0,
-    "ratio": 1.004,
-    "records": 3,
-    "runs": [
-     "/home/ubuntu/wt/hgi-reprice/results/rtl/hgi_unit_tput_20261010/idx/ds_L0_tput/report.json"
-    ],
-    "grade": "production_width"
-   },
-   "FUSED.QDQ_FP8": {
-    "rtl_service": 1399.0,
-    "sim_cost": 96.0,
-    "ratio": 14.573,
-    "records": 4,
-    "runs": [
-     "/home/ubuntu/wt/hgi-reprice/results/rtl/hgi_unit_tput_20261010/qdq/ds_L0_tput/report.json"
-    ],
-    "grade": "production_width"
-   },
-   "FUSED.QDQ_FP4_E8M0": {
-    "rtl_service": 196.0,
-    "sim_cost": 24.0,
-    "ratio": 8.167,
-    "records": 2,
-    "runs": [
-     "/home/ubuntu/wt/hgi-reprice/results/rtl/hgi_unit_tput_20261010/qdq/ds_L0_tput/report.json"
-    ],
-    "grade": "production_width"
-   },
-   "FUSED.QDQ_FP4_E4M3": {
-    "rtl_service": 700.0,
-    "sim_cost": 48.0,
-    "ratio": 14.583,
-    "records": 2,
-    "runs": [
-     "/home/ubuntu/wt/hgi-reprice/results/rtl/hgi_unit_tput_20261010/qdq/ds_L0_tput/report.json"
-    ],
-    "grade": "production_width"
-   },
-   "SU.VOP": {
-    "rtl_service": 3063.0,
-    "sim_cost": 2870.0,
-    "ratio": 1.067,
-    "records": 27,
-    "runs": [
-     "/home/ubuntu/wt/hgi-reprice/results/rtl/hgi_unit_tput_20261010/su/report.json"
-    ],
-    "grade": "measured_unit_bench"
-   }
-  },
-  "unit_reports": [
-   "/home/ubuntu/wt/hgi-reprice/results/rtl/hgi_unit_tput_20261010/coll/report.json",
-   "/home/ubuntu/wt/hgi-reprice/results/rtl/hgi_unit_tput_20261010/hc/ds_L0_tput/report.json",
-   "/home/ubuntu/wt/hgi-reprice/results/rtl/hgi_unit_tput_20261010/idx/ds_L0_tput/report.json",
-   "/home/ubuntu/wt/hgi-reprice/results/rtl/hgi_unit_tput_20261010/qdq/ds_L0_tput/report.json",
-   "/home/ubuntu/wt/hgi-reprice/results/rtl/hgi_unit_tput_20261010/su/report.json"
-  ],
   "open_defects": {
    "COLL": "F3 whole-row gathers + F4 PFMAX 64 (die build faults; PFMAX 512 what-if measured)",
    "DMA": "F6 mover boot-path rate (one element / 4 edges + a kport round trip a sector miss)",
@@ -211,160 +128,61 @@
   "sensitivity": {
    "ds_1M": {
     "scale": {
-     "FUSED.HC_PRE_NORM": 29.261,
-     "COLL.ALL_GATHER": 0.716,
-     "DMA.LOAD": 0.622,
-     "SU.VOP": 1.067,
-     "FUSED.QDQ_FP8": 14.573,
-     "DMA.KVWB_DS": 3.817,
-     "COLL.GROUP_REDUCE_MCAST": 0.908,
-     "FUSED.HC_POST": 290.674,
-     "IDX.TOPK": 4.286,
-     "DMA.FENCE": 0.117,
-     "HC.HC_MIX_ROWS": 125.155,
-     "HC.HC_MIX_POST": 1.282,
-     "HC.HC_MIX": 64.931,
-     "IDX.OWNED": 1.004,
-     "FUSED.QDQ_FP4_E8M0": 8.167,
-     "FUSED.QDQ_FP4_E4M3": 14.583
+     "COLL.ALL_GATHER": 2.26,
+     "DMA.LOAD": 2.813,
+     "FUSED.QDQ_FP8": 15.875,
+     "DMA.KVWB_DS": 6.267,
+     "COLL.GROUP_REDUCE_MCAST": 0.909,
+     "IDX.TOPK": 4.477,
+     "DMA.FENCE": 0.117
     },
-    "calibration_coverage": {
-     "measured_ops": [
-      "COLL.ALL_GATHER",
-      "COLL.GROUP_REDUCE_MCAST",
-      "DMA.FENCE",
-      "DMA.KVWB_DS",
-      "DMA.LOAD",
-      "FUSED.HC_POST",
-      "FUSED.HC_PRE_NORM",
-      "FUSED.QDQ_FP8",
-      "HC.HC_MIX_POST",
-      "IDX.OWNED",
-      "IDX.TOPK",
-      "SU.VOP"
-     ],
-     "uncalibrated_ops": [
-      "ARGMAX.LOCAL",
-      "ATT.PV",
-      "ATT.QK",
-      "COLL.ARGMAX_MERGE",
-      "COLL.TOPK_MERGE",
-      "DMA.STORE",
-      "IDX.INDEX",
-      "SM.MATVEC"
-     ],
-     "grade_per_op": {
-      "ARGMAX.LOCAL": "model (stub in RTL bench or unmeasured)",
-      "ATT.PV": "model (stub in RTL bench or unmeasured)",
-      "ATT.QK": "model (stub in RTL bench or unmeasured)",
-      "COLL.ALL_GATHER": "measured_unit_bench",
-      "COLL.ARGMAX_MERGE": "model (stub in RTL bench or unmeasured)",
-      "COLL.GROUP_REDUCE_MCAST": "e2e_single_record",
-      "COLL.TOPK_MERGE": "model (stub in RTL bench or unmeasured)",
-      "DMA.FENCE": "e2e_single_record",
-      "DMA.KVWB_DS": "e2e_single_record",
-      "DMA.LOAD": "e2e_measured",
-      "DMA.STORE": "model (stub in RTL bench or unmeasured)",
-      "FUSED.HC_POST": "e2e_reduced_width",
-      "FUSED.HC_PRE_NORM": "e2e_reduced_width",
-      "FUSED.QDQ_FP8": "production_width",
-      "HC.HC_MIX_POST": "production_width",
-      "IDX.INDEX": "model (stub in RTL bench or unmeasured)",
-      "IDX.OWNED": "production_width",
-      "IDX.TOPK": "production_width",
-      "SM.MATVEC": "model (stub in RTL bench or unmeasured)",
-      "SU.VOP": "measured_unit_bench"
-     },
-     "scope": "measured unit-service ratios replayed on the modelled token; uncalibrated operations retain their model costs (not a measured whole-token rate)"
-    },
-    "fixed_rtl_cycles": 696743.8,
-    "fixed_rtl_tok_s": 1722.3,
-    "current_rtl_cycles": 7312820.1,
-    "current_rtl_tok_s": 164.1,
+    "fixed_rtl_cycles": 543456.7,
+    "fixed_rtl_tok_s": 2208.1,
+    "current_rtl_cycles": 805993.6,
+    "current_rtl_tok_s": 1488.8,
     "scale_dma_full_bw": {
-     "FUSED.HC_PRE_NORM": 29.261,
-     "COLL.ALL_GATHER": 0.716,
-     "SU.VOP": 1.067,
-     "FUSED.QDQ_FP8": 14.573,
-     "COLL.GROUP_REDUCE_MCAST": 0.908,
-     "FUSED.HC_POST": 290.674,
-     "IDX.TOPK": 4.286,
-     "HC.HC_MIX_ROWS": 125.155,
-     "HC.HC_MIX_POST": 1.282,
-     "HC.HC_MIX": 64.931,
-     "IDX.OWNED": 1.004,
-     "FUSED.QDQ_FP4_E8M0": 8.167,
-     "FUSED.QDQ_FP4_E4M3": 14.583
+     "COLL.ALL_GATHER": 2.26,
+     "FUSED.QDQ_FP8": 15.875,
+     "COLL.GROUP_REDUCE_MCAST": 0.909,
+     "IDX.TOPK": 4.477
     },
-    "dma_full_bw_assumption": "DMA service ratios omitted: full-bandwidth successor budget, not a measured DMA result",
-    "current_rtl_dma_full_bw_cycles": 7317741.9,
-    "current_rtl_dma_full_bw_tok_s": 164.0
+    "current_rtl_dma_full_bw_cycles": 795263.9,
+    "current_rtl_dma_full_bw_tok_s": 1508.9
    },
    "qwen_P8191": {
     "scale": {
-     "COLL.ALL_GATHER": 0.716,
-     "HC.HC_MIX_ROWS": 125.155,
-     "HC.HC_MIX_POST": 1.282,
-     "HC.HC_MIX": 64.931,
-     "IDX.TOPK": 4.286,
-     "IDX.OWNED": 1.004,
-     "FUSED.QDQ_FP8": 14.573,
-     "FUSED.QDQ_FP4_E8M0": 8.167,
-     "FUSED.QDQ_FP4_E4M3": 14.583,
-     "SU.VOP": 1.067
+     "DMA.LOAD": 9.204,
+     "DMA.FENCE": 0.117,
+     "SU.VOP": 2.896,
+     "DMA.STORE": 4.3,
+     "COLL.ALL_REDUCE_SUM": 0.911,
+     "SFU.GLU": 2.517
     },
-    "calibration_coverage": {
-     "measured_ops": [
-      "SU.VOP"
-     ],
-     "uncalibrated_ops": [
-      "ARGMAX.LOCAL",
-      "ATT.PV",
-      "ATT.QK",
-      "COLL.ALL_REDUCE_SUM",
-      "COLL.ARGMAX_MERGE",
-      "DMA.FENCE",
-      "DMA.LOAD",
-      "DMA.STORE",
-      "FUSED.ROW_NORM",
-      "SFU.GLU",
-      "SM.MATVEC"
-     ],
-     "grade_per_op": {
-      "ARGMAX.LOCAL": "model (stub in RTL bench or unmeasured)",
-      "ATT.PV": "model (stub in RTL bench or unmeasured)",
-      "ATT.QK": "model (stub in RTL bench or unmeasured)",
-      "COLL.ALL_REDUCE_SUM": "model (stub in RTL bench or unmeasured)",
-      "COLL.ARGMAX_MERGE": "model (stub in RTL bench or unmeasured)",
-      "DMA.FENCE": "model (stub in RTL bench or unmeasured)",
-      "DMA.LOAD": "model (stub in RTL bench or unmeasured)",
-      "DMA.STORE": "model (stub in RTL bench or unmeasured)",
-      "FUSED.ROW_NORM": "model (stub in RTL bench or unmeasured)",
-      "SFU.GLU": "model (stub in RTL bench or unmeasured)",
-      "SM.MATVEC": "model (stub in RTL bench or unmeasured)",
-      "SU.VOP": "measured_unit_bench"
-     },
-     "scope": "measured unit-service ratios replayed on the modelled token; uncalibrated operations retain their model costs (not a measured whole-token rate)"
-    },
-    "fixed_rtl_cycles": 1269120.1,
-    "fixed_rtl_tok_s": 945.5,
-    "current_rtl_cycles": 1272696.8,
-    "current_rtl_tok_s": 942.9,
+    "fixed_rtl_cycles": 1258136.1,
+    "fixed_rtl_tok_s": 953.8,
+    "current_rtl_cycles": 1347272.6,
+    "current_rtl_tok_s": 890.7,
     "scale_dma_full_bw": {
-     "COLL.ALL_GATHER": 0.716,
-     "HC.HC_MIX_ROWS": 125.155,
-     "HC.HC_MIX_POST": 1.282,
-     "HC.HC_MIX": 64.931,
-     "IDX.TOPK": 4.286,
-     "IDX.OWNED": 1.004,
-     "FUSED.QDQ_FP8": 14.573,
-     "FUSED.QDQ_FP4_E8M0": 8.167,
-     "FUSED.QDQ_FP4_E4M3": 14.583,
-     "SU.VOP": 1.067
+     "SU.VOP": 2.896,
+     "COLL.ALL_REDUCE_SUM": 0.911,
+     "SFU.GLU": 2.517
     },
-    "dma_full_bw_assumption": "DMA service ratios omitted: full-bandwidth successor budget, not a measured DMA result",
-    "current_rtl_dma_full_bw_cycles": 1272696.8,
-    "current_rtl_dma_full_bw_tok_s": 942.9
+    "current_rtl_dma_full_bw_cycles": 1344071.5,
+    "current_rtl_dma_full_bw_tok_s": 892.8
+   },
+   "dflash_b16": {
+    "fixed_rtl": {
+     "step_cycles": 5364526.1,
+     "tok_s_tau_8_01": 1791.8
+    },
+    "current_rtl_dma_full_bw": {
+     "step_cycles": 7626115.5,
+     "tok_s_tau_8_01": 1260.4
+    },
+    "current_rtl": {
+     "step_cycles": 7646687.4,
+     "tok_s_tau_8_01": 1257.0
+    }
    }
   },
   "reading": "ratios > 1 are the RTL's extra cycles over the simulator's price on the same records; the HBM rates published by reprice assume the FIXED RTL (simulator tables); 'current_rtl' is what the token would cost with today's RTL units (open defects listed)"

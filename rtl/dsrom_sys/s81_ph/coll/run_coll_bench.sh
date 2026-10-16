@@ -20,10 +20,4 @@ P=$S/rtl/dsrom_sys/s81_ph
   --Mdir obj > build.log 2>&1 ) || { echo "BUILD_FAIL" > $O/$L.log; tail -30 $O/$L/build.log >> $O/$L.log; cat $O/$L.log; exit 2; }
 $O/$L/obj/Vtb_s81ph_coll_sys > $O/$L.log 2>&1
 grep -E "CYCLES|TB_S81PH_COLL_SYS" $O/$L.log | tail -3
-# COLL_MAX_CYCLES (ds-1010 2026-10-10, optional): a PASS that took more than this many DUT cycles fails -- go-back-N
-# retransmission keeps a broken endpoint transaction-exact (link EP RXPIPE mutant: PASS at 39,544 vs 3,011 cycles).
-if [ -n "${COLL_MAX_CYCLES:-}" ]; then
-  c=$(grep -oE "dut_last [0-9]+" $O/$L.log | tail -1 | awk '{print $2}')
-  if [ -z "$c" ] || [ "$c" -gt "$COLL_MAX_CYCLES" ]; then echo "TB_S81PH_COLL_SYS FAIL cycles ${c:-none} > bound $COLL_MAX_CYCLES" | tee -a $O/$L.log; exit 1; fi
-fi
 grep -q "TB_S81PH_COLL_SYS PASS" $O/$L.log

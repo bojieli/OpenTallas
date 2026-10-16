@@ -268,46 +268,6 @@ def arcs_insertion(mst, view, mi, libpath=None, parts=None):
     return [0.0, 0.0, 0.0]
 
 
-BF_COMPOSE = ROOT / 'results/rtl/s81_bf_arch_20261009/compose/compose.json'
-
-
-def bf_front_tap(masters, lat, by, root=ROOT, compose=None):
-    """ds-1010 2026-10-10 (owner: hierarchical full-rate BF adopted): the BF front's balanced clock tap.  The routed
-    front (ot_s81_bf_front) has a shallower tree than its two routed columns (ot_v41_bf_col): mean insertion TT 275.2 vs
-    642.7, FF 221.0 vs 513.0 ps (compose.json, from the closed ETMs), so the die tree taps the front LATER than the
-    columns by the deficit (TT 367.5 / FF 292.0 = set_clock_latency -source on the front tap, the interior insertion the
-    columns spend; design standard for edge / face taps).  Flop arrivals of front and columns are then equal, which is
-    what the kit's balanced model already gives: an interim (pin = flop) view keeps planned + D on every pin, a closed
-    view gets planned + D - its in-arc insertion (balance_latency), i.e. the front pin lands the deficit after the
-    column pins by construction.  Recorded here as the die clock plan's tap target per front clock pin."""
-    fronts = sorted(k_ for k_ in lat if by[k_.split('/')[0]].master == 'dsfd_bf_front')
-    if not fronts:
-        return None
-    cp = Path(compose) if compose else root / BF_COMPOSE.relative_to(ROOT)
-    if not cp.exists():
-        raise FileNotFoundError(f'--bf-hier die without the composed BF record {cp}')
-    cj = json.loads(cp.read_text())
-    tap = {c: round(cj['corners'][c]['bal_latency']['u_front'], 1) for c in ('tt', 'ff')}
-    ins = {c: {b: round((v['min'] + v['max']) / 2, 1) for b, v in cj['corners'][c]['insertion'].items() if b in ('u_front', 'u_col0')}
-           for c in ('tt', 'ff')}
-    views = {m_: masters.get(m_, {}).get('view', 'interim') for m_ in ('dsfd_bf_front', 'dsfd_bf_col')}
-    rec = dict(front_clock_pins=len(fronts), tap_source_latency_ps=tap, block_mean_insertion_ps=ins,
-               ss='no SS ETM of the routed BF blocks: the SS tap scales with the column tree (not measured)',
-               views=views, record=str(cp),
-               basis=('compact die (--bf-hier-compact) timed with the col600 composed tap until the compact blocks close '
-                      'and their compose record is passed (--bf-compose)' if getattr(S, 'BF_HIER', None) == 450.144 and not compose
-                      else 'composed record of the bound BF blocks'),
-               model=('interim BF views (pin = flop): front and column flops already arrive together; the physical tap '
-                      'target is the column pin latency + tap_source_latency_ps' if 'interim' in views.values() else
-                      'closed BF views: balance_latency delivers the front pin tap_source_latency_ps after its columns'))
-    if all(v == 'closed' for v in views.values()):
-        col = sorted(k_ for k_ in lat if by[k_.split('/')[0]].master == 'dsfd_bf_col')
-        f0 = next(iter(fronts)); c0 = next(k_ for k_ in col if k_.split('/')[0] == f0.split('/')[0] + 'w')
-        d = [lat[f0][i] - lat[c0][i] for i in (2, 1)]
-        rec['closed_check_ps'] = dict(tt=round(d[0], 1), ff=round(d[1], 1))
-    return rec
-
-
 def co_delay(lib):
     """the cfifo's ck -> co clock pass (rising, smallest load) from its view lib: the column clock root arrives that
     much after the cfifo ck pin (0 when the lib has no co arc, e.g. an interim cfifo)"""
@@ -395,8 +355,6 @@ def main():
                     help='closure-loop routed block clock insertion: the in-arc insertion of closed / assembled views, '
                          'subtracted from their planned pin latency (balanced die tree, balance_latency)')
     ap.add_argument('--require-qualified-collective', action='store_true', help='reject an unqualified opt-in split3CR collective instead of writing an interim planning kit')
-    ap.add_argument('--bf-compose', type=Path, help='composed BF pair record (bf_hier_compose_sta.py compose.json) of the '
-                    'die\'s BF blocks: the front clock tap; default the col600 record')
     ap.add_argument('--index-out', type=Path, help='also write the master -> view index (JSON) here')
     a = ap.parse_args()
     S.apply_options(S.die_options(argparse.ArgumentParser()).parse_args(shlex.split(a.s81_opts) + ['--die', a.die]))
@@ -530,9 +488,6 @@ def main():
             (a.out / f'latency_{corner}.tcl').write_text(''.join(
                 f'set_clock_latency {v[ci]:.1f} [get_pins -quiet {{{k_} {k_}[0]}}]\n' for k_, v in sorted(lat.items())))
         rec['tt_latency'] = 'estimate: mean of the CTS-validated SS and FF sink insertion'
-        tap = bf_front_tap(rec['masters'], lat, by, a.views_root.resolve(), a.bf_compose)
-        if tap:
-            rec['bf_front_tap'] = tap
         rec['clock_plan'] = dict(file=str(a.clock_plan), sinks=len(sinks), planned=sum(1 for s in sinks if f'{s[1]}/{s[2]}' in si),
                                  nearest=len(lat) - sum(1 for s in sinks if f'{s[1]}/{s[2]}' in si))
     # with the CTS plan: setup 60 + 25 plan tolerance, hold 25 + 25 plan tolerance (rule H1: the die-link hold term

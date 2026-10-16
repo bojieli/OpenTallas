@@ -860,9 +860,6 @@ def ds41_simulate(detail=True):
                 r.src_key = None if not x["src"] else f"{x['src'][0]}:{x['src'][1]}"
                 r.src_extra = [f"{x['src'][0]}:{e}" for e in x["src"][2]] if x["src"] and len(x["src"]) > 2 else []
                 one.append(r)
-            for r in one:                    # VM-count loops (G24): template estimate (M ~ 13 at c = 2)
-                if r.unit == "CTL" and r.op == "LOOP" and r.param & (1 << 17):
-                    r.dyn_count = 7
             sh = Counter((r.src_key, r.unit) for r in one if r.src_key)
             for r in one:                    # an op's price splits over its records within ONE layer instance
                 r.share = sh.get((r.src_key, r.unit), 1)

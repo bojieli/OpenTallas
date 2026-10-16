@@ -28,14 +28,7 @@ module ot_hgi_su_ctl #(
     parameter integer SLB = 16,           // log2 words of the stream-0 landing region (top of the local memory)
     parameter integer MUT_DIRTY = 0,      // mutant: drain whole sectors (overwrites words the op did not write)
     parameter integer LG1 = LWB, LG2 = LWB, LG3 = LWB,   // local memory group sizes (log2 words; G0 = LWB)
-    parameter integer LGO = LWB, RWB = 6,                 // the O group, the reducer-result file
-    // FILL-9 (2026-10-10) opt-in timing structure, both default 0 (historical elaboration); -D flips them for benches.
-    // RST_RELAY 1: the rst_n port drives only rtl/lib/ot_rst_relay (async assert, release 3 edges later; regions 0 record
-    // adapter, 1 controller, 2 engine-status / return pins); rec_rdy is held low until region 0 has left reset.
-    parameter integer RST_RELAY = `ifdef OT_SU_RST_RELAY 1 `else 0 `endif,
-    // PRE_PIPE 1: the op-level layout (pow2ceil slot, row width) and no x ni are computed over 3 registered phases of
-    // S_PRE instead of one edge (routed worst path: w -> 16x16 multiply / pow2ceil ripple -> compare; +2 cycles an op)
-    parameter integer PRE_PIPE = `ifdef OT_SU_PRE_PIPE 1 `else 0 `endif
+    parameter integer LGO = LWB, RWB = 6                  // the O group, the reducer-result file
 ) (
     input  wire          clk,
     input  wire          rst_n,
@@ -87,16 +80,7 @@ module ot_hgi_su_ctl #(
     // ---- the record adapter (decode) and the op it issues
     wire op_v; reg op_rdy_r; wire [669:0] op_w; reg su_idle_r, su_fault_r;
     wire [1:0] strm;
-    // ---- reset (RST_RELAY): region 0 the record adapter, 1 the controller, 2 the engine-status / return pin flops
-    wire [2:0] rr; wire rec_rdy_rec;
-    generate if (RST_RELAY) begin : g_rr
-        ot_rst_relay #(.REGIONS(3), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rr (.clk(clk), .rst_n_in(rst_n), .rst_n(rr));
-        assign rec_rdy = rec_rdy_rec && rr[0];
-    end else begin : g_rr_port
-        assign rr = {3{rst_n}};
-        assign rec_rdy = rec_rdy_rec;
-    end endgenerate
-    ot_hgi_su_record #(.LEGACY(0), .GLU(GLU), .STREAM_OK(!GLU), .PAYLOAD_RESET(PAYLOAD_RESET)) u_rec (.clk(clk), .rst_n(rr[0]), .hgi_en(1'b1), .rec_v(rec_v), .rec_rdy(rec_rdy_rec),
+    ot_hgi_su_record #(.LEGACY(0), .GLU(GLU), .STREAM_OK(!GLU), .PAYLOAD_RESET(PAYLOAD_RESET)) u_rec (.clk(clk), .rst_n(rst_n), .hgi_en(1'b1), .rec_v(rec_v), .rec_rdy(rec_rdy),
         .rec_hdr(rec_hdr), .rec_sut(rec_sut), .rec_a(rec_a), .rec_b(rec_b), .rec_c(rec_c), .rec_d(rec_d), .rec_o(rec_o),
         .rec_r(rec_r), .rec_i(rec_i), .rec_n_a(rec_n_a), .rec_done(rec_done), .rec_fault(rec_fault), .halted(halted),
         .drained(), .op_strm(strm), .lg_v(1'b0), .lg_rdy(), .lg_w(670'd0), .op_v(op_v), .op_rdy(op_rdy_r), .op_w(op_w),
@@ -177,7 +161,7 @@ module ot_hgi_su_ctl #(
     reg [3:0] rp;                                         // read pipe
     reg [255:0] sr_data_q; reg sr_rv_q;
     always @(posedge clk) sr_data_q <= sr_data;
-    always @(posedge clk or negedge rr[2]) if (!rr[2]) sr_rv_q <= 1'b0; else sr_rv_q <= sr_rv;
+    always @(posedge clk or negedge rst_n) if (!rst_n) sr_rv_q <= 1'b0; else sr_rv_q <= sr_rv;
     // drain reads in flight: {VM sector, word mask} of each issued read, popped by its response (valid-driven, any
     // memory latency; hgi-1010/d exactness audit: no reader counts edges)
     reg [34:0] df [0:3]; reg [1:0] df_h, df_t; reg [2:0] nf;
@@ -202,23 +186,15 @@ module ot_hgi_su_ctl #(
     reg [20:0] etot; reg [20:0] ebeat; reg [LWB:0] o_lb; reg amr_q;
     always @(posedge clk) amr_q <= am_rdy;
     reg ready_q, idle_q, vfault_q;
-    always @(posedge clk or negedge rr[2]) begin
-        if (!rr[2]) begin ready_q <= 1'b0; idle_q <= 1'b0; vfault_q <= 1'b0; end
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin ready_q <= 1'b0; idle_q <= 1'b0; vfault_q <= 1'b0; end
         else begin ready_q <= ready; idle_q <= idle; vfault_q <= vfault; end
     end
     reg vf_seen; reg [1:0] idle_ph;
-    // PRE_PIPE: the op layout over 3 phases (pre_ph), every phase register to register
-    function automatic [LWB:0] p2c_f(input [LWB:0] x);  // pow2ceil(x), x >= 1: smear(x - 1) + 1 (log depth)
-        reg [LWB:0] y; integer b3;
-        y = x - 1;
-        for (b3 = 1; b3 <= LWB; b3 = b3 << 1) y = y | (y >> b3);
-        p2c_f = y + 1;
-    endfunction
-    reg [1:0] pre_ph; reg [LWB:0] px_q, ps0_q, prnd_q, pvw_q; reg pflat_q; reg [23:0] pml_q, pmh_q;
     integer k2;
-    always @(posedge clk or negedge rr[1]) begin
-        if (!rr[1]) begin
-            st <= S_IDLE; pre_ph <= 2'd0; op_rdy_r <= 1'b1; su_idle_r <= 1'b1; su_fault_r <= 1'b0; go <= 1'b0; vmq <= 338'd0;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            st <= S_IDLE; op_rdy_r <= 1'b1; su_idle_r <= 1'b1; su_fault_r <= 1'b0; go <= 1'b0; vmq <= 338'd0;
             sl_v <= 1'b0; sw_v <= 1'b0; sr_v <= 1'b0; rp <= 4'd0; use_p <= 4'd0; nf <= 3'd0; df_h <= 2'd0; df_t <= 2'd0;
             outst <= 3'd0; q_h <= 2'd0; q_t <= 2'd0; vf_seen <= 1'b0; scount <= 21'd0; s_clr <= 1'b0; am_stream <= 523'd0;
         end else begin
@@ -238,32 +214,10 @@ module ot_hgi_su_ctl #(
                         a_s <= strm[0]; o_s <= strm[1]; st <= S_PRE;
                     end
                 end
-                S_PRE: if (PRE_PIPE == 0) begin                     // the op's layout (registered once)
+                S_PRE: begin                                        // the op's layout (registered once)
                     l_full_q <= l_el; l_half_q <= flatc ? (ni >> 1) : ((l_el >> 1) == 0 ? 1 : (l_el >> 1));
                     nn_q <= {16'd0, no} * {16'd0, ni};
                     st <= S_SPAN;
-                end else begin : pre3                               // same values, 3 register-to-register phases
-                    reg [LWB:0] se_;
-                    case (pre_ph)
-                        2'd0: begin                                 // operands: max(ni, 8 | 1), vw, flat, roundup, partials
-                            px_q <= (ni > (red_on ? 16'd8 : 16'd1)) ? ni : (red_on ? 16'd8 : 16'd1);
-                            pvw_q <= vw; pflat_q <= flatc; prnd_q <= (ni + N - 1) & ~(N - 1);
-                            pml_q <= {8'd0, no} * {16'd0, ni[7:0]}; pmh_q <= {8'd0, no} * {16'd0, ni[15:8]};
-                            pre_ph <= 2'd1;
-                        end
-                        2'd1: begin                                 // pow2ceil; the product
-                            ps0_q <= p2c_f(px_q);
-                            nn_q <= {8'd0, pml_q} + {pmh_q, 8'd0};
-                            pre_ph <= 2'd2;
-                        end
-                        default: begin                              // slot = min(pow2ceil, vw); row width
-                            se_ = (ps0_q > pvw_q) ? pvw_q : ps0_q;
-                            if (pflat_q) begin l_full_q <= ni; l_half_q <= ni >> 1; end
-                            else if (ni <= se_) begin l_full_q <= se_; l_half_q <= ((se_ >> 1) == 0) ? 1 : (se_ >> 1); end
-                            else begin l_full_q <= prnd_q; l_half_q <= ((prnd_q >> 1) == 0) ? 1 : (prnd_q >> 1); end
-                            pre_ph <= 2'd0; st <= S_SPAN;
-                        end
-                    endcase
                 end
                 S_SPAN: begin                                       // region rk: used? its layout
                     rv[rk] <= used_k && !(rk == 3'd0 && a_s);
@@ -393,7 +347,7 @@ module ot_hgi_su_ctl #(
                 S_DRAIN: begin
                     use_p <= 4'd0;
                     if (dk == 3'd6) begin
-                        if (o_s) begin etot <= PRE_PIPE ? nn_q[20:0] : {5'd0, no} * {5'd0, ni}; ebeat <= 21'd0; o_lb <= lb[4]; rp <= 4'd0; so_w <= 1'b0;
+                        if (o_s) begin etot <= {5'd0, no} * {5'd0, ni}; ebeat <= 21'd0; o_lb <= lb[4]; rp <= 4'd0; so_w <= 1'b0;
                                        st <= S_SOUT; end
                         else st <= S_DONE;
                     end

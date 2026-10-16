@@ -1,4 +1,4 @@
-export DESIGN_NICKNAME = smh_front_s_one_hbm_smh_front_s_vq_933923316_tc_hm25_tcfix_cl
+export DESIGN_NICKNAME = smh_front_s_one_hbm_smh_front_s_vq_933923316_tc_hm25_cl
 export DESIGN_NAME = ot_hbm_accel_smh_front_s
 export PLATFORM = asap7
 export VERILOG_FILES = /src/rtl/hdc/ot_hdc_prefix.sv /src/rtl/v41rom/ot_v41_bterm.sv /src/rtl/v41rom/ot_v41_bterm2.sv /src/rtl/gpu/ot_gpu_fadd.sv /src/rtl/hdc/ot_hdc_fp32_add_lat.sv /src/rtl/hdc/ot_hdc_fp32_mul_lat.sv /src/rtl/hdc/ot_hdc_fastfp.sv /src/rtl/gpu/ot_gpu_tree.sv /src/rtl/gpu/ot_gpu_issue.sv /src/rtl/gpu/ot_gpu_stack.sv /src/rtl/gpu/ot_gpu_tc_col.sv /src/rtl/gpu/ot_gpu_bd_col.sv /src/rtl/hdc/v41/ot_hdc_blockdot.sv /src/rtl/gpu/ot_gpu_bulk_copy.sv /src/rtl/hdc/ot_hdc_fpu.sv /src/rtl/hdc/ot_hdc_fp32_mul_pipe.sv /src/rtl/proto/ot_fp32_add_rne_pipe.sv /src/rtl/hdc/ot_hdc_sfu.sv /src/rtl/hdc/ot_hdc_delay.sv /src/rtl/hbm_accel/epilogue/ot_hbm_accel_issue.sv /src/rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy.sv /src/rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy_oq4.sv /src/rtl/hbm_accel/epilogue/ot_hbm_accel_bulk_copy_oq5.sv /src/rtl/hbm_accel/sm/ot_hbm_accel_tc16.sv /src/rtl/hbm_accel/sm/ot_hbm_accel_bd_col.sv /src/rtl/hbm_accel/sm/ot_hbm_accel_sm_v.sv /src/rtl/hbm_accel/sm/ot_hbm_accel_issue_pq.sv /src/rtl/hbm_accel/sm/ot_hbm_accel_stack.sv /src/rtl/hbm_accel/sm/ot_hbm_accel_smh_bd.sv /src/rtl/hbm_accel/sm/ot_hbm_accel_smh.sv /src/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v /src/physical/hbm_accel_macros/ot_sram_1r1w_512x256_m1_r2c2/ot_sram_1r1w_512x256_m1_r2c2_bb.v
@@ -19,7 +19,7 @@ export ADDER_MAP_FILE =
 export ASAP7_USE_VT = RVT
 export SLEW_MARGIN = 30
 export CORNERS = WC BC
-export WC_LIB_FILES = $(TC_NLDM_LIB_FILES) 
+export WC_LIB_FILES = $(WC_NLDM_LIB_FILES) 
 export BC_LIB_FILES = $(BC_NLDM_LIB_FILES) 
 export IO_CONSTRAINTS = /work/pins.tcl
 export GDS_ALLOW_EMPTY = (ot_sram.*|ot_hbm_accel_smh_.*)

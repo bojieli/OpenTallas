@@ -25,8 +25,7 @@ module ot_hgi_coll_ep #(
     parameter integer PPK = 512,       // parking depth per epoch queue (flits of a gather this rank has not started)
     parameter integer MUT_PIPE = 0,    // bench mutants: 1 tag ignored (oldest epoch's context), 2 no parking (early
                                        //   flits formatted with the oldest context), 3 an epoch completes one flit early
-    parameter integer RGXHW = 0,       // 1: hardware COLL.ROW_GATHER (G25): owner-row source + list-order sink on this endpoint
-    parameter integer RFMT = 1         // 0: no row formatter (rowfmt ports unbound): ROW_GATHER param[8] = 0 faults
+    parameter integer RGXHW = 0        // 1: hardware COLL.ROW_GATHER (G25): owner-row source + list-order sink on this endpoint
 ) (
     input  wire               clk,
     input  wire               rst_n,
@@ -107,7 +106,7 @@ module ot_hgi_coll_ep #(
     wire ep_fault;
     wire [31:0] cfg_w46;
     ot_hgi_cfg_rx #(.W0(46), .NW(1), .RST(32'd96)) u_cfg (.clk(clk), .rst_n(rst_n), .bus(hgi_cfg), .act(cfg_w46));
-    ot_hgi_coll_record #(.PIPE(PIPE), .RGXHW(RGXHW), .RFMT(RFMT)) u_rec (.clk(clk), .rst_n(rst_n), .cfg_coll_group_size(cfg_w46[7:0]), .cfg_die_id(hgi_rec[967:960]),
+    ot_hgi_coll_record #(.PIPE(PIPE), .RGXHW(RGXHW)) u_rec (.clk(clk), .rst_n(rst_n), .cfg_coll_group_size(cfg_w46[7:0]), .cfg_die_id(hgi_rec[967:960]),
         .rec_v(hgi_rec[0]), .rec_rdy(rec_rdy), .rec_hdr(hgi_rec[128:1]), .rec_a(hgi_rec[384:129]),
         .rec_o(hgi_rec[640:385]), .rec_i(hgi_rec[896:641]), .rec_n_a(hgi_rec[917:897]), .rec_n_o(hgi_rec[938:918]),
         .rec_n_i(hgi_rec[959:939]), .rec_done(rec_done), .rec_fault(rec_fault),

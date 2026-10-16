@@ -2281,7 +2281,6 @@ COL_W8 = 2 * LANE_W + NS_W + RSC_W  # 1,182.816
 # 2 x COL_W + 280.152 wide: every frame's lane zone widens by BF_FRAME_EXTRA (node strip / return column move east) and
 # the die widens by 2 x 11 columns x BF_FRAME_EXTRA (no reticle rescue: 128 frames, PQ r128 kept; reported).
 BF_HIER = None                       # column width (520.128 | 600.264) or None
-TIER_COLS_SET = False                # --tier-cols given (reticle die, ROOTS = 2 x sum(TIER_COLS8))
 BF_FRONT_W = 280.152
 BF_ROUTE_H = 190.08
 BF_FRAME_EXTRA = 0.0
@@ -2336,16 +2335,8 @@ Q_X1B = False                  # --q-x1b: option-B q pin plan (x1 on the S-face 
 CFG_RGAP = 0.0
 LANE_EQUAL = False             # --lane-equal (ds-1010 lat-audit): equal column-relay counts on xa / xb / cc of a slot segment
 CFG_RGAP_AT = 4
-RSV_RECTS = []                 # reserved relay sites (x0, y0, x1, y1, tag): tag 'rt' (--cfg-rgap) / 'x' (--xb-rgap)
-RSV_ALLOW = None               # the tag whose sites the relay being placed may take (None: no reserved site)
-# --xb-rgap UM (ds-1010/s81die 2026-10-10, efs q pin plan = x0 / x1 / cfg / go on ONE S-face bank in the element's
-# middle): a reserved relay site of UM in every right-lane cfg ROM row between the pair sequencer and ROM 0, for the
-# slot's x-lane relays only (xa_ / xb_ / cc_ column and hop relays).  Root cause (efs check, src 734e82437): the slot
-# station (x 365-538) has no free relay box toward its banks; lane-equal x1 relays found none in the 100 %-packed cfg
-# ROM + sequencer row and fell up to 250 um BEHIND the station (y_xb_127_7_0 in the slot below), so the hops to the
-# right-lane bank / next station ran 517-713 um (768 g_xb / y_xb SS reach + 1,536 x0/x1 field mismatches: the x1 lane
-# took extra hop relays x0 did not).  The site sits on the station -> right bank / next-station path.  Default 0 = off.
-XB_RGAP = 0.0
+RSV_RECTS = []                 # --cfg-rgap: the reserved relay sites (die coordinates), for return-tree relays only
+RSV_ALLOW = False              # set while a return-tree (rt_*) relay / station is placed
 CK_RULE = False                # --ck-rule: generated masters >= 300 um take ck in the middle third of a long face
 COLL_SPLIT3 = False            # --coll-split3: collective slab = composition_split3 outline (1,371.792 x 1,369.416)
 COLL_SPLIT3_COMP = 'physical/s81_ph_views/collective/composition_split3.json'
@@ -2661,8 +2652,8 @@ class Placer:
             r = (x, y, x + w, y + h)
             if not _inside(r, allowed) or not self.occ.free(r, 0.432):
                 continue
-            if RSV_RECTS and any(t_ != RSV_ALLOW and a_ < r[2] and r[0] < c_ and b_ < r[3] and r[1] < d_
-                                 for a_, b_, c_, d_, t_ in RSV_RECTS):
+            if RSV_RECTS and not RSV_ALLOW and any(a_ < r[2] and r[0] < c_ and b_ < r[3] and r[1] < d_
+                                                   for a_, b_, c_, d_ in RSV_RECTS):
                 continue
             return x, y
         return None
@@ -2877,7 +2868,7 @@ def build_r8(variant=None):
     COLS8 = max(TIER_COLS8)
     x_lw = up(EDGE, GX)
     slack = W - 2 * x_lw - 2 * LINK_COL - 2 * COLS8 * COL_PITCH8 - SPINE_W8 - 2 * SPF
-    assert slack >= 0, ("die columns exceed the die width (--tier-cols / --bf-hier)", slack, TIER_COLS8, COL_PITCH8)
+    assert slack >= 0, slack
     x_fw = up(x_lw + LINK_COL + 0.5 * slack, GX)
     x_sp = up(x_fw + COLS8 * COL_PITCH8 - 8.64 + SPF, GX)       # spine W edge
     x_fe = up(x_sp + SPINE_W8, GX)                                # spine E edge
@@ -2967,12 +2958,9 @@ def build_r8(variant=None):
                 sx = cx0 + (CFG_PER_PAIR - 1) * CFG_PITCH + rc['w'] + 3.888
             if CFG_RGAP and ln == 'R':
                 gx0 = cx0 + (CFG_RGAP_AT - 1) * CFG_PITCH + rc['w']
-                RSV_RECTS.append((gx0 + XB_RGAP, sy + CFG_DY, cx0 + XB_RGAP + CFG_RGAP_AT * CFG_PITCH + CFG_RGAP,
-                                  sy + CFG_DY + rc['h'], 'rt'))
-            if XB_RGAP and ln == 'R':
-                RSV_RECTS.append((cx0 - 3.888 + 2.16, sy + CFG_DY, cx0 + XB_RGAP - 2.16, sy + CFG_DY + rc['h'], 'x'))
+                RSV_RECTS.append((gx0, sy + CFG_DY, cx0 + CFG_RGAP_AT * CFG_PITCH + CFG_RGAP, sy + CFG_DY + rc['h']))
             for j in range(CFG_PER_PAIR):
-                gx_ = (CFG_RGAP if (ln == 'R' and j >= CFG_RGAP_AT) else 0.0) + (XB_RGAP if ln == 'R' else 0.0)
+                gx_ = CFG_RGAP if (ln == 'R' and j >= CFG_RGAP_AT) else 0.0
                 insts.append(Inst(f'c{p}_{j}', rc['name'], cx0 + j * CFG_PITCH + gx_, sy + CFG_DY, rc['w'], rc['h'], ro,
                                   kind='cfg', region=f'frame_{r}'))
             insts.append(Inst(f's{p}', 'ot_s81_cfg7_seq', sx, sy + CFG_DY, SEQ_WH[0] - SHAVE, SEQ_WH[1] - SHAVE, so,
@@ -3219,7 +3207,7 @@ def build_r8(variant=None):
             insts.append(it)
             links.append(it)
             y = up(y + m_['h'] + 43.2, GY)
-    variant.update(tier_cols=list(TIER_COLS8) if TIER_COLS_SET else None, frames=ROOTS, lane_equal=LANE_EQUAL, q_x1b=Q_X1B, cfg_rgap=CFG_RGAP, cfg_rgap_at=CFG_RGAP_AT, xb_rgap=XB_RGAP, ck_rule=CK_RULE, coll_split3=COLL_SPLIT3, bf_hier=BF_HIER, bf_frame_extra_um=BF_FRAME_EXTRA, die_um=list(DIE), host=HOST_SLAB, ctrl_rq=CTRL_RQ, fwd_iface=FWD_IFACE, hop_extra=HOP_EXTRA, path_pick=PATH_PICK, hop_r_cc=HOP_R_CC, relay_tt_reach=RELAY_TT_REACH,
+    variant.update(lane_equal=LANE_EQUAL, q_x1b=Q_X1B, cfg_rgap=CFG_RGAP, cfg_rgap_at=CFG_RGAP_AT, ck_rule=CK_RULE, coll_split3=COLL_SPLIT3, bf_hier=BF_HIER, bf_frame_extra_um=BF_FRAME_EXTRA, die_um=list(DIE), host=HOST_SLAB, ctrl_rq=CTRL_RQ, fwd_iface=FWD_IFACE, hop_extra=HOP_EXTRA, path_pick=PATH_PICK, hop_r_cc=HOP_R_CC, relay_tt_reach=RELAY_TT_REACH,
                    wfc_hard=WFC_HARD, face_pin_inset=bool(FACE_PIN_INSET))
     variant.update(collective_variant_binding())
     variant.update(ctrl_slab=CTRL_SLAB, ctrl_role=CTRL_ROLE if CTRL_SLAB else None, su_area_mm2=su_area, hub_column_width_um=cw, gen='r8', geometry_fix=GEOMETRY_FIX, cfifo_v2=CFIFO_V2, cfifo_colck=CFIFO_COLCK, link_fix=LINK_FIX, link_split=LINK_SPLIT, sel_xstg=SEL_XSTG, pin_relay=PIN_RELAY, nxt_reach=NXT_REACH, vm_face_mm2=VM_FACE_MM2, ch_heights=CHS, vch_w=VCH8, hc_corr=HC_CORR, hc_xface=HC_XFACE, hop_fix=HOP_FIX, meso_d8=MESO_D8, fwd_pitch=FWD_REACH, corr_interleave=CORR_INTERLEAVE, rev=REV, cc_reach_um=CC_REACH, vch_interleave=VCH_INTERLEAVE, q_lef=Q_LEF, head_dies=HEAD_DIES, die=DIE_KIND, role=dict(layer='scan die (4 HBM3E stacks; 32 of the rack)',
@@ -3672,8 +3660,6 @@ def buses_r8(m):
         _hop_fix(m, P)
     if LANE_EQUAL:
         _go_retap(m)
-    if CTRL_SLAB and HOP_PLAN:
-        _ctrl_vm_latency_check(m)
     # ---------------- clocks, resets, top ports
     col = coll.name
     bus('refclk', 'top_in', 1, [('TOP', 'refclk'), (col, 'refclk')])
@@ -3949,10 +3935,6 @@ def _q_port_xc(rq, port):
     return sum(xs) / len(xs)
 
 
-def _rsv_tag(bid):
-    return 'rt' if bid.startswith('rt_') else ('x' if re.match(r'(xa|xb|cc)_\d+_\d+$', bid) else None)
-
-
 def _q_banks(p, ex, ey, rq, region, mirror=False):
     """one bank per element face (S below, N above), at the centre of its ports' pins.  --q-x1b (option B, s81-gen
     2026-10-10): x1 is its own S-face bank 'bx' at the x1 pins' centre (element x 400.08-505.44: over the slot station,
@@ -4121,7 +4103,7 @@ def _hop_fix(m, P):
     global RSV_ALLOW
     for i in range(len(B)):
         bid, cls, bits, eps = B[i]
-        RSV_ALLOW = _rsv_tag(bid)              # reserved relay sites: return tree ('rt') / slot x lanes ('x')
+        RSV_ALLOW = bid.startswith('rt_')      # --cfg-rgap: reserved relay sites serve the return tree only
         if cls in HOP_SKIP or len(eps) < 2:
             continue
         keep = [eps[0]]
@@ -4366,7 +4348,7 @@ def _hop_fix(m, P):
             q['max_um'] = max(q['max_um'], L)
             q['max_added'] = max(q['max_added'], n)
         B[i] = (bid, cls, bits, keep)
-    RSV_ALLOW = None
+    RSV_ALLOW = False
     B[:] = [b for b in B if len(b[3]) > 1 or b[1] in ('col_clock', 'col_reset')] + new
     # inserted relays: faces toward their driver and load
     by = {it.name: it for it in m['insts']}
@@ -4399,51 +4381,6 @@ def _hop_fix(m, P):
                         planned_hops=len(plan), fwd_rt_add=fwd_add.get('r', 0) + fwd_add.get('x', 0),
                         reach_um=dict(common_clock=HOP_R_CC, forwarded=HOP_R_FWD, tt_exception=RELAY_TT_REACH),
                         tt_reach_relays=sorted(m.get('tt_reach_relays', [])))
-
-
-def _pin_stages(m, src):
-    """registered relay stages from driver pin src = (inst, port) to every non-relay load pin: {(inst, port): n}"""
-    kind = {it.name: it.kind for it in m['insts']}
-    outs = {}
-    for bid, cls, bits, eps in m['buses']:
-        outs.setdefault(tuple(eps[0]), []).append(eps[1:])
-    thru = {'i': 'o', 'di': 'dq', 'di0': 'do0'}
-    res, stack = {}, [(tuple(src), 0)]
-    while stack:
-        ep, n = stack.pop()
-        for loads in outs.get(ep, []):
-            for l_ in loads:
-                l_ = tuple(l_)
-                if (kind.get(l_[0]) in ('rly', 'hstn') or (kind.get(l_[0]) == 'stn' and l_[0].startswith('g_'))) \
-                        and l_[1] in thru:
-                    stack.append(((l_[0], thru[l_[1]]), n + 1))
-                else:
-                    res[l_] = n
-    return res
-
-
-def _ctrl_vm_latency_check(m):
-    """ds-1010 lat-audit (2026-10-10): the native stage controller (ot_s81_ctrl / ot_s81_hop_tx) reads the VM in
-    FIXED-latency mode by default (USE_VM_RVALID 0: data taken from its own r1 -> rd pipe) and the binding manifest
-    claims vm_read_cycles 1.  --hop-fix / --pin-relay put stations on the vre / vra request and the vrq / vrv response
-    when the endpoints are apart, so the claim is checked here on the built die: any stage on the read path fails the
-    build unless the manifest declares vm_return_valid (the master consumes vrv, which must then carry exactly the
-    stages of vrq)."""
-    it = m['hub']['stage_ctrl'].name
-    P = CTRL_BINDINGS['ports']
-    req = max([max(_pin_stages(m, (it, p_)).values(), default=0) for p_ in ('vre', 'vra')])
-    rsp = {}
-    for p_ in ('vrq', 'vrv'):
-        ep = tuple(P[p_]['endpoint'])
-        rsp[p_] = _pin_stages(m, ep).get((it, p_), 0)
-    m['ctrl_vm_read'] = dict(request_stages=req, response_stages=rsp,
-                             vm_return_valid=bool(CTRL_BINDINGS.get('vm_return_valid')))
-    if rsp['vrq'] != rsp['vrv']:
-        raise SystemExit('--ctrl-slab: VM read data and valid cross different stage counts %s' % rsp)
-    if not CTRL_BINDINGS.get('vm_return_valid') and (req or rsp['vrq']):
-        raise SystemExit('--ctrl-slab: fixed-latency VM read (USE_VM_RVALID 0, vm_read_cycles 1) but the die puts %d '
-                         'request + %d response stages on it: bind the master with --vm-return-valid '
-                         '(tools/s81_ctrl/specialize_master.py) and set vm_return_valid in the manifest' % (req, rsp['vrq']))
 
 
 def _go_retap(m):
@@ -4530,7 +4467,7 @@ def _col_relays(m, P):
                 k_ = (mm.group(2), mm.group(3))
                 lane_n[k_] = max(lane_n.get(k_, 0), n_ or 0)
     for bid, cls, bits, eps in list(B):
-        RSV_ALLOW = _rsv_tag(bid)              # reserved relay sites: return tree ('rt') / slot x lanes ('x')
+        RSV_ALLOW = bid.startswith('rt_')      # --cfg-rgap: reserved relay sites serve the return tree only
         if cls not in RCLS or bid.endswith('_eb'):
             out.append((bid, cls, bits, eps))
             continue
@@ -4597,7 +4534,7 @@ def _col_relays(m, P):
             RLY_FACES[it.master] = (fi, fo)
         out.append((bid, cls, bits, [prev] + list(eps[1:])))
         added[bid] = n
-    RSV_ALLOW = None
+    RSV_ALLOW = False
     B[:] = out
     for i, (bid, cls, bits, eps) in enumerate(B):
         if cls in ('col_clock', 'col_reset') and bid.rsplit('_', 1)[-1].isdigit():
@@ -5999,9 +5936,6 @@ def die_options(ap):
     ap.add_argument('--cfg-rgap', type=float, default=0.0, help='ds-1010 2026-10-10: reserved relay gap (um, e.g. 21.6) '
                     'in every right-lane cfg ROM row between ROM --cfg-rgap-at - 1 and --cfg-rgap-at (x1b residual '
                     'rt_<f>_8b return-leaf SS reach class); default 0 = off')
-    ap.add_argument('--xb-rgap', type=float, default=0.0, help='ds-1010/s81die 2026-10-10: reserved x-lane relay site (um, '
-                    'e.g. 25.92) in every right-lane cfg ROM row between the sequencer and ROM 0, for xa_/xb_/cc_ relays '
-                    'only (efs q: x1 in the element middle, the slot station had no relay box toward its banks); default 0')
     ap.add_argument('--cfg-rgap-at', type=int, default=4, help='ROM index the --cfg-rgap gap precedes (default 4)')
     ap.add_argument('--lane-equal', action='store_true', help='ds-1010 lat-audit 2026-10-10: column relays on the x0 / x1 / '
                     'cc lanes of one slot segment (xa_/xb_/cc_<f>_<k>) take the MAX relay count of the three, so the three '
@@ -6014,14 +5948,6 @@ def die_options(ap):
     ap.add_argument('--coll-split3-cr', action='store_true', help='opt-in planning candidate: use composition_split3cr.json with credit seams and LCR lane tiles; implies --coll-split3, all four routed masters required for adoption')
     ap.add_argument('--bf-hier', type=float, choices=[520.128, 600.264], help='s81-gen 2026-10-09 (bf-arch): BF pair as '
                     'dsfd_bf_col | dsfd_bf_front | dsfd_bf_col (MY), 190.08 um tall; frames and die widen; default off')
-    ap.add_argument('--bf-hier-height', type=float, choices=[220.32, 241.92], default=220.32, help='model-priced compact hardened BF heights, default 220.32; requires --bf-hier-compact')
-    ap.add_argument('--bf-hier-compact', action='store_true', help='(bf-hier, claude/bf-compact-1011; OWNER 2026-10-10 BF of record) '
-                    'column 450.144 / front 100.224, height 220.32: the pair (1,000.512 um) fits the original lane zone, 1,792 '
-                    'pairs / 128 regions kept; requires a BF frame of 228.96 or taller (--elem-h); default off')
-    ap.add_argument('--tier-cols', help='ds-1010 2026-10-10 (owner: hierarchical full-rate BF AT THE RETICLE): comma list of '
-                    'the TIERS frame columns per tier and half (default 10,11,11,11,11,10 = 128 frames); with --bf-hier the '
-                    'die stays 33 x 26 mm (no widening) and the columns must fit it (e.g. 8,8,8,8,8,8 = 96 frames at col600); '
-                    'frames (= PQ roots) = 2 x the sum')
     ap.add_argument('--hop-extra', type=int, default=0, help='s81-gen 2026-10-09: a hop whose stations cannot all place '
                     'within both reaches may take up to N extra stations (+1 cycle each on that hop; dry-run chosen); default 0')
     ap.add_argument('--fwd-iface', action='store_true', help='s81-gen 2026-10-09: host-write (with --ctrl-rq) and layer1e '
@@ -6124,9 +6050,6 @@ def apply_options(a):
     global CFG_RGAP, CFG_RGAP_AT
     CFG_RGAP = float(getattr(a, 'cfg_rgap', 0.0) or 0.0)
     CFG_RGAP_AT = int(getattr(a, 'cfg_rgap_at', 4) or 4)
-    global XB_RGAP
-    XB_RGAP = float(getattr(a, 'xb_rgap', 0.0) or 0.0)
-    assert not XB_RGAP or abs(XB_RGAP / GX - round(XB_RGAP / GX)) < 1e-6, ('--xb-rgap off the x lattice', XB_RGAP)
     global LANE_EQUAL
     LANE_EQUAL = bool(getattr(a, 'lane_equal', False))
     if CFG_RGAP:
@@ -6135,30 +6058,16 @@ def apply_options(a):
     COLL_SPLIT3_CR = bool(getattr(a, 'coll_split3_cr', False))
     COLL_SPLIT3 = bool(getattr(a, 'coll_split3', False)) or COLL_SPLIT3_CR
     COLL_SPLIT3_COMP = 'physical/s81_ph_views/collective/composition_split3cr.json' if COLL_SPLIT3_CR else 'physical/s81_ph_views/collective/composition_split3.json'
-    global CTRL_RQ, FWD_IFACE, HOP_EXTRA, BF_HIER, BF_FRAME_EXTRA, BF_FRONT_W, BF_ROUTE_H, LANES_W, COL_W8, COL_PITCH8, DIE
+    global CTRL_RQ, FWD_IFACE, HOP_EXTRA, BF_HIER, BF_FRAME_EXTRA, LANES_W, COL_W8, COL_PITCH8, DIE
     BF_HIER = getattr(a, 'bf_hier', None)
-    if getattr(a, 'bf_hier_compact', False):
-        assert BF_HIER is None, '--bf-hier and --bf-hier-compact are exclusive'
-        BF_HIER, BF_FRONT_W, BF_ROUTE_H = 450.144, 100.224, a.bf_hier_height
-    else:
-        BF_FRONT_W, BF_ROUTE_H = 280.152, 190.08
     BF_FRAME_EXTRA = up(max(0.0, 2 * BF_HIER + BF_FRONT_W + 8.64 - 2 * LANE_W), GX) if BF_HIER else 0.0
     LANES_W = 2 * LANE_W + BF_FRAME_EXTRA
     COL_W8 = LANES_W + NS_W + RSC_W
     COL_PITCH8 = COL_W8 + 8.64
-    global TIER_COLS8, ROOTS, TIER_COLS_SET
-    TIER_COLS_SET = bool(getattr(a, 'tier_cols', None))
-    if TIER_COLS_SET:
-        TIER_COLS8 = tuple(int(x) for x in a.tier_cols.split(','))
-        assert len(TIER_COLS8) == TIERS and min(TIER_COLS8) >= 1, ('--tier-cols needs one count per tier', TIER_COLS8)
-        assert a.die in LAYER_KINDS, '--tier-cols: layer dies only (head bundles assume 128 frames)'
-        ROOTS = 2 * sum(TIER_COLS8)
-    # --tier-cols: the reticle die (33 x 26 mm); build_r8 asserts the columns fit.  Without it --bf-hier keeps the
-    # over-reticle evidence vehicle (128 frames, die widened by 2 x 11 x BF_FRAME_EXTRA).
-    DIE = (up(33000.0 + 2 * max(TIER_COLS8) * BF_FRAME_EXTRA, GX) if (BF_HIER and BF_FRAME_EXTRA > 0 and not TIER_COLS_SET) else 33000.0, 26000.0)
+    DIE = (up(33000.0 + 2 * max(TIER_COLS8) * BF_FRAME_EXTRA, GX) if BF_HIER else 33000.0, 26000.0)
     if BF_HIER:
         assert (Q_ELEM_FRAME_H or 0) >= 0 and (getattr(a, 'elem_h', None) or ELEM_FRAME_H) >= BF_ROUTE_H + 8.64 - 1e-6, \
-            '--bf-hier: the BF frame (--elem-h) must hold the routed BF blocks (BF_ROUTE_H) + halos'
+            '--bf-hier: the BF frame (--elem-h) must hold the 190.08 um routed BF blocks + halos'
     HOP_EXTRA = int(getattr(a, 'hop_extra', 0) or 0)
     FWD_IFACE = bool(getattr(a, 'fwd_iface', False))
     CTRL_RQ = bool(getattr(a, 'ctrl_rq', False)) or a.die == 'layer1e'

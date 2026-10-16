@@ -2,7 +2,7 @@
  "schema": "opentallas.qwen-kv-die.rom-r22k.v1",
  "recipe": "r22ko4 (tools/die_top_lint.py QWEN_RECIPES)",
  "generator_sha256": "6e40ce155e29e0c9dd3f053669def62788c8dd87a0575b8840f290a8ef94b5c3",
- "surgery_sha256": "5b2ce3c83d3be6e1c1d3b8bee725d91f3cbe7e0a31528d4ddf317af7c527ca60",
+ "surgery_sha256": "13d1dfa1b902c1e1f7a383e0a946c18a962dad68c04da2a413d7904adb48a9cd",
  "die_um": [
   23484.384,
   32801.76
@@ -11,14 +11,14 @@
  "reticle_mm2": 858.0,
  "margin_mm2": 87.671,
  "r21c_die_mm2": 846.792,
- "instances": 13179,
- "buses": 16378,
- "instance_mm2": 609.181,
+ "instances": 13180,
+ "buses": 16379,
+ "instance_mm2": 609.184,
  "area_by_kind_mm2": {
   "tile": 529.628,
   "spine_block": 34.667,
   "io": 17.6,
-  "relay": 16.743,
+  "relay": 16.746,
   "station": 8.387,
   "xfifo": 0.626,
   "phy_d2d": 0.605,
@@ -148,7 +148,7 @@
   "seq_coll_x": 0,
   "seq_ib": 1,
   "seq_vrd": 1,
-  "seq_vwr": 1,
+  "seq_vwr": 2,
   "tt_c0": 40,
   "tt_c1": 30,
   "tt_c2": 17,
@@ -183,18 +183,18 @@
  "stage_note": "relay stages = registered hops between the endpoint pins (segments - 1); every endpoint port is registered as well (the stage the r21 token-cost counts as one per die hop)",
  "r22k": {
   "removed_instances": {
-   "qfd_hub": 1,
    "qfd_cdc": 128,
-   "qfd_ctrl": 4,
+   "qfd_lst_h_w": 10,
    "qfd_lst_h_e": 10,
-   "qfd_lst_v": 3,
-   "qfd_lst_c": 1,
+   "qfd_ctrl": 4,
    "qfd_lst_v_split": 6,
    "qfd_kvc": 2,
-   "qfd_lst_h_w": 10,
+   "qfd_lst_v": 3,
    "ot_hbm3e_phy": 4,
+   "qfd_lst_c_split": 2,
    "qfd_kvc_n": 2,
-   "qfd_lst_c_split": 2
+   "qfd_hub": 1,
+   "qfd_lst_c": 1
   },
   "dropped_buses": {
    "link_channel": 24,

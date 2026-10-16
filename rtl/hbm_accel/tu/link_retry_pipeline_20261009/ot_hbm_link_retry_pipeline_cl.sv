@@ -13,30 +13,7 @@
 // Coordinated reset must change session; old traffic cannot survive its wrap.
 module ot_hbm_link_retry_pipeline #(
  parameter ENABLE=0,W=545,SW=12,EW=24,DEPTH=512,TIMEOUT=8192,MAX_RETRY=8,
- RSTR=`ifdef OT_RETRY_RSTR 1 `else 0 `endif,
- RX_SLOT_SAMPLE=`ifdef OT_RETRY_RX_SLOT_SAMPLE 1 `else 0 `endif,
- // [link] 2026-10-10 TX_SLOT_SAMPLE (opt-in): routed retry545 dp TT -69.75 / -85.73 = u_storage.seqp -> txd_u/D (22 levels):
- // the replay response tag compares (rd_seq vs read_target / cursor, rd_epoch vs session, generation, rewind) drove the
- // 545-bit txd_u load select in one edge.  The forward slot is the transmit twin of RX_SLOT_SAMPLE: txd_u samples its
- // source every edge the slot is EMPTY (!txv) and holds while occupied; the source is chosen by read_pending (a flop):
- // read_pending implies replaying, which closes in_ready, so the replay response and an admitted word are never both
- // possible.  All validation still gates txv (unchanged control block), so empty-slot contents are never visible.
- TX_SLOT_SAMPLE=`ifdef OT_RETRY_TX_SLOT_SAMPLE 1 `else 0 `endif,
- // [link] 2026-10-10 IN_PIN (opt-in): at the routed IO reference the remaining TT classes are INPUT PORT -> compare ->
- // flop (rx_session -> rxv / nak_pending / rxd_u, fb_session -> mail_seq: 14-17 levels after the 0.2 T + 150 ps budget).
- // Every rx_* / fb_* input lands in a pin register first (OT_WS_PINREG) and all validation runs on registered copies.
- //   rx: a raw pin slot rp (valid + tags + 545-bit payload, payload sampled while the slot is empty) feeds the visible
- //       landing slot.  A raw beat is judged only into an EMPTY landing slot (!rxv), so `expected` already counts every
- //       consumed item exactly as before; rx_ready = !rp_v.  Throughput is unchanged (one beat per 2 edges, as the
- //       landing bubble already imposed); +1 edge receive latency; +580 flops.
- //   fb: feedback inputs registered (+1 edge on ACK/NAK feedback; the mailbox coalescing is unchanged).
- IN_PIN=`ifdef OT_RETRY_IN_PIN 1 `else 0 `endif,
- // [link] 2026-10-10 IN_WPIN (opt-in, needs RSTR): txrx 860d4ad8e routed TT -54.45 at the routed IO reference has ONE
- // setup class left: in_data port -> replay-SRAM SECDED encoder (14 levels) -> u_enc.q.  The replay write now leaves the
- // TX slot register (txd_u, already the accepted beat's pin-side copy) one edge after acceptance: w_valid / w_seq
- // registered, w_data = txd_u (held: the slot is occupied from acceptance until launch).  +1 edge write latency,
- // covered by write_guard 3 (no replay read of a beat before its write); throughput unchanged.
- IN_WPIN=`ifdef OT_RETRY_IN_WPIN 1 `else 0 `endif
+ RSTR=`ifdef OT_RETRY_RSTR 1 `else 0 `endif
 )(
  input wire clk,rst_n,input wire [EW-1:0] session,
  input wire in_valid,output wire in_ready,input wire [W-1:0] in_data,
@@ -103,29 +80,8 @@ module ot_hbm_link_retry_pipeline #(
  reg [1:0] write_guard;
  wire rd_v,rd_ce,rd_ue;wire [W-1:0] rd_data;
  wire [SW-1:0] rd_seq;wire [EW-1:0] rd_epoch;
- // IN_PIN pin registers (pass-through when IN_PIN = 0)
- wire fbe_valid,fbe_good,fbe_nak;wire [SW-1:0] fbe_seq;wire [EW-1:0] fbe_session;
- reg rp_v;
- wire rj_v,rj_ue;wire [SW-1:0] rj_seq;wire [EW-1:0] rj_session;wire [W-1:0] rj_data;
- if (IN_PIN != 0) begin : g_inpin
-  reg fq_valid,fq_good,fq_nak;reg [SW-1:0] fq_seq;reg [EW-1:0] fq_session;
-  always @(posedge clk or negedge rst_i) if(!rst_i) fq_valid<=1'b0; else fq_valid<=fb_valid;
-  always @(posedge clk) begin fq_good<=fb_good;fq_nak<=fb_nak;fq_seq<=fb_seq;fq_session<=fb_session; end
-  assign fbe_valid=fq_valid;assign fbe_good=fq_good;assign fbe_nak=fq_nak;assign fbe_seq=fq_seq;assign fbe_session=fq_session;
-  reg rq_ue;reg [SW-1:0] rq_seq;reg [EW-1:0] rq_session;reg [W-1:0] rq_data;
-  // raw slot payload/tags: sampled every edge the raw slot is empty (enable = one flop), held while occupied
-`ifndef OT_RETRY_MUT_IN_PIN_HOLD
-  always @(posedge clk) if(!rp_v) begin rq_ue<=rx_ue;rq_seq<=rx_seq;rq_session<=rx_session;rq_data<=rx_data; end
-`else
-  always @(posedge clk) begin rq_ue<=rx_ue;rq_seq<=rx_seq;rq_session<=rx_session;rq_data<=rx_data; end   // mutant: raw slot not held
-`endif
-  assign rj_v=rp_v&&!rxv;assign rj_ue=rq_ue;assign rj_seq=rq_seq;assign rj_session=rq_session;assign rj_data=rq_data;
- end else begin : g_inpass
-  assign fbe_valid=fb_valid;assign fbe_good=fb_good;assign fbe_nak=fb_nak;assign fbe_seq=fb_seq;assign fbe_session=fb_session;
-  assign rj_v=rx_valid&&rx_ready;assign rj_ue=rx_ue;assign rj_seq=rx_seq;assign rj_session=rx_session;assign rj_data=rx_data;
- end
- wire [SW-1:0] rx_delta=rj_seq-expected;
- wire feedback=fbe_valid&&fbe_good&&fbe_session==session_i;
+ wire [SW-1:0] rx_delta=rx_seq-expected;
+ wire feedback=fb_valid&&fb_good&&fb_session==session_i;
  wire apply=phase==3;
  wire rewind=apply&&(fresh_nak||timeout_pending);
  wire accepted=in_valid&&in_ready;
@@ -140,56 +96,32 @@ module ot_hbm_link_retry_pipeline #(
  // RSTR: unreset payload registers, loaded under exactly the conditions of the control block (else branch: !fault_r)
  wire txd_ld_rd = rd_v&&!rd_ue&&read_generation==generation&&rd_seq==read_target&&rd_seq==cursor&&rd_epoch==session_i&&!rewind;
  wire rxd_ld = rx_valid&&rx_ready&&rx_session==session_i&&!rx_ue&&rx_seq==expected;
- // Free-slot capture: validation still gates rxv. Empty-slot data is invisible;
- // once occupied, payload must remain stable until out_ready consumes it.
-`ifndef OT_RETRY_MUT_RX_SLOT_HOLD
- wire rxd_payload_ld = (RX_SLOT_SAMPLE != 0) ? !rxv : rxd_ld;
-`else
- wire rxd_payload_ld = (RX_SLOT_SAMPLE != 0) ? 1'b1 : rxd_ld;
-`endif
  reg [W-1:0] txd_u, rxd_u;
  always @(posedge clk) if (rst_i && !fault_r) begin
-`ifndef OT_RETRY_MUT_TX_SLOT_HOLD
-  if (TX_SLOT_SAMPLE != 0) begin if (!txv) txd_u <= read_pending ? rd_data : in_data; end
-`else
-  if (TX_SLOT_SAMPLE != 0) txd_u <= read_pending ? rd_data : in_data;   // mutant: occupied slot not held
-`endif
-  else if (txd_ld_rd) txd_u <= rd_data; else if (accepted) txd_u <= in_data;
+  if (txd_ld_rd) txd_u <= rd_data; else if (accepted) txd_u <= in_data;
 `ifndef OT_RETRY_MUT_RXD_U
-  if (IN_PIN != 0) begin if (!rxv) rxd_u <= rj_data; end
-  else if (rxd_payload_ld) rxd_u <= rx_data;
+  if (rxd_ld) rxd_u <= rx_data;
 `else
-  if (rxd_payload_ld && rx_seq[0]) rxd_u <= rx_data;   // mutant: odd-sequence payloads only (the shadow load condition broken)
+  if (rxd_ld && rx_seq[0]) rxd_u <= rx_data;   // mutant: odd-sequence payloads only (the shadow load condition broken)
 `endif
  end
  assign tx_valid=txv&&!fault_r;assign tx_data=(RSTR!=0)?txd_u:txd;assign tx_seq=txs;
  assign tx_session=session_i;
  assign out_valid=rxv&&!fault_r;assign out_data=(RSTR!=0)?rxd_u:rxd;
  // Conservatively leave a bubble when the landing register is occupied.
- assign rx_ready=(RSTR==0||rst_i)&&(((IN_PIN!=0)?!rp_v:!rxv)||fault_r);
+ assign rx_ready=(RSTR==0||rst_i)&&(!rxv||fault_r);
  assign ack_seq=expected;assign ack_nak=nak_pending;assign ack_session=session_i;
  // struct-close r2: retained (next_seq - base, a 12-bit subtract) was the -cl routes' only failing class: reg->out -513
  // (hbm_retry545_cl-958d0b4b1 x3).  Registered status: +1 cycle on the debt report, nothing else changes.
  reg [SW-1:0] retained_q;
  always @(posedge clk or negedge rst_i) if(!rst_i) retained_q<=0; else retained_q<=next_seq-base;
  assign retained=retained_q;assign fault=fault_r;assign replay_count=retries;
- reg wq_v; reg [SW-1:0] wq_seq;
- always @(posedge clk or negedge rst_i) if(!rst_i) wq_v<=1'b0; else wq_v<=accepted&&!fault_r;
- always @(posedge clk) if(accepted) wq_seq<=next_seq;
- wire st_wv = (IN_WPIN!=0) ? wq_v : accepted;
-`ifndef OT_RETRY_MUT_WPIN_DATA
- wire [W-1:0] st_wd = (IN_WPIN!=0) ? txd_u : in_data;
-`else
- wire [W-1:0] st_wd = in_data;   // mutant: the delayed write takes the live input port, not the accepted beat's slot copy
-`endif
- wire [SW-1:0] st_ws = (IN_WPIN!=0) ? wq_seq : next_seq;
  ot_hbm_replay_sram #(.W(W),.SW(SW),.EW(EW),.DEPTH(DEPTH)) u_storage(
- .clk(clk),.rst_n(rst_i),.w_valid(st_wv),.w_data(st_wd),
- .w_seq(st_ws),.w_session(session_i),.r_valid(request_read),
+ .clk(clk),.rst_n(rst_i),.w_valid(accepted),.w_data(in_data),
+ .w_seq(next_seq),.w_session(session_i),.r_valid(request_read),
  .r_seq(cursor),.r_session(session_i),.o_valid(rd_v),.o_data(rd_data),
  .o_seq(rd_seq),.o_session(rd_epoch),.o_ce(rd_ce),.o_ue(rd_ue));
  initial begin
- if(IN_WPIN!=0&&RSTR==0)$fatal(1,"IN_WPIN needs RSTR (the write data is the TX slot register txd_u)");
  if(DEPTH<2||(DEPTH&(DEPTH-1))!=0||DEPTH>=(1<<(SW-1)))$fatal(1,"ambiguous replay window");
  if(TIMEOUT<8||MAX_RETRY<1)$fatal(1,"invalid retry bound");
  end
@@ -198,7 +130,7 @@ module ot_hbm_link_retry_pipeline #(
  phase<=0;base<=0;next_seq<=0;sent_seq<=0;cursor<=0;expected<=0;
  debt_pipe<=0;full_pipe<=0;fault_r<=0;replaying<=0;nak_pending<=0;
  nak_seen<=0;last_nak<=0;rinc<=0;timer<=0;attempts<=0;
- timeout_pending<=0;txv<=0;tx_replay<=0;txd<=0;txs<=0;rxv<=0;rxd<=0;rp_v<=0;
+ timeout_pending<=0;txv<=0;tx_replay<=0;txd<=0;txs<=0;rxv<=0;rxd<=0;
  mail_v<=0;mail_nak<=0;mail_seq<=0;cap_v<=0;cap_nak<=0;cap_seq<=0;
  cap_base<=0;cap_sent<=0;delta_pipe<=0;window_pipe<=0;
  ack_progress<=0;invalid_ack<=0;fresh_nak<=0;
@@ -209,12 +141,12 @@ module ot_hbm_link_retry_pipeline #(
  phase<=phase+1'b1;
  if(write_guard!=0)write_guard<=write_guard-1'b1;
  if(feedback)begin
- mail_v<=1;mail_seq<=fbe_seq;mail_nak<=mail_nak|fbe_nak;
+ mail_v<=1;mail_seq<=fb_seq;mail_nak<=mail_nak|fb_nak;
  end
  if(phase==0)begin
  cap_v<=mail_v;cap_nak<=mail_nak;cap_seq<=mail_seq;
  cap_base<=base;cap_sent<=sent_seq;
- mail_v<=feedback;mail_nak<=feedback&&fbe_nak;
+ mail_v<=feedback;mail_nak<=feedback&&fb_nak;
  end
  if(phase==1)begin
  delta_pipe<=cap_seq-cap_base;window_pipe<=cap_sent-cap_base;
@@ -230,12 +162,7 @@ module ot_hbm_link_retry_pipeline #(
  if(accepted)begin
  txv<=1;tx_replay<=0;txd<=in_data;txs<=next_seq;
  
- next_seq<=next_seq+1'b1;
-`ifndef OT_RETRY_MUT_WPIN_GUARD
- write_guard<=(IN_WPIN!=0)?2'd3:2'd2;
-`else
- write_guard<=2'd2;   // mutant: the read-after-write guard not extended for the delayed write
-`endif
+ next_seq<=next_seq+1'b1;write_guard<=2;
  end
  if(launched)begin
  txv<=0;
@@ -285,13 +212,9 @@ module ot_hbm_link_retry_pipeline #(
 `endif
  nak_pending<=0;
  end
- if(IN_PIN!=0)begin
- if(rj_v)rp_v<=0;
- if(rx_valid&&rx_ready)rp_v<=1;
- end
- if(rj_v&&rj_session==session_i)begin
- if(!rj_ue&&rj_seq==expected)begin rxv<=1;rxd<=rj_data;end
- else if(rj_ue||!rx_delta[SW-1])nak_pending<=1;
+ if(rx_valid&&rx_ready&&rx_session==session_i)begin
+ if(!rx_ue&&rx_seq==expected)begin rxv<=1;rxd<=rx_data;end
+ else if(rx_ue||!rx_delta[SW-1])nak_pending<=1;
  end
  end
  end

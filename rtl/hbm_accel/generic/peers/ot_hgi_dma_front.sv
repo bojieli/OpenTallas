@@ -12,15 +12,13 @@
 //   R  splits it into per-stack requests {tag, nsec <= 256, addr}, one a cycle: rows in windows of 4, chunk by chunk
 //      round robin over the window's rows (a chunk = up to 256 sectors); the stack = address bits [SBIT+1:SBIT]); the tag remembers the run's first VM sector;
 //   L  pin-flops the NS x NL data lanes, computes each beat's VM sector (tag base + idx x K) and lands it in an LD-entry
-//      lane FIFO (source sector in a 128 x 256 SRAM macro a lane, VM sector in flops; credit LD a lane = the svc's initial
-//      credit; the credit returns when the entry's read issues); a tag is free again once all its beats landed; the read
-//      (macro output register) fills a 3-entry skid, issued on registered occupancy only;
-//   C  per lane two out buffers {VM sector, source sector}: the skid head loads the idle one once every destination slot
-//      (K = 4 / esize: FP32 / U32 1, BF16 2, FP8 / INT8 4) of the active one was picked;
-//   X  X1 per bank a rotating-priority pick among the lanes' active buffers (each lane's K slots sit in K consecutive
-//      banks), registered; X2 per bank the AND-OR mux of the picked lane's buffer (the one active in X1's cycle), decoded
-//      for its slot exactly as the mover (BF16 << 16, E4M3 exact, NaN -> 0x7FC00000, INT8 exact), registered into the VM
-//      wide lane = the bank (NB destination sectors a cycle);
+//      lane FIFO (credit LD a lane = the svc's initial credit; the credit returns when the beat leaves the FIFO); a tag
+//      is free again once all its beats landed;
+//   C  per lane: cur (the source sector) -> out (all K = 4 / esize destination sectors at once, registered: FP32 / U32
+//      1, BF16 2, FP8 / INT8 4), decoded exactly as the mover (BF16 << 16, E4M3 exact, NaN -> 0x7FC00000, INT8 exact);
+//      a lane converts one source sector a cycle while its K sectors win their banks;
+//   X  per bank a rotating-priority pick among the lanes (each lane's K slots sit in K consecutive banks) -> VM wide
+//      lane = the bank (NB destination sectors a cycle);
 //   done when every destination sector's wide write is acknowledged.
 //   Fault (sticky until reset): a request run crossing a stack or ending beyond STACK_BYTES, an svc fault beat, a beat without a credit.
 // Rate: NS x NL source sectors a cycle in (the svc lane rate), NB destination sectors a cycle out (the VM port).
@@ -71,9 +69,9 @@ module ot_hgi_dma_front #(
     input  wire [NS-1:0]         dq_rdy,
     // data per stack x lane {v, fault, tag 4, idx 8, data 256}
     input  wire [NS*NL*270-1:0]  dd,
-    output wire [NS*NL-1:0]      dd_cr,
+    output reg  [NS*NL-1:0]      dd_cr,
     // VM wide write port, NB lanes {v, sector 15, wdata 256, word mask 8}
-    output wire [NB*280-1:0]     wl,
+    output reg  [NB*280-1:0]     wl,
     input  wire [NB-1:0]         wl_done
 );
     localparam integer NIN = NS * NL;
@@ -105,10 +103,6 @@ module ot_hgi_dma_front #(
     function automatic [2:0] esz(input [2:0] f);
         esz = (f == 3'd0 || f == 3'd5) ? 3'd4 : (f == 3'd1) ? 3'd2 : 3'd1;
     endfunction
-    // ---------------------------------------------------------------- reset relay: a region a stack's lanes, + control
-    wire [NS:0] rl;
-    ot_rst_relay #(.REGIONS(NS + 1)) u_rst (.clk(clk), .rst_n_in(rst_n), .rst_n(rl));
-    wire rc = rl[NS];
     // ---------------------------------------------------------------- command station (registered)
     reg cv_q; reg [226:0] cm_q;
     reg busy; reg [2:0] sf; reg [1:0] ks;                  // ks = log2 K (destination sectors per source sector)
@@ -121,7 +115,7 @@ module ot_hgi_dma_front #(
     reg [23:0] rsec, r_off;                                 // sectors a row, the chunk's first sector (all window rows)
     reg r_done;
     reg [31:0] issued, wrote;                               // destination sectors requested / acknowledged
-    assign mv_rdy = rc && !busy && !cv_q && !ixc_q && !mv_fault;
+    assign mv_rdy = !busy && !cv_q && !ixc_q && !mv_fault;
     // ---------------------------------------------------------------- indexed row stream state
     reg ixc_q; reg [175:0] ixm_q;                           // command station
     reg ixm;                                                // the running move is an indexed stream
@@ -136,7 +130,7 @@ module ot_hgi_dma_front #(
     reg [36:0] rq_a [0:3]; reg [17:0] rq_ds [0:3];          // row queue {address, first VM sector}
     reg [1:0] rq_h, rq_t; reg [2:0] rq_n;
     wire [3:0] ix_inflight = {1'b0, rq_n} + {3'd0, i1_v} + {3'd0, i2_v} + {3'd0, i3_v} + {3'd0, i4_v};
-    assign ix_rdy = rc && !busy && !cv_q && !ixc_q && !mv_fault;
+    assign ix_rdy = !busy && !cv_q && !ixc_q && !mv_fault;
     assign id_rdy = busy && ixm && !mv_fault && ids_left != 20'd0 && ix_inflight < 4'd4;
     wire id_take = id_v && id_rdy;
     // ---------------------------------------------------------------- tags
@@ -146,22 +140,12 @@ module ot_hgi_dma_front #(
     reg [4:0] ft;
     always @* begin ft = 5'd16; for (integer t = 15; t >= 0; t = t - 1) if (!tag_busy[t]) ft = 5'(t); end
     // ---------------------------------------------------------------- lanes
-    // L  pin flop -> lane FIFO: the source sector in an ot_sram_1r1w_128x256 macro a lane (LD of its 128 rows), the beat's
-    //    VM sector in flops -> read (the macro's output register) -> 3-entry skid (a read issues on registered occupancy
-    //    only: lane FIFO not empty, skid + read in flight < 3) -> one of two out buffers ({sector, source}, alternating);
-    //    the credit returns when the read issues (the entry leaves the FIFO)
-    // X1 per bank a rotating-priority pick over the lanes' active buffers (lane i asks bank b with slot (b - ob_i) mod NB
-    //    when that is < 4 and the slot is still valid); the pick is registered (one-hot over the lanes)
-    // X2 per bank the AND-OR mux of the picked lane's previously active buffer (a lane flips buffers only when every slot
-    //    of the active one was picked, so the buffer X2 reads is never the one being refilled), the slot's conversion,
-    //    registered into wl.  Data flops carry no reset; control resets from ot_rst_relay (one region a stack, + control).
-    wire [NIN-1:0]     dv_w;                                // pin-flopped beat valid a lane
-    wire [NIN*4-1:0]   dtag_w;                              // its tag
-    wire [NIN-1:0]     lflt_w;                              // svc fault beat / beat without a credit
-    wire [NIN*4-1:0]   ov_w;                                // active buffer: slots still to go
-    wire [NIN*18-1:0]  ob_w;                                // active buffer: VM sector of slot 0
-    wire [NIN*274-1:0] ls_w;                                // the buffer active last cycle {sector 18, source 256}
-    reg [NB-1:0] wl_v; reg [278:0] wl_d [0:NB-1];
+    reg [NIN*270-1:0] dd_r;                                 // pin flops
+    reg [273:0] lq [0:NIN*LD-1];                            // {VM sector 18, source sector 256}
+    reg [LW-1:0] lq_h [0:NIN-1]; reg [LW-1:0] lq_t [0:NIN-1]; reg [LW:0] lq_n [0:NIN-1];
+    reg [NIN-1:0] cur_v; reg [17:0] cur_sec [0:NIN-1]; reg [255:0] cur_d [0:NIN-1];
+    // out: the K destination sectors of one source sector, slot j = VM sector ob + j (K consecutive banks)
+    reg [3:0] ov [0:NIN-1]; reg [17:0] ob [0:NIN-1]; reg [255:0] od [0:NIN*4-1];
     function automatic [255:0] conv(input [255:0] s, input [2:0] f, input [1:0] j);
         reg [255:0] o; integer w; reg [7:0] b; reg [15:0] h;
         begin
@@ -178,8 +162,10 @@ module ot_hgi_dma_front #(
             conv = o;
         end
     endfunction
-    // ---------------------------------------------------------------- X1: per bank, rotating priority from rr
+    // ---------------------------------------------------------------- crossbar: per bank, rotating priority from rr
     reg [RW-1:0] rr;
+    // lane i asks bank b with slot (b - ob_i) mod NB when that is < 4 and the slot is valid; per bank a one-hot
+    // rotating-priority pick (requests at or above rr first), the sector by a one-hot AND-OR mux
     reg [NIN-1:0] req [0:NB-1]; reg [NIN-1:0] oh [0:NB-1]; reg [1:0] rslot [0:NB-1][0:NIN-1];
     reg [3:0] gnt [0:NIN-1]; reg [NB-1:0] bsel_v;
     always @* begin
@@ -187,9 +173,9 @@ module ot_hgi_dma_front #(
         for (integer b = 0; b < NB; b = b + 1) begin
             reg [NIN-1:0] hi; reg [NIN-1:0] pk;
             for (integer i = 0; i < NIN; i = i + 1) begin
-                reg [BW-1:0] d; reg [3:0] v; d = BW'(b) - ob_w[i*18 +: BW]; v = ov_w[i*4 +: 4];
+                reg [BW-1:0] d; d = BW'(b) - ob[i][BW-1:0];
                 rslot[b][i] = d[1:0];
-                req[b][i] = d < BW'(4) && v[d[1:0]];
+                req[b][i] = d < BW'(4) && ov[i][d[1:0]];
             end
             hi = req[b] & ~((NIN'(1) << rr) - NIN'(1));
             pk = (hi != '0) ? hi : req[b];
@@ -198,71 +184,20 @@ module ot_hgi_dma_front #(
             for (integer i = 0; i < NIN; i = i + 1) if (oh[b][i]) gnt[i][rslot[b][i]] = 1'b1;
         end
     end
-    reg [NIN-1:0] x_oh [0:NB-1]; reg [NB-1:0] x_v;          // the registered pick
-    wire [3:0] kmask = (ks == 2'd0) ? 4'b0001 : (ks == 2'd1) ? 4'b0011 : 4'b1111;
+    reg [279:0] xw [0:NB-1];
+    always @* for (integer b = 0; b < NB; b = b + 1) begin
+        xw[b] = 280'd0;
+        for (integer i = 0; i < NIN; i = i + 1)
+            if (oh[b][i]) xw[b] = xw[b] | {1'b1, 15'(ob[i] + {16'd0, rslot[b][i]}), od[i*4 + rslot[b][i]], 8'hFF};
+    end
+    wire [NIN-1:0] cur_go;                                  // cur converts into out (every out slot left this cycle)
+    wire [NIN-1:0] pop;                                     // the FIFO head moves into cur
     genvar g;
     generate for (g = 0; g < NIN; g = g + 1) begin : lg
-        wire lr = rl[g / NL];
-        reg dv; reg [269:0] dd_q;                             // pin flop
-        reg [LW-1:0] h, t; reg [LW:0] n;                      // lane FIFO
-        reg [17:0] qs [0:LD-1];                               // its entries' VM sectors
-        reg rv; reg [17:0] rs; wire [255:0] rd;               // read in flight
-        reg [1:0] sh, st, sn; reg [273:0] sk [0:2];           // skid
-        reg ap, pa; reg [273:0] bf [0:1];                     // out buffers
-        reg [3:0] ov; reg [17:0] ob; reg cr;
-        wire rdi  = n != '0 && ({1'b0, sn} + {2'd0, rv}) < 3'd3;
-        wire full = n == (LW+1)'(LD) && !rdi;
-        wire ok   = dv && !full;
-        wire fin  = (ov & ~gnt[g]) == 4'd0;
-        wire ld   = fin && sn != 2'd0;
-        assign dv_w[g] = dv; assign dtag_w[g*4 +: 4] = dd_q[267:264];
-        assign lflt_w[g] = dv && (dd_q[268] || full);
-        assign ov_w[g*4 +: 4] = ov; assign ob_w[g*18 +: 18] = ob;
-        assign ls_w[g*274 +: 274] = bf[pa];
-        assign dd_cr[g] = cr;
-        ot_sram_1r1w_128x256_m1_r2c2 u_q (.clk(clk), .r_ce_in(rdi), .r_addr_in(7'(h)), .rd_out(rd),
-            .w_ce_in(ok), .w_addr_in(7'(t)), .wd_in(dd_q[255:0]), .w_mask_in({256{1'b1}}),
-            .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(16'd0));
-        always @(posedge clk) begin                           // data: no reset
-            dd_q <= dd[g*270 +: 270];
-            if (ok) qs[t] <= tg_dsec[dd_q[267:264]] + (18'(dd_q[263:256]) << ks);
-            if (rdi) rs <= qs[h];
-            if (rv) sk[st] <= {rs, rd};
-            if (ld) begin bf[!ap] <= sk[sh]; ob <= sk[sh][273:256]; end
-        end
-        always @(posedge clk or negedge lr) begin
-            if (!lr) begin
-                dv <= 1'b0; h <= '0; t <= '0; n <= '0; rv <= 1'b0; sh <= 2'd0; st <= 2'd0; sn <= 2'd0;
-                ap <= 1'b0; pa <= 1'b0; ov <= 4'd0; cr <= 1'b0;
-            end else begin
-                dv <= dd[g*270 + 269];
-                if (ok) t <= t + 1'b1;
-                if (rdi) h <= h + 1'b1;
-                n <= n + (LW+1)'(ok) - (LW+1)'(rdi);
-                cr <= rdi;
-                rv <= rdi;
-                if (rv) st <= (st == 2'd2) ? 2'd0 : st + 2'd1;
-                if (ld) sh <= (sh == 2'd2) ? 2'd0 : sh + 2'd1;
-                sn <= sn + 2'(rv) - 2'(ld);
-                pa <= ap;
-                if (ld) begin ap <= !ap; ov <= kmask; end
-                else ov <= ov & ~gnt[g];
-            end
-        end
+        assign cur_go[g] = cur_v[g] && (ov[g] & ~gnt[g]) == 4'd0;
+        assign pop[g] = lq_n[g] != '0 && (!cur_v[g] || cur_go[g]);
     end endgenerate
-    // ---------------------------------------------------------------- X2
-    genvar xb;
-    generate for (xb = 0; xb < NB; xb = xb + 1) begin : xg
-        assign wl[xb*280 +: 280] = {wl_v[xb], wl_d[xb]};
-        always @(posedge clk) begin : x2
-            reg [273:0] sv; reg [BW-1:0] d;
-            x_oh[xb] <= oh[xb];
-            sv = 274'd0;
-            for (integer i = 0; i < NIN; i = i + 1) if (x_oh[xb][i]) sv = sv | ls_w[i*274 +: 274];
-            d = BW'(xb) - sv[256 +: BW];
-            wl_d[xb] <= {15'(sv[273:256] + {16'd0, d[1:0]}), conv(sv[255:0], sf, d[1:0]), 8'hFF};
-        end
-    end endgenerate
+    wire [3:0] kmask = (ks == 2'd0) ? 4'b0001 : (ks == 2'd1) ? 4'b0011 : 4'b1111;
     // the indexed request of this cycle (head row of the queue, its next run of <= 256 sectors)
     reg ix_try, ix_bad, ix_go, ix_pop; reg [36:0] ix_a; reg [8:0] ix_rn; reg [1:0] ix_st;
     always @* begin : ixreq
@@ -280,15 +215,18 @@ module ot_hgi_dma_front #(
     end
     // ---------------------------------------------------------------- sequential
     integer i, s, t;
-    always @(posedge clk or negedge rc) begin
-        if (!rc) begin
-            cv_q <= 1'b0; busy <= 1'b0; mv_done <= 1'b0; mv_fault <= 1'b0; dq <= '0; wl_v <= '0; x_v <= '0;
-            tag_busy <= 16'd0; rr <= '0; r_done <= 1'b1;
+    always @(posedge clk or negedge rst_n) begin
+        if (!rst_n) begin
+            cv_q <= 1'b0; busy <= 1'b0; mv_done <= 1'b0; mv_fault <= 1'b0; dq <= '0; dd_cr <= '0; wl <= '0;
+            dd_r <= '0; tag_busy <= 16'd0; rr <= '0; r_done <= 1'b1; cur_v <= '0;
             issued <= 32'd0; wrote <= 32'd0;
             ixc_q <= 1'b0; ixm <= 1'b0; ids_left <= 20'd0; i1_v <= 1'b0; i2_v <= 1'b0; i3_v <= 1'b0; i4_v <= 1'b0; ix_first <= 1'b0;
             rq_h <= 2'd0; rq_t <= 2'd0; rq_n <= 3'd0;
+            for (i = 0; i < NIN; i = i + 1) begin lq_h[i] <= '0; lq_t[i] <= '0; lq_n[i] <= '0; ov[i] <= 4'd0; end
         end else begin
-            mv_done <= 1'b0;
+            mv_done <= 1'b0; dd_cr <= '0;
+            dd_r <= dd;
+            for (i = 0; i < NB; i = i + 1) wl[i*280 + 279] <= 1'b0;
             for (s = 0; s < NS; s = s + 1) if (dq_rdy[s]) dq[s*51 + 50] <= 1'b0;
             // ---- accept (command station, then the decode)
             if (mv_v && mv_rdy) begin cv_q <= 1'b1; cm_q <= mv; end
@@ -395,19 +333,40 @@ module ot_hgi_dma_front #(
                 pp = ix_go && ix_pop;
                 rq_n <= rq_n + {2'd0, psh} - {2'd0, pp};
             end
-            // ---- lanes: a beat that is a fault or finds its lane FIFO full
-            if (lflt_w != '0) mv_fault <= 1'b1;
+            // ---- landing: VM sector of each beat, into the lane FIFO
+            for (i = 0; i < NIN; i = i + 1) begin : land
+                reg [269:0] in; reg ok;
+                in = dd_r[i*270 +: 270];
+                ok = in[269] && !(lq_n[i] == (LW+1)'(LD) && !pop[i]);
+                if (in[269] && in[268]) mv_fault <= 1'b1;
+                if (in[269] && !ok) mv_fault <= 1'b1;
+                if (ok) begin
+                    lq[i*LD + lq_t[i]] <= {tg_dsec[in[267:264]] + (18'(in[263:256]) << ks), in[255:0]};
+                    lq_t[i] <= lq_t[i] + 1'b1;
+                end
+                if (pop[i]) begin
+                    lq_h[i] <= lq_h[i] + 1'b1; dd_cr[i] <= 1'b1;
+                    {cur_sec[i], cur_d[i]} <= lq[i*LD + lq_h[i]];
+                end
+                cur_v[i] <= pop[i] ? 1'b1 : cur_go[i] ? 1'b0 : cur_v[i];
+                lq_n[i] <= lq_n[i] + (LW+1)'(ok) - (LW+1)'(pop[i]);
+                if (cur_go[i]) begin
+                    ob[i] <= cur_sec[i]; ov[i] <= kmask;
+                    for (t = 0; t < 4; t = t + 1) od[i*4 + t] <= conv(cur_d[i], sf, 2'(t));
+                end else ov[i] <= ov[i] & ~gnt[i];
+            end
             // ---- tags: free once every beat landed
             for (t = 0; t < 16; t = t + 1) begin : tg
                 integer k; k = 0;
-                for (i = 0; i < NIN; i = i + 1) if (dv_w[i] && dtag_w[i*4 +: 4] == 4'(t)) k = k + 1;
+                for (i = 0; i < NIN; i = i + 1) if (dd_r[i*270 + 269] && dd_r[i*270 + 264 +: 4] == 4'(t)) k = k + 1;
                 if (k != 0) begin
                     tg_left[t] <= tg_left[t] - 9'(k);
                     if ({23'd0, tg_left[t]} <= ((MUT == 2) ? k + 8 : k)) tag_busy[t] <= 1'b0;
                 end
             end
             // ---- crossbar
-            x_v <= bsel_v; wl_v <= x_v;
+            for (i = 0; i < NB; i = i + 1)
+                if (bsel_v[i]) wl[i*280 +: 280] <= xw[i];
             rr <= (rr == RW'(NIN - 1)) ? '0 : rr + 1'b1;
             // ---- completion
             begin : cnt
@@ -422,7 +381,7 @@ module ot_hgi_dma_front #(
     // +DMA_TRACE: each move taken, each request, each done (bench / e2e debugging)
     reg trc; initial trc = $test$plusargs("DMA_TRACE");
     reg mv_fault_d; always @(posedge clk) mv_fault_d <= mv_fault;
-    always @(posedge clk) if (trc && rc) begin
+    always @(posedge clk) if (trc && rst_n) begin
         if (cv_q) $display("FRONT move sf %0d src %h sst %0d dst %0d dstr %0d m %0d n %0d", cm_q[4:2], cm_q[44:5], cm_q[76:45],
                            cm_q[137:98], cm_q[169:138], cm_q[205:186], cm_q[226:206]);
         for (integer q = 0; q < NS; q = q + 1)

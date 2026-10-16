@@ -94,7 +94,6 @@ D_MD_FIELDS = [
     ("cp_vocab", 40, 0, 18, "u", "hfd_cmdproc", "doorbell / completion token range check (width 18 everywhere)"),
     ("cp_ctx_max", 41, 0, 21, "u", "hfd_cmdproc", "doorbell position range check"),
     ("coll_group_size", 46, 0, 8, "u", "hfd_coll", "aligned groups (C6 set); rank = die_id mod size"),
-    ("link_session", 47, 0, 24, "u", "hfd_coll", "link session id carried on every die-to-die link (hfd_lk_ep, f_lk chain); software sets it per job (hgi-1010/c for hbm-phys [link])"),
     # word 53 = mtp_noise (hgi-1010/h); words 54-55: reserved for MTP; word 49 = G26 mtp_kstride; words 50-52: reserved for C4 window/chunk parameters
     ("entry_ar", 56, 0, 32, "u", "hfd_cmdproc", "AR decode step: record offset in the image (16 B units)"),
     ("entry_verify", 57, 0, 32, "u", "hfd_cmdproc", "MTP verify pass (0 = absent)"),
@@ -199,7 +198,7 @@ def d_spec_json():
         md_fields=[dict(name=n, word=w, lsb=l, width=wd, kind=k, consumer=c, why=y, reset=D_RESET.get(n),
                         legal=(sorted(D_LEGAL[n]) if isinstance(D_LEGAL.get(n), set) else D_LEGAL.get(n)))
                    for n, w, l, wd, k, c, y in D_MD_FIELDS],
-        reserved_words=dict(geometry_in_manifest="2-31", static_reserved="42-45, 48, 46 bits 31:8, 47 bits 31:24",
+        reserved_words=dict(geometry_in_manifest="2-31", static_reserved="42-45, 47-48, 46 bits 31:8",
                             mtp="49, 53-55", window_chunk="50-52", other="59, 62"),
         coll_group_size_defined_rejected=D_GROUP_DEFINED_REJECTED, errors=ERR, fmt=FMT,
         uop=dict(bits=128, fields=[dict(name=n, lsb=l, width=w) for n, l, w in D_UOP_FIELDS], units=D_UNITS,

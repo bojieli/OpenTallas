@@ -123,39 +123,6 @@ def ensure_corner(s):
     return s, msg, True
 
 
-# LOOP-LVT 2026-10-10: the WC-reads-TT var alone is not enough for multi-VT routes.  The asap7 platform config.mk
-# (included after the design config) appends each OTHER_VT with `WC_NLDM_LIB_FILES += $(subst PLACEHOLDER,<vt>,
-# $(WC_NLDM_LIB_FILES_T))` -- the SS template, which the design config cannot override (the platform re-assigns it) --
-# so OT_MULTI_VT routes repaired setup against LVT/SLVT SS cells (qfd sys_v lvt r3).  `override` makes that += a no-op.
-LIBOV_FN = r'''def ot_tt_lib_override(config):
-    """LOOP-LVT (tt_overlay backport): `override export WC_NLDM_LIB_FILES = $(TC_NLDM_LIB_FILES)` so the asap7
-    platform's OTHER_VT `+=` (SS template) cannot add LVT/SLVT SS libraries to the TT-reading WC corner."""
-    return [("override " + line) if re.fullmatch(r"export WC_NLDM_LIB_FILES\s*=\s*\$\(TC_NLDM_LIB_FILES\)\s*", line)
-            else line for line in config]
-
-
-'''
-LIBOV_CALL = "    config = ot_tt_lib_override(config)\n"
-HOOKS_CALL = "    config = apply_cts_fix_hooks(config, case)\n"
-DIRECT_OVERRIDE = ("# tt_overlay LOOP-LVT: no OTHER_VT SS append into the TT-reading WC corner\n"
-                   "override export WC_NLDM_LIB_FILES = $(TC_NLDM_LIB_FILES)")
-
-
-def ensure_lib_override(s):
-    """(text, msgs, ok): run_abi3_physical writes `override export WC_NLDM_LIB_FILES = ...` (main has it since
-    LOOP-LVT; older snapshots get the function + call).  Needs ensure_hooks' call anchor."""
-    if "def ot_tt_lib_override" in s and LIBOV_CALL in s:
-        return s, [], True
-    if s.count(HOOKS_CALL) != 1 or s.count("\ndef apply_cts_fix_hooks") != 1:
-        return s, ["NO anchor for the WC TT lib override (LOOP-LVT)"], False
-    if "def ot_tt_lib_override" not in s:
-        i = s.index("\ndef apply_cts_fix_hooks") + 1
-        s = s[:i] + LIBOV_FN + s[i:]
-    if LIBOV_CALL not in s:
-        s = s.replace(HOOKS_CALL, HOOKS_CALL + LIBOV_CALL)
-    return s, ["WC TT lib override (multi-VT) added"], True
-
-
 def ensure_hooks(s, src):
     fn = HOOKS_FN.replace("@TTB_SRC@", str(src.resolve()))
     if fn in s:
@@ -265,9 +232,6 @@ def ensure_direct_configs(src):
         t = f.read_text(errors="replace")
         u = "\n".join((l.replace("$(WC_NLDM_LIB_FILES)", "$(TC_NLDM_LIB_FILES)").replace("_ss.lib", "_tt.lib")
                        if re.match(r"\s*export\s+WC_LIB_FILES\s*=", l) else l) for l in t.split("\n"))
-        if re.search(r"^\s*export\s+WC_LIB_FILES\s*=", u, re.M) and DIRECT_OVERRIDE not in u:
-            # LOOP-LVT: a single-corner stage (LIB_FILES += $(WC_NLDM_LIB_FILES)) and any OTHER_VT append read TT too
-            u = u.rstrip("\n") + "\n" + DIRECT_OVERRIDE + "\n"
         if u != t:
             f.write_text(u)
             n += 1
@@ -306,9 +270,8 @@ def main():
         s0 = s = f.read_text()
         s, m1, ok1 = ensure_corner(s)
         s, m2, ok2 = ensure_hooks(s, src)
-        s, m3, ok3 = ensure_lib_override(s) if ok2 else (s, [], False)
-        out += m1 + m2 + m3
-        ok = ok1 and ok2 and ok3
+        out += m1 + m2
+        ok = ok1 and ok2
         if s != s0:
             if not f.with_suffix(".py.pre_ttb").exists():
                 shutil.copy2(f, f.with_suffix(".py.pre_ttb"))

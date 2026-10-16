@@ -138,35 +138,6 @@ def d_unpack(words):
     return md
 
 
-LOOP_COUNT_FROM_VM = 1 << 17     # PROVISIONAL (G24, hbm-sim -> hgi-takeover 10-10): count = U32(VM[imm_a]), e.g. the
-                                  # IDX.OWNED slot count of a software ROW_GATHER (data-dependent)
-
-
-def loop_count(M, r):
-    """CTL.LOOP count: param[15:0], or (param[17]) the U32 word VM[imm_a] -- equal on every die of the group."""
-    if not r.param & LOOP_COUNT_FROM_VM:
-        return r.param & 0xFFFF
-    vals = {int(d.vm[r.imm_a]) for d in M.dies}
-    if len(vals) != 1:
-        raise Fault(1, f"LOOP count from VM differs across dies {sorted(vals)[:4]}")
-    c = vals.pop()
-    if c > 0xFFFF:
-        raise Fault(3, "LOOP count from VM > 65,535")
-    return c
-
-
-def matching_endloop(recs, pc):
-    depth = 0
-    for j in range(pc, len(recs)):
-        if recs[j].unit == "CTL" and recs[j].op == "LOOP":
-            depth += 1
-        elif recs[j].unit == "CTL" and recs[j].op == "ENDLOOP":
-            depth -= 1
-            if depth == 0:
-                return j
-    raise Fault(3, "LOOP without ENDLOOP")
-
-
 class Machine:
     def __init__(self, dies, units=None):
         self.dies = dies
@@ -334,11 +305,7 @@ class Machine:
                 continue
             if r.unit == "CTL":
                 if r.op == "LOOP":
-                    cnt = loop_count(self, r)
-                    if cnt == 0:                                # skip the body (to the matching ENDLOOP)
-                        pc = matching_endloop(recs, pc) + 1
-                        continue
-                    loops.append(dict(start=pc + 1, count=cnt, level=(r.param >> 16) & 1, i=0))
+                    loops.append(dict(start=pc + 1, count=r.param & 0xFFFF, level=(r.param >> 16) & 1, i=0))
                     pc += 1
                     continue
                 if r.op == "ENDLOOP":
@@ -450,9 +417,6 @@ def encode_fmt(v, fmt):
 # unit models
 # ----------------------------------------------------------------------------------------------------------------
 def u_dma_load(M: Machine, r: Rec, L):
-    a0 = r.desc["A"]
-    if a0.indexed and a0.n_sel == HGI.NSEL_FROM_VM:
-        return dma_row_stream(M, r, L)
     for die in M.dies:
         a, o = r.desc["A"], r.desc["O"]
         vals = M.read(a, die, L)
@@ -460,25 +424,6 @@ def u_dma_load(M: Machine, r: Rec, L):
             die.vm[M.vm_addrs(o, die, L)] = vals.astype(np.uint32)
         else:
             M.vm_write(o, die, L, vals)
-
-
-def dma_row_stream(M: Machine, r: Rec, L):
-    """The indexed stream form of DMA.LOAD (spec 3.3), PROVISIONAL reading (G24 iii): A indexed with n_sel = N_FROM_VM;
-    the row count is U32(VM[I + I.stride + L]) (row 1 of I) and row e is the A row of id U32(VM[I + L + e]) (row 0):
-    base + id x dyn_mul, O.n elements of A.fmt; rows land at O.base + e O.stride, in list order."""
-    for die in M.dies:
-        rd = M.rec_of(die, r)
-        a, o, i_ = rd.desc["A"], rd.desc["O"], rd.desc["I"]
-        ib = M._plain_base(i_, die, L)
-        cnt = int(die.vm[ib + i_.stride + L])
-        ob, on, om, ost, _ = M.eff(o, die, L)
-        if cnt > om:
-            raise Fault(3, f"row stream: {cnt} rows > O.m {om}")
-        for e in range(cnt):
-            idx = int(die.vm[ib + L + e])
-            base = a.base + L * a.lstride + idx * a.dyn_mul
-            v = M.hbm_read(MDesc(space="HBM", fmt=a.fmt, base=base, n=on), die, 0)[0]
-            M.vm_write(MDesc(space="VM", base=ob + e * ost, n=on), die, 0, v)
 
 
 def u_dma_store(M: Machine, r: Rec, L):
@@ -736,43 +681,6 @@ def u_idx_index(M: Machine, r: Rec, L):
                 M.vm_write(rd.desc["R"], die, L, v[order].astype(F))
 
 
-def u_idx_owned(M: Machine, r: Rec, L):
-    """IDX.OWNED (G21): param [7:0] B (owner block), [15:8] G, [23:16] c (slots a gather; PROVISIONAL G24, 0 = 1).
-    A U32 = the K selected row ids (list order).  Row i is owned by rank (i div B) mod G at local row
-    (i div (B G)) B + i mod B.  O = this rank's owned local rows in list order, padded with 0 to ceil(M / c) c (M = the
-    group's largest owned count); R = per list entry the row's place in the gathered array, SLOT-MAJOR j G + r
-    (PROVISIONAL G24: slot j of owner r; the spec text says r M + j); D = [M, ceil(M / c)]."""
-    B, G_, c = r.param & 0xFF, (r.param >> 8) & 0xFF, max(1, (r.param >> 16) & 0xFF)
-    if B == 0 or B & (B - 1) or G_ not in (1, 2, 4, 8, 96):
-        raise Fault(3, "IDX.OWNED B / G")
-    for die in M.dies:
-        rd = M.rec_of(die, r)
-        ab, K, _, _, _ = M.eff(rd.desc["A"], die, L)
-        ids = die.vm[ab:ab + K].astype(np.int64)
-        own = (ids // B) % G_
-        cnt = np.bincount(own, minlength=G_)
-        Mx = int(cnt.max()) if K else 0
-        rounds = -(-Mx // c)
-        me = die.rank % G_
-        mine = ids[own == me]
-        local = (mine // (B * G_)) * B + mine % B
-        ob, on, _, _, _ = M.eff(rd.desc["O"], die, L)
-        if on < rounds * c:
-            raise Fault(3, f"IDX.OWNED O.n {on} < ceil(M / c) c = {rounds * c}")
-        o = np.zeros(on, dtype=np.uint32)
-        o[:len(local)] = local
-        die.vm[ob:ob + on] = o
-        j = np.zeros(K, dtype=np.int64)                  # slot of each entry within its owner's list
-        seen = np.zeros(G_, dtype=np.int64)
-        for e in range(K):
-            j[e] = seen[own[e]]
-            seen[own[e]] += 1
-        rb, rn, _, _, _ = M.eff(rd.desc["R"], die, L)
-        die.vm[rb:rb + K] = (j * G_ + own).astype(np.uint32)
-        db, _, _, _, _ = M.eff(rd.desc["D"], die, L)
-        die.vm[db:db + 2] = np.array([Mx, rounds], dtype=np.uint32)
-
-
 def u_coll_topk_merge(M: Machine, r: Rec, L):
     """COLL.TOPK_MERGE (G18): from VM, A = local values, B = their ids (n each, per die); the group's top imm_a by
     descending value, ties to the lowest id; O = the ids in ascending id order, R (optional) = their values.  The
@@ -1006,7 +914,7 @@ def _write_red(M, rd, die, L, vals):
 
 UNITS = {("DMA", "LOAD"): u_dma_load, ("DMA", "STORE"): u_dma_store, ("DMA", "FENCE"): u_dma_fence,
          ("SM", "MATVEC"): u_sm_matvec, ("COLL", "ALL_REDUCE_SUM"): u_coll_all_reduce,
-         ("IDX", "INDEX"): u_idx_index, ("COLL", "TOPK_MERGE"): u_coll_topk_merge, ("IDX", "OWNED"): u_idx_owned,
+         ("IDX", "INDEX"): u_idx_index, ("COLL", "TOPK_MERGE"): u_coll_topk_merge,
          ("ARGMAX", "LOCAL"): u_argmax_local, ("COLL", "ARGMAX_MERGE"): u_coll_argmax_merge,
          ("FUSED", "ROW_NORM"): u_row_norm, ("SFU", "GLU"): u_glu, ("ATT", "QK"): u_att_qk, ("ATT", "PV"): u_att_pv,
          ("SU", "VOP"): u_su_vop, ("IDX", "TOPK"): u_idx_topk, ("COLL", "ALL_GATHER"): u_coll_all_gather,

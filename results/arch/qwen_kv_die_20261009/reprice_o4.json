@@ -3,11 +3,11 @@
  "date": "2026-10-10",
  "clock_hz": 1200000000.0,
  "inputs": {
-  "results/arch/qwen_kv_die_20261010/reprice_relays_dq64.json": "0e425c71440da0b4",
+  "results/arch/qwen_kv_die_20261009/reprice.json": "d132d462ee1402cc",
   "results/arch/qwen_kv_die_20261009/split_relays.json": "803238edb2d2824f",
-  "results/arch/qwen_kv_die_20261009/rom_r22ko4.json": "e2e56dcd24aade4f",
+  "results/arch/qwen_kv_die_20261009/rom_r22ko4.json": "60bbaabca03be749",
   "results/arch/qwen_kv_die_20261009/rom_r22ksv.json": "3ed27d09b8306174",
-  "results/arch/qwen_kv_die_20261009/option4_die/L3_p17.json": "cddfc762f9287e49"
+  "results/arch/qwen_kv_die_20261009/option4_die/L3_p16.json": "81495c6d4d80737a"
  },
  "r22k_relay_term": {
   "run": "r22k_ml10 (the plan as built: ME 37/37, SU 7/7, constant-ROM relays raise the SU memory latency to 10)",
@@ -16,7 +16,7 @@
   "token": 22259
  },
  "o4_run": {
-  "name": "p17",
+  "name": "p16",
   "exact": true,
   "L0": 6369,
   "L1": 5754,
@@ -28,21 +28,49 @@
  },
  "cases": {
   "typical": {
-   "r22k_token_cycles": 250416.0,
-   "r22k_tok_s": 4792.0,
-   "o4_token_cycles": 237965.0,
-   "o4_tok_s": 5042.8,
-   "o4_fec_token_cycles": 245165.0,
-   "o4_fec_tok_s": 4894.7,
-   "o4_fec_bound_tok_s": 4701.4,
-   "r22k_fec_tok_s": 4658.1,
-   "kvd_bound_tok_s": 4850.5,
-   "r22k_fec_vmar_tok_s": 4623.2,
-   "r22k_fecb_vmar_tok_s": 4450.4,
-   "o4_fec_vmar_tok_s": 4890.4,
-   "o4_fecb_vmar_tok_s": 4697.4,
-   "r22k_fec0_vmar_tok_s": 4755.1,
-   "o4_fec0_vmar_tok_s": 5038.2
+   "r22k_token_cycles": 249431.0,
+   "r22k_tok_s": 4810.9,
+   "o4_token_cycles": 236980.0,
+   "o4_tok_s": 5063.7,
+   "o4_fec_token_cycles": 244180.0,
+   "o4_fec_tok_s": 4914.4,
+   "o4_fec_bound_tok_s": 4719.6,
+   "r22k_fec_tok_s": 4676.0,
+   "kvd_bound_tok_s": 4869.9,
+   "r22k_fec_vmar_tok_s": 4640.8,
+   "r22k_fecb_vmar_tok_s": 4466.7,
+   "o4_fec_vmar_tok_s": 4908.6,
+   "o4_fecb_vmar_tok_s": 4714.2
+  },
+  "best": {
+   "r22k_token_cycles": 249067.0,
+   "r22k_tok_s": 4818.0,
+   "o4_token_cycles": 236616.0,
+   "o4_tok_s": 5071.5,
+   "o4_fec_token_cycles": 243816.0,
+   "o4_fec_tok_s": 4921.7,
+   "o4_fec_bound_tok_s": 4726.3,
+   "r22k_fec_tok_s": 4682.6,
+   "kvd_bound_tok_s": 4877.1,
+   "r22k_fec_vmar_tok_s": 4647.4,
+   "r22k_fecb_vmar_tok_s": 4472.8,
+   "o4_fec_vmar_tok_s": 4915.9,
+   "o4_fecb_vmar_tok_s": 4721.0
+  },
+  "worst": {
+   "r22k_token_cycles": 249902.0,
+   "r22k_tok_s": 4801.9,
+   "o4_token_cycles": 237451.0,
+   "o4_tok_s": 5053.7,
+   "o4_fec_token_cycles": 244651.0,
+   "o4_fec_tok_s": 4904.9,
+   "o4_fec_bound_tok_s": 4710.9,
+   "r22k_fec_tok_s": 4667.4,
+   "kvd_bound_tok_s": 4860.6,
+   "r22k_fec_vmar_tok_s": 4632.4,
+   "r22k_fecb_vmar_tok_s": 4458.9,
+   "o4_fec_vmar_tok_s": 4899.2,
+   "o4_fecb_vmar_tok_s": 4705.5
   }
  },
  "o4_relay_term": {
@@ -52,9 +80,9 @@
  },
  "vm_ar": {
   "per_token_r22k": 1944,
-  "per_token_o4": 216,
+  "per_token_o4": 288,
   "stages_r22ksv": 27,
-  "stages_r22ko4": 3,
+  "stages_r22ko4": 4,
   "note": "the sequencer <-> VM all-reduce word path (read request, word back, write) was not in the r22k die or price; each of the 72 all-reduces pays its die relays once (the stream rate is kept: ot_qwen_tp_seq_w12_vrl), the masters' own stations are in the measured vehicle"
  },
  "bounds": {
@@ -70,45 +98,37 @@
    "note": "band words reach the 2 x 2 upper-tile group +8 stages later than the r22k tree top (TWS sensitivity run), tt_ty +3"
   }
  },
+ "sensitivities": {
+  "v16_vrl_only": {
+   "exact": true,
+   "L0": 6367,
+   "L1": 5751,
+   "L2": 5751,
+   "vs_s22ml7": {
+    "L0": 216,
+    "L1": 271
+   },
+   "token_term": 9701,
+   "tok_s_typical": 4916.6
+  }
+ },
  "headline": {
-  "o4_tok_s": 5042.8,
-  "o4_fec_tok_s": 4894.7,
-  "r22k_tok_s": 4792.0,
-  "r22k_fec_tok_s": 4658.1,
+  "o4_tok_s": 5063.7,
+  "o4_fec_tok_s": 4914.4,
+  "r22k_tok_s": 4810.9,
+  "r22k_fec_tok_s": 4676.0,
   "o4_exact": true,
-  "fec_headline_cycles": 0,
-  "fec_verdict": "FEC_IN_LAT: the vehicle charges LAT 339 cycles = 282.5 ns per collective link crossing, which is >= the full technology.",
-  "price_fec0": {
-   "r22k": 4755.1,
-   "o4": 5038.2
-  },
   "price_fec100": {
-   "r22k": 4623.2,
-   "o4": 4890.4
+   "r22k": 4640.8,
+   "o4": 4908.6
   },
   "price_fec240": {
-   "r22k": 4450.4,
-   "o4": 4697.4
+   "r22k": 4466.7,
+   "o4": 4714.2
   },
   "layer_relay_cycles": {
    "r22k": 623,
    "o4": 274
-  },
-  "kv_refresh_provisional": {
-   "mean": 4942.6,
-   "worst": 4843.5
   }
- },
- "kv_refresh_provisional": {
-  "status": "PROVISIONAL: DQ128 / P8 + SRAM row buffer on timed REFpb HBM (qwen-1010/b); the controller RTL refreshes in a fixed rotation, so these may be optimistic; refresh-aware REFpb RTL in progress",
-  "step_increase_per_layer": {
-   "mean": 128,
-   "worst": 266
-  },
-  "o4_fec0_tok_s": {
-   "mean": 4942.6,
-   "worst": 4843.5
-  }
- },
- "kv_basis": "results/arch/qwen_kv_die_20261010/reprice_relays_dq64.json"
+ }
 }

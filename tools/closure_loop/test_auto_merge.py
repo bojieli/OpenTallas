@@ -94,13 +94,3 @@ class AutoMerge(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-
-
-class ExternalBenchWaiver(AutoMerge):
-    def test_waived_prefix_without_loop_benches(self):
-        (self.state / "main_publish_owner.json").write_text(json.dumps({"auto_merge_guarded": True,
-                                                                         "auto_merge_external_bench_prefixes": ["job1"]}))
-        j = self.job(benches={}, spec={"block": "a", "source": {"branch": "claude/feat"}, "no_bench_reason": "external exact bench"})
-        self.assertIsNone(cl.auto_merge_guard(j))
-        j2 = self.job(benches={}, spec={"block": "a", "source": {"branch": "claude/feat"}})
-        self.assertIn("no loop benches", cl.auto_merge_guard(j2))

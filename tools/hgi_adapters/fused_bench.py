@@ -121,17 +121,14 @@ def main():
     def rec(op, eff, n, imm=0, unit=4, param=0):
         opnd = sum(1 << j for j, e in enumerate(eff) if e)
         return dict(hdr=C.SV.header(unit, op, opnd=opnd, imm_a=imm, param=param), eff=eff, n=n)
-    import os
-    only = int(os.environ.get('FUSED_ONLY_D', '0'))     # debug: only the HC cases of this d
-    for D in ((only,) if only else (64, 512, 4096, 5120)):        # 5120: the DS-V4.1 HC_PRE_NORM / HC_POST d (F10)
+    for D in (64, 512, 4096, 5120):        # 5120: the DS-V4.1 HC_PRE_NORM / HC_POST d (F10)
         h = (rng.standard_normal((4, D)) * 2).astype(np.float32)
         pre = (rng.random(4) * 1.5).astype(np.float32)
         w = LB.to_bf16((1 + 0.1 * rng.standard_normal(D)).astype(np.float32))
         eps = np.float32(1e-6)
         x = GV.to_bf16(GV.seqsum([GV.mul(pre[j], h[j]) for j in range(4)]))
         y = GV.rmsnorm_bf16(x, w, eps)
-        # pre must not overlap h (4 D words at 0): at D 5120 the old cb 20000 overwrote h[3][4640..4643] (bench bug)
-        ab, cb, ob, bb = 0, (20000 if 4 * D <= 20000 else 4 * D + 64), 30000, 0x4_0000_0000
+        ab, cb, ob, bb = 0, 20000, 30000, 0x4_0000_0000
         vin = {ab + i: int(v) for i, v in enumerate(f32w(h.reshape(-1)))}
         vin.update({cb + j: int(f32w(pre)[j]) for j in range(4)})
         gb = (f32w(w) >> 16).astype(np.uint32)

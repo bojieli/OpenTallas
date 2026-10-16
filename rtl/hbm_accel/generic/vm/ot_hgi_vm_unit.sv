@@ -95,11 +95,13 @@ module ot_hgi_vm_unit #(
         assign wl_m[gp*8 +: 8] = wq_r[gp*280 +: 8]; assign wl_d[gp*256 +: 256] = wq_r[gp*280 + 8 +: 256];
         assign wl_sec[gp*15 +: 15] = wq_r[gp*280 + 264 +: 15]; assign wl_v[gp] = wq_r[gp*280 + 279];
     end
-    // per-client station: a 4-entry FIFO with one explicit write enable per entry (hgi-1010/c: the for-loop over clients
-    // writing a 2-D array elaborated as a 24-deep procmux chain from cq to sq; rtl_boundary refused in->reg 25 levels)
-    wire [NC-1:0]     h_v;
-    wire [NC*337-1:0] h_q;
-    wire [NC-1:0]     ovf;                 // a push into a full station that does not pop this cycle
+    reg  [336:0] sq [0:NC-1][0:3];
+    reg  [1:0]   sh [0:NC-1];
+    reg  [1:0]   stl [0:NC-1];
+    reg  [2:0]   sn [0:NC-1];
+    reg  [NC-1:0]     h_v;
+    reg  [NC*337-1:0] h_q;
+    always @* for (integer cc = 0; cc < NC; cc = cc + 1) begin h_v[cc] = sn[cc] != 3'd0; h_q[cc*337 +: 337] = sq[cc][sh[cc]]; end
     wire [NC-1:0]     req_r, rsp_v;
     wire [NC*273-1:0] rsp;
     wire [15:0] ce; wire ue, mask_fault;
@@ -110,35 +112,23 @@ module ot_hgi_vm_unit #(
         .wl_v(wl_v), .wl_sec(wl_sec), .wl_d(wl_d), .wl_m(wl_m), .wl_done(wq_done), .wl_conflict(wl_conflict),
         .rl_v(rl_v), .rl_sec(rl_sec), .rl_acc(rl_acc), .rl_rsp(rl_rsp), .rl_conflict(rl_conflict),
         .w2_v(w2_v), .w2_sec(w2_sec), .w2_d(w2_d), .w2_m(w2_m), .w2_acc(w2_acc), .w2_done(w2_done));
-    genvar gc;
-    for (gc = 0; gc < NC; gc = gc + 1) begin : g_st
-        reg [336:0] e0, e1, e2, e3;
-        reg [1:0] sh, stl; reg [2:0] sn;
-        wire push = cq[gc*338 + 337];
-        wire pop  = h_v[gc] && req_r[gc];
-        assign ovf[gc] = push && sn == 3'd4 && !pop;
-        wire wr = push && !ovf[gc];
-        assign h_v[gc] = sn != 3'd0;
-        assign h_q[gc*337 +: 337] = (sh == 2'd0) ? e0 : (sh == 2'd1) ? e1 : (sh == 2'd2) ? e2 : e3;
-        always @(posedge clk) begin
-            if (wr && stl == 2'd0) e0 <= cq[gc*338 +: 337];
-            if (wr && stl == 2'd1) e1 <= cq[gc*338 +: 337];
-            if (wr && stl == 2'd2) e2 <= cq[gc*338 +: 337];
-            if (wr && stl == 2'd3) e3 <= cq[gc*338 +: 337];
-        end
-        always @(posedge clk or negedge rst_n)
-            if (!rst_n) begin sh <= 2'd0; stl <= 2'd0; sn <= 3'd0; cr[gc*274 +: 274] <= 274'd0; end
-            else begin
-                if (wr) stl <= stl + 2'd1;
-                if (pop) sh <= sh + 2'd1;
-                sn <= sn + {2'd0, wr} - {2'd0, pop};
-                cr[gc*274 +: 274] <= {rsp_v[gc], rsp[gc*273 +: 273]};
-            end
-    end
+    integer c;
     always @(posedge clk or negedge rst_n)
-        if (!rst_n) begin proto <= 1'b0; status <= 19'd0; end
-        else begin
-            if (|ovf) proto <= 1'b1;
+        if (!rst_n) begin
+            proto <= 1'b0; cr <= {NC*274{1'b0}}; status <= 19'd0;
+            for (c = 0; c < NC; c = c + 1) begin sh[c] <= 2'd0; stl[c] <= 2'd0; sn[c] <= 3'd0; end
+        end else begin
+            for (c = 0; c < NC; c = c + 1) begin : st
+                reg push, pop;
+                push = cq[c*338 + 337]; pop = h_v[c] && req_r[c];
+                if (push) begin
+                    if (sn[c] == 3'd4 && !pop) proto <= 1'b1;
+                    else begin sq[c][stl[c]] <= cq[c*338 +: 337]; stl[c] <= stl[c] + 2'd1; end
+                end
+                if (pop) sh[c] <= sh[c] + 2'd1;
+                sn[c] <= sn[c] + {2'd0, push && !(sn[c] == 3'd4 && !pop)} - {2'd0, pop};
+                cr[c*274 +: 274] <= {rsp_v[c], rsp[c*273 +: 273]};
+            end
             status <= {proto | wl_conflict | rl_conflict | rq_ovf | w2_ovf, mask_fault, ue, ce};
         end
 endmodule

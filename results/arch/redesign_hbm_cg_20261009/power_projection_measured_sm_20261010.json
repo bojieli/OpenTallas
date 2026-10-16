@@ -29,7 +29,7 @@
     "smatt_r05": 180.4,
     "smatt_r15": 191.9,
     "all_r05": 135.5,
-    "all_r15": 151.7
+    "all_r15": 151.8
    }
   },
   "qwen3_8b_P8191": {
@@ -53,7 +53,7 @@
    "projection_w": {
     "none_r05": 460.1,
     "none_r15": 460.1,
-    "smatt_r05": 331.1,
+    "smatt_r05": 331.2,
     "smatt_r15": 334.2,
     "all_r05": 276.1,
     "all_r15": 285.0
@@ -81,7 +81,7 @@
     "none_r05": 470.6,
     "none_r15": 470.6,
     "smatt_r05": 341.7,
-    "smatt_r15": 344.7,
+    "smatt_r15": 344.8,
     "all_r05": 298.2,
     "all_r15": 305.8
    }
@@ -133,24 +133,19 @@
    }
   },
   "sm_front_s": {
-   "a20_w": 0.045499738305807114,
-   "a00_w": 0.02581152878701687,
+   "a20_w": 0.046075329184532166,
+   "a00_w": 0.02608656696975231,
    "gated": false,
-   "source": "results/arch/redesign_hbm_cg_20261009/sm_front_s_power_20261010/sm_front_s_vq_933_tc.kv",
-   "source_manifest": "results/arch/redesign_hbm_cg_20261009/sm_front_s_power_20261010/sm_front_s_vq_933_tc.src",
+   "source": "results/arch/redesign_hbm_cg_20261009/sm_front_s_power_20261010/sm_front_s_vq_933.kv",
+   "source_manifest": "results/arch/redesign_hbm_cg_20261009/sm_front_s_power_20261010/sm_front_s_vq_933.src",
    "point": "TT OpenSTA report_power at the routed SDC clock period, routed SPEF; UNGATED (no ICG): replaces the pre-qualifier front_s (8e93e5a83) a20 0.045765 / a00 0.025817",
    "original_record_commit": "a622542cf (closure 38381d798, source 933923316 RESULT_VALID qualifier)",
-   "clock_period_ns": 0.833,
-   "route": "TC re-route hbm_smh_front_s_vq-933923316-tc-hm25-tcfix-cl (main a3d6a237c)",
-   "superseded_ss_route_measure": {
-    "a20_w": 0.046075329184532166,
-    "a00_w": 0.02608656696975231
-   }
+   "clock_period_ns": 0.833
   }
  },
  "verdict": {
   "built_scenario": "smatt",
-  "envelope_max_w_high_residual": 344.7,
+  "envelope_max_w_high_residual": 344.8,
   "limit_w": 474.56,
   "passes": true,
   "note": "the peak in-phase a20 point (613.5 W) assumes every unit busy at once, which the measured workloads never do; gating changes the duty-mix point, not a20"

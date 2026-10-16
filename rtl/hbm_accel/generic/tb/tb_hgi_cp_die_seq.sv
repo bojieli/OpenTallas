@@ -199,8 +199,7 @@ module tb_hgi_cp_die_seq;
                 if (cu == 2) exp_x = {nA_, I_, R_, O_, D_, C_, B_, A_, d_sut, d_hdr, 1'b1};
                 if (cu == 3) exp_x = {nA_, O_, C_, B_, A_, d_hdr, 1'b1};
                 if (cu == 5) exp_x = {d_pos1, nC_, nB_, O_, C_, B_, A_, d_sut, d_hdr, 1'b1};
-                if (cu == 8) begin : dx reg [255:0] ai; reg [17:0] il; il = I_[25:8] + {2'd0, d_L}; ai = A_; ai[255:239] = il[17:1]; ai[7] = il[0];
-                    exp_x = {d_pos1, nO_, nA_, O_, ai, d_hdr, 1'b1}; end   // A carries the I-list address (hgi-1010/c)
+                if (cu == 8) exp_x = {d_pos1, nO_, nA_, O_, A_, d_hdr, 1'b1};
                 if (cu == 10) exp_x = {nO_, nA_, O_, B_, A_, d_hdr, 1'b1};
                 if (cu == 1 || cu == 2 || cu == 3 || cu == 5 || cu == 8 || cu == 10) begin chk_u = cu; check_x = 1; end
             end

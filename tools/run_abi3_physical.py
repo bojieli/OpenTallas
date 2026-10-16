@@ -1913,17 +1913,6 @@ def floorplan_extra_lines(floorplan: dict[str, Any] | None) -> list[str]:
     return lines
 
 
-def ot_tt_lib_override(config: list[str]) -> list[str]:
-    """LOOP-LVT (2026-10-10): option B makes corner WC read TT via `export WC_NLDM_LIB_FILES = $(TC_NLDM_LIB_FILES)`,
-    but the asap7 platform config.mk (included AFTER the design config) then appends every OTHER_VT's libraries with
-    `WC_NLDM_LIB_FILES += $(subst PLACEHOLDER,<vt>,$(WC_NLDM_LIB_FILES_T))` -- the SS template -- so an
-    ASAP7_USE_VT='RVT LVT[ SLVT]' route repaired setup against LVT/SLVT SS cells.  The template cannot be overridden
-    from the design config (the platform re-assigns it); `override` makes the platform's later `+=` a no-op, and
-    $(TC_NLDM_LIB_FILES) already holds every VT's TT libraries.  RVT-only routes: same value, unchanged."""
-    return [("override " + line) if re.fullmatch(r"export WC_NLDM_LIB_FILES\s*=\s*\$\(TC_NLDM_LIB_FILES\)\s*", line)
-            else line for line in config]
-
-
 def apply_cts_fix_hooks(config: list[str], case: Path) -> list[str]:
     """Opt-in flow fixes chained after the block's own PRE_CTS hook (setup-triage 2026-10-07).
 
@@ -2465,7 +2454,6 @@ def run_pnr(
     if endpoint_netlist:
         config.append("export SYNTH_NETLIST_FILES = /work/w11_endpoint_mapped.v")
     config = apply_cts_fix_hooks(config, case)
-    config = ot_tt_lib_override(config)
     (case / "config.mk").write_text("\n".join(config) + "\n", encoding="utf-8")
     if floorplan and floorplan.get("pin_regions"):
         (case / "io_constraints.tcl").write_text(

@@ -90,11 +90,6 @@ def cv(sec, key):
     return CAL[sec][key]["value"]
 
 
-def fp(key, default):
-    """re-floorplan unit counts (calibration.json "floorplan"; absent -> the pre-10-10 die)"""
-    return CAL.get("floorplan", {}).get(key, {}).get("value", default)
-
-
 # ----------------------------------------------------------------------------------------------------------------
 # execution list and footprints
 # ----------------------------------------------------------------------------------------------------------------
@@ -112,24 +107,7 @@ def expand(recs, pos, token=0, rank=0):
             pc += 1
             continue
         if r.unit == "CTL" and r.op == "LOOP":
-            cnt = r.param & 0xFFFF
-            if r.param & (1 << 17):                    # count from VM (G24): the timing caller sets r.dyn_count
-                cnt = getattr(r, "dyn_count", None)
-                if cnt is None:
-                    raise ValueError(f"LOOP {r.tag}: count from VM needs dyn_count for timing")
-            if cnt == 0:
-                depth, j = 0, pc
-                while True:
-                    if recs[j].unit == "CTL" and recs[j].op == "LOOP":
-                        depth += 1
-                    elif recs[j].unit == "CTL" and recs[j].op == "ENDLOOP":
-                        depth -= 1
-                        if depth == 0:
-                            break
-                    j += 1
-                pc = j + 1
-                continue
-            loops.append([pc + 1, cnt, 0, (r.param >> 16) & 1])
+            loops.append([pc + 1, r.param & 0xFFFF, 0, (r.param >> 16) & 1])
             pc += 1
             continue
         if r.unit == "CTL" and r.op == "ENDLOOP":
@@ -190,16 +168,11 @@ def footprint(r, dyn, L):
     """Descriptor extents, plus the implicit state a native engine reads / writes (r.implicit: VM intervals the
     lowering declares for DS engines whose inputs are not all descriptors)."""
     reads, writes = [], []
-    if r.unit == "CTL" and r.op == "LOOP" and r.param & (1 << 17):
-        reads.append(("VM", r.imm_a, r.imm_a + 1))
     for kind, iv in getattr(r, "implicit", ()):
         (writes if kind == "w" else reads).append(iv)
     half = r.unit == "SU" and r.sut is not None and r.sut.get("b_half")
     for k, d in r.desc.items():
         if d.space not in ("VM", "HBM"):
-            continue
-        if d.indexed and d.n_sel == 63 and d.space == "HBM":     # indexed row stream: any row of the region
-            reads.append(("HBM", d.base, d.base + (1 << 30)))
             continue
         if half and k in ("B", "D") and not (0 < d.n_sel < 63):
             # b_half: B / D are read at inner index i >> 1 (adjacent-pair tables), so the span is ceil(n / 2)
@@ -252,7 +225,7 @@ def su_cost(r, dyn, L):
         strides(k, s)
     if "R" in r.desc:
         f["rso"] = max(1, r.desc["R"].stride)
-    lay = VC.layout(f, int(fp("su_lanes", 1024)), int(fp("su_sfu_lanes", 256)))
+    lay = VC.layout(f, 1024, 256)
     depth = lay["dR"] if t["red"] else lay["dP"]
     hbm = any(d.space == "HBM" for d in r.desc.values())       # an HBM source pays the first access before row 0
     fa = first_access() if hbm else 0.0
@@ -297,8 +270,7 @@ def cost(r, dyn, L, cfg=None):
         c = cv("units", "FUSED.ROW_NORM.seg128" if seg else "FUSED.ROW_NORM.d4096")
         return c, "estimate", f"ROW_NORM seg {seg}"
     if u == "SFU":
-        w = fp("sfu_width", 1.0)
-        return cv("units", "SFU.GLU") / w, "estimate", "GLU fast path" + (f" (width {w})" if w != 1.0 else "")
+        return cv("units", "SFU.GLU"), "estimate", "GLU fast path"
     if u == "ATT":
         b = r.desc["B"]
         _, P, _, st, _ = eff(b, dyn, L)
@@ -454,8 +426,7 @@ def schedule(recs, pos, mode="S2", token=0, cost_fn=cost, wires=True):
         u = r.unit
         if mode == "S0":
             t0 = max([end[j] for j in deps[i]] + [start[j] for j in ddeps[i]] +
-                     [last_end_unit[u] if u not in PIPELINED else 0.0] +
-                     [outstanding_end["DMA"] if (u == "DMA" and r.op == "FENCE") else 0.0])
+                     [last_end_unit[u] if u not in PIPELINED else 0.0])
             if u in PIPELINED and unit_starts[u]:
                 t0 = max(t0, unit_starts[u][-1] + PIPELINED[u])
             start[i] = t0
@@ -501,8 +472,6 @@ def schedule(recs, pos, mode="S2", token=0, cost_fn=cost, wires=True):
                 cp_t = d_t
             disp[i] = d_t
             t0 = max(d_t + (wire_of(r) if mode != "S1" else 0.0), last_end_unit[u] if u not in PIPELINED else 0.0)
-            if u == "DMA" and r.op == "FENCE":           # posted HBM writes: the fence completes after every DMA record
-                t0 = max(t0, outstanding_end["DMA"])
             if u in PIPELINED and q:
                 t0 = max(t0, q[-1] + PIPELINED[u])
             start[i] = t0
@@ -524,11 +493,8 @@ def schedule(recs, pos, mode="S2", token=0, cost_fn=cost, wires=True):
     if mode != "S0":
         for i in range(n):
             for j in deps[i]:
-                same = recs[ex[i][0]].unit == recs[ex[j][0]].unit and j < i
-                war_only = same and not any(overlap(w_, x) for w_ in fps[i][1] for x in fps[j][1]) and \
-                    not any(overlap(x, w_) for x in fps[i][0] for w_ in fps[j][1])
-                if end[j] > start[i] + 1e-9 and not (same and recs[ex[i][0]].unit not in PIPELINED) and \
-                        not (war_only and start[j] <= start[i]):
+                if end[j] > start[i] + 1e-9 and not (recs[ex[i][0]].unit == recs[ex[j][0]].unit and j < i
+                                                       and recs[ex[i][0]].unit not in PIPELINED):
                     races.append(dict(rec=ex[i][0], L=ex[i][1], tag=recs[ex[i][0]].tag, producer=recs[ex[j][0]].tag,
                                       early=round(end[j] - start[i], 1)))
             for j in ddeps[i]:

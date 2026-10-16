@@ -26,10 +26,6 @@
 //   them.  At most one posted move is in flight (the mover runs one move at a time); its completion is mv_pdone (the
 //   mover's done), a front LOAD's is mv_fdone.  A posted move's fault halts the unit (rec_fault, sticky) when it occurs.
 //   MUT_FENCE (bench): the fence retires without draining the posted move (stale data after the fence: must FAIL).
-// INDEXED ROW STREAM (hgi-1010/c, spec 3.3): a LOAD whose A is indexed with n_sel = N_FROM_VM (63) goes to the engines'
-//   stream port is_*: {ilist 32 = the I table's effective base + L (rec_ilist, from the CP), rebase 1, cnt 20 = A's
-//   effective n (the CP read it from row 1 of I), O stride 32, O base 32, O n 21, A dyn_mul 27, A effective base 40
-//   (holds id_0 x dyn_mul), A fmt 3}.  Checks: A HBM, O VM (FP32 / U32 as a LOAD), 1 <= cnt <= O.m, I operand present.
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_hgi_dma_record #(
     parameter integer MUT_SLOT = 0,       // mutant: KVWB slot = POS (no ring wrap)
@@ -47,7 +43,6 @@ module ot_hgi_dma_record #(
     input  wire [255:0]  rec_a, rec_o,
     input  wire [20:0]   rec_n_a, rec_n_o,
     input  wire [20:0]   rec_pos1,
-    input  wire [31:0]   rec_ilist,      // VM word address of this iteration's I row 0 entry (I effective base + L)
     output reg           rec_done,
     output reg           rec_fault,
     output wire          halted,
@@ -67,17 +62,13 @@ module ot_hgi_dma_record #(
     input  wire          mv_src,         // the mover: the move's source consumed (POSTED)
     input  wire          mv_pdone,       // the mover's done (POSTED; mv_done = front done | mover done)
     input  wire          mv_fdone,       // the front's done (POSTED)
-    output wire          is_v,           // indexed row stream command (ot_hgi_dma_engines)
-    input  wire          is_rdy,
-    output wire [207:0]  is_cmd,
     output wire          fence_v,
     input  wire          fence_rdy,
     input  wire          fence_done
 );
     wire hen = LEGACY ? hgi_en : 1'b1;
     reg          raw_v, busy, halt_q, iss, is_fence, kv, kv_iss, mul_run;
-    reg  [127:0] hdr_q; reg [255:0] a_q, o_q; reg [20:0] na_q, no_q, pos1_q; reg [31:0] il_q, il1; reg [20:0] no1;
-    reg          is_str; reg [207:0] is_q;
+    reg  [127:0] hdr_q; reg [255:0] a_q, o_q; reg [20:0] na_q, no_q, pos1_q;
     reg  [226:0] mv_q;
     reg  [2:0]   dig;
     reg  [19:0]  slot; reg [31:0] ost; reg [51:0] prod;
@@ -90,9 +81,7 @@ module ot_hgi_dma_record #(
     assign halted = halt_q;
     assign wr_quiet = !pst;
     assign rec_rdy = hen && rdy_r;                                       // registered
-    assign mv_v    = hen ? (iss && !is_fence && !is_str) : lg_mv_v;
-    assign is_v    = hen && iss && is_str;
-    assign is_cmd  = is_q;
+    assign mv_v    = hen ? (iss && !is_fence) : lg_mv_v;
     assign mv      = hen ? mv_q : lg_mv;
     assign lg_mv_rdy = !hen && mv_rdy;
     assign fence_v = hen ? (iss && is_fence && !pst && MUT_FENCE == 0) : lg_fence_v;
@@ -108,11 +97,9 @@ module ot_hgi_dma_record #(
     wire a_ok_store = as == 2'd1 && (af == 3'd0 || af == 3'd5);
     wire o_ok_store = os == 2'd0 && (of == 3'd0 || of == 3'd1 || of == 3'd2 || of == 3'd5) && ((of == 3'd5) == (af == 3'd5));
     wire shape_ok   = (na_q == no_q) && (a_q[87:68] == om);
-    wire str        = (op == 6'd0) && a_q[6] && a_q[206:201] == 6'd63;     // the indexed stream form
-    wire str_ok     = opnd[6] && as == 2'd0 && na_q <= {1'b0, om} && na_q != 21'd0;
     wire kv_ok      = (om != 20'd0) && ((om & (om - 20'd1)) == 20'd0) && (na_q == no_q) && (a_q[87:68] == 20'd1);
     wire bad = (hdr_q[127:124] != 4'd8) || (op > 6'd3) ||
-               (op == 6'd0 && !(opnd[0] && opnd[4] && a_ok_load && o_ok_load && (str ? str_ok : shape_ok))) ||
+               (op == 6'd0 && !(opnd[0] && opnd[4] && a_ok_load && o_ok_load && shape_ok)) ||
                (op == 6'd1 && !(opnd[0] && opnd[4] && a_ok_store && o_ok_store && shape_ok)) ||
                (op == 6'd3 && !(opnd[0] && opnd[4] && a_ok_store && o_ok_store && kv_ok));
     function automatic [15:0] ist(input [255:0] d);
@@ -121,17 +108,16 @@ module ot_hgi_dma_record #(
     wire [20:0] pos = pos1_q - 21'd1;
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) begin
-            raw_v <= 1'b0; s1_v <= 1'b0; bad1 <= 1'b0; rdy_r <= 1'b0; busy <= 1'b0; halt_q <= 1'b0; iss <= 1'b0; is_fence <= 1'b0; kv <= 1'b0; kv_iss <= 1'b0; mul_run <= 1'b0; is_str <= 1'b0;
+            raw_v <= 1'b0; s1_v <= 1'b0; bad1 <= 1'b0; rdy_r <= 1'b0; busy <= 1'b0; halt_q <= 1'b0; iss <= 1'b0; is_fence <= 1'b0; kv <= 1'b0; kv_iss <= 1'b0; mul_run <= 1'b0;
             rec_done <= 1'b0; rec_fault <= 1'b0; hdr_q <= 0; a_q <= 0; o_q <= 0; na_q <= 0; no_q <= 0; pos1_q <= 0;
             mv_q <= 0; dig <= 0; slot <= 0; ost <= 0; prod <= 0; pst <= 1'b0; post_cur <= 1'b0;
         end else begin
             rec_done <= 1'b0; rec_fault <= 1'b0;
-            hdr_q <= rec_hdr; a_q <= rec_a; o_q <= rec_o; na_q <= rec_n_a; no_q <= rec_n_o; pos1_q <= rec_pos1; il_q <= rec_ilist;  // pin flops
+            hdr_q <= rec_hdr; a_q <= rec_a; o_q <= rec_o; na_q <= rec_n_a; no_q <= rec_n_o; pos1_q <= rec_pos1;  // pin flops
             if (rec_v && rec_rdy) raw_v <= 1'b1;
             rdy_r <= hen && !raw_v && !s1_v && !busy && !halt_q && !(rec_v && rec_rdy);
             if (raw_v) begin                                   // E1: checks + the ring slot, operands copied
-                raw_v <= 1'b0; s1_v <= 1'b1; bad1 <= bad; op1 <= op; a1 <= a_q; o1 <= o_q; na1 <= na_q; no1 <= no_q; il1 <= il_q;
-                is_str <= str;
+                raw_v <= 1'b0; s1_v <= 1'b1; bad1 <= bad; op1 <= op; a1 <= a_q; o1 <= o_q; na1 <= na_q;
                 slot1 <= MUT_SLOT ? pos[19:0] : (pos[19:0] & (om - 20'd1));
             end
             if (s1_v) begin                                    // E2: the move word
@@ -140,7 +126,6 @@ module ot_hgi_dma_record #(
                 else begin
                     busy <= 1'b1; is_fence <= (op1 == 6'd2); kv <= (op1 == 6'd3); kv_iss <= 1'b0;
                     post_cur <= (POSTED != 0) && (op1 == 6'd1 || op1 == 6'd3);
-                    is_q <= {il1, 1'b1, na1[19:0], o1[119:88], o1[39:8], no1, a1[200:174], a1[47:8], a1[4:2]};
                     mv_q <= {na1, a1[87:68], ist(o1), o1[119:88], o1[47:8], o1[4:2], o1[1:0],
                              ist(a1), a1[119:88], a1[47:8], a1[4:2], a1[1:0]};
                     if (op1 == 6'd3) begin
@@ -157,7 +142,7 @@ module ot_hgi_dma_record #(
             if (kv && busy && !mul_run && !kv_iss && dig == 3'd0) begin   // fields: o base [137:98], m [205:186]
                 mv_q[137:98] <= mv_q[137:98] + prod[39:0]; mv_q[205:186] <= 20'd1; iss <= 1'b1; kv_iss <= 1'b1;
             end
-            if (iss && ((!is_fence && !is_str && mv_rdy) || (is_str && is_rdy) || (is_fence && fence_rdy && !pst) || (is_fence && MUT_FENCE != 0)) && hen) begin
+            if (iss && ((!is_fence && mv_rdy) || (is_fence && fence_rdy && !pst) || (is_fence && MUT_FENCE != 0)) && hen) begin
                 iss <= 1'b0;
                 if (MUT_EARLY) begin rec_done <= 1'b1; busy <= 1'b0; kv <= 1'b0; end
             end

@@ -7,9 +7,7 @@ The verdict check ttb_routed_at_TC used to pass on any 'TC ...' line in <run>/cl
 line for unrelated patches (direct config.mk), so SM piece routes that loaded SS liberties (the generator ignored
 OT_ORFS_CORNER_OVERRIDE) were judged "routed at TC".  This reads the read_liberty lines the place / CTS / GRT stages
 logged (`read_liberty -corner <C> <file>`): a corner whose libraries are not all FF is a setup corner, and every setup
-corner must read only <want> std-cell (*_TT_nldm*) and macro (*_tt.lib) views.  A setup corner reading <want> plus SS
-views (OTHER_VT SS libs appended by the platform, LOOP-LVT) only made repair pessimistic: WARN, not fail, because the
-verdict STA re-times every VT at clean TT / FF views.  No logs or no liberty lines: fail
+corner must read only <want> std-cell (*_TT_nldm*) and macro (*_tt.lib) views.  No logs or no liberty lines: fail
 (unproven).  Earlier attempts (*.attempt*), the source snapshot and (unless --include-cal) the CTS-only calibrate
 directories (*_cal) are ignored."""
 import os
@@ -51,8 +49,6 @@ def check(root, want="TT", include_cal=False):
         corners = {}
         for c, lib in LIB_RE.findall(text):
             t = tag(lib)
-            if t == "SS" and "_nldm" not in os.path.basename(lib):
-                t = "SS-macro"          # a macro's SS view never gets the std-cell OTHER_VT warning below
             if t:
                 corners.setdefault(c or "(single)", set()).add(t)
         # a single-corner load (no CORNERS) reads the setup and FF views into one scene: the non-FF tags are its setup corner
@@ -61,12 +57,8 @@ def check(root, want="TT", include_cal=False):
             continue
         seen = True
         bad = {c: t for c, t in setup.items() if t != {want}}
-        # want + SS only (the platform appends OTHER_VT SS views to the setup scene, LOOP-LVT): setup repair was at worst
-        # pessimistic and the verdict corner STA (clean TT / FF views) is authoritative -> warn, do not fail.  A scene with
-        # no <want> views, or any other tag, still fails.
-        warn = bool(bad) and want != "SS" and all(t == {want, "SS"} for t in bad.values())
-        ok = ok and (not bad or warn)
-        lines.append(f"{'WARN' if warn else 'BAD' if bad else 'ok '} {os.path.relpath(f, root)}: "
+        ok = ok and not bad
+        lines.append(f"{'BAD' if bad else 'ok '} {os.path.relpath(f, root)}: "
                      + " ".join(f"{c}={'+'.join(sorted(t))}" for c, t in sorted(setup.items())))
     if not seen:
         return False, lines + [f"no read_liberty -corner lines in {len(logs)} stage logs under {root}: routed corner unproven"]

@@ -425,8 +425,7 @@ The descriptor is 64 little-endian 32-bit words. Every reserved bit must be 0; t
 | 41 | `cp_ctx_max` (bits 20:0) | CP |
 | 42–45 | reserved | — |
 | 46 | `coll_group_size` (bits 7:0) | collective |
-| 47 | `link_session` (bits 23:0) | collective (die-to-die links) |
-| 48 | reserved | — |
+| 47–48 | reserved | — |
 | 49 | MTP per-layer kernel stride `kstride` (G26), 16-byte units; 0 = one body per kind | CP (MTP translator) |
 | 53 | `mtp_noise` [17:0]: the draft-block noise / mask token id the MTP translator puts on the `demb` launches of columns > 0 (DS: `dspark_noise_token_id` mod vocab = 128,799; 0 = none) | CP (MTP translator) |
 | 54–55 | reserved for MTP parameters (§10.3) | — |
@@ -444,7 +443,6 @@ The descriptor is 64 little-endian 32-bit words. Every reserved bit must be 0; t
 | `cp_vocab` (40.0) | 18 | 1 … 2¹⁸ − 1 | 129,280 | 151,936 | Range check for doorbell and completion tokens. A token id is 18 bits everywhere (doorbell, completion, argmax). The limit is a safety check on the host interface, so it is per model, not per operation. |
 | `cp_ctx_max` (41.0) | 21 | 1 … 2²⁰ | 2²⁰ | 40,960 | Range check for the doorbell position. Positions are 20 bits. |
 | `coll_group_size` (46.0) | 8 | 1, 2, 4, 8, 96 | 96 | 4 | Which dies form a group. Membership is genuinely static configuration: every collective on a die uses the same group. At 96, reductions run as 12 sub-groups of 8 (`GROUP_REDUCE_MCAST` s = 8); `ALL_REDUCE_SUM` at 96 is rejected. The values 16, 32 and 64 are defined encodings that the range check rejects until a collective engine that builds them exists. |
-| `link_session` (47.0) | 24 | any | 0 | 0 | The session id every die-to-die link carries (the link endpoints check it); software sets it per job. |
 
 Each static field resets to the DS value. DS programs also carry DS's own per-operation settings in their records, so loading the DS descriptor changes nothing, and a DS test bench that never loads a descriptor still runs. The static fields change only when a model is loaded while the die is idle; they never change while it is decoding.
 

@@ -565,7 +565,6 @@ O4_UP4 = (345.6, 388.8)
 O4_SEQ = (518.4, 518.4)
 O4_CBUF = (194.4, 216.0)
 O4_CROM = (194.4, 518.4)
-O4_UP4_LOW = os.environ.get('OT_R22KO4_UP4_LOW') == '1'   # study only (see _option4)
 O4_RROW = 64.8                 # relay row between the buffer rows and the ROM row (>= the 60.48-um wide-word relay frame)
 O4_BITS = dict(me_snap=92, su_snap=57, me_start=49, pw=75, kvd=201, kok=1, meok=1, su_iss=476, su_st=133, su_acc=24,
                cb_su_a=8 + 192 + 6, cb_su_q=512, cb_far_a=8 + 192 + 6, cb_far_q=512 + 1, cb_ctl=6 + 1 + 18, cb_rdy=1 + 6 + 3,
@@ -589,14 +588,12 @@ def surgery_o4(v, m):
     surgery(v, m)
     _option4(v, m, m['r22k'])
     _vm_ar(v, m, 'seq_su', 'qfd_seq_su')
-    _despan(v, m, m['r22k'])
 
 
 def surgery_vm(v, m):
     """r22ksv: r22k (+ seam_free in the recipe) with the sequencer <-> VM all-reduce word path (_vm_ar)"""
     surgery(v, m)
     _vm_ar(v, m, 'sp_constants_sequencer', 'qfd_sp_constants_sequencer')
-    _despan(v, m, m['r22k'])
 
 
 # qwen-1010/a 2026-10-10 (owner rule: every path end to end): the TP sequencer's all-reduce reads its partial words from
@@ -624,11 +621,9 @@ def _vm_ar(v, m, seq, seq_master):
         vf = 'S' if si.y + si.h <= vi.y + 1.0 and si.x < vi.x + vi.w - 1.0 else 'E'
         if si.x >= vi.x + vi.w - 1.0:
             vf = 'E'
-        # clear of the master's other pins on that face (r22ko4 case: vrq on top of seq_su ib -> DRT-0073 ib[305])
-        so = (20.0 if seq_master == 'qfd_seq_su' else s.w * 0.15) if sf in 'NS' else s.h * 0.85
-        step = 32.0 if seq_master == 'qfd_seq_su' else 60.0
+        so = s.w * 0.15 if sf in 'NS' else s.h * 0.85
         for j, (p, b) in enumerate((('vrd', 9), ('vrq', 512), ('vwr', 521))):
-            s.face(p, b, sf, 'M5' if sf in 'NS' else 'M4', so + j * (step if sf in 'NS' else -60.0), 1)
+            s.face(p, b, sf, 'M5' if sf in 'NS' else 'M4', so + j * (60.0 if sf in 'NS' else -60.0), 1)
         vo = vm.w * 0.85 if vf in 'NS' else 300.0
         for j, (p, b) in enumerate((('svr', 9), ('svq', 512), ('svw', 521))):
             vm.face(p, b, vf, 'M5' if vf in 'NS' else 'M4', vo + j * (-60.0 if vf in 'NS' else 60.0), 1)
@@ -651,15 +646,10 @@ def _option4(v, m, rec):
                  region=tt.region, domain=dom or tt.domain)
         new.append(i)
         return i
-    if O4_UP4_LOW:
-        # study: the upper-tile group at the VM top, the control tile N of it (band words to the old tree-top height)
-        y0 = tt.y
-        ctl = add('tt_ctlm', 'qfd_tt_ctlm', tt.x, v.up(tt.y + 2 * O4_UP4[1] + 2 * v.GY, v.GY), O4_CTLM)
-    else:
-        ctl = add('tt_ctlm', 'qfd_tt_ctlm', tt.x, tt.y, O4_CTLM)
-        # 2 x 2 block N of the control tile: the band words come over the top to the block centre (up4_0's NE corner)
-        # and fan out to the four abutted tiles there (<= 400 um, no stage), as the r21b tree top's bw* area pins
-        y0 = ctl.y + O4_CTLM[1] + v.GY
+    ctl = add('tt_ctlm', 'qfd_tt_ctlm', tt.x, tt.y, O4_CTLM)
+    # 2 x 2 block N of the control tile: the band words come over the top to the block centre (up4_0's NE corner) and
+    # fan out to the four abutted tiles there (<= 400 um, no stage), as the r21b tree top's bw* area pins
+    y0 = ctl.y + O4_CTLM[1] + v.GY
     ups = [add(f'tt_up4_{u}', 'qfd_tt_up4' if u == 0 else 'qfd_tt_up4_g', tt.x + (u % 2) * (O4_UP4[0] + v.GX),
                y0 + (u // 2) * (O4_UP4[1] + v.GY), O4_UP4) for u in range(4)]
     seq = add('seq_su', 'qfd_seq_su', slab.x, v.dn(slab.y - O4_SEQ[1] - v.GY, v.GY), O4_SEQ, dom=sq.domain)
@@ -861,45 +851,3 @@ def _o4_masters(v, m, ghosts):
         del saved
         return M
     v.masters = masters
-
-# qwen-1010/a 2026-10-10: face pin groups that share a face AND a layer must not overlap (the r22ks real case: DRT-0073 on
-# sp_tree_top/c3[111]: c3 (343 b), lc3 (28 b) and lf3 (1 b) span y 1,581.8-1,598.2 on the W face, M4).  Opt-in for the
-# seam-free recipes: each later group (by centre) slides along its face to start one gap after the previous one.
-DESPAN_GAP = 1.0
-
-
-def _despan(v, m, rec):
-    inner = v.masters
-    moved = rec.setdefault('despan', [])
-
-    def masters(model, k=1, port_bits=None):
-        M = inner(model, k, port_bits)
-        for name, mst in M.items():
-            groups = {}
-            for p in mst.order:
-                s = mst.ports.get(p)
-                if s and s[0] == 'face':
-                    groups.setdefault((s[2], s[3]), []).append(p)
-            for (face, layer), ps in groups.items():
-                L_ = mst.h if face in 'EW' else mst.w
-                ps.sort(key=lambda q: mst.ports[q][4])
-                end = -1e9
-                for p in ps:
-                    kind, bits, f, ly, c, pitch = mst.ports[p]
-                    half = bits * pitch * 0.048 / 2
-                    if c - half < end + DESPAN_GAP:
-                        c2 = end + DESPAN_GAP + half
-                        if c2 + half <= L_:
-                            mst.ports[p] = (kind, bits, f, ly, round(c2, 3), pitch)
-                            if len(moved) < 400 and (name, p) not in [(a, b) for a, b, *_ in moved]:
-                                moved.append((name, p, face, layer, round(c, 3), round(c2, 3)))
-                            c = c2
-                    end = c + half
-        return M
-    v.masters = masters
-
-
-def surgery_s(v, m):
-    """r22ks: r22k (+ seam_free in the recipe) with non-overlapping face pin groups"""
-    surgery(v, m)
-    _despan(v, m, m['r22k'])

@@ -174,7 +174,6 @@ class Local:
     layer of its type: index layers ratio 2 (L2, L8, L14) <- L2; ratio 1 (L20 .. L36) <- L24 (L20 for its own
     candidates); Engram (L1, L14) <- L1; quantisers have the same widths in every layer."""
     TYPE = {2: 2, 8: 2, 14: 2, 20: 20, 24: 24, 28: 24, 32: 24, 36: 24, 1: 1}
-    INGEST_SCALE = 1.0          # hgi_sim re-floorplan: score-array lanes / the measured 64-key basis (1.0 = as measured)
 
     def __init__(self, rec):
         self.rec = rec
@@ -214,9 +213,8 @@ class Local:
             t = 14
         r = self._row(f"L{t}.{fn}") if t is not None else None
         if r is not None and fn == "index_scores" and keys is not None and r["fixed"] is not None:
-            ing = r["ingest"] * self.INGEST_SCALE
-            r["cycles"] = r["fixed"] + math.ceil(keys / ing)
-            r["stream_cycles"] = math.ceil(keys / ing)
+            r["cycles"] = r["fixed"] + math.ceil(keys / r["ingest"])
+            r["stream_cycles"] = math.ceil(keys / r["ingest"])
         return r
 
 

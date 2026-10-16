@@ -676,7 +676,7 @@ def phy_pins():
 
 
 # ------------------------------------------------------------------------------------------------ abstracts
-TRK = {'M4': (0.012, 0.048), 'M5': (0.012, 0.048), 'M6': (0.016, 0.064), 'M7': (0.016, 0.064), 'M8': (0.116, 0.080)}
+TRK = {'M4': (0.012, 0.048), 'M5': (0.012, 0.048), 'M6': (0.016, 0.064), 'M8': (0.116, 0.080)}
 
 
 class Master:
@@ -929,9 +929,6 @@ def pin_rects(mst, k, wmap):
             continue
         _, _, face, layer, centre, pitch = spec
         centre = PIN_CENTRE.get((mst.name, port), centre)
-        if '+' in layer:        # HBM R25GQ 10-10 (opt-in): two interleaved layers, every other track on each
-            out.extend(_interleaved_face(mst, port, names, face, layer, centre, k))
-            continue
         off, p = TRK[layer]
         step = p * k * pitch
         along = mst.h if face in 'EW' else mst.w
@@ -962,44 +959,6 @@ def pin_rects(mst, k, wmap):
             else:
                 r = (pos - hw, mst.h - depth, pos + hw, mst.h)
             out.append((nm, layer, r))
-    return out
-
-
-def _interleaved_face(mst, port, names, face, layer, centre, k):
-    """pins of one port on two layers ('M5+M7' / 'M4+M6'): every other track of each, merged in position order,
-    centred on `centre`; each pin keeps its own layer"""
-    l1, l2 = layer.split('+')
-    (o1, p1), (o2, p2) = TRK[l1], TRK[l2]
-    s1, s2 = 2 * p1 * k, 2 * p2 * k
-    along = mst.h if face in 'EW' else mst.w
-    n = len(names)
-    span = n / (1.0 / s1 + 1.0 / s2)
-    lo = max(2 * max(p1, p2) * k, min(centre - span / 2, along - 2 * max(p1, p2) * k - span))
-    if lo < 0:
-        raise ValueError(f'{mst.name}.{port}: {n} pins on {layer} do not fit {along:.3f} um ({face})')
-    def grid(off, st):
-        x = off * k + math.ceil((lo - off * k) / st - 1e-9) * st
-        out_ = []
-        while len(out_) < n + 2 and x <= along:
-            out_.append(x)
-            x += st
-        return out_
-    cand = sorted([(x, l1) for x in grid(o1, s1)] + [(x, l2) for x in grid(o2, s2)])[:n]
-    if len(cand) < n or cand[-1][0] > along - 2 * max(p1, p2) * k + 1e-6:
-        raise ValueError(f'{mst.name}.{port}: {n} pins on {layer} do not fit {along:.3f} um ({face})')
-    depth = 0.192 * (k if k > 1 else 1)
-    out = []
-    for nm, (pos, ly) in zip(names, cand):
-        hw = MIN_HW.get(ly, 0.012) * k         # an interleaved M6 / M7 pin at its layer's minimum width
-        if face == 'W':
-            r = (0.0, pos - hw, depth, pos + hw)
-        elif face == 'E':
-            r = (mst.w - depth, pos - hw, mst.w, pos + hw)
-        elif face == 'S':
-            r = (pos - hw, 0.0, pos + hw, depth)
-        else:
-            r = (pos - hw, mst.h - depth, pos + hw, mst.h)
-        out.append((nm, ly, r))
     return out
 
 
