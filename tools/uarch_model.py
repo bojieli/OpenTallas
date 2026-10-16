@@ -64,12 +64,20 @@ def hbm_su_local_programme_model(line_bits, edges, dict_banks, quarters=4):
                           output_capture_roots=len(selected)))
     old_macros = math.ceil(cols / 16) * index_banks + sum(dict_banks)
     new_macros = sum(q['macros'] for q in local)
+    # These observations belong to the frozen 301-macro source shape. The
+    # recovered RF36 image changes column 28 and must not inherit its area/FF
+    # measurements merely because its command width is identical.
+    measured_banks = (3,10,9,13,2,1,1,1,1,1,2,10,9,2,1,1,1,1,1,3,10,9,13,1,1,1,1,1,3,2,10,1,2,1,1,1,1,1)
+    measured = line_bits == 9688 and edges == 7116 and tuple(dict_banks) == measured_banks
     return dict(schema='opentallas.hbm-su-local-programme-candidate.v1', opt_in_default=False,
                 macs_per_cycle=0, source_dimensions=dict(line_bits=line_bits, edges=edges,
                     columns=cols, dict_banks=list(dict_banks), index_banks=index_banks),
                 baseline=dict(macros=old_macros, macro_area_um2=old_macros * macro_w * macro_h,
-                    measured_standard_area_um2=9394.243920, measured_ff=10144,
-                    measured_command_gate_loads=9689, command_present_after_start_edges=3),
+                    measured_standard_area_um2=9394.243920 if measured else None,
+                    measured_ff=10144 if measured else None,
+                    measured_command_gate_loads=9689 if measured else None,
+                    measured_basis='S a89a10d1f 301-macro mapped observation' if measured else None,
+                    command_present_after_start_edges=3),
                 quarters=local, macros=new_macros,
                 incremental_macro_area_um2=(new_macros - old_macros) * macro_w * macro_h,
                 memory_macro='actual ot_sram_1r1w_128x256_m1_r2c2',

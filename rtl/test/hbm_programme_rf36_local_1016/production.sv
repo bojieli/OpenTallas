@@ -1,0 +1,3 @@
+module hbm_programme_local_production(input wire [3:0] clk_ctl,input wire [40:0] clk_cmd,input wire [475:0] clk_macro,input wire rst_n,cfg_we,start,input wire [15:0] cfg_bank,length,input wire [6:0] cfg_row,input wire [255:0] cfg_data,output wire busy,valid,done,fault,output wire [15:0] edge_index,output wire [9687:0] command);
+ ot_hbm_su_programme_local #(.GLOBAL_MACROS(302),.LOCAL_MACROS(476),.DICT_BANKS({32'd1,32'd1,32'd1,32'd1,32'd1,32'd2,32'd1,32'd10,32'd2,32'd4,32'd1,32'd1,32'd1,32'd1,32'd1,32'd13,32'd9,32'd10,32'd3,32'd1,32'd1,32'd1,32'd1,32'd1,32'd2,32'd9,32'd10,32'd2,32'd1,32'd1,32'd1,32'd1,32'd1,32'd2,32'd13,32'd9,32'd10,32'd3})) u(.*);
+endmodule

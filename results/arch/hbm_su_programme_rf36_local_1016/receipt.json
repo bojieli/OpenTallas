@@ -1,0 +1,49 @@
+{
+  "schema": "opentallas.hbm-programme-rf36-local-mapped-proof.v1",
+  "status": "ADDITIVE_UNADOPTED_MAPPED_ONLY",
+  "source_s_unchanged": "a89a10d1fc2200a6f6d556dda2efc905cecbac77",
+  "generic_rtl_commit": "4cceac7f5",
+  "image": "actualrecoveredRF36native302serial; separatefromS301component",
+  "host": "ot-epyc4",
+  "unit": "oth-ubuntu-2138080-1792148688",
+  "session": 66114,
+  "exit": 0,
+  "check_assert_problems": 0,
+  "actual_macros": 476,
+  "global_image_macros": 302,
+  "quarter_macros": [
+    98,
+    141,
+    101,
+    136
+  ],
+  "standard_area_um2": 12679.2783,
+  "macro_area_um2": 1853473.902336,
+  "incremental_macro_area_over302_um2": 677530.376064,
+  "actual_ff": 23931,
+  "clock_roots": {
+    "control": 4,
+    "column": 41,
+    "macro": 476
+  },
+  "max_internal_driven_net_loads": 256,
+  "physical_qualification": false,
+  "functional_image_qualification": false,
+  "compiler_cost_qualification": false,
+  "remote": "/srv/opentallas-scratch/codex/hdie-programme-rf36-0405",
+  "mapped_log_sha256": "1733b4ebd06c300f7747cbda17b73c6dfeb268cda3d9e0c4d1fddcd381f882ba",
+  "reproduction": "Use original rtl/test/hbm_programme_local_1016 production.ys+synth.sh with thisdirectory production.sv and exactgenericRTL4cceac7f5. SameactualSsnapshotSRAMbb/TTlibs; then thisdirectory check_mapped.py mapped.json.",
+  "hashes": {
+    "rtl/test/hbm_programme_rf36_local_1016/production.sv": "6ec4bb08e8471f8923eee5ef84b6dbd19b68329fdbbcf57be4103e49b7f95dc4",
+    "rtl/test/hbm_programme_rf36_local_1016/check_mapped.py": "a1c2e2f3fdfc92d6cca368cfc6252b8cbb36858d0a7d4bfd9376d3cf272f23cc",
+    "results/arch/hbm_su_programme_rf36_local_1016/source_manifest.json": "0725310fac052ecc8a7db93a81e35d23e7bc6815850e9e66ef7782ee3c78a5ef",
+    "results/arch/hbm_su_programme_rf36_local_1016/mapped_summary.json": "09c87c1a368ea2f63d22a2874ef6c3128c44f99fd155a0476b0b2c2a5072047c",
+    "results/arch/hbm_su_programme_rf36_local_1016/model.json": "36008d0ad6ff9aead9a03864c67255939fd7dafa27c0e3234fc463f119cf3347",
+    "results/arch/hbm_su_programme_rf36_local_1016/recovered_serial_manifest.json": "5f6f9affe367eb2eca38bcc3737b609566c3409780c1e98538475c1e3c206a17",
+    "results/arch/hbm_su_programme_rf36_local_1016/mapped.stat": "7bee67381e796071f8a5fb2165f86acb775e43a07216f6f6e3b4226081f3644a",
+    "rtl/hbm_accel/generic/adapters/static_su/programme/ot_hbm_su_programme_local.sv": "7ff140b4063c86ba48956588f8443435b3f2f36bb7b829b2d7610c8408a8606b",
+    "rtl/test/hbm_programme_local_1016/production.ys": "9d1a28b78a9f5bbe2bd316597b5cad05a805c5681d4b13ecb53cd367149978bb",
+    "rtl/test/hbm_programme_local_1016/synth.sh": "00b5f3ac6bb490f9be09eb9c67d8e80fe1773ce8eac2ce01ebecb2c7b879b569",
+    "tools/uarch_model.py": "72667072979d8ea5dc12205705c1eeb6c851e2c1f7ff23d019227630a51cc5cb"
+  }
+}

@@ -1,0 +1,206 @@
+{
+  "schema": "opentallas.hbm-su-local-programme-candidate.v1",
+  "opt_in_default": false,
+  "macs_per_cycle": 0,
+  "source_dimensions": {
+    "line_bits": 9688,
+    "edges": 7116,
+    "columns": 38,
+    "dict_banks": [
+      3,
+      10,
+      9,
+      13,
+      2,
+      1,
+      1,
+      1,
+      1,
+      1,
+      2,
+      10,
+      9,
+      2,
+      1,
+      1,
+      1,
+      1,
+      1,
+      3,
+      10,
+      9,
+      13,
+      1,
+      1,
+      1,
+      1,
+      1,
+      4,
+      2,
+      10,
+      1,
+      2,
+      1,
+      1,
+      1,
+      1,
+      1
+    ],
+    "index_banks": 56
+  },
+  "baseline": {
+    "macros": 302,
+    "macro_area_um2": 1175943.5262719998,
+    "measured_standard_area_um2": null,
+    "measured_ff": null,
+    "measured_command_gate_loads": null,
+    "measured_basis": null,
+    "command_present_after_start_edges": 3
+  },
+  "quarters": [
+    {
+      "quarter": 0,
+      "command_bits": 2422,
+      "columns": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ],
+      "index_groups": [
+        0
+      ],
+      "dictionary_macros": 42,
+      "index_macros": 56,
+      "macros": 98,
+      "macro_area_um2": 381597.568128,
+      "memory_read_bytes_per_cycle": 352,
+      "output_capture_roots": 10
+    },
+    {
+      "quarter": 1,
+      "command_bits": 2422,
+      "columns": [
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18
+      ],
+      "index_groups": [
+        0,
+        1
+      ],
+      "dictionary_macros": 29,
+      "index_macros": 112,
+      "macros": 141,
+      "macro_area_um2": 549033.235776,
+      "memory_read_bytes_per_cycle": 384,
+      "output_capture_roots": 10
+    },
+    {
+      "quarter": 2,
+      "command_bits": 2422,
+      "columns": [
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28
+      ],
+      "index_groups": [
+        1
+      ],
+      "dictionary_macros": 45,
+      "index_macros": 56,
+      "macros": 101,
+      "macro_area_um2": 393279.126336,
+      "memory_read_bytes_per_cycle": 384,
+      "output_capture_roots": 11
+    },
+    {
+      "quarter": 3,
+      "command_bits": 2422,
+      "columns": [
+        28,
+        29,
+        30,
+        31,
+        32,
+        33,
+        34,
+        35,
+        36,
+        37
+      ],
+      "index_groups": [
+        1,
+        2
+      ],
+      "dictionary_macros": 24,
+      "index_macros": 112,
+      "macros": 136,
+      "macro_area_um2": 529563.972096,
+      "memory_read_bytes_per_cycle": 384,
+      "output_capture_roots": 10
+    }
+  ],
+  "macros": 476,
+  "incremental_macro_area_um2": 677530.376064,
+  "memory_macro": "actual ot_sram_1r1w_128x256_m1_r2c2",
+  "macro_outline_um": [
+    94.824,
+    41.064
+  ],
+  "host_write_bytes_per_cycle": 32,
+  "global_install_boundary_bits": 280,
+  "command_bytes_per_cycle": 1211.0,
+  "steady_command_interval_edges": 1,
+  "proposed_command_present_after_start_edges": 5,
+  "proposed_extra_edges_per_start": 2,
+  "proposed_extra_edges_fraction": 0.00028093833403567916,
+  "output_control_load_bound_per_root": 256,
+  "mux_cost": "Retain each selected BANKS:1 word selector; local registered read/command controls; no demand arbitration.",
+  "physical_leaf_candidate": {
+    "max_macros": 8,
+    "macro_grid": [
+      2,
+      4
+    ],
+    "channel_um": 20,
+    "macro_and_channel_outline_um": [
+      249.648,
+      264.256
+    ]
+  },
+  "routing_tracks_required_per_local_word": 256,
+  "actual_tracks_capacity": null,
+  "physical_outline": null,
+  "mapped_logic_area": 12679.2783,
+  "token_starts": null,
+  "measured_token_rate_loss": null,
+  "qualification": "Sizing only. Exact native SRAM playback, failing mutants, mapped counts, real pins/cuts, clock and TT/FF/DRC proof required; no rate or accepted-cost credit.",
+  "source_rf36_manifest_sha256": "5f6f9affe367eb2eca38bcc3737b609566c3409780c1e98538475c1e3c206a17",
+  "source_rf36_image_sha256": "ef51677866608d14c080d0aef73939220f5e18230a566a015d511c0f07daff2a",
+  "mapped_ff": 23931,
+  "mapped_macros": 476,
+  "mapped_qualification": "mapped structure only; native/compiler/physical/cost still OPEN",
+  "source_generating_model_sha256": "72667072979d8ea5dc12205705c1eeb6c851e2c1f7ff23d019227630a51cc5cb"
+}
