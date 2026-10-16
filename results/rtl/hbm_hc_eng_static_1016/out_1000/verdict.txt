@@ -1,0 +1,52 @@
+2026-10-16T10:09:46-07:00 chain_m0 start host=regular-crane
+2026-10-16T10:12:30-07:00 build_m0 rc=0
+  probe: HC_ENG_DONE mode=1 npos=1 mixes=0 mixbad=0 outs=0 outbad=0 TB=1944 last_mix_t=0 first_out_t=-1 last_out_t=0 HC_MIX_CYCLES=-1944
+  probe: HC_ENG PASS
+  probe: 	Elapsed (wall clock) time (h:mm:ss or m:ss): 1:47.77
+  probe: 	Maximum resident set size (kbytes): 454760
+  probe: RUN_RC=0
+2026-10-16T10:14:17-07:00 probe TL=2030 first_raw_t=2167 RAW0=137
+2026-10-16T10:14:49-07:00 chain_mut3 start
+2026-10-16T10:14:49-07:00 chain_mut1 start
+  p1_rs104: HC_ENG_DONE mode=0 npos=1 mixes=24 mixbad=0 outs=4 outbad=0 TB=1944 last_mix_t=2413 first_out_t=2912 last_out_t=2912 HC_MIX_CYCLES=968
+  p1_rs104: HC_ENG PASS
+  p1_rs104: 	Elapsed (wall clock) time (h:mm:ss or m:ss): 1:30.74
+  p1_rs104: 	Maximum resident set size (kbytes): 454824
+  p1_rs104: RUN_RC=0
+2026-10-16T10:15:49-07:00 P1 RS sweep -> RS=104 (0 = none passed)
+  neg_rs103: HC_ENG_FAULT t=2273 seq=0 ing=0 core=1 mix=0 tbl=0 tail=0 tfl=0
+  neg_rs103: 	Elapsed (wall clock) time (h:mm:ss or m:ss): 1:10.75
+  neg_rs103: 	Maximum resident set size (kbytes): 454824
+  neg_rs103: RUN_RC=1
+2026-10-16T10:17:00-07:00 NEG RS103 FAIL as expected
+  neg_raw0m1: HC_ENG_FAULT t=2169 seq=0 ing=0 core=1 mix=0 tbl=0 tail=0 tfl=0
+  neg_raw0m1: 	Elapsed (wall clock) time (h:mm:ss or m:ss): 1:08.47
+  neg_raw0m1: 	Maximum resident set size (kbytes): 453756
+  neg_raw0m1: RUN_RC=1
+2026-10-16T10:18:09-07:00 NEG RAW0-1 FAIL as expected
+  mut_data: MIX_MISMATCH pos0 row5 got=3d47c219 exp=3d47c218
+  mut_data: HC_ENG_DONE mode=0 npos=1 mixes=24 mixbad=1 outs=4 outbad=0 TB=1944 last_mix_t=2413 first_out_t=2912 last_out_t=2912 HC_MIX_CYCLES=968
+  mut_data: [6119000] %Fatal: tb_hbm_hc_eng_static.sv:137: Assertion failed in tb_hbm_hc_eng_static: HC_ENG FAIL
+  mut_data: 	Elapsed (wall clock) time (h:mm:ss or m:ss): 1:31.05
+  mut_data: 	Maximum resident set size (kbytes): 454824
+  mut_data: RUN_RC=1
+2026-10-16T10:19:40-07:00 DATA MUTANT FAIL as expected
+  p2: HC_ENG_DONE mode=0 npos=2 mixes=48 mixbad=0 outs=8 outbad=0 TB=1944 last_mix_t=2663 first_out_t=2913 last_out_t=3162 HC_MIX_CYCLES=1218
+  p2: HC_ENG PASS
+  p2: 	Elapsed (wall clock) time (h:mm:ss or m:ss): 1:39.27
+  p2: 	Maximum resident set size (kbytes): 454824
+  p2: RUN_RC=0
+2026-10-16T10:21:20-07:00 P2 PASS
+  p8: HC_ENG_DONE mode=0 npos=8 mixes=192 mixbad=0 outs=32 outbad=0 TB=1944 last_mix_t=4163 first_out_t=2913 last_out_t=4662 HC_MIX_CYCLES=2718
+  p8: HC_ENG PASS
+  p8: 	Elapsed (wall clock) time (h:mm:ss or m:ss): 2:35.26
+  p8: 	Maximum resident set size (kbytes): 454848
+  p8: RUN_RC=0
+2026-10-16T10:23:56-07:00 P8 PASS
+  g22: HC_ENG_DONE mode=2 npos=1 mixes=0 mixbad=0 outs=2 outbad=0 TB=8 last_mix_t=0 first_out_t=538 last_out_t=538 HC_MIX_CYCLES=530
+  g22: HC_ENG PASS
+  g22: 	Elapsed (wall clock) time (h:mm:ss or m:ss): 0:18.42
+  g22: 	Maximum resident set size (kbytes): 454816
+  g22: RUN_RC=0
+2026-10-16T10:24:14-07:00 G22 PASS
+2026-10-16T10:24:14-07:00 chain_m0 done

@@ -1,0 +1,22 @@
+{
+ "element": "ot_hbm_hc_eng_static (HBM die hc_eng, HC.HC_MIX K=20480 W=256, 24 rows + tail)",
+ "source": "worktree claude/hnl-hceng-0030 898518a02; 24-source manifest objv_h5/source_manifest.json byte-identical to HEAD",
+ "build": "Verilator 5.050 --hierarchical (lane/bank/tail/SRAM hier_blocks), objv_h5 verilated on ot-pve1 (ot-run 3163057), compiled + run on ot-epyc4 (make 4.4 jobserver -j64; PVE make 4.3 inner make was serial, 1,711 files)",
+ "schedule_constants_measured": {"RAW0": 137, "RS": 104},
+ "verdict": "FUNCTIONAL PASS (bit-exact mixes + tail vs golden)",
+ "cases": {
+  "P1": {"result": "PASS", "mixes": 24, "tail_results": 4, "HC_MIX_CYCLES": 968},
+  "P2": {"result": "PASS", "mixes": 48, "tail_results": 8, "HC_MIX_CYCLES": 1218},
+  "P8": {"result": "PASS", "mixes": 192, "tail_results": 32, "HC_MIX_CYCLES": 2718},
+  "G22": {"result": "PASS", "tail_results": 2, "HC_MIX_CYCLES": 530}
+ },
+ "cycle_law": "HC_MIX_CYCLES = 718 + 250 P (P = positions), measured from record start TB (x ingest) to last tail result",
+ "price": {"P1": 1160.0, "ratio_P1": 0.834, "row_II_price": 250, "row_II_measured": 250},
+ "negatives": {
+  "RS103 (schedule one edge early)": "FAIL core fault t=2273",
+  "RAW0-1": "FAIL core fault t=2169",
+  "data mutant expmix[5]^1": "FAIL MIX_MISMATCH pos0 row5",
+  "RTL mutants MUT1 bank3 weight rotate / MUT2 tail eps / MUT3 x landing": "builds+runs queued on ot-epyc4 (chain_mut.sh), verdicts append to /tmp/ot-hc-eng-0600b/out_1000/verdict.txt"
+ },
+ "ledger": "no accepted-cost row: measured <= price at P1 (0.83x) and on the priced 250-cycle row II; e2e cost 0 (sens_current HC.HC_MIX scale 8.236 in rows_design_hcstatic was the OLD a35449ada 128-lane engine and must be replaced by 968/1160 = 0.834)"
+}
