@@ -206,7 +206,13 @@ def prepare(v, m, source_root, *, production=True, mode='b2', full_graph=False, 
             for u in range(NUP):
                 alias(cm,f'uf_l{u}','uf',[u])
                 newdata.append(add(f'b2_uf{u}',1,(f'tt_up4_leaf{u}','fault'),('tt_ctlm',f'uf_l{u}')))
-            if compact_selector:alias(cm,SEL,'sel',[10,11,23,24])
+            if compact_selector:
+                alias(cm,SEL,'sel',[10,11,23,24])
+                # Only bits 10/11/23/24 have mapped NL2 consumers. The other 22 bits of the
+                # actual controller OUTPUT stay unloaded open nets (writer), never fake ports.
+                cport=next(r for r in source_receipts if r['master']==cm)['ports'].get('sel')
+                if tuple(cport or ())!=(26,'output'):raise ValueError(f'{cm}.sel must be the actual 26-bit output, got {cport}')
+                m.setdefault('port_join_open_outputs',{}).setdefault(cm,{})['sel']=26
             newdata.append(('b2_selector','tree_spine',SEL_W,[('tt_ctlm',SEL)]+[(f'tt_up4_leaf{u}',SEL)for u in range(NUP)]))
             from qwen_split.command_distribution import FIELDS
             for f,n in FIELDS:
@@ -547,7 +553,7 @@ def install_calibrated_sources(model, prepared, calibration, source_root):
         frame=copy.deepcopy(M[old]);frame.name=new
         frame.note='NEW source-bound calibrated candidate; no physical view inheritance'
         M[new]=frame;by[instance].master=new
-        for key in ('port_join','port_split'):
+        for key in ('port_join','port_split','port_join_open_outputs'):
             if old in model.get(key,{}):model[key][new]=copy.deepcopy(model[key][old])
         receipts[:]=[r for r in receipts if r['master']!=old]
         receipts.append(dict(master=new,source=record['path'],sha256=record['sha256'],ports=ports))
@@ -565,5 +571,6 @@ def canonical_graph(model):
     graph=dict(instances=[{k:getattr(i,k)for k in ('name','master','x','y','w','h','orient')}
                        for i in model['insts']],buses=model['buses'],
                port_join=model.get('port_join',{}),port_split=model.get('port_split',{}),
+               port_join_open_outputs=model.get('port_join_open_outputs',{}),
                ties=model.get('ties',[]))
     return json.loads(json.dumps(graph,sort_keys=True))

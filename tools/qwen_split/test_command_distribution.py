@@ -57,14 +57,15 @@ def test_fail_closed_on_lost_live_consumer_or_missing_root():
   with pytest.raises(ValueError):apply(m,ss)
   assert m==before
 
-def test_eight_selector_consumers_use_distinct_actual_registered_output_ports():
+@pytest.mark.parametrize("width,field",[(26,"sel"),(4,"sel4")])
+def test_eight_selector_consumers_use_distinct_actual_registered_output_ports(width,field):
  m,ss=model()
  for i in range(6,8):
   m['insts'].append(SimpleNamespace(name=f'sink{i}',master='source',x=100+400*(i%2),y=700,w=43.2,h=43.2,orient='R0',domain='stream_1p2'))
   ss.append(f'sink{i}')
  m['buses']=[b for b in m['buses']if b[1]in('clock_trunk','reset')]
- m['buses'].append(('upper_selector','tree_spine',26,[('res_train_issue','sel')]+[(s,'sel')for s in ss]))
- r=apply(m,ss,fielddefs=(('sel',26),),master='qfd_static_selector_fork26',source_file='rtl/qwen_split/qfd_static_selector_fork26.sv',prefix='selector')
+ m['buses'].append(('upper_selector','tree_spine',width,[('res_train_issue',field)]+[(s,field)for s in ss]))
+ r=apply(m,ss,fielddefs=((field,width),),master=f'qfd_static_selector_fork{width}',source_file=f'rtl/qwen_split/qfd_static_selector_fork{width}.sv',prefix='selector')
  assert r['normal_logic_edges']==3 and len(r['nodes'])==7
  assert len(r['equal_groups']['selector_level_3'])==8
  assert 'selector'in m['distribution_trees'] and 'command_distribution'not in m

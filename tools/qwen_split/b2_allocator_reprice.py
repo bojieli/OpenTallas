@@ -77,13 +77,13 @@ def main():
                     b=incoming[0];path.insert(0,b[0]);src=tuple(b[3][0])
                     if src[0].startswith(prefix+'_fork_'):endpoint=(src[0],'a_'+field)
                     else:endpoint=src
-                paths[sink+'.'+field]=dict(buses=path,stages=[S(b)for b in path],transport_capture_edges=sum(S(b)for b in path))
+                paths[sink+'.'+field]=dict(buses=path,stages=[S(b)for b in path],transport_capture_edges=sum(S(b)for b in path),additional_external_register_edges=sum(S(b)for b in path)-1)
         distribution_ages[prefix]=paths
     round_trip=[]
     if a.production:
-        R=max(S(f'b2_return_{kind}{u}')for u in range(NUP)for kind in('l','use','v'))
+        R=max(S(f'b2_return_{kind}{u}')-1 for u in range(NUP)for kind in('l','use','v'))
         for hb in range(6):
-            F=max(S(f'b2_pword_{hb}_{kind}{u}')for u in range(NUP)for kind in('l','v'))
+            F=max(S(f'b2_pword_{hb}_{kind}{u}')-1 for u in range(NUP)for kind in('l','v'))
             total=F+R
             round_trip.append(dict(halfband=hb,forward_external_edges=F,actual_return_external_edges=R if hb==0 else None,
                 HB0_roundtrip_edges=total if hb==0 else None,parent_lnk=total//2 if hb==0 and total%2==0 else None,
