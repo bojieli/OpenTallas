@@ -99,7 +99,7 @@
  "inter": [],
  "job": {
   "owner": "Claude H-SM",
-  "branch": "claude/hbm-sm-attention-1015",
+  "branch": "claude/hsm-xl2-0230",
   "tag": "cl2e",
   "purpose": "x-load cl2 leaf (H-SM 2026-10-15): the flat clock-leaf cl failed its --cts gate (multiple_cts_roots source on 32 SRAMs; bs_a 8,642 / md 5,635 / bq_v 4,125-load nets; bw->rq 21 levels). cl2 = cluster of hardened leaves (ctl, 4 x BF quarter of one master, 2 x the CLOSED tree13 quantiser tile, BD ring), one clock root each < 15k sinks, every leaf pin registered (owner 19:50), running issue-word registers (no multiply), replicated selects; +2 fixed edges on every xw beat (lock bench vs cl shifted 2).",
   "structural_change": "cl2d: ring write controls r_wsel/zlo/zhi leave ONE edge early (lookahead on the fixed tag line qt[QL-2]) so the bdring leaf pin-registers them on the same edge as its quantiser words (bdring cl2c native capture 511.7 ps on 18 pins); no edge change (lock bench vs cl shifted 2; MUT5 = no lookahead must FAIL). Kit otherwise as cl2c (two related roots clk / clk_eg).",
@@ -260,5 +260,13 @@
   "enable": false,
   "reason": "OWNER RULE 19:50 met in RTL (rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv, x-load cl2 rewritten for this rule; +2 edges accepted by the coordinator): inputs land in pin flops c_base..c_xb / cmd_v (x_*), rr_c (rr), rw (rwq), bq_c (bq_d), qo_*_c/qf_*_c (quantiser flags); every output is a register (q_v/q_s, x_busy/x_fault/x_done, xw_*, c_d/c_wce/c_mhi/c_mlo/c_wa, r_ce/r_a, l_d, qv_*, r_wsel/zlo/zhi, ea/eb2, lane_en, rn); a recipe-3 register would add a second stage on every port."
  },
- "structural_change": "cl2e (ctl cl2d NEEDS_RTL TT -92.5: la/lane_en flop -> need table lookup -> wc>=need -> bd_em -> eb2 next state -> one-hot decode -> bsel, ~8 levels + 400 ps wire): need(eb2) and (eb2==nb-1) registered one edge ahead from next-state eb2/la/pla/nb; same values every edge, no edge added; lock bench PASS, MUT1-5 FAIL (2444/656/1040/1433/1028). "
+ "structural_change": "cl2e (ctl cl2d NEEDS_RTL TT -92.5: la/lane_en flop -> need table lookup -> wc>=need -> bd_em -> eb2 next state -> one-hot decode -> bsel, ~8 levels + 400 ps wire): need(eb2) and (eb2==nb-1) registered one edge ahead from next-state eb2/la/pla/nb; same values every edge, no edge added; lock bench PASS, MUT1-5 FAIL (2444/656/1040/1433/1028). ",
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "source": "results/hbm_sm_attention_1015/hsm_xl2_0600/ctl_cl2d/cl2d_verdict.json",
+  "cell": "ot_hgi_sm_xload_cl2_ctl",
+  "predecessor": "hgi_sm_xl2_ctl-cl2d-COMMIT-b0d45974d NEEDS_RTL TT -92.5 / FF +18.09 / DRC 4 (no ctl master ever CLOSED)",
+  "rtl_commit": "13e560329",
+  "why": "cl2d setup path la/lane_en flop -> need table -> wc>=need -> bd_em -> eb2 next state -> one-hot decode -> bsel (~8 levels + ~400 ps wire) = TT -92.5 ps; cl2e RTL registers need(eb2) and last-beat (eb2==nb-1) one edge ahead from next-state eb2/la/pla/nb (same values every edge, no edge added; lock PASS, MUT1-5 FAIL). DRC 4 (corner pins M5 spacing) fixed at ROOT via OT_PIN_CORNER_UM in ref_route.sh."
+ }
 }

@@ -21,7 +21,7 @@
 // registered; cfg/desc while active or in the launch edge is a FAULT (static install, no runtime arbitration).
 // Pin rule (owner 19:50): every input lands in a pin flop, every output is a flop.  Fixed latencies: cfg -> window
 // write 2 edges; launch_v -> run_v 2 edges; launch_v -> sequencer base = cycle + LEAD (see bench / spec notes).
-module ot_static_cmd_target #(
+module ot_static_cmd_target_core #(
     parameter [7:0]  TARGET = 8'd64,
     parameter integer MODE  = 0,     // 0 RUN, 1 SEQ
     parameter integer AWA   = 0,     // window A address width (0: absent)
@@ -61,7 +61,15 @@ module ot_static_cmd_target #(
     output reg  cmd_v,
     output reg  [CW-1:0] cmd,
     output reg  [31:0] cycle,
-    output reg  configured, fault, active
+    output reg  configured, fault, active,
+    // command-table SRAM interface (H-HARDEN 2026-10-16): the table macros live OUTSIDE the core so a physical parent
+    // can clock them from their own related entry; ot_static_cmd_target below binds them exactly as before the split.
+    output wire tab_r_ce,
+    output wire [6:0] tab_r_addr,
+    input  wire [((MODE == 1) ? ((32 + CW + 255) / 256) : 1)*256-1:0] tab_rd_word,
+    output wire [((MODE == 1) ? ((32 + CW + 255) / 256) : 1)-1:0] tab_w_ce,
+    output wire [6:0] tab_w_addr,
+    output wire [255:0] tab_w_data
 );
     localparam integer EW = 32 + CW;
     localparam integer NW = (EW + 255) / 256;
@@ -106,14 +114,14 @@ module ot_static_cmd_target #(
     wire busy_any = seq_on || (|act_q);
     wire rd_go = (MODE == 1) && seq_on && !rd_end && !nxt_v && !rd_q && !fault_r;
     wire [NW*256-1:0] rd_word;
+    assign tab_r_ce = rd_go; assign tab_r_addr = idx; assign tab_w_addr = tw_addr; assign tab_w_data = tw_data;
     generate if (MODE == 1) begin : g_tab
+        assign rd_word = tab_rd_word;
         for (genvar w = 0; w < NW; w = w + 1) begin : g_w
-            ot_sram_1r1w_128x256_m1_r2c2 u_tab(.clk(clk), .r_ce_in(rd_go), .r_addr_in(idx), .rd_out(rd_word[w*256 +: 256]),
-                .w_ce_in(tw_we && tw_sel == 2'(w)), .w_addr_in(tw_addr), .wd_in(tw_data), .w_mask_in({256{1'b1}}),
-                .rr_en(2'b0), .rr_addr(12'b0), .cr_en(2'b0), .cr_sel(16'b0));
+            assign tab_w_ce[w] = tw_we && tw_sel == 2'(w);
         end
     end else begin : g_notab
-        assign rd_word = '0;
+        assign rd_word = '0; assign tab_w_ce = '0;
     end endgenerate
     wire [31:0] fire_at = (MUT == 1) ? head_fire + 32'd1 : head_fire;
     wire fire = head_v && cyc == fire_at;
@@ -198,5 +206,58 @@ module ot_static_cmd_target #(
             active <= seq_on || (|act_q);
         end
     end
+endmodule
+// The die master: the core with its command table on the same clock -- ports and behaviour exactly as before the split.
+module ot_static_cmd_target #(
+    parameter [7:0]  TARGET = 8'd64,
+    parameter integer MODE = 0, AWA = 0, AWB = 0, RBW = 1, RCW = 1, CW = 1, RELF = 0, NA = 1, NF = 1, LEAD = 8,
+    parameter integer MUT = 0, TGT_PIN = 0
+)(
+    input  wire clk, rst_n,
+    input  wire [7:0] tgt,
+    input  wire cfg_v,
+    input  wire [7:0] cfg_target,
+    input  wire [11:0] cfg_addr,
+    input  wire [255:0] cfg_data,
+    input  wire desc_v,
+    input  wire [11:0] desc_base,
+    input  wire [12:0] desc_limit,
+    input  wire [15:0] desc_loops,
+    input  wire launch_v,
+    input  wire [NA-1:0] tgt_active,
+    input  wire [NF-1:0] tgt_fault,
+    output wire a_we,
+    output wire [(AWA>0?AWA:1)-1:0] a_addr,
+    output wire [255:0] a_data,
+    output wire b_we,
+    output wire [(AWB>0?AWB:1)-1:0] b_addr,
+    output wire [255:0] b_data,
+    output wire run_v,
+    output wire [RBW-1:0] run_base,
+    output wire [RCW-1:0] run_count,
+    output wire cmd_v,
+    output wire [CW-1:0] cmd,
+    output wire [31:0] cycle,
+    output wire configured, fault, active
+);
+    localparam integer NT = (MODE == 1) ? ((32 + CW + 255) / 256) : 1;
+    wire r_ce; wire [6:0] r_addr, w_addr; wire [NT-1:0] w_ce; wire [255:0] w_data; wire [NT*256-1:0] rd_word;
+    ot_static_cmd_target_core #(.TARGET(TARGET),.MODE(MODE),.AWA(AWA),.AWB(AWB),.RBW(RBW),.RCW(RCW),.CW(CW),.RELF(RELF),
+        .NA(NA),.NF(NF),.LEAD(LEAD),.MUT(MUT),.TGT_PIN(TGT_PIN)) core(
+        .clk(clk),.rst_n(rst_n),.tgt(tgt),.cfg_v(cfg_v),.cfg_target(cfg_target),.cfg_addr(cfg_addr),.cfg_data(cfg_data),
+        .desc_v(desc_v),.desc_base(desc_base),.desc_limit(desc_limit),.desc_loops(desc_loops),.launch_v(launch_v),
+        .tgt_active(tgt_active),.tgt_fault(tgt_fault),.a_we(a_we),.a_addr(a_addr),.a_data(a_data),.b_we(b_we),.b_addr(b_addr),
+        .b_data(b_data),.run_v(run_v),.run_base(run_base),.run_count(run_count),.cmd_v(cmd_v),.cmd(cmd),.cycle(cycle),
+        .configured(configured),.fault(fault),.active(active),
+        .tab_r_ce(r_ce),.tab_r_addr(r_addr),.tab_rd_word(rd_word),.tab_w_ce(w_ce),.tab_w_addr(w_addr),.tab_w_data(w_data));
+    generate if (MODE == 1) begin : g_tab
+        for (genvar w = 0; w < NT; w = w + 1) begin : g_w
+            ot_sram_1r1w_128x256_m1_r2c2 u_tab(.clk(clk), .r_ce_in(r_ce), .r_addr_in(r_addr), .rd_out(rd_word[w*256 +: 256]),
+                .w_ce_in(w_ce[w]), .w_addr_in(w_addr), .wd_in(w_data), .w_mask_in({256{1'b1}}),
+                .rr_en(2'b0), .rr_addr(12'b0), .cr_en(2'b0), .cr_sel(16'b0));
+        end
+    end else begin : g_notab
+        assign rd_word = '0;
+    end endgenerate
 endmodule
 `default_nettype wire

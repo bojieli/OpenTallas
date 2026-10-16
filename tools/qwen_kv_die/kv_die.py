@@ -513,17 +513,17 @@ def dcal_binding():
 
 
 def _d2ds_binding_dcal():
+    # always bound (a die without the dcal instance has no cal / eab pins, so the groups are unused): the post-prep
+    # chain re-runs the strict bind without the OT_KV_* environment and must see the same bindings
     b = d2ds_binding()
-    if DCAL:
-        b['ports'].update(cal=list(DCAL_CFG), eab=['epoch_abort'])
+    b['ports'].update(cal=list(DCAL_CFG), eab=['epoch_abort'])
     return b
 
 
 BINDINGS.update(qkd_host_rt=_host_rt_v14(host_rt_binding()), qkd_hslice=slice_die_binding(), qkd_pllm=pll_model_binding(),
                 qkd_d2ds=_d2ds_binding_dcal())
-if DCAL:
-    BINDINGS.update(qkd_dcal=dcal_binding())
-    RTL.update(qkd_dcal=DCAL_FILE)
+BINDINGS.update(qkd_dcal=dcal_binding())
+RTL.update(qkd_dcal=DCAL_FILE)
 RTL.update(qkd_d2ds=D2DS_FILE)
 RTL.update(qkd_host_rt=HOST_RT_FILE, qkd_hslice=SLICE_DIE_FILE)
 # v1.4.1 HOST-north: the N stacks' slices = the same RTL under a second physical view with swapped chain faces

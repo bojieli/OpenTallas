@@ -1,12 +1,12 @@
 {
  "schema": "opentallas.die_port_bind.v2",
- "die_v": "/tmp/claude-1000/hnl0600/g12/die.v",
+ "die_v": "/tmp/claude-1000/hnl0600/g17/die.v",
  "top": "hbm_v16_die",
  "verdict": "PASS",
  "failing": [],
  "summary": {
   "masters": 61,
-  "instances": 1538,
+  "instances": 1532,
   "unbound_masters": 0,
   "stub_masters": 0,
   "ambiguous_masters": 0,
@@ -20,7 +20,7 @@
   "multi_driven_net_bits": 0,
   "top_assigns": 0,
   "params_not_in_rtl": 0,
-  "strap_ports": 14,
+  "strap_ports": 16,
   "pad_bits": 2288
  },
  "masters": {
@@ -515,7 +515,9 @@
    "die_port_not_in_rtl": [],
    "input_unconnected": [],
    "input_tied": [],
-   "straps": [],
+   "straps": [
+    "tgt"
+   ],
    "pad_bits": {},
    "output_open": [],
    "width_mismatch": {},
@@ -540,7 +542,9 @@
    "die_port_not_in_rtl": [],
    "input_unconnected": [],
    "input_tied": [],
-   "straps": [],
+   "straps": [
+    "tgt"
+   ],
    "pad_bits": {},
    "output_open": [],
    "width_mismatch": {},
@@ -753,7 +757,7 @@
     "host_status"
    ],
    "param_sets": {
-    "{\"NF\": \"151\", \"NH\": \"6\", \"NT\": \"105\", \"TGTS\": \"840'hdfdedddcdbdad9d8d7d6d5d4d3d2d1d0cfcecdcccbcac9c8c7c6c5c4c3c2c1c0a5a4a3a2a1a0878685846f6e6d6c6b6a696867666564636261605f5e5d5c5b5a595857565554535251504f4e4d4c4b4a494847464544434241403b3a39387877767574703736353430\"}": 1
+    "{\"NF\": \"149\", \"NH\": \"6\", \"NT\": \"105\", \"TGTS\": \"840'hdfdedddcdbdad9d8d7d6d5d4d3d2d1d0cfcecdcccbcac9c8c7c6c5c4c3c2c1c0a5a4a3a2a1a0878685846f6e6d6c6b6a696867666564636261605f5e5d5c5b5a595857565554535251504f4e4d4c4b4a494847464544434241403b3a39387877767574703736353430\"}": 1
    },
    "die_port_not_in_rtl": [],
    "input_unconnected": [],
@@ -1325,6 +1329,31 @@
    "unparsed_conn": [],
    "duplicate_port": []
   },
+  "ot_hgi_sfu_core_split": {
+   "verdict": "PASS",
+   "fails": [],
+   "instances": 4,
+   "rtl": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_core_split.sv",
+   "kind": "real",
+   "ambiguous_defs": null,
+   "examples": [
+    "sfucore_SW",
+    "sfucore_SE",
+    "sfucore_NW"
+   ],
+   "param_sets": {
+    "{\"LG_PATH\": \"24\", \"LWB\": \"15\"}": 4
+   },
+   "die_port_not_in_rtl": [],
+   "input_unconnected": [],
+   "input_tied": [],
+   "straps": [],
+   "pad_bits": {},
+   "output_open": [],
+   "width_mismatch": {},
+   "unparsed_conn": [],
+   "duplicate_port": []
+  },
   "ot_hgi_sfu_lg_pair_leaf": {
    "verdict": "PASS",
    "fails": [],
@@ -1350,20 +1379,20 @@
    "unparsed_conn": [],
    "duplicate_port": []
   },
-  "ot_hgi_sfu_scheduled_engine": {
+  "ot_hgi_sfu_programme_store": {
    "verdict": "PASS",
    "fails": [],
    "instances": 4,
-   "rtl": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_scheduled_engine.sv",
+   "rtl": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_programme_store.sv",
    "kind": "real",
    "ambiguous_defs": null,
    "examples": [
-    "sfucore_SW",
-    "sfucore_SE",
-    "sfucore_NW"
+    "sfup_SW",
+    "sfup_SE",
+    "sfup_NW"
    ],
    "param_sets": {
-    "{\"AW\": \"11\", \"LG_PATH\": \"24\", \"LWB\": \"15\", \"PAGE_AW\": \"1\"}": 4
+    "{\"PAGE_AW\": \"1\"}": 4
    },
    "die_port_not_in_rtl": [],
    "input_unconnected": [],
@@ -1425,7 +1454,7 @@
    "unparsed_conn": [],
    "duplicate_port": []
   },
-  "ot_hgi_sm_xload_cl2_ctl": {
+  "ot_hgi_sm_xload_cl2_ctlw": {
    "verdict": "PASS",
    "fails": [],
    "instances": 4,
@@ -1438,12 +1467,14 @@
     "xl_NW_ctl"
    ],
    "param_sets": {
-    "{\"MUT\": \"0\", \"NR\": \"32\", \"PMAX\": \"8\", \"RD_LAT\": \"6\"}": 4
+    "{\"LEAD\": \"8\", \"NR\": \"32\", \"PMAX\": \"8\", \"RD_LAT\": \"6\"}": 4
    },
    "die_port_not_in_rtl": [],
    "input_unconnected": [],
    "input_tied": [],
-   "straps": [],
+   "straps": [
+    "tgt"
+   ],
    "pad_bits": {},
    "output_open": [],
    "width_mismatch": {},
@@ -1501,7 +1532,7 @@
   "ot_static_cmd_target": {
    "verdict": "PASS",
    "fails": [],
-   "instances": 36,
+   "instances": 32,
    "rtl": "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
    "kind": "real",
    "ambiguous_defs": null,
@@ -1511,35 +1542,7 @@
     "cp_svg_SW2"
    ],
    "param_sets": {
-    "{\"AWA\": \"10\", \"AWB\": \"7\", \"MODE\": \"0\", \"NA\": \"2\", \"NF\": \"1\", \"RBW\": \"7\", \"RCW\": \"8\", \"TGT_PIN\": \"1\"}": 32,
-    "{\"CW\": \"108\", \"MODE\": \"1\", \"NA\": \"1\", \"NF\": \"1\", \"RELF\": \"0\", \"TGT_PIN\": \"1\"}": 4
-   },
-   "die_port_not_in_rtl": [],
-   "input_unconnected": [],
-   "input_tied": [],
-   "straps": [
-    "tgt"
-   ],
-   "pad_bits": {},
-   "output_open": [],
-   "width_mismatch": {},
-   "unparsed_conn": [],
-   "duplicate_port": []
-  },
-  "ot_static_program_target": {
-   "verdict": "PASS",
-   "fails": [],
-   "instances": 6,
-   "rtl": "rtl/hbm_accel/generic/vm/static/ot_static_program_target.sv",
-   "kind": "real",
-   "ambiguous_defs": null,
-   "examples": [
-    "hc_tgt_SW",
-    "hc_tgt_SE",
-    "hc_tgt_NW"
-   ],
-   "param_sets": {
-    "{\"PCW\": \"10\", \"TGT_PIN\": \"1\"}": 6
+    "{\"AWA\": \"10\", \"AWB\": \"7\", \"MODE\": \"0\", \"NA\": \"2\", \"NF\": \"1\", \"RBW\": \"7\", \"RCW\": \"8\", \"TGT_PIN\": \"1\"}": 32
    },
    "die_port_not_in_rtl": [],
    "input_unconnected": [],
@@ -1591,9 +1594,11 @@
   "hbfd_rly_624_SN:i",
   "hbfd_rly_624_WE:i"
  ],
- "die_sha256": "42d663218752d2819ca2b45f9f4ceea4a2acd2cee2c5926d3e6883194cd7452b",
+ "die_sha256": "e882e87562f623dfeec9671bc9b41ed5e3d89cd4f4c58d7f0b7e93afdb94bb7d",
  "straps_declared": [
   "hfd_hgi_vm_calendar_f20:tgt",
+  "ot_hbm_hc_eng_static:tgt",
+  "ot_hbm_hc_q_static:tgt",
   "ot_hbm_sm_vm_wr_q_t:quad",
   "ot_hbm_sm_vm_wr_q_t:tgt",
   "ot_hbm_static_cfg_collar:tgt",
@@ -1605,8 +1610,8 @@
   "ot_hbm_vm_lg_static_bank:wret",
   "ot_hgi_dma_back_static_vp4_banks_cp:stk",
   "ot_hgi_dma_back_static_vp4_banks_cp:tgt",
-  "ot_static_cmd_target:tgt",
-  "ot_static_program_target:tgt"
+  "ot_hgi_sm_xload_cl2_ctlw:tgt",
+  "ot_static_cmd_target:tgt"
  ],
  "params_file": null,
  "rtl_roots": [

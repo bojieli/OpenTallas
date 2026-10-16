@@ -1,0 +1,28 @@
+{
+ "cell": "ot_s81_cfg7_seq_bfp",
+ "view": "physical/ref_tile/s81coll_cfg7_seq_bfp_pr/views/ot_s81_cfg7_seq_bfp",
+ "lib_cell": "ot_s81_cfg7_seq_bfp",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 93.2,
+ "spread_ps": 14.4,
+ "outputs": 114,
+ "inputs": 520,
+ "launch_ps": 191.9,
+ "launch_pin": "f_prog[18]",
+ "capture_ps": 137.1,
+ "capture_pin": "q1[71]",
+ "launch_over": 0,
+ "capture_over": 0,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pass": true,
+ "fail_why": "",
+ "record_commit": "ae47f11bf",
+ "job": "s81coll_cfg7_seq_bfp_pr-pr1-ef2866774",
+ "verdict": "CLOSED TT +244.26 / FF +23.88 / DRC 0 (main 21c012531)",
+ "route_images_viewed": "6_final density: W pin-flop band dense, SE quadrant empty (outline set by 524 W pins; shrink candidate)",
+ "audited": "S-ELEM-PQ r5 2026-10-16"
+}

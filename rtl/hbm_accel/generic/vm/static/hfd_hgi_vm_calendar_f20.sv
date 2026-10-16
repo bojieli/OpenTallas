@@ -4,11 +4,13 @@
 // The standalone ot_static_program_target collar (~630 pins, ~0.01 mm2) is pin-bound as its own tile, so it is folded
 // here as pin-registered soft logic: the face takes the F20 broadcast bus + the identity strap tgt[7:0] (TGT_PIN=1),
 // and the target's registered programme/start outputs feed the calendar's own W capture rung internally (reg->reg).
-// The target is the W-face front end: clocked by clk_cap (the related phase-0 root of the W capture rung) so its F20
-// pin flops sit on the short root; calendar body/outputs stay on clk.
+// The target's F20 input-capture rung runs on clk_cap (CAP_CLK=1: the related phase-0 short root of the W capture rung);
+// its body (installed bitmap, scan, programme outputs) and the calendar body/outputs stay on clk (gate 06:40: whole target
+// on clk_cap = 2,031 sinks, TT insertion 266.5 / spread 94.6 ps). The target body (installed bitmap, scan, programme
+// outputs) has its own related phase-0 root clk_tgt (gate 07:30: body on clk = 2,045 sinks, TT 286.8 / spread 109.5 ps).
 // Cycle behaviour is exactly the two-tile composition (collar outputs are flops; no stage added or removed).
 module hfd_hgi_vm_calendar_f20 #(parameter integer RMUT=0) (
-    input wire clk,clk_cap,clk_mem,rst_n,
+    input wire clk,clk_cap,clk_mem,clk_tgt,rst_n,
     input wire [7:0] tgt,
     input wire cfg_v,
     input wire [7:0] cfg_target,
@@ -41,8 +43,8 @@ module hfd_hgi_vm_calendar_f20 #(parameter integer RMUT=0) (
     output wire [23:0] lg_local_write
 );
     wire p_we,p_sv; wire [9:0] p_wa,p_sb; wire [255:0] p_wd; wire [10:0] p_sl; wire [15:0] p_lp;
-    ot_static_program_target #(.TARGET(8'hff),.PCW(10),.TGT_PIN(1)) u_target(
-        .clk(clk_cap),.rst_n(rst_n),.tgt(tgt),.cfg_v(cfg_v),.cfg_target(cfg_target),.cfg_addr(cfg_addr),.cfg_data(cfg_data),
+    ot_static_program_target #(.TARGET(8'hff),.PCW(10),.TGT_PIN(1),.CAP_CLK(1)) u_target(
+        .clk(clk_tgt),.clk_cap(clk_cap),.rst_n(rst_n),.tgt(tgt),.cfg_v(cfg_v),.cfg_target(cfg_target),.cfg_addr(cfg_addr),.cfg_data(cfg_data),
         .desc_v(desc_v),.desc_base(desc_base),.desc_limit(desc_limit),.desc_loops(desc_loops),.launch_v(launch_v),
         .program_active(active),.program_cfg_we(p_we),.program_cfg_addr(p_wa),.program_cfg_data(p_wd),
         .program_start_v(p_sv),.program_start_base(p_sb),.program_start_limit(p_sl),.program_start_loops(p_lp),
