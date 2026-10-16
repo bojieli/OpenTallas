@@ -118,7 +118,7 @@ class Leaf:
         out = []
         for port, bits in sorted(self.p.items()):
             for i, (f, ly, c) in enumerate(bits):
-                name = port if len(bits) == 1 and port in SCALAR else f'{port}[{i}]'
+                name = port if len(bits) == 1 and (port in SCALAR or port == 'cs_fwd') else f'{port}[{i}]'
                 x, y = {'N': (c, self.h - 0.042), 'S': (c, 0.042), 'W': (0.042, c), 'E': (self.w - 0.042, c)}[f]
                 out.append(f'place_pin -pin_name {{{name}}} -layer {ly} -location {{{x:.3f} {y:.3f}}} -force_to_die_boundary')
         return '\n'.join(out) + '\n'
