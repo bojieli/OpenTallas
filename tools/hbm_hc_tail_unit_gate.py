@@ -6,6 +6,7 @@ Vector directory must contain the full-engine generator's P=1 expmix/exptail/tbl
 import argparse
 import hashlib
 import json
+import re
 from pathlib import Path
 import shutil
 import subprocess
@@ -47,10 +48,12 @@ def main():
             raise SystemExit(f'tail component build {mutant} failed: {a.run}')
         p = subprocess.run(['vvp', str(binary)], cwd=a.run, capture_output=True, text=True)
         (a.run / f'run_mut{mutant}.log').write_text(p.stdout + p.stderr)
-        valid = (p.returncode == 0 and 'HC_TAIL_UNIT PASS phases=7 words=168 fixed timing' in p.stdout
+        clean_pulses = len(re.findall(r'TAIL RESULT_PULSE cycle=\d+ delta=496 fault=0', p.stdout))
+        valid = clean_pulses == 7 and (p.returncode == 0 and 'HC_TAIL_UNIT PASS phases=7 words=168 fixed timing' in p.stdout
                  if not mutant else p.returncode != 0 and 'TAIL FAIL bad=' in p.stdout
                  and 'TAIL CONTRACT' not in p.stdout)
-        records.append(dict(mutant=mutant, rc=p.returncode, expected_outcome_observed=valid))
+        records.append(dict(mutant=mutant, rc=p.returncode, known_clean_fixed_cycle_pulses=clean_pulses,
+                            expected_outcome_observed=valid))
     result = dict(scope='Tail-unit component; real sigmoid/exp/Sinkhorn RTL; external golden mixes/table',
                   full_engine_qualified=False, phases=7, words=168, launch_to_result_cycles=496,
                   tested_mutants=a.mutants,
