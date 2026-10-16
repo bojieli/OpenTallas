@@ -52,7 +52,8 @@ foreach inst [$q45_block getInsts] {
   if {![dict exists $q45_boxes $root]} {error "Q45 unassigned mapped clock root $root"}
   dict lappend q45_regs $root $inst
 }
-if {[dict size $q45_regs] != 26} {error "Q45 expected26 actual soft roots"}
+# every fenced soft root must own mapped FFs (nk 26 roots, node-less twin 23), and no FF may sit on an unfenced root
+if {[dict size $q45_regs] != [dict size $q45_boxes]} {error "Q45 expected [dict size $q45_boxes] actual soft roots, got [dict size $q45_regs]: [dict keys $q45_regs]"}
 dict for {root registers} $q45_regs {
   if {[llength $registers] > 5000} {error "Q45 root $root exceeds structural5000sink bound"}
   set cone [q45_fanin $registers]; dict set q45_cones $root $cone
@@ -61,6 +62,12 @@ dict for {root registers} $q45_regs {
 set q45_report [open q45_actual_regions.tsv w]
 puts $q45_report "root\tff_sinks\texclusive_comb\tshared_comb\tcell_area_um2\tplaceable_um2\tutilization"
 dict for {root boxes} $q45_boxes {
+  if {![llength $boxes]} {
+    # pin-anchored input face root: io_flop_at_pins fixes every sink FIRM at its pin (an all-FIRM fence diverges GPL)
+    puts "Q45_REGION $root FF=[llength [dict get $q45_regs $root]] PIN_ANCHORED no_fence"
+    puts $q45_report "$root\t[llength [dict get $q45_regs $root]]\t0\t0\t0\t0\tpin_anchored"
+    continue
+  }
   set region [odb::dbRegion_create $q45_block q45_$root]
   $region setRegionType EXCLUSIVE
   set capacity 0.0
@@ -88,4 +95,4 @@ dict for {root boxes} $q45_boxes {
   if {$fill > .60} {close $q45_report; error "Q45 $root actual mapped region fill exceeds60percent; redesign required"}
 }
 close $q45_report
-puts "Q45_LOCALIZE_PASS roots26 all_actual_mapped_FF_owned exclusive_data_cones_fenced capacity_checked"
+puts "Q45_LOCALIZE_PASS roots[dict size $q45_boxes] all_actual_mapped_FF_owned exclusive_data_cones_fenced capacity_checked"

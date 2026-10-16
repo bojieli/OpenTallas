@@ -21,9 +21,9 @@ dict set q45_boxes ck_tx4 {{315.144 196.56 324.432 336.96000000000004}}
 dict set q45_boxes ck_tx5 {{315.144 25.92 324.432 166.32}}
 dict set q45_boxes ck_tx6 {{435.024 196.56 455.76 336.96000000000004}}
 dict set q45_boxes ck_tx7 {{435.024 25.92 455.76 166.32}}
-dict set q45_boxes ck_fa0 {{2.16 60.58 17.064 161.61}}
-dict set q45_boxes ck_fa1 {{2.16 161.61 17.064 262.16}}
+dict set q45_boxes ck_fa0 {}
+dict set q45_boxes ck_fa1 {}
 dict set q45_boxes ck_fa2 {{2.16 262.16 17.064 362.66}}
 dict set q45_boxes ck_fa3 {{2.16 362.66 17.064 463.64}}
-dict set q45_boxes ck_fa4 {{440.856 429.2 455.76 495.0}}
+dict set q45_boxes ck_fa4 {}
 source /src/tools/qwen_repack/localize45.tcl
