@@ -10,7 +10,7 @@ module tb_s81_engram_mix4_clocked #(parameter MUT=0, HLAYOUT=1, BANKED=0);
  reg clk=0;always #1 clk=~clk;
  reg [63:0] cfg[0:0];reg rst=0;reg [84:0] cmd=0;wire [8:0] done;wire [1:0] st;wire [19:0] rq;wire [279:0] addr;
  reg [19:0] rv=0;reg [10239:0] rd=0;wire [3:0] wv;wire [55:0] wa;wire [63:0] mask;wire [2047:0] wd;
- dsfd_engram_mix4_clocked_candidate #(.MUT(MUT),.HLAYOUT(HLAYOUT)) dut({189{clk}},rst,cmd,done,st,
+ dsfd_engram_mix4_clocked_candidate #(.MUT(MUT),.HLAYOUT(HLAYOUT)) dut({193{clk}},rst,cmd,done,st,
 `ifndef DSFD_ENGRAM_STATIC_ISSUE
  1'b1,
 `endif

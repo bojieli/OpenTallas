@@ -1,0 +1,475 @@
+{
+ "status": "HELD_GEOMETRY_SCREEN",
+ "actual_leaf_views": {
+  "mul4": {
+   "record": "892399f17",
+   "path": "physical/ref_tile/s81engm_mul4/views/ot_s81_engram_mul4/ot_s81_engram_mul4.lef",
+   "sha256": "d6bd8f1137805f83a18372d3731b8c699704adee632299619d5677a917e2a992",
+   "outline_um": [
+    181.44,
+    120.96
+   ]
+  },
+  "chunk8": {
+   "record": "23081f14a",
+   "path": "physical/ref_tile/s81engm_chunk8/views/ot_s81_engram_chunk8/ot_s81_engram_chunk8.lef",
+   "sha256": "d792a9d03a1b619876727883e23fa3dd03de16b0bbe4311f796d8377a167e208",
+   "outline_um": [
+    90.72,
+    90.72
+   ]
+  },
+  "add8": {
+   "record": "ff40f7451",
+   "path": "physical/ref_tile/s81engm_add8/views/ot_s81_engram_add8/ot_s81_engram_add8.lef",
+   "sha256": "c10ab7c5bce0944559fb1472bc3b2a681a764d4ec1ee58c9f88dc4355f16aafc",
+   "outline_um": [
+    181.44,
+    99.36
+   ]
+  },
+  "norm": {
+   "record": "0ab4f50f0",
+   "path": "physical/ref_tile/s81engm_norm/views/ot_s81_engram_norm/ot_s81_engram_norm.lef",
+   "sha256": "f4b99a65b8bae0af76d2d64dcefb5d2a57b64eb06550851e3d0abd730516ae9c",
+   "outline_um": [
+    181.44,
+    95.04
+   ]
+  },
+  "sum": {
+   "record": "c7bfebfff",
+   "path": "physical/ref_tile/s81engm_sum/views/ot_s81_engram_sum/ot_s81_engram_sum.lef",
+   "sha256": "647e5450014f2ee9e25b8db4562bf292651d146370975fd28d38a9806a0cd4ac",
+   "outline_um": [
+    90.72,
+    99.36
+   ]
+  },
+  "signed_sqrt": {
+   "record": "27a678c9a",
+   "path": "physical/ref_tile/s81engm_signed_sqrt/views/ot_s81_engram_signed_sqrt/ot_s81_engram_signed_sqrt.lef",
+   "sha256": "6033e4b72b266b7be8617cea20dc5cda6c64f0346f7e6159849864628df3ee3a",
+   "outline_um": [
+    64.8,
+    43.2
+   ]
+  },
+  "sigmoid": {
+   "record": "d147e15bb",
+   "path": "physical/ref_tile/s81engm_sigmoid/views/ot_s81_engram_sigmoid/ot_s81_engram_sigmoid.lef",
+   "sha256": "cb45ff5f15017d022a13c0fe54c015148aa484fb5bd19a1ac47fd41c7f6eb9ff",
+   "outline_um": [
+    181.44,
+    110.16
+   ]
+  },
+  "mix_control": {
+   "record": "2b910ab42",
+   "path": "physical/ref_tile/s81engm_control/views/ot_s81_engram_mix_control/ot_s81_engram_mix_control.lef",
+   "sha256": "a5ec54f1ce5c5d1fb16c2083e803d1bbb11be16a826dc3205893f6a0bce951c2",
+   "outline_um": [
+    90.72,
+    64.8
+   ]
+  },
+  "rly": {
+   "record": "6416be4d7",
+   "path": "physical/ref_tile/s81engm_rly/views/ot_s81_engram_rly/ot_s81_engram_rly.lef",
+   "sha256": "dc75099e3f5c76248e1e20b1e754f36fb147446f0e84fe60fe0f084655f82912",
+   "outline_um": [
+    43.2,
+    21.6
+   ]
+  },
+  "mixq_shcol": {
+   "record": "117bf9beb",
+   "path": "physical/ref_tile/s81engm_shcol/views/ot_s81_engram_mixq_shcol/ot_s81_engram_mixq_shcol.lef",
+   "sha256": "f7ebdf09c173ad770f0b5d3e209d10ca166cf79df10e07f835ae1986fc617d36",
+   "outline_um": [
+    164.16,
+    54.0
+   ]
+  },
+  "mixq_shctl": {
+   "record": "3032e848c",
+   "path": "physical/ref_tile/s81engm_shctl/views/ot_s81_engram_mixq_shctl/ot_s81_engram_mixq_shctl.lef",
+   "sha256": "3e049cd1d53be86e9db021359a6426177755d8258553dcdeb99be981f5208031",
+   "outline_um": [
+    86.4,
+    54.0
+   ]
+  }
+ },
+ "cluster": {
+  "outline_um": [
+   876.96,
+   876.96
+  ],
+  "children": 38,
+  "channel_um": 21.6,
+  "overlaps": 0,
+  "min_axis_clearance_um": 21.59999999999991,
+  "boxes": [
+   {
+    "name": "shell0",
+    "master": "mixq_shcol",
+    "x": 23.76,
+    "y": 0,
+    "w": 164.16,
+    "h": 54.0
+   },
+   {
+    "name": "shell1",
+    "master": "mixq_shcol",
+    "x": 209.52,
+    "y": 0,
+    "w": 164.16,
+    "h": 54.0
+   },
+   {
+    "name": "shell2",
+    "master": "mixq_shctl",
+    "x": 395.28,
+    "y": 0,
+    "w": 86.4,
+    "h": 54.0
+   },
+   {
+    "name": "shell3",
+    "master": "mixq_shcol",
+    "x": 503.28,
+    "y": 0,
+    "w": 164.16,
+    "h": 54.0
+   },
+   {
+    "name": "shell4",
+    "master": "mixq_shcol",
+    "x": 689.04,
+    "y": 0,
+    "w": 164.16,
+    "h": 54.0
+   },
+   {
+    "name": "add80",
+    "master": "add8",
+    "x": 43.2,
+    "y": 75.6,
+    "w": 181.44,
+    "h": 99.36
+   },
+   {
+    "name": "add81",
+    "master": "add8",
+    "x": 246.24,
+    "y": 75.6,
+    "w": 181.44,
+    "h": 99.36
+   },
+   {
+    "name": "add82",
+    "master": "add8",
+    "x": 449.28,
+    "y": 75.6,
+    "w": 181.44,
+    "h": 99.36
+   },
+   {
+    "name": "add83",
+    "master": "add8",
+    "x": 652.32,
+    "y": 75.6,
+    "w": 181.44,
+    "h": 99.36
+   },
+   {
+    "name": "mul4a0",
+    "master": "mul4",
+    "x": 43.2,
+    "y": 196.56,
+    "w": 181.44,
+    "h": 120.96
+   },
+   {
+    "name": "mul4a1",
+    "master": "mul4",
+    "x": 246.24,
+    "y": 196.56,
+    "w": 181.44,
+    "h": 120.96
+   },
+   {
+    "name": "mul4a2",
+    "master": "mul4",
+    "x": 449.28,
+    "y": 196.56,
+    "w": 181.44,
+    "h": 120.96
+   },
+   {
+    "name": "mul4a3",
+    "master": "mul4",
+    "x": 652.32,
+    "y": 196.56,
+    "w": 181.44,
+    "h": 120.96
+   },
+   {
+    "name": "mul4b0",
+    "master": "mul4",
+    "x": 43.2,
+    "y": 339.12,
+    "w": 181.44,
+    "h": 120.96
+   },
+   {
+    "name": "mul4b1",
+    "master": "mul4",
+    "x": 246.24,
+    "y": 339.12,
+    "w": 181.44,
+    "h": 120.96
+   },
+   {
+    "name": "mul4b2",
+    "master": "mul4",
+    "x": 449.28,
+    "y": 339.12,
+    "w": 181.44,
+    "h": 120.96
+   },
+   {
+    "name": "mul4b3",
+    "master": "mul4",
+    "x": 652.32,
+    "y": 339.12,
+    "w": 181.44,
+    "h": 120.96
+   },
+   {
+    "name": "relay0",
+    "master": "rly",
+    "x": 416.88,
+    "y": 481.68,
+    "w": 43.2,
+    "h": 21.6
+   },
+   {
+    "name": "chunkA0",
+    "master": "chunk8",
+    "x": 56.16,
+    "y": 524.88,
+    "w": 90.72,
+    "h": 90.72
+   },
+   {
+    "name": "chunkA1",
+    "master": "chunk8",
+    "x": 168.48,
+    "y": 524.88,
+    "w": 90.72,
+    "h": 90.72
+   },
+   {
+    "name": "chunkA2",
+    "master": "chunk8",
+    "x": 280.8,
+    "y": 524.88,
+    "w": 90.72,
+    "h": 90.72
+   },
+   {
+    "name": "chunkA3",
+    "master": "sum",
+    "x": 393.12,
+    "y": 524.88,
+    "w": 90.72,
+    "h": 99.36
+   },
+   {
+    "name": "chunkA4",
+    "master": "chunk8",
+    "x": 505.44,
+    "y": 524.88,
+    "w": 90.72,
+    "h": 90.72
+   },
+   {
+    "name": "chunkA5",
+    "master": "chunk8",
+    "x": 617.76,
+    "y": 524.88,
+    "w": 90.72,
+    "h": 90.72
+   },
+   {
+    "name": "chunkA6",
+    "master": "chunk8",
+    "x": 730.08,
+    "y": 524.88,
+    "w": 90.72,
+    "h": 90.72
+   },
+   {
+    "name": "chunkB0",
+    "master": "chunk8",
+    "x": 0.0,
+    "y": 645.84,
+    "w": 90.72,
+    "h": 90.72
+   },
+   {
+    "name": "chunkB1",
+    "master": "chunk8",
+    "x": 112.32,
+    "y": 645.84,
+    "w": 90.72,
+    "h": 90.72
+   },
+   {
+    "name": "chunkB2",
+    "master": "chunk8",
+    "x": 224.64,
+    "y": 645.84,
+    "w": 90.72,
+    "h": 90.72
+   },
+   {
+    "name": "chunkB3",
+    "master": "sum",
+    "x": 336.96,
+    "y": 645.84,
+    "w": 90.72,
+    "h": 99.36
+   },
+   {
+    "name": "chunkB4",
+    "master": "sum",
+    "x": 449.28,
+    "y": 645.84,
+    "w": 90.72,
+    "h": 99.36
+   },
+   {
+    "name": "chunkB5",
+    "master": "chunk8",
+    "x": 561.6,
+    "y": 645.84,
+    "w": 90.72,
+    "h": 90.72
+   },
+   {
+    "name": "chunkB6",
+    "master": "chunk8",
+    "x": 673.92,
+    "y": 645.84,
+    "w": 90.72,
+    "h": 90.72
+   },
+   {
+    "name": "chunkB7",
+    "master": "chunk8",
+    "x": 786.24,
+    "y": 645.84,
+    "w": 90.72,
+    "h": 90.72
+   },
+   {
+    "name": "scalar0",
+    "master": "norm",
+    "x": 45.36,
+    "y": 766.8,
+    "w": 181.44,
+    "h": 95.04
+   },
+   {
+    "name": "scalar1",
+    "master": "signed_sqrt",
+    "x": 248.4,
+    "y": 766.8,
+    "w": 64.8,
+    "h": 43.2
+   },
+   {
+    "name": "scalar2",
+    "master": "mix_control",
+    "x": 334.8,
+    "y": 766.8,
+    "w": 90.72,
+    "h": 64.8
+   },
+   {
+    "name": "scalar3",
+    "master": "sigmoid",
+    "x": 447.12,
+    "y": 766.8,
+    "w": 181.44,
+    "h": 110.16
+   },
+   {
+    "name": "scalar4",
+    "master": "norm",
+    "x": 650.16,
+    "y": 766.8,
+    "w": 181.44,
+    "h": 95.04
+   }
+  ]
+ },
+ "current_reserve_um": [
+  1321.92,
+  3229.2
+ ],
+ "one_by_four_shortfall_um": [
+  109.36,
+  423.36
+ ],
+ "alternatives": [
+  {
+   "clusters": [
+    1,
+    4
+   ],
+   "outline_um": [
+    1431.28,
+    3652.56
+   ],
+   "area_mm2": 5.227836076800001,
+   "status": "CONSERVATIVE_ROW_PLAN_ONLY"
+  },
+  {
+   "clusters": [
+    2,
+    2
+   ],
+   "outline_um": [
+    2329.84,
+    1855.44
+   ],
+   "area_mm2": 4.3228783296,
+   "status": "CONSERVATIVE_ROW_PLAN_ONLY"
+  },
+  {
+   "clusters": [
+    4,
+    1
+   ],
+   "outline_um": [
+    4126.96,
+    956.88
+   ],
+   "area_mm2": 3.9490054848000007,
+   "status": "CONSERVATIVE_ROW_PLAN_ONLY"
+  }
+ ],
+ "clock_entries_implemented_candidate": 193,
+ "station_channel_um": 550.0,
+ "top_strip_um": 54.0,
+ "assumptions": [
+  "Conservative row packing only, not globally minimal",
+  "Stationchannel550/topstrip54 are reservations; no actual relaystation hardview/topingress physicalproof",
+  "All leaf pin matching/reach/clocks/PG, parentfill/trialGRT and full current RTL binding remain open",
+  "Existing149 ABI hides68220relayFF onck0; 193clock candidate proof pending; prior189clock candidate preserves exact810cycles, topingress localization remains open"
+ ]
+}
