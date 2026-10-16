@@ -45,5 +45,11 @@
   "host_ack_n -> fence.commits32 unregistered arithmetic endpoints,15logic levels; pin stage +fixed latency needs own exact phase proof",
   "u_eng ap0_stk -> ap1_rbase25levels estimated878.5ps needs actualtiming classification",
   "actual slots/PG/cuts/clocks/TTsetup/FFhold/DRC0 and normalcompiledcalendar OPEN"
- ]
+ ],
+ "positive_emit_calendar": {
+  "path": "emit_calendar_exact.tsv",
+  "rows": 544,
+  "sha256": "54dc358cc9bb3ef0736390cb8a419991f1bc7982f451f14fb6cd3edc1a3f8472",
+  "persistence_fix": "Captured immediately after exact DUT before CSR-bypass MUT0 negative truncates its own generic filename"
+ }
 }

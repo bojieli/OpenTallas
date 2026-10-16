@@ -1,10 +1,13 @@
 {
   "scope": "Actual HOST leaf composition: fixed ingress slots, source-exact IKEY and boot.\n\nExternal HBM storage/ACKs and expected numerical images are test models. Every\non-chip packet/FIFO/arithmetic/decoder result comes from actual source RTL.\nScope is initialization/off-chip ingress; normal-token compiler reservations,\nphysical pin/clock timing and die/full-token throughput remain OPEN.\n",
+  "output_artifact_sha256": {
+    "emit_calendar_exact.tsv": "54dc358cc9bb3ef0736390cb8a419991f1bc7982f451f14fb6cd3edc1a3f8472"
+  },
   "generator_source_sha256": {
     "tools/rtl_rom_host_ingest_bench.py": "53a881623280e85661a53b91d28bcd0a66ec1356a0a8a4ff4419bcca8cbad45b",
     "tools/rtl_hdc_kv_ingest_campaign.py": "184f63ac390a299e109cc99fad6afe43515cfb7eb99f716fed7290d120a86b94",
     "tools/kv_ingest_ref.py": "9cc66372dac0b82d24ea0c02a7af1e71fbfa37d743bfcd476eba71ab33c111a2",
-    "tools/s81_static_control/host_c_sliced_gate.py": "42f1034675f096e13b3ad2043b1dfa496e674460d3978f5dc20a3cbc75e128ae"
+    "tools/s81_static_control/host_c_sliced_gate.py": "852cbf985e58bfa69dae3c2a0587d5a4ecdc4782632e5932cee1323e23f484a9"
   },
   "input_image_sha256": {
     "packets.mem": "0d67b838272d7a1e3d55078ede7f98ac9a03225495b72880bb66e2045a02e7d6",
