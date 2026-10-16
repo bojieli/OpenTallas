@@ -1,0 +1,47 @@
+{
+  "schema": "opentallas.qwen-vm-transport-candidate.v1",
+  "return_ro": 6,
+  "physical_profile_status": "UNQUALIFIED",
+  "compiler_adopted": false,
+  "source_sha256": {
+    "rtl/qwen_sys/vm_nox_20261014/qfd_sp_vector_memory.sv": "e23213d9d55dd2e604112a968976671a47451c1fb1db7d64ac63e821b0439d28",
+    "rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv": "7b04314ab42961f0eb3b935dd0fe6e7fcec3fa09ee118c021d55672c795da778",
+    "rtl/qwen_sys/dvm_20261014/ot_qfd_vm_q_export_fixed.sv": "f7c95a54cc6581171e43eb73ad06739f0254fbf7c05e95efa70e642ee8e75c92",
+    "rtl/qwen_sys/vm_native_physical_20261015/qvm_bank_banked_native.sv": "b6b26f18b39fabeb1953922c839ba28d329f7ac513f7ee63ddc18975379ece10",
+    "rtl/qwen_sys/vm_native_physical_20261015/qvm_su_bank_native.sv": "0e11ada83efd98a267e78c081b00810e4a0713d2b414fd2a70596af146cd5bb7"
+  },
+  "fixed_core_cycles": {
+    "read_edges": 18,
+    "VM_response_edges": 18,
+    "SU_VL": 19,
+    "SU_request_to_answer_edges": 20,
+    "q_start_to_first_output_edges": 19,
+    "q_start_to_last_output_edges": 50,
+    "delta_vs_production_RO1": 5
+  },
+  "relay_hardware": {
+    "master": "qvm_data256_native",
+    "tiles": 849,
+    "ff_bits": 217344,
+    "outline_um": [
+      25.92,
+      51.84
+    ],
+    "area_um2": 1140795.1872000003,
+    "unchanged_hard_memory_banks": {
+      "row": 64,
+      "operand": 48
+    },
+    "distinct_relay_clock_entries": 849
+  },
+  "schedule": "Compiler must use these fixed ages for every dependency, slot, occupancy, write visibility and deadline. No runtime credits or ready-driven rescheduling.",
+  "e2e_token_cost_status": "UNMEASURED",
+  "accepted_cost_ledger_admitted": false,
+  "blockers": [
+    "New return/read-control leaf physical views and exact native timing",
+    "All relay homes, assigned pins and actual clock phi-R",
+    "Every incident boundary connection and cut after PG/clock/OBS/via subtraction",
+    "Static full programme native composition and measured token cost",
+    "Remaining parent write/control hardening"
+  ]
+}
