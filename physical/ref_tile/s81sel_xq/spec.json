@@ -15,21 +15,20 @@
  },
  "pins": {
   "S": [
-   "i_sw"
-  ],
-  "N": [
-   "o_lanes"
-  ],
-  "W": [
+   "i_sw",
    "ck",
    "rst"
+  ],
+  "N": [
+   "o_sw",
+   "o_x"
   ]
  },
  "layer_cap": "M5",
  "recipe": 2,
  "pin_regs": {
   "enable": false,
-  "reason": "Source registers both boundaries: input pin flop p <= i_sw and o_lanes are flops; wrapper registers would add a cycle beyond the proven +1 SW-lane cost."
+  "reason": "Source registers both boundaries: input pin flop p <= i_sw; o_sw / o_x driven by flops (constant bits are ties); wrapper registers would add a cycle beyond the proven +1 SW-lane cost."
  },
  "route": {
   "pd": 0.5,
@@ -44,7 +43,7 @@
  "job": {
   "owner": "Claude:S-ELEM-PQ",
   "branch": "claude/s81-seltxq-1016",
-  "tag": "x3",
+  "tag": "x5",
   "purpose": "Harden dsfd_selt_xq (absent-quarter synthesiser, the open leaf of dsfd_bk_selector_c1 on the 1-stack S81 die); closure-first, removes the bk_selector_c1 stand-in once the parent binds it.",
   "benches": [
    {
@@ -82,14 +81,30 @@
   "record_to": "results/rtl/ref_tile/s81sel_xq"
  },
  "pin_ranges": {
-  "o_lanes": [
-   10.8,
-   378.0
+  "o_sw": [
+   5.4,
+   194.4
+  ],
+  "o_x": [
+   199.8,
+   383.4
   ],
   "i_sw": [
-   10.8,
-   102.6
+   5.4,
+   194.4
+  ],
+  "ck": [
+   196.02,
+   197.1
+  ],
+  "rst": [
+   198.18,
+   199.26
   ]
+ },
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "why": "r2 dsfd_selt_xq: output split o_sw/o_x (same cycle behaviour), control-only reset, constant bits of the synthesised quarters unregistered; x3 native launch 228.7 > 220 (results/rtl/s81_seltxq_1016/x3-native.json), x4 GRT congestion in the lane-0 output band (515 pins in 46 um N)"
  },
  "params": {},
  "macros": [],

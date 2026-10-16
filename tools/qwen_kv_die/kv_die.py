@@ -255,6 +255,12 @@ V144 = __import__('os').environ.get('OT_KV_V144', '0') == '1'
 V144_R6 = V144 and __import__('os').environ.get('OT_KV_V144_R6', '0') == '1'
 PV_W = int(__import__('os').environ.get('OT_KV_PV_W', '59'))
 PV_AGE = int(__import__('os').environ.get('OT_KV_PV_AGE', '20'))
+# KVDIE 2026-10-16 kvs13e (Q-KVSYS lead: the 2,089-b host_fdi d2d_kv/host -> S-edge SerDes ran 33.5 mm, 70.7 Mbit.um):
+# OT_KV_SERDES_N=1 puts the host SerDes PHY on the N edge beside the HOST root (east of the PLL, W-face FDI pins facing
+# the root), so the FDI is local; the S band it leaves goes to the south PV pair.  OT_KV_PV_PINY=1 puts each PV pair's
+# vin<k> / vrq<k> face pins level with V port k's home (not all at the array middle).
+SERDES_N = __import__('os').environ.get('OT_KV_SERDES_N', '0') == '1'
+PV_PINY = __import__('os').environ.get('OT_KV_PV_PINY', '0') == '1'
 # 'ahub' (default): the attention hub moves SOUTH by the north shortfall (rounded up to the 43.2-um band lattice) while the
 # south envelope still fits; any remainder grows the die height (north band = embgw and everything above it rises).
 # 'grow': the hub stays, the die height grows by the whole shortfall (the coordinator's decision-2 baseline).
@@ -1220,6 +1226,9 @@ def _build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_w
     Hk0 = Hk
     if split and V144:
         Hk = round(Hk + V144S['grow'], 6)   # v1.4.4: the north band (embgw and everything above it) rises with the die top
+    if split and SERDES_N:
+        # kvs13e: the N-edge SerDes (1,563.6 um tall) needs a relay channel under it above the N head groups
+        Hk = round(Hk + float(__import__('os').environ.get('OT_KV_SERDES_N_GROW', '648')), 6)
     # x layout (W half; E mirrors)
     x_land = I['cdc_WS_0']['x'] + I['cdc_WS_0']['w'] + GX
     leaf_shift = ((518.4 if kv_wq_head else 432.0) + GX if kv_wq_leaf_s else 518.4 + GX) if kv_wq_leaves else 0.0
@@ -1335,8 +1344,14 @@ def _build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_w
     hw, hh = FRAMES['qkd_ahub']
     add('ahub', 'qkd_ahub', xc - hw / 2, up(Hk0 / 2 - hh / 2, GY) - (V144S['ahub_dy'] if split and V144 else 0.0),
         hw - SHAVE, hh - SHAVE, 'R0', 'attn_hub', 'attn')
-    add('serdes_host', SERDES[0], xc - SERDES[1] / 2, MARGIN, SERDES[1] - SHAVE, SERDES[2] - SHAVE, 'R0', 'phy_host',
-        'io', 'link_serdes')
+    if split and SERDES_N:
+        _pl = next(i for i in ins if i.name == ('ckb_kv' if __import__('os').environ.get('OT_KV_SERDES_N_SIDE', 'E') == 'W' else 'pll'))
+        _sx = (_pl.x - 10 * GX - SERDES[1]) if _pl.name == 'ckb_kv' else (_pl.x + _pl.w + 10 * GX)
+        add('serdes_host', SERDES[0], up(_sx, GX), Hk - MARGIN - SERDES[2], SERDES[1] - SHAVE,
+            SERDES[2] - SHAVE, 'R0', 'phy_host', 'io', 'link_serdes')
+    else:
+        add('serdes_host', SERDES[0], xc - SERDES[1] / 2, MARGIN, SERDES[1] - SHAVE, SERDES[2] - SHAVE, 'R0', 'phy_host',
+            'io', 'link_serdes')
     tw, th = FRAMES['qkd_host']
     if slice_w and HOST_V14.get('north'):
         # v1.4.1 (owner/coordinator 10-15): the HOST root core sits directly below the static D2D end, in the slot the
@@ -1353,7 +1368,7 @@ def _build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_w
         byc = {i.name: i for i in ins}
         ah_, eg_, sd_ = byc['ahub'], byc['embgw'], byc['serdes_host']
         n_lo, n_hi = ah_.y + ah_.h + PV_CLEAR, eg_.y - max(PV_CLEAR, V144_APRON)
-        s_lo, s_hi = sd_.y + sd_.h + PV_CLEAR, ah_.y - PV_CLEAR
+        s_lo, s_hi = (MARGIN if SERDES_N else sd_.y + sd_.h) + PV_CLEAR, ah_.y - PV_CLEAR
         if not V144S['resolved']:
             # measured shortfall of the north home -> hub shift south (while the south envelope fits) + die growth
             short = PVW[1] - (n_hi - n_lo)
@@ -2093,7 +2108,7 @@ def _relays(m):
             except ValueError:
                 path = None
 
-        if path is None and bid == 'host_fdi' and HOST_V14.get('north'):
+        if path is None and bid == 'host_fdi' and HOST_V14.get('north') and not SERDES_N:
             # v1.4.1 HOST-north (kvs7 window: coarse H 1.11 -> 1.27 / V 0.94 -> 1.15 where the 2,089-b FDI left the root
             # westward into the kvn_WN / krs_WN corridor): the FDI goes down the EAST centre channel
             try:
@@ -2411,7 +2426,8 @@ def _relays(m):
             dep[root_] = max(dep.get(root_, 0), d_)
         m['tree_depth_max'] = dep
         if max(dep.values()) >= RELAY_FLUSH:
-            raise ValueError(f'kv die reset trees: depth {dep} >= RELAY_FLUSH {RELAY_FLUSH}')
+            raise ValueError(f'kv die reset trees: depth {dep} >= RELAY_FLUSH {RELAY_FLUSH}; deepest '
+                             f'{sorted(m["tree_depth"].items(), key=lambda kv: -kv[1])[:4]}')
         if m.get('reset_regions'):
             # v1.4.3: per reset root, D = its deepest region chain; every region root is strapped dly = D - d_r so all
             # its regions release on host release + D + 2 (each load L later: tree_depth, now the LOCAL depth)
@@ -2852,8 +2868,18 @@ def _split_pins(M, m=None):
             # of the column array (measured 10-16: worst port 30 relay edges vs 53 with the pins at the control-strip end; the
             # side-channel chains reach the middle from the S band and from the corridor alike).  The pair's array-wide
             # 128-b chunk / cmd distribution from there is the element owner's.
+            vh_ = (m or {}).get('geo', {}).get('pv144', {}).get('vport_homes', {}) if PV_PINY else {}
+            pi_ = {i.name: i for i in m['insts']} if PV_PINY and m is not None else {}
             for k_ in range(8):
                 f_, yc_ = ('W' if k_ < 4 else 'E'), PV_ARR[1] / 2 + ((k_ % 4) - 1.5) * 130.0
+                if vh_:
+                    # kvs13e: level with V port k of this pair (W ports k of stack PAIR, E ports of stack PAIR + 2); the
+                    # canonical frame is R0 (pvw_0) / MX (pvw_1: die y flips)
+                    pw_ = pi_['pvw_0' if mn == 'qkd_pvw_s' else 'pvw_1']
+                    hv_ = next(h for h in vh_.values() if h['pair'] == (0 if mn == 'qkd_pvw_s' else 1) and h['pair_port'] == k_)
+                    dy_ = hv_['xy'][1] + PV_VPORT[1] / 2 - pw_.y
+                    dy_ = dy_ if pw_.orient == 'R0' else pw_.h - dy_
+                    yc_ = min(max(dy_, 200.0), pw_.h - 300.0)
                 if f'vin{k_}' in hm.ports:
                     hm.ports[f'vin{k_}'] = ('face', hm.ports[f'vin{k_}'][1], f_, 'M4', round(yc_, 3), 1)
                 if f'vrq{k_}' in hm.ports:

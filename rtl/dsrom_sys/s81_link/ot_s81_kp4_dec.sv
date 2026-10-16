@@ -53,7 +53,14 @@ module ot_s81_kp4_dec #(parameter integer MUT = 0, parameter integer NBM = 4) (
                     end else if (cand) wc <= wc + 1'b1;
                     else if (am_ok) begin cand <= 1'b1; wc <= 4'd0; end
                 end else begin
-                    cap[5439 - 544 * wc -: 544] <= p_d;
+                    case (wc)   // fixed part-selects (H-DIE 10-16: variable lvalue part-select blew up the yosys frontend)
+                        4'd0: cap[5439 -: 544] <= p_d;  4'd1: cap[4895 -: 544] <= p_d;
+                        4'd2: cap[4351 -: 544] <= p_d;  4'd3: cap[3807 -: 544] <= p_d;
+                        4'd4: cap[3263 -: 544] <= p_d;  4'd5: cap[2719 -: 544] <= p_d;
+                        4'd6: cap[2175 -: 544] <= p_d;  4'd7: cap[1631 -: 544] <= p_d;
+                        4'd8: cap[1087 -: 544] <= p_d;  4'd9: cap[543  -: 544] <= p_d;
+                        default: ;
+                    endcase
                     if (wc == 4'd0) begin
                         if (am_ok) miss <= 0;
                         else if (miss == 2'd3) begin lock <= 1'b0; cand <= 1'b0; miss <= 0; end
@@ -71,11 +78,13 @@ module ot_s81_kp4_dec #(parameter integer MUT = 0, parameter integer NBM = 4) (
     reg           s_busy;
     reg  [9:0]    nS [0:NT-1];
     reg  [9:0]    sym;
+    // symbol p = 55 sc + k - 6 (6 leading zero symbols), p = 0 first (x^543): window = {60'b0, sb} << 550 sc, symbol k at
+    // fixed bits [5499 - 10 k -: 10] (55 sc + k <= 549 < 550 = 6 + 544 always; sc > 9 never occurs while busy)
+    wire [5499:0] swin = {60'b0, sb} << (10 * SPC * sc);
     always @* begin
         for (j = 0; j < NT; j = j + 1) nS[j] = S[j];
         for (k = 0; k < SPC; k = k + 1) begin
-            // symbol p = 55 sc + k - 6 (6 leading zero symbols), p = 0 first (x^543)
-            if (SPC * sc + k - 6 >= 0 && SPC * sc + k - 6 < 544) sym = sb[5439 - 10 * (SPC * sc + k - 6) -: 10]; else sym = 10'd0;
+            sym = swin[5499 - 10 * k -: 10];
             for (j = 0; j < NT; j = j + 1) nS[j] = gf_mul(nS[j], gf_alpha(j)) ^ sym;
         end
     end
@@ -176,10 +185,11 @@ module ot_s81_kp4_dec #(parameter integer MUT = 0, parameter integer NBM = 4) (
     reg  [5:0]    nroot;
     reg  [9:0]    lv, ov, dv, ev, xe;
     reg  [5439:0] ncw;
+    reg  [549:0]  corr;                  // symbol k of this slice at bits [10 k + 9 -: 10] (position 543 - (55 cc + k))
     reg  [5:0]    nr_add;
-    integer e, pp;
+    integer e;
     always @* begin
-        ncw = cw; nr_add = 0;
+        corr = 550'd0; nr_add = 0;
         for (k = 0; k < SPC; k = k + 1) begin
             e = SPC * cc + k;                       // degree: X = alpha^e, symbol position 543 - e
             lv = 10'd0; ov = 10'd0; dv = 10'd0;
@@ -190,11 +200,11 @@ module ot_s81_kp4_dec #(parameter integer MUT = 0, parameter integer NBM = 4) (
             dv = gf_mul(dv, xe);                    // Lambda'(X^-1) = X * sum_{i odd} lambda_i X^-i
             ev = (MUT == 2) ? gf_mul(ov, gf_inv(dv)) : gf_mul(xe, gf_mul(ov, gf_inv(dv)));
             if (e < 544 && lv == 10'd0) begin
-                pp = 543 - e;
-                ncw[5439 - 10 * pp -: 10] = ncw[5439 - 10 * pp -: 10] ^ ev;
+                corr[10 * k + 9 -: 10] = ev;
                 nr_add = nr_add + 1;
             end
         end
+        ncw = cw ^ ({4890'd0, corr} << (10 * SPC * cc));   // symbol 543 - e sits at bits [10 e + 9 -: 10]
     end
     wire       c_fin  = c_busy && cc == 4'd9;
     wire [5:0] nr_fin = nroot + nr_add;
@@ -223,13 +233,15 @@ module ot_s81_kp4_dec #(parameter integer MUT = 0, parameter integer NBM = 4) (
     reg  [3:0]    oc;
     reg           o_busy, o_unc;
     reg  [4:0]    o_ne;
+    wire [5439:0] obsh  = ob << (512 * oc);
+    wire [511:0]  obeat = obsh[5419 -: 512];       // = ob[5419 - 512 oc -: 512]
     always @(posedge clk or negedge rst_n)
         if (!rst_n) begin o_busy <= 1'b0; oc <= 0; q_v <= 1'b0; q_first <= 1'b0; q_unc <= 1'b0; q_nerr <= 0; n_corr <= 0; n_unc <= 0; end
         else begin
             q_v <= 1'b0; q_first <= 1'b0;
             if (o_busy) begin
                 q_v <= 1'b1; q_first <= (oc == 0); q_unc <= o_unc; q_nerr <= o_ne; q_seq <= ob[5427:5420];
-                q_d <= ob[5419 - 512 * oc -: 512];        // beats follow the 20-b header
+                q_d <= obeat;                              // beats follow the 20-b header
                 oc <= oc + 1'b1;
                 if (oc == 4'd9) o_busy <= 1'b0;
             end
