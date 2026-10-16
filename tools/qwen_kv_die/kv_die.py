@@ -282,8 +282,11 @@ PVW = (PV_ARR[0], round(PV_ARR[1] + PV_GAP + PV_STRIP, 6))   # 1,144.8 x 9,547.2
 PV_CLEAR = 21.6                                   # envelope <-> hub / gateway / SerDes clearance (sliver rule >= 20 um)
 PV_GRANT_Y0 = 1844.346                            # pv_wide_grant.json pvw_0 (kept when the full height fits under the hub)
 # element owner screen (results/arch/qwen_attention_rate_1015/pv_parent_2330/screen.json, gap 21.6): bank l -> (x, y, orient)
-PV_BANK = {0: (0.0, 0.0, 'R0'), 1: (194.4, 0.0, 'R0'), 2: (0.0, 194.4, 'MX'), 3: (0.0, 388.8, 'R180'),
-           4: (194.4, 388.8, 'MX'), 5: (388.8, 388.8, 'MX'), 6: (388.8, 0.0, 'MY'), 7: (388.8, 194.4, 'R0')}
+# kvs13g REAL CASE FAIL (10-16 14:49): ot_mts 'ot_qwen_tp8_pv_slice_t R180 x has no legal origin on this track grid' --
+# the closed slice view's pins are not track-legal under an X flip, so no bank may use MY / R180 (bank 3 R180 -> MX,
+# bank 6 MY -> R0; same homes, y-flip only, as banks 2/4/5 already are).
+PV_BANK = {0: (0.0, 0.0, 'R0'), 1: (194.4, 0.0, 'R0'), 2: (0.0, 194.4, 'MX'), 3: (0.0, 388.8, 'MX'),
+           4: (194.4, 388.8, 'MX'), 5: (388.8, 388.8, 'MX'), 6: (388.8, 0.0, 'R0'), 7: (388.8, 194.4, 'R0')}
 PV_JOIN = (194.4, 194.4, 'R0')
 V144S = dict(resolved=False, grow=0.0, ahub_dy=0.0)
 # Q-VMWB 2026-10-16 (main 551d29b2c): the 16 V ports qkd_pv16_vport (86.4 x 172.8, pin-registered, CLOSED kit
