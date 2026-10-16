@@ -990,7 +990,10 @@ def dirs_qwen(bid, cls, bits, eps, j, port):
         if bid in ('seq_ib', 'seq_su', 'seq_coll', 'seq_d2d', 'd2d_seq'):   # word + valid/go down, ready / done back
             return flow(j, bits, bits - 1)
         return [(0, bits, 'out' if j == 0 else 'in')]
-    if cls in ('hbm_cdc', 'cdc_core', 'phy_dfi', 'd2d_fdi'):
+    if cls in ('hbm_cdc', 'cdc_core', 'phy_dfi', 'd2d_fdi') or bid == 'host_fdi':
+        # Q-KVSYS-NETLIST 2026-10-16: the v1.4.1 HOST-north host_fdi is relayed as class spine_local, whose rule ran every
+        # bit host -> SerDes; tx_up / rx_v / rx_flit (1,045 b) run SerDes -> host (strict bind v2: 1,045 bits undriven at
+        # the host, multi-driven at the PHY).  Its direction is the real SerDes PHY's port directions, complemented.
         return 'complement'
     if cls == 'constant':                             # kv-die write leaves: a die-top tie (chain tail, lane strap) into one input
         return [(0, bits, 'in')]

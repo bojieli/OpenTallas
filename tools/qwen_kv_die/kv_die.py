@@ -362,8 +362,14 @@ SPLIT_BINDINGS.update(qkd_land=KS.land_binding(), qkd_land_n=KS.land_binding(), 
 SPLIT_BINDINGS['qkd_embgw'] = dict(
     module='qkd_embgw', file='rtl/physical/ot_qwen_kv_gwhost_slots.sv',
     ports=dict(gq=['r_ea', 't_ecr'], gr=['t_eq'], hb=['hb', 'hb_cr'], est=['est'], ck=['ck'], rst_n=['rst_n'],
-               **{f'emf_{q}': [f'emf_{q}', f'emf_{q}_cr'] for q in STACKS},
-               **{f'emr_{q}': [f'emr_{q}', f'emr_{q}_cr'] for q in STACKS}), classed={})
+               # Q-KVSYS-NETLIST 2026-10-16 (strict bit-level bind, opentallas.die_port_bind.v2): each die bundle carries its
+               # word one way and the credit for THAT word back (the landing strip's emf / emf_cr out and emr / emr_cr in,
+               # the relay direction model's reverse bit).  The gateway's credit FOR emf is emr_<q>_cr ('strip q consumed one
+               # gateway word', in) and its credit for emr is emf_<q>_cr ('the gateway took one emr word', out): v1.2 paired
+               # each word with the other word's credit -> bit 288 of emf multi-driven (gateway + strip) and bit 520 of emr
+               # undriven at the strip end.  Widths unchanged (289 / 521); die.v nets unchanged.
+               **{f'emf_{q}': [f'emf_{q}', f'emr_{q}_cr'] for q in STACKS},
+               **{f'emr_{q}': [f'emr_{q}', f'emf_{q}_cr'] for q in STACKS}), classed={})
 
 
 # ---- kvsys v1.4 (2026-10-15, die lead r7): REAL HOST / PLL bindings and the 128 die-placed HOST PC slices ----------------
@@ -1201,6 +1207,16 @@ def _buses(m, T, r):
         # {v, 519}, ds 187, pw 75, x3 credit)
         add(('lx', 'spine_local', 1 + 11 + 512 + 56 + 44 + 1, [('lnk', 'lx'), ('seq', 'lx')]))
         add(('lr', 'spine_local', 1 + 519 + 187 + 75 + 1, [('seq', 'lr'), ('lnk', 'lr')]))
+    if split:
+        # Q-KVSYS-NETLIST 2026-10-16 (strict bit-level bind): the landing / attention strips' stack index st[1:0] (the
+        # gateway contract: 'the landing strip's stack strap st must be the same index' = STACKS order) was a 'classed'
+        # port with no die net -> an UNCONNECTED functional input of qkd_land_strip_s / qkd_astk_strip_s.  It is a die-top
+        # strap like the slices' lpc: one 2-b constant net a strip, tie cells at its pin (die_constant_cells.tcl).
+        ties_ = m.setdefault('host_ties', {})
+        for st in STACKS:
+            for f_ in ('land', 'astk'):
+                add((f'stid_{f_}_{st}', 'constant', 2, [(f'{f_}_{st}', 'st')]))
+                ties_[f'stid_{f_}_{st}'] = (2, STACKS.index(st))
     # attention
     for st in STACKS:
         add((f'aq_{st}', 'spine_local', 1 + 14 + 6 + 1 + 6 + 512, [('seq', f'aq_{st}'), (f'astk_{st}', 'aq')]))
