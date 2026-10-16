@@ -1,0 +1,163 @@
+{
+  "evidence": {
+    "ot_pin_regs.tsv": "18fdaefc9b2cc1a64f309529d935ac79e83b18d48c808010f30a1a8ab8fe8978",
+    "ot_pin_regs_wrapper.v": "2369e7db51cca91e555c57076cadd8b7caf7dd6aee81710e46054f6e28f6da5b"
+  },
+  "job": "qfd_tt_core_leaf-tg1-4485b28e4",
+  "ports": {
+    "clk": {
+      "dir": "input",
+      "reason": "clock",
+      "register_edges": 0,
+      "width": 1
+    },
+    "cmd": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 380
+    },
+    "fab_fault": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 1
+    },
+    "land_cnt": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 16
+    },
+    "me_acc_o": {
+      "dir": "output",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 24
+    },
+    "me_idle_o": {
+      "dir": "output",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 1
+    },
+    "me_prog_o": {
+      "dir": "output",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 16
+    },
+    "mx_addr": {
+      "dir": "output",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 24
+    },
+    "mx_data": {
+      "dir": "output",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 512
+    },
+    "mx_mask": {
+      "dir": "output",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 16
+    },
+    "mx_we": {
+      "dir": "output",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 1
+    },
+    "ov": {
+      "dir": "output",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 1
+    },
+    "p_am": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 306
+    },
+    "p_f_e2": {
+      "dir": "output",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 113
+    },
+    "p_fault": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 6
+    },
+    "p_v_e2": {
+      "dir": "output",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 1
+    },
+    "ret": {
+      "dir": "output",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 95
+    },
+    "rst_n": {
+      "dir": "input",
+      "reason": "reset",
+      "register_edges": 0,
+      "width": 1
+    },
+    "scale_rst_n": {
+      "dir": "output",
+      "reason": "reset",
+      "register_edges": 0,
+      "width": 1
+    },
+    "scale_tag": {
+      "dir": "output",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 91
+    },
+    "scale_v": {
+      "dir": "output",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 1
+    },
+    "t_sel_e": {
+      "dir": "output",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 13
+    },
+    "t_tv_e": {
+      "dir": "output",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 13
+    },
+    "tr_fault": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 16
+    },
+    "up_fault": {
+      "dir": "input",
+      "reason": "pin register",
+      "register_edges": 1,
+      "width": 1
+    }
+  },
+  "schema": "opentallas.ref_tile.port_latency.v1",
+  "scope": "Additional generic wrapper edges only; core RTL stages remain in measured core duration; no physical qualification",
+  "source_commit": "4485b28e48f99acbb020194832ff3e405bf7cf4a",
+  "top": "qfd_tt_core_leaf"
+}
