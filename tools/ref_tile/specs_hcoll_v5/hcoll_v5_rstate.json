@@ -25,7 +25,12 @@
   "hold_margin_ns": 0.03,
   "macro_halo_um": 5.4,
   "pin_h": "M4",
-  "pin_v": "M3 M5"
+  "pin_v": "M3 M5",
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M3 M5"
+  }
  },
  "name": "hcoll_v5_rstate",
  "top": "ot_hgi_coll_reduce_static_state_lane",
@@ -114,5 +119,75 @@
    }
   ]
  },
- "std_area_um2": 587
+ "std_area_um2": 587,
+ "pin_ranges": {
+  "clk": [
+   18,
+   20
+  ],
+  "load_v": [
+   2,
+   4
+  ],
+  "load_tag": [
+   4,
+   8
+  ],
+  "wb": [
+   8,
+   10
+  ],
+  "wb_tag": [
+   10,
+   14
+  ],
+  "add_read": [
+   14,
+   16
+  ],
+  "read_tag": [
+   21,
+   25
+  ],
+  "pub_read": [
+   25,
+   27
+  ],
+  "pub_tag_a": [
+   27,
+   31
+  ],
+  "pub_tag_b": [
+   31,
+   35
+  ],
+  "load_data": [
+   2,
+   18
+  ],
+  "external_data": [
+   19,
+   35
+  ],
+  "wb_data": [
+   2,
+   13
+  ],
+  "acc": [
+   13,
+   24
+  ],
+  "operand": [
+   24,
+   35
+  ],
+  "pub_a": [
+   2,
+   18
+  ],
+  "pub_b": [
+   19,
+   35
+  ]
+ }
 }
