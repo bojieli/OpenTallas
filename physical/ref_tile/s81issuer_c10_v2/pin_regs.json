@@ -1,0 +1,23 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "dsfd_stage_seq_static_c10",
+ "enable": true,
+ "clock": "ck",
+ "clock_ports": [
+  "ck",
+  "ckv"
+ ],
+ "reset_ports": [
+  "rst",
+  "rsv"
+ ],
+ "exclude": "^ckv$|^(f_ks|f_pw|f_pq_pw|t_kd|t_st)(\\[.*\\])?$",
+ "reset": "^(rst|rsv)(\\[.*\\])?$",
+ "reason": "ckv is the actual related3:4 serial CLOCK and passes directly; rst/rsv are explicit core/serial asynchronous RESET roles and pass directly. Serial mailbox data already terminate in ckv registers and are excluded from ck data-pin stages. Measured previous transformation incorrectly flopped ckv/rsv; this correction restores actual clock/reset topology, not an exception to data pin registers.",
+ "latency_cycles": {
+  "input": 1,
+  "output": 1
+ },
+ "rule": "OWNER RULE 19:50 PT 2026-10-15: every new tile registers every input and every output at its pin",
+ "per_port_table": "$RESULTS_DIR/ot_pin_regs.tsv (route synthesis: port dir width cycles why)"
+}
