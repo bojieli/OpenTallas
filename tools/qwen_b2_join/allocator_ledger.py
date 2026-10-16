@@ -11,8 +11,8 @@ Derived constants (fail closed, never a zero/fake calibration):
   train_edges     TE = 14 + TC + RQ - 1 - TAG - CMD   (phase_protocol.validate_calibration), >= 2, equal for six
   halfband_lnk    (F + R) / 2 for HB0's band<->upper round trip (pword forward F, upper return R), applied to all six
                   halves so the six result ages stay equal (b0 = 0 halves ignore the return)
-  controller_clnk selector arrival law: CLNK = SEL - LC - F (selects made CLNK edges early reach the upper with the
-                  words); must be >= 0
+  controller_clnk CLNK = LC - TC (selects made CLNK edges early meet the port's tree words at the lanes), >= 0;
+                  and the upper selects must satisfy SEL = LC + 3 + F (tb_qfd_halfband control law)
   xpf_transport   stage_of[xs_pf] - 1 (controller xpf -> tap)
 Odd round trips and negative CLNK are reported as STRUCTURAL (need a real pad stage), never rounded.
 """
@@ -63,6 +63,8 @@ def ledger(graph, stage_of):
             rq_to_train=direct(f'b2_rq_{hb}'),
             tag_copy_to_issuer=direct('b2_source_tag_v'),
             me_copy_to_issuer=direct('b2_source_me_go'),
+            tw_port_to_halfband=direct(f'b2_tw_{hb}'),
+            ty_halfband_to_port=direct(f'b2_ty_{hb}'),
             issuer_to_train=tree('command', f'sp_halfres_{hb}', 'train_start'),
             lc_to_halfband=direct(f'b2_lc_{hb}'),
             rb_to_vm=direct(f'b2_rb_{hb}'))
@@ -93,6 +95,11 @@ def derive(halves, sel, ret, xpf):
     TC, AM, RQ, LC, RB, CMD = (same(k) for k in ('tc_to_port', 'am_to_controller', 'rq_to_train', 'lc_to_halfband',
                                                     'rb_to_vm', 'issuer_to_train'))
     TAG = halves[0]['tag_copy_to_issuer']['edges']
+    for k in ('tw_port_to_halfband', 'ty_halfband_to_port'):
+        e = {halves[h][k]['edges'] for h in range(6)}
+        if e != {0}:
+            issues.append(f'{k} has relay edges {sorted(e)}: the abutted port<->halfband contact must be a direct wire '
+                          '(its age is inside the qualified port/lane composition); re-home or pad structurally')
     ME = halves[0]['me_copy_to_issuer']['edges']
     if ME > TAG:
         issues.append(f'ME descriptor copy age {ME} > tag age {TAG}: the issuer would see the tag before its descriptor')
@@ -117,9 +124,16 @@ def derive(halves, sel, ret, xpf):
     HL = (Fm + R) // 2
     if not 0 <= HL <= 54:
         issues.append(f'halfband lnk {HL} outside proved 0..54')
-    CL = SEL - LC - Fm
+    # lane control (lc) must meet the port's tree words (tc -> port -> tw): the controller makes its selects CLNK
+    # edges early, so CLNK = LC - TC (ot_qfd_tt_ctl_b2: XD - CLNK; results stay 5 + 2 LNK behind).
+    CL = LC - TC
     if CL < 0:
-        issues.append(f'CLNK = SEL {SEL} - LC {LC} - F {Fm} = {CL} < 0: selector path must be padded by {-CL}')
+        issues.append(f'CLNK = LC {LC} - TC {TC} = {CL} < 0: lane control would arrive after the tree words; pad LC by {-CL}')
+    # the upper's selects (compact selector-4 fork tree: 3 fork registers) must meet the halfband words at the upper:
+    # tb_qfd_halfband law: upper control = lane control + 3 + forward word link
+    if SEL != LC + 3 + Fm:
+        issues.append(f'selector age {SEL} != LC {LC} + 3 + F {Fm} = {LC + 3 + Fm}: structural pad on the '
+                      f'{"selector" if SEL < LC + 3 + Fm else "lane-control/word"} path required')
     out = dict(TC=TC, AM=AM, RQ=RQ, LC=LC, RB=RB, CMD=CMD, TAG=TAG, ME=ME, F=Fm, R=R, SEL=SEL,
                controller_lnk=L, controller_clnk=CL, train_edges=TE, halfband_lnk=HL,
                xpf_transport_edges=(xpf['edges'] if xpf else None))
