@@ -1,0 +1,5 @@
+PC_CTRL_FAULT_CLASSES PASS checks=6
+rtl/hbm_accel/loader/service_native/tb_hbm_pc_ctrl_leaf_fault_classes.sv:176: $finish called at 79361000 (1fs)
+PC_CTRL_FAULTS_MITER PASS edges49600 acc_rd2075 acc_wr327 kr5126 wdone326 cols5484 rows6688 sticky_final1
+rtl/hbm_accel/loader/service_native/tb_hbm_pc_ctrl_leaf_faults_miter.sv:84: $finish called at 50814976000 (1fs)
+PC_CTRL_FAULTS_GATE_PASS

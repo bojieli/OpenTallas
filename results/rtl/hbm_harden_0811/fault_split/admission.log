@@ -1,0 +1,30 @@
+ot-run: ot-epyc4       admits   233 GB (avail 470, growth 190, headroom 48, waiters 0/0 GB) load 55/128 running 37 disk 915 GB 
+ot-run: ot-pve1        admits   132 GB (avail 184, growth 22, headroom 32, waiters 0/0 GB) load 37/28 running 7 disk 1326 GB 
+ot-run: ot-agidock128  admits    30 GB (avail 71, growth 40, headroom 24, waiters 0/0 GB) load 29/64 running 9 disk 273 GB 
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-4073885-1792165674 after 0 s
+Icarus Verilog version 12.0 (stable) ()
+ROW fault_mutant=none rc=0
+rtl/hbm_accel/loader/service_native/tb_hbm_pc_ctrl_leaf_fault_classes.sv:176: $finish called at 79361000 (1fs)
+PC_CTRL_FAULTS_MITER PASS edges49600 acc_rd2075 acc_wr327 kr5126 wdone326 cols5484 rows6688 sticky_final1
+rtl/hbm_accel/loader/service_native/tb_hbm_pc_ctrl_leaf_faults_miter.sv:84: $finish called at 50814976000 (1fs)
+PC_CTRL_FAULTS_GATE_PASS
+ROW fault_mutant=0 rc=1
+FATAL: rtl/hbm_accel/loader/service_native/tb_hbm_pc_ctrl_leaf_fault_classes.sv:103: FAULT_CLASS mismatch case=0 scalar=01 split=000000
+       Time: 12801000  Scope: tb
+ROW fault_mutant=1 rc=1
+FATAL: rtl/hbm_accel/loader/service_native/tb_hbm_pc_ctrl_leaf_fault_classes.sv:103: FAULT_CLASS mismatch case=1 scalar=01 split=000000
+       Time: 26113000  Scope: tb
+ROW fault_mutant=2 rc=1
+FATAL: rtl/hbm_accel/loader/service_native/tb_hbm_pc_ctrl_leaf_fault_classes.sv:103: FAULT_CLASS mismatch case=2 scalar=01 split=000000
+       Time: 39425000  Scope: tb
+ROW fault_mutant=3 rc=1
+FATAL: rtl/hbm_accel/loader/service_native/tb_hbm_pc_ctrl_leaf_fault_classes.sv:103: FAULT_CLASS mismatch case=3 scalar=01 split=000000
+       Time: 52737000  Scope: tb
+ROW fault_mutant=4 rc=1
+FATAL: rtl/hbm_accel/loader/service_native/tb_hbm_pc_ctrl_leaf_fault_classes.sv:103: FAULT_CLASS mismatch case=4 scalar=01 split=000000
+       Time: 66049000  Scope: tb
+ROW fault_mutant=5 rc=1
+FATAL: rtl/hbm_accel/loader/service_native/tb_hbm_pc_ctrl_leaf_fault_classes.sv:103: FAULT_CLASS mismatch case=5 scalar=01 split=000000
+       Time: 79361000  Scope: tb
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-4073885-1792165674): exit 0

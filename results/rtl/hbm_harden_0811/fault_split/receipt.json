@@ -1,0 +1,106 @@
+{
+  "schema": "opentallas.hbm_h7_split_fault_component_receipt.v1",
+  "generated": "2026-10-16T09:03:59.288556-07:00",
+  "controller_source_commit": "b3274d462",
+  "parent_source_commit": "dbf86d368",
+  "parent_fixture_commit": "cb8e49275",
+  "source_manifest": {
+    "baseline_sha256": "961f061e4846868c71f83c4ed6304d361e9ab853d8d6c7a06312caf212cfeb48",
+    "candidate_sha256": "bd5be073a797d4c14508abd161de8c1e3f6caab5ddb078cba3d0cd0ecfc05af9",
+    "groups": {
+      "0": "illegal ingress",
+      "1": "column command identity/state",
+      "2": "write payload freshness",
+      "3": "pending/response admission",
+      "4": "response drain underflow",
+      "5": "accounting overflow"
+    },
+    "normal_cycles_added": 0,
+    "internal_fault_kill_edges_added": 0,
+    "physical_output_bits_added": 5,
+    "flops_added_per_controller": 5,
+    "instances": 128,
+    "new_physical_gate_or_adoption": false,
+    "parent_master": "ot_hbm_svc_stack_fault_split",
+    "parent_input_flops_added_each": 160,
+    "parent_instances": 4,
+    "parent_fault_observation_edges_added": 0,
+    "total_declared_flops_added": 1280,
+    "legacy_parent_source_unchanged": true,
+    "parent_candidate_sha256": "1ef80b574f382be3f6fd3b4ea4c2269de42fdb5ad7552023ae377bc657a57595"
+  },
+  "actual_controller_proof": {
+    "unit": "oth-ubuntu-4073885-1792165674",
+    "host": "ot-epyc4",
+    "exit": 0,
+    "tool": "Icarus12.0",
+    "miter_edges": 49600,
+    "accepted_reads": 2075,
+    "accepted_writes": 327,
+    "responses": 5126,
+    "write_done": 326,
+    "columns": 5484,
+    "rows": 6688,
+    "targeted_classes": 6,
+    "omission_mutants_rejected": 6,
+    "comparison": "Every control/metadata output and every valid result vs actual source-pinned H7 QREG1; same-edge internal state/count/kill checked. Six fault conditions explicitly injected into actual reference/candidate at a declared diagnostic boundary."
+  },
+  "actual_parent_proof": {
+    "unit": "oth-ubuntu-4134460-1792166260",
+    "host": "ot-epyc4",
+    "exit": 0,
+    "cases": 193,
+    "checks": 4827,
+    "input_owner_fault_pins": 192,
+    "bit_drop_and_clock_drop_mutants_rejected": 2,
+    "observation_edges_added": 0,
+    "clock_periods_ns": [
+      8,
+      6
+    ],
+    "scope": "Boolean fault capture/OR equivalence under asynchronous diagnostic clocks; no production CDC/timing qualification."
+  },
+  "excluded_history": {
+    "stack_r1": "Mixed all-flag fixture expected owner bit but did not drive any owner fault. Corrected stimulus cb8e49275 explicitly drives bit191; r1 positive failure retained and excluded. All192 per-pin cases had passed before that fixture error."
+  },
+  "physical_request": {
+    "current_top": "ot_hbm_svc_pc_ctrl_leaf_cfg",
+    "requested_top": "ot_hbm_svc_pc_ctrl_leaf_cfg_faults",
+    "outline_um": [
+      185.76,
+      164.16
+    ],
+    "same_clock_port": "clk",
+    "normal_ports": "Same as scalar configured H7 except owner_fault removed and six registered owner_fault_split[5:0] outputs added. No pin positions granted yet.",
+    "parent_top": "ot_hbm_svc_stack_fault_split",
+    "parent_owner_port_bits": 192,
+    "current_d4_frozen": true,
+    "new_declared_flops_whole": 1280,
+    "new_wire_bits_whole": 640,
+    "new_normal_cycles": 0,
+    "new_fault_observation_cycles": 0
+  },
+  "physical_native_qualified": false,
+  "production_rate_qualified": false,
+  "whole_die_qualified": false,
+  "files_sha256": {
+    "admission.log": "17302ed6fe9e359edfcfc5c5fd53b82cd1f9981539e86e096e7c907e26b6b269",
+    "reference.sv": "31a4ef84029ec58b56351b867ceabe3401c4bddfd2e49288598caaa3b0c7f153",
+    "miter_wrapper.sv": "6c26a5fdcc638df71572c89408e3e2ac1740405be8879d785d0d5757bfe734a4",
+    "stack_admission.log": "544e1ec389f7465828721a0b2012dd50b6222e36bf8035fad5719acf97d8a9cd",
+    "manifest.json": "0330d35c58694df89265c4e1afb64b623628c0b335a8b6514dcf20fde10e1d65",
+    "sources.json": "de3fc16e76d1c1f5cd7ca479e7100c44c03721a3dd05a5cb0c1419cb6b9b23ba",
+    "stack_r2_admission.log": "135b3939f0dff423ab449b05d37bb1407b50937913da313953ed85c6b91d496f",
+    "logs/bench5.log": "ccfa6ebade011a84815288e0b319b0736427de28b845ccbc52ec4f5aba0c6077",
+    "logs/bench3.log": "7f6bb053097cdd8c3af1c1af56479bc93125691b865763b3a85e7306d8c5da29",
+    "logs/bench1.log": "2058922a35c9abd1a4897a6080a60c80cde1f8ac8a35c60dbf527da412271583",
+    "logs/stackr2_2.log": "6d20a2c150df019ee39fe223676e759c31db597362e2ab94866e49bdb68102ef",
+    "logs/benchnone.log": "6e113e130aa20d5b251f2a1d783381344f3b5d582130b04ef9560d429c4145ac",
+    "logs/stackr2_1.log": "8c8a161ef2e313fa36d13335094f838b287c4a5d95c713a953a4e356fea016b9",
+    "logs/stackr2_0.log": "2322846a61688289aa3ce80a413e3ef469f612e07790c6e619402f769822b232",
+    "logs/bench0.log": "f94f892f6a2ecd8a04556236e8d6569b1f0231895019b660c9a9b2dc21cd67a5",
+    "logs/bench4.log": "fd80da6720fd227198ca699d45b033aaa2d9739d7f2f4e8655d5f7db93dd1d02",
+    "logs/classes_positive.log": "091a317c1bbd6cf503180f6ba8e502c3ab0e9cd7545da8ffcaa556909c718dbe",
+    "logs/bench2.log": "2ea19729b0b86f638dea83bc606d4654d28175687635551c9c1771d8deb3322a"
+  }
+}
