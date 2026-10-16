@@ -41,6 +41,13 @@
 // whole epoch) of the serial counter against the stream counter sets the row's sticky fault: a schedule violation is
 // reported, never re-timed.  There is no other way to violate the schedule (every sample index is accepted).
 //
+// TWO SERIAL CLOCK ENTRIES (claude S-VM-CAPT-X8S2, 2026-10-16, split1016z): the serial leaf has two literal entries of
+// the same ckv root, ckv[0] (stage A bank-read flops, row counters, s_mark / s_par, reset chain: the E-face seam
+// column) and ckvb[0] (stage B t_vm output flops: the S-face band).  The die delivers ckv to both at phi - R_entry.
+// One shared tree let the 832-flop S band pull the lower rows' stage-A leaves onto its late branch (split1016y s_e:
+// stage-A clock 119..173 ps, rows 0-2 hold-padded 5 buffers, native capture 197.6).  Same logic and cycles: stage B
+// still registers stage A one serial edge later.
+//
 // Mutant S81PH_CAPX_MUT_DROP1: the serial side never presents the n = 1 bank (t_vm row1 valid stays 0): words lost.
 // ---------------------------------------------------------------------------------------------------------------
 
@@ -85,7 +92,8 @@ endmodule
 
 // serial side of one row: stage A (fixed-edge bank read, x43 order), stage B (t_vm output flops), marker / parity
 module dsfd_capt_x43r_s (
-    input  wire         ckv,
+    input  wire         ckv,                 // stage A, counters, marker / parity (entry ckv[0])
+    input  wire         ckvb,                // stage B t_vm flops (entry ckvb[0]; same root, phase 0)
     input  wire         rv_s,                // leaf reset (rv_s[1]), active low, synchronous release
     input  wire [51:0]  b0, b1, b2, b3,
     output reg          s_mark, s_par,
@@ -97,12 +105,11 @@ module dsfd_capt_x43r_s (
     wire [1:0] sn = (sp == 2'd2) ? 2'd0 : sp + 2'd1;    // serial edge index of THIS edge (sp = 2 under reset)
     reg av0, av1, bv0, bv1; reg [50:0] ad0, ad1, bd0, bd1;
     always @(posedge ckv or negedge rv_n)
-        if (!rv_n) begin sp <= 2'd2; s_mark <= 1'b0; s_par <= 1'b0; av0 <= 1'b0; av1 <= 1'b0; bv0 <= 1'b0; bv1 <= 1'b0; end
+        if (!rv_n) begin sp <= 2'd2; s_mark <= 1'b0; s_par <= 1'b0; av0 <= 1'b0; av1 <= 1'b0; end
         else begin
             sp <= sn;
             s_mark <= sn == 2'd1;
             if (sn == 2'd0) s_par <= ~s_par;
-            bv0 <= av0; bv1 <= av1;
             case (sn)
                 2'd0: begin av0 <= b2[0]; av1 <= 1'b0; end
                 2'd1: begin av0 <= b3[0]; av1 <= 1'b0; end
@@ -113,8 +120,9 @@ module dsfd_capt_x43r_s (
 `endif
             endcase
         end
+    always @(posedge ckvb or negedge rv_n) if (!rv_n) begin bv0 <= 1'b0; bv1 <= 1'b0; end else begin bv0 <= av0; bv1 <= av1; end
+    always @(posedge ckvb) begin bd0 <= ad0; bd1 <= ad1; end
     always @(posedge ckv) begin
-        bd0 <= ad0; bd1 <= ad1;
         case (sn)
             2'd0: ad0 <= b2[51:1];
             2'd1: ad0 <= b3[51:1];
@@ -151,7 +159,7 @@ endmodule
 
 // ckv leaf: 8 rows of fixed-edge reads + t_vm output flops, reset release chain.  Every output from a flop.
 module dsfd_capt_x8x_s (
-    input  wire [0:0]   ckv, rsv,
+    input  wire [0:0]   ckv, ckvb, rsv,      // ckv[0]: stage A / counters / reset chain; ckvb[0]: stage B (t_vm)
     input  wire [8*208-1:0] b,
     output wire [7:0]   s_mark, s_par,
     output wire [831:0] t_vm
@@ -160,7 +168,7 @@ module dsfd_capt_x8x_s (
     always @(posedge ckv[0] or negedge rsv[0]) if (!rsv[0]) rv_s <= 2'b00; else rv_s <= {rv_s[0], 1'b1};
     genvar g;
     generate for (g = 0; g < 8; g = g + 1) begin : g_r
-        dsfd_capt_x43r_s u_s (.ckv(ckv[0]), .rv_s(rv_s[1]), .b0(b[208 * g +: 52]), .b1(b[208 * g + 52 +: 52]),
+        dsfd_capt_x43r_s u_s (.ckv(ckv[0]), .ckvb(ckvb[0]), .rv_s(rv_s[1]), .b0(b[208 * g +: 52]), .b1(b[208 * g + 52 +: 52]),
             .b2(b[208 * g + 104 +: 52]), .b3(b[208 * g + 156 +: 52]), .s_mark(s_mark[g]), .s_par(s_par[g]),
             .t_vm(t_vm[104 * g +: 104]));
     end endgenerate
@@ -175,12 +183,12 @@ module dsfd_capt_x8x_t_w (input wire [0:0] ck, rst, input wire [415:0] f_w, outp
     input wire [7:0] s_mark, s_par, output wire [0:0] t_ho);
     dsfd_capt_x8x_t u (.ck(ck), .rst(rst), .f_w(f_w), .b(b), .s_mark(s_mark), .s_par(s_par), .t_ho(t_ho));
 endmodule
-module dsfd_capt_x8x_s_e (input wire [0:0] ckv, rsv, input wire [1663:0] b, output wire [7:0] s_mark, s_par,
+module dsfd_capt_x8x_s_e (input wire [0:0] ckv, ckvb, rsv, input wire [1663:0] b, output wire [7:0] s_mark, s_par,
     output wire [831:0] t_vm);
-    dsfd_capt_x8x_s u (.ckv(ckv), .rsv(rsv), .b(b), .s_mark(s_mark), .s_par(s_par), .t_vm(t_vm));
+    dsfd_capt_x8x_s u (.ckv(ckv), .ckvb(ckvb), .rsv(rsv), .b(b), .s_mark(s_mark), .s_par(s_par), .t_vm(t_vm));
 endmodule
-module dsfd_capt_x8x_s_w (input wire [0:0] ckv, rsv, input wire [1663:0] b, output wire [7:0] s_mark, s_par,
+module dsfd_capt_x8x_s_w (input wire [0:0] ckv, ckvb, rsv, input wire [1663:0] b, output wire [7:0] s_mark, s_par,
     output wire [831:0] t_vm);
-    dsfd_capt_x8x_s u (.ckv(ckv), .rsv(rsv), .b(b), .s_mark(s_mark), .s_par(s_par), .t_vm(t_vm));
+    dsfd_capt_x8x_s u (.ckv(ckv), .ckvb(ckvb), .rsv(rsv), .b(b), .s_mark(s_mark), .s_par(s_par), .t_vm(t_vm));
 endmodule
 `default_nettype wire

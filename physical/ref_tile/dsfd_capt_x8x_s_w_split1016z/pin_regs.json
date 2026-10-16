@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "dsfd_capt_x8x_s_w",
+ "enable": false,
+ "reason": "Designed-in pin flops: every output is launched by a flop at its pin (banks / s_mark / s_par / t_vm stage B / t_ho; io_flop_at_pins), every input is captured by its first flop through at most one fixed-epoch enable/select mux (bank write enable at sample index n; x43 read select at serial edge 0/1/2; marker/parity samples at index 2/0) -- those flops ARE the pin registers of the 3:4 transfer.  A separate recipe-3 stage would add a stream cycle (t) / serial cycle (s) per crossing and sample the banks at every serial edge (1-tick windows on the seam) for no timing benefit; native audit (capture <= 190 / launch <= 220) applies."
+}
