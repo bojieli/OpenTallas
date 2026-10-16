@@ -96,6 +96,7 @@ def main():
     ap.add_argument('--rf-relay', type=int, default=36)  # H-DIE r2 route plan: 36 stages at 480 um (proof d9507c056)
     ap.add_argument('--pin-reg', type=int, default=0, help='1: pin-registered lanes (requests +2, writes / reducer operands +4 edges)')
     ap.add_argument('--mlat', type=int, default=3); ap.add_argument('--alat', type=int, default=3); ap.add_argument('--leaf', type=int, default=0)
+    ap.add_argument('--collective-red', action='store_true', help='native sequential RED_CARRY composition candidate; requires actual cxport/ring and its programme plane')
     a = ap.parse_args()
     out = Path(a.out); out.mkdir(parents=True, exist_ok=True)
     arith = out / 'arith'
@@ -156,7 +157,7 @@ def main():
     t_ab, t_aa = names.index('AB'), names.index('AA')
     rf_val = {}
     lane_sum = [7 * q + 3 for q in range(4)]; lane_max = [11 * q + 5 for q in range(4)]
-    X = {}
+    X = {}; sum_roots = []
     RLAT = 9                     # reducer command edge E -> issue E+2 -> commit / scalar issue+9 (r3 pin-ingress stage)
     DEP = RLAT + 1               # same-address dependent command distance
     NCH = DEP                    # interleaved accumulation chains so one lane output per edge never waits
@@ -195,15 +196,45 @@ def main():
             P.red_cmd(ex, q, 4, a=root, tag=tag)
             P.exps.append((ex + RLAT + 3, q, tag, vv[root]))
             rf_val[8 * q + rfo] = vv[root]; X[(kind, q)] = ex
+            if kind == 'sum':
+                sum_roots.append(dict(quarter=q, source_addr=root, ready_serial=ready[root], expected_fp32=f'{vv[root]:08x}'))
     xl = max(X.values())
     m = xl + RLAT + 4 + 2 + R    # class-4 read (m-2) after the RF commit of the last export (+RLAT+4+R)
-    gsum = None
-    for i in range(4):
-        e = m + DEP * i
-        P.rf_cmd(e - 2, 0, 4, 8 * i)
-        P.red_cmd(e, 0, 0 if i == 0 else 1, a=80, d=80, osel=1)
-        gsum = rf_val[8 * i] if i == 0 else u32(add(f32(gsum), f32(rf_val[8 * i])))
-    ex3 = m + 4 * DEP; tag = 0x100 | G_ADDR
+    # Expected arithmetic is independent of the selected transport. Preserve
+    # every original FP32 rounding in (((q0+q1)+q2)+q3).
+    gsum = rf_val[0]
+    for i in range(1,4): gsum=u32(add(f32(gsum),f32(rf_val[8*i])))
+    collective = None
+    if a.collective_red:
+        from su_collective_compile import compile_sum
+        collective=compile_sum([{k:v for k,v in r.items() if k!='expected_fp32'} for r in sum_roots],m)
+        values={r['quarter']:int(r['expected_fp32'],16) for r in sum_roots}
+        for event in collective['native_lowering']['events']:
+            if event['kind']!='export':continue
+            e,q=event['command_serial'],event['quarter']
+            word=int(event['red_cmd_hex'],16)
+            P.put(P.red,e,q,0,74,word)
+            P.exps.append((event['scalar_capture_serial'],q,event['tag'],values[q]))
+        # Return sector row3/banks56..63 is reserved, avoiding original local
+        # scalar RF words0..25. Read lane2 (word250) then publish original G_ADDR.
+        m=max(collective['rf_commit_serial'].values())+2
+        P.rf_cmd(m-2,0,4,250)
+        P.red_cmd(m,0,0,d=80,osel=1)
+        ex3=m+DEP
+        (out/'collective_programme.json').write_text(json.dumps(collective,indent=2)+'\n')
+        # Stream length uses the same event rule as su_multirate_compile.
+        from su_multirate_compile import event
+        pe=event(NE-1)['stream_register']+1
+        ring=[[0]*4 for _ in range(pe)]
+        for row in collective['ring_rows']:ring[row['stream_edge']][row['quarter']]=int(row['word'],16)
+        (out/'collective_ring.mem').write_text(''.join(f'{sum(v<<(58*q) for q,v in enumerate(r)):058x}\n' for r in ring))
+    else:
+        for i in range(4):
+            e = m + DEP * i
+            P.rf_cmd(e - 2, 0, 4, 8 * i)
+            P.red_cmd(e, 0, 0 if i == 0 else 1, a=80, d=80, osel=1)
+        ex3=m+4*DEP
+    tag = 0x100 | G_ADDR
     P.red_cmd(ex3, 0, 4, a=80, tag=tag); P.exps.append((ex3 + RLAT + 3, 0, tag, gsum)); rf_val[G_ADDR] = gsum
     g_ready = ex3 + RLAT + 4 + R
     # AB_RF: B = RF word G broadcast (class 1 held one edge ahead through the op)
@@ -247,6 +278,7 @@ def main():
                global_sum_export=ex3, g_ready=g_ready, rf_drain_edge=Z,
                golden='hdc_golden add/mul/to_bf16 NumPy FP32 RNE (independent of the DUT); su_arith_compile seed/gold/control reused',
                line_bits=LINE, quarter_layout='[q*2422 +: 2422] = {control1742, vmr240, vmw312, rf54, red74}')
+    if collective is not None:man['collective_red']=dict(programme='collective_programme.json',source_roots=sum_roots,qualified=False)
     (out / 'programme.json').write_text(json.dumps(man, indent=1) + '\n')
     print(f'NE={NE} NW={len(P.expw)} NS={len(P.exps)}')
 
