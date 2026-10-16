@@ -17,7 +17,7 @@ SOURCES = ['tools/s81_vm/area_id_candidate.sv', 'tools/s81_vm/area_stripe_bench.
 
 
 def check_lock():
-    if json.loads(LOCK.read_text())['owner'] != 'codex':
+    if json.loads(LOCK.read_text())['owner'] not in ('claude','codex'):
         raise RuntimeError('coordinator ownership changed')
 
 

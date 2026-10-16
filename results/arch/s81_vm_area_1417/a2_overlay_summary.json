@@ -31,15 +31,16 @@
   "global_fault_collector": "OPEN",
   "new_unconnected_join_fault_outputs": 16,
   "source_sha256": {
-    "tools/s81_vm/area_a2_controlled.sv": "c1129959bcbf49eafea44330fe12b7595371d1e913129c838fc3f8a4ecbfd8d0",
-    "tools/s81_vm/area_id_native.sv": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-    "tools/s81_vm/area_id_native_join.sv": "ea9fdb8d223455fbc90a4c10bc2049c413d97abf3657a6760ffabc4e6594d513"
+    "tools/s81_vm/area_a2_controlled.sv": "f2f67f2a35bd91745e8314f8478b6ce6aafacbbbe9bb35567de7bcb1146ca595",
+    "tools/s81_vm/area_id_native.sv": "8c2a49d5b9563cf593f7650fa7bea960542609a959e312f47fa53c7bebe6ab6b",
+    "tools/s81_vm/area_id_native_join.sv": "ea9fdb8d223455fbc90a4c10bc2049c413d97abf3657a6760ffabc4e6594d513",
+    "tools/s81_vm/area_a2_hardmasters.sv": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74"
   },
   "input_evidence_sha256": {
     "inventory.json": "8eaf1ca7f8fb9c3ba8d58348b6e722a26cbb9f6f2fb4e29850029ab927214a6a",
     "pin_producer_join.jsonl.gz": "f06c860f63ed0526a4e275cc224f5f309cce909cb0a37e4d1933e6b5bd3ba89e",
     "write_source_map.json": "1672e852b64f5976120fabc9270c4cbc295ce8b3f0c6fa770e9a9e8f6eec1e73"
   },
-  "generator_sha256": "d588cdf7158780638f2793d8c226a500e691503ef42d054b8afff3564e40c557",
+  "generator_sha256": "22ffe7e059b197d7ead2888a1d1d39967fd4274f1336984030d654f8822f11a9",
   "limitations": "Source overlay using explicit bit substitutions, not elaborated replacement. Retained legs/source bindings preserved; no invented homes, new clocks planned, no whole-VM fit or physical qualification."
 }

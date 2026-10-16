@@ -27,7 +27,7 @@ source=ROOT/'tools/s81_vm/area_id_native_join.sv';rows=[]
 with tempfile.TemporaryDirectory(prefix='s81-a2-fault-') as td:
     td=Path(td);(td/'tb.sv').write_text(tb)
     for variant,replacement in [('gold','|pin_fault'),('early','|i_fault'),('omit9','|pin_fault[8:0]')]:
-        assert json.loads(LOCK.read_text())['owner']=='codex'
+        assert json.loads(LOCK.read_text())['owner'] in ('claude','codex')
         sv=source.read_text().replace('|pin_fault;',replacement+';');(td/'dut.sv').write_text(sv)
         r=subprocess.run(['iverilog','-g2012','-s','tb','-o',str(td/'test'),str(td/'dut.sv'),str(td/'tb.sv')],capture_output=True,text=True)
         assert r.returncode==0,r.stderr

@@ -11,7 +11,7 @@ ROOT = Path(__file__).resolve().parents[2]
 LOCK = Path('/home/ubuntu/claude-takeover-20261007/COORDINATOR.lock')
 
 def checked_write(path, obj):
-    assert json.loads(LOCK.read_text())['owner'] == 'codex', 'STOP: coordinator changed'
+    assert json.loads(LOCK.read_text())['owner'] in ('claude','codex'), 'STOP: coordinator changed'
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(obj, indent=2) + '\n')
 

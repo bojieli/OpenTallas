@@ -7,9 +7,10 @@
     "READ_PIPE": 4
   },
   "source_sha256": {
-    "tools/s81_vm/area_a2_controlled.sv": "c1129959bcbf49eafea44330fe12b7595371d1e913129c838fc3f8a4ecbfd8d0",
-    "tools/s81_vm/area_id_native.sv": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-    "tools/s81_vm/area_id_native_join.sv": "ea9fdb8d223455fbc90a4c10bc2049c413d97abf3657a6760ffabc4e6594d513"
+    "tools/s81_vm/area_a2_controlled.sv": "f2f67f2a35bd91745e8314f8478b6ce6aafacbbbe9bb35567de7bcb1146ca595",
+    "tools/s81_vm/area_id_native.sv": "8c2a49d5b9563cf593f7650fa7bea960542609a959e312f47fa53c7bebe6ab6b",
+    "tools/s81_vm/area_id_native_join.sv": "ea9fdb8d223455fbc90a4c10bc2049c413d97abf3657a6760ffabc4e6594d513",
+    "tools/s81_vm/area_a2_hardmasters.sv": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74"
   },
   "hard_leaf_count": 543,
   "hard_clock_pin_count": 591,
@@ -53,9 +54,13 @@
     "dsfd_vm_static_read_v7_p": 1,
     "dsfd_vm_seq_tile": 1,
     "dsfd_vm_static_landing": 1,
-    "s81_a2_controller": 16,
-    "s81_area_stripe": 144,
-    "s81_area_id_fault_join": 16
+    "s81_a2_controller_b0": 4,
+    "s81_a2_stripe_data16": 128,
+    "s81_a2_stripe_meta26": 16,
+    "s81_area_id_fault_join": 16,
+    "s81_a2_controller_b8": 4,
+    "s81_a2_controller_b16": 4,
+    "s81_a2_controller_b24": 4
   },
   "leaves": [
     {
@@ -5413,7 +5418,7 @@
       "geometry_status": "SOURCE_PIN_CANDIDATE_NO_CURRENT_NATIVE_KIT",
       "physical_pin_missing": [],
       "native_view_present": false,
-      "master_source_sha256": "c1129959bcbf49eafea44330fe12b7595371d1e913129c838fc3f8a4ecbfd8d0",
+      "master_source_sha256": "f2f67f2a35bd91745e8314f8478b6ce6aafacbbbe9bb35567de7bcb1146ca595",
       "master_source_path": "tools/s81_vm/area_a2_controlled.sv",
       "candidate_rtl_path": "s81_a2_controlled.u_header",
       "replacement_scope": "same port mapping; native-reset source changed; prior view does not qualify candidate",
@@ -5466,7 +5471,7 @@
       "geometry_status": "SOURCE_PIN_CANDIDATE_NO_CURRENT_NATIVE_KIT",
       "physical_pin_missing": [],
       "native_view_present": false,
-      "master_source_sha256": "c1129959bcbf49eafea44330fe12b7595371d1e913129c838fc3f8a4ecbfd8d0",
+      "master_source_sha256": "f2f67f2a35bd91745e8314f8478b6ce6aafacbbbe9bb35567de7bcb1146ca595",
       "master_source_path": "tools/s81_vm/area_a2_controlled.sv",
       "candidate_rtl_path": "s81_a2_controlled.payload[0].u_payload",
       "replacement_scope": "same port mapping; native-reset source changed; prior view does not qualify candidate",
@@ -5519,7 +5524,7 @@
       "geometry_status": "SOURCE_PIN_CANDIDATE_NO_CURRENT_NATIVE_KIT",
       "physical_pin_missing": [],
       "native_view_present": false,
-      "master_source_sha256": "c1129959bcbf49eafea44330fe12b7595371d1e913129c838fc3f8a4ecbfd8d0",
+      "master_source_sha256": "f2f67f2a35bd91745e8314f8478b6ce6aafacbbbe9bb35567de7bcb1146ca595",
       "master_source_path": "tools/s81_vm/area_a2_controlled.sv",
       "candidate_rtl_path": "s81_a2_controlled.payload[1].u_payload",
       "replacement_scope": "same port mapping; native-reset source changed; prior view does not qualify candidate",
@@ -5572,7 +5577,7 @@
       "geometry_status": "SOURCE_PIN_CANDIDATE_NO_CURRENT_NATIVE_KIT",
       "physical_pin_missing": [],
       "native_view_present": false,
-      "master_source_sha256": "c1129959bcbf49eafea44330fe12b7595371d1e913129c838fc3f8a4ecbfd8d0",
+      "master_source_sha256": "f2f67f2a35bd91745e8314f8478b6ce6aafacbbbe9bb35567de7bcb1146ca595",
       "master_source_path": "tools/s81_vm/area_a2_controlled.sv",
       "candidate_rtl_path": "s81_a2_controlled.payload[2].u_payload",
       "replacement_scope": "same port mapping; native-reset source changed; prior view does not qualify candidate",
@@ -5625,7 +5630,7 @@
       "geometry_status": "SOURCE_PIN_CANDIDATE_NO_CURRENT_NATIVE_KIT",
       "physical_pin_missing": [],
       "native_view_present": false,
-      "master_source_sha256": "c1129959bcbf49eafea44330fe12b7595371d1e913129c838fc3f8a4ecbfd8d0",
+      "master_source_sha256": "f2f67f2a35bd91745e8314f8478b6ce6aafacbbbe9bb35567de7bcb1146ca595",
       "master_source_path": "tools/s81_vm/area_a2_controlled.sv",
       "candidate_rtl_path": "s81_a2_controlled.payload[3].u_payload",
       "replacement_scope": "same port mapping; native-reset source changed; prior view does not qualify candidate",
@@ -37905,11 +37910,8 @@
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[0].quarter[0].u_control",
-      "master": "s81_a2_controller",
-      "parameters": {
-        "NSRC": 53,
-        "BASE": 0
-      },
+      "master": "s81_a2_controller_b0",
+      "parameters": {},
       "ports": {
         "ck_control": {
           "direction": "input",
@@ -37968,17 +37970,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_a2_controlled.sv",
-      "master_source_sha256": "c1129959bcbf49eafea44330fe12b7595371d1e913129c838fc3f8a4ecbfd8d0",
-      "candidate_rtl_path": "s81_a2_controlled.payload[0].quarter[0].u_quarter.u_control"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[0].quarter[0].u_quarter.control_b0.u_control"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[0].quarter[0].u_data0",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -38033,17 +38032,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[0].quarter[0].u_quarter.genblk2[0].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[0].quarter[0].u_quarter.data_stripe[0].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[0].quarter[0].u_data1",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -38098,17 +38094,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[0].quarter[0].u_quarter.genblk2[1].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[0].quarter[0].u_quarter.data_stripe[1].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[0].quarter[0].u_data2",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -38163,17 +38156,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[0].quarter[0].u_quarter.genblk2[2].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[0].quarter[0].u_quarter.data_stripe[2].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[0].quarter[0].u_data3",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -38228,17 +38218,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[0].quarter[0].u_quarter.genblk2[3].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[0].quarter[0].u_quarter.data_stripe[3].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[0].quarter[0].u_data4",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -38293,17 +38280,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[0].quarter[0].u_quarter.genblk2[4].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[0].quarter[0].u_quarter.data_stripe[4].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[0].quarter[0].u_data5",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -38358,17 +38342,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[0].quarter[0].u_quarter.genblk2[5].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[0].quarter[0].u_quarter.data_stripe[5].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[0].quarter[0].u_data6",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -38423,17 +38404,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[0].quarter[0].u_quarter.genblk2[6].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[0].quarter[0].u_quarter.data_stripe[6].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[0].quarter[0].u_data7",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -38488,17 +38466,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[0].quarter[0].u_quarter.genblk2[7].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[0].quarter[0].u_quarter.data_stripe[7].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[0].quarter[0].u_meta",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 26
-      },
+      "master": "s81_a2_stripe_meta26",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -38553,8 +38528,8 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
       "candidate_rtl_path": "s81_a2_controlled.payload[0].quarter[0].u_quarter.u_meta"
     },
     {
@@ -38601,11 +38576,8 @@
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[0].quarter[1].u_control",
-      "master": "s81_a2_controller",
-      "parameters": {
-        "NSRC": 53,
-        "BASE": 8
-      },
+      "master": "s81_a2_controller_b8",
+      "parameters": {},
       "ports": {
         "ck_control": {
           "direction": "input",
@@ -38664,17 +38636,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_a2_controlled.sv",
-      "master_source_sha256": "c1129959bcbf49eafea44330fe12b7595371d1e913129c838fc3f8a4ecbfd8d0",
-      "candidate_rtl_path": "s81_a2_controlled.payload[0].quarter[1].u_quarter.u_control"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[0].quarter[1].u_quarter.control_b8.u_control"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[0].quarter[1].u_data0",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -38729,17 +38698,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[0].quarter[1].u_quarter.genblk2[0].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[0].quarter[1].u_quarter.data_stripe[0].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[0].quarter[1].u_data1",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -38794,17 +38760,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[0].quarter[1].u_quarter.genblk2[1].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[0].quarter[1].u_quarter.data_stripe[1].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[0].quarter[1].u_data2",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -38859,17 +38822,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[0].quarter[1].u_quarter.genblk2[2].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[0].quarter[1].u_quarter.data_stripe[2].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[0].quarter[1].u_data3",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -38924,17 +38884,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[0].quarter[1].u_quarter.genblk2[3].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[0].quarter[1].u_quarter.data_stripe[3].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[0].quarter[1].u_data4",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -38989,17 +38946,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[0].quarter[1].u_quarter.genblk2[4].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[0].quarter[1].u_quarter.data_stripe[4].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[0].quarter[1].u_data5",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -39054,17 +39008,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[0].quarter[1].u_quarter.genblk2[5].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[0].quarter[1].u_quarter.data_stripe[5].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[0].quarter[1].u_data6",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -39119,17 +39070,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[0].quarter[1].u_quarter.genblk2[6].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[0].quarter[1].u_quarter.data_stripe[6].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[0].quarter[1].u_data7",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -39184,17 +39132,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[0].quarter[1].u_quarter.genblk2[7].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[0].quarter[1].u_quarter.data_stripe[7].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[0].quarter[1].u_meta",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 26
-      },
+      "master": "s81_a2_stripe_meta26",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -39249,8 +39194,8 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
       "candidate_rtl_path": "s81_a2_controlled.payload[0].quarter[1].u_quarter.u_meta"
     },
     {
@@ -39297,11 +39242,8 @@
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[0].quarter[2].u_control",
-      "master": "s81_a2_controller",
-      "parameters": {
-        "NSRC": 53,
-        "BASE": 16
-      },
+      "master": "s81_a2_controller_b16",
+      "parameters": {},
       "ports": {
         "ck_control": {
           "direction": "input",
@@ -39360,17 +39302,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_a2_controlled.sv",
-      "master_source_sha256": "c1129959bcbf49eafea44330fe12b7595371d1e913129c838fc3f8a4ecbfd8d0",
-      "candidate_rtl_path": "s81_a2_controlled.payload[0].quarter[2].u_quarter.u_control"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[0].quarter[2].u_quarter.control_b16.u_control"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[0].quarter[2].u_data0",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -39425,17 +39364,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[0].quarter[2].u_quarter.genblk2[0].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[0].quarter[2].u_quarter.data_stripe[0].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[0].quarter[2].u_data1",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -39490,17 +39426,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[0].quarter[2].u_quarter.genblk2[1].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[0].quarter[2].u_quarter.data_stripe[1].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[0].quarter[2].u_data2",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -39555,17 +39488,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[0].quarter[2].u_quarter.genblk2[2].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[0].quarter[2].u_quarter.data_stripe[2].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[0].quarter[2].u_data3",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -39620,17 +39550,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[0].quarter[2].u_quarter.genblk2[3].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[0].quarter[2].u_quarter.data_stripe[3].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[0].quarter[2].u_data4",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -39685,17 +39612,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[0].quarter[2].u_quarter.genblk2[4].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[0].quarter[2].u_quarter.data_stripe[4].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[0].quarter[2].u_data5",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -39750,17 +39674,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[0].quarter[2].u_quarter.genblk2[5].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[0].quarter[2].u_quarter.data_stripe[5].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[0].quarter[2].u_data6",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -39815,17 +39736,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[0].quarter[2].u_quarter.genblk2[6].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[0].quarter[2].u_quarter.data_stripe[6].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[0].quarter[2].u_data7",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -39880,17 +39798,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[0].quarter[2].u_quarter.genblk2[7].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[0].quarter[2].u_quarter.data_stripe[7].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[0].quarter[2].u_meta",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 26
-      },
+      "master": "s81_a2_stripe_meta26",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -39945,8 +39860,8 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
       "candidate_rtl_path": "s81_a2_controlled.payload[0].quarter[2].u_quarter.u_meta"
     },
     {
@@ -39993,11 +39908,8 @@
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[0].quarter[3].u_control",
-      "master": "s81_a2_controller",
-      "parameters": {
-        "NSRC": 53,
-        "BASE": 24
-      },
+      "master": "s81_a2_controller_b24",
+      "parameters": {},
       "ports": {
         "ck_control": {
           "direction": "input",
@@ -40056,17 +39968,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_a2_controlled.sv",
-      "master_source_sha256": "c1129959bcbf49eafea44330fe12b7595371d1e913129c838fc3f8a4ecbfd8d0",
-      "candidate_rtl_path": "s81_a2_controlled.payload[0].quarter[3].u_quarter.u_control"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[0].quarter[3].u_quarter.control_b24.u_control"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[0].quarter[3].u_data0",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -40121,17 +40030,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[0].quarter[3].u_quarter.genblk2[0].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[0].quarter[3].u_quarter.data_stripe[0].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[0].quarter[3].u_data1",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -40186,17 +40092,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[0].quarter[3].u_quarter.genblk2[1].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[0].quarter[3].u_quarter.data_stripe[1].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[0].quarter[3].u_data2",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -40251,17 +40154,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[0].quarter[3].u_quarter.genblk2[2].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[0].quarter[3].u_quarter.data_stripe[2].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[0].quarter[3].u_data3",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -40316,17 +40216,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[0].quarter[3].u_quarter.genblk2[3].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[0].quarter[3].u_quarter.data_stripe[3].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[0].quarter[3].u_data4",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -40381,17 +40278,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[0].quarter[3].u_quarter.genblk2[4].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[0].quarter[3].u_quarter.data_stripe[4].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[0].quarter[3].u_data5",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -40446,17 +40340,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[0].quarter[3].u_quarter.genblk2[5].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[0].quarter[3].u_quarter.data_stripe[5].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[0].quarter[3].u_data6",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -40511,17 +40402,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[0].quarter[3].u_quarter.genblk2[6].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[0].quarter[3].u_quarter.data_stripe[6].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[0].quarter[3].u_data7",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -40576,17 +40464,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[0].quarter[3].u_quarter.genblk2[7].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[0].quarter[3].u_quarter.data_stripe[7].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[0].quarter[3].u_meta",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 26
-      },
+      "master": "s81_a2_stripe_meta26",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -40641,8 +40526,8 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
       "candidate_rtl_path": "s81_a2_controlled.payload[0].quarter[3].u_quarter.u_meta"
     },
     {
@@ -40689,11 +40574,8 @@
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[1].quarter[0].u_control",
-      "master": "s81_a2_controller",
-      "parameters": {
-        "NSRC": 53,
-        "BASE": 0
-      },
+      "master": "s81_a2_controller_b0",
+      "parameters": {},
       "ports": {
         "ck_control": {
           "direction": "input",
@@ -40752,17 +40634,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_a2_controlled.sv",
-      "master_source_sha256": "c1129959bcbf49eafea44330fe12b7595371d1e913129c838fc3f8a4ecbfd8d0",
-      "candidate_rtl_path": "s81_a2_controlled.payload[1].quarter[0].u_quarter.u_control"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[1].quarter[0].u_quarter.control_b0.u_control"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[1].quarter[0].u_data0",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -40817,17 +40696,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[1].quarter[0].u_quarter.genblk2[0].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[1].quarter[0].u_quarter.data_stripe[0].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[1].quarter[0].u_data1",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -40882,17 +40758,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[1].quarter[0].u_quarter.genblk2[1].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[1].quarter[0].u_quarter.data_stripe[1].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[1].quarter[0].u_data2",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -40947,17 +40820,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[1].quarter[0].u_quarter.genblk2[2].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[1].quarter[0].u_quarter.data_stripe[2].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[1].quarter[0].u_data3",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -41012,17 +40882,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[1].quarter[0].u_quarter.genblk2[3].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[1].quarter[0].u_quarter.data_stripe[3].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[1].quarter[0].u_data4",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -41077,17 +40944,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[1].quarter[0].u_quarter.genblk2[4].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[1].quarter[0].u_quarter.data_stripe[4].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[1].quarter[0].u_data5",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -41142,17 +41006,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[1].quarter[0].u_quarter.genblk2[5].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[1].quarter[0].u_quarter.data_stripe[5].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[1].quarter[0].u_data6",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -41207,17 +41068,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[1].quarter[0].u_quarter.genblk2[6].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[1].quarter[0].u_quarter.data_stripe[6].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[1].quarter[0].u_data7",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -41272,17 +41130,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[1].quarter[0].u_quarter.genblk2[7].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[1].quarter[0].u_quarter.data_stripe[7].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[1].quarter[0].u_meta",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 26
-      },
+      "master": "s81_a2_stripe_meta26",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -41337,8 +41192,8 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
       "candidate_rtl_path": "s81_a2_controlled.payload[1].quarter[0].u_quarter.u_meta"
     },
     {
@@ -41385,11 +41240,8 @@
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[1].quarter[1].u_control",
-      "master": "s81_a2_controller",
-      "parameters": {
-        "NSRC": 53,
-        "BASE": 8
-      },
+      "master": "s81_a2_controller_b8",
+      "parameters": {},
       "ports": {
         "ck_control": {
           "direction": "input",
@@ -41448,17 +41300,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_a2_controlled.sv",
-      "master_source_sha256": "c1129959bcbf49eafea44330fe12b7595371d1e913129c838fc3f8a4ecbfd8d0",
-      "candidate_rtl_path": "s81_a2_controlled.payload[1].quarter[1].u_quarter.u_control"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[1].quarter[1].u_quarter.control_b8.u_control"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[1].quarter[1].u_data0",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -41513,17 +41362,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[1].quarter[1].u_quarter.genblk2[0].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[1].quarter[1].u_quarter.data_stripe[0].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[1].quarter[1].u_data1",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -41578,17 +41424,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[1].quarter[1].u_quarter.genblk2[1].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[1].quarter[1].u_quarter.data_stripe[1].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[1].quarter[1].u_data2",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -41643,17 +41486,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[1].quarter[1].u_quarter.genblk2[2].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[1].quarter[1].u_quarter.data_stripe[2].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[1].quarter[1].u_data3",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -41708,17 +41548,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[1].quarter[1].u_quarter.genblk2[3].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[1].quarter[1].u_quarter.data_stripe[3].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[1].quarter[1].u_data4",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -41773,17 +41610,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[1].quarter[1].u_quarter.genblk2[4].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[1].quarter[1].u_quarter.data_stripe[4].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[1].quarter[1].u_data5",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -41838,17 +41672,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[1].quarter[1].u_quarter.genblk2[5].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[1].quarter[1].u_quarter.data_stripe[5].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[1].quarter[1].u_data6",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -41903,17 +41734,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[1].quarter[1].u_quarter.genblk2[6].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[1].quarter[1].u_quarter.data_stripe[6].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[1].quarter[1].u_data7",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -41968,17 +41796,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[1].quarter[1].u_quarter.genblk2[7].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[1].quarter[1].u_quarter.data_stripe[7].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[1].quarter[1].u_meta",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 26
-      },
+      "master": "s81_a2_stripe_meta26",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -42033,8 +41858,8 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
       "candidate_rtl_path": "s81_a2_controlled.payload[1].quarter[1].u_quarter.u_meta"
     },
     {
@@ -42081,11 +41906,8 @@
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[1].quarter[2].u_control",
-      "master": "s81_a2_controller",
-      "parameters": {
-        "NSRC": 53,
-        "BASE": 16
-      },
+      "master": "s81_a2_controller_b16",
+      "parameters": {},
       "ports": {
         "ck_control": {
           "direction": "input",
@@ -42144,17 +41966,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_a2_controlled.sv",
-      "master_source_sha256": "c1129959bcbf49eafea44330fe12b7595371d1e913129c838fc3f8a4ecbfd8d0",
-      "candidate_rtl_path": "s81_a2_controlled.payload[1].quarter[2].u_quarter.u_control"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[1].quarter[2].u_quarter.control_b16.u_control"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[1].quarter[2].u_data0",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -42209,17 +42028,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[1].quarter[2].u_quarter.genblk2[0].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[1].quarter[2].u_quarter.data_stripe[0].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[1].quarter[2].u_data1",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -42274,17 +42090,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[1].quarter[2].u_quarter.genblk2[1].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[1].quarter[2].u_quarter.data_stripe[1].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[1].quarter[2].u_data2",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -42339,17 +42152,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[1].quarter[2].u_quarter.genblk2[2].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[1].quarter[2].u_quarter.data_stripe[2].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[1].quarter[2].u_data3",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -42404,17 +42214,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[1].quarter[2].u_quarter.genblk2[3].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[1].quarter[2].u_quarter.data_stripe[3].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[1].quarter[2].u_data4",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -42469,17 +42276,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[1].quarter[2].u_quarter.genblk2[4].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[1].quarter[2].u_quarter.data_stripe[4].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[1].quarter[2].u_data5",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -42534,17 +42338,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[1].quarter[2].u_quarter.genblk2[5].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[1].quarter[2].u_quarter.data_stripe[5].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[1].quarter[2].u_data6",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -42599,17 +42400,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[1].quarter[2].u_quarter.genblk2[6].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[1].quarter[2].u_quarter.data_stripe[6].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[1].quarter[2].u_data7",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -42664,17 +42462,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[1].quarter[2].u_quarter.genblk2[7].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[1].quarter[2].u_quarter.data_stripe[7].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[1].quarter[2].u_meta",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 26
-      },
+      "master": "s81_a2_stripe_meta26",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -42729,8 +42524,8 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
       "candidate_rtl_path": "s81_a2_controlled.payload[1].quarter[2].u_quarter.u_meta"
     },
     {
@@ -42777,11 +42572,8 @@
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[1].quarter[3].u_control",
-      "master": "s81_a2_controller",
-      "parameters": {
-        "NSRC": 53,
-        "BASE": 24
-      },
+      "master": "s81_a2_controller_b24",
+      "parameters": {},
       "ports": {
         "ck_control": {
           "direction": "input",
@@ -42840,17 +42632,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_a2_controlled.sv",
-      "master_source_sha256": "c1129959bcbf49eafea44330fe12b7595371d1e913129c838fc3f8a4ecbfd8d0",
-      "candidate_rtl_path": "s81_a2_controlled.payload[1].quarter[3].u_quarter.u_control"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[1].quarter[3].u_quarter.control_b24.u_control"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[1].quarter[3].u_data0",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -42905,17 +42694,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[1].quarter[3].u_quarter.genblk2[0].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[1].quarter[3].u_quarter.data_stripe[0].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[1].quarter[3].u_data1",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -42970,17 +42756,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[1].quarter[3].u_quarter.genblk2[1].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[1].quarter[3].u_quarter.data_stripe[1].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[1].quarter[3].u_data2",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -43035,17 +42818,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[1].quarter[3].u_quarter.genblk2[2].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[1].quarter[3].u_quarter.data_stripe[2].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[1].quarter[3].u_data3",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -43100,17 +42880,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[1].quarter[3].u_quarter.genblk2[3].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[1].quarter[3].u_quarter.data_stripe[3].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[1].quarter[3].u_data4",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -43165,17 +42942,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[1].quarter[3].u_quarter.genblk2[4].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[1].quarter[3].u_quarter.data_stripe[4].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[1].quarter[3].u_data5",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -43230,17 +43004,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[1].quarter[3].u_quarter.genblk2[5].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[1].quarter[3].u_quarter.data_stripe[5].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[1].quarter[3].u_data6",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -43295,17 +43066,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[1].quarter[3].u_quarter.genblk2[6].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[1].quarter[3].u_quarter.data_stripe[6].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[1].quarter[3].u_data7",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -43360,17 +43128,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[1].quarter[3].u_quarter.genblk2[7].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[1].quarter[3].u_quarter.data_stripe[7].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[1].quarter[3].u_meta",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 26
-      },
+      "master": "s81_a2_stripe_meta26",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -43425,8 +43190,8 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
       "candidate_rtl_path": "s81_a2_controlled.payload[1].quarter[3].u_quarter.u_meta"
     },
     {
@@ -43473,11 +43238,8 @@
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[2].quarter[0].u_control",
-      "master": "s81_a2_controller",
-      "parameters": {
-        "NSRC": 53,
-        "BASE": 0
-      },
+      "master": "s81_a2_controller_b0",
+      "parameters": {},
       "ports": {
         "ck_control": {
           "direction": "input",
@@ -43536,17 +43298,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_a2_controlled.sv",
-      "master_source_sha256": "c1129959bcbf49eafea44330fe12b7595371d1e913129c838fc3f8a4ecbfd8d0",
-      "candidate_rtl_path": "s81_a2_controlled.payload[2].quarter[0].u_quarter.u_control"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[2].quarter[0].u_quarter.control_b0.u_control"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[2].quarter[0].u_data0",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -43601,17 +43360,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[2].quarter[0].u_quarter.genblk2[0].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[2].quarter[0].u_quarter.data_stripe[0].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[2].quarter[0].u_data1",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -43666,17 +43422,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[2].quarter[0].u_quarter.genblk2[1].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[2].quarter[0].u_quarter.data_stripe[1].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[2].quarter[0].u_data2",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -43731,17 +43484,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[2].quarter[0].u_quarter.genblk2[2].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[2].quarter[0].u_quarter.data_stripe[2].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[2].quarter[0].u_data3",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -43796,17 +43546,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[2].quarter[0].u_quarter.genblk2[3].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[2].quarter[0].u_quarter.data_stripe[3].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[2].quarter[0].u_data4",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -43861,17 +43608,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[2].quarter[0].u_quarter.genblk2[4].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[2].quarter[0].u_quarter.data_stripe[4].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[2].quarter[0].u_data5",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -43926,17 +43670,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[2].quarter[0].u_quarter.genblk2[5].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[2].quarter[0].u_quarter.data_stripe[5].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[2].quarter[0].u_data6",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -43991,17 +43732,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[2].quarter[0].u_quarter.genblk2[6].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[2].quarter[0].u_quarter.data_stripe[6].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[2].quarter[0].u_data7",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -44056,17 +43794,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[2].quarter[0].u_quarter.genblk2[7].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[2].quarter[0].u_quarter.data_stripe[7].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[2].quarter[0].u_meta",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 26
-      },
+      "master": "s81_a2_stripe_meta26",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -44121,8 +43856,8 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
       "candidate_rtl_path": "s81_a2_controlled.payload[2].quarter[0].u_quarter.u_meta"
     },
     {
@@ -44169,11 +43904,8 @@
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[2].quarter[1].u_control",
-      "master": "s81_a2_controller",
-      "parameters": {
-        "NSRC": 53,
-        "BASE": 8
-      },
+      "master": "s81_a2_controller_b8",
+      "parameters": {},
       "ports": {
         "ck_control": {
           "direction": "input",
@@ -44232,17 +43964,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_a2_controlled.sv",
-      "master_source_sha256": "c1129959bcbf49eafea44330fe12b7595371d1e913129c838fc3f8a4ecbfd8d0",
-      "candidate_rtl_path": "s81_a2_controlled.payload[2].quarter[1].u_quarter.u_control"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[2].quarter[1].u_quarter.control_b8.u_control"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[2].quarter[1].u_data0",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -44297,17 +44026,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[2].quarter[1].u_quarter.genblk2[0].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[2].quarter[1].u_quarter.data_stripe[0].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[2].quarter[1].u_data1",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -44362,17 +44088,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[2].quarter[1].u_quarter.genblk2[1].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[2].quarter[1].u_quarter.data_stripe[1].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[2].quarter[1].u_data2",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -44427,17 +44150,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[2].quarter[1].u_quarter.genblk2[2].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[2].quarter[1].u_quarter.data_stripe[2].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[2].quarter[1].u_data3",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -44492,17 +44212,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[2].quarter[1].u_quarter.genblk2[3].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[2].quarter[1].u_quarter.data_stripe[3].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[2].quarter[1].u_data4",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -44557,17 +44274,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[2].quarter[1].u_quarter.genblk2[4].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[2].quarter[1].u_quarter.data_stripe[4].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[2].quarter[1].u_data5",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -44622,17 +44336,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[2].quarter[1].u_quarter.genblk2[5].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[2].quarter[1].u_quarter.data_stripe[5].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[2].quarter[1].u_data6",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -44687,17 +44398,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[2].quarter[1].u_quarter.genblk2[6].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[2].quarter[1].u_quarter.data_stripe[6].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[2].quarter[1].u_data7",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -44752,17 +44460,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[2].quarter[1].u_quarter.genblk2[7].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[2].quarter[1].u_quarter.data_stripe[7].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[2].quarter[1].u_meta",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 26
-      },
+      "master": "s81_a2_stripe_meta26",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -44817,8 +44522,8 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
       "candidate_rtl_path": "s81_a2_controlled.payload[2].quarter[1].u_quarter.u_meta"
     },
     {
@@ -44865,11 +44570,8 @@
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[2].quarter[2].u_control",
-      "master": "s81_a2_controller",
-      "parameters": {
-        "NSRC": 53,
-        "BASE": 16
-      },
+      "master": "s81_a2_controller_b16",
+      "parameters": {},
       "ports": {
         "ck_control": {
           "direction": "input",
@@ -44928,17 +44630,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_a2_controlled.sv",
-      "master_source_sha256": "c1129959bcbf49eafea44330fe12b7595371d1e913129c838fc3f8a4ecbfd8d0",
-      "candidate_rtl_path": "s81_a2_controlled.payload[2].quarter[2].u_quarter.u_control"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[2].quarter[2].u_quarter.control_b16.u_control"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[2].quarter[2].u_data0",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -44993,17 +44692,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[2].quarter[2].u_quarter.genblk2[0].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[2].quarter[2].u_quarter.data_stripe[0].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[2].quarter[2].u_data1",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -45058,17 +44754,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[2].quarter[2].u_quarter.genblk2[1].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[2].quarter[2].u_quarter.data_stripe[1].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[2].quarter[2].u_data2",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -45123,17 +44816,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[2].quarter[2].u_quarter.genblk2[2].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[2].quarter[2].u_quarter.data_stripe[2].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[2].quarter[2].u_data3",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -45188,17 +44878,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[2].quarter[2].u_quarter.genblk2[3].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[2].quarter[2].u_quarter.data_stripe[3].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[2].quarter[2].u_data4",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -45253,17 +44940,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[2].quarter[2].u_quarter.genblk2[4].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[2].quarter[2].u_quarter.data_stripe[4].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[2].quarter[2].u_data5",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -45318,17 +45002,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[2].quarter[2].u_quarter.genblk2[5].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[2].quarter[2].u_quarter.data_stripe[5].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[2].quarter[2].u_data6",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -45383,17 +45064,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[2].quarter[2].u_quarter.genblk2[6].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[2].quarter[2].u_quarter.data_stripe[6].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[2].quarter[2].u_data7",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -45448,17 +45126,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[2].quarter[2].u_quarter.genblk2[7].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[2].quarter[2].u_quarter.data_stripe[7].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[2].quarter[2].u_meta",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 26
-      },
+      "master": "s81_a2_stripe_meta26",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -45513,8 +45188,8 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
       "candidate_rtl_path": "s81_a2_controlled.payload[2].quarter[2].u_quarter.u_meta"
     },
     {
@@ -45561,11 +45236,8 @@
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[2].quarter[3].u_control",
-      "master": "s81_a2_controller",
-      "parameters": {
-        "NSRC": 53,
-        "BASE": 24
-      },
+      "master": "s81_a2_controller_b24",
+      "parameters": {},
       "ports": {
         "ck_control": {
           "direction": "input",
@@ -45624,17 +45296,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_a2_controlled.sv",
-      "master_source_sha256": "c1129959bcbf49eafea44330fe12b7595371d1e913129c838fc3f8a4ecbfd8d0",
-      "candidate_rtl_path": "s81_a2_controlled.payload[2].quarter[3].u_quarter.u_control"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[2].quarter[3].u_quarter.control_b24.u_control"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[2].quarter[3].u_data0",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -45689,17 +45358,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[2].quarter[3].u_quarter.genblk2[0].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[2].quarter[3].u_quarter.data_stripe[0].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[2].quarter[3].u_data1",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -45754,17 +45420,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[2].quarter[3].u_quarter.genblk2[1].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[2].quarter[3].u_quarter.data_stripe[1].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[2].quarter[3].u_data2",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -45819,17 +45482,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[2].quarter[3].u_quarter.genblk2[2].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[2].quarter[3].u_quarter.data_stripe[2].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[2].quarter[3].u_data3",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -45884,17 +45544,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[2].quarter[3].u_quarter.genblk2[3].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[2].quarter[3].u_quarter.data_stripe[3].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[2].quarter[3].u_data4",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -45949,17 +45606,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[2].quarter[3].u_quarter.genblk2[4].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[2].quarter[3].u_quarter.data_stripe[4].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[2].quarter[3].u_data5",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -46014,17 +45668,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[2].quarter[3].u_quarter.genblk2[5].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[2].quarter[3].u_quarter.data_stripe[5].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[2].quarter[3].u_data6",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -46079,17 +45730,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[2].quarter[3].u_quarter.genblk2[6].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[2].quarter[3].u_quarter.data_stripe[6].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[2].quarter[3].u_data7",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -46144,17 +45792,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[2].quarter[3].u_quarter.genblk2[7].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[2].quarter[3].u_quarter.data_stripe[7].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[2].quarter[3].u_meta",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 26
-      },
+      "master": "s81_a2_stripe_meta26",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -46209,8 +45854,8 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
       "candidate_rtl_path": "s81_a2_controlled.payload[2].quarter[3].u_quarter.u_meta"
     },
     {
@@ -46257,11 +45902,8 @@
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[3].quarter[0].u_control",
-      "master": "s81_a2_controller",
-      "parameters": {
-        "NSRC": 53,
-        "BASE": 0
-      },
+      "master": "s81_a2_controller_b0",
+      "parameters": {},
       "ports": {
         "ck_control": {
           "direction": "input",
@@ -46320,17 +45962,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_a2_controlled.sv",
-      "master_source_sha256": "c1129959bcbf49eafea44330fe12b7595371d1e913129c838fc3f8a4ecbfd8d0",
-      "candidate_rtl_path": "s81_a2_controlled.payload[3].quarter[0].u_quarter.u_control"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[3].quarter[0].u_quarter.control_b0.u_control"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[3].quarter[0].u_data0",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -46385,17 +46024,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[3].quarter[0].u_quarter.genblk2[0].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[3].quarter[0].u_quarter.data_stripe[0].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[3].quarter[0].u_data1",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -46450,17 +46086,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[3].quarter[0].u_quarter.genblk2[1].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[3].quarter[0].u_quarter.data_stripe[1].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[3].quarter[0].u_data2",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -46515,17 +46148,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[3].quarter[0].u_quarter.genblk2[2].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[3].quarter[0].u_quarter.data_stripe[2].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[3].quarter[0].u_data3",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -46580,17 +46210,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[3].quarter[0].u_quarter.genblk2[3].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[3].quarter[0].u_quarter.data_stripe[3].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[3].quarter[0].u_data4",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -46645,17 +46272,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[3].quarter[0].u_quarter.genblk2[4].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[3].quarter[0].u_quarter.data_stripe[4].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[3].quarter[0].u_data5",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -46710,17 +46334,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[3].quarter[0].u_quarter.genblk2[5].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[3].quarter[0].u_quarter.data_stripe[5].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[3].quarter[0].u_data6",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -46775,17 +46396,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[3].quarter[0].u_quarter.genblk2[6].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[3].quarter[0].u_quarter.data_stripe[6].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[3].quarter[0].u_data7",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -46840,17 +46458,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[3].quarter[0].u_quarter.genblk2[7].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[3].quarter[0].u_quarter.data_stripe[7].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[3].quarter[0].u_meta",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 26
-      },
+      "master": "s81_a2_stripe_meta26",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -46905,8 +46520,8 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
       "candidate_rtl_path": "s81_a2_controlled.payload[3].quarter[0].u_quarter.u_meta"
     },
     {
@@ -46953,11 +46568,8 @@
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[3].quarter[1].u_control",
-      "master": "s81_a2_controller",
-      "parameters": {
-        "NSRC": 53,
-        "BASE": 8
-      },
+      "master": "s81_a2_controller_b8",
+      "parameters": {},
       "ports": {
         "ck_control": {
           "direction": "input",
@@ -47016,17 +46628,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_a2_controlled.sv",
-      "master_source_sha256": "c1129959bcbf49eafea44330fe12b7595371d1e913129c838fc3f8a4ecbfd8d0",
-      "candidate_rtl_path": "s81_a2_controlled.payload[3].quarter[1].u_quarter.u_control"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[3].quarter[1].u_quarter.control_b8.u_control"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[3].quarter[1].u_data0",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -47081,17 +46690,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[3].quarter[1].u_quarter.genblk2[0].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[3].quarter[1].u_quarter.data_stripe[0].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[3].quarter[1].u_data1",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -47146,17 +46752,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[3].quarter[1].u_quarter.genblk2[1].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[3].quarter[1].u_quarter.data_stripe[1].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[3].quarter[1].u_data2",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -47211,17 +46814,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[3].quarter[1].u_quarter.genblk2[2].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[3].quarter[1].u_quarter.data_stripe[2].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[3].quarter[1].u_data3",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -47276,17 +46876,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[3].quarter[1].u_quarter.genblk2[3].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[3].quarter[1].u_quarter.data_stripe[3].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[3].quarter[1].u_data4",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -47341,17 +46938,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[3].quarter[1].u_quarter.genblk2[4].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[3].quarter[1].u_quarter.data_stripe[4].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[3].quarter[1].u_data5",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -47406,17 +47000,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[3].quarter[1].u_quarter.genblk2[5].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[3].quarter[1].u_quarter.data_stripe[5].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[3].quarter[1].u_data6",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -47471,17 +47062,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[3].quarter[1].u_quarter.genblk2[6].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[3].quarter[1].u_quarter.data_stripe[6].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[3].quarter[1].u_data7",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -47536,17 +47124,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[3].quarter[1].u_quarter.genblk2[7].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[3].quarter[1].u_quarter.data_stripe[7].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[3].quarter[1].u_meta",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 26
-      },
+      "master": "s81_a2_stripe_meta26",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -47601,8 +47186,8 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
       "candidate_rtl_path": "s81_a2_controlled.payload[3].quarter[1].u_quarter.u_meta"
     },
     {
@@ -47649,11 +47234,8 @@
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[3].quarter[2].u_control",
-      "master": "s81_a2_controller",
-      "parameters": {
-        "NSRC": 53,
-        "BASE": 16
-      },
+      "master": "s81_a2_controller_b16",
+      "parameters": {},
       "ports": {
         "ck_control": {
           "direction": "input",
@@ -47712,17 +47294,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_a2_controlled.sv",
-      "master_source_sha256": "c1129959bcbf49eafea44330fe12b7595371d1e913129c838fc3f8a4ecbfd8d0",
-      "candidate_rtl_path": "s81_a2_controlled.payload[3].quarter[2].u_quarter.u_control"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[3].quarter[2].u_quarter.control_b16.u_control"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[3].quarter[2].u_data0",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -47777,17 +47356,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[3].quarter[2].u_quarter.genblk2[0].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[3].quarter[2].u_quarter.data_stripe[0].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[3].quarter[2].u_data1",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -47842,17 +47418,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[3].quarter[2].u_quarter.genblk2[1].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[3].quarter[2].u_quarter.data_stripe[1].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[3].quarter[2].u_data2",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -47907,17 +47480,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[3].quarter[2].u_quarter.genblk2[2].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[3].quarter[2].u_quarter.data_stripe[2].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[3].quarter[2].u_data3",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -47972,17 +47542,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[3].quarter[2].u_quarter.genblk2[3].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[3].quarter[2].u_quarter.data_stripe[3].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[3].quarter[2].u_data4",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -48037,17 +47604,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[3].quarter[2].u_quarter.genblk2[4].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[3].quarter[2].u_quarter.data_stripe[4].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[3].quarter[2].u_data5",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -48102,17 +47666,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[3].quarter[2].u_quarter.genblk2[5].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[3].quarter[2].u_quarter.data_stripe[5].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[3].quarter[2].u_data6",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -48167,17 +47728,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[3].quarter[2].u_quarter.genblk2[6].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[3].quarter[2].u_quarter.data_stripe[6].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[3].quarter[2].u_data7",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -48232,17 +47790,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[3].quarter[2].u_quarter.genblk2[7].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[3].quarter[2].u_quarter.data_stripe[7].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[3].quarter[2].u_meta",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 26
-      },
+      "master": "s81_a2_stripe_meta26",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -48297,8 +47852,8 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
       "candidate_rtl_path": "s81_a2_controlled.payload[3].quarter[2].u_quarter.u_meta"
     },
     {
@@ -48345,11 +47900,8 @@
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[3].quarter[3].u_control",
-      "master": "s81_a2_controller",
-      "parameters": {
-        "NSRC": 53,
-        "BASE": 24
-      },
+      "master": "s81_a2_controller_b24",
+      "parameters": {},
       "ports": {
         "ck_control": {
           "direction": "input",
@@ -48408,17 +47960,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_a2_controlled.sv",
-      "master_source_sha256": "c1129959bcbf49eafea44330fe12b7595371d1e913129c838fc3f8a4ecbfd8d0",
-      "candidate_rtl_path": "s81_a2_controlled.payload[3].quarter[3].u_quarter.u_control"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[3].quarter[3].u_quarter.control_b24.u_control"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[3].quarter[3].u_data0",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -48473,17 +48022,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[3].quarter[3].u_quarter.genblk2[0].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[3].quarter[3].u_quarter.data_stripe[0].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[3].quarter[3].u_data1",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -48538,17 +48084,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[3].quarter[3].u_quarter.genblk2[1].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[3].quarter[3].u_quarter.data_stripe[1].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[3].quarter[3].u_data2",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -48603,17 +48146,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[3].quarter[3].u_quarter.genblk2[2].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[3].quarter[3].u_quarter.data_stripe[2].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[3].quarter[3].u_data3",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -48668,17 +48208,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[3].quarter[3].u_quarter.genblk2[3].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[3].quarter[3].u_quarter.data_stripe[3].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[3].quarter[3].u_data4",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -48733,17 +48270,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[3].quarter[3].u_quarter.genblk2[4].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[3].quarter[3].u_quarter.data_stripe[4].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[3].quarter[3].u_data5",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -48798,17 +48332,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[3].quarter[3].u_quarter.genblk2[5].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[3].quarter[3].u_quarter.data_stripe[5].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[3].quarter[3].u_data6",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -48863,17 +48394,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[3].quarter[3].u_quarter.genblk2[6].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[3].quarter[3].u_quarter.data_stripe[6].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[3].quarter[3].u_data7",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 16
-      },
+      "master": "s81_a2_stripe_data16",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -48928,17 +48456,14 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
-      "candidate_rtl_path": "s81_a2_controlled.payload[3].quarter[3].u_quarter.genblk2[7].u_data"
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
+      "candidate_rtl_path": "s81_a2_controlled.payload[3].quarter[3].u_quarter.data_stripe[7].u_data"
     },
     {
       "path": "dut.u_core.u_ws.a2.payload[3].quarter[3].u_meta",
-      "master": "s81_area_stripe",
-      "parameters": {
-        "NSRC": 53,
-        "W": 26
-      },
+      "master": "s81_a2_stripe_meta26",
+      "parameters": {},
       "ports": {
         "ck": {
           "direction": "input",
@@ -48993,8 +48518,8 @@
       "outline_scope": "budget only; no native physical view",
       "native_view_present": false,
       "kit": null,
-      "master_source_path": "tools/s81_vm/area_id_native.sv",
-      "master_source_sha256": "1473f5b5004a094b1242e8e9863238bcb5fa11a4c0a4fa69965be6900a5a30cf",
+      "master_source_path": "tools/s81_vm/area_a2_hardmasters.sv",
+      "master_source_sha256": "fbb1314195485b4fbf26b8194c11556f030d63a0630460e24611d2beac860e74",
       "candidate_rtl_path": "s81_a2_controlled.payload[3].quarter[3].u_quarter.u_meta"
     },
     {

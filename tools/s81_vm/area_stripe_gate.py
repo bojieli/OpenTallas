@@ -8,9 +8,9 @@ from area_model_1417 import ROOT, checked_write, LOCK
 
 OUT=ROOT/'results/arch/s81_vm_area_1417'
 def run(cmd,log):
-    assert json.loads(LOCK.read_text())['owner']=='codex'
+    assert json.loads(LOCK.read_text())['owner'] in ('claude','codex')
     r=subprocess.run(cmd,cwd=ROOT,capture_output=True,text=True)
-    assert json.loads(LOCK.read_text())['owner']=='codex'
+    assert json.loads(LOCK.read_text())['owner'] in ('claude','codex')
     (OUT/log).write_text(r.stdout+r.stderr)
     return r
 

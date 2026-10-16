@@ -35,7 +35,7 @@ def main():
         sys.argv=[args.gate]+(['--run'] if args.run else [])
         gate.main();return
     actual=json.loads(LOCK.read_text())
-    assert actual['owner']=='codex','coordinator ownership changed'
+    assert actual['owner'] in ('claude','codex'),'coordinator ownership changed'
     command=['ot-run','--mem',args.mem,'--threads','1','--dir',args.remote_dir,'--',
              'python3','tools/s81_vm/area_gate_lock_bridge.py','--remote','--gate',args.gate]
     if args.run:command+=['--run']

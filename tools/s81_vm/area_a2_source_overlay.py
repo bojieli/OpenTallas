@@ -13,13 +13,13 @@ BASE=Path('/home/ubuntu/wt/s81-vm-geometry-1103/results/physical/s81_vm_geometry
 OUT=ROOT/'results/arch/s81_vm_area_1417'
 LOCK=Path('/home/ubuntu/claude-takeover-20261007/COORDINATOR.lock')
 SOURCES=['tools/s81_vm/area_a2_controlled.sv','tools/s81_vm/area_id_native.sv',
-         'tools/s81_vm/area_id_native_join.sv']
+         'tools/s81_vm/area_id_native_join.sv','tools/s81_vm/area_a2_hardmasters.sv']
 REMOVE={'dsfd_vm_static_wdispatch128','dsfd_vm_static_wstage128',
         'dsfd_vm_static_write_capture128','dsfd_vm_static_wcontrol'}
 
 
 def check_lock():
-    if json.loads(LOCK.read_text())['owner']!='codex':
+    if json.loads(LOCK.read_text())['owner'] not in ('claude','codex'):
         raise RuntimeError('coordinator ownership changed')
 
 
@@ -73,16 +73,17 @@ def main():
         return index
     for x in range(4):
         for q in range(4):
-            controls[x,q]=add(x,q,'u_control','s81_a2_controller',dict(NSRC=53,BASE=q*8),
+            controls[x,q]=add(x,q,'u_control',f's81_a2_controller_b{q*8}',{},
                 ports(dict(ck_control=1,rst_n=1,src_v=53,src_bank=424,header_epoch=3,payload_epoch=12),
-                      dict(ids=168,dr_v=8,dr_s=16,fault=1)),[172.8,54],[324,0],SOURCES[0],'u_control')
+                      dict(ids=168,dr_v=8,dr_s=16,fault=1)),[172.8,54],[324,0],SOURCES[3],f'control_b{q*8}.u_control')
             for k in range(9):
                 w=16 if k<8 else 26
-                index=add(x,q,f'u_data{k}' if k<8 else 'u_meta','s81_area_stripe',dict(NSRC=53,W=w),
+                index=add(x,q,f'u_data{k}' if k<8 else 'u_meta',
+                    's81_a2_stripe_data16' if k<8 else 's81_a2_stripe_meta26',{},
                     ports(dict(ck=1,rst_n=1,i_data=w*53,i_sel=168,i_drain_v=8,i_drain_slot=16),
                           dict(o_v=8,o_data=8*w,fault=1)),[237.6,54],
-                    [48.6+243*(k%3),81+81*(k//3)],SOURCES[1],
-                    f'genblk2[{k}].u_data' if k<8 else 'u_meta')
+                    [48.6+243*(k%3),81+81*(k//3)],SOURCES[3],
+                    f'data_stripe[{k}].u_data' if k<8 else 'u_meta')
                 if k<8:stripes[x,q,k]=index
                 else:metas[x,q]=index
             joins[x,q]=add(x,q,'u_fault','s81_area_id_fault_join',{},

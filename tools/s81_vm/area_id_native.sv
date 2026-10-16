@@ -71,14 +71,15 @@ module s81_area_stripe #(parameter NSRC=53,W=16)(
 `else
  assign rn=rr[1];
 `endif
- reg [W*NSRC-1:0] d0,d1,d2;reg [24*7-1:0] sq;
- reg [7:0] dv;reg [15:0] ds;reg [23:0] cv,valid;
+ reg rn_pin_d;
+ reg [W*NSRC-1:0] d0,d1,d2;reg [24*7-1:0] raw_sq;wire [24*7-1:0] sq=raw_sq & {168{rn_pin_d}};
+ reg [7:0] raw_dv;wire [7:0] dv=raw_dv & {8{rn_pin_d}};reg [15:0] ds;reg [23:0] cv,valid;
  reg [W-1:0] chosen[0:23],storage[0:23];
  reg [24*W-1:0] muxed;reg [23:0] hits;
  integer g,s,b,c;reg bad;reg [23:0] vn;
- always @(posedge ck)begin d0<=i_data;d1<=d0;d2<=d1;ds<=i_drain_slot;end
- always @(posedge ck)if(!rn)begin sq<=0;dv<=0;cv<=0;end
- else begin sq<=i_sel;dv<=i_drain_v;cv<=hits;end
+ always @(posedge ck)begin raw_sq<=i_sel;raw_dv<=i_drain_v;rn_pin_d<=rn;d0<=i_data;d1<=d0;d2<=d1;ds<=i_drain_slot;end
+ always @(posedge ck)if(!rn)begin cv<=0;end
+ else begin cv<=hits;end
  always @*begin
   muxed=0;hits=0;
   for(g=0;g<24;g=g+1)for(s=0;s<NSRC;s=s+1)if(sq[g*7+6] && sq[g*7+:6]==s)begin

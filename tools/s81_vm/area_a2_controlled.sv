@@ -30,10 +30,11 @@ module s81_a2_controller #(parameter NSRC=53,BASE=0)(
         reg [2:0] t; begin t = a + b; sat3 = t[2] ? 2'd3 : t[1:0]; end
     endfunction
     localparam integer NP = 64;                            // tree width >= NSRC
-    reg [NSRC-1:0] s_v; reg [8*NSRC-1:0] s_bank;            // source pin registers, edge P
+    reg rn_pin_d;
+    reg [NSRC-1:0] raw_src_v;wire [NSRC-1:0] s_v=raw_src_v & {NSRC{rn_pin_d}}; reg [8*NSRC-1:0] s_bank;            // source pin registers, edge P
     always @(posedge ck_control) begin
         s_bank <= src_bank;
-        if (!rn) s_v <= {NSRC{1'b0}}; else s_v <= src_v;
+        raw_src_v <= src_v; rn_pin_d <= rn; // raw pins drive plain DFFs only
     end
     reg [NSRC-1:0] lane_v_d; reg [2*NSRC-1:0] lane_d; reg lane_bad_d;
     always @* begin : p_lane integer c, d, w, k; reg [4:0] bc, bd; reg [1:0] t [0:NP-1]; reg [1:0] n;
@@ -152,7 +153,7 @@ module s81_a2_w0_header #(parameter integer NSRC=53)(
  always @(posedge ck)rst_pin_q<=rst_n;
  always @(posedge ck)if(!rst_pin_q)rr<=0;else rr<={rr[0],1'b1};
  always @(posedge ck)begin
-  if(!rr[1])o_v<=0;else o_v<=i_v;
+  o_v<=i_v; // plain observation pin flop; A2 controller owns validity
   o_row<=i_row;o_tag<=i_tag;
   if(!rr[1])o_epoch<=0;else begin
 `ifdef S81_A2_MUT_EPOCH
@@ -179,21 +180,38 @@ module s81_a2_quarter #(parameter NSRC=53,BASE=0)(
  wire [167:0] ids;wire [7:0] dv;wire [15:0] ds;
  wire fc,fm;wire [7:0] fd;
  wire [26*NSRC-1:0] mi;wire [207:0] mo;
- s81_a2_controller #(.NSRC(NSRC),.BASE(BASE)) u_control(
-  ck_control,rst_control_n,src_v,src_bank,header_epoch,payload_epoch,ids,dv,ds,fc);
+ generate
+ if(BASE==0)begin:control_b0
+  s81_a2_controller_b0 u_control(
+   ck_control,rst_control_n,src_v,src_bank,header_epoch,payload_epoch,ids,dv,ds,fc);
+ end
+ else if(BASE==8)begin:control_b8
+  s81_a2_controller_b8 u_control(
+   ck_control,rst_control_n,src_v,src_bank,header_epoch,payload_epoch,ids,dv,ds,fc);
+ end
+ else if(BASE==16)begin:control_b16
+  s81_a2_controller_b16 u_control(
+   ck_control,rst_control_n,src_v,src_bank,header_epoch,payload_epoch,ids,dv,ds,fc);
+ end
+ else if(BASE==24)begin:control_b24
+  s81_a2_controller_b24 u_control(
+   ck_control,rst_control_n,src_v,src_bank,header_epoch,payload_epoch,ids,dv,ds,fc);
+ end
+ endgenerate
+ initial if(NSRC!=53 ||(BASE!=0 &&BASE!=8 &&BASE!=16 &&BASE!=24))$error("A2 hard quarter requires full53 and legal BASE");
  genvar s,k;
  generate for(s=0;s<NSRC;s=s+1)begin
   assign mi[26*s+:26]={i_tag[8*s+:8],i_mask[4*s+:4],i_row[14*s+:14]};
  end
- for(k=0;k<8;k=k+1)begin
+ for(k=0;k<8;k=k+1)begin:data_stripe
   assign {o_tag[8*k+:8],o_mask[4*k+:4],o_row[14*k+:14]}=mo[26*k+:26];
   wire [16*NSRC-1:0] di;wire [127:0] dout;wire [7:0] unused_v;
   for(s=0;s<NSRC;s=s+1)begin assign di[16*s+:16]=i_data[128*s+16*k+:16];end
-  s81_area_stripe #(.NSRC(NSRC),.W(16)) u_data(
+  s81_a2_stripe_data16 u_data(
    ck_data[k],rst_data_n[k],di,ids,dv,ds,unused_v,dout,fd[k]);
   for(s=0;s<8;s=s+1)begin assign o_data[128*s+16*k+:16]=dout[16*s+:16];end
  end endgenerate
- s81_area_stripe #(.NSRC(NSRC),.W(26)) u_meta(
+ s81_a2_stripe_meta26 u_meta(
   ck_meta,rst_meta_n,mi,ids,dv,ds,o_v,mo,fm);
  s81_area_id_fault_join u_fault(ck_fault,rst_fault_n,{fd,fm,fc},fault);
 endmodule

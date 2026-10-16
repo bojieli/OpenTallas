@@ -49,7 +49,7 @@ module s81_a2_storage_join(
    dsfd_vm_static_relay128_b8 u_b8(
     .ck_req(ck_req[I]),.ck_rsp(ck_rsp[I]),.rst_n(rst_relay_n[I]),
     .i_rv(i_rv[q*8+:8]),.i_ra(i_ra[q*72+:72]),.i_rt(i_rt[q*64+:64]),
-    .i_wv(sv&swe),.i_wa(sa),.i_wt(st),.i_wm(sm),.i_wd(sd),
+    .i_wv(sv),.i_wa(sa),.i_wt(st),.i_wm(sm),.i_wd(sd),
     .o_rv(r8v),.o_ra(r8a),.o_rt(r8t),.o_wv(w8v),.o_wa(w8a),.o_wt(w8t),.o_wm(w8m),.o_wd(w8d),
     .i_sv(bs_v),.i_sd(bs_d),.i_st(bs_t),.i_cv(bc_v),.i_ca(bc_a),.i_cm(bc_m),.i_ct(bc_t),
     .o_sv(rs_v),.o_sd(rs_d),.o_st(rs_t),.o_cv(rc_v),.o_ca(rc_a),.o_cm(rc_m),.o_ct(rc_t));

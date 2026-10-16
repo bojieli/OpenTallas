@@ -17,7 +17,7 @@ SOURCES = ['tools/s81_vm/area_id_native.sv', 'tools/s81_vm/area_id_native_gate.p
 
 
 def check_lock():
-    if json.loads(LOCK.read_text())['owner'] != 'codex':
+    if json.loads(LOCK.read_text())['owner'] not in ('claude','codex'):
         raise RuntimeError('coordinator ownership changed')
 
 

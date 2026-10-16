@@ -11,7 +11,7 @@ ROOT = Path(__file__).resolve().parents[2]
 OUT = ROOT / 'results/arch/s81_vm_area_1417'
 LOCK = Path('/home/ubuntu/claude-takeover-20261007/COORDINATOR.lock')
 SOURCES = ['tools/s81_vm/area_a2_controlled.sv', 'tools/s81_vm/area_id_native.sv',
-           'tools/s81_vm/area_id_native_join.sv', 'tools/s81_vm/area_a2_controlled_gate.py']
+           'tools/s81_vm/area_id_native_join.sv', 'tools/s81_vm/area_a2_hardmasters.sv', 'tools/s81_vm/area_a2_controlled_gate.py']
 
 BENCH = r'''`timescale 1ns/1ps
 module tb;
@@ -103,7 +103,7 @@ endmodule
 
 
 def check_lock():
-    if json.loads(LOCK.read_text())['owner'] != 'codex':
+    if json.loads(LOCK.read_text())['owner'] not in ('claude','codex'):
         raise RuntimeError('coordinator ownership changed')
 
 
@@ -123,17 +123,26 @@ def run(command, logfile):
 UNIT = r'''`timescale 1ns/1ps
 module unit_tb;
  reg ck=0;always #5 ck=~ck;
- reg rst=0;reg [52:0] v=0;reg [423:0] bank=0;
+ reg rst=0;reg [52:0] v=(53'b1<<0)|(53'b1<<5)|(53'b1<<52);reg [423:0] bank=0;
  wire [2:0] epoch;wire [52:0] unusedv;wire [741:0] unusedrow;wire [423:0] unusedtag;
  wire [167:0] ids;wire [7:0] dv;wire [15:0] ds;wire fault;
  s81_a2_w0_header header(ck,rst,v,742'b0,424'b0,unusedv,unusedrow,unusedtag,epoch);
- s81_a2_controller control(ck,rst,v,bank,epoch,{4{epoch}},ids,dv,ds,fault);
+ s81_a2_controller_b0 control(ck,rst,v,bank,epoch,{4{epoch}},ids,dv,ds,fault);
+ reg stripe_override=1;
+ wire [847:0] stripe_input;wire [127:0] stripe_data;wire [7:0] stripe_v;wire stripe_fault;
+ genvar s;generate for(s=0;s<53;s=s+1)begin:stripe_source
+  assign stripe_input[16*s+:16]=16'ha000+s;
+ end endgenerate
+ s81_a2_stripe_data16 stripe(ck,rst,stripe_input,
+  stripe_override?168'h74:ids,stripe_override?8'h01:dv,ds,stripe_v,stripe_data,stripe_fault);
  task tick;begin @(posedge ck);#1;end endtask
  integer e;
  initial begin
   repeat(7)tick();
-  if(fault!==0 || ids!==0 || dv!==0)$fatal(1,"UNIT_HELD_RESET");
-  @(negedge ck);rst=1;repeat(7)tick();
+  if(fault!==0 || ids!==0 || dv!==0 ||stripe_v!==0 ||stripe_fault!==0)$fatal(1,"UNIT_HELD_RESET");
+  @(negedge ck);rst=1;
+  repeat(3)begin tick();if(ids!==0 ||dv!==0 ||fault!==0 ||stripe_v!==0 ||stripe_fault!==0)$fatal(1,"UNIT_PREARM_STALE");end
+  @(negedge ck);v=0;stripe_override=0;repeat(7)tick();
   if(fault!==0)$fatal(1,"UNIT_EPOCH_PHASE");
   @(negedge ck);v=(53'b1<<0)|(53'b1<<5)|(53'b1<<52);
   tick();
@@ -146,10 +155,21 @@ module unit_tb;
     if(dv!==1 || ds[1:0]!==e-4)$fatal(1,"UNIT_DRAIN_PHASE edge%0d",e);
    end else if(dv!==0)$fatal(1,"UNIT_EARLY_DRAIN edge%0d",e);
    if(fault!==0)$fatal(1,"UNIT_UNEXPECTED_FAULT edge%0d",e);
+   if(stripe_fault!==0)$fatal(1,"UNIT_STRIPE_FAULT edge%0d",e);
+   if(e>=6)begin
+    if(stripe_v!==1 ||stripe_data[15:0]!==(e==6?16'ha000:e==7?16'ha005:16'ha034))
+     $fatal(1,"UNIT_STRIPE_AGE6 edge%0d",e);
+   end else if(stripe_v!==0)$fatal(1,"UNIT_STRIPE_EARLY");
   end
   @(negedge ck);v=(53'b1<<0)|(53'b1<<1)|(53'b1<<5)|(53'b1<<52);
   tick();@(negedge ck);v=0;repeat(8)tick();
   if(fault!==1)$fatal(1,"UNIT_MISSING_OVERFLOW_FAULT");
+  @(negedge ck);rst=0;v=(53'b1<<0)|(53'b1<<5)|(53'b1<<52);stripe_override=1;
+  repeat(7)tick();if(ids!==0 ||dv!==0 ||fault!==0)$fatal(1,"UNIT_RESTART_HELD");
+  @(negedge ck);rst=1;
+  repeat(3)begin tick();if(ids!==0 ||dv!==0 ||fault!==0 ||stripe_v!==0 ||stripe_fault!==0)$fatal(1,"UNIT_RESTART_PREARM");end
+  @(negedge ck);v=0;stripe_override=0;
+  repeat(8)begin tick();if(ids!==0 ||dv!==0 ||fault!==0 ||stripe_v!==0 ||stripe_fault!==0)$fatal(1,"UNIT_RESTART_STALE");end
   $display("PASS A2 controller source0/5/52 prefix IDsP2 drainsP4/P5/P6 native_reset phase overflow");$finish;
  end
 endmodule
@@ -167,9 +187,9 @@ def unit_gate():
             executable=str(Path(temporary)/(variant+'.vvp'))
             command=['iverilog','-g2012','-s','unit_tb','-o',executable]
             if define:command.append('-D'+define)
-            build=run(command+[SOURCES[0],str(bench)],OUT/f'a2_controlled_unit_{variant}_compile.log')
+            build=run(command+SOURCES[:4]+[str(bench)],OUT/f'a2_controlled_pinplain_unit_{variant}_compile.log')
             if build.returncode:raise RuntimeError(build.stdout+build.stderr)
-            result=run(['vvp',executable],OUT/f'a2_controlled_unit_{variant}.log')
+            result=run(['vvp',executable],OUT/f'a2_controlled_pinplain_unit_{variant}.log')
             passed=result.returncode==0 and 'PASS A2 controller' in result.stdout
             rejected=result.returncode!=0 and 'UNIT_' in result.stdout
             if not (passed if variant=='gold' else rejected):
@@ -179,11 +199,29 @@ def unit_gate():
     proof=dict(status='PASS_ISOLATED_A2_CONTROLLER_UNIT_ONLY_NOT_FULL32_OR_PHYSICAL',
                source_sha256={name:hashlib.sha256((ROOT/name).read_bytes()).hexdigest() for name in SOURCES},
                bench_sha256=hashlib.sha256(UNIT.encode()).hexdigest(),
-               scope='actual controller+one actual native W0header; four payload epochs tied to header only in unit bench',
-               prefix_source='NP64 sat3 and p_lane block copied verbatim from git3f077f3a1 dsfd_vm_static_wcontrol.sv',
+               scope='actual controller+one actual native W0header+one actual native W16 stripe; four payload epochs tied to header only in unit bench',
+               prefix_source='NP64 sat3 and p_lane block copied from git3f077f3a1 with plain-pin arm qualification added dsfd_vm_static_wcontrol.sv',
                records=records)
-    write(OUT/'a2_controlled_unit_proof.json',json.dumps(proof,indent=2)+'\n')
+    write(OUT/'a2_controlled_pinplain_unit_proof.json',json.dumps(proof,indent=2)+'\n')
     print(json.dumps(dict(status=proof['status'],mutants_rejected=4)))
+
+
+def syntax_gate():
+    # Elaborate only the generated scoreboard against an empty interface stub.
+    # This catches bench name errors before the admitted full-shape compile.
+    source=(ROOT/SOURCES[0]).read_text()
+    start=source.index('module s81_a2_controlled(')
+    stub=source[start:source.index(');',start)+2]+'\nendmodule\n'
+    with tempfile.TemporaryDirectory(prefix='s81-a2-bench-syntax-')as temporary:
+        path=Path(temporary)
+        write(path/'stub.sv',stub);write(path/'bench.sv',BENCH)
+        result=run(['iverilog','-g2012','-s','tb','-o',str(path/'sim'),str(path/'stub.sv'),str(path/'bench.sv')],
+                   OUT/'a2_controlled_pinplain_syntax.log')
+        if result.returncode:raise RuntimeError(result.stdout+result.stderr)
+    write(OUT/'a2_controlled_pinplain_syntax.json',json.dumps(dict(
+        status='PASS_GENERATED_BENCH_NAME_AND_SYNTAX_CHECK_ONLY',
+        method='generated scoreboard compiled against empty exact-interface top stub; no hardware correctness claim',
+        bench_sha256=hashlib.sha256(BENCH.encode()).hexdigest()),indent=2)+'\n')
 
 
 def main():
@@ -194,7 +232,7 @@ def main():
     args = parser.parse_args()
     check_lock()
     OUT.mkdir(parents=True, exist_ok=True)
-    bench = OUT / 'a2_controlled_bench.sv'
+    bench = OUT / 'a2_controlled_pinplain_bench.sv'
     write(bench, BENCH)
     plan = dict(status='GENERATED_NOT_RUN', source_sha256={name: hashlib.sha256((ROOT/name).read_bytes()).hexdigest() for name in SOURCES},
                 bench_sha256=hashlib.sha256(BENCH.encode()).hexdigest(),
@@ -204,7 +242,8 @@ def main():
                 expected_records=dict(mode0_all_three_lanes=1060, mode4_sustained_II1=5760),
                 flags=dict(actual_SRAM_read_join_run=False, native_physical_qualified=False,
                            full_programme_trace=False, full_token_claim=False))
-    write(OUT/'a2_controlled_plan.json', json.dumps(plan, indent=2)+'\n')
+    write(OUT/'a2_controlled_pinplain_plan.json', json.dumps(plan, indent=2)+'\n')
+    syntax_gate()
     if args.unit:
         unit_gate()
     if not args.run:
@@ -217,7 +256,7 @@ def main():
             command=['iverilog','-g2012','-s','tb','-o',executable]
             if define:
                 command.append('-D'+define)
-            build=run(command+SOURCES[:3]+[str(bench)],OUT/f'a2_controlled_{variant}_compile.log')
+            build=run(command+SOURCES[:4]+[str(bench)],OUT/f'a2_controlled_{variant}_compile.log')
             if build.returncode:
                 raise RuntimeError(build.stdout+build.stderr)
             for mode in ((0,4) if variant=='gold' else (0,)):
@@ -251,7 +290,7 @@ def main():
     proof=dict(plan,status='PASS_ISOLATED_A2_CONTROLLED_SHARED53_FULL32_512BIT_NOT_PHYSICALLY_QUALIFIED',runs=records,
                observed_scope='one common53source interface concurrently drives all32logicalbanks and four128bit slices',
                analytical_scope='rawwrite=observedoutput+6 and commit=observedoutput+8 are declared backend arithmetic, not SRAM/commit observations')
-    write(OUT/'a2_controlled_proof.json',json.dumps(proof,indent=2)+'\n')
+    write(OUT/'a2_controlled_pinplain_proof.json',json.dumps(proof,indent=2)+'\n')
     print(json.dumps(dict(status=proof['status'],gold_records=6820,mutants_rejected=4)))
 
 

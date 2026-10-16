@@ -45,6 +45,8 @@ receipt=dict(schema='opentallas.s81.vm-area-stripe-map.v1',kind=a.kind,top=top,p
  calibration='Enrolled DFFHQNx1 LEF1.08x0.27=0.2916um2 matcheslibertyarea0.2916; no divide16',
  benched_by='results/arch/s81_vm_area_1417/'+('benes_rail.json' if a.kind=='benes16' else ('native_id_proof.json' if a.kind.startswith('id') else ('a2_controlled_proof.json' if a.kind.startswith('a2') else 'stripe_proof.json'))))
 if a.kind=='a2faultjoin':receipt['benched_by']='results/arch/s81_vm_area_1417/fault_join_proof.json'
+elif a.kind.startswith('id') or a.kind.startswith('a2'):
+ receipt['benched_by']='results/arch/s81_vm_area_1417/a2_controlled_pinplain_proof.json'
 if r.returncode==0:
  gen=json.loads((a.out/'generic.json').read_text())['modules'][top]
  net=json.loads((a.out/'mapped.json').read_text())['modules'][top]
@@ -60,6 +62,30 @@ if r.returncode==0:
   port_bits={p:dict(direction=v['direction'],width=len(v['bits'])) for p,v in net['ports'].items()})
  receipt['total_port_bits']=sum(p['width'] for p in receipt['port_bits'].values())
  receipt['clock_root_ff_count_under15000']=receipt['mapped_ff_bits']<=15000
+ # A raw input reaching a reset AND before the first DFF was invisible to the
+ # older pin-flop selector. Explicitly classify every input bit's actual loads.
+ loads={}
+ for cname,cell in net['cells'].items():
+  for pin,bits in cell['connections'].items():
+   if cell.get('port_directions',{}).get(pin)=='output':continue
+   for bit in bits:
+    if isinstance(bit,int):loads.setdefault(bit,[]).append((cell['type'],pin,cname))
+ direct=0;unused=0;bad=[];byport={}
+ for pname,port in net['ports'].items():
+  if port['direction']!='input' or pname in ['ck','ck_control']:continue
+  counts=dict(plain_DFF_D=0,unreferenced=0,other_load=0)
+  for idx,bit in enumerate(port['bits']):
+   touched=loads.get(bit,[])
+   if not touched:unused+=1;counts['unreferenced']+=1
+   elif all('DFF' in typ and pin=='D' for typ,pin,_ in touched):direct+=1;counts['plain_DFF_D']+=1
+   else:
+    counts['other_load']+=1
+    bad.append(dict(port=pname,bit=idx,loads=touched))
+  byport[pname]=counts
+ receipt['raw_input_boundary']=dict(status='PASS_ALL_MEANINGFUL_INPUTS_PLAIN_DFF_D' if not bad else 'FAIL_INPUT_COMBINATIONAL_OR_NON_D_LOAD',
+  direct_plain_DFF_D_bits=direct,unreferenced_bits=unused,nonplain_bits=len(bad),
+  by_port=byport,first20_nonplain=bad[:20],
+  scope='Mapped connectivity only; no capture/launch timing, hold, clock insertion or physical pin-position proof')
 for name in ['input.sv','map.ys','map.log','generic.json','mapped.json','mapped.v','mapped.lib']:
  p=a.out/name
  if p.exists():receipt.setdefault('artifacts',{})[name]=hashlib.sha256(p.read_bytes()).hexdigest()
