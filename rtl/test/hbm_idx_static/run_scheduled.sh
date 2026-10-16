@@ -42,7 +42,7 @@ run(){ # tag caldir mut expect(pass|fail)
  (cd "$out/run_$tag" && "$out/obj/Vtb_idx_scheduled_static" +N="$(len "$cal")" +MUT="$mut" +EXP_KEY="$ek" +EXP_TX="$et") > "$out/run_$tag.log" 2>&1
  rc=$?
  set -e
- grep -E 'IDX_SCHEDULED_STATIC|TIMELINE|SCOREBAD|fatal|Error' "$out/run_$tag.log" | head -6 | sed "s/^/[$tag] /"
+ grep -E "IDX_SCHEDULED_STATIC|TIMELINE|SCOREBAD|TXBAD|DIAG|fatal|Error" "$out/run_$tag.log" | head -12 | sed "s/^/[$tag] /"
  if [ "$want" = pass ]; then [ "$rc" = 0 ] || { echo "RUN $tag FAILED (expected PASS)"; return 1; }
  else [ "$rc" != 0 ] || { echo "MUTANT $tag SURVIVED"; return 1; }; echo "[$tag] mutant rejected"; fi
 }

@@ -33,6 +33,12 @@ module tb_idx_scheduled_static;
  integer mutation=0,n=0,exp_key=-1,exp_tx=-1;
  integer cycle=0,errors=0,checked=0,records=0,flits=0,firstscore=-1,lastscore=-1,firsttx=-1,lasttx=-1,firstkey=-1,doneedge=-1,tstart=0;
  always @(posedge clk)cycle<=cycle+1;
+ // diagnostics: first edge of every fault source, error classes
+ integer ffirst[0:7];integer ecls[0:5];
+ wire[7:0]fsrc={dut.calendar_fault,dut.parent.vf,dut.parent.qf,|dut.parent.scf,dut.parent.sf,dut.parent.lf,dut.parent.calendar_fault,1'b0};
+ initial for(integer i=0;i<8;i=i+1)ffirst[i]=-1;
+ initial for(integer i=0;i<6;i=i+1)ecls[i]=0;
+ always @(negedge clk)for(integer i=1;i<8;i=i+1)if(fsrc[i]===1'b1&&ffirst[i]<0)ffirst[i]=cycle;
  always @* begin
   key_lines=0;
   if(key_slot)begin key_lines=keys[key_index];if(mutation==2&&key_index==128)key_lines[11]=~key_lines[11];end
@@ -51,14 +57,14 @@ module tb_idx_scheduled_static;
   end
   if(|tx_v)begin
    if(firsttx<0)firsttx=cycle;
-   if(lasttx>=0&&cycle-lasttx!=8)errors++;
+   if(lasttx>=0&&cycle-lasttx!=8)begin errors++;ecls[0]++;end
    lasttx=cycle;
    for(integer l=0;l<4;l=l+1)begin
-    if(tx[l*545+512+:16]!==16'(128+flits))errors++;flits++;
+    if(tx[l*545+512+:16]!==16'(128+flits))begin errors++;ecls[1]++;end flits++;
     for(integer r=0;r<8;r=r+1)begin
      integer id,ord;id=int'(tx[l*545+256+r*32+:32]);ord=(id/768)*8+id%8;records++;
-     if(ord>=10928)errors++;
-     else begin if(!gold[ord]||seen[ord]||tx[l*545+r*32+:32]!=={scores[ord],16'd0})errors++;seen[ord]=1;end
+     if(ord>=10928)begin errors++;ecls[2]++;end
+     else begin if(!gold[ord]||seen[ord]||tx[l*545+r*32+:32]!=={scores[ord],16'd0})begin errors++;ecls[3]++;if(ecls[3]<6)$display("TXBAD edge%0d ord%0d gold%0d seen%0d rec%h score%h",cycle-tstart,ord,gold[ord],seen[ord],tx[l*545+r*32+:32],scores[ord]);end seen[ord]=1;end
     end
    end
   end
@@ -97,7 +103,9 @@ module tb_idx_scheduled_static;
   @(negedge clk);wr=0;repeat(8)@(negedge clk);
   length=12'(n);start=1;tstart=cycle;@(negedge clk);start=0;
   repeat(n+40)@(negedge clk);
-  for(integer i=0;i<10928;i=i+1)if(gold[i]!==seen[i])errors++;
+  for(integer i=0;i<10928;i=i+1)if(gold[i]!==seen[i])begin errors++;ecls[4]++;end
+  $display("DIAG faults(first edge from start; -1 never) calendar%0d operand%0d query%0d scorer%0d selector%0d link%0d parent_cal%0d | errors spacing%0d seq%0d ord%0d record%0d missing%0d",
+   ffirst[7]<0?-1:ffirst[7]-tstart,ffirst[6]<0?-1:ffirst[6]-tstart,ffirst[5]<0?-1:ffirst[5]-tstart,ffirst[4]<0?-1:ffirst[4]-tstart,ffirst[3]<0?-1:ffirst[3]-tstart,ffirst[2]<0?-1:ffirst[2]-tstart,ffirst[1]<0?-1:ffirst[1]-tstart,ecls[0],ecls[1],ecls[2],ecls[3],ecls[4]);
   $display("IDX_SCHEDULED_STATIC N%0d mutation%0d scores%0d records%0d flits%0d errors%0d fault%0d status%0d firstkey%0d firstscore%0d lastscore%0d firsttx%0d lasttx%0d done%0d (edges from start; expected key%0d tx%0d)",
    n,mutation,checked,records,flits,errors,fault,|status,firstkey-tstart,firstscore-tstart,lastscore-tstart,firsttx-tstart,lasttx-tstart,doneedge-tstart,exp_key,exp_tx);
   if(exp_key>=0&&firstkey-tstart!=exp_key)begin errors++;$display("TIMELINE first key edge %0d != compiled %0d",firstkey-tstart,exp_key);end
