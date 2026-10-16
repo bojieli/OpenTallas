@@ -122,7 +122,11 @@ class Roadmap:
  def to_root(self,side,source,r,kind):
   target=self.rootnode[(r,kind)];q=[];dist={};prev={}
   stem=[source]
-  if side=='E' and source[0] < self.m['geo']['x_fe']:
+  if self.G.vmc_hub() and (side=='E' and source[0] < self.m['geo']['x_fe'] or side=='W' and source[0] > self.G.wide_hub()['s14w'][1]):
+   # vmc: real obstacle-avoiding route from the hub source to the nearest S14 entry of its half
+   e0=min(self.entry[side],key=lambda n:abs(n[1]-source[1]))
+   stem=self.G._vmc_route(self.m,source,side,e0,'E' if side=='W' else 'W')
+  elif side=='E' and source[0] < self.m['geo']['x_fe']:
    cy=self.G.corr_y(self.m, 'xdn' if kind=='x' else 'r0')
    sx=self.entry[side][0][0]
    stem += [(source[0],cy),(sx,cy)]
@@ -223,7 +227,10 @@ def trunks(G,m,CH,cor,starts,ga,end_spec,hub_block,bus):
    assert len(override)==2
    entry=min(entries,key=lambda n:G._mh(n,override))
    assert G._mh(entry,override)<.001,('broadcast override is not an actual S14 entry',side,override,entry)
-  if side=='E':
+  if G.vmc_hub():
+   # vmc: the PQ start block leaves at PQ height over MIX4 (W) / over the HC top (E): real obstacle-avoiding route
+   prefix=G._vmc_route(m,source,side,entry,'E' if side=='W' else 'W',skip=(st.name,))
+  elif side=='E':
    cy=G.corr_y(m,'xdn');prefix=G._dedup([source,(source[0],cy),(entry[0],cy),entry])
   elif G.wide_hub():
    # wide hub: up the W strip to the W corridor above MIX4, then W to the S14W entry
@@ -250,6 +257,16 @@ def trunks(G,m,CH,cor,starts,ga,end_spec,hub_block,bus):
   # on the same edge; one 1,102-b station (58.3 x 17.3 um) found no street spot (bind6/bind10 cxW_edge27)
   LA=[G.X0B+G.X1B+G.CCB+2] if pair else [G.LSW+2];LB=[G.X2B+2]
   def run_pair(name,path,src,forced,srcA,srcB):
+   if G.vmc_hub():
+    # Both packed lanes share one geometric route.  A's returned stops are
+    # already measured on that route; rerouting B from the old polyline would
+    # scale those stops a second time and add unpaired pipeline stages.
+    ends=tuple(n for n,x,y,w,h in G._vmc_boxes(m) for q in (path[0],path[-1],src)
+               if x-.001<=q[0]<=x+w+.001 and y-.001<=q[1]<=y+h+.001)
+    length=G._poly_len(path)
+    path=G._vmc_reroute(m,path,ends,name)
+    actual=G._poly_len(path)
+    forced=[s*actual/length if length else s for s in forced]
    sa=CH.run(name,LA,path,allowed,src,forced=forced)
    G.chain_nets(CH,name,srcA,[i for i,_,_ in sa],LA)
    tA=(sa[-1][0].name,'fo0','do0') if sa else srcA
@@ -338,6 +355,15 @@ def trunks(G,m,CH,cor,starts,ga,end_spec,hub_block,bus):
       active=flows.pop(node);par=parent[node]
       active=advance(f'{prefix}_edge{k}',[node,par],active);flows.setdefault(par,{}).update(active)
      active=flows[entry];dst=(endb.x+endb.w/2,endb.y+endb.h/2);path=[entry]
+     if G.vmc_hub():
+      # vmc: entry -> the return end block beside the gather face, real obstacle-avoiding route (E returns cross over
+      # the HC top, cross-half bundles go round the gather / PQ stack)
+      path=G._vmc_route(m,entry,'E' if side=='W' else 'W',dst,logical,skip=(endb.name,))
+      active=advance(f'{prefix}_hub',path,active)
+      for lane,r in group:
+       tail=active[lane];bus(f'{prefix}_fe{lane}','fclk',1,[(tail[0],tail[1]),(endb.name,f'fi{lane}')]);bus(f'{prefix}_de{lane}','lane',G.CRET+2,[(tail[0],tail[2]),(endb.name,f'di{lane}')])
+       m.setdefault('r_stages',{})[r]=flights[r];calendar[r].update(return_stations=flights[r],gather_input_lane=lane,return_bundle=prefix)
+      continue
      if side=='E':
       cy=G.corr_y(m,f'r{t}');vx=G.vch_x(m,f'r{t}');path +=[(entry[0],cy),(vx,cy)]
      elif G.wide_hub():
@@ -371,7 +397,7 @@ def trunks(G,m,CH,cor,starts,ga,end_spec,hub_block,bus):
      for lane,r in group:
       tail=active[lane];bus(f'{prefix}_fe{lane}','fclk',1,[(tail[0],tail[1]),(endb.name,f'fi{lane}')]);bus(f'{prefix}_de{lane}','lane',G.CRET+2,[(tail[0],tail[2]),(endb.name,f'di{lane}')])
       m.setdefault('r_stages',{})[r]=flights[r];calendar[r].update(return_stations=flights[r],gather_input_lane=lane,return_bundle=prefix)
-   G._local_chain(m,CH,([cor['s14W']]+([G.wide_return_strip(cor),cor['hub_w']] if G.wide_hub() else []) if logical=='W' else [cor['vch']]),endb,'o',ga,f'r{logical}{t}',n*(G.CRET+1)+2,f'hr_{logical}{t}_o','stream_1p2')
+   G._local_chain(m,CH,([cor['hub_w']] if G.vmc_hub() else ([cor['s14W']]+([G.wide_return_strip(cor),cor['hub_w']] if G.wide_hub() else []) if logical=='W' else [cor['vch']])),endb,'o',ga,f'r{logical}{t}',n*(G.CRET+1)+2,f'hr_{logical}{t}_o','stream_1p2')
  m['canonical_calendar']=[calendar[r] for r in sorted(calendar)]
 
 
