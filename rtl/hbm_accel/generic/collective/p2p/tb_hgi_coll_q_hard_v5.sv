@@ -50,15 +50,18 @@ module tb_hgi_coll_q_hard_v5;
  endfunction
  wire [1023:0] inj_data={512'd0,source_rd[SUL-1]?source_word(source_index[SUL-1]):512'd0};
  // hard parent: its own SU boundary (driven by its own requests) and the same stimuli 2 edges later
- localparam integer SH=3,SHP=1;  // issue path +3 (frame capture +1, uop delay +2); programme target +1
+ localparam integer SH=4,SHP=1;  // V6 issue path +4 (frame capture +1, uop delay +3); programme target +1
  reg [15:0] n_source_index[0:SUL-1];reg n_source_rd[0:SUL-1];
  always @(posedge clk)begin
   n_source_index[0]<=n_iidx[15:0];n_source_rd[0]<=n_ird[0];
   for(integer p=1;p<SUL;p=p+1)begin n_source_index[p]<=n_source_index[p-1];n_source_rd[p]<=n_source_rd[p-1];end
  end
  wire [1023:0] n_inj_data={512'd0,n_source_rd[SUL-1]?source_word(n_source_index[SUL-1]):512'd0};
- reg [NPT-1:0] rxv_d1=0,rxv_d2=0,rxv_d3=0;reg rcv_d1=0,rcv_d2=0,rcv_d3=0;
- always @(posedge clk)begin rxv_d1<=rxv;rxv_d2<=rxv_d1;rxv_d3<=rxv_d2;rcv_d1<=rcv;rcv_d2<=rcv_d1;rcv_d3<=rcv_d2;end
+ // injected die inputs reach the hard parent SH edges after the reference (its whole schedule is shifted by SH)
+ reg [NPT-1:0] rxv_h[1:SH];reg rcv_h[1:SH];
+ initial for(integer h=1;h<=SH;h=h+1)begin rxv_h[h]=0;rcv_h[h]=0;end
+ always @(posedge clk)begin rxv_h[1]<=rxv;rcv_h[1]<=rcv;for(integer h=2;h<=SH;h=h+1)begin rxv_h[h]<=rxv_h[h-1];rcv_h[h]<=rcv_h[h-1];end end
+ wire [NPT-1:0] rxv_d3=rxv_h[SH];wire rcv_d3=rcv_h[SH];
 `ifdef Q3
  ot_hfd_coll_q3_static_host_v4 #(.QID(2'(QID))) ref_q(.rst_n(rst_n),.clk_program(clk),.clk_control(clk),
   .clk_issue({4{clk}}),.clk_qslots({2{clk}}),.clk_ring({17{clk}}),.clk_reduce({33{clk}}),.clk_arg(clk),
@@ -78,11 +81,11 @@ module tb_hgi_coll_q_hard_v5;
   .pr_cw_i(280'd0),.pr_ccw_i(280'd0),.pr_cw_o(r_cw),.pr_ccw_o(r_ccw),
   .vm_rq(r_rq),.vm_rr(2056'd0),.vm_kq(r_kq),.fault(r_fault),.done(r_done2),.stat_cycles(r_cyc));
 `ifdef Q3
- ot_hfd_coll_q3_hard_v5 dut(.rst_n(rst_n),.qid(2'(QID)),.clk_program(clk),.clk_control(clk),
+ ot_hfd_coll_q3_hard_v5 dut(.rst_n(rst_n),.qid(2'(QID)),.clk_program(clk),.clk_control(clk),.clk_vmasm(clk),.clk_upipe(clk),
   .clk_issue(clk),.clk_qslots({NCKQ{clk}}),.clk_ring({17{clk}}),.clk_reduce({33{clk}}),.clk_arg(clk),
   .clk_tkm({34{clk}}),.clk_vmwrite({16{clk}}),.clk_link({15{clk}}),
 `else
- ot_hfd_coll_q2_hard_v5 dut(.rst_n(rst_n),.qid(2'(QID)),.clk_program(clk),.clk_control(clk),
+ ot_hfd_coll_q2_hard_v5 dut(.rst_n(rst_n),.qid(2'(QID)),.clk_program(clk),.clk_control(clk),.clk_vmasm(clk),.clk_upipe(clk),
   .clk_issue(clk),.clk_qslots({NCKQ{clk}}),.clk_ring({17{clk}}),.clk_reduce({33{clk}}),
   .clk_vmwrite({16{clk}}),.clk_link({10{clk}}),
 `endif

@@ -3,7 +3,7 @@
  "block": "ot_hgi_coll_ctl_v5_q2",
  "ref_tile": true,
  "owner": "Claude:H-NETLIST/COLL-CTL-1045",
- "purpose": "H-NETLIST/COLL hard_v5 q2 leaf ot_hgi_coll_ctl_v5_q2: V5 protocol leaf ot_hgi_coll_ctl_v5_core = ot_hgi_coll_iter_mul (pin capture + registered 16b partial products) + ot_hgi_coll_q_static_ctl_v5 (V4 protocol, field+partial adders only) NPT2 SOLO0 INJLAT12 (V4 protocol control). Benched by the hard_v5 q2 lockstep/fault-ABI gate vs production host_v4.",
+ "purpose": "H-NETLIST/COLL hard_v5 q2 leaf ot_hgi_coll_ctl_v5_q2: V6 protocol leaf (VM data split to ot_hgi_coll_vmasm; inst pin capture; iter_mul 16x8 partials + registered combine; +1 issue edge, SH=4). Benched by the hard_v5 lockstep/fault-ABI gate vs production host_v4.",
  "threads": 8,
  "peak_ram_gb": 32,
  "source": {
