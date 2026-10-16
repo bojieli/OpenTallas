@@ -98,8 +98,8 @@ def main():
     for base, fs in faces.items():
         (face_map['ANY'] if len(fs) > 1 else face_map[next(iter(fs))]).append(base)
     old = json.loads((ROOT / 'physical/ref_tile/hv15_dbk_cl/spec.json').read_text())
-    children = [dict(view=BANK, count=1, inst=f'L[{b}].u_bank', at=[bx[b], by[b]], orient='R0') for b in range(8)]
-    children.append(dict(view=CTLV, count=1, inst='u_control', at=list(CTRL), orient='R0'))
+    children = [dict(view=BANK, count=1, inst=f'u_dbk.L[{b}].u_bank', at=[bx[b], by[b]], orient='R0') for b in range(8)]
+    children.append(dict(view=CTLV, count=1, inst='u_dbk.u_control', at=list(CTRL), orient='R0'))
     spec = dict(old)
     spec.update(name=NAME, top='ot_hgi_dma_back_static_vp4_banks_cp',
                 sources=['rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks_cp.sv',

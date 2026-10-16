@@ -34,31 +34,31 @@ puts "REF_TILE place: [$i getName] ot_sram_1r1w_128x256_m1_r2c2 at 527.04 118.8 
 set i [ot_ref_pick $ot_ref_by ot_sram_1r1w_128x256_m1_r2c2 {u_cp.g_tab.g_w[1].u_tab}]
 $i setOrient R0; $i setLocation [expr {round(527.04 * $dbu)}] [expr {round(181.44 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] ot_sram_1r1w_128x256_m1_r2c2 at 527.04 181.44 R0"
-set i [ot_ref_pick $ot_ref_by ot_hgi_dma_back_landing_bank {L[0].u_bank}]
+set i [ot_ref_pick $ot_ref_by ot_hgi_dma_back_landing_bank {u_dbk.L[0].u_bank}]
 $i setOrient R0; $i setLocation [expr {round(23.76 * $dbu)}] [expr {round(23.76 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] ot_hgi_dma_back_landing_bank at 23.76 23.76 R0"
-set i [ot_ref_pick $ot_ref_by ot_hgi_dma_back_landing_bank {L[1].u_bank}]
+set i [ot_ref_pick $ot_ref_by ot_hgi_dma_back_landing_bank {u_dbk.L[1].u_bank}]
 $i setOrient R0; $i setLocation [expr {round(194.4 * $dbu)}] [expr {round(23.76 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] ot_hgi_dma_back_landing_bank at 194.4 23.76 R0"
-set i [ot_ref_pick $ot_ref_by ot_hgi_dma_back_landing_bank {L[2].u_bank}]
+set i [ot_ref_pick $ot_ref_by ot_hgi_dma_back_landing_bank {u_dbk.L[2].u_bank}]
 $i setOrient R0; $i setLocation [expr {round(365.04 * $dbu)}] [expr {round(23.76 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] ot_hgi_dma_back_landing_bank at 365.04 23.76 R0"
-set i [ot_ref_pick $ot_ref_by ot_hgi_dma_back_landing_bank {L[3].u_bank}]
+set i [ot_ref_pick $ot_ref_by ot_hgi_dma_back_landing_bank {u_dbk.L[3].u_bank}]
 $i setOrient R0; $i setLocation [expr {round(23.76 * $dbu)}] [expr {round(131.76 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] ot_hgi_dma_back_landing_bank at 23.76 131.76 R0"
-set i [ot_ref_pick $ot_ref_by ot_hgi_dma_back_landing_bank {L[4].u_bank}]
+set i [ot_ref_pick $ot_ref_by ot_hgi_dma_back_landing_bank {u_dbk.L[4].u_bank}]
 $i setOrient R0; $i setLocation [expr {round(365.04 * $dbu)}] [expr {round(239.76 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] ot_hgi_dma_back_landing_bank at 365.04 239.76 R0"
-set i [ot_ref_pick $ot_ref_by ot_hgi_dma_back_landing_bank {L[5].u_bank}]
+set i [ot_ref_pick $ot_ref_by ot_hgi_dma_back_landing_bank {u_dbk.L[5].u_bank}]
 $i setOrient R0; $i setLocation [expr {round(365.04 * $dbu)}] [expr {round(131.76 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] ot_hgi_dma_back_landing_bank at 365.04 131.76 R0"
-set i [ot_ref_pick $ot_ref_by ot_hgi_dma_back_landing_bank {L[6].u_bank}]
+set i [ot_ref_pick $ot_ref_by ot_hgi_dma_back_landing_bank {u_dbk.L[6].u_bank}]
 $i setOrient R0; $i setLocation [expr {round(23.76 * $dbu)}] [expr {round(239.76 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] ot_hgi_dma_back_landing_bank at 23.76 239.76 R0"
-set i [ot_ref_pick $ot_ref_by ot_hgi_dma_back_landing_bank {L[7].u_bank}]
+set i [ot_ref_pick $ot_ref_by ot_hgi_dma_back_landing_bank {u_dbk.L[7].u_bank}]
 $i setOrient R0; $i setLocation [expr {round(194.4 * $dbu)}] [expr {round(239.76 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] ot_hgi_dma_back_landing_bank at 194.4 239.76 R0"
-set i [ot_ref_pick $ot_ref_by ot_hgi_dma_back_static_vp4_controller {u_control}]
+set i [ot_ref_pick $ot_ref_by ot_hgi_dma_back_static_vp4_controller {u_dbk.u_control}]
 $i setOrient R0; $i setLocation [expr {round(265.68 * $dbu)}] [expr {round(140.4 * $dbu)}]; $i setPlacementStatus FIRM
 puts "REF_TILE place: [$i getName] ot_hgi_dma_back_static_vp4_controller at 265.68 140.4 R0"
 set nb 0; dict for {k v} $ot_ref_by { incr nb [llength $v] }
