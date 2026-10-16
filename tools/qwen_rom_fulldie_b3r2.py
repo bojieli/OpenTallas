@@ -1112,6 +1112,7 @@ def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=50
             if os.environ.get('OT_SPLIT_B2', '0') == '1':
                 from qwen_split.b2_graph import apply as apply_b2_graph
                 apply_b2_graph(v, m)
+            _late_pin_grant(v)
             _relays(v, m, relay_pitch)
         finally:
             v.CORR = _corr0
@@ -1193,6 +1194,90 @@ SU_VM_Q_BITS = 3 * 64 * 32                                        # 6,144 VM -> 
 SU_VM_ABUT_TOL_UM = 0.05                                          # the generator's SHAVE gap (0.024 um) + rounding
 
 
+def _late_pin_grant(v):
+    """'late_masters' of OT_SPLIT_PIN_GRANT (Q-DIEPLAN2r q2o2): exact per-bit pins (face, positions, layers) for UNCLOSED
+    masters that later passes draw (b2's VM qfd_sp_vector_memory_b2_*: its seq_su-facing svr / svw drop straight
+    under seq_su). Installed as the outermost master pass before the relays; fails closed."""
+    gp = os.environ.get('OT_SPLIT_PIN_GRANT', '').strip()
+    late = json.loads(Path(gp).read_text()).get('late_masters', {}) if gp else {}
+    if not late:
+        return
+    base = v.masters
+
+    def masters(model, k=1, port_bits=None):
+        out = base(model, k, port_bits)
+        for mname, ports in late.items():
+            M_ = out.get(mname)
+            if M_ is None:
+                raise ValueError(f'OT_SPLIT_PIN_GRANT late_masters: master {mname} not on this die')
+            vpl = getattr(M_, 'view_pin_layers', None) or {}
+            for pn, g in ports.items():
+                sp = M_.ports.get(pn)
+                if sp is None or sp[0] not in ('face', 'pins') or len(g['positions']) != sp[1]:
+                    raise ValueError(f'OT_SPLIT_PIN_GRANT late_masters: {mname}.{pn} is not a {len(g["positions"])}-bit face group')
+                f = g['face']
+                pos = [round(float(z), 4) for z in g['positions']]
+                lays = list(g['layers'])
+                if min(pos) < 0.1 or max(pos) > (M_.h if f in 'WE' else M_.w) - 0.1:
+                    raise ValueError(f'OT_SPLIT_PIN_GRANT late_masters: {mname}.{pn} outside its {f} face')
+                M_.ports[pn] = ('pins', sp[1], f, max(set(lays), key=lays.count), pos, 1)
+                if len(set(lays)) > 1:
+                    vpl[pn] = lays
+                else:
+                    vpl.pop(pn, None)
+            M_.view_pin_layers = vpl
+        return out
+    v.masters = masters
+
+
+def _su_vm_kit_seam(v, model, out, s, q, off, vm_face):
+    """SU va / vq from the kit plan, VM sa / sq mirrored onto the VM face; port_join fragments with exact rects."""
+    plan = s.kit_plan
+    su_face = 'S' if vm_face == 'N' else 'N'
+    for M_, pairs, dx, f in ((s, (('va', 'va'), ('vq', 'vq')), 0.0, su_face),
+                             (q, (('sa', 'va'), ('sq', 'vq')), off, vm_face)):
+        vpl = getattr(M_, 'view_pin_layers', None) or {}
+        for pn, kn in pairs:
+            r = plan[kn]
+            if r['face'] != su_face:
+                raise ValueError(f'su_vm kit seam: kit {kn} on face {r["face"]}, not {su_face}')
+            xs = [round(float(x) + dx, 4) for x, _, _ in r['positions_xy_um']]
+            lays = [L for _, _, L in r['positions_xy_um']]
+            if max(xs) > M_.w - 0.1 or min(xs) < 0.1:
+                raise ValueError(f'su_vm kit seam: {M_.name}.{pn} kit pins outside its {f} face')
+            M_.ports.pop(pn, None)
+            if pn in M_.order:
+                M_.order.remove(pn)
+            M_.ports[pn] = ('pins', len(xs), f, max(set(lays), key=lays.count), xs, 1)
+            M_.order.append(pn)
+            vpl[pn] = lays
+        M_.view_pin_layers = vpl
+        aliases = {a_: rb_ for a_, rb_ in model.get('port_join', {}).get(M_.name, {}).items()
+                   if rb_[0] in M_.ports and rb_[0] in dict(pairs)}
+        if aliases:
+            for a_ in aliases:
+                M_.ports.pop(a_, None)
+                if a_ in M_.order:
+                    M_.order.remove(a_)
+            rects = v.pin_rects(M_, 1, {p_: sp_[1] for p_, sp_ in M_.ports.items()})
+            pts = {}
+            for nm, L, r in rects:
+                base_, _, bit = nm.partition('[')
+                pts[(base_, int(bit[:-1]) if bit else 0)] = (L, tuple(r))
+            for real in {rb_[0] for rb_ in aliases.values()}:
+                M_.ports.pop(real)
+                M_.order.remove(real)
+            if not hasattr(M_, 'assigned_fragment_rects'):
+                M_.assigned_fragment_rects = {}
+            for a_, (real, idx) in aliases.items():
+                ex = [pts[(real, i)] for i in idx]
+                lays_ = [L for L, _ in ex]
+                M_.ports[a_] = ('xy', len(ex), max(set(lays_), key=lays_.count),
+                                [((r[0] + r[2]) / 2, (r[1] + r[3]) / 2) for _, r in ex], 1)
+                M_.assigned_fragment_rects[a_] = ex
+                M_.order.append(a_)
+
+
 def _su_vm_bus(v, m, a_bits=None, q_bits=None):
     SU_VM_A_BITS = a_bits if a_bits is not None else globals()['SU_VM_A_BITS']   # noqa: N806
     SU_VM_Q_BITS = q_bits if q_bits is not None else globals()['SU_VM_Q_BITS']   # noqa: N806
@@ -1230,7 +1315,15 @@ def _su_vm_bus(v, m, a_bits=None, q_bits=None):
 
     def masters(model, k=1, port_bits=None):
         out = base(model, k, port_bits)
-        s, q = out['qfd_sp_su64_sfu'], (out.get('qfd_sp_vector_memory_par') or out['qfd_sp_vector_memory'])
+        s = out['qfd_sp_su64_sfu']
+        if getattr(s, 'kit_plan', None) is not None:
+            # Q-DIEPLAN2r 2026-10-16 (q2o2): the SU is drawn on its hardened kit's exact pins (OT_SPLIT_PIN_GRANT
+            # assigned_pins); the abutted VM takes the mirror of the kit's va / vq pins (same x + off, same layer per
+            # bit) on whatever VM master the instance carries now (b2: qfd_sp_vector_memory_b2_*): every bit faces its
+            # peer, jog 0.  Fragments (port_join) of either side take exact per-bit rectangles.
+            _su_vm_kit_seam(v, model, out, s, out[vm.master], off, 'N' if north else 'S')
+            return out
+        q = out.get('qfd_sp_vector_memory_par') or out['qfd_sp_vector_memory']
         if model.get('native_control_contract'):
             # Native controller retired the legacy VM request/ready service.
             # These are unbound abstract pins, not a reusable physical view.
@@ -1837,6 +1930,25 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
     words (<= 350 um) and the DFI (417 um, HBM PHY interface timing, priced by the controller)."""
     if _os_r.environ.get('OT_RELAY_SKIP') == '1':     # smoke runs only (masters / pins / die.v without the relay plan)
         m['r21_relays'] = dict(skipped=True)
+        if _os_r.environ.get('OT_RELAY_CLOCK_PROBE') == '1' and (TP8 or {}).get('split') == 'compute':
+            # Q-DIEPLAN2r: every bus a relay could take the serial_0p9 domain on (first non-cdc endpoint), resolved
+            # the way the FULL relay plan resolves it, so a missing relay clock is found in seconds, not after a GEN
+            from qwen_split.relay_clock import assigned_clock, collective_core_clock
+            by_ = {i.name: i for i in m['insts']}
+            ok_, bad_ = {}, {}
+            for bid, cl, bits, eps in m['buses']:
+                if cl in ('clock_trunk', 'reset', 'link_spine', 'link_channel') or len(eps) < 2:
+                    continue
+                dom = next((by_[x].domain for x, _ in eps if x in by_ and by_[x].domain != 'cdc'), 'stream_1p2')
+                if dom != 'serial_0p9' or assigned_clock(m, bid, cl) is not None:
+                    continue
+                try:
+                    ok_[bid] = collective_core_clock(m, bid, cl, eps)
+                except ValueError as e:
+                    bad_[bid] = str(e)
+            m['r21_relays']['clock_probe'] = dict(serial_buses=len(ok_) + len(bad_), resolved=ok_, unresolved=bad_)
+            print(f'OT_RELAY_CLOCK_PROBE serial buses {len(ok_) + len(bad_)} resolved {len(ok_)} unresolved {len(bad_)} '
+                  f'{sorted(bad_)[:8]}', flush=True)
         return
     import bisect
     RMAX = max(RELAY_MAX_UM, pitch)   # a wire is relayed only when longer than the relay pitch
