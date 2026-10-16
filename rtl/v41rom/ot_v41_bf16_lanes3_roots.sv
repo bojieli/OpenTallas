@@ -95,42 +95,19 @@ module ot_v41_bf16_lanes3_roots #(
     wire [31:0] cs [0:15];
     wire [TRW:0] ct [0:15];
     genvar l;
-    generate for (l = 0; l < 16; l = l + 1) begin : g_l
-        // lane tile: local gated clock lclk / reset lrst; the lane's own boundary registers (16-bit word and x slices,
-        // valid copy) are the lane's local operand registers
-        wire lclk, lrst;
-`ifdef BF_ROOT_MUTANT_STOP
-        wire lane_fclk=l<4 ? 1'b0 : leaf_clk[l/4];
-`else
-        wire lane_fclk=leaf_clk[l/4];
-`endif
-`ifdef TCG_MUTANT_EN
-        // negative control: lane 3's tile enable copy loads the wrong function (go-only), so lane 3 misses edges
-        ot_v41_tile_clk u_tl (.fclk(lane_fclk), .rst_pin(rst_pin), .ze_d(l == 3 ? 1'b0 : ze_d), .gclk(lclk), .rst_n(lrst));
-`else
-        ot_v41_tile_clk u_tl (.fclk(lane_fclk), .rst_pin(rst_pin), .ze_d(ze_d), .gclk(lclk), .rst_n(lrst));
-`endif
-        reg [15:0] w_r, x_r;
-        reg        v_r;
-        always @(posedge lclk or negedge lrst) if (!lrst) v_r <= 1'b0; else v_r <= v_s;
-        always @(posedge lclk) begin w_r <= w_s[16*l +: 16]; x_r <= x_s[16*l +: 16]; end
-        ot_v41_bmul2_rne_prepare #(.GRADUAL_RNE(GRADUAL_RNE), .XS(RC != 0 ? 1 : 0)) u_m (.clk(lclk), .rst_n(lrst), .v(v_r), .a({w_r, 16'd0}), .b({x_r, 16'd0}),
-                         .y(prod[l]), .fault(pf[l]));
-        reg [PL-1:0] vp;
-        always @(posedge lclk or negedge lrst) if (!lrst) vp <= '0; else vp <= {vp[PL-2:0], v_r};
-        assign pv[l] = vp[PL-1];
-        if (RC >= 2) begin : g_cu
-        ot_v41_chain2u2 #(.NCH(NCHB), .TW(TRW + 1), .CUT(CUT)) u_c (.clk(lclk), .rst_n(lrst), .v(pv[l]),
-            .slot(t_p[TW-1 -: HW]), .first(t_p[TRW+2]), .last(t_p[TRW+1]), .term(prod[l]), .term_f(pf[l]),
-            .tag(t_p[TRW:0]), .ov(cv[l]), .osum(cs[l]), .of(cf[l]), .otag(ct[l]), .fault(cfault[l]));
-        end else if (RC != 0) begin : g_c4
-        ot_v41_chain4 #(.PD(1), .ND(4), .NCH(NCHB), .TW(TRW + 1), .CUT(CUT)) u_c (.clk(lclk), .rst_n(lrst), .v(pv[l]),
-            .slot(t_p[TW-1 -: HW]), .first(t_p[TRW+2]), .last(t_p[TRW+1]), .term(prod[l]), .term_f(pf[l]),
-            .tag(t_p[TRW:0]), .ov(cv[l]), .osum(cs[l]), .of(cf[l]), .otag(ct[l]), .fault(cfault[l]));
-        end else begin : g_c2
-        ot_v41_chain2 #(.NCH(NCHB), .TW(TRW + 1), .CUT(CUT)) u_c (.clk(lclk), .rst_n(lrst), .v(pv[l]),
-            .slot(t_p[TW-1 -: HW]), .first(t_p[TRW+2]), .last(t_p[TRW+1]), .term(prod[l]), .term_f(pf[l]),
-            .tag(t_p[TRW:0]), .ov(cv[l]), .osum(cs[l]), .of(cf[l]), .otag(ct[l]), .fault(cfault[l]));
+    generate for (genvar g=0;g<4;g++) begin : g_group
+        wire [3:0] cv_g,cf_g,fault_g;
+        wire [127:0] cs_g;
+        wire [4*(TRW+1)-1:0] ct_g;
+        ot_v41_bf_lane4 #(.NCHB(NCHB),.TRW(TRW),.CUT(CUT),
+            .GRADUAL_RNE(GRADUAL_RNE),.RC(RC),.GROUP(g)) u_lane4
+            (.fclk(leaf_clk[g]),.rst_pin(rst_pin),.ze_d(ze_d),.v_s(v_s),
+             .w_s(w_s[64*g +: 64]),.x_s(x_s[64*g +: 64]),.t_p(t_p),
+             .cv(cv_g),.cf(cf_g),.cfault(fault_g),.cs_p(cs_g),.ct_p(ct_g));
+        for (genvar j=0;j<4;j++) begin : g_out
+            assign cv[4*g+j]=cv_g[j];assign cf[4*g+j]=cf_g[j];
+            assign cfault[4*g+j]=fault_g[j];assign cs[4*g+j]=cs_g[32*j +: 32];
+            assign ct[4*g+j]=ct_g[(TRW+1)*j +: TRW+1];
         end
     end endgenerate
     // 4-level pairwise tree over the 16 chunk sums (all lanes emit in the same cycle)
