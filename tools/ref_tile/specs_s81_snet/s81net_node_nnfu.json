@@ -44,14 +44,14 @@
   "pin_v": "M3 M5",
   "m5_pg_pitch": 2.7
  },
- "structural_change": "S-NET static return node dsfd_node_NNfu (1265 die instances): the ot_v41_retn_w17w10 wrapper (D=64 x 2 queues, WAIT-timeout forwarding, older-side-first / yield-to-add arbitration) is replaced by ot_s81_retn_static (owner static-schedule rule 10-14 18:59): sibling window WIN=2, every output at edge early+WIN+8, no queue/timeout/priority/ready; compiler model tools/s81/static_return_calendar.py; same die ports and leaf packing; RTL = the case glue module rendered by the generator (module sha256 522398fdc557ced9, glue db43fe8fec3ba6e8); pins at the generator centres (gen19b).",
+ "structural_change": "S-NET static return node dsfd_node_NNfu (1265 die instances): the ot_v41_retn_w17w10 wrapper (D=64 x 2 queues, WAIT-timeout forwarding, older-side-first / yield-to-add arbitration) is replaced by ot_s81_retn_static (owner static-schedule rule 10-14 18:59): sibling window WIN=2, every output at edge early+WIN+8, no queue/timeout/priority/ready; compiler model tools/s81/static_return_calendar.py; same die ports and leaf packing; RTL = the case glue module rendered by the generator (module sha256 522398fdc557ced9, glue db43fe8fec3ba6e8); pins at the generator centres (gen19b). | n5 (2026-10-15 17:40): n2 routes TT -798/-801/-2034 ps (port -> norm -> sibling match -> parent norm -> adder stage 1, depth 1,615 ps) -> ot_s81_retn_static r2: P1 port register, P2 normalised-tag register, P3 issue register, parent norm moved to the side-band output; uniform +3 edges (exit = early + WIN + 10 + RST, static_return_calendar.py PIPE_C = 10)",
  "reroute_reason": {
   "kind": "rtl_change"
  },
  "job": {
   "owner": "Claude:s81-net",
   "branch": "claude/el1015-s81-net-static",
-  "tag": "n2",
+  "tag": "n5",
   "purpose": "S81 S-NET static-schedule redesign: dsfd_node_NNfu (1265 replicas, hardened once): exact bench + observed failing mutants; recipe 2, M5 cap, generator pins",
   "views_to": "physical/ref_tile/s81net_node_nnfu/views",
   "record_to": "results/rtl/ref_tile/s81net_node_nnfu",
