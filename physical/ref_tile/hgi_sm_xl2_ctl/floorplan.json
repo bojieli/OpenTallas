@@ -6,14 +6,14 @@
  "die": [
   0,
   0,
-  432.0,
-  237.6
+  345.6,
+  345.6
  ],
  "core": [
   2.16,
   2.16,
-  429.84,
-  235.44
+  343.44,
+  343.44
  ],
  "why": "spec outline",
  "std_area_um2": null,
@@ -29,24 +29,6 @@
   "cap_basis": "contract"
  },
  "pins": {
-  "W": [
-   "rr",
-   "rq"
-  ],
-  "E": [
-   "xw_en",
-   "xw_last",
-   "xw_addr",
-   "xw_grp",
-   "xw_data",
-   "r_wsel",
-   "zlo",
-   "zhi",
-   "ea",
-   "eb2",
-   "lane_en",
-   "bq_d"
-  ],
   "N": [
    "clk",
    "rst_n",
@@ -61,24 +43,42 @@
    "x_busy",
    "x_done",
    "x_fault",
+   "xw_en",
+   "xw_last",
+   "xw_addr",
+   "xw_grp",
+   "xw_data"
+  ],
+  "S": [
+   "r_wsel",
+   "zlo",
+   "zhi",
+   "ea",
+   "eb2",
+   "lane_en",
+   "bq_d"
+  ],
+  "E": [
    "rn_o",
-   "l_d_o",
    "qv_lo",
    "qv_hi",
    "qo_lo",
    "qo_hi",
    "qf_lo",
-   "qf_hi"
+   "qf_hi",
+   "l_d_o",
+   "rwq"
   ],
-  "S": [
+  "W": [
+   "rr",
+   "rq",
    "c_d",
    "c_wce",
    "c_mhi",
    "c_mlo",
    "c_wa",
    "r_ce",
-   "r_a",
-   "rwq"
+   "r_a"
   ]
  },
  "clock_port": "clk",
