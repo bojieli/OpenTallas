@@ -1,0 +1,14 @@
+{
+ "run": "lane coverage v2: E4 unit oth-ubuntu-2027404-1792182969, /srv/opentallas-scratch/claude/q-b2-integ-1016/lane_cov2 (Codex 1246 159-file snapshot hardlinked + generator rmax ops; tb sha 932a4ff6...; compiled source manifest source.sha256)",
+ "baseline": "PASS b2 lane route equivalence REF==DUT rq_beats2352 am33396 mx4 distinct2351 (SEL3, all other routes 0); eight uppers valid/nonzero/used 768 each; 23 ops back-to-back, one reset",
+ "negative_controls": {
+  "TC+1": "REJECTED (rq mismatch h0..h2 beat0)",
+  "AM+1": "REJECTED (scalar argmax events)",
+  "HL+1": "REJECTED (rq mismatch)",
+  "SEL+1 (SEL4)": "NOT rejected"
+ },
+ "selector_age_sweep": {"pass": [0, 1, 2, 3, 4, 5, 6, 7], "fail": [8, 10, 12, 16, 20, 23],
+  "law": "selector select lines are quasi-static per op: results are identical for any DUT selector age 0..7 edges (REF 3); 8+ edges corrupt rq/am (select changes after the op's first words). The selector is therefore NOT an exact-phase path in this bench protocol (idle drain between ops): the phase protocol must treat it as a window constraint age <= 7, and a SEL negative control must use >= +5 (SEL8), not +1.",
+  "caveat": "window measured with the bench's full idle drain between ops; a compiler calendar that issues the next op before drain can shrink it -- re-measure on the actual allocator-age temporal gate"},
+ "status": "BASELINE PASS + TC/AM/HL negatives rejected; actual allocator-age gate pending the b2 allocation (owner_a 739418 / owner-2 trial_o2)"
+}
