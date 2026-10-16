@@ -12,16 +12,16 @@ def encode_program(rows,stage,phase):
     if not 1<len(rows)<=128:
         raise ValueError('nonempty native calendar plus END must fit128 rows')
     end=[r for r in rows if r['engine']==15];kit=[r for r in rows if r['engine']==14]
-    commands=[r for r in rows if r['engine']<13]
+    commands=[r for r in rows if r['engine']<14]
     if len(end)!=1 or len(kit)>1 or not commands:
         raise ValueError('one END, at most one KIT and actual commands required')
     slots=set();done_slots=set()
     for r in rows:
         if any(type(r[k])is not int or r[k]<0 for k in ('engine','arg','issue','done')):
             raise ValueError('integer native calendar fields required')
-        if r['engine'] not in list(range(13))+[14,15] or r['arg']>=1<<24 or max(r['issue'],r['done'])>=1<<24:
+        if r['engine'] not in list(range(16)) or r['arg']>=1<<24 or max(r['issue'],r['done'])>=1<<24:
             raise ValueError('calendar field exceeds actual native width')
-        if r['engine']<13:
+        if r['engine']<14:
             # Rows may carry the owner's measured command-pin -> done-pin latency;
             # the done row must then be exactly issue + 1 + latency (every engine).
             if 'pin_to_pin' in r and r['done']!=issuer_done_row(r['issue'],r['pin_to_pin']):
@@ -59,7 +59,7 @@ def validate_launches(rows,launches):
         if j>=2 and t<=launches[j-2]+end:
             raise ValueError('compiler launch overwrites a live physical context')
         for r in rows:
-            if r['engine']<13:
+            if r['engine']<14:
                 for occupied,key in [(issue,(t+r['issue'],r['engine'])),(done,(t+r['done'],r['engine']))]:
                     if key in occupied:raise ValueError('cross-context native pin event collision')
                     occupied.add(key)

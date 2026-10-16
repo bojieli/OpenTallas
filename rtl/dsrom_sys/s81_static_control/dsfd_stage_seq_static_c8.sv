@@ -23,7 +23,7 @@ module dsfd_stage_seq_static_c8 #(parameter integer NOPS=128,STAGE=0)(
  dsfd_stage_seq_static_c #(.NOPS(NOPS),.STAGE(STAGE),.ENG_PRESENT(PRESENT))u_s(
   .ckv(ckv),.rsv(rsv),.ck(ck),.rst(rst),.f_ks(f_ks),.t_kd(t_kd),.f_pw(f_pw),.f_plen(f_plen),.t_st(t_st),
   .c0(c0),.c1(c1),.c2(c2),.c3(c3),.c4(c4),.c5(c5),.c6(c6),.c7(c7),.c8(c8_nc),.c9(c9_nc),.c10(c10_nc),.c11(c11_nc),.c12(c12),
-  .d0(d0),.d1(d1),.d2(d2),.d3(d3),.d4(d4),.d5(d5),.d6(d6),.d7(d7),.d8(9'd0),.d9(9'd0),.d10(9'd0),.d11(9'd0),.d12(d12),
-  .s0(s0),.s1(s1),.s2(s2),.s3(s3),.s4(s4),.s5(s5),.s6(s6),.s7(s7),.s8(2'd0),.s9(2'd0),.s10(2'd0),.s11(2'd0),.s12(s12));
+  .d0(d0),.d1(d1),.d2(d2),.d3(d3),.d4(d4),.d5(d5),.d6(d6),.d7(d7),.d8(9'd0),.d9(9'd0),.d10(9'd0),.d11(9'd0),.d12(d12),.d13(9'd0),
+  .s0(s0),.s1(s1),.s2(s2),.s3(s3),.s4(s4),.s5(s5),.s6(s6),.s7(s7),.s8(2'd0),.s9(2'd0),.s10(2'd0),.s11(2'd0),.s12(s12),.s13(2'd0));
 endmodule
 `default_nettype wire

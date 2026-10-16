@@ -23,7 +23,6 @@
    "bank_read_en",
    "bank_read_slot",
    "bank_write_slot",
-   "bank_write_en",
    "bank_output_en",
    "bank_read_addr",
    "rr_valid_i"
@@ -62,10 +61,10 @@
   "hold_margin_ns": 0.03
  },
  "job": {
-  "owner": "Claude:HBM-V15-HARDEN",
-  "branch": "codex/hbm-hardening-1103",
-  "tag": "c1",
-  "purpose": "DMA STORE back DESC_LAT4 controller leaf STK=0 (structural successor: cursor -827 ps, vp -412 ps; this gate -59 ps placement-RC, clock 142.5/18.6 ps): measure the routed timing; parent hb_dbk = controller + 8 bank leaves requested from H-DIE.",
+  "owner": "Claude:H-HARDEN",
+  "branch": "claude/hbm-harden-1705",
+  "tag": "rm1",
+  "purpose": "DMA STORE back DESC_LAT4 controller leaf STK=0, registered schedule matches (H-HARDEN r4): native1 route TT -67.54 ps (cycle_q -> next_drain 32-bit compare in front of the drain enables), precompare gate -59.9 (next_issue; drain_chunk_hbm 17 levels). Issue/drain/pre-drain/fill/end events are now 1-bit registers computed one edge ahead from the captured cycle and pre-offset target copies; acceptance range/lead/lag terms registered one edge early from the same operands; landed counter replaced by remaining-count compare; wb_ready pin-captured (+1 exceptional fault edge); bank_write_en output removed (banks capture the raw response valid), bank_write_slot = expect_tag[7]. 0 normal cycles; vp4 lockstep vs cursor 31 cases/1921 checks/6790 beats + actual 32VM/128SRAM production + 3 mutants + 26 reset/fault + wb_ready +1 edge with mutant.",
   "extra_paths": [
    "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
@@ -76,6 +75,16 @@
   ],
   "record_to": "results/rtl/ref_tile/hv15_dbk_vp4_ctl_stk0",
   "benches": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hgi_dma_back_static_vp4_controller #(.STK(0)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks.sv rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
    {
     "name": "exact",
     "cmd": "bash tools/hbm_v15_harden/bench_dma_vp4_banks.sh {RUN}/bench/exact 0",
@@ -107,11 +116,63 @@
     "needs": [
      "iverilog"
     ]
+   },
+   {
+    "name": "landing_address_mutant",
+    "cmd": "bash tools/hbm_v15_harden/bench_dma_vp4_banks.sh {RUN}/bench/mut3 3",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 8,
+    "needs": [
+     "iverilog"
+    ],
+    "fail_regex": "write beat mismatch"
+   },
+   {
+    "name": "native_fault_reset",
+    "cmd": "bash tools/hbm_v15_harden/bench_dma_vp4_native_fault.sh {RUN}/bench/native_fault",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "DMA_NATIVE_FAULT_PASS",
+    "min_count_regex": "checks=(\\d+)"
+   },
+   {
+    "name": "wbready_fault",
+    "cmd": "bash tools/hbm_v15_harden/bench_dma_vp4_wbready_fault.sh {RUN}/bench/wb 0",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ],
+    "pass_regex": "DMA_WBREADY_FAULT_PASS",
+    "min_count_regex": "checks=(\\d+)"
+   },
+   {
+    "name": "wbready_fault_mutant",
+    "cmd": "bash tools/hbm_v15_harden/bench_dma_vp4_wbready_fault.sh {RUN}/bench/wbm 1",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
    }
-  ]
+  ],
+  "merge_target": "main"
  },
  "params": {
   "STK": 0
  },
- "std_area_um2": 2600
+ "std_area_um2": 2100,
+ "structural_change": "Absolute-cycle compares (issue/drain/pre-drain/fill/end) moved one edge ahead into 1-bit match registers fed by the captured cycle and pre-offset target registers (exact under the checked cycle+1 contract); acceptance checks registered from stage-b operands; remaining-landing counter; wb_ready pin flop; bank write enable taken by the banks from the raw response valid. 0 normal cycles, identical issue/drain/data/fence edges.",
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "source": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks.sv",
+  "why_route": "native1 routed TT -67.54 ps on the 32-bit cycle compare feeding the drain enables; registered match restructure removes it; fresh source-bound CTS gate + actual native audit required."
+ }
 }
