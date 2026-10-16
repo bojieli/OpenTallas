@@ -47,6 +47,7 @@ class Sites:
         self.g, self.W, self.H = grid, W, H
         self.nx, self.ny = int(W / XPITCH), int(H / YPITCH)
         self.occ = set(taken)
+        self._search = None
 
     def legal(self, ix, iy):
         x, y = ix * XPITCH, iy * YPITCH
@@ -62,16 +63,26 @@ class Sites:
     def take(self, x0, y0):
         import heapq
         s = (min(self.nx - 1, max(0, round(x0 / XPITCH))), min(self.ny - 1, max(0, round(y0 / YPITCH))))
-        q, seen = [(0.0, s)], {s}
+        # Trim pads arrive consecutively at the same leaf coordinate. Resume
+        # that search rather than revisiting every pad already placed there.
+        # Keep only the last origin, so unique tree-buffer origins do not retain
+        # one frontier each. Obstacles are fixed and occupancy only increases.
+        key = (x0, y0)
+        if self._search is None or self._search[0] != key:
+            self._search = (key, [(0.0, s)], {s})
+        _, q, seen = self._search
         while q:
             _, (ix, iy) = heapq.heappop(q)
-            if self.legal(ix, iy):
-                self.occ.add((ix, iy))
-                return round(ix * XPITCH, 3), round(iy * YPITCH, 3)
+            available = self.legal(ix, iy)
+            # Expand the chosen site too: on a restarted search it is occupied,
+            # and its neighbours must still participate in the next choice.
             for n in ((ix - 1, iy), (ix + 1, iy), (ix, iy - 1), (ix, iy + 1)):
                 if 0 <= n[0] < self.nx and 0 <= n[1] < self.ny and n not in seen:
                     seen.add(n)
                     heapq.heappush(q, (abs(n[0] * XPITCH - x0) + abs(n[1] * YPITCH - y0), n))
+            if available:
+                self.occ.add((ix, iy))
+                return round(ix * XPITCH, 3), round(iy * YPITCH, 3)
         raise ValueError(f'no legal clock site near {x0},{y0}')
 
 
