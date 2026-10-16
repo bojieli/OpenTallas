@@ -263,5 +263,8 @@
   "ck_ctrl",
   "ck_out_lo",
   "ck_out_hi"
- ]
+ ],
+ "fill_reason": {
+  "pin_bound": "Die-assigned QVM row-bank slot 371.52x224.64 (ne3 outline and pin faces, bound by Q-VMWB qfd_sp_vector_memory_par NATIVE_BANKS=1 as the 64 row banks) is set by the 1,136-pin interface, not area: W 571 pins over 145.7/224.6 um (65%), E 532 q pins over 102.3/224.6 um (46%); 2x 256x256 SRAM + 4 data256 leaves. ne5 removes 3 hard leaves (u_ctrl, u_out_lo/hi) into 548 parent pin flops (512 q + 36 control), so fill drops 0.29->0.24 at the unchanged slot; trial GRT overflow 0."
+ }
 }
