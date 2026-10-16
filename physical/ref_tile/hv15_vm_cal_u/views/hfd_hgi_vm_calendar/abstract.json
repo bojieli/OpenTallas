@@ -1,0 +1,195 @@
+{
+  "name": "hfd_hgi_vm_calendar",
+  "orfs_dir": "/srv/opentallas/claude/closure-loop/hv15_vm_cal_u-compact2330-24eeb93bb/routes/hv15_vm_cal_u_compact2330_24eeb93bb/work/orfs",
+  "corners": {
+    "ss": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max -1.1570300273433531e-10 min 6.305173050336066e-11",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hv15_vm_cal_u-compact2330-24eeb93bb/routes/hv15_vm_cal_u_compact2330_24eeb93bb/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hv15_vm_cal_u-compact2330-24eeb93bb/record/views/hfd_hgi_vm_calendar:/out",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hv15_vm_cal_u-compact2330-24eeb93bb/src/physical/ref_tile/hv15_vm_cal_u/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hv15_vm_cal_u-compact2330-24eeb93bb/routes/hv15_vm_cal_u_compact2330_24eeb93bb/work/orfs:/work:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hv15_vm_cal_u-compact2330-24eeb93bb/src:/src:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hv15_vm_cal_u-compact2330-24eeb93bb/cl/routed_ioref.a1_meas:/meas:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hv15_vm_cal_u-compact2330-24eeb93bb/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ss.tcl"
+      ]
+    },
+    "ff": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max 2.8667984652841483e-10 min 1.4271916981556387e-11",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hv15_vm_cal_u-compact2330-24eeb93bb/routes/hv15_vm_cal_u_compact2330_24eeb93bb/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hv15_vm_cal_u-compact2330-24eeb93bb/record/views/hfd_hgi_vm_calendar:/out",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hv15_vm_cal_u-compact2330-24eeb93bb/src/physical/ref_tile/hv15_vm_cal_u/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hv15_vm_cal_u-compact2330-24eeb93bb/routes/hv15_vm_cal_u_compact2330_24eeb93bb/work/orfs:/work:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hv15_vm_cal_u-compact2330-24eeb93bb/src:/src:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hv15_vm_cal_u-compact2330-24eeb93bb/cl/routed_ioref.a1_meas:/meas:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hv15_vm_cal_u-compact2330-24eeb93bb/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_ff.tcl"
+      ]
+    },
+    "tt": {
+      "returncode": 0,
+      "done": true,
+      "ws": "OT_WS max 1.4262907521711554e-10 min 4.939837427997418e-11",
+      "image": "openroad/orfs:latest",
+      "command": [
+        "docker",
+        "run",
+        "--rm",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hv15_vm_cal_u-compact2330-24eeb93bb/routes/hv15_vm_cal_u_compact2330_24eeb93bb/work/orfs:/in:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hv15_vm_cal_u-compact2330-24eeb93bb/record/views/hfd_hgi_vm_calendar:/out",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hv15_vm_cal_u-compact2330-24eeb93bb/src/physical/ref_tile/hv15_vm_cal_u/signoff.sdc:/interface.sdc:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hv15_vm_cal_u-compact2330-24eeb93bb/routes/hv15_vm_cal_u_compact2330_24eeb93bb/work/orfs:/work:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hv15_vm_cal_u-compact2330-24eeb93bb/src:/src:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hv15_vm_cal_u-compact2330-24eeb93bb/cl/routed_ioref.a1_meas:/meas:ro",
+        "-v",
+        "/srv/opentallas/claude/closure-loop/hv15_vm_cal_u-compact2330-24eeb93bb/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2:/mv0:ro",
+        "openroad/orfs:latest",
+        "/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad",
+        "-no_init",
+        "-exit",
+        "/out/export_tt.tcl"
+      ]
+    }
+  },
+  "interface_sdc": {
+    "path": "/srv/opentallas/claude/closure-loop/hv15_vm_cal_u-compact2330-24eeb93bb/src/physical/ref_tile/hv15_vm_cal_u/signoff.sdc",
+    "sha256": "803586c247c387cfab38047d981f9fd3eb9120f5c9da6fa55116cd10f8ff46e1",
+    "purpose": "interface timing extraction, not a new leaf signoff verdict",
+    "in_verdict_sequence": true
+  },
+  "verdict": {
+    "json": "/srv/opentallas/claude/closure-loop/hv15_vm_cal_u-compact2330-24eeb93bb/cl/routed_ioref.a1.json",
+    "sha256": "18f8e4163878f1a41512069744b003af0c615d72e26860d581fabb823a6a9919",
+    "expect_ps": {
+      "tt": 142.63,
+      "ff": 14.27
+    },
+    "tol_ps": 0.05,
+    "work": "/srv/opentallas/claude/closure-loop/hv15_vm_cal_u-compact2330-24eeb93bb/routes/hv15_vm_cal_u_compact2330_24eeb93bb/work/orfs",
+    "files": {
+      "/meas/app0_io_ref_routed.sdc": {
+        "host": "/srv/opentallas/claude/closure-loop/hv15_vm_cal_u-compact2330-24eeb93bb/cl/routed_ioref.a1_meas/app0_io_ref_routed.sdc",
+        "sha256": "cb2805c3a4a622051ebd24447f6898db2d82fdd6060317692dc3180ef5ac6a7e"
+      },
+      "/work/results/asap7/opentallas_hfd_hgi_vm_calendar_asap7_ref_hv15_vm_cal_u_compact2330_24eeb93bb/base/6_final.odb": {
+        "host": "/srv/opentallas/claude/closure-loop/hv15_vm_cal_u-compact2330-24eeb93bb/routes/hv15_vm_cal_u_compact2330_24eeb93bb/work/orfs/results/asap7/opentallas_hfd_hgi_vm_calendar_asap7_ref_hv15_vm_cal_u_compact2330_24eeb93bb/base/6_final.odb",
+        "sha256": "3f542909a275c2802bf0d4104ed68a5800cb03d191e8e660c26e340f39b898c8"
+      },
+      "/work/results/asap7/opentallas_hfd_hgi_vm_calendar_asap7_ref_hv15_vm_cal_u_compact2330_24eeb93bb/base/6_final.sdc": {
+        "host": "/srv/opentallas/claude/closure-loop/hv15_vm_cal_u-compact2330-24eeb93bb/routes/hv15_vm_cal_u_compact2330_24eeb93bb/work/orfs/results/asap7/opentallas_hfd_hgi_vm_calendar_asap7_ref_hv15_vm_cal_u_compact2330_24eeb93bb/base/6_final.sdc",
+        "sha256": "8eed3c7f815a20218ee94bacfd08587a090a7cc041cbda42cc1c7521b03c9aeb"
+      },
+      "/work/results/asap7/opentallas_hfd_hgi_vm_calendar_asap7_ref_hv15_vm_cal_u_compact2330_24eeb93bb/base/6_final.spef": {
+        "host": "/srv/opentallas/claude/closure-loop/hv15_vm_cal_u-compact2330-24eeb93bb/routes/hv15_vm_cal_u_compact2330_24eeb93bb/work/orfs/results/asap7/opentallas_hfd_hgi_vm_calendar_asap7_ref_hv15_vm_cal_u_compact2330_24eeb93bb/base/6_final.spef",
+        "sha256": "13b66b3c8384392767710871e1c05e36662790e8a425609d91185d876cf6dd98"
+      },
+      "/work/w18_extra.sdc": {
+        "host": "/srv/opentallas/claude/closure-loop/hv15_vm_cal_u-compact2330-24eeb93bb/routes/hv15_vm_cal_u_compact2330_24eeb93bb/work/orfs/w18_extra.sdc",
+        "sha256": "803586c247c387cfab38047d981f9fd3eb9120f5c9da6fa55116cd10f8ff46e1"
+      }
+    },
+    "check": {
+      "ff": {
+        "export_ps": 14.271916981556387,
+        "verdict_ps": 14.27,
+        "ok": true
+      },
+      "tt": {
+        "export_ps": 142.62907521711554,
+        "verdict_ps": 142.63,
+        "ok": true
+      }
+    }
+  },
+  "sdc_sequence": {
+    "ss": {
+      "mode": "verdict",
+      "tcl": [
+        "read_db /work/results/asap7/opentallas_hfd_hgi_vm_calendar_asap7_ref_hv15_vm_cal_u_compact2330_24eeb93bb/base/6_final.odb",
+        "set ::ot_ce_corner ss",
+        "read_sdc /work/results/asap7/opentallas_hfd_hgi_vm_calendar_asap7_ref_hv15_vm_cal_u_compact2330_24eeb93bb/base/6_final.sdc",
+        "read_spef /work/results/asap7/opentallas_hfd_hgi_vm_calendar_asap7_ref_hv15_vm_cal_u_compact2330_24eeb93bb/base/6_final.spef",
+        "set_propagated_clock [all_clocks]",
+        "read_sdc /work/w18_extra.sdc",
+        "read_sdc /meas/app0_io_ref_routed.sdc"
+      ]
+    },
+    "ff": {
+      "mode": "verdict",
+      "tcl": [
+        "read_db /work/results/asap7/opentallas_hfd_hgi_vm_calendar_asap7_ref_hv15_vm_cal_u_compact2330_24eeb93bb/base/6_final.odb",
+        "set ::ot_ce_corner ff",
+        "read_sdc /work/results/asap7/opentallas_hfd_hgi_vm_calendar_asap7_ref_hv15_vm_cal_u_compact2330_24eeb93bb/base/6_final.sdc",
+        "read_spef /work/results/asap7/opentallas_hfd_hgi_vm_calendar_asap7_ref_hv15_vm_cal_u_compact2330_24eeb93bb/base/6_final.spef",
+        "set_propagated_clock [all_clocks]",
+        "read_sdc /work/w18_extra.sdc",
+        "read_sdc /meas/app0_io_ref_routed.sdc"
+      ]
+    },
+    "tt": {
+      "mode": "verdict",
+      "tcl": [
+        "read_db /work/results/asap7/opentallas_hfd_hgi_vm_calendar_asap7_ref_hv15_vm_cal_u_compact2330_24eeb93bb/base/6_final.odb",
+        "set ::ot_ce_corner tt",
+        "read_sdc /work/results/asap7/opentallas_hfd_hgi_vm_calendar_asap7_ref_hv15_vm_cal_u_compact2330_24eeb93bb/base/6_final.sdc",
+        "read_spef /work/results/asap7/opentallas_hfd_hgi_vm_calendar_asap7_ref_hv15_vm_cal_u_compact2330_24eeb93bb/base/6_final.spef",
+        "set_propagated_clock [all_clocks]",
+        "read_sdc /work/w18_extra.sdc",
+        "read_sdc /meas/app0_io_ref_routed.sdc"
+      ]
+    }
+  },
+  "macro_views": [
+    "/srv/opentallas/claude/closure-loop/hv15_vm_cal_u-compact2330-24eeb93bb/src/physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2"
+  ],
+  "files": {
+    "hfd_hgi_vm_calendar.lef": "909eb0a44f18e5caff877d3bc977ed0868858164c5c93a6812273b8606f8db86",
+    "hfd_hgi_vm_calendar_ff.lib": "a23b8361c901289802eeb2e1392e13a3b1868bc777714af6d01b4a3243586c0c",
+    "hfd_hgi_vm_calendar_ss.lib": "bf144de77fca1ca53fa02dd51f01c600d3084b9d8f86281a5a03b37b5847fe15",
+    "hfd_hgi_vm_calendar_tt.lib": "a068032621358f39a7221e3b692942249117392bca3664509f7d7722b6ea34ef"
+  },
+  "ok": true,
+  "checked": true
+}
