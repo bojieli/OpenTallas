@@ -55,6 +55,9 @@ CURRENT_MEASURED = {
     "COLL.TOPK_MERGE": (1.057, "coll/tkm_tput_480f631d5.json"),
 }
 
+# one extra block-dot MAC set on every SM: 8 columns x 4 ot_gpu_bd_col (LB 2) a SM, results/physical_abi3/asap7/gpu/
+# ot_gpu_bd_col_lb2_092/physical.json 5,474 um2 routed std cells -> 9,123 um2 at 0.6 utilisation; 32 SMs
+BDSET = 32 * 32 * 5473.54 / 0.6 / 1e6
 # item: (owner, change, area_mm2 estimate, area basis, config delta)
 ITEMS = {
     "COLL": ("H-COLL", "COLL.ROW_GATHER / TOPK_MERGE / kv_gather / ARGMAX_MERGE take R = P rows: one message train of "
@@ -87,19 +90,23 @@ ITEMS = {
                 "passes (op_xb + slot field [4:2] + per-slot x base); never faster than the HBM share",
                 0.32, "per SM one 136 B line held x IL 8 + slot tag; 32 SMs",
                 dict(sm_mode="slots", sm_k=1)),
-    "SM_K3": ("H-SM", "SM MAC slot sets k = 3 (the P-slot port of HGI-1 spec 6.7 at 3 slots a pass): ceil(6 / 3) = 2 "
-              "passes, 2 / 1.374 of the HBM-bound line time",
-              30.0, "2 more MAC slot sets x 32 SMs at ~0.47 mm2 a set (40 % of the 1.19 mm2 std-cell SM synth, "
-              "H-DIE 18:41) -- ESTIMATE, H-SM to measure",
+    "SM_K2": ("H-SM", "SM MAC slot sets k = 2 (the P-slot port of HGI-1 spec 6.7 at 2 slots a pass): ceil(6 / 2) = 3 "
+              "passes, 3 / 1.374 of the HBM-bound line time",
+              BDSET * 1 + 0.32, "1 more block-dot set a SM (32 ot_gpu_bd_col LB2 at 9,123 um2 = 5,474 um2 std cells "
+              "routed / 0.6) x 32 SMs + the line hold -- ESTIMATE from the routed bd_col, H-SM to measure",
+              dict(sm_mode="slots", sm_k=2, att_k=2)),
+    "SM_K3": ("H-SM", "SM MAC slot sets k = 3 (spec 6.7 P-slot port at 3 slots a pass): ceil(6 / 3) = 2 passes, "
+              "2 / 1.374 of the HBM-bound line time",
+              BDSET * 2 + 0.32, "2 more block-dot sets a SM (same basis) -- ESTIMATE, H-SM to measure",
               dict(sm_mode="slots", sm_k=3, att_k=3)),
     "SM_K6": ("H-SM", "SM MAC slot sets k = 6 (one pass, spec 6.7 'issue unchanged')",
-              75.0, "5 more MAC slot sets x 32 SMs (same basis) -- ESTIMATE",
+              BDSET * 5 + 0.32, "5 more block-dot sets a SM (same basis) -- ESTIMATE",
               dict(sm_mode="slots", sm_k=6, att_k=6)),
     "VM": ("H-DIE", "VM +150k words: the P verify columns' h / PRE resident (no per-layer column swap)",
            0.9, "+150k x 32 b SRAM at the VM's 1.5 mm2 / 256k-word density",
            dict(swap=False)),
 }
-ORDER_FIXED = ("SM_HOLD", "SM_K3", "SM_K6")          # mutually exclusive SM options
+ORDER_FIXED = ("SM_HOLD", "SM_K2", "SM_K3", "SM_K6")          # mutually exclusive SM options
 
 
 def cfg_of(items):
@@ -232,6 +239,29 @@ def main():
                     res[f"ladder:{nm}|{sc}"]["cycles"], res[f"AR|{sc}"]["cycles"], ar_l0, v5, draft, k, batched)
         ladder.append(row)
     first = next((r for r in ladder if r["fixed|draft_batched"]["mtp_tok_s"] >= TARGET), None)
+    # 3) the smallest set: for each SM option, the full cheap set and every leave-one-out (fixed table, batched draft)
+    cheap = [x for x in order if x not in ORDER_FIXED]
+    cand = []
+    for smo in ("SM_K2", "SM_K3"):
+        cand.append(tuple(cheap) + (smo,))
+        for drop in cheap:
+            cand.append(tuple(x for x in cheap if x != drop) + (smo,))
+    jobs = []
+    for st in cand:
+        nm = "+".join(st)
+        jobs += [(f"min:{nm}|fixed", st, P, "fixed", None), (f"minL0P5:{nm}|fixed", st, 5, "fixed", 0),
+                 (f"min:{nm}|sens_current", st, P, "sens_current", None)]
+    with mp.Pool(a.jobs) as pool:
+        res.update(dict(pool.map(_job, jobs)))
+    minimal = []
+    for st in cand:
+        nm = "+".join(st)
+        f_ = compose(res[f"min:{nm}|fixed"]["cycles"], ar, ar_l0, res[f"minL0P5:{nm}|fixed"]["cycles"], draft, 1.0, True)
+        k_ = res["AR|sens_current"]["cycles"] / ar
+        s_ = compose(res[f"min:{nm}|sens_current"]["cycles"], res["AR|sens_current"]["cycles"], ar_l0,
+                     res[f"minL0P5:{nm}|fixed"]["cycles"], draft, k_, True)
+        minimal.append(dict(items=list(st), area_mm2=round(sum(ITEMS[i][2] for i in st), 2), fixed=f_, sens_current=s_))
+    meet = sorted([m_ for m_ in minimal if m_["fixed"]["mtp_tok_s"] >= TARGET], key=lambda m_: m_["area_mm2"])
     rec = dict(schema="opentallas.hgi_sim.ds_mtp_rows.v1",
                generated_utc=datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
                target=dict(tok_s=TARGET, step_cycles_max=round(V.TAU * V.CLK / TARGET), basis=__doc__.split("ITEMS")[0]),
@@ -249,7 +279,7 @@ def main():
                asbuilt_verify=asb, rank_alone=rank, ladder=ladder,
                first_meeting_target=first and dict(items=first["items"], area_mm2=first["area_mm2"],
                                                     **first["fixed|draft_batched"]),
-               runs=res)
+               minimal_search=minimal, smallest_meeting_target=meet[0] if meet else None, runs=res)
     for r in ladder:
         print(f"{'+'.join(r['items']):60s} {r['area_mm2']:7.2f} mm2  fixed {r['fixed']['mtp_tok_s']:7.1f} "
               f"batched-draft {r['fixed|draft_batched']['mtp_tok_s']:7.1f}  sens_cur {r['sens_current|draft_batched']['mtp_tok_s']:7.1f}",
