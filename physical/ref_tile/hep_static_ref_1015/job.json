@@ -1,5 +1,5 @@
 {
- "name": "hep_static_ref_1015-ep1-COMMIT",
+ "name": "hep_static_ref_1015-ep1-fe628e131",
  "block": "hfd_ep_static",
  "ref_tile": true,
  "owner": "Claude:H-LKEP",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 32,
  "source": {
   "branch": "claude/h-lkep-1015",
-  "commit": "COMMIT",
+  "commit": "fe628e131",
   "extra_paths": [
    "rtl/hbm_accel/tu/ep_static_20261015",
    "rtl/dsrom_sys/s81_link",
@@ -120,7 +120,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hep_static_ref_1015/hep_static_ref_1015-ep1-COMMIT"
+   "to": "results/rtl/ref_tile/hep_static_ref_1015/hep_static_ref_1015-ep1-fe628e131"
   }
  ],
  "cycles_added": 0,
