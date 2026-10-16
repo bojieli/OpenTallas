@@ -1,0 +1,117 @@
+{
+ "name": "hbm_sfu_programme_store_1016-r2-g16-COMMIT",
+ "block": "ot_hgi_sfu_programme_store",
+ "ref_tile": true,
+ "owner": "Codex:H-SU",
+ "purpose": "NEW master: SFU programme store (both fixed SFU calendars, 11 stripes x 2 pages = 22 ot_sram_1r1w_1024x256) split out of ot_hgi_sfu_scheduled_engine (main 697997629, split equivalence receipt results/rtl/hbm_sfu_split_1016) for die slot sfus_<q>. Each stripe = one row of two back-to-back SRAMs (W MY, E R0) whose rd_out faces a shared 40 um logic channel; the 222-bit stripe word runs west along its own 20 um row channel to the W-face output registers toward sfucore_<q>; host cfg/start on N. | r1 gate (41fbe28f5) TritonCTS: 16 buffers per path, TT insertion 565.8..745.2 ps / spread 179.4 over 447x1024 um -> pre-placed balanced clock spine from the W-centre entry; N host pins spread (cfg_data / io_cfg_data ranged across the face, were clustered in 40 um); W output ranges aligned to the stripe rows (io_word rows 0-2, compiler_control rows 3-10).",
+ "threads": 8,
+ "peak_ram_gb": 8,
+ "source": {
+  "branch": "codex/hbm-su-calendar-0845",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "results/arch/hbm_native_1013/sfu_native_quarter",
+   "results/rtl/hbm_hc_sfu_static_1015/qswiglu",
+   "rtl/test/hbm_accel/generic",
+   "rtl/hbm_accel/generic/vm/static",
+   "physical/asap7_memory_macros",
+   "rtl/hbm_accel/generic/peers"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hgi_sfu_programme_store #(.PAGE_AW(1)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/generic/peers/ot_hgi_sfu_program_stripe_static.sv rtl/hbm_accel/generic/peers/ot_hgi_sfu_io_calendar_static.sv rtl/hbm_accel/generic/peers/ot_hgi_sfu_calendar_paged_static.sv physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v rtl/hbm_accel/generic/peers/ot_hgi_sfu_programme_store.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "split_equiv_exact",
+    "cmd": "OUT={RUN}/bench/pos bash tools/hbm_static/run_sfu_split_equiv.sh",
+    "expect": "pass",
+    "pass_regex": "SFU_SPLIT_GATE POSITIVE PASS",
+    "min_count_regex": "SFU_SPLIT_EQUIV PASS edges=(\\d+)",
+    "threads": 8,
+    "peak_ram_gb": 96,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "split_mutant_flip",
+    "cmd": "OUT={RUN}/bench/flip EQ_MUT=flip bash tools/hbm_static/run_sfu_split_equiv.sh; cat {RUN}/bench/flip/run.log; exit 1",
+    "expect": "fail",
+    "fail_regex": "SFU_SPLIT_EQUIV (FAIL|_MISMATCH)",
+    "threads": 8,
+    "peak_ram_gb": 96,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/hbm_sfu_programme_store_1016/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=16 bash tools/ref_tile/ref_route.sh physical/ref_tile/hbm_sfu_programme_store_1016/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 8
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/hbm_sfu_programme_store_1016 --out {RUN}/record/views/ot_hgi_sfu_programme_store --macro-view physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/hbm_sfu_programme_store_1016/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/hbm_sfu_programme_store_1016/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/hbm_sfu_programme_store_1016/hbm_sfu_programme_store_1016-r2-g16-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "NEW master: SFU programme store (both fixed SFU calendars, 11 stripes x 2 pages = 22 ot_sram_1r1w_1024x256) split out of ot_hgi_sfu_scheduled_engine (main 697997629, split equivalence receipt results/rtl/hbm_sfu_split_1016) for die slot sfus_<q>. Each stripe = one row of two back-to-back SRAMs (W MY, E R0) whose rd_out faces a shared 40 um logic channel; the 222-bit stripe word runs west along its own 20 um row channel to the W-face output registers toward sfucore_<q>; host cfg/start on N. | r1 gate (41fbe28f5) TritonCTS: 16 buffers per path, TT insertion 565.8..745.2 ps / spread 179.4 over 447x1024 um -> pre-placed balanced clock spine from the W-centre entry; N host pins spread (cfg_data / io_cfg_data ranged across the face, were clustered in 40 um); W output ranges aligned to the stripe rows (io_word rows 0-2, compiler_control rows 3-10). | Codex r2: exact r1 PPL-0086 showed 32-bit ordered group cannot fit 23 remaining TOP slots at cfg_data constraint edge; bound ordered IO groups to16 with unchanged tracks, bit order, port ranges, outline and balanced spine. This repairs placement granularity, not routing/timing gates."
+}
