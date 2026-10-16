@@ -880,6 +880,50 @@ def _band(T, side, Wk):
 
 
 _PIN_HINT = {}
+# Q-KVSYS-HOP 2026-10-16 (OT_KV_HOP=1; default off): hop rules calibrated on the kvs11-v143c GRT/TT run (realized named
+# pins, routed wirelength; results/arch/qwen_kv_hop_1016).  (1) A frame port that kv_expand binds to a CLOSED leaf is
+# reached at that leaf's realized LEF pin, not the frame face: kvs11 ctrl kc kf -> rly_lkf planned 450 um at the frame
+# face, realized 558 um at the kc leaf (TT -196.7 ps).  (2) Late-launch closed views take their first relay nearer:
+# ectl_a rq (R 414 ps, insertion spread 63 ps) -> rly_krq passes <= ~380 um, fails at 437-444 um (-63 ps).  (3) Relay
+# chains keep every hop <= HOP_REACH (the closed standards' native self-reach: rlys_296 446 um, rlys_528 460 um).
+HOP = __import__('os').environ.get('OT_KV_HOP', '0') == '1'
+HOP_REACH = 445.0
+HOP_FIRST = dict(krq=340.0, krs=340.0)
+_LEAF_PIN_CACHE = {}
+
+
+def _leaf_pin(it, port):
+    """OT_KV_HOP: realized pin of an expanded frame's closed leaf (kc leaf of the controller strip), else None."""
+    if not HOP or it.master not in ('qkd_ctrl', 'qkd_ctrl_n'):
+        return None
+    if 'kc' not in _LEAF_PIN_CACHE:
+        lef = Path(__file__).resolve().parents[2] / 'physical/ref_tile/qkd_ctrl_kc/views/qkd_ctrl_kc/qkd_ctrl_kc.lef'
+        pins, cur, size = {}, None, None
+        for ln in lef.read_text().split('\n'):
+            t = ln.split()
+            if not t:
+                continue
+            if t[0] == 'SIZE':
+                size = (float(t[1]), float(t[3]))
+            elif t[0] == 'PIN':
+                cur = t[1].split('[')[0]
+            elif t[0] == 'RECT' and cur and cur not in pins:
+                x0, y0, x1, y1 = map(float, t[1:5])
+                pins[cur] = ((x0 + x1) / 2, (y0 + y1) / 2)
+        _LEAF_PIN_CACHE['kc'] = (pins, size)
+    pins, (lw, lh) = _LEAF_PIN_CACHE['kc']
+    p = pins.get(port.lstrip('*').split('[')[0])
+    if p is None:
+        return None
+    rev = it.master == 'qkd_ctrl'                       # kv_expand._ctrl_plan: u_kc at the strip's outer end
+    cx, cy = it.w / 2 - 23.76, (0.0 if rev else it.h - 43.2)
+    lx, ly = (p[0], lh - p[1]) if rev else p           # leaf MX in the reversed strip
+    fx, fy = cx + lx, cy + ly                           # frame-canonical
+    if it.orient in ('MY', 'R180'):
+        fx = it.w - fx
+    if it.orient in ('MX', 'R180'):
+        fy = it.h - fy
+    return it.x + fx, it.y + fy
 
 
 def build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_wq_head=False, kv_wq_wide=False, kv_wq_mirror=False, split=False, reserve_static_memory=False, reserve_native_astk=False, host_v14=None, host_north=None, host_trees=None, v143=None):
@@ -1784,6 +1828,9 @@ def _relays(m):
         def fixed_pin(inst, port):
             if bid in tree_meta and inst in by and max(by[inst].w, by[inst].h) > 2 * PIN_REACH:
                 return None       # v1.4.2 tree: a big frame's area reset pin is reached at the frame (over-macro last hop)
+            lp_ = _leaf_pin(by[inst], port) if inst in by else None
+            if lp_ is not None:
+                return lp_
             if (inst, port.lstrip('*')) in _PIN_HINT:
                 return _PIN_HINT[(inst, port.lstrip('*'))]
             it_ = by[inst]
@@ -1836,6 +1883,9 @@ def _relays(m):
         def reach_():
             # v1.3 (kvs5L TT -17.19: CLOSED ctl_bin launches f<g> late, 413 um to its first relay): a bus whose driver is a
             # closed view with a late launch takes its FIRST relay within FIRST_REACH of that pin; later hops keep PIN_REACH
+            if HOP:
+                fr_ = FIRST_REACH.get(bid.rsplit('_', 2)[0], HOP_FIRST.get(bid.split('_')[0], HOP_REACH))
+                return min(fr_, HOP_REACH) if st_['prev_pt'] is None else HOP_REACH
             if st_['prev_pt'] is None:
                 return FIRST_REACH.get(bid.rsplit('_', 2)[0], PIN_REACH)
             return PIN_REACH
@@ -1927,7 +1977,11 @@ def _relays(m):
                         st_['path'] = route(a, b, pa, pb)
                     except ValueError:
                         SP['dil'] = 0
-                        st_['path'] = route(a, b, pa, pb)
+                        try:
+                            st_['path'] = route(a, b, pa, pb)
+                        except ValueError:
+                            SP['on'] = False       # as the v1.4.2 tree retry: the relay-avoiding route can be closed
+                            st_['path'] = route(a, b, pa, pb)
                     finally:
                         SP['on'] = False
                         SP['dil'] = 0
@@ -2718,8 +2772,8 @@ def pin_reach(m, M, reach=500.0, skip=('clock_trunk', 'reset', 'constant')):
             continue
         n += 1
         try:
-            xa, ya = pin_xy(ia, M[ia.master], pa.lstrip('*'))
-            xb, yb = pin_xy(ib, M[ib.master], pb.lstrip('*'))
+            xa, ya = _leaf_pin(ia, pa) or pin_xy(ia, M[ia.master], pa.lstrip('*'))
+            xb, yb = _leaf_pin(ib, pb) or pin_xy(ib, M[ib.master], pb.lstrip('*'))
         except (TypeError, KeyError):
             continue
         d = abs(xa - xb) + abs(ya - yb)
