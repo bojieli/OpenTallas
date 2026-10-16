@@ -185,9 +185,12 @@ module ot_qfd_sp_vector_memory_bv #(
     // `end` beats.  PMUT (bench negative control): 1 = lane 1 takes lane 2's data.
     parameter integer PAR_RB = 0,
     parameter integer PMUT = 0,
+    parameter integer RETURN_LEAVES = 0, // opt-in: existing E6/E7/E8 registers in 32 standard bit-plane leaves per copy
+    parameter integer RETURN_CLOCKS = 0, // 1: independent return_ck pin per leaf; 0: component equivalence on clk
     parameter integer NATIVE_BANKS = 0   // Q-VMWB 2026-10-15: native storage successors in every region (ot_qfd_vm_region_nx)
 ) (
     input  wire                    clk,
+    input wire [NSU*32-1:0] return_ck,
 `ifdef OT_QFD_VM_NOX
     input  wire [(NRB/8)*56-1:0]    leaf_ck,
     input wire [NRB-1:0] observer_ck,
@@ -1256,6 +1259,22 @@ module ot_qfd_sp_vector_memory_bv #(
         assign su_ra[gc*NRBS*LAWS +: NRBS*LAWS] = sb_ra;
         assign su_v3[gc] = d3_v;
         wire [NRBS*512-1:0] scap = su_cap[gc*NRBS*512 +: NRBS*512];
+        if (RETURN_LEAVES != 0) begin : g_return_leaves
+            for (genvar plane = 0; plane < 32; plane = plane + 1) begin : g_plane
+                wire [NRBS*16-1:0] pd;
+                wire [SW-1:0] pq;
+                for (genvar elem = 0; elem < NRBS*16; elem = elem + 1) begin : g_unpack
+                    assign pd[elem] = scap[elem*32 + plane];
+                end
+                ot_qfd_vm_su_return_plane #(.ELEMS(ELEMS), .AW(AW), .SW(SW), .NRBS(NRBS), .MUT(MUT)) u_plane (
+                    .ck((RETURN_CLOCKS != 0) ? return_ck[gc*32+plane] : clk),
+                    .v5(d5_v), .v6(d6_v), .v7(d7_v), .a5(d5_a0), .a6(d6_a0), .a7(d7_a0),
+                    .stride1(d7_si), .d(pd), .q(pq));
+                for (genvar lane = 0; lane < SW; lane = lane + 1) begin : g_pack
+                    assign s_q[(gc*SW+lane)*32+plane] = pq[lane];
+                end
+            end
+        end else begin : g_return_flat
         // E6: coarse rotate (by the window's first bank, rounded down to 8), E7: fine (by its low 3 bits)
         reg  [NPS*512-1:0] pos;
         reg  [NWR*512-1:0] win;
@@ -1272,6 +1291,7 @@ module ot_qfd_sp_vector_memory_bv #(
             for (i = 0; i < SW; i = i + 1)
                 q8[i*32 +: 32] <= ((d7_a0 + (d7_si ? i : 0)) < ELEMS) ? win[(off7 + (d7_si ? i : 0))*32 +: 32] : 32'd0;
         assign s_q[gc*SW*32 +: SW*32] = q8;
+        end
         // hazard: this copy reads (macro edge next) a row with a late write pending
         reg hz;
         always @(*) begin
@@ -1697,4 +1717,34 @@ module ot_qfd_vm_grp #(
         end
         always @(posedge clk) if (pop_k) xo[k*FSW +: FSW] <= rd;
     end endgenerate
+endmodule
+
+// Standard return leaf. The old E6/E7/E8 registers are moved, with zero added edges.
+// Existing first/last registers own data pins; physical opt-out must cite this RTL
+// and verify native launch/capture after CTS, rather than add hidden wrapper stages.
+module ot_qfd_vm_su_return_plane #(
+    parameter integer ELEMS=177808, AW=24, SW=64, NRBS=16, MUT=0
+)(
+    input wire ck, v5, v6, v7,
+    input wire [AW-1:0] a5, a6, a7,
+    input wire stride1,
+    input wire [NRBS*16-1:0] d,
+    output reg [SW-1:0] q
+);
+    localparam integer NWR=(SW+30)/16;
+    localparam integer NPS=(NWR+7<NRBS)?NWR+7:NRBS;
+    localparam integer LNRBS=$clog2(NRBS);
+    reg [NPS*16-1:0] pos;
+    reg [NWR*16-1:0] win;
+    wire [LNRBS-1:0] r5=a5[4+:LNRBS], r6=a6[4+:LNRBS];
+    wire [3:0] off7=a7[3:0]+((MUT==1)?4'd1:4'd0);
+    integer row,lane;
+    always @(posedge ck) begin
+        if(v5) for(row=0;row<NPS;row=row+1)
+            pos[row*16+:16] <= d[((row+(r5 & ~7))%NRBS)*16+:16];
+        if(v6) for(row=0;row<NWR;row=row+1)
+            win[row*16+:16] <= pos[(row+(r6 & 7))*16+:16];
+        if(v7) for(lane=0;lane<SW;lane=lane+1)
+            q[lane] <= ((a7+(stride1?lane:0))<ELEMS) ? win[off7+(stride1?lane:0)] : 1'b0;
+    end
 endmodule

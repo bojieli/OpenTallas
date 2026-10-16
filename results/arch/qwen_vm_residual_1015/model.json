@@ -1,0 +1,45 @@
+{
+  "scope": "Unadopted source partition candidate; current production wrapper default unchanged",
+  "census": {
+    "bv_ff_bits": 87507,
+    "return_ff_bits": 32256,
+    "bank_write_ff_bits": 43184,
+    "other_bv_ff_bits": 12067,
+    "stage": "Yosys proc opt_clean, blackboxed actual hardened leaves; NOT mapped/CTS"
+  },
+  "return": {
+    "instances": 96,
+    "standard_masters": 1,
+    "copies": 3,
+    "planes_per_copy": 32,
+    "ff_bits_per_leaf": 336,
+    "stages": 3,
+    "new_normal_edges": 0,
+    "payload_bits_in": 256,
+    "payload_bits_out": 64,
+    "address_control_bits": 75,
+    "clock_pins_new": 96,
+    "reset_needed": false,
+    "max_sink_count_estimate": 336,
+    "arithmetic_macs": 0,
+    "memory_ports_new": 0,
+    "replication": "bit planes: bank/row rotation never crosses FP32 bit positions",
+    "native_input_caveat": "First register follows coarse mux, so capture <=190 ps must be measured; added pin stage requires explicit new edge and compiler integration if this fails",
+    "physical_status": "No outline, assigned pins, CTS or route qualification yet"
+  },
+  "parent": {
+    "remaining_bv_ff_bits_after_return": 55251,
+    "homes_source": "fpq_r2f-homes.json; confirmed by compute die owner",
+    "outline_um": [
+      4708.8,
+      2203.2
+    ],
+    "outline_delta_vs_previous_prose_um": [
+      0.024,
+      0.024
+    ],
+    "legacy_parent_clock_entries": 487,
+    "candidate_clock_entries_at_least": 583,
+    "write_control_extraction": "Still required; none of the 55,251 remaining BV FFs is claimed as wires-only parent"
+  }
+}
