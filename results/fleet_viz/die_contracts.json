@@ -202,12 +202,12 @@
    "sources": [
     {
      "kind": "port_bind",
-     "path": "results/arch/qwen_split_1014/kvsys_v1_4_1/port_bind.json",
+     "path": "results/arch/qwen_split_1014/kvsys_v1_4_3_design/port_bind_v2/current/port_bind_v2.json",
      "skip": [
       "qkd_d2ds"
      ],
      "macro": "(phy|ckbump|pllm|fwdbump)",
-     "evidence": "KV die v1.4.1 port-bind (kvs7c case; qkd_d2ds = qkd_d2d_static, listed by add)"
+     "evidence": "KV die v1.4.3 strict port-bind v2 (kvs12 cases; was v1.4.1 kvs7c; qkd_d2ds = qkd_d2d_static, listed by add)"
     },
     {
      "kind": "json_keys",
