@@ -23,6 +23,30 @@ class OrientationContract(unittest.TestCase):
             with self.subTest(symmetry=symmetry):
                 self.assertEqual(set(G.bound_view_orientation_contract(self.view(symmetry))['supported']),legal)
 
+    def test_site_and_pin_symmetry_cannot_authorize_target_macro(self):
+        view=self.view()
+        view['text']='SITE decoy\n SYMMETRY X Y ;\nEND decoy\nMACRO test\n PIN data\n SYMMETRY X Y ;\n END data\nEND test\n'
+        self.assertEqual(G.bound_view_orientation_contract(view,'test')['supported'],['R0'])
+
+    def test_another_macro_cannot_authorize_target(self):
+        view=self.view()
+        view['text']='MACRO other\n SYMMETRY X Y ;\nEND other\n'+view['text']
+        self.assertEqual(G.bound_view_orientation_contract(view,'test')['supported'],['R0'])
+
+    def test_unknown_duplicate_and_malformed_declarations_fail_closed(self):
+        for body in ('SYMMETRY X BAD ;','SYMMETRY X X ;','SYMMETRY X ;\nSYMMETRY Y ;',
+                     'SYMMETRY X','SYMMETRY ;','SYMMETRY X ; junk'):
+            with self.subTest(body=body):
+                view=self.view();view['text']='MACRO test\n'+body+'\nEND test\n'
+                contract=G.bound_view_orientation_contract(view,'test')
+                self.assertFalse(contract['supported']);self.assertTrue(contract['errors'])
+
+    def test_missing_or_duplicate_target_macro_fails_closed(self):
+        view=self.view('X Y')
+        self.assertFalse(G.bound_view_orientation_contract(view,'absent')['supported'])
+        view['text']*=2
+        self.assertFalse(G.bound_view_orientation_contract(view,'test')['supported'])
+
     def bind(self, instances, symmetry='', diagnostic=False):
         model=dict(insts=instances)
         with patch.object(G,'bound_views',return_value={'test':self.view(symmetry)}), \
@@ -53,6 +77,16 @@ class OrientationContract(unittest.TestCase):
         self.assertFalse(model['view_binding_qualification']['native_qualification'])
         self.assertEqual(model['view_binding_qualification']['unsupported_orientation_instances'],2)
         self.assertEqual(model['view_binding_unbound_generated']['missing']['reason'],'NO_VERIFIED_TABLE_VIEW')
+
+    def test_empty_verified_table_marks_all_generated_unbound(self):
+        model=dict(insts=[self.inst('missing',master='missing')])
+        with patch.object(G,'bound_views',return_value={}),patch.object(G,'REAL_FILES',{}), \
+             patch.dict(os.environ,{'OT_S81_VIEW_BINDING_SKIP_MISFIT':'1'}),contextlib.redirect_stderr(io.StringIO()):
+            G.apply_view_binding(model,{})
+        self.assertFalse(model['bound_views'])
+        self.assertFalse(model['view_binding_qualification']['complete'])
+        self.assertFalse(model['view_binding_qualification']['native_qualification'])
+        self.assertEqual(model['view_binding_qualification']['unbound_generated_instances'],1)
 
 
 if __name__=='__main__':unittest.main()
