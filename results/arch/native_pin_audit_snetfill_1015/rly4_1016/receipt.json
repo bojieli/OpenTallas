@@ -1,0 +1,14 @@
+{
+  "schema": "s81-rly4-functional-proof-v1",
+  "source_commit": "ac28d4772",
+  "source_sha256": {
+    "rtl/dsrom_sys/s81_glue/ot_s81_rly.sv": "72d22c716680a647ba8fe263abf36c1ef3e04f0ae2111588607cc91072d41b5d",
+    "rtl/dsrom_sys/s81_glue/ot_s81_rly4.sv": "6af6571d7d88ffbacf57c4c2baf0d612fff27b6a84fca366226d549356c7db7d",
+    "tools/s81_static_net/tb_rly4.sv": "a441427c2edaf7c03a5e12978364ae26a77f6398cf02a7c294d40506c3c8f8c2",
+    "tools/s81_static_net/bench_rly4.sh": "e873e64d463b76c964c6e3f451e53fbb1841f3cfbf704be6cad68664e442c203"
+  },
+  "remote_unit": "ot-pve1:oth-ubuntu-2130034-1792167156",
+  "result": "PASS all16 selected face pairs, 2000 words each, 386112 comparisons including both clock edges and warm asynchronous reset; input/output/edge/reset mutants rejected",
+  "contract": "Exactly one real input connected per instance; other three explicitly PAD zero. One selected output consumed; other three explicitly NC. All four physical outputs branch from the same real flop. RSREG0: one posedge stage and original asynchronous reset, no added release edge.",
+  "scope": "Independent 17.28x17.28 leaf diagnostic only; physical/native/actual parent home and incident joins still open. Existing seven qualified scalar relay views retained. No generator activation."
+}
