@@ -88254,16 +88254,16 @@
   },
   {
    "name": "sfu_NE0",
-   "cell": null,
+   "cell": "ot_hgi_sfu_lg_pair_leaf",
    "kind": "tile",
    "parent": "die",
    "outline": {
-    "w": 500.0,
-    "h": 800.0
+    "w": 216.0,
+    "h": 216.0
    },
    "origin": {
     "x": 30398.4,
-    "y": 14855.133,
+    "y": 15147.133,
     "orient": "R0"
    },
    "clock_entry": {
@@ -88279,8 +88279,8 @@
     "in_delay_frac": 0.2,
     "out_delay_frac": 0.2
    },
-   "version": 5,
-   "grant": "window",
+   "version": 7,
+   "grant": "real_rtl_pins_v7",
    "rtl_owner": "H-ELEM-B / HBM-V15-HARDEN: SFU bank-pair leaf (4 per quadrant, LG roots f94fb79fd/80d1f4413)",
    "notes": "SFU port-group leaf 0.40 mm2",
    "pin_windows": [
@@ -88335,20 +88335,124 @@
      "link": "vmb_NE0>sfu_NE0:LG_SFU"
     }
    ],
-   "rtl_pending": "H-ELEM-B / HBM-V15-HARDEN: SFU bank-pair leaf (4 per quadrant, LG roots f94fb79fd/80d1f4413)"
+   "rtl_pending": "H-ELEM-B / HBM-V15-HARDEN: SFU bank-pair leaf (4 per quadrant, LG roots f94fb79fd/80d1f4413)",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_leaf.sv",
+   "clock_domain": "stream 1200 MHz: clk_lg[0] of vm NE",
+   "pins": [
+    {
+     "name": "clk",
+     "face": "N",
+     "layer": "M5",
+     "span_um": [
+      107.952,
+      108.048
+     ],
+     "offset": 108.0
+    },
+    {
+     "name": "rst_n",
+     "face": "N",
+     "layer": "M5",
+     "span_um": [
+      108.048,
+      108.144
+     ],
+     "offset": 108.096
+    },
+    {
+     "name": "lg_rq[33:0]",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      10.0,
+      13.264
+     ],
+     "offset": 11.632
+    },
+    {
+     "name": "lg_wq[561:0]",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      14.0,
+      67.952
+     ],
+     "offset": 40.976
+    },
+    {
+     "name": "lg_rr[513:0]",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      70.0,
+      119.344
+     ],
+     "offset": 94.672
+    },
+    {
+     "name": "lg_w_done[1:0]",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      120.0,
+      120.192
+     ],
+     "offset": 120.096
+    },
+    {
+     "name": "c_rq[33:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      10.0,
+      13.264
+     ],
+     "offset": 11.632
+    },
+    {
+     "name": "c_wq[561:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      14.0,
+      67.952
+     ],
+     "offset": 40.976
+    },
+    {
+     "name": "c_rr[513:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      70.0,
+      119.344
+     ],
+     "offset": 94.672
+    },
+    {
+     "name": "c_w_done[1:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      120.0,
+      120.192
+     ],
+     "offset": 120.096
+    }
+   ]
   },
   {
    "name": "sfu_NE1",
-   "cell": null,
+   "cell": "ot_hgi_sfu_lg_pair_leaf",
    "kind": "tile",
    "parent": "die",
    "outline": {
-    "w": 500.0,
-    "h": 800.0
+    "w": 216.0,
+    "h": 216.0
    },
    "origin": {
     "x": 27738.872,
-    "y": 14855.133,
+    "y": 15147.133,
     "orient": "R0"
    },
    "clock_entry": {
@@ -88364,8 +88468,8 @@
     "in_delay_frac": 0.2,
     "out_delay_frac": 0.2
    },
-   "version": 5,
-   "grant": "window",
+   "version": 7,
+   "grant": "real_rtl_pins_v7",
    "rtl_owner": "H-ELEM-B / HBM-V15-HARDEN: SFU bank-pair leaf (4 per quadrant, LG roots f94fb79fd/80d1f4413)",
    "notes": "SFU port-group leaf 0.40 mm2",
    "pin_windows": [
@@ -88400,20 +88504,124 @@
      "link": "sfu_NE1>sfu_NE0:SFU_CORE"
     }
    ],
-   "rtl_pending": "H-ELEM-B / HBM-V15-HARDEN: SFU bank-pair leaf (4 per quadrant, LG roots f94fb79fd/80d1f4413)"
+   "rtl_pending": "H-ELEM-B / HBM-V15-HARDEN: SFU bank-pair leaf (4 per quadrant, LG roots f94fb79fd/80d1f4413)",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_leaf.sv",
+   "clock_domain": "stream 1200 MHz: clk_lg[1] of vm NE",
+   "pins": [
+    {
+     "name": "clk",
+     "face": "N",
+     "layer": "M5",
+     "span_um": [
+      107.952,
+      108.048
+     ],
+     "offset": 108.0
+    },
+    {
+     "name": "rst_n",
+     "face": "N",
+     "layer": "M5",
+     "span_um": [
+      108.048,
+      108.144
+     ],
+     "offset": 108.096
+    },
+    {
+     "name": "lg_rq[33:0]",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      10.0,
+      13.264
+     ],
+     "offset": 11.632
+    },
+    {
+     "name": "lg_wq[561:0]",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      14.0,
+      67.952
+     ],
+     "offset": 40.976
+    },
+    {
+     "name": "lg_rr[513:0]",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      70.0,
+      119.344
+     ],
+     "offset": 94.672
+    },
+    {
+     "name": "lg_w_done[1:0]",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      120.0,
+      120.192
+     ],
+     "offset": 120.096
+    },
+    {
+     "name": "c_rq[33:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      10.0,
+      13.264
+     ],
+     "offset": 11.632
+    },
+    {
+     "name": "c_wq[561:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      14.0,
+      67.952
+     ],
+     "offset": 40.976
+    },
+    {
+     "name": "c_rr[513:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      70.0,
+      119.344
+     ],
+     "offset": 94.672
+    },
+    {
+     "name": "c_w_done[1:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      120.0,
+      120.192
+     ],
+     "offset": 120.096
+    }
+   ]
   },
   {
    "name": "sfu_NE2",
-   "cell": null,
+   "cell": "ot_hgi_sfu_lg_pair_leaf",
    "kind": "tile",
    "parent": "die",
    "outline": {
-    "w": 500.0,
-    "h": 800.0
+    "w": 216.0,
+    "h": 216.0
    },
    "origin": {
     "x": 25079.344,
-    "y": 14855.133,
+    "y": 15147.133,
     "orient": "R0"
    },
    "clock_entry": {
@@ -88429,8 +88637,8 @@
     "in_delay_frac": 0.2,
     "out_delay_frac": 0.2
    },
-   "version": 5,
-   "grant": "window",
+   "version": 7,
+   "grant": "real_rtl_pins_v7",
    "rtl_owner": "H-ELEM-B / HBM-V15-HARDEN: SFU bank-pair leaf (4 per quadrant, LG roots f94fb79fd/80d1f4413)",
    "notes": "SFU port-group leaf 0.40 mm2",
    "pin_windows": [
@@ -88465,20 +88673,124 @@
      "link": "sfu_NE2>sfu_NE0:SFU_CORE"
     }
    ],
-   "rtl_pending": "H-ELEM-B / HBM-V15-HARDEN: SFU bank-pair leaf (4 per quadrant, LG roots f94fb79fd/80d1f4413)"
+   "rtl_pending": "H-ELEM-B / HBM-V15-HARDEN: SFU bank-pair leaf (4 per quadrant, LG roots f94fb79fd/80d1f4413)",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_leaf.sv",
+   "clock_domain": "stream 1200 MHz: clk_lg[2] of vm NE",
+   "pins": [
+    {
+     "name": "clk",
+     "face": "N",
+     "layer": "M5",
+     "span_um": [
+      107.952,
+      108.048
+     ],
+     "offset": 108.0
+    },
+    {
+     "name": "rst_n",
+     "face": "N",
+     "layer": "M5",
+     "span_um": [
+      108.048,
+      108.144
+     ],
+     "offset": 108.096
+    },
+    {
+     "name": "lg_rq[33:0]",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      10.0,
+      13.264
+     ],
+     "offset": 11.632
+    },
+    {
+     "name": "lg_wq[561:0]",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      14.0,
+      67.952
+     ],
+     "offset": 40.976
+    },
+    {
+     "name": "lg_rr[513:0]",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      70.0,
+      119.344
+     ],
+     "offset": 94.672
+    },
+    {
+     "name": "lg_w_done[1:0]",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      120.0,
+      120.192
+     ],
+     "offset": 120.096
+    },
+    {
+     "name": "c_rq[33:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      10.0,
+      13.264
+     ],
+     "offset": 11.632
+    },
+    {
+     "name": "c_wq[561:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      14.0,
+      67.952
+     ],
+     "offset": 40.976
+    },
+    {
+     "name": "c_rr[513:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      70.0,
+      119.344
+     ],
+     "offset": 94.672
+    },
+    {
+     "name": "c_w_done[1:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      120.0,
+      120.192
+     ],
+     "offset": 120.096
+    }
+   ]
   },
   {
    "name": "sfu_NE3",
-   "cell": null,
+   "cell": "ot_hgi_sfu_lg_pair_leaf",
    "kind": "tile",
    "parent": "die",
    "outline": {
-    "w": 500.0,
-    "h": 800.0
+    "w": 216.0,
+    "h": 216.0
    },
    "origin": {
     "x": 22419.816,
-    "y": 14855.133,
+    "y": 15147.133,
     "orient": "R0"
    },
    "clock_entry": {
@@ -88494,8 +88806,8 @@
     "in_delay_frac": 0.2,
     "out_delay_frac": 0.2
    },
-   "version": 5,
-   "grant": "window",
+   "version": 7,
+   "grant": "real_rtl_pins_v7",
    "rtl_owner": "H-ELEM-B / HBM-V15-HARDEN: SFU bank-pair leaf (4 per quadrant, LG roots f94fb79fd/80d1f4413)",
    "notes": "SFU port-group leaf 0.40 mm2",
    "pin_windows": [
@@ -88530,20 +88842,124 @@
      "link": "sfu_NE3>sfu_NE0:SFU_CORE"
     }
    ],
-   "rtl_pending": "H-ELEM-B / HBM-V15-HARDEN: SFU bank-pair leaf (4 per quadrant, LG roots f94fb79fd/80d1f4413)"
+   "rtl_pending": "H-ELEM-B / HBM-V15-HARDEN: SFU bank-pair leaf (4 per quadrant, LG roots f94fb79fd/80d1f4413)",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_leaf.sv",
+   "clock_domain": "stream 1200 MHz: clk_lg[3] of vm NE",
+   "pins": [
+    {
+     "name": "clk",
+     "face": "N",
+     "layer": "M5",
+     "span_um": [
+      107.952,
+      108.048
+     ],
+     "offset": 108.0
+    },
+    {
+     "name": "rst_n",
+     "face": "N",
+     "layer": "M5",
+     "span_um": [
+      108.048,
+      108.144
+     ],
+     "offset": 108.096
+    },
+    {
+     "name": "lg_rq[33:0]",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      10.0,
+      13.264
+     ],
+     "offset": 11.632
+    },
+    {
+     "name": "lg_wq[561:0]",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      14.0,
+      67.952
+     ],
+     "offset": 40.976
+    },
+    {
+     "name": "lg_rr[513:0]",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      70.0,
+      119.344
+     ],
+     "offset": 94.672
+    },
+    {
+     "name": "lg_w_done[1:0]",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      120.0,
+      120.192
+     ],
+     "offset": 120.096
+    },
+    {
+     "name": "c_rq[33:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      10.0,
+      13.264
+     ],
+     "offset": 11.632
+    },
+    {
+     "name": "c_wq[561:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      14.0,
+      67.952
+     ],
+     "offset": 40.976
+    },
+    {
+     "name": "c_rr[513:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      70.0,
+      119.344
+     ],
+     "offset": 94.672
+    },
+    {
+     "name": "c_w_done[1:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      120.0,
+      120.192
+     ],
+     "offset": 120.096
+    }
+   ]
   },
   {
    "name": "sfu_NW0",
-   "cell": null,
+   "cell": "ot_hgi_sfu_lg_pair_leaf",
    "kind": "tile",
    "parent": "die",
    "outline": {
-    "w": 500.0,
-    "h": 800.0
+    "w": 216.0,
+    "h": 216.0
    },
    "origin": {
-    "x": 120.0,
-    "y": 14590.133,
+    "x": 404.0,
+    "y": 14882.133,
     "orient": "R0"
    },
    "clock_entry": {
@@ -88559,8 +88975,8 @@
     "in_delay_frac": 0.2,
     "out_delay_frac": 0.2
    },
-   "version": 5,
-   "grant": "window",
+   "version": 7,
+   "grant": "real_rtl_pins_v7",
    "rtl_owner": "H-ELEM-B / HBM-V15-HARDEN: SFU bank-pair leaf (4 per quadrant, LG roots f94fb79fd/80d1f4413)",
    "notes": "SFU port-group leaf 0.40 mm2",
    "pin_windows": [
@@ -88615,20 +89031,124 @@
      "link": "vmb_NW1>sfu_NW0:LG_SFU"
     }
    ],
-   "rtl_pending": "H-ELEM-B / HBM-V15-HARDEN: SFU bank-pair leaf (4 per quadrant, LG roots f94fb79fd/80d1f4413)"
+   "rtl_pending": "H-ELEM-B / HBM-V15-HARDEN: SFU bank-pair leaf (4 per quadrant, LG roots f94fb79fd/80d1f4413)",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_leaf.sv",
+   "clock_domain": "stream 1200 MHz: clk_lg[0] of vm NW",
+   "pins": [
+    {
+     "name": "clk",
+     "face": "N",
+     "layer": "M5",
+     "span_um": [
+      107.952,
+      108.048
+     ],
+     "offset": 108.0
+    },
+    {
+     "name": "rst_n",
+     "face": "N",
+     "layer": "M5",
+     "span_um": [
+      108.048,
+      108.144
+     ],
+     "offset": 108.096
+    },
+    {
+     "name": "lg_rq[33:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      10.0,
+      13.264
+     ],
+     "offset": 11.632
+    },
+    {
+     "name": "lg_wq[561:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      14.0,
+      67.952
+     ],
+     "offset": 40.976
+    },
+    {
+     "name": "lg_rr[513:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      70.0,
+      119.344
+     ],
+     "offset": 94.672
+    },
+    {
+     "name": "lg_w_done[1:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      120.0,
+      120.192
+     ],
+     "offset": 120.096
+    },
+    {
+     "name": "c_rq[33:0]",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      10.0,
+      13.264
+     ],
+     "offset": 11.632
+    },
+    {
+     "name": "c_wq[561:0]",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      14.0,
+      67.952
+     ],
+     "offset": 40.976
+    },
+    {
+     "name": "c_rr[513:0]",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      70.0,
+      119.344
+     ],
+     "offset": 94.672
+    },
+    {
+     "name": "c_w_done[1:0]",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      120.0,
+      120.192
+     ],
+     "offset": 120.096
+    }
+   ]
   },
   {
    "name": "sfu_NW1",
-   "cell": null,
+   "cell": "ot_hgi_sfu_lg_pair_leaf",
    "kind": "tile",
    "parent": "die",
    "outline": {
-    "w": 500.0,
-    "h": 800.0
+    "w": 216.0,
+    "h": 216.0
    },
    "origin": {
-    "x": 2779.528,
-    "y": 14590.133,
+    "x": 3063.528,
+    "y": 14882.133,
     "orient": "R0"
    },
    "clock_entry": {
@@ -88644,8 +89164,8 @@
     "in_delay_frac": 0.2,
     "out_delay_frac": 0.2
    },
-   "version": 5,
-   "grant": "window",
+   "version": 7,
+   "grant": "real_rtl_pins_v7",
    "rtl_owner": "H-ELEM-B / HBM-V15-HARDEN: SFU bank-pair leaf (4 per quadrant, LG roots f94fb79fd/80d1f4413)",
    "notes": "SFU port-group leaf 0.40 mm2",
    "pin_windows": [
@@ -88680,20 +89200,124 @@
      "link": "sfu_NW1>sfu_NW0:SFU_CORE"
     }
    ],
-   "rtl_pending": "H-ELEM-B / HBM-V15-HARDEN: SFU bank-pair leaf (4 per quadrant, LG roots f94fb79fd/80d1f4413)"
+   "rtl_pending": "H-ELEM-B / HBM-V15-HARDEN: SFU bank-pair leaf (4 per quadrant, LG roots f94fb79fd/80d1f4413)",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_leaf.sv",
+   "clock_domain": "stream 1200 MHz: clk_lg[1] of vm NW",
+   "pins": [
+    {
+     "name": "clk",
+     "face": "N",
+     "layer": "M5",
+     "span_um": [
+      107.952,
+      108.048
+     ],
+     "offset": 108.0
+    },
+    {
+     "name": "rst_n",
+     "face": "N",
+     "layer": "M5",
+     "span_um": [
+      108.048,
+      108.144
+     ],
+     "offset": 108.096
+    },
+    {
+     "name": "lg_rq[33:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      10.0,
+      13.264
+     ],
+     "offset": 11.632
+    },
+    {
+     "name": "lg_wq[561:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      14.0,
+      67.952
+     ],
+     "offset": 40.976
+    },
+    {
+     "name": "lg_rr[513:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      70.0,
+      119.344
+     ],
+     "offset": 94.672
+    },
+    {
+     "name": "lg_w_done[1:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      120.0,
+      120.192
+     ],
+     "offset": 120.096
+    },
+    {
+     "name": "c_rq[33:0]",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      10.0,
+      13.264
+     ],
+     "offset": 11.632
+    },
+    {
+     "name": "c_wq[561:0]",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      14.0,
+      67.952
+     ],
+     "offset": 40.976
+    },
+    {
+     "name": "c_rr[513:0]",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      70.0,
+      119.344
+     ],
+     "offset": 94.672
+    },
+    {
+     "name": "c_w_done[1:0]",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      120.0,
+      120.192
+     ],
+     "offset": 120.096
+    }
+   ]
   },
   {
    "name": "sfu_NW2",
-   "cell": null,
+   "cell": "ot_hgi_sfu_lg_pair_leaf",
    "kind": "tile",
    "parent": "die",
    "outline": {
-    "w": 500.0,
-    "h": 800.0
+    "w": 216.0,
+    "h": 216.0
    },
    "origin": {
-    "x": 5439.056,
-    "y": 14590.133,
+    "x": 5723.056,
+    "y": 14882.133,
     "orient": "R0"
    },
    "clock_entry": {
@@ -88709,8 +89333,8 @@
     "in_delay_frac": 0.2,
     "out_delay_frac": 0.2
    },
-   "version": 5,
-   "grant": "window",
+   "version": 7,
+   "grant": "real_rtl_pins_v7",
    "rtl_owner": "H-ELEM-B / HBM-V15-HARDEN: SFU bank-pair leaf (4 per quadrant, LG roots f94fb79fd/80d1f4413)",
    "notes": "SFU port-group leaf 0.40 mm2",
    "pin_windows": [
@@ -88745,20 +89369,124 @@
      "link": "sfu_NW2>sfu_NW0:SFU_CORE"
     }
    ],
-   "rtl_pending": "H-ELEM-B / HBM-V15-HARDEN: SFU bank-pair leaf (4 per quadrant, LG roots f94fb79fd/80d1f4413)"
+   "rtl_pending": "H-ELEM-B / HBM-V15-HARDEN: SFU bank-pair leaf (4 per quadrant, LG roots f94fb79fd/80d1f4413)",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_leaf.sv",
+   "clock_domain": "stream 1200 MHz: clk_lg[2] of vm NW",
+   "pins": [
+    {
+     "name": "clk",
+     "face": "N",
+     "layer": "M5",
+     "span_um": [
+      107.952,
+      108.048
+     ],
+     "offset": 108.0
+    },
+    {
+     "name": "rst_n",
+     "face": "N",
+     "layer": "M5",
+     "span_um": [
+      108.048,
+      108.144
+     ],
+     "offset": 108.096
+    },
+    {
+     "name": "lg_rq[33:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      10.0,
+      13.264
+     ],
+     "offset": 11.632
+    },
+    {
+     "name": "lg_wq[561:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      14.0,
+      67.952
+     ],
+     "offset": 40.976
+    },
+    {
+     "name": "lg_rr[513:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      70.0,
+      119.344
+     ],
+     "offset": 94.672
+    },
+    {
+     "name": "lg_w_done[1:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      120.0,
+      120.192
+     ],
+     "offset": 120.096
+    },
+    {
+     "name": "c_rq[33:0]",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      10.0,
+      13.264
+     ],
+     "offset": 11.632
+    },
+    {
+     "name": "c_wq[561:0]",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      14.0,
+      67.952
+     ],
+     "offset": 40.976
+    },
+    {
+     "name": "c_rr[513:0]",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      70.0,
+      119.344
+     ],
+     "offset": 94.672
+    },
+    {
+     "name": "c_w_done[1:0]",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      120.0,
+      120.192
+     ],
+     "offset": 120.096
+    }
+   ]
   },
   {
    "name": "sfu_NW3",
-   "cell": null,
+   "cell": "ot_hgi_sfu_lg_pair_leaf",
    "kind": "tile",
    "parent": "die",
    "outline": {
-    "w": 500.0,
-    "h": 800.0
+    "w": 216.0,
+    "h": 216.0
    },
    "origin": {
-    "x": 8098.584,
-    "y": 14590.133,
+    "x": 8382.584,
+    "y": 14882.133,
     "orient": "R0"
    },
    "clock_entry": {
@@ -88774,8 +89502,8 @@
     "in_delay_frac": 0.2,
     "out_delay_frac": 0.2
    },
-   "version": 5,
-   "grant": "window",
+   "version": 7,
+   "grant": "real_rtl_pins_v7",
    "rtl_owner": "H-ELEM-B / HBM-V15-HARDEN: SFU bank-pair leaf (4 per quadrant, LG roots f94fb79fd/80d1f4413)",
    "notes": "SFU port-group leaf 0.40 mm2",
    "pin_windows": [
@@ -88810,20 +89538,124 @@
      "link": "sfu_NW3>sfu_NW0:SFU_CORE"
     }
    ],
-   "rtl_pending": "H-ELEM-B / HBM-V15-HARDEN: SFU bank-pair leaf (4 per quadrant, LG roots f94fb79fd/80d1f4413)"
+   "rtl_pending": "H-ELEM-B / HBM-V15-HARDEN: SFU bank-pair leaf (4 per quadrant, LG roots f94fb79fd/80d1f4413)",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_leaf.sv",
+   "clock_domain": "stream 1200 MHz: clk_lg[3] of vm NW",
+   "pins": [
+    {
+     "name": "clk",
+     "face": "N",
+     "layer": "M5",
+     "span_um": [
+      107.952,
+      108.048
+     ],
+     "offset": 108.0
+    },
+    {
+     "name": "rst_n",
+     "face": "N",
+     "layer": "M5",
+     "span_um": [
+      108.048,
+      108.144
+     ],
+     "offset": 108.096
+    },
+    {
+     "name": "lg_rq[33:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      10.0,
+      13.264
+     ],
+     "offset": 11.632
+    },
+    {
+     "name": "lg_wq[561:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      14.0,
+      67.952
+     ],
+     "offset": 40.976
+    },
+    {
+     "name": "lg_rr[513:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      70.0,
+      119.344
+     ],
+     "offset": 94.672
+    },
+    {
+     "name": "lg_w_done[1:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      120.0,
+      120.192
+     ],
+     "offset": 120.096
+    },
+    {
+     "name": "c_rq[33:0]",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      10.0,
+      13.264
+     ],
+     "offset": 11.632
+    },
+    {
+     "name": "c_wq[561:0]",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      14.0,
+      67.952
+     ],
+     "offset": 40.976
+    },
+    {
+     "name": "c_rr[513:0]",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      70.0,
+      119.344
+     ],
+     "offset": 94.672
+    },
+    {
+     "name": "c_w_done[1:0]",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      120.0,
+      120.192
+     ],
+     "offset": 120.096
+    }
+   ]
   },
   {
    "name": "sfu_SE0",
-   "cell": null,
+   "cell": "ot_hgi_sfu_lg_pair_leaf",
    "kind": "tile",
    "parent": "die",
    "outline": {
-    "w": 500.0,
-    "h": 800.0
+    "w": 216.0,
+    "h": 216.0
    },
    "origin": {
     "x": 30398.4,
-    "y": 5622.56,
+    "y": 5914.56,
     "orient": "R0"
    },
    "clock_entry": {
@@ -88839,8 +89671,8 @@
     "in_delay_frac": 0.2,
     "out_delay_frac": 0.2
    },
-   "version": 5,
-   "grant": "window",
+   "version": 7,
+   "grant": "real_rtl_pins_v7",
    "rtl_owner": "H-ELEM-B / HBM-V15-HARDEN: SFU bank-pair leaf (4 per quadrant, LG roots f94fb79fd/80d1f4413)",
    "notes": "SFU port-group leaf 0.40 mm2",
    "pin_windows": [
@@ -88895,20 +89727,124 @@
      "link": "vmb_SE1>sfu_SE0:LG_SFU"
     }
    ],
-   "rtl_pending": "H-ELEM-B / HBM-V15-HARDEN: SFU bank-pair leaf (4 per quadrant, LG roots f94fb79fd/80d1f4413)"
+   "rtl_pending": "H-ELEM-B / HBM-V15-HARDEN: SFU bank-pair leaf (4 per quadrant, LG roots f94fb79fd/80d1f4413)",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_leaf.sv",
+   "clock_domain": "stream 1200 MHz: clk_lg[0] of vm SE",
+   "pins": [
+    {
+     "name": "clk",
+     "face": "N",
+     "layer": "M5",
+     "span_um": [
+      107.952,
+      108.048
+     ],
+     "offset": 108.0
+    },
+    {
+     "name": "rst_n",
+     "face": "N",
+     "layer": "M5",
+     "span_um": [
+      108.048,
+      108.144
+     ],
+     "offset": 108.096
+    },
+    {
+     "name": "lg_rq[33:0]",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      10.0,
+      13.264
+     ],
+     "offset": 11.632
+    },
+    {
+     "name": "lg_wq[561:0]",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      14.0,
+      67.952
+     ],
+     "offset": 40.976
+    },
+    {
+     "name": "lg_rr[513:0]",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      70.0,
+      119.344
+     ],
+     "offset": 94.672
+    },
+    {
+     "name": "lg_w_done[1:0]",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      120.0,
+      120.192
+     ],
+     "offset": 120.096
+    },
+    {
+     "name": "c_rq[33:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      10.0,
+      13.264
+     ],
+     "offset": 11.632
+    },
+    {
+     "name": "c_wq[561:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      14.0,
+      67.952
+     ],
+     "offset": 40.976
+    },
+    {
+     "name": "c_rr[513:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      70.0,
+      119.344
+     ],
+     "offset": 94.672
+    },
+    {
+     "name": "c_w_done[1:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      120.0,
+      120.192
+     ],
+     "offset": 120.096
+    }
+   ]
   },
   {
    "name": "sfu_SE1",
-   "cell": null,
+   "cell": "ot_hgi_sfu_lg_pair_leaf",
    "kind": "tile",
    "parent": "die",
    "outline": {
-    "w": 500.0,
-    "h": 800.0
+    "w": 216.0,
+    "h": 216.0
    },
    "origin": {
     "x": 27775.592,
-    "y": 5622.56,
+    "y": 5914.56,
     "orient": "R0"
    },
    "clock_entry": {
@@ -88924,8 +89860,8 @@
     "in_delay_frac": 0.2,
     "out_delay_frac": 0.2
    },
-   "version": 5,
-   "grant": "window",
+   "version": 7,
+   "grant": "real_rtl_pins_v7",
    "rtl_owner": "H-ELEM-B / HBM-V15-HARDEN: SFU bank-pair leaf (4 per quadrant, LG roots f94fb79fd/80d1f4413)",
    "notes": "SFU port-group leaf 0.40 mm2",
    "pin_windows": [
@@ -88960,20 +89896,124 @@
      "link": "sfu_SE1>sfu_SE0:SFU_CORE"
     }
    ],
-   "rtl_pending": "H-ELEM-B / HBM-V15-HARDEN: SFU bank-pair leaf (4 per quadrant, LG roots f94fb79fd/80d1f4413)"
+   "rtl_pending": "H-ELEM-B / HBM-V15-HARDEN: SFU bank-pair leaf (4 per quadrant, LG roots f94fb79fd/80d1f4413)",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_leaf.sv",
+   "clock_domain": "stream 1200 MHz: clk_lg[1] of vm SE",
+   "pins": [
+    {
+     "name": "clk",
+     "face": "N",
+     "layer": "M5",
+     "span_um": [
+      107.952,
+      108.048
+     ],
+     "offset": 108.0
+    },
+    {
+     "name": "rst_n",
+     "face": "N",
+     "layer": "M5",
+     "span_um": [
+      108.048,
+      108.144
+     ],
+     "offset": 108.096
+    },
+    {
+     "name": "lg_rq[33:0]",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      10.0,
+      13.264
+     ],
+     "offset": 11.632
+    },
+    {
+     "name": "lg_wq[561:0]",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      14.0,
+      67.952
+     ],
+     "offset": 40.976
+    },
+    {
+     "name": "lg_rr[513:0]",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      70.0,
+      119.344
+     ],
+     "offset": 94.672
+    },
+    {
+     "name": "lg_w_done[1:0]",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      120.0,
+      120.192
+     ],
+     "offset": 120.096
+    },
+    {
+     "name": "c_rq[33:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      10.0,
+      13.264
+     ],
+     "offset": 11.632
+    },
+    {
+     "name": "c_wq[561:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      14.0,
+      67.952
+     ],
+     "offset": 40.976
+    },
+    {
+     "name": "c_rr[513:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      70.0,
+      119.344
+     ],
+     "offset": 94.672
+    },
+    {
+     "name": "c_w_done[1:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      120.0,
+      120.192
+     ],
+     "offset": 120.096
+    }
+   ]
   },
   {
    "name": "sfu_SE2",
-   "cell": null,
+   "cell": "ot_hgi_sfu_lg_pair_leaf",
    "kind": "tile",
    "parent": "die",
    "outline": {
-    "w": 500.0,
-    "h": 800.0
+    "w": 216.0,
+    "h": 216.0
    },
    "origin": {
     "x": 25152.784,
-    "y": 5622.56,
+    "y": 5914.56,
     "orient": "R0"
    },
    "clock_entry": {
@@ -88989,8 +90029,8 @@
     "in_delay_frac": 0.2,
     "out_delay_frac": 0.2
    },
-   "version": 5,
-   "grant": "window",
+   "version": 7,
+   "grant": "real_rtl_pins_v7",
    "rtl_owner": "H-ELEM-B / HBM-V15-HARDEN: SFU bank-pair leaf (4 per quadrant, LG roots f94fb79fd/80d1f4413)",
    "notes": "SFU port-group leaf 0.40 mm2",
    "pin_windows": [
@@ -89025,20 +90065,124 @@
      "link": "sfu_SE2>sfu_SE0:SFU_CORE"
     }
    ],
-   "rtl_pending": "H-ELEM-B / HBM-V15-HARDEN: SFU bank-pair leaf (4 per quadrant, LG roots f94fb79fd/80d1f4413)"
+   "rtl_pending": "H-ELEM-B / HBM-V15-HARDEN: SFU bank-pair leaf (4 per quadrant, LG roots f94fb79fd/80d1f4413)",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_leaf.sv",
+   "clock_domain": "stream 1200 MHz: clk_lg[2] of vm SE",
+   "pins": [
+    {
+     "name": "clk",
+     "face": "N",
+     "layer": "M5",
+     "span_um": [
+      107.952,
+      108.048
+     ],
+     "offset": 108.0
+    },
+    {
+     "name": "rst_n",
+     "face": "N",
+     "layer": "M5",
+     "span_um": [
+      108.048,
+      108.144
+     ],
+     "offset": 108.096
+    },
+    {
+     "name": "lg_rq[33:0]",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      10.0,
+      13.264
+     ],
+     "offset": 11.632
+    },
+    {
+     "name": "lg_wq[561:0]",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      14.0,
+      67.952
+     ],
+     "offset": 40.976
+    },
+    {
+     "name": "lg_rr[513:0]",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      70.0,
+      119.344
+     ],
+     "offset": 94.672
+    },
+    {
+     "name": "lg_w_done[1:0]",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      120.0,
+      120.192
+     ],
+     "offset": 120.096
+    },
+    {
+     "name": "c_rq[33:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      10.0,
+      13.264
+     ],
+     "offset": 11.632
+    },
+    {
+     "name": "c_wq[561:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      14.0,
+      67.952
+     ],
+     "offset": 40.976
+    },
+    {
+     "name": "c_rr[513:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      70.0,
+      119.344
+     ],
+     "offset": 94.672
+    },
+    {
+     "name": "c_w_done[1:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      120.0,
+      120.192
+     ],
+     "offset": 120.096
+    }
+   ]
   },
   {
    "name": "sfu_SE3",
-   "cell": null,
+   "cell": "ot_hgi_sfu_lg_pair_leaf",
    "kind": "tile",
    "parent": "die",
    "outline": {
-    "w": 500.0,
-    "h": 800.0
+    "w": 216.0,
+    "h": 216.0
    },
    "origin": {
     "x": 22529.976,
-    "y": 5622.56,
+    "y": 5914.56,
     "orient": "R0"
    },
    "clock_entry": {
@@ -89054,8 +90198,8 @@
     "in_delay_frac": 0.2,
     "out_delay_frac": 0.2
    },
-   "version": 5,
-   "grant": "window",
+   "version": 7,
+   "grant": "real_rtl_pins_v7",
    "rtl_owner": "H-ELEM-B / HBM-V15-HARDEN: SFU bank-pair leaf (4 per quadrant, LG roots f94fb79fd/80d1f4413)",
    "notes": "SFU port-group leaf 0.40 mm2",
    "pin_windows": [
@@ -89090,20 +90234,124 @@
      "link": "sfu_SE3>sfu_SE0:SFU_CORE"
     }
    ],
-   "rtl_pending": "H-ELEM-B / HBM-V15-HARDEN: SFU bank-pair leaf (4 per quadrant, LG roots f94fb79fd/80d1f4413)"
+   "rtl_pending": "H-ELEM-B / HBM-V15-HARDEN: SFU bank-pair leaf (4 per quadrant, LG roots f94fb79fd/80d1f4413)",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_leaf.sv",
+   "clock_domain": "stream 1200 MHz: clk_lg[3] of vm SE",
+   "pins": [
+    {
+     "name": "clk",
+     "face": "N",
+     "layer": "M5",
+     "span_um": [
+      107.952,
+      108.048
+     ],
+     "offset": 108.0
+    },
+    {
+     "name": "rst_n",
+     "face": "N",
+     "layer": "M5",
+     "span_um": [
+      108.048,
+      108.144
+     ],
+     "offset": 108.096
+    },
+    {
+     "name": "lg_rq[33:0]",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      10.0,
+      13.264
+     ],
+     "offset": 11.632
+    },
+    {
+     "name": "lg_wq[561:0]",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      14.0,
+      67.952
+     ],
+     "offset": 40.976
+    },
+    {
+     "name": "lg_rr[513:0]",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      70.0,
+      119.344
+     ],
+     "offset": 94.672
+    },
+    {
+     "name": "lg_w_done[1:0]",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      120.0,
+      120.192
+     ],
+     "offset": 120.096
+    },
+    {
+     "name": "c_rq[33:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      10.0,
+      13.264
+     ],
+     "offset": 11.632
+    },
+    {
+     "name": "c_wq[561:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      14.0,
+      67.952
+     ],
+     "offset": 40.976
+    },
+    {
+     "name": "c_rr[513:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      70.0,
+      119.344
+     ],
+     "offset": 94.672
+    },
+    {
+     "name": "c_w_done[1:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      120.0,
+      120.192
+     ],
+     "offset": 120.096
+    }
+   ]
   },
   {
    "name": "sfu_SW0",
-   "cell": null,
+   "cell": "ot_hgi_sfu_lg_pair_leaf",
    "kind": "tile",
    "parent": "die",
    "outline": {
-    "w": 500.0,
-    "h": 800.0
+    "w": 216.0,
+    "h": 216.0
    },
    "origin": {
-    "x": 120.0,
-    "y": 5622.56,
+    "x": 404.0,
+    "y": 5914.56,
     "orient": "R0"
    },
    "clock_entry": {
@@ -89119,8 +90367,8 @@
     "in_delay_frac": 0.2,
     "out_delay_frac": 0.2
    },
-   "version": 5,
-   "grant": "window",
+   "version": 7,
+   "grant": "real_rtl_pins_v7",
    "rtl_owner": "H-ELEM-B / HBM-V15-HARDEN: SFU bank-pair leaf (4 per quadrant, LG roots f94fb79fd/80d1f4413)",
    "notes": "SFU port-group leaf 0.40 mm2",
    "pin_windows": [
@@ -89175,20 +90423,124 @@
      "link": "vmb_SW1>sfu_SW0:LG_SFU"
     }
    ],
-   "rtl_pending": "H-ELEM-B / HBM-V15-HARDEN: SFU bank-pair leaf (4 per quadrant, LG roots f94fb79fd/80d1f4413)"
+   "rtl_pending": "H-ELEM-B / HBM-V15-HARDEN: SFU bank-pair leaf (4 per quadrant, LG roots f94fb79fd/80d1f4413)",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_leaf.sv",
+   "clock_domain": "stream 1200 MHz: clk_lg[0] of vm SW",
+   "pins": [
+    {
+     "name": "clk",
+     "face": "N",
+     "layer": "M5",
+     "span_um": [
+      107.952,
+      108.048
+     ],
+     "offset": 108.0
+    },
+    {
+     "name": "rst_n",
+     "face": "N",
+     "layer": "M5",
+     "span_um": [
+      108.048,
+      108.144
+     ],
+     "offset": 108.096
+    },
+    {
+     "name": "lg_rq[33:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      10.0,
+      13.264
+     ],
+     "offset": 11.632
+    },
+    {
+     "name": "lg_wq[561:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      14.0,
+      67.952
+     ],
+     "offset": 40.976
+    },
+    {
+     "name": "lg_rr[513:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      70.0,
+      119.344
+     ],
+     "offset": 94.672
+    },
+    {
+     "name": "lg_w_done[1:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      120.0,
+      120.192
+     ],
+     "offset": 120.096
+    },
+    {
+     "name": "c_rq[33:0]",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      10.0,
+      13.264
+     ],
+     "offset": 11.632
+    },
+    {
+     "name": "c_wq[561:0]",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      14.0,
+      67.952
+     ],
+     "offset": 40.976
+    },
+    {
+     "name": "c_rr[513:0]",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      70.0,
+      119.344
+     ],
+     "offset": 94.672
+    },
+    {
+     "name": "c_w_done[1:0]",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      120.0,
+      120.192
+     ],
+     "offset": 120.096
+    }
+   ]
   },
   {
    "name": "sfu_SW1",
-   "cell": null,
+   "cell": "ot_hgi_sfu_lg_pair_leaf",
    "kind": "tile",
    "parent": "die",
    "outline": {
-    "w": 500.0,
-    "h": 800.0
+    "w": 216.0,
+    "h": 216.0
    },
    "origin": {
-    "x": 2742.808,
-    "y": 5622.56,
+    "x": 3026.808,
+    "y": 5914.56,
     "orient": "R0"
    },
    "clock_entry": {
@@ -89204,8 +90556,8 @@
     "in_delay_frac": 0.2,
     "out_delay_frac": 0.2
    },
-   "version": 5,
-   "grant": "window",
+   "version": 7,
+   "grant": "real_rtl_pins_v7",
    "rtl_owner": "H-ELEM-B / HBM-V15-HARDEN: SFU bank-pair leaf (4 per quadrant, LG roots f94fb79fd/80d1f4413)",
    "notes": "SFU port-group leaf 0.40 mm2",
    "pin_windows": [
@@ -89240,20 +90592,124 @@
      "link": "sfu_SW1>sfu_SW0:SFU_CORE"
     }
    ],
-   "rtl_pending": "H-ELEM-B / HBM-V15-HARDEN: SFU bank-pair leaf (4 per quadrant, LG roots f94fb79fd/80d1f4413)"
+   "rtl_pending": "H-ELEM-B / HBM-V15-HARDEN: SFU bank-pair leaf (4 per quadrant, LG roots f94fb79fd/80d1f4413)",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_leaf.sv",
+   "clock_domain": "stream 1200 MHz: clk_lg[1] of vm SW",
+   "pins": [
+    {
+     "name": "clk",
+     "face": "N",
+     "layer": "M5",
+     "span_um": [
+      107.952,
+      108.048
+     ],
+     "offset": 108.0
+    },
+    {
+     "name": "rst_n",
+     "face": "N",
+     "layer": "M5",
+     "span_um": [
+      108.048,
+      108.144
+     ],
+     "offset": 108.096
+    },
+    {
+     "name": "lg_rq[33:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      10.0,
+      13.264
+     ],
+     "offset": 11.632
+    },
+    {
+     "name": "lg_wq[561:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      14.0,
+      67.952
+     ],
+     "offset": 40.976
+    },
+    {
+     "name": "lg_rr[513:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      70.0,
+      119.344
+     ],
+     "offset": 94.672
+    },
+    {
+     "name": "lg_w_done[1:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      120.0,
+      120.192
+     ],
+     "offset": 120.096
+    },
+    {
+     "name": "c_rq[33:0]",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      10.0,
+      13.264
+     ],
+     "offset": 11.632
+    },
+    {
+     "name": "c_wq[561:0]",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      14.0,
+      67.952
+     ],
+     "offset": 40.976
+    },
+    {
+     "name": "c_rr[513:0]",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      70.0,
+      119.344
+     ],
+     "offset": 94.672
+    },
+    {
+     "name": "c_w_done[1:0]",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      120.0,
+      120.192
+     ],
+     "offset": 120.096
+    }
+   ]
   },
   {
    "name": "sfu_SW2",
-   "cell": null,
+   "cell": "ot_hgi_sfu_lg_pair_leaf",
    "kind": "tile",
    "parent": "die",
    "outline": {
-    "w": 500.0,
-    "h": 800.0
+    "w": 216.0,
+    "h": 216.0
    },
    "origin": {
-    "x": 5365.616,
-    "y": 5622.56,
+    "x": 5649.616,
+    "y": 5914.56,
     "orient": "R0"
    },
    "clock_entry": {
@@ -89269,8 +90725,8 @@
     "in_delay_frac": 0.2,
     "out_delay_frac": 0.2
    },
-   "version": 5,
-   "grant": "window",
+   "version": 7,
+   "grant": "real_rtl_pins_v7",
    "rtl_owner": "H-ELEM-B / HBM-V15-HARDEN: SFU bank-pair leaf (4 per quadrant, LG roots f94fb79fd/80d1f4413)",
    "notes": "SFU port-group leaf 0.40 mm2",
    "pin_windows": [
@@ -89305,20 +90761,124 @@
      "link": "sfu_SW2>sfu_SW0:SFU_CORE"
     }
    ],
-   "rtl_pending": "H-ELEM-B / HBM-V15-HARDEN: SFU bank-pair leaf (4 per quadrant, LG roots f94fb79fd/80d1f4413)"
+   "rtl_pending": "H-ELEM-B / HBM-V15-HARDEN: SFU bank-pair leaf (4 per quadrant, LG roots f94fb79fd/80d1f4413)",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_leaf.sv",
+   "clock_domain": "stream 1200 MHz: clk_lg[2] of vm SW",
+   "pins": [
+    {
+     "name": "clk",
+     "face": "N",
+     "layer": "M5",
+     "span_um": [
+      107.952,
+      108.048
+     ],
+     "offset": 108.0
+    },
+    {
+     "name": "rst_n",
+     "face": "N",
+     "layer": "M5",
+     "span_um": [
+      108.048,
+      108.144
+     ],
+     "offset": 108.096
+    },
+    {
+     "name": "lg_rq[33:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      10.0,
+      13.264
+     ],
+     "offset": 11.632
+    },
+    {
+     "name": "lg_wq[561:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      14.0,
+      67.952
+     ],
+     "offset": 40.976
+    },
+    {
+     "name": "lg_rr[513:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      70.0,
+      119.344
+     ],
+     "offset": 94.672
+    },
+    {
+     "name": "lg_w_done[1:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      120.0,
+      120.192
+     ],
+     "offset": 120.096
+    },
+    {
+     "name": "c_rq[33:0]",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      10.0,
+      13.264
+     ],
+     "offset": 11.632
+    },
+    {
+     "name": "c_wq[561:0]",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      14.0,
+      67.952
+     ],
+     "offset": 40.976
+    },
+    {
+     "name": "c_rr[513:0]",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      70.0,
+      119.344
+     ],
+     "offset": 94.672
+    },
+    {
+     "name": "c_w_done[1:0]",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      120.0,
+      120.192
+     ],
+     "offset": 120.096
+    }
+   ]
   },
   {
    "name": "sfu_SW3",
-   "cell": null,
+   "cell": "ot_hgi_sfu_lg_pair_leaf",
    "kind": "tile",
    "parent": "die",
    "outline": {
-    "w": 500.0,
-    "h": 800.0
+    "w": 216.0,
+    "h": 216.0
    },
    "origin": {
-    "x": 7988.424,
-    "y": 5622.56,
+    "x": 8272.424,
+    "y": 5914.56,
     "orient": "R0"
    },
    "clock_entry": {
@@ -89334,8 +90894,8 @@
     "in_delay_frac": 0.2,
     "out_delay_frac": 0.2
    },
-   "version": 5,
-   "grant": "window",
+   "version": 7,
+   "grant": "real_rtl_pins_v7",
    "rtl_owner": "H-ELEM-B / HBM-V15-HARDEN: SFU bank-pair leaf (4 per quadrant, LG roots f94fb79fd/80d1f4413)",
    "notes": "SFU port-group leaf 0.40 mm2",
    "pin_windows": [
@@ -89370,7 +90930,111 @@
      "link": "sfu_SW3>sfu_SW0:SFU_CORE"
     }
    ],
-   "rtl_pending": "H-ELEM-B / HBM-V15-HARDEN: SFU bank-pair leaf (4 per quadrant, LG roots f94fb79fd/80d1f4413)"
+   "rtl_pending": "H-ELEM-B / HBM-V15-HARDEN: SFU bank-pair leaf (4 per quadrant, LG roots f94fb79fd/80d1f4413)",
+   "source": "rtl/hbm_accel/generic/peers/ot_hgi_sfu_lg_pair_leaf.sv",
+   "clock_domain": "stream 1200 MHz: clk_lg[3] of vm SW",
+   "pins": [
+    {
+     "name": "clk",
+     "face": "N",
+     "layer": "M5",
+     "span_um": [
+      107.952,
+      108.048
+     ],
+     "offset": 108.0
+    },
+    {
+     "name": "rst_n",
+     "face": "N",
+     "layer": "M5",
+     "span_um": [
+      108.048,
+      108.144
+     ],
+     "offset": 108.096
+    },
+    {
+     "name": "lg_rq[33:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      10.0,
+      13.264
+     ],
+     "offset": 11.632
+    },
+    {
+     "name": "lg_wq[561:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      14.0,
+      67.952
+     ],
+     "offset": 40.976
+    },
+    {
+     "name": "lg_rr[513:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      70.0,
+      119.344
+     ],
+     "offset": 94.672
+    },
+    {
+     "name": "lg_w_done[1:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      120.0,
+      120.192
+     ],
+     "offset": 120.096
+    },
+    {
+     "name": "c_rq[33:0]",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      10.0,
+      13.264
+     ],
+     "offset": 11.632
+    },
+    {
+     "name": "c_wq[561:0]",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      14.0,
+      67.952
+     ],
+     "offset": 40.976
+    },
+    {
+     "name": "c_rr[513:0]",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      70.0,
+      119.344
+     ],
+     "offset": 94.672
+    },
+    {
+     "name": "c_w_done[1:0]",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      120.0,
+      120.192
+     ],
+     "offset": 120.096
+    }
+   ]
   },
   {
    "name": "sm_NE0",
@@ -130578,6 +132242,127 @@
    "hb_ckgen -> 259.2 x 220.32 wires-only cluster (PLL + 4 ckgen_rel), por_* + pll_* S M5, refclk/por_n N",
    "ot_hbm_svc_static_vm_delivery: no slot; VM HBM path open (H-DIE)",
    "SU RF: 36 relay homes x 16 routes (max hop 470.8 um)"
+  ]
+ },
+ "sfu_core_request_v7": {
+  "status": "PROPOSED (needs H-SM: shrink the band-side SM rows by 420 um)",
+  "core_boxes": {
+   "SW": {
+    "x": 2304.212,
+    "y": 4682.56,
+    "w": 4000.0,
+    "h": 400.0
+   },
+   "SE": {
+    "x": 24714.188,
+    "y": 4682.56,
+    "w": 4000.0,
+    "h": 400.0
+   },
+   "NW": {
+    "x": 2359.292,
+    "y": 16195.133,
+    "w": 4000.0,
+    "h": 400.0
+   },
+   "NE": {
+    "x": 24659.108,
+    "y": 16195.133,
+    "w": 4000.0,
+    "h": 400.0
+   }
+  },
+  "leaf_R": [
+   {
+    "leaf": "sfu_NE0",
+    "dist_um": 4987,
+    "R": 10
+   },
+   {
+    "leaf": "sfu_NE1",
+    "dist_um": 2328,
+    "R": 4
+   },
+   {
+    "leaf": "sfu_NE2",
+    "dist_um": 2612,
+    "R": 5
+   },
+   {
+    "leaf": "sfu_NE3",
+    "dist_um": 5271,
+    "R": 10
+   },
+   {
+    "leaf": "sfu_NW0",
+    "dist_um": 5252,
+    "R": 10
+   },
+   {
+    "leaf": "sfu_NW1",
+    "dist_um": 2593,
+    "R": 5
+   },
+   {
+    "leaf": "sfu_NW2",
+    "dist_um": 2877,
+    "R": 5
+   },
+   {
+    "leaf": "sfu_NW3",
+    "dist_um": 5536,
+    "R": 11
+   },
+   {
+    "leaf": "sfu_SE0",
+    "dist_um": 4932,
+    "R": 10
+   },
+   {
+    "leaf": "sfu_SE1",
+    "dist_um": 2309,
+    "R": 4
+   },
+   {
+    "leaf": "sfu_SE2",
+    "dist_um": 2593,
+    "R": 5
+   },
+   {
+    "leaf": "sfu_SE3",
+    "dist_um": 5216,
+    "R": 10
+   },
+   {
+    "leaf": "sfu_SW0",
+    "dist_um": 4932,
+    "R": 10
+   },
+   {
+    "leaf": "sfu_SW1",
+    "dist_um": 2309,
+    "R": 4
+   },
+   {
+    "leaf": "sfu_SW2",
+    "dist_um": 2593,
+    "R": 5
+   },
+   {
+    "leaf": "sfu_SW3",
+    "dist_um": 5216,
+    "R": 10
+   }
+  ],
+  "R_padded": 11,
+  "note": "core LG_PATH = 1 + max R; all pairs padded to equal R (H-SU rule)"
+ },
+ "grants_v7_1945": {
+  "date": "2026-10-15",
+  "owner": "H-DIE",
+  "changes": [
+   "sfu leaves x16 216x216 real RTL pins",
+   "SFU core: no free area, PROPOSED strip (H-SM)"
   ]
  }
 }
