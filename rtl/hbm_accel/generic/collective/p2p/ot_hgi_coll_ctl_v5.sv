@@ -26,6 +26,7 @@ module ot_hgi_coll_iter_mul(
  // The m_* ports keep their names and edges: m_*_l carries the full 32-bit offset, m_*_h is 0 (ctl_v5 adds it, a no-op).
  reg [31:0] it;reg [15:0] a,v,b,c,d;reg [7:0] k;
  reg [15:0] pa0,pv0;reg [7:0] pa1,pv1;
+ reg [23:0] lk_l,lk_h;
  reg [23:0] pb0,pb1,pc0,pc1,pd0,pd1;reg [15:0] qb0,qc0,qd0;reg [7:0] qb1,qc1,qd1;
  always @(posedge clk)begin
   it<=iteration;a<=s_idx;v<=s_vm;b<=s_iaddr;c<=s_del;d<=s_rgx;k<=s_lk;
@@ -34,14 +35,17 @@ module ot_hgi_coll_iter_mul(
   pb0<=it[15:0]*b[7:0];pb1<=it[15:0]*b[15:8];qb0<=16'(it[31:16]*b[7:0]);qb1<=8'(it[31:16]*b[15:8]);
   pc0<=it[15:0]*c[7:0];pc1<=it[15:0]*c[15:8];qc0<=16'(it[31:16]*c[7:0]);qc1<=8'(it[31:16]*c[15:8]);
   pd0<=it[15:0]*d[7:0];pd1<=it[15:0]*d[15:8];qd0<=16'(it[31:16]*d[7:0]);qd1<=8'(it[31:16]*d[15:8]);
-  m_lk_l<=it[15:0]*k;m_lk_h<=it[31:16]*k;
+  lk_l<=it[15:0]*k;lk_h<=it[31:16]*k;
  end
- always @*begin
-  m_idx=16'(pa0+{pa1,8'd0});m_vm=16'(pv0+{pv1,8'd0});
-  m_iaddr_l=32'({8'd0,pb0}+{pb1,8'd0}+{qb0,16'd0}+{qb1,24'd0});
-  m_del_l=32'({8'd0,pc0}+{pc1,8'd0}+{qc0,16'd0}+{qc1,24'd0});
-  m_rgx_l=32'({8'd0,pd0}+{pd1,8'd0}+{qd0,16'd0}+{qd1,24'd0});
-  m_iaddr_h=16'd0;m_del_h=16'd0;m_rgx_h=16'd0;
+ // V6 (+1 issue edge, H-ELEM 14:20): the combine is its own registered stage (V5b gate: 16x8 stage ~845 ps,
+ // combine + field add -322 ps), so products land at E+3 with the pin-captured d2 instruction.
+ always @(posedge clk)begin
+  m_idx<=16'(pa0+{pa1,8'd0});m_vm<=16'(pv0+{pv1,8'd0});
+  m_iaddr_l<=32'({8'd0,pb0}+{pb1,8'd0}+{qb0,16'd0}+{qb1,24'd0});
+  m_del_l<=32'({8'd0,pc0}+{pc1,8'd0}+{qc0,16'd0}+{qc1,24'd0});
+  m_rgx_l<=32'({8'd0,pd0}+{pd1,8'd0}+{qd0,16'd0}+{qd1,24'd0});
+  m_iaddr_h<=16'd0;m_del_h<=16'd0;m_rgx_h<=16'd0;
+  m_lk_l<=lk_l;m_lk_h<=lk_h;
  end
 endmodule
 
@@ -58,7 +62,8 @@ module ot_hgi_coll_q_static_ctl_v5 #(
  input wire hgi_start,hgi_busy,issue_done,tkm_done,tkm_busy,
  input wire [ND-1:0] dest_v,
  input wire rc_v,input wire [2:0] rc_tag,
- input wire [2055:0] vm_rr,
+ input wire [7:0] vm_rv,                    // V6: VM read valid bits only (data -> ot_hgi_coll_vmasm)
+ output wire [23:0] vm_sel,                  // V6: pair select of the current instruction (flop Q) -> ot_hgi_coll_vmasm
  output wire [135:0] vm_req_pin,
  output reg [1:0] inj_req_pin,
  output reg [31:0] inj_idx_pin,
@@ -67,7 +72,6 @@ module ot_hgi_coll_q_static_ctl_v5 #(
  output wire [1:0] inj_source_v,
  output wire [65:0] inj_source_meta,
  output wire [131:0] vm_source_meta,
- output reg [2047:0] vm_assembled,
  output reg [3:0] vm_assembled_v,
  output wire [NPT*8-1:0] held_epoch,
  output reg [NPT*16-1:0] wr_sequence_pin,rd_sequence_pin,rx_sequence_pin,
@@ -176,8 +180,6 @@ module ot_hgi_coll_q_static_ctl_v5 #(
  reg [65:0] inj_meta_pipe[0:INJLAT-1];
  reg [131:0] vm_meta_pipe[0:9];
  reg [23:0] vm_select_pipe[0:8];
- wire [2055:0] vm_raw;
- reg [2047:0] vm_raw_data;
  reg [7:0] vm_raw_valid;
  reg [7:0] vm_valid_pipe[0:7];
  reg arg_active;
@@ -211,10 +213,6 @@ module ot_hgi_coll_q_static_ctl_v5 #(
   for(integer j=1;j<10;j=j+1)vm_meta_pipe[j]<=vm_meta_pipe[j-1];
   vm_select_pipe[0]<=p_vm_pair_select;
   for(integer j=1;j<9;j=j+1)vm_select_pipe[j]<=vm_select_pipe[j-1];
-  for(integer b=0;b<8;b=b+1)vm_raw_data[b*256+:256]<=vm_rr[b*257+:256];
-  for(integer j=0;j<4;j=j+1)
-   vm_assembled[j*512+:512]<={vm_raw[257*int'(vm_select_pipe[8][j*6+3+:3])+:256],
-     vm_raw[257*int'(vm_select_pipe[8][j*6+:3])+:256]};
   for(integer b=0;b<8;b=b+1)
    vm_req_sector[b*16+:16]<=p_vm_rq[b*17+:16]+m_vm;
  end
@@ -228,22 +226,22 @@ module ot_hgi_coll_q_static_ctl_v5 #(
   end else begin
    if(hgi_start)cycles<=0;else if(hgi_busy)cycles<=cycles+1;
    inj_req_pin<=p_inj_rd;
-   for(integer b=0;b<8;b=b+1)vm_raw_valid[b]<=vm_rr[b*257+256];
+   for(integer b=0;b<8;b=b+1)vm_raw_valid[b]<=vm_rv[b];
    inj_valid_pipe[0]<=p_inj_rd;
    for(integer j=1;j<INJLAT;j=j+1)inj_valid_pipe[j]<=inj_valid_pipe[j-1];
    for(integer b=0;b<8;b=b+1)begin
     vm_req_valid[b]<=p_vm_rq[b*17+16];
     vm_valid_pipe[0][b]<=p_vm_rq[b*17+16];
-    if(vm_rr[b*257+256]!=vm_valid_pipe[7][b])protocol_fault<=1;
+    if(vm_rv[b]!=vm_valid_pipe[7][b])protocol_fault<=1;
    end
    for(integer j=1;j<8;j=j+1)vm_valid_pipe[j]<=vm_valid_pipe[j-1];
    for(integer j=0;j<4;j=j+1)begin
-    vm_assembled_v[j]<=vm_raw[257*int'(vm_select_pipe[8][j*6+:3])+256] &&
-                        vm_raw[257*int'(vm_select_pipe[8][j*6+3+:3])+256] &&
+    vm_assembled_v[j]<=vm_raw_valid[vm_select_pipe[8][j*6+:3]] &&
+                        vm_raw_valid[vm_select_pipe[8][j*6+3+:3]] &&
                         vm_select_pipe[8][j*6+:3]!=vm_select_pipe[8][j*6+3+:3];
     if(vm_select_pipe[8][j*6+:3]!=vm_select_pipe[8][j*6+3+:3] &&
-       vm_raw[257*int'(vm_select_pipe[8][j*6+:3])+256] !=
-       vm_raw[257*int'(vm_select_pipe[8][j*6+3+:3])+256])protocol_fault<=1;
+       vm_raw_valid[vm_select_pipe[8][j*6+:3]] !=
+       vm_raw_valid[vm_select_pipe[8][j*6+3+:3]])protocol_fault<=1;
 
    end
    for(integer k=0;k<NPT;k=k+1)begin
@@ -272,10 +270,35 @@ module ot_hgi_coll_q_static_ctl_v5 #(
 
   end
  end
- for(genvar b=0;b<8;b=b+1)assign vm_raw[b*257+:257]={vm_raw_valid[b],vm_raw_data[b*256+:256]};
+ assign vm_sel=p_vm_pair_select;
  assign inj_source_v=inj_valid_pipe[INJLAT-1];
  assign inj_source_meta=inj_meta_pipe[INJLAT-1];
  assign vm_source_meta=vm_meta_pipe[9];
  for(genvar k=0;k<NPT;k=k+1)assign held_epoch[k*8+:8]=link_epoch[k];
+endmodule
+// V6: VM read-data assembly leaf (moved out of the protocol leaf: 2,048 data bits in and out made that leaf pin-bound,
+// 380x280 at util 7%). Same edges as the V5 protocol-leaf code: sel = the protocol leaf's instruction field (flop Q),
+// sp[0] = vm_select_pipe[0]; raw = vm_raw_data; assembled 9 edges after the select.
+module ot_hgi_coll_vmasm(
+ // BIT-INTERLEAVED faces (the parent permutes, wires only): rd_il[i*8+b] = bank b bit i, as_il[i*8+2j+h] = output pair j
+ // half h (h 0 = low 256) bit i. A 256-column bit slice holds its 8 inputs, its 8:1 muxes and its 8 outputs, so the
+ // pin order along the face keeps every mux local (no 2,048-wire cross-tile shuffle).
+ input wire clk,input wire [23:0] sel,input wire [2047:0] rd_il,output reg [2047:0] as_il);
+ reg [23:0] sp[0:8];reg [2047:0] raw;
+ localparam integer SPX=8;
+`ifdef OT_COLL_V6_MUT_VMSEL
+ localparam integer HL=3;                     // mutant: the two halves of every pair swapped
+`else
+ localparam integer HL=0;
+`endif
+ always @(posedge clk)begin
+  sp[0]<=sel;for(integer j=1;j<9;j=j+1)sp[j]<=sp[j-1];
+  raw<=rd_il;
+  for(integer i=0;i<256;i=i+1)
+   for(integer j=0;j<4;j=j+1)begin
+    as_il[i*8+2*j]  <=raw[i*8+int'(sp[SPX][j*6+HL+:3])];
+    as_il[i*8+2*j+1]<=raw[i*8+int'(sp[SPX][j*6+3-HL+:3])];
+   end
+ end
 endmodule
 `default_nettype wire

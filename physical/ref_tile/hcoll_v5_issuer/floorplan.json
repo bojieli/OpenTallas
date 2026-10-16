@@ -30,10 +30,10 @@
  },
  "pins": {
   "W": [
-   "uop_d2",
-   "busy_d2",
-   "done_d2",
-   "start_d2",
+   "uop_d3",
+   "busy_d3",
+   "done_d3",
+   "start_d3",
    "tap_iteration",
    "tap_steps"
   ],
@@ -50,7 +50,9 @@
    "uop_pc"
   ],
   "S": [
-   "uop_d1"
+   "uop_d2",
+   "busy_d2",
+   "start_d2"
   ]
  },
  "clock_port": "clk_control",
