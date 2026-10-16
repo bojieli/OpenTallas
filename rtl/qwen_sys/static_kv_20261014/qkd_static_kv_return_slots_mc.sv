@@ -40,10 +40,17 @@ module qkd_static_kv_return_slots_mc #(parameter integer DEPTH=8)(
  // Both exports plus upstream controller/front quiet are required at the parent.
  // Core publication synchronizers can lag a new HBM write; idle_core alone
  // therefore cannot establish whole-ring or whole-KV drained.
+ // mc_r3b (Q-ELEM 10-16): idle_hbm no longer looks at the raw controller_co[0] / compiled_hbm_put pins (the r3
+ // route failed CTS hold/setup on that pin -> compare -> idle_hbm cone: setup -527 ps / hold -90 ps). It uses only
+ // registered pin captures: observed/write_slot (this edge's pins) and obs_d/ws_d (last edge's), so idle_hbm is the
+ // original observation one pll_hbm edge later and never earlier (drain observation only; no schedule uses it).
+ (* keep *)reg obs_d,ws_d;
  always @(posedge pll_hbm or negedge hr)
-  if(!hr)idle_hbm<=0;
-  else idle_hbm<=(published==done_sync2) && !observed && !write_slot &&
-                  !controller_co[0] && !compiled_hbm_put;
+  if(!hr)begin idle_hbm<=0;obs_d<=0;ws_d<=0;end
+  else begin
+   obs_d<=observed;ws_d<=write_slot;
+   idle_hbm<=(published==done_sync2) && !observed && !write_slot && !obs_d && !ws_d;
+  end
  always @(posedge ck or negedge rs)
   if(!rs)idle_core<=0;
   else idle_core<=(pub_sync2==consumed) && !slot && !expected_put && !actual_valid;
