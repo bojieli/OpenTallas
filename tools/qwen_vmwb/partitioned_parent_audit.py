@@ -36,6 +36,16 @@ actual={'source_ports':sum(len(v['bits']) for v in tm['ports'].values()),'physic
 checks={'port_bits':actual['source_ports']==15864+relay_clocks+240*e3,'row_bank_count':leaf_counts['qvm_bank_banked_native']==64,'operand_bank_count':leaf_counts['qvm_su_bank_native']==48,'relay_tiles':leaf_counts['qvm_data256_native']==relay_clocks+160*e3,'return_planes':leaf_counts['qvm_return_plane_pin_native'if pin else'ot_qfd_vm_su_return_plane']==96,'read_controls':leaf_counts['ot_qfd_vm_su_read_control']==3}
 for prefix,want in [('native_ck[',1008),('return_ck[',96),('read_control_ck[',3),('relay_ck[',relay_clocks)]+([('write_ck[',240)]if e3 else[]):
  vals=[r['parent_clock_port'] for r in clock_rows if r['parent_clock_port'].startswith(prefix)];checks[prefix]=len(vals)==want and len(set(vals))==want
+write_index_errors=[]
+if e3:
+ for r in clock_rows:
+  if not r['parent_clock_port'].startswith('write_ck['):continue
+  m=re.search(r'\.g_(bw|ws)\[(\d+)\]\.g_write_leaf\.u_write\.(u_lo|u_hi|u_control)$',r['instance'])
+  if not m:write_index_errors.append(dict(r,expected='recognized E3 bank/role'));continue
+  bank=int(m[2])+(64 if m[1]=='ws'else 0);role={'u_lo':0,'u_hi':1,'u_control':2}[m[3]];want=f'write_ck[{3*bank+role}]'
+  if r['parent_clock_port']!=want:write_index_errors.append(dict(r,expected=want))
+actual['E3_write_clock_index_errors']=write_index_errors
+checks['E3_exact_bank_role_clocks']=not write_index_errors
 checks['E3_control_count']=leaf_counts['ot_qfd_vm_write_control_t']==80*e3
 if e3: checks['E3_parent_ff_residual']=ff['ck']==12198
 checks.update({'unique_leaf_clocks':actual['unique_physical_leaf_clock_inputs']==1482+relay_clocks+240*e3,'active_clocks':actual['all_active_clock_inputs_including_residual']==1483+relay_clocks+240*e3,'all_retained_legacy_pins_used':not actual['legacy_unused_pins'],'no_constant_clock':all(not r['parent_clock_port'].startswith('constant:') for r in clock_rows)})
