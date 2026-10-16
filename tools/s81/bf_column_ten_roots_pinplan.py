@@ -45,6 +45,9 @@ def main():
     for i in range(9):
         pins[f'leaf_ck[{i}]'] = dict(face='N', layer='M5', x=round(43.212+43.2*i, 6),
                                       y=198.72, w=.024, h=.192, source_pin=f'leaf_clk[{i}]')
+    if args.face=='W':
+        for pin in pins.values():
+            if pin['face'] in 'NS':pin['x']=round(450.144-pin['x'],6)
     assert len(pins) == 851
     for n, p in pins.items():
         for m, q in pins.items():
@@ -56,9 +59,10 @@ def main():
               'rtl/v41rom/ot_v41_bf_col_roots.sv', 'rtl/v41rom/ot_v41_bf16_lanes3_roots.sv',
               'rtl/v41rom/ot_v41_bf_lane4.sv', 'rtl/v41rom/ot_v41_bf_reduce.sv',
               'rtl/v41rom/ot_v41_bf_fp4_leaves.sv', 'rtl/v41rom/ot_v41_bf_segment_leaf.sv']
+    if args.face=='W':source[0]='rtl/dsrom_sys/s81_die_bind/dsfd_bf_col_roots_w.sv'
     record = dict(schema='opentallas.s81.bf_column_ten_root.v1',
                   status='GRANTED_INDEPENDENT_CANDIDATE_NOT_PHYSICALLY_QUALIFIED',
-                  top='dsfd_bf_col_roots', outline_um=[450.144, 198.72], face=args.face,
+                  top='dsfd_bf_col_roots_w' if args.face=='W' else 'dsfd_bf_col_roots', outline_um=[450.144, 198.72], face=args.face,
                   orientation='R0; W requires its own actual view, no mirrored view inheritance',
                   source_sha256={n:digest(ROOT/n) for n in source},
                   seed_proposal=dict(commit=SEED,path=BASE,sha256=hashlib.sha256(raw).hexdigest()),
@@ -92,9 +96,11 @@ def main():
     ax.add_patch(Rectangle((0,0),450.144,198.72,fill=False))
     # Literal macro kit homes; all other space is available to the ten real
     # clock cones. This is a geometry request, not a placement density image.
+    mx=43.2 if args.face=='E' else 280.8
+    orient='R0' if args.face=='E' else 'MY'
     for i,y in enumerate([25.92,112.32]):
-        ax.add_patch(Rectangle((43.2,y),125.304,62.952,color='lightgray'))
-        ax.text(105.852,y+31.476,f'actual ROM{i}\n4096 x274\nR0 aligned-v2',ha='center',va='center')
+        ax.add_patch(Rectangle((mx,y),125.304,62.952,color='lightgray'))
+        ax.text(mx+62.652,y+31.476,f'actual ROM{i}\n4096 x274\n{orient} aligned-v2',ha='center',va='center')
     for n,p in pins.items():
         if n=='ck' or n.startswith('leaf_ck['):
             ax.scatter(p['x'],p['y'],c='red',s=18)
@@ -103,7 +109,7 @@ def main():
             ax.scatter(p['x'],p['y'],c='red',s=18);ax.text(p['x'],8,'reset',ha='center',fontsize=8)
         else:
             ax.scatter(p['x'],p['y'],c='tab:blue' if n.startswith('ci[') else 'tab:green',s=2)
-    ax.text(310,103,'Ten real same-PLL clock roots\nflat actual source; no hard-child substitutes\nphysical placement/CTS/native proof PENDING',ha='center',va='center')
+    ax.text(310 if args.face=='E' else 145,103,'Ten real same-PLL clock roots\nflat actual source; no hard-child substitutes\nphysical placement/CTS/native proof PENDING',ha='center',va='center')
     ax.set(xlim=(-8,460),ylim=(-12,222),xlabel='um',ylabel='um',
            title=f'Independent R0 {args.face}-facing BF column request: 851 literal signal/clock pins\n450.144 x198.72; zero payload cycles; source {record["source_sha256"][source[1]][:12]}')
     ax.set_aspect('equal');fig.tight_layout();fig.savefig(out/'connected_pin_plan.png',dpi=140);plt.close(fig)

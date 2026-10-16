@@ -17,7 +17,8 @@
     "rtl/v41rom/ot_v41_bf_segment_leaf.sv": "c350fb583dab9dccce038c001b10f08f6b75092a4fa3d75a7c400b62e3d65212",
     "rtl/v41rom/ot_v41_bf16_lanes3_roots.sv": "d0f83797917c652bf46116fefd1bce8366b120b559784da495af31cfa4450d3b",
     "rtl/v41rom/ot_v41_bf_col_roots.sv": "00d03ac7a439d89a2cff881d89ce01615e067872e2ed8e6a42043d4720f3b8f3",
-    "rtl/dsrom_sys/s81_die_bind/dsfd_bf_col_roots.sv": "6bb089595e915c984fff05605dc673ce279ff780f3a7215956d24c49e17499d2"
+    "rtl/dsrom_sys/s81_die_bind/dsfd_bf_col_roots.sv": "6bb089595e915c984fff05605dc673ce279ff780f3a7215956d24c49e17499d2",
+    "rtl/dsrom_sys/s81_die_bind/dsfd_bf_col_roots_w.sv": "3a21eee7ab26c597b85666b6e0fa75dce0e18ba035e3f14c6f0a7c618a45d66e"
   },
   "physical_leaf_status": "Actual source hierarchy extracted: lane4 x4, two BF reductions, FP4 chain/pair leaves and segment leaf. Parent retains real control/input pipelines and two ROM macros. Hardening, clock pins, all incident cuts and native boundary proof remain pending.",
   "roots": [

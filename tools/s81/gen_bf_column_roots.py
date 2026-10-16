@@ -283,9 +283,14 @@ endmodule
     w=replace_once(w,'    ot_v41_bf_col #(','    ot_v41_bf_col_roots #(')
     w=replace_once(w,'.clk(w_clk),','.clk(w_clk), .leaf_clk(leaf_ck),')
     rp=ROOT/'rtl/dsrom_sys/s81_die_bind/dsfd_bf_col_roots.sv';rp.write_text(w)
+    west=replace_once(w,'module dsfd_bf_col_roots #(','module dsfd_bf_col_roots_w #(')
+    west=replace_once(west,'    assign w_i2x_q0[7] = ci[42];',
+        '`ifdef BF_COL_W_MUTANT_DATA\n    assign w_i2x_q0[7] = ci[42] ^ 1\'b1;\n`else\n    assign w_i2x_q0[7] = ci[42];\n`endif')
+    wrp=ROOT/'rtl/dsrom_sys/s81_die_bind/dsfd_bf_col_roots_w.sv'
+    wrp.write_text('// Independent W-facing R0 physical candidate. Historical comments below do not qualify this view.\n'+west)
     rec={'status':'SOURCE_ONLY_NOT_PHYSICAL_CLOSURE','cycles_added':0,'relocated_parent_XST_edges':1,'added_RTL_register_bits':50,'register_cost_note':'4x142 data bits+4x2 localclock/reset copies minus526 shared XST bits; mapped area still measured independently','clock_contract':'10 same-PLL833.333ps phase0 roots; physical leaf delivery phi-R individually; ordinary synchronous timing on every cross-root path',
          'inputs':{str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in [path,ROOT/'rtl/v41rom/ot_v41_bf16_lanes3.sv',wp]},
-         'outputs':{str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in [leaf,red,fp,segment,lp,cp,rp]},
+         'outputs':{str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in [leaf,red,fp,segment,lp,cp,rp,wrp]},
          'physical_leaf_status':'Actual source hierarchy extracted: lane4 x4, two BF reductions, FP4 chain/pair leaves and segment leaf. Parent retains real control/input pipelines and two ROM macros. Hardening, clock pins, all incident cuts and native boundary proof remain pending.',
          'roots':['ck: boundary/memory/input relays','leaf_ck[0]: FP4 term0+chain0+pair','leaf_ck[1]: FP4 term1+chain1','leaf_ck[2]: segment reduction/output','leaf_ck[3]: BF16 lanes0..3','leaf_ck[4]: BF16 lanes4..7','leaf_ck[5]: BF16 lanes8..11','leaf_ck[6]: BF16 lanes12..15','leaf_ck[7]: BF16 pairwise level0','leaf_ck[8]: BF16 pairwise levels1..3']}
     out=ROOT/'results/rtl/s81_bf_clock_1015/c10/recovery_0253/root_source.json';out.write_text(json.dumps(rec,indent=2)+'\n')

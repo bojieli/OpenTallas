@@ -131,6 +131,7 @@ def main():
     p.add_argument('--params', default='', help="extra shadow parameters, e.g. 'QZE=1,CG=0' (bf-icg 2026-10-08)")
     p.add_argument('--mutant', action='append', default=[], help='extra negative case NAME=DEFINE (must FAIL)')
     p.add_argument('--column-roots', action='store_true', help='actual ten-root column RTL, all roots on the compiled phase')
+    p.add_argument('--column-west-roots', action='store_true', help='with --column-roots: actual W-facing R0 source master on the east side of the pair')
     p.add_argument('--front-roots', action='store_true', help='actual five-root static front RTL, all roots on the compiled phase')
     p.add_argument('--mapped-rom-candidate', action='store_true', help='candidate uses real macro functional model and offline via-mask images')
     p.add_argument('--positive-define', action='append', default=[],
@@ -156,6 +157,9 @@ def main():
     if a.column_roots:
         assert a.die_pair and a.static_prog is not None
         names += ['ot_v41_bf_col_roots','ot_v41_bf16_lanes3_roots','dsfd_bf_col_roots','ot_v41_bf_lane4','ot_v41_bf_reduce','ot_v41_bf_segment_leaf','ot_v41_bf_fp4_chain','ot_v41_bf_fp4_pair_leaf']
+    if a.column_west_roots:
+        assert a.column_roots
+        names += ['dsfd_bf_col_roots_w']
     if a.front_roots:
         assert a.die_pair and a.static_prog is not None
         names += ['ot_s81_bf_front_roots','dsfd_bf_front_roots','ot_v41_bf_front_core_roots','ot_s81_bf_seam_roots']
@@ -223,6 +227,13 @@ def main():
         files[fn], count=re.subn(r'(?<![\w$])(?:cand_)?dsfd_bf_col #\(', 'cand_dsfd_bf_col_roots #(', files[fn])
         assert count==2, count
         files[fn]=files[fn].replace('e0w (.ck(clk)', 'e0w (.leaf_ck({9{clk}}), .ck(clk)').replace('e0e (.ck(clk)', 'e0e (.leaf_ck({9{clk}}), .ck(clk)')
+        if a.column_west_roots:
+            pieces=files[fn].split('cand_dsfd_bf_col_roots #(')
+            assert len(pieces)==3 and 'e0e' in pieces[2].split(';',1)[0]
+            files[fn]=pieces[0]+'cand_dsfd_bf_col_roots #('+pieces[1]+'cand_dsfd_bf_col_roots_w #('+pieces[2]
+            path='rtl/dsrom_sys/s81_die_bind/dsfd_bf_col_roots_w.sv'
+            f='x_dsfd_bf_col_roots_w.sv'
+            files[f]=candify((ROOT/path).read_text(),names);extra.append(f)
     if a.front_roots:
         for n in ['rtl/s81/ot_s81_bf_front_roots.sv','rtl/dsrom_sys/s81_die_bind/dsfd_bf_front_roots.sv','rtl/v41rom/ot_v41_bf_front_core_roots.sv','rtl/s81/ot_s81_bf_seam_roots.sv']:
             fn='x_'+Path(n).name
@@ -248,6 +259,7 @@ def main():
         commit, dirty = (ROOT / 'SOURCE_COMMIT').read_text().strip() if (ROOT / 'SOURCE_COMMIT').exists() else 'unknown', None
     out = {'variant': a.variant, 'params': a.params, 'cases': {}, 'pass': True, 'refreshed': refreshed, 'source_commit': commit, 'dirty': dirty, 'column_roots':a.column_roots, 'mapped_candidate_rom':image_rec if a.mapped_rom_candidate else None}
     out['front_roots']=a.front_roots
+    out['column_west_roots']=a.column_west_roots
     pos = ['+define+QP_CHECK', '+define+QT_CHECK'] if a.variant == 'recut' else []
     positives = [('positive', pos)] + [(x.split('=')[0], pos + ['+define+' + x.split('=', 1)[1]])
                                       for x in a.positive_define]
