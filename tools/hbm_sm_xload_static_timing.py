@@ -69,7 +69,7 @@ if __name__ == "__main__":
            (1, 1, 1344, 90), (2, 5, 3296, 377), (1, 4, 5408, 507), (2, 1, 5536, 170), (1, 8, 1568, 314), (2, 1, 4064, 122)]
     bad = [(f, p, k, beats(p, f, k)[-1][0], e) for f, p, k, e in chk if beats(p, f, k)[-1][0] != e]
     # cl2 lock bench (results/hbm_sm_attention_1015/xload_cl2_bench/lock_pos.log): the same commands, + XW_ADD_CL2
-    cl2 = [604, 300, 109, 379, 109, 172, 92, 379, 509, 172, 316, 124]     # measured cl2 last-beat edges, cmds 12..23
+    cl2 = [605, 301, 110, 380, 110, 173, 93, 380, 510, 173, 317, 125]     # measured cl2g last-beat edges, cmds 12..23 (H-SM 10-16 F20/CL2 lock benches)
     bad += [("cl2", f, p, k, e2) for (f, p, k, _e), e2 in zip(chk, cl2) if beats(p, f, k, xw_add=XW_ADD_CL2)[-1][0] != e2]
     print("model vs bench last-beat edges (cl and cl2):", "PASS" if not bad else f"FAIL {bad}")
     sys.exit(1 if bad else 0)
