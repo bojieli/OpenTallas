@@ -87,81 +87,73 @@
    "name": "hb_dbk_SW",
    "master": "ot_hgi_dma_back_static_vp4_banks",
    "source": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks.sv",
-   "params": {
-    "STK": 0
-   },
+   "params": {},
    "slot": "hb_dbk_SW",
    "owner": "H-HARDEN",
-   "note": "v15 name kept, master CHANGED ot_hgi_dma_back_static -> grants v7 wires_only_cluster ot_hgi_dma_back_static_vp4_banks STK=0; adds clk_bank[8]; rq/rr widths unchanged so v15 edges hb_dbk_SW_rq/_rr stand"
+   "note": "One vp4 bank-cluster master; registered stk strap and eight bank clock entries."
   },
   {
    "name": "hb_dbk_SE",
    "master": "ot_hgi_dma_back_static_vp4_banks",
    "source": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks.sv",
-   "params": {
-    "STK": 1
-   },
+   "params": {},
    "slot": "hb_dbk_SE",
    "owner": "H-HARDEN",
-   "note": "v15 name kept, master CHANGED ot_hgi_dma_back_static -> grants v7 wires_only_cluster ot_hgi_dma_back_static_vp4_banks STK=1; adds clk_bank[8]; rq/rr widths unchanged so v15 edges hb_dbk_SE_rq/_rr stand"
+   "note": "One vp4 bank-cluster master; registered stk strap and eight bank clock entries."
   },
   {
    "name": "hb_dbk_NW",
    "master": "ot_hgi_dma_back_static_vp4_banks",
    "source": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks.sv",
-   "params": {
-    "STK": 2
-   },
+   "params": {},
    "slot": "hb_dbk_NW",
    "owner": "H-HARDEN",
-   "note": "v15 name kept, master CHANGED ot_hgi_dma_back_static -> grants v7 wires_only_cluster ot_hgi_dma_back_static_vp4_banks STK=2; adds clk_bank[8]; rq/rr widths unchanged so v15 edges hb_dbk_NW_rq/_rr stand"
+   "note": "One vp4 bank-cluster master; registered stk strap and eight bank clock entries."
   },
   {
    "name": "hb_dbk_NE",
    "master": "ot_hgi_dma_back_static_vp4_banks",
    "source": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks.sv",
-   "params": {
-    "STK": 3
-   },
+   "params": {},
    "slot": "hb_dbk_NE",
    "owner": "H-HARDEN",
-   "note": "v15 name kept, master CHANGED ot_hgi_dma_back_static -> grants v7 wires_only_cluster ot_hgi_dma_back_static_vp4_banks STK=3; adds clk_bank[8]; rq/rr widths unchanged so v15 edges hb_dbk_NE_rq/_rr stand"
+   "note": "One vp4 bank-cluster master; registered stk strap and eight bank clock entries."
   },
   {
    "name": "calendar_SW",
-   "master": "hfd_hgi_vm_calendar_SW",
-   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_static.sv",
+   "master": "hfd_hgi_vm_calendar",
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar.sv",
    "params": {},
-   "slot": null,
+   "slot": "calendar_SW",
    "owner": "H-SM",
-   "note": "KEPT v15; cfg/start inputs remain a host-loader gap"
+   "note": "Universal W187 master; compiler --universal required; host-loader gap remains OPEN."
   },
   {
    "name": "calendar_SE",
-   "master": "hfd_hgi_vm_calendar_SE",
-   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_static.sv",
+   "master": "hfd_hgi_vm_calendar",
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar.sv",
    "params": {},
-   "slot": null,
+   "slot": "calendar_SE",
    "owner": "H-SM",
-   "note": "KEPT v15; cfg/start inputs remain a host-loader gap"
+   "note": "Universal W187 master; compiler --universal required; host-loader gap remains OPEN."
   },
   {
    "name": "calendar_NW",
-   "master": "hfd_hgi_vm_calendar_NW",
-   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_static.sv",
+   "master": "hfd_hgi_vm_calendar",
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar.sv",
    "params": {},
-   "slot": null,
+   "slot": "calendar_NW",
    "owner": "H-SM",
-   "note": "KEPT v15; cfg/start inputs remain a host-loader gap"
+   "note": "Universal W187 master; compiler --universal required; host-loader gap remains OPEN."
   },
   {
    "name": "calendar_NE",
-   "master": "hfd_hgi_vm_calendar_NE",
-   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_static.sv",
+   "master": "hfd_hgi_vm_calendar",
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar.sv",
    "params": {},
-   "slot": null,
+   "slot": "calendar_NE",
    "owner": "H-SM",
-   "note": "KEPT v15; cfg/start inputs remain a host-loader gap"
+   "note": "Universal W187 master; compiler --universal required; host-loader gap remains OPEN."
   },
   {
    "name": "vm_status4",
@@ -1082,7 +1074,40 @@
    "kind": "reset"
   }
  ],
- "straps": [],
+ "straps": [
+  {
+   "inst": "hb_dbk_SW",
+   "port": "stk",
+   "lo": 0,
+   "hi": 2,
+   "value": 0,
+   "reason": "Registered physical stack identity; no runtime selection."
+  },
+  {
+   "inst": "hb_dbk_SE",
+   "port": "stk",
+   "lo": 0,
+   "hi": 2,
+   "value": 1,
+   "reason": "Registered physical stack identity; no runtime selection."
+  },
+  {
+   "inst": "hb_dbk_NW",
+   "port": "stk",
+   "lo": 0,
+   "hi": 2,
+   "value": 2,
+   "reason": "Registered physical stack identity; no runtime selection."
+  },
+  {
+   "inst": "hb_dbk_NE",
+   "port": "stk",
+   "lo": 0,
+   "hi": 2,
+   "value": 3,
+   "reason": "Registered physical stack identity; no runtime selection."
+  }
+ ],
  "gaps": [
   {
    "id": "G-HOST-PADS",
