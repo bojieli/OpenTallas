@@ -91,6 +91,7 @@ DISPOSITION = {
 # A2-F / hop-1 parent (S-VM-RTL 2026-10-16): category -> master / pin / kit, overriding VIEWS; None = no view (OPEN)
 SRC_A2F = 'rtl/dsrom_sys/s81_ph/vm/dsfd_sp_vm_a2f.sv'
 VIEWS_A2F = {
+    'ck_landing_t': ('dsfd_vm_static_landing_joined: lane0..3 plus fault_join (five roots; data age2/II1 unchanged)', 'ck', 'dsfd_vm_static_landing_lane0_native_1417|dsfd_vm_static_landing_lane1_native_1417|dsfd_vm_static_landing_lane2_native_1417|dsfd_vm_static_landing_lane3_native_1417|dsfd_vm_static_landing_fault_join_native_1417'),
     'ck_mem_relay_req_t': ('dsfd_vm_static_relay128_b8 (HOP1: 16 roots, bit 4*slice+group; no b4)', 'ck_req', 'dsfd_vm_static_relay128_b8_native_cb'),
     'ck_mem_relay_rsp_t': ('dsfd_vm_static_relay128_b8 (HOP1: 16 roots, bit 4*slice+group; no b4)', 'ck_rsp', 'dsfd_vm_static_relay128_b8_native_cb'),
     'ck_mem_wscatter_t': ('dsfd_vm_static_scatter_b8_out PIPE 1 (B0|B8|B16|B24)', 'ck', 'dsfd_vm_direct_scatter_b0_native_cb4|dsfd_vm_direct_scatter_b8_native_cb5|dsfd_vm_direct_scatter_b16_native_cb4|dsfd_vm_direct_scatter_b24_native_cb4b'),
@@ -99,6 +100,7 @@ VIEWS_A2F = {
     'ck_write_control_t': ('s81_a2f_control4_resetlocal (bit = slice)', 'ck_control', 's81_a2f_control4_resetlocal_pilot_2118_r3'),
 }
 DISPOSITION_A2F = {
+    'ck_landing_t': ('BOUND_NATIVE_COMPONENT', 'Five native source-identical hard leaves adopted in A2F source; data age2/II1, diagnostic flags +2 edges; full new parent gate and die binding still required'),
     'ck_rsched_t': ('VIEW_OWED', 'dsfd_vm_a2f_rsched_p (REL 8, hop-1 release) is a new netlist: the closed '
                     'dsfd_vm_static_rsched_p_native_1015_l16 view is REL 10 and does not bind; build a kit from the same recipe'),
     'ck_write_header_t': ('VIEW_OWED', 's81_a2_w0_header (53 x {v, row 14, tag 8} pin register + epoch): no hard view'),

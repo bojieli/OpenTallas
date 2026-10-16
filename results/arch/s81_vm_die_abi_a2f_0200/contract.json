@@ -449,14 +449,50 @@
   },
   "ck_landing_t": {
    "dir": "input",
-   "bits": 1,
+   "bits": 5,
    "domain": "stream",
-   "master": null,
-   "child_pin": null,
-   "routed_R": null,
-   "delivery": "OPEN: no closed native view; parent leaf/CTS root pending",
-   "disposition": "BIND_ON_ADOPTION",
-   "disposition_why": "production u_land is the monolith dsfd_vm_static_landing (no native-PASS view: r4 FF -7.1); the joined form dsfd_vm_static_landing_joined = lanes 0..3 + fault join, five CLOSED native-PASS 1417 views (R 162 ps lane0), port widens 1 -> 5 roots; adopted with the A2-F write front because both change the core files pinned by service profile s81_vm_r4_c2_w1"
+   "master": "dsfd_vm_static_landing_joined: lane0..3 plus fault_join (five roots; data age2/II1 unchanged)",
+   "child_pin": "ck",
+   "routed_R": [
+    {
+     "kit": "dsfd_vm_static_landing_lane0_native_1417",
+     "R_tt_ps": 162.0,
+     "min": 150.3,
+     "max": 174.3,
+     "n": 1063
+    },
+    {
+     "kit": "dsfd_vm_static_landing_lane1_native_1417",
+     "R_tt_ps": 160.6,
+     "min": 149.9,
+     "max": 176.3,
+     "n": 1063
+    },
+    {
+     "kit": "dsfd_vm_static_landing_lane2_native_1417",
+     "R_tt_ps": 164.6,
+     "min": 153.9,
+     "max": 181.5,
+     "n": 1063
+    },
+    {
+     "kit": "dsfd_vm_static_landing_lane3_native_1417",
+     "R_tt_ps": 167.4,
+     "min": 155.7,
+     "max": 180.1,
+     "n": 1063
+    },
+    {
+     "kit": "dsfd_vm_static_landing_fault_join_native_1417",
+     "R_tt_ps": 51.9,
+     "min": 51.4,
+     "max": 52.2,
+     "n": 15
+    }
+   ],
+   "delivery": "phi - wire - R per root (R from the bound routed view)",
+   "disposition": "BOUND_NATIVE_COMPONENT",
+   "disposition_why": "Five native source-identical hard leaves adopted in A2F source; data age2/II1, diagnostic flags +2 edges; full new parent gate and die binding still required"
   },
   "ck_landing_x34_s": {
    "dir": "input",
@@ -846,8 +882,8 @@
    "child_pin": null,
    "routed_R": null,
    "delivery": "OPEN: no closed native view; parent leaf/CTS root pending",
-   "disposition": "LEAF_IN_FLIGHT",
-   "disposition_why": "control flops extracted to the two-root hard leaf dsfd_vm_static_wfc_ctl (parent wires only; differential gate + full master gate PASS); route dsfd_vm_static_wfc_ctl_native_1015_r1-native1-COMMIT-60bbca547"
+   "disposition": "NO_SINK",
+   "disposition_why": "r6 serial control/grant now in independent fault leaf ck_wfc_fault_s; retained source ABI port has no sink"
   },
   "ck_wfc_control_t": {
    "dir": "input",
@@ -858,7 +894,40 @@
    "routed_R": null,
    "delivery": "OPEN: no closed native view; parent leaf/CTS root pending",
    "disposition": "LEAF_IN_FLIGHT",
-   "disposition_why": "stream root of dsfd_vm_static_wfc_ctl (same route)"
+   "disposition_why": "r6 request leaf dsfd_vm_wfc_request own root ck; native gate pending"
+  },
+  "ck_wfc_fault_s": {
+   "dir": "input",
+   "bits": 1,
+   "domain": "serial",
+   "master": null,
+   "child_pin": null,
+   "routed_R": null,
+   "delivery": "OPEN: no closed native view; parent leaf/CTS root pending",
+   "disposition": "LEAF_IN_FLIGHT",
+   "disposition_why": "r6 diagnostic bridge dsfd_vm_wfc_fault_bridge, serial root ck_s; own per-child phi-minus-R mandatory"
+  },
+  "ck_wfc_fault_t": {
+   "dir": "input",
+   "bits": 1,
+   "domain": "stream",
+   "master": null,
+   "child_pin": null,
+   "routed_R": null,
+   "delivery": "OPEN: no closed native view; parent leaf/CTS root pending",
+   "disposition": "LEAF_IN_FLIGHT",
+   "disposition_why": "r6 diagnostic bridge dsfd_vm_wfc_fault_bridge, core root ck_t; native/gate pending"
+  },
+  "ck_wfc_return_t": {
+   "dir": "input",
+   "bits": 1,
+   "domain": "stream",
+   "master": null,
+   "child_pin": null,
+   "routed_R": null,
+   "delivery": "OPEN: no closed native view; parent leaf/CTS root pending",
+   "disposition": "LEAF_IN_FLIGHT",
+   "disposition_why": "r6 return leaf dsfd_vm_wfc_return own root ck; native gate pending"
   },
   "ck_wfc_x34_s": {
    "dir": "input",
@@ -1172,6 +1241,16 @@
    "bits": 1,
    "domain": "stream"
   },
+  "rss_wfc_fault_t": {
+   "dir": "input",
+   "bits": 1,
+   "domain": "stream"
+  },
+  "rss_wfc_return_t": {
+   "dir": "input",
+   "bits": 1,
+   "domain": "stream"
+  },
   "rss_wfc_x34_t": {
    "dir": "input",
    "bits": 1,
@@ -1242,6 +1321,11 @@
    "bits": 1,
    "domain": "serial"
   },
+  "rst_wfc_fault_s": {
+   "dir": "input",
+   "bits": 1,
+   "domain": "serial"
+  },
   "rst_wfc_x34_s": {
    "dir": "input",
    "bits": 1,
@@ -1264,12 +1348,12 @@
   }
  },
  "counts": {
-  "ports": 110,
+  "ports": 116,
   "functional": 44,
-  "clock_ports": 34,
-  "clock_bits": 520,
-  "reset_ports": 32,
-  "reset_bits": 476
+  "clock_ports": 37,
+  "clock_bits": 527,
+  "reset_ports": 35,
+  "reset_bits": 479
  },
  "generator_requirements": [
   "drop RTL_HUB_EXTRA vm->collective t_collective 592 / tcs 3 (no RTL port, backpressure-era)",

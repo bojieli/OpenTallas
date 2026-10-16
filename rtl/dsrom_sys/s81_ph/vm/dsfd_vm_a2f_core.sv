@@ -21,7 +21,8 @@ module dsfd_vm_a2f_core #(parameter integer READ_PIPE=4, parameter integer HOP1=
     // glue lives in the hardened engine-12 tile dsfd_vm_seq_tile on ck_seq). Every child root is an explicit
     // independently deliverable clock pin; tying these pins is a TESTBENCH decision only.
     input  wire          cks, rss,
-    input  wire          ck_rsched, ck_seq, ck_landing,
+    input  wire          ck_rsched, ck_seq,
+    input  wire [4:0]    ck_landing,
     input  wire [15:0]   ck_mem_fsr,
     input  wire [15:0]   ck_mem_return,
     input  wire [127:0]  ck_mem_bank,
@@ -250,7 +251,13 @@ module dsfd_vm_a2f_core #(parameter integer READ_PIPE=4, parameter integer HOP1=
         .larm_v(larm_v), .larm_g(larm_g), .larm_base(larm_base),
         .pqx_chk({f_pqx[19], f_pqx[6:1], f_pqx[0]}), .read_fault(out_fault), .edge_f(edge_f), .x_hdr(x_hdr), .x_al(x_al),
         .w_flt(w_flt), .m_flt(m_flt), .l_flt(l_flt), .r_flt(r_flt), .vm_fault(vm_fault));
-    dsfd_vm_static_landing #(.PINREG(`ifdef OT_VM_LANDING_PINREG0 0 `else 1 `endif)) u_land (.ck(ck_landing), .rst_n(rst_landing_n), .larm_v(larm_v), .larm_g(larm_g), .larm_base(larm_base),
+    // Five source-identical native hard leaves: four lane pin-register/data paths and a two-edge fault join.
+    // Normal data age/II remain 2/1. Diagnostic lane flags reach seq two edges later than the monolith.
+`ifdef OT_VM_LANDING_PINREG0
+    dsfd_vm_static_landing #(.PINREG(0)) u_land (.ck(ck_landing[0]), .rst_n(rst_landing_n), .larm_v(larm_v), .larm_g(larm_g), .larm_base(larm_base),
+`else
+    dsfd_vm_static_landing_joined u_land (.ck(ck_landing), .rst_n(rst_landing_n), .larm_v(larm_v), .larm_g(larm_g), .larm_base(larm_base),
+`endif
         .i_v(l_v), .i_d01(l_d[1023:0]), .i_d23(l_d[2047:1024]), .o_v(lo_v), .o_row(lo_row),
         .o_d01(lo_d[1023:0]), .o_d23(lo_d[2047:1024]), .fault(l_flt));
 endmodule

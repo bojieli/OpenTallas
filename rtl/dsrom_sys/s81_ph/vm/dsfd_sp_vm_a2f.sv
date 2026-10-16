@@ -23,7 +23,8 @@ module dsfd_sp_vm
 module dsfd_sp_vm_a2f
 `endif
     #(parameter integer CAP_PIPE=2, parameter integer READ_PIPE=4, parameter integer HOP1=1) (
-    input  wire          ck_core_t, ck_rsched_t, ck_seq_t, ck_landing_t,
+    input  wire          ck_core_t, ck_rsched_t, ck_seq_t,
+    input  wire [4:0]    ck_landing_t,
     input  wire [15:0]   ck_mem_fsr_t,
     input  wire [15:0]   ck_mem_return_t,
     input  wire [127:0]  ck_mem_bank_t,

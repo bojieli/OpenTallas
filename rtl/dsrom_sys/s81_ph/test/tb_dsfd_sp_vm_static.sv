@@ -67,6 +67,8 @@ module tb_dsfd_sp_vm_static;
         .rst_landing_x34_s({3{rst}}), .rss_landing_x34_t({3{rss}}),
         .ck_cap_control_s(s_ck), .rst_cap_control_s(rst), .ck_cap_lane_s({16{s_ck}}),
         .ck_cap_x34_s({16{s_ck}}), .ck_cap_x34_t({16{t_ck}}), .rst_cap_x34_s({16{rst}}), .rss_cap_x34_t({16{rss}}),
+        .ck_wfc_fault_s(s_ck), .ck_wfc_fault_t(t_ck), .rst_wfc_fault_s(rst), .rss_wfc_fault_t(rss),
+        .ck_wfc_return_t(t_ck), .rss_wfc_return_t(rss),
         .ck_wfc_control_s(s_ck), .ck_wfc_control_t(t_ck), .ck_wfc_x34_s(s_ck), .ck_wfc_x34_t(t_ck), .ck_wfc_x43_s(s_ck), .ck_wfc_x43_t(t_ck),
         .rst_wfc_control_s(rst), .rss_wfc_control_t(rss), .rst_wfc_x34_s(rst), .rss_wfc_x34_t(rss), .rst_wfc_x43_s(rst), .rss_wfc_x43_t(rss),
         .ck_xio_control_s(s_ck), .ck_xio_control_t(t_ck), .ck_xio_x43_s({2{s_ck}}), .ck_xio_x43_t({2{t_ck}}),
@@ -224,7 +226,7 @@ module tb_dsfd_sp_vm_static;
             r = 4096 + 2 * (sk - 200);
             fwfc[528] = 1'b1; fwfc[543:529] = 15'(r); fwfc[558:544] = 15'(r + 1); fwfc[559] = 1'b1;
             if (mode == 7 && sk == 210) fwfc[558:544] = 15'(r + 4);
-            e_w[sk + 1 + 15+3*((READ_PIPE+3)/4)] = {1'b1, mem[r + 1], 1'b1, mem[r]};
+            e_w[sk + 1 + 18+3*((READ_PIPE+3)/4)] = {1'b1, mem[r + 1], 1'b1, mem[r]};
         end
         if (sk >= 130 && sk < 134) begin
             r = 7000 + sk - 130; sel = {1'b0, 1'b1, rowdata(r, 6), 1'b1}; mem[r] = rowdata(r, 6); memv[r] = 1;

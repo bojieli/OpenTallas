@@ -40,6 +40,13 @@ module tb_dsfd_sp_vm_a2f;
 `else
     localparam integer CAP_PIPE=0;
 `endif
+    // S-VM 0030: the master bench used to ignore OT_VM_NATIVE_WSCATTER (always WSCATTER_PIPE 0), so the 10-16 "pipe 1"
+    // receipt (results/rtl/s81_vm_master_current_scatter_20261016) ran pipe 0 twice.  The define now reaches the DUT.
+`ifdef OT_VM_NATIVE_WSCATTER
+    localparam integer WSCATTER_PIPE=1;
+`else
+    localparam integer WSCATTER_PIPE=0;
+`endif
 
     // every stream read service is 2 edges shorter with HOP1: the expectations use the effective read pipe RPE
     localparam integer RPE = READ_PIPE - 2*HOP1;
@@ -57,7 +64,7 @@ module tb_dsfd_sp_vm_a2f;
     wire [511:0] tgat; reg [10:0] xgo = 0; wire [512:0] qsw; reg [2:0] qsws = 3'b011;
     dsfd_sp_vm_a2f #(.CAP_PIPE(CAP_PIPE), .READ_PIPE(READ_PIPE), .HOP1(HOP1)) dut (
         .ck_read_data_t({64{t_ck}}), .ck_read_valid_t({8{t_ck}}), .rss_read_data_t({64{rss}}), .rss_read_valid_t({8{rss}}),
-        .ck_core_t(t_ck), .ck_rsched_t(t_ck), .ck_seq_t(t_ck), .ck_landing_t(t_ck),
+        .ck_core_t(t_ck), .ck_rsched_t(t_ck), .ck_seq_t(t_ck), .ck_landing_t({5{t_ck}}),
         .ck_mem_fsr_t({16{t_ck}}), .ck_mem_return_t({16{t_ck}}), .ck_mem_bank_t({128{t_ck}}),
         .ck_mem_wscatter_t({16{t_ck}}),
         .ck_mem_relay_req_t({NRL{t_ck}}), .ck_mem_relay_rsp_t({NRL{t_ck}}),
@@ -72,6 +79,8 @@ module tb_dsfd_sp_vm_a2f;
         .rst_landing_x34_s({3{rst}}), .rss_landing_x34_t({3{rss}}),
         .ck_cap_control_s(s_ck), .rst_cap_control_s(rst), .ck_cap_lane_s({16{s_ck}}),
         .ck_cap_x34_s({16{s_ck}}), .ck_cap_x34_t({16{t_ck}}), .rst_cap_x34_s({16{rst}}), .rss_cap_x34_t({16{rss}}),
+        .ck_wfc_fault_s(s_ck), .ck_wfc_fault_t(t_ck), .rst_wfc_fault_s(rst), .rss_wfc_fault_t(rss),
+        .ck_wfc_return_t(t_ck), .rss_wfc_return_t(rss),
         .ck_wfc_control_s(s_ck), .ck_wfc_control_t(t_ck), .ck_wfc_x34_s(s_ck), .ck_wfc_x34_t(t_ck), .ck_wfc_x43_s(s_ck), .ck_wfc_x43_t(t_ck),
         .rst_wfc_control_s(rst), .rss_wfc_control_t(rss), .rst_wfc_x34_s(rst), .rss_wfc_x34_t(rss), .rst_wfc_x43_s(rst), .rss_wfc_x43_t(rss),
         .ck_xio_control_s(s_ck), .ck_xio_control_t(t_ck), .ck_xio_x43_s({2{s_ck}}), .ck_xio_x43_t({2{t_ck}}),
@@ -229,7 +238,7 @@ module tb_dsfd_sp_vm_a2f;
             r = 4096 + 2 * (sk - 200);
             fwfc[528] = 1'b1; fwfc[543:529] = 15'(r); fwfc[558:544] = 15'(r + 1); fwfc[559] = 1'b1;
             if (mode == 7 && sk == 210) fwfc[558:544] = 15'(r + 4);
-            e_w[sk + 1 + 15+3*((RPE+3)/4)] = {1'b1, mem[r + 1], 1'b1, mem[r]};
+            e_w[sk + 1 + 18+3*((RPE+3)/4)] = {1'b1, mem[r + 1], 1'b1, mem[r]};
         end
         if (sk >= 130 && sk < 134) begin
             r = 7000 + sk - 130; sel = {1'b0, 1'b1, rowdata(r, 6), 1'b1}; mem[r] = rowdata(r, 6); memv[r] = 1;
