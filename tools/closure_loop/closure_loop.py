@@ -1208,8 +1208,7 @@ def ref_gate_at_submit(j, jobs=None):
     if mode == "off":
         return
     try:
-        sys.path.insert(0, str(HERE.parent / "ref_tile"))
-        import pre_route_gate  # noqa: E402
+        pre_route_gate = ref_gate_modules()
         kw = {}
         if j["spec"].get("ref_tile"):
             # MEASURED CLOCK RULE (owner 2026-10-13; constants + rule text in tools/textbook_lint.py).  ref_gate.json
@@ -2641,10 +2640,46 @@ def inprocess_stale_sync(head=None):
                         if getattr(m, "__file__", None) and Path(m.__file__).resolve() == (root / rel).resolve())
         log(f"INPROCESS-SYNC vs origin/main {head[:9]}: {len(synced)} stale/missing file(s) replaced by main's copy: "
             + ", ".join(synced[:20]) + (f" (+{len(synced) - 20} more)" if len(synced) > 20 else "")
-            + (f"; already imported {loaded}: daemon restarts at the next idle tick start" if loaded else ""))
+            + (f"; already imported {loaded}: re-imported before the next submit check" if loaded else ""))
         if loaded:
-            _RESTART["why"] = f"in-process modules synced to main {head[:9]}: {', '.join(loaded)}"
+            _INPROC["gen"] += 1             # ref_gate_modules re-imports them before the next submit check
     return synced
+
+
+_INPROC = {"head": None, "gen": 0, "loaded_gen": 0, "lock": threading.Lock()}
+
+
+def inprocess_sync_on_main_move():
+    """every tick: when origin/main moved since the last INPROCESS-SYNC, re-sync the daemon's tools/ref_tile and
+    tools/hier_contract at once (not hourly): the submit check judges kits with these generators, and a kit generated on
+    a newer main was refused 'native_cts_sdc' while the daemon still held the older generator (hgi_sm_xl2_ctl-cl2b 20:51
+    10-15).  Changed in-process modules are re-imported before the next submit check (ref_gate_modules)."""
+    head = _ovl_head()
+    if not head or head == _INPROC["head"]:
+        return
+    synced = inprocess_stale_sync(head)
+    _INPROC["head"] = head
+    if synced:
+        _INPROC["gen"] += 1
+
+
+def ref_gate_modules():
+    """the pre_route_gate module for the submit check, re-imported (with every tools/ref_tile / hier_contract module it
+    loaded) after an INPROCESS-SYNC changed those files"""
+    with _INPROC["lock"]:
+        if _INPROC["loaded_gen"] != _INPROC["gen"]:
+            root = (HERE.parents[1]).resolve()
+            for name, m in list(sys.modules.items()):
+                f = getattr(m, "__file__", None)
+                if f and any(str(Path(f).resolve()).startswith(str(root / d) + "/") for d in INPROCESS_SYNC_DIRS):
+                    del sys.modules[name]
+            _INPROC["loaded_gen"] = _INPROC["gen"]
+            import importlib
+            importlib.invalidate_caches()
+            log(f"INPROCESS-SYNC: ref_tile / hier_contract modules re-imported (generation {_INPROC['gen']})")
+        sys.path.insert(0, str(HERE.parent / "ref_tile"))
+        import pre_route_gate  # noqa: E402
+        return pre_route_gate
 
 
 def restart_if_requested():
@@ -5327,6 +5362,14 @@ def step(j, fleet):
             elif rc != 0 or not ok_extra:
                 return crash(j, st, fleet, f"rc={rc}{'' if ok_extra else ' ok-check failed: ' + okout.strip()[-200:]}")
             event(j, f"{st['key']} done (rc={rc})")
+            if st["kind"] == "route":
+                # LAYOUT IMAGES (owner rule 20:45 10-15): ref_route.sh renders floorplan / density / congestion PNGs
+                # beside the route; the paths go into the job record so the owner LOOKS at them with the verdict
+                r = ssh(j["host"], f"ls {j['run']}/routes/*/layout/*.png 2>/dev/null", timeout=60)
+                pngs = [x for x in (r.stdout or "").split() if x.endswith(".png")]
+                if pngs:
+                    j["layout_images"] = {"host": j["host"], "paths": pngs}
+                    event(j, f"LAYOUT images ({j['host']}): " + " ".join(pngs))
             if st["kind"] == "calibrate":
                 r = ssh(j["host"], f"cat {j['run']}/cl/calib.json", timeout=60)
                 if r.returncode == 255:
@@ -8074,6 +8117,10 @@ def host_down_requeue(j, kind, now=None):
 
 def tick(fleet):
     restart_if_requested()
+    try:
+        inprocess_sync_on_main_move()
+    except Exception:  # noqa: BLE001
+        log("inprocess_sync_on_main_move error:\n" + traceback.format_exc())
     t_ph = time.time()
     overlay_drift_check()
     _slow_phase("overlay_drift_check", t_ph)

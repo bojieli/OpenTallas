@@ -132364,5 +132364,27 @@
    "sfu leaves x16 216x216 real RTL pins",
    "SFU core: no free area, PROPOSED strip (H-SM)"
   ]
+ },
+ "vm_bank_resize_v7_proposal": {
+  "date": "2026-10-15",
+  "owner": "H-DIE",
+  "status": "PROPOSED to H-SM (strap masters routing at 356.4 x 365.04)",
+  "finding": "vm bank slot is PIN-PERIMETER bound, not area bound: W/E faces carry rq/rr/wq/... at 0.288 um PG-clear bit pitch up to 362.9 of 365.04 um, N/S to 354.3 of 356.4; content = 3 x ot_sram_1r1w_1024x256 (174.744 x 70.488, 36,950 um2) + std -> ~31 % fill",
+  "proposal": {
+   "outline_um": [
+    270.0,
+    270.0
+   ],
+   "fill_estimate": "~55-60 % (macros 36,950 um2 + std, of 72,900 um2)",
+   "pins": "W/E pin-dense faces on TWO layers (M4 + M6, alternating per bit at 0.288 um per layer) under a die-lead layer_cap M6 grant for the bank tiles (ref_tile layer_cap_grant: pin-dense edge); N/S stay M5; same face assignment and bit order",
+   "macros": "abutted centred 3-SRAM stack (as vm_strap_q2): 174.744 x 211.512, ~47 um ring for pin escape on every side",
+   "freed_area_mm2": 1.83,
+   "use": "channels around the bank pairs and the SFU core strip"
+  },
+  "needs_from_H_SM": [
+   "bank std area per strap master (post-synth)",
+   "OK on the M6 pin layer for W/E",
+   "switch point: after the running strap routes report (keep closed ones as diagnostics)"
+  ]
  }
 }
