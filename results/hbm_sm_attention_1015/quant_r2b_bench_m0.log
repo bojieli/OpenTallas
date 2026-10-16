@@ -1,0 +1,5 @@
+PASS HGI_QDQ_STATIC_PROGRAM RG4_WG2 records=8 beats=104 sectors=416 commit_cycles=156 immutable_price=168 historical_wq3_price=184 programme_macros=1 data_macros=24
+- rtl/test/hbm_accel/generic/tb_hgi_qdq_static.sv:143: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 9us; walltime 0.043 s; speed 204.765 us/s
+- Verilator: cpu 0.044 s on 1 threads; alloced 1020 MB
