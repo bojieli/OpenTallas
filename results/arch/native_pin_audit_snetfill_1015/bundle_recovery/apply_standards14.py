@@ -32,7 +32,8 @@ ADMISSION = {  # ot-run units that executed the replays (logs in ART_DIR/standar
     ('standards3_effective', 'ot-epyc1tb'): 'oth-ubuntu-2134426-1792135703',
     ('standards3_effective', 'ot-epyc4'): 'oth-ubuntu-3784147-1792135703',
     ('xstg_n4', 'ot-epyc1tb'): 'oth-ubuntu-2148971-1792135864',
-    ('r2l_n7', 'ot-pve1'): 'oth-ubuntu-2006639-1792155246'}
+    ('r2l_n7', 'ot-pve1'): 'oth-ubuntu-2006639-1792155246',
+    ('hc6', 'ot-epyc4'): 'oth-ubuntu-2488830-1792155693', ('hc6', 'ot-agidock128'): 'oth-ubuntu-1570595-1792155693'}
 
 rows = {}
 for batch in BATCHES:
