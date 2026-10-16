@@ -6,13 +6,13 @@
  "die": [
   0,
   0,
-  380.16,
+  108.0,
   280.8
  ],
  "core": [
   2.16,
   2.16,
-  378.0,
+  105.84,
   278.64
  ],
  "why": "spec outline",
@@ -40,21 +40,21 @@
    "issue_done"
   ],
   "N": [
-   "vm_rr"
+   "vm_rv",
+   "vm_sel",
+   "tkm_done",
+   "tkm_busy",
+   "dest_v",
+   "rc_v",
+   "rc_tag"
   ],
   "S": [
-   "vm_assembled",
    "vm_assembled_v",
    "vm_source_meta",
    "inj_source_v",
    "inj_source_meta"
   ],
   "E": [
-   "tkm_done",
-   "tkm_busy",
-   "dest_v",
-   "rc_v",
-   "rc_tag",
    "vm_req_pin",
    "inj_req_pin",
    "inj_idx_pin",

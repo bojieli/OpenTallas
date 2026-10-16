@@ -1,0 +1,15 @@
+ISSUER_V6_MITER FAIL mismatches1379 checks484653
+ISSUER_V6_MITER FAIL mismatches20281 checks3242065
+ISSUER_V6_MITER FAIL mismatches97886 checks484653
+HCOLL_Q_HARD_V5 PASS q2 scen0 checks2411 ref_fault-1 hard_fault-1 first_cause0000 final_cause0000
+HCOLL_Q_HARD_V5 PASS q2 scen1 checks2411 ref_fault2367 hard_fault2372 first_cause0040 final_cause0040
+HCOLL_Q_HARD_V5 PASS q2 scen2 checks2411 ref_fault2366 hard_fault2371 first_cause0004 final_cause0004
+HCOLL_Q_HARD_V5 PASS q2 scen3 checks2411 ref_fault2371 hard_fault2376 first_cause2000 final_cause2004
+HCOLL_Q_HARD_V5 PASS q2 scen4 checks2411 ref_fault2372 hard_fault2378 first_cause0008 final_cause0008
+HCOLL_Q_HARD_V5 PASS q2 scen5 checks2411 ref_fault2372 hard_fault2376 first_cause1000 final_cause1004
+HCOLL_Q_HARD_V5 PASS q2 scen6 checks2413 ref_fault2347 hard_fault2348 first_cause0001 final_cause0001
+MUTANT mut_droplink scen1 rejected
+MUTANT mut_nomask scen0 rejected
+MUTANT mut_causeswap scen4 rejected
+MUTANT mut_droptkm scen3 rejected
+HCOLL_Q_HARD_V5_GATE_PASS q2

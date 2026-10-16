@@ -29,7 +29,16 @@ module ot_s81_static_lane_cross_hr #(
     reg [AW:0] identity [0:DEPTH-1];
     reg [AW:0] wc, rc;
     reg [AW:0] warm;
-    wire [AW:0] wg=wc^(wc>>1);
+    // r5b: the observed epoch is a dedicated Gray register (wgr == gray(wc) at every instant, same edges as the
+    // base module's combinational wc^(wc>>1)). It keeps the cross-root wg1 capture off wc's bank-decode fanout
+    // tree, whose long max path left no setup room for the hold buffers on wc->wg1 (gate r5 4_1_cts chunk 1:
+    // RSZ stuck 9,000 iterations at -14.3 ps on u_x.u_cross.wg1[1]).
+    reg [AW:0] wgr;
+    wire [AW:0] wc_n = wc+1'b1;
+    always @(posedge w_ck or negedge w_rst_n)
+        if (!w_rst_n) wgr <= 0;
+        else wgr <= wc_n^(wc_n>>1);
+    wire [AW:0] wg=wgr;
     (* async_reg="true" *) reg [AW:0] wg1,wg2,wg3;
     wire [AW:0] epoch_expected=rc-2+EPOCH_SHIFT;
     wire [AW:0] epoch_gray=epoch_expected^(epoch_expected>>1);

@@ -109,6 +109,39 @@
   },
   {
    "design": "qwen_rom",
+   "unit": "DVM.HEAD_ROW_ONWARD2 (qfd_xhead_e/w_w130 ONWARD_REG 2)",
+   "group": "DVM.HEAD_ROW_ONWARD2 (qfd_xhead_e/w_w130 ONWARD_REG 2)",
+   "measured": 28.0,
+   "price": 5.0,
+   "unit_of_measure": "cycles",
+   "unit_ratio": 5.6,
+   "e2e_loss_pct": 1.319,
+   "binding_workload": "ar",
+   "per_workload": {
+    "ar": {
+     "model": "token-path longest path",
+     "base_cycles": 249431.0,
+     "cycles": 252766.0,
+     "added_cycles": 3335.0,
+     "runs_per_token": 145,
+     "critical_runs": 145,
+     "overlapped_runs": 0,
+     "other_price_nodes_skipped": 0,
+     "naive_added_cycles": 3335.0,
+     "wave_positions": 0,
+     "wave_added_cycles_per_position": 0.0,
+     "e2e_loss_pct": 1.319
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "results/rtl/qwen_link_recovery_0253/head_onward2_receipt.json (branch codex/qwen-link-recovery-0253 ecbb50fc0)",
+   "evidence_grade": "committed_bench",
+   "date": "2026-10-16",
+   "status": "proposed",
+   "note": "Q-ELEM option (a), accepted by Q-COMPUTE-DIE 2026-10-16: the 129.6-um head's 0-cycle onward copy failed native capture (243.6/233.7 ps); input+output onward registers add 1 edge per head-row hop (23 hops a side, equalised) = +23 edges on every dependent ME op's x/go broadcast; prod36 full48 HEAD_CHAIN PASS dvm_minus_ref 5 -> 28. Not hideable (the fill carries the previous op's result). Structural removal: fewer hops (e.g. a mid-row root per half or two heads a slot)."
+  },
+  {
+   "design": "qwen_rom",
    "unit": "KV-end d2d credit class 6 (HCTL, 4 credits)",
    "group": "KV_END.class6",
    "measured": 0.4,
@@ -1374,40 +1407,40 @@
   },
   {
    "design": "r25gq",
-   "unit": "COLL quadrant hard_v5 V5 issue timing (host launch -> first uop effect 5 -> 8 edges)",
+   "unit": "COLL quadrant hard_v5 V6 issue timing (host launch -> first uop effect 5 -> 9 edges; V5 +3 plus the V6 ctl product/combine stage +1)",
    "group": "COLL.HARD_V5_ISSUE",
-   "measured": 8.0,
+   "measured": 9.0,
    "price": 5.0,
    "unit_of_measure": "cycles",
-   "unit_ratio": 1.6,
-   "e2e_loss_pct": 0.248,
+   "unit_ratio": 1.8,
+   "e2e_loss_pct": 0.331,
    "binding_workload": "ds_ar",
    "per_workload": {
     "ds_ar": {
      "model": "S2 schedule, fixed cycles added to every record of the op",
      "base_cycles": 576702.4,
-     "cycles": 578134.3,
-     "added_cycles": 1431.9,
+     "cycles": 578611.6,
+     "added_cycles": 1909.2,
      "program_records": 642,
-     "added_cycles_per_record": 3.0,
+     "added_cycles_per_record": 4.0,
      "e2e_loss_pct": 0.248
     },
     "qwen_ar": {
      "model": "S2 schedule, fixed cycles added to every record of the op",
      "base_cycles": 1269120.1,
-     "cycles": 1269339.1,
-     "added_cycles": 219.0,
+     "cycles": 1269412.1,
+     "added_cycles": 292.0,
      "program_records": 3,
      "added_cycles_per_record": 3.0,
-     "e2e_loss_pct": 0.017
+     "e2e_loss_pct": 0.023
     }
    },
    "within_unit_limit": true,
-   "evidence": "results/arch/hbm_coll_hard_v5_1045/bench_q2_5bb671b57",
+   "evidence": "results/arch/hbm_coll_hard_v5_1045/bench_q2_v6 (claude/hnl-coll-ctl-1045; V5 receipt bench_q2_5bb671b57)",
    "evidence_grade": "committed_bench",
    "date": "2026-10-16",
    "status": "proposed",
-   "note": "H-NETLIST/COLL 1045 V5 issue timing of the hard-hierarchy COLL quadrant (ot_hfd_coll_q{2,3}_hard_v5): HOST frame capture +1 at the fj pin registers, uop stream +2 for the pipelined iteration products (ctl gate in->reg -959 ps on the one-cycle 32x16 multiply), so every issue-path output is +3 edges vs host_v4 (lockstep bench tb_hgi_coll_q_hard_v5 SH=3/SHP=1, q2 gate PASS 5bb671b57). Charged conservatively as 3 fixed cycles on EVERY COLL record of the S2 schedule (every record treated as its own programme launch on the critical path; one launch a programme would cost ~3 cycles a token). Programme frames are +1 but frame gaps are relative (unchanged); child faults +1 are exceptional. Compiler constants: tools/hbm_coll_static/parent_timing.py (hard_v5 selectable; host_v4 unchanged; V4 constants on hard_v5 FAIL the lockstep check)."
+   "note": "H-NETLIST/COLL 1045 V5 issue timing of the hard-hierarchy COLL quadrant (ot_hfd_coll_q{2,3}_hard_v5): HOST frame capture +1 at the fj pin registers, uop stream +2 for the pipelined iteration products (ctl gate in->reg -959 ps on the one-cycle 32x16 multiply), so every issue-path output is +3 edges vs host_v4 (lockstep bench tb_hgi_coll_q_hard_v5 SH=3/SHP=1, q2 gate PASS 5bb671b57). V6 (H-ELEM 14:20 accepted +1: ctl3 gate combine/field adders -322 ps, 16x8 stage ~845 ps). Charged conservatively as 4 fixed cycles on EVERY COLL record of the S2 schedule (every record treated as its own programme launch on the critical path; one launch a programme would cost ~3 cycles a token). Programme frames are +1 but frame gaps are relative (unchanged); child faults +1 are exceptional. Compiler constants: tools/hbm_coll_static/parent_timing.py (hard_v5 selectable; host_v4 unchanged; V4 constants on hard_v5 FAIL the lockstep check)."
   },
   {
    "design": "r25gq",
@@ -1978,11 +2011,11 @@
  "totals": {
   "qwen_rom": {
    "accepted_pct": 1.065,
-   "proposed_pct": 4.331,
-   "accepted_plus_proposed_pct": 5.396,
+   "proposed_pct": 5.65,
+   "accepted_plus_proposed_pct": 6.715,
    "limit_pct": 15.0,
    "accepted_rows": 4,
-   "proposed_rows": 7,
+   "proposed_rows": 8,
    "headroom_pct": 13.935,
    "owner_exception_rows": 0,
    "over_limit_by_owner_exception": false
@@ -2000,8 +2033,8 @@
   },
   "r25gq": {
    "accepted_pct": 0.895,
-   "proposed_pct": 113.829,
-   "accepted_plus_proposed_pct": 114.724,
+   "proposed_pct": 113.912,
+   "accepted_plus_proposed_pct": 114.807,
    "limit_pct": 15.0,
    "accepted_rows": 1,
    "proposed_rows": 21,

@@ -48,3 +48,8 @@ CFIFO_X2 FAIL bad=1 words=390
 CFIFO_X2 FAIL bad=1 words=391
 CFIFO_X2_GATE FAIL
 RC mut_hsel 1
+== mut_hgray
+CFIFO_X2 FAIL bad=220 words=390
+CFIFO_X2 FAIL bad=220 words=391
+CFIFO_X2_GATE FAIL
+RC mut_hgray 1
