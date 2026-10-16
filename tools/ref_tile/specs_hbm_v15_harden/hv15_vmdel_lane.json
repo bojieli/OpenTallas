@@ -58,13 +58,14 @@
   "period_ps": 833.333,
   "threads": 8,
   "peak_ram_gb": 24,
-  "hold_margin_ns": 0.03
+  "hold_margin_ns": 0.03,
+  "pin_balance": {"group_max": 1}
  },
  "job": {
   "owner": "Claude:H-NETLIST/kits",
   "branch": "claude/hnl-kits-0030",
   "tag": "hv15",
-  "purpose": "v4 lane leaf of the split VM delivery (v16 die: vmdel_<q><b> x32). Measured failure hv15_vmdel_lane-countvisible-flow4536 (v2 RTL): TT -184.64 in->reg / -171.07 reg->out, DRC 2, util 32%. Structural fix: v3 pin registers on every input and output (+2 interface cycles, II=1, outputs == monolithic delayed 2) + v4 single rst_n pin flop (port reaches 8 flops, was 640) + outline 302.4x172.8 -> 257.04x151.2 (util ~46%, 20-um macro channels). Bench: production + LAT=2 lockstep equivalence; mutants group-select, SRAM slot, late reset release FAIL.",
+  "purpose": "v4 lane leaf of the split VM delivery (v16 die: vmdel_<q><b> x32). Measured failure hv15_vmdel_lane-countvisible-flow4536 (v2 RTL): TT -184.64 in->reg / -171.07 reg->out, DRC 2, util 32%. Structural fix: v3 pin registers on every input and output (+2 interface cycles, II=1, outputs == monolithic delayed 2) + v4 six kept rst_n pin flops, one per region (port reaches 13 flops, was 640; each copy <= ~290 loads, 0 cycles) + pins spread over the faces (pin_balance; gate 01:19 PNG: S fill pins and N dq crowded into narrow strips) + outline 302.4x172.8 -> 257.04x151.2 (util ~46%, 20-um macro channels). Bench: production + LAT=2 lockstep equivalence; mutants group-select, SRAM slot, late reset release FAIL.",
   "extra_paths": [
    "tools/hbm_v15_harden",
    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
@@ -125,5 +126,31 @@
  "pin_regs": {
   "enable": false,
   "reason": "RTL already registers every pin (v3/v4): begin/start/fill inputs captured in pin flops, dq/block_ready/busy/fault leave from flops (LAT=2 lockstep-equivalent to the monolithic module); rst_n reaches one pin flop + the 7 valid pin flops. The 27 cross-lane status bits (full0/full1/pcbad out = AND of 4 count flops; full*_all/pcbad_all in) stay single-level so the eight lanes' replicated state stays cycle-consistent; synthesis pin registers would add a second, unpriced stage."
+ },
+ "pin_ranges": {
+  "fill_v_i": [
+   8.64,
+   12.96
+  ],
+  "fill_bank_i": [
+   12.96,
+   17.28
+  ],
+  "fill_slot_i": [
+   17.28,
+   28.08
+  ],
+  "fill_epoch_i": [
+   28.08,
+   49.68
+  ],
+  "fill_data_i": [
+   49.68,
+   248.4
+  ],
+  "dq": [
+   12.96,
+   244.08
+  ]
  }
 }

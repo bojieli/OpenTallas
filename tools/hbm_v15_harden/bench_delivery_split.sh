@@ -14,7 +14,7 @@ cp $sp "$out/split.sv"
 case "$mut" in
  1) sed -i 's/({256{out_group==2.d0}}&macro_data\[0+:256\])/({256{out_group==2\x27d0}}\&macro_data[256+:256])/' "$out/split.sv";;
  2) sed -i 's/\.r_addr_in({rb,rs})/.r_addr_in({rb,rs ^ 6\x27d1})/' "$out/split.sv";;
- 3) sed -i 's/ else rst_q<=1.b1;/ else rst_q<=rst_q2; reg rst_q2; always @(posedge clk or negedge rst_n) if(!rst_n) rst_q2<=0; else rst_q2<=1;/' "$out/split.sv";;  # v4: lane state released one edge late
+ 3) sed -i 's/ else rst_r<=6.h3f;/ else rst_r<=rst_r2; reg [5:0] rst_r2; always @(posedge clk or negedge rst_n) if(!rst_n) rst_r2<=0; else rst_r2<=6\x27h3f;/' "$out/split.sv";;  # v4: lane state released one edge late
 esac
 if [ "$mut" != 0 ]; then cmp -s "$out/split.sv" $sp && { echo 'mutant not applied'; exit 3; }; fi
 sed 's/module ot_hbm_svc_static_vm_delivery_split /module ot_hbm_svc_static_vm_delivery /' "$out/split.sv" > "$out/as_delivery.sv"
