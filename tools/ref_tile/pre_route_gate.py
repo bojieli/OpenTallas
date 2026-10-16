@@ -185,24 +185,30 @@ def check_pins(g: Gate, spec: dict, ports: dict | None, where="RTL"):
     if ports is None:
         g.add("FAIL", "pins", f"top module {spec['top']} not found in the {where} sources", "fix 'top' / 'sources'")
         return
-    plan = {}
-    for f, names in spec["pins"].items():
-        for n in names:
-            plan.setdefault(n, []).append(f)
-    if spec["pins"].get("ANY"):
-        g.add("WARN", "pins", f"{len(spec['pins']['ANY'])} port group(s) left to the IO placer (ANY): {spec['pins']['ANY'][:4]}",
-              "give every bus a face (and an offset range) from the die contract before the die integrates it")
-    for n, fs in plan.items():
-        if len(fs) > 1:
-            g.add("FAIL", "pins", f"port {n} planned on {len(fs)} faces {fs}", "one face per port")
-        if n not in ports:
-            near = [p for p in ports if p.startswith(n.rstrip("[0]"))][:3]
-            g.add("FAIL", "pins", f"pin plan names '{n}', not a port of {spec['top']} ({where})"
-                  + (f"; ports like it: {near}" if near else ""), "name ports by their (scalar) base name")
-    miss = [p for p in ports if p not in plan]
-    if miss:
-        g.add("FAIL", "pins", f"{len(miss)} ports not in the pin plan (exhaustive regions fail the floorplan): {miss[:8]}",
-              "assign every port to a face")
+    if RT.literal_pin_bits(spec):
+        try:
+            RT.validate_literal_pin_plan(spec, ports if where == "synthesized netlist" else None, ROOT)
+        except RT.SpecError as e:
+            g.add("FAIL", "pins", str(e), "preserve complete actual pin coverage, exact IO source and named M6 contacts")
+    else:
+        plan = {}
+        for f, names in spec["pins"].items():
+            for n in names:
+                plan.setdefault(n, []).append(f)
+        if spec["pins"].get("ANY"):
+            g.add("WARN", "pins", f"{len(spec['pins']['ANY'])} port group(s) left to the IO placer (ANY): {spec['pins']['ANY'][:4]}",
+                  "give every bus a face (and an offset range) from the die contract before the die integrates it")
+        for n, fs in plan.items():
+            if len(fs) > 1:
+                g.add("FAIL", "pins", f"port {n} planned on {len(fs)} faces {fs}", "one face per port")
+            if n not in ports:
+                near = [p for p in ports if p.startswith(n.rstrip("[0]"))][:3]
+                g.add("FAIL", "pins", f"pin plan names '{n}', not a port of {spec['top']} ({where})"
+                      + (f"; ports like it: {near}" if near else ""), "name ports by their (scalar) base name")
+        miss = [p for p in ports if p not in plan]
+        if miss:
+            g.add("FAIL", "pins", f"{len(miss)} ports not in the pin plan (exhaustive regions fail the floorplan): {miss[:8]}",
+                  "assign every port to a face")
     one = [p for p, (w, vec) in ports.items() if vec and w == 1]
     if one:
         g.add("WARN", "pins", f"1-bit vector ports {one[:6]}: scalars after synthesis (named by base name here, which is "
