@@ -99,6 +99,24 @@ class WideHubLayout(unittest.TestCase):
         finally:
             G.HUB_LAYOUT=old;G.VCH8=vch
 
+    def test_return_macro_placement_preserves_vm_escape(self):
+        sys.path.insert(0,str(ROOT/'tools'))
+        import dsrom_s81_fulldie as G
+        r=json.loads((ROOT/'results/physical/die_iter_1012/s81/canonical_widehub_1015/hub_layout_rm5.json').read_text())
+        x0,y0,x1,y1=r['wide']['strip_w']
+        x2,a,x3,b=G.wide_return_strip({'strip_w':(x0,y0,x1,y1)})
+        self.assertEqual((a,b),(y0,y1));self.assertEqual(x3,x1)
+        self.assertGreater(x2-x0,390)
+        self.assertGreater(x3-x2,470)
+        # These three actual GEN24w2 return endpoint bodies occupied the VM
+        # reservation, despite nominal return centerlines being further east.
+        for x,w in [(15746,157),(15905,157),(15921,149)]:
+            self.assertLess(x,x2)
+        # A real2049b VM hub station (104um face) and return endpoint157um
+        # each fit in the independently reserved channel.
+        self.assertGreater(x2-x0,104)
+        self.assertGreater(x3-x2,157)
+
     def test_render_preserves_all_six_hcp_homes(self):
         sys.path.insert(0,str(ROOT/'tools'))
         from die_layout_render import from_s81

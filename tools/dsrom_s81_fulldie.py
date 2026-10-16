@@ -5099,7 +5099,7 @@ def buses_r8(m):
         if name.startswith('hr_') and side == 'W':
             xx = face_x - 0.55 * SPF - w
         if wide_hub() and side == 'W':   # wide hub: the gather / PQ W faces open onto the W strip and the W approach
-            allowed = list(allowed) + [cor['strip_w'], cor['hub_w']]
+            allowed = list(allowed) + [wide_return_strip(cor), cor['hub_w']]
         pl = P.near(xx + w / 2, y_c, w, h, allowed, horiz=False, span=1600.0, rows=6)
         assert pl, name
         it = P.add(Inst(name, master, pl[0], pl[1], w, h, 'MY' if side == 'W' else 'R0', kind=kind, region='hub'))
@@ -7569,6 +7569,18 @@ def wide_corr_y(m, tag):
     y0, y1 = wide_hub()['corr_w']
     n = 24
     return y0 + 30.0 + (y1 - y0 - 60.0) * (((d[tag] * 7) % n) + 0.5) / n
+
+
+
+def wide_return_strip(cor):
+    """Reserve the E55% of MIX4's E strip for field return trees and endpoints.
+
+    The W45% is the VM N-face escape. Keeping only path centerlines separate
+    lets the return end macros consume that escape; restrict their placement
+    regions as well as their nominal paths.
+    """
+    x0,y0,x1,y1 = cor['strip_w']
+    return (x0 + .45 * (x1 - x0),y0,x1,y1)
 
 
 def wide_strip_x(m, tag):
