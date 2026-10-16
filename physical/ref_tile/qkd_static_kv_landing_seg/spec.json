@@ -1,0 +1,285 @@
+{
+ "name": "qkd_static_kv_landing_seg",
+ "top": "qkd_static_kv_landing_seg",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_landing_seg.sv",
+  "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_landing.sv",
+  "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_hop.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"
+ ],
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 151.2,
+  "h": 1512.0
+ },
+ "layer_cap": "M5",
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*g_pc[0]*u_rows",
+   "at": [
+    28.08,
+    168.21
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*g_pc[1]*u_rows",
+   "at": [
+    28.08,
+    546.21
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*g_pc[2]*u_rows",
+   "at": [
+    28.08,
+    924.21
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*g_pc[3]*u_rows",
+   "at": [
+    28.08,
+    1302.21
+   ],
+   "orient": "R0"
+  }
+ ],
+ "pins": {
+  "W": [
+   "rsp_data",
+   "rsp_t",
+   "rsp_v",
+   "rsp_epoch",
+   "rsp_layer",
+   "rsp_valid",
+   "fault",
+   "req_valid",
+   "req_t",
+   "req_v",
+   "req_epoch",
+   "req_layer",
+   "vreq_valid",
+   "vreq_t",
+   "cfg_stack",
+   "cfg_group",
+   "rst_n",
+   "ck"
+  ],
+  "E": [
+   "actual_data",
+   "actual_sector",
+   "actual_epoch",
+   "actual_layer",
+   "actual_valid",
+   "expected_sector",
+   "expected_put",
+   "arm",
+   "epoch",
+   "layer"
+  ]
+ },
+ "pin_ranges": {
+  "actual_data": [
+   8.0,
+   1504.0
+  ],
+  "actual_sector": [
+   8.0,
+   1504.0
+  ],
+  "actual_epoch": [
+   8.0,
+   1504.0
+  ],
+  "actual_layer": [
+   8.0,
+   1504.0
+  ],
+  "actual_valid": [
+   8.0,
+   1504.0
+  ],
+  "expected_sector": [
+   8.0,
+   1504.0
+  ],
+  "expected_put": [
+   8.0,
+   1504.0
+  ],
+  "rsp_data": [
+   8.0,
+   1504.0
+  ],
+  "arm": [
+   700.0,
+   700.6
+  ],
+  "epoch": [
+   701.6,
+   705.6
+  ],
+  "layer": [
+   706.6,
+   708.1
+  ],
+  "rsp_t": [
+   640.0,
+   647.0
+  ],
+  "rsp_v": [
+   648.0,
+   648.6
+  ],
+  "rsp_epoch": [
+   649.6,
+   657.6
+  ],
+  "rsp_layer": [
+   658.6,
+   661.6
+  ],
+  "rsp_valid": [
+   662.6,
+   663.2
+  ],
+  "fault": [
+   664.2,
+   664.8
+  ],
+  "req_valid": [
+   665.8,
+   666.4
+  ],
+  "req_t": [
+   667.4,
+   674.4
+  ],
+  "req_v": [
+   675.4,
+   676.0
+  ],
+  "req_epoch": [
+   677.0,
+   685.0
+  ],
+  "req_layer": [
+   686.0,
+   689.0
+  ],
+  "vreq_valid": [
+   690.0,
+   690.6
+  ],
+  "vreq_t": [
+   691.6,
+   698.6
+  ],
+  "cfg_stack": [
+   699.6,
+   700.6
+  ],
+  "cfg_group": [
+   701.6,
+   703.1
+  ],
+  "rst_n": [
+   704.1,
+   704.7
+  ],
+  "ck": [
+   709.7,
+   710.2
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M3 M5"
+  },
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "recipe": 2,
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "Every pin is already a flop in RTL: inputs land on the landing_pc input registers (ps_q/as_q/ae_q/al_q/ad_q/arm_q/epoch_q/layer_q/put_q/actual_q) and the rowctl request registers (rq/tq/vq/eq/lq, vrq/vtq); outputs leave the rowctl rsp_* / fault registers; cfg straps are registered in each PC (stack_q/group_q). A synthesis pin-register stage would add a second, redundant edge."
+ },
+ "fill_reason": {
+  "pin_bound": "height = one landing group's 4 HBM PC pitches (4 x 378 um): PC q's 289-b return word and its SRAM sit level with the controller-strip / return-slot PC q (8 segments tile the 12,096-um stack column); width = the 94.8-um 128x256 SRAM + >= 20 um to both pin faces. Content ~4 SRAMs (15.6k um2) + ~11k flops."
+ },
+ "slot_change_request": "Q-KVSYS-STRIP 2026-10-16 (coordinator priority change via Q-KVSYS-DIE a58156848): NEW master for the die's static landing (replaces the credit-based qkd_land_strip / qkd_land_seg): 151.2 x 1,512 um, 8 per stack (32 per die) at the PC pitch, cfg_stack/cfg_group strap pins; E face = return slots / writer-calendar (actual_*, expected_*, arm/epoch/layer), W face = head request / response and the PV16 V port (req_*, vreq_*, rsp_*), clock ck on W at the middle. The die lead (Q-KVSYS-DIE, OT_KV_STATIC) binds the view.",
+ "job": {
+  "owner": "Claude:Q-KVSYS-STRIP",
+  "branch": "claude/qkvsys-seg",
+  "tag": "ls1",
+  "purpose": "KV/system die STATIC landing segment qkd_static_kv_landing_seg (= qkd_static_kv_landing_physical_grp VMAP=1 VREQ=1 with cfg strap ports and one clock): 4 PCs each with its real 128x256 SRAM, per-PC hop38/hop295 branch stages, VREQ row control; fixed-cycle (latency 8 edges), no flow control. ONE master replicated 32x.",
+  "extra_paths": [
+   "rtl/qwen_sys/static_kv_20261014",
+   "rtl/test/qwen_static_kv",
+   "tools/qwen_static_kv",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "benches": [
+   {
+    "name": "landing_seg_exact",
+    "cmd": "bash tools/qwen_static_kv/run_landing_seg.sh pos {RUN}/bench/pos",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^PASS landing_seg exact",
+    "note": "tb_static_landing PHYS=1 VMAP=1 VREQ=1: 32 segments on their straps, 128 PCs, ctx 8192, every K and V row word / t / kind on its edge (latency 8); fault modes 1-5 must FAIL"
+   },
+   {
+    "name": "landing_seg_mutant",
+    "cmd": "bash tools/qwen_static_kv/run_landing_seg.sh neg {RUN}/bench/neg",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 16,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "^FAIL landing_seg mutant detected",
+    "note": "branch-0 response hop flips a data bit (HOP_MUT 1)"
+   }
+  ]
+ },
+ "structural_change": "ls1: new master (the static landing replaces the credit-based landing strip in the die).",
+ "clock": "spine"
+}

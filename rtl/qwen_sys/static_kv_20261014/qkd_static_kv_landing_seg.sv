@@ -1,0 +1,64 @@
+`timescale 1ns/1ps
+// Q-KVSYS-STRIP 2026-10-16 (coordinator priority change via Q-KVSYS-DIE: the die's credit-based landing strip is replaced
+// by the STATIC landing): the hardened landing SEGMENT master, ONE master replicated 8 x per stack (32 per die).
+// Content = qkd_static_kv_landing_physical_grp #(.VMAP(1), .VREQ(1)) (one group = 4 PCs, each its real 128x256 SRAM; the
+// per-PC request hop38 / response hop295 branch stages; the VREQ row control) with two differences that make one master
+// serve every slot: (1) the stack / group identity is a strap PORT pair (cfg_stack / cfg_group, die ties; the PC leaf
+// registers it exactly as the parameter form does), (2) one tile clock ck (the grp form's 13 clock entries are die-leaf
+// entries; inside one hardened tile they are one CTS root).  Every input lands on a flop (landing_pc input registers,
+// rowctl req / vreq registers) and every output leaves a flop (rowctl rsp_* / fault), so the tile is pin-registered in
+// RTL.  Cycle-identical to the grp form (latency 8 edges request -> response with VREQ=1): bench
+// tools/qwen_static_kv/run_landing_seg.sh (tb_static_landing PHYS=1, VMAP=1 VREQ=1, 32 groups / 128 PCs / ctx 8192).
+module qkd_static_kv_landing_seg #(
+    parameter integer MUT=0,HOP_MUT=0
+)(
+    input wire ck,input wire rst_n,
+    input wire [1:0] cfg_stack,input wire [2:0] cfg_group,
+    input wire arm,input wire [15:0] epoch,input wire [5:0] layer,
+    input wire [3:0] expected_put,input wire [39:0] expected_sector,
+    input wire [3:0] actual_valid,input wire [39:0] actual_sector,
+    input wire [63:0] actual_epoch,input wire [23:0] actual_layer,input wire [1023:0] actual_data,
+    input wire req_valid,input wire [13:0] req_t,input wire req_v,
+    input wire [15:0] req_epoch,input wire [5:0] req_layer,
+    input wire vreq_valid,input wire [13:0] vreq_t,
+    output wire rsp_valid,output wire [1023:0] rsp_data,output wire [13:0] rsp_t,
+    output wire rsp_v,output wire [15:0] rsp_epoch,output wire [5:0] rsp_layer,output wire fault
+);
+    wire [3:0] get,gv,ov,pf,vv;
+    wire [55:0] gt,ot;
+    wire [63:0] ge,oe;
+    wire [23:0] gl,ol;
+    wire [1023:0] od;
+    wire [3:0] get_d,gv_d,ov_d,pf_d,vv_d;
+    wire [55:0] gt_d,ot_d;
+    wire [63:0] ge_d,oe_d;
+    wire [23:0] gl_d,ol_d;
+    wire [1023:0] od_d;
+    for(genvar branch=0;branch<4;branch=branch+1)begin:g_hop
+      qkd_static_kv_hop38 #(.MUT(HOP_MUT==2 && branch==0))u_req(
+        .ck(ck),.rst_n(rst_n),
+        .a({gl[6*branch+:6],ge[16*branch+:16],gv[branch],gt[14*branch+:14],get[branch]}),
+        .b({gl_d[6*branch+:6],ge_d[16*branch+:16],gv_d[branch],gt_d[14*branch+:14],get_d[branch]}));
+      qkd_static_kv_hop295 #(.MUT(HOP_MUT==1 && branch==0))u_rsp(
+        .ck(ck),.rst_n(rst_n),
+        .a({pf[branch],ol[6*branch+:6],oe[16*branch+:16],vv[branch],ot[14*branch+:14],od[256*branch+:256],ov[branch]}),
+        .b({pf_d[branch],ol_d[6*branch+:6],oe_d[16*branch+:16],vv_d[branch],ot_d[14*branch+:14],od_d[256*branch+:256],ov_d[branch]}));
+    end
+    qkd_static_kv_rowctl #(.VREQ(1)) u_rowctl(
+      .ck(ck),.rst_n(rst_n),.req_valid(req_valid),.req_t(req_t),.req_v(req_v),.req_epoch(req_epoch),.req_layer(req_layer),
+      .vreq_valid(vreq_valid),.vreq_t(vreq_t),
+      .pc_get(get),.pc_get_t(gt),.pc_get_v(gv),.pc_get_epoch(ge),.pc_get_layer(gl),
+      .pc_valid(ov_d),.pc_data(od_d),.pc_t(ot_d),.pc_v(vv_d),.pc_epoch(oe_d),.pc_layer(ol_d),.pc_fault(pf_d),
+      .rsp_valid(rsp_valid),.rsp_data(rsp_data),.rsp_t(rsp_t),.rsp_v(rsp_v),.rsp_epoch(rsp_epoch),.rsp_layer(rsp_layer),.fault(fault));
+    genvar q;
+    generate for(q=0;q<4;q=q+1)begin:g_pc
+      qkd_static_kv_landing_pc #(.MUT(MUT),.VMAP(1))u_pc(
+       .ck(ck),.rst_n(rst_n),.cfg_stack(cfg_stack),.cfg_group(cfg_group),.arm(arm),.epoch(epoch),.layer(layer),
+       .expected_put(expected_put[q]),.expected_sector(expected_sector[10*q+:10]),
+       .actual_valid(actual_valid[q]),.actual_sector(actual_sector[10*q+:10]),
+       .actual_epoch(actual_epoch[16*q+:16]),.actual_layer(actual_layer[6*q+:6]),.actual_data(actual_data[256*q+:256]),
+       .get(get_d[q]),.get_t(gt_d[14*q+:14]),.get_v(gv_d[q]),.get_epoch(ge_d[16*q+:16]),.get_layer(gl_d[6*q+:6]),
+       .out_valid(ov[q]),.out_data(od[256*q+:256]),.out_t(ot[14*q+:14]),
+       .out_v(vv[q]),.out_epoch(oe[16*q+:16]),.out_layer(ol[6*q+:6]),.fault(pf[q]));
+    end endgenerate
+endmodule

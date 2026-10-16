@@ -11,7 +11,10 @@ module tb_static_landing;
  parameter integer DUT_VMAP=VMAP;   // negative control: DUT_VMAP != VMAP must FAIL
  parameter integer VREQ=0;          // 1: V gets on the vreq face (qkd_pv16_vport), K on req; latency 6
  parameter integer VREQ_MUT=0;      // 1: the DUT is built VREQ=0 while V gets use the vreq face (must FAIL)
- localparam integer LAT=5+VREQ;
+ parameter integer PHYS=0;          // 1 (Q-KVSYS-STRIP): the DUT is the hardened segment qkd_static_kv_landing_seg (VMAP 1 /
+                                    // VREQ 1 fixed, cfg straps, one clock; +2 edges: request hop38 + response hop295)
+ parameter integer SEG_HOP_MUT=0;   // PHYS=1 negative control: 1 = branch-0 response hop flips a data bit (must FAIL)
+ localparam integer LAT=5+VREQ+2*PHYS;
  reg ck=0;always #0.416667 ck=~ck;
  reg rst=0,arm=0;
  reg [31:0] put=0,av=0,rq=0;
@@ -38,6 +41,15 @@ module tb_static_landing;
  genvar g;
  generate for(g=0;g<32;g=g+1)begin:groups
   wire [15:0] oe;wire [5:0] ol;wire rv;
+  if(PHYS!=0)begin:g_seg
+  qkd_static_kv_landing_seg #(.HOP_MUT(SEG_HOP_MUT))dut(
+   .ck(ck),.rst_n(rst),.cfg_stack(2'(g/8)),.cfg_group(3'(g%8)),.arm(arm),.epoch(16'd7),.layer(6'd3),
+   .expected_put({4{put[g]}}),.expected_sector({4{sec[g]}}),.actual_valid(ap[g]),.actual_sector(as[g]),
+   .actual_epoch({4{16'd7}}),.actual_layer({4{6'd3}}),.actual_data(wd[g]),
+   .req_valid((rq[g]&~vv[g])|kx[g]),.req_t(tt[g]),.req_v(1'b0),.req_epoch(16'd7),.req_layer(6'd3),
+   .vreq_valid(rq[g]&vv[g]),.vreq_t(tt[g]),
+   .rsp_valid(ov[g]),.rsp_data(od[g]),.rsp_t(ot[g]),.rsp_v(outv[g]),.rsp_epoch(oe),.rsp_layer(ol),.fault(ff[g]));
+  end else begin:g_grp
   qkd_static_kv_landing_grp #(.STACK(g/8),.GROUP(g%8),.VMAP(DUT_VMAP),.VREQ(VREQ_MUT?0:VREQ))dut(
    .ck(ck),.ck_pc({4{ck}}),.rst_n(rst),.arm(arm),.epoch(16'd7),.layer(6'd3),
    .expected_put({4{put[g]}}),.expected_sector({4{sec[g]}}),.actual_valid(ap[g]),.actual_sector(as[g]),
@@ -45,16 +57,17 @@ module tb_static_landing;
    .req_valid(VREQ?((rq[g]&~vv[g])|kx[g]):rq[g]),.req_t(tt[g]),.req_v(VREQ?1'b0:vv[g]),.req_epoch(16'd7),.req_layer(6'd3),
    .vreq_valid(VREQ?(rq[g]&vv[g]):1'b0),.vreq_t(tt[g]),
    .rsp_valid(ov[g]),.rsp_data(od[g]),.rsp_t(ot[g]),.rsp_v(outv[g]),.rsp_epoch(oe),.rsp_layer(ol),.fault(ff[g]));
+  end
  end endgenerate
- reg [31:0] expv[0:6],expkind[0:6];
- reg [13:0] expt[0:6][0:31];reg [1023:0] expd[0:6][0:31];
+ reg [31:0] expv[0:8],expkind[0:8];
+ reg [13:0] expt[0:8][0:31];reg [1023:0] expd[0:8][0:31];
  always @(posedge ck)begin
   cycles++;
-  if(!rst)for(integer d=0;d<7;d=d+1)expv[d]<=0;
+  if(!rst)for(integer d=0;d<9;d=d+1)expv[d]<=0;
   else begin
    expv[0]<=rq;expkind[0]<=vv;
    for(integer n=0;n<32;n=n+1)begin expt[0][n]<=tt[n];expd[0][n]<=pattern(tt[n],vv[n]);end
-   for(integer d=1;d<7;d=d+1)begin
+   for(integer d=1;d<9;d=d+1)begin
     expv[d]<=expv[d-1];expkind[d]<=expkind[d-1];
     for(integer n=0;n<32;n=n+1)begin expt[d][n]<=expt[d-1][n];expd[d][n]<=expd[d-1][n];end
    end
