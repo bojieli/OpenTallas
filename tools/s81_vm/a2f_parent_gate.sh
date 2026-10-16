@@ -38,7 +38,7 @@ build par_a2f      tb_dsfd_sp_vm_a2f "$PAR" $NATIVE & pids+=($!)
 build par_capword  tb_dsfd_sp_vm_a2f "$PAR" $NATIVE +define+OT_VM_CAPL_MUT_WORD & pids+=($!)
 build par_wfcpair  tb_dsfd_sp_vm_a2f "$PAR" $NATIVE +define+OT_VM_WFC_MUT_PAIR & pids+=($!)
 build par_x43phase tb_dsfd_sp_vm_a2f "$PAR" $NATIVE +define+OT_VM_X43_MUT_PHASE & pids+=($!)
-build par_legacy tb_dsfd_sp_vm_static "$PLEG" $NATIVE & pids+=($!)
+build par_legacy tb_dsfd_sp_vm_static "$PLEG" $NATIVE +define+OT_VM_NATIVE_WSCATTER & pids+=($!)
 bfail=0; for p in "${pids[@]}"; do wait "$p" || bfail=1; done
 [ $bfail = 0 ] || { echo 'A2F_GATE FAIL (build)'; exit 2; }
 # ---- runs (all in parallel)
