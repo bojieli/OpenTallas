@@ -1,0 +1,48 @@
+{
+ "schema": "opentallas.payload33-exact-composition.v1",
+ "status": "PASS_PAYLOAD_AND_PARENT_VISIBLE_OR_COMPONENTS_FULL_NORMAL_FRONT_STILL_RUNNING",
+ "source_commit": "e01535e80",
+ "source_sha256": {
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_a2f_payload33.sv": "62cd34802bcb72928c369ecc12c548e6913ebd62bee383d8476a3c02b25b2eb0",
+  "tools/s81_vm/a2f_payload33_gate.py": "aa7c04321101e6284c51542e0cc8614506107de10e92ebf398f0342efbdfe586",
+  "tools/s81_vm/payload33_epoch_or_gate.py": "f3fc2dddd487be51600fac4f86770005f66b2d685021a3e9f3cf0733d983589b",
+  "tools/s81_vm/payload33_epoch_or_bench.sv": "4c97475cca00e01fdc41f208b39bab018797b6346c35c023bb404970d04cb177",
+  "tools/s81_vm/area_a2_controlled.sv": "f2f67f2a35bd91745e8314f8478b6ce6aafacbbbe9bb35567de7bcb1146ca595",
+  "tools/s81_vm/area_a2f.sv": "87ac2c197d4bfefa87289de73525565c5aae4b6a20f55f62015354dde00f59b7",
+  "tools/s81_vm/area_a2f_control_resetlocal.sv": "59907c651f325341ec872da56ae3fa965ae01eac3a2fb8d40ade35aa73841d62",
+  "tools/s81_vm/area_a2f_payload33_composed.sv": "1f328900083c0a4e0fecc24cd6e159e0e4479c24b293216c696cd57db6060d09"
+ },
+ "normal_payload": {
+  "edges": 900,
+  "sources": 53,
+  "data_mask_bits": 6996,
+  "quarters": 4,
+  "epoch_outputs": 4,
+  "reference": "actual s81_a2_w0_payload",
+  "mutants_rejected": [
+   "DATA",
+   "MASK",
+   "EPOCH",
+   "RESET"
+  ]
+ },
+ "observable_or": {
+  "edges": 808,
+  "payload_roots": 16,
+  "source_count": 53,
+  "data_mask_bits": 27984,
+  "actual_hardware": "16 payload33 leaves, four unchanged control4_resetlocal masters, four actual fault_join4 masters, actual header and four original reference payloads",
+  "reference": "independent scheduled epoch sample / sticky / FJ pin-register / FJ output-register oracle",
+  "witnesses": "each of16 payload roots reset independently, alternating short/held reset, all16 observed in the global OR",
+  "reset_scope": "Header, controller and fault-join reset roots are coordinated. Payload resets vary independently. Native clock/reset delivery and arbitrary concurrent independent controller resets are not qualified.",
+  "mutant": "actual pure-wire epoch routing drops root15 and duplicates root14",
+  "mutant_failure": "edge766: actual OR0 expected1"
+ },
+ "full_front": {
+  "module": "s81_a2f_controlled_split4m_payload33",
+  "elaboration": "PASS Verilator5.032,38modules,2.147GB",
+  "normal_differential": "LIVE unit oth-ubuntu-1150760-1792146742, source99b7ba5e5,3seeds against actual A2,16384outputs/53sources/3slots",
+  "production_parent": "S-VM owns combined WFC/XIO/payload33 integration and expensive real128SRAM full-parent proof"
+ },
+ "physical_scope": "Compact291.6x32.4um leaf diagnostic CTS passes, fresh501be7692 clock-edge gate live. No full parent native/physical adoption claimed."
+}
