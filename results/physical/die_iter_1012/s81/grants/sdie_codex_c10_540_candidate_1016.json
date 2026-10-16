@@ -20,7 +20,7 @@
   1727.976,
   88.536
  ],
- "candidate_origin": "reservation SW corner",
+ "candidate_origin": "EAST anchored in existing reservation (supersedes initial SW fit-only location)",
  "pin_tcl": "physical/s81_die_pins/fill2_gen19b/dsfd_stage_seq_static_c10_localtree.tcl",
  "pin_tcl_sha256": "c5a8b404611d37f401cdf613dd2a92494ed1cd279bf893788503bd45e249a4c4",
  "clock_reset_sha256": "d141db3e5be57f430ae6d789fbb7968c5251a335cd18d0597f8aaaab8c52c8f3",
@@ -63,5 +63,11 @@
   "path": "/home/ubuntu/artifacts/s81-issuer-localtree0253/c10_pinplan.png",
   "personally_viewed": true,
   "finding": "N/S ports span full width with centered two-clock south entries, crowded E face uses 2-track lattice. Empty core has no placed cells/clock evidence yet; geometry alone not qualification."
- }
+ },
+ "candidate_origin_um": [
+  12075.24,
+  15806.88
+ ],
+ "east_boundary_um": 12615.24,
+ "placement_correction": "Initial SW placement was fit-only and would shift the actual E boundary1187.976um west. Source slot request places compact data pins at the old EAST end; east anchoring preserves the old E boundary12615.240um. All remaining actual N/S/clock/redistributed E-pin incidents still require source-current regeneration; no complete reach claim."
 }
