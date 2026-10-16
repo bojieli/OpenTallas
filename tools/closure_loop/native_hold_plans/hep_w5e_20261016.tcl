@@ -16,6 +16,7 @@ foreach name [concat $ot_hep_remove [dict keys $ot_hep_swap]] {
     error "HEP normalization unexpected buffer $name"
   }
   foreach term [$inst getITerms] {
+    if {[[$term getMTerm] getSigType] in {POWER GROUND}} continue
     set net [$term getNet]
     if {$net eq "NULL" || [$net getSigType] in {CLOCK POWER GROUND}} {
       error "HEP normalization non-signal net at $name"
