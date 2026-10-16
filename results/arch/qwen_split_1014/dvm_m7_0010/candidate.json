@@ -1,0 +1,212 @@
+{
+  "schema": "opentallas.qwen-dvm-m7-seam-candidate.v1",
+  "qualified": false,
+  "homes_fixture_sha256": "99d04a8557ae5b971f9b5583884f26421d0e1e557e81a0be3d5f7403c73f1fd5",
+  "source_full_homes_sha256": "9f42a0444678d0970b05eab9d6029f7476204f5bb25a08274ee931204538d1d6",
+  "column_count": 48,
+  "width_um": 64.776,
+  "source_rtl_sha256": {
+    "rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv": "3eada105e05fca89ab91f84ef01ab4c499601d3960d2100437ed75ab42ec8e63",
+    "rtl/qwen_sys/dvm_20261014/ot_qfd_xslice_slots.sv": "259e9c16b770adfdb3b48a4a9d0304091d9731d99da917316ac5bb5ea84fb28e"
+  },
+  "normal_cycle_change": 0,
+  "workload_bits_per_seam": 1170,
+  "phases": {
+    "0": [
+      "h_1",
+      "h_3",
+      "h_5",
+      "h_7",
+      "h_9",
+      "h_11",
+      "h_13",
+      "h_15",
+      "h_17",
+      "h_19",
+      "h_21",
+      "h_23",
+      "h_25",
+      "h_27",
+      "h_29",
+      "h_31",
+      "h_33",
+      "h_35",
+      "h_37",
+      "h_39",
+      "h_41",
+      "h_43",
+      "h_45",
+      "h_47"
+    ],
+    "32": [
+      "h_0",
+      "h_2",
+      "h_4",
+      "h_6",
+      "h_8",
+      "h_10",
+      "h_12",
+      "h_14",
+      "h_16",
+      "h_18",
+      "h_20",
+      "h_22",
+      "h_24",
+      "h_26",
+      "h_28",
+      "h_30",
+      "h_32",
+      "h_34",
+      "h_36",
+      "h_38",
+      "h_40",
+      "h_42",
+      "h_44",
+      "h_46"
+    ]
+  },
+  "variants": {
+    "0": {
+      "origin_x_mod64_nm": 0,
+      "seam_bits": 1170,
+      "available_slots": 1958,
+      "cut": 0.5975485188968335,
+      "baseline_M3_M5_slots": 1499,
+      "baseline_cut": 0.7805203468979319,
+      "contacts_by_layer": {
+        "M3": 527,
+        "M7": 288,
+        "M5": 355
+      }
+    },
+    "32": {
+      "origin_x_mod64_nm": 32,
+      "seam_bits": 1170,
+      "available_slots": 1958,
+      "cut": 0.5975485188968335,
+      "baseline_M3_M5_slots": 1499,
+      "baseline_cut": 0.7805203468979319,
+      "contacts_by_layer": {
+        "M3": 523,
+        "M7": 271,
+        "M5": 376
+      }
+    }
+  },
+  "track_and_spacing_errors": [],
+  "observed_wrong_phase_rejections": {
+    "32_as_0": true,
+    "0_as_32": true
+  },
+  "interior_signal_and_pg_cap": "M5",
+  "proposed_contact_cap": "M7",
+  "grant_scope": "Only the exact named M7 contacts in seam_phase*.json, N/S .384um edge strips; M6/M7 vias must be expanded and contained in corresponding source-bound landing boxes; no blanket cap/OBS/PG change",
+  "analytic_M5_pg_reservation_nm": [
+    [
+      2460,
+      2580
+    ],
+    [
+      2652,
+      2772
+    ],
+    [
+      7860,
+      7980
+    ],
+    [
+      8052,
+      8172
+    ],
+    [
+      13260,
+      13380
+    ],
+    [
+      13452,
+      13572
+    ],
+    [
+      18660,
+      18780
+    ],
+    [
+      18852,
+      18972
+    ],
+    [
+      24060,
+      24180
+    ],
+    [
+      24252,
+      24372
+    ],
+    [
+      29460,
+      29580
+    ],
+    [
+      29652,
+      29772
+    ],
+    [
+      34860,
+      34980
+    ],
+    [
+      35052,
+      35172
+    ],
+    [
+      40260,
+      40380
+    ],
+    [
+      40452,
+      40572
+    ],
+    [
+      45660,
+      45780
+    ],
+    [
+      45852,
+      45972
+    ],
+    [
+      51060,
+      51180
+    ],
+    [
+      51252,
+      51372
+    ],
+    [
+      56460,
+      56580
+    ],
+    [
+      56652,
+      56772
+    ],
+    [
+      61860,
+      61980
+    ],
+    [
+      62052,
+      62172
+    ]
+  ],
+  "open": [
+    "die-lead expanded actual M5-to-M8 and M7-to-M8 via/PG audit at all four2.16um y phases",
+    "actual M5-to-M7 signal via dimensions/clearance and routed DEF audit",
+    "exact source-bound shared-flow M7 contact grant support",
+    "independently hardened head/control and eight real leaves with separate native clock views",
+    "head W/E full connection pin plan and <=500um neighbor leg",
+    "TTsetup/FFhold/DRC0 and native220/190/80 per child; aggregate GRT/STA",
+    "one-edge leaf input/output shared capture register must satisfy both opposite-face native bounds"
+  ],
+  "interpretation": "Analytic pin capacity and track candidate only, no physical or whole-column qualification"
+}
