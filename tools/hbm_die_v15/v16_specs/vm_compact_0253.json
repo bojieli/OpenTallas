@@ -1,0 +1,124 @@
+{
+ "region": "vm_compact_0253",
+ "author": "Codex typed ABI integration",
+ "instances": [],
+ "edges": [
+  {
+   "src": [
+    "hb_coll_NW",
+    "vm_rq",
+    0,
+    136
+   ],
+   "dst": [
+    "hb_vms_NW",
+    "rq",
+    544,
+    680
+   ],
+   "bits": 136,
+   "clock": "stream",
+   "basis": "Exact live endpoint group mapping after deleting unused group3; baseline coll_vm_rq_NW"
+  },
+  {
+   "src": [
+    "hb_vms_NW",
+    "rr",
+    8224,
+    10280
+   ],
+   "dst": [
+    "hb_coll_NW",
+    "vm_rr",
+    0,
+    2056
+   ],
+   "bits": 2056,
+   "clock": "stream",
+   "basis": "Exact live endpoint group mapping after deleting unused group3; baseline coll_vm_rr_NW"
+  },
+  {
+   "src": [
+    "hb_coll_NE",
+    "vm_rq",
+    0,
+    136
+   ],
+   "dst": [
+    "hb_vms_NE",
+    "rq",
+    544,
+    680
+   ],
+   "bits": 136,
+   "clock": "stream",
+   "basis": "Exact live endpoint group mapping after deleting unused group3; baseline coll_vm_rq_NE"
+  },
+  {
+   "src": [
+    "hb_vms_NE",
+    "rr",
+    8224,
+    10280
+   ],
+   "dst": [
+    "hb_coll_NE",
+    "vm_rr",
+    0,
+    2056
+   ],
+   "bits": 2056,
+   "clock": "stream",
+   "basis": "Exact live endpoint group mapping after deleting unused group3; baseline coll_vm_rr_NE"
+  },
+  {
+   "src": [
+    "hb_quant_NW",
+    "rq",
+    0,
+    136
+   ],
+   "dst": [
+    "hb_vms_NW",
+    "rq",
+    408,
+    544
+   ],
+   "bits": 136,
+   "clock": "stream",
+   "basis": "Exact live endpoint group mapping after deleting unused group3; baseline quant_vm_rq"
+  },
+  {
+   "src": [
+    "hb_vms_NW",
+    "rr",
+    6168,
+    8224
+   ],
+   "dst": [
+    "hb_quant_NW",
+    "rr",
+    0,
+    2056
+   ],
+   "bits": 2056,
+   "clock": "stream",
+   "basis": "Exact live endpoint group mapping after deleting unused group3; baseline quant_vm_rr"
+  }
+ ],
+ "clocks": [],
+ "straps": [],
+ "gaps": [],
+ "drop_v15_edges": [
+  "coll_vm_rq_NW",
+  "coll_vm_rr_NW",
+  "coll_vm_rq_NE",
+  "coll_vm_rr_NE",
+  "quant_vm_rq",
+  "quant_vm_rr"
+ ],
+ "vm_abi_mapping": "native-compact-0253",
+ "notes": [
+  "NW/NE readgroups0,1,2,4,5 ->0,1,2,3,4. No ties or missing producers added. Calendar packed offsets remain actualW187 source. Updated wrapper/bank physical views are UNQUALIFIED until source-bound gates."
+ ]
+}

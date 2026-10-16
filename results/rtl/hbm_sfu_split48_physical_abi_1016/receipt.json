@@ -1,0 +1,53 @@
+{
+  "scope": "functional source/reset/cycle equivalence only; fourteen scalar phase-related clocks compared logically; reset leaf native gate, clock insertion/phase delivery, placement, route, reach remain OPEN",
+  "sources": {
+    "rtl/test/hbm_sfu_relay_0330/tb_sfu_split48_physical.sv": "b1c0a8613b90a2d34502bcb24e6393710dbc91a4fb7df25618935ce8a21765b8",
+    "rtl/test/hbm_sfu_relay_0330/hbfd_rly_624_split48_physical_candidate.sv": "dbe09a05218be4e8cdd7012abc485fb1f44ba11f316f0d0ea95ea578f82e5c32",
+    "rtl/hbm_accel/die_glue/hbfd_rly_masters.sv": "5fdbc01ad0bdbfe4e4e6baab63711e42eceba25958eb79eb6a3628f961293439",
+    "rtl/hbm_accel/die_glue/ot_hbm_rly.sv": "f38be06321d90ba5660d783ddba2d5a4f95e4c355b5b87d84b6bc03f63a37053",
+    "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5"
+  },
+  "cases": [
+    {
+      "R": 1,
+      "MUT": 0,
+      "exit": 0,
+      "passed": true
+    },
+    {
+      "R": 11,
+      "MUT": 0,
+      "exit": 0,
+      "passed": true
+    },
+    {
+      "R": 23,
+      "MUT": 0,
+      "exit": 0,
+      "passed": true
+    },
+    {
+      "R": 23,
+      "MUT": 1,
+      "exit": 1,
+      "passed": true
+    },
+    {
+      "R": 23,
+      "MUT": 2,
+      "exit": 1,
+      "passed": true
+    },
+    {
+      "R": 23,
+      "MUT": 3,
+      "exit": 1,
+      "passed": true
+    }
+  ],
+  "payload_bits_per_station": 624,
+  "literal_48_masters_per_station": 13,
+  "reset_FF_per_station": 15,
+  "scalar_payload_clock_ports": 13,
+  "scalar_reset_clock_ports": 1
+}
