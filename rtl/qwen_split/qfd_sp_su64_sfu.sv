@@ -4,7 +4,12 @@
 // edges (VL14), cache response is compile-time5 or8; no ideal memory adapter.
 // SI fields are the actual qfd_seq_su482 ABI, not a second instruction decoder.
 // Raw KV output feeds the native formatter; no reference results are accepted.
-module qfd_sp_su64_sfu #(parameter integer CBUF_EDGES=5,COPY_DATA_MUT=0,EXTERNAL_EMBED=0)(
+// Q-NETLIST 2026-10-16: the compute die serves the embedding row from the external provider
+// (qfd_embedding_word_provider via the sequencer's embed ROM ports, external_embed_fault): EXTERNAL_EMBED=1 is the only
+// die configuration, so the resident-row preload/fill inputs (dead under EXTERNAL_EMBED=1: no row SRAM is instantiated)
+// are not ports of this die master any more (strict port-bind: no unconnected functional input).  The resident variant
+// stays available in ot_qfd_sp_su64_static_entries (EXTERNAL_EMBED=0) for the historical benches.
+module qfd_sp_su64_sfu #(parameter integer CBUF_EDGES=5,COPY_DATA_MUT=0,EXTERNAL_EMBED=1)(
     input wire ck,rst_n,
     output wire [63:0] external_a_re,
     output wire [1535:0] external_a_addr,
@@ -26,9 +31,6 @@ module qfd_sp_su64_sfu #(parameter integer CBUF_EDGES=5,COPY_DATA_MUT=0,EXTERNAL
     output wire [63:0] kv_we,
     output wire [1535:0] kv_waddr,
     output wire [2047:0] kv_wdata,
-    input wire fill_begin,input wire[17:0]fill_token,input wire[15:0]fill_epoch,
-    input wire preload_slot,preload_v,preload_scale,input wire[5:0]preload_word,
-    input wire[17:0]preload_token,input wire[15:0]preload_epoch,input wire[511:0]preload_data,
     input wire ck_head0,
     input wire ck_head1,
     input wire ck_head2,
@@ -404,13 +406,7 @@ module qfd_sp_su64_sfu #(parameter integer CBUF_EDGES=5,COPY_DATA_MUT=0,EXTERNAL
  // occupancy; the new status edge never changes copy/arithmetic issue timing.
  ot_hdc_delay #(.W(1),.D(1),.RESET(1))u_copy_active_pin
   (.clk(ck),.rst_n(rst_n),.d(copy_active_internal),.q(cp_active));
- reg embed_epoch_valid,embed_epoch_fault;reg[15:0]embed_epoch;
- always @(posedge ck or negedge rst_n)
-  if(!rst_n)begin embed_epoch_valid<=0;embed_epoch<=0;embed_epoch_fault<=0;end
-  else begin
-   if(EXTERNAL_EMBED==0&&fill_begin)begin embed_epoch_valid<=1;embed_epoch<=fill_epoch;end
-   if(EXTERNAL_EMBED==0&&preload_v&&(!embed_epoch_valid||preload_epoch!=embed_epoch||fill_begin))embed_epoch_fault<=1;
-  end
+ wire embed_epoch_fault=1'b0;   // epoch identity is checked by the external provider (preload face + core store)
  wire[2366:0] arithmetic_va;
  assign sd={su_fault|wrom_fault|copy_fault|embed_epoch_fault,rows,progress,kv_we,idle&&!copy_active_internal,ready&&!copy_active_internal,inflight,active|copy_active_internal};
  assign ca0={si[481:476],crom_addr[0+:192],crom_re[0+:8]};
@@ -480,6 +476,8 @@ module qfd_sp_su64_sfu #(parameter integer CBUF_EDGES=5,COPY_DATA_MUT=0,EXTERNAL
  .red_we(red_we),.red_addr(red_addr),.red_data(red_data),
  .kv_we(kv_we),.kv_waddr(kv_waddr),.kv_wdata(kv_wdata),
  .crom_re(crom_re),.crom_addr(crom_addr),.crom_q(crom_q),
- .fill_begin(fill_begin),.fill_token(fill_token),.preload_slot(preload_slot),.preload_v(preload_v),.preload_scale(preload_scale),.preload_word(preload_word),.preload_token(preload_token),.preload_data(preload_data),.wrom_fault(wrom_fault));
+ // resident-row ports of the shared entries body: compile-time dead under EXTERNAL_EMBED=1 (g_controller_embedding)
+ .fill_begin(1'b0),.fill_token(18'd0),.preload_slot(1'b0),.preload_v(1'b0),.preload_scale(1'b0),.preload_word(6'd0),.preload_token(18'd0),.preload_data(512'd0),.wrom_fault(wrom_fault));
  initial if(CBUF_EDGES!=5&&CBUF_EDGES!=8)$fatal(1,"unqualified native CBUF latency");
+ initial if(EXTERNAL_EMBED!=1)$fatal(1,"qfd_sp_su64_sfu: the compute die master is the external-embedding configuration");
 endmodule

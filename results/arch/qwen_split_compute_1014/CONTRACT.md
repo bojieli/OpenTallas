@@ -1,4 +1,4 @@
-# Qwen3-8B TP8 split — COMPUTE die contract v1.3 (2026-10-14 takeover; structural candidate, unqualified)
+# Qwen3-8B TP8 split — COMPUTE die contract v1.4 (2026-10-16 Q-NETLIST full-netlist revision; v1.3 below; structural candidate, unqualified)
 
 **Binding owner clarification 2026-10-14 18:59:24 PT:** ROM production is statically cycle scheduled by the compiler.
 No runtime credit counters, readiness-driven issue, demand arbitration, or backpressure may schedule normal execution.
@@ -7,6 +7,66 @@ implemented latencies and phases. Availability/commit checks fault on a missed r
 The credit-based interfaces below are retained as historical/diagnostic evidence until replaced by real static RTL
 and an exact production composition. Arbitrarily stalled safety benches do not qualify production timing or tok/s.
 
+
+## v1.4 (Q-NETLIST, 2026-10-16) -- full-netlist contract on the current floorplan (supersedes the v1.3 master list)
+
+Lineage: fpq_s6 (840.7 mm2) -> repack_2210 r2f (held45 re-packed tile 457.92 x 820.8, 45 clock entries) ->
+repack_0030 **r2h** (`repack_0030/fpq_r2h-homes.json`, die **32,996.16 x 17,435.52 um = 575.3 mm2**, reticle-legal),
+tree hosts `OT_SPLIT_TREE_HOSTS=dp` (720 `qfd_tile_nk` + 48 `qfd_tile_nl`).  Generator env = the die lead's r2h2 trial +
+the system face (default ON, `OT_SPLIT_SYS_FACE`).  **Strict port-bind PASS** (`netlist_0030/port_bind.txt`: 39 masters,
+1,642 instances, every count 0 -- was r2b2 input_unconnected 71 / port_not_in_rtl 30); real views bound 10 masters / 795
+instances (`netlist_0030/bind.json`; rstseq/rstsync now bind at their closed 21.6 x 21.6 outline).
+Evidence: `netlist_0030/` (port_bind.json/.txt, bind.json, gen_receipt.json), bench `sys_face_0030/`.
+
+| master | n | RTL (die name) | frame um | view | owner |
+|---|---:|---|---|---|---|
+| qfd_tile_nk / qfd_tile_nl | 720 / 48 | rtl/physical/qfd_tile_rp2_45_slots.sv -> qfd_tile_nk_rp2_45 / qfd_tile_nl_rp2_45 | 457.92 x 820.8 | gen (held45 kit) | Q-TILE45 |
+| qfd_xcst_n / qfd_xcst_s | 384 / 384 | ot_qfd_xslice_slots.sv | 52.68 x 103.656 | CLOSED view | Q-DVM |
+| qfd_xcol_e / qfd_xcol_w | 24 / 24 | ot_qfd_xslice_slots.sv | 64.776 x 1,434.216 | gen | Q-DVM |
+| qfd_xs_tap | 1 | ot_qfd_xslice_slots.sv | 216 x 216 | CLOSED view | Q-DVM |
+| qfd_band_upper_tp8 | 4 | qfd_band_upper_tp8.sv | 64.8 x 205.2 | CLOSED view | Q-ELEM |
+| qfd_sp_band_lanes | 3 | ot_qwen_band_lanes_slots.sv | 881.28 x 1,131.84 | gen | Q-ELEM |
+| qfd_port_tiles_{0,1,2}{,_f1} | 6 | qfd_port_tiles.sv | 1,036.8 x 2,462.4 | gen | Q-ELEM |
+| qfd_sp_res_train_par_{0,1,2} | 3 | qfd_sp_res_train_par.sv | 777.576 x 518.376 | gen | Q-ELEM |
+| qfd_res_train_issue | 1 | qfd_res_train_issue.sv | 129.6 x 129.6 | gen | Q-ELEM |
+| qfd_tt_ctlm_static_s | 1 | static_schedule_20261014/qfd_tt_ctlm_static_s.sv | 777.6 x 1,814.4 | gen | Q-ELEM / q_compute_integration |
+| qfd_seq_su_static | 1 | qfd_seq_su_static.sv | 518.376 x 518.376 | gen | Q-ELEM |
+| qfd_sp_su64_sfu | 1 | qfd_sp_su64_sfu.sv (EXTERNAL_EMBED=1 only; no preload ports) | 3,239.976 x 3,671.976 | gen (W-face grant) | Q-ELEM (SU) |
+| qfd_su_cbuf_g / qfd_crom_g | 8 / 8 | ot_qwen_tp8_real_rom_slots.sv | 194.376 x 215.976 / 550.776 | CLOSED views | Q-ELEM |
+| qfd_sp_vector_memory_par | 1 | vm_nox_20261014/qfd_sp_vector_memory_par.sv | 4,708.776 x 2,203.176 | gen | Q-VMWB |
+| qfd_native59_compute_service | 1 | qfd_native59_compute_service.sv | 777.6 x 518.4 | gen | ORPHAN (open_owner_audit) -> die lead |
+| **qfd_embedding_word_provider** | 1 | qfd_embedding_word_provider.sv (NEW; replaces qkd_embedding_static_core_provider) | 259.2 x 216 | gen | Q-NETLIST / Q-COMPUTE-DIE |
+| **qfd_sys_face** | 1 | qfd_sys_face.sv (NEW system face, ot_rom_4096x72_m8 config ROM) | 302.4 x 216 | gen | Q-NETLIST / Q-COMPUTE-DIE |
+| qfd_d2d_static | 1 | d2d_static_20261015/ot_qwen_d2d_dies.sv | 777.576 x 518.376 MX | gen | Q-DVM+LINK |
+| qfd_collective_static_io_production | 1 | ot_qfd_collective_static_io_production.sv | 4,157.976 x 1,563.816 | gen | Q-DVM+LINK |
+| qfd_clkrx / qfd_rly_26_NE_9x9 | 1 / 1 | generated die glue (gen_relay_rtl.py) | 412.536 sq / 8.64 sq | gen | die lead / Q-ELEM |
+| qfd_rstseq / qfd_rstsync | 1 / 1 | qfd_link_slots.sv | **21.6 x 21.6** (closed view) | CLOSED views | Q-LINK (FILL-Q) |
+| models: ot_qkvd_ucie_x64_phy, ot_qfd_ucie_x64_phy, ot_qfd_serdes_112g_x12_phy_s597 x3, qfd_ckbump, qfd_sigbump x5 | | allowed hard-macro / bump models | | | PHY/package |
+
+New die nets (all real producers, no ties): qfd_sys_face drives every input that had no compute-die producer (D2D
+cfg / cal_start / cal_seg / STATUS+RESULT / program-record TX; native59 HOST context + compiled q / KV / visibility /
+complete slots; provider row words + compiler expectations + fill + core epoch; sequencer dh; TT pw / kok / kwd / fab)
+from real sources (D2D RX payload and record slots, sequencer dc / program_obs / descriptor_obs / cfg_image_ready, TT
+program_obs / control_stores_ready / head context, collective cmd_free / faults, D2D / native59 / result-train faults,
+constant-ROM fault codes).  `pkg_s[1:0]` / `die_ps` of the collective are the TP8 rank straps (rank = 4 die_ps + pkg_s,
+per package position): three `qfd_sigbump` package strap bumps.  Placement: sys_face sited after the homes south of
+native59 / embed_prov (`sys_face_bind.place`, 19,541.5 / 6,605.3), bumps beside the collective; to be folded into the
+next homes revision by the die lead (`OT_SPLIT_SYSFACE_XY` overrides).  Production calendar/program images are the
+compiler's (`tools/qwen_split/sys_face_image.py`; Q-FUNC); EMB row record format (kinds 6/7 + kind-8 header) is owed by
+the KV-die embedding provider + `d2d_link_calendar.py` (+1 header record) -> Q-DVM+LINK.
+
+Absent v1.3 / die_contracts names, classified: **stale (remove)** `qfd_d2d_rom`, `ot_qfd_split_romlink`,
+`ot_qkvd_d2d_llr` (-> qfd_d2d_static), `qfd_io_collective`, `qfd_io_serdes`, `qfd_io_ucie`, `qfd_io_xfifo`,
+`qfd_io_xfifo_static`, `qfd_io_ucie_static`, `qfd_io_serdes_static` (-> qfd_collective_static_io_production + PHY
+masters; none is instantiated by the production collective), `ot_qfd_x3_mux_native` (retired by static_link_bind:
+native59 drives x3), `qfd_seq_su` (-> qfd_seq_su_static), `qfd_tt_ctlm` + `qfd_tt_up4` (-> qfd_tt_ctlm_static_s +
+qfd_band_upper_tp8), `qfd_sp_res_ser` (-> qfd_sp_res_train_par_b + qfd_res_train_issue), `qfd_sp_vector_memory` (->
+qfd_sp_vector_memory_par), `qkd_embedding_static_core_provider` (-> qfd_embedding_word_provider; the HBM half-beat join
+stays a KV-die function), `ot_qwen_me_array_w12` (reference model, not a die master); **renamed / reparented children**
+`qfd_io_collective_static`, `qfd_static_ch546` (via qfd_coll_static_face), `qfd_ucie_gearbox_r10` = `qfd_ucie_six_five`
+(children of qfd_collective_static_io_production), `qfd_vm_qcommit` (child of the VM via ot_qfd_vm_region_nx);
+**truly missing, built now**: `qfd_sys_face`, `qfd_embedding_word_provider`, the rank strap bumps, the 45-entry tile
+die-name wrappers (`qfd_tile_rp2_45_slots.sv`, bodies from Q-TILE45 e6a1b3c6a).
 
 Current source-exact pin contracts supersede older slot-interface descriptions below:
 
