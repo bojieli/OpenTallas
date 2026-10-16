@@ -22,7 +22,7 @@ module dsfd_sp_vm
 `else
 module dsfd_sp_vm_a2f
 `endif
-    #(parameter integer CAP_PIPE=2, parameter integer READ_PIPE=4, parameter integer HOP1=1, parameter integer XSW_FAULT_SPLIT=0) (
+    #(parameter integer CAP_PIPE=2, parameter integer READ_PIPE=4, parameter integer HOP1=1, parameter integer XSW_FAULT_SPLIT=0, parameter integer WFC_RETURN256=0) (
     input  wire          ck_core_t, ck_rsched_t, ck_seq_t,
     input  wire [4:0]    ck_landing_t,
     input  wire [3:0]    ck_mem_native_diag_t, rss_mem_native_diag_t,
@@ -54,10 +54,11 @@ module dsfd_sp_vm_a2f
     input wire ck_cap_fault_s, rst_cap_fault_s, ck_cap_fault_t, rss_cap_fault_t, rst_cap_control_s,
     input  wire [15:0]   ck_cap_lane_s, ck_cap_x34_s, ck_cap_x34_t,
     input  wire [15:0]   rst_cap_x34_s, rss_cap_x34_t,
-    input  wire          ck_wfc_control_s, ck_wfc_control_t, ck_wfc_fault_s, ck_wfc_fault_t, ck_wfc_return_t,
+    input  wire          ck_wfc_control_s, ck_wfc_control_t, ck_wfc_fault_s, ck_wfc_fault_t,
                          ck_wfc_fault_x34_s,ck_wfc_fault_x34_t,ck_wfc_fault_x43_t,ck_wfc_fault_x43_s, ck_wfc_x34_s, ck_wfc_x34_t, ck_wfc_x43_s, ck_wfc_x43_t,
-    input  wire          rst_wfc_control_s, rss_wfc_control_t, rst_wfc_fault_s, rss_wfc_fault_t, rss_wfc_return_t,
+    input  wire          rst_wfc_control_s, rss_wfc_control_t, rst_wfc_fault_s, rss_wfc_fault_t,
                          rst_wfc_fault_x34_s,rss_wfc_fault_x34_t,rss_wfc_fault_x43_t,rst_wfc_fault_x43_s, rst_wfc_x34_s, rss_wfc_x34_t, rst_wfc_x43_s, rss_wfc_x43_t,
+    input wire [(WFC_RETURN256?3:1)-1:0] ck_wfc_return_t, rss_wfc_return_t,
     input  wire          ck_xio_control_s, ck_xio_control_t, rst_xio_control_s, rss_xio_control_t,
     input  wire          ck_xio_return_t, rss_xio_return_t, ck_xio_fault_t, ck_xio_fault_s,
                          rss_xio_fault_t, rst_xio_fault_s, ck_xio_fault_join_t, rss_xio_fault_join_t,
@@ -117,7 +118,7 @@ module dsfd_sp_vm_a2f
     wire [7:0] x_rv; wire [4095:0] x_rd; wire [3:0] xa_v; wire [55:0] xa_row; wire xio_f; wire vm_fault;
     wire n_v; wire [83:0] n_d;
     wire [3:0] cl_v; wire [55:0] cl_row; wire [2047:0] cl_d; wire [63:0] cl_m; wire [31:0] cl_t;
-    dsfd_vm_static_wfc #(.RLAT(13+RPE), .RESPONSE_PAD((4-RPE%4)%4)) u_wfc (
+    dsfd_vm_static_wfc_select256 #(.RLAT(13+RPE), .RESPONSE_PAD((4-RPE%4)%4), .RETURN256(WFC_RETURN256)) u_wfc (
         .ck_control_s(ck_wfc_control_s), .ck_control_t(ck_wfc_control_t),
         .ck_fault_s(ck_wfc_fault_s), .ck_fault_t(ck_wfc_fault_t),
         .ck_return_t(ck_wfc_return_t),.rss_return_t(rss_wfc_return_t),
