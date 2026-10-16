@@ -16,7 +16,7 @@
   1021.6800000000001
  ],
  "why": "spec outline (exact: the closed view's sub-slot)",
- "std_area_um2": null,
+ "std_area_um2": 5212.0,
  "layer_contract": {
   "children": {},
   "pg_layer": "M5",
@@ -355,12 +355,6 @@
    "clock_span",
    "447.12 x 1023.84 um: one clock root over > 600 um",
    "split into hardened sub-tiles with local roots (kind cluster) or keep the sink count small"
-  ],
-  [
-   "WARN",
-   "fill",
-   "parent kit without std_area_um2: fill not computed at gen (the gate measures it)",
-   "pass --area-um2 / std_area_um2 from the synthesis smoke"
   ]
  ],
  "referenced": [
