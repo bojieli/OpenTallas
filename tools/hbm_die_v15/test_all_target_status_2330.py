@@ -6,7 +6,7 @@ s=json.loads((ROOT/'tools/hbm_die_v15/v16_specs/cp2.json').read_text())
 p=next(i['params'] for i in s['instances'] if i['name']=='host_status')
 extra_faults=sum(4 for n in ('dmawb_0030','su_collport_0253','su_collport_0253') if (ROOT/'tools/hbm_die_v15/v16_specs'/f'{n}.json').exists())
 hc=(ROOT/'tools/hbm_die_v15/v16_specs/hceng_0030.json').exists()   # +2 targets 164/165, +3 faults (H-NETLIST 0600 hc_eng)
-assert (p['NT'],p['NF'])==(67+32+4+2*hc,100+32+4+extra_faults+3*hc)   # +32 attention-SM cpx_<q><k> (H-NETLIST/attn), +4 SM->VM writer cp_smw_<q> (H-NETLIST/smvm)
+assert (p['NT'],p['NF'])==(67+32+4+2*hc,96+32+4+extra_faults+1*hc)   # 0600 fold: HC targets inside hc_q/hc_eng (one fault each)   # +32 attention-SM cpx_<q><k> (H-NETLIST/attn), +4 SM->VM writer cp_smw_<q> (H-NETLIST/smvm)
 # Every bit of the actual root is driven once, and the ingress accepts exactly these ids.
 for port,width in [('t_ready',p['NT']),('t_active',p['NT']),('t_fault',p['NF'])]:
     bits=[]

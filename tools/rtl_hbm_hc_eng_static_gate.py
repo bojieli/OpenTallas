@@ -87,12 +87,12 @@ def main():
     np.savetxt(run / 'expmix.mem', u32(mix).reshape(-1), fmt='%08x')
     np.savetxt(run / 'exptail.mem', u32(tail).reshape(-1), fmt='%08x')
     with open(run / 'tbl.mem', 'w') as f:
+        # F20 table rows (0600 collar fold): [255:224] = row header (written by the bench), payload 7 FP32 words;
+        # set s = rows 4s..4s+3, base i = row i/7 word i%7, scale j = row 3 word 3 + j (payload word 24 + j)
         for s in range(nset):
-            b = u32(bases[s])
-            for r3 in range(3):
-                f.write(''.join('%08x' % b[r3 * 8 + i] for i in reversed(range(8))) + '\n')
-            sc = u32(scales[s])
-            f.write('0' * (8 * 5) + ''.join('%08x' % sc[i] for i in reversed(range(3))) + '\n')
+            words = list(u32(bases[s])) + list(u32(scales[s])) + [0]
+            for r4 in range(4):
+                f.write('0' * 8 + ''.join('%08x' % words[r4 * 7 + i] for i in reversed(range(7))) + '\n')
     ev, sched, gm = {}, [], []
 
     def add(t, **f):
@@ -171,7 +171,7 @@ def main():
         P = 1
     words = []
     for pc, t in enumerate(sorted(ev)):
-        v = word(t, **ev[t]) | (0xc7a2 << 240) | (pc << 224)
+        v = word(t, **ev[t]) | (0xc7a1 << 240) | (pc << 224)
         words.append('%064x' % v)
     assert len(words) <= 1024, len(words)
     (run / 'prog.mem').write_text('\n'.join(words) + '\n')

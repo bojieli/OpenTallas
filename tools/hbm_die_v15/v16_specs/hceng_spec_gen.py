@@ -2,9 +2,8 @@
 """H-NETLIST/hceng 2026-10-16: v16 spec hceng_0030.json -- the static HC engine hc_eng (ot_hbm_hc_eng_static) and
 its two host programme collars, bound to the four quadrant HC clients hc_<q> (ot_hbm_hc_q_static).
 
-  hc_eng_tgt  ot_static_program_target TARGET 164: engine event programme (cfg rows + start base/limit/loops)
-  hc_tbl_tgt  ot_static_program_target TARGET 165: bases/scales table rows (its programme-row write port);
-              its start outputs have no consumer (a table is data, never launched); program_active = hc_eng's
+  (0600 collar fold: the former hc_eng_tgt / hc_tbl_tgt collars, TARGET 164 programme / 165 table, are now
+   ot_static_program_target TGT_PIN=1 instances INSIDE hc_eng; hc_eng takes the F20 broadcast + strap tgt = 164)
   hc_eng      ot_hbm_hc_eng_static: consumes hc_<q>.x_wave_v/x_wave_word/x_wave and gathered_mix_* (HC_ENGINE_INPUTS,
               28 ports / 32,976 b) and drives hc_<q>.result_v/result_position/result (G-HC-ENG, 12 ports / 3,088 b).
     usage: hceng_spec_gen.py <basis_commit> <out.json>
@@ -38,48 +37,36 @@ inst.append(dict(name='hc_eng', master='ot_hbm_hc_eng_static', source=SRC, rtl_d
                  '4 weight slots in 256 x 1024x256 macros, 2 exact tail units, event programme, bases/scales table). '
                  'Pin-registered (every input a pin flop, every output a flop). Area estimate ~9.5 mm2 '
                  '(results/uarch/hbm_hc_eng_0030/model.json). Bench ' + BENCH))
-for name, tid, what in [('hc_eng_tgt', 164, 'engine event programme'), ('hc_tbl_tgt', 165, 'bases/scales table rows')]:
-    inst.append(dict(name=name, master='ot_static_program_target', source=TGT, params=dict(TARGET=f"8'd{tid}", PCW=10),
-                     slot=None, owner=OWN, note=f'F20 programme target {tid}: {what} of hc_eng (H-NETLIST ids 164..167 '
-                     'reserved for hceng); host_cp_ingress TARGET_MASK must admit it'))
-    for p, w in [('cfg_v', 1), ('cfg_target', 8), ('cfg_addr', 12), ('cfg_data', 256), ('desc_v', 1),
-                 ('desc_base', 12), ('desc_limit', 13), ('desc_loops', 16), ('launch_v', 1)]:
-        E(['host_cp_ingress', p], [name, p], w, TGT + ' F20 broadcast consumer (as hc_tgt_<q>)')
-    E(['hc_eng', 'program_active'], [name, 'program_active'], 1,
-      'launch/install interlock: no table or programme rows while the engine programme runs')
-B = 'ot_static_program_target PCW10 port ABI -> ot_hbm_hc_eng_static programme (ot_hbm_hc_eng_seq_static) pins'
-for a, b, w in [('program_cfg_we', 'cfg_we', 1), ('program_cfg_addr', 'cfg_addr', 10), ('program_cfg_data', 'cfg_data', 256),
-                ('program_start_v', 'start_v', 1), ('program_start_base', 'start_base', 10),
-                ('program_start_limit', 'start_limit', 11), ('program_start_loops', 'start_loops', 16)]:
-    E(['hc_eng_tgt', a], ['hc_eng', b], w, B)
-for a, b, w in [('program_cfg_we', 'tbl_we', 1), ('program_cfg_addr', 'tbl_addr', 10), ('program_cfg_data', 'tbl_data', 256)]:
-    E(['hc_tbl_tgt', a], ['hc_eng', b], w, 'table rows: set s = rows 4s..4s+3 (bases 0..2, scales row 3 [95:0]) '
-      'written through the target row port into the engine table macro')
+# 0600 collar fold (H-DIE option A): the programme (164) and table (165) F20 targets are inside hc_eng
+# (ot_static_program_target TGT_PIN=1, ids from strap tgt = 164 and tgt + 1); hc_eng takes the F20 broadcast directly.
+for p, w in [('cfg_v', 1), ('cfg_target', 8), ('cfg_addr', 12), ('cfg_data', 256), ('desc_v', 1),
+             ('desc_base', 12), ('desc_limit', 13), ('desc_loops', 16), ('launch_v', 1)]:
+    E(['host_cp_ingress', p], ['hc_eng', p], w, TGT + ' F20 broadcast consumer folded into hc_eng (ids 164/165)')
+straps = [dict(inst='hc_eng', port='tgt', bits=8, value=164, note='F20 identity: programme 164, table 165 (= tgt + 1)')]
 BQ = ('rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_q_static.sv -> ot_hbm_hc_eng_static quadrant q slice '
-      '(x_wave [q*8192+:8192], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench ' + BENCH)
+      '(x_wave 4-beat link [q*2048+:2048] + x_wave_beat [q*2+:2], word [q*10+:10], gathered row [q*5+:5] pos [q*3+:3] data [q*32+:32]); bench ' + BENCH)
 for qi, q in enumerate(Q):
     c = f'hc_{q}'
-    for p, w in [('x_wave_v', 1), ('x_wave_word', 10), ('x_wave', 8192), ('gathered_mix_v', 1),
+    for p, w in [('x_wave_v', 1), ('x_wave_word', 10), ('x_wave', 2048), ('x_wave_beat', 2), ('gathered_mix_v', 1),
                  ('gathered_mix_row', 5), ('gathered_mix_pos', 3), ('gathered_mix_data', 32)]:
         E([c, p], ['hc_eng', p, qi * w, qi * w + w], w, BQ)
     for p, w in [('result_v', 1), ('result_position', 3), ('result', 768)]:
         E(['hc_eng', p, qi * w, qi * w + w], [c, p], w,
           BQ + '; emit event drives the quadrant result pins from tail unit u (fixed latency 496 + 1 edges)')
-for i in ('hc_eng', 'hc_eng_tgt', 'hc_tbl_tgt'):
+for i in ('hc_eng',):
     clocks.append(dict(inst=i, port='clk', domain='stream', kind='clock'))
     clocks.append(dict(inst=i, port='rst_n', domain='stream', kind='reset'))
 spec = dict(region='hceng', author='Claude H-NETLIST sub-agent hceng (2026-10-16)', basis_commit=sys.argv[1],
-            instances=inst, retire_v15=[], edges=edges, drop_v15_edges=[], clocks=clocks, straps=[], gaps=[],
+            instances=inst, retire_v15=[], edges=edges, drop_v15_edges=[], clocks=clocks, straps=straps, gaps=[],
             notes=['Closes G-HC-ENG (hc_<q>.result_v/result_position/result, 12 ports / 3,088 b) and the required '
                    'output join HC_ENGINE_INPUTS (hc_<q>.x_wave_v/x_wave_word/x_wave + gathered_mix_*, 28 ports / '
-                   '32,976 b) with ONE new die master hc_eng = ot_hbm_hc_eng_static and two existing '
-                   'ot_static_program_target collars (TARGET 164 programme, 165 table).',
+                   '32,976 b) with ONE new die master hc_eng = ot_hbm_hc_eng_static (F20 targets 164/165 folded inside, 0600).',
                    'HC weights: next (layer, attn|ffn) set reaches the quadrant VM by the existing DMA.LOAD / kshare '
                    'VM fill windows (vmks_<q><k>), and the hc_<q> residual reader moves it into the engine weight '
                    'macros as weight waves (1,920 waves = 1,920 edges a set, 4 quadrants staggered one wave an edge); '
                    'no dedicated HBM PC or new K-port wiring.',
                    'Static timing contract (programme time t of hc_eng): ingest event T -> quadrant wave n on '
-                   'x_wave pins at t = T + 1 + 4n (hc_<q> reader launched 23 edges earlier); launch TL -> raw a at '
+                   'x_wave pins at t = T + 1 + 4n (XW_BEATS=4: beat b at t = T - 2 + 4n + b, reassembled wave at the same pin-level edge) (hc_<q> reader launched 23 edges earlier); launch TL -> raw a at '
                    'TL + RAW0 + 10a; tail launch -> result 496 edges later; emit -> result pins +1, hc_<q> result '
                    'store +1 (pin) and its write-done +19. Measured values: results/rtl/hbm_hc_eng_0030/receipt.json.'])
 json.dump(spec, open(sys.argv[2], 'w'), indent=1)

@@ -57,7 +57,8 @@
   "threads": 8,
   "peak_ram_gb": 24,
   "hold_margin_ns": 0.03,
-  "macro_halo_um": 5.4
+  "macro_halo_um": 5.4,
+  "pin_min_tracks": 3
  },
  "recipe": 3,
  "purpose": "Q-ATTN-RATE 2026-10-16: PV16 V port of the KV die (16 per die, ONE master). Replaces the 8-sector double-buffered transposer: with the VMAP=1 V placement each w16 port reads only groups {lane,0}/{lane,1}, every PC streams in the controller's v_consumer_order; the port is a static 2:1 quad select with input + output pin registers and tag checks. Pin-bound (3,276 pins, ~1,230 um2 of cells): 86.4 x 172.8 is the smallest outline at ~6 pins/um per face.",
@@ -65,7 +66,7 @@
   "owner": "Claude:Q-ATTN-RATE",
   "branch": "claude/q-vmwb-0030",
   "tag": "r5",
-  "purpose": "r5 (Q-VMWB 10-16): the vport is also the V issuer -- the pvw pair's request (pr_*) is demuxed by t[0] onto the landing V get face (vq0/vq1 -> qkd_static_kv_landing_physical_grp VREQ=1) and slot/sel come from a fixed delay (RL 19, WP 2, RT 8 -> 5-edge request wait), so the die needs no calendar producer and no glue; rsp face per side {valid, v, t, 1024-b} (r4); HB1 output pad (r2 native launch 220.23 on one pin) and rst_n pin capture (r1). 0 production cycles.",
+  "purpose": "r5 (Q-VMWB 10-16): the vport is also the V issuer -- the pvw pair's request (pr_*) is demuxed by t[0] onto the landing V get face (vq0/vq1 -> qkd_static_kv_landing_physical_grp VREQ=1) and slot/sel come from a fixed delay (RL 19, WP 2, RT 8 -> 5-edge request wait), so the die needs no calendar producer and no glue; rsp face per side {valid, v, t, 1024-b} (r4); HB1 output pad (r2 native launch 220.23 on one pin) and rst_n pin capture (r1). 0 production cycles. Pins at 3-track pitch (r2/r3 gate images: S face packed into 55% of the width; launch tail = detours at the crowded face).",
   "benches": [
    {
     "name": "pv16_p0",
@@ -152,7 +153,7 @@
  },
  "pin_regs": {
   "enable": false,
-  "reason": "the RTL registers every port at the module boundary: every input (slot/sel/in_v*/in_t*/in_d*) -> *_q, every output (out_valid/out_t/out_v/fault) a flop"
+  "reason": "the RTL registers every port at the module boundary: every input (pr_*/in0_*/in1_*/rst_n) lands on a flop, every output (vq0_*/vq1_*/out_*/fault) is a flop"
  },
  "children": [],
  "inter": [],
@@ -168,5 +169,5 @@
   "cell": "HB2xp67_ASAP7_75t_R",
   "out_cell": "HB1xp67_ASAP7_75t_R"
  },
- "structural_change": "r5 (Q-VMWB 10-16): the vport is also the V issuer -- the pvw pair's request (pr_*) is demuxed by t[0] onto the landing V get face (vq0/vq1 -> qkd_static_kv_landing_physical_grp VREQ=1) and slot/sel come from a fixed delay (RL 19, WP 2, RT 8 -> 5-edge request wait), so the die needs no calendar producer and no glue; rsp face per side {valid, v, t, 1024-b} (r4); HB1 output pad (r2 native launch 220.23 on one pin) and rst_n pin capture (r1). 0 production cycles."
+ "structural_change": "r5 (Q-VMWB 10-16): the vport is also the V issuer -- the pvw pair's request (pr_*) is demuxed by t[0] onto the landing V get face (vq0/vq1 -> qkd_static_kv_landing_physical_grp VREQ=1) and slot/sel come from a fixed delay (RL 19, WP 2, RT 8 -> 5-edge request wait), so the die needs no calendar producer and no glue; rsp face per side {valid, v, t, 1024-b} (r4); HB1 output pad (r2 native launch 220.23 on one pin) and rst_n pin capture (r1). 0 production cycles. Pins at 3-track pitch (r2/r3 gate images: S face packed into 55% of the width; launch tail = detours at the crowded face)."
 }
