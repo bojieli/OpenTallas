@@ -27,8 +27,13 @@
     "macro_read_span_each_um": 12.288,
     "pergroup_rectangle_area_um2": 265.4208,
     "population": "256data FF plus3control FF; exact mapped area/feasible sites to be measured before gate",
-    "clock_DRC": "restrict CTS global trunk away from M4 macro pin access; legal same macro clock entry required"
+    "clock_DRC": "legal M4-M5 clock range; actual DRC starts1.331um inside macro, beyond old1.2um via guard. Set existing shared M5 macro-edge guard2.4um, about50extra M5 tracks/bank,0cycles. OpenROAD rejects single-layer M5-M5 before CTS; no layer/cap relaxation."
   },
   "admission": "component proof before physical kit; no unchanged retry; no threshold/SDC/clock or price change",
-  "die_slot_grant": "S-DIE directly granted candidate216x125.28/samepinfile; newactualmaster required; source/component only, full20/static parent held"
+  "die_slot_grant": "S-DIE directly granted candidate216x125.28/samepinfile; newactualmaster required; source/component only, full20/static parent held",
+  "failed_preCTS_attempts": [
+    "gate1 refused missing sparse archive file before compute",
+    "gate2 floorplan ODB0137: single-layer M5-M5 unsupported",
+    "gate3 same unsupported single-layer range despite MAX_CLK key; no CTS reached"
+  ]
 }
