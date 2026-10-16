@@ -86,7 +86,7 @@
  "structural_change": "r5 S81F-14 (S-NET+FILL 2026-10-16, VIS-ROM): centred, bit-ordered data pin bands -- bit k of i and o at 3.084 + k*0.144 um (3-track) along its face on BOTH data faces (pin_ranges + route.pin_balance, exact place_pin), so a straight hop has zero jog and 63/66 masters align bit for bit; ck at the face-centre track 7.548, rs +0.144. Was: place_pins chose i and o windows up to 4.66 um apart with scrambled bit order. Same RTL / outline / pin faces / one register stage.",
  "reroute_reason": {
   "kind": "slot_change",
-  "slot_change_request": "PENDING",
+  "slot_change_request": "S81F-14 S-DIE approved centered bit-ordered pin bands; el1015-fill-s81.log 2026-10-16 02:41:50 PDT",
   "why": "VIS-ROM S81F-14: i/o pin bands offset ~4.5 um (every straight relay hop jogs); die-agreed centred pin plan"
  },
  "pin_ranges": {
