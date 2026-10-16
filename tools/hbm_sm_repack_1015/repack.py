@@ -118,25 +118,26 @@ def main():
     # rp1 tile
     tb = [(k, inst.split(".")[-1].replace("*g_lf?", "L").replace("?", ""), x, y, w, h)
           for k, inst, x, y, w, h, o in T.children()]
-    tb = [(k, (("L0 " if y > T.Y_CH0 else "L1 ") + n) if k != "beat" else n, x, y, w, h) for k, n, x, y, w, h in tb]
-    rec["rp1_tile"] = stats(T.W, T.H, tb)
-    rec["rp1_tile"].update({"channel_um": [T.Y_CH0, T.Y_XS0], "transport": "beat_e x2 hard (W transit + E beat), rows / "
-                            "landings / pin registers = tile cells", "parent_sinks_est": 22862 - 2 * 2 * 2069})
+    tb = [(k, (("L0 " if y > T.Y_CH0 else "L1 ") + n) if k not in ("beat", "land") else n, x, y, w, h) for k, n, x, y, w, h in tb]
+    rec[f"{T.VARIANT}_tile"] = stats(T.W, T.H, tb)
+    rec[f"{T.VARIANT}_tile"].update({"channel_um": [T.Y_CH0, T.Y_XS0], "transport": "beat_e x2 hard (W transit + E beat)"
+                            + (", N/S landings hard (land x2)" if T.VARIANT == "rp2" else ", N/S landings") + ", rows, pin "
+                            "registers = tile cells", "parent_sinks_est": 22862 - 2 * 2 * 2069 - (2 * 2069 if T.VARIANT == "rp2" else 0)})
     bands = [(0, T.Y_CH0, T.W, T.Y_XS0, "#edc948", "transport channel: pin regs, row_w/row_e + N/S landing cells"),
              (0, T.Y_CH0 + 8, 6, T.Y_XS0 - 8, "#e15759", "")]
     notes = [(2, T.Y_XS0 - 20, "rin/bin W (M4+M6)"), (T.W - 90, T.Y_XS0 - 20, "rout/bout E"),
              (T.W / 2 - 40, T.H - 12, "gin, straps, clk N"), (T.W / 2 - 30, 4, "gout S")]
-    draw(out / "rp1_tile.png", T.W, T.H, tb, f"rp1 tile {T.W} x {T.H} (12 closed children)", notes, bands)
+    draw(out / f"{T.VARIANT}_tile.png", T.W, T.H, tb, f"{T.VARIANT} tile {T.W} x {T.H} ({len(tb)} closed children)", notes, bands)
     # rp1 frame
     w, h, fb = frame_rp1()
-    rec["rp1_frame"] = stats(w, h, fb)
-    for k in ("v5_frame", "rp1_frame"):
+    rec[f"{T.VARIANT}_frame"] = stats(w, h, fb)
+    for k in ("v5_frame", f"{T.VARIANT}_frame"):
         a = rec[k]["area_mm2"]
         rec[k]["sm32_mm2"] = round(32 * a, 1)
         rec[k]["fill_content"] = round(CONTENT_PER_SM_MM2 / a, 3)
-    rec["rp1_frame"]["saving_32sm_mm2"] = round(rec["v5_frame"]["sm32_mm2"] - rec["rp1_frame"]["sm32_mm2"], 1)
-    draw(out / "rp1_frame.png", w, h, fb, f"rp1 SM frame {w} x {h}")
-    (out / "repack.json").write_text(json.dumps(rec, indent=1) + "\n")
+    rec[f"{T.VARIANT}_frame"]["saving_32sm_mm2"] = round(rec["v5_frame"]["sm32_mm2"] - rec[f"{T.VARIANT}_frame"]["sm32_mm2"], 1)
+    draw(out / f"{T.VARIANT}_frame.png", w, h, fb, f"{T.VARIANT} SM frame {w} x {h}")
+    (out / f"repack_{T.VARIANT}.json").write_text(json.dumps(rec, indent=1) + "\n")
     print(json.dumps(rec, indent=1))
 
 
