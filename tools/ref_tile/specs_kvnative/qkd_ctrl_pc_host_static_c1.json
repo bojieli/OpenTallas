@@ -75,7 +75,7 @@
   ]
  },
  "outline": {
-  "w": 190.08,
+  "w": 207.36,
   "h": 233.28,
   "exact": true
  },
@@ -84,7 +84,7 @@
  "child_lattice_um": 2.16,
  "children": [
   {
-   "view": "physical/ref_tile/qkd_ctrl_pc_core_s1/views/qkd_ctrl_pc_host_static_core",
+   "view": "physical/ref_tile/qkd_ctrl_pc_core_s4/views/qkd_ctrl_pc_host_static_core",
    "count": 1,
    "inst": "u_core",
    "at": [
@@ -98,7 +98,7 @@
    "count": 1,
    "inst": "u_port",
    "at": [
-    112.32,
+    123.12,
     144.72
    ],
    "orient": "R0"
@@ -108,7 +108,7 @@
    "count": 1,
    "inst": "u_ecc",
    "at": [
-    140.4,
+    157.68,
     90.72
    ],
    "orient": "MX"
@@ -129,13 +129,13 @@
   "hold_margin_ns": 0.03,
   "macro_halo_um": 5.4
  },
- "slot_change_request": "KVCTRL wires-parent cluster 190.08x233.28 replaces the 129.6x216 e2 tile inside the 247.512x378 controller slot; +2 clock entry ports (pll_hbm_port, pll_hbm_ecc), data ports unchanged; signals M2-M6, PG M7 over M5-capped children.",
+ "slot_change_request": "KVCTRL wires-parent cluster 207.36x233.28 replaces the 129.6x216 e2 tile inside the 247.512x378 controller slot; +2 clock entry ports (pll_hbm_port, pll_hbm_ecc), data ports unchanged; signals M2-M6, PG M7 over M5-capped children.",
  "job": {
   "owner": "Claude:Q-KVSYS-DIE KVCTRL",
   "branch": "claude/qkvctrl-split-1016",
   "tag": "c1",
   "record_to": "results/rtl/ref_tile/qkd_ctrl_pc_host_static_c1",
-  "purpose": "KVCTRL split, lead decision 2026-10-16 option A: the controller is replicated per PC, so the wires-only parent qkd_ctrl_pc_host_static is hardened ONCE as a cluster of three closed native-PASS children (core W 97.2x216, port 69.12x79.92 at the top of the E column, ECC 41.04x43.2 mirrored (MX) directly below it so port kv_d (S face) meets ECC i_code across a 10.8 um gap) inside the 247.512x378 controller slot. Clock entries: one top port per hard-child clock pin (ck, pll_hbm -> core; pll_hbm_port -> port; pll_hbm_ecc -> ECC; all three HBM entries carry the same 1024 ps clock, the die delivers phi - R_i each). Parent = wires only (no flops, no tree). Entries are timed in the default related core domain (833.333 ps), a conservative over-constraint of the 1024 ps hclk seams (no relaxation).",
+  "purpose": "KVCTRL split, lead decision 2026-10-16 option A: the controller is replicated per PC, so the wires-only parent qkd_ctrl_pc_host_static is hardened ONCE as a cluster of three closed native-PASS children (core W 108.0x216 (core_s4), port 69.12x79.92 at the top of the E column, ECC 41.04x43.2 mirrored (MX) directly below it so port kv_d (S face) meets ECC i_code across a 10.8 um gap) inside the 247.512x378 controller slot. Clock entries: one top port per hard-child clock pin (ck, pll_hbm -> core; pll_hbm_port -> port; pll_hbm_ecc -> ECC; all three HBM entries carry the same 1024 ps clock, the die delivers phi - R_i each). Parent = wires only (no flops, no tree). Entries are timed in the default related core domain (833.333 ps), a conservative over-constraint of the 1024 ps hclk seams (no relaxation).",
   "extra_paths": [
    "rtl/lib",
    "rtl/qwen_sys/emb_hbm_20261008",
@@ -173,5 +173,5 @@
   ],
   "peak_ram_gb": 16
  },
- "structural_change": "KVCTRL split, lead decision 2026-10-16 option A: the controller is replicated per PC, so the wires-only parent qkd_ctrl_pc_host_static is hardened ONCE as a cluster of three closed native-PASS children (core W 97.2x216, port 69.12x79.92 at the top of the E column, ECC 41.04x43.2 mirrored (MX) directly below it so port kv_d (S face) meets ECC i_code across a 10.8 um gap) inside the 247.512x378 controller slot. Clock entries: one top port per hard-child clock pin (ck, pll_hbm -> core; pll_hbm_port -> port; pll_hbm_ecc -> ECC; all three HBM entries carry the same 1024 ps clock, the die delivers phi - R_i each). Parent = wires only (no flops, no tree). Entries are timed in the default related core domain (833.333 ps), a conservative over-constraint of the 1024 ps hclk seams (no relaxation)."
+ "structural_change": "KVCTRL split, lead decision 2026-10-16 option A: the controller is replicated per PC, so the wires-only parent qkd_ctrl_pc_host_static is hardened ONCE as a cluster of three closed native-PASS children (core W 108.0x216 (core_s4), port 69.12x79.92 at the top of the E column, ECC 41.04x43.2 mirrored (MX) directly below it so port kv_d (S face) meets ECC i_code across a 10.8 um gap) inside the 247.512x378 controller slot. Clock entries: one top port per hard-child clock pin (ck, pll_hbm -> core; pll_hbm_port -> port; pll_hbm_ecc -> ECC; all three HBM entries carry the same 1024 ps clock, the die delivers phi - R_i each). Parent = wires only (no flops, no tree). Entries are timed in the default related core domain (833.333 ps), a conservative over-constraint of the 1024 ps hclk seams (no relaxation)."
 }

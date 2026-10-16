@@ -124,9 +124,13 @@ module ot_qkd_static_kv_timing #(
     end
     reg [31:0] hold_n, hold;                          // banks a queued write needs (never precharged;
     integer hi;                                       // registered: one cycle behind the queue)
+    // KVCTRL core_s4: the same set (every queued entry's bank) from per-SLOT valid bits and the stored one-hots, with no
+    // wq_rp-relative index / decode (core_s1 routed TT: wq_rp -> wq_bq -> hold_n -> s_pre_ok -> s_pblk -> rd_ok -> rd_oh
+    // -20.54 ps, 24 levels; SS -525.84). Membership is order-free, so the OR is identical.
+    reg [WQ-1:0] wq_v;                                // physical slot holds a queued entry
     always @* begin
       hold_n = 0;
-      for (hi = 0; hi < WQ; hi = hi + 1) if (wq_in[hi]) hold_n = hold_n | (32'b1 << wq_bq[hi*5 +: 5]);
+      for (hi = 0; hi < WQ; hi = hi + 1) if (W && wq_v[hi]) hold_n = hold_n | wq_oh[hi];
     end
     always @(posedge clk or negedge rst_n) if (!rst_n) hold <= 0; else hold <= hold_n;
     wire wr_ok, wr_ok0, rd_ok0;
@@ -466,7 +470,7 @@ module ot_qkd_static_kv_timing #(
         sq_n <= 0; sq_rp <= 0; sb <= 0; sc <= 0; srw <= 0; swe <= 0; sb_oh <= 0; sfl <= 0; scm <= 0; swait <= 0;
         so_v <= 0; so_b <= 0; so_row <= 0;
         koh <= 8'b1; k1v <= 1'b0; rd_oh <= 32'b1; rd_bgoh <= 4'b1;
-        wq_n <= 0; wq_rp <= 0; wq_rp1 <= WQW'(1); rtw_c <= 0; wtr_c <= 0; wopen <= 0; c_w <= 0; hb <= 0; hc <= 0; hb_oh <= 0; hr <= 0;
+        wq_n <= 0; wq_rp <= 0; wq_rp1 <= WQW'(1); wq_v <= '0; rtw_c <= 0; wtr_c <= 0; wopen <= 0; c_w <= 0; hb <= 0; hc <= 0; hb_oh <= 0; hr <= 0;
         pin <= 0; ep <= 0; skip <= 0; sact <= 0; hwait <= 0;
       end else begin
         if (AQ) begin if (!wq_ne || !hr || wr_ok) hwait <= 0; else if (hwait != 8'hff) hwait <= hwait + 1'b1; end
@@ -479,6 +483,12 @@ module ot_qkd_static_kv_timing #(
             if (AQ) wq_rd[WQW'(wq_rp + wq_n)] <= wr_rd;
           end
           wq_n <= wq_n + (wr_v && wr_r ? 1'b1 : 1'b0) - (wr_ok ? 1'b1 : 1'b0);
+          begin : slotv
+            reg [WQ-1:0] v; v = wq_v;
+            if (wr_ok) v[wq_rp] = 1'b0;
+            if (wr_v && wr_r) v[WQW'(wq_rp + wq_n)] = 1'b1;
+            wq_v <= v;
+          end
           if (wr_ok) begin wq_rp <= wq_rp1; wq_rp1 <= WQW'(wq_rp1 + 1'b1); end
           // next head: the entry after the popped one if it exists, else the entry pushed now
           begin : headn
