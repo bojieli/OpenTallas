@@ -1,0 +1,20 @@
+{
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "d9801653d16576f40306c1fb1d01928e88e7371a3897b616e31d3e3df917cb2d",
+  "rtl/hdc/nearhbm/ot_qkd_ectl_parts.sv": "3e5b780de95ca1eb1d4a5adfdb7c3355ac27ca6a19ae784ca8adec16acabf3d4",
+  "rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_h.sv": "4f44dcdf9c5c704846d0d54d136f5aafed5be1425a850c7ee9621050fa997e5b",
+  "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+  "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+  "rtl/physical/ot_qkd_kv_static_writer_native.sv": "5211b852aed6049fdf8793e151ed5eb4061002bced26a25728c9e28b8476ca12",
+  "rtl/qwen_sys/split_20261014/qkd_ectl3_epoch_direct_s.sv": "525216470bcb0cdd6e134368b754d8baf3e917ba037f63e51977315c13830fea",
+  "rtl/qwen_sys/split_20261014/qkd_ectl_a_tp8_epoch_direct.sv": "309e2467c4c8dbe06f2738e8f5b7fdd2aa91ed3d56e08d22968396a12b4a3043",
+  "rtl/qwen_sys/split_20261014/qkd_ectl_native_direct_tp8.sv": "851b537e06aa44a5686ad6c374e13cdc6bfda8bcf380e704698f0f88c551696a",
+  "rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv": "2746da49b5f099afea24f6752b63b55a916c53cdb6abc542fc60cdbb4091383c",
+  "rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv": "43dbe53dbaf8aef2a2051ed6b2f27edfd48af8dfde379eb59b7f101288aadd7e",
+  "rtl/qwen_sys/static_kv_20261014/qkd_static_k_issuer.sv": "470cf70cf33e3a7b9a6aa50b758f7913fc7b38394495d994ac4a0ed991b68d6a",
+  "rtl/qwen_sys/static_kv_20261014/qkd_static_writer_ingress.sv": "8c8213c3fff967857fd8a918301c14cf5074dfc1e94b538bbbdc9bc701d6d184",
+  "rtl/test/qwen_static_kv/tb_qkd_static_ingress_idle.sv": "b8e2afbd2012410de684c06337b4ab5f841ed63a74722fb277b5f497315ea4e9",
+  "rtl/test/qwen_static_kv/tb_qkd_static_k_issuer.sv": "1b4e588e0d9ef09942c445324314efddb20aac5c1f0543ca51f449276fd9d48b",
+  "rtl/test/qwen_static_kv/tb_qkd_static_writer_ingress.sv": "a0a1d32212dc371ee2dd0234b2f2184b0ac5cc1abc218bca68c463d98bad8e9d",
+  "tools/qwen_kv_die/static_k_issuer_bench.sh": "a70227918dfc5f92c9c25c812b6d95f16aaca88891d7df0fa00ce68d0c71410d",
+  "tools/qwen_static_kv/run_writer_ingress.sh": "f0271c88db3611467099b6f450b9558ef4268ad16ad08f972e3550b1f0004515"
+}

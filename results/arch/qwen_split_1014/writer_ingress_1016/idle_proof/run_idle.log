@@ -1,0 +1,5 @@
+INGRESS_IDLE PASS raw_capture pending_register flush credit completion stickyfault; observation_only1 data_edges_unchanged
+- rtl/test/qwen_static_kv/tb_qkd_static_ingress_idle.sv:35: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 29ns; walltime 0.002 s; speed 9.975 us/s
+- Verilator: cpu 0.003 s on 1 threads; alloced 217 MB

@@ -1,0 +1,571 @@
+{
+  "schema": "qwen.native-writer-ingress-calendar.v1",
+  "status": "COMPONENT_TEST_NOT_INSTALLABLE",
+  "source_sha256": {
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_writer_ingress.sv": "8c8213c3fff967857fd8a918301c14cf5074dfc1e94b538bbbdc9bc701d6d184",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_native_programme.sv": "2746da49b5f099afea24f6752b63b55a916c53cdb6abc542fc60cdbb4091383c",
+    "rtl/physical/ot_qkd_kv_static_writer_native.sv": "5211b852aed6049fdf8793e151ed5eb4061002bced26a25728c9e28b8476ca12",
+    "rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv": "43dbe53dbaf8aef2a2051ed6b2f27edfd48af8dfde379eb59b7f101288aadd7e"
+  },
+  "vmap": 1,
+  "source_writer_descriptor_edges": 2,
+  "ingress_edges": {
+    "input_pin_capture": 1,
+    "group_output": 1,
+    "ownership_mux": 1,
+    "physical_relays": 0
+  },
+  "total_added_native_core_edges": 3,
+  "stages": [
+    {
+      "stage": 1,
+      "high_half_intervals": [
+        5,
+        7
+      ],
+      "independent_writer_descriptor_intervals": [
+        7,
+        9
+      ],
+      "controller_face_intervals": [
+        10,
+        12
+      ]
+    },
+    {
+      "stage": 2,
+      "high_half_intervals": [
+        5,
+        7
+      ],
+      "independent_writer_descriptor_intervals": [
+        7,
+        9
+      ],
+      "controller_face_intervals": [
+        10,
+        12
+      ]
+    },
+    {
+      "stage": 3,
+      "high_half_intervals": [
+        5,
+        7
+      ],
+      "independent_writer_descriptor_intervals": [
+        7,
+        9
+      ],
+      "controller_face_intervals": [
+        10,
+        12
+      ]
+    },
+    {
+      "stage": 4,
+      "high_half_intervals": [
+        5,
+        7
+      ],
+      "independent_writer_descriptor_intervals": [
+        7,
+        9
+      ],
+      "controller_face_intervals": [
+        10,
+        12
+      ]
+    },
+    {
+      "stage": 5,
+      "high_half_intervals": [
+        5,
+        7
+      ],
+      "independent_writer_descriptor_intervals": [
+        7,
+        9
+      ],
+      "controller_face_intervals": [
+        10,
+        12
+      ]
+    },
+    {
+      "stage": 6,
+      "high_half_intervals": [
+        5,
+        7
+      ],
+      "independent_writer_descriptor_intervals": [
+        7,
+        9
+      ],
+      "controller_face_intervals": [
+        10,
+        12
+      ]
+    },
+    {
+      "stage": 7,
+      "high_half_intervals": [
+        5,
+        7
+      ],
+      "independent_writer_descriptor_intervals": [
+        7,
+        9
+      ],
+      "controller_face_intervals": [
+        10,
+        12
+      ]
+    },
+    {
+      "stage": 8,
+      "high_half_intervals": [
+        5,
+        7
+      ],
+      "independent_writer_descriptor_intervals": [
+        7,
+        9
+      ],
+      "controller_face_intervals": [
+        10,
+        12
+      ]
+    },
+    {
+      "stage": 9,
+      "high_half_intervals": [
+        5,
+        7
+      ],
+      "independent_writer_descriptor_intervals": [
+        7,
+        9
+      ],
+      "controller_face_intervals": [
+        10,
+        12
+      ]
+    },
+    {
+      "stage": 10,
+      "high_half_intervals": [
+        5,
+        7
+      ],
+      "independent_writer_descriptor_intervals": [
+        7,
+        9
+      ],
+      "controller_face_intervals": [
+        10,
+        12
+      ]
+    },
+    {
+      "stage": 11,
+      "high_half_intervals": [
+        5,
+        7
+      ],
+      "independent_writer_descriptor_intervals": [
+        7,
+        9
+      ],
+      "controller_face_intervals": [
+        10,
+        12
+      ]
+    },
+    {
+      "stage": 12,
+      "high_half_intervals": [
+        5,
+        7
+      ],
+      "independent_writer_descriptor_intervals": [
+        7,
+        9
+      ],
+      "controller_face_intervals": [
+        10,
+        12
+      ]
+    },
+    {
+      "stage": 13,
+      "high_half_intervals": [
+        5,
+        7
+      ],
+      "independent_writer_descriptor_intervals": [
+        7,
+        9
+      ],
+      "controller_face_intervals": [
+        10,
+        12
+      ]
+    },
+    {
+      "stage": 14,
+      "high_half_intervals": [
+        5,
+        7
+      ],
+      "independent_writer_descriptor_intervals": [
+        7,
+        9
+      ],
+      "controller_face_intervals": [
+        10,
+        12
+      ]
+    },
+    {
+      "stage": 15,
+      "high_half_intervals": [
+        5,
+        7
+      ],
+      "independent_writer_descriptor_intervals": [
+        7,
+        9
+      ],
+      "controller_face_intervals": [
+        10,
+        12
+      ]
+    },
+    {
+      "stage": 16,
+      "high_half_intervals": [
+        5,
+        7
+      ],
+      "independent_writer_descriptor_intervals": [
+        7,
+        9
+      ],
+      "controller_face_intervals": [
+        10,
+        12
+      ]
+    },
+    {
+      "stage": 17,
+      "high_half_intervals": [
+        5,
+        7
+      ],
+      "independent_writer_descriptor_intervals": [
+        7,
+        9
+      ],
+      "controller_face_intervals": [
+        10,
+        12
+      ]
+    },
+    {
+      "stage": 18,
+      "high_half_intervals": [
+        5,
+        7
+      ],
+      "independent_writer_descriptor_intervals": [
+        7,
+        9
+      ],
+      "controller_face_intervals": [
+        10,
+        12
+      ]
+    },
+    {
+      "stage": 19,
+      "high_half_intervals": [
+        5,
+        7
+      ],
+      "independent_writer_descriptor_intervals": [
+        7,
+        9
+      ],
+      "controller_face_intervals": [
+        10,
+        12
+      ]
+    },
+    {
+      "stage": 20,
+      "high_half_intervals": [
+        5,
+        7
+      ],
+      "independent_writer_descriptor_intervals": [
+        7,
+        9
+      ],
+      "controller_face_intervals": [
+        10,
+        12
+      ]
+    },
+    {
+      "stage": 21,
+      "high_half_intervals": [
+        5,
+        7
+      ],
+      "independent_writer_descriptor_intervals": [
+        7,
+        9
+      ],
+      "controller_face_intervals": [
+        10,
+        12
+      ]
+    },
+    {
+      "stage": 22,
+      "high_half_intervals": [
+        5,
+        7
+      ],
+      "independent_writer_descriptor_intervals": [
+        7,
+        9
+      ],
+      "controller_face_intervals": [
+        10,
+        12
+      ]
+    },
+    {
+      "stage": 23,
+      "high_half_intervals": [
+        5,
+        7
+      ],
+      "independent_writer_descriptor_intervals": [
+        7,
+        9
+      ],
+      "controller_face_intervals": [
+        10,
+        12
+      ]
+    },
+    {
+      "stage": 24,
+      "high_half_intervals": [
+        5,
+        7
+      ],
+      "independent_writer_descriptor_intervals": [
+        7,
+        9
+      ],
+      "controller_face_intervals": [
+        10,
+        12
+      ]
+    },
+    {
+      "stage": 25,
+      "high_half_intervals": [
+        5,
+        7
+      ],
+      "independent_writer_descriptor_intervals": [
+        7,
+        9
+      ],
+      "controller_face_intervals": [
+        10,
+        12
+      ]
+    },
+    {
+      "stage": 26,
+      "high_half_intervals": [
+        5,
+        7
+      ],
+      "independent_writer_descriptor_intervals": [
+        7,
+        9
+      ],
+      "controller_face_intervals": [
+        10,
+        12
+      ]
+    },
+    {
+      "stage": 27,
+      "high_half_intervals": [
+        5,
+        7
+      ],
+      "independent_writer_descriptor_intervals": [
+        7,
+        9
+      ],
+      "controller_face_intervals": [
+        10,
+        12
+      ]
+    },
+    {
+      "stage": 28,
+      "high_half_intervals": [
+        5,
+        7
+      ],
+      "independent_writer_descriptor_intervals": [
+        7,
+        9
+      ],
+      "controller_face_intervals": [
+        10,
+        12
+      ]
+    },
+    {
+      "stage": 29,
+      "high_half_intervals": [
+        5,
+        7
+      ],
+      "independent_writer_descriptor_intervals": [
+        7,
+        9
+      ],
+      "controller_face_intervals": [
+        10,
+        12
+      ]
+    },
+    {
+      "stage": 30,
+      "high_half_intervals": [
+        5,
+        7
+      ],
+      "independent_writer_descriptor_intervals": [
+        7,
+        9
+      ],
+      "controller_face_intervals": [
+        10,
+        12
+      ]
+    },
+    {
+      "stage": 31,
+      "high_half_intervals": [
+        5,
+        7
+      ],
+      "independent_writer_descriptor_intervals": [
+        7,
+        9
+      ],
+      "controller_face_intervals": [
+        10,
+        12
+      ]
+    },
+    {
+      "stage": 32,
+      "high_half_intervals": [
+        5,
+        7
+      ],
+      "independent_writer_descriptor_intervals": [
+        7,
+        9
+      ],
+      "controller_face_intervals": [
+        10,
+        12
+      ]
+    },
+    {
+      "stage": 33,
+      "high_half_intervals": [
+        5,
+        7
+      ],
+      "independent_writer_descriptor_intervals": [
+        7,
+        9
+      ],
+      "controller_face_intervals": [
+        10,
+        12
+      ]
+    },
+    {
+      "stage": 34,
+      "high_half_intervals": [
+        5,
+        7
+      ],
+      "independent_writer_descriptor_intervals": [
+        7,
+        9
+      ],
+      "controller_face_intervals": [
+        10,
+        12
+      ]
+    },
+    {
+      "stage": 35,
+      "high_half_intervals": [
+        5,
+        7
+      ],
+      "independent_writer_descriptor_intervals": [
+        7,
+        9
+      ],
+      "controller_face_intervals": [
+        10,
+        12
+      ]
+    },
+    {
+      "stage": 36,
+      "high_half_intervals": [
+        5,
+        7
+      ],
+      "independent_writer_descriptor_intervals": [
+        7,
+        9
+      ],
+      "controller_face_intervals": [
+        10,
+        12
+      ]
+    }
+  ],
+  "time_origin": "internal accepted writer-programme start; core edge intervals",
+  "production_qualified": false,
+  "full_token_qualified": false,
+  "missing_joins": [
+    "actual source programme and root time origin",
+    "allincident physical pins/clocks and real relay profile",
+    "core-to-HBM phase and actual native-write CDC service",
+    "HBM WR reservation, commit and own-row read visibility",
+    "actual native ownership enter/leave/drain calendar"
+  ]
+}
