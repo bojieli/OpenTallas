@@ -9,7 +9,11 @@
 // at PC sector {1,0,t[6],t[12:9],t[3:1]}; its ordinal {t[12:9],t[6],t[3:1]} is then the w16 pair's consumption order.
 // K (get_v 0) is unchanged.  0 = the historical t[2:0] group / t[5:3] sector layout.
 module qkd_static_kv_landing_pc #(
-    parameter integer MUT=0, parameter integer VMAP=0
+    parameter integer MUT=0, parameter integer VMAP=0,
+    // FAULT_PIPE 1 (KVELEM 2026-10-16, landing_seg ls4): the fault conditions are registered once (fq) before the sticky
+    // fault flop: the ticket[ra]/valid[ra] compare cone no longer ends in the fault OR (gate: -105 ps at 770 ps on
+    // u_pc.fault/D).  Fault reports one edge later; no slot or data edge moves.  0 = historical single-edge fault.
+    parameter integer FAULT_PIPE=0
 )(
     input wire ck, rst_n,
     input wire [1:0] cfg_stack,input wire [2:0] cfg_group,
@@ -92,23 +96,30 @@ module qkd_static_kv_landing_pc #(
       out_data<=(MUT==2)?(mem_q^256'b1):mem_q;
       if(put_q)ticket[wa]<=(MUT==1)?(put_ticket^9'b1):put_ticket;
     end
+    // registered fault conditions (FAULT_PIPE 1): the same put/get checks as below, captured one edge before fault
+    (* keep *) reg fq;
+    wire fq_put=put_q&&((!armed||ps_q[8]||as_q!=ps_q||ae_q!=active_epoch||al_q!=active_layer)||(valid[wa]&&!(get_q&&ra==wa)));
+    wire fq_get=get_q&&(!armed||!valid[ra]||ticket[ra]!=get_ticket||ge_q!=active_epoch||gl_q!=active_layer||
+                        gt_q[13]||get_group!=group_q||gt_q[8:7]!=stack_q);
+    always @(posedge ck or negedge rn) if(!rn)fq<=0; else fq<=(FAULT_PIPE!=0)&&(fq_put||fq_get);
     always @(posedge ck or negedge rn)
       if(!rn)begin valid<=0;fault<=0;active_epoch<=0;active_layer<=0;armed<=0;read_q<=0;out_valid<=0;end
       else begin
         read_q<=get_q;out_valid<=read_q;
+        if(FAULT_PIPE!=0 && fq)fault<=1;
         if(arm_q)begin
           if((|valid)||put_q||get_q)fault<=1;
           active_epoch<=epoch_q;active_layer<=layer_q;armed<=1;valid<=0;
         end
         if(put_q!=actual_q)fault<=1;
         if(put_q)begin
-          if(!armed||ps_q[8]||as_q!=ps_q||ae_q!=active_epoch||al_q!=active_layer)fault<=1;
-          if(valid[wa]&&!(get_q&&ra==wa))fault<=1;
+          if(FAULT_PIPE==0 && (!armed||ps_q[8]||as_q!=ps_q||ae_q!=active_epoch||al_q!=active_layer))fault<=1;
+          if(FAULT_PIPE==0 && valid[wa]&&!(get_q&&ra==wa))fault<=1;
           valid[wa]<=1;
         end
         if(get_q)begin
           if(!armed||!valid[ra]||ticket[ra]!=get_ticket||ge_q!=active_epoch||gl_q!=active_layer||
-             gt_q[13]||get_group!=group_q||gt_q[8:7]!=stack_q)fault<=1;
+             gt_q[13]||get_group!=group_q||gt_q[8:7]!=stack_q)begin if(FAULT_PIPE==0)fault<=1;end
           if(!(put_q&&wa==ra))valid[ra]<=0;
         end
       end

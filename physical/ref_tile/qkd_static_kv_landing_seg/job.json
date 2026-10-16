@@ -1,5 +1,5 @@
 {
- "name": "qkd_static_kv_landing_seg-ls3-COMMIT",
+ "name": "qkd_static_kv_landing_seg-ls4-COMMIT",
  "block": "qkd_static_kv_landing_seg",
  "ref_tile": true,
  "owner": "Claude:Q-KVSYS-STRIP",
@@ -103,13 +103,14 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qkd_static_kv_landing_seg/qkd_static_kv_landing_seg-ls3-COMMIT"
+   "to": "results/rtl/ref_tile/qkd_static_kv_landing_seg/qkd_static_kv_landing_seg-ls4-COMMIT"
   }
  ],
  "cycles_added": {
   "hop_reset_deassert_edges": 1,
+  "fault_report_edges": 1,
   "traffic_edges": 0,
-  "note": "reset guard only; data/landing latency 8 unchanged"
+  "note": "reset guard +1 and fault visibility +1 edge; data/landing latency 8 unchanged"
  },
  "route_hold_corners": "mm",
  "route_hold_margin_ns": 0.03,
@@ -119,6 +120,6 @@
  "structural_change": "ls2: rebased on the landing alias fix (main 35a278613: K row ordinal = stream position; rowctl VREQ takes arm/epoch/layer); bench over 4 contexts. ls1 (1a68fa5b0) was never submitted.",
  "reroute_reason": {
   "kind": "rtl_change",
-  "why": "ls2 qkd_static_kv_landing_seg-ls2-d9f90ede0 EARLY_FAIL_HOLD: CTS hold repair stalled at -44.70 ps (TNS -572 after 7000 it) on FF removal rst_n port -> g_hop[*].u_rsp.u.rn RESETN (async capture from the pin; hold repair cannot pad a removal arc). ls3: per-branch synchronous D capture hrn <= rst_n feeds the hops (as landing PCs/rowctl already do); hop reset deassertion +1 edge (reset guard only)."
+  "why": "parallel structural variant of ls3 (ls2 EARLY_FAIL_HOLD reset-removal fix kept): ls3 exact gate placement repair shows TT setup -105.5 ps at 770 ps on g_pc[*].u_pc.fault/D (ticket[ra]/valid[ra] compare cone into the sticky fault OR; ls2 gate -93.5). ls4: landing_pc FAULT_PIPE=1 registers the put/get fault conditions (fq) one edge before fault."
  }
 }
