@@ -1,5 +1,5 @@
 {
- "name": "hbm_sfucore_split-k4-COMMIT",
+ "name": "hbm_sfucore_split-k5-COMMIT",
  "block": "ot_hgi_sfu_core_split",
  "ref_tile": true,
  "owner": "Claude:H-SU/core-kit",
@@ -47,7 +47,7 @@
    },
    {
     "name": "split_mutant_skip_pinreg",
-    "cmd": "OUT={RUN}/bench/skip EQ_MUT=skip bash tools/hbm_static/run_sfu_split_equiv.sh; cat {RUN}/bench/skip/run.log; exit 1",
+    "cmd": "OUT={RUN}/bench/skip SFU_LG_R=23 EQ_MUT=skip bash tools/hbm_static/run_sfu_split_equiv.sh; cat {RUN}/bench/skip/run.log; exit 1",
     "expect": "fail",
     "fail_regex": "SFU_SPLIT_EQUIV (FAIL|_MISMATCH)",
     "threads": 8,
@@ -108,7 +108,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hbm_sfucore_split/hbm_sfucore_split-k4-COMMIT"
+   "to": "results/rtl/ref_tile/hbm_sfucore_split/hbm_sfucore_split-k5-COMMIT"
   }
  ],
  "cycles_added": 0,
