@@ -12,7 +12,7 @@ ROOT=${HCOLL_ROOT:-$(cd "$HERE/../../../../.." && pwd)}
 OUT=$(realpath -m "${1:?output directory}"); Q=${2:-q2}; MODE=${3:-all}; mkdir -p "$OUT"
 V=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}; [ -x "$V" ] || V=verilator
 p=$ROOT/rtl/hbm_accel/generic/collective/p2p; t=$ROOT/rtl/hbm_accel/generic/collective/tkm
-src=("$p/tb_hgi_coll_q_hard_v5.sv" "$p/ot_hfd_coll_q_hard_v5.sv" "$p/ot_hfd_coll_q3_static_host_v4.sv"
+src=("$p/tb_hgi_coll_q_hard_v5.sv" "$p/ot_hfd_coll_q_hard_v5.sv" "$p/ot_hgi_coll_ctl_v5.sv" "$p/ot_hfd_coll_q3_static_host_v4.sv"
  "$p/ot_hfd_coll_q2_static_host_v4.sv" "$p/ot_hgi_coll_static_program_target.sv" "$p/ot_hfd_coll_q_static_v4.sv"
  "$p/ot_hgi_coll_static_issuer.sv" "$p/ot_hgi_coll_qslots.sv" "$p/ot_hgi_coll_qslots_capture_pin_v2.sv"
  "$p/ot_hgi_coll_pring_static.sv" "$p/ot_hgi_coll_pring_captured_static.sv" "$p/ot_hgi_coll_pring_static_state_capture.sv"
@@ -26,7 +26,9 @@ src=("$p/tb_hgi_coll_q_hard_v5.sv" "$p/ot_hfd_coll_q_hard_v5.sv" "$p/ot_hfd_coll
  "$ROOT/physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v"
  "$ROOT/physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v")
 sha256sum "${src[@]}" > "$OUT/sources.sha256"
-QD=(); [ "$Q" = q3 ] && QD=(-DQ3 --hierarchical "$p/qtkm_hier.vlt")
+QD=(); [ "$Q" = q3 ] && QD=(-DQ3 --hierarchical "$p/qhard_hier.vlt")
+# q3 elaborates two KMAX-2048 TKMs (host_v4 ref + hard_v5): -j16 hierarchical OOMs 128 GB (EPYC4 oom-kill); default 4
+[ "$Q" = q3 ] && JOBS=${JOBS_Q3:-4}
 build(){ # name defines...
  local n=$1; shift
  "$V" --binary --timing -j "${JOBS:-16}" -O1 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-WIDTHCONCAT \

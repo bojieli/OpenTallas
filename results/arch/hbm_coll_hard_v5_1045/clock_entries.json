@@ -1,0 +1,4215 @@
+{
+ "schema": "opentallas.hbm.coll_hard_v5_clock_entries.v1",
+ "rtl_commit": "5bb671b57",
+ "note": "One die clock entry per hard-child clock pin (entries ABI). All stream domain, same logical edge; physical phi-R per entry from H-DIE. New vs host_v4: clk_qslots 2->29 (SW)/27 (q2), clk_vmwrite 1->16, clk_issue 4->1.",
+ "counts": {
+  "hb_coll_NE": 106,
+  "hb_coll_NW": 106,
+  "hb_coll_SE": 106,
+  "hb_coll_SW": 148
+ },
+ "entries": {
+  "hb_coll_NE": [
+   {
+    "port": "clk_control",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_control (ctl_v5 leaf incl. iteration-product unit)"
+   },
+   {
+    "port": "clk_issue",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_issuer (issuer_m leaf: control + 3 SRAM macros + 2-edge uop delay)"
+   },
+   {
+    "port": "clk_link[0]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_link[0].u_link capture_ctl_e"
+   },
+   {
+    "port": "clk_link[1]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_link[0].u_link store bank 0"
+   },
+   {
+    "port": "clk_link[2]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_link[0].u_link store bank 1"
+   },
+   {
+    "port": "clk_link[3]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_link[0].u_link store bank 2"
+   },
+   {
+    "port": "clk_link[4]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_link[0].u_link store bank 3"
+   },
+   {
+    "port": "clk_link[5]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_link[1].u_link capture_ctl_e"
+   },
+   {
+    "port": "clk_link[6]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_link[1].u_link store bank 0"
+   },
+   {
+    "port": "clk_link[7]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_link[1].u_link store bank 1"
+   },
+   {
+    "port": "clk_link[8]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_link[1].u_link store bank 2"
+   },
+   {
+    "port": "clk_link[9]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_link[1].u_link store bank 3"
+   },
+   {
+    "port": "clk_program",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_fj (fj leaf: programme target + fault join)"
+   },
+   {
+    "port": "clk_qslots[0]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qcap[0].u_cap (qslots capture_pin_v2)"
+   },
+   {
+    "port": "clk_qslots[1]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qcap[1].u_cap (qslots capture_pin_v2)"
+   },
+   {
+    "port": "clk_qslots[2]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qcap[2].u_cap (qslots capture_pin_v2)"
+   },
+   {
+    "port": "clk_qslots[3]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qcap[3].u_cap (qslots capture_pin_v2)"
+   },
+   {
+    "port": "clk_qslots[4]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qcap[4].u_cap (qslots capture_pin_v2)"
+   },
+   {
+    "port": "clk_qslots[5]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qcap[5].u_cap (qslots capture_pin_v2)"
+   },
+   {
+    "port": "clk_qslots[6]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qcap[6].u_cap (qslots capture_pin_v2)"
+   },
+   {
+    "port": "clk_qslots[7]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qcap[7].u_cap (qslots capture_pin_v2)"
+   },
+   {
+    "port": "clk_qslots[8]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qcap[8].u_cap (qslots capture_pin_v2)"
+   },
+   {
+    "port": "clk_qslots[9]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qout[0].u_out (qslots switch slice b32)"
+   },
+   {
+    "port": "clk_qslots[10]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qout[1].u_out (qslots switch slice b32)"
+   },
+   {
+    "port": "clk_qslots[11]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qout[2].u_out (qslots switch slice b32)"
+   },
+   {
+    "port": "clk_qslots[12]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qout[3].u_out (qslots switch slice b32)"
+   },
+   {
+    "port": "clk_qslots[13]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qout[4].u_out (qslots switch slice b32)"
+   },
+   {
+    "port": "clk_qslots[14]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qout[5].u_out (qslots switch slice b32)"
+   },
+   {
+    "port": "clk_qslots[15]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qout[6].u_out (qslots switch slice b32)"
+   },
+   {
+    "port": "clk_qslots[16]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qout[7].u_out (qslots switch slice b32)"
+   },
+   {
+    "port": "clk_qslots[17]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qout[8].u_out (qslots switch slice b32)"
+   },
+   {
+    "port": "clk_qslots[18]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qout[9].u_out (qslots switch slice b32)"
+   },
+   {
+    "port": "clk_qslots[19]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qout[10].u_out (qslots switch slice b32)"
+   },
+   {
+    "port": "clk_qslots[20]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qout[11].u_out (qslots switch slice b32)"
+   },
+   {
+    "port": "clk_qslots[21]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qout[12].u_out (qslots switch slice b32)"
+   },
+   {
+    "port": "clk_qslots[22]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qout[13].u_out (qslots switch slice b32)"
+   },
+   {
+    "port": "clk_qslots[23]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qout[14].u_out (qslots switch slice b32)"
+   },
+   {
+    "port": "clk_qslots[24]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qout[15].u_out (qslots switch slice b32)"
+   },
+   {
+    "port": "clk_qslots[25]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qout[16].u_out (qslots switch slice b32)"
+   },
+   {
+    "port": "clk_qslots[26]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qout[17].u_out (qslots switch slice b1)"
+   },
+   {
+    "port": "clk_reduce[0]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce control root"
+   },
+   {
+    "port": "clk_reduce[1]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce state lane 0"
+   },
+   {
+    "port": "clk_reduce[2]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce state lane 1"
+   },
+   {
+    "port": "clk_reduce[3]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce state lane 2"
+   },
+   {
+    "port": "clk_reduce[4]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce state lane 3"
+   },
+   {
+    "port": "clk_reduce[5]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce state lane 4"
+   },
+   {
+    "port": "clk_reduce[6]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce state lane 5"
+   },
+   {
+    "port": "clk_reduce[7]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce state lane 6"
+   },
+   {
+    "port": "clk_reduce[8]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce state lane 7"
+   },
+   {
+    "port": "clk_reduce[9]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce state lane 8"
+   },
+   {
+    "port": "clk_reduce[10]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce state lane 9"
+   },
+   {
+    "port": "clk_reduce[11]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce state lane 10"
+   },
+   {
+    "port": "clk_reduce[12]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce state lane 11"
+   },
+   {
+    "port": "clk_reduce[13]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce state lane 12"
+   },
+   {
+    "port": "clk_reduce[14]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce state lane 13"
+   },
+   {
+    "port": "clk_reduce[15]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce state lane 14"
+   },
+   {
+    "port": "clk_reduce[16]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce state lane 15"
+   },
+   {
+    "port": "clk_reduce[17]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce add lane 0"
+   },
+   {
+    "port": "clk_reduce[18]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce add lane 1"
+   },
+   {
+    "port": "clk_reduce[19]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce add lane 2"
+   },
+   {
+    "port": "clk_reduce[20]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce add lane 3"
+   },
+   {
+    "port": "clk_reduce[21]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce add lane 4"
+   },
+   {
+    "port": "clk_reduce[22]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce add lane 5"
+   },
+   {
+    "port": "clk_reduce[23]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce add lane 6"
+   },
+   {
+    "port": "clk_reduce[24]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce add lane 7"
+   },
+   {
+    "port": "clk_reduce[25]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce add lane 8"
+   },
+   {
+    "port": "clk_reduce[26]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce add lane 9"
+   },
+   {
+    "port": "clk_reduce[27]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce add lane 10"
+   },
+   {
+    "port": "clk_reduce[28]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce add lane 11"
+   },
+   {
+    "port": "clk_reduce[29]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce add lane 12"
+   },
+   {
+    "port": "clk_reduce[30]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce add lane 13"
+   },
+   {
+    "port": "clk_reduce[31]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce add lane 14"
+   },
+   {
+    "port": "clk_reduce[32]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce add lane 15"
+   },
+   {
+    "port": "clk_ring[0]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_ring control root"
+   },
+   {
+    "port": "clk_ring[1]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_ring state-capture lane 0 (routed view)"
+   },
+   {
+    "port": "clk_ring[2]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_ring state-capture lane 1 (routed view)"
+   },
+   {
+    "port": "clk_ring[3]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_ring state-capture lane 2 (routed view)"
+   },
+   {
+    "port": "clk_ring[4]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_ring state-capture lane 3 (routed view)"
+   },
+   {
+    "port": "clk_ring[5]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_ring state-capture lane 4 (routed view)"
+   },
+   {
+    "port": "clk_ring[6]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_ring state-capture lane 5 (routed view)"
+   },
+   {
+    "port": "clk_ring[7]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_ring state-capture lane 6 (routed view)"
+   },
+   {
+    "port": "clk_ring[8]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_ring state-capture lane 7 (routed view)"
+   },
+   {
+    "port": "clk_ring[9]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_ring add lane 0"
+   },
+   {
+    "port": "clk_ring[10]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_ring add lane 1"
+   },
+   {
+    "port": "clk_ring[11]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_ring add lane 2"
+   },
+   {
+    "port": "clk_ring[12]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_ring add lane 3"
+   },
+   {
+    "port": "clk_ring[13]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_ring add lane 4"
+   },
+   {
+    "port": "clk_ring[14]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_ring add lane 5"
+   },
+   {
+    "port": "clk_ring[15]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_ring add lane 6"
+   },
+   {
+    "port": "clk_ring[16]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_ring add lane 7"
+   },
+   {
+    "port": "clk_vmwrite[0]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_writer (CLOSED v6) clk_rgx_data0"
+   },
+   {
+    "port": "clk_vmwrite[1]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_writer (CLOSED v6) clk_rgx_data1"
+   },
+   {
+    "port": "clk_vmwrite[2]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_writer (CLOSED v6) clk_rgx_data2"
+   },
+   {
+    "port": "clk_vmwrite[3]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_writer (CLOSED v6) clk_rgx_data3"
+   },
+   {
+    "port": "clk_vmwrite[4]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_writer (CLOSED v6) clk_rgx_ctrl"
+   },
+   {
+    "port": "clk_vmwrite[5]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_writer (CLOSED v6) clk_tkw"
+   },
+   {
+    "port": "clk_vmwrite[6]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_writer (CLOSED v6) clk_meta"
+   },
+   {
+    "port": "clk_vmwrite[7]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_writer (CLOSED v6) clk_body"
+   },
+   {
+    "port": "clk_vmwrite[8]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_writer (CLOSED v6) clk_bank0"
+   },
+   {
+    "port": "clk_vmwrite[9]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_writer (CLOSED v6) clk_bank1"
+   },
+   {
+    "port": "clk_vmwrite[10]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_writer (CLOSED v6) clk_bank2"
+   },
+   {
+    "port": "clk_vmwrite[11]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_writer (CLOSED v6) clk_bank3"
+   },
+   {
+    "port": "clk_vmwrite[12]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_writer (CLOSED v6) clk_bank4"
+   },
+   {
+    "port": "clk_vmwrite[13]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_writer (CLOSED v6) clk_bank5"
+   },
+   {
+    "port": "clk_vmwrite[14]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_writer (CLOSED v6) clk_bank6"
+   },
+   {
+    "port": "clk_vmwrite[15]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_writer (CLOSED v6) clk_bank7"
+   }
+  ],
+  "hb_coll_NW": [
+   {
+    "port": "clk_control",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_control (ctl_v5 leaf incl. iteration-product unit)"
+   },
+   {
+    "port": "clk_issue",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_issuer (issuer_m leaf: control + 3 SRAM macros + 2-edge uop delay)"
+   },
+   {
+    "port": "clk_link[0]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_link[0].u_link capture_ctl_e"
+   },
+   {
+    "port": "clk_link[1]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_link[0].u_link store bank 0"
+   },
+   {
+    "port": "clk_link[2]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_link[0].u_link store bank 1"
+   },
+   {
+    "port": "clk_link[3]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_link[0].u_link store bank 2"
+   },
+   {
+    "port": "clk_link[4]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_link[0].u_link store bank 3"
+   },
+   {
+    "port": "clk_link[5]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_link[1].u_link capture_ctl_e"
+   },
+   {
+    "port": "clk_link[6]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_link[1].u_link store bank 0"
+   },
+   {
+    "port": "clk_link[7]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_link[1].u_link store bank 1"
+   },
+   {
+    "port": "clk_link[8]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_link[1].u_link store bank 2"
+   },
+   {
+    "port": "clk_link[9]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_link[1].u_link store bank 3"
+   },
+   {
+    "port": "clk_program",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_fj (fj leaf: programme target + fault join)"
+   },
+   {
+    "port": "clk_qslots[0]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qcap[0].u_cap (qslots capture_pin_v2)"
+   },
+   {
+    "port": "clk_qslots[1]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qcap[1].u_cap (qslots capture_pin_v2)"
+   },
+   {
+    "port": "clk_qslots[2]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qcap[2].u_cap (qslots capture_pin_v2)"
+   },
+   {
+    "port": "clk_qslots[3]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qcap[3].u_cap (qslots capture_pin_v2)"
+   },
+   {
+    "port": "clk_qslots[4]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qcap[4].u_cap (qslots capture_pin_v2)"
+   },
+   {
+    "port": "clk_qslots[5]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qcap[5].u_cap (qslots capture_pin_v2)"
+   },
+   {
+    "port": "clk_qslots[6]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qcap[6].u_cap (qslots capture_pin_v2)"
+   },
+   {
+    "port": "clk_qslots[7]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qcap[7].u_cap (qslots capture_pin_v2)"
+   },
+   {
+    "port": "clk_qslots[8]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qcap[8].u_cap (qslots capture_pin_v2)"
+   },
+   {
+    "port": "clk_qslots[9]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qout[0].u_out (qslots switch slice b32)"
+   },
+   {
+    "port": "clk_qslots[10]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qout[1].u_out (qslots switch slice b32)"
+   },
+   {
+    "port": "clk_qslots[11]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qout[2].u_out (qslots switch slice b32)"
+   },
+   {
+    "port": "clk_qslots[12]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qout[3].u_out (qslots switch slice b32)"
+   },
+   {
+    "port": "clk_qslots[13]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qout[4].u_out (qslots switch slice b32)"
+   },
+   {
+    "port": "clk_qslots[14]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qout[5].u_out (qslots switch slice b32)"
+   },
+   {
+    "port": "clk_qslots[15]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qout[6].u_out (qslots switch slice b32)"
+   },
+   {
+    "port": "clk_qslots[16]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qout[7].u_out (qslots switch slice b32)"
+   },
+   {
+    "port": "clk_qslots[17]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qout[8].u_out (qslots switch slice b32)"
+   },
+   {
+    "port": "clk_qslots[18]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qout[9].u_out (qslots switch slice b32)"
+   },
+   {
+    "port": "clk_qslots[19]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qout[10].u_out (qslots switch slice b32)"
+   },
+   {
+    "port": "clk_qslots[20]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qout[11].u_out (qslots switch slice b32)"
+   },
+   {
+    "port": "clk_qslots[21]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qout[12].u_out (qslots switch slice b32)"
+   },
+   {
+    "port": "clk_qslots[22]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qout[13].u_out (qslots switch slice b32)"
+   },
+   {
+    "port": "clk_qslots[23]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qout[14].u_out (qslots switch slice b32)"
+   },
+   {
+    "port": "clk_qslots[24]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qout[15].u_out (qslots switch slice b32)"
+   },
+   {
+    "port": "clk_qslots[25]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qout[16].u_out (qslots switch slice b32)"
+   },
+   {
+    "port": "clk_qslots[26]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qout[17].u_out (qslots switch slice b1)"
+   },
+   {
+    "port": "clk_reduce[0]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce control root"
+   },
+   {
+    "port": "clk_reduce[1]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce state lane 0"
+   },
+   {
+    "port": "clk_reduce[2]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce state lane 1"
+   },
+   {
+    "port": "clk_reduce[3]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce state lane 2"
+   },
+   {
+    "port": "clk_reduce[4]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce state lane 3"
+   },
+   {
+    "port": "clk_reduce[5]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce state lane 4"
+   },
+   {
+    "port": "clk_reduce[6]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce state lane 5"
+   },
+   {
+    "port": "clk_reduce[7]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce state lane 6"
+   },
+   {
+    "port": "clk_reduce[8]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce state lane 7"
+   },
+   {
+    "port": "clk_reduce[9]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce state lane 8"
+   },
+   {
+    "port": "clk_reduce[10]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce state lane 9"
+   },
+   {
+    "port": "clk_reduce[11]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce state lane 10"
+   },
+   {
+    "port": "clk_reduce[12]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce state lane 11"
+   },
+   {
+    "port": "clk_reduce[13]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce state lane 12"
+   },
+   {
+    "port": "clk_reduce[14]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce state lane 13"
+   },
+   {
+    "port": "clk_reduce[15]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce state lane 14"
+   },
+   {
+    "port": "clk_reduce[16]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce state lane 15"
+   },
+   {
+    "port": "clk_reduce[17]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce add lane 0"
+   },
+   {
+    "port": "clk_reduce[18]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce add lane 1"
+   },
+   {
+    "port": "clk_reduce[19]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce add lane 2"
+   },
+   {
+    "port": "clk_reduce[20]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce add lane 3"
+   },
+   {
+    "port": "clk_reduce[21]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce add lane 4"
+   },
+   {
+    "port": "clk_reduce[22]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce add lane 5"
+   },
+   {
+    "port": "clk_reduce[23]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce add lane 6"
+   },
+   {
+    "port": "clk_reduce[24]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce add lane 7"
+   },
+   {
+    "port": "clk_reduce[25]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce add lane 8"
+   },
+   {
+    "port": "clk_reduce[26]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce add lane 9"
+   },
+   {
+    "port": "clk_reduce[27]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce add lane 10"
+   },
+   {
+    "port": "clk_reduce[28]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce add lane 11"
+   },
+   {
+    "port": "clk_reduce[29]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce add lane 12"
+   },
+   {
+    "port": "clk_reduce[30]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce add lane 13"
+   },
+   {
+    "port": "clk_reduce[31]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce add lane 14"
+   },
+   {
+    "port": "clk_reduce[32]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce add lane 15"
+   },
+   {
+    "port": "clk_ring[0]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_ring control root"
+   },
+   {
+    "port": "clk_ring[1]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_ring state-capture lane 0 (routed view)"
+   },
+   {
+    "port": "clk_ring[2]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_ring state-capture lane 1 (routed view)"
+   },
+   {
+    "port": "clk_ring[3]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_ring state-capture lane 2 (routed view)"
+   },
+   {
+    "port": "clk_ring[4]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_ring state-capture lane 3 (routed view)"
+   },
+   {
+    "port": "clk_ring[5]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_ring state-capture lane 4 (routed view)"
+   },
+   {
+    "port": "clk_ring[6]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_ring state-capture lane 5 (routed view)"
+   },
+   {
+    "port": "clk_ring[7]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_ring state-capture lane 6 (routed view)"
+   },
+   {
+    "port": "clk_ring[8]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_ring state-capture lane 7 (routed view)"
+   },
+   {
+    "port": "clk_ring[9]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_ring add lane 0"
+   },
+   {
+    "port": "clk_ring[10]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_ring add lane 1"
+   },
+   {
+    "port": "clk_ring[11]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_ring add lane 2"
+   },
+   {
+    "port": "clk_ring[12]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_ring add lane 3"
+   },
+   {
+    "port": "clk_ring[13]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_ring add lane 4"
+   },
+   {
+    "port": "clk_ring[14]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_ring add lane 5"
+   },
+   {
+    "port": "clk_ring[15]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_ring add lane 6"
+   },
+   {
+    "port": "clk_ring[16]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_ring add lane 7"
+   },
+   {
+    "port": "clk_vmwrite[0]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_writer (CLOSED v6) clk_rgx_data0"
+   },
+   {
+    "port": "clk_vmwrite[1]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_writer (CLOSED v6) clk_rgx_data1"
+   },
+   {
+    "port": "clk_vmwrite[2]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_writer (CLOSED v6) clk_rgx_data2"
+   },
+   {
+    "port": "clk_vmwrite[3]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_writer (CLOSED v6) clk_rgx_data3"
+   },
+   {
+    "port": "clk_vmwrite[4]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_writer (CLOSED v6) clk_rgx_ctrl"
+   },
+   {
+    "port": "clk_vmwrite[5]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_writer (CLOSED v6) clk_tkw"
+   },
+   {
+    "port": "clk_vmwrite[6]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_writer (CLOSED v6) clk_meta"
+   },
+   {
+    "port": "clk_vmwrite[7]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_writer (CLOSED v6) clk_body"
+   },
+   {
+    "port": "clk_vmwrite[8]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_writer (CLOSED v6) clk_bank0"
+   },
+   {
+    "port": "clk_vmwrite[9]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_writer (CLOSED v6) clk_bank1"
+   },
+   {
+    "port": "clk_vmwrite[10]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_writer (CLOSED v6) clk_bank2"
+   },
+   {
+    "port": "clk_vmwrite[11]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_writer (CLOSED v6) clk_bank3"
+   },
+   {
+    "port": "clk_vmwrite[12]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_writer (CLOSED v6) clk_bank4"
+   },
+   {
+    "port": "clk_vmwrite[13]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_writer (CLOSED v6) clk_bank5"
+   },
+   {
+    "port": "clk_vmwrite[14]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_writer (CLOSED v6) clk_bank6"
+   },
+   {
+    "port": "clk_vmwrite[15]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_writer (CLOSED v6) clk_bank7"
+   }
+  ],
+  "hb_coll_SE": [
+   {
+    "port": "clk_control",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_control (ctl_v5 leaf incl. iteration-product unit)"
+   },
+   {
+    "port": "clk_issue",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_issuer (issuer_m leaf: control + 3 SRAM macros + 2-edge uop delay)"
+   },
+   {
+    "port": "clk_link[0]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_link[0].u_link capture_ctl_e"
+   },
+   {
+    "port": "clk_link[1]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_link[0].u_link store bank 0"
+   },
+   {
+    "port": "clk_link[2]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_link[0].u_link store bank 1"
+   },
+   {
+    "port": "clk_link[3]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_link[0].u_link store bank 2"
+   },
+   {
+    "port": "clk_link[4]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_link[0].u_link store bank 3"
+   },
+   {
+    "port": "clk_link[5]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_link[1].u_link capture_ctl_e"
+   },
+   {
+    "port": "clk_link[6]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_link[1].u_link store bank 0"
+   },
+   {
+    "port": "clk_link[7]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_link[1].u_link store bank 1"
+   },
+   {
+    "port": "clk_link[8]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_link[1].u_link store bank 2"
+   },
+   {
+    "port": "clk_link[9]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_link[1].u_link store bank 3"
+   },
+   {
+    "port": "clk_program",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_fj (fj leaf: programme target + fault join)"
+   },
+   {
+    "port": "clk_qslots[0]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qcap[0].u_cap (qslots capture_pin_v2)"
+   },
+   {
+    "port": "clk_qslots[1]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qcap[1].u_cap (qslots capture_pin_v2)"
+   },
+   {
+    "port": "clk_qslots[2]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qcap[2].u_cap (qslots capture_pin_v2)"
+   },
+   {
+    "port": "clk_qslots[3]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qcap[3].u_cap (qslots capture_pin_v2)"
+   },
+   {
+    "port": "clk_qslots[4]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qcap[4].u_cap (qslots capture_pin_v2)"
+   },
+   {
+    "port": "clk_qslots[5]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qcap[5].u_cap (qslots capture_pin_v2)"
+   },
+   {
+    "port": "clk_qslots[6]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qcap[6].u_cap (qslots capture_pin_v2)"
+   },
+   {
+    "port": "clk_qslots[7]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qcap[7].u_cap (qslots capture_pin_v2)"
+   },
+   {
+    "port": "clk_qslots[8]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qcap[8].u_cap (qslots capture_pin_v2)"
+   },
+   {
+    "port": "clk_qslots[9]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qout[0].u_out (qslots switch slice b32)"
+   },
+   {
+    "port": "clk_qslots[10]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qout[1].u_out (qslots switch slice b32)"
+   },
+   {
+    "port": "clk_qslots[11]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qout[2].u_out (qslots switch slice b32)"
+   },
+   {
+    "port": "clk_qslots[12]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qout[3].u_out (qslots switch slice b32)"
+   },
+   {
+    "port": "clk_qslots[13]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qout[4].u_out (qslots switch slice b32)"
+   },
+   {
+    "port": "clk_qslots[14]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qout[5].u_out (qslots switch slice b32)"
+   },
+   {
+    "port": "clk_qslots[15]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qout[6].u_out (qslots switch slice b32)"
+   },
+   {
+    "port": "clk_qslots[16]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qout[7].u_out (qslots switch slice b32)"
+   },
+   {
+    "port": "clk_qslots[17]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qout[8].u_out (qslots switch slice b32)"
+   },
+   {
+    "port": "clk_qslots[18]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qout[9].u_out (qslots switch slice b32)"
+   },
+   {
+    "port": "clk_qslots[19]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qout[10].u_out (qslots switch slice b32)"
+   },
+   {
+    "port": "clk_qslots[20]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qout[11].u_out (qslots switch slice b32)"
+   },
+   {
+    "port": "clk_qslots[21]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qout[12].u_out (qslots switch slice b32)"
+   },
+   {
+    "port": "clk_qslots[22]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qout[13].u_out (qslots switch slice b32)"
+   },
+   {
+    "port": "clk_qslots[23]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qout[14].u_out (qslots switch slice b32)"
+   },
+   {
+    "port": "clk_qslots[24]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qout[15].u_out (qslots switch slice b32)"
+   },
+   {
+    "port": "clk_qslots[25]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qout[16].u_out (qslots switch slice b32)"
+   },
+   {
+    "port": "clk_qslots[26]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qout[17].u_out (qslots switch slice b1)"
+   },
+   {
+    "port": "clk_reduce[0]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce control root"
+   },
+   {
+    "port": "clk_reduce[1]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce state lane 0"
+   },
+   {
+    "port": "clk_reduce[2]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce state lane 1"
+   },
+   {
+    "port": "clk_reduce[3]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce state lane 2"
+   },
+   {
+    "port": "clk_reduce[4]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce state lane 3"
+   },
+   {
+    "port": "clk_reduce[5]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce state lane 4"
+   },
+   {
+    "port": "clk_reduce[6]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce state lane 5"
+   },
+   {
+    "port": "clk_reduce[7]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce state lane 6"
+   },
+   {
+    "port": "clk_reduce[8]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce state lane 7"
+   },
+   {
+    "port": "clk_reduce[9]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce state lane 8"
+   },
+   {
+    "port": "clk_reduce[10]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce state lane 9"
+   },
+   {
+    "port": "clk_reduce[11]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce state lane 10"
+   },
+   {
+    "port": "clk_reduce[12]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce state lane 11"
+   },
+   {
+    "port": "clk_reduce[13]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce state lane 12"
+   },
+   {
+    "port": "clk_reduce[14]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce state lane 13"
+   },
+   {
+    "port": "clk_reduce[15]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce state lane 14"
+   },
+   {
+    "port": "clk_reduce[16]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce state lane 15"
+   },
+   {
+    "port": "clk_reduce[17]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce add lane 0"
+   },
+   {
+    "port": "clk_reduce[18]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce add lane 1"
+   },
+   {
+    "port": "clk_reduce[19]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce add lane 2"
+   },
+   {
+    "port": "clk_reduce[20]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce add lane 3"
+   },
+   {
+    "port": "clk_reduce[21]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce add lane 4"
+   },
+   {
+    "port": "clk_reduce[22]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce add lane 5"
+   },
+   {
+    "port": "clk_reduce[23]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce add lane 6"
+   },
+   {
+    "port": "clk_reduce[24]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce add lane 7"
+   },
+   {
+    "port": "clk_reduce[25]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce add lane 8"
+   },
+   {
+    "port": "clk_reduce[26]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce add lane 9"
+   },
+   {
+    "port": "clk_reduce[27]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce add lane 10"
+   },
+   {
+    "port": "clk_reduce[28]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce add lane 11"
+   },
+   {
+    "port": "clk_reduce[29]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce add lane 12"
+   },
+   {
+    "port": "clk_reduce[30]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce add lane 13"
+   },
+   {
+    "port": "clk_reduce[31]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce add lane 14"
+   },
+   {
+    "port": "clk_reduce[32]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce add lane 15"
+   },
+   {
+    "port": "clk_ring[0]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_ring control root"
+   },
+   {
+    "port": "clk_ring[1]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_ring state-capture lane 0 (routed view)"
+   },
+   {
+    "port": "clk_ring[2]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_ring state-capture lane 1 (routed view)"
+   },
+   {
+    "port": "clk_ring[3]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_ring state-capture lane 2 (routed view)"
+   },
+   {
+    "port": "clk_ring[4]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_ring state-capture lane 3 (routed view)"
+   },
+   {
+    "port": "clk_ring[5]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_ring state-capture lane 4 (routed view)"
+   },
+   {
+    "port": "clk_ring[6]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_ring state-capture lane 5 (routed view)"
+   },
+   {
+    "port": "clk_ring[7]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_ring state-capture lane 6 (routed view)"
+   },
+   {
+    "port": "clk_ring[8]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_ring state-capture lane 7 (routed view)"
+   },
+   {
+    "port": "clk_ring[9]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_ring add lane 0"
+   },
+   {
+    "port": "clk_ring[10]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_ring add lane 1"
+   },
+   {
+    "port": "clk_ring[11]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_ring add lane 2"
+   },
+   {
+    "port": "clk_ring[12]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_ring add lane 3"
+   },
+   {
+    "port": "clk_ring[13]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_ring add lane 4"
+   },
+   {
+    "port": "clk_ring[14]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_ring add lane 5"
+   },
+   {
+    "port": "clk_ring[15]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_ring add lane 6"
+   },
+   {
+    "port": "clk_ring[16]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_ring add lane 7"
+   },
+   {
+    "port": "clk_vmwrite[0]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_writer (CLOSED v6) clk_rgx_data0"
+   },
+   {
+    "port": "clk_vmwrite[1]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_writer (CLOSED v6) clk_rgx_data1"
+   },
+   {
+    "port": "clk_vmwrite[2]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_writer (CLOSED v6) clk_rgx_data2"
+   },
+   {
+    "port": "clk_vmwrite[3]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_writer (CLOSED v6) clk_rgx_data3"
+   },
+   {
+    "port": "clk_vmwrite[4]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_writer (CLOSED v6) clk_rgx_ctrl"
+   },
+   {
+    "port": "clk_vmwrite[5]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_writer (CLOSED v6) clk_tkw"
+   },
+   {
+    "port": "clk_vmwrite[6]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_writer (CLOSED v6) clk_meta"
+   },
+   {
+    "port": "clk_vmwrite[7]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_writer (CLOSED v6) clk_body"
+   },
+   {
+    "port": "clk_vmwrite[8]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_writer (CLOSED v6) clk_bank0"
+   },
+   {
+    "port": "clk_vmwrite[9]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_writer (CLOSED v6) clk_bank1"
+   },
+   {
+    "port": "clk_vmwrite[10]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_writer (CLOSED v6) clk_bank2"
+   },
+   {
+    "port": "clk_vmwrite[11]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_writer (CLOSED v6) clk_bank3"
+   },
+   {
+    "port": "clk_vmwrite[12]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_writer (CLOSED v6) clk_bank4"
+   },
+   {
+    "port": "clk_vmwrite[13]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_writer (CLOSED v6) clk_bank5"
+   },
+   {
+    "port": "clk_vmwrite[14]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_writer (CLOSED v6) clk_bank6"
+   },
+   {
+    "port": "clk_vmwrite[15]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_writer (CLOSED v6) clk_bank7"
+   }
+  ],
+  "hb_coll_SW": [
+   {
+    "port": "clk_arg",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_arg (argmax_m leaf)"
+   },
+   {
+    "port": "clk_control",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_control (ctl_v5 leaf incl. iteration-product unit)"
+   },
+   {
+    "port": "clk_issue",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_issuer (issuer_m leaf: control + 3 SRAM macros + 2-edge uop delay)"
+   },
+   {
+    "port": "clk_link[0]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_link[0].u_link capture_ctl_e"
+   },
+   {
+    "port": "clk_link[1]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_link[0].u_link store bank 0"
+   },
+   {
+    "port": "clk_link[2]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_link[0].u_link store bank 1"
+   },
+   {
+    "port": "clk_link[3]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_link[0].u_link store bank 2"
+   },
+   {
+    "port": "clk_link[4]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_link[0].u_link store bank 3"
+   },
+   {
+    "port": "clk_link[5]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_link[1].u_link capture_ctl_e"
+   },
+   {
+    "port": "clk_link[6]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_link[1].u_link store bank 0"
+   },
+   {
+    "port": "clk_link[7]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_link[1].u_link store bank 1"
+   },
+   {
+    "port": "clk_link[8]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_link[1].u_link store bank 2"
+   },
+   {
+    "port": "clk_link[9]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_link[1].u_link store bank 3"
+   },
+   {
+    "port": "clk_link[10]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_link[2].u_link capture_ctl_e"
+   },
+   {
+    "port": "clk_link[11]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_link[2].u_link store bank 0"
+   },
+   {
+    "port": "clk_link[12]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_link[2].u_link store bank 1"
+   },
+   {
+    "port": "clk_link[13]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_link[2].u_link store bank 2"
+   },
+   {
+    "port": "clk_link[14]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_link[2].u_link store bank 3"
+   },
+   {
+    "port": "clk_program",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_fj (fj leaf: programme target + fault join)"
+   },
+   {
+    "port": "clk_qslots[0]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qcap[0].u_cap (qslots capture_pin_v2)"
+   },
+   {
+    "port": "clk_qslots[1]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qcap[1].u_cap (qslots capture_pin_v2)"
+   },
+   {
+    "port": "clk_qslots[2]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qcap[2].u_cap (qslots capture_pin_v2)"
+   },
+   {
+    "port": "clk_qslots[3]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qcap[3].u_cap (qslots capture_pin_v2)"
+   },
+   {
+    "port": "clk_qslots[4]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qcap[4].u_cap (qslots capture_pin_v2)"
+   },
+   {
+    "port": "clk_qslots[5]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qcap[5].u_cap (qslots capture_pin_v2)"
+   },
+   {
+    "port": "clk_qslots[6]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qcap[6].u_cap (qslots capture_pin_v2)"
+   },
+   {
+    "port": "clk_qslots[7]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qcap[7].u_cap (qslots capture_pin_v2)"
+   },
+   {
+    "port": "clk_qslots[8]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qcap[8].u_cap (qslots capture_pin_v2)"
+   },
+   {
+    "port": "clk_qslots[9]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qcap[9].u_cap (qslots capture_pin_v2)"
+   },
+   {
+    "port": "clk_qslots[10]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qcap[10].u_cap (qslots capture_pin_v2)"
+   },
+   {
+    "port": "clk_qslots[11]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qout[0].u_out (qslots switch slice b32)"
+   },
+   {
+    "port": "clk_qslots[12]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qout[1].u_out (qslots switch slice b32)"
+   },
+   {
+    "port": "clk_qslots[13]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qout[2].u_out (qslots switch slice b32)"
+   },
+   {
+    "port": "clk_qslots[14]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qout[3].u_out (qslots switch slice b32)"
+   },
+   {
+    "port": "clk_qslots[15]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qout[4].u_out (qslots switch slice b32)"
+   },
+   {
+    "port": "clk_qslots[16]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qout[5].u_out (qslots switch slice b32)"
+   },
+   {
+    "port": "clk_qslots[17]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qout[6].u_out (qslots switch slice b32)"
+   },
+   {
+    "port": "clk_qslots[18]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qout[7].u_out (qslots switch slice b32)"
+   },
+   {
+    "port": "clk_qslots[19]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qout[8].u_out (qslots switch slice b32)"
+   },
+   {
+    "port": "clk_qslots[20]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qout[9].u_out (qslots switch slice b32)"
+   },
+   {
+    "port": "clk_qslots[21]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qout[10].u_out (qslots switch slice b32)"
+   },
+   {
+    "port": "clk_qslots[22]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qout[11].u_out (qslots switch slice b32)"
+   },
+   {
+    "port": "clk_qslots[23]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qout[12].u_out (qslots switch slice b32)"
+   },
+   {
+    "port": "clk_qslots[24]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qout[13].u_out (qslots switch slice b32)"
+   },
+   {
+    "port": "clk_qslots[25]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qout[14].u_out (qslots switch slice b32)"
+   },
+   {
+    "port": "clk_qslots[26]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qout[15].u_out (qslots switch slice b32)"
+   },
+   {
+    "port": "clk_qslots[27]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qout[16].u_out (qslots switch slice b32)"
+   },
+   {
+    "port": "clk_qslots[28]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "g_qout[17].u_out (qslots switch slice b1)"
+   },
+   {
+    "port": "clk_reduce[0]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce control root"
+   },
+   {
+    "port": "clk_reduce[1]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce state lane 0"
+   },
+   {
+    "port": "clk_reduce[2]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce state lane 1"
+   },
+   {
+    "port": "clk_reduce[3]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce state lane 2"
+   },
+   {
+    "port": "clk_reduce[4]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce state lane 3"
+   },
+   {
+    "port": "clk_reduce[5]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce state lane 4"
+   },
+   {
+    "port": "clk_reduce[6]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce state lane 5"
+   },
+   {
+    "port": "clk_reduce[7]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce state lane 6"
+   },
+   {
+    "port": "clk_reduce[8]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce state lane 7"
+   },
+   {
+    "port": "clk_reduce[9]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce state lane 8"
+   },
+   {
+    "port": "clk_reduce[10]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce state lane 9"
+   },
+   {
+    "port": "clk_reduce[11]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce state lane 10"
+   },
+   {
+    "port": "clk_reduce[12]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce state lane 11"
+   },
+   {
+    "port": "clk_reduce[13]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce state lane 12"
+   },
+   {
+    "port": "clk_reduce[14]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce state lane 13"
+   },
+   {
+    "port": "clk_reduce[15]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce state lane 14"
+   },
+   {
+    "port": "clk_reduce[16]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce state lane 15"
+   },
+   {
+    "port": "clk_reduce[17]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce add lane 0"
+   },
+   {
+    "port": "clk_reduce[18]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce add lane 1"
+   },
+   {
+    "port": "clk_reduce[19]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce add lane 2"
+   },
+   {
+    "port": "clk_reduce[20]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce add lane 3"
+   },
+   {
+    "port": "clk_reduce[21]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce add lane 4"
+   },
+   {
+    "port": "clk_reduce[22]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce add lane 5"
+   },
+   {
+    "port": "clk_reduce[23]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce add lane 6"
+   },
+   {
+    "port": "clk_reduce[24]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce add lane 7"
+   },
+   {
+    "port": "clk_reduce[25]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce add lane 8"
+   },
+   {
+    "port": "clk_reduce[26]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce add lane 9"
+   },
+   {
+    "port": "clk_reduce[27]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce add lane 10"
+   },
+   {
+    "port": "clk_reduce[28]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce add lane 11"
+   },
+   {
+    "port": "clk_reduce[29]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce add lane 12"
+   },
+   {
+    "port": "clk_reduce[30]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce add lane 13"
+   },
+   {
+    "port": "clk_reduce[31]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce add lane 14"
+   },
+   {
+    "port": "clk_reduce[32]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_reduce add lane 15"
+   },
+   {
+    "port": "clk_ring[0]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_ring control root"
+   },
+   {
+    "port": "clk_ring[1]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_ring state-capture lane 0 (routed view)"
+   },
+   {
+    "port": "clk_ring[2]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_ring state-capture lane 1 (routed view)"
+   },
+   {
+    "port": "clk_ring[3]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_ring state-capture lane 2 (routed view)"
+   },
+   {
+    "port": "clk_ring[4]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_ring state-capture lane 3 (routed view)"
+   },
+   {
+    "port": "clk_ring[5]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_ring state-capture lane 4 (routed view)"
+   },
+   {
+    "port": "clk_ring[6]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_ring state-capture lane 5 (routed view)"
+   },
+   {
+    "port": "clk_ring[7]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_ring state-capture lane 6 (routed view)"
+   },
+   {
+    "port": "clk_ring[8]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_ring state-capture lane 7 (routed view)"
+   },
+   {
+    "port": "clk_ring[9]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_ring add lane 0"
+   },
+   {
+    "port": "clk_ring[10]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_ring add lane 1"
+   },
+   {
+    "port": "clk_ring[11]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_ring add lane 2"
+   },
+   {
+    "port": "clk_ring[12]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_ring add lane 3"
+   },
+   {
+    "port": "clk_ring[13]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_ring add lane 4"
+   },
+   {
+    "port": "clk_ring[14]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_ring add lane 5"
+   },
+   {
+    "port": "clk_ring[15]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_ring add lane 6"
+   },
+   {
+    "port": "clk_ring[16]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_ring add lane 7"
+   },
+   {
+    "port": "clk_tkm[0]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_tkm tile 0 (CLOSED tkm_tile)"
+   },
+   {
+    "port": "clk_tkm[1]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_tkm tile 1 (CLOSED tkm_tile)"
+   },
+   {
+    "port": "clk_tkm[2]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_tkm tile 2 (CLOSED tkm_tile)"
+   },
+   {
+    "port": "clk_tkm[3]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_tkm tile 3 (CLOSED tkm_tile)"
+   },
+   {
+    "port": "clk_tkm[4]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_tkm tile 4 (CLOSED tkm_tile)"
+   },
+   {
+    "port": "clk_tkm[5]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_tkm tile 5 (CLOSED tkm_tile)"
+   },
+   {
+    "port": "clk_tkm[6]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_tkm tile 6 (CLOSED tkm_tile)"
+   },
+   {
+    "port": "clk_tkm[7]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_tkm tile 7 (CLOSED tkm_tile)"
+   },
+   {
+    "port": "clk_tkm[8]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_tkm tile 8 (CLOSED tkm_tile)"
+   },
+   {
+    "port": "clk_tkm[9]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_tkm tile 9 (CLOSED tkm_tile)"
+   },
+   {
+    "port": "clk_tkm[10]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_tkm tile 10 (CLOSED tkm_tile)"
+   },
+   {
+    "port": "clk_tkm[11]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_tkm tile 11 (CLOSED tkm_tile)"
+   },
+   {
+    "port": "clk_tkm[12]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_tkm tile 12 (CLOSED tkm_tile)"
+   },
+   {
+    "port": "clk_tkm[13]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_tkm tile 13 (CLOSED tkm_tile)"
+   },
+   {
+    "port": "clk_tkm[14]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_tkm tile 14 (CLOSED tkm_tile)"
+   },
+   {
+    "port": "clk_tkm[15]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_tkm tile 15 (CLOSED tkm_tile)"
+   },
+   {
+    "port": "clk_tkm[16]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_tkm tile 16 (CLOSED tkm_tile)"
+   },
+   {
+    "port": "clk_tkm[17]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_tkm tile 17 (CLOSED tkm_tile)"
+   },
+   {
+    "port": "clk_tkm[18]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_tkm tile 18 (CLOSED tkm_tile)"
+   },
+   {
+    "port": "clk_tkm[19]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_tkm tile 19 (CLOSED tkm_tile)"
+   },
+   {
+    "port": "clk_tkm[20]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_tkm tile 20 (CLOSED tkm_tile)"
+   },
+   {
+    "port": "clk_tkm[21]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_tkm tile 21 (CLOSED tkm_tile)"
+   },
+   {
+    "port": "clk_tkm[22]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_tkm tile 22 (CLOSED tkm_tile)"
+   },
+   {
+    "port": "clk_tkm[23]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_tkm tile 23 (CLOSED tkm_tile)"
+   },
+   {
+    "port": "clk_tkm[24]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_tkm tile 24 (CLOSED tkm_tile)"
+   },
+   {
+    "port": "clk_tkm[25]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_tkm tile 25 (CLOSED tkm_tile)"
+   },
+   {
+    "port": "clk_tkm[26]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_tkm tile 26 (CLOSED tkm_tile)"
+   },
+   {
+    "port": "clk_tkm[27]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_tkm tile 27 (CLOSED tkm_tile)"
+   },
+   {
+    "port": "clk_tkm[28]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_tkm tile 28 (CLOSED tkm_tile)"
+   },
+   {
+    "port": "clk_tkm[29]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_tkm tile 29 (CLOSED tkm_tile)"
+   },
+   {
+    "port": "clk_tkm[30]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_tkm tile 30 (CLOSED tkm_tile)"
+   },
+   {
+    "port": "clk_tkm[31]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_tkm tile 31 (CLOSED tkm_tile)"
+   },
+   {
+    "port": "clk_tkm[32]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_tkm buffer (SRAM)"
+   },
+   {
+    "port": "clk_tkm[33]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_tkm control root"
+   },
+   {
+    "port": "clk_vmwrite[0]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_writer (CLOSED v6) clk_rgx_data0"
+   },
+   {
+    "port": "clk_vmwrite[1]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_writer (CLOSED v6) clk_rgx_data1"
+   },
+   {
+    "port": "clk_vmwrite[2]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_writer (CLOSED v6) clk_rgx_data2"
+   },
+   {
+    "port": "clk_vmwrite[3]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_writer (CLOSED v6) clk_rgx_data3"
+   },
+   {
+    "port": "clk_vmwrite[4]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_writer (CLOSED v6) clk_rgx_ctrl"
+   },
+   {
+    "port": "clk_vmwrite[5]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_writer (CLOSED v6) clk_tkw"
+   },
+   {
+    "port": "clk_vmwrite[6]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_writer (CLOSED v6) clk_meta"
+   },
+   {
+    "port": "clk_vmwrite[7]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_writer (CLOSED v6) clk_body"
+   },
+   {
+    "port": "clk_vmwrite[8]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_writer (CLOSED v6) clk_bank0"
+   },
+   {
+    "port": "clk_vmwrite[9]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_writer (CLOSED v6) clk_bank1"
+   },
+   {
+    "port": "clk_vmwrite[10]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_writer (CLOSED v6) clk_bank2"
+   },
+   {
+    "port": "clk_vmwrite[11]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_writer (CLOSED v6) clk_bank3"
+   },
+   {
+    "port": "clk_vmwrite[12]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_writer (CLOSED v6) clk_bank4"
+   },
+   {
+    "port": "clk_vmwrite[13]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_writer (CLOSED v6) clk_bank5"
+   },
+   {
+    "port": "clk_vmwrite[14]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_writer (CLOSED v6) clk_bank6"
+   },
+   {
+    "port": "clk_vmwrite[15]",
+    "domain": "stream",
+    "source": [
+     "hb_ckgen",
+     "pll_stream"
+    ],
+    "child": "u_writer (CLOSED v6) clk_bank7"
+   }
+  ]
+ }
+}
