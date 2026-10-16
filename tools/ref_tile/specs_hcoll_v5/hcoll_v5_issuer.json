@@ -12,15 +12,17 @@
   "rst_n"
  ],
  "outline": {
-  "w": 298.08,
+  "w": 315.36,
   "h": 324.0
  },
  "pins": {
   "W": [
-   "uop",
-   "uop_v",
-   "iteration",
-   "uop_pc"
+   "uop_d2",
+   "busy_d2",
+   "done_d2",
+   "start_d2",
+   "tap_iteration",
+   "tap_steps"
   ],
   "N": [
    "clk_control",
@@ -30,7 +32,9 @@
    "start_pc",
    "busy",
    "done",
-   "fault"
+   "fault",
+   "uop_v",
+   "uop_pc"
   ]
  },
  "layer_cap": "M5",
@@ -41,7 +45,7 @@
    "count": 1,
    "inst": "u_issuer.g_mem[0].u_bank.u_sram",
    "at": [
-    64.8,
+    81.0,
     23.76
    ]
   },
@@ -50,7 +54,7 @@
    "count": 1,
    "inst": "u_issuer.g_mem[1].u_bank.u_sram",
    "at": [
-    64.8,
+    81.0,
     123.12
    ]
   },
@@ -59,7 +63,7 @@
    "count": 1,
    "inst": "u_issuer.g_mem[2].u_bank.u_sram",
    "at": [
-    64.8,
+    81.0,
     222.48
    ]
   }
@@ -75,13 +79,13 @@
  },
  "pin_regs": {
   "enable": false,
-  "reason": "The hard_v5 lockstep bench (tb_hgi_coll_q_hard_v5 vs production host_v4) fixes the issuer's fixed timeline (first uop = start+3, one per edge): busy/done/fault/uop_v/iteration/uop_pc are flop Q, uop is the 512b bank face flop AND the uop_v flop (host_v4 mask), cfg/start/start_pc land in control flops. A synthesis pin stage would add +1/+1 edges the static schedule and the bench do not carry."
+  "reason": "The hard_v5 V5 lockstep bench (hard outputs at +2 vs production host_v4) fixes the issuer leaf's edges: raw busy/done/fault/uop_v/uop_pc and tap_iteration are flop Q (programme-target feedback at host_v4 edges), uop_d2/busy_d2/done_d2/start_d2 are the leaf's own 2-edge delay flops, tap_steps is the bank face flop AND uop_v (host_v4 mask) captured by the protocol leaf's pin flops; cfg/start/start_pc land in control flops. A synthesis pin stage would add edges the V5 schedule and bench do not carry."
  },
  "job": {
   "owner": "Claude:H-NETLIST/COLL-CTL-1045",
   "branch": "claude/hnl-coll-ctl-1045",
   "tag": "c1045",
-  "purpose": "H-NETLIST/COLL hard_v5 leaf ot_hgi_coll_issuer_m (q2+q3 shared): actual ot_hgi_coll_static_issuer with 3 x ot_sram_1r1w_64x512_m1_r2c2 (u_issuer.g_mem[b].u_bank.u_sram) on the leaf's single CTS root + host_v4 uop_v mask in the leaf. Benched by the hard_v5 q2 lockstep gate vs production host_v4; nomask mutant.",
+  "purpose": "H-NETLIST/COLL hard_v5 leaf ot_hgi_coll_issuer_m (q2+q3 shared, V5 issue timing): actual ot_hgi_coll_static_issuer with 3 x ot_sram_1r1w_64x512_m1_r2c2 (u_issuer.g_mem[b].u_bank.u_sram) on the leaf's single CTS root, host_v4 uop_v mask, 2-edge uop/busy/done/start delay + early iteration/step tap. Benched by the hard_v5 q2 V5 lockstep gate vs production host_v4; nomask mutant.",
   "extra_paths": [
    "rtl/hbm_accel/generic/collective",
    "rtl/lib/ot_rst_relay.sv",

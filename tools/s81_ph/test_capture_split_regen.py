@@ -12,13 +12,14 @@ class CaptureSplitRegen(unittest.TestCase):
     def test_specs_generated_or_preserved(self):
         bad, n = capture_split_specs.check()
         self.assertEqual(bad, [])
-        self.assertEqual(n, 22)
+        self.assertEqual(n, 23)
 
     def test_status_x43_generated(self):
         import capx43_status_kits as ks
         out = ks.outputs()
-        self.assertEqual(len(out), 4)
+        self.assertEqual(len(out), 5)
         names = {p.name for p in out}
+        self.assertIn("dsfd_capt_status_x43_s_y.json", names)   # split1016y S successor (S-VM-CAPT-X43RST)
         self.assertNotIn("dsfd_capt_status_x43_t.json", capture_split_specs.PRESERVED)
         self.assertTrue({"dsfd_capt_status_x43_t.tcl", "dsfd_capt_status_x43_s.json"} <= names)
         s = out[ks.PINS / "dsfd_capt_status_x43_s.tcl"]

@@ -2,5 +2,5 @@
  "schema": "opentallas.ref_tile.pin_regs.v1",
  "top": "ot_hgi_coll_fj_q3",
  "enable": false,
- "reason": "The hard_v5 parent's fault ABI fixes this leaf's edges against production host_v4 (lockstep bench tb_hgi_coll_q_hard_v5, every cycle): every output is already a flop Q (program target issuer_cfg/start/start_pc/configured/init_busy/fault; sticky fault/fault_cause), the host F20 inputs are captured by the target's own input rung (cv/dv/lv/target_q/addr_q/data_q/base_q/limit_q/loops_q), and child-fault/issuer-feedback inputs land in the sticky/fault flops through one OR/compare level. A synthesis pin stage would add +1/+1 edges the RTL bench does not see."
+ "reason": "ot_hgi_coll_fj_core registers every input at its pin in RTL (HOST F20 cfg/desc/launch frames, issuer feedback, child faults, sync rst_n D-pin flop; coordinator native audit of fj_q2 54f035ca0) and every output is flop Q (programme target issuer_cfg/start/configured/init_busy/fault, sticky fault/fault_cause); the V5 lockstep bench fixes these edges (programme +1, issue +3, child faults +1). A synthesis pin stage would add a second, unbenched rung."
 }

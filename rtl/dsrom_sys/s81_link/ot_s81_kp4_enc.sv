@@ -34,20 +34,34 @@ module ot_s81_kp4_enc #(parameter integer MUT = 0) (
     reg           e_v;
     reg  [5439:0] o_c;                  // codeword being emitted
     reg           o_v;
-    integer i, k;
+    integer i;
     // message symbol s (s = 0 first): e_m[5139 - 10 s -: 10]; cycle c processes symbols 52 c - 6 .. 52 c + 45
-    reg [9:0] nrem [0:NP-1];
-    reg [9:0] fb, sym;
-    always @* begin
-        for (i = 0; i < NP; i = i + 1) nrem[i] = rem[i];
-        for (k = 0; k < SPC; k = k + 1) begin
-            if (SPC * ph + k - 6 >= 0 && SPC * ph + k - 6 < NS) sym = e_m[5139 - 10 * (SPC * ph + k - 6) -: 10];
-            else sym = 10'd0;
-            fb = sym ^ nrem[0];
-            for (i = 0; i < NP - 1; i = i + 1) nrem[i] = nrem[i + 1] ^ gf_mul(fb, rs_g(i + 1));
-            nrem[NP - 1] = gf_mul(fb, rs_g(NP));
+    // (H-DIE 10-16, yosys frontend: the 52-step LFSR is a generate chain of constant multipliers -- one module
+    // derivation per generator coefficient -- and the slice symbols come from one shifted window, not 52 variable
+    // part-selects.  Same arithmetic: window {60'b0, e_m} << 520 ph puts symbol 52 ph + k - 6 at bits
+    // [5199 - 10 k -: 10]; symbols < 0 read the zero prefix, symbols >= 514 (ph >= 10) are shifted out.)
+    wire [5199:0] ewin = {60'b0, e_m} << (10 * SPC * ph);
+    wire [300 * (SPC + 1) - 1:0] lr;         // LFSR state before step k at [300 k +: 300], rem[i] at [10 i +: 10]
+    reg  [299:0] rem_f;
+    integer ri;
+    always @* for (ri = 0; ri < NP; ri = ri + 1) rem_f[10 * ri +: 10] = rem[ri];
+    assign lr[299:0] = rem_f;
+    genvar gk, gi;
+    generate for (gk = 0; gk < SPC; gk = gk + 1) begin : g_lfsr
+        wire [9:0] fb_k = ewin[5199 - 10 * gk -: 10] ^ lr[300 * gk +: 10];
+        for (gi = 0; gi < NP; gi = gi + 1) begin : g_t
+            wire [9:0] gp;
+            ot_s81_kp4_enc_gmul #(.I(gi + 1)) u_m (.a(fb_k), .y(gp));
+            if (gi < NP - 1) begin : g_x
+                assign lr[300 * (gk + 1) + 10 * gi +: 10] = lr[300 * gk + 10 * (gi + 1) +: 10] ^ gp;
+            end else begin : g_l
+                assign lr[300 * (gk + 1) + 10 * gi +: 10] = gp;
+            end
         end
-    end
+    end endgenerate
+    reg [9:0] nrem [0:NP-1];
+    integer ni;
+    always @* for (ni = 0; ni < NP; ni = ni + 1) nrem[ni] = lr[300 * SPC + 10 * ni +: 10];
     reg [299:0] par;
     always @* for (i = 0; i < NP; i = i + 1) par[299 - 10 * i -: 10] = nrem[i] ^ ((MUT == 1 && i == 7) ? 10'h3FF : 10'h000);
     always @(posedge clk or negedge rst_n)
@@ -58,7 +72,14 @@ module ot_s81_kp4_enc #(parameter integer MUT = 0) (
             if (tx_v) run <= 1'b1;
             if (run && !tx_v) flt <= 1'b1;
             if (tx_v || run) begin
-                a_b[5119 - 512 * ph -: 512] <= tx_d;
+                case (ph)   // fixed part-selects (H-DIE 10-16: a variable lvalue part-select blows up the yosys frontend)
+                    4'd0: a_b[5119 -: 512] <= tx_d;  4'd1: a_b[4607 -: 512] <= tx_d;
+                    4'd2: a_b[4095 -: 512] <= tx_d;  4'd3: a_b[3583 -: 512] <= tx_d;
+                    4'd4: a_b[3071 -: 512] <= tx_d;  4'd5: a_b[2559 -: 512] <= tx_d;
+                    4'd6: a_b[2047 -: 512] <= tx_d;  4'd7: a_b[1535 -: 512] <= tx_d;
+                    4'd8: a_b[1023 -: 512] <= tx_d;  4'd9: a_b[511  -: 512] <= tx_d;
+                    default: ;
+                endcase
                 ph <= (ph == 4'd9) ? 4'd0 : ph + 1'b1;
             end
             // encode: the frame in E advances its LFSR one 52-symbol slice a cycle (slice = ph = 0..9 of the next frame)
@@ -75,4 +96,10 @@ module ot_s81_kp4_enc #(parameter integer MUT = 0) (
             p_d <= o_v ? o_c[5439 - 544 * ph -: 544] : 544'd0;
         end
     assign fault = flt;
+endmodule
+// fb * g_I (g(x) coefficient of x^(30 - I)): one derivation per coefficient (H-DIE 10-16, yosys frontend)
+module ot_s81_kp4_enc_gmul #(parameter integer I = 1) (input wire [9:0] a, output wire [9:0] y);
+`include "ot_s81_gf1024.svh"
+    localparam [9:0] C = rs_g(I);
+    assign y = gf_mul(a, C);
 endmodule

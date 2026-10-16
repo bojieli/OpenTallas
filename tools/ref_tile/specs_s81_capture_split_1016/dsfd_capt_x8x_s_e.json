@@ -1,5 +1,5 @@
 {
- "name": "dsfd_capt_x8x_s_e_split1016x",
+ "name": "dsfd_capt_x8x_s_e_split1016y",
  "top": "dsfd_capt_x8x_s_e",
  "kind": "tile",
  "sources": [
@@ -12,7 +12,7 @@
  ],
  "outline": {
   "w": 86.4,
-  "h": 172.8,
+  "h": 183.6,
   "exact": true
  },
  "macros": [],
@@ -60,25 +60,18 @@
   "reason": "Designed-in pin flops: every output is launched by a flop at its pin (banks / s_mark / s_par / t_vm stage B / t_ho; io_flop_at_pins), every input is captured by its first flop through at most one fixed-epoch enable/select mux (bank write enable at sample index n; x43 read select at serial edge 0/1/2; marker/parity samples at index 2/0) -- those flops ARE the pin registers of the 3:4 transfer.  A separate recipe-3 stage would add a stream cycle (t) / serial cycle (s) per crossing and sample the banks at every serial edge (1-tick windows on the seam) for no timing benefit; native audit (capture <= 190 / launch <= 220) applies."
  },
  "clock": "cts",
- "structural_change": "DECISION B successor of dsfd_capt_x8_data_e (split1016 / split1016b: FF hold -84 ps on 3,376 intra-leaf ck->ckv R2R arcs of 8 x ot_ratio_cdc_fifo, hold repair stalled: the 256.67 ps 4:3 window cannot carry the 100 ps hold + 150 ps setup cross-entry reserve).  The 8 dsfd_capt_row_local rows (dynamic hold queue + pair packer + ratio FIFO) become fixed-bank 3:4 transfers on the common epoch (ot_s81_vm_x43 contract) split per clock root: dsfd_capt_x8x_t (ck) samples f_w into bank n at EVERY stream index n = 0..3 (no index is a fault: capture words arrive on any stream cycle); dsfd_capt_x8x_s (ckv) reads b0+b1 at serial edge 2, b2 at edge 0, b3 at edge 1 (stage A) and registers t_vm one serial edge later at the S face (stage B).  Hold queue removed (no word can be refused); t_ho = sticky epoch-slip fault (stream side checks the serial marker/parity).  Latency f_w sample edge -> t_vm: 3.333/2.500/2.778/3.056 ns for n = 0/1/2/3, one serial cycle LESS than the old leaf's best case (measured: tb_dsfd_capt_x8_x43).  Every leaf pin is a flop; outhold off (bank outputs rewritten >= 1.11 ns after their fixed read).  Parent footprint 118.8 x 172.8 (old 108 x 162): bit-major seam needs 1,680 M4 pins at 0.096 um; t width 32.4 for two 10.5 pins/um faces (gate oflop).",
- "slot_change_request": {
-  "contract": "S81 capture split 1016 (codex/s81-hub-parents-0811)",
-  "version": "x43-x8-1016",
-  "why": "New single-clock leaf dsfd_capt_x8x_s_e (DECISION B: replaces the two-clock dsfd_capt_x8_data_e hard leaf, split1016 FF hold -84 ps on 3,376 intra-leaf 4:3 R2R arcs); no prior slot or closed view"
- },
+ "structural_change": "split1016y re-kit of dsfd_capt_x8x_s_e (closed split1016x view fails native capture: b[188] 211.4 ps, 12 pins, all row 0): seam slot block 10.8 um higher in a 86.4 x 183.6 serial leaf (was 86.4 x 172.8, seam from y 4.99): row 0's stage-A capture flops leave the S-face t_vm stage-B band (y 2-14) and its late ckv branch (row 0 ckv 172-176 ps vs 133-143 mid rows; input hold repair put 4-5 BUFx2 on each row-0 seam path, TT data 209.5 ps); t leaf unchanged, the parent places it DS above the s origin so the seam stays mirror-aligned; no RTL change.  DECISION B successor of dsfd_capt_x8_data_e (split1016 / split1016b: FF hold -84 ps on 3,376 intra-leaf ck->ckv R2R arcs of 8 x ot_ratio_cdc_fifo, hold repair stalled: the 256.67 ps 4:3 window cannot carry the 100 ps hold + 150 ps setup cross-entry reserve).  The 8 dsfd_capt_row_local rows (dynamic hold queue + pair packer + ratio FIFO) become fixed-bank 3:4 transfers on the common epoch (ot_s81_vm_x43 contract) split per clock root: dsfd_capt_x8x_t (ck) samples f_w into bank n at EVERY stream index n = 0..3 (no index is a fault: capture words arrive on any stream cycle); dsfd_capt_x8x_s (ckv) reads b0+b1 at serial edge 2, b2 at edge 0, b3 at edge 1 (stage A) and registers t_vm one serial edge later at the S face (stage B).  Hold queue removed (no word can be refused); t_ho = sticky epoch-slip fault (stream side checks the serial marker/parity).  Latency f_w sample edge -> t_vm: 3.333/2.500/2.778/3.056 ns for n = 0/1/2/3, one serial cycle LESS than the old leaf's best case (measured: tb_dsfd_capt_x8_x43).  Every leaf pin is a flop; outhold off (bank outputs rewritten >= 1.11 ns after their fixed read).  Parent footprint 118.8 x 172.8 (old 108 x 162): bit-major seam needs 1,680 M4 pins at 0.096 um; t width 32.4 for two 10.5 pins/um faces (gate oflop).",
  "reroute_reason": {
-  "kind": "slot_change",
-  "slot_change_request": {
-   "contract": "S81 capture split 1016 (codex/s81-hub-parents-0811)",
-   "version": "x43-x8-1016",
-   "why": "New single-clock leaf dsfd_capt_x8x_s_e (DECISION B: replaces the two-clock dsfd_capt_x8_data_e hard leaf, split1016 FF hold -84 ps on 3,376 intra-leaf 4:3 R2R arcs); no prior slot or closed view"
-  },
-  "why": "new single-clock leaf master; no closed view exists for this block",
-  "contract": "S81 capture split 1016: dsfd_capt_x8_data DECISION B x43 split"
+  "kind": "pin_register",
+  "source": "results/arch/s81_hub_parents_1016/native_audit_capture_1316/native_audit_x8x.json",
+  "cell": "dsfd_capt_x8x_s_e",
+  "capture_ps": 211.4,
+  "launch_ps": 177.6,
+  "fix": "seam slot block 10.8 um higher in a 86.4 x 183.6 serial leaf (was 86.4 x 172.8, seam from y 4.99): row 0's stage-A capture flops leave the S-face t_vm stage-B band (y 2-14) and its late ckv branch (row 0 ckv 172-176 ps vs 133-143 mid rows; input hold repair put 4-5 BUFx2 on each row-0 seam path, TT data 209.5 ps); t leaf unchanged, the parent places it DS above the s origin so the seam stays mirror-aligned; no RTL change"
  },
  "job": {
-  "owner": "claude:S-VM-CAPT-X8",
-  "branch": "codex/s81-hub-parents-0811",
+  "owner": "claude:S-VM-CAPT-X8S",
+  "branch": "claude/svm-capt-x8s-1016",
   "tag": "x43",
   "purpose": "DECISION B dsfd_capt_x8x_s_e: single-clock leaf of the static capture data-half transfer; capture split bench (row-word sequences + status/t_cd) + unit/slip bench + DROP1 mutant, TT/FF/DRC0 + native audit; parent 3:4 seam arcs (epoch multicycle) open at die level",
   "extra_paths": [

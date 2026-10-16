@@ -219,11 +219,36 @@
    "commit": "f3a847272a849191c3dc6ad77f8c3f04b1cd61cb",
    "view": "physical/ref_tile/s81coll_cfifo_x2_w432p144/views/dsfd_cfifo",
    "job": "s81coll_cfifo_x2_w432p144-w432p144-e1d2c142c"
+  },
+  {
+   "job": "s81engm_mx4rq0-p17c-d11a778b4",
+   "pass_": true,
+   "launch_ps": 177.1,
+   "launch_pin": "rq_row[5]",
+   "capture_ps": 144.6,
+   "capture_pin": "u_row[1]",
+   "R_ps": 92.5,
+   "spread_ps": 16.7,
+   "comb_pins": 0,
+   "commit": "6c3c00b635b2b83f5fcdaf8877433ac07ad4fdb4"
+  },
+  {
+   "job": "s81engm_mx4rq1-p17c-d11a778b4",
+   "pass_": true,
+   "launch_ps": 179.9,
+   "launch_pin": "vtag",
+   "capture_ps": 165.0,
+   "capture_pin": "u_vtag",
+   "R_ps": 90.8,
+   "spread_ps": 13.3,
+   "comb_pins": 0,
+   "commit": "24190a2e204be70780e7d68733d9cecd29a5ffcd"
   }
  ],
  "decisions": {
   "hc_bank256": "PICK h1 (s81hc_ccfbp_bank256_ref-h1-d317ebd34, view physical/ref_tile/s81hc_ccfbp_bank256_ref/views/ot_s81_hc_ccf_bankpipe_bank256): all three variants native PASS; h1 has the smallest outline 146.88x91.8 (w1 172.8x97.2, x1 220.32x97.2), best margins TT +170.92/FF +12.59/SS -93.2, lowest R 270.4. w1/x1 not bound.",
   "engram_mx4": "mx4ctl f1, mx4mcol f2spread, shctlp p29b native PASS (bindable with the flat MIX4 parent). mx4rq0/rq1 p17b native FAIL capture desc_rq 202.1/200.0 > 190 -> desc_rq/desc_row pin register (+1 cycle descriptor read) RTL fix in flight.",
-  "cfifo_w432p144": "CLOSED TT +99.06/FF +18.59 but native FAIL capture 371.9 at ri[22] (67 pins), R 227.4 spread 74.8: same single-cr-root cause as south96/w432p192. NOT bindable; isolated crs master (main 4edf550c6) is the path."
+  "cfifo_w432p144": "CLOSED TT +99.06/FF +18.59 but native FAIL capture 371.9 at ri[22] (67 pins), R 227.4 spread 74.8: same single-cr-root cause as south96/w432p192. NOT bindable; isolated crs master (main 4edf550c6) is the path.",
+  "engram_mx4rq": "PICK p17c for both masters (s81engm_mx4rq0-p17c-d11a778b4 TT +345.79/FF +27.75, native L177.1/C144.6; s81engm_mx4rq1-p17c-d11a778b4 TT +341.36/FF +28.32, native L179.9/C165.0) - desc_rq pin register (+1 descriptor-read cycle). p17/p17b native FAIL (desc_rq 209-212/200-202) superseded, run data deleted 13:45. No further rq variants."
  }
 }
