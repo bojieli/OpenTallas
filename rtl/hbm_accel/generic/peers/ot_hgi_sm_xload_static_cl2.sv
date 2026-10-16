@@ -638,6 +638,66 @@ module ot_hgi_sm_xload_cl2_bfq (
     always @(posedge clk) rwq <= or4a | or4b;   // cl's rw edge
 endmodule
 
+// bfqf (H-SM 2026-10-16, native audit of CLOSED cl2dh TT +97.07 / FF +7.59: launch 262.9 ps on 75 rwq pins, capture
+// 222.1 ps on 612 c_d pins, boundary clock spread 95.3 ps around R 353.2 -- one CTS root from the N-face clock pin
+// reaches the N c_d pin flops early and the S rwq pin flops late).  Same RTL edges as bfq; the clock is delivered on
+// face-local entries (hybrid_entries, the VM q0 faces recipe that passed native L193.2/C186.1):
+//   clk_n  -> the c_d pin registers (cdq, N face)          CTS root
+//   clk_s  -> the rwq pin registers (S face)               CTS root
+//   clk    -> everything else (reset relay, W-pin registers, read selects, cq, OR tree)  CTS root
+//   clk_m0..7 -> the 8 SRAM clock pins directly (W face for t even, E face for t odd, at each SRAM clk pin y)
+// The die delivers the same core clock at every entry (one domain, fixed phase).  No new data edges.
+module ot_hgi_sm_xload_cl2_bfqf (
+    input  wire               clk, clk_n, clk_s,
+    input  wire               clk_m0, clk_m1, clk_m2, clk_m3, clk_m4, clk_m5, clk_m6, clk_m7,
+    input  wire               rst_n,
+    input  wire [1023:0]      c_d,
+    input  wire               wce,
+    input  wire               mhi, mlo,
+    input  wire [6:0]         wa,
+    input  wire [7:0]         r_ce,
+    input  wire [6:0]         r_a,
+    output reg  [255:0]       rwq
+);
+    wire [7:0] cm = {clk_m7, clk_m6, clk_m5, clk_m4, clk_m3, clk_m2, clk_m1, clk_m0};
+    wire [0:0] rn_l;
+    ot_rst_relay #(.REGIONS(1), .SYNC_STAGES(2), .TREE_STAGES(1)) u_rst (.clk(clk), .rst_n_in(rst_n), .rst_n(rn_l));
+    (* keep = 1 *) reg mask_hi, mask_lo;
+    always @(posedge clk) begin mask_hi <= mhi; mask_lo <= mlo; end
+    (* keep = 1 *) reg [1023:0] cdq; (* keep = 1 *) reg [6:0] wa_q, ra_q;
+    always @(posedge clk_n) cdq <= c_d;
+    always @(posedge clk) begin wa_q <= wa; ra_q <= r_a; end
+    (* keep = 1 *) reg wce_q;
+    always @(posedge clk or negedge rn_l[0]) if (!rn_l[0]) wce_q <= 1'b0; else wce_q <= wce;
+    wire [255:0] cap [0:7];
+    genvar gt;
+    generate for (gt = 0; gt < 8; gt = gt + 1) begin : g_t
+        (* keep = 1 *) reg rp_ce; reg rp_sel;
+        wire [255:0] wp_d = {cdq[gt*128 +: 128], cdq[gt*128 +: 128]};
+        wire [255:0] wp_m = {{128{mask_hi}}, {128{mask_lo}}};
+        reg [255:0] cq;
+        wire [255:0] rd;
+        always @(posedge clk or negedge rn_l[0]) begin
+            if (!rn_l[0]) begin rp_ce <= 1'b0; rp_sel <= 1'b0; end
+            else begin rp_ce <= r_ce[gt]; rp_sel <= rp_ce; end
+        end
+        always @(posedge clk) begin
+            cq <= rd & {256{rp_sel}};
+        end
+        ot_sram_1r1w_128x256_m1_r2c2 u_m (.clk(cm[gt]),
+            .r_ce_in(rp_ce), .r_addr_in(ra_q), .rd_out(rd),
+            .w_ce_in(wce_q), .w_addr_in(wa_q), .wd_in(wp_d), .w_mask_in(wp_m),
+            .rr_en(2'b00), .rr_addr(14'd0), .cr_en(2'b00), .cr_sel(16'd0));
+        assign cap[gt] = cq;
+    end endgenerate
+    reg [255:0] or4a, or4b;
+    always @(posedge clk) begin
+        or4a <= cap[0] | cap[1] | cap[2] | cap[3];
+        or4b <= cap[4] | cap[5] | cap[6] | cap[7];
+    end
+    always @(posedge clk_s) rwq <= or4a | or4b;
+endmodule
+
 // Block-dot lane ring + beat assembly + beat register (cl's ring / beat_w / bsel / bq_d), local replicated selects.
 module ot_hgi_sm_xload_cl2_bdring #(
     parameter integer PMAX = 8,
@@ -764,8 +824,25 @@ module ot_hgi_sm_xload_static_cl2 #(
         .r_wsel(r_wsel), .zlo(zlo), .zhi(zhi), .bsel(bsel), .lane_en(lane_en), .bq_d(bq_d));
     genvar gq;
     generate for (gq = 0; gq < 4; gq = gq + 1) begin : g_q
+`ifdef XLOAD_BFQ_FACES
+        // bfqf: every face / SRAM clock entry is fed from this quarter's clock; XLOAD_BFQF_CLKDROP=k (bench mutant) holds
+        // entry k low in quarter 0 (0 = clk_n, 1 = clk_s, 2..9 = clk_m0..7)
+`ifdef XLOAD_BFQF_CLKDROP
+        localparam integer CDROP = (gq == 0) ? `XLOAD_BFQF_CLKDROP : -1;
+`else
+        localparam integer CDROP = -1;
+`endif
+        wire cb = clk_bf[gq];
+        ot_hgi_sm_xload_cl2_bfqf u_bfq (.clk(cb), .clk_n(CDROP == 0 ? 1'b0 : cb), .clk_s(CDROP == 1 ? 1'b0 : cb),
+            .clk_m0(CDROP == 2 ? 1'b0 : cb), .clk_m1(CDROP == 3 ? 1'b0 : cb), .clk_m2(CDROP == 4 ? 1'b0 : cb),
+            .clk_m3(CDROP == 5 ? 1'b0 : cb), .clk_m4(CDROP == 6 ? 1'b0 : cb), .clk_m5(CDROP == 7 ? 1'b0 : cb),
+            .clk_m6(CDROP == 8 ? 1'b0 : cb), .clk_m7(CDROP == 9 ? 1'b0 : cb),
+            .rst_n(rn), .c_d(c_d), .wce(c_wce[gq]), .mhi(c_mhi), .mlo(c_mlo),
+            .wa(c_wa), .r_ce(r_ce), .r_a(r_a), .rwq(rwq[256*gq +: 256]));
+`else
         ot_hgi_sm_xload_cl2_bfq u_bfq (.clk(clk_bf[gq]), .rst_n(rn), .c_d(c_d), .wce(c_wce[gq]), .mhi(c_mhi), .mlo(c_mlo),
             .wa(c_wa), .r_ce(r_ce), .r_a(r_a), .rwq(rwq[256*gq +: 256]));
+`endif
     end endgenerate
     ot_hbm_xp_aq_tree13 u_aq_lo (.clk(clk_qlo), .rst_n(rn), .v(qv_lo), .fp4(1'b0), .x(l_d[1023:0]), .vo(qo_lo), .q(qq_lo),
                              .e(qe_lo), .y(), .fault(qf_lo));
@@ -828,8 +905,25 @@ module ot_hgi_sm_xload_static_cl2f #(
         .r_wsel(r_wsel), .zlo(zlo), .zhi(zhi), .bsel(bsel), .lane_en(lane_en), .bq_d(bq_d));
     genvar gq;
     generate for (gq = 0; gq < 4; gq = gq + 1) begin : g_q
+`ifdef XLOAD_BFQ_FACES
+        // bfqf: every face / SRAM clock entry is fed from this quarter's clock; XLOAD_BFQF_CLKDROP=k (bench mutant) holds
+        // entry k low in quarter 0 (0 = clk_n, 1 = clk_s, 2..9 = clk_m0..7)
+`ifdef XLOAD_BFQF_CLKDROP
+        localparam integer CDROP = (gq == 0) ? `XLOAD_BFQF_CLKDROP : -1;
+`else
+        localparam integer CDROP = -1;
+`endif
+        wire cb = clk_bf[gq];
+        ot_hgi_sm_xload_cl2_bfqf u_bfq (.clk(cb), .clk_n(CDROP == 0 ? 1'b0 : cb), .clk_s(CDROP == 1 ? 1'b0 : cb),
+            .clk_m0(CDROP == 2 ? 1'b0 : cb), .clk_m1(CDROP == 3 ? 1'b0 : cb), .clk_m2(CDROP == 4 ? 1'b0 : cb),
+            .clk_m3(CDROP == 5 ? 1'b0 : cb), .clk_m4(CDROP == 6 ? 1'b0 : cb), .clk_m5(CDROP == 7 ? 1'b0 : cb),
+            .clk_m6(CDROP == 8 ? 1'b0 : cb), .clk_m7(CDROP == 9 ? 1'b0 : cb),
+            .rst_n(rn), .c_d(c_d), .wce(c_wce[gq]), .mhi(c_mhi), .mlo(c_mlo),
+            .wa(c_wa), .r_ce(r_ce), .r_a(r_a), .rwq(rwq[256*gq +: 256]));
+`else
         ot_hgi_sm_xload_cl2_bfq u_bfq (.clk(clk_bf[gq]), .rst_n(rn), .c_d(c_d), .wce(c_wce[gq]), .mhi(c_mhi), .mlo(c_mlo),
             .wa(c_wa), .r_ce(r_ce), .r_a(r_a), .rwq(rwq[256*gq +: 256]));
+`endif
     end endgenerate
     ot_hbm_xp_aq_tree13 u_aq_lo (.clk(clk_qlo), .rst_n(rn), .v(qv_lo), .fp4(1'b0), .x(l_d[1023:0]), .vo(qo_lo), .q(qq_lo),
                              .e(qe_lo), .y(), .fault(qf_lo));

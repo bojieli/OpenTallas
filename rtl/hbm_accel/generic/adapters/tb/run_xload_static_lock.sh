@@ -9,6 +9,10 @@ MASK_FLAGS=()
 if [[ ${XLOAD_LOCAL_MASK_REGS:-0} == 1 ]];then MASK_FLAGS=(-DXLOAD_LOCAL_MASK_REGS);fi
 if [[ ${XLOAD_CLOCK_LEAVES:-0} == 1 ]];then MASK_FLAGS+=(-DXLOAD_CLOCK_LEAVES);fi
 if [[ ${XLOAD_CL2:-0} == 1 ]];then MASK_FLAGS+=(-DXLOAD_CL2);fi
+# XLOAD_BFQ_FACES=1 (H-SM 10-16): the bfq quarters as ot_hgi_sm_xload_cl2_bfqf (face / SRAM clock entries);
+# XLOAD_BFQF_CLKDROP=k holds entry k of quarter 0 low (0 clk_n, 1 clk_s, 2..9 clk_m0..7) -- fail mutant
+if [[ ${XLOAD_BFQ_FACES:-0} == 1 ]];then MASK_FLAGS+=(-DXLOAD_BFQ_FACES);fi
+if [[ -n ${XLOAD_BFQF_CLKDROP:-} ]];then MASK_FLAGS+=(-DXLOAD_BFQF_CLKDROP=$XLOAD_BFQF_CLKDROP);fi
 # XLOAD_F20=1 (H-SM 2026-10-16): the ctlw die master (x-load issuer folded in) driven through the real host ingress
 F20_SRCS=()
 # XLOAD_RD_LAT=7: VM model + every x-load unit at the nat2 bank read latency (H-SM 10-16; default 6)
