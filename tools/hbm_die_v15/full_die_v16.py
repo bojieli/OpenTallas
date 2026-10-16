@@ -232,7 +232,8 @@ FOLD_RULES.append(dict(target='ot_static_cmd_target', detect='cmd_v', consumers=
      wrapper='ot_hgi_sm_xload_cl2_ctlw', source='rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv',
      deps=['rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv'],
      params={'PMAX': 8, 'RD_LAT': 6, 'NR': 32, 'LEAD': 8},   # H-SM xl2 8146db7ac: issuer MODE1 CW108 folded (option A)
-     status={'configured': 'configured', 'fault': 'fault', 'active': 'active'}))
+     status={'configured': 'configured', 'fault': 'fault', 'active': 'active'},
+     clocks=('clk_cal',)))   # r2 8e0535ed5: raw hard entry of the issuer table SRAM
 # parameters that became identity strap pins (H-SM DEDUPE 2026-10-16): one hardened master for every value
 PARAM_STRAPS = {'ot_hbm_svc_vm_kshare': {'SM': 'sm'}}
 # H-NETLIST 0600: logical array wrappers whose RTL is "physically N independently hardened leaves" are FLATTENED in the
