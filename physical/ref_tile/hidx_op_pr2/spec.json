@@ -1,0 +1,155 @@
+{
+ "name": "hidx_op_pr2",
+ "top": "ot_hbm_idx_vm_query_static",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/index/ot_hbm_idx_vm_query_static.sv",
+  "rtl/hbm_accel/index/ot_hbm_idx_vm_static.sv",
+  "rtl/lib/ot_rst_relay.sv"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "pins": {
+  "N": [
+   "clk",
+   "rst_n"
+  ],
+  "E": [
+   "sid",
+   "weight_slot",
+   "query_slot",
+   "query_index",
+   "weight_sector",
+   "query_sector",
+   "block_v",
+   "block_head",
+   "block_number",
+   "block_data",
+   "head_weight",
+   "fault"
+  ],
+  "S": [
+   "vm_rq",
+   "vm_rr"
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 3,
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_balance": {
+   "h": "M4",
+   "v": "M5",
+   "group_max": 1
+  }
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "RTL registers every data input and every output at the pin: the die master is the pin-register shell (rtl/hbm_accel/index/ot_hbm_idx_vm_query_static.sv, OWNER RULE 19:50; one kept flop per bit, +1/+1 edge, scheduled by tools/hbm_idx_static_calendar.py and proven by rtl/test/hbm_idx_static/run_scheduled.sh); a synthesis wrapper would add a second unpriced stage. Clock/rst_n ports pass through."
+ },
+ "pin_ranges": {
+  "sid": [
+   1.56,
+   1.752
+  ],
+  "weight_slot": [
+   1.752,
+   1.848
+  ],
+  "query_slot": [
+   1.848,
+   1.944
+  ],
+  "query_index": [
+   1.944,
+   2.616
+  ],
+  "weight_sector": [
+   2.616,
+   4.152
+  ],
+  "query_sector": [
+   4.152,
+   5.688
+  ],
+  "block_v": [
+   5.688,
+   5.784
+  ],
+  "block_head": [
+   5.784,
+   6.264
+  ],
+  "block_number": [
+   6.264,
+   6.456
+  ],
+  "block_data": [
+   6.456,
+   104.76
+  ],
+  "head_weight": [
+   104.76,
+   106.296
+  ],
+  "fault": [
+   106.296,
+   106.392
+  ],
+  "vm_rq": [
+   2.76,
+   15.816
+  ],
+  "vm_rr": [
+   15.816,
+   213.192
+  ],
+  "clk": [
+   107.976,
+   108.072
+  ],
+  "rst_n": [
+   108.072,
+   108.168
+  ]
+ },
+ "job": {
+  "owner": "Claude:H-NETLIST/IDXP-OPQ-1405",
+  "branch": "claude/hnl-idxopq-1405",
+  "tag": "idxopq1405",
+  "purpose": "idx_op successor of hidx_op_pr (gate WARN util 5%, TT ins 412.5/spread 92.8, rst_n 4,708 loads, 5 runtime part-selects): same ports and data timing; rst_n -> ot_rst_relay (2 regions, ~100 reset loads), reset-free data flops (vm_static DRST=0), decoded constant-index slices; outline 216 x 108 = pin-bound minimum (S face 2,192 pins x 0.096 um = 210.4 um, E face 1,092 pins = 104.8 um) inside the v8 idx_op slot origin (H-DIE grant idx_soft_parent_grant_1016 idx_op_outline); clk/rst_n on the N face centre. Benches run_vm_query.sh (MUT0 pass, MUT1-3 fail) + run_scheduled.sh.",
+  "extra_paths": [
+   "tools/hbm_idx_static_calendar.py",
+   "rtl/test/hbm_idx_static",
+   "tools/hbm_idx_static_parent_vectors.py",
+   "tools/hbm_idx_static_query_vectors.py"
+  ],
+  "benches": []
+ },
+ "outline": {
+  "w": 216.0,
+  "h": 108.0
+ },
+ "params": {},
+ "macros": [],
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ }
+}
