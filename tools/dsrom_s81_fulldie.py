@@ -1624,6 +1624,11 @@ def write_netlist(m, k, path, top='dsfd_die', skip=()):
                         parts.append(f'.{port}({{{nc_}, {net}}})')
                     continue
                 parts.append(f'.{port}({net})')
+        for port, literal in m.get('neutral_role_inputs', {}).get(it.name, {}).items():
+            if any(c[0] == port for c in conns.get(it.name, [])):
+                raise ValueError('neutral-role strap collides with active bus '+it.name+'.'+port)
+            parts.append(f'.{port}({literal})')
+            pads_decl[it.name][port] = 0
         for base, pcs in sliced.items():
             pcs.sort()
             assert all(pcs[i][0] + pcs[i][2] <= pcs[i + 1][0] for i in range(len(pcs) - 1)), (it.name, base, pcs)
@@ -1670,7 +1675,8 @@ def write_netlist(m, k, path, top='dsfd_die', skip=()):
     if k == 1 and pads_decl:
         pad_path.write_text(json.dumps(dict(schema='s81-instance-padding-v1', instances={
             inst: dict(master=by[inst].master,
-                       reason='DEDUPE --dedupe-pad: spare standard input bits tied low; logical bits unchanged',
+                       reason=('SSTN role superset: only absent original control ports tied zero' if inst in m.get('neutral_role_inputs', {}) else
+                               'DEDUPE --dedupe-pad: spare standard input bits tied low; logical bits unchanged'),
                        ports={p_: dict(logical_width=L) for p_, L in sorted(ps.items())})
             for inst, ps in sorted(pads_decl.items())}), indent=1) + '\n')
     elif pad_path.exists():
@@ -5880,6 +5886,7 @@ PIN_NEED = False                # --pin-need (hbmdie-1011, compact199): a column
                                 # is measured to that port's LEF pin centroid, not the 510 x 221 um element centre (gt: seq ->
                                 # go_tag pins on the element S face ~150 um, centre 238 um > the 214 um rule)
 HSTN_POSEDGE = False            # --hstn-posedge (FILL-S 2026-10-15): common-clock stations as plain posedge flops on ck
+SSTN_SPLIT_MAP = None           # opt-in actual two-leaf SSTN map; both real child views required
 SSTN_REG = False                # --sstn-reg (S-NET 2026-10-15): slot stations / return stages register the reset-qualified
                                 # valid (async-reset flop) instead of an AND gate behind the output flop (logic at the pin)
 NODE_STATIC = False             # --node-static (S-NET 2026-10-15, owner static rule): return nodes = ot_s81_retn_static
@@ -9464,6 +9471,11 @@ def port_usage(m):
             if old and old[0] != d:
                 raise ValueError(f'{inst}.{port}: direction {old[0]} and {d}')
             use[inst][port] = (d, max(bits if lo is None else hi + 1, old[1] if old else 0))
+    for inst, ports in m.get('neutral_role_inputs', {}).items():
+        for port, literal in ports.items():
+            if port in use[inst]:
+                raise ValueError('neutral-role strap attempts to mask live input '+inst+'.'+port)
+            use[inst][port] = ('input', int(literal.split("'")[0]))
     return use
 
 
@@ -9471,6 +9483,13 @@ def finalize_r8(m):
     """field glue masters by role (S13: one master per role and width): slot stations by their port set, return
     nodes by child kinds / fault chain; records m['pdir'][master][port] = (dir, bits)."""
     use = port_usage(m)
+    if SSTN_SPLIT_MAP and not m.get('sstn_split'):
+        if not (SSTN_REG and BF_X2_STATIC):
+            raise ValueError('--sstn-split-map requires --sstn-reg and --bf-x2-static')
+        from s81.sstn_split import expand
+        expand(m, use, SSTN_SPLIT_MAP['map'], bound_views())
+        m['sstn_split']['map'] = {k: SSTN_SPLIT_MAP[k] for k in ('path', 'sha256')}
+        use = port_usage(m)
     for in_, pr_ in (m.get('pad') or {}).items():      # --dedupe-pad: the standard's full port width
         for p_, w_ in pr_['ports'].items():
             d_, b_ = use[in_][p_]
@@ -10423,6 +10442,10 @@ def _spread_ports(Mx, k):
 
 
 def _faces_r8(m, Mx, it, ports):
+    if it.kind in ('sstn_split_base', 'sstn_split_payload') and _LAY_K[0] == 1:
+        from s81.sstn_split import populate
+        populate(sys.modules[__name__], Mx, ports)
+        return
     if _LAY_K[0] == 1 and BF_HIER == 450.144 and BF_ROUTE_H == 198.72 and it.master in ('dsfd_bf_front', 'dsfd_bf_col',
                                                                                          'dsfd_bf_front_static'):
         from s81.bf_direct_pins import populate, groups
@@ -11555,6 +11578,7 @@ def die_options(ap):
                     '(r3 GRT: hop relays 776-906 um from their load, TT -244 on ck_col relay paths)')
     ap.add_argument('--pin-relay', action='store_true', help='r9: relay station abutting every hardened-block pin on '
                     'die interfaces (last segment <= 100 um; needs --hop-fix; default off)')
+    ap.add_argument('--sstn-split-map', help='Exact source-pinned two-leaf SSTN role map; requires both real bound child views')
     ap.add_argument('--dedupe-pad', help='S-NET+FILL: DEDUPE pad map JSON (results/arch/tile_dedupe_1015/s81_pad_map_1016.json): '
                     'instances of FROM become the closed standard TO; spare inputs tied low (die.v.pads.json), spare outputs open')
     ap.add_argument('--hend-bound-footprint', action='store_true', help='S-NET+FILL: reserve the verified binding-table '
@@ -11900,6 +11924,11 @@ def apply_options(a):
     HEND_BOUND_FOOTPRINT = bool(getattr(a, 'hend_bound_footprint', False))
     global DEDUPE_PAD
     DEDUPE_PAD = None
+    global SSTN_SPLIT_MAP
+    SSTN_SPLIT_MAP = None
+    if getattr(a, 'sstn_split_map', None):
+        sp_ = Path(a.sstn_split_map); sp_ = sp_ if sp_.is_absolute() else ROOT / sp_
+        SSTN_SPLIT_MAP = dict(path=str(a.sstn_split_map), map=json.loads(sp_.read_text()), sha256=hashlib.sha256(sp_.read_bytes()).hexdigest())
     if getattr(a, 'dedupe_pad', None):
         pp_ = Path(a.dedupe_pad); pp_ = pp_ if pp_.is_absolute() else ROOT / pp_
         DEDUPE_PAD = dict(path=str(a.dedupe_pad), map=json.loads(pp_.read_text())['map'])
