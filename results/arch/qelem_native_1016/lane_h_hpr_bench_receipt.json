@@ -1,0 +1,73 @@
+{
+ "schema": "opentallas.bench_receipt.v1",
+ "by": "Q-ELEM-SUH (Claude) 2026-10-16",
+ "source_commit": "c68fc0809",
+ "branch": "claude/qelem-suh-1016",
+ "bench": "rtl/test/qwen_vm_me/tb_qfd_su_vm_bv.sv, base knobs -GRTREE=1 -GLT=1 -GVL=15 -GRD=2 -GRSRAM=1 -GLOFF=1, verilator 5.050, ot-run ot-epyc4",
+ "remote_logs": "/srv/opentallas-scratch/claude/suh_1016/bench/<name>/run.log",
+ "runs": {
+  "hpr0_exact": {
+   "verdict": "PASS",
+   "line": "== hpr0_exact: PASS qfd_su_vm_bv SW=8 IS=1 OS=1 CRX=2 VL=15 ops=120 va/vb/vc/crom/vm/red/kv events 980/663/745/753/299/214/328",
+   "su_lat": "SU_LAT ops=119 ref_avg=92.94 dut_avg=160.04 delta_min=36 delta_max=390 ref_min=24 ref_max=184 (SW=8 IS=1 OS=1 CRX=2 VL=15)",
+   "host": "ot-epyc4",
+   "unit": "oth-ubuntu-553448-1792171572"
+  },
+  "hpr0_prod64": {
+   "verdict": "PASS",
+   "line": "== hpr0_prod64: PASS qfd_su_vm_bv SW=64 IS=1 OS=1 CRX=2 VL=15 ops=120 va/vb/vc/crom/vm/red/kv events 242/149/160/195/76/214/81",
+   "su_lat": "SU_LAT ops=119 ref_avg=94.07 dut_avg=161.17 delta_min=36 delta_max=390 ref_min=22 ref_max=172 (SW=64 IS=1 OS=1 CRX=2 VL=15)",
+   "host": "ot-epyc4",
+   "unit": "oth-ubuntu-553385-1792171572"
+  },
+  "hpr1_exact": {
+   "verdict": "PASS",
+   "line": "== hpr1_exact: PASS qfd_su_vm_bv SW=8 IS=1 OS=1 CRX=2 VL=15 ops=120 va/vb/vc/crom/vm/red/kv events 980/663/745/753/299/214/328",
+   "su_lat": "SU_LAT ops=119 ref_avg=92.94 dut_avg=164.58 delta_min=40 delta_max=396 ref_min=24 ref_max=184 (SW=8 IS=1 OS=1 CRX=2 VL=15)",
+   "host": "ot-epyc4",
+   "unit": "oth-ubuntu-553390-1792171572"
+  },
+  "hpr1_mlmut": {
+   "verdict": "FAIL",
+   "line": "== hpr1_mlmut: FAIL qfd_su_vm_bv vm_answer_bad=0 vm_mismatch=1649 port_streams_differing=3 faults r0 d0 vm w_fault 0 w_hazard 0 ops=120 vm_write_events=299 (floors: events x SW 2392 > 960 lanes, events > 60) x_fault",
+   "su_lat": "SU_LAT ops=119 ref_avg=92.94 dut_avg=162.58 delta_min=38 delta_max=394 ref_min=24 ref_max=184 (SW=8 IS=1 OS=1 CRX=2 VL=15)",
+   "host": "ot-epyc4",
+   "unit": "oth-ubuntu-553389-1792171572"
+  },
+  "hpr1_prod64": {
+   "verdict": "PASS",
+   "line": "== hpr1_prod64: PASS qfd_su_vm_bv SW=64 IS=1 OS=1 CRX=2 VL=15 ops=120 va/vb/vc/crom/vm/red/kv events 242/149/160/195/76/214/81",
+   "su_lat": "SU_LAT ops=119 ref_avg=94.07 dut_avg=165.72 delta_min=40 delta_max=396 ref_min=22 ref_max=172 (SW=64 IS=1 OS=1 CRX=2 VL=15)",
+   "host": "ot-epyc4",
+   "unit": "oth-ubuntu-553434-1792171572"
+  },
+  "hpr1_s2": {
+   "verdict": "PASS",
+   "line": "== hpr1_s2: PASS qfd_su_vm_bv SW=8 IS=2 OS=2 CRX=3 VL=15 ops=120 va/vb/vc/crom/vm/red/kv events 1174/912/755/872/401/242/378",
+   "su_lat": "SU_LAT ops=119 ref_avg=102.86 dut_avg=181.21 delta_min=42 delta_max=372 ref_min=26 ref_max=180 (SW=8 IS=2 OS=2 CRX=3 VL=15)",
+   "host": "ot-epyc4",
+   "unit": "oth-ubuntu-553384-1792171572"
+  },
+  "hpr1_sfmut": {
+   "verdict": "FAIL",
+   "line": "== hpr1_sfmut: FAIL qfd_su_vm_bv vm_answer_bad=0 vm_mismatch=593 port_streams_differing=3 faults r0 d0 vm w_fault 0 w_hazard 0 ops=120 vm_write_events=299 (floors: events x SW 2392 > 960 lanes, events > 60) x_fault ",
+   "su_lat": "SU_LAT ops=119 ref_avg=92.94 dut_avg=164.04 delta_min=40 delta_max=394 ref_min=24 ref_max=184 (SW=8 IS=1 OS=1 CRX=2 VL=15)",
+   "host": "ot-epyc4",
+   "unit": "oth-ubuntu-553383-1792171572"
+  }
+ },
+ "expect": {
+  "hpr1_exact": "PASS",
+  "hpr1_s2": "PASS",
+  "hpr1_prod64": "PASS",
+  "hpr0_exact": "PASS (baseline)",
+  "hpr0_prod64": "PASS (baseline)",
+  "hpr1_mlmut": "FAIL (+define+OT_HPR_MUT)",
+  "hpr1_sfmut": "FAIL (+define+OT_SFXX_MUT)"
+ },
+ "su_lat_delta_edges_per_op": {
+  "SW8": 4.54,
+  "SW64": 4.55
+ },
+ "all_as_expected": true
+}

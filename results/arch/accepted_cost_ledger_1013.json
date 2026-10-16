@@ -137,6 +137,39 @@
   },
   {
    "design": "qwen_rom",
+   "unit": "SU.LANE_HPR lane head pin-register stage (qfd_su_lane_h_native_crom5r HPR=1; native fallback h for crom5_e)",
+   "group": "SU.LANE_HPR",
+   "measured": 165.72,
+   "price": 161.17,
+   "unit_of_measure": "cycles",
+   "unit_ratio": 1.0282,
+   "e2e_loss_pct": 1.04,
+   "binding_workload": "ar",
+   "per_workload": {
+    "ar": {
+     "model": "token-path longest path",
+     "base_cycles": 249431.0,
+     "cycles": 252052.2,
+     "added_cycles": 2621.2,
+     "runs_per_token": 108,
+     "critical_runs": 108,
+     "overlapped_runs": 0,
+     "other_price_nodes_skipped": 0,
+     "naive_added_cycles": 2621.2,
+     "wave_positions": 0,
+     "wave_added_cycles_per_position": 0.0,
+     "e2e_loss_pct": 1.04
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "results/arch/qelem_native_1016/lane_h_hpr_bench_receipt.json",
+   "evidence_grade": "committed_bench",
+   "date": "2026-10-16",
+   "status": "proposed",
+   "note": "Q-ELEM-SUH 2026-10-16, coordinator-approved +2 edges (pin-register fallback h). Measured on tb_qfd_su_vm_bv production SW64 (and SW8): go->idle per op 161.17 -> 165.72 (+4.55 edges; +2 head in/out, +1 per SFU traversal, plus the retire-chained issue of the next op). Share MODELLED as an upper bound: 16 serial SU op-equivalents a layer, from the measured ML 10->15 layer delta (die_terms qD-qC: +80 cycles / 5 edges), i.e. 4.55 x 16 = 72.8 cycles a layer spread over rmsnorm1 / qknorm_rope / rmsnorm2 (24.27 each). Applies only if the h view is adopted (closed + native PASS) in place of e/f/g."
+  },
+  {
+   "design": "qwen_rom",
    "unit": "TT.ROMCMD qfd_tt_head_static h4 rom_cmd output register (+1 ROM-tree command edge)",
    "group": "TT.ROMCMD",
    "measured": 2.0,
@@ -1767,11 +1800,11 @@
  "totals": {
   "qwen_rom": {
    "accepted_pct": 1.065,
-   "proposed_pct": 4.331,
-   "accepted_plus_proposed_pct": 5.396,
+   "proposed_pct": 5.371,
+   "accepted_plus_proposed_pct": 6.436,
    "limit_pct": 15.0,
    "accepted_rows": 4,
-   "proposed_rows": 7,
+   "proposed_rows": 8,
    "headroom_pct": 13.935,
    "owner_exception_rows": 0,
    "over_limit_by_owner_exception": false
