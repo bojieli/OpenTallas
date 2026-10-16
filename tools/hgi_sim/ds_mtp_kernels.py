@@ -1072,7 +1072,8 @@ def rows_replay(Mach, progs, units, rows, mutant=None):
     record-major (record k runs its P rows, then record k + 1), row r with its own VM image (the per-position VM copy
     of the P-row form) and its own doorbell DYN (POS = its position, WIN), the HBM shared by all rows (so every
     attention row sees ALL P positions' KV appends of the layer: the causal superset of the batched verify).  Returns
-    the per-row final VM images.  mutant 'pos0': every row runs at row 0's POS (must FAIL)."""
+    the per-row final VM images.  mutant 'pos0': every row runs at row 0's POS (must FAIL); 'tok0': every row runs at
+    row 0's TOKEN (the DSpark draft bodies' block-row index: QV row, DSKX / ROWQ / DLOG row)."""
     dies = Mach.dies
     keep = [d.vm for d in dies]
     imgs = [[im.copy() for im in r[2]] for r in rows]
@@ -1089,7 +1090,7 @@ def rows_replay(Mach, progs, units, rows, mutant=None):
             for j, (tok, pos, _) in enumerate(rows):
                 for i, d in enumerate(dies):
                     d.vm = imgs[j][i]
-                Mach.doorbell(tok, rows[0][1] if mutant == "pos0" else pos)
+                Mach.doorbell(rows[0][0] if mutant == "tok0" else tok, rows[0][1] if mutant == "pos0" else pos)
                 for d in dies:
                     d.dyn[4] = 0
                 if r0.unit == "COLL":
@@ -1269,7 +1270,67 @@ def sim(a):
                   f"{'ALL ROWS EQUAL the column-serial VM' if not bad else 'DIFFER ' + str(bad)}", flush=True)
         rows_pre.clear()
 
+    DRW_REGIONS = ("DSKX0", "DSKX1", "DSKX2", "ROWQ", "ROWMIX", "DLOG")
+    drw = dict(cur=None, pre={}, post={}, res={}, experts={})
+
+    def draft_rows_proof(key):
+        """H-MTP2 decision 4: the draft body `key` (dsa / dsb of stage st, or dhead) of the step's R = 5 block rows
+        as ONE pass of R-row records (rows_replay; record-major, every row its own VM image and doorbell TOKEN = row
+        i / POS = i + 1, the HBM shared): every row's final VM (96 dies, whole VM incl. the HC aperture) must equal
+        that row's row-serial post-launch VM, and the HBM rows the body writes (DSKX, ROWQ, ROWMIX, DLOG: already
+        holding the row-serial values) must be unchanged by the R-row pass; mutants pos0 / tok0 must differ.  The
+        written regions are restored after every pass (a mutant's stores do not reach the rest of the job)."""
+        kind, Lp = key
+        progs = [K.body[d.rank][(KINDS.index(kind), Lp)] for d in dies]
+        pre, post = drw["pre"].pop(key), drw["post"].pop(key)
+        rows = [(tok, pos, imgs) for tok, pos, imgs in pre]
+        snap = [[(nm, dat, dat.copy()) for b_, dat, nm in d.hbm.regions if nm in DRW_REGIONS] for d in dies]
+        res = {}
+        for mut in (None, "pos0", "tok0"):
+            t1 = time.time()
+            imgs = rows_replay(Mach, progs, units, rows, mutant=mut)
+            bad = {}
+            for j in range(len(rows)):
+                nd = [int(np.count_nonzero(imgs[j][i] != post[j][i])) for i in range(len(dies))]
+                if any(nd):
+                    bad[j] = dict(dies_differing=sum(1 for x in nd if x), words_differing_max=max(nd))
+            hb = {}
+            for i, sn in enumerate(snap):
+                for nm, dat, old in sn:
+                    n_ = int(np.count_nonzero(dat != old))
+                    if n_:
+                        hb[nm] = hb.get(nm, 0) + 1
+                    dat[:] = old
+            res["p_row" if mut is None else f"mutant_{mut}"] = dict(
+                rows=len(rows), tokens=[r_[0] for r_ in rows], positions=[r_[1] for r_ in rows], vm_bad=bad,
+                hbm_regions_changed_dies=hb, equal=not bad and not hb, wall_s=round(time.time() - t1, 1))
+        if kind == "dsb":
+            # the routed experts of each row (route top-3 ids, rank 0 post-launch VM): the draft's expert union
+            tk = next(r for r in progs[0] if r.unit == "IDX" and r.op == "TOPK")
+            o = tk.desc["O"]
+            ids = [sorted(int(x) for x in post[j][0][o.base:o.base + o.n]) for j in range(len(rows))]
+            drw["experts"][f"stage{Lp}"] = dict(rows=ids, union=len(set(x for r_ in ids for x in r_)))
+        nrec = sum(1 for r in progs[0] if r.unit != "CTL")
+        ok = res["p_row"]["equal"] and (not res["mutant_pos0"]["equal"] or not res["mutant_tok0"]["equal"])
+        drw["res"][f"{kind}{Lp if kind != 'dhead' else ''}"] = dict(records=nrec, ok=ok, **res)
+        print(f"DRAFT R-ROW PROOF {kind} stage {Lp}: {len(rows)} rows x {nrec} records x {len(dies)} dies: "
+              f"{'ALL ROWS EQUAL the row-serial VM + HBM' if res['p_row']['equal'] else 'DIFFER ' + str(res['p_row'])}"
+              f"; mutant pos0 {'equal' if res['mutant_pos0']['equal'] else 'differs'}, tok0 "
+              f"{'equal' if res['mutant_tok0']['equal'] else 'differs'}", flush=True)
+
     def on_launch(e):
+        if drows_on and spec:
+            k_ = e["kind"]
+            if k_ == "demb" or (k_ == "swapin" and e["token"] >= PMAX):
+                drw["cur"] = [d.vm.copy() for d in dies]
+            elif k_ in ("dsa", "dsb", "dhead"):
+                key = (k_, e["Lp"])
+                assert drw["cur"] is not None, f"draft rows proof: no pre-launch image for {key}"
+                drw["pre"].setdefault(key, []).append((e["token"], e["pos"], drw["cur"]))
+                drw["post"].setdefault(key, []).append([d.vm.copy() for d in dies])
+                drw["cur"] = None
+                if len(drw["pre"][key]) == BLK:
+                    draft_rows_proof(key)
         if rows_on and K_cur["L"] == 0 and e["kind"] == "embed" and e["pos"] >= plen:
             rows_pre[e["pos"]] = (e["token"], [d.vm.copy() for d in dies])
         if rows_on and K_cur["L"] == 0 and e["kind"] == "layer" and e["pos"] in rows_pre:
@@ -1309,6 +1370,7 @@ def sim(a):
     eng.on_launch = on_launch
     plen = len(gd["prompt"])
     rows_on = bool(getattr(a, "rows_proof", False))
+    drows_on = bool(getattr(a, "draft_rows_proof", False))
     forced = None
     if not spec:
         forced_d = gd["drafts"]
@@ -1485,6 +1547,8 @@ def sim(a):
     if rows_on:
         ok_all = ok_all and bool(rows_res.get("p_row", {}).get("equal")) and \
             not rows_res.get("mutant_pos0", {}).get("equal", True)
+    if drows_on:
+        ok_all = ok_all and len(drw["res"]) == 7 and all(x["ok"] for x in drw["res"].values())
     rec = dict(schema="opentallas.hgi_sim.ds_mtp_sim.v2", golden=str(a.golden),
                drafter="dspark (real, lowered)" if spec else "FORCED (golden drafts; draft kinds END stubs)",
                golden_summary={k_: gd[k_] for k_ in ("prompt", "y", "verify_tokens", "drafts", "targets", "accepted",
@@ -1502,6 +1566,7 @@ def sim(a):
                kernel_records={f"{KINDS[k_]}{'' if Lp == 0 else Lp}": len([r for r in K.body[0][(k_, Lp)] if r.unit != "CTL"])
                                for (k_, Lp) in K.body[0] if (k_ not in (3,) or Lp in (0, 1, 37))},
                hc_plan=plan["name"], fused_hll=int(DN.FUSED_HLL), rows_proof=rows_res or None,
+               draft_rows_proof=(dict(results=drw["res"], experts=drw["experts"]) if drows_on else None),
                s2_first_launch_cycles={k_: v for k_, v in r0_kern.items() if not k_.startswith("layer") or k_ in (
                    "layer", "layer1", "layer37")},
                hc_row_rank=dict(rank=hc_rank, s2_job_cycles=round(sum(own.values()), 1),
@@ -1638,6 +1703,10 @@ def main():
     q.add_argument("--rows-proof", action="store_true",
                    help="H-MTP2: re-run the verify's layer 0 as ONE pass of P-row records (rows_replay) and require "
                         "every row's VM == the column-serial VM (all dies); mutant pos0 must differ")
+    q.add_argument("--draft-rows-proof", action="store_true",
+                   help="H-MTP2 decision 4: re-run each DSpark draft body (dsa / dsb of the 3 stages, dhead) of the step's "
+                        "5 block rows as ONE pass of R-row records (rows_replay) and require every row's VM and the "
+                        "body's HBM rows == the row-serial run (all dies); mutants pos0 / tok0 must differ")
     a = ap.parse_args()
     if a.cmd == "golden":
         return golden(a)

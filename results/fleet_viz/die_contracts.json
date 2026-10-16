@@ -224,6 +224,11 @@
      ],
      "macro": "(phy|ckbump|pllm|fwdbump)",
      "evidence": "KV die contract v1.4.1 slots"
+    },
+    {
+     "kind": "registry",
+     "path": "results/fleet_viz/element_registry/qwen_kvsys_v143_die_masters_20261016.json",
+     "evidence": "Q-KVSYS-NETLIST 2026-10-16: v1.4.3 die masters absent from the v1.4.1 bind (qkd_hgs, qkd_hss, qkd_rly_t1, qkd_rst_region) + qkd_d2ds (die master of qkd_d2d_static); strict bind v2 results/arch/qwen_split_1014/kvsys_v1_4_3_design/port_bind_v2/"
     }
    ],
    "add": [
@@ -311,6 +316,10 @@
     [
      "^qkd_host",
      "Q-KVSYS-DIE"
+    ],
+    [
+     "^qkh_",
+     "Q-KVSYS-ELEM"
     ],
     [
      "^(qkd_|ot_qkh_|ot_qkvd_)",
