@@ -275,6 +275,11 @@ endmodule
     cp=ROOT/'rtl/v41rom/ot_v41_bf_col_roots.sv';cp.write_text(s)
     wp=ROOT/'rtl/dsrom_sys/s81_die_bind/dsfd_bf_col.sv';w=wp.read_text();w=w.replace('module dsfd_bf_col #(','module dsfd_bf_col_roots #(')
     w=replace_once(w,'    input  wire [775:0] ci,','    input wire [8:0] leaf_ck,\n    input  wire [775:0] ci,')
+    # Own actual physical scalars: Yosys retains [0:0] ports as ck[0], which
+    # disagrees with the explicitly declared physical source clock ck.
+    for direction,name in [('output','qy'),('input','ck'),('input','rs')]:
+        w=replace_once(w,f'{direction} wire [0:0] {name}',f'{direction} wire {name}') if direction=='output' else replace_once(w,f'{direction}  wire [0:0] {name}',f'{direction}  wire {name}')
+        w=replace_once(w,f'{name}[0]',name)
     w=replace_once(w,'    ot_v41_bf_col #(','    ot_v41_bf_col_roots #(')
     w=replace_once(w,'.clk(w_clk),','.clk(w_clk), .leaf_clk(leaf_ck),')
     rp=ROOT/'rtl/dsrom_sys/s81_die_bind/dsfd_bf_col_roots.sv';rp.write_text(w)

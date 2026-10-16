@@ -7,9 +7,9 @@
 module dsfd_bf_col_roots #(parameter INSTANCE = "", parameter integer MB = 0) (
     input wire [8:0] leaf_ck,
     input  wire [775:0] ci,
-    output wire [0:0] qy,
-    input  wire [0:0] ck,
-    input  wire [0:0] rs,
+    output wire qy,
+    input  wire ck,
+    input  wire rs,
     output wire [62:0] r
 );
     wire [13:0] w_a_ctr;
@@ -820,9 +820,9 @@ module dsfd_bf_col_roots #(parameter INSTANCE = "", parameter integer MB = 0) (
     assign w_so_n[37] = ci[773];
     assign w_so_n[38] = ci[774];
     assign w_so_n[39] = ci[775];
-    assign qy[0] = w_qy_bkf;
-    assign w_clk = ck[0];
-    assign w_rst_n_pin = rs[0];
+    assign qy = w_qy_bkf;
+    assign w_clk = ck;
+    assign w_rst_n_pin = rs;
     assign r[0] = w_pv;
     assign r[1] = w_pval[0];
     assign r[2] = w_pval[1];
