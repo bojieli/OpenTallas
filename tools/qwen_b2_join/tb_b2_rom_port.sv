@@ -43,7 +43,7 @@ always @(negedge clk)if(rs)begin
   amchecks=amchecks+1;am_due[h][j]=-1;
  end
  for(integer h=0;h<6;h=h+1)if(rq[h][2212])begin
-  if(firstcap[h]<0)firstcap[h]=cycle;
+  if(firstcap[h]<0)begin firstcap[h]=cycle;$display("CALIBRATION pc%0d h%0d firsttag%0d firstcap%0d age%0d",op_pc,h,firsttag,cycle,cycle-firsttag);end
   head_winner=0;
   k=burst[h];nb=(k/8)*(3072>>op_sp)*128+(k%8)*16;
   for(integer q=0;q<4;q=q+1)begin

@@ -132,3 +132,5 @@ tools/qwen_b2_join/tb_b2_ctlm.sv
 rtl/qwen_split/qfd_b2_train_source.sv
 rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_b2_parent.sv
 rtl/qwen_sys/static_schedule_20261014/qfd_tt_ctlm_tree_b2.sv
+rtl/qwen_sys/static_schedule_20261014/ot_qwen_me_spctl_b2.sv
+rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctl_b2.sv

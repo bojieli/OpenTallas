@@ -2,6 +2,504 @@
   "status": "SOURCE_ONLY_UNQUALIFIED",
   "sources": [
     {
+      "source": "rtl/qwen_sys/static_schedule_20261014/ot_qwen_me_spctl_b2.sv",
+      "sha256": "10cb2818e973a29b876460fffbc2b0e6496635d4dcc4c98d6768d49c864851f7",
+      "top": "ot_qwen_me_spctl_b2",
+      "ports": {
+        "clk": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "go": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ready": {
+          "direction": "output",
+          "bits": 1
+        },
+        "idle": {
+          "direction": "output",
+          "bits": 1
+        },
+        "land_cnt": {
+          "direction": "input",
+          "bits": 16
+        },
+        "i_nout": {
+          "direction": "input",
+          "bits": 16
+        },
+        "i_tiles": {
+          "direction": "input",
+          "bits": 16
+        },
+        "i_k": {
+          "direction": "input",
+          "bits": 16
+        },
+        "i_wsrc": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i_wbase": {
+          "direction": "input",
+          "bits": 24
+        },
+        "i_ts": {
+          "direction": "input",
+          "bits": 24
+        },
+        "i_ks": {
+          "direction": "input",
+          "bits": 24
+        },
+        "i_js": {
+          "direction": "input",
+          "bits": 24
+        },
+        "i_xbase": {
+          "direction": "input",
+          "bits": 24
+        },
+        "i_xks": {
+          "direction": "input",
+          "bits": 24
+        },
+        "i_xjs": {
+          "direction": "input",
+          "bits": 24
+        },
+        "i_xcs": {
+          "direction": "input",
+          "bits": 24
+        },
+        "i_jsh": {
+          "direction": "input",
+          "bits": 3
+        },
+        "i_split": {
+          "direction": "input",
+          "bits": 4
+        },
+        "i_wcs": {
+          "direction": "input",
+          "bits": 24
+        },
+        "i_round": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i_obase": {
+          "direction": "input",
+          "bits": 24
+        },
+        "i_ots": {
+          "direction": "input",
+          "bits": 24
+        },
+        "i_ojs": {
+          "direction": "input",
+          "bits": 24
+        },
+        "i_mmode": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i_oen": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i_amax": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i_rmax": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i_mbase": {
+          "direction": "input",
+          "bits": 24
+        },
+        "wrom_re": {
+          "direction": "output",
+          "bits": 1
+        },
+        "wrom_addr": {
+          "direction": "output",
+          "bits": 24
+        },
+        "kv_re": {
+          "direction": "output",
+          "bits": 1
+        },
+        "scale_re": {
+          "direction": "output",
+          "bits": 1
+        },
+        "scale_gre": {
+          "direction": "output",
+          "bits": 10
+        },
+        "scale_addr": {
+          "direction": "output",
+          "bits": 240
+        },
+        "x_re": {
+          "direction": "output",
+          "bits": 32
+        },
+        "x_addr": {
+          "direction": "output",
+          "bits": 768
+        },
+        "x_q": {
+          "direction": "input",
+          "bits": 1024
+        },
+        "xl0": {
+          "direction": "output",
+          "bits": 1024
+        },
+        "x_dv": {
+          "direction": "output",
+          "bits": 1
+        },
+        "x_dc": {
+          "direction": "output",
+          "bits": 24
+        },
+        "x_dcs": {
+          "direction": "output",
+          "bits": 24
+        },
+        "x_dsp": {
+          "direction": "output",
+          "bits": 4
+        },
+        "t_sel_e": {
+          "direction": "output",
+          "bits": 8
+        },
+        "t_tv_e": {
+          "direction": "output",
+          "bits": 8
+        },
+        "tr_fault": {
+          "direction": "input",
+          "bits": 16
+        },
+        "p_v_e2": {
+          "direction": "output",
+          "bits": 1
+        },
+        "p_f_e2": {
+          "direction": "output",
+          "bits": 107
+        },
+        "p_am": {
+          "direction": "input",
+          "bits": 98
+        },
+        "p_fault": {
+          "direction": "input",
+          "bits": 2
+        },
+        "fab_fault": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ov": {
+          "direction": "output",
+          "bits": 1
+        },
+        "am_idx": {
+          "direction": "output",
+          "bits": 16
+        },
+        "am_val": {
+          "direction": "output",
+          "bits": 32
+        },
+        "am_any": {
+          "direction": "output",
+          "bits": 1
+        },
+        "mx_we": {
+          "direction": "output",
+          "bits": 1
+        },
+        "mx_addr": {
+          "direction": "output",
+          "bits": 24
+        },
+        "mx_mask": {
+          "direction": "output",
+          "bits": 16
+        },
+        "mx_data": {
+          "direction": "output",
+          "bits": 512
+        },
+        "progress": {
+          "direction": "output",
+          "bits": 16
+        },
+        "fault": {
+          "direction": "output",
+          "bits": 1
+        }
+      }
+    },
+    {
+      "source": "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctl_b2.sv",
+      "sha256": "0b58fc1e857d254946e62bea703885e9e617c5b8f167d870841e9d4109415812",
+      "top": "ot_qfd_tt_ctl_b2",
+      "ports": {
+        "clk": {
+          "direction": "input",
+          "bits": 1
+        },
+        "rst_n": {
+          "direction": "input",
+          "bits": 1
+        },
+        "up_fault": {
+          "direction": "input",
+          "bits": 1
+        },
+        "land_cnt": {
+          "direction": "input",
+          "bits": 16
+        },
+        "go": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ready": {
+          "direction": "output",
+          "bits": 1
+        },
+        "idle": {
+          "direction": "output",
+          "bits": 1
+        },
+        "i_nout": {
+          "direction": "input",
+          "bits": 16
+        },
+        "i_tiles": {
+          "direction": "input",
+          "bits": 16
+        },
+        "i_k": {
+          "direction": "input",
+          "bits": 16
+        },
+        "i_wsrc": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i_wbase": {
+          "direction": "input",
+          "bits": 24
+        },
+        "i_ts": {
+          "direction": "input",
+          "bits": 24
+        },
+        "i_ks": {
+          "direction": "input",
+          "bits": 24
+        },
+        "i_js": {
+          "direction": "input",
+          "bits": 24
+        },
+        "i_xbase": {
+          "direction": "input",
+          "bits": 24
+        },
+        "i_xks": {
+          "direction": "input",
+          "bits": 24
+        },
+        "i_xjs": {
+          "direction": "input",
+          "bits": 24
+        },
+        "i_xcs": {
+          "direction": "input",
+          "bits": 24
+        },
+        "i_jsh": {
+          "direction": "input",
+          "bits": 3
+        },
+        "i_split": {
+          "direction": "input",
+          "bits": 4
+        },
+        "i_wcs": {
+          "direction": "input",
+          "bits": 24
+        },
+        "i_round": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i_obase": {
+          "direction": "input",
+          "bits": 24
+        },
+        "i_ots": {
+          "direction": "input",
+          "bits": 24
+        },
+        "i_ojs": {
+          "direction": "input",
+          "bits": 24
+        },
+        "i_mmode": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i_oen": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i_amax": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i_rmax": {
+          "direction": "input",
+          "bits": 1
+        },
+        "i_mbase": {
+          "direction": "input",
+          "bits": 24
+        },
+        "wrom_re": {
+          "direction": "output",
+          "bits": 1
+        },
+        "wrom_addr": {
+          "direction": "output",
+          "bits": 24
+        },
+        "kv_re": {
+          "direction": "output",
+          "bits": 1
+        },
+        "scale_re": {
+          "direction": "output",
+          "bits": 1
+        },
+        "scale_gre": {
+          "direction": "output",
+          "bits": 10
+        },
+        "scale_addr": {
+          "direction": "output",
+          "bits": 240
+        },
+        "x_dv": {
+          "direction": "output",
+          "bits": 1
+        },
+        "x_dc": {
+          "direction": "output",
+          "bits": 24
+        },
+        "x_dcs": {
+          "direction": "output",
+          "bits": 24
+        },
+        "x_dsp": {
+          "direction": "output",
+          "bits": 4
+        },
+        "t_sel_e": {
+          "direction": "output",
+          "bits": 8
+        },
+        "t_tv_e": {
+          "direction": "output",
+          "bits": 8
+        },
+        "tr_fault": {
+          "direction": "input",
+          "bits": 16
+        },
+        "p_v_e2": {
+          "direction": "output",
+          "bits": 1
+        },
+        "p_f_e2": {
+          "direction": "output",
+          "bits": 107
+        },
+        "p_am": {
+          "direction": "input",
+          "bits": 98
+        },
+        "p_fault": {
+          "direction": "input",
+          "bits": 2
+        },
+        "fab_fault": {
+          "direction": "input",
+          "bits": 1
+        },
+        "ov": {
+          "direction": "output",
+          "bits": 1
+        },
+        "am_idx": {
+          "direction": "output",
+          "bits": 16
+        },
+        "am_val": {
+          "direction": "output",
+          "bits": 32
+        },
+        "am_any": {
+          "direction": "output",
+          "bits": 1
+        },
+        "mx_we": {
+          "direction": "output",
+          "bits": 1
+        },
+        "mx_addr": {
+          "direction": "output",
+          "bits": 24
+        },
+        "mx_mask": {
+          "direction": "output",
+          "bits": 16
+        },
+        "mx_data": {
+          "direction": "output",
+          "bits": 512
+        },
+        "progress": {
+          "direction": "output",
+          "bits": 16
+        },
+        "fault": {
+          "direction": "output",
+          "bits": 1
+        }
+      }
+    },
+    {
       "source": "rtl/qwen_split/qfd_res_train_half_b2_wrappers.sv",
       "sha256": "469c76349d43c32122e0a27ce7c7595b198205f71869b53f954ff420edf3f97a",
       "top": "qfd_res_train_half_b2_0",
@@ -592,7 +1090,7 @@
     },
     {
       "source": "rtl/qwen_sys/static_schedule_20261014/qfd_tt_ctlm_tree_b2.sv",
-      "sha256": "44c621dcfd24404d47fd75cb9c0812c8bf289a712c900d452c531467d18c0bfa",
+      "sha256": "53c4337096e03859c301da48946404bb0cc8b771606f856770c7e0cb60cba474",
       "top": "qfd_tt_ctlm_tree_b2",
       "ports": {
         "clk": {
@@ -4956,7 +5454,8 @@
     }
   ],
   "cycles": {
-    "controller_execution_added_logic": 0,
+    "controller_result_phase_added_edges": 4,
+    "scale_prefetch_advance_edges": 6,
     "train_source_copy_edges": 1,
     "cold_reset_release_edges": 1,
     "am_station_added_vs_old_master": 0,
