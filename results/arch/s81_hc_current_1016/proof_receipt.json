@@ -90,5 +90,11 @@
         "- Verilator: Walltime 0.116 s (elab=0.037, cvt=0.002, bld=0.000); cpu 0.116 s on 1 threads; allocated 71.707 MB"
       ]
     }
+  },
+  "outer_native_lint_replay": {
+    "runner": "tools/s81_hc_outer/lint.py",
+    "runner_sha256": "beb1134951aa4dbd3cd021d21fc72e94a6ba6ff135c9b29175cb2e195daebaf0",
+    "source_archive_sha256": "5a207fe2e0354189eff1f1095a1c488630edb45897feee4c4603b7fe9462e744",
+    "note": "byte-identical tested outer runner moved to its dedicated scope; bank gate original unrelated lint.py restored exactly to staged snapshot, no physical tool/RTL changed"
   }
 }
