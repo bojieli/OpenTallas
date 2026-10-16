@@ -20,10 +20,11 @@
 // one edge later (lane row at P+3), and the 3:4 transfers run NAT=1 (ICG-gated serial banks; stream side captures each
 // bank unmuxed at its read edge, output one stream edge later): x34 samples the row at q = P+2+CAP_PIPE, stream output
 // at 4*floor(q/3)+2+(q%3)+1.  Explicit added edges vs legacy: 2 serial + 1 stream (static_face_model cap_pipeline=2).
-module dsfd_vm_static_cap #(parameter integer E = 8, parameter integer CAP_PIPE = 0) (
+module dsfd_vm_static_cap #(parameter integer E = 8, parameter integer CAP_PIPE = 0, parameter integer SPLIT_FAULT = 0) (
     // Actual source categories. All serial/stream roots share the 3:4 PLL
     // epoch; each physical entry receives its own measured phi-R delivery.
     input wire ck_control_s,
+    input wire ck_fault_s, rst_fault_s, ck_fault_t, rss_fault_t,
     input wire [15:0] ck_lane_s, ck_x34_s, ck_x34_t,
     input wire rst_control_s,
     input wire [15:0] rst_x34_s, rss_x34_t, // per-root active-low epoch resets
@@ -32,6 +33,7 @@ module dsfd_vm_static_cap #(parameter integer E = 8, parameter integer CAP_PIPE 
     output wire [223:0]    w_row,
     output wire [255:0]    w_m,
     output wire [8191:0]   w_d,
+    output wire            fault_core,
     output wire            fault                // serial-domain sticky level (lanes + status) | stream x34 faults
 );
     // Control root (ck_control_s) = hard leaf dsfd_vm_static_cap_ctl (claude S81 VM F2 2026-10-15): the same
@@ -53,7 +55,16 @@ module dsfd_vm_static_cap #(parameter integer E = 8, parameter integer CAP_PIPE 
         assign w_m[16*g +: 16] = xd[29:14];
         assign w_d[512*g +: 512] = xd[541:30];
     end endgenerate
-    assign fault = |lf | s_flt | |xf;
+    generate if (SPLIT_FAULT) begin : split_diagnostic
+        dsfd_vm_capture_fault_serial u_serial(.ck(ck_fault_s),.rst_n(rst_fault_s),
+            .i_lo(lf[39:0]),.i_hi(lf[79:40]),.i_status(s_flt),.fault(fault));
+        dsfd_vm_native_valid_diag u_core(.ck(ck_fault_t),.rst_n(rss_fault_t),
+            .i_v(32'd0),.expected_v(18'd0),.release_slot(90'd0),
+            .i_fault(xf),.fault(fault_core));
+    end else begin : legacy_diagnostic
+        assign fault = |lf | s_flt | |xf;
+        assign fault_core = 1'b0;
+    end endgenerate
 endmodule
 
 // dsfd_vm_static_cap_ctl: the capture face's control root.  rn = two-edge synchronized release of rst_n (the lanes'
