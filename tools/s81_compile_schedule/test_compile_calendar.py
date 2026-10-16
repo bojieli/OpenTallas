@@ -30,6 +30,7 @@ class CompileTest(unittest.TestCase):
                         accesses=[dict(kind=kind,tensor='q',row_offset=0,slot=0,issue_cycle=1,ingress_cycle=2,
                                        bank_enqueue_cycle=2,service_cycle=3,deadline_cycle=8,
                                        **({'commit_cycle':4} if kind=='write' else {'response_cycle':4}))],
+                        vm_pipeline_abi=dict(PIPELINE_ABI['vm']),
                         **({'pipeline_abi':dict(PIPELINE_ABI[eng])} if eng in PIPELINE_ABI else {}))
         self.binding = dict(stage='S000',tensors={'q':dict(base_row=256,nrows=1,source='native_job',producer='field',
                                                         consumers=['su'],evidence=self.evidence)},
@@ -188,6 +189,55 @@ class CompileTest(unittest.TestCase):
             with self.assertRaises(ValueError): schedule_jobs(self.program,self.binding)
         self.binding['jobs']['su']['pipeline_abi']=dict(rec)
         self.assertTrue(self.run_compile()['dispatch_eligible'])
+
+    def test_fld_record_carries_the_static_return_node_r2_pipeline(self):
+        # S-NET r2 node: +3 edges per node level (PIPE_C 10); field durations measured on the 7-edge node are refused
+        import importlib.util
+        spec=importlib.util.spec_from_file_location('src',ROOT/'tools/s81/static_return_calendar.py')
+        src=importlib.util.module_from_spec(spec); spec.loader.exec_module(src)
+        rec=PIPELINE_ABI['fld']
+        self.assertEqual(rec['return_node_exit_edges'],src.PIPE_C)
+        self.assertEqual(rec['return_node_levels_max'],6)
+        good=self.binding['jobs']['field']['pipeline_abi']
+        self.binding['jobs']['field']['pipeline_abi']=dict(good,return_node_exit_edges=7)
+        self.assertFalse(self.run_compile()['dispatch_eligible'])
+        with self.assertRaises(ValueError): schedule_jobs(self.program,self.binding)
+        self.binding['jobs']['field']['pipeline_abi']=good
+        self.assertTrue(self.run_compile()['dispatch_eligible'])
+
+    def test_tile_pin_registers_come_from_the_kit_port_latency_report(self):
+        # owner 19:50: registered tile pins (+1-2 edges a boundary) enter the schedule from the kit report, not constants
+        from compile_calendar import kit_boundary_edges, KIT_PORT_LATENCY_SCHEMA
+        rep=self.root/'kit'/'port_latency.json'; rep.parent.mkdir()
+        rep.write_text(json.dumps(dict(schema=KIT_PORT_LATENCY_SCHEMA,ports=dict(c_cmd=dict(dir='input',register_edges=1),
+                                                                                  c_done=dict(dir='output',register_edges=2)))))
+        sha=hashlib.sha256(rep.read_bytes()).hexdigest()
+        su=self.binding['jobs']['su']
+        su['kit_boundary']=dict(report='kit/port_latency.json',sha256=sha,ports=['c_cmd','c_done'],duration_measured_at='rtl_core')
+        self.assertEqual(kit_boundary_edges(su,self.root),3)
+        # the graph priced at 10 is now stale (pin-to-pin 13): refused until recompiled
+        self.assertFalse(self.run_compile()['dispatch_eligible'])
+        sched=schedule_jobs(self.program,self.binding,self.root)
+        self.assertEqual(sched['ops'][1]['end']-sched['ops'][1]['start'],1+10+3)
+        self.program=sched; self.assertTrue(self.run_compile()['dispatch_eligible'])
+        su['kit_boundary']=dict(su['kit_boundary'],duration_measured_at='kit_pins'); self.assertEqual(kit_boundary_edges(su,self.root),0)
+        for bad in (dict(su['kit_boundary'],sha256='0'*64), dict(su['kit_boundary'],ports=['c_cmd','nope']),
+                    dict(su['kit_boundary'],duration_measured_at=None)):
+            su['kit_boundary']=bad
+            with self.assertRaises(ValueError): kit_boundary_edges(su,self.root)
+        del su['kit_boundary']; su['boundary_edges']=2
+        with self.assertRaises(ValueError): kit_boundary_edges(su,self.root)
+
+    def test_vm_a2f_relay_record_required_on_vm_touching_jobs(self):
+        vm=PIPELINE_ABI['vm']
+        self.assertEqual((vm['a2_write_extra_edges'],vm['a2f_relay_write_edges'],vm['a2f_relay_read_edges'],vm['a2f_relay_commit_edges']),(2,9,16,3))
+        su=self.binding['jobs']['su']
+        for stale in (None, dict(vm,a2f_relay_read_edges=0)):
+            if stale is None: su.pop('vm_pipeline_abi')
+            else: su['vm_pipeline_abi']=stale
+            self.assertFalse(self.run_compile()['dispatch_eligible'])
+            with self.assertRaises(ValueError): schedule_jobs(self.program,self.binding)
+        su['vm_pipeline_abi']=dict(vm); self.assertTrue(self.run_compile()['dispatch_eligible'])
 
     def test_sa2x2rp_floorplan_stages_require_remeasured_durations(self):
         # SA_2x2_RP: SU-VM link +3 relay edges, field round trip 140 -> 118: old measurements are refused

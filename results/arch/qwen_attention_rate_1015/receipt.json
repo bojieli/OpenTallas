@@ -1,0 +1,257 @@
+{
+ "schema": "qwen-tp8-attention-rate-w16-v1",
+ "date": "2026-10-15",
+ "owner": "Q-ATTN-RATE",
+ "scope": "static native Qwen TP8 attention service with 16-row/cycle P.V (ot_qwen_tp8_attention_native_service_w16): 4 native QK stacks (ECTL3 RL21/HXK8, zfix static ASTK CTL) + 4-wide EP e read + static AHUB + 2 x ot_qwen_tp8_pv_wide_pair + finalize; common phase, one request; Verilator production binary; NOT physical qualification",
+ "source_commit": "4c026e895 (branch claude/q-attn-rate-1015, merged to main)",
+ "build": "tools/qwen_attention_native/rate_1015/build_w16.sh on ot-epyc1tb, /srv/opentallas-scratch/claude/q-attn-rate-1015/b_4c026e895",
+ "binaries": [
+  "d62f6b1e87df74abe4266d6f2f8d0cd04ccd542ccb30878841ffeca3121666dc  /srv/opentallas-scratch/claude/q-attn-rate-1015/b_4c026e895/cp/libqattn_cp_w4.a",
+  "630d8451c82fb38a093dbf2ae73686974cfe9b5b336434bf7f68a4ca56dad7ed  /srv/opentallas-scratch/claude/q-attn-rate-1015/b_4c026e895/parent0/Vtb_qwen_tp8_attention_native_service_w16",
+  "4b3dbf3ffc2f05a9314bca4aca45c6de7e5cedd4bd2710146527c3a0212d9da2  /srv/opentallas-scratch/claude/q-attn-rate-1015/b_4c026e895/parent1/Vtb_qwen_tp8_attention_native_service_w16",
+  "f2e7709f4dcbad8175303b1cdbe731acf5ad2ae140ecde978f43f4f02d81e7ca  /srv/opentallas-scratch/claude/q-attn-rate-1015/b_4c026e895/parent2/Vtb_qwen_tp8_attention_native_service_w16",
+  "291cd1a91bf3291629c66d3a4b3fe9c052cf659f252d700a5daff56972312fa6  /srv/opentallas-scratch/claude/q-attn-rate-1015/b_4c026e895/cp_w4.sv",
+  "2de13ff4f29aacb7700f5936b1b1308f908221853edd092f19e85313a9158b17  /srv/opentallas-scratch/claude/q-attn-rate-1015/b_4c026e895/service.sv",
+  ""
+ ],
+ "budget": {
+  "price_cycles_per_layer": 1816,
+  "price_source": "results/arch/qwen_kv_die_20261009/reprice.json cases.typical.layer_step (P8191, incl. link)",
+  "link_cycles": 65,
+  "link_source": "results/arch/qwen_split_1014/LINK.md 5b: 47 + 2 x (C_ST 8 + K_ST 1) at the design point",
+  "service_budget_1x": 1751,
+  "service_budget_1p10x": 1932,
+  "derivation": "non-P.V path ends at HUB_PUB 1326 (+49 finalize/emit = 1377 floor at T=8192); P.V must end by ~1700 (1.0x). P.V cannot start before the last EP e group is visible (~EXP+zwalk+188 = 849 at T=8192); then 32 serial chain steps per chain (s_pv=256) at a round of 128/W cycles + tail. W=4/pair (8 rows/cycle): 32x32+tail ~1,200 -> ~2,100 service = 1.19x with link: misses. W=8/pair (16 rows/cycle): 528+129 -> 1,555: meets. W=16 violates the 11-edge chain loop (round 8). QK (32 rows/cycle, 256 cycles) and softmax/hub (EXP pass 8 e/cycle/stack, Z/recip tree) already fit and are unchanged."
+ },
+ "design": {
+  "pv_rows_per_cycle": 16,
+  "banks_per_pair": 8,
+  "round_cycles": 16,
+  "chain_loop_edges": 11,
+  "mac_lanes": 8192,
+  "join_adders": 1024,
+  "slices": 512,
+  "sram_macros": "512 slices x 4 x ot_sram_1r1w_32x128_m1 (2,048 macros, 1,069 um2 each)",
+  "v_ports": 16,
+  "v_bytes_per_cycle": 2048,
+  "hbm_per_stack_bytes_per_cycle": 512,
+  "hbm_stack_physical_bytes_per_cycle": 1024,
+  "e_reads_per_stack_per_cycle": 4,
+  "d2d": "unchanged: K/V never cross the die link (Q in 32 FP32 beats, result out 32 beats)",
+  "rtl": [
+   "rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_pair.sv",
+   "rtl/qwen_sys/split_20261014/qkd_astk_native_er_service_w.sv",
+   "rtl/qwen_sys/split_20261014/qkd_astk_native_stack_w4_gen.sv (gen_pv_rate.py)",
+   "rtl/hdc/nearhbm/ot_qwen_tp8_attention_native_service_w16.sv (mk_service_w16.py)",
+   "rtl/test/nearhbm/tb_qwen_tp8_attention_native_service_w16.sv (mk_tb_w16.py)"
+  ]
+ },
+ "calendar": "tools/qwen_attention_native/attn_calendar.py --pv w16: P = 22 + NQ - 1 + 13 + 73 + 28, NQ = 16(ceil((T-128p)/256)+1); PV_START = max(EXP + zwalk + 186, HUB_PUB + 2 - P); R = max(P, HUB_PUB + 2 - PV_START)",
+ "pv_start_boundary": {
+  "note": "d = PV_START - EXP - zwalk at 1-edge resolution (runs_4c026e895/sweep3.out): minimal exact",
+  "T5000": "<=174 (R binds)",
+  "T6144": 182,
+  "T7000": 184,
+  "T7168": 184,
+  "T8000": 186,
+  "T8192": 186,
+  "law": 186
+ },
+ "positives_exact": "53/53",
+ "service_cycles": {
+  "flat5000": 1239,
+  "full1": 882,
+  "full100": 906,
+  "full1000": 943,
+  "full1023": 943,
+  "full1024": 943,
+  "full1025": 945,
+  "full127": 912,
+  "full128": 912,
+  "full129": 912,
+  "full1500": 974,
+  "full2": 882,
+  "full2047": 1005,
+  "full2048": 1005,
+  "full2049": 1007,
+  "full2500": 1036,
+  "full255": 912,
+  "full256": 912,
+  "full257": 912,
+  "full300": 912,
+  "full3000": 1067,
+  "full3071": 1067,
+  "full3072": 1067,
+  "full383": 912,
+  "full384": 912,
+  "full385": 912,
+  "full4095": 1129,
+  "full4096": 1129,
+  "full4097": 1194,
+  "full5000": 1239,
+  "full511": 912,
+  "full512": 912,
+  "full5120": 1239,
+  "full513": 914,
+  "full6000": 1339,
+  "full6143": 1339,
+  "full6144": 1339,
+  "full6145": 1356,
+  "full640": 943,
+  "full7": 882,
+  "full7000": 1449,
+  "full7167": 1449,
+  "full7168": 1449,
+  "full8": 882,
+  "full8000": 1559,
+  "full8191": 1559,
+  "full8192": 1559,
+  "full9": 884,
+  "mixed6145": 1356,
+  "peaky3000": 1067,
+  "precision_ties1000": 943,
+  "tiny129": 912,
+  "wide7000": 1449
+ },
+ "negatives": {
+  "n_vlate_T1000": {
+   "exact": false,
+   "fault": 1,
+   "fault_cause": "0011100000000000",
+   "data_errors": 0,
+   "first_fault_age": 740
+  },
+  "n_P1m1_T1000": {
+   "exact": false,
+   "fault": 1,
+   "fault_cause": "0011000000000000",
+   "data_errors": 0,
+   "first_fault_age": 894
+  },
+  "n_vswap_T1000": {
+   "exact": false,
+   "fault": 0,
+   "fault_cause": "0000000000000000",
+   "data_errors": 504,
+   "first_fault_age": -1
+  },
+  "n_dmut2join_T1000": {
+   "exact": false,
+   "fault": 0,
+   "fault_cause": "0000000000000000",
+   "data_errors": 85,
+   "first_fault_age": -1
+  },
+  "n_dmut1_T3000": {
+   "exact": false,
+   "fault": 0,
+   "fault_cause": "0000000000000000",
+   "data_errors": 93,
+   "first_fault_age": -1
+  },
+  "n_law181_T6144": {
+   "exact": false,
+   "fault": 1,
+   "fault_cause": "0000000010000011",
+   "data_errors": 0,
+   "first_fault_age": 794
+  },
+  "n_precision_T8192": {
+   "exact": false,
+   "fault": 0,
+   "fault_cause": "0000000000000000",
+   "data_errors": 512,
+   "first_fault_age": -1
+  },
+  "n_vlate_T8192": {
+   "exact": false,
+   "fault": 1,
+   "fault_cause": "0011100000000000",
+   "data_errors": 0,
+   "first_fault_age": 910
+  },
+  "n_vswap_T8192": {
+   "exact": false,
+   "fault": 0,
+   "fault_cause": "0000000000000000",
+   "data_errors": 504,
+   "first_fault_age": -1
+  },
+  "n_qlate_T8192": {
+   "exact": false,
+   "fault": 1,
+   "fault_cause": "0000000010101111",
+   "data_errors": 128,
+   "first_fault_age": 11
+  },
+  "n_klate_T8192": {
+   "exact": false,
+   "fault": 1,
+   "fault_cause": "0000000011000010",
+   "data_errors": 512,
+   "first_fault_age": 86
+  },
+  "n_law185_T8192": {
+   "exact": false,
+   "fault": 1,
+   "fault_cause": "0000000010000011",
+   "data_errors": 0,
+   "first_fault_age": 890
+  },
+  "n_P0m1_T8192": {
+   "exact": false,
+   "fault": 1,
+   "fault_cause": "0011000000000000",
+   "data_errors": 0,
+   "first_fault_age": 1512
+  },
+  "n_kdrop_T8192": {
+   "exact": false,
+   "fault": 1,
+   "fault_cause": "0000000011000001",
+   "data_errors": 512,
+   "first_fault_age": 132
+  },
+  "n_dmut2join_T8192": {
+   "exact": false,
+   "fault": 0,
+   "fault_cause": "0000000000000000",
+   "data_errors": 81,
+   "first_fault_age": -1
+  }
+ },
+ "vs_w1": {
+  "T1": [
+   882,
+   882
+  ],
+  "T1000": [
+   1425,
+   943
+  ],
+  "T4096": [
+   3066,
+   1129
+  ],
+  "T8192": [
+   5362,
+   1555
+  ]
+ },
+ "ratio_vs_price": {
+  "service_8192": 1559,
+  "with_link": 1624,
+  "ratio": 0.894
+ },
+ "history_r1": {
+  "source_commit": "55a5f5a98 (branch claude/q-attn-rate-1015)",
+  "service_cycles_8192": 1555,
+  "note": "first measurement: pairs without pin registers, 128x256 macros (runs/)"
+ },
+ "physical_partition": {
+  "master": "ot_qwen_tp8_pv_col (64 instances per KV die: 2 pairs x 32 columns), every port registered; 8 x ot_qwen_tp8_pv16_slice (4 x ot_sram_1r1w_32x128_m1 each, 32 macros per column) + 16-lane L5-L7 join",
+  "control": "ot_qwen_tp8_pv_wide_ctl (2 per die), every port registered",
+  "pair": "ot_qwen_tp8_pv_wide_pair = wires only",
+  "cost_cycles": "+4 per P (column cmd/pin regs) + 2 (start and request pin regs), absorbed: T=8192 1559"
+ }
+}

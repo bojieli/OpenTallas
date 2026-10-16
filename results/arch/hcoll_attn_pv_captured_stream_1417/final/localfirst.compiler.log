@@ -1,0 +1,28 @@
+{
+  "schema": "hcoll-attention-pv-captured-overlap-v1",
+  "scope": "Qwen canonical128row SM nodes component; native SM and physical/price separate",
+  "batches": 128,
+  "output_words": 1024,
+  "period": 88,
+  "first_output": 174,
+  "final_output": 11350,
+  "last": 11352,
+  "mutant": "localfirst",
+  "ring_tag_count": 8,
+  "reducer_tag_count": 16,
+  "landing_native_sram_banks": 2,
+  "bank_shape": "64x512",
+  "effective_payload": "16x256 per bank",
+  "ring_wave_stride": 44,
+  "read_lead_edges": 2,
+  "tag_lifetime_edges": 42,
+  "ring_batch_edges": 88,
+  "local_level_edges": [
+    29,
+    21,
+    17,
+    15
+  ],
+  "local_stream_bits": 41,
+  "events": 80768
+}

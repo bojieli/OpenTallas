@@ -1,0 +1,18 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "dsfd_r2l_vr_1024x1__ha_SW",
+ "enable": true,
+ "clock": "ck",
+ "clock_ports": [
+  "ck"
+ ],
+ "exclude": "^(di0|rs)$",
+ "reset": "",
+ "reason": "di0 is the fi0-forwarded hop: the RTL captures it in the negedge dq0 pin register (a ck-domain pin flop would be a CDC); rs is the async root reset (synchronised inside by rsl_q)",
+ "latency_cycles": {
+  "input": 1,
+  "output": 1
+ },
+ "rule": "OWNER RULE 19:50 PT 2026-10-15: every new tile registers every input and every output at its pin",
+ "per_port_table": "$RESULTS_DIR/ot_pin_regs.tsv (route synthesis: port dir width cycles why)"
+}

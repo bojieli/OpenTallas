@@ -1,0 +1,12 @@
+{
+ "schema": "opentallas.hcoll.stager_status_rename.v1",
+ "old_source_ref": "b1c49ac48",
+ "old_source_sha256": "41b342d7ad3d72971ead3e7eed77e0739eb1db5d786a0206c3b0b2d8fd4b5733",
+ "new_source_sha256": "b970bee6e0bd786288752d9d8ba5b5cf25c52622d85f3bf9ac1ffc01570d16d0",
+ "exact_transform": {
+  "vector_ready": "vector_valid",
+  "bank_ready": "bank_full"
+ },
+ "normalized_byte_identical": true,
+ "reason": "Status is content validity, never on-die flow control. Avoid ready-named ports in fixed-slot composition."
+}

@@ -1,0 +1,130 @@
+{
+ "name": "qvm_su_bank_native-su3-COMMIT",
+ "block": "qvm_su_bank_native",
+ "ref_tile": true,
+ "owner": "Claude:Q-VMWB (el1015-qwen-attn.log)",
+ "purpose": "SU operand-bank native successor cluster, su2: macro->capture phase by entry geometry.",
+ "threads": 8,
+ "peak_ram_gb": 8,
+ "source": {
+  "branch": "claude/q-vmwb-vm-1705",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/qwen_sys/vm_native_physical_20261015",
+   "rtl/qwen_sys/vm_plane_20261013",
+   "rtl/qwen_sys/vm_me_20261008",
+   "rtl/qwen_sys/rtl_finish_20261007",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "physical/ref_tile/qvm_data256_native/views",
+   "physical/ref_tile/qvm_su_bank_ctrl_native/views"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; qvm_su_bank_native #(.MUT(0)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/qwen_sys/vm_native_physical_20261015/qvm_su_bank_hard_native.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "su_m0",
+    "cmd": "mkdir -p {RUN}/bench && $HOME/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -Wno-fatal --top-module tb_qvm_su_bank_native -GMUT=0 -j 2 --Mdir {RUN}/bench/m0 rtl/qwen_sys/vm_native_physical_20261015/tb_qvm_su_bank_native.sv rtl/qwen_sys/vm_native_physical_20261015/qvm_su_bank_native.sv rtl/qwen_sys/vm_native_physical_20261015/qvm_bank_banked_native.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_region_leaf.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_vector_memory.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v > {RUN}/bench/m0.build.log 2>&1 && {RUN}/bench/m0/Vtb_qvm_su_bank_native",
+    "expect": "pass",
+    "pass_regex": "PASS qvm_su_bank_native",
+    "threads": 2,
+    "peak_ram_gb": 2,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "su_m1",
+    "cmd": "mkdir -p {RUN}/bench && $HOME/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -Wno-fatal --top-module tb_qvm_su_bank_native -GMUT=1 -j 2 --Mdir {RUN}/bench/m1 rtl/qwen_sys/vm_native_physical_20261015/tb_qvm_su_bank_native.sv rtl/qwen_sys/vm_native_physical_20261015/qvm_su_bank_native.sv rtl/qwen_sys/vm_native_physical_20261015/qvm_bank_banked_native.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_region_leaf.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_vector_memory.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v > {RUN}/bench/m1.build.log 2>&1 && {RUN}/bench/m1/Vtb_qvm_su_bank_native",
+    "expect": "fail",
+    "pass_regex": "PASS qvm_su_bank_native",
+    "threads": 2,
+    "peak_ram_gb": 2,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "su_m2",
+    "cmd": "mkdir -p {RUN}/bench && $HOME/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -Wno-fatal --top-module tb_qvm_su_bank_native -GMUT=2 -j 2 --Mdir {RUN}/bench/m2 rtl/qwen_sys/vm_native_physical_20261015/tb_qvm_su_bank_native.sv rtl/qwen_sys/vm_native_physical_20261015/qvm_su_bank_native.sv rtl/qwen_sys/vm_native_physical_20261015/qvm_bank_banked_native.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_region_leaf.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_vector_memory.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v > {RUN}/bench/m2.build.log 2>&1 && {RUN}/bench/m2/Vtb_qvm_su_bank_native",
+    "expect": "fail",
+    "pass_regex": "PASS qvm_su_bank_native",
+    "threads": 2,
+    "peak_ram_gb": 2,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/qvm_su_bank_native/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/qvm_su_bank_native/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 8
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/qvm_su_bank_native --out {RUN}/record/views/qvm_su_bank_native --macro-view physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2 --macro-view physical/ref_tile/qvm_data256_native/views/qvm_data256_native --macro-view physical/ref_tile/qvm_su_bank_ctrl_native/views/qvm_su_bank_ctrl_native > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/qvm_su_bank_native/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "physical/ref_tile/qvm_data256_native/views/qvm_data256_native",
+   "physical/ref_tile/qvm_su_bank_ctrl_native/views/qvm_su_bank_ctrl_native"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/qvm_su_bank_native/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/qvm_su_bank_native/qvm_su_bank_native-su3-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "su3 after su2-ee983ad21 TT -2.70 (su1 -8.81): still only u_hi -> u_cap_hi (1024x256 rd_out 561 ps); the hi macro clk pin sat 117 um above the S face (entry wire 76.9 ps). su3 turns the hi macro R180 so its clk and rd_out pins sit on its right edge near the TOP (y ~186, 56 um below the N face) and takes ck_mem_hi from the N face above that column; rd_out still faces the capture leaves. ck_mem_lo stays S under the lo macro clk, ck_cap_lo/hi N (later capture; cap->out +358 ps). Same RTL/children/outline/entries, 0 cycles."
+}

@@ -214,7 +214,27 @@
  "macros": [
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
-   "count": 3
+   "at": [
+    90.72,
+    76.752
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "at": [
+    90.72,
+    147.264
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "at": [
+    90.72,
+    217.776
+   ],
+   "at_exact": true
   }
  ],
  "route": {
@@ -252,6 +272,14 @@
     "threads": 1,
     "peak_ram_gb": 2,
     "min_count_regex": "eachgroup_reads=(\\d+)"
+   },
+   {
+    "name": "wrong_compiled_identity_mutant",
+    "cmd": "cd rtl/hbm_accel/generic/vm/static/identity && iverilog -g2012 -s tb_hbm_vm_identity -Ptb_hbm_vm_identity.SID=2 -Ptb_hbm_vm_identity.RG=6 -Ptb_hbm_vm_identity.WG=3 -Ptb_hbm_vm_identity.MUT=3 -o {RUN}/mut3.vvp ../ot_vms_ce_counter_pipe.sv ../ot_vms_bank_static_identity.sv ../../../../../../physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v tb_hbm_vm_identity.sv && vvp {RUN}/mut3.vvp",
+    "expect": "fail",
+    "fail_regex": "FATAL: .*bank fault",
+    "threads": 1,
+    "peak_ram_gb": 2
    }
   ]
  },
@@ -277,5 +305,6 @@
  "io_tcl": "physical/hbm_vm_identity_1015/q2_b0/io.tcl",
  "orfs_vars": {
   "POST_IO_PLACEMENT_TCL": "physical/hbm_vm_identity_1015/q2_b0/post_iop.tcl"
- }
+ },
+ "floorplan_note": "q2 identity2 --cts gate failed GPL-0305 (NaN) twice with the generated 3-macro column (20 um macro-macro channels, 5.4 um halos -> 9.5 um cell rows between arrays; overflow stuck at 0.115 for 12k iterations). Structural: the three arrays (pins only on W/E faces) form one abutted N-S stack (pitch = array height + 0.024 um) centred in the core, so no narrow inter-array channel exists; two ~70 um N/S channels carry the cross traffic."
 }

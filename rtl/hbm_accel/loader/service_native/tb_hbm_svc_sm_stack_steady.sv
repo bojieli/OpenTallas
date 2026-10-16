@@ -9,17 +9,18 @@ module tb_hbm_svc_sm_stack_steady;
  parameter integer EPOCHS=8;
  parameter integer DECOUPLE=1;
  parameter integer OVERLAP=1;
+ parameter integer LBANKS=4;
  localparam integer SECT=((ROWS*136+127)/128)*4;
  localparam[7:0]ACTIVE=8'hff;
  reg stream=0,hbm=0;initial forever begin #416.666 stream=1;#416.667 stream=0;end
  initial begin #173;forever #512 hbm=~hbm;end
- reg[7:0]rbank=0,sbank=0;reg[15:0]repoch=51,sepoch=51;reg[9:0]pbase=0;reg[10:0]plimit=11'(ROWS+1);real done_t[0:63];integer ndone=0;
+ reg[15:0]rbank=0,sbank=0;reg[15:0]repoch=51,sepoch=51;reg[9:0]pbase=0;reg[10:0]plimit=11'(ROWS+1);real done_t[0:63];integer ndone=0;
  reg srst=0,hrst=0;reg[7:0]reserve_v=0,start_v=0,cfg_we=0,go=0;
- wire[7:0]reserve_ready,active,done,fault,pv;wire[15:0]ready,cache_ready,owned;
+ wire[7:0]reserve_ready,active,done,fault,pv;wire[31:0]ready;wire[15:0]cache_ready,owned;
  reg[79:0]cfg_addr=0;reg[2047:0]cfg_data=0;reg[79:0]tags=0;
  wire[31:0]kv,krdy,kwe,kdone,rv,rrdy;wire[959:0]ka;wire[127:0]kl,rb;wire[543:0]kt,rt;wire[8191:0]kw,rd;wire[1023:0]ks;
  wire[8*1099-1:0]packet;wire[8*135-1:0]programme;wire[8*1082-1:0]lt0,lt1;wire[8*570-1:0]lb0,lb1;wire[95:0]fm;wire[343:0]expected_request;
- ot_hbm_svc_sm_stack_native #(.STACK(STACK),.DECOUPLE(DECOUPLE),.OVERLAP(OVERLAP)) dut(
+ ot_hbm_svc_sm_stack_native #(.STACK(STACK),.DECOUPLE(DECOUPLE),.OVERLAP(OVERLAP),.LBANKS(LBANKS)) dut(
  .stream_clk({8{stream}}),.stream_rst_n({8{srst}}),.hbm_clk({8{hbm}}),.hbm_rst_n({8{hrst}}),
  .stream_bank_clk({16{stream}}),.hbm_fifo_clk({16{hbm}}),.hbm_pc_clk({32{hbm}}),
  .reserve_v(reserve_v),.reserve_ready(reserve_ready),.reserve_base({8{32'(STACK<<30)}}),.reserve_row_base({8{15'd20738}}),.reserve_total({8{12'(SECT)}}),.reserve_bank(rbank),.reserve_epoch({8{repoch}}),.reserve_rows({8{7'(ROWS)}}),.reserve_tag_base(tags),
@@ -36,6 +37,9 @@ module tb_hbm_svc_sm_stack_steady;
  reg[1087:0]records[0:7][0:ROWS-1];reg[1087:0]load_rows[0:ROWS-1];reg[9:0]tag_base[0:7];
  integer packets[0:7],feeds[0:7],sectors[0:7];integer cycle=0;string images,path,smname;integer early,earlystart;
  real reserve_at,ready_at,cache_at,done_at;
+ function automatic all_land(input [31:0] v,input integer b);
+  begin all_land=1;for(integer s=0;s<8;s=s+1)if(ACTIVE[s]&&!v[4*s+b])all_land=0;end
+ endfunction
  function automatic all_bank(input [15:0] v,input integer b);
   begin all_bank=1;for(integer s=0;s<8;s=s+1)if(ACTIVE[s]&&!v[2*s+b])all_bank=0;end
  endfunction
@@ -99,15 +103,15 @@ module tb_hbm_svc_sm_stack_steady;
   fork
    // reserve: epoch e on bank e%2 as soon as the DUT admits it (landing + cache bank of that index free)
    for(integer e=0;e<EPOCHS;e=e+1)begin
-    @(negedge stream);rbank={8{1'(e%2)}};repoch=16'(51+e%2);for(integer s=0;s<8;s=s+1)tags[s*10+:10]=10'(e%2==0?100:300);
+    @(negedge stream);rbank={8{2'(e%LBANKS)}};repoch=16'(51+e%2);for(integer s=0;s<8;s=s+1)tags[s*10+:10]=10'(e%2==0?100:300);
     #1;while((reserve_ready&ACTIVE)!=ACTIVE)begin @(negedge stream);#1;end
     reserve_v=ACTIVE;if(e==0)reserve_at=$realtime;$display("SM_STACK_STEADY t=%0t reserve e=%0d",$realtime,e);@(negedge stream);reserve_v=0;
    end
    // start: copy block e into cache bank e%2 when its landing block is resident
    for(integer e=0;e<EPOCHS;e=e+1)begin
     @(negedge stream);
-    while(!all_bank(ready,e%2)||(!earlystart&&!all_bank(~owned,e%2)))@(negedge stream);
-    sbank={8{1'(e%2)}};sepoch=16'(51+e%2);start_v=ACTIVE;$display("SM_STACK_STEADY t=%0t start e=%0d",$realtime,e);@(negedge stream);start_v=0;
+    while(!all_land(ready,e%LBANKS)||(!earlystart&&!all_bank(~owned,e%2)))@(negedge stream);
+    sbank={8{2'(e%LBANKS)}};sepoch=16'(51+e%2);start_v=ACTIVE;$display("SM_STACK_STEADY t=%0t start e=%0d",$realtime,e);@(negedge stream);start_v=0;
     if(e==0)ready_at=$realtime;
    end
    // programme: run epoch e's programme (base 128*(e%2)) once its cache bank is ready, back to back
@@ -123,7 +127,7 @@ module tb_hbm_svc_sm_stack_steady;
   for(integer s=0;s<8;s=s+1)if(ACTIVE[s])begin
    if(packets[s]!=ROWS*EPOCHS||feeds[s]!=ROWS*EPOCHS||sectors[s]!=SECT*EPOCHS)$fatal(1,"SM_STACK counts sm%0d packets%0d feeds%0d sectors%0d",s,packets[s],feeds[s],sectors[s]);
   end
-  $display("SM_STACK_STEADY PASS decouple=%0d overlap=%0d stack=%0d active=%h rows=%0d epochs=%0d first_done_ps=%0f last_done_ps=%0f steady_epoch_ps=%0f bytes_per_epoch_per_SM=%0d",DECOUPLE,OVERLAP,STACK,ACTIVE,ROWS,EPOCHS,done_t[0]-reserve_at,done_t[EPOCHS-1]-reserve_at,(done_t[EPOCHS-1]-done_t[1])/(EPOCHS-2),ROWS*136);
+  $display("SM_STACK_STEADY PASS lbanks=%0d decouple=%0d overlap=%0d stack=%0d active=%h rows=%0d epochs=%0d first_done_ps=%0f last_done_ps=%0f steady_epoch_ps=%0f bytes_per_epoch_per_SM=%0d",LBANKS,DECOUPLE,OVERLAP,STACK,ACTIVE,ROWS,EPOCHS,done_t[0]-reserve_at,done_t[EPOCHS-1]-reserve_at,(done_t[EPOCHS-1]-done_t[1])/(EPOCHS-2),ROWS*136);
   for(integer e=0;e<EPOCHS;e=e+1)$display("SM_STACK_STEADY epoch=%0d done_ps=%0f",e,done_t[e]-reserve_at);
   $finish;
  end

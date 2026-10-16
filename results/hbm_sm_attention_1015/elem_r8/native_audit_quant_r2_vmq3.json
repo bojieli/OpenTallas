@@ -1,0 +1,71 @@
+[
+ {
+  "cell": "ot_hgi_qdq_transport_ctl_r2",
+  "view": "physical/ref_tile/hgi_qdq_tsplit_ctl_r2/views/ot_hgi_qdq_transport_ctl_r2",
+  "lib_cell": "ot_hgi_qdq_transport_ctl_r2",
+  "insertion": true,
+  "ref_src": [
+   "insertion.json boundary mean"
+  ],
+  "R_ps": 132.8,
+  "spread_ps": 23.5,
+  "outputs": 360,
+  "inputs": 60,
+  "launch_ps": 175.2,
+  "launch_pin": "wq_mask[25]",
+  "capture_ps": 213.8,
+  "capture_pin": "rst_n",
+  "launch_over": 0,
+  "capture_over": 1,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": false,
+  "fail_why": "capture 213.79638 > 190 (1 pins)"
+ },
+ {
+  "cell": "ot_hgi_qdq_transport_rslice",
+  "view": "physical/ref_tile/hgi_qdq_tsplit_rslice_r2/views/ot_hgi_qdq_transport_rslice",
+  "lib_cell": "ot_hgi_qdq_transport_rslice",
+  "insertion": true,
+  "ref_src": [
+   "insertion.json boundary mean"
+  ],
+  "R_ps": 143.7,
+  "spread_ps": 70.2,
+  "outputs": 256,
+  "inputs": 515,
+  "launch_ps": 210.8,
+  "launch_pin": "gx_w[253]",
+  "capture_ps": 160.4,
+  "capture_pin": "rsel[1]",
+  "launch_over": 0,
+  "capture_over": 0,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": true,
+  "fail_why": ""
+ },
+ {
+  "cell": "hfd_vms_bank_identity_q3_b0",
+  "view": "physical/ref_tile/vm_identity_q3_b0_ref/views/hfd_vms_bank_identity_q3_b0",
+  "lib_cell": "hfd_vms_bank_identity_q3_b0",
+  "insertion": true,
+  "ref_src": [
+   "insertion.json boundary mean"
+  ],
+  "R_ps": 684.2,
+  "spread_ps": 66.6,
+  "outputs": 2109,
+  "inputs": 2353,
+  "launch_ps": 223.6,
+  "launch_pin": "rr0[240]",
+  "capture_ps": 223.1,
+  "capture_pin": "pq[81]",
+  "launch_over": 1,
+  "capture_over": 198,
+  "comb_pins": 0,
+  "comb_first": [],
+  "pass": false,
+  "fail_why": "launch 223.62275 > 220 (1 pins); capture 223.10256 > 190 (198 pins)"
+ }
+]

@@ -1,0 +1,120 @@
+{
+  "scope": "v3 source-only same-edge clock equivalence; physical/native OPEN",
+  "clock_roots": 14,
+  "results": [
+    {
+      "name": "fullshape_miter",
+      "expected_pass": true,
+      "exit_code": 0,
+      "gate_pass": true
+    },
+    {
+      "name": "production_exact",
+      "expected_pass": true,
+      "exit_code": 0,
+      "gate_pass": true
+    },
+    {
+      "name": "functional_mutant_1",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "functional_mutant_2",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "functional_mutant_3",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "clock_mutant_1",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "clock_mutant_2",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "clock_mutant_3",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "clock_mutant_4",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "clock_mutant_5",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "clock_mutant_6",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "clock_mutant_7",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "clock_mutant_8",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "clock_mutant_9",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "clock_mutant_10",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "clock_mutant_11",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "clock_mutant_12",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "clock_mutant_13",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    },
+    {
+      "name": "clock_mutant_14",
+      "expected_pass": false,
+      "exit_code": 1,
+      "gate_pass": true
+    }
+  ]
+}

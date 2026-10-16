@@ -536,15 +536,118 @@ def generate_v41x_legal(out: Path | None, edge_mm: float = V2_EDGE_BASIS["value_
     return sheet
 
 
+# ---- H-DIE 2026-10-15: PHY-ONLY abstract (owner rule 10-14 "all on-chip execution is real hardware") ---------------------
+# The v41x/v41x_legal abstracts expose the CONTROLLER K interface (k_v/k_rdy/kr_*, W loader port): the memory controller
+# is modelled inside the macro.  The rc variant is the PHY alone at the DFI-like row/column/data boundary of the real
+# controller RTL (ot_hbm_svc_pc_ctrl_leaf = actual ot_hbm_r14_stream_pc + same-row FIFO + response SRAM): per pseudo-channel
+# row command (row_v/op/bank/row), column command (col_v/we/bank/col + write data/strobe) and read return
+# (dram_rvalid/dram_rdata), exactly the ports ot_hbm_svc_sm_stack_native drives across its modelled off-chip boundary.
+# Same 8.5 mm shoreline and 10 mm2 basis as v41x_legal, same M5-track pin rule, same assumed registered boundary timing.
+RC = "ot_hbm3e_phy_rc"
+
+
+def rc_pins(npc: int = 32) -> tuple[list[Pin], dict]:
+    per = [("row_v", 1, "input"), ("row_op", 3, "input"), ("row_bank", 5, "input"), ("row_row", 19, "input"),
+           ("col_v", 1, "input"), ("col_we", 1, "input"), ("col_bank", 5, "input"), ("col_col", 5, "input"),
+           ("col_data", 256, "input"), ("col_strb", 32, "input"),
+           ("dram_rvalid", 1, "output"), ("dram_rdata", 256, "output")]
+    kind = {"input": "data_in", "output": "data_out"}
+    plist = [Pin("clk", 1, "input", "clock"), Pin("rst_n", 1, "input", "control")]
+    plist += [Pin(n, npc * b, d, kind[d]) for n, b, d in per]
+    place: dict[str, tuple[int, str]] = {}
+    for n, b, _ in per:
+        for p in range(npc):
+            for i in range(b):
+                place[f"{n}[{p * b + i}]" if npc * b > 1 else n] = (p, "k")
+    for nm in ("clk", "rst_n"):
+        place[nm] = (npc // 2, "w")
+    return plist, place
+
+
+def generate_rc(out: Path | None, edge_mm: float = V2_EDGE_BASIS["value_mm"], npc: int = 32) -> dict[str, Any]:
+    name = f"{RC}_e{edge_mm:g}".replace(".", "p")
+    area = tech("hbm.hbm3e.phy_area_mm2_per_stack")
+    w_um = asap7.snap_up(edge_mm * 1000.0, JOINT_X_UM)
+    h_um = asap7.snap_up(area["value"] * 1e6 / w_um, 2.16)
+    plist, place = rc_pins(npc)
+    lef, pin_info = write_lef_v41x_legal(w_um, h_um, plist, place, npc, 0.192, name=name)
+    lef = lef.replace("--variant v41x_legal (v2): HBM3E PHY + controller", "--variant rc (v1): HBM3E PHY ONLY (no controller)")
+    lef = lef.replace("ABSTRACT for the adopted V4.1 die (rtl/chip/ot_chip_v41x_hbm3e_phy.sv); controller-side pins only.",
+                      "ABSTRACT at the row/column/data boundary of the real controller ot_hbm_svc_pc_ctrl_leaf.")
+    pin_info["matches"] = ("ot_hbm_svc_sm_stack_native / ot_hbm_svc_native_sector_pipeline_leaves PHY-side ports "
+                           "(row_*, col_*, dram_rvalid, dram_rdata) at NPC = 32")
+    pin_info["placement"] = ("pseudo-channel p's row/column/data bits in [p*window + span] (facing its controller "
+                             "leaf); clk, rst_n in window 16")
+    cal = asap7.calibration()
+    energy = tech("energy.hbm_j_per_byte")
+    per_corner = {}
+    for c in asap7.CORNERS:
+        k = cal["corners"][c]
+        fo4 = k["fo4_ps"]
+        per_corner[c] = Timing(
+            corner=c, voltage=k["voltage_v"], temperature=k["temperature_c"],
+            clk_to_q_ps=k["dff_clk_to_q_ps"] + 3 * fo4, out_r_kohm=k["inv4_r_kohm"] / 2.0,
+            out_slew_intrinsic_ps=1.5 * fo4, setup_ps=k["dff_setup_ps"] + 3 * fo4, hold_ps=k["dff_hold_ps"] + fo4,
+            min_period_ps=900.0, min_pulse_ps=360.0,
+            read_energy_fj=energy["value"] * 1e15 * 32, write_energy_fj=0.0,
+            leakage_nw=0.0, pin_cap_ff=k["inv1_cin_ff"] * 2, clk_cap_ff=50.0,
+            breakdown={"fo4_ps": fo4})
+    sheet: dict[str, Any] = {
+        "schema": "opentallas.hbm-phy-abstract.v2",
+        "generator": f"tools/mem_compiler/hbm_phy_gen.py --variant rc --edge-mm {edge_mm:g} v1.0",
+        "kind": "hbm_phy_abstract", "name": name,
+        "supersedes": {"views": "ot_hbm3e_phy_v41x_aw30_e8p5 on the v15 HBM die",
+                       "reason": "owner rule 10-14: the controller must be real RTL; only the PHY (off-chip signalling) "
+                                 "may be modelled.  The K/W controller interface moves to ot_hbm_svc_pc_ctrl_leaf."},
+        "footprint": {"width_um": w_um, "height_um": h_um, "area_mm2": w_um * h_um / 1e6,
+                      "edge_basis": dict(V2_EDGE_BASIS, value_mm=edge_mm),
+                      "area_basis": {"value_mm2": area["value"], "grade": area["grade"],
+                                     "source": "configs/hardware/technology.json hbm.hbm3e.phy_area_mm2_per_stack",
+                                     "note": area["note"] + "; the controller logic previously counted inside this "
+                                     "area is now real leaves (no area credit taken)"},
+                      "depth": "area / edge, snapped up to 2.16 um"},
+        "interface": {"port_list": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_native_sector_pipeline_leaves.sv "
+                                   "PHY-side ports", "parameters": {"NPC": npc},
+                      "functional_model": "rtl/hbm_accel/loader/service_native/tb_hbm_svc_command_dram_pipeline_fixture.sv",
+                      "controller_clock_mhz": {"value": 1087.0, "grade": "assumed",
+                                               "note": "the PHY-side controller clock; min_period 900 ps"}},
+        "pins": pin_info,
+        "timing": {c: asdict(t) for c, t in per_corner.items()},
+        "timing_grade": "assumed: registered boundary, as ot_hbm3e_phy (ASAP7 flop clock-to-Q / setup + 3 FO4)",
+        "claim_boundary": "a placement and connection abstract for licensed PHY IP only; footprint and boundary timing "
+                          "are assumed, the port list is the real controller RTL's PHY side",
+    }
+    if out is not None:
+        d = out / name
+        d.mkdir(parents=True, exist_ok=True)
+        (d / f"{name}.lef").write_text(lef)
+        comment = "HBM3E PHY-only abstract (row/column/data boundary of the real controller), boundary timing assumed"
+        for c, t in per_corner.items():
+            (d / f"{name}_{c}.lib").write_text(write_liberty(name, t, plist, w_um * h_um, None, comment))
+        (d / f"{name}_bb.v").write_text(blackbox_verilog(name, plist, comment + "; functional model: "
+                                        "rtl/hbm_accel/loader/service_native/tb_hbm_svc_command_dram_pipeline_fixture.sv"))
+        files = sorted(p.name for p in d.iterdir() if p.name != f"{name}.json")
+        sheet["views"] = {f: asap7.sha256_file(d / f) for f in files}
+        (d / f"{name}.json").write_text(json.dumps(sheet, indent=2, sort_keys=True) + "\n")
+    return sheet
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--out", type=Path, default=asap7.ROOT / "physical/asap7_memory_macros")
-    ap.add_argument("--variant", choices=["v1", "v41x", "v41x_legal"], default="v1")
+    ap.add_argument("--variant", choices=["v1", "v41x", "v41x_legal", "rc"], default="v1")
     ap.add_argument("--edge-mm", type=float, default=V2_EDGE_BASIS["value_mm"],
                     help="v41x_legal: core-facing PHY edge per stack (mm)")
     ap.add_argument("--area-mm2", type=float, default=None, help="v41x_legal: override the PHY area")
     ap.add_argument("--k-aw", type=int, default=28, help="V4.1 K sector address width: 28 reduced or 30 full")
     args = ap.parse_args()
+    if args.variant == "rc":
+        s = generate_rc(args.out, edge_mm=args.edge_mm)
+        f = s["footprint"]
+        print(f"{s['name']}: {f['width_um']:.3f} x {f['height_um']:.3f} um ({f['area_mm2']:.2f} mm2), "
+              f"{s['pins']['signal_pins']} pins, window {s['pins']['pseudo_channel_window_um']} um, "
+              f"span {s['pins']['k_pins_in_window_um']}")
+        return 0
     if args.variant == "v41x_legal":
         s = generate_v41x_legal(args.out, edge_mm=args.edge_mm, k_aw=args.k_aw if args.k_aw != 28 else 30,
                                 area_mm2=args.area_mm2)

@@ -69,9 +69,10 @@
  },
  "reroute_reason": {
   "kind": "pin_register",
-  "source": "S-VM 1705 native_pin_audit of CLOSED f4 view",
+  "source": "results/physical/s81_vm_native_1705/cdc_f4_native_audit.json",
   "cell": "ot_s81_vm_x34_t",
-  "fix": "Native capture fix: input pin hold pad HB2 -> HB1 (shorter pin->first-flop D arc, the x34_t r10 input choice) and a 0.55 T outside input budget so the route places the capture flops at the pins; output side unchanged. Same RTL/W/outline/pins/clock root; zero data cycles. F4 audit: capture 202.9 > 190 (15 pins), launch 181.6, R 175.3, spread 20.2"
+  "fix": "Native capture fix: input pin hold pad HB2 -> HB1 (shorter pin->first-flop D arc, the x34_t r10 input choice) and a 0.55 T outside input budget so the route places the capture flops at the pins; output side unchanged. Same RTL/W/outline/pins/clock root; zero data cycles. F4 audit: capture 202.9 > 190 (15 pins), launch 181.6, R 175.3, spread 20.2",
+  "capture_ps": 202.9
  },
  "job": {
   "owner": "claude:S-VM 1705",
