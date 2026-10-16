@@ -155,7 +155,10 @@ def row_ii(r, c1, dyn, L, sk_rep=3):
     if fam == "FUSED.PRE":
         # price: SU chain 20,480 + 5,120 words at M256 (100 beats) | actquant 32 / cycle on 5,120 (160): 160 binds.
         # LL engine: each of the 32 lanes reads 4 h sectors x 20 (80 VM-bank reads a row; gain kept, writes on W port)
-        return 160.0, 80.0, "price: actquant 5,120 / 32; LL: 80 lane reads a row"
+        # MEASURED (results/arch/hbm_mtp_1015/p6_rtl_2330/measurement.json, RTL 8fe5d18bd, mapped VM, D 5,120): one
+        # P6 job 1,451 cycles vs one row 466 -> (1,451 - 466) / 5 = 197 a further row (KX = 2 x slots: row starts
+        # alternate 80 / 258); the price form 649.4 + 5 x 160 = 1,449 matches the measured job to 0.2 %
+        return 160.0, 197.0, "price: actquant 5,120 / 32; LL P6 RTL measured (1,451 - 466) / 5"
     if fam == "FUSED.POST":
         return 100.0, 100.0, "SU chain 25,600 words / 256; LL: 5 reads x 20 sectors a lane"
     if fam == "FUSED.QDQ":
