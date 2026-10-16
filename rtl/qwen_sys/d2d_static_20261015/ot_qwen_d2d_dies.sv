@@ -30,12 +30,15 @@ module ot_qwen_d2d_kvn_tx (
 );
     wire [15:0] ep = x3_identity[58:43];
     wire [5:0]  sg = x3_identity[42:37];
+    // Payload has no reset/enable fanout: validity is the ownership boundary.
+    // The matching payload and tx_valid still land on the same original edge.
+    always @(posedge ck)
+        tx_payload <= {ep[12:8], 4'd5, sg, x3[522:512], x3_generation, ep[7:0], x3[511:0]};
     always @(posedge ck or negedge rst_n)
-        if (!rst_n) begin tx_valid <= 0; tx_payload <= 0; fault <= 0; end
+        if (!rst_n) begin tx_valid <= 0; fault <= 0; end
         else begin
             tx_valid <= x3[523];
             if (x3[523]) begin
-                tx_payload <= {ep[12:8], 4'd5, sg, x3[522:512], x3_generation, ep[7:0], x3[511:0]};
                 if (x3[522:520] != 3'd2 || ep[15:13] != 3'd0) fault <= 1'b1;   // KVN class only; epoch < 8192
             end
         end
@@ -117,19 +120,28 @@ module qfd_d2d_static_core #(parameter integer MUT = 0, parameter [31:0] TXDP = 
     output wire         phy_rst_n,
     output wire         epoch_abort, output wire [7:0] transport_fault, output wire fault
 );
+    // Port resets reach only local capture flops. Four regional releases keep
+    // the global pin off the end/status/KVN fanout; cold release adds four edges,
+    // outside the compiled normal timeline. POR also uses a local capture.
+    wire [3:0] local_rst_n;
+    wire [0:0] local_por_n;
+    ot_rst_pipe #(.REGIONS(4), .STAGES(2)) u_reset_regions
+        (.clk(ck), .rst_n_in(rst_n), .rst_n(local_rst_n));
+    ot_rst_pipe #(.REGIONS(1), .STAGES(2)) u_por_region
+        (.clk(ck), .rst_n_in(por_n), .rst_n(local_por_n));
     localparam integer FW = 548;
     wire [3:0] txs, rxe, rxs; wire [3:0] tk, rk; wire [4:0] tb, rb; wire [FW-1:0] rxp;
     wire [3:0] tv; wire [4*FW-1:0] tp;
     wire eb, ab, endf, own_rst_n, rec; wire [7:0] ep, fc;
     wire st_f, kvn_f;
-    ot_qwen_d2d_recovery #(.MASTER(0)) u_rec (.ck(ck), .por_n(por_n), .rst_n(rst_n), .abort(ab | endf),
+    ot_qwen_d2d_recovery #(.MASTER(0)) u_rec (.ck(ck), .por_n(local_por_n[0]), .rst_n(local_rst_n[0]), .abort(ab | endf),
         .fault_cause(fc), .end_fault(endf), .p_tx_up(fdi_tx_up), .p_tx_v(fdi_tx_v), .p_rx_v(fdi_rx_v),
         .reset_req(1'b0), .recovery_clear(1'b0), .boot_begin(1'b0), .fwd_epoch_i(fwd_epoch), .fwd_epoch_o(),
         .fwd_link_rst_n(), .phy_rst_n(own_rst_n), .epoch_begin(eb), .epoch(ep), .link_up(), .links_drained(),
         .link_reset_seen(), .retrained(), .transport_fault(transport_fault), .recovering(rec), .recovery_cycles());
     assign phy_rst_n = own_rst_n & fwd_link_rst_n;
     ot_qwen_d2d_static_end #(.NT(4), .NR(4), .TXD(TXDP), .MUT(MUT)) u_end (
-        .ck({5{ck}}), .rst_n(rst_n), .cfg_tx_we(cfg_tx_we), .cfg_rx_we(cfg_rx_we), .cfg_addr(cfg_addr), .cfg_data(cfg_data),
+        .ck({5{ck}}), .rst_n(local_rst_n[1]), .cfg_tx_we(cfg_tx_we), .cfg_rx_we(cfg_rx_we), .cfg_addr(cfg_addr), .cfg_data(cfg_data),
         .epoch_begin(eb), .epoch(ep), .cal_start(cal_start), .cal_seg(cal_seg),
         .tx_slot(txs), .tx_kind(tk), .tx_beat(tb), .tx_valid(tv), .tx_payload(tp),
         .rx_event(rxe), .rx_slot(rxs), .rx_kind(rk), .rx_beat(rb), .rx_payload(rxp),
@@ -151,7 +163,7 @@ module qfd_d2d_static_core #(parameter integer MUT = 0, parameter [31:0] TXDP = 
     assign prog_auth_slot = rxs[1] && rk == 4'd13;
     assign prog_context_slot = rxs[1] && rk == 4'd12;
     // port 2 status/result
-    ot_qwen_d2d_status_tx u_st (.ck(ck), .rst_n(rst_n & ~eb), .epoch16(status_epoch16),
+    ot_qwen_d2d_status_tx u_st (.ck(ck), .rst_n(local_rst_n[2] & ~eb), .epoch16(status_epoch16),
         .vm_drained(vm_drained), .collective_drained(collective_drained), .collective_busy(collective_busy),
         .crom_fault(crom_fault), .execution_active(execution_active), .admit_ready(admit_ready),
         .result_v(result_v), .result_done(result_done), .result_fault(result_fault), .result_cause(result_cause),
@@ -160,7 +172,7 @@ module qfd_d2d_static_core #(parameter integer MUT = 0, parameter [31:0] TXDP = 
         .fault(st_f));
     // port 3 KVN
     assign kv_x3_slot = txs[3];
-    ot_qwen_d2d_kvn_tx u_kvn (.ck(ck), .rst_n(rst_n & ~eb), .x3(x3), .x3_identity(x3_identity),
+    ot_qwen_d2d_kvn_tx u_kvn (.ck(ck), .rst_n(local_rst_n[3] & ~eb), .x3(x3), .x3_identity(x3_identity),
         .x3_generation(x3_generation), .tx_valid(tv[3]), .tx_payload(tp[3*FW +: FW]), .fault(kvn_f));
     assign fault = endf | st_f | kvn_f;
 endmodule
