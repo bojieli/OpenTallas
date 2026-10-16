@@ -64,6 +64,28 @@ def lef_macros(lef: str) -> dict:
     return out
 
 
+def die_pin_alt(mac: dict) -> dict:
+    """pin -> layer, the die generator's --stn-pin-alt rule (tools/dsrom_s81_fulldie.py _station_pin_layers) on the
+    generator slot: density per (face, layer) over the slot face length; > 12 b/um/layer -> every face with > 8 pins
+    alternates, sorted by position along the face, odd index M5 -> M3 / M4 -> M6, same coordinates"""
+    alt = {'M5': 'M3', 'M4': 'M6'}
+    dens = {}
+    for p in mac['pins']:
+        dens[(p['face'], p['layer'])] = dens.get((p['face'], p['layer']), 0) + 1
+    worst = max(n / (mac['h'] if f in 'EW' else mac['w']) for (f, _), n in dens.items())
+    if worst <= 12.0:
+        return {}
+    out = {}
+    for face in 'NSEW':
+        lst = sorted((p for p in mac['pins'] if p['face'] == face), key=lambda q: q['y'] if face in 'EW' else q['x'])
+        if len(lst) <= 8:
+            continue
+        for i, q in enumerate(lst):
+            if i % 2 and q['layer'] in alt:
+                out[q['pin']] = alt[q['layer']]
+    return out
+
+
 def snap(v: float) -> float:
     """outline dimension up to a multiple of 2.16 um (rows 0.27, sites 0.054, M4/M5 tracks): the generator's 17.256 /
     30.216 / ... slots are off that lattice and the exported view lost every full-length M5 PG stripe (child_lint (b)
@@ -98,6 +120,9 @@ def main() -> int:
     ap.add_argument('--snap', action='store_true', help='outline up to the 2.16-um lattice (PG full-length stripes)')
     ap.add_argument('--alt-vlayer', action='store_true', help='N/S-face data pins alternate M3 / M5 by bit index at the '
                     'generator coordinates (10.4 b/um/layer instead of 20.8 on M5 alone; verdict 10:00 pin_density limit 12)')
+    ap.add_argument('--pin-alt-die', action='store_true', help='S-DIE grant 10:35 (--stn-pin-alt, tools/dsrom_s81_fulldie.py '
+                    '_station_pin_layers): a master whose densest face exceeds 12 b/um/layer alternates layers by sorted face '
+                    'position (odd index; faces with > 8 pins): N/S M5 -> M3, W/E M4 -> M6 (PORT-only, needs an m6_pin_grant)')
     a = ap.parse_args()
     glue_txt = Path(a.glue).read_text()
     glue_sha = hashlib.sha256(glue_txt.encode()).hexdigest()
@@ -137,6 +162,7 @@ def main() -> int:
         tcl = [f'# {mst}: die generator pin centres ({a.case}, pins.lef); outline {dw} x {dh}'
                + (f' (slot {mac["w"]} x {mac["h"]} grown in depth)' if grown else ' (= generator slot)')]
         faces = {}
+        alt_layer = die_pin_alt(mac) if a.pin_alt_die else {}
         scalar = set(re.findall(r'wire \[0:0\] (\w+)', txt))     # 1-bit vectors are scalars after synthesis (PPL-0061)
         for p in mac['pins']:
             x, y = p['x'], p['y']
@@ -149,6 +175,7 @@ def main() -> int:
             if a.alt_vlayer and p['face'] in 'NS' and bit and layer == 'M5' and int(bit.group(1)) % 2 and \
                     re.sub(r'\[\d+\]$', '', p['pin']) not in scalar:
                 layer = 'M3'
+            layer = alt_layer.get(p['pin'], layer)
             p = dict(p, layer=layer)
             pname = re.sub(r'\[0\]$', '', p['pin']) if re.sub(r'\[\d+\]$', '', p['pin']) in scalar else p['pin']
             tcl.append(f'place_pin -pin_name {{{pname}}} -layer {p["layer"]} -location {{{x:.6f} {y:.6f}}} -force_to_die_boundary')
