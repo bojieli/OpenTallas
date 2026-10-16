@@ -21,7 +21,9 @@ module qkd_static_writer_group #(
  (* keep *) reg rn;reg [1:0] stack_q;reg [2:0] group_q;
  always @(posedge ck)begin rn<=rst_n;stack_q<=cfg_stack;group_q<=cfg_group;end
  // Explicit pin capture before target/identity checks and local output flops.
- (* keep *) reg [1151:0] writer_es_p;
+ wire [1151:0] writer_es_p;
+ (* keep *) reg [1147:0] writer_payload_p;
+ (* keep *) reg [3:0] writer_valid_p;
  (* keep *) reg [19:0] writer_pc_p;
  (* keep *) reg [1:0] writer_stack_p;
  (* keep *) reg [58:0] writer_identity_p;
@@ -45,11 +47,12 @@ module qkd_static_writer_group #(
  end
  genvar pin_q;
  generate for(pin_q=0;pin_q<4;pin_q=pin_q+1)begin:g_input_pin
-  always @(posedge ck)writer_es_p[288*pin_q+1+:287]<=writer_es[288*pin_q+1+:287];
-  always @(posedge ck or negedge rn)if(!rn)writer_es_p[288*pin_q]<=0;else writer_es_p[288*pin_q]<=writer_es[288*pin_q];
+  always @(posedge ck)writer_payload_p[287*pin_q+:287]<=writer_es[288*pin_q+1+:287];
+  assign writer_es_p[288*pin_q+:288]={writer_payload_p[287*pin_q+:287],writer_valid_p[pin_q]};
  end endgenerate
  always @(posedge ck or negedge rn)
-  if(!rn)programme_valid_p<=0;else programme_valid_p<=programme_valid;
+  if(!rn)begin programme_valid_p<=0;writer_valid_p<=0;end
+  else begin programme_valid_p<=programme_valid;writer_valid_p<={writer_es[864],writer_es[576],writer_es[288],writer_es[0]};end
  reg [60:0] actual_identity;reg native_slot;
  wire [255:0] full_mask={256{1'b1}} ^ ((MUT==4)?256'd1:256'd0);
  assign pc_context={native_slot,actual_identity,full_mask};
@@ -101,26 +104,27 @@ module qkd_static_writer_pc_mux(
  input wire [28:0] native_expected_address,input wire [4:0] native_expected_pc,input wire [1:0] native_expected_stack,
  input wire [287:0] host_es,
  input wire [260:0] ctrl_er,input wire ctrl_completion_v,ctrl_completion_we,
- output reg [287:0] es,output wire [317:0] es_context,
+ output wire [287:0] es,output wire [317:0] es_context,
  output reg es_expected_valid,output reg [60:0] es_expected_identity,
  output reg [28:0] es_expected_address,output reg [4:0] es_expected_pc,output reg [1:0] es_expected_stack,
  output reg [260:0] host_er,output reg host_completion_v,host_completion_we,
  output reg fault
 );
  (* keep *) reg rn;reg mode_q,native_q;reg [60:0] identity_q;reg [255:0] mask_q;
+ reg [286:0] es_data;reg es_valid;assign es={es_data,es_valid};
  always @(posedge ck)rn<=rst_n;
  assign es_context={native_q,identity_q,mask_q};
  always @(posedge ck)begin
-  es[287:1]<=native_mode?native_es[287:1]:host_es[287:1];
+  es_data<=native_mode?native_es[287:1]:host_es[287:1];
   identity_q<=native_mode?native_context[316:256]:61'd0;mask_q<=native_mode?native_context[255:0]:256'd0;
   es_expected_identity<=native_expected_identity;es_expected_address<=native_expected_address;
   es_expected_pc<=native_expected_pc;es_expected_stack<=native_expected_stack;
  end
  always @(posedge ck or negedge rn)
-  if(!rn)begin es[0]<=0;native_q<=0;es_expected_valid<=0;host_er<=0;host_completion_v<=0;host_completion_we<=0;mode_q<=0;fault<=0;end
+  if(!rn)begin es_valid<=0;native_q<=0;es_expected_valid<=0;host_er<=0;host_completion_v<=0;host_completion_we<=0;mode_q<=0;fault<=0;end
   else begin
    mode_q<=native_mode;
-   es[0]<=ownership_valid&&(native_mode?native_es[0]:host_es[0]);
+   es_valid<=ownership_valid&&(native_mode?native_es[0]:host_es[0]);
    native_q<=ownership_valid&&native_mode&&native_context[317];
    es_expected_valid<=ownership_valid&&native_mode&&native_expected_valid;
    host_er<=(!native_mode&&ownership_valid)?ctrl_er:261'd0;
