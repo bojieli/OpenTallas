@@ -1,0 +1,253 @@
+{
+ "params": {
+  "MUT": 0
+ },
+ "job": {
+  "owner": "Claude:Q-VMWB (el1015-qwen-attn.log)",
+  "branch": "claude/q-vmwb-1705",
+  "tag": "su1",
+  "purpose": "SU operand-bank native successor cluster (48 x in qfd_sp_vector_memory_par): ctrl + 6 data256 leaves + 2 x 1024x256 macros, 9 clock entries.",
+  "views_to": "physical/ref_tile/qvm_su_bank_native/views",
+  "record_to": "results/rtl/ref_tile/qvm_su_bank_native",
+  "cycles_added": 0,
+  "extra_paths": [
+   "rtl/qwen_sys/vm_native_physical_20261015",
+   "rtl/qwen_sys/vm_plane_20261013",
+   "rtl/qwen_sys/vm_me_20261008",
+   "rtl/qwen_sys/rtl_finish_20261007",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "physical/ref_tile/qvm_data256_native/views",
+   "physical/ref_tile/qvm_su_bank_ctrl_native/views"
+  ],
+  "benches": [
+   {
+    "name": "su_m0",
+    "cmd": "mkdir -p {RUN}/bench && $HOME/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -Wno-fatal --top-module tb_qvm_su_bank_native -GMUT=0 -j 2 --Mdir {RUN}/bench/m0 rtl/qwen_sys/vm_native_physical_20261015/tb_qvm_su_bank_native.sv rtl/qwen_sys/vm_native_physical_20261015/qvm_su_bank_native.sv rtl/qwen_sys/vm_native_physical_20261015/qvm_bank_banked_native.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_region_leaf.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_vector_memory.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v > {RUN}/bench/m0.build.log 2>&1 && {RUN}/bench/m0/Vtb_qvm_su_bank_native",
+    "expect": "pass",
+    "pass_regex": "PASS qvm_su_bank_native",
+    "threads": 2,
+    "peak_ram_gb": 2,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "su_m1",
+    "cmd": "mkdir -p {RUN}/bench && $HOME/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -Wno-fatal --top-module tb_qvm_su_bank_native -GMUT=1 -j 2 --Mdir {RUN}/bench/m1 rtl/qwen_sys/vm_native_physical_20261015/tb_qvm_su_bank_native.sv rtl/qwen_sys/vm_native_physical_20261015/qvm_su_bank_native.sv rtl/qwen_sys/vm_native_physical_20261015/qvm_bank_banked_native.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_region_leaf.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_vector_memory.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v > {RUN}/bench/m1.build.log 2>&1 && {RUN}/bench/m1/Vtb_qvm_su_bank_native",
+    "expect": "fail",
+    "pass_regex": "PASS qvm_su_bank_native",
+    "threads": 2,
+    "peak_ram_gb": 2,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "su_m2",
+    "cmd": "mkdir -p {RUN}/bench && $HOME/.local/opentallas-tools/verilator-5.050/bin/verilator --binary --timing -Wno-fatal --top-module tb_qvm_su_bank_native -GMUT=2 -j 2 --Mdir {RUN}/bench/m2 rtl/qwen_sys/vm_native_physical_20261015/tb_qvm_su_bank_native.sv rtl/qwen_sys/vm_native_physical_20261015/qvm_su_bank_native.sv rtl/qwen_sys/vm_native_physical_20261015/qvm_bank_banked_native.sv rtl/qwen_sys/vm_plane_20261013/ot_qfd_vm_region_leaf.sv rtl/qwen_sys/vm_me_20261008/ot_qfd_sp_vector_memory_bv.sv rtl/qwen_sys/rtl_finish_20261007/ot_qfd_sp_vector_memory.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v > {RUN}/bench/m2.build.log 2>&1 && {RUN}/bench/m2/Vtb_qvm_su_bank_native",
+    "expect": "fail",
+    "pass_regex": "PASS qvm_su_bank_native",
+    "threads": 2,
+    "peak_ram_gb": 2,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "structural_change": "NEW cluster: successor of ot_qfd_vm_su_t per qvm_su_bank_native (cycle-exact vs the reference, tb_qvm_su_bank_native); geometry follows ne3 (entries at their children: ck_ctrl/rst_n W at u_ctrl, ck_in W at u_in, q E facing u_out, ck_mem/cap/out S)."
+ },
+ "name": "qvm_su_bank_native",
+ "top": "qvm_su_bank_native",
+ "kind": "cluster",
+ "sources": [
+  "rtl/qwen_sys/vm_native_physical_20261015/qvm_su_bank_hard_native.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v"
+ ],
+ "clock": "entries",
+ "clock_port": "ck_ctrl",
+ "clock_ports": [
+  "ck_ctrl",
+  "ck_in_lo",
+  "ck_in_hi",
+  "ck_mem_lo",
+  "ck_mem_hi",
+  "ck_cap_lo",
+  "ck_cap_hi",
+  "ck_out_lo",
+  "ck_out_hi"
+ ],
+ "reset_ports": [
+  "rst_n"
+ ],
+ "std_area_um2": 0,
+ "outline": {
+  "w": 371.52,
+  "h": 237.6
+ },
+ "pins": {
+  "W": [
+   "re",
+   "we",
+   "ra",
+   "wl",
+   "wm",
+   "wd",
+   "ck_in_lo",
+   "ck_in_hi",
+   "ck_ctrl",
+   "rst_n"
+  ],
+  "E": [
+   "q"
+  ],
+  "S": [
+   "ck_mem_lo",
+   "ck_mem_hi",
+   "ck_cap_lo",
+   "ck_cap_hi",
+   "ck_out_lo",
+   "ck_out_hi"
+  ]
+ },
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 8,
+  "macro_halo_um": 5.4,
+  "hold_margin_ns": 0.03
+ },
+ "slot_change_request": "NEW master: native structural successor of ot_qfd_vm_su_t (48 instances in qfd_sp_vector_memory_par); not yet in a die contract; same 9-entry clock/pin geometry rule as qvm_bank_entries_my_native ne3.",
+ "children": [
+  {
+   "view": "physical/ref_tile/qvm_su_bank_ctrl_native/views/qvm_su_bank_ctrl_native",
+   "count": 1,
+   "inst": "u_ctrl",
+   "at": [
+    25.92,
+    190.08
+   ]
+  },
+  {
+   "view": "physical/ref_tile/qvm_data256_native/views/qvm_data256_native",
+   "count": 1,
+   "inst": "u_in_lo",
+   "at": [
+    25.92,
+    25.92
+   ]
+  },
+  {
+   "view": "physical/ref_tile/qvm_data256_native/views/qvm_data256_native",
+   "count": 1,
+   "inst": "u_in_hi",
+   "at": [
+    25.92,
+    116.64
+   ]
+  },
+  {
+   "view": "physical/ref_tile/qvm_data256_native/views/qvm_data256_native",
+   "count": 1,
+   "inst": "u_cap_lo",
+   "at": [
+    272.16,
+    25.92
+   ]
+  },
+  {
+   "view": "physical/ref_tile/qvm_data256_native/views/qvm_data256_native",
+   "count": 1,
+   "inst": "u_cap_hi",
+   "at": [
+    272.16,
+    116.64
+   ]
+  },
+  {
+   "view": "physical/ref_tile/qvm_data256_native/views/qvm_data256_native",
+   "count": 1,
+   "inst": "u_out_lo",
+   "at": [
+    319.68,
+    25.92
+   ]
+  },
+  {
+   "view": "physical/ref_tile/qvm_data256_native/views/qvm_data256_native",
+   "count": 1,
+   "inst": "u_out_hi",
+   "at": [
+    319.68,
+    116.64
+   ]
+  }
+ ],
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "u_lo",
+   "at": [
+    73.44,
+    25.92
+   ],
+   "clock_entry": {
+    "port": "ck_mem_lo",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   },
+   "orient": "MY"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "count": 1,
+   "inst": "u_hi",
+   "at": [
+    73.44,
+    116.64
+   ],
+   "clock_entry": {
+    "port": "ck_mem_hi",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   },
+   "orient": "MY"
+  }
+ ],
+ "child_lattice_um": 4.32,
+ "inter": [],
+ "recipe": 2,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "pin_ranges": {
+  "ck_in_lo": [
+   46.5,
+   50.5
+  ],
+  "ck_in_hi": [
+   137.28,
+   141.28
+  ],
+  "ck_ctrl": [
+   194.78,
+   198.28
+  ],
+  "rst_n": [
+   199.28,
+   202.78
+  ],
+  "q": [
+   24.0,
+   170.0
+  ]
+ }
+}
