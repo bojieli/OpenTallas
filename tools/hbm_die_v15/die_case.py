@@ -314,10 +314,34 @@ def main():
                     'hbm_pc_clk': 'hbm'}.get(b)
     ck = slots[a.ckgen]
     pads = json.loads(a.clock_pads.read_text()) if a.clock_pads else {}
-    obs = [(v['x'], v['y'], v['x'] + v['w'], v['y'] + v['h']) for v in leaves.values()]
+    # obstacles: every placed view and every other plan block, MINUS the die-owned feedthrough relay column/row each
+    # cluster slot reserves (grants reserved_channels): die clock repeaters sit there, as the die relay stations do
+    def minus_channels(name, x0, y0, w, h, o):
+        sl = slots.get(name)
+        rects = [(x0, y0, x0 + w, y0 + h)]
+        for ch_ in (sl or {}).get('reserved_channels', []):
+            cx0, cx1 = ch_['x_um']; cy0, cy1 = ch_['y_um']
+            if o in ('MY', 'R180'):
+                cx0, cx1 = w - cx1, w - cx0
+            if o in ('MX', 'R180'):
+                cy0, cy1 = h - cy1, h - cy0
+            cut = (x0 + cx0, y0 + cy0, x0 + cx1, y0 + cy1)
+            nr = []
+            for (a0, b0, a1, b1) in rects:
+                if cut[0] >= a1 or cut[2] <= a0 or cut[1] >= b1 or cut[3] <= b0:
+                    nr.append((a0, b0, a1, b1)); continue
+                for r in ((a0, b0, cut[0], b1), (cut[2], b0, a1, b1), (max(a0, cut[0]), b0, min(a1, cut[2]), cut[1]),
+                          (max(a0, cut[0]), cut[3], min(a1, cut[2]), b1)):
+                    if r[2] - r[0] > 0.01 and r[3] - r[1] > 0.01:
+                        nr.append(r)
+            rects = nr
+        return rects
+    obs = []
+    for l, v in leaves.items():
+        obs += minus_channels(l, v['x'], v['y'], v['w'], v['h'], v['o'])
     for n, b in P.items():
         if isinstance(b, dict) and 'x' in b and n.split('_')[0] not in ('phy', 'pc', 'sm'):
-            obs.append((b['x'], b['y'], b['x'] + b['w'], b['y'] + b['h']))
+            obs += minus_channels(n, b['x'], b['y'], b['w'], b['h'], b.get('orient', 'R0'))
     trees = {}
     clkpins = defaultdict(lambda: defaultdict(list))   # domain -> inst -> [pins]
     for l, v in leaves.items():
