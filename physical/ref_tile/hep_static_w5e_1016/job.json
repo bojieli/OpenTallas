@@ -43,7 +43,8 @@
     "expect": "fail",
     "threads": 8,
     "peak_ram_gb": 8,
-    "pass_regex": "^TB_HFD_EP_STATIC .* PASS$"
+    "pass_regex": "^TB_HFD_EP_STATIC .* PASS$",
+    "fail_regex": "^TB_HFD_EP_STATIC MUT=[1-4] .*\\| FAIL$"
    },
    {
     "name": "ep_mut_rx_noidle",
@@ -51,7 +52,8 @@
     "expect": "fail",
     "threads": 8,
     "peak_ram_gb": 8,
-    "pass_regex": "^TB_HFD_EP_STATIC .* PASS$"
+    "pass_regex": "^TB_HFD_EP_STATIC .* PASS$",
+    "fail_regex": "^TB_HFD_EP_STATIC MUT=[1-4] .*\\| FAIL$"
    },
    {
     "name": "ep_mut_rx_swap",
@@ -59,7 +61,8 @@
     "expect": "fail",
     "threads": 8,
     "peak_ram_gb": 8,
-    "pass_regex": "^TB_HFD_EP_STATIC .* PASS$"
+    "pass_regex": "^TB_HFD_EP_STATIC .* PASS$",
+    "fail_regex": "^TB_HFD_EP_STATIC MUT=[1-4] .*\\| FAIL$"
    },
    {
     "name": "ep_mut_rxblock_bank",
@@ -67,7 +70,8 @@
     "expect": "fail",
     "threads": 8,
     "peak_ram_gb": 8,
-    "pass_regex": "^TB_HFD_EP_STATIC .* PASS$"
+    "pass_regex": "^TB_HFD_EP_STATIC .* PASS$",
+    "fail_regex": "^TB_HFD_EP_STATIC MUT=[1-4] .*\\| FAIL$"
    }
   ],
   "calibrate": {
