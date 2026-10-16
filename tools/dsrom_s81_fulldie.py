@@ -1591,12 +1591,14 @@ def write_netlist(m, k, path, top='dsfd_die', skip=()):
                 conns[inst].append((base, net, n, lo if k == 1 else lo // k))
             else:
                 conns[inst].append((port, net, n))
+    pads_decl = defaultdict(dict)
     for it in m['insts']:
         parts = []
         bus_bits = defaultdict(dict)
         sliced = defaultdict(list)
         for c in conns.get(it.name, []):
             if len(c) == 4:                      # a slice of a generated / bundled port
+                assert not (k == 1 and it.name in (m.get('pad') or {}) and c[0] in m['pad'][it.name]['ports']), (it.name, c[0], 'sliced DEDUPE padding unsupported')
                 sliced[c[0]].append((c[3], c[1], c[2]))
                 continue
             if isinstance(c[0], list):
@@ -1609,6 +1611,18 @@ def write_netlist(m, k, path, top='dsfd_die', skip=()):
                         parts.append(f'.{Q.esc(pn)}({net}[{i}])')
             else:
                 port, net, n = c
+                pr_ = (m.get('pad') or {}).get(it.name)
+                if pr_ and port in pr_['ports'] and k == 1 and n < pr_['std']:
+                    # --dedupe-pad: spare standard bits above the logical width
+                    sp_ = pr_['std'] - n
+                    if m['pdir'][it.master][port][0] == 'input':
+                        parts.append(f".{port}({{{sp_}'b0, {net}}})")
+                        pads_decl[it.name][port] = n
+                    else:
+                        nc_ = f'n_pad_{it.name}_{port}'
+                        V.append(f'  wire [{sp_ - 1}:0] {nc_};')
+                        parts.append(f'.{port}({{{nc_}, {net}}})')
+                    continue
                 parts.append(f'.{port}({net})')
         for base, pcs in sliced.items():
             pcs.sort()
@@ -1652,6 +1666,15 @@ def write_netlist(m, k, path, top='dsfd_die', skip=()):
         V.append(f'  {it.master} {it.name} (' + ', '.join(parts) + ');')
     V.append('endmodule\n')
     Path(path).write_text('\n'.join(V))
+    pad_path = Path(str(path) + '.pads.json')
+    if k == 1 and pads_decl:
+        pad_path.write_text(json.dumps(dict(schema='s81-instance-padding-v1', instances={
+            inst: dict(master=by[inst].master,
+                       reason='DEDUPE --dedupe-pad: spare standard input bits tied low; logical bits unchanged',
+                       ports={p_: dict(logical_width=L) for p_, L in sorted(ps.items())})
+            for inst, ps in sorted(pads_decl.items())}), indent=1) + '\n')
+    elif pad_path.exists():
+        pad_path.unlink()   # an opt-out/default regeneration must not inherit old pad permissions
     if k == 1:
         # s81-die-rtl-bind 2026-10-14: the structural netlist names each hardened master by its base module (OpenSTA reads
         # no #(...) overrides), so the elaboration parameters every master is built with go to a sidecar the RTL binders
@@ -3876,6 +3899,52 @@ def _split_multi_lane_stations(m):
                                      % (len(victims), sum(r_['lanes'] for r_ in rec)))
 
 
+def _dedupe_pad(m):
+    """--dedupe-pad FILE (S-NET+FILL 2026-10-16, coordinator decision; DEDUPE owner rule 19:50 'fewer distinct tiles'):
+    every instance of a map FROM master becomes an instance of the standard TO (same RTL body family, one register
+    stage, 0 cycles).  Its die buses keep their logical width: write_netlist ties the spare TO input bits low and gives
+    the spare outputs no-load nets, and die.v.pads.json declares the spare inputs for tools/die_port_bind.py (PADS).
+    The instance takes TO's outline (bound view SIZE, else the generated slot of a native TO instance) through the
+    --stn-footprints growth search, so a bound view fits its slot.  Recorded in m['pad'] / variant['dedupe_pad']."""
+    mp = DEDUPE_PAD['map']
+    for frm, e in mp.items():
+        fp = re.fullmatch(r'dsfd_(hstn[hv])_(\d+)|dsfd_(stn[hv])_(\d+)x1|dsfd_(rly)_(\d+)_([NSEW]{2})', frm)
+        to = e['to']
+        tp = re.fullmatch(r'dsfd_(hstn[hv])_(\d+)|dsfd_(stn[hv])_(\d+)x1|dsfd_(rly)_(\d+)_([NSEW]{2})', to)
+        assert fp and tp, (frm, to, 'unsupported DEDUPE family')
+        fg, tg = fp.groups(), tp.groups()
+        family = next(x for x in (fg[0], fg[2], fg[4]) if x)
+        assert family == next(x for x in (tg[0], tg[2], tg[4]) if x), (frm, to, 'clock/stage family differs')
+        logical = int(next(x for x in (fg[1], fg[3], fg[5]) if x))
+        standard = int(next(x for x in (tg[1], tg[3], tg[5]) if x))
+        assert logical < standard and (fg[6] == tg[6]), (frm, to, 'width or relay faces differ')
+        expected = {'di': logical, 'dq': logical} if family.startswith('hstn') else ({'di0': logical, 'do0': logical} if family.startswith('stn') else {'i': logical, 'o': logical})
+        assert e['ports'] == expected, (frm, e['ports'], expected)
+    nat = {}
+    for it in m['insts']:
+        nat.setdefault(it.master, (it.w, it.h))
+    bv = bound_views()
+    rec = m.setdefault('pad', {})
+    for it in m['insts']:
+        e = mp.get(it.master)
+        if not e:
+            continue
+        to = e['to']
+        std = int(re.search(r'_(\d+)(?:x1|_[NSEW]{2})?$', to).group(1))
+        rec[it.name] = dict(frm=it.master, std=std, ports=dict(e['ports']))
+        it.master = to
+        if to in bv:
+            wh = (bv[to]['w'], bv[to]['h'])
+        elif to in nat:
+            wh = nat[to]
+        else:
+            wh = None
+        if wh and to not in STN_FOOTPRINTS and (abs(wh[0] - it.w) > 1e-6 or abs(wh[1] - it.h) > 1e-6):
+            STN_FOOTPRINTS[to] = wh
+    m['dedupe_pad'] = dict(file=DEDUPE_PAD['path'], instances=len(rec),
+                           by_master={k: sum(1 for r in rec.values() if r['frm'] == k) for k in mp})
+
+
 def _apply_station_footprints(m):
     """--stn-footprints (S-DIE r12 grant 10-15): instances of the FILL-S-measured station masters (exact final master
     name, after the common-clock hstn conversion) take the granted outline: depth-only growth in the flow direction,
@@ -5021,6 +5090,8 @@ def build_r8(variant=None):
     buses_r8(m)
     if STN70_SPLIT:
         _split_multi_lane_stations(m)
+    if DEDUPE_PAD:
+        _dedupe_pad(m)
     if STN_FOOTPRINTS:
         _apply_station_footprints(m)
     if RTL_HUB_WIDTHS and 'wfc' in hub and hub['wfc'].master in WFC_FIELD_SPLIT:
@@ -6388,6 +6459,7 @@ HC_XFACE = False                # --hc-xface (S81-RERUN v7, default off): hc_s <
                                 #   the corridor inside the HC column (out of the VCH-edge lane)
 SEL_XSTG = False                # --sel-xstg (S81-RERUN v8, default off): d8g1 meso crossing stage (1.5 T arcs + low guard)
 HEND_BOUND_FOOTPRINT = False    # --hend-bound-footprint: reserve each hub end's verified view outline before placement
+DEDUPE_PAD = None               # --dedupe-pad FILE: DEDUPE pad map (instances of FROM become the standard TO, spare bits padded)
                                 #   on the 8 end block -> selector / collector buses; +6 cycles
 LINK_SPLIT = False              # --link-split (S81-RERUN v8, default off; needs --link-fix): SerDes tx / rx through two
                                 #   256-b half-span stations (port slices), last hop <= 281 um; +1 cycle each way
@@ -9383,6 +9455,11 @@ def finalize_r8(m):
     """field glue masters by role (S13: one master per role and width): slot stations by their port set, return
     nodes by child kinds / fault chain; records m['pdir'][master][port] = (dir, bits)."""
     use = port_usage(m)
+    for in_, pr_ in (m.get('pad') or {}).items():      # --dedupe-pad: the standard's full port width
+        for p_, w_ in pr_['ports'].items():
+            d_, b_ = use[in_][p_]
+            assert b_ == w_, (in_, p_, b_, w_)
+            use[in_][p_] = (d_, pr_['std'])
     by_ = {it.name: it for it in m['insts']}
     m['_nets_of_o'] = defaultdict(list)
     for b_ in m['buses']:
@@ -11462,6 +11539,8 @@ def die_options(ap):
                     '(r3 GRT: hop relays 776-906 um from their load, TT -244 on ck_col relay paths)')
     ap.add_argument('--pin-relay', action='store_true', help='r9: relay station abutting every hardened-block pin on '
                     'die interfaces (last segment <= 100 um; needs --hop-fix; default off)')
+    ap.add_argument('--dedupe-pad', help='S-NET+FILL: DEDUPE pad map JSON (results/arch/tile_dedupe_1015/s81_pad_map_1016.json): '
+                    'instances of FROM become the closed standard TO; spare inputs tied low (die.v.pads.json), spare outputs open')
     ap.add_argument('--hend-bound-footprint', action='store_true', help='S-NET+FILL: reserve the verified binding-table '
                     'SIZE of every hub end / start block (<master>__<inst>) before placement (c26b: 37 hub end views '
                     'OT_VIEW_MISFIT real > slot by 0.02-1.75 um); geometry only, does not qualify clocks or routes')
@@ -11803,6 +11882,11 @@ def apply_options(a):
     SEL_XSTG = bool(getattr(a, 'sel_xstg', False))
     global HEND_BOUND_FOOTPRINT
     HEND_BOUND_FOOTPRINT = bool(getattr(a, 'hend_bound_footprint', False))
+    global DEDUPE_PAD
+    DEDUPE_PAD = None
+    if getattr(a, 'dedupe_pad', None):
+        pp_ = Path(a.dedupe_pad); pp_ = pp_ if pp_.is_absolute() else ROOT / pp_
+        DEDUPE_PAD = dict(path=str(a.dedupe_pad), map=json.loads(pp_.read_text())['map'])
     global PIN_RELAY, NXT_REACH, CHS, VCH8, HC_CORR, SPINE_W8
     PIN_RELAY = bool(getattr(a, 'pin_relay', False))
     NXT_REACH = bool(getattr(a, 'nxt_reach', False))
