@@ -23,11 +23,47 @@
   "w": 475.2,
   "h": 280.8
  },
- "recipe": 2,
+ "recipe": 3,
  "macros": [
   {
    "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
-   "count": 4
+   "count": 1,
+   "at": [
+    45.792,
+    51.84
+   ],
+   "orient": "R0",
+   "inst": "u_core.u_end.u_link.g_bank[0].u_store.u_sram"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "at": [
+    257.904,
+    51.84
+   ],
+   "orient": "R0",
+   "inst": "u_core.u_end.u_link.g_bank[1].u_store.u_sram"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "at": [
+    45.792,
+    151.2
+   ],
+   "orient": "R0",
+   "inst": "u_core.u_end.u_link.g_bank[2].u_store.u_sram"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "count": 1,
+   "at": [
+    257.904,
+    151.2
+   ],
+   "orient": "R0",
+   "inst": "u_core.u_end.u_link.g_bank[3].u_store.u_sram"
   }
  ],
  "pins": {
@@ -103,12 +139,15 @@
   "threads": 16,
   "peak_ram_gb": 48,
   "hold_margin_ns": 0.03,
-  "macro_halo_um": 5.4
+  "macro_halo_um": 5.4,
+  "cts_sink": {
+   "extra": "-no_obstruction_aware -distance_between_buffers 40"
+  }
  },
  "job": {
-  "owner": "Claude:q-link",
-  "branch": "claude/qwen-link-1015",
-  "tag": "r1",
+  "owner": "Codex:qwen-link-2116",
+  "branch": "codex/qwen-link-2116",
+  "tag": "r4",
   "purpose": "Q-LINK static D2D link end qfd_d2d_static (compiler calendars, 583-bit PHY word slot link with 4x137 SRAM store, explicit recovery mode; no credits/backpressure). PHY on face S.",
   "extra_paths": [
    "rtl/qwen_sys",
@@ -151,5 +190,10 @@
  "pin_reg_split": true,
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "structural_change": "r3 cb4ec1b91 GRT-0116 is one internal rx_payload[24] capture net with two zero-capacity M4 gcells at x225.72..226.86 y171.57..172.14 beside upper-left SRAM E edge. Current central macro channel only20.088um; symmetrically move west/east macro columns outward10.368um to create40.824um center escape channel, preserving475.2x280.8 slot and45.792um outer clearance. Keep r3 balanced CTS (no obstruction detours,40umrepeaters); no logical edges, clock periods, budgets or gates changed. Actual before floorplan/density PNG and net endpoint diagnostic retained.",
+ "pin_regs": {
+  "enable": false,
+  "reason": "RTL is already pin-registered: d2d_pinreg_gen.py PR=1 wraps qfd_d2d_static_core with exactly one flop per functional port (FIRM at the pin via io_flop_at_pins); the link calendar is compiled --pinreg; a second synthesized pin register would add +1 cycle per port with no timing purpose"
  }
 }
