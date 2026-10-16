@@ -13,8 +13,8 @@
   "rst_n"
  ],
  "outline": {
-  "w": 75.6,
-  "h": 280.8,
+  "w": 54.0,
+  "h": 324.0,
   "exact": true
  },
  "layer_cap": "M5",
@@ -46,7 +46,8 @@
   "peak_ram_gb": 16,
   "period_ps": 770,
   "hold_margin_ns": 0.03,
-  "macro_halo_um": 5.4
+  "macro_halo_um": 5.4,
+  "pin_min_tracks": 3
  },
  "recipe": 2,
  "pin_regs": {
@@ -69,17 +70,19 @@
  },
  "children": [],
  "inter": [],
- "structural_change": "r3 (S-VM-XRET 10-16): (1) RTL: e_v / return_valid / f_xgo get plain pin capture flops (ev_raw / valid_raw / xq_raw <= pin); the rn qualification is applied after the flop from a registered rn copy (rq[2]): rn_d ? raw : 0 equals the former rn ? pin : 0 captured at the same edge -- zero cycle change, proved by tools/s81_vm/xio_return_r3_equiv_gate.sh (r3 vs frozen r2, every output every cycle, random inputs through 400 async resets x 4 seeds; mutant RNQ fails). r2 mapped ev_pin<=rn?e_v:0 to AND2 + SDFF; io_flop_at_pins walks INV/BUF only, so the four e_v flops were never anchored and sat at x=162-164 um, 162 um from their W pins (BUFx16f wire buffer + BUFx2): e_v[0] TT setup -47.3 ps + R 267.3 = capture 220.0 > 190. (2) Outline right-sized by pin perimeter 216x324 -> 75.6x280.8 (fill 0.062 -> ~0.2-0.3). Static fixed-cycle; no backpressure, no clock relaxation.",
+ "structural_change": "r3 (S-VM-XRET 10-16): (1) RTL: e_v / return_valid / f_xgo get plain pin capture flops (ev_raw / valid_raw / xq_raw <= pin); the rn qualification is applied after the flop from a registered rn copy (rq[2]): rn_d ? raw : 0 equals the former rn ? pin : 0 captured at the same edge -- zero cycle change, proved by tools/s81_vm/xio_return_r3_equiv_gate.sh (r3 vs frozen r2, every output every cycle, random inputs through 400 async resets x 4 seeds; mutant RNQ fails). r2 mapped ev_pin<=rn?e_v:0 to AND2 + SDFF; io_flop_at_pins walks INV/BUF only, so the four e_v flops were never anchored and sat at x=162-164 um, 162 um from their W pins (BUFx16f wire buffer + BUFx2): e_v[0] TT setup -47.3 ps + R 267.3 = capture 220.0 > 190. (2) Outline right-sized by pin perimeter 216x324 -> 54x324 with 3-track pin spacing (synth util 0.12 at 75.6x280.8 in the first gate; r3 synth 2368 um2 -> 0.15, ~0.25-0.3 after repair). Static fixed-cycle; no backpressure, no clock relaxation.",
  "slot_change_request": {
   "contract": "S81 VM connected A2F physical rebind candidate",
   "version": "xio-native-1016-r3",
   "why": "r2 216x324 routed at fill 0.062 with a ~150 um empty middle; outline re-derived from the pin perimeter.",
   "arithmetic": {
-   "W_face": "e_v 4 + e_d 2048 = 2052 pins on one horizontal pin layer (M4; M5 cap) at <= 8 pins/um -> H >= 256.5 um; grid 21.6 -> H = 280.8 (13 x 21.6): 7.31 pins/um (r2 6.33)",
-   "E_face": "t_crs 513 + q_v 1 + q_d 512 + g_v 1 + g_d 511 + f_xgo 11 = 1549 pins / 280.8 = 5.52 pins/um",
-   "N_face": "ck 1 + rst_n 1 + return_valid 3 + return_lane 6 + fault 1 = 12 pins / 75.6 um = 0.16 pins/um; ck at N-face centre (x~37.8), no corner",
-   "W_dim": "cell area r2: synth 2370 um2, final 4529 um2 (incl. 162 um wire buffering the new outline removes); width 75.6 (7 x 10.8): core 71.28 x 276.48 = 19,707 um2 -> util 0.12 (synth) .. 0.23 (r2 final); die 21,228 um2 vs 69,984 (0.30x)",
-   "cut": "W->E horizontal cut: <= 2052 signals / 276.5 um = 7.4 per um vs M2+M4 ~48 tracks/um = 0.15; io flops: W 2052 / 1024 rows = 2.0 per row, E 1549 / 1024 = 1.5 per row (4 staggered columns each face)"
+   "pin_spacing": "first r3 gate (75.6x280.8, place_pins -min_distance 2 tracks) packed the W pins at 10.5 pins/um over ~198 um and E at ~11 pins/um: min-distance 2 x 0.048 um M4 = 10.4 pins/um. r3 uses pin_min_tracks 3 (0.144 um pitch: 6.94 pins/um <= 8 on the single horizontal pin layer M4 under the M5 cap)",
+   "W_face": "e_v 4 + e_d 2048 = 2052 pins x 0.144 um = 295.5 um of face -> H >= 295.5 + core margins; grid 21.6 -> H = 324 (15 x 21.6), core 319.7 um, 92% of the face at 6.94 pins/um",
+   "E_face": "t_crs 513 + q_v 1 + q_d 512 + g_v 1 + g_d 511 + f_xgo 11 = 1549 pins x 0.144 = 223 um of 319.7",
+   "N_face": "ck 1 + rst_n 1 + return_valid 3 + return_lane 6 + fault 1 = 12 pins on 54 um; ck at the N-face centre (x~27), no corner",
+   "W_dim": "synthesized std area 2368 um2 (gate on 992cc9cb4), r2 final 4529 um2 incl. 162 um wire buffering; W = 54 (5 x 10.8): core 49.68 x 319.68 = 15,882 um2 -> util 0.15 synth .. 0.29 at the r2 final area; die 17,496 um2 = 0.25x r2's 69,984",
+   "bands": "W: hold pad + 4..6 flop columns ~10 um; E ~11 um; ~29 um middle for the 3 x 512 4:1 lane muxes and 2-stage q/g regs",
+   "cut": "W->E horizontal: <= 2052 signals / 319.7 um = 6.4 per um vs M2+M4 ~48 tracks/um = 0.13; lane rotation vertical: r2 pin order interleaves the four e_d lanes over one span, residual per-bit rotation tens of um on M3+M5 ~48 tracks/um x 54 um = 2,600 tracks"
   }
  },
  "job": {
