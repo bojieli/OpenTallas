@@ -48,6 +48,15 @@
     "images_viewed": [
       "physical/ref_tile/ot_qwen_tile_romleaf/gate_layout/floorplan.png",
       "physical/ref_tile/ot_qwen_tile_romleaf/gate_layout/density.png"
-    ]
+    ],
+    "actual_macro_clock": {
+      "pin": "u_rom/clk",
+      "arrival_tt_ps": 179.7,
+      "slew_ps": 13.4,
+      "register_mean_tt_ps": 187.4,
+      "macro_minus_reg_ps": -7.7,
+      "net": "clknet_1_0__leaf_clk",
+      "source": "gate_result.json clock.clock_measurements[0].tt.macros"
+    }
   }
 }
