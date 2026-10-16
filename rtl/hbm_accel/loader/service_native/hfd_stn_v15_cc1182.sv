@@ -5,7 +5,7 @@
 module hfd_stn_v15_cc1182 (
     input  wire [1181:0] a,
     output reg  [1181:0] b,
-    input  wire ck
+    input  wire clk
 );
-    always @(posedge ck) b <= a;
+    always @(posedge clk) b <= a;
 endmodule
