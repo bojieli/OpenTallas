@@ -2,13 +2,13 @@
  "schema": "opentallas.ref_tile.gate_result.v2",
  "kit": "qfd_tt_ctlm_tree",
  "verdict": "FAIL",
- "generated": "2026-10-14T08:06:13-0700",
+ "generated": "2026-10-14T08:22:46-0700",
  "host": "ot-epyc1tb",
  "cts": true,
  "commit": null,
  "source_binding": {
   "schema": "opentallas.ref_tile.source_snapshot.v1",
-  "start_commit": "642a48f5e29a0539347319c6fa31fe0aab8c522a",
+  "start_commit": "20d8bec7223864ee5240fcccd2e31893209e6648",
   "commit": null,
   "identity": "exact_content_snapshot",
   "daemon_tree": "/home/ubuntu/wt-claude-closure-daemon-1010",
@@ -21,8 +21,8 @@
    "tools/orfs_hold_mm.tcl",
    "tools/textbook_lint.py"
   ],
-  "archive_sha256": "3589ddbb3f9181992b971d3361c00465119220e7d9f974ba3c7f09ac60e4e7ae",
-  "manifest_sha256": "306030fc4ad0baf764fc211c729ebf848f752de758501175ab1dc86a575fad2c",
+  "archive_sha256": "8c16c50c915b72fe090778e3547973dcc7aec9a9deef46f22789c0a1d48541be",
+  "manifest_sha256": "36f5a19a01203ad7ce00667f3f5c39551fe161d7bd21243c41bdaf4bcdce643d",
   "files": [
    {
     "path": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.json",
@@ -17835,8 +17835,8 @@
    {
     "path": "physical/ref_tile/qfd_tt_ctlm_tree/job.json",
     "kind": "file",
-    "sha256": "7a160979957fe5ecc4416d71ae2182dfcb31bd0f09a4c14c0573feb2e60ba3b5",
-    "git_blob": "fe72a70eff9ac9bd3c4d3110244cf1a97dc2e53a",
+    "sha256": "acb34e4085859d6172f5661561fcaf1b37913b85043c82ba2a563e755a5d4e42",
+    "git_blob": "0472efd45e21b920d4869b8b9fcc19d9cd79a53d",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -17955,8 +17955,8 @@
    {
     "path": "physical/ref_tile/qfd_tt_ctlm_tree/spec.json",
     "kind": "file",
-    "sha256": "5fb5780436a85a2c186220d437ee1d098ddf4f0c4e73eb690146cc0703701891",
-    "git_blob": "4b5f6be260d9c15bc623d06df8f113e7f9626c64",
+    "sha256": "49b5a48633eae743841267c2ce569ff0d80770e9094e66e3f3896de57bc2d80e",
+    "git_blob": "ba583eca94fb1f833ce1ab569281ce8aed3285ad",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -87675,8 +87675,8 @@
    {
     "path": "tools/ref_tile/specs_qttsplit/qfd_tt_ctlm_tree.json",
     "kind": "file",
-    "sha256": "13fb8840468bdc38e912ca98abc199d294b40e36da9f9eced51d22a6740cd776",
-    "git_blob": "d5c2948879383d3d99f13afac6fe7f5b4efbed56",
+    "sha256": "52209bd7f49c73d92f92e21d668aa5ee4253594c76c15ad767e6b6e84d31ee7c",
+    "git_blob": "58ff5a77e7aa28e823ca5dc7a12aa0565cf6eb2e",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -107843,7 +107843,7 @@
   ],
   "route_overlay_plan": {
    "schema": "opentallas.closure_loop.helper_overlay_plan.v1",
-   "origin_main": "4b95cb7bd7ed0c5dac41cd4554432e81f6dc95d5",
+   "origin_main": "b1db1e98aa971405fa1611f446ae738bdfb74108",
    "content_sha256": "d422c33fd7fe5e4ebf90576f2a8c7ac9c2a4595707a1c3fb2709a6cc4610da04",
    "files": [
     {
@@ -108216,11 +108216,11 @@
     }
    ]
   },
-  "captured": "2026-10-14T07:54:29-0700",
-  "remote_script_sha256": "81c847affdb36213005d55eb5dae658959927542a89386aefd4a2558db5c7bd6",
+  "captured": "2026-10-14T08:07:26-0700",
+  "remote_script_sha256": "1966fce0730c6a26df37677e5cccbe00bdf7a6df0918282f5bd1b754a4c5cb8f",
   "tool_image_requested": "openroad/orfs:latest",
   "remote_host": "ot-epyc1tb",
-  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/qfd_tt_ctlm_tree-20261014-075318",
+  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/qfd_tt_ctlm_tree-20261014-080646",
   "remote_archive_verified": true,
   "runtime_tool_provenance": [
    "GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=[\"openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29\"]",
@@ -108246,7 +108246,7 @@
   {
    "severity": "FAIL",
    "check": "cts_run",
-   "message": "placement / CTS of the kit failed: [ERROR RSZ-3006] Failed to insert buffer before loads for net net10661",
+   "message": "placement / CTS of the kit failed: [ERROR RSZ-3006] Failed to insert buffer before loads for net net10636",
    "fix": "the route would fail the same way (DPL-0033 / GPL-0305 / CTS-*): fix the floorplan / density before routing"
   },
   {
