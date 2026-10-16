@@ -5,7 +5,7 @@ from pathlib import Path
 p=argparse.ArgumentParser();p.add_argument('netlist',type=Path);p.add_argument('--out',type=Path,required=True);p.add_argument('--top',default='qfd_sp_vector_memory_par_partitioned_ro6');p.add_argument('--expected-parent-ff',type=int,default=55382);p.add_argument('--expected-bv-ff',type=int,default=53549);a=p.parse_args();mods=json.loads(a.netlist.read_text())['modules'];top=a.top;tm=mods[top]
 labels={b:n if len(v['bits'])==1 else f'{n}[{i}]'for n,v in tm['ports'].items()for i,b in enumerate(v['bits'])};rows=[];physical=collections.Counter()
 seq={'$dff','$adff','$sdff','$dffe','$adffe','$sdffe','$aldff','$dffsr'}
-def base(n):return n.split('\\')[-1]
+def base(n):return n.split('\\')[1]if n.startswith('$paramod\\')else n.split('\\')[-1]
 def wire(b,mp,path):return mp.get(b,f'{path}::bit{b}')if isinstance(b,int)else f'constant:{b}'
 def walk(name,mp,path):
  m=mods[name];alias=collections.defaultdict(list)

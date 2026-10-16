@@ -11,7 +11,7 @@ for n,v in tm['ports'].items():
 clock_rows=[];ff=Counter();owned=Counter();leaf_counts=Counter()
 physical=['ot_qfd_vm_bctl_nx','ot_qfd_vm_delay1_t','ot_qfd_vm_delay2_t','ot_qfd_vm_rr2_nx','ot_qfd_vm_rr4_t','ot_qfd_vm_sctl_t','ot_qfd_vm_su1024_t','qfd_vm_qcommit','qvm_bank_banked_native','qvm_su_bank_native','qvm_data256_native']
 roles=['ck_ctrl','ck_in_lo','ck_in_hi','ck_mem_lo','ck_mem_hi','ck_cap_lo','ck_cap_hi','ck_out_lo','ck_out_hi']
-def basename(n):return n.split('\\')[-1]
+def basename(n):return n.split('\\')[1]if n.startswith('$paramod\\')else n.split('\\')[-1]
 def mapbit(b,mp,path):return mp.get(b,f'{path}::bit{b}') if isinstance(b,int) else f'constant:{b}'
 def walk(name,mp,path,in_pin=False):
  m=mods[name]
