@@ -21,7 +21,7 @@ set ::ot_ce_leaf_roots 1
 set ::ot_ce_related_data 1
 set ::ot_ce_refs [dict create ]
 set ::ot_ce_counts [dict create ]
-set ::ot_ce_domains [dict create {core} {clock core_clk io_budget_ps 166.667 inputs {{rst_n} {x_v} {x_base} {x_n} {x_p} {x_stride} {x_space} {x_fmt} {x_xb} {rr} {qo_lo} {qo_hi} {qf_lo} {qf_hi}} outputs {{x_busy} {x_fault} {rq} {rn_o} {c_d} {c_wce} {c_mhi} {c_mlo} {c_wa} {r_ce} {r_a} {l_d_o} {qv_lo} {qv_hi} {r_wsel} {zlo} {zhi} {ea} {eb2} {lane_en}}} {eg} {clock ot_io_eg io_budget_ps 166.667 inputs {{rwq} {bq_d}} outputs {{x_done} {xw_en} {xw_last} {xw_addr} {xw_grp} {xw_data}}}]
+set ::ot_ce_domains [dict create {core} {clock core_clk io_budget_ps 166.667 inputs {{rst_n} {x_v} {x_base} {x_n} {x_p} {x_stride} {x_space} {x_fmt} {x_xb} {rr} {qo_lo} {qo_hi} {qf_lo} {qf_hi}} outputs {{x_busy} {x_fault} {rq} {rn_o} {c_d} {c_wce} {c_mhi} {c_mlo} {c_wa} {r_ce} {r_a} {l_d_o} {qv_lo} {qv_hi} {r_wsel} {zlo} {zhi} {lane_en} {bsel}}} {eg} {clock ot_io_eg io_budget_ps 166.667 inputs {{rwq} {bq_d}} outputs {{x_done} {xw_en} {xw_last} {xw_addr} {xw_grp} {xw_data}}}]
 set ::ot_ce_source_domains [dict create {clk} {core} {clk_eg} {eg}]
 set ::ot_ce_explicit_domains 1
 set ::ot_ce_cts_roots {{clk} {clk_eg}}
