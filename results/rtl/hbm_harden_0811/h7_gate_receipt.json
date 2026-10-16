@@ -1,0 +1,82 @@
+{
+  "schema": "opentallas.hbm_h7_recovery.v1",
+  "generated": "2026-10-16T08:27:25.982212-07:00",
+  "source_commit": "d389499a94dcde7e766d65672d3920aac92ba62c",
+  "gate_verdict": "WARN",
+  "tt_placement_setup_ps": -55.0373080443,
+  "tt_placement_hold_ps": 40.3154454265,
+  "worst_endpoint": "owner_fault$_DFF_PN0_/D",
+  "clock": {
+    "max_root_sinks": 9536,
+    "root": "port:clk",
+    "cts": true,
+    "tt_insertion_ps": 433.5,
+    "tt_spread_ps": 30.3,
+    "declared_clock": "spine",
+    "limits": {
+      "sinks": 15000,
+      "insertion_ps": 300.0,
+      "spread_ps": 80.0
+    },
+    "clock_measurements": [
+      {
+        "source": "clk",
+        "clock": "core_clk",
+        "tt": {
+          "boundary": {
+            "n": 2117,
+            "mean": 418.9,
+            "min": 404.3,
+            "max": 433.5
+          },
+          "all": {
+            "n": 9817,
+            "mean": 419.0,
+            "min": 403.2,
+            "max": 433.5
+          },
+          "errors": [],
+          "macros": {
+            "n": 2,
+            "nets": 2,
+            "max_per_net": 1,
+            "reg_mean": 419.0,
+            "max_slew": 21.0,
+            "max_late": 2.6,
+            "pins": [
+              {
+                "pin": "g_wpay.u_write_payload/clk",
+                "arr": 414.7,
+                "slew": 21.0,
+                "late": -4.3,
+                "net": "clkbuf_sp_L965_net"
+              },
+              {
+                "pin": "u_response_payload/clk",
+                "arr": 421.6,
+                "slew": 15.0,
+                "late": 2.6,
+                "net": "clkbuf_sp_L711_net"
+              }
+            ]
+          },
+          "macro_libs": 1
+        }
+      }
+    ],
+    "measured_clock": "core_clk",
+    "verdict": "PASS",
+    "text": "9,536 sinks on the largest root <= 15,000; measured TT insertion 433.5 ps, leaf spread 30.3 ps"
+  },
+  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/hdie_pc_ctrl_cfg-20261016-072952",
+  "source_archive_verified": true,
+  "images_inspected": true,
+  "findings": "Two real SRAMs, broad west-side logic and narrow N/S capture strips; isolated high-density bins at N/S edges. Reg-to-reg owner_fault fanin misses. No normal route was submitted. Further structural correction requires actual timing path classification.",
+  "physical_native_qualified": false,
+  "whole_die_qualified": false,
+  "hashes": {
+    "physical/ref_tile/hdie_pc_ctrl_cfg/gate_result.json": "78e3c6ed28af328d159af450e9c0b143ee9fd2cc250d8f38e6e16f3aae62f2f9",
+    "physical/ref_tile/hdie_pc_ctrl_cfg/gate_layout/floorplan.png": "9e1cf160f69dd4492ef11812849835d84ced7191789d5d5d443c9d376c3db26a",
+    "physical/ref_tile/hdie_pc_ctrl_cfg/gate_layout/density.png": "e8df6b30e19dbedbeb4447d616025197cf63d32f503e371619f51ecca21cdef8"
+  }
+}
