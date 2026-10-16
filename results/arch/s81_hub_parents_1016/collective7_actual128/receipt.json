@@ -15,7 +15,26 @@
   "base_unit": "oth-ubuntu-59535-1792167758",
   "actual_source_files_verified": 82,
   "source_hash_mismatches": [],
-  "clock_and_payload_mutants": "running, not yet qualified",
+  "clock_and_payload_mutants": {
+    "romclock": {
+      "caught": true,
+      "exit": 1,
+      "unit": "oth-ubuntu-83376-1792168047",
+      "failure": "Actual VM request mismatch edge48 after independently delivered ROM0 clock stopped"
+    },
+    "outclock": {
+      "caught": true,
+      "exit": 1,
+      "unit": "oth-ubuntu-83455-1792168048",
+      "failure": "Actual VM request mismatch edge48 after independently delivered output0 clock stopped"
+    },
+    "payload": {
+      "caught": true,
+      "exit": 1,
+      "unit": "oth-ubuntu-83550-1792168049",
+      "failure": "Actual reduce VM word item0 mismatch edge433 from boundary HCwrite bit31 corruption"
+    }
+  },
   "new_parent_clock_entries": 35,
   "additional_normal_edges": 0,
   "limits": "Component-only declared external producers and zero external PHY flight; actual128SRAM internalVM/read/write/collective/HC/channel hardware. Production FIELD/compilerA2F/static die phase/native proof remain open."
