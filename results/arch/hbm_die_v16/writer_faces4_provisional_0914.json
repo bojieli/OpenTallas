@@ -1,0 +1,268 @@
+{
+ "schema": "opentallas.hbm.provisional_native_child_grant.v1",
+ "status": "PROVISIONAL_ISOLATED_SUCCESSOR_MEASUREMENT_ONLY",
+ "cell": "ot_hbm_sm_vm_wr_q_t_faces4",
+ "source_snapshot": "b75a3b5a0",
+ "params": {
+  "DEPTH": 4,
+  "MUT": 0
+ },
+ "source_sha256": {
+  "rtl/hbm_accel/generic/vm/static/ot_hbm_sm_vm_wr_q_t_faces4.sv": "98820c5487b8ccc65e346924c8d26c3475c4d572e5194d8cf923ae0edbb2e8b0",
+  "rtl/hbm_accel/generic/vm/static/ot_hbm_sm_vm_wr_q_faces4.sv": "85c5aa222a4dbc5aa7ddef606812d02589864e8f03bef850d6dc8c9043faa47e",
+  "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv": "9276c7b41a9ff684e6e2db3fe4d0b22310cae08c3ddfbeaaf08fc19d7d0fb6b0",
+  "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v": "5f736eaf4e9b3ad93fb728861f29a8da6bf626e53d8facb9e1e5e8af738d6571",
+  "physical/ref_tile/hsm_smvm_wrq_t_r4/spec.json": "8eff659894ba61500a8351446c871d2c3f695aa5820f6e0625ce3c99ccad746f",
+  "physical/ref_tile_specs/smh/smvm_writer_faces4_pins.tcl": "a1af36c248b51b3ab674683f3ed466b4b4fa0df7948a4d52fb29c152a573dea5",
+  "results/physical/hsm_takeover_0825/writer_faces4_pins.json": "d16e10004485b1b67b79c1b097fc4fa5534ed8096c94460c8cfd83634762c7f0",
+  "results/physical/hsm_takeover_0825/writer_faces4_bench.log": "5b366678c5af41d433f3b0b3933e1de406988bb4562a25d6d39ef2bb145ab548",
+  "tools/hbm_sm_repack_1015/writer_faces4_plan.py": "c6973d6874b93557ddeeda7f39eb1e8e0fd3ce244e5f4080413c0969441ace1c"
+ },
+ "outline": {
+  "w": 142.56,
+  "h": 388.8
+ },
+ "literal_pinfile": "physical/ref_tile_specs/smh/smvm_writer_faces4_pins.tcl",
+ "all_ports_accounted": 4756,
+ "clock_ports": [
+  "clk",
+  "clk_in_lo",
+  "clk_in_hi",
+  "clk_out_lo",
+  "clk_out_hi",
+  "clk_cal"
+ ],
+ "clock_cts_roots": [
+  "clk",
+  "clk_in_lo",
+  "clk_in_hi",
+  "clk_out_lo",
+  "clk_out_hi"
+ ],
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk"
+   ],
+   "inputs": [
+    "rst_n",
+    "tgt",
+    "quad",
+    "cfg_v",
+    "cfg_target",
+    "cfg_addr",
+    "cfg_data",
+    "desc_v",
+    "desc_base",
+    "desc_limit",
+    "desc_loops",
+    "launch_v"
+   ],
+   "outputs": [
+    "configured",
+    "fault",
+    "active"
+   ]
+  },
+  "inp_lo": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_in_lo"
+   ],
+   "inputs": [
+    "rv_lo",
+    "rrow_lo",
+    "rdata_lo",
+    "sm_fault_lo",
+    "sm_sched_fault_lo"
+   ],
+   "outputs": []
+  },
+  "inp_hi": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_in_hi"
+   ],
+   "inputs": [
+    "rv_hi",
+    "rrow_hi",
+    "rdata_hi",
+    "sm_fault_hi",
+    "sm_sched_fault_hi"
+   ],
+   "outputs": []
+  },
+  "out_lo": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_out_lo"
+   ],
+   "inputs": [],
+   "outputs": [
+    "wq_lo"
+   ]
+  },
+  "out_hi": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_out_hi"
+   ],
+   "inputs": [],
+   "outputs": [
+    "wq_hi"
+   ]
+  },
+  "cal": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_cal"
+   ],
+   "inputs": [],
+   "outputs": []
+  }
+ },
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "pin_windows": [
+  {
+   "window": "W_lower",
+   "data_bits": 1084,
+   "span_um": [
+    4.332,
+    191.244
+   ],
+   "reserved_clock_centres_um": [
+    97.212
+   ],
+   "usable_face_um": 184.752,
+   "allocation_um_per_bit": 0.096,
+   "cut": 0.5632631852429203,
+   "minimum_physical_pin_pitch_um": 0.144
+  },
+  {
+   "window": "W_upper",
+   "data_bits": 1084,
+   "span_um": [
+    197.556,
+    384.468
+   ],
+   "reserved_clock_centres_um": [
+    291.612,
+    300.012
+   ],
+   "usable_face_um": 182.592,
+   "allocation_um_per_bit": 0.096,
+   "cut": 0.5699263932702419,
+   "minimum_physical_pin_pitch_um": 0.144
+  },
+  {
+   "window": "E_lower",
+   "data_bits": 1124,
+   "span_um": [
+    4.332,
+    191.244
+   ],
+   "reserved_clock_centres_um": [
+    97.212
+   ],
+   "usable_face_um": 184.752,
+   "allocation_um_per_bit": 0.096,
+   "cut": 0.5840478046245777,
+   "minimum_physical_pin_pitch_um": 0.144
+  },
+  {
+   "window": "E_upper",
+   "data_bits": 1124,
+   "span_um": [
+    197.556,
+    384.468
+   ],
+   "reserved_clock_centres_um": [
+    291.612
+   ],
+   "usable_face_um": 184.752,
+   "allocation_um_per_bit": 0.096,
+   "cut": 0.5840478046245777,
+   "minimum_physical_pin_pitch_um": 0.144
+  },
+  {
+   "window": "N_core",
+   "data_bits": 334,
+   "span_um": [
+    4.332,
+    138.228
+   ],
+   "reserved_clock_centres_um": [
+    71.292
+   ],
+   "usable_face_um": 131.736,
+   "allocation_um_per_bit": 0.096,
+   "cut": 0.24339588267443976,
+   "minimum_physical_pin_pitch_um": 0.384
+  }
+ ],
+ "layer_cap": "M5",
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "at": [
+    23.328,
+    302.4
+   ],
+   "inst": "u_tab",
+   "clock_entry": {
+    "port": "clk_cal",
+    "pin": "clk",
+    "reference": "raw_liberty_clock_pin"
+   }
+  }
+ ],
+ "raw_calendar_clock": {
+  "parent_entry_face": "W",
+  "parent_entry_offset_um": 300.012,
+  "macro_clock_local_um": [
+   0.012,
+   0.78
+  ],
+  "macro_clock_die_um": [
+   23.34,
+   303.18
+  ],
+  "nominal_boundary_manhattan_um": 26.508,
+  "qualification": "Actual stub slew/cap and real Liberty/native gates required; geometric length alone does not qualify."
+ },
+ "normal_data_edge_delta": 0,
+ "receipt_review": "4756 literal pins all on0.048-grid offset0.012, in outline, unique, W/E minsep0.144/N0.384. Four data-window cuts<=0.584048 including actual clock notches; source-bound two positives/seven negatives reviewed.",
+ "physical_requirements": [
+  "Fresh current generator, actual six clock entries (five soft CTS roots plus raw SRAM clk_cal); no ideal clock substitution or input ownership exemption.",
+  "Native entry R/latency/spread/slew and related phase paths require actual measurement; TT>=0, FF>=0, DRC0 and density/congestion/image inspection.",
+  "Preserve actual macro, PG rules and literal pin locations; no clock/source/Liberty alias or hidden normal-data edge added."
+ ],
+ "adoption": "No frozen d4/default flip or full four-parent homes adopted; actual parent clock entries/source/port wiring and packing required before native admission."
+}
