@@ -203,10 +203,27 @@
    "fail_why": "",
    "job": "s81hc_ccfbp_bank256x_ref-x1-8d9268ea0",
    "commit": "29152f8cba71c0bdf17d7565f7b2e64eed3c312c"
+  },
+  {
+   "pass": false,
+   "launch_ps": 178.6,
+   "launch_pin": "x2[361]",
+   "launch_over": 0,
+   "capture_ps": 371.9,
+   "capture_pin": "ri[22]",
+   "capture_over": 67,
+   "R_ps": 227.4,
+   "spread_ps": 74.8,
+   "comb_pins": 0,
+   "fail_why": "capture 371.92435 > 190 (67 pins)",
+   "commit": "f3a847272a849191c3dc6ad77f8c3f04b1cd61cb",
+   "view": "physical/ref_tile/s81coll_cfifo_x2_w432p144/views/dsfd_cfifo",
+   "job": "s81coll_cfifo_x2_w432p144-w432p144-e1d2c142c"
   }
  ],
  "decisions": {
   "hc_bank256": "PICK h1 (s81hc_ccfbp_bank256_ref-h1-d317ebd34, view physical/ref_tile/s81hc_ccfbp_bank256_ref/views/ot_s81_hc_ccf_bankpipe_bank256): all three variants native PASS; h1 has the smallest outline 146.88x91.8 (w1 172.8x97.2, x1 220.32x97.2), best margins TT +170.92/FF +12.59/SS -93.2, lowest R 270.4. w1/x1 not bound.",
-  "engram_mx4": "mx4ctl f1, mx4mcol f2spread, shctlp p29b native PASS (bindable with the flat MIX4 parent). mx4rq0/rq1 p17b native FAIL capture desc_rq 202.1/200.0 > 190 -> desc_rq/desc_row pin register (+1 cycle descriptor read) RTL fix in flight."
+  "engram_mx4": "mx4ctl f1, mx4mcol f2spread, shctlp p29b native PASS (bindable with the flat MIX4 parent). mx4rq0/rq1 p17b native FAIL capture desc_rq 202.1/200.0 > 190 -> desc_rq/desc_row pin register (+1 cycle descriptor read) RTL fix in flight.",
+  "cfifo_w432p144": "CLOSED TT +99.06/FF +18.59 but native FAIL capture 371.9 at ri[22] (67 pins), R 227.4 spread 74.8: same single-cr-root cause as south96/w432p192. NOT bindable; isolated crs master (main 4edf550c6) is the path."
  }
 }
