@@ -7948,11 +7948,30 @@ def _svc_chains(m, CH8, P, cor, end_spec, hub_block):
         if narrow_service:
             from s81.canonical_layout import service_path
             endpoint=(sink_end.x+sink_end.w/2,sink_end.y+sink_end.h/2)
+            source_face=target_face=None
+            if vmc_hub():
+                # A service adapter centre is not a physical pin.  Start the
+                # canonical road at its assigned data face, or at the generated
+                # facing edge for an unclosed adapter; never open blocked raster
+                # cells to tunnel through the adapter's own body.
+                from s81 import hub_router as HR_
+                src_it=next(it_ for it_ in m['insts'] if it_.name==src[0])
+                def access(it_,port_,old_,other_):
+                    rec_=_assigned_record(it_.master+'__'+it_.name) or _assigned_record(it_.master)
+                    if rec_ and HR_.assigned_face(rec_,port_):
+                        return HR_.endpoint(it_,port_,rec_,other_)
+                    if it_.x+.001<old_[0]<it_.x+it_.w-.001 and it_.y+.001<old_[1]<it_.y+it_.h-.001:
+                        return HR_.endpoint(it_,port_,None,other_)
+                    face_=min(('W','E','S','N'),key=lambda f_:abs(old_[0]-(it_.x+(it_.w if f_=='E' else 0))) if f_ in 'WE' else abs(old_[1]-(it_.y+(it_.h if f_=='N' else 0))))
+                    return face_,old_
+                source_face,src_xy=access(src_it,src[2],src_xy,sink_end)
+                target_face,endpoint=access(sink_end,'di0',endpoint,src_it)
+                m.setdefault('vmc_service_access',[]).append(dict(chain=name,source=src[0],source_port=src[2],source_face=source_face,source_xy=src_xy,target=sink_end.name,target_face=target_face,target_xy=endpoint))
             side,service_source=canonical_access or (name[-1],name[0]!='q')
             if not service_source:
-                path=service_path(sys.modules[__name__],m,cor,src_xy,endpoint,side)
+                path=service_path(sys.modules[__name__],m,cor,src_xy,endpoint,side,hub_face=source_face)
             else:
-                path=list(reversed(service_path(sys.modules[__name__],m,cor,endpoint,src_xy,side)))
+                path=list(reversed(service_path(sys.modules[__name__],m,cor,endpoint,src_xy,side,hub_face=target_face)))
             vs_ = cor.get('vm_s')
             # the hub foot: VM S face and the band blocks under the hub (bk_selector), between S14W and the capture column
             in_vs_ = lambda q_: bool(vs_) and cor['su_under'][0] + 700.0 <= q_[0] <= vs_[2] + 1 and q_[1] <= vs_[3] + 300

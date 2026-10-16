@@ -119,13 +119,13 @@ class Roadmap:
    for a,b in zip(ordered,ordered[1:]):self.add(a,b)
  def add(self,a,b):
   self.graph.setdefault(a,{})[b]=abs(a[0]-b[0])+abs(a[1]-b[1]);self.graph.setdefault(b,{})[a]=self.graph[a][b]
- def to_root(self,side,source,r,kind):
+ def to_root(self,side,source,r,kind,source_face=None):
   target=self.rootnode[(r,kind)];q=[];dist={};prev={}
   stem=[source]
   if self.G.vmc_hub() and (side=='E' and source[0] < self.m['geo']['x_fe'] or side=='W' and source[0] > self.G.wide_hub()['s14w'][1]):
    # vmc: real obstacle-avoiding route from the hub source to the nearest S14 entry of its half
    e0=min(self.entry[side],key=lambda n:abs(n[1]-source[1]))
-   stem=self.G._vmc_route(self.m,source,side,e0,'E' if side=='W' else 'W')
+   stem=self.G._vmc_route(self.m,source,source_face or side,e0,'E' if side=='W' else 'W')
   elif side=='E' and source[0] < self.m['geo']['x_fe']:
    cy=self.G.corr_y(self.m, 'xdn' if kind=='x' else 'r0')
    sx=self.entry[side][0][0]
@@ -150,7 +150,7 @@ class Roadmap:
   while n is not None:ns.append(n);n=prev[n]
   ns.reverse();return self.G._dedup(stem+[(ns[0][0],base[1])]+ns)
 
-def service_path(G,m,cor,hub_point,service_point,side):
+def service_path(G,m,cor,hub_point,service_point,side,hub_face=None):
  """Reach the real service face via actual irregular streets and S14.
  No symmetric shoreline strip is presumed empty in a canonical layout.
  """
@@ -168,7 +168,7 @@ def service_path(G,m,cor,hub_point,service_point,side):
   distance=max(x0-px,0,px-x1)+max(y0-py,0,py-y1)
   return distance,G._mh(road.rootnode[(r,'x')],service_point),r
  r,f=min(((r,f)for r,f in m['frames'].items() if f['half']==side),key=score)
- path=road.to_root(side,hub_point,r,'x');end=path[-1]
+ path=road.to_root(side,hub_point,r,'x',source_face=hub_face);end=path[-1]
  # The last two legs stay within the selected actual service-facing street
  # except the explicit short access to the service port. Placer and the
  # independent exact-pin gate judge every physical access stage.

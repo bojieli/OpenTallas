@@ -8,6 +8,7 @@ is not a usable die model: failed chains have dangling partial stations. Missing
 later-hop repair, final pin/footprint placement and global routing stay explicit.
 """
 import argparse
+from collections import Counter
 import hashlib
 import json
 import os
@@ -140,6 +141,7 @@ def run(root,recipe,out):
         generator_sha256=sha(root/'tools/dsrom_s81_fulldie.py'),driver_sha256=sha(__file__),recipe_sha256=sha(recipe),working_directory=str(Path.cwd()),
         complete_hub_request_enumeration=model is not None,fatal=fatal,verdict='FAIL' if fatal or failures or bad else 'PREFLIGHT_PASS_NOT_PHYSICAL',
         requests=len(rows),problem_requests=len(bad),station_placement_failures=failures,paths=rows,
+        master_census=dict(sorted(Counter(i.master for i in model['insts']).items())) if model is not None else {},
         obstacle_rectangles=[dict(name=n,origin_um=[x,y],outline_um=[w,h]) for n,x,y,w,h in boxes],
         remaining=['Hop repair and final pin/footprint placement not evaluated','Partial failed stations retained only as conservative diagnostic occupancy; no RTL/LEF emitted','Clock/PG/cut/native/STA qualification not established'])
     out.parent.mkdir(parents=True,exist_ok=True);out.write_text(json.dumps(result,indent=1)+'\n')
