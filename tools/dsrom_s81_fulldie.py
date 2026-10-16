@@ -3770,6 +3770,11 @@ def _apply_station_footprints(m):
                     if pl:
                         rec.setdefault('widened', []).append(dict(inst=it.name, master=it.master, span_um=span_))
                         break
+            if not pl and os.environ.get('OT_S81_STATION_FALLBACK') == '1':
+                # pathfinding only: the instance keeps its generated outline (recorded; its bound view then misfits)
+                rec.setdefault('unapplied', []).append(dict(inst=it.name, master=it.master, at=[round(it.x, 1), round(it.y, 1)]))
+                print('OT_STN_FOOTPRINT_UNAPPLIED', it.name, it.master, file=sys.stderr, flush=True)
+                continue
             assert pl, ('--stn-footprints: no box for granted outline', it.name, it.master, (w2, h2))
             rec['moved'].append([it.name, round(pl[0] - it.x, 3), round(pl[1] - it.y, 3)])
             done = pl
