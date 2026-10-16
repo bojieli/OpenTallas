@@ -27,6 +27,7 @@ PARENT = BASE + "dsfd_sp_capture_split_candidate.sv"
 
 def census():
     headers = []
+    scalar_buses = {}
     for path, names in GROUPS.items():
         text = (ROOT / path).read_text()
         text = re.sub(r"/\*.*?\*/", "", text, flags=re.S)
@@ -35,6 +36,11 @@ def census():
             match = re.search(r"\bmodule\s+" + name + r"\b.*?;", text, re.S)
             if not match:
                 raise ValueError("missing actual source header: " + name)
+            scalar_buses[name]=[]
+            for decl in re.split(r"\b(?:input|output|inout)\b",match[0])[1:]:
+                if re.search(r"\[\s*0\s*:\s*0\s*\]",decl):
+                    clean=re.sub(r"\[[^]]*\]", " ",decl)
+                    scalar_buses[name].extend(n for n in re.findall(r"\b[A-Za-z_]\w*\b",clean) if n not in ('wire','reg','logic','signed'))
             headers.append(match[0] + "\nendmodule\n")
     with tempfile.TemporaryDirectory() as tmp:
         tmp = Path(tmp)
@@ -70,6 +76,7 @@ def census():
                             clock_entry_bits=sum(len(v["bits"]) for p, v in module["ports"].items() if p.startswith("ck"))),
                 cell_types=dict(types),
                 ports=module["ports"],
+                single_bit_bus_ports=scalar_buses,
                 children={n: dict(master=c["type"], connections=c["connections"],
                                   port_directions=c["port_directions"], parameters=c.get("parameters", {}))
                           for n, c in module["cells"].items()},

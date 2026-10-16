@@ -17,7 +17,7 @@ def specs(pins_dir):
         if not row.get('requested_outline_um'):continue
         samples=[c for c in graph['children'].values() if c['master']==master]
         if not samples:raise ValueError('unused requested master '+master)
-        dirs=samples[0]['port_directions'];clocks=row['clocks'];dual=clocks==['ck','ckv']
+        dirs=samples[0]['port_directions'];clocks=[p+'[0]' if p in graph['single_bit_bus_ports'][master] else p for p in row['clocks']];dual=row['clocks']==['ck','ckv']
         spec=dict(name=master+'_split1016',top=master,kind='tile',sources=[
           'rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_capt_split.sv','rtl/dsrom_sys/s81_ph/ot_s81ph_cap_tile.sv',
           'rtl/common/ot_ratio_cdc_fifo.sv','rtl/dsrom_sys/s81_glue/ot_s81_rly.sv','rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_capt_cd.sv'],params={},
@@ -31,8 +31,8 @@ def specs(pins_dir):
         if dual:
             inp='f_w' if master.startswith('dsfd_capt_x8_data_') else 'f_sn';out='t_vm' if inp=='f_w' else 't_st'
             spec.update(clock='multiple_cts_roots',clock_ports=clocks,clock_data_paths='related_pll_ratio',clock_relationship=dict(kind='same_pll_fixed_phase',ratio=[4,3],phase_ps=0),clock_entry_domains={
-              'core':dict(ratio=[1,1],ports=['ck'],inputs=['rst',inp],outputs=['t_ho'] if inp=='f_w' else []),
-              'serial':dict(ratio=[4,3],ports=['ckv'],inputs=['rsv'],outputs=[out])})
+              'core':dict(ratio=[1,1],ports=[clocks[0]],inputs=['rst',inp],outputs=['t_ho'] if inp=='f_w' else []),
+              'serial':dict(ratio=[4,3],ports=[clocks[1]],inputs=['rsv'],outputs=[out])})
         if master in ('dsfd_capt_ctl','dsfd_capt_cd'):
             spec['reroute_reason']=dict(kind='slot_change',change='Die lead granted independent compactctl324x86.4 or CD15.12 native-reset rekit; no old view inheritance. Assigned pin contract required.')
         rows[master]=spec

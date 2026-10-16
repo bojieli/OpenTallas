@@ -61,7 +61,7 @@ def build(wide=False):
         pins = {}
         for port, bits in c["connections"].items():
             for i, bit in enumerate(bits):
-                pin = f"{port}[{i}]" if len(bits) > 1 else port
+                pin = f"{port}[{i}]" if len(bits) > 1 or port in graph["single_bit_bus_ports"][master] else port
                 if measured is not None:
                     value = measured.get(pin) or measured.get(pin + "[0]")
                     if value is None: raise ValueError(f"missing actual {master}/{pin}")
