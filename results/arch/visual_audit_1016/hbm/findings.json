@@ -1450,6 +1450,12 @@
      "date": "2026-10-16T01:35",
      "status": "confirmed-provisional",
      "evidence": "route 2 GRT-0116 with 12 overflow edges at the inward SRAM faces -> route-3 kit e4e436536 (21.6-um channel between macro rows) trial GRT overflow 0, M2 16% (H-LKEP). Route itself pending. 90-um channel / outward rotation infeasible at the fixed 434.72 width (owner)."
+    },
+    {
+     "round": 2,
+     "date": "2026-10-16T02:20",
+     "status": "fix-in-gate (route 4)",
+     "evidence": "route 3 e4e436536 CLOSED TT +128.49 / FF +7.69 (congestion fix confirmed: 12 overflow edges -> 0) but native FAIL launch 223.2 (3 sd_tx pins) / capture 212.7 (sd_rx[1]); route 4: single IDLE pin flop, clock moved west on the S face"
     }
    ]
   },
