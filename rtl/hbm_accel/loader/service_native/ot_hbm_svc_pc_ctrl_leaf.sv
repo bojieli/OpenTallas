@@ -4,9 +4,13 @@
 // in the parent ot_hbm_svc_native_sector_pipeline_leaves).  Real controller: actual ot_hbm_r14_stream_pc sequencer +
 // same-row FIFO32 + 32 reserved responses in an actual 128x256 SRAM.  K side faces the SM service group; row/column/data
 // side faces the PHY-only abstract (the only modelled boundary).  clk = this PC's pc_clk root.
+// OREG=1 (H-DIE 2026-10-15, die default): every PHY-side command output (row_*, col_*, write data/strobe) leaves from a
+// flop -- one uniform extra cycle on the command path to the PHY (relative DRAM command timing unchanged); the read
+// return path is unchanged.  OREG=0 is the stack body exactly.
 module ot_hbm_svc_pc_ctrl_leaf #(
     parameter integer PHASE=0,
-    parameter integer P=0
+    parameter integer P=0,
+    parameter integer OREG=1
 )(
     input wire clk,rst_n,
     input wire k_v,output wire k_rdy,input wire k_we,
@@ -50,9 +54,19 @@ module ot_hbm_svc_pc_ctrl_leaf #(
         (state==IDLE || (state==RUN && (same_row || row_idle)));
     assign kr_v=head_valid&&!sticky&&!pc_fault;
     assign kr_tag=head_identity[20:4];assign kr_beat=head_identity[3:0];assign kr_data=response_data;
-    assign col_v=cv;assign col_we=cwe;
-    assign col_bank=cb;assign col_col=cc;
-    assign col_data=head[255:0];assign col_strb=head[287:256];
+    wire r_v;wire[2:0]r_op;wire[4:0]r_bank;wire[18:0]r_row;
+    generate if(OREG!=0)begin:g_oreg
+        reg q_rv,q_cv,q_cwe;reg[2:0]q_rop;reg[4:0]q_rbank,q_cb,q_cc;reg[18:0]q_rrow;reg[255:0]q_cd;reg[31:0]q_cs;
+        always @(posedge clk or negedge rst_n)
+            if(!rst_n)begin q_rv<=0;q_cv<=0;q_cwe<=0;end else begin q_rv<=r_v;q_cv<=cv;q_cwe<=cwe;end
+        always @(posedge clk)begin q_rop<=r_op;q_rbank<=r_bank;q_rrow<=r_row;q_cb<=cb;q_cc<=cc;q_cd<=head[255:0];q_cs<=head[287:256];end
+        assign row_v=q_rv;assign row_op=q_rop;assign row_bank=q_rbank;assign row_row=q_rrow;
+        assign col_v=q_cv;assign col_we=q_cwe;assign col_bank=q_cb;assign col_col=q_cc;assign col_data=q_cd;assign col_strb=q_cs;
+    end else begin:g_comb
+        assign row_v=r_v;assign row_op=r_op;assign row_bank=r_bank;assign row_row=r_row;
+        assign col_v=cv;assign col_we=cwe;assign col_bank=cb;assign col_col=cc;
+        assign col_data=head[255:0];assign col_strb=head[287:256];
+    end endgenerate
     assign owner_fault=sticky;
     wire response_read=!sticky&&((!head_valid&&response_count!=0)||(response_take&&response_count>1));
     wire[4:0]response_read_address=response_take?response_rp+5'd1:response_rp;
@@ -64,8 +78,8 @@ module ot_hbm_svc_pc_ctrl_leaf #(
     ot_hbm_r14_stream_pc #(.ENABLE(1),.PC(P),.REF_MODE(1),.WR_EN(1),.AQ_RD(1),.WQ(32),
         .REF_PHASE((PHASE+P*118/32)%118)) controller(
         .clk(clk),.rst_n(rst_n),.desc_v(state==DESC),.desc_r(dr),.desc_row(active_row),.desc_n(11'd0),
-        .go(1'b1),.next_posted(1'b0),.row_v(row_v),.row_prio(),.row_gnt(1'b1),
-        .row_op(row_op),.row_bank(row_bank),.row_row(row_row),
+        .go(1'b1),.next_posted(1'b0),.row_v(r_v),.row_prio(),.row_gnt(1'b1),
+        .row_op(r_op),.row_bank(r_bank),.row_row(r_row),
         // desc_n=0 uses the actual access queue only. AQ reads never
         // consume the separate streaming-reader credit counter.
         .col_v(cv),.col_bank(cb),.col_col(cc),.cred_ret(3'b0),.busy(),.ref_fault(pc_fault),
@@ -91,10 +105,10 @@ module ot_hbm_svc_pc_ctrl_leaf #(
             pending_count<=pending_count+(column_read?6'd1:6'd0)-(dram_rvalid?6'd1:6'd0);
             response_count<=response_count+(dram_rvalid?6'd1:6'd0)-(response_take?6'd1:6'd0);
             if(posted)ep<=ep+1'b1;
-            if(row_v)begin
-                case(row_op)
-                    0:observed_open[row_bank]<=0;
-                    1:observed_open[row_bank]<=1;
+            if(r_v)begin
+                case(r_op)
+                    0:observed_open[r_bank]<=0;
+                    1:observed_open[r_bank]<=1;
                     5:observed_open<=0;
                     default:;
                 endcase
