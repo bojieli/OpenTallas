@@ -4,7 +4,7 @@ import argparse,hashlib,json,os,subprocess
 from pathlib import Path
 from controller_calendar_image import Run,compile_image
 ROOT=Path(__file__).resolve().parents[2]
-a=argparse.ArgumentParser();a.add_argument('out',type=Path);x=a.parse_args();out=x.out.resolve();out.mkdir(parents=True,exist_ok=True)
+a=argparse.ArgumentParser();a.add_argument('out',type=Path);a.add_argument('--mutant-only',type=int,choices=(1,2));x=a.parse_args();out=x.out.resolve();out.mkdir(parents=True,exist_ok=True)
 # Full 256-sector K and 256-sector V traffic plus distinct static read/write
 # reservations. This image is a component fixed-edge witness, not permission
 # to claim these artificial offsets form a complete JEDEC/write schedule.
@@ -21,7 +21,7 @@ for t,e in z['events'].items():
 files=['rtl/qwen_sys/static_kv_20261014/qkd_controller_hbm_calendar.sv','rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv','rtl/test/qwen_static_kv/tb_controller_hbm_calendar.sv']
 verilator=os.environ.get('VERILATOR',str(Path.home()/'.local/opentallas-tools/verilator-5.050/bin/verilator'))
 result=[]
-for m in (0,1,2):
+for m in ((x.mutant_only,) if x.mutant_only else (0,1,2)):
  obj=out/f'obj{m}'
  cmd=[verilator,'--binary','--timing','-Wno-fatal','-j','2','--top-module','tb_controller_hbm_calendar',f'-GMUT={m}','--Mdir',str(obj)]+[str(ROOT/f) for f in files]
  with (out/f'build{m}.log').open('w')as log:subprocess.run(cmd,stdout=log,stderr=subprocess.STDOUT,check=True)
@@ -36,3 +36,5 @@ for bad in ([Run(1)],[Run(4),Run(4)],[Run(4,mask=3)],[Run(65535,count=2)],[Run(1
  else:raise AssertionError('invalid image accepted')
 receipt=dict(scope='compressed controller producer component, 36 fixed frame repeats; not full memory/native layer',source_sha256={f:hashlib.sha256((ROOT/f).read_bytes()).hexdigest()for f in files},storage_bits=z['storage_bits'],events_per_frame=len(z['events']),results=result,invalid_image_controls=5,native_full_layer=False)
 (out/'receipt.json').write_text(json.dumps(receipt,indent=2)+'\n');print(json.dumps(receipt,indent=2))
+
+if x.mutant_only:raise SystemExit(1)
