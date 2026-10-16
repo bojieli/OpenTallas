@@ -42,7 +42,7 @@ if a.sequenced:
  (a.work/'image.json').write_text(json.dumps(image,indent=2)+'\n')
  defs_extra=['DSFD_HOST_C_STATIC','DSFD_HOST_PQ_BOOT']
 else:defs_extra=[]
-defs=['OT_PQ_ROM_PORTS' ,'OT_PQ_CTL_STATIC','OT_PQ_QB_PIPE','OT_PQ_QB_PHYS_SPLIT','OT_PQ_AQ_PHYS_SPLIT','OT_PQ_IX_PHYS_SPLIT','OT_PQ_IX_BANK_SPLIT','OT_PQ_BC_SLICED','DSFD_PQ_STATIC_X2']
+defs=['OT_PQ_ROM_PORTS' ,'OT_PQ_CTL_STATIC','OT_PQ_QB_PIPE','OT_PQ_QB_PINREAD','OT_PQ_QB_PHYS_SPLIT','OT_PQ_AQ_PHYS_SPLIT','OT_PQ_IX_PHYS_SPLIT','OT_PQ_IX_BANK_SPLIT','OT_PQ_BC_SLICED','DSFD_PQ_STATIC_X2']
 defs+=defs_extra
 if a.produced:defs+=['OT_PQ_CTL_STATE_PINS','OT_PQ_CTL_INCAP','OT_PQ_AQ_PIN_LAUNCH']  # captured-input ctl leaf; AQ leaves launch from its registered aq_vin
 if a.calcap:defs.append('OT_PQ_CTL_CALCAP')

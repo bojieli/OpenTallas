@@ -69,7 +69,7 @@ module tb_hbm_ep_calendar_host;
         end
         @(negedge clk);cfg_we=0;repeat(5)step();
         desc_v=1;desc_base=5;desc_limit=8;desc_loops=(MUT==2)?511:512;step();@(negedge clk);desc_v=0;
-        repeat(4)step();if(!configured||target_fault)$fatal(1,"host descriptor install failed");
+        repeat(8)step();if(!configured||target_fault)$fatal(1,"host descriptor install failed");
         launch_v=1;launch=cycle+1;watching=1;step();@(negedge clk);launch_v=0;
         while(count<1536)step();
         if(!done || fault)$fatal(1,"CALENDAR completion/fault");
@@ -78,9 +78,10 @@ module tb_hbm_ep_calendar_host;
         // A non-programmed range still consumes its exact reserved cycles and
         // faults rather than waiting for memory initialization or replaying.
         @(negedge clk);desc_v=1;desc_base=64;desc_limit=65;desc_loops=1;step();
-        @(negedge clk);desc_v=0;repeat(4)step();
+        @(negedge clk);desc_v=0;repeat(8)step();
+        if(configured || !target_fault)$fatal(1,"uninstalled programme range advertised ready");
         launch_v=1;step();@(negedge clk);launch_v=0;repeat(6)step();
-        if(calendar!=0 || !fault || target_fault)$fatal(1,"host calendar invalid word not fail closed");
-        $display("EP_CALENDAR_HOST PASS1536 gapless slots512 wraps actual host target and programme SRAM startup6edges invalidword fault");$finish;
+        if(calendar_v || calendar!=0 || !target_fault)$fatal(1,"host calendar uninstalled range not fail closed");
+        $display("EP_CALENDAR_HOST PASS1536 gapless slots512 wraps actual host target and programme SRAM startup6edges missing-row rejection");$finish;
     end
 endmodule
