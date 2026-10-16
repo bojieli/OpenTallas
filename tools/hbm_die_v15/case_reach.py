@@ -101,12 +101,25 @@ def multicast_relay_ages(contract):
                 rows=result)
 
 
+def typed_clock_pins(contract):
+    result = set()
+    for entry in contract.get('clock_resets', []):
+        if entry['kind'] != 'clock':
+            continue
+        width = contract['instances'][entry['instance']]['ports'][entry['port']]['bits']
+        result.update((entry['instance'], f"{entry['port']}[{k}]" if width > 1 else entry['port'])
+                      for k in range(entry['bits']))
+    return result
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('case'); ap.add_argument('--reach', type=float, default=500.0)
     ap.add_argument('--paths', nargs='*', default=[]); ap.add_argument('--out')
     ap.add_argument('--contract', help='frozen source contract for explicit multicast relay-depth/calendar audit')
     a = ap.parse_args()
+    contract = json.loads(Path(a.contract).read_text()) if a.contract else None
+    clock_pins = typed_clock_pins(contract) if contract else set()
     c = Path(a.case)
     man = json.loads((c / 'manifest.json').read_text())
     L = {}
@@ -133,11 +146,11 @@ def main():
                         continue
                     bit = n - 1 - i
                     pn = f'{p}[{bit}]'
-                    if pn in lv['pins'] and lv['uses'][pn] != 'CLOCK':
+                    if pn in lv['pins'] and lv['uses'][pn] != 'CLOCK' and (inst, pn) not in clock_pins:
                         nets[s].append((inst, pn, xf(v, lv['w'], lv['h'], *lv['pins'][pn])))
                         directions[(inst, pn)] = lv['directions'][pn]
             elif e and not e.startswith('nc_') and e not in ('clk_hbm', 'rst_n'):
-                if p in lv['pins'] and lv['uses'][p] != 'CLOCK':
+                if p in lv['pins'] and lv['uses'][p] != 'CLOCK' and (inst, p) not in clock_pins:
                     nets[e].append((inst, p, xf(v, lv['w'], lv['h'], *lv['pins'][p])))
                     directions[(inst, p)] = lv['directions'][p]
     length, all_branches, ambiguous = {}, {}, {}
@@ -159,6 +172,8 @@ def main():
     res = dict(case=str(c), reach_um=a.reach, nets=len(length), over_reach=len(over),
                max_um=round(max(length.values(), default=0), 1), mean_um=round(sum(length.values()) / max(1, len(length)), 1),
                branch_coverage='Every typed driver-to-sink branch; LEF directions identify the driver.',
+               clock_exclusion=dict(typed_clock_pins=len(clock_pins),
+                                    rule='Frozen contract clock ABI plus LEF USE CLOCK; actual routed LEFs may label clocks USE SIGNAL.'),
                branches=sum(len(b) for b in all_branches.values()),
                branches_over_reach=sum(d > a.reach for bs in all_branches.values() for _, _, d in bs),
                ambiguous_nets=ambiguous, skipped_instances=skipped,
@@ -201,7 +216,7 @@ def main():
             classes[Path(pf).name] = dict(sorted(cls.items(), key=lambda kv: kv[1]['worst']))
         res['sta_classes'] = classes
     if a.contract:
-        res['source_multicast_relay_ages'] = multicast_relay_ages(json.loads(Path(a.contract).read_text()))
+        res['source_multicast_relay_ages'] = multicast_relay_ages(contract)
     out = Path(a.out) if a.out else c / 'reach.json'
     out.write_text(json.dumps(res, indent=1))
     print(json.dumps({k: res[k] for k in ('nets', 'over_reach', 'max_um', 'mean_um')}))
