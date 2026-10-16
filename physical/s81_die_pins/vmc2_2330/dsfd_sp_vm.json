@@ -80273,8 +80273,8 @@
  "source": {
   "capture_record": "physical/s81_die_pins/v19_merged/dsfd_sp_capture_c.json",
   "capture_sha256": "35cce144193d7fcb990c35e437b4a33857c099519a7164d778e6f527a2773840",
-  "hub_layout": "results/physical/die_iter_1012/s81/canonical_widehub_1015/vmc_2240/hub_layout.json",
-  "layout_sha256": "4d6627ec651a70972161199365e866e0492c7f423efe36e10599e82ce4cf13f0"
+  "hub_layout": "results/physical/die_iter_1012/s81/canonical_widehub_1015/vmc_2330/hub_layout.json",
+  "layout_sha256": "86ed1f5820b4228b85780c04cacd115bca8b78d72b5e9786402f40aa7df1f969"
  },
  "rule": "CONDITIONAL VM-centred v2 parent grant. Each f_capture bit is aligned to its actual frozen capture t_vm bit. Other ports, clock roots, child placement, native timing, PG and GRT remain open; this record does not qualify the VM parent.",
  "peer_origin_delta_um": [
