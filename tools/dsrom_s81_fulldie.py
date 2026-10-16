@@ -3735,6 +3735,14 @@ def _apply_station_footprints(m):
                 break
         if done is None:
             pl = P.near(it.x + it.w / 2, it.y + it.h / 2, w2, h2, [(0.0, 0.0, W, H)], horiz=horiz, span=120.0, rows=12)
+            if not pl:
+                # S-DIE 0030 c26a (f_cxW_edge15_2, stnv_566 f9 77.76 x 19.44 in the crowded W broadcast edge): widen the
+                # search; the move is recorded and the die hop gate / STA judge the longer hop
+                for span_, rows_ in ((300.0, 30), (500.0, 48)):
+                    pl = P.near(it.x + it.w / 2, it.y + it.h / 2, w2, h2, [(0.0, 0.0, W, H)], horiz=horiz, span=span_, rows=rows_)
+                    if pl:
+                        rec.setdefault('widened', []).append(dict(inst=it.name, master=it.master, span_um=span_))
+                        break
             assert pl, ('--stn-footprints: no box for granted outline', it.name, it.master, (w2, h2))
             rec['moved'].append([it.name, round(pl[0] - it.x, 3), round(pl[1] - it.y, 3)])
             done = pl
