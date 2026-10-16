@@ -476,10 +476,87 @@
     "pin_shapes": 16,
     "source_json_sha256": "017861be2ee672955b1a74072f2680f49c4a6b8643dbdfb8956c53e1203dfcb9"
    }
+  },
+  {
+   "kit": "physical/ref_tile/dsfd_vm_wfc_request_hop1_native_1016_r1",
+   "strict_cts": {
+    "schema": "opentallas.ref-tile.cts-native-probe.v1",
+    "scope": "CTS placement RC diagnostic; NOT a routed native qualification",
+    "kit": "physical/ref_tile/dsfd_vm_wfc_request_hop1_native_1016_r1",
+    "remote_host": "ot-agidock128",
+    "remote_run": "/srv/opentallas-scratch/claude/ref_gate/dsfd_vm_wfc_request_hop1_native_1016_r1-20261016-040742",
+    "gate_source_commit": "b71fa4e73ec3ae23620ef45daa28c3d5cd9ad774",
+    "gate_result_sha256": "d8a7fdf73eba827ce1379e502e9137b896875782427d0feb7810afab9e4f63d3",
+    "library_sha256": "627c4057c2a7095f569cf9d21045be3f08f52549053d02bbc5cc1a935a1714d3",
+    "insertion_sha256": "b8ce100602177e27640691339e154cf39899977884484708471099befe10fd6f",
+    "probe_tcl_sha256": "03e5b45c2bc10b7745823aa59fc9d3ab21f3a05cd8d27df5bcc4b909c6b53900",
+    "launch": {
+     "ps": 187.01341000000002,
+     "pin": "w_d[351]"
+    },
+    "capture": {
+     "ps": 174.03895,
+     "pin": "vm_fault"
+    },
+    "launch_over": 0,
+    "capture_over": 0,
+    "comb_pins": [],
+    "clock_refs": {
+     "ck": {
+      "rise": 194.2,
+      "fall": 206.53059499999998,
+      "min": 160.20091,
+      "max": 210.19916,
+      "src": "insertion.json boundary mean",
+      "bmin": 170.2,
+      "bmax": 210.2,
+      "n": 1157
+     }
+    },
+    "spread_ps": {
+     "ck": 40.0
+    },
+    "measured_reference_coverage": true,
+    "diagnostic_pass": true
+   },
+   "audit_one": {
+    "cell": "dsfd_vm_wfc_request",
+    "view": "dsfd_vm_wfc_request_hop1_native_1016_r1",
+    "lib_cell": "dsfd_vm_wfc_request",
+    "insertion": true,
+    "ref_src": [
+     "insertion.json boundary mean"
+    ],
+    "R_ps": 194.2,
+    "spread_ps": 40.0,
+    "outputs": 594,
+    "inputs": 564,
+    "launch_ps": 187.0,
+    "launch_pin": "w_d[351]",
+    "capture_ps": 174.0,
+    "capture_pin": "vm_fault",
+    "launch_over": 0,
+    "capture_over": 0,
+    "comb_pins": 0,
+    "comb_first": [],
+    "pass": true,
+    "fail_why": ""
+   },
+   "viewed_images_sha256": {
+    "floorplan.png": "69fbe44bff73987f70637b1e49a8df0a2cffbf6ebdf2c92701f71fcb6952a824",
+    "density.png": "5b4d137739a9cd41d6ffa7853546452edb021e6b8d2f1c18574391eb3c8d58b4"
+   },
+   "viewed_image_note": "Exact byte identity to actually viewed prior PNGs; same master geometry and leaf logic.",
+   "actual_pg": {
+    "layers": [
+     "M5"
+    ],
+    "pin_shapes": 72,
+    "source_json_sha256": "c99f7a29f11098a118dd77ff7781fa0d957d59cb5f183892441f9a325d152b71"
+   }
   }
  ],
  "remaining": [
-  "request_hop1",
   "return_hop1_r2"
  ]
 }
