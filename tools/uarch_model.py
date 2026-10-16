@@ -17337,3 +17337,9 @@ def s81_host_native_split_candidate_model(**kwargs):
     """Source-pinned opt-in sizing; unknown physical capacity fails closed."""
     from uarch_model_s81_host_split import model
     return model(**kwargs)
+
+
+def s81_qb_read_root_candidate_model(**kwargs):
+    """Size separate real QB read-output clocks before RTL or physical build."""
+    from uarch_model_s81_qb_read_root import model
+    return model(**kwargs)
