@@ -1,0 +1,117 @@
+{
+ "name": "hbm_sfu_programme_store_1016_v5b-r5b-edata-COMMIT",
+ "block": "ot_hgi_sfu_programme_store",
+ "ref_tile": true,
+ "owner": "Codex:H-SU",
+ "purpose": "NEW master: SFU programme store (both fixed SFU calendars, 11 stripes x 2 pages = 22 ot_sram_1r1w_1024x256) split out of ot_hgi_sfu_scheduled_engine (main 697997629, split equivalence receipt results/rtl/hbm_sfu_split_1016) for die slot sfus_<q>. Each stripe = one row of two back-to-back SRAMs (W MY, E R0) whose rd_out faces a shared 40 um logic channel; the 222-bit stripe word runs west along its own 20 um row channel to the W-face output registers toward sfucore_<q>; host cfg/start on N. | r1 gate (41fbe28f5) TritonCTS: 16 buffers per path, TT insertion 565.8..745.2 ps / spread 179.4 over 447x1024 um -> pre-placed balanced clock spine from the W-centre entry; N host pins spread (cfg_data / io_cfg_data ranged across the face, were clustered in 40 um); W output ranges aligned to the stripe rows (io_word rows 0-2, compiler_control rows 3-10). | r4 (Claude H-SU 10-16): actual 092026 IOP PPL-0086 io_cfg_addr group 11 in N427.3..446.7: measured N slots are ~2.3-5 per um (PPL-0078 sections, e.g. 4.75 um = 11 slots), not 10.5, so 88/89 control bits do not fit 19.4 um bands. Control bands widened to N0.3..48.0 and N399.0..446.7 (47.7 um each, ~2x the measured need); cfg_data N50..215 and io_cfg_data N232..397 (165 um / 256 bits = 1.55/um, the r1-r3 data windows ran 1.31/um). Same face, ports, bit order, group size 16, outline, W face, clock/reset tracks. | r4b: r4 gate 094919 IOP PPL-0086 'group of size 1': PPL places the 16-bit compiler_control groups (range W296..1004) before the scalar clk (W506..514) / rst_n (W515..519) groups, and they took those slots. compiler_control now W520.5..1004 (1742 bits / 483.5 um = 3.6/um on M4), disjoint from clk/rst; clock entry stays at the W centre. Rows 3-5 (y296..505) compiler_control bits run up to 220 um north inside the tile; W296..505 left free. | r5 (Claude H-SU): r4b 095449 IOP PPL-0086 again on TOP: measured TOP sections hold only ~0.5-1 slot/um (PPL-0078: 4 slots in 399.1..403.3, 8 in 200.6..215.0) under the M3/M5 straps, so 689 N pins cannot fit 447 um. The W face carries 2,213 M4 pins at 3.6/um. r5b: cfg_data E704..1000 / io_cfg_data E400..696 (M4); N keeps only the 88+89 control/status pins over N0.3..220 / N227..446.7 (0.4/um).",
+ "threads": 8,
+ "peak_ram_gb": 8,
+ "source": {
+  "branch": "codex/hbm-su-calendar-0845",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "results/arch/hbm_native_1013/sfu_native_quarter",
+   "results/rtl/hbm_hc_sfu_static_1015/qswiglu",
+   "rtl/test/hbm_accel/generic",
+   "rtl/hbm_accel/generic/vm/static",
+   "physical/asap7_memory_macros",
+   "rtl/hbm_accel/generic/peers"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hgi_sfu_programme_store #(.PAGE_AW(1)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/generic/peers/ot_hgi_sfu_program_stripe_static.sv rtl/hbm_accel/generic/peers/ot_hgi_sfu_io_calendar_static.sv rtl/hbm_accel/generic/peers/ot_hgi_sfu_calendar_paged_static.sv physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v rtl/hbm_accel/generic/peers/ot_hgi_sfu_programme_store.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "split_equiv_exact",
+    "cmd": "OUT={RUN}/bench/pos bash tools/hbm_static/run_sfu_split_equiv.sh",
+    "expect": "pass",
+    "pass_regex": "SFU_SPLIT_GATE POSITIVE PASS",
+    "min_count_regex": "SFU_SPLIT_EQUIV PASS edges=(\\d+)",
+    "threads": 8,
+    "peak_ram_gb": 96,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "split_mutant_flip",
+    "cmd": "OUT={RUN}/bench/flip EQ_MUT=flip bash tools/hbm_static/run_sfu_split_equiv.sh; cat {RUN}/bench/flip/run.log; exit 1",
+    "expect": "fail",
+    "fail_regex": "SFU_SPLIT_EQUIV (FAIL|_MISMATCH)",
+    "threads": 8,
+    "peak_ram_gb": 96,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/hbm_sfu_programme_store_1016_v5b/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=16 bash tools/ref_tile/ref_route.sh physical/ref_tile/hbm_sfu_programme_store_1016_v5b/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 8
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/hbm_sfu_programme_store_1016_v5b --out {RUN}/record/views/ot_hgi_sfu_programme_store --macro-view physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/hbm_sfu_programme_store_1016_v5b/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/hbm_sfu_programme_store_1016/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/hbm_sfu_programme_store_1016/hbm_sfu_programme_store_1016_v5b-r5b-edata-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "NEW master: SFU programme store (both fixed SFU calendars, 11 stripes x 2 pages = 22 ot_sram_1r1w_1024x256) split out of ot_hgi_sfu_scheduled_engine (main 697997629, split equivalence receipt results/rtl/hbm_sfu_split_1016) for die slot sfus_<q>. Each stripe = one row of two back-to-back SRAMs (W MY, E R0) whose rd_out faces a shared 40 um logic channel; the 222-bit stripe word runs west along its own 20 um row channel to the W-face output registers toward sfucore_<q>; host cfg/start on N. | r1 gate (41fbe28f5) TritonCTS: 16 buffers per path, TT insertion 565.8..745.2 ps / spread 179.4 over 447x1024 um -> pre-placed balanced clock spine from the W-centre entry; N host pins spread (cfg_data / io_cfg_data ranged across the face, were clustered in 40 um); W output ranges aligned to the stripe rows (io_word rows 0-2, compiler_control rows 3-10). | Codex r2: exact r1 PPL-0086 showed 32-bit ordered group cannot fit 23 remaining TOP slots at cfg_data constraint edge; bound ordered IO groups to16 with unchanged tracks, bit order, port ranges, outline and balanced spine. This repairs placement granularity, not routing/timing gates. | r3: actual g16 IOP still PPL-0086 (0/8 slots remain in constrained cfg boundary sections). Unconstrained 177 host/status pins competed across cfg_data / io_cfg_data windows. Give all88 arithmetic controls/status a disjoint N0.3..19.7 band, all89 IO controls/status a disjoint N427.3..446.7 band. Existing data windows and all W outputs unchanged. Capacity each 19.4um *10.5pins/um=203 slots vs88/89 pins; eliminates unconstrained overlap instead of further group-size tuning. | r4 (Claude H-SU 10-16): actual 092026 IOP PPL-0086 io_cfg_addr group 11 in N427.3..446.7: measured N slots are ~2.3-5 per um (PPL-0078 sections, e.g. 4.75 um = 11 slots), not 10.5, so 88/89 control bits do not fit 19.4 um bands. Control bands widened to N0.3..48.0 and N399.0..446.7 (47.7 um each, ~2x the measured need); cfg_data N50..215 and io_cfg_data N232..397 (165 um / 256 bits = 1.55/um, the r1-r3 data windows ran 1.31/um). Same face, ports, bit order, group size 16, outline, W face, clock/reset tracks. | r4b: r4 gate 094919 IOP PPL-0086 'group of size 1': PPL places the 16-bit compiler_control groups (range W296..1004) before the scalar clk (W506..514) / rst_n (W515..519) groups, and they took those slots. compiler_control now W520.5..1004 (1742 bits / 483.5 um = 3.6/um on M4), disjoint from clk/rst; clock entry stays at the W centre. Rows 3-5 (y296..505) compiler_control bits run up to 220 um north inside the tile; W296..505 left free. | r5 (Claude H-SU): r4b 095449 IOP PPL-0086 again on TOP: measured TOP sections hold only ~0.5-1 slot/um (PPL-0078: 4 slots in 399.1..403.3, 8 in 200.6..215.0) under the M3/M5 straps, so 689 N pins cannot fit 447 um. The W face carries 2,213 M4 pins at 3.6/um. r5b: cfg_data E704..1000 / io_cfg_data E400..696 (M4); N keeps only the 88+89 control/status pins over N0.3..220 / N227..446.7 (0.4/um)."
+}

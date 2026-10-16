@@ -250,29 +250,29 @@
    "rst_n",
    "compiler_control"
   ],
-  "N": [
+  "E": [
    "cfg_we",
    "cfg_stripe",
    "cfg_addr",
-   "cfg_data",
    "start_base",
    "start_limit",
    "start_loops",
+   "programme_active",
+   "programme_done",
+   "programme_ordinal",
    "io_cfg_we",
    "io_cfg_stripe",
    "io_cfg_addr",
-   "io_cfg_data",
    "io_start_v",
    "io_start_base",
    "io_start_limit",
    "io_start_loops",
-   "programme_active",
-   "programme_done",
-   "programme_ordinal",
    "io_active",
    "io_done",
    "io_ordinal",
-   "fault"
+   "fault",
+   "cfg_data",
+   "io_cfg_data"
   ]
  },
  "pin_ranges": {
@@ -293,92 +293,92 @@
    1004.0
   ],
   "cfg_data": [
-   50.0,
-   215.0
+   704.0,
+   958.0
   ],
   "io_cfg_data": [
-   232.0,
-   397.0
+   446.0,
+   700.0
   ],
   "cfg_we": [
-   0.3,
-   48.0
+   962.0,
+   1020.0
   ],
   "cfg_stripe": [
-   0.3,
-   48.0
+   962.0,
+   1020.0
   ],
   "cfg_addr": [
-   0.3,
-   48.0
+   962.0,
+   1020.0
   ],
   "start_base": [
-   0.3,
-   48.0
+   962.0,
+   1020.0
   ],
   "start_limit": [
-   0.3,
-   48.0
+   962.0,
+   1020.0
   ],
   "start_loops": [
-   0.3,
-   48.0
+   962.0,
+   1020.0
   ],
   "programme_active": [
-   0.3,
-   48.0
+   962.0,
+   1020.0
   ],
   "programme_done": [
-   0.3,
-   48.0
+   962.0,
+   1020.0
   ],
   "programme_ordinal": [
-   0.3,
-   48.0
+   962.0,
+   1020.0
   ],
   "io_cfg_we": [
-   399.0,
-   446.7
+   384.0,
+   442.0
   ],
   "io_cfg_stripe": [
-   399.0,
-   446.7
+   384.0,
+   442.0
   ],
   "io_cfg_addr": [
-   399.0,
-   446.7
+   384.0,
+   442.0
   ],
   "io_start_v": [
-   399.0,
-   446.7
+   384.0,
+   442.0
   ],
   "io_start_base": [
-   399.0,
-   446.7
+   384.0,
+   442.0
   ],
   "io_start_limit": [
-   399.0,
-   446.7
+   384.0,
+   442.0
   ],
   "io_start_loops": [
-   399.0,
-   446.7
+   384.0,
+   442.0
   ],
   "io_active": [
-   399.0,
-   446.7
+   384.0,
+   442.0
   ],
   "io_done": [
-   399.0,
-   446.7
+   384.0,
+   442.0
   ],
   "io_ordinal": [
-   399.0,
-   446.7
+   384.0,
+   442.0
   ],
   "fault": [
-   399.0,
-   446.7
+   384.0,
+   442.0
   ]
  },
  "layer_cap": "M5",
@@ -410,12 +410,12 @@
  },
  "children": [],
  "inter": [],
- "structural_change": "NEW master: SFU programme store (both fixed SFU calendars, 11 stripes x 2 pages = 22 ot_sram_1r1w_1024x256) split out of ot_hgi_sfu_scheduled_engine (main 697997629, split equivalence receipt results/rtl/hbm_sfu_split_1016) for die slot sfus_<q>. Each stripe = one row of two back-to-back SRAMs (W MY, E R0) whose rd_out faces a shared 40 um logic channel; the 222-bit stripe word runs west along its own 20 um row channel to the W-face output registers toward sfucore_<q>; host cfg/start on N. | r1 gate (41fbe28f5) TritonCTS: 16 buffers per path, TT insertion 565.8..745.2 ps / spread 179.4 over 447x1024 um -> pre-placed balanced clock spine from the W-centre entry; N host pins spread (cfg_data / io_cfg_data ranged across the face, were clustered in 40 um); W output ranges aligned to the stripe rows (io_word rows 0-2, compiler_control rows 3-10). | Codex r2: exact r1 PPL-0086 showed 32-bit ordered group cannot fit 23 remaining TOP slots at cfg_data constraint edge; bound ordered IO groups to16 with unchanged tracks, bit order, port ranges, outline and balanced spine. This repairs placement granularity, not routing/timing gates. | r3: actual g16 IOP still PPL-0086 (0/8 slots remain in constrained cfg boundary sections). Unconstrained 177 host/status pins competed across cfg_data / io_cfg_data windows. Give all88 arithmetic controls/status a disjoint N0.3..19.7 band, all89 IO controls/status a disjoint N427.3..446.7 band. Existing data windows and all W outputs unchanged. Capacity each 19.4um *10.5pins/um=203 slots vs88/89 pins; eliminates unconstrained overlap instead of further group-size tuning. | r4 (Claude H-SU 10-16): actual 092026 IOP PPL-0086 io_cfg_addr group 11 in N427.3..446.7: measured N slots are ~2.3-5 per um (PPL-0078 sections, e.g. 4.75 um = 11 slots), not 10.5, so 88/89 control bits do not fit 19.4 um bands. Control bands widened to N0.3..48.0 and N399.0..446.7 (47.7 um each, ~2x the measured need); cfg_data N50..215 and io_cfg_data N232..397 (165 um / 256 bits = 1.55/um, the r1-r3 data windows ran 1.31/um). Same face, ports, bit order, group size 16, outline, W face, clock/reset tracks. | r4b: r4 gate 094919 IOP PPL-0086 'group of size 1': PPL places the 16-bit compiler_control groups (range W296..1004) before the scalar clk (W506..514) / rst_n (W515..519) groups, and they took those slots. compiler_control now W520.5..1004 (1742 bits / 483.5 um = 3.6/um on M4), disjoint from clk/rst; clock entry stays at the W centre. Rows 3-5 (y296..505) compiler_control bits run up to 220 um north inside the tile; W296..505 left free.",
+ "structural_change": "NEW master: SFU programme store (both fixed SFU calendars, 11 stripes x 2 pages = 22 ot_sram_1r1w_1024x256) split out of ot_hgi_sfu_scheduled_engine (main 697997629, split equivalence receipt results/rtl/hbm_sfu_split_1016) for die slot sfus_<q>. Each stripe = one row of two back-to-back SRAMs (W MY, E R0) whose rd_out faces a shared 40 um logic channel; the 222-bit stripe word runs west along its own 20 um row channel to the W-face output registers toward sfucore_<q>; host cfg/start on N. | r1 gate (41fbe28f5) TritonCTS: 16 buffers per path, TT insertion 565.8..745.2 ps / spread 179.4 over 447x1024 um -> pre-placed balanced clock spine from the W-centre entry; N host pins spread (cfg_data / io_cfg_data ranged across the face, were clustered in 40 um); W output ranges aligned to the stripe rows (io_word rows 0-2, compiler_control rows 3-10). | Codex r2: exact r1 PPL-0086 showed 32-bit ordered group cannot fit 23 remaining TOP slots at cfg_data constraint edge; bound ordered IO groups to16 with unchanged tracks, bit order, port ranges, outline and balanced spine. This repairs placement granularity, not routing/timing gates. | r3: actual g16 IOP still PPL-0086 (0/8 slots remain in constrained cfg boundary sections). Unconstrained 177 host/status pins competed across cfg_data / io_cfg_data windows. Give all88 arithmetic controls/status a disjoint N0.3..19.7 band, all89 IO controls/status a disjoint N427.3..446.7 band. Existing data windows and all W outputs unchanged. Capacity each 19.4um *10.5pins/um=203 slots vs88/89 pins; eliminates unconstrained overlap instead of further group-size tuning. | r4 (Claude H-SU 10-16): actual 092026 IOP PPL-0086 io_cfg_addr group 11 in N427.3..446.7: measured N slots are ~2.3-5 per um (PPL-0078 sections, e.g. 4.75 um = 11 slots), not 10.5, so 88/89 control bits do not fit 19.4 um bands. Control bands widened to N0.3..48.0 and N399.0..446.7 (47.7 um each, ~2x the measured need); cfg_data N50..215 and io_cfg_data N232..397 (165 um / 256 bits = 1.55/um, the r1-r3 data windows ran 1.31/um). Same face, ports, bit order, group size 16, outline, W face, clock/reset tracks. | r4b: r4 gate 094919 IOP PPL-0086 'group of size 1': PPL places the 16-bit compiler_control groups (range W296..1004) before the scalar clk (W506..514) / rst_n (W515..519) groups, and they took those slots. compiler_control now W520.5..1004 (1742 bits / 483.5 um = 3.6/um on M4), disjoint from clk/rst; clock entry stays at the W centre. Rows 3-5 (y296..505) compiler_control bits run up to 220 um north inside the tile; W296..505 left free. | r5 (Claude H-SU): r4b 095449 IOP PPL-0086 again on TOP: measured TOP sections hold only ~0.5-1 slot/um (PPL-0078: 4 slots in 399.1..403.3, 8 in 200.6..215.0) under the M3/M5 straps, so 689 N pins cannot fit 447 um. The W face carries 2,213 M4 pins at 3.6/um. r5: all host cfg/start/status pins move N->E (M4): arithmetic ctl E962..1020, cfg_data E704..958, io_cfg_data E446..700, io ctl E384..442 (<=1.5 pins/um). W face/clk/rst unchanged.",
  "job": {
   "owner": "Codex:H-SU",
   "branch": "codex/hbm-su-calendar-0845",
-  "tag": "r4b-disjoint",
-  "purpose": "NEW master: SFU programme store (both fixed SFU calendars, 11 stripes x 2 pages = 22 ot_sram_1r1w_1024x256) split out of ot_hgi_sfu_scheduled_engine (main 697997629, split equivalence receipt results/rtl/hbm_sfu_split_1016) for die slot sfus_<q>. Each stripe = one row of two back-to-back SRAMs (W MY, E R0) whose rd_out faces a shared 40 um logic channel; the 222-bit stripe word runs west along its own 20 um row channel to the W-face output registers toward sfucore_<q>; host cfg/start on N. | r1 gate (41fbe28f5) TritonCTS: 16 buffers per path, TT insertion 565.8..745.2 ps / spread 179.4 over 447x1024 um -> pre-placed balanced clock spine from the W-centre entry; N host pins spread (cfg_data / io_cfg_data ranged across the face, were clustered in 40 um); W output ranges aligned to the stripe rows (io_word rows 0-2, compiler_control rows 3-10). | r4 (Claude H-SU 10-16): actual 092026 IOP PPL-0086 io_cfg_addr group 11 in N427.3..446.7: measured N slots are ~2.3-5 per um (PPL-0078 sections, e.g. 4.75 um = 11 slots), not 10.5, so 88/89 control bits do not fit 19.4 um bands. Control bands widened to N0.3..48.0 and N399.0..446.7 (47.7 um each, ~2x the measured need); cfg_data N50..215 and io_cfg_data N232..397 (165 um / 256 bits = 1.55/um, the r1-r3 data windows ran 1.31/um). Same face, ports, bit order, group size 16, outline, W face, clock/reset tracks. | r4b: r4 gate 094919 IOP PPL-0086 'group of size 1': PPL places the 16-bit compiler_control groups (range W296..1004) before the scalar clk (W506..514) / rst_n (W515..519) groups, and they took those slots. compiler_control now W520.5..1004 (1742 bits / 483.5 um = 3.6/um on M4), disjoint from clk/rst; clock entry stays at the W centre. Rows 3-5 (y296..505) compiler_control bits run up to 220 um north inside the tile; W296..505 left free.",
+  "tag": "r5-eface",
+  "purpose": "NEW master: SFU programme store (both fixed SFU calendars, 11 stripes x 2 pages = 22 ot_sram_1r1w_1024x256) split out of ot_hgi_sfu_scheduled_engine (main 697997629, split equivalence receipt results/rtl/hbm_sfu_split_1016) for die slot sfus_<q>. Each stripe = one row of two back-to-back SRAMs (W MY, E R0) whose rd_out faces a shared 40 um logic channel; the 222-bit stripe word runs west along its own 20 um row channel to the W-face output registers toward sfucore_<q>; host cfg/start on N. | r1 gate (41fbe28f5) TritonCTS: 16 buffers per path, TT insertion 565.8..745.2 ps / spread 179.4 over 447x1024 um -> pre-placed balanced clock spine from the W-centre entry; N host pins spread (cfg_data / io_cfg_data ranged across the face, were clustered in 40 um); W output ranges aligned to the stripe rows (io_word rows 0-2, compiler_control rows 3-10). | r4 (Claude H-SU 10-16): actual 092026 IOP PPL-0086 io_cfg_addr group 11 in N427.3..446.7: measured N slots are ~2.3-5 per um (PPL-0078 sections, e.g. 4.75 um = 11 slots), not 10.5, so 88/89 control bits do not fit 19.4 um bands. Control bands widened to N0.3..48.0 and N399.0..446.7 (47.7 um each, ~2x the measured need); cfg_data N50..215 and io_cfg_data N232..397 (165 um / 256 bits = 1.55/um, the r1-r3 data windows ran 1.31/um). Same face, ports, bit order, group size 16, outline, W face, clock/reset tracks. | r4b: r4 gate 094919 IOP PPL-0086 'group of size 1': PPL places the 16-bit compiler_control groups (range W296..1004) before the scalar clk (W506..514) / rst_n (W515..519) groups, and they took those slots. compiler_control now W520.5..1004 (1742 bits / 483.5 um = 3.6/um on M4), disjoint from clk/rst; clock entry stays at the W centre. Rows 3-5 (y296..505) compiler_control bits run up to 220 um north inside the tile; W296..505 left free. | r5 (Claude H-SU): r4b 095449 IOP PPL-0086 again on TOP: measured TOP sections hold only ~0.5-1 slot/um (PPL-0078: 4 slots in 399.1..403.3, 8 in 200.6..215.0) under the M3/M5 straps, so 689 N pins cannot fit 447 um. The W face carries 2,213 M4 pins at 3.6/um. r5: all host cfg/start/status pins move N->E (M4): arithmetic ctl E962..1020, cfg_data E704..958, io_cfg_data E446..700, io ctl E384..442 (<=1.5 pins/um). W face/clk/rst unchanged.",
   "views_to": "physical/ref_tile/hbm_sfu_programme_store_1016/views",
   "record_to": "results/rtl/ref_tile/hbm_sfu_programme_store_1016",
   "extra_paths": [
