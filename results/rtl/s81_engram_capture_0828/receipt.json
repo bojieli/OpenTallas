@@ -1,0 +1,10 @@
+{
+ "scope": "MIX4 arithmetic component with external fixed-latency VM boundary; not full native chip",
+ "cycles": 808,
+ "prior_pre_control_capture_cycles": 804,
+ "extra_edges": 4,
+ "delta": "control scalar/feedback capture +2; shell gate handoff/write retirement +2",
+ "positive": "PASS exact20480words/640writes/4161reads",
+ "mut21": "FAIL20459words bypassing valid/data alignment",
+ "native_physical": "OPEN; fresh source-bound CTS gates pending"
+}

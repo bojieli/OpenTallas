@@ -45,8 +45,9 @@ C=$M/clock; mkdir -p $C
       --out $M/kit --clock-plan $C/plan.json.gz --index-out $M/kit/index.json > $M/kit/kit.log 2>&1; echo $? > $M/kit/kit.exit
   echo $S > $M/kit/src_root; st "KIT rc=$(cat $M/kit/kit.exit) $(python3 -c "import json,sys;d=json.load(open('$M/kit/clock_delivery.json'));print('CLOCK_DELIVERY common',d['masters_common'],'early_tap',d['masters_early_tap'],'deep_pins',d['deep_clock_pins'],'estimated_R',len(d['estimated_R']),'spread_defects',len(d['spread_defects']))" 2>/dev/null)"; [ "$(cat $M/kit/kit.exit)" = 0 ] ) &
 CK=$!
+# r7 2026-10-15 (S-DIE r4): the 80,654-instance die PLACE (pin_access on 10.46 M nets) peaked 62.8 GB > the old 60 GB cap (exit 137)
 D=$M/a_real; date -u +%FT%TZ > $D/run.log.start
-/srv/opentallas-scratch/admit.sh 40 -- docker run --rm --name dieit_${TAG}_place --cpus=$T --memory=60g -v $D:/work -w /work openroad/orfs:asap7lock \
+/srv/opentallas-scratch/admit.sh ${OT_PLACE_ADMIT_GB:-160} -- docker run --rm --name dieit_${TAG}_place --cpus=$T --memory=${OT_PLACE_MEM_GB:-200}g -v $D:/work -w /work openroad/orfs:asap7lock \
   bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; /usr/bin/time -v openroad -threads $T -no_init -exit /work/run.tcl > /work/run.log 2>&1; rc=\$?; chmod -R a+rwX /work; exit \$rc"
 echo $? > $D/run.log.exit; date -u +%FT%TZ > $D/run.log.end; st "PLACE rc=$(cat $D/run.log.exit)"
 wait $CK || { st CLOCK_OR_KIT_FAIL; exit 1; }

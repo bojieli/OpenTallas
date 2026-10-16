@@ -20,7 +20,11 @@ module tb_s81_engram_mix4_fixed #(parameter MUT=0, HLAYOUT=1);
   .job_rdy(),.busy(),.job_done(),.job_kdone(),.done_slot(),.kit_tok(),.cmd_v(cv),.cmd_d(cd),
   .engine_available({2'b0,st[1],10'b0}),.dn_v({2'b0,done[8],10'b0}),.dn_tag({16'b0,done[7:0],80'b0}),
   .fault(is_fault),.fault_code(is_code),.st_jobs(),.st_cmds(),.phase(phase));
- dsfd_engram_mix4_c #(.MUT(MUT),.HLAYOUT(HLAYOUT)) dut({133{clk}},rst,{cv[10],cd[840+:84]},done,st,1'b1,rq,addr,rv,rd,wv,wa,mask,wd);
+ dsfd_engram_mix4_c #(.MUT(MUT),.HLAYOUT(HLAYOUT)) dut({149{clk}},rst,{cv[10],cd[840+:84]},done,st,
+`ifndef DSFD_ENGRAM_STATIC_ISSUE
+ 1'b1,
+`endif
+ rq,addr,rv,rd,wv,wa,mask,wd);
  reg [1023:0] hm[0:639],km[0:639],wm[0:639],vm[0:159],ym[0:639];reg [511:0] mem[0:16383];
  string dir;integer i,j,l,m,bad=0,writes=0,reads=0,desc=11880;
  integer cmd_cyc=-1,done_cyc=-1,job_age0=-1,fault_cyc=-1,fault_code=0,mix_fault_cyc=-1;
