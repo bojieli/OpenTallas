@@ -22,6 +22,7 @@ S = 'rtl/qwen_sys/static_kv_20261014/'
 # Name, actual source/module, exact required full-die population. The pc parent
 # elaborates into four real masters; it is not an inherited physical frame.
 ROLES = {
+    'phase_launch': (S+'qkd_static_kv_phase_launch.sv', 'qkd_static_kv_phase_launch', 32),
     'layer_programme': (S+'qkd_static_kv_layer_programme.sv', 'qkd_static_kv_layer_programme', 1),
     'attention_programme': ('rtl/qwen_sys/split_20261014/qkd_native_attention_programme.sv', 'qkd_native_attention_programme', 1),
     'ownership': (S+'qkd_static_kv_ownership.sv', 'qkd_static_kv_ownership_calendar', 1),
@@ -212,7 +213,7 @@ def compile_graph(graph, root=ROOT):
             raise ValueError(f'{n}: all exact input ports must be connected')
         if role=='k_issuer' and (i['parameters']['RESPONSE_LAT']<1 or i['parameters']['MUT']!=0):
             raise ValueError(f'{n}: actual positive response latency and production MUT0 required')
-        if role in ('landing','front_calendar','landing_calendar','writer','writer_programme','ownership','drain_guard','layer_programme','attention_programme') and i['parameters'].get('MUT')!=0:
+        if role in ('landing','front_calendar','landing_calendar','writer','writer_programme','ownership','drain_guard','layer_programme','attention_programme','phase_launch') and i['parameters'].get('MUT')!=0:
             raise ValueError(f'{n}: production MUT0 required')
     if counts!=Counter({k:v[2] for k,v in ROLES.items()}):raise ValueError(f'full die actual source census mismatch: {dict(counts)}')
     validate_native_edges(ins)
@@ -317,6 +318,7 @@ def template(root=ROOT):
     """
     params={
         'layer_programme':dict(MUT=0),'attention_programme':dict(MUT=0),
+        'phase_launch':dict(PH0=None,SAFE_LOW_U=None,SAFE_HIGH_U=None,META_HOLD_CORE=None,MUT=0),
         'ownership':dict(MUT=0),'drain_guard':dict(MUT=0),
         'pc_path':{},'landing':dict(MUT=0,HOP_MUT=0),
         'landing_calendar':dict(MUT=0,PH0=0),'front_calendar':dict(MUT=0),
@@ -356,8 +358,11 @@ def template(root=ROOT):
     for stack,st in enumerate(('WS','WN','ES','EN')):
         for lane in range(4):add(f'vport_{st}_{lane}','vport')
         for g in range(8):
-            land=f'slg_{st}_{g}';lc=f'lcal_{st}_{g}';fc=f'fcal_{st}_{g}';ki=f'ki_{st}_{g}';a=f'ectl_a_{st}_{g}';guard=f'drain_{st}_{g}'
-            for name,role in [(land,'landing'),(lc,'landing_calendar'),(fc,'front_calendar'),(ki,'k_issuer'),(a,'ectla'),(guard,'drain_guard')]:add(name,role)
+            land=f'slg_{st}_{g}';lc=f'lcal_{st}_{g}';fc=f'fcal_{st}_{g}';ki=f'ki_{st}_{g}';a=f'ectl_a_{st}_{g}';guard=f'drain_{st}_{g}';bridge=f'phase_{st}_{g}'
+            for name,role in [(land,'landing'),(lc,'landing_calendar'),(fc,'front_calendar'),(ki,'k_issuer'),(a,'ectla'),(guard,'drain_guard'),(bridge,'phase_launch')]:add(name,role)
+            for p,sp in [('ctrl_go','ctrl_go'),('kgo','kgo'),('vgo','vgo'),('ctx_t','ctx_t'),('epoch','epoch'),('layer','layer')]:join(bridge,p,'layer_programme',sp)
+            for p in ('kgo_h','vgo_h'):join(fc,p,bridge,p)
+            join(fc,'ctx_t',bridge,'ctx_t_h')
             for p,sp in [('kgo','kgo'),('vgo','vgo'),('ctx_t','ctx_t'),('epoch','epoch'),('layer','layer')]:join(lc,p,'layer_programme',sp)
             for p,sp in [('kgo','kgo'),('epoch','epoch'),('layer','layer')]:join(ki,p,'layer_programme',sp)
             strap(land,'cfg_stack',stack,2);strap(land,'cfg_group',g,3);strap(a,'cfg',(g<<2)|stack,5)
@@ -372,6 +377,7 @@ def template(root=ROOT):
             for q in range(4):
                 pc=4*order.index(g)+q;n=f'pc_{st}_{pc}';add(n,'pc_path');pcs.append(n)
                 strap(n,'pc',pc,5);strap(n,'cfg_stack',stack,2)
+                for p,sp in [('cal_go','ctrl_go_h'),('cal_epoch','epoch_h'),('cal_layer','layer_h')]:join(n,p,bridge,sp)
                 for p,sp,lo,w in [('expected_put','r_put',q,1),('expected_sector','r_sector',10*q,10),('expected_epoch','r_epoch',0,16),('expected_layer','r_layer',0,6)]:join(n,p,lc,sp,lo,w)
                 join(n,'front_blk_go',fc,'blk_go',q,1)
             for p,sp in [('actual_valid','actual_valid'),('actual_sector','actual_sector'),('actual_epoch','actual_epoch'),('actual_layer','actual_layer'),('actual_data','actual_data')]:

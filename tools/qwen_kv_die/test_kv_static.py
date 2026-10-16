@@ -135,7 +135,7 @@ class CriticalNativeEdges(unittest.TestCase):
 class ActualTopology(unittest.TestCase):
     def test_full_shape_known_joins_and_unknowns_are_explicit(self):
         graph,gaps=K.template()
-        self.assertEqual(len(graph['instances']),342)
+        self.assertEqual(len(graph['instances']),374)
         by={i['name']:i for i in graph['instances']}
         for stack in ('WS','WN','ES','EN'):
             for g in range(8):
