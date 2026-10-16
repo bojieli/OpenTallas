@@ -1,0 +1,1594 @@
+{
+ "scope": "SOURCE_PARTITION_PROPOSAL_NOT_DIE_OR_PHYSICAL_QUALIFICATION",
+ "parent": "dsfd_host_sd_sliced",
+ "parent_has_registers": false,
+ "full_abi_bits": 292,
+ "ports": [
+  {
+   "abi_bit": 0,
+   "producer": "data0.hw_valid[0]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 1,
+   "producer": "data0.hw_data[0]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 2,
+   "producer": "data0.hw_data[1]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 3,
+   "producer": "data0.hw_data[2]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 4,
+   "producer": "data0.hw_data[3]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 5,
+   "producer": "data0.hw_data[4]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 6,
+   "producer": "data0.hw_data[5]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 7,
+   "producer": "data0.hw_data[6]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 8,
+   "producer": "data0.hw_data[7]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 9,
+   "producer": "data0.hw_data[8]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 10,
+   "producer": "data0.hw_data[9]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 11,
+   "producer": "data0.hw_data[10]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 12,
+   "producer": "data0.hw_data[11]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 13,
+   "producer": "data0.hw_data[12]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 14,
+   "producer": "data0.hw_data[13]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 15,
+   "producer": "data0.hw_data[14]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 16,
+   "producer": "data0.hw_data[15]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 17,
+   "producer": "data0.hw_data[16]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 18,
+   "producer": "data0.hw_data[17]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 19,
+   "producer": "data0.hw_data[18]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 20,
+   "producer": "data0.hw_data[19]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 21,
+   "producer": "data0.hw_data[20]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 22,
+   "producer": "data0.hw_data[21]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 23,
+   "producer": "data0.hw_data[22]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 24,
+   "producer": "data0.hw_data[23]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 25,
+   "producer": "data0.hw_data[24]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 26,
+   "producer": "data0.hw_data[25]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 27,
+   "producer": "data0.hw_data[26]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 28,
+   "producer": "data0.hw_data[27]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 29,
+   "producer": "data0.hw_data[28]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 30,
+   "producer": "data0.hw_data[29]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 31,
+   "producer": "data0.hw_data[30]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 32,
+   "producer": "data0.hw_data[31]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 33,
+   "producer": "data0.hw_data[32]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 34,
+   "producer": "data0.hw_data[33]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 35,
+   "producer": "data0.hw_data[34]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 36,
+   "producer": "data0.hw_data[35]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 37,
+   "producer": "data0.hw_data[36]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 38,
+   "producer": "data0.hw_data[37]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 39,
+   "producer": "data0.hw_data[38]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 40,
+   "producer": "data0.hw_data[39]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 41,
+   "producer": "data0.hw_data[40]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 42,
+   "producer": "data0.hw_data[41]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 43,
+   "producer": "data0.hw_data[42]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 44,
+   "producer": "data0.hw_data[43]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 45,
+   "producer": "data0.hw_data[44]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 46,
+   "producer": "data0.hw_data[45]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 47,
+   "producer": "data0.hw_data[46]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 48,
+   "producer": "data0.hw_data[47]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 49,
+   "producer": "data0.hw_data[48]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 50,
+   "producer": "data0.hw_data[49]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 51,
+   "producer": "data0.hw_data[50]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 52,
+   "producer": "data0.hw_data[51]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 53,
+   "producer": "data0.hw_data[52]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 54,
+   "producer": "data0.hw_data[53]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 55,
+   "producer": "data0.hw_data[54]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 56,
+   "producer": "data0.hw_data[55]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 57,
+   "producer": "data0.hw_data[56]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 58,
+   "producer": "data0.hw_data[57]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 59,
+   "producer": "data0.hw_data[58]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 60,
+   "producer": "data0.hw_data[59]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 61,
+   "producer": "data0.hw_data[60]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 62,
+   "producer": "data0.hw_data[61]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 63,
+   "producer": "data0.hw_data[62]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 64,
+   "producer": "data0.hw_data[63]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 65,
+   "producer": "data1.hw_data[0]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 66,
+   "producer": "data1.hw_data[1]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 67,
+   "producer": "data1.hw_data[2]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 68,
+   "producer": "data1.hw_data[3]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 69,
+   "producer": "data1.hw_data[4]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 70,
+   "producer": "data1.hw_data[5]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 71,
+   "producer": "data1.hw_data[6]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 72,
+   "producer": "data1.hw_data[7]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 73,
+   "producer": "data1.hw_data[8]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 74,
+   "producer": "data1.hw_data[9]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 75,
+   "producer": "data1.hw_data[10]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 76,
+   "producer": "data1.hw_data[11]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 77,
+   "producer": "data1.hw_data[12]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 78,
+   "producer": "data1.hw_data[13]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 79,
+   "producer": "data1.hw_data[14]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 80,
+   "producer": "data1.hw_data[15]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 81,
+   "producer": "data1.hw_data[16]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 82,
+   "producer": "data1.hw_data[17]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 83,
+   "producer": "data1.hw_data[18]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 84,
+   "producer": "data1.hw_data[19]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 85,
+   "producer": "data1.hw_data[20]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 86,
+   "producer": "data1.hw_data[21]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 87,
+   "producer": "data1.hw_data[22]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 88,
+   "producer": "data1.hw_data[23]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 89,
+   "producer": "data1.hw_data[24]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 90,
+   "producer": "data1.hw_data[25]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 91,
+   "producer": "data1.hw_data[26]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 92,
+   "producer": "data1.hw_data[27]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 93,
+   "producer": "data1.hw_data[28]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 94,
+   "producer": "data1.hw_data[29]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 95,
+   "producer": "data1.hw_data[30]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 96,
+   "producer": "data1.hw_data[31]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 97,
+   "producer": "data1.hw_data[32]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 98,
+   "producer": "data1.hw_data[33]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 99,
+   "producer": "data1.hw_data[34]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 100,
+   "producer": "data1.hw_data[35]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 101,
+   "producer": "data1.hw_data[36]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 102,
+   "producer": "data1.hw_data[37]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 103,
+   "producer": "data1.hw_data[38]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 104,
+   "producer": "data1.hw_data[39]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 105,
+   "producer": "data1.hw_data[40]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 106,
+   "producer": "data1.hw_data[41]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 107,
+   "producer": "data1.hw_data[42]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 108,
+   "producer": "data1.hw_data[43]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 109,
+   "producer": "data1.hw_data[44]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 110,
+   "producer": "data1.hw_data[45]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 111,
+   "producer": "data1.hw_data[46]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 112,
+   "producer": "data1.hw_data[47]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 113,
+   "producer": "data1.hw_data[48]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 114,
+   "producer": "data1.hw_data[49]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 115,
+   "producer": "data1.hw_data[50]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 116,
+   "producer": "data1.hw_data[51]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 117,
+   "producer": "data1.hw_data[52]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 118,
+   "producer": "data1.hw_data[53]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 119,
+   "producer": "data1.hw_data[54]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 120,
+   "producer": "data1.hw_data[55]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 121,
+   "producer": "data1.hw_data[56]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 122,
+   "producer": "data1.hw_data[57]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 123,
+   "producer": "data1.hw_data[58]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 124,
+   "producer": "data1.hw_data[59]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 125,
+   "producer": "data1.hw_data[60]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 126,
+   "producer": "data1.hw_data[61]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 127,
+   "producer": "data1.hw_data[62]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 128,
+   "producer": "data1.hw_data[63]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 129,
+   "producer": "data2.hw_data[0]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 130,
+   "producer": "data2.hw_data[1]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 131,
+   "producer": "data2.hw_data[2]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 132,
+   "producer": "data2.hw_data[3]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 133,
+   "producer": "data2.hw_data[4]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 134,
+   "producer": "data2.hw_data[5]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 135,
+   "producer": "data2.hw_data[6]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 136,
+   "producer": "data2.hw_data[7]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 137,
+   "producer": "data2.hw_data[8]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 138,
+   "producer": "data2.hw_data[9]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 139,
+   "producer": "data2.hw_data[10]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 140,
+   "producer": "data2.hw_data[11]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 141,
+   "producer": "data2.hw_data[12]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 142,
+   "producer": "data2.hw_data[13]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 143,
+   "producer": "data2.hw_data[14]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 144,
+   "producer": "data2.hw_data[15]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 145,
+   "producer": "data2.hw_data[16]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 146,
+   "producer": "data2.hw_data[17]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 147,
+   "producer": "data2.hw_data[18]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 148,
+   "producer": "data2.hw_data[19]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 149,
+   "producer": "data2.hw_data[20]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 150,
+   "producer": "data2.hw_data[21]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 151,
+   "producer": "data2.hw_data[22]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 152,
+   "producer": "data2.hw_data[23]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 153,
+   "producer": "data2.hw_data[24]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 154,
+   "producer": "data2.hw_data[25]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 155,
+   "producer": "data2.hw_data[26]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 156,
+   "producer": "data2.hw_data[27]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 157,
+   "producer": "data2.hw_data[28]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 158,
+   "producer": "data2.hw_data[29]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 159,
+   "producer": "data2.hw_data[30]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 160,
+   "producer": "data2.hw_data[31]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 161,
+   "producer": "data2.hw_data[32]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 162,
+   "producer": "data2.hw_data[33]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 163,
+   "producer": "data2.hw_data[34]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 164,
+   "producer": "data2.hw_data[35]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 165,
+   "producer": "data2.hw_data[36]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 166,
+   "producer": "data2.hw_data[37]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 167,
+   "producer": "data2.hw_data[38]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 168,
+   "producer": "data2.hw_data[39]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 169,
+   "producer": "data2.hw_data[40]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 170,
+   "producer": "data2.hw_data[41]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 171,
+   "producer": "data2.hw_data[42]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 172,
+   "producer": "data2.hw_data[43]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 173,
+   "producer": "data2.hw_data[44]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 174,
+   "producer": "data2.hw_data[45]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 175,
+   "producer": "data2.hw_data[46]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 176,
+   "producer": "data2.hw_data[47]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 177,
+   "producer": "data2.hw_data[48]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 178,
+   "producer": "data2.hw_data[49]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 179,
+   "producer": "data2.hw_data[50]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 180,
+   "producer": "data2.hw_data[51]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 181,
+   "producer": "data2.hw_data[52]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 182,
+   "producer": "data2.hw_data[53]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 183,
+   "producer": "data2.hw_data[54]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 184,
+   "producer": "data2.hw_data[55]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 185,
+   "producer": "data2.hw_data[56]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 186,
+   "producer": "data2.hw_data[57]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 187,
+   "producer": "data2.hw_data[58]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 188,
+   "producer": "data2.hw_data[59]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 189,
+   "producer": "data2.hw_data[60]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 190,
+   "producer": "data2.hw_data[61]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 191,
+   "producer": "data2.hw_data[62]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 192,
+   "producer": "data2.hw_data[63]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 193,
+   "producer": "data3.hw_data[0]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 194,
+   "producer": "data3.hw_data[1]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 195,
+   "producer": "data3.hw_data[2]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 196,
+   "producer": "data3.hw_data[3]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 197,
+   "producer": "data3.hw_data[4]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 198,
+   "producer": "data3.hw_data[5]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 199,
+   "producer": "data3.hw_data[6]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 200,
+   "producer": "data3.hw_data[7]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 201,
+   "producer": "data3.hw_data[8]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 202,
+   "producer": "data3.hw_data[9]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 203,
+   "producer": "data3.hw_data[10]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 204,
+   "producer": "data3.hw_data[11]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 205,
+   "producer": "data3.hw_data[12]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 206,
+   "producer": "data3.hw_data[13]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 207,
+   "producer": "data3.hw_data[14]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 208,
+   "producer": "data3.hw_data[15]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 209,
+   "producer": "data3.hw_data[16]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 210,
+   "producer": "data3.hw_data[17]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 211,
+   "producer": "data3.hw_data[18]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 212,
+   "producer": "data3.hw_data[19]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 213,
+   "producer": "data3.hw_data[20]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 214,
+   "producer": "data3.hw_data[21]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 215,
+   "producer": "data3.hw_data[22]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 216,
+   "producer": "data3.hw_data[23]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 217,
+   "producer": "data3.hw_data[24]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 218,
+   "producer": "data3.hw_data[25]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 219,
+   "producer": "data3.hw_data[26]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 220,
+   "producer": "data3.hw_data[27]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 221,
+   "producer": "data3.hw_data[28]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 222,
+   "producer": "data3.hw_data[29]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 223,
+   "producer": "data3.hw_data[30]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 224,
+   "producer": "data3.hw_data[31]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 225,
+   "producer": "data3.hw_data[32]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 226,
+   "producer": "data3.hw_data[33]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 227,
+   "producer": "data3.hw_data[34]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 228,
+   "producer": "data3.hw_data[35]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 229,
+   "producer": "data3.hw_data[36]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 230,
+   "producer": "data3.hw_data[37]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 231,
+   "producer": "data3.hw_data[38]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 232,
+   "producer": "data3.hw_data[39]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 233,
+   "producer": "data3.hw_data[40]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 234,
+   "producer": "data3.hw_data[41]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 235,
+   "producer": "data3.hw_data[42]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 236,
+   "producer": "data3.hw_data[43]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 237,
+   "producer": "data3.hw_data[44]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 238,
+   "producer": "data3.hw_data[45]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 239,
+   "producer": "data3.hw_data[46]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 240,
+   "producer": "data3.hw_data[47]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 241,
+   "producer": "data3.hw_data[48]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 242,
+   "producer": "data3.hw_data[49]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 243,
+   "producer": "data3.hw_data[50]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 244,
+   "producer": "data3.hw_data[51]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 245,
+   "producer": "data3.hw_data[52]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 246,
+   "producer": "data3.hw_data[53]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 247,
+   "producer": "data3.hw_data[54]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 248,
+   "producer": "data3.hw_data[55]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 249,
+   "producer": "data3.hw_data[56]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 250,
+   "producer": "data3.hw_data[57]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 251,
+   "producer": "data3.hw_data[58]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 252,
+   "producer": "data3.hw_data[59]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 253,
+   "producer": "data3.hw_data[60]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 254,
+   "producer": "data3.hw_data[61]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 255,
+   "producer": "data3.hw_data[62]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 256,
+   "producer": "data3.hw_data[63]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 257,
+   "producer": "control.hw_control[1]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 258,
+   "producer": "control.hw_control[2]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 259,
+   "producer": "control.hw_control[3]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 260,
+   "producer": "control.hw_control[4]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 261,
+   "producer": "control.hw_control[5]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 262,
+   "producer": "control.hw_control[6]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 263,
+   "producer": "control.hw_control[7]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 264,
+   "producer": "control.hw_control[8]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 265,
+   "producer": "control.hw_control[9]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 266,
+   "producer": "control.hw_control[10]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 267,
+   "producer": "control.hw_control[11]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 268,
+   "producer": "control.hw_control[12]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 269,
+   "producer": "control.hw_control[13]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 270,
+   "producer": "control.hw_control[14]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 271,
+   "producer": "control.hw_control[15]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 272,
+   "producer": "control.hw_control[16]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 273,
+   "producer": "control.hw_control[17]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 274,
+   "producer": "control.hw_control[18]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 275,
+   "producer": "control.hw_control[19]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 276,
+   "producer": "control.hw_control[20]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 277,
+   "producer": "control.hw_control[21]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 278,
+   "producer": "control.hw_control[22]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 279,
+   "producer": "control.hw_control[23]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 280,
+   "producer": "control.hw_control[24]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 281,
+   "producer": "control.hw_control[25]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 282,
+   "producer": "control.hw_control[26]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 283,
+   "producer": "control.hw_control[27]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 284,
+   "producer": "control.hw_control[28]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 285,
+   "producer": "control.hw_control[29]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 286,
+   "producer": "control.hw_control[30]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 287,
+   "producer": "control.hw_control[31]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 288,
+   "producer": "control.hw_control[32]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 289,
+   "producer": "control.hw_control[33]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 290,
+   "producer": "control.hw_control[34]",
+   "pipeline_edges_added": 0
+  },
+  {
+   "abi_bit": 291,
+   "producer": "control.hw_control[35]",
+   "pipeline_edges_added": 0
+  }
+ ],
+ "leaves": [
+  {
+   "instance": "data0",
+   "module": "dsfd_host_sd_data64",
+   "params": {
+    "NS": 1,
+    "KVS": 1,
+    "ENG": -1,
+    "SLICE": 0
+   },
+   "clock": "ck_data[0]",
+   "box_um": [
+    19.44,
+    0,
+    114.48,
+    25.92
+   ],
+   "data_bits": 64,
+   "marker_class_bits": 2,
+   "local_state": "independent wp/rp/n/credit/decode; exact equality asserted with controller everyedge",
+   "reset": "raw common assertion -> own2-edge ot_reset_sync -> own3-edge ot_rst_relay"
+  },
+  {
+   "instance": "data1",
+   "module": "dsfd_host_sd_data64",
+   "params": {
+    "NS": 1,
+    "KVS": 1,
+    "ENG": -1,
+    "SLICE": 1
+   },
+   "clock": "ck_data[1]",
+   "box_um": [
+    114.48,
+    0,
+    209.52,
+    25.92
+   ],
+   "data_bits": 64,
+   "marker_class_bits": 2,
+   "local_state": "independent wp/rp/n/credit/decode; exact equality asserted with controller everyedge",
+   "reset": "raw common assertion -> own2-edge ot_reset_sync -> own3-edge ot_rst_relay"
+  },
+  {
+   "instance": "data2",
+   "module": "dsfd_host_sd_data64",
+   "params": {
+    "NS": 1,
+    "KVS": 1,
+    "ENG": -1,
+    "SLICE": 2
+   },
+   "clock": "ck_data[2]",
+   "box_um": [
+    209.52,
+    0,
+    304.56,
+    25.92
+   ],
+   "data_bits": 64,
+   "marker_class_bits": 2,
+   "local_state": "independent wp/rp/n/credit/decode; exact equality asserted with controller everyedge",
+   "reset": "raw common assertion -> own2-edge ot_reset_sync -> own3-edge ot_rst_relay"
+  },
+  {
+   "instance": "data3",
+   "module": "dsfd_host_sd_data64",
+   "params": {
+    "NS": 1,
+    "KVS": 1,
+    "ENG": -1,
+    "SLICE": 3
+   },
+   "clock": "ck_data[3]",
+   "box_um": [
+    304.56,
+    0,
+    399.6,
+    25.92
+   ],
+   "data_bits": 64,
+   "marker_class_bits": 2,
+   "local_state": "independent wp/rp/n/credit/decode; exact equality asserted with controller everyedge",
+   "reset": "raw common assertion -> own2-edge ot_reset_sync -> own3-edge ot_rst_relay"
+  }
+ ],
+ "control": {
+  "module": "dsfd_host_sd_control",
+  "clock": "ck_control",
+  "projection_bits": 36,
+  "used_projection_bits": "header35; valid retained for diagnostics/source equality, actual ABI valid comes from SWdata0",
+  "proposed_E_boot_control_region_um": [
+   399.6,
+   0,
+   453.6,
+   77.76
+  ],
+  "control_projection_box_um": [
+   399.6,
+   0,
+   453.6,
+   51.84
+  ],
+  "whole_HOST_extraction": "SOURCE_IMPLEMENTED dsfd_host_c_sliced with sixactualleafinstances; see whole_host_graph.json. ECTL/nativephysicalgates, parentclocks/cuts/slots remainOPEN."
+ },
+ "clock_contract": {
+  "source": "same fixed-phase PLL family as existing ck",
+  "delivery": "each hardened clock pin phi-R from its own measured insertion.json",
+  "phase": "independent source pins; no derived HDL clocks",
+  "qualification": "UNMEASURED"
+ },
+ "calendar": {
+  "input_capture_edges": 1,
+  "output_launch": "same registered output edge as legacy source decoder",
+  "added_service_edges": 0,
+  "reset_release_edges": 5,
+  "static_service": "head serviced every nonempty edge; missingreservedcredit is fault and does not defer pop",
+  "proof": "1689 exact edges/210emits, fourmutants rejected, missingcredit same210emitcalendar+fault"
+ },
+ "native_HOST_status_contract": {
+  "consumer": "recurring diagnostic f_sseq_st only; no t_kd/KIT or rawEND input",
+  "f_st_capture": "C0 is firstck edge sampling declared source f_st",
+  "visible_t_collective_status": "C0+2ck (ss1,ss2,to registers)",
+  "forbidden_inference": "nativeingest completion tv/td are physicalwriteACKs; cannot qualify token success",
+  "actual_token_verdict_consumer": "collective/parent must consume source-specific fixed faultstatusedge; OPEN"
+ }
+}
