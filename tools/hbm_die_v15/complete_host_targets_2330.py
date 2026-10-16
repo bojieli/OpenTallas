@@ -66,7 +66,7 @@ for k,q in enumerate(Q):
 # Universal calendar fields are zero-extended whole packed fields by the compiler.
 # Connect each original quadrant ABI to its low contiguous field bits, preserving its lane packing.
 s['drop_v15_edges']=[]
-for q,widths in dict(SW=(8,4,8,16,4),SE=(2,1,2,8,2),NE=(2,1,2,8,2)).items():
+for q,widths in dict(SW=(8,4,8,16,4),SE=(2,1,2,8,2),NW=(8,4,8,16,4),NE=(2,1,2,8,2)).items():
     for field,w in zip(('client_seq','response_enable','response_seq','bank_client','hub_ring_client'),widths):
         s['drop_v15_edges'].append(f'calendar_{q}_{field}')
         e([f'calendar_{q}',field,0,w],[f'hb_vms_{q}',field,0,w],w)
