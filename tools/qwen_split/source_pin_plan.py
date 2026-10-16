@@ -11,11 +11,12 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / 'tools'))
-from die_port_bind import parse_modules
+from die_port_bind import parse_modules, preprocess, strip_comments
 
 
 def rtl_ports(path, name):
-    mods = [m for m in parse_modules(path.read_text(), str(path)) if m.name == name]
+    # production die build defines nothing: opt-in `ifdef ports (e.g. OT_QFD_VM_PARTITIONED_CLOCKS) are not die pins
+    mods = [m for m in parse_modules(preprocess(strip_comments(path.read_text()), {}), str(path)) if m.name == name]
     if len(mods) != 1 or mods[0].port_parse_errors:
         raise ValueError(f'{name}: cannot resolve one complete RTL port list')
     m = mods[0]
@@ -186,11 +187,21 @@ def apply_slabs(M):
                 s = old.get(p)
                 f = s[2] if s and s[0] in ('face', 'pins') else 'W'
             faces[f].append((p, n))
+        spread = os.environ.get('OT_SPLIT_BW_SPREAD', '0') == '1'
         for f, groups in faces.items():
             L = q.w if f in 'NS' else q.h
             need = sum(n * .096 + 1.0 for _, n in groups)
             if need > L - 8:
                 raise ValueError(f'{q.name}.{f}: {need:.1f}um pins exceed {L-8:.1f}um face')
+            if spread and f in 'WE' and groups and all(p.startswith('bw') for p, _ in groups):
+                # Q-COMPUTE-DIE r2h: a face carrying only the tile-tree words (8 x 514 b) spreads them evenly over
+                # the face (router: the 401-um packed block was the 0.665 cut window beside the W tile column)
+                gap = (L - 240.0 - need) / max(1, len(groups) - 1)
+                cursor = 120.0
+                for p, n in groups:
+                    q.face(p, n, f, 'M4', snap(cursor + n * .096 / 2), 2)
+                    cursor += n * .096 + 1. + gap
+                continue
             cursor = (L - need) / 2
             for p, n in groups:
                 q.face(p, n, f, 'M5' if f in 'NS' else 'M4', snap(cursor + n * .096 / 2), 2)

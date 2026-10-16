@@ -33,7 +33,7 @@ VM_CLASSES = {'su', 'field', 'coll', 'select', 'hbm'}     # a2_programme_cost.py
 def cls(m):
     if m.startswith('PORT'):
         return 'port'
-    for k, v in (('w0_payload', 'payload'), ('w0_header', 'header'), ('field16', 'front'), ('meta26', 'front'),
+    for k, v in (('w0_payload', 'payload'), ('w0_header', 'header'), ('field16', 'front'), ('field4', 'front'), ('meta26', 'front'),
                  ('control4', 'front'), ('stripe_', 'front'), ('controller', 'front'), ('fault_join', 'fault'),
                  ('scatter', 'scatter'), ('relay128_b8', 'b8'), ('relay128_b4', 'b4'), ('bank128', 'bank'),
                  ('return_bank8', 'return'), ('read_q', 'read'), ('read_v', 'read'), ('fsr', 'fsr'),
@@ -66,7 +66,10 @@ def measure(P, nets, W, H, reach):
     for path, hops in PATHS.items():
         rows, tot = [], 0
         for name, keys in hops:
-            L = max((mx.get(tuple(sorted(k)), 0.0) for k in keys), default=0.0)
+            observed = [mx[tuple(sorted(k))] for k in keys if tuple(sorted(k)) in mx]
+            if not observed:
+                raise ValueError(f'unobserved VM path {path}/{name}: missing classified native connection')
+            L = max(observed)
             st = max(0, math.ceil(L / reach) - 1)
             tot += st
             rows.append(dict(hop=name, max_um=round(L, 1), relay_stages=st))

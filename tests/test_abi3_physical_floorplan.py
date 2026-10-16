@@ -169,3 +169,21 @@ def test_exhaustive_counts_bus_base_matches_once():
     fp = flow.resolve_floorplan(None, None, [r"^(e|f)$=top", r"^g$=left"], None)
     rc, out = _run_pin_tcl(flow.io_constraints_tcl(fp["pin_regions"], exhaustive=True), ["e[0]", "e[1]", "f", "g"])
     assert rc == 0, out
+
+
+def test_balanced_pins_avoid_tile_corners(monkeypatch):
+    # ROOT 2026-10-16 (H-SM ot_hgi_sm_xload_cl2_ctl cl2d DRC 4: M5 spacing between corner pins at x=0.042 / 345.53):
+    # balanced place_pin positions span [edge0 + C, edge1 - C], C = OT_PIN_CORNER_UM (default 1.0 um)
+    monkeypatch.setenv("OT_PIN_GROUP_MAX", "1")
+    monkeypatch.setenv("OT_PIN_BALANCE_H", "M4")
+    monkeypatch.setenv("OT_PIN_BALANCE_V", "M5")
+    fp = flow.resolve_floorplan(None, None, [r"^a$=top", r"^b$=left:0-100"], None)
+    tcl = flow.io_constraints_tcl(fp["pin_regions"], die_area_um=[0, 0, 345.6, 345.6])
+    assert "expr {1 + (344.6 - 1) * ($ot_first + 0.5) / $ot_count}" in tcl      # full top face
+    assert "expr {0 + (100 - 0) * ($ot_first + 0.5) / $ot_count}" in tcl        # explicit range: as written
+    monkeypatch.setenv("OT_PIN_CORNER_UM", "0")
+    tcl = flow.io_constraints_tcl(fp["pin_regions"], die_area_um=[0, 0, 345.6, 345.6])
+    assert "expr {0 + (345.6 - 0) * ($ot_first + 0.5) / $ot_count}" in tcl     # opt-out keeps the old positions
+    monkeypatch.setenv("OT_PIN_CORNER_UM", "1.0")
+    fp = flow.resolve_floorplan(None, None, [r"^a$=top:0.2-0.8"], None)                # a corner window stays legal
+    assert "expr {0.2 + (0.8 - 0.2)" in flow.io_constraints_tcl(fp["pin_regions"], die_area_um=[0, 0, 345.6, 345.6])
