@@ -63,9 +63,14 @@
     "consumer_calls": [
       "before_allocator: validate_calibration(...,phase=\"before_allocator\"); consumer compares exact current module ports/directions/widths before replacing controller/issuer source masters; no emission authorized by this check alone",
       "after_allocator immediatelybeforewriter: validate_calibration(...,phase=\"post_allocator\",current_graph=canonical_export,current_stage_of=actual_r21_stage_of). Exact fullgraph+stage equality required."
-    ]
+    ],
+    "compiled_source_manifest": "sha256sum text, every compiledsource and recursive literalinclude; validator rehashes all actualfiles underrepo_root and refuses changed/missing/unhashedinclude"
   },
   "physical_qualified": false,
   "native_full_layer_qualified": false,
-  "graph_format": "qwen-b2-allinst-buses-bindings-v1"
+  "graph_format": "qwen-b2-allinst-buses-bindings-v1",
+  "route_bench_include_dirs": [
+    "rtl/hdc",
+    "."
+  ]
 }

@@ -6,7 +6,7 @@ must supply actual path ledgers and a route-composed temporal gate, including th
 calibrated parameter-free controller and issuer sources. No generic PASS+SHA is
 accepted as a substitute for these named source/path obligations.
 """
-import hashlib,json,sys
+import hashlib,json,sys,re
 from pathlib import Path
 PATH_GROUPS=('tc_to_port','am_to_controller','rq_to_train','tag_copy_to_issuer','issuer_to_train','lc_to_halfband','selector_to_upper','upper_to_halfband','rb_to_vm')
 
@@ -34,10 +34,24 @@ def validate_calibration(manifest,root,*,phase="post_allocator",current_graph=No
   if current_graph is None or canonical(current_graph)!=canonical(graph):raise ValueError('current fullgraph differs from qualified allocation')
   stages=json.loads(checked_file(a['evidence']['allocator_stage_of']).read_text())
   if current_stage_of is None or canonical(current_stage_of)!=canonical(stages):raise ValueError('current r21_stage_of differs from qualified allocation')
+ # Rehash every actual compiled dependency, not merely its receipt file.
+ source_manifest=checked_file(a['evidence']['route_bench_source_manifest'])
+ compiled={}
+ for line in source_manifest.read_text().splitlines():
+  m=re.fullmatch(r'([0-9a-f]{64}) [ *](.+)',line)
+  if not m:raise ValueError('malformed compiled source SHA line')
+  p=(root/m[2]).resolve()
+  if not p.is_relative_to(root)or not p.is_file()or hashlib.sha256(p.read_bytes()).hexdigest()!=m[1]:raise ValueError('compiled source missing/changed: '+m[2])
+  compiled[p]=m[1]
+ if not compiled:raise ValueError('empty compiled source manifest')
+ include_dirs=[root/d for d in a.get('route_bench_include_dirs',['rtl/hdc','.'])]
+ for p in compiled:
+  for inc in re.findall(r'^\s*`include\s+"([^"]+)"',p.read_text(),re.M):
+   matches=[d/inc for d in [p.parent,*include_dirs]if(d/inc).is_file()]
+   if not matches or matches[0].resolve()not in compiled:raise ValueError('unhashed compiled include '+str(p)+': '+inc)
  # Parameter-free production successors must be distinct actual sources.
  for n in ('controller','issuer'):
   r=a['calibrated_sources'][n];p=checked_file(r)
-  import re
   text=p.read_text()
   m=re.search(r'\bmodule\s+'+re.escape(r['module'])+r'\s*([#(])',text)
   if not m or m[1]=='#':raise ValueError('calibrated '+n+' must have actual parameter-free source identity')
