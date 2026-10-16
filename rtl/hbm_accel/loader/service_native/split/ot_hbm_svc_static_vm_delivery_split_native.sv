@@ -32,7 +32,7 @@ module ot_hbm_svc_static_vm_delivery_split_native (
  assign block_ready=br[0]; assign busy=bz[0]; assign fault=ft[0];
  genvar b;
  generate for(b=0;b<8;b=b+1)begin:g_bank
-  ot_hbm_svc_vmdel_lane u_lane (.clk(clk_lane[b]),.clk_cap(clk_lane[b]),.rst_n(rst_n),.bank_id(b[2:0]),
+  ot_hbm_svc_vmdel_lane u_lane (.clk(clk_lane[b]),.rst_n(rst_n),.bank_id(b[2:0]),
    .begin_v_i(begin_v),.begin_bank_i(begin_bank),.begin_epoch_i(begin_epoch),
    .start_i(start),.start_bank_i(start_bank),.start_epoch_i(start_epoch),.start_base_sector_i(start_base_sector),
    .fill_v_i({fill_v[24+b],fill_v[16+b],fill_v[8+b],fill_v[b]}),

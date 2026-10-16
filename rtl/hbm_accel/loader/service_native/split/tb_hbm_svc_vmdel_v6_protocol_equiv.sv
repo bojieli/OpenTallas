@@ -15,7 +15,7 @@ module tb_hbm_svc_vmdel_v6_protocol_equiv;
  ot_hbm_svc_static_vm_delivery #(.STATUS_LAT(SLAT)) ref_i(.clk(clk),.rst_n(rst_n),.begin_v(begin_v),.begin_bank(begin_bank),.begin_epoch(begin_epoch),
   .fill_v(fill_v),.fill_bank(fill_bank),.fill_slot(fill_slot),.fill_epoch(fill_epoch),.fill_data(fill_data),.block_ready(br_a),
   .start(start),.start_bank(start_bank),.start_epoch(start_epoch),.start_base_sector(start_base_sector),.dq(dq_a),.busy(busy_a),.fault(fault_a));
- ot_hbm_svc_static_vm_delivery_split dut(.clk(clk),.rst_n(rst_n),.begin_v(begin_v),.begin_bank(begin_bank),.begin_epoch(begin_epoch),
+ ot_hbm_svc_static_vm_delivery_split_v6 dut(.clk(clk),.rst_n(rst_n),.begin_v(begin_v),.begin_bank(begin_bank),.begin_epoch(begin_epoch),
   .fill_v(fill_v),.fill_bank(fill_bank),.fill_slot(fill_slot),.fill_epoch(fill_epoch),.fill_data(fill_data),.block_ready(br_b),
   .start(start),.start_bank(start_bank),.start_epoch(start_epoch),.start_base_sector(start_base_sector),.dq(dq_b),.busy(busy_b),.fault(fault_b));
  integer seed=SEED,cyc,p,checks=0,starts=0,valid_dq=0,faults_seen=0,resets=0,completes=0;

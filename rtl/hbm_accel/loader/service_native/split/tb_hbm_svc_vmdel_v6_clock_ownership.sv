@@ -3,7 +3,7 @@ module tb_hbm_svc_vmdel_v6_clock_ownership;
  reg [7:0] clk_lane=0;
  reg rst_n=1,begin_v=0; reg [15:0] begin_epoch=0;
  wire [15:0] own; wire [127:0] epoch;
- ot_hbm_svc_static_vm_delivery_split_native dut(
+ ot_hbm_svc_static_vm_delivery_split_native_v6 dut(
   .clk_lane(clk_lane),.rst_n(rst_n),.begin_v(begin_v),.begin_bank(1'b0),.begin_epoch(begin_epoch),
   .fill_v(32'b0),.fill_bank(32'b0),.fill_slot(192'b0),.fill_epoch(512'b0),.fill_data(8192'b0),
   .start(1'b0),.start_bank(1'b0),.start_epoch(16'b0),.start_base_sector(16'b0));
