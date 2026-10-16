@@ -146,5 +146,15 @@
       "registered_clock_reset": "rejected direct edge assertion",
       "Make_corrupted_serial_data_exclusion": "rejected status fault edge17 expected211"
     }
+  },
+  "system_success_observation_binding": {
+    "qualified": false,
+    "local_profile_scope": "issuer-local missing-completion diagnostic only; no aggregate VM or engine-fault success deadline",
+    "required_before_success": [
+      "exact sealed source and bounded fault-return path from every engine/component",
+      "actual die return linkage and measured core/serial clock phase",
+      "actual production success consumer and compiler-selected fixed observation edge"
+    ],
+    "runtime_status_wait_allowed": false
   }
 }
