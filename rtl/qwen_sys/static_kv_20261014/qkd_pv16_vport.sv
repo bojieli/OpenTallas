@@ -11,46 +11,52 @@
 // Static schedule, no credits: the compiler pops the four return rings of group {k, sel} at the slot whose word
 // this port must present 2 edges later (input pin register + output pin register) and drives sel (= q[0]) and
 // slot with it.  Nothing here waits, retries or reorders.  Checks (sticky fault, never move a slot): a slot
-// without all four quarter words, any word outside a slot or on the unselected group, quarter tags that differ,
-// a tag whose t[0] is not the selected group's parity.  ONE master for all 16 ports (no lane/stack straps): the
+// without a V word on the selected group, any V word outside a slot or on the unselected group, a tag whose t[0]
+// is not the selected group's parity (quarter agreement is checked by the landing rowctl).  ONE master for all 16 ports (no lane/stack straps): the
 // pair checks every arrival's t against its own calendar, which catches a word routed to the wrong lane or stack.
-// MUT (bench negative controls): 1 = sel inverted, 2 = quarter 1 and 2 swapped.
+// r4 ABI (Q-VMWB 2026-10-16): each side is the landing group's existing response face
+// qkd_static_kv_landing_physical_grp.rsp_{valid,v,t,data} wired straight in (no die-top glue).  The landing rowctl
+// already checks that the four quarter words agree (valid / tag / epoch / layer, sticky fault), so one valid, one
+// K/V flag and one tag per side.  K responses share the bus (rsp_v = 0) and are ignored here; a K word on the
+// selected group in a V slot is a fault (the compiler never schedules that).
+// MUT (bench negative controls): 1 = sel inverted, 2 = quarter 1 and 2 swapped, 3 = K/V flag ignored.
 module qkd_pv16_vport #(parameter integer MUT = 0) (
     input wire ck, rst_n,
     input wire slot, input wire sel,                       // compiled: this edge's word, group parity
-    // group {lane, 0} (even q) and group {lane, 1} (odd q): per quarter Q a ring word valid, tag (row t), sector
-    input wire [3:0] in_v0, input wire [4*14-1:0] in_t0, input wire [4*256-1:0] in_d0,
-    input wire [3:0] in_v1, input wire [4*14-1:0] in_t1, input wire [4*256-1:0] in_d1,
+    // side 0 = landing group {lane, 0} (even q), side 1 = group {lane, 1} (odd q): the group's rsp face
+    input wire in0_valid, input wire in0_vflag, input wire [13:0] in0_t, input wire [1023:0] in0_d,
+    input wire in1_valid, input wire in1_vflag, input wire [13:0] in1_t, input wire [1023:0] in1_d,
     output reg out_valid, output reg [13:0] out_t,
     output reg [511:0] out_v_lo, output reg [511:0] out_v_hi,     // V row dims 0-63 (quarters 0-1) / 64-127 (2-3)
     output reg fault
 );
-    // ---- reset captured at its pin (r2: r1's routed rst_n -> async-clear fanout measured capture 203.2 ps > 190):
-    // one flop, synchronous capture; internal state uses the local copy.  Cold release is one edge later; the
-    // production slot timeline is unchanged (the compiler's first slot is >= 2 edges after release).
+    // reset captured at its pin (r2); internal state uses the local copy (+1 cold-release edge, 0 production cycles)
     (* keep *) reg rst_q;
     always @(posedge ck) rst_q <= rst_n;
     wire rn = rst_q;
     // ---- input pin registers (every port registered) ----
     reg slot_q, sel_q;
-    reg [7:0] v_q;
-    reg [8*14-1:0] t_q;
-    reg [8*256-1:0] d_q;
+    reg [1:0] val_q, vf_q;
+    reg [27:0] t_q;
+    reg [2047:0] d_q;
     always @(posedge ck or negedge rn)
-        if (!rn) begin slot_q <= 1'b0; v_q <= 8'b0; end
-        else begin slot_q <= slot; v_q <= {in_v1, in_v0}; end
-    always @(posedge ck) begin sel_q <= sel ^ ((MUT == 1) ? 1'b1 : 1'b0); t_q <= {in_t1, in_t0}; d_q <= {in_d1, in_d0}; end
+        if (!rn) begin slot_q <= 1'b0; val_q <= 2'b0; end
+        else begin slot_q <= slot; val_q <= {in1_valid, in0_valid}; end
+    always @(posedge ck) begin
+        sel_q <= sel ^ ((MUT == 1) ? 1'b1 : 1'b0);
+        vf_q <= (MUT == 3) ? 2'b11 : {in1_vflag, in0_vflag};
+        t_q <= {in1_t, in0_t}; d_q <= {in1_d, in0_d};
+    end
 
-    // ---- static select of the 4-quarter quad of group {lane, sel} ----
-    wire [3:0] gv = sel_q ? v_q[7:4] : v_q[3:0];
-    wire [3:0] ov = sel_q ? v_q[3:0] : v_q[7:4];
-    wire [4*14-1:0] gt = sel_q ? t_q[4*14 +: 4*14] : t_q[0 +: 4*14];
-    wire [1023:0] gd = sel_q ? d_q[1024 +: 1024] : d_q[0 +: 1024];
+    // ---- static select of group {lane, sel} ----
+    wire [1:0] vw = val_q & vf_q;                          // V words on each side this edge
+    wire gv = sel_q ? vw[1] : vw[0];
+    wire ov = sel_q ? vw[0] : vw[1];
+    wire [13:0] t0 = sel_q ? t_q[27:14] : t_q[13:0];
+    wire [1023:0] gd = sel_q ? d_q[2047:1024] : d_q[1023:0];
     wire [1023:0] row = (MUT == 2) ? {gd[1023:768], gd[511:256], gd[767:512], gd[255:0]} : gd;
-    wire [13:0] t0 = gt[13:0];
-    wire tags_eq = gt[27:14] == t0 && gt[41:28] == t0 && gt[55:42] == t0;
     wire own = t0[0] == sel_q;
-    wire bad = slot_q ? (gv != 4'hf || ov != 4'h0 || !tags_eq || !own) : (|v_q);
+    wire bad = slot_q ? (!gv || ov || !own) : (|vw);
 
     // ---- output pin registers ----
     always @(posedge ck or negedge rn)
