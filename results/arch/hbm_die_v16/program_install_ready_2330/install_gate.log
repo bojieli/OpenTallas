@@ -1,0 +1,16 @@
+actual caseNone rc=0: PROGRAM_INSTALL_READY PASS case=-1 actual2x1024x256 macros sparse/missing/generation/invalid/multi-target/full1024 fixed edges
+before case1 rc=1: FATAL: /home/ubuntu/wt/hnetlist-1015/rtl/hbm_accel/host_static_20261015/tb_hbm_program_install_ready.sv:61: missing installed row was accepted q0
+before case2 rc=1: FATAL: /home/ubuntu/wt/hnetlist-1015/rtl/hbm_accel/host_static_20261015/tb_hbm_program_install_ready.sv:61: missing installed row was accepted q0
+before case3 rc=1: FATAL: /home/ubuntu/wt/hnetlist-1015/rtl/hbm_accel/host_static_20261015/tb_hbm_program_install_ready.sv:61: missing installed row was accepted q0
+before case4 rc=1: FATAL: /home/ubuntu/wt/hnetlist-1015/rtl/hbm_accel/host_static_20261015/tb_hbm_program_install_ready.sv:38: readiness advertised before exact row scan j1 rows3
+before case5 rc=1: FATAL: /home/ubuntu/wt/hnetlist-1015/rtl/hbm_accel/host_static_20261015/tb_hbm_program_install_ready.sv:89: early launch was dynamically delayed or accepted
+before case11 rc=1: FATAL: /home/ubuntu/wt/hnetlist-1015/rtl/hbm_accel/host_static_20261015/tb_hbm_program_install_ready.sv:122: bad programme magic written to real SRAM
+before case12 rc=1: FATAL: /home/ubuntu/wt/hnetlist-1015/rtl/hbm_accel/host_static_20261015/tb_hbm_program_install_ready.sv:126: wrong programme PC written to real SRAM
+before case14 rc=1: FATAL: /home/ubuntu/wt/hnetlist-1015/rtl/hbm_accel/host_static_20261015/tb_hbm_program_install_ready.sv:61: missing installed row was accepted q0
+missing_bypass case1 rc=1: FATAL: /home/ubuntu/wt/hnetlist-1015/rtl/hbm_accel/host_static_20261015/tb_hbm_program_install_ready.sv:61: missing installed row was accepted q0
+stale_generation case4 rc=1: FATAL: /home/ubuntu/wt/hnetlist-1015/rtl/hbm_accel/host_static_20261015/tb_hbm_program_install_ready.sv:83: stale previous-generation rows accepted
+early_launch case5 rc=1: FATAL: /home/ubuntu/wt/hnetlist-1015/rtl/hbm_accel/host_static_20261015/tb_hbm_program_install_ready.sv:89: early launch was dynamically delayed or accepted
+bad_magic case11 rc=1: FATAL: /home/ubuntu/wt/hnetlist-1015/rtl/hbm_accel/host_static_20261015/tb_hbm_program_install_ready.sv:122: bad programme magic written to real SRAM
+wrong_pc case12 rc=1: FATAL: /home/ubuntu/wt/hnetlist-1015/rtl/hbm_accel/host_static_20261015/tb_hbm_program_install_ready.sv:126: wrong programme PC written to real SRAM
+wrong_write_owner case14 rc=1: FATAL: /home/ubuntu/wt/hnetlist-1015/rtl/hbm_accel/host_static_20261015/tb_hbm_program_install_ready.sv:61: missing installed row was accepted q0
+PROGRAM_INSTALL_READY_GATE PASS actual15cases,8oldsource failures,6structuralmutants rejected

@@ -25,8 +25,9 @@ INST = dict(tt='tt_ctlm', seq='seq_su', su='sp_su64_sfu', vm='sp_vector_memory',
 MASTER = dict(seq=('qfd_seq_su_static', 'rtl/qwen_split/qfd_seq_su_static.sv'),
               su=('qfd_sp_su64_sfu', 'rtl/qwen_split/qfd_sp_su64_sfu.sv'),
               native=('qfd_native59_compute_service', 'rtl/qwen_split/qfd_native59_compute_service.sv'),
-              embed=('qkd_embedding_static_core_provider',
-                     'rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_core_provider.sv'))
+              # Q-NETLIST 2026-10-16: the compute die's provider is the word-level store (the HBM half-beat join stays
+              # on the KV die); same join edges (core / embed / fault), row face word_* driven by qfd_sys_face
+              embed=('qfd_embedding_word_provider', 'rtl/qwen_split/qfd_embedding_word_provider.sv'))
 # NEW parents: native59 site request (Codex C15 candidate frame 777.6 x 518.4: 11,717 FF, 6 roots); the embedding
 # provider = one ot_sram_1r1w_64x512_m1_r2c2 (171.3 x 77.8) + the beat / epoch faces
 NEW_WH = dict(native=(777.6, 518.4), embed=(259.2, 216.0))
@@ -99,11 +100,21 @@ def apply(model):
     io_master = by['io_collective'].master
     ports['io'] = {p: (n, d) for p, (n, d) in rtl_ports(ROOT / 'rtl/physical/ot_qfd_collective_static_io_production.sv',
                                                             io_master).items()}
+    # The join's edge and clock / reset ports must exist in the RTL at the join's width.  Its unresolved TOP inputs (the
+    # system producers: SU preload, provider beats, ...) may differ: the die RTL is the truth for them (Q-NETLIST 10-16).
+    edge_ports = {}
+    for e in j['directed_edges']:
+        edge_ports.setdefault(e['source'][0], set()).add(e['source'][1])
+        edge_ports.setdefault(e['sink'][0], set()).add(e['sink'][1])
+    for x in j['external_ports']:
+        if x['role'] in ('clock', 'reset'):
+            edge_ports.setdefault(x['node'], set()).add(x['port'])
     for k, (mst, src) in MASTER.items():
         rp = rtl_ports(ROOT / src, mst)
-        bad = {p for p in ports[k] if rp.get(p) != ports[k][p]}
+        bad = {p for p in ports[k] if p in edge_ports.get(k, ()) and rp.get(p) != ports[k][p]}
         if bad:
             raise ValueError(f'native graph: join node {k} differs from {src}: {sorted(bad)[:8]}')
+        ports[k] = dict(rp)
     node_of = {v: k for k, v in INST.items()}
     # ---- remove every historical functional bus among the seven nodes and every bus on a port the RTL lacks
     removed, kept = [], []
@@ -286,7 +297,7 @@ def assign_pins(M, model, Master, inst, mst, src, peers, partition_master):
         for p, (n, d) in rp.items():
             if p not in covered:
                 die_ports[p] = (n, p)
-        want = {}
+        want, alt = {}, {}
         for p in die_ports:
             ps = peers.get((inst.name, p))
             if not ps or p.startswith('ck') or p in ('rst_n', 'rsi'):
@@ -295,10 +306,29 @@ def assign_pins(M, model, Master, inst, mst, src, peers, partition_master):
             ox = sum(o.x + o.w / 2 for o in ps) / len(ps)
             oy = sum(o.y + o.h / 2 for o in ps) / len(ps)
             cx, cy = inst.x + inst.w / 2, inst.y + inst.h / 2
-            if abs(oy - cy) - inst.h / 2 >= abs(ox - cx) - inst.w / 2:
-                want[p] = ('N' if oy > cy else 'S', min(max(ox - inst.x, 0), inst.w))
-            else:
-                want[p] = ('E' if ox > cx else 'W', min(max(oy - inst.y, 0), inst.h))
+            ns = ('N' if oy > cy else 'S', min(max(ox - inst.x, 0), inst.w))
+            ew = ('E' if ox > cx else 'W', min(max(oy - inst.y, 0), inst.h))
+            dv, dh_ = abs(oy - cy) - inst.h / 2, abs(ox - cx) - inst.w / 2
+            want[p] = ns if dv >= dh_ else ew
+            alt[p] = (ew if dv >= dh_ else ns, abs(dv - dh_))
+        # Q-NETLIST 10-16: a face that cannot hold its groups even at every track spills the groups whose peer direction
+        # is closest to the diagonal (smallest primary-vs-secondary margin) to their secondary face, if that face has room
+        def _need(f, pitch=.048):
+            return sum(die_ports[p][0] * pitch + 1.0 for p, (ff, _) in want.items() if ff == f)
+        spilled = []
+        for f in 'NSEW':
+            L = inst.w if f in 'NS' else inst.h
+            while _need(f) > L - 8.0:
+                cands = sorted((alt[p][1], p) for p, (ff, _) in want.items() if ff == f and p in alt and
+                               _need(alt[p][0][0]) + die_ports[p][0] * .048 + 1.0 <=
+                               (inst.w if alt[p][0][0] in 'NS' else inst.h) - 8.0)
+                if not cands:
+                    break
+                p = cands[0][1]
+                want[p] = alt.pop(p)[0]
+                spilled.append((p, f, want[p][0]))
+        if spilled:
+            model.setdefault('assigned_pin_face_spills', {})[mst] = spilled
         pos = {}
         for f in 'NSEW':
             L = inst.w if f in 'NS' else inst.h
