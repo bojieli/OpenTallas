@@ -78,4 +78,35 @@ class CompilerFold(unittest.TestCase):
                 with self.subTest(change=change),self.assertRaises(ScheduleError):
                     compile_calendar([root/'p.hex'],bad,root)
 
+    def test_distinct_clock_names_with_identical_timing_refused(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            c = self.vehicle(root)
+            # Identical nominal phase/period do not establish clock identity.
+            c['clocks']['su_alias'] = copy.deepcopy(c['clocks']['core'])
+            cases = []
+            resource = copy.deepcopy(c)
+            resource['resources']['copy_engine']['clock'] = 'su_alias'
+            cases.append(('occupancy_resource', resource))
+            issue = copy.deepcopy(c)
+            issue['resources']['command']['clock'] = 'su_alias'
+            cases.append(('issue_resource', issue))
+            impl = copy.deepcopy(c)
+            impl['instructions'][0]['clock'] = 'su_alias'
+            cases.append(('instruction_clock', impl))
+            port = copy.deepcopy(c)
+            port['resources']['read']['clock'] = 'su_alias'
+            cases.append(('copy_port', port))
+            for name, bad in cases:
+                with self.subTest(name=name), self.assertRaisesRegex(ScheduleError, 'copy (CDC|port clock)'):
+                    compile_calendar([root/'p.hex'], bad, root)
+
+    def test_shared_issue_and_occupancy_resource_refused(self):
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            c = self.vehicle(root)
+            c['b2_configuration']['copy_resource'] = 'command'
+            with self.assertRaisesRegex(ScheduleError, 'inherently oversubscribes'):
+                compile_calendar([root/'p.hex'], c, root)
+
 if __name__=='__main__':unittest.main()

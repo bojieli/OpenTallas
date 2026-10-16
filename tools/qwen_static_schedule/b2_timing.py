@@ -78,17 +78,19 @@ def fold(contract, root):
         beats = command >> 49
         if not 0 <= command < 1 << 56 or not command & 1 or not 1 <= beats <= 64:
             raise ScheduleError('invalid actual CP56 copy command')
-        domain = out['clocks'][out['resources'][copy_resource]['clock']]
-        if domain != out['clocks'][impl['clock']] or domain != out['clocks'][out['resources'][e['resource']]['clock']]:
+        domain_name = out['resources'][copy_resource]['clock']
+        # Matching nominal timing is not proof that independently named roots
+        # are the same physical clock. No measured alias contract exists here.
+        if domain_name != impl['clock'] or domain_name != out['resources'][e['resource']]['clock']:
             raise ScheduleError('B2 copy CDC needs an explicit measured cross-domain calendar')
-        period = domain['period_fs']
+        period = out['clocks'][domain_name]['period_fs']
         shifts = dict(read=su['reads'], write=su['writes'], done=su['done'],
                       active_rise=su['active_rise'], active_fall=su['active_fall'])
         for port in roles:
             role = port['b2_copy_role']
             if role not in shifts or not port.get('rtl_port'):
                 raise ScheduleError('unknown/unbound B2 copy port role')
-            if out['clocks'][out['resources'][port['resource']]['clock']] != domain:
+            if out['resources'][port['resource']]['clock'] != domain_name:
                 raise ScheduleError('B2 copy port clock differs from the measured copy domain')
             port['offset_fs'] += shifts[role] * period
         if {p['b2_copy_role'] for p in roles} != set(shifts):
