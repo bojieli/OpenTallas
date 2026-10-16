@@ -5,9 +5,9 @@ import matplotlib;matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
 import argparse
-p=argparse.ArgumentParser();p.add_argument('--out',type=Path,required=True);args=p.parse_args()
+p=argparse.ArgumentParser();p.add_argument('--out',type=Path,required=True);p.add_argument('--own-valid',action='store_true');args=p.parse_args()
 R=Path(__file__).resolve().parents[3];O=args.out;O.mkdir(parents=True,exist_ok=True)
-screen=json.loads((R/'results/arch/s81_mix4_localized_1016/connected_geometry/baseline_leaf_geometry.json').read_text());J=json.loads((O/'cluster_graph.json').read_text());top=J['modules']['ot_s81_engram_mixq_clocked_candidate'];cells=top['cells'];assert len(cells)==38
+screen=json.loads((R/'results/arch/s81_mix4_localized_1016/connected_geometry/baseline_leaf_geometry.json').read_text());J=json.loads((O/'cluster_graph.json').read_text());TOP='ot_s81_engram_mixq_localized_candidate'if args.own_valid else'ot_s81_engram_mixq_clocked_candidate';top=J['modules'][TOP];cells=top['cells'];assert len(cells)==38
 pins={};dims={};hashes={}
 for key,v in screen['actual_leaf_views'].items():
  raw=subprocess.check_output(['git','show',v['record']+':'+v['path']],cwd=R);assert hashlib.sha256(raw).hexdigest()==v['sha256'];s=raw.decode();master='ot_s81_engram_'+key;dims[master]=v['outline_um'];pins[master]={};hashes[master]=v
