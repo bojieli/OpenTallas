@@ -47,6 +47,38 @@ class CaptureImport(unittest.TestCase):
      if ep[0].startswith('sp_capture__'):
       self.assertNotIn(ep,drivers,('leaf pin appears on multiple nets',ep))
       drivers[ep]=bid
+ def test_shared_actual_clock_trunks(self):
+  m=self.model()
+  clock_buses=[b for b in m['buses'] if b[0].startswith('external_ck')]
+  m['buses']=[b for b in m['buses'] if b not in clock_buses]
+  expected={}
+  for serial in (False,True):
+   bid='clk_serial' if serial else 'clk_stream';eps=[('clock_source',bid)];count=0
+   for b in clock_buses:
+    parent=next(ep for ep in b[3] if ep[0]=='sp_capture')
+    if parent[1].startswith('ckv')!=serial:continue
+    for i in range(b[2]):
+     ep=(parent[0],f'{parent[1]}[{i}:{i}]' if b[2]>1 else parent[1])
+     eps.append(ep);count+=1
+   m['buses'].append((bid,'clock',1,eps));expected[bid]=count
+  before_reset={b[0] for b in m['buses'] if b[0] in ('external_rst','external_rsv')}
+  r=expand(m,packet=self.packet)
+  self.assertEqual(r['counts']['literal_clock_contacts'],86)
+  actual={b[0]:b for b in m['buses'] if b[0] in expected}
+  self.assertEqual(set(actual),set(expected))
+  contacts=[]
+  for bid,b in actual.items():
+   self.assertEqual(b[2],1);self.assertEqual(b[3][0],('clock_source',bid))
+   contacts.extend(ep for ep in b[3] if ep[0].startswith('sp_capture__'))
+  self.assertEqual(len(contacts),86);self.assertEqual(len(set(contacts)),86)
+  self.assertEqual(sum(ep[1]=='ckvb[0:0]' for ep in contacts),16)
+  self.assertTrue(before_reset.issubset({b[0] for b in m['buses']}))
+  self.assertFalse(any(n=='sp_capture' for b in m['buses'] for n,p in b[3]))
+ def test_shared_data_endpoints_refused(self):
+  m=self.model();b=next(b for b in m['buses'] if b[0]=='external_t_cd')
+  b[3].append(('sp_capture','t_vm[0:11]'));before=copy.deepcopy(m)
+  with self.assertRaisesRegex(ValueError,'multiple capture data'):expand(m,packet=self.packet)
+  self.assertEqual(m,before)
  def test_unknown_port_atomic_refusal(self):
   m=self.model();m['buses'].append(('bad','test',1,[('peer','p'),('sp_capture','unknown')]))
   before=copy.deepcopy(m)

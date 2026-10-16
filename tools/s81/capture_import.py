@@ -112,7 +112,35 @@ def expand(m, parent_name='sp_capture', packet=DEFAULT_PACKET, *, root=ROOT, ins
   bid,cls,width,eps,*tail=bus
   hits=[(j,p) for j,(n,p) in enumerate(eps) if n==parent_name]
   if not hits:buses.append(bus);continue
-  if len(hits)!=1:raise ValueError('multiple capture endpoints on one bus '+bid)
+  if len(hits)>1:
+   # buses_r8 puts each logical tile clock entry on a shared scalar trunk.
+   # Expand every input endpoint together, retaining that one original net.
+   records=[];categories=set()
+   for _,port in hits:
+    base,_=_slice(port,width)
+    category='serial' if base.startswith('ckv') else 'stream' if base.startswith('ck') else base
+    if width!=1 or category not in ('stream','serial','rst','rsv'):
+     raise ValueError('multiple capture data endpoints on one bus '+bid)
+    categories.add(category)
+    chosen=selections(port,width)[0]
+    if any(r['direction']!='input' for r in chosen):
+     raise ValueError('shared capture net contains output '+bid)
+    records.extend(chosen)
+   if len(categories)!=1:raise ValueError('mixed capture clock/reset domains on one bus '+bid)
+   replacement=contacts(records)
+   if not replacement:raise ValueError('empty shared capture net '+bid)
+   ordered=[];inserted=False
+   for n,p in eps:
+    if n==parent_name:
+     if not inserted:ordered.extend(replacement);inserted=True
+    else:ordered.append((n,p))
+   ordered=list(dict.fromkeys(ordered))
+   logical_bits={r['bit'] for r in records}
+   if logical_bits & external_bits:raise ValueError('capture clock/reset bit appears on multiple nets '+bid)
+   for bit in logical_bits:bit_bus[bit]=len(buses)
+   covered.update(logical_bits);external_bits.update(logical_bits)
+   buses.append((bid,cls,width,ordered,*tail))
+   continue
   pos,port=hits[0];selected=selections(port,width)
   peer_bits=[]
   for j,(n,p) in enumerate(eps):
