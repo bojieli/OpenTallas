@@ -1,0 +1,74 @@
+{
+  "golden": {
+    "generic_cells": 27,
+    "registers": [
+      {
+        "name": "$auto$ff.cc:337:slice$82",
+        "type": "$dffe",
+        "width": 340,
+        "reset_dependent_ports": [
+          "EN"
+        ]
+      },
+      {
+        "name": "$auto$ff.cc:337:slice$85",
+        "type": "$adffe",
+        "width": 1,
+        "reset_dependent_ports": [
+          "ARST"
+        ]
+      },
+      {
+        "name": "$auto$ff.cc:337:slice$92",
+        "type": "$adffe",
+        "width": 1,
+        "reset_dependent_ports": [
+          "ARST"
+        ]
+      },
+      {
+        "name": "$auto$ff.cc:337:slice$95",
+        "type": "$dffe",
+        "width": 340,
+        "reset_dependent_ports": [
+          "EN"
+        ]
+      }
+    ],
+    "reset_qualified_payload_bits": 680
+  },
+  "candidate": {
+    "generic_cells": 22,
+    "registers": [
+      {
+        "name": "$auto$ff.cc:337:slice$71",
+        "type": "$adffe",
+        "width": 1,
+        "reset_dependent_ports": [
+          "ARST"
+        ]
+      },
+      {
+        "name": "$auto$ff.cc:337:slice$74",
+        "type": "$adffe",
+        "width": 1,
+        "reset_dependent_ports": [
+          "ARST"
+        ]
+      },
+      {
+        "name": "$auto$ff.cc:337:slice$77",
+        "type": "$dffe",
+        "width": 340,
+        "reset_dependent_ports": []
+      },
+      {
+        "name": "$auto$ff.cc:337:slice$78",
+        "type": "$dffe",
+        "width": 340,
+        "reset_dependent_ports": []
+      }
+    ],
+    "reset_qualified_payload_bits": 0
+  }
+}

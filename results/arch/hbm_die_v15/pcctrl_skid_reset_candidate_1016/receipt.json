@@ -37,10 +37,27 @@
     "exit_code": 0
   },
   "sha256": {
+    "synth_compare.log": "70209e8148f81172ae1cc36dc3d6ce8ce8f4736e4c4140c2517e8e1e40fd03b5",
     "candidate.sv": "8fecb0719f39b3927f1b791729171ee633684aed0264ed90041cbf436ddf1eb9",
+    "reset_analysis.json": "117363bb4398930836cd6a4dbed4c86d927bc3a4178e4b0a946839a05d69ea81",
+    "analyze_reset.py": "1615c4577f4f34c59f35a4ba2f3e3c32989ab2b38877bc5107ef4a8ee18c03ae",
+    "candidate_proc.json": "88a0ed12d1cb096b64f46c72e8b26f96b3806cf90b7362e47d16db699ee48e7f",
     "tb.sv": "c64f27014accf61d1a094786802a381ebc9804795827ce0290e2728330d1a73d",
+    "synth_compare.sh": "dbb939bec007b0b10a23363f18c5eaff21e2b11c25a858c3dd9f62350fa8a5a6",
+    "golden_proc.json": "280e55e14dc1de780818e47f3968a039778b03059e1c29d7236a8eada77d9f18",
     "run.log": "eff8996528e2340abd38beda04749b5c487dfae53630795638763c67b8ad8a60",
     "golden.sv": "53db715e4792579df81b6b67af7ab86a66f8c65b76956b98c0765fad12c4aa31",
     "run.sh": "2ea084df205c9a6ded3c2c22c72ceb0003db0e876f555dd31239d720911cbadf"
+  },
+  "generic_synthesis": {
+    "width": 340,
+    "passes": "Yosys proc;opt;stat",
+    "reset_qualified_payload_enable_bits_before": 680,
+    "reset_qualified_payload_enable_bits_after": 0,
+    "valid_state_async_reset_bits": 2,
+    "generic_cells_before": 27,
+    "generic_cells_after": 22,
+    "qualification": "Generic structural evidence only. No mapped area, timing, power, native pins, integration or throughput measured.",
+    "run_unit": "oth-ubuntu-774425-1792146195"
   }
 }
