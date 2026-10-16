@@ -9,6 +9,24 @@ from collections import defaultdict
 import re
 
 
+def hdl_index(info, position):
+    """Yosys JSON vector position -> declared HDL subscript, including `upto`."""
+    width=len(info['bits'])
+    if not 0<=position<width:raise ValueError('vector position outside actual width')
+    return info.get('offset',0)+(width-1-position if info.get('upto',0) else position)
+
+
+def bit_position(info, index):
+    """Inverse declaration mapping for literal top clock-port bit selection."""
+    offset=index-info.get('offset',0);width=len(info['bits'])
+    if not 0<=offset<width:raise ValueError('HDL subscript outside actual vector range')
+    return width-1-offset if info.get('upto',0) else offset
+
+
+def bit_label(name, info, position):
+    return name+'['+str(hdl_index(info,position))+']' if len(info['bits'])>1 or info.get('offset',0) else name
+
+
 class Bits:
     def __init__(self): self.parent={}
     def find(self,x):
@@ -40,8 +58,7 @@ def audit(document,top,clock_domains,input_domains=None,output_domains=None,requ
             if not net.get('hide_name'):
                 for i,b in enumerate(net['bits']):
                     if isinstance(b,str):continue
-                    label=(scope+'.'if scope else'')+name
-                    if len(net['bits'])>1 or net.get('offset',0):label+='['+str(i+net.get('offset',0))+']'
+                    label=bit_label((scope+'.'if scope else'')+name,net,i)
                     names[bit(scope,b)].add(label)
         for name,cell in module.get('cells',{}).items():
             full=(scope+'.'if scope else'')+name
@@ -65,7 +82,7 @@ def audit(document,top,clock_domains,input_domains=None,output_domains=None,requ
     for name,domain in clock_domains.items():
         match=re.fullmatch(r'([A-Za-z_][A-Za-z0-9_]*)(?:\[([0-9]+)\])?',name)
         if not match or match[1]not in top_ports:raise ValueError(f'invalid actual clock root {name}')
-        port=top_ports[match[1]];index=int(match[2])-port.get('offset',0)if match[2]is not None else 0
+        port=top_ports[match[1]];index=bit_position(port,int(match[2]))if match[2]is not None else 0
         if (match[2]is None and len(port['bits'])!=1)or not 0<=index<len(port['bits']):
             raise ValueError(f'invalid actual clock root {name}')
         key=bits.find(bit('',port['bits'][index]))
@@ -154,7 +171,7 @@ def audit(document,top,clock_domains,input_domains=None,output_domains=None,requ
             if output_domains is not None and not literal and domains!={output_domains.get(name)}:
                 violations.append(dict(kind='output_owner_mismatch',output=name,actual=sorted(domains),declared=output_domains.get(name)))
             for index,b in enumerate(p['bits']):
-                label=name+'['+str(index+p.get('offset',0))+']'if len(p['bits'])>1 or p.get('offset',0)else name
+                label=bit_label(name,p,index)
                 for v in origins[bits.find(bit('',b))]:
                     if v.startswith('payload:'):
                         scope,source_bit=v[8:].rsplit(':',1)
