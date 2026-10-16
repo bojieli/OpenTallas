@@ -55,7 +55,8 @@
   "exceptional_status": "Write-conflict sticky fault reports exactly one edge later than S; checked explicitly. Drain/reducer faults unchanged. No runtime rescheduling.",
   "negative_control": {
     "MUT256": "retains old bank input rung after raw pin capture; FAIL1217errors",
-    "other_mutants": "MUT16 drain source, MUT32 RF tag valid, MUT64 SFU operand, MUT128 RR bank order remain bound to route benches"
+    "other_mutants": "MUT16 drain source, MUT32 RF tag valid, MUT64 SFU operand, MUT128 RR bank order remain bound to route benches",
+    "staged_replay": "Exact native r2 source archive: MUT0 PASS4514checks; MUT16/32/64/128/256 all FAIL, component_benches_mut*.log"
   },
   "physical_candidate": {
     "outline_um": [
@@ -92,6 +93,12 @@
     "source_snapshot": "native_r1_source_snapshot.json",
     "actual_synthesis_report": "native_r1_synth_stat.txt",
     "r1_failure": "Actual reset data first endpoint u_red.iv on clk_red requires rst_n IO domain red; source snapshot assigned core. Flow rejected before floorplan, so no actual placement PNG exists.",
-    "sizing_correction": "276.48square would be70.6% core fill from actual retained mapping; source-bound native successor330.48square gives~49.2%."
+    "sizing_correction": "276.48square would be70.6% core fill from actual retained mapping; source-bound native successor330.48square gives~49.2%.",
+    "root_count": 66,
+    "rf_root_flops": 1152,
+    "ctl_root_flops": 1141,
+    "red_root_flops": 1351,
+    "red_macro_clock_pins": 2,
+    "actual_full_root_table": "native_r2_all_roots.json"
   }
 }
