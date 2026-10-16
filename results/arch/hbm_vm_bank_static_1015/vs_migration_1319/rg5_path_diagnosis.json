@@ -1,0 +1,18 @@
+{
+  "scope": "original RG5 CTS database diagnostic, placement RC only",
+  "source_start_commit": "b5140c202",
+  "worst_startpoint": "bank.ce_n_q[0]",
+  "worst_endpoints": [
+    "bank.ce[12]",
+    "bank.ce[7]",
+    "bank.ce[6]",
+    "bank.ce[1]",
+    "bank.ce[3]",
+    "bank.ce[2]",
+    "bank.ce[11]",
+    "bank.ce[4]"
+  ],
+  "worst_slack_ps": -35.482,
+  "cause": "registered corrected-error event count crosses a long buffered wire then existing saturating-counter carry/prefix cone",
+  "next": "Local hardened diagnostic counter or explicit status retiming with exact saturation proof; normal read/write calendars must remain exact. Do not hide the diagnostic timing path."
+}

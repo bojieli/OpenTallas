@@ -1,0 +1,33 @@
+ot-run: ot-epyc1tb     admits  -209 GB (avail 498, growth 154, headroom 64, waiters 1/480 GB) load 60/128 running 20 disk 231 GB 
+ot-run: ot-epyc4       admits  -181 GB (avail 315, growth 164, headroom 48, waiters 1/270 GB) load 123/128 running 37 disk 305 GB 
+ot-run: ot-pve1        skipped: load hold: load1 > 1.5 x cores
+ot-run: ot-agidock128  admits    27 GB (avail 68, growth 50, headroom 24, waiters 0/0 GB) load 26/64 running 12 disk 162 GB 
+ot-run: -> ot-agidock128
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-1350635-1792096020 after 0 s
+GATE_SOURCE_ARCHIVE_SHA256=320656c52d032768a7d6892872a07afb7dc05bb42d677b42158ea06955f1597f
+GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=["openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29"]
+GATE_TOOL_CTS_MACRO_CLUSTER=
+GATE_FLOW_RC=0 GATE_FLOW_S=52
+GATE_IOP_RC=0
+GATE_DUMP_RC=0
+GATE_TB textbook_lint: WARN hfd_vms_bank_vs_rg4wg1 cells 14,060 flops 4,769 depth 396.7 ps util 0.3089 reach 0.0 um (0.5 s)
+GATE_TB textbook_lint: INFO clock_roots max_root_sinks=4772 root=port:clk rule=PASS: 4,772 sinks on the largest root <= 15,000; no measured clock tree (no --cts gate evidence)
+GATE_TB textbook_lint: WARN util_channel: utilisation 30.9% outside 45%-65% (std 2285 + macro 36952 um2 in 127002 um2): shrink the outline (long wires / sparse placement)
+GATE_PORTS {"clk": [1, false], "rst_n": [1, false], "bid": [null, true], "sid": [null, true], "rslot_v": [1, false], "rslot": [null, true], "wslot_v": [1, false], "wslot": [null, true], "rq0": [null, true], "rr0": [null, true], "rq1": [null, true], "rr1": [null, true], "rq2": [null, true], "rr2": [null, true], "rq3": [null, true], "rr3": [null, true], "wq0": [null, true], "wq_done0": [1, false], "dq": [null, true], "dq_done": [1, false], "kq": [null, true], "kq_done": [1, false], "xq": [null, true], "xq_done": [1, false], "xq2": [null, true], "xq2_done": [1, false], "eg": [null, true], "pq": [null, true], "pr": [null, true], "status": [null, true]}
+GATE_AREA    Chip area for module '\hfd_vms_bank_vs_rg4wg1': 39215.770680
+GATE_CTS_RC=0
+GATE_SPINE OT_SPINE iter 4 (fine) leaves 774 sinks 6063 cells 5170 leaf arrival 743.6..774.6 ps (spread 31.0) pad 64.8 / 16.4 ps
+GATE_SPINE OT_SPINE iter 5 (fine) leaves 774 sinks 6063 cells 5181 leaf arrival 745.8..774.6 ps (spread 28.9) pad 64.8 / 16.5 ps
+GATE_SPINE_DONE OT_SPINE done port clk buffers 5181
+GATE_GPLD global_placement -density 0.5 -pad_left 0 -pad_right 0 -routability_driven -timing_driven -force_center_initial_place -min_phi_coef 0.95 -max_phi_coef 1.05
+GATE_GPLD [INFO GPL-0023] Placement target density:       0.5000
+GATE_CK_RC=0
+GATE_CK ss insertion all 935.5..1034.2 ps (spread 98.7), boundary mean 999.7; tt insertion all 743.6..774.6 ps (spread 31.0), boundary mean 756.3; ff insertion all 592.7..641.5 ps (spread 48.8), boundary mean 608.0; macro_clk flag False
+GATE_CK_DOMAIN {"source": "clk", "clock": "core_clk", "tt": {"boundary": {"n": 3357, "mean": 756.3, "min": 743.6, "max": 774.6}, "all": {"n": 6063, "mean": 756.2, "min": 743.6, "max": 774.6}, "errors": [], "macros": {"n": 3, "nets": 3, "max_per_net": 1, "reg_mean": 756.2, "max_slew": 13.8, "max_late": 4.0, "pins": [{"pin": "bank.u_a/clk", "arr": 760.2, "slew": 13.8, "late": 4.0, "net": "clkbuf_sp_L432_net"}, {"pin": "bank.u_b/clk", "arr": 752.8, "slew": 13.7, "late": -3.4, "net": "clkbuf_sp_L431_net"}, {"pin": "bank.u_c/clk", "arr": 751.0, "slew": 13.6, "late": -5.2, "net": "clkbuf_sp_L430_net"}]}, "macro_libs": 1}}
+GATE_PC constraints signoff /src/physical/ref_tile/vms_bank_vs_rg4wg1_1015/signoff.sdc (TT placement RC; diagnostic)
+GATE_PC reg->reg      382 paths, worst slack -86.8 ps (e.g. bank.eg_v$_DFF_PN0_/D)
+GATE_PC macro->reg      1 paths, worst slack 104.1 ps (e.g. bank.c_c[23]$_DFF_P_/D)
+GATE_PC in->reg         3 paths, worst slack 367.0 ps (e.g. bank.rn$_DFF_PN0_/RESETN)
+GATE_PC setup WNS -8.680833829544099e-11 hold WNS 2.300626356088742e-11
+GATE_DONE
+ot-run: RAN on ot-agidock128 (unit oth-ubuntu-1350635-1792096020): exit 0

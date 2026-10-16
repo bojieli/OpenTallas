@@ -24,7 +24,7 @@ module tb_hgi_sfu_vm_round_static;
  wire [511:0] dd;wire [1:0] drv;
  wire [143:0] bs;
  function automatic [31:0] value(input integer a);value=32'h3e000000+32'(a*32768);endfunction
- ot_hgi_sfu_vm_static_bridge dut(.clk(clk),.rst_n(rst_n),.prefetch_v(pf_v),.prefetch_sector(pf_sec),.prefetch_group(pf_group),
+ ot_hgi_sfu_vm_static_bridge dut(.clk(clk),.rst_n(rst_n),.clk_lg({4{clk}}),.rst_lg_n({4{rst_n}}),.prefetch_v(pf_v),.prefetch_sector(pf_sec),.prefetch_group(pf_group),
  .prefetch_local_addr(pf_addr),.prefetch_scalar(pf_scalar),.prefetch_word(24'd0),.scalar_addr(96'd0),
  .local_rq(rq),.local_rr(bridge_rr),.stage_v(sv),.stage_group(sg),.stage_addr(sa),.stage_data(sd),.stage_mask(sm),
  .scalar_load(sl),.scalar_load_addr(sla),.scalar_data(sld),

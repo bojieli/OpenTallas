@@ -1,0 +1,20 @@
+GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
+GATE INFO remote: ot-run selected ot-agidock128 for 8 GB memory; disk pick 10 GiB, runtime 10 GiB includes 8 GiB work reserve plus snapshot staging
+GATE INFO source_binding: immutable shipping manifest /tmp/ref_gate_vm_identity_q1_b0_ref_20261015-144419.source_snapshot.json
+GATE INFO remote: remote log /tmp/ref_gate_vm_identity_q1_b0_ref_20261015-144419.log; host dir ot-agidock128:/srv/opentallas-scratch/claude/ref_gate/vm_identity_q1_b0_ref-20261015-144419
+GATE INFO remote: synth + floorplan + PDN OK on ot-agidock128 in 50 s (gate total 1055 s)
+GATE FAIL io_place: IO placement failed:   -> FIX: fix the pin plan / pin layers
+GATE WARN util: synthesized std area 2264 um2 + macros 36952 in core 127002: util 31%  -> FIX: set "std_area_um2": 2264 and drop 'outline' (gen sizes to util 0.52)
+GATE INFO textbook: WARN hfd_vms_bank_identity_q1_b0 cells 14,053 flops 4,770 depth 435.1 ps util 0.309 reach 0.0 um (0.4 s)
+GATE WARN textbook.util_channel: utilisation 30.9% outside 45%-65% (std 2285 + macro 36952 um2 in 127002 um2): shrink the outline (long wires / sparse placement)  -> FIX: size the outline to util 0.50-0.55 with >= 20 um macro channels
+GATE INFO cts_calibration: ss insertion all 735.8..805.2 ps (spread 69.4), boundary mean 770.2; tt insertion all 569.7..601.0 ps (spread 31.3), boundary mean 582.9; ff insertion all 454.0..487.3 ps (spread 33.3), boundary mean 468.8; macro_clk flag False
+GATE INFO density: effective global-placement target density 0.500 vs spec PD 0.50
+GATE INFO clock_spine: OT_SPINE iter 4 (fine) leaves 775 sinks 6064 cells 4252 leaf arrival 571.1..600.8 ps (spread 29.7) pad 73.4 / 16.2 ps
+GATE INFO clock_spine: OT_SPINE iter 5 (fine) leaves 775 sinks 6064 cells 4267 leaf arrival 572.2..600.8 ps (spread 28.7) pad 73.4 / 16.5 ps
+GATE INFO path_classes: constraints signoff /src/physical/ref_tile/vm_identity_q1_b0_ref/signoff.sdc (TT placement RC; diagnostic)
+GATE INFO path_classes: reg->reg      389 paths, worst slack 9.8 ps (e.g. bank.eg_d[263]$_DFF_P_/D)
+GATE INFO path_classes: in->reg         3 paths, worst slack 358.6 ps (e.g. bank.rst_s1$_DFF_PN0_/RESETN)
+GATE INFO path_classes: setup WNS 9.798939437644094e-12 hold WNS 4.227579397664272e-11
+GATE INFO clock_rule: root port:clk: 4,773 sinks on the largest root <= 15,000; measured TT insertion 601.0 ps, leaf spread 31.3 ps
+PRE_ROUTE_GATE: FAIL (1 fail, 2 warn)
+GATE: vm_identity_q1_b0_ref/gate_result.json written (exact staged source binding; commit it with the kit)

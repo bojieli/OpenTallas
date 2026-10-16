@@ -1,0 +1,88 @@
+{
+  "schema": "opentallas.qwen.closed-source-specialization.v1",
+  "master": "qfd_band_upper_tp8",
+  "implementation_master": "ot_qfd_band_upper",
+  "closed_source_commit": "2f82af99bf0511de51beb4f61b7cef565476208c",
+  "closed_recipe": "physical/ref_tile/qfd_tt_up4_leafr/spec.json",
+  "closed_recipe_sha256": "ef0eac19f84ea98d11b4767d114fabf2eb0982437ed6dabb89e1eafcec1eeb4a",
+  "implementation_params": {
+    "NL": 4,
+    "NB": 3,
+    "LNK": 0,
+    "DLY": 1,
+    "TREE_LAT": 7,
+    "TCUT": 7,
+    "LG": 12,
+    "RPIN": 1,
+    "MUT": 0
+  },
+  "view": "physical/ref_tile/qfd_tt_up4_tp8/views/ot_qfd_band_upper",
+  "closed_record": "qfd_tt_up4_leafr-r1-2f82af99b",
+  "view_sha256": {
+    "ot_qfd_band_upper.lef": "4b23ce3b3977a48457ece6017fe0008d32391df75ea2a9001c65b943e952efa2",
+    "ot_qfd_band_upper_tt.lib": "e8257f6e2cb1909a08bc7d3a13a5b5ddd73c473c554b828453a2a4c73b150683",
+    "ot_qfd_band_upper_ff.lib": "a2d1d82076529a3f2355ff4c2723ce60d7055a0bd615500aaf8e86cd7d0010d0",
+    "ot_qfd_band_upper_ss.lib": "cd09586cd4bb81ca6c771df665dfd42b2c275e14a7301234dc2c95eeaefa1e59",
+    "insertion.json": "0d6ddd7cb78579c14279a6db0bf8b4d305947e287723442723c45d7ca2d7ac36",
+    "abstract.json": "ca5d9f00a3d15641137843ef810b923237f876956056ed913e5f99721ae486ea"
+  },
+  "modules": {
+    "ot_hdc_delay": {
+      "source": "rtl/hdc/ot_hdc_delay.sv",
+      "sha256": "c763d2af0e1c059a3d7aec77ff4e917f3317400d49a0b55d271390917f28601f"
+    },
+    "ot_hdc_fp32_add_fast": {
+      "source": "rtl/hdc/ot_hdc_fastfp.sv",
+      "sha256": "85f721d62c90170002dd93696725f687b9ecafd922e0282ba45dd35589097987"
+    },
+    "ot_hdc_fp32_add_lat": {
+      "source": "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+      "sha256": "7f5fa4fc4ba4f57301ad502eabf4677da8942606ec2ad93fc5497c761fa77113"
+    },
+    "ot_hdc_ksa": {
+      "source": "rtl/hdc/ot_hdc_fastfp.sv",
+      "sha256": "de405e57e8f22a92f5cc77dea448e850369c8452f64ed9a393eee823db7bc84a"
+    },
+    "ot_hdc_ksadd_k": {
+      "source": "rtl/hdc/ot_hdc_prefix.sv",
+      "sha256": "6288fb312129aedce779ef1625790db8af448f8b361fa6b24a5974d7f88dd08b"
+    },
+    "ot_hdc_lzc32": {
+      "source": "rtl/hdc/ot_hdc_fastfp.sv",
+      "sha256": "ef4f79f4640953e144374f1dfde28787a672182e98a00819d09ab371f26760f0"
+    },
+    "ot_hdc_qadd": {
+      "source": "rtl/hdc/ot_hdc_fastfp.sv",
+      "sha256": "650ae768250a5a344ba9ca6c243c38e2b60f73b80bc0bc93eb46b9dc1ad74ad0"
+    },
+    "ot_hdc_w11_cut": {
+      "source": "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+      "sha256": "914e1896a7d02e7d3829de8a54007717cee822c02d8824ae4240e87beaf34fdf"
+    },
+    "ot_qfd_band_upper": {
+      "source": "rtl/qwen_sys/lane_band_20261008/ot_qfd_band_lanes.sv",
+      "sha256": "ff6956d924942586af5d664106062dc3cfe46f9e14c69116c48a6a26f9a22183"
+    },
+    "ot_qfd_bt_levels": {
+      "source": "rtl/qwen_sys/lane_band_20261008/ot_qfd_band_lanes.sv",
+      "sha256": "ddf39d0c456d57657c2f8b94532f50853ece7eeba58e77ef1be5ad03c03fcf27"
+    },
+    "ot_qfd_or_tree": {
+      "source": "rtl/hdc/ot_qwen_me_spine_h_w12.sv",
+      "sha256": "1a9eb1c9e6af447980fe45482e3992f26973d90599a0d4740a5bbec505e9abba"
+    },
+    "ot_qwen_me_rdelay_w12": {
+      "source": "rtl/hdc/ot_qwen_me_spine_h_w12.sv",
+      "sha256": "f4f3ec03cb69853ebbf4dfc76b060e64254c6305b2935dbdd3955cba1eeebaec"
+    },
+    "ot_qwen_w12_ladd": {
+      "source": "rtl/hdc/ot_qwen_w12_matvec.sv",
+      "sha256": "b988c8038197871dbefc009eac700a83a532c5e02782f0985c21383522de64af"
+    },
+    "ot_qwen_w12_tadd": {
+      "source": "rtl/hdc/ot_qwen_w12_matvec.sv",
+      "sha256": "d4da5104e15e9e5b4ce0625a4f2f62c625331dc11a4d0a2fc207fbc3f7b2dfbe"
+    }
+  },
+  "qualification": "Existing closed implementation identity only; no new route or whole-die qualification"
+}

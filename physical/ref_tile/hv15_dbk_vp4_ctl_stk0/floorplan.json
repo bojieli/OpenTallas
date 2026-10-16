@@ -6,17 +6,17 @@
  "die": [
   0,
   0,
-  75.6,
-  75.6
+  69.12,
+  69.12
  ],
  "core": [
   2.16,
   2.16,
-  73.44,
-  73.44
+  66.96000000000001,
+  66.96000000000001
  ],
- "why": "util 0.52 of std 2600 + macros 0 um2",
- "std_area_um2": 2600,
+ "why": "util 0.52 of std 2100 + macros 0 um2",
+ "std_area_um2": 2100,
  "layer_contract": {
   "children": {},
   "pg_layer": "M5",
@@ -42,7 +42,6 @@
    "bank_read_en",
    "bank_read_slot",
    "bank_write_slot",
-   "bank_write_en",
    "bank_output_en",
    "bank_read_addr",
    "rr_valid_i"

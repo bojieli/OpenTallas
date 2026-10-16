@@ -1,0 +1,15 @@
+GATE_SOURCE_ARCHIVE_SHA256=79feb1d4a4e28fcb749b39591da5e158b520001252340cc3ca5b2df793bc5925
+GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=["openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29"]
+GATE_TOOL_CTS_MACRO_CLUSTER=
+GATE_FLOW_RC=0 GATE_FLOW_S=3893
+GATE_IOP_RC=137
+
+--- stderr
+ot-run: load hold: every qualifying host has load1 > 1.5 x cores (ot-pve1 51/28); waiting
+ot-run: load hold released after 121 s
+ot-run: ot-pve1        admits   164 GB (avail 212, growth 27, headroom 32, waiters 0/0 GB) load 41/28 running 10 disk 1221 GB 
+ot-run: -> ot-pve1
+ot-heavy: request 24G is charged 10G (family 'ref_gate_*' seed 10G (class 'ref_gate_hgi_sm_xload_static_ref_#-#.sh' not measured yet)); the cap stays 24G
+ot-heavy: admitted on ot-pve1 as oth-ubuntu-1594721-1792093609 after 0 s
+Terminated
+ot-run: RAN on ot-pve1 (unit oth-ubuntu-1594721-1792093609): exit 143

@@ -79,6 +79,7 @@ OWNER = "Claude:closure-loop"
 SS_MIN, FF_MIN = 0.0, 0.0             # OWNER DECISION 2026-10-07 20:1x: ACCEPT at SS >= 0 / FF >= 0 / DRC 0 at 833.333 sign-off (+15 is the DESIGN target: route 770, repair hold margin 50; was +15/+15 since 10-06 18:15)
 RAM_HEADROOM_GB = 32
 LIGHT_STAGE_RAM_GB = 8      # drive-0849: bench / collect / export stages
+SYNC_DISK_GB = 16           # SYNC-ROOM: disk one source sync may write (src/ + bench_src*/ beyond the view store)
 LIGHT_DISK_FLOOR_GB = 30    # their run-root / disk-root floor (full floor for route / calibrate / ECO)
 ADMIT_SAFETY_GB = 16          # fixed safety over a job's own RAM request (owner: no reservation for future growth)
 PENDING_WINDOW_S = 600
@@ -1521,6 +1522,7 @@ class Fleet:
         self.probe_cache = {}
         self.tool_cache = {}
         self.own_running = {}    # host -> declared threads of this loop's running stages
+        self.syncing = {}        # host -> jobs placed there and still syncing their source (SYNC-ROOM)
         self.last_good = {}      # host -> (t, last successful probe): used for PROBE_LAST_GOOD_S when a probe fails
         self.tool_good = {}      # host -> (t, last successful toolchain probe)
 
@@ -1698,6 +1700,20 @@ mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);
                                            for p in self.inflight_launches.get(host, [])]
             self.probe_cache.pop(host, None)
 
+    def sync_room(self, h):
+        """SYNC-ROOM (ROOT 2026-10-15): placing a job writes its source snapshot (src/ + bench_src*/, up to ~28 GB before
+        the view-store fix) before any stage runs, but the disk floor was judged on the first stage's RAM only: a light
+        first stage kept just LIGHT_DISK_FLOOR_GB, and AGIdock took 14 syncs at 60 GB free and hit 0 (17:40 10-15).
+        A placement now also needs room for every sync already in flight on the host plus its own."""
+        info = self.probe(h)
+        if info is None or info.get("disk_gb") is None:
+            return True, "ok"
+        n = self.syncing.get(h, 0) + 1
+        if info["disk_gb"] - SYNC_DISK_GB * n < LIGHT_DISK_FLOOR_GB:
+            return False, (f"{host_cfg(h)['label']} run root {info['disk_gb']} GB free - {n} source sync(s) x {SYNC_DISK_GB} GB "
+                           f"< {LIGHT_DISK_FLOOR_GB}")
+        return True, "ok"
+
     def choose(self, spec, exclude=()):
         with FLEET_LOCK:
             return self._choose(spec, exclude)
@@ -1789,6 +1805,9 @@ mkdir -p {cfg['base']} && df -P -BG {cfg['base']} | awk 'NR==2{{gsub("G","",$4);
         for h in order:
             ok, msg = self.fits(h, threads, ram)
             if ok:
+                ok, msg = self.sync_room(h)
+            if ok:
+                self.syncing[h] = self.syncing.get(h, 0) + 1
                 return h, None
             why.append(msg)
         return None, "; ".join(why) or "no compatible host (capabilities/image probe unavailable or mismatched)"
@@ -6864,6 +6883,18 @@ def trim_snapshot(tp):
         with open(os.path.join(tp, "TRIMMED_SOURCE_SNAPSHOT"), "w") as f:
             f.write("source snapshot trimmed by deep release; git archive %s re-creates it; receipt paths kept\n" % a["src_commit"])
     return b
+if mode == "src":
+    # SRC-RELEASE (ROOT 2026-10-15): only the git snapshots (src/, bench_src*/) at the job's own commit, trimmed to the
+    # receipt-named paths; nothing else in the run dir is touched
+    for top in sorted(os.listdir(R)):
+        tp = os.path.join(R, top)
+        if (top == "src" or top.startswith("bench_src")) and os.path.isdir(tp) and not os.path.islink(tp) \
+                and a.get("src_commit") and snap_commit(tp) == a["src_commit"] \
+                and not os.path.exists(os.path.join(tp, ".keep")) \
+                and not os.path.exists(os.path.join(tp, "TRIMMED_SOURCE_SNAPSHOT")):
+            freed += trim_snapshot(tp)
+    print("DEEP_FREED %d" % (freed // 2 ** 20))
+    sys.exit(0)
 for top in sorted(os.listdir(R)):
     tp = os.path.join(R, top)
     if not os.path.isdir(tp) or os.path.islink(tp):
@@ -7206,6 +7237,82 @@ def release_deep(jobs, now=None):
                     "fail": "6_final.*", "nearmiss": "5_2_route.odb, 6_final.*, objects/, src"}[mode]
             event(j, f"deep release ({mode}, {m.group(1)} MB): kept {kept}, receipt-referenced paths, logs/reports/json")
             save_job(j)
+    return n
+
+
+# SRC-RELEASE (ROOT 2026-10-15, coordinator): AGIdock's root went 356 -> 0 GB free in 4.5 h because every loop run dir
+# keeps src/ (6-14 GB) and bench_src_a*/ (13-14 GB) until DEEP release, which waits DEEP_RELEASE_AGE_H and, for a CLOSED
+# job, the closure on main; 61 routes closed on AGIdock in that window.  A route never reads either snapshot after its
+# verdict: the record branch is already pushed, the receipts on main name the few files they cite, and a later human
+# retry / bench re-judgment re-syncs (source_synced=False).  So a terminal job loses both snapshots (trimmed to the
+# receipt-named paths, SOURCE_COMMIT kept) SRC_RELEASE_AGE_H after its last event, on every host.  Kept: near-miss
+# retained jobs (hold-ECO successors), collect-crash retention, BF exemption, helper provenance, source-mismatch
+# retention, .keep, reaper holds, a live process in the run dir, and a run dir shared with a non-terminal job.
+SRC_RELEASE_AGE_H = 0.1
+SRC_RELEASE_PER_TICK = 40
+
+
+def src_release_candidates(jobs, now=None):
+    closed = closed_blocks(jobs)
+    holds = STATE / "reaper_holds"
+    hosts = {h["name"] for h in hosts_table()}
+    shared = {}
+    for x in jobs:
+        if x.get("run") and x.get("host"):
+            shared.setdefault((x["host"], x["run"].rstrip("/")), []).append(x)
+    out = []
+    for x in jobs:
+        if x["status"] not in TERMINAL or x.get("src_released") or x.get("snapshot_trimmed") or not x.get("run") \
+                or x.get("host") not in hosts or _terminal_age_h(x, now) < SRC_RELEASE_AGE_H:
+            continue
+        if x["status"] in EARLY_FAIL or x.get("near_miss_retained") or near_miss(x, closed) or bf_exempt(x, now) \
+                or helper_provenance_retained(x) or collect_crash_after_closed_verdict(x) or viz_elem_running(x) \
+                or (holds / x["name"]).exists():
+            continue
+        if any(y["status"] not in TERMINAL for y in shared.get((x["host"], x["run"].rstrip("/")), [])):
+            continue
+        out.append(x)
+    return sorted(out, key=lambda x: x.get("updated") or "", reverse=True)    # the newest (largest, still on disk) first
+
+
+def release_src(jobs, now=None, limit=SRC_RELEASE_PER_TICK):
+    cand = src_release_candidates(jobs, now)
+    if not cand:
+        return 0
+    ev = _main_evidence()
+    if not ev:
+        return 0
+    sources = release_source_index(jobs)
+    n = freed = 0
+    for x in cand:
+        if n >= limit:
+            break
+        if source_mismatch_retained(x, sources):
+            continue
+        with job_lock(x["name"]):
+            j = load_job(x["name"])
+            if j["status"] not in TERMINAL or j.get("src_released") or j.get("snapshot_trimmed"):
+                continue
+            commit = j.get("commit_full") or (j["spec"].get("source") or {}).get("commit") or ""
+            if not commit or subprocess.run(["git", "-C", str(REPO), "cat-file", "-e", commit + "^{commit}"],
+                                            capture_output=True, timeout=60).returncode != 0:
+                continue
+            full = git("rev-parse", commit + "^{commit}").stdout.strip()
+            run = j["run"].rstrip("/")
+            arg = dict(run=run, mode="src", src_commit=full, refs=[r for r in ev["refs"] if r.startswith(run + "/")])
+            r = ssh(j["host"], f"OT_DR={shlex.quote(json.dumps(arg))} python3 - <<'DRPY'\n{DEEP_RELEASE_PY}\nDRPY\n", timeout=1800)
+            n += 1
+            m = re.search(r"DEEP_FREED (\d+)", r.stdout)
+            if r.returncode == 3 or r.returncode != 0 or not m:
+                continue
+            j["src_released"] = dict(at=now_iso(), freed_mb=int(m.group(1)))
+            j["source_synced"] = False          # any later resume / human retry re-syncs the snapshot
+            event(j, f"src release ({m.group(1)} MB): src/ + bench_src*/ snapshots cut to receipt-named paths "
+                     f"(git archive {full[:12]} re-creates them)")
+            save_job(j)
+            freed += int(m.group(1))
+    if n:
+        log(f"SRC-RELEASE: {n} run dirs, {freed / 1024:.1f} GB freed")
     return n
 
 
@@ -7962,6 +8069,12 @@ def tick(fleet):
             if e.get("state") == "running":
                 own[e["host"]] = own.get(e["host"], 0) + 4
     fleet.own_running = own
+    sync = {}
+    for x in all_jobs():
+        if x["status"] == "SYNC" and x.get("host") and not x.get("source_synced"):
+            sync[x["host"]] = sync.get(x["host"], 0) + 1
+    with FLEET_LOCK:
+        fleet.syncing = sync
     schedule_housekeeping()     # release_bulk / release_deep / stale24_sweep: background, never ahead of dispatch
     t_mg = time.time()
     try:
@@ -8042,7 +8155,8 @@ def _slow_phase(name, t0):
 
 def housekeeping():
     """disk give-back passes (ssh up to 30 min each, git): one background thread, so a READY job never waits for them"""
-    for name, fn in (("release_bulk", release_bulk), ("release_deep", release_deep), ("stale24 sweep", stale24_sweep)):
+    for name, fn in (("release_src", release_src), ("release_bulk", release_bulk), ("release_deep", release_deep),
+                     ("stale24 sweep", stale24_sweep)):
         try:
             fn(all_jobs())
         except Exception:  # noqa: BLE001

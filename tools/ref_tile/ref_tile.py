@@ -654,6 +654,41 @@ def outline(s: dict, slot: dict | None, area_um2: float | None, blocks: list) ->
     return snap_up(w, og), snap_up(h, og), f"util {util} of std {area:.0f} + macros {mac:.0f} um2"
 
 
+PG_MIN_STRIPES, PG_MIN_SPREAD = 2, 0.50     # child_lint (b): MIN_STRIPES per net, first..last stripe >= MIN_SPREAD of the span
+
+
+def pg_stripe_spread(s: dict, lc: dict, W: float, H: float):
+    """(layer, per-net full stripes, spread) the generated pdn.tcl gives a leaf tile, or None (cluster / M7 tiles).
+    Mirrors gen_pdn: M5 stripes (vertical, across W) start CORE_MARGIN + 0.300 (+0.192 for the second net) at the
+    route.m5_pg_pitch; M6 stripes (horizontal, across H) start CORE_MARGIN + 2.0 (+0.384) at route.pg_pitch; a stripe is
+    made while it fits inside the core.  hbm_ckgen_rel-r1 (W 15.12, M5 at 5.4): 2 stripes, 36% -> export child_lint (b)
+    FAIL after a clean route, so gen sizes / refuses such outlines BEFORE the route (ROOT 2026-10-15)."""
+    if s["kind"] != "tile":
+        return None
+    pg = lc.get("pg_layer")
+    r = s.get("route", {})
+    if pg == "M5":
+        pitch, off, width, step, span = float(r.get("m5_pg_pitch", 5.4)), 0.300, 0.12, 0.192, W
+    elif pg == "M6":
+        pitch, off, width, step, span = float(r.get("pg_pitch", 10.8)), 2.0, 0.288, 0.384, H
+    else:
+        return None
+    n_min, spread_min = None, None
+    for d in (0.0, step):
+        xs, x = [], CORE_MARGIN + off + d
+        while x < span - CORE_MARGIN - 1e-6:          # OpenROAD makes a stripe whose start lies inside the core
+            xs.append(x)
+            x += pitch
+        sp = (xs[-1] - xs[0]) / span if len(xs) > 1 else 0.0
+        n_min = len(xs) if n_min is None else min(n_min, len(xs))
+        spread_min = sp if spread_min is None else min(spread_min, sp)
+    return pg, n_min, spread_min
+
+
+def pg_spread_ok(rec) -> bool:
+    return rec is None or (rec[1] >= PG_MIN_STRIPES and rec[2] + 1e-9 >= PG_MIN_SPREAD)
+
+
 def blocks_of(s: dict) -> list:
     out = []
     for kind, items in (("macro", s["macros"]), ("child", s["children"])):
@@ -1599,9 +1634,25 @@ def gen(spec_path: str, area_um2: float | None = None, commit: str | None = None
         s["m6_pin_grant"] = lc["m6_pin_grant"]
     blocks = blocks_of(s)
     W, H, why = outline(s, slot, area_um2, blocks)
+    if not slot and not s.get("outline"):
+        # an auto-sized outline grows (on its grid) until the PDN gives the export's PG stripe spread
+        W0, H0 = W, H
+        while not pg_spread_ok(pg_stripe_spread(s, lc, W, H)) and max(W, H) < 4 * max(W0, H0, 21.6):
+            if lc.get("pg_layer") == "M6":
+                H = snap_up(H + GRID_Y, GRID_Y)
+            else:
+                W = snap_up(W + GRID_Y, GRID_Y)
+        if (W, H) != (W0, H0):
+            why += f"; grown {W0:g}x{H0:g} -> {W:g}x{H:g} for >= {PG_MIN_STRIPES} PG stripes per net spanning >= {PG_MIN_SPREAD:.0%}"
     place_blocks(s, W, H, blocks)
     std = area_um2 or s.get("std_area_um2")
     findings = floorplan_checks(s, W, H, blocks, std)
+    pgs = pg_stripe_spread(s, lc, W, H)
+    if not pg_spread_ok(pgs):
+        findings.append(("FAIL", "pg_spread",
+                         f"{pgs[0]} PG: {pgs[1]} stripes per net spanning {pgs[2]:.0%} of the outline (export child_lint (b) "
+                         f"needs >= {PG_MIN_STRIPES} spanning >= {PG_MIN_SPREAD:.0%}); the route would close and the export fail",
+                         "widen the outline across the stripes, or set route.m5_pg_pitch 2.7 (M5) / route.pg_pitch 5.4 (M6)"))
     kd = kit_dir(s)
     fp = {"schema": "opentallas.ref_tile.floorplan.v1", "name": s["name"], "top": s["top"], "kind": s["kind"],
           "die": [0, 0, W, H], "core": [CORE_MARGIN, CORE_MARGIN, W - CORE_MARGIN, H - CORE_MARGIN], "why": why,

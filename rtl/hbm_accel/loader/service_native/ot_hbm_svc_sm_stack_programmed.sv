@@ -1,6 +1,9 @@
 `default_nettype none
 // Wires-only actual eight-SM natural four-PC grouping. All child clocks remain explicit.
-module ot_hbm_svc_sm_stack_programmed #(parameter[1:0]STACK=0,parameter integer OWNER_AW=5,RESPONSE_DEPTH=8) (
+// H-DIE 2026-10-15: landing index 2 bits per SM (reserve_bank/start_bank), block_ready 4 per SM; LBANKS=2 uses the
+// low bit / low two.
+module ot_hbm_svc_sm_stack_programmed #(parameter[1:0]STACK=0,parameter integer OWNER_AW=5,RESPONSE_DEPTH=8,DECOUPLE=1,OVERLAP=1,LBANKS=4,
+ parameter integer LB=(LBANKS>2)?2:1) (
  input wire [7:0] stream_clk,
  input wire [7:0] stream_rst_n,
  input wire [7:0] hbm_clk,
@@ -13,15 +16,15 @@ module ot_hbm_svc_sm_stack_programmed #(parameter[1:0]STACK=0,parameter integer 
  input wire [255:0] reserve_base,
  input wire [119:0] reserve_row_base,
  input wire [95:0] reserve_total,
- input wire [7:0] reserve_bank,
+ input wire [15:0] reserve_bank,
  input wire [127:0] reserve_epoch,
  input wire [55:0] reserve_rows,
  input wire [79:0] reserve_tag_base,
- output wire [15:0] block_ready,
+ output wire [31:0] block_ready,
  output wire [15:0] cache_ready,
  output wire [15:0] cache_owned,
  input wire [7:0] start_v,
- input wire [7:0] start_bank,
+ input wire [15:0] start_bank,
  input wire [127:0] start_epoch,
  input wire [7:0] program_cfg_we,
  input wire [79:0] program_cfg_addr,
@@ -58,7 +61,8 @@ module ot_hbm_svc_sm_stack_programmed #(parameter[1:0]STACK=0,parameter integer 
  input wire [8191:0] kr_data
 );
  for(genvar sm=0;sm<8;sm=sm+1)begin:sm_group
-  ot_hbm_svc_sm_feed_programmed #(.STACK(STACK),.SM(sm),.OWNER_AW(OWNER_AW),.RESPONSE_DEPTH(RESPONSE_DEPTH)) u_sm (
+  if(LBANKS<4)begin:g_br assign block_ready[sm*4+LBANKS+:4-LBANKS]=0; end
+  ot_hbm_svc_sm_feed_programmed #(.STACK(STACK),.SM(sm),.OWNER_AW(OWNER_AW),.RESPONSE_DEPTH(RESPONSE_DEPTH),.DECOUPLE(DECOUPLE),.OVERLAP(OVERLAP),.LBANKS(LBANKS)) u_sm (
    .stream_clk(stream_clk[sm*1+:1]),
    .stream_rst_n(stream_rst_n[sm*1+:1]),
    .hbm_clk(hbm_clk[sm*1+:1]),
@@ -71,15 +75,15 @@ module ot_hbm_svc_sm_stack_programmed #(parameter[1:0]STACK=0,parameter integer 
    .reserve_base(reserve_base[sm*32+:32]),
    .reserve_row_base(reserve_row_base[sm*15+:15]),
    .reserve_total(reserve_total[sm*12+:12]),
-   .reserve_bank(reserve_bank[sm*1+:1]),
+   .reserve_bank(reserve_bank[sm*2+:LB]),
    .reserve_epoch(reserve_epoch[sm*16+:16]),
    .reserve_rows(reserve_rows[sm*7+:7]),
    .reserve_tag_base(reserve_tag_base[sm*10+:10]),
-   .block_ready(block_ready[sm*2+:2]),
+   .block_ready(block_ready[sm*4+:LBANKS]),
    .cache_ready(cache_ready[sm*2+:2]),
    .cache_owned(cache_owned[sm*2+:2]),
    .start_v(start_v[sm*1+:1]),
-   .start_bank(start_bank[sm*1+:1]),
+   .start_bank(start_bank[sm*2+:LB]),
    .start_epoch(start_epoch[sm*16+:16]),
    .program_cfg_we(program_cfg_we[sm*1+:1]),
    .program_cfg_addr(program_cfg_addr[sm*10+:10]),
