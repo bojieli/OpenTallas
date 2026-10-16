@@ -61,6 +61,23 @@ def propose(packet):
     actual={p if n==1 else f'{p}[{i}]' for p,(n,d) in ports.items() for i in range(n)}
     if {p['name'] for p in pinlist}!=actual or len(pinlist)!=len(actual):
         raise ValueError('pin proposal is not a one-to-one cover of the actual source ABI')
+    # kv_die face ports are regular-pitch groups. The real link's cfg_data
+    # face has a deliberate gap after bit19, so expose TWO physical aliases
+    # rather than one falsely contiguous 32-bit group. Bind base first, then hi.
+    dieports={p:[p] for p in ports if p!='cfg_data'}
+    dieports['cfg_data_lo']=['cfg_data']
+    groups={p:([p] if n==1 else [f'{p}[{i}]' for i in range(n)])
+            for p,(n,d) in ports.items() if p!='cfg_data'}
+    groups['cfg_data_lo']=[f'cfg_data[{i}]' for i in range(20)]
+    groups['cfg_data_hi']=[f'cfg_data[{i}]' for i in range(20,32)]
+    pinby={p['name']:p for p in pinlist}; faces={}
+    for port,ns in groups.items():
+        ps=[pinby[n] for n in ns];face=ps[0]['face'];layer=ps[0]['layer'];axis=1 if face in 'WE' else 0
+        ys=[p['center_um'][axis] for p in ps]
+        step=round(ys[1]-ys[0],6) if len(ys)>1 else .096
+        if any(abs(y-(ys[0]+i*step))>1e-6 for i,y in enumerate(ys)):
+            raise ValueError(f'{port}: cannot represent as one regular physical face group')
+        faces[port]=['face',len(ns),face,layer,round(ys[0]+len(ns)*step/2,6),round(step/.048)]
     return dict(scope='PROPOSED_DIE_DRIVEN_PINS_AND_SOURCE_MAP_ONLY',top=TOP,source=SOURCE,
                 source_sha256=hashlib.sha256((ROOT/SOURCE).read_bytes()).hexdigest(),
                 link_interface_source=LINK_SOURCE,link_interface_sha256=hashlib.sha256((ROOT/LINK_SOURCE).read_bytes()).hexdigest(),
@@ -68,7 +85,9 @@ def propose(packet):
                 relative_to_link_R0_origin_um=[w+gap,yoff],link_gap_um=gap,
                 link_matched_pin_span_um=[low,high],pins=pinlist,edges=edges,
                 control_bundle_lsb_first=bits,
-                binding=dict(module=TOP,file=SOURCE,ports=dict(calctl=list(CONTROL),**{p:[p] for p in ports if p not in CONTROL}),classed={}),
+                binding_template=dict(module=TOP,file=SOURCE,ports=dieports,sliced={'cfg_data_hi':'cfg_data_lo'},classed={}),
+                required_binding_parameters=['EP_SKEW'],die_master_face_ports=faces,
+                face_model_note='Regular-pitch kv_die frame groups; cfg_data split20/12 preserves the actual gap. Requested Tcl pin shapes are authoritative before actual routed readback.',
                 compiler=dict(extra_control_relay_edges=0,extra_epoch_relay_edges=0,
                               EP_SKEW='package_epoch_edges - extra_epoch_relay_edges - extra_control_relay_edges',
                               no_implicit_package_skew=True),

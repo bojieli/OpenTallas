@@ -1949,18 +1949,10 @@
     "cal_start",
     "cal_seg"
   ],
-  "binding": {
+  "binding_template": {
     "module": "qkd_d2d_cal_seq",
     "file": "rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_cal_seq_dies.sv",
     "ports": {
-      "calctl": [
-        "cfg_tx_we",
-        "cfg_rx_we",
-        "cfg_addr",
-        "cfg_data",
-        "cal_start",
-        "cal_seg"
-      ],
       "ck": [
         "ck"
       ],
@@ -1979,6 +1971,21 @@
       "halt": [
         "halt"
       ],
+      "cfg_tx_we": [
+        "cfg_tx_we"
+      ],
+      "cfg_rx_we": [
+        "cfg_rx_we"
+      ],
+      "cfg_addr": [
+        "cfg_addr"
+      ],
+      "cal_start": [
+        "cal_start"
+      ],
+      "cal_seg": [
+        "cal_seg"
+      ],
       "cal_ready": [
         "cal_ready"
       ],
@@ -1996,10 +2003,174 @@
       ],
       "fault": [
         "fault"
+      ],
+      "cfg_data_lo": [
+        "cfg_data"
       ]
+    },
+    "sliced": {
+      "cfg_data_hi": "cfg_data_lo"
     },
     "classed": {}
   },
+  "required_binding_parameters": [
+    "EP_SKEW"
+  ],
+  "die_master_face_ports": {
+    "ck": [
+      "face",
+      1,
+      "S",
+      "M5",
+      4.38,
+      2
+    ],
+    "rst_n": [
+      "face",
+      1,
+      "S",
+      "M5",
+      13.02,
+      2
+    ],
+    "reload": [
+      "face",
+      1,
+      "S",
+      "M5",
+      21.66,
+      2
+    ],
+    "tok_go": [
+      "face",
+      1,
+      "S",
+      "M5",
+      30.3,
+      2
+    ],
+    "epoch_go": [
+      "face",
+      1,
+      "W",
+      "M4",
+      29.292,
+      2
+    ],
+    "halt": [
+      "face",
+      1,
+      "W",
+      "M4",
+      29.004,
+      2
+    ],
+    "cfg_tx_we": [
+      "face",
+      1,
+      "W",
+      "M4",
+      32.748,
+      2
+    ],
+    "cfg_rx_we": [
+      "face",
+      1,
+      "W",
+      "M4",
+      32.652,
+      2
+    ],
+    "cfg_addr": [
+      "face",
+      6,
+      "W",
+      "M4",
+      13.116,
+      2
+    ],
+    "cal_start": [
+      "face",
+      1,
+      "W",
+      "M4",
+      12.78,
+      2
+    ],
+    "cal_seg": [
+      "face",
+      1,
+      "W",
+      "M4",
+      12.684,
+      2
+    ],
+    "cal_ready": [
+      "face",
+      1,
+      "E",
+      "M4",
+      4.38,
+      2
+    ],
+    "running": [
+      "face",
+      1,
+      "E",
+      "M4",
+      6.108,
+      2
+    ],
+    "layer": [
+      "face",
+      6,
+      "E",
+      "M4",
+      12.972,
+      36
+    ],
+    "adm_done": [
+      "face",
+      1,
+      "E",
+      "M4",
+      18.204,
+      2
+    ],
+    "tok_start": [
+      "face",
+      1,
+      "E",
+      "M4",
+      19.932,
+      2
+    ],
+    "fault": [
+      "face",
+      1,
+      "E",
+      "M4",
+      21.66,
+      2
+    ],
+    "cfg_data_lo": [
+      "face",
+      20,
+      "W",
+      "M4",
+      14.364,
+      2
+    ],
+    "cfg_data_hi": [
+      "face",
+      12,
+      "W",
+      "M4",
+      32.028,
+      2
+    ]
+  },
+  "face_model_note": "Regular-pitch kv_die frame groups; cfg_data split20/12 preserves the actual gap. Requested Tcl pin shapes are authoritative before actual routed readback.",
   "compiler": {
     "extra_control_relay_edges": 0,
     "extra_epoch_relay_edges": 0,
