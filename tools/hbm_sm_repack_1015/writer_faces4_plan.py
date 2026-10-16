@@ -28,7 +28,7 @@ s['job']['benches'][0]['cmd']=s['job']['benches'][0]['cmd'].replace('run_sm_vm_w
 s['job']['benches'][0]['pass_regex']='SM_VM_WR_Q_T BENCH PASS'
 s['structural_change']='The compactr3 failed the authoritative0.096um/0.60 pin-capacity audit before adoption. r4 returns to original388.8um face, and partitions each face clock into two actual half-face roots. Input control fields split at4SMs to preserve unique source-clock ownership. Body/core and one raw calendar clock are separate. Literal windows reserve all six clock entries; every data window cut<=0.60. Zero ordinary data/calendar stages added. Physical/native/typed grant still pending.'
 widths=port_widths(s,ROOT)
-clocks={'clk':('N',71.292),'clk_in_lo':('W',97.212),'clk_in_hi':('W',291.612),'clk_out_lo':('E',97.212),'clk_out_hi':('E',291.612),'clk_cal':('W',300.012)}
+clocks={'clk':('N',71.292),'clk_in_lo':('W',97.236),'clk_in_hi':('W',291.636),'clk_out_lo':('E',97.236),'clk_out_hi':('E',291.636),'clk_cal':('W',300.036)}
 windows=[('W_lower','W',low,4.332,191.244),('W_upper','W',high,197.556,384.468),('E_lower','E',['wq_lo'],4.332,191.244),('E_upper','E',['wq_hi'],197.556,384.468),('N_core','N',north,4.332,138.228)]
 lines=['# Candidate exact source-derived plan. Allocation:0.096um/bit, max cut0.60.'];pins={};metrics=[]
 def emit(name,face,pos,clock=False):
@@ -44,7 +44,8 @@ for label,face,ports,a,b in windows:
  for p in ports:
   n,vec=widths[p];bits += [f'{p}[{i}]' if vec else p for i in range(n)]
  notches=[v for f,v in clocks.values() if f==face and a<=v<=b]
- tracks=[round(.012+.048*k,3) for k in range(math.ceil((a-.012)/.048),math.floor((b-.012)/.048)+1)]
+ phase=.036 if face in ['W','E'] else .012
+ tracks=[round(phase+.048*k,3) for k in range(math.ceil((a-phase)/.048),math.floor((b-phase)/.048)+1)]
  tracks=[x for x in tracks if all(abs(x-v)>=1.08-1e-8 for v in notches)]
  usable=b-a-len(notches)*2.16;cut=len(bits)*.096/usable
  assert cut<=.60,(label,len(bits),usable,cut)
