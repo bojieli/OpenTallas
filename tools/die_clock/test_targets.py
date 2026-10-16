@@ -13,9 +13,10 @@ class Targets(unittest.TestCase):
             target = load_targets(p)
             self.assertEqual(target('leaf','ck'), [140,90,120])
             data = json.loads(p.read_text())
-            data['masters']['leaf']['physical_insertion_per_clock_pin_ps'] = {'ck': [130,95,122]}
+            data['masters']['leaf']['physical_insertion_per_clock_pin_ps'] = {'ck[0]': [130,95,122]}
             p.write_text(json.dumps(data))
             self.assertEqual(load_targets(p)('leaf','ck'), [130,95,122])
+            self.assertEqual(load_targets(p)('leaf','ck[0]'), [130,95,122])
             self.assertEqual(target('leaf','zero'), [0,0,0])  # explicit R0 retained for labelled diagnostics
             for master, pin in [('leaf','ckvb'), ('absent','ck')]:
                 with self.assertRaisesRegex(ValueError, 'missing native insertion R'):

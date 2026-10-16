@@ -65,6 +65,54 @@ SEAM_SETUP_PS, SEAM_HOLD_PS = 1388.889, 1111.111
 RESET_NET_GLOBS = ('n_rst_*', 'n_rs_col_*', 'por_n')
 
 
+def literal_clock_pin(pin):
+    """Canonical LEF/Liberty spelling for a generator's one-bit Verilog slice."""
+    return re.sub(r'\[(\d+):\1\]', r'[\1]', pin)
+
+
+def clock_sink_key(inst, port, master, real_ports):
+    port = literal_clock_pin(port)
+    mapped = real_ports.get(master, {}).get(port, [port])[0]
+    return f'{inst}/{literal_clock_pin(mapped)}'
+
+
+def capture_physical_insertions(model, masters):
+    """Bind exact imported native clocks to physical phi-R means, independently of ETM reference extrema."""
+    packet = model.get('capture_import')
+    if not packet:
+        return {}
+    by = {it.name: it.master for it in model['insts']}
+    rows = packet.get('clock_entries', [])
+    expected = packet.get('counts', {}).get('literal_clock_contacts')
+    if expected is None or expected != len(rows):
+        raise ValueError('capture physical clocks require complete literal contact records')
+    per_entry, per_master = {}, {}
+    for row in rows:
+        child, pin = row['child'], literal_clock_pin(row['pin'])
+        if child not in by or by[child] not in masters:
+            raise ValueError(f'capture physical clock has no actual child/master: {child}/{pin}')
+        raw = row.get('R_ps', {})
+        values = [raw.get(c) for c in ('ss', 'ff', 'tt')]
+        if any(not isinstance(v, (int, float)) or isinstance(v, bool) or not math.isfinite(v) for v in values):
+            raise ValueError(f'capture physical clock missing measured boundary mean R: {child}/{pin}')
+        key, mk = f'{child}/{pin}', (by[child], pin)
+        if key in per_entry:
+            raise ValueError(f'duplicate capture physical clock contact: {key}')
+        if mk in per_master and per_master[mk] != values:
+            raise ValueError(f'inconsistent capture physical clock mean: {mk}')
+        per_entry[key], per_master[mk] = values, values
+    children = set(packet.get('children', {}).values())
+    for _, cls, _, endpoints in model['buses']:
+        if cls in ('clock', 'col_clock'):
+            for child, pin in endpoints[1:]:
+                if child in children and f'{child}/{literal_clock_pin(pin)}' not in per_entry:
+                    raise ValueError(f'capture clock graph contact lacks physical R: {child}/{pin}')
+    for (master, pin), values in sorted(per_master.items()):
+        masters[master].setdefault('physical_insertion_per_clock_pin_ps', {})[pin] = values
+    return dict(entries=len(per_entry), reference='source-qualified insertion.json per-clock boundary mean',
+                per_entry=per_entry)
+
+
 def seam_constraints(m):
     """-> (sdc lines replacing the serial|stream async group and the blanket reset false path, record)"""
     import fnmatch
@@ -952,20 +1000,26 @@ def main():
             rec['masters'][mst] = r_
         (a.out / f'interim_{corner}.lib').write_text(interim_lib(cells, corner, pads))
         (a.out / f'libs_{corner}.txt').write_text('\n'.join(sorted(libs) + [f'/kit/interim_{corner}.lib']) + '\n')
+    rec['capture_physical_insertions'] = capture_physical_insertions(m, rec['masters'])
     # clocks: die domain sources (collective PLL pins) and the column roots (cfifo co)
     srcs = []
     for bid, cls, bits, eps in m['buses']:
         if cls == 'clock':
-            srcs.append((bid, f'{eps[0][0]}/{eps[0][1]}', dict(clk_stream=833.333, clk_serial=1111.111,
+            srcs.append((literal_clock_pin(bid), f'{eps[0][0]}/{literal_clock_pin(eps[0][1])}', dict(clk_stream=833.333, clk_serial=1111.111,
                                                                 clk_hbm=1023.96).get(bid, 833.333)))
         elif cls == 'col_clock':
-            srcs.append((bid, f'{eps[0][0]}/{eps[0][1]}', 833.333))
+            srcs.append((literal_clock_pin(bid), f'{eps[0][0]}/{literal_clock_pin(eps[0][1])}', 833.333))
     rec['clocks'] = srcs
     lat = {}
     if a.clock_plan:
         import gzip, math
         cp = json.load(gzip.open(a.clock_plan))
-        si = cp['sink_insertion']
+        si = {}
+        for key, value in cp['sink_insertion'].items():
+            key = literal_clock_pin(key)
+            if key in si and si[key] != value:
+                raise ValueError(f'inconsistent clock-plan scalar aliases: {key}')
+            si[key] = value
         by = {it.name: it for it in m['insts']}
         cen = lambda n: (by[n].x + by[n].w / 2, by[n].y + by[n].h / 2)
         known = defaultdict(list)          # clock bus -> [(x, y, ss, ff)]
@@ -976,13 +1030,13 @@ def main():
             for inst, p_ in eps[1:]:
                 if inst not in by:
                     continue
-                k_ = f'{inst}/{p_}'
+                k_ = f'{inst}/{literal_clock_pin(p_)}'
                 sinks.append((bid, inst, p_))
                 if k_ in si:
                     known[bid].append(cen(inst) + tuple(si[k_]))
         for bid, inst, p_ in sinks:
-            k_ = f'{inst}/{p_}'
-            pk = f'{inst}/' + rp.get(by[inst].master, {}).get(p_, [p_])[0]   # real macros: the pin of the die port
+            k_ = f'{inst}/{literal_clock_pin(p_)}'
+            pk = clock_sink_key(inst, p_, by[inst].master, rp)   # real macros: the pin of the die port
             if k_ in si:
                 lat[pk] = si[k_]
             elif known[bid]:
@@ -999,7 +1053,7 @@ def main():
         mi = measured_insertion(a.measured)
         grp = {}
         for bid, inst, p_ in sinks:
-            pk = f'{inst}/' + rp.get(by[inst].master, {}).get(p_, [p_])[0]
+            pk = clock_sink_key(inst, p_, by[inst].master, rp)
             grp[pk] = bid if bid.startswith('ck_col_') else 'trunk'
         bal = balance_latency(lat, {k_: by[k_.split('/')[0]].master for k_ in lat}, rec['masters'], mi, cls_, grp, parts)
         rec['routed_insertion'] = dict(file=str(a.measured), **bal)
@@ -1017,8 +1071,8 @@ def main():
         tap = bf_front_tap(rec['masters'], lat, by, a.views_root.resolve(), a.bf_compose)
         if tap:
             rec['bf_front_tap'] = tap
-        rec['clock_plan'] = dict(file=str(a.clock_plan), sinks=len(sinks), planned=sum(1 for s in sinks if f'{s[1]}/{s[2]}' in si),
-                                 nearest=len(lat) - sum(1 for s in sinks if f'{s[1]}/{s[2]}' in si))
+        rec['clock_plan'] = dict(file=str(a.clock_plan), sinks=len(sinks), planned=sum(1 for s in sinks if f'{s[1]}/{literal_clock_pin(s[2])}' in si),
+                                 nearest=len(lat) - sum(1 for s in sinks if f'{s[1]}/{literal_clock_pin(s[2])}' in si))
     # with the CTS plan: setup 60 + 25 plan tolerance, hold 25 + 25 plan tolerance (rule H1: the die-link hold term
     # (+50) is not counted at the die, the receiver block signs off its input min at L; was 75)
     seam_lines, rec['ratio_seams'] = seam_constraints(m)
