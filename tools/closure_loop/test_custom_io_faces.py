@@ -138,6 +138,20 @@ class ActualSourceGate(unittest.TestCase):
                                   new["files"][path], flags=re.M)
         self.assertEqual(store.check()["verdict"], "REFUSE")
 
+    def test_literal_custom_io_outline_changes_remain_supported(self):
+        store = Store(CASES[0])
+        old, new = store.snapshots["old"], store.snapshots["new"]
+        path = next(p for p in new["files"] if p.endswith("kit.env"))
+        old_path = next(p for p in old["files"] if p.endswith("kit.env"))
+        # Preserve the OLD faces, grow the real outline, and move its E-face
+        # pins onto the new boundary. The outline itself is a supported change.
+        old_io = IO.read(old["files"][old_path], old["commit"], store.show)
+        new_io = IO.read(new["files"][path], new["commit"], store.show)
+        new["files"][path] = new["files"][path].replace("FW=43.2\n", "FW=45.36\n")
+        new["files"][new_io["source"]] = old["files"][old_io["source"]].replace("43.056000", "45.216000")
+        result = store.check()
+        self.assertEqual(result["verdict"], "PASS", result)
+
 
 if __name__ == "__main__":
     unittest.main()

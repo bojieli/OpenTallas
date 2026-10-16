@@ -5,12 +5,13 @@
  "candidate_files_sha256": {
   "tools/closure_loop/closed_stands.py": "383e784fd1080bbfcac74953fc6a4bc1d886bc150c4a7d8d84bc9a455210bd5f",
   "tools/closure_loop/custom_io_faces.py": "2a1287927e5d757c783a44bfe558544a96c06215fd8a08934e03a537cc6b46fa",
-  "tools/closure_loop/test_custom_io_faces.py": "fbd41114cf6b1dd9b726c216763fe6abecc79ea124ad9475766e06884a383846"
+  "tools/closure_loop/test_custom_io_faces.py": "2c5673eba0576145d1a785d64bf7fe18f2d7cc2625b4ff54541ed2454d1c378b"
  },
  "tests": {
-  "actual_source_and_negative_cases": 10,
+  "actual_source_and_negative_cases": 11,
   "existing_closed_stands": 31,
-  "pass": true
+  "pass": true,
+  "literal_custom_outline_change_supported": true
  },
  "cases": [
   {
