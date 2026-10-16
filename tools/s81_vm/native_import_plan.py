@@ -44,6 +44,8 @@ def select_binding(leaf, old):
 def model(path, gate=False):
     if gate:
         raw = json.loads(path.read_text())
+        if not isinstance(raw.get('pins'), list):
+            raise ValueError('gate geometry requires actual BPin rows, not a kit face plan')
         _, _, w, h = raw['die']
         pins = collections.defaultdict(list)
         for name, *rect in raw['pins']:
@@ -80,6 +82,9 @@ def require_pins(leaf, physical):
 
 def build(inputs, source):
     manifest = json.loads((inputs/'source_manifest.json').read_text())
+    graph = json.loads((inputs/'graph_summary.json').read_text())
+    if graph['hard_leaves'] != 540 or sha(inputs/'parent.xml') != graph['xml_sha256']:
+        raise ValueError('graph XML/count provenance mismatch')
     for entry in manifest['files']:
         if sha(source/Path(entry['path']).name) != entry['sha256']:
             raise ValueError('source manifest drift: ' + entry['path'])
@@ -88,7 +93,7 @@ def build(inputs, source):
         raise ValueError('candidate requires exactly 540 distinct actual leaves')
     old = {r['path']: r for r in json.loads((inputs/'old_leaves.json').read_text())['leaves']}
     homes = json.loads((inputs/'homes.json').read_text())['placement']
-    models, rows, missing_homes, changed_shapes = {}, [], [], []
+    models, rows, missing_homes, changed_shapes, clocks = {}, [], [], [], []
     for leaf in inventory:
         kit = select_binding(leaf, old)
         if kit not in models:
@@ -101,6 +106,14 @@ def build(inputs, source):
                 models[kit] = model(files[0])
         physical = models[kit]
         mapping = require_pins(leaf, physical)
+        for port, spec in leaf['ports'].items():
+            if port in ('ck', 'ck_control', 'ck_req', 'ck_rsp', 's_ck', 't_ck'):
+                for bit in range(spec['bits']):
+                    pin = f'{port}[{bit}]' if spec['bits']>1 else port
+                    actual = mapping[pin]
+                    clocks.append(dict(child=leaf['path'], port=pin, physical_pin=actual,
+                                       local_xy_um=physical['pins'][actual]['anchor_um'],
+                                       layer=physical['pins'][actual]['anchor_layer']))
         home = homes.get(leaf['path'])
         if home is None:
             missing_homes.append(leaf['path'])
@@ -117,6 +130,7 @@ def build(inputs, source):
                   exact_pin_models=len(models), source_parameters=manifest['parameters'],
                   input_sha256={p.name:sha(p) for p in inputs.iterdir() if p.is_file()},
                   missing_homes=missing_homes, changed_outline_homes=changed_shapes,
+                  literal_clock_contacts=clocks,
                   blockers=['HF4 param4 route/native verdict pending; param3 cannot substitute',
                             'All published LEFs still require their source-exact native/clock receipts',
                             '540 actual child homes and incident joins need die allocation and reach/cut proof',
@@ -137,7 +151,9 @@ def main():
     (args.out/'plan.json').write_text(json.dumps(report,indent=1)+'\n')
     with gzip.open(args.out/'models.json.gz','wt') as f:
         json.dump(models,f,separators=(',',':'))
-    print(json.dumps({k:v for k,v in report.items() if k!='leaves'},indent=1))
+    summary={k:v for k,v in report.items() if k not in ('leaves','literal_clock_contacts')}
+    summary['literal_clock_contacts']=len(report['literal_clock_contacts'])
+    print(json.dumps(summary,indent=1))
 
 
 if __name__=='__main__':
