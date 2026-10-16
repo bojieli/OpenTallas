@@ -1,5 +1,5 @@
 {
-  "status": "SOURCE_INTERFACE_WIP_NOT_PHYSICALLY_QUALIFIED",
+  "status": "DIRECT_FLAT_FULL16_PASS_PHYSICAL_WRAPPER_COMPOSITION_FAIL_NOT_ADOPTION_READY",
   "ordering": [
     "W0",
     "E0",
@@ -26,7 +26,8 @@
     },
     "clock_entries": "ck,ck_bw0..7,ck_pair0..3,ck_col0..15,ck_mul0..15,ck_group0..3",
     "outline": "candidate1036.8x2462.4 from die owner; new source needs views",
-    "status": "cw0[2048]=native valid, [2049]=native fault. local sticky word fault folded into am[51] with registered am station (+1); central cross-half valid check pending. Source-specific qfd_b2_word_status added, real die wiring/padding remains pending."
+    "status": "cw0[2048]=native valid, [2049]=native fault. local sticky word fault folded into am[51] with registered am station (+1); central cross-half valid check pending. Source-specific qfd_b2_word_status added, real die wiring/padding remains pending.",
+    "source_child": "qfd_slab_port_leaf_b2 has fixedBANDF2, distinct source identity; original BANDF1 leaf restored"
   },
   "halfband": {
     "master": "qfd_sp_halfband_lanes",
@@ -47,7 +48,8 @@
       "f": 1
     },
     "clock_entries": "ck,ck_l0..15",
-    "outline": "candidate881.28x648 from die owner; new views required"
+    "outline": "candidate881.28x648 from die owner; new views required",
+    "qualification": "Actual halfband parent + upper wrapper composition failed finite phase/word comparison; control/strap/station alignment not diagnosed at hand-back."
   },
   "upper": {
     "master": "qfd_band_upper_b2",
@@ -74,7 +76,8 @@
       "LG": 12,
       "RPIN": 1
     },
-    "outline": "candidate86.4x410.4 from die owner; new views required"
+    "outline": "candidate86.4x410.4 from die owner; new views required",
+    "qualification": "Actual halfband parent + upper wrapper composition failed finite phase/word comparison; control/strap/station alignment not diagnosed at hand-back."
   },
   "serializer": {
     "master": "qfd_res_ser_half_b2",
@@ -90,7 +93,8 @@
     },
     "clock_entries": "ck",
     "calendar": "D+4*HB+j; j0..3; HB5 slot3 end; 24-edge span",
-    "outline": "candidate777.6x324 from die owner; new views required"
+    "outline": "candidate777.6x324 from die owner; new views required",
+    "status": "DIAGNOSTIC PREDECESSOR ONLY. Native961w uses trained PAR3 result calendar with eight consecutive captures; qwen_b2_join owns actual qfd_res_train_half_b2 and VM NB6 PAR_RB1 integration. Do not bind this simple24spacing module as production."
   },
   "graph": [
     "Each original bword terminates same-side port bw0..7",
@@ -98,8 +102,8 @@
     "Halfband h pw_lu[127:0] -> upper u pw[128*h+:128]; pw_lu[128] -> pw_v[h]; f_up[u] -> lf[h]",
     "Upper u tt_ty distributes quarter lanes to halfband0 tt only, upper use/v duplicated per quarter as existing tree",
     "local halfband ty -> same-side port ty",
-    "port rq -> same-side serializer rq",
-    "six serializer rb -> six independent VM result sources, statically disjoint; VM source pending",
+    "port rq -> same-side actual qfd_res_train_half_b2 rq (source by qwen_b2_join)",
+    "six actual train serializer rb -> VM NB6 PAR_RB1; native PAR3 calendar allows max3 active/cycle; source by qwen_b2_join",
     "tt_ctlm tc duplicated to W/E, half am routed separately; controller source pending"
   ],
   "costs": "No actual allocator price yet. Existing 0bits/64stages and0.3..0.6mm2 are geometric estimates only.",

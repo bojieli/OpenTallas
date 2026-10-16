@@ -1,4 +1,5 @@
 `timescale 1ns/1ps
+// DIAGNOSTIC predecessor, not native961w qualification (actual production uses PAR3 train serializer).
 // Four-slot b2 serializer. HB=2*band+half; exact old 24-cycle shared calendar.
 // LAST is east half of final band, slot3 (global slot23). Native static fault behavior.
 module qfd_res_ser_half_b2 #(

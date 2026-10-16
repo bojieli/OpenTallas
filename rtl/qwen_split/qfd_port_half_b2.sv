@@ -92,4 +92,3 @@ module qfd_port_half_b2 #(parameter integer ROM_BAND=0, ROM_HALF=0) (
     end
     assign cw0=local_word; assign rq=local_result; assign am=am_q;
 endmodule
-

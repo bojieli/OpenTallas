@@ -38,9 +38,9 @@ module qfd_slab_result_half_b2 #(
     wire ov,fault;
     wire [203:0] heads;
     wire [3:0] gov,gfault;
-    // q15: port q (scale merge of group q + spport) is the hardened leaf qfd_slab_port_leaf on clock entry ck_group[q].
+    // q15: port q (scale merge of group q + spport) is the NEW b2 leaf qfd_slab_port_leaf_b2 on clock entry ck_group[q].
     generate for(genvar q=0;q<4;q=q+1) begin:g_port
-        qfd_slab_port_leaf #(.BANDF(2)) u_leaf (
+        qfd_slab_port_leaf_b2 u_leaf (
             .ck(ck_group[q]),.ck_mul0(ck_mul[4*q]),.ck_mul1(ck_mul[4*q+1]),.ck_mul2(ck_mul[4*q+2]),.ck_mul3(ck_mul[4*q+3]),.rst_n(rst_n),.pt_id(({hb,2'b00}+5'(q))),
             .colq(colq_all[1024*q +: 1024]),.lv_in(ty[512*q +:512]),.a_v_e2(tc[26]),.a_f_e2(tc[139:27]),
             .o_we(we[q]),.o_addr(addr[24*q +:24]),.o_mask(mask[16*q +:16]),
