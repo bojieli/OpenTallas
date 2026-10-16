@@ -204,7 +204,7 @@ def trunks(G,m,CH,cor,starts,ga,end_spec,hub_block,bus):
  x_stages/r_stages become compiler inputs, never an ideal tier flight estimate.
  """
  compact_return_relays(G,m,CH)
- road=Roadmap(G,m,cor);allowed=[v for k,v in cor.items() if k.startswith(('cfstreet','rsclane','s14','vch','hcc','svc_access','hub_w','strip_w'))]
+ road=Roadmap(G,m,cor);allowed=[G.wide_return_strip(cor) if k=='strip_w' and G.wide_hub() else v for k,v in cor.items() if k.startswith(('cfstreet','rsclane','s14','vch','hcc','svc_access','hub_w','strip_w'))]
  m['chain_paths']=[];calendar={};m['canonical_injectors']={side:dict(inst=starts[side].name,box=list(starts[side].box()),source_ports=['fo','od'])for side in 'WE'}
  m['canonical_broadcast_trees']={}
  # One real broadcast tree per physical half. Shared road prefixes are
@@ -371,7 +371,7 @@ def trunks(G,m,CH,cor,starts,ga,end_spec,hub_block,bus):
      for lane,r in group:
       tail=active[lane];bus(f'{prefix}_fe{lane}','fclk',1,[(tail[0],tail[1]),(endb.name,f'fi{lane}')]);bus(f'{prefix}_de{lane}','lane',G.CRET+2,[(tail[0],tail[2]),(endb.name,f'di{lane}')])
       m.setdefault('r_stages',{})[r]=flights[r];calendar[r].update(return_stations=flights[r],gather_input_lane=lane,return_bundle=prefix)
-   G._local_chain(m,CH,([cor['s14W']]+([cor['strip_w'],cor['hub_w']] if G.wide_hub() else []) if logical=='W' else [cor['vch']]),endb,'o',ga,f'r{logical}{t}',n*(G.CRET+1)+2,f'hr_{logical}{t}_o','stream_1p2')
+   G._local_chain(m,CH,([cor['s14W']]+([G.wide_return_strip(cor),cor['hub_w']] if G.wide_hub() else []) if logical=='W' else [cor['vch']]),endb,'o',ga,f'r{logical}{t}',n*(G.CRET+1)+2,f'hr_{logical}{t}_o','stream_1p2')
  m['canonical_calendar']=[calendar[r] for r in sorted(calendar)]
 
 

@@ -5099,7 +5099,7 @@ def buses_r8(m):
         if name.startswith('hr_') and side == 'W':
             xx = face_x - 0.55 * SPF - w
         if wide_hub() and side == 'W':   # wide hub: the gather / PQ W faces open onto the W strip and the W approach
-            allowed = list(allowed) + [cor['strip_w'], cor['hub_w']]
+            allowed = list(allowed) + [wide_return_strip(cor), cor['hub_w']]
         pl = P.near(xx + w / 2, y_c, w, h, allowed, horiz=False, span=1600.0, rows=6)
         assert pl, name
         it = P.add(Inst(name, master, pl[0], pl[1], w, h, 'MY' if side == 'W' else 'R0', kind=kind, region='hub'))
@@ -7305,6 +7305,11 @@ def _hub_bus_chain(m, CH8, cor, a_, b_, bits, pa, pb, dom=None, reach_um=None):
                                                      floor_added=max(0, math.ceil(L / LINK_STAGE_UM - 1e-9) - 1))
         return
     xcol = [cor[k_] for k_ in ('ecolS', 'ecolN', 'vmW', 'vmE', 'hrtxG') if k_ in cor]
+    if wide_hub():
+        # All incident interfaces must follow the relocated cluster, including
+        # WFC/host/status/control legs that do not name VM or SU. The old VCH-only
+        # placement region strands their receivers on the relocated S floor.
+        xcol += [cor[k_] for k_ in ('capfree','hub_w','above_su','vm_s','su_under','seam_rect') if k_ in cor]
     wpath_ = _wide_hub_path(m, A, Bk) if (wide_hub() and {a_, b_} & {'vm', 'su_s'}) else None
     if wpath_ is not None:
         # wide hub (S-DIE 10-15): SU | VM | capture column side by side -- abutting faces wire directly, VM / SU reach the
@@ -7569,6 +7574,18 @@ def wide_corr_y(m, tag):
     y0, y1 = wide_hub()['corr_w']
     n = 24
     return y0 + 30.0 + (y1 - y0 - 60.0) * (((d[tag] * 7) % n) + 0.5) / n
+
+
+
+def wide_return_strip(cor):
+    """Reserve the E55% of MIX4's E strip for field return trees and endpoints.
+
+    The W45% is the VM N-face escape. Keeping only path centerlines separate
+    lets the return end macros consume that escape; restrict their placement
+    regions as well as their nominal paths.
+    """
+    x0,y0,x1,y1 = cor['strip_w']
+    return (x0 + .45 * (x1 - x0),y0,x1,y1)
 
 
 def wide_strip_x(m, tag):
