@@ -1,0 +1,209 @@
+{
+  "scope": "UNQUALIFIED ANALYTIC TT SCREEN: real routed ETM native arcs + candidate R0 geometry; no routed parent/clock/FF hold proof",
+  "budget_ps": 683.333,
+  "budget_basis": "833.333-60uncertainty-90same-levelskew; phi-R per tile entry; both routed R<=300ps",
+  "wire_ps_per_um": 0.76,
+  "geometry": "nt_parent/placement.json",
+  "views": {
+    "fn": {
+      "record_commit": "6de40d441",
+      "view": "physical/ref_tile/s81hc_ctfnnt_ref/views/ot_s81_hc_ctfn_nt",
+      "lib_sha256": "8c809eeac64bc5c1accbbea5775dc24d9273fbd4e8aaea47b7f9f16c8e7f91de",
+      "insertion_sha256": "89848905911a7798c1265e838f008a820493fc5e4aead08dbb1eb719cc13378d"
+    },
+    "fs": {
+      "record_commit": "ef32747a0",
+      "view": "physical/ref_tile/s81hc_ctfsnt_ref/views/ot_s81_hc_ctfs_nt",
+      "lib_sha256": "c0ee297e1332229c62758f13e1cfc144a9ffd95547c0a0d256cba218ed64aae6",
+      "insertion_sha256": "7abcb128702bf87b02379ce20983f1dfefa6575065b56727fb2908b4fa817b0c"
+    }
+  },
+  "results": [
+    {
+      "name": "FSprev_to_FN",
+      "count": 2927,
+      "missing_count": 0,
+      "missing": [],
+      "negative_count": 40,
+      "min_slack_ps": -10.922780000000216,
+      "worst": [
+        {
+          "src": "fd_out[2275]",
+          "dst": "fd_in[2275]",
+          "launch_ps": 195.11482,
+          "capture_ps": 164.19072,
+          "L_um": 440.724,
+          "wire_estimate_ps": 334.95024000000024,
+          "pair_cost_ps": 694.2557800000002,
+          "slack_ps": -10.922780000000216
+        },
+        {
+          "src": "fd_out[2265]",
+          "dst": "fd_in[2265]",
+          "launch_ps": 193.25203,
+          "capture_ps": 163.95383999999999,
+          "L_um": 440.724,
+          "wire_estimate_ps": 334.95024000000024,
+          "pair_cost_ps": 692.1561100000002,
+          "slack_ps": -8.82311000000027
+        },
+        {
+          "src": "fd_out[2249]",
+          "dst": "fd_in[2249]",
+          "launch_ps": 199.64085,
+          "capture_ps": 156.92341,
+          "L_um": 440.724,
+          "wire_estimate_ps": 334.95024000000024,
+          "pair_cost_ps": 691.5145000000002,
+          "slack_ps": -8.181500000000256
+        },
+        {
+          "src": "fd_out[2273]",
+          "dst": "fd_in[2273]",
+          "launch_ps": 193.81358,
+          "capture_ps": 161.74757999999997,
+          "L_um": 440.724,
+          "wire_estimate_ps": 334.95024000000024,
+          "pair_cost_ps": 690.5114000000002,
+          "slack_ps": -7.178400000000238
+        },
+        {
+          "src": "fd_out[2294]",
+          "dst": "fd_in[2294]",
+          "launch_ps": 192.63517000000002,
+          "capture_ps": 162.37106999999997,
+          "L_um": 440.724,
+          "wire_estimate_ps": 334.95024000000024,
+          "pair_cost_ps": 689.9564800000003,
+          "slack_ps": -6.623480000000313
+        },
+        {
+          "src": "fd_out[2277]",
+          "dst": "fd_in[2277]",
+          "launch_ps": 191.59581000000003,
+          "capture_ps": 163.23911999999999,
+          "L_um": 440.724,
+          "wire_estimate_ps": 334.95024000000024,
+          "pair_cost_ps": 689.7851700000002,
+          "slack_ps": -6.452170000000251
+        },
+        {
+          "src": "fd_out[2284]",
+          "dst": "fd_in[2284]",
+          "launch_ps": 191.44398,
+          "capture_ps": 163.30264999999997,
+          "L_um": 440.724,
+          "wire_estimate_ps": 334.95024000000024,
+          "pair_cost_ps": 689.6968700000002,
+          "slack_ps": -6.363870000000247
+        },
+        {
+          "src": "fd_out[2282]",
+          "dst": "fd_in[2282]",
+          "launch_ps": 193.00132000000002,
+          "capture_ps": 161.37836,
+          "L_um": 440.724,
+          "wire_estimate_ps": 334.95024000000024,
+          "pair_cost_ps": 689.3299200000001,
+          "slack_ps": -5.996920000000159
+        }
+      ]
+    },
+    {
+      "name": "FN_to_FS",
+      "count": 2927,
+      "missing_count": 0,
+      "missing": [],
+      "negative_count": 0,
+      "min_slack_ps": 65.64905999999996,
+      "worst": [
+        {
+          "src": "fdm[1445]",
+          "dst": "fdm[1445]",
+          "launch_ps": 195.84056000000004,
+          "capture_ps": 180.46434,
+          "L_um": 317.604,
+          "wire_estimate_ps": 241.37903999999995,
+          "pair_cost_ps": 617.68394,
+          "slack_ps": 65.64905999999996
+        },
+        {
+          "src": "fdm[1425]",
+          "dst": "fdm[1425]",
+          "launch_ps": 191.01426000000004,
+          "capture_ps": 178.8209,
+          "L_um": 317.604,
+          "wire_estimate_ps": 241.37903999999995,
+          "pair_cost_ps": 611.2141999999999,
+          "slack_ps": 72.11880000000008
+        },
+        {
+          "src": "fdm[1435]",
+          "dst": "fdm[1435]",
+          "launch_ps": 188.63289000000003,
+          "capture_ps": 181.05415,
+          "L_um": 317.604,
+          "wire_estimate_ps": 241.37903999999995,
+          "pair_cost_ps": 611.06608,
+          "slack_ps": 72.26691999999991
+        },
+        {
+          "src": "fdm[1453]",
+          "dst": "fdm[1453]",
+          "launch_ps": 191.99376,
+          "capture_ps": 177.64209999999997,
+          "L_um": 317.604,
+          "wire_estimate_ps": 241.37903999999995,
+          "pair_cost_ps": 611.0148999999999,
+          "slack_ps": 72.31810000000007
+        },
+        {
+          "src": "fdm[1430]",
+          "dst": "fdm[1430]",
+          "launch_ps": 186.20085,
+          "capture_ps": 183.18676,
+          "L_um": 317.604,
+          "wire_estimate_ps": 241.37903999999995,
+          "pair_cost_ps": 610.76665,
+          "slack_ps": 72.56634999999994
+        },
+        {
+          "src": "fdm[1448]",
+          "dst": "fdm[1448]",
+          "launch_ps": 189.26802000000004,
+          "capture_ps": 179.37318,
+          "L_um": 317.604,
+          "wire_estimate_ps": 241.37903999999995,
+          "pair_cost_ps": 610.0202400000001,
+          "slack_ps": 73.31275999999991
+        },
+        {
+          "src": "fdm[1426]",
+          "dst": "fdm[1426]",
+          "launch_ps": 185.78074000000004,
+          "capture_ps": 182.02175999999997,
+          "L_um": 317.604,
+          "wire_estimate_ps": 241.37903999999995,
+          "pair_cost_ps": 609.1815399999999,
+          "slack_ps": 74.15146000000004
+        },
+        {
+          "src": "fdm[1427]",
+          "dst": "fdm[1427]",
+          "launch_ps": 191.32728000000003,
+          "capture_ps": 175.96112,
+          "L_um": 317.604,
+          "wire_estimate_ps": 241.37903999999995,
+          "pair_cost_ps": 608.6674399999999,
+          "slack_ps": 74.66556000000003
+        }
+      ]
+    }
+  ],
+  "open": [
+    "Full parent actual RTL/cell/pin binding",
+    "Actual die wire RC/clock delivery and FF hold",
+    "CTFXS/CTFL and every other incident join",
+    "First/last chain anchors"
+  ]
+}
