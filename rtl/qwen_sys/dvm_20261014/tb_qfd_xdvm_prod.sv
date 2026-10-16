@@ -22,6 +22,7 @@ module tb_qfd_xdvm_prod;
     parameter integer NLAYER = 2, NRAND = 6, SEED = 1, GAP = 4;
     parameter integer NATIVE_AFFINE=0,STATIC_SCHEDULE=0,NW=18;
     parameter integer TAP_MUT = 0, LEAF_MUT = 0, HEAD_MUT = 0;
+    parameter integer HEAD_LOCAL_RST = 0, HEAD_ONWARD_REG = 0;
     localparam integer W = 16, IL = 8, AW = 24, XCW = 12;
     localparam integer NT = GT / TG, NXC = 1 << SMAX, NXL = NXC / TG;
     localparam integer BDR = HB + NH + 3 + XVMR;
@@ -113,7 +114,7 @@ module tb_qfd_xdvm_prod;
     wire [NT*TG*32-1:0] d_xl;
     wire             d_x_fault;
     ot_qfd_xdvm_fabric #(.AW(AW), .NW(NW), .XCW(XCW), .IL(IL), .NCOL(NCOL), .NH(NH), .TG(TG), .SMIN(SMIN), .SMAX(SMAX),
-        .HB(HB), .LEAF_FILL_PIPE(LEAF_FILL_PIPE), .LEAF_READ_PIN_PIPE(LEAF_READ_PIN_PIPE), .LEAF_BANK_PIPE(LEAF_BANK_PIPE), .REQ_PIPE(REQ_PIPE), .DX(DX), .FILL_LEAD(FILL_LEAD), .TIDM(TIDM), .XOFF(XOFF), .NATIVE_AFFINE(NATIVE_AFFINE),.STATIC_SCHEDULE(STATIC_SCHEDULE),.TAP_MUT(TAP_MUT), .LEAF_MUT(LEAF_MUT),
+        .HB(HB), .LEAF_FILL_PIPE(LEAF_FILL_PIPE), .HEAD_LOCAL_RST(HEAD_LOCAL_RST), .HEAD_ONWARD_REG(HEAD_ONWARD_REG), .LEAF_READ_PIN_PIPE(LEAF_READ_PIN_PIPE), .LEAF_BANK_PIPE(LEAF_BANK_PIPE), .REQ_PIPE(REQ_PIPE), .DX(DX), .FILL_LEAD(FILL_LEAD), .TIDM(TIDM), .XOFF(XOFF), .NATIVE_AFFINE(NATIVE_AFFINE),.STATIC_SCHEDULE(STATIC_SCHEDULE),.TAP_MUT(TAP_MUT), .LEAF_MUT(LEAF_MUT),
         .HEAD_MUT(HEAD_MUT)) u_fab (
         .clk(clk), .rst_n(rst_n), .go_acc(go && r_ready), .ib(ib),
         .xpf_v(xpf_v), .xpf_xbase(xpf_xbase), .xpf_xcs(xpf_xcs), .xpf_xks(xpf_xks), .xpf_split(xpf_split),
