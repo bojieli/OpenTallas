@@ -14825,6 +14825,12 @@ def s81_bf_ten_root_candidate_model(**kwargs):
     return model(**kwargs)
 
 
+def s81_host_native_split_candidate_model(**kwargs):
+    """Initialization-only native HOST partition; unknown parent cuts fail closed."""
+    from uarch_model_s81_host_split import model
+    return model(**kwargs)
+
+
 def hbm_sm_command_model(*, hops=8, depth=1, replicas=32):
     """Native-record command transport with conservative retirement ordering."""
     from hbm_sm_command_model import model
