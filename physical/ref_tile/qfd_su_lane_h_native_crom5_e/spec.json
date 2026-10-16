@@ -1,0 +1,182 @@
+{
+ "name": "qfd_su_lane_h_native_crom5_e",
+ "top": "qfd_su_lane_h_native_crom5",
+ "kind": "tile",
+ "sources": [
+  "rtl/physical/ot_qfd_su_lane_h_native_crom5.sv",
+  "rtl/hdc/ot_hdc_vstream_lane.sv",
+  "rtl/hdc/ot_hdc_vstream_lane_t.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_fpu.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "rtl/hdc/ot_hdc_sfu_q.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"
+ ],
+ "params": {},
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "pins": {
+  "W": [
+   "emit0",
+   "live",
+   "i",
+   "fin_th",
+   "i_last_r",
+   "cura0",
+   "curb0",
+   "curc0",
+   "curd0",
+   "rrow",
+   "asi",
+   "bsi",
+   "csi",
+   "dsi",
+   "asrc",
+   "bsrc",
+   "csrc",
+   "mc",
+   "md",
+   "redsq",
+   "ma",
+   "mb",
+   "dst",
+   "red",
+   "ad",
+   "imm1",
+   "imm2",
+   "cls",
+   "accept",
+   "i_sfu"
+  ],
+  "S": [
+   "va_re",
+   "va_addr",
+   "vb_re",
+   "vb_addr",
+   "vc_re",
+   "vc_addr",
+   "wrom_re",
+   "wrom_addr",
+   "crom_re",
+   "crom_addr",
+   "va_q",
+   "vb_q",
+   "vc_q",
+   "wrom_q",
+   "crom_q"
+  ],
+  "N": [
+   "clk",
+   "rst_n",
+   "vm_we",
+   "vm_waddr",
+   "vm_wdata",
+   "kv_we",
+   "kv_waddr",
+   "kv_wdata",
+   "l_ov",
+   "l_out",
+   "l_red",
+   "l_redsq",
+   "l_raddr",
+   "l_last",
+   "retire",
+   "l_fault",
+   "sx_exp_v",
+   "sx_exp_x",
+   "sy_exp_y",
+   "sy_exp_vo",
+   "sy_exp_f",
+   "sx_rcp_v",
+   "sx_rcp_x",
+   "sy_rcp_y",
+   "sy_rcp_f",
+   "sx_rsq_v",
+   "sx_rsq_x",
+   "sy_rsq_y",
+   "sy_rsq_f"
+  ]
+ },
+ "outline": {
+  "w": 172.8,
+  "h": 129.6
+ },
+ "recipe": 2,
+ "route": {
+  "pd": 0.52,
+  "threads": 16,
+  "peak_ram_gb": 48,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "Claude:Q-ELEM-SU",
+  "branch": "claude/qelem-su-r2",
+  "tag": "native45e",
+  "purpose": "Current-source actualML15/RD2/QLA4/QLM5 nativeCROM5 parent leaf candidate. Old943 dependency differs currentmultiply. VMVL7 unchanged; assignedphase/slots/PG/pins and functionalleafnegativebinding pending. No oldCLOSED alias.",
+  "benches": [
+   {
+    "name": "lint",
+    "cmd": "verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -DSYNTHESIS --top-module qfd_su_lane_h_native_crom5 rtl/physical/ot_qfd_su_lane_h_native_crom5.sv rtl/hdc/ot_hdc_vstream_lane.sv rtl/hdc/ot_hdc_vstream_lane_t.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/ot_hdc_sfu_q.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ]
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "at": [
+    55.728,
+    43.2
+   ]
+  }
+ ],
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "clock": "spine",
+ "structural_change": "New explicit master/source wrapper for current native45 source dependency. Wire-only wrapper adds no state or latency. Separate current gate/actualpin-cost qualification required before parent binds. | r2 (Q-ELEM-SU 10-16): clock spine balanced with symmetric insertion-aware topology, subtree-common padding and bounded measured balancing (OT_SPINE_SYM/TREE_PAD/SAFE_BALANCE, as CLOSED qfd_su_cbuf_g_tp8r on the same SRAM): the unbounded fine pass learned a 3 ps/pad estimate from the coarse pads and inserted ~17,600 pad cells (6,180 -> 23,785 spine cells, +2,870 um2 fixed, util 53% -> 67%), leaf arrival 460 -> 655 ps, and detailed placement failed DPL-0033 after hold repair | B (Q-ELEM-SU 10-16 06:55): SRAM macro moved from the centre (x 38.9) to the pin-free E side (x 55.7, 20 um E channel): the A gate density map showed the 765-input W pin-flop band red (>1.0) in a 37 um strip W of the macro and an empty 37 um region E of it; the W band gets 54 um",
+ "slot_change_request": "Historicaloutline retained as gate-only candidate screen, not assigned. Actual64copies source currentnative4/5; no diefit/PG/phase assertion.",
+ "reroute_reason": {
+  "kind": "dependency_source_change",
+  "why_route": "ot_hdc_fp32_mul_lat.sv currentbytehash differs943 actualoldview producer; noalias/promotion"
+ },
+ "pin_ranges": {
+  "clk": [
+   84.24,
+   88.56
+  ]
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "SU lane / SFU interface is hardware fixed-latency, not compiler-scheduled: the lane body expects every vstream memory answer at exactly 1+ML edges through RD relays and each SFU result at a fixed lane pipeline slot (ot_hdc_vstream_lane_t cy_exp/cy_rcp/cy_rsq). +1 cycle per pin breaks that timing unless ML/RD and the SFU slot are re-parameterised and re-benched; current-source successor of the CLOSED view keeps its interface (Q-ELEM-SU 2026-10-16)"
+ },
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "orfs_vars": {
+  "OT_SPINE_SYM": "1",
+  "OT_SPINE_TREE_PAD": "1",
+  "OT_SPINE_SAFE_BALANCE": "1"
+ }
+}
