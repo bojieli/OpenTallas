@@ -58,12 +58,15 @@
   },
   {
    "name": "hb_argmax",
-   "master": "ot_hbm_argmax_static_sw",
-   "source": "rtl/hbm_accel/generic/ot_hbm_argmax_static_sw.sv",
+   "master": "ot_hbm_argmax_static_sw_vm",
+   "source": "rtl/hbm_accel/generic/ot_hbm_argmax_static_sw_vm.sv",
    "params": {},
    "slot": null,
    "owner": "H-COLL+IDX",
-   "note": "kept (v15). NO slot in compact660_v5 / grants (H-DIE must give it a plan block or fold it). VM via hb_idx argmax_rq/rr, cq/cr on hb_vms_SW client 0 (v15 edges kept)."
+   "note": "kept (v15). NO slot in compact660_v5 / grants (H-DIE must give it a plan block or fold it). VM via hb_idx argmax_rq/rr, cq/cr on hb_vms_SW client 0 (v15 edges kept). | H-NETLIST/attn 2026-10-16: VM-only master (no am_stream): the die wires no STREAM id into ARGMAX; LM-head logits are read from VM (mode 0), H-MTP2-agreed <0.15 % (attn_0030.json notes); a mode-1 record faults via the engine legality check.",
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/ot_hbm_argmax_static.sv"
+   ]
   },
   {
    "name": "lk_S0",
@@ -1977,20 +1980,6 @@
     ]
    ],
    "note": "v15 unbound"
-  },
-  {
-   "id": "G-CIL-AMSTREAM",
-   "owner": "H-SU / H-ELEM-B (s_mtp)",
-   "missing_rtl": "static SU logit stream am_stream[522:0] {bias_en,bias256,vals256,mask8,last,v}: only the historical ot_hgi_su_unit / ot_hgi_sv_unit (generic/peers) have an am_stream output; no v16 static SU master (su_<q>/sucore_<q>) exports it",
-   "affects": [
-    [
-     "hb_argmax",
-     "am_stream",
-     0,
-     523
-    ]
-   ],
-   "note": ""
   },
   {
    "id": "G-CIL-HOSTN",

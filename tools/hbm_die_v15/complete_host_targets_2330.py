@@ -42,6 +42,8 @@ for k,q in enumerate(Q):
         source='rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar.sv',
         params={},slot=None,owner='H-NETLIST',note='Exact universal hfd_hgi_vm_calendar master (local reset2edges); 19 RX-control bits per local endpoint, high bits unused outputs. Compiler arm/read/release slots; no ready-driven rescheduling.')]
     for i in (n,g): s['clocks'].append(dict(inst=i,port='clk',domain='stream',kind='clock'))
+    # H-HARDEN 2026-10-16 calendar xcap: typed related clocks of the universal calendar (W capture root, raw SRAM entry)
+    for cp in ('clk_cap','clk_mem'): s['clocks'].append(dict(inst=g,port=cp,domain='stream',kind='clock'))
     for p,w in [('cfg_v',1),('cfg_target',8),('cfg_addr',12),('cfg_data',256),('desc_v',1),
                 ('desc_base',12),('desc_limit',13),('desc_loops',16),('launch_v',1)]: e(['host_cp_ingress',p],[n,p],w)
     for a,b,w in [('program_cfg_we','cfg_we',1),('program_cfg_addr','cfg_addr',10),
@@ -93,6 +95,16 @@ for k,q in enumerate(Q):
 for k,q in enumerate(Q):
     rows.append((132+k,[f'cp_ep_{q}','configured'],[f'epcal_{q}','active'],
                  [[f'cp_ep_{q}','fault'],[f'epcal_{q}','fault']]+[['ep_'+lk,'fault'] for lk in links[q]]))
+# H-NETLIST/attn 2026-10-16: 32 attention-SM extension programme collars cpx_<q><k> (TARGET 192+8*QID+k, attn_0030.json):
+# participation by the host descriptor to cpx (sent whenever the SM runs); ready = configured, active = collar active (|xcal active),
+# fault = collar fault (already ORs the xcal sticky fault through tgt_fault).
+for k,q in enumerate(Q):
+    for m in range(8):
+        rows.append((192+8*k+m,[f'cpx_{q}{m}','configured'],[f'cpx_{q}{m}','active'],[[f'cpx_{q}{m}','fault']]))
+# H-NETLIST/smvm 2026-10-16: per-quadrant SM->VM writer descriptor targets cp_smw_<q> (TARGET 160+QID, smvm_0030.json);
+# fault = target fault (ORs the writer sticky fault, which ORs its 8 SMs' fault/schedule_fault pin flops).
+for k,q in enumerate(Q):
+    rows.append((160+k,[f'cp_smw_{q}','configured'],[f'cp_smw_{q}','active'],[[f'cp_smw_{q}','fault']]))
 rows.sort()
 nt,nf=original_nt,original_nf
 for t,ready,active,faults in rows:
@@ -105,9 +117,9 @@ for t,ready,active,faults in rows:
         nf+=1
     nt+=1
 all_targets=base_targets+[r[0] for r in rows]
-assert len(all_targets)==len(set(all_targets))==67
+assert len(all_targets)==len(set(all_targets))==67+32+4
 root['params'].update(NT=nt,NF=nf,TGTS=f"{8*nt}'h"+''.join(f'{t:02x}' for t in reversed(all_targets)))
-root['note']='All67 actual admitted host targets: participation-filtered ready, active and fault from real collars/calendars. Existing pin-registered parameterised master; no dynamic production scheduling. Physical closure remains open.'
+root['note']=f'All{nt} actual admitted host targets: participation-filtered ready, active and fault from real collars/calendars. Existing pin-registered parameterised master; no dynamic production scheduling. Physical closure remains open.'
 write('cp2',c)
 h=read('host_misc')
 for i in h['instances']:

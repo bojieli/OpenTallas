@@ -66,30 +66,6 @@ s['notes'] = [
  'VM write group: NW wq1 (was CP), NE wq1 (was retired ATT). NE wq2 (HC engine) and NE rq3/rq4, NW rq3, NW cq, SW cq client1 stay '
  'G-SMVM-VMCLIENT (no static producer; retirement requested from H-SM).']
 (SP / 'smvm_0030.json').write_text(json.dumps(s, indent=1) + '\n')
-# ---- host_status: one plain participation-filtered row per cp_smw_<q> (TARGET 160+QID); ingress mask bits 160..163
-c = json.loads((SP / 'cp2.json').read_text())
-root = next(i for i in c['instances'] if i['name'] == 'host_status')
-nt, nf = root['params']['NT'], root['params']['NF']
-hexs = root['params']['TGTS'].split("'h")[1]
-prev = [e for e in c['edges'] if e['src'][0].startswith('cp_smw_')]
-if prev:   # idempotent re-run: undo the previous rows
-    nt = min(e['dst'][2] for e in prev if e['dst'][1] == 't_ready')
-    nf = min(e['dst'][2] for e in prev if e['dst'][1] == 't_fault')
-    hexs = hexs[8:]
-c['edges'] = [e for e in c['edges'] if not e['src'][0].startswith('cp_smw_')]
-for qi, q in enumerate(Q):
-    ct = f'cp_smw_{q}'
-    for p, sp, bit in [('t_ready', 'configured', nt + qi), ('t_active', 'active', nt + qi), ('t_fault', 'fault', nf + qi)]:
-        c['edges'].append(dict(src=[ct, sp, 0, 1], dst=['host_status', p, bit, bit + 1], bits=1, clock='stream',
-                               basis=f'TARGET{TGT0+qi} real collar status (fault incl. writer + its 8 SMs fault/schedule_fault)'))
-root['params'].update(NT=nt + 4, NF=nf + 4,
-                      TGTS=f"{8*(nt+4)}'h" + ''.join(f'{TGT0+k:02x}' for k in (3, 2, 1, 0)) + hexs)
-(SP / 'cp2.json').write_text(json.dumps(c, indent=1) + '\n')
-h = json.loads((SP / 'host_misc.json').read_text())
-for i in h['instances']:
-    if i['name'] == 'host_cp_ingress':
-        m = int(i['params']['TARGET_MASK'].split("'h")[1], 16)
-        for t in range(TGT0, TGT0 + 4): m |= 1 << t
-        i['params']['TARGET_MASK'] = f"256'h{m:x}"
-(SP / 'host_misc.json').write_text(json.dumps(h, indent=1) + '\n')
-print('smvm_0030 spec written; host_status NT', nt + 4, 'NF', nf + 4)
+# host_status rows / ingress mask for cp_smw_<q> (TARGET 160+QID) now live in tools/hbm_die_v15/complete_host_targets_2330.py
+# (H-NETLIST integration 0030: one generator owns host_status so sibling regions cannot collide on NT/NF/TGTS).
+print('smvm_0030 spec written')
