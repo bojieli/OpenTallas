@@ -73,10 +73,10 @@
  },
  "job": {
   "benches_from": "tools/s81_suhc/hc_owned_nt_benches.json",
-  "owner": "Codex:S81-HC-takeover",
-  "branch": "codex/s81-hc-takeover-2116",
-  "tag": "s3-pinrepair",
-  "structural_change": "s3 pin-register defect repair: measured s2 launch229.30/capture231.34 violate220/190. Lane pins x8..118 and core x170..398 instead of10b/um groups; two roots, same outline and cycles. TWO CTS ROOTS + straight feed-through (S-NORM 2026-10-15): s1 routed native FAIL (R 271.9, spread 65.7; capture cs 283 / dl_in 226 / ul_in 227 / fd_in 219, launch fdx 236.5): one root over two disjoint sink clusters (NORM lanes x 40-86, data rows x 227-342) gives every single-flop feed-through the whole-tile spread. clk_l now clocks the lane registers (rr, ul_out, dl_out, farq/oct, ctq replica), clk the data rows (fv, fdx); each root has its own boundary R (phi - R per entry). fd_in / fv_in re-pinned at the fdx / fv x of the same bit (v23: internal cut 129 -> 0, max lateral 83.8 -> 0). Same registers and cycles (RTL: clock ports only); crossing hooks (clock_split, local_clock_tap, capture_driver_size) dropped.",
+  "owner": "Claude:S-ELEM-PQ",
+  "branch": "claude/s81-elempq-2210",
+  "tag": "s4-lanefence",
+  "structural_change": "s4 lane-root compaction (measured cause of s3 CLOSED d8e5e1a77 native FAIL capture 264.15 ps / 436 lane pins): clk_l had 616 sinks over x 0..300 um because the ctq replica (u_q delay lines, 205 sinks + fcl/fvl) was placed by wirelength at the data rows (x 175..300) while the lane pin flops sit at x 8..118 -> leaf buffers 82..120 ps, lane insertion 113.9..191.1 (spread 77), 3..6 hold buffers on every lane input (hold reference = boundary min 113.9 vs local up to 191) and R-local deviation. Fence every named ctq-replica register into x 121..166 (beside the lane pins, between cs_* and fd_in): clk_l tree spans x 8..166. Geometry only: same RTL, registers, cycles, outline and pins; core root unchanged (native PASS).",
   "no_bench_reason": "bit-exactness is gated on the HC slab composition with dsfd_sp_hc NTREE 1 (tools/s81_suhc/hc_ntree_bench.sh: NG 256 production shape exact PASS + mutant 3 FAIL; tools/s81_suhc/hc_gate.py --ntree 1 NG 256 exact 0/1940 x3 + per-tile mutants); the tile alone has no golden",
   "purpose": "el1014-s81-norm-tree: ctfx_nt broadcast source without the local re-register (LOCAL_SPLIT 1)",
   "views_to": "physical/ref_tile/s81hc_ctfxsnt_ref/views",
@@ -181,5 +181,8 @@
    1
   ],
   "phase_ps": 0
- }
+ },
+ "pin_hook_before_flops": [
+  "physical/ref_tile/s81hc_ctfxsnt_ref/lane_ctq_fence.tcl"
+ ]
 }
