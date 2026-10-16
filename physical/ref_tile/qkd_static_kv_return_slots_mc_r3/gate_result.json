@@ -2,13 +2,13 @@
  "schema": "opentallas.ref_tile.gate_result.v2",
  "kit": "qkd_static_kv_return_slots_mc_r3",
  "verdict": "WARN",
- "generated": "2026-10-16T02:14:40-0700",
+ "generated": "2026-10-16T02:37:45-0700",
  "host": "ot-epyc4",
  "cts": true,
  "commit": null,
  "source_binding": {
   "schema": "opentallas.ref_tile.source_snapshot.v1",
-  "start_commit": "4735dc6b806ab94ba12b34123aaaea0a07cb38f0",
+  "start_commit": "78a8e07f8730c71cb12c579ab1c0b74716630cc2",
   "commit": null,
   "identity": "exact_content_snapshot",
   "daemon_tree": "/home/ubuntu/wt-claude-closure-daemon-1010",
@@ -21,8 +21,8 @@
    "tools/orfs_hold_mm.tcl",
    "tools/textbook_lint.py"
   ],
-  "archive_sha256": "36554ccfe2ddfd8704cd8c0323301d470d600aa6852df90caea3242578096f07",
-  "manifest_sha256": "303b4da3a6289aacb1fd080a3f183e816d60b5b3ec3876e750249e0b4f07be74",
+  "archive_sha256": "bdd08337aaddc1ad83316376863fa148e71ec94959c964d2fd278839129d8878",
+  "manifest_sha256": "5ad97bcadd46bfc2810bb68c1a853f94a8b0da556907c12e3ff40b312666d47e",
   "files": [
    {
     "path": "physical/common_flow/anchor_row_packing.tcl",
@@ -56219,8 +56219,8 @@
    {
     "path": "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_slots_mc.sv",
     "kind": "file",
-    "sha256": "27408a1b328f0402998ecf8c56d0fb5a688c6fe8d3119406e4f5b4603a5f1fd9",
-    "git_blob": "af79095707eb6a830a73261e34a6041d72b00100",
+    "sha256": "21b2036cce622226ca1ef557ed4949bc868fe9ffea7bcd7298c039fea2776794",
+    "git_blob": "b2253da1254142964d5530a7cc032d4c5c2758a4",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -150619,14 +150619,14 @@
   ],
   "disk_admission": {
    "reserve_gb": 20,
-   "archive_bytes": 141609558,
+   "archive_bytes": 141609753,
    "unpacked_bytes": 883585024,
    "pick_gb": 22,
    "runtime_gb": 22
   },
   "route_overlay_plan": {
    "schema": "opentallas.closure_loop.helper_overlay_plan.v1",
-   "origin_main": "18346b32b0d57197157c12e22ee2b1d9053bbf83",
+   "origin_main": "a5e4b28d9424a2b8c7b37d0eabd6a745c5e1715b",
    "content_sha256": "0918b61809bbdb2fac88c3e1aa4f0fbff72af4b16806d94b2e532c40d8fbf235",
    "files": [
     {
@@ -151181,7 +151181,7 @@
     "rtl/qwen_sys/static_kv_20261014/qkd_kv_static_writer.sv": "53ca5402473ba845bc7683a58ce35b4d6fe2a9d1131f97ac0a59dbab5abb32f6",
     "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_calendar.sv": "082820cd49a595fba0b349252170a9bfbe7e91182f2d9fc81f7ed14a21d69a61",
     "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_slots.sv": "58c84c5a4c00eaf641022c3d2417ce9a5a52b17b6f554c2831f2a11b545cc652",
-    "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_slots_mc.sv": "27408a1b328f0402998ecf8c56d0fb5a688c6fe8d3119406e4f5b4603a5f1fd9",
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_return_slots_mc.sv": "21b2036cce622226ca1ef557ed4949bc868fe9ffea7bcd7298c039fea2776794",
     "rtl/qwen_sys/vm_nox_20261014/qfd_vm_attention_commit_fence.sv": "ac30b638f8cf33c17f1bd534e7696ea2dfabd2c37a8c873b158e4b8b62f8429b",
     "rtl/test/qwen_static_kv/tb_kv_hbm_elastic_boundary.sv": "1720c26ec9522b3c7930f47359d20f1d2a427c49ef1c9d4f4342db7c952f9f02",
     "rtl/test/qwen_static_kv/tb_kv_hbm_elastic_boundary_mc.sv": "9fb00a4f61ec4dd288e1ac56e1438e414a817ffcac81f87218e3b97524c851ce",
@@ -151253,16 +151253,16 @@
    },
    "digest": "3ac354da2ade0b77d681acfa516993b3d9f976d323fca483ea9d97a3f034c47b"
   },
-  "captured": "2026-10-16T01:54:58-0700",
+  "captured": "2026-10-16T02:16:57-0700",
   "route_hold_context": {
    "HM": "0.03",
    "OT_ROUTE_HOLD_CORNERS": "mm",
    "OT_MM_FF_SDC": "physical/ref_tile/qkd_static_kv_return_slots_mc_r3/signoff.sdc"
   },
-  "remote_script_sha256": "72b1fb6227c94f1023436e6f9c20f7b642947ff8b1f32203343b72833bb18897",
+  "remote_script_sha256": "3b94458a5bd43425c77a02b9fa04d08ae1f59d976ed156354b21eecb89eba03d",
   "tool_image_requested": "openroad/orfs:latest",
   "remote_host": "ot-epyc4",
-  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/qkd_static_kv_return_slots_mc_r3-20261016-015409",
+  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/qkd_static_kv_return_slots_mc_r3-20261016-021602",
   "remote_archive_verified": true,
   "runtime_tool_provenance": [
    "GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=[\"openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29\"]",
@@ -151273,8 +151273,8 @@
   "max_root_sinks": 4608,
   "root": "port:pll_hbm_data[0]",
   "cts": true,
-  "tt_insertion_ps": 166.2,
-  "tt_spread_ps": 32.2,
+  "tt_insertion_ps": 154.4,
+  "tt_spread_ps": 22.3,
   "declared_clock": null,
   "limits": {
    "sinks": 15000,
@@ -151288,15 +151288,15 @@
     "tt": {
      "boundary": {
       "n": 325,
-      "mean": 242.0,
-      "min": 230.0,
-      "max": 285.9
+      "mean": 230.5,
+      "min": 219.7,
+      "max": 257.0
      },
      "all": {
-      "n": 814,
-      "mean": 242.0,
-      "min": 230.0,
-      "max": 285.9
+      "n": 910,
+      "mean": 230.1,
+      "min": 217.7,
+      "max": 257.0
      },
      "errors": [],
      "macros": null,
@@ -151309,15 +151309,15 @@
     "tt": {
      "boundary": {
       "n": 293,
-      "mean": 239.0,
-      "min": 223.4,
-      "max": 268.6
+      "mean": 252.0,
+      "min": 243.6,
+      "max": 274.1
      },
      "all": {
       "n": 559,
-      "mean": 228.8,
-      "min": 212.1,
-      "max": 268.6
+      "mean": 248.2,
+      "min": 239.7,
+      "max": 274.1
      },
      "errors": [],
      "macros": null,
@@ -151331,9 +151331,9 @@
      "boundary": null,
      "all": {
       "n": 4608,
-      "mean": 149.0,
-      "min": 134.0,
-      "max": 166.2
+      "mean": 147.1,
+      "min": 132.1,
+      "max": 154.4
      },
      "errors": [],
      "macros": null,
@@ -151347,9 +151347,9 @@
      "boundary": null,
      "all": {
       "n": 4608,
-      "mean": 194.6,
-      "min": 183.0,
-      "max": 204.1
+      "mean": 211.9,
+      "min": 201.7,
+      "max": 219.2
      },
      "errors": [],
      "macros": null,
@@ -151363,9 +151363,9 @@
      "boundary": null,
      "all": {
       "n": 4608,
-      "mean": 219.6,
-      "min": 209.9,
-      "max": 233.2
+      "mean": 216.3,
+      "min": 205.9,
+      "max": 229.0
      },
      "errors": [],
      "macros": null,
@@ -151379,9 +151379,9 @@
      "boundary": null,
      "all": {
       "n": 4608,
-      "mean": 223.1,
-      "min": 205.1,
-      "max": 246.1
+      "mean": 224.0,
+      "min": 206.0,
+      "max": 244.5
      },
      "errors": [],
      "macros": null,
@@ -151391,37 +151391,25 @@
   ],
   "measured_clock": "hdata_0",
   "verdict": "PASS",
-  "text": "4,608 sinks on the largest root <= 15,000; measured TT insertion 166.2 ps, leaf spread 32.2 ps"
+  "text": "4,608 sinks on the largest root <= 15,000; measured TT insertion 154.4 ps, leaf spread 22.3 ps"
  },
  "items": [
   {
    "severity": "WARN",
    "check": "util",
-   "message": "synthesized std area 13258 um2 + macros 0 in core 40236: util 33%",
-   "fix": "set \"std_area_um2\": 13258 and drop 'outline' (gen sizes to util 0.52)"
+   "message": "synthesized std area 13322 um2 + macros 0 in core 40236: util 33%",
+   "fix": "set \"std_area_um2\": 13322 and drop 'outline' (gen sizes to util 0.52)"
   },
   {
    "severity": "WARN",
    "check": "textbook.high_fanout",
-   "message": "net rp[1]$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R): 18,407 loads (0 flops, e.g. None) > 3,000: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
-   "fix": "no reset on datapath registers; replicate enables / selects / pointer bits per region (<= ~256 loads)"
-  },
-  {
-   "severity": "WARN",
-   "check": "textbook.high_fanout",
-   "message": "net rp[0]$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R): 9,003 loads (0 flops, e.g. None) > 3,000: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
-   "fix": "no reset on datapath registers; replicate enables / selects / pointer bits per region (<= ~256 loads)"
-  },
-  {
-   "severity": "WARN",
-   "check": "textbook.high_fanout",
-   "message": "net rp[3]$_DFFE_PN0P_/QN (DFFASRHQNx1_ASAP7_75t_R): 3,533 loads (0 flops, e.g. None) > 3,000: replicate the driver register per consumer region (one copy per <= ~256 loads / ~100 um) or pipeline the broadcast",
+   "message": "reset rs$_DFF_P_/QN (DFFHQNx1_ASAP7_75t_R): 301 loads (299 flops, e.g. actual_valid$_DFF_PN0_) > 256: register it and replicate per region (rtl/lib/ot_rst_relay.sv: one relay copy per region)",
    "fix": "no reset on datapath registers; replicate enables / selects / pointer bits per region (<= ~256 loads)"
   },
   {
    "severity": "WARN",
    "check": "textbook.util_channel",
-   "message": "utilisation 33.0% outside 45%-65% (std 13278 + macro 0 um2 in 40236 um2): shrink the outline (long wires / sparse placement)",
+   "message": "utilisation 33.2% outside 45%-65% (std 13345 + macro 0 um2 in 40236 um2): shrink the outline (long wires / sparse placement)",
    "fix": "size the outline to util 0.50-0.55 with >= 20 um macro channels"
   }
  ]
