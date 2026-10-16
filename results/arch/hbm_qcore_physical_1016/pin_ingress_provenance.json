@@ -31,7 +31,8 @@
     "macros": 2,
     "macro_master": "ot_sram_1r1w_128x256_m1_r2c2",
     "macro_area_um2": 7783.15392,
-    "standard_area_um2": 29403.48608
+    "standard_area_um2": 29403.48608,
+    "scope": "PRELIMINARY generic mapping only: shared keep-register hook was absent from the diagnostic staging, so coherent RF replicas merged. This is NOT the native physical size. Native gate count below supersedes it."
   },
   "baseline_cause": {
     "refusal": "rf_wa input to fault capture is10logic levels (>9)",
@@ -58,10 +59,10 @@
   },
   "physical_candidate": {
     "outline_um": [
-      276.48,
-      276.48
+      330.48,
+      330.48
     ],
-    "source_S_macro_plus_std_core_fill": 0.502,
+    "source_S_macro_plus_std_core_fill": null,
     "old_reserve_um": [
       250,
       2671.92
@@ -72,9 +73,24 @@
     "delivery": "phi minus actual per-root insertion",
     "parent_proposed_SW_home_um": [
       11528.48,
-      7673.84
+      7619.84
     ],
-    "boundary": "RF tuple N; RR/SFU E; slice W. RF raw capture now clk_ctl, followed by actual clk_ctl-to64RF commit paths at n+1."
+    "boundary": "RF tuple N; RR/SFU E; slice W. RF raw capture now clk_ctl, followed by actual clk_ctl-to64RF commit paths at n+1.",
+    "native_retained_core_fill": 0.4915
   },
-  "qualification": "UNQUALIFIED until real native physical gate and routed TT/FF/DRC; no inherited hard view"
+  "qualification": "UNQUALIFIED until real native physical gate and routed TT/FF/DRC; no inherited hard view",
+  "native_retained_replica_synthesis": {
+    "cells": 339152,
+    "flops": 76220,
+    "async_flops": 65,
+    "nonreset_flops": 76155,
+    "mapped_area_um2": 52285.27976,
+    "macro_area_um2": 7783.15392,
+    "standard_area_um2": 44502.12584,
+    "replica_policy": "All six declared RF payload copies preserved by shared keep-register hook; never disable it to shrink.",
+    "source_snapshot": "native_r1_source_snapshot.json",
+    "actual_synthesis_report": "native_r1_synth_stat.txt",
+    "r1_failure": "Actual reset data first endpoint u_red.iv on clk_red requires rst_n IO domain red; source snapshot assigned core. Flow rejected before floorplan, so no actual placement PNG exists.",
+    "sizing_correction": "276.48square would be70.6% core fill from actual retained mapping; source-bound native successor330.48square gives~49.2%."
+  }
 }

@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hbm_su_static_qcore",
+ "enable": false,
+ "reason": "The measured S source had10 input-to-fault logic levels and8 input-to-RF-capture levels. PHYS_RF_INGRESS=1 relocates the EXISTING bank ingress stage to raw RF/relay/RR pin flops and bypasses the bank rung, preserving normal commit n+1/read n+3 and scalar E+11. Native gate must measure all actual remaining endpoints; no extra wrapper stages or ideal ports."
+}
