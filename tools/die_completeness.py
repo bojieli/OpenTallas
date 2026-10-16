@@ -804,9 +804,10 @@ UNKNOWNS = [
     'inputs come from 7 producers that are not built; no compute-die STA has ever produced numbers (C16s STA flow error, '
     'C23s in PDN); contract v1.3 predates the fpq_s6 homes, so the 10 contract masters absent from the netlist may be '
     'stale names rather than missing blocks.',
-    'Qwen KV/system: the strict die_port_bind.py v2 check has never run on the KV netlist (the KV tool does not count '
-    'undriven / multi-driven bits); the measured open inputs are 27 (the logged "25" is arithmetic after the HOST fix, '
-    'not a bind). The only die STA is PDN-skipped (TT -1,762.84 ps, 299,285 real-to-real violators). The v1.4.3 '
+    'Qwen KV/system: the strict die_port_bind.py v2 check now runs on the BINDINGS-bound netlist (kv_port_bind_v2.sh, '
+    '2026-10-16): after the embgw / host_fdi / stack-strap fixes 0 undriven and 0 multi-driven bits, 23 unconnected inputs '
+    'that are owed RTL (results/arch/qwen_split_1014/kvsys_v1_4_3_design/port_bind_v2/remaining_items.json); the record is a '
+    'local regeneration, not yet a die trial. The only die STA is PDN-skipped (TT -1,762.84 ps, 299,285 real-to-real violators). The v1.4.3 '
     'PV-wide pair (new masters, 1,024 SRAM macros) is not yet in the netlist.',
     'Native audit: closed views that fail the native launch/capture budget (compute 1, KV 4, S81 19 in the netlist, '
     'HBM 4) need re-kits; each one found at die level so far has cost a re-route.',
