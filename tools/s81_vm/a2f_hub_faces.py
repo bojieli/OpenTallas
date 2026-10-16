@@ -176,6 +176,7 @@ def install_spans(spans, assigned=None):
             for r, k in enumerate(order):
                 t = a + span * (r + 0.5) / len(lst)
                 place[(lst[k][0], pname)] = {'W': (0.0, t), 'E': (W, t), 'N': (t, H), 'S': (t, 0.0)}[f]
+        R._last_port_place = place      # read-only stash for a2f_affine_reach.py (same pins, no behaviour change)
         out = []
         for n, (pts, tags, ports) in enumerate(raw):
             pts, tags = list(pts), list(tags)
@@ -362,6 +363,43 @@ def hop1(P, nets):
     return new
 
 
+def center_ctl(P, W, H, step=21.6):
+    """Lever 2 (S-FUNC 10-16): move the request scheduler (rsched) and the sequencer tile (seq) to the legal spot nearest
+    the centroid of the leaves they serve (rsched: the 16 FSR leaves; seq: the 16 b8 bridges), keeping every other
+    leaf, the outline and all faces.  Returns {leaf: (old xy, new xy)}."""
+    L = P.leaves
+    moved = {}
+    for key, served in (('rsched', 'fsr_b'), ('seq_tile', 'relay128_b8')):
+        i = next(k for k in P.pos if key in L[k]['master'])
+        tg = [k for k in P.pos if served in L[k]['master']]
+        cx = sum(P.rect(k)[0] + P.rect(k)[2] / 2 for k in tg) / len(tg)
+        cy = sum(P.rect(k)[1] + P.rect(k)[3] / 2 for k in tg) / len(tg)
+        old = P.pos.pop(i)
+        w, h = L[i]['w'], L[i]['h']
+        others = [P.rect(k) for k in P.pos]
+        best = None
+        nx, ny = int(W // step), int(H // step)
+        for gx in range(nx):
+            x = gx * step
+            if x + w > W:
+                break
+            for gy in range(ny):
+                y = gy * step
+                if y + h > H:
+                    break
+                d = abs(x + w / 2 - cx) + abs(y + h / 2 - cy)
+                if best is not None and d >= best[0]:
+                    continue
+                if any(x < ox + ow + CH and ox < x + w + CH and y < oy + oh + CH and oy < y + h + CH
+                       for ox, oy, ow, oh in others):
+                    continue
+                best = (d, x, y)
+        assert best, ('no legal centre spot', key)
+        P.pos[i] = (round(best[1], 4), round(best[2], 4), old[2], old[3])
+        moved[L[i]['name']] = [list(old[:2]), [best[1], best[2]], [round(cx, 1), round(cy, 1)]]
+    return moved
+
+
 def arrange(P, W, H, struct, arr, capture_hints=None):
     """returns the (possibly new) outline"""
     if arr == 'caprow':
@@ -451,6 +489,7 @@ def main():
     ap.add_argument('--center-band', action='store_true', help='center the actual control/landing/CDC band in its empty middle strip')
     ap.add_argument('--meta4', action='store_true', help='seven standard field4 metadata leaves per slice')
     ap.add_argument('--hop1', action='store_true', help='remove the b4 relay level (b8 drives the banks)')
+    ap.add_argument('--center-ctl', action='store_true', help='lever 2: rsched and seq tile at the centroid of FSR / b8')
     ap.add_argument('--read-near', action='store_true')
     ap.add_argument('--return-far', action='store_true', help='with --read-near: return lanes stay at the outer end (beside the storage)')
     ap.add_argument('--su-x0', type=float, default=0.0, help='SU W edge along the VM S face; -1 centred')
@@ -491,6 +530,7 @@ def main():
         struct['center_band_shift_um']=round(dx,4)
         struct['center_band_leaves']=len(ids)
 
+    moved = center_ctl(P, W, H) if a.center_ctl else None
     if a.hop1:
         nets = hop1(P, nets)
         for path in ('write', 'read'):
@@ -505,7 +545,7 @@ def main():
         R.port_face = lambda p: 'E' if p.startswith(cdc) else baseface(p)
     install_spans(sp, assigned)
     bad, outside = P.check(W, H)
-    res = dict(schema='opentallas.s81.vm-a2f-hub-faces.v1', status='SCREEN_NOT_GRT', hub=a.hub, arrangement=a.arr,
+    res = dict(center_ctl=moved, schema='opentallas.s81.vm-a2f-hub-faces.v1', status='SCREEN_NOT_GRT', hub=a.hub, arrangement=a.arr,
                rectangle_um=[W, H], area_mm2=round(W * H / 1e6, 4), legality=dict(spacing=bad, outside=outside),
                spans=sp, by_reach={}, metadata_standard_field4=a.meta4, center_band=a.center_band, capture_order=a.capture_order, structure=struct)
     if a.assigned_pins:
