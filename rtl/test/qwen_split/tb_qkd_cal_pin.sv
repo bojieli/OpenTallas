@@ -38,7 +38,7 @@ module tb_qkd_cal_pin;
    end
   end
  end
- task edge;begin @(posedge ck);#2;end endtask
+ task step;begin @(posedge ck);#2;end endtask
  initial begin
   repeat(4)@(negedge ck);release_c=cyc;check_init=1;rst_n=1;
   repeat(70)@(negedge ck);check_init=0;
@@ -48,12 +48,12 @@ module tb_qkd_cal_pin;
   // Two complete36layer token programmes, then token3 L0 tests halt while active.
   wait(starts==74);@(negedge ck);check_calendar=0;
   if(!running)$fatal(1,"CALPIN_FAIL halt test did not reach active programme");
-  halt=1;edge();if(!running)$fatal(1,"CALPIN_FAIL halt bypassed declared input capture");
-  edge();if(running)$fatal(1,"CALPIN_FAIL halt missed fixed1edge observation");
-  @(negedge ck);halt=0;edge();@(negedge ck);reload=1;
-  edge();if(!ready)$fatal(1,"CALPIN_FAIL reload bypassed input capture");
-  edge();if(ready)$fatal(1,"CALPIN_FAIL reload missed fixed1edge observation");
-  @(negedge ck);reload=0;repeat(66)edge();if(!ready||fault)$fatal(1,"CALPIN_FAIL reload66write completion");
+  halt=1;step();if(!running)$fatal(1,"CALPIN_FAIL halt bypassed declared input capture");
+  step();if(running)$fatal(1,"CALPIN_FAIL halt missed fixed1edge observation");
+  @(negedge ck);halt=0;step();@(negedge ck);reload=1;
+  step();if(!ready)$fatal(1,"CALPIN_FAIL reload bypassed input capture");
+  step();if(ready)$fatal(1,"CALPIN_FAIL reload missed fixed1edge observation");
+  @(negedge ck);reload=0;repeat(66)step();if(!ready||fault)$fatal(1,"CALPIN_FAIL reload66write completion");
   @(negedge ck);rst_n=0;#2;if(ready||running||fault)$fatal(1,"CALPIN_FAIL asynchronous reset not observed");
   @(negedge ck);init_words=0;release_c=cyc;check_init=1;rst_n=1;
   repeat(70)@(negedge ck);check_init=0;if(!ready||init_words!=66)$fatal(1,"CALPIN_FAIL reset/reinit deadline");
