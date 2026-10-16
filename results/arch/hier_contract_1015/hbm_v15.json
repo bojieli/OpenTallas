@@ -2369,11 +2369,11 @@
    "kind": "cluster",
    "parent": "die",
    "outline": {
-    "w": 488.16,
+    "w": 511.92,
     "h": 360.72
    },
    "origin": {
-    "x": 11839.68,
+    "x": 11815.92,
     "y": 5864.0,
     "orient": "MY"
    },
@@ -2387,10 +2387,10 @@
     "layer": "M4",
     "offset": 163.704
    },
-   "pg_layer": "M5",
-   "strap_layer": "M6",
-   "signal_max_layer": "M5",
-   "layer_cap": "M5",
+   "pg_layer": "M7",
+   "strap_layer": "M8",
+   "signal_max_layer": "M6",
+   "layer_cap": "M6",
    "version": 7,
    "pins": [
     {
@@ -2672,12 +2672,21 @@
       197.472
      ],
      "offset": 197.424
+    },
+    {
+     "name": "stk[1:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      197.664,
+      197.856
+     ],
+     "offset": 197.76,
+     "note": "Registered compile-time stack identity; existing pins preserved."
     }
    ],
    "source": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks.sv",
-   "params": {
-    "STK": 0
-   },
+   "params": {},
    "layer_rule": "tile",
    "instance": "hb_dbk_SW",
    "synth": {
@@ -2738,14 +2747,14 @@
     "own_face_match_bits": 0.557
    },
    "plan_block": "dbk_SW",
-   "grant": "wires_only_cluster_v7",
+   "grant": "wires_only_cluster_v7_hardening_2330",
    "children": [
     {
      "inst": "L[0].u_bank",
      "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
      "at": [
-      0,
-      0
+      23.76,
+      23.76
      ],
      "outline": {
       "w": 140.4,
@@ -2766,8 +2775,8 @@
      "inst": "L[1].u_bank",
      "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
      "at": [
-      172.8,
-      0
+      185.76,
+      23.76
      ],
      "outline": {
       "w": 140.4,
@@ -2788,8 +2797,8 @@
      "inst": "L[2].u_bank",
      "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
      "at": [
-      345.6,
-      0
+      347.76,
+      23.76
      ],
      "outline": {
       "w": 140.4,
@@ -2810,8 +2819,8 @@
      "inst": "L[3].u_bank",
      "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
      "at": [
-      0,
-      129.6
+      23.76,
+      131.76
      ],
      "outline": {
       "w": 140.4,
@@ -2832,8 +2841,8 @@
      "inst": "L[4].u_bank",
      "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
      "at": [
-      172.8,
-      129.6
+      185.76,
+      131.76
      ],
      "outline": {
       "w": 140.4,
@@ -2854,8 +2863,8 @@
      "inst": "L[5].u_bank",
      "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
      "at": [
-      345.6,
-      129.6
+      347.76,
+      131.76
      ],
      "outline": {
       "w": 140.4,
@@ -2876,8 +2885,8 @@
      "inst": "L[6].u_bank",
      "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
      "at": [
-      0,
-      259.2
+      23.76,
+      239.76
      ],
      "outline": {
       "w": 140.4,
@@ -2898,8 +2907,8 @@
      "inst": "L[7].u_bank",
      "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
      "at": [
-      172.8,
-      259.2
+      185.76,
+      239.76
      ],
      "outline": {
       "w": 140.4,
@@ -2918,17 +2927,20 @@
     },
     {
      "inst": "u_control",
-     "view": "physical/ref_tile/hv15_dbk_vp4_ctl_stk0/views/ot_hgi_dma_back_static_vp4_controller",
+     "view": "physical/ref_tile/hv15_dbk_vp4_ctl/views/ot_hgi_dma_back_static_vp4_controller",
      "at": [
-      345.6,
-      259.2
+      347.76,
+      239.76
      ],
-     "dedupe": "Registered stk strap remains requested; actual parent still specializes STK/QID. No new per-stack routes."
+     "dedupe": "One source/master; registered stk[1:0] identity. Fresh view required."
     }
    ],
-   "controller_binding_status": "STK0 routed controller only; registered stk strap is still absent from actual RTL. No inherited STK1..3 view qualification.",
+   "controller_binding_status": "Registered stk port source 49705ce8a; one configured controller master required. Old STK0 view is historical and cannot qualify this new source or the parent.",
    "parent_qualified": false,
-   "child_binding_refresh_2116": "Eight actual L[b].u_bank instances use geo1 CLOSED/native PASS 140.4x87.48 view. Parent size/child homes/ports preserved; parent packing and seams remain OPEN."
+   "child_binding_refresh_2116": "Eight actual L[b].u_bank instances use geo1 CLOSED/native PASS 140.4x87.48 view. Parent size/child homes/ports preserved; parent packing and seams remain OPEN.",
+   "identity_straps": {
+    "stk": 0
+   }
   },
   {
    "name": "hb_dbk_SE",
@@ -2936,7 +2948,7 @@
    "kind": "cluster",
    "parent": "die",
    "outline": {
-    "w": 488.16,
+    "w": 511.92,
     "h": 360.72
    },
    "origin": {
@@ -2954,10 +2966,10 @@
     "layer": "M4",
     "offset": 163.704
    },
-   "pg_layer": "M5",
-   "strap_layer": "M6",
-   "signal_max_layer": "M5",
-   "layer_cap": "M5",
+   "pg_layer": "M7",
+   "strap_layer": "M8",
+   "signal_max_layer": "M6",
+   "layer_cap": "M6",
    "version": 7,
    "pins": [
     {
@@ -3239,12 +3251,21 @@
       197.472
      ],
      "offset": 197.424
+    },
+    {
+     "name": "stk[1:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      197.664,
+      197.856
+     ],
+     "offset": 197.76,
+     "note": "Registered compile-time stack identity; existing pins preserved."
     }
    ],
    "source": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks.sv",
-   "params": {
-    "STK": 1
-   },
+   "params": {},
    "layer_rule": "tile",
    "instance": "hb_dbk_SE",
    "synth": {
@@ -3305,14 +3326,14 @@
     "own_face_match_bits": 0.557
    },
    "plan_block": "dbk_SE",
-   "grant": "wires_only_cluster_v7",
+   "grant": "wires_only_cluster_v7_hardening_2330",
    "children": [
     {
      "inst": "L[0].u_bank",
      "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
      "at": [
-      0,
-      0
+      23.76,
+      23.76
      ],
      "outline": {
       "w": 140.4,
@@ -3333,8 +3354,8 @@
      "inst": "L[1].u_bank",
      "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
      "at": [
-      172.8,
-      0
+      185.76,
+      23.76
      ],
      "outline": {
       "w": 140.4,
@@ -3355,8 +3376,8 @@
      "inst": "L[2].u_bank",
      "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
      "at": [
-      345.6,
-      0
+      347.76,
+      23.76
      ],
      "outline": {
       "w": 140.4,
@@ -3377,8 +3398,8 @@
      "inst": "L[3].u_bank",
      "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
      "at": [
-      0,
-      129.6
+      23.76,
+      131.76
      ],
      "outline": {
       "w": 140.4,
@@ -3399,8 +3420,8 @@
      "inst": "L[4].u_bank",
      "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
      "at": [
-      172.8,
-      129.6
+      185.76,
+      131.76
      ],
      "outline": {
       "w": 140.4,
@@ -3421,8 +3442,8 @@
      "inst": "L[5].u_bank",
      "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
      "at": [
-      345.6,
-      129.6
+      347.76,
+      131.76
      ],
      "outline": {
       "w": 140.4,
@@ -3443,8 +3464,8 @@
      "inst": "L[6].u_bank",
      "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
      "at": [
-      0,
-      259.2
+      23.76,
+      239.76
      ],
      "outline": {
       "w": 140.4,
@@ -3465,8 +3486,8 @@
      "inst": "L[7].u_bank",
      "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
      "at": [
-      172.8,
-      259.2
+      185.76,
+      239.76
      ],
      "outline": {
       "w": 140.4,
@@ -3485,17 +3506,20 @@
     },
     {
      "inst": "u_control",
-     "view": "physical/ref_tile/hv15_dbk_vp4_ctl_stk0/views/ot_hgi_dma_back_static_vp4_controller",
+     "view": "physical/ref_tile/hv15_dbk_vp4_ctl/views/ot_hgi_dma_back_static_vp4_controller",
      "at": [
-      345.6,
-      259.2
+      347.76,
+      239.76
      ],
-     "dedupe": "Registered stk strap remains requested; actual parent still specializes STK/QID. No new per-stack routes."
+     "dedupe": "One source/master; registered stk[1:0] identity. Fresh view required."
     }
    ],
-   "controller_binding_status": "STK0 routed controller only; registered stk strap is still absent from actual RTL. No inherited STK1..3 view qualification.",
+   "controller_binding_status": "Registered stk port source 49705ce8a; one configured controller master required. Old STK0 view is historical and cannot qualify this new source or the parent.",
    "parent_qualified": false,
-   "child_binding_refresh_2116": "Eight actual L[b].u_bank instances use geo1 CLOSED/native PASS 140.4x87.48 view. Parent size/child homes/ports preserved; parent packing and seams remain OPEN."
+   "child_binding_refresh_2116": "Eight actual L[b].u_bank instances use geo1 CLOSED/native PASS 140.4x87.48 view. Parent size/child homes/ports preserved; parent packing and seams remain OPEN.",
+   "identity_straps": {
+    "stk": 1
+   }
   },
   {
    "name": "hb_dbk_NW",
@@ -3503,11 +3527,11 @@
    "kind": "cluster",
    "parent": "die",
    "outline": {
-    "w": 488.16,
+    "w": 511.92,
     "h": 360.72
    },
    "origin": {
-    "x": 11839.68,
+    "x": 11815.92,
     "y": 15052.973,
     "orient": "MY"
    },
@@ -3521,10 +3545,10 @@
     "layer": "M4",
     "offset": 163.704
    },
-   "pg_layer": "M5",
-   "strap_layer": "M6",
-   "signal_max_layer": "M5",
-   "layer_cap": "M5",
+   "pg_layer": "M7",
+   "strap_layer": "M8",
+   "signal_max_layer": "M6",
+   "layer_cap": "M6",
    "version": 7,
    "pins": [
     {
@@ -3806,12 +3830,21 @@
       197.472
      ],
      "offset": 197.424
+    },
+    {
+     "name": "stk[1:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      197.664,
+      197.856
+     ],
+     "offset": 197.76,
+     "note": "Registered compile-time stack identity; existing pins preserved."
     }
    ],
    "source": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks.sv",
-   "params": {
-    "STK": 2
-   },
+   "params": {},
    "layer_rule": "tile",
    "instance": "hb_dbk_NW",
    "synth": {
@@ -3872,14 +3905,14 @@
     "own_face_match_bits": 0.557
    },
    "plan_block": "dbk_NW",
-   "grant": "wires_only_cluster_v7",
+   "grant": "wires_only_cluster_v7_hardening_2330",
    "children": [
     {
      "inst": "L[0].u_bank",
      "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
      "at": [
-      0,
-      0
+      23.76,
+      23.76
      ],
      "outline": {
       "w": 140.4,
@@ -3900,8 +3933,8 @@
      "inst": "L[1].u_bank",
      "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
      "at": [
-      172.8,
-      0
+      185.76,
+      23.76
      ],
      "outline": {
       "w": 140.4,
@@ -3922,8 +3955,8 @@
      "inst": "L[2].u_bank",
      "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
      "at": [
-      345.6,
-      0
+      347.76,
+      23.76
      ],
      "outline": {
       "w": 140.4,
@@ -3944,8 +3977,8 @@
      "inst": "L[3].u_bank",
      "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
      "at": [
-      0,
-      129.6
+      23.76,
+      131.76
      ],
      "outline": {
       "w": 140.4,
@@ -3966,8 +3999,8 @@
      "inst": "L[4].u_bank",
      "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
      "at": [
-      172.8,
-      129.6
+      185.76,
+      131.76
      ],
      "outline": {
       "w": 140.4,
@@ -3988,8 +4021,8 @@
      "inst": "L[5].u_bank",
      "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
      "at": [
-      345.6,
-      129.6
+      347.76,
+      131.76
      ],
      "outline": {
       "w": 140.4,
@@ -4010,8 +4043,8 @@
      "inst": "L[6].u_bank",
      "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
      "at": [
-      0,
-      259.2
+      23.76,
+      239.76
      ],
      "outline": {
       "w": 140.4,
@@ -4032,8 +4065,8 @@
      "inst": "L[7].u_bank",
      "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
      "at": [
-      172.8,
-      259.2
+      185.76,
+      239.76
      ],
      "outline": {
       "w": 140.4,
@@ -4052,17 +4085,20 @@
     },
     {
      "inst": "u_control",
-     "view": "physical/ref_tile/hv15_dbk_vp4_ctl_stk0/views/ot_hgi_dma_back_static_vp4_controller",
+     "view": "physical/ref_tile/hv15_dbk_vp4_ctl/views/ot_hgi_dma_back_static_vp4_controller",
      "at": [
-      345.6,
-      259.2
+      347.76,
+      239.76
      ],
-     "dedupe": "Registered stk strap remains requested; actual parent still specializes STK/QID. No new per-stack routes."
+     "dedupe": "One source/master; registered stk[1:0] identity. Fresh view required."
     }
    ],
-   "controller_binding_status": "STK0 routed controller only; registered stk strap is still absent from actual RTL. No inherited STK1..3 view qualification.",
+   "controller_binding_status": "Registered stk port source 49705ce8a; one configured controller master required. Old STK0 view is historical and cannot qualify this new source or the parent.",
    "parent_qualified": false,
-   "child_binding_refresh_2116": "Eight actual L[b].u_bank instances use geo1 CLOSED/native PASS 140.4x87.48 view. Parent size/child homes/ports preserved; parent packing and seams remain OPEN."
+   "child_binding_refresh_2116": "Eight actual L[b].u_bank instances use geo1 CLOSED/native PASS 140.4x87.48 view. Parent size/child homes/ports preserved; parent packing and seams remain OPEN.",
+   "identity_straps": {
+    "stk": 2
+   }
   },
   {
    "name": "hb_dbk_NE",
@@ -4070,7 +4106,7 @@
    "kind": "cluster",
    "parent": "die",
    "outline": {
-    "w": 488.16,
+    "w": 511.92,
     "h": 360.72
    },
    "origin": {
@@ -4088,10 +4124,10 @@
     "layer": "M4",
     "offset": 163.704
    },
-   "pg_layer": "M5",
-   "strap_layer": "M6",
-   "signal_max_layer": "M5",
-   "layer_cap": "M5",
+   "pg_layer": "M7",
+   "strap_layer": "M8",
+   "signal_max_layer": "M6",
+   "layer_cap": "M6",
    "version": 7,
    "pins": [
     {
@@ -4373,6 +4409,17 @@
       197.472
      ],
      "offset": 197.424
+    },
+    {
+     "name": "stk[1:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      197.664,
+      197.856
+     ],
+     "offset": 197.76,
+     "note": "Registered compile-time stack identity; existing pins preserved."
     }
    ],
    "face_utilisation": {
@@ -4381,9 +4428,7 @@
     "E": 0.093
    },
    "source": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp4_banks.sv",
-   "params": {
-    "STK": 3
-   },
+   "params": {},
    "layer_rule": "tile",
    "instance": "hb_dbk_NE",
    "synth": {
@@ -4434,14 +4479,14 @@
     "h": 360.72
    },
    "plan_block": "dbk_NE",
-   "grant": "wires_only_cluster_v7",
+   "grant": "wires_only_cluster_v7_hardening_2330",
    "children": [
     {
      "inst": "L[0].u_bank",
      "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
      "at": [
-      0,
-      0
+      23.76,
+      23.76
      ],
      "outline": {
       "w": 140.4,
@@ -4462,8 +4507,8 @@
      "inst": "L[1].u_bank",
      "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
      "at": [
-      172.8,
-      0
+      185.76,
+      23.76
      ],
      "outline": {
       "w": 140.4,
@@ -4484,8 +4529,8 @@
      "inst": "L[2].u_bank",
      "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
      "at": [
-      345.6,
-      0
+      347.76,
+      23.76
      ],
      "outline": {
       "w": 140.4,
@@ -4506,8 +4551,8 @@
      "inst": "L[3].u_bank",
      "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
      "at": [
-      0,
-      129.6
+      23.76,
+      131.76
      ],
      "outline": {
       "w": 140.4,
@@ -4528,8 +4573,8 @@
      "inst": "L[4].u_bank",
      "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
      "at": [
-      172.8,
-      129.6
+      185.76,
+      131.76
      ],
      "outline": {
       "w": 140.4,
@@ -4550,8 +4595,8 @@
      "inst": "L[5].u_bank",
      "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
      "at": [
-      345.6,
-      129.6
+      347.76,
+      131.76
      ],
      "outline": {
       "w": 140.4,
@@ -4572,8 +4617,8 @@
      "inst": "L[6].u_bank",
      "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
      "at": [
-      0,
-      259.2
+      23.76,
+      239.76
      ],
      "outline": {
       "w": 140.4,
@@ -4594,8 +4639,8 @@
      "inst": "L[7].u_bank",
      "view": "physical/ref_tile/hv15_dbk_bank/views/ot_hgi_dma_back_landing_bank",
      "at": [
-      172.8,
-      259.2
+      185.76,
+      239.76
      ],
      "outline": {
       "w": 140.4,
@@ -4614,17 +4659,20 @@
     },
     {
      "inst": "u_control",
-     "view": "physical/ref_tile/hv15_dbk_vp4_ctl_stk0/views/ot_hgi_dma_back_static_vp4_controller",
+     "view": "physical/ref_tile/hv15_dbk_vp4_ctl/views/ot_hgi_dma_back_static_vp4_controller",
      "at": [
-      345.6,
-      259.2
+      347.76,
+      239.76
      ],
-     "dedupe": "Registered stk strap remains requested; actual parent still specializes STK/QID. No new per-stack routes."
+     "dedupe": "One source/master; registered stk[1:0] identity. Fresh view required."
     }
    ],
-   "controller_binding_status": "STK0 routed controller only; registered stk strap is still absent from actual RTL. No inherited STK1..3 view qualification.",
+   "controller_binding_status": "Registered stk port source 49705ce8a; one configured controller master required. Old STK0 view is historical and cannot qualify this new source or the parent.",
    "parent_qualified": false,
-   "child_binding_refresh_2116": "Eight actual L[b].u_bank instances use geo1 CLOSED/native PASS 140.4x87.48 view. Parent size/child homes/ports preserved; parent packing and seams remain OPEN."
+   "child_binding_refresh_2116": "Eight actual L[b].u_bank instances use geo1 CLOSED/native PASS 140.4x87.48 view. Parent size/child homes/ports preserved; parent packing and seams remain OPEN.",
+   "identity_straps": {
+    "stk": 3
+   }
   },
   {
    "name": "svc_SW_s0",
@@ -126659,6 +126707,1386 @@
    "grant": "real_kit_slot_1405",
    "rtl_pin_grant_1405": true,
    "notes": "kit outline + kit face assignment adopted unchanged (gate-clean); slot is the home"
+  },
+  {
+   "name": "calendar_SW",
+   "cell": "hfd_hgi_vm_calendar",
+   "instance": "calendar_SW",
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar.sv",
+   "source_prerequisite": "53ece5c68",
+   "kind": "tile",
+   "parent": "die",
+   "version": 7,
+   "grant": "universal_calendar_candidate_2330",
+   "origin": {
+    "x": 12899.2,
+    "y": 5142.56,
+    "orient": "R0"
+   },
+   "outline": {
+    "w": 220.32,
+    "h": 177.12
+   },
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "params": {},
+   "clock_entry": {
+    "port": "clk",
+    "face": "W",
+    "layer": "M4"
+   },
+   "pins": [
+    {
+     "name": "clk",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      73.824,
+      73.92
+     ],
+     "offset": 73.872
+    },
+    {
+     "name": "rst_n",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      73.92,
+      74.016
+     ],
+     "offset": 73.968
+    },
+    {
+     "name": "cfg_we",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      74.016,
+      74.112
+     ],
+     "offset": 74.064
+    },
+    {
+     "name": "cfg_addr[9:0]",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      74.112,
+      75.072
+     ],
+     "offset": 74.592
+    },
+    {
+     "name": "cfg_data[255:0]",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      75.072,
+      99.648
+     ],
+     "offset": 87.36
+    },
+    {
+     "name": "start_v",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      99.648,
+      99.744
+     ],
+     "offset": 99.696
+    },
+    {
+     "name": "start_base[9:0]",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      99.744,
+      100.704
+     ],
+     "offset": 100.224
+    },
+    {
+     "name": "start_limit[10:0]",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      100.704,
+      101.76
+     ],
+     "offset": 101.232
+    },
+    {
+     "name": "start_loops[15:0]",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      101.76,
+      103.296
+     ],
+     "offset": 102.528
+    },
+    {
+     "name": "client_seq[9:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      79.584,
+      80.544
+     ],
+     "offset": 80.064
+    },
+    {
+     "name": "response_enable[4:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      80.544,
+      81.024
+     ],
+     "offset": 80.784
+    },
+    {
+     "name": "response_seq[9:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      81.024,
+      81.984
+     ],
+     "offset": 81.504
+    },
+    {
+     "name": "bank_enable[7:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      81.984,
+      82.752
+     ],
+     "offset": 82.368
+    },
+    {
+     "name": "bank_client[23:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      82.752,
+      85.056
+     ],
+     "offset": 83.904
+    },
+    {
+     "name": "hub_ring_enable[1:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      85.056,
+      85.248
+     ],
+     "offset": 85.152
+    },
+    {
+     "name": "hub_ring_client[5:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      85.248,
+      85.824
+     ],
+     "offset": 85.536
+    },
+    {
+     "name": "rslot_v[7:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      85.824,
+      86.592
+     ],
+     "offset": 86.208
+    },
+    {
+     "name": "wslot_v[7:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      86.592,
+      87.36
+     ],
+     "offset": 86.976
+    },
+    {
+     "name": "rslot[23:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      87.36,
+      89.664
+     ],
+     "offset": 88.512
+    },
+    {
+     "name": "wslot[23:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      89.664,
+      91.968
+     ],
+     "offset": 90.816
+    },
+    {
+     "name": "ring_tx_enable[1:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      91.968,
+      92.16
+     ],
+     "offset": 92.064
+    },
+    {
+     "name": "ring_tx_source[5:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      92.16,
+      92.736
+     ],
+     "offset": 92.448
+    },
+    {
+     "name": "replay_enable",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      92.736,
+      92.832
+     ],
+     "offset": 92.784
+    },
+    {
+     "name": "replay_source",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      92.832,
+      92.928
+     ],
+     "offset": 92.88
+    },
+    {
+     "name": "lg_local_read[23:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      92.928,
+      95.232
+     ],
+     "offset": 94.08
+    },
+    {
+     "name": "lg_local_write[23:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      95.232,
+      97.536
+     ],
+     "offset": 96.384
+    },
+    {
+     "name": "calendar_v",
+     "face": "S",
+     "layer": "M5",
+     "span_um": [
+      108.432,
+      108.528
+     ],
+     "offset": 108.48
+    },
+    {
+     "name": "active",
+     "face": "S",
+     "layer": "M5",
+     "span_um": [
+      108.528,
+      108.624
+     ],
+     "offset": 108.576
+    },
+    {
+     "name": "done",
+     "face": "S",
+     "layer": "M5",
+     "span_um": [
+      108.624,
+      108.72
+     ],
+     "offset": 108.672
+    },
+    {
+     "name": "fault",
+     "face": "S",
+     "layer": "M5",
+     "span_um": [
+      108.72,
+      108.816
+     ],
+     "offset": 108.768
+    },
+    {
+     "name": "ordinal[31:0]",
+     "face": "S",
+     "layer": "M5",
+     "span_um": [
+      108.816,
+      111.888
+     ],
+     "offset": 110.352
+    }
+   ],
+   "planning_group": "vmh_SW",
+   "qualified": false,
+   "notes": "Source universal W187; candidate slot only. Fresh view, host programming, complete hub packing, incident pin hops and native die timing remain OPEN. Universal output low slices are explicit in consumers."
+  },
+  {
+   "name": "calendar_SE",
+   "cell": "hfd_hgi_vm_calendar",
+   "instance": "calendar_SE",
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar.sv",
+   "source_prerequisite": "53ece5c68",
+   "kind": "tile",
+   "parent": "die",
+   "version": 7,
+   "grant": "universal_calendar_candidate_2330",
+   "origin": {
+    "x": 17679.2,
+    "y": 5315.36,
+    "orient": "R0"
+   },
+   "outline": {
+    "w": 220.32,
+    "h": 177.12
+   },
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "params": {},
+   "clock_entry": {
+    "port": "clk",
+    "face": "W",
+    "layer": "M4"
+   },
+   "pins": [
+    {
+     "name": "clk",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      73.824,
+      73.92
+     ],
+     "offset": 73.872
+    },
+    {
+     "name": "rst_n",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      73.92,
+      74.016
+     ],
+     "offset": 73.968
+    },
+    {
+     "name": "cfg_we",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      74.016,
+      74.112
+     ],
+     "offset": 74.064
+    },
+    {
+     "name": "cfg_addr[9:0]",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      74.112,
+      75.072
+     ],
+     "offset": 74.592
+    },
+    {
+     "name": "cfg_data[255:0]",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      75.072,
+      99.648
+     ],
+     "offset": 87.36
+    },
+    {
+     "name": "start_v",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      99.648,
+      99.744
+     ],
+     "offset": 99.696
+    },
+    {
+     "name": "start_base[9:0]",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      99.744,
+      100.704
+     ],
+     "offset": 100.224
+    },
+    {
+     "name": "start_limit[10:0]",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      100.704,
+      101.76
+     ],
+     "offset": 101.232
+    },
+    {
+     "name": "start_loops[15:0]",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      101.76,
+      103.296
+     ],
+     "offset": 102.528
+    },
+    {
+     "name": "client_seq[9:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      79.584,
+      80.544
+     ],
+     "offset": 80.064
+    },
+    {
+     "name": "response_enable[4:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      80.544,
+      81.024
+     ],
+     "offset": 80.784
+    },
+    {
+     "name": "response_seq[9:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      81.024,
+      81.984
+     ],
+     "offset": 81.504
+    },
+    {
+     "name": "bank_enable[7:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      81.984,
+      82.752
+     ],
+     "offset": 82.368
+    },
+    {
+     "name": "bank_client[23:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      82.752,
+      85.056
+     ],
+     "offset": 83.904
+    },
+    {
+     "name": "hub_ring_enable[1:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      85.056,
+      85.248
+     ],
+     "offset": 85.152
+    },
+    {
+     "name": "hub_ring_client[5:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      85.248,
+      85.824
+     ],
+     "offset": 85.536
+    },
+    {
+     "name": "rslot_v[7:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      85.824,
+      86.592
+     ],
+     "offset": 86.208
+    },
+    {
+     "name": "wslot_v[7:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      86.592,
+      87.36
+     ],
+     "offset": 86.976
+    },
+    {
+     "name": "rslot[23:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      87.36,
+      89.664
+     ],
+     "offset": 88.512
+    },
+    {
+     "name": "wslot[23:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      89.664,
+      91.968
+     ],
+     "offset": 90.816
+    },
+    {
+     "name": "ring_tx_enable[1:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      91.968,
+      92.16
+     ],
+     "offset": 92.064
+    },
+    {
+     "name": "ring_tx_source[5:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      92.16,
+      92.736
+     ],
+     "offset": 92.448
+    },
+    {
+     "name": "replay_enable",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      92.736,
+      92.832
+     ],
+     "offset": 92.784
+    },
+    {
+     "name": "replay_source",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      92.832,
+      92.928
+     ],
+     "offset": 92.88
+    },
+    {
+     "name": "lg_local_read[23:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      92.928,
+      95.232
+     ],
+     "offset": 94.08
+    },
+    {
+     "name": "lg_local_write[23:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      95.232,
+      97.536
+     ],
+     "offset": 96.384
+    },
+    {
+     "name": "calendar_v",
+     "face": "S",
+     "layer": "M5",
+     "span_um": [
+      108.432,
+      108.528
+     ],
+     "offset": 108.48
+    },
+    {
+     "name": "active",
+     "face": "S",
+     "layer": "M5",
+     "span_um": [
+      108.528,
+      108.624
+     ],
+     "offset": 108.576
+    },
+    {
+     "name": "done",
+     "face": "S",
+     "layer": "M5",
+     "span_um": [
+      108.624,
+      108.72
+     ],
+     "offset": 108.672
+    },
+    {
+     "name": "fault",
+     "face": "S",
+     "layer": "M5",
+     "span_um": [
+      108.72,
+      108.816
+     ],
+     "offset": 108.768
+    },
+    {
+     "name": "ordinal[31:0]",
+     "face": "S",
+     "layer": "M5",
+     "span_um": [
+      108.816,
+      111.888
+     ],
+     "offset": 110.352
+    }
+   ],
+   "planning_group": "vmh_SE",
+   "qualified": false,
+   "notes": "Source universal W187; candidate slot only. Fresh view, host programming, complete hub packing, incident pin hops and native die timing remain OPEN. Universal output low slices are explicit in consumers."
+  },
+  {
+   "name": "calendar_NW",
+   "cell": "hfd_hgi_vm_calendar",
+   "instance": "calendar_NW",
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar.sv",
+   "source_prerequisite": "53ece5c68",
+   "kind": "tile",
+   "parent": "die",
+   "version": 7,
+   "grant": "universal_calendar_candidate_2330",
+   "origin": {
+    "x": 12899.2,
+    "y": 14215.133,
+    "orient": "R0"
+   },
+   "outline": {
+    "w": 220.32,
+    "h": 177.12
+   },
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "params": {},
+   "clock_entry": {
+    "port": "clk",
+    "face": "W",
+    "layer": "M4"
+   },
+   "pins": [
+    {
+     "name": "clk",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      73.824,
+      73.92
+     ],
+     "offset": 73.872
+    },
+    {
+     "name": "rst_n",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      73.92,
+      74.016
+     ],
+     "offset": 73.968
+    },
+    {
+     "name": "cfg_we",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      74.016,
+      74.112
+     ],
+     "offset": 74.064
+    },
+    {
+     "name": "cfg_addr[9:0]",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      74.112,
+      75.072
+     ],
+     "offset": 74.592
+    },
+    {
+     "name": "cfg_data[255:0]",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      75.072,
+      99.648
+     ],
+     "offset": 87.36
+    },
+    {
+     "name": "start_v",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      99.648,
+      99.744
+     ],
+     "offset": 99.696
+    },
+    {
+     "name": "start_base[9:0]",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      99.744,
+      100.704
+     ],
+     "offset": 100.224
+    },
+    {
+     "name": "start_limit[10:0]",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      100.704,
+      101.76
+     ],
+     "offset": 101.232
+    },
+    {
+     "name": "start_loops[15:0]",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      101.76,
+      103.296
+     ],
+     "offset": 102.528
+    },
+    {
+     "name": "client_seq[9:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      79.584,
+      80.544
+     ],
+     "offset": 80.064
+    },
+    {
+     "name": "response_enable[4:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      80.544,
+      81.024
+     ],
+     "offset": 80.784
+    },
+    {
+     "name": "response_seq[9:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      81.024,
+      81.984
+     ],
+     "offset": 81.504
+    },
+    {
+     "name": "bank_enable[7:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      81.984,
+      82.752
+     ],
+     "offset": 82.368
+    },
+    {
+     "name": "bank_client[23:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      82.752,
+      85.056
+     ],
+     "offset": 83.904
+    },
+    {
+     "name": "hub_ring_enable[1:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      85.056,
+      85.248
+     ],
+     "offset": 85.152
+    },
+    {
+     "name": "hub_ring_client[5:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      85.248,
+      85.824
+     ],
+     "offset": 85.536
+    },
+    {
+     "name": "rslot_v[7:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      85.824,
+      86.592
+     ],
+     "offset": 86.208
+    },
+    {
+     "name": "wslot_v[7:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      86.592,
+      87.36
+     ],
+     "offset": 86.976
+    },
+    {
+     "name": "rslot[23:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      87.36,
+      89.664
+     ],
+     "offset": 88.512
+    },
+    {
+     "name": "wslot[23:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      89.664,
+      91.968
+     ],
+     "offset": 90.816
+    },
+    {
+     "name": "ring_tx_enable[1:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      91.968,
+      92.16
+     ],
+     "offset": 92.064
+    },
+    {
+     "name": "ring_tx_source[5:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      92.16,
+      92.736
+     ],
+     "offset": 92.448
+    },
+    {
+     "name": "replay_enable",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      92.736,
+      92.832
+     ],
+     "offset": 92.784
+    },
+    {
+     "name": "replay_source",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      92.832,
+      92.928
+     ],
+     "offset": 92.88
+    },
+    {
+     "name": "lg_local_read[23:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      92.928,
+      95.232
+     ],
+     "offset": 94.08
+    },
+    {
+     "name": "lg_local_write[23:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      95.232,
+      97.536
+     ],
+     "offset": 96.384
+    },
+    {
+     "name": "calendar_v",
+     "face": "S",
+     "layer": "M5",
+     "span_um": [
+      108.432,
+      108.528
+     ],
+     "offset": 108.48
+    },
+    {
+     "name": "active",
+     "face": "S",
+     "layer": "M5",
+     "span_um": [
+      108.528,
+      108.624
+     ],
+     "offset": 108.576
+    },
+    {
+     "name": "done",
+     "face": "S",
+     "layer": "M5",
+     "span_um": [
+      108.624,
+      108.72
+     ],
+     "offset": 108.672
+    },
+    {
+     "name": "fault",
+     "face": "S",
+     "layer": "M5",
+     "span_um": [
+      108.72,
+      108.816
+     ],
+     "offset": 108.768
+    },
+    {
+     "name": "ordinal[31:0]",
+     "face": "S",
+     "layer": "M5",
+     "span_um": [
+      108.816,
+      111.888
+     ],
+     "offset": 110.352
+    }
+   ],
+   "planning_group": "vmh_NW",
+   "qualified": false,
+   "notes": "Source universal W187; candidate slot only. Fresh view, host programming, complete hub packing, incident pin hops and native die timing remain OPEN. Universal output low slices are explicit in consumers."
+  },
+  {
+   "name": "calendar_NE",
+   "cell": "hfd_hgi_vm_calendar",
+   "instance": "calendar_NE",
+   "source": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar.sv",
+   "source_prerequisite": "53ece5c68",
+   "kind": "tile",
+   "parent": "die",
+   "version": 7,
+   "grant": "universal_calendar_candidate_2330",
+   "origin": {
+    "x": 17679.2,
+    "y": 14215.133,
+    "orient": "R0"
+   },
+   "outline": {
+    "w": 220.32,
+    "h": 177.12
+   },
+   "pg_layer": "M5",
+   "strap_layer": "M6",
+   "signal_max_layer": "M5",
+   "layer_cap": "M5",
+   "params": {},
+   "clock_entry": {
+    "port": "clk",
+    "face": "W",
+    "layer": "M4"
+   },
+   "pins": [
+    {
+     "name": "clk",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      73.824,
+      73.92
+     ],
+     "offset": 73.872
+    },
+    {
+     "name": "rst_n",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      73.92,
+      74.016
+     ],
+     "offset": 73.968
+    },
+    {
+     "name": "cfg_we",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      74.016,
+      74.112
+     ],
+     "offset": 74.064
+    },
+    {
+     "name": "cfg_addr[9:0]",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      74.112,
+      75.072
+     ],
+     "offset": 74.592
+    },
+    {
+     "name": "cfg_data[255:0]",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      75.072,
+      99.648
+     ],
+     "offset": 87.36
+    },
+    {
+     "name": "start_v",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      99.648,
+      99.744
+     ],
+     "offset": 99.696
+    },
+    {
+     "name": "start_base[9:0]",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      99.744,
+      100.704
+     ],
+     "offset": 100.224
+    },
+    {
+     "name": "start_limit[10:0]",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      100.704,
+      101.76
+     ],
+     "offset": 101.232
+    },
+    {
+     "name": "start_loops[15:0]",
+     "face": "W",
+     "layer": "M4",
+     "span_um": [
+      101.76,
+      103.296
+     ],
+     "offset": 102.528
+    },
+    {
+     "name": "client_seq[9:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      79.584,
+      80.544
+     ],
+     "offset": 80.064
+    },
+    {
+     "name": "response_enable[4:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      80.544,
+      81.024
+     ],
+     "offset": 80.784
+    },
+    {
+     "name": "response_seq[9:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      81.024,
+      81.984
+     ],
+     "offset": 81.504
+    },
+    {
+     "name": "bank_enable[7:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      81.984,
+      82.752
+     ],
+     "offset": 82.368
+    },
+    {
+     "name": "bank_client[23:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      82.752,
+      85.056
+     ],
+     "offset": 83.904
+    },
+    {
+     "name": "hub_ring_enable[1:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      85.056,
+      85.248
+     ],
+     "offset": 85.152
+    },
+    {
+     "name": "hub_ring_client[5:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      85.248,
+      85.824
+     ],
+     "offset": 85.536
+    },
+    {
+     "name": "rslot_v[7:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      85.824,
+      86.592
+     ],
+     "offset": 86.208
+    },
+    {
+     "name": "wslot_v[7:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      86.592,
+      87.36
+     ],
+     "offset": 86.976
+    },
+    {
+     "name": "rslot[23:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      87.36,
+      89.664
+     ],
+     "offset": 88.512
+    },
+    {
+     "name": "wslot[23:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      89.664,
+      91.968
+     ],
+     "offset": 90.816
+    },
+    {
+     "name": "ring_tx_enable[1:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      91.968,
+      92.16
+     ],
+     "offset": 92.064
+    },
+    {
+     "name": "ring_tx_source[5:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      92.16,
+      92.736
+     ],
+     "offset": 92.448
+    },
+    {
+     "name": "replay_enable",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      92.736,
+      92.832
+     ],
+     "offset": 92.784
+    },
+    {
+     "name": "replay_source",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      92.832,
+      92.928
+     ],
+     "offset": 92.88
+    },
+    {
+     "name": "lg_local_read[23:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      92.928,
+      95.232
+     ],
+     "offset": 94.08
+    },
+    {
+     "name": "lg_local_write[23:0]",
+     "face": "E",
+     "layer": "M4",
+     "span_um": [
+      95.232,
+      97.536
+     ],
+     "offset": 96.384
+    },
+    {
+     "name": "calendar_v",
+     "face": "S",
+     "layer": "M5",
+     "span_um": [
+      108.432,
+      108.528
+     ],
+     "offset": 108.48
+    },
+    {
+     "name": "active",
+     "face": "S",
+     "layer": "M5",
+     "span_um": [
+      108.528,
+      108.624
+     ],
+     "offset": 108.576
+    },
+    {
+     "name": "done",
+     "face": "S",
+     "layer": "M5",
+     "span_um": [
+      108.624,
+      108.72
+     ],
+     "offset": 108.672
+    },
+    {
+     "name": "fault",
+     "face": "S",
+     "layer": "M5",
+     "span_um": [
+      108.72,
+      108.816
+     ],
+     "offset": 108.768
+    },
+    {
+     "name": "ordinal[31:0]",
+     "face": "S",
+     "layer": "M5",
+     "span_um": [
+      108.816,
+      111.888
+     ],
+     "offset": 110.352
+    }
+   ],
+   "planning_group": "vmh_NE",
+   "qualified": false,
+   "notes": "Source universal W187; candidate slot only. Fresh view, host programming, complete hub packing, incident pin hops and native die timing remain OPEN. Universal output low slices are explicit in consumers."
   }
  ],
  "sub_layouts": {
@@ -132892,5 +134320,17 @@
   "bit_pitch_um": 0.192,
   "accepted_by": "H-SM 2026-10-15 ~23:0x (cap-M6 single-layer variant; 2-layer v3 withdrawn: ref_tile has no pins-above-cap leaf contract)",
   "production_binding_adopted": false
+ },
+ "hardening_grants_2330": {
+  "source": "53ece5c68",
+  "parent_qualified": false,
+  "dma": "Four 511.92x360.72 homes: PG M7, signal cap M6, registered stk identity; 23.76um width growth away from centre provides actual child edge channels.",
+  "calendars": [
+   "calendar_SW",
+   "calendar_SE",
+   "calendar_NW",
+   "calendar_NE"
+  ],
+  "scope": "Candidate slot and source binding only; no inherited view/native or full die qualification."
  }
 }
