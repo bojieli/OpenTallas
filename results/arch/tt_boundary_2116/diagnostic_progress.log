@@ -268,3 +268,88 @@ Up-via summary (total 206727):
     elapsed time = 00:00:21, memory = 11057.07 (MB).
     Completing 40% with 2308 violations.
     elapsed time = 00:00:27, memory = 11057.07 (MB).
+    Completing 50% with 1876 violations.
+    elapsed time = 00:00:36, memory = 11150.11 (MB).
+    Completing 60% with 1856 violations.
+    elapsed time = 00:00:42, memory = 11098.99 (MB).
+    Completing 70% with 1856 violations.
+    elapsed time = 00:00:49, memory = 11098.99 (MB).
+    Completing 80% with 909 violations.
+    elapsed time = 00:00:58, memory = 11131.98 (MB).
+    Completing 90% with 909 violations.
+    elapsed time = 00:01:04, memory = 11131.98 (MB).
+    Completing 100% with 301 violations.
+    elapsed time = 00:01:12, memory = 11331.36 (MB).
+[INFO DRT-0199]   Number of violations = 308.
+Viol/Layer          M1     M2     M3     V3     M4     V4
+CutSpcTbl            0      0      0    101      0     61
+EOL                  0     10      1      0      2      0
+Metal Spacing       30      4     14      0      8      0
+Recheck              0      5      2      0      0      0
+Short                0      4      3      0      2      0
+eolKeepOut           0     48      3      0     10      0
+[INFO DRT-0267] cpu time = 00:08:15, elapsed time = 00:01:13, memory = 11203.54 (MB), peak = 11314.14 (MB)
+Total wire length = 408371 um.
+Total wire length on LAYER M1 = 0 um.
+Total wire length on LAYER M2 = 153162 um.
+Total wire length on LAYER M3 = 60847 um.
+Total wire length on LAYER M4 = 146127 um.
+Total wire length on LAYER M5 = 48233 um.
+Total wire length on LAYER M6 = 0 um.
+Total wire length on LAYER M7 = 0 um.
+Total wire length on LAYER M8 = 0 um.
+Total wire length on LAYER M9 = 0 um.
+Total wire length on LAYER Pad = 0 um.
+Total number of vias = 204014.
+Up-via summary (total 204014):
+
+-----------------
+ Active         0
+     M1     62051
+     M2    101136
+     M3     27155
+     M4     13672
+     M5         0
+     M6         0
+     M7         0
+     M8         0
+     M9         0
+-----------------
+       204014
+
+
+[INFO DRT-0198] Complete detail routing.
+Total wire length = 408371 um.
+Total wire length on LAYER M1 = 0 um.
+Total wire length on LAYER M2 = 153162 um.
+Total wire length on LAYER M3 = 60847 um.
+Total wire length on LAYER M4 = 146127 um.
+Total wire length on LAYER M5 = 48233 um.
+Total wire length on LAYER M6 = 0 um.
+Total wire length on LAYER M7 = 0 um.
+Total wire length on LAYER M8 = 0 um.
+Total wire length on LAYER M9 = 0 um.
+Total wire length on LAYER Pad = 0 um.
+Total number of vias = 204014.
+Up-via summary (total 204014):
+
+-----------------
+ Active         0
+     M1     62051
+     M2    101136
+     M3     27155
+     M4     13672
+     M5         0
+     M6         0
+     M7         0
+     M8         0
+     M9         0
+-----------------
+       204014
+
+
+[INFO DRT-0267] cpu time = 00:15:46, elapsed time = 00:02:19, memory = 11203.85 (MB), peak = 11314.14 (MB)
+
+[INFO DRT-0180] Post processing.
+[INFO DRT-0501] Runtime: 151.15s
+ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-997281-1792124578): exit 0

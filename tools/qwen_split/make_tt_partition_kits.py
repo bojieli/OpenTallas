@@ -20,7 +20,10 @@ def bits(names, widths):
 
 
 def snap(x):
-    return round(round(x / .048) * .048, 6)
+    # Preferred M4 Y / M5 X tracks in the measured ASAP7 OpenDB are
+    # 0.012 + n*0.048 um. Zero-origin snapping leaves a 24nm-wide pin
+    # with the nearest track on its edge, causing DRT-0255 at the face.
+    return round(.012 + round((x - .012) / .048) * .048, 6)
 
 
 def main():
