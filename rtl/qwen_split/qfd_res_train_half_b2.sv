@@ -12,7 +12,12 @@ module qfd_res_train_half_b2_bank #(parameter integer INDEX=0,BAND=0,NB=6,D=2,MU
  always @(posedge ck or negedge rst_n)if(!rst_n)reset_q<=0;else reset_q<=1;
  wire rs=reset_q;
  reg[2207:0]data;reg[3:0]we;
- wire[31:0]cap=(INDEX/8)*stride+(INDEX%8)+((MUT==3)?32'd1:32'd0);
+`ifdef OT_QFD_B2_LATE_CAPTURE
+ localparam integer LATE_CAPTURE=1; // Native hardware negative control: captures the wrong producer beat.
+`else
+ localparam integer LATE_CAPTURE=(MUT==3);
+`endif
+ wire[31:0]cap=(INDEX/8)*stride+(INDEX%8)+(LATE_CAPTURE?32'd1:32'd0);
  wire emit=enable&&cycle>=base&&cycle<base+11'(ns);
  wire[1:0]j=2'(cycle-base);
  wire[551:0]w=data[552*j+:552];
