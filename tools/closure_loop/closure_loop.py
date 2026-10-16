@@ -6250,7 +6250,7 @@ def eco_install_cmd(j):
         lines.append(f"python3 {{CL}}/eco_recovery.py verify {shlex.quote(j['eco_overlay_recovery']['guard'])}")
     lines.append(f"EB=$(ls -d {out}/orfs/results/asap7/*/base)")
     for b in sorted({rb, ob}):
-        for f in ("6_final.odb", "6_final.spef", "6_final.v"):
+        for f in ("6_final.odb", "6_final.spef", "6_final.v", "6_final.def"):
             lines.append(f"[ -f {b}/{f} ] && [ ! -f {b}/{f}.pre_eco ] && mv {b}/{f} {b}/{f}.pre_eco; cp $EB/{f} {b}/{f}")
     lines.append(f"for c in {cs}; do [ -f $c.pre_eco ] || cp $c $c.pre_eco; cp {out}/corner_sta.json $c; done")
     if e.get("kind") in ("combo", "combo_hold") or e.get("combo_vtswap"):
@@ -6398,7 +6398,8 @@ def do_commit(j):
     if adoption_held(j):
         return
     m = j["metrics"]
-    if not j.get("spec", {}).get("smoke") and (j.get("child_lint") or {}).get("fails") != []:
+    if not j.get("spec", {}).get("smoke") and (j.get("spec", {}).get("m6_pin_grant") is not None
+            or (j.get("child_lint") or {}).get("fails") != []):
         g = child_lint_gate(j)
         if g:
             finish(j, "NEEDS_HUMAN", f"CHILD-LINT: exported view fails {g}"[:300],

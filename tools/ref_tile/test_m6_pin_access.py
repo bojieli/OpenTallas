@@ -13,6 +13,15 @@ class M6PinAccess(unittest.TestCase):
     def test_stub_routes_m6_and_hooks_both_ways(self):
         lc=RT.layer_contract(self.spec(),None)
         self.assertEqual(('M2','M6'),lc['rlayers']);self.assertEqual('M5',lc['pg_layer']);self.assertEqual(0.384,lc['m6_pin_access_stub_um'])
+    def test_deepen_precedes_keepout_and_remove_is_explicit(self):
+        s=self.spec(clock_port='clk', reset_ports=[], pins={})
+        hooks=RT.gen_hooks(s,'physical/ref_tile/dut')
+        pre=hooks['pre_grt.tcl'];post=hooks['post_drt.tcl']
+        self.assertLess(pre.index('m6_pin_access.tcl'),pre.index('stn_pin_keepout.tcl'))
+        self.assertLess(post.index('stn_pin_keepout.tcl'),post.index('m6_pin_access.tcl'))
+        self.assertIn('set ::ot_m6_pin_access_mode add',pre)
+        self.assertIn('set ::ot_m6_pin_access_mode remove',post)
+
     def test_no_stub_keeps_m5_cap(self):
         s=self.spec();s.pop('pin_access')
         self.assertEqual(('M2','M5'),RT.layer_contract(s,None)['rlayers'])

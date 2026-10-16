@@ -219,6 +219,19 @@ proc ot_meg_apply {mode} { set ::env(OT_MEG_LAYER) $::hi; set ::env(OT_MEG_MODE)
 set ot_eco_meg [envd OT_ECO_MEG 0]
 if {$ot_eco_meg && ![file exists $ot_meg_tcl]} { error "OT_ECO macro-edge guard requested but $ot_meg_tcl is missing" }
 if {$ot_eco_meg} { puts "OT_ECO macro-edge via guard: add"; ot_meg_apply add }
+# The route removes its temporary M6 interior obstruction before writing ODB.
+# Reinstate it for every ECO reroute and remove explicitly before export.
+set ot_m6_stub [envd OT_ECO_M6_STUB_UM ""]
+set ot_m6_hook [envd OT_CL /cl]/m6_pin_access.tcl
+proc ot_m6_apply {mode} {
+  set ::ot_m6_stub_um $::ot_m6_stub
+  set ::ot_m6_pin_access_mode $mode
+  source $::ot_m6_hook
+}
+if {$ot_m6_stub ne ""} {
+  if {$hi ne "M6" || ![file exists $ot_m6_hook]} {error "OT_ECO M6 stub policy cannot be applied"}
+  ot_m6_apply add
+}
 set guides [expr {[envd OT_GUIDES 1] && [grt::have_routes]}]
 set allow_fresh [envd OT_ALLOW_FRESH_GRT 0]
 puts "OT_ECO route guides from the db: $guides"
@@ -398,6 +411,7 @@ if {$drt_err} {
   global_route -allow_congestion -congestion_iterations 30 {*}$ra
   detailed_route -output_drc $::env(OT_OUT)/eco_drc.rpt -verbose 1
 }
+if {$ot_m6_stub ne ""} { ot_m6_apply remove }
 if {$ot_eco_pk} { puts "OT_ECO face-pin keepout: remove"; ot_pk_toggle }
 if {$ot_eco_meg} { puts "OT_ECO macro-edge via guard: remove"; ot_meg_apply remove }
 # MULTI-VT: one filler pair per VT present (OT_VT); RVT-only fillers leave LVTN/SLVTN implant gaps -> DPL-0050
@@ -411,6 +425,7 @@ write_spef $::env(OT_OUT)/6_final.spef
 foreach c $corners { read_spef -corner $c $::env(OT_OUT)/6_final.spef }
 rep post
 puts "OT_ECO post_ws ss [expr {$session in {two mm} ? [ws max ss] : "n/a"}] ff [ws min ff]"
+write_def $::env(OT_OUT)/6_final.def
 write_db $::env(OT_OUT)/6_final.odb
 write_verilog $::env(OT_OUT)/6_final.v
 puts "OT_ECO done"

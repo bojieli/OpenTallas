@@ -125,6 +125,13 @@ if [ -z "${ECO_MEG:-}" ]; then
 fi
 echo "OT_ECO macro-edge via guard in the re-route: $ECO_MEG" | tee -a "$OUT/eco.log"
 PK_ENV=(-e OT_ECO_PK=$ECO_PK -e OT_ECO_MEG=$ECO_MEG)
+# Recover the source-pinned M6 stub depth from the kit hook, including old
+# kits whose hook predates the explicit add/remove API. Never toggle it.
+M6_STUB=$(python3 "$CLD/m6_stub_config.py" "$RCFG")
+if [ -n "$M6_STUB" ]; then
+  PK_ENV+=(-e OT_ECO_M6_STUB_UM="$M6_STUB")
+  echo "OT_ECO M6 PORT-only obstruction: $M6_STUB um" | tee -a "$OUT/eco.log"
+fi
 if [ "$ECO_MEG" = 1 ] && [ -f "$RCFG" ]; then
   for v in OT_MEG_DEPTH_UM OT_MEG_PIN_UM; do
     x=$(sed -n "s/^export $v *= *//p" "$RCFG" | tail -1)
