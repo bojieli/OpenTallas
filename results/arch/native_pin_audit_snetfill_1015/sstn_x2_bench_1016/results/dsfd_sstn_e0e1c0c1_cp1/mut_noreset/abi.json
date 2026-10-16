@@ -1,0 +1,61 @@
+{
+ "master": "dsfd_sstn_e0e1c0c1_cp1",
+ "ports": {
+  "cc": {
+   "direction": "output",
+   "width": 15
+  },
+  "cci": {
+   "direction": "input",
+   "width": 15
+  },
+  "ck": {
+   "direction": "input",
+   "width": 1
+  },
+  "rs": {
+   "direction": "input",
+   "width": 1
+  },
+  "so": {
+   "direction": "output",
+   "width": 2
+  },
+  "xa": {
+   "direction": "output",
+   "width": 283
+  },
+  "xai": {
+   "direction": "input",
+   "width": 283
+  },
+  "xb": {
+   "direction": "output",
+   "width": 266
+  },
+  "xbi": {
+   "direction": "input",
+   "width": 266
+  },
+  "c0": {
+   "direction": "input",
+   "width": 2
+  },
+  "e0": {
+   "direction": "input",
+   "width": 2
+  },
+  "c1": {
+   "direction": "input",
+   "width": 2
+  },
+  "e1": {
+   "direction": "input",
+   "width": 2
+  }
+ },
+ "source_sha256": "dfe9559caf9a61b62129d4129adfef3f53383b5c599379795fc56e348c711614",
+ "normal_capture_edge": "posedge ck[0]",
+ "reset": "active-low rs[0], asynchronous control clear",
+ "x2": false
+}

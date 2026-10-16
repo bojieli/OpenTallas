@@ -1,0 +1,15 @@
+{
+ "scope": "Component ABI and exact-edge bench only. Historical old bench passes did not check x2. No current c26b/c26n final graph, die slot or physical x2 qualification claimed.",
+ "host": "ot-agidock128",
+ "admission": "ot-run 2GB 1thread unit oth-ubuntu-1184161-1792147287 exit0",
+ "checks": 46,
+ "positive": "13 actual masters; 4000 exact edges each. Five x2 masters each536bits, 2144000 full-bus bit comparisons/master; independent BF consumer reset fields0/4; one normal data edge.",
+ "mutants": "All five x2 reject noreset, lane-drop, high payload-bit flip, control reset removal and wrong capture edge. Eight legacy masters reject noreset.",
+ "source_sha256": {
+  "rtl/dsrom_sys/s81_static_net/test/tb_dsfd_sstn_reg.sv": "797271cb40b6400cdb6e657cdbfcbbcbb489499279f98fcd24c1e0ee063c7a4a",
+  "tools/s81_static_net/bench_sstn_master.sh": "2d2476b3ba5d4337df6d9244bfbe76b81f2bad86b6eb5a0d13eab559da047965",
+  "tools/s81_static_net/sstn_abi.py": "32ce30ee016a9516e40d3592931decd46d6c6ce44f80f2d45c9d4966c57b739e",
+  "tools/s81/snet_kits.py": "3f047d88630c0834cb318cd2425c6dd72a1e4c952f7f5ce6b1e6335b44f8bfd5",
+  "rtl/dsrom_sys/s81_die_bind/dsfd_bf_front_static.sv": "75b505b94b3295c731daa543a778776647b281a117599525bda7c2166bf072e5"
+ }
+}

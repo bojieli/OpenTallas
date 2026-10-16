@@ -1,0 +1,22 @@
+[
+ {
+  "case": "unknown_port",
+  "rejected": true,
+  "reason": "declared port lacks exact bench coverage"
+ },
+ {
+  "case": "unpaired_x2",
+  "rejected": true,
+  "reason": "x2 producer/consumer port pair is incomplete"
+ },
+ {
+  "case": "output_width_mismatch",
+  "rejected": true,
+  "reason": "declared port lacks exact bench coverage"
+ },
+ {
+  "case": "base_width_mismatch",
+  "rejected": true,
+  "reason": "declared port lacks exact bench coverage"
+ }
+]

@@ -1,0 +1,73 @@
+{
+ "master": "dsfd_sstn_e0c0si_x2",
+ "ports": {
+  "cc": {
+   "direction": "output",
+   "width": 15
+  },
+  "cci": {
+   "direction": "input",
+   "width": 15
+  },
+  "ck": {
+   "direction": "input",
+   "width": 1
+  },
+  "rs": {
+   "direction": "input",
+   "width": 1
+  },
+  "si": {
+   "direction": "input",
+   "width": 2
+  },
+  "so": {
+   "direction": "output",
+   "width": 2
+  },
+  "x2i": {
+   "direction": "input",
+   "width": 536
+  },
+  "xa": {
+   "direction": "output",
+   "width": 283
+  },
+  "xai": {
+   "direction": "input",
+   "width": 283
+  },
+  "xb": {
+   "direction": "output",
+   "width": 266
+  },
+  "xbi": {
+   "direction": "input",
+   "width": 266
+  },
+  "c0": {
+   "direction": "input",
+   "width": 2
+  },
+  "e0": {
+   "direction": "input",
+   "width": 2
+  },
+  "x2": {
+   "direction": "output",
+   "width": 536
+  }
+ },
+ "source_sha256": "81db6a1c4f953d93edef8d7e98e36fd42b5ecaeaed61c435859890118b294203",
+ "normal_capture_edge": "posedge ck[0]",
+ "reset": "active-low rs[0], asynchronous control clear",
+ "x2": true,
+ "x2_width": 536,
+ "reset_bits": {
+  "go_bf": 0,
+  "xb_v": 4
+ },
+ "payload_mutant_bit": 535,
+ "consumer": "rtl/dsrom_sys/s81_die_bind/dsfd_bf_front_static.sv",
+ "consumer_sha256": "75b505b94b3295c731daa543a778776647b281a117599525bda7c2166bf072e5"
+}

@@ -1,0 +1,3 @@
+SSTN_REG PASS 4000 edges exact incl. async column reset
+SSTN_REG X2 COVERAGE width=536 words=4000 checked_bits=2144000 reset_bits=0,4 normal_data_edges=1
+SSTN_REG_GATE PASS dsfd_sstn_e0c0si_x2
