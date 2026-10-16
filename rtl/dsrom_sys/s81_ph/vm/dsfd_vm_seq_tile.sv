@@ -5,7 +5,7 @@
 // roots (cks: VM-top p_bad / e_flt; ck_core_t: core rr / pq_bad / fault_q / v_dv / v_dt / op_bad).  Now one root
 // (ck_seq_t) and one reset; every edge is unchanged except vm_fault, which leaves the tile registered (+1 stream edge,
 // a diagnostic level sampled by the WFC in the serial domain; it never gates data or stretches a schedule).
-module dsfd_vm_seq_tile (
+module dsfd_vm_seq_tile #(parameter integer X_AL_WIDTH=3) (
     input  wire          ck,
     input  wire [0:0]    rst,                       // async, active low (seq convention)
     input  wire [84:0]   c_cmd,
@@ -22,7 +22,7 @@ module dsfd_vm_seq_tile (
     input  wire [7:0]    read_fault,
     input  wire [2:0]    edge_f,                    // capture / WFC / xio
     input  wire [8:0]    x_hdr,                     // {xw_v, xw_d[1025:1024], xc_v, xc_d[513:512], xs_v, xs_d[513:512]}
-    input  wire [2:0]    x_al,
+    input  wire [X_AL_WIDTH-1:0] x_al,
     input  wire          w_flt, input wire [39:0] m_flt, input wire [2:0] l_flt, input wire r_flt,
     output reg           vm_fault
 );
@@ -34,12 +34,23 @@ module dsfd_vm_seq_tile (
     // input -> OR tree -> vm_fault / u_seq.v_flt, e.g. l_flt[2]).  Faults are diagnostic and never gate data or the
     // command calendar: vm_fault and the sequencer's fault flag move one edge later; command issue/done timing unchanged.
     reg w_flt_q, r_flt_q; reg [39:0] m_flt_q; reg [2:0] l_flt_q; reg [7:0] pqx_q;
-    reg [2:0] x_al_q; reg [8:0] x_hdr_q; reg [7:0] rf_q; reg [2:0] ef_q;
+    reg [X_AL_WIDTH-1:0] x_al_q; reg [8:0] x_hdr_q; reg [7:0] rf_q; reg [2:0] ef_q;
     always @(posedge ck) begin
         w_flt_q <= w_flt; r_flt_q <= r_flt; m_flt_q <= m_flt; l_flt_q <= l_flt; pqx_q <= pqx_chk;
-        x_al_q <= x_al; x_hdr_q <= x_hdr; rf_q <= read_fault; ef_q <= edge_f;
+        `ifdef S81_SEQ_HF_MUT_DROP_HI
+        x_al_q <= x_al & ~( {{(X_AL_WIDTH-1){1'b0}},1'b1} << 3);
+`elsif S81_SEQ_HF_MUT_DROP_LO
+        x_al_q <= x_al & ~( {{(X_AL_WIDTH-1){1'b0}},1'b1} << 2);
+`else
+        x_al_q <= x_al;
+`endif
+        x_hdr_q <= x_hdr; rf_q <= read_fault; ef_q <= edge_f;
     end
+    `ifdef S81_SEQ_HF_MUT_EARLY
+    wire x_flt = |x_al | p_bad | e_flt;
+`else
     wire x_flt = |x_al_q | p_bad | e_flt;
+`endif
     // landing header check per x34 i (sel 0, col 1, aSW 2): x_hdr[3i+2] valid, [3i+1] header top bit, [3i] header bit
     wire hdr_bad = (x_hdr_q[2] && (!x_hdr_q[0] || x_hdr_q[1])) || (x_hdr_q[5] && (!x_hdr_q[3] || x_hdr_q[4])) ||
                    (x_hdr_q[8] && (!x_hdr_q[6] || x_hdr_q[7]));

@@ -16,7 +16,7 @@
 //     takes header 1 + payload 4 + control 4 + fault 4 + meta 28 + data 128; relay roots 16 (HOP1) / 48 (HOP1=0).
 // WSCATTER_PIPE does not exist here: the A2-F scatter is always pin-registered (PIPE 1).
 // ---------------------------------------------------------------------------------------------------------------
-module dsfd_vm_a2f_core #(parameter integer READ_PIPE=4, parameter integer HOP1=1) (  // READ_PIPE 0 legacy L12 | 1 router L13 | 2 pin-registered router L14 | 4 + pin-registered rsched / return lanes L16
+module dsfd_vm_a2f_core #(parameter integer READ_PIPE=4, parameter integer HOP1=1, parameter integer X_AL_WIDTH=3) (  // READ_PIPE 0 legacy L12 | 1 router L13 | 2 pin-registered router L14 | 4 + pin-registered rsched / return lanes L16
     // cks owns ONLY the legacy READ_PIPE=0 die output registers (native read production: no sink; the VM control
     // glue lives in the hardened engine-12 tile dsfd_vm_seq_tile on ck_seq). Every child root is an explicit
     // independently deliverable clock pin; tying these pins is a TESTBENCH decision only.
@@ -80,7 +80,7 @@ module dsfd_vm_a2f_core #(parameter integer READ_PIPE=4, parameter integer HOP1=
     input  wire          wf_v, input wire [13:0] wf_row, input wire [511:0] wf_d,
     // external service fault sources, checked/registered in the engine-12 tile: 3:4 landing transfer alarms and
     // headers {xw_v, xw_d[1025:1024], xc_v, xc_d[513:512], xs_v, xs_d[513:512]}, edge leaf faults {xio, wfc, cap}
-    input  wire [2:0]    x_al, input wire [8:0] x_hdr, input wire [2:0] edge_f, input wire edge_cap_xfault,
+    input  wire [X_AL_WIDTH-1:0] x_al, input wire [8:0] x_hdr, input wire [2:0] edge_f, input wire edge_cap_xfault,
     output wire          vm_fault
 );
 
@@ -256,7 +256,7 @@ module dsfd_vm_a2f_core #(parameter integer READ_PIPE=4, parameter integer HOP1=
 
     // ---------------------------------------------------------------- engine 12 + static native ops + control glue
     wire larm_v; wire [3:0] larm_g; wire [13:0] larm_base;
-    dsfd_vm_seq_tile u_seq (.ck(ck_seq), .rst(rst_seq_n), .c_cmd(c_cmd), .c_done(c_done), .c_st(c_st),
+    dsfd_vm_seq_tile #(.X_AL_WIDTH(X_AL_WIDTH)) u_seq (.ck(ck_seq), .rst(rst_seq_n), .c_cmd(c_cmd), .c_done(c_done), .c_st(c_st),
         .o_cv(cm_v), .o_ca(cm_a), .o_cm(cm_m), .o_rv({2'b00, a_v, n_v}), .o_rr({28'd0, obs_row}),
         .t_inp_su(t_inp_su), .t_inp_hc(t_inp_hc), .nf_v(nf_v), .nf_d(nf_d),
         .larm_v(larm_v), .larm_g(larm_g), .larm_base(larm_base),
