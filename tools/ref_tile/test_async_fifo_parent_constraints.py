@@ -164,6 +164,55 @@ class ParentAdmission(unittest.TestCase):
                     self.assertNotEqual(p.returncode,0,mutation+'\n'+p.stdout+p.stderr)
                     self.assertIn('OT_ASYNC_GRAY:',p.stdout+p.stderr)
 
+    def test_ascending_and_offset_vector_positive_and_swapped_bit_negative(self):
+        for declaration,labels in [('[0:1]',['dout[1]','dout[0]']),('[4:5]',['dout[5]','dout[4]']),('[5:4]',['dout[4]','dout[5]'])]:
+            with self.subTest(declaration=declaration),tempfile.TemporaryDirectory()as tmp:
+                root=Path(tmp);source_tree(root);s=parent_spec()
+                (root/'parent.sv').write_text(PARENT.replace('output reg [1:0] dout','output reg '+declaration+' dout'))
+                record=A.load(s,root)
+                self.assertEqual(record['payload_consumer_bits']['u_fifo'],{'0':[labels[0]],'1':[labels[1]]})
+                args='read_verilog -sv -DSYNTHESIS '+' '.join(str(root/f)for f in s['sources'])
+                args+='; hierarchy -check -top audited_parent; synth -top audited_parent -flatten -noabc; dffunmap; abc -g simple; clean; write_json '+str(root/'parent.json')
+                p=subprocess.run([YOSYS,'-Q','-T','-p',args],capture_output=True,text=True)
+                self.assertEqual(p.returncode,0,p.stdout+p.stderr)
+                original=json.loads((root/'parent.json').read_text());m=original['modules']['audited_parent']
+                (root/'probe.lib').write_text(fixture_lib(m))
+                for mutant in (False,True):
+                    data=copy.deepcopy(original);m=data['modules']['audited_parent']
+                    if mutant:
+                        for i,qb in enumerate(m['netnames']['dout']['bits']):
+                            ff=next(c for c in m['cells'].values()if c['type'].startswith('$_DFF')and c['connections']['Q']==[qb])
+                            ff['connections']['D']=[m['netnames']['u_fifo.mem[0]']['bits'][1-i]]
+                    (root/'mapped.json').write_text(json.dumps(data))
+                    p=subprocess.run([YOSYS,'-Q','-T','-p',f'read_json {root}/mapped.json; write_verilog -noattr -noexpr {root}/mapped.v'],capture_output=True,text=True)
+                    self.assertEqual(p.returncode,0,p.stdout+p.stderr)
+                    body=f'read_liberty {{{root}/probe.lib}}\nread_verilog {{{root}/mapped.v}}\nlink_design audited_parent\n'
+                    body+=C.clocks(s,833.333)+C.generate(s,root).rsplit('\not_ce_apply\n',1)[0]
+                    body+='\nset ins [dict create stream_rst_n core hbm_rst_n hbm wr_valid hbm rd_ready core {din[0]} hbm {din[1]} hbm]\n'
+                    body+='set outs [dict create wr_ready hbm {'+labels[0]+'} core {'+labels[1]+'} core valid core wr_fault hbm rd_fault core]\n'
+                    body+='if {[catch {ot_ce_leaf_ownership $ins $outs} message]} {puts stderr $message;exit 1}\nputs EXACT_DECLARATION_GRAPH_PASS\nexit 0\n'
+                    (root/'mapped.tcl').write_text(body)
+                    p=subprocess.run([STA,'-exit',str(root/'mapped.tcl')],capture_output=True,text=True)
+                    if mutant:
+                        self.assertNotEqual(p.returncode,0,p.stdout+p.stderr)
+                        self.assertIn('unapproved actual crossing',p.stdout+p.stderr)
+                    else:
+                        self.assertEqual(p.returncode,0,p.stdout+p.stderr)
+                        self.assertIn('EXACT_DECLARATION_GRAPH_PASS',p.stdout+p.stderr)
+
+    def test_ascending_offset_clock_bus_actual_source_ownership(self):
+        with tempfile.TemporaryDirectory()as tmp:
+            root=Path(tmp);source_tree(root);s=parent_spec()
+            source=PARENT.replace('input wire stream_clk,hbm_clk,stream_rst_n,hbm_rst_n,','input wire [4:5] clocks,input wire stream_rst_n,hbm_rst_n,')
+            source=source.replace('.wr_clk(hbm_clk)', '.wr_clk(clocks[4])').replace('.rd_clk(stream_clk)', '.rd_clk(clocks[5])').replace('posedge stream_clk','posedge clocks[5]')
+            (root/'parent.sv').write_text(source)
+            s['clock_port']='clocks[5]';s['clock_ports']=['clocks[5]','clocks[4]']
+            s['clock_entry_domains']['core']['ports']=['clocks[5]'];s['clock_entry_domains']['hbm']['ports']=['clocks[4]']
+            record=A.load(s,root)
+            self.assertEqual(record['fifo_instances'][0]['writer_domain'],'hbm')
+            self.assertEqual(record['fifo_instances'][0]['reader_domain'],'core')
+            self.assertIn('get_ports {clocks[5]}',C.clocks(s,833.333))
+
     def test_actual_mapped_parent_and_undeclared_payload_consumer_mutant(self):
         with tempfile.TemporaryDirectory()as tmp:
             root=Path(tmp);source_tree(root);s=parent_spec()
