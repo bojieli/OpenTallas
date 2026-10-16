@@ -39,6 +39,7 @@
    "read_v",
    "read_addr",
    "clk",
+   "clk_ws",
    "rst_n",
    "write_v",
    "write_addr",
@@ -59,6 +60,7 @@
  "clock_ports": [
   "clk",
   "clk_rd",
+  "clk_ws",
   "clk_macro0",
   "clk_macro1",
   "clk_macro2",
@@ -68,7 +70,8 @@
  ],
  "clock_cts_roots": [
   "clk",
-  "clk_rd"
+  "clk_rd",
+  "clk_ws"
  ],
  "blocks": [
   {

@@ -28,6 +28,8 @@ Queue candidates must have enough total physical RAM after mandatory headroom fo
 cannot take an impossible request or release a capable host's CPU hold. Older probes without a total retain legacy eligibility.
 The CPU hold considers memory-admissible hosts first; if none admits the request, it considers the hosts eligible
 for a memory queue. An underloaded host without enough memory cannot release a hold on memory-admissible hosts.
+--priority die: a die-level trial (owner 2026-10-15 23:50). On the host it waits with OT_HEAVY_PRIO=die; while it
+                 waits, ot-heavy admits other requests only if they leave its charge free (DIE-FIRST, ot-heavy-reconcile).
 --max-wait SEC: give up (exit 75, NOT RUN) when the host has not admitted the command after SEC seconds.
 
 Exit status (v2, 2026-10-13, after a bench was reported "EXIT 0" although nothing had run): ot-run returns the command's
@@ -144,6 +146,7 @@ def run(host, mem, cmd, d=None, max_wait=None, env="", quiet=False):
     """run cmd under ot-heavy on host; return (status, ran).  status is the command's only when ran is True."""
     tag = "otrun-%s-%d-%d" % (os.uname().nodename, os.getpid(), int(time.time() * 1000) % 10 ** 9)
     say = (lambda m: None) if quiet else (lambda m: print(m, file=sys.stderr, flush=True))
+    env = os.environ.get("OT_RUN_PRIO_ENV", "") + env
     inner = f"{env}/usr/local/bin/ot-heavy --mem {mem} --tag {tag}" + (f" --max-wait {int(max_wait)}" if max_wait else "") \
         + " -- " + " ".join(shlex.quote(x) for x in cmd)
     remote = (f"cd {shlex.quote(d)} || {{ echo OT_RUN_NOCD {tag} >&2; exit 96; }}; " if d else "") \
@@ -245,6 +248,10 @@ def main():
         elif o == "--pick": pick = True
         elif o == "--max-wait": max_wait = int(a.pop(0))
         elif o == "--threads": threads = int(a.pop(0))
+        elif o == "--priority":
+            prio = a.pop(0)
+            if prio != "die": sys.exit("ot-run: --priority takes only 'die' (owner 2026-10-15 23:50: die-level trials)")
+            os.environ["OT_RUN_PRIO_ENV"] = "OT_HEAVY_PRIO=die "
         else: sys.exit(__doc__)
     cmd = a[1:]
     if mem is None or not (cmd or pick):

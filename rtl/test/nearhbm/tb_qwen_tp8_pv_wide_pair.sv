@@ -22,6 +22,12 @@ module tb_qwen_tp8_pv_wide_pair;
   if(!$value$plusargs("VEC=%s",vec))$fatal(1,"+VEC");
   if(!$value$plusargs("CTX=%d",CTX))$fatal(1,"+CTX");
   if(!$value$plusargs("MODE=%s",mode))mode="steady";
+  // fail closed on missing vectors (10-15 22:30: a missing golden produced all-zero gold == all-zero DUT = false PASS)
+  for(i=0;i<3;i=i+1)begin
+   n=$fopen({vec,(i==0)?"/v.hex":(i==1)?"/e.hex":"/gold.hex"},"r");
+   if(n==0)$fatal(1,"missing vector file in %0s",vec);
+   $fclose(n);
+  end
   $readmemh({vec,"/v.hex"},vr);$readmemh({vec,"/e.hex"},er);$readmemh({vec,"/gold.hex"},gold);
   for(k=0;k<8;k=k+1)begin wp[k]=0;rp[k]=0;end
   repeat(5)@(negedge clk);rst_n=1;repeat(3)@(negedge clk);

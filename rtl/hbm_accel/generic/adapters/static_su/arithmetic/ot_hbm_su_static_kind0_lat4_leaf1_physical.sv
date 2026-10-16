@@ -1,6 +1,6 @@
 // Physical KIND0 LIGHT lane leaf (LAT4 / LEAF1). r2 (H-SU 2026-10-15, owner rule 19:50): pin-registered lane
 // (ot_hbm_su_static_lane_pinreg: every input and output registered at the pin, +2 edges at the parent, absorbed by
-// su_top_compile --pin-reg). No arithmetic change.
+// su_top_compile --pin-reg). No arithmetic change. rst_n registered at its pin (PIN_RST=1).
 module ot_hbm_su_static_kind0_lat4_leaf1_physical(
  input wire clk_stage_0,
  input wire clk_stage_1,
@@ -79,7 +79,7 @@ module ot_hbm_su_static_kind0_lat4_leaf1_physical(
  output wire fault,
  output wire coll
 );
- ot_hbm_su_static_lane_pinreg #(.LN(7),.LEAF(1),.KIND(0),.FETCH_EXTRA_EDGES(2),.MLAT(4),.ALAT(3)) u_native(
+ ot_hbm_su_static_lane_pinreg #(.LN(7),.LEAF(1),.KIND(0),.FETCH_EXTRA_EDGES(2),.MLAT(4),.ALAT(3),.PIN_RST(1)) u_native(
  .clk_stage({clk_stage_7,clk_stage_6,clk_stage_5,clk_stage_4,clk_stage_3,clk_stage_2,clk_stage_1,clk_stage_0}),
  .clk_insert({clk_insert_3,clk_insert_2,clk_insert_1,clk_insert_0}),
  .rst_n(rst_n),

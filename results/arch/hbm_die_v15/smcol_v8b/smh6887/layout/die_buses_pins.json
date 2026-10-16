@@ -1,0 +1,170 @@
+{
+ "HBM_K": {
+  "links": 32,
+  "bits": 70784,
+  "max_stages_pin": 0,
+  "mean_stages_pin": 0.0,
+  "mean_stages_centre_model": 5.6
+ },
+ "SM_X": {
+  "links": 256,
+  "bits": 69888,
+  "max_stages_pin": 18,
+  "mean_stages_pin": 7.1,
+  "mean_stages_centre_model": 16.3
+ },
+ "SM_HBM": {
+  "links": 32,
+  "bits": 36224,
+  "max_stages_pin": 0,
+  "mean_stages_pin": 0.0,
+  "mean_stages_centre_model": 7.0
+ },
+ "LG_SU": {
+  "links": 32,
+  "bits": 17792,
+  "max_stages_pin": 0,
+  "mean_stages_pin": 0.0,
+  "mean_stages_centre_model": 2.0
+ },
+ "LG_SFU": {
+  "links": 32,
+  "bits": 17792,
+  "max_stages_pin": 0,
+  "mean_stages_pin": 0.0,
+  "mean_stages_centre_model": 1.5
+ },
+ "LG_HC": {
+  "links": 32,
+  "bits": 17792,
+  "max_stages_pin": 0,
+  "mean_stages_pin": 0.0,
+  "mean_stages_centre_model": 2.0
+ },
+ "VM_RING": {
+  "links": 8,
+  "bits": 17792,
+  "max_stages_pin": 30,
+  "mean_stages_pin": 15.5,
+  "mean_stages_centre_model": 18.5
+ },
+ "COLL_VM": {
+  "links": 32,
+  "bits": 17760,
+  "max_stages_pin": 22,
+  "mean_stages_pin": 12.8,
+  "mean_stages_centre_model": 15.2
+ },
+ "VM_HUB": {
+  "links": 32,
+  "bits": 17216,
+  "max_stages_pin": 13,
+  "mean_stages_pin": 6.1,
+  "mean_stages_centre_model": 7.9
+ },
+ "COLL_EP": {
+  "links": 9,
+  "bits": 11016,
+  "max_stages_pin": 24,
+  "mean_stages_pin": 22.7,
+  "mean_stages_centre_model": 25.0
+ },
+ "EP_SERDES": {
+  "links": 9,
+  "bits": 9504,
+  "max_stages_pin": 2,
+  "mean_stages_pin": 1.0,
+  "mean_stages_centre_model": 2.9
+ },
+ "SM_OUT": {
+  "links": 32,
+  "bits": 8640,
+  "max_stages_pin": 13,
+  "mean_stages_pin": 5.6,
+  "mean_stages_centre_model": 15.8
+ },
+ "HBM_VM": {
+  "links": 32,
+  "bits": 8192,
+  "max_stages_pin": 27,
+  "mean_stages_pin": 19.9,
+  "mean_stages_centre_model": 23.4
+ },
+ "VM_HBM": {
+  "links": 32,
+  "bits": 8192,
+  "max_stages_pin": 27,
+  "mean_stages_pin": 20.0,
+  "mean_stages_centre_model": 23.4
+ },
+ "IDX_INT": {
+  "links": 10,
+  "bits": 8064,
+  "max_stages_pin": 22,
+  "mean_stages_pin": 11.7,
+  "mean_stages_centre_model": 17.3
+ },
+ "COLL_RING": {
+  "links": 8,
+  "bits": 6608,
+  "max_stages_pin": 12,
+  "mean_stages_pin": 9.0,
+  "mean_stages_centre_model": 11.0
+ },
+ "QUANT_VM": {
+  "links": 8,
+  "bits": 4440,
+  "max_stages_pin": 0,
+  "mean_stages_pin": 0.0,
+  "mean_stages_centre_model": 1.5
+ },
+ "SU_CORE": {
+  "links": 12,
+  "bits": 3072,
+  "max_stages_pin": 15,
+  "mean_stages_pin": 8.3,
+  "mean_stages_centre_model": 11.2
+ },
+ "SFU_CORE": {
+  "links": 12,
+  "bits": 3072,
+  "max_stages_pin": 17,
+  "mean_stages_pin": 10.2,
+  "mean_stages_centre_model": 11.2
+ },
+ "HC_CORE": {
+  "links": 12,
+  "bits": 3072,
+  "max_stages_pin": 17,
+  "mean_stages_pin": 10.2,
+  "mean_stages_centre_model": 11.2
+ },
+ "IDX_VM": {
+  "links": 8,
+  "bits": 2192,
+  "max_stages_pin": 22,
+  "mean_stages_pin": 13.5,
+  "mean_stages_centre_model": 15.4
+ },
+ "IDX_COLL": {
+  "links": 1,
+  "bits": 2180,
+  "max_stages_pin": 9,
+  "mean_stages_pin": 9.0,
+  "mean_stages_centre_model": 12.0
+ },
+ "KV_DESC": {
+  "links": 32,
+  "bits": 2048,
+  "max_stages_pin": 13,
+  "mean_stages_pin": 5.7,
+  "mean_stages_centre_model": 15.8
+ },
+ "HC_ENG": {
+  "links": 4,
+  "bits": 2048,
+  "max_stages_pin": 41,
+  "mean_stages_pin": 33.8,
+  "mean_stages_centre_model": 36.2
+ }
+}

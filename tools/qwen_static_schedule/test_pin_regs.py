@@ -36,6 +36,27 @@ class PinRegs(unittest.TestCase):
             with self.assertRaises(ScheduleError):
                 P.seam_edges('core', 'a', 'scale', 'b', -1, r)
 
+    def test_exact_elaborated_report_wins(self):
+        with tempfile.TemporaryDirectory() as t:
+            r = Path(t)
+            regs = dict(schema='opentallas.ref_tile.pin_regs.v1', top='tt', enable=True, clock_ports=['clk'], exclude='',
+                        reset='', latency_cycles=dict(input=1, output=1))
+            self.kit(r, 'core', 3, regs)
+            v = r / 'physical/ref_tile/core/views/tt'
+            v.mkdir(parents=True)
+            rep = dict(schema='opentallas.ref_tile.port_latency.v1', top='tt', source_commit='a' * 40,
+                       ports=dict(mx_data=dict(dir='output', register_edges=1), cfg=dict(dir='input', register_edges=0)))
+            (v / 'port_latency.json').write_text(json.dumps(rep))
+            self.assertEqual(P.port_edges('core', 'cfg', 'input', r), 0)         # excluded at elaboration, intent said 1
+            self.assertEqual(P.port_edges('core', 'mx_data', 'output', r), 1)
+            with self.assertRaises(ScheduleError):
+                P.port_edges('core', 'nope', 'input', r)                         # unknown port: never a silent 0
+            with self.assertRaises(ScheduleError):
+                P.port_edges('core', 'cfg', 'output', r)                         # direction mismatch
+            (v / 'port_latency.json').write_text(json.dumps(dict(rep, top='other')))
+            with self.assertRaises(ScheduleError):
+                P.port_edges('core', 'cfg', 'input', r)
+
 
 if __name__ == '__main__':
     unittest.main()
