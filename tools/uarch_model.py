@@ -17325,3 +17325,37 @@ def hbm_host_static_ingress_model():
       area_slot_um=[432,432], slot_area_um2=186624,
       sink_bound='under700 source registers, no programme SRAM inside ingress; mapped area and CTS still required',
       scope='component ingress only; actual host packet/landing join, heterogeneous target adapters, all-ready reduction, fullchip binding and performance remain OPEN')
+
+
+def s81_host_phase_safe_2330_model():
+    """Measured boot cost and pre-CTS bounds for the four-root HOST successor.
+
+    Half-phase lockups repair measured related-root hold races; they do not
+    change any credit/schedule policy. This is a component boot model. Native
+    die timing and token cost remain unmeasured until actual die integration.
+    """
+    return dict(
+        schema='opentallas.s81.host-phase-safe.2330.v1',
+        source_define='OT_S81_HOST_PHASESAFE',
+        current_master='dsfd_host_c',
+        outline_um=[453.6, 77.76], outline_area_um2=453.6*77.76,
+        real_roots=['ck', 'ckv', 'ck_ingest[0]', 'ck_ingest[1]'],
+        root_period_ps=[833.333, 1111.111, 833.333, 833.333],
+        data_input_bits=538, data_output_bits=449,
+        boundary_ports=993,
+        added_structure=dict(source_low_phase_locks=True,
+                             fifo_head_high_phase_locks=True,
+                             locally_conditioned_boot_resets=True,
+                             ingest_address_stages=[2, 3],
+                             lane_fault_capture_ff=4),
+        boot_address_cost_edges_per_row_or_key=1,
+        raw_write_address_cost_edges=0,
+        measured_component_cycles=dict(ckv_128=[1852,1980],
+                                       window_96=[2268,2364],
+                                       ikey_1024=[5692,6716],
+                                       raw_300_sectors=[745,745]),
+        arithmetic_scope='Actual native ROWS/IKEY/RAW RTL; expected external fabric images only',
+        clock_hold_scope='Measured original hold classes -87 to -107.64 ps; successor CTS/TT/FF/native OPEN',
+        qualification='UNQUALIFIED: physical and die joins remain open',
+        normal_token_cost='UNMEASURED; these boot component measurements do not establish token performance',
+        evidence='results/rtl/s81_host_phase_safe_2330/native_ingest_record.json')
