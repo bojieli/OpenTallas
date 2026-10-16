@@ -68,7 +68,7 @@ def main():
     assert negative.returncode != 0 and 'FAIL kv refresh rdrate' in negative.stdout, 'hardware mutant escaped'
     receipt = dict(scope='actual timing-controller 118 phases x two PC parities; compiled strict PROFILE0 replay',
                    source_sha256=manifest, contexts=236, sectors_each=256,
-                   refresh_rd_block_hbm=0, compiled_image_sha256=hashlib.sha256(image.read_bytes()).hexdigest(),
+                   refresh_rd_block_hbm=0, first_read_after_go_hbm=sorted({int(x[2]) for x in records}), compiled_image_sha256=hashlib.sha256(image.read_bytes()).hexdigest(),
                    production_exit=production.returncode, mutant_exit=negative.returncode,
                    mutant='extra ref_c<=8 read blocker; actual RTL permission differs from reserved slots',
                    full_memory_data_path=False, native_full_layer=False, native_full_token=False)

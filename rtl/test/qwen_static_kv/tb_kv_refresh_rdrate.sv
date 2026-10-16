@@ -39,7 +39,10 @@ module tb_kv_refresh_rdrate;
   for(p=0;p<N;p=p+1)begin first[p]=-1;last[p]=-1;cnt[p]=0;late_max[p]=0;end
   repeat(8)@(negedge ck); rst=1;
   for(t=0;t<CYCLES;t=t+1)begin
-   @(posedge ck); #0.1;
+   // Sample the command consumed at this edge before nonblocking updates.
+   // Post-edge PROFILE1 permission is for the NEXT edge and cannot be
+   // compiled as a reservation for the edge which just passed.
+   @(posedge ck);
    for(p=0;p<N;p=p+1)begin
     if(cv[p])begin
      if(first[p]<0)first[p]=t;
