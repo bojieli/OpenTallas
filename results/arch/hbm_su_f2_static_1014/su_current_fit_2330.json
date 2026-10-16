@@ -1,0 +1,114 @@
+{
+ "schema": "opentallas.hbm.su.physical_inventory.2330",
+ "scope": "Current outlined candidate lower bound; actual production physical fit FAIL. Not minimum achievable silicon or legal placement. No heavy/SIDE/RF/control/VM-leaf/extra routing cost silently omitted.",
+ "source_commit": "eb7478711",
+ "source_sha256": {
+  "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv": "33e20b53b147e1a7c203e68dea2042b51220edb7a3be4dad0f0e1ac85433d063",
+  "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_quarter.sv": "454399ea6bfef1ccc2ac46b28ed22f4ea58f95c56b9a58a675f39cb4fd0f18ae",
+  "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_qcore.sv": "65dd0eb600d483738fe32c149167ce175d2a06692301d67ad0e8c184a1906f5b",
+  "physical/ref_tile/hbm_su_static_bank6_clock7_1015/spec.json": "dbb7b2b7eb285ce809632765b473893864f51966444a1d615645a32fcedd4016"
+ },
+ "actual_inventory": {
+  "quarters": 4,
+  "pg_slices": 16,
+  "lanes": 512,
+  "LIGHT": 384,
+  "SFU": 127,
+  "FULL": 1,
+  "SIDE": 1,
+  "store_banks": 512,
+  "SRAM_per_bank": 6,
+  "store_SRAM": 3072,
+  "qcore_RF_banks": 256,
+  "RF_words_per_bank": 4,
+  "RF_word_bits": 32,
+  "RF_read_classes": 6,
+  "reducers": 4,
+  "reducer_SRAMs": 8,
+  "VM_leafs_per_pg": 2,
+  "VM_leafs": 32,
+  "broadcast_replicas_per_pg": 32,
+  "broadcast_bits_per_replica": 1742,
+  "broadcast_FF": 891904
+ },
+ "outline_candidates": {
+  "bank": {
+   "width_um": 390.96,
+   "height_um": 151.2,
+   "count": 512,
+   "area_mm2": 30.265933823999998,
+   "status": "r10c native PASS diagnostic, DRC2 FAIL; r11 guard trialGRT0, route OPEN"
+  },
+  "LIGHT_pinreg": {
+   "width_um": 151.2,
+   "height_um": 151.2,
+   "count": 384,
+   "area_mm2": 8.778792959999999,
+   "growth_vs_old125_28_mm2": 2.7518828543999976,
+   "status": "r2 source/current CTS0fail, route RUNNING"
+  },
+  "reducer": {
+   "width_um": 216,
+   "height_um": 151.2,
+   "count": 4,
+   "area_mm2": 0.1306368
+  }
+ },
+ "per_quarter_groups": [
+  {
+   "G": 0,
+   "bank_count": 32,
+   "light_count": 16,
+   "heavy_count": 16,
+   "known_outline_mm2": 2.257403904,
+   "usable_after_40um_cross_mm2": 2.1054,
+   "known_deficit_before_heavy_mm2": 0.15200390399999986
+  },
+  {
+   "G": 1,
+   "bank_count": 32,
+   "light_count": 16,
+   "heavy_count": 16,
+   "known_outline_mm2": 2.257403904,
+   "usable_after_40um_cross_mm2": 2.1054,
+   "known_deficit_before_heavy_mm2": 0.15200390399999986
+  },
+  {
+   "G": 2,
+   "bank_count": 32,
+   "light_count": 32,
+   "heavy_count": 0,
+   "known_outline_mm2": 2.6231869439999995,
+   "usable_after_40um_cross_mm2": 2.1054,
+   "known_deficit_before_heavy_mm2": 0.5177869439999996
+  },
+  {
+   "G": 3,
+   "bank_count": 32,
+   "light_count": 32,
+   "heavy_count": 0,
+   "known_outline_mm2": 2.6231869439999995,
+   "usable_after_40um_cross_mm2": 2.1054,
+   "known_deficit_before_heavy_mm2": 0.5177869439999996
+  }
+ ],
+ "whole_SU_known_outline_mm2": 39.175363583999996,
+ "whole_SU_usable_reservation_mm2": 35.4664,
+ "known_deficit_before_missing_parts_mm2": 3.7089635839999957,
+ "excluded_unmeasured_outline_parts": [
+  "127 SFU lanes",
+  "1 FULL lane",
+  "1 SIDE engine",
+  "256 RF banks and six read-class selects",
+  "891904 broadcast FF and local reset/control",
+  "32 VM boundary leaves",
+  "fill/drain multirate bridges",
+  "all remaining clock/pin relay/channel reservations"
+ ],
+ "fit": false,
+ "next_structural_options": [
+  "Repartition/repack six-SRAM bank to lower actual outline overhead while retaining 20um intermacro channels and native pin roots; current macroarea23349um2/outline59113um2 suggests room but no qualified smaller view exists.",
+  "Die-level repartition of complete SU connected groups into measured free homes while preserving RF36 and mandatory feedthroughs; no die grow or workload reduction inferred.",
+  "Retain full workload and actual mapped memories; production qualification remains false until all missing parts mapped and actual placements/cuts/native phase pass."
+ ]
+}
