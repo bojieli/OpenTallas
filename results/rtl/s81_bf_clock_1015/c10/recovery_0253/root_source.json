@@ -11,12 +11,12 @@
     "rtl/dsrom_sys/s81_die_bind/dsfd_bf_col.sv": "2dc852a281fca190fbfe3ac029ebf67e192340edf66c28e3d7d540e7b00041f3"
   },
   "outputs": {
-    "rtl/v41rom/ot_v41_bf_lane4.sv": "fbd93077394044fb2e459b536f8579cd0119dc3468da1dff2397b9e0e3e25981",
+    "rtl/v41rom/ot_v41_bf_lane4.sv": "fc6c482d3742dfafe7d96639a016b1e8e75e1ba1031c5a9a6895e362975a55c5",
     "rtl/v41rom/ot_v41_bf_reduce.sv": "caa181d35e615f8f70a83ae6c5fe39bde58c87afd8b883f2bfe5f93ef43f9166",
     "rtl/v41rom/ot_v41_bf_fp4_leaves.sv": "0b559f5b1e5f115c3c2d3a79e24d6c70fb31576d71d0d9b01f8d0f246b8924ff",
     "rtl/v41rom/ot_v41_bf_segment_leaf.sv": "c350fb583dab9dccce038c001b10f08f6b75092a4fa3d75a7c400b62e3d65212",
-    "rtl/v41rom/ot_v41_bf16_lanes3_roots.sv": "7d9766df8b941cd29668e35911bd7198ac27a1168888a50df1b9da35955bc0e5",
-    "rtl/v41rom/ot_v41_bf_col_roots.sv": "27502ad036f8c68ab1caebdd115f675b6356e196b295692edb88ea5074299cc1",
+    "rtl/v41rom/ot_v41_bf16_lanes3_roots.sv": "d0f83797917c652bf46116fefd1bce8366b120b559784da495af31cfa4450d3b",
+    "rtl/v41rom/ot_v41_bf_col_roots.sv": "00d03ac7a439d89a2cff881d89ce01615e067872e2ed8e6a42043d4720f3b8f3",
     "rtl/dsrom_sys/s81_die_bind/dsfd_bf_col_roots.sv": "7a8dc0f1973982ca6b859dc59e2ebf9a2ad1ab89ad182f0eacd4597c597f2a76"
   },
   "physical_leaf_status": "Actual source hierarchy extracted: lane4 x4, two BF reductions, FP4 chain/pair leaves and segment leaf. Parent retains real control/input pipelines and two ROM macros. Hardening, clock pins, all incident cuts and native boundary proof remain pending.",

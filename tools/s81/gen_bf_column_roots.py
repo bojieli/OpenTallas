@@ -50,7 +50,7 @@ def generate():
 // One physical master x4; GROUP affects only the simulation negative control.
 // No added stage or arithmetic change. Physical/native gates remain pending.
 module ot_v41_bf_lane4 #(
-    parameter integer NCHB=8,TRW=7,GRADUAL_RNE=1,RC=1,GROUP=0,
+    parameter integer NCHB=8,TRW=7,GRADUAL_RNE=1,RC=1,GROUP=0,BOUNDARY_STAGE=1,
     parameter [8:0] CUT=9'b1_0111_1011
 )(input wire fclk,rst_pin,ze_d,v_s,
   input wire [63:0] w_s,x_s,
@@ -74,11 +74,19 @@ module ot_v41_bf_lane4 #(
     wire lane_fclk=fclk;
 `endif
     // Relocated final parent XST stage: no end-to-end cycle is added.
-    wire bclk,brst;
-    ot_v41_tile_clk u_boundary(.fclk(lane_fclk),.rst_pin(rst_pin),.ze_d(ze_d),.gclk(bclk),.rst_n(brst));
-    reg v_d;reg[63:0]w_d,x_d;reg[TW-1:0]t_d;
-    always @(posedge bclk or negedge brst)if(!brst)v_d<=1'b0;else v_d<=v_s;
-    always @(posedge bclk)begin w_d<=w_s;x_d<=x_s;t_d<=t_p;end
+    initial if (BOUNDARY_STAGE<0 || BOUNDARY_STAGE>1)
+        $fatal(1,"BOUNDARY_STAGE must be zero or one");
+    wire v_d;wire[63:0]w_d,x_d;wire[TW-1:0]t_d;
+    if (BOUNDARY_STAGE!=0) begin:g_boundary
+        wire bclk,brst;
+        ot_v41_tile_clk u_boundary(.fclk(lane_fclk),.rst_pin(rst_pin),.ze_d(ze_d),.gclk(bclk),.rst_n(brst));
+        reg v_q;reg[63:0]w_q,x_q;reg[TW-1:0]t_q;
+        always @(posedge bclk or negedge brst)if(!brst)v_q<=1'b0;else v_q<=v_s;
+        always @(posedge bclk)begin w_q<=w_s;x_q<=x_s;t_q<=t_p;end
+        assign v_d=v_q;assign w_d=w_q;assign x_d=x_q;assign t_d=t_q;
+    end else begin:g_no_boundary
+        assign v_d=v_s;assign w_d=w_s;assign x_d=x_s;assign t_d=t_p;
+    end
     genvar l;
 """
     leaf=ROOT/'rtl/v41rom/ot_v41_bf_lane4.sv';leaf.write_text(header+body+'\nendmodule\n')
@@ -89,7 +97,7 @@ module ot_v41_bf_lane4 #(
         wire [127:0] cs_g;
         wire [4*(TRW+1)-1:0] ct_g;
         ot_v41_bf_lane4 #(.NCHB(NCHB),.TRW(TRW),.CUT(CUT),
-            .GRADUAL_RNE(GRADUAL_RNE),.RC(RC),.GROUP(g)) u_lane4
+            .GRADUAL_RNE(GRADUAL_RNE),.RC(RC),.GROUP(g),.BOUNDARY_STAGE(XST>0)) u_lane4
             (.fclk(leaf_clk[g]),.rst_pin(rst_pin),.ze_d(ze_d),.v_s(v_s),
              .w_s(w_s[64*g +: 64]),.x_s(x_s[64*g +: 64]),.t_p(t_p),
              .cv(cv_g),.cf(cf_g),.cfault(fault_g),.cs_p(cs_g),.ct_p(ct_g));
@@ -106,7 +114,7 @@ module ot_v41_bf_lane4 #(
     bstart=s.index('    localparam integer HW =')
     head=s[:bstart];body=s[bstart:]
     body=re.sub(r'\bXST\b','PARENT_XST',body)
-    s=head+'    localparam integer PARENT_XST=XST-1;\n'+body
+    s=head+'    initial if (XST<0) $fatal(1,"XST must be nonnegative");\n    localparam integer PARENT_XST=XST>0?XST-1:0;\n'+body
     # Pairwise reductions form two further real leaves (8 adders, then4+2+1).
     reduction="""`timescale 1ns/1ps
 // GENERATED from the original golden-order pairwise reduction; zero extra edges.
@@ -233,12 +241,17 @@ endmodule
     first=s.index('    // ---------------- sibling-chunk pair (FP4):')
     last=s.index('    if (BP == 1) begin : g_bp4',first)
     s=s[:first]+s[last:]
-    s=replace_once(s,'    wire bk_fault;',"""`ifndef SYNTHESIS
-    initial if (!(NSEG==8 && NCH==16 && NCHB==8 && MTP==1 && BP==0 &&
+    s=replace_once(s,'    wire bk_fault;',"""
+    if (!(NSEG==8 && NCH==16 && NCHB==8 && MTP==1 && BP==0 &&
         FAST==1 && PP==1 && QPIPE==1 && QP_CAP==0 && QP_P1==1 && QP_CSAM==10 &&
-        QZ_NS==8 && QX==10 && QBF==2 && TCG==1 && BXST==2 && FXST==2))
-        $fatal(1, \"ten-root extraction supports the source-pinned production column only\");
+        QZ_NS==8 && QX==10 && QBF==2 && TCG==1 && BXST==2 && FXST==2)) begin:g_unsupported_profile
+        // Unresolved on purpose: hierarchy -check refuses unsupported profiles
+        // in synthesis too. Valid parameter derivations remove this branch.
+        OT_S81_BF_COLUMN_REQUIRES_PRODUCTION_PROFILE invalid();
+`ifndef SYNTHESIS
+        initial $fatal(1, \"ten-root extraction supports the source-pinned production column only\");
 `endif
+    end
     wire q_v,q_err;wire[31:0]q_val;wire[TG:0]q_tag_native;
     wire[TG+2:0]pr_t={q_tag_native,2'b00};
     wire bk_fault;""")

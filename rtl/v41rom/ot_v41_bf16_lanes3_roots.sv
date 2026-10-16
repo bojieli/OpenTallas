@@ -51,7 +51,8 @@ module ot_v41_bf16_lanes3_roots #(
     output wire              oerr,
     output wire              fault
 );
-    localparam integer PARENT_XST=XST-1;
+    initial if (XST<0) $fatal(1,"XST must be nonnegative");
+    localparam integer PARENT_XST=XST>0?XST-1:0;
     localparam integer HW = $clog2(NCHB);
     localparam integer TW = HW + 2 + TRW + 1;
     // 1.2 GHz: the word, x slice and tag are registered at the lanes' boundary (the element's capture mux and the
@@ -101,7 +102,7 @@ module ot_v41_bf16_lanes3_roots #(
         wire [127:0] cs_g;
         wire [4*(TRW+1)-1:0] ct_g;
         ot_v41_bf_lane4 #(.NCHB(NCHB),.TRW(TRW),.CUT(CUT),
-            .GRADUAL_RNE(GRADUAL_RNE),.RC(RC),.GROUP(g)) u_lane4
+            .GRADUAL_RNE(GRADUAL_RNE),.RC(RC),.GROUP(g),.BOUNDARY_STAGE(PARENT_XST>0)) u_lane4
             (.fclk(leaf_clk[g]),.rst_pin(rst_pin),.ze_d(ze_d),.v_s(v_s),
              .w_s(w_s[64*g +: 64]),.x_s(x_s[64*g +: 64]),.t_p(t_p),
              .cv(cv_g),.cf(cf_g),.cfault(fault_g),.cs_p(cs_g),.ct_p(ct_g));

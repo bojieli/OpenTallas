@@ -3,7 +3,7 @@
 // One physical master x4; GROUP affects only the simulation negative control.
 // No added stage or arithmetic change. Physical/native gates remain pending.
 module ot_v41_bf_lane4 #(
-    parameter integer NCHB=8,TRW=7,GRADUAL_RNE=1,RC=1,GROUP=0,
+    parameter integer NCHB=8,TRW=7,GRADUAL_RNE=1,RC=1,GROUP=0,BOUNDARY_STAGE=1,
     parameter [8:0] CUT=9'b1_0111_1011
 )(input wire fclk,rst_pin,ze_d,v_s,
   input wire [63:0] w_s,x_s,
@@ -27,11 +27,19 @@ module ot_v41_bf_lane4 #(
     wire lane_fclk=fclk;
 `endif
     // Relocated final parent XST stage: no end-to-end cycle is added.
-    wire bclk,brst;
-    ot_v41_tile_clk u_boundary(.fclk(lane_fclk),.rst_pin(rst_pin),.ze_d(ze_d),.gclk(bclk),.rst_n(brst));
-    reg v_d;reg[63:0]w_d,x_d;reg[TW-1:0]t_d;
-    always @(posedge bclk or negedge brst)if(!brst)v_d<=1'b0;else v_d<=v_s;
-    always @(posedge bclk)begin w_d<=w_s;x_d<=x_s;t_d<=t_p;end
+    initial if (BOUNDARY_STAGE<0 || BOUNDARY_STAGE>1)
+        $fatal(1,"BOUNDARY_STAGE must be zero or one");
+    wire v_d;wire[63:0]w_d,x_d;wire[TW-1:0]t_d;
+    if (BOUNDARY_STAGE!=0) begin:g_boundary
+        wire bclk,brst;
+        ot_v41_tile_clk u_boundary(.fclk(lane_fclk),.rst_pin(rst_pin),.ze_d(ze_d),.gclk(bclk),.rst_n(brst));
+        reg v_q;reg[63:0]w_q,x_q;reg[TW-1:0]t_q;
+        always @(posedge bclk or negedge brst)if(!brst)v_q<=1'b0;else v_q<=v_s;
+        always @(posedge bclk)begin w_q<=w_s;x_q<=x_s;t_q<=t_p;end
+        assign v_d=v_q;assign w_d=w_q;assign x_d=x_q;assign t_d=t_q;
+    end else begin:g_no_boundary
+        assign v_d=v_s;assign w_d=w_s;assign x_d=x_s;assign t_d=t_p;
+    end
     genvar l;
     generate for (l = 0; l < 4; l = l + 1) begin : g_l
         // lane tile: local gated clock lclk / reset lrst; the lane's own boundary registers (16-bit word and x slices,

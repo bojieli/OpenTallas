@@ -119,12 +119,17 @@ module ot_v41_bf_col_roots #(
             for (i = 0; i < 32; i = i + 1) nib[8*i +: 4] = c[4*i +: 4];
         end
     endfunction
-`ifndef SYNTHESIS
-    initial if (!(NSEG==8 && NCH==16 && NCHB==8 && MTP==1 && BP==0 &&
+
+    if (!(NSEG==8 && NCH==16 && NCHB==8 && MTP==1 && BP==0 &&
         FAST==1 && PP==1 && QPIPE==1 && QP_CAP==0 && QP_P1==1 && QP_CSAM==10 &&
-        QZ_NS==8 && QX==10 && QBF==2 && TCG==1 && BXST==2 && FXST==2))
-        $fatal(1, "ten-root extraction supports the source-pinned production column only");
+        QZ_NS==8 && QX==10 && QBF==2 && TCG==1 && BXST==2 && FXST==2)) begin:g_unsupported_profile
+        // Unresolved on purpose: hierarchy -check refuses unsupported profiles
+        // in synthesis too. Valid parameter derivations remove this branch.
+        OT_S81_BF_COLUMN_REQUIRES_PRODUCTION_PROFILE invalid();
+`ifndef SYNTHESIS
+        initial $fatal(1, "ten-root extraction supports the source-pinned production column only");
 `endif
+    end
     wire q_v,q_err;wire[31:0]q_val;wire[TG:0]q_tag_native;
     wire[TG+2:0]pr_t={q_tag_native,2'b00};
     wire bk_fault;
