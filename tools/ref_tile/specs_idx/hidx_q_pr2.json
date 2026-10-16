@@ -149,7 +149,24 @@
    "tools/hbm_idx_static_query_vectors.py",
    "physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1"
   ],
-  "benches": []
+  "benches": [
+   {
+    "name": "query_exact",
+    "cmd": "bash rtl/test/hbm_idx_static/run_query.sh {RUN}/q0 0",
+    "expect": "pass",
+    "pass_regex": "IDX_QUERY_STATIC MUT0 checked32 errors0 fault0",
+    "threads": 1,
+    "peak_ram_gb": 4
+   },
+   {
+    "name": "query_block_mutant",
+    "cmd": "bash rtl/test/hbm_idx_static/run_query.sh {RUN}/q1 1",
+    "expect": "fail",
+    "fail_regex": "exact32head static query gate",
+    "threads": 1,
+    "peak_ram_gb": 4
+   }
+  ]
  },
  "clock": "cts",
  "outline": {

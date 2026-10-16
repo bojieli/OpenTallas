@@ -131,7 +131,24 @@
    "tools/hbm_idx_static_parent_vectors.py",
    "tools/hbm_idx_static_query_vectors.py"
   ],
-  "benches": []
+  "benches": [
+   {
+    "name": "vm_query_exact",
+    "cmd": "bash rtl/test/hbm_idx_static/run_vm_query.sh {RUN}/vq0 0",
+    "expect": "pass",
+    "pass_regex": "IDX_VM_QUERY_STATIC MUT0 commits514 reads514 blocks128 quant32 errors0 fault0",
+    "threads": 1,
+    "peak_ram_gb": 4
+   },
+   {
+    "name": "vm_query_weight_mutant",
+    "cmd": "bash rtl/test/hbm_idx_static/run_vm_query.sh {RUN}/vq1 1",
+    "expect": "fail",
+    "fail_regex": "actual SRAM query/weight/quant mismatch",
+    "threads": 1,
+    "peak_ram_gb": 4
+   }
+  ]
  },
  "outline": {
   "w": 216.0,
