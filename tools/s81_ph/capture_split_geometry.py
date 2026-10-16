@@ -29,7 +29,7 @@ def build(wide=False):
             suffix = master.removeprefix("dsfd_rly_").lower()
             view = ROOT / f"physical/ref_tile/s81_rly_{suffix}/views/{master}/{master}.lef"
             size, measured = lef_pins(view)
-        elif master == "dsfd_capt_x8_data": size = (108,162) if wide else (123.12, 136.08)
+        elif master.startswith("dsfd_capt_x8_data_"): size = (108,162) if wide else (123.12, 136.08)
         elif master == "dsfd_capt_g2_dualho": size = (118.8, 162)
         elif master == "dsfd_capt_ctl": size = (324, 86.4)
         elif master == "dsfd_capt_status_dual": size = (43.2, 86.4)
@@ -68,7 +68,7 @@ def build(wide=False):
                     layer, x, y = value
                 else:
                     layer = "M5"
-                    if master == "dsfd_capt_x8_data":
+                    if master.startswith("dsfd_capt_x8_data_"):
                         if port == "f_w": layer, x, y = "M4", (size[0] if name.endswith("u_x0") else 0), 18 + (.288 if wide else .24)*i
                         elif port == "t_ho": layer, x, y = "M4", (size[0] if name.endswith("u_x0") else 0), (150 if wide else 120)
                         elif port == "t_vm": layer, x, y = ("M3" if i%2 else "M5"), 10 + (.192 if wide else .24)*(i//2), 0
@@ -113,6 +113,12 @@ def build(wide=False):
                 endpoint[(name, pin)] = (bit,c["port_directions"][port],pins[pin]["xy_um"])
         children[name] = dict(master=master,at_um=at,outline_um=size,orient="R0",pins=pins,
                               reused_actual_pins=measured is not None)
+    canonical = {}
+    for name,c in children.items():
+        table = {p:(d["layer"],round(c["outline_um"][0]-d["local_xy_um"][0],3) if c["orient"]=="MY" else d["local_xy_um"][0],d["local_xy_um"][1]) for p,d in c["pins"].items()}
+        if c["master"] in canonical and canonical[c["master"]] != table:
+            raise ValueError("same master has inconsistent transformed pins: "+name)
+        canonical[c["master"]]=table
     drivers, sinks = {}, {}
     for (name,pin),(bit,direction,xy) in endpoint.items():
         (drivers if direction=="output" else sinks).setdefault(bit,[]).append(dict(pin=name+"/"+pin,xy_um=xy))

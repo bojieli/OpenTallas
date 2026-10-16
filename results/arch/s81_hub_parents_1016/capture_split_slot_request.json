@@ -8,22 +8,6 @@
   "clock_entry_bits": 70,
   "parent_logic_cells": 0,
   "masters": {
-    "dsfd_capt_x8_data": {
-      "count": 16,
-      "requested_outline_um": [
-        108,
-        162
-      ],
-      "outline_status": "candidate, actual synth/CTS/physical gate required",
-      "clocks": [
-        "ck",
-        "ckv"
-      ],
-      "source": "rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_capt_split.sv",
-      "source_sha256": "ea64587376f4c4c31a05c30ec01ca02c0c5410089cd48b120059c1b366d653e5",
-      "pin_proposal": "Retain existing x8_dual data/fault/clock/reset pins on same outline; omit f_sn/t_st ports, no data-stage change.",
-      "outline_cost": "+4.4% area versus123.12x136.08; zero normal or initialization edges; actual mapped utilization/CTS/route required"
-    },
     "dsfd_capt_g2_dualho": {
       "count": 8,
       "requested_outline_um": [
@@ -35,8 +19,8 @@
         "ck"
       ],
       "source": "rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_capt_split.sv",
-      "source_sha256": "ea64587376f4c4c31a05c30ec01ca02c0c5410089cd48b120059c1b366d653e5",
-      "pin_proposal": "Retain original g2 data/control/clock/reset pins; replace f_ho[0] with two adjacent actual half fault pins at the original f_ho face."
+      "source_sha256": "77e04c6df1dcc9802f52c1530441c3fcee92e47b906a5e2c6b330d9d1e326997",
+      "pin_proposal": "Proposed geometry --wide: t_w halves W/E toward respective data leaf; one f_ho bit each side, f_row N/M3+M5; exact bit identity preserved. Actual pin access required."
     },
     "dsfd_capt_status_dual": {
       "count": 1,
@@ -50,8 +34,8 @@
         "ckv"
       ],
       "source": "rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_capt_split.sv",
-      "source_sha256": "ea64587376f4c4c31a05c30ec01ca02c0c5410089cd48b120059c1b366d653e5",
-      "pin_proposal": "f_sn[63:0] N/M5, t_st[63:0] S/M5, ck/rst N/M5, ckv/rsv S/M5; local used status cone between ctl/status relay and u_cd + VMstatus seam."
+      "source_sha256": "77e04c6df1dcc9802f52c1530441c3fcee92e47b906a5e2c6b330d9d1e326997",
+      "pin_proposal": "Proposed geometry --wide: f_sn E/M4,t_st W/M4, ck/rst N,ckv/rsv S. Exact status pipeline unchanged. Actual pin access required."
     },
     "dsfd_capt_rly_31_EW": {
       "count": 4,
@@ -64,7 +48,7 @@
         "ck"
       ],
       "source": "rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_capt_split.sv",
-      "source_sha256": "ea64587376f4c4c31a05c30ec01ca02c0c5410089cd48b120059c1b366d653e5"
+      "source_sha256": "77e04c6df1dcc9802f52c1530441c3fcee92e47b906a5e2c6b330d9d1e326997"
     },
     "dsfd_capt_rly_36_WE": {
       "count": 4,
@@ -77,7 +61,7 @@
         "ck"
       ],
       "source": "rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_capt_split.sv",
-      "source_sha256": "ea64587376f4c4c31a05c30ec01ca02c0c5410089cd48b120059c1b366d653e5"
+      "source_sha256": "77e04c6df1dcc9802f52c1530441c3fcee92e47b906a5e2c6b330d9d1e326997"
     },
     "dsfd_capt_rly_64_EW": {
       "count": 1,
@@ -90,7 +74,7 @@
         "ck"
       ],
       "source": "rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_capt_split.sv",
-      "source_sha256": "ea64587376f4c4c31a05c30ec01ca02c0c5410089cd48b120059c1b366d653e5"
+      "source_sha256": "77e04c6df1dcc9802f52c1530441c3fcee92e47b906a5e2c6b330d9d1e326997"
     },
     "dsfd_capt_rly_12_SN": {
       "count": 1,
@@ -103,7 +87,39 @@
         "ck"
       ],
       "source": "rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_capt_split.sv",
-      "source_sha256": "ea64587376f4c4c31a05c30ec01ca02c0c5410089cd48b120059c1b366d653e5"
+      "source_sha256": "77e04c6df1dcc9802f52c1530441c3fcee92e47b906a5e2c6b330d9d1e326997"
+    },
+    "dsfd_capt_x8_data_e": {
+      "count": 8,
+      "requested_outline_um": [
+        108,
+        162
+      ],
+      "outline_status": "candidate, actual synth/CTS/physical gate required",
+      "clocks": [
+        "ck",
+        "ckv"
+      ],
+      "source": "rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_capt_split.sv",
+      "source_sha256": "77e04c6df1dcc9802f52c1530441c3fcee92e47b906a5e2c6b330d9d1e326997",
+      "pin_proposal": "Explicit same-RTL R0 physical alias: f_w/t_ho E/M4; t_vm S/M3+M5; canonical per-master pins enforced by capture_split_geometry.py --wide. Actual assigned track/PG check required.",
+      "outline_cost": "+4.4% area versus123.12x136.08; zero normal or initialization edges; actual mapped utilization/CTS/route required"
+    },
+    "dsfd_capt_x8_data_w": {
+      "count": 8,
+      "requested_outline_um": [
+        108,
+        162
+      ],
+      "outline_status": "candidate, actual synth/CTS/physical gate required",
+      "clocks": [
+        "ck",
+        "ckv"
+      ],
+      "source": "rtl/dsrom_sys/s81_ph/ctrl_c/dsfd_capt_split.sv",
+      "source_sha256": "77e04c6df1dcc9802f52c1530441c3fcee92e47b906a5e2c6b330d9d1e326997",
+      "pin_proposal": "Explicit same-RTL R0 physical alias: f_w/t_ho W/M4; t_vm S/M3+M5; canonical per-master pins enforced by capture_split_geometry.py --wide. Actual assigned track/PG check required.",
+      "outline_cost": "+4.4% area versus123.12x136.08; zero normal or initialization edges; actual mapped utilization/CTS/route required"
     }
   },
   "clock_change": {
@@ -149,5 +165,6 @@
     "inter_group_road_um": 61.92,
     "group_width_um": 378
   },
-  "grant": "S-DIE message2026-10-16:108x162 data-only candidate +61.92um roads inside unchanged1697.76/1727.976 width; compactctl/status/cd leafonly grant. Parent not adopted."
+  "grant": "S-DIE message2026-10-16:108x162 data-only candidate +61.92um roads inside unchanged1697.76/1727.976 width; compactctl/status/cd leafonly grant. Parent not adopted.",
+  "pin_plan_source": "tools/s81_ph/capture_split_geometry.py --wide; capture_split_geometry_alias.json; S-DIE snapping/PG validation pending"
 }

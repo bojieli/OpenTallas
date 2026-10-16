@@ -71,6 +71,142 @@ module dsfd_capt_x8_data (
     assign t_ho = hq;
 endmodule
 
+module dsfd_capt_x8_data_e (
+    input wire [0:0] ck, rst, ckv, rsv,
+    input wire [415:0] f_w,
+    output wire [831:0] t_vm,
+    output wire [0:0] t_ho
+);
+    localparam integer NR = 8, LD = 4, LOCAL_CTRL = 1;
+    reg [1:0] rst_s, rv_s;
+    always @(posedge ck[0] or negedge rst[0]) if (!rst[0]) rst_s <= 2'b00; else rst_s <= {rst_s[0], 1'b1};
+    always @(posedge ckv[0] or negedge rsv[0]) if (!rsv[0]) rv_s <= 2'b00; else rv_s <= {rv_s[0], 1'b1};
+    (* keep *) reg [1:0] rst_h, rsv_h;
+    always @(posedge ck[0] or negedge rst_s[1]) if (!rst_s[1]) rst_h <= 2'b00; else rst_h <= 2'b11;
+    always @(posedge ckv[0] or negedge rv_s[1]) if (!rv_s[1]) rsv_h <= 2'b00; else rsv_h <= 2'b11;
+    reg [NR*52-1:0] fw;
+    always @(posedge ck[0]) fw <= f_w;
+    wire [NR-1:0] hovf;
+    genvar g;
+    generate for (g = 0; g < NR; g = g + 1) begin : g_r
+        if (LOCAL_CTRL) begin : g_local_row
+            (* keep_hierarchy *) dsfd_capt_row_local #(.LD(LD)) u_row
+                (.ck(ck), .ckv(ckv), .rs_s(rst_s[1]), .rv_s(rv_s[1]),
+                 .fw(fw[52*g +: 52]), .t_vm(t_vm[104*g +: 104]), .hovf(hovf[g]));
+        end else begin : g_original_row
+        localparam integer H = g / (NR / 2);
+        wire rs_n = rst_h[H];
+        wire vm_valid = fw[52 * g];
+        wire [50:0] din = fw[52 * g + 1 +: 51];
+        reg [50:0] h [0:3];
+        reg [1:0] hr, hw;
+        reg [2:0] hc;
+        reg ho;
+        wire wr;
+        wire [2:0] npop = (!wr || hc == 3'd0) ? 3'd0 : (hc == 3'd1) ? 3'd1 : 3'd2;
+        wire crdy = LOCAL_CTRL ? (!hc[2] || (wr && !hc[1])) : ((hc - npop) < 3'd4);
+        always @(posedge ck[0] or negedge rs_n)
+            if (!rs_n) begin hr <= 2'd0; hw <= 2'd0; hc <= 3'd0; ho <= 1'b0; end
+            else begin
+                hr <= hr + npop[1:0];
+                if (vm_valid && crdy) begin hw <= hw + 2'd1; if (!LOCAL_CTRL) h[hw] <= din; end
+                hc <= hc - npop + ((vm_valid && crdy) ? 3'd1 : 3'd0);
+                if (vm_valid && !crdy) ho <= 1'b1;
+            end
+        if (LOCAL_CTRL) begin : g_local_store
+            for (genvar off = 0; off < 51; off = off + 17) begin : g_slice
+                wire [67:0] words;
+                (* keep_hierarchy *) dsfd_capt_hold_slice u_store
+                    (.ck(ck[0]), .rs_n(rs_n), .valid(vm_valid), .ready(crdy),
+                     .pop(wr), .hw(hw), .rs_s(1'b0), .read_next(2'd0), .read0(), .read1(), .din(din[off +: 17]), .words(words));
+                for (genvar bank = 0; bank < 4; bank = bank + 1)
+                    assign h[bank][off +: 17] = words[17*bank +: 17];
+            end
+        end
+        assign hovf[g] = ho;
+        wire cv; wire [102:0] cd;
+        ot_ratio_cdc_fifo #(.W(103), .DEPTH(LD), .LAG(1), .LOCAL_CTRL(LOCAL_CTRL)) u_x (.wclk(ck[0]), .wrst_n(rs_n), .w_v(hc != 3'd0), .w_rdy(wr),
+            .w_d({h[hr + 2'd1], hc >= 3'd2, h[hr]}), .rclk(ckv[0]), .rrst_n(rsv_h[H]), .r_v(cv), .r_rdy(1'b1),
+            .r_d(cd), .w_live(), .r_live());
+        reg [1:0] ov; reg [101:0] od;
+        always @(posedge ckv[0] or negedge rsv_h[H]) if (!rsv_h[H]) ov <= 2'b00; else ov <= {cv & cd[51], cv};
+        always @(posedge ckv[0]) begin od[50:0] <= cd[50:0]; od[101:51] <= cd[102:52]; end
+        assign t_vm[104 * g +: 104] = {od[101:51], ov[1], od[50:0], ov[0]};
+        end
+    end endgenerate
+    reg hq;
+    always @(posedge ck[0] or negedge rst_h[0]) if (!rst_h[0]) hq <= 1'b0; else hq <= |hovf;
+    assign t_ho = hq;
+endmodule
+
+module dsfd_capt_x8_data_w (
+    input wire [0:0] ck, rst, ckv, rsv,
+    input wire [415:0] f_w,
+    output wire [831:0] t_vm,
+    output wire [0:0] t_ho
+);
+    localparam integer NR = 8, LD = 4, LOCAL_CTRL = 1;
+    reg [1:0] rst_s, rv_s;
+    always @(posedge ck[0] or negedge rst[0]) if (!rst[0]) rst_s <= 2'b00; else rst_s <= {rst_s[0], 1'b1};
+    always @(posedge ckv[0] or negedge rsv[0]) if (!rsv[0]) rv_s <= 2'b00; else rv_s <= {rv_s[0], 1'b1};
+    (* keep *) reg [1:0] rst_h, rsv_h;
+    always @(posedge ck[0] or negedge rst_s[1]) if (!rst_s[1]) rst_h <= 2'b00; else rst_h <= 2'b11;
+    always @(posedge ckv[0] or negedge rv_s[1]) if (!rv_s[1]) rsv_h <= 2'b00; else rsv_h <= 2'b11;
+    reg [NR*52-1:0] fw;
+    always @(posedge ck[0]) fw <= f_w;
+    wire [NR-1:0] hovf;
+    genvar g;
+    generate for (g = 0; g < NR; g = g + 1) begin : g_r
+        if (LOCAL_CTRL) begin : g_local_row
+            (* keep_hierarchy *) dsfd_capt_row_local #(.LD(LD)) u_row
+                (.ck(ck), .ckv(ckv), .rs_s(rst_s[1]), .rv_s(rv_s[1]),
+                 .fw(fw[52*g +: 52]), .t_vm(t_vm[104*g +: 104]), .hovf(hovf[g]));
+        end else begin : g_original_row
+        localparam integer H = g / (NR / 2);
+        wire rs_n = rst_h[H];
+        wire vm_valid = fw[52 * g];
+        wire [50:0] din = fw[52 * g + 1 +: 51];
+        reg [50:0] h [0:3];
+        reg [1:0] hr, hw;
+        reg [2:0] hc;
+        reg ho;
+        wire wr;
+        wire [2:0] npop = (!wr || hc == 3'd0) ? 3'd0 : (hc == 3'd1) ? 3'd1 : 3'd2;
+        wire crdy = LOCAL_CTRL ? (!hc[2] || (wr && !hc[1])) : ((hc - npop) < 3'd4);
+        always @(posedge ck[0] or negedge rs_n)
+            if (!rs_n) begin hr <= 2'd0; hw <= 2'd0; hc <= 3'd0; ho <= 1'b0; end
+            else begin
+                hr <= hr + npop[1:0];
+                if (vm_valid && crdy) begin hw <= hw + 2'd1; if (!LOCAL_CTRL) h[hw] <= din; end
+                hc <= hc - npop + ((vm_valid && crdy) ? 3'd1 : 3'd0);
+                if (vm_valid && !crdy) ho <= 1'b1;
+            end
+        if (LOCAL_CTRL) begin : g_local_store
+            for (genvar off = 0; off < 51; off = off + 17) begin : g_slice
+                wire [67:0] words;
+                (* keep_hierarchy *) dsfd_capt_hold_slice u_store
+                    (.ck(ck[0]), .rs_n(rs_n), .valid(vm_valid), .ready(crdy),
+                     .pop(wr), .hw(hw), .rs_s(1'b0), .read_next(2'd0), .read0(), .read1(), .din(din[off +: 17]), .words(words));
+                for (genvar bank = 0; bank < 4; bank = bank + 1)
+                    assign h[bank][off +: 17] = words[17*bank +: 17];
+            end
+        end
+        assign hovf[g] = ho;
+        wire cv; wire [102:0] cd;
+        ot_ratio_cdc_fifo #(.W(103), .DEPTH(LD), .LAG(1), .LOCAL_CTRL(LOCAL_CTRL)) u_x (.wclk(ck[0]), .wrst_n(rs_n), .w_v(hc != 3'd0), .w_rdy(wr),
+            .w_d({h[hr + 2'd1], hc >= 3'd2, h[hr]}), .rclk(ckv[0]), .rrst_n(rsv_h[H]), .r_v(cv), .r_rdy(1'b1),
+            .r_d(cd), .w_live(), .r_live());
+        reg [1:0] ov; reg [101:0] od;
+        always @(posedge ckv[0] or negedge rsv_h[H]) if (!rsv_h[H]) ov <= 2'b00; else ov <= {cv & cd[51], cv};
+        always @(posedge ckv[0]) begin od[50:0] <= cd[50:0]; od[101:51] <= cd[102:52]; end
+        assign t_vm[104 * g +: 104] = {od[101:51], ov[1], od[50:0], ov[0]};
+        end
+    end endgenerate
+    reg hq;
+    always @(posedge ck[0] or negedge rst_h[0]) if (!rst_h[0]) hq <= 1'b0; else hq <= |hovf;
+    assign t_ho = hq;
+endmodule
+
 module dsfd_capt_g2_dualho #(
     parameter integer NR = 16,               // roots per tile
     parameter integer LD = 4

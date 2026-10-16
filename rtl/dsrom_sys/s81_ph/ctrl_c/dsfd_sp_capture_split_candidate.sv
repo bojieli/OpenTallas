@@ -71,9 +71,9 @@ module dsfd_sp_capture_split_candidate (
         dsfd_capt_g2_dualho u_g (.ck(ck_g[g]), .rst(rst), .f_row(f_gather[53 * 16 * g +: 53 * 16]), .f_k(kd[KB * g +: KB]),
             .t_w(w), .f_ho(ho_half), .t_sb(st[2 * g +: 2]));
 
-        dsfd_capt_x8_data u_x0 (.ck(ck_x[2*g]), .rst(rst), .ckv(ckv_x[2*g]), .rsv(rsv),
+        dsfd_capt_x8_data_e u_x0 (.ck(ck_x[2*g]), .rst(rst), .ckv(ckv_x[2*g]), .rsv(rsv),
             .f_w(w[415:0]), .t_vm(t_vm[1664*g +: 832]), .t_ho(ho_half[0]));
-        dsfd_capt_x8_data u_x1 (.ck(ck_x[2*g+1]), .rst(rst), .ckv(ckv_x[2*g+1]), .rsv(rsv),
+        dsfd_capt_x8_data_w u_x1 (.ck(ck_x[2*g+1]), .rst(rst), .ckv(ckv_x[2*g+1]), .rsv(rsv),
             .f_w(w[831:416]), .t_vm(t_vm[1664*g+832 +: 832]), .t_ho(ho_half[1]));
 
     end endgenerate

@@ -17,7 +17,7 @@ ROOT = Path(__file__).resolve().parents[2]
 BASE = "rtl/dsrom_sys/s81_ph/ctrl_c/"
 GROUPS = {
     "rtl/dsrom_sys/s81_ph/ot_s81ph_cap_tile.sv": ["dsfd_capt_ctl"],
-    BASE + "dsfd_capt_split.sv": ["dsfd_capt_x8_data", "dsfd_capt_g2_dualho", "dsfd_capt_status_dual",
+    BASE + "dsfd_capt_split.sv": ["dsfd_capt_x8_data_e", "dsfd_capt_x8_data_w", "dsfd_capt_g2_dualho", "dsfd_capt_status_dual",
                                "dsfd_capt_rly_31_EW", "dsfd_capt_rly_36_WE", "dsfd_capt_rly_64_EW", "dsfd_capt_rly_12_SN"],
     BASE + "dsfd_capt_cd.sv": ["dsfd_capt_cd"],
     "rtl/dsrom_sys/s81_glue/dsfd_rly_masters.sv": ["dsfd_rly_68_EW", "dsfd_rly_2_WE", "dsfd_rly_63_WE", "dsfd_rly_2_EW"],
