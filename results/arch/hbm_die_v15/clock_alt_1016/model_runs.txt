@@ -1,0 +1,15 @@
+{"variant": "open", "mode": "htree", "bin_um": 1600.0, "sinks": 586, "buffers": 8750, "pad_bufs": 4081, "insertion_ps": [8519.0, 8559.0], "free": 0.9388, "secs": 0}
+{"variant": "grid", "mode": "htree", "bin_um": 1600.0, "sinks": 586, "buffers": 16329, "pad_bufs": 11260, "insertion_ps": [11196.1, 11236.8], "free": 0.2001, "secs": 13}
+{"variant": "granted", "mode": "htree", "bin_um": 800.0, "sinks": 586, "buffers": 17837, "pad_bufs": 11861, "insertion_ps": [11475.2, 11515.3], "free": 0.1951, "secs": 24}
+{"variant": "granted", "mode": "htree", "bin_um": 1600.0, "sinks": 586, "buffers": 13604, "pad_bufs": 8090, "insertion_ps": [11512.7, 11550.4], "free": 0.1951, "secs": 36}
+[1]   Done                    timeout 3000 python3 clk_alt.py $v
+[2]   Done                    timeout 3000 python3 clk_alt.py $v
+[3]   Done                    timeout 3000 python3 clk_alt.py $v
+[7]+  Done                    timeout 3000 python3 clk_alt.py $v
+{"variant": "base", "mode": "htree", "bin_um": 3200.0, "sinks": 586, "buffers": 26475, "pad_bufs": 20072, "insertion_ps": [16584.8, 16633.0], "free": 0.183, "secs": 72}
+[4]   Terminated              timeout 3000 python3 clk_alt.py $v
+[6]+  Done                    timeout 3000 python3 clk_alt.py $v
+{"variant": "granted", "mode": "quad", "bin_um": 1600.0, "sinks": 586, "buffers": 27236, "pad_bufs": 14733, "insertion_ps": [12881.1, 12932.4], "free": 0.1951, "secs": 419}
+[5]+  Done                    timeout 3000 python3 clk_alt.py $v
+
+[exited with code 0]
