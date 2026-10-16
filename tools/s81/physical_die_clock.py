@@ -56,7 +56,11 @@ def graph_pairs(entries, tile_pairs):
     for pins in by.values():
         pins.sort(key=lambda p: (p[1], p[2], p[0]))
         out.update((a[0], b[0]) for a, b in zip(pins, pins[1:]))
-    for a, b in sorted(tile_pairs):
+    if isinstance(tile_pairs,dict):
+        links=((a,b) for a in sorted(by) for b in sorted(tile_pairs.get(a,())) if a<b and b in by)
+    else:
+        links=sorted(tile_pairs)
+    for a,b in links:
         if a not in by or b not in by:
             continue
         p, q = min(((p, q) for p in by[a] for q in by[b]),
@@ -98,6 +102,9 @@ def main():
     ap.add_argument('--dump', required=True, type=Path)
     ap.add_argument('--out', required=True, type=Path)
     ap.add_argument('--domains', default='serial', help='comma-separated PLL domains; empty string selects only extra roots')
+    ap.add_argument('--root-contract', type=Path, help='source-model clock intent resolved against the exact actual input ODB')
+    ap.add_argument('--mode', choices=('graph','htree'), default='graph',
+                    help='structural candidate: communication graph or geometric balanced H-tree')
     ap.add_argument('--extra-root', action='append', default=[], metavar='NAME=INST/PIN',
                     help='actual forwarded clock output; preserve that native driver and all its actual input loads')
     a = ap.parse_args()
@@ -105,6 +112,9 @@ def main():
     if (a.out / 'physical_clock.odb').exists():
         raise ValueError('refusing to overwrite an existing physical candidate')
     roots, entries, pairs = load_dump(a.dump)
+    pair_index=defaultdict(set)
+    for left,right in pairs:
+        pair_index[left].add(right);pair_index[right].add(left)
     db = odb.dbDatabase.create()
     odb.read_db(db, str(a.input_odb))
     block = db.getChip().getBlock()
@@ -124,8 +134,21 @@ def main():
     # and RTL clock-source/forwarded-clock binding.
     clocklike = re.compile(r'^(?:(?:ck|clk|sk)|(?:fi0?|xf|cr|wclk|rclk|io_clk)(?:_|\[|$))')
     root_names={d:f'sp_collective/pll_{d}[0]' for d in a.domains.split(',') if d}
+    root_contract=None
+    extra_roots=list(a.extra_root)
+    if a.root_contract:
+        root_contract=json.loads(a.root_contract.read_text())
+        if root_contract.get('schema')!='opentallas.s81.actual_clock_intent.v1':
+            raise ValueError('unexpected native clock root contract schema')
+        if root_contract.get('verdict')!='PASS_CLOCK_INTENT_TOPOLOGY_ONLY':
+            raise ValueError('native clock intent has binding failures; repair actual LEF/RTL source rather than infer clock drivers')
+        if root_contract['odb_sha256']!=digest(a.input_odb):
+            raise ValueError('native clock intent belongs to a different actual ODB')
+        for index,row in enumerate(root_contract['roots']):
+            if row['driver'] not in root_names.values():
+                extra_roots.append(f'intent{index:05d}='+row['driver'])
     noncanonical_entries=[]
-    for spec in a.extra_root:
+    for spec in extra_roots:
         name,root=spec.split('=',1)
         if not re.fullmatch(r'[A-Za-z][A-Za-z0-9_]*',name) or name in root_names:
             raise ValueError(f'invalid or duplicate extra clock root name: {name}')
@@ -179,10 +202,20 @@ def main():
             if abs(xy[0]-x)+abs(xy[1]-y) > .002:
                 raise ValueError(f'dump/ODB placed pin mismatch: {key} {xy} vs {(x,y)}')
             sinks.append((key, 'entry', *xy))
-        local_pairs = graph_pairs(entries[root], pairs)
+        local_pairs = graph_pairs(entries[root], pair_index)
         print(f'CLOCK_BUILD {domain}: {len(sinks)} actual pins, {len(local_pairs)} graph edges', flush=True)
-        tree = dct.build(width, height, obstacles, roots[root], sinks,
-                         lambda n: 'SW', mode='graph', pairs=local_pairs)
+        mode='graph' if domain.startswith('intent') else a.mode
+        # A short native forwarded point-to-point clock already has a driver
+        # and wire; do not send it to the global die centre or add needless
+        # buffers. Routed RC and native load qualification remain required.
+        distance=(abs(roots[root][0]-sinks[0][2])+abs(roots[root][1]-sinks[0][3])) if len(sinks)==1 else None
+        if domain.startswith('intent') and distance is not None and distance<=dct.SPAN:
+            tree=dict(buffers=[],nets=[('direct',('port','clk_hbm'),[('pin',sinks[0][0],'entry')])],
+                      model=dict(mode='native_direct_wire',manhattan_um=distance,buffers=0,
+                                 timing='actual routed RC still required'))
+        else:
+            tree = dct.build(width, height, obstacles, roots[root], sinks,
+                             lambda n: 'SW', mode=mode, pairs=local_pairs)
         checks[domain] = verify_topology(tree, [s[0] for s in sinks])
         # A removed leaf must be rejected; this guards the actual coverage gate.
         broken = dict(tree, nets=[n for n in tree['nets'] if not any(p[0]=='pin' for p in n[2])])
@@ -234,6 +267,7 @@ def main():
         scope='PHYSICAL_TOPOLOGY_PILOT_NOT_NATIVE_CLOCK_OR_DIE_QUALIFICATION',
         input_odb=dict(path=str(a.input_odb), sha256=digest(a.input_odb)),
         input_dump=dict(path=str(a.dump), sha256=digest(a.dump)),
+        root_contract_sha256=digest(a.root_contract) if a.root_contract else None,
         source_sha256={str(p.relative_to(Path(__file__).resolve().parents[2])): digest(p)
             for p in [Path(__file__).resolve(), Path(dct.__file__), Path(clock_sites.__file__)]},
         dimensions_um=[width,height], hard_obstacles=len(obstacles),
@@ -244,6 +278,7 @@ def main():
         open_obligations=['propagated TT/FF arrival with actual pin capacitance and physical RC',
             'per-child corner insertion R compensation: physical positive delays only',
             'all PLL and forwarded/ratio clock coverage against RTL/Liberty',
+            'actual clock-cell power/ground connections and PG grid',
             'post-route uncertainty and setup/hold/DRC; topology model gives no credit'])
     odb.write_db(db, str(a.out/'physical_clock.odb'))
     (a.out/'physical_clock.json').write_text(json.dumps(manifest,indent=1)+'\n')

@@ -35,6 +35,13 @@ class PhysicalClockSTATests(unittest.TestCase):
             self.assertNotIn('set_clock_latency',text)
             self.assertNotIn('set_false_path',text)
 
+    def test_forwarded_clock_cannot_become_independent_ideal_root(self):
+        row=json.loads(self.candidate.read_text())
+        row['domains']={'col70':dict(root='cf70/co[0]')}
+        self.candidate.write_text(json.dumps(row))
+        with self.assertRaisesRegex(ValueError,'native generated-clock/ratio contract'):
+            emit(self.candidate,self.dump,self.binding,self.root,self.root/'out',True)
+
     def test_changed_source_library_is_refused_even_for_diagnostic(self):
         path=self.root/'lib.lib';path.write_text('cell(MASTER) {}')
         files={corner:dict(path='lib.lib',sha256=sha(path)) for corner in ('tt','ff')}

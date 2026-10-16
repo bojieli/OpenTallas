@@ -11,6 +11,8 @@ class PhysicalClockTests(unittest.TestCase):
         self.assertIn(('vm/ck0', 'vm/ck1'), pairs)
         self.assertIn(('vm/ck1', 'relay/ck'), pairs)
         self.assertEqual(len(pairs), 2)
+        self.assertEqual({frozenset(e) for e in graph_pairs(entries,{'vm':{'relay'},'relay':{'vm'}})},
+                         {frozenset(e) for e in pairs})
 
     def test_missing_leaf_and_double_drive_are_refused(self):
         tree = dict(buffers=[('a', 'BUF', 0., 0.)], nets=[
