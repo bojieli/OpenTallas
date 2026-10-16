@@ -1,0 +1,523 @@
+{
+ "schema": "opentallas.qwen.dvm.head_onward2_receipt.v1",
+ "owner": "Q-LINK-D2D 2026-10-16",
+ "decision": "Q-ELEM option (a), accepted by Q-COMPUTE-DIE: qfd_xhead_e/w_w130 ONWARD_REG 2 (input + output onward registers, +1 edge per head-row hop)",
+ "cause": "w1 (129.6x345.6, ONWARD_REG 1) gate native capture E 243.6 ps (1416 pins) / W 233.7 (1567): the 0-cycle onward copy crossed the whole head; w2 (ONWARD 2) capture 185.9 / 182.5 PASS",
+ "rtl_commit": "7e4bb8103 (ONWARD_REG 2, fabric HEAD_CHAIN, tb SCHED_ONWARD); FLT_PIPE 7875715b9 (fault events registered)",
+ "schedule": {
+  "model": "HEAD_CHAIN 1: two roots (tap hw W / he E), NCOL/2 = 24 heads a side chained through b_d; every column's corridor outputs equalised to the farthest head (static, compiler-visible; no handshake)",
+  "head_row_edges_onward1": 23,
+  "head_row_edges_onward2": 46,
+  "extra_edges_per_ME_op": 23,
+  "tb_terms": "BDR = HB + HCHR + NH + 3 + XVMR; DOFF = 3 + DX - XVMR + HCHD - HCHR; HCHR = NCOL/2-1, HCHD = (NCOL/2-1) * (SCHED_ONWARD>=2 ? 2 : 1)",
+  "per_column": [
+   {
+    "column": 0,
+    "side": "W",
+    "hops_from_root": 23,
+    "arrival_edges_onward1": 23,
+    "arrival_edges_onward2": 46,
+    "equalise_edges_onward1": 0,
+    "equalise_edges_onward2": 0,
+    "effective_extra_edges_vs_onward1": 23
+   },
+   {
+    "column": 1,
+    "side": "W",
+    "hops_from_root": 22,
+    "arrival_edges_onward1": 22,
+    "arrival_edges_onward2": 44,
+    "equalise_edges_onward1": 1,
+    "equalise_edges_onward2": 2,
+    "effective_extra_edges_vs_onward1": 23
+   },
+   {
+    "column": 2,
+    "side": "W",
+    "hops_from_root": 21,
+    "arrival_edges_onward1": 21,
+    "arrival_edges_onward2": 42,
+    "equalise_edges_onward1": 2,
+    "equalise_edges_onward2": 4,
+    "effective_extra_edges_vs_onward1": 23
+   },
+   {
+    "column": 3,
+    "side": "W",
+    "hops_from_root": 20,
+    "arrival_edges_onward1": 20,
+    "arrival_edges_onward2": 40,
+    "equalise_edges_onward1": 3,
+    "equalise_edges_onward2": 6,
+    "effective_extra_edges_vs_onward1": 23
+   },
+   {
+    "column": 4,
+    "side": "W",
+    "hops_from_root": 19,
+    "arrival_edges_onward1": 19,
+    "arrival_edges_onward2": 38,
+    "equalise_edges_onward1": 4,
+    "equalise_edges_onward2": 8,
+    "effective_extra_edges_vs_onward1": 23
+   },
+   {
+    "column": 5,
+    "side": "W",
+    "hops_from_root": 18,
+    "arrival_edges_onward1": 18,
+    "arrival_edges_onward2": 36,
+    "equalise_edges_onward1": 5,
+    "equalise_edges_onward2": 10,
+    "effective_extra_edges_vs_onward1": 23
+   },
+   {
+    "column": 6,
+    "side": "W",
+    "hops_from_root": 17,
+    "arrival_edges_onward1": 17,
+    "arrival_edges_onward2": 34,
+    "equalise_edges_onward1": 6,
+    "equalise_edges_onward2": 12,
+    "effective_extra_edges_vs_onward1": 23
+   },
+   {
+    "column": 7,
+    "side": "W",
+    "hops_from_root": 16,
+    "arrival_edges_onward1": 16,
+    "arrival_edges_onward2": 32,
+    "equalise_edges_onward1": 7,
+    "equalise_edges_onward2": 14,
+    "effective_extra_edges_vs_onward1": 23
+   },
+   {
+    "column": 8,
+    "side": "W",
+    "hops_from_root": 15,
+    "arrival_edges_onward1": 15,
+    "arrival_edges_onward2": 30,
+    "equalise_edges_onward1": 8,
+    "equalise_edges_onward2": 16,
+    "effective_extra_edges_vs_onward1": 23
+   },
+   {
+    "column": 9,
+    "side": "W",
+    "hops_from_root": 14,
+    "arrival_edges_onward1": 14,
+    "arrival_edges_onward2": 28,
+    "equalise_edges_onward1": 9,
+    "equalise_edges_onward2": 18,
+    "effective_extra_edges_vs_onward1": 23
+   },
+   {
+    "column": 10,
+    "side": "W",
+    "hops_from_root": 13,
+    "arrival_edges_onward1": 13,
+    "arrival_edges_onward2": 26,
+    "equalise_edges_onward1": 10,
+    "equalise_edges_onward2": 20,
+    "effective_extra_edges_vs_onward1": 23
+   },
+   {
+    "column": 11,
+    "side": "W",
+    "hops_from_root": 12,
+    "arrival_edges_onward1": 12,
+    "arrival_edges_onward2": 24,
+    "equalise_edges_onward1": 11,
+    "equalise_edges_onward2": 22,
+    "effective_extra_edges_vs_onward1": 23
+   },
+   {
+    "column": 12,
+    "side": "W",
+    "hops_from_root": 11,
+    "arrival_edges_onward1": 11,
+    "arrival_edges_onward2": 22,
+    "equalise_edges_onward1": 12,
+    "equalise_edges_onward2": 24,
+    "effective_extra_edges_vs_onward1": 23
+   },
+   {
+    "column": 13,
+    "side": "W",
+    "hops_from_root": 10,
+    "arrival_edges_onward1": 10,
+    "arrival_edges_onward2": 20,
+    "equalise_edges_onward1": 13,
+    "equalise_edges_onward2": 26,
+    "effective_extra_edges_vs_onward1": 23
+   },
+   {
+    "column": 14,
+    "side": "W",
+    "hops_from_root": 9,
+    "arrival_edges_onward1": 9,
+    "arrival_edges_onward2": 18,
+    "equalise_edges_onward1": 14,
+    "equalise_edges_onward2": 28,
+    "effective_extra_edges_vs_onward1": 23
+   },
+   {
+    "column": 15,
+    "side": "W",
+    "hops_from_root": 8,
+    "arrival_edges_onward1": 8,
+    "arrival_edges_onward2": 16,
+    "equalise_edges_onward1": 15,
+    "equalise_edges_onward2": 30,
+    "effective_extra_edges_vs_onward1": 23
+   },
+   {
+    "column": 16,
+    "side": "W",
+    "hops_from_root": 7,
+    "arrival_edges_onward1": 7,
+    "arrival_edges_onward2": 14,
+    "equalise_edges_onward1": 16,
+    "equalise_edges_onward2": 32,
+    "effective_extra_edges_vs_onward1": 23
+   },
+   {
+    "column": 17,
+    "side": "W",
+    "hops_from_root": 6,
+    "arrival_edges_onward1": 6,
+    "arrival_edges_onward2": 12,
+    "equalise_edges_onward1": 17,
+    "equalise_edges_onward2": 34,
+    "effective_extra_edges_vs_onward1": 23
+   },
+   {
+    "column": 18,
+    "side": "W",
+    "hops_from_root": 5,
+    "arrival_edges_onward1": 5,
+    "arrival_edges_onward2": 10,
+    "equalise_edges_onward1": 18,
+    "equalise_edges_onward2": 36,
+    "effective_extra_edges_vs_onward1": 23
+   },
+   {
+    "column": 19,
+    "side": "W",
+    "hops_from_root": 4,
+    "arrival_edges_onward1": 4,
+    "arrival_edges_onward2": 8,
+    "equalise_edges_onward1": 19,
+    "equalise_edges_onward2": 38,
+    "effective_extra_edges_vs_onward1": 23
+   },
+   {
+    "column": 20,
+    "side": "W",
+    "hops_from_root": 3,
+    "arrival_edges_onward1": 3,
+    "arrival_edges_onward2": 6,
+    "equalise_edges_onward1": 20,
+    "equalise_edges_onward2": 40,
+    "effective_extra_edges_vs_onward1": 23
+   },
+   {
+    "column": 21,
+    "side": "W",
+    "hops_from_root": 2,
+    "arrival_edges_onward1": 2,
+    "arrival_edges_onward2": 4,
+    "equalise_edges_onward1": 21,
+    "equalise_edges_onward2": 42,
+    "effective_extra_edges_vs_onward1": 23
+   },
+   {
+    "column": 22,
+    "side": "W",
+    "hops_from_root": 1,
+    "arrival_edges_onward1": 1,
+    "arrival_edges_onward2": 2,
+    "equalise_edges_onward1": 22,
+    "equalise_edges_onward2": 44,
+    "effective_extra_edges_vs_onward1": 23
+   },
+   {
+    "column": 23,
+    "side": "W",
+    "hops_from_root": 0,
+    "arrival_edges_onward1": 0,
+    "arrival_edges_onward2": 0,
+    "equalise_edges_onward1": 23,
+    "equalise_edges_onward2": 46,
+    "effective_extra_edges_vs_onward1": 23
+   },
+   {
+    "column": 24,
+    "side": "E",
+    "hops_from_root": 0,
+    "arrival_edges_onward1": 0,
+    "arrival_edges_onward2": 0,
+    "equalise_edges_onward1": 23,
+    "equalise_edges_onward2": 46,
+    "effective_extra_edges_vs_onward1": 23
+   },
+   {
+    "column": 25,
+    "side": "E",
+    "hops_from_root": 1,
+    "arrival_edges_onward1": 1,
+    "arrival_edges_onward2": 2,
+    "equalise_edges_onward1": 22,
+    "equalise_edges_onward2": 44,
+    "effective_extra_edges_vs_onward1": 23
+   },
+   {
+    "column": 26,
+    "side": "E",
+    "hops_from_root": 2,
+    "arrival_edges_onward1": 2,
+    "arrival_edges_onward2": 4,
+    "equalise_edges_onward1": 21,
+    "equalise_edges_onward2": 42,
+    "effective_extra_edges_vs_onward1": 23
+   },
+   {
+    "column": 27,
+    "side": "E",
+    "hops_from_root": 3,
+    "arrival_edges_onward1": 3,
+    "arrival_edges_onward2": 6,
+    "equalise_edges_onward1": 20,
+    "equalise_edges_onward2": 40,
+    "effective_extra_edges_vs_onward1": 23
+   },
+   {
+    "column": 28,
+    "side": "E",
+    "hops_from_root": 4,
+    "arrival_edges_onward1": 4,
+    "arrival_edges_onward2": 8,
+    "equalise_edges_onward1": 19,
+    "equalise_edges_onward2": 38,
+    "effective_extra_edges_vs_onward1": 23
+   },
+   {
+    "column": 29,
+    "side": "E",
+    "hops_from_root": 5,
+    "arrival_edges_onward1": 5,
+    "arrival_edges_onward2": 10,
+    "equalise_edges_onward1": 18,
+    "equalise_edges_onward2": 36,
+    "effective_extra_edges_vs_onward1": 23
+   },
+   {
+    "column": 30,
+    "side": "E",
+    "hops_from_root": 6,
+    "arrival_edges_onward1": 6,
+    "arrival_edges_onward2": 12,
+    "equalise_edges_onward1": 17,
+    "equalise_edges_onward2": 34,
+    "effective_extra_edges_vs_onward1": 23
+   },
+   {
+    "column": 31,
+    "side": "E",
+    "hops_from_root": 7,
+    "arrival_edges_onward1": 7,
+    "arrival_edges_onward2": 14,
+    "equalise_edges_onward1": 16,
+    "equalise_edges_onward2": 32,
+    "effective_extra_edges_vs_onward1": 23
+   },
+   {
+    "column": 32,
+    "side": "E",
+    "hops_from_root": 8,
+    "arrival_edges_onward1": 8,
+    "arrival_edges_onward2": 16,
+    "equalise_edges_onward1": 15,
+    "equalise_edges_onward2": 30,
+    "effective_extra_edges_vs_onward1": 23
+   },
+   {
+    "column": 33,
+    "side": "E",
+    "hops_from_root": 9,
+    "arrival_edges_onward1": 9,
+    "arrival_edges_onward2": 18,
+    "equalise_edges_onward1": 14,
+    "equalise_edges_onward2": 28,
+    "effective_extra_edges_vs_onward1": 23
+   },
+   {
+    "column": 34,
+    "side": "E",
+    "hops_from_root": 10,
+    "arrival_edges_onward1": 10,
+    "arrival_edges_onward2": 20,
+    "equalise_edges_onward1": 13,
+    "equalise_edges_onward2": 26,
+    "effective_extra_edges_vs_onward1": 23
+   },
+   {
+    "column": 35,
+    "side": "E",
+    "hops_from_root": 11,
+    "arrival_edges_onward1": 11,
+    "arrival_edges_onward2": 22,
+    "equalise_edges_onward1": 12,
+    "equalise_edges_onward2": 24,
+    "effective_extra_edges_vs_onward1": 23
+   },
+   {
+    "column": 36,
+    "side": "E",
+    "hops_from_root": 12,
+    "arrival_edges_onward1": 12,
+    "arrival_edges_onward2": 24,
+    "equalise_edges_onward1": 11,
+    "equalise_edges_onward2": 22,
+    "effective_extra_edges_vs_onward1": 23
+   },
+   {
+    "column": 37,
+    "side": "E",
+    "hops_from_root": 13,
+    "arrival_edges_onward1": 13,
+    "arrival_edges_onward2": 26,
+    "equalise_edges_onward1": 10,
+    "equalise_edges_onward2": 20,
+    "effective_extra_edges_vs_onward1": 23
+   },
+   {
+    "column": 38,
+    "side": "E",
+    "hops_from_root": 14,
+    "arrival_edges_onward1": 14,
+    "arrival_edges_onward2": 28,
+    "equalise_edges_onward1": 9,
+    "equalise_edges_onward2": 18,
+    "effective_extra_edges_vs_onward1": 23
+   },
+   {
+    "column": 39,
+    "side": "E",
+    "hops_from_root": 15,
+    "arrival_edges_onward1": 15,
+    "arrival_edges_onward2": 30,
+    "equalise_edges_onward1": 8,
+    "equalise_edges_onward2": 16,
+    "effective_extra_edges_vs_onward1": 23
+   },
+   {
+    "column": 40,
+    "side": "E",
+    "hops_from_root": 16,
+    "arrival_edges_onward1": 16,
+    "arrival_edges_onward2": 32,
+    "equalise_edges_onward1": 7,
+    "equalise_edges_onward2": 14,
+    "effective_extra_edges_vs_onward1": 23
+   },
+   {
+    "column": 41,
+    "side": "E",
+    "hops_from_root": 17,
+    "arrival_edges_onward1": 17,
+    "arrival_edges_onward2": 34,
+    "equalise_edges_onward1": 6,
+    "equalise_edges_onward2": 12,
+    "effective_extra_edges_vs_onward1": 23
+   },
+   {
+    "column": 42,
+    "side": "E",
+    "hops_from_root": 18,
+    "arrival_edges_onward1": 18,
+    "arrival_edges_onward2": 36,
+    "equalise_edges_onward1": 5,
+    "equalise_edges_onward2": 10,
+    "effective_extra_edges_vs_onward1": 23
+   },
+   {
+    "column": 43,
+    "side": "E",
+    "hops_from_root": 19,
+    "arrival_edges_onward1": 19,
+    "arrival_edges_onward2": 38,
+    "equalise_edges_onward1": 4,
+    "equalise_edges_onward2": 8,
+    "effective_extra_edges_vs_onward1": 23
+   },
+   {
+    "column": 44,
+    "side": "E",
+    "hops_from_root": 20,
+    "arrival_edges_onward1": 20,
+    "arrival_edges_onward2": 40,
+    "equalise_edges_onward1": 3,
+    "equalise_edges_onward2": 6,
+    "effective_extra_edges_vs_onward1": 23
+   },
+   {
+    "column": 45,
+    "side": "E",
+    "hops_from_root": 21,
+    "arrival_edges_onward1": 21,
+    "arrival_edges_onward2": 42,
+    "equalise_edges_onward1": 2,
+    "equalise_edges_onward2": 4,
+    "effective_extra_edges_vs_onward1": 23
+   },
+   {
+    "column": 46,
+    "side": "E",
+    "hops_from_root": 22,
+    "arrival_edges_onward1": 22,
+    "arrival_edges_onward2": 44,
+    "equalise_edges_onward1": 1,
+    "equalise_edges_onward2": 2,
+    "effective_extra_edges_vs_onward1": 23
+   },
+   {
+    "column": 47,
+    "side": "E",
+    "hops_from_root": 23,
+    "arrival_edges_onward1": 23,
+    "arrival_edges_onward2": 46,
+    "equalise_edges_onward1": 0,
+    "equalise_edges_onward2": 0,
+    "effective_extra_edges_vs_onward1": 23
+   }
+  ]
+ },
+ "benches": {
+  "kit_ncol4": {
+   "onward2": "PASS cycles 1724 element_checks 159744 dvm_minus_ref_edges 6",
+   "chain_onward1": "PASS 1718 / 5",
+   "broadcast_onward1": "PASS 1710 / 5",
+   "sched_onward1_mutant": "FAIL (tile 0 element mismatch cyc 187)",
+   "head_mut7": "FAIL x_fault",
+   "head_mut3": "FAIL"
+  },
+  "prod36_full48": {
+   "baseline_broadcast": "PASS cycles 20976 dvm_minus_ref_edges 5 (ledger 1b3c8c6f4)",
+   "chain_onward1": "PASS NCOL 48 ops 150 cycles 22289 element_checks 57655296 dvm_minus_ref_edges 5 (E4 unit oth-ubuntu-2406111)",
+   "chain_onward2": "PASS NCOL 48 ops 150 cycles 24060 element_checks 57655296 dvm_minus_ref_edges 28 (E4 unit oth-ubuntu-2406117)",
+   "note": "bench cycles are stimulus-paced (each issue waits HB + HCHD + 8); dvm_minus_ref 5 -> 28 is the measured +23-edge head-row shift"
+  }
+ },
+ "e2e": {
+  "base_tok_s": 5839.5,
+  "base_cycles_per_token": 205497,
+  "serial_ME_ops_per_token": 217,
+  "added_cycles_per_token": 4991,
+  "new_tok_s": 5701.0,
+  "delta_pct": -2.37,
+  "hiding": "not hideable: the fill of a dependent op carries the previous op's SU result and must traverse the head row; go may pre-issue but the x cannot; the far-column partial sums reach the tree root last either way",
+  "accepted_cost_rule": "<=5% per unit (owner 10-13): within; ledger row"
+ },
+ "source_basis": "base 5,839.5 tok/s (B4, el1014-qwen-split-compute.log 402), 217 ME ops per AR token (same log 158)"
+}
