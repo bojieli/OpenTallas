@@ -45,34 +45,34 @@
    "design": "qwen_rom",
    "unit": "ATTN.NATIVE_STATIC service (QK+softmax+PV+finalize, T=8192, minimal per-context calendar; link/landing excluded => lower bound)",
    "group": "ATTN.NATIVE",
-   "measured": 5362.0,
+   "measured": 1620.0,
    "price": 1816.0,
    "unit_of_measure": "cycles",
-   "unit_ratio": 2.9526,
-   "e2e_loss_pct": 33.853,
+   "unit_ratio": 0.8921,
+   "e2e_loss_pct": -2.911,
    "binding_workload": "ar",
    "per_workload": {
     "ar": {
      "model": "token-path longest path",
      "base_cycles": 249431.0,
-     "cycles": 377087.0,
-     "added_cycles": 127656.0,
+     "cycles": 242375.0,
+     "added_cycles": -7056.0,
      "runs_per_token": 36,
      "critical_runs": 36,
      "overlapped_runs": 0,
      "other_price_nodes_skipped": 0,
-     "naive_added_cycles": 127656.0,
+     "naive_added_cycles": -7056.0,
      "wave_positions": 0,
      "wave_added_cycles_per_position": 0.0,
-     "e2e_loss_pct": 33.853
+     "e2e_loss_pct": -2.911
     }
    },
-   "within_unit_limit": false,
-   "evidence": "results/arch/qwen_attention_native_calendar_1015/receipt.json",
+   "within_unit_limit": true,
+   "evidence": "results/arch/qwen_attention_rate_1015/receipt.json",
    "evidence_grade": "committed_bench",
    "date": "2026-10-15",
    "status": "proposed",
-   "note": "Q-VMWB 2026-10-15 (coordinator request): priced attn_kv 1816 cyc/layer at P8191 (results/arch/qwen_kv_die_20261009/reprice.json, incl. link step) vs measured static native attention service 5362 cyc at T=8192 (zfix production binary, 53/53 contexts exact; T=1 882, 1000 1425, 4096 3066). Delta 3546 added to every critical attn_kv node; the measured figure excludes the KV link/landing stages, so the loss is a LOWER BOUND. Dominant term: PV pairs stream 1 V row/cycle each (pair out = 590 + T/2 = 4686 at T=8192) vs the priced rate -> needs a structural PV/V-stream redesign (wider PV or more pairs), not acceptance."
+   "note": "Q-ATTN-RATE 2026-10-15 RE-MEASURED after the structural P.V redesign (16 V rows/cycle, ot_qwen_tp8_attention_native_service_w16, 8-bank ot_qwen_tp8_pv_wide_pair x2): service 1555 cyc at T=8192 (53/53 contexts exact, 14 mutants fail) + 65 link (LINK.md 5b) = 1620 vs price 1816 = 0.892x -> QUALIFIES within 1.10x, e2e -2.9 % vs price. History (never overwritten, results/arch/qwen_attention_native_calendar_1015/receipt.json): the 1-row/cycle pairs measured 5362 (2.95x, 33.85 % e2e)."
   },
   {
    "design": "qwen_rom",
@@ -1519,8 +1519,8 @@
  "totals": {
   "qwen_rom": {
    "accepted_pct": 1.065,
-   "proposed_pct": 38.184,
-   "accepted_plus_proposed_pct": 39.249,
+   "proposed_pct": 4.331,
+   "accepted_plus_proposed_pct": 5.396,
    "limit_pct": 15.0,
    "accepted_rows": 4,
    "proposed_rows": 7,

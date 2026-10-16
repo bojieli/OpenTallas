@@ -112,8 +112,30 @@ def hub(z, lmax):
     return hub_lmax, hub_z, recip, pub
 
 
-def calendar(T, lmax=None, exp_gap=None, z_k=None, pv_gap=None):
-    """lmax: LMAX start (default lmax_min); exp_gap: EXP - LMAX; z_k: Z - (EXP + zwalk); pv_gap: PV_START - Z"""
+# ---- Q-ATTN-RATE 2026-10-15: 16-row/cycle P.V (ot_qwen_tp8_attention_native_service_w16, 2 x ot_qwen_tp8_pv_wide_pair) ----
+W16_FIRST = 20          # pair cycle of the q = 0 arrival: request cycle 1 + V_EXT 16 + ER3 3
+W16_DRAIN, W16_TREE, W16_JOIN = 13, 73, 24   # last arrival -> TRA; in-bank tree 16 -> 1 (31+19+13+10); 512-lane join L5-L7
+W16_PV_AFTER_EXP = 188   # PV_START - EXP - zwalk(T): e of the last EP group visible to the 16-row walk (measured, below)
+
+
+def w16_nq(T, p):
+    """issue cycles of pair p: 16 x (rounds of the c = 0 chain + 1 round of high-half skew), 0 for an empty pair"""
+    if T <= 128 * p:
+        return 0
+    return 16 * (((T - 128 * p + 255) >> 8) + 1)
+
+
+def w16_pair_out(T, p):
+    """pair output cycle after the start_pv cycle (ot_qwen_tp8_pv_wide_pair.out_age)"""
+    return W16_FIRST + w16_nq(T, p) - 1 + W16_DRAIN + W16_TREE + W16_JOIN
+
+
+def calendar(T, lmax=None, exp_gap=None, z_k=None, pv_gap=None, pv="w1", w16_gap=None):
+    """lmax: LMAX start (default lmax_min); exp_gap: EXP - LMAX; z_k: Z - (EXP + zwalk); pv_gap: PV_START - Z;
+    pv: 'w1' (1 row/cycle pairs, ot_qwen_tp8_attention_native_service) or 'w16' (16 rows/cycle, _service_w16);
+    w16_gap: w16 only, PV_START - EXP override (default: the measured law pv_after_exp_w16)"""
+    if pv == "w16":
+        return calendar_w16(T, lmax, exp_gap, z_k, w16_gap)
     if not 1 <= T <= 8192:
         raise ValueError("context 1..8192")
     if lmax is None:
@@ -131,6 +153,29 @@ def calendar(T, lmax=None, exp_gap=None, z_k=None, pv_gap=None):
              LMAX=lmax, EXP=exp)
     check(c)
     return c
+
+
+def calendar_w16(T, lmax=None, exp_gap=None, z_k=None, w16_gap=None):
+    c = calendar(T, lmax, exp_gap, z_k)
+    po = [w16_pair_out(T, 0), w16_pair_out(T, 1)]
+    gap = w16_gap if w16_gap is not None else pv_after_exp_w16(T)
+    pv = max(c["EXP"] + gap, c["HUB_PUB"] + RZ_MARGIN - max(po))
+    c.update(P0=po[0], P1=po[1], PV_START=pv, R=max(max(po), c["HUB_PUB"] + RZ_MARGIN - pv))
+    check(c)
+    return c
+
+
+def pv_after_exp_w16(T):
+    """PV_START - EXP of the 16-row walk: zwalk(T) + 188.  Measured on the w16 production binary (55a5f5a98,
+    fault = the stack e-read visibility check): d = PV_START - EXP - zwalk faults at 182 / 184 / 186 and is exact at
+    184 / 186 / 188 for T = 6144 / 7000-7168 / 8000-8192; below ~6000 rows the published reciprocal (R) binds the
+    capture, so the law only has to stay above the visibility boundary (exact from d = 80 at 4096, 100 at 5000)."""
+    return zwalk(T) + W16_PV_AFTER_EXP
+
+
+def service_cycles(c):
+    """start_qk cycle -> last result beat (the bench's service_cycles): PV_START + max(P, R) + 16 (join) + 33"""
+    return c["PV_START"] + max(c["P0"], c["P1"], c["R"]) + 16 + 33
 
 
 def check(c):
@@ -158,10 +203,12 @@ def main(argv=None):
     ap.add_argument("--z-k", type=int, default=None)
     ap.add_argument("--pv-gap", type=int, default=None)
     ap.add_argument("--json", action="store_true")
+    ap.add_argument("--pv", choices=("w1", "w16"), default="w1")
+    ap.add_argument("--pv-after-exp", type=int, default=None)
     a = ap.parse_args(argv)
     out = {}
     for T in a.ctx:
-        c = calendar(T, a.lmax, a.exp_gap, a.z_k, a.pv_gap)
+        c = calendar(T, a.lmax, a.exp_gap, a.z_k, a.pv_gap, pv=a.pv, w16_gap=a.pv_after_exp)
         out[T] = dict(cal=hexcal(c), fields=c)
     print(json.dumps(out, indent=1) if a.json else "\n".join(f"{T} {v['cal']}" for T, v in out.items()))
 
