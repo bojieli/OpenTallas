@@ -11,12 +11,14 @@
 // K input reaches k_rdy or the queue combinationally; one extra hbm cycle on the request, full rate.  KREG=0: as the stack.
 // KRREG=1 (die default): the K response leaves through a 2-entry skid whose registers drive kr_v/kr_tag/kr_beat/kr_data;
 // kr_rdy only pops the skid.  One extra hbm cycle on the response, full rate.  KRREG=0: as the stack.
+// DREG=1 (die default): dram_rvalid / dram_rdata captured in pin flops (+1 hbm cycle on the PHY read return).
 module ot_hbm_svc_pc_ctrl_leaf #(
     parameter integer PHASE=0,
     parameter integer P=0,
     parameter integer OREG=1,
     parameter integer KREG=1,
-    parameter integer KRREG=1
+    parameter integer KRREG=1,
+    parameter integer DREG=1
 )(
     input wire clk,rst_n,
     input wire k_v,output wire k_rdy,input wire k_we,
@@ -34,6 +36,15 @@ module ot_hbm_svc_pc_ctrl_leaf #(
     localparam[1:0]IDLE=0,DESC=1,DRAIN=2,RUN=3;
     // the rst_n port drives only the registered reset relay (assert asynchronous, release after 3 clk edges)
     wire lrst_n;
+    wire d_rv;wire[255:0]d_rd;
+    generate if(DREG!=0)begin:g_dreg
+        reg q_drv;reg[255:0]q_drd;
+        always @(posedge clk or negedge rst_n)if(!rst_n)q_drv<=0;else q_drv<=dram_rvalid;
+        always @(posedge clk)q_drd<=dram_rdata;
+        assign d_rv=q_drv;assign d_rd=q_drd;
+    end else begin:g_ddirect
+        assign d_rv=dram_rvalid;assign d_rd=dram_rdata;
+    end endgenerate
     ot_rst_relay #(.REGIONS(1)) u_rst(.clk(clk),.rst_n_in(rst_n),.rst_n(lrst_n));
     wire i_v,i_we;wire[29:0]i_addr;wire[3:0]i_len;wire[16:0]i_tag;wire[255:0]i_wdata;wire[31:0]i_wstrb;
     wire i_rdy;
@@ -118,10 +129,10 @@ module ot_hbm_svc_pc_ctrl_leaf #(
     assign owner_fault=sticky;
     wire response_read=!sticky&&((!head_valid&&response_count!=0)||(response_take&&response_count>1));
     wire[4:0]response_read_address=response_take?response_rp+5'd1:response_rp;
-    wire response_write=dram_rvalid&&pending_count!=0&&!sticky;
+    wire response_write=d_rv&&pending_count!=0&&!sticky;
     ot_sram_1r1w_128x256_m1_r2c2 u_response_payload(
         .clk(clk),.r_ce_in(response_read),.r_addr_in({2'b0,response_read_address}),.rd_out(response_data),
-        .w_ce_in(response_write),.w_addr_in({2'b0,response_wp}),.wd_in(dram_rdata),.w_mask_in({256{1'b1}}),
+        .w_ce_in(response_write),.w_addr_in({2'b0,response_wp}),.wd_in(d_rd),.w_mask_in({256{1'b1}}),
         .rr_en(2'b0),.rr_addr(14'b0),.cr_en(2'b0),.cr_sel(16'b0));
     ot_hbm_r14_stream_pc #(.ENABLE(1),.PC(P),.REF_MODE(1),.WR_EN(1),.AQ_RD(1),.WQ(32),
         .REF_PHASE((PHASE+P*118/32)%118)) controller(
@@ -150,8 +161,8 @@ module ot_hbm_svc_pc_ctrl_leaf #(
             count<=count+(accepted?6'(length):6'd0)-(cv?6'd1:6'd0);
             unposted<=unposted+(accepted?6'(length):6'd0)-(posted?6'd1:6'd0);
             read_reserved<=read_reserved+(posted_read?6'd1:6'd0)-(response_take?6'd1:6'd0);
-            pending_count<=pending_count+(column_read?6'd1:6'd0)-(dram_rvalid?6'd1:6'd0);
-            response_count<=response_count+(dram_rvalid?6'd1:6'd0)-(response_take?6'd1:6'd0);
+            pending_count<=pending_count+(column_read?6'd1:6'd0)-(d_rv?6'd1:6'd0);
+            response_count<=response_count+(d_rv?6'd1:6'd0)-(response_take?6'd1:6'd0);
             if(posted)ep<=ep+1'b1;
             if(r_v)begin
                 case(r_op)
@@ -172,7 +183,7 @@ module ot_hbm_svc_pc_ctrl_leaf #(
                     pending_identity[pending_wp]<=head[308:288];pending_wp<=pending_wp+1'b1;
                 end
             end
-            if(dram_rvalid)begin
+            if(d_rv)begin
                 if(pending_count==0 || (response_count>=32&&!response_take))sticky<=1;
                 else begin response_identity[response_wp]<=pending_identity[pending_rp];pending_rp<=pending_rp+1'b1;response_wp<=response_wp+1'b1;end
             end

@@ -2,5 +2,5 @@
  "schema": "opentallas.ref_tile.pin_regs.v1",
  "top": "ot_hbm_svc_pc_ctrl_leaf",
  "enable": false,
- "reason": "the RTL registers its boundary itself (OREG: every PHY command output from a flop; KREG: K request in a 2-entry pin skid, k_rdy from a register; KRREG: K response from a 2-entry skid, kr_rdy only pops it). Flow pin registers would add a cycle inside the elastic K ready/valid handshake (HBM-stack boundary, owner 10-14) and overflow the skids. Remaining unregistered inputs: kr_rdy (skid pop, 1-2 levels), dram_rvalid/dram_rdata (PHY return into the response SRAM write port, the modelled off-chip boundary)."
+ "reason": "the RTL registers its boundary itself (OREG: every PHY command output from a flop; KREG: K request in a 2-entry pin skid, k_rdy from a register; DREG: dram_rvalid/dram_rdata in pin flops). Flow pin registers would add a cycle inside the elastic K ready/valid handshake (HBM-stack boundary, owner 10-14). Remaining: the K response (kr_v/kr_tag/kr_beat from registers, kr_data from the response SRAM output register; kr_rdy pops the response read, ~13 levels): a response skid (KRREG=1, bench PASS) costs 554 flops and puts the root over 15,000 sinks -- next structural step is a clock split (control vs queue root), not a flow pin register."
 }
