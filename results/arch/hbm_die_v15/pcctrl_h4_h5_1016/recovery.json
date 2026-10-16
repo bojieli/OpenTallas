@@ -12,7 +12,14 @@
       "total": 33
     },
     "failure_class": "capacity-zero SRAM west pin-face escape",
-    "native_status": "not qualified; no routed ETM"
+    "native_status": "not qualified; no routed ETM",
+    "post_verdict_images": {
+      "source": "H4 exact failed GRT ODB",
+      "density": "h4_images/density.png",
+      "congestion": "h4_images/congestion.png",
+      "inspected": true,
+      "findings": "Both capacity-zero hotspots are at SRAM west edges; density is distributed, with expected boundary pin-flop stripes and macro halos. No abutted macros or squeezed outline."
+    }
   },
   "h5": {
     "commit": "145159c02e4e3bb1ad7fe70146979dae325da429",
