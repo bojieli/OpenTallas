@@ -17,7 +17,7 @@
   "rst_n"
  ],
  "outline": {
-  "w": 25.92,
+  "w": 30.24,
   "h": 60.48,
   "exact": true
  },
@@ -64,7 +64,7 @@
   "pin_v": "M3 M5",
   "m5_pg_pitch": 2.7
  },
- "structural_change": "NEW master view (no view existed; S-DIE census: 424 die instances under --bf-static-prog): ot_s81_cfg7_seq_bfp = BF pair cfg loader ot_s81_cfg7_seq_bf at LAYOUT 1 / PINREG 1 (the closed+native-PASS cfg7 pr3 structure: every pin registered, rst_n -> ot_rst_relay) + the static BF programme producer ot_s81_bf_prog_seq; new PINREG mode of the bfp wrapper: spare columns q*[71:48] in pin flops, bank select +1, spare word +1 so row k still meets cfg {c_v,c_a=k}; st re-registered after the fault OR (+1 on st); f_prog leaves u_prog flops; producer reset from its own relay. 0 payload cycles beyond the pr3 loader shifts (lc->cfg/go_e +4, st +5, f_prog follows go_e). Exact: tools/s81/cfg7_bfp_bench.sh pr PASS (160 phases, 1852 issues, lockstep vs PINREG 1 reference loader + reference producer), mutants pr_mut_row / pr_mut_spdl FAIL. Outline 25.92 x 60.48 inside the 34.56 x 60.48 cfg7_seq_bf generator slot (W 524 pins = 8.7 b/um).",
+ "structural_change": "NEW master view (no view existed; S-DIE census: 424 die instances under --bf-static-prog): ot_s81_cfg7_seq_bfp = BF pair cfg loader ot_s81_cfg7_seq_bf at LAYOUT 1 / PINREG 1 (the closed+native-PASS cfg7 pr3 structure: every pin registered, rst_n -> ot_rst_relay) + the static BF programme producer ot_s81_bf_prog_seq; new PINREG mode of the bfp wrapper: spare columns q*[71:48] in pin flops, bank select +1, spare word +1 so row k still meets cfg {c_v,c_a=k}; st re-registered after the fault OR (+1 on st); f_prog leaves u_prog flops; producer reset from its own relay. 0 payload cycles beyond the pr3 loader shifts (lc->cfg/go_e +4, st +5, f_prog follows go_e). Exact: tools/s81/cfg7_bfp_bench.sh pr PASS (160 phases, 1852 issues, lockstep vs PINREG 1 reference loader + reference producer), mutants pr_mut_row / pr_mut_spdl FAIL. Outline 30.24 x 60.48 (gate on 25.92: W face 10.5 pins/um pin-flop gap 10.58 um > 45% of the 21.6 um core) inside the 34.56 x 60.48 cfg7_seq_bf generator slot (W 524 pins = 8.7 b/um).",
  "job": {
   "owner": "Claude:S-ELEM-PQ",
   "branch": "claude/selempq-bfp-0600",
