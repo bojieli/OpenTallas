@@ -182,12 +182,24 @@ def pin_regs_plan(s: dict) -> dict | None:
         return {"enable": False, "reason": pr["reason"]}
     if pr.get("exclude") and not str(pr.get("reason", "")).strip():
         raise SpecError("spec: pin_regs.exclude needs a recorded reason")
-    cks = clock_ports(s)
+    declared = s.get("clock_ports", [])
+    resets = s.get("reset_ports", [])
+    literal = r"[A-Za-z_][A-Za-z0-9_$]*(?:\[\d+\])?"
+    if not isinstance(declared, list) or not isinstance(resets, list):
+        raise SpecError("spec: clock/reset role declarations must be literal lists")
+    roles = [s["clock_port"]] + declared + resets
+    if any(not isinstance(p, str) or not re.fullmatch(literal, p) for p in roles):
+        raise SpecError("spec: clock/reset roles require explicit literal port names or bits")
+    cks = list(dict.fromkeys([s["clock_port"]] + declared))
+    if set(cks) & set(resets):
+        raise SpecError("spec: clock/reset roles conflict; clocks must not be listed as reset_ports")
     ck = pr.get("clock") or (cks[0] if len(cks) == 1 else None)
     if not ck:
         raise SpecError(f"spec: multi-clock tile ({', '.join(cks)}): name the data clock in pin_regs.clock, or opt out "
                         "with a reason")
-    return {"enable": True, "clock": ck, "clock_ports": cks, "exclude": pr.get("exclude", ""),
+    if ck not in cks:
+        raise SpecError("spec: pin_regs.clock must name a declared clock port or bit")
+    return {"enable": True, "clock": ck, "clock_ports": cks, "reset_ports": resets, "exclude": pr.get("exclude", ""),
             "reset": pr.get("reset", ""), "reason": pr.get("reason", ""),
             "latency_cycles": {"input": 1, "output": 1}, "rule": PIN_REGS_RULE,
             "per_port_table": "$RESULTS_DIR/ot_pin_regs.tsv (route synthesis: port dir width cycles why)"}
@@ -197,7 +209,8 @@ def pin_regs_vars(s: dict) -> list:
     plan = pin_regs_plan(s)
     if not plan or not plan["enable"]:
         return []
-    out = ["--orfs-var OT_PIN_REGS=1", f"--orfs-var OT_PIN_REGS_CLOCK={','.join([plan['clock']] + [c for c in plan['clock_ports'] if c != plan['clock']])}"]
+    out = ["--orfs-var OT_PIN_REGS=1", f"--orfs-var OT_PIN_REGS_CLOCK={shq(','.join([plan['clock']] + [c for c in plan['clock_ports'] if c != plan['clock']]))}"]
+    out.append(f"--orfs-var OT_PIN_REGS_RESET_PORTS={shq(','.join(plan['reset_ports']))}")
     if plan["exclude"]:
         out.append(f"--orfs-var OT_PIN_REGS_EXCLUDE={shq(plan['exclude'])}")
     if plan["reset"]:
@@ -360,7 +373,9 @@ def load_spec(path: str) -> dict:
     elif s.get("clock_cts_roots") is not None:
         raise SpecError("clock_cts_roots requires hybrid_entries")
     elif s.get("clock_ports"):
-        raise SpecError('spec: "clock_ports" requires entries or hybrid_entries')
+        cps = s["clock_ports"]
+        if not isinstance(cps, list) or not cps or len(set(cps)) != len(cps) or s["clock_port"] not in cps:
+            raise SpecError("spec: clock_ports role declarations must be distinct and include clock_port")
     if s["pins"] == "auto":   # inputs S, outputs N, clock + resets W (a starting plan; set real faces per the die contract)
         import textbook_lint as TL  # noqa: E402
         mods = TL.rtl_modules([(ROOT / f).read_text(errors="replace") for f in s["sources"] if (ROOT / f).exists()])
