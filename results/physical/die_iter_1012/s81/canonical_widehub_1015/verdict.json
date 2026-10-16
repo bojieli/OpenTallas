@@ -84,9 +84,38 @@
    "stages": 89,
    "hub_um": 10900.2,
    "result": "PASS, file rm4_p1983.json; allocator p1983s89 0 fail (s88 118 fail)"
+  },
+  {
+   "name": "rm5_p1973 (ADOPTED C, S-DIE 10-15 20:40)",
+   "removed": [
+    8,
+    9,
+    10,
+    11,
+    12
+   ],
+   "io_to_hub": false,
+   "pairs": 1973,
+   "bf": 424,
+   "stages": 89,
+   "hub_um": 12091.68,
+   "result": "PASS, file rm5_p1973.json; allocator p1973s89 0 fail (46,719 placed)",
+   "why": "coordinator 20:25 chose C (89 stages, IO kept, generous room); the 4-column C hub is 10,900.2 = the same 255-um spare as A; one more column at 10 fewer pairs keeps 89 stages and gives a 12,091.7-um hub (1,446.7-um spare in the A2-F row)"
   }
  ],
  "io_to_hub": "phy_SW/ctrl_SW/svc_SW (8,500 x 3,041 um) centred at the hub foot (x 11,645.9) and the six HCP homes as two rows of three at the hub head E end; every kept column runs full height. Needs a generator option to place the SW stack there (today xs_phy[0] = W-field centre).",
  "note_rom_trade": "rom_trade.py sized the hub gap by pitch (10,753 um at 4 columns); the actual gap is 10,900.2 (4) / 9,708.8 (3) because column 10 carries the 155.5-um SW service corridor shift. Its 2,176-pair pack used ragged 11-20-pair roots, which the allocator (uniform region bounds) does not model; dsrom_s73_pair1.py now takes --regions-json for that test.",
- "ragged_allocator_test": "dsrom_s73_pair1.py --regions-json with the DP ragged packs: rom_trade 2,176-pair (11-20-pair roots) at 82/83/84 stages -> 5,105/4,973/4,842 failed groups; 4-col+IO 2,308 ragged at 75/76 -> 4,283/4,127 failed. Ragged roots do not allocate (matrices stripe over all 128 roots, bounded by the smallest); rom_trade's recommended 2,176/82 is not reachable."
+ "ragged_allocator_test": "dsrom_s73_pair1.py --regions-json with the DP ragged packs: rom_trade 2,176-pair (11-20-pair roots) at 82/83/84 stages -> 5,105/4,973/4,842 failed groups; 4-col+IO 2,308 ragged at 75/76 -> 4,283/4,127 failed. Ragged roots do not allocate (matrices stripe over all 128 roots, bounded by the smallest); rom_trade's recommended 2,176/82 is not reachable.",
+ "a2f_tier_fit": {
+  "vm_um": [
+   4104,
+   4115
+  ],
+  "tier_width_um": 10645.0,
+  "parts": "S14W 661.6 | HC 1816.6 | capture+collective 1728 | VM A2-F 4104 (+MIX4 N) | SU 1935.4 | S14E >= 399",
+  "rm3io_stub_p2190": "fits above y 7,262 (hub 10,900.2, 255 um spare); below it hub 9,708.8 holds the IO band + roads",
+  "rm3io_p2328": "does not fit (-936 um)",
+  "rm4_p1983": "fits full height, 255 um spare",
+  "rm5_p1973": "fits full height, 1,446.7 um spare"
+ }
 }

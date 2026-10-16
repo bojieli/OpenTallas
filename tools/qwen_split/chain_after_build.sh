@@ -17,8 +17,8 @@ cat SOURCE_COMMIT > $R/case_r22k/SOURCE_COMMIT
 # die-wide M3..M7 stdcell ladder -- that ladder (58533b5a0) drove C19s / C21sa PDN to the 420 GiB cgroup kill
 PDN_REV=${OT_PDN_REV:-r8}
 TIE_LOCAL=; UP4SKIP="--skip-prefix up4_sel_"
-# r8: up4_sel_* (3 M7/M8-pin selector blocks) get their macro grid: without the ladder they were PG islands
-[ "$PDN_REV" = r8 ] && { TIE_LOCAL=--tie-local; UP4SKIP=; }
+# up4_sel_* (8.64-um-tall selector blocks) cannot host an M8 macro grid (PDN-0185): recorded PG islands with the PHYs
+[ "$PDN_REV" = r8 ] && TIE_LOCAL=--tie-local
 if [ "$PDN_REV" = r7 ] || [ "$PDN_REV" = r8 ]; then
   cp $R/case_r22k/pdn.tcl $R/case_r22k/pdn_r5.tcl
 # licensed link-PHY abstracts (io_serdes*, io_ucie) carry their own M4 PG straps under a full M1-M5 OBS: no die macro
@@ -29,4 +29,4 @@ fi
 bash tools/qwen_split/port_bind_compute.sh $R/case_r22k/die.v $R/port_bind > $R/port_bind.line 2>&1; pb=$?
 echo "$(date '+%F %T %Z') port-bind (no stubs): $(cat $R/port_bind.line) rc=$pb" >> $R/STATUS.log
 echo "$(date '+%F %T %Z') qwen-split compute chain $T (src $(cat SOURCE_COMMIT)); real views: $(python3 -c "import json;b=json.load(open('../bind.json'));print(b['masters_bound'],'masters /',b['instances_bound'],'of',b['instances'],'instances')")" >> $R/STATUS.log
-exec env OT_ADMIT=pass OT_ITERS=12 OT_ROUTE_RESET=1 OT_CORNERS="tt ff ss" OT_STA_CLOCKS=$R/libs/clocks.tcl bash $S/src/tools/qwen_kv_die/chain/die_chain.sh r22k $R $S/src
+exec env OT_PG_OPEN_DIAG=${OT_PG_OPEN_DIAG:-1} OT_ADMIT=pass OT_ITERS=12 OT_ROUTE_RESET=1 OT_CORNERS="tt ff ss" OT_STA_CLOCKS=$R/libs/clocks.tcl bash $S/src/tools/qwen_kv_die/chain/die_chain.sh r22k $R $S/src

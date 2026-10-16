@@ -297,8 +297,8 @@ module tb_dsfd_sp_vm_static;
                 3: ok = dut.u_xio.f_s[0];
                 4: ok = dut.u_xio.f_iss[2];
                 5: ok = dut.u_xio.f_iss[1];
-                6: ok = dut.u_wfc.err && twfc[1028];
-                7: ok = dut.u_wfc.err && twfc[1028];
+                6: ok = dut.u_wfc.u_ctl.err && twfc[1028];
+                7: ok = dut.u_wfc.u_ctl.err && twfc[1028];
                 8: ok = |dut.u_cap.lf;
                 default: ok = 1'b0;
             endcase

@@ -37,14 +37,22 @@ module ot_hgi_qdq_transport_ctl_r2 #(
     output wire [127:0] dec_header,
     input wire vo, qfault, decode_fault
 );
+    // local reset relay (native audit of the r2 view: rst_n capture 213.8 ps, the port fanned out to every valid flop):
+    // the port drives only the relay (async assert, 2-stage sync release + 1 relay = 3 edges of release latency, an
+    // initialization-mode cost, no data edge); every controller flop resets from rn.
+    (* async_reg = "true" *) reg rst_s1, rst_s2;
+    reg rn;
+    always @(posedge clk or negedge rst_n)
+        if (!rst_n) begin rst_s1 <= 1'b0; rst_s2 <= 1'b0; rn <= 1'b0; end
+        else begin rst_s1 <= 1'b1; rst_s2 <= rst_s1; rn <= rst_s2; end
     // pin capture registers (the only load of each cmd pin)
     reg cv_q;
     reg [5:0] op_q; reg [7:0] blk_q; reg [15:0] src_q, dst_q; reg last_q;
-    always @(posedge clk or negedge rst_n)
-        if(!rst_n) cv_q<=1'b0; else cv_q<=cmd_v;
+    always @(posedge clk or negedge rn)
+        if(!rn) cv_q<=1'b0; else cv_q<=cmd_v;
     always @(posedge clk) begin op_q<=cmd_op; blk_q<=cmd_block; src_q<=cmd_src; dst_q<=cmd_dst; last_q<=cmd_last; end
     ot_hgi_qdq_transport_ctl #(.RL(RL),.DL(DL),.WC(WC),.MUT(MUT)) u_ctl(
-        .clk(clk),.rst_n(rst_n),.cmd_v(cv_q),.cmd_op(op_q),.cmd_block(blk_q),.cmd_src(src_q),.cmd_dst(dst_q),
+        .clk(clk),.rst_n(rn),.cmd_v(cv_q),.cmd_op(op_q),.cmd_block(blk_q),.cmd_src(src_q),.cmd_dst(dst_q),
         .cmd_last(last_q),.rq(rq),.rr_v(rr_v),.wq_v(wq_v),.wq_addr(wq_addr),.wq_mask(wq_mask),.rsel(rsel),.wsel(wsel),
         .beat_done(beat_done),.record_done(record_done),.fault(fault),.dec_v(dec_v),.dec_header(dec_header),
         .vo(vo),.qfault(qfault),.decode_fault(decode_fault));

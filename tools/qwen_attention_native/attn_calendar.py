@@ -5,7 +5,9 @@ The service takes one 176-bit calendar per request: 11 start/capture ages (edges
 {R, P1, P0, PV_START, HUB_PUB, HUB_RECIP, HUB_Z, HUB_LMAX, Z, LMAX, EXP} (tb_qwen_tp8_attention_native_service +CAL).
 Every age is derived from the context length T (1..8192) by laws read off the RTL structure and pinned by measured
 fault/exact boundaries on the production binary (fix_r3 RL21/HXK8 + static ASTK CTL reading Z sums by block index,
-results/arch/qwen_attention_native_calendar_1015):
+results/arch/qwen_attention_native_calendar_1015).
+PRODUCTION (2026-10-15, coordinator): pv="w16" = ot_qwen_tp8_attention_native_service_w16 (16 V rows/cycle P.V,
+results/arch/qwen_attention_rate_1015) is the default; pv="w1" keeps the 1-row/cycle service laws below for reference:
   LMAX     = last ECTL QK consume (tools/qwen_kv_die/static_qk_calendar.py) + 117
   EXP      = LMAX + 15
   Z        = EXP + 250 + zwalk(T)            (EP sequencer walk position of block 0's last chunk)
@@ -130,7 +132,7 @@ def w16_pair_out(T, p):
     return W16_FIRST + w16_nq(T, p) - 1 + W16_DRAIN + W16_TREE + W16_JOIN
 
 
-def calendar(T, lmax=None, exp_gap=None, z_k=None, pv_gap=None, pv="w1", w16_gap=None):
+def calendar(T, lmax=None, exp_gap=None, z_k=None, pv_gap=None, pv="w16", w16_gap=None):
     """lmax: LMAX start (default lmax_min); exp_gap: EXP - LMAX; z_k: Z - (EXP + zwalk); pv_gap: PV_START - Z;
     pv: 'w1' (1 row/cycle pairs, ot_qwen_tp8_attention_native_service) or 'w16' (16 rows/cycle, _service_w16);
     w16_gap: w16 only, PV_START - EXP override (default: the measured law pv_after_exp_w16)"""
@@ -156,7 +158,7 @@ def calendar(T, lmax=None, exp_gap=None, z_k=None, pv_gap=None, pv="w1", w16_gap
 
 
 def calendar_w16(T, lmax=None, exp_gap=None, z_k=None, w16_gap=None):
-    c = calendar(T, lmax, exp_gap, z_k)
+    c = calendar(T, lmax, exp_gap, z_k, pv="w1")   # QK / softmax / hub ages are shared; P.V replaced below
     po = [w16_pair_out(T, 0), w16_pair_out(T, 1)]
     gap = w16_gap if w16_gap is not None else pv_after_exp_w16(T)
     pv = max(c["EXP"] + gap, c["HUB_PUB"] + RZ_MARGIN - max(po))
@@ -204,7 +206,7 @@ def main(argv=None):
     ap.add_argument("--z-k", type=int, default=None)
     ap.add_argument("--pv-gap", type=int, default=None)
     ap.add_argument("--json", action="store_true")
-    ap.add_argument("--pv", choices=("w1", "w16"), default="w1")
+    ap.add_argument("--pv", choices=("w1", "w16"), default="w16")
     ap.add_argument("--pv-after-exp", type=int, default=None)
     a = ap.parse_args(argv)
     out = {}
