@@ -970,6 +970,8 @@ QLINK = 1056          # qwen_rom_fulldie LINK_TRACKS: 512 each way + 32 control 
 def dirs_qwen(bid, cls, bits, eps, j, port):
     """Qwen die (qwen_rom_fulldie buses(): endpoint 0 is always the upstream / source end)."""
     bid = re.sub(r'__r\d+$', '', bid)                  # r21: a relay hop keeps its bus's rule
+    bid = re.sub(r'__pinfix\d+$', '', bid)             # KVDIE 10-16: so does a kv_pin_repair hop (kvs13a host_fdi__pinfix1:
+    #                                                   qkd_rly_2089 1,045 bits with no direction under OT_KV_HOP=1)
     cls = cls.split('@')[0]                            # tp8b: KV-die buses merged onto the ROM die carry '<cls>@kv'
     if cls in ('corridor', 'head_chain', 'tap'):
         return flow(j, bits, bits - 1)               # instruction beats + go + x + clock/reset down, ready back
