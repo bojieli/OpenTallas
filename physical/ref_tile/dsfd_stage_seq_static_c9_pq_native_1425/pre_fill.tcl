@@ -1,0 +1,2 @@
+estimate_parasitics -placement
+source /src/physical/ref_tile/dsfd_stage_seq_static_c9_pq_native_1425/clock_entry.sdc

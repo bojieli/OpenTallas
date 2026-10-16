@@ -1,0 +1,13 @@
+CAL controller_return ctick=476 -> FAST_CYC=478
+CAL post_ready_fall age(ck)=523 after cmd 1
+CAL post_ready_rise age(ck)=1231 after cmd 1
+CAL controller_return ctick=476 -> FAST_CYC=478
+CAL post_ready_fall age(ck)=523 after cmd 2
+CAL post_ready_rise age(ck)=1231 after cmd 2
+HCX_CHAIN commands=2 cmd_phase=2 proj_done_age=479 raw_age=476,476,476,476 gp_done_age=510 post_start_age(ck)=521 post_seen_age=1245 chain_done_age=1254 first_cmd=1454 first_done=2708 cmd_to_done=1254
+HCX_CHAIN coef_words_bad=0 issuer_fault=0 code=0 chain_fault=0 ncmd=2
+HCX_CHAIN PASS layer1 attn+ffn 4 coefficient rows exact, fixed issuer, compiled done
+- rtl/dsrom_sys/s81_hcx/test/tb_s81_hcx_chain.sv:134: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 6us; walltime 271.542 s; speed 22.436 ns/s
+- Verilator: cpu 271.497 s on 1 threads; allocated 469 MB
