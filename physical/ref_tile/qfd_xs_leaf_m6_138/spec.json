@@ -7,7 +7,8 @@
   "rtl/hdc/ot_hdc_delay.sv"
  ],
  "params": {
-  "NCH": 4
+  "NCH": 4,
+  "READ_PIN_PIPE": 1
  },
  "clock_port": "clk",
  "reset_ports": [
@@ -2479,9 +2480,9 @@
  "pin_source": "Exact source candidate. R0 origin-y phase0 and MX phase32 reuse one M6 frame at H138.24; actual exported outline and all parent tracks are unqualified.",
  "slot_change_request": "Coordinator local-body candidate permission 2026-10-16: leaf64.8x138.24/head64.8x345.6 in r2h4 64.8x1473.12 envelope; parent M7/M9 tracks pending actualPG audit.",
  "job": {
-  "owner": "Codex:el1014-qwen-dvm-build",
+  "owner": "Claude:Q-DVM+LINK",
   "branch": "codex/qwen-link-recovery-0253",
-  "tag": "m6a",
+  "tag": "m6b",
   "purpose": "Qwen TP8 distributed x slice LEAF r3 (owner 08:20 PT 10-14; el1014-qwen-dvm-build.log 16:15): 2 tiles x 2 epochs x one 64-position slot of BF16 operands (+ per-element valid), footprints > 64 pooled over a tile pair by the column head; ONE 128:1 x 17-b serial read tree per tile (r2: four 512:1 trees, 2.7x the slot); write chain pin-registered pass-through (18-b control a leaf); answer pin flops at R + 4.",
   "benches": [
    {
@@ -2530,7 +2531,7 @@
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
  },
- "structural_change": "Move346 exact1170-bit chain contacts onto named M6 W/E PORT contacts, retain824 chain bits on N/S M3+M5. M5 interior/PG unchanged. Leaf read/reset/clock pins M6 support its coherent MX frame; nonflipped head read/head-row ports retain M4, because putting all2728E-side original head bits plus346seam bits on M6 would exceed two-track capacity. No workload/RTL/cycle change; placement/native/TT/FF/DRC remain unqualified.",
+ "structural_change": "m6b (Q-DVM+LINK 2026-10-16): READ_PIN_PIPE=1 -- one raw pin capture of r_v/r_t/r_ep/r_p (31 flops) for the m6a CTS native capture miss 235.0/228.4 ps on r_v/r_t; +1 read edge (DX 10->11) source-qualified: array exact PASS, full48/36-layer static PASS, measured +1 program edge (results/rtl/qwen_link_recovery_0253/read_pin_cycle_ledger.json). Heads/parent must select LEAF_READ_PIN_PIPE=1. | Move346 exact1170-bit chain contacts onto named M6 W/E PORT contacts, retain824 chain bits on N/S M3+M5. M5 interior/PG unchanged. Leaf read/reset/clock pins M6 support its coherent MX frame; nonflipped head read/head-row ports retain M4, because putting all2728E-side original head bits plus346seam bits on M6 would exceed two-track capacity. No workload/RTL/cycle change; placement/native/TT/FF/DRC remain unqualified.",
  "io_tcl": "physical/ref_tile/qfd_xs_leaf_m6_138/assigned_pins.tcl",
  "m6_pin_grant": {
   "schema": "opentallas.m6_pin_grant.v1",
