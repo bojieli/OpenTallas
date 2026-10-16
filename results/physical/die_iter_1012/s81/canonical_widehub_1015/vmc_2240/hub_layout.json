@@ -1,7 +1,7 @@
 {
  "schema": "opentallas.s81.hub_layout.v2",
  "source": "tools/s81/wide_hub_layout.py --mode vmc",
- "canonical": "results/physical/die_iter_1012/s81/canonical_widehub_1015/rm5_p1973.json",
+ "canonical": "results/physical/die_iter_1012/s81/canonical_widehub_1015/rm5_p1973h.json",
  "order": "S14W | sseq+MIX4 | SU under VM (capture, gather, PQ on its N face) | collective/host/WFC(MY) | 432 | HC (hc_t low, hc_s high, top below the gather) | S14E",
  "blocks": {
   "sp_su_s": [
