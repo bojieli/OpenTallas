@@ -10,6 +10,6 @@ if "$out/obj/Vtb_b2_rom_port" +OT_ROM_DIR="$images/rank0/masks" +EXPECTED="$imag
  test "$mode" = normal
 else
  test "$mode" = mutant
- rg -q 'actual ROM.*hardmul mismatch' "$out/run.log"
+ grep -q 'actual ROM.*hardmul mismatch' "$out/run.log"
 fi
 cat "$out/run.log"

@@ -47,8 +47,25 @@
       "route_bench_source_manifest",
       "route_bench_log"
     ],
-    "emission": "Must import phase_protocol.validate_calibration and refuse OPEN; local smoke may use0 only with diagnostic flag and never publish production."
+    "emission": "Must import phase_protocol.validate_calibration and refuse OPEN; local smoke may use0 only with diagnostic flag and never publish production.",
+    "per_half_delay_values": {
+      "halfband_lnk": "one scalar int0..54 perhalf for6bit port; leaf internallyadds1",
+      "controller_lnk": "nonnegative int, separate fromhalfband_lnk; same across6",
+      "controller_clnk": "nonnegative int, separate fromhalfband_lnk; same across6"
+    },
+    "graph_export": {
+      "instances": "ALL inst sorted byname with name/master/x/y/w/h/orient including unrelated inst",
+      "buses": "ALL ordered buses, including every unrelated bus",
+      "port_join": "exact graph joins",
+      "port_split": "exact graph splits",
+      "ties": "exact constant bindings"
+    },
+    "consumer_calls": [
+      "before_allocator: validate_calibration(...,phase=\"before_allocator\"); consumer compares exact current module ports/directions/widths before replacing controller/issuer source masters; no emission authorized by this check alone",
+      "after_allocator immediatelybeforewriter: validate_calibration(...,phase=\"post_allocator\",current_graph=canonical_export,current_stage_of=actual_r21_stage_of). Exact fullgraph+stage equality required."
+    ]
   },
   "physical_qualified": false,
-  "native_full_layer_qualified": false
+  "native_full_layer_qualified": false,
+  "graph_format": "qwen-b2-allinst-buses-bindings-v1"
 }
