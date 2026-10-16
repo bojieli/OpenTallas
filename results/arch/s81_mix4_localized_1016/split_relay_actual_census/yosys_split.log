@@ -1,0 +1,601 @@
+
+-- Running command `read_verilog -sv /home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv; hierarchy -check -top ot_s81_engram_rly_split; proc; flatten; opt_expr; opt_clean; write_json /home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/split.json; stat' --
+
+1. Executing Verilog-2005 frontend: /home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv
+Parsing SystemVerilog input from `/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv' to AST representation.
+Generating RTLIL representation for module `\ot_s81_engram_reset'.
+Generating RTLIL representation for module `\ot_s81_engram_capture_slice'.
+Generating RTLIL representation for module `\ot_s81_engram_rly_split'.
+Generating RTLIL representation for module `\ot_s81_engram_rly'.
+Successfully finished Verilog frontend.
+
+2. Executing HIERARCHY pass (managing design hierarchy).
+
+2.1. Analyzing design hierarchy..
+Top module:  \ot_s81_engram_rly_split
+Used module:     \ot_s81_engram_capture_slice
+Used module:         \ot_s81_engram_reset
+
+2.2. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s81_engram_capture_slice'.
+Parameter \W = 32
+Parameter \RESET_MASK = 0
+Generating RTLIL representation for module `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0'.
+
+2.3. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s81_engram_capture_slice'.
+Parameter \W = 4
+Generating RTLIL representation for module `$paramod\ot_s81_engram_capture_slice\W=4'.
+
+2.4. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s81_engram_capture_slice'.
+Parameter \W = 32
+Parameter \RESET_MASK = 0
+Found cached RTLIL representation for module `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0'.
+
+2.5. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s81_engram_capture_slice'.
+Parameter \W = 4
+Found cached RTLIL representation for module `$paramod\ot_s81_engram_capture_slice\W=4'.
+
+2.6. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s81_engram_capture_slice'.
+Parameter \W = 32
+Parameter \RESET_MASK = 0
+Found cached RTLIL representation for module `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0'.
+
+2.7. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s81_engram_capture_slice'.
+Parameter \W = 4
+Found cached RTLIL representation for module `$paramod\ot_s81_engram_capture_slice\W=4'.
+
+2.8. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s81_engram_capture_slice'.
+Parameter \W = 32
+Parameter \RESET_MASK = 0
+Found cached RTLIL representation for module `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0'.
+
+2.9. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s81_engram_capture_slice'.
+Parameter \W = 4
+Found cached RTLIL representation for module `$paramod\ot_s81_engram_capture_slice\W=4'.
+
+2.10. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s81_engram_capture_slice'.
+Parameter \W = 2
+Generating RTLIL representation for module `$paramod\ot_s81_engram_capture_slice\W=2'.
+
+2.11. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s81_engram_capture_slice'.
+Parameter \W = 2
+Found cached RTLIL representation for module `$paramod\ot_s81_engram_capture_slice\W=2'.
+
+2.12. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s81_engram_capture_slice'.
+Parameter \W = 2
+Found cached RTLIL representation for module `$paramod\ot_s81_engram_capture_slice\W=2'.
+
+2.13. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s81_engram_capture_slice'.
+Parameter \W = 2
+Found cached RTLIL representation for module `$paramod\ot_s81_engram_capture_slice\W=2'.
+
+2.14. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s81_engram_capture_slice'.
+Parameter \W = 2
+Found cached RTLIL representation for module `$paramod\ot_s81_engram_capture_slice\W=2'.
+
+2.15. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s81_engram_capture_slice'.
+Parameter \W = 2
+Found cached RTLIL representation for module `$paramod\ot_s81_engram_capture_slice\W=2'.
+
+2.16. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s81_engram_capture_slice'.
+Parameter \W = 2
+Found cached RTLIL representation for module `$paramod\ot_s81_engram_capture_slice\W=2'.
+
+2.17. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s81_engram_capture_slice'.
+Parameter \W = 2
+Found cached RTLIL representation for module `$paramod\ot_s81_engram_capture_slice\W=2'.
+
+2.18. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s81_engram_capture_slice'.
+Parameter \W = 4
+Found cached RTLIL representation for module `$paramod\ot_s81_engram_capture_slice\W=4'.
+
+2.19. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s81_engram_capture_slice'.
+Parameter \W = 37
+Parameter \RESET_MASK = 37'1111100000000000000000000000000000000
+Generating RTLIL representation for module `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000'.
+
+2.20. Analyzing design hierarchy..
+Top module:  \ot_s81_engram_rly_split
+Used module:     $paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0
+Used module:         \ot_s81_engram_reset
+Used module:     $paramod\ot_s81_engram_capture_slice\W=4
+Used module:     $paramod\ot_s81_engram_capture_slice\W=2
+Used module:     $paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000
+
+2.21. Analyzing design hierarchy..
+Top module:  \ot_s81_engram_rly_split
+Used module:     $paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0
+Used module:         \ot_s81_engram_reset
+Used module:     $paramod\ot_s81_engram_capture_slice\W=4
+Used module:     $paramod\ot_s81_engram_capture_slice\W=2
+Used module:     $paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000
+Removing unused module `\ot_s81_engram_rly'.
+Removing unused module `\ot_s81_engram_capture_slice'.
+Removed 2 unused modules.
+Mapping positional arguments of cell $paramod\ot_s81_engram_capture_slice\W=4.reset_leaf (ot_s81_engram_reset).
+Mapping positional arguments of cell $paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.reset_leaf (ot_s81_engram_reset).
+Mapping positional arguments of cell $paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.reset_leaf (ot_s81_engram_reset).
+Mapping positional arguments of cell ot_s81_engram_rly_split.add[3].gate_capture ($paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0).
+Mapping positional arguments of cell ot_s81_engram_rly_split.add[3].u ($paramod\ot_s81_engram_capture_slice\W=4).
+Mapping positional arguments of cell ot_s81_engram_rly_split.add[2].gate_capture ($paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0).
+Mapping positional arguments of cell ot_s81_engram_rly_split.add[2].u ($paramod\ot_s81_engram_capture_slice\W=4).
+Mapping positional arguments of cell ot_s81_engram_rly_split.add[1].gate_capture ($paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0).
+Mapping positional arguments of cell ot_s81_engram_rly_split.add[1].u ($paramod\ot_s81_engram_capture_slice\W=4).
+Mapping positional arguments of cell ot_s81_engram_rly_split.add[0].gate_capture ($paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0).
+Mapping positional arguments of cell ot_s81_engram_rly_split.add[0].u ($paramod\ot_s81_engram_capture_slice\W=4).
+Mapping positional arguments of cell ot_s81_engram_rly_split.mul[7].u ($paramod\ot_s81_engram_capture_slice\W=2).
+Mapping positional arguments of cell ot_s81_engram_rly_split.mul[6].u ($paramod\ot_s81_engram_capture_slice\W=2).
+Mapping positional arguments of cell ot_s81_engram_rly_split.mul[5].u ($paramod\ot_s81_engram_capture_slice\W=2).
+Mapping positional arguments of cell ot_s81_engram_rly_split.mul[4].u ($paramod\ot_s81_engram_capture_slice\W=2).
+Mapping positional arguments of cell ot_s81_engram_rly_split.mul[3].u ($paramod\ot_s81_engram_capture_slice\W=2).
+Mapping positional arguments of cell ot_s81_engram_rly_split.mul[2].u ($paramod\ot_s81_engram_capture_slice\W=2).
+Mapping positional arguments of cell ot_s81_engram_rly_split.mul[1].u ($paramod\ot_s81_engram_capture_slice\W=2).
+Mapping positional arguments of cell ot_s81_engram_rly_split.mul[0].u ($paramod\ot_s81_engram_capture_slice\W=2).
+Mapping positional arguments of cell ot_s81_engram_rly_split.shell_dn ($paramod\ot_s81_engram_capture_slice\W=4).
+Mapping positional arguments of cell ot_s81_engram_rly_split.shell_up ($paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000).
+Mapping positional arguments of cell $paramod\ot_s81_engram_capture_slice\W=2.reset_leaf (ot_s81_engram_reset).
+
+3. Executing PROC pass (convert processes to netlists).
+
+3.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+3.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 1 switch rules as full_case in process $proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:11$54 in module $paramod\ot_s81_engram_capture_slice\W=4.
+Marked 1 switch rules as full_case in process $proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:11$52 in module $paramod\ot_s81_engram_capture_slice\W=4.
+Marked 1 switch rules as full_case in process $proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:11$50 in module $paramod\ot_s81_engram_capture_slice\W=4.
+Marked 1 switch rules as full_case in process $proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:11$48 in module $paramod\ot_s81_engram_capture_slice\W=4.
+Marked 1 switch rules as full_case in process $proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:11$100 in module $paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.
+Marked 1 switch rules as full_case in process $proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:11$98 in module $paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.
+Marked 1 switch rules as full_case in process $proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:11$96 in module $paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.
+Marked 1 switch rules as full_case in process $proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:11$94 in module $paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.
+Marked 1 switch rules as full_case in process $proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:11$92 in module $paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.
+Marked 1 switch rules as full_case in process $proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:11$58 in module $paramod\ot_s81_engram_capture_slice\W=2.
+Marked 1 switch rules as full_case in process $proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:11$56 in module $paramod\ot_s81_engram_capture_slice\W=2.
+Marked 1 switch rules as full_case in process $proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:3$1 in module ot_s81_engram_reset.
+Removed a total of 0 dead cases.
+
+3.3. Executing PROC_INIT pass (extract init attributes).
+
+3.4. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \rn in `$paramod\ot_s81_engram_capture_slice\W=4.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:11$54'.
+Found async reset \rn in `$paramod\ot_s81_engram_capture_slice\W=4.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:11$52'.
+Found async reset \rn in `$paramod\ot_s81_engram_capture_slice\W=4.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:11$50'.
+Found async reset \rn in `$paramod\ot_s81_engram_capture_slice\W=4.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:11$48'.
+Found async reset \rn in `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:11$100'.
+Found async reset \rn in `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:11$98'.
+Found async reset \rn in `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:11$96'.
+Found async reset \rn in `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:11$94'.
+Found async reset \rn in `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:11$92'.
+Found async reset \rn in `$paramod\ot_s81_engram_capture_slice\W=2.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:11$58'.
+Found async reset \rn in `$paramod\ot_s81_engram_capture_slice\W=2.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:11$56'.
+Found async reset \arst_n in `\ot_s81_engram_reset.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:3$1'.
+
+3.5. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `$paramod\ot_s81_engram_capture_slice\W=4.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:11$54'.
+     1/1: $0\bit_ff[3].value[0:0]
+Creating decoders for process `$paramod\ot_s81_engram_capture_slice\W=4.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:11$52'.
+     1/1: $0\bit_ff[2].value[0:0]
+Creating decoders for process `$paramod\ot_s81_engram_capture_slice\W=4.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:11$50'.
+     1/1: $0\bit_ff[1].value[0:0]
+Creating decoders for process `$paramod\ot_s81_engram_capture_slice\W=4.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:11$48'.
+     1/1: $0\bit_ff[0].value[0:0]
+Creating decoders for process `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$47'.
+     1/1: $0\bit_ff[31].value[0:0]
+Creating decoders for process `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$46'.
+     1/1: $0\bit_ff[30].value[0:0]
+Creating decoders for process `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$45'.
+     1/1: $0\bit_ff[29].value[0:0]
+Creating decoders for process `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$44'.
+     1/1: $0\bit_ff[28].value[0:0]
+Creating decoders for process `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$43'.
+     1/1: $0\bit_ff[27].value[0:0]
+Creating decoders for process `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$42'.
+     1/1: $0\bit_ff[26].value[0:0]
+Creating decoders for process `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$41'.
+     1/1: $0\bit_ff[25].value[0:0]
+Creating decoders for process `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$40'.
+     1/1: $0\bit_ff[24].value[0:0]
+Creating decoders for process `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$39'.
+     1/1: $0\bit_ff[23].value[0:0]
+Creating decoders for process `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$38'.
+     1/1: $0\bit_ff[22].value[0:0]
+Creating decoders for process `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$37'.
+     1/1: $0\bit_ff[21].value[0:0]
+Creating decoders for process `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$36'.
+     1/1: $0\bit_ff[20].value[0:0]
+Creating decoders for process `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$35'.
+     1/1: $0\bit_ff[19].value[0:0]
+Creating decoders for process `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$34'.
+     1/1: $0\bit_ff[18].value[0:0]
+Creating decoders for process `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$33'.
+     1/1: $0\bit_ff[17].value[0:0]
+Creating decoders for process `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$32'.
+     1/1: $0\bit_ff[16].value[0:0]
+Creating decoders for process `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$31'.
+     1/1: $0\bit_ff[15].value[0:0]
+Creating decoders for process `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$30'.
+     1/1: $0\bit_ff[14].value[0:0]
+Creating decoders for process `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$29'.
+     1/1: $0\bit_ff[13].value[0:0]
+Creating decoders for process `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$28'.
+     1/1: $0\bit_ff[12].value[0:0]
+Creating decoders for process `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$27'.
+     1/1: $0\bit_ff[11].value[0:0]
+Creating decoders for process `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$26'.
+     1/1: $0\bit_ff[10].value[0:0]
+Creating decoders for process `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$25'.
+     1/1: $0\bit_ff[9].value[0:0]
+Creating decoders for process `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$24'.
+     1/1: $0\bit_ff[8].value[0:0]
+Creating decoders for process `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$23'.
+     1/1: $0\bit_ff[7].value[0:0]
+Creating decoders for process `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$22'.
+     1/1: $0\bit_ff[6].value[0:0]
+Creating decoders for process `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$21'.
+     1/1: $0\bit_ff[5].value[0:0]
+Creating decoders for process `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$20'.
+     1/1: $0\bit_ff[4].value[0:0]
+Creating decoders for process `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$19'.
+     1/1: $0\bit_ff[3].value[0:0]
+Creating decoders for process `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$18'.
+     1/1: $0\bit_ff[2].value[0:0]
+Creating decoders for process `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$17'.
+     1/1: $0\bit_ff[1].value[0:0]
+Creating decoders for process `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$16'.
+     1/1: $0\bit_ff[0].value[0:0]
+Creating decoders for process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:11$100'.
+     1/1: $0\bit_ff[36].value[0:0]
+Creating decoders for process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:11$98'.
+     1/1: $0\bit_ff[35].value[0:0]
+Creating decoders for process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:11$96'.
+     1/1: $0\bit_ff[34].value[0:0]
+Creating decoders for process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:11$94'.
+     1/1: $0\bit_ff[33].value[0:0]
+Creating decoders for process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:11$92'.
+     1/1: $0\bit_ff[32].value[0:0]
+Creating decoders for process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$91'.
+     1/1: $0\bit_ff[31].value[0:0]
+Creating decoders for process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$90'.
+     1/1: $0\bit_ff[30].value[0:0]
+Creating decoders for process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$89'.
+     1/1: $0\bit_ff[29].value[0:0]
+Creating decoders for process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$88'.
+     1/1: $0\bit_ff[28].value[0:0]
+Creating decoders for process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$87'.
+     1/1: $0\bit_ff[27].value[0:0]
+Creating decoders for process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$86'.
+     1/1: $0\bit_ff[26].value[0:0]
+Creating decoders for process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$85'.
+     1/1: $0\bit_ff[25].value[0:0]
+Creating decoders for process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$84'.
+     1/1: $0\bit_ff[24].value[0:0]
+Creating decoders for process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$83'.
+     1/1: $0\bit_ff[23].value[0:0]
+Creating decoders for process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$82'.
+     1/1: $0\bit_ff[22].value[0:0]
+Creating decoders for process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$81'.
+     1/1: $0\bit_ff[21].value[0:0]
+Creating decoders for process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$80'.
+     1/1: $0\bit_ff[20].value[0:0]
+Creating decoders for process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$79'.
+     1/1: $0\bit_ff[19].value[0:0]
+Creating decoders for process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$78'.
+     1/1: $0\bit_ff[18].value[0:0]
+Creating decoders for process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$77'.
+     1/1: $0\bit_ff[17].value[0:0]
+Creating decoders for process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$76'.
+     1/1: $0\bit_ff[16].value[0:0]
+Creating decoders for process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$75'.
+     1/1: $0\bit_ff[15].value[0:0]
+Creating decoders for process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$74'.
+     1/1: $0\bit_ff[14].value[0:0]
+Creating decoders for process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$73'.
+     1/1: $0\bit_ff[13].value[0:0]
+Creating decoders for process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$72'.
+     1/1: $0\bit_ff[12].value[0:0]
+Creating decoders for process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$71'.
+     1/1: $0\bit_ff[11].value[0:0]
+Creating decoders for process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$70'.
+     1/1: $0\bit_ff[10].value[0:0]
+Creating decoders for process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$69'.
+     1/1: $0\bit_ff[9].value[0:0]
+Creating decoders for process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$68'.
+     1/1: $0\bit_ff[8].value[0:0]
+Creating decoders for process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$67'.
+     1/1: $0\bit_ff[7].value[0:0]
+Creating decoders for process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$66'.
+     1/1: $0\bit_ff[6].value[0:0]
+Creating decoders for process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$65'.
+     1/1: $0\bit_ff[5].value[0:0]
+Creating decoders for process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$64'.
+     1/1: $0\bit_ff[4].value[0:0]
+Creating decoders for process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$63'.
+     1/1: $0\bit_ff[3].value[0:0]
+Creating decoders for process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$62'.
+     1/1: $0\bit_ff[2].value[0:0]
+Creating decoders for process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$61'.
+     1/1: $0\bit_ff[1].value[0:0]
+Creating decoders for process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$60'.
+     1/1: $0\bit_ff[0].value[0:0]
+Creating decoders for process `$paramod\ot_s81_engram_capture_slice\W=2.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:11$58'.
+     1/1: $0\bit_ff[1].value[0:0]
+Creating decoders for process `$paramod\ot_s81_engram_capture_slice\W=2.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:11$56'.
+     1/1: $0\bit_ff[0].value[0:0]
+Creating decoders for process `\ot_s81_engram_reset.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:3$1'.
+     1/1: $0\sync[1:0]
+
+3.6. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+3.7. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `$paramod\ot_s81_engram_capture_slice\W=4.\bit_ff[3].value' using process `$paramod\ot_s81_engram_capture_slice\W=4.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:11$54'.
+  created $adff cell `$procdff$102' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\ot_s81_engram_capture_slice\W=4.\bit_ff[2].value' using process `$paramod\ot_s81_engram_capture_slice\W=4.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:11$52'.
+  created $adff cell `$procdff$103' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\ot_s81_engram_capture_slice\W=4.\bit_ff[1].value' using process `$paramod\ot_s81_engram_capture_slice\W=4.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:11$50'.
+  created $adff cell `$procdff$104' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\ot_s81_engram_capture_slice\W=4.\bit_ff[0].value' using process `$paramod\ot_s81_engram_capture_slice\W=4.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:11$48'.
+  created $adff cell `$procdff$105' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.\bit_ff[31].value' using process `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$47'.
+  created $dff cell `$procdff$106' with positive edge clock.
+Creating register for signal `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.\bit_ff[30].value' using process `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$46'.
+  created $dff cell `$procdff$107' with positive edge clock.
+Creating register for signal `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.\bit_ff[29].value' using process `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$45'.
+  created $dff cell `$procdff$108' with positive edge clock.
+Creating register for signal `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.\bit_ff[28].value' using process `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$44'.
+  created $dff cell `$procdff$109' with positive edge clock.
+Creating register for signal `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.\bit_ff[27].value' using process `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$43'.
+  created $dff cell `$procdff$110' with positive edge clock.
+Creating register for signal `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.\bit_ff[26].value' using process `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$42'.
+  created $dff cell `$procdff$111' with positive edge clock.
+Creating register for signal `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.\bit_ff[25].value' using process `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$41'.
+  created $dff cell `$procdff$112' with positive edge clock.
+Creating register for signal `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.\bit_ff[24].value' using process `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$40'.
+  created $dff cell `$procdff$113' with positive edge clock.
+Creating register for signal `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.\bit_ff[23].value' using process `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$39'.
+  created $dff cell `$procdff$114' with positive edge clock.
+Creating register for signal `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.\bit_ff[22].value' using process `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$38'.
+  created $dff cell `$procdff$115' with positive edge clock.
+Creating register for signal `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.\bit_ff[21].value' using process `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$37'.
+  created $dff cell `$procdff$116' with positive edge clock.
+Creating register for signal `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.\bit_ff[20].value' using process `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$36'.
+  created $dff cell `$procdff$117' with positive edge clock.
+Creating register for signal `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.\bit_ff[19].value' using process `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$35'.
+  created $dff cell `$procdff$118' with positive edge clock.
+Creating register for signal `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.\bit_ff[18].value' using process `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$34'.
+  created $dff cell `$procdff$119' with positive edge clock.
+Creating register for signal `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.\bit_ff[17].value' using process `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$33'.
+  created $dff cell `$procdff$120' with positive edge clock.
+Creating register for signal `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.\bit_ff[16].value' using process `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$32'.
+  created $dff cell `$procdff$121' with positive edge clock.
+Creating register for signal `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.\bit_ff[15].value' using process `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$31'.
+  created $dff cell `$procdff$122' with positive edge clock.
+Creating register for signal `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.\bit_ff[14].value' using process `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$30'.
+  created $dff cell `$procdff$123' with positive edge clock.
+Creating register for signal `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.\bit_ff[13].value' using process `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$29'.
+  created $dff cell `$procdff$124' with positive edge clock.
+Creating register for signal `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.\bit_ff[12].value' using process `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$28'.
+  created $dff cell `$procdff$125' with positive edge clock.
+Creating register for signal `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.\bit_ff[11].value' using process `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$27'.
+  created $dff cell `$procdff$126' with positive edge clock.
+Creating register for signal `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.\bit_ff[10].value' using process `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$26'.
+  created $dff cell `$procdff$127' with positive edge clock.
+Creating register for signal `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.\bit_ff[9].value' using process `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$25'.
+  created $dff cell `$procdff$128' with positive edge clock.
+Creating register for signal `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.\bit_ff[8].value' using process `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$24'.
+  created $dff cell `$procdff$129' with positive edge clock.
+Creating register for signal `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.\bit_ff[7].value' using process `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$23'.
+  created $dff cell `$procdff$130' with positive edge clock.
+Creating register for signal `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.\bit_ff[6].value' using process `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$22'.
+  created $dff cell `$procdff$131' with positive edge clock.
+Creating register for signal `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.\bit_ff[5].value' using process `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$21'.
+  created $dff cell `$procdff$132' with positive edge clock.
+Creating register for signal `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.\bit_ff[4].value' using process `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$20'.
+  created $dff cell `$procdff$133' with positive edge clock.
+Creating register for signal `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.\bit_ff[3].value' using process `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$19'.
+  created $dff cell `$procdff$134' with positive edge clock.
+Creating register for signal `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.\bit_ff[2].value' using process `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$18'.
+  created $dff cell `$procdff$135' with positive edge clock.
+Creating register for signal `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.\bit_ff[1].value' using process `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$17'.
+  created $dff cell `$procdff$136' with positive edge clock.
+Creating register for signal `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.\bit_ff[0].value' using process `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$16'.
+  created $dff cell `$procdff$137' with positive edge clock.
+Creating register for signal `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.\bit_ff[36].value' using process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:11$100'.
+  created $adff cell `$procdff$138' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.\bit_ff[35].value' using process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:11$98'.
+  created $adff cell `$procdff$139' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.\bit_ff[34].value' using process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:11$96'.
+  created $adff cell `$procdff$140' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.\bit_ff[33].value' using process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:11$94'.
+  created $adff cell `$procdff$141' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.\bit_ff[32].value' using process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:11$92'.
+  created $adff cell `$procdff$142' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.\bit_ff[31].value' using process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$91'.
+  created $dff cell `$procdff$143' with positive edge clock.
+Creating register for signal `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.\bit_ff[30].value' using process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$90'.
+  created $dff cell `$procdff$144' with positive edge clock.
+Creating register for signal `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.\bit_ff[29].value' using process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$89'.
+  created $dff cell `$procdff$145' with positive edge clock.
+Creating register for signal `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.\bit_ff[28].value' using process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$88'.
+  created $dff cell `$procdff$146' with positive edge clock.
+Creating register for signal `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.\bit_ff[27].value' using process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$87'.
+  created $dff cell `$procdff$147' with positive edge clock.
+Creating register for signal `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.\bit_ff[26].value' using process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$86'.
+  created $dff cell `$procdff$148' with positive edge clock.
+Creating register for signal `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.\bit_ff[25].value' using process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$85'.
+  created $dff cell `$procdff$149' with positive edge clock.
+Creating register for signal `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.\bit_ff[24].value' using process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$84'.
+  created $dff cell `$procdff$150' with positive edge clock.
+Creating register for signal `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.\bit_ff[23].value' using process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$83'.
+  created $dff cell `$procdff$151' with positive edge clock.
+Creating register for signal `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.\bit_ff[22].value' using process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$82'.
+  created $dff cell `$procdff$152' with positive edge clock.
+Creating register for signal `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.\bit_ff[21].value' using process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$81'.
+  created $dff cell `$procdff$153' with positive edge clock.
+Creating register for signal `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.\bit_ff[20].value' using process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$80'.
+  created $dff cell `$procdff$154' with positive edge clock.
+Creating register for signal `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.\bit_ff[19].value' using process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$79'.
+  created $dff cell `$procdff$155' with positive edge clock.
+Creating register for signal `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.\bit_ff[18].value' using process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$78'.
+  created $dff cell `$procdff$156' with positive edge clock.
+Creating register for signal `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.\bit_ff[17].value' using process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$77'.
+  created $dff cell `$procdff$157' with positive edge clock.
+Creating register for signal `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.\bit_ff[16].value' using process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$76'.
+  created $dff cell `$procdff$158' with positive edge clock.
+Creating register for signal `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.\bit_ff[15].value' using process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$75'.
+  created $dff cell `$procdff$159' with positive edge clock.
+Creating register for signal `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.\bit_ff[14].value' using process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$74'.
+  created $dff cell `$procdff$160' with positive edge clock.
+Creating register for signal `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.\bit_ff[13].value' using process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$73'.
+  created $dff cell `$procdff$161' with positive edge clock.
+Creating register for signal `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.\bit_ff[12].value' using process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$72'.
+  created $dff cell `$procdff$162' with positive edge clock.
+Creating register for signal `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.\bit_ff[11].value' using process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$71'.
+  created $dff cell `$procdff$163' with positive edge clock.
+Creating register for signal `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.\bit_ff[10].value' using process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$70'.
+  created $dff cell `$procdff$164' with positive edge clock.
+Creating register for signal `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.\bit_ff[9].value' using process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$69'.
+  created $dff cell `$procdff$165' with positive edge clock.
+Creating register for signal `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.\bit_ff[8].value' using process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$68'.
+  created $dff cell `$procdff$166' with positive edge clock.
+Creating register for signal `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.\bit_ff[7].value' using process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$67'.
+  created $dff cell `$procdff$167' with positive edge clock.
+Creating register for signal `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.\bit_ff[6].value' using process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$66'.
+  created $dff cell `$procdff$168' with positive edge clock.
+Creating register for signal `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.\bit_ff[5].value' using process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$65'.
+  created $dff cell `$procdff$169' with positive edge clock.
+Creating register for signal `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.\bit_ff[4].value' using process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$64'.
+  created $dff cell `$procdff$170' with positive edge clock.
+Creating register for signal `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.\bit_ff[3].value' using process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$63'.
+  created $dff cell `$procdff$171' with positive edge clock.
+Creating register for signal `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.\bit_ff[2].value' using process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$62'.
+  created $dff cell `$procdff$172' with positive edge clock.
+Creating register for signal `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.\bit_ff[1].value' using process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$61'.
+  created $dff cell `$procdff$173' with positive edge clock.
+Creating register for signal `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.\bit_ff[0].value' using process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$60'.
+  created $dff cell `$procdff$174' with positive edge clock.
+Creating register for signal `$paramod\ot_s81_engram_capture_slice\W=2.\bit_ff[1].value' using process `$paramod\ot_s81_engram_capture_slice\W=2.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:11$58'.
+  created $adff cell `$procdff$175' with positive edge clock and negative level reset.
+Creating register for signal `$paramod\ot_s81_engram_capture_slice\W=2.\bit_ff[0].value' using process `$paramod\ot_s81_engram_capture_slice\W=2.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:11$56'.
+  created $adff cell `$procdff$176' with positive edge clock and negative level reset.
+Creating register for signal `\ot_s81_engram_reset.\sync' using process `\ot_s81_engram_reset.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:3$1'.
+  created $adff cell `$procdff$177' with positive edge clock and negative level reset.
+
+3.8. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `$paramod\ot_s81_engram_capture_slice\W=4.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:11$54'.
+Removing empty process `$paramod\ot_s81_engram_capture_slice\W=4.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:11$52'.
+Removing empty process `$paramod\ot_s81_engram_capture_slice\W=4.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:11$50'.
+Removing empty process `$paramod\ot_s81_engram_capture_slice\W=4.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:11$48'.
+Removing empty process `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$47'.
+Removing empty process `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$46'.
+Removing empty process `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$45'.
+Removing empty process `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$44'.
+Removing empty process `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$43'.
+Removing empty process `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$42'.
+Removing empty process `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$41'.
+Removing empty process `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$40'.
+Removing empty process `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$39'.
+Removing empty process `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$38'.
+Removing empty process `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$37'.
+Removing empty process `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$36'.
+Removing empty process `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$35'.
+Removing empty process `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$34'.
+Removing empty process `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$33'.
+Removing empty process `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$32'.
+Removing empty process `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$31'.
+Removing empty process `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$30'.
+Removing empty process `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$29'.
+Removing empty process `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$28'.
+Removing empty process `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$27'.
+Removing empty process `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$26'.
+Removing empty process `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$25'.
+Removing empty process `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$24'.
+Removing empty process `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$23'.
+Removing empty process `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$22'.
+Removing empty process `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$21'.
+Removing empty process `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$20'.
+Removing empty process `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$19'.
+Removing empty process `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$18'.
+Removing empty process `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$17'.
+Removing empty process `$paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$16'.
+Removing empty process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:11$100'.
+Removing empty process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:11$98'.
+Removing empty process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:11$96'.
+Removing empty process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:11$94'.
+Removing empty process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:11$92'.
+Removing empty process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$91'.
+Removing empty process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$90'.
+Removing empty process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$89'.
+Removing empty process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$88'.
+Removing empty process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$87'.
+Removing empty process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$86'.
+Removing empty process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$85'.
+Removing empty process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$84'.
+Removing empty process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$83'.
+Removing empty process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$82'.
+Removing empty process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$81'.
+Removing empty process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$80'.
+Removing empty process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$79'.
+Removing empty process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$78'.
+Removing empty process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$77'.
+Removing empty process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$76'.
+Removing empty process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$75'.
+Removing empty process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$74'.
+Removing empty process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$73'.
+Removing empty process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$72'.
+Removing empty process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$71'.
+Removing empty process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$70'.
+Removing empty process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$69'.
+Removing empty process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$68'.
+Removing empty process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$67'.
+Removing empty process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$66'.
+Removing empty process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$65'.
+Removing empty process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$64'.
+Removing empty process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$63'.
+Removing empty process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$62'.
+Removing empty process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$61'.
+Removing empty process `$paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:12$60'.
+Removing empty process `$paramod\ot_s81_engram_capture_slice\W=2.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:11$58'.
+Removing empty process `$paramod\ot_s81_engram_capture_slice\W=2.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:11$56'.
+Removing empty process `ot_s81_engram_reset.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:3$1'.
+Cleaned up 0 empty switches.
+
+4. Executing FLATTEN pass (flatten design).
+Using template $paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000 for cells of type $paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.
+Using template $paramod\ot_s81_engram_capture_slice\W=2 for cells of type $paramod\ot_s81_engram_capture_slice\W=2.
+Using template $paramod\ot_s81_engram_capture_slice\W=4 for cells of type $paramod\ot_s81_engram_capture_slice\W=4.
+Using template $paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0 for cells of type $paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.
+Using template ot_s81_engram_reset for cells of type ot_s81_engram_reset.
+<suppressed ~36 debug messages>
+No more expansions possible.
+Deleting now unused module $paramod\ot_s81_engram_capture_slice\W=4.
+Deleting now unused module $paramod\ot_s81_engram_capture_slice\W=32\RESET_MASK=0.
+Deleting now unused module $paramod\ot_s81_engram_capture_slice\W=37\RESET_MASK=37'1111100000000000000000000000000000000.
+Deleting now unused module $paramod\ot_s81_engram_capture_slice\W=2.
+Deleting now unused module ot_s81_engram_reset.
+
+5. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_s81_engram_rly_split.
+<suppressed ~8 debug messages>
+
+6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_s81_engram_rly_split..
+Removed 63 unused cells and 298 unused wires.
+<suppressed ~76 debug messages>
+
+7. Executing JSON backend.
+
+8. Printing statistics.
+
+=== ot_s81_engram_rly_split ===
+
+   Number of wires:                366
+   Number of wire bits:           1096
+   Number of public wires:         366
+   Number of public wire bits:    1096
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                215
+     $adff                          55
+     $dff                          160
+

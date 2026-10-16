@@ -1,0 +1,1426 @@
+{
+ "status": "ACTUAL_YOSYS_SPLIT_ROOT_FF_CENSUS",
+ "actual_source_sha256": "9dae13281985a267c73fccb5f7ab76b631175bd3c4c877ed85c342e4cbd074a4",
+ "baseline_source_sha256": "893b7f7aedb186ccb2fb9a1b215fc128b1ebb601943b7e24aaec68745d40a17e",
+ "profiles": [
+  {
+   "width": 2,
+   "copies_per_cluster": 8,
+   "payload_ff_each": 2,
+   "reset_sync_ff_each": 2,
+   "reset_mask": "11"
+  },
+  {
+   "width": 4,
+   "copies_per_cluster": 5,
+   "payload_ff_each": 4,
+   "reset_sync_ff_each": 2,
+   "reset_mask": "1111"
+  },
+  {
+   "width": 32,
+   "copies_per_cluster": 4,
+   "payload_ff_each": 32,
+   "reset_sync_ff_each": 0,
+   "reset_mask": "0; unused local reset synchronizer pruned by actual Yosys"
+  },
+  {
+   "width": 37,
+   "copies_per_cluster": 1,
+   "payload_ff_each": 37,
+   "reset_sync_ff_each": 2,
+   "reset_mask": "bits36:32 reset;31:0 unreset"
+  }
+ ],
+ "new_payload_ff_per_copy": 201,
+ "new_reset_sync_ff_per_copy": 28,
+ "new_ff_per_copy": 229,
+ "old_ff_per_copy": 107,
+ "added_ff_per_copy": 122,
+ "added_ff_all4": 488,
+ "added_payload_ff_all4": 384,
+ "added_reset_ff_all4": 104,
+ "new_roots": 285,
+ "added_roots": 68,
+ "added_logical_edges": 0,
+ "previous_source_estimate": "237percopy/+520all4 assumed2resetFF per32unreset leaf. Actual optimizer prunes8unused resetFF/copy. This actual229/+488 supersedes that estimate; historical source/mechanism logs preserved.",
+ "actual": {
+  "split": {
+   "ff": 229,
+   "root_count": 18,
+   "per_root_ff": {
+    "13": 32,
+    "8": 6,
+    "14": 32,
+    "9": 6,
+    "15": 32,
+    "10": 6,
+    "16": 32,
+    "11": 6,
+    "0": 4,
+    "1": 4,
+    "2": 4,
+    "3": 4,
+    "4": 4,
+    "5": 4,
+    "6": 4,
+    "7": 4,
+    "17": 6,
+    "12": 39
+   },
+   "per_root_reset_sync_ff": {
+    "8": 2,
+    "9": 2,
+    "10": 2,
+    "11": 2,
+    "0": 2,
+    "1": 2,
+    "2": 2,
+    "3": 2,
+    "4": 2,
+    "5": 2,
+    "6": 2,
+    "7": 2,
+    "17": 2,
+    "12": 2
+   },
+   "rows": [
+    {
+     "cell": "$techmap\\add[0].gate_capture.$procdff$106",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 13
+    },
+    {
+     "cell": "$techmap\\add[0].gate_capture.$procdff$107",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 13
+    },
+    {
+     "cell": "$techmap\\add[0].gate_capture.$procdff$108",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 13
+    },
+    {
+     "cell": "$techmap\\add[0].gate_capture.$procdff$109",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 13
+    },
+    {
+     "cell": "$techmap\\add[0].gate_capture.$procdff$110",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 13
+    },
+    {
+     "cell": "$techmap\\add[0].gate_capture.$procdff$111",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 13
+    },
+    {
+     "cell": "$techmap\\add[0].gate_capture.$procdff$112",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 13
+    },
+    {
+     "cell": "$techmap\\add[0].gate_capture.$procdff$113",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 13
+    },
+    {
+     "cell": "$techmap\\add[0].gate_capture.$procdff$114",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 13
+    },
+    {
+     "cell": "$techmap\\add[0].gate_capture.$procdff$115",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 13
+    },
+    {
+     "cell": "$techmap\\add[0].gate_capture.$procdff$116",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 13
+    },
+    {
+     "cell": "$techmap\\add[0].gate_capture.$procdff$117",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 13
+    },
+    {
+     "cell": "$techmap\\add[0].gate_capture.$procdff$118",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 13
+    },
+    {
+     "cell": "$techmap\\add[0].gate_capture.$procdff$119",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 13
+    },
+    {
+     "cell": "$techmap\\add[0].gate_capture.$procdff$120",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 13
+    },
+    {
+     "cell": "$techmap\\add[0].gate_capture.$procdff$121",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 13
+    },
+    {
+     "cell": "$techmap\\add[0].gate_capture.$procdff$122",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 13
+    },
+    {
+     "cell": "$techmap\\add[0].gate_capture.$procdff$123",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 13
+    },
+    {
+     "cell": "$techmap\\add[0].gate_capture.$procdff$124",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 13
+    },
+    {
+     "cell": "$techmap\\add[0].gate_capture.$procdff$125",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 13
+    },
+    {
+     "cell": "$techmap\\add[0].gate_capture.$procdff$126",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 13
+    },
+    {
+     "cell": "$techmap\\add[0].gate_capture.$procdff$127",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 13
+    },
+    {
+     "cell": "$techmap\\add[0].gate_capture.$procdff$128",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 13
+    },
+    {
+     "cell": "$techmap\\add[0].gate_capture.$procdff$129",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 13
+    },
+    {
+     "cell": "$techmap\\add[0].gate_capture.$procdff$130",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 13
+    },
+    {
+     "cell": "$techmap\\add[0].gate_capture.$procdff$131",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 13
+    },
+    {
+     "cell": "$techmap\\add[0].gate_capture.$procdff$132",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 13
+    },
+    {
+     "cell": "$techmap\\add[0].gate_capture.$procdff$133",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 13
+    },
+    {
+     "cell": "$techmap\\add[0].gate_capture.$procdff$134",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 13
+    },
+    {
+     "cell": "$techmap\\add[0].gate_capture.$procdff$135",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 13
+    },
+    {
+     "cell": "$techmap\\add[0].gate_capture.$procdff$136",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 13
+    },
+    {
+     "cell": "$techmap\\add[0].gate_capture.$procdff$137",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 13
+    },
+    {
+     "cell": "$techmap\\add[0].u.$procdff$102",
+     "type": "$adff",
+     "width": 1,
+     "clock_index": 8
+    },
+    {
+     "cell": "$techmap\\add[0].u.$procdff$103",
+     "type": "$adff",
+     "width": 1,
+     "clock_index": 8
+    },
+    {
+     "cell": "$techmap\\add[0].u.$procdff$104",
+     "type": "$adff",
+     "width": 1,
+     "clock_index": 8
+    },
+    {
+     "cell": "$techmap\\add[0].u.$procdff$105",
+     "type": "$adff",
+     "width": 1,
+     "clock_index": 8
+    },
+    {
+     "cell": "$techmap\\add[0].u.reset_leaf.$procdff$177",
+     "type": "$adff",
+     "width": 2,
+     "clock_index": 8
+    },
+    {
+     "cell": "$techmap\\add[1].gate_capture.$procdff$106",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 14
+    },
+    {
+     "cell": "$techmap\\add[1].gate_capture.$procdff$107",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 14
+    },
+    {
+     "cell": "$techmap\\add[1].gate_capture.$procdff$108",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 14
+    },
+    {
+     "cell": "$techmap\\add[1].gate_capture.$procdff$109",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 14
+    },
+    {
+     "cell": "$techmap\\add[1].gate_capture.$procdff$110",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 14
+    },
+    {
+     "cell": "$techmap\\add[1].gate_capture.$procdff$111",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 14
+    },
+    {
+     "cell": "$techmap\\add[1].gate_capture.$procdff$112",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 14
+    },
+    {
+     "cell": "$techmap\\add[1].gate_capture.$procdff$113",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 14
+    },
+    {
+     "cell": "$techmap\\add[1].gate_capture.$procdff$114",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 14
+    },
+    {
+     "cell": "$techmap\\add[1].gate_capture.$procdff$115",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 14
+    },
+    {
+     "cell": "$techmap\\add[1].gate_capture.$procdff$116",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 14
+    },
+    {
+     "cell": "$techmap\\add[1].gate_capture.$procdff$117",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 14
+    },
+    {
+     "cell": "$techmap\\add[1].gate_capture.$procdff$118",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 14
+    },
+    {
+     "cell": "$techmap\\add[1].gate_capture.$procdff$119",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 14
+    },
+    {
+     "cell": "$techmap\\add[1].gate_capture.$procdff$120",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 14
+    },
+    {
+     "cell": "$techmap\\add[1].gate_capture.$procdff$121",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 14
+    },
+    {
+     "cell": "$techmap\\add[1].gate_capture.$procdff$122",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 14
+    },
+    {
+     "cell": "$techmap\\add[1].gate_capture.$procdff$123",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 14
+    },
+    {
+     "cell": "$techmap\\add[1].gate_capture.$procdff$124",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 14
+    },
+    {
+     "cell": "$techmap\\add[1].gate_capture.$procdff$125",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 14
+    },
+    {
+     "cell": "$techmap\\add[1].gate_capture.$procdff$126",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 14
+    },
+    {
+     "cell": "$techmap\\add[1].gate_capture.$procdff$127",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 14
+    },
+    {
+     "cell": "$techmap\\add[1].gate_capture.$procdff$128",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 14
+    },
+    {
+     "cell": "$techmap\\add[1].gate_capture.$procdff$129",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 14
+    },
+    {
+     "cell": "$techmap\\add[1].gate_capture.$procdff$130",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 14
+    },
+    {
+     "cell": "$techmap\\add[1].gate_capture.$procdff$131",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 14
+    },
+    {
+     "cell": "$techmap\\add[1].gate_capture.$procdff$132",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 14
+    },
+    {
+     "cell": "$techmap\\add[1].gate_capture.$procdff$133",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 14
+    },
+    {
+     "cell": "$techmap\\add[1].gate_capture.$procdff$134",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 14
+    },
+    {
+     "cell": "$techmap\\add[1].gate_capture.$procdff$135",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 14
+    },
+    {
+     "cell": "$techmap\\add[1].gate_capture.$procdff$136",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 14
+    },
+    {
+     "cell": "$techmap\\add[1].gate_capture.$procdff$137",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 14
+    },
+    {
+     "cell": "$techmap\\add[1].u.$procdff$102",
+     "type": "$adff",
+     "width": 1,
+     "clock_index": 9
+    },
+    {
+     "cell": "$techmap\\add[1].u.$procdff$103",
+     "type": "$adff",
+     "width": 1,
+     "clock_index": 9
+    },
+    {
+     "cell": "$techmap\\add[1].u.$procdff$104",
+     "type": "$adff",
+     "width": 1,
+     "clock_index": 9
+    },
+    {
+     "cell": "$techmap\\add[1].u.$procdff$105",
+     "type": "$adff",
+     "width": 1,
+     "clock_index": 9
+    },
+    {
+     "cell": "$techmap\\add[1].u.reset_leaf.$procdff$177",
+     "type": "$adff",
+     "width": 2,
+     "clock_index": 9
+    },
+    {
+     "cell": "$techmap\\add[2].gate_capture.$procdff$106",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 15
+    },
+    {
+     "cell": "$techmap\\add[2].gate_capture.$procdff$107",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 15
+    },
+    {
+     "cell": "$techmap\\add[2].gate_capture.$procdff$108",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 15
+    },
+    {
+     "cell": "$techmap\\add[2].gate_capture.$procdff$109",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 15
+    },
+    {
+     "cell": "$techmap\\add[2].gate_capture.$procdff$110",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 15
+    },
+    {
+     "cell": "$techmap\\add[2].gate_capture.$procdff$111",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 15
+    },
+    {
+     "cell": "$techmap\\add[2].gate_capture.$procdff$112",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 15
+    },
+    {
+     "cell": "$techmap\\add[2].gate_capture.$procdff$113",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 15
+    },
+    {
+     "cell": "$techmap\\add[2].gate_capture.$procdff$114",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 15
+    },
+    {
+     "cell": "$techmap\\add[2].gate_capture.$procdff$115",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 15
+    },
+    {
+     "cell": "$techmap\\add[2].gate_capture.$procdff$116",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 15
+    },
+    {
+     "cell": "$techmap\\add[2].gate_capture.$procdff$117",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 15
+    },
+    {
+     "cell": "$techmap\\add[2].gate_capture.$procdff$118",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 15
+    },
+    {
+     "cell": "$techmap\\add[2].gate_capture.$procdff$119",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 15
+    },
+    {
+     "cell": "$techmap\\add[2].gate_capture.$procdff$120",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 15
+    },
+    {
+     "cell": "$techmap\\add[2].gate_capture.$procdff$121",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 15
+    },
+    {
+     "cell": "$techmap\\add[2].gate_capture.$procdff$122",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 15
+    },
+    {
+     "cell": "$techmap\\add[2].gate_capture.$procdff$123",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 15
+    },
+    {
+     "cell": "$techmap\\add[2].gate_capture.$procdff$124",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 15
+    },
+    {
+     "cell": "$techmap\\add[2].gate_capture.$procdff$125",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 15
+    },
+    {
+     "cell": "$techmap\\add[2].gate_capture.$procdff$126",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 15
+    },
+    {
+     "cell": "$techmap\\add[2].gate_capture.$procdff$127",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 15
+    },
+    {
+     "cell": "$techmap\\add[2].gate_capture.$procdff$128",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 15
+    },
+    {
+     "cell": "$techmap\\add[2].gate_capture.$procdff$129",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 15
+    },
+    {
+     "cell": "$techmap\\add[2].gate_capture.$procdff$130",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 15
+    },
+    {
+     "cell": "$techmap\\add[2].gate_capture.$procdff$131",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 15
+    },
+    {
+     "cell": "$techmap\\add[2].gate_capture.$procdff$132",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 15
+    },
+    {
+     "cell": "$techmap\\add[2].gate_capture.$procdff$133",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 15
+    },
+    {
+     "cell": "$techmap\\add[2].gate_capture.$procdff$134",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 15
+    },
+    {
+     "cell": "$techmap\\add[2].gate_capture.$procdff$135",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 15
+    },
+    {
+     "cell": "$techmap\\add[2].gate_capture.$procdff$136",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 15
+    },
+    {
+     "cell": "$techmap\\add[2].gate_capture.$procdff$137",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 15
+    },
+    {
+     "cell": "$techmap\\add[2].u.$procdff$102",
+     "type": "$adff",
+     "width": 1,
+     "clock_index": 10
+    },
+    {
+     "cell": "$techmap\\add[2].u.$procdff$103",
+     "type": "$adff",
+     "width": 1,
+     "clock_index": 10
+    },
+    {
+     "cell": "$techmap\\add[2].u.$procdff$104",
+     "type": "$adff",
+     "width": 1,
+     "clock_index": 10
+    },
+    {
+     "cell": "$techmap\\add[2].u.$procdff$105",
+     "type": "$adff",
+     "width": 1,
+     "clock_index": 10
+    },
+    {
+     "cell": "$techmap\\add[2].u.reset_leaf.$procdff$177",
+     "type": "$adff",
+     "width": 2,
+     "clock_index": 10
+    },
+    {
+     "cell": "$techmap\\add[3].gate_capture.$procdff$106",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 16
+    },
+    {
+     "cell": "$techmap\\add[3].gate_capture.$procdff$107",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 16
+    },
+    {
+     "cell": "$techmap\\add[3].gate_capture.$procdff$108",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 16
+    },
+    {
+     "cell": "$techmap\\add[3].gate_capture.$procdff$109",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 16
+    },
+    {
+     "cell": "$techmap\\add[3].gate_capture.$procdff$110",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 16
+    },
+    {
+     "cell": "$techmap\\add[3].gate_capture.$procdff$111",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 16
+    },
+    {
+     "cell": "$techmap\\add[3].gate_capture.$procdff$112",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 16
+    },
+    {
+     "cell": "$techmap\\add[3].gate_capture.$procdff$113",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 16
+    },
+    {
+     "cell": "$techmap\\add[3].gate_capture.$procdff$114",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 16
+    },
+    {
+     "cell": "$techmap\\add[3].gate_capture.$procdff$115",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 16
+    },
+    {
+     "cell": "$techmap\\add[3].gate_capture.$procdff$116",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 16
+    },
+    {
+     "cell": "$techmap\\add[3].gate_capture.$procdff$117",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 16
+    },
+    {
+     "cell": "$techmap\\add[3].gate_capture.$procdff$118",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 16
+    },
+    {
+     "cell": "$techmap\\add[3].gate_capture.$procdff$119",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 16
+    },
+    {
+     "cell": "$techmap\\add[3].gate_capture.$procdff$120",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 16
+    },
+    {
+     "cell": "$techmap\\add[3].gate_capture.$procdff$121",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 16
+    },
+    {
+     "cell": "$techmap\\add[3].gate_capture.$procdff$122",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 16
+    },
+    {
+     "cell": "$techmap\\add[3].gate_capture.$procdff$123",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 16
+    },
+    {
+     "cell": "$techmap\\add[3].gate_capture.$procdff$124",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 16
+    },
+    {
+     "cell": "$techmap\\add[3].gate_capture.$procdff$125",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 16
+    },
+    {
+     "cell": "$techmap\\add[3].gate_capture.$procdff$126",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 16
+    },
+    {
+     "cell": "$techmap\\add[3].gate_capture.$procdff$127",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 16
+    },
+    {
+     "cell": "$techmap\\add[3].gate_capture.$procdff$128",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 16
+    },
+    {
+     "cell": "$techmap\\add[3].gate_capture.$procdff$129",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 16
+    },
+    {
+     "cell": "$techmap\\add[3].gate_capture.$procdff$130",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 16
+    },
+    {
+     "cell": "$techmap\\add[3].gate_capture.$procdff$131",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 16
+    },
+    {
+     "cell": "$techmap\\add[3].gate_capture.$procdff$132",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 16
+    },
+    {
+     "cell": "$techmap\\add[3].gate_capture.$procdff$133",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 16
+    },
+    {
+     "cell": "$techmap\\add[3].gate_capture.$procdff$134",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 16
+    },
+    {
+     "cell": "$techmap\\add[3].gate_capture.$procdff$135",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 16
+    },
+    {
+     "cell": "$techmap\\add[3].gate_capture.$procdff$136",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 16
+    },
+    {
+     "cell": "$techmap\\add[3].gate_capture.$procdff$137",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 16
+    },
+    {
+     "cell": "$techmap\\add[3].u.$procdff$102",
+     "type": "$adff",
+     "width": 1,
+     "clock_index": 11
+    },
+    {
+     "cell": "$techmap\\add[3].u.$procdff$103",
+     "type": "$adff",
+     "width": 1,
+     "clock_index": 11
+    },
+    {
+     "cell": "$techmap\\add[3].u.$procdff$104",
+     "type": "$adff",
+     "width": 1,
+     "clock_index": 11
+    },
+    {
+     "cell": "$techmap\\add[3].u.$procdff$105",
+     "type": "$adff",
+     "width": 1,
+     "clock_index": 11
+    },
+    {
+     "cell": "$techmap\\add[3].u.reset_leaf.$procdff$177",
+     "type": "$adff",
+     "width": 2,
+     "clock_index": 11
+    },
+    {
+     "cell": "$techmap\\mul[0].u.$procdff$175",
+     "type": "$adff",
+     "width": 1,
+     "clock_index": 0
+    },
+    {
+     "cell": "$techmap\\mul[0].u.$procdff$176",
+     "type": "$adff",
+     "width": 1,
+     "clock_index": 0
+    },
+    {
+     "cell": "$techmap\\mul[0].u.reset_leaf.$procdff$177",
+     "type": "$adff",
+     "width": 2,
+     "clock_index": 0
+    },
+    {
+     "cell": "$techmap\\mul[1].u.$procdff$175",
+     "type": "$adff",
+     "width": 1,
+     "clock_index": 1
+    },
+    {
+     "cell": "$techmap\\mul[1].u.$procdff$176",
+     "type": "$adff",
+     "width": 1,
+     "clock_index": 1
+    },
+    {
+     "cell": "$techmap\\mul[1].u.reset_leaf.$procdff$177",
+     "type": "$adff",
+     "width": 2,
+     "clock_index": 1
+    },
+    {
+     "cell": "$techmap\\mul[2].u.$procdff$175",
+     "type": "$adff",
+     "width": 1,
+     "clock_index": 2
+    },
+    {
+     "cell": "$techmap\\mul[2].u.$procdff$176",
+     "type": "$adff",
+     "width": 1,
+     "clock_index": 2
+    },
+    {
+     "cell": "$techmap\\mul[2].u.reset_leaf.$procdff$177",
+     "type": "$adff",
+     "width": 2,
+     "clock_index": 2
+    },
+    {
+     "cell": "$techmap\\mul[3].u.$procdff$175",
+     "type": "$adff",
+     "width": 1,
+     "clock_index": 3
+    },
+    {
+     "cell": "$techmap\\mul[3].u.$procdff$176",
+     "type": "$adff",
+     "width": 1,
+     "clock_index": 3
+    },
+    {
+     "cell": "$techmap\\mul[3].u.reset_leaf.$procdff$177",
+     "type": "$adff",
+     "width": 2,
+     "clock_index": 3
+    },
+    {
+     "cell": "$techmap\\mul[4].u.$procdff$175",
+     "type": "$adff",
+     "width": 1,
+     "clock_index": 4
+    },
+    {
+     "cell": "$techmap\\mul[4].u.$procdff$176",
+     "type": "$adff",
+     "width": 1,
+     "clock_index": 4
+    },
+    {
+     "cell": "$techmap\\mul[4].u.reset_leaf.$procdff$177",
+     "type": "$adff",
+     "width": 2,
+     "clock_index": 4
+    },
+    {
+     "cell": "$techmap\\mul[5].u.$procdff$175",
+     "type": "$adff",
+     "width": 1,
+     "clock_index": 5
+    },
+    {
+     "cell": "$techmap\\mul[5].u.$procdff$176",
+     "type": "$adff",
+     "width": 1,
+     "clock_index": 5
+    },
+    {
+     "cell": "$techmap\\mul[5].u.reset_leaf.$procdff$177",
+     "type": "$adff",
+     "width": 2,
+     "clock_index": 5
+    },
+    {
+     "cell": "$techmap\\mul[6].u.$procdff$175",
+     "type": "$adff",
+     "width": 1,
+     "clock_index": 6
+    },
+    {
+     "cell": "$techmap\\mul[6].u.$procdff$176",
+     "type": "$adff",
+     "width": 1,
+     "clock_index": 6
+    },
+    {
+     "cell": "$techmap\\mul[6].u.reset_leaf.$procdff$177",
+     "type": "$adff",
+     "width": 2,
+     "clock_index": 6
+    },
+    {
+     "cell": "$techmap\\mul[7].u.$procdff$175",
+     "type": "$adff",
+     "width": 1,
+     "clock_index": 7
+    },
+    {
+     "cell": "$techmap\\mul[7].u.$procdff$176",
+     "type": "$adff",
+     "width": 1,
+     "clock_index": 7
+    },
+    {
+     "cell": "$techmap\\mul[7].u.reset_leaf.$procdff$177",
+     "type": "$adff",
+     "width": 2,
+     "clock_index": 7
+    },
+    {
+     "cell": "$techmap\\shell_dn.$procdff$102",
+     "type": "$adff",
+     "width": 1,
+     "clock_index": 17
+    },
+    {
+     "cell": "$techmap\\shell_dn.$procdff$103",
+     "type": "$adff",
+     "width": 1,
+     "clock_index": 17
+    },
+    {
+     "cell": "$techmap\\shell_dn.$procdff$104",
+     "type": "$adff",
+     "width": 1,
+     "clock_index": 17
+    },
+    {
+     "cell": "$techmap\\shell_dn.$procdff$105",
+     "type": "$adff",
+     "width": 1,
+     "clock_index": 17
+    },
+    {
+     "cell": "$techmap\\shell_dn.reset_leaf.$procdff$177",
+     "type": "$adff",
+     "width": 2,
+     "clock_index": 17
+    },
+    {
+     "cell": "$techmap\\shell_up.$procdff$138",
+     "type": "$adff",
+     "width": 1,
+     "clock_index": 12
+    },
+    {
+     "cell": "$techmap\\shell_up.$procdff$139",
+     "type": "$adff",
+     "width": 1,
+     "clock_index": 12
+    },
+    {
+     "cell": "$techmap\\shell_up.$procdff$140",
+     "type": "$adff",
+     "width": 1,
+     "clock_index": 12
+    },
+    {
+     "cell": "$techmap\\shell_up.$procdff$141",
+     "type": "$adff",
+     "width": 1,
+     "clock_index": 12
+    },
+    {
+     "cell": "$techmap\\shell_up.$procdff$142",
+     "type": "$adff",
+     "width": 1,
+     "clock_index": 12
+    },
+    {
+     "cell": "$techmap\\shell_up.$procdff$143",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 12
+    },
+    {
+     "cell": "$techmap\\shell_up.$procdff$144",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 12
+    },
+    {
+     "cell": "$techmap\\shell_up.$procdff$145",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 12
+    },
+    {
+     "cell": "$techmap\\shell_up.$procdff$146",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 12
+    },
+    {
+     "cell": "$techmap\\shell_up.$procdff$147",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 12
+    },
+    {
+     "cell": "$techmap\\shell_up.$procdff$148",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 12
+    },
+    {
+     "cell": "$techmap\\shell_up.$procdff$149",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 12
+    },
+    {
+     "cell": "$techmap\\shell_up.$procdff$150",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 12
+    },
+    {
+     "cell": "$techmap\\shell_up.$procdff$151",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 12
+    },
+    {
+     "cell": "$techmap\\shell_up.$procdff$152",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 12
+    },
+    {
+     "cell": "$techmap\\shell_up.$procdff$153",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 12
+    },
+    {
+     "cell": "$techmap\\shell_up.$procdff$154",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 12
+    },
+    {
+     "cell": "$techmap\\shell_up.$procdff$155",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 12
+    },
+    {
+     "cell": "$techmap\\shell_up.$procdff$156",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 12
+    },
+    {
+     "cell": "$techmap\\shell_up.$procdff$157",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 12
+    },
+    {
+     "cell": "$techmap\\shell_up.$procdff$158",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 12
+    },
+    {
+     "cell": "$techmap\\shell_up.$procdff$159",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 12
+    },
+    {
+     "cell": "$techmap\\shell_up.$procdff$160",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 12
+    },
+    {
+     "cell": "$techmap\\shell_up.$procdff$161",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 12
+    },
+    {
+     "cell": "$techmap\\shell_up.$procdff$162",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 12
+    },
+    {
+     "cell": "$techmap\\shell_up.$procdff$163",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 12
+    },
+    {
+     "cell": "$techmap\\shell_up.$procdff$164",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 12
+    },
+    {
+     "cell": "$techmap\\shell_up.$procdff$165",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 12
+    },
+    {
+     "cell": "$techmap\\shell_up.$procdff$166",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 12
+    },
+    {
+     "cell": "$techmap\\shell_up.$procdff$167",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 12
+    },
+    {
+     "cell": "$techmap\\shell_up.$procdff$168",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 12
+    },
+    {
+     "cell": "$techmap\\shell_up.$procdff$169",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 12
+    },
+    {
+     "cell": "$techmap\\shell_up.$procdff$170",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 12
+    },
+    {
+     "cell": "$techmap\\shell_up.$procdff$171",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 12
+    },
+    {
+     "cell": "$techmap\\shell_up.$procdff$172",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 12
+    },
+    {
+     "cell": "$techmap\\shell_up.$procdff$173",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 12
+    },
+    {
+     "cell": "$techmap\\shell_up.$procdff$174",
+     "type": "$dff",
+     "width": 1,
+     "clock_index": 12
+    },
+    {
+     "cell": "$techmap\\shell_up.reset_leaf.$procdff$177",
+     "type": "$adff",
+     "width": 2,
+     "clock_index": 12
+    }
+   ],
+   "json_sha256": "4da9ae72c1f2c2f632b60edfef30b9d1ebdd04b74c0f77613fc1126b617371e1"
+  },
+  "baseline": {
+   "ff": 107,
+   "root_count": 1,
+   "per_root_ff": {
+    "0": 107
+   },
+   "per_root_reset_sync_ff": {
+    "0": 2
+   },
+   "rows": [
+    {
+     "cell": "$procdff$16",
+     "type": "$dff",
+     "width": 32,
+     "clock_index": 0
+    },
+    {
+     "cell": "$procdff$17",
+     "type": "$dff",
+     "width": 32,
+     "clock_index": 0
+    },
+    {
+     "cell": "$procdff$18",
+     "type": "$adff",
+     "width": 37,
+     "clock_index": 0
+    },
+    {
+     "cell": "$procdff$19",
+     "type": "$adff",
+     "width": 4,
+     "clock_index": 0
+    },
+    {
+     "cell": "$techmap\\reset_leaf.$procdff$20",
+     "type": "$adff",
+     "width": 2,
+     "clock_index": 0
+    }
+   ],
+   "json_sha256": "4cdfcb396ce83d9311c947603b63fe397798a92fc25450a430c3e3737c26fcd9"
+  }
+ },
+ "scope": "Actual source Yosys proc/flatten/opt_expr/opt_clean census; no newleaf mapped area/clock/native/FFhold/pin qualification. Width2 physical probe cannot qualify4/32/37."
+}

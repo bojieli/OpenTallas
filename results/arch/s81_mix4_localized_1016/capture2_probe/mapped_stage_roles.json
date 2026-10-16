@@ -1,0 +1,41 @@
+{
+ "status": "ACTUAL_MAPPED_FOUR_FF_ONE_DATA_EDGE_ROLE_PROOF",
+ "netlist_sha256": "0d5ae9bd6f2268ae5bed7a0f795c54db0af1dbcd3f44e72a06595a50670b7175",
+ "flops": 4,
+ "payload_ff": 2,
+ "reset_sync_ff": 2,
+ "clock_roots": {
+  "clk": 4
+ },
+ "literal_clock_ports": [
+  "clk"
+ ],
+ "literal_reset_ports": [
+  "arst_n"
+ ],
+ "registered_clock_or_reset_as_data": false,
+ "generic_added_data_stages": 0,
+ "outputs": [
+  {
+   "output": "q[0]",
+   "source_D": "d[0]",
+   "register_edges": 1,
+   "mapped_Q_path_instances": [
+    "\\capture.bit_ff[0].value$_DFF_PN0_",
+    "_06_",
+    "_10_"
+   ]
+  },
+  {
+   "output": "q[1]",
+   "source_D": "d[1]",
+   "register_edges": 1,
+   "mapped_Q_path_instances": [
+    "\\capture.bit_ff[1].value$_DFF_PN0_",
+    "_08_",
+    "_11_"
+   ]
+  }
+ ],
+ "scope": "Actual mapped synthesis D/Q role census only; routed FF recovery/removal, hold, pin access and native ETM remain OPEN."
+}

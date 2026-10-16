@@ -1,0 +1,102 @@
+
+-- Running command `read_verilog -sv /home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv; hierarchy -check -top ot_s81_engram_rly; proc; flatten; opt_expr; opt_clean; write_json /home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/baseline.json; stat' --
+
+1. Executing Verilog-2005 frontend: /home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv
+Parsing SystemVerilog input from `/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv' to AST representation.
+Generating RTLIL representation for module `\ot_s81_engram_reset'.
+Generating RTLIL representation for module `\ot_s81_engram_capture_slice'.
+Generating RTLIL representation for module `\ot_s81_engram_rly_split'.
+Generating RTLIL representation for module `\ot_s81_engram_rly'.
+Successfully finished Verilog frontend.
+
+2. Executing HIERARCHY pass (managing design hierarchy).
+
+2.1. Analyzing design hierarchy..
+Top module:  \ot_s81_engram_rly
+Used module:     \ot_s81_engram_reset
+
+2.2. Analyzing design hierarchy..
+Top module:  \ot_s81_engram_rly
+Used module:     \ot_s81_engram_reset
+Removing unused module `\ot_s81_engram_rly_split'.
+Removing unused module `\ot_s81_engram_capture_slice'.
+Removed 2 unused modules.
+Mapping positional arguments of cell ot_s81_engram_rly.reset_leaf (ot_s81_engram_reset).
+
+3. Executing PROC pass (convert processes to netlists).
+
+3.1. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Cleaned up 0 empty switches.
+
+3.2. Executing PROC_RMDEAD pass (remove dead branches from decision trees).
+Marked 1 switch rules as full_case in process $proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:38$13 in module ot_s81_engram_rly.
+Marked 1 switch rules as full_case in process $proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:3$1 in module ot_s81_engram_reset.
+Removed a total of 0 dead cases.
+
+3.3. Executing PROC_INIT pass (extract init attributes).
+
+3.4. Executing PROC_ARST pass (detect async resets in processes).
+Found async reset \rn in `\ot_s81_engram_rly.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:38$13'.
+Found async reset \arst_n in `\ot_s81_engram_reset.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:3$1'.
+
+3.5. Executing PROC_MUX pass (convert decision trees to multiplexers).
+Creating decoders for process `\ot_s81_engram_rly.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:40$15'.
+     1/2: $0\dn_o[35:4]
+     2/2: $0\up_o[31:0]
+Creating decoders for process `\ot_s81_engram_rly.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:38$13'.
+     1/2: $0\dn_o[3:0]
+     2/2: $0\up_o[68:32]
+Creating decoders for process `\ot_s81_engram_reset.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:3$1'.
+     1/1: $0\sync[1:0]
+
+3.6. Executing PROC_DLATCH pass (convert process syncs to latches).
+
+3.7. Executing PROC_DFF pass (convert process syncs to FFs).
+Creating register for signal `\ot_s81_engram_rly.\up_o [31:0]' using process `\ot_s81_engram_rly.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:40$15'.
+  created $dff cell `$procdff$16' with positive edge clock.
+Creating register for signal `\ot_s81_engram_rly.\dn_o [35:4]' using process `\ot_s81_engram_rly.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:40$15'.
+  created $dff cell `$procdff$17' with positive edge clock.
+Creating register for signal `\ot_s81_engram_rly.\up_o [68:32]' using process `\ot_s81_engram_rly.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:38$13'.
+  created $adff cell `$procdff$18' with positive edge clock and negative level reset.
+Creating register for signal `\ot_s81_engram_rly.\dn_o [3:0]' using process `\ot_s81_engram_rly.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:38$13'.
+  created $adff cell `$procdff$19' with positive edge clock and negative level reset.
+Creating register for signal `\ot_s81_engram_reset.\sync' using process `\ot_s81_engram_reset.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:3$1'.
+  created $adff cell `$procdff$20' with positive edge clock and negative level reset.
+
+3.8. Executing PROC_CLEAN pass (remove empty switches from decision trees).
+Removing empty process `ot_s81_engram_rly.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:40$15'.
+Removing empty process `ot_s81_engram_rly.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:38$13'.
+Removing empty process `ot_s81_engram_reset.$proc$/home/ubuntu/artifacts/s81-mix4-localized-0310/split_actual_census/source.sv:3$1'.
+Cleaned up 0 empty switches.
+
+4. Executing FLATTEN pass (flatten design).
+Using template ot_s81_engram_reset for cells of type ot_s81_engram_reset.
+<suppressed ~1 debug messages>
+No more expansions possible.
+Deleting now unused module ot_s81_engram_reset.
+
+5. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_s81_engram_rly.
+
+6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_s81_engram_rly..
+Removed 2 unused cells and 7 unused wires.
+<suppressed ~3 debug messages>
+
+7. Executing JSON backend.
+
+8. Printing statistics.
+
+=== ot_s81_engram_rly ===
+
+   Number of wires:                 11
+   Number of wire bits:            218
+   Number of public wires:          11
+   Number of public wire bits:     218
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                  5
+     $adff                           3
+     $dff                            2
+
