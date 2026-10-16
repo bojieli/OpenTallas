@@ -42,6 +42,37 @@ class WideHubLayout(unittest.TestCase):
             x0,y0,x1,y1=rec['wide'][k]
             self.assertLess(x0,x1,k)
             self.assertLess(y0,y1,k)
+    def test_every_wide_incident_route_stays_outside_hard_blocks(self):
+        sys.path.insert(0,str(ROOT/'tools'))
+        import dsrom_s81_fulldie as G
+        from types import SimpleNamespace
+        from die_layout_render import S81_HUB_BUSES
+        r=json.loads((ROOT/'results/physical/die_iter_1012/s81/canonical_widehub_1015/hub_layout_rm5.json').read_text())
+        old, old_vch=G.HUB_LAYOUT,G.VCH8
+        try:
+            G.HUB_LAYOUT=r;G.VCH8=r['wide']['vch']
+            m={'geo':{'x_sp':r['wide']['x_sp']},'x_vch':r['wide']['x_vch']}
+            boxes=dict(r['blocks']);boxes['mix4']=r['mix4_slot']
+            instances={n:SimpleNamespace(name=n,x=a[0],y=a[1],w=a[2],h=a[3]) for n,a in boxes.items()}
+            for a,b,_ in S81_HUB_BUSES:
+                if not {a,b}&{'sp_vm','sp_su_s'}:
+                    continue
+                path=G._wide_hub_path(m,instances[a],instances[b])
+                if path is None:
+                    continue
+                for p,q in zip(path,path[1:]):
+                    self.assertTrue(abs(p[0]-q[0])<.001 or abs(p[1]-q[1])<.001,(a,b,p,q))
+                    for n,(x,y,w,h,*_) in boxes.items():
+                        # An open segment may touch a face but must never pass
+                        # through any hard macro, including its source/receiver.
+                        if abs(p[1]-q[1])<.001:
+                            cross=y+.001<p[1]<y+h-.001 and min(max(p[0],q[0]),x+w)-max(min(p[0],q[0]),x)>.001
+                        else:
+                            cross=x+.001<p[0]<x+w-.001 and min(max(p[1],q[1]),y+h)-max(min(p[1],q[1]),y)>.001
+                        self.assertFalse(cross,(a,b,n,p,q))
+        finally:
+            G.HUB_LAYOUT=old;G.VCH8=old_vch
+
     def test_road_capacity_refuses_overwide_hub(self):
         with tempfile.TemporaryDirectory() as tmp:
             p=subprocess.run([sys.executable,str(ROOT/'tools/s81/wide_hub_layout.py'),'--canonical',CAP,
