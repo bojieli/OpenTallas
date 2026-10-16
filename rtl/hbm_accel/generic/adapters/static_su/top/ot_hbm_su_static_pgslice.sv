@@ -33,7 +33,20 @@ module ot_hbm_su_static_pgslice #(
  parameter integer QID=0,G=0,READ_RETURN=10,WRITE_RETURN=7,FETCH_EXTRA_EDGES=2,MLAT=3,ALAT=3,LEAF=0,MUT=0,MULTIRATE=0,
  // PIN_REG (owner rule 10-15 19:50): every lane is the pin-registered leaf ot_hbm_su_static_lane_pinreg: its store /
  // RF-stream requests leave +2 edges and its writes / reducer operands +4 edges later (su_top_compile --pin-reg)
- parameter integer PIN_REG=0
+ parameter integer PIN_REG=0,
+ // COLLPORT (H-NETLIST/suport 2026-10-16, default 0 = unchanged): the quarter's COLL joins through ot_hbm_su_static_cxport.
+ //   INJECT  inj_rd/inj_addr (stream, from COLL, captured at A in a stream pin slot); serial edge n = ceil((3A+3)/4)
+ //           (A mod 4 in {0,1,3}) drives bank READ PORT 5 (shared with DRAIN by the compiler calendar) of the store groups
+ //           named by the 4 sectors (2 lanes x lo/hi): group g = a[6:3], this slice iff a[5:4]==G, h = a[3], hi = a[6],
+ //           row a[15:7]; inj_q = the 32 banks' port-5 read_data (n+2), registered by the cxport at n+3.
+ //           B39_NOOP (SW): a lane whose addr_lo[39]=1 is an IDX-staging read: no SU read.
+ //   DELIVERY dw_v/dw_row/dw_d (serial, cxport registers at n): half hi writes banks 16hi..16hi+15 (word w -> bank
+ //           16hi+w) at row; bank pins sample n+1, commit n+2. Write port priority fill > delivery > lane; any two in one
+ //           edge latch FAULT.
+ //   Checks (FAULT): inject and drain on one group in one edge; two sectors on one group with different rows.
+ //   MUT (bench): 8 inject slot map off by one phase; 9 B39 no-op ignored; 10 delivery word order reversed.
+ parameter integer COLLPORT=0,
+ parameter integer B39_NOOP=(QID==0)
 )(
  input wire pg_clk,
  input wire [255:0] clk_lane, input wire [127:0] clk_insert, input wire [31:0] rst_lane_n,
@@ -54,6 +67,13 @@ module ot_hbm_su_static_pgslice #(
  output reg [31:0] slice_x,
  output wire [2*17-1:0] lg_rq, output wire [2*281-1:0] lg_wq,
  input wire [2*257-1:0] lg_rr, input wire [1:0] lg_w_done,
+ // COLLPORT ports (unused when COLLPORT=0)
+ input wire [1:0] inj_rd,
+ input wire [159:0] inj_addr,
+ output wire [1023:0] inj_q,
+ input wire [1:0] dw_v,
+ input wire [17:0] dw_row,
+ input wire [1023:0] dw_d,
  output reg fault
 );
  // Serial fill destination delay and stream leaf tap return are different
@@ -179,8 +199,39 @@ module ot_hbm_su_static_pgslice #(
    end
   always @(posedge clk_ctl)begin fr_hi[h]<=fd[h][FD][9];fr_row[h]<=fd[h][FD][8:0];fr_dat[h]<=su_rr[h*257+:256];end
  end
+ // ------------------------------------------------------------------ COLLPORT inject: stream pin slots -> port-5 reads
+ wire [3:0] ij_v;                     // per group {hi,h}: inject read of this slice at this serial edge
+ wire [35:0] ij_row;                  // ij_row[9*grp+:9]
+ wire ij_bad;
+ if(COLLPORT!=0)begin:g_inj
+  reg [1:0] sp; reg [1:0] sq;
+  always @(posedge pg_clk or negedge bridge_rst_n) if(!bridge_rst_n) sp<=2'd0; else sp<=sp+2'd1;
+  always @(posedge clk_ctl or negedge bridge_rst_n) if(!bridge_rst_n) sq<=2'd0; else sq<=(sq==2'd2)?2'd0:sq+2'd1;
+  reg [161:0] slot [0:3];
+  always @(posedge pg_clk) slot[sp] <= {inj_rd, inj_addr};
+  wire [1:0] rs = ((sq==2'd1)?2'd0:(sq==2'd2)?2'd1:2'd3) + ((MUT==8)?2'd1:2'd0);
+  wire [161:0] ij = slot[rs];
+  reg [3:0] v; reg [35:0] row; reg bad; integer k,gg;
+  always @* begin
+   v=0; row=0; bad=0;
+   for(k=0;k<4;k=k+1) begin : dec
+    reg [39:0] a, lo; reg on; reg [1:0] grp;
+    a = ij[40*k+:40]; lo = ij[80*(k/2)+:40];
+    on = ij[160+(k/2)] && !(B39_NOOP!=0 && lo[39] && MUT!=9) && a[5:4]==2'(G);
+    grp = {a[6],a[3]};
+    if(on) begin
+     if(v[grp] && row[9*grp+:9]!=a[15:7]) bad=1'b1;
+     v[grp]=1'b1; row[9*grp+:9]=a[15:7];
+    end
+   end
+  end
+  assign ij_v=v; assign ij_row=row; assign ij_bad=bad;
+ end else begin:g_no_inj
+  assign ij_v=4'd0; assign ij_row=36'd0; assign ij_bad=1'b0;
+ end
  // ------------------------------------------------------------------ store banks
  wire [32*192-1:0] bank_q;
+ wire [31:0] st_inj_drain;
  wire [31:0] st_conflict,st_id_fault;
  // drain store-group reads: port h reads group (h, grp_hi) = slice lanes 8h + 16*grp_hi .. +7
  wire [1:0] dr_v,dr_hi; wire [8:0] dr_row [0:1];
@@ -196,13 +247,20 @@ module ot_hbm_su_static_pgslice #(
    assign ra[p*9+:9]={a[17:16],a[13:7]}; assign rv[p]=rd_re[n*4+p]&&rd_src[n*8+2*p+:2]==2'd0;
   end
   assign ra[4*9+:9]={vi_addr[n*24+16+:2],vi_addr[n*24+7+:7]}; assign rv[4]=vi_re[n]; assign vi_q[n*32+:32]=q[4*32+:32];
-  assign ra[5*9+:9]=dr_row[H]; assign rv[5]=dr_v[H]&&dr_hi[H]==1'(HI);
+  wire drn=dr_v[H]&&dr_hi[H]==1'(HI);
+  wire ijn=ij_v[2*HI+H];
+  assign ra[5*9+:9]=ijn?ij_row[9*(2*HI+H)+:9]:dr_row[H]; assign rv[5]=drn||ijn;
+  assign st_inj_drain[n]=drn&&ijn;
   assign bank_q[n*192+:192]=q;
+  assign inj_q[n*32+:32]=q[5*32+:32];
   wire lw=vm_we[n]|kv_we[n];
   wire [23:0] la=vm_we[n]?vm_waddr[n*24+:24]:kv_waddr[n*24+:24];
   wire [31:0] ldat=vm_we[n]?vm_wdata[n*32+:32]:kv_wdata[n*32+:32];
   wire fw=fr_v[H]&&fr_hi[H]==1'(HI);
-  assign st_conflict[n]=fw&&lw;
+  wire dwn=(COLLPORT!=0)&&dw_v[HI];
+  wire [8:0] dwr=dw_row[9*HI+:9];
+  wire [31:0] dwd=dw_d[512*HI+32*((MUT==10)?15-(n%16):(n%16))+:32];
+  assign st_conflict[n]=(fw&&lw)||(fw&&dwn)||(dwn&&lw);
   reg idf; integer p2;
   always @*begin
    idf=lw&&(la[6:0]!=7'(L)||la[15:14]!=2'(QID));
@@ -210,8 +268,8 @@ module ot_hbm_su_static_pgslice #(
   end
   assign st_id_fault[n]=idf;
   ot_hbm_su_static_pinned_bank #(.READERS(6),.RB(9)) u_bank(.clk(clk_bank[n]),.clk_rd(clk_bank[n]),.clk_ws(clk_bank[n]),.clk_macro(clk_bank_macro[n*6+:6]),.rst_n(rst_n),.read_v(rv),.read_addr(ra),
-   .read_data(q),.read_return(),.write_v(lw|fw),.write_addr(fw?fr_row[H]:{la[17:16],la[13:7]}),
-   .write_data(fw?fr_dat[H][K*32+:32]:ldat));
+   .read_data(q),.read_return(),.write_v(lw|fw|dwn),.write_addr(fw?fr_row[H]:dwn?dwr:{la[17:16],la[13:7]}),
+   .write_data(fw?fr_dat[H][K*32+:32]:dwn?dwd:ldat));
  end
  // ------------------------------------------------------------------ RF broadcast into lane operands
  reg [31:0] rf_src_bad;
@@ -266,6 +324,6 @@ module ot_hbm_su_static_pgslice #(
  always @(posedge clk_ctl or negedge rst_n)
   if(!rst_n)fault<=1'b0;
   else if((|l_fault)||(|l_coll)||(|leaf_fault)||(|bridge_fault)||(|st_conflict)||(|st_id_fault)||(|cmd_far)||(|rf_src_bad)||
-          (|rf_drain_bad)||red_bad||side_fault)fault<=1'b1;
+          (|rf_drain_bad)||red_bad||side_fault||(|st_inj_drain)||ij_bad)fault<=1'b1;
 endmodule
 `default_nettype wire

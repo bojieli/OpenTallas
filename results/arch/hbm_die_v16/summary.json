@@ -1,17 +1,17 @@
 {
  "summary": {
-  "instances": 1491,
-  "masters": 58,
-  "edges": 11101,
-  "edge_bits": 1081325,
-  "clock_reset_ports": 3468,
-  "straps": 90,
+  "instances": 1506,
+  "masters": 62,
+  "edges": 11716,
+  "edge_bits": 1233837,
+  "clock_reset_ports": 3518,
+  "straps": 94,
   "die_pins": 43,
-  "exposed_input_ports": 49,
-  "exposed_input_bits": 16718,
+  "exposed_input_ports": 0,
+  "exposed_input_bits": 0,
   "exposed_unassigned_ports": 0,
-  "gaps": 32,
-  "open_output_ports": 1260,
+  "gaps": 30,
+  "open_output_ports": 1128,
   "problems": 0,
   "before_v15": {
    "instances": 83,
@@ -21,48 +21,23 @@
    "source": "results/arch/hbm_die_v15/views_v5/exposed_inputs_by_owner_1705.json"
   }
  },
- "by_owner": {
-  "see note per range (not SM)": {
-   "ports": 5,
-   "bits": 4346
-  },
-  "H-SU / H-COLL": {
-   "ports": 12,
-   "bits": 1040
-  },
-  "H-SU (SU quarter inject read) / H-COLL": {
-   "ports": 4,
-   "bits": 4096
-  },
-  "owner / H-DIE (HBM K-port ownership)": {
-   "ports": 8,
-   "bits": 52
-  },
-  "HC owner (engine) / H-DIE": {
-   "ports": 12,
-   "bits": 3088
-  },
-  "H-SU": {
-   "ports": 8,
-   "bits": 4096
-  }
- },
+ "by_owner": {},
  "problems": [],
  "gaps": [
   {
    "id": "G-CIL-INJ",
    "owner": "H-SU (SU quarter inject read) / H-COLL",
    "missing_rtl": "no static producer of COLL inj_d[1023:0] (2 x 512-b SU-quarter inject words answered INJLAT=12 edges after inj_rd/inj_idx/hgi_inj_addr, ot_hfd_coll_q_static_v4.sv:201-217) exists among the v16 SU/sucore masters known to this region; v15 also unbound (\"actual VM programme SRAM calendar issuer\")",
-   "undriven_ports": 4,
-   "undriven_bits": 4678,
+   "undriven_ports": 0,
+   "undriven_bits": 582,
    "region": "coll_idx_link"
   },
   {
    "id": "G-CIL-RC",
    "owner": "H-SU / H-COLL",
    "missing_rtl": "RED_CARRY reduction-carry port pair to the quadrant SU (rc_v/rc_tag[3]/rc_d[256] in, rr_v/rr_tag/rr_d out; ot_hfd_coll_q.sv:17-18, ring lp_data at ot_hfd_coll_q_static_v4.sv:302): no SU-side static RTL port named on main",
-   "undriven_ports": 12,
-   "undriven_bits": 2080,
+   "undriven_ports": 0,
+   "undriven_bits": 1040,
    "region": "coll_idx_link"
   },
   {
@@ -109,8 +84,8 @@
    "id": "G-DMA-WB",
    "owner": "owner / H-DIE (HBM K-port ownership)",
    "missing_rtl": "DMA write-back partner (wb_ready, wa[12] into hb_dbk_<q>; consumer of wd[2312] + wb_reserve_*/wb_fill_*): the real successor exists on main (ot_hbm_svc_wb_block_cdc / _pipeline_cdc: reserve/fill/wd -> two-buffer WB SRAM -> CDC -> 32 HBM K write ports per stack, wa = posted sectors on true PHY completion; composed with this DMA in ot_hgi_b2_swap_wb_grp_static.sv) but every HBM controller K port of the v16 die is owned by an svg_<q><k> read feed (4 PCs each). Binding the WB needs an architecture decision: (a) a static K-port time slot shared by svg read feed and WB write (fixed calendar slot in the feed issuer), or (b) dedicated write PCs. wa/wb_ready are true off-die completion signals and cannot be produced by a dispatcher.",
-   "undriven_ports": 8,
-   "undriven_bits": 52,
+   "undriven_ports": 0,
+   "undriven_bits": 0,
    "region": "cp1"
   },
   {
@@ -125,8 +100,8 @@
    "id": "G-HC-ENG",
    "owner": "HC owner (engine) / H-DIE",
    "missing_rtl": "the single static HC engine hc_eng (projection W32/K20480 + Sinkhorn tail, 64 weight + 16 residual SRAM, programme SRAM; codex/hc-static-engine-1014 a35449ada ot_hgi_hc_programmed_sys1_split_mtp_static + weight prefetch on codex/hc-weight-prefetch-1015) is not on main; it is the producer of the per-quadrant tail result (result_v, result_position[3], result[768] = 24 FP32) that hc_<q> stores to VM. Its residual input is hc_<q>.x_wave (8192 b every 4 edges) and gathered mixes, both open outputs here.",
-   "undriven_ports": 12,
-   "undriven_bits": 3088,
+   "undriven_ports": 0,
+   "undriven_bits": 0,
    "region": "hc"
   },
   {
@@ -174,7 +149,7 @@
    "owner": "H-HARDEN (DMA)",
    "missing_rtl": "static DMA dispatcher (cycle/mv_v/mv[227]/issue_at/drain_at/mv_wb_bank/mv_wb_epoch) and the service write-back band reservation partner (wb_ready, wa[12] in; consumer of wb_reserve_*/wb_fill_*/wd[2312]): no module on main outputs issue_at/drain_at/mv_wb_epoch/wa/wb_ready, and no module takes wb_reserve_v as input (svc bands retired; ot_hbm_svc_sm_group has no WB port)",
    "undriven_ports": 0,
-   "undriven_bits": 52,
+   "undriven_bits": 0,
    "region": "host_misc"
   },
   {
@@ -210,28 +185,12 @@
    "region": "sm_vm"
   },
   {
-   "id": "G-SMVM-VMCLIENT",
-   "owner": "see note per range (not SM)",
-   "missing_rtl": "static client source migration for VM ports outside RG2: no static producer on main for these client slots",
-   "undriven_ports": 5,
-   "undriven_bits": 4346,
-   "region": "sm_vm"
-  },
-  {
    "id": "G-SMVM-KEYSTAGE",
    "owner": "H-COLL+IDX (with H-SM for attention-on-SM KV)",
    "missing_rtl": "service key staging producer of hb_idx key_lines[35167:0] (consumes key_slot/key_index): no module on main outputs key_lines (only ot_hbm_idx_* inputs); ot_hbm_svc_sm_group has no key-line output.",
    "undriven_ports": 0,
    "undriven_bits": 0,
    "region": "sm_vm"
-  },
-  {
-   "id": "G-SMVM-SMOUT-SWSE",
-   "owner": "H-SM (hfd_hgi_vms_static_SW/SE ABI)",
-   "missing_rtl": "hfd_hgi_vms_static_SW/SE have WG=1 (wq0 = LG): no free VM write group for smw_SW/smw_SE.wq. Requested from H-SM (2026-10-16): ot_vms_slice_static WG 1 -> 2 (wq [4495:0], group 1 = SM writer; wslot stays 3 b/bank, owner codes COLL..DMA shift +1 in the calendar programme). Then add edges smw_<q>.wq -> hb_vms_<q>.wq[2248:4496].",
-   "undriven_ports": 0,
-   "undriven_bits": 0,
-   "region": "smvm_0030"
   },
   {
    "id": "G-SU-PROG-HOST",
@@ -253,8 +212,8 @@
    "id": "G-SFU-OPERAND-JOIN-SW",
    "owner": "H-SU",
    "missing_rtl": "SFU operand SRAM / whole-SU join: vi_q and side_y (512 b each) have no producer; the static SU pgslice keeps vi_*/side_* internal (no ports), and the SFU benches tie them to 0",
-   "undriven_ports": 2,
-   "undriven_bits": 1024,
+   "undriven_ports": 0,
+   "undriven_bits": 0,
    "region": "su_sfu"
   },
   {
@@ -269,8 +228,8 @@
    "id": "G-SFU-OPERAND-JOIN-SE",
    "owner": "H-SU",
    "missing_rtl": "SFU operand SRAM / whole-SU join: vi_q and side_y (512 b each) have no producer; the static SU pgslice keeps vi_*/side_* internal (no ports), and the SFU benches tie them to 0",
-   "undriven_ports": 2,
-   "undriven_bits": 1024,
+   "undriven_ports": 0,
+   "undriven_bits": 0,
    "region": "su_sfu"
   },
   {
@@ -285,8 +244,8 @@
    "id": "G-SFU-OPERAND-JOIN-NW",
    "owner": "H-SU",
    "missing_rtl": "SFU operand SRAM / whole-SU join: vi_q and side_y (512 b each) have no producer; the static SU pgslice keeps vi_*/side_* internal (no ports), and the SFU benches tie them to 0",
-   "undriven_ports": 2,
-   "undriven_bits": 1024,
+   "undriven_ports": 0,
+   "undriven_bits": 0,
    "region": "su_sfu"
   },
   {
@@ -301,8 +260,8 @@
    "id": "G-SFU-OPERAND-JOIN-NE",
    "owner": "H-SU",
    "missing_rtl": "SFU operand SRAM / whole-SU join: vi_q and side_y (512 b each) have no producer; the static SU pgslice keeps vi_*/side_* internal (no ports), and the SFU benches tie them to 0",
-   "undriven_ports": 2,
-   "undriven_bits": 1024,
+   "undriven_ports": 0,
+   "undriven_bits": 0,
    "region": "su_sfu"
   }
  ]
