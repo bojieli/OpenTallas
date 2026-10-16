@@ -4,6 +4,8 @@
 // The standalone ot_static_program_target collar (~630 pins, ~0.01 mm2) is pin-bound as its own tile, so it is folded
 // here as pin-registered soft logic: the face takes the F20 broadcast bus + the identity strap tgt[7:0] (TGT_PIN=1),
 // and the target's registered programme/start outputs feed the calendar's own W capture rung internally (reg->reg).
+// The target is the W-face front end: clocked by clk_cap (the related phase-0 root of the W capture rung) so its F20
+// pin flops sit on the short root; calendar body/outputs stay on clk.
 // Cycle behaviour is exactly the two-tile composition (collar outputs are flops; no stage added or removed).
 module hfd_hgi_vm_calendar_f20 #(parameter integer RMUT=0) (
     input wire clk,clk_cap,clk_mem,rst_n,
@@ -40,7 +42,7 @@ module hfd_hgi_vm_calendar_f20 #(parameter integer RMUT=0) (
 );
     wire p_we,p_sv; wire [9:0] p_wa,p_sb; wire [255:0] p_wd; wire [10:0] p_sl; wire [15:0] p_lp;
     ot_static_program_target #(.TARGET(8'hff),.PCW(10),.TGT_PIN(1)) u_target(
-        .clk(clk),.rst_n(rst_n),.tgt(tgt),.cfg_v(cfg_v),.cfg_target(cfg_target),.cfg_addr(cfg_addr),.cfg_data(cfg_data),
+        .clk(clk_cap),.rst_n(rst_n),.tgt(tgt),.cfg_v(cfg_v),.cfg_target(cfg_target),.cfg_addr(cfg_addr),.cfg_data(cfg_data),
         .desc_v(desc_v),.desc_base(desc_base),.desc_limit(desc_limit),.desc_loops(desc_loops),.launch_v(launch_v),
         .program_active(active),.program_cfg_we(p_we),.program_cfg_addr(p_wa),.program_cfg_data(p_wd),
         .program_start_v(p_sv),.program_start_base(p_sb),.program_start_limit(p_sl),.program_start_loops(p_lp),
