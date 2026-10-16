@@ -1,0 +1,984 @@
+{
+  "schema": "opentallas.s81.nt_parent_candidate.v1",
+  "status": "HELD_GEOMETRY_ONLY",
+  "source_contract": {
+    "path": "results/arch/hier_contract_1011/s81_v23_hc_budget.json",
+    "ref": "origin/main",
+    "sha256": "b1bf2e325f0411f3a344297e5bbb29b3ca73c79c89030dbf614a4af5d5062a18"
+  },
+  "outline_um": [
+    576.72,
+    844.56
+  ],
+  "y_from": "N face",
+  "orientation": "R0 explicitly; no inferred MX",
+  "rows": [
+    {
+      "tile": "ctrn",
+      "cell": "ot_s81_hc_ctrn",
+      "w": 576.72,
+      "h": 12.96,
+      "y": 0.0
+    },
+    {
+      "tile": "ctnl[j=0][l]",
+      "cell": "ot_s81_hc_ctnl",
+      "w": 142.56,
+      "h": 99.36,
+      "y": 12.96,
+      "per_col": true,
+      "per_column_leaf_heights_um": [
+        95.04,
+        95.04,
+        99.36,
+        99.36
+      ]
+    },
+    {
+      "tile": "ctnl[j=1][l]",
+      "cell": "ot_s81_hc_ctnl",
+      "w": 142.56,
+      "h": 99.36,
+      "y": 112.32,
+      "per_col": true,
+      "per_column_leaf_heights_um": [
+        95.04,
+        95.04,
+        99.36,
+        99.36
+      ]
+    },
+    {
+      "tile": "ctpl[g][half0]",
+      "cell": "ot_s81_hc_ctpl",
+      "w": 142.56,
+      "h": 118.8,
+      "y": 211.68,
+      "per_col": true
+    },
+    {
+      "tile": "ctra_column[c]",
+      "cell": "ot_s81_hc_ctra_column",
+      "w": 144.18,
+      "h": 30.24,
+      "y": 330.48,
+      "per_col": true,
+      "x_cols": [
+        0.0,
+        144.18,
+        288.36,
+        432.54
+      ],
+      "params": "COLUMN = column index",
+      "replaces": "ctra 576.72 x 21.60 strip"
+    },
+    {
+      "tile": "ctrb_column[c]",
+      "cell": "ot_s81_hc_ctrb_column",
+      "w": 144.18,
+      "h": 25.92,
+      "y": 360.72,
+      "per_col": true,
+      "x_cols": [
+        0.0,
+        144.18,
+        288.36,
+        432.54
+      ],
+      "params": "COLUMN = column index",
+      "replaces": "ctrb 576.72 x 21.60 strip"
+    },
+    {
+      "tile": "ctfxs_nt",
+      "cell": "ot_s81_hc_ctfxs_nt",
+      "w": 576.72,
+      "h": 25.92,
+      "y": 386.64
+    },
+    {
+      "tile": "ctfl_nt",
+      "cell": "ot_s81_hc_ctfl_nt",
+      "w": 576.72,
+      "h": 25.92,
+      "y": 447.12
+    },
+    {
+      "tile": "ctfn_nt",
+      "cell": "ot_s81_hc_ctfn_banks_candidate",
+      "w": 576.72,
+      "h": 34.56,
+      "y": 412.56
+    },
+    {
+      "tile": "ctpl[g][half1]",
+      "cell": "ot_s81_hc_ctpl",
+      "w": 142.56,
+      "h": 118.8,
+      "y": 473.04,
+      "per_col": true
+    },
+    {
+      "tile": "ctnl[j=2][l]",
+      "cell": "ot_s81_hc_ctnl",
+      "w": 142.56,
+      "h": 99.36,
+      "y": 591.84,
+      "per_col": true,
+      "per_column_leaf_heights_um": [
+        95.04,
+        95.04,
+        99.36,
+        99.36
+      ]
+    },
+    {
+      "tile": "ctnl[j=3][l]",
+      "cell": "ot_s81_hc_ctnl",
+      "w": 142.56,
+      "h": 99.36,
+      "y": 691.2,
+      "per_col": true,
+      "per_column_leaf_heights_um": [
+        95.04,
+        95.04,
+        99.36,
+        99.36
+      ]
+    },
+    {
+      "tile": "ctfs_nt",
+      "cell": "ot_s81_hc_ctfs_nt",
+      "w": 576.72,
+      "h": 51.84,
+      "y": 790.56
+    }
+  ],
+  "instances": [
+    {
+      "name": "ctrn",
+      "cell": "ot_s81_hc_ctrn",
+      "x": 0.0,
+      "y_from_N": 0.0,
+      "w": 576.72,
+      "h": 12.96,
+      "orient": "R0",
+      "row_reservation": true,
+      "instantiation_status": "SOURCE_BINDING_OPEN"
+    },
+    {
+      "name": "ctnl[j=0][l=0]",
+      "cell": "ot_s81_hc_ctnl_l0",
+      "x": 0.0,
+      "y_from_N": 12.96,
+      "w": 142.56,
+      "h": 99.36,
+      "orient": "R0",
+      "row_reservation": true,
+      "instantiation_status": "SOURCE_BINDING_OPEN",
+      "native_view_binding": "OPEN: actual native successor LEF must be bound, no inherited view"
+    },
+    {
+      "name": "ctnl[j=0][l=1]",
+      "cell": "ot_s81_hc_ctnl_l1",
+      "x": 144.72,
+      "y_from_N": 12.96,
+      "w": 142.56,
+      "h": 99.36,
+      "orient": "R0",
+      "row_reservation": true,
+      "instantiation_status": "SOURCE_BINDING_OPEN",
+      "native_view_binding": "OPEN: actual native successor LEF must be bound, no inherited view"
+    },
+    {
+      "name": "ctnl[j=0][l=2]",
+      "cell": "ot_s81_hc_ctnl_l2",
+      "x": 289.44,
+      "y_from_N": 12.96,
+      "w": 142.56,
+      "h": 99.36,
+      "orient": "R0",
+      "row_reservation": true,
+      "instantiation_status": "SOURCE_BINDING_OPEN",
+      "native_view_binding": "OPEN: actual native successor LEF must be bound, no inherited view"
+    },
+    {
+      "name": "ctnl[j=0][l=3]",
+      "cell": "ot_s81_hc_ctnl_l3",
+      "x": 434.16,
+      "y_from_N": 12.96,
+      "w": 142.56,
+      "h": 99.36,
+      "orient": "R0",
+      "row_reservation": true,
+      "instantiation_status": "SOURCE_BINDING_OPEN",
+      "native_view_binding": "OPEN: actual native successor LEF must be bound, no inherited view"
+    },
+    {
+      "name": "ctnl[j=1][l=0]",
+      "cell": "ot_s81_hc_ctnl_l0",
+      "x": 0.0,
+      "y_from_N": 112.32,
+      "w": 142.56,
+      "h": 99.36,
+      "orient": "R0",
+      "row_reservation": true,
+      "instantiation_status": "SOURCE_BINDING_OPEN",
+      "native_view_binding": "OPEN: actual native successor LEF must be bound, no inherited view"
+    },
+    {
+      "name": "ctnl[j=1][l=1]",
+      "cell": "ot_s81_hc_ctnl_l1",
+      "x": 144.72,
+      "y_from_N": 112.32,
+      "w": 142.56,
+      "h": 99.36,
+      "orient": "R0",
+      "row_reservation": true,
+      "instantiation_status": "SOURCE_BINDING_OPEN",
+      "native_view_binding": "OPEN: actual native successor LEF must be bound, no inherited view"
+    },
+    {
+      "name": "ctnl[j=1][l=2]",
+      "cell": "ot_s81_hc_ctnl_l2",
+      "x": 289.44,
+      "y_from_N": 112.32,
+      "w": 142.56,
+      "h": 99.36,
+      "orient": "R0",
+      "row_reservation": true,
+      "instantiation_status": "SOURCE_BINDING_OPEN",
+      "native_view_binding": "OPEN: actual native successor LEF must be bound, no inherited view"
+    },
+    {
+      "name": "ctnl[j=1][l=3]",
+      "cell": "ot_s81_hc_ctnl_l3",
+      "x": 434.16,
+      "y_from_N": 112.32,
+      "w": 142.56,
+      "h": 99.36,
+      "orient": "R0",
+      "row_reservation": true,
+      "instantiation_status": "SOURCE_BINDING_OPEN",
+      "native_view_binding": "OPEN: actual native successor LEF must be bound, no inherited view"
+    },
+    {
+      "name": "ctpl[g=0][half0]",
+      "cell": "ot_s81_hc_ctpl",
+      "x": 0.0,
+      "y_from_N": 211.68,
+      "w": 142.56,
+      "h": 118.8,
+      "orient": "R0",
+      "row_reservation": true,
+      "instantiation_status": "SOURCE_BINDING_OPEN"
+    },
+    {
+      "name": "ctpl[g=1][half0]",
+      "cell": "ot_s81_hc_ctpl",
+      "x": 144.72,
+      "y_from_N": 211.68,
+      "w": 142.56,
+      "h": 118.8,
+      "orient": "R0",
+      "row_reservation": true,
+      "instantiation_status": "SOURCE_BINDING_OPEN"
+    },
+    {
+      "name": "ctpl[g=2][half0]",
+      "cell": "ot_s81_hc_ctpl",
+      "x": 289.44,
+      "y_from_N": 211.68,
+      "w": 142.56,
+      "h": 118.8,
+      "orient": "R0",
+      "row_reservation": true,
+      "instantiation_status": "SOURCE_BINDING_OPEN"
+    },
+    {
+      "name": "ctpl[g=3][half0]",
+      "cell": "ot_s81_hc_ctpl",
+      "x": 434.16,
+      "y_from_N": 211.68,
+      "w": 142.56,
+      "h": 118.8,
+      "orient": "R0",
+      "row_reservation": true,
+      "instantiation_status": "SOURCE_BINDING_OPEN"
+    },
+    {
+      "name": "ctra_column[c=0]",
+      "cell": "ot_s81_hc_ctra_column",
+      "x": 0.0,
+      "y_from_N": 330.48,
+      "w": 144.18,
+      "h": 30.24,
+      "orient": "R0",
+      "row_reservation": true,
+      "instantiation_status": "SOURCE_BINDING_OPEN",
+      "params": {
+        "COLUMN": 0
+      }
+    },
+    {
+      "name": "ctra_column[c=1]",
+      "cell": "ot_s81_hc_ctra_column",
+      "x": 144.18,
+      "y_from_N": 330.48,
+      "w": 144.18,
+      "h": 30.24,
+      "orient": "R0",
+      "row_reservation": true,
+      "instantiation_status": "SOURCE_BINDING_OPEN",
+      "params": {
+        "COLUMN": 1
+      }
+    },
+    {
+      "name": "ctra_column[c=2]",
+      "cell": "ot_s81_hc_ctra_column",
+      "x": 288.36,
+      "y_from_N": 330.48,
+      "w": 144.18,
+      "h": 30.24,
+      "orient": "R0",
+      "row_reservation": true,
+      "instantiation_status": "SOURCE_BINDING_OPEN",
+      "params": {
+        "COLUMN": 2
+      }
+    },
+    {
+      "name": "ctra_column[c=3]",
+      "cell": "ot_s81_hc_ctra_column",
+      "x": 432.54,
+      "y_from_N": 330.48,
+      "w": 144.18,
+      "h": 30.24,
+      "orient": "R0",
+      "row_reservation": true,
+      "instantiation_status": "SOURCE_BINDING_OPEN",
+      "params": {
+        "COLUMN": 3
+      }
+    },
+    {
+      "name": "ctrb_column[c=0]",
+      "cell": "ot_s81_hc_ctrb_column",
+      "x": 0.0,
+      "y_from_N": 360.72,
+      "w": 144.18,
+      "h": 25.92,
+      "orient": "R0",
+      "row_reservation": true,
+      "instantiation_status": "SOURCE_BINDING_OPEN",
+      "params": {
+        "COLUMN": 0
+      }
+    },
+    {
+      "name": "ctrb_column[c=1]",
+      "cell": "ot_s81_hc_ctrb_column",
+      "x": 144.18,
+      "y_from_N": 360.72,
+      "w": 144.18,
+      "h": 25.92,
+      "orient": "R0",
+      "row_reservation": true,
+      "instantiation_status": "SOURCE_BINDING_OPEN",
+      "params": {
+        "COLUMN": 1
+      }
+    },
+    {
+      "name": "ctrb_column[c=2]",
+      "cell": "ot_s81_hc_ctrb_column",
+      "x": 288.36,
+      "y_from_N": 360.72,
+      "w": 144.18,
+      "h": 25.92,
+      "orient": "R0",
+      "row_reservation": true,
+      "instantiation_status": "SOURCE_BINDING_OPEN",
+      "params": {
+        "COLUMN": 2
+      }
+    },
+    {
+      "name": "ctrb_column[c=3]",
+      "cell": "ot_s81_hc_ctrb_column",
+      "x": 432.54,
+      "y_from_N": 360.72,
+      "w": 144.18,
+      "h": 25.92,
+      "orient": "R0",
+      "row_reservation": true,
+      "instantiation_status": "SOURCE_BINDING_OPEN",
+      "params": {
+        "COLUMN": 3
+      }
+    },
+    {
+      "name": "ctfxs_nt",
+      "cell": "ot_s81_hc_ctfxs_nt",
+      "x": 0.0,
+      "y_from_N": 386.64,
+      "w": 576.72,
+      "h": 25.92,
+      "orient": "R0",
+      "row_reservation": true,
+      "instantiation_status": "SOURCE_BINDING_OPEN"
+    },
+    {
+      "name": "ctfl_nt",
+      "cell": "ot_s81_hc_ctfl_nt",
+      "x": 0.0,
+      "y_from_N": 447.12,
+      "w": 576.72,
+      "h": 25.92,
+      "orient": "R0",
+      "row_reservation": true,
+      "instantiation_status": "SOURCE_BINDING_OPEN"
+    },
+    {
+      "name": "ctfn_bank_ot_s81_hc_ctfnq0",
+      "cell": "ot_s81_hc_ctfnq0",
+      "x": 0,
+      "y_from_N": 412.56,
+      "w": 144.288,
+      "h": 25.92,
+      "orient": "R0",
+      "row_reservation": true,
+      "instantiation_status": "ACTUAL_BANK_RTL_COMPONENT_PROVEN_PARENT_OPEN"
+    },
+    {
+      "name": "ctfn_bank_ot_s81_hc_ctfnq1",
+      "cell": "ot_s81_hc_ctfnq1",
+      "x": 144.288,
+      "y_from_N": 412.56,
+      "w": 144.288,
+      "h": 25.92,
+      "orient": "R0",
+      "row_reservation": true,
+      "instantiation_status": "ACTUAL_BANK_RTL_COMPONENT_PROVEN_PARENT_OPEN"
+    },
+    {
+      "name": "ctfn_bank_ot_s81_hc_ctfnq2",
+      "cell": "ot_s81_hc_ctfnq2",
+      "x": 288.576,
+      "y_from_N": 412.56,
+      "w": 144.288,
+      "h": 25.92,
+      "orient": "R0",
+      "row_reservation": true,
+      "instantiation_status": "ACTUAL_BANK_RTL_COMPONENT_PROVEN_PARENT_OPEN"
+    },
+    {
+      "name": "ctfn_bank_ot_s81_hc_ctfnq3",
+      "cell": "ot_s81_hc_ctfnq3",
+      "x": 432.864,
+      "y_from_N": 412.56,
+      "w": 143.856,
+      "h": 25.92,
+      "orient": "R0",
+      "row_reservation": true,
+      "instantiation_status": "ACTUAL_BANK_RTL_COMPONENT_PROVEN_PARENT_OPEN"
+    },
+    {
+      "name": "ctfn_bank_ot_s81_hc_ctfnq_reset",
+      "cell": "ot_s81_hc_ctfnq_reset",
+      "x": 280.8,
+      "y_from_N": 438.48,
+      "w": 16.416,
+      "h": 8.64,
+      "orient": "R0",
+      "row_reservation": true,
+      "instantiation_status": "ACTUAL_BANK_RTL_COMPONENT_PROVEN_PARENT_OPEN"
+    },
+    {
+      "name": "ctpl[g=0][half1]",
+      "cell": "ot_s81_hc_ctpl",
+      "x": 0.0,
+      "y_from_N": 473.04,
+      "w": 142.56,
+      "h": 118.8,
+      "orient": "R0",
+      "row_reservation": true,
+      "instantiation_status": "SOURCE_BINDING_OPEN"
+    },
+    {
+      "name": "ctpl[g=1][half1]",
+      "cell": "ot_s81_hc_ctpl",
+      "x": 144.72,
+      "y_from_N": 473.04,
+      "w": 142.56,
+      "h": 118.8,
+      "orient": "R0",
+      "row_reservation": true,
+      "instantiation_status": "SOURCE_BINDING_OPEN"
+    },
+    {
+      "name": "ctpl[g=2][half1]",
+      "cell": "ot_s81_hc_ctpl",
+      "x": 289.44,
+      "y_from_N": 473.04,
+      "w": 142.56,
+      "h": 118.8,
+      "orient": "R0",
+      "row_reservation": true,
+      "instantiation_status": "SOURCE_BINDING_OPEN"
+    },
+    {
+      "name": "ctpl[g=3][half1]",
+      "cell": "ot_s81_hc_ctpl",
+      "x": 434.16,
+      "y_from_N": 473.04,
+      "w": 142.56,
+      "h": 118.8,
+      "orient": "R0",
+      "row_reservation": true,
+      "instantiation_status": "SOURCE_BINDING_OPEN"
+    },
+    {
+      "name": "ctnl[j=2][l=0]",
+      "cell": "ot_s81_hc_ctnl_l0",
+      "x": 0.0,
+      "y_from_N": 591.84,
+      "w": 142.56,
+      "h": 99.36,
+      "orient": "R0",
+      "row_reservation": true,
+      "instantiation_status": "SOURCE_BINDING_OPEN",
+      "native_view_binding": "OPEN: actual native successor LEF must be bound, no inherited view"
+    },
+    {
+      "name": "ctnl[j=2][l=1]",
+      "cell": "ot_s81_hc_ctnl_l1",
+      "x": 144.72,
+      "y_from_N": 591.84,
+      "w": 142.56,
+      "h": 99.36,
+      "orient": "R0",
+      "row_reservation": true,
+      "instantiation_status": "SOURCE_BINDING_OPEN",
+      "native_view_binding": "OPEN: actual native successor LEF must be bound, no inherited view"
+    },
+    {
+      "name": "ctnl[j=2][l=2]",
+      "cell": "ot_s81_hc_ctnl_l2",
+      "x": 289.44,
+      "y_from_N": 591.84,
+      "w": 142.56,
+      "h": 99.36,
+      "orient": "R0",
+      "row_reservation": true,
+      "instantiation_status": "SOURCE_BINDING_OPEN",
+      "native_view_binding": "OPEN: actual native successor LEF must be bound, no inherited view"
+    },
+    {
+      "name": "ctnl[j=2][l=3]",
+      "cell": "ot_s81_hc_ctnl_l3",
+      "x": 434.16,
+      "y_from_N": 591.84,
+      "w": 142.56,
+      "h": 99.36,
+      "orient": "R0",
+      "row_reservation": true,
+      "instantiation_status": "SOURCE_BINDING_OPEN",
+      "native_view_binding": "OPEN: actual native successor LEF must be bound, no inherited view"
+    },
+    {
+      "name": "ctnl[j=3][l=0]",
+      "cell": "ot_s81_hc_ctnl_l0",
+      "x": 0.0,
+      "y_from_N": 691.2,
+      "w": 142.56,
+      "h": 99.36,
+      "orient": "R0",
+      "row_reservation": true,
+      "instantiation_status": "SOURCE_BINDING_OPEN",
+      "native_view_binding": "OPEN: actual native successor LEF must be bound, no inherited view"
+    },
+    {
+      "name": "ctnl[j=3][l=1]",
+      "cell": "ot_s81_hc_ctnl_l1",
+      "x": 144.72,
+      "y_from_N": 691.2,
+      "w": 142.56,
+      "h": 99.36,
+      "orient": "R0",
+      "row_reservation": true,
+      "instantiation_status": "SOURCE_BINDING_OPEN",
+      "native_view_binding": "OPEN: actual native successor LEF must be bound, no inherited view"
+    },
+    {
+      "name": "ctnl[j=3][l=2]",
+      "cell": "ot_s81_hc_ctnl_l2",
+      "x": 289.44,
+      "y_from_N": 691.2,
+      "w": 142.56,
+      "h": 99.36,
+      "orient": "R0",
+      "row_reservation": true,
+      "instantiation_status": "SOURCE_BINDING_OPEN",
+      "native_view_binding": "OPEN: actual native successor LEF must be bound, no inherited view"
+    },
+    {
+      "name": "ctnl[j=3][l=3]",
+      "cell": "ot_s81_hc_ctnl_l3",
+      "x": 434.16,
+      "y_from_N": 691.2,
+      "w": 142.56,
+      "h": 99.36,
+      "orient": "R0",
+      "row_reservation": true,
+      "instantiation_status": "SOURCE_BINDING_OPEN",
+      "native_view_binding": "OPEN: actual native successor LEF must be bound, no inherited view"
+    },
+    {
+      "name": "ctfs_nt",
+      "cell": "ot_s81_hc_ctfs_nt",
+      "x": 0.0,
+      "y_from_N": 790.56,
+      "w": 576.72,
+      "h": 51.84,
+      "orient": "R0",
+      "row_reservation": true,
+      "instantiation_status": "SOURCE_BINDING_OPEN"
+    }
+  ],
+  "overlap_count": 0,
+  "spare_um": 2.16,
+  "pin_sources": {
+    "xs": {
+      "path": "physical/s81_die_pins/v27_hc_ctfxs_spread_candidate/ot_s81_hc_ctfxs_nt.tcl",
+      "commit": "b875feb3a",
+      "sha256": "2fe60fde7d8fe1470b0af1d21d1d0058d8dfef29157e8a9fb4f98d5fe10d822b"
+    },
+    "fl": {
+      "path": "physical/s81_die_pins/v24_hc_norm_spread_candidate/ot_s81_hc_ctfl_nt.tcl",
+      "commit": "b875feb3a",
+      "sha256": "fe6b075eb82c59d8ef8da01d7816c16054c6daa48d98826e972dda5fe694442d"
+    },
+    "fn": {
+      "path": "physical/s81_die_pins/v25_hc_norm_fs_yshift_candidate/ot_s81_hc_ctfn_nt.tcl",
+      "commit": "b875feb3a",
+      "sha256": "faeabe228456df5b98898d5bc0edae98fcd40f8ddd2e2bfef5c419ca4b0e1dc0"
+    },
+    "fs": {
+      "path": "physical/s81_die_pins/v25_hc_norm_fs_yshift_candidate/ot_s81_hc_ctfs_nt.tcl",
+      "commit": "b875feb3a",
+      "sha256": "8d102ace8655aae842a9908f5b3a8edcdc715a85e6c3b02e951a007bc366fb0d"
+    }
+  },
+  "pin_joins": [
+    {
+      "name": "FSprev_to_FN_data",
+      "bits": 2927,
+      "over500": 0,
+      "max_um": 414.804,
+      "worst": [
+        {
+          "src": "fd_out[0]",
+          "dst": "fd_in[0]",
+          "length_um": 414.804,
+          "src_xy": [
+            314.46,
+            842.358
+          ],
+          "dst_xy": [
+            314.46,
+            1257.1619999999998
+          ]
+        },
+        {
+          "src": "fd_out[1]",
+          "dst": "fd_in[1]",
+          "length_um": 414.804,
+          "src_xy": [
+            314.652,
+            842.358
+          ],
+          "dst_xy": [
+            314.652,
+            1257.1619999999998
+          ]
+        },
+        {
+          "src": "fd_out[2]",
+          "dst": "fd_in[2]",
+          "length_um": 414.804,
+          "src_xy": [
+            314.844,
+            842.358
+          ],
+          "dst_xy": [
+            314.844,
+            1257.1619999999998
+          ]
+        }
+      ],
+      "scope": "actual candidate transforms and exact pin bytes; no clock-adjusted reach claim"
+    },
+    {
+      "name": "FSprev_to_XS_data",
+      "bits": 1135,
+      "over500": 0,
+      "max_um": 444.372,
+      "worst": [
+        {
+          "src": "fv_out[6]",
+          "dst": "fv_in[6]",
+          "length_um": 444.372,
+          "src_xy": [
+            342.492,
+            842.358
+          ],
+          "dst_xy": [
+            397.98,
+            1231.242
+          ]
+        },
+        {
+          "src": "fv_out[5]",
+          "dst": "fv_in[5]",
+          "length_um": 444.276,
+          "src_xy": [
+            342.396,
+            842.358
+          ],
+          "dst_xy": [
+            397.788,
+            1231.242
+          ]
+        },
+        {
+          "src": "fv_out[4]",
+          "dst": "fv_in[4]",
+          "length_um": 444.18,
+          "src_xy": [
+            342.3,
+            842.358
+          ],
+          "dst_xy": [
+            397.596,
+            1231.242
+          ]
+        }
+      ],
+      "scope": "actual candidate transforms and exact pin bytes; no clock-adjusted reach claim"
+    },
+    {
+      "name": "FN_to_FS_data",
+      "bits": 2927,
+      "over500": 0,
+      "max_um": 343.524,
+      "worst": [
+        {
+          "src": "fdm[0]",
+          "dst": "fdm[0]",
+          "length_um": 343.524,
+          "src_xy": [
+            314.46,
+            447.07800000000003
+          ],
+          "dst_xy": [
+            314.46,
+            790.602
+          ]
+        },
+        {
+          "src": "fdm[1]",
+          "dst": "fdm[1]",
+          "length_um": 343.524,
+          "src_xy": [
+            314.652,
+            447.07800000000003
+          ],
+          "dst_xy": [
+            314.652,
+            790.602
+          ]
+        },
+        {
+          "src": "fdm[2]",
+          "dst": "fdm[2]",
+          "length_um": 343.524,
+          "src_xy": [
+            314.844,
+            447.07800000000003
+          ],
+          "dst_xy": [
+            314.844,
+            790.602
+          ]
+        }
+      ],
+      "scope": "actual candidate transforms and exact pin bytes; no clock-adjusted reach claim"
+    },
+    {
+      "name": "XS_to_FL_data",
+      "bits": 1135,
+      "over500": 0,
+      "max_um": 91.956,
+      "worst": [
+        {
+          "src": "fdx[1024]",
+          "dst": "fdx[1024]",
+          "length_um": 91.956,
+          "src_xy": [
+            169.98,
+            412.51800000000003
+          ],
+          "dst_xy": [
+            227.292,
+            447.16200000000003
+          ]
+        },
+        {
+          "src": "fdx[1025]",
+          "dst": "fdx[1025]",
+          "length_um": 91.86,
+          "src_xy": [
+            170.172,
+            412.51800000000003
+          ],
+          "dst_xy": [
+            227.388,
+            447.16200000000003
+          ]
+        },
+        {
+          "src": "fv[6]",
+          "dst": "fv[6]",
+          "length_um": 91.86,
+          "src_xy": [
+            397.98,
+            412.51800000000003
+          ],
+          "dst_xy": [
+            340.764,
+            447.16200000000003
+          ]
+        }
+      ],
+      "scope": "actual candidate transforms and exact pin bytes; no clock-adjusted reach claim"
+    },
+    {
+      "name": "XS_to_FS_partial",
+      "bits": 275,
+      "over500": 0,
+      "max_um": 410.088,
+      "worst": [
+        {
+          "src": "dl_out[0]",
+          "dst": "dl_in[0]",
+          "length_um": 410.088,
+          "src_xy": [
+            8.028,
+            412.51800000000003
+          ],
+          "dst_xy": [
+            40.032,
+            790.602
+          ]
+        },
+        {
+          "src": "dl_out[1]",
+          "dst": "dl_in[1]",
+          "length_um": 409.992,
+          "src_xy": [
+            8.22,
+            412.51800000000003
+          ],
+          "dst_xy": [
+            40.128,
+            790.602
+          ]
+        },
+        {
+          "src": "dl_out[2]",
+          "dst": "dl_in[2]",
+          "length_um": 409.896,
+          "src_xy": [
+            8.412,
+            412.51800000000003
+          ],
+          "dst_xy": [
+            40.224,
+            790.602
+          ]
+        }
+      ],
+      "scope": "actual candidate transforms and exact pin bytes; no clock-adjusted reach claim"
+    },
+    {
+      "name": "FS_to_XS_scale",
+      "bits": 33,
+      "over500": 0,
+      "max_um": 392.016,
+      "worst": [
+        {
+          "src": "ul_out[32]",
+          "dst": "ul_in[32]",
+          "length_um": 392.016,
+          "src_xy": [
+            73.104,
+            790.602
+          ],
+          "dst_xy": [
+            87.036,
+            412.51800000000003
+          ]
+        },
+        {
+          "src": "ul_out[31]",
+          "dst": "ul_in[31]",
+          "length_um": 391.92,
+          "src_xy": [
+            73.008,
+            790.602
+          ],
+          "dst_xy": [
+            86.844,
+            412.51800000000003
+          ]
+        },
+        {
+          "src": "ul_out[30]",
+          "dst": "ul_in[30]",
+          "length_um": 391.728,
+          "src_xy": [
+            72.912,
+            790.602
+          ],
+          "dst_xy": [
+            86.556,
+            412.51800000000003
+          ]
+        }
+      ],
+      "scope": "actual candidate transforms and exact pin bytes; no clock-adjusted reach claim"
+    }
+  ],
+  "extra_height_from_current_budget_um": 54.0,
+  "outer_growth_um": {
+    "hc_s_10_rows": 540.0,
+    "hc_t_12_rows": 648.0
+  },
+  "open": [
+    "Bind actual full NT RTL hierarchy/source and physical masters (FS_YSHIFT=1,LOCAL_SPLIT=1)",
+    "CTNL,CTPL,return-column,collective,reset,tid and every first/last anchor join",
+    "Actual per-master routed native views; CTFLs6 native PASS, CTFXSs4 native capture FAIL, bank routes pending",
+    "No source/view inheritance, no static calendar or end-to-end token release claim",
+    "Full parent pin registry/clock compensation/cut/route and outer C5 rescreen"
+  ],
+  "fn_bank_candidate": {
+    "source": "902e0f18f",
+    "clock_entries_per_cth": 5,
+    "extra_init_edges": 1,
+    "extra_normal_edges": 0,
+    "parent_clock_abi_open": true,
+    "swap_fn_fl": true,
+    "pin_transform": "Old FN north pin y+8.64 only, exact bank parent grant from902e0f18f; reset and clock pins must bind actual candidate ABI"
+  }
+}

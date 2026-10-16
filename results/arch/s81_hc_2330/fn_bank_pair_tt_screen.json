@@ -1,0 +1,189 @@
+{
+ "status": "UNQUALIFIED_MIXED_ROUTE_PLACEMENT_ANALYTIC_TT",
+ "outline_um": [
+  576.72,
+  844.56
+ ],
+ "budget_ps": 683.333,
+ "internal_bank_output_wire_um": 8.64,
+ "sources": {
+  "FS": {
+   "record": "ef32747a0",
+   "sha256": "c0ee297e1332229c62758f13e1cfc144a9ffd95547c0a0d256cba218ed64aae6"
+  },
+  "ot_s81_hc_ctfnq0": {
+   "lib_sha256": "0e791c1a47930c6366ea3bb5db31154240789aafe35e9496dd8104613e0c8aec",
+   "insertion_sha256": "0d22d95069bb80caa93ec485ac106b4235312c1a821859a10e596e2792a5c36b",
+   "scope": "UNQUALIFIED_PLACEMENT_ONLY"
+  },
+  "ot_s81_hc_ctfnq1": {
+   "lib_sha256": "649e7e0214b32b8488d1232108599402d8925e941f8bb38bc58355c8d7abd953",
+   "insertion_sha256": "4d9574bc37cd36caeb611340d454431f326b670696a665e02a54681caedc02a8",
+   "scope": "UNQUALIFIED_PLACEMENT_ONLY"
+  },
+  "ot_s81_hc_ctfnq2": {
+   "lib_sha256": "bbbf10bdd9cfb077fad4bfd15ff28687e4b084617633dba23a01c46aae3fb845",
+   "insertion_sha256": "7b62ae63f75c3d901cb790e540342a5cb1d129a50f769ae1278b571001fab64e",
+   "scope": "UNQUALIFIED_PLACEMENT_ONLY"
+  },
+  "ot_s81_hc_ctfnq3": {
+   "lib_sha256": "4daaa79f65a52f169ae4f046c50c2e21d1fa547527ac031c39eae281d4d3c978",
+   "insertion_sha256": "b0f0a5aacebe312200d8d99598dadc7299ac07862ce134c31580fba752024476",
+   "scope": "UNQUALIFIED_PLACEMENT_ONLY"
+  }
+ },
+ "results": [
+  {
+   "name": "FSprev_to_FN",
+   "count": 2927,
+   "missing_count": 0,
+   "negative_count": 0,
+   "min_slack_ps": 5.463139999999953,
+   "worst": [
+    {
+     "src": "fd_out[1290]",
+     "dst": "fd_in[1290]",
+     "launch_ps": 211.99327,
+     "capture_ps": 130.92635,
+     "length_um": 440.72399999999993,
+     "slack_ps": 5.463139999999953
+    },
+    {
+     "src": "fd_out[1286]",
+     "dst": "fd_in[1286]",
+     "launch_ps": 208.20823000000001,
+     "capture_ps": 133.27466,
+     "length_um": 440.72399999999993,
+     "slack_ps": 6.899870000000078
+    },
+    {
+     "src": "fd_out[1284]",
+     "dst": "fd_in[1284]",
+     "launch_ps": 206.86714,
+     "capture_ps": 133.07468,
+     "length_um": 440.72399999999993,
+     "slack_ps": 8.440940000000069
+    },
+    {
+     "src": "fd_out[73]",
+     "dst": "fd_in[73]",
+     "launch_ps": 197.78041000000002,
+     "capture_ps": 138.79922,
+     "length_um": 440.72399999999993,
+     "slack_ps": 11.80313000000001
+    },
+    {
+     "src": "fd_out[1364]",
+     "dst": "fd_in[1364]",
+     "launch_ps": 195.86622,
+     "capture_ps": 138.88351,
+     "length_um": 440.72399999999993,
+     "slack_ps": 13.633030000000076
+    },
+    {
+     "src": "fd_out[1192]",
+     "dst": "fd_in[1192]",
+     "launch_ps": 212.53309000000002,
+     "capture_ps": 121.2494,
+     "length_um": 440.72399999999993,
+     "slack_ps": 14.600270000000023
+    },
+    {
+     "src": "fd_out[1404]",
+     "dst": "fd_in[1404]",
+     "launch_ps": 199.83888000000002,
+     "capture_ps": 133.64221,
+     "length_um": 440.72399999999993,
+     "slack_ps": 14.901670000000081
+    },
+    {
+     "src": "fd_out[1396]",
+     "dst": "fd_in[1396]",
+     "launch_ps": 202.18721,
+     "capture_ps": 130.8959,
+     "length_um": 440.72399999999993,
+     "slack_ps": 15.299650000000042
+    }
+   ]
+  },
+  {
+   "name": "FN_to_FS",
+   "count": 2927,
+   "missing_count": 0,
+   "negative_count": 0,
+   "min_slack_ps": 70.29141000000004,
+   "worst": [
+    {
+     "src": "fdm[2412]",
+     "dst": "fdm[2412]",
+     "launch_ps": 195.00416,
+     "capture_ps": 176.65839,
+     "length_um": 317.6039999999999,
+     "slack_ps": 70.29141000000004
+    },
+    {
+     "src": "fdm[2408]",
+     "dst": "fdm[2408]",
+     "launch_ps": 191.44904000000002,
+     "capture_ps": 178.27828,
+     "length_um": 317.6039999999999,
+     "slack_ps": 72.22663999999997
+    },
+    {
+     "src": "fdm[1426]",
+     "dst": "fdm[1426]",
+     "launch_ps": 186.49506000000002,
+     "capture_ps": 182.02175999999997,
+     "length_um": 317.6039999999999,
+     "slack_ps": 73.43714
+    },
+    {
+     "src": "fdm[2173]",
+     "dst": "fdm[2173]",
+     "launch_ps": 187.9683,
+     "capture_ps": 180.07799999999997,
+     "length_um": 317.6039999999999,
+     "slack_ps": 73.90766000000008
+    },
+    {
+     "src": "fdm[2379]",
+     "dst": "fdm[2379]",
+     "launch_ps": 190.31706999999997,
+     "capture_ps": 177.12102,
+     "length_um": 317.6039999999999,
+     "slack_ps": 74.51587000000006
+    },
+    {
+     "src": "fdm[1415]",
+     "dst": "fdm[1415]",
+     "launch_ps": 189.10496,
+     "capture_ps": 178.08393,
+     "length_um": 317.6039999999999,
+     "slack_ps": 74.76507000000004
+    },
+    {
+     "src": "fdm[2414]",
+     "dst": "fdm[2414]",
+     "launch_ps": 190.00666,
+     "capture_ps": 176.17313,
+     "length_um": 317.6039999999999,
+     "slack_ps": 75.77417000000003
+    },
+    {
+     "src": "fdm[1435]",
+     "dst": "fdm[1435]",
+     "launch_ps": 184.24479000000002,
+     "capture_ps": 181.05415,
+     "length_um": 317.6039999999999,
+     "slack_ps": 76.65502000000004
+    }
+   ]
+  }
+ ],
+ "open": [
+  "All five banks routed native TT/FF/DRC0",
+  "Full actual parent clock/reset/pins/all incident hops",
+  "Die clocks phi-R and wireRC/hold",
+  "Static whole-HC timeline"
+ ]
+}

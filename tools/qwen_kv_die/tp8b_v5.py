@@ -1971,12 +1971,13 @@ def _wrap(v, m, G, peers):
                     continue
                 _, n0, f, layer, poss, _ = mine[p]
                 n = min(wmap.get(p, n0), len(poss))
+                lays = getattr(mst, 'view_pin_layers', {}).get(p)   # closed_view.install_master: per-bit view layer
                 for i in range(n):
                     pos = poss[i]
                     hw = 0.012
                     r = {'W': (0.0, pos - hw, depth, pos + hw), 'E': (mst.w - depth, pos - hw, mst.w, pos + hw),
                          'S': (pos - hw, 0.0, pos + hw, depth), 'N': (pos - hw, mst.h - depth, pos + hw, mst.h)}[f]
-                    out.append((f'{p}[{i}]', layer, r))
+                    out.append((f'{p}[{i}]', lays[i] if lays else layer, r))
         else:
             out = base_pr(mst, k, wmap)
         sp_ = split.get(mst.name)
