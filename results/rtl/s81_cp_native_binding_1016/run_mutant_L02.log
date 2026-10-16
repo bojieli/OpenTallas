@@ -1,0 +1,10 @@
+CP_ENDPOINT_DONE slot0 cycles153 fault0 rows0 requests65 tag0
+BAD row0 address4880
+BAD row1 address4881
+BAD row2 address4882
+BAD row3 address4883
+CP_ENDPOINT_DONE slot1 cycles286 fault0 rows32 requests65 tag1
+CP_ENDPOINT_RESULT errors32 rows32 first159 last283
+[383000] %Fatal: tb_s81_su_cp_endpoint.sv:92: Assertion failed in tb_s81_su_cp_endpoint: CP_ENDPOINT FAIL
+%Error: /srv/opentallas-scratch/codex/s81-su-cppool-1016/rtl/dsrom_sys/s81_suhc/test/tb_s81_su_cp_endpoint.sv:92: Verilog $stop
+Aborting...

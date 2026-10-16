@@ -1,0 +1,8 @@
+CP_ENDPOINT_DONE slot0 cycles153 fault0 rows0 requests65 tag0
+CP_ENDPOINT_DONE slot1 cycles286 fault0 rows32 requests65 tag1
+CP_ENDPOINT_RESULT errors0 rows32 first159 last283
+CP_ENDPOINT PASS
+- /srv/opentallas-scratch/codex/s81-su-cppool-1016/rtl/dsrom_sys/s81_suhc/test/tb_s81_su_cp_endpoint.sv:93: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 383ns; walltime 0.135 s; speed 2.831 us/s
+- Verilator: cpu 0.135 s on 1 threads; allocated 18 MB

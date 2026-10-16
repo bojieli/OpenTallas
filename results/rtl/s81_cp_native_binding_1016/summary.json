@@ -1,0 +1,49 @@
+{
+  "schema": "opentallas.s81.cp-native-binding-evidence.v1",
+  "source_commit": "6cc01a6be5cef8ebafd98c73aa5afb98641c65cc",
+  "base_main_commit": "c8feb055e510245cf6acb015c6d90973e1c9d10f",
+  "qualified": false,
+  "native_physical_image": null,
+  "proved": [
+    "actual CP arithmetic and two128x256 SRAM history banks bit-exact on full512 dimensions",
+    "real hctl opcode14 descriptor read -> CP tap -> actual arithmetic/SRAM -> hctl tagged completion",
+    "canonical current operand rows4816/4848 reused on distinct command epochs; output4880..4911; descriptors12336/12352",
+    "store153cycles/pool286cycles;65VM requests each;32exact output rows; arithmetic mutant fails32rows on unchanged153/286schedule",
+    "late VM response produces sticky fault and fails; no numerical output substituted"
+  ],
+  "boundary_fixtures": [
+    "current FIELD/allgather KV and score rows injected at declared boundary, not an implemented producer",
+    "preceding history slot is declared fixture loaded by real CP store, not a previous-token native producer",
+    "VM service uses fixed10cycle fixture returns; full native VM4/2/hop1 calendar and cross-domain timing are unqualified"
+  ],
+  "physical_inventory": {
+    "memory_macros": 370,
+    "macro128x256": 258,
+    "macro64x512": 112,
+    "storage_bits": 12124160,
+    "su_instances": 1880,
+    "top_ports": 20
+  },
+  "open": [
+    "DSFD_SUHC_HIER selector remains opt-in diagnostic; real hctl still waits for descriptor response counts/norm readiness",
+    "all native FIELD/collective producer commit edges and prior-token CP context lifetime/restore source",
+    "native child clock/reset phi-R delivery and real child physical homes/views; old su_slab_compose is obsolete",
+    "historical routed dsfd_su_t_ctl ties up_cp_done to0, so new CP control port/view required",
+    "QI15 actual service output binding plus idx.newkey/cand.final implementations and global native operation coverage",
+    "production layer timing/throughput and immutable-price comparison; no token-rate credit taken"
+  ],
+  "reproduce": [
+    "python3 tools/s81_ftok/cp_slot_vectors.py --input results/rtl/s81_cp_native_binding_1016/fixtures/L02 --out RUN/canonical/L02 --native-layout",
+    "python3 tools/s81_ftok/cp_gate.py --work RUN/gate --fixtures RUN/canonical --layers 2 --endpoint --jobs 8",
+    "same native endpoint command plus --mutant; positive command also runs late-service mutant",
+    "verilator --json-only -O0 -Wno-fatal -Wno-WIDTH --top-module dsfd_sp_su_c +define+DSFD_SUHC_HIER +define+DSFD_SUHC_STATIC_ISSUE +define+OT_S81_CP_LEAF_CLOCKS -f rtl/dsrom_sys/s81_suhc/hier/s81_su_hier.f --json-only-output su.tree.json"
+  ],
+  "units": [
+    "oth-ubuntu-659410-1792145233 CP bridge positive+mutant exit0",
+    "oth-ubuntu-682254-1792145431 hierarchy JSON elaboration exit0",
+    "oth-ubuntu-728672-1792145776 generic hctl/tap/CP seam exit0",
+    "oth-ubuntu-764796-1792146014 canonical hctl/tap/CP seam exit0"
+  ],
+  "no_epyc1_jobs": true,
+  "source_pins_current": true
+}
