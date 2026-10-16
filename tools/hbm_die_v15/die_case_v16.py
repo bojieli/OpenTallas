@@ -192,6 +192,13 @@ def main():
                     help='clique expansion limit; every source-to-sink branch is always a clock pair')
     ap.add_argument('--clock-bin-um', type=float, default=1600.0)
     ap.add_argument('--no-clock', action='store_true', help='placement/images only (skip die clock trees and run files)')
+    ap.add_argument('--pc-strip', type=float, default=0.0,
+                    help='d4b (H-DIE 10-16): grow every PC band box by this height (um) toward its SM row -- the S boxes '
+                         'upward, the N boxes downward -- shifting every plan block, grant slot, h-lane and relay home '
+                         'beyond the strip; the die grows by 2x. Room for the per-PC kshare + xcal_t row (d4a overflow).')
+    ap.add_argument('--d4b-homes', action='store_true',
+                    help='d4b (H-DIE 10-16): LG banks beside their user (pgslice / lg_pair / hc_q), not inside VM plan '
+                         'blocks; xload ctlw at the Manhattan minimax point of its SM peers')
     a = ap.parse_args()
     C = json.loads(a.contract.read_text()); G = json.loads(a.grants.read_text()); P = json.loads(a.plan.read_text())
     V = json.loads((a.views / 'views.json').read_text())
@@ -199,6 +206,32 @@ def main():
     slots = {s['name']: s for s in G['slots']}
     W, H = G['floorplan']['die_um']
     I = C['instances']
+    strip = None
+    if a.pc_strip:
+        dh = a.pc_strip
+        ys = max(b['y'] + b['h'] for k_, b in P.items() if re.fullmatch(r'pc_S[WE]\d', k_))
+        yn = min(b['y'] for k_, b in P.items() if re.fullmatch(r'pc_N[WE]\d', k_))
+        fy = lambda y: y + (dh if y >= ys - 0.01 else 0.0) + (dh if y >= yn - 0.01 else 0.0)
+        for k_, b in P.items():
+            if isinstance(b, dict) and 'y' in b:
+                b['y'] = round(fy(b['y']), 3)
+                if re.fullmatch(r'pc_S[WE]\d', k_):
+                    b['h'] = round(b['h'] + dh, 3)
+                elif re.fullmatch(r'pc_N[WE]\d', k_):
+                    b['y'] = round(b['y'] - dh, 3); b['h'] = round(b['h'] + dh, 3)
+        for sl in G['slots']:
+            if 'origin' in sl and sl['origin']['y'] >= 100:
+                sl['origin']['y'] = round(fy(sl['origin']['y']), 3)
+        for k_, ln in lanes.items():
+            if 'h' in ln:
+                ln['h'] = round(fy(ln['h']), 3)
+        for n_, v_ in I.items():
+            m_ = re.search(r'home \(([\d.]+), ([\d.]+)\) um', v_.get('note', ''))
+            if m_:
+                v_['note'] = v_['note'].replace(m_.group(0), f'home ({m_.group(1)}, {fy(float(m_.group(2))):.3f}) um')
+        H = round(H + 2 * dh, 3)
+        strip = dict(dh_um=dh, s_strip_at_y=ys, n_strip_at_y=yn, die_um=[W, H], die_mm2=round(W * H / 1e6, 2))
+        print('PC strip', strip)
     out = a.out; vd = out / 'views'; vd.mkdir(parents=True, exist_ok=True); (out / 'out').mkdir(exist_ok=True)
 
     # ---------------- views ----------------
@@ -438,6 +471,20 @@ def main():
             else:
                 cx, cy = W / 2, H / 2; rule = 'no placed peer: die centre'
         w_, h_ = size[cell_of[n]]
+        if a.d4b_homes and re.fullmatch(r'lg_(SW|SE|NW|NE)_\d+(_b\d+)?', n):
+            users = [(p, b) for p, b in adj[n].items() if p in pl and not re.match(r'(lg_|hb_vms_|calendar_)', p)]
+            if users:
+                u = max(users, key=lambda t: t[1])[0]; cx, cy = centre(u); rule = f'd4b: beside its user {u}'
+                r = occ.find(cx, cy, w_, h_, 0.0)
+                put(n, r[0], r[1], 'R0', rule, 0.0); occ_res.mark(r[0], r[1], w_, h_); occ_big.mark(r[0], r[1], w_, h_)
+                homes[n] = dict(rule=rule, target=[round(cx, 1), round(cy, 1)], at=list(r))
+                continue
+        if a.d4b_homes and I[n]['master'] == 'ot_hgi_sm_xload_cl2_ctlw':
+            sms = [p for p in adj[n] if p in pl and I[p]['master'] == 'ot_hbm_accel_smh_attn']
+            if sms:
+                xs = [centre(p)[0] for p in sms]; ys_ = [centre(p)[1] for p in sms]
+                cx, cy = (min(xs) + max(xs)) / 2, (min(ys_) + max(ys_)) / 2
+                rule = f'd4b: Manhattan minimax of its {len(sms)} SM peers'
         own = [k_ for pat, f_ in OWNER for k_ in [None] if re.fullmatch(pat, n)
                for k_ in P if isinstance(P[k_], dict) and 'x' in P[k_] and re.fullmatch(f_(re.fullmatch(pat, n)), k_)]
         if own:   # the plan blocks reserved for this instance's function: nearest free fit inside one of them
@@ -659,6 +706,8 @@ def main():
     manifest['consumed_view_sha256'] = {p.name: digest(p) for p in sorted(vd.iterdir())
                                         if p.suffix in ('.lef', '.lib')}
     manifest['native_complete'] = False
+    manifest['pc_strip'] = strip
+    manifest['d4b_homes'] = bool(a.d4b_homes)
     render(out, manifest, P, W, H)
     if a.no_clock:
         (out / 'manifest.json').write_text(json.dumps(manifest, indent=1))

@@ -1,0 +1,537 @@
+{
+ "schema": "opentallas.hbm.d4b_placement_relay.v1",
+ "issued": "H-DIE (Claude) 2026-10-16 ~15:40 PT",
+ "placement": {
+  "tool": "die_case_v16.py --pc-strip 237.6 --d4b-homes (--no-clock)",
+  "die_um": [
+   32990.0,
+   25640.402
+  ],
+  "die_mm2": 845.88,
+  "changes": [
+   "PC band boxes +237.6 um toward the SM rows (die +475.2 um): kshare + xcal_t x32 now inside their PC box (no overflow)",
+   "LG banks (96) beside their user pgslice/lg_pair/hc_q",
+   "xload ctlw x4 at the Manhattan minimax of its 8 SMs"
+  ],
+  "remaining_overflow": [
+   "wb_kport x4 (hb_dbk)",
+   "su cxport x4",
+   "sfu programme_store x4",
+   "coll_q3 host, dma_back cp, coll_inj_idx_join, lk_ep, host_landing256 (1 each)",
+   "hb_vms x4 owner-block MISFIT (663x663)"
+  ]
+ },
+ "relay_pass": {
+  "reach_um": 450,
+  "nets_over_reach": 550785,
+  "station_flops": 7321935,
+  "pad_flops": 2577057,
+  "end_to_end_top": [
+   {
+    "origin": "ot_hbm_svc_vm_kshare.fill_data",
+    "sinks": "ot_hbm_svc_vmdel_lane.fill_data_i",
+    "nets": 32768,
+    "existing_relays_max": 0,
+    "added_max": 41,
+    "total_max": 41,
+    "total_sum": 1035973,
+    "total_mean": 31.62
+   },
+   {
+    "origin": "ot_hbm_svc_wb_kport.w_k_wdata",
+    "sinks": "ot_hbm_svc_vm_kshare.w_k_wdata",
+    "nets": 32768,
+    "existing_relays_max": 0,
+    "added_max": 37,
+    "total_max": 37,
+    "total_sum": 909312,
+    "total_mean": 27.75
+   },
+   {
+    "origin": "ot_hbm_svc_sm_group.sm_packet",
+    "sinks": "ot_hbm_accel_smh_attn.packet",
+    "nets": 35168,
+    "existing_relays_max": 0,
+    "added_max": 37,
+    "total_max": 37,
+    "total_sum": 627149,
+    "total_mean": 17.83
+   },
+   {
+    "origin": "ot_hbm_su_programme.command",
+    "sinks": "ot_hbm_su_static_pgslice.control",
+    "nets": 6968,
+    "existing_relays_max": 0,
+    "added_max": 67,
+    "total_max": 67,
+    "total_sum": 366188,
+    "total_mean": 52.55
+   },
+   {
+    "origin": "ot_hgi_sm_xload_cl2_ctlw.xw_data",
+    "sinks": "ot_hbm_accel_smh_attn.xw_data",
+    "nets": 8192,
+    "existing_relays_max": 0,
+    "added_max": 49,
+    "total_max": 49,
+    "total_sum": 294670,
+    "total_mean": 35.97
+   },
+   {
+    "origin": "ot_hbm_su_static_pgslice.inj_q",
+    "sinks": "ot_hbm_su_static_cxport.inj_q",
+    "nets": 16384,
+    "existing_relays_max": 0,
+    "added_max": 29,
+    "total_max": 29,
+    "total_sum": 231955,
+    "total_mean": 14.16
+   },
+   {
+    "origin": "ot_hbm_su_static_cxport.dw_d",
+    "sinks": "ot_hbm_su_static_pgslice.dw_d",
+    "nets": 16384,
+    "existing_relays_max": 0,
+    "added_max": 28,
+    "total_max": 28,
+    "total_sum": 225677,
+    "total_mean": 13.77
+   },
+   {
+    "origin": "ot_hbm_accel_smh_attn.rdata",
+    "sinks": "ot_hbm_sm_vm_wr_q_t.rdata",
+    "nets": 8192,
+    "existing_relays_max": 0,
+    "added_max": 42,
+    "total_max": 42,
+    "total_sum": 189544,
+    "total_mean": 23.14
+   },
+   {
+    "origin": "ot_hgi_sfu_core_split.local_wq",
+    "sinks": "ot_hgi_sfu_lg_pair_leaf.c_wq",
+    "nets": 8992,
+    "existing_relays_max": 11,
+    "added_max": 19,
+    "total_max": 30,
+    "total_sum": 180905,
+    "total_mean": 20.12
+   },
+   {
+    "origin": "ot_hbm_hc_q_static.lg_wq",
+    "sinks": "ot_hgi_sfu_lg_pair_leaf.c_wq",
+    "nets": 8992,
+    "existing_relays_max": 0,
+    "added_max": 31,
+    "total_max": 31,
+    "total_sum": 180200,
+    "total_mean": 20.04
+   },
+   {
+    "origin": "ot_hgi_sfu_lg_pair_leaf.c_rr",
+    "sinks": "ot_hbm_hc_q_static.lg_rr",
+    "nets": 8224,
+    "existing_relays_max": 0,
+    "added_max": 31,
+    "total_max": 31,
+    "total_sum": 165508,
+    "total_mean": 20.12
+   },
+   {
+    "origin": "ot_hgi_sfu_lg_pair_leaf.c_rr",
+    "sinks": "ot_hgi_sfu_core_split.local_rr",
+    "nets": 8224,
+    "existing_relays_max": 11,
+    "added_max": 16,
+    "total_max": 27,
+    "total_sum": 162234,
+    "total_mean": 19.73
+   },
+   {
+    "origin": "ot_hbm_hc_q_static.x_wave",
+    "sinks": "ot_hbm_hc_eng_static.x_wave",
+    "nets": 8192,
+    "existing_relays_max": 0,
+    "added_max": 20,
+    "total_max": 20,
+    "total_sum": 146507,
+    "total_mean": 17.88
+   },
+   {
+    "origin": "ot_hbm_svc_wb_kport.w_k_addr",
+    "sinks": "ot_hbm_svc_vm_kshare.w_k_addr",
+    "nets": 3840,
+    "existing_relays_max": 0,
+    "added_max": 36,
+    "total_max": 36,
+    "total_sum": 106440,
+    "total_mean": 27.72
+   },
+   {
+    "origin": "ot_hbm_svc_sm_xcal_t.cmd_ext",
+    "sinks": "ot_hbm_accel_smh_attn.command",
+    "nets": 3488,
+    "existing_relays_max": 0,
+    "added_max": 38,
+    "total_max": 38,
+    "total_sum": 68731,
+    "total_mean": 19.7
+   },
+   {
+    "origin": "ot_hbm_svc_vm_kshare.fill_epoch",
+    "sinks": "ot_hbm_svc_vmdel_lane.fill_epoch_i",
+    "nets": 2048,
+    "existing_relays_max": 0,
+    "added_max": 41,
+    "total_max": 41,
+    "total_sum": 64740,
+    "total_mean": 31.61
+   },
+   {
+    "origin": "ot_hfd_coll_q2_static_host_v4.tx_pin_flit",
+    "sinks": "hfd_ep_static.tx_frame",
+    "nets": 3672,
+    "existing_relays_max": 0,
+    "added_max": 19,
+    "total_max": 19,
+    "total_sum": 64707,
+    "total_mean": 17.62
+   },
+   {
+    "origin": "ot_hbm_vm_lg_static_bank.near_wq",
+    "sinks": "hfd_hgi_vms_static_NE.wq",
+    "nets": 2248,
+    "existing_relays_max": 0,
+    "added_max": 38,
+    "total_max": 38,
+    "total_sum": 64630,
+    "total_mean": 28.75
+   },
+   {
+    "origin": "hfd_ep_static.rx_pin_flit",
+    "sinks": "ot_hfd_coll_q2_static_host_v4.rx_pin_flit",
+    "nets": 3672,
+    "existing_relays_max": 0,
+    "added_max": 18,
+    "total_max": 18,
+    "total_sum": 60740,
+    "total_mean": 16.54
+   },
+   {
+    "origin": "hfd_hgi_vms_static_NE.rr",
+    "sinks": "ot_hbm_vm_lg_static_bank.near_rr",
+    "nets": 2056,
+    "existing_relays_max": 0,
+    "added_max": 38,
+    "total_max": 38,
+    "total_sum": 58596,
+    "total_mean": 28.5
+   },
+   {
+    "origin": "ot_hbm_hc_eng_static.result",
+    "sinks": "ot_hbm_hc_q_static.result",
+    "nets": 3072,
+    "existing_relays_max": 0,
+    "added_max": 22,
+    "total_max": 22,
+    "total_sum": 56832,
+    "total_mean": 18.5
+   },
+   {
+    "origin": "hfd_hgi_vms_static_NE.rr",
+    "sinks": "ot_hgi_sm_xload_cl2_ctlw.rr",
+    "nets": 2056,
+    "existing_relays_max": 0,
+    "added_max": 27,
+    "total_max": 27,
+    "total_sum": 55512,
+    "total_mean": 27.0
+   },
+   {
+    "origin": "ot_hbm_su_programme.command",
+    "sinks": "ot_hbm_su_static_pgslice.vmw_cmd",
+    "nets": 1240,
+    "existing_relays_max": 0,
+    "added_max": 67,
+    "total_max": 67,
+    "total_sum": 53467,
+    "total_mean": 43.12
+   },
+   {
+    "origin": "ot_hbm_svc_sm_group.sm_command",
+    "sinks": "ot_hbm_accel_smh_attn.command",
+    "nets": 2656,
+    "existing_relays_max": 0,
+    "added_max": 36,
+    "total_max": 36,
+    "total_sum": 49695,
+    "total_mean": 18.71
+   },
+   {
+    "origin": "hfd_hgi_vms_static_SW.ccw_out",
+    "sinks": "hfd_hgi_vms_static_NW.ccw_in",
+    "nets": 2224,
+    "existing_relays_max": 0,
+    "added_max": 19,
+    "total_max": 19,
+    "total_sum": 42256,
+    "total_mean": 19.0
+   },
+   {
+    "origin": "hfd_hgi_vms_static_NW.cw_out",
+    "sinks": "hfd_hgi_vms_static_SW.cw_in",
+    "nets": 2224,
+    "existing_relays_max": 0,
+    "added_max": 19,
+    "total_max": 19,
+    "total_sum": 42256,
+    "total_mean": 19.0
+   },
+   {
+    "origin": "ot_hbm_su_programme.command",
+    "sinks": "ot_hbm_su_static_pgslice.vmr_cmd",
+    "nets": 960,
+    "existing_relays_max": 0,
+    "added_max": 67,
+    "total_max": 67,
+    "total_sum": 41642,
+    "total_mean": 43.38
+   },
+   {
+    "origin": "ot_hbm_svc_sm_xcal_t.kv_desc",
+    "sinks": "ot_hbm_accel_smh_attn.kv_desc",
+    "nets": 2048,
+    "existing_relays_max": 0,
+    "added_max": 39,
+    "total_max": 39,
+    "total_sum": 41278,
+    "total_mean": 20.16
+   },
+   {
+    "origin": "hfd_hgi_vms_static_NE.ccw_out",
+    "sinks": "hfd_hgi_vms_static_SE.ccw_in",
+    "nets": 2224,
+    "existing_relays_max": 0,
+    "added_max": 18,
+    "total_max": 18,
+    "total_sum": 40032,
+    "total_mean": 18.0
+   },
+   {
+    "origin": "hfd_hgi_vms_static_SE.cw_out",
+    "sinks": "hfd_hgi_vms_static_NE.cw_in",
+    "nets": 2224,
+    "existing_relays_max": 0,
+    "added_max": 18,
+    "total_max": 18,
+    "total_sum": 40032,
+    "total_mean": 18.0
+   },
+   {
+    "origin": "ot_hbm_vm_lg_static_bank.near_wq",
+    "sinks": "hfd_hgi_vms_static_NW.wq",
+    "nets": 2248,
+    "existing_relays_max": 0,
+    "added_max": 25,
+    "total_max": 25,
+    "total_sum": 38429,
+    "total_mean": 17.09
+   },
+   {
+    "origin": "hfd_ep_static.rx_pin_flit",
+    "sinks": "ot_hfd_coll_q3_static_host_v4.rx_pin_flit",
+    "nets": 1836,
+    "existing_relays_max": 0,
+    "added_max": 22,
+    "total_max": 22,
+    "total_sum": 37944,
+    "total_mean": 20.67
+   },
+   {
+    "origin": "ot_static_cmd_target.b_data",
+    "sinks": "ot_hbm_svc_sm_group.desc_data",
+    "nets": 8192,
+    "existing_relays_max": 0,
+    "added_max": 9,
+    "total_max": 9,
+    "total_sum": 36864,
+    "total_mean": 4.5
+   },
+   {
+    "origin": "ot_static_cmd_target.a_data",
+    "sinks": "ot_hbm_svc_sm_group.program_cfg_data",
+    "nets": 8192,
+    "existing_relays_max": 0,
+    "added_max": 9,
+    "total_max": 9,
+    "total_sum": 36852,
+    "total_mean": 4.5
+   },
+   {
+    "origin": "ot_hgi_sfu_core_split.ro_x",
+    "sinks": "ot_hbm_su_static_cxport.ro_x",
+    "nets": 2048,
+    "existing_relays_max": 0,
+    "added_max": 20,
+    "total_max": 20,
+    "total_sum": 36672,
+    "total_mean": 17.91
+   },
+   {
+    "origin": "ot_hbm_vm_lg_static_bank.near_wq",
+    "sinks": "hfd_hgi_vms_static_SE.wq",
+    "nets": 2248,
+    "existing_relays_max": 0,
+    "added_max": 29,
+    "total_max": 29,
+    "total_sum": 36530,
+    "total_mean": 16.25
+   },
+   {
+    "origin": "ot_hfd_coll_q2_static_host_v4.vm_kq",
+    "sinks": "hfd_hgi_vms_static_NE.kq",
+    "nets": 2248,
+    "existing_relays_max": 0,
+    "added_max": 16,
+    "total_max": 16,
+    "total_sum": 35592,
+    "total_mean": 15.83
+   },
+   {
+    "origin": "hfd_hgi_vms_static_NW.rr",
+    "sinks": "ot_hbm_vm_lg_static_bank.near_rr",
+    "nets": 2056,
+    "existing_relays_max": 0,
+    "added_max": 25,
+    "total_max": 25,
+    "total_sum": 34505,
+    "total_mean": 16.78
+   },
+   {
+    "origin": "ot_hfd_coll_q3_static_host_v4.tx_pin_flit",
+    "sinks": "hfd_ep_static.tx_frame",
+    "nets": 1836,
+    "existing_relays_max": 0,
+    "added_max": 20,
+    "total_max": 20,
+    "total_sum": 34272,
+    "total_mean": 18.67
+   },
+   {
+    "origin": "ot_hbm_vm_lg_static_bank.near_wq",
+    "sinks": "hfd_hgi_vms_static_SW.wq",
+    "nets": 2248,
+    "existing_relays_max": 0,
+    "added_max": 26,
+    "total_max": 26,
+    "total_sum": 33720,
+    "total_mean": 15.0
+   }
+  ]
+ },
+ "ds_cost": {
+  "d4b450": {
+   "eval": "/tmp/hdie_an/eval_d4b_relay450.json",
+   "delta_stages": {
+    "HBM_K": 0.0,
+    "SM_X": 53.08,
+    "SM_HBM": 6.34,
+    "LG_SU": 28.75,
+    "LG_HC": 20.04,
+    "LG_SFU": 0.0,
+    "HC_CORE": 0.0,
+    "VM_RING": 5.5,
+    "COLL_VM": 0.0,
+    "VM_HUB": 0.0,
+    "HC_ENG": 6.0,
+    "COLL_EP": 3.06,
+    "EP_SERDES": 0.0,
+    "SM_OUT": 12.23,
+    "HBM_VM": 5.34,
+    "VM_HBM": 1.56,
+    "IDX_INT": 0.0,
+    "COLL_RING": 0.0,
+    "QUANT_VM": 0.0,
+    "SFU_CORE": 6.2,
+    "SU_CORE": 0.8,
+    "IDX_VM": 0.0,
+    "IDX_COLL": 0.0,
+    "KV_DESC": 0.0
+   },
+   "sm_leg_delta": 50.97,
+   "AR_dcycles": 124013.4,
+   "AR_tok_pct": -17.201,
+   "MTP_design_dcycles": 355321.5,
+   "MTP_design_tok_pct": -22.065
+  },
+  "d4b450_smx_as_plan": {
+   "eval": "/tmp/hdie_an/eval_d4b_relay450_smxplan.json",
+   "delta_stages": {
+    "HBM_K": 0.0,
+    "SM_X": 0.659,
+    "SM_HBM": 6.34,
+    "LG_SU": 28.75,
+    "LG_HC": 20.04,
+    "LG_SFU": 0.0,
+    "HC_CORE": 0.0,
+    "VM_RING": 5.5,
+    "COLL_VM": 0.0,
+    "VM_HUB": 0.0,
+    "HC_ENG": 6.0,
+    "COLL_EP": 3.06,
+    "EP_SERDES": 0.0,
+    "SM_OUT": 12.23,
+    "HBM_VM": 5.34,
+    "VM_HBM": 1.56,
+    "IDX_INT": 0.0,
+    "COLL_RING": 0.0,
+    "QUANT_VM": 0.0,
+    "SFU_CORE": 6.2,
+    "SU_CORE": 0.8,
+    "IDX_VM": 0.0,
+    "IDX_COLL": 0.0,
+    "KV_DESC": 0.0
+   },
+   "sm_leg_delta": 6.34,
+   "AR_dcycles": 29799.2,
+   "AR_tok_pct": -4.755,
+   "MTP_design_dcycles": 76175.6,
+   "MTP_design_tok_pct": -5.722
+  },
+  "d4b450_smx30": {
+   "eval": "/tmp/hdie_an/eval_d4b_smx30.json",
+   "delta_stages": {
+    "HBM_K": 0.0,
+    "SM_X": 20.11,
+    "SM_HBM": 6.34,
+    "LG_SU": 28.75,
+    "LG_HC": 20.04,
+    "LG_SFU": 0.0,
+    "HC_CORE": 0.0,
+    "VM_RING": 5.5,
+    "COLL_VM": 0.0,
+    "VM_HUB": 0.0,
+    "HC_ENG": 6.0,
+    "COLL_EP": 3.06,
+    "EP_SERDES": 0.0,
+    "SM_OUT": 12.23,
+    "HBM_VM": 5.34,
+    "VM_HBM": 1.56,
+    "IDX_INT": 0.0,
+    "COLL_RING": 0.0,
+    "QUANT_VM": 0.0,
+    "SFU_CORE": 6.2,
+    "SU_CORE": 0.8,
+    "IDX_VM": 0.0,
+    "IDX_COLL": 0.0,
+    "KV_DESC": 0.0
+   },
+   "sm_leg_delta": 18.0,
+   "AR_dcycles": 52173.9,
+   "AR_tok_pct": -8.038,
+   "MTP_design_dcycles": 145199.3,
+   "MTP_design_tok_pct": -10.37
+  }
+ },
+ "finding": "SM_X dominates: x path hb_vms (VM hub, centre column) -> per-quadrant ctlw -> 8 SMs (xw_data pins spread 366..6069 um along the SM S face) = 63 stages; the plan priced 9.89 as a bit-weighted MEAN of per-SM links, but a broadcast completes at its farthest SM (max). With SM_X as planned: -4.75% AR / -5.72% MTP; with a ~30-stage registered x tree (vms in its band owner block, tree root near the quadrant SM centroid, xw pins compacted): -8.0% AR / -10.4% MTP; as now: -17.2% AR / -22.1% MTP (over ledger)."
+}
