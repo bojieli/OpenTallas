@@ -244,8 +244,8 @@
  "slot_change_request": "Q-KVSYS-STRIP 2026-10-16 (coordinator priority change via Q-KVSYS-DIE a58156848): NEW master for the die's static landing (replaces the credit-based qkd_land_strip / qkd_land_seg): 151.2 x 1,512 um, 8 per stack (32 per die) at the PC pitch, cfg_stack/cfg_group strap pins; E face = return slots / writer-calendar (actual_*, expected_*, arm/epoch/layer), W face = head request / response and the PV16 V port (req_*, vreq_*, rsp_*), clock ck on W at the middle. The die lead (Q-KVSYS-DIE, OT_KV_STATIC) binds the view.",
  "job": {
   "owner": "Claude:Q-KVSYS-STRIP",
-  "branch": "claude/qkvsys-seg",
-  "tag": "ls1",
+  "branch": "claude/qkvsys-lseg",
+  "tag": "ls2",
   "purpose": "KV/system die STATIC landing segment qkd_static_kv_landing_seg (= qkd_static_kv_landing_physical_grp VMAP=1 VREQ=1 with cfg strap ports and one clock): 4 PCs each with its real 128x256 SRAM, per-PC hop38/hop295 branch stages, VREQ row control; fixed-cycle (latency 8 edges), no flow control. ONE master replicated 32x.",
   "extra_paths": [
    "rtl/qwen_sys/static_kv_20261014",
@@ -264,7 +264,7 @@
      "verilator"
     ],
     "pass_regex": "^PASS landing_seg exact",
-    "note": "tb_static_landing PHYS=1 VMAP=1 VREQ=1: 32 segments on their straps, 128 PCs, ctx 8192, every K and V row word / t / kind on its edge (latency 8); fault modes 1-5 must FAIL"
+    "note": "tb_static_landing PHYS=1 VMAP=1 VREQ=1: 32 segments on their straps, 128 PCs, K at CTX 1000/2048/4096/8192 + the PV16 V walk, every row word / t / kind on its edge (latency 8); fault modes 1-5 and the aliasing K ordinal (DUT_MUT 3 at CTX 2048) must FAIL"
    },
    {
     "name": "landing_seg_mutant",
@@ -280,6 +280,6 @@
    }
   ]
  },
- "structural_change": "ls1: new master (the static landing replaces the credit-based landing strip in the die).",
+ "structural_change": "ls2: rebased on the landing alias fix (main 35a278613: K row ordinal = stream position; rowctl VREQ takes arm/epoch/layer); bench over 4 contexts. ls1 (1a68fa5b0) was never submitted.",
  "clock": "spine"
 }

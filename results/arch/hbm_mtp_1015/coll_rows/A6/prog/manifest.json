@@ -1,0 +1,42 @@
+{
+ "schema": "hcoll.rows.argmax.v1",
+ "P": 6,
+ "mutant": null,
+ "G": 96,
+ "II": 32,
+ "VB": 1024,
+ "VS": 32,
+ "OBASE": 1090519040,
+ "DSTRIDE": 64,
+ "layout_sha256": "1f7c747b17fc1142e655a2aebe03fd4e16b8c0af5830cddabdf101991c208dc1",
+ "parents": {
+  "d0q0": {
+   "P": 6,
+   "rows": 64,
+   "halt": 208,
+   "last_delivery": 207,
+   "II": 32,
+   "body_rows": 32,
+   "prologue": 15,
+   "epilogue": 15
+  },
+  "d0q1": {
+   "rows": 1,
+   "halt_only": true
+  },
+  "d1q0": {
+   "P": 6,
+   "rows": 64,
+   "halt": 208,
+   "last_delivery": 207,
+   "II": 32,
+   "body_rows": 32,
+   "prologue": 15,
+   "epilogue": 15
+  },
+  "d1q1": {
+   "rows": 1,
+   "halt_only": true
+  }
+ }
+}

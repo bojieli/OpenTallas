@@ -15,7 +15,7 @@
   19.44,
   62.64
  ],
- "why": "spec outline",
+ "why": "spec outline (exact: the closed view's sub-slot)",
  "std_area_um2": null,
  "layer_contract": {
   "children": {},
@@ -52,6 +52,11 @@
   "physical/ref_tile/hbfd_rly_624_we/signoff.sdc",
   "physical/ref_tile/hbfd_rly_624_we/pdn.tcl",
   "physical/ref_tile/hbfd_rly_624_we/pre_cts.tcl",
+  "physical/ref_tile/hbfd_rly_624_we/post_cts.tcl",
+  "physical/ref_tile/hbfd_rly_624_we/post_grt.tcl",
+  "physical/ref_tile/hbfd_rly_624_we/pre_drt.tcl",
+  "physical/ref_tile/hbfd_rly_624_we/pre_fill.tcl",
+  "physical/ref_tile/hbfd_rly_624_we/post_fill.tcl",
   "physical/ref_tile/hbfd_rly_624_we/pre_grt.tcl",
   "physical/ref_tile/hbfd_rly_624_we/post_drt.tcl",
   "tools/ref_tile/ref_route.sh",
@@ -63,7 +68,14 @@
   "physical/qwen_die_masters/post_plain.tcl",
   "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
   "physical/common_flow/grt_macro_top_layer.tcl",
+  "physical/qwen_die_masters/io_flop_at_pins.tcl",
+  "physical/qwen_die_masters/out_flop_release.tcl",
   "physical/dsrom_window_source/leaf_iohold.tcl",
-  "physical/dsrom_window_source/leaf_inhold_release.tcl"
+  "physical/dsrom_window_source/leaf_inhold_release.tcl",
+  "physical/dsrom_window_source/leaf_inhold.tcl",
+  "physical/dsrom_window_source/leaf_inhold_release.tcl",
+  "physical/ref_tile/hbfd_rly_624_we/pre_gpl.tcl",
+  "physical/ref_tile/hbfd_rly_624_we/pre_dpl.tcl",
+  "physical/common_flow/pin_reg_split.tcl"
  ]
 }
