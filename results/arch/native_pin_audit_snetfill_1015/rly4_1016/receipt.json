@@ -1,13 +1,13 @@
 {
   "schema": "s81-rly4-functional-proof-v1",
-  "source_commit": "ac28d4772",
+  "source_commit": "53a10038a",
   "source_sha256": {
-    "rtl/dsrom_sys/s81_glue/ot_s81_rly.sv": "72d22c716680a647ba8fe263abf36c1ef3e04f0ae2111588607cc91072d41b5d",
     "rtl/dsrom_sys/s81_glue/ot_s81_rly4.sv": "6af6571d7d88ffbacf57c4c2baf0d612fff27b6a84fca366226d549356c7db7d",
-    "tools/s81_static_net/tb_rly4.sv": "a441427c2edaf7c03a5e12978364ae26a77f6398cf02a7c294d40506c3c8f8c2",
-    "tools/s81_static_net/bench_rly4.sh": "e873e64d463b76c964c6e3f451e53fbb1841f3cfbf704be6cad68664e442c203"
+    "tools/s81_static_net/tb_rly4.sv": "81cfefdc7fd6f0a595ca82afa92783397d1642985517702ea4bc39204073a544",
+    "tools/s81_static_net/bench_rly4.sh": "5524a3da9a85c293ab83fce207f0b2a23dac4e45989894ded168d42dcb12aa67",
+    "results/arch/native_pin_audit_snetfill_1015/rly4_1016/actual_reference.sv": "a5e31f7a6b5072efd6f8320ebef98f8d7b73e56f11a57b645bdf29e5152e4db3"
   },
-  "remote_unit": "ot-pve1:oth-ubuntu-2130034-1792167156",
+  "remote_unit": "ot-pve1:oth-ubuntu-2130870-1792167268",
   "result": "PASS all16 selected face pairs, 2000 words each, 386112 comparisons including both clock edges and warm asynchronous reset; input/output/edge/reset mutants rejected",
   "contract": "Exactly one real input connected per instance; other three explicitly PAD zero. One selected output consumed; other three explicitly NC. All four physical outputs branch from the same real flop. RSREG0: one posedge stage and original asynchronous reset, no added release edge.",
   "scope": "Independent 17.28x17.28 leaf diagnostic only; physical/native/actual parent home and incident joins still open. Existing seven qualified scalar relay views retained. No generator activation.",
