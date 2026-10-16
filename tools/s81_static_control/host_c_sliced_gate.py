@@ -43,6 +43,10 @@ def run(exe,name,args,expect,marker):
 for mut in [0,6]:
     name=f'native_m{mut}';exe=build('tb_host_c_sliced_native',ROOT/'tests/s81/tb_host_c_sliced_native.sv',mut,name)
     run(exe,name,[f'+NP={len(words)}'],mut==0,'HOST_SLICED_NATIVE PASS' if mut==0 else 'HOST_SLICED_NATIVE FAIL exact producer/calendar')
+    if mut==0:
+        # Later MUT0 interception-negative run uses the same DUT filename.
+        # Preserve the positive emit calendar before that intentional failure.
+        (a.out/'emit_calendar_exact.tsv').write_bytes((a.out/'emit_calendar_m0.tsv').read_bytes())
 # Negative control: bypass only the relocated native launch filter. The
 # mixed-CSR bench must catch an intercepted CSR on the actual native port.
 original=(ROOT/'rtl/dsrom_sys/s81_ingest/dsfd_host_c_sliced.sv').read_text()
@@ -60,6 +64,6 @@ for phase in range(8):run(exe,f'boot_phase{phase}',[f'+serial_phase={phase}'],Tr
 for name,arg in [('stop','+stop_boot=1'),('capacity','+overload=1')]:run(exe,'boot_'+name,[arg],True,'BOOT300 FAIL_EXPECTED')
 exe=build('tb_host_boot300_sliced',tb,5,'boot_kind_mutant')
 run(exe,'boot_kind_mutant',[],False,'BOOT300 FAIL payload/kind')
-rec=dict(scope=__doc__,generator_source_sha256={x:hashlib.sha256((ROOT/x).read_bytes()).hexdigest() for x in ['tools/rtl_rom_host_ingest_bench.py','tools/rtl_hdc_kv_ingest_campaign.py','tools/kv_ingest_ref.py','tools/s81_static_control/host_c_sliced_gate.py']},input_image_sha256={x:hashlib.sha256((a.out/x).read_bytes()).hexdigest() for x in ['packets.mem','init.mem','exp.mem']},source_sha256={x:hashlib.sha256((ROOT/x).read_bytes()).hexdigest() for x in SRC+['tests/s81/tb_host_c_sliced_native.sv','tests/s81/tb_host_boot300.sv']},input_slots=dict(first=128,stride=32,packets=len(words),final_verification_edge=60000),normal_token_reservation='OPEN: queue-nonempty service is not a compiled execution calendar',diagnostic_delta=dict(native_fault_host_edges=1,payload_ack_service_edges=0),cases=records)
+rec=dict(scope=__doc__,output_artifact_sha256={'emit_calendar_exact.tsv':hashlib.sha256((a.out/'emit_calendar_exact.tsv').read_bytes()).hexdigest()},generator_source_sha256={x:hashlib.sha256((ROOT/x).read_bytes()).hexdigest() for x in ['tools/rtl_rom_host_ingest_bench.py','tools/rtl_hdc_kv_ingest_campaign.py','tools/kv_ingest_ref.py','tools/s81_static_control/host_c_sliced_gate.py']},input_image_sha256={x:hashlib.sha256((a.out/x).read_bytes()).hexdigest() for x in ['packets.mem','init.mem','exp.mem']},source_sha256={x:hashlib.sha256((ROOT/x).read_bytes()).hexdigest() for x in SRC+['tests/s81/tb_host_c_sliced_native.sv','tests/s81/tb_host_boot300.sv']},input_slots=dict(first=128,stride=32,packets=len(words),final_verification_edge=60000),normal_token_reservation='OPEN: queue-nonempty service is not a compiled execution calendar',diagnostic_delta=dict(native_fault_host_edges=1,payload_ack_service_edges=0),cases=records)
 (a.out/'record.json').write_text(json.dumps(rec,indent=2)+'\n')
 print('HOST_C_SLICED_GATE PASS actual IKEY544sectors/full256 exact59989edges + badpayload/interceptbypass mutants + mixedCSR + boot8phases/kind/missingclock/capacity')
