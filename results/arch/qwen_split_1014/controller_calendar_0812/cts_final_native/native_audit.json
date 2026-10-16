@@ -1,0 +1,40 @@
+{
+  "schema": "opentallas.ref-tile.cts-native-probe.v1",
+  "scope": "CTS placement RC diagnostic; NOT a routed native qualification",
+  "kit": "physical/ref_tile/qkd_controller_hbm_calendar",
+  "remote_host": "ot-epyc4",
+  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/qkd_controller_hbm_calendar-20261016-083213",
+  "gate_source_commit": "7b37daf5aefe52e6f0e6a8f3d6acf71d5f2f0eff",
+  "gate_result_sha256": "2852521d36a9645c360f96ce02cc6770569ef80433fc10717a64a695d6b16e26",
+  "library_sha256": "abef4d060e6d20442dac1d444a0504d1dd4ad72b6b6dc8eac253e445379a204d",
+  "insertion_sha256": "9ea29694fd509da8dbbd2fe5124dcb5de634a41f38c2eca190eba92ecb224167",
+  "probe_tcl_sha256": "03e5b45c2bc10b7745823aa59fc9d3ab21f3a05cd8d27df5bcc4b909c6b53900",
+  "launch": {
+    "ps": 183.91955,
+    "pin": "static_cmd[33]"
+  },
+  "capture": {
+    "ps": 129.68516,
+    "pin": "layer[0]"
+  },
+  "launch_over": 0,
+  "capture_over": 0,
+  "comb_pins": [],
+  "clock_refs": {
+    "hck": {
+      "rise": 114.4,
+      "fall": 118.9663,
+      "min": 99.67156,
+      "max": 118.56197,
+      "src": "insertion.json boundary mean",
+      "bmin": 111.8,
+      "bmax": 118.2,
+      "n": 161
+    }
+  },
+  "spread_ps": {
+    "hck": 6.400000000000006
+  },
+  "measured_reference_coverage": true,
+  "diagnostic_pass": true
+}
