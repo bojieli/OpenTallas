@@ -242,5 +242,16 @@
     "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_comb.sv": "73209624bb432b4c29e8a5c49482de1621f7f85ea1b4f120a0c8a8bb017ff2cb",
     "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_pad_split.sv": "974a6f37e1825ba319dcb7cba2a58197a9035016dfda22920d9926b10ec4d5d0",
     "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_ccf_bankpipe.sv": "c5fc59bad4739dd6693c2f464228c64b810cde5cfc6fa330a2299534a9cab68b"
+  },
+  "static_pin_transport": {
+    "source": "actual cpin register transport, shared serial input domain",
+    "new_data_ff": 165,
+    "new_external_terminals": 330,
+    "existing_credit_counter_ff_removed": 9,
+    "credit_backpressure": "none; Y acceptance is scheduled event regardless pop/occupancy; capacity faults remain consumers responsibility",
+    "command_boundary_edges": 1,
+    "Y_boundary_edges": 1,
+    "clock_roots": 1,
+    "physical_view": "unbuilt; legacy cpin two-root view not inheritable"
   }
 }
