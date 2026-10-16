@@ -16,7 +16,8 @@ module ot_hbm_svc_pc_ctrl_leaf #(
     parameter integer P=0,
     parameter integer OREG=1,
     parameter integer KREG=1,
-    parameter integer KRREG=1
+    parameter integer KRREG=1,
+    parameter integer RREG=1
 )(
     input wire clk,rst_n,
     input wire k_v,output wire k_rdy,input wire k_we,
@@ -35,6 +36,20 @@ module ot_hbm_svc_pc_ctrl_leaf #(
     // the rst_n port drives only the registered reset relay (assert asynchronous, release after 3 clk edges)
     wire lrst_n;
     ot_rst_relay #(.REGIONS(1)) u_rst(.clk(clk),.rst_n_in(rst_n),.rst_n(lrst_n));
+    // Native PHY-return pin capture: valid and all payload bits enter flops
+    // together before response FIFO accounting/address/identity logic. This
+    // adds one HBM edge before block-ready; normal on-die calendars do not
+    // gain a runtime stall or a credit mechanism. RREG=0 is diagnostic history.
+    wire ret_v; wire [255:0] ret_data;
+    generate if(RREG!=0)begin:g_phy_return
+        reg v;reg [255:0]data;
+        always @(posedge clk) data<=dram_rdata;
+        always @(posedge clk or negedge lrst_n)
+            if(!lrst_n) v<=1'b0; else v<=dram_rvalid;
+        assign ret_v=v;assign ret_data=data;
+    end else begin:g_raw_phy_return
+        assign ret_v=dram_rvalid;assign ret_data=dram_rdata;
+    end endgenerate
     wire i_v,i_we;wire[29:0]i_addr;wire[3:0]i_len;wire[16:0]i_tag;wire[255:0]i_wdata;wire[31:0]i_wstrb;
     wire i_rdy;
     reg[1:0]state;reg sticky;reg[18:0]active_row;reg[31:0]observed_open;
@@ -65,40 +80,22 @@ module ot_hbm_svc_pc_ctrl_leaf #(
     assign i_rdy=!sticky&&!pc_fault&&legal&&count+length<=32&&
         (state==IDLE || (state==RUN && (same_row || row_idle)));
     generate if(KREG!=0)begin:g_kreg
-        reg[339:0]sk[0:1];reg[1:0]sn;reg sw,sr;
-        wire push_k=k_v&&k_rdy,pop_k=i_v&&i_rdy;
-        assign k_rdy=sn!=2'd2;
-        assign i_v=sn!=0;
-        assign {i_we,i_addr,i_len,i_tag,i_wstrb,i_wdata}=sk[sr];
-        always @(posedge clk)if(push_k)sk[sw]<={k_we,k_addr,k_len,k_tag,k_wstrb,k_wdata};
-        always @(posedge clk or negedge lrst_n)
-            if(!lrst_n)begin sn<=0;sw<=0;sr<=0;end
-            else begin
-                if(push_k)sw<=~sw;
-                if(pop_k)sr<=~sr;
-                sn<=sn+(push_k?2'd1:2'd0)-(pop_k?2'd1:2'd0);
-            end
-    end else begin:g_kdirect
+        ot_hbm_svc_pin_skid2 #(.WIDTH(340)) u_skid(
+            .clk(clk),.rst_n(lrst_n),.in_v(k_v),.in_r(k_rdy),
+            .in_data({k_we,k_addr,k_len,k_tag,k_wstrb,k_wdata}),
+            .out_v(i_v),.out_r(i_rdy),.out_data({i_we,i_addr,i_len,i_tag,i_wstrb,i_wdata}));
+    end else begin:g_raw_k
         assign i_v=k_v;assign i_we=k_we;assign i_addr=k_addr;assign i_len=k_len;assign i_tag=k_tag;
         assign i_wdata=k_wdata;assign i_wstrb=k_wstrb;assign k_rdy=i_rdy;
     end endgenerate
 
     assign j_v=head_valid&&!sticky&&!pc_fault;
     generate if(KRREG!=0)begin:g_krreg
-        reg[276:0]rk[0:1];reg[1:0]rn;reg rw,rr;
-        wire pop_r=kr_v&&kr_rdy;
-        assign j_rdy=rn!=2'd2;
-        assign kr_v=rn!=0;
-        assign {kr_tag,kr_beat,kr_data}=rk[rr];
-        always @(posedge clk)if(response_take)rk[rw]<={head_identity[20:4],head_identity[3:0],response_data};
-        always @(posedge clk or negedge lrst_n)
-            if(!lrst_n)begin rn<=0;rw<=0;rr<=0;end
-            else begin
-                if(response_take)rw<=~rw;
-                if(pop_r)rr<=~rr;
-                rn<=rn+(response_take?2'd1:2'd0)-(pop_r?2'd1:2'd0);
-            end
-    end else begin:g_krdirect
+        ot_hbm_svc_pin_skid2 #(.WIDTH(277)) u_skid(
+            .clk(clk),.rst_n(lrst_n),.in_v(j_v),.in_r(j_rdy),
+            .in_data({head_identity[20:4],head_identity[3:0],response_data}),
+            .out_v(kr_v),.out_r(kr_rdy),.out_data({kr_tag,kr_beat,kr_data}));
+    end else begin:g_raw_kr
         assign kr_v=j_v;assign j_rdy=kr_rdy;
         assign kr_tag=head_identity[20:4];assign kr_beat=head_identity[3:0];assign kr_data=response_data;
     end endgenerate
@@ -118,10 +115,10 @@ module ot_hbm_svc_pc_ctrl_leaf #(
     assign owner_fault=sticky;
     wire response_read=!sticky&&((!head_valid&&response_count!=0)||(response_take&&response_count>1));
     wire[4:0]response_read_address=response_take?response_rp+5'd1:response_rp;
-    wire response_write=dram_rvalid&&pending_count!=0&&!sticky;
+    wire response_write=ret_v&&pending_count!=0&&!sticky;
     ot_sram_1r1w_128x256_m1_r2c2 u_response_payload(
         .clk(clk),.r_ce_in(response_read),.r_addr_in({2'b0,response_read_address}),.rd_out(response_data),
-        .w_ce_in(response_write),.w_addr_in({2'b0,response_wp}),.wd_in(dram_rdata),.w_mask_in({256{1'b1}}),
+        .w_ce_in(response_write),.w_addr_in({2'b0,response_wp}),.wd_in(ret_data),.w_mask_in({256{1'b1}}),
         .rr_en(2'b0),.rr_addr(14'b0),.cr_en(2'b0),.cr_sel(16'b0));
     ot_hbm_r14_stream_pc #(.ENABLE(1),.PC(P),.REF_MODE(1),.WR_EN(1),.AQ_RD(1),.WQ(32),
         .REF_PHASE((PHASE+P*118/32)%118)) controller(
@@ -150,8 +147,8 @@ module ot_hbm_svc_pc_ctrl_leaf #(
             count<=count+(accepted?6'(length):6'd0)-(cv?6'd1:6'd0);
             unposted<=unposted+(accepted?6'(length):6'd0)-(posted?6'd1:6'd0);
             read_reserved<=read_reserved+(posted_read?6'd1:6'd0)-(response_take?6'd1:6'd0);
-            pending_count<=pending_count+(column_read?6'd1:6'd0)-(dram_rvalid?6'd1:6'd0);
-            response_count<=response_count+(dram_rvalid?6'd1:6'd0)-(response_take?6'd1:6'd0);
+            pending_count<=pending_count+(column_read?6'd1:6'd0)-(ret_v?6'd1:6'd0);
+            response_count<=response_count+(ret_v?6'd1:6'd0)-(response_take?6'd1:6'd0);
             if(posted)ep<=ep+1'b1;
             if(r_v)begin
                 case(r_op)
@@ -172,7 +169,7 @@ module ot_hbm_svc_pc_ctrl_leaf #(
                     pending_identity[pending_wp]<=head[308:288];pending_wp<=pending_wp+1'b1;
                 end
             end
-            if(dram_rvalid)begin
+            if(ret_v)begin
                 if(pending_count==0 || (response_count>=32&&!response_take))sticky<=1;
                 else begin response_identity[response_wp]<=pending_identity[pending_rp];pending_rp<=pending_rp+1'b1;response_wp<=response_wp+1'b1;end
             end
@@ -186,3 +183,37 @@ module ot_hbm_svc_pc_ctrl_leaf #(
         end
     end
 endmodule
+// Two-entry elastic pin skid at the external HBM-service boundary. A head
+// register directly drives the output pins; selection happens before its flop.
+// This removes the old pointer-selected output mux without adding an edge or
+// changing count<2 admission. On-die execution starts from block-ready.
+module ot_hbm_svc_pin_skid2 #(parameter integer WIDTH=1,MUT=0)(
+    input wire clk,rst_n,input wire in_v,output wire in_r,
+    input wire [WIDTH-1:0]in_data,output wire out_v,input wire out_r,
+    output wire [WIDTH-1:0]out_data
+);
+    reg head_valid,tail_valid;
+    reg [WIDTH-1:0]head_data,tail_data;
+    wire push=in_v&&in_r,pop=out_v&&out_r;
+    assign in_r=!tail_valid;assign out_v=head_valid;assign out_data=head_data;
+    always @(posedge clk or negedge rst_n) begin
+        if(!rst_n)begin head_valid<=0;tail_valid<=0;end
+        else begin
+            case({push,pop})
+                2'b10:begin
+                    if(!head_valid)begin head_data<=in_data;head_valid<=1;end
+                    else begin tail_data<=in_data;tail_valid<=1;end
+                end
+                2'b01:begin
+                    if(tail_valid)head_data<=tail_data;
+                    head_valid<=tail_valid;tail_valid<=0;
+                end
+                2'b11:begin head_data<=in_data;head_valid<=1;tail_valid<=0;end
+                default:;
+            endcase
+            // Checked negative control: illegally overwrite a stalled head.
+            if(MUT!=0 && push && head_valid && !out_r)head_data<=in_data;
+        end
+    end
+endmodule
+`default_nettype wire
