@@ -1,0 +1,14 @@
+ot-run: ot-epyc4       admits   506 GB (avail 732, growth 107, headroom 48, waiters 0/0 GB) load 48/128 running 26 disk 852 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/qwen-split-compute/r2b2
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/qwen-split-compute/r2b2
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-596056-1792144817 after 0 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+Traceback (most recent call last):
+  File "/work/dvm_actual_pg_audit.py", line 21, in <module>
+    if [box.xMin(),box.yMin()] != expected: raise ValueError(f'Origins differ {name}: {[box.xMin(),box.yMin()]} vs {expected}')
+ValueError: Origins differ h_24: [20662128, 8208000] vs [20662200, 8208000]
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-596056-1792144817): exit 1

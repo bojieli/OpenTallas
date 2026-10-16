@@ -1,0 +1,36 @@
+{
+  "scope": "ACTUAL_FROZEN_R2B2_PG_CAPACITY_DIAGNOSTIC_NOT_PARENT_GRANT",
+  "original_odb_sha256": "15829f8842ee4d07229bd901416a1163cef3ce12e7567ec9c60a2a36a6fd9e5f",
+  "audit_tool_sha256": "7af51362b1729bb3f0845eb8149cdd7df36996a7441d7c54d3466ba257a1d8b2",
+  "actual_columns": 48,
+  "actual_obstructions": {
+    "wire_rectangles": 7281,
+    "via_rectangles": 20142004,
+    "expanded_vias": 20364116
+  },
+  "minimum_clear_M7_tracks": 443,
+  "minimum_clear_M9_tracks": 336,
+  "max_selected_M7_cut": 0.45146726862302483,
+  "max_selected_M9_cut": 0.43452380952380953,
+  "initial_nominal_request": "Initial selected200M7 tracks had actual PG conflicts; full family scan selects only actual-clear200/146. Old origins and unsnapped generator origins both refused.",
+  "source_scope": "Frozen r2b2 actual placed origins/actual PG only; does not grant r2h4 or any current source homes.",
+  "open": [
+    "Actual candidate head/leaf ports and native clock capture/launch not placed",
+    "Wholegraph signal cuts and clocks not reserved",
+    "Expanded column1473.12um height requires whole-die overlap/incident hop proof",
+    "Actual pin access/DRC and complete TT/FF signoff remain mandatory",
+    "Current actual leaf/head CTS/raw/native and candidate full die PG must be audited before parent grant."
+  ],
+  "files_sha256": {
+    "r2b2-rom_tp8b.json.gz": "a3954fc0fcc63faa0183a573aec0231ba3724e810a964e1de7a55e19fe03a979",
+    "snap-origin-refusal.log": "b5b592d112fe5075be4dbec659a1f9888b057674fcb42a13be598b32acb25fc7",
+    "column_origins.json": "bbe5dc19e3ef7e688ce135d9f2590f0d4da30e1dd592ee8fcddd95b18cea6c70",
+    "all_family_otrun.log": "088bf9baebcbd6e673c4a483676faaff009e31b2e46bc56659468ca8b26dedf6",
+    "parent_m9_request.json.gz": "d7fb7c67c26b983310d713eff553923f91fb52fc7384bc26e72157324b27e0c4",
+    "stale-origin-refusal.log": "1085fdb584970a04ad824608e5f201743287a78eaefa000b62aae1115436bd4c",
+    "m6_supported_candidate.json.gz": "5d813d87a8d75e2e79804ef8dc1cb750552856ddd94d0d1714c2c0fd7a2e6473",
+    "all_family_audit.json.gz": "43a3af6782a00e9e8a48f24ab4e21e0f07868bac40c3c2472806bb33b7747986",
+    "r2b2-pdn.tcl": "e0e522549a179d741b73802c66efc8e1f0c4f2c33796db2ccb577ac074455760",
+    "audit.json.gz": "568eed628c948869f16e087b9e5d2bf87103b162823b528bd3914d971127a390"
+  }
+}

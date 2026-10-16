@@ -1,0 +1,11 @@
+ot-run: ot-epyc4       admits   455 GB (avail 682, growth 149, headroom 48, waiters 0/0 GB) load 46/128 running 26 disk 867 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch/claude/qwen-split-compute/r2b2
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch/claude/qwen-split-compute/r2b2
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-823282-1792146709 after 0 s
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+{"columns": 48, "counts": {"wire_rectangles": 7281, "via_rectangles": 20142004, "expanded_vias": 20364116}, "available_min": {"M7": 443, "M9": 336}, "output": "/work/dvm-pg-audit-0253/all_family_audit.json"}
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-823282-1792146709): exit 0
