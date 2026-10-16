@@ -28,7 +28,7 @@ def main():
    if min(dx,dy)==0:clearance.append(max(dx,dy))
  assert not overlap;assert min(clearance)>=21.599
  # 550um station channel and54um top strip are planning reservations, not qualified masters.
- channel,strip,edge=550.,54.,2.16
+ channel,strip,edge=550.368,54.,2.16
  alts=[]
  for cols,rows in [(1,4),(2,2),(4,1)]:
   ww=cols*w+(cols-1)*gap+channel+2*edge;hh=rows*h+(rows-1)*gap+strip+gap+2*edge

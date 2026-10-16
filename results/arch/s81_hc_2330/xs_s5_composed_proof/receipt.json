@@ -1,0 +1,58 @@
+{
+ "scope": "Actual XS RTL control/register component within composed NG256 HC bench. Other FP leaves are DPI; NO all-on-chip full-HC/native layer claim.",
+ "source_commit": "85e95731c",
+ "required_rtl_correction": "8ce8c2234",
+ "all_source_hashes_match_pinned_commit": true,
+ "verified_source_count": 53,
+ "positive_runs": [
+  {
+   "run": "golden_L0_L2",
+   "rows": 1940,
+   "err_rows": 0,
+   "cycles": 4695,
+   "ok": true
+  },
+  {
+   "run": "stress_0",
+   "rows": 1940,
+   "err_rows": 0,
+   "cycles": 4695,
+   "ok": true
+  },
+  {
+   "run": "stress_1",
+   "rows": 1940,
+   "err_rows": 0,
+   "cycles": 4695,
+   "ok": true
+  }
+ ],
+ "mutant_tile": "ot_s81_hc_ctfxs_nt",
+ "mutant_edit": [
+  ".rst_in(rst_in), .fv_in(fv_in), .fd_in(fd_in)",
+  ".rst_in(rst_in), .fv_in(fv_in & ~7'd1), .fd_in(fd_in)"
+ ],
+ "mutant_runs": [
+  {
+   "run": "golden_L0_L2",
+   "rows": 1940,
+   "err_rows": 1940,
+   "cycles": 4695,
+   "ok": false
+  },
+  {
+   "run": "stress_0",
+   "rows": 1940,
+   "err_rows": 1940,
+   "cycles": 4695,
+   "ok": false
+  },
+  {
+   "run": "stress_1",
+   "rows": 1940,
+   "err_rows": 1940,
+   "cycles": 4695,
+   "ok": false
+  }
+ ]
+}

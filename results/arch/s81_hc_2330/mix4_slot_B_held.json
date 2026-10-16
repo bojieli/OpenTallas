@@ -1,0 +1,44 @@
+{
+ "status": "HELD_SNAPPED_B_GEOMETRY_ONLY",
+ "die_owner": "s81_die_2330",
+ "origin_um": [
+  11373.696,
+  20949.84
+ ],
+ "outline_um": [
+  2330.208,
+  1855.44
+ ],
+ "grid_um": [
+  0.432,
+  2.16
+ ],
+ "VM_facing_side": "S",
+ "VM_physical_overlap_local_x_um": [
+  697.248,
+  2330.208
+ ],
+ "proposed_VM_pin_extent_local_x_um": [
+  717.264,
+  2310.192
+ ],
+ "VM_seam_um": 21.6,
+ "command_side": "W/SW toward SSEQ; actual per-port proof pending",
+ "clusters": {
+  "arrangement": [
+   2,
+   2
+  ],
+  "conservative_outline_um": [
+   876.96,
+   876.96
+  ],
+  "orient": "MX proposed to make shell face S; every child/pin transform must be checked"
+ },
+ "station_channel_um": 550.368,
+ "RS": 5,
+ "normal_calendar": "Retain existing fixed RS5 schedule; no RS reduction from centroid distance",
+ "candidate_clock_entries": 193,
+ "clock_abi_status": "Conditional: top ingress localization adds further entries; no issued physical clock pin map",
+ "scope": "Die owner reports160frame/hard/HCP/MIX4rectangles zerooverlap/outside. Actual per-bit channel, parent fill/trialGRT, mapped clock delivery, FF and all-source native parent proof remain open."
+}
