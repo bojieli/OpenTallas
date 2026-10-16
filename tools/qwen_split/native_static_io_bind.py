@@ -217,8 +217,15 @@ def install_master(M, model, Master):
                 pos[(p, b)] = (face, 'M4', round(.012 + round((y - .012) / .048) * .048, 4))
                 y += .048
         return y
-    end = column('E', phy_order(0), win)                 # SerDes0, abutting the E PHY window
-    column('E', EU, max(end, win + 60.0) + 8.0)           # UCIe, over SerDes0 (M6+) to the PHY beyond it
+    by_ = {i.name: i for i in model['insts']}
+    if 'io_ucie' in by_ and 'io_serdes' in by_ and by_['io_ucie'].x < by_['io_serdes'].x:
+        # Q-COMPUTE-DIE r2h (00:30 10-16): the UCIe PHY abuts the E face (homes order collective|ucie|serdes0), so it
+        # owns the aligned window; SerDes0 follows above it and crosses the UCIe PHY on upper metal
+        end = column('E', EU, win)
+        column('E', phy_order(0), max(end, win + 60.0) + 8.0)
+    else:
+        end = column('E', phy_order(0), win)             # SerDes0, abutting the E PHY window
+        column('E', EU, max(end, win + 60.0) + 8.0)       # UCIe, over SerDes0 (M6+) to the PHY beyond it
     end = column('W', phy_order(1), win)                 # SerDes1 (MY PHY, window faces E)
     column('W', phy_order(2), end + 8.0)                 # SerDes2, over SerDes1
     placed = {p for p, _ in pos}
