@@ -136,7 +136,7 @@ def main() -> int:
     lef_txt = gzip.open(a.lef, 'rt').read() if a.lef.endswith('.gz') else Path(a.lef).read_text()
     macs = lef_macros(lef_txt)
     counts = {ln.split()[1]: int(ln.split()[0]) for ln in Path(a.counts).read_text().splitlines() if ln.strip()}
-    want = [m for m in sorted(mods) if re.fullmatch(r'dsfd_hstn[hv]_\d+|dsfd_stn[hv]_\d+x1', m)]
+    want = [m for m in sorted(mods) if re.fullmatch(r'dsfd_hstn[hv]_\d+s?|dsfd_stn[hv]_\d+x1', m)]   # 's': split slice master (f7)
     if a.only:
         sel = set(a.only.split(','))
         want = [m for m in want if m in sel]
