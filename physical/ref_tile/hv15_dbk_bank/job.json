@@ -1,14 +1,14 @@
 {
- "name": "hv15_dbk_bank-pf1-4e0d5b48c",
+ "name": "hv15_dbk_bank-geo1-COMMIT",
  "block": "ot_hgi_dma_back_landing_bank",
  "ref_tile": true,
  "owner": "Claude:H-HARDEN",
- "purpose": "DMA STORE back landing bank leaf ot_hgi_dma_back_landing_bank, native-capture structural fix (H-HARDEN r4): routed nl1 bank (TT +311.82/FF +20.58/DRC 0, launch 181.5 ps PASS) failed native capture on 4 SRAM-macro pins (read_slot/write_en/write_slot 190.5..191.5 ps > 190). Every input now pin-flopped: write_en = raw response valid + write_slot = controller expect_tag[7] (same write edge as before), read_en/read_slot sampled one edge later and the macro word goes straight to the wd_payload launch flop (capture stage removed): 0 cycles, -240 flops/bank. One real 128x256 SRAM, own related clock entry; 8 per hb_dbk parent x4 stacks.",
+ "purpose": "DMA STORE back landing bank, the hb_dbk parent standard bank (one master x32): geometry re-kit, both data buses on the W face at the SRAM pin edge, 140.4x87.48; RTL unchanged from pf1 (native PASS).",
  "threads": 8,
  "peak_ram_gb": 8,
  "source": {
-  "branch": "claude/hbm-harden-1705",
-  "commit": "4e0d5b48c8145acb5f62872b9d75337e985546cc",
+  "branch": "claude/hbm-harden-2100",
+  "commit": "COMMIT",
   "extra_paths": [
    "tools/hbm_v15_harden",
    "rtl/hbm_accel/generic/peers/static",
@@ -114,7 +114,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hv15_dbk_bank/hv15_dbk_bank-pf1-4e0d5b48c"
+   "to": "results/rtl/ref_tile/hv15_dbk_bank/hv15_dbk_bank-geo1-COMMIT"
   }
  ],
  "cycles_added": 0,
@@ -125,8 +125,8 @@
  "merge_target": "main",
  "structural_change": "All bank inputs registered at the pins (no input reaches the SRAM macro); write enable from the raw response valid and slot from the controller one edge ahead keep the write edge; read sampled one edge later with the separate capture stage removed keeps the wd edge. 0 cycles.",
  "reroute_reason": {
-  "kind": "rtl_change",
-  "source": "rtl/hbm_accel/generic/peers/static/ot_hgi_dma_back_static_vp_banks.sv",
-  "why_route": "nl1 routed ETM native capture 191.47 ps > 190 on 4 SRAM-macro input pins; pin flops on every input; fresh source-bound CTS gate + actual native audit required."
+  "kind": "slot_change",
+  "slot_change_request": "geometry (owner 20:45 visual inspection + coordinator 10-15): pf1 view had wd[288:0] on the E face while the SRAM's rd_out/wd_in pins are on its W edge (256 read bits crossed ~120 um around the macro) and 36% fill. geo1: rr_data AND wd both on the W face next to the macro pin edge (all macro pins are on its LEF W edge, so mirroring cannot serve both buses), control on N; outline 140.4 x 87.48 = the 20 um macro-channel rule minimum for this 94.8x41.06 SRAM (140.4 x 64 / 55% fill is not reachable under the rule: needs abut_plan or a 2-SRAM bank leaf). One master for all 32 banks. Told H-DIE.",
+  "why_route": "geometry: pins far from consumers, 36% fill"
  }
 }
