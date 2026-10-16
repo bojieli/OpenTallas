@@ -1,0 +1,90 @@
+{
+ "summary": {
+  "shape": "ds640",
+  "ops": 1,
+  "passed": 0,
+  "probe": false,
+  "dmut": 0,
+  "smut": "early",
+  "lat": {
+   "req_lead": 8,
+   "qk_first": 63,
+   "qk_land_meas": 70,
+   "qk_land": 78,
+   "qk_clear": 8,
+   "pv_node": 160,
+   "out": 40
+  },
+  "wall_s": 4.2,
+  "verdict": "FAIL"
+ },
+ "ops": [
+  {
+   "name": "qk_sm0",
+   "kind": "qk",
+   "rows": 20,
+   "rc": 1,
+   "fault": true,
+   "calendar": {
+    "first_line": 123,
+    "last_consume": 347,
+    "lines": 50,
+    "qk": [
+     {
+      "wave": 0,
+      "rows": [
+       0,
+       1,
+       2,
+       3,
+       128,
+       129,
+       130,
+       131
+      ],
+      "last_consume": 223,
+      "clear": 231,
+      "publish": 293
+     },
+     {
+      "wave": 1,
+      "rows": [
+       132,
+       133,
+       134,
+       135,
+       136,
+       137,
+       138,
+       139
+      ],
+      "last_consume": 287,
+      "clear": 294,
+      "publish": 357
+     },
+     {
+      "wave": 2,
+      "rows": [
+       140,
+       141,
+       142,
+       143
+      ],
+      "last_consume": 347,
+      "clear": 358,
+      "publish": 417
+     }
+    ],
+    "end": 457
+   },
+   "results": 16,
+   "expected": 20,
+   "mismatches": 5,
+   "result_rows": 2,
+   "first_result": 325,
+   "last_result": 389,
+   "pass": false,
+   "span_first_line_to_last_result": 266
+  }
+ ]
+}
