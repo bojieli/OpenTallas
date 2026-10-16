@@ -62,6 +62,17 @@ def prepare(v, m, source_root, *, production=True, mode='b2', full_graph=False, 
               lambda p:'S'if p=='rq'else'N'if p.startswith('ck')or p=='rst_n'else'E')
         frame(um,('rtl/qwen_split/qfd_band_upper_b2_l2_s4.sv'if compact_selector else'rtl/qwen_split/qfd_band_upper_b2_l2.sv')if production else'rtl/qwen_split/qfd_band_upper_b2.sv',86.4,205.2 if production else 410.4,
               lambda p:'W'if p in('pw','pw_v','lf')else'N'if p in('clk','rst_n')else'E')
+        if production:
+            # Q-B2 10-16: a CLOSED upper view (qfd_band_upper_b2_l2_s4 s4r2) is the physical truth: redraw the die
+            # master exactly as that abstract (outline + every pin), as bind_real will bind it.
+            from types import SimpleNamespace
+            from qwen_split.closed_view import view_dir,install_master as view_install
+            if view_dir(um) is not None:
+                upath=('rtl/qwen_split/qfd_band_upper_b2_l2_s4.sv'if compact_selector else'rtl/qwen_split/qfd_band_upper_b2_l2.sv')
+                rec_=view_install(M,m,v.Master,SimpleNamespace(name=um,w=86.4,h=205.2),um,rtl_ports(source_root/upath,um),
+                                  partition_master,note='closed upper view')
+                frames[um]=dict(w=86.4,h=205.2,ports=copy.deepcopy(M[um].ports),view=rec_['view'])
+                notes.append(f'{um}: die frame = closed view {rec_["view"]}')
         # Exact numeric aliases; no centroid stand-ins for missing pin groups.
         alias(pm,'cw_data','cw0',range(2048))
         for l in range(NUP):
