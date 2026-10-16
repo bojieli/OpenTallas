@@ -421,7 +421,8 @@ def bound_views(root=None):
     the view-binding table.  Hard errors: unknown schema, an entry that is not QUALIFIED, a missing file, a file whose
     sha256 differs from the table (the view changed after it was qualified), a LEF whose MACRO is not the master, a
     corner liberty without that cell."""
-    key = (VIEW_BINDING, str(root or ROOT))
+    diagnostic = os.environ.get('OT_S81_DIAGNOSTIC_CLOSED_VIEWS') == '1'
+    key = (VIEW_BINDING, str(root or ROOT), diagnostic)
     if key in _BOUND:
         return _BOUND[key]
     out = {}
@@ -433,9 +434,9 @@ def bound_views(root=None):
         if tab.get('schema') != VIEW_BINDING_SCHEMA:
             raise SystemExit(f'VIEW_BINDING: {tp} schema {tab.get("schema")!r}, expected {VIEW_BINDING_SCHEMA!r}')
         for mst, rec in sorted(tab.get('bound', {}).items()):
-            if rec.get('verdict') != 'QUALIFIED':
+            if rec.get('verdict') != 'QUALIFIED' and not (diagnostic and rec.get('verdict') == 'DIAGNOSTIC_CLOSED'):
                 raise SystemExit(f'VIEW_BINDING: {mst} is in the table without a QUALIFIED verdict ({rec.get("verdict")!r})')
-            r_ = dict(job=rec.get('job'), export_dir=rec.get('export_dir'))
+            r_ = dict(job=rec.get('job'), export_dir=rec.get('export_dir'), binding_scope=rec.get('verdict'))
             for k_ in ('lef', 'tt', 'ff', 'ss'):
                 f_ = rec.get('files', {}).get(k_) or {}
                 fp = _view_path(f_.get('path', ''), root)
@@ -500,6 +501,33 @@ def apply_view_binding(m, pdir):
         return m['bound_views']
     bv = bound_views()
     rec = {}
+    if bv and os.environ.get('OT_S81_VIEW_BINDING_SKIP_MISFIT') == '1':
+        # S-DIE 2026-10-16 (pathfinding trials, ROOT: bind every closed view): a master whose real view does not fit
+        # its die slot (pin names / directions, non-R0 instance, outline larger than the generated slot) is NOT bound
+        # and is listed in m['view_binding_misfits'] for its owner; nothing is relaxed for the masters that do bind
+        mis = {}
+        by_m = {}
+        for it in m['insts']:
+            if it.master in bv:
+                by_m.setdefault(it.master, []).append(it)
+        for mst, its in by_m.items():
+            v = bv[mst]
+            why = bound_view_pin_faults(mst, v, pdir.get(mst, {}))[:4]
+            if mst in REAL_FILES:
+                why.append('constant-bound hard macro')
+            nr = [i.name for i in its if i.orient != 'R0']
+            if nr:
+                why.append(f'{len(nr)} non-R0 instance(s), e.g. {nr[0]}')
+            big = [i for i in its if v['w'] > i.w + 1e-6 or v['h'] > i.h + 1e-6]
+            if big:
+                why.append(f'real {v["w"]} x {v["h"]} > slot {big[0].w:.3f} x {big[0].h:.3f} ({len(big)} inst)')
+            if why:
+                mis[mst] = dict(instances=len(its), lef=v['lef'], why=why)
+        m['view_binding_misfits'] = mis
+        bv = {k: v for k, v in bv.items() if k not in mis}
+        print('OT_VIEW_BINDING_MISFITS %d masters not bound' % len(mis), file=sys.stderr)
+        for k_, v_ in sorted(mis.items()):
+            print('OT_VIEW_MISFIT ' + json.dumps(dict(master=k_, **v_)), file=sys.stderr)
     for it in m['insts'] if bv else ():
         v = bv.get(it.master)
         if v is None:
@@ -513,7 +541,8 @@ def apply_view_binding(m, pdir):
                 raise SystemExit(f'VIEW_BINDING: {it.master} LEF {v["lef"]} does not match the die netlist ports: '
                                  + '; '.join(faults[:8]))
             r_ = rec[it.master] = dict(lef=v['lef'], libs={c: v[c] for c in ('tt', 'ff', 'ss')}, size_um=[v['w'], v['h']],
-                                       generated_slot_um=[round(it.w, 3), round(it.h, 3)], instances=0)
+                                       generated_slot_um=[round(it.w, 3), round(it.h, 3)], instances=0,
+                                       binding_scope=v.get('binding_scope', 'QUALIFIED'))
         if it.orient != 'R0':
             raise SystemExit(f'VIEW_BINDING: {it.master} instance {it.name} is {it.orient}: bound views are placed R0 only')
         if v['w'] > it.w + 1e-6 or v['h'] > it.h + 1e-6:
@@ -3780,6 +3809,20 @@ class Chains:
         """Place stations along polyline `path` for a chain of `lanes` (list of data widths).  `forced`: path lengths
         where a station MUST stand (taps / branches).  Returns [(inst, s_along)].  src: (x, y) of the source pin."""
         path_receipt=None
+        if vmc_hub() and len(path) >= 2:
+            # vmc (S-DIE 10-16): every chain's planned polyline must clear every macro except the blocks holding its
+            # ends; a crossing path is re-routed around them (forced stops keep their fraction of the path)
+            ends_ = tuple(n_ for n_, x_, y_, w_, h_ in _vmc_boxes(self.m) for q_ in (path[0], path[-1], src)
+                          if x_ - 1e-3 <= q_[0] <= x_ + w_ + 1e-3 and y_ - 1e-3 <= q_[1] <= y_ + h_ + 1e-3)
+            L0_ = _poly_len(path)
+            new_ = _vmc_reroute(self.m, list(path), ends_, name)
+            if new_ is not path:
+                L1_ = _poly_len(new_)
+                forced = [s_ * L1_ / L0_ if L0_ > 0 else s_ for s_ in forced]
+                path = new_
+            cor_ = self.m.get('_cor') or {}
+            if 'hub_w' in cor_:
+                allowed = list(allowed) + [cor_['hub_w']]
         if self.m.get('canonical_layout'):
             path_receipt=dict(chain=name,lanes=list(lanes),path=list(path),source=src,forced_stops=list(forced),force_horiz=force_horiz,stations=[],status='BUILDING')
             self.m.setdefault('chain_paths',[]).append(path_receipt)
@@ -4532,6 +4575,8 @@ def build_r8(variant=None):
             nx_, ny_ = up(box_[0], GX), up(box_[1], GY)
             if box_[4] if len(box_) > 4 else False:      # reshape flag
                 it.w, it.h = dn(box_[2], GX) - SHAVE, dn(box_[3], GY) - SHAVE
+            if len(box_) > 5:                            # vmc (S-DIE 10-15): placement orientation (WFC MY faces the VM)
+                it.orient = box_[5]
             moved_[it.name] = (nx_ - it.x, ny_ - it.y)
             it.x, it.y = nx_, ny_
         for it in insts:
@@ -4586,6 +4631,11 @@ def build_r8(variant=None):
             # requiring the entire centre to stay above the shoreline band
             # would reject the explicitly reserved south extension itself.
             floor_ = EDGE if HUB_SOUTH_SHIFT and it.name == 'sp_su_s' else band + SPINE_GAP
+            if vmc_hub():
+                # vmc: the N band holds no PHY on a 1-stack die and the S IO stands W of the hub; the hub blocks only
+                # need the die edge here -- the actual-instance overlap gate checks every real band block
+                assert it.y >= EDGE and it.y + it.h <= H - EDGE, (it.name, it.y, it.y + it.h)
+                continue
             assert it.y >= floor_ and it.y + it.h <= H - band - SPINE_GAP, (it.name, it.y, it.y + it.h)
     # ---- bands (as r7)
     rp = real_lef(PHY_LEF)
@@ -4832,6 +4882,9 @@ def _corridors(m):
             if k_ not in w_:
                 continue
             x0_, y0_, x1_, y1_ = w_[k_]
+            if vmc_hub():   # vmc: the hub interior station region runs die edge to die edge (stations avoid occupancy)
+                cor[k_] = (x0_ + 4.32, y0_ + 4.32, x1_ - 4.32, y1_ - 4.32)
+                continue
             cor[k_] = (x0_ + 4.32, max(y0_, b0) + 4.32, x1_ - 4.32, min(y1_, b1) - 4.32)
     if HUB_SOUTH_SHIFT and not wide_hub():
         su = m['hub']['su_s']
@@ -4881,6 +4934,7 @@ def _corridors(m):
     if CANONICAL_LAYOUT is not None:
         from s81.canonical_layout import corridors as canonical_corridors
         canonical_corridors(sys.modules[__name__], m, cor)
+    m['_cor'] = cor
     return cor
 
 
@@ -5098,8 +5152,12 @@ def buses_r8(m):
             xx = face_x + 0.55 * VCH8           # E-half return ends mid-VCH: keep the VCH west lanes free (r8 GRT)
         if name.startswith('hr_') and side == 'W':
             xx = face_x - 0.55 * SPF - w
-        if wide_hub() and side == 'W':   # wide hub: the gather / PQ W faces open onto the W strip and the W approach
-            allowed = list(allowed) + [cor['strip_w'], cor['hub_w']]
+        if vmc_hub():
+            if name.startswith('hr_') and side == 'E':
+                xx = face_x + 4.32
+            allowed = list(allowed) + [cor['hub_w']]
+        elif wide_hub() and side == 'W':   # wide hub: the gather / PQ W faces open onto the W strip and the W approach
+            allowed = list(allowed) + [wide_return_strip(cor), cor['hub_w']]
         pl = P.near(xx + w / 2, y_c, w, h, allowed, horiz=False, span=1600.0, rows=6)
         assert pl, name
         it = P.add(Inst(name, master, pl[0], pl[1], w, h, 'MY' if side == 'W' else 'R0', kind=kind, region='hub'))
@@ -7211,11 +7269,16 @@ def _pq_cnt_buses(m, CH8, cor, bits):
         vx = (cor['s14W'][2] - 30.0 - HUB_LANE_PITCH * n_) if side == 'W' else (cor['vch'][0] + 30.0 + HUB_LANE_PITCH * (n_ + 0.5))
         if wide_hub() and side == 'W':   # wide hub: the W lanes run in the W strip beside the gather / PQ W faces
             vx = cor['strip_w'][2] - 30.0 - HUB_LANE_PITCH * n_
+        if vmc_hub() and side == 'E':    # vmc: the E lanes run beside the gather / PQ E faces
+            ga_ = m['hub']['gather']
+            vx = ga_.x + ga_.w + 30.0 + HUB_LANE_PITCH * (n_ + 0.5)
         tx = min(max(leaf.x + leaf.w / 2, P_.x + 20.0), P_.x + P_.w - 20.0)
         p_ = [((leaf.x if side == 'W' else leaf.x + leaf.w), yr), (vx, yr), (vx, yg), (tx, yg), (tx, P_.y)]
         allowed = [row, gap, cor['s14W'] if side == 'W' else cor['vch']]
         if wide_hub() and side == 'W':
             allowed += [cor['strip_w'], cor['hub_w']]
+        elif vmc_hub():
+            allowed += [cor['hub_w']]
         return _dedup(p_), allowed
 
     def staged(name, path, allowed, bits, src_eps, dst_eps):
@@ -7306,7 +7369,32 @@ def _hub_bus_chain(m, CH8, cor, a_, b_, bits, pa, pb, dom=None, reach_um=None):
         m.setdefault('hub_stations', {})[hbn] = dict(path_um=round(L, 1), stations=len(sts),
                                                      floor_added=max(0, math.ceil(L / LINK_STAGE_UM - 1e-9) - 1))
         return
+    if vmc_hub() and not (hcA and hcB):
+        path = _vmc_path(m, A, pa, Bk, pb)
+        name = hbn
+        L = _poly_len(path)
+        if L <= (reach_um or CC_REACH) - 30.0:
+            CH8.bus(name, 'hub', bits, [(A.name, pa), (Bk.name, pb)])
+            m.setdefault('hub_stations', {})[name] = dict(path_um=round(L, 1), stations=0)
+            return
+        sts = CH8.run(name, [bits], path, [cor[k_] for k_ in ('hub_w', 's14W', 's14E', 'vch', 'hcc') if k_ in cor], path[0],
+                      reach=reach_um or (CC_REACH if CC_REACH < LINK_STAGE_UM else None))
+        prev = (A.name, pa)
+        for k, (it, s_, hop) in enumerate(sts):
+            it.kind, it.domain = 'hstn', dom or A.domain
+            it.master = 'dsfd_hstn%s_%d' % ('h' if it.master.startswith('dsfd_stnh') else 'v', bits)
+            CH8.bus(f'{name}_d{k}', 'hub', bits, [prev, (it.name, 'di')])
+            prev = (it.name, 'dq')
+        CH8.bus(f'{name}_d{len(sts)}', 'hub', bits, [prev, (Bk.name, pb)])
+        m.setdefault('hub_stations', {})[name] = dict(path_um=round(L, 1), stations=len(sts),
+                                                      floor_added=max(0, math.ceil(L / LINK_STAGE_UM - 1e-9) - 1))
+        return
     xcol = [cor[k_] for k_ in ('ecolS', 'ecolN', 'vmW', 'vmE', 'hrtxG') if k_ in cor]
+    if wide_hub():
+        # All incident interfaces must follow the relocated cluster, including
+        # WFC/host/status/control legs that do not name VM or SU. The old VCH-only
+        # placement region strands their receivers on the relocated S floor.
+        xcol += [cor[k_] for k_ in ('capfree','hub_w','above_su','vm_s','su_under','seam_rect') if k_ in cor]
     wpath_ = _wide_hub_path(m, A, Bk) if (wide_hub() and {a_, b_} & {'vm', 'su_s'}) else None
     if wpath_ is not None:
         # wide hub (S-DIE 10-15): SU | VM | capture column side by side -- abutting faces wire directly, VM / SU reach the
@@ -7552,6 +7640,77 @@ def wide_hub():
     return HUB_LAYOUT.get('wide') if HUB_LAYOUT else None
 
 
+def vmc_hub():
+    """--hub-layout wide mode 'vmc' (S-DIE 10-15 22:40): VM-centred hub, every hub polyline from real port faces"""
+    w_ = wide_hub()
+    return bool(w_ and w_.get('mode') == 'vmc')
+
+
+def _vmc_boxes(m):
+    """every non-station macro (the preflight's obstacle set)"""
+    out = [(i.name, i.x, i.y, i.w, i.h) for i in m['insts'] if i.kind not in ('stn', 'hstn', 'rly')]
+    # reservations (MIX4 home, canonical HCP homes) are not instances, but no wire may plan a station inside them
+    out += [(f'rsv_{r_[4]}_{k_}', r_[0], r_[1], r_[2] - r_[0], r_[3] - r_[1]) for k_, r_ in enumerate(RSV_RECTS)
+            if len(r_) > 4 and r_[4] in ('mix4_home', 'canonical_hcp_home')]
+    return out
+
+
+def _vmc_route(m, a, fa, b, fb, skip=()):
+    from s81 import hub_router as HR_
+    p_ = HR_.route(a, fa, b, fb, _vmc_boxes(m), (0.0, 0.0, DIE[0], DIE[1]), skip=skip)
+    assert p_ is not None, ('vmc: no route', a, fa, b, fb)
+    return p_
+
+
+def _vmc_reroute(m, path, ends, name=''):
+    """vmc: keep a caller's polyline when it crosses no macro (its end blocks excepted), else route its two ends around
+    every macro, leaving / entering along the original first / last leg directions"""
+    from s81 import hub_router as HR_
+    # Canonical FIELD roads already carry their own station/track construction.
+    # Their legal upper-metal wires may pass over leaf bodies; treating every
+    # leaf as a new vmc obstacle sends FIELD returns around entire ROM columns.
+    # Normalize only crossings of the relocated hub and its reserved homes.
+    # Explicit hub routes in _vmc_route still use the complete obstacle set.
+    hub_names = set(HUB_LAYOUT.get('blocks', {}))
+    boxes = [b for b in _vmc_boxes(m) if b[0] in hub_names or b[0].startswith('rsv_')]
+    if len(path) < 2 or not HR_.path_hits(path, boxes, skip=ends):
+        return path
+    def dir_(p_, q_):
+        return ('E' if q_[0] > p_[0] else 'W') if abs(q_[0] - p_[0]) > abs(q_[1] - p_[1]) else ('N' if q_[1] > p_[1] else 'S')
+    # Preserve each unaffected canonical road segment.  Replacing the entire
+    # chain by a new endpoint-to-endpoint route discards the FIELD street graph
+    # and can send wide service bundles straight across occupied ROM rows.
+    out_ = [path[0]]
+    for p_, q_ in zip(path, path[1:]):
+        if HR_.seg_hits(p_, q_, boxes, skip=ends):
+            leg_ = HR_.route(p_, dir_(p_, q_), q_, dir_(q_, p_), _vmc_boxes(m),
+                             (0.0, 0.0, DIE[0], DIE[1]), skip=ends)
+            assert leg_ is not None, ('vmc: no reroute', name, p_, q_)
+            out_.extend(leg_[1:])
+        else:
+            out_.append(q_)
+    m.setdefault('vmc_rerouted', []).append(name)
+    return _dedup(out_)
+
+
+
+def _vmc_path(m, A, pa, Bk, pb):
+    """vmc hub bus polyline A.pa -> Bk.pb: assigned faces where the master has a die pin record, the generator-laid
+    face (toward the peer, aligned with the assigned end) otherwise"""
+    from s81 import hub_router as HR_
+    ra, rb = _assigned_record(A.master), _assigned_record(Bk.master)
+    ea = HR_.endpoint(A, pa, ra, Bk) if ra and HR_.assigned_face(ra, pa) else None
+    eb = HR_.endpoint(Bk, pb, rb, A) if rb and HR_.assigned_face(rb, pb) else None
+    class _Pt:   # a zero-size peer at a fixed end point (aligns the free face with the assigned one)
+        def __init__(s_, p_):
+            s_.x, s_.y, s_.w, s_.h = p_[0], p_[1], 0.0, 0.0
+    if ea is None:
+        ea = HR_.endpoint(A, pa, None, _Pt(eb[1]) if eb else Bk)
+    if eb is None:
+        eb = HR_.endpoint(Bk, pb, None, _Pt(ea[1]))
+    return _vmc_route(m, ea[1], ea[0], eb[1], eb[0])
+
+
 def s14_span(half):
     """x interval of the half's S14 road (spine edge +- SPF, or the wide-hub layout's road)"""
     if wide_hub():
@@ -7571,6 +7730,18 @@ def wide_corr_y(m, tag):
     y0, y1 = wide_hub()['corr_w']
     n = 24
     return y0 + 30.0 + (y1 - y0 - 60.0) * (((d[tag] * 7) % n) + 0.5) / n
+
+
+
+def wide_return_strip(cor):
+    """Reserve the E55% of MIX4's E strip for field return trees and endpoints.
+
+    The W45% is the VM N-face escape. Keeping only path centerlines separate
+    lets the return end macros consume that escape; restrict their placement
+    regions as well as their nominal paths.
+    """
+    x0,y0,x1,y1 = cor['strip_w']
+    return (x0 + .45 * (x1 - x0),y0,x1,y1)
 
 
 def wide_strip_x(m, tag):
@@ -7785,7 +7956,7 @@ def _svc_chains(m, CH8, P, cor, end_spec, hub_block):
             vs_ = cor.get('vm_s')
             # the hub foot: VM S face and the band blocks under the hub (bk_selector), between S14W and the capture column
             in_vs_ = lambda q_: bool(vs_) and cor['su_under'][0] + 700.0 <= q_[0] <= vs_[2] + 1 and q_[1] <= vs_[3] + 300
-            if wide_hub() and side == 'W' and (in_vs_(src_xy) or in_vs_(endpoint)):
+            if wide_hub() and not vmc_hub() and side == 'W' and (in_vs_(src_xy) or in_vs_(endpoint)):
                 # wide hub: a VM S-face end and the SW service meet W along the channel under the SU (the field streets
                 # are on the far side of the SU)
                 su_ = cor['su_under'];yc_ = (su_[1] + su_[3]) / 2 + 40.0 * (len(m.setdefault('_su_under_lane', [])) % 5 - 2)
@@ -7794,7 +7965,10 @@ def _svc_chains(m, CH8, P, cor, end_spec, hub_block):
         # A wide service record uses its real W/E-face station in an RSC
         # vertical access lane; its17.256um body fits, its54.84um N/S-face
         # alternative does not. Actual pin turns/reach remain to be audited.
-        sts = CH8.run(name, [lw], _dedup(path), allc, src_xy,
+        allc_ = allc
+        if vmc_hub():
+            path, allc_ = _vmc_reroute(m, _dedup(path), (src[0], sink_end.name), name), list(allc) + [cor['hub_w']]
+        sts = CH8.run(name, [lw], _dedup(path), allc_, src_xy,
                       force_horiz=bool(narrow_service and not CANONICAL_LAYOUT.get('service_access_corridors')
                                        and stn_dims([lw],False)[0]>RSC_W-.864))
         chain_nets(CH8, name, src, [it for it, _, _ in sts], [lw])
@@ -7905,7 +8079,14 @@ def _svc_chains(m, CH8, P, cor, end_spec, hub_block):
         bx = blk.x + blk.w / 2 + 300.0
         by_ = blk.y + blk.h if name == 'sel' else blk.y
         endpoint = (he.x + he.w / 2, he.y + he.h / 2)
-        path = _wide_vm_band_path(m, cor, name, (bx, by_), endpoint, yo)
+        if vmc_hub():
+            # The C5 service floor is not the vmc SU|VM channel.  Derive
+            # this relocated band-to-VM connection from its actual end faces
+            # rather than retaining C5's intermediate point inside the SU.
+            path = _vmc_route(m, (bx, by_), 'N' if name == 'sel' else 'S',
+                              endpoint, 'S', skip=(blk.name, he.name))
+        else:
+            path = _wide_vm_band_path(m, cor, name, (bx, by_), endpoint, yo)
         if path is None:
             path = [(bx, by_), (bx, yo), (vch_x(m, name), yo),
                     (vch_x(m, name), endpoint[1]), endpoint]
