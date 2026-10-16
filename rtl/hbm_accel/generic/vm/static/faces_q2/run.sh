@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 cd "$(dirname "$0")/../../../../../.."
-D=rtl/hbm_accel/generic/vm/static/faces_q0
+D=rtl/hbm_accel/generic/vm/static/faces_q2
 O=${1:?output dir required}
 mkdir -p "$O"
 src=("$D"/*.sv rtl/hbm_accel/generic/vm/static/ot_vms_ce_counter_pipe.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v)

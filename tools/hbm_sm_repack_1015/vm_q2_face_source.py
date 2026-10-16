@@ -20,7 +20,7 @@ for f,names in faces.items():
 (OUT/'hfd_vms_bank_native_q2_faces.sv').write_text(w)
 t=(Q0/'tb_hbm_vm_q0_faces.sv').read_text().replace('q0_faces','q2_faces').replace('SID=0,RG=5,WG=2','SID=2,RG=5,WG=3').replace('.wq_done0(wide_done[b*WG]),.wq_done1(wide_done[b*WG+1]));','.wq_done0(wide_done[b*WG]),.wq_done1(wide_done[b*WG+1]),\n          .wq2(wq[(b*WG+2)*281+:281]),.wq_done2(wide_done[b*WG+2]));')
 (OUT/'tb_hbm_vm_q2_faces.sv').write_text(t)
-r=(Q0/'run.sh').read_text().replace('q0_faces','q2_faces').replace('Q0_FACE_CLOCKS','Q2_FACE_CLOCKS')
+r=(Q0/'run.sh').read_text().replace('q0_faces','q2_faces').replace('Q0_FACE_CLOCKS','Q2_FACE_CLOCKS').replace('faces_q0','faces_q2')
 (OUT/'run.sh').write_text(r);(OUT/'run.sh').chmod(0o755)
 rec={'status':'SOURCE_CANDIDATE_ONLY','quadrant':2,'RG':5,'WG':3,'normal_edges_added':0,'return_edges':7,'write_done_edges':4,'input_face_ownership':faces,'files':{str(p.relative_to(ROOT)):hashlib.sha256(p.read_bytes()).hexdigest() for p in OUT.glob('*.sv')}}
 (ROOT/'results/physical/hsm_takeover_0825/q2_faces_source.json').write_text(json.dumps(rec,indent=2)+'\n')
