@@ -153,16 +153,17 @@ module ot_hbm_r14_stream_pc_strap #(
     always @(posedge clk or negedge rst_n) if (!rst_n) hold <= 0; else hold <= hold_n;
     wire wr_ok;
     // ---- refresh windows -------------------------------------------------------------
-    // Dynamic reset values cannot be asynchronous cell reset constants. Load
-    // the registered strap synchronously on every held-reset edge; the parent
-    // reset relay holds this sequencer until the pins have been captured.
-    always @(posedge clk)
-      if(!rst_n) ref_c<=RW'(refresh_reload); else ref_c<=ref_n;
     wire ref_due = (ref_c == 0);
     reg  phase;                                       // cycle parity; this PC's row slot when == PC[0]
     wire slot_next = (phase != slot_parity);           // the next cycle is this PC's row slot
     wire [RW-1:0] ref_n = ref_due ? RW'(PERIOD - 1) : ref_c - 1'b1;   // ref_c of the next cycle
     wire ref_due_n = (ref_n == 0);
+    // (declared after ref_n: yosys needs the width before use)
+    // Dynamic reset values cannot be asynchronous cell reset constants. Load
+    // the registered strap synchronously on every held-reset edge; the parent
+    // reset relay holds this sequencer until the pins have been captured.
+    always @(posedge clk)
+      if(!rst_n) ref_c<=RW'(refresh_reload); else ref_c<=ref_n;
     wire act_block = REF_MODE ? (ref_n != 0 && ref_n < RW'(T_RREFD))
                               : (ref_n <= RW'(T_RP + T_RAS + 2));
     wire rd_block  = REF_MODE ? 1'b0 : (ref_c <= RW'(T_RP + T_RTP + 2));
