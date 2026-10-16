@@ -2,7 +2,7 @@
 // Real balanced physical branch stages. Logical5 +request1 +return1 =7coreedges.
 // Compiler metadata/actual-return producers, native clocks/views remain mandatory.
 module qkd_static_kv_landing_physical_grp #(
-    parameter integer STACK=0,GROUP=0,MUT=0,HOP_MUT=0
+    parameter integer STACK=0,GROUP=0,MUT=0,HOP_MUT=0,VMAP=0
 )(
     input wire ck,input wire [3:0] ck_pc,input wire [3:0] ck_req_rly,ck_rsp_rly,input wire rst_n,
     input wire arm,input wire [15:0] epoch,input wire [5:0] layer,
@@ -42,7 +42,7 @@ module qkd_static_kv_landing_physical_grp #(
       .rsp_valid(rsp_valid),.rsp_data(rsp_data),.rsp_t(rsp_t),.rsp_v(rsp_v),.rsp_epoch(rsp_epoch),.rsp_layer(rsp_layer),.fault(fault));
     genvar q;
     generate for(q=0;q<4;q=q+1)begin:g_pc
-      qkd_static_kv_landing_pc #(.MUT(MUT))u_pc(
+      qkd_static_kv_landing_pc #(.MUT(MUT),.VMAP(VMAP))u_pc(
        .ck(ck_pc[q]),.rst_n(rst_n),.cfg_stack(2'(STACK)),.cfg_group(3'(GROUP)),.arm(arm),.epoch(epoch),.layer(layer),
        .expected_put(expected_put[q]),.expected_sector(expected_sector[10*q+:10]),
        .actual_valid(actual_valid[q]),.actual_sector(actual_sector[10*q+:10]),

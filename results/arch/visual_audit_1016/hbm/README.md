@@ -57,3 +57,5 @@ New, measured:
   - Fix: cut the height from ~315 to ~200 um and put clk at W mid-height, before spending route 3.
 
 R2-1 correction (01:35): the 300/80 ps limit applies only above 15k sinks per root; this tile has 7,194, so the gate PASS stands and my clock-rule claim is **refuted**. The open risk is the native audit: boundary insertion is 348.3-396.4 ps against native launch <= 220 / capture <= 190. H-LKEP adopted the height fix as compact variant `hep_static_cmp_1016`: 434.72 x 224.64, fill ~59%. Its clk stays at S-centre (parent contract).
+
+T4 update (01:45): **confirmed**. The calendar xcap route (cce3264d2) CLOSED at TT +45.93 / FF +24.17 / DRC 0 and the routed native audit PASSes. Launch 222.0 -> 179.0 ps, capture 206.2 -> 133.0 ps, spread 92.8 -> 37.2 ps. The clock moved to S-centre and no longer wraps under the macro. Round-2 decided so far: 2 confirmed (T4 routed; T12 at trial GRT only), 1 magnitude-refuted (T9 bank), 1 refuted (R2-1 clock-rule wording), 1 withdrawn (T7).

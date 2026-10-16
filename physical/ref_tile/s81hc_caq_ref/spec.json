@@ -72,20 +72,59 @@
   "pd": 0.5,
   "threads": 8,
   "peak_ram_gb": 48,
-  "hold_margin_ns": 0.01
+  "hold_margin_ns": 0.01,
+  "macro_halo_um": 2.16
  },
  "aspect": 1.0,
  "job": {
   "benches_from": "tools/s81_suhc/hc_gate_benches.json",
-  "owner": "Claude:s81-suhc-hier-1011",
-  "branch": "claude/s81-suhc-hier-1011-hc-mp",
-  "tag": "v1",
-  "purpose": "s81-suhc-hier-1011 comb v2 (PHYSICAL SPEC comb v2, el1011-s81-suhc-hier-1011.log 23:40 PT): ot_s81_hc_caq, one of the 7 hard tile types replacing the flat 124k-flop ot_s81_hc_comb (wires-only wrapper); reference tile flow",
+  "owner": "Claude:S-ELEM-PQ/HC3",
+  "branch": "claude/s81hc3-native-0030",
+  "tag": "pr3",
+  "purpose": "S-ELEM-PQ/HC3 native pin re-kit of CLOSED s81hc_caq_ref-v1-d02b035e3 (ot_s81_hc_caq: capture 253.62576 > 190 (1 pins) at phi - R, results/rtl/s81_hc_native_0030/native_audit.json); same outline and pin faces, kit recipe 3 (OWNER RULE 19:50)",
   "no_bench_reason": "bit-exactness is gated on the wires-only wrapper ot_s81_hc_comb in the slab bench (tools/s81_suhc/hc_gate.py NG64 HIER=1/2 m0 PASS + m1/m3 FAIL, NG256 HIER=1 m0 PASS; el1011-s81-suhc-hier-1011.log [hc-split]); the tile alone has no golden",
   "views_to": "physical/ref_tile/s81hc_caq_ref/views",
-  "record_to": "results/rtl/ref_tile/s81hc_caq_ref"
+  "record_to": "results/rtl/ref_tile/s81hc_caq_ref",
+  "reroute_reason": {
+   "kind": "slot_change",
+   "source": "results/rtl/s81_hc_native_0030/native_audit.json",
+   "cell": "ot_s81_hc_caq",
+   "fix": "recipe 3 at the closed RTL / outline / pin faces: odd (static parity tie, 256-load select, capture 253.6 ps) gets its own pin register (+1 edge on a constant), every RTL pin flop anchored at its pin (io_flop_at_pins) with one dedicated launch flop per output (pin_reg_split: wd = x_q also feeds aq12) and kept pin registers, HB2 pin pads | outline 110.16 -> 114.48 (slot change request, el1011-s81die.log): pr1 FLOORPLAN_MARGIN util+hold 0.650 at 110.16",
+   "launch_ps": 203.4,
+   "capture_ps": 253.6,
+   "closed_job": "s81hc_caq_ref-v1-d02b035e3",
+   "added_cycles_per_port": {
+    "odd": 1
+   },
+   "slot_change_request": "2026-10-16 02:19:27 PDT [S-ELEM-PQ/HC3 -> S-DIE] SLOT CHANGE REQUEST ot_s81_hc_caq (kit s81hc_caq_ref, S81 contract slots 206-209 sp_hc_s/comb/g_aq[0..3].u_caq, stepped x4): outline 110.16 x 110.16 -> 114.48 x 114.48 (+2 x 2.16 um each axis). Measured: fp_margin_lint on the recipe-3 re-kit (pr1-69e1a2b72) util 0.560 / with hold allowance 0.650 (std 6,275 um2, 13,833 flops, core 11,202 um2) -> FLOORPLAN_MARGIN; at 114.48 the core is 12,135 um2 -> util 0.517 / +hold 0.600. Pin faces and per-face bit order UNCHANGED (N run/kind/rv_u/t_u/iq/odd/c_d, W sk/srs/w_d, E e_d, S vo/e/f/iqo/wd/cq), positi"
+  },
+  "structural_change": "recipe 3 at the closed RTL / outline / pin faces: odd (static parity tie, 256-load select, capture 253.6 ps) gets its own pin register (+1 edge on a constant), every RTL pin flop anchored at its pin (io_flop_at_pins) with one dedicated launch flop per output (pin_reg_split: wd = x_q also feeds aq12) and kept pin registers, HB2 pin pads | outline 110.16 -> 114.48 (slot change request, el1011-s81die.log): pr1 FLOORPLAN_MARGIN util+hold 0.650 at 110.16"
  },
  "params": {},
  "children": [],
- "inter": []
+ "inter": [],
+ "recipe": 3,
+ "outline": {
+  "w": 114.48,
+  "h": 114.48,
+  "exact": true
+ },
+ "pin_regs": {
+  "enable": true,
+  "reset": "^srs$",
+  "exclude": "^(run|kind|rv_u|t_u|iq|w_d|e_d|c_d|vo|e|f|iqo|wd|cq)$",
+  "reason": "ot_s81_hc_caq RTL already registers every one of these ports at the pin (header: run / kind / rv_u / t_u / iq / w_d / e_d / c_d captured by run_q..cd_q; vo / e / f = aq12 output flops, iqo = u_iq last stage, wd = x_q, cq = cq flop); the routed audit puts them all inside budget (capture <= 116.8, launch <= 203.4 ps). Only odd (the per-instance parity tie into the 256-bit cq1 select, capture 253.6 ps) has no pin flop: it alone is registered (+1 edge on a static tie = no schedule change). A second register on the lockstep ports would add +1 cycle each to the HC combine region (exact register counts) for no timing need."
+ },
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "slot_change_request": "2026-10-16 02:19:27 PDT [S-ELEM-PQ/HC3 -> S-DIE] SLOT CHANGE REQUEST ot_s81_hc_caq (kit s81hc_caq_ref, S81 contract slots 206-209 sp_hc_s/comb/g_aq[0..3].u_caq, stepped x4): outline 110.16 x 110.16 -> 114.48 x 114.48 (+2 x 2.16 um each axis). Measured: fp_margin_lint on the recipe-3 re-kit (pr1-69e1a2b72) util 0.560 / with hold allowance 0.650 (std 6,275 um2, 13,833 flops, core 11,202 um2) -> FLOORPLAN_MARGIN; at 114.48 the core is 12,135 um2 -> util 0.517 / +hold 0.600. Pin faces and per-face bit order UNCHANGED (N run/kind/rv_u/t_u/iq/odd/c_d, W sk/srs/w_d, E e_d, S vo/e/f/iqo/wd/cq), positi"
 }

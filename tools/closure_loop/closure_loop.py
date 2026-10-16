@@ -4215,6 +4215,12 @@ def stage_output_dirs(j, st):
         return [subst(d, j) for d in ([out] if isinstance(out, str) else out)]
     if st["kind"] in ("calibrate", "route"):
         return [f"{j['run']}/routes/{label(j['name'])}{'_cal' if st['kind'] == 'calibrate' else ''}"]
+    # EXPORT-ASIDE (ROOT 2026-10-16, qkd_rlys_1-v1-838dc5048): a retried ref_tile collect re-exported into the same
+    # views dir and export_provenance refused it ('existing provenance: use a fresh export directory'), so EVERY
+    # failed first collect became NEEDS_HUMAN on the retry.  The export --out dir is the stage's output.
+    m = re.search(r"ref_tile\.py export\b[^&;|>]*?--out\s+(\S+)", st.get("cmd") or "")
+    if m:
+        return [subst(m.group(1), j)]
     return []
 
 
@@ -6253,8 +6259,11 @@ def child_lint_gate_checks(spec):
 
 def pick_view_lef(paths, block):
     """the block's own view among the record's LEFs (not bloat / macro copies of its children)"""
-    cand = [p for p in paths if p.endswith(".lef") and "_bloat" not in p and "/macros/" not in p]
-    return next((p for p in cand if Path(p).stem == block), None)
+    cand = [p for p in paths if p.endswith(".lef") and "_bloat" not in p
+            and not {"macros", "provenance"}.intersection(Path(p).parts) and Path(p).stem == block]
+    # Collect retries retain <block>.attemptN beside the active view. Prefer the
+    # canonical bundle; provenance/raw is immutable evidence, never an active view.
+    return next((p for p in cand if Path(p).parent.name == block), next(iter(cand), None))
 
 
 def child_lint_view(lef_text, checks, pin_grant=None, def_text=None, tech_text=None):
@@ -9059,7 +9068,23 @@ def cmd_recover_export_lint(a):
     import base64
     from export_lint_recovery import eligible
     j = load_job(a.name)
-    eligible(j)
+    evidence = None
+    try:
+        eligible(j)
+    except ValueError as exc:
+        if str(exc) != 'no recorded PG lint collection failure':
+            raise
+        probe = ("import hashlib,json,pathlib; "
+                 "ps=[p for p in pathlib.Path(" + repr(j['run']) + ").glob('record/views/**/provenance/abstract_pin_stub.json') "
+                 "if p.parent.parent.name==" + repr(j['spec']['block']) + "]; "
+                 "print(json.dumps([dict(path=str(p),sha256=hashlib.sha256(p.read_bytes()).hexdigest(),"
+                 "child_lint=json.loads(p.read_text()).get('child_lint',{})) for p in ps]))")
+        r = ssh(j['host'], 'python3 -c ' + shlex.quote(probe), timeout=60, check=True)
+        records = json.loads(r.stdout)
+        if len(records) != 1:
+            raise ValueError('expected one retained structured lint receipt')
+        evidence = records[0]
+        eligible(j, evidence)
     head = _ovl_head()
     rel = "tools/hier_contract/child_lint.py"
     data = subprocess.run(["git", "-C", str(REPO), "show", f"{head}:{rel}"],
@@ -9067,6 +9092,8 @@ def cmd_recover_export_lint(a):
     request = dict(job=j, helper_commit=head, helper_b64=base64.b64encode(data).decode(),
                    helper_sha256=hashlib.sha256(data).hexdigest(),
                    guard_b64=base64.b64encode((HERE / "export_lint_recovery.py").read_bytes()).decode())
+    if evidence:
+        request['pg_lint_evidence'] = evidence
     r = ssh(j["host"], "python3 - prepare " + shlex.quote(json.dumps(request)),
             input=(HERE / "export_lint_recovery.py").read_text(), timeout=120, check=True)
     j["export_lint_recovery"] = dict(json.loads(r.stdout), requested=now_iso())

@@ -1,0 +1,147 @@
+OpenROAD 26Q3-1510-g6cb3f2b704 
+Features included (+) or not (-): +GPU +GUI +Python
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO ORD-0030] Using 8 thread(s).
+INHOLD released 2116 FIRM hold cells / drivers for DPL
+OT_OFLOP released 801 output-port flops for DPL
+R5_SEQUENCE_INITIAL_ORDINARY_DPL
+[INFO DPL-0006] Core area: 370355.33 um^2
+[INFO DPL-0007] Movable instances area: 18034.45 um^2
+[INFO DPL-0008] Fixed instances area within core: 189496.35 um^2
+[INFO DPL-0009] Utilization: 56.0%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (3 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 141951 cells
+[INFO DPL-0393]   height 233 row(s): 10 cells
+[INFO DPL-0393]   height 520 row(s): 8 cells
+          |      Total |  Illegal |  Illegal
+Iteration | Violations |    Cells |    Sites
+---------------------------------------------
+        0 |       8021 |      1561 |      6326
+        1 |       6727 |      1009 |      5392
+        2 |       4225 |       848 |      3273
+        3 |       2624 |       748 |      1838
+        4 |       1912 |       706 |      1171
+        5 |       1456 |       664 |       757
+        6 |       1310 |       658 |       617
+        7 |       1200 |       648 |       517
+        8 |       1090 |       642 |       413
+        9 |       1098 |       640 |       423
+       10 |       1081 |       639 |       407
+       19 |       1014 |       634 |       345
+[WARNING DPL-0700] Negotiation phase 1: violations stuck at 1014 for 3 consecutive iterations.
+Using old diamond search for 634 remaining illegal cells.
+diamond recovery: recovered 634/634 stuck cells.
+Negotiation phase 2: isolation point active, 1000 iterations.
+      400 |          0 |         0 |         0
+Negotiation phase 2 converged at iteration 0.
+[INFO DPL-0500] Runtime: 14.37s
+Placement Analysis
+---------------------------------
+total displacement      91424.4 u
+average displacement        0.6 u
+max displacement           73.2 u
+original HPWL         2767460.2 u
+legalized HPWL        2795073.3 u
+delta HPWL                    1 %
+
+R5_SEQUENCE_BEFORE_DPO_CHECK_PASS
+Detailed placement improvement.
+[INFO DPL-0401] Setting random seed to 1.
+[INFO DPL-0402] Setting maximum displacement 5 1 to 1350 270 units.
+[INFO DPL-0320] Collected 32581 fixed cells.
+[INFO DPL-0318] Collected 115528 single height cells.
+[INFO DPL-0321] Collected 0 wide cells.
+[INFO DPL-0322] Image (2160, 2160) - (455760, 818640)
+[INFO DPL-0310] Assigned 115528 cells into segments.  Movement in X-direction is 12366.000000, movement in Y-direction is 0.000000.
+[WARNING DPL-0200] Unexpected displacement during legalization.
+[INFO DPL-0313] Found 0 cells in wrong regions.
+[INFO DPL-0315] Found 0 row alignment problems.
+[INFO DPL-0314] Found 8 site alignment problems.
+[INFO DPL-0311] Found 4 overlaps between adjacent cells.
+Violation in load_slew38924
+Violation in _088288_
+Violation in u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[3\].g_sf.u_rp.g_pair\[1\].r\[386\]$_DFF_P_
+Violation in u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[4\].g_sf.u_rp.g_pair\[1\].g_bank.g_capx2.cap2x\[464\]$_SDFF_PN0_
+[INFO DPL-0312] Found 4 edge spacing violations and 0 padding violations.
+[WARNING DPL-0201] Placement check failure during legalization.
+[INFO DPL-0303] Running algorithm for independent set matching.
+[INFO DPL-0300] Set matching objective is wirelength.
+[INFO DPL-0301] Pass   1 of matching; objective is 2.795196e+09.
+[INFO DPL-0302] End of matching; objective is 2.793419e+09, improvement is 0.06 percent.
+[INFO DPL-0303] Running algorithm for global swaps.
+[INFO DPL-0306] Pass   1 of global swaps; hpwl is 2.779562e+09.
+[INFO DPL-0307] End of global swaps; objective is 2.779562e+09, improvement is 0.50 percent.
+[INFO DPL-0303] Running algorithm for vertical swaps.
+[INFO DPL-0308] Pass   1 of vertical swaps; hpwl is 2.777924e+09.
+[INFO DPL-0309] End of vertical swaps; objective is 2.777924e+09, improvement is 0.06 percent.
+[INFO DPL-0303] Running algorithm for reordering.
+[INFO DPL-0304] Pass   1 of reordering; objective is 2.776889e+09.
+[INFO DPL-0305] End of reordering; objective is 2.776889e+09, improvement is 0.04 percent.
+[INFO DPL-0303] Running algorithm for random improvement.
+[INFO DPL-0324] Random improver is using random generator.
+[INFO DPL-0325] Random improver is using hpwl objective.
+[INFO DPL-0326] Random improver cost string is (a).
+[INFO DPL-0332] End of pass, Generator random called 2310560 times.
+[INFO DPL-0335] Generator random, Cumulative attempts 2310560, swaps 122948, moves 864598 since last reset.
+[INFO DPL-0333] End of pass, Objective hpwl, Initial cost 2.767236e+09, Scratch cost 2.753977e+09, Incremental cost 2.753977e+09, Mismatch? N
+[INFO DPL-0338] End of pass, Total cost is 2.753977e+09.
+[INFO DPL-0327] Pass   1 of random improver; improvement in cost is 0.48 percent.
+[INFO DPL-0328] End of random improver; improvement is 0.479142 percent.
+[INFO DPL-0380] Cell flipping.
+[INFO DPL-0382] Changed 0 cell orientations for row compatibility.
+[INFO DPL-0383] Performed 41574 cell flips.
+[INFO DPL-0384] End of flipping; objective is 2.743632e+09, improvement is 0.72 percent.
+[INFO DPL-0313] Found 0 cells in wrong regions.
+[INFO DPL-0315] Found 0 row alignment problems.
+[INFO DPL-0314] Found 3 site alignment problems.
+[INFO DPL-0311] Found 3 overlaps between adjacent cells.
+[INFO DPL-0312] Found 0 edge spacing violations and 0 padding violations.
+Detailed Improvement Results
+------------------------------------------
+Original HPWL          2795073.3 u ( 1351980.6,  1443092.8)
+Final HPWL             2741939.5 u ( 1309288.0,  1432651.5)
+Delta HPWL                  -1.9 % (      -3.2,       -0.7)
+
+[INFO DPL-0020] Mirrored 6761 instances
+[INFO DPL-0021] HPWL before          2741939.5 u
+[INFO DPL-0022] HPWL after           2741709.4 u
+[INFO DPL-0023] HPWL delta               -0.0 %
+[WARNING DPL-0006] Site aligned check failed (3).
+ place27678
+ u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[0\].g_sf.u_rp.g_pair\[1\].g\[422\]$_DFF_P_
+ u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb\[4\].g_sf.u_rp.g_pair\[1\].r\[408\]$_DFF_P_
+[ERROR DPL-0033] detailed placement checks failed during check placement.
+R5_SEQUENCE_AFTER_DPO_CHECK_RC=1 DPL-0033
+OT_FINAL_DPL: ordinary legalization after final optimizer/mirroring
+[INFO DPL-0006] Core area: 370355.33 um^2
+[INFO DPL-0007] Movable instances area: 18034.45 um^2
+[INFO DPL-0008] Fixed instances area within core: 189496.35 um^2
+[INFO DPL-0009] Utilization: 56.0%
+[INFO DPL-0005] Diamond search max displacement: +/- 500 sites horizontally, +/- 100 rows vertically.
+[INFO DPL-1102] Legalizing using negotiation legalizer.
+[INFO DPL-1103] Negotiation base search window: +/-20 sites horizontally, +/-5 rows vertically 
+	Automatic search window extension enabled.
+	Search window extendable up to the max displacement cap of +/-500 sites, +/-100 rows near walls.
+[INFO DPL-1104] NegotiationLegalizer DRC penalty: 5.
+[INFO DPL-0392] Negotiation cell height distribution (3 unique row-count(s)):
+[INFO DPL-0393]   height 1 row(s): 141951 cells
+[INFO DPL-0393]   height 233 row(s): 10 cells
+[INFO DPL-0393]   height 520 row(s): 8 cells
+[INFO DPL-0500] Runtime: 2.31s
+Placement Analysis
+---------------------------------
+total displacement      22721.5 u
+average displacement        0.2 u
+max displacement            1.6 u
+original HPWL         2741709.4 u
+legalized HPWL        2763491.1 u
+delta HPWL                    1 %
+
+R5_SEQUENCE_CANONICAL_FINAL_CHECK_PASS
