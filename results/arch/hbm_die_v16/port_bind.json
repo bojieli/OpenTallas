@@ -1,11 +1,11 @@
 {
  "schema": "opentallas.die_port_bind.v2",
- "die_v": "/tmp/claude-1000/hnl0600/g6/die.v",
+ "die_v": "/tmp/claude-1000/hnl0600/g7/die.v",
  "top": "hbm_v16_die",
  "verdict": "PASS",
  "failing": [],
  "summary": {
-  "masters": 62,
+  "masters": 61,
   "instances": 1506,
   "unbound_masters": 0,
   "stub_masters": 0,
@@ -287,7 +287,7 @@
   "hfd_hgi_vm_calendar": {
    "verdict": "PASS",
    "fails": [],
-   "instances": 8,
+   "instances": 12,
    "rtl": "rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar.sv",
    "kind": "real",
    "ambiguous_defs": null,
@@ -297,7 +297,7 @@
     "calendar_NW"
    ],
    "param_sets": {
-    "{}": 8
+    "{}": 12
    },
    "die_port_not_in_rtl": [],
    "input_unconnected": [],
@@ -1554,31 +1554,6 @@
    "unparsed_conn": [],
    "duplicate_port": []
   },
-  "ot_vms_calendar_static": {
-   "verdict": "PASS",
-   "fails": [],
-   "instances": 4,
-   "rtl": "rtl/hbm_accel/generic/vm/static/ot_vms_calendar_static.sv",
-   "kind": "real",
-   "ambiguous_defs": null,
-   "examples": [
-    "vmfc_SW",
-    "vmfc_SE",
-    "vmfc_NW"
-   ],
-   "param_sets": {
-    "{\"MUT\": \"0\", \"W\": \"89\"}": 4
-   },
-   "die_port_not_in_rtl": [],
-   "input_unconnected": [],
-   "input_tied": [],
-   "straps": [],
-   "pad_bits": {},
-   "output_open": [],
-   "width_mismatch": {},
-   "unparsed_conn": [],
-   "duplicate_port": []
-  },
   "ot_vms_status4_static": {
    "verdict": "PASS",
    "fails": [],
@@ -1617,7 +1592,7 @@
   "hbfd_rly_624_SN:i",
   "hbfd_rly_624_WE:i"
  ],
- "die_sha256": "86cfa5d3de621243a11fcccf6624d0df680c09e86a5a617bf2f7ef7ac1d45e2e",
+ "die_sha256": "1fba5a075094d0ec3f1e66702207e831dff7fe737338b5b7797904d45468b7a9",
  "straps_declared": [
   "ot_hbm_static_cfg_collar:tgt",
   "ot_hbm_svc_vmdel_lane:bank_id",
