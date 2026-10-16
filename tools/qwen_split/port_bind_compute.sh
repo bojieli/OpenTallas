@@ -8,7 +8,9 @@ set -u
 D=$(readlink -f "$1"); O=$(mkdir -p "$2" && readlink -f "$2")
 R=$(cd "$(dirname "$0")/../.." && pwd)
 python3 $R/tools/qwen_split/gen_relay_rtl.py $D $O/die_glue.sv > $O/die_glue.json || exit 3
-python3 $R/tools/die_port_bind.py $D --rtl-file $O/die_glue.sv --rtl-file $R/rtl/qwen_split/qfd_link_slots.sv --rtl-file $R/rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies.sv \
+# the re-packed 45-entry tile (OT_SPLIT_TILE_GRANT) binds through its die-name wrappers (Q-NETLIST 10-16)
+T45=; grep -q 'ck_fa0' $D && T45="--rtl-file $R/rtl/physical/qfd_tile_rp2_45_slots.sv --rtl-file $R/rtl/physical/qfd_tile_nk_rp2_45.sv --rtl-file $R/rtl/physical/qfd_tile_nl_rp2_45.sv"
+python3 $R/tools/die_port_bind.py $D $T45 --rtl-file $O/die_glue.sv --rtl-file $R/rtl/qwen_split/qfd_link_slots.sv --rtl-file $R/rtl/qwen_sys/d2d_static_20261015/ot_qwen_d2d_dies.sv \
   --rtl-file $R/physical/qwen_kv_die_phy/ot_qkvd_ucie_x64_phy/ot_qkvd_ucie_x64_phy_model.sv \
   --rtl-file $R/physical/qwen_missing_phy/tp8_1013/ot_qfd_ucie_x64_phy/ot_qfd_ucie_x64_phy_bb.v \
   --rtl-file $R/physical/qwen_missing_phy/ot_qfd_serdes_112g_x12_phy_s597/ot_qfd_serdes_112g_x12_phy_s597_bb.v \

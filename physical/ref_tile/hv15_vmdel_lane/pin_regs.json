@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hbm_svc_vmdel_lane",
+ "enable": false,
+ "reason": "RTL already registers every pin (v3/v4): begin/start/fill inputs captured in pin flops, dq/block_ready/busy/fault leave from flops (LAT=2 lockstep-equivalent to the monolithic module); rst_n reaches one pin flop + the 7 valid pin flops. The 27 cross-lane status bits (full0/full1/pcbad out = AND of 4 count flops; full*_all/pcbad_all in) stay single-level so the eight lanes' replicated state stays cycle-consistent; synthesis pin registers would add a second, unpriced stage."
+}

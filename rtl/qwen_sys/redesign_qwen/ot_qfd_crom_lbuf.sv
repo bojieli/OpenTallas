@@ -461,7 +461,7 @@ module ot_qfd_su_cbuf (
     output wire [1:0]        fault_code
 );
     ot_qfd_crom_lbuf #(.SRAM(1), .FLP(11)) u_b (.clk(clk), .rst_n(rst_n), .crom_re(crom_re), .crom_addr(crom_addr),
-        .crom_stage(crom_stage), .crom_q(crom_q), .stage(stage), .tok_start(tok_start), .tpos(tpos), .st_rdy(st_rdy),
+        .crom_stage(crom_stage), .crom_q(crom_q), .stage(stage), .tok_start(tok_start), .tpos(tpos), .st_rdy(st_rdy), .st_rdy_stage(st_rdy_stage),
         .f_re(f_re), .f_addr(f_addr), .f_stage(f_stage), .f_q(f_q), .f_fault(f_fault), .fault(fault), .fault_code(fault_code),
         .lane_base(24'd0), .f_lat(5'd0));
 endmodule

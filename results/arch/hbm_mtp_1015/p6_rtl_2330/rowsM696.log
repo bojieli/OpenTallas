@@ -1,0 +1,30 @@
+SEED=3
+case 0: 1 records in 466 cycles (HC engine 453, mover 0)
+case 1: 1 records in 212 cycles (HC engine 199, mover 0)
+case 2: 1 records in 1451 cycles (HC engine 1438, mover 0)
+ERR case 2 VM[128000] = bfd10000 expected bfc50000
+ERR case 2 VM[128001] = bfab0000 expected bf860000
+ERR case 2 VM[128002] = 3cd30000 expected 3ea50000
+ERR case 2 VM[128003] = 3f0e0000 expected 3f440000
+ERR case 2 VM[128004] = be280000 expected bebc0000
+ERR case 2 VM[128005] = 3e520000 expected 3ea90000
+ERR case 2 VM[128006] = 3f370000 expected 3f230000
+ERR case 2 VM[128007] = 3e4b0000 expected 3e540000
+ERR case 2 VM[128008] = 3f2b0000 expected 3f410000
+ERR case 2 VM[128009] = be6b0000 expected be910000
+ERR case 2 VM[128010] = bf800000 expected bf5b0000
+ERR case 2 VM[128011] = 3fc60000 expected 3fd70000
+ERR case 2 VM[128012] = 3c4b0000 expected 3c8d0000
+ERR case 2 VM[128013] = 3f7d0000 expected 3f9b0000
+ERR case 2 VM[128014] = 3d960000 expected bdaf0000
+ERR case 2 VM[128015] = bf150000 expected bf0c0000
+ERR case 2 VM[128016] = 3ee50000 expected 3f090000
+ERR case 2 VM[128017] = bff20000 expected bfe00000
+ERR case 2 VM[128018] = bfbb0000 expected bfee0000
+ERR case 2 VM[128019] = bf4b0000 expected bf2b0000
+summary: 3 FUSED data cases through the D1 unit, 56320 VM words exact
+HGI_FUSED_UNIT FAIL errors=25521
+- rtl/hbm_accel/generic/adapters/tb/tb_hgi_fused_unit.sv:257: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 6us; walltime 101.935 s; speed 60.156 ns/s
+- Verilator: cpu 101.930 s on 1 threads; allocated 344 MB

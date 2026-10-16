@@ -1,0 +1,150 @@
+{
+  "schema": 1,
+  "kind": "abstract_pin_stub",
+  "status": "PASS",
+  "input": {
+    "path": "provenance/raw/dsfd_xstg_515.lef",
+    "sha256": "d783d94dd2f8954df1c50d6fcb728ca6e461a04ce5427fee35406af358af9545"
+  },
+  "output": {
+    "path": "dsfd_xstg_515.lef",
+    "sha256": "28664e4897fda0d5b11ba56501556c5c7a293210b5b38106d87063ef4e9569e8"
+  },
+  "helper": {
+    "path": "tools/hier_contract/abstract_pin_stub.py",
+    "sha256": "c3cae85e3aa1a8da5374284fe57418b2230ceb208aa76eff4567c6993bbe0c05",
+    "retained_copy": "provenance/helper/abstract_pin_stub.py",
+    "basis": "verified_original_frozen_overlay",
+    "git_blob": "f38ae3a60e459326ef899b999ff1a1ef148aded7",
+    "overlay_origin_main": "82ac9e63d0d19c329a5bfef2c4d6d08cc29ae44a",
+    "overlay_content_sha256": "07bb979deb17b27ca048cdf68111d87abc7bb2f6d93187edf07ed47a0933cb33",
+    "overlay_verification": {
+      "status": "verified_original",
+      "origin_main": "82ac9e63d0d19c329a5bfef2c4d6d08cc29ae44a",
+      "content_sha256": "07bb979deb17b27ca048cdf68111d87abc7bb2f6d93187edf07ed47a0933cb33",
+      "files": 46,
+      "verified_at": "2026-10-16T00:24:34-07:00",
+      "host": "ot-epyc1tb",
+      "run": "/srv/opentallas/claude/closure-loop/s81net_xstg_515-n4refclk-bbc0958a4",
+      "mutation": false
+    },
+    "job_source_commit": "bbc0958a4fea5e917cd082c2600ed296190efddb",
+    "note": "the route installed this frozen overlay helper; the job source commit helper does NOT reproduce the published LEF"
+  },
+  "environment": {
+    "OT_OBS_CLOSE": null,
+    "OT_OBS_CLOSE_UM": null
+  },
+  "command": [
+    "python3",
+    "provenance/helper/abstract_pin_stub.py",
+    "provenance/raw/dsfd_xstg_515.lef",
+    "dsfd_xstg_515.lef"
+  ],
+  "returncode": 0,
+  "stdout": "pinstub: 2 OBS rects moved into 2 pins: ck[0], cw[0]; pockets: 1081 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
+  "stderr": "",
+  "invariants": {
+    "macro_outline": "PASS",
+    "pin_names_directions_uses": "PASS",
+    "original_pin_rectangles_retained": "PASS"
+  },
+  "child_lint": {
+    "schema": "opentallas.hier_contract.child_lint.v1",
+    "lef": "/home/ubuntu/wt/el1015-snetfill/physical/ref_tile/s81net_xstg_515/views/dsfd_xstg_515/dsfd_xstg_515.lef",
+    "verdict": "PASS",
+    "fails": [],
+    "warns": [],
+    "summary": "dsfd_xstg_515 75.6 x 92.88: PG M5 VDD 27 stripes (93% spread, 100% cov) / VSS 27 stripes (93% spread, 100% cov); strap M6; face pins 1032 blocked-above 0 blocked-same 0; clock ck[0] insertion 148 ps; clock cw[0] insertion 160 ps; pockets M5 0 (closed)",
+    "info": {
+      "cell": "dsfd_xstg_515",
+      "W": 75.6,
+      "H": 92.88,
+      "pg": {
+        "nets": {
+          "VDD": {
+            "top_layer": "M5",
+            "stripes": 27,
+            "dir": "V",
+            "spread": 0.929,
+            "coverage": 1.0,
+            "shapes_on_top": 27
+          },
+          "VSS": {
+            "top_layer": "M5",
+            "stripes": 27,
+            "dir": "V",
+            "spread": 0.929,
+            "coverage": 1.0,
+            "shapes_on_top": 27
+          }
+        },
+        "top_layer": "M5",
+        "ok": true,
+        "why": []
+      },
+      "pg_layer": "M5",
+      "strap_layer": "M6",
+      "cap": null,
+      "face": {
+        "face_pins": 1032,
+        "blocked_above": 0,
+        "covered_below": 0,
+        "examples": [],
+        "blocked_same": 0,
+        "same_examples": [],
+        "band_same": 0,
+        "band_examples": []
+      },
+      "clock_insertion": {
+        "ck[0]": {
+          "max_ps": 147.86,
+          "min_ps": 111.38
+        },
+        "cw[0]": {
+          "max_ps": 160.31,
+          "min_ps": 125.05
+        }
+      },
+      "pockets": {
+        "layer": "M5",
+        "d_um": 1.536,
+        "marker": {
+          "layer": "M5",
+          "d_um": 1.536,
+          "added": 1081
+        },
+        "count": 0,
+        "area_um2": 0,
+        "examples": []
+      }
+    }
+  },
+  "replay": {
+    "historical": true,
+    "job": "s81net_xstg_515-n4refclk-bbc0958a4",
+    "source_commit": "bbc0958a4fea5e917cd082c2600ed296190efddb",
+    "published_record_commit": "6abdf9ce7777e84e7bdd69a9817c2d895f0daa02",
+    "orfs_dir": "/srv/opentallas/claude/closure-loop/s81net_xstg_515-n4refclk-bbc0958a4/routes/s81net_xstg_515_n4refclk_bbc0958a4/work/orfs",
+    "raw_export_tcl": "provenance/reconstruction/raw.tcl",
+    "raw_export_tcl_sha256": "b4c7e42c0ec4f34566bc0c2432452027d9b6f9d0851ac2f94103f9fd77135707",
+    "environment_basis": "Reconstruction replay cleared both options; original process environment was not recorded. Exact published output hash is reproduced.",
+    "raw_matches_original_manifest": true,
+    "final_matches_published_export": true,
+    "all_published_files_verified": {
+      "dsfd_xstg_515.lef": "28664e4897fda0d5b11ba56501556c5c7a293210b5b38106d87063ef4e9569e8",
+      "dsfd_xstg_515_tt.lib": "9d4f1570a0aa615089d734dedf8817a1702a3d6d87ad84d31026b6c0bf3166ce",
+      "dsfd_xstg_515_ff.lib": "57e49388f3b61363187144de9dd47ab7598f2207ccdf004091c25207526bd728",
+      "dsfd_xstg_515_ss.lib": "d46292be162fade901a6f9aa5f8d1ae2548fd4c9f20ae0412a56e8585741a508",
+      "abstract.json": "6ce31ee7563f3eb67b8c7e0f058c02676ad5fe387e0a9fa7d25642498732468d",
+      "insertion.json": "fc5de2818509f6e10023a27050dafb8c6665179ab44d3d5d0610bb7f7835ebae",
+      "child_lint.json": "f7b82523c38d599b643a3532f7d357b6952cdb78b27194456520671b6339ec36"
+    },
+    "admission": {
+      "host": "ot-epyc1tb",
+      "unit": "oth-ubuntu-2148971-1792135864",
+      "memory_gb": 4,
+      "threads": 1
+    }
+  }
+}
