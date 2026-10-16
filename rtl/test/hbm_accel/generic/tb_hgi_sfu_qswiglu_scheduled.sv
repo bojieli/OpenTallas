@@ -53,7 +53,12 @@ reg io_cfg_we=0,io_start_v=0;
  wire fault;
  integer checks=0;
  function automatic [31:0] value(input integer g,a);value=32'h3e000000+32'(100000*g+a*7);endfunction
- ot_hgi_sfu_scheduled_engine dut(.clk(clk),.rst_n(rst_n),.clk_lg(clk_lg),.rst_lg_n({4{rst_n}}),.clk_lane({16{clk}}),.clk_map({16{clk}}),
+`ifdef SFU_LG_R
+ // Split SFU: core + 4 bank-pair LG leaves + R static die relays per pair (ot_hgi_sfu_split_engine).
+ ot_hgi_sfu_split_engine #(.R(`SFU_LG_R)) dut(
+`else
+ ot_hgi_sfu_scheduled_engine dut(
+`endif.clk(clk),.rst_n(rst_n),.clk_lg(clk_lg),.rst_lg_n({4{rst_n}}),.clk_lane({16{clk}}),.clk_map({16{clk}}),
  .rst_lane_n({16{rst_n}}),.rst_map_n({16{rst_n}}),
  .cfg_we(cfg_we),.cfg_stripe(cfg_stripe),.cfg_addr(cfg_addr),.cfg_data(cfg_data),
  .start_base(11'd0),.start_limit(12'(NINST)),.start_loops(16'd1),
