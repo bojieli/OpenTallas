@@ -49,11 +49,16 @@ module tb_qfd_xs_leaf_read_pin;
   // II4 alternating tiles => each tile requested every8edges; includes all
   // bank boundaries, both epochs and disabled elements in arbitrary positions.
   for(i=0;i<128;i=i+1)begin
+   // Same physical write/update edge in both designs, including writes
+   // concurrent with in-flight reads. Reference request is delayed one edge,
+   // so the model compares the same effective memory observation boundary.
+   w_v=(i%3==0);w_ep=(i/7)%2;w_ctl=0;w_ctl[9*((i/5)%2)+8]=1;
+   for(l=0;l<64;l=l+1)w_d[16*l+:16]=16'h4000+i*64+l;
    r_v=1;r_t=i%2;r_ep=(i/2)%2;
    for(j=0;j<4;j=j+1)begin r_p[7*j+:6]=(i*13+j*31)%64;r_p[7*j+6]=((i+j)%5!=0);end
    tick();r_v=0;repeat(3)tick();
   end
-  repeat(12)tick();
+  w_v=0;repeat(12)tick();
   // Clear epoch0 validity, then read it: the candidate must retain fail-loud
   // per-element invalid tracking as well as matching the successful reads.
   c_v=1;c_ep=0;tick();c_v=0;repeat(3)tick();
