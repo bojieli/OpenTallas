@@ -67,7 +67,7 @@
  "job": {
   "owner": "Codex:S81-HC-takeover",
   "branch": "codex/s81-hc-takeover-2116",
-  "tag": "ncap-slaunch",
+  "tag": "ncap-slaunch-caps",
   "purpose": "Held component structural successor; full HC schedule/adoption open.",
   "views_to": "physical/ref_tile/s81hc_ctfxcap_pinpipe_ref/views",
   "record_to": "results/rtl/ref_tile/s81hc_ctfxcap_pinpipe_ref",
@@ -83,8 +83,7 @@
     "threads": 1,
     "peak_ram_gb": 2,
     "needs": [
-     "iverilog",
-     "vvp"
+     "iverilog"
     ]
    },
    {
@@ -95,8 +94,7 @@
     "threads": 1,
     "peak_ram_gb": 2,
     "needs": [
-     "iverilog",
-     "vvp"
+     "iverilog"
     ]
    }
   ],
