@@ -387,7 +387,7 @@ module ot_s81_bf_front #(
         reg [CLW-1:0] c_lk;
         if (STATIC_PROGRAM != 0) begin : g_seam_lk
 `ifdef BF_SEAM_LK_MUTANT
-            always_latch if (!clk) c_lk = c_raw ^ {{(CLW-1){1'b0}}, 1'b1};   // negative control: one latched bit flipped
+            always_latch if (!clk) c_lk = c_raw ^ {1'b1, {(CLW-1){1'b0}}};   // negative control: latched issue bit flipped
 `else
             always_latch if (!clk) c_lk = c_raw;
 `endif

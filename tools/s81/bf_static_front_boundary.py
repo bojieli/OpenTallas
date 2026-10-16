@@ -81,7 +81,7 @@ def apply(text):
            '        reg [CLW-1:0] c_lk;\n'
            '        if (STATIC_PROGRAM != 0) begin : g_seam_lk\n'
            '`ifdef BF_SEAM_LK_MUTANT\n'
-           "            always_latch if (!clk) c_lk = c_raw ^ {{(CLW-1){1'b0}}, 1'b1};   // negative control: one latched bit flipped\n"
+           "            always_latch if (!clk) c_lk = c_raw ^ {1'b1, {(CLW-1){1'b0}}};   // negative control: latched issue bit flipped\n"
            '`else\n'
            '            always_latch if (!clk) c_lk = c_raw;\n'
            '`endif\n'
