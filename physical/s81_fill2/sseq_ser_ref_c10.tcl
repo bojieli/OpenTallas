@@ -73,7 +73,7 @@ proc ot_ser_balance {} {
 }
 proc ot_ser_boundary {} {
   if {![llength [get_clocks -quiet ser_clk]]} { return }
-  set si [get_ports -quiet {f_ks f_ks[*] f_pw f_pw[*]}]
+  set si [get_ports -quiet {f_ks f_ks[*] f_pw f_pw[*] f_pq_pw f_pq_pw[*]}]
   set so [get_ports -quiet {t_kd t_kd[*] t_st t_st[*]}]
   set io [expr {0.2 * [get_property [get_clocks ser_clk] period]}]
   if {[llength $si]} { unset_input_delay $si }
