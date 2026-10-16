@@ -64,16 +64,16 @@
    "ck_lsl6": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[6].g_hd.u_lh/clk",
    "ck_lsl3": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[3].g_hd.u_lh/clk",
    "ck_lsl7": "u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[7].g_hd.u_lh/clk",
-   "ck_rp0": "u_g.u_tile.u_tile.u_logic.g_rph.g_rb[0].g_single.g_col[0].u_leaf/clk",
-   "ck_rp1": "u_g.u_tile.u_tile.u_logic.g_rph.g_rb[1].g_single.g_col[0].u_leaf/clk",
-   "ck_rp2": "u_g.u_tile.u_tile.u_logic.g_rph.g_rb[2].g_single.g_col[0].u_leaf/clk",
-   "ck_rp3": "u_g.u_tile.u_tile.u_logic.g_rph.g_rb[3].g_single.g_col[0].u_leaf/clk",
-   "ck_rp4": "u_g.u_tile.u_tile.u_logic.g_rph.g_rb[4].g_single.g_col[0].u_leaf/clk",
-   "ck_rp5": "u_g.u_tile.u_tile.u_logic.g_rph.g_rb[0].g_single.g_col[1].u_leaf/clk",
-   "ck_rp6": "u_g.u_tile.u_tile.u_logic.g_rph.g_rb[1].g_single.g_col[1].u_leaf/clk",
-   "ck_rp7": "u_g.u_tile.u_tile.u_logic.g_rph.g_rb[2].g_single.g_col[1].u_leaf/clk",
-   "ck_rp8": "u_g.u_tile.u_tile.u_logic.g_rph.g_rb[3].g_single.g_col[1].u_leaf/clk",
-   "ck_rp9": "u_g.u_tile.u_tile.u_logic.g_rph.g_rb[4].g_single.g_col[1].u_leaf/clk"
+   "ck_rp0": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[0].u_leaf/clk",
+   "ck_rp1": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[1].g_single.g_col[0].u_leaf/clk",
+   "ck_rp2": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[2].g_single.g_col[0].u_leaf/clk",
+   "ck_rp3": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[3].g_single.g_col[0].u_leaf/clk",
+   "ck_rp4": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[4].g_single.g_col[0].u_leaf/clk",
+   "ck_rp5": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[1].u_leaf/clk",
+   "ck_rp6": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[1].g_single.g_col[1].u_leaf/clk",
+   "ck_rp7": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[2].g_single.g_col[1].u_leaf/clk",
+   "ck_rp8": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[3].g_single.g_col[1].u_leaf/clk",
+   "ck_rp9": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[4].g_single.g_col[1].u_leaf/clk"
   }
  },
  "sources": [
@@ -210,7 +210,7 @@
   {
    "view": "physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf",
    "count": 1,
-   "inst": "u_g.u_tile.u_tile.u_logic.g_rph.g_rb[0].g_single.g_col[0].u_leaf",
+   "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[0].u_leaf",
    "at": [
     56.16,
     511.488
@@ -221,7 +221,7 @@
   {
    "view": "physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf",
    "count": 1,
-   "inst": "u_g.u_tile.u_tile.u_logic.g_rph.g_rb[1].g_single.g_col[0].u_leaf",
+   "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[1].g_single.g_col[0].u_leaf",
    "at": [
     56.16,
     641.952
@@ -232,7 +232,7 @@
   {
    "view": "physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf",
    "count": 1,
-   "inst": "u_g.u_tile.u_tile.u_logic.g_rph.g_rb[2].g_single.g_col[0].u_leaf",
+   "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[2].g_single.g_col[0].u_leaf",
    "at": [
     56.16,
     772.4159999999999
@@ -243,7 +243,7 @@
   {
    "view": "physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf",
    "count": 1,
-   "inst": "u_g.u_tile.u_tile.u_logic.g_rph.g_rb[3].g_single.g_col[0].u_leaf",
+   "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[3].g_single.g_col[0].u_leaf",
    "at": [
     56.16,
     902.88
@@ -254,7 +254,7 @@
   {
    "view": "physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf",
    "count": 1,
-   "inst": "u_g.u_tile.u_tile.u_logic.g_rph.g_rb[4].g_single.g_col[0].u_leaf",
+   "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[4].g_single.g_col[0].u_leaf",
    "at": [
     56.16,
     1033.344
@@ -265,7 +265,7 @@
   {
    "view": "physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf",
    "count": 1,
-   "inst": "u_g.u_tile.u_tile.u_logic.g_rph.g_rb[0].g_single.g_col[1].u_leaf",
+   "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[0].g_single.g_col[1].u_leaf",
    "at": [
     228.96,
     511.488
@@ -276,7 +276,7 @@
   {
    "view": "physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf",
    "count": 1,
-   "inst": "u_g.u_tile.u_tile.u_logic.g_rph.g_rb[1].g_single.g_col[1].u_leaf",
+   "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[1].g_single.g_col[1].u_leaf",
    "at": [
     228.96,
     641.952
@@ -287,7 +287,7 @@
   {
    "view": "physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf",
    "count": 1,
-   "inst": "u_g.u_tile.u_tile.u_logic.g_rph.g_rb[2].g_single.g_col[1].u_leaf",
+   "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[2].g_single.g_col[1].u_leaf",
    "at": [
     228.96,
     772.4159999999999
@@ -298,7 +298,7 @@
   {
    "view": "physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf",
    "count": 1,
-   "inst": "u_g.u_tile.u_tile.u_logic.g_rph.g_rb[3].g_single.g_col[1].u_leaf",
+   "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[3].g_single.g_col[1].u_leaf",
    "at": [
     228.96,
     902.88
@@ -309,7 +309,7 @@
   {
    "view": "physical/ref_tile/ot_qwen_tile_romleaf/views/ot_qwen_tile_romleaf",
    "count": 1,
-   "inst": "u_g.u_tile.u_tile.u_logic.g_rph.g_rb[4].g_single.g_col[1].u_leaf",
+   "inst": "u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[4].g_single.g_col[1].u_leaf",
    "at": [
     228.96,
     1033.344
