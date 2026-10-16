@@ -20,7 +20,9 @@ module dsfd_mtp_hrow_td #(
     parameter integer CQ = 3, parameter integer WK = 7, parameter integer P = 2,
     parameter integer HARD_RELAYS = 0,  // opt-in fixed masters: preserves every original relay edge/reset bit
     parameter integer DISTRIBUTED_RST = 0, // default-off local two-edge release; global ck/rst delivery still required
-    parameter integer UT = 1         // die relay stages on the U-turn hop (cbe bank 4 -> cbw bank 5), w / r / d alike
+    parameter integer UT = 1,        // die relay stages on the U-turn hop (cbe bank 4 -> cbw bank 5), w / r / d alike
+    parameter integer HALF_BANKS = 0 // opt-in (S-ELEM-PQ/HROW 10-16): every bank = dsfd_mtp_hrow_cbp, two dsfd_mtp_hrow_cbh half
+                                     // tiles (ot_dsrom_mtp_hrow_cbh.sv; 512 data bits each, same edges), replacing cbe / cbw
 ) (
     input  wire           ck, rst,
     input  wire [514:0]   f_hp0, f_hp1, f_hp2,
@@ -155,6 +157,22 @@ module dsfd_mtp_hrow_td #(
         ot_dsrom_mtp_hrow_rly #(.W(15), .N(CQ)) u_rc (.clk(ck), .rst_n(rn), .i(rc[gp]), .o(cr[0]));
         end
         assign cd[0] = '0;
+        if (HALF_BANKS != 0) begin : g_hb
+        for (gk = 0; gk < 10; gk = gk + 1) begin : g_c
+            wire [1038:0] tw; wire [14:0] tr; wire [1024:0] td;
+            dsfd_mtp_hrow_cbp u_b (.ck(ck), .rst(rst), .f_bid(4'(gk)), .f_w(cw[gk]), .t_w(tw), .f_r(cr[gk]), .t_r(tr),
+                                   .f_d(cd[gk]), .t_d(td)
+`ifdef OT_HROW_RESET_ACK
+                                   ,.rst_ack(rst_ack_leaf[gp*11+1+gk])
+`endif
+);
+            if (gk == 4) begin : g_u
+                assign uw = tw; assign ur = tr; assign ud = td;
+            end else begin : g_n
+                assign cw[gk+1] = tw; assign cr[gk+1] = tr; assign cd[gk+1] = td;
+            end
+        end
+        end else begin : g_fb
         for (gk = 0; gk < 10; gk = gk + 1) begin : g_c
             if (gk == 4) begin : g_e
                 dsfd_mtp_hrow_cbe u_b (.ck(ck), .rst(rst), .f_bid(4'(gk)), .f_w(cw[gk]), .t_w(uw), .f_r(cr[gk]),
@@ -178,6 +196,7 @@ module dsfd_mtp_hrow_td #(
 `endif
 );
             end
+        end
         end
         if (HARD_RELAYS != 0) begin : g_hrp
             wire [1024:0] q[0:P]; assign q[0]=cd[10];

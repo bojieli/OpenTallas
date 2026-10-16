@@ -31,14 +31,15 @@ HARD_RELAYS = False
 UT_STAGES = 1
 DISTRIBUTED_RESET = False
 UTURN = False   # --uturn (with --tiles): the die composition dsfd_mtp_hrow_td (tc + one die relay on the U-turn hop)
+HALF_BANKS = False   # --half-banks (with --uturn): every bank = two dsfd_mtp_hrow_cbh half tiles (dsfd_mtp_hrow_cbp)
 TILE_SRC = 'rtl/dsrom_sys/mtp/ot_dsrom_mtp_hrow_tiles.sv'   # --tile-src: another tiles file (e.g. a mixed-commit pair)
 
 
 def build(out, d=None):
-    exe = out / ('sim' + ('_' + d if d else '') + ('_tiles' if TILES else '') + ('_uturn' if UTURN else ''))
-    src = SRC + (['rtl/dsrom_sys/s81_ph/relays/dsfd_die_relays.sv'] if HARD_RELAYS else []) + ([TILE_SRC] if TILES else []) + (['rtl/dsrom_sys/mtp/ot_dsrom_mtp_hrow_die.sv'] if UTURN else [])
+    exe = out / ('sim' + ('_' + d if d else '') + ('_tiles' if TILES else '') + ('_uturn' if UTURN else '') + ('_half' if HALF_BANKS else ''))
+    src = SRC + (['rtl/dsrom_sys/s81_ph/relays/dsfd_die_relays.sv'] if HARD_RELAYS else []) + ([TILE_SRC] if TILES else []) + (['rtl/dsrom_sys/mtp/ot_dsrom_mtp_hrow_die.sv'] if UTURN else []) + (['rtl/dsrom_sys/mtp/ot_dsrom_mtp_hrow_cbh.sv'] if HALF_BANKS else [])
     subprocess.run(['iverilog', '-g2012', '-o', str(exe), '-s', 'tb_mtp_hrow'] + (['-D' + d] if d else [])
-                   + (['-DOT_HROW_HARD_RELAYS'] if HARD_RELAYS else []) + (['-DOT_HROW_UT=' + str(UT_STAGES)] if UTURN else []) + (['-DOT_HROW_DISTRIBUTED_RST'] if DISTRIBUTED_RESET else []) + (['-DOT_HROW_TILES'] if TILES else []) + (['-DOT_HROW_DIE'] if UTURN else [])
+                   + (['-DOT_HROW_HARD_RELAYS'] if HARD_RELAYS else []) + (['-DOT_HROW_UT=' + str(UT_STAGES)] if UTURN else []) + (['-DOT_HROW_DISTRIBUTED_RST'] if DISTRIBUTED_RESET else []) + (['-DOT_HROW_TILES'] if TILES else []) + (['-DOT_HROW_DIE'] if UTURN else []) + (['-DOT_HROW_HALF_BANKS'] if HALF_BANKS else [])
                    + [str(s) if Path(s).is_absolute() else str(ROOT / s) for s in src], check=True)
     return exe
 
@@ -63,9 +64,12 @@ def main():
     ap.add_argument('--hard-relays', action='store_true', help='with --uturn: exact fixed relay hard masters')
     ap.add_argument('--ut-stages', type=int, default=1, help='die U-turn relay stages; production default remains one')
     ap.add_argument('--distributed-reset', action='store_true', help='local reset synchronizers for each hard relay')
+    ap.add_argument('--half-banks', action='store_true', help='with --uturn: banks as two dsfd_mtp_hrow_cbh half tiles')
     ap.add_argument('--tile-src', help='tiles source file instead of ot_dsrom_mtp_hrow_tiles.sv (a mixed-commit pair)')
     a = ap.parse_args()
-    global TILES, UTURN, TILE_SRC, HARD_RELAYS, UT_STAGES, DISTRIBUTED_RESET
+    global TILES, UTURN, TILE_SRC, HARD_RELAYS, UT_STAGES, DISTRIBUTED_RESET, HALF_BANKS
+    HALF_BANKS = a.half_banks
+    if HALF_BANKS and not a.uturn: ap.error('--half-banks requires --uturn')
     TILES = a.tiles or a.uturn
     UTURN = a.uturn
     HARD_RELAYS = a.hard_relays
@@ -77,7 +81,7 @@ def main():
     if a.tile_src:
         TILE_SRC = a.tile_src
     a.out.mkdir(parents=True, exist_ok=True)
-    rec = dict(schema='opentallas.mtp-hrow-gate.v1', sources=SRC, tiles=TILES, uturn=UTURN, tile_src=TILE_SRC if TILES else None, hard_relays=HARD_RELAYS, ut_stages=UT_STAGES, distributed_reset=DISTRIBUTED_RESET,
+    rec = dict(schema='opentallas.mtp-hrow-gate.v1', sources=SRC, tiles=TILES, uturn=UTURN, tile_src=TILE_SRC if TILES else None, hard_relays=HARD_RELAYS, half_banks=HALF_BANKS, ut_stages=UT_STAGES, distributed_reset=DISTRIBUTED_RESET,
                cases=[], mutants=[])
     ok = mut_ok = True
     if a.only != 'mut':

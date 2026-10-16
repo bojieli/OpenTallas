@@ -1,0 +1,123 @@
+{
+ "name": "hrow5_cbh",
+ "top": "dsfd_mtp_hrow_cbh",
+ "kind": "tile",
+ "sources": [
+  "rtl/dsrom_sys/mtp/ot_dsrom_mtp_hrow_cbh.sv",
+  "rtl/dsrom_sys/mtp/rtt/ot_dsrom_mtp_rstsync.sv",
+  "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v"
+ ],
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst"
+ ],
+ "pins": {
+  "S": [
+   "f_w",
+   "f_r",
+   "f_d"
+  ],
+  "N": [
+   "t_w",
+   "t_r",
+   "t_d",
+   "ck",
+   "rst",
+   "f_bid"
+  ]
+ },
+ "route": {
+  "pd": 0.55,
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "hold_margin_ns": 0.03,
+  "pin_min_tracks": 3,
+  "pin_v": "M5",
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "Claude:S-ELEM-PQ/HROW",
+  "branch": "claude/hrow-native-0030",
+  "tag": "h1-0030",
+  "purpose": "S-ELEM-PQ/HROW 2026-10-16: half chain bank tile dsfd_mtp_hrow_cbh (2 x ot_sram_1r1w_1024x256, 512 data bits) replacing the full-bank cbe/cbw tiles whose clock cannot meet the native rule (cbw closed R 538.5 / spread 89.2; N-centre TritonCTS gate R 406.2 / spread 120.8). Recipe 3 kit (io_flop_at_pins + pin_reg_split + keep_pin_regs + HB2), TritonCTS from the N-face centre, 0 cycles. Pass: TT/FF >= 0, DRC 0, native launch <= 220 / capture <= 190 / spread <= 80 / R <= 300; bench mtp_hrow_gate --uturn --half-banks pos PASS / mut FAIL.",
+  "benches": [
+   {
+    "name": "hrow_half_pos",
+    "cmd": "python3 tools/mtp_hrow_gate.py --uturn --half-banks --out {RUN}/gate --only pos",
+    "expect": "pass",
+    "pass_regex": "HROW_GATE PASS positives=3",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "hrow_half_mut",
+    "cmd": "python3 tools/mtp_hrow_gate.py --uturn --half-banks --out {RUN}/gatem --only mut",
+    "expect": "fail",
+    "fail_regex": "HROW_MUTANTS FAIL_AS_REQUIRED",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ],
+  "views_to": "physical/ref_tile/hrow5_cbh/views",
+  "record_to": "results/rtl/ref_tile/hrow5_cbh"
+ },
+ "outline": {
+  "w": 250.56,
+  "h": 216.0
+ },
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "at": [
+    31.104,
+    24.84
+   ]
+  },
+  {
+   "view": "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2",
+   "at": [
+    31.104,
+    121.5
+   ]
+  }
+ ],
+ "floorplan_why": "S-ELEM-PQ/HROW 2026-10-16 half bank: one column of 2 SRAMs (512 data bits), R0, x 31.104 (the x=0 rd_out/addr/wd pin set faces a 28.9 um W channel, as in the closed cbw west column), 42.6 um E channel for the x=174.72 wd/w_mask/cr/rr set (closed cbw: that set only clean facing a >=60 um channel before the sram_edge_access guard), rows y 24.84 / 121.5 as cbw (26.2 um mid channel). Chain bus N<-S on M5 over the macros: 1,055 pins a face at 3 M5 tracks = 152 of 246 um. Clock at the N-face centre: farthest sink 341 um (cbw 453 / 583).",
+ "inhold": true,
+ "outhold": true,
+ "params": {},
+ "children": [],
+ "inter": [],
+ "clock": "cts",
+ "orfs_vars": {},
+ "boundary_tcl": [
+  "physical/hrow_cx/sram_edge_access.tcl"
+ ],
+ "recipe": 3,
+ "pin_regs": {
+  "enable": false,
+  "reason": "ot_dsrom_mtp_hrow_cbhcore registers every data port at a dedicated kept boundary flop: inputs f_w/f_r/f_d/f_bid -> wi/ri/di/id (+ kept SRAM launch copies macro_wa/ra/wd on the same edge), outputs t_w/t_r/t_d = out flops wo/ro/dq; io_flop_at_pins anchors them at the faces. A generic wrapper would add 2 edges per chain tile (+20 edges per 10-bank part chain) for no structural gain. 0 cycles added."
+ },
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": false
+ },
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "pin_ranges": {
+  "ck": [
+   122.8,
+   127.8
+  ]
+ },
+ "structural_change": "NEW master replacing dsfd_mtp_hrow_cbe + dsfd_mtp_hrow_cbw (one master, 2 per bank, 60 per die instead of 30 + ... full-bank tiles): full-bank tiles cannot meet R <= 300 / spread <= 80 (measured: closed cbw spine R 538.5/89.2; TritonCTS W entry 385-501; n1-0030 CTS gate N-centre entry 326.9-447.7, R 406.2, spread 120.8; results/physical/s81_hrow_native_0030/native_audit_s81_hc_hrow_0030.json). Same chain-stage RTL narrowed to 512 data bits; bank pair dsfd_mtp_hrow_cbp is die wiring; 0 cycles (bench --uturn --half-banks cycle-identical).",
+ "slot_change_request": "rep/hrow: replace slots dsfd_mtp_hrow_cbe x15 + dsfd_mtp_hrow_cbw x15 (475.2 x 216) by dsfd_mtp_hrow_cbh x60 (250.56 x 216, S in / N out, ck N-face centre; return column = same master MX); die wiring dsfd_mtp_hrow_cbp (ot_dsrom_mtp_hrow_die.sv HALF_BANKS=1)"
+}

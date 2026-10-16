@@ -153,6 +153,9 @@ module tb_mtp_hrow;
 `ifdef OT_HROW_HARD_RELAYS
            , .HARD_RELAYS(1)
 `endif
+`ifdef OT_HROW_HALF_BANKS
+           , .HALF_BANKS(1)
+`endif
 `elsif OT_HROW_TILES
     dsfd_mtp_hrow_tc #(.NW(NW)
 `else
