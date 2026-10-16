@@ -20,3 +20,21 @@ p=D/'ot_vms_bank_static_local_roots.sv';p.write_text('// Generated additive loca
 x=dict(schema='opentallas.vm_local_roots_source.v1',source=str(src.relative_to(R)),source_sha256=hashlib.sha256(src.read_bytes()).hexdigest(),generated=str(p.relative_to(R)),generated_sha256=hashlib.sha256(p.read_bytes()).hexdigest(),always_block_root_order=roots,local_roots=['input_payload_valid','slot_strap_reset','S1_decode_egress','S2_macro_pin_registers','macro_capture_ECC_pipeline','response_status'],direct_macro_entries={'clk_macro[0]':'u_a/clk','clk_macro[1]':'u_b/clk','clk_macro[2]':'u_c/clk'},data_edges_added=0,scope='Candidate only; direct9clockentries require actual die delivery phi-R, local placement, CTS and TT/FF/DRC/native proof. Stable native quadrant master source is unchanged.')
 (p.parent/'native_abi_1016/local_roots_manifest.json').write_text(json.dumps(x,indent=2)+'\n')
 print(json.dumps(x,indent=2))
+# Literal per-quadrant physical identities; stable native masters remain frozen.
+for q in range(4):
+ p=D/'physical'/f'hfd_vms_bank_native_q{q}.sv';text=p.read_text()
+ text=text.replace(f'module hfd_vms_bank_native_q{q}',f'module hfd_vms_bank_local_q{q}',1)
+ assert text.count('input wire clk,')==1
+ text=text.replace('input wire clk,','input wire [5:0] clk_local, input wire [2:0] clk_macro,',1)
+ text=text.replace('ot_vms_bank_static_strap #(', 'ot_vms_bank_static_local_roots #(',1)
+ assert text.count('.clk(clk)')==1
+ text=text.replace('.clk(clk)', '.clk_local(clk_local),.clk_macro(clk_macro)',1)
+ (D/'physical'/f'hfd_vms_bank_local_q{q}.sv').write_text(text)
+text=(D/'ot_vms_bank_native_physical.sv').read_text().replace('module ot_vms_bank_native_physical','module ot_vms_bank_local_physical',1)
+assert text.count('input wire clk, rst_n,')==1
+text=text.replace('input wire clk, rst_n,','input wire [5:0] clk_local, input wire [2:0] clk_macro, input wire rst_n,',1)
+text=text.replace("wire die_clk=MUT==5&&bid==7?1'b0:clk;", "wire[2:0]die_macro=MUT==5&&bid==7?(clk_macro&3'b110):clk_macro;")
+for q in range(4):text=text.replace(f'hfd_vms_bank_native_q{q}',f'hfd_vms_bank_local_q{q}')
+assert text.count('.clk(die_clk)')==4
+text=text.replace('.clk(die_clk)', '.clk_local(clk_local),.clk_macro(die_macro)')
+(D/'ot_vms_bank_local_physical.sv').write_text(text)
