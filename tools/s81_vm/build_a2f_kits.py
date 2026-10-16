@@ -35,11 +35,11 @@ BRANCH = 'claude/s81-vm-a2hier-1015'
 GATE = 'python3 tools/s81_vm/area_a2f_equiv_gate.py --seeds 1 --bench %s'
 LEAVES = {
     'field16': dict(top='s81_a2f_field16', clock='ck', reset='rst_n', outline=(183.6, 140.4),
-                    faces={'S': ['i_data'], 'N': ['o_data', 'o_v'], 'W': ['ck', 'rst_n', 'i_sel:0:336'],
-                           'E': ['i_sel:336:672', 'i_drain_v', 'i_drain_slot', 'fault']}),
+                    faces={'S': ['i_data'], 'N': ['o_data', 'o_v'], 'W': ['ck', 'rst_n', 'i_sel'],
+                           'E': ['i_drain_v', 'i_drain_slot', 'fault']}),
     'meta26': dict(top='s81_a2f_meta26', clock='ck', reset='rst_n', outline=(259.2, 162.0),
-                   faces={'S': ['i_data'], 'N': ['o_data', 'o_v'], 'W': ['ck', 'rst_n', 'i_sel:0:336'],
-                          'E': ['i_sel:336:672', 'i_drain_v', 'i_drain_slot', 'fault']}),
+                   faces={'S': ['i_data'], 'N': ['o_data', 'o_v'], 'W': ['ck', 'rst_n', 'i_sel'],
+                          'E': ['i_drain_v', 'i_drain_slot', 'fault']}),
     'control4': dict(top='s81_a2f_control4', clock='ck_control', reset='rst_n', outline=(172.8, 86.4),
                      faces={'S': ['src_v', 'src_bank', 'header_epoch', 'payload_epoch'], 'N': ['ids', 'dr_v', 'dr_s'],
                             'W': ['ck_control', 'rst_n'], 'E': ['fault']}),
