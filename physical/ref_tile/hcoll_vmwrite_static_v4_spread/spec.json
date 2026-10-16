@@ -51,9 +51,9 @@
   "macro_halo_um": 5.4
  },
  "job": {
-  "owner": "Codex:HBM2116",
-  "branch": "codex/hbm-takeover-2116",
-  "tag": "spread1",
+  "owner": "Codex:H-HARDEN-2330",
+  "branch": "claude/hnl-harden-2210",
+  "tag": "spread2330",
   "purpose": "Native capture repair of CLOSED writer v4 (TT143.57/FF6.87/DRC0; capture192.8ps>190 on tkw_d[482]). Owner-inspected S-face central569pinstrip and unused W/Eends: spread each face over full legal tracks, preserving buses/faces/bit order and N-centre clock. Same actual v4 RTL/outline/latency. Structural correction to crowding; route contingent on inspected placement/GRT and native audit.",
   "extra_paths": [
    "tools/hbm_coll_static",

@@ -1,12 +1,10 @@
 {
  "schema": "opentallas.hier_contract.child_lint.v1",
- "lef": "/srv/opentallas/claude/closure-loop/s81fill_stnh_86x1-f4-d00852275/record/views/dsfd_stnh_86x1/dsfd_stnh_86x1.lef",
+ "lef": "/srv/opentallas-scratch/claude/closure-loop/s81fill_stnh_86x1-f10-884a902b1/record/views/dsfd_stnh_86x1/provenance/dsfd_stnh_86x1.candidate.lef",
  "verdict": "PASS",
  "fails": [],
- "warns": [
-  "(f) face-pin access: 174 of 174 face pins partly under a same-layer OBS rect spanning several pins (exporter edge-band decomposition; e.g. di0[0] M4 (0.060,6.480), di0[10] M4 (0.060,6.480), di0[11] M4 (0.060,6.480))"
- ],
- "summary": "dsfd_stnh_86x1 17.28 x 17.28: PG M5 VDD 5 stripes (62% spread, 100% cov) / VSS 5 stripes (62% spread, 100% cov); strap M6; face pins 174 blocked-above 0 blocked-same 0; clock fi0[0] insertion 68 ps; pockets M5 0 (closed)",
+ "warns": [],
+ "summary": "dsfd_stnh_86x1 17.28 x 17.28: PG M5 VDD 5 stripes (62% spread, 100% cov) / VSS 5 stripes (62% spread, 100% cov); strap M6; face pins 174 blocked-above 0 blocked-same 0; clock fi0[0] insertion 67 ps; pockets M5 0 (closed)",
  "info": {
   "cell": "dsfd_stnh_86x1",
   "W": 17.28,
@@ -40,24 +38,17 @@
   "face": {
    "face_pins": 174,
    "blocked_above": 0,
-   "covered_below": 6,
+   "covered_below": 0,
    "examples": [],
    "blocked_same": 0,
    "same_examples": [],
-   "band_same": 174,
-   "band_examples": [
-    "di0[0] M4 (0.060,6.480)",
-    "di0[10] M4 (0.060,6.480)",
-    "di0[11] M4 (0.060,6.480)",
-    "di0[12] M4 (0.060,6.480)",
-    "di0[13] M4 (0.060,6.480)",
-    "di0[14] M4 (0.060,6.480)"
-   ]
+   "band_same": 0,
+   "band_examples": []
   },
   "clock_insertion": {
    "fi0[0]": {
-    "max_ps": 67.61,
-    "min_ps": 57.5
+    "max_ps": 67.43,
+    "min_ps": 57.54
    }
   },
   "pockets": {
@@ -66,7 +57,7 @@
    "marker": {
     "layer": "M5",
     "d_um": 1.536,
-    "added": 0
+    "added": 2
    },
    "count": 0,
    "area_um2": 0,

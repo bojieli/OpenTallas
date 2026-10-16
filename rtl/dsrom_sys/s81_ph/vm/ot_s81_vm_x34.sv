@@ -179,9 +179,14 @@ module ot_s81_vm_x34_t #(parameter integer W = 512, parameter integer NAT = 0, p
 `ifdef SYNTHESIS
             ICGx2_ASAP7_75t_R u_g3 (.CLK(t_ck), .ENA(en_b), .SE(1'b0), .GCLK(ck_b));
 `else
-            reg en_l;
-            always @(t_ck or en_b) if (!t_ck) en_l = en_b;
-            assign ck_b = t_ck & en_l;
+            // Simulation model (S-FUNC 2026-10-16): ck_b = t_ck.  A behavioural gated clock (latch + AND, or a negedge
+            // enable flop + AND) is a same-timestep derived clock that Verilator may evaluate AFTER the t_ck NBAs of
+            // c0/c1/c2/mk_q/tp, so the core sampled next-edge values and raised a false parity fault in the full VM
+            // master bench depending on unrelated scheduling (tb_dsfd_sp_vm_static mode 0, all 16 capture x34, t=19182).
+            // Ungated is cycle-identical here: en_b == r1 is also the core's asynchronous reset, so every ck_b edge the
+            // ICG suppresses (r1 == 0) is an edge on which the core is held in reset anyway; the first active core
+            // edge stays the second t_ck edge after release.  Synthesis keeps the ICG cell above (netlist unchanged).
+            assign ck_b = t_ck;
 `endif
         end else begin : nobal
             assign ck_b = t_ck;

@@ -16,7 +16,7 @@ module tb_hbm_svc_vmdel_split_equiv;
   .fill_v(fill_v),.fill_bank(fill_bank),.fill_slot(fill_slot),.fill_epoch(fill_epoch),.fill_data(fill_data),.block_ready(br_b),
   .start(start),.start_bank(start_bank),.start_epoch(start_epoch),.start_base_sector(start_base_sector),.dq(dq_b),.busy(busy_b),.fault(fault_b));
  integer seed=SEED,cyc,p,checks=0,starts=0,valid_dq=0,faults_seen=0,resets=0,completes=0;
- reg [15:0] ep[0:1]; reg [6:0] nxt[0:31][0:1]; reg [1:0] opened; integer viol_at=-1,fault_run=0; reg v; reg run_bank=0; reg open_pend=0; 
+ reg [15:0] ep[0:1]; reg [6:0] nxt[0:31][0:1]; reg [1:0] opened; integer viol_at=-1,fault_run=0; reg v; reg run_bank=0; reg open_pend=0; reg post_rst=0; 
  function integer rnd(input integer n); rnd=$unsigned($random(seed))%n; endfunction
  // reference outputs delayed LAT cycles; the first LAT cycles after each reset release compare nothing (the split's
  // output registers still hold their reset value while the reference already shows its post-reset state)
@@ -42,14 +42,16 @@ module tb_hbm_svc_vmdel_split_equiv;
    begin_v=0;start=0;fill_v=0;
    fault_run=fault_a?fault_run+1:0;
    v=(cyc==viol_at);
-   if(!rst_n) begin rst_n=(rnd(4)!=0); opened=0; for(p=0;p<32;p=p+1)begin nxt[p][0]=0;nxt[p][1]=0;end
+   if(!rst_n) begin rst_n=(rnd(4)!=0); post_rst=rst_n; opened=0; for(p=0;p<32;p=p+1)begin nxt[p][0]=0;nxt[p][1]=0;end
      viol_at=(rnd(3)==0)?cyc+1+rnd(3000):-1; end
    else if(fault_run>40 || rnd(20000)==0) begin rst_n=0; resets=resets+1; end
    else begin
     // begin: mostly on a closed bank, sometimes a conflict
-    if((!opened[0]&&!(busy_a&&run_bank==0)||!opened[1]&&!(busy_a&&run_bank==1))&&rnd(20)==0 || v&&rnd(4)==0) begin
+    // H-NETLIST/kits 10-16: a begin on the FIRST edge after every reset release (directed: the reset-release edge of
+    // the lane state, v4 rst pin flop, is otherwise exercised only by chance)
+    if(post_rst || (!opened[0]&&!(busy_a&&run_bank==0)||!opened[1]&&!(busy_a&&run_bank==1))&&rnd(20)==0 || v&&rnd(4)==0) begin
      begin_bank=v?rnd(2):(!opened[0]?0:1); begin_epoch=$random(seed); if(!v && busy_a && run_bank==begin_bank) begin_bank=!begin_bank;
-     begin_v=1;
+     begin_v=1; post_rst=0;
      if(!opened[begin_bank]) begin ep[begin_bank]=begin_epoch; open_pend=1; end
     end
     // fills: each PC independently, next slot of an opened bank, occasional violations

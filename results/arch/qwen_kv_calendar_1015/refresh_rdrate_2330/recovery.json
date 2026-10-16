@@ -1,0 +1,11 @@
+{
+  "original_path": "/home/ubuntu/wt/claude-q-vmwb-1705/rtl/test/qwen_static_kv/tb_kv_refresh_rdrate.sv",
+  "original_sha256": "c77b4351d09afdeae42a05fc1d25fe970504048ca1d05f99af193be027097d75",
+  "predecessor_untouched": true,
+  "changes": [
+    "explicit PROFILE parameter and required external compiled slot image for strict replay",
+    "bench errors now fatal instead of display-only",
+    "runner requires every discovery stream contiguous before accepting zero refresh blocking",
+    "actual permission-block hardware mutant"
+  ]
+}

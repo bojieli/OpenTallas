@@ -50,7 +50,16 @@ module tb_qwen_d2d_program;
     always @(posedge ck) begin bump_ep <= {bump_ep, fwd_ep}; bump_lr <= {bump_lr, fwd_lrst_n}; end
     integer lay = -1, lstart = 0;
     reg cstart = 0, cseg = 0;
-    integer tok = 0, tstart = 0, trel = 0, emb_ok = 0, tok_res = 0;
+    integer tok = 0, tstart = 0, trel = 0, emb_ok = 0, tok_res = 0, emb_hdr = 0, prec_c = 0, prec_auth = 0, prec_ctx = 0, prec_w = 0;
+    wire c_prog_rxv, c_prog_auth, c_prog_ctx, c_prog_wslot;
+    // program-record producers (declared external stimulus at this boundary: the KV HOST record port and the compute
+    // qfd_sys_face): every reserved slot carries a record (observed = 1; an empty reserved slot is an ownership fault),
+    // presented after the pin-registered slot strobe at the port-1 codec latency (KV TXD 4: two edges; compute TXD 3: one edge)
+    reg [1:0] h_rec_d = 0, c_wit_d = 0; reg [1:0] h_sk_d1 = 0, h_sk_d2 = 0;
+    always @(posedge ck) begin h_rec_d <= {h_rec_d[0], h_sk != 2'd0}; c_wit_d <= {c_wit_d[0], c_prog_wslot};
+                               h_sk_d1 <= h_sk; h_sk_d2 <= h_sk_d1; end
+    wire h_rec_v = h_rec_d[1]; wire [547:0] h_rec_p = h_rec_v ? {18'h2a5a5, 2'(h_sk_d2), 528'h5eed} : 548'd0;
+    wire c_wit_v = c_wit_d[0]; wire [547:0] c_wit_p = c_wit_v ? {18'h2a5a5, 2'd3, 528'h717} : 548'd0;
     always @* trel = cyc - tstart;
     wire c_txs0, c_rxe0, c_rxs0, k_txs0, k_rxe0, k_rxs0; wire [3:0] c_tk, k_tk, c_rk, k_rk; wire [4:0] c_tb, k_tb, c_rb, k_rb;
     wire [FW-1:0] c_rxp, k_rxp; wire c_tv0, k_tv0; wire [FW-1:0] c_tp0, k_tp0;
@@ -71,7 +80,10 @@ module tb_qwen_d2d_program;
     function automatic [547:0] eword(input integer w);
         eword = {20'(32'hE0000 + w), 16'h3f80, word(77, 6, w)};
     endfunction
-    always @(posedge ck) begin k_emb_v <= k_emb_slot; k_emb_p <= k_emb_slot ? eword(k_tk == 4'd7 ? 32 + k_tb : k_tb) : 548'd0; end
+    // kind-8 row header (qfd_sys_face layout: {token18, 6'd0, 12'd0, DATA = epoch16 [47:32], scale16 [15:0]})
+    localparam [547:0] EHDR = {18'h2a5a5, 6'd0, 12'd0, 464'd0, 16'h0400, 16'd0, 16'h3f80};
+    always @(posedge ck) begin k_emb_v <= k_emb_slot;
+        k_emb_p <= !k_emb_slot ? 548'd0 : k_tk == 4'd8 ? EHDR : eword(k_tk == 4'd7 ? 32 + k_tb : k_tb); end
     wire c_eb = u_c.u_core.eb, k_eb = u_k.u_core.eb; wire [7:0] c_ep = u_c.u_core.ep, k_ep = u_k.u_core.ep;
     // pin-registered masters (PR): producers see their slot 2 edges after cal_start (cal_start pin flop + slot pin
     // flop); a consumer sees a frame 4 edges later than the unregistered end (net TX +1, PHY pin flops +2, RX pin flop +1)
@@ -97,8 +109,8 @@ module tb_qwen_d2d_program;
         .native_tx_slot(c_txs0), .native_tx_slot_kind(c_tk), .native_tx_slot_beat(c_tb), .native_tx_v(c_tv0),
         .native_tx_payload(c_tp0), .rx_payload(c_rxp), .native_rx_v(c_rxe0), .native_rx_slot(c_rxs0),
         .native_rx_slot_kind(c_rk), .native_rx_slot_beat(c_rb),
-        .prog_witness_slot(), .prog_auth_slot(), .prog_context_slot(), .prog_tx_observed_v(1'b0), .prog_tx_record(548'd0),
-        .prog_rx_v(), .emb_rx_v(c_emb_v), .emb_rx_slot(c_emb_s),
+        .prog_witness_slot(c_prog_wslot), .prog_auth_slot(c_prog_auth), .prog_context_slot(c_prog_ctx), .prog_tx_observed_v(c_wit_v), .prog_tx_record(c_wit_p),
+        .prog_rx_v(c_prog_rxv), .emb_rx_v(c_emb_v), .emb_rx_slot(c_emb_s),
         .kv_x3_slot(kv_x3_slot), .x3(x3), .x3_identity(x3_id), .x3_generation(x3_gen),
         .status_epoch16(op_epoch), .vm_drained(lay[0]), .collective_drained(~lay[0]), .collective_busy(lay[1]),
         .crom_fault(1'b0), .execution_active(1'b1), .admit_ready(lay[0] ^ lay[1]),
@@ -114,7 +126,7 @@ module tb_qwen_d2d_program;
         .att_tx_slot(k_txs0), .att_tx_kind(k_tk), .att_tx_beat(k_tb), .att_tx_v(k_tv0), .att_tx_payload(k_tp0),
         .att_rx_v(k_rxe0), .att_rx_slot(k_rxs0), .att_rx_kind(k_rk), .att_rx_beat(k_rb), .rx_payload(k_rxp),
         .emb_tx_slot(k_emb_slot), .emb_tx_v(k_emb_v), .emb_tx_payload(k_emb_p),
-        .record_tx_observed_v(1'b0), .record_tx(548'd0), .record_send_kind(h_sk), .record_witness_slot(h_wv),
+        .record_tx_observed_v(h_rec_v), .record_tx(h_rec_p), .record_send_kind(h_sk), .record_witness_slot(h_wv),
         .record_rx_v(h_rxv), .record_rx(h_rx),
         .kvn_compiled_identity(op_tag), .kvn_compiled_generation(2'(lay)),
         .kvn_word_valid(kw_v), .kvn_word_tag(kw_tag), .kvn_word_data(kw_data), .kvn_word_identity(kw_id),
@@ -186,12 +198,22 @@ module tb_qwen_d2d_program;
     reg first_after_eb = 0;
     // token run (segment 1): terminal RESULT C->S at token cycle 2, embedding row S->C words 0..63 from cycle 20
     always @(posedge ck) if (tok && rst_n) begin
-        if (c_emb_v) begin
+        if (c_emb_v && c_rk == 4'd8) begin
+            if (!c_emb_s || trel - 2 - XL != P_EH || c_rxp !== EHDR) begin
+                errs = errs + 1; $display("ERR embedding header trel %0d", trel); end
+            else emb_hdr = emb_hdr + 1;
+        end else if (c_emb_v) begin
             if (!c_emb_s || trel - 2 - XL - P_ES < 0 || trel - 2 - XL - P_ES > 63 ||
                 (c_rk == 4'd7 ? 32 + c_rb : c_rb) != trel - 2 - XL - P_ES || c_rxp !== eword(trel - 2 - XL - P_ES)) begin
                 errs = errs + 1; $display("ERR embedding word trel %0d kind %0d beat %0d", trel, c_rk, c_rb); end
             else emb_ok = emb_ok + 1;
         end
+        // program-record slots: 3 S->C frames (BEGIN/AUTH kind 13, CONTEXT kind 12) reach the compute face, 1 C->S
+        // WITNESS (kind 14) reaches the KV HOST record port; empty slots (observed 0) in this component bench
+        if (c_prog_rxv) prec_c = prec_c + 1;
+        if (c_prog_auth) prec_auth = prec_auth + 1;
+        if (c_prog_ctx) prec_ctx = prec_ctx + 1;
+        if (h_wv) prec_w = prec_w + 1;
         if (s_rv) begin
             if (trel != 2 + XS + 3 || s_rtok !== 18'(lay * 1001) || s_rval !== 32'(lay * 77) || !s_rd) begin
                 errs = errs + 1; $display("ERR token result trel %0d", trel); end
@@ -289,10 +311,11 @@ module tb_qwen_d2d_program;
         while (cyc < tstart + P_FINISH) tick(1);
         if (statuses != 36) begin errs = errs + 1; $display("ERR HOST status checks %0d", statuses); end
         lay = -1; tick(20);
+        $display("token run: embedding words %0d header %0d program records S->C %0d (auth %0d context %0d) witness %0d", emb_ok, emb_hdr, prec_c, prec_auth, prec_ctx, prec_w);
         $display("frames C->S %0d S->C %0d kvn %0d results %0d host-checks %0d normal-epoch faults %0d errors %0d",
             frames_ck, frames_kc, kvn_ok, results, statuses, normal_aborts, errs);
         if (errs == 0 && normal_aborts == 0 && frames_ck == 33 * NLAY && frames_kc == 33 * NLAY && kvn_ok == 4 * NLAY && results == NLAY &&
-            emb_ok == 64 && tok_res == 1 && (!DRV || seq_starts == NLAY))
+            emb_ok == 64 && emb_hdr == 1 && prec_c == 3 && prec_auth == 2 && prec_ctx == 1 && prec_w == 1 && tok_res == 1 && (!DRV || seq_starts == NLAY))
             $display("D2D_PROGRAM_PASS");
         else $display("D2D_PROGRAM_FAIL");
         $finish;

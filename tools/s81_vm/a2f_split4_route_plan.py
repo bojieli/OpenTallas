@@ -14,16 +14,17 @@ def table(file):
  for p in s['pins']:
   n=p['port'];base=n.split('[')[0];b=int(n.split('[')[1][:-1]) if '[' in n else 0;xy[(base,b)]=(p['x_um'],p['y_um'])
  return lambda p,b:xy[(p,b)]
-def expand(P,nets):
+def expand(P,nets,meta4=False):
  old=P.leaves;new=[];remap={};groups={};pos={};d=table('physical/s81_vm_a2f_split4_2118/s81_a2f_field4.pins.json')
  for i,l in enumerate(old):
-  if l['master']!='s81_a2f_field16':
+  splitmeta=meta4 and l['master']=='s81_a2f_meta26'
+  if l['master']!='s81_a2f_field16' and not splitmeta:
    n=dict(l);remap[i]=len(new);new.append(n);pos[len(new)-1]=P.pos[i]
    if n['master']=='s81_a2f_control4':n['master']=CTL;n['geo']=None;n['pins_fn']=table('physical/s81_vm_a2f_control_resetlocal_2118/s81_a2f_control4_resetlocal.pins.json')
    continue
   ids=[];x,y,fx,fy=P.pos[i]
-  for k in range(4):
-   j=len(new);ids.append(j);lx=(k%2)*(86.4+CH);ly=(k//2)*(129.6+CH)
+  for k in range(7 if splitmeta else 4):
+   j=len(new);ids.append(j);lx=(k if splitmeta else k%2)*(86.4+CH);ly=(0 if splitmeta else k//2)*(129.6+CH)
    if fx:lx=l['w']-lx-86.4
    if fy:ly=l['h']-ly-129.6
    new.append(dict(name=l['name']+f'.bitslice[{k}].u_leaf',master=FIELD,w=86.4,h=129.6,geo=None,
@@ -36,7 +37,8 @@ def expand(P,nets):
   if i not in groups:return [(remap[i],p,b)]
   ids=groups[i]
   if p in ('i_data','o_data'):
-   k=(b%16)//4;return [(ids[k],p,(b//16)*4+b%4)]
+   width=26 if len(ids)==7 else 16
+   k=(b%width)//4;return [(ids[k],p,(b//width)*4+b%width%4)]
   if p in ('o_v','fault'):return [(ids[0],p,b)]
   return [(j,p,b) for j in ids]
  nn=[]
