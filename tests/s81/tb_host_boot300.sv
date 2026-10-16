@@ -1,7 +1,7 @@
 `timescale 1ns/1ps
 module tb_host_boot300;
  parameter integer MUT=0;
- reg ck=0,ckv=0,rst=0;always #3 ck=~ck;
+ reg ck=0,ckv=0,rst=1;always #3 ck=~ck;
  integer phase=0,stop_boot=0,overload=0;
  initial begin
   if(!$value$plusargs("serial_phase=%d",phase))phase=0;
@@ -17,7 +17,7 @@ module tb_host_boot300;
  integer cyc=0,sent=0,got=0,expected_type;reg[34:0]exp[0:95];reg[95:0]types;
  initial begin
   for(integer i=0;i<96;i=i+1)begin exp[i]={7'(i),28'(32'hcae5+i*337)};types[i]=i%3==1;end
-  #60 rst=1;
+  #1 rst=0;#59 rst=1;
  end
  always @(negedge ck)if(rst)begin:tx
   reg[511:0]word;
