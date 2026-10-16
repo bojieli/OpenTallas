@@ -93,10 +93,14 @@ module tb_qfd_vm_bv_ports;
     ot_qfd_sp_vector_memory_bv #(.XQT(XQT), .ELEMS(ELEMS), .NRB(NRB), .AW(AW), .SMIN(SMIN), .SMAX(SMAX), .XVM(XVM), .BMAX(BMAX),
         .ND(ND), .DSET(DSET), .SW(SW), .NSU(3), .NB(NB), .CRB(CRB), .MUT(MUT), .MEE(MEE), .VMT(VMT), .RV(RV), .RO(RO), .XPR(XPR),
         .XTK(XTK), .XMK(XMK), .XMF(XMF), .XLO(XLO), .XQR(XQR), .SQD(SQD), .NRBS(NRBS), .RETURN_LEAVES(RETURN_LEAVES), .RETURN_CLOCKS(RETURN_CLOCKS), .READ_CONTROL_LEAVES(READ_CONTROL_LEAVES), .NATIVE_BANKS(NATIVE_BANKS), .USE_NATIVE_CLOCKS(USE_NATIVE_CLOCKS), .USE_MACRO(USE_MACRO)) dut (
-        .clk(clk), .return_ck({96{clk}}), .read_control_ck({3{clk}}), .rst_n(rst_n), .me_en(me_en), .me_en_e(me_en_e),
+        .clk(clk),
+`ifdef OT_QFD_VM_PARTITIONED_CLOCKS
+        .return_ck({96{clk}}), .read_control_ck({3{clk}}),
 `ifdef OT_QFD_VM_NOX
         .native_ck({(NRB+3*NRBS)*9{clk}}),
 `endif
+`endif
+        .rst_n(rst_n), .me_en(me_en), .me_en_e(me_en_e),
 `ifndef OT_QFD_VM_NOX
         .me_en_t(me_en_t), .x_dv(x_dv), .x_dc(x_dc), .x_dcs(x_dcs), .x_dsp(x_dsp), .x_q(d_xq),
         .x_rdy(), .x_fault(x_fault), .x_hazard(x_hazard),

@@ -48,7 +48,9 @@ module ot_qfd_vm_region_nx #(
     parameter integer NATIVE_BANKS = 0
 ) (
     input  wire                      clk,
+`ifdef OT_QFD_VM_PARTITIONED_CLOCKS
     input wire [(NBK+NSU*NSB)*9-1:0] native_ck,
+`endif
     input  wire [55:0]               leaf_ck,
     input  wire [7:0]                observer_ck,
     input  wire                      rst_n,
@@ -74,6 +76,12 @@ module ot_qfd_vm_region_nx #(
     output wire [511:0]              ro,
     output wire [NSU*NSB*512-1:0]    so
 );
+`ifndef OT_QFD_VM_PARTITIONED_CLOCKS
+    wire [(NBK+NSU*NSB)*9-1:0] native_ck = {(NBK+NSU*NSB)*9{1'b0}};
+    if (USE_NATIVE_CLOCKS != 0) begin : g_need_partitioned_clocks
+        initial $fatal(1, "ot_qfd_vm_region_nx: USE_NATIVE_CLOCKS needs +define+OT_QFD_VM_PARTITIONED_CLOCKS");
+    end
+`endif
 `ifndef SYNTHESIS
     initial if (NBK != 8 || NSB != 2 || NSU != 3 || NRI != 2 || NRX != 2 || NRS != 1)
         $fatal(1, "ot_qfd_vm_region_nx: unsupported leaf shape");

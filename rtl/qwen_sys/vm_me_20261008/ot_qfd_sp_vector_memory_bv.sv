@@ -192,10 +192,16 @@ module ot_qfd_sp_vector_memory_bv #(
     parameter integer NATIVE_BANKS = 0   // Q-VMWB 2026-10-15: native storage successors in every region (ot_qfd_vm_region_nx)
 ) (
     input  wire                    clk,
+`ifdef OT_QFD_VM_PARTITIONED_CLOCKS
     input wire [NSU*32-1:0] return_ck,
+`endif
+`ifdef OT_QFD_VM_PARTITIONED_CLOCKS
     input wire [NSU-1:0] read_control_ck,
+`endif
 `ifdef OT_QFD_VM_NOX
+`ifdef OT_QFD_VM_PARTITIONED_CLOCKS
     input wire [(NRB+NSU*NRBS)*9-1:0] native_ck,
+`endif
     input  wire [(NRB/8)*56-1:0]    leaf_ck,
     input wire [NRB-1:0] observer_ck,
     output wire [511:0]             qr_commit_mask,
@@ -266,6 +272,16 @@ module ot_qfd_sp_vector_memory_bv #(
     output reg                     w_fault,
     output reg                     w_hazard
 );
+`ifndef OT_QFD_VM_PARTITIONED_CLOCKS
+    // Q-VMWB 0030: the partitioned clock ABI (Codex 51fc824c0) exists only under OT_QFD_VM_PARTITIONED_CLOCKS; the
+    // production port list is unchanged (no unbound/tied pins in die consumers).  Without it the opt-in clock modes are refused.
+    wire [NSU*32-1:0] return_ck = {NSU*32{1'b0}};
+    wire [NSU-1:0] read_control_ck = {NSU{1'b0}};
+    wire [(NRB+NSU*NRBS)*9-1:0] native_ck = {(NRB+NSU*NRBS)*9{1'b0}};
+    if (USE_NATIVE_CLOCKS != 0 || RETURN_CLOCKS != 0) begin : g_need_partitioned_clocks
+        initial $fatal(1, "ot_qfd_sp_vector_memory_bv: USE_NATIVE_CLOCKS / RETURN_CLOCKS need +define+OT_QFD_VM_PARTITIONED_CLOCKS");
+    end
+`endif
 `ifdef OT_QFD_VM_NOX
     // no x read: the descriptor is the constant "no tuple"; x_q / x_rdy / x_fault / x_hazard have no consumer
     wire                    me_en_t = 1'b0;
@@ -995,7 +1011,10 @@ module ot_qfd_sp_vector_memory_bv #(
 `ifdef OT_QFD_VM_NOX
             `OT_QFD_VM_TILE_MOD #(.NBK(8), .NSB(NSB), .NSU(NSU), .DEPTH(DEPTH), .LAW(LAW), .DEPTHS(DEPTHS), .LAWS(LAWS),
                 .USE_OBSERVER_CLOCKS(USE_OBSERVER_CLOCKS), .BANK_BASE(8*g), .TOTAL_BANKS(NRB), .USE_MACRO(USE_MACRO), .USE_LEAF_CLOCKS(USE_LEAF_CLOCKS), .NRI(TNI), .NRX(TNX), .NRS(TNS), .NATIVE_BANKS(NATIVE_BANKS),.USE_NATIVE_CLOCKS(USE_NATIVE_CLOCKS)) u_t (
-                .clk(clk), .rst_n(rst_n), .native_ck(native_ck[g*(8+NSU*NSB)*9+:(8+NSU*NSB)*9]), .leaf_ck(leaf_ck[56*g +: 56]), .observer_ck(observer_ck[8*g+:8]),
+`ifdef OT_QFD_VM_PARTITIONED_CLOCKS
+                .native_ck(native_ck[g*(8+NSU*NSB)*9+:(8+NSU*NSB)*9]),
+`endif
+                .clk(clk), .rst_n(rst_n), .leaf_ck(leaf_ck[56*g +: 56]), .observer_ck(observer_ck[8*g+:8]),
                 .re(d_re), .ra(d_ra), .we(d_we), .wl(d_wl), .wm(d_wm), .wd(d_wd), .rq(d_rq), .rqb(d_rqb),
                 .sre(d_sre), .sra(d_sra), .sv(d_sv), .swe(d_swe), .swl(d_swl), .swm(d_swm), .swd(d_swd),
                 .qr_commit_mask(qr_masks[512*g +: 512]),
