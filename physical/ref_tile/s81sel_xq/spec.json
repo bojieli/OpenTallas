@@ -10,7 +10,7 @@
   "rst"
  ],
  "outline": {
-  "w": 194.4,
+  "w": 388.8,
   "h": 34.56
  },
  "pins": {
@@ -20,14 +20,15 @@
    "rst"
   ],
   "N": [
-   "o_lanes"
+   "o_sw",
+   "o_x"
   ]
  },
  "layer_cap": "M5",
  "recipe": 2,
  "pin_regs": {
   "enable": false,
-  "reason": "Source registers both boundaries: input pin flop p <= i_sw and o_lanes are flops; wrapper registers would add a cycle beyond the proven +1 SW-lane cost."
+  "reason": "Source registers both boundaries: input pin flop p <= i_sw; o_sw / o_x driven by flops (constant bits are ties); wrapper registers would add a cycle beyond the proven +1 SW-lane cost."
  },
  "route": {
   "pd": 0.5,
@@ -42,7 +43,7 @@
  "job": {
   "owner": "Claude:S-ELEM-PQ",
   "branch": "claude/s81-seltxq-1016",
-  "tag": "x4",
+  "tag": "x5",
   "purpose": "Harden dsfd_selt_xq (absent-quarter synthesiser, the open leaf of dsfd_bk_selector_c1 on the 1-stack S81 die); closure-first, removes the bk_selector_c1 stand-in once the parent binds it.",
   "benches": [
    {
@@ -80,26 +81,30 @@
   "record_to": "results/rtl/ref_tile/s81sel_xq"
  },
  "pin_ranges": {
-  "o_lanes": [
+  "o_sw": [
    5.4,
-   189.0
+   194.4
+  ],
+  "o_x": [
+   199.8,
+   383.4
   ],
   "i_sw": [
    5.4,
-   91.8
+   194.4
   ],
   "ck": [
-   95.04,
-   96.12
+   196.02,
+   197.1
   ],
   "rst": [
-   97.2,
-   98.28
+   198.18,
+   199.26
   ]
  },
  "reroute_reason": {
-  "kind": "slot_change",
-  "slot_change_request": "S-ELEM-PQ 2026-10-16: x3 view CLOSED TT +296.86/FF +18.12 but native FAIL (results/rtl/s81_seltxq_1016/x3-native.json: launch 228.7 > 220 on 14 east-end o_lanes pins, spread 80.2; ck entered on W of a 388.8-um tile). x4: 194.4x34.56, ck/rst at S centre, same RTL; tile not yet bound by S-DIE."
+  "kind": "rtl_change",
+  "why": "r2 dsfd_selt_xq: output split o_sw/o_x (same cycle behaviour), control-only reset, constant bits of the synthesised quarters unregistered; x3 native launch 228.7 > 220 (results/rtl/s81_seltxq_1016/x3-native.json), x4 GRT congestion in the lane-0 output band (515 pins in 46 um N)"
  },
  "params": {},
  "macros": [],
