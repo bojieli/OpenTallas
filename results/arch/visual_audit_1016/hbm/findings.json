@@ -53,6 +53,12 @@
      "date": "2026-10-16T01:15",
      "status": "open",
      "evidence": "d2 GRT/STA still running on E1 (unit oth-ubuntu-2130580-1792135616); no d3 / clock-generator fix yet"
+    },
+    {
+     "round": 2,
+     "date": "2026-10-16T02:35",
+     "status": "fixed in case (GRT pending)",
+     "evidence": "a37c69eb8; VIS-HBM scan of /tmp/claude-1000/hdie0030/d3a/run.tcl: 0 of 24,156 placed die cells inside hard outlines; hbm quad 1,635 bufs 7.9 ns pads 1/2/0/4; stream htree 21,999 bufs 13.8 ns"
     }
    ]
   },
@@ -93,6 +99,12 @@
      "date": "2026-10-16T01:15",
      "status": "open",
      "evidence": "no new plan revision"
+    },
+    {
+     "round": 2,
+     "date": "2026-10-16T02:35",
+     "status": "open (re-scoped to v6b 770 mm2)",
+     "evidence": "v5 band gap -> sfucore slots; SU overflow homes 0.595 mm2/quadrant in the PHY corner voids; v6b: ~30 mm2 corner voids + ~23 mm2 above HC/SFU still empty (H-DIE)"
     }
    ]
   },
@@ -1450,6 +1462,12 @@
      "date": "2026-10-16T01:35",
      "status": "confirmed-provisional",
      "evidence": "route 2 GRT-0116 with 12 overflow edges at the inward SRAM faces -> route-3 kit e4e436536 (21.6-um channel between macro rows) trial GRT overflow 0, M2 16% (H-LKEP). Route itself pending. 90-um channel / outward rotation infeasible at the fixed 434.72 width (owner)."
+    },
+    {
+     "round": 2,
+     "date": "2026-10-16T02:20",
+     "status": "fix-in-gate (route 4)",
+     "evidence": "route 3 e4e436536 CLOSED TT +128.49 / FF +7.69 (congestion fix confirmed: 12 overflow edges -> 0) but native FAIL launch 223.2 (3 sd_tx pins) / capture 212.7 (sd_rx[1]); route 4: single IDLE pin flop, clock moved west on the S face"
     }
    ]
   },

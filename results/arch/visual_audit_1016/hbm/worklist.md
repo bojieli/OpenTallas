@@ -15,8 +15,8 @@ Each item has its own helper scope, so the helpers can run in parallel.
 ## H-DIE (P0, P0-partial)
 | # | sev | item | expected gain | dependency | helper scope |
 |---|---|---|---|---|---|
-| 6 | P0 | **D1 die clock**: 15,671 buffers inside SM outlines (d2); 31.6 ns / 14.3 ns model insertion from one root | a legal die case (d3 is blocked on it). Clock model insertion and pad imbalance (NE 0 / NW 249) to be measured on the regenerated case | die_case obstacle fix (owner, in progress) | Helper: run the overlap scan on the regenerated case (place_inst vs block outlines, target 0) and report insertion/pads per quadrant. Separately, evaluate 4 quadrant roots vs 1 |
-| 7 | P0 | **D2 die area**: ~33 mm2 of corner voids beside the LK/EP column still unused (sfucore slots already took the band gap) | up to ~33 mm2 of placement room, or est. ~1.5 mm die-width reduction | die GRT on d3 | Helper: re-home candidate blocks (HC, COLL, SU heavy/RF, host slab) into the 4 corner voids. Measure plan GRT + bus stages vs v5 |
+| 6 | P0 | **D1 die clock**: fixed in the d3a case (0 of 24,156 cells inside outlines; hbm quad 7.9 ns, stream H-tree 13.8 ns) | a legal die case; confirmed when the d3a GRT/STA lands | d3a GRT+STA (E1, running) | Collect the d3a GRT overflow + STA classes; VIS-HBM renders and re-inspects |
+| 7 | P0 | **D2 die area (v6b, 770 mm2)**: ~30 mm2 corner voids + ~23 mm2 above the HC/SFU pairs still empty | up to ~53 mm2 of placement room in a die that just grew 110 mm2 | v6b adoption | Helper: re-home HC / host slab / COLL into the corner voids; measure plan GRT + bus stages against v6b as-is |
 | 8 | P1 | **T8 hdie_pc_ctrl_cfg (x128)**: H3 outline 185.76 -> 164.16 square, macros still centred; blocker TT -37.9 on ref_c -> write-ACT | closure. Area already -0.0075 mm2 per instance = -0.96 mm2 die-wide (measured outline) | H3 CTS gate (H-PCCTRL, running) | H-PCCTRL continues. Optional parallel helper: SRAMs against the E edge with clk W-mid, compared at the same 164.16 outline |
 
 ## H-NETLIST / H-HARDEN (P1, P2)
@@ -28,7 +28,7 @@ Each item has its own helper scope, so the helpers can run in parallel.
 ## H-LKEP (P1 follow-up)
 | # | sev | item | expected gain | dependency | helper scope |
 |---|---|---|---|---|---|
-| 11 | P1 | **T12 hfd_ep_static route 3**: CLOSED TT +128.49 / FF +7.69 (e4e436536); native audit not yet run. Compact variant cmp1 failed GRT-0116 | native PASS = element done. Area: the 434.72 x 315.36 outline vs the 515.2 window already saves 0.087 mm2 per instance | none | Native audit + registry receipt for route 3; drop cmp1 unless a die area need appears |
+| 11 | P1 | **T12 hfd_ep_static**: route 3 CLOSED TT +128.49 / FF +7.69 but native FAIL: launch 223.2 on 3 sd_tx pins (limit 220), capture 212.7 on sd_rx[1] (limit 190) | native PASS = element done (gaps of 3.2 ps launch and 22.7 ps capture) | none | Route 4 (owner, in progress): a single IDLE pin flop, clock moved west on the S face. Helper: native audit of route 4 against the sd_tx/sd_rx pins. Drop cmp1 (GRT-0116) |
 
 ## Not on the list
 Not listed: refuted or no-action findings (D3, T9 reduce, R2-1, T3 q1-q3), withdrawn T7, and the routed-fixed T4 and T9 bank. Masters with no odb are listed in findings.json N1; they need a gate_layout before they can be audited.

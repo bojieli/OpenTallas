@@ -1,6 +1,6 @@
 # VIS-ROM: closure-blocking (severity-1) findings, status
 
-Updated 2026-10-16 03:05 PT. Maintained by VIS-ROM. The table is updated as owners reply and route/gate verdicts land; the full evidence is in `findings.json`.
+Updated 2026-10-16 04:00 PT. Maintained by VIS-ROM. The table is updated as owners reply and route/gate verdicts land; the full evidence is in `findings.json`.
 State values: **fixed-routed** (fixed and the route closed or improved on the cited metric) · **fix-in-gate** (fix built; gate or route running, or the gate improved but the tile is not closed) · **not-started** · **refuted** (the finding was wrong, with the evidence).
 
 | finding | die | master | owner | state | evidence (before -> after, job) |
@@ -18,9 +18,9 @@ State values: **fixed-routed** (fixed and the route closed or improved on the ci
 | S81F-02 | S81 | dsfd_cfifo | S-ELEM-PQ | not-started | The die binds --cfifo-v2, but no closed v2 view with xd2/xf2 exists, so 68,864 bits are unbound. |
 | S81H-01 | S81 | dsfd_host_c | S-ELEM-PQ | not-started | 4 CTS roots, 22,965 hold violations left. An n5 job.json is prepared (1c8f71915) but not submitted, with no evidence the clock roots were merged. |
 | S81H-02 | S81 | dsfd_stage_seq_static c9/c10 | S-ELEM-PQ | not-started | c9 FLOORPLAN_MARGIN at 66% util. The c10 RTL is larger again, and no grown-outline c10 kit or gate exists. |
-| S81H-14 (r2) | S81 | dsfd_vm_static_wfc_ctl | S-VM | not-started | Owner confirmed: e_q in the serial domain samples x43f, vm_fault and x34f from the core domain (OT_MULTI_ROOT refusal). It needs a structural CDC fix and was not resubmitted. |
+| S81H-14 (r2) | S81 | dsfd_vm_static_wfc_ctl | S-VM | fix-in-gate | r5 (split5-d0344ba3f) is submitted, and the in-leaf 4:3 core->serial crossing is removed: e_q carries the serial-native x43 fault and fault carries the core-native faults. e_d pins are now bit-major. Equivalence gate PASS against the r9 split reference, and the mutants fail as expected. CTS gate WARN with 0 fail: in->reg +174, reg->reg +259 ps. r4 had failed TT -98.74 / FF -70.09. Waiting on the r5 route. |
 
-**Summary:** 14 rows. 4 fix-in-gate, 1 refuted (pending its measurement), 9 not-started, 0 fixed-routed yet.
+**Summary:** 14 rows. 5 fix-in-gate, 1 refuted (pending its measurement), 8 not-started, 0 fixed-routed yet.
 The largest remaining lever not yet started is QKV-04, a single abstract regeneration for every KV relay. S81F-01 is built and waits on a die GEN run with --rly-face-pins.
 
 Note: S-VM control4 r3 record is on main (447607a6f), so the earlier merge request is closed.
