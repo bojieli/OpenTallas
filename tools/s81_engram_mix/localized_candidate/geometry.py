@@ -5,7 +5,7 @@ import matplotlib;matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
 import argparse
-p=argparse.ArgumentParser();p.add_argument('--out',type=Path,required=True);p.add_argument('--own-valid',action='store_true');args=p.parse_args()
+p=argparse.ArgumentParser();p.add_argument('--out',type=Path,required=True);p.add_argument('--own-valid',action='store_true');p.add_argument('--timing-metrics',type=Path);p.add_argument('--constant-proof',type=Path);args=p.parse_args()
 R=Path(__file__).resolve().parents[3];O=args.out;O.mkdir(parents=True,exist_ok=True)
 screen=json.loads((R/'results/arch/s81_mix4_localized_1016/connected_geometry/baseline_leaf_geometry.json').read_text());J=json.loads((O/'cluster_graph.json').read_text());TOP='ot_s81_engram_mixq_localized_candidate'if args.own_valid else'ot_s81_engram_mixq_clocked_candidate';top=J['modules'][TOP];cells=top['cells'];assert len(cells)==38
 pins={};dims={};hashes={}
@@ -97,6 +97,24 @@ def dist(a,b,boxes):return min(abs(x-u)+abs(y-v)for x,y in coords(a,boxes)for u,
 import numpy as np,random
 names=list(cells);index={n:i for i,n in enumerate(names)}
 si=np.array([index[a[0]]for a,b in joins]);ti=np.array([index[b[0]]for a,b in joins]);so=np.array([pins[cells[a[0]]['type']][a[1]][0]for a,b in joins]);to=np.array([pins[cells[b[0]]['type']][b[1]][0]for a,b in joins])
+# Actual child ETM pair limits; mapped static constants remain separate.
+timing_limits=None
+if args.timing_metrics:
+ cache=json.loads(args.timing_metrics.read_text());mm=cache['metrics'];vv=cache['view_provenance'];constants={}
+ if args.constant_proof:
+  for item in json.loads(args.constant_proof.read_text())['cells']:constants[item['cell']]={r['port']for r in item['rows']if r['constant_zero_proved']}
+ limits=[];timed=[]
+ for k,(a,b)in enumerate(joins):
+  sm,tm=cells[a[0]]['type'],cells[b[0]]['type'];aa=mm[sm]['tt'].get(a[1]);bb=mm[tm]['tt'].get(b[1])
+  if not aa or not bb or aa['out']is None or bb['inp']is None:
+   assert a[1]in constants.get(sm,set()),(a,b,'unknown timing arc')
+   continue
+  sr=max(vv[sm]['tt']['clock_refs'][ck]['rise']for ck in aa['clk']);tr=max(vv[tm]['tt']['clock_refs'][ck]['rise']for ck in bb['clk']);skew=150 if max(sr,tr)>300 else 90
+  limits.append((833.333-60-skew-aa['out']-bb['inp'])/.76);timed.append(k)
+ timing_limits=np.array(limits);timed=np.array(timed)
+def tt_score(boxes):
+ xy=np.array([(boxes[n]['x'],boxes[n]['y'])for n in names]);d=np.abs(xy[si]+so-xy[ti]-to).sum(axis=1);deficit=np.maximum(.76*(d[timed]-timing_limits),0)
+ return 100000*deficit.max()+100*deficit.sum()+1000*np.count_nonzero(deficit)+.01*d.sum()
 globalrow=['mix.hsum','mix.ksum','mix.dsum','mix.g_norm[0].leaf','mix.g_norm[1].leaf','shell.ctl','mix.relay','mix.control']
 def build(order):
  boxes={n:dict(b)for n,b in q1.items()};x=0
@@ -104,6 +122,7 @@ def build(order):
  boxes['mix.gate_leaf.magnitude']['y']=496.8
  return boxes
 def objective(boxes):
+ if timing_limits is not None:return tt_score(boxes)
  xy=np.array([(boxes[n]['x'],boxes[n]['y'])for n in names]);d=np.abs(xy[si]+so-xy[ti]-to).sum(axis=1)
  return d.sum()+6*np.maximum(d-500,0).sum()+1000*d.max()
 bestorder=globalrow[:];bestboxes=build(bestorder);bestcost=objective(bestboxes);rng=random.Random(217)
@@ -116,6 +135,7 @@ for seed in range(3):
 import itertools
 capsule={n:dict(b)for n,b in bestboxes.items()}
 def reach_score(boxes):
+ if timing_limits is not None:return tt_score(boxes)
  xy=np.array([(boxes[n]['x'],boxes[n]['y'])for n in names]);d=np.abs(xy[si]+so-xy[ti]-to).sum(axis=1)
  return 10000*np.count_nonzero(d>500)+1000*d.max()+np.maximum(d-500,0).sum()+.1*d.sum()
 for sweep in range(2):
@@ -145,6 +165,42 @@ for step in range(7000):
  trial=current[:];i,j=rng.sample(range(8),2);trial[i],trial[j]=trial[j],trial[i];boxes=placecapsule(trial);v=reach_score(boxes);temperature=150000*(1-step/7000)+100
  if v<currentcost or rng.random()<math.exp(min(0,(currentcost-v)/temperature)):current,currentcost=trial,v
  if v<capsulebest:capsulebest,capsule=v,boxes
+# Whole-copy legal R0 master-slot permutations, including cross-quarter swaps.
+# Unlike quarter-only row orders this can bring global fanout sinks together.
+if timing_limits is not None:
+ interchangeable=defaultdict(list)
+ for n,b in capsule.items():interchangeable[(b['w'],b['h'])].append(n)
+ pairs=[(a,b)for group in interchangeable.values()for a,b in itertools.combinations(group,2)]
+ current={n:dict(b)for n,b in capsule.items()};cc=reach_score(current);bc=cc
+ for step in range(30000):
+  trial={n:dict(b)for n,b in current.items()};a,b=rng.choice(pairs)
+  trial[a]['x'],trial[b]['x']=trial[b]['x'],trial[a]['x'];trial[a]['y'],trial[b]['y']=trial[b]['y'],trial[a]['y']
+  v=reach_score(trial);temperature=1200000*(1-step/30000)+100
+  if v<cc or rng.random()<math.exp(min(0,(cc-v)/temperature)):current,cc=trial,v
+  if v<bc:bc,capsule=v,trial
+# General site-grid translations and legal swaps, without frozen quarter homes.
+if timing_limits is not None:
+ def legal(boxes,changed):
+  for n in changed:
+   b=boxes[n]
+   if b['x']<0 or b['y']<0 or b['x']+b['w']>1028.161 or b['y']+b['h']>851.041:return False
+   for m,c in boxes.items():
+    if m==n:continue
+    dx=max(b['x']-c['x']-c['w'],c['x']-b['x']-b['w'],0);dy=max(b['y']-c['y']-c['h'],c['y']-b['y']-b['h'],0)
+    if dx+dy<21.599:return False
+  return True
+ current={n:dict(b)for n,b in capsule.items()};cc=reach_score(current);bc=cc
+ for step in range(30000):
+  trial={n:dict(b)for n,b in current.items()};n=rng.choice(names);changed=[n]
+  if rng.random()<.20:
+   m=rng.choice(names);changed.append(m)
+   for axis in ['x','y']:trial[n][axis],trial[m][axis]=trial[m][axis],trial[n][axis]
+  else:
+   axis=rng.choice(['x','y']);trial[n][axis]+=rng.choice([-1,1])*2.16*rng.choice([1,2,5,10,20,40])
+  if not legal(trial,changed):continue
+  v=reach_score(trial);temperature=500000*(1-step/30000)+100
+  if v<cc or rng.random()<math.exp(min(0,(cc-v)/temperature)):current,cc=trial,v
+  if v<bc:bc,capsule=v,trial
 variants={'Q_cooptimized_capsules':(capsule,[1028.16,851.04]),'Q_optimized_center':(bestboxes,[1028.16,851.04]),**variants}
 results={};overruns_by_variant={}
 for tag,(boxes,outline)in variants.items():
@@ -183,17 +239,17 @@ for tag,(boxes,outline)in variants.items():
      count+=1;unique_drivers.add(source)
    cutrows.append({'position_um':value,'mandatory_crossing_bit_joins':count,'mandatory_crossing_unique_driver_bits':len(unique_drivers)})
   cuts[axis]=sorted(cutrows,key=lambda r:r['mandatory_crossing_bit_joins'],reverse=True)
- results[tag]={'mandatory_cut_inventory':cuts,'outline_um':outline,'overlap':0,'minimum_rect_L1_clearance_um':min(clearances),'incident_child_bit_joins':len(rows),'missing_LEF_terminals':0,'minimum_manhattan_sum_bit_um':sum(lengths),'minimum_manhattan_worst_um':max(lengths),'over500um_even_before_obstructions':sum(x>500for x in lengths),'p95_um':lengths[int(.95*len(lengths))],'VM_E_face_to_shell_return_minimum_max_um':max(vm),'VM_E_face_to_shell_return_minimum_mean_um':sum(vm)/len(vm),'largest_pairs':sorted([{'pair':k,'bits':v[0],'max_L1_um':v[1],'over500':v[2]}for k,v in groups.items()],key=lambda r:r['max_L1_um'],reverse=True)[:20],'placement':boxes}
+ results[tag]={'mandatory_cut_inventory':cuts,'outline_um':outline,'overlap':0,'minimum_rect_L1_clearance_um':min(clearances),'incident_child_bit_joins':len(rows),'missing_LEF_terminals':0,'minimum_manhattan_sum_bit_um':sum(lengths),'minimum_manhattan_worst_um':max(lengths),'over500um_even_before_obstructions':sum(x>500for x in lengths),'p95_um':lengths[int(.95*len(lengths))],'copy_E_boundary_to_shell_return_minimum_max_um':max(vm),'copy_E_boundary_to_shell_return_minimum_mean_um':sum(vm)/len(vm),'largest_pairs':sorted([{'pair':k,'bits':v[0],'max_L1_um':v[1],'over500':v[2]}for k,v in groups.items()],key=lambda r:r['max_L1_um'],reverse=True)[:20],'placement':boxes}
 print(json.dumps({k:{x:v for x,v in r.items()if x not in ('placement','largest_pairs','mandatory_cut_inventory')}for k,r in results.items()},indent=1))
-receipt={'status':'ACTUAL_CONNECTED_GEOMETRY_SCREEN_ONLY','graph':'Yosys elaborated source38blackboxphysicalchildren; blackboxes use actual RTL headers, every data/control interchild terminal matched to actual routed LEF pin rectangles','leaf_views':hashes,'excluded_clock_reset_bits':dict(excluded),'perbit_joins':len(joins),'boundary_input_bits':len(boundary),'results':results,'limits':['Minimum L1 over all LEF terminal rectangle centers is optimistic, not routed RC or TT/FF proof','Clock/reset connections enumerated separately, no clocktree/reset PG plan qualified','Boundary VM span/lane per-bit y grants absent: Eface reach is only optimistic horizontal lowerbound','No timing waiver for over500um joins; added pipeline requires actual RTL/calendar proof','All R0 outlines; no90degree rotations or inherited rotated physical views','N inherited chunk ordering is concretized from prior geometry reservation, not a routed parent','Cut counts are mandatory endpoint-separated bit joins; no channel/layer track grant exists so no cut-capacity PASS claimed']}
+receipt={'status':'ACTUAL_CONNECTED_GEOMETRY_SCREEN_ONLY','graph':'Yosys elaborated source38blackboxphysicalchildren; blackboxes use actual RTL headers, every data/control interchild terminal matched to actual routed LEF pin rectangles','leaf_views':hashes,'excluded_clock_reset_bits':dict(excluded),'perbit_joins':len(joins),'boundary_input_bits':len(boundary),'results':results,'limits':['Minimum L1 over all LEF terminal rectangle centers is optimistic, not routed RC or TT/FF proof','Clock/reset connections enumerated separately, no clocktree/reset PG plan qualified','Copy E boundary is not VM face; actual parent E transport reserve403.488um nominal/403.464um postshave is additional. Joint candidate pins require fullparent joins.','No timing waiver for over500um joins; added pipeline requires actual RTL/calendar proof','All R0 outlines; no90degree rotations or inherited rotated physical views','N inherited chunk ordering is concretized from prior geometry reservation, not a routed parent','Cut counts are mandatory endpoint-separated bit joins; no channel/layer track grant exists so no cut-capacity PASS claimed']}
 (O/'over500_pin_legs.json').write_text(json.dumps(overruns_by_variant,indent=1)+'\n')
 (O/'connected_geometry.json').write_text(json.dumps(receipt,indent=1)+'\n')
 fig,axs=plt.subplots(2,3,figsize=(20,13));axs=axs.ravel()
 for ax,(tag,(boxes,outline))in zip(axs,variants.items()):
  for n,b in boxes.items():
   ax.add_patch(Rectangle((b['x'],b['y']),b['w'],b['h'],facecolor='#b2df8a'if n.startswith('shell.')else'#bdcce3',edgecolor='black',linewidth=.5));ax.text(b['x']+b['w']/2,b['y']+b['h']/2,n.replace('mix.','').replace('shell.','s.').replace('.leaf',''),ha='center',va='center',fontsize=5)
- ax.axvline(outline[0]+21.6,color='red',lw=2);ax.set_aspect('equal');ax.set_xlim(-10,1140);ax.set_ylim(-10,910);ax.set_title(tag+'\n'+str(outline)+'um; E red=VM',fontsize=10)
- r=results[tag];ax.set_xlabel(f'actual bitjoins{len(joins)}; >500um {r["over500um_even_before_obstructions"]}\nworst {r["minimum_manhattan_worst_um"]:.1f}um; shell VM max {r["VM_E_face_to_shell_return_minimum_max_um"]:.1f}um')
+ ax.axvline(outline[0],color='red',lw=2);ax.set_aspect('equal');ax.set_xlim(-10,1140);ax.set_ylim(-10,910);ax.set_title(tag+'\n'+str(outline)+'um; red=copy E boundary',fontsize=10)
+ r=results[tag];ax.set_xlabel(f'actual bitjoins{len(joins)}; >500um {r["over500um_even_before_obstructions"]}\nworst {r["minimum_manhattan_worst_um"]:.1f}um; shell to copy E max {r["copy_E_boundary_to_shell_return_minimum_max_um"]:.1f}um')
 # comparison uses every subplot
 # axs[-1].text(0,1,'38 actual RTL children;10,396 bitjoins\nAll data/control pins match routed LEFs.\nMinimum L1 over terminal shapes only.\nNo native timing/cut/PG qualification.\nQuarter grouping improves all-incident wire cost;\nremaining long nets require source/calendar fix.\nAll outlines R0;21.6um minimum clearance.\nClock/reset reported separately,not qualified.',va='top',fontsize=14)
 fig.suptitle('MIX4 source-connected R0 alternatives:optimistic actual LEF-pin L1; parent timing/cuts/PG OPEN');fig.tight_layout();fig.savefig(O/'connected_geometry.png',dpi=160)

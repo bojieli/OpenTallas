@@ -1,0 +1,319 @@
+{
+ "joint_sha256": "39fcc020007762e86569c5c83871d989cff2d5a41d70422ee1cb1104ccb368b8",
+ "joint_source": "die candidate d0323e2d2; not adopted",
+ "copy_bottoms_um": [
+  30.24,
+  943.92,
+  1857.6,
+  2771.28
+ ],
+ "parent_outline_um": [
+  1431.624,
+  3652.536
+ ],
+ "actual_E_channel_um": 403.46399999999994,
+ "nominal_E_channel_um": 403.488,
+ "top_grouped_actual_failing_legs": [
+  {
+   "source": [
+    "shell.ctl",
+    "phase"
+   ],
+   "target": [
+    "mix.g_mult[1].leaf",
+    "phase"
+   ],
+   "source_master": "ot_s81_engram_mixq_shctl",
+   "target_master": "ot_s81_engram_mul4",
+   "distance_um": 671.9205000000001,
+   "O_minus_R_ps": 161.34428999999997,
+   "S_plus_R_ps": 158.31886,
+   "source_clocks": [
+    "ck"
+   ],
+   "target_clocks": [
+    "clk"
+   ],
+   "pair_reach150_um": 399.56559210526314,
+   "source_R_ps": 97.9,
+   "target_R_ps": 247.4,
+   "selected_skew_ps": 90,
+   "selected_setup_ps": -146.98973000000007,
+   "child_boundary_defect": false,
+   "setup90_ps": -146.98973000000007,
+   "setup150_ps": -206.98973000000007,
+   "ff_no_wire_reserve_ps": 95.93660999999997
+  },
+  {
+   "source": [
+    "mix.g_add[3].leaf",
+    "fault"
+   ],
+   "target": [
+    "mix.relay",
+    "up_i[40]"
+   ],
+   "source_master": "ot_s81_engram_add8",
+   "target_master": "ot_s81_engram_rly",
+   "distance_um": 711.8064999999988,
+   "O_minus_R_ps": 164.26326,
+   "S_plus_R_ps": 121.63748000000001,
+   "source_clocks": [
+    "clk"
+   ],
+   "target_clocks": [
+    "clk"
+   ],
+   "pair_reach150_um": 443.9898157894736,
+   "source_R_ps": 210.3,
+   "target_R_ps": 60.7,
+   "selected_skew_ps": 90,
+   "selected_setup_ps": -143.54067999999916,
+   "child_boundary_defect": false,
+   "setup90_ps": -143.54067999999916,
+   "setup150_ps": -203.54067999999916,
+   "ff_no_wire_reserve_ps": 85.21158999999997
+  },
+  {
+   "source": [
+    "shell.ctl",
+    "fa"
+   ],
+   "target": [
+    "shell.col[3].u",
+    "fa"
+   ],
+   "source_master": "ot_s81_engram_mixq_shctl",
+   "target_master": "ot_s81_engram_mixq_shcol",
+   "distance_um": 694.9664999999997,
+   "O_minus_R_ps": 161.6358,
+   "S_plus_R_ps": 136.69295,
+   "source_clocks": [
+    "ck"
+   ],
+   "target_clocks": [
+    "ck"
+   ],
+   "pair_reach150_um": 427.6371710526315,
+   "source_R_ps": 97.9,
+   "target_R_ps": 149.1,
+   "selected_skew_ps": 90,
+   "selected_setup_ps": -143.1702899999998,
+   "child_boundary_defect": false,
+   "setup90_ps": -143.1702899999998,
+   "setup150_ps": -203.1702899999998,
+   "ff_no_wire_reserve_ps": 86.26443999999998
+  },
+  {
+   "source": [
+    "shell.ctl",
+    "fr"
+   ],
+   "target": [
+    "shell.col[3].u",
+    "fr"
+   ],
+   "source_master": "ot_s81_engram_mixq_shctl",
+   "target_master": "ot_s81_engram_mixq_shcol",
+   "distance_um": 695.8754999999996,
+   "O_minus_R_ps": 161.36769999999999,
+   "S_plus_R_ps": 136.26189,
+   "source_clocks": [
+    "ck"
+   ],
+   "target_clocks": [
+    "ck"
+   ],
+   "pair_reach150_um": 428.55711842105256,
+   "source_R_ps": 97.9,
+   "target_R_ps": 149.1,
+   "selected_skew_ps": 90,
+   "selected_setup_ps": -143.16196999999977,
+   "child_boundary_defect": false,
+   "setup90_ps": -143.16196999999977,
+   "setup150_ps": -203.16196999999977,
+   "ff_no_wire_reserve_ps": 85.76978
+  },
+  {
+   "source": [
+    "mix.g_mult[4].leaf",
+    "vo"
+   ],
+   "target": [
+    "mix.dsum",
+    "v"
+   ],
+   "source_master": "ot_s81_engram_mul4",
+   "target_master": "ot_s81_engram_sum",
+   "distance_um": 681.8090000000004,
+   "O_minus_R_ps": 168.10592,
+   "S_plus_R_ps": 127.88012,
+   "source_clocks": [
+    "clk"
+   ],
+   "target_clocks": [
+    "clk"
+   ],
+   "pair_reach150_um": 430.7196842105263,
+   "source_R_ps": 247.4,
+   "target_R_ps": 153.3,
+   "selected_skew_ps": 90,
+   "selected_setup_ps": -130.8278800000004,
+   "child_boundary_defect": false,
+   "setup90_ps": -130.8278800000004,
+   "setup150_ps": -190.8278800000004,
+   "ff_no_wire_reserve_ps": 86.87783999999999
+  },
+  {
+   "source": [
+    "shell.ctl",
+    "iv"
+   ],
+   "target": [
+    "mix.g_mult[1].leaf",
+    "v"
+   ],
+   "source_master": "ot_s81_engram_mixq_shctl",
+   "target_master": "ot_s81_engram_mul4",
+   "distance_um": 672.4965000000002,
+   "O_minus_R_ps": 161.96880000000002,
+   "S_plus_R_ps": 140.22986,
+   "source_clocks": [
+    "ck"
+   ],
+   "target_clocks": [
+    "clk"
+   ],
+   "pair_reach150_um": 422.54518421052626,
+   "source_R_ps": 97.9,
+   "target_R_ps": 247.4,
+   "selected_skew_ps": 90,
+   "selected_setup_ps": -129.9630000000002,
+   "child_boundary_defect": false,
+   "setup90_ps": -129.9630000000002,
+   "setup150_ps": -189.9630000000002,
+   "ff_no_wire_reserve_ps": 83.91803000000002
+  },
+  {
+   "source": [
+    "mix.g_add[3].leaf",
+    "copy_out[1]"
+   ],
+   "target": [
+    "mix.relay",
+    "up_i[52]"
+   ],
+   "source_master": "ot_s81_engram_add8",
+   "target_master": "ot_s81_engram_rly",
+   "distance_um": 709.9679999999987,
+   "O_minus_R_ps": 169.33900999999997,
+   "S_plus_R_ps": 103.59093,
+   "source_clocks": [
+    "clk"
+   ],
+   "target_clocks": [
+    "clk"
+   ],
+   "pair_reach150_um": 461.0566578947368,
+   "source_R_ps": 210.3,
+   "target_R_ps": 60.7,
+   "selected_skew_ps": 90,
+   "selected_setup_ps": -129.17261999999909,
+   "child_boundary_defect": false,
+   "setup90_ps": -129.17261999999909,
+   "setup150_ps": -189.17261999999909,
+   "ff_no_wire_reserve_ps": 75.41199
+  },
+  {
+   "source": [
+    "mix.g_mult[6].leaf",
+    "fault"
+   ],
+   "target": [
+    "mix.relay",
+    "up_i[59]"
+   ],
+   "source_master": "ot_s81_engram_mul4",
+   "target_master": "ot_s81_engram_rly",
+   "distance_um": 701.2320000000001,
+   "O_minus_R_ps": 172.77791999999997,
+   "S_plus_R_ps": 104.09146000000001,
+   "source_clocks": [
+    "clk"
+   ],
+   "target_clocks": [
+    "clk"
+   ],
+   "pair_reach150_um": 455.8731842105263,
+   "source_R_ps": 247.4,
+   "target_R_ps": 60.7,
+   "selected_skew_ps": 90,
+   "selected_setup_ps": -126.47270000000003,
+   "child_boundary_defect": false,
+   "setup90_ps": -126.47270000000003,
+   "setup150_ps": -186.47270000000003,
+   "ff_no_wire_reserve_ps": 79.73422000000002
+  },
+  {
+   "source": [
+    "shell.ctl",
+    "eps[22]"
+   ],
+   "target": [
+    "mix.g_norm[1].leaf",
+    "eps[22]"
+   ],
+   "source_master": "ot_s81_engram_mixq_shctl",
+   "target_master": "ot_s81_engram_norm",
+   "distance_um": 646.6560000000004,
+   "O_minus_R_ps": 175.25508999999997,
+   "S_plus_R_ps": 140.85749,
+   "source_clocks": [
+    "ck"
+   ],
+   "target_clocks": [
+    "clk"
+   ],
+   "pair_reach150_um": 404.2373947368421,
+   "source_R_ps": 97.9,
+   "target_R_ps": 214.8,
+   "selected_skew_ps": 90,
+   "selected_setup_ps": -124.23814000000033,
+   "child_boundary_defect": false,
+   "setup90_ps": -124.23814000000033,
+   "setup150_ps": -184.23814000000033,
+   "ff_no_wire_reserve_ps": 105.62510999999998
+  },
+  {
+   "source": [
+    "shell.ctl",
+    "fa"
+   ],
+   "target": [
+    "shell.col[2].u",
+    "fa"
+   ],
+   "source_master": "ot_s81_engram_mixq_shctl",
+   "target_master": "ot_s81_engram_mixq_shcol",
+   "distance_um": 661.5584999999998,
+   "O_minus_R_ps": 161.6358,
+   "S_plus_R_ps": 136.69295,
+   "source_clocks": [
+    "ck"
+   ],
+   "target_clocks": [
+    "ck"
+   ],
+   "pair_reach150_um": 427.6371710526315,
+   "source_R_ps": 97.9,
+   "target_R_ps": 149.1,
+   "selected_skew_ps": 90,
+   "selected_setup_ps": -117.78020999999984,
+   "child_boundary_defect": false,
+   "setup90_ps": -117.78020999999984,
+   "setup150_ps": -177.78020999999984,
+   "ff_no_wire_reserve_ps": 86.26443999999998
+  }
+ ],
+ "placement_scope": "R0 candidate exact38hard outlines/copy; remaining65roots have no placed physicalview; all parent source transpose/broadcast transports remain OPEN"
+}

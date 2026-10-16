@@ -1,0 +1,150 @@
+
+-- Running command `read_verilog -sv /home/ubuntu/artifacts/s81-mix4-localized-0310/ownvalid_geometry/graph_source.sv; hierarchy -check -top ot_s81_engram_mixq_localized_candidate -chparam VM_LAT 13; flatten; opt_expr; opt_clean; write_json /home/ubuntu/artifacts/s81-mix4-localized-0310/ownvalid_geometry/cluster_graph.json' --
+
+1. Executing Verilog-2005 frontend: /home/ubuntu/artifacts/s81-mix4-localized-0310/ownvalid_geometry/graph_source.sv
+Parsing SystemVerilog input from `/home/ubuntu/artifacts/s81-mix4-localized-0310/ownvalid_geometry/graph_source.sv' to AST representation.
+Generating RTLIL representation for module `\ot_s81_engram_mul4'.
+Generating RTLIL representation for module `\ot_s81_engram_chunk8'.
+Generating RTLIL representation for module `\ot_s81_engram_add8'.
+Generating RTLIL representation for module `\ot_s81_engram_norm'.
+Generating RTLIL representation for module `\ot_s81_engram_sum'.
+Generating RTLIL representation for module `\ot_s81_engram_signed_sqrt'.
+Generating RTLIL representation for module `\ot_s81_engram_sigmoid'.
+Generating RTLIL representation for module `\ot_s81_engram_mix_control'.
+Generating RTLIL representation for module `\ot_s81_engram_rly'.
+Generating RTLIL representation for module `\ot_s81_engram_mixq_shcol'.
+Generating RTLIL representation for module `\ot_s81_engram_mixq_shctl'.
+Generating RTLIL representation for module `\ot_s81_engram_mixq_localized_candidate'.
+Generating RTLIL representation for module `\ot_s81_engram_mix_relay_localized_candidate'.
+Generating RTLIL representation for module `\ot_s81_engram_mixq_shell_localized'.
+Generating RTLIL representation for module `\ot_s81_engram_gate'.
+Successfully finished Verilog frontend.
+
+2. Executing HIERARCHY pass (managing design hierarchy).
+
+3. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s81_engram_mixq_localized_candidate'.
+Parameter \VM_LAT = 13
+Generating RTLIL representation for module `$paramod\ot_s81_engram_mixq_localized_candidate\VM_LAT=13'.
+
+3.1. Analyzing design hierarchy..
+Top module:  \ot_s81_engram_mixq_localized_candidate
+Used module:     \ot_s81_engram_mixq_shell_localized
+Used module:     \ot_s81_engram_mix_relay_localized_candidate
+Used module:         \ot_s81_engram_gate
+
+3.2. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s81_engram_mixq_shell_localized'.
+Parameter \MUT = 0
+Parameter \VM_LAT = 13
+Parameter \WRITE_COMMIT_LAT = 1
+Parameter \HLAYOUT = 1
+Generating RTLIL representation for module `$paramod\ot_s81_engram_mixq_shell_localized\MUT=0\VM_LAT=13\WRITE_COMMIT_LAT=1\HLAYOUT=1'.
+
+3.3. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s81_engram_mix_relay_localized_candidate'.
+Parameter \MUT = 0
+Generating RTLIL representation for module `$paramod\ot_s81_engram_mix_relay_localized_candidate\MUT=0'.
+
+3.4. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s81_engram_gate'.
+Parameter \LM = 5
+Parameter \LA = 4
+Generating RTLIL representation for module `$paramod\ot_s81_engram_gate\LM=5\LA=4'.
+
+3.5. Analyzing design hierarchy..
+Top module:  \ot_s81_engram_mixq_localized_candidate
+Used module:     $paramod\ot_s81_engram_mixq_shell_localized\MUT=0\VM_LAT=13\WRITE_COMMIT_LAT=1\HLAYOUT=1
+Used module:     $paramod\ot_s81_engram_mix_relay_localized_candidate\MUT=0
+Used module:         \ot_s81_engram_gate
+
+3.6. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s81_engram_gate'.
+Parameter \LM = 5
+Parameter \LA = 4
+Found cached RTLIL representation for module `$paramod\ot_s81_engram_gate\LM=5\LA=4'.
+
+3.7. Analyzing design hierarchy..
+Top module:  \ot_s81_engram_mixq_localized_candidate
+Used module:     $paramod\ot_s81_engram_mixq_shell_localized\MUT=0\VM_LAT=13\WRITE_COMMIT_LAT=1\HLAYOUT=1
+Used module:     $paramod\ot_s81_engram_mix_relay_localized_candidate\MUT=0
+Used module:         $paramod\ot_s81_engram_gate\LM=5\LA=4
+
+3.8. Analyzing design hierarchy..
+Top module:  \ot_s81_engram_mixq_localized_candidate
+Used module:     $paramod\ot_s81_engram_mixq_shell_localized\MUT=0\VM_LAT=13\WRITE_COMMIT_LAT=1\HLAYOUT=1
+Used module:     $paramod\ot_s81_engram_mix_relay_localized_candidate\MUT=0
+Used module:         $paramod\ot_s81_engram_gate\LM=5\LA=4
+Removing unused module `\ot_s81_engram_gate'.
+Removing unused module `\ot_s81_engram_mixq_shell_localized'.
+Removing unused module `\ot_s81_engram_mix_relay_localized_candidate'.
+Removing unused module `$paramod\ot_s81_engram_mixq_localized_candidate\VM_LAT=13'.
+Removed 4 unused modules.
+Mapping positional arguments of cell $paramod\ot_s81_engram_gate\LM=5\LA=4.sigmoid (ot_s81_engram_sigmoid).
+Mapping positional arguments of cell $paramod\ot_s81_engram_gate\LM=5\LA=4.magnitude (ot_s81_engram_signed_sqrt).
+Mapping positional arguments of cell $paramod\ot_s81_engram_mix_relay_localized_candidate\MUT=0.g_norm[1].leaf (ot_s81_engram_norm).
+Mapping positional arguments of cell $paramod\ot_s81_engram_mix_relay_localized_candidate\MUT=0.g_norm[0].leaf (ot_s81_engram_norm).
+Mapping positional arguments of cell $paramod\ot_s81_engram_mix_relay_localized_candidate\MUT=0.g_add[3].leaf (ot_s81_engram_add8).
+Mapping positional arguments of cell $paramod\ot_s81_engram_mix_relay_localized_candidate\MUT=0.g_add[2].leaf (ot_s81_engram_add8).
+Mapping positional arguments of cell $paramod\ot_s81_engram_mix_relay_localized_candidate\MUT=0.g_add[1].leaf (ot_s81_engram_add8).
+Mapping positional arguments of cell $paramod\ot_s81_engram_mix_relay_localized_candidate\MUT=0.g_add[0].leaf (ot_s81_engram_add8).
+Mapping positional arguments of cell $paramod\ot_s81_engram_mix_relay_localized_candidate\MUT=0.g_reduce[2].g_chunk[3].leaf (ot_s81_engram_chunk8).
+Mapping positional arguments of cell $paramod\ot_s81_engram_mix_relay_localized_candidate\MUT=0.g_reduce[2].g_chunk[2].leaf (ot_s81_engram_chunk8).
+Mapping positional arguments of cell $paramod\ot_s81_engram_mix_relay_localized_candidate\MUT=0.g_reduce[2].g_chunk[1].leaf (ot_s81_engram_chunk8).
+Mapping positional arguments of cell $paramod\ot_s81_engram_mix_relay_localized_candidate\MUT=0.g_reduce[2].g_chunk[0].leaf (ot_s81_engram_chunk8).
+Mapping positional arguments of cell $paramod\ot_s81_engram_mix_relay_localized_candidate\MUT=0.g_reduce[1].g_chunk[3].leaf (ot_s81_engram_chunk8).
+Mapping positional arguments of cell $paramod\ot_s81_engram_mix_relay_localized_candidate\MUT=0.g_reduce[1].g_chunk[2].leaf (ot_s81_engram_chunk8).
+Mapping positional arguments of cell $paramod\ot_s81_engram_mix_relay_localized_candidate\MUT=0.g_reduce[1].g_chunk[1].leaf (ot_s81_engram_chunk8).
+Mapping positional arguments of cell $paramod\ot_s81_engram_mix_relay_localized_candidate\MUT=0.g_reduce[1].g_chunk[0].leaf (ot_s81_engram_chunk8).
+Mapping positional arguments of cell $paramod\ot_s81_engram_mix_relay_localized_candidate\MUT=0.g_reduce[0].g_chunk[3].leaf (ot_s81_engram_chunk8).
+Mapping positional arguments of cell $paramod\ot_s81_engram_mix_relay_localized_candidate\MUT=0.g_reduce[0].g_chunk[2].leaf (ot_s81_engram_chunk8).
+Mapping positional arguments of cell $paramod\ot_s81_engram_mix_relay_localized_candidate\MUT=0.g_reduce[0].g_chunk[1].leaf (ot_s81_engram_chunk8).
+Mapping positional arguments of cell $paramod\ot_s81_engram_mix_relay_localized_candidate\MUT=0.g_reduce[0].g_chunk[0].leaf (ot_s81_engram_chunk8).
+Mapping positional arguments of cell $paramod\ot_s81_engram_mix_relay_localized_candidate\MUT=0.g_mult[7].leaf (ot_s81_engram_mul4).
+Mapping positional arguments of cell $paramod\ot_s81_engram_mix_relay_localized_candidate\MUT=0.g_mult[6].leaf (ot_s81_engram_mul4).
+Mapping positional arguments of cell $paramod\ot_s81_engram_mix_relay_localized_candidate\MUT=0.g_mult[5].leaf (ot_s81_engram_mul4).
+Mapping positional arguments of cell $paramod\ot_s81_engram_mix_relay_localized_candidate\MUT=0.g_mult[4].leaf (ot_s81_engram_mul4).
+Mapping positional arguments of cell $paramod\ot_s81_engram_mix_relay_localized_candidate\MUT=0.g_mult[3].leaf (ot_s81_engram_mul4).
+Mapping positional arguments of cell $paramod\ot_s81_engram_mix_relay_localized_candidate\MUT=0.g_mult[2].leaf (ot_s81_engram_mul4).
+Mapping positional arguments of cell $paramod\ot_s81_engram_mix_relay_localized_candidate\MUT=0.g_mult[1].leaf (ot_s81_engram_mul4).
+Mapping positional arguments of cell $paramod\ot_s81_engram_mix_relay_localized_candidate\MUT=0.g_mult[0].leaf (ot_s81_engram_mul4).
+Mapping positional arguments of cell $paramod\ot_s81_engram_mix_relay_localized_candidate\MUT=0.gate_leaf ($paramod\ot_s81_engram_gate\LM=5\LA=4).
+Mapping positional arguments of cell $paramod\ot_s81_engram_mix_relay_localized_candidate\MUT=0.dsum (ot_s81_engram_sum).
+Mapping positional arguments of cell $paramod\ot_s81_engram_mix_relay_localized_candidate\MUT=0.ksum (ot_s81_engram_sum).
+Mapping positional arguments of cell $paramod\ot_s81_engram_mix_relay_localized_candidate\MUT=0.hsum (ot_s81_engram_sum).
+Mapping positional arguments of cell $paramod\ot_s81_engram_mix_relay_localized_candidate\MUT=0.relay (ot_s81_engram_rly).
+Mapping positional arguments of cell ot_s81_engram_mixq_localized_candidate.mix ($paramod\ot_s81_engram_mix_relay_localized_candidate\MUT=0).
+
+3.9. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s81_engram_sum'.
+Parameter \N = 32
+Parameter \D = 5120
+Parameter \LA = 4
+Generating RTLIL representation for module `$paramod\ot_s81_engram_sum\N=32\D=5120\LA=4'.
+
+3.10. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s81_engram_sum'.
+Parameter \N = 32
+Parameter \D = 5120
+Parameter \LA = 4
+Found cached RTLIL representation for module `$paramod\ot_s81_engram_sum\N=32\D=5120\LA=4'.
+
+3.11. Executing AST frontend in derive mode using pre-parsed AST for module `\ot_s81_engram_sum'.
+Parameter \N = 32
+Parameter \D = 5120
+Parameter \LA = 4
+Found cached RTLIL representation for module `$paramod\ot_s81_engram_sum\N=32\D=5120\LA=4'.
+
+4. Executing FLATTEN pass (flatten design).
+Using template $paramod\ot_s81_engram_mixq_shell_localized\MUT=0\VM_LAT=13\WRITE_COMMIT_LAT=1\HLAYOUT=1 for cells of type $paramod\ot_s81_engram_mixq_shell_localized\MUT=0\VM_LAT=13\WRITE_COMMIT_LAT=1\HLAYOUT=1.
+Using template $paramod\ot_s81_engram_mix_relay_localized_candidate\MUT=0 for cells of type $paramod\ot_s81_engram_mix_relay_localized_candidate\MUT=0.
+Using template $paramod\ot_s81_engram_gate\LM=5\LA=4 for cells of type $paramod\ot_s81_engram_gate\LM=5\LA=4.
+<suppressed ~3 debug messages>
+No more expansions possible.
+Deleting now unused module $paramod\ot_s81_engram_gate\LM=5\LA=4.
+Deleting now unused module $paramod\ot_s81_engram_mix_relay_localized_candidate\MUT=0.
+Deleting now unused module $paramod\ot_s81_engram_mixq_shell_localized\MUT=0\VM_LAT=13\WRITE_COMMIT_LAT=1\HLAYOUT=1.
+
+5. Executing OPT_EXPR pass (perform const folding).
+Optimizing module ot_s81_engram_mixq_localized_candidate.
+<suppressed ~13 debug messages>
+
+6. Executing OPT_CLEAN pass (remove unused cells and wires).
+Finding unused cells or wires in module \ot_s81_engram_mixq_localized_candidate..
+Removed 0 unused cells and 13 unused wires.
+<suppressed ~1 debug messages>
+
+7. Executing JSON backend.
