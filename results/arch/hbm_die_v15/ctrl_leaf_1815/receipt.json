@@ -1,0 +1,51 @@
+{
+ "schema": "opentallas.hbm_v15.ctrl_leaf.v1",
+ "date": "2026-10-15",
+ "owner": "H-DIE",
+ "source_commit": "edb8dfd0c",
+ "rule": "owner 10-14: all on-chip execution is real hardware; only the PHY (off-chip signalling) is modelled",
+ "change": "the die PHY abstract ot_hbm3e_phy_v41x_aw30_e8p5 carried the controller K interface (modelled controller). Successor: PHY-only abstract ot_hbm3e_phy_rc_e8p5 (row/column/data boundary, 18,722 pins, same 8.5 mm edge / 10 mm2 basis) + the real controller as 32 per-PC die leaves per stack ot_hbm_svc_pc_ctrl_leaf (the g_pc body of ot_hbm_svc_native_sector_pipeline_stack verbatim: actual ot_hbm_r14_stream_pc sequencer, same-row FIFO32, 32 reserved responses in a real 128x256 SRAM); parent ot_hbm_svc_native_sector_pipeline_leaves keeps ca_fault/fault OR (original module byte-identical)",
+ "proof": {
+  "native_stack0": "archived images, 320 records PASS, identical to the monolithic-controller log; early mutant rejected",
+  "native_stack1": "200 records PASS identical; early mutant rejected",
+  "steady_l4": "8 SM x 64 rows x 8 epochs, steady_epoch_ps 69583.3055 = 1.053x price, IDENTICAL to 13f80ffe1; early + copy-into-owned-cache mutants rejected",
+  "bench": "rtl/hbm_accel/loader/service_native/run_ctrl_leaves.sh <bench> (same TB/images/pass strings; only the controller source differs)"
+ },
+ "leaf_synth": {
+  "std_area_um2": 8665.23,
+  "cells": 68018,
+  "ff": 13681,
+  "srams": "1 x ot_sram_1r1w_128x256_m1_r2c2",
+  "host": "ot-epyc1tb /srv/opentallas-scratch/claude/hdie-1705/synth_pcleaf"
+ },
+ "kit": "physical/ref_tile/hdie_pc_ctrl (170.64 x 170.64 um, util 0.52), spec tools/ref_tile/specs_hbm_die_v15/hdie_pc_ctrl.json",
+ "die_cost": {
+  "instances": 128,
+  "outline_mm2_per_die": 3.727,
+  "note": "replaces 128 svc PCs (140.4x112.32 um, 2.02 mm2) in the PC band boxes; PHY area basis unchanged (no credit taken for the controller removed from it)"
+ },
+ "open": [
+  "ORFS route of hdie_pc_ctrl (REAL view)",
+  "region re-proof pcrow_rc (PHY-only + 128 leaves, die clock)",
+  "stack parent glue (ca_fault, fault OR) home",
+  "host write path to HBM through a K port (W loader port of the old abstract is gone)"
+ ],
+ "source_sha256": {
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf.sv": "724486e2813c12206de99ebf0f62a735c4dfb553198a219cf79f12827eff83a8",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_native_sector_pipeline_leaves.sv": "d9a122821374a9f9d12e3fc5d067c6dac87b1b233580c63e4d78c07134e99371",
+  "rtl/hbm_accel/loader/service_native/run_ctrl_leaves.sh": "a4f4d53004832a189c9f439cc66dc2644dcc6c5c9a149a5649c241d635c141ab",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_native_sector_pipeline_stack.sv": "e64cfb071eb16aca278f75bb0a5bdba6793b8fb74e4928c1a5d217f87697e65d",
+  "rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc.sv": "36ab8140f3a9f14d4098729f79f5091f1e67156409997dc2d6276387a23315c8",
+  "tools/mem_compiler/hbm_phy_gen.py": "8f4e110e2732e1c7bbce0de08a01b4bcf79cdd991cd4b4b633d5d184e0cae9da",
+  "physical/asap7_memory_macros/ot_hbm3e_phy_rc_e8p5/ot_hbm3e_phy_rc_e8p5.lef": "5112c676cb94ece49c98092fad8612c142e3ee7124788ab1d42229ba4ab568cf"
+ },
+ "logs_sha256": {
+  "native_s0_early_mutant.log": "1ed48ae912bee8f7379990d574fb3c276cde6faf4bb9bdc9f9f6db4452869646",
+  "native_s0_positive.log": "17c4832bdc898ed9a0ade686ba3c7838547313ebe6859daaaa792c473ac9cbe9",
+  "native_s1_early_mutant.log": "0041a40455276d6948b0fe9d4f42fb16ac981187df27a0a9468412b348973b6c",
+  "native_s1_positive.log": "5d222fc8638a22bec1da728c7a977c2074143ce0fcb8349ca74be4df3d9c2928",
+  "steady_l4_early_mutant.log": "c4f6f584b0597c83daa64e6266e8391d5f16e73b2ee097b0d7022a02a3fb0ae7",
+  "steady_l4_earlystart_mutant.log": "5001ee3b17428bc9c358e059ecd372f9f2ce40e5723312f5f1c5cf75b9329e23",
+  "steady_l4_positive.log": "4fd1e428a2bd143dbd52b09e491780797c448cda01869a790c651eae5d489a7b"
+ }
+}
