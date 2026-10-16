@@ -1081,9 +1081,11 @@ def rows_replay(Mach, progs, units, rows, mutant=None):
         raise RuntimeError("rows_replay: loops in the body (not a sliding layer)")
     try:
         for k in range(nrec):
-            r0 = progs[0][k]
-            if r0.unit == "CTL":
+            r0 = next((p[k] for p in progs if p[k].unit != "CTL"), None)
+            if r0 is None:
                 continue
+            if r0.unit == "COLL":
+                assert all(p[k].unit == "COLL" for p in progs), f"rows_replay: COLL record {k} not on every die"
             for j, (tok, pos, _) in enumerate(rows):
                 for i, d in enumerate(dies):
                     d.vm = imgs[j][i]
@@ -1100,6 +1102,9 @@ def rows_replay(Mach, progs, units, rows, mutant=None):
                 else:
                     for i, die in enumerate(dies):
                         r = progs[i][k]
+                        if r.unit == "CTL":          # a die-local NOP (ds_native pads non-owner dies with CTL.NOP)
+                            assert r.op in ("NOP", "FENCE"), r.op
+                            continue
                         Mach.dies = [die]
                         Mach.cur = r
                         try:
