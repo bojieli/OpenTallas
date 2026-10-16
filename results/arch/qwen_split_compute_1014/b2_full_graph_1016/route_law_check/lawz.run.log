@@ -1,0 +1,50 @@
+CALIBRATION pc1 h0 firsttag321 firstcap335 age14
+CALIBRATION pc1 h1 firsttag321 firstcap335 age14
+CALIBRATION pc1 h2 firsttag321 firstcap335 age14
+CALIBRATION pc1 h3 firsttag321 firstcap335 age14
+CALIBRATION pc1 h4 firsttag321 firstcap335 age14
+CALIBRATION pc1 h5 firsttag321 firstcap335 age14
+PASS actualROM_E3 pc1 writes48 reads48 landed8 exactallRB
+ROUTE TC0 AM0 RQ0 ME0 TAG0 CMD0 RB0
+PASS actualROMport pc1 firsttag321 caps335,335,335,335,335,335 tag_to_capture14
+CALIBRATION pc12 h0 firsttag3442 firstcap3456 age14
+CALIBRATION pc12 h1 firsttag3442 firstcap3456 age14
+CALIBRATION pc12 h2 firsttag3442 firstcap3456 age14
+CALIBRATION pc12 h3 firsttag3442 firstcap3456 age14
+CALIBRATION pc12 h4 firsttag3442 firstcap3456 age14
+CALIBRATION pc12 h5 firsttag3442 firstcap3456 age14
+PASS actualROM_E3 pc12 writes336 reads256 landed24 exactallRB
+ROUTE TC0 AM0 RQ0 ME0 TAG0 CMD0 RB0
+PASS actualROMport pc12 firsttag3442 caps3456,3456,3456,3456,3456,3456 tag_to_capture14
+CALIBRATION pc16 h0 firsttag7059 firstcap7073 age14
+CALIBRATION pc16 h1 firsttag7059 firstcap7073 age14
+CALIBRATION pc16 h2 firsttag7059 firstcap7073 age14
+CALIBRATION pc16 h3 firsttag7059 firstcap7073 age14
+CALIBRATION pc16 h4 firsttag7059 firstcap7073 age14
+CALIBRATION pc16 h5 firsttag7059 firstcap7073 age14
+PASS actualROM_E3 pc16 writes528 reads192 landed8 exactallRB
+ROUTE TC0 AM0 RQ0 ME0 TAG0 CMD0 RB0
+PASS actualROMport pc16 firsttag7059 caps7073,7073,7073,7073,7073,7073 tag_to_capture14
+CALIBRATION pc20 h0 firsttag10164 firstcap10178 age14
+CALIBRATION pc20 h1 firsttag10164 firstcap10178 age14
+CALIBRATION pc20 h2 firsttag10164 firstcap10178 age14
+CALIBRATION pc20 h3 firsttag10164 firstcap10178 age14
+CALIBRATION pc20 h4 firsttag10164 firstcap10178 age14
+CALIBRATION pc20 h5 firsttag10164 firstcap10178 age14
+PASS actualROM_E3 pc20 writes816 reads256 landed24 exactallRB
+ROUTE TC0 AM0 RQ0 ME0 TAG0 CMD0 RB0
+PASS actualROMport pc20 firsttag10164 caps10178,10178,10178,10178,10178,10178 tag_to_capture14
+CALIBRATION pc103 h0 firsttag13557 firstcap13571 age14
+CALIBRATION pc103 h1 firsttag13557 firstcap13571 age14
+CALIBRATION pc103 h2 firsttag13557 firstcap13571 age14
+CALIBRATION pc103 h3 firsttag13557 firstcap13571 age14
+CALIBRATION pc103 h4 firsttag13557 firstcap13571 age14
+CALIBRATION pc103 h5 firsttag13557 firstcap13571 age14
+PASS actualROM_E3 pc103 writes816 reads0 landed64 exactallRB
+ROUTE TC0 AM0 RQ0 ME0 TAG0 CMD0 RB0
+PASS actualROMport pc103 firsttag13557 caps13571,13571,13571,13571,13571,13571 tag_to_capture14
+PASS actual native controller→releasedROM→384hardmul→source50FF→issuer→sixhalftrain→E3 component checkedrows1200 actualwrites816 checkedlanes18176
+- /srv/opentallas-scratch/claude/q-b2-integ-1016/law/lawz/tb_b2_route.sv:579: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 33us; walltime 86.192 s; speed 380.129 ns/s
+- Verilator: cpu 86.124 s on 1 threads; allocated 103 MB

@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.qwen-split.compute-straps.v1",
- "note": "Contract STRAP inputs of the compute die: constants by contract (identity / configuration), tied by the die. Every other constant on an input is a defect the port-bind reports (INPUT_TIED), e.g. chain-terminus ready ties and the lockstep tile's tap_r (requests to the DVM builder: variants without those inputs). qfd_sp_band_lanes.tt is the RTL-contract strap-gated input of bands 1/2 (b0 = 0: the band ignores it; only band 0 receives the tree-top word).",
+ "note": "Contract STRAP inputs of the compute die: constants by contract (identity / configuration), tied by the die. Every other constant on an input is a defect the port-bind reports (INPUT_TIED), e.g. chain-terminus ready ties and the lockstep tile's tap_r (requests to the DVM builder: variants without those inputs). qfd_sp_band_lanes.tt is the RTL-contract strap-gated input of bands 1/2 (b0 = 0: the band ignores it; only band 0 receives the tree-top word). Q-B2 10-16 (b2 per-side port remap): qfd_port_half_b2.hb is the captured physical halfband identity (0..5); qfd_sp_halfband_lanes_b2_l2.b0 selects the single native tree-return half (HB0), its tt_l0..tt_l7 upper returns are the strap-gated inputs of halves 1..5 (b0 = 0 ignores them, exactly as qfd_sp_band_lanes.tt), and lnk is the per-half relay strap set ONLY from the calibrated phase manifest (the production writer refuses emission while it is OPEN).",
  "straps": [
   [
    "qfd_tile_nk",
@@ -45,6 +45,50 @@
   [
    "qfd_sp_band_lanes",
    "tt"
+  ],
+  [
+   "qfd_port_half_b2",
+   "hb"
+  ],
+  [
+   "qfd_sp_halfband_lanes_b2_l2",
+   "b0"
+  ],
+  [
+   "qfd_sp_halfband_lanes_b2_l2",
+   "lnk"
+  ],
+  [
+   "qfd_sp_halfband_lanes_b2_l2",
+   "tt_l0"
+  ],
+  [
+   "qfd_sp_halfband_lanes_b2_l2",
+   "tt_l1"
+  ],
+  [
+   "qfd_sp_halfband_lanes_b2_l2",
+   "tt_l2"
+  ],
+  [
+   "qfd_sp_halfband_lanes_b2_l2",
+   "tt_l3"
+  ],
+  [
+   "qfd_sp_halfband_lanes_b2_l2",
+   "tt_l4"
+  ],
+  [
+   "qfd_sp_halfband_lanes_b2_l2",
+   "tt_l5"
+  ],
+  [
+   "qfd_sp_halfband_lanes_b2_l2",
+   "tt_l6"
+  ],
+  [
+   "qfd_sp_halfband_lanes_b2_l2",
+   "tt_l7"
   ]
  ]
 }
