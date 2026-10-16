@@ -31,7 +31,7 @@ if a.sequenced:
  descriptors=[dict(ph=514,np=0,xbase=0,xps=0,obase=0,ops=0,fmt=0,observed_end_edges=35,native_tag=0)]
  rows=[dict(engine=13,arg=0,issue=0,done=38,pin_to_pin=37,native_tag=0),dict(engine=14,arg=0,issue=39,done=0),dict(engine=15,arg=0,issue=40,done=0)]
  events=[dict(timestamp=1,action=dict(accept_tag=0)),dict(timestamp=10,action=dict(cfg=1)),dict(timestamp=14,action=dict(stream_req=1,stream_addr=16383)),dict(timestamp=32,action=dict(retire_mask=1)),dict(timestamp=42,action=dict(phase_end=1))]
- image=compile_stage(rows,descriptors,events,0,0)
+ image=compile_stage(rows,descriptors,events,0,0,host_boot300=a.host_boot300)
  packets=image['host_packets']
  # Declared external initialization CSR words exercise the real HOST h/i
  # async FIFO; all22 programming packets above are intentionally intercepted.
