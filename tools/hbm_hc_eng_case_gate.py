@@ -13,6 +13,8 @@ import shlex
 import subprocess
 import sys
 
+from hbm_hc_eng_build import SOURCES
+
 ROOT = Path(__file__).resolve().parents[1]
 
 
@@ -26,8 +28,16 @@ def main():
     ap.add_argument('--rs', type=int, default=0)
     ap.add_argument('--mutant', type=int, choices=range(4), default=0)
     ap.add_argument('--seed', type=int, default=20261016)
+    ap.add_argument('--source-commit', help='explicit source lineage for a staged snapshot without .git')
     a = ap.parse_args()
+    lineage = subprocess.run(['git', 'rev-parse', 'HEAD'], cwd=ROOT, capture_output=True, text=True)
+    source_commit = a.source_commit or (lineage.stdout.strip() if lineage.returncode == 0 else None)
+    if not source_commit:
+        ap.error('staged snapshot has no .git; provide --source-commit before running')
+    source_manifest = {s: hashlib.sha256((ROOT / s).read_bytes()).hexdigest() for s in SOURCES}
     a.binary = a.binary.resolve()
+    if not a.binary.is_file():
+        ap.error('binary does not exist; preserve and collect the running build first')
     a.run = a.run.resolve()
     if a.run.exists():
         ap.error('output directory already exists; preserve earlier evidence and choose a new directory')
@@ -62,7 +72,7 @@ def main():
                   scope='HC engine component at declared external wave/gathered-mix/table/programme ports',
                   full_die_qualified=False, binary_sha256=hashlib.sha256(a.binary.read_bytes()).hexdigest(),
                   declared_compile_mutant=a.mutant, binary_compile_lineage_must_be_checked_separately=True,
-                  source_commit=subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip(),
+                  source_commit=source_commit, source_files_sha256=source_manifest,
                   rc=p.returncode, measured_raw0=measured_raw0, scalar_spacing=a.rs, programme=meta)
     (a.run / 'summary.json').write_text(json.dumps(report, indent=2) + '\n')
     print(json.dumps({k: v for k, v in report.items() if k != 'programme'}))
