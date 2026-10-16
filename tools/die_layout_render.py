@@ -102,7 +102,7 @@ def from_s81(plan_path, reach, hub_layout=None):
         # --s81-hub: the generator hub layout (tools/s81/wide_hub_layout.py) replaces the old hub boxes of the record
         hl = json.loads(Path(hub_layout).read_text())
         x0, x1 = p["wide_hub"]["hub_x_um"]
-        blocks = [b for b in blocks if not (b[1] >= x0 - 1 and b[3] <= x1 + 1 and not b[0].startswith(("phy", "ctrl", "svc")))]
+        blocks = [b for b in blocks if b[0] not in hl["blocks"]]
         for n, (x, y, w, h, *_r) in hl["blocks"].items():
             blocks.append([n, x, y, x + w, y + h])
         if hl.get("mix4_slot"):

@@ -73,6 +73,17 @@ class WideHubLayout(unittest.TestCase):
         finally:
             G.HUB_LAYOUT=old;G.VCH8=old_vch
 
+    def test_render_preserves_all_six_hcp_homes(self):
+        sys.path.insert(0,str(ROOT/'tools'))
+        from die_layout_render import from_s81
+        layout=ROOT/'results/physical/die_iter_1012/s81/canonical_widehub_1015/hub_layout_rm5.json'
+        plan=from_s81(ROOT/CAP,500,layout)
+        names=[b[0] for b in plan['blocks']]
+        self.assertEqual(len(names),len(set(names)))
+        canonical=json.loads((ROOT/CAP).read_text())
+        for h in canonical['hcp_homes']:
+            self.assertIn(h['name'],names)
+
     def test_road_capacity_refuses_overwide_hub(self):
         with tempfile.TemporaryDirectory() as tmp:
             p=subprocess.run([sys.executable,str(ROOT/'tools/s81/wide_hub_layout.py'),'--canonical',CAP,
