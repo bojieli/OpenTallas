@@ -46,7 +46,7 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
   input wire [23:0] host_phy__session_pad;
   wire [821:0] hb_vms_SW__cr;
   wire [10279:0] hb_vms_SW__rr;
-  wire [7:0] hb_vms_SW__wq_done;
+  wire [15:0] hb_vms_SW__wq_done;
   wire [7:0] hb_vms_SW__dq_done;
   wire [7:0] hb_vms_SW__kq_done;
   wire [2223:0] hb_vms_SW__cw_out;
@@ -57,7 +57,7 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
   wire [18:0] hb_vms_SW__vmstat;
   wire [2:0] hb_vms_SW__ring_fault;
   wire [8223:0] hb_vms_SE__rr;
-  wire [7:0] hb_vms_SE__wq_done;
+  wire [15:0] hb_vms_SE__wq_done;
   wire [7:0] hb_vms_SE__dq_done;
   wire [7:0] hb_vms_SE__kq_done;
   wire [2223:0] hb_vms_SE__cw_out;
@@ -67,8 +67,8 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
   wire [1:0] hb_vms_SE__mirror_busy;
   wire [18:0] hb_vms_SE__vmstat;
   wire [2:0] hb_vms_SE__ring_fault;
-  wire [1095:0] hb_vms_NW__cr;
-  wire [12335:0] hb_vms_NW__rr;
+  wire [821:0] hb_vms_NW__cr;
+  wire [10279:0] hb_vms_NW__rr;
   wire [23:0] hb_vms_NW__wq_done;
   wire [7:0] hb_vms_NW__dq_done;
   wire [7:0] hb_vms_NW__kq_done;
@@ -79,7 +79,7 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
   wire [1:0] hb_vms_NW__mirror_busy;
   wire [18:0] hb_vms_NW__vmstat;
   wire [2:0] hb_vms_NW__ring_fault;
-  wire [12335:0] hb_vms_NE__rr;
+  wire [10279:0] hb_vms_NE__rr;
   wire [23:0] hb_vms_NE__wq_done;
   wire [7:0] hb_vms_NE__dq_done;
   wire [7:0] hb_vms_NE__kq_done;
@@ -1071,6 +1071,8 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
   wire [1023:0] vmks_SW0__c_k_wdata;
   wire [127:0] vmks_SW0__c_k_wstrb;
   wire [3:0] vmks_SW0__c_kr_rdy;
+  wire [3:0] vmks_SW0__w_k_rdy;
+  wire [3:0] vmks_SW0__w_k_wr_done;
   wire [3:0] vmks_SW0__fill_v;
   wire [3:0] vmks_SW0__fill_bank;
   wire [23:0] vmks_SW0__fill_slot;
@@ -1117,6 +1119,8 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
   wire [1023:0] vmks_SW1__c_k_wdata;
   wire [127:0] vmks_SW1__c_k_wstrb;
   wire [3:0] vmks_SW1__c_kr_rdy;
+  wire [3:0] vmks_SW1__w_k_rdy;
+  wire [3:0] vmks_SW1__w_k_wr_done;
   wire [3:0] vmks_SW1__fill_v;
   wire [3:0] vmks_SW1__fill_bank;
   wire [23:0] vmks_SW1__fill_slot;
@@ -1163,6 +1167,8 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
   wire [1023:0] vmks_SW2__c_k_wdata;
   wire [127:0] vmks_SW2__c_k_wstrb;
   wire [3:0] vmks_SW2__c_kr_rdy;
+  wire [3:0] vmks_SW2__w_k_rdy;
+  wire [3:0] vmks_SW2__w_k_wr_done;
   wire [3:0] vmks_SW2__fill_v;
   wire [3:0] vmks_SW2__fill_bank;
   wire [23:0] vmks_SW2__fill_slot;
@@ -1209,6 +1215,8 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
   wire [1023:0] vmks_SW3__c_k_wdata;
   wire [127:0] vmks_SW3__c_k_wstrb;
   wire [3:0] vmks_SW3__c_kr_rdy;
+  wire [3:0] vmks_SW3__w_k_rdy;
+  wire [3:0] vmks_SW3__w_k_wr_done;
   wire [3:0] vmks_SW3__fill_v;
   wire [3:0] vmks_SW3__fill_bank;
   wire [23:0] vmks_SW3__fill_slot;
@@ -1255,6 +1263,8 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
   wire [1023:0] vmks_SW4__c_k_wdata;
   wire [127:0] vmks_SW4__c_k_wstrb;
   wire [3:0] vmks_SW4__c_kr_rdy;
+  wire [3:0] vmks_SW4__w_k_rdy;
+  wire [3:0] vmks_SW4__w_k_wr_done;
   wire [3:0] vmks_SW4__fill_v;
   wire [3:0] vmks_SW4__fill_bank;
   wire [23:0] vmks_SW4__fill_slot;
@@ -1301,6 +1311,8 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
   wire [1023:0] vmks_SW5__c_k_wdata;
   wire [127:0] vmks_SW5__c_k_wstrb;
   wire [3:0] vmks_SW5__c_kr_rdy;
+  wire [3:0] vmks_SW5__w_k_rdy;
+  wire [3:0] vmks_SW5__w_k_wr_done;
   wire [3:0] vmks_SW5__fill_v;
   wire [3:0] vmks_SW5__fill_bank;
   wire [23:0] vmks_SW5__fill_slot;
@@ -1347,6 +1359,8 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
   wire [1023:0] vmks_SW6__c_k_wdata;
   wire [127:0] vmks_SW6__c_k_wstrb;
   wire [3:0] vmks_SW6__c_kr_rdy;
+  wire [3:0] vmks_SW6__w_k_rdy;
+  wire [3:0] vmks_SW6__w_k_wr_done;
   wire [3:0] vmks_SW6__fill_v;
   wire [3:0] vmks_SW6__fill_bank;
   wire [23:0] vmks_SW6__fill_slot;
@@ -1393,6 +1407,8 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
   wire [1023:0] vmks_SW7__c_k_wdata;
   wire [127:0] vmks_SW7__c_k_wstrb;
   wire [3:0] vmks_SW7__c_kr_rdy;
+  wire [3:0] vmks_SW7__w_k_rdy;
+  wire [3:0] vmks_SW7__w_k_wr_done;
   wire [3:0] vmks_SW7__fill_v;
   wire [3:0] vmks_SW7__fill_bank;
   wire [23:0] vmks_SW7__fill_slot;
@@ -2017,6 +2033,8 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
   wire [1023:0] vmks_SE0__c_k_wdata;
   wire [127:0] vmks_SE0__c_k_wstrb;
   wire [3:0] vmks_SE0__c_kr_rdy;
+  wire [3:0] vmks_SE0__w_k_rdy;
+  wire [3:0] vmks_SE0__w_k_wr_done;
   wire [3:0] vmks_SE0__fill_v;
   wire [3:0] vmks_SE0__fill_bank;
   wire [23:0] vmks_SE0__fill_slot;
@@ -2063,6 +2081,8 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
   wire [1023:0] vmks_SE1__c_k_wdata;
   wire [127:0] vmks_SE1__c_k_wstrb;
   wire [3:0] vmks_SE1__c_kr_rdy;
+  wire [3:0] vmks_SE1__w_k_rdy;
+  wire [3:0] vmks_SE1__w_k_wr_done;
   wire [3:0] vmks_SE1__fill_v;
   wire [3:0] vmks_SE1__fill_bank;
   wire [23:0] vmks_SE1__fill_slot;
@@ -2109,6 +2129,8 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
   wire [1023:0] vmks_SE2__c_k_wdata;
   wire [127:0] vmks_SE2__c_k_wstrb;
   wire [3:0] vmks_SE2__c_kr_rdy;
+  wire [3:0] vmks_SE2__w_k_rdy;
+  wire [3:0] vmks_SE2__w_k_wr_done;
   wire [3:0] vmks_SE2__fill_v;
   wire [3:0] vmks_SE2__fill_bank;
   wire [23:0] vmks_SE2__fill_slot;
@@ -2155,6 +2177,8 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
   wire [1023:0] vmks_SE3__c_k_wdata;
   wire [127:0] vmks_SE3__c_k_wstrb;
   wire [3:0] vmks_SE3__c_kr_rdy;
+  wire [3:0] vmks_SE3__w_k_rdy;
+  wire [3:0] vmks_SE3__w_k_wr_done;
   wire [3:0] vmks_SE3__fill_v;
   wire [3:0] vmks_SE3__fill_bank;
   wire [23:0] vmks_SE3__fill_slot;
@@ -2201,6 +2225,8 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
   wire [1023:0] vmks_SE4__c_k_wdata;
   wire [127:0] vmks_SE4__c_k_wstrb;
   wire [3:0] vmks_SE4__c_kr_rdy;
+  wire [3:0] vmks_SE4__w_k_rdy;
+  wire [3:0] vmks_SE4__w_k_wr_done;
   wire [3:0] vmks_SE4__fill_v;
   wire [3:0] vmks_SE4__fill_bank;
   wire [23:0] vmks_SE4__fill_slot;
@@ -2247,6 +2273,8 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
   wire [1023:0] vmks_SE5__c_k_wdata;
   wire [127:0] vmks_SE5__c_k_wstrb;
   wire [3:0] vmks_SE5__c_kr_rdy;
+  wire [3:0] vmks_SE5__w_k_rdy;
+  wire [3:0] vmks_SE5__w_k_wr_done;
   wire [3:0] vmks_SE5__fill_v;
   wire [3:0] vmks_SE5__fill_bank;
   wire [23:0] vmks_SE5__fill_slot;
@@ -2293,6 +2321,8 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
   wire [1023:0] vmks_SE6__c_k_wdata;
   wire [127:0] vmks_SE6__c_k_wstrb;
   wire [3:0] vmks_SE6__c_kr_rdy;
+  wire [3:0] vmks_SE6__w_k_rdy;
+  wire [3:0] vmks_SE6__w_k_wr_done;
   wire [3:0] vmks_SE6__fill_v;
   wire [3:0] vmks_SE6__fill_bank;
   wire [23:0] vmks_SE6__fill_slot;
@@ -2339,6 +2369,8 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
   wire [1023:0] vmks_SE7__c_k_wdata;
   wire [127:0] vmks_SE7__c_k_wstrb;
   wire [3:0] vmks_SE7__c_kr_rdy;
+  wire [3:0] vmks_SE7__w_k_rdy;
+  wire [3:0] vmks_SE7__w_k_wr_done;
   wire [3:0] vmks_SE7__fill_v;
   wire [3:0] vmks_SE7__fill_bank;
   wire [23:0] vmks_SE7__fill_slot;
@@ -2963,6 +2995,8 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
   wire [1023:0] vmks_NW0__c_k_wdata;
   wire [127:0] vmks_NW0__c_k_wstrb;
   wire [3:0] vmks_NW0__c_kr_rdy;
+  wire [3:0] vmks_NW0__w_k_rdy;
+  wire [3:0] vmks_NW0__w_k_wr_done;
   wire [3:0] vmks_NW0__fill_v;
   wire [3:0] vmks_NW0__fill_bank;
   wire [23:0] vmks_NW0__fill_slot;
@@ -3009,6 +3043,8 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
   wire [1023:0] vmks_NW1__c_k_wdata;
   wire [127:0] vmks_NW1__c_k_wstrb;
   wire [3:0] vmks_NW1__c_kr_rdy;
+  wire [3:0] vmks_NW1__w_k_rdy;
+  wire [3:0] vmks_NW1__w_k_wr_done;
   wire [3:0] vmks_NW1__fill_v;
   wire [3:0] vmks_NW1__fill_bank;
   wire [23:0] vmks_NW1__fill_slot;
@@ -3055,6 +3091,8 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
   wire [1023:0] vmks_NW2__c_k_wdata;
   wire [127:0] vmks_NW2__c_k_wstrb;
   wire [3:0] vmks_NW2__c_kr_rdy;
+  wire [3:0] vmks_NW2__w_k_rdy;
+  wire [3:0] vmks_NW2__w_k_wr_done;
   wire [3:0] vmks_NW2__fill_v;
   wire [3:0] vmks_NW2__fill_bank;
   wire [23:0] vmks_NW2__fill_slot;
@@ -3101,6 +3139,8 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
   wire [1023:0] vmks_NW3__c_k_wdata;
   wire [127:0] vmks_NW3__c_k_wstrb;
   wire [3:0] vmks_NW3__c_kr_rdy;
+  wire [3:0] vmks_NW3__w_k_rdy;
+  wire [3:0] vmks_NW3__w_k_wr_done;
   wire [3:0] vmks_NW3__fill_v;
   wire [3:0] vmks_NW3__fill_bank;
   wire [23:0] vmks_NW3__fill_slot;
@@ -3147,6 +3187,8 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
   wire [1023:0] vmks_NW4__c_k_wdata;
   wire [127:0] vmks_NW4__c_k_wstrb;
   wire [3:0] vmks_NW4__c_kr_rdy;
+  wire [3:0] vmks_NW4__w_k_rdy;
+  wire [3:0] vmks_NW4__w_k_wr_done;
   wire [3:0] vmks_NW4__fill_v;
   wire [3:0] vmks_NW4__fill_bank;
   wire [23:0] vmks_NW4__fill_slot;
@@ -3193,6 +3235,8 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
   wire [1023:0] vmks_NW5__c_k_wdata;
   wire [127:0] vmks_NW5__c_k_wstrb;
   wire [3:0] vmks_NW5__c_kr_rdy;
+  wire [3:0] vmks_NW5__w_k_rdy;
+  wire [3:0] vmks_NW5__w_k_wr_done;
   wire [3:0] vmks_NW5__fill_v;
   wire [3:0] vmks_NW5__fill_bank;
   wire [23:0] vmks_NW5__fill_slot;
@@ -3239,6 +3283,8 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
   wire [1023:0] vmks_NW6__c_k_wdata;
   wire [127:0] vmks_NW6__c_k_wstrb;
   wire [3:0] vmks_NW6__c_kr_rdy;
+  wire [3:0] vmks_NW6__w_k_rdy;
+  wire [3:0] vmks_NW6__w_k_wr_done;
   wire [3:0] vmks_NW6__fill_v;
   wire [3:0] vmks_NW6__fill_bank;
   wire [23:0] vmks_NW6__fill_slot;
@@ -3285,6 +3331,8 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
   wire [1023:0] vmks_NW7__c_k_wdata;
   wire [127:0] vmks_NW7__c_k_wstrb;
   wire [3:0] vmks_NW7__c_kr_rdy;
+  wire [3:0] vmks_NW7__w_k_rdy;
+  wire [3:0] vmks_NW7__w_k_wr_done;
   wire [3:0] vmks_NW7__fill_v;
   wire [3:0] vmks_NW7__fill_bank;
   wire [23:0] vmks_NW7__fill_slot;
@@ -3909,6 +3957,8 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
   wire [1023:0] vmks_NE0__c_k_wdata;
   wire [127:0] vmks_NE0__c_k_wstrb;
   wire [3:0] vmks_NE0__c_kr_rdy;
+  wire [3:0] vmks_NE0__w_k_rdy;
+  wire [3:0] vmks_NE0__w_k_wr_done;
   wire [3:0] vmks_NE0__fill_v;
   wire [3:0] vmks_NE0__fill_bank;
   wire [23:0] vmks_NE0__fill_slot;
@@ -3955,6 +4005,8 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
   wire [1023:0] vmks_NE1__c_k_wdata;
   wire [127:0] vmks_NE1__c_k_wstrb;
   wire [3:0] vmks_NE1__c_kr_rdy;
+  wire [3:0] vmks_NE1__w_k_rdy;
+  wire [3:0] vmks_NE1__w_k_wr_done;
   wire [3:0] vmks_NE1__fill_v;
   wire [3:0] vmks_NE1__fill_bank;
   wire [23:0] vmks_NE1__fill_slot;
@@ -4001,6 +4053,8 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
   wire [1023:0] vmks_NE2__c_k_wdata;
   wire [127:0] vmks_NE2__c_k_wstrb;
   wire [3:0] vmks_NE2__c_kr_rdy;
+  wire [3:0] vmks_NE2__w_k_rdy;
+  wire [3:0] vmks_NE2__w_k_wr_done;
   wire [3:0] vmks_NE2__fill_v;
   wire [3:0] vmks_NE2__fill_bank;
   wire [23:0] vmks_NE2__fill_slot;
@@ -4047,6 +4101,8 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
   wire [1023:0] vmks_NE3__c_k_wdata;
   wire [127:0] vmks_NE3__c_k_wstrb;
   wire [3:0] vmks_NE3__c_kr_rdy;
+  wire [3:0] vmks_NE3__w_k_rdy;
+  wire [3:0] vmks_NE3__w_k_wr_done;
   wire [3:0] vmks_NE3__fill_v;
   wire [3:0] vmks_NE3__fill_bank;
   wire [23:0] vmks_NE3__fill_slot;
@@ -4093,6 +4149,8 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
   wire [1023:0] vmks_NE4__c_k_wdata;
   wire [127:0] vmks_NE4__c_k_wstrb;
   wire [3:0] vmks_NE4__c_kr_rdy;
+  wire [3:0] vmks_NE4__w_k_rdy;
+  wire [3:0] vmks_NE4__w_k_wr_done;
   wire [3:0] vmks_NE4__fill_v;
   wire [3:0] vmks_NE4__fill_bank;
   wire [23:0] vmks_NE4__fill_slot;
@@ -4139,6 +4197,8 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
   wire [1023:0] vmks_NE5__c_k_wdata;
   wire [127:0] vmks_NE5__c_k_wstrb;
   wire [3:0] vmks_NE5__c_kr_rdy;
+  wire [3:0] vmks_NE5__w_k_rdy;
+  wire [3:0] vmks_NE5__w_k_wr_done;
   wire [3:0] vmks_NE5__fill_v;
   wire [3:0] vmks_NE5__fill_bank;
   wire [23:0] vmks_NE5__fill_slot;
@@ -4185,6 +4245,8 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
   wire [1023:0] vmks_NE6__c_k_wdata;
   wire [127:0] vmks_NE6__c_k_wstrb;
   wire [3:0] vmks_NE6__c_kr_rdy;
+  wire [3:0] vmks_NE6__w_k_rdy;
+  wire [3:0] vmks_NE6__w_k_wr_done;
   wire [3:0] vmks_NE6__fill_v;
   wire [3:0] vmks_NE6__fill_bank;
   wire [23:0] vmks_NE6__fill_slot;
@@ -4231,6 +4293,8 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
   wire [1023:0] vmks_NE7__c_k_wdata;
   wire [127:0] vmks_NE7__c_k_wstrb;
   wire [3:0] vmks_NE7__c_kr_rdy;
+  wire [3:0] vmks_NE7__w_k_rdy;
+  wire [3:0] vmks_NE7__w_k_wr_done;
   wire [3:0] vmks_NE7__fill_v;
   wire [3:0] vmks_NE7__fill_bank;
   wire [23:0] vmks_NE7__fill_slot;
@@ -5605,6 +5669,42 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
   wire [0:0] host_status__program_fault;
   wire [0:0] host_status__die_fault;
   wire [0:0] host_status__irq;
+  wire [0:0] wbk_SW__wb_ready;
+  wire [11:0] wbk_SW__wa;
+  wire [0:0] wbk_SW__wbw_v;
+  wire [29:0] wbk_SW__wbw_base;
+  wire [11:0] wbk_SW__wbw_total;
+  wire [31:0] wbk_SW__w_k_v;
+  wire [959:0] wbk_SW__w_k_addr;
+  wire [8191:0] wbk_SW__w_k_wdata;
+  wire [0:0] wbk_SW__fault;
+  wire [0:0] wbk_SE__wb_ready;
+  wire [11:0] wbk_SE__wa;
+  wire [0:0] wbk_SE__wbw_v;
+  wire [29:0] wbk_SE__wbw_base;
+  wire [11:0] wbk_SE__wbw_total;
+  wire [31:0] wbk_SE__w_k_v;
+  wire [959:0] wbk_SE__w_k_addr;
+  wire [8191:0] wbk_SE__w_k_wdata;
+  wire [0:0] wbk_SE__fault;
+  wire [0:0] wbk_NW__wb_ready;
+  wire [11:0] wbk_NW__wa;
+  wire [0:0] wbk_NW__wbw_v;
+  wire [29:0] wbk_NW__wbw_base;
+  wire [11:0] wbk_NW__wbw_total;
+  wire [31:0] wbk_NW__w_k_v;
+  wire [959:0] wbk_NW__w_k_addr;
+  wire [8191:0] wbk_NW__w_k_wdata;
+  wire [0:0] wbk_NW__fault;
+  wire [0:0] wbk_NE__wb_ready;
+  wire [11:0] wbk_NE__wa;
+  wire [0:0] wbk_NE__wbw_v;
+  wire [29:0] wbk_NE__wbw_base;
+  wire [11:0] wbk_NE__wbw_total;
+  wire [31:0] wbk_NE__w_k_v;
+  wire [959:0] wbk_NE__w_k_addr;
+  wire [8191:0] wbk_NE__w_k_wdata;
+  wire [0:0] wbk_NE__fault;
   wire [0:0] hc_tgt_SW__program_cfg_we;
   wire [9:0] hc_tgt_SW__program_cfg_addr;
   wire [255:0] hc_tgt_SW__program_cfg_data;
@@ -6269,6 +6369,62 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
   wire [0:0] subr_NW__fault;
   wire [0:0] subr_NE__bridge_rst_n;
   wire [0:0] subr_NE__fault;
+  wire [1023:0] sucx_SW__inj_d;
+  wire [0:0] sucx_SW__rc_v;
+  wire [2:0] sucx_SW__rc_tag;
+  wire [255:0] sucx_SW__rc_d;
+  wire [7:0] sucx_SW__dw_v;
+  wire [71:0] sucx_SW__dw_row;
+  wire [4095:0] sucx_SW__dw_d;
+  wire [0:0] sucx_SW__rr_wv;
+  wire [4:0] sucx_SW__rr_wa;
+  wire [255:0] sucx_SW__rr_wd;
+  wire [31:0] sucx_SW__sfu_x;
+  wire [0:0] sucx_SW__fault;
+  wire [511:0] sfus_SW__vi_q;
+  wire [0:0] sfus_SW__fault;
+  wire [1023:0] sucx_SE__inj_d;
+  wire [0:0] sucx_SE__rc_v;
+  wire [2:0] sucx_SE__rc_tag;
+  wire [255:0] sucx_SE__rc_d;
+  wire [7:0] sucx_SE__dw_v;
+  wire [71:0] sucx_SE__dw_row;
+  wire [4095:0] sucx_SE__dw_d;
+  wire [0:0] sucx_SE__rr_wv;
+  wire [4:0] sucx_SE__rr_wa;
+  wire [255:0] sucx_SE__rr_wd;
+  wire [31:0] sucx_SE__sfu_x;
+  wire [0:0] sucx_SE__fault;
+  wire [511:0] sfus_SE__vi_q;
+  wire [0:0] sfus_SE__fault;
+  wire [1023:0] sucx_NW__inj_d;
+  wire [0:0] sucx_NW__rc_v;
+  wire [2:0] sucx_NW__rc_tag;
+  wire [255:0] sucx_NW__rc_d;
+  wire [7:0] sucx_NW__dw_v;
+  wire [71:0] sucx_NW__dw_row;
+  wire [4095:0] sucx_NW__dw_d;
+  wire [0:0] sucx_NW__rr_wv;
+  wire [4:0] sucx_NW__rr_wa;
+  wire [255:0] sucx_NW__rr_wd;
+  wire [31:0] sucx_NW__sfu_x;
+  wire [0:0] sucx_NW__fault;
+  wire [511:0] sfus_NW__vi_q;
+  wire [0:0] sfus_NW__fault;
+  wire [1023:0] sucx_NE__inj_d;
+  wire [0:0] sucx_NE__rc_v;
+  wire [2:0] sucx_NE__rc_tag;
+  wire [255:0] sucx_NE__rc_d;
+  wire [7:0] sucx_NE__dw_v;
+  wire [71:0] sucx_NE__dw_row;
+  wire [4095:0] sucx_NE__dw_d;
+  wire [0:0] sucx_NE__rr_wv;
+  wire [4:0] sucx_NE__rr_wa;
+  wire [255:0] sucx_NE__rr_wd;
+  wire [31:0] sucx_NE__sfu_x;
+  wire [0:0] sucx_NE__fault;
+  wire [511:0] sfus_NE__vi_q;
+  wire [0:0] sfus_NE__fault;
   wire [0:0] su_prog__busy;
   wire [0:0] su_prog__valid;
   wire [0:0] su_prog__done;
@@ -6286,18 +6442,22 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
   wire [31:0] su_SW0__slice_x;
   wire [33:0] su_SW0__lg_rq;
   wire [561:0] su_SW0__lg_wq;
+  wire [1023:0] su_SW0__inj_q;
   wire [0:0] su_SW0__fault;
   wire [31:0] su_SW1__slice_x;
   wire [33:0] su_SW1__lg_rq;
   wire [561:0] su_SW1__lg_wq;
+  wire [1023:0] su_SW1__inj_q;
   wire [0:0] su_SW1__fault;
   wire [31:0] su_SW2__slice_x;
   wire [33:0] su_SW2__lg_rq;
   wire [561:0] su_SW2__lg_wq;
+  wire [1023:0] su_SW2__inj_q;
   wire [0:0] su_SW2__fault;
   wire [31:0] su_SW3__slice_x;
   wire [33:0] su_SW3__lg_rq;
   wire [561:0] su_SW3__lg_wq;
+  wire [1023:0] su_SW3__inj_q;
   wire [0:0] su_SW3__fault;
   wire [127:0] sucore_SE__rf_bword;
   wire [35:0] sucore_SE__rf_bcmd;
@@ -6310,18 +6470,22 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
   wire [31:0] su_SE0__slice_x;
   wire [33:0] su_SE0__lg_rq;
   wire [561:0] su_SE0__lg_wq;
+  wire [1023:0] su_SE0__inj_q;
   wire [0:0] su_SE0__fault;
   wire [31:0] su_SE1__slice_x;
   wire [33:0] su_SE1__lg_rq;
   wire [561:0] su_SE1__lg_wq;
+  wire [1023:0] su_SE1__inj_q;
   wire [0:0] su_SE1__fault;
   wire [31:0] su_SE2__slice_x;
   wire [33:0] su_SE2__lg_rq;
   wire [561:0] su_SE2__lg_wq;
+  wire [1023:0] su_SE2__inj_q;
   wire [0:0] su_SE2__fault;
   wire [31:0] su_SE3__slice_x;
   wire [33:0] su_SE3__lg_rq;
   wire [561:0] su_SE3__lg_wq;
+  wire [1023:0] su_SE3__inj_q;
   wire [0:0] su_SE3__fault;
   wire [127:0] sucore_NW__rf_bword;
   wire [35:0] sucore_NW__rf_bcmd;
@@ -6334,18 +6498,22 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
   wire [31:0] su_NW0__slice_x;
   wire [33:0] su_NW0__lg_rq;
   wire [561:0] su_NW0__lg_wq;
+  wire [1023:0] su_NW0__inj_q;
   wire [0:0] su_NW0__fault;
   wire [31:0] su_NW1__slice_x;
   wire [33:0] su_NW1__lg_rq;
   wire [561:0] su_NW1__lg_wq;
+  wire [1023:0] su_NW1__inj_q;
   wire [0:0] su_NW1__fault;
   wire [31:0] su_NW2__slice_x;
   wire [33:0] su_NW2__lg_rq;
   wire [561:0] su_NW2__lg_wq;
+  wire [1023:0] su_NW2__inj_q;
   wire [0:0] su_NW2__fault;
   wire [31:0] su_NW3__slice_x;
   wire [33:0] su_NW3__lg_rq;
   wire [561:0] su_NW3__lg_wq;
+  wire [1023:0] su_NW3__inj_q;
   wire [0:0] su_NW3__fault;
   wire [127:0] sucore_NE__rf_bword;
   wire [35:0] sucore_NE__rf_bcmd;
@@ -6358,18 +6526,22 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
   wire [31:0] su_NE0__slice_x;
   wire [33:0] su_NE0__lg_rq;
   wire [561:0] su_NE0__lg_wq;
+  wire [1023:0] su_NE0__inj_q;
   wire [0:0] su_NE0__fault;
   wire [31:0] su_NE1__slice_x;
   wire [33:0] su_NE1__lg_rq;
   wire [561:0] su_NE1__lg_wq;
+  wire [1023:0] su_NE1__inj_q;
   wire [0:0] su_NE1__fault;
   wire [31:0] su_NE2__slice_x;
   wire [33:0] su_NE2__lg_rq;
   wire [561:0] su_NE2__lg_wq;
+  wire [1023:0] su_NE2__inj_q;
   wire [0:0] su_NE2__fault;
   wire [31:0] su_NE3__slice_x;
   wire [33:0] su_NE3__lg_rq;
   wire [561:0] su_NE3__lg_wq;
+  wire [1023:0] su_NE3__inj_q;
   wire [0:0] su_NE3__fault;
   wire [47:0] rfr_SW_SW_00__o;
   wire [47:0] rfr_SW_SW_01__o;
@@ -6958,10 +7130,8 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
   wire [15:0] sfucore_SW__vi_re;
   wire [383:0] sfucore_SW__vi_addr;
   wire [15:0] sfucore_SW__ro_v;
-  wire [15:0] sfucore_SW__side_v;
   wire [15:0] sfucore_SW__kv_we;
   wire [511:0] sfucore_SW__ro_x;
-  wire [511:0] sfucore_SW__side_x;
   wire [511:0] sfucore_SW__kv_wdata;
   wire [383:0] sfucore_SW__kv_waddr;
   wire [0:0] sfucore_SW__fault;
@@ -7080,10 +7250,8 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
   wire [15:0] sfucore_SE__vi_re;
   wire [383:0] sfucore_SE__vi_addr;
   wire [15:0] sfucore_SE__ro_v;
-  wire [15:0] sfucore_SE__side_v;
   wire [15:0] sfucore_SE__kv_we;
   wire [511:0] sfucore_SE__ro_x;
-  wire [511:0] sfucore_SE__side_x;
   wire [511:0] sfucore_SE__kv_wdata;
   wire [383:0] sfucore_SE__kv_waddr;
   wire [0:0] sfucore_SE__fault;
@@ -7202,10 +7370,8 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
   wire [15:0] sfucore_NW__vi_re;
   wire [383:0] sfucore_NW__vi_addr;
   wire [15:0] sfucore_NW__ro_v;
-  wire [15:0] sfucore_NW__side_v;
   wire [15:0] sfucore_NW__kv_we;
   wire [511:0] sfucore_NW__ro_x;
-  wire [511:0] sfucore_NW__side_x;
   wire [511:0] sfucore_NW__kv_wdata;
   wire [383:0] sfucore_NW__kv_waddr;
   wire [0:0] sfucore_NW__fault;
@@ -7324,10 +7490,8 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
   wire [15:0] sfucore_NE__vi_re;
   wire [383:0] sfucore_NE__vi_addr;
   wire [15:0] sfucore_NE__ro_v;
-  wire [15:0] sfucore_NE__side_v;
   wire [15:0] sfucore_NE__kv_we;
   wire [511:0] sfucore_NE__ro_x;
-  wire [511:0] sfucore_NE__side_x;
   wire [511:0] sfucore_NE__kv_wdata;
   wire [383:0] sfucore_NE__kv_waddr;
   wire [0:0] sfucore_NE__fault;
@@ -7691,9 +7855,8 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
   wire [0:0] vmdel_NE7__busy;
   wire [0:0] vmdel_NE7__fault;
   wire [280:0] vmdel_NE7__dq;
-  wire [815:0] nc__hb_vms_NE__rq;   // undriven bits = listed gap bits (never tied)
+  wire [679:0] nc__hb_vms_NE__rq;   // undriven bits = listed gap bits (never tied)
   wire [6743:0] nc__hb_vms_NE__wq;   // undriven bits = listed gap bits (never tied)
-  wire [815:0] nc__hb_vms_NW__rq;   // undriven bits = listed gap bits (never tied)
   wire [1013:0] nc__hb_vms_SW__cq;   // undriven bits = listed gap bits (never tied)
   hfd_hgi_vms_static_SW hb_vms_SW (
     .clk_bank({8{hb_ckgen__pll_stream[0]}}),
@@ -7716,7 +7879,7 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .wslot(calendar_SW__wslot[23:0]),
     .rq({hb_idx__vm_rq[135:0], hb_coll_SW__vm_rq[135:0], xl_SW_ctl__rq[135:0], hb_dbk_SW__rq[135:0], lg_SW_0__near_rq[135:0]}),
     .rr(hb_vms_SW__rr),
-    .wq(lg_SW_0__near_wq[2247:0]),
+    .wq({smw_SW__wq[2247:0], lg_SW_0__near_wq[2247:0]}),
     .wq_done(hb_vms_SW__wq_done),
     .dq({vmdel_SW7__dq[280:0], vmdel_SW6__dq[280:0], vmdel_SW5__dq[280:0], vmdel_SW4__dq[280:0], vmdel_SW3__dq[280:0], vmdel_SW2__dq[280:0], vmdel_SW1__dq[280:0], vmdel_SW0__dq[280:0]}),
     .kq(hb_coll_SW__vm_kq[2247:0]),
@@ -7755,7 +7918,7 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .wslot(calendar_SE__wslot[23:0]),
     .rq({hb_coll_SE__vm_rq[135:0], xl_SE_ctl__rq[135:0], hb_dbk_SE__rq[135:0], lg_SE_0__near_rq[135:0]}),
     .rr(hb_vms_SE__rr),
-    .wq(lg_SE_0__near_wq[2247:0]),
+    .wq({smw_SE__wq[2247:0], lg_SE_0__near_wq[2247:0]}),
     .wq_done(hb_vms_SE__wq_done),
     .dq({vmdel_SE7__dq[280:0], vmdel_SE6__dq[280:0], vmdel_SE5__dq[280:0], vmdel_SE4__dq[280:0], vmdel_SE3__dq[280:0], vmdel_SE2__dq[280:0], vmdel_SE1__dq[280:0], vmdel_SE0__dq[280:0]}),
     .kq(hb_coll_SE__vm_kq[2247:0]),
@@ -7782,18 +7945,18 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .clk_replay(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
     .cr(hb_vms_NW__cr),
-    .client_seq(calendar_NW__client_seq[9:0]),
-    .response_enable(calendar_NW__response_enable[4:0]),
-    .response_seq(calendar_NW__response_seq[9:0]),
+    .client_seq(calendar_NW__client_seq[7:0]),
+    .response_enable(calendar_NW__response_enable[3:0]),
+    .response_seq(calendar_NW__response_seq[7:0]),
     .bank_enable(calendar_NW__bank_enable[7:0]),
-    .bank_client(calendar_NW__bank_client[23:0]),
+    .bank_client(calendar_NW__bank_client[15:0]),
     .hub_ring_enable(calendar_NW__hub_ring_enable[1:0]),
-    .hub_ring_client(calendar_NW__hub_ring_client[5:0]),
+    .hub_ring_client(calendar_NW__hub_ring_client[3:0]),
     .rslot_v(calendar_NW__rslot_v[7:0]),
     .wslot_v(calendar_NW__wslot_v[7:0]),
     .rslot(calendar_NW__rslot[23:0]),
     .wslot(calendar_NW__wslot[23:0]),
-    .rq({hb_coll_NW__vm_rq[135:0], hb_quant_NW__rq[135:0], nc__hb_vms_NW__rq[543:408], xl_NW_ctl__rq[135:0], hb_dbk_NW__rq[135:0], lg_NW_0__near_rq[135:0]}),
+    .rq({hb_coll_NW__vm_rq[135:0], hb_quant_NW__rq[135:0], xl_NW_ctl__rq[135:0], hb_dbk_NW__rq[135:0], lg_NW_0__near_rq[135:0]}),
     .rr(hb_vms_NW__rr),
     .wq({hb_quant_NW__wq[2247:0], smw_NW__wq[2247:0], lg_NW_0__near_wq[2247:0]}),
     .wq_done(hb_vms_NW__wq_done),
@@ -7832,7 +7995,7 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .wslot_v(calendar_NE__wslot_v[7:0]),
     .rslot(calendar_NE__rslot[23:0]),
     .wslot(calendar_NE__wslot[23:0]),
-    .rq({hb_coll_NE__vm_rq[135:0], nc__hb_vms_NE__rq[679:408], xl_NE_ctl__rq[135:0], hb_dbk_NE__rq[135:0], lg_NE_0__near_rq[135:0]}),
+    .rq({hb_coll_NE__vm_rq[135:0], nc__hb_vms_NE__rq[543:408], xl_NE_ctl__rq[135:0], hb_dbk_NE__rq[135:0], lg_NE_0__near_rq[135:0]}),
     .rr(hb_vms_NE__rr),
     .wq({nc__hb_vms_NE__wq[6743:4496], smw_NE__wq[2247:0], lg_NE_0__near_wq[2247:0]}),
     .wq_done(hb_vms_NE__wq_done),
@@ -8258,6 +8421,9 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .del_valid(hb_coll_SW__del_valid),
     .del_flit(hb_coll_SW__del_flit),
     .hgi_del_obase(hb_coll_SW__hgi_del_obase),
+    .rc_v(sucx_SW__rc_v[0]),
+    .rc_tag(sucx_SW__rc_tag[2:0]),
+    .rc_d(sucx_SW__rc_d[255:0]),
     .rr_v(hb_coll_SW__rr_v),
     .rr_tag(hb_coll_SW__rr_tag),
     .rr_d(hb_coll_SW__rr_d),
@@ -8306,9 +8472,13 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .inj_rd(hb_coll_SE__inj_rd),
     .inj_idx(hb_coll_SE__inj_idx),
     .hgi_inj_addr(hb_coll_SE__hgi_inj_addr),
+    .inj_d(sucx_SE__inj_d[1023:0]),
     .del_valid(hb_coll_SE__del_valid),
     .del_flit(hb_coll_SE__del_flit),
     .hgi_del_obase(hb_coll_SE__hgi_del_obase),
+    .rc_v(sucx_SE__rc_v[0]),
+    .rc_tag(sucx_SE__rc_tag[2:0]),
+    .rc_d(sucx_SE__rc_d[255:0]),
     .rr_v(hb_coll_SE__rr_v),
     .rr_tag(hb_coll_SE__rr_tag),
     .rr_d(hb_coll_SE__rr_d),
@@ -8357,9 +8527,13 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .inj_rd(hb_coll_NW__inj_rd),
     .inj_idx(hb_coll_NW__inj_idx),
     .hgi_inj_addr(hb_coll_NW__hgi_inj_addr),
+    .inj_d(sucx_NW__inj_d[1023:0]),
     .del_valid(hb_coll_NW__del_valid),
     .del_flit(hb_coll_NW__del_flit),
     .hgi_del_obase(hb_coll_NW__hgi_del_obase),
+    .rc_v(sucx_NW__rc_v[0]),
+    .rc_tag(sucx_NW__rc_tag[2:0]),
+    .rc_d(sucx_NW__rc_d[255:0]),
     .rr_v(hb_coll_NW__rr_v),
     .rr_tag(hb_coll_NW__rr_tag),
     .rr_d(hb_coll_NW__rr_d),
@@ -8374,7 +8548,7 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .pr_cw_o(hb_coll_NW__pr_cw_o),
     .pr_ccw_o(hb_coll_NW__pr_ccw_o),
     .vm_rq(hb_coll_NW__vm_rq),
-    .vm_rr(hb_vms_NW__rr[12335:10280]),
+    .vm_rr(hb_vms_NW__rr[10279:8224]),
     .vm_kq(hb_coll_NW__vm_kq),
     .fault(hb_coll_NW__fault),
     .done(hb_coll_NW__done),
@@ -8408,9 +8582,13 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .inj_rd(hb_coll_NE__inj_rd),
     .inj_idx(hb_coll_NE__inj_idx),
     .hgi_inj_addr(hb_coll_NE__hgi_inj_addr),
+    .inj_d(sucx_NE__inj_d[1023:0]),
     .del_valid(hb_coll_NE__del_valid),
     .del_flit(hb_coll_NE__del_flit),
     .hgi_del_obase(hb_coll_NE__hgi_del_obase),
+    .rc_v(sucx_NE__rc_v[0]),
+    .rc_tag(sucx_NE__rc_tag[2:0]),
+    .rc_d(sucx_NE__rc_d[255:0]),
     .rr_v(hb_coll_NE__rr_v),
     .rr_tag(hb_coll_NE__rr_tag),
     .rr_d(hb_coll_NE__rr_d),
@@ -8425,7 +8603,7 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .pr_cw_o(hb_coll_NE__pr_cw_o),
     .pr_ccw_o(hb_coll_NE__pr_ccw_o),
     .vm_rq(hb_coll_NE__vm_rq),
-    .vm_rr(hb_vms_NE__rr[12335:10280]),
+    .vm_rr(hb_vms_NE__rr[10279:8224]),
     .vm_kq(hb_coll_NE__vm_kq),
     .fault(hb_coll_NE__fault),
     .done(hb_coll_NE__done),
@@ -8458,7 +8636,9 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .wb_reserve_sectors(hb_dbk_SW__wb_reserve_sectors),
     .wb_reserve_base(hb_dbk_SW__wb_reserve_base),
     .wb_fill_start(hb_dbk_SW__wb_fill_start),
-    .wd(hb_dbk_SW__wd)
+    .wb_ready(wbk_SW__wb_ready[0]),
+    .wd(hb_dbk_SW__wd),
+    .wa(wbk_SW__wa[11:0])
   );
   ot_hgi_dma_back_static_vp4_banks hb_dbk_SE (
     .clk(hb_ckgen__pll_stream[0]),
@@ -8487,7 +8667,9 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .wb_reserve_sectors(hb_dbk_SE__wb_reserve_sectors),
     .wb_reserve_base(hb_dbk_SE__wb_reserve_base),
     .wb_fill_start(hb_dbk_SE__wb_fill_start),
-    .wd(hb_dbk_SE__wd)
+    .wb_ready(wbk_SE__wb_ready[0]),
+    .wd(hb_dbk_SE__wd),
+    .wa(wbk_SE__wa[11:0])
   );
   ot_hgi_dma_back_static_vp4_banks hb_dbk_NW (
     .clk(hb_ckgen__pll_stream[0]),
@@ -8516,7 +8698,9 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .wb_reserve_sectors(hb_dbk_NW__wb_reserve_sectors),
     .wb_reserve_base(hb_dbk_NW__wb_reserve_base),
     .wb_fill_start(hb_dbk_NW__wb_fill_start),
-    .wd(hb_dbk_NW__wd)
+    .wb_ready(wbk_NW__wb_ready[0]),
+    .wd(hb_dbk_NW__wd),
+    .wa(wbk_NW__wa[11:0])
   );
   ot_hgi_dma_back_static_vp4_banks hb_dbk_NE (
     .clk(hb_ckgen__pll_stream[0]),
@@ -8545,7 +8729,9 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .wb_reserve_sectors(hb_dbk_NE__wb_reserve_sectors),
     .wb_reserve_base(hb_dbk_NE__wb_reserve_base),
     .wb_fill_start(hb_dbk_NE__wb_fill_start),
-    .wd(hb_dbk_NE__wd)
+    .wb_ready(wbk_NE__wb_ready[0]),
+    .wd(hb_dbk_NE__wd),
+    .wa(wbk_NE__wa[11:0])
   );
   ot_hbm_idx_client_static_sw hb_idx (
     .clk_program(hb_ckgen__pll_stream[0]),
@@ -8657,7 +8843,7 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .program_done(hb_quant_NW__program_done),
     .configured(hb_quant_NW__configured),
     .rq(hb_quant_NW__rq),
-    .rr(hb_vms_NW__rr[10279:8224]),
+    .rr(hb_vms_NW__rr[8223:6168]),
     .wq(hb_quant_NW__wq),
     .beat_done(hb_quant_NW__beat_done),
     .record_done(hb_quant_NW__record_done),
@@ -9802,6 +9988,14 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .vm_epoch(vmfc_SW__calendar[69:54]),
     .vm_row(vmfc_SW__calendar[84:70]),
     .vm_col(vmfc_SW__calendar[88:85]),
+    .wbw_v(wbk_SW__wbw_v[0]),
+    .wbw_base(wbk_SW__wbw_base[29:0]),
+    .wbw_total(wbk_SW__wbw_total[11:0]),
+    .w_k_v(wbk_SW__w_k_v[3:0]),
+    .w_k_rdy(vmks_SW0__w_k_rdy),
+    .w_k_addr(wbk_SW__w_k_addr[119:0]),
+    .w_k_wdata(wbk_SW__w_k_wdata[1023:0]),
+    .w_k_wr_done(vmks_SW0__w_k_wr_done),
     .fill_v(vmks_SW0__fill_v),
     .fill_bank(vmks_SW0__fill_bank),
     .fill_slot(vmks_SW0__fill_slot),
@@ -9908,6 +10102,14 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .vm_epoch(vmfc_SW__calendar[69:54]),
     .vm_row(vmfc_SW__calendar[84:70]),
     .vm_col(vmfc_SW__calendar[88:85]),
+    .wbw_v(wbk_SW__wbw_v[0]),
+    .wbw_base(wbk_SW__wbw_base[29:0]),
+    .wbw_total(wbk_SW__wbw_total[11:0]),
+    .w_k_v(wbk_SW__w_k_v[7:4]),
+    .w_k_rdy(vmks_SW1__w_k_rdy),
+    .w_k_addr(wbk_SW__w_k_addr[239:120]),
+    .w_k_wdata(wbk_SW__w_k_wdata[2047:1024]),
+    .w_k_wr_done(vmks_SW1__w_k_wr_done),
     .fill_v(vmks_SW1__fill_v),
     .fill_bank(vmks_SW1__fill_bank),
     .fill_slot(vmks_SW1__fill_slot),
@@ -10014,6 +10216,14 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .vm_epoch(vmfc_SW__calendar[69:54]),
     .vm_row(vmfc_SW__calendar[84:70]),
     .vm_col(vmfc_SW__calendar[88:85]),
+    .wbw_v(wbk_SW__wbw_v[0]),
+    .wbw_base(wbk_SW__wbw_base[29:0]),
+    .wbw_total(wbk_SW__wbw_total[11:0]),
+    .w_k_v(wbk_SW__w_k_v[11:8]),
+    .w_k_rdy(vmks_SW2__w_k_rdy),
+    .w_k_addr(wbk_SW__w_k_addr[359:240]),
+    .w_k_wdata(wbk_SW__w_k_wdata[3071:2048]),
+    .w_k_wr_done(vmks_SW2__w_k_wr_done),
     .fill_v(vmks_SW2__fill_v),
     .fill_bank(vmks_SW2__fill_bank),
     .fill_slot(vmks_SW2__fill_slot),
@@ -10120,6 +10330,14 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .vm_epoch(vmfc_SW__calendar[69:54]),
     .vm_row(vmfc_SW__calendar[84:70]),
     .vm_col(vmfc_SW__calendar[88:85]),
+    .wbw_v(wbk_SW__wbw_v[0]),
+    .wbw_base(wbk_SW__wbw_base[29:0]),
+    .wbw_total(wbk_SW__wbw_total[11:0]),
+    .w_k_v(wbk_SW__w_k_v[15:12]),
+    .w_k_rdy(vmks_SW3__w_k_rdy),
+    .w_k_addr(wbk_SW__w_k_addr[479:360]),
+    .w_k_wdata(wbk_SW__w_k_wdata[4095:3072]),
+    .w_k_wr_done(vmks_SW3__w_k_wr_done),
     .fill_v(vmks_SW3__fill_v),
     .fill_bank(vmks_SW3__fill_bank),
     .fill_slot(vmks_SW3__fill_slot),
@@ -10226,6 +10444,14 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .vm_epoch(vmfc_SW__calendar[69:54]),
     .vm_row(vmfc_SW__calendar[84:70]),
     .vm_col(vmfc_SW__calendar[88:85]),
+    .wbw_v(wbk_SW__wbw_v[0]),
+    .wbw_base(wbk_SW__wbw_base[29:0]),
+    .wbw_total(wbk_SW__wbw_total[11:0]),
+    .w_k_v(wbk_SW__w_k_v[19:16]),
+    .w_k_rdy(vmks_SW4__w_k_rdy),
+    .w_k_addr(wbk_SW__w_k_addr[599:480]),
+    .w_k_wdata(wbk_SW__w_k_wdata[5119:4096]),
+    .w_k_wr_done(vmks_SW4__w_k_wr_done),
     .fill_v(vmks_SW4__fill_v),
     .fill_bank(vmks_SW4__fill_bank),
     .fill_slot(vmks_SW4__fill_slot),
@@ -10332,6 +10558,14 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .vm_epoch(vmfc_SW__calendar[69:54]),
     .vm_row(vmfc_SW__calendar[84:70]),
     .vm_col(vmfc_SW__calendar[88:85]),
+    .wbw_v(wbk_SW__wbw_v[0]),
+    .wbw_base(wbk_SW__wbw_base[29:0]),
+    .wbw_total(wbk_SW__wbw_total[11:0]),
+    .w_k_v(wbk_SW__w_k_v[23:20]),
+    .w_k_rdy(vmks_SW5__w_k_rdy),
+    .w_k_addr(wbk_SW__w_k_addr[719:600]),
+    .w_k_wdata(wbk_SW__w_k_wdata[6143:5120]),
+    .w_k_wr_done(vmks_SW5__w_k_wr_done),
     .fill_v(vmks_SW5__fill_v),
     .fill_bank(vmks_SW5__fill_bank),
     .fill_slot(vmks_SW5__fill_slot),
@@ -10438,6 +10672,14 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .vm_epoch(vmfc_SW__calendar[69:54]),
     .vm_row(vmfc_SW__calendar[84:70]),
     .vm_col(vmfc_SW__calendar[88:85]),
+    .wbw_v(wbk_SW__wbw_v[0]),
+    .wbw_base(wbk_SW__wbw_base[29:0]),
+    .wbw_total(wbk_SW__wbw_total[11:0]),
+    .w_k_v(wbk_SW__w_k_v[27:24]),
+    .w_k_rdy(vmks_SW6__w_k_rdy),
+    .w_k_addr(wbk_SW__w_k_addr[839:720]),
+    .w_k_wdata(wbk_SW__w_k_wdata[7167:6144]),
+    .w_k_wr_done(vmks_SW6__w_k_wr_done),
     .fill_v(vmks_SW6__fill_v),
     .fill_bank(vmks_SW6__fill_bank),
     .fill_slot(vmks_SW6__fill_slot),
@@ -10544,6 +10786,14 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .vm_epoch(vmfc_SW__calendar[69:54]),
     .vm_row(vmfc_SW__calendar[84:70]),
     .vm_col(vmfc_SW__calendar[88:85]),
+    .wbw_v(wbk_SW__wbw_v[0]),
+    .wbw_base(wbk_SW__wbw_base[29:0]),
+    .wbw_total(wbk_SW__wbw_total[11:0]),
+    .w_k_v(wbk_SW__w_k_v[31:28]),
+    .w_k_rdy(vmks_SW7__w_k_rdy),
+    .w_k_addr(wbk_SW__w_k_addr[959:840]),
+    .w_k_wdata(wbk_SW__w_k_wdata[8191:7168]),
+    .w_k_wr_done(vmks_SW7__w_k_wr_done),
     .fill_v(vmks_SW7__fill_v),
     .fill_bank(vmks_SW7__fill_bank),
     .fill_slot(vmks_SW7__fill_slot),
@@ -11690,6 +11940,14 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .vm_epoch(vmfc_SE__calendar[69:54]),
     .vm_row(vmfc_SE__calendar[84:70]),
     .vm_col(vmfc_SE__calendar[88:85]),
+    .wbw_v(wbk_SE__wbw_v[0]),
+    .wbw_base(wbk_SE__wbw_base[29:0]),
+    .wbw_total(wbk_SE__wbw_total[11:0]),
+    .w_k_v(wbk_SE__w_k_v[3:0]),
+    .w_k_rdy(vmks_SE0__w_k_rdy),
+    .w_k_addr(wbk_SE__w_k_addr[119:0]),
+    .w_k_wdata(wbk_SE__w_k_wdata[1023:0]),
+    .w_k_wr_done(vmks_SE0__w_k_wr_done),
     .fill_v(vmks_SE0__fill_v),
     .fill_bank(vmks_SE0__fill_bank),
     .fill_slot(vmks_SE0__fill_slot),
@@ -11796,6 +12054,14 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .vm_epoch(vmfc_SE__calendar[69:54]),
     .vm_row(vmfc_SE__calendar[84:70]),
     .vm_col(vmfc_SE__calendar[88:85]),
+    .wbw_v(wbk_SE__wbw_v[0]),
+    .wbw_base(wbk_SE__wbw_base[29:0]),
+    .wbw_total(wbk_SE__wbw_total[11:0]),
+    .w_k_v(wbk_SE__w_k_v[7:4]),
+    .w_k_rdy(vmks_SE1__w_k_rdy),
+    .w_k_addr(wbk_SE__w_k_addr[239:120]),
+    .w_k_wdata(wbk_SE__w_k_wdata[2047:1024]),
+    .w_k_wr_done(vmks_SE1__w_k_wr_done),
     .fill_v(vmks_SE1__fill_v),
     .fill_bank(vmks_SE1__fill_bank),
     .fill_slot(vmks_SE1__fill_slot),
@@ -11902,6 +12168,14 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .vm_epoch(vmfc_SE__calendar[69:54]),
     .vm_row(vmfc_SE__calendar[84:70]),
     .vm_col(vmfc_SE__calendar[88:85]),
+    .wbw_v(wbk_SE__wbw_v[0]),
+    .wbw_base(wbk_SE__wbw_base[29:0]),
+    .wbw_total(wbk_SE__wbw_total[11:0]),
+    .w_k_v(wbk_SE__w_k_v[11:8]),
+    .w_k_rdy(vmks_SE2__w_k_rdy),
+    .w_k_addr(wbk_SE__w_k_addr[359:240]),
+    .w_k_wdata(wbk_SE__w_k_wdata[3071:2048]),
+    .w_k_wr_done(vmks_SE2__w_k_wr_done),
     .fill_v(vmks_SE2__fill_v),
     .fill_bank(vmks_SE2__fill_bank),
     .fill_slot(vmks_SE2__fill_slot),
@@ -12008,6 +12282,14 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .vm_epoch(vmfc_SE__calendar[69:54]),
     .vm_row(vmfc_SE__calendar[84:70]),
     .vm_col(vmfc_SE__calendar[88:85]),
+    .wbw_v(wbk_SE__wbw_v[0]),
+    .wbw_base(wbk_SE__wbw_base[29:0]),
+    .wbw_total(wbk_SE__wbw_total[11:0]),
+    .w_k_v(wbk_SE__w_k_v[15:12]),
+    .w_k_rdy(vmks_SE3__w_k_rdy),
+    .w_k_addr(wbk_SE__w_k_addr[479:360]),
+    .w_k_wdata(wbk_SE__w_k_wdata[4095:3072]),
+    .w_k_wr_done(vmks_SE3__w_k_wr_done),
     .fill_v(vmks_SE3__fill_v),
     .fill_bank(vmks_SE3__fill_bank),
     .fill_slot(vmks_SE3__fill_slot),
@@ -12114,6 +12396,14 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .vm_epoch(vmfc_SE__calendar[69:54]),
     .vm_row(vmfc_SE__calendar[84:70]),
     .vm_col(vmfc_SE__calendar[88:85]),
+    .wbw_v(wbk_SE__wbw_v[0]),
+    .wbw_base(wbk_SE__wbw_base[29:0]),
+    .wbw_total(wbk_SE__wbw_total[11:0]),
+    .w_k_v(wbk_SE__w_k_v[19:16]),
+    .w_k_rdy(vmks_SE4__w_k_rdy),
+    .w_k_addr(wbk_SE__w_k_addr[599:480]),
+    .w_k_wdata(wbk_SE__w_k_wdata[5119:4096]),
+    .w_k_wr_done(vmks_SE4__w_k_wr_done),
     .fill_v(vmks_SE4__fill_v),
     .fill_bank(vmks_SE4__fill_bank),
     .fill_slot(vmks_SE4__fill_slot),
@@ -12220,6 +12510,14 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .vm_epoch(vmfc_SE__calendar[69:54]),
     .vm_row(vmfc_SE__calendar[84:70]),
     .vm_col(vmfc_SE__calendar[88:85]),
+    .wbw_v(wbk_SE__wbw_v[0]),
+    .wbw_base(wbk_SE__wbw_base[29:0]),
+    .wbw_total(wbk_SE__wbw_total[11:0]),
+    .w_k_v(wbk_SE__w_k_v[23:20]),
+    .w_k_rdy(vmks_SE5__w_k_rdy),
+    .w_k_addr(wbk_SE__w_k_addr[719:600]),
+    .w_k_wdata(wbk_SE__w_k_wdata[6143:5120]),
+    .w_k_wr_done(vmks_SE5__w_k_wr_done),
     .fill_v(vmks_SE5__fill_v),
     .fill_bank(vmks_SE5__fill_bank),
     .fill_slot(vmks_SE5__fill_slot),
@@ -12326,6 +12624,14 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .vm_epoch(vmfc_SE__calendar[69:54]),
     .vm_row(vmfc_SE__calendar[84:70]),
     .vm_col(vmfc_SE__calendar[88:85]),
+    .wbw_v(wbk_SE__wbw_v[0]),
+    .wbw_base(wbk_SE__wbw_base[29:0]),
+    .wbw_total(wbk_SE__wbw_total[11:0]),
+    .w_k_v(wbk_SE__w_k_v[27:24]),
+    .w_k_rdy(vmks_SE6__w_k_rdy),
+    .w_k_addr(wbk_SE__w_k_addr[839:720]),
+    .w_k_wdata(wbk_SE__w_k_wdata[7167:6144]),
+    .w_k_wr_done(vmks_SE6__w_k_wr_done),
     .fill_v(vmks_SE6__fill_v),
     .fill_bank(vmks_SE6__fill_bank),
     .fill_slot(vmks_SE6__fill_slot),
@@ -12432,6 +12738,14 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .vm_epoch(vmfc_SE__calendar[69:54]),
     .vm_row(vmfc_SE__calendar[84:70]),
     .vm_col(vmfc_SE__calendar[88:85]),
+    .wbw_v(wbk_SE__wbw_v[0]),
+    .wbw_base(wbk_SE__wbw_base[29:0]),
+    .wbw_total(wbk_SE__wbw_total[11:0]),
+    .w_k_v(wbk_SE__w_k_v[31:28]),
+    .w_k_rdy(vmks_SE7__w_k_rdy),
+    .w_k_addr(wbk_SE__w_k_addr[959:840]),
+    .w_k_wdata(wbk_SE__w_k_wdata[8191:7168]),
+    .w_k_wr_done(vmks_SE7__w_k_wr_done),
     .fill_v(vmks_SE7__fill_v),
     .fill_bank(vmks_SE7__fill_bank),
     .fill_slot(vmks_SE7__fill_slot),
@@ -13578,6 +13892,14 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .vm_epoch(vmfc_NW__calendar[69:54]),
     .vm_row(vmfc_NW__calendar[84:70]),
     .vm_col(vmfc_NW__calendar[88:85]),
+    .wbw_v(wbk_NW__wbw_v[0]),
+    .wbw_base(wbk_NW__wbw_base[29:0]),
+    .wbw_total(wbk_NW__wbw_total[11:0]),
+    .w_k_v(wbk_NW__w_k_v[3:0]),
+    .w_k_rdy(vmks_NW0__w_k_rdy),
+    .w_k_addr(wbk_NW__w_k_addr[119:0]),
+    .w_k_wdata(wbk_NW__w_k_wdata[1023:0]),
+    .w_k_wr_done(vmks_NW0__w_k_wr_done),
     .fill_v(vmks_NW0__fill_v),
     .fill_bank(vmks_NW0__fill_bank),
     .fill_slot(vmks_NW0__fill_slot),
@@ -13684,6 +14006,14 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .vm_epoch(vmfc_NW__calendar[69:54]),
     .vm_row(vmfc_NW__calendar[84:70]),
     .vm_col(vmfc_NW__calendar[88:85]),
+    .wbw_v(wbk_NW__wbw_v[0]),
+    .wbw_base(wbk_NW__wbw_base[29:0]),
+    .wbw_total(wbk_NW__wbw_total[11:0]),
+    .w_k_v(wbk_NW__w_k_v[7:4]),
+    .w_k_rdy(vmks_NW1__w_k_rdy),
+    .w_k_addr(wbk_NW__w_k_addr[239:120]),
+    .w_k_wdata(wbk_NW__w_k_wdata[2047:1024]),
+    .w_k_wr_done(vmks_NW1__w_k_wr_done),
     .fill_v(vmks_NW1__fill_v),
     .fill_bank(vmks_NW1__fill_bank),
     .fill_slot(vmks_NW1__fill_slot),
@@ -13790,6 +14120,14 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .vm_epoch(vmfc_NW__calendar[69:54]),
     .vm_row(vmfc_NW__calendar[84:70]),
     .vm_col(vmfc_NW__calendar[88:85]),
+    .wbw_v(wbk_NW__wbw_v[0]),
+    .wbw_base(wbk_NW__wbw_base[29:0]),
+    .wbw_total(wbk_NW__wbw_total[11:0]),
+    .w_k_v(wbk_NW__w_k_v[11:8]),
+    .w_k_rdy(vmks_NW2__w_k_rdy),
+    .w_k_addr(wbk_NW__w_k_addr[359:240]),
+    .w_k_wdata(wbk_NW__w_k_wdata[3071:2048]),
+    .w_k_wr_done(vmks_NW2__w_k_wr_done),
     .fill_v(vmks_NW2__fill_v),
     .fill_bank(vmks_NW2__fill_bank),
     .fill_slot(vmks_NW2__fill_slot),
@@ -13896,6 +14234,14 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .vm_epoch(vmfc_NW__calendar[69:54]),
     .vm_row(vmfc_NW__calendar[84:70]),
     .vm_col(vmfc_NW__calendar[88:85]),
+    .wbw_v(wbk_NW__wbw_v[0]),
+    .wbw_base(wbk_NW__wbw_base[29:0]),
+    .wbw_total(wbk_NW__wbw_total[11:0]),
+    .w_k_v(wbk_NW__w_k_v[15:12]),
+    .w_k_rdy(vmks_NW3__w_k_rdy),
+    .w_k_addr(wbk_NW__w_k_addr[479:360]),
+    .w_k_wdata(wbk_NW__w_k_wdata[4095:3072]),
+    .w_k_wr_done(vmks_NW3__w_k_wr_done),
     .fill_v(vmks_NW3__fill_v),
     .fill_bank(vmks_NW3__fill_bank),
     .fill_slot(vmks_NW3__fill_slot),
@@ -14002,6 +14348,14 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .vm_epoch(vmfc_NW__calendar[69:54]),
     .vm_row(vmfc_NW__calendar[84:70]),
     .vm_col(vmfc_NW__calendar[88:85]),
+    .wbw_v(wbk_NW__wbw_v[0]),
+    .wbw_base(wbk_NW__wbw_base[29:0]),
+    .wbw_total(wbk_NW__wbw_total[11:0]),
+    .w_k_v(wbk_NW__w_k_v[19:16]),
+    .w_k_rdy(vmks_NW4__w_k_rdy),
+    .w_k_addr(wbk_NW__w_k_addr[599:480]),
+    .w_k_wdata(wbk_NW__w_k_wdata[5119:4096]),
+    .w_k_wr_done(vmks_NW4__w_k_wr_done),
     .fill_v(vmks_NW4__fill_v),
     .fill_bank(vmks_NW4__fill_bank),
     .fill_slot(vmks_NW4__fill_slot),
@@ -14108,6 +14462,14 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .vm_epoch(vmfc_NW__calendar[69:54]),
     .vm_row(vmfc_NW__calendar[84:70]),
     .vm_col(vmfc_NW__calendar[88:85]),
+    .wbw_v(wbk_NW__wbw_v[0]),
+    .wbw_base(wbk_NW__wbw_base[29:0]),
+    .wbw_total(wbk_NW__wbw_total[11:0]),
+    .w_k_v(wbk_NW__w_k_v[23:20]),
+    .w_k_rdy(vmks_NW5__w_k_rdy),
+    .w_k_addr(wbk_NW__w_k_addr[719:600]),
+    .w_k_wdata(wbk_NW__w_k_wdata[6143:5120]),
+    .w_k_wr_done(vmks_NW5__w_k_wr_done),
     .fill_v(vmks_NW5__fill_v),
     .fill_bank(vmks_NW5__fill_bank),
     .fill_slot(vmks_NW5__fill_slot),
@@ -14214,6 +14576,14 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .vm_epoch(vmfc_NW__calendar[69:54]),
     .vm_row(vmfc_NW__calendar[84:70]),
     .vm_col(vmfc_NW__calendar[88:85]),
+    .wbw_v(wbk_NW__wbw_v[0]),
+    .wbw_base(wbk_NW__wbw_base[29:0]),
+    .wbw_total(wbk_NW__wbw_total[11:0]),
+    .w_k_v(wbk_NW__w_k_v[27:24]),
+    .w_k_rdy(vmks_NW6__w_k_rdy),
+    .w_k_addr(wbk_NW__w_k_addr[839:720]),
+    .w_k_wdata(wbk_NW__w_k_wdata[7167:6144]),
+    .w_k_wr_done(vmks_NW6__w_k_wr_done),
     .fill_v(vmks_NW6__fill_v),
     .fill_bank(vmks_NW6__fill_bank),
     .fill_slot(vmks_NW6__fill_slot),
@@ -14320,6 +14690,14 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .vm_epoch(vmfc_NW__calendar[69:54]),
     .vm_row(vmfc_NW__calendar[84:70]),
     .vm_col(vmfc_NW__calendar[88:85]),
+    .wbw_v(wbk_NW__wbw_v[0]),
+    .wbw_base(wbk_NW__wbw_base[29:0]),
+    .wbw_total(wbk_NW__wbw_total[11:0]),
+    .w_k_v(wbk_NW__w_k_v[31:28]),
+    .w_k_rdy(vmks_NW7__w_k_rdy),
+    .w_k_addr(wbk_NW__w_k_addr[959:840]),
+    .w_k_wdata(wbk_NW__w_k_wdata[8191:7168]),
+    .w_k_wr_done(vmks_NW7__w_k_wr_done),
     .fill_v(vmks_NW7__fill_v),
     .fill_bank(vmks_NW7__fill_bank),
     .fill_slot(vmks_NW7__fill_slot),
@@ -15466,6 +15844,14 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .vm_epoch(vmfc_NE__calendar[69:54]),
     .vm_row(vmfc_NE__calendar[84:70]),
     .vm_col(vmfc_NE__calendar[88:85]),
+    .wbw_v(wbk_NE__wbw_v[0]),
+    .wbw_base(wbk_NE__wbw_base[29:0]),
+    .wbw_total(wbk_NE__wbw_total[11:0]),
+    .w_k_v(wbk_NE__w_k_v[3:0]),
+    .w_k_rdy(vmks_NE0__w_k_rdy),
+    .w_k_addr(wbk_NE__w_k_addr[119:0]),
+    .w_k_wdata(wbk_NE__w_k_wdata[1023:0]),
+    .w_k_wr_done(vmks_NE0__w_k_wr_done),
     .fill_v(vmks_NE0__fill_v),
     .fill_bank(vmks_NE0__fill_bank),
     .fill_slot(vmks_NE0__fill_slot),
@@ -15572,6 +15958,14 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .vm_epoch(vmfc_NE__calendar[69:54]),
     .vm_row(vmfc_NE__calendar[84:70]),
     .vm_col(vmfc_NE__calendar[88:85]),
+    .wbw_v(wbk_NE__wbw_v[0]),
+    .wbw_base(wbk_NE__wbw_base[29:0]),
+    .wbw_total(wbk_NE__wbw_total[11:0]),
+    .w_k_v(wbk_NE__w_k_v[7:4]),
+    .w_k_rdy(vmks_NE1__w_k_rdy),
+    .w_k_addr(wbk_NE__w_k_addr[239:120]),
+    .w_k_wdata(wbk_NE__w_k_wdata[2047:1024]),
+    .w_k_wr_done(vmks_NE1__w_k_wr_done),
     .fill_v(vmks_NE1__fill_v),
     .fill_bank(vmks_NE1__fill_bank),
     .fill_slot(vmks_NE1__fill_slot),
@@ -15678,6 +16072,14 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .vm_epoch(vmfc_NE__calendar[69:54]),
     .vm_row(vmfc_NE__calendar[84:70]),
     .vm_col(vmfc_NE__calendar[88:85]),
+    .wbw_v(wbk_NE__wbw_v[0]),
+    .wbw_base(wbk_NE__wbw_base[29:0]),
+    .wbw_total(wbk_NE__wbw_total[11:0]),
+    .w_k_v(wbk_NE__w_k_v[11:8]),
+    .w_k_rdy(vmks_NE2__w_k_rdy),
+    .w_k_addr(wbk_NE__w_k_addr[359:240]),
+    .w_k_wdata(wbk_NE__w_k_wdata[3071:2048]),
+    .w_k_wr_done(vmks_NE2__w_k_wr_done),
     .fill_v(vmks_NE2__fill_v),
     .fill_bank(vmks_NE2__fill_bank),
     .fill_slot(vmks_NE2__fill_slot),
@@ -15784,6 +16186,14 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .vm_epoch(vmfc_NE__calendar[69:54]),
     .vm_row(vmfc_NE__calendar[84:70]),
     .vm_col(vmfc_NE__calendar[88:85]),
+    .wbw_v(wbk_NE__wbw_v[0]),
+    .wbw_base(wbk_NE__wbw_base[29:0]),
+    .wbw_total(wbk_NE__wbw_total[11:0]),
+    .w_k_v(wbk_NE__w_k_v[15:12]),
+    .w_k_rdy(vmks_NE3__w_k_rdy),
+    .w_k_addr(wbk_NE__w_k_addr[479:360]),
+    .w_k_wdata(wbk_NE__w_k_wdata[4095:3072]),
+    .w_k_wr_done(vmks_NE3__w_k_wr_done),
     .fill_v(vmks_NE3__fill_v),
     .fill_bank(vmks_NE3__fill_bank),
     .fill_slot(vmks_NE3__fill_slot),
@@ -15890,6 +16300,14 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .vm_epoch(vmfc_NE__calendar[69:54]),
     .vm_row(vmfc_NE__calendar[84:70]),
     .vm_col(vmfc_NE__calendar[88:85]),
+    .wbw_v(wbk_NE__wbw_v[0]),
+    .wbw_base(wbk_NE__wbw_base[29:0]),
+    .wbw_total(wbk_NE__wbw_total[11:0]),
+    .w_k_v(wbk_NE__w_k_v[19:16]),
+    .w_k_rdy(vmks_NE4__w_k_rdy),
+    .w_k_addr(wbk_NE__w_k_addr[599:480]),
+    .w_k_wdata(wbk_NE__w_k_wdata[5119:4096]),
+    .w_k_wr_done(vmks_NE4__w_k_wr_done),
     .fill_v(vmks_NE4__fill_v),
     .fill_bank(vmks_NE4__fill_bank),
     .fill_slot(vmks_NE4__fill_slot),
@@ -15996,6 +16414,14 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .vm_epoch(vmfc_NE__calendar[69:54]),
     .vm_row(vmfc_NE__calendar[84:70]),
     .vm_col(vmfc_NE__calendar[88:85]),
+    .wbw_v(wbk_NE__wbw_v[0]),
+    .wbw_base(wbk_NE__wbw_base[29:0]),
+    .wbw_total(wbk_NE__wbw_total[11:0]),
+    .w_k_v(wbk_NE__w_k_v[23:20]),
+    .w_k_rdy(vmks_NE5__w_k_rdy),
+    .w_k_addr(wbk_NE__w_k_addr[719:600]),
+    .w_k_wdata(wbk_NE__w_k_wdata[6143:5120]),
+    .w_k_wr_done(vmks_NE5__w_k_wr_done),
     .fill_v(vmks_NE5__fill_v),
     .fill_bank(vmks_NE5__fill_bank),
     .fill_slot(vmks_NE5__fill_slot),
@@ -16102,6 +16528,14 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .vm_epoch(vmfc_NE__calendar[69:54]),
     .vm_row(vmfc_NE__calendar[84:70]),
     .vm_col(vmfc_NE__calendar[88:85]),
+    .wbw_v(wbk_NE__wbw_v[0]),
+    .wbw_base(wbk_NE__wbw_base[29:0]),
+    .wbw_total(wbk_NE__wbw_total[11:0]),
+    .w_k_v(wbk_NE__w_k_v[27:24]),
+    .w_k_rdy(vmks_NE6__w_k_rdy),
+    .w_k_addr(wbk_NE__w_k_addr[839:720]),
+    .w_k_wdata(wbk_NE__w_k_wdata[7167:6144]),
+    .w_k_wr_done(vmks_NE6__w_k_wr_done),
     .fill_v(vmks_NE6__fill_v),
     .fill_bank(vmks_NE6__fill_bank),
     .fill_slot(vmks_NE6__fill_slot),
@@ -16208,6 +16642,14 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .vm_epoch(vmfc_NE__calendar[69:54]),
     .vm_row(vmfc_NE__calendar[84:70]),
     .vm_col(vmfc_NE__calendar[88:85]),
+    .wbw_v(wbk_NE__wbw_v[0]),
+    .wbw_base(wbk_NE__wbw_base[29:0]),
+    .wbw_total(wbk_NE__wbw_total[11:0]),
+    .w_k_v(wbk_NE__w_k_v[31:28]),
+    .w_k_rdy(vmks_NE7__w_k_rdy),
+    .w_k_addr(wbk_NE__w_k_addr[959:840]),
+    .w_k_wdata(wbk_NE__w_k_wdata[8191:7168]),
+    .w_k_wr_done(vmks_NE7__w_k_wr_done),
     .fill_v(vmks_NE7__fill_v),
     .fill_bank(vmks_NE7__fill_bank),
     .fill_slot(vmks_NE7__fill_slot),
@@ -17757,6 +18199,7 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .inj_rd(hb_coll_SW__inj_rd[1:0]),
     .inj_idx(hb_coll_SW__inj_idx[31:0]),
     .inj_addr(hb_coll_SW__hgi_inj_addr[159:0]),
+    .su_inj_d(sucx_SW__inj_d[1023:0]),
     .idx_tx_v(hb_idx__tx_v[3:0]),
     .idx_tx(hb_idx__tx[2179:0]),
     .inj_d(cij_SW__inj_d),
@@ -19327,7 +19770,7 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .pad_fault(host_phy__pad_fault),
     .phy_fault(host_phy__phy_fault)
   );
-  ot_hbm_status_join #(.NT(103), .NF(136), .NH(6), .TGTS(824'hdfdedddcdbdad9d8d7d6d5d4d3d2d1d0cfcecdcccbcac9c8c7c6c5c4c3c2c1c0a3a2a1a0878685846f6e6d6c6b6a696867666564636261605f5e5d5c5b5a595857565554535251504f4e4d4c4b4a494847464544434241403b3a39387877767574703736353430)) host_status (
+  ot_hbm_status_join #(.NT(103), .NF(148), .NH(6), .TGTS(824'hdfdedddcdbdad9d8d7d6d5d4d3d2d1d0cfcecdcccbcac9c8c7c6c5c4c3c2c1c0a3a2a1a0878685846f6e6d6c6b6a696867666564636261605f5e5d5c5b5a595857565554535251504f4e4d4c4b4a494847464544434241403b3a39387877767574703736353430)) host_status (
     .clk(hb_ckgen__pll_stream[0]),
     .rst_n(hb_ckgen__por_stream[0]),
     .cfg_v(host_cp_ingress__cfg_v[0]),
@@ -19336,13 +19779,125 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .cfg_target(host_cp_ingress__cfg_target[7:0]),
     .t_ready({cpx_NE7__configured[0], cpx_NE6__configured[0], cpx_NE5__configured[0], cpx_NE4__configured[0], cpx_NE3__configured[0], cpx_NE2__configured[0], cpx_NE1__configured[0], cpx_NE0__configured[0], cpx_NW7__configured[0], cpx_NW6__configured[0], cpx_NW5__configured[0], cpx_NW4__configured[0], cpx_NW3__configured[0], cpx_NW2__configured[0], cpx_NW1__configured[0], cpx_NW0__configured[0], cpx_SE7__configured[0], cpx_SE6__configured[0], cpx_SE5__configured[0], cpx_SE4__configured[0], cpx_SE3__configured[0], cpx_SE2__configured[0], cpx_SE1__configured[0], cpx_SE0__configured[0], cpx_SW7__configured[0], cpx_SW6__configured[0], cpx_SW5__configured[0], cpx_SW4__configured[0], cpx_SW3__configured[0], cpx_SW2__configured[0], cpx_SW1__configured[0], cpx_SW0__configured[0], cp_smw_NE__configured[0], cp_smw_NW__configured[0], cp_smw_SE__configured[0], cp_smw_SW__configured[0], cp_ep_NE__configured[0], cp_ep_NW__configured[0], cp_ep_SE__configured[0], cp_ep_SW__configured[0], hc_tgt_NE__configured[0], hc_tgt_NW__configured[0], hc_tgt_SE__configured[0], hc_tgt_SW__configured[0], cp_dma_NE__configured[0], cp_dma_NW__configured[0], cp_dma_SE__configured[0], cp_dma_SW__configured[0], cp_xl_NE__configured[0], cp_xl_NW__configured[0], cp_xl_SE__configured[0], cp_xl_SW__configured[0], cp_cal_NE__configured[0], cp_cal_NW__configured[0], cp_cal_SE__configured[0], cp_cal_SW__configured[0], cp_svg_NE7__configured[0], cp_svg_NE6__configured[0], cp_svg_NE5__configured[0], cp_svg_NE4__configured[0], cp_svg_NE3__configured[0], cp_svg_NE2__configured[0], cp_svg_NE1__configured[0], cp_svg_NE0__configured[0], cp_svg_NW7__configured[0], cp_svg_NW6__configured[0], cp_svg_NW5__configured[0], cp_svg_NW4__configured[0], cp_svg_NW3__configured[0], cp_svg_NW2__configured[0], cp_svg_NW1__configured[0], cp_svg_NW0__configured[0], cp_svg_SE7__configured[0], cp_svg_SE6__configured[0], cp_svg_SE5__configured[0], cp_svg_SE4__configured[0], cp_svg_SE3__configured[0], cp_svg_SE2__configured[0], cp_svg_SE1__configured[0], cp_svg_SE0__configured[0], cp_svg_SW7__configured[0], cp_svg_SW6__configured[0], cp_svg_SW5__configured[0], cp_svg_SW4__configured[0], cp_svg_SW3__configured[0], cp_svg_SW2__configured[0], cp_svg_SW1__configured[0], cp_svg_SW0__configured[0], cp_fill_NE__configured[0], cp_fill_NW__configured[0], cp_fill_SE__configured[0], cp_fill_SW__configured[0], col_idx__ready[0], col_sfu_NE__ready[0], col_sfu_NW__ready[0], col_sfu_SE__ready[0], col_sfu_SW__ready[0], col_su__ready[0], hb_coll_NE__program_configured[0], hb_coll_NW__program_configured[0], hb_coll_SE__program_configured[0], hb_coll_SW__program_configured[0], hb_quant_NW__configured[0]}),
     .t_active({cpx_NE7__active[0], cpx_NE6__active[0], cpx_NE5__active[0], cpx_NE4__active[0], cpx_NE3__active[0], cpx_NE2__active[0], cpx_NE1__active[0], cpx_NE0__active[0], cpx_NW7__active[0], cpx_NW6__active[0], cpx_NW5__active[0], cpx_NW4__active[0], cpx_NW3__active[0], cpx_NW2__active[0], cpx_NW1__active[0], cpx_NW0__active[0], cpx_SE7__active[0], cpx_SE6__active[0], cpx_SE5__active[0], cpx_SE4__active[0], cpx_SE3__active[0], cpx_SE2__active[0], cpx_SE1__active[0], cpx_SE0__active[0], cpx_SW7__active[0], cpx_SW6__active[0], cpx_SW5__active[0], cpx_SW4__active[0], cpx_SW3__active[0], cpx_SW2__active[0], cpx_SW1__active[0], cpx_SW0__active[0], cp_smw_NE__active[0], cp_smw_NW__active[0], cp_smw_SE__active[0], cp_smw_SW__active[0], epcal_NE__active[0], epcal_NW__active[0], epcal_SE__active[0], epcal_SW__active[0], hc_NE__program_active[0], hc_NW__program_active[0], hc_SE__program_active[0], hc_SW__program_active[0], cp_dma_NE__active[0], cp_dma_NW__active[0], cp_dma_SE__active[0], cp_dma_SW__active[0], cp_xl_NE__active[0], cp_xl_NW__active[0], cp_xl_SE__active[0], cp_xl_SW__active[0], calendar_NE__active[0], calendar_NW__active[0], calendar_SE__active[0], calendar_SW__active[0], cp_svg_NE7__active[0], cp_svg_NE6__active[0], cp_svg_NE5__active[0], cp_svg_NE4__active[0], cp_svg_NE3__active[0], cp_svg_NE2__active[0], cp_svg_NE1__active[0], cp_svg_NE0__active[0], cp_svg_NW7__active[0], cp_svg_NW6__active[0], cp_svg_NW5__active[0], cp_svg_NW4__active[0], cp_svg_NW3__active[0], cp_svg_NW2__active[0], cp_svg_NW1__active[0], cp_svg_NW0__active[0], cp_svg_SE7__active[0], cp_svg_SE6__active[0], cp_svg_SE5__active[0], cp_svg_SE4__active[0], cp_svg_SE3__active[0], cp_svg_SE2__active[0], cp_svg_SE1__active[0], cp_svg_SE0__active[0], cp_svg_SW7__active[0], cp_svg_SW6__active[0], cp_svg_SW5__active[0], cp_svg_SW4__active[0], cp_svg_SW3__active[0], cp_svg_SW2__active[0], cp_svg_SW1__active[0], cp_svg_SW0__active[0], vmfc_NE__active[0], vmfc_NW__active[0], vmfc_SE__active[0], vmfc_SW__active[0], col_idx__active[0], col_sfu_NE__active[0], col_sfu_NW__active[0], col_sfu_SE__active[0], col_sfu_SW__active[0], col_su__active[0], hb_coll_NE__hgi_busy[0], hb_coll_NW__hgi_busy[0], hb_coll_SE__hgi_busy[0], hb_coll_SW__hgi_busy[0], hb_quant_NW__program_active[0]}),
-    .t_fault({cpx_NE7__fault[0], cpx_NE6__fault[0], cpx_NE5__fault[0], cpx_NE4__fault[0], cpx_NE3__fault[0], cpx_NE2__fault[0], cpx_NE1__fault[0], cpx_NE0__fault[0], cpx_NW7__fault[0], cpx_NW6__fault[0], cpx_NW5__fault[0], cpx_NW4__fault[0], cpx_NW3__fault[0], cpx_NW2__fault[0], cpx_NW1__fault[0], cpx_NW0__fault[0], cpx_SE7__fault[0], cpx_SE6__fault[0], cpx_SE5__fault[0], cpx_SE4__fault[0], cpx_SE3__fault[0], cpx_SE2__fault[0], cpx_SE1__fault[0], cpx_SE0__fault[0], cpx_SW7__fault[0], cpx_SW6__fault[0], cpx_SW5__fault[0], cpx_SW4__fault[0], cpx_SW3__fault[0], cpx_SW2__fault[0], cpx_SW1__fault[0], cpx_SW0__fault[0], cp_smw_NE__fault[0], cp_smw_NW__fault[0], cp_smw_SE__fault[0], cp_smw_SW__fault[0], ep_N3__fault[0], ep_N2__fault[0], epcal_NE__fault[0], cp_ep_NE__fault[0], ep_N1__fault[0], ep_N0__fault[0], epcal_NW__fault[0], cp_ep_NW__fault[0], ep_S4__fault[0], ep_S3__fault[0], epcal_SE__fault[0], cp_ep_SE__fault[0], ep_S2__fault[0], ep_S1__fault[0], ep_S0__fault[0], epcal_SW__fault[0], cp_ep_SW__fault[0], hc_NE__fault[0], hc_tgt_NE__fault[0], hc_NW__fault[0], hc_tgt_NW__fault[0], hc_SE__fault[0], hc_tgt_SE__fault[0], hc_SW__fault[0], hc_tgt_SW__fault[0], cp_dma_NE__fault[0], cp_dma_NW__fault[0], cp_dma_SE__fault[0], cp_dma_SW__fault[0], cp_xl_NE__fault[0], cp_xl_NW__fault[0], cp_xl_SE__fault[0], cp_xl_SW__fault[0], calendar_NE__fault[0], cp_cal_NE__fault[0], calendar_NW__fault[0], cp_cal_NW__fault[0], calendar_SE__fault[0], cp_cal_SE__fault[0], calendar_SW__fault[0], cp_cal_SW__fault[0], cp_svg_NE7__fault[0], cp_svg_NE6__fault[0], cp_svg_NE5__fault[0], cp_svg_NE4__fault[0], cp_svg_NE3__fault[0], cp_svg_NE2__fault[0], cp_svg_NE1__fault[0], cp_svg_NE0__fault[0], cp_svg_NW7__fault[0], cp_svg_NW6__fault[0], cp_svg_NW5__fault[0], cp_svg_NW4__fault[0], cp_svg_NW3__fault[0], cp_svg_NW2__fault[0], cp_svg_NW1__fault[0], cp_svg_NW0__fault[0], cp_svg_SE7__fault[0], cp_svg_SE6__fault[0], cp_svg_SE5__fault[0], cp_svg_SE4__fault[0], cp_svg_SE3__fault[0], cp_svg_SE2__fault[0], cp_svg_SE1__fault[0], cp_svg_SE0__fault[0], cp_svg_SW7__fault[0], cp_svg_SW6__fault[0], cp_svg_SW5__fault[0], cp_svg_SW4__fault[0], cp_svg_SW3__fault[0], cp_svg_SW2__fault[0], cp_svg_SW1__fault[0], cp_svg_SW0__fault[0], vmfc_NE__fault[0], cp_fill_NE__fault[0], vmfc_NW__fault[0], cp_fill_NW__fault[0], vmfc_SE__fault[0], cp_fill_SE__fault[0], vmfc_SW__fault[0], cp_fill_SW__fault[0], col_idx__fault[0], col_sfu_NE__fault[0], col_sfu_NW__fault[0], col_sfu_SE__fault[0], col_sfu_SW__fault[0], col_su__fault[0], hb_coll_NE__fault[0], hb_coll_NE__hgi_fault[0], hb_coll_NE__program_fault[0], hb_coll_NW__fault[0], hb_coll_NW__hgi_fault[0], hb_coll_NW__program_fault[0], hb_coll_SE__fault[0], hb_coll_SE__hgi_fault[0], hb_coll_SE__program_fault[0], hb_coll_SW__fault[0], hb_coll_SW__hgi_fault[0], hb_coll_SW__program_fault[0], hb_quant_NW__fault[0]}),
+    .t_fault({sfus_NE__fault[0], sfus_NW__fault[0], sfus_SE__fault[0], sfus_SW__fault[0], sucx_NE__fault[0], sucx_NW__fault[0], sucx_SE__fault[0], sucx_SW__fault[0], wbk_NE__fault[0], wbk_NW__fault[0], wbk_SE__fault[0], wbk_SW__fault[0], cpx_NE7__fault[0], cpx_NE6__fault[0], cpx_NE5__fault[0], cpx_NE4__fault[0], cpx_NE3__fault[0], cpx_NE2__fault[0], cpx_NE1__fault[0], cpx_NE0__fault[0], cpx_NW7__fault[0], cpx_NW6__fault[0], cpx_NW5__fault[0], cpx_NW4__fault[0], cpx_NW3__fault[0], cpx_NW2__fault[0], cpx_NW1__fault[0], cpx_NW0__fault[0], cpx_SE7__fault[0], cpx_SE6__fault[0], cpx_SE5__fault[0], cpx_SE4__fault[0], cpx_SE3__fault[0], cpx_SE2__fault[0], cpx_SE1__fault[0], cpx_SE0__fault[0], cpx_SW7__fault[0], cpx_SW6__fault[0], cpx_SW5__fault[0], cpx_SW4__fault[0], cpx_SW3__fault[0], cpx_SW2__fault[0], cpx_SW1__fault[0], cpx_SW0__fault[0], cp_smw_NE__fault[0], cp_smw_NW__fault[0], cp_smw_SE__fault[0], cp_smw_SW__fault[0], ep_N3__fault[0], ep_N2__fault[0], epcal_NE__fault[0], cp_ep_NE__fault[0], ep_N1__fault[0], ep_N0__fault[0], epcal_NW__fault[0], cp_ep_NW__fault[0], ep_S4__fault[0], ep_S3__fault[0], epcal_SE__fault[0], cp_ep_SE__fault[0], ep_S2__fault[0], ep_S1__fault[0], ep_S0__fault[0], epcal_SW__fault[0], cp_ep_SW__fault[0], hc_NE__fault[0], hc_tgt_NE__fault[0], hc_NW__fault[0], hc_tgt_NW__fault[0], hc_SE__fault[0], hc_tgt_SE__fault[0], hc_SW__fault[0], hc_tgt_SW__fault[0], cp_dma_NE__fault[0], cp_dma_NW__fault[0], cp_dma_SE__fault[0], cp_dma_SW__fault[0], cp_xl_NE__fault[0], cp_xl_NW__fault[0], cp_xl_SE__fault[0], cp_xl_SW__fault[0], calendar_NE__fault[0], cp_cal_NE__fault[0], calendar_NW__fault[0], cp_cal_NW__fault[0], calendar_SE__fault[0], cp_cal_SE__fault[0], calendar_SW__fault[0], cp_cal_SW__fault[0], cp_svg_NE7__fault[0], cp_svg_NE6__fault[0], cp_svg_NE5__fault[0], cp_svg_NE4__fault[0], cp_svg_NE3__fault[0], cp_svg_NE2__fault[0], cp_svg_NE1__fault[0], cp_svg_NE0__fault[0], cp_svg_NW7__fault[0], cp_svg_NW6__fault[0], cp_svg_NW5__fault[0], cp_svg_NW4__fault[0], cp_svg_NW3__fault[0], cp_svg_NW2__fault[0], cp_svg_NW1__fault[0], cp_svg_NW0__fault[0], cp_svg_SE7__fault[0], cp_svg_SE6__fault[0], cp_svg_SE5__fault[0], cp_svg_SE4__fault[0], cp_svg_SE3__fault[0], cp_svg_SE2__fault[0], cp_svg_SE1__fault[0], cp_svg_SE0__fault[0], cp_svg_SW7__fault[0], cp_svg_SW6__fault[0], cp_svg_SW5__fault[0], cp_svg_SW4__fault[0], cp_svg_SW3__fault[0], cp_svg_SW2__fault[0], cp_svg_SW1__fault[0], cp_svg_SW0__fault[0], vmfc_NE__fault[0], cp_fill_NE__fault[0], vmfc_NW__fault[0], cp_fill_NW__fault[0], vmfc_SE__fault[0], cp_fill_SE__fault[0], vmfc_SW__fault[0], cp_fill_SW__fault[0], col_idx__fault[0], col_sfu_NE__fault[0], col_sfu_NW__fault[0], col_sfu_SE__fault[0], col_sfu_SW__fault[0], col_su__fault[0], hb_coll_NE__fault[0], hb_coll_NE__hgi_fault[0], hb_coll_NE__program_fault[0], hb_coll_NW__fault[0], hb_coll_NW__hgi_fault[0], hb_coll_NW__program_fault[0], hb_coll_SE__fault[0], hb_coll_SE__hgi_fault[0], hb_coll_SE__program_fault[0], hb_coll_SW__fault[0], hb_coll_SW__hgi_fault[0], hb_coll_SW__program_fault[0], hb_quant_NW__fault[0]}),
     .h_fault({host_phy__phy_fault[0], host_phy__pad_fault[0], host_cp_ep_face__f_lk_tx[547], host_cp_landing__fault[0], host_cp_packet__protocol_fault[0], host_cp_ingress__fault[0]}),
     .block_ready(host_status__block_ready),
     .program_active(host_status__program_active),
     .program_fault(host_status__program_fault),
     .die_fault(host_status__die_fault),
     .irq(host_status__irq)
+  );
+  ot_hbm_svc_wb_kport #(.WOPEN(0), .MUT(0)) wbk_SW (
+    .stream_clk(hb_ckgen__pll_stream[0]),
+    .stream_rst_n(hb_ckgen__por_stream[0]),
+    .hbm_clk(hb_ckgen__pll_hbm[0]),
+    .hbm_rst_n(hb_ckgen__por_hbm[0]),
+    .stream_fifo_clk({4{hb_ckgen__pll_stream[0]}}),
+    .stk(2'd0),
+    .wb_reserve_v(hb_dbk_SW__wb_reserve_v[0]),
+    .wb_reserve_bank(hb_dbk_SW__wb_reserve_bank[0]),
+    .wb_fill_bank(hb_dbk_SW__wb_fill_bank[0]),
+    .wb_reserve_epoch(hb_dbk_SW__wb_reserve_epoch[15:0]),
+    .wb_fill_epoch(hb_dbk_SW__wb_fill_epoch[15:0]),
+    .wb_reserve_sectors(hb_dbk_SW__wb_reserve_sectors[11:0]),
+    .wb_reserve_base(hb_dbk_SW__wb_reserve_base[31:0]),
+    .wb_fill_start(hb_dbk_SW__wb_fill_start[0]),
+    .wd(hb_dbk_SW__wd[2311:0]),
+    .wb_ready(wbk_SW__wb_ready),
+    .wa(wbk_SW__wa),
+    .wbw_v(wbk_SW__wbw_v),
+    .wbw_base(wbk_SW__wbw_base),
+    .wbw_total(wbk_SW__wbw_total),
+    .w_k_v(wbk_SW__w_k_v),
+    .w_k_rdy({vmks_SW7__w_k_rdy[3:0], vmks_SW6__w_k_rdy[3:0], vmks_SW5__w_k_rdy[3:0], vmks_SW4__w_k_rdy[3:0], vmks_SW3__w_k_rdy[3:0], vmks_SW2__w_k_rdy[3:0], vmks_SW1__w_k_rdy[3:0], vmks_SW0__w_k_rdy[3:0]}),
+    .w_k_addr(wbk_SW__w_k_addr),
+    .w_k_wdata(wbk_SW__w_k_wdata),
+    .w_k_wr_done({vmks_SW7__w_k_wr_done[3:0], vmks_SW6__w_k_wr_done[3:0], vmks_SW5__w_k_wr_done[3:0], vmks_SW4__w_k_wr_done[3:0], vmks_SW3__w_k_wr_done[3:0], vmks_SW2__w_k_wr_done[3:0], vmks_SW1__w_k_wr_done[3:0], vmks_SW0__w_k_wr_done[3:0]}),
+    .fault(wbk_SW__fault)
+  );
+  ot_hbm_svc_wb_kport #(.WOPEN(0), .MUT(0)) wbk_SE (
+    .stream_clk(hb_ckgen__pll_stream[0]),
+    .stream_rst_n(hb_ckgen__por_stream[0]),
+    .hbm_clk(hb_ckgen__pll_hbm[0]),
+    .hbm_rst_n(hb_ckgen__por_hbm[0]),
+    .stream_fifo_clk({4{hb_ckgen__pll_stream[0]}}),
+    .stk(2'd1),
+    .wb_reserve_v(hb_dbk_SE__wb_reserve_v[0]),
+    .wb_reserve_bank(hb_dbk_SE__wb_reserve_bank[0]),
+    .wb_fill_bank(hb_dbk_SE__wb_fill_bank[0]),
+    .wb_reserve_epoch(hb_dbk_SE__wb_reserve_epoch[15:0]),
+    .wb_fill_epoch(hb_dbk_SE__wb_fill_epoch[15:0]),
+    .wb_reserve_sectors(hb_dbk_SE__wb_reserve_sectors[11:0]),
+    .wb_reserve_base(hb_dbk_SE__wb_reserve_base[31:0]),
+    .wb_fill_start(hb_dbk_SE__wb_fill_start[0]),
+    .wd(hb_dbk_SE__wd[2311:0]),
+    .wb_ready(wbk_SE__wb_ready),
+    .wa(wbk_SE__wa),
+    .wbw_v(wbk_SE__wbw_v),
+    .wbw_base(wbk_SE__wbw_base),
+    .wbw_total(wbk_SE__wbw_total),
+    .w_k_v(wbk_SE__w_k_v),
+    .w_k_rdy({vmks_SE7__w_k_rdy[3:0], vmks_SE6__w_k_rdy[3:0], vmks_SE5__w_k_rdy[3:0], vmks_SE4__w_k_rdy[3:0], vmks_SE3__w_k_rdy[3:0], vmks_SE2__w_k_rdy[3:0], vmks_SE1__w_k_rdy[3:0], vmks_SE0__w_k_rdy[3:0]}),
+    .w_k_addr(wbk_SE__w_k_addr),
+    .w_k_wdata(wbk_SE__w_k_wdata),
+    .w_k_wr_done({vmks_SE7__w_k_wr_done[3:0], vmks_SE6__w_k_wr_done[3:0], vmks_SE5__w_k_wr_done[3:0], vmks_SE4__w_k_wr_done[3:0], vmks_SE3__w_k_wr_done[3:0], vmks_SE2__w_k_wr_done[3:0], vmks_SE1__w_k_wr_done[3:0], vmks_SE0__w_k_wr_done[3:0]}),
+    .fault(wbk_SE__fault)
+  );
+  ot_hbm_svc_wb_kport #(.WOPEN(0), .MUT(0)) wbk_NW (
+    .stream_clk(hb_ckgen__pll_stream[0]),
+    .stream_rst_n(hb_ckgen__por_stream[0]),
+    .hbm_clk(hb_ckgen__pll_hbm[0]),
+    .hbm_rst_n(hb_ckgen__por_hbm[0]),
+    .stream_fifo_clk({4{hb_ckgen__pll_stream[0]}}),
+    .stk(2'd2),
+    .wb_reserve_v(hb_dbk_NW__wb_reserve_v[0]),
+    .wb_reserve_bank(hb_dbk_NW__wb_reserve_bank[0]),
+    .wb_fill_bank(hb_dbk_NW__wb_fill_bank[0]),
+    .wb_reserve_epoch(hb_dbk_NW__wb_reserve_epoch[15:0]),
+    .wb_fill_epoch(hb_dbk_NW__wb_fill_epoch[15:0]),
+    .wb_reserve_sectors(hb_dbk_NW__wb_reserve_sectors[11:0]),
+    .wb_reserve_base(hb_dbk_NW__wb_reserve_base[31:0]),
+    .wb_fill_start(hb_dbk_NW__wb_fill_start[0]),
+    .wd(hb_dbk_NW__wd[2311:0]),
+    .wb_ready(wbk_NW__wb_ready),
+    .wa(wbk_NW__wa),
+    .wbw_v(wbk_NW__wbw_v),
+    .wbw_base(wbk_NW__wbw_base),
+    .wbw_total(wbk_NW__wbw_total),
+    .w_k_v(wbk_NW__w_k_v),
+    .w_k_rdy({vmks_NW7__w_k_rdy[3:0], vmks_NW6__w_k_rdy[3:0], vmks_NW5__w_k_rdy[3:0], vmks_NW4__w_k_rdy[3:0], vmks_NW3__w_k_rdy[3:0], vmks_NW2__w_k_rdy[3:0], vmks_NW1__w_k_rdy[3:0], vmks_NW0__w_k_rdy[3:0]}),
+    .w_k_addr(wbk_NW__w_k_addr),
+    .w_k_wdata(wbk_NW__w_k_wdata),
+    .w_k_wr_done({vmks_NW7__w_k_wr_done[3:0], vmks_NW6__w_k_wr_done[3:0], vmks_NW5__w_k_wr_done[3:0], vmks_NW4__w_k_wr_done[3:0], vmks_NW3__w_k_wr_done[3:0], vmks_NW2__w_k_wr_done[3:0], vmks_NW1__w_k_wr_done[3:0], vmks_NW0__w_k_wr_done[3:0]}),
+    .fault(wbk_NW__fault)
+  );
+  ot_hbm_svc_wb_kport #(.WOPEN(0), .MUT(0)) wbk_NE (
+    .stream_clk(hb_ckgen__pll_stream[0]),
+    .stream_rst_n(hb_ckgen__por_stream[0]),
+    .hbm_clk(hb_ckgen__pll_hbm[0]),
+    .hbm_rst_n(hb_ckgen__por_hbm[0]),
+    .stream_fifo_clk({4{hb_ckgen__pll_stream[0]}}),
+    .stk(2'd3),
+    .wb_reserve_v(hb_dbk_NE__wb_reserve_v[0]),
+    .wb_reserve_bank(hb_dbk_NE__wb_reserve_bank[0]),
+    .wb_fill_bank(hb_dbk_NE__wb_fill_bank[0]),
+    .wb_reserve_epoch(hb_dbk_NE__wb_reserve_epoch[15:0]),
+    .wb_fill_epoch(hb_dbk_NE__wb_fill_epoch[15:0]),
+    .wb_reserve_sectors(hb_dbk_NE__wb_reserve_sectors[11:0]),
+    .wb_reserve_base(hb_dbk_NE__wb_reserve_base[31:0]),
+    .wb_fill_start(hb_dbk_NE__wb_fill_start[0]),
+    .wd(hb_dbk_NE__wd[2311:0]),
+    .wb_ready(wbk_NE__wb_ready),
+    .wa(wbk_NE__wa),
+    .wbw_v(wbk_NE__wbw_v),
+    .wbw_base(wbk_NE__wbw_base),
+    .wbw_total(wbk_NE__wbw_total),
+    .w_k_v(wbk_NE__w_k_v),
+    .w_k_rdy({vmks_NE7__w_k_rdy[3:0], vmks_NE6__w_k_rdy[3:0], vmks_NE5__w_k_rdy[3:0], vmks_NE4__w_k_rdy[3:0], vmks_NE3__w_k_rdy[3:0], vmks_NE2__w_k_rdy[3:0], vmks_NE1__w_k_rdy[3:0], vmks_NE0__w_k_rdy[3:0]}),
+    .w_k_addr(wbk_NE__w_k_addr),
+    .w_k_wdata(wbk_NE__w_k_wdata),
+    .w_k_wr_done({vmks_NE7__w_k_wr_done[3:0], vmks_NE6__w_k_wr_done[3:0], vmks_NE5__w_k_wr_done[3:0], vmks_NE4__w_k_wr_done[3:0], vmks_NE3__w_k_wr_done[3:0], vmks_NE2__w_k_wr_done[3:0], vmks_NE1__w_k_wr_done[3:0], vmks_NE0__w_k_wr_done[3:0]}),
+    .fault(wbk_NE__fault)
   );
   ot_static_program_target #(.TARGET(8'd108), .PCW(10)) hc_tgt_SW (
     .clk(hb_ckgen__pll_stream[0]),
@@ -21098,7 +21653,187 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .bridge_rst_n(subr_NE__bridge_rst_n),
     .fault(subr_NE__fault)
   );
-  ot_hbm_su_programme #(.LINE_BITS(9688), .EDGES(7116), .COLS(38), .INDEX_PACK(1), .DICT_BANKS('{3,10,9,13,2,1,1,1,1,1,2,10,9,2,1,1,1,1,1,3,10,9,13,1,1,1,1,1,3,2,10,1,2,1,1,1,1,1}), .MACROS(301)) su_prog (
+  ot_hbm_su_static_cxport #(.QID(0), .B39_NOOP(1), .INJ_RET(9)) sucx_SW (
+    .clk_s(hb_ckgen__pll_stream[0]),
+    .clk_q(hb_ckgen__pll_serial[0]),
+    .rst_n(subr_SW__bridge_rst_n[0]),
+    .inj_rd(hb_coll_SW__inj_rd[1:0]),
+    .inj_addr(hb_coll_SW__hgi_inj_addr[159:0]),
+    .inj_d(sucx_SW__inj_d),
+    .del_valid(hb_coll_SW__del_valid[3:0]),
+    .del_flit(hb_coll_SW__del_flit[2179:0]),
+    .del_obase(hb_coll_SW__hgi_del_obase[159:0]),
+    .rc_v(sucx_SW__rc_v),
+    .rc_tag(sucx_SW__rc_tag),
+    .rc_d(sucx_SW__rc_d),
+    .rr_v(hb_coll_SW__rr_v[0]),
+    .rr_tag(hb_coll_SW__rr_tag[2:0]),
+    .rr_d(hb_coll_SW__rr_d[255:0]),
+    .inj_q({su_SW3__inj_q[1023:0], su_SW2__inj_q[1023:0], su_SW1__inj_q[1023:0], su_SW0__inj_q[1023:0]}),
+    .dw_v(sucx_SW__dw_v),
+    .dw_row(sucx_SW__dw_row),
+    .dw_d(sucx_SW__dw_d),
+    .red_sv(sucore_SW__red_sv[0]),
+    .red_tag(sucore_SW__red_tag[31:0]),
+    .red_x(sucore_SW__red_x[31:0]),
+    .rr_wv(sucx_SW__rr_wv),
+    .rr_wa(sucx_SW__rr_wa),
+    .rr_wd(sucx_SW__rr_wd),
+    .ro_v(sfucore_SW__ro_v[15:0]),
+    .ro_x(sfucore_SW__ro_x[511:0]),
+    .red_sel({su_prog__command[73:70], su_prog__command[7:0]}),
+    .sfu_x(sucx_SW__sfu_x),
+    .fault(sucx_SW__fault)
+  );
+  ot_hbm_su_static_sfustore #(.QID(0)) sfus_SW (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .clk_bank({16{hb_ckgen__pll_stream[0]}}),
+    .clk_bank_macro({16{hb_ckgen__pll_stream[0]}}),
+    .vi_re(sfucore_SW__vi_re[15:0]),
+    .vi_addr(sfucore_SW__vi_addr[383:0]),
+    .vi_q(sfus_SW__vi_q),
+    .kv_we(sfucore_SW__kv_we[15:0]),
+    .kv_waddr(sfucore_SW__kv_waddr[383:0]),
+    .kv_wdata(sfucore_SW__kv_wdata[511:0]),
+    .fault(sfus_SW__fault)
+  );
+  ot_hbm_su_static_cxport #(.QID(1), .B39_NOOP(0), .INJ_RET(11)) sucx_SE (
+    .clk_s(hb_ckgen__pll_stream[0]),
+    .clk_q(hb_ckgen__pll_serial[0]),
+    .rst_n(subr_SE__bridge_rst_n[0]),
+    .inj_rd(hb_coll_SE__inj_rd[1:0]),
+    .inj_addr(hb_coll_SE__hgi_inj_addr[159:0]),
+    .inj_d(sucx_SE__inj_d),
+    .del_valid(hb_coll_SE__del_valid[3:0]),
+    .del_flit(hb_coll_SE__del_flit[2179:0]),
+    .del_obase(hb_coll_SE__hgi_del_obase[159:0]),
+    .rc_v(sucx_SE__rc_v),
+    .rc_tag(sucx_SE__rc_tag),
+    .rc_d(sucx_SE__rc_d),
+    .rr_v(hb_coll_SE__rr_v[0]),
+    .rr_tag(hb_coll_SE__rr_tag[2:0]),
+    .rr_d(hb_coll_SE__rr_d[255:0]),
+    .inj_q({su_SE3__inj_q[1023:0], su_SE2__inj_q[1023:0], su_SE1__inj_q[1023:0], su_SE0__inj_q[1023:0]}),
+    .dw_v(sucx_SE__dw_v),
+    .dw_row(sucx_SE__dw_row),
+    .dw_d(sucx_SE__dw_d),
+    .red_sv(sucore_SE__red_sv[0]),
+    .red_tag(sucore_SE__red_tag[31:0]),
+    .red_x(sucore_SE__red_x[31:0]),
+    .rr_wv(sucx_SE__rr_wv),
+    .rr_wa(sucx_SE__rr_wa),
+    .rr_wd(sucx_SE__rr_wd),
+    .ro_v(sfucore_SE__ro_v[15:0]),
+    .ro_x(sfucore_SE__ro_x[511:0]),
+    .red_sel({su_prog__command[2495:2492], su_prog__command[2429:2422]}),
+    .sfu_x(sucx_SE__sfu_x),
+    .fault(sucx_SE__fault)
+  );
+  ot_hbm_su_static_sfustore #(.QID(1)) sfus_SE (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .clk_bank({16{hb_ckgen__pll_stream[0]}}),
+    .clk_bank_macro({16{hb_ckgen__pll_stream[0]}}),
+    .vi_re(sfucore_SE__vi_re[15:0]),
+    .vi_addr(sfucore_SE__vi_addr[383:0]),
+    .vi_q(sfus_SE__vi_q),
+    .kv_we(sfucore_SE__kv_we[15:0]),
+    .kv_waddr(sfucore_SE__kv_waddr[383:0]),
+    .kv_wdata(sfucore_SE__kv_wdata[511:0]),
+    .fault(sfus_SE__fault)
+  );
+  ot_hbm_su_static_cxport #(.QID(2), .B39_NOOP(0), .INJ_RET(11)) sucx_NW (
+    .clk_s(hb_ckgen__pll_stream[0]),
+    .clk_q(hb_ckgen__pll_serial[0]),
+    .rst_n(subr_NW__bridge_rst_n[0]),
+    .inj_rd(hb_coll_NW__inj_rd[1:0]),
+    .inj_addr(hb_coll_NW__hgi_inj_addr[159:0]),
+    .inj_d(sucx_NW__inj_d),
+    .del_valid(hb_coll_NW__del_valid[3:0]),
+    .del_flit(hb_coll_NW__del_flit[2179:0]),
+    .del_obase(hb_coll_NW__hgi_del_obase[159:0]),
+    .rc_v(sucx_NW__rc_v),
+    .rc_tag(sucx_NW__rc_tag),
+    .rc_d(sucx_NW__rc_d),
+    .rr_v(hb_coll_NW__rr_v[0]),
+    .rr_tag(hb_coll_NW__rr_tag[2:0]),
+    .rr_d(hb_coll_NW__rr_d[255:0]),
+    .inj_q({su_NW3__inj_q[1023:0], su_NW2__inj_q[1023:0], su_NW1__inj_q[1023:0], su_NW0__inj_q[1023:0]}),
+    .dw_v(sucx_NW__dw_v),
+    .dw_row(sucx_NW__dw_row),
+    .dw_d(sucx_NW__dw_d),
+    .red_sv(sucore_NW__red_sv[0]),
+    .red_tag(sucore_NW__red_tag[31:0]),
+    .red_x(sucore_NW__red_x[31:0]),
+    .rr_wv(sucx_NW__rr_wv),
+    .rr_wa(sucx_NW__rr_wa),
+    .rr_wd(sucx_NW__rr_wd),
+    .ro_v(sfucore_NW__ro_v[15:0]),
+    .ro_x(sfucore_NW__ro_x[511:0]),
+    .red_sel({su_prog__command[4917:4914], su_prog__command[4851:4844]}),
+    .sfu_x(sucx_NW__sfu_x),
+    .fault(sucx_NW__fault)
+  );
+  ot_hbm_su_static_sfustore #(.QID(2)) sfus_NW (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .clk_bank({16{hb_ckgen__pll_stream[0]}}),
+    .clk_bank_macro({16{hb_ckgen__pll_stream[0]}}),
+    .vi_re(sfucore_NW__vi_re[15:0]),
+    .vi_addr(sfucore_NW__vi_addr[383:0]),
+    .vi_q(sfus_NW__vi_q),
+    .kv_we(sfucore_NW__kv_we[15:0]),
+    .kv_waddr(sfucore_NW__kv_waddr[383:0]),
+    .kv_wdata(sfucore_NW__kv_wdata[511:0]),
+    .fault(sfus_NW__fault)
+  );
+  ot_hbm_su_static_cxport #(.QID(3), .B39_NOOP(0), .INJ_RET(11)) sucx_NE (
+    .clk_s(hb_ckgen__pll_stream[0]),
+    .clk_q(hb_ckgen__pll_serial[0]),
+    .rst_n(subr_NE__bridge_rst_n[0]),
+    .inj_rd(hb_coll_NE__inj_rd[1:0]),
+    .inj_addr(hb_coll_NE__hgi_inj_addr[159:0]),
+    .inj_d(sucx_NE__inj_d),
+    .del_valid(hb_coll_NE__del_valid[3:0]),
+    .del_flit(hb_coll_NE__del_flit[2179:0]),
+    .del_obase(hb_coll_NE__hgi_del_obase[159:0]),
+    .rc_v(sucx_NE__rc_v),
+    .rc_tag(sucx_NE__rc_tag),
+    .rc_d(sucx_NE__rc_d),
+    .rr_v(hb_coll_NE__rr_v[0]),
+    .rr_tag(hb_coll_NE__rr_tag[2:0]),
+    .rr_d(hb_coll_NE__rr_d[255:0]),
+    .inj_q({su_NE3__inj_q[1023:0], su_NE2__inj_q[1023:0], su_NE1__inj_q[1023:0], su_NE0__inj_q[1023:0]}),
+    .dw_v(sucx_NE__dw_v),
+    .dw_row(sucx_NE__dw_row),
+    .dw_d(sucx_NE__dw_d),
+    .red_sv(sucore_NE__red_sv[0]),
+    .red_tag(sucore_NE__red_tag[31:0]),
+    .red_x(sucore_NE__red_x[31:0]),
+    .rr_wv(sucx_NE__rr_wv),
+    .rr_wa(sucx_NE__rr_wa),
+    .rr_wd(sucx_NE__rr_wd),
+    .ro_v(sfucore_NE__ro_v[15:0]),
+    .ro_x(sfucore_NE__ro_x[511:0]),
+    .red_sel({su_prog__command[7339:7336], su_prog__command[7273:7266]}),
+    .sfu_x(sucx_NE__sfu_x),
+    .fault(sucx_NE__fault)
+  );
+  ot_hbm_su_static_sfustore #(.QID(3)) sfus_NE (
+    .clk(hb_ckgen__pll_stream[0]),
+    .rst_n(hb_ckgen__por_stream[0]),
+    .clk_bank({16{hb_ckgen__pll_stream[0]}}),
+    .clk_bank_macro({16{hb_ckgen__pll_stream[0]}}),
+    .vi_re(sfucore_NE__vi_re[15:0]),
+    .vi_addr(sfucore_NE__vi_addr[383:0]),
+    .vi_q(sfus_NE__vi_q),
+    .kv_we(sfucore_NE__kv_we[15:0]),
+    .kv_waddr(sfucore_NE__kv_waddr[383:0]),
+    .kv_wdata(sfucore_NE__kv_wdata[511:0]),
+    .fault(sfus_NE__fault)
+  );
+  ot_hbm_su_programme #(.LINE_BITS(9688), .EDGES(7116), .COLS(38), .INDEX_PACK(1), .DICT_BANKS({32'd1,32'd1,32'd1,32'd1,32'd1,32'd2,32'd1,32'd10,32'd2,32'd3,32'd1,32'd1,32'd1,32'd1,32'd1,32'd13,32'd9,32'd10,32'd3,32'd1,32'd1,32'd1,32'd1,32'd1,32'd2,32'd9,32'd10,32'd2,32'd1,32'd1,32'd1,32'd1,32'd1,32'd2,32'd13,32'd9,32'd10,32'd3}), .MACROS(301)) su_prog (
     .clk(hb_ckgen__pll_serial[0]),
     .rst_n(hb_ckgen__por_serial[0]),
     .clk_macro({301{hb_ckgen__pll_serial[0]}}),
@@ -21115,7 +21850,7 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .edge_index(su_prog__edge_index),
     .command(su_prog__command)
   );
-  ot_hbm_su_static_qcore #(.MUT(0)) sucore_SW (
+  ot_hbm_su_static_qcore #(.MUT(0), .COLLPORT(1)) sucore_SW (
     .clk_rf({64{hb_ckgen__pll_serial[0]}}),
     .clk_ctl(hb_ckgen__pll_serial[0]),
     .clk_red(hb_ckgen__pll_serial[0]),
@@ -21134,9 +21869,13 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .red_tag(sucore_SW__red_tag),
     .red_x(sucore_SW__red_x),
     .red_rf_v(sucore_SW__red_rf_v),
+    .rr_wv(sucx_SW__rr_wv[0]),
+    .rr_wa(sucx_SW__rr_wa[4:0]),
+    .rr_wd(sucx_SW__rr_wd[255:0]),
+    .sfu_x(sucx_SW__sfu_x[31:0]),
     .fault(sucore_SW__fault)
   );
-  ot_hbm_su_static_pgslice #(.QID(0), .G(0), .READ_RETURN(10), .WRITE_RETURN(7), .FETCH_EXTRA_EDGES(2), .MLAT(4), .ALAT(3), .LEAF(1), .MUT(0), .MULTIRATE(1)) su_SW0 (
+  ot_hbm_su_static_pgslice #(.QID(0), .G(0), .READ_RETURN(10), .WRITE_RETURN(7), .FETCH_EXTRA_EDGES(2), .MLAT(4), .ALAT(3), .LEAF(1), .MUT(0), .MULTIRATE(1), .COLLPORT(1)) su_SW0 (
     .pg_clk(hb_ckgen__pll_stream[0]),
     .clk_lane({256{hb_ckgen__pll_serial[0]}}),
     .clk_insert({128{hb_ckgen__pll_serial[0]}}),
@@ -21161,9 +21900,15 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .lg_wq(su_SW0__lg_wq),
     .lg_rr(lg_SW_0__local_rr[513:0]),
     .lg_w_done(lg_SW_0__local_w_done[1:0]),
+    .inj_rd(hb_coll_SW__inj_rd[1:0]),
+    .inj_addr(hb_coll_SW__hgi_inj_addr[159:0]),
+    .inj_q(su_SW0__inj_q),
+    .dw_v(sucx_SW__dw_v[1:0]),
+    .dw_row(sucx_SW__dw_row[17:0]),
+    .dw_d(sucx_SW__dw_d[1023:0]),
     .fault(su_SW0__fault)
   );
-  ot_hbm_su_static_pgslice #(.QID(0), .G(1), .READ_RETURN(10), .WRITE_RETURN(7), .FETCH_EXTRA_EDGES(2), .MLAT(4), .ALAT(3), .LEAF(1), .MUT(0), .MULTIRATE(1)) su_SW1 (
+  ot_hbm_su_static_pgslice #(.QID(0), .G(1), .READ_RETURN(10), .WRITE_RETURN(7), .FETCH_EXTRA_EDGES(2), .MLAT(4), .ALAT(3), .LEAF(1), .MUT(0), .MULTIRATE(1), .COLLPORT(1)) su_SW1 (
     .pg_clk(hb_ckgen__pll_stream[0]),
     .clk_lane({256{hb_ckgen__pll_serial[0]}}),
     .clk_insert({128{hb_ckgen__pll_serial[0]}}),
@@ -21188,9 +21933,15 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .lg_wq(su_SW1__lg_wq),
     .lg_rr(lg_SW_0__local_rr[1027:514]),
     .lg_w_done(lg_SW_0__local_w_done[3:2]),
+    .inj_rd(hb_coll_SW__inj_rd[1:0]),
+    .inj_addr(hb_coll_SW__hgi_inj_addr[159:0]),
+    .inj_q(su_SW1__inj_q),
+    .dw_v(sucx_SW__dw_v[3:2]),
+    .dw_row(sucx_SW__dw_row[35:18]),
+    .dw_d(sucx_SW__dw_d[2047:1024]),
     .fault(su_SW1__fault)
   );
-  ot_hbm_su_static_pgslice #(.QID(0), .G(2), .READ_RETURN(10), .WRITE_RETURN(7), .FETCH_EXTRA_EDGES(2), .MLAT(4), .ALAT(3), .LEAF(1), .MUT(0), .MULTIRATE(1)) su_SW2 (
+  ot_hbm_su_static_pgslice #(.QID(0), .G(2), .READ_RETURN(10), .WRITE_RETURN(7), .FETCH_EXTRA_EDGES(2), .MLAT(4), .ALAT(3), .LEAF(1), .MUT(0), .MULTIRATE(1), .COLLPORT(1)) su_SW2 (
     .pg_clk(hb_ckgen__pll_stream[0]),
     .clk_lane({256{hb_ckgen__pll_serial[0]}}),
     .clk_insert({128{hb_ckgen__pll_serial[0]}}),
@@ -21215,9 +21966,15 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .lg_wq(su_SW2__lg_wq),
     .lg_rr(lg_SW_0__local_rr[1541:1028]),
     .lg_w_done(lg_SW_0__local_w_done[5:4]),
+    .inj_rd(hb_coll_SW__inj_rd[1:0]),
+    .inj_addr(hb_coll_SW__hgi_inj_addr[159:0]),
+    .inj_q(su_SW2__inj_q),
+    .dw_v(sucx_SW__dw_v[5:4]),
+    .dw_row(sucx_SW__dw_row[53:36]),
+    .dw_d(sucx_SW__dw_d[3071:2048]),
     .fault(su_SW2__fault)
   );
-  ot_hbm_su_static_pgslice #(.QID(0), .G(3), .READ_RETURN(10), .WRITE_RETURN(7), .FETCH_EXTRA_EDGES(2), .MLAT(4), .ALAT(3), .LEAF(1), .MUT(0), .MULTIRATE(1)) su_SW3 (
+  ot_hbm_su_static_pgslice #(.QID(0), .G(3), .READ_RETURN(10), .WRITE_RETURN(7), .FETCH_EXTRA_EDGES(2), .MLAT(4), .ALAT(3), .LEAF(1), .MUT(0), .MULTIRATE(1), .COLLPORT(1)) su_SW3 (
     .pg_clk(hb_ckgen__pll_stream[0]),
     .clk_lane({256{hb_ckgen__pll_serial[0]}}),
     .clk_insert({128{hb_ckgen__pll_serial[0]}}),
@@ -21242,9 +21999,15 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .lg_wq(su_SW3__lg_wq),
     .lg_rr(lg_SW_0__local_rr[2055:1542]),
     .lg_w_done(lg_SW_0__local_w_done[7:6]),
+    .inj_rd(hb_coll_SW__inj_rd[1:0]),
+    .inj_addr(hb_coll_SW__hgi_inj_addr[159:0]),
+    .inj_q(su_SW3__inj_q),
+    .dw_v(sucx_SW__dw_v[7:6]),
+    .dw_row(sucx_SW__dw_row[71:54]),
+    .dw_d(sucx_SW__dw_d[4095:3072]),
     .fault(su_SW3__fault)
   );
-  ot_hbm_su_static_qcore #(.MUT(0)) sucore_SE (
+  ot_hbm_su_static_qcore #(.MUT(0), .COLLPORT(1)) sucore_SE (
     .clk_rf({64{hb_ckgen__pll_serial[0]}}),
     .clk_ctl(hb_ckgen__pll_serial[0]),
     .clk_red(hb_ckgen__pll_serial[0]),
@@ -21263,9 +22026,13 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .red_tag(sucore_SE__red_tag),
     .red_x(sucore_SE__red_x),
     .red_rf_v(sucore_SE__red_rf_v),
+    .rr_wv(sucx_SE__rr_wv[0]),
+    .rr_wa(sucx_SE__rr_wa[4:0]),
+    .rr_wd(sucx_SE__rr_wd[255:0]),
+    .sfu_x(sucx_SE__sfu_x[31:0]),
     .fault(sucore_SE__fault)
   );
-  ot_hbm_su_static_pgslice #(.QID(1), .G(0), .READ_RETURN(10), .WRITE_RETURN(7), .FETCH_EXTRA_EDGES(2), .MLAT(4), .ALAT(3), .LEAF(1), .MUT(0), .MULTIRATE(1)) su_SE0 (
+  ot_hbm_su_static_pgslice #(.QID(1), .G(0), .READ_RETURN(10), .WRITE_RETURN(7), .FETCH_EXTRA_EDGES(2), .MLAT(4), .ALAT(3), .LEAF(1), .MUT(0), .MULTIRATE(1), .COLLPORT(1)) su_SE0 (
     .pg_clk(hb_ckgen__pll_stream[0]),
     .clk_lane({256{hb_ckgen__pll_serial[0]}}),
     .clk_insert({128{hb_ckgen__pll_serial[0]}}),
@@ -21290,9 +22057,15 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .lg_wq(su_SE0__lg_wq),
     .lg_rr(lg_SE_0__local_rr[513:0]),
     .lg_w_done(lg_SE_0__local_w_done[1:0]),
+    .inj_rd(hb_coll_SE__inj_rd[1:0]),
+    .inj_addr(hb_coll_SE__hgi_inj_addr[159:0]),
+    .inj_q(su_SE0__inj_q),
+    .dw_v(sucx_SE__dw_v[1:0]),
+    .dw_row(sucx_SE__dw_row[17:0]),
+    .dw_d(sucx_SE__dw_d[1023:0]),
     .fault(su_SE0__fault)
   );
-  ot_hbm_su_static_pgslice #(.QID(1), .G(1), .READ_RETURN(10), .WRITE_RETURN(7), .FETCH_EXTRA_EDGES(2), .MLAT(4), .ALAT(3), .LEAF(1), .MUT(0), .MULTIRATE(1)) su_SE1 (
+  ot_hbm_su_static_pgslice #(.QID(1), .G(1), .READ_RETURN(10), .WRITE_RETURN(7), .FETCH_EXTRA_EDGES(2), .MLAT(4), .ALAT(3), .LEAF(1), .MUT(0), .MULTIRATE(1), .COLLPORT(1)) su_SE1 (
     .pg_clk(hb_ckgen__pll_stream[0]),
     .clk_lane({256{hb_ckgen__pll_serial[0]}}),
     .clk_insert({128{hb_ckgen__pll_serial[0]}}),
@@ -21317,9 +22090,15 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .lg_wq(su_SE1__lg_wq),
     .lg_rr(lg_SE_0__local_rr[1027:514]),
     .lg_w_done(lg_SE_0__local_w_done[3:2]),
+    .inj_rd(hb_coll_SE__inj_rd[1:0]),
+    .inj_addr(hb_coll_SE__hgi_inj_addr[159:0]),
+    .inj_q(su_SE1__inj_q),
+    .dw_v(sucx_SE__dw_v[3:2]),
+    .dw_row(sucx_SE__dw_row[35:18]),
+    .dw_d(sucx_SE__dw_d[2047:1024]),
     .fault(su_SE1__fault)
   );
-  ot_hbm_su_static_pgslice #(.QID(1), .G(2), .READ_RETURN(10), .WRITE_RETURN(7), .FETCH_EXTRA_EDGES(2), .MLAT(4), .ALAT(3), .LEAF(1), .MUT(0), .MULTIRATE(1)) su_SE2 (
+  ot_hbm_su_static_pgslice #(.QID(1), .G(2), .READ_RETURN(10), .WRITE_RETURN(7), .FETCH_EXTRA_EDGES(2), .MLAT(4), .ALAT(3), .LEAF(1), .MUT(0), .MULTIRATE(1), .COLLPORT(1)) su_SE2 (
     .pg_clk(hb_ckgen__pll_stream[0]),
     .clk_lane({256{hb_ckgen__pll_serial[0]}}),
     .clk_insert({128{hb_ckgen__pll_serial[0]}}),
@@ -21344,9 +22123,15 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .lg_wq(su_SE2__lg_wq),
     .lg_rr(lg_SE_0__local_rr[1541:1028]),
     .lg_w_done(lg_SE_0__local_w_done[5:4]),
+    .inj_rd(hb_coll_SE__inj_rd[1:0]),
+    .inj_addr(hb_coll_SE__hgi_inj_addr[159:0]),
+    .inj_q(su_SE2__inj_q),
+    .dw_v(sucx_SE__dw_v[5:4]),
+    .dw_row(sucx_SE__dw_row[53:36]),
+    .dw_d(sucx_SE__dw_d[3071:2048]),
     .fault(su_SE2__fault)
   );
-  ot_hbm_su_static_pgslice #(.QID(1), .G(3), .READ_RETURN(10), .WRITE_RETURN(7), .FETCH_EXTRA_EDGES(2), .MLAT(4), .ALAT(3), .LEAF(1), .MUT(0), .MULTIRATE(1)) su_SE3 (
+  ot_hbm_su_static_pgslice #(.QID(1), .G(3), .READ_RETURN(10), .WRITE_RETURN(7), .FETCH_EXTRA_EDGES(2), .MLAT(4), .ALAT(3), .LEAF(1), .MUT(0), .MULTIRATE(1), .COLLPORT(1)) su_SE3 (
     .pg_clk(hb_ckgen__pll_stream[0]),
     .clk_lane({256{hb_ckgen__pll_serial[0]}}),
     .clk_insert({128{hb_ckgen__pll_serial[0]}}),
@@ -21371,9 +22156,15 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .lg_wq(su_SE3__lg_wq),
     .lg_rr(lg_SE_0__local_rr[2055:1542]),
     .lg_w_done(lg_SE_0__local_w_done[7:6]),
+    .inj_rd(hb_coll_SE__inj_rd[1:0]),
+    .inj_addr(hb_coll_SE__hgi_inj_addr[159:0]),
+    .inj_q(su_SE3__inj_q),
+    .dw_v(sucx_SE__dw_v[7:6]),
+    .dw_row(sucx_SE__dw_row[71:54]),
+    .dw_d(sucx_SE__dw_d[4095:3072]),
     .fault(su_SE3__fault)
   );
-  ot_hbm_su_static_qcore #(.MUT(0)) sucore_NW (
+  ot_hbm_su_static_qcore #(.MUT(0), .COLLPORT(1)) sucore_NW (
     .clk_rf({64{hb_ckgen__pll_serial[0]}}),
     .clk_ctl(hb_ckgen__pll_serial[0]),
     .clk_red(hb_ckgen__pll_serial[0]),
@@ -21392,9 +22183,13 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .red_tag(sucore_NW__red_tag),
     .red_x(sucore_NW__red_x),
     .red_rf_v(sucore_NW__red_rf_v),
+    .rr_wv(sucx_NW__rr_wv[0]),
+    .rr_wa(sucx_NW__rr_wa[4:0]),
+    .rr_wd(sucx_NW__rr_wd[255:0]),
+    .sfu_x(sucx_NW__sfu_x[31:0]),
     .fault(sucore_NW__fault)
   );
-  ot_hbm_su_static_pgslice #(.QID(2), .G(0), .READ_RETURN(10), .WRITE_RETURN(7), .FETCH_EXTRA_EDGES(2), .MLAT(4), .ALAT(3), .LEAF(1), .MUT(0), .MULTIRATE(1)) su_NW0 (
+  ot_hbm_su_static_pgslice #(.QID(2), .G(0), .READ_RETURN(10), .WRITE_RETURN(7), .FETCH_EXTRA_EDGES(2), .MLAT(4), .ALAT(3), .LEAF(1), .MUT(0), .MULTIRATE(1), .COLLPORT(1)) su_NW0 (
     .pg_clk(hb_ckgen__pll_stream[0]),
     .clk_lane({256{hb_ckgen__pll_serial[0]}}),
     .clk_insert({128{hb_ckgen__pll_serial[0]}}),
@@ -21419,9 +22214,15 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .lg_wq(su_NW0__lg_wq),
     .lg_rr(lg_NW_0__local_rr[513:0]),
     .lg_w_done(lg_NW_0__local_w_done[1:0]),
+    .inj_rd(hb_coll_NW__inj_rd[1:0]),
+    .inj_addr(hb_coll_NW__hgi_inj_addr[159:0]),
+    .inj_q(su_NW0__inj_q),
+    .dw_v(sucx_NW__dw_v[1:0]),
+    .dw_row(sucx_NW__dw_row[17:0]),
+    .dw_d(sucx_NW__dw_d[1023:0]),
     .fault(su_NW0__fault)
   );
-  ot_hbm_su_static_pgslice #(.QID(2), .G(1), .READ_RETURN(10), .WRITE_RETURN(7), .FETCH_EXTRA_EDGES(2), .MLAT(4), .ALAT(3), .LEAF(1), .MUT(0), .MULTIRATE(1)) su_NW1 (
+  ot_hbm_su_static_pgslice #(.QID(2), .G(1), .READ_RETURN(10), .WRITE_RETURN(7), .FETCH_EXTRA_EDGES(2), .MLAT(4), .ALAT(3), .LEAF(1), .MUT(0), .MULTIRATE(1), .COLLPORT(1)) su_NW1 (
     .pg_clk(hb_ckgen__pll_stream[0]),
     .clk_lane({256{hb_ckgen__pll_serial[0]}}),
     .clk_insert({128{hb_ckgen__pll_serial[0]}}),
@@ -21446,9 +22247,15 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .lg_wq(su_NW1__lg_wq),
     .lg_rr(lg_NW_0__local_rr[1027:514]),
     .lg_w_done(lg_NW_0__local_w_done[3:2]),
+    .inj_rd(hb_coll_NW__inj_rd[1:0]),
+    .inj_addr(hb_coll_NW__hgi_inj_addr[159:0]),
+    .inj_q(su_NW1__inj_q),
+    .dw_v(sucx_NW__dw_v[3:2]),
+    .dw_row(sucx_NW__dw_row[35:18]),
+    .dw_d(sucx_NW__dw_d[2047:1024]),
     .fault(su_NW1__fault)
   );
-  ot_hbm_su_static_pgslice #(.QID(2), .G(2), .READ_RETURN(10), .WRITE_RETURN(7), .FETCH_EXTRA_EDGES(2), .MLAT(4), .ALAT(3), .LEAF(1), .MUT(0), .MULTIRATE(1)) su_NW2 (
+  ot_hbm_su_static_pgslice #(.QID(2), .G(2), .READ_RETURN(10), .WRITE_RETURN(7), .FETCH_EXTRA_EDGES(2), .MLAT(4), .ALAT(3), .LEAF(1), .MUT(0), .MULTIRATE(1), .COLLPORT(1)) su_NW2 (
     .pg_clk(hb_ckgen__pll_stream[0]),
     .clk_lane({256{hb_ckgen__pll_serial[0]}}),
     .clk_insert({128{hb_ckgen__pll_serial[0]}}),
@@ -21473,9 +22280,15 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .lg_wq(su_NW2__lg_wq),
     .lg_rr(lg_NW_0__local_rr[1541:1028]),
     .lg_w_done(lg_NW_0__local_w_done[5:4]),
+    .inj_rd(hb_coll_NW__inj_rd[1:0]),
+    .inj_addr(hb_coll_NW__hgi_inj_addr[159:0]),
+    .inj_q(su_NW2__inj_q),
+    .dw_v(sucx_NW__dw_v[5:4]),
+    .dw_row(sucx_NW__dw_row[53:36]),
+    .dw_d(sucx_NW__dw_d[3071:2048]),
     .fault(su_NW2__fault)
   );
-  ot_hbm_su_static_pgslice #(.QID(2), .G(3), .READ_RETURN(10), .WRITE_RETURN(7), .FETCH_EXTRA_EDGES(2), .MLAT(4), .ALAT(3), .LEAF(1), .MUT(0), .MULTIRATE(1)) su_NW3 (
+  ot_hbm_su_static_pgslice #(.QID(2), .G(3), .READ_RETURN(10), .WRITE_RETURN(7), .FETCH_EXTRA_EDGES(2), .MLAT(4), .ALAT(3), .LEAF(1), .MUT(0), .MULTIRATE(1), .COLLPORT(1)) su_NW3 (
     .pg_clk(hb_ckgen__pll_stream[0]),
     .clk_lane({256{hb_ckgen__pll_serial[0]}}),
     .clk_insert({128{hb_ckgen__pll_serial[0]}}),
@@ -21500,9 +22313,15 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .lg_wq(su_NW3__lg_wq),
     .lg_rr(lg_NW_0__local_rr[2055:1542]),
     .lg_w_done(lg_NW_0__local_w_done[7:6]),
+    .inj_rd(hb_coll_NW__inj_rd[1:0]),
+    .inj_addr(hb_coll_NW__hgi_inj_addr[159:0]),
+    .inj_q(su_NW3__inj_q),
+    .dw_v(sucx_NW__dw_v[7:6]),
+    .dw_row(sucx_NW__dw_row[71:54]),
+    .dw_d(sucx_NW__dw_d[4095:3072]),
     .fault(su_NW3__fault)
   );
-  ot_hbm_su_static_qcore #(.MUT(0)) sucore_NE (
+  ot_hbm_su_static_qcore #(.MUT(0), .COLLPORT(1)) sucore_NE (
     .clk_rf({64{hb_ckgen__pll_serial[0]}}),
     .clk_ctl(hb_ckgen__pll_serial[0]),
     .clk_red(hb_ckgen__pll_serial[0]),
@@ -21521,9 +22340,13 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .red_tag(sucore_NE__red_tag),
     .red_x(sucore_NE__red_x),
     .red_rf_v(sucore_NE__red_rf_v),
+    .rr_wv(sucx_NE__rr_wv[0]),
+    .rr_wa(sucx_NE__rr_wa[4:0]),
+    .rr_wd(sucx_NE__rr_wd[255:0]),
+    .sfu_x(sucx_NE__sfu_x[31:0]),
     .fault(sucore_NE__fault)
   );
-  ot_hbm_su_static_pgslice #(.QID(3), .G(0), .READ_RETURN(10), .WRITE_RETURN(7), .FETCH_EXTRA_EDGES(2), .MLAT(4), .ALAT(3), .LEAF(1), .MUT(0), .MULTIRATE(1)) su_NE0 (
+  ot_hbm_su_static_pgslice #(.QID(3), .G(0), .READ_RETURN(10), .WRITE_RETURN(7), .FETCH_EXTRA_EDGES(2), .MLAT(4), .ALAT(3), .LEAF(1), .MUT(0), .MULTIRATE(1), .COLLPORT(1)) su_NE0 (
     .pg_clk(hb_ckgen__pll_stream[0]),
     .clk_lane({256{hb_ckgen__pll_serial[0]}}),
     .clk_insert({128{hb_ckgen__pll_serial[0]}}),
@@ -21548,9 +22371,15 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .lg_wq(su_NE0__lg_wq),
     .lg_rr(lg_NE_0__local_rr[513:0]),
     .lg_w_done(lg_NE_0__local_w_done[1:0]),
+    .inj_rd(hb_coll_NE__inj_rd[1:0]),
+    .inj_addr(hb_coll_NE__hgi_inj_addr[159:0]),
+    .inj_q(su_NE0__inj_q),
+    .dw_v(sucx_NE__dw_v[1:0]),
+    .dw_row(sucx_NE__dw_row[17:0]),
+    .dw_d(sucx_NE__dw_d[1023:0]),
     .fault(su_NE0__fault)
   );
-  ot_hbm_su_static_pgslice #(.QID(3), .G(1), .READ_RETURN(10), .WRITE_RETURN(7), .FETCH_EXTRA_EDGES(2), .MLAT(4), .ALAT(3), .LEAF(1), .MUT(0), .MULTIRATE(1)) su_NE1 (
+  ot_hbm_su_static_pgslice #(.QID(3), .G(1), .READ_RETURN(10), .WRITE_RETURN(7), .FETCH_EXTRA_EDGES(2), .MLAT(4), .ALAT(3), .LEAF(1), .MUT(0), .MULTIRATE(1), .COLLPORT(1)) su_NE1 (
     .pg_clk(hb_ckgen__pll_stream[0]),
     .clk_lane({256{hb_ckgen__pll_serial[0]}}),
     .clk_insert({128{hb_ckgen__pll_serial[0]}}),
@@ -21575,9 +22404,15 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .lg_wq(su_NE1__lg_wq),
     .lg_rr(lg_NE_0__local_rr[1027:514]),
     .lg_w_done(lg_NE_0__local_w_done[3:2]),
+    .inj_rd(hb_coll_NE__inj_rd[1:0]),
+    .inj_addr(hb_coll_NE__hgi_inj_addr[159:0]),
+    .inj_q(su_NE1__inj_q),
+    .dw_v(sucx_NE__dw_v[3:2]),
+    .dw_row(sucx_NE__dw_row[35:18]),
+    .dw_d(sucx_NE__dw_d[2047:1024]),
     .fault(su_NE1__fault)
   );
-  ot_hbm_su_static_pgslice #(.QID(3), .G(2), .READ_RETURN(10), .WRITE_RETURN(7), .FETCH_EXTRA_EDGES(2), .MLAT(4), .ALAT(3), .LEAF(1), .MUT(0), .MULTIRATE(1)) su_NE2 (
+  ot_hbm_su_static_pgslice #(.QID(3), .G(2), .READ_RETURN(10), .WRITE_RETURN(7), .FETCH_EXTRA_EDGES(2), .MLAT(4), .ALAT(3), .LEAF(1), .MUT(0), .MULTIRATE(1), .COLLPORT(1)) su_NE2 (
     .pg_clk(hb_ckgen__pll_stream[0]),
     .clk_lane({256{hb_ckgen__pll_serial[0]}}),
     .clk_insert({128{hb_ckgen__pll_serial[0]}}),
@@ -21602,9 +22437,15 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .lg_wq(su_NE2__lg_wq),
     .lg_rr(lg_NE_0__local_rr[1541:1028]),
     .lg_w_done(lg_NE_0__local_w_done[5:4]),
+    .inj_rd(hb_coll_NE__inj_rd[1:0]),
+    .inj_addr(hb_coll_NE__hgi_inj_addr[159:0]),
+    .inj_q(su_NE2__inj_q),
+    .dw_v(sucx_NE__dw_v[5:4]),
+    .dw_row(sucx_NE__dw_row[53:36]),
+    .dw_d(sucx_NE__dw_d[3071:2048]),
     .fault(su_NE2__fault)
   );
-  ot_hbm_su_static_pgslice #(.QID(3), .G(3), .READ_RETURN(10), .WRITE_RETURN(7), .FETCH_EXTRA_EDGES(2), .MLAT(4), .ALAT(3), .LEAF(1), .MUT(0), .MULTIRATE(1)) su_NE3 (
+  ot_hbm_su_static_pgslice #(.QID(3), .G(3), .READ_RETURN(10), .WRITE_RETURN(7), .FETCH_EXTRA_EDGES(2), .MLAT(4), .ALAT(3), .LEAF(1), .MUT(0), .MULTIRATE(1), .COLLPORT(1)) su_NE3 (
     .pg_clk(hb_ckgen__pll_stream[0]),
     .clk_lane({256{hb_ckgen__pll_serial[0]}}),
     .clk_insert({128{hb_ckgen__pll_serial[0]}}),
@@ -21629,6 +22470,12 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .lg_wq(su_NE3__lg_wq),
     .lg_rr(lg_NE_0__local_rr[2055:1542]),
     .lg_w_done(lg_NE_0__local_w_done[7:6]),
+    .inj_rd(hb_coll_NE__inj_rd[1:0]),
+    .inj_addr(hb_coll_NE__hgi_inj_addr[159:0]),
+    .inj_q(su_NE3__inj_q),
+    .dw_v(sucx_NE__dw_v[7:6]),
+    .dw_row(sucx_NE__dw_row[71:54]),
+    .dw_d(sucx_NE__dw_d[4095:3072]),
     .fault(su_NE3__fault)
   );
   hbfd_rly_48_WE rfr_SW_SW_00 (
@@ -25123,11 +25970,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .local_w_done({sfr_SW3_b10__o[515:514], sfr_SW2_b10__o[515:514], sfr_SW1_b10__o[515:514], sfr_SW0_b10__o[515:514]}),
     .vi_re(sfucore_SW__vi_re),
     .vi_addr(sfucore_SW__vi_addr),
+    .vi_q(sfus_SW__vi_q[511:0]),
     .ro_v(sfucore_SW__ro_v),
-    .side_v(sfucore_SW__side_v),
     .kv_we(sfucore_SW__kv_we),
     .ro_x(sfucore_SW__ro_x),
-    .side_x(sfucore_SW__side_x),
     .kv_wdata(sfucore_SW__kv_wdata),
     .kv_waddr(sfucore_SW__kv_waddr),
     .fault(sfucore_SW__fault)
@@ -25744,11 +26590,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .local_w_done({sfr_SE3_b10__o[515:514], sfr_SE2_b10__o[515:514], sfr_SE1_b10__o[515:514], sfr_SE0_b10__o[515:514]}),
     .vi_re(sfucore_SE__vi_re),
     .vi_addr(sfucore_SE__vi_addr),
+    .vi_q(sfus_SE__vi_q[511:0]),
     .ro_v(sfucore_SE__ro_v),
-    .side_v(sfucore_SE__side_v),
     .kv_we(sfucore_SE__kv_we),
     .ro_x(sfucore_SE__ro_x),
-    .side_x(sfucore_SE__side_x),
     .kv_wdata(sfucore_SE__kv_wdata),
     .kv_waddr(sfucore_SE__kv_waddr),
     .fault(sfucore_SE__fault)
@@ -26365,11 +27210,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .local_w_done({sfr_NW3_b10__o[515:514], sfr_NW2_b10__o[515:514], sfr_NW1_b10__o[515:514], sfr_NW0_b10__o[515:514]}),
     .vi_re(sfucore_NW__vi_re),
     .vi_addr(sfucore_NW__vi_addr),
+    .vi_q(sfus_NW__vi_q[511:0]),
     .ro_v(sfucore_NW__ro_v),
-    .side_v(sfucore_NW__side_v),
     .kv_we(sfucore_NW__kv_we),
     .ro_x(sfucore_NW__ro_x),
-    .side_x(sfucore_NW__side_x),
     .kv_wdata(sfucore_NW__kv_wdata),
     .kv_waddr(sfucore_NW__kv_waddr),
     .fault(sfucore_NW__fault)
@@ -26986,11 +27830,10 @@ module hbm_v16_die (hb_ckgen__refclk, hb_ckgen__por_n, lk_S0__pma_tx, lk_S0__pma
     .local_w_done({sfr_NE3_b10__o[515:514], sfr_NE2_b10__o[515:514], sfr_NE1_b10__o[515:514], sfr_NE0_b10__o[515:514]}),
     .vi_re(sfucore_NE__vi_re),
     .vi_addr(sfucore_NE__vi_addr),
+    .vi_q(sfus_NE__vi_q[511:0]),
     .ro_v(sfucore_NE__ro_v),
-    .side_v(sfucore_NE__side_v),
     .kv_we(sfucore_NE__kv_we),
     .ro_x(sfucore_NE__ro_x),
-    .side_x(sfucore_NE__side_x),
     .kv_wdata(sfucore_NE__kv_wdata),
     .kv_waddr(sfucore_NE__kv_waddr),
     .fault(sfucore_NE__fault)
