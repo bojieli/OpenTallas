@@ -120,7 +120,7 @@ def run(root,recipe,out):
         fatal=type(error).__name__+': '+str(error)
     finally:
         G._hub_bus_chain=original_hub;G.Chains.run=original_run;G._relay_progress_fix=original_stop
-    rows=[]
+    rows=[];boxes=[]
     if model is not None:
         # Relay stations are intentionally not obstacles to their own wire path.
         # End blocks and all actual functional macros, including field leaves,
@@ -138,6 +138,7 @@ def run(root,recipe,out):
         generator_sha256=sha(root/'tools/dsrom_s81_fulldie.py'),driver_sha256=sha(__file__),recipe_sha256=sha(recipe),working_directory=str(Path.cwd()),
         complete_hub_request_enumeration=model is not None,fatal=fatal,verdict='FAIL' if fatal or failures or bad else 'PREFLIGHT_PASS_NOT_PHYSICAL',
         requests=len(rows),problem_requests=len(bad),station_placement_failures=failures,paths=rows,
+        obstacle_rectangles=[dict(name=n,origin_um=[x,y],outline_um=[w,h]) for n,x,y,w,h in boxes],
         remaining=['Hop repair and final pin/footprint placement not evaluated','Partial failed stations retained only as conservative diagnostic occupancy; no RTL/LEF emitted','Clock/PG/cut/native/STA qualification not established'])
     out.parent.mkdir(parents=True,exist_ok=True);out.write_text(json.dumps(result,indent=1)+'\n')
     print(json.dumps({k:result[k] for k in ('verdict','complete_hub_request_enumeration','requests','problem_requests','fatal')}))
