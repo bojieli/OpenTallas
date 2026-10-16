@@ -2150,6 +2150,20 @@ def bundle_bound_lefs(texts):
                      for text in texts) + '\nEND LIBRARY\n'
 
 
+def emit_case_glue(m, work):
+    """Keep RTL glue and import provenance from the exact model that emitted die.v."""
+    import gzip
+    (work / 'die_glue.sv').write_text(glue_rtl(m))
+    reset_path = work / 'die_glue.reset_contract.json'
+    if RLY536_RSTREG:
+        reset_path.write_text(json.dumps(rly536_reset_contract(m), indent=1) + '\n')
+    elif reset_path.exists():
+        reset_path.unlink()
+    if m.get('capture_import'):
+        payload = json.dumps(m['capture_import'], separators=(',', ':')).encode()
+        (work / 'capture_import.json.gz').write_bytes(gzip.compress(payload, mtime=0))
+
+
 def case_real(m, work):
     work.mkdir(parents=True, exist_ok=True)
     npins = write_lefs(m, 1, work / 'elements.lef')
@@ -2167,6 +2181,8 @@ def case_real(m, work):
         bv_ = bound_views()
         (work / 'bound_views.lef').write_text(bundle_bound_lefs(bv_[n_]['text'] for n_ in sorted(bnd)))
     write_netlist(m, 1, work / 'die.v')
+    if GEN == 'r8':
+        emit_case_glue(m, work)
     # pin ALIGNMENT of every die bundle (owner 2026-10-13, tools/hier_contract/pin_align.py): jog along the shared
     # direction, bit order, pin-to-pin length, from the LEFs written above.  FAIL = the jog alone takes > 0.60 of the
     # channel tracks between the two faces (OT_PIN_ALIGN_GATE=warn|off to build anyway)
@@ -12692,11 +12708,7 @@ def main(argv=None):
         work.mkdir(parents=True, exist_ok=True)
         write_netlist(m, 1, work / 'die.v')
         if GEN == 'r8':
-            (work / 'die_glue.sv').write_text(glue_rtl(m))    # this case's glue masters (die_port_bind --rtl-file)
-            if RLY536_RSTREG:
-                (work / 'die_glue.reset_contract.json').write_text(json.dumps(rly536_reset_contract(m), indent=1) + '\n')
-            elif (work / 'die_glue.reset_contract.json').exists():
-                (work / 'die_glue.reset_contract.json').unlink()
+            emit_case_glue(m, work)
         print(json.dumps(dict(die_v=str(work / 'die.v'), insts=len(m['insts']))))
     elif a.mode == 'real':
         print(json.dumps(case_real(m, work)))
