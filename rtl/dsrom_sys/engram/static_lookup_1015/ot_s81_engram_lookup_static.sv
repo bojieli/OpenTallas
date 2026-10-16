@@ -10,6 +10,17 @@
 // registered in the core root as one-hot (bank, atom) write enables + data and written one cycle later by
 // the row-root leaf (flop-to-flop root crossing), so emission starts at RETURN_AGE+1 (+1 cycle on every
 // output beat and status; the HBM response window age < RETURN_AGE is unchanged).
+// 2026-10-16 (STATIC14 cross-root hold; st3-main0600-b64134583 EARLY_FAIL_HOLD at CTS, -164 ps hash->core,
+// 23,324 hold endpoints): every clock-root crossing except the row read is a flop-to-flop HALF-CYCLE hop, a
+// negative-edge register of the launching root feeding a positive-edge register of the capturing root (hold margin
+// ~T/2 against the 100 ps inter-entry reserve, no hold buffers):
+//   core -> seed : the core forms the hash window from ids (win_n, ck negedge) -> hash w (ck_seed posedge);
+//   seed -> hash : roll_s -> roll_n (ck_seed negedge) -> roll_h (column posedge), inside the hash;
+//   hash -> core : res_n (column negedge) -> res_c (ck posedge) -> the 8:1 strap select -> res[];
+//   seed -> core : removed (hdone = lastl[12]; the hash valid pipe was redundant with it);
+//   core -> rows : wen_q/wdata_q -> per-bank wx_en/wx_d (ck negedge) -> leaf we_q/wd_q (row posedge) -> payload,
+//                  +1 write cycle inside the fixed drain (payload visible at age <= RETURN_AGE+2, first read RETURN_AGE+2).
+// Requests, row beats and statuses keep their cycles (0 schedule change).
 import ot_hdc_engram_tables_shipped_pkg::*;
 
 module ot_s81_engram_lookup_static #(
@@ -133,18 +144,24 @@ module ot_s81_engram_lookup_static #(
     always @(posedge clk) if (win_acc) ids <= win_ids;
 
     // ---- hash -------------------------------------------------------------------------
+    // The 4th feed (fcnt 3) of a window hashes ids[0] newest .. ids[3] oldest with no pad (sequence start at feed 0),
+    // i.e. exactly the window {ids[3], ids[2], ids[1], ids[0]} (w[k] = ids slot k); ids is stable from the cycle after
+    // win_acc until the next window, so the window register win_n carries ids every cycle (only the 4th feed's result
+    // is captured, at hdone).  win_n is the core -> seed hop: ck negedge -> hash w on ck_seed posedge.
     wire hfeed = (st == S_FEED);
-    wire [ENG_ID_W-1:0] hcid = ids[ENG_ID_W*(3 - fcnt) +: ENG_ID_W];
-    wire hov;
+    reg [4*ENG_ID_W-1:0] win_n;
+    always @(negedge clk) win_n <= ids;
     wire [QW*ENG_LAYERS*ENG_COLS-1:0] hres;
-    ot_s81_engram_hash_static u_hash (.clk(clk_seed), .clk_columns(clk_hash), .rst_n(rst_n), .in_valid(hfeed), .in_first(hfeed && fcnt == 2'd0),
-                                       .in_cid(hcid), .out_valid(hov), .out_row(), .out_res(hres));
+    ot_s81_engram_hash_static u_hash (.clk(clk_seed), .clk_columns(clk_hash), .in_w(win_n), .out_res(hres));
     reg [12:1] lastl;                        // marks the 4th feed through the hash latency
     always @(posedge clk or negedge rst_n) begin
         if (!rst_n) lastl <= 12'd0;
         else lastl <= {lastl[11:1], hfeed && fcnt == 2'd3};
     end
-    wire hdone = hov && lastl[12];
+    wire hdone = lastl[12];
+    // hash -> core hop: column negedge res_n -> core posedge res_c (no logic between them)
+    reg [QW*ENG_LAYERS*ENG_COLS-1:0] res_c;
+    always @(posedge clk) res_c <= hres;
 
     // ---- address ----------------------------------------------------------------------
     reg [QW-1:0]  res  [0:CPR-1];
@@ -165,19 +182,19 @@ module ot_s81_engram_lookup_static #(
             reg [QW-1:0]  res_m;
             reg [ABW-1:0] cb_m;
             reg [ABW-1:0] cb_q;
-            wire [8*QW-1:0]  res_c;
+            wire [8*QW-1:0]  res_c8;
             wire [8*ABW-1:0] cbs_c;
             for (gc = 0; gc < 8; gc = gc + 1) begin : g_cand          // gc = {layer, rank}
                 localparam integer C = (gc / 4) * ENG_COLS + (gc % 4) * CPR + gj;
                 localparam [63:0] CB = col_base(gc / 4, gc % 4, gj);
-                assign res_c[QW*gc +: QW]   = hres[QW*C +: QW];     // = row - offset, exactly
+                assign res_c8[QW*gc +: QW]  = res_c[QW*C +: QW];    // = row - offset, exactly
                 assign cbs_c[ABW*gc +: ABW] = CB[ABW-1:0];
             end
             integer m;
             always @(*) begin
                 res_m = {QW{1'b0}}; cb_m = {ABW{1'b0}};
                 for (m = 0; m < 8; m = m + 1) begin
-                    res_m = res_m | ({QW{csel[m]}} & res_c[QW*m +: QW]);
+                    res_m = res_m | ({QW{csel[m]}} & res_c8[QW*m +: QW]);
                     cb_m  = cb_m  | ({ABW{csel[m]}} & cbs_c[ABW*m +: ABW]);
                 end
             end
@@ -211,8 +228,12 @@ module ot_s81_engram_lookup_static #(
         always @(posedge clk or negedge rst_n)
             if (!rst_n) wen_q <= {ATOMS{1'b0}};
             else        wen_q <= (response_ok && hr_tag == bank) ? ({{(ATOMS-1){1'b0}}, 1'b1} << hr_idx) : {ATOMS{1'b0}};
+        // core -> row hop: this bank's ck-negedge copy, captured by the leaf on the row posedge
+        reg  [ATOMS-1:0] wx_en;
+        reg  [255:0]     wx_d;
+        always @(negedge clk) begin wx_en <= wen_q; wx_d <= wdata_q; end
         ot_s81_engram_rowbank_static_leaf #(.ATOMS(ATOMS)) storage (
-            .ck(clk_rows[bank]), .write_en(wen_q), .write_data(wdata_q), .rows(stored));
+            .ck(clk_rows[bank]), .write_en(wx_en), .write_data(wx_d), .rows(stored));
         for (atom=0; atom<ATOMS; atom=atom+1) begin : g_read
             assign rb[bank][atom]=stored[256*atom+:256];
         end
