@@ -1,5 +1,5 @@
 {
- "name": "s81pq_qb_headpc_native-p9-pinload-1705-COMMIT",
+ "name": "s81pq_qb_headpc_native-p10-wcap-elaunch-COMMIT",
  "block": "ot_s81_pq_qb_headpc_native",
  "ref_tile": true,
  "owner": "Claude:S-ELEM-PQ",
@@ -7,7 +7,7 @@
  "threads": 16,
  "peak_ram_gb": 24,
  "source": {
-  "branch": "claude/s81-elempq-1705",
+  "branch": "claude/s81-pq-headpc-p10",
   "commit": "COMMIT",
   "extra_paths": [
    "rtl/dsrom_sys",
@@ -21,8 +21,8 @@
    "rtl/test/dsrom_sys/tb_s81_pq_qb_pinread.sv",
    "rtl/test/dsrom_sys/tb_s81_pq_headpc_pin_capture.sv",
    "tools/s81/pq_qb_pinread_bench.sh",
-   "rtl/test/dsrom_sys/tb_s81_pq_headpc_p9_equiv.sv",
-   "rtl/test/dsrom_sys/ot_s81_pq_qb_headpc_native_p8ref.sv"
+   "rtl/test/dsrom_sys/tb_s81_pq_headpc_p10_equiv.sv",
+   "rtl/test/dsrom_sys/ot_s81_pq_qb_headpc_native_p9ref.sv"
   ]
  },
  "stages": {
@@ -60,20 +60,20 @@
     ]
    },
    {
-    "name": "p9_equiv_vs_p8",
-    "cmd": "mkdir -p {RUN}/p9eq && iverilog -g2012 -s tb_s81_pq_headpc_p9_equiv -o {RUN}/p9eq/e.vvp rtl/test/dsrom_sys/tb_s81_pq_headpc_p9_equiv.sv rtl/test/dsrom_sys/ot_s81_pq_qb_headpc_native_p8ref.sv rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_qb_pinread_native.sv physical/s81_pq_hier/pinned/rtl/ot_rst_relay.sv && vvp {RUN}/p9eq/e.vvp",
+    "name": "p10_equiv_vs_p9_plus1",
+    "cmd": "mkdir -p {RUN}/p10eq && iverilog -g2012 -s tb_s81_pq_headpc_p10_equiv -o {RUN}/p10eq/e.vvp rtl/test/dsrom_sys/tb_s81_pq_headpc_p10_equiv.sv rtl/test/dsrom_sys/ot_s81_pq_qb_headpc_native_p9ref.sv rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_qb_pinread_native.sv physical/s81_pq_hier/pinned/rtl/ot_rst_relay.sv && vvp {RUN}/p10eq/e.vvp",
     "expect": "pass",
     "threads": 1,
     "peak_ram_gb": 4,
     "needs": [
      "iverilog"
     ],
-    "pass_regex": "PQ_HEADPC_P9_EQUIV PASS",
+    "pass_regex": "PQ_HEADPC_P10_EQUIV PASS",
     "min_count_regex": "checked_bits=([0-9]+)"
    },
    {
     "name": "mutant_r0c_early",
-    "cmd": "mkdir -p {RUN}/p9mut && iverilog -g2012 -s tb_s81_pq_headpc_p9_equiv -DOT_S81_PQ_HEADPC_MUT_R0C -o {RUN}/p9mut/m.vvp rtl/test/dsrom_sys/tb_s81_pq_headpc_p9_equiv.sv rtl/test/dsrom_sys/ot_s81_pq_qb_headpc_native_p8ref.sv rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_qb_pinread_native.sv physical/s81_pq_hier/pinned/rtl/ot_rst_relay.sv && vvp {RUN}/p9mut/m.vvp",
+    "cmd": "mkdir -p {RUN}/p10mut && iverilog -g2012 -s tb_s81_pq_headpc_p10_equiv -DOT_S81_PQ_HEADPC_MUT_R0C -o {RUN}/p10mut/m.vvp rtl/test/dsrom_sys/tb_s81_pq_headpc_p10_equiv.sv rtl/test/dsrom_sys/ot_s81_pq_qb_headpc_native_p9ref.sv rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_qb_pinread_native.sv physical/s81_pq_hier/pinned/rtl/ot_rst_relay.sv && vvp {RUN}/p10mut/m.vvp",
     "expect": "fail",
     "threads": 1,
     "peak_ram_gb": 4,
@@ -130,7 +130,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81pq_qb_headpc_native/s81pq_qb_headpc_native-p9-pinload-1705-COMMIT"
+   "to": "results/rtl/ref_tile/s81pq_qb_headpc_native/s81pq_qb_headpc_native-p10-wcap-elaunch-COMMIT"
   }
  ],
  "cycles_added": 0,
@@ -142,6 +142,6 @@
  "structural_change": "P9 (10-15 S-ELEM-PQ): P8 route CLOSED TT +104.16/FF +18.09/DRC0 but native capture FAIL 21 pins <=244.6 ps (h_b0/h_b1 all bits, consume, hw_sv; results/rtl/s81_pq_native_audit_1015/native_collect_1705): each h_b* bit loaded i0 + 16 r0c copies, h_b*[3]/[0], consume and hw_sv also fed 8 rq AND4 decode flops at the E face. P9 = one capture flop per head input pin: r0c copies load from i0/i1 one edge later and the bank select lands in m*[2] (the m*[1] pure-delay stage is absorbed), rq0/rq1 are decoded at the output from the consume_1/gates/i0/i1 capture flops (same edge). 0 added cycles, read delta 3 unchanged; P9 equals frozen P8 on every output pin each edge under the loader contract (meta row not read within 3 edges of its write, which P8 itself needs for meta/data consistency). Same granted 142.56x120.96 outline and P8 pins. | p7 (10-15 S-ELEM-B): P6 route NEEDS_RTL TT -90.64/FF +19.99 (congestion fixed), worst i1[3] -> m1[0][0]: r0c/r1c -> per-bank 96:1 metadata read -> 4:1 bank select -> m*[0] in one edge. Retimed: per-bank read results registered (mb*_q, +128 FF), bank select moved into the next stage, which replaces the pure-delay first stage of the m0/m1 alignment line; metadata reaches m*[3] on the same edge, 0 added cycles, no compiler change. pq_qb_pinread_bench PASS (+3 mutants FAIL), capture-bypass mutant FAIL. | p6 (10-15 S-ELEM-B): P5 route FLOORPLAN_MARGIN util 62.1% (7,783 um2 in 12,541) -> height 95.04 -> 103.68 (core 13,736 um2, ~57%), same width/faces; per-bank read-index copies were folded by synthesis into one 5,900-load flop -> (* keep *) + 4 copies per bank, one per 4-bit row slice (~370 loads/bit, +168 FF, 0 cycles); pins re-spread for the new height with clk at the W-face centre (spread_face_pins ee058260f). | P4 route CLOSED but nativeFAIL capture308.7ps on1045pins, raw1024bank data into4:1mux; P5 inserts1024actual data captureFF plus38matching valid/select/metadataFF (+1062FF), exact +1readedge (legacydelta2\u21923), same4physical SRAM banks. Actual345800bit parent comparison +57344independent changing head pin bitchecks +3source mutants PASS. Same142.56x95.04 and exactP4io_tcl; native8i0launch errors remain toassess/repair, so this is bounded CTS characterization only, no route/adoption/throughput qualification. | P8: expand headpc height103.68->120.96 from actual P7 mapped8583um2/util62.5%; width/faces/RTL and production read delta3 unchanged; exact legal per-face re-spread pins, target53% utilization.",
  "reroute_reason": {
   "kind": "rtl_change",
-  "why": "P8 native capture FAIL 21 head input pins <=244.6 ps; P9 single capture flop per input pin (r0c from i0, rq decoded at output), 0 cycles"
+  "why": "P9 CLOSED (2f0cf4367) native FAIL: rq0/rq1 launch 321-333 ps (decoded after flops), h_b captures 191-221 ps (i0/i1 flops were both W-face capture and E-face launch, 142.56 um apart). P10: W capture flops i0w/i1w/gates/consume_1 + E launch flops i0/i1/rq0/rq1 (rq registered); +1 head read edge (read_latency_delta 3 -> 4), every head pin registered at its face; same outline/pins."
  }
 }
