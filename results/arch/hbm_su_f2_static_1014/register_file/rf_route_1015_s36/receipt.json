@@ -1,0 +1,11 @@
+{
+ "scope": "16 actual RF tuple relay routes (ot_hbm_su_rf_route over hbfd_rly_48_{WE,EW,SN,NS}, one per-stage clock/reset) at STAGES=36 = RF_RELAY of the H-DIE compact660_v5 plan (su_rf_route_pins.json, 480 um reach, 9.0-17.4 mm core->core routes)",
+ "positive": "RF_ROUTE PASS routes=16 stages=36 actual48bitmasters=576 checks=33408 (bubbles every 7th tuple, mid-stream reset at n=1000)",
+ "mutants": {
+  "MUT1 data bit flip at stage 18": "FAIL",
+  "MUT2 valid drop at stage 18": "FAIL",
+  "MUT3 stage clock stopped on route 5": "FAIL"
+ },
+ "cmd": "RF_STAGES=36 bash tools/hbm_static/su_rf_route_run.sh <out>",
+ "open": "relay homes per route = H-DIE (su_rf_route_pins.json lists them); SU top RF_RELAY default (8 in su_native_vm_top_run.sh) and compiler deadlines recompile from 36 = H-SU; physical relay instances in the die netlist = H-DIE"
+}

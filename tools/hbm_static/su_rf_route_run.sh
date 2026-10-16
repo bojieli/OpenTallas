@@ -1,12 +1,13 @@
 #!/usr/bin/env bash
 set -euo pipefail
+# RF_STAGES (default 36): H-DIE compact660_v5 su_rf_route_pins.json, 480 um reach on the 16 core->core routes (RF_RELAY 36)
 cd "$(dirname "$0")/../.."
 out=$(realpath -m "$1");mkdir -p "$out"
 vl=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
 S=rtl/hbm_accel/generic/adapters/static_su/register_file
 for mut in 0 1 2 3;do
  "$vl" --binary --timing -O1 -j 2 -CFLAGS -O0 -Wno-fatal -Wno-lint -Wno-style \
-  --top-module tb_hbm_su_rf_route -GMUT="$mut" --Mdir "$out/obj$mut" \
+  --top-module tb_hbm_su_rf_route -GMUT="$mut" -GSTAGES="${RF_STAGES:-36}" --Mdir "$out/obj$mut" \
   rtl/lib/ot_rst_relay.sv rtl/hbm_accel/die_glue/ot_hbm_rly.sv \
   rtl/hbm_accel/die_glue/hbfd_rly_masters.sv "$S/ot_hbm_su_rf_route.sv" "$S/tb_hbm_su_rf_route.sv" \
   > "$out/build$mut.log" 2>&1
