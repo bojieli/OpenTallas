@@ -23,7 +23,7 @@ class Bits:
         else:self.parent[a]=b
 
 
-def audit(document,top,clock_domains,input_domains=None,output_domains=None):
+def audit(document,top,clock_domains,input_domains=None,output_domains=None,require_bit_graph=False):
     """Find every inferred input ownership and non-FIFO inter-domain data edge.
 
     Clock roots are literal top ports. Approved FIFO implementations are cut at
@@ -38,7 +38,11 @@ def audit(document,top,clock_domains,input_domains=None,output_domains=None):
             raise ValueError(f'{scope}: proc/opt cell graph and explicit flop memory required')
         for name,net in module.get('netnames',{}).items():
             if not net.get('hide_name'):
-                for b in net['bits']:names[bit(scope,b)].add((scope+'.'if scope else'')+name)
+                for i,b in enumerate(net['bits']):
+                    if isinstance(b,str):continue
+                    label=(scope+'.'if scope else'')+name
+                    if len(net['bits'])>1 or net.get('offset',0):label+='['+str(i+net.get('offset',0))+']'
+                    names[bit(scope,b)].add(label)
         for name,cell in module.get('cells',{}).items():
             full=(scope+'.'if scope else'')+name
             con={p:[bit(scope,b)for b in bs]for p,bs in cell['connections'].items()}
@@ -82,14 +86,16 @@ def audit(document,top,clock_domains,input_domains=None,output_domains=None):
     for path,cell,con in cells:
         typ=cell['type']
         if typ=='$scopeinfo':continue
-        if typ in ('$dff','$dffe','$adff','$adffe','$sdff','$sdffe','$sdffce'):
-            domain=root(con.get('CLK',[]),path)
+        if typ in ('$dff','$dffe','$adff','$adffe','$sdff','$sdffe','$sdffce','$_DFF_P_','$_DFF_PN0_','$_DFF_PP0_','$_DFF_PN1_','$_DFF_PP1_'):
+            domain=root(con.get('CLK',con.get('C',[])),path)
             for b in canon(con['Q']):origins[b].add('domain:'+domain)
             # Asynchronous controls keep recovery/removal timing separately;
             # synchronous reset/enable are real data-domain dependencies.
-            targets=con.get('D',[])+con.get('EN',[])+con.get('SRST',[])
-            consumers.append((path,domain,canon(targets),canon(con['Q'])))
-        elif typ in {'$add','$sub','$mul','$div','$mod','$divfloor','$modfloor','$pow','$shl','$shr','$sshl','$sshr','$shift','$shiftx','$lt','$le','$eq','$ne','$eqx','$nex','$ge','$gt','$not','$and','$or','$xor','$xnor','$reduce_and','$reduce_or','$reduce_xor','$reduce_xnor','$reduce_bool','$logic_not','$logic_and','$logic_or','$mux','$pmux','$bmux','$demux','$slice','$concat','$pos','$neg','$alu','$fa','$lcu','$lut','$sop'}:
+            if len(con['D'])!=len(con['Q']):raise ValueError('flop data/output width mismatch')
+            for d,q in zip(con['D'],con['Q']):consumers.append((path+':D',domain,canon([d]),canon([q])))
+            for control in ('EN','SRST'):
+                if control in con:consumers.append((path+':'+control,domain,canon(con[control]),[]))
+        elif typ in {'$add','$sub','$mul','$div','$mod','$divfloor','$modfloor','$pow','$shl','$shr','$sshl','$sshr','$shift','$shiftx','$lt','$le','$eq','$ne','$eqx','$nex','$ge','$gt','$not','$and','$or','$xor','$xnor','$reduce_and','$reduce_or','$reduce_xor','$reduce_xnor','$reduce_bool','$logic_not','$logic_and','$logic_or','$mux','$pmux','$bmux','$demux','$slice','$concat','$pos','$neg','$alu','$fa','$lcu','$lut','$sop','$_AND_','$_OR_','$_XOR_','$_NOT_','$_MUX_','$_XNOR_','$_ANDNOT_','$_ORNOT_','$_NAND_','$_NOR_'}:
             if typ in ('$assert','$assume','$cover','$check'):raise ValueError(f'{path}: unsupported formal cell {typ}')
             if any(k in con for k in ('CLK','C','ARST','SRST'))or 'mem'in typ.lower()or 'latch'in typ.lower():
                 raise ValueError(f'{path}: unsupported state primitive {typ}')
@@ -98,6 +104,8 @@ def audit(document,top,clock_domains,input_domains=None,output_domains=None):
                 if direction=='input':ins+=canon(con[p])
                 elif direction=='output':outs+=canon(con[p])
                 else:raise ValueError(f'{path}: unsupported bidirectional cell')
+            if require_bit_graph and (len(outs)!=1 or any(len(con[p])!=1 for p in con)):
+                raise ValueError(f'{path}: payload grants require actual bit-level primitive graph')
             edges.append((ins,outs))
         else:raise ValueError(f'{path}: missing actual module {typ}')
     for f in fifos:
@@ -107,7 +115,7 @@ def audit(document,top,clock_domains,input_domains=None,output_domains=None):
             for b in canon(con[p]):origins[b].add('domain:'+wr)
         for p in ('rd_valid','rd_underflow','rd_data'):
             for b in canon(con[p]):origins[b].add('domain:'+rd)
-        for b in canon(con['rd_data']):origins[b].add('payload:'+f['path'])
+        for index,b in enumerate(canon(con['rd_data'])):origins[b].add('payload:'+f['path']+':'+str(index))
         for domain,ports in ((wr,('wr_valid','wr_data')),(rd,('rd_ready',))):
             consumers.append((f['path']+':'+domain,domain,canon(sum((con[p]for p in ports),[])),[]))
         fifo_records.append(dict(path=f['path'],writer_domain=wr,reader_domain=rd,parameters=f['parameters']))
@@ -120,7 +128,7 @@ def audit(document,top,clock_domains,input_domains=None,output_domains=None):
             for b in outs:
                 if isinstance(b,str):continue
                 old=len(origins[b]);origins[b].update(value);changed|=len(origins[b])!=old
-    input_uses=defaultdict(set);payload_targets=defaultdict(set);payload_outputs=defaultdict(set)
+    input_uses=defaultdict(set);payload_targets=defaultdict(set);payload_outputs=defaultdict(set);target_bits=defaultdict(lambda:defaultdict(set));output_bits=defaultdict(lambda:defaultdict(set))
     def check(path,domain,data,outputs):
         value=set().union(*(origins[b]for b in data))
         for origin in value:
@@ -128,7 +136,12 @@ def audit(document,top,clock_domains,input_domains=None,output_domains=None):
             if kind=='input':input_uses[name].add(domain)
             elif kind=='domain'and name!=domain:violations.append(dict(kind='extra_crossing',consumer=path,source_domain=name,target_domain=domain))
             elif kind=='payload':
-                for b in outputs:payload_targets[name].update(public_names[b])
+                scope,index=name.rsplit(':',1)
+                if path.endswith((':EN',':SRST')):
+                    violations.append(dict(kind='payload_control',consumer=path,fifo=scope))
+                for b in outputs:
+                    if isinstance(b,str):continue
+                    payload_targets[scope].update(public_names[b]);target_bits[scope][index].update(public_names[b])
         for b in data:
             if not isinstance(b,str)and not origins[b]:violations.append(dict(kind='unowned_cone',consumer=path,bit=repr(b)))
     for path,domain,data,outputs in consumers:check(path,domain,data,outputs)
@@ -140,8 +153,12 @@ def audit(document,top,clock_domains,input_domains=None,output_domains=None):
             literal=all(bits.find(bit('',b))in ('0','1')for b in p['bits'])
             if output_domains is not None and not literal and domains!={output_domains.get(name)}:
                 violations.append(dict(kind='output_owner_mismatch',output=name,actual=sorted(domains),declared=output_domains.get(name)))
-            for v in values:
-                if v.startswith('payload:'):payload_outputs[v[8:]].add(name)
+            for index,b in enumerate(p['bits']):
+                label=name+'['+str(index+p.get('offset',0))+']'if len(p['bits'])>1 or p.get('offset',0)else name
+                for v in origins[bits.find(bit('',b))]:
+                    if v.startswith('payload:'):
+                        scope,source_bit=v[8:].rsplit(':',1)
+                        payload_outputs[scope].add(label);output_bits[scope][source_bit].add(label)
     for name,used in input_uses.items():
         if len(used)>1:violations.append(dict(kind='shared_input_domains',input=name,domains=sorted(used)))
         if input_domains is not None and used!={input_domains.get(name)}:
@@ -152,6 +169,9 @@ def audit(document,top,clock_domains,input_domains=None,output_domains=None):
                 input_domains={k:sorted(v)for k,v in sorted(input_uses.items())},
                 payload_consumer_public_nets={k:sorted(v)for k,v in sorted(payload_targets.items())},
                 payload_output_ports={k:sorted(v)for k,v in sorted(payload_outputs.items())},
+                payload_consumer_bits={scope:{i:sorted(v)for i,v in data.items()}for scope,data in target_bits.items()},
+                payload_output_bits={scope:{i:sorted(v)for i,v in data.items()}for scope,data in output_bits.items()},
+                bit_graph_required=require_bit_graph,
                 violations=violations,physical_admitted=False)
 
 
