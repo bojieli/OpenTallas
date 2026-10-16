@@ -1,5 +1,5 @@
 {
- "name": "qfd_xcst_s_m5-xsm5d-e7e932f67",
+ "name": "qfd_xcst_s_m5-xsm5d-2a10238e1",
  "block": "qfd_xcst_s_m5",
  "ref_tile": true,
  "owner": "Codex:el1014-qwen-dvm-build",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 32,
  "source": {
   "branch": "claude/qwen-dvm-1014",
-  "commit": "e7e932f67",
+  "commit": "2a10238e1",
   "extra_paths": [
    "rtl/hdc",
    "rtl/proto",
@@ -98,7 +98,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qfd_xcst_s_m5/qfd_xcst_s_m5-xsm5d-e7e932f67"
+   "to": "results/rtl/ref_tile/qfd_xcst_s_m5/qfd_xcst_s_m5-xsm5d-2a10238e1"
   }
  ],
  "cycles_added": 0,
