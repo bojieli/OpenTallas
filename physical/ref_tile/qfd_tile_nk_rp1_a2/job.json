@@ -1,5 +1,5 @@
 {
- "name": "qfd_tile_nk_rp1_a2-a2-298dc52a9",
+ "name": "qfd_tile_nk_rp1_a2-a2-COMMIT",
  "block": "qfd_tile_nk_rp1",
  "ref_tile": true,
  "owner": "Claude:q_tile_repack",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 24,
  "source": {
   "branch": "claude/qtile-repack-1015",
-  "commit": "298dc52a9",
+  "commit": "COMMIT",
   "extra_paths": [
    "rtl/test/tb_qfd_tile_nk_rp1.sv",
    "tools/rtl_qwen_me_partition_gate_w12.py",
@@ -135,7 +135,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qfd_tile_nk_rp1_a2/qfd_tile_nk_rp1_a2-a2-298dc52a9"
+   "to": "results/rtl/ref_tile/qfd_tile_nk_rp1_a2/qfd_tile_nk_rp1_a2-a2-COMMIT"
   }
  ],
  "cycles_added": 0,

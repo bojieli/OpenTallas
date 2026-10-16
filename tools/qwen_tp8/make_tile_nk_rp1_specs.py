@@ -125,12 +125,12 @@ def plan(name, tag, W, ncol, rows, gl, gm, e_bot, e_top, purpose):
         "n_b": [round(ny + 111.5, 3), round(ny + 210.8, 3)],
         "t_out": [round(ny + 212.0, 3), round(ny + 311.3, 3)],
         "n_y": [round(ny + 312.5, 3), round(ny + 411.8, 3)],
-        "tie_lo": [round(tap_lo - 6.0, 3)] * 2,
-        "tie_hi": [round(tap_lo - 4.0, 3)] * 2,
-        "tile_id": [round(tap_lo - 3.0, 3), round(tap_lo - 1.5, 3)],
-        "rst_n": [round(tap_lo - 0.8, 3)] * 2,
+        "tie_lo": [round(tap_lo - 8.0, 3), round(tap_lo - 7.0, 3)],    # pin regions need HIGH > LOW
+        "tie_hi": [round(tap_lo - 6.5, 3), round(tap_lo - 5.5, 3)],
+        "tile_id": [round(tap_lo - 5.0, 3), round(tap_lo - 2.0, 3)],
+        "rst_n": [round(tap_lo - 1.5, 3), round(tap_lo - 0.5, 3)],
         "tap": [round(tap_lo, 3), round(tap_lo + 48.672, 3)],
-        "ck": [round(W / 2, 3)] * 2,
+        "ck": [round(W / 2 - 0.5, 3), round(W / 2 + 0.5, 3)],
     }
     s.pop("io_tcl", None)
     s["structural_change"] = (
