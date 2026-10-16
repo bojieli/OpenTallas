@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""submit_exact.py -- SUBMIT ORDER in one step: commit -> gate on that exact commit -> submit, refused LOCALLY.
+"""submit_exact.py -- SUBMIT ORDER in one step: commit -> push -> gate on that exact commit -> submit, refused LOCALLY.
 
 Why (ROOT, 2026-10-15): the daemon refuses ref_tile jobs whose committed gate result no longer binds to the route
 source or to the gate-executed daemon overlays ("SUBMIT_LINT REF_GATE: source_binding ...").  Every refusal audited
@@ -14,12 +14,13 @@ the exact differing files (and the main commits that moved an overlay), and opti
     tools/closure_loop/submit_exact.py SPEC.json --dry-run               # preflight only
 
 Run it from the worktree that holds the spec's source commit.  Steps:
- 1. optional commit by path (--commit-paths); the spec's source.commit / name suffix follow HEAD (--follow-head, the
-    default when committing);
+ 1. optional commit by path (--commit-paths) and PUSH to origin/<source.branch> (--no-push to skip); the spec's
+    source.commit / name suffix follow HEAD (--follow-head, the default when committing);
  2. fetch origin main (overlay resolution uses origin/main, exactly as the daemon does);
  3. refuse if any consumed path (kit dir, spec sources, source.extra_paths) is dirty in the worktree or differs from
     the spec commit;
- 4. run the daemon's submit check; on a source_binding refusal print every differing file;
+ 4. refuse unless the source commit is on origin/<source.branch> and every grant/provenance commit the kit names
+    (m6_pin_grant source_commit, *grant_commit) exists and is on an origin branch; run the daemon's submit check; on a source_binding refusal print every differing file;
  5. --regate: run pre_route_gate.py <kit> --commit <C> <gate-args>, commit the gate result by path, move the spec to
     that commit, re-check;
  6. drop the spec atomically into the closure-loop drop dir (only after a PASS/WARN).
@@ -76,6 +77,59 @@ def dirty(root, commit, paths):
     head = git(root, "rev-parse", "HEAD")
     diff = git(root, "diff", "--name-only", commit, head, "--", *paths).splitlines() if not head.startswith(commit) else []
     return unc, [d for d in diff if d]
+
+
+def on_origin(root, commit, branch):
+    """commit is an ancestor of origin/<branch> after a fresh fetch of that branch (the daemon's sync_source rule)"""
+    git(root, "fetch", "-q", "origin", branch, check=False)
+    return subprocess.run(["git", "-C", str(root), "merge-base", "--is-ancestor", commit, f"origin/{branch}"],
+                          capture_output=True).returncode == 0
+
+
+def referenced_commits(root, commit, kit):
+    """grant/provenance commits a kit names: every '*source_commit' / '*grant_commit' value in the kit's JSON files
+    at the spec commit, plus the die-contract slot's m6_pin_grant (ref_tile.contract_slot)"""
+    found = {}
+
+    def walk(x, where):
+        if isinstance(x, dict):
+            for k, v in x.items():
+                if isinstance(v, str) and k.endswith(("source_commit", "grant_commit")) and re.fullmatch(r"[0-9a-f]{7,40}", v):
+                    found.setdefault(v, where + ":" + k)
+                else:
+                    walk(v, where)
+        elif isinstance(x, list):
+            for v in x:
+                walk(v, where)
+    for f in git(root, "ls-tree", "-r", "--name-only", commit, "--", kit).splitlines():
+        if f.endswith(".json") and not f.endswith(("gate_result.json", "source_snapshot.json")):
+            try:
+                walk(json.loads(git(root, "show", f"{commit}:{f}")), f)
+            except (SystemExit, ValueError):
+                pass
+    try:
+        import ref_tile as RT
+        spec = json.loads(git(root, "show", f"{commit}:{kit}/spec.json"))
+        slot = RT.contract_slot(spec) or {}
+        walk({"m6_pin_grant": slot.get("m6_pin_grant") or {}}, "die contract slot")
+    except Exception:  # noqa: BLE001 -- best effort; the daemon's own check still runs below
+        pass
+    return found
+
+
+def origin_problems(root, commit, spec, kit):
+    out = []
+    branch = (spec.get("source") or {}).get("branch")
+    if not branch:
+        out.append("spec source.branch missing")
+    elif not on_origin(root, commit, branch):
+        out.append(f"source commit {commit[:12]} is not on origin/{branch} (push it: --push)")
+    for c, where in sorted(referenced_commits(root, commit, kit).items()) if kit else ():
+        if subprocess.run(["git", "-C", str(root), "cat-file", "-e", c + "^{commit}"], capture_output=True).returncode:
+            out.append(f"referenced commit {c} ({where}) does not exist")
+        elif not git(root, "branch", "-r", "--contains", c, check=False):
+            out.append(f"referenced commit {c} ({where}) is on no origin branch (push it)")
+    return out
 
 
 def binding_diff(root, kit, commit, daemon):
@@ -147,7 +201,8 @@ def main(argv=None):
     ap.add_argument("--follow-head", action="store_true", help="move the spec to HEAD (name suffix too) before checking")
     ap.add_argument("--regate", action="store_true", help="on a source_binding refusal run the gate on the exact commit")
     ap.add_argument("--gate-args", default="--remote auto --cts --mem 24")
-    ap.add_argument("--push", action="store_true", help="push HEAD to spec source.branch after committing")
+    ap.add_argument("--no-push", dest="push", action="store_false",
+                    help="do not push HEAD to origin/<source.branch> (default: push after every commit, before the gate)")
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--daemon-tree", default=os.environ.get("OT_CLOSURE_DAEMON_TREE", "/home/ubuntu/wt-claude-closure-daemon-1010"))
     a = ap.parse_args(argv)
@@ -163,6 +218,13 @@ def main(argv=None):
         a.follow_head = True
     if a.follow_head:
         spec = move_spec(spec, git(root, "rev-parse", "HEAD"))
+
+    def push():
+        br = (spec.get("source") or {}).get("branch")
+        if a.push and br:
+            git(root, "push", "-q", "origin", f"HEAD:refs/heads/{br}")
+    if a.commit_paths:
+        push()
     git(root, "fetch", "-q", "origin", "main", check=False)
     for attempt in (1, 2):
         commit = git(root, "rev-parse", f"{spec['source']['commit']}^{{commit}}")
@@ -175,6 +237,10 @@ def main(argv=None):
                 print(f"  uncommitted {x}")
             for x in diff:
                 print(f"  HEAD differs from spec commit: {x}")
+            return 1
+        bad = origin_problems(root, commit, spec, kit_of(spec))
+        if bad:
+            print("REFUSED LOCALLY (not on origin): " + "; ".join(bad))
             return 1
         res = preflight(spec, root, a.daemon_tree)
         v, msg = res.get("verdict"), res.get("message", "")
@@ -199,8 +265,7 @@ def main(argv=None):
         git(root, "add", "--", *out)
         git(root, "commit", "-m", a.message or f"{kit}: gate result on {commit[:9]} (submit_exact)", "--", *out)
         spec = move_spec(spec, git(root, "rev-parse", "HEAD"))
-    if a.push and (spec.get("source") or {}).get("branch"):
-        git(root, "push", "-q", "origin", f"HEAD:refs/heads/{spec['source']['branch']}")
+        push()
     if a.dry_run:
         print(f"DRY RUN: would submit {spec['name']} at {spec['source']['commit']}")
         return 0

@@ -34,3 +34,32 @@ def test_dirty_detects_uncommitted_and_moved(tmp_path):
     assert S.dirty(tmp_path, c1, ["k"])[0] == ["k/f"]
     g("commit", "-qam", "b")
     assert S.dirty(tmp_path, c1, ["k"]) == ([], ["k/f"])
+
+
+def test_origin_problems_unpushed_source_and_grant(tmp_path):
+    def g(d, *a):
+        return subprocess.run(["git", "-C", str(d), *a], check=True, capture_output=True, text=True).stdout.strip()
+    bare, wt = tmp_path / "o.git", tmp_path / "w"
+    subprocess.run(["git", "init", "-q", "--bare", str(bare)], check=True)
+    subprocess.run(["git", "init", "-q", str(wt)], check=True)
+    g(wt, "config", "user.email", "t@t"); g(wt, "config", "user.name", "t"); g(wt, "remote", "add", "origin", str(bare))
+    (wt / "k").mkdir(); (wt / "k" / "spec.json").write_text("{}")
+    g(wt, "add", "k"); g(wt, "commit", "-qm", "a"); g(wt, "push", "-q", "origin", "HEAD:refs/heads/br")
+    c1 = g(wt, "rev-parse", "HEAD")
+    spec = {"source": {"branch": "br"}}
+    assert S.origin_problems(wt, c1, spec, "k") == []
+    (wt / "k" / "grant.json").write_text('{"m6_pin_grant": {"source_commit": "%s"}}' % c1)
+    g(wt, "add", "k"); g(wt, "commit", "-qm", "b")
+    c2 = g(wt, "rev-parse", "HEAD")
+    bad = S.origin_problems(wt, c2, spec, "k")
+    assert len(bad) == 1 and "not on origin/br" in bad[0]
+    g(wt, "commit", "-q", "--allow-empty", "-m", "local only")
+    c3 = g(wt, "rev-parse", "HEAD")
+    (wt / "k" / "grant.json").write_text('{"m6_pin_grant": {"source_commit": "%s"}}' % c3)
+    g(wt, "add", "k"); g(wt, "commit", "-qm", "c"); g(wt, "push", "-q", "origin", "HEAD:refs/heads/br")
+    c4 = g(wt, "rev-parse", "HEAD")
+    assert S.origin_problems(wt, c4, spec, "k") == []           # c3 is pushed as an ancestor of br
+    (wt / "k" / "grant.json").write_text('{"m6_pin_grant": {"source_commit": "%s"}}' % ("ab" * 20))
+    g(wt, "add", "k"); g(wt, "commit", "-qm", "d"); g(wt, "push", "-q", "origin", "HEAD:refs/heads/br")
+    bad = S.origin_problems(wt, g(wt, "rev-parse", "HEAD"), spec, "k")
+    assert len(bad) == 1 and "does not exist" in bad[0]
