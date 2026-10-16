@@ -1,0 +1,59 @@
+{
+ "schema": "opentallas.s81.die_lead_grant.v1",
+ "by": "Codex S-DIE under coordinator delegation",
+ "decision": "GRANT actual S-face clock/reset pin-map change and accept exact p6 source/view for future parent binding; no new reroute requested. Existing live c26b source unchanged.",
+ "master": "ot_s81_pq_qb_align_native",
+ "params": {},
+ "defines": [
+  "OT_PQ_ROM_PORTS"
+ ],
+ "outline_um": [
+  172.8,
+  64.8
+ ],
+ "source_commit": "4d19ff6fe",
+ "closed_record_commit": "67834e78f",
+ "view": "physical/ref_tile/s81pq_qb_align_native/views/ot_s81_pq_qb_align_native",
+ "pin_tcl": "physical/ref_tile_specs/s81pq_native/s81pq_qb_align_native_spread_pins.tcl",
+ "pin_tcl_sha256": "64600fce3ada5c1328cb6d1d98aa207379e158a9508d66c8e261e4a3a7a92156",
+ "actual_pin_geometry": {
+  "clk": {
+   "face": "S",
+   "layer": "M5",
+   "rectangle_um": [
+    86.352,
+    0,
+    86.376,
+    0.192
+   ],
+   "edge_centre_um": 86.364
+  },
+  "rst_n": {
+   "face": "S",
+   "layer": "M3",
+   "rectangle_um": [
+    65.556,
+    0,
+    65.574,
+    0.144
+   ],
+   "edge_centre_um": 65.565
+  }
+ },
+ "prior_pin_geometry": {
+  "source": "040b3fe3c",
+  "clk": "W M4 edge y18.396",
+  "rst_n": "W M4 edge y46.476"
+ },
+ "reported_native_ps": {
+  "launch": 159.9,
+  "capture": 132.5,
+  "spread": 20.2
+ },
+ "integration_requirements": [
+  "Future PQ parent must bind exact source parameters/defines and exact p6 pin map.",
+  "Regenerate actual clock entry route/phase and reset release path for S-face entry; do not reuse old W-facing parent routes.",
+  "Prove current native parent pin reach/cut and all incident child routes; component native PASS is not parent qualification.",
+  "No pin/clock/timing gate waiver and no retroactive claim of current GEN adoption."
+ ]
+}
