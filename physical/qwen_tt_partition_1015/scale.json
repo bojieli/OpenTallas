@@ -46,7 +46,7 @@
     "w": 345.6,
     "h": 216
   },
-  "recipe": 2,
+  "recipe": 3,
   "layer_cap": "M5",
   "pins": {
     "W": [
@@ -108,12 +108,12 @@
     "OT_CHANNEL_BLOCK_UM": "20",
     "OT_ROW_MIN_UM": "6"
   },
-  "structural_change": "Actual functional CORE/SCALE partition of the failing 10622-FF/4-SRAM TT tree; separate clock roots, each owns two real SRAMs in a W column with >=20um corridors, existing registered 93-bit seam across21.6um candidate gap, all output stations retained, zero added data edges. Replaces t4 congestion3405 and insertion382/spread107.6; no inherited clock/native qualification.",
+  "structural_change": "Measured fs4 ODB has all thin M4/M5 manual pins 12nm off preferred track (M4 Y/M5 X =0.012+n*0.048um); repair pin coordinates to measured track lattice, preserving PG-clean 12-track seam and five-track core south spread, real two-SRAM functional partition and recipe3 input/output registers. No additional RTL cycles/area; recipe3 boundary +1 edge per input/output (+2 core-to-scale seam) remains explicit. Diagnostic translated BPin shapes remove first-iteration DRT0255 failure; fresh exact source CTS/route required.",
   "slot_change_request": "Q-COMPUTE-DIE 14:33-14:36 candidate two345.6x216 homes inside777.6x1814.4; physical/qwen_tt_partition_1015/pin_plan.json",
   "job": {
-    "owner": "Codex:Q-COMPUTE-ELEM1417",
-    "branch": "codex/qwen-compute-elements-1417",
-    "tag": "fs1",
+    "owner": "codex:QWEN-TT-boundary2116",
+    "branch": "codex/qwen-tt-boundary-2116",
+    "tag": "tg1",
     "hold_merge": true,
     "purpose": "TT real functional partition candidate, native clocks/pins unqualified until measured",
     "benches": [
@@ -155,6 +155,17 @@
       "rtl/qwen_sys/tt_tree_partition_20261015",
       "physical/qwen_tt_partition_1015",
       "tools/qwen_split/derive_tt_tree_partition.py"
+    ],
+    "structural_change": "fs2 (Q-ELEM 1705): fs1 scale route DRT-0255 on seam pins tag_payload[0]/rst_n: 93 seam pins on every M5 track (0.096 pitch, 168.4..177.2) overlapped the M5 PG pair at x~173.1; seam now 3-track pitch on PG-free tracks 157.8..188.6 on BOTH leaves (identical x, straight seam), RTL/outline/cycles unchanged. | fs4 (Q-ELEM 1705): fs2r DRT-0255 on tag_payload at the S face (516 cells in the 6 um face band under a 31 um seam): seam 12-track pitch 110.3..234.4 matching core; recipe 3 pin registers (owner 19:50).",
+    "hosts": [
+      "ot-epyc1tb",
+      "ot-epyc4",
+      "ot-pve1"
     ]
+  },
+  "children": [],
+  "inter": [],
+  "pin_regs": {
+    "enable": true
   }
 }
