@@ -40,7 +40,7 @@
     "cmd": "bash tools/qwen_split/run_su64_pinreg_bench.sh {RUN}/bench/pinreg_su_ops 0 0",
     "expect": "pass",
     "threads": 8,
-    "peak_ram_gb": 48,
+    "peak_ram_gb": 72,
     "needs": [
      "verilator"
     ],
@@ -51,7 +51,7 @@
     "cmd": "bash tools/qwen_split/run_su64_pinreg_bench.sh {RUN}/bench/pinreg_copy 1 0",
     "expect": "pass",
     "threads": 8,
-    "peak_ram_gb": 48,
+    "peak_ram_gb": 72,
     "needs": [
      "verilator"
     ],
@@ -62,7 +62,7 @@
     "cmd": "bash tools/qwen_split/run_su64_pinreg_bench.sh {RUN}/bench/pinreg_mut_old_vm_edge 0 1",
     "expect": "fail",
     "threads": 8,
-    "peak_ram_gb": 48,
+    "peak_ram_gb": 72,
     "needs": [
      "verilator"
     ],
@@ -73,7 +73,7 @@
     "cmd": "bash tools/qwen_split/run_su64_pinreg_bench.sh {RUN}/bench/pinreg_mut_copy_latency 1 2",
     "expect": "fail",
     "threads": 8,
-    "peak_ram_gb": 48,
+    "peak_ram_gb": 72,
     "needs": [
      "verilator"
     ],
@@ -84,7 +84,7 @@
     "cmd": "bash tools/qwen_split/run_su64_pinreg_bench.sh {RUN}/bench/pinreg_mut_sd_old_edge 0 3",
     "expect": "fail",
     "threads": 8,
-    "peak_ram_gb": 48,
+    "peak_ram_gb": 72,
     "needs": [
      "verilator"
     ],
@@ -95,7 +95,7 @@
     "cmd": "bash tools/qwen_split/run_su64_pinreg_bench.sh {RUN}/bench/pinreg_mut_cp_old_edge 1 4",
     "expect": "fail",
     "threads": 8,
-    "peak_ram_gb": 48,
+    "peak_ram_gb": 72,
     "needs": [
      "verilator"
     ],
