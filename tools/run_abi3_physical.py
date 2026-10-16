@@ -2366,6 +2366,26 @@ def corner_lib_lines(corners: list[str], memory_macros: dict[str, Any] | None) -
     return lines
 
 
+def orfs_config_value(key: str, value: Any) -> str:
+    """Preserve literal control names/patterns across Make's export expansion.
+
+    Other ORFS options retain their Make expressions, notably corner-library
+    references. These options are consumed as literal Tcl names or regexes;
+    Make must not consume anchors such as ``$|`` before synthesis sees them.
+    """
+    value = str(value)
+    literal = (key.startswith("OT_PIN_REGS_") or key.endswith(("_RE", "_REGEX", "_PATTERN"))
+               or key in {"RESET_INCLUDE", "RESET_EXCLUDE", "SYNTH_RESET_INCLUDE", "SYNTH_RESET_EXCLUDE"})
+    if not literal:
+        return value
+    if "\n" in value or "\r" in value:
+        raise FlowError(f"literal ORFS option {key} must occupy one config.mk line")
+    # Make strips comments before expanding dollars. Preserve both the hash
+    # and any literal backslashes immediately before it.
+    value = re.sub(r"(\\*)#", lambda m: "\\" * (2 * len(m[1]) + 1) + "#", value)
+    return value.replace("$", "$$")
+
+
 def orfs_config_lines(
     nickname: str,
     block: dict[str, Any],
@@ -2438,7 +2458,7 @@ def orfs_config_lines(
     if pnr["corner_env"]:
         config.append(f"export CORNER = {pnr['corner_env']}")
     for key, value in sorted(pnr["extra_config"].items()):
-        config.append(f"export {key} = {value}")
+        config.append(f"export {key} = {orfs_config_value(key, value)}")
     if pnr["extra_config"].get("OT_MULTI_VT"):
         # MULTI-VT (OT_MULTI_VT=lvt|lvt+slvt): synthesis maps RVT only (the platform reads ASAP7_USE_VT for the
         # synthesis make goals, including the recursive do-yosys* ones), so the netlist ABC produces is the RVT
