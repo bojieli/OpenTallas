@@ -144,7 +144,7 @@
    "count": 1,
    "at": [
     43.2,
-    8.64
+    22.176
    ],
    "orient": "R0",
    "inst": "*u_head*g_m?0?*u_pm",
@@ -152,14 +152,15 @@
     "port": "ck_pm0",
     "pin": "clk",
     "reference": "raw_liberty_clock_pin"
-   }
+   },
+   "at_exact": true
   },
   {
    "view": "physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2",
    "count": 1,
    "at": [
     43.2,
-    97.2
+    99.984
    ],
    "orient": "R0",
    "inst": "*u_head*g_m?1?*u_pm",
@@ -167,7 +168,8 @@
     "port": "ck_pm1",
     "pin": "clk",
     "reference": "raw_liberty_clock_pin"
-   }
+   },
+   "at_exact": true
   }
  ],
  "pins": {
@@ -249,7 +251,7 @@
   "OT_CHANNEL_BLOCK_UM": "20",
   "OT_ROW_MIN_UM": "6"
  },
- "structural_change": "f10 (Q-ELEM 1315): h9b placement worst ~-200..-250 broad (in->reg, prs, kvd, fq/hq1, resets) with insertion 358.7: logic is a thin ring around the centred program SRAMs. Both SRAMs moved flush to the S edge (y 8.64 / 97.2), ck_pm0/1 pin ranges follow; logic gets a contiguous N band (~72 um) + W/E columns next to ck_head (N). Same RTL (h9b), 0 edges; ck_pm pin move needs Q-COMPUTE-DIE OK. h9 (Q-ELEM 1315): h8 gate worst moved to controller decode h_rd_c -> ir mux -> F(BASE)+dyn[F(D)] -> me_obase/xbase (-565.5). DPRE=1: the 10 base+DYN adds are computed per FIFO head word (hq, hq1) from flops and selected by h_rd copies after the add; exact, 0 edges. h8 (Q-ELEM 1315): h7 gate placement TT reg->reg -470.7 ps over 2,648 flops: u_issue.cycle -> 32-bit cycle==head compare (~410 ps OR tree) -> controller fan-out (~650 ps incl. cross-tile buffering) -> kvd fields / pin regs. Fix: SREG=1 (ot_qwen_fixed_issue): 'scheduled' is a register loaded with the exact next-state value; bit-identical every cycle (sim self-check + regroup bench vs ref), 0 edges. h3 (Q-COMPUTE-ELEM r14): h2 CTS refused by the strict multiple-CTS profile (ck_head drove 4,831 std FF + 2 raw SRAM clock pins: mixed source). The two program SRAMs now take explicit raw-macro clock entries ck_pm0/ck_pm1 (qfd_tt_ctlm_head_static_rk, derived by tools/qwen_split/derive_tt_head_rawck.py; shared source unchanged), W-face pins at the SRAM clk heights; std roots ck_head / ck_me_sched unchanged (clock hybrid_entries, flow 891a5f188). Parent delivers ck_pm0/1 from the same PLL phase as ck_head (same_pll_fixed_phase 0 ps). Logic, edges and outline unchanged. NEW head-side leaf of the selected static TT controller: exact original parent body minus the ROM tree (u_head + native route + resident relocation + loaded stage), formally equivalent regrouping (physical/qwen_tt_static_cluster_1015). Roots ck_head (4,813+route) / ck_me_sched (877), related phase-0; 2 SRAM 64x512; no ICG.",
+ "structural_change": "f10 (Q-ELEM 1315): h9b placement worst ~-200..-250 broad (in->reg, prs, kvd, fq/hq1, resets) with insertion 358.7: logic is a thin ring around the centred program SRAMs. Both SRAMs as one abutted N-S stack (pins on W only; pitch 77.784) at y 22.176 / 99.984 (both on track, gap 0.048) (20-um S edge rule), ck_pm0/1 pin ranges follow; logic gets a contiguous N band (~72 um) + W/E columns next to ck_head (N). Same RTL (h9b), 0 edges; ck_pm pin move needs Q-COMPUTE-DIE OK. h9 (Q-ELEM 1315): h8 gate worst moved to controller decode h_rd_c -> ir mux -> F(BASE)+dyn[F(D)] -> me_obase/xbase (-565.5). DPRE=1: the 10 base+DYN adds are computed per FIFO head word (hq, hq1) from flops and selected by h_rd copies after the add; exact, 0 edges. h8 (Q-ELEM 1315): h7 gate placement TT reg->reg -470.7 ps over 2,648 flops: u_issue.cycle -> 32-bit cycle==head compare (~410 ps OR tree) -> controller fan-out (~650 ps incl. cross-tile buffering) -> kvd fields / pin regs. Fix: SREG=1 (ot_qwen_fixed_issue): 'scheduled' is a register loaded with the exact next-state value; bit-identical every cycle (sim self-check + regroup bench vs ref), 0 edges. h3 (Q-COMPUTE-ELEM r14): h2 CTS refused by the strict multiple-CTS profile (ck_head drove 4,831 std FF + 2 raw SRAM clock pins: mixed source). The two program SRAMs now take explicit raw-macro clock entries ck_pm0/ck_pm1 (qfd_tt_ctlm_head_static_rk, derived by tools/qwen_split/derive_tt_head_rawck.py; shared source unchanged), W-face pins at the SRAM clk heights; std roots ck_head / ck_me_sched unchanged (clock hybrid_entries, flow 891a5f188). Parent delivers ck_pm0/1 from the same PLL phase as ck_head (same_pll_fixed_phase 0 ps). Logic, edges and outline unchanged. NEW head-side leaf of the selected static TT controller: exact original parent body minus the ROM tree (u_head + native route + resident relocation + loaded stage), formally equivalent regrouping (physical/qwen_tt_static_cluster_1015). Roots ck_head (4,813+route) / ck_me_sched (877), related phase-0; 2 SRAM 64x512; no ICG.",
  "job": {
   "owner": "Claude:Q-ELEM-TTH",
   "branch": "claude/qelem-tth-1016",
@@ -327,7 +329,7 @@
     "fail_regex": "REGROUP_FAIL"
    }
   ],
-  "structural_change": "f10 (Q-ELEM 1315): h9b placement worst ~-200..-250 broad (in->reg, prs, kvd, fq/hq1, resets) with insertion 358.7: logic is a thin ring around the centred program SRAMs. Both SRAMs moved flush to the S edge (y 8.64 / 97.2), ck_pm0/1 pin ranges follow; logic gets a contiguous N band (~72 um) + W/E columns next to ck_head (N). Same RTL (h9b), 0 edges; ck_pm pin move needs Q-COMPUTE-DIE OK. h9 (Q-ELEM 1315): h8 gate worst moved to controller decode h_rd_c -> ir mux -> F(BASE)+dyn[F(D)] -> me_obase/xbase (-565.5). DPRE=1: the 10 base+DYN adds are computed per FIFO head word (hq, hq1) from flops and selected by h_rd copies after the add; exact, 0 edges. h8 (Q-ELEM 1315): h7 gate placement TT reg->reg -470.7 ps over 2,648 flops: u_issue.cycle -> 32-bit cycle==head compare (~410 ps OR tree) -> controller fan-out (~650 ps incl. cross-tile buffering) -> kvd fields / pin regs. Fix: SREG=1 (ot_qwen_fixed_issue): 'scheduled' is a register loaded with the exact next-state value; bit-identical every cycle (sim self-check + regroup bench vs ref), 0 edges. h7 (Q-ELEM-TTH 2026-10-16) after h6 gate (c20527ec4 receipt): ck_head boundary spread 73.7 ps OK with -no_obstruction_aware, but placement TT setup sched->core -429 ps / core->sched -301 ps: separate std entries carry the die-skew reserve (setup 150/210, hold 100) on every hop between them (210 because ck_head mean 303 > 300), and the die already feeds ck_me_sched and ck_head from one tap. ck_me_sched entry merged into ck_head (one standard-cell root, 5,402+877 sinks < 15k); hr port ck_me_sched removed (parent port retained until the die netlist drops it, as Q-ELEM-TTP 1c99b5f52). Raw program-SRAM entries ck_pm0/ck_pm1 unchanged (coordinator requirement). Logic, edges, outline, macros unchanged. Keeps h6: reset station (RSTN=1, release +1 edge, 0 token cycles) and -no_obstruction_aware.",
+  "structural_change": "f10 (Q-ELEM 1315): h9b placement worst ~-200..-250 broad (in->reg, prs, kvd, fq/hq1, resets) with insertion 358.7: logic is a thin ring around the centred program SRAMs. Both SRAMs as one abutted N-S stack (pins on W only; pitch 77.784) at y 22.176 / 99.984 (both on track, gap 0.048) (20-um S edge rule), ck_pm0/1 pin ranges follow; logic gets a contiguous N band (~72 um) + W/E columns next to ck_head (N). Same RTL (h9b), 0 edges; ck_pm pin move needs Q-COMPUTE-DIE OK. h9 (Q-ELEM 1315): h8 gate worst moved to controller decode h_rd_c -> ir mux -> F(BASE)+dyn[F(D)] -> me_obase/xbase (-565.5). DPRE=1: the 10 base+DYN adds are computed per FIFO head word (hq, hq1) from flops and selected by h_rd copies after the add; exact, 0 edges. h8 (Q-ELEM 1315): h7 gate placement TT reg->reg -470.7 ps over 2,648 flops: u_issue.cycle -> 32-bit cycle==head compare (~410 ps OR tree) -> controller fan-out (~650 ps incl. cross-tile buffering) -> kvd fields / pin regs. Fix: SREG=1 (ot_qwen_fixed_issue): 'scheduled' is a register loaded with the exact next-state value; bit-identical every cycle (sim self-check + regroup bench vs ref), 0 edges. h3 (Q-COMPUTE-ELEM r14): h2 CTS refused by the strict multiple-CTS profile (ck_head drove 4,831 std FF + 2 raw SRAM clock pins: mixed source). The two program SRAMs now take explicit raw-macro clock entries ck_pm0/ck_pm1 (qfd_tt_ctlm_head_static_rk, derived by tools/qwen_split/derive_tt_head_rawck.py; shared source unchanged), W-face pins at the SRAM clk heights; std roots ck_head / ck_me_sched unchanged (clock hybrid_entries, flow 891a5f188). Parent delivers ck_pm0/1 from the same PLL phase as ck_head (same_pll_fixed_phase 0 ps). Logic, edges and outline unchanged. NEW head-side leaf of the selected static TT controller: exact original parent body minus the ROM tree (u_head + native route + resident relocation + loaded stage), formally equivalent regrouping (physical/qwen_tt_static_cluster_1015). Roots ck_head (4,813+route) / ck_me_sched (877), related phase-0; 2 SRAM 64x512; no ICG.",
   "cycles_added": 1
  },
  "children": [],
@@ -342,12 +344,12 @@
  ],
  "pin_ranges": {
   "ck_pm0": [
-   7.44,
-   11.44
+   20.976,
+   24.976
   ],
   "ck_pm1": [
-   96.0,
-   100.0
+   98.784,
+   102.784
   ]
  }
 }

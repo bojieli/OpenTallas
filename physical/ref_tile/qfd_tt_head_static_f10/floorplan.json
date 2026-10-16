@@ -102,7 +102,7 @@
    "inst": "*u_head*g_m?0?*u_pm",
    "idx": 0,
    "x": 43.2,
-   "y": 8.64,
+   "y": 22.176,
    "w": 171.288,
    "h": 77.76,
    "orient": "R0",
@@ -115,27 +115,14 @@
    "inst": "*u_head*g_m?1?*u_pm",
    "idx": 0,
    "x": 43.2,
-   "y": 97.2,
+   "y": 99.984,
    "w": 171.288,
    "h": 77.76,
    "orient": "R0",
    "offtrack": 0
   }
  ],
- "findings": [
-  [
-   "FAIL",
-   "macro_edge",
-   "ot_sram_1r1w_64x512_m1_r2c2#0 6.5 um from the S core edge (< 20 um)",
-   "move the macro inward / to a face without pins (sliver + pin-access blockage)"
-  ],
-  [
-   "FAIL",
-   "channel",
-   "ot_sram_1r1w_64x512_m1_r2c2#0 / ot_sram_1r1w_64x512_m1_r2c2#0 channel 10.8 um (< 20 um)",
-   "spread the macros, or abut two macros N-S deliberately (gap <= 0.1 um, R0 / MY / MX / R180, no pin on the touching faces: abutted_stack), or two blocks E-W with bare touching faces (no pin of any use: abutted_row)"
-  ]
- ],
+ "findings": [],
  "referenced": [
   "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_split_static.sv",
   "rtl/qwen_sys/static_schedule_20261014/ot_qfd_tt_ctlm_head_static_rk.sv",
