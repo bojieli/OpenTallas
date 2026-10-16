@@ -1,0 +1,8 @@
+{"kit": "qfd_xs_leaf_w130", "tag": "w2", "stage": "gate 4_1_cts (TT, placement RC)", "gate_dir": "ot-epyc4:/srv/opentallas-scratch/claude/ref_gate/qfd_xs_leaf_w130-20261016-143554",
+ "audit": {"cell": "ot_qfd_xs_leaf", "R_ps": 169.1, "spread_ps": 9.1, "outputs": 1218, "inputs": 1202, "launch_ps": 192.5, "launch_pin": "wo_d[994]", "capture_ps": 160.7, "capture_pin": "rst_n", "launch_over": 0, "capture_over": 0, "comb_pins": 0, "pass": true},
+ "limits": {"launch": 220, "capture": 190, "spread": 80},
+ "w1_failure": "qfd_xs_leaf_w130-w1-47446a163 GRT 0 overflow; DRT crashed twice: 153x initMazeIdx_connFig via no idx V5 (M6 pins above the M2-M5 routing range)",
+ "drt_probe": {"db": "w130 gate 4_cts.odb (ot-agidock128)", "stub_0p384": {"grt_overflow": 0, "drt_violations": 0}, "stub_1p0": {"grt_overflow": 0, "drt_violations": 0}},
+ "cut_receipt": {"n_band_tracks_needed": 2490, "ratio_64p8": 1.04, "ratio_band_129p6": 0.52, "ratio_bus_129p6": 0.25, "w1_grt_usage": {"M2": 52.6, "M3": 59.8, "M4": 25.0, "M5": 13.3}},
+ "column_body_um": {"w": 129.6, "h": 920.16},
+ "images_viewed": ["gate_layout/density.png", "gate_layout/floorplan.png"]}
