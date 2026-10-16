@@ -1,8 +1,10 @@
 # claude S-VM-CAPT-X8 2026-10-16 (tools/s81_ph/capx43_kits.py): dsfd_capt_x8x_s_e, DECISION B single-clock leaf of dsfd_capt_x8_data_e.
 # BIT-MAJOR bank seam: b[208 r + 52 k + j] (bank k of row r, word bit j) at y(f_w[52 r + j]) + (k - 1.5) x 0.096 on the seam face of BOTH leaves (they abut); s_mark/s_par[r] in the slot after row r.  M4 E/W, M5 N, M3/M5 S.
 # split1016y: serial leaf 86.4 x 183.6, seam 10.8 um above the t leaf seam (the parent places t 10.8 um above this leaf origin, tops flush); row 0 clear of the S-face t_vm stage-B band.
+# split1016z: ckvb[0] = second literal entry of the ckv root (stage B t_vm flops); ckv[0] = stage A.
 place_pin -pin_name {ckv[0]} -layer M5 -location {40.044000 183.600000} -pin_size {0.024 0.192} -force_to_die_boundary
 place_pin -pin_name {rsv[0]} -layer M5 -location {42.444000 183.600000} -pin_size {0.024 0.192} -force_to_die_boundary
+place_pin -pin_name {ckvb[0]} -layer M5 -location {44.844000 183.600000} -pin_size {0.024 0.192} -force_to_die_boundary
 place_pin -pin_name {b[0]} -layer M4 -location {86.400000 15.660000} -pin_size {0.192 0.024} -force_to_die_boundary
 place_pin -pin_name {b[52]} -layer M4 -location {86.400000 15.756000} -pin_size {0.192 0.024} -force_to_die_boundary
 place_pin -pin_name {b[104]} -layer M4 -location {86.400000 15.852000} -pin_size {0.192 0.024} -force_to_die_boundary
