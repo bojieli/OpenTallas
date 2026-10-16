@@ -17,7 +17,7 @@ for seed in 1 17 91; do
   grep -q '^CCF_BANKPIPE_PASS' "$out/positive_seed$seed.log"
   echo "CCF_POSITIVE seed=$seed PASS"
 done
-for faultcase in 1 2 3; do
+for faultcase in 1 2 3 4 5; do
   vvp "$out/positive.vvp" +MODE=0 +SEED=17 +FAULTCASE="$faultcase" > "$out/faultcase$faultcase.log" 2>&1
   grep -q '^CCF_BANKPIPE_PASS' "$out/faultcase$faultcase.log"
   echo "CCF_FAULTCASE case=$faultcase PASS"
@@ -35,14 +35,18 @@ python3 - "$new" "$out" <<'PY'
 from pathlib import Path
 import sys
 s=Path(sys.argv[1]).read_text();out=Path(sys.argv[2])
-for name,old,new in [('wrongpop','.pop(pop_q)',".pop(1'b0)"),('wronghead','head_o<=head;',"head_o<=head ^ 512'b1;"),('earlymetadata','fd_p <= fd_mid;','fd_p <= fd_i;'),('wrongfaultphase','pop_p<=pop_mid;','pop_p<=fv_q[POPBIT];'),('ignorebankovf',' || yf_ovf)',')')]:
+for name,old,new in [('wrongpop','.pop(pop_q)',".pop(1'b0)"),('wronghead','head_o<=head;',"head_o<=head ^ 512'b1;"),('earlymetadata','fd_p <= fd_mid;','fd_p <= fd_i;'),('wrongfaultphase','pop_p<=pop_mid;','pop_p<=fv_q[POPBIT];'),('ignorebankovf',' || yf_ovf)',')'),('ignorebankhv',' || (pop_p && !yf_hv)','')]:
  assert s.count(old)==1,(name,s.count(old))
  (out/(name+'.sv')).write_text(s.replace(old,new))
 PY
-for mutant in wrongpop wronghead earlymetadata wrongfaultphase ignorebankovf; do
+for mutant in wrongpop wronghead earlymetadata wrongfaultphase ignorebankovf ignorebankhv; do
   compile "$mutant" "$out/$mutant.sv"
+  fault_probe=0
+  if [ "$mutant" = wrongfaultphase ]; then fault_probe=1; fi
+  if [ "$mutant" = ignorebankovf ]; then fault_probe=3; fi
+  if [ "$mutant" = ignorebankhv ]; then fault_probe=4; fi
   set +e
-  vvp "$out/$mutant.vvp" +MODE=0 +SEED=17 +FAULTCASE="$([ "$mutant" = ignorebankovf ] && echo 3 || echo 0)" > "$out/$mutant.log" 2>&1
+  vvp "$out/$mutant.vvp" +MODE=0 +SEED=17 +FAULTCASE="$fault_probe" > "$out/$mutant.log" 2>&1
   neg_rc=$?
   set -e
   test "$neg_rc" -ne 0

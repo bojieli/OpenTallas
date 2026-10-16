@@ -6,7 +6,7 @@ module tb_ccf_bankpipe;
  wire ro,rn,fo,fn;wire[FVW-1:0]vo,vn;wire[FDW-1:0]do_,dn;
  reg[6:0] allow_roots=7'b1111111;wire[4:0]bc={5{ck}}&allow_roots[6:2];
  wire ckn=ck&allow_roots[0],cks=ck&allow_roots[1];
- integer mode=0,seed=1,faultcase=0,cycle=0,k,checks=0,errors=0,tag,cclass,old_fault_seen=0,new_fault_seen=0;
+ integer mode=0,seed=1,faultcase=0,cycle=0,k,checks=0,errors=0,tag,cclass,old_fault_seen=0,new_fault_seen=0,old_first_fault=-1,new_first_fault=-1;
  reg[FDW+FVW+1:0] previous,older;
  integer samples_old[0:5],samples_new[0:5],lat_old[0:5],lat_new[0:5];
  reg[31:0] prng=32'h715ac3d9;
@@ -50,13 +50,22 @@ module tb_ccf_bankpipe;
      if(cycle==104)release old_dut.yf_ovf;
      if(cycle==105)release dut.g_bank[0].u_b.ovf;
     end
+    if(faultcase==4)begin
+     if(cycle>=40&&cycle<56)yv=1;
+     if(cycle==80)fv[2]=1;
+     if(cycle==80)force old_dut.yf_hv=1'b0;
+     if(cycle==82)force dut.valid[0]=1'b0;
+     if(cycle==84)release old_dut.yf_hv;
+     if(cycle==86)release dut.valid[0];
+    end
+    if(faultcase==5 && cycle==2350)fv[2]=1; // fresh post-reset fault near final component-output window
    end
    if(mode>=1&&mode<=7&&cycle==64)allow_roots[mode-1]=0;
    @(posedge ck);#0.001;
    if(cycle>20)begin
     checks=checks+1;
-    if(fo===1'b1)old_fault_seen=1;
-    if(fn===1'b1)new_fault_seen=1;
+    if(fo===1'b1)begin old_fault_seen=1;if(old_first_fault<0)old_first_fault=cycle;end
+    if(fn===1'b1)begin new_fault_seen=1;if(new_first_fault<0)new_first_fault=cycle;end
     if({rn,vn,dn,fn} !== older)begin
      errors=errors+1;
      if(errors<4)$display("CCF_DIFF cycle=%0d mode=%0d reset=%0b fvnew=%h fvexpected=%h",cycle,mode,rn,vn,older[FDW+FVW:FDW+1]);
@@ -79,8 +88,12 @@ module tb_ccf_bankpipe;
    end
    older=previous;previous={ro,vo,do_,fo};
   end
-  if(faultcase!=0 && (!old_fault_seen || !new_fault_seen))$fatal(1,"CCF_FAULT_NOT_OBSERVED case=%0d old=%0d new=%0d",faultcase,old_fault_seen,new_fault_seen);
   if(errors!=0)$fatal(1,"CCF_BANKPIPE_FAIL checks=%0d mismatches=%0d mode=%0d seed=%0d",checks,errors,mode,seed);
+  if(faultcase!=0 && (!old_fault_seen || !new_fault_seen))$fatal(1,"CCF_FAULT_NOT_OBSERVED case=%0d old=%0d new=%0d",faultcase,old_fault_seen,new_fault_seen);
+  if(faultcase!=0)begin
+   if(new_first_fault!=old_first_fault+2)$fatal(1,"CCF_FIRST_FAULT_PHASE_FAIL case=%0d old=%0d new=%0d",faultcase,old_first_fault,new_first_fault);
+   $display("CCF_FIRST_FAULT case=%0d old_edge=%0d new_edge=%0d extra_edges=2 reset_assert_release_checked=1",faultcase,old_first_fault,new_first_fault);
+  end
   if(mode==0 && faultcase==0)for(k=0;k<6;k=k+1)begin
    if(samples_old[k]!=16 || samples_new[k]!=16 || lat_old[k]!=1 || lat_new[k]!=3)
     $fatal(1,"CCF_LATENCY_FAIL class=%0d oldsamples=%0d newsamples=%0d oldedges=%0d newedges=%0d",k,samples_old[k],samples_new[k],lat_old[k],lat_new[k]);
