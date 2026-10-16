@@ -17,7 +17,7 @@ Recovered measurements:
 | Lane cuts V / H | 0.410 / 0.550 | Existing graph only; no new join edges |
 | Bit-weighted relay stages | 8.537 | Existing pin/lane model, reach 480 um; v5 7.47 |
 | RF route model maximum | 66 stages | Previously adopted production RF_RELAY is 36 |
-| New/reshaped reserves | 21.6304 mm2 | XC32 500x1200, SMW4 216x1100, sucx4 600x600, cij_SW 200x200 |
+| New/reshaped reserves | 22.296 mm2 | XC32 500x1200, SMW4 216x1100, sucx4 720x720, cij_SW 200x360 |
 | Reserves plus plan overlaps / outside | 0 / 0 | Lower-bound windows; mapped physical fit open |
 | Default v5 reproduction | Exact; zero differing blocks | Current planner vs compact660_v5 |
 
@@ -28,7 +28,7 @@ extra margin. No channel-capacity or timing gate changed.
 `recovery.json` binds source ports and hashes for XC, SMW and cij to af261fbcb;
 sucx/sfus bind the recovered uncommitted source hashes in the named suport tree.
 The corrected-window overlay is `corrected.P.json` and `corrected_windows.png`.
-It reshapes sucx to 600x600 and cij_SW to 200x200 in the empty COLL stack; the
+It reshapes sucx to 720x720 and cij_SW to 200x360 in the empty COLL stack; the
 SMW window moves beside sucx. The corrected overlay has zero overlaps/outside
 and passes the necessary total-perimeter capacity test for all45 source-bound
 new masters. Exact face assignment and full incident graphs remain OPEN.
@@ -48,7 +48,7 @@ pitch and 0.60 face utilization, even before assigning ports to incident faces:
 The four sucx instances now have larger preliminary windows; a distributed structure remains preferable if incident-face budgets fail. The suport source
 owner agrees a 600 x 600 lower-bound reserve still needs actual face proof, and
 four local slice-facing capture/store leaves may avoid the two 4096-bit buses
-crossing the full band. cij now has a 200x200 preliminary footprint; its 4429bits fit within the necessary5000bit perimeter budget. The SFU store
+crossing the full band. cij now has a 200x360 preliminary footprint; its IDX interface uses the longer east face. The SFU store
 has 1859 port bits against a 16105-bit perimeter capacity; this passes only the
 necessary perimeter test, not mapped fit or timing.
 
@@ -85,3 +85,41 @@ and `corrected_windows.png`: the16unused HC/SFU group regions support32XC
 reserves and the COLL stack has room for the enlarged sucx/cij plus narrow SMW.
 The die still has long quarter-core/RF paths and sparse centre-channel access;
 these images establish placement geometry only.
+
+
+Source-bound per-face successor (`join_faces.json`): sucx now assigns4136bits
+on each side to its two incident slices,4050bits on the COLL-facing face, and
+903bits on the remaining face. Utilizations are0.55147,0.54000,0.12040, below0.60.
+The smaller600x600 suggestion fails actual side-face incidence and was enlarged.
+cij uses E2184/360um=0.5824, S1218/200um=0.58464, N1024/200um=0.49152;
+its clock/reset/fault use W. Every source port bit is assigned once and all
+centres lie on0.012+0.048k tracks. PG stripe clearance and peer pin agreement
+remain open; these are not qualified production pins.
+
+`join_edges.json` recovers824incident edges (600from af261fbcb,224from the
+source-hashed recovered SU spec). All45new masters have incidence. Missing
+physical homes remain explicit for su_prog (16edges) and subr4 reset sources.
+Other non-leaf peer mappings state their scope; a parent rectangle is not an
+exact source pin. These824edges must replace the old aggregate graph edges
+appropriately before the full pin-cut claim can be updated.
+
+XC identity is now assigned by an exact minimax matching to actual SM consumers
+across each quarter's eight free windows, minimizing worst gap then total gap.
+This lowers worst XC-to-own-SM gap from9630.08to3430.08um (relay lower bound
+20to7 at480um), without moving a rectangle. Corresponding SW row-pair gaps are
+3430.08/1610.08/121.84/1941.84um; lower-bound stages7/3/0/4.
+The preferred structural alternative is an explicit XC child inside its own
+SM hierarchical frame near command capture, with the long low-rate programme
+load connection. This needs H-SM's actual parent placement/view grant; a child
+cannot silently occupy the current SM hard abstract. The band plan is a
+geometrically legal fallback, not the selected production implementation.
+
+Reproduce the source-bound additions after recovery_v6b.py:
+
+```sh
+python3 tools/hbm_die_v15/join_face_assignment.py results/arch/hbm_die_v15/compact_v6b_recovery
+python3 tools/hbm_die_v15/join_edge_audit.py results/arch/hbm_die_v15/compact_v6b_recovery
+```
+
+The updated corrected_windows.png was inspected with the image tool after
+reshaping sucx/cij and reassigning XC identities; zero overlaps/outside remain.

@@ -6,6 +6,7 @@ New reserves below are preliminary windows, never inherited physical views.
 """
 import argparse
 import hashlib
+import itertools
 import json
 import subprocess
 import sys
@@ -44,15 +45,24 @@ def main():
         # Reserve above the DMA/operand stack, with no change to its footprints.
         coll = p[f'coll_{q}']
         y = coll['y'] + coll['h'] + 742 if q.startswith('S') else coll['y'] - 1842
-        x = coll['x'] + 620 if q.endswith('W') else coll['x'] + coll['w'] - 836
+        x = coll['x'] + 740 if q.endswith('W') else coll['x'] + coll['w'] - 956
         homes[f'smw_{q}'] = dict(x=round(x, 3), y=round(y, 3), w=216, h=1100, orient='R0')
         # Correct the impossible monolithic draft window, without claiming a
         # legal incident-face assignment or replacing the production structure.
-        x = coll['x'] if q.endswith('W') else coll['x'] + coll['w'] - 600
-        cy = y if q.startswith('S') else y + 500
-        homes[f'sucx_{q}'] = dict(x=round(x, 3), y=round(cy, 3), w=600, h=600, orient='R0')
+        x = coll['x'] if q.endswith('W') else coll['x'] + coll['w'] - 720
+        cy = y if q.startswith('S') else y + 380
+        homes[f'sucx_{q}'] = dict(x=round(x, 3), y=round(cy, 3), w=720, h=720, orient='R0')
         if q == 'SW':
-            homes['cij_SW'] = dict(x=coll['x'], y=round(coll['y'] + coll['h'] + 21.6, 3), w=200, h=200, orient='R0')
+            homes['cij_SW'] = dict(x=coll['x'], y=round(coll['y'] + coll['h'] + 21.6, 3), w=200, h=360, orient='R0')
+    # Calendar identity is not bank-pair identity. Assign the eight free windows
+    # to their actual SM consumers, minimizing worst critical gap, then total.
+    for q in ('SW', 'SE', 'NW', 'NE'):
+        windows = [homes[f'xc_{q}{k}'] for k in range(8)]
+        gaps = [[F.gap(w, p[f'sm_{q}{k}'])[0] for w in windows] for k in range(8)]
+        perm = min(itertools.permutations(range(8)),
+                   key=lambda t: (max(gaps[k][t[k]] for k in range(8)), sum(gaps[k][t[k]] for k in range(8))))
+        for k in range(8):
+            homes[f'xc_{q}{k}'] = windows[perm[k]]
     source = {}
     for n, b in homes.items():
         if n not in net['instances']:
