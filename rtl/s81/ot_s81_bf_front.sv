@@ -138,7 +138,7 @@ module ot_s81_bf_front #(
     output wire [5*NSEG-1:0] c1_so_n,
     input  wire [1:0]    c_qy_bkf_in,     // the two columns' registered fault ORs
     input wire io_clk, // independent physical pin/seam clock root
-    input wire [37:0] f_prog, // fixed core-edge programme, pin->issue +1 edge
+    input wire [37:0] f_prog, // fixed core-edge programme, pin->issue +2 edges (pin flop, core flop)
     output wire         busy,
     output wire         fault,
     output wire         hph           // HALF: 1 in the clk cycle that ends on a gated (element) edge; 1 when HALF = 0
@@ -152,6 +152,25 @@ module ot_s81_bf_front #(
         always @(posedge pin_clk or negedge rst_n)
             if (!rst_n) programme_pin_q <= 38'd0;
             else programme_pin_q <= f_prog;
+    end endgenerate
+    // Clock structure (2026-10-15, gate ec84ce526 hold repair 119k buffers): io_clk (pin/seam root, ~200-250 ps) and
+    // ck (core root, gated subtrees ~260-310 ps) are two physical roots of ONE die clock (the die ties both to the
+    // column clock). Every io_clk -> ck crossing is register -> lockup latch (transparent while io_clk is low) ->
+    // register with no fan-out in between, so its hold margin is ~T/2 by construction instead of buffers on every
+    // core endpoint. The programme used to fan from programme_pin_q straight into the issue cone (thousands of core
+    // endpoints); it now lands in programme_core_q (core clock) first: +1 edge, absorbed by the producer
+    // (ot_s81_bf_prog_seq DELTA -1: the compiled issue edges relative to go are unchanged).
+    reg [37:0] programme_lat;
+    (* keep = 1 *) reg [37:0] programme_core_q;
+    generate if (STATIC_PROGRAM != 0) begin : g_static_programme_core
+        always_latch if (!pin_clk) programme_lat = programme_pin_q;
+        always @(posedge clk or negedge rst_n)
+            if (!rst_n) programme_core_q <= 38'd0;
+`ifdef BF_PROG_MUTANT_CORE_BYPASS
+            else programme_core_q <= f_prog;                // negative control: programme one edge early
+`else
+            else programme_core_q <= programme_lat;
+`endif
     end endgenerate
     // bf-arch: the partial outputs leave from the hardened columns, not from this block
     wire [NB-1:0] pv; wire [32*NB-1:0] pval; wire [16*NB-1:0] prow; wire [5*NB-1:0] pseg, pnseg; wire [NB-1:0] perr;
@@ -280,12 +299,30 @@ module ot_s81_bf_front #(
                 r_lxb_sv = r_xb_sv; r_lxb_u = r_xb_u; r_lxb_d = r_xb_d;
             end
         end
-        assign cfg_v_i = r_cfg_v;
-        assign cfg_a_i = r_cfg_a;
-        assign cfg_d_i = r_cfg_d;
-        assign go_i = r_go;
-        assign go_bf_i = r_go_bf;
-        assign xs_v_i = r_xs_v;
+        reg r_lc_cfg_v;
+        reg [4:0] r_lc_cfg_a;
+        reg [47:0] r_lc_cfg_d;
+        reg r_lc_go;
+        reg r_lc_go_bf;
+        reg r_lc_xs_v;
+        reg r_lc_xb_v;
+        if (STATIC_PROGRAM != 0 && PINLAT != 0) begin : g_lat_ctl
+            always_latch if (!pin_clk) begin
+`ifdef BF_CTL_LAT_MUTANT_GO
+                r_lc_cfg_v = r_cfg_v; r_lc_cfg_a = r_cfg_a; r_lc_cfg_d = r_cfg_d; r_lc_go = 1'b0; r_lc_go_bf = r_go_bf; r_lc_xs_v = r_xs_v; r_lc_xb_v = r_xb_v;   // negative control: go lost
+`else
+                r_lc_cfg_v = r_cfg_v; r_lc_cfg_a = r_cfg_a; r_lc_cfg_d = r_cfg_d; r_lc_go = r_go; r_lc_go_bf = r_go_bf; r_lc_xs_v = r_xs_v; r_lc_xb_v = r_xb_v;
+`endif
+            end
+        end else begin : g_nolat_ctl
+            always @* begin r_lc_cfg_v = r_cfg_v; r_lc_cfg_a = r_cfg_a; r_lc_cfg_d = r_cfg_d; r_lc_go = r_go; r_lc_go_bf = r_go_bf; r_lc_xs_v = r_xs_v; r_lc_xb_v = r_xb_v; end
+        end
+        assign cfg_v_i = r_lc_cfg_v;
+        assign cfg_a_i = r_lc_cfg_a;
+        assign cfg_d_i = r_lc_cfg_d;
+        assign go_i = r_lc_go;
+        assign go_bf_i = r_lc_go_bf;
+        assign xs_v_i = r_lc_xs_v;
         assign xs_p_i = r_lxs_p;
         assign xs_b_i = r_lxs_b;
         assign xs_sv_i = r_lxs_sv;
@@ -295,7 +332,7 @@ module ot_s81_bf_front #(
         assign xs_e1_i = r_lxs_e1;
         assign xs_pos_i = r_lxs_pos;
         assign xb_pos_i = r_lxb_pos;
-        assign xb_v_i = r_xb_v;
+        assign xb_v_i = r_lc_xb_v;
         assign xb_b_i = r_lxb_b;
         assign xb_sv_i = r_lxb_sv;
         assign xb_u_i = r_lxb_u;
@@ -338,9 +375,9 @@ module ot_s81_bf_front #(
             .EARLY(EARLY), .CG(CG), .DRAIN(RDRAIN), .FAST(FAST), .CUT(CUT), .PP(PP), .FRONT_PAR(FRONT_PAR), .BP(BP),
             .QTIMING_FIX(1), .QPIPE(1), .QP_XS(1), .QP_CAP(0), .QP_P1(1), .QP_CSAM(10), .QZ(1), .QZ_NS(8), .QZ_NE(4),
             .QY(1), .QX(10), .QBF(RECUT), .QZE(QZE), .TCG(TCG), .BXST(BXST), .FXST(FXST), .GRADUAL_RNE(GRADUAL_RNE), .INSTANCE(INSTANCE), .STATIC_PROGRAM(STATIC_PROGRAM)) u_front (
-            .prog_issue_pin(programme_pin_q[0]), .prog_addr_pin(programme_pin_q[14:1]),
-            .prog_operand_pin(programme_pin_q[29:15]), .prog_segment_pin(programme_pin_q[32:30]),
-            .prog_half_pin(programme_pin_q[33]), .prog_chain_pin(programme_pin_q[37:34]),
+            .prog_issue_pin(programme_core_q[0]), .prog_addr_pin(programme_core_q[14:1]),
+            .prog_operand_pin(programme_core_q[29:15]), .prog_segment_pin(programme_core_q[32:30]),
+            .prog_half_pin(programme_core_q[33]), .prog_chain_pin(programme_core_q[37:34]),
             .clk(eclk), .rst_n_pin(rst_n), .cfg_v_pin(cfg_v_i), .cfg_a_pin(cfg_a_i), .cfg_d_pin(cfg_d_i), .go_pin(go_i),
             .go_bf_pin(go_bf_i), .xs_v_pin(xs_v_i), .xs_p_pin(xs_p_i), .xs_b_pin(xs_b_i), .xs_sv_pin(xs_sv_i),
             .xs_q0_pin(xs_q0_i), .xs_e0_pin(xs_e0_i), .xs_q1_pin(xs_q1_i), .xs_e1_pin(xs_e1_i), .xs_pos_pin(xs_pos_i),

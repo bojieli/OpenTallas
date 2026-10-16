@@ -1,5 +1,7 @@
 `timescale 1ns/1ps
 // Actual die-master pins. Functional clocks share a phase; physical skew is a separate gate.
+// 2026-10-15 clock-structure pass: programme pin -> io_clk flop -> lockup latch -> ck core flop -> issue (+1 edge vs
+// the first static front; the producer absorbs it with DELTA -1), so every public age below is one edge later.
 module tb_bf_static_front;
   reg clk=0; always #5 clk=~clk;
   wire io_clk=clk;
@@ -16,7 +18,7 @@ module tb_bf_static_front;
       .xb({bd,bu,4'hf,bb,(bv && m!=1),3'd0,1'b1}),
       .f_prog(prog ^ (m==2 ? 38'd2:38'd0)),.c0(c0[m]),.c1(c1[m]),.st(st[m]));
   end
-  reg [37:0] prev_prog=0,prev2_prog=0,prev3_prog=0;
+  reg [37:0] prev_prog=0,prev2_prog=0,prev3_prog=0,prev4_prog=0;
   reg [37:0] sampled;
   reg [16:0] expected_tag;
   integer n=0,b,j,k;
@@ -27,30 +29,30 @@ module tb_bf_static_front;
     #1;
     if(rst) begin
       for(integer z=0;z<3;z=z+1) begin
-        if(c0[z][0] !== prev_prog[0] || c1[z][0] !== prev_prog[0])
+        if(c0[z][0] !== prev2_prog[0] || c1[z][0] !== prev2_prog[0])
           $fatal(1,"public pin issue edge shifted variant=%d",z);
-        if(prev_prog[0] && (c0[z][14:1] !== prev_prog[14:1] || c1[z][14:1] !== prev_prog[14:1]))
+        if(prev2_prog[0] && (c0[z][14:1] !== prev2_prog[14:1] || c1[z][14:1] !== prev2_prog[14:1]))
           $fatal(1,"public pin address shifted");
-        if(c0[z][15] !== prev2_prog[0] || c1[z][15] !== prev2_prog[0])
+        if(c0[z][15] !== prev3_prog[0] || c1[z][15] !== prev3_prog[0])
           $fatal(1,"public i1 valid shifted");
-        if(prev2_prog[0]) begin
-          expected_tag={prev2_prog[37:34],3'd0,4'd0,
-            prev2_prog[25:23]==3'd0,prev2_prog[25:23]==3'd7,
-            (prev2_prog[25:23]==3'd7 && prev2_prog[22:15]==8'd7),3'd0};
+        if(prev3_prog[0]) begin
+          expected_tag={prev3_prog[37:34],3'd0,4'd0,
+            prev3_prog[25:23]==3'd0,prev3_prog[25:23]==3'd7,
+            (prev3_prog[25:23]==3'd7 && prev3_prog[22:15]==8'd7),3'd0};
           if(c0[z][34:18] !== expected_tag || c1[z][34:18] !== expected_tag)
             $fatal(1,"public source-calendar tag mismatch actual=%h expected=%h",c0[z][34:18],expected_tag);
         end
       end
       // Data traverses PINREG/PINLAT, the real XF8 FIFO, i1/i2x and CPIN.
       // The expected word comes directly from the immutable input programme.
-      if(prev3_prog[0]) begin
-        if(c0[0][290:35] !== 256'(prev3_prog[22:15]+1) ||
-           c1[0][290:35] !== 256'(prev3_prog[22:15]+1))
+      if(prev4_prog[0]) begin
+        if(c0[0][290:35] !== 256'(prev4_prog[22:15]+1) ||
+           c1[0][290:35] !== 256'(prev4_prog[22:15]+1))
           $fatal(1,"public operand payload mismatch or data age shifted");
       end
       if(prev_prog[0]) n=n+1;
     end
-    prev3_prog=prev2_prog;prev2_prog=prev_prog;prev_prog=sampled;
+    prev4_prog=prev3_prog;prev3_prog=prev2_prog;prev2_prog=prev_prog;prev_prog=sampled;
   end
   initial begin
     repeat(3)tick();rst=1;repeat(5)tick();

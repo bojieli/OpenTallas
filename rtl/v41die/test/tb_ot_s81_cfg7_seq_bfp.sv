@@ -20,7 +20,7 @@ module tb_ot_s81_cfg7_seq_bfp;
     initial begin
         for (p = 0; p < (1 << PHW); p = p + 1) begin
             reg [81:0] d; reg [13:0] n; reg [7:0] per, off;
-            rng = nx(rng); n = 14'(rng % 24); rng = nx(rng); per = 8'(2 + rng % 6); rng = nx(rng); off = 8'(1 + rng % 9);
+            rng = nx(rng); n = 14'(rng % 24); rng = nx(rng); per = 8'(2 + rng % 6); rng = nx(rng); off = 8'(2 + rng % 9);   // OFF >= 2: DELTA -1 (static front programme age 2)
             rng = nx(rng);
             d = 82'd0;
             d[13:0] = n; d[14] = rng[0]; d[22:15] = off; d[30:23] = per; d[44:31] = 14'(rng[15:2]); d[58:45] = 14'h7f;

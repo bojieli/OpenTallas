@@ -20,7 +20,9 @@ FILES = ['tests/s81/tb_bf_static_front.sv', MASTER, FRONT,
          'rtl/v41rom/ot_v41_rom_elem_w10.sv', 'rtl/v41rom/ot_v41_kreg.sv',
          'rtl/common/ot_prefix.sv', 'rtl/hdc/ot_hdc_cg.sv']
 MUTANTS = {
-    'programme_register_bypass': (FRONT, '.prog_issue_pin(programme_pin_q[0])', '.prog_issue_pin(f_prog[0])'),
+    'programme_register_bypass': ('define', 'BF_PROG_MUTANT_CORE_BYPASS', ''),
+    'control_latch_go_lost': ('define', 'BF_CTL_LAT_MUTANT_GO', ''),
+    'read_pointer_copy_stall': ('define', 'BF_FRD_MUTANT_COPY', ''),
     'cpin_register_bypass': (MASTER, '.CPIN(1)', '.CPIN(0)'),
     'address_check_removed': (CORE, 'prog_addr_pin != a_ctr ||', "1'b0 ||"),
     'pinlat_payload_lsb_loss': ('define', 'PINLAT_MUTANT_B0', ''),
@@ -64,8 +66,8 @@ def main():
             results[name]={'exit':run.returncode,'output':run.stdout.strip()}
     print(json.dumps({'scope':'Actual die-front control and payload boundary component; not BF numerical columns, CFG7 workload, production throughput or physical skew qualification',
                       'source_sha256':{f:hashlib.sha256((ROOT/f).read_bytes()).hexdigest() for f in FILES},
-                      'pin_age_edges':{'issue':1,'i1_valid_and_tag':2,'operand_q0':3},
-                      'compiled_slots':64,'clock_roots':'ck and io_clk distinct ports, tied at fixed phase in functional bench',
+                      'pin_age_edges':{'issue':2,'i1_valid_and_tag':3,'operand_q0':4},
+                      'compiled_slots':64,'clock_roots':'ck and io_clk: two physical roots of one die clock (tied at the die); every io_clk->ck crossing register->lockup latch->register; tied in the functional bench',
                       'results':results},indent=2))
 
 if __name__=='__main__':main()

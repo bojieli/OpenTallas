@@ -62,4 +62,59 @@ def transform(fc):
                 f_q0[f_wr + bpre[bk]] <= xbd[256*bk +: 256];
                 f_identity[f_wr + bpre[bk]] <= {1'b1, b_identity_pb, b_identity_units[8*bk +: 8]};
             end''')
+    return transform_frd(fc)
+
+
+def transform_frd(fc):
+    """Clock-structure pass 2026-10-15 (gate ec84ce526: f_rd[1] drove 4,378 read-mux loads, f_rd[0] 2,191): in the
+    static programme every read slice selects with its own copy of the read pointer (0 cycles)."""
+    def replace(old, new):
+        nonlocal fc
+        assert fc.count(old) == 1, (old, fc.count(old))
+        fc = fc.replace(old, new)
+
+    replace('    reg [XW-1:0] f_wr, f_rd;', """    reg [XW-1:0] f_wr, f_rd;
+    // FIFO read data. Static programme: 17 kept read-pointer copies (16 x 32-bit q0/q1 slices + the exponent/identity
+    // slice), each loaded with f_rd's own next state on the same edge (0 cycles, <= ~270 mux loads per copy bit);
+    // physical/common_flow/ot_keep_regs.tcl keeps the copies apart. Legacy: the original single pointer.
+    wire [255:0] rd_q0, rd_q1;
+    wire [9:0] rd_e0, rd_e1;
+    wire [14:0] rd_id;""")
+    replace("prog_chain_pin != w_cnt || f_identity[f_rd] != programme_operand;",
+            "prog_chain_pin != w_cnt || rd_id != programme_operand;")
+    replace("""        i1_q0 <= (use_hi && QPIPE == 0) ? f_q1[f_rd] : f_q0[f_rd];
+        i1_e0 <= (use_hi && QPIPE == 0) ? f_e1[f_rd] : f_e0[f_rd];""", """        i1_q0 <= (use_hi && QPIPE == 0) ? rd_q1 : rd_q0;
+        i1_e0 <= (use_hi && QPIPE == 0) ? rd_e1 : rd_e0;""")
+    replace("        i1_q1 <= f_q1[f_rd]; i1_e1 <= f_e1[f_rd];", "        i1_q1 <= rd_q1; i1_e1 <= rd_e1;")
+    replace("""    // QPIPE: the FP8 half select is applied one stage later (i1 holds both slices and the select)
+    reg i1_uh;""", """    if (STATIC_PROGRAM != 0) begin : g_frd
+        localparam integer FRC = 17;
+        (* keep *) reg [FRC*XW-1:0] f_rdc;
+        always @(posedge gclk or negedge rst_n)
+            if (!rst_n) f_rdc <= '0;
+            else if (go_em) f_rdc <= '0;
+            else if (pop) for (int k = 0; k < FRC; k++)
+`ifdef BF_FRD_MUTANT_COPY
+                if (k != 0) f_rdc[XW*k +: XW] <= f_rdc[XW*k +: XW] + 1'b1;     // negative control: slice 0 copy stalls
+`else
+                f_rdc[XW*k +: XW] <= f_rdc[XW*k +: XW] + 1'b1;
+`endif
+        genvar fs;
+        for (fs = 0; fs < 8; fs = fs + 1) begin : g_s
+            assign rd_q0[32*fs +: 32] = f_q0[f_rdc[XW*fs +: XW]][32*fs +: 32];
+            assign rd_q1[32*fs +: 32] = f_q1[f_rdc[XW*(8+fs) +: XW]][32*fs +: 32];
+        end
+        assign rd_e0 = f_e0[f_rdc[XW*16 +: XW]]; assign rd_e1 = f_e1[f_rdc[XW*16 +: XW]];
+        assign rd_id = f_identity[f_rdc[XW*16 +: XW]];
+`ifdef BF_FRD_CHECK
+        always @(negedge clk) if (rst_n) for (int k = 0; k < FRC; k++) if (f_rdc[XW*k +: XW] !== f_rd) begin
+            $display("BF_FRD_CHECK FAIL: copy %0d %0d != f_rd %0d at %t", k, f_rdc[XW*k +: XW], f_rd, $time); $fatal(1);
+        end
+`endif
+    end else begin : g_frd1
+        assign rd_q0 = f_q0[f_rd]; assign rd_q1 = f_q1[f_rd]; assign rd_e0 = f_e0[f_rd]; assign rd_e1 = f_e1[f_rd];
+        assign rd_id = f_identity[f_rd];
+    end
+    // QPIPE: the FP8 half select is applied one stage later (i1 holds both slices and the select)
+    reg i1_uh;""")
     return fc

@@ -91,15 +91,15 @@
   "hold_margin_ns": 0.03,
   "macro_halo_um": 5.4
  },
- "structural_change": "Actual named BF static programme core replaces availability-qualified issue; independent core/IO physicalclockroots <=15k target with real relatedclockdata paths. CPIN1 perface776bit egress, resetrelay/face, exact3230oldlive pinrectangles plus38programme pins; no relaxed timing.",
+ "structural_change": "BF clock-structure pass 2026-10-15 (S-ELEM-PQ, gate ec84ce526 FAILED CTS: hold repair ~119k buffers, util 102.8%; io_clk 202-252 ps vs ck 259-307 ps, boundary->core -158.9 ps because the io_clk programme flop fanned straight into the core issue cone). ck and io_clk stay two related roots of ONE die clock (same_pll_fixed_phase; one root measured 329 ps > 300 at 16,824 sinks, gate 75030). Every io_clk->ck crossing is now register -> lockup latch (io_clk low) -> register with no fan-out: programme pin flop -> latch -> programme_core_q (ck) -> issue (+1 edge, producer DELTA -1, issue edges vs go unchanged); cfg/go/go_bf/xs_v/xb_v through latches like the payload (0 cycles). f_rd replicated 17x (one kept copy per 32-bit read slice, was 4,378 loads); CPIN seam reset relay 1 -> 5 per face (<=160 loads). Outline/pins unchanged; no relaxed timing.",
  "reroute_reason": {
   "kind": "rtl_change",
-  "why": "Newactualstaticprogramme core withperfaceegress andseparatephysicalclockroot; oldfrontnativepin/childauditFAIL despite CLOSED",
-  "fix": "Use actual static programme core with independent ck[0]/io_clk roots and registered programme/payload/CPIN boundaries; exact inherited live pin locations plus f_prog38/io_clk. Related-root crossings remain timed. Actual per-root census, CTS/native qualification remain required."
+  "why": "CTS gate ec84ce526 FAILED: cross-root hold (io_clk programme flop fanning into the ck issue cone, -158.9 ps) -> 119k hold buffers, DPL util 102.8%; f_rd 4,378 loads; seam reset 775 loads",
+  "fix": "Register->lockup latch->register on every io_clk->ck crossing (programme +1 core edge absorbed by producer DELTA -1), 17 kept f_rd copies, 5 seam reset relays/face; two related roots of one die clock kept (single root measured 329 ps > 300)."
  },
  "job": {
-  "owner": "Codex:s81-pq-physical-1103",
-  "purpose": "Actual named BF static programme core replaces availability-qualified issue; independent core/IO physicalclockroots <=15k target with real relatedclockdata paths. CPIN1 perface776bit egress, resetrelay/face, exact3230oldlive pinrectangles plus38programme pins; no relaxed timing.",
+  "owner": "Claude:S-ELEM-PQ-1825",
+  "purpose": "BF clock-structure pass 2026-10-15 (S-ELEM-PQ, gate ec84ce526 FAILED CTS: hold repair ~119k buffers, util 102.8%; io_clk 202-252 ps vs ck 259-307 ps, boundary->core -158.9 ps because the io_clk programme flop fanned straight into the core issue cone). ck and io_clk stay two related roots of ONE die clock (same_pll_fixed_phase; one root measured 329 ps > 300 at 16,824 sinks, gate 75030). Every io_clk->ck crossing is now register -> lockup latch (io_clk low) -> register with no fan-out: programme pin flop -> latch -> programme_core_q (ck) -> issue (+1 edge, producer DELTA -1, issue edges vs go unchanged); cfg/go/go_bf/xs_v/xb_v through latches like the payload (0 cycles). f_rd replicated 17x (one kept copy per 32-bit read slice, was 4,378 loads); CPIN seam reset relay 1 -> 5 per face (<=160 loads). Outline/pins unchanged; no relaxed timing.",
   "benches": [
    {
     "name": "actual_static_front_boundary",

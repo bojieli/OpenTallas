@@ -8,7 +8,7 @@
 // prow, pseg, pnseg, perr, ppos}) plus the BF stream port xb = {go_bf, xb_pos, xb_v, xb_b, xb_sv, xb_u, xb_d}.
 // Same pins as ot_s81_bf_native (the transaction shadow of tools/s81/bf_txn_bench.py --die-pair).
 // ---------------------------------------------------------------------------------------------------------------------
-module bf_die_pair_static #(parameter INSTANCE = "", parameter integer DELTA = 0, parameter DESC = "bf_desc.hex") (
+module bf_die_pair_static #(parameter INSTANCE = "", parameter integer DELTA = -1, parameter DESC = "bf_desc.hex") (
     input  wire          clk, rst_n,
     input  wire          cfg_v, input wire [4:0] cfg_a, input wire [47:0] cfg_d,
     input  wire          go, go_bf,
