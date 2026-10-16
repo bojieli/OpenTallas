@@ -3,8 +3,8 @@
 // 3:4 clocks and actual VM/LG. Physical epoch/skew and closure remain OPEN.
 module tb_hbm_su_native_multirate_top;
  parameter integer NE=7116,PE=9489,NW=135184,NS=9,RF_RELAY=36,MUT=0,
-                   MLAT=4,ALAT=3,LEAF=1,MUT_LG=0,MUT_BANK=0;
- localparam integer QW=2422,FO=8+23+4*(MLAT-3)+(ALAT-3)+LEAF;
+                   MLAT=4,ALAT=3,LEAF=1,MUT_LG=0,MUT_BANK=0,PIN_REG=0;
+ localparam integer QW=2422,FO=8+23+4*(MLAT-3)+(ALAT-3)+LEAF+4*PIN_REG;
  localparam realtime HALF_Q=1250.0/9.0;
  reg serial_clk=0,stream_clk=0,rst_n=0,bridge_rst_n=0;
  integer half_tick=-1,epoch_half=-1;
@@ -57,7 +57,7 @@ module tb_hbm_su_native_multirate_top;
   .cal_rd(cal_line[31:0]),.cal_wr(cal_line[63:32]),.rslot_v(32'hffffffff),.wslot_v(32'hffffffff),
   .rslot(64'd0),.wslot(wslot),.preload_wq(preload_wq),.preload_done(preload_done),.lg_fault(lg_fault),.bank_status(bank_status));
  wire[19:0]fault;
- ot_hbm_su_static_top #(.MULTIRATE(1),.RF_RELAY(RF_RELAY),.MLAT(MLAT),.ALAT(ALAT),.LEAF(LEAF),.MUT(MUT)) dut(
+ ot_hbm_su_static_top #(.MULTIRATE(1),.RF_RELAY(RF_RELAY),.MLAT(MLAT),.ALAT(ALAT),.LEAF(LEAF),.MUT(MUT),.PIN_REG(PIN_REG)) dut(
   .pg_clk({16{stream_clk}}),.clk_lane({4096{serial_clk}}),.clk_insert({2048{serial_clk}}),.rst_lane_n({512{rst_n}}),
   .clk_bcast({64{serial_clk}}),.rst_bcast_n({64{rst_n}}),.clk_bank({512{serial_clk}}),.clk_bank_macro({3072{serial_clk}}),
   .clk_rf({256{serial_clk}}),.clk_ctl({16{serial_clk}}),.clk_core({4{serial_clk}}),.clk_red({4{serial_clk}}),

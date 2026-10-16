@@ -13,7 +13,7 @@
 // slice p/2), rf_rd_cmd [6 classes x {v,addr8}], red_cmd {v,op3,a10,b10,dst10,tag32,osel,lane7}.
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_hbm_su_static_quarter #(
- parameter integer QID=0,READ_RETURN=10,WRITE_RETURN=7,FETCH_EXTRA_EDGES=2,MLAT=3,ALAT=3,LEAF=0,MUT=0,MULTIRATE=0
+ parameter integer QID=0,READ_RETURN=10,WRITE_RETURN=7,FETCH_EXTRA_EDGES=2,MLAT=3,ALAT=3,LEAF=0,MUT=0,MULTIRATE=0,PIN_REG=0
 )(
  input wire [3:0] pg_clk,
  input wire [1023:0] clk_lane, input wire [511:0] clk_insert, input wire [127:0] rst_lane_n,
@@ -41,7 +41,7 @@ module ot_hbm_su_static_quarter #(
  wire [11:0] red_sel={red_cmd[73],red_cmd[72:70],red_cmd[7],red_cmd[6:0]};
  for(genvar g=0;g<4;g=g+1)begin:g_slice
   ot_hbm_su_static_pgslice #(.QID(QID),.G(g),.READ_RETURN(READ_RETURN),.WRITE_RETURN(WRITE_RETURN),
-   .FETCH_EXTRA_EDGES(FETCH_EXTRA_EDGES),.MLAT(MLAT),.ALAT(ALAT),.LEAF(LEAF),.MUT(MUT),.MULTIRATE(MULTIRATE)) u_slice(
+   .FETCH_EXTRA_EDGES(FETCH_EXTRA_EDGES),.MLAT(MLAT),.ALAT(ALAT),.LEAF(LEAF),.MUT(MUT),.MULTIRATE(MULTIRATE),.PIN_REG(PIN_REG)) u_slice(
    .pg_clk(pg_clk[g]),
    .clk_lane({clk_lane[(64+16*g)*8+:128],clk_lane[(16*g)*8+:128]}),
    .clk_insert({clk_insert[(64+16*g)*4+:64],clk_insert[(16*g)*4+:64]}),

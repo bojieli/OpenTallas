@@ -1,0 +1,25 @@
+FAIL hfd_hgi_vm_calendar_NE             x1      INPUT_UNCONNECTED in_unconn=cfg_addr,cfg_data,cfg_we,start_base,start_limit,start_loops,start_v
+FAIL hfd_hgi_vm_calendar_NW             x1      INPUT_UNCONNECTED in_unconn=cfg_addr,cfg_data,cfg_we,start_base,start_limit,start_loops,start_v
+FAIL hfd_hgi_vm_calendar_SE             x1      INPUT_UNCONNECTED in_unconn=cfg_addr,cfg_data,cfg_we,start_base,start_limit,start_loops,start_v
+FAIL hfd_hgi_vm_calendar_SW             x1      INPUT_UNCONNECTED in_unconn=cfg_addr,cfg_data,cfg_we,start_base,start_limit,start_loops,start_v
+FAIL hfd_hgi_vms_static_NE              x1      INPUT_UNCONNECTED in_unconn=dq
+FAIL hfd_hgi_vms_static_NW              x1      INPUT_UNCONNECTED in_unconn=cq,dq
+FAIL hfd_hgi_vms_static_SE              x1      INPUT_UNCONNECTED in_unconn=dq
+FAIL hfd_hgi_vms_static_SW              x1      INPUT_UNCONNECTED in_unconn=dq
+FAIL ot_hbm_argmax_static_sw            x1      INPUT_UNCONNECTED in_unconn=a_base,a_mirror,am_stream,die_id,go,imm_a,mode,n
+FAIL ot_hbm_host_packet                 x1      INPUT_UNCONNECTED in_unconn=fault,h_araddr,h_arvalid,h_awaddr,h_awvalid,h_bready,h_dma_arready,h_dma_awready
+FAIL ot_hbm_host_static_ingress         x1      INPUT_UNCONNECTED in_unconn=block_ready,program_active,program_fault
+FAIL ot_hbm_idx_client_static_sw        x1      INPUT_UNCONNECTED in_unconn=gbase,keep_bitmap,keep_en,key_lines,length,nkeys,program_addr,program_data
+FAIL ot_hbm_su_programme                x1      INPUT_UNCONNECTED in_unconn=cfg_bank,cfg_data,cfg_row,cfg_we,length,start
+FAIL ot_hbm_su_static_pgslice           x16     INPUT_UNCONNECTED in_unconn=bridge_rst_n
+FAIL ot_hbm_su_static_qcore             x4      INPUT_UNCONNECTED in_unconn=rf_drain_now
+FAIL ot_hbm_svc_sm_group                x32     INPUT_UNCONNECTED in_unconn=desc_addr,desc_data,desc_we,program_cfg_addr,program_cfg_data,program_cfg_we,run_base,run_count
+FAIL ot_hbm_vm_lg_static_split_term     x4      INPUT_UNCONNECTED in_unconn=local_rq,local_wq
+FAIL ot_hbm_xp_aq_tree13                x8      INPUT_UNCONNECTED in_unconn=fp4
+FAIL ot_hfd_coll_q2_static_host_v4      x3      INPUT_UNCONNECTED in_unconn=inj_d,phy_up,rc_d,rc_tag,rc_v,rx_pin_flit,rx_pin_v
+FAIL ot_hfd_coll_q3_static_host_v4      x1      INPUT_UNCONNECTED in_unconn=inj_d,phy_up,rc_d,rc_tag,rc_v,rx_pin_flit,rx_pin_v
+FAIL ot_hgi_dma_back_static_vp4_banks   x4      INPUT_UNCONNECTED in_unconn=cycle,drain_at,issue_at,mv,mv_v,mv_wb_bank,mv_wb_epoch,wa
+FAIL ot_hgi_sfu_scheduled_engine        x4      INPUT_UNCONNECTED in_unconn=cfg_addr,cfg_data,cfg_stripe,cfg_we,io_cfg_addr,io_cfg_data,io_cfg_stripe,io_cfg_we
+FAIL ot_hgi_sm_xload_cl2_ctl            x4      INPUT_UNCONNECTED in_unconn=x_base,x_fmt,x_n,x_p,x_space,x_stride,x_v,x_xb
+FAIL ot_pdie_serdes                     x9      INPUT_UNCONNECTED in_unconn=tx
+DIE_PORT_BIND FAIL masters=46 instances=1245 unbound_masters=0 stub_masters=0 ambiguous_masters=0 port_not_in_rtl=0 width_mismatch=0 input_unconnected=177 input_tied=0 unparsed_connections=0 undriven_net_bits=7589 multi_driven_net_bits=0 top_assigns=0 params_not_in_rtl=0 strap_ports=0 pad_bits=2288
