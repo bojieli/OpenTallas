@@ -1,0 +1,19 @@
+ot-run: ot-epyc1tb     admits  -209 GB (avail 498, growth 154, headroom 64, waiters 1/480 GB) load 60/128 running 20 disk 231 GB 
+ot-run: ot-epyc4       admits  -182 GB (avail 315, growth 164, headroom 48, waiters 1/270 GB) load 123/128 running 37 disk 305 GB 
+ot-run: ot-pve1        skipped: load hold: load1 > 1.5 x cores
+ot-run: ot-agidock128  admits    27 GB (avail 68, growth 50, headroom 24, waiters 0/0 GB) load 26/64 running 12 disk 162 GB 
+ot-run: -> ot-agidock128
+ot-heavy: waiting for memory on vm-xry57mhfyn: need 24 GB, admissible 15 GB: available 68 GB, growth charged 50 GB, young 28 GB, headroom 24 GB, real floor 25 GB
+ot-heavy: admitted on vm-xry57mhfyn as oth-ubuntu-1350646-1792096021 after 181 s
+GATE_SOURCE_ARCHIVE_SHA256=31152a33c53f9da23596834f624b391e5f208dfcf7bc9832d92c2fd10543e00a
+GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=["openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29"]
+GATE_TOOL_CTS_MACRO_CLUSTER=
+GATE_FLOW_RC=0 GATE_FLOW_S=82
+GATE_IOP_RC=0
+GATE_DUMP_RC=0
+GATE_TB textbook_lint: WARN hfd_vms_bank_vs_rg4wg1 cells 14,060 flops 4,769 depth 396.7 ps util 0.3089 reach 0.0 um (0.5 s)
+GATE_TB textbook_lint: INFO clock_roots max_root_sinks=4772 root=port:clk rule=PASS: 4,772 sinks on the largest root <= 15,000; no measured clock tree (no --cts gate evidence)
+GATE_TB textbook_lint: WARN util_channel: utilisation 30.9% outside 45%-65% (std 2285 + macro 36952 um2 in 127002 um2): shrink the outline (long wires / sparse placement)
+GATE_PORTS {"clk": [1, false], "rst_n": [1, false], "bid": [null, true], "sid": [null, true], "rslot_v": [1, false], "rslot": [null, true], "wslot_v": [1, false], "wslot": [null, true], "rq0": [null, true], "rr0": [null, true], "rq1": [null, true], "rr1": [null, true], "rq2": [null, true], "rr2": [null, true], "rq3": [null, true], "rr3": [null, true], "wq0": [null, true], "wq_done0": [1, false], "dq": [null, true], "dq_done": [1, false], "kq": [null, true], "kq_done": [1, false], "xq": [null, true], "xq_done": [1, false], "xq2": [null, true], "xq2_done": [1, false], "eg": [null, true], "pq": [null, true], "pr": [null, true], "status": [null, true]}
+GATE_AREA    Chip area for module '\hfd_vms_bank_vs_rg4wg1': 39215.770680
+ot-run: interrupted (signal 15); the command is STILL RUNNING on ot-agidock128 (unit oth-ubuntu-1350646-1792096021): NOT COMPLETED

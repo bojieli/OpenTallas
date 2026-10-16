@@ -67,13 +67,13 @@ module tb_dma_back_vp4_banks_equiv;
  begin
   @(negedge clk);#1;mv=d;issue_at=cycle+lead;drain_at=cycle+lead+lag;mv_v=1;@(negedge clk);#1;mv_v=0;
   repeat(12)@(negedge clk);
-  #1;rst_n=0;@(negedge clk);#1;rst_n=1;bad_cases=bad_cases+1;
+  #1;rst_n=0;@(negedge clk);#1;rst_n=1;repeat(3)@(negedge clk);bad_cases=bad_cases+1;
  end
  endtask
  initial begin
   for(integer b=0;b<8;b=b+1)response_v[b]=0;
   for(integer k=0;k<5;k=k+1)ack[k]=0;
-  repeat(3)@(negedge clk);#1;rst_n=1;
+  repeat(3)@(negedge clk);#1;rst_n=1;repeat(3)@(negedge clk);
   run_case(1,1,0);run_case(7,1,9);run_case(8,1,0);run_case(9,1,17);run_case(15,1,0);run_case(16,1,0);
   run_case(17,1,3);run_case(63,1,0);run_case(64,1,0);run_case(127,1,0);run_case(1024,1,0);
   run_case(8,2,0);run_case(8,80,0);run_case(16,3,0);run_case(32,16,0);run_case(64,16,0);

@@ -73,7 +73,7 @@ module ot_hgi_dma_back_static_vp_banks #(
         ot_hgi_dma_back_landing_bank u_bank(
             .clk(clk_bank[b]),.rst_n(rst_n),
             .read_en(bank_read_en[b]),.read_slot(bank_read_slot),
-            .write_en(bank_write_en[b]),.write_slot(bank_write_slot),.rr_data(rr[b*257+:256]),
+            .write_en(rr_valid_i[b]),.write_slot(bank_write_slot),.rr_data(rr[b*257+:256]),
             .read_addr(bank_read_addr[b*32+:32]),.output_en(bank_output_en[b]),.wd(wd[b*289+:289]));
     end
 endmodule
@@ -169,7 +169,7 @@ module ot_hgi_dma_back_static_vp_controller #(
     assign bank_read_en={8{drain_slot}}&drain_mask;
     assign bank_read_slot=drain_index[6:0];
     assign bank_write_en=rr_valid;
-    assign bank_write_slot=rr_tag;
+    assign bank_write_slot=expect_tag[7]; // bank pin flop aligns it with the response edge
     assign bank_output_en=output_mask_q;
     for(genvar b=0;b<8;b=b+1)begin:RQ
         assign rq[b*17+:17]={rq_v[b],rq_payload[b]};
@@ -267,26 +267,36 @@ module ot_hgi_dma_back_landing_bank (
     input wire [31:0] read_addr,
     input wire output_en,output wire [288:0] wd
 );
-    reg [255:0] rr_data_q,capture;
+    // Native boundary (H-HARDEN 10-15 r4): every input is captured by a pin flop; no input pin reaches the SRAM macro.
+    // The routed nl1 bank failed native capture on four macro pins (read_slot/write_en/write_slot 190.5..191.5 ps
+    // > 190, ~64 um from the N face to the macro's W-edge control pins). Write side: write_en is the raw response
+    // valid (same die net the controller captures) and write_slot the controller's expect_tag[7] register, so
+    // write_en_q/write_slot_q/rr_data_q are the same edge as before. Read side: read_en_q/read_slot_q sample the
+    // controller's read one edge later, and the macro read word goes straight to the wd_payload launch register
+    // (the separate capture stage is removed): wd stays on the same edge, 0 cycles, same SRAM, same schedule.
+    reg [255:0] rr_data_q;
     reg [31:0] capture_addr;
     reg [287:0] wd_payload;
-    reg wd_valid;
+    reg wd_valid,read_en_q,write_en_q;
+    reg [6:0] read_slot_q,write_slot_q;
     wire [255:0] macro_data;
     assign wd={wd_valid,wd_payload};
-    // Native launch fix (H-HARDEN 10-15): the routed bank launched wd[288] at 252.2 ps (> 220) from the only
-    // asynchronous-reset flop; every other output launches <= 220. The valid bit is now a plain flop with the reset
-    // folded into its D input (rst_n & output_en): same value at every clock edge while the clock runs through reset
-    // (output_en is the controller's async-reset output_mask_q), no cycle, SRAM or schedule change.
-    always @(posedge clk) wd_valid<=rst_n&output_en;
+    // Native launch fix (H-HARDEN 10-15): valid bits are plain flops with the reset folded into D.
+    always @(posedge clk) begin
+        wd_valid<=rst_n&output_en;
+        read_en_q<=rst_n&read_en;
+        write_en_q<=rst_n&write_en;
+    end
     always @(posedge clk)begin
         rr_data_q<=rr_data;
-        capture<=macro_data;
+        read_slot_q<=read_slot;
+        write_slot_q<=write_slot;
         capture_addr<=read_addr;
-        wd_payload<={capture_addr,capture};
+        wd_payload<={capture_addr,macro_data};
     end
     ot_sram_1r1w_128x256_m1_r2c2 landing(.clk(clk),
-        .r_ce_in(read_en),.r_addr_in(read_slot),.rd_out(macro_data),
-        .w_ce_in(write_en),.w_addr_in(write_slot),.wd_in(rr_data_q),.w_mask_in({256{1'b1}}),
+        .r_ce_in(read_en_q),.r_addr_in(read_slot_q),.rd_out(macro_data),
+        .w_ce_in(write_en_q),.w_addr_in(write_slot_q),.wd_in(rr_data_q),.w_mask_in({256{1'b1}}),
         .rr_en(2'b00),.rr_addr(14'd0),.cr_en(2'b00),.cr_sel(16'd0));
 endmodule
 `default_nettype wire

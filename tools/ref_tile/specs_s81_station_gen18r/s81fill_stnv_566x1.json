@@ -10,9 +10,15 @@
  "clock_port": "fi0",
  "reset_ports": [],
  "forwarded_clock": true,
+ "boundary_tcl": [
+  "physical/s81_station_native/fwd_clock_out.tcl"
+ ],
+ "sdc_extra": [
+  "physical/s81_station_native/fwd_clock_out.tcl"
+ ],
  "outline": {
-  "w": 32.376,
-  "h": 35.64,
+  "w": 77.76,
+  "h": 19.44,
   "exact": true
  },
  "layer_cap": "M5",
@@ -37,11 +43,11 @@
   "pin_v": "M3 M5",
   "m5_pg_pitch": 2.7
  },
- "structural_change": "First hardening of the GEN18r generated forwarded-clock station dsfd_stnv_566x1 (814 die instances): capture on the falling edge of the forwarded fi0, fo0 = kept forwarding INV, 566 b, no reset, 0 cycles; RTL = the case glue module byte-identical (module sha256 69266cae4ca40731, glue 81730f1679e7bc00); pins at the generator centres. Slot 32.376 x 17.256 holds 363 um2 of core vs 482 um2 recipe-2 content (input hold + output min delay cells a bit) -> depth grown to 32.376 x 35.64 (data-pin coordinates unchanged).",
+ "structural_change": "First hardening of the GEN18r generated forwarded-clock station dsfd_stnv_566x1 (814 die instances): capture on the falling edge of the forwarded fi0, fo0 = kept forwarding INV, 566 b, no reset, 0 cycles; RTL = the case glue module byte-identical (module sha256 69266cae4ca40731, glue 81730f1679e7bc00); pins at the generator centres. Slot 32.376 x 17.256 holds 363 um2 of core vs 482 um2 recipe-2 content (input hold + output min delay cells a bit) -> depth grown to 77.76 x 19.44 (data-pin coordinates unchanged). | f6 face-cut sizing (verdict 17:32 GRT-0116 on the 513-b f5 pilots): data face grown to the pin demand at cut <= 0.6 -> 77.76 x 19.44; pins spread evenly per face (spread_face_pins.py: N/S M3/M5 alternation, W/E M4, clock at face centre); the die adopts this footprint + pin file (slot_change_request)",
  "job": {
   "owner": "Claude:fill-s81",
   "branch": "claude/el1015-fill-1015",
-  "tag": "f2",
+  "tag": "f6",
   "purpose": "S81 FILL: GEN18r die station dsfd_stnv_566x1 (814 replicas, hardened once): exact phase/basis/random bench + wrong-edge and payload mutants; recipe 2, M5 cap, generator pins",
   "views_to": "physical/ref_tile/s81fill_stnv_566x1/views",
   "record_to": "results/rtl/ref_tile/s81fill_stnv_566x1",
@@ -51,7 +57,8 @@
    "tools/s81_station_native",
    "physical/s81_die_pins/v22_gen18r_stations",
    "physical/hbm_accel_die_views/stations/bench",
-   "physical/hbm_w2_rb_station_20261006/forwarded_subtree.tcl"
+   "physical/hbm_w2_rb_station_20261006/forwarded_subtree.tcl",
+   "physical/s81_station_native"
   ],
   "benches": [
    {
@@ -81,14 +88,15 @@
   ]
  },
  "slot_change_request": {
-  "reason": "recipe-2 content 482 um2 exceeds util 0.55 of the generator slot core 363 um2; depth-only growth keeps every data pin coordinate",
+  "reason": "f6: data face sized to the pin demand at cut <= 0.6 (0.12 um a pin N/S, 0.16 um a pin W/E, + 8.64 um); pins spread evenly (io_tcl)",
   "outline": [
-   32.376,
-   35.64
+   77.76,
+   19.44
   ],
   "generator_slot": [
    32.376,
    17.256
-  ]
+  ],
+  "pins": "physical/s81_die_pins/v22_gen18r_stations/dsfd_stnv_566x1.tcl"
  }
 }

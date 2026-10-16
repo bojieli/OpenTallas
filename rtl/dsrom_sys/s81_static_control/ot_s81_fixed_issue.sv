@@ -11,7 +11,7 @@
 // changes an issue, KIT or END edge. Availability/completions only detect faults.
 module ot_s81_fixed_issue #(
  parameter integer NOPS=128, NENG=13, STAGE=0, OP_BASE=0,
- parameter [12:0] ENG_PRESENT=13'h1fff,
+ parameter [NENG-1:0] ENG_PRESENT=13'h1fff,
  parameter integer MUT=0
 )(
  input wire clk,rst_n,
@@ -45,7 +45,7 @@ module ot_s81_fixed_issue #(
  reg[NENG-1:0]legit_done;
 `ifndef SYNTHESIS
  initial begin
-  if(NOPS<2||NOPS>128||NENG<1||NENG>13||STAGE<0||STAGE>127||OP_BASE<0||OP_BASE+NOPS>128)$fatal(1,"invalid native S81 issuer shape");
+  if(NOPS<2||NOPS>128||NENG<1||NENG>14||STAGE<0||STAGE>127||OP_BASE<0||OP_BASE+NOPS>128)$fatal(1,"invalid native S81 issuer shape");
  end
 `endif
  always @(posedge clk or negedge rst_n)begin

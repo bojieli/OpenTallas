@@ -516,6 +516,22 @@
      "by": "128 die-level ot_hbm_svc_static_pc leaf instances; service bands are soft groups",
      "reason": "HBM v5 flattens every service band into individually placed real PC leaves directly over PHY channel windows; these 17 name variants no longer need independent physical closure. Historical band routes remain evidence and PC native-boundary qualification remains OPEN.",
      "evidence": "results/arch/hier_contract_1015/hbm_v15.json version 5 slots kind=soft_group + pc_homes; el1015-hbm-v15-harden.log H-DIE 2026-10-15 13:10; results/fleet_viz/element_registry/hbm_service_soft_groups_1015.json"
+    },
+    {
+     "elements": [
+      "ot_vms_calendar_static"
+     ],
+     "by": "hfd_hgi_vm_calendar_SW/SE/NW/NE (CLOSED hv15_vm_cal_{sw,se,nw,ne}-takeover-47ef6b64b)",
+     "reason": "soft sub-block: ot_vms_calendar_static is the u_programme instance inside each hardened hfd_hgi_vm_calendar_<Q> tile (rtl/hbm_accel/generic/vm/static/hfd_hgi_vm_calendar_static.sv); it has no physical slot of its own. Calendar reset-recovery native obligations stay with the four calendar tiles.",
+     "evidence": "H-HARDEN el1015-hbm-v15-harden.log 2026-10-15 r4"
+    },
+    {
+     "elements": [
+      "ot_hgi_dma_back_static"
+     ],
+     "by": "ot_hgi_dma_back_static_vp4_banks = ot_hgi_dma_back_static_vp4_controller + 8 x ot_hgi_dma_back_landing_bank (hb_dbk_<q> wires-only parent)",
+     "reason": "the monolithic DMA STORE back engine (cursor -827 ps, vp -412 ps CTS) is structurally replaced by the DESC_LAT4 controller leaf + eight landing-bank leaves (identical issue/drain/data/fence edges, actual 32VM/128SRAM production proof); H-DIE asked to re-grant hb_dbk_<q> as the wires-only cluster.",
+     "evidence": "jobs hv15_dbk_bank-pf1-4e0d5b48c / hv15_dbk_vp4_ctl_stk0-rm1 (claude/hbm-harden-1705), el1011-hbmdie.log H-HARDEN 1705 request (2)"
     }
    ],
    "streams": [
