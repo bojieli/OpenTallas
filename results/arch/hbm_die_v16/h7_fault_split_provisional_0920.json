@@ -2,7 +2,7 @@
  "schema": "opentallas.hbm.provisional_native_child_grant.v1",
  "status": "PROVISIONAL_ISOLATED_SUCCESSOR_MEASUREMENT_ONLY",
  "cell": "ot_hbm_svc_pc_ctrl_leaf_cfg_faults",
- "source_snapshot": "680655bef",
+ "source_snapshot": "cf302625a",
  "source": "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg_faults.sv",
  "params": {
   "OREG": 1,
@@ -13,10 +13,14 @@
   "QREG": 1
  },
  "receipt_sha256": {
-  "results/rtl/hbm_harden_0811/fault_split/physical_request.json": "4152e5cba95c5585520be35059a816e23113ecba6b002173adf63606504d309a",
-  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg_faults.sv": "bd5be073a797d4c14508abd161de8c1e3f6caab5ddb078cba3d0cd0ecfc05af9",
-  "results/rtl/hbm_harden_0811/fault_split/receipt.json": "7f4588da83ec6cec5c3fd8698dd9f236eaa494dee3a6c291354a699985c4bfd3",
-  "results/rtl/hbm_harden_0811/fault_split/actual_track_readback/summary.json": "b6807bb350f2c46a9a39d224756eb9ce23a916ccf7e51be0a832d77dbee26b28"
+  "results/rtl/hbm_harden_0811/fault_split/physical_request.json": "f5d408fd9f770a8191fe16ad247b065f95724d5ffbe882fc340d91e42eba4d76",
+  "results/rtl/hbm_harden_0811/fault_split/additive_controller/receipt.json": "fe3b14fb77a267d28e4073362eb777509a7c4feec1e98cfd193a8844ae05c243",
+  "results/rtl/hbm_harden_0811/fault_split/actual_track_readback/summary.json": "b6807bb350f2c46a9a39d224756eb9ce23a916ccf7e51be0a832d77dbee26b28",
+  "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg_faults.sv": "8c6e548ed59e80dccf523556d86e75d757b0d37856a74172d5389a9bdb154118",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf.sv": "c56a3487cab5560d0347a895b11c6cffcf6359515b00b6b44794baa8c0fcda15",
+  "rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc_strap_h7.sv": "bcdda846683fa0104f37594f8cabbc2df56ab898d715218c82e0fb1008258779",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v": "9352069d59a398f6946d3971477dcc989306f1351c9c205cea9d68b183728c2c"
  },
  "outline_um": [
   185.76,
@@ -149,5 +153,14 @@
   "Fresh PG must be regenerated, not inherited rectangles; new ODB track/pin/macro readback required.",
   "Existing R418.9ps and TT-55.0373ps are FAILED; scalar-OR repair alone cannot inherit native timing qualification."
  ],
- "adoption": "Current d4/default/controller ABI unchanged. Isolated measurement only, no native or all128 parent homes/cut/clock/phase qualification inherited. Component source receipts do not establish production CDC or throughput."
+ "adoption": "Current d4/default/controller ABI unchanged. Isolated measurement only, no native or all128 parent homes/cut/clock/phase qualification inherited. Component source receipts do not establish production CDC or throughput.",
+ "source_dependencies": {
+  "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf_cfg_faults.sv": "8c6e548ed59e80dccf523556d86e75d757b0d37856a74172d5389a9bdb154118",
+  "rtl/hbm_accel/loader/service_native/ot_hbm_svc_pc_ctrl_leaf.sv": "c56a3487cab5560d0347a895b11c6cffcf6359515b00b6b44794baa8c0fcda15",
+  "rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc_strap_h7.sv": "bcdda846683fa0104f37594f8cabbc2df56ab898d715218c82e0fb1008258779",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v": "9352069d59a398f6946d3971477dcc989306f1351c9c205cea9d68b183728c2c"
+ },
+ "namespace_revision": "Exact original H7 controller dependency now additive *_strap_h7. No substitution by main PHYS_WACT1; no change to geometry/pins/params/normal edges/cost.",
+ "supersedes": "3fec25e1c initial source binding required original unmerged H7 helper. This grant binds complete additive *_strap_h7 dependency graph; all1229 pins, macros, params and costs remain byte-exact request geometry. Fresh49,600edge/6class/6omission mutant proof atcf302 required and reviewed."
 }
