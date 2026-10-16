@@ -41,6 +41,17 @@ module ot_s81_ingest_visibility_fence #(parameter integer ENABLE=0,PROTECT=0,PIP
   wire ack_seam=ack_host,req_seam=req,fc_seam=fc;
   wire [31:0]snapshot_seam=snapshot;
 `endif
+  // The held snapshot and req cross together. rc1/rc2 reserve two
+  // clk_h edges before acceptance, so capture the payload on the first edge
+  // and keep the 32-bit monotonic compare entirely in clk_h. This removes
+  // arithmetic from the half-phase ck -> clk_h path without delaying ack.
+`ifdef OT_S81_HOST_PHASESAFE
+  reg [31:0] snapshot_h;
+  always @(posedge clk_h) snapshot_h <= snapshot_seam;
+  wire [31:0] snapshot_local = snapshot_h;
+`else
+  wire [31:0] snapshot_local = snapshot;
+`endif
   wire[32:0] add={1'b0,commits}+ack_n;
   always @(posedge ck or negedge rn_c)begin
    if(!rn_c)begin commits<=0;snapshot<=0;commit_p<=0;snapshot_p<=0;req<=0;ac1<=0;ac2<=0;fc<=0;end
@@ -54,7 +65,7 @@ module ot_s81_ingest_visibility_fence #(parameter integer ENABLE=0,PROTECT=0,PIP
    end
   end
   reg rc1,rc2,fc1,fc2;reg[31:0] landed;reg landed_p,fh;reg snap_lt_q;
-  always @(posedge clk_h) snap_lt_q<=snapshot_seam<landed;
+  always @(posedge clk_h) snap_lt_q<=snapshot_local<landed;
   localparam integer QW=PROTECT?72:64;
   reg[QW-1:0] q[0:7];reg[2:0] wp,rp;reg[3:0] count;reg qp;
   reg[2:0] host_credits;reg hp;
@@ -88,11 +99,11 @@ module ot_s81_ingest_visibility_fence #(parameter integer ENABLE=0,PROTECT=0,PIP
     rc1<=req_seam;rc2<=rc1;fc1<=fc_seam;fc2<=fc1;in_cr<=0;out_v<=0;
     if(rc2!=ack_host)begin
 `ifdef OT_FENCE_MUT_LTSTALE
-     if((PROTECT&&snapshot_p!=(^{snapshot,rc2}))||((PIPE>=2)?1'b0:(snapshot<landed)))fh<=1;   // mutant: monotonic check dropped
+     if((PROTECT&&snapshot_p!=(^{snapshot,rc2}))||((PIPE>=2)?1'b0:(snapshot_local<landed)))fh<=1;   // mutant: monotonic check dropped
 `else
-     if((PROTECT&&snapshot_p!=(^{snapshot,rc2}))||((PIPE>=2)?snap_lt_q:(snapshot<landed)))fh<=1;
+     if((PROTECT&&snapshot_p!=(^{snapshot,rc2}))||((PIPE>=2)?snap_lt_q:(snapshot_local<landed)))fh<=1;
 `endif
-     else begin landed<=snapshot_seam;landed_p<=^snapshot_seam;end
+     else begin landed<=snapshot_local;landed_p<=^snapshot_local;end
      ack_host<=rc2;
     end
     if(bad_q||bad_h||bad_land||(count!=0&&uncorrectable))fh<=1;
