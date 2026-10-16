@@ -14,14 +14,19 @@
 //   ot_hgi_sm_xload_cl2_bfq    clk_bf  one lane quarter of the x-store: 8 SRAMs (t 0..7) with their per-macro pin
 //                                      registers, gated capture and OR-4 tree; outputs the quarter's rw word.  4 instances
 //                                      of ONE master (the quarter index is wiring at the parent).
-//   ot_hdc_actquant            clk_qlo / clk_qhi  the two block-dot quantisers (input S0 register at the pins), 2 x ONE
-//                                      master.
+//   ot_hbm_xp_aq_tree13        clk_qlo / clk_qhi  the two block-dot quantisers: the CLOSED quantiser tile (kit hgi_xp_aq,
+//                                      TT +21.56 / FF +14.95; same ports and 13-edge latency as ot_hdc_actquant, input S0
+//                                      and output registers at its pins), reused (fewer distinct tiles, owner 19:50).
 //   ot_hgi_sm_xload_cl2_bdring clk_bd  block-dot lane ring (2 x 16 x 266), beat assembly and the beat register, with
 //                                      local replicated parity / beat selects and a local lane-enable copy.
-// Every leaf input lands in a register (or one gate before it) and every leaf output leaves a register (or one gate
-// after it); cross-leaf paths are related same-frequency phase-0 single-cycle paths.  No stage, calendar or compiler
-// change: tb_hgi_xload_static_lock (-DXLOAD_CL2) runs cl and cl2 side by side and requires identical rq / xw / done /
-// busy / fault on every cycle, besides the lock against the production credited x-load.
+// OWNER RULE 2026-10-15 19:50: every input and output of every leaf is registered AT ITS PIN (an enable flop counts;
+// no gate between a pin and its flop).  Two boundaries cannot keep cl's edges under that rule and each costs ONE
+// fixed edge: (1) landing: rr is captured raw at the ctl pins, the lane rotation moves to the next stage (+1);
+// (2) egress: the quarters' rw words and the BD beat register are captured at the ctl pins before the xw mux (+1).
+// Issue (rq) edges are unchanged; every x-store beat and x_done leave exactly XW_ADD = 2 edges later than cl, for
+// both formats (BF em_off + 1; the BD sequencer follows its lane writes).  The compiler model adds 2 to the first-beat
+// / CBD constants.  tb_hgi_xload_static_lock (-DXLOAD_CL2) runs cl beside cl2: rq identical every cycle, every xw / done
+// output identical to cl's 2 edges earlier, besides the lock against the production credited x-load.
 // =====================================================================================================================
 
 module ot_hgi_sm_xload_cl2_ctl #(
@@ -55,22 +60,20 @@ module ot_hgi_sm_xload_cl2_ctl #(
     // ---- to the 4 BF quarters (write side, C stage registers)
     output reg  [1023:0]      c_d,
     output reg  [3:0]         c_wce,     // quarter q writes at W (= wp_ce of every macro of quarter q)
-    output reg                c_wq0,     // lane half (mask select)
+    output reg                c_mhi, c_mlo,   // lane-half write masks
     output reg  [6:0]         c_wa,      // {g mod 16, p}
     // ---- to the 4 BF quarters (read side, one-edge lookahead of the E0 decision)
     output reg  [7:0]         r_ce,      // macro t reads at E0 + 1
     output reg  [6:0]         r_a,
     // ---- from the 4 BF quarters
-    input  wire [1023:0]      rwq,       // quarter q word at [256 q +: 256] (OR of the quarter's two OR-4 registers)
-    // ---- quantisers
+    input  wire [1023:0]      rwq,       // quarter q rw register at [256 q +: 256]
+    // ---- quantisers (their data words go straight to the BD ring leaf; only the valid / fault flags come here)
     output wire [2047:0]      l_d_o,
     output reg                qv_lo, qv_hi,
     input  wire               qo_lo, qo_hi, qf_lo, qf_hi,
-    input  wire [255:0]       qq_lo, qq_hi,
-    input  wire signed [9:0]  qe_lo, qe_hi,
     // ---- BD ring
     output reg  [15:0]        r_wsel,    // one-hot ring slot write enable (both parities)
-    output reg  [265:0]       wd_lo, wd_hi,
+    output reg                zlo, zhi,  // block inside K (lane word kept) / outside (written as 0)
     output reg                ea,
     output reg  [6:0]         eb2,
     output reg  [PMAX*8-1:0]  lane_en,
@@ -79,7 +82,7 @@ module ot_hgi_sm_xload_cl2_ctl #(
     localparam integer XC = 3152, XOFF = 2128;
     localparam integer NBMAX = (PMAX * XC + 2047) / 2048;
     localparam integer LAND = 3;
-    localparam integer RDP = 6;
+    localparam integer RDP = 7;            // + 1: rw captured at the ctl pins (egress edge)
     localparam integer RB = 2048 / NR;     // data bits per select replica
     // ---- local reset relay
     reg rs1, rs2, rn;
@@ -142,7 +145,7 @@ module ot_hgi_sm_xload_cl2_ctl #(
             gn <= 8'(((c_n - 21'd1) >> 9) + 21'd1);
             nb <= 7'((({12'd0, c_p} * 16'd3152) + 16'd2047) >> 11);
             ew <= 11'(((({12'd0, c_p} * 16'd3152) + 16'd2047) >> 11) * 8);
-            em_off <= (MUT == 2) ? 11'(RD_LAT) : 11'({c_p, 3'd0} + RD_LAT + LAND + 1);
+            em_off <= (MUT == 2) ? 11'(RD_LAT) : 11'({c_p, 3'd0} + RD_LAT + LAND + 2);   // + 1: raw rr pin capture
             ig <= 8'd0; iw <= 11'd0; tc <= 11'd0; eg <= 8'd0; et <= 3'd0; eb <= 7'd0;
             a_g <= c_base[17:0]; a_gp <= c_base[17:0];
             r_g <= {1'b0, c_n}; r_w <= {1'b0, c_n};
@@ -185,31 +188,37 @@ module ot_hgi_sm_xload_cl2_ctl #(
     always @(posedge clk) for (integer b = 0; b < 8; b = b + 1)
         q_s[b] <= {1'b0, (3'(b) < i_s0[2:0]) ? s_hi1 : s_hi, 3'(b)};
     localparam integer MW = 1 + 4 + 3 + 3 + 3 + 7;
-    reg [MW-1:0] md [0:RD_LAT];
+    reg [MW-1:0] md [0:RD_LAT+1];          // + 1: rr is captured raw at the pins, rotated one edge later
     wire [6:0] i_rem = (r_w <= 22'sd0) ? 7'd0 : (r_w >= 22'sd64) ? 7'd64 : r_w[6:0];
     always @(posedge clk or negedge rn) begin
-        if (!rn) for (integer d = 0; d <= RD_LAT; d = d + 1) md[d] <= '0;
+        if (!rn) for (integer d = 0; d <= RD_LAT + 1; d = d + 1) md[d] <= '0;
         else begin
             md[0] <= bdm ? {bd_iss, bd_meta[16:7], i_s0[2:0], bd_meta[6:0]} : {iss_w, ig[3:0], i_p[2:0], i_wq, i_s0[2:0], i_rem};
-            for (integer d = 1; d <= RD_LAT; d = d + 1) md[d] <= md[d-1];
+            for (integer d = 1; d <= RD_LAT + 1; d = d + 1) md[d] <= md[d-1];
         end
     end
-    wire [MW-1:0] mr = md[RD_LAT];
+    wire [MW-1:0] mr = md[RD_LAT+1];
     wire m_v = mr[MW-1];
+    // raw rr pin registers (valid bits reset)
+    reg [8*257-1:0] rr_c;
+    always @(posedge clk or negedge rn)
+        if (!rn) for (integer b = 0; b < 8; b = b + 1) rr_c[b*257 + 256] <= 1'b0;
+        else for (integer b = 0; b < 8; b = b + 1) rr_c[b*257 + 256] <= rr[b*257 + 256];
+    always @(posedge clk) for (integer b = 0; b < 8; b = b + 1) rr_c[b*257 +: 256] <= rr[b*257 +: 256];
     reg [7:0] rr_v_seen;
-    always @* for (integer b = 0; b < 8; b = b + 1) rr_v_seen[b] = rr[b*257 + 256];
+    always @* for (integer b = 0; b < 8; b = b + 1) rr_v_seen[b] = rr_c[b*257 + 256];
     assign resp_bad = (m_v && rr_v_seen != 8'hFF) || (!m_v && rr_v_seen != 8'h00);
     // ---- L: capture + rotate; the rotation select is replicated (NR copies of md[RD_LAT][9:7], same edge)
     reg l_v; reg [3:0] l_g; reg [2:0] l_p, l_wq; reg [6:0] l_rem; reg [8*256-1:0] l_d;
     reg [2:0] s0r [0:NR-1];
     always @(posedge clk or negedge rn)
         if (!rn) for (integer k = 0; k < NR; k = k + 1) s0r[k] <= 3'd0;
-        else for (integer k = 0; k < NR; k = k + 1) s0r[k] <= md[RD_LAT-1][9:7];
+        else for (integer k = 0; k < NR; k = k + 1) s0r[k] <= md[RD_LAT][9:7];
     always @(posedge clk or negedge rn) if (!rn) l_v <= 1'b0; else l_v <= m_v;
     always @(posedge clk) begin
         {l_g, l_p, l_wq} <= mr[MW-2 -: 10]; l_rem <= mr[6:0];
         for (integer k = 0; k < NR; k = k + 1)
-            l_d[k*RB +: RB] <= rr[(3'(s0r[k] + 3'((k*RB) / 256) + ((MUT == 1) ? 3'd1 : 3'd0)))*257 + (k*RB) % 256 +: RB];
+            l_d[k*RB +: RB] <= rr_c[(3'(s0r[k] + 3'((k*RB) / 256) + ((MUT == 1) ? 3'd1 : 3'd0)))*257 + (k*RB) % 256 +: RB];
     end
     assign l_d_o = l_d;
     // quantiser valids registered on the landing edge (= l_v && bdm && l_wq[2] / [1] of cl)
@@ -225,7 +234,8 @@ module ot_hgi_sm_xload_cl2_ctl #(
             for (integer q = 0; q < 4; q = q + 1) c_wce[q] <= l_v && !bdm && l_wq[2:1] == 2'(q);
         end
     always @(posedge clk) begin
-        c_g <= l_g; c_pp <= l_p; c_wq <= l_wq; c_wq0 <= l_wq[0]; c_wa <= {l_g, l_p};
+        c_g <= l_g; c_pp <= l_p; c_wq <= l_wq; c_wa <= {l_g, l_p};
+        c_mhi <= l_wq[0] ^ (MUT == 4); c_mlo <= ~l_wq[0] ^ (MUT == 4);
         for (integer l = 0; l < 8; l = l + 1) for (integer tv = 0; tv < 8; tv = tv + 1)
             c_d[(tv*8 + l)*16 +: 16] <= (7'(l * 8 + tv) < l_rem) ? bf16(l_d[l*256 + 32*tv +: 32]) : 16'd0;
     end
@@ -271,7 +281,7 @@ module ot_hgi_sm_xload_cl2_ctl #(
             for (integer d = 1; d < RDP; d = d + 1) ed[d] <= ed[d-1];
         end
     end
-    // ---- rw: the quarters' OR-4 words land here (cl: rw on clk_bf, same edge)
+    // ---- rw: the quarters' rw registers are captured at the ctl pins (egress edge + 1)
     reg [1023:0] rw;
     always @(posedge clk) rw <= rwq;
     // ---- beat select, replicated (ok, b) selects of ed[RDP-2] (each replica selects RB output bits)
@@ -363,7 +373,12 @@ module ot_hgi_sm_xload_cl2_ctl #(
         end
     end
     wire [9:0] qtl = qt[QL-1];
-    assign bd_fault = (qo_lo && qf_lo) || (qo_hi && qf_hi) || (qtl[9] && (qtl[1] != qo_lo || qtl[0] != qo_hi));
+    // quantiser flags registered at the pins; the fault check compares them one edge later with the delayed tag
+    reg qo_lo_c, qo_hi_c, qf_lo_c, qf_hi_c; reg [9:0] qtl_d;
+    always @(posedge clk or negedge rn)
+        if (!rn) begin qo_lo_c <= 1'b0; qo_hi_c <= 1'b0; qf_lo_c <= 1'b0; qf_hi_c <= 1'b0; qtl_d <= '0; end
+        else begin qo_lo_c <= qo_lo; qo_hi_c <= qo_hi; qf_lo_c <= qf_lo; qf_hi_c <= qf_hi; qtl_d <= qtl; end
+    assign bd_fault = (qo_lo_c && qf_lo_c) || (qo_hi_c && qf_hi_c) || (qtl_d[9] && (qtl_d[1] != qo_lo_c || qtl_d[0] != qo_hi_c));
     reg wv_b;
     always @(posedge clk or negedge rn)
         if (!rn) begin wv_b <= 1'b0; r_wsel <= 16'd0; end
@@ -372,9 +387,7 @@ module ot_hgi_sm_xload_cl2_ctl #(
             for (integer s = 0; s < 16; s = s + 1)
                 r_wsel[s] <= qtl[9] && {qtl[5], qtl[4:2] ^ ((MUT == 3) ? 3'd1 : 3'd0)} == 4'(s);
         end
-    always @(posedge clk) begin
-        wd_lo <= qtl[1] ? {qe_lo, qq_lo} : 266'd0; wd_hi <= qtl[0] ? {qe_hi, qq_hi} : 266'd0;
-    end
+    always @(posedge clk) begin zlo <= qtl[1]; zhi <= qtl[0]; end
     reg [6:0] wc; reg [9:0] wk;
     always @(posedge clk) begin
         if (start_bd) begin wc <= 7'd0; wk <= 10'd0; end
@@ -426,41 +439,41 @@ module ot_hgi_sm_xload_cl2_ctl #(
     always @(posedge clk) begin
         bs_b <= eb2; bs_addr <= 7'({ek[5:0], ea}) + xb;
     end
+    // bq_* (the ring leaf's beat register edge) and bc_* (that beat captured at the ctl pins, egress + 1)
     reg bq_v, bq_last; reg [6:0] bq_addr, bq_b;
-    reg [NR-1:0] bqvr;                     // bq_v replicated (xw data select)
+    reg bc_v, bc_last; reg [6:0] bc_addr, bc_b; reg [2047:0] bq_c;
+    reg [NR-1:0] bqvr;                     // bc_v replicated (xw data select)
     always @(posedge clk or negedge rn) begin
-        if (!rn) begin bq_v <= 1'b0; bq_last <= 1'b0; bqvr <= '0; end
-        else begin bq_v <= bs_v; bq_last <= bs_last; bqvr <= {NR{bs_v}}; end
+        if (!rn) begin bq_v <= 1'b0; bq_last <= 1'b0; bc_v <= 1'b0; bc_last <= 1'b0; bqvr <= '0; end
+        else begin bq_v <= bs_v; bq_last <= bs_last; bc_v <= bq_v; bc_last <= bq_last; bqvr <= {NR{bq_v}}; end
     end
-    always @(posedge clk) begin bq_addr <= bs_addr; bq_b <= bs_b; end
+    always @(posedge clk) begin bq_addr <= bs_addr; bq_b <= bs_b; bc_addr <= bq_addr; bc_b <= bq_b; bq_c <= bq_d; end
     // ---- xw pins
     always @(posedge clk or negedge rn) begin
         if (!rn) begin xw_en <= 1'b0; xw_last <= 1'b0; x_done <= 1'b0; end
         else begin
-            xw_en <= e6[EW-1] || bq_v; xw_last <= (e6[EW-1] && e6[EW-3]) || bq_last;
+            xw_en <= e6[EW-1] || bc_v; xw_last <= (e6[EW-1] && e6[EW-3]) || bc_last;
             x_done <= xw_en && xw_last;
         end
     end
     always @(posedge clk) begin
-        if (bq_v) begin xw_addr <= bq_addr; xw_grp <= bq_b; end
+        if (bc_v) begin xw_addr <= bc_addr; xw_grp <= bc_b; end
         else begin xw_addr <= e6[13:7]; xw_grp <= e6[6:0]; end
-        for (integer k = 0; k < NR; k = k + 1) xw_data[k*RB +: RB] <= bqvr[k] ? bq_d[k*RB +: RB] : xbeat[k*RB +: RB];
+        for (integer k = 0; k < NR; k = k + 1) xw_data[k*RB +: RB] <= bqvr[k] ? bq_c[k*RB +: RB] : xbeat[k*RB +: RB];
     end
 endmodule
 
 // One lane quarter of the BF16 x-store: macros m[t] (t < 8) with per-macro pin registers, gated capture, OR-4 tree.
-module ot_hgi_sm_xload_cl2_bfq #(
-    parameter integer MUT = 0
-) (
+module ot_hgi_sm_xload_cl2_bfq (
     input  wire               clk,
     input  wire               rst_n,
     input  wire [1023:0]      c_d,       // c_d[(t 8 + l) 16 +: 16]
     input  wire               wce,
-    input  wire               wq0,
+    input  wire               mhi, mlo,
     input  wire [6:0]         wa,
     input  wire [7:0]         r_ce,
     input  wire [6:0]         r_a,
-    output wire [255:0]       rwq
+    output reg  [255:0]       rwq
 );
     wire [255:0] cap [0:7];
     genvar gt;
@@ -476,7 +489,7 @@ module ot_hgi_sm_xload_cl2_bfq #(
             else begin rp_ce <= r_ce[gt]; rp_sel <= rp_ce; wp_ce <= wce; end
         end
         always @(posedge clk) begin
-            mask_hi <= wq0 ^ (MUT == 4); mask_lo <= ~wq0 ^ (MUT == 4);
+            mask_hi <= mhi; mask_lo <= mlo;
             rp_a <= r_a; wp_a <= wa;
             for (integer l = 0; l < 8; l = l + 1) begin
                 wp_d[16*l +: 16] <= c_d[(gt*8 + l)*16 +: 16];
@@ -495,7 +508,7 @@ module ot_hgi_sm_xload_cl2_bfq #(
         or4a <= cap[0] | cap[1] | cap[2] | cap[3];
         or4b <= cap[4] | cap[5] | cap[6] | cap[7];
     end
-    assign rwq = or4a | or4b;
+    always @(posedge clk) rwq <= or4a | or4b;   // cl's rw edge
 endmodule
 
 // Block-dot lane ring + beat assembly + beat register (cl's ring / beat_w / bsel / bq_d), local replicated selects.
@@ -505,7 +518,9 @@ module ot_hgi_sm_xload_cl2_bdring #(
 ) (
     input  wire               clk,
     input  wire [15:0]        r_wsel,
-    input  wire [265:0]       wd_lo, wd_hi,
+    input  wire               zlo, zhi,
+    input  wire [255:0]       qq_lo, qq_hi,
+    input  wire signed [9:0]  qe_lo, qe_hi,
     input  wire               ea,
     input  wire [6:0]         eb2,
     input  wire [PMAX*8-1:0]  lane_en_i,
@@ -516,6 +531,9 @@ module ot_hgi_sm_xload_cl2_bdring #(
     localparam integer RB = 2048 / NR;
     reg [PMAX*8-1:0] lane_en;              // local copy (command constant; refreshed every edge)
     always @(posedge clk) lane_en <= lane_en_i;
+    reg [265:0] wr_lo, wr_hi;              // quantiser words registered at the pins (cl's wd edge)
+    always @(posedge clk) begin wr_lo <= {qe_lo, qq_lo}; wr_hi <= {qe_hi, qq_hi}; end
+    wire [265:0] wd_lo = zlo ? wr_lo : 266'd0, wd_hi = zhi ? wr_hi : 266'd0;
     wire [265:0] ring [0:1][0:15];
     genvar gpa, gsl;
     generate for (gpa = 0; gpa < 2; gpa = gpa + 1) begin : g_rp
@@ -591,28 +609,28 @@ module ot_hgi_sm_xload_static_cl2 #(
     input  wire [8*257-1:0]   rr
 );
     wire rn;
-    wire [1023:0] c_d; wire [3:0] c_wce; wire c_wq0; wire [6:0] c_wa; wire [7:0] r_ce; wire [6:0] r_a;
+    wire [1023:0] c_d; wire [3:0] c_wce; wire c_mhi, c_mlo; wire [6:0] c_wa; wire [7:0] r_ce; wire [6:0] r_a;
     wire [1023:0] rwq;
     wire [2047:0] l_d; wire qv_lo, qv_hi, qo_lo, qo_hi, qf_lo, qf_hi; wire [255:0] qq_lo, qq_hi; wire signed [9:0] qe_lo, qe_hi;
-    wire [15:0] r_wsel; wire [265:0] wd_lo, wd_hi; wire ea; wire [6:0] eb2; wire [PMAX*8-1:0] lane_en; wire [2047:0] bq_d;
+    wire [15:0] r_wsel; wire zlo, zhi; wire ea; wire [6:0] eb2; wire [PMAX*8-1:0] lane_en; wire [2047:0] bq_d;
     ot_hgi_sm_xload_cl2_ctl #(.PMAX(PMAX), .RD_LAT(RD_LAT), .MUT(MUT)) u_ctl (
         .clk(clk), .rst_n(rst_n), .x_v(x_v), .x_base(x_base), .x_n(x_n), .x_p(x_p), .x_stride(x_stride), .x_space(x_space),
         .x_fmt(x_fmt), .x_xb(x_xb), .x_busy(x_busy), .x_done(x_done), .x_fault(x_fault), .xw_en(xw_en), .xw_last(xw_last),
         .xw_addr(xw_addr), .xw_grp(xw_grp), .xw_data(xw_data), .rq(rq), .rr(rr), .rn_o(rn),
-        .c_d(c_d), .c_wce(c_wce), .c_wq0(c_wq0), .c_wa(c_wa), .r_ce(r_ce), .r_a(r_a), .rwq(rwq),
+        .c_d(c_d), .c_wce(c_wce), .c_mhi(c_mhi), .c_mlo(c_mlo), .c_wa(c_wa), .r_ce(r_ce), .r_a(r_a), .rwq(rwq),
         .l_d_o(l_d), .qv_lo(qv_lo), .qv_hi(qv_hi), .qo_lo(qo_lo), .qo_hi(qo_hi), .qf_lo(qf_lo), .qf_hi(qf_hi),
-        .qq_lo(qq_lo), .qq_hi(qq_hi), .qe_lo(qe_lo), .qe_hi(qe_hi),
-        .r_wsel(r_wsel), .wd_lo(wd_lo), .wd_hi(wd_hi), .ea(ea), .eb2(eb2), .lane_en(lane_en), .bq_d(bq_d));
+        .r_wsel(r_wsel), .zlo(zlo), .zhi(zhi), .ea(ea), .eb2(eb2), .lane_en(lane_en), .bq_d(bq_d));
     genvar gq;
     generate for (gq = 0; gq < 4; gq = gq + 1) begin : g_q
-        ot_hgi_sm_xload_cl2_bfq #(.MUT(MUT)) u_bfq (.clk(clk_bf), .rst_n(rn), .c_d(c_d), .wce(c_wce[gq]), .wq0(c_wq0),
+        ot_hgi_sm_xload_cl2_bfq u_bfq (.clk(clk_bf), .rst_n(rn), .c_d(c_d), .wce(c_wce[gq]), .mhi(c_mhi), .mlo(c_mlo),
             .wa(c_wa), .r_ce(r_ce), .r_a(r_a), .rwq(rwq[256*gq +: 256]));
     end endgenerate
-    ot_hdc_actquant u_aq_lo (.clk(clk_qlo), .rst_n(rn), .v(qv_lo), .fp4(1'b0), .x(l_d[1023:0]), .vo(qo_lo), .q(qq_lo),
+    ot_hbm_xp_aq_tree13 u_aq_lo (.clk(clk_qlo), .rst_n(rn), .v(qv_lo), .fp4(1'b0), .x(l_d[1023:0]), .vo(qo_lo), .q(qq_lo),
                              .e(qe_lo), .y(), .fault(qf_lo));
-    ot_hdc_actquant u_aq_hi (.clk(clk_qhi), .rst_n(rn), .v(qv_hi), .fp4(1'b0), .x(l_d[2047:1024]), .vo(qo_hi), .q(qq_hi),
+    ot_hbm_xp_aq_tree13 u_aq_hi (.clk(clk_qhi), .rst_n(rn), .v(qv_hi), .fp4(1'b0), .x(l_d[2047:1024]), .vo(qo_hi), .q(qq_hi),
                              .e(qe_hi), .y(), .fault(qf_hi));
-    ot_hgi_sm_xload_cl2_bdring #(.PMAX(PMAX)) u_bd (.clk(clk_bd), .r_wsel(r_wsel), .wd_lo(wd_lo), .wd_hi(wd_hi), .ea(ea),
+    ot_hgi_sm_xload_cl2_bdring #(.PMAX(PMAX)) u_bd (.clk(clk_bd), .r_wsel(r_wsel), .zlo(zlo), .zhi(zhi), .qq_lo(qq_lo),
+        .qq_hi(qq_hi), .qe_lo(qe_lo), .qe_hi(qe_hi), .ea(ea),
         .eb2(eb2), .lane_en_i(lane_en), .bq_d(bq_d));
 endmodule
 `default_nettype wire
