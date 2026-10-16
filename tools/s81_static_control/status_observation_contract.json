@@ -18,7 +18,9 @@
     "rtl/dsrom_sys/s81_static_control/test/tb_s81_issuer_status_contract.sv": "979544d3565a7abadd31d2508f4b876ff8fcc61d1bf475a3b7c7850e2de8ae26",
     "rtl/dsrom_sys/s81_static_control/ot_s81_pq_boot_control.sv": "32ecceb7c7d91cb541d1d25c8cd2ee1a4be83b1a1c0eed0031502bc53d4fb747",
     "rtl/dsrom_sys/s81_static_control/test/run_issuer_status_contract.sh": "e7734475ffd59c7904f0005316eebbeea5a17327d6db1615eb58ff2e4cd508a4",
-    "tools/s81_static_control/program.py": "0cc4b547f0251cd8e1a18fb5c5ca8cd95f4244216ce2236645c9a94e8bdd6ccb"
+    "tools/s81_static_control/program.py": "0cc4b547f0251cd8e1a18fb5c5ca8cd95f4244216ce2236645c9a94e8bdd6ccb",
+    "physical/common_flow/ot_pin_regs.tcl": "fd53ca5dd8aa2a697bed062de2df5a4a492faa8fc0313752cbfdc56565fb5356",
+    "rtl/dsrom_sys/s81_static_control/test/tb_s81_issuer_pinreg_boundary.sv": "30680b5ffcaa655b423b6699f08b63d3434ea7dd9c0d6ed3d6f2598867c60082"
   },
   "bench": "rtl/dsrom_sys/s81_static_control/test/run_issuer_status_contract.sh",
   "profile": {
@@ -82,5 +84,55 @@
       "c10": "a3888620d97084d550edce887da6024c375bfd7eab7329acc0072f9ce64315d1"
     },
     "normal_preprocessed_equality": "Byte-identical to the actual four NOPS128 passing runs at427f52cf7; the sole bench change tightens the independently rerun c10 negative control to trigger on actual kd[53]."
+  },
+  "generated_pin_boundary_evidence": {
+    "status": "PASS component functional boundary only",
+    "actual_NOPS": 128,
+    "actual_STAGE": 0,
+    "actual_target_defaults": true,
+    "source_archive_commit": "a66085b03",
+    "final_role_hook_sha256": "fd53ca5dd8aa2a697bed062de2df5a4a492faa8fc0313752cbfdc56565fb5356",
+    "actual_Yosys_wrapper_receipt": "results/rtl/s81_static_status_1016/pinreg_boundary_receipt.json",
+    "final_helper_actual_Yosys_byte_equality_receipt": "results/rtl/s81_static_status_1016/pinreg_final_rebind_receipt.json",
+    "true_clock_ports_zero_pin_cycles": [
+      "ck",
+      "ckv"
+    ],
+    "true_reset_ports_zero_pin_cycles": [
+      "rst",
+      "rsv"
+    ],
+    "existing_local_reset_release_ck_edges": 2,
+    "existing_local_reset_release_ckv_edges": 2,
+    "additional_ck_data_input_cycles": 1,
+    "additional_ck_data_output_cycles": 1,
+    "program_rows": {
+      "issue": [
+        0,
+        1
+      ],
+      "done": [
+        5,
+        6
+      ],
+      "KIT": 6,
+      "END": 7
+    },
+    "ideal_profile": {
+      "external_KS_sample_serial_edge": 200,
+      "command_pin_ck_edges": [
+        272,
+        273
+      ],
+      "END_visible_ck_edge": 278,
+      "missing_final_completion_fault_visible_ck_edge": 279,
+      "KIT_port_visible_serial_edge": 211,
+      "c8_fault_status_port_visible_serial_edge": 211,
+      "c10_fault_status_port_visible_serial_edge": 212,
+      "c8_fixed_registered_consumer_sample_serial_edge": 212,
+      "c10_fixed_registered_consumer_sample_serial_edge": 213
+    },
+    "negative_control": "actual historical gate wrapper with ckv/rsv data registered fails clock/reset directness assertion",
+    "does_not_qualify": "Measured physical epoch, actual downstream success consumer/static compiler binding, HOST3ck forwarding, native TTsetup/FFhold/DRC0/reach remain required."
   }
 }

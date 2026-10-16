@@ -16,7 +16,8 @@
    "physical/s81_fill2",
    "physical/s81_die_pins/fill2_gen19b/dsfd_stage_seq_static_c8.tcl",
    "physical/s81_die_pins/fill2_gen19b/dsfd_stage_seq_static_c8_localtree.tcl",
-   "tools/s81_compile_schedule"
+   "tools/s81_compile_schedule",
+   "tools/s81/issuer_pinreg_boundary_gate.py"
   ]
  },
  "stages": {
@@ -72,6 +73,18 @@
     "threads": 4,
     "peak_ram_gb": 4,
     "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "actual_pinreg_clock_reset_schedule",
+    "cmd": "python3 tools/s81/issuer_pinreg_boundary_gate.py {RUN}/actual_pinreg_boundary --kind c8",
+    "expect": "pass",
+    "pass_regex": "ISSUER_PINREG_BOUNDARY PASS",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "yosys",
      "iverilog"
     ]
    }

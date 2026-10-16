@@ -11,7 +11,7 @@ ROOT=Path(__file__).resolve().parents[2]
 def digest(p):return hashlib.sha256(Path(p).read_bytes()).hexdigest()
 def run(cmd,**kw):return subprocess.run(cmd,check=True,**kw)
 def main():
- a=argparse.ArgumentParser();a.add_argument('out');a.add_argument('--hook');a.add_argument('--old-wrapper');a=a.parse_args()
+ a=argparse.ArgumentParser();a.add_argument('out');a.add_argument('--hook');a.add_argument('--old-wrapper');a.add_argument('--kind',choices=['c8','c10','all'],default='all');a=a.parse_args()
  out=Path(a.out).resolve();out.mkdir(parents=True,exist_ok=True)
  hook=Path(a.hook).resolve()if a.hook else ROOT/'physical/common_flow/ot_pin_regs.tcl'
  yosys=os.environ.get('YOSYS')or str(Path.home()/'.local/opentallas-tools/yosys-0.68/bin/yosys')
@@ -19,6 +19,7 @@ def main():
  if not yosys:raise RuntimeError('actual Yosys required')
  sources={};receipt={'hook':str(hook),'hook_sha256':digest(hook),'qualified':False,'scope':'actual generated boundary + actual sourceRTL simulation; physicalphase/route/productionconsumer still unqualified','tops':{}}
  for kind,stem in [('c8','s81fill2_sseq_c8'),('c10','s81issuer_c10_localtree')]:
+  if a.kind!='all'and a.kind!=kind:continue
   spec=json.loads((ROOT/'tools/ref_tile/specs_s81_fill2'/f'{stem}.json').read_text());top=spec['top'];d=out/kind;d.mkdir(exist_ok=True)
   kit=ROOT/'physical/ref_tile'/spec['name']/'kit.env'
   # Let bash parse the actual generated array, then pass each literal value

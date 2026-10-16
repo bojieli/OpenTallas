@@ -1,0 +1,574 @@
+{
+  "hook": "/srv/opentallas-scratch/claude/s81issuer-boundary-roles2/pinroles_candidate_snapshot.tcl",
+  "hook_sha256": "72103f693ab08fa2e2ec22afa49c3150647545023954741bf5aaddf39c120b88",
+  "qualified": false,
+  "scope": "actual generated boundary + actual sourceRTL simulation; physicalphase/route/productionconsumer still unqualified",
+  "tops": {
+    "c8": {
+      "top": "dsfd_stage_seq_static_c8",
+      "NOPS": 128,
+      "STAGE": 0,
+      "kit_sha256": "e66f30357142c411e54a5636f16b8e8346c053e54b94353c6caf1e2672471572",
+      "wrapper_sha256": "bd4f01ae263e4426f36e543e8a2acf138cd6d0d43bb49087996b7e66116bfaed",
+      "table_sha256": "65764f015c4458f5171338f028504bf0181ed711b43bddb9dd70da962f6fbd4f",
+      "role_env": {
+        "OT_PIN_REGS": "1",
+        "OT_PIN_REGS_CLOCK": "ck,ckv",
+        "OT_PIN_REGS_RESET_PORTS": "rst,rsv",
+        "OT_PIN_REGS_EXCLUDE": "^ckv$|^(f_ks|f_pw|t_kd|t_st)(\\[.*\\])?$",
+        "OT_PIN_REGS_RESET": "^(rst|rsv)(\\[.*\\])?$"
+      },
+      "rows": {
+        "ckv": {
+          "direction": "input",
+          "width": 1,
+          "cycles": 0,
+          "why": "clock"
+        },
+        "rsv": {
+          "direction": "input",
+          "width": 1,
+          "cycles": 0,
+          "why": "reset"
+        },
+        "ck": {
+          "direction": "input",
+          "width": 1,
+          "cycles": 0,
+          "why": "clock"
+        },
+        "rst": {
+          "direction": "input",
+          "width": 1,
+          "cycles": 0,
+          "why": "reset"
+        },
+        "f_ks": {
+          "direction": "input",
+          "width": 53,
+          "cycles": 0,
+          "why": "excluded"
+        },
+        "t_kd": {
+          "direction": "output",
+          "width": 54,
+          "cycles": 0,
+          "why": "excluded"
+        },
+        "f_pw": {
+          "direction": "input",
+          "width": 36,
+          "cycles": 0,
+          "why": "excluded"
+        },
+        "f_plen": {
+          "direction": "input",
+          "width": 8,
+          "cycles": 1,
+          "why": "pin register"
+        },
+        "t_st": {
+          "direction": "output",
+          "width": 6,
+          "cycles": 0,
+          "why": "excluded"
+        },
+        "c0": {
+          "direction": "output",
+          "width": 85,
+          "cycles": 1,
+          "why": "pin register"
+        },
+        "c1": {
+          "direction": "output",
+          "width": 85,
+          "cycles": 1,
+          "why": "pin register"
+        },
+        "c2": {
+          "direction": "output",
+          "width": 85,
+          "cycles": 1,
+          "why": "pin register"
+        },
+        "c3": {
+          "direction": "output",
+          "width": 85,
+          "cycles": 1,
+          "why": "pin register"
+        },
+        "c4": {
+          "direction": "output",
+          "width": 85,
+          "cycles": 1,
+          "why": "pin register"
+        },
+        "c5": {
+          "direction": "output",
+          "width": 85,
+          "cycles": 1,
+          "why": "pin register"
+        },
+        "c6": {
+          "direction": "output",
+          "width": 85,
+          "cycles": 1,
+          "why": "pin register"
+        },
+        "c7": {
+          "direction": "output",
+          "width": 85,
+          "cycles": 1,
+          "why": "pin register"
+        },
+        "c12": {
+          "direction": "output",
+          "width": 85,
+          "cycles": 1,
+          "why": "pin register"
+        },
+        "d0": {
+          "direction": "input",
+          "width": 9,
+          "cycles": 1,
+          "why": "pin register"
+        },
+        "d1": {
+          "direction": "input",
+          "width": 9,
+          "cycles": 1,
+          "why": "pin register"
+        },
+        "d2": {
+          "direction": "input",
+          "width": 9,
+          "cycles": 1,
+          "why": "pin register"
+        },
+        "d3": {
+          "direction": "input",
+          "width": 9,
+          "cycles": 1,
+          "why": "pin register"
+        },
+        "d4": {
+          "direction": "input",
+          "width": 9,
+          "cycles": 1,
+          "why": "pin register"
+        },
+        "d5": {
+          "direction": "input",
+          "width": 9,
+          "cycles": 1,
+          "why": "pin register"
+        },
+        "d6": {
+          "direction": "input",
+          "width": 9,
+          "cycles": 1,
+          "why": "pin register"
+        },
+        "d7": {
+          "direction": "input",
+          "width": 9,
+          "cycles": 1,
+          "why": "pin register"
+        },
+        "d12": {
+          "direction": "input",
+          "width": 9,
+          "cycles": 1,
+          "why": "pin register"
+        },
+        "s0": {
+          "direction": "input",
+          "width": 2,
+          "cycles": 1,
+          "why": "pin register"
+        },
+        "s1": {
+          "direction": "input",
+          "width": 2,
+          "cycles": 1,
+          "why": "pin register"
+        },
+        "s2": {
+          "direction": "input",
+          "width": 2,
+          "cycles": 1,
+          "why": "pin register"
+        },
+        "s3": {
+          "direction": "input",
+          "width": 2,
+          "cycles": 1,
+          "why": "pin register"
+        },
+        "s4": {
+          "direction": "input",
+          "width": 2,
+          "cycles": 1,
+          "why": "pin register"
+        },
+        "s5": {
+          "direction": "input",
+          "width": 2,
+          "cycles": 1,
+          "why": "pin register"
+        },
+        "s6": {
+          "direction": "input",
+          "width": 2,
+          "cycles": 1,
+          "why": "pin register"
+        },
+        "s7": {
+          "direction": "input",
+          "width": 2,
+          "cycles": 1,
+          "why": "pin register"
+        },
+        "s12": {
+          "direction": "input",
+          "width": 2,
+          "cycles": 1,
+          "why": "pin register"
+        }
+      }
+    },
+    "c10": {
+      "top": "dsfd_stage_seq_static_c10",
+      "NOPS": 128,
+      "STAGE": 0,
+      "kit_sha256": "558de27ba9846eebb79d604b7dd119182b1d9fe7647c3d7c185a3ca64b17692e",
+      "wrapper_sha256": "4c3d9e0ba97d773e7879b484de35561a4323e3bc8acccde6c9d1bf7905deff6a",
+      "table_sha256": "23dae681c315cbd31554096dc7082c550f24302fd50d7db8c4d0e6b939b6414d",
+      "role_env": {
+        "OT_PIN_REGS": "1",
+        "OT_PIN_REGS_CLOCK": "ck,ckv",
+        "OT_PIN_REGS_RESET_PORTS": "rst,rsv",
+        "OT_PIN_REGS_EXCLUDE": "^ckv$|^(f_ks|f_pw|f_pq_pw|t_kd|t_st)(\\[.*\\])?$",
+        "OT_PIN_REGS_RESET": "^(rst|rsv)(\\[.*\\])?$"
+      },
+      "rows": {
+        "ckv": {
+          "direction": "input",
+          "width": 1,
+          "cycles": 0,
+          "why": "clock"
+        },
+        "rsv": {
+          "direction": "input",
+          "width": 1,
+          "cycles": 0,
+          "why": "reset"
+        },
+        "ck": {
+          "direction": "input",
+          "width": 1,
+          "cycles": 0,
+          "why": "clock"
+        },
+        "rst": {
+          "direction": "input",
+          "width": 1,
+          "cycles": 0,
+          "why": "reset"
+        },
+        "f_ks": {
+          "direction": "input",
+          "width": 53,
+          "cycles": 0,
+          "why": "excluded"
+        },
+        "t_kd": {
+          "direction": "output",
+          "width": 54,
+          "cycles": 0,
+          "why": "excluded"
+        },
+        "f_pw": {
+          "direction": "input",
+          "width": 36,
+          "cycles": 0,
+          "why": "excluded"
+        },
+        "f_plen": {
+          "direction": "input",
+          "width": 8,
+          "cycles": 1,
+          "why": "pin register"
+        },
+        "t_st": {
+          "direction": "output",
+          "width": 6,
+          "cycles": 0,
+          "why": "excluded"
+        },
+        "f_pq_pw": {
+          "direction": "input",
+          "width": 36,
+          "cycles": 0,
+          "why": "excluded"
+        },
+        "t_pq_desc_pw": {
+          "direction": "output",
+          "width": 36,
+          "cycles": 1,
+          "why": "pin register"
+        },
+        "calendar_prime": {
+          "direction": "output",
+          "width": 1,
+          "cycles": 1,
+          "why": "pin register"
+        },
+        "stage_start": {
+          "direction": "output",
+          "width": 1,
+          "cycles": 1,
+          "why": "pin register"
+        },
+        "calendar_base": {
+          "direction": "output",
+          "width": 12,
+          "cycles": 1,
+          "why": "pin register"
+        },
+        "calendar_length": {
+          "direction": "output",
+          "width": 13,
+          "cycles": 1,
+          "why": "pin register"
+        },
+        "pq_image_sealed": {
+          "direction": "input",
+          "width": 1,
+          "cycles": 1,
+          "why": "pin register"
+        },
+        "pq_calendar_primed": {
+          "direction": "input",
+          "width": 1,
+          "cycles": 1,
+          "why": "pin register"
+        },
+        "pq_calendar_fault": {
+          "direction": "input",
+          "width": 1,
+          "cycles": 1,
+          "why": "pin register"
+        },
+        "c0": {
+          "direction": "output",
+          "width": 85,
+          "cycles": 1,
+          "why": "pin register"
+        },
+        "c1": {
+          "direction": "output",
+          "width": 85,
+          "cycles": 1,
+          "why": "pin register"
+        },
+        "c2": {
+          "direction": "output",
+          "width": 85,
+          "cycles": 1,
+          "why": "pin register"
+        },
+        "c3": {
+          "direction": "output",
+          "width": 85,
+          "cycles": 1,
+          "why": "pin register"
+        },
+        "c4": {
+          "direction": "output",
+          "width": 85,
+          "cycles": 1,
+          "why": "pin register"
+        },
+        "c5": {
+          "direction": "output",
+          "width": 85,
+          "cycles": 1,
+          "why": "pin register"
+        },
+        "c6": {
+          "direction": "output",
+          "width": 85,
+          "cycles": 1,
+          "why": "pin register"
+        },
+        "c7": {
+          "direction": "output",
+          "width": 85,
+          "cycles": 1,
+          "why": "pin register"
+        },
+        "c10": {
+          "direction": "output",
+          "width": 85,
+          "cycles": 1,
+          "why": "pin register"
+        },
+        "c12": {
+          "direction": "output",
+          "width": 85,
+          "cycles": 1,
+          "why": "pin register"
+        },
+        "c13": {
+          "direction": "output",
+          "width": 85,
+          "cycles": 1,
+          "why": "pin register"
+        },
+        "d0": {
+          "direction": "input",
+          "width": 9,
+          "cycles": 1,
+          "why": "pin register"
+        },
+        "d1": {
+          "direction": "input",
+          "width": 9,
+          "cycles": 1,
+          "why": "pin register"
+        },
+        "d2": {
+          "direction": "input",
+          "width": 9,
+          "cycles": 1,
+          "why": "pin register"
+        },
+        "d3": {
+          "direction": "input",
+          "width": 9,
+          "cycles": 1,
+          "why": "pin register"
+        },
+        "d4": {
+          "direction": "input",
+          "width": 9,
+          "cycles": 1,
+          "why": "pin register"
+        },
+        "d5": {
+          "direction": "input",
+          "width": 9,
+          "cycles": 1,
+          "why": "pin register"
+        },
+        "d6": {
+          "direction": "input",
+          "width": 9,
+          "cycles": 1,
+          "why": "pin register"
+        },
+        "d7": {
+          "direction": "input",
+          "width": 9,
+          "cycles": 1,
+          "why": "pin register"
+        },
+        "d10": {
+          "direction": "input",
+          "width": 9,
+          "cycles": 1,
+          "why": "pin register"
+        },
+        "d12": {
+          "direction": "input",
+          "width": 9,
+          "cycles": 1,
+          "why": "pin register"
+        },
+        "d13": {
+          "direction": "input",
+          "width": 9,
+          "cycles": 1,
+          "why": "pin register"
+        },
+        "s0": {
+          "direction": "input",
+          "width": 2,
+          "cycles": 1,
+          "why": "pin register"
+        },
+        "s1": {
+          "direction": "input",
+          "width": 2,
+          "cycles": 1,
+          "why": "pin register"
+        },
+        "s2": {
+          "direction": "input",
+          "width": 2,
+          "cycles": 1,
+          "why": "pin register"
+        },
+        "s3": {
+          "direction": "input",
+          "width": 2,
+          "cycles": 1,
+          "why": "pin register"
+        },
+        "s4": {
+          "direction": "input",
+          "width": 2,
+          "cycles": 1,
+          "why": "pin register"
+        },
+        "s5": {
+          "direction": "input",
+          "width": 2,
+          "cycles": 1,
+          "why": "pin register"
+        },
+        "s6": {
+          "direction": "input",
+          "width": 2,
+          "cycles": 1,
+          "why": "pin register"
+        },
+        "s7": {
+          "direction": "input",
+          "width": 2,
+          "cycles": 1,
+          "why": "pin register"
+        },
+        "s10": {
+          "direction": "input",
+          "width": 2,
+          "cycles": 1,
+          "why": "pin register"
+        },
+        "s12": {
+          "direction": "input",
+          "width": 2,
+          "cycles": 1,
+          "why": "pin register"
+        },
+        "s13": {
+          "direction": "input",
+          "width": 2,
+          "cycles": 1,
+          "why": "pin register"
+        }
+      }
+    }
+  },
+  "old_wrapper_sha256": "b3be8fd9f707863ea0b92f10c327417b78a15d51c8851e3ccc958eb61987e7e7",
+  "source_sha256": {
+    "rtl/dsrom_sys/s81_static_control/ot_s81_fixed_issue.sv": "5cf56524db619c7f1bddc73815f622132358436529e324c82954b89013dbbf07",
+    "rtl/dsrom_sys/s81_static_control/ot_s81_fixed_mailbox.sv": "e9629558b211dd2000ebb8970f87176d0648a00e3da2195201bbd135539412b7",
+    "rtl/dsrom_sys/s81_static_control/dsfd_stage_seq_static_c.sv": "3fc9e5cd96970d49788e9a5a06fce3a31fb4984baa8cd505ad49084ada338521",
+    "rtl/dsrom_sys/s81_static_control/dsfd_stage_seq_static_c8.sv": "c10293192d5859139181269994dd2caa0930a569e4785f8613ace66db8bfddd8",
+    "rtl/dsrom_sys/s81_static_control/dsfd_stage_seq_static_c10.sv": "08bd9bf3123f065785ba6b6cc3946845688fde907b9bffd5b97cac949db6fe64",
+    "rtl/dsrom_sys/s81_static_control/ot_s81_pq_boot_control.sv": "32ecceb7c7d91cb541d1d25c8cd2ee1a4be83b1a1c0eed0031502bc53d4fb747"
+  },
+  "bench_sha256": "30680b5ffcaa655b423b6699f08b63d3434ea7dd9c0d6ed3d6f2598867c60082"
+}
