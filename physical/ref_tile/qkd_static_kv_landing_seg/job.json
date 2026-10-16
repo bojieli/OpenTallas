@@ -108,10 +108,10 @@
  ],
  "cycles_added": {
   "hop_reset_deassert_edges": 1,
-  "fault_report_edges": 1,
-  "sram_write_edges": 1,
+  "fault_report_edges": 2,
+  "sram_write_edges": 0,
   "traffic_edges": 0,
-  "note": "row written one edge later inside the PC; request->response latency 8 unchanged"
+  "note": "ls3 hop reset deassert +1 (reset guard); fault visibility +2 vs historical (FAULT_PIPE +1, CHECK_PIPE +1: the checker runs one edge behind the data path); SRAM write/read edges, request->response latency 8 and the kv_calendar / landing_cal ages unchanged"
  },
  "route_hold_corners": "mm",
  "route_hold_margin_ns": 0.03,
@@ -121,6 +121,6 @@
  "structural_change": "ls2: rebased on the landing alias fix (main 35a278613: K row ordinal = stream position; rowctl VREQ takes arm/epoch/layer); bench over 4 contexts. ls1 (1a68fa5b0) was never submitted.",
  "reroute_reason": {
   "kind": "rtl_change",
-  "why": "parallel variant of ls4 from the ls3 exact gate TT classes (signoff 833, placement RC): reg->reg 598 paths worst -43.3 ps ticket[*]/D (wa decode), reg->macro -36.3 ps u_rows/w_addr_in; no in/out class in the worst 300 (rsp face not limiting). ls5 = ls4 + landing_pc WRITE_PIPE=1: SRAM write ce/addr/data and ticket write registered once more beside the array."
+  "why": "ls3 route EARLY_FAIL_HOLD (hold WNS -20.9 stuck; the real limiter is setup: 2,338 SS endpoints in landing_pc). ls4 exact gate re-timed at TT placement RC (signoff 833): all 715 failing endpoints are the PC checker fed by ps_q (expected_sector pin register): valid[*] 204 paths -44.4, ticket[*][*] 508 -31.5, fq -30.7, u_rows/w_addr_in -21.6; the worst path spends ~400 ps in 7 BUFx6f from ps_q (quarter of the E face) to the checker the placer pulled to the centre (get / arm / epoch side; density hot spot y 600-900). ls5 = ls4 + landing_pc CHECK_PIPE=1: the checker runs on relay registers one edge behind the data path (ticket narrowed to {sector[9], ordinal[7]} exactly, per-bit valid update); WRITE_PIPE stays 0 (the unsubmitted 25b3d9a6f WRITE_PIPE variant gated SS -147 on fq: the cone was wire, not logic)."
  }
 }
