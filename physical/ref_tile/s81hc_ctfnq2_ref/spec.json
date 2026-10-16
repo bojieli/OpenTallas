@@ -15,7 +15,18 @@
   "exact": true
  },
  "why_floorplan": "Held CTFN native-hop structural partition:4 data banks each<=1615sinks plus tiny reset leaf. Existing n3 andFSv6 routed pin arcs fail40incominghops at literal835.92; independently compensated local clocks must demonstrate safer native margin. Parent+8.64um and5actualentries, no inherited physical view.",
- "pins": {},
+ "pins": {
+  "N": [
+   "clk",
+   "fd_in",
+   "rst_in",
+   "fv_in"
+  ],
+  "S": [
+   "fdm",
+   "fvm"
+  ]
+ },
  "refglob": "*",
  "route": {
   "pd": 0.5,

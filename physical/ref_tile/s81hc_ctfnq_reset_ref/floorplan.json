@@ -28,7 +28,16 @@
   "layer_cap": "M5",
   "cap_basis": "contract"
  },
- "pins": {},
+ "pins": {
+  "N": [
+   "clk",
+   "rst_in"
+  ],
+  "S": [
+   "rst_c",
+   "valid_reset"
+  ]
+ },
  "clock_port": "clk",
  "blocks": [],
  "findings": [],
