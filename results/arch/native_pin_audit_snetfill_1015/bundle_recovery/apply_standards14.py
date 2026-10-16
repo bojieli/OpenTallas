@@ -10,12 +10,16 @@ a current file that differs from the replayed published hash, or an abstract.jso
 Helper basis: 11 replays used the job-source helper (source_commit). hstnv_515/759/2204 (source c6e3baa04) actually
 installed the verified frozen overlay helper (route_overlay_plan, helper_overlay_verification verified_original);
 their receipts name THAT basis (git blob / origin_main / content hash), not the c6 source branch.
-usage: apply_standards14.py WORKTREE ART_DIR
+usage: apply_standards14.py WORKTREE ART_DIR [BATCH ... --out NAME]  (default batches standards14 standards3_effective)
 """
 import hashlib, json, shutil, sys
 from pathlib import Path
 
 w = Path(sys.argv[1]).resolve(); art = Path(sys.argv[2]).resolve()
+args = sys.argv[3:]; OUT = 'recovered_standards14_0040.json'
+if '--out' in args:
+    i = args.index('--out'); OUT = args[i + 1]; args = args[:i] + args[i + 2:]
+BATCHES = args or ['standards14', 'standards3_effective']
 sys.path.insert(0, str(w / 'tools/ref_tile')); sys.path.insert(0, str(w / 'tools/hier_contract'))
 import export_provenance as EP  # noqa: E402
 import child_lint as C  # noqa: E402
@@ -26,10 +30,11 @@ ADMISSION = {  # ot-run units that executed the replays (logs in ART_DIR/standar
     ('standards14', 'ot-epyc1tb'): 'oth-ubuntu-2094769-1792135225', ('standards14', 'ot-epyc4'): 'oth-ubuntu-3757852-1792135225',
     ('standards14', 'ot-pve1'): 'oth-ubuntu-1870763-1792135225',
     ('standards3_effective', 'ot-epyc1tb'): 'oth-ubuntu-2134426-1792135703',
-    ('standards3_effective', 'ot-epyc4'): 'oth-ubuntu-3784147-1792135703'}
+    ('standards3_effective', 'ot-epyc4'): 'oth-ubuntu-3784147-1792135703',
+    ('xstg_n4', 'ot-epyc1tb'): 'oth-ubuntu-2148971-1792135864'}
 
 rows = {}
-for batch in ('standards14', 'standards3_effective'):
+for batch in BATCHES:
     for rp in sorted((art / batch).glob('ot-*/*/replay.json')):
         r = json.loads(rp.read_text())
         if r.get('passed'):
@@ -92,7 +97,7 @@ for job, (batch, host, d, r) in sorted(rows.items()):
                 'fail_why': nat.get('fail_why', ''),
                 'transformation_sha256': a['export_provenance']['transformation_sha256']})
     print(cell, helper['basis'], 'native', 'PASS' if nat['pass'] else 'FAIL ' + nat.get('fail_why', ''))
-EP.write_json(w / 'results/arch/native_pin_audit_snetfill_1015/recovered_standards14_0040.json',
+EP.write_json(w / 'results/arch/native_pin_audit_snetfill_1015' / OUT,
               {'scope': 'DEDUPE phase-1 S81 station/relay standards: strict export lineage + native pin audit only; '
                         'no die slot/pin binding or parent/die qualification', 'rows': out})
 print(len(out), 'receipts applied')

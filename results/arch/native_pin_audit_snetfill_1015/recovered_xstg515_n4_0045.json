@@ -1,0 +1,19 @@
+{
+  "scope": "dsfd_xstg_515 n4refclk (CLOSED TT +178.14 / FF +20.84 / DRC 0): strict export lineage + native pin audit only (launch 115.1 / capture 126.4 / spread 13.5 ps; was capture 356 ps on n3); layout PNGs read (uniform ~0.49 fill, W/E data faces, S-face clock entry); no die slot/pin binding or parent/die qualification",
+  "rows": [
+    {
+      "cell": "dsfd_xstg_515",
+      "job": "s81net_xstg_515-n4refclk-bbc0958a4",
+      "helper_basis": "verified_original_frozen_overlay",
+      "raw_sha256": "d783d94dd2f8954df1c50d6fcb728ca6e461a04ce5427fee35406af358af9545",
+      "final_sha256": "28664e4897fda0d5b11ba56501556c5c7a293210b5b38106d87063ef4e9569e8",
+      "child_lint": "PASS",
+      "native_pass": true,
+      "launch_ps": 115.1,
+      "capture_ps": 126.4,
+      "spread_ps": 13.5,
+      "fail_why": "",
+      "transformation_sha256": "f744761c7329e515b2542da53def62007b27bfd052a67e369ad673b24323d712"
+    }
+  ]
+}
