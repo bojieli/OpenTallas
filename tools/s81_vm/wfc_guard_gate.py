@@ -34,7 +34,7 @@ def main():
  p=argparse.ArgumentParser(description=__doc__)
  p.add_argument('--source',type=Path,required=True);p.add_argument('--manifest',type=Path,required=True)
  p.add_argument('--wfc-sha256',required=True);p.add_argument('--out',type=Path,required=True)
- p.add_argument('--jobs',type=int,default=8);p.add_argument('--max-gap',type=int,default=10)
+ p.add_argument('--jobs',type=int,default=8);p.add_argument('--min-gap',type=int,default=0);p.add_argument('--max-gap',type=int,default=10)
  a=p.parse_args();a.source=a.source.resolve();a.out=a.out.resolve();a.out.mkdir(parents=True,exist_ok=True)
  package=json.loads(a.manifest.read_text());manifest={i['path']:i['sha256']for i in package['files']}if 'files'in package else package;files=[];pins={}
  for rel,expected in manifest.items():
@@ -59,7 +59,7 @@ def main():
  if r.returncode:raise RuntimeError('build failed; inspect '+str(a.out/'build.log'))
  rows=[];minima={}
  for phase in range(8):
-  for gap in range(a.max_gap+1):
+  for gap in range(a.min_gap,a.max_gap+1):
    r=subprocess.run([str(a.out/'obj/sim'),f'+PHASE={phase}',f'+GAP={gap}'],capture_output=True,text=True)
    (a.out/f'phase{phase}_gap{gap}.log').write_text(r.stdout+r.stderr)
    m=re.search(r'^WFC_GUARD_RESULT (.*)$',r.stdout,re.M)

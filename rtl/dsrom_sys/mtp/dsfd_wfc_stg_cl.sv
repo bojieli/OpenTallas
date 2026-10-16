@@ -409,7 +409,7 @@ module dsfd_wfc_vmx_p (
     output wire [3:0]    t_ft
 );
     wire [31:0] hks; wire [0:0] vr_ft;
-    dsfd_wfc_vmx_w u_vw (.ck(ck), .ckv(ckv), .rst(rst), .rsv(rsv),
+    dsfd_wfc_vmx_w #(.START_DELAY_S(1)) u_vw (.ck(ck), .ckv(ckv), .rst(rst), .rsv(rsv),
         .f_vw(f_vw), .f_cs(f_cs), .t_vc(t_vc),
         .t_swv(t_swv), .t_swd(t_swd), .f_swr(f_swr), .f_swa(f_swa), .f_kdv(f_kd[53]), .t_ks(t_ks), .t_hks(hks),
         .f_pf(f_pf), .f_lf(f_lf), .f_rf(vr_ft), .t_ft(t_ft));
