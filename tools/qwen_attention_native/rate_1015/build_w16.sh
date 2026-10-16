@@ -31,14 +31,18 @@ assert s.count(old)==1;s=s.replace(old,'ot_qwen_tp8_pv256_finalize_static_cal_8 
 i=s.index('// Common-phase stack entry');s=s[:i]
 (out/'service.sv').write_text(s)
 PYGEN
+# the 16-chain slice (4 x 32x128 macros) as its own protected library (512 instances in the parent)
+rm -rf "$D/slice"
+"$vl" --cc --build --timing -O2 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-WIDTH --build-jobs 32 --top-module ot_qwen_tp8_pv16_slice --prefix Vqattn_pv16_slice --mod-prefix Vqattn_pv16_slice --lib-create qattn_pv16_slice --Mdir "$D/slice" "$R/rtl/hdc/nearhbm/ot_qwen_tp8_pv16_slice_gen.sv" "$R/rtl/hdc/nearhbm/ot_qwen_nearhbm_prod.sv" "$R/rtl/hdc/ot_hdc_fp32_add_lat.sv" "$R/rtl/hdc/ot_hdc_prefix.sv" "$R/rtl/hdc/ot_hdc_fastfp.sv" "$R/rtl/hdc/ot_hdc_fpu.sv" "$R/physical/asap7_memory_macros/ot_sram_1r1w_32x128_m1/ot_sram_1r1w_32x128_m1.v" > "$D/slice_build.log" 2>&1
+sed -e 's/^module qattn_pv16_slice/module ot_qwen_tp8_pv16_slice/' "$D/slice/qattn_pv16_slice.sv" > "$D/slice/ot_qwen_tp8_pv16_slice.sv"
 libs=();while IFS= read -r file;do case "$file" in */libot_qwen_tp8_attention_native_stack_cp_c.a|*/libqkd_ectl3_epoch_direct_s_d.a|*/libqkd_astk_ctl_tp8_cal_d.a) ;; *)libs+=("$file");;esac;done < <(find "$stage/stubs" -mindepth 2 -maxdepth 2 -name 'lib*.a' | sort)
 [[ ${#libs[@]} == 30 ]]
-libs+=("$fix/ectl3/libqkd_ectl3_epoch_direct_s_d.a" "$D/cp/libqattn_cp_w4.a" "$zfix/ctl/libqkd_astk_ctl_tp8_cal_d.a")
+libs+=("$fix/ectl3/libqkd_ectl3_epoch_direct_s_d.a" "$D/cp/libqattn_cp_w4.a" "$zfix/ctl/libqkd_astk_ctl_tp8_cal_d.a" "$D/slice/libqattn_pv16_slice.a")
 link="-Wl,--start-group ${libs[*]} -Wl,--end-group"
 fp=("$R/rtl/hdc/ot_hdc_fp32_add_lat.sv" "$R/rtl/hdc/ot_hdc_prefix.sv" "$R/rtl/hdc/ot_hdc_fastfp.sv" "$R/rtl/hdc/ot_hdc_fpu.sv")
 for dm in ${DMUTS:-0 1 2}; do
 rm -rf "$D/parent$dm"
-"$vl" --binary --timing -O2 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-WIDTH --build-jobs 32 --top-module tb_qwen_tp8_attention_native_service_w16 -GDMUT=$dm -GTRACE=1 --Mdir "$D/parent$dm" -LDFLAGS "$link" "$D/cp/qattn_cp_w4.sv" "$stage/stubs/Vot_qwen_tp8_pv256_slice/ot_qwen_tp8_pv256_slice.sv" "$stage/stubs/Vot_qkd_ahub_static_die_cal_3/ot_qkd_ahub_static_die_cal_3.sv" "$stage/stubs/Vot_qwen_tp8_pv256_finalize_static_cal_8/ot_qwen_tp8_pv256_finalize_static_cal_8.sv" "${fp[@]}" "$R/rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_pair.sv" "$R/rtl/hdc/nearhbm/ot_qwen_tp8_vrow_capture.sv" "$D/service.sv" "$R/rtl/test/nearhbm/tb_qwen_tp8_attention_native_service_w16.sv" > "$D/parent${dm}_build.log" 2>&1 &
+"$vl" --binary --timing -O2 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-WIDTH --build-jobs 32 --top-module tb_qwen_tp8_attention_native_service_w16 -GDMUT=$dm -GTRACE=1 --Mdir "$D/parent$dm" -LDFLAGS "$link" "$D/cp/qattn_cp_w4.sv" "$D/slice/ot_qwen_tp8_pv16_slice.sv" "$stage/stubs/Vot_qkd_ahub_static_die_cal_3/ot_qkd_ahub_static_die_cal_3.sv" "$stage/stubs/Vot_qwen_tp8_pv256_finalize_static_cal_8/ot_qwen_tp8_pv256_finalize_static_cal_8.sv" "${fp[@]}" "$R/rtl/hdc/nearhbm/ot_qwen_tp8_pv_wide_pair.sv" "$R/rtl/hdc/nearhbm/ot_qwen_tp8_vrow_capture.sv" "$D/service.sv" "$R/rtl/test/nearhbm/tb_qwen_tp8_attention_native_service_w16.sv" > "$D/parent${dm}_build.log" 2>&1 &
 done
 wait
 for dm in ${DMUTS:-0 1 2}; do test -x "$D/parent$dm/Vtb_qwen_tp8_attention_native_service_w16"; done

@@ -128,5 +128,10 @@
  "io_budget": {
   "in": 0.55,
   "out": 0.2
+ },
+ "reroute_reason": {
+  "kind": "slot_change",
+  "slot_change_request": "S-VM 2026-10-15 x34_s W1026 slot 43.2x345.6 -> 86.4x345.6 um: closed n1 view native FAIL launch 234.5 > 220 ps (74 bank pins, R 250.1; results/physical/s81_vm_native_1705/cdc_n1_native_audit.json); same RTL/pins/root, wider outline for the 3,085 bank output registers",
+  "source": "results/physical/s81_vm_native_1705/cdc_n1_native_audit.json"
  }
 }

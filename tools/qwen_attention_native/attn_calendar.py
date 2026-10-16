@@ -115,9 +115,9 @@ def hub(z, lmax):
 
 
 # ---- Q-ATTN-RATE 2026-10-15: 16-row/cycle P.V (ot_qwen_tp8_attention_native_service_w16, 2 x ot_qwen_tp8_pv_wide_pair) ----
-W16_FIRST = 20          # pair cycle of the q = 0 arrival: request cycle 1 + V_EXT 16 + ER3 3
-W16_DRAIN, W16_TREE, W16_JOIN = 13, 73, 24   # last arrival -> TRA; in-bank tree 16 -> 1 (31+19+13+10); 512-lane join L5-L7
-W16_PV_AFTER_EXP = 188   # PV_START - EXP - zwalk(T): e of the last EP group visible to the 16-row walk (measured, below)
+W16_FIRST = 22          # pair cycle of the q = 0 arrival: start pin reg 1 + request cycle 1 + request pin reg 1 + V_EXT 16 + ER3 3
+W16_DRAIN, W16_TREE, W16_JOIN = 13, 73, 28   # last arrival -> TRA; in-bank tree 16 -> 1; column join 24 behind cmd reg + column pin regs (+4)
+W16_PV_AFTER_EXP = 186   # PV_START - EXP - zwalk(T): e of the last EP group visible to the 16-row walk (measured, below)
 
 
 def w16_nq(T, p):
@@ -168,10 +168,11 @@ def calendar_w16(T, lmax=None, exp_gap=None, z_k=None, w16_gap=None):
 
 
 def pv_after_exp_w16(T):
-    """PV_START - EXP of the 16-row walk: zwalk(T) + 188.  Measured on the w16 production binary (55a5f5a98,
-    fault = the stack e-read visibility check): d = PV_START - EXP - zwalk faults at 182 / 184 / 186 and is exact at
-    184 / 186 / 188 for T = 6144 / 7000-7168 / 8000-8192; below ~6000 rows the published reciprocal (R) binds the
-    capture, so the law only has to stay above the visibility boundary (exact from d = 80 at 4096, 100 at 5000)."""
+    """PV_START - EXP of the 16-row walk: zwalk(T) + 186.  Measured at 1-edge resolution on the production binary with
+    pin registers on every P.V port (4c026e895; fault = the stack e-read visibility check): d = PV_START - EXP - zwalk
+    is exact from 182 (T=6144), 184 (7000, 7168), 186 (8000, 8192) and faults one edge below; from ~5000 rows down the
+    published reciprocal (R) binds the capture (exact from 174 at 5000).  The 1-row/cycle-era receipt (55a5f5a98, no
+    request pin register) had the same boundaries 2 edges later."""
     return zwalk(T) + W16_PV_AFTER_EXP
 
 

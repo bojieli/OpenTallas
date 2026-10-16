@@ -1,0 +1,108 @@
+{
+ "name": "vm_strap_q3_ref-strap1-COMMIT",
+ "block": "hfd_vms_bank_strap_q3",
+ "ref_tile": true,
+ "owner": "Claude H-SM",
+ "purpose": "Strap-identity quadrant master (coordinator decision per DEDUPE, 2026-10-15): bank / slice identity is a registered strap input (bid[2:0] / sid[1:0] pins, tied to die constants per instance, captured by pin flops), so the 8 banks of the quadrant use this ONE view; replaces the 8 literal-identity masters. Same data calendars and edges as identity2. Pins: identity2 r2 grant (actual tracks, PG-clear, explicit centres) + 5 strap pins on free N-face tracks beside the clock pair (proposal for H-DIE).",
+ "threads": 8,
+ "peak_ram_gb": 24,
+ "source": {
+  "branch": "claude/hbm-sm-attention-1015",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/hbm_accel/generic/vm/static",
+   "physical/hbm_vm_strap_1015/q3",
+   "results/arch/hbm_die_v15/vm_strap_grants_1015.json",
+   "physical/common_flow/assigned_pin_exact.tcl"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; hfd_vms_bank_strap_q3 u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_strap_q3.sv rtl/hbm_accel/generic/vm/static/ot_vms_bank_static_strap.sv rtl/hbm_accel/generic/vm/static/ot_vms_ce_counter_pipe.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "strap_core_and_8_strapped_instances",
+    "cmd": "bash rtl/hbm_accel/generic/vm/static/identity/run_strap.sh {RUN}/bench/strap 3",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 2,
+    "min_count_regex": "eachgroup_reads=(\\d+)"
+   },
+   {
+    "name": "wrong_bank_strap_mutant",
+    "cmd": "cd rtl/hbm_accel/generic/vm/static/identity && iverilog -g2012 -s tb_hbm_vm_strap_wrappers -Ptb_hbm_vm_strap_wrappers.SID=3 -Ptb_hbm_vm_strap_wrappers.RG=6 -Ptb_hbm_vm_strap_wrappers.WG=3 -Ptb_hbm_vm_strap_wrappers.MUT=3 -o {RUN}/mut3.vvp ../ot_vms_ce_counter_pipe.sv ../ot_vms_bank_static_strap.sv ../physical/hfd_vms_bank_strap_q3.sv ../../../../../../physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v tb_hbm_vm_strap_wrappers.sv && vvp {RUN}/mut3.vvp",
+    "expect": "fail",
+    "fail_regex": "FATAL: .*bank fault",
+    "threads": 1,
+    "peak_ram_gb": 2
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/vm_strap_q3_ref/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/vm_strap_q3_ref/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 24
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/vm_strap_q3_ref --out {RUN}/record/views/hfd_vms_bank_strap_q3 --macro-view physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/vm_strap_q3_ref/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/vm_strap_q3_ref/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/vm_strap_q3_ref/vm_strap_q3_ref-strap1-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "Strap-identity quadrant master (coordinator decision per DEDUPE, 2026-10-15): bank / slice identity is a registered strap input (bid[2:0] / sid[1:0] pins, tied to die constants per instance, captured by pin flops), so the 8 banks of the quadrant use this ONE view; replaces the 8 literal-identity masters. Same data calendars and edges as identity2. Pins: identity2 r2 grant (actual tracks, PG-clear, explicit centres) + 5 strap pins on free N-face tracks beside the clock pair (proposal for H-DIE)."
+}

@@ -1,0 +1,204 @@
+{
+ "name": "qkd_ectl_b_tp8_direct_h5",
+ "top": "qkd_ectl_b_tp8_direct",
+ "kind": "tile",
+ "sources": [
+  "rtl/qwen_sys/split_20261014/qkd_ectl_native_direct_tp8.sv",
+  "rtl/hdc/nearhbm/ot_qkd_ectl_parts.sv",
+  "rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_h.sv",
+  "rtl/hdc/ot_hdc_delay.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
+  "rtl/lib/ot_rst_relay.sv"
+ ],
+ "params": {
+  "STATIC_QK": 1,
+  "QK_ISSUE_AGE": 34,
+  "ROW_RETURN_LAT": 21,
+  "HXK": 5
+ },
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 254.88,
+  "h": 129.6
+ },
+ "layer_cap": "M5",
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_rows*g_m?0?*u_s",
+   "at": [
+    22.464,
+    43.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "inst": "*u_rows*g_m?1?*u_s",
+   "at": [
+    137.592,
+    43.2
+   ],
+   "orient": "R0"
+  }
+ ],
+ "pins": {
+  "W": [
+   "rs_i"
+  ],
+  "E": [
+   "x_i"
+  ],
+  "S": [
+   "t0_cl",
+   "t0_row",
+   "rst_n",
+   "cfg"
+  ],
+  "N": [
+   "t1_cl",
+   "t1_row",
+   "ck"
+  ]
+ },
+ "pin_ranges": {
+  "rs_i": [
+   6.0,
+   110.0
+  ],
+  "x_i": [
+   112.0,
+   124.0
+  ],
+  "t0_cl": [
+   4.5,
+   8.5
+  ],
+  "t0_row": [
+   10.0,
+   110.0
+  ],
+  "rst_n": [
+   120.0,
+   121.0
+  ],
+  "cfg": [
+   122.0,
+   124.0
+  ],
+  "t1_cl": [
+   4.5,
+   8.5
+  ],
+  "t1_row": [
+   10.0,
+   110.0
+  ],
+  "ck": [
+   126.9,
+   127.9
+  ]
+ },
+ "route": {
+  "pd": 0.45,
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "pin_balance": {
+   "group_max": 32,
+   "v": "M5",
+   "h": "M4"
+  },
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "recipe": 3,
+ "structural_change": "Direct registered ECTL seams (Codex 5f3e5767f/00f42ca01, coordinator 14:07 native audit of tp3 A/B/C: B x_o feed-through launch 349.5 / x_i + rvm_i capture 232, C x_o launch 301.8 / si capture 239.8, A rs[0] capture 247.9 (rs[0] fed rv1 AND the B feed-through rvm)). Now C launches x_b (stage 1) to B and x_a (stage 2) straight to A over B; A launches rs_o[0] (stage 2) to B and C; B has no feed-through flop (captures one face, launches only S/N). Every consumer still sees stage 3: exact native 3705 / s0e0 4137 PASS, mutants A/B/C FAIL 172/924/2835, no cycle change. dr2: clock spine with macro leaves (as A: 361 / 28.7 ps): dr1 CLOSED TT +151.09 / FF +9.28 but native launch 225.6 ps on 2 t1_row pins with a 74.9-ps boundary spread (TritonCTS); the spine bounds the pin-flop clock spread. r3 (dr3): C's x1 is now a pure E-pin capture flop; C launches its x2 (stage 2) to B and A; B's pin flop x1 is stage 3 (XB2). Exact native 3705 / s0e0 6065 PASS, mutants A/B/C FAIL 3496/999/178, legacy 3705 PASS; no cycle change.",
+ "job": {
+  "owner": "claude:Q-ELEM 1705",
+  "branch": "claude/qelem-ectl-h5-1705",
+  "tag": "h5",
+  "purpose": "Native TP8 ECTL leaf B with direct registered seams (native pin audit fix) for the KV/system die three-clock ectl.",
+  "benches": [
+   {
+    "name": "ectl3_tp8_exact",
+    "cmd": "SPLIT_CLOCK=1 ECTL_DIRECT=1 bash tools/qwen_kv_die/ectl3_tp8_bench.sh {RUN}/bench/ectl3",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^ECTL3 PASS",
+    "min_count_regex": "compares (\\d+)"
+   },
+   {
+    "name": "ectl3_tp8_exact_s0e0",
+    "cmd": "SPLIT_CLOCK=1 ECTL_DIRECT=1 S=0 E=0 NL=6 bash tools/qwen_kv_die/ectl3_tp8_bench.sh {RUN}/bench/ectl3_00",
+    "expect": "pass",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^ECTL3 PASS",
+    "min_count_regex": "compares (\\d+)"
+   },
+   {
+    "name": "ectl3_tp8_mut_b",
+    "cmd": "SPLIT_CLOCK=1 ECTL_DIRECT=1 S=0 E=0 bash tools/qwen_kv_die/ectl3_tp8_bench.sh {RUN}/bench/ectl3_mut B",
+    "expect": "fail",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "^ECTL3 PASS"
+   }
+  ],
+  "extra_paths": [
+   "rtl/hdc",
+   "rtl/test/qwen_kv_die",
+   "tools/qwen_kv_die",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2"
+  ],
+  "views_to": "physical/ref_tile/qkd_ectl_b_tp8_direct_h5/views",
+  "record_to": "results/rtl/ref_tile/qkd_ectl_b_tp8_direct_h5",
+  "hosts": [
+   "ot-epyc1tb",
+   "ot-epyc4",
+   "ot-pve1"
+  ],
+  "structural_change": "KV die v1.4.3 (G3S2 head stages, Q-KVSYS-DIE request 10-15 ~20:30): production parameters STATIC_QK 1, QK_ISSUE_AGE 34, ROW_RETURN_LAT 21, HXK 5 (head extra score latency in v1.4.3; was 8 in s8). RTL, outline, pins identical to qkd_ectl_b_tp8_direct. Leaf benches are the closed kit's exact/mutant benches (default-parameter control exactness, as s8); HXK 5 composition proof is the stack owner's."
+ },
+ "boundary_tcl": [
+  "physical/qwen_die_masters/sram_edge_guard.tcl"
+ ],
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB2xp67_ASAP7_75t_R"
+ },
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "clock": "spine",
+ "slot_change_request": "qkd_ectl slot unchanged (647.976 x 129.576, three abutting leaves A 254.88 | B 254.88 | C 138.24); parent becomes rtl/qwen_sys/split_20261014/qkd_ectl3_direct_s.sv (wires only, ck[2:0]); C.x_a (W 94-106) -> A.x_i (E 112-124) and A.rs_o[0] -> C.rsv_i are parent nets over the B slot on M6+ (<= 255 um).",
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "why": "rtl_change: B takes C's stage-2 word (XB2=1, its pin flop x1 is stage 3) + clock spine; dr1 native launch 225.6 on 2 pins (spread 74.9)"
+ },
+ "children": [],
+ "inter": [],
+ "pin_regs": {
+  "enable": false,
+  "reason": "ECTL static calendar: QK_ISSUE_AGE, ROW_RETURN_LAT (=K_EXT 16 + RQD 2 + 3 response pin stages) and HXK count every boundary edge of the K-pass / row-return loop inside the RTL; synthesis-only pin registers (+1 per port) would shift the fixed-cycle issue/return by edges the RTL constants and the native benches do not see (age fault). Pin registration for this leaf must be done in RTL with the constants re-derived (KV die lead / Q-ATTN decision). Pin geometry, outline and io_flop_at_pins unchanged from the closed kit."
+ }
+}
