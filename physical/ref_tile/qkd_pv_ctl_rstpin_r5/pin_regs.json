@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_qwen_tp8_pv_wide_ctl",
+ "enable": false,
+ "reason": "the RTL already registers every data port at the module boundary (ot_qwen_tp8_pv_col: pv/pe/cmd -> v_r/e_r/c_r, y/y_valid/fault are flops; ot_qwen_tp8_pv_wide_ctl: every input *_r, every output a flop; only the constant pair_id strap is unregistered) and the bench-measured static calendar includes those stages (P = 22 + NQ + 113, results/arch/qwen_attention_rate_1015/receipt.json, 53/53 exact); a flow-inserted second stage would add 1 cycle the compiler calendar does not have. io_flop_at_pins anchors the RTL pin flops (recipe 2)."
+}
