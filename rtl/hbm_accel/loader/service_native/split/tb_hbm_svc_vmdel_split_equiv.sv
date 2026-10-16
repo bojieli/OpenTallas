@@ -24,16 +24,21 @@ module tb_hbm_svc_vmdel_split_equiv;
  reg [2251:0] hist [0:7]; integer since_rst=0, h;
  wire [2251:0] ref_now={br_a,dq_a,busy_a,fault_a};
  wire [2251:0] ref_del=(LAT==0)?ref_now:hist[LAT-1];
- always @(negedge clk) begin
-  if(!rst_n) since_rst=0; else since_rst=since_rst+1;
- end
  always @(posedge clk) begin for(h=7;h>0;h=h-1) hist[h]<=hist[h-1]; hist[0]<=ref_now; end
- always @(negedge clk) if(rst_n && since_rst>LAT) begin
+ // The stimulus below also drives reset at negedge. Sample after those blocking
+ // assignments and update the recovery count in this same process. Independent
+ // active-region processes could miss a one-cycle reset at both assertion and
+ // release, then compare unqualified reset-recovery payload against the history.
+ always @(negedge clk) begin
+  #1;
+  if(!rst_n) since_rst=0; else since_rst=since_rst+1;
+  if(rst_n && since_rst>LAT) begin
   checks=checks+1;
   if(ref_del!=={br_b,dq_b,busy_b,fault_b})
    $fatal(1,"SPLIT_EQUIV mismatch cycle=%0d LAT=%0d br %b/%b busy %b/%b fault %b/%b",cyc,LAT,ref_del[2251:2250],br_b,ref_del[1],busy_b,ref_del[0],fault_b);
   for(integer b=0;b<8;b=b+1) if(dq_a[b*281+280]) valid_dq=valid_dq+1;
   if(fault_a) faults_seen=faults_seen+1;
+  end
  end
  initial begin
   if(!$value$plusargs("seed=%d",seed)) seed=SEED;
