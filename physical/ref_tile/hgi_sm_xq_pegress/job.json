@@ -1,0 +1,128 @@
+{
+ "name": "hgi_sm_xq_pegress-x1-COMMIT",
+ "block": "ot_hgi_sm_xload_xq_pegress",
+ "ref_tile": true,
+ "owner": "Claude H-SM 1315",
+ "purpose": "XQL pair-egress leaf: the ctl egress (rw capture, replicated beat select, BD beat capture, xw pins) per SM pair, beside the pair store",
+ "threads": 8,
+ "peak_ram_gb": 16,
+ "source": {
+  "branch": "claude/hsm-xql-1315",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "physical/asap7_memory_macros",
+   "physical/hbm_xp_aq_tree13_1014",
+   "rtl/hbm_accel/generic/adapters/tb",
+   "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload.sv",
+   "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static.sv",
+   "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl.sv",
+   "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_cl2.sv",
+   "rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_xql.sv",
+   "rtl/hbm_accel/generic/vm",
+   "rtl/hbm_accel/host_static_20261015",
+   "rtl/hdc",
+   "rtl/lib/ot_rst_relay.sv",
+   "rtl/link/ot_fifo_sram_fwft.sv",
+   "tools/hbm_sm_xload_static_timing.py"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hgi_sm_xload_xq_pegress u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/generic/peers/ot_hgi_sm_xload_static_xql.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "xql_lock_exact",
+    "cmd": "XLOAD_F20=1 XLOAD_CL2=1 XLOAD_CLOCK_LEAVES=1 XLOAD_XQL=1 XQL_T=2 bash rtl/hbm_accel/generic/adapters/tb/run_xload_static_lock.sh {RUN}/xql_lock_exact",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 24
+   },
+   {
+    "name": "xql_pair_write_drop_mutant",
+    "cmd": "XLOAD_F20=1 XLOAD_CL2=1 XLOAD_CLOCK_LEAVES=1 XLOAD_XQL=1 XQL_T=2 XQL_MUT=1 bash rtl/hbm_accel/generic/adapters/tb/run_xload_static_lock.sh {RUN}/xql_m1",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 24
+   },
+   {
+    "name": "xql_pair_skew_mutant",
+    "cmd": "XLOAD_F20=1 XLOAD_CL2=1 XLOAD_CLOCK_LEAVES=1 XLOAD_XQL=1 XQL_T=2 XQL_MUT=2 bash rtl/hbm_accel/generic/adapters/tb/run_xload_static_lock.sh {RUN}/xql_m2",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 24
+   },
+   {
+    "name": "xql_pair_map_mutant",
+    "cmd": "XLOAD_F20=1 XLOAD_CL2=1 XLOAD_CLOCK_LEAVES=1 XLOAD_XQL=1 XQL_T=2 XQL_MUT=3 bash rtl/hbm_accel/generic/adapters/tb/run_xload_static_lock.sh {RUN}/xql_m3",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 24
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/hgi_sm_xq_pegress/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/hgi_sm_xq_pegress/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 16
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/hgi_sm_xq_pegress --out {RUN}/record/views/ot_hgi_sm_xload_xq_pegress  > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/hgi_sm_xq_pegress/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": []
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/hgi_sm_xq_pegress/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/hgi_sm_xq_pegress/hgi_sm_xq_pegress-x1-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "new leaf (XQL, coordinator decision 10-16; d4b SM_X 63 stages -> pair-local egress)"
+}
