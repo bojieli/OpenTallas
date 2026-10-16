@@ -232,6 +232,21 @@ if {$guides} {
 }
 set snap [dict create]
 foreach i [$block getInsts] { dict set snap [$i getName] [list {*}[$i getLocation] [$i getOrient] [[$i getMaster] getName]] }
+# Source-pinned opt-in for the diagnosed A input overpadding only. It changes
+# physical buffers, not constraints or RTL stages. Normal repair follows; the
+# resulting netlist must be rerouted/extracted and judged by unchanged signoff.
+set ot_native [envd OT_ECO_NATIVE_NORMALIZE ""]
+if {$ot_native ne ""} {
+  if {[$block getName] ne "qkd_ectl_a_tp8_epoch_direct"} {error "native normalization is A-scoped"}
+  if {![file isfile $ot_native]} {error "native normalization source missing"}
+  set ot_native_sha [envd OT_ECO_NATIVE_NORMALIZE_SHA256 ""]
+  if {![regexp {^[0-9a-f]{64}$} $ot_native_sha] || [lindex [exec sha256sum $ot_native] 0] ne $ot_native_sha} {
+    error "native normalization source hash mismatch"
+  }
+  source $ot_native
+  puts "OT_ECO native normalization applied; canonical route/signoff still required"
+}
+
 if {[llength [dict get $win fixable]]} {
   if {[catch {repair_timing -hold -hold_margin $hm -setup_margin $sm -max_buffer_percent [envd OT_MAX_BUF_PCT 30] -verbose} err]} {
     # the buffer cap (RSZ-0060) keeps what was inserted: continue and let the sign-off judge it (hfd_stn_r38 pass 2 died
