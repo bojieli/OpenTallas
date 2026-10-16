@@ -60,6 +60,7 @@ def main():
     ap.add_argument('--phy-sw-x', type=float, default=2884.896)
     ap.add_argument('--block', action='append', default=[], help='override NAME=W,H')
     ap.add_argument('--out', type=Path, required=True)
+    ap.add_argument('--vm-seam', type=float, default=86.4, help='vmc: actual VM to collective access channel width')
     ap.add_argument('--pq-gap', type=float, default=432.0, help='vmc: gather | PQ crossing channel (um)')
     ap.add_argument('--mode', choices=('c5', 'vmc'), default='c5',
                     help='c5 = side-by-side strip (historical); vmc = VM-centred cluster from real port faces (S81-AGGRO vmc + S-DIE D1/D2)')
@@ -174,8 +175,8 @@ def vmc_main(a):
     bk_top_lim = bx[3] - a.abut                    # bk_collector bottom
     su_floor = 1831.68                             # 45 um clear of bk_selector top (1786.3)
     # ---- x (S81-AGGRO vmc)
-    col_x = up(hx0 + 3153.7 + 4104.0 + 86.4, GX)   # 17,194.1: collective / WFC / host column (fixed by the HC + S14E)
-    vm_x = dn(col_x - 86.4 - B['vm'][0], GX)       # VM E edge on the 86.4 seam; a wider VM (S-VM) grows W
+    col_x = up(hx0 + 3153.7 + 4104.0 + a.vm_seam, GX)   # 17,194.1: collective / WFC / host column (fixed by the HC + S14E)
+    vm_x = dn(col_x - a.vm_seam - B['vm'][0], GX)       # VM E edge on the 86.4 seam; a wider VM (S-VM) grows W
     su_x = up(hx0 + 3153.7, GX)                    # 13,003.7 (S81-AGGRO vmc2)
     hc_x = up(col_x + a.cw + 432.0, GX)            # 432-um channel collective column | HC
     s14e = hx1 - (hc_x + B['hc_s'][0])
