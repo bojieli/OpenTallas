@@ -998,109 +998,109 @@
   {
    "inst": "lk_S0",
    "port": "clk",
-   "domain": "link",
+   "domain": "stream",
    "kind": "clock"
   },
   {
    "inst": "lk_S0",
    "port": "rst",
-   "domain": "link",
+   "domain": "stream",
    "kind": "reset"
   },
   {
    "inst": "lk_S1",
    "port": "clk",
-   "domain": "link",
+   "domain": "stream",
    "kind": "clock"
   },
   {
    "inst": "lk_S1",
    "port": "rst",
-   "domain": "link",
+   "domain": "stream",
    "kind": "reset"
   },
   {
    "inst": "lk_S2",
    "port": "clk",
-   "domain": "link",
+   "domain": "stream",
    "kind": "clock"
   },
   {
    "inst": "lk_S2",
    "port": "rst",
-   "domain": "link",
+   "domain": "stream",
    "kind": "reset"
   },
   {
    "inst": "lk_S3",
    "port": "clk",
-   "domain": "link",
+   "domain": "stream",
    "kind": "clock"
   },
   {
    "inst": "lk_S3",
    "port": "rst",
-   "domain": "link",
+   "domain": "stream",
    "kind": "reset"
   },
   {
    "inst": "lk_S4",
    "port": "clk",
-   "domain": "link",
+   "domain": "stream",
    "kind": "clock"
   },
   {
    "inst": "lk_S4",
    "port": "rst",
-   "domain": "link",
+   "domain": "stream",
    "kind": "reset"
   },
   {
    "inst": "lk_N0",
    "port": "clk",
-   "domain": "link",
+   "domain": "stream",
    "kind": "clock"
   },
   {
    "inst": "lk_N0",
    "port": "rst",
-   "domain": "link",
+   "domain": "stream",
    "kind": "reset"
   },
   {
    "inst": "lk_N1",
    "port": "clk",
-   "domain": "link",
+   "domain": "stream",
    "kind": "clock"
   },
   {
    "inst": "lk_N1",
    "port": "rst",
-   "domain": "link",
+   "domain": "stream",
    "kind": "reset"
   },
   {
    "inst": "lk_N2",
    "port": "clk",
-   "domain": "link",
+   "domain": "stream",
    "kind": "clock"
   },
   {
    "inst": "lk_N2",
    "port": "rst",
-   "domain": "link",
+   "domain": "stream",
    "kind": "reset"
   },
   {
    "inst": "lk_N3",
    "port": "clk",
-   "domain": "link",
+   "domain": "stream",
    "kind": "clock"
   },
   {
    "inst": "lk_N3",
    "port": "rst",
-   "domain": "link",
+   "domain": "stream",
    "kind": "reset"
   },
   {
@@ -1118,230 +1118,6 @@
  ],
  "straps": [],
  "gaps": [
-  {
-   "id": "G-CIL-EP",
-   "owner": "H-COLL (link endpoint group, ep_* windows)",
-   "missing_rtl": "hfd_ep_static (planned in el1013-lkep-split.log: 613-b static frame <-> 512-b SerDes beat TX/RX gearbox, 4 slots in 5 beats, marker/idle + off-die elastic RX pingpong (0az) + pin-registered ports) does NOT exist on main. ot_hgi_coll_static_link_capture exists but is NOT the ep: it is already instantiated INSIDE the COLL quadrant (ot_hfd_coll_q_static_v4.sv:261, u_link per link) and its die-facing side is the 612-b pin frame, not the 512-b ot_pdie_serdes beat (ot_pdie_serdes tx/rx are 512 b, no valid). hfd_lk_ep v14 retired (credits on the COLL side, too big for the 0.224 mm2 window). ot_hfd_coll_q*_static_host_v4_elastic_rx(_pingpong) put the elastic RX inside COLL instead -- conflicts with the ep plan; owner must pick one home.",
-   "affects": [
-    [
-     "hb_coll_SW",
-     "phy_up",
-     0,
-     1
-    ],
-    [
-     "hb_coll_SW",
-     "rx_pin_v",
-     0,
-     1
-    ],
-    [
-     "hb_coll_SW",
-     "rx_pin_flit",
-     0,
-     612
-    ],
-    [
-     "lk_S0",
-     "tx",
-     0,
-     512
-    ],
-    [
-     "hb_coll_SW",
-     "phy_up",
-     1,
-     2
-    ],
-    [
-     "hb_coll_SW",
-     "rx_pin_v",
-     1,
-     2
-    ],
-    [
-     "hb_coll_SW",
-     "rx_pin_flit",
-     612,
-     1224
-    ],
-    [
-     "lk_S1",
-     "tx",
-     0,
-     512
-    ],
-    [
-     "hb_coll_SW",
-     "phy_up",
-     2,
-     3
-    ],
-    [
-     "hb_coll_SW",
-     "rx_pin_v",
-     2,
-     3
-    ],
-    [
-     "hb_coll_SW",
-     "rx_pin_flit",
-     1224,
-     1836
-    ],
-    [
-     "lk_S2",
-     "tx",
-     0,
-     512
-    ],
-    [
-     "hb_coll_SE",
-     "phy_up",
-     0,
-     1
-    ],
-    [
-     "hb_coll_SE",
-     "rx_pin_v",
-     0,
-     1
-    ],
-    [
-     "hb_coll_SE",
-     "rx_pin_flit",
-     0,
-     612
-    ],
-    [
-     "lk_S3",
-     "tx",
-     0,
-     512
-    ],
-    [
-     "hb_coll_SE",
-     "phy_up",
-     1,
-     2
-    ],
-    [
-     "hb_coll_SE",
-     "rx_pin_v",
-     1,
-     2
-    ],
-    [
-     "hb_coll_SE",
-     "rx_pin_flit",
-     612,
-     1224
-    ],
-    [
-     "lk_S4",
-     "tx",
-     0,
-     512
-    ],
-    [
-     "hb_coll_NW",
-     "phy_up",
-     0,
-     1
-    ],
-    [
-     "hb_coll_NW",
-     "rx_pin_v",
-     0,
-     1
-    ],
-    [
-     "hb_coll_NW",
-     "rx_pin_flit",
-     0,
-     612
-    ],
-    [
-     "lk_N0",
-     "tx",
-     0,
-     512
-    ],
-    [
-     "hb_coll_NW",
-     "phy_up",
-     1,
-     2
-    ],
-    [
-     "hb_coll_NW",
-     "rx_pin_v",
-     1,
-     2
-    ],
-    [
-     "hb_coll_NW",
-     "rx_pin_flit",
-     612,
-     1224
-    ],
-    [
-     "lk_N1",
-     "tx",
-     0,
-     512
-    ],
-    [
-     "hb_coll_NE",
-     "phy_up",
-     0,
-     1
-    ],
-    [
-     "hb_coll_NE",
-     "rx_pin_v",
-     0,
-     1
-    ],
-    [
-     "hb_coll_NE",
-     "rx_pin_flit",
-     0,
-     612
-    ],
-    [
-     "lk_N2",
-     "tx",
-     0,
-     512
-    ],
-    [
-     "hb_coll_NE",
-     "phy_up",
-     1,
-     2
-    ],
-    [
-     "hb_coll_NE",
-     "rx_pin_v",
-     1,
-     2
-    ],
-    [
-     "hb_coll_NE",
-     "rx_pin_flit",
-     612,
-     1224
-    ],
-    [
-     "lk_N3",
-     "tx",
-     0,
-     512
-    ]
-   ],
-   "note": "Per link, COLL side 1+612+1 out (tx_pin_v, tx_pin_flit[612], retry_requested) / 1+1+612 in (phy_up, rx_pin_v, rx_pin_flit[612]) = 1228 b vs grant COLL_EP window 1224 b (4 b short); SerDes side tx 512 in / rx 512 + st 2 out (+clk/rst) vs EP_SERDES window 1056 b. Unconsumed outputs until ep exists: hb_coll_<q>.tx_pin_v/tx_pin_flit/retry_requested, lk_*.rx/st. Planned ep -> coll mapping (grant peers): {\"S0\": {\"coll\": \"hb_coll_SW\", \"link_index\": 0, \"coll_tx\": [\"tx_pin_v[0]\", \"tx_pin_flit[611:0]\", \"retry_requested[0]\"], \"coll_rx\": [\"phy_up[0]\", \"rx_pin_v[0]\", \"rx_pin_flit[611:0]\"], \"serdes\": \"lk_S0\"}, \"S1\": {\"coll\": \"hb_coll_SW\", \"link_index\": 1, \"coll_tx\": [\"tx_pin_v[1]\", \"tx_pin_flit[1223:612]\", \"retry_requested[1]\"], \"coll_rx\": [\"phy_up[1]\", \"rx_pin_v[1]\", \"rx_pin_flit[1223:612]\"], \"serdes\": \"lk_S1\"}, \"S2\": {\"coll\": \"hb_coll_SW\", \"link_index\": 2, \"coll_tx\": [\"tx_pin_v[2]\", \"tx_pin_flit[1835:1224]\", \"retry_requested[2]\"], \"coll_rx\": [\"phy_up[2]\", \"rx_pin_v[2]\", \"rx_pin_flit[1835:1224]\"], \"serdes\": \"lk_S2\"}, \"S3\": {\"coll\": \"hb_coll_SE\", \"link_index\": 0, \"coll_tx\": [\"tx_pin_v[0]\", \"tx_pin_flit[611:0]\", \"retry_requested[0]\"], \"coll_rx\": [\"phy_up[0]\", \"rx_pin_v[0]\", \"rx_pin_flit[611:0]\"], \"serdes\": \"lk_S3\"}, \"S4\": {\"coll\": \"hb_coll_SE\", \"link_index\": 1, \"coll_tx\": [\"tx_pin_v[1]\", \"tx_pin_flit[1223:612]\", \"retry_requested[1]\"], \"coll_rx\": [\"phy_up[1]\", \"rx_pin_v[1]\", \"rx_pin_flit[1223:612]\"], \"serdes\": \"lk_S4\"}, \"N0\": {\"coll\": \"hb_coll_NW\", \"link_index\": 0, \"coll_tx\": [\"tx_pin_v[0]\", \"tx_pin_flit[611:0]\", \"retry_requested[0]\"], \"coll_rx\": [\"phy_up[0]\", \"rx_pin_v[0]\", \"rx_pin_flit[611:0]\"], \"serdes\": \"lk_N0\"}, \"N1\": {\"coll\": \"hb_coll_NW\", \"link_index\": 1, \"coll_tx\": [\"tx_pin_v[1]\", \"tx_pin_flit[1223:612]\", \"retry_requested[1]\"], \"coll_rx\": [\"phy_up[1]\", \"rx_pin_v[1]\", \"rx_pin_flit[1223:612]\"], \"serdes\": \"lk_N1\"}, \"N2\": {\"coll\": \"hb_coll_NE\", \"link_index\": 0, \"coll_tx\": [\"tx_pin_v[0]\", \"tx_pin_flit[611:0]\", \"retry_requested[0]\"], \"coll_rx\": [\"phy_up[0]\", \"rx_pin_v[0]\", \"rx_pin_flit[611:0]\"], \"serdes\": \"lk_N2\"}, \"N3\": {\"coll\": \"hb_coll_NE\", \"link_index\": 1, \"coll_tx\": [\"tx_pin_v[1]\", \"tx_pin_flit[1223:612]\", \"retry_requested[1]\"], \"coll_rx\": [\"phy_up[1]\", \"rx_pin_v[1]\", \"rx_pin_flit[1223:612]\"], \"serdes\": \"lk_N3\"}}"
-  },
   {
    "id": "G-CIL-INJ",
    "owner": "H-SU (SU quarter inject read) / H-COLL",
@@ -1951,12 +1727,6 @@
     ],
     [
      "hb_idx",
-     "rank",
-     0,
-     7
-    ],
-    [
-     "hb_idx",
      "gbase",
      0,
      8
@@ -2106,33 +1876,7 @@
      2440
     ]
    ],
-   "note": "v15 unbound_ports \"actual INDEX programme loader / CP\" (same list). rank[6:0] is the die TP rank (same value as argmax die_id[6:0]) -> could become a die top strap pin, see G-CIL-RANK"
-  },
-  {
-   "id": "G-CIL-IDXKEY",
-   "owner": "H-DIE service engine / H-COLL+IDX",
-   "missing_rtl": "service key staging producer for hb_idx.key_lines[35167:0] (4 scorers x 8792 b), addressed by key_slot/key_index outputs; v16 service engine (die_case.py: phy rc + pc_ctrl_leaf + svc_sm_group + smh) exposes no key-line port known to this region",
-   "affects": [
-    [
-     "hb_idx",
-     "key_lines",
-     0,
-     35168
-    ],
-    [
-     "hb_idx",
-     "key_slot",
-     0,
-     1
-    ],
-    [
-     "hb_idx",
-     "key_index",
-     0,
-     8
-    ]
-   ],
-   "note": "v15 \"actual service key staging\""
+   "note": "v15 unbound_ports \"actual INDEX programme loader / CP\" (same list). rank[6:0] is the die TP rank (same value as argmax die_id[6:0]) -> could become a die top strap pin, see G-CIL-RANK | idxcoll 2026-10-15: hb_idx.rank moved to G-CIL-RANK (die identity strap pin, idxcoll.json)"
   },
   {
    "id": "G-CIL-IDXTX",
@@ -2152,7 +1896,7 @@
      2180
     ]
    ],
-   "note": "outputs only; needs an SW COLL master variant exposing an idx ingress port"
+   "note": "outputs only; needs an SW COLL master variant exposing an idx ingress port | idxcoll 2026-10-15: REQUIRED RTL (H-COLL): ot_hfd_coll_q3_static_host_v4 (SW, SOLO; the only IDX) gains inputs idx_v[3:0]/idx_d[2179:0] (pin-registered) and places ot_hgi_coll_vm_idx_ingress (exists, bench PASS: run_vm_idx_ingress_bench.sh) on the four VM-assembled qslots source faces 2+NPT+j (vm face = vm_assembled, idx face = IDX tx), with mode_idx/expected_v[3:0] from a NEW instruction field: the 1536-b q_static_v4 instruction is fully packed (p_ar_low ends at 1535), so the ISA widens or an existing field is re-encoded. Latency per IDX_TKM_NATIVE_JOIN.md: IDX emit E -> ingress E+2/E+3 -> qslots E+4/E+6 -> TKM E+7 (TKM start E-2). Then edges hb_idx.tx_v/tx -> hb_coll_SW.idx_v/idx_d. Alternative without a COLL port: IDX link writes its 64 flits per rank to VM through its record client and COLL reads them as VM-assembled sources (an IDX RTL change instead)."
   },
   {
    "id": "G-CIL-AMCP",
@@ -2247,20 +1991,6 @@
     ]
    ],
    "note": ""
-  },
-  {
-   "id": "G-CIL-RANK",
-   "owner": "H-DIE / owner (package strap)",
-   "missing_rtl": "die rank identity: hb_argmax.die_id[7:0] is commented \"static rank strap\" (ot_hbm_argmax_static_sw.sv:12) but one die master serves every array position, so it is NOT a compile-time constant -> propose a die top input strap pin die_rank[7:0] (bump strap) feeding hb_argmax.die_id and hb_idx.rank[6:0]; not tied here",
-   "affects": [
-    [
-     "hb_argmax",
-     "die_id",
-     0,
-     8
-    ]
-   ],
-   "note": "hb_idx.rank listed under G-CIL-IDXCP (it may be per-record)"
   },
   {
    "id": "G-CIL-HOSTN",
@@ -2589,5 +2319,5 @@
   },
   "unchanged": "rst_n clk_control clk_issue clk_qslots clk_ring clk_vmwrite clk_link clk_tkm(SW) hgi_busy/done/fault inj_* del_* rc_*/rr_* phy_up tx_pin_v rx_pin_v retry_requested pr_cw/ccw_i/o vm_rq vm_rr vm_kq fault done stat_cycles (same widths) -> all v15 edges on hb_coll_<q> (vm rq/rr/kq, ring) stay valid"
  },
- "notes": "MASTER CHOICE: hb_coll_<q> rebound from v15 ot_hfd_coll_q{3,2}_static (V1) to ot_hfd_coll_q{3,2}_static_host_v4 #(QID) -- the H-COLL production parent (tb_hgi_coll_sw_slice_parent PASS on main, writer v4 CLOSED inside, state lanes adopted by grants v7). Reasons: (a) its HOST F20 programme target binds the 4 v15 UNBOUND control ports (qid/hgi_start/hgi_start_pc/program_cfg) to real RTL (host_cp_ingress = ot_hbm_host_static_ingress, same port names/widths) and turns qid into a QID parameter; (b) its 612-b pin frame is what the grant COLL_EP windows (1224 b = 2x612) and compact.graph provenance ('tx/rx_pin_flit 1836 = 3 x 612') already assume; (c) all v15 hb_coll edges (vm rq/rr/kq, pr ring) keep their ports and widths. Grants slot cells still say ot_hfd_coll_q{3,2}_static -> H-DIE must re-cell coll_<q> (unclosed cluster, top-down pins) and the writer/state child paths become hb_coll_<q>/u_q/u_q/{u_writer,u_ring...} (host_v4 u_q -> q*_static_v4 u_q -> q_static_v4). Did NOT pick *_elastic_rx(_pingpong): they put the 0az off-die elastic RX inside COLL and add 19-28 rx_* boundary-control inputs with no producer, while the ep plan (el1013-lkep-split.log) puts the elastic pingpong in the ep tile; owner must decide the home (G-CIL-EP). If the coordinator prefers to stay on v15 V1 masters: drop the 36 host_cp_ingress edges, restore qid as a STRAP (SW0 SE1 NW2 NE3) and gap hgi_start/hgi_start_pc/program_cfg, pin flits 596/link. host_cp_ingress TARGET_MASK (default 1<<48) must include targets 52..55 (COLL quadrants) -- host_misc sets that param; launch_v is a broadcast (all 4 quadrants start the same record). EP: no ep_* instance is emitted (no master on main); coll links <-> lk_* stay a gap; nothing aliased. lk_* clk/rst and host_N clk/rst put on the LINK domain (pll_link / por_link, ot_pdie_serdes rst is active-low despite its name, file header line 21); coll clk_link stays STREAM as in v15 (the capture endpoint runs on the native edge) -> the stream<->link crossing must live in the future ep (or pll_link must equal stream; doubt). pma_* ports are die pins (die_pins list; pma_rck/pma_tck are pad clocks of the far die / to the far die). IDX: hb_idx stays one die instance; idx_s0..3/idx_sel/idx_link/idx_q/idx_op are its hardened children placed as plan blocks. hb_argmax kept but has NO compact660_v5 slot. Accounting: every input bit of the 16 instances is an edge dst, a clock/reset, a die pin, a gap, or a kept v15 edge (hb_coll vm_rr/pr_cw_i/pr_ccw_i; hb_idx vm_rr/cr/argmax_rq; hb_argmax vm_rr/cr)."
+ "notes": "MASTER CHOICE: hb_coll_<q> rebound from v15 ot_hfd_coll_q{3,2}_static (V1) to ot_hfd_coll_q{3,2}_static_host_v4 #(QID) -- the H-COLL production parent (tb_hgi_coll_sw_slice_parent PASS on main, writer v4 CLOSED inside, state lanes adopted by grants v7). Reasons: (a) its HOST F20 programme target binds the 4 v15 UNBOUND control ports (qid/hgi_start/hgi_start_pc/program_cfg) to real RTL (host_cp_ingress = ot_hbm_host_static_ingress, same port names/widths) and turns qid into a QID parameter; (b) its 612-b pin frame is what the grant COLL_EP windows (1224 b = 2x612) and compact.graph provenance ('tx/rx_pin_flit 1836 = 3 x 612') already assume; (c) all v15 hb_coll edges (vm rq/rr/kq, pr ring) keep their ports and widths. Grants slot cells still say ot_hfd_coll_q{3,2}_static -> H-DIE must re-cell coll_<q> (unclosed cluster, top-down pins) and the writer/state child paths become hb_coll_<q>/u_q/u_q/{u_writer,u_ring...} (host_v4 u_q -> q*_static_v4 u_q -> q_static_v4). Did NOT pick *_elastic_rx(_pingpong): they put the 0az off-die elastic RX inside COLL and add 19-28 rx_* boundary-control inputs with no producer, while the ep plan (el1013-lkep-split.log) puts the elastic pingpong in the ep tile; owner must decide the home (G-CIL-EP). If the coordinator prefers to stay on v15 V1 masters: drop the 36 host_cp_ingress edges, restore qid as a STRAP (SW0 SE1 NW2 NE3) and gap hgi_start/hgi_start_pc/program_cfg, pin flits 596/link. host_cp_ingress TARGET_MASK (default 1<<48) must include targets 52..55 (COLL quadrants) -- host_misc sets that param; launch_v is a broadcast (all 4 quadrants start the same record). EP: no ep_* instance is emitted (no master on main); coll links <-> lk_* stay a gap; nothing aliased. lk_* clk/rst and host_N clk/rst put on the LINK domain (pll_link / por_link, ot_pdie_serdes rst is active-low despite its name, file header line 21); coll clk_link stays STREAM as in v15 (the capture endpoint runs on the native edge) -> the stream<->link crossing must live in the future ep (or pll_link must equal stream; doubt). pma_* ports are die pins (die_pins list; pma_rck/pma_tck are pad clocks of the far die / to the far die). IDX: hb_idx stays one die instance; idx_s0..3/idx_sel/idx_link/idx_q/idx_op are its hardened children placed as plan blocks. hb_argmax kept but has NO compact660_v5 slot. Accounting: every input bit of the 16 instances is an edge dst, a clock/reset, a die pin, a gap, or a kept v15 edge (hb_coll vm_rr/pr_cw_i/pr_ccw_i; hb_idx vm_rr/cr/argmax_rq; hb_argmax vm_rr/cr). | idxcoll 2026-10-15: lk_* clk/rst moved link -> stream (the SerDes ck is the hfd_ep_static clock = COLL clk_link = stream edge); G-CIL-EP closed by idxcoll.json ep_* (hfd_ep_static); G-CIL-IDXKEY closed by idxcoll.json (svg sm_packet -> key_lines); G-CIL-RANK moved to idxcoll.json."
 }
