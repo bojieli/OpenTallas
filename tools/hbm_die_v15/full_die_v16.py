@@ -197,6 +197,9 @@ def rng(ref, ports):
     return i, p, 0, ports[i][p]['bits']
 
 
+STRAP_TARGET_MASTERS = ('ot_static_cmd_target', 'ot_static_program_target')
+
+
 def build(specs_dir, out):
     v15 = json.loads((ROOT / V15).read_text())
     grants = json.loads((ROOT / GRANTS).read_text())
@@ -238,6 +241,17 @@ def build(specs_dir, out):
                             replaces_v15=prev['master'] if prev else None)
             if i.get('rtl_deps'):
                 insts[n]['rtl_deps'] = list(i['rtl_deps'])
+    # H-NETLIST 0600 (owner 19:50 FEWER DISTINCT TILES): programme/command targets take their F20 target id from the
+    # identity strap pin tgt (TGT_PIN=1) instead of the TARGET parameter, so one hardened master per shape serves every id
+    # (76 cmd + 18+ programme targets -> 5 + 1 masters).  The id is a die constant on the strap, never a runtime value.
+    tgt_straps = []
+    for n, i in insts.items():
+        if i['master'] in STRAP_TARGET_MASTERS and 'TARGET' in i['params']:
+            v = str(i['params'].pop('TARGET'))
+            tid = int(v.split("'d")[1]) if "'d" in v else (int(v.split("'h")[1], 16) if "'h" in v else int(v))
+            i['params']['TGT_PIN'] = 1
+            tgt_straps.append(dict(inst=n, port='tgt', value=tid, reason=f'identity: F20 target id {tid} of this target instance'))
+    specs.append(dict(region='target_id_straps', straps=tgt_straps, edges=[], instances=[], clocks=[], gaps=[]))
     ports = {}
     for n, i in insts.items():
         ports[n] = rtl.ports(i['master'], i['source'], i['params'])

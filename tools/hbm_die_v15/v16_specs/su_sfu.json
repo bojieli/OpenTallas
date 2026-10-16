@@ -5595,11 +5595,11 @@
     "PAGE_AW": 1,
     "AW": 11,
     "LWB": 15,
-    "LG_PATH": 12
+    "LG_PATH": 24
    },
    "slot": null,
    "owner": "H-SU",
-   "note": "SFU core = the scheduled engine with LG_PATH=1+R (ot_hgi_sfu_split_engine.sv header: \"the core is the unchanged scheduled engine with LG_PATH = 1 + R\"; leaves + relays are die instances). R=11 padded (sfu_core_request_v7). NO slot: core box PROPOSED (4000x400 strip, needs H-SM shrink) -> placement gap H-DIE/H-SM."
+   "note": "SFU core = the scheduled engine with LG_PATH=1+R (ot_hgi_sfu_split_engine.sv header: \"the core is the unchanged scheduled engine with LG_PATH = 1 + R\"; leaves + relays are die instances). R=11 padded (sfu_core_request_v7). NO slot: core box PROPOSED (4000x400 strip, needs H-SM shrink) -> placement gap H-DIE/H-SM. | H-NETLIST 0600: LG_PATH 12 -> 24 = 1+R23 (accepted R23 sfucore homes, H-SU receipt d6d9a0ce2)."
   },
   {
    "name": "sfu_SW0",
@@ -6437,11 +6437,11 @@
     "PAGE_AW": 1,
     "AW": 11,
     "LWB": 15,
-    "LG_PATH": 12
+    "LG_PATH": 24
    },
    "slot": null,
    "owner": "H-SU",
-   "note": "SFU core = the scheduled engine with LG_PATH=1+R (ot_hgi_sfu_split_engine.sv header: \"the core is the unchanged scheduled engine with LG_PATH = 1 + R\"; leaves + relays are die instances). R=11 padded (sfu_core_request_v7). NO slot: core box PROPOSED (4000x400 strip, needs H-SM shrink) -> placement gap H-DIE/H-SM."
+   "note": "SFU core = the scheduled engine with LG_PATH=1+R (ot_hgi_sfu_split_engine.sv header: \"the core is the unchanged scheduled engine with LG_PATH = 1 + R\"; leaves + relays are die instances). R=11 padded (sfu_core_request_v7). NO slot: core box PROPOSED (4000x400 strip, needs H-SM shrink) -> placement gap H-DIE/H-SM. | H-NETLIST 0600: LG_PATH 12 -> 24 = 1+R23 (accepted R23 sfucore homes, H-SU receipt d6d9a0ce2)."
   },
   {
    "name": "sfu_SE0",
@@ -7279,11 +7279,11 @@
     "PAGE_AW": 1,
     "AW": 11,
     "LWB": 15,
-    "LG_PATH": 12
+    "LG_PATH": 24
    },
    "slot": null,
    "owner": "H-SU",
-   "note": "SFU core = the scheduled engine with LG_PATH=1+R (ot_hgi_sfu_split_engine.sv header: \"the core is the unchanged scheduled engine with LG_PATH = 1 + R\"; leaves + relays are die instances). R=11 padded (sfu_core_request_v7). NO slot: core box PROPOSED (4000x400 strip, needs H-SM shrink) -> placement gap H-DIE/H-SM."
+   "note": "SFU core = the scheduled engine with LG_PATH=1+R (ot_hgi_sfu_split_engine.sv header: \"the core is the unchanged scheduled engine with LG_PATH = 1 + R\"; leaves + relays are die instances). R=11 padded (sfu_core_request_v7). NO slot: core box PROPOSED (4000x400 strip, needs H-SM shrink) -> placement gap H-DIE/H-SM. | H-NETLIST 0600: LG_PATH 12 -> 24 = 1+R23 (accepted R23 sfucore homes, H-SU receipt d6d9a0ce2)."
   },
   {
    "name": "sfu_NW0",
@@ -8121,11 +8121,11 @@
     "PAGE_AW": 1,
     "AW": 11,
     "LWB": 15,
-    "LG_PATH": 12
+    "LG_PATH": 24
    },
    "slot": null,
    "owner": "H-SU",
-   "note": "SFU core = the scheduled engine with LG_PATH=1+R (ot_hgi_sfu_split_engine.sv header: \"the core is the unchanged scheduled engine with LG_PATH = 1 + R\"; leaves + relays are die instances). R=11 padded (sfu_core_request_v7). NO slot: core box PROPOSED (4000x400 strip, needs H-SM shrink) -> placement gap H-DIE/H-SM."
+   "note": "SFU core = the scheduled engine with LG_PATH=1+R (ot_hgi_sfu_split_engine.sv header: \"the core is the unchanged scheduled engine with LG_PATH = 1 + R\"; leaves + relays are die instances). R=11 padded (sfu_core_request_v7). NO slot: core box PROPOSED (4000x400 strip, needs H-SM shrink) -> placement gap H-DIE/H-SM. | H-NETLIST 0600: LG_PATH 12 -> 24 = 1+R23 (accepted R23 sfucore homes, H-SU receipt d6d9a0ce2)."
   },
   {
    "name": "sfu_NE0",

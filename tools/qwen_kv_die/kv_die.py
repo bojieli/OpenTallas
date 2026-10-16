@@ -1617,7 +1617,9 @@ def _relays(m):
                 # v1.2: never along the die-edge cell ring (no relay fits there: kc_ES ran 24 mm up and down the E edge
                 # past the PHY to the controller strip's N-end PHY gap once the landing strip closed its old channel)
                 if q not in prev and 1 <= q[0] < nx - 1 and 1 <= q[1] < ny - 1 and not owner.get(q) and \
-                        not (SP['on'] and q in rocc):
+                        not (SP['on'] and q in rocc) and \
+                        not (SP.get('dil') and any((q[0] + i_, q[1] + j_) in rocc for i_ in range(-SP['dil'], SP['dil'] + 1)
+                                                   for j_ in range(-SP['dil'], SP['dil'] + 1))):
                     prev[q] = c
                     dq.append(q)
         if hit is None:
@@ -1853,6 +1855,8 @@ def _relays(m):
                     px, py = path_[idx]
                     best_ = None
                     for dx_, dy_ in (offs_wide if st_.get('wide') else offs):
+                        if st_.get('offmax') and abs(dx_) + abs(dy_) > st_['offmax']:
+                            continue      # Q-KVSYS-HOP retry: a spot stays near its path point (no stranded off-path hop)
                         qx, qy = up(px + dx_ - fw / 2, GX), up(py + dy_ - fh / 2, GY)
                         pin_a = (qx, qy + fh / 2)
                         dd = d_ep(pin_a, a, pa) if prev_pt_ is None else abs(pin_a[0] - prev_pt_[0]) + abs(pin_a[1] - prev_pt_[1])
@@ -1899,13 +1903,35 @@ def _relays(m):
                 rocc[cell].remove(r_)
             cells_added.clear()
             st_.update(prev_pt=None, prev_ep=(a, pa), k=0, idx0=0)
-        for attempt in (0, 1):
+        # Q-KVSYS-HOP 2026-10-16 (OT_KV_RLY_STD=1 case: rst_die_t0_6 stage 19 found no spot): the std relay rows
+        # (up to 118.8 x 106 um) fill the channels, and the wide (24-cell) spot search strands a chain off its path, so a
+        # chain that fails BOTH attempts gets up to three more (below).  Reached only where the planner raised before:
+        # every case that built is unchanged.
+        for attempt in (0, 1, 2, 3):
             try:
                 chain_()
                 break
             except ValueError:
-                if attempt or not m['geo'].get('split'):
+                if attempt == 3 or not m['geo'].get('split') or (attempt and bid not in tree_meta
+                                                                    and __import__('os').environ.get('OT_KV_RLY_STD', '0') != '1'):
                     raise
+                if attempt:
+                    # retries 2-4: route 1 / 2 / 0 cells clear of placed relays, and every spot within PIN_REACH / 2 of
+                    # its path point (an off-path hop up to 24 cells away stranded rst_die_t0_6 500 um from its path)
+                    rollback_()
+                    st_['wide'] = True
+                    st_['offmax'] = PIN_REACH / 2
+                    SP['on'] = True
+                    SP['dil'] = (1, 2, 0)[attempt - 1]
+                    try:
+                        st_['path'] = route(a, b, pa, pb)
+                    except ValueError:
+                        SP['dil'] = 0
+                        st_['path'] = route(a, b, pa, pb)
+                    finally:
+                        SP['on'] = False
+                        SP['dil'] = 0
+                    continue
                 # v1.1 (split): the chain ran out of relay spots in a corridor other chains fill: re-route it around
                 # every cell those chains' relays hold and place it again
                 rollback_()
