@@ -1,0 +1,22 @@
+{
+ "status": "SOURCE_MECHANISM_PASS_NOT_FULL_NUMERIC_OR_PHYSICAL",
+ "source_sha256": "9dae13281985a267c73fccb5f7ab76b631175bd3c4c877ed85c342e4cbd074a4",
+ "reference_modules_extracted_from_actual_rtl_sha256": "893b7f7aedb186ccb2fb9a1b215fc128b1ebb601943b7e24aaec68745d40a17e",
+ "samples": 4096,
+ "resetepisodes": 16,
+ "unique_bit_comparisons": 821487,
+ "mutant27": "Stopped actual newly introduced capture root;3073 mismatchgroups rejected",
+ "ff_cost_per_copy": {
+  "old_payload": 105,
+  "new_payload": 201,
+  "old_reset_sync": 2,
+  "new_reset_sync": 36,
+  "added": 130
+ },
+ "full4copy_added_ff": 520,
+ "root_count": 285,
+ "root_delta": 68,
+ "new_registered_edges": 0,
+ "clock_semantics": "Same-edge functional comparison only:285roots phase-coherent in bench; actual skew/delivery/async recovery-removal remains OPEN",
+ "physical_scope": "72 new capture instances replace4oldrly leaves. No physicalarea/pins/ETM borrowed from old rly; actualnewleaf implementation and both-leg/PG/clock checks required."
+}

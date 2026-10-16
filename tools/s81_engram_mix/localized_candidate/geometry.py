@@ -5,7 +5,7 @@ import matplotlib;matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
 import argparse
-p=argparse.ArgumentParser();p.add_argument('--out',type=Path,required=True);p.add_argument('--own-valid',action='store_true');p.add_argument('--timing-metrics',type=Path);p.add_argument('--constant-proof',type=Path);args=p.parse_args()
+p=argparse.ArgumentParser();p.add_argument('--out',type=Path,required=True);p.add_argument('--own-valid',action='store_true');p.add_argument('--timing-metrics',type=Path);p.add_argument('--constant-proof',type=Path);p.add_argument('--seed',type=int,default=217);args=p.parse_args()
 R=Path(__file__).resolve().parents[3];O=args.out;O.mkdir(parents=True,exist_ok=True)
 screen=json.loads((R/'results/arch/s81_mix4_localized_1016/connected_geometry/baseline_leaf_geometry.json').read_text());J=json.loads((O/'cluster_graph.json').read_text());TOP='ot_s81_engram_mixq_localized_candidate'if args.own_valid else'ot_s81_engram_mixq_clocked_candidate';top=J['modules'][TOP];cells=top['cells'];assert len(cells)==38
 pins={};dims={};hashes={}
@@ -125,7 +125,7 @@ def objective(boxes):
  if timing_limits is not None:return tt_score(boxes)
  xy=np.array([(boxes[n]['x'],boxes[n]['y'])for n in names]);d=np.abs(xy[si]+so-xy[ti]-to).sum(axis=1)
  return d.sum()+6*np.maximum(d-500,0).sum()+1000*d.max()
-bestorder=globalrow[:];bestboxes=build(bestorder);bestcost=objective(bestboxes);rng=random.Random(217)
+bestorder=globalrow[:];bestboxes=build(bestorder);bestcost=objective(bestboxes);rng=random.Random(args.seed)
 for seed in range(3):
  order=bestorder[:];cost=bestcost
  for step in range(3500):
@@ -241,7 +241,7 @@ for tag,(boxes,outline)in variants.items():
   cuts[axis]=sorted(cutrows,key=lambda r:r['mandatory_crossing_bit_joins'],reverse=True)
  results[tag]={'mandatory_cut_inventory':cuts,'outline_um':outline,'overlap':0,'minimum_rect_L1_clearance_um':min(clearances),'incident_child_bit_joins':len(rows),'missing_LEF_terminals':0,'minimum_manhattan_sum_bit_um':sum(lengths),'minimum_manhattan_worst_um':max(lengths),'over500um_even_before_obstructions':sum(x>500for x in lengths),'p95_um':lengths[int(.95*len(lengths))],'copy_E_boundary_to_shell_return_minimum_max_um':max(vm),'copy_E_boundary_to_shell_return_minimum_mean_um':sum(vm)/len(vm),'largest_pairs':sorted([{'pair':k,'bits':v[0],'max_L1_um':v[1],'over500':v[2]}for k,v in groups.items()],key=lambda r:r['max_L1_um'],reverse=True)[:20],'placement':boxes}
 print(json.dumps({k:{x:v for x,v in r.items()if x not in ('placement','largest_pairs','mandatory_cut_inventory')}for k,r in results.items()},indent=1))
-receipt={'status':'ACTUAL_CONNECTED_GEOMETRY_SCREEN_ONLY','graph':'Yosys elaborated source38blackboxphysicalchildren; blackboxes use actual RTL headers, every data/control interchild terminal matched to actual routed LEF pin rectangles','leaf_views':hashes,'excluded_clock_reset_bits':dict(excluded),'perbit_joins':len(joins),'boundary_input_bits':len(boundary),'results':results,'limits':['Minimum L1 over all LEF terminal rectangle centers is optimistic, not routed RC or TT/FF proof','Clock/reset connections enumerated separately, no clocktree/reset PG plan qualified','Copy E boundary is not VM face; actual parent E transport reserve403.488um nominal/403.464um postshave is additional. Joint candidate pins require fullparent joins.','No timing waiver for over500um joins; added pipeline requires actual RTL/calendar proof','All R0 outlines; no90degree rotations or inherited rotated physical views','N inherited chunk ordering is concretized from prior geometry reservation, not a routed parent','Cut counts are mandatory endpoint-separated bit joins; no channel/layer track grant exists so no cut-capacity PASS claimed']}
+receipt={'search_seed':args.seed,'search_objective':'actual TT worst deficit, total deficit, failing bit count, secondary bit-um'if timing_limits is not None else'necessary500um reach heuristic','status':'ACTUAL_CONNECTED_GEOMETRY_SCREEN_ONLY','graph':'Yosys elaborated source38blackboxphysicalchildren; blackboxes use actual RTL headers, every data/control interchild terminal matched to actual routed LEF pin rectangles','leaf_views':hashes,'excluded_clock_reset_bits':dict(excluded),'perbit_joins':len(joins),'boundary_input_bits':len(boundary),'results':results,'limits':['Minimum L1 over all LEF terminal rectangle centers is optimistic, not routed RC or TT/FF proof','Clock/reset connections enumerated separately, no clocktree/reset PG plan qualified','Copy E boundary is not VM face; actual parent E transport reserve403.488um nominal/403.464um postshave is additional. Joint candidate pins require fullparent joins.','No timing waiver for over500um joins; added pipeline requires actual RTL/calendar proof','All R0 outlines; no90degree rotations or inherited rotated physical views','N inherited chunk ordering is concretized from prior geometry reservation, not a routed parent','Cut counts are mandatory endpoint-separated bit joins; no channel/layer track grant exists so no cut-capacity PASS claimed']}
 (O/'over500_pin_legs.json').write_text(json.dumps(overruns_by_variant,indent=1)+'\n')
 (O/'connected_geometry.json').write_text(json.dumps(receipt,indent=1)+'\n')
 fig,axs=plt.subplots(2,3,figsize=(20,13));axs=axs.ravel()

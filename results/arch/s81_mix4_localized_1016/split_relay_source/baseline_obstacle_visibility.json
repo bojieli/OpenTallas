@@ -1,0 +1,160 @@
+{
+ "status": "NECESSARY_ONLY_CHANNEL_VISIBILITY_SCREEN",
+ "rows": [
+  {
+   "source": [
+    "shell.ctl",
+    "phase"
+   ],
+   "target": [
+    "mix.g_mult[1].leaf",
+    "phase"
+   ],
+   "terminal_L1_um": 671.9205000000001,
+   "whole_outline_visibility_um": 673.0680000000004,
+   "extra_obstacle_um": 1.1475000000003774,
+   "optimistic_setup_ps_with_visibility": -147.86183000000034,
+   "owner_escape_stubs": "Nearest-outline-edge escape only from each actual terminal rectangle center; short access stub explicit, access unqualified."
+  },
+  {
+   "source": [
+    "mix.g_add[3].leaf",
+    "fault"
+   ],
+   "target": [
+    "mix.relay",
+    "up_i[40]"
+   ],
+   "terminal_L1_um": 711.8064999999988,
+   "whole_outline_visibility_um": 713.0039999999981,
+   "extra_obstacle_um": 1.1974999999993088,
+   "optimistic_setup_ps_with_visibility": -144.45077999999864,
+   "owner_escape_stubs": "Nearest-outline-edge escape only from each actual terminal rectangle center; short access stub explicit, access unqualified."
+  },
+  {
+   "source": [
+    "shell.ctl",
+    "fa"
+   ],
+   "target": [
+    "shell.col[3].u",
+    "fa"
+   ],
+   "terminal_L1_um": 694.9664999999997,
+   "whole_outline_visibility_um": 695.1539999999995,
+   "extra_obstacle_um": 0.1874999999998863,
+   "optimistic_setup_ps_with_visibility": -143.31278999999972,
+   "owner_escape_stubs": "Nearest-outline-edge escape only from each actual terminal rectangle center; short access stub explicit, access unqualified."
+  },
+  {
+   "source": [
+    "shell.ctl",
+    "fr"
+   ],
+   "target": [
+    "shell.col[3].u",
+    "fr"
+   ],
+   "terminal_L1_um": 695.8754999999996,
+   "whole_outline_visibility_um": 696.0629999999995,
+   "extra_obstacle_um": 0.1874999999998863,
+   "optimistic_setup_ps_with_visibility": -143.3044699999997,
+   "owner_escape_stubs": "Nearest-outline-edge escape only from each actual terminal rectangle center; short access stub explicit, access unqualified."
+  },
+  {
+   "source": [
+    "mix.g_mult[4].leaf",
+    "vo"
+   ],
+   "target": [
+    "mix.dsum",
+    "v"
+   ],
+   "terminal_L1_um": 681.8090000000004,
+   "whole_outline_visibility_um": 683.8439999999998,
+   "extra_obstacle_um": 2.0349999999993997,
+   "optimistic_setup_ps_with_visibility": -132.37447999999995,
+   "owner_escape_stubs": "Nearest-outline-edge escape only from each actual terminal rectangle center; short access stub explicit, access unqualified."
+  },
+  {
+   "source": [
+    "shell.ctl",
+    "iv"
+   ],
+   "target": [
+    "mix.g_mult[1].leaf",
+    "v"
+   ],
+   "terminal_L1_um": 672.4965000000002,
+   "whole_outline_visibility_um": 673.0680000000004,
+   "extra_obstacle_um": 0.5715000000002419,
+   "optimistic_setup_ps_with_visibility": -130.39734000000038,
+   "owner_escape_stubs": "Nearest-outline-edge escape only from each actual terminal rectangle center; short access stub explicit, access unqualified."
+  },
+  {
+   "source": [
+    "mix.g_add[3].leaf",
+    "copy_out[1]"
+   ],
+   "target": [
+    "mix.relay",
+    "up_i[52]"
+   ],
+   "terminal_L1_um": 709.9679999999987,
+   "whole_outline_visibility_um": 710.1239999999982,
+   "extra_obstacle_um": 0.15599999999949432,
+   "optimistic_setup_ps_with_visibility": -129.2911799999987,
+   "owner_escape_stubs": "Nearest-outline-edge escape only from each actual terminal rectangle center; short access stub explicit, access unqualified."
+  },
+  {
+   "source": [
+    "mix.g_mult[6].leaf",
+    "fault"
+   ],
+   "target": [
+    "mix.relay",
+    "up_i[59]"
+   ],
+   "terminal_L1_um": 701.2320000000001,
+   "whole_outline_visibility_um": 701.3879999999995,
+   "extra_obstacle_um": 0.15599999999938063,
+   "optimistic_setup_ps_with_visibility": -126.59125999999956,
+   "owner_escape_stubs": "Nearest-outline-edge escape only from each actual terminal rectangle center; short access stub explicit, access unqualified."
+  },
+  {
+   "source": [
+    "shell.ctl",
+    "eps[22]"
+   ],
+   "target": [
+    "mix.g_norm[1].leaf",
+    "eps[22]"
+   ],
+   "terminal_L1_um": 646.6560000000004,
+   "whole_outline_visibility_um": 646.812,
+   "extra_obstacle_um": 0.155999999999608,
+   "optimistic_setup_ps_with_visibility": -124.35670000000003,
+   "owner_escape_stubs": "Nearest-outline-edge escape only from each actual terminal rectangle center; short access stub explicit, access unqualified."
+  },
+  {
+   "source": [
+    "shell.ctl",
+    "fa"
+   ],
+   "target": [
+    "shell.col[2].u",
+    "fa"
+   ],
+   "terminal_L1_um": 661.5584999999998,
+   "whole_outline_visibility_um": 661.7459999999996,
+   "extra_obstacle_um": 0.1874999999998863,
+   "optimistic_setup_ps_with_visibility": -117.92270999999975,
+   "owner_escape_stubs": "Nearest-outline-edge escape only from each actual terminal rectangle center; short access stub explicit, access unqualified."
+  }
+ ],
+ "scope": [
+  "Whole actual child outlines blocked plus .036um wire-center halo; orthogonal visibility graph uses all rectangle edges and nearest-side source/target owner escapes.",
+  "Owner escape stubs are explicitly optimistic, not LEF pin access proof. No route/track/PG/clock feasibility claimed.",
+  "Allows paths along expanded-outline boundaries; fullparent transports and all other incident nets not routed."
+ ]
+}
