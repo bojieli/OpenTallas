@@ -96,11 +96,13 @@ module ot_hgi_hc_unit #(
     input  wire [31:0]       wrq_cr,
     input  wire [32*257-1:0] wrr,
     // the weight aperture write lanes (HSRC = 1; from the VM unit's DMA wide-write route for VM words >= 2^18): lane b
-    // {v, sector 13 (aperture sector: slot [12], bank [11:9], word / position [8:0]), data 256, word mask 8}; ap_cr[b]
-    // pulses when the lane's sector is accepted (one a lane in flight), ap_done[b] the edge it is written
-    input  wire [32*278-1:0] ap_q,
-    output reg  [31:0]       ap_cr,
-    output reg  [31:0]       ap_done
+    // {v, sector 13 (aperture sector: slot [12], bank [11:9], word / position [8:0]), data 256, word mask 8}.
+    // 8 LANES, lane k = weight bank k (sector[11:9] == k, else a fault): a lane's sector is written the edge after it
+    // arrives (each lane owns its bank's macros: no arbitration); ap_cr[k] = its credit (one in flight), ap_done[k]
+    // the edge the write lands (hgi-1010/d 10-11: 2,224 b down, 16 b back, per hbm-phys)
+    input  wire [8*278-1:0]  ap_q,
+    output reg  [7:0]        ap_cr,
+    output reg  [7:0]        ap_done
 );
     localparam integer SPW = W / 8, LW = $clog2(W), LS = $clog2(SPW), AW = 16, CWW = $clog2(RMAX + 1);
     // ---- the record adapter
@@ -218,7 +220,6 @@ module ot_hgi_hc_unit #(
     reg [12:0] ap_cnt [0:1];                               // sectors written into slot s since it was last released
     reg ap_job, ap_slot;                                   // this record reads slot ap_slot
     wire [2*8*SPW-1:0] apm_we; wire [2*8*SPW*256-1:0] apm_rd;
-    reg [31:0] ap_hv; reg [277:0] ap_h [0:31];             // a lane's held write
     reg [6:0] apm_wa [0:2*8*SPW-1]; reg [255:0] apm_wd [0:2*8*SPW-1], apm_wm [0:2*8*SPW-1]; reg [2*8*SPW-1:0] apm_wv;
     generate if (HSRC != 0) begin : g_ap
         for (genvar am = 0; am < 2 * 8 * SPW; am = am + 1) begin : g_apm
@@ -228,35 +229,26 @@ module ot_hgi_hc_unit #(
                 .w_addr_in(apm_wa[am]), .wd_in(apm_wd[am]), .w_mask_in(apm_wm[am]), .rr_en(2'b00), .rr_addr(14'd0),
                 .cr_en(2'b00), .cr_sel(16'd0));
         end
-        // lanes: hold one sector each; a macro takes its lowest held lane an edge; the credit returns on acceptance
+        // lane k: pin flop -> its bank's macro (slot, position) the next edge; the credit returns with the write
+        reg [7:0] al_v; reg [277:0] al_d [0:7];
+        always @(posedge clk) for (integer k2 = 0; k2 < 8; k2 = k2 + 1) al_d[k2] <= ap_q[k2*278 +: 278];
         always @(posedge clk or negedge rst_n) begin
-            if (!rst_n) begin ap_hv <= '0; ap_cr <= '0; ap_done <= '0; apm_wv <= '0; ap_cnt[0] <= '0; ap_cnt[1] <= '0;
+            if (!rst_n) begin al_v <= '0; ap_cr <= '0; ap_done <= '0; apm_wv <= '0; ap_cnt[0] <= '0; ap_cnt[1] <= '0;
                               ap_ovf <= 1'b0; end
             else begin : apw
-                reg [2*8*SPW-1:0] taken; reg [12:0] s; integer b2, mi; reg [12:0] add0, add1;
-                taken = '0; add0 = '0; add1 = '0; ap_cr <= '0; apm_wv <= '0; ap_cr_now = '0;
-                ap_done <= ap_cr;
-                for (b2 = 0; b2 < 32; b2 = b2 + 1) begin
-                    if (ap_hv[b2]) begin
-                        s = ap_h[b2][276:264];
-                        mi = s[12] * 8 * SPW + s[11:9] * SPW + (s[8:0] % SPW);
-                        if (!taken[mi]) begin
-                            taken[mi] = 1'b1; apm_wv[mi] <= 1'b1; apm_wa[mi] <= 7'(s[8:0] / SPW);
-                            apm_wd[mi] <= ap_h[b2][263:8];
-                            apm_wm[mi] <= {{32{ap_h[b2][7]}}, {32{ap_h[b2][6]}}, {32{ap_h[b2][5]}}, {32{ap_h[b2][4]}},
-                                           {32{ap_h[b2][3]}}, {32{ap_h[b2][2]}}, {32{ap_h[b2][1]}}, {32{ap_h[b2][0]}}};
-                            ap_hv[b2] <= 1'b0; ap_cr[b2] <= 1'b1; ap_cr_now[b2] = 1'b1;
-                            if (!(MUT_AP != 0 && s[11:9] == 3'd7)) begin if (s[12]) add1 = add1 + 1'b1; else add0 = add0 + 1'b1; end
-                        end
-                    end
+                reg [12:0] s; integer k2, mi; reg [12:0] add0, add1;
+                add0 = '0; add1 = '0; apm_wv <= '0;
+                for (k2 = 0; k2 < 8; k2 = k2 + 1) al_v[k2] <= ap_q[k2*278 + 277];
+                ap_cr <= al_v; ap_done <= ap_cr;
+                for (k2 = 0; k2 < 8; k2 = k2 + 1) if (al_v[k2]) begin
+                    s = al_d[k2][276:264];
+                    if (s[11:9] != k2[2:0]) ap_ovf <= 1'b1;          // a sector on the wrong bank's lane: fail closed
+                    mi = s[12] * 8 * SPW + k2 * SPW + (s[8:0] % SPW);
+                    apm_wv[mi] <= 1'b1; apm_wa[mi] <= 7'(s[8:0] / SPW); apm_wd[mi] <= al_d[k2][263:8];
+                    apm_wm[mi] <= {{32{al_d[k2][7]}}, {32{al_d[k2][6]}}, {32{al_d[k2][5]}}, {32{al_d[k2][4]}},
+                                   {32{al_d[k2][3]}}, {32{al_d[k2][2]}}, {32{al_d[k2][1]}}, {32{al_d[k2][0]}}};
+                    if (!(MUT_AP != 0 && k2 == 7)) begin if (s[12]) add1 = add1 + 1'b1; else add0 = add0 + 1'b1; end
                 end
-                // a new sector a lane only after its credit (one in flight): an arrival onto a still-held lane is a
-                // protocol fault (fail closed)
-                for (b2 = 0; b2 < 32; b2 = b2 + 1)
-                    if (ap_q[b2*278 + 277]) begin
-                        if (ap_hv[b2] && !ap_cr_now[b2]) ap_ovf <= 1'b1;
-                        ap_hv[b2] <= 1'b1; ap_h[b2] <= ap_q[b2*278 +: 278];
-                    end
                 // a slot's count clears when the record that read it retires (the next fill waits for that retire)
                 ap_cnt[0] <= ((ap_rel && !ap_slot) ? 13'd0 : ap_cnt[0]) + add0;
                 ap_cnt[1] <= ((ap_rel && ap_slot) ? 13'd0 : ap_cnt[1]) + add1;
@@ -266,7 +258,7 @@ module ot_hgi_hc_unit #(
         always @* begin ap_cr = '0; ap_done = '0; ap_ovf = 1'b0; ap_cnt[0] = '0; ap_cnt[1] = '0; end
         assign apm_rd = '0;
     end endgenerate
-    reg [31:0] ap_cr_now; reg ap_ovf;
+    reg ap_ovf;
     reg ap_rel;                                            // the aperture record retires (its slot is free again)
     wire [12:0] ap_need = 13'(8 * rr * SPW);               // sectors of the record's row (8 banks x R words)
     reg ap_rq;                                             // the HCP read the aperture (rom_q comes from it next edge)

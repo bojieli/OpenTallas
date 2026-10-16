@@ -186,7 +186,7 @@ module tb_hgi_hc_unit;
     localparam integer HCWT = 32;
 `endif
     integer naps = 0;
-    reg [32*278-1:0] apq = '0; wire [31:0] apcr; reg [31:0] ap_busy = 0, ap_set = 0;
+    reg [8*278-1:0] apq = '0; wire [7:0] apcr; reg [7:0] ap_busy = 0, ap_set = 0;
     always @(posedge clk) ap_busy <= (ap_busy | ap_set) & ~apcr;    // a lane is busy from its request to its credit
     task automatic ap_fill(input integer slot, input [34:0] s0, input integer o, input integer K);
         integer R, SPWt, nsec, k2, r2, q2, i2, l2; reg [34:0] hs; reg [12:0] as;
@@ -195,7 +195,7 @@ module tb_hgi_hc_unit;
             for (k2 = 0; k2 < 8; k2 = k2 + 1) for (r2 = 0; r2 < R; r2 = r2 + 1) for (q2 = 0; q2 < SPWt; q2 = q2 + 1) begin
                 hs = s0 + 4 + o * 8 * R * SPWt + k2 * R * SPWt + r2 * SPWt + q2;
                 as = 13'(slot * 4096 + k2 * 512 + r2 * SPWt + q2);
-                l2 = i2 % 32;
+                l2 = k2;                                            // lane = the sector's bank
                 while (ap_busy[l2]) @(negedge clk);
                 apq[l2*278 +: 278] = {1'b1, as, hbm.exists(hs) ? hbm[hs] : 256'd0, 8'hFF}; ap_set[l2] = 1'b1;
                 @(negedge clk); apq[l2*278 + 277] = 1'b0; ap_set[l2] = 1'b0;
