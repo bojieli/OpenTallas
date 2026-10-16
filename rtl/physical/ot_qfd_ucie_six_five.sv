@@ -57,6 +57,12 @@ module qfd_ucie_six_five #(parameter integer MUT=0)(
  always @(posedge blk_tx_ck or negedge rst_n)if(!rst_n)rbs<=0;else rbs<={rbs[0],1'b1};
  reg bt;
  always @(posedge blk_tx_ck or negedge rb_n)if(!rb_n)bt<=0;else bt<=~bt;
+ // r15: related-root control crossings use the same half-cycle ownership as
+ // the wide data. With aligned frame edges these capture the value that the
+ // following positive edge previously read, without adding a production edge.
+ (* keep *)reg bt_core_n,bt_fdi_n;
+ always @(negedge core_ck)bt_core_n<=bt;
+ always @(negedge fdi_ck)bt_fdi_n<=bt;
  // ---- local synchronous reset releases (integer-related, ordinary paths)
  reg rc_n,rf_n;
  always @(posedge core_ck or negedge rst_n)if(!rst_n)rc_n<=0;else rc_n<=rb_n;
@@ -70,7 +76,7 @@ module qfd_ucie_six_five #(parameter integer MUT=0)(
  always @(posedge core_ck or negedge rc_n)
   if(!rc_n)begin we<=WE0;rs<=RS0;cs<=0;
    we_c[0]<=WE0;we_c[1]<=WE0;we_c[2]<=WE0;rs_c[0]<=RS0;rs_c[1]<=RS0;rs_c[2]<=RS0;end
-  else begin we<={we[4:0],we[5]};rs<={rs[4:0],rs[5]};cs<=bt;
+  else begin we<={we[4:0],we[5]};rs<={rs[4:0],rs[5]};cs<=bt_core_n;
    for(int c=0;c<3;c++)begin we_c[c]<={we_c[c][4:0],we_c[c][5]};rs_c[c]<={rs_c[c][4:0],rs_c[c][5]};end
   end
  // input pin registers: word j offered at C(6m+j) sits in txp from C(6m+j) to C(6m+j+1)
@@ -108,7 +114,7 @@ module qfd_ucie_six_five #(parameter integer MUT=0)(
   if(!rf_n)begin tp<=1;fw<=0;fs<=0;phy_tx_valid<=0;txsel<=0;rxen<=0;rxchk<=0;rx3<=0;
    for(int c=0;c<5;c++)begin txsel_c[c]<=0;rxen_c[c]<=0;end end
   else begin
-   tp<=tp_n;fw<=fw_n;fs<=bt;
+   tp<=tp_n;fw<=fw_n;fs<=bt_fdi_n;
    phy_tx_valid<=|txsel;
    txsel<=(fw_n!=0)?oh_n:4'b0;
    rxen<=(fw_n>=2)?oh_n:4'b0;
@@ -154,8 +160,12 @@ module qfd_ucie_six_five #(parameter integer MUT=0)(
   end
  wire[5:0]rxv_now={rxp[458],rxv[4:0]};
  // padding check on the registered beat-3 pad bits, one FDI edge after capture
+ (* keep *)reg rx3_n;
+ always @(negedge fdi_rx_ck)rx3_n<=rx3;
  reg padbad;
- always @(posedge fdi_rx_ck or negedge rf_n)if(!rf_n)padbad<=0;else padbad<=rx3 && (|rxpad);
+ always @(posedge fdi_rx_ck or negedge rf_n)if(!rf_n)padbad<=0;else padbad<=rx3_n && (|rxpad);
+ (* keep *)reg padbad_n;
+ always @(negedge fdi_ck)padbad_n<=padbad;
  // PHY valid registered at the pin and compared one edge later
  reg pv_q,pv_exp;
  always @(posedge fdi_ck or negedge rf_n)if(!rf_n)begin pv_q<=0;pv_exp<=0;end else begin pv_q<=phy_rx_valid;pv_exp<=rxchk;end
@@ -201,15 +211,15 @@ module qfd_ucie_six_five #(parameter integer MUT=0)(
   if(!rcf_n)core_fault<=0;
   else begin
    if(!rc_n && txp_v)core_fault<=1;            // word offered before the frame exists
-   if(rc_n && ((bt^cs)!=we[1]))core_fault<=1;     // core frame not aligned to the block clock
+   if(rc_n && ((bt_core_n^cs)!=we[1]))core_fault<=1;     // core frame not aligned to the block clock
    if(rc_n && we_bad)core_fault<=1;
   end
  always @(posedge fdi_ck or negedge rff_n)
   if(!rff_n)fdi_fault<=0;
   else if(rf_n)begin
-   if((bt^fs)!=(tp==0))fdi_fault<=1;              // FDI frame not aligned to the block clock
+   if((bt_fdi_n^fs)!=(tp==0))fdi_fault<=1;              // FDI frame not aligned to the block clock
    if(pv_q!=pv_exp)fdi_fault<=1;                  // PHY valid off its compiled calendar
-   if(padbad)fdi_fault<=1;
+   if(padbad_n)fdi_fault<=1;
    if(tp>4)fdi_fault<=1;
   end
 endmodule
