@@ -3,6 +3,8 @@
 import argparse,hashlib,json,re,subprocess
 from pathlib import Path
 p=argparse.ArgumentParser();p.add_argument('--proof-ref',default='66cd3dbd4eec1d860ce9b3241224913821fff4ec');p.add_argument('--manifest-ref',default='HEAD');p.add_argument('--live-ref',default='origin/main');p.add_argument('--snapshot',type=Path);p.add_argument('--out',type=Path);a=p.parse_args();R=Path(__file__).resolve().parents[3];P='results/arch/s81_mix4_localized_1016/current_main_full_proof/'
+requested_refs={key:getattr(a,key) for key in ['proof_ref','manifest_ref','live_ref']}
+for key,value in requested_refs.items():setattr(a,key,subprocess.check_output(['git','rev-parse',value+'^{commit}'],cwd=R,text=True).strip())
 def git(ref,path):return subprocess.check_output(['git','show',ref+':'+path],cwd=R,stderr=subprocess.DEVNULL)
 def sha(b):return hashlib.sha256(b).hexdigest()
 def js(ref,path):return json.loads(git(ref,path))
@@ -36,6 +38,6 @@ if a.snapshot:
  require(sha((a.snapshot/'source_manifest.json').read_bytes())==art['actual_source_manifest_sha256'],'actual external snapshot manifest bytes')
  for filename,h in source_maps[0].items():require(sha((a.snapshot/filename).read_bytes())==h,'actual snapshot source '+filename)
  for filename,h in snapshot['fixture_sha256'].items():require(sha((a.snapshot/'fixtures'/filename).read_bytes())==h,'actual fixture '+filename)
-report={'status':'PASS_EXACT_NUMERIC_PROOF_REJOIN','executable_source':source,'comment_successor':comment,'proof_ref':a.proof_ref,'live_ref':a.live_ref,'source_hash_checks':68,'sealed_receipt_checks':2,'sealed_log_hash_checks':8,'actual_positive_words':20480,'actual_cycles':810,'actual_mutant_bad_words':5120,'compile_defines':[],'comment_tokens_equal':len(tokens(old)),'live_source_joins':live,'external_snapshot_checked':bool(a.snapshot),'physical_scope':'No fullparent timing/PG/clock/native VM qualification'}
+report={'status':'PASS_EXACT_NUMERIC_PROOF_REJOIN','executable_source':source,'comment_successor':comment,'proof_ref':a.proof_ref,'live_ref':a.live_ref,'manifest_ref':a.manifest_ref,'requested_refs':requested_refs,'source_hash_checks':68,'sealed_receipt_checks':2,'sealed_log_hash_checks':8,'actual_positive_words':20480,'actual_cycles':810,'actual_mutant_bad_words':5120,'compile_defines':[],'comment_tokens_equal':len(tokens(old)),'live_source_joins':live,'external_snapshot_checked':bool(a.snapshot),'physical_scope':'No fullparent timing/PG/clock/native VM qualification'}
 if a.out:a.out.write_text(json.dumps(report,indent=1)+'\n')
-print('PASS:68actual source blob hashes;2sealed receipts;8sealed logs;positive20480/640/4161/810;MUT26 build0/run1/5120words;LIVE FIFO/shared joins;37comment5765tokens;'+('actualsnapshot+fixtures'if a.snapshot else'no optional external snapshot supplied'))
+print('PASS:68actual source blob hashes;2sealed receipts;8sealed artifacts;positive20480/640/4161/810;MUT26 build0/run1/5120words;LIVE FIFO/shared joins;37comment5765tokens;'+('actualsnapshot+fixtures'if a.snapshot else'no optional external snapshot supplied'))
