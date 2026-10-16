@@ -1,0 +1,23 @@
+{
+  "schema": "opentallas.s81.topdown.leaf-slot-grant.v1",
+  "at": "2026-10-15T14:22:28.621971-07:00",
+  "owner": "s81_die_1417",
+  "master": "s81pq_qb_headpc_native",
+  "candidate_commit": "4e7336ba5",
+  "slot_request_path": "results/arch/s81_pq_p8_margin_1417/slot_request.json",
+  "slot_request_sha256": "53b3ca8d300d7baff1aa45825d2ed07804c914c2a8945fce7c8a9ca0be07c607",
+  "outline_um": [
+    142.56,
+    120.96
+  ],
+  "pins_count": 1696,
+  "sha256": {
+    "tools/ref_tile/specs_s81pq/s81pq_qb_headpc_native.json": "4f9f2a85a7a8def12587501d0e07f8f87266300bf9b34956a9954a5b148a4e24",
+    "physical/ref_tile_specs/s81pq_native/s81pq_qb_headpc_native_spread_pins.tcl": "e08af947fe2304e9d7519062779186abf8dca0da522db3513e11f36369ebd2eb",
+    "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_qb_pipe_native.sv": "8bbde3ed38fd6d94ae99821c11d73e0f009881e084a35476206990a98c2294d1",
+    "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_qb_pinread_native.sv": "00617bb204af2a536f41657398222dde2f884094aeb477ef9d9382a719209e5a"
+  },
+  "grant": "independent leaf outline/pin grant only; parent/die fit and native closure remain OPEN",
+  "reroute_reason": "slot_change: measured P7 floorplan utilization62.5percent requires structural height margin",
+  "normal_edges_added": 0
+}

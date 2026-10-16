@@ -3063,6 +3063,8 @@ SUHC_V2_BUSES = tuple(
 SU_E = 0.0                     # --su-e MM2: su_n in the E column above hc_n (W column: su_s + centre)
 COLL_SLAB_H = None             # --coll-slab-h H (s81die-1011 hier contract v1): collective slab height at full hub column width
 VM_SLAB = None                 # --vm-slab W,H (s81-vm-1011): VM master outline in um
+HUB_ABUT = False               # --hub-abut (S-DIE 2026-10-15, A2 fit): every W-column centre-stack gap = RTL_ABUT_GAP (21.6) instead of
+                                # the 172.8-um SPINE_GAP channel (inter-block lanes leave through the VCH / roads, not the gaps)
 VM_SPAN_VCH = False            # --vm-span-vch W,H (S-DIE 2026-10-15, coordinator 18:40): A2 VM reservation spans W column + VCH
 SU_GROW_EAST = False           # --su-outline W,H[,XOFF] (S-DIE 2026-10-15): su_s outline override, W edge XOFF um west of the
 SU_WEST_OVERHANG = 0.0          # column (default 0); the rest of a wider SU grows EAST into the VCH
@@ -4422,7 +4424,7 @@ def build_r8(variant=None):
         nx_ = centre[i_ + 1] if i_ + 1 < len(centre) else None
         # --rtl-hub-widths: the face-to-face wide pairs (VM <- capture 13,376 b, capture <- gather 6,947 b) sit RTL_ABUT_GAP
         # apart so their buses are direct register-to-register wires (SPINE_GAP 172.8 > the 155 um direct-hop limit)
-        gap_ = RTL_ABUT_GAP if RTL_HUB_WIDTHS and {n, nx_} in ({'vm', 'capture'}, {'capture', 'gather'}) else SPINE_GAP
+        gap_ = RTL_ABUT_GAP if (RTL_HUB_WIDTHS and {n, nx_} in ({'vm', 'capture'}, {'capture', 'gather'})) or HUB_ABUT else SPINE_GAP
         if PQ_CNT and {n, nx_} == {'capture', 'gather'}:
             gap_ = PQ_CNT_SEAM       # --pq-cnt: the count leaves tile the gather | capture seam
         yy += up(centre_area[n] * 1e6 / slab_w.get(n, cw), GY) + gap_
@@ -10403,6 +10405,7 @@ def die_options(ap):
     ap.add_argument('--bf-static-prog', action='store_true', help='S-BIND 2026-10-15: BF pairs run their compiled '
                     'programme (dsfd_bf_front_static + ot_s81_cfg7_seq_bfp; descriptor in the cfg ROM spare columns)')
     ap.add_argument('--bf-x2-pair', action='store_true', help='S-BIND r6 (needs --bf-x2-static): the x tree carries the packed word as two equal-station forwarded lanes (566-b legacy + 538-b x2) with one static ingress each at the column')
+    ap.add_argument('--hub-abut', action='store_true', help='S-DIE 2026-10-15: W-column centre-stack gaps 21.6 um (RTL_ABUT_GAP) instead of 172.8')
     ap.add_argument('--vm-span-vch', help='S-DIE 2026-10-15 (coordinator 18:40, A2 VM): VM reservation W,H um spanning the W column + VCH (overrides the contract VM outline)')
     ap.add_argument('--su-outline', help='S-DIE 2026-10-15: su_s outline W,H um (overrides the contract); wider than the column grows EAST into the VCH')
     ap.add_argument('--pin-lattice', action='store_true', help='S-DIE 2026-10-15: move off-lattice generated/assigned pins the least distance onto one legal site-grid origin per axis (die PLACE snap rule); report in <lef>.lattice.json')
@@ -10718,7 +10721,8 @@ def apply_options(a):
     HROW_TX = bool(getattr(a, 'hrow_tx', False))
     assert not HROW_TX or (SUHC_1011 and SU_E), '--hrow-tx needs --suhc-1011 --su-e (h resident in HC, E-column slot)'
     VM_SLAB = tuple(float(x) for x in a.vm_slab.split(',')) if getattr(a, 'vm_slab', None) else None
-    global VM_SPAN_VCH, SU_GROW_EAST
+    global VM_SPAN_VCH, SU_GROW_EAST, HUB_ABUT
+    HUB_ABUT = bool(getattr(a, 'hub_abut', False))
     if getattr(a, 'vm_span_vch', None):
         VM_SLAB = tuple(float(x) for x in a.vm_span_vch.split(','))
         VM_SPAN_VCH = True

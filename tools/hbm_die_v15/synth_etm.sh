@@ -24,7 +24,7 @@ for c, C in (('tt', 'TT'), ('ff', 'FF')):
         L.append(f'read_liberty /tmp/lib/asap7sc7p5t_{f.format(C=C)}.lib')
     for b in macro_libs:
         L.append(f'read_liberty /src/{b}_{c}.lib')
-    L += [f'read_verilog /out/{name}.netlist.v', f'link_design {top}',
+    L += [f'read_verilog /out/{name}.sta.v', f'link_design {top}',
           'set ck [get_ports -quiet {clk clk_* *_clk *_clk_* pg_clk*}]', 'set n 0',
           'foreach p $ck { create_clock -name ck_$n -period 833.333 $p; incr n }', 'puts "OT_ETM_CLOCKS $n"',
           'set_clock_uncertainty -setup 60 [all_clocks]', 'set_clock_uncertainty -hold 25 [all_clocks]',
@@ -33,6 +33,8 @@ for c, C in (('tt', 'TT'), ('ff', 'FF')):
     open(tcl.replace('.tcl', f'_{c}.tcl'), 'w').write('\n'.join(L) + '\n')
 
 PY
+# OpenSTA's verilog reader rejects 'wire signed' (yosys keeps it on hierarchical netlists): drop the keyword only.
+sed -E 's/^(\s*)(wire|input|output|inout) signed /\1\2 /' $OUT/$NAME.netlist.v > $OUT/$NAME.sta.v
 L=/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM
 docker run --rm --name hdie15-etm-$NAME-$$ --cpus=2 --memory=${MEMG:-24}g -v $SRC:/src:ro -v $OUT:/out -w /out openroad/orfs:asap7lock bash -lc "
   source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; mkdir -p /tmp/lib
