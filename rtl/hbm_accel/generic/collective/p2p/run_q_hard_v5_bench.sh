@@ -27,6 +27,8 @@ src=("$p/tb_hgi_coll_q_hard_v5.sv" "$p/ot_hfd_coll_q_hard_v5.sv" "$p/ot_hgi_coll
  "$ROOT/physical/asap7_memory_macros/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v")
 sha256sum "${src[@]}" > "$OUT/sources.sha256"
 QD=(); [ "$Q" = q3 ] && QD=(-DQ3 --hierarchical "$p/qtkm_hier.vlt")
+# q3 elaborates two KMAX-2048 TKMs (host_v4 ref + hard_v5): -j16 hierarchical OOMs 128 GB (EPYC4 oom-kill); default 4
+[ "$Q" = q3 ] && JOBS=${JOBS_Q3:-4}
 build(){ # name defines...
  local n=$1; shift
  "$V" --binary --timing -j "${JOBS:-16}" -O1 -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-WIDTHCONCAT \

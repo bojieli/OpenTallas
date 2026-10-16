@@ -15,11 +15,11 @@
 //   u_reduce  ot_hgi_coll_reduce_static    (hybrid cluster: 16 state + 16 add lanes)
 //   u_ring    ot_hgi_coll_ring_v5          (= pring_captured_static SPLIT_CLOCKS 1; 8 CLOSED state-capture lanes)
 //   q3 only:  u_arg ot_hgi_coll_argmax_m (mode gating inside), u_tkm ot_hgi_coll_tkm_m (32 CLOSED tkm tiles)
-// V5 ISSUE TIMING: the uop stream (and exported busy/done) is uniformly 2 edges later than host_v4 (issuer
-// start -> first effect +2); the programme target and every relative edge are unchanged. Normal data/valid are
+// V5 ISSUE TIMING: HOST frames are captured at the fj pins (+1: programme-target outputs +1) and the uop stream
+// (with exported busy/done) is delayed 2 more edges: issue path +3 vs host_v4; every relative edge is unchanged. Normal data/valid are
 // identical to host_v4 shifted by 2 edges (lockstep bench tb_hgi_coll_q_hard_v5). Exceptional fault ABI
-// (all sticky; registered once in u_fj on clk_program, host-visible `fault`/`hgi_fault` and fault_cause):
-//   every child fault reaches `fault` at the host_v4 edge, EXCEPT
+// (all sticky; u_fj captures every input at its pin, then registers fault/fault_cause on clk_program). Relative to
+// host_v4 shifted by the issue latency (+3: HOST frame capture +1, uop delay +2): every child fault +1 edge, AND
 //   qslots capture (pin_v2)        +1 edge (source C -> leaf fault C+1 -> fault C+2)
 //   q2 arg capture reservation      -1 edge (q2 has no arg source: checked in u_fj directly, C -> fault C+1)
 //   q2 arg sink selection           select_fault instead of unavailable_fault (same edge; class only)
@@ -65,51 +65,74 @@ module ot_hgi_coll_fj_core #(parameter integer NPT=3,SOLO=1,NS=11,NSL=18)(
  output reg fault,
  output reg [15:0] fault_cause
 );
- wire [7:0] target_eff=(cfg_target==(8'd52+{6'd0,qid}))?8'd52:8'd0;
+ // Every input is captured at its pin (coordinator native audit of fj_q2 54f035ca0: 71 unregistered inputs, capture
+ // 512.9 ps). rst_n: synchronous D-pin flop. HOST frames: +1 edge (target remap after capture, against the static
+ // qid strap). Issuer feedback and child faults: +1 edge (exceptional fault ABI +1, like qslots pin_v2).
+ reg rst_q;
+ always @(posedge clk) rst_q<=rst_n;
+ reg cv_q,dv_q,lv_q,act_q,ibusy_q,ifault_q,iuv_q;
+ reg [7:0] tgt_q;reg [1:0] qid_q;reg [11:0] addr_q,base_q;reg [255:0] data_q;reg [12:0] limit_q;reg [15:0] loops_q;
+ reg [5:0] iupc_q;
+ reg prot_q,ring_q,writer_q,reduce_q,arg_q,tkm_q,argcap_q,tkmstart_q;
+ reg [NS-1:0] cap_q;reg [NSL-1:0] sel_q,unav_q;reg [NPT-1:0] lk_q;reg [3:0] tdel_q,tdest_q;
+ always @(posedge clk)begin
+  tgt_q<=cfg_target;qid_q<=qid;addr_q<=cfg_addr;data_q<=cfg_data;base_q<=desc_base;limit_q<=desc_limit;
+  loops_q<=desc_loops;iupc_q<=issuer_uop_pc;
+ end
+ always @(posedge clk or negedge rst_q)
+  if(!rst_q)begin
+   cv_q<=0;dv_q<=0;lv_q<=0;act_q<=0;ibusy_q<=0;ifault_q<=0;iuv_q<=0;prot_q<=0;ring_q<=0;writer_q<=0;reduce_q<=0;
+   arg_q<=0;tkm_q<=0;argcap_q<=0;tkmstart_q<=0;cap_q<=0;sel_q<=0;unav_q<=0;lk_q<=0;tdel_q<=0;tdest_q<=0;
+  end else begin
+   cv_q<=cfg_v;dv_q<=desc_v;lv_q<=launch_v;act_q<=program_active;ibusy_q<=issuer_busy;ifault_q<=issuer_fault;
+   iuv_q<=issuer_uop_v;prot_q<=protocol_fault;ring_q<=ring_fault;writer_q<=writer_fault;reduce_q<=reduce_fault;
+   arg_q<=arg_fault;tkm_q<=tkm_fault;argcap_q<=arg_capture_slot;tkmstart_q<=tkm_start;cap_q<=capture_fault;
+   sel_q<=select_fault;unav_q<=unavailable_fault;lk_q<=link_abort;tdel_q<=tkm_del_slot;tdest_q<=tkm_dest_v;
+  end
+ wire [7:0] target_eff=(tgt_q==(8'd52+{6'd0,qid_q}))?8'd52:8'd0;
  ot_hgi_coll_static_program_target #(.TARGET(8'd52)) u_program(
-  .clk(clk),.rst_n(rst_n),.cfg_v(cfg_v),.cfg_target(target_eff),
-  .cfg_addr(cfg_addr),.cfg_data(cfg_data),.desc_v(desc_v),.desc_base(desc_base),
-  .desc_limit(desc_limit),.desc_loops(desc_loops),.launch_v(launch_v),
-  .program_active(program_active),.issuer_busy(issuer_busy),.issuer_fault(issuer_fault),
-  .issuer_uop_v(issuer_uop_v),.issuer_uop_pc(issuer_uop_pc),
+  .clk(clk),.rst_n(rst_q),.cfg_v(cv_q),.cfg_target(target_eff),
+  .cfg_addr(addr_q),.cfg_data(data_q),.desc_v(dv_q),.desc_base(base_q),
+  .desc_limit(limit_q),.desc_loops(loops_q),.launch_v(lv_q),
+  .program_active(act_q),.issuer_busy(ibusy_q),.issuer_fault(ifault_q),
+  .issuer_uop_v(iuv_q),.issuer_uop_pc(iupc_q),
   .issuer_cfg(issuer_cfg),.issuer_start(issuer_start),.issuer_start_pc(issuer_start_pc),
   .configured(configured),.init_busy(init_busy),.fault(program_fault));
- wire noengine_arg=(SOLO==0)&&arg_capture_slot;
- wire noengine_tkm=(SOLO==0)&&(tkm_start || (|tkm_dest_v) || (|tkm_del_slot));
+ wire noengine_arg=(SOLO==0)&&argcap_q;
+ wire noengine_tkm=(SOLO==0)&&(tkmstart_q || (|tdest_q) || (|tdel_q));
  wire [2:0] link3;
  for(genvar k=0;k<3;k=k+1)begin:g_l3
-  if(k<NPT)begin:p assign link3[k]=link_abort[k]; end else begin:z assign link3[k]=1'b0; end
+  if(k<NPT)begin:p assign link3[k]=lk_q[k]; end else begin:z assign link3[k]=1'b0; end
  end
  wire [15:0] cause_now;
  assign cause_now[0]=program_fault;
- assign cause_now[1]=issuer_fault;
- assign cause_now[2]=protocol_fault;
+ assign cause_now[1]=ifault_q;
+ assign cause_now[2]=prot_q;
 `ifdef OT_COLL_V5_MUT_CAUSE_SWAP
- assign cause_now[3]=|select_fault;
- assign cause_now[4]=|capture_fault;
+ assign cause_now[3]=|sel_q;
+ assign cause_now[4]=|cap_q;
 `else
- assign cause_now[3]=|capture_fault;
- assign cause_now[4]=|select_fault;
+ assign cause_now[3]=|cap_q;
+ assign cause_now[4]=|sel_q;
 `endif
- assign cause_now[5]=|unavailable_fault;
+ assign cause_now[5]=|unav_q;
 `ifdef OT_COLL_V5_MUT_DROP_LINK
  assign cause_now[8:6]=3'b000;
 `else
  assign cause_now[8:6]=link3;
 `endif
- assign cause_now[9]=ring_fault;
- assign cause_now[10]=writer_fault;
- assign cause_now[11]=reduce_fault;
- assign cause_now[12]=(SOLO!=0)?arg_fault:noengine_arg;
+ assign cause_now[9]=ring_q;
+ assign cause_now[10]=writer_q;
+ assign cause_now[11]=reduce_q;
+ assign cause_now[12]=(SOLO!=0)?arg_q:noengine_arg;
 `ifdef OT_COLL_V5_MUT_DROP_TKM
- assign cause_now[13]=(SOLO!=0)?tkm_fault:1'b0;
+ assign cause_now[13]=(SOLO!=0)?tkm_q:1'b0;
 `else
- assign cause_now[13]=(SOLO!=0)?tkm_fault:noengine_tkm;
+ assign cause_now[13]=(SOLO!=0)?tkm_q:noengine_tkm;
 `endif
  assign cause_now[15:14]=2'b00;
- // Same edge as host_v4 `fault<=fault|program_fault|quad_fault` (quad_fault = OR of registered child faults).
- always @(posedge clk or negedge rst_n)
-  if(!rst_n)begin fault<=1'b0;fault_cause<=16'd0;end
+ always @(posedge clk or negedge rst_q)
+  if(!rst_q)begin fault<=1'b0;fault_cause<=16'd0;end
   else begin fault<=fault | (|cause_now);fault_cause<=fault_cause | cause_now;end
 endmodule
 
@@ -313,13 +336,24 @@ module ot_hgi_coll_argmax_m(
  input wire clk,rst_n,start,mode,input wire [7:0] cfg_g,cfg_gbase,cfg_rank,
  input wire [3:0] in_slot,in_v,input wire [255:0] in_key,input wire [131:0] in_meta,input wire flush_slot,publish_slot,
  output wire out_v,output wire [544:0] out_flit,output wire fault);
+ // u_data: live inputs, data/valid edges exact (its check logic has no load and is removed by synthesis).
+ // u_chk : the same actual module on pin-captured inputs; only its sticky fault is used (arg fault ABI +1 edge;
+ //         the 15-level input-check cone becomes reg->reg).
  wire [2179:0] in_flit;
  for(genvar l=0;l<4;l=l+1)begin:g_lane
   assign in_flit[l*545+:545]={in_meta[l*33+:33],448'd0,in_key[l*64+:64]};
  end
- ot_hgi_coll_argmax_static u(.clk(clk),.rst_n(rst_n),.start(start),.cfg_g(cfg_g),.cfg_gbase(cfg_gbase),
+ ot_hgi_coll_argmax_static u_data(.clk(clk),.rst_n(rst_n),.start(start),.cfg_g(cfg_g),.cfg_gbase(cfg_gbase),
   .cfg_rank(cfg_rank),.in_slot(in_slot & {4{mode}}),.in_v(in_v & {4{mode}}),.in_flit(in_flit),
-  .flush_slot(flush_slot),.publish_slot(publish_slot),.out_v(out_v),.out_flit(out_flit),.fault(fault));
+  .flush_slot(flush_slot),.publish_slot(publish_slot),.out_v(out_v),.out_flit(out_flit),.fault());
+ reg start_q,flush_q,pub_q;reg [7:0] g_q,gb_q,rk_q;reg [3:0] slot_q,v_q;reg [2179:0] flit_q;
+ always @(posedge clk)begin g_q<=cfg_g;gb_q<=cfg_gbase;rk_q<=cfg_rank;flit_q<=in_flit;end
+ always @(posedge clk or negedge rst_n)
+  if(!rst_n)begin start_q<=0;flush_q<=0;pub_q<=0;slot_q<=0;v_q<=0;end
+  else begin start_q<=start;flush_q<=flush_slot;pub_q<=publish_slot;slot_q<=in_slot & {4{mode}};v_q<=in_v & {4{mode}};end
+ ot_hgi_coll_argmax_static u_chk(.clk(clk),.rst_n(rst_n),.start(start_q),.cfg_g(g_q),.cfg_gbase(gb_q),
+  .cfg_rank(rk_q),.in_slot(slot_q),.in_v(v_q),.in_flit(flit_q),
+  .flush_slot(flush_q),.publish_slot(pub_q),.out_v(),.out_flit(),.fault(fault));
 endmodule
 
 module ot_hgi_coll_tkm_m(
