@@ -732,6 +732,10 @@ GATE_STEP_CAP_S = int(os.environ.get("OT_GATE_STEP_CAP_S", "14400"))
 # --------------------------------------------------------------------------------------------- remote
 REMOTE_SH = r"""set -uo pipefail
 R={R}; mkdir -p $R/src $R/bin
+# Keep the original full measurement stream on the host. GNU tee -p continues
+# writing this file if SSH closes its output pipe; the admitted job must finish
+# and retain its terminal receipt rather than dying at the next echo.
+exec > >(tee -p "$R/execution.log") 2>&1
 ACTUAL=$(sha256sum $R.tgz | cut -d' ' -f1)
 [ "$ACTUAL" = "{ARCHIVE_SHA256}" ] || {{ echo GATE_SOURCE_BINDING_FAIL; exit 1; }}
 echo "GATE_SOURCE_ARCHIVE_SHA256=$ACTUAL"
