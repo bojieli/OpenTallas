@@ -1,0 +1,51 @@
+{
+ "schema": "opentallas.s81.wfc-pipeline-proof.v1",
+ "status": "PASS_COMPONENT_FUNCTION_AND_FIXED_DELTAS_NOT_PHYSICAL_OR_FULL_VM",
+ "source_sha256": {
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_vm_static_wfc.sv": "44e5e9b4118f7143d641ca5c48b2d3adf1561a71f30f44f6131b9600c3dff395",
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_sp_vm_static.sv": "bb30689e2694e7b8c33563a6ba972d83774374e1d850877ad85ce85fc07384fd",
+  "rtl/dsrom_sys/s81_ph/vm/dsfd_sp_vm_a2f.sv": "fa4a3c58bbe87c3e2a16aae85ec9f879684fda991521f9c91e4e5fbe119580ca",
+  "tools/s81_vm/wfc_pipeline_bench.sv": "d9aaff98b9f23e5e30130d1b93ee52c1437c20e0fd8d7abca669546ec174303b",
+  "tools/s81_vm/wfc_pipeline_ref_r5.sv": "b2b27269a82ff3362a4b2f172daeab4db67c85113b45db21b029b7449b0e105f",
+  "tools/s81_vm/wfc_pipeline_gate.sh": "2e968cce856519ddbc2638d496477be6d1b496c681d74e35550e0260d6771380",
+  "tools/s81_vm/die_clock_abi.py": "a22a5d333877b82c53d2919d0bce4d1789e9e22cbfc29fc32e7800552665f290"
+ },
+ "runs": [
+  {
+   "mode": "gold",
+   "rc": 0,
+   "output": "WFC_PIPELINE PASS seed1 edges2500 reads628 writes644 request_delta1 core_return_delta4 serial_return_delta3 fault_both_directions\nWFC_PIPELINE PASS seed2 edges2500 reads608 writes626 request_delta1 core_return_delta4 serial_return_delta3 fault_both_directions\nWFC_PIPELINE PASS seed1 edges2500 reads628 writes644 request_delta1 core_return_delta4 serial_return_delta3 fault_both_directions\nWFC_PIPELINE PASS seed2 edges2500 reads608 writes626 request_delta1 core_return_delta4 serial_return_delta3 fault_both_directions\nWFC_PIPELINE_GATE PASS\n"
+  },
+  {
+   "mode": "OT_VM_WFC_CTL_MUT_LANE",
+   "rc": 1,
+   "output": "FATAL: tools/s81_vm/wfc_pipeline_bench.sv:28: return +4 mismatch 45\n       Time: 739000 Scope: tb_wfc_pipeline\n"
+  },
+  {
+   "mode": "OT_VM_WFC_CTL_MUT_FAULT",
+   "rc": 1,
+   "output": "FATAL: tools/s81_vm/wfc_pipeline_bench.sv:38: core diagnostic not reported to BOTH domains\n       Time: 30377000 Scope: tb_wfc_pipeline\n"
+  },
+  {
+   "mode": "OT_VM_WFC_CTL_MUT_CAPTURE",
+   "rc": 1,
+   "output": "FATAL: tools/s81_vm/wfc_pipeline_bench.sv:26: request +1 write mismatch 41\n       Time: 691000 Scope: tb_wfc_pipeline\n"
+  },
+  {
+   "mode": "OT_VM_WFC_CTL_MUT_CDC",
+   "rc": 1,
+   "output": "FATAL: tools/s81_vm/wfc_pipeline_bench.sv:38: core diagnostic not reported to BOTH domains\n       Time: 30377000 Scope: tb_wfc_pipeline\n"
+  }
+ ],
+ "request_delta_core": 1,
+ "response_delta_core": 4,
+ "response_delta_serial": 3,
+ "new_parent_ports": [
+  "ck_wfc_fault_s",
+  "ck_wfc_fault_t",
+  "rst_wfc_fault_s",
+  "rss_wfc_fault_t"
+ ],
+ "diagnostic": "Both core-to-serial and serial-to-core directions observed; negative-edge source lockup, same-domain input stages and two-stage destination registers. Related timing remains enabled. Fullmaster fault-fuzz and compiler/native physical proof still required.",
+ "scope": "Frozen r5 data reference remains independent of DUT mutants. Diagnostic reference uses explicit legacy BOTH-domain assertions; does not inherit known r5 lost-fault behavior. Ideal direct component boundary stimuli model core response shifted one edge; actual full parent timing validation owned by VMstream."
+}
