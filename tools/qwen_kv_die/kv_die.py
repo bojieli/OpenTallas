@@ -1697,6 +1697,16 @@ def _relays(m):
             # v1.4.2: a reset / boot tree hop is ONE flop: its own 10.8-um relay master qkd_rly_t1 (same RTL rule: one flop a
             # bit, no reset), so it fits the 43.2-um channels between the stack-column blocks the 52.68-um frame cannot
             fw, fh, mst = 10.8, 10.8, 'qkd_rly_t1'
+        elif __import__('os').environ.get('OT_KV_RLY_STD', '0') == '1':
+            # Q-KVSYS-RLY 2026-10-16 (owner 'fewer distinct tiles', VIS-ROM QKV-04): the frame is the ROW of relay-standard
+            # replicas (qkd_rlys_1 / 36 / 296 / 528, M4 pins <= 6.94 /um, face <= 82.08 um) that kv_rly_std.py binds
+            # in the netlist pass; default off = the per-width frames above, unchanged
+            import kv_rly_std as RS
+            fw, fh, _ = RS.layout(bits, RS.frame_rev(bid))
+            # the pre-expansion frame abstract still draws the whole word on one M4 face (pitch 1): a word over
+            # 82.08 um of M4 (qkd_rly_2089 only) keeps today's frame height around the 82.08-um replica row
+            fw, fh = fw + SHAVE, max(fh + SHAVE, span if bits > 512 else 0.0)
+            fh = up(fh, GY) if fh > RS.STD[528][1] + SHAVE else fh
 
         def near_d(r0, r1):
             # nearest-point Manhattan distance between two rectangles (x0, y0, x1, y1)
