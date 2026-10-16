@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hgi_coll_reduce_static_state_lane",
+ "enable": false,
+ "reason": "Fixed-edge state lane of ot_hgi_coll_reduce_static: load/read/publish commands and data are sampled at their scheduled edges directly into the 16-entry state and the four registered outputs (acc/operand/pub_a/pub_b are flops); an input pin register adds one edge to every compiled reservation and breaks the host_v4 lockstep."
+}

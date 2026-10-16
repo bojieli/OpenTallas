@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hgi_coll_static_pinreg_store",
+ "enable": false,
+ "reason": "RTL owns its pin registers: every input (we/wa/ra/din) is captured at the pin and dout is launched from a flop (ot_qkvd_llr_replay_sram_leaf); a recipe-3 cycle would break the host_v4 lockstep edge contract."
+}
