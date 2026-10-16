@@ -37,6 +37,26 @@ class RemoteDisconnectLog(unittest.TestCase):
             self.assertIn('GATE_DONE', (Path(td) / 'execution.log').read_text())
 
 
+class EarlyTerminalFailure(unittest.TestCase):
+    def test_actual_bad_pin_early_exit_retains_floorplan_failure(self):
+        # Use the actual shell EXIT trap. A real flow may intentionally exit0
+        # after recording its own failed status; transport still completed.
+        trap = next(ln for ln in PG.REMOTE_SH.splitlines() if ln.startswith("trap 'rc=$?;"))
+        command = trap + '\necho GATE_SOURCE_ARCHIVE_SHA256=sha\necho GATE_FLOW_RC=1\necho "GATE_FLOWERR invalid pin rectangle"\nexit 0\n'
+        run = subprocess.run(['bash', '-c', command], capture_output=True, text=True)
+        self.assertEqual(run.returncode, 0)
+        self.assertIn('GATE_SCRIPT_RC=0\nGATE_DONE', run.stdout)
+        with tempfile.TemporaryDirectory() as td:
+            kd = Path(td); (kd / 'floorplan.json').write_text('{}')
+            g = PG.Gate()
+            PG.analyse_remote(g, kd, {}, run.stdout, True,
+                              {'archive_sha256': 'sha'}, 60, 'original-host')
+            self.assertEqual(g.verdict, 'FAIL')
+            self.assertTrue(any(i['check'] == 'floorplan_run' and 'invalid pin rectangle' in i['message']
+                                for i in g.items))
+            self.assertFalse(any(i['check'] == 'remote_incomplete' for i in g.items))
+
+
 class DiskBudget(unittest.TestCase):
     def test_default_retains_twenty_gib_work_reserve_and_prices_staging(self):
         data = archive()
@@ -96,7 +116,7 @@ class RemoteAdmission(unittest.TestCase):
                                                        '' if reject else 'ot-test\n', 'disk too small' if reject else '')
                 if cmd[0] == 'ot-run':
                     return subprocess.CompletedProcess(cmd, 255 if interrupted else 0,
-                        b'GATE_FLOW_RC=0\n' if interrupted or missing_done else b'GATE_DONE\n',
+                        b'GATE_FLOW_RC=0\n' if interrupted or missing_done else b'GATE_SCRIPT_RC=0\nGATE_DONE\n',
                         b'ot-run: NOT COMPLETED: ssh status 255' if interrupted else b'')
                 return subprocess.CompletedProcess(cmd, 0, b'', b'')
             stack.enter_context(patch.object(PG.subprocess, 'run', side_effect=run))

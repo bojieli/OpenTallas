@@ -736,6 +736,9 @@ R={R}; mkdir -p $R/src $R/bin
 # writing this file if SSH closes its output pipe; the admitted job must finish
 # and retain its terminal receipt rather than dying at the next echo.
 exec > >(tee -p "$R/execution.log") 2>&1
+# Intentional early exits (for example failed floorplan geometry) are terminal
+# too. The trap records script status; tool status remains in GATE_*_RC.
+trap 'rc=$?; echo "GATE_SCRIPT_RC=$rc"; echo GATE_DONE' EXIT
 ACTUAL=$(sha256sum $R.tgz | cut -d' ' -f1)
 [ "$ACTUAL" = "{ARCHIVE_SHA256}" ] || {{ echo GATE_SOURCE_BINDING_FAIL; exit 1; }}
 echo "GATE_SOURCE_ARCHIVE_SHA256=$ACTUAL"
@@ -826,7 +829,6 @@ if [ "{TRIAL}" = 1 ]; then
   [ -n "$CR" ] && python3 -c "import zlib,base64,sys;print('GATE_CONG_B64 '+base64.b64encode(zlib.compress(open(sys.argv[1],'rb').read()[:20000000],9)).decode())" $CR
   ot_layout $NB/5_1_grt.odb placed
 fi
-echo GATE_DONE
 """
 
 
@@ -1112,7 +1114,11 @@ def remote(g: Gate, kd: Path, spec: dict, host: str, cap: int, mem: int, cts: bo
     # A dropped SSH session can leave the admitted container running. Its
     # partial stdout must never become a terminal CTS/clock qualification.
     # Preserve the source snapshot and handle; collect this original job.
-    if p.returncode or not re.search(r"^GATE_DONE$", out, re.M):
+    terminal = re.search(r"^GATE_SCRIPT_RC=(\d+)$", out, re.M)
+    completed = (terminal is not None and int(terminal[1]) == p.returncode
+                 and re.search(r"^GATE_DONE$", out, re.M)
+                 and b"NOT COMPLETED" not in p.stderr)
+    if not completed:
         g.add("FAIL", "remote_incomplete",
               f"remote gate has no verified terminal completion (ot-run exit {p.returncode}); "
               f"original job may still run at {host}:{R}; script {script}; log {logp}",
@@ -1121,6 +1127,9 @@ def remote(g: Gate, kd: Path, spec: dict, host: str, cap: int, mem: int, cts: bo
                    "text": "transport or script ended without verified GATE_DONE; no clock qualification"}
         return
     analyse_remote(g, kd, spec, out, cts, binding, cap, host, round(time.time() - t0), local_snapshot)
+    if p.returncode:
+        g.add("FAIL", "remote_script", f"remote script completed with exit {p.returncode}",
+              "read the original terminal log and fix the reported failure")
     gate_layout(g, kd, spec, out)
 
 
