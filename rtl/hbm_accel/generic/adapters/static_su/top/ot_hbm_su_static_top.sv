@@ -16,7 +16,7 @@
 // reducer 1 to quarter 3's replica is missing (replica incoherence).
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_hbm_su_static_top #(
- parameter integer READ_RETURN=10,WRITE_RETURN=7,RF_RELAY=8,FETCH_EXTRA_EDGES=2,MLAT=3,ALAT=3,LEAF=0,MUT=0,MULTIRATE=0
+ parameter integer READ_RETURN=10,WRITE_RETURN=7,RF_RELAY=36,FETCH_EXTRA_EDGES=2,MLAT=3,ALAT=3,LEAF=0,MUT=0,MULTIRATE=0
 )(
  input wire [15:0] pg_clk,                       // 4 port-group roots per quarter
  input wire [4095:0] clk_lane, input wire [2047:0] clk_insert, input wire [511:0] rst_lane_n,

@@ -2,7 +2,7 @@
 // Native whole-SU source candidate: independent SRAM programme planes, actual
 // 3:4 clocks and actual VM/LG. Physical epoch/skew and closure remain OPEN.
 module tb_hbm_su_native_multirate_top;
- parameter integer NE=7116,PE=9489,NW=135184,NS=9,RF_RELAY=8,MUT=0,
+ parameter integer NE=7116,PE=9489,NW=135184,NS=9,RF_RELAY=36,MUT=0,
                    MLAT=4,ALAT=3,LEAF=1,MUT_LG=0,MUT_BANK=0;
  localparam integer QW=2422,FO=8+23+4*(MLAT-3)+(ALAT-3)+LEAF;
  localparam realtime HALF_Q=1250.0/9.0;

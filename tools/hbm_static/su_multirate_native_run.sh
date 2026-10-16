@@ -6,7 +6,7 @@ ulimit -c 0
 cd "$(dirname "$0")/../.."
 out=$(realpath -m "$1"); mode=${2:-prepare}
 mkdir -p "$out"
-mlat=${SU_TOP_MLAT:-4};alat=${SU_TOP_ALAT:-3};leaf=${SU_TOP_LEAF:-1};relay=${SU_TOP_RF_RELAY:-8};stream_pack=${SU_STREAM_INDEX_PACK:-1}
+mlat=${SU_TOP_MLAT:-4};alat=${SU_TOP_ALAT:-3};leaf=${SU_TOP_LEAF:-1};relay=${SU_TOP_RF_RELAY:-36};stream_pack=${SU_STREAM_INDEX_PACK:-1}
 [ -f "$out/vec/prog.mem" ] || python3 tools/hbm_static/su_top_compile.py "$out/vec" --rf-relay "$relay" --mlat "$mlat" --alat "$alat" --leaf "$leaf" > "$out/vec.log"
 python3 tools/hbm_static/su_multirate_compile.py "$out/vec/prog.mem" "$out/vec/phase" --expected-writes "$out/vec/expw.mem" > "$out/phase.log"
 python3 tools/hbm_static/su_programme_compile.py "$out/vec/phase/serial_prog.mem" "$out/vec/serial" --param-prefix SERIAL > "$out/serial.log"
