@@ -36,6 +36,9 @@ module tb_ot_s81_cfg7_seq_bfp;
             d[59] = rng[16]; d[61:60] = 2'(rng[18:17] % 2); d[68:66] = 3'(rng[21:19] % 3); d[71:69] = 3'd7; d[75:72] = rng[0] ? 4'hf : 4'h7;
             dtab[p] = d;
         end
+`ifdef TB_BFP_EMPTY
+        dtab[0] = 82'd0; // literal compiler empty phase: no invented OFF padding
+`endif
         for (g = 0; g < NW; g = g + 1) begin
             reg [71:0] w; reg [23:0] sp;
             p = g / CW; k = g % CW;
@@ -79,6 +82,9 @@ module tb_ot_s81_cfg7_seq_bfp;
         for (ph_i = 0; ph_i < NPH; ph_i = ph_i + 1) begin
             rng = nx(rng);
             @(negedge clk); phase = PHW'(rng % (1 << PHW)); np = 3'(rng[13:11]); cfg_go = 1;
+`ifdef TB_BFP_EMPTY
+            if (ph_i==0) phase=0;
+`endif
             @(negedge clk); cfg_go = 0;
             repeat (40) @(negedge clk);
             cur = phase; go = 1; ngo = ngo + 1;
