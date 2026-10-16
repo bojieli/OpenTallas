@@ -3,3 +3,5 @@
 source /src/physical/qwen_die_masters/pre_ref_skew.tcl
 source /src/physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl
 source /src/physical/common_flow/grt_macro_top_layer.tcl
+set ::ot_m6_stub_um 0.384
+source /src/physical/common_flow/m6_pin_access.tcl
