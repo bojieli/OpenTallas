@@ -1,0 +1,51 @@
+{
+ "schema": "opentallas.s81.die_lead_grant.v1",
+ "time": "2026-10-16T03:04:38.948921-07:00",
+ "by": "Codex S-DIE under coordinator delegation",
+ "decision": "GRANT c8-only candidate route in the current reservation; no native c10 view inheritance.",
+ "master": "dsfd_stage_seq_static_c8",
+ "params": {
+  "NOPS": 128,
+  "STAGE": 0
+ },
+ "source_commit": "1cf40ef7c",
+ "candidate_outline_um": [
+  540,
+  86.4
+ ],
+ "reservation_geometry_source": "17b13fb0637869d53580a1084bdd250d18828d9b:results/physical/die_iter_1012/s81/canonical_widehub_1015/vmc_26b/hub_layout.json",
+ "reservation_um": [
+  10887.264,
+  15806.88,
+  1727.976,
+  88.536
+ ],
+ "candidate_origin": "reservation SW corner",
+ "pin_tcl": "physical/s81_die_pins/fill2_gen19b/dsfd_stage_seq_static_c8_localtree.tcl",
+ "pin_tcl_sha256": "0c7b6292aa6635685be47a5e7b21898863d73ed75775c28241906a0f8e89c101",
+ "clock_reset_sha256": "d141db3e5be57f430ae6d789fbb7968c5251a335cd18d0597f8aaaab8c52c8f3",
+ "south_M5_clock_reset_um": {
+  "ck": [
+   270.384,
+   0
+  ],
+  "ckv": [
+   270.528,
+   0
+  ],
+  "rst": [
+   270.192,
+   0
+  ],
+  "rsv": [
+   270,
+   0
+  ]
+ },
+ "limitations": [
+  "Exact actual physical/native gate pending source1cf40ef7c; signoff/clock/bench/mutant not waived.",
+  "Current c26b remains unchanged. Future c10 adds engine10/13/PQboot faces and needs independent source/size/pinmap/native proof.",
+  "New actual macro endpoint position and peer stages must be regenerated before integrated adoption.",
+  "Structural cause is failed legacy single-root placement and physical margin, not a cosmetic closed reroute."
+ ]
+}
