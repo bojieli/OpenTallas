@@ -1,11 +1,69 @@
 {
  "scope": "rly_1 minimal set (coordinator 07:10: one kit per mirror class instead of 13 variants): closed rfp1 views, native pin audit + export_fix; 17.28 x 17.28 (64 rows, 320 sites) so MX / MY bind via S-DIE --orientation-qualification",
  "rows": [
-  {"cell": "dsfd_rly_1_WW", "job": "s81_rly_1_ww-rfp1-7abf56f5d", "native": {"pass": true, "launch_ps": 167.6, "capture_ps": 104.8}, "export_fix": true, "serves": {"WW": "R0 (353)", "EE": "MY (579)"}},
-  {"cell": "dsfd_rly_1_NW", "job": "s81_rly_1_nw-rfp1-621944a58", "native": {"pass": true, "launch_ps": 161.7, "capture_ps": 104.9}, "export_fix": true, "serves": {"NW": "R0 (99)", "NE": "MY (193)", "SW": "MX (244)", "SE": "R180 (207)"}},
-  {"cell": "dsfd_rly_1_NN", "job": "s81_rly_1_nn-rfp1-b43e7c973", "native": {"pass": true, "launch_ps": 166.2, "capture_ps": 104.7}, "export_fix": true, "serves": {"NN": "R0 (251)", "SS": "MX (309)"}},
-  {"cell": "dsfd_rly_1_NS", "job": "s81_rly_1_ns-rfp1-3cc59dd67", "native": "route pending", "serves": {"NS": "R0 (214)", "SN": "MX (273)"}}
+  {
+   "cell": "dsfd_rly_1_WW",
+   "job": "s81_rly_1_ww-rfp1-7abf56f5d",
+   "native": {
+    "pass": true,
+    "launch_ps": 167.6,
+    "capture_ps": 104.8
+   },
+   "export_fix": true,
+   "serves": {
+    "WW": "R0 (353)",
+    "EE": "MY (579)"
+   }
+  },
+  {
+   "cell": "dsfd_rly_1_NW",
+   "job": "s81_rly_1_nw-rfp1-621944a58",
+   "native": {
+    "pass": true,
+    "launch_ps": 161.7,
+    "capture_ps": 104.9
+   },
+   "export_fix": true,
+   "serves": {
+    "NW": "R0 (99)",
+    "NE": "MY (193)",
+    "SW": "MX (244)",
+    "SE": "R180 (207)"
+   }
+  },
+  {
+   "cell": "dsfd_rly_1_NN",
+   "job": "s81_rly_1_nn-rfp1-b43e7c973",
+   "native": {
+    "pass": true,
+    "launch_ps": 166.2,
+    "capture_ps": 104.7
+   },
+   "export_fix": true,
+   "serves": {
+    "NN": "R0 (251)",
+    "SS": "MX (309)"
+   }
+  },
+  {
+   "cell": "dsfd_rly_1_NS",
+   "job": "s81_rly_1_ns-rfp1-3cc59dd67",
+   "native": {
+    "pass": true,
+    "launch_ps": 161.1,
+    "capture_ps": 104.5
+   },
+   "serves": {
+    "NS": "R0 (214)",
+    "SN": "MX (273)"
+   },
+   "export_fix": true,
+   "closure": "TT +358.25 / FF +29.69 / DRC 0"
+  }
  ],
- "existing_closed": {"dsfd_rly_1_WN": "WN R0, EN MY (299), WS MX (523), ES R180 (222) -- 17.256 outline, needs a 17.28 re-cut to qualify for MX/MY", "dsfd_rly_1_WE / _EW": "R0 each"},
+ "existing_closed": {
+  "dsfd_rly_1_WN": "WN R0 only for now: the 17.28 re-cut (rfp2) was REFUSED CLOSED_STANDS (outline treated as equal); EN/WS/ES bind only if S-DIE orientation qualification accepts the 17.256 view",
+  "dsfd_rly_1_WE / _EW": "R0 each"
+ },
  "source": "c26b a_real/relay_face_audit.json kit_requests"
 }
