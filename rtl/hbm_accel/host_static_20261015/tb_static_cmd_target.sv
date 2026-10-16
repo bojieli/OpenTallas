@@ -1,3 +1,6 @@
+`ifndef TGTPIN
+`define TGTPIN 0
+`endif
 `timescale 1ns/1ps
 `default_nettype none
 // H-NETLIST/cp1: ot_static_cmd_target through the REAL host ingress (ot_hbm_host_static_ingress, AXI-lite F20..F30).
@@ -30,37 +33,37 @@ module tb_static_cmd_target;
     wire s_awe, s_bwe, s_run, s_cv, s_cfgd, s_flt, s_act; wire [9:0] s_aa; wire [6:0] s_ba; wire [255:0] s_ad, s_bd;
     wire [6:0] s_rb; wire [7:0] s_rc; wire [31:0] s_cyc; wire [0:0] s_cmd;
     reg svg_running = 0;
-    ot_static_cmd_target #(.TARGET(8'd64), .MODE(0), .AWA(10), .AWB(7), .RBW(7), .RCW(8), .NA(2), .NF(1), .MUT(`MUT)) t_svg(
-        .clk(clk), .rst_n(rst_n), .cfg_v(cfg_v), .cfg_target(cfg_target), .cfg_addr(cfg_addr), .cfg_data(cfg_data),
+    ot_static_cmd_target #(.TARGET(`TGTPIN ? 8'hff : 8'd64), .TGT_PIN(`TGTPIN), .MODE(0), .AWA(10), .AWB(7), .RBW(7), .RCW(8), .NA(2), .NF(1), .MUT(`MUT)) t_svg(
+        .clk(clk), .tgt(8'd64), .rst_n(rst_n), .cfg_v(cfg_v), .cfg_target(cfg_target), .cfg_addr(cfg_addr), .cfg_data(cfg_data),
         .desc_v(desc_v), .desc_base(desc_base), .desc_limit(desc_limit), .desc_loops(desc_loops), .launch_v(launch_v),
         .tgt_active({svg_running, 1'b0}), .tgt_fault(1'b0),
         .a_we(s_awe), .a_addr(s_aa), .a_data(s_ad), .b_we(s_bwe), .b_addr(s_ba), .b_data(s_bd),
         .run_v(s_run), .run_base(s_rb), .run_count(s_rc), .cmd_v(s_cv), .cmd(s_cmd), .cycle(s_cyc),
         .configured(s_cfgd), .fault(s_flt), .active(s_act));
     wire x_cv, x_cfgd, x_flt, x_act; wire [107:0] x_cmd; wire [31:0] x_cyc;
-    ot_static_cmd_target #(.TARGET(8'd100), .MODE(1), .CW(108), .RELF(0), .LEAD(LEAD), .MUT(`MUT)) t_xl(
-        .clk(clk), .rst_n(rst_n), .cfg_v(cfg_v), .cfg_target(cfg_target), .cfg_addr(cfg_addr), .cfg_data(cfg_data),
+    ot_static_cmd_target #(.TARGET(`TGTPIN ? 8'hff : 8'd100), .TGT_PIN(`TGTPIN), .MODE(1), .CW(108), .RELF(0), .LEAD(LEAD), .MUT(`MUT)) t_xl(
+        .clk(clk), .tgt(8'd100), .rst_n(rst_n), .cfg_v(cfg_v), .cfg_target(cfg_target), .cfg_addr(cfg_addr), .cfg_data(cfg_data),
         .desc_v(desc_v), .desc_base(desc_base), .desc_limit(desc_limit), .desc_loops(desc_loops), .launch_v(launch_v),
         .tgt_active(1'b0), .tgt_fault(1'b0),
         .a_we(), .a_addr(), .a_data(), .b_we(), .b_addr(), .b_data(), .run_v(), .run_base(), .run_count(),
         .cmd_v(x_cv), .cmd(x_cmd), .cycle(x_cyc), .configured(x_cfgd), .fault(x_flt), .active(x_act));
     wire d_cv, d_cfgd, d_flt, d_act; wire [307:0] d_cmd; wire [31:0] d_cyc;
-    ot_static_cmd_target #(.TARGET(8'd104), .MODE(1), .CW(308), .RELF(2), .LEAD(LEAD), .MUT(`MUT)) t_dma(
-        .clk(clk), .rst_n(rst_n), .cfg_v(cfg_v), .cfg_target(cfg_target), .cfg_addr(cfg_addr), .cfg_data(cfg_data),
+    ot_static_cmd_target #(.TARGET(`TGTPIN ? 8'hff : 8'd104), .TGT_PIN(`TGTPIN), .MODE(1), .CW(308), .RELF(2), .LEAD(LEAD), .MUT(`MUT)) t_dma(
+        .clk(clk), .tgt(8'd104), .rst_n(rst_n), .cfg_v(cfg_v), .cfg_target(cfg_target), .cfg_addr(cfg_addr), .cfg_data(cfg_data),
         .desc_v(desc_v), .desc_base(desc_base), .desc_limit(desc_limit), .desc_loops(desc_loops), .launch_v(launch_v),
         .tgt_active(1'b0), .tgt_fault(1'b0),
         .a_we(), .a_addr(), .a_data(), .b_we(), .b_addr(), .b_data(), .run_v(), .run_base(), .run_count(),
         .cmd_v(d_cv), .cmd(d_cmd), .cycle(d_cyc), .configured(d_cfgd), .fault(d_flt), .active(d_act));
     // negative collar: commands one cycle apart (must fault, never issue late)
     wire n_cv, n_cfgd, n_flt, n_act; wire [107:0] n_cmd;
-    ot_static_cmd_target #(.TARGET(8'd105), .MODE(1), .CW(108), .LEAD(LEAD), .MUT(`MUT)) t_neg(
-        .clk(clk), .rst_n(rst_n), .cfg_v(cfg_v), .cfg_target(cfg_target), .cfg_addr(cfg_addr), .cfg_data(cfg_data),
+    ot_static_cmd_target #(.TARGET(`TGTPIN ? 8'hff : 8'd105), .TGT_PIN(`TGTPIN), .MODE(1), .CW(108), .LEAD(LEAD), .MUT(`MUT)) t_neg(
+        .clk(clk), .tgt(8'd105), .rst_n(rst_n), .cfg_v(cfg_v), .cfg_target(cfg_target), .cfg_addr(cfg_addr), .cfg_data(cfg_data),
         .desc_v(desc_v), .desc_base(desc_base), .desc_limit(desc_limit), .desc_loops(desc_loops), .launch_v(launch_v),
         .tgt_active(1'b0), .tgt_fault(1'b0),
         .a_we(), .a_addr(), .a_data(), .b_we(), .b_addr(), .b_data(), .run_v(), .run_base(), .run_count(),
         .cmd_v(n_cv), .cmd(n_cmd), .cycle(), .configured(n_cfgd), .fault(n_flt), .active(n_act));
     wire c_we, c_sv, c_cfgd, c_flt; wire [9:0] c_wa, c_sb; wire [10:0] c_sl; wire [15:0] c_lp; wire [255:0] c_wd;
-    ot_static_program_target #(.TARGET(8'd96), .PCW(10)) t_cal(.clk(clk), .rst_n(rst_n), .cfg_v(cfg_v), .cfg_target(cfg_target),
+    ot_static_program_target #(.TARGET(`TGTPIN ? 8'hff : 8'd96), .TGT_PIN(`TGTPIN), .PCW(10)) t_cal(.clk(clk), .tgt(8'd96), .rst_n(rst_n), .cfg_v(cfg_v), .cfg_target(cfg_target),
         .cfg_addr(cfg_addr), .cfg_data(cfg_data), .desc_v(desc_v), .desc_base(desc_base), .desc_limit(desc_limit),
         .desc_loops(desc_loops), .launch_v(launch_v), .program_active(1'b0), .program_cfg_we(c_we), .program_cfg_addr(c_wa),
         .program_cfg_data(c_wd), .program_start_v(c_sv), .program_start_base(c_sb), .program_start_limit(c_sl),
