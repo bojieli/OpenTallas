@@ -77,7 +77,7 @@
     "threads": 8,
     "peak_ram_gb": 16,
     "pass_regex": "'mutant': False, 'ok': True",
-    "cmd": "python3 tools/s81_suhc/softmax_tail_gate.py --physical-wrapper --pin-wrapper tools/s81_suhc/proof_sources/sml_pin_wrapper.sv --only positive --out {RUN}/bench/tailpositive"
+    "cmd": "python3 tools/s81_suhc/softmax_tail_gate.py --physical-wrapper --check-pin-age --pin-wrapper tools/s81_suhc/proof_sources/sml_pin_wrapper.sv --only positive --out {RUN}/bench/tailpositive"
    },
    {
     "name": "mutant",
@@ -85,7 +85,7 @@
     "threads": 8,
     "peak_ram_gb": 16,
     "fail_regex": "'mutant': True, 'ok': False",
-    "cmd": "python3 tools/s81_suhc/softmax_tail_gate.py --physical-wrapper --pin-wrapper tools/s81_suhc/proof_sources/sml_pin_wrapper.sv --only mutant --out {RUN}/bench/tailmutant"
+    "cmd": "python3 tools/s81_suhc/softmax_tail_gate.py --physical-wrapper --check-pin-age --pin-wrapper tools/s81_suhc/proof_sources/sml_pin_wrapper.sv --only mutant --out {RUN}/bench/tailmutant"
    }
   ],
   "cycles_added": 2,

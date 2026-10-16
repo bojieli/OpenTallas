@@ -15,7 +15,7 @@ import hc_gate as H
 import su_gate as S
 
 def main():
-    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--out',type=Path,required=True);p.add_argument('--physical-wrapper',action='store_true');p.add_argument('--pin-wrapper',type=Path);p.add_argument('--only',choices=['both','positive','mutant'],default='both')
+    p=argparse.ArgumentParser(description=__doc__);p.add_argument('--out',type=Path,required=True);p.add_argument('--physical-wrapper',action='store_true');p.add_argument('--pin-wrapper',type=Path);p.add_argument('--check-pin-age',action='store_true');p.add_argument('--only',choices=['both','positive','mutant'],default='both')
     a=p.parse_args();a.out=a.out.resolve();a.out.mkdir(parents=True,exist_ok=True)
     rng=np.random.default_rng(1014133)
     x=np.full(144,-np.inf,np.float32);x[:133]=rng.uniform(-20,1,133).astype(np.float32);x[0]=1
@@ -29,6 +29,30 @@ def main():
     tbtext=tb.read_text()
     if a.physical_wrapper:
         tbtext=tbtext.replace('ot_s81_su_sml dut(.clk(clk), .rst_in(rst)', 'dsfd_su_t_sml dut(.ck(clk), .rst(rst)')
+    if a.check_pin_age:
+        assert a.pin_wrapper, '--check-pin-age requires exact --pin-wrapper'
+        age = """
+    wire b_mxv,b_ev,b_es,b_el;wire[31:0]b_mx,b_e;
+    dsfd_su_t_sml__ot_pr_core baseline(.ck(clk),.rst(rst),.sk_en(1'b0),
+        .i_cv(cv),.i_nv(7'd9),.i_scale(32'h3f800000),.i_sink(32'd0),
+        .i_sv(sv),.i_s(sd),.i_mv(mv),.i_nmb(32'hbf800000),
+        .o_mxv(b_mxv),.o_mx(b_mx),.o_ev(b_ev),.o_es(b_es),.o_el(b_el),.o_e(b_e));
+    reg[67:0]age0,age1;integer agewarm=0,agechecks=0;
+    always @(posedge clk) begin
+        age0<={b_mxv,b_mx,b_ev,b_es,b_el,b_e};age1<=age0;
+        if(!rst)agewarm<=0;else agewarm<=agewarm+1;
+    end
+    always @(negedge clk) if(rst && agewarm>8) begin
+        agechecks=agechecks+1;
+        if(mxv!==age1[67] || ev!==age1[34])begin
+            $display("PIN_AGE valid mismatch cycle=%0d",agewarm);bad=bad+1;
+        end
+        if(mxv && mx!==age1[66:35])begin $display("PIN_AGE mx mismatch");bad=bad+1;end
+        if(ev && {es,el,ed}!==age1[33:0])begin $display("PIN_AGE exp mismatch");bad=bad+1;end
+    end
+"""
+        tbtext=tbtext.replace('    reg [31:0] scores',age+'    reg [31:0] scores')
+        tbtext=tbtext.replace('$display("TAIL checked=144 bad=%0d",bad);','$display("PIN_AGE exact_edges=2 checked_cycles=%0d",agechecks);\n        $display("TAIL checked=144 bad=%0d",bad);')
     actual_tb.write_text(tbtext)
     if a.pin_wrapper:
         assert a.physical_wrapper, '--pin-wrapper requires --physical-wrapper'
@@ -58,7 +82,7 @@ def main():
         results.append(dict(mutant=mutant,ok=ok,returncode=r.returncode))
         print(results[-1],flush=True)
     record=dict(schema='opentallas.s81_su.tail.v1',results=results,
-        dut='dsfd_su_t_sml' if a.physical_wrapper else 'ot_s81_su_sml',positions=133,vector_beats=9,capacity_beats=40,capacity_positions=640,inactive_tail_positions=11,generated_tb_sha256=H.sha(actual_tb),pin_registers={'input_edges':1,'output_edges':1,'wrapper_sha256':H.sha(routed_wrapper),'core_sha256':H.sha(physical_core)} if a.pin_wrapper else None,
+        dut='dsfd_su_t_sml' if a.physical_wrapper else 'ot_s81_su_sml',positions=133,vector_beats=9,capacity_beats=40,capacity_positions=640,inactive_tail_positions=11,generated_tb_sha256=H.sha(actual_tb),pin_age_exact_checked=a.check_pin_age,pin_registers={'input_edges':1,'output_edges':1,'wrapper_sha256':H.sha(routed_wrapper),'core_sha256':H.sha(physical_core)} if a.pin_wrapper else None,
         status=('pass' if results[0]['ok'] and not results[1]['ok'] else 'fail') if a.only=='both' else ('pass' if results[0]['ok'] else 'fail'),fp='real RTL, no DPI',
         source_sha256={str(s.relative_to(ROOT)):H.sha(s) for s in [lane,tb]+[ROOT/s for s in paths]})
     (a.out/'result.json').write_text(json.dumps(record,indent=2)+'\n')
