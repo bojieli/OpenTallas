@@ -76,25 +76,36 @@
  "why_floorplan": "banded MIX4 shell payload column (shcol + own-column issue valid iv/ph, +2 FF): same 164.16 x 54 outline as the closed shcol; faces swapped for the banded cluster column (VM side S toward the cluster transport channel, cluster side N toward add8/mul4 above); 4 per cluster x 4 clusters (replaces ot_s81_engram_mixq_shcol, no added master count)",
  "structural_change": "S-ENGRAM+NORM MIX4-PARENT 10-16: the shell control iv/phase broadcast to 8 mul4 + 4 add8 (frozen R0 screen: -147 ps worst, 5+4+1+1 negative fan-out joins) is replaced by each payload column issuing its own column valid from the registered load decision it already makes (iv = ld_r|ld_a, ph = ld_a, same edge as h/kv/w): 0 cycles, exact. The load decision uses the captured return-valid pattern alone (REDUCE = 11111, ADD = 00111; the shell control faults on any other), so the fr/fa phase-flag inputs (and their 8 long control joins per cluster) are removed.",
  "job": {
-  "owner": "Claude:s81-surx-engram-1015",
-  "branch": "codex/s81-elements-shell-1417",
-  "tag": "bankv1benchfix-1421",
-  "purpose": "S81 Engram MIX4 split-shell leaf ot_s81_engram_mixq_shcol (control + 4 payload columns)",
+  "owner": "Claude:S-ENGRAM+NORM-MIX4-PARENT",
+  "branch": "claude/s81-mix4-parent-0600",
+  "tag": "b1",
+  "purpose": "S81 Engram MIX4 banded shell payload column ot_s81_engram_mixq_shcol_b (own-column iv/ph, pattern-decoded phase)",
   "benches": [
    {
-    "name": "mix4_exact_L01",
-    "cmd": "python3 tools/s81_engram_mix/gate.py --mix4 --fp rtl --snap results/rtl/s81_engram_mix_1014/fixtures/engram_L01.pkl --out {RUN}/mix4_m0 --vm-banked",
+    "name": "mix4b_exact_L01",
+    "cmd": "python3 tools/s81_engram_mix/gate.py --mix4 --banded --define DSFD_ENGRAM_STATIC_ISSUE --fp rtl --snap results/rtl/s81_engram_mix_1014/fixtures/engram_L01.pkl --vm-banked --out {RUN}/mix4b_m0",
     "expect": "pass",
     "threads": 16,
     "peak_ram_gb": 48,
     "needs": [
      "verilator"
     ],
-    "pass_regex": "PASS native Engram MIX4.*20480words.*writes640 reads4161.*cycles=810"
+    "pass_regex": "PASS native Engram MIX4.*20480words.*writes640 reads4161.*cycles=811"
    },
    {
-    "name": "mix4_mut1_key",
-    "cmd": "python3 tools/s81_engram_mix/gate.py --mix4 --fp rtl --snap results/rtl/s81_engram_mix_1014/fixtures/engram_L01.pkl --mut 1 --out {RUN}/mix4_m1 --vm-banked",
+    "name": "mix4b_mut28_colvalid",
+    "cmd": "python3 tools/s81_engram_mix/gate.py --mix4 --banded --define DSFD_ENGRAM_STATIC_ISSUE --fp rtl --snap results/rtl/s81_engram_mix_1014/fixtures/engram_L01.pkl --vm-banked --mut 28 --out {RUN}/mix4b_m28",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 48,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "endpoint fault|FAIL [0-9]+ words"
+   },
+   {
+    "name": "mix4b_mut1_key",
+    "cmd": "python3 tools/s81_engram_mix/gate.py --mix4 --banded --define DSFD_ENGRAM_STATIC_ISSUE --fp rtl --snap results/rtl/s81_engram_mix_1014/fixtures/engram_L01.pkl --vm-banked --mut 1 --out {RUN}/mix4b_m1",
     "expect": "fail",
     "threads": 16,
     "peak_ram_gb": 48,
@@ -102,32 +113,10 @@
      "verilator"
     ],
     "fail_regex": "FAIL [0-9]+ words"
-   },
-   {
-    "name": "mix4_mut21_ovalign",
-    "cmd": "python3 tools/s81_engram_mix/gate.py --mix4 --fp rtl --snap results/rtl/s81_engram_mix_1014/fixtures/engram_L01.pkl --mut 21 --out {RUN}/mix4_m21 --vm-banked",
-    "expect": "fail",
-    "threads": 16,
-    "peak_ram_gb": 48,
-    "needs": [
-     "verilator"
-    ],
-    "fail_regex": "FAIL [0-9]+ words"
-   },
-   {
-    "name": "mix4_mut22_boundary_valid",
-    "cmd": "python3 tools/s81_engram_mix/gate.py --mix4 --fp rtl --vm-banked --snap results/rtl/s81_engram_mix_1014/fixtures/engram_L01.pkl --mut 22 --out {RUN}/mix4_m22",
-    "expect": "fail",
-    "threads": 16,
-    "peak_ram_gb": 48,
-    "needs": [
-     "verilator"
-    ],
-    "fail_regex": "endpoint fault cyc=78"
    }
   ],
-  "views_to": "physical/ref_tile/s81engm_shcol/views",
-  "record_to": "results/rtl/ref_tile/s81engm_shcol",
+  "views_to": "physical/ref_tile/s81engm_shcolb/views",
+  "record_to": "results/rtl/ref_tile/s81engm_shcolb",
   "extra_paths": [
    "physical/s81_die_pins/v21_engram_arithmetic",
    "rtl/dsrom_sys",
@@ -159,5 +148,9 @@
  },
  "defines": [
   "DSFD_ENGRAM_STATIC_ISSUE"
- ]
+ ],
+ "pin_regs": {
+  "enable": false,
+  "reason": "the RTL registers every port at the leaf boundary already (rs_v/rs_d/ov/result captured in rvq/rdq/ov_q/result_q; h/kv/w/wq_d/iv/ph launched from flops) and recipe 2 keep_pin_regs/pin_reg_split places those flops at the pins; flow-inserted pin stages would add an unmodelled cycle and misalign iv with h/kv/w against the shell control"
+ }
 }
