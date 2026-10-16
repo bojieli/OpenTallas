@@ -49,6 +49,22 @@ module tb_host_c_sliced_native;
    end
   end
  end
+ // Count only the prior registered pin sample. This asserts the declared
+ // source ACK -> capture -> fence counter edge, independently of whether
+ // the downstream completion toggle already has spare handshake cycles.
+ reg [31:0] expected_commits=0; reg [7:0] pin_sample;reg pin_reset;
+ always @(posedge ck)begin
+  if(!rst)expected_commits=0;
+  else begin
+   pin_sample=dut.ack;pin_reset=dut.ingest.rn_ack;
+   if(!dut.ingest.native_ingest.fence.g_on.rn_c)expected_commits=0;
+   else if(!dut.ingest.native_ingest.fence.g_on.fc)expected_commits=expected_commits+dut.ingest.ack_pin;
+   #0.01;
+   if(cyc>10 && (dut.ingest.ack_pin !== (pin_reset?pin_sample:8'd0) ||
+      dut.ingest.native_ingest.fence.g_on.commits !== expected_commits))
+    $fatal(1,"HOST_SLICED_NATIVE FAIL ACK fixed pin-stage calendar edge=%0d",cyc);
+  end
+ end
  always @(posedge cv)if(rst)begin
   #0.01;
   if(sp!==rsp||pq!==rpq||plen!==rplen)$fatal(1,"HOST_SLICED_NATIVE FAIL exact boot calendar");

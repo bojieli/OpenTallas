@@ -55,6 +55,19 @@ assert original.count(needle)==1
 mutant=a.out/'bypass_intercepts.sv';mutant.write_text(original.replace(needle,"wire csr=1'b0; // mutant: leak intercepted CSRs into native ingest"))
 exe=build('tb_host_c_sliced_native',ROOT/'tests/s81/tb_host_c_sliced_native.sv',0,'native_bypass_intercepts',mutant)
 run(exe,'native_bypass_intercepts',[f'+NP={len(words)}'],False,'HOST_SLICED_NATIVE FAIL interceptedCSR reached native ingest port')
+# Negative control: retain the capture register but illegally bypass it at
+# the actual fence input. The edge assertion must detect the early count.
+ackneedle='.host_ack_n(ack_pin),.fault(hf)'
+assert original.count(ackneedle)==1
+ackmut=a.out/'bypass_ack_pin.sv';ackmut.write_text(original.replace(ackneedle,'.host_ack_n(host_ack_n),.fault(hf)'))
+exe=build('tb_host_c_sliced_native',ROOT/'tests/s81/tb_host_c_sliced_native.sv',0,'native_bypass_ack_pin',ackmut)
+run(exe,'native_bypass_ack_pin',[f'+NP={len(words)}'],False,'HOST_SLICED_NATIVE FAIL ACK fixed pin-stage calendar')
+# Actual native ACK capture/count checks at every source-family phase, with
+# reset during traffic. The same bypass-negative must fail this direct bench.
+exe=build('tb_host_ack_pin',ROOT/'tests/s81/tb_host_ack_pin.sv',0,'ack_phase_exact')
+for phase in range(6):run(exe,f'ack_phase{phase}',[f'+phase={phase}'],True,'ACK_PIN PASS')
+exe=build('tb_host_ack_pin',ROOT/'tests/s81/tb_host_ack_pin.sv',0,'ack_phase_bypass',ackmut)
+run(exe,'ack_phase_bypass',['+phase=2'],False,'ACK_PIN FAIL fixed capture/count edge')
 # Reuse the exact legacy boundary transport vectors, with actual new clock
 # entry pins bound to their ideal source-family phase. This is not timing proof.
 boot=(ROOT/'tests/s81/tb_host_boot300.sv').read_text().replace('module tb_host_boot300;', 'module tb_host_boot300_sliced;').replace('dsfd_host_c #','dsfd_host_c_sliced #').replace('.ck(ck),.ckv(ckv)', '.ck(ck),.ck_data({4{ck}}),.ck_native(ck),.ck_launch(ck),.ck_return(ck),.ckv(ckv)')
@@ -64,6 +77,6 @@ for phase in range(8):run(exe,f'boot_phase{phase}',[f'+serial_phase={phase}'],Tr
 for name,arg in [('stop','+stop_boot=1'),('capacity','+overload=1')]:run(exe,'boot_'+name,[arg],True,'BOOT300 FAIL_EXPECTED')
 exe=build('tb_host_boot300_sliced',tb,5,'boot_kind_mutant')
 run(exe,'boot_kind_mutant',[],False,'BOOT300 FAIL payload/kind')
-rec=dict(scope=__doc__,output_artifact_sha256={'emit_calendar_exact.tsv':hashlib.sha256((a.out/'emit_calendar_exact.tsv').read_bytes()).hexdigest()},generator_source_sha256={x:hashlib.sha256((ROOT/x).read_bytes()).hexdigest() for x in ['tools/rtl_rom_host_ingest_bench.py','tools/rtl_hdc_kv_ingest_campaign.py','tools/kv_ingest_ref.py','tools/s81_static_control/host_c_sliced_gate.py']},input_image_sha256={x:hashlib.sha256((a.out/x).read_bytes()).hexdigest() for x in ['packets.mem','init.mem','exp.mem']},source_sha256={x:hashlib.sha256((ROOT/x).read_bytes()).hexdigest() for x in SRC+['tests/s81/tb_host_c_sliced_native.sv','tests/s81/tb_host_boot300.sv']},input_slots=dict(first=128,stride=32,packets=len(words),final_verification_edge=60000),normal_token_reservation='OPEN: queue-nonempty service is not a compiled execution calendar',diagnostic_delta=dict(native_fault_host_edges=1,payload_ack_service_edges=0),cases=records)
+rec=dict(scope=__doc__,output_artifact_sha256={'emit_calendar_exact.tsv':hashlib.sha256((a.out/'emit_calendar_exact.tsv').read_bytes()).hexdigest()},generator_source_sha256={x:hashlib.sha256((ROOT/x).read_bytes()).hexdigest() for x in ['tools/rtl_rom_host_ingest_bench.py','tools/rtl_hdc_kv_ingest_campaign.py','tools/kv_ingest_ref.py','tools/s81_static_control/host_c_sliced_gate.py']},input_image_sha256={x:hashlib.sha256((a.out/x).read_bytes()).hexdigest() for x in ['packets.mem','init.mem','exp.mem']},source_sha256={x:hashlib.sha256((ROOT/x).read_bytes()).hexdigest() for x in SRC+['tests/s81/tb_host_c_sliced_native.sv','tests/s81/tb_host_boot300.sv','tests/s81/tb_host_ack_pin.sv']},input_slots=dict(first=128,stride=32,packets=len(words),final_verification_edge=60000),normal_token_reservation='OPEN: queue-nonempty service is not a compiled execution calendar',diagnostic_delta=dict(native_fault_host_edges=1,payload_emit_service_edges=0,ACK_pin_to_fence_count_edges_added=1,measured_IKEY_completion_edge_delta=0),cases=records)
 (a.out/'record.json').write_text(json.dumps(rec,indent=2)+'\n')
-print('HOST_C_SLICED_GATE PASS actual IKEY544sectors/full256 exact59989edges + badpayload/interceptbypass mutants + mixedCSR + boot8phases/kind/missingclock/capacity')
+print('HOST_C_SLICED_GATE PASS actual IKEY544sectors/full256 exact59989edges + badpayload/interceptbypass/ACKearlycount mutants + mixedCSR + boot8phases/kind/missingclock/capacity')

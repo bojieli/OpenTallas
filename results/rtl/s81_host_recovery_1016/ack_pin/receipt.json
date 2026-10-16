@@ -1,0 +1,40 @@
+{
+ "schema": "opentallas.s81.host_ack_pin.v1",
+ "source_sha256": {
+  "rtl/dsrom_sys/s81_ingest/dsfd_host_c.sv": "0d3da0d94bda2fb71284cdbaa1bba40d8f55a39c984c94339a9b86b25cf8a65b",
+  "rtl/lib/ot_async_fifo.sv": "22c5e15fc205c1585be1a3cf1cefa58550ddf546e3fe56945ec3282f276948bc",
+  "rtl/lib/ot_reset_sync.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
+  "rtl/dsrom_sys/s81_ingest/dsfd_host_sd.sv": "42fb60c08775f37b7ca35e90cd15f4a153fc584e11610f144204036a762bece8",
+  "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+  "rtl/dsrom_sys/s81_ingest/dsfd_host_native.sv": "6fbf6750c4d0418f6e9b2fbf430469e7ca9035c6e7a1b5242b2d35b4ffa3c214",
+  "rtl/dsrom_sys/s81_ingest/ot_s81_ingest_visibility_fence.sv": "33806f0009eb7c08ee56309b86aabaf4181478a29193a51474bddaa0ff662c40",
+  "rtl/dsrom_sys/s81_ctrl/ot_s81_secded.sv": "5c0c277ed07a50cd46d0738009187c836d3d4854e0d5b4eb23fb6ec3c7960c5d",
+  "physical/rom_host_ingest/rtl/dsfd_host.sv": "11da6bdc13e1df14c9eab9e4651d8161ed23ccf5342bff27263f7bcf1778e8ca",
+  "rtl/hdc/ingest/ot_rom_host_ingest.sv": "7d6602326b8bddee7054df7fcb720d0406dac1ef6c5939b086546aa1d6222b40",
+  "rtl/link/ot_link_afifo.sv": "fd295cdf0e41d47ebd9a231b4ee505bb21da72cae8efd2de35af96d123816a68",
+  "rtl/hdc/ingest/ot_hdc_kv_ingest.sv": "7518d90c50c3689821066dd59a10e9c7d67511129583e225c7bfa05f7b80b38b",
+  "rtl/hdc/ingest/ot_hdc_ingest_fp8q.sv": "94e483c574be4ecf58c1d270dc83224a936a6ba11e1122bed967d52219330b32",
+  "rtl/dsrom_sys/s81_ingest/dsfd_host_sd_sliced.sv": "f23ad311c9f4ef0f664639dd564eb06f096bf97d0fe0bf6c458bf3a3c1cdb69c",
+  "rtl/dsrom_sys/s81_ingest/dsfd_host_c_sliced.sv": "cc55550c22633025e28d086d29ec28b1bcc9ff5f550c96f1784e519808bd3c39"
+ },
+ "compiler_stage": {
+  "input": "host_ack_n[7:0]",
+  "capture_register": "ingest.ack_pin[7:0]",
+  "capture_clock": "ck_native -> ingest.ck_write",
+  "next_consumer": "ingest.native_ingest.fence.g_on.commits",
+  "added_source_to_counter_edges": 1,
+  "source_capture_FF_bits": 8,
+  "own_root_reset_conditioner_bits": 2,
+  "mapped_added_FF": "OPEN: same-root reset conditioner may merge with existing identical synchronizer, measure actual new synthesis",
+  "payload_emit_cycle_delta": 0,
+  "measured_IKEY_completion_cycle_delta": 0,
+  "general_completion_latency": "Must include ACKstage1 in fixedschedule; no generalzero-delta inference from existing handshake overlap in IKEY workload",
+  "phase_proof": "6source phases,217/218samples each, midtraffic asyncreset including coincidence with writeedge; exact inputcapture/counter assertions",
+  "negative": "Earlycount bypassFAIL fullHOST anddirectphasebench"
+ },
+ "full_proof_record": "results/rtl/s81_host_recovery_1016/ack_pin/record.json",
+ "emit_calendar_sha256": "54dc358cc9bb3ef0736390cb8a419991f1bc7982f451f14fb6cd3edc1a3f8472",
+ "previous_source_contract": "RCOPY9aefcd0db retained zero-cycle predecessor; this adds1 fixed ACKinputedge only; no packet/sectorACKemit edge change",
+ "scope": "Initialization component only; no normalcompiledtoken/nativephysical qualification",
+ "unresolved": "Actual othernative u_oxWRITEside setupplateau/internalarithmetic, sourcecurrentarea/clock/pin/cuts/TTFFDRC/parentgrant/calendar"
+}

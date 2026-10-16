@@ -190,11 +190,18 @@ module dsfd_host_native_leaf(
  always @*if(!ck_launch)begin host_seam={hcl,hd,hv&&!csr};tcr_seam=t_cr;end
  wire hf;wire[4:0]unused_cr;wire rn_h;
  ot_reset_sync rs_h(.clk(ck_host),.async_rst_n(rst_n),.sync_rst_n(rn_h));
+ // Physical commit-ACK input boundary: sampled on ck_write, then counted
+ // by the native visibility fence on the next ck_write edge (+1). This
+ // stage cannot defer/merge an ACK or reschedule a payload. Local reset
+ // release uses only this root. Compiler commit visibility includes it.
+ wire rn_ack; reg [7:0] ack_pin;
+ ot_reset_sync rs_ack(.clk(ck_write),.async_rst_n(rst_n),.sync_rst_n(rn_ack));
+ always @(posedge ck_write or negedge rn_ack) if(!rn_ack)ack_pin<=0;else ack_pin<=host_ack_n;
  dsfd_host_native #(.ENABLE(1),.FPIPE(2),.ENG_TRIM(1),.APIPE(3))native_ingest(
   .rst_n(rst_n),.clk_h(ck_host),.h_v(host_seam[0]),.h_cls(host_seam[514:513]),
   .h_d(host_seam[512:1]),.h_crn(unused_cr),.t_v(t_v),.t_d(t_d),.t_cr(tcr_seam),
   .clk_i(ck_core),.ck(ck_write),.o_v(o_v),.o_we(o_we),.o_addr(o_addr),.o_d(o_d),
-  .o_cr(o_cr),.i_rv(1'b0),.i_rd(256'd0),.host_ack_n(host_ack_n),.fault(hf));
+  .o_cr(o_cr),.i_rv(1'b0),.i_rd(256'd0),.host_ack_n(ack_pin),.fault(hf));
  // Native fault OR is hardened behind a source pin FF. +1 host diagnostic
  // edge is explicit; native payload/ACK completion edges are unchanged.
  always @(posedge ck_host or negedge rn_h)if(!rn_h)fault<=0;else fault<=hf;
