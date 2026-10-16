@@ -1,0 +1,32 @@
+{
+  "scope": "Read-only actual gate_dump JSON validation; no ODB, route, daemon or VM source modification.",
+  "actual_dump_sha256": "eb9d32fbde5309c3ddbbb30d825dbe4f2e04632a9416150e684ab8f01b3160c4",
+  "actual_dump_bytes": 438112,
+  "source_commit": "c15649a12",
+  "old_gate_receipt_commit": "d84acacda",
+  "actual_result": "FAIL: same38 rectangles outside die and without finite preferred-track full-minimum-width access",
+  "die": [
+    0.0,
+    0.0,
+    64.8,
+    129.6
+  ],
+  "existing_pin_track_access_unchanged": true,
+  "thresholds_unchanged": true,
+  "bounds_numerical_epsilon_um": 1e-07,
+  "tests": {
+    "new_gate_cases": 7,
+    "source_binding": 7,
+    "existing_fp_lint": 15
+  },
+  "qualification": "Previous202.855ps native CTS numbers remain diagnostic until actual legal pin geometry is proved.",
+  "sync_files": [
+    "tools/fp_margin_lint.py",
+    "tools/ref_tile/pre_route_gate.py"
+  ],
+  "sync_note": "Both shared Python files must reach the gate runner and source/helper snapshots together. fp_margin_lint.py already appears in SHIP_HELPERS and daemon flow helper overlays. No daemon or direct-job edits performed.",
+  "tool_sha256": {
+    "tools/fp_margin_lint.py": "5c0b112365aab653a6790d862cec90ff30a182ce0aeae58e80465b5b68c391a8",
+    "tools/ref_tile/pre_route_gate.py": "e0efdcfc0da18fe8d4e26ecce9f83fac9de41538cbc0903e74627f094ceb832c"
+  }
+}

@@ -1,0 +1,13 @@
+test_complete_remote_path_parses_digit_bearing_archive_key_and_clock (test_source_binding.SourceBindingTest) ... ok
+test_dirty_generated_kit_and_daemon_overlay_are_exact_hashes_not_commit_claim (test_source_binding.SourceBindingTest) ... ok
+test_gate_completion_after_head_advances_remains_bound_to_staged_bytes (test_source_binding.SourceBindingTest) ... ok
+test_legacy_result_cannot_qualify_new_source (test_source_binding.SourceBindingTest) ... ok
+test_recovery_parser_never_clears_a_source_mismatch_failure (test_source_binding.SourceBindingTest) ... ok
+test_recovery_requires_full_manifest_log_script_and_staged_bytes (test_source_binding.SourceBindingTest) ... ok
+test_remote_script_verifies_archive_before_extracting (test_source_binding.SourceBindingTest) ... ok
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.084s
+
+OK
+GATE: kit/gate_result.json written (exact staged source binding; commit it with the kit)
