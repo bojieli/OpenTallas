@@ -8,15 +8,15 @@ Same pattern as die_case.py (d2: service engine + SM), extended to EVERY v16 sou
 nets bit-exact from the contract edges, die clock trees per contract clock domain (die_clock_tree.py), die repeaters
 (repair_design -max_wire_length 400), global route, TT setup / FF hold STA.  Open inputs stay open (manifest, with
 owner); straps are constants of the design and stay open in this timing case (listed); nothing is tied or stubbed.
-The source contract's current strict port-bind result is reported in the manifest. Open inputs or unqualified views
-keep the case diagnostic; this tool does not qualify a die by matching view ports alone.
+The v16 strict port bind FAILs (51 exposed input ports) -> every result of this case is labelled NOT_A_DIE_RESULT.
 
 Views: REAL = closed routed view (LEF + TT/FF ETM); SYNTH = current-source mapped-netlist ETM (ideal clocks, no wires,
 clock pin re-capped to one 2 fF entry) with a generated abstract: outline = the instance's grant slot when it is the
 only instance of that slot, else std area / 0.60 + 1.3 x macro area, square, grown until every port bit fits one
 0.048 um track per face over 90 % of the face (pin-bound outlines are flagged); every port on the face that points to
 the bit-weighted centroid of its peers (spill to the next face when full), ordered along the face by peer position.
-hfd_ckgen is placed at hb_ckgen. Domain clocks originate at its pll_<domain> output pins; the analog PLL is modeled.
+hfd_ckgen (PLL = the allowed analog model, no Liberty) is out of the case: the domain clocks and resets enter as die
+ports at its grant slot, as in d2.
 
 Placement order (every generated home is reported in manifest.json 'homes'):
   1. PHY at its grant slot; PC controller leaves over their PHY channel and service groups in their PC band box (d2
@@ -213,12 +213,18 @@ def main():
             size[c] = lef_size(vd / f'{c}.lef')
         else:
             sd = a.views / 'synth' / c
-            libs = {k: sd / f"{e['wrapper']}_synth_{k}.lib" for k in ('tt', 'ff')}
+            synth_top = e.get('synth_top', e['wrapper'])
+            if synth_top != e['wrapper']:
+                receipt = json.loads((sd / 'meta.json').read_text())
+                assert (e['params'] == {} and synth_top == e['master'] == c
+                        and receipt['actual_top'] == synth_top
+                        and receipt['parameter_binding'] == 'EXACT_DIRECT_MASTER_PARAMS_EMPTY_NO_RENAME'), c
+            libs = {k: sd / f"{synth_top}_synth_{k}.lib" for k in ('tt', 'ff')}
             if not all(p.exists() for p in libs.values()):
                 excluded[c] = 'SYNTH view not built (see VIEWS/drive/<cell>.json)'
                 continue
             for k, p in libs.items():
-                t = p.read_text().replace(e['wrapper'], c)
+                t = p.read_text().replace(synth_top, c)
                 (vd / f'{c}_{k}.lib').write_text(t)
             ecap[c] = [entry_cap(vd / f'{c}_{k}.lib') for k in ('tt', 'ff')]
             kinds[c] = 'SYNTH'
