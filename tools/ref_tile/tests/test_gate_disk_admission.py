@@ -23,6 +23,20 @@ def archive(size=8193):
     return buf.getvalue()
 
 
+class RemoteDisconnectLog(unittest.TestCase):
+    def test_original_measurement_finishes_and_logs_after_reader_disconnect(self):
+        with tempfile.TemporaryDirectory() as td:
+            # Execute the real shipped redirection, then close the same pipe
+            # SSH owns after the first message. No hardware or network needed.
+            redirection = next(ln for ln in PG.REMOTE_SH.splitlines() if ln.startswith('exec > >('))
+            code = 'R="$1"\n' + redirection + '\necho STARTED\nsleep 0.05\necho GATE_CTS_RC=0\necho GATE_DONE\n'
+            p = subprocess.Popen(['bash', '-c', code, 'gate-test', td], stdout=subprocess.PIPE)
+            self.assertEqual(p.stdout.readline(), b'STARTED\n')
+            p.stdout.close()
+            self.assertEqual(p.wait(timeout=5), 0)
+            self.assertIn('GATE_DONE', (Path(td) / 'execution.log').read_text())
+
+
 class DiskBudget(unittest.TestCase):
     def test_default_retains_twenty_gib_work_reserve_and_prices_staging(self):
         data = archive()
