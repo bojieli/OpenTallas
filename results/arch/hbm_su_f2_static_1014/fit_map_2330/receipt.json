@@ -1,0 +1,29 @@
+{
+ "source_commit": "f86d487d1",
+ "scope": "Actual mapped source area diagnostic only; timing/DRC/native physical/whole-SU fit OPEN",
+ "source_origin": "git archive f86d487d1 tools plus exactRTLsourcefiles",
+ "classes": {
+  "SFU": {
+   "count": 127,
+   "area_um2": 22528.12662,
+   "cell_count": 170448,
+   "FF": 33207,
+   "max_clock_sinks": 10727,
+   "used_roots": 10,
+   "raw_std_total_mm2": 2.8610720807399996,
+   "source_hashes_match_immutable_commit": true,
+   "normalized_netlist_sha256": "ad23284592eae559faf96e38a9372b5389b2e635534fb8b4ca79f771921f5bcb"
+  },
+  "FULL": {
+   "count": 1,
+   "area_um2": 26624.01312,
+   "cell_count": 194716,
+   "FF": 45485,
+   "max_clock_sinks": 10727,
+   "used_roots": 12,
+   "raw_std_total_mm2": 0.026624013119999998,
+   "source_hashes_match_immutable_commit": true,
+   "normalized_netlist_sha256": "76ed36fc51e6774bb9c8e18979e6a5031471549ba23f2618e7a013f7d023e5f1"
+  }
+ }
+}
