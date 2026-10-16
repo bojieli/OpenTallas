@@ -1,0 +1,114 @@
+{
+ "name": "s81hc_ccfbp_bank256x_ref-x1-COMMIT",
+ "block": "ot_s81_hc_ccf_bankpipe_bank256",
+ "ref_tile": true,
+ "owner": "Claude:S-ENGRAM+NORM/HC-COMB",
+ "purpose": "CCF bankpipe HALF bank leaf (u_cf.g_bank[0..4].u_b.u_h0/u_h1, one master x10): 256-bit FWFT FIFO on one ot_sram_1r1w_128x256 macro, registered head/hv/ovf; same cycles as the 512-bit bank",
+ "threads": 8,
+ "peak_ram_gb": 32,
+ "source": {
+  "branch": "claude/s81hc-comb3-bank256b",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "rtl/dsrom_sys/s81_suhc",
+   "tools/s81_suhc",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_s81_hc_ccf_bankpipe_bank256 #(.DEPTH(32)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_ccf_bankpipe.sv rtl/link/ot_fifo_sram_fwft.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "ccf_bankpipe_component",
+    "cmd": "bash tools/s81_suhc/ccf_bankpipe_gate.sh {RUN}/bench/ccfbp 3",
+    "expect": "pass",
+    "pass_regex": "^CCF_BANKPIPE_COMPONENT_GATE PASS$",
+    "threads": 1,
+    "peak_ram_gb": 8,
+    "needs": [
+     "iverilog"
+    ]
+   },
+   {
+    "name": "ccf_bankpipe_neg_head",
+    "cmd": "mkdir -p {RUN}/neg && sed 's/head_o<=head;/head_o<=~head;/' rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_ccf_bankpipe.sv > {RUN}/neg/ot_s81_hc_ccf_bankpipe_mut.sv && iverilog -g2012 -s tb_ccf_bankpipe -Ptb_ccf_bankpipe.EXTRA=3 -o {RUN}/neg/mut.vvp rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_ccf.sv {RUN}/neg/ot_s81_hc_ccf_bankpipe_mut.sv rtl/link/ot_fifo_sram_fwft.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_64x512_m1_r2c2/ot_sram_1r1w_64x512_m1_r2c2.v physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v rtl/dsrom_sys/s81_suhc/test/tb_ccf_bankpipe.sv && vvp {RUN}/neg/mut.vvp +MODE=0 +SEED=17",
+    "expect": "fail",
+    "fail_regex": "CCF_BANKPIPE_FAIL",
+    "threads": 1,
+    "peak_ram_gb": 8,
+    "needs": [
+     "iverilog"
+    ]
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/s81hc_ccfbp_bank256x_ref/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/s81hc_ccfbp_bank256x_ref/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 32
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/s81hc_ccfbp_bank256x_ref --out {RUN}/record/views/ot_s81_hc_ccf_bankpipe_bank256 --macro-view physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/s81hc_ccfbp_bank256x_ref/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/s81hc_ccfbp_bank256x_ref/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/s81hc_ccfbp_bank256x_ref/s81hc_ccfbp_bank256x_ref-x1-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "HC-COMB-3 structural partition (bank128 g128edge24 EARLY_FAIL_CONGESTION GRT overflow 49,847; bank v1 TT -34.99 rd_out[383]->b1[127] W-channel detour + 2 CTS M4 shorts at macro E edge): one 64x512 SRAM (171.3x77.8, all pins W/E on M4, ~1,300 N->S bits turned through 20-25 um side channels, congestion.png all in W channel + NW/SW corners) -> bank = 2 half leaves on one 128x256 SRAM (94.8x41.1), half the bits per side channel, 0 added cycles; macro-edge M5 via guard 2.4 um (Codex measured DRC 1.33 um inside the macro). Wide-side variant (VIS-ROM option c): ~60 um W/E channels for the macro W/E M4 pin faces."
+}
