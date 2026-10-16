@@ -13,6 +13,8 @@ module ot_hgi_qdq_program_static #(
     // LG=1: GEO-H four bank-pair LG port groups (ot_hgi_qdq_lg_port_group) between the engine and the VM
     // banks; adds exactly +2 read-return edges (rq,rr) and +1 write-commit edge (wq) to the fixed calendar.
     // LG=0 is the previous single-cluster boundary (unchanged behaviour).
+    // LG=2: r2 groups (ot_hgi_qdq_lg_port_group_r2: capture register at the input pins + launch register at the
+    // output pins) = +4 read-return edges and +2 write-commit edges over LG=0.
     parameter integer LG=0,
     parameter integer LGMUT=0, // bench only: 1 binds port groups 0/1 to each other's bank-pair write slice
     parameter integer TSPLIT=0, // 1: word-sliced transport leaves (control + NS read/write slices), zero added edges
@@ -66,13 +68,18 @@ module ot_hgi_qdq_program_static #(
                 assign rri[i*257+:257]=rr[gmember(k,i)*257+:257]; assign rr_e[gmember(k,i)*257+:257]=rro[i*257+:257];
                 assign wqi[i*281+:281]=wq_e[gmember(k,i)*281+:281]; assign wq[gmember(KW,i)*281+:281]=wqo[i*281+:281];
             end
+            if(LG==2) begin: r2
+            ot_hgi_qdq_lg_port_group_r2 #(.BANKS(N)) port_group(.clk(clk_lg[k]),.rst_n(rst_n),
+                .rq_i(rqi),.rq_o(rqo),.rr_i(rri),.rr_o(rro),.wq_i(wqi),.wq_o(wqo));
+            end else begin: r1
             ot_hgi_qdq_lg_port_group #(.BANKS(N)) port_group(.clk(clk_lg[k]),.rst_n(rst_n),
                 .rq_i(rqi),.rq_o(rqo),.rr_i(rri),.rr_o(rro),.wq_i(wqi),.wq_o(wqo));
+            end
         end
     end else begin: single_cluster
         assign rq=rq_e; assign rr_e=rr; assign wq=wq_e;
     end endgenerate
-    ot_hgi_qdq_static #(.IO_REGS(IO_REGS),.RL(RL+(LG!=0?2:0)),.WC(WC+(LG!=0?1:0)),.MUT(MUT),.TSPLIT(TSPLIT)) engine(
+    ot_hgi_qdq_static #(.IO_REGS(IO_REGS),.RL(RL+(LG==2?4:LG!=0?2:0)),.WC(WC+(LG==2?2:LG!=0?1:0)),.MUT(MUT),.TSPLIT(TSPLIT)) engine(
         .clk_transport(clk_transport),.clk_dxl(clk_dxl),.clk_dbq(clk_dbq),.clk_daq(clk_daq),.rst_n(rst_n),.cmd_v(command_v&&command[0]),
         .cmd_op(command[6:1]),.cmd_block(command[14:7]),.cmd_src(command[30:15]),
         .cmd_dst(command[46:31]),.cmd_last(command[47]),
