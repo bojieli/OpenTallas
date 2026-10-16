@@ -16,7 +16,7 @@
  ],
  "outline": {
   "w": 86.4,
-  "h": 151.2,
+  "h": 172.8,
   "exact": true
  },
  "layer_cap": "M5",
@@ -46,7 +46,12 @@
   "hold_margin_ns": 0.03,
   "macro_halo_um": 5.4,
   "pin_h": "M2 M4",
-  "pin_v": "M3 M5"
+  "pin_v": "M3 M5",
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M2 M4",
+   "v": "M3 M5"
+  }
  },
  "recipe": 2,
  "pin_regs": {
@@ -64,11 +69,11 @@
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
  },
- "structural_change": "r3 (new kit, never routed; RTL 320d5b77d byte-identical): r2 gate WARN -- outline 194.4x324 sized by the old band slot, std 3,183 um2 at util 5%, logic packed on the E/N faces with the W half empty, clock at the W-face centre ~150 um from the sinks (TT insertion up to 293.8 ps). Outline now sized by the pin perimeter, two pin layers per dense face: E face e_v+e_d = 2,052 pins on M2+M4 (pin_h, precedent dsfd_hrow_r2079_m5 CLOSED at 2,079 pins / 129.6 um on M2 M4) -> 2,052/(2 x 8 pins/um/layer) = 128.3 um min, quantised up to 151.2 um (7 x 21.6) = 6.79 pins/um/layer for PPL section margin and the recipe-2 hold/flop band; N face s_v+s_d+r_bad = 1,028 pins on M3+M5 (pin_v) -> 1,028/(2 x 8) = 64.3 um min -> 86.4 um (4 x 21.6) = 5.95 pins/um/layer. Gate trial a (129.6x151.2, N on M5 only = 7.93 pins/um, util 17%): TT insertion 198.9 ps / spread 27.9 ps but the W ~40% of the core stayed empty (logic follows the E/N pin flops) -> width cut to 86.4. Outline 86.4x151.2 = 13,064 um2 (r2 62,986 um2, -79%), expected util ~25%, still pin-limited. Clock + rn stay at the W-face centre: in an 86.4 um wide tile the W centre is 86.4 um from the E pin column and <= 162 um Manhattan from any sink (r2: up to ~356 um); never a corner. tq[1] sync-clear fan-out (~4.1k loads on r_q/pad) left in RTL (frozen, proven source); buffered by repair_design.",
+ "structural_change": "r3 (new kit, never routed; RTL 320d5b77d byte-identical): r2 gate WARN -- outline 194.4x324 sized by the old band slot, std 3,183 um2 at util 5%, logic packed on the E/N faces with the W half empty, clock at the W-face centre ~150 um from the sinks (TT insertion up to 293.8 ps). Outline now sized by the pin perimeter, two pin layers per dense face: E face e_v+e_d = 2,052 pins on M2+M4 (pin_h, precedent dsfd_hrow_r2079_m5 CLOSED at 2,079 pins / 129.6 um on M2 M4) -> 2,052/(2 x 8 pins/um/layer) = 128.3 um min, quantised up to 172.8 um (8 x 21.6) = 5.94 pins/um/layer for PPL section margin and the recipe-2 hold/flop band; N face s_v+s_d+r_bad = 1,028 pins on M3+M5 (pin_v) -> 1,028/(2 x 8) = 64.3 um min -> 86.4 um (4 x 21.6) = 5.95 pins/um/layer. Gate trial a (129.6x151.2, N on M5 only = 7.93 pins/um, util 17%): TT insertion 198.9 ps / spread 27.9 ps but the W ~40% of the core stayed empty (logic follows the E/N pin flops) -> width cut to 86.4. Route a77910722 (86.4x151.2, PPL ordered 32-pin groups) EARLY_FAIL GRT-0116: mild overflow (max 4/18 per gcell, total 2,016) only in the E/N hold-stage bands -- PPL packs groups at slot pitch and stacks both layers locally (~20 pins/um peak, gaps elsewhere). Fix: route.pin_balance (uniform place_pin, layer alternating every pin: E 2,052/172.8 = 11.9 pins/um face, N 1,028/86.4 = 11.9 pins/um face, <= 6 per layer) and E height 172.8. W pins in explicit centre pin_ranges (ck at 86.0-86.8 = face centre, rn adjacent). Outline 86.4x172.8 = 14,930 um2 (r2 62,986 um2, -76%), expected util ~23%, still pin-limited. Clock + rn stay at the W-face centre: in an 86.4 um wide tile the W centre is 86.4 um from the E pin column and <= 173 um Manhattan from any sink (r2: up to ~356 um); never a corner. tq[1] sync-clear fan-out (~4.1k loads on r_q/pad) left in RTL (frozen, proven source); buffered by repair_design.",
  "slot_change_request": {
   "contract": "S81 VM WFC structural native successor",
   "version": "hop1-r7-1016",
-  "why": "Return leaf re-sized from the band slot 194.4x324 to the pin perimeter 86.4x151.2 (21.6/10.8 um quantised): E face 2,052 pins / (151.2 um x 2 layers M2+M4) = 6.79 pins/um/layer, N face 1,028 pins / (86.4 um x 2 layers M3+M5) = 5.95 pins/um/layer (<= 8). Area 13,064 um2 vs 62,986 um2; std 3,183 um2 -> util ~25%. Request 194.4x129.6 and fault 43.2x43.2 leaves unchanged; parent home must re-place the return leaf at the new outline and reach N pins on M3/M5, E pins on M2/M4. Ports, faces, params RLAT15/PAD2 and cycles unchanged."
+  "why": "Return leaf re-sized from the band slot 194.4x324 to the pin perimeter 86.4x172.8 (21.6/10.8 um quantised): E face 2,052 pins / (172.8 um x 2 layers M2+M4, balanced) = 5.94 pins/um/layer, N face 1,028 pins / (86.4 um x 2 layers M3+M5) = 5.95 pins/um/layer (<= 8). Area 14,930 um2 vs 62,986 um2; std 3,183 um2 -> util ~23%. Request 194.4x129.6 and fault 43.2x43.2 leaves unchanged; parent home must re-place the return leaf at the new outline and reach N pins on M3/M5, E pins on M2/M4. Ports, faces, params RLAT15/PAD2 and cycles unchanged."
  },
  "job": {
   "owner": "claude:S-VM-RET",
@@ -200,5 +205,23 @@
   "GPL_ROUTABILITY_DRIVEN": "0"
  },
  "children": [],
- "inter": []
+ "inter": [],
+ "pin_ranges": {
+  "return_valid": [
+   80.4,
+   82.4
+  ],
+  "return_lane": [
+   82.8,
+   85.6
+  ],
+  "ck": [
+   86.0,
+   86.8
+  ],
+  "rn": [
+   87.2,
+   88.0
+  ]
+ }
 }
