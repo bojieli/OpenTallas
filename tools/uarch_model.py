@@ -35,6 +35,40 @@ sys.path.insert(0, str(ROOT / "tools"))
 
 
 
+def s81_cp_pooling_model():
+    """Literal existing CP512 component resources, not a token-rate repricing.
+
+    Four lanes preserve the golden ratio-two order. Measurements name their
+    boundary: component VM pins versus the minimum real hctl/tap seam.
+    Actual FIELD/VM transport, physical views and global issue are still open.
+    """
+    return dict(schema='opentallas.s81.cp512-native-component.v1',
+        dimensions=512,ratio=2,lane_count=4,input_beats_per_slot=128,
+        operations_per_dimension=dict(max=1,subtract=2,exp=2,divide=2,multiply=2,add=2),
+        memory=dict(macros=2,macro='ot_sram_1r1w_128x256_m1_r2c2',
+                    bits=65536,physical_context_groups=1,slots=2,
+                    write_bytes_per_cycle=32,read_bytes_per_cycle=32,
+                    service='one selected slot write and opposite slot read; fixed128cycle reservation'),
+        external_vm=dict(read_ports=2,read_row_bits=512,read_rows_per_slot=64,
+                         read_pair_spacing_cycles=4,peak_read_bytes_per_cycle=128,
+                         average_read_bytes_per_cycle=32,output_rows_per_pool=32,
+                         write_row_bits=512,output_row_spacing_cycles=4),
+        boundaries=dict(input_bits_per_cycle=256,output_bits_per_cycle=128,
+                        component_vm_response_bits=1024,component_vm_write_bits=512),
+        replication=dict(control=1,bridge=1,descriptor_tap=1,arithmetic_lanes=4,history_banks=2),
+        clock_entries=dict(bridge=1,descriptor_tap=1,control=1,memory=2,arithmetic=4),
+        mux_demux='2to1 history bank selection; two512bit4to1 chunk selectors; four128bit row assembly phases',
+        measured_component_cycles=dict(store=139,pool=272,vm_return_latency=10),
+        measured_hctl_tap_cycles=dict(store=153,pool=286,requests_per_job=65),
+        measured_scope='L02 declared FIELD/history fixtures, actual arithmetic and SRAM, exact32row output plus arithmetic and late-service mutants',
+        composed_native_layer_latency=None,immutable_price_comparison=None,
+        area_um2=None,slot_outline_um=None,routing_tracks_capacity=None,
+        floorplan_slot_fit=False,physical_clock_and_view_bound=False,
+        global_static_issue=False,native_field_producer_bound=False,
+        native_previous_token_context_bound=False,route_admissible=False,
+        required='actual child homes and phi-R roots; fixed global issue; current FIELD/allgather commit edges; retained-history native producer/context lifetime; layer throughput measurement')
+
+
 def qwen_native_kv_programme_candidate_model(replicas=1):
     """Writer-only fixed roots; no measured route or token-rate credit."""
     if type(replicas) is not int or replicas < 1:
