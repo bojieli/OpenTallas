@@ -1,5 +1,5 @@
 {
- "name": "s81pq_bc1_ns-ns1-COMMIT",
+ "name": "s81pq_bc1_ns-ns1-4b8781e86",
  "block": "ot_s81_pq_bc_slice1",
  "ref_tile": true,
  "owner": "Codex:s81-rom-2250",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 12,
  "source": {
   "branch": "codex/s81-rom-2250",
-  "commit": "COMMIT",
+  "commit": "4b8781e86",
   "extra_paths": [
    "physical/s81_pq_hier/pinned",
    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
@@ -102,7 +102,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81pq_bc1_ns/s81pq_bc1_ns-ns1-COMMIT"
+   "to": "results/rtl/ref_tile/s81pq_bc1_ns/s81pq_bc1_ns-ns1-4b8781e86"
   }
  ],
  "cycles_added": 0,

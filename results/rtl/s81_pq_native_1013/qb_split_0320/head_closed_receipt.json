@@ -1,0 +1,153 @@
+{
+  "job": "s81pq_qb_head_native-g1-6eff8e4b7",
+  "status": "CLOSED",
+  "publish": {
+    "record_branch": "codex/closure-record-s81pq_qb_head_native-g1-6eff8e4b7",
+    "branch_commit": "473418bc0417bfddf62cc506c94249e857b49bc2",
+    "files": 19,
+    "merge": "AUTO-MERGED into main eb6e89ac3"
+  },
+  "metrics": {
+    "corner_sta": [
+      "/srv/opentallas/claude/closure-loop/s81pq_qb_head_native-g1-6eff8e4b7/routes/s81pq_qb_head_native_g1_6eff8e4b7/corner_sta.json"
+    ],
+    "drc_metrics": [
+      "/srv/opentallas/claude/closure-loop/s81pq_qb_head_native-g1-6eff8e4b7/routes/s81pq_qb_head_native_g1_6eff8e4b7/work/orfs/logs/asap7/opentallas_ot_s81_pq_qb_head_native_asap7_ref_s81pq_qb_head_native_g1_6eff8e4b7/base/5_2_route.json"
+    ],
+    "ff_ps": 31.54,
+    "clock_periods_ps": {
+      "core_clk": 833.333
+    },
+    "orfs_dir": "/srv/opentallas/claude/closure-loop/s81pq_qb_head_native-g1-6eff8e4b7/routes/s81pq_qb_head_native_g1_6eff8e4b7/work/orfs",
+    "post_sdc": [
+      "physical/common_flow/io_ref_routed.sdc"
+    ],
+    "sdc_name": "6_final.sdc",
+    "setup_post_sdc": [],
+    "ss_sensitivity_ps": 25.8,
+    "ss_sensitivity_tns_ps": 0.0,
+    "setup_corner": "tt",
+    "corner_sta_tt": "/srv/opentallas/claude/closure-loop/s81pq_qb_head_native-g1-6eff8e4b7/routes/s81pq_qb_head_native_g1_6eff8e4b7/corner_sta.json",
+    "ss_ps": 278.82,
+    "ss_tns_ps": 0.0,
+    "errors": [],
+    "drc": 0,
+    "routed_ioref": {
+      "key": "2|/srv/opentallas/claude/closure-loop/s81pq_qb_head_native-g1-6eff8e4b7/routes/s81pq_qb_head_native_g1_6eff8e4b7/work/orfs|0|ae0410",
+      "at": "2026-10-14T04:31:45-07:00",
+      "available": true,
+      "ioref_edge": {
+        "tt": {
+          "core_clk": {
+            "boundary": 600,
+            "negedge": 0,
+            "noarc": 0,
+            "inverted": 0
+          }
+        },
+        "ff": {
+          "core_clk": {
+            "boundary": 600,
+            "negedge": 0,
+            "noarc": 0,
+            "inverted": 0
+          }
+        }
+      },
+      "tt": 278.82,
+      "ff": 31.54,
+      "errors": [],
+      "ioref": {
+        "tt": {
+          "ot_lb_v_core_clk": {
+            "clock": "core_clk",
+            "mean": 99.0,
+            "min": 92.5,
+            "max": 105.4,
+            "n": 600,
+            "kind": "boundary"
+          }
+        },
+        "ff": {
+          "ot_lb_v_core_clk": {
+            "clock": "core_clk",
+            "mean": 80.7,
+            "min": 74.3,
+            "max": 87.0,
+            "n": 600,
+            "kind": "boundary"
+          }
+        }
+      },
+      "tt_i2r": 291.05,
+      "tt_out": 280.73,
+      "ff_i2r": 34.69,
+      "ff_out": 32.93,
+      "ff_r2r": 31.54,
+      "json": "/srv/opentallas/claude/closure-loop/s81pq_qb_head_native-g1-6eff8e4b7/cl/routed_ioref.a2.json",
+      "registers": 606,
+      "registers_clocked": 606
+    },
+    "route_sdc_clock": {
+      "ss_ps": 278.82,
+      "ff_ps": 31.54
+    }
+  },
+  "routed_ioref": {
+    "key": "2|/srv/opentallas/claude/closure-loop/s81pq_qb_head_native-g1-6eff8e4b7/routes/s81pq_qb_head_native_g1_6eff8e4b7/work/orfs|0|ae0410",
+    "at": "2026-10-14T04:31:45-07:00",
+    "available": true,
+    "ioref_edge": {
+      "tt": {
+        "core_clk": {
+          "boundary": 600,
+          "negedge": 0,
+          "noarc": 0,
+          "inverted": 0
+        }
+      },
+      "ff": {
+        "core_clk": {
+          "boundary": 600,
+          "negedge": 0,
+          "noarc": 0,
+          "inverted": 0
+        }
+      }
+    },
+    "tt": 278.82,
+    "ff": 31.54,
+    "errors": [],
+    "ioref": {
+      "tt": {
+        "ot_lb_v_core_clk": {
+          "clock": "core_clk",
+          "mean": 99.0,
+          "min": 92.5,
+          "max": 105.4,
+          "n": 600,
+          "kind": "boundary"
+        }
+      },
+      "ff": {
+        "ot_lb_v_core_clk": {
+          "clock": "core_clk",
+          "mean": 80.7,
+          "min": 74.3,
+          "max": 87.0,
+          "n": 600,
+          "kind": "boundary"
+        }
+      }
+    },
+    "tt_i2r": 291.05,
+    "tt_out": 280.73,
+    "ff_i2r": 34.69,
+    "ff_out": 32.93,
+    "ff_r2r": 31.54,
+    "json": "/srv/opentallas/claude/closure-loop/s81pq_qb_head_native-g1-6eff8e4b7/cl/routed_ioref.a2.json",
+    "registers": 606,
+    "registers_clocked": 606
+  },
+  "scope": "actual606sink nativehead CLOSED; unchangedbody preserved under upcomingbankonlyfactoring; nativeparentjoinsOPEN"
+}

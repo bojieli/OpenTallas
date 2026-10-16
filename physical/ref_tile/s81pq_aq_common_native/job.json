@@ -1,5 +1,5 @@
 {
- "name": "s81pq_aq_common_native-g1-COMMIT",
+ "name": "s81pq_aq_common_native-g1-62d067b4a",
  "block": "ot_s81_pq_aq_common_native",
  "ref_tile": true,
  "owner": "Codex:s81-rom-2250",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 40,
  "source": {
   "branch": "codex/s81-rom-2250",
-  "commit": "COMMIT",
+  "commit": "62d067b4a",
   "extra_paths": [
    "rtl/dsrom_sys",
    "rtl/test/dsrom_sys",
@@ -101,7 +101,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81pq_aq_common_native/s81pq_aq_common_native-g1-COMMIT"
+   "to": "results/rtl/ref_tile/s81pq_aq_common_native/s81pq_aq_common_native-g1-62d067b4a"
   }
  ],
  "cycles_added": 0,

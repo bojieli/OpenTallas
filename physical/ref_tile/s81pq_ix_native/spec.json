@@ -1,0 +1,238 @@
+{
+ "name": "s81pq_ix_native",
+ "top": "ot_s81_pq_ix_sram",
+ "kind": "tile",
+ "sources": [
+  "physical/s81_pq_hier/pinned/physical/dsrom_field_spine/ot_v41_pqc_spine_screen.sv",
+  "physical/s81_pq_hier/pinned/physical/dsrom_field_spine/ot_v41_pqc_tile_tops.sv",
+  "physical/s81_pq_hier/pinned/rtl/common/ot_prefix.sv",
+  "physical/s81_pq_hier/pinned/rtl/hdc/ot_hdc_delay.sv",
+  "physical/s81_pq_hier/pinned/rtl/hdc/ot_hdc_fastfp.sv",
+  "physical/s81_pq_hier/pinned/rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+  "physical/s81_pq_hier/pinned/rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "physical/s81_pq_hier/pinned/rtl/hdc/ot_hdc_fp32_f12.sv",
+  "physical/s81_pq_hier/pinned/rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "physical/s81_pq_hier/pinned/rtl/hdc/ot_hdc_prefix.sv",
+  "physical/s81_pq_hier/pinned/rtl/hdc/ot_hdc_sfu.sv",
+  "physical/s81_pq_hier/pinned/rtl/hdc/v41x/ot_dsrom_aq12m.sv",
+  "physical/s81_pq_hier/pinned/rtl/hdc/v41x/ot_dsrom_aq12t.sv",
+  "physical/s81_pq_hier/pinned/rtl/ot_rst_relay.sv",
+  "physical/s81_pq_hier/pinned/rtl/v41die/ot_v41_pqc_tiles.sv",
+  "physical/s81_pq_hier/pinned/rtl/v41die/ot_v41_spine_pqc_w17w10.sv",
+  "physical/s81_pq_hier/pinned/rtl/v41rom/ot_v41_kreg.sv",
+  "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_core_native.sv",
+  "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_ctl_native.sv",
+  "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_ix_sram.sv",
+  "rtl/dsrom_sys/s81_ph/pq/ot_s81_pq_qb_sram.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "outline": {
+  "w": 254.88,
+  "h": 272.16
+ },
+ "pins": {
+  "N": [
+   "xw"
+  ],
+  "S": [
+   "bt_d"
+  ],
+  "W": [
+   "par",
+   "consume",
+   "ba_v",
+   "ba_blk",
+   "h_hi",
+   "hw7",
+   "clk",
+   "rst_n"
+  ],
+  "E": [
+   "fault"
+  ]
+ },
+ "layer_cap": "M5",
+ "recipe": 2,
+ "route": {
+  "pd": 0.5,
+  "threads": 16,
+  "peak_ram_gb": 40,
+  "pin_v": "M3 M5",
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4
+ },
+ "structural_change": "Native PHW9/SAW11/KMAX6144/R128 source-owned SRAM implementation;44productionmacro total; exact .576 macro origins preserve20umguards. Native AQvalid stage relocated with no added epoch. Candidate outlines/pinfaces for die-reviewed assignment, no parent qualification.",
+ "slot_change_request": {
+  "name": "s81-pq-native-ix-2250",
+  "outline": [
+   254.88,
+   272.16
+  ],
+  "pin_faces": {
+   "N": [
+    "xw"
+   ],
+   "S": [
+    "bt_d"
+   ],
+   "W": [
+    "par",
+    "consume",
+    "ba_v",
+    "ba_blk",
+    "h_hi",
+    "hw7",
+    "clk",
+    "rst_n"
+   ],
+   "E": [
+    "fault"
+   ]
+  },
+  "reason": "actual native SRAM leaf, guarded origins, die parent allocation pending"
+ },
+ "job": {
+  "owner": "Codex:s81-rom-2250",
+  "branch": "codex/s81-rom-2250",
+  "tag": "g1",
+  "purpose": "Native production ix leaf; actual macros and native parameter proof",
+  "benches": [
+   {
+    "name": "native_exact",
+    "cmd": "python3 tools/s81/pq_native_core_bench.py --bc-sliced --aq-pin --work {RUN}/native_exact --jobs 8",
+    "expect": "pass",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "pass_regex": "PQ_NATIVE_CORE PASS",
+    "min_count_regex": "compared=(\\d+)"
+   },
+   {
+    "name": "native_actual_mutant",
+    "cmd": "python3 tools/s81/pq_native_core_bench.py --bc-sliced --aq-pin --mut IX --work {RUN}/native_mut --jobs 8",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ],
+    "fail_regex": "PQ_NATIVE_CORE FAIL"
+   }
+  ],
+  "views_to": "physical/ref_tile/s81pq_ix_native/views",
+  "record_to": "results/rtl/ref_tile/s81pq_ix_native",
+  "extra_paths": [
+   "rtl/dsrom_sys",
+   "rtl/test/dsrom_sys",
+   "physical/s81_pq_hier/pinned",
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/ref_tile_specs/s81pq_native"
+  ]
+ },
+ "defines": [
+  "OT_PQ_AQ_PIN_LAUNCH",
+  "OT_PQ_ROM_PORTS"
+ ],
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "at": [
+    22.464,
+    22.464
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "at": [
+    137.664,
+    22.464
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "at": [
+    22.464,
+    84.096
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "at": [
+    137.664,
+    84.096
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "at": [
+    22.464,
+    145.728
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "at": [
+    137.664,
+    145.728
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "at": [
+    22.464,
+    207.35999999999999
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "count": 1,
+   "at": [
+    137.664,
+    207.35999999999999
+   ],
+   "at_exact": true,
+   "orient": "R0"
+  }
+ ],
+ "reroute_reason": {
+  "kind": "rtl_change",
+  "why": "replace old screen shape/source with native production macros and source-bound fullshape proof"
+ },
+ "io_tcl": "physical/ref_tile_specs/s81pq_native/ix_guarded_pins.tcl",
+ "params": {},
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true
+}

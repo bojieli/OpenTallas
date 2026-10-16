@@ -1,5 +1,5 @@
 {
- "name": "dscoll_cescn_ln_c16-c16-COMMIT",
+ "name": "dscoll_cescn_ln_c16-c16-73c6efe18",
  "block": "dsfd_coll_cescn",
  "ref_tile": true,
  "owner": "Codex:s81-rom-2250",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 40,
  "source": {
   "branch": "codex/s81-rom-2250",
-  "commit": "COMMIT",
+  "commit": "73c6efe18",
   "extra_paths": [
    "rtl/dsrom_sys",
    "rtl/lib",
@@ -155,7 +155,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/dscoll_cescn_ln_c16/dscoll_cescn_ln_c16-c16-COMMIT"
+   "to": "results/rtl/ref_tile/dscoll_cescn_ln_c16/dscoll_cescn_ln_c16-c16-73c6efe18"
   }
  ],
  "cycles_added": 0,

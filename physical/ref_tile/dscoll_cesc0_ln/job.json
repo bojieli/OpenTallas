@@ -1,5 +1,5 @@
 {
- "name": "dscoll_cesc0_ln-ln2-COMMIT",
+ "name": "dscoll_cesc0_ln-ln2-1739282b7",
  "block": "dsfd_coll_cesc0",
  "ref_tile": true,
  "owner": "Codex:s81-rom-2250",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 40,
  "source": {
   "branch": "codex/s81-rom-2250",
-  "commit": "COMMIT",
+  "commit": "1739282b7",
   "extra_paths": [
    "rtl/dsrom_sys",
    "rtl/lib",
@@ -155,7 +155,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/dscoll_cesc0_ln/dscoll_cesc0_ln-ln2-COMMIT"
+   "to": "results/rtl/ref_tile/dscoll_cesc0_ln/dscoll_cesc0_ln-ln2-1739282b7"
   }
  ],
  "cycles_added": 0,
