@@ -1,0 +1,411 @@
+{
+ "name": "vm_native_q0_faces",
+ "top": "hfd_vms_bank_native_q0_faces",
+ "kind": "tile",
+ "sources": [
+  "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+  "rtl/hbm_accel/generic/vm/static/faces_q0/ot_vms_bank_q0_faces_core.sv",
+  "rtl/hbm_accel/generic/vm/static/faces_q0/ot_vms_bank_q0_faces_body.sv",
+  "rtl/hbm_accel/generic/vm/static/ot_vms_ce_counter_pipe.sv",
+  "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v"
+ ],
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "pins": {
+  "N": [
+   "rst_n",
+   "bid",
+   "sid",
+   "rslot_v",
+   "rslot",
+   "wslot_v",
+   "wslot",
+   "rq2",
+   "rr2",
+   "kq_done",
+   "kq",
+   "status",
+   "clk",
+   "clk_n"
+  ],
+  "S": [
+   "rq3",
+   "rr3",
+   "dq",
+   "dq_done",
+   "pq",
+   "pr",
+   "clk_s"
+  ],
+  "E": [
+   "rq1",
+   "rr1",
+   "wq1",
+   "wq_done1",
+   "xq2",
+   "xq2_done",
+   "eg",
+   "clk_e"
+  ],
+  "W": [
+   "rq0",
+   "rr0",
+   "rq4",
+   "rr4",
+   "wq0",
+   "wq_done0",
+   "xq",
+   "xq_done",
+   "clk_w"
+  ]
+ },
+ "pin_ranges": {
+  "clk": [
+   134.94,
+   135.036
+  ],
+  "rst_n": [
+   135.132,
+   135.228
+  ],
+  "bid": [
+   135.228,
+   135.516
+  ],
+  "sid": [
+   135.516,
+   135.708
+  ],
+  "rslot_v": [
+   2.172,
+   2.268
+  ],
+  "rslot": [
+   2.556,
+   3.612
+  ],
+  "wslot_v": [
+   4.092,
+   4.188
+  ],
+  "wslot": [
+   4.476,
+   5.532
+  ],
+  "rq2": [
+   6.012,
+   13.596
+  ],
+  "rr2": [
+   13.884,
+   134.172
+  ],
+  "kq_done": [
+   134.46,
+   134.556
+  ],
+  "kq": [
+   135.948,
+   259.884
+  ],
+  "status": [
+   260.172,
+   267.756
+  ],
+  "rq3": [
+   2.172,
+   6.108
+  ],
+  "rr3": [
+   6.204,
+   67.74
+  ],
+  "dq": [
+   68.028,
+   135.324
+  ],
+  "dq_done": [
+   135.42,
+   135.516
+  ],
+  "pq": [
+   135.612,
+   203.868
+  ],
+  "pr": [
+   204.156,
+   267.804
+  ],
+  "rq0": [
+   2.172,
+   6.108
+  ],
+  "rr0": [
+   6.204,
+   67.74
+  ],
+  "rq4": [
+   68.028,
+   71.964
+  ],
+  "rr4": [
+   72.06,
+   133.596
+  ],
+  "wq0": [
+   133.692,
+   200.988
+  ],
+  "wq_done0": [
+   201.276,
+   201.372
+  ],
+  "xq": [
+   201.468,
+   267.612
+  ],
+  "xq_done": [
+   267.708,
+   267.804
+  ],
+  "rq1": [
+   2.172,
+   5.292
+  ],
+  "rr1": [
+   5.484,
+   54.684
+  ],
+  "wq1": [
+   107.436,
+   161.388
+  ],
+  "wq_done1": [
+   161.436,
+   161.532
+  ],
+  "xq2": [
+   161.58,
+   214.524
+  ],
+  "xq2_done": [
+   214.716,
+   214.812
+  ],
+  "eg": [
+   214.86,
+   267.804
+  ]
+ },
+ "outline": {
+  "w": 270.0,
+  "h": 270.0,
+  "exact": true
+ },
+ "layer_cap": "M6",
+ "recipe": 2,
+ "macros": [
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "at": [
+    47.52,
+    29.232
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "at": [
+    47.52,
+    99.744
+   ],
+   "at_exact": true
+  },
+  {
+   "view": "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
+   "at": [
+    47.52,
+    170.256
+   ],
+   "at_exact": true
+  }
+ ],
+ "route": {
+  "pd": 0.5,
+  "period_ps": 833.333,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "hold_margin_ns": 0.03,
+  "pin_balance": {
+   "group_max": 32,
+   "h": "M4",
+   "v": "M3 M5"
+  },
+  "macro_halo_um": 5.4
+ },
+ "job": {
+  "owner": "Claude H-SM",
+  "branch": "claude/hbm-sm-attention-1015",
+  "tag": "faces0",
+  "purpose": "Additive q0 face-local clocks: existing recipe3 input state and existing response state, no new edges. Physical grant/native proof required.",
+  "structural_change": "Native v16 ABI master for SW (RG5/WG2; die netlist main 04fad9220 binds hfd_vms_bank_native_q*, strap masters retired). Same body as strap6: strap5 write tree (payload zeroed at its own pin capture, lv_rep removed), SECDED flip on the D edge. nat2: recipe-3 pin register on every input (+1 edge per input, uniform; native q2 nat1 TT -59.5 = 35 input->reg endpoints, valid pin -> ~281 masking ANDs; reg->reg +60.5), outputs stay RTL registers, EG_WIDE=1 (strap5 q0 TT -114.94: 21/22 violators packet/COLL leaf -> egress pin clones; native q2 gate nat1 placement reg->reg -115.9 at eg_d[10], same egress pattern; equivalence 0 mismatches at RG5/WG2, RG4/WG2, RG5/WG3). Pins: v4 strap grant N/S/W + E face = strap q2 E (0.144 um) minus rq5/rr5 (results/arch/hbm_die_v16/vm_native_bank_grants_0600.json).",
+  "extra_paths": [
+   "rtl/hbm_accel/generic/vm/static",
+   "physical/hbm_vm_native_1016/q0",
+   "results/arch/hbm_die_v16/vm_native_bank_grants_0600.json",
+   "physical/common_flow/assigned_pin_exact.tcl"
+  ],
+  "record_to": "results/rtl/ref_tile/vm_native_q0_faces",
+  "views_to": "physical/ref_tile/vm_native_q0_faces/views",
+  "benches": [
+   {
+    "name": "exact_real_memory",
+    "cmd": "bash rtl/hbm_accel/generic/vm/static/faces_q0/run.sh {RUN}/bench/q0_faces",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "pass_regex": "Q0_FACE_CLOCKS BENCH PASS"
+   }
+  ]
+ },
+ "params": {},
+ "children": [],
+ "inter": [],
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "inhold": true,
+ "outhold": true,
+ "keep_pin_regs": true,
+ "pin_reg_split": true,
+ "hold_pad": {
+  "cell": "HB1xp67_ASAP7_75t_R"
+ },
+ "clock": "multiple_cts_roots",
+ "io_tcl": "physical/ref_tile_specs/smh/vm_q0_faces_pins.tcl",
+ "orfs_vars": {},
+ "pin_regs": {
+  "enable": false,
+  "reason": "Actual source wrapper explicitly preserves exact recipe3 input registers; no additional automatic stage."
+ },
+ "floorplan_note": "q2 identity2 --cts gate failed GPL-0305 (NaN) twice with the generated 3-macro column (20 um macro-macro channels, 5.4 um halos -> 9.5 um cell rows between arrays; overflow stuck at 0.115 for 12k iterations). Structural: the three arrays (pins only on W/E faces) form one abutted N-S stack (pitch = array height + 0.024 um) centred in the core, so no narrow inter-array channel exists; two ~70 um N/S channels carry the cross traffic.",
+ "pg_layer": "M6",
+ "layer_cap_grant": "H-DIE 2210 v4: VM bank strap masters are pin-perimeter bound (270 x 270, ~1,260 b per face): PG moves to M6 so M5 pins need no stripe clearance; parent strap M7 (H-DIE 2210, H-SM proposal)",
+ "structural_change": "Native q0 failed L258.5/C207.5/spread88.3 despite routed timing. New master uses four literal face-local related roots plus core/SRAM root; existing boundary stages only, return7/writeDone4 preserved. Same270square/3 actual SRAMs. No default/compiler adoption.",
+ "clock_data_paths": "related_same_frequency",
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "clock_ports": [
+  "clk",
+  "clk_n",
+  "clk_s",
+  "clk_e",
+  "clk_w"
+ ],
+ "clock_entry_domains": {
+  "n": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_n"
+   ],
+   "inputs": [
+    "bid",
+    "sid",
+    "rslot_v",
+    "rslot",
+    "wslot_v",
+    "wslot",
+    "rq2",
+    "kq"
+   ],
+   "outputs": [
+    "rr2",
+    "kq_done",
+    "status"
+   ]
+  },
+  "s": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_s"
+   ],
+   "inputs": [
+    "rq3",
+    "dq",
+    "pq"
+   ],
+   "outputs": [
+    "rr3",
+    "dq_done",
+    "pr"
+   ]
+  },
+  "e": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_e"
+   ],
+   "inputs": [
+    "rq1",
+    "wq1",
+    "xq2"
+   ],
+   "outputs": [
+    "rr1",
+    "wq_done1",
+    "xq2_done",
+    "eg"
+   ]
+  },
+  "w": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_w"
+   ],
+   "inputs": [
+    "rq0",
+    "rq4",
+    "wq0",
+    "xq"
+   ],
+   "outputs": [
+    "rr0",
+    "rr4",
+    "wq_done0",
+    "xq_done"
+   ]
+  },
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk"
+   ],
+   "inputs": [],
+   "outputs": []
+  }
+ }
+}
