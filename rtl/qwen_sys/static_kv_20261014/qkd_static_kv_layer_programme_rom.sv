@@ -99,14 +99,18 @@ module qkd_static_kv_layer_programme_rom #(parameter integer MUT=0,parameter [36
  end
 endmodule
 
-// The die master: the ROM variant bound to the committed link-compiled image (regenerated and compared by the bench).
+// The die master: the ROM variant bound to the committed link-compiled image (regenerated and compared by the bench), with
+// the HOST root's native outputs as its authority pins (wires only): authority_valid = token_epoch_valid, programme
+// authorized = program_ready (the authorized image is installed), programme epoch / digest = program_epoch / program_digest
+// (must equal the image's LP_EPOCH / LP_DIGEST: compile the image for the installed program), token context = the HOST
+// cohort tag {epoch16, 0, token18, position13, 0} / cohort_gen held for the whole token.  start = the link calendar
+// sequencer's tok_start.
 `include "layer_programme_image.svh"
 module qkd_static_kv_layer_programme_img #(parameter integer MUT=0)(
  input wire ck,rst_n,
- input wire start,authority_valid,programme_authorized,
- input wire[15:0]programme_epoch,input wire[63:0]programme_digest,
- input wire[15:0]authority_epoch,input wire[17:0]authority_token,authority_position,
- input wire[1:0]authority_generation,
+ input wire start,token_epoch_valid,program_ready,
+ input wire[15:0]program_epoch,input wire[63:0]program_digest,
+ input wire[58:0]cohort_tag,input wire[1:0]cohort_gen,
  output wire ctrl_go,kgo,vgo,attention_issue,attention_run,writer_start,link_start,
  output wire stage_start,stage_done,expected_upstream_quiet,output wire[5:0]completed_stage,
  output wire[5:0]stage,output wire[5:0]layer,
@@ -116,9 +120,9 @@ module qkd_static_kv_layer_programme_img #(parameter integer MUT=0)(
  output wire[31:0]age,token_cycles
 );
  qkd_static_kv_layer_programme_rom #(.MUT(MUT),.ROOTS(LP_ROOTS),.DIGEST(LP_DIGEST),.EPOCH(LP_EPOCH)) u_rom(.ck(ck),.rst_n(rst_n),
-  .start(start),.authority_valid(authority_valid),.programme_authorized(programme_authorized),.programme_epoch(programme_epoch),
-  .programme_digest(programme_digest),.authority_epoch(authority_epoch),.authority_token(authority_token),
-  .authority_position(authority_position),.authority_generation(authority_generation),.ctrl_go(ctrl_go),.kgo(kgo),.vgo(vgo),
+  .start(start),.authority_valid(token_epoch_valid),.programme_authorized(program_ready),.programme_epoch(program_epoch),
+  .programme_digest(program_digest),.authority_epoch(cohort_tag[58:43]),.authority_token(cohort_tag[36:19]),
+  .authority_position({5'd0,cohort_tag[18:6]}),.authority_generation(cohort_gen),.ctrl_go(ctrl_go),.kgo(kgo),.vgo(vgo),
   .attention_issue(attention_issue),.attention_run(attention_run),.writer_start(writer_start),.link_start(link_start),
   .stage_start(stage_start),.stage_done(stage_done),.expected_upstream_quiet(expected_upstream_quiet),.completed_stage(completed_stage),
   .stage(stage),.layer(layer),.epoch(epoch),.token(token),.position(position),.ctx_t(ctx_t),.generation(generation),

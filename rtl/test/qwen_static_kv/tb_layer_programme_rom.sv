@@ -34,9 +34,8 @@ module tb_layer_programme_rom #(parameter integer MUT = 0, parameter integer NTO
         .position(aps), .ctx_t(acx), .generation(agn), .configured(af[0]), .active(af[1]), .done(af[2]), .fault(af[3]),
         .fault_code(afc), .age(aag), .token_cycles(atc));
     qkd_static_kv_layer_programme_img #(.MUT(MUT)) dut (.ck(ck), .rst_n(rst_n),
-        .start(start), .authority_valid(1'b1), .programme_authorized(1'b1), .programme_epoch(boot[325][15:0]),
-        .programme_digest(boot[324]), .authority_epoch(aep), .authority_token(atok), .authority_position(apos),
-        .authority_generation(agen), .ctrl_go(bo[0]), .kgo(bo[1]), .vgo(bo[2]), .attention_issue(bo[3]),
+        .start(start), .token_epoch_valid(1'b1), .program_ready(1'b1), .program_epoch(boot[325][15:0]),
+        .program_digest(boot[324]), .cohort_tag({aep, 6'd0, atok, apos[12:0], 6'd0}), .cohort_gen(agen), .ctrl_go(bo[0]), .kgo(bo[1]), .vgo(bo[2]), .attention_issue(bo[3]),
         .attention_run(bo[4]), .writer_start(bo[5]), .link_start(bo[6]), .stage_start(bo[7]), .stage_done(bo[8]),
         .expected_upstream_quiet(bo[9]), .completed_stage(bcs), .stage(bst), .layer(bly), .epoch(bep_), .token(btk),
         .position(bps), .ctx_t(bcx), .generation(bgn), .configured(bf[0]), .active(bf[1]), .done(bf[2]), .fault(bf[3]),

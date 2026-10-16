@@ -24,14 +24,12 @@
  "pins": {
   "W": [
    "start",
-   "authority_valid",
-   "programme_authorized",
-   "programme_epoch",
-   "programme_digest",
-   "authority_epoch",
-   "authority_token",
-   "authority_position",
-   "authority_generation"
+   "token_epoch_valid",
+   "program_ready",
+   "program_epoch",
+   "program_digest",
+   "cohort_tag",
+   "cohort_gen"
   ],
   "E": [
    "ctrl_go",
@@ -144,7 +142,7 @@
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
  },
- "structural_change": "r2: image roots +1 (layer_roots_from_link.py START_LEAD 1): the die start is the link calendar sequencer tok_start, one edge before the token cal_start; same RTL / outline / pins as r1. new die master (no prior view): compiler-constant image variant of qkd_static_kv_layer_programme (DCAL pattern): the 324 root words are a compile-time image from the link compiler (layer_programme_image.svh), so no die boot loader and none of the 10,368 table flops; cycle-equivalent to the boot-loaded module.",
+ "structural_change": "r2: image roots +1 (layer_roots_from_link.py START_LEAD 1): the die start is the link calendar sequencer tok_start, one edge before the token cal_start; die-master pins are the HOST root outputs (token_epoch_valid, program_ready, program_epoch/digest, cohort_tag/gen; wires only into the same _rom logic); same outline as r1. new die master (no prior view): compiler-constant image variant of qkd_static_kv_layer_programme (DCAL pattern): the 324 root words are a compile-time image from the link compiler (layer_programme_image.svh), so no die boot loader and none of the 10,368 table flops; cycle-equivalent to the boot-loaded module.",
  "orfs_vars": {
   "VERILOG_INCLUDE_DIRS": "/src/rtl/qwen_sys/static_kv_20261014"
  }

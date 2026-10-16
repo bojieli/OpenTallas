@@ -31,14 +31,12 @@
  "pins": {
   "W": [
    "start",
-   "authority_valid",
-   "programme_authorized",
-   "programme_epoch",
-   "programme_digest",
-   "authority_epoch",
-   "authority_token",
-   "authority_position",
-   "authority_generation"
+   "token_epoch_valid",
+   "program_ready",
+   "program_epoch",
+   "program_digest",
+   "cohort_tag",
+   "cohort_gen"
   ],
   "E": [
    "ctrl_go",
