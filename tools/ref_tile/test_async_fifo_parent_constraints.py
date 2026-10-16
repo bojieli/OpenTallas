@@ -48,7 +48,7 @@ class ParentAdmission(unittest.TestCase):
             normal=A.load(s,root)
             self.assertEqual(normal['verdict'],'PASS_SOURCE_GRAPH_ONLY')
             self.assertEqual(len(normal['fifo_instances']),1)
-            self.assertIn('dout',normal['payload_consumer_public_nets']['u_fifo'])
+            self.assertEqual(normal['payload_consumer_public_nets']['u_fifo'],['dout[0]','dout[1]'])
             generated=C.generate(s,root)
             self.assertIn('set ::ot_ag_targets [dict create {u_fifo}',generated)
             self.assertNotIn('set_false_path',generated)
@@ -105,6 +105,64 @@ class ParentAdmission(unittest.TestCase):
             p=subprocess.run([STA,'-exit',str(root/'mapped.tcl')],capture_output=True,text=True)
             self.assertEqual(p.returncode,0,p.stdout+p.stderr)
             self.assertIn('ACTUAL_REVERSE_PARENT_PASS',p.stdout+p.stderr)
+
+    def test_build_defines_and_hard_define_are_explicitly_refused(self):
+        with tempfile.TemporaryDirectory()as tmp:
+            root=Path(tmp);source_tree(root)
+            normal='always @(posedge stream_clk)begin dout<=data;valid<=rv;end'
+            bad='reg bad_h;always @(posedge hbm_clk)bad_h<=din[0];always @(posedge stream_clk)begin dout<=data;valid<=bad_h;end'
+            (root/'parent.sv').write_text(PARENT.replace(normal,'`ifdef BYPASS\n'+bad+'\n`else\n'+normal+'\n`endif'))
+            self.assertEqual(A.load(parent_spec(),root)['verdict'],'PASS_SOURCE_GRAPH_ONLY')
+            for key,value in [('defines',['BYPASS']),('hard_define','BYPASS'),('hard_defines',['BYPASS']),('orfs_vars',{'VERILOG_DEFINES':'-DBYPASS'})]:
+                candidate=parent_spec();candidate[key]=value
+                with self.subTest(key=key),self.assertRaisesRegex(ValueError,'unsupported build defines'):
+                    C.generate(candidate,root)
+
+    def test_exact_payload_bit_and_control_pin_mutants(self):
+        with tempfile.TemporaryDirectory()as tmp:
+            root=Path(tmp);source_tree(root);s=parent_spec()
+            (root/'parent.sv').write_text(PARENT.replace('dout<=data',"dout<={1'b0,data[0]}").replace('valid<=rv','valid<=data[1]'))
+            record=A.load(s,root)
+            self.assertEqual(record['payload_consumer_bits']['u_fifo'],{'0':['dout[0]'],'1':['valid']})
+            args='read_verilog -sv -DSYNTHESIS '+' '.join(str(root/f)for f in s['sources'])
+            args+='; hierarchy -check -top audited_parent; synth -top audited_parent -flatten -noabc; dffunmap; abc -g simple; clean; write_json '+str(root/'parent.json')
+            p=subprocess.run([YOSYS,'-Q','-T','-p',args],capture_output=True,text=True)
+            self.assertEqual(p.returncode,0,p.stdout+p.stderr)
+            original=json.loads((root/'parent.json').read_text())
+            for mutation in ('normal','new_vector_bit','wrong_payload_source_bit','async_control'):
+                d=copy.deepcopy(original);m=d['modules']['audited_parent'];dout=m['netnames']['dout']['bits']
+                template=next(c for c in m['cells'].values()if c['type'].startswith('$_DFF')and c['connections']['Q']==[dout[0]])
+                if mutation=='new_vector_bit':
+                    fresh=max(b for n in m['netnames'].values()for b in n['bits']if isinstance(b,int))+1
+                    rogue=copy.deepcopy(template);rogue['connections']['Q']=[fresh]
+                    rogue['connections']['D']=[m['netnames']['u_fifo.mem[0]']['bits'][0]]
+                    m['cells']['rogue_new_payload_receiver']=rogue
+                    m['ports']['dout']['bits'][1]=fresh;m['netnames']['dout']['bits'][1]=fresh
+                elif mutation=='wrong_payload_source_bit':
+                    template['connections']['D']=[m['netnames']['u_fifo.mem[0]']['bits'][1]]
+                elif mutation=='async_control':
+                    # A legitimate payload D receiver must not grant a new
+                    # FIFO-payload path to that same receiver's async reset.
+                    template['type']='$_DFF_PN0_'
+                    template['connections']['R']=[m['netnames']['u_fifo.mem[0]']['bits'][0]]
+                    template['port_directions']['R']='input'
+                (root/'mapped.json').write_text(json.dumps(d));(root/'probe.lib').write_text(fixture_lib(m))
+                p=subprocess.run([YOSYS,'-Q','-T','-p',f'read_json {root}/mapped.json; write_verilog -noattr -noexpr {root}/mapped.v'],capture_output=True,text=True)
+                self.assertEqual(p.returncode,0,p.stdout+p.stderr)
+                body=f'read_liberty {{{root}/probe.lib}}\nread_verilog {{{root}/mapped.v}}\nlink_design audited_parent\n'
+                body+=C.clocks(s,833.333)+C.generate(s,root).rsplit('\not_ce_apply\n',1)[0]
+                body+='\nset ins [dict create stream_rst_n core hbm_rst_n hbm wr_valid hbm rd_ready core {din[0]} hbm {din[1]} hbm]\n'
+                # Pure constant dout[1] uses the existing OpenROAD/ODB constant proof,
+                # outside this standalone STA data-graph fixture. Every actual
+                # receiver D/control pin is still traversed, including mutants.
+                body+='set outs [dict create wr_ready hbm {dout[0]} core valid core wr_fault hbm rd_fault core]\n'
+                body+='if {[catch {ot_ce_leaf_ownership $ins $outs} message]} {puts stderr $message;exit 1}\nputs EXACT_BIT_GRAPH_PASS\nexit 0\n'
+                (root/'mapped.tcl').write_text(body)
+                p=subprocess.run([STA,'-exit',str(root/'mapped.tcl')],capture_output=True,text=True)
+                if mutation=='normal':self.assertEqual(p.returncode,0,p.stdout+p.stderr)
+                else:
+                    self.assertNotEqual(p.returncode,0,mutation+'\n'+p.stdout+p.stderr)
+                    self.assertIn('OT_ASYNC_GRAY:',p.stdout+p.stderr)
 
     def test_actual_mapped_parent_and_undeclared_payload_consumer_mutant(self):
         with tempfile.TemporaryDirectory()as tmp:

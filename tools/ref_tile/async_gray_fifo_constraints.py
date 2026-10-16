@@ -29,6 +29,8 @@ RELATIONSHIP = dict(kind='hbm_phy_async_gray_fifo', stream_period_ps=833.333,
 
 
 def relationship(spec):
+    if any(spec.get(k)for k in ('defines','hard_define','hard_defines','orfs_vars')):
+        raise ValueError('async_gray_fifo unsupported build defines/ORFS overrides; source audit uses only SYNTHESIS')
     if (spec.get('clock') != 'multiple_cts_roots' or spec.get('kind') != 'tile'
             or spec.get('clock_relationship') != RELATIONSHIP):
         raise ValueError('async_gray_fifo requires explicit HBM PHY stream833.333/HBM1024 relationship and native leaf roots')
@@ -74,7 +76,8 @@ def load(spec, root):
             raise ValueError(f'async_gray_fifo wrong actual IO ownership for {name}')
     return dict(source_sha256=actual_hashes, depth=params.get('DEPTH', 8), width=params.get('WIDTH', 32),
                 fifo_instances=[dict(path='', writer_domain='hbm', reader_domain='core')],
-                payload_consumer_public_nets={}, payload_output_ports={'':['rd_data']}, primitive=True)
+                payload_consumer_public_nets={}, payload_output_ports={'':['rd_data']},
+                payload_consumer_bits={},payload_output_bits={'':{str(i):(['rd_data','rd_data[0]']if params.get('WIDTH',32)==1 else['rd_data['+str(i)+']'])for i in range(params.get('WIDTH',32))}},primitive=True)
 
 
 @lru_cache(maxsize=16)
@@ -106,7 +109,7 @@ def elaborate(root, top, sources, params):
     with tempfile.TemporaryDirectory(prefix='ot-async-gray-source-')as tmp:
         out=Path(tmp)/'hierarchy.json'
         command='read_verilog -sv -DSYNTHESIS '+' '.join(paths)
-        command+=f'; hierarchy -check -top {top}'+param_args+f'; proc; opt; write_json {out}'
+        command+=f'; hierarchy -check -top {top}'+param_args+f'; proc; opt; dffunmap; techmap; opt_expr; opt_clean; write_json {out}'
         run=subprocess.run([yosys,'-Q','-T','-p',command],capture_output=True,text=True)
         if run.returncode:raise ValueError('async_gray_fifo actual source elaboration failed: '+(run.stdout+run.stderr)[-1800:])
         document=json.loads(out.read_text())
@@ -127,7 +130,7 @@ def parent_load(spec,root,actual_hashes):
     roots={p:name for name,d in spec['clock_entry_domains'].items()for p in d['ports']}
     inputs={p:name for name,d in spec['clock_entry_domains'].items()for p in d['inputs']}
     outputs={p:name for name,d in spec['clock_entry_domains'].items()for p in d['outputs']}
-    result=async_fifo_hierarchy_audit.audit(document,spec['top'],roots,inputs,outputs)
+    result=async_fifo_hierarchy_audit.audit(document,spec['top'],roots,inputs,outputs,require_bit_graph=True)
     if result['violations']:
         raise ValueError('async_gray_fifo source-domain audit REFUSE: '+json.dumps(result['violations'][:8],sort_keys=True))
     if not result['fifo_instances']:raise ValueError('async_gray_fifo requires actual reviewed FIFO instances')
@@ -142,8 +145,9 @@ def bindings(record):
         return '{'+value+'}'
     fifo=' '.join(word(f['path'])+' {'+f['writer_domain']+' '+f['reader_domain']+'}'for f in record['fifo_instances'])
     msbs=' '.join(word(f['path'])+' '+str((int(f['parameters']['DEPTH'],2)if 'parameters'in f else record['depth']).bit_length()-1)for f in record['fifo_instances'])
-    targets=' '.join(word(f['path'])+' {'+' '.join(word(v)for v in record['payload_consumer_public_nets'].get(f['path'],[]))+'}'for f in record['fifo_instances'])
-    outputs=' '.join(word(f['path'])+' {'+' '.join(word(v)for v in record['payload_output_ports'].get(f['path'],[]))+'}'for f in record['fifo_instances'])
+    def exact_rows(key):
+        return ' '.join(word(f['path'])+' {'+' '.join('{'+str(i)+'} {'+' '.join(word(v)for v in values)+'}'for i,values in record[key].get(f['path'],{}).items())+'}'for f in record['fifo_instances'])
+    targets=exact_rows('payload_consumer_bits');outputs=exact_rows('payload_output_bits')
     return ('set ::ot_ag_fifo_domains [dict create '+fifo+']\n'
             +'set ::ot_ag_pointer_msb [dict create '+msbs+']\n'
             +'set ::ot_ag_targets [dict create '+targets+']\n'
@@ -167,6 +171,9 @@ def extend(body, spec, root):
         if {[dict exists $cells $source] && [ot_ag_payload $start [get_ports $name] $source $name [dict get $cells $source] $domain]} {continue}
         error "OT_MULTI_ROOT: output $name has wrong or unregistered source domain $source"
       }''')
+    async_guard='    if {[dict exists $async_pins [get_full_name $pin]]} continue'
+    if body.count(async_guard)!=1:raise ValueError('async pin classification changed; revalidate CDC guard')
+    body=body.replace(async_guard,'    if {[dict exists $async_pins [get_full_name $pin]]} {ot_ag_async_control $pin; continue}')
     marker = '  puts "OT_MULTI_ROOT OWNERSHIP PASS roots='
     if body.count(marker) != 1:
         raise ValueError('async_gray_fifo ownership gate changed; revalidate extension')
@@ -199,31 +206,46 @@ proc ot_ag_role {cell} {
         if {[string first $prefix $name]!=0} continue
         set local [string range $name [string length $prefix] end]
       }
-      if {[regexp {^(wr_gray|rd_gray|wr_gray_r1|rd_gray_w1|wr_online|rd_online|wr_online_r1|rd_online_w1)(\[[0-9]+\])?$} $local unused role]} {
-        dict set roles [list $scope $role] 1
+      if {[regexp {^(wr_gray|rd_gray|wr_gray_r1|rd_gray_w1|wr_online|rd_online|wr_online_r1|rd_online_w1)(?:\[([0-9]+)\])?$} $local unused role index]} {
+        if {$index eq ""} {set index 0}
+        dict set roles [list $scope $role $index] 1
       }
       # The reviewed Gray pointer's MSB is exactly the binary pointer MSB.
       # Synthesis may keep only the binary public alias on that shared flop.
       # Lower binary bits are never admitted by this source-derived alias rule.
       if {[regexp {^(wr|rd)_bin\[([0-9]+)\]$} $local unused direction index] && $index == [dict get $::ot_ag_pointer_msb $scope]} {
-        dict set roles [list $scope ${direction}_gray] 1
+        dict set roles [list $scope ${direction}_gray $index] 1
       }
-      if {[regexp {^mem\[[0-9]+\](\[[0-9]+\])?$} $local]} {dict set roles [list $scope payload] 1}
+      if {[regexp {^mem\[[0-9]+\](?:\[([0-9]+)\])?$} $local unused payload_bit]} {
+        if {$payload_bit eq ""} {set payload_bit 0}
+        dict set roles [list $scope payload $payload_bit] 1
+      }
     }
   }
   if {[dict size $roles] != 1} {return {}}
   return [lindex [dict keys $roles] 0]
 }
-proc ot_ag_base {name} {
-  if {[regexp {^(.*)\[[0-9]+\]$} $name unused base]} {return $base}
-  return $name
+proc ot_ag_data_pin {pin} {
+  return [expr {[lindex [split [get_full_name $pin] /] end] eq "D" && [get_property $pin direction] eq "input"}]
 }
-proc ot_ag_target {scope cell} {
-  set allowed [dict get $::ot_ag_targets $scope]
+proc ot_ag_target {scope source_bit cell pin} {
+  if {![ot_ag_data_pin $pin] || ![dict exists $::ot_ag_targets $scope $source_bit]} {return 0}
+  set allowed [dict get $::ot_ag_targets $scope $source_bit]
   foreach name [ot_ag_public_nets $cell] {
-    if {$name in $allowed || [ot_ag_base $name] in $allowed} {return 1}
+    if {$name in $allowed} {return 1}
   }
   return 0
+}
+proc ot_ag_async_control {pin} {
+  # Reset recovery/removal stays timed. A FIFO data/pointer publication must
+  # never acquire an async-control exception by sharing a legitimate D target.
+  foreach start [get_fanin -flat -startpoints_only -to $pin] {
+    set cell [get_cells -quiet -of_objects $start]
+    if {[llength $cell]!=1} continue
+    if {[llength [ot_ag_role [get_full_name $cell]]]} {
+      error "OT_ASYNC_GRAY: FIFO publication drives asynchronous control [get_full_name $pin]"
+    }
+  }
 }
 proc ot_ag_bound {start target} {
   # OpenSTA graph startpoints are register clock pins; exceptions and path
@@ -248,29 +270,31 @@ proc ot_ag_bound {start target} {
   }
 }
 proc ot_ag_crossing {start pin source target source_domain target_domain} {
-  lassign [ot_ag_role $source] scope sr
-  lassign [ot_ag_role $target] target_scope tr
+  lassign [ot_ag_role $source] scope sr source_bit
+  if {![ot_ag_data_pin $pin]} {error "OT_ASYNC_GRAY: cross-domain control pin [get_full_name $pin]"}
+  lassign [ot_ag_role $target] target_scope tr target_bit
   if {$sr eq "" || ![dict exists $::ot_ag_fifo_domains $scope]} {
     error "OT_ASYNC_GRAY: unapproved actual crossing $source -> $target"
   }
   lassign [dict get $::ot_ag_fifo_domains $scope] writer reader
   set permitted 0
-  if {$scope eq $target_scope} {
+  if {$scope eq $target_scope && $source_bit eq $target_bit} {
     if {[list $sr $tr] in {{wr_gray wr_gray_r1} {wr_online wr_online_r1}} && $source_domain eq $writer && $target_domain eq $reader} {set permitted 1}
     if {[list $sr $tr] in {{rd_gray rd_gray_w1} {rd_online rd_online_w1}} && $source_domain eq $reader && $target_domain eq $writer} {set permitted 1}
   }
-  if {$sr eq "payload" && $source_domain eq $writer && $target_domain eq $reader && [ot_ag_target $scope $target]} {set permitted 1}
+  if {$sr eq "payload" && $source_domain eq $writer && $target_domain eq $reader && [ot_ag_target $scope $source_bit $target $pin]} {set permitted 1}
   if {!$permitted} {error "OT_ASYNC_GRAY: unapproved actual crossing $source -> $target ($scope $sr -> $target_scope $tr)"}
   ot_ag_bound $start $pin
   dict incr ::ot_ag_seen [list $scope $sr]
   puts "OT_ASYNC_GRAY BOUNDED $source -> $target"
 }
 proc ot_ag_payload {start port source name source_domain target_domain} {
-  lassign [ot_ag_role $source] scope role
+  lassign [ot_ag_role $source] scope role source_bit
   if {$role ne "payload" || ![dict exists $::ot_ag_fifo_domains $scope]} {return 0}
   lassign [dict get $::ot_ag_fifo_domains $scope] writer reader
   if {$source_domain ne $writer || $target_domain ne $reader ||
-      [ot_ag_base $name] ni [dict get $::ot_ag_outputs $scope]} {return 0}
+      ![dict exists $::ot_ag_outputs $scope $source_bit] ||
+      $name ni [dict get $::ot_ag_outputs $scope $source_bit]} {return 0}
   ot_ag_bound $start $port
   dict incr ::ot_ag_seen [list $scope payload]
   return 1
