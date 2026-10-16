@@ -20,9 +20,9 @@ if [ -n "${MUTONLY:-}" ]; then   # closure-loop negative control: every case wit
  echo "RESULT $([ $rc = 0 ] && echo OK || echo FAIL) landing_cal MUTONLY=$MUTONLY positives_pass=$np"; exit $rc
 fi
 for c in "$O"/cases/c_*.txt; do run "$c" 0 pass; done
-# negatives: MUT 1 needs V rows with o[3] != o[7] (T 8192), MUT 2 any case with puts, MUT 3 a K second half with n0 < 128 (T 2048)
+# negatives (cases from T 2048 / 8192, which every bench T list carries): MUT 1 V sector map, MUT 2 phase drift, MUT 3 K order
 for c in "$O"/cases/c_8192_0_0.txt "$O"/cases/c_8192_3_7.txt; do run "$c" 1 fail; done
-for c in "$O"/cases/c_700_0_0.txt "$O"/cases/c_8192_2_5.txt; do run "$c" 2 fail; done
+for c in "$O"/cases/c_2048_1_3.txt "$O"/cases/c_8192_2_5.txt; do run "$c" 2 fail; done
 for c in "$O"/cases/c_2048_0_0.txt "$O"/cases/c_2048_1_3.txt; do run "$c" 3 fail; done
 echo "RESULT $([ $rc = 0 ] && echo OK || echo FAIL) landing_cal positives_pass=$np mutants_fail=$nf"
 exit $rc

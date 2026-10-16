@@ -6,12 +6,12 @@ module tb_selector_link_static;
  reg[2367:0]in_line=0;wire[3:0]out_v;wire[2367:0]out_line;wire fault;
  wire[3:0]selected_v;wire[2367:0]selected_line;
  wire[15:0]threshold_observe;wire[55:0]selected_observe;
- ot_hbm_idx_selector_static #(.MUT(0)) dut(.clk_ctl(clk),.clk_q({4{clk}}),.clk_mem({12{clk}}),.*);
+ ot_hbm_idx_selector_static_core #(.MUT(0)) dut(.clk_ctl(clk),.clk_q({4{clk}}),.clk_mem({12{clk}}),.*);
  reg[2367:0]lines[0:170];reg gold[0:10943];reg[15:0]scores[0:10943];reg seen[0:10943];
  integer errors=0,checked=0,frame,cyc=0,firstemit,beginframe;string fn;
  reg clear=0,flush=0,emit_v=0;reg[3:0]emit_group=0;
  wire[3:0]tx_v;wire[2179:0]tx;wire link_fault;wire[9:0]selected_count;
- ot_hbm_idx_topk_link_static #(.MUT(MUT))link(.clk(clk),.clk_mem({8{clk}}),.rst_n(rst_n),.clear(clear),
+ ot_hbm_idx_topk_link_static_core #(.MUT(MUT))link(.clk(clk),.clk_mem({8{clk}}),.rst_n(rst_n),.clear(clear),
   .ingest_v(&selected_v),.selected_line(selected_line),.flush(flush),.emit_v(emit_v),.emit_group(emit_group),.rank(8'd3),.gbase(8'd1),
   .tx_v(tx_v),.tx(tx),.fault(link_fault),.selected_count(selected_count));
  integer flits=0,records=0,lasttx=-1,firsttx=-1;

@@ -1,0 +1,210 @@
+{
+ "input_glue": "/home/ubuntu/artifacts/s81-netfill-0600/stnh566/die_glue.sv",
+ "input_glue_sha256": "ab5e41fe55f2cc316656b1f96bf7187f81e8dca3e8fb6516675944d144dbf11e",
+ "modules": {
+  "dsfd_hstnh_16": {
+   "source": "actual_c26b_glue",
+   "sha256": "518b63040c6059ae18a8a97dd06a247f465f24604e8dc8461920e303a23bf642"
+  },
+  "dsfd_hstnh_17": {
+   "source": "actual_c26b_glue",
+   "sha256": "959e0e7d4129dde97e20a1a322984a9c8f61dbdde45c4b2220489701ce16999e"
+  },
+  "dsfd_hstnh_2048": {
+   "source": "actual_c26b_glue",
+   "sha256": "25c3e89a0d2bfb519a8deda3426c9aab21b20222c77bfc6457b9684c382f6792"
+  },
+  "dsfd_hstnh_2164": {
+   "source": "actual_c26b_glue",
+   "sha256": "d208455048beed162a12dc0a3da5fcc5b852cbc70dfae4ad3488ea4d372e5cca"
+  },
+  "dsfd_hstnh_3": {
+   "source": "actual_c26b_glue",
+   "sha256": "a0f51ea2c6fca0d9895d74297698bdd5f9d4784687441cf2a3c4bf8c5932b66f"
+  },
+  "dsfd_hstnh_3056": {
+   "source": "actual_c26b_glue",
+   "sha256": "2ee9e809bc42b331a63558868aaac22d02a262f039590cb3cbc2c413a167a9c0"
+  },
+  "dsfd_hstnh_512": {
+   "source": "actual_c26b_glue",
+   "sha256": "b40393a27cb727ef0f82286be19d825175ad466d2307dd833f832897a9c98fa7"
+  },
+  "dsfd_hstnh_56": {
+   "source": "actual_c26b_glue",
+   "sha256": "ec23c554e5ba3127724ef91446ddcbb6ada28fe03ea2125934640bdf62c1caf7"
+  },
+  "dsfd_hstnh_64": {
+   "source": "actual_c26b_glue",
+   "sha256": "396c50ab56d22cf871ca9a47b83f0bd29985fb4948ed62ddc2c5262eb44c19d3"
+  },
+  "dsfd_hstnh_84": {
+   "source": "actual_c26b_glue",
+   "sha256": "a94e1814e7fca99d25ca3eb4f5e54b3713498cd788b78d85462c50ba8cd92d68"
+  },
+  "dsfd_hstnv_1": {
+   "source": "actual_c26b_glue",
+   "sha256": "e3ca5e086d5da96f43df34ba5ece9e23ad5dd55d6fec8cef1993c64c5b9a56b6"
+  },
+  "dsfd_hstnv_1024": {
+   "source": "actual_c26b_glue",
+   "sha256": "c1bf4aab95e0a800f059d95b2fb90fbccfa7fb2cb48926a2e5759578b5e594d4"
+  },
+  "dsfd_hstnv_1027": {
+   "source": "actual_c26b_glue",
+   "sha256": "c4006343e1922ebfa6b8ac96e5f36a82f9e659dcc1a17d5db2c0bc6c97749547"
+  },
+  "dsfd_hstnv_12": {
+   "source": "actual_c26b_glue",
+   "sha256": "b58405fe0bb3bd1d57df91d0e5e516568977f0ca2143903ee7782b46d02dc50f"
+  },
+  "dsfd_hstnv_16": {
+   "source": "actual_c26b_glue",
+   "sha256": "e9252a418110381598a867949cc6c1a3f7d1bdc9ab7c944599eaeb787c4fdc79"
+  },
+  "dsfd_hstnv_17": {
+   "source": "actual_c26b_glue",
+   "sha256": "dd8420c52643de915d2b793326733f4d68aee0a4aa9c911dfc66b5e8cb74990d"
+  },
+  "dsfd_hstnv_2048": {
+   "source": "actual_c26b_glue",
+   "sha256": "c81929c10c861258f9e0d004546110abda6b68e40d71c2e6ee483889a88ea12f"
+  },
+  "dsfd_hstnv_3": {
+   "source": "actual_c26b_glue",
+   "sha256": "1e55944dd51f801d9065d0e5e779796e5928f3a5d99d46c78f550996e8ad1a9e"
+  },
+  "dsfd_hstnv_48": {
+   "source": "actual_c26b_glue",
+   "sha256": "74e3aa14de1edb6281d4f9d936bf6fc457fbf55afad982cd98523b10d0c5cb3c"
+  },
+  "dsfd_hstnv_56": {
+   "source": "actual_c26b_glue",
+   "sha256": "52e9745d207ae4401d9bac3ef339168047354856c23922dac787bb1ae6ec7c5e"
+  },
+  "dsfd_hstnv_64": {
+   "source": "actual_c26b_glue",
+   "sha256": "3fb4c79c9cd458085410e3e05d55f3319985ceac52fcc13929c925b23c3661ac"
+  },
+  "dsfd_hstnv_692": {
+   "source": "actual_c26b_glue",
+   "sha256": "a12530ae820f9658c7f78b67f355af000901edf33c0ed66acdd57c086b71da7b"
+  },
+  "dsfd_hstnv_84": {
+   "source": "actual_c26b_glue",
+   "sha256": "a2230dd4f7f358acdfba519f181b8d8db47fbc387d37c873f5441733d9be8f53"
+  },
+  "dsfd_stnh_512x1": {
+   "source": "actual_c26b_glue",
+   "sha256": "c343a33fadc55ace38fc84a3d580a984f0e2cfaa1e2783b0ef7e677701a9e882"
+  },
+  "dsfd_stnh_514x1": {
+   "source": "actual_c26b_glue",
+   "sha256": "6f2d0c56657183cb7a98138d403e745e145f0172b4e47d7d6fe0c8374bb3af82"
+  },
+  "dsfd_stnh_538x1": {
+   "source": "actual_c26b_glue",
+   "sha256": "4a75077808a0b5d0508b289d14048e21dd68bf2bf08770cd750bc91261871be2"
+  },
+  "dsfd_stnv_512x1": {
+   "source": "actual_c26b_glue",
+   "sha256": "8f6eb95200b6dcf59f82df6713e5dbaa69c8f2ce96ec55ed3c101da1f10a2b2a"
+  },
+  "dsfd_stnv_514x1": {
+   "source": "actual_c26b_glue",
+   "sha256": "077d0fa4518f19b51a5b0de4a3fb87638be3f5c4bbf3ec81248114cdb0112682"
+  },
+  "dsfd_stnv_538x1": {
+   "source": "actual_c26b_glue",
+   "sha256": "637ccbfe67603f65a88149234d158cc84c3e7ae9f3f4309c5673f33125cb0677"
+  },
+  "dsfd_rly_38_WN": {
+   "source": "actual_c26b_glue",
+   "sha256": "81224720ecad889524cf177df5f85d4be2a711fcf08802f8d5b26079c05c1344"
+  },
+  "dsfd_hstnh_20": {
+   "source": "rtl/dsrom_sys/s81_station_native/gen18r/dsfd_hstnh_20.sv",
+   "sha256": "14f0211e17ae71e13982a2fcea5a3ca79cecf320c63302dd497012a3450c4966"
+  },
+  "dsfd_hstnh_2049": {
+   "source": "rtl/dsrom_sys/s81_station_native/gen18r/dsfd_hstnh_2049.sv",
+   "sha256": "1567893c4f091331ad46aa67135129c8bd54f47a43b69a01cece90d67fddb7c7"
+  },
+  "dsfd_hstnh_2204": {
+   "source": "rtl/dsrom_sys/s81_station_native/gen18r/dsfd_hstnh_2204.sv",
+   "sha256": "8f002afd935597d0a8512f36db230b94d7b2551a3a611f47db6868dae93c293a"
+  },
+  "dsfd_hstnh_4": {
+   "source": "rtl/dsrom_sys/s81_station_native/gen18r/dsfd_hstnh_4.sv",
+   "sha256": "67fc4b29122cc82c61d5bc5926a4ab0861b3ce9bc14c7072d9274746281b2df8"
+  },
+  "dsfd_hstnh_4096": {
+   "source": "rtl/dsrom_sys/s81_station_native/gen18r/dsfd_hstnh_4096.sv",
+   "sha256": "3ec13a613165efc278aec87f1da5b8c1a8d33f61e6e44e638da7a86392e1f6e3"
+  },
+  "dsfd_hstnh_513": {
+   "source": "rtl/dsrom_sys/s81_station_native/gen18r/dsfd_hstnh_513.sv",
+   "sha256": "f539f3a8aab09c773429ad77ff6357d023dfdf8232420f76e6c46f055517e689"
+  },
+  "dsfd_hstnh_77": {
+   "source": "rtl/dsrom_sys/s81_station_native/gen18r/dsfd_hstnh_77.sv",
+   "sha256": "f0a1978675c295fc1fa7d06115e8a173d83d25fc9e37bf560cc7a6d5e32f2421"
+  },
+  "dsfd_hstnh_85": {
+   "source": "rtl/dsrom_sys/s81_station_native/gen18r/dsfd_hstnh_85.sv",
+   "sha256": "96a2673d1fb4ade8cae424c3f4558f9be1acb1dc876b2d6b9ee332d25a132e5e"
+  },
+  "dsfd_hstnv_1029": {
+   "source": "rtl/dsrom_sys/s81_station_native/gen18r/dsfd_hstnv_1029.sv",
+   "sha256": "a2698a604831aadd2da6f67d54b8112b623613e6be4278c2fcb327bfe32cdab4"
+  },
+  "dsfd_hstnv_15": {
+   "source": "rtl/dsrom_sys/s81_station_native/gen18r/dsfd_hstnv_15.sv",
+   "sha256": "de51dda0468af4c2a33e26ad2ea5e7af38c894b4010dbfc2ad65f9d6eeaa39a0"
+  },
+  "dsfd_hstnv_2": {
+   "source": "rtl/dsrom_sys/s81_station_native/gen18r/dsfd_hstnv_2.sv",
+   "sha256": "5ff321fb9dcc94a36e6e2ab096339391ed06b172d86a0c6543eeb827a6bebaf4"
+  },
+  "dsfd_hstnv_20": {
+   "source": "rtl/dsrom_sys/s81_station_native/gen18r/dsfd_hstnv_20.sv",
+   "sha256": "f4c40755eb08c364abec89015985916c056a9d65f9724724bcba2d130c103829"
+  },
+  "dsfd_hstnv_2049": {
+   "source": "rtl/dsrom_sys/s81_station_native/gen18r/dsfd_hstnv_2049.sv",
+   "sha256": "eb44e49996e66a8abf8c64ca8f34b33e730db6f5f4a8ce5d797c4ba1d21162c3"
+  },
+  "dsfd_hstnv_4": {
+   "source": "rtl/dsrom_sys/s81_station_native/gen18r/dsfd_hstnv_4.sv",
+   "sha256": "eaf965caa0291d0f50a31e1db184336bfb2aa8ec7f494239797a942dfc308065"
+  },
+  "dsfd_hstnv_53": {
+   "source": "rtl/dsrom_sys/s81_station_native/gen18r/dsfd_hstnv_53.sv",
+   "sha256": "b07104319a357754740745c1ecc9863666d18401664b1425ec55744df1159c14"
+  },
+  "dsfd_hstnv_759": {
+   "source": "rtl/dsrom_sys/s81_station_native/gen18r/dsfd_hstnv_759.sv",
+   "sha256": "3750cdb2bb8b88f4aa4a07fc8961b00d2a1e4e6b4a4394fe79e2a173c13aae50"
+  },
+  "dsfd_hstnv_77": {
+   "source": "rtl/dsrom_sys/s81_station_native/gen18r/dsfd_hstnv_77.sv",
+   "sha256": "a7ef37944ea86c678ce41e5bbdc4f22ed894a3894a474b1a80c6f82d1312b10f"
+  },
+  "dsfd_hstnv_85": {
+   "source": "rtl/dsrom_sys/s81_station_native/gen18r/dsfd_hstnv_85.sv",
+   "sha256": "12e1b00baeb86afeb0920ec938cc4d1d791cd9638255dc6c40ac36d231e28f4d"
+  },
+  "dsfd_rly_63_WN": {
+   "source": "actual_c26b_glue (legacy stnh566 module verified source2e2d7aa3f; relay behavior sourcegen)",
+   "sha256": "3fcdc62f337e0db9dd78aef5b7a2151abb4a413b14f5e55f4657ba99bcb3478a"
+  },
+  "dsfd_stnh_566x1": {
+   "source": "actual_c26b_glue (legacy stnh566 module verified source2e2d7aa3f; relay behavior sourcegen)",
+   "sha256": "428c33ee0415f0d67dfc3ef246e1262ea407d3b352d63e31b3d389b9e7baec9a"
+  },
+  "dsfd_stnv_566x1": {
+   "source": "rtl/dsrom_sys/s81_station_native/gen18r/dsfd_stnv_566x1.sv",
+   "sha256": "69266cae4ca40731c40fbaae9437119a04af2e211fa1b66779982661820148d7"
+  }
+ }
+}

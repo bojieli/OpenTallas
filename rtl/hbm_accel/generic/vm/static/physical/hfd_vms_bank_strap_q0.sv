@@ -43,7 +43,7 @@ module hfd_vms_bank_strap_q0(
     assign rr3=rr[771+:257];
     assign rr4=rr[1028+:257];
     assign wq_done0=wq_done[0];
-    ot_vms_bank_static_strap #(.RG(5),.WG(1)) bank(
+    ot_vms_bank_static_strap #(.RG(5),.WG(1),.EG_WIDE(1)) bank(
         .clk(clk),
         .rst_n(rst_n),
         .bid(bid),

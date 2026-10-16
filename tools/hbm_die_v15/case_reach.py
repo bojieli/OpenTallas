@@ -163,34 +163,12 @@ def main():
                     directions[(inst, p)] = lv['directions'][p]
                 elif p in lv['pins']:
                     excluded['typed_or_LEF_clock_pin'] += 1
-    top_locations = defaultdict(list)
-    layout_path = c / 'out' / 'layout_dump.json'
-    if layout_path.exists():
-        for name, layer, x0, y0, x1, y1 in json.loads(layout_path.read_text()).get('pins', []):
-            top_locations[name].append(((x0 + x1) / 2, (y0 + y1) / 2))
     length, all_branches, ambiguous, top_driven = {}, {}, {}, {}
     for n, ends in nets.items():
         if n in top_inputs:
             top_driven[n] = dict(loads=[dict(instance=e[0], pin=e[1], xy_um=e[2]) for e in ends],
                                  coverage='UNMEASURED_TOP_ENTRY_LOCATION: cannot infer a branch from sinks alone',
                                  reset_forest='UNQUALIFIED' if re.search(r'rst|reset|por', n, re.I) else 'not classified reset')
-            if top_locations[n]:
-                # For a multi-shape BTerm retain the farthest centre, rather than
-                # quietly selecting a nearby shape and understating reach.
-                bs = []
-                for load in ends:
-                    if directions.get(load[:2]) != 'INPUT':
-                        continue
-                    dist, xy = max((abs(x - load[2][0]) + abs(y - load[2][1]), (x, y))
-                                   for x, y in top_locations[n])
-                    bs.append((('$TOP', n, xy), load, dist))
-                if len(bs) == len(ends) and bs:
-                    all_branches[n] = bs
-                    length[n] = max(b[2] for b in bs)
-                    top_driven[n].update(coverage='MEASURED_BTERM_RECTANGLE_CENTRES',
-                                         entry_rect_centres_um=top_locations[n],
-                                         longest_branch_um=length[n],
-                                         metric='Worst Manhattan distance across actual BTerm rectangle centres; not routed wire length.')
             continue
         if len(ends) < 2:
             continue

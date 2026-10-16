@@ -1,0 +1,9 @@
+ot-run: ot-epyc4       admits   277 GB (avail 539, growth 213, headroom 48, waiters 0/0 GB) load 84/128 running 40 disk 936 GB 
+ot-run: ot-pve1        admits   143 GB (avail 193, growth 18, headroom 32, waiters 0/0 GB) load 33/28 running 6 disk 1329 GB 
+ot-run: -> ot-epyc4
+ot-heavy: admitted on regular-crane as oth-ubuntu-3910325-1792164745 after 0 s
+QUALIFIED baseline expected_exit=0
+QUALIFIED overlap expected_exit=1
+QUALIFIED address expected_exit=1
+QUALIFIED premature expected_exit=1
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-3910325-1792164745): exit 0

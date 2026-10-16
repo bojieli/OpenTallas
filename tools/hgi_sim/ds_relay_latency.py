@@ -108,14 +108,24 @@ def crossings(r, upper=False):
     return {}
 
 
-def added(r, delta, upper=False, only=None):
+def added(r, delta, upper=False, only=None, b=None, o=None):
+    """the record's added latency.  delta = per-class stage change.  b / o (absolute per-class stages of the base and
+    the option eval, 10-16 r2): the parallel SM legs are charged the change of the ABSOLUTE critical leg
+    max(2 SM_HBM (+ KV_DESC), 2 SM_X) -- a fetch-leg change counts only while the fetch leg is the longer one (H-DIE's
+    layout_ds_cost_1016 fix; the r1 form max(delta fetch, delta x) over-charges an x-leg growth that stays shorter
+    than the fetch leg).  With `only`, classes outside it keep their base value inside the leg."""
     c = dict(crossings(r, upper))
     par = c.pop("_par", False)
     d = {k: n * delta.get(k, 0.0) for k, n in c.items() if only is None or k in only}
     if par:
         fetch = d.pop("SM_HBM", 0.0) + d.pop("KV_DESC", 0.0)
         x = d.pop("SM_X", 0.0)
-        return sum(d.values()) + max(fetch, x)
+        if b is not None and o is not None and not upper:
+            sel = lambda k: (o if (only is None or k in only) else b).get(k, 0.0)
+            kv = "KV_DESC" in c
+            leg = lambda g: max(c["SM_HBM"] * g("SM_HBM") + (g("KV_DESC") if kv else 0.0), c["SM_X"] * g("SM_X"))
+            return sum(d.values()) + leg(sel) - leg(lambda k: b.get(k, 0.0))
+        return sum(d.values()) + max(fetch, x) if not upper else sum(d.values()) + fetch + x
     return sum(d.values())
 
 
@@ -128,10 +138,11 @@ def cost_fn(scale=None):
     if not _KNOB:
         return base
     delta, upper, only = _KNOB["delta"], _KNOB["upper"], _KNOB["only"]
+    b, o = _KNOB.get("b"), _KNOB.get("o")
 
     def cf(r, dyn, L):
         c, g, how = base(r, dyn, L)
-        return c + added(r, delta, upper, only), g, how
+        return c + added(r, delta, upper, only, b, o), g, how
     return cf
 
 
@@ -211,7 +222,11 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--out", type=Path)
     ap.add_argument("--jobs", type=int, default=16)
+    ap.add_argument("--spec", type=Path, help="pairs mode (r2): JSON {pairs: {NAME: {base: {cls: stages}, opt: {cls: "
+                    "stages}, qwen: bool, attrib: bool}}}; absolute-leg SM rule")
     a = ap.parse_args()
+    if a.spec:
+        return main_pairs(a)
     st = stages()
     dl = lambda t: {k: round(st[t]["per_class"][k] - st["v5"]["per_class"].get(k, 0.0), 3) for k in st[t]["per_class"]}
     delta = dl("v6")
@@ -311,6 +326,94 @@ def qwen_runs(st, position=8191):
         if isinstance(out[v], dict) and "tok_s" in out[v]:
             out[v]["d_pct"] = round(100 * (out[v]["tok_s"] / out["base"]["tok_s"] - 1), 3)
     return out
+
+
+
+def _knob(b, o, only=None):
+    return dict(delta={k: round(o.get(k, 0.0) - b.get(k, 0.0), 3) for k in set(b) | set(o)}, upper=False, only=only,
+                b=b, o=o)
+
+
+def _qwen_job(job):
+    """one Qwen AR S2 schedule (qwen_runs basis) under a knob"""
+    name, kn = job
+    from hgi_sim import qwen_timing as QT
+    from hgi_sim import timing as T
+    cfg = json.loads(QT.CFG.read_text())
+    recs = QT.QC.program(QT.QC.Geometry(cfg, 8192), QT.QC.qwen_params(cfg), cfg["num_hidden_layers"])
+    if kn is None:
+        cf = T.cost
+    else:
+        def cf(r, dyn, L):
+            c, g, how = T.cost(r, dyn, L)
+            return c + added(r, kn["delta"], False, kn["only"], kn["b"], kn["o"]), g, how
+    return name, dict(cycles=round(T.schedule(recs, 8191, "S2", cost_fn=cf)["total_cycles"], 1))
+
+
+def _any_job(job):
+    return _qwen_job(job[1:]) if job[0] == "qwen" else _job(job[1:])
+
+
+def main_pairs(a):
+    """r2 (10-16): price layout pairs (base eval -> option eval) on DS AR, the DS MTP 3,500 design point (verify P = 6
+    + the R-row compiled draft re-timed + main-hidden stores + control) and Qwen AR, absolute-leg SM rule; per-class
+    attribution (one class at the option value, the rest at base) on AR and the MTP design verify."""
+    import multiprocessing as mp
+    spec = json.loads(a.spec.read_text())
+    jobs = [("ds", "AR|base", "AR", None), ("ds", "MTP_design|base", "MTP_design", None),
+            ("ds", "draft_design|base", "draft_design", None), ("qwen", "qwen|base", None)]
+    for nm, pr in spec["pairs"].items():
+        kn = _knob(pr["base"], pr["opt"])
+        for case in ("AR", "MTP_design", "draft_design"):
+            jobs.append(("ds", f"{case}|{nm}", case, kn))
+        if pr.get("qwen"):
+            jobs.append(("qwen", f"qwen|{nm}", kn))
+        if pr.get("attrib"):
+            for k in sorted(kn["delta"]):
+                if abs(kn["delta"][k]) < 1e-9:
+                    continue
+                for case in ("AR", "MTP_design"):
+                    jobs.append(("ds", f"{case}|{nm}|cls:{k}", case, _knob(pr["base"], pr["opt"], {k})))
+    with mp.Pool(a.jobs) as pool:
+        res = dict(pool.map(_any_job, jobs, chunksize=1))
+    dref = json.loads((ROOT / "results/arch/hbm_mtp_1015/draft_rows/design.json").read_text())
+    smt = dref["smallest_meeting_target"]["fixed"]
+    mh_ctl = smt["step_cycles"] - smt["verify_cycles"] - smt["draft_cycles"] - smt["seed_cycles"]
+
+    def step(v):
+        d = res[f"draft_design|{v}"]
+        return res[f"MTP_design|{v}"]["cycles"] + d["draft_cycles"] + d["seed_cycles"] + mh_ctl
+    b_ar, b_step, b_q = res["AR|base"]["cycles"], step("base"), res["qwen|base"]["cycles"]
+    out = {}
+    for nm, pr in spec["pairs"].items():
+        ar, st_ = res[f"AR|{nm}"]["cycles"], step(nm)
+        row = dict(note=pr.get("note"), delta_stages=_knob(pr["base"], pr["opt"])["delta"],
+                   ar_tok_s=round(V.CLK / ar, 1), d_ar_pct=round(100 * (b_ar / ar - 1), 3),
+                   mtp_design_tok_s=round(V.TAU * V.CLK / st_, 1), d_mtp_design_pct=round(100 * (b_step / st_ - 1), 3),
+                   d_mtp_verify_only_pct=round(100 * (res["MTP_design|base"]["cycles"] / res[f"MTP_design|{nm}"]["cycles"] - 1), 3))
+        if f"qwen|{nm}" in res:
+            q = res[f"qwen|{nm}"]["cycles"]
+            row.update(qwen_tok_s=round(V.CLK / q, 1), d_qwen_pct=round(100 * (b_q / q - 1), 3))
+        if pr.get("attrib"):
+            att = {}
+            for k in row["delta_stages"]:
+                if f"AR|{nm}|cls:{k}" in res:
+                    att[k] = dict(d_ar_pct=round(100 * (b_ar / res[f"AR|{nm}|cls:{k}"]["cycles"] - 1), 3),
+                                  d_mtp_verify_pct=round(100 * (res["MTP_design|base"]["cycles"]
+                                                                / res[f"MTP_design|{nm}|cls:{k}"]["cycles"] - 1), 3))
+            row["per_class"] = dict(sorted(att.items(), key=lambda kv: kv[1]["d_ar_pct"]))
+        out[nm] = row
+    rec = dict(schema="opentallas.hbm_mtp_1015.die_growth_relay.v2",
+               generated_utc=datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+               rule=main_pairs.__doc__ + "\n" + added.__doc__, crossings_rule=__doc__, spec=spec,
+               base=dict(ar_tok_s=round(V.CLK / b_ar, 1), mtp_design_tok_s=round(V.TAU * V.CLK / b_step, 1),
+                         qwen_tok_s=round(V.CLK / b_q, 1)),
+               pairs=out, runs=res)
+    print(json.dumps({k: {x: y for x, y in v.items() if x not in ("delta_stages",)} for k, v in out.items()}, indent=1))
+    if a.out:
+        a.out.parent.mkdir(parents=True, exist_ok=True)
+        a.out.write_text(json.dumps(rec, indent=1) + "\n")
+    return 0
 
 
 if __name__ == "__main__":

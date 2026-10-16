@@ -1,0 +1,49 @@
+{
+  "schema": "qwen.static_k.shared_return_proof.v1",
+  "tested_source_commit": "beec46e86",
+  "actual_current_source_byte_match": true,
+  "source_hashes": {
+    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v": "d9801653d16576f40306c1fb1d01928e88e7371a3897b616e31d3e3df917cb2d",
+    "rtl/hdc/nearhbm/ot_qkd_ectl_parts.sv": "3e5b780de95ca1eb1d4a5adfdb7c3355ac27ca6a19ae784ca8adec16acabf3d4",
+    "rtl/hdc/nearhbm/ot_qwen_nearhbm_attn_stack_h.sv": "4f44dcdf9c5c704846d0d54d136f5aafed5be1425a850c7ee9621050fa997e5b",
+    "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
+    "rtl/lib/ot_rst_relay.sv": "0071a3d067e72da7a450dd265aa8390b968f0228491ed2245fe8947b499264c5",
+    "rtl/qwen_sys/split_20261014/qkd_ectl3_epoch_direct_s.sv": "525216470bcb0cdd6e134368b754d8baf3e917ba037f63e51977315c13830fea",
+    "rtl/qwen_sys/split_20261014/qkd_ectl_a_tp8_epoch_direct.sv": "309e2467c4c8dbe06f2738e8f5b7fdd2aa91ed3d56e08d22968396a12b4a3043",
+    "rtl/qwen_sys/split_20261014/qkd_ectl_native_direct_tp8.sv": "851b537e06aa44a5686ad6c374e13cdc6bfda8bcf380e704698f0f88c551696a",
+    "rtl/qwen_sys/static_kv_20261014/qkd_static_k_issuer.sv": "f690f70271960a1f2f8edab2fae1b4f4826c8a1e9084f4bd5f87369bb6a7b20b",
+    "rtl/test/qwen_static_kv/tb_qkd_static_k_issuer.sv": "8127bc5a32286320ecda6ec31b75b4b3cec503e1c15cc3d45582a95c8b246b62",
+    "tools/qwen_kv_die/static_k_issuer_bench.sh": "a70227918dfc5f92c9c25c812b6d95f16aaca88891d7df0fa00ce68d0c71410d"
+  },
+  "host": "ot-pve1",
+  "unit": "oth-ubuntu-2109806-1792165460",
+  "ot_run_status": "RAN exit0",
+  "RESPONSE_LAT": 2,
+  "bridge_MUT": 0,
+  "production_execution": "fixed K expected slots; faults never move slots or consumption",
+  "modes": {
+    "0": "36layers9216exactKrows,bridgefault0",
+    "1": "missingKfault1,255actualrs/256unchangedconsume",
+    "2": "wrongKrowfault1,256unchangedconsume",
+    "3": "wrongKlayerfault1,256unchangedconsume",
+    "6": "36layers9216exactKrows plus576legalVresponses ignored,bridgefault0",
+    "7": "V substitutes requiredK:missingKfault1,255actualKrs/256unchangedconsume",
+    "4": "deliberatebridgepayloadMUT2:actualSRAMrowFAILc37",
+    "5": "deliberatebridgerequestlayerMUT1:requestidentityFAILc8"
+  },
+  "correction": "actual VREQ1 landing shared return requires filtering valid by !rsp_v in K diagnostics, matching existing data valid filter",
+  "qualification": "Native ECTL K bridge component; external K/V response stimuli only; no full V-port arithmetic, physical landing, implemented roundtrip or die qualification.",
+  "runtime_shared_V_profiles": {
+    "source": "beec46e86",
+    "unit": "oth-ubuntu-2110797-1792165576",
+    "status": "RANexit0",
+    "profiles": 288,
+    "layers": 10368,
+    "exact_K_rows": 1094724,
+    "legal_V_words_ignored": 165888,
+    "includes_empty_K_groups_with_V_responses": true,
+    "independent_compiler_row_counts_match": true,
+    "binary_sha256": "1867b804ea16e74fbbb5fcf23a654d3a56ee9cfdfb3403a349ac721dd91a87e9",
+    "reused_compiled_actual_binary": true
+  }
+}
