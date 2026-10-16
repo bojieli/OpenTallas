@@ -12,6 +12,6 @@ def case(case):
  return dict(pc=pc,mutant=mut,expected_exit=0 if mut==0 else 1,actual_exit=r.returncode,receipt=rec)
 with concurrent.futures.ThreadPoolExecutor(max_workers=2)as pool:
  results=list(pool.map(case,[(pc,0)for pc in range(32)]+[(13,m)for m in (1,2,3,4,5)]))
-okay=all((r['actual_exit']==0)==(r['mutant']==0)for r in results)
+okay=all((r['actual_exit']==0)==(r['mutant']==0) and ('PASS context controller' if r['mutant']==0 else 'FAIL context controller') in r['receipt'].get('output','') and len(r['receipt'].get('binary_sha256',''))==64 for r in results)
 (a.out/'summary.json').write_text(json.dumps(dict(passed=okay,results=results,scope='component variable-context calendar+realPROFILE0controller, not integrated die'),indent=2)+'\n')
 print(json.dumps(dict(passed=okay,results=[{k:v for k,v in r.items()if k!='receipt'}for r in results]),indent=2));raise SystemExit(0 if okay else 1)
