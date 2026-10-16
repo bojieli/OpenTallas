@@ -1,5 +1,5 @@
 {
- "name": "qfd_static_selector_fork4-s4a-COMMIT",
+ "name": "qfd_static_selector_fork4-s4a-329ee30a1",
  "block": "qfd_static_selector_fork4",
  "ref_tile": true,
  "owner": "Codex:Q-COMPUTE-DIE",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 4,
  "source": {
   "branch": "codex/qwen-b2-allocator-command-0812",
-  "commit": "COMMIT",
+  "commit": "329ee30a1",
   "extra_paths": [
    "rtl/test/qwen_command_fork",
    "tools/qwen_split/run_fork_bench.sh",
@@ -98,7 +98,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/qfd_static_selector_fork4/qfd_static_selector_fork4-s4a-COMMIT"
+   "to": "results/rtl/ref_tile/qfd_static_selector_fork4/qfd_static_selector_fork4-s4a-329ee30a1"
   }
  ],
  "cycles_added": 0,
