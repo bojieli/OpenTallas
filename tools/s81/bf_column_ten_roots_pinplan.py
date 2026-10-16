@@ -18,6 +18,7 @@ def digest(path):
 def main():
     parser = argparse.ArgumentParser(__doc__)
     parser.add_argument('--face', choices=['E', 'W'], required=True)
+    parser.add_argument('--raw-rom-entries',action='store_true',help='S-DIE granted 12-root successor: two raw Liberty ROM clock pins')
     args = parser.parse_args()
     import sys
     sys.path.insert(0, str(ROOT/'tools/s81'))
@@ -48,7 +49,12 @@ def main():
     if args.face=='W':
         for pin in pins.values():
             if pin['face'] in 'NS':pin['x']=round(450.144-pin['x'],6)
-    assert len(pins) == 851
+    if args.raw_rom_entries:
+        for i,y in enumerate([26.7,113.1]):
+            pins[f'rom_ck{i}']=dict(face='W' if args.face=='E' else 'E',layer='M4',
+                                    x=0.0 if args.face=='E' else 450.144,y=y,w=.192,h=.024,
+                                    source_pin=f'u_col.g_pp.u_rom{i}.clk')
+    assert len(pins) == (853 if args.raw_rom_entries else 851)
     for n, p in pins.items():
         for m, q in pins.items():
             if n >= m or (p['face'], p['layer']) != (q['face'], q['layer']):
@@ -69,7 +75,7 @@ def main():
                   front_request_sha256=digest(front_path), pins=pins,
                   changes=dict(ci_seam_bits=776, seam_y_mismatches=0, reset_face='S',
                                south_outputs=64, south_output_pitch_um=1.152,
-                               added_north_clock_pins=9, total_clock_roots=10,
+                               added_north_clock_pins=9, total_clock_roots=12 if args.raw_rom_entries else 10,
                                payload_cycles_added=0, relocated_input_edges=1,
                                RTL_register_bits_added=50),
                   grant=dict(owner='S-DIE',record='2026-10-16 direct message to BF views helper',
@@ -81,7 +87,15 @@ def main():
                   geometric_cut=dict(seam=776/(194.16/.048),south=64/(72.576/.048),limit=.60,
                                      scope='Track arithmetic only; actual obstruction/PG/access/congestion still required'),
                   physical_qualification=False)
-    out=ROOT/f'physical/ref_tile_specs/s81_bf_native_1015/column_ten_roots_{args.face.lower()}'
+    if args.raw_rom_entries:
+        record['schema']='opentallas.s81.bf_column_hybrid12.v1'
+        record['raw_rom_clock_contract']=dict(reference='raw_liberty_clock_pin',
+            phase_ps=0,period_ps=833.333,normal_edges_added=0,
+            macro_clock_pins={f'rom_ck{i}':f'u_col.g_pp.u_rom{i}.clk' for i in range(2)},
+            parent_delivery='Separate physical delivery phi-R per entry; raw macro setup/hold/CQ from its own TT/FF/SS Liberty. No inferred internal insertion or CTS guard waiver.',
+            free_running='Actual ce_in unchanged. Reset initialization and idle drain must pass source-current full pair; no dynamic scheduling.')
+    kind='hybrid12' if args.raw_rom_entries else 'ten_roots'
+    out=ROOT/f'physical/ref_tile_specs/s81_bf_native_1015/column_{kind}_{args.face.lower()}'
     out.mkdir(parents=True,exist_ok=True)
     (out/'pin_request.json').write_text(json.dumps(record,indent=2)+'\n')
     lines=['# Literal independent ten-root column candidate, no inherited physical view.']
@@ -102,16 +116,16 @@ def main():
         ax.add_patch(Rectangle((mx,y),125.304,62.952,color='lightgray'))
         ax.text(mx+62.652,y+31.476,f'actual ROM{i}\n4096 x274\n{orient} aligned-v2',ha='center',va='center')
     for n,p in pins.items():
-        if n=='ck' or n.startswith('leaf_ck['):
+        if n=='ck' or n.startswith('leaf_ck[') or n.startswith('rom_ck'):
             ax.scatter(p['x'],p['y'],c='red',s=18)
             ax.annotate(n,(p['x'],p['y']),xytext=(p['x'],p['y']+6),ha='center',fontsize=7)
         elif n=='rs':
             ax.scatter(p['x'],p['y'],c='red',s=18);ax.text(p['x'],8,'reset',ha='center',fontsize=8)
         else:
             ax.scatter(p['x'],p['y'],c='tab:blue' if n.startswith('ci[') else 'tab:green',s=2)
-    ax.text(310 if args.face=='E' else 145,103,'Ten real same-PLL clock roots\nflat actual source; no hard-child substitutes\nphysical placement/CTS/native proof PENDING',ha='center',va='center')
+    ax.text(310 if args.face=='E' else 145,103,('12 roots: 10 std CTS + 2 raw ROM' if args.raw_rom_entries else 'Ten real same-PLL clock roots')+'\nflat actual source; no hard-child substitutes\nphysical placement/CTS/native proof PENDING',ha='center',va='center')
     ax.set(xlim=(-8,460),ylim=(-12,222),xlabel='um',ylabel='um',
-           title=f'Independent R0 {args.face}-facing BF column request: 851 literal signal/clock pins\n450.144 x198.72; zero payload cycles; source {record["source_sha256"][source[1]][:12]}')
+           title=f'Independent R0 {args.face}-facing BF column request: {len(pins)} literal signal/clock pins\n450.144 x198.72; zero payload cycles; source {record["source_sha256"][source[1]][:12]}')
     ax.set_aspect('equal');fig.tight_layout();fig.savefig(out/'connected_pin_plan.png',dpi=140);plt.close(fig)
     print(json.dumps(dict(face=args.face,pins=len(pins),source_sha256=record['source_sha256'])))
 

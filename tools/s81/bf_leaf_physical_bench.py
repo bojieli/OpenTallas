@@ -17,11 +17,13 @@ def main():
     p = argparse.ArgumentParser(__doc__)
     p.add_argument('--work', type=Path, required=True)
     p.add_argument('--mutant', action='store_true')
+    p.add_argument('--rom-mutant',action='store_true')
     p.add_argument('--programme-delta',type=int,required=True,
                    help='Explicit compiler fixture delta: main front0, historical c10 front-1')
     a = p.parse_args()
     work = a.work.resolve()
-    case = 'root_stop' if a.mutant else 'positive'
+    assert not (a.mutant and a.rom_mutant)
+    case = 'rom_stop' if a.rom_mutant else 'root_stop' if a.mutant else 'positive'
     cmd = [sys.executable, str(ROOT/'tools/s81/bf_txn_bench.py'),
            '--variant', 'recut', '--die-pair', '--static-prog', str(a.programme_delta),
            '--column-roots', '--mapped-rom-candidate', '--jobs', '8',
@@ -30,6 +32,8 @@ def main():
            '--work', str(work), '--no-default-mutants', '--only', case]
     if a.mutant:
         cmd += ['--mutant', 'root_stop=BF_ROOT_MUTANT_STOP']
+    if a.rom_mutant:
+        cmd += ['--mutant', 'rom_stop=BF_COL_MUTANT_ROM_STOP']
     result = subprocess.run(cmd, cwd=ROOT)
     terminal = work/'terminal.json'
     if not terminal.exists():
@@ -38,11 +42,11 @@ def main():
     c = record['cases'].get(case, {})
     if result.returncode or not c.get('ok'):
         raise SystemExit('ERROR: actual BF bench did not qualify')
-    if a.mutant:
+    if a.mutant or a.rom_mutant:
         log = (work/case/'run.log').read_text()
         if not c.get('returncode') or 'DIFF TXN' not in log:
             raise SystemExit('ERROR: stopped clock did not produce a transaction difference')
-        print('MUTANT BF leaf root_stop FAIL: DIFF TXN from actual RTL', flush=True)
+        print(f'MUTANT BF leaf {case} FAIL: DIFF TXN from actual RTL', flush=True)
         raise SystemExit(1)
     print('PASS BF leaf full-shape actual RTL: 456 rows, 912 values, 448 configs', flush=True)
 

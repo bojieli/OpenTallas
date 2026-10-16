@@ -226,7 +226,7 @@ def main():
         fn='x_bf_die_pair_static.sv'
         files[fn], count=re.subn(r'(?<![\w$])(?:cand_)?dsfd_bf_col #\(', 'cand_dsfd_bf_col_roots #(', files[fn])
         assert count==2, count
-        files[fn]=files[fn].replace('e0w (.ck(clk)', 'e0w (.leaf_ck({9{clk}}), .ck(clk)').replace('e0e (.ck(clk)', 'e0e (.leaf_ck({9{clk}}), .ck(clk)')
+        files[fn]=files[fn].replace('e0w (.ck(clk)', 'e0w (.rom_ck0(clk), .rom_ck1(clk), .leaf_ck({9{clk}}), .ck(clk)').replace('e0e (.ck(clk)', 'e0e (.rom_ck0(clk), .rom_ck1(clk), .leaf_ck({9{clk}}), .ck(clk)')
         if a.column_west_roots:
             pieces=files[fn].split('cand_dsfd_bf_col_roots #(')
             assert len(pieces)==3 and 'e0e' in pieces[2].split(';',1)[0]

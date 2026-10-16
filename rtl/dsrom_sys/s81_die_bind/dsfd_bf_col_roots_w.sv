@@ -6,6 +6,7 @@
 // parameters.  Die bit i of ci / r / qy = the view pin tools/s81/bf_direct_pins.groups(column=True) names.
 // INSTANCE / MB: simulation ROM image names only (ot_v41_bf_col MB), never hardware.
 module dsfd_bf_col_roots_w #(parameter INSTANCE = "", parameter integer MB = 0) (
+    input wire rom_ck0,rom_ck1,
     input wire [8:0] leaf_ck,
     input  wire [775:0] ci,
     output wire qy,
@@ -13,6 +14,12 @@ module dsfd_bf_col_roots_w #(parameter INSTANCE = "", parameter integer MB = 0) 
     input  wire rs,
     output wire [62:0] r
 );
+    // Negative control stops a real mapped ROM clock, never a comparator.
+`ifdef BF_COL_MUTANT_ROM_STOP
+    wire rom_ck0_live=1'b0;
+`else
+    wire rom_ck0_live=rom_ck0;
+`endif
     wire [13:0] w_a_ctr;
     wire w_clk;
     wire w_i1_bf;
@@ -894,7 +901,7 @@ module dsfd_bf_col_roots_w #(parameter INSTANCE = "", parameter integer MB = 0) 
     /* verilator lint_off PINCONNECTEMPTY */
     ot_v41_bf_col_roots #(.NSEG(8), .NCH(16), .XF(8), .LV(5), .BF16(1), .NCHB(8), .NB(2), .MTP(1), .EARLY(1), .CG(1), .DRAIN(200), .FAST(1), .PP(1), .BP(0), .QTIMING_FIX(1), .QPIPE(1), .QP_XS(1), .QP_CAP(0), .QP_P1(1), .QP_CSAM(10), .QZ(1), .QZ_NS(8), .QZ_NE(4), .QY(1), .QX(10), .QBF(2), .QZE(1), .TCG(1), .GRADUAL_RNE(1), .BXST(2), .FXST(2), .INSTANCE(INSTANCE), .MB(MB)) u_view (
         .a_ctr(w_a_ctr),
-        .clk(w_clk), .leaf_clk(leaf_ck),
+        .clk(w_clk), .leaf_clk(leaf_ck), .rom_clk({rom_ck1,rom_ck0_live}),
         .i1_bf(w_i1_bf),
         .i1_bk(w_i1_bk),
         .i1_t(w_i1_t),

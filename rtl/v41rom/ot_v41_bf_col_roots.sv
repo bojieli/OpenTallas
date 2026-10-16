@@ -73,6 +73,7 @@ module ot_v41_bf_col_roots #(
     parameter integer HDLY = 0,       // bf-hier-1011: HB4 hold-delay cells per input bit ahead of the boundary registers
     parameter integer MB = 0          // which column (simulation ROM image name only)
 ) (
+    input wire [1:0] rom_clk, // explicit raw Liberty macro clock entries
     input wire [8:0] leaf_clk, // fp0, fp1, segment, four lane groups, two reduction roots
     input  wire          clk,
     input  wire          rst_n_pin,
@@ -300,12 +301,12 @@ module ot_v41_bf_col_roots #(
 `ifndef SYNTHESIS
             #(.INSTANCE(MB == 0 ? $sformatf("%s_0", INSTANCE) : $sformatf("%sb_0", INSTANCE)))
 `endif
-            u_rom0 (.clk(gclk_c), .ce_in(b_issue && !b_a_ctr[0]), .addr_in(b_a_ctr[12:1]), .rd_out(rd0));
+            u_rom0 (.clk(rom_clk[0]), .ce_in(b_issue && !b_a_ctr[0]), .addr_in(b_a_ctr[12:1]), .rd_out(rd0));
         ot_rom_4096x274_m8
 `ifndef SYNTHESIS
             #(.INSTANCE(MB == 0 ? $sformatf("%s_1", INSTANCE) : $sformatf("%sb_1", INSTANCE)))
 `endif
-            u_rom1 (.clk(gclk_c), .ce_in(b_issue && b_a_ctr[0]), .addr_in(b_a_ctr[12:1]), .rd_out(rd1));
+            u_rom1 (.clk(rom_clk[1]), .ce_in(b_issue && b_a_ctr[0]), .addr_in(b_a_ctr[12:1]), .rd_out(rd1));
         if (QZ != 0) begin : g_cz
             genvar ck;
             for (ck = 0; ck < QZ_NE; ck = ck + 1) begin : g_e
