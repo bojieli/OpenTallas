@@ -5,7 +5,7 @@
 // A single seal supports every layer and successive tokens without cfg/reset.
 // Explicit boot flops have no inferred RAM read latency. No payload, valid,
 // readiness, completion, credit or runtime search can move a slot.
-module qkd_kv_native_programme #(parameter integer MUT=0)(
+module qkd_kv_native_programme #(parameter integer MUT=0, parameter integer VMAP=0)(
  input wire ck,rst_n,
  input wire cfg_we,input wire[7:0]cfg_addr,input wire[63:0]cfg_data,
  input wire start,input wire[5:0]stage,input wire[15:0]epoch,input wire[17:0]token,
@@ -112,7 +112,8 @@ module qkd_kv_native_programme #(parameter integer MUT=0)(
   endcase
  endfunction
  wire[12:0]pos=identity_q[18:6];
- wire[2:0]group_q=group_of(pos[2:0]);
+ wire vmap_expected=(VMAP!=0)&&kind_q;
+ wire[2:0]group_q=group_of(vmap_expected?{pos[5:4],pos[0]}:pos[2:0]);
  always @(posedge ck or negedge reset_pin_n)begin
   if(!reset_pin_n)begin
    t0<=0;t1<=0;t2<=0;t3<=0;stop_q<=0;stage_q<=0;next_cfg<=0;cfg_stage<=0;cfg_word<=0;ld<=0;sel_q<=0;
@@ -137,7 +138,7 @@ module qkd_kv_native_programme #(parameter integer MUT=0)(
     expected_identity<=identity_q;expected_generation<=generation_q;
     expected_stack<=pos[8:7];
     expected_pc<={group_q,2'd3,group_q,2'd2,group_q,2'd1,group_q,2'd0};
-    expected_address<={19'd64+{13'd0,stage_q-6'd1},kind_q,1'b0,pos[6],pos[4:3],pos[12:9],pos[5]} ^ ((MUT==4)?29'd1:29'd0);
+    expected_address<={19'd64+{13'd0,stage_q-6'd1},kind_q,1'b0,pos[6],vmap_expected?pos[2:1]:pos[4:3],pos[12:9],vmap_expected?pos[3]:pos[5]} ^ ((MUT==4)?29'd1:29'd0);
    end
    if(cfg_we_p)begin
     if(!accept_cfg)fault<=1;

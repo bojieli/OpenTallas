@@ -1,0 +1,69 @@
+{
+  "schema": "qwen.writer_ingress.microarchitecture.v1",
+  "status": "COMPONENT_CANDIDATE; actual full programme/physical graph OPEN",
+  "source": "actual qkd_kv_static_writer_native VMAP1 remains unchanged; independent qkd_kv_native_programme gains VMAP1 expected descriptor law",
+  "modules": {
+    "distribution_group": {
+      "name": "qkd_static_writer_group",
+      "replicas": 32,
+      "clock_roots": 32,
+      "PCs_each": 4,
+      "fixed_edges": 2,
+      "macros": 0,
+      "estimated_registers_each": 2800,
+      "payload_in_bits": 1152,
+      "actual_metadata_bits": 83,
+      "independent_expected_bits": 116,
+      "output_es_bits": 1152,
+      "common_context_bits": 318,
+      "expected_metadata_output_bits": 116,
+      "route": "independent programme stack/group target; never actual dest",
+      "qualification": "no physical home or view yet",
+      "reason_for_two_edges": "explicit pin capture before local target/identity comparisons and output-flop placement"
+    },
+    "controller_face_mux": {
+      "name": "qkd_static_writer_pc_mux",
+      "replicas": 128,
+      "clock_roots": 128,
+      "fixed_forward_edges": 1,
+      "fixed_HOST_return_edges": 1,
+      "estimated_registers_each": 720,
+      "native_es_bits": 288,
+      "host_es_bits": 288,
+      "context_bits": 318,
+      "route": "compiled native_mode+ownership_valid; ownership_valid low is exceptional fault-stop, never normal rescheduling"
+    }
+  },
+  "throughput": {
+    "rows_per_global_input_edge": 1,
+    "sectors_per_global_input_edge": 4,
+    "payload_bytes_per_global_edge": 128,
+    "programme_minimum_halfword_spacing": 1,
+    "native_writer_high_half_rows_spacing_minimum_edges": 2,
+    "max_programme_payload_bytes_per_edge": 64,
+    "backpressure": false,
+    "data_buffers": "fixed pin pipeline registers only; no FIFO or occupancy-driven issue"
+  },
+  "added_native_edges": 3,
+  "added_HOST_exception_edges": {
+    "outbound": 1,
+    "return": 1
+  },
+  "compiler_obligation": "delay native expected and actual arrival together by3coreedges and recompile physical write-ready/command/own-row visibility using actual relay/clock service; no hardcoded physicalroundtrip",
+  "mutable_context_contract": {
+    "actual_identity": "writer.identity59+generation2 actual captured-word ports",
+    "expected_identity": "independent programme expected_identity59+generation2",
+    "actual_mask": "source-proved native full-sector semantic constant; checked against actual underlying writer output in bench, never inferred from actual-valid metadata",
+    "native_bit": "only compiled native reserved slot; HOST context native0",
+    "expected_mask": "full256 compile-time native contract, not actual echo"
+  },
+  "bounded_gaps": [
+    "programme historical defaultVMAP0 expectedV law mismatches productionVMAP1; add opt-in VMAP1 with no default change",
+    "actual HOST land_es path is dynamic credit arbiter; normal native ingress bypasses it",
+    "HOST credits/completions must be isolated during nativeownership, actual rootcompletion/drain retained",
+    "root actual sequencer plus ownership calendar and synchronized drain/fault sources required, not writer active",
+    "actual x/y, pins, clock compensation, relays, TT/FF/DRC0 and sustained layer/token cost not measured"
+  ],
+  "no_physical_area_claim": true,
+  "accepted_cost": null
+}
