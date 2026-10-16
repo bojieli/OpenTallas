@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_hgi_coll_uop_slice96",
+ "enable": false,
+ "reason": "Existing two delay banks; preserve D1->D2->D3 edges and 192FF/master."
+}
