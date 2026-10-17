@@ -8,9 +8,10 @@ mkdir -p "$out"
 [ -f "$out/vec/control.mem" ] || python3 tools/hbm_static/su_arith_compile.py "$out/vec" > "$out/vec.log"
 S=rtl/hbm_accel/generic/adapters/static_su
 vl=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
-obj="$out/obj_${top}_sync${SU_LANE_SYNC_RST:-0}"
+obj="$out/obj_${top}_sync${SU_LANE_SYNC_RST:-0}_q${SU_LANE_QMUL4_INCUT:-0}"
 defs=()
 [ "${SU_LANE_SYNC_RST:-0}" = 0 ] || defs+=(+define+OT_SU_SYNC_RST)
+[ "${SU_LANE_QMUL4_INCUT:-0}" = 0 ] || defs+=(+define+OT_QMUL4_INCUT)
 if [ ! -x "$obj/Vtb_su_static_lane_leaf" ]; then
 "$vl" --binary --timing -O1 -j 4 -Wno-fatal -Wno-lint -Wno-style --top-module tb_su_static_lane_leaf \
  "${defs[@]}" +define+LEAF_TOP="$top" -GMLAT="$mlat" -GALAT="$alat" -GLEAF="$leaf" -GLANE="$lane" -GPINREG="${SU_PINREG:-0}" --Mdir "$obj" \

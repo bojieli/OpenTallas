@@ -29,7 +29,12 @@ module ot_hdc_qmul_lat #(
     end else if (LAT == 4) begin : g_l4
         // the fixed LAT-4 top: a plain module name, so synthesis can keep it as its own hierarchy
         // (ORFS SYNTH_KEEP_MODULES) and ABC maps it as the standalone unit
+`ifdef OT_QMUL4_INCUT
+        // OT_QMUL4_INCUT (H-SU KIND1 leaf): the LAT-4 input-cut multiplier (C1 instead of C3), same latency, bit for bit
+        ot_hdc_fp32_mul_lat4i u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a), .b(b), .y(y), .err(err), .valid_out(vo));
+`else
         ot_hdc_fp32_mul_lat4 u (.clk(clk), .rst_n(rst_n), .valid_in(v), .a(a), .b(b), .y(y), .err(err), .valid_out(vo));
+`endif
     end else if (LAT == 5) begin : g_l5
         // LAT 5 is the input-cut variant (C1 + C3; rtl/hdc/ot_hdc_fp32_mul_lat.sv): the operand multiplexer ahead of
         // the unit shares a stage with the decode / normalise, not with the partial products (W11 serial domain)

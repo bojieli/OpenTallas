@@ -303,6 +303,14 @@ module ot_hdc_fp32_mul_lat9 (input wire clk, rst_n, valid_in, input wire [31:0] 
 endmodule
 
 // the W11 serial-domain LAT-5 multiplier: the LAT-4 cuts plus C1 (after the decode / normalise), bit-identical
+// LAT-4 INPUT-CUT variant (H-SU 2026-10-16, KIND1 leaf): C1 only, so the operand multiplexer ahead of the unit plus
+// decode / normalise take stage 1 and the partial-product rows a stage of their own (the default LAT-4 C3 cut left
+// operand mux + decode + rows in one stage: KIND1 sreset gate TT -17.2 ps at u_e1m s1_rows). Same latency, bit for bit.
+module ot_hdc_fp32_mul_lat4i (input wire clk, rst_n, valid_in, input wire [31:0] a, b, output wire [31:0] y,
+                              output wire [1:0] err, output wire valid_out);
+    ot_hdc_fp32_mul_lat #(.LAT(4), .CUTS(1), .KCP(4)) u (.*);
+endmodule
+
 module ot_hdc_fp32_mul_lat5i (input wire clk, rst_n, valid_in, input wire [31:0] a, b, output wire [31:0] y,
                               output wire [1:0] err, output wire valid_out);
     ot_hdc_fp32_mul_lat #(.LAT(5), .CUTS(5)) u (.*);
