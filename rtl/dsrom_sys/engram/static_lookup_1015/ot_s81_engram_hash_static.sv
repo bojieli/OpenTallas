@@ -98,7 +98,7 @@ module ot_s81_engram_hash_static (
             add64cs = {lo[32] ? h1 : h0, lo[31:0]};
         end
     endfunction
-    genvar p, c, j, k;
+    genvar p, c, j, kq;
     generate
         for (p = 0; p < NP; p = p + 1) begin : g_prod
             localparam integer ND = 1 << ENG_DIG_W;              // entries per product table
@@ -159,8 +159,8 @@ module ot_s81_engram_hash_static (
                 localparam [RW*16-1:0] TD = RES[RW*16*(c*16 + j) +: RW*16];   // this digit's 16 residues
                 wire [3:0] nib = x[4*j +: 4];
                 wire [RW-1:0] term [0:15];
-                for (k = 0; k < 16; k = k + 1) begin : g_k
-                    assign term[k] = {RW{nib == k}} & TD[RW*k +: RW];
+                for (kq = 0; kq < 16; kq = kq + 1) begin : g_k
+                    assign term[kq] = {RW{nib == kq}} & TD[RW*kq +: RW];
                 end
                 assign r[j] = term[0] | term[1] | term[2] | term[3] | term[4] | term[5] | term[6] | term[7]
                             | term[8] | term[9] | term[10] | term[11] | term[12] | term[13] | term[14] | term[15];
