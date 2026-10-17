@@ -1,0 +1,6 @@
+DVXFIN16 slices=16 y_vecs=80 y_err=0 rstd=16 rstd_distinct=0 rstd=3fbf858b fault=0000000000000000 gf=0 last_partial_to_first_rstd=171 rstd_spread=53 LS=9 LE=29
+PASS
+- src/tb_s81dv_xfin16.sv:79: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.032 2025-01-01
+- Verilator: $finish at 4us; walltime 124.342 s; speed 32.178 ns/s
+- Verilator: cpu 124.340 s on 1 threads; alloced 1226 MB
