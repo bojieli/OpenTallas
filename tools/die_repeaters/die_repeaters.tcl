@@ -60,7 +60,7 @@ proc ot_die_repeaters {cfg} {
   set d [dict create max_wire_um 160 slew_ps 260 receiver_slew {} \
            buffers {BUFx4_ASAP7_75t_R BUFx4f_ASAP7_75t_R BUFx5_ASAP7_75t_R BUFx6f_ASAP7_75t_R BUFx8_ASAP7_75t_R} \
            skip_nets {} repeat_nets {} skip_sigtypes {CLOCK POWER GROUND} skip_clock_pins 1 reach_um 0 over_reach report \
-           long_wire_scan 5000 post_drv report rc_layer M4 repair_args "" legalize snap bounds_tcl /work/cluster_bounds.tcl \
+           long_wire_scan 5000 repair_rounds 3 post_drv report rc_layer M4 repair_args "" legalize snap bounds_tcl /work/cluster_bounds.tcl \
            libs {} std_corner "" design ""]
   set d [dict merge $d $cfg]
   dict with d {}
@@ -192,22 +192,33 @@ proc ot_die_repeaters {cfg} {
   foreach lc $flagged { set_dont_use $lc }
   foreach b $buffers { unset_dont_use [get_lib_cells -quiet $b] }
 
+  # repair -> legalise rounds: snap pushes buffers that the resizer dropped on a hard macro to the macro edge, which
+  # re-lengthens segments (S81-DV p4e pilot: 202k repeaters, 9,792 placement-estimate slew violators up to 623 ps after
+  # one round); each further round re-buffers the now-legal positions until a round inserts nothing (repair_rounds)
   set r0 [clock seconds]
-  set rc [catch {eval repair_design -max_wire_length $max_wire_um -slew_margin 0 -cap_margin 0 $repair_args} err]
-  foreach lc $flagged { unset_dont_use $lc }
-  if {$rc} { ot_die_rep_log "FAIL repair_design: $err"; error "ot_die_repeaters: repair_design: $err" }
-  set repair_s [expr {[clock seconds] - $r0}]
-
-  # ---- legalise the new buffers
-  set legal "none"
-  if {$legalize eq "snap"} {
-    if {![llength [info procs ot_cluster_snap_legalize]]} { source $bounds_tcl }
-    set left [ot_cluster_snap_legalize [file rootname $report].snap.json]
-    set legal "snap still_on_macro=$left"
-    if {$left != 0} { incr viol $left; lappend notes "repeaters left on a hard macro: $left" }
-  } elseif {$legalize eq "dpl"} {
-    if {[catch {detailed_placement} e]} { incr viol; lappend notes "detailed_placement: $e"; set legal "dpl FAIL" } else { set legal dpl }
+  set legal "none"; set rounds_done 0; set round_bufs {}
+  for {set rd 1} {$rd <= $repair_rounds} {incr rd} {
+    set nb0 [llength [$blk getInsts]]
+    if {$rd > 1} { estimate_parasitics -placement }
+    set rc [catch {eval repair_design -max_wire_length $max_wire_um -slew_margin 0 -cap_margin 0 $repair_args} err]
+    if {$rc} { foreach lc $flagged { unset_dont_use $lc }; ot_die_rep_log "FAIL repair_design: $err"; error "ot_die_repeaters: repair_design: $err" }
+    set added [expr {[llength [$blk getInsts]] - $nb0}]
+    lappend round_bufs $added; set rounds_done $rd
+    if {$legalize eq "snap"} {
+      if {![llength [info procs ot_cluster_snap_legalize]]} { source $bounds_tcl }
+      set left [ot_cluster_snap_legalize [file rootname $report].snap.json]
+      set legal "snap still_on_macro=$left"
+      if {$left != 0} { break }
+    } elseif {$legalize eq "dpl"} {
+      if {[catch {detailed_placement} e]} { set legal "dpl FAIL: $e"; break } else { set legal dpl }
+    } else { break }    ;# caller legalises: one round
+    ot_die_rep_log "round $rd added=$added"
+    if {$rd > 1 && $added == 0} { break }
   }
+  foreach lc $flagged { unset_dont_use $lc }
+  if {[string match "snap still_on_macro=*" $legal] && $left != 0} { incr viol $left; lappend notes "repeaters left on a hard macro: $left" }
+  if {[string match "dpl FAIL*" $legal]} { incr viol; lappend notes $legal }
+  set repair_s [expr {[clock seconds] - $r0}]
 
   # ---- residual electrical audit on placement parasitics after repair + legalisation (every die net, not only the
   # repaired ones): pins still over the native max_transition / max_capacitance are listed; post_drv_policy fail
@@ -259,7 +270,7 @@ proc ot_die_repeaters {cfg} {
   puts $f "{\"schema\": \"opentallas.die_repeaters.v1\", \"design\": [ot_die_rep_json_str $design], \"verdict\": \"$verdict\", \"violations\": $viol,"
   puts $f " \"rule\": \"repair_design on die nets only, buffers only, between relay registers; one repeater from ~175 um then every ~160 um (owner 0cl, H-REACH)\","
   puts $f " \"max_wire_um\": $max_wire_um, \"max_transition_ps\": $slew, \"max_transition_source\": [ot_die_rep_json_str $slew_src], \"rc_layer\": [ot_die_rep_json_str $rc_layer],"
-  puts $f " \"repair_args\": [ot_die_rep_json_str $repair_args], \"legalize\": [ot_die_rep_json_str $legal],"
+  puts $f " \"repair_args\": [ot_die_rep_json_str $repair_args], \"repair_rounds\": $rounds_done, \"round_buffers\": \[[join $round_bufs {, }]\], \"legalize\": [ot_die_rep_json_str $legal],"
   puts $f " \"instances_pre\": [dict size $pre], \"instances_post\": [dict size $post], \"repeaters\": $repeaters, \"repeaters_by_master\": {[join $bm {, }]},"
   puts $f " \"removed\": $removed, \"resized\": $changed, \"non_buffer_inserted\": $bad_new, \"skip_nets\": [llength $skip_names], \"skip_nets_modified\": $skip_changed,"
   puts $f " \"skip_by\": {\"sigtype\": $n_sig, \"clock_pin\": $n_ck, \"glob\": [expr {[llength $skip_names] - $n_sig - $n_ck + $n_rep}]}, \"repeated_clock_nets\": $n_rep, \"masters_without_liberty\": [llength $nolib],"

@@ -80,8 +80,9 @@ foreach {i x} {r0 10 r1 900 g0 905 r2 60} { set inst [[ord::get_db_block] findIn
 MUTANT = '''rename repair_design ot_orig_repair_design
 proc repair_design {args} { ot_orig_repair_design {*}$args
   replace_cell [get_cells r1] DFFHQNx2_ASAP7_75t_R
-  set i [odb::dbInst_create [ord::get_db_block] [[ord::get_db] findMaster DFFHQNx1_ASAP7_75t_R] mut_flop]
-  $i setLocation 500000 10800; $i setPlacementStatus PLACED }
+  if {[[ord::get_db_block] findInst mut_flop] eq "NULL"} {
+    set i [odb::dbInst_create [ord::get_db_block] [[ord::get_db] findMaster DFFHQNx1_ASAP7_75t_R] mut_flop]
+    $i setLocation 500000 10800; $i setPlacementStatus PLACED } }
 '''
 CHECK_TCL = '''set_routing_layers -signal M2-M7
 global_route -allow_congestion
