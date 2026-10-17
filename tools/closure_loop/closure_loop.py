@@ -2797,6 +2797,18 @@ def ship_helpers(host, run, job=None):
                         origin_main=frozen.get("origin_main"), verified_at=now_iso()))
             except (ValueError, OSError, subprocess.SubprocessError) as ex:
                 raise ValueError(f"FROZEN_HELPER_OVERLAY: {ex}; preserve original execution") from ex
+        if payloads is None and frozen is not None and job.get("replay_frozen_helpers"):
+            # FROZEN-REPLAY (ROOT 2026-10-16, coordinator: recover drift-blocked jobs from their ORIGINAL state): a human
+            # `retry --replay-frozen-helpers` runs the job with exactly the helper bytes its gate froze (committed origin
+            # tree / content store, every byte verified against the plan) instead of today's helpers.  Never automatic.
+            try:
+                payloads, src_ = HO.recover_frozen_payloads(REPO, HELPER_STORE, frozen)
+            except ValueError as ex:
+                raise ValueError(f"FROZEN_HELPER_OVERLAY: replay requested but the frozen bytes are not recoverable "
+                                 f"({ex})") from ex
+            modes = {f["path"]: f["mode"] for f in HO.frozen_rows(frozen)}
+            event(job, f"FROZEN-REPLAY: shipping the gate-frozen helper set {str(frozen.get('content_sha256'))[:12]} "
+                       f"(origin {str(frozen.get('origin_main'))[:9]}, {src_}) by human request")
         if payloads is None:
             current, payloads = HO.capture_plan(HERE.parents[1], REPO, head=_ovl_head(), cache=_OVL["hist"])
             modes = {f["path"]: f["mode"] for f in current["files"]}
@@ -8763,6 +8775,11 @@ def cmd_retry(a):
         j["budget"]["override"] = "human retry after NEEDS_BUDGET"
         j["spec"].setdefault("budget", {})["on_deviation"] = "continue"
         j["stage_idx"] += 1           # the calibration is kept: continue after it, on the sheet SDC
+    if getattr(a, "replay_frozen_helpers", False):
+        if not j.get("route_overlay_plan"):
+            sys.exit(f"{a.name}: --replay-frozen-helpers needs a frozen route_overlay_plan")
+        j["replay_frozen_helpers"] = dict(at=now_iso(), by="human retry")
+        event(j, "human retry: replay the gate-frozen helper bytes (FROZEN-REPLAY)")
     if getattr(a, "at", None):        # resume at a named stage (e.g. verdict: the evidence of the failed stage is valid)
         stl = stage_list(j["spec"])
         idx = [i for i, s in enumerate(stl) if s["key"] == a.at]
@@ -9211,6 +9228,8 @@ def main():
     sr = sub.add_parser("submit-recheck"); sr.add_argument("--since", required=True)
     sr.add_argument("--requeue", action="store_true"); sr.add_argument("--log")
     r = sub.add_parser("retry"); r.add_argument("name"); r.add_argument("--at", help="resume at this stage key")
+    r.add_argument("--replay-frozen-helpers", action="store_true",
+                   help="run with the exact helper bytes the gate froze (recovery of a helper-drift NEEDS_HUMAN)")
     r.add_argument("--keep-resume", action="store_true", help="keep a pending checkpoint resume / HOLD-STOP caps")
     r.add_argument("--force", action="store_true", help="FLOORPLAN_MARGIN job whose lint dump is gone: requeue anyway")
     r = sub.add_parser("retry-eco"); r.add_argument("name"); r.add_argument("--why", default="hold_eco rev 2")

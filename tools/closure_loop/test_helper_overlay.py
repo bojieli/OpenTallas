@@ -276,6 +276,20 @@ class HelperOverlay(unittest.TestCase):
         self.assertEqual(job['helper_overlay_sanctioned'][0]['kind'], 'lint_frozen')
         self.assertEqual(HO.verify_installed_plan(run/'cl', job['route_overlay_plan'])['status'], 'verified_original')
 
+    def test_frozen_replay_ships_gate_bytes_after_any_main_drift(self):
+        _, binding = self.gate()
+        frozen_plan = binding['route_overlay_plan']
+        self.commit_helper(b'# behaviour change after the gate\n')
+        job = {'name': 'replay-t', 'events': [], 'freeze_helper_overlay': True, 'route_overlay_plan': frozen_plan}
+        with self.assertRaisesRegex(ValueError, 'effective route helper drift'):
+            CL.ship_helpers('local', str(Path(self.tmp.name)/'r0'), dict(job))
+        job['replay_frozen_helpers'] = {'at': 'now'}
+        run = Path(self.tmp.name)/'r1'
+        with patch.object(CL, 'HELPER_STORE', Path(self.tmp.name)/'store'):
+            CL.ship_helpers('local', str(run), job)
+        self.assertEqual((run/'cl/orfs_hold_mm.tcl').read_bytes(), self.new)
+        self.assertEqual(HO.verify_installed_plan(run/'cl', frozen_plan)['status'], 'verified_original')
+
     def test_lint_only_foreign_blob_still_refuses(self):
         _, binding = self.gate()
         self.commit_helper(b'# later main\n')
