@@ -87,7 +87,11 @@ FACES = {"N": "top", "S": "bottom", "E": "right", "W": "left"}
 #      table is $RESULTS_DIR/ot_pin_regs.tsv of the route).  io_flop_at_pins anchors them at the pin face.  Opt-out only
 #      with a recorded reason: "pin_regs": {"enable": false, "reason": "..."}; per-port: "pin_regs": {"exclude":
 #      "<regexp>", "reason": "..."}; a multi-clock tile names the data clock: "pin_regs": {"clock": "<port>"}.
-RECIPE_LATEST = 3
+#   4  (coordinator 2026-10-16, owner-approved die boundary hold budget, FLOW-HOLD) recipe 3 + "hold_budget": "die" for
+#      leaf tiles: flop-first pins (no inhold / outhold pads), boundary min delays credit the guaranteed launch C, the
+#      link's skew / uncertainty / shortfall are the die's (results/arch/boundary_hold_budget_1016/RULE.md).  A tile that
+#      does not qualify (CDC / async leaf, unregistered pin) opts out with "hold_budget": "tile" + "hold_budget_reason".
+RECIPE_LATEST = 4
 PIN_REGS_RULE = "OWNER RULE 19:50 PT 2026-10-15: every new tile registers every input and every output at its pin"
 RECIPE_HOLD_PAD = "HB2xp67_ASAP7_75t_R"
 HOLD_PAD_STRONG = "HB4xp67_ASAP7_75t_R"
@@ -164,6 +168,8 @@ def check_hold_budget(s: dict) -> None:
     e.g. hcoll_v5_ctl2) -- and no pin hold pads.  The export is then checked structurally by the native audit (no
     combinational pin arc; launch / capture budgets), which a non-registered pin fails."""
     if not hold_budget_die(s):
+        if s.get("recipe", 1) >= 4 and s.get("kind") == "tile" and not str(s.get("hold_budget_reason") or "").strip():
+            raise SpecError('spec: recipe 4 leaf tile with hold_budget "tile" needs "hold_budget_reason" (e.g. CDC leaf)')
         return
     pr = s.get("pin_regs") or {}
     if s.get("kind") != "tile":
@@ -191,6 +197,8 @@ def apply_recipe(s: dict, recipe: int) -> dict:
         return s
     s["recipe"] = recipe
     r = s["route"]
+    if recipe >= 4 and s.get("kind") == "tile":
+        s.setdefault("hold_budget", "die")
     if hold_budget_die(s):
         # no pin hold pads (inhold / outhold), boundary repaired at margin 0 against the credited launch
         s.setdefault("inhold", False)

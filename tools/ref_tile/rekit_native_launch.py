@@ -199,6 +199,10 @@ def new_spec(a: dict, audit=AUDIT) -> dict:
     """the closed kit's spec with the recipe-2 output stage, the closed outline pinned, the native_launch reason"""
     s = json.loads(json.dumps(a["spec"]))
     s["recipe"] = RT.RECIPE_LATEST
+    if RT.RECIPE_LATEST >= 4 and s.get("kind") == "tile" and s.get("hold_budget", "die") == "die":
+        # recipe 4 (FLOW-HOLD): flop-first pins, boundary hold is the die's -- the closed kit's explicit pin pads go
+        for k in ("inhold", "outhold", "hold_pad", "inhold_drv"):
+            s.pop(k, None)
     if a["recipe"] < 2:
         # a recipe-1 kit keeps its routed geometry and hold settings; only the output / input pin stage is new
         s["route"].setdefault("macro_halo_um", RT.HALO_UM)
