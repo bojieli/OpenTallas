@@ -1,0 +1,67 @@
+{
+  "schema": "opentallas.qwen.q3h.codex_intake.v1",
+  "time": "2026-10-16T19:59:08.168254-07:00",
+  "provisional": true,
+  "qualification": false,
+  "source_manifest_mismatches": [],
+  "bench": {
+    "kind": "fabric with synthetic tile-face arithmetic proxy, actual FP32 node RTL",
+    "logs": {
+      "run_m0_f0.log": {
+        "sha256": "13a3eb9f9adcd5139361e856217acb44ee6e8e15edeea3522c66346e32491c0d",
+        "pass": true,
+        "failure": false
+      },
+      "run_m1_f0.log": {
+        "sha256": "2defc1fd0648bb7ec56a66d2330850f4a7af2e4c0dc35cb5e41be95b9a06ead3",
+        "pass": false,
+        "failure": true
+      },
+      "run_m0_f1.log": {
+        "sha256": "81985e89ee700033353deefd8f63d78dc200023d2e069ecedc5988a7a5be389e",
+        "pass": true,
+        "failure": false
+      },
+      "run_m2_f0.log": {
+        "sha256": "528624e0c855feec650bb0cd360e9a81834bb3eeef2cef6e253df9f37905850c",
+        "pass": false,
+        "failure": true
+      },
+      "run_m3_f0.log": {
+        "sha256": "32354f0f42fc3b4c57598c88bfa174331e44ae9f5051876ebb7ac24d099b8ae2",
+        "pass": false,
+        "failure": true
+      }
+    },
+    "tile_proxy_edges": 8,
+    "node_face_edges": 10,
+    "fabric_edges": 35,
+    "total_rs_edges": 83,
+    "tap_edges": [
+      3,
+      7,
+      11,
+      15
+    ],
+    "bco_edges": 18
+  },
+  "elaboration": {
+    "verilator_exit": 0,
+    "qualified": false,
+    "reason": "33 q3h warnings: 32 deliberately open station tie outputs and reserved C++ word far; strict script fails",
+    "memory_mb": 29827.582,
+    "wall_seconds": 542.126
+  },
+  "blockers": [
+    "A0 NK/NL parent views not closed or native-qualified; pending regional-root gates",
+    "C_B16 one ck still drives all fabric and hard child entries over 5184um: regional clock plan and measured neighbour-skew/native proofs required",
+    "No granted cluster-over-cluster signal/PG layer contract: A0 uses signals M2-M7/PG M7, C_B16 provisional signal<=M6 claim cannot bind",
+    "No full real ROM/memory production-layer static-cycle proof; proxy bench proves fabric only",
+    "No routed CB view, final GRT/STA, all-pin native audit or layout review"
+  ],
+  "outline_um": [
+    2090.88,
+    5184
+  ],
+  "contract_sha256": "746541a90926f9c8a9e089718af7d21b3b1672a7c048767fb88bca0ad7ee2d8c"
+}

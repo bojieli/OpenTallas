@@ -1,0 +1,288 @@
+{
+ "schema": "opentallas.ref_tile.floorplan.v1",
+ "name": "qfd_c_b16",
+ "top": "qfd_c_b16",
+ "kind": "cluster",
+ "provisional": true,
+ "die": [
+  0,
+  0,
+  2090.88,
+  5184.0
+ ],
+ "core": [
+  2.16,
+  2.16,
+  2088.7200000000003,
+  5181.84
+ ],
+ "why": "contract outline (Q-DIEPLAN3 array_grid.json: 2090.88 x 5184)",
+ "blocks": [
+  {
+   "inst": "u_t_0_0",
+   "view": "physical/ref_tile/qfd_tile_nk_romleaf_a0/views/qfd_tile_nk_rp2_romleaf",
+   "rect": [
+    32.4,
+    64.8,
+    490.32,
+    1231.2
+   ],
+   "orient": "MY"
+  },
+  {
+   "inst": "u_t_0_1",
+   "view": "physical/ref_tile/qfd_tile_nk_romleaf_a0/views/qfd_tile_nk_rp2_romleaf",
+   "rect": [
+    32.4,
+    1360.8,
+    490.32,
+    2527.2
+   ],
+   "orient": "MY"
+  },
+  {
+   "inst": "u_t_0_2",
+   "view": "physical/ref_tile/qfd_tile_nk_romleaf_a0/views/qfd_tile_nk_rp2_romleaf",
+   "rect": [
+    32.4,
+    2656.8,
+    490.32,
+    3823.2000000000003
+   ],
+   "orient": "MY"
+  },
+  {
+   "inst": "u_t_0_3",
+   "view": "physical/ref_tile/qfd_tile_nk_romleaf_a0/views/qfd_tile_nk_rp2_romleaf",
+   "rect": [
+    32.4,
+    3952.8,
+    490.32,
+    5119.200000000001
+   ],
+   "orient": "MY"
+  },
+  {
+   "inst": "u_t_1_0",
+   "view": "physical/ref_tile/qfd_tile_nk_romleaf_a0/views/qfd_tile_nk_rp2_romleaf",
+   "rect": [
+    555.12,
+    64.8,
+    1013.04,
+    1231.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "inst": "u_t_1_1",
+   "view": "physical/ref_tile/qfd_tile_nk_romleaf_a0/views/qfd_tile_nk_rp2_romleaf",
+   "rect": [
+    555.12,
+    1360.8,
+    1013.04,
+    2527.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "inst": "u_t_1_2",
+   "view": "physical/ref_tile/qfd_tile_nk_romleaf_a0/views/qfd_tile_nk_rp2_romleaf",
+   "rect": [
+    555.12,
+    2656.8,
+    1013.04,
+    3823.2000000000003
+   ],
+   "orient": "R0"
+  },
+  {
+   "inst": "u_t_1_3",
+   "view": "physical/ref_tile/qfd_tile_nk_romleaf_a0/views/qfd_tile_nk_rp2_romleaf",
+   "rect": [
+    555.12,
+    3952.8,
+    1013.04,
+    5119.200000000001
+   ],
+   "orient": "R0"
+  },
+  {
+   "inst": "u_t_2_0",
+   "view": "physical/ref_tile/qfd_tile_nk_romleaf_a0/views/qfd_tile_nk_rp2_romleaf",
+   "rect": [
+    1077.84,
+    64.8,
+    1535.76,
+    1231.2
+   ],
+   "orient": "MY"
+  },
+  {
+   "inst": "u_t_2_1",
+   "view": "physical/ref_tile/qfd_tile_nk_romleaf_a0/views/qfd_tile_nk_rp2_romleaf",
+   "rect": [
+    1077.84,
+    1360.8,
+    1535.76,
+    2527.2
+   ],
+   "orient": "MY"
+  },
+  {
+   "inst": "u_t_2_2",
+   "view": "physical/ref_tile/qfd_tile_nk_romleaf_a0/views/qfd_tile_nk_rp2_romleaf",
+   "rect": [
+    1077.84,
+    2656.8,
+    1535.76,
+    3823.2000000000003
+   ],
+   "orient": "MY"
+  },
+  {
+   "inst": "u_t_2_3",
+   "view": "physical/ref_tile/qfd_tile_nk_romleaf_a0/views/qfd_tile_nk_rp2_romleaf",
+   "rect": [
+    1077.84,
+    3952.8,
+    1535.76,
+    5119.200000000001
+   ],
+   "orient": "MY"
+  },
+  {
+   "inst": "u_t_3_0",
+   "view": "physical/ref_tile/qfd_tile_nl_romleaf_a0/views/qfd_tile_nl_rp2_romleaf",
+   "rect": [
+    1600.56,
+    64.8,
+    2058.48,
+    1231.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "inst": "u_t_3_1",
+   "view": "physical/ref_tile/qfd_tile_nk_romleaf_a0/views/qfd_tile_nk_rp2_romleaf",
+   "rect": [
+    1600.56,
+    1360.8,
+    2058.48,
+    2527.2
+   ],
+   "orient": "R0"
+  },
+  {
+   "inst": "u_t_3_2",
+   "view": "physical/ref_tile/qfd_tile_nk_romleaf_a0/views/qfd_tile_nk_rp2_romleaf",
+   "rect": [
+    1600.56,
+    2656.8,
+    2058.48,
+    3823.2000000000003
+   ],
+   "orient": "R0"
+  },
+  {
+   "inst": "u_t_3_3",
+   "view": "physical/ref_tile/qfd_tile_nk_romleaf_a0/views/qfd_tile_nk_rp2_romleaf",
+   "rect": [
+    1600.56,
+    3952.8,
+    2058.48,
+    5119.200000000001
+   ],
+   "orient": "R0"
+  }
+ ],
+ "channels": {
+  "corridors": {
+   "L": [
+    0.0,
+    32.4
+   ],
+   "A": [
+    490.32,
+    555.12
+   ],
+   "T": [
+    1013.04,
+    1077.84
+   ],
+   "B": [
+    1535.76,
+    1600.56
+   ],
+   "R": [
+    2058.48,
+    2090.88
+   ]
+  },
+  "gaps": [
+   [
+    0.0,
+    64.8
+   ],
+   [
+    1231.2,
+    1360.8
+   ],
+   [
+    2527.2,
+    2656.8
+   ],
+   [
+    3823.2,
+    3952.8
+   ],
+   [
+    5119.2,
+    5184.0
+   ]
+  ]
+ },
+ "pins": {
+  "N": [
+   "bco0",
+   "bco1",
+   "bco2",
+   "bco3"
+  ],
+  "S": [
+   "bc0",
+   "bc1",
+   "bc2",
+   "bc3",
+   "rs",
+   "ck",
+   "rst_n",
+   "far",
+   "cid",
+   "tie_hi",
+   "tie_lo"
+  ],
+  "E": [],
+  "W": []
+ },
+ "clock_port": "ck",
+ "findings": [
+  [
+   "BLOCK",
+   "child_views",
+   "A0 tile views not closed (Q-ROMPARENT gate3 GRT repair)",
+   "wait; no route"
+  ],
+  [
+   "BLOCK",
+   "layer_contract",
+   "A0 is a cluster (PG M7, signals M2-M7); a cluster parent needs its PG one layer above (M8), which the ref_tile contract reserves for the die",
+   "owner / Q-DIEPLAN3 grant"
+  ],
+  [
+   "WARN",
+   "corridor_cut",
+   "corridor A peak 2570 b over 64.8 um = 0.82 of M3+M5 tracks at the row-0 pin band (guidance; GRT overflow 0 is the gate)",
+   "measure in GRT"
+  ]
+ ]
+}

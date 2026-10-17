@@ -1,0 +1,734 @@
+%Warning-PINMISSING: rtl/physical/ot_qwen_rom_tile_die.sv:115:309: Cell has missing pin: 'ck_rpair'
+  115 |         .TREE_LAT(TREE_LAT), .ROM_PIPE(ROM_PIPE), .ROM_ARELAY(ROM_ARELAY), .ROM_CAP2(ROM_CAP2), .ROM_CAPX(ROM_CAPX), .LRST(LRST), .ARPB(ARPB), .MPR(MPR), .HIER(HIER), .HIER_HARD(HIER_HARD), .TOREG(TOREG), .TIDR(TIDR), .LRR(LRR), .RPH(RPH), .RQR(RQR), .XTX(XTX), .ANR(ANR), .BAW(BAW), .NDH(NDH), .BMUT(BMUT)) u_tile (
+      |                                                                                                                                                                                                                                                                                                                     ^~~~~~
+                     rtl/hdc/ot_qwen_rom_tile_w12.sv:773:33: ... Location of port declaration
+  773 |     input wire [CODE_BANKS-1:0] ck_rpair,
+      |                                 ^~~~~~~~
+                     ... For warning description see https://verilator.org/warn/PINMISSING?v=5.032
+                     ... Use "/* verilator lint_off PINMISSING */" and lint_on around source to disable this message.
+%Warning-PINMISSING: rtl/physical/ot_qwen_rom_tile_die.sv:115:309: Cell has missing pin: 'ck_pair1'
+  115 |         .TREE_LAT(TREE_LAT), .ROM_PIPE(ROM_PIPE), .ROM_ARELAY(ROM_ARELAY), .ROM_CAP2(ROM_CAP2), .ROM_CAPX(ROM_CAPX), .LRST(LRST), .ARPB(ARPB), .MPR(MPR), .HIER(HIER), .HIER_HARD(HIER_HARD), .TOREG(TOREG), .TIDR(TIDR), .LRR(LRR), .RPH(RPH), .RQR(RQR), .XTX(XTX), .ANR(ANR), .BAW(BAW), .NDH(NDH), .BMUT(BMUT)) u_tile (
+      |                                                                                                                                                                                                                                                                                                                     ^~~~~~
+                     rtl/hdc/ot_qwen_rom_tile_w12.sv:774:33: ... Location of port declaration
+  774 |     input wire [CODE_BANKS-1:0] ck_pair1,
+      |                                 ^~~~~~~~
+%Warning-PINMISSING: rtl/physical/ot_qwen_rom_tile_die.sv:115:309: Cell has missing pin: 'ck_rqr'
+  115 |         .TREE_LAT(TREE_LAT), .ROM_PIPE(ROM_PIPE), .ROM_ARELAY(ROM_ARELAY), .ROM_CAP2(ROM_CAP2), .ROM_CAPX(ROM_CAPX), .LRST(LRST), .ARPB(ARPB), .MPR(MPR), .HIER(HIER), .HIER_HARD(HIER_HARD), .TOREG(TOREG), .TIDR(TIDR), .LRR(LRR), .RPH(RPH), .RQR(RQR), .XTX(XTX), .ANR(ANR), .BAW(BAW), .NDH(NDH), .BMUT(BMUT)) u_tile (
+      |                                                                                                                                                                                                                                                                                                                     ^~~~~~
+                     rtl/hdc/ot_qwen_rom_tile_w12.sv:775:22: ... Location of port declaration
+  775 |     input wire [1:0] ck_rqr,
+      |                      ^~~~~~
+%Warning-PINMISSING: rtl/physical/ot_qwen_rom_tile_die.sv:115:309: Cell has missing pin: 'ck_tx'
+  115 |         .TREE_LAT(TREE_LAT), .ROM_PIPE(ROM_PIPE), .ROM_ARELAY(ROM_ARELAY), .ROM_CAP2(ROM_CAP2), .ROM_CAPX(ROM_CAPX), .LRST(LRST), .ARPB(ARPB), .MPR(MPR), .HIER(HIER), .HIER_HARD(HIER_HARD), .TOREG(TOREG), .TIDR(TIDR), .LRR(LRR), .RPH(RPH), .RQR(RQR), .XTX(XTX), .ANR(ANR), .BAW(BAW), .NDH(NDH), .BMUT(BMUT)) u_tile (
+      |                                                                                                                                                                                                                                                                                                                     ^~~~~~
+                     rtl/hdc/ot_qwen_rom_tile_w12.sv:776:22: ... Location of port declaration
+  776 |     input wire [7:0] ck_tx,
+      |                      ^~~~~
+%Warning-PINMISSING: rtl/physical/ot_qwen_rom_tile_die.sv:115:309: Cell has missing pin: 'ck_rom'
+  115 |         .TREE_LAT(TREE_LAT), .ROM_PIPE(ROM_PIPE), .ROM_ARELAY(ROM_ARELAY), .ROM_CAP2(ROM_CAP2), .ROM_CAPX(ROM_CAPX), .LRST(LRST), .ARPB(ARPB), .MPR(MPR), .HIER(HIER), .HIER_HARD(HIER_HARD), .TOREG(TOREG), .TIDR(TIDR), .LRR(LRR), .RPH(RPH), .RQR(RQR), .XTX(XTX), .ANR(ANR), .BAW(BAW), .NDH(NDH), .BMUT(BMUT)) u_tile (
+      |                                                                                                                                                                                                                                                                                                                     ^~~~~~
+                     rtl/hdc/ot_qwen_rom_tile_w12.sv:780:35: ... Location of port declaration
+  780 |     input wire [2*CODE_BANKS-1:0] ck_rom,
+      |                                   ^~~~~~
+%Warning-PINMISSING: rtl/physical/ot_qwen_rom_tile_die.sv:115:309: Cell has missing pin: 'ck_lsl'
+  115 |         .TREE_LAT(TREE_LAT), .ROM_PIPE(ROM_PIPE), .ROM_ARELAY(ROM_ARELAY), .ROM_CAP2(ROM_CAP2), .ROM_CAPX(ROM_CAPX), .LRST(LRST), .ARPB(ARPB), .MPR(MPR), .HIER(HIER), .HIER_HARD(HIER_HARD), .TOREG(TOREG), .TIDR(TIDR), .LRR(LRR), .RPH(RPH), .RQR(RQR), .XTX(XTX), .ANR(ANR), .BAW(BAW), .NDH(NDH), .BMUT(BMUT)) u_tile (
+      |                                                                                                                                                                                                                                                                                                                     ^~~~~~
+                     rtl/hdc/ot_qwen_rom_tile_w12.sv:781:22: ... Location of port declaration
+  781 |     input wire [7:0] ck_lsl,
+      |                      ^~~~~~
+%Warning-PINMISSING: rtl/physical/ot_qwen_rom_tile_die.sv:115:309: Cell has missing pin: 'ck_node'
+  115 |         .TREE_LAT(TREE_LAT), .ROM_PIPE(ROM_PIPE), .ROM_ARELAY(ROM_ARELAY), .ROM_CAP2(ROM_CAP2), .ROM_CAPX(ROM_CAPX), .LRST(LRST), .ARPB(ARPB), .MPR(MPR), .HIER(HIER), .HIER_HARD(HIER_HARD), .TOREG(TOREG), .TIDR(TIDR), .LRR(LRR), .RPH(RPH), .RQR(RQR), .XTX(XTX), .ANR(ANR), .BAW(BAW), .NDH(NDH), .BMUT(BMUT)) u_tile (
+      |                                                                                                                                                                                                                                                                                                                     ^~~~~~
+                     rtl/hdc/ot_qwen_rom_tile_w12.sv:782:16: ... Location of port declaration
+  782 |     input wire ck_node,
+      |                ^~~~~~~
+%Warning-PINCONNECTEMPTY: rtl/hdc/ot_hdc_matvec.sv:163:10: Cell pin connected by name with empty reference: 't_out'
+  163 |         .t_out(), .t_vout(), .t_fault(), .active_o(active));
+      |          ^~~~~
+%Warning-PINCONNECTEMPTY: rtl/hdc/ot_hdc_matvec.sv:163:20: Cell pin connected by name with empty reference: 't_vout'
+  163 |         .t_out(), .t_vout(), .t_fault(), .active_o(active));
+      |                    ^~~~~~
+%Warning-PINCONNECTEMPTY: rtl/hdc/ot_hdc_matvec.sv:163:31: Cell pin connected by name with empty reference: 't_fault'
+  163 |         .t_out(), .t_vout(), .t_fault(), .active_o(active));
+      |                               ^~~~~~~
+%Warning-PINCONNECTEMPTY: rtl/hdc/ot_qwen_me_array_w12.sv:163:10: Cell pin connected by name with empty reference: 'wrom_re'
+  163 |         .wrom_re(), .wrom_addr(), .kv_re(),
+      |          ^~~~~~~
+%Warning-PINCONNECTEMPTY: rtl/hdc/ot_qwen_me_array_w12.sv:163:22: Cell pin connected by name with empty reference: 'wrom_addr'
+  163 |         .wrom_re(), .wrom_addr(), .kv_re(),
+      |                      ^~~~~~~~~
+%Warning-PINCONNECTEMPTY: rtl/hdc/ot_qwen_me_array_w12.sv:163:36: Cell pin connected by name with empty reference: 'kv_re'
+  163 |         .wrom_re(), .wrom_addr(), .kv_re(),
+      |                                    ^~~~~
+%Warning-PINCONNECTEMPTY: rtl/hdc/ot_qwen_me_array_w12.sv:231:18: Cell pin connected by name with empty reference: 'kvs_r_ce'
+  231 |                 .kvs_r_ce(), .kvs_r_addr(), .kvs_rd({TG*W*8{1'b0}}),
+      |                  ^~~~~~~~
+%Warning-PINCONNECTEMPTY: rtl/hdc/ot_qwen_me_array_w12.sv:231:31: Cell pin connected by name with empty reference: 'kvs_r_addr'
+  231 |                 .kvs_r_ce(), .kvs_r_addr(), .kvs_rd({TG*W*8{1'b0}}),
+      |                               ^~~~~~~~~~
+%Warning-PINMISSING: rtl/hdc/ot_qwen_me_array_w12.sv:224:120: Cell has missing pin: 'ck_rpair'
+  224 |                 .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT)) u_t (
+      |                                                                                                                        ^~~
+                     rtl/hdc/ot_qwen_rom_tile_w12.sv:143:33: ... Location of port declaration
+  143 |     input wire [CODE_BANKS-1:0] ck_rpair,
+      |                                 ^~~~~~~~
+%Warning-PINMISSING: rtl/hdc/ot_qwen_me_array_w12.sv:224:120: Cell has missing pin: 'ck_pair1'
+  224 |                 .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT)) u_t (
+      |                                                                                                                        ^~~
+                     rtl/hdc/ot_qwen_rom_tile_w12.sv:144:33: ... Location of port declaration
+  144 |     input wire [CODE_BANKS-1:0] ck_pair1,
+      |                                 ^~~~~~~~
+%Warning-PINMISSING: rtl/hdc/ot_qwen_me_array_w12.sv:224:120: Cell has missing pin: 'ck_rqr'
+  224 |                 .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT)) u_t (
+      |                                                                                                                        ^~~
+                     rtl/hdc/ot_qwen_rom_tile_w12.sv:145:22: ... Location of port declaration
+  145 |     input wire [1:0] ck_rqr,
+      |                      ^~~~~~
+%Warning-PINMISSING: rtl/hdc/ot_qwen_me_array_w12.sv:224:120: Cell has missing pin: 'ck_tx'
+  224 |                 .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT)) u_t (
+      |                                                                                                                        ^~~
+                     rtl/hdc/ot_qwen_rom_tile_w12.sv:146:22: ... Location of port declaration
+  146 |     input wire [7:0] ck_tx,
+      |                      ^~~~~
+%Warning-PINMISSING: rtl/hdc/ot_qwen_me_array_w12.sv:224:120: Cell has missing pin: 'ck_lsl'
+  224 |                 .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT)) u_t (
+      |                                                                                                                        ^~~
+                     rtl/hdc/ot_qwen_rom_tile_w12.sv:148:22: ... Location of port declaration
+  148 |     input wire [7:0] ck_lsl,
+      |                      ^~~~~~
+%Warning-PINMISSING: rtl/hdc/ot_qwen_me_array_w12.sv:224:120: Cell has missing pin: 'ck_node'
+  224 |                 .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT)) u_t (
+      |                                                                                                                        ^~~
+                     rtl/hdc/ot_qwen_rom_tile_w12.sv:149:16: ... Location of port declaration
+  149 |     input wire ck_node,
+      |                ^~~~~~~
+%Warning-PINMISSING: rtl/hdc/ot_qwen_me_array_w12.sv:224:120: Cell has missing pin: 'rom_addr_n'
+  224 |                 .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT)) u_t (
+      |                                                                                                                        ^~~
+                     rtl/hdc/ot_qwen_rom_tile_w12.sv:170:30: ... Location of port declaration
+  170 |     output wire [11:0]       rom_addr_n,           
+      |                              ^~~~~~~~~~
+%Warning-PINMISSING: rtl/hdc/ot_qwen_me_array_w12.sv:224:120: Cell has missing pin: 'rom_addr_b'
+  224 |                 .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT)) u_t (
+      |                                                                                                                        ^~~
+                     rtl/hdc/ot_qwen_rom_tile_w12.sv:171:37: ... Location of port declaration
+  171 |     output wire [CODE_BANKS*12-1:0] rom_addr_b,    
+      |                                     ^~~~~~~~~~
+%Warning-PINMISSING: rtl/hdc/ot_qwen_me_array_w12.sv:224:120: Cell has missing pin: 'rom_req_m'
+  224 |                 .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT)) u_t (
+      |                                                                                                                        ^~~
+                     rtl/hdc/ot_qwen_rom_tile_w12.sv:172:39: ... Location of port declaration
+  172 |     output wire [2*CODE_BANKS*13-1:0] rom_req_m,   
+      |                                       ^~~~~~~~~
+%Warning-PINCONNECTEMPTY: rtl/hdc/ot_qwen_me_array_w12.sv:347:25: Cell pin connected by name with empty reference: 'kv_addr'
+  347 |         .kv_re(kv_re), .kv_addr(), .kv_q({GT*W*32{1'b0}}),
+      |                         ^~~~~~~
+%Warning-PINCONNECTEMPTY: rtl/hdc/ot_qwen_me_array_w12.sv:354:10: Cell pin connected by name with empty reference: 't_out'
+  354 |         .t_out(), .t_vout(), .t_fault(), .active_o());
+      |          ^~~~~
+%Warning-PINCONNECTEMPTY: rtl/hdc/ot_qwen_me_array_w12.sv:354:20: Cell pin connected by name with empty reference: 't_vout'
+  354 |         .t_out(), .t_vout(), .t_fault(), .active_o());
+      |                    ^~~~~~
+%Warning-PINCONNECTEMPTY: rtl/hdc/ot_qwen_me_array_w12.sv:354:31: Cell pin connected by name with empty reference: 't_fault'
+  354 |         .t_out(), .t_vout(), .t_fault(), .active_o());
+      |                               ^~~~~~~
+%Warning-PINCONNECTEMPTY: rtl/hdc/ot_qwen_me_array_w12.sv:354:43: Cell pin connected by name with empty reference: 'active_o'
+  354 |         .t_out(), .t_vout(), .t_fault(), .active_o());
+      |                                           ^~~~~~~~
+%Warning-PINMISSING: rtl/hdc/ot_qwen_me_array_w12.sv:337:188: Cell has missing pin: 'ck_lsl'
+  337 |         .XD(XD), .NX(NXC), .ORD(ORD), .SCALE_LOCAL(SCALE_LOCAL), .GOUT(GT >> SMIN), .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT)) u_top (
+      |                                                                                                                                                                                            ^~~~~
+                     rtl/hdc/ot_qwen_w12_matvec.sv:241:22: ... Location of port declaration
+  241 |     input wire [7:0] ck_lsl,
+      |                      ^~~~~~
+%Warning-PINMISSING: rtl/hdc/ot_qwen_me_array_w12.sv:337:188: Cell has missing pin: 'ck_tx'
+  337 |         .XD(XD), .NX(NXC), .ORD(ORD), .SCALE_LOCAL(SCALE_LOCAL), .GOUT(GT >> SMIN), .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT)) u_top (
+      |                                                                                                                                                                                            ^~~~~
+                     rtl/hdc/ot_qwen_w12_matvec.sv:242:22: ... Location of port declaration
+  242 |     input wire [7:0] ck_tx,
+      |                      ^~~~~
+%Warning-PINCONNECTEMPTY: rtl/hdc/ot_qwen_rom_tile_w12.sv:255:47: Cell pin connected by name with empty reference: 'ready'
+  255 |         .clk(clk), .rst_n(rst_n), .go(go_i), .ready(), .idle(),
+      |                                               ^~~~~
+%Warning-PINCONNECTEMPTY: rtl/hdc/ot_qwen_rom_tile_w12.sv:255:57: Cell pin connected by name with empty reference: 'idle'
+  255 |         .clk(clk), .rst_n(rst_n), .go(go_i), .ready(), .idle(),
+      |                                                         ^~~~
+%Warning-PINCONNECTEMPTY: rtl/hdc/ot_qwen_rom_tile_w12.sv:263:10: Cell pin connected by name with empty reference: 'scale_re'
+  263 |         .scale_re(), .scale_gre(), .scale_addr(), .scale_q({TG*W*16{1'b0}}),
+      |          ^~~~~~~~
+%Warning-PINCONNECTEMPTY: rtl/hdc/ot_qwen_rom_tile_w12.sv:263:23: Cell pin connected by name with empty reference: 'scale_gre'
+  263 |         .scale_re(), .scale_gre(), .scale_addr(), .scale_q({TG*W*16{1'b0}}),
+      |                       ^~~~~~~~~
+%Warning-PINCONNECTEMPTY: rtl/hdc/ot_qwen_rom_tile_w12.sv:263:37: Cell pin connected by name with empty reference: 'scale_addr'
+  263 |         .scale_re(), .scale_gre(), .scale_addr(), .scale_q({TG*W*16{1'b0}}),
+      |                                     ^~~~~~~~~~
+%Warning-PINCONNECTEMPTY: rtl/hdc/ot_qwen_rom_tile_w12.sv:265:10: Cell pin connected by name with empty reference: 'x_re'
+  265 |         .x_re(), .x_addr(), .x_q(xl_i),
+      |          ^~~~
+%Warning-PINCONNECTEMPTY: rtl/hdc/ot_qwen_rom_tile_w12.sv:265:19: Cell pin connected by name with empty reference: 'x_addr'
+  265 |         .x_re(), .x_addr(), .x_q(xl_i),
+      |                   ^~~~~~
+%Warning-PINCONNECTEMPTY: rtl/hdc/ot_qwen_rom_tile_w12.sv:266:10: Cell pin connected by name with empty reference: 'ov'
+  266 |         .ov(), .o_we(), .o_addr(), .o_mask(), .o_data(),
+      |          ^~
+%Warning-PINCONNECTEMPTY: rtl/hdc/ot_qwen_rom_tile_w12.sv:266:17: Cell pin connected by name with empty reference: 'o_we'
+  266 |         .ov(), .o_we(), .o_addr(), .o_mask(), .o_data(),
+      |                 ^~~~
+%Warning-PINCONNECTEMPTY: rtl/hdc/ot_qwen_rom_tile_w12.sv:266:26: Cell pin connected by name with empty reference: 'o_addr'
+  266 |         .ov(), .o_we(), .o_addr(), .o_mask(), .o_data(),
+      |                          ^~~~~~
+%Warning-PINCONNECTEMPTY: rtl/hdc/ot_qwen_rom_tile_w12.sv:266:37: Cell pin connected by name with empty reference: 'o_mask'
+  266 |         .ov(), .o_we(), .o_addr(), .o_mask(), .o_data(),
+      |                                     ^~~~~~
+%Warning-PINCONNECTEMPTY: rtl/hdc/ot_qwen_rom_tile_w12.sv:266:48: Cell pin connected by name with empty reference: 'o_data'
+  266 |         .ov(), .o_we(), .o_addr(), .o_mask(), .o_data(),
+      |                                                ^~~~~~
+%Warning-PINCONNECTEMPTY: rtl/hdc/ot_qwen_rom_tile_w12.sv:267:10: Cell pin connected by name with empty reference: 'am_idx'
+  267 |         .am_idx(), .am_val(), .am_any(), .mx_we(), .mx_addr(), .mx_mask(), .mx_data(),
+      |          ^~~~~~
+%Warning-PINCONNECTEMPTY: rtl/hdc/ot_qwen_rom_tile_w12.sv:267:21: Cell pin connected by name with empty reference: 'am_val'
+  267 |         .am_idx(), .am_val(), .am_any(), .mx_we(), .mx_addr(), .mx_mask(), .mx_data(),
+      |                     ^~~~~~
+%Warning-PINCONNECTEMPTY: rtl/hdc/ot_qwen_rom_tile_w12.sv:267:32: Cell pin connected by name with empty reference: 'am_any'
+  267 |         .am_idx(), .am_val(), .am_any(), .mx_we(), .mx_addr(), .mx_mask(), .mx_data(),
+      |                                ^~~~~~
+%Warning-PINCONNECTEMPTY: rtl/hdc/ot_qwen_rom_tile_w12.sv:267:43: Cell pin connected by name with empty reference: 'mx_we'
+  267 |         .am_idx(), .am_val(), .am_any(), .mx_we(), .mx_addr(), .mx_mask(), .mx_data(),
+      |                                           ^~~~~
+%Warning-PINCONNECTEMPTY: rtl/hdc/ot_qwen_rom_tile_w12.sv:267:53: Cell pin connected by name with empty reference: 'mx_addr'
+  267 |         .am_idx(), .am_val(), .am_any(), .mx_we(), .mx_addr(), .mx_mask(), .mx_data(),
+      |                                                     ^~~~~~~
+%Warning-PINCONNECTEMPTY: rtl/hdc/ot_qwen_rom_tile_w12.sv:267:65: Cell pin connected by name with empty reference: 'mx_mask'
+  267 |         .am_idx(), .am_val(), .am_any(), .mx_we(), .mx_addr(), .mx_mask(), .mx_data(),
+      |                                                                 ^~~~~~~
+%Warning-PINCONNECTEMPTY: rtl/hdc/ot_qwen_rom_tile_w12.sv:267:77: Cell pin connected by name with empty reference: 'mx_data'
+  267 |         .am_idx(), .am_val(), .am_any(), .mx_we(), .mx_addr(), .mx_mask(), .mx_data(),
+      |                                                                             ^~~~~~~
+%Warning-PINCONNECTEMPTY: rtl/hdc/ot_qwen_rom_tile_w12.sv:268:10: Cell pin connected by name with empty reference: 'progress'
+  268 |         .progress(), .fault(me_fault),
+      |          ^~~~~~~~
+%Warning-PINCONNECTEMPTY: rtl/hdc/ot_qwen_rom_tile_w12.sv:270:46: Cell pin connected by name with empty reference: 't_fault'
+  270 |         .t_out(t_out_i), .t_vout(t_vout_i), .t_fault(), .active_o());
+      |                                              ^~~~~~~
+%Warning-PINCONNECTEMPTY: rtl/hdc/ot_qwen_rom_tile_w12.sv:270:58: Cell pin connected by name with empty reference: 'active_o'
+  270 |         .t_out(t_out_i), .t_vout(t_vout_i), .t_fault(), .active_o());
+      |                                                          ^~~~~~~~
+%Warning-PINCONNECTEMPTY: rtl/hdc/ot_qwen_rom_tile_w12.sv:822:10: Cell pin connected by name with empty reference: 'kv_re'
+  822 |         .kv_re(), .kv_addr(), .kv_q({4*16*32{1'b0}}));
+      |          ^~~~~
+%Warning-PINCONNECTEMPTY: rtl/hdc/ot_qwen_rom_tile_w12.sv:822:20: Cell pin connected by name with empty reference: 'kv_addr'
+  822 |         .kv_re(), .kv_addr(), .kv_q({4*16*32{1'b0}}));
+      |                    ^~~~~~~
+%Warning-PINCONNECTEMPTY: rtl/hdc/ot_qwen_w12_matvec.sv:169:10: Cell pin connected by name with empty reference: 't_out'
+  169 |         .t_out(), .t_vout(), .t_fault(), .active_o(active));
+      |          ^~~~~
+%Warning-PINCONNECTEMPTY: rtl/hdc/ot_qwen_w12_matvec.sv:169:20: Cell pin connected by name with empty reference: 't_vout'
+  169 |         .t_out(), .t_vout(), .t_fault(), .active_o(active));
+      |                    ^~~~~~
+%Warning-PINCONNECTEMPTY: rtl/hdc/ot_qwen_w12_matvec.sv:169:31: Cell pin connected by name with empty reference: 't_fault'
+  169 |         .t_out(), .t_vout(), .t_fault(), .active_o(active));
+      |                               ^~~~~~~
+%Warning-PINMISSING: rtl/hdc/ot_qwen_w12_matvec.sv:152:129: Cell has missing pin: 'ck_lsl'
+  152 |                          .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT)) u_p (
+      |                                                                                                                                 ^~~
+                     rtl/hdc/ot_qwen_w12_matvec.sv:241:22: ... Location of port declaration
+  241 |     input wire [7:0] ck_lsl,
+      |                      ^~~~~~
+%Warning-PINMISSING: rtl/hdc/ot_qwen_w12_matvec.sv:152:129: Cell has missing pin: 'ck_tx'
+  152 |                          .ACC_LAT(ACC_LAT), .TREE_LAT(TREE_LAT), .FAST_ISSUE(FAST_ISSUE), .KV_PREP(KV_PREP), .MUL_LAT(MUL_LAT)) u_p (
+      |                                                                                                                                 ^~~
+                     rtl/hdc/ot_qwen_w12_matvec.sv:242:22: ... Location of port declaration
+  242 |     input wire [7:0] ck_tx,
+      |                      ^~~~~
+%Warning-PINCONNECTEMPTY: rtl/hdc/ot_qwen_w12_arith.sv:118:68: Cell pin connected by name with empty reference: 'p'
+  118 |         ot_qwen_w12_mul8x8_cs #(.CUT(1)) u_m (.a(s1_a), .b(s1_b), .p(), .rs(ps), .rc(pc));
+      |                                                                    ^
+%Warning-PINCONNECTEMPTY: rtl/hdc/ot_qwen_w12_arith.sv:129:67: Cell pin connected by name with empty reference: 'rs'
+  129 |         ot_qwen_w12_mul8x8_cs u_m (.a(s1_a), .b(s1_b), .p(p8x8), .rs(), .rc());
+      |                                                                   ^~
+%Warning-PINCONNECTEMPTY: rtl/hdc/ot_qwen_w12_arith.sv:129:74: Cell pin connected by name with empty reference: 'rc'
+  129 |         ot_qwen_w12_mul8x8_cs u_m (.a(s1_a), .b(s1_b), .p(p8x8), .rs(), .rc());
+      |                                                                          ^~
+%Warning-PINCONNECTEMPTY: rtl/physical/qfd_tile_nl_rp2_45.sv:103:51: Cell pin connected by name with empty reference: 'n_y'
+  103 |         .n_a(512'd0), .n_b(512'd0), .n_va(1'b0), .n_y(), .n_vy(), .fault(tf));    
+      |                                                   ^~~
+%Warning-PINCONNECTEMPTY: rtl/physical/qfd_tile_nl_rp2_45.sv:103:59: Cell pin connected by name with empty reference: 'n_vy'
+  103 |         .n_a(512'd0), .n_b(512'd0), .n_va(1'b0), .n_y(), .n_vy(), .fault(tf));    
+      |                                                           ^~~~
+%Warning-PINCONNECTEMPTY: rtl/qwen_sys/dvm_20261014/ot_qfd_xslice_slots.sv:45:105: Cell pin connected by name with empty reference: 'a_r'
+   45 |     ot_qfd_xcst #(.AW(AW), .NW(NW), .XOFF(XOFF)) u_st (.ck(ck), .rst_n(rst_n), .sidx(sidx), .a_d(a_d), .a_r(),
+      |                                                                                                         ^~~
+%Warning-PINCONNECTEMPTY: rtl/qwen_sys/dvm_20261014/ot_qfd_xslice_slots.sv:64:105: Cell pin connected by name with empty reference: 'a_r'
+   64 |     ot_qfd_xcst #(.AW(AW), .NW(NW), .XOFF(XOFF)) u_st (.ck(ck), .rst_n(rst_n), .sidx(sidx), .a_d(b_d), .a_r(),
+      |                                                                                                         ^~~
+%Warning-PINCONNECTEMPTY: rtl/qwen_sys/dvm_20261014/ot_qfd_xslice_slots.sv:138:22: Cell pin connected by name with empty reference: 'a_r'
+  138 |         .a_d(h_in), .a_r(), .b_d(h_out), .b_r(1'b1), .n_d(n_d), .n_r(1'b1), .s_d(s_d), .s_r(1'b1),
+      |                      ^~~
+%Warning-PINCONNECTEMPTY: rtl/physical/q3h/qfd_c_b16_fabric.sv:199:127: Cell pin connected by name with empty reference: 'tie_hi'
+  199 |     qfd_xcst_n u_x_0_0 (.ck(ck), .rst_n(rstl_L_0), .sidx({far, far, far}), .b_d(dn0_rly0), .a_d(dn0_xcst0), .tap_d(tap_0_0), .tie_hi(), .tie_lo());    
+      |                                                                                                                               ^~~~~~
+%Warning-PINCONNECTEMPTY: rtl/physical/q3h/qfd_c_b16_fabric.sv:199:138: Cell pin connected by name with empty reference: 'tie_lo'
+  199 |     qfd_xcst_n u_x_0_0 (.ck(ck), .rst_n(rstl_L_0), .sidx({far, far, far}), .b_d(dn0_rly0), .a_d(dn0_xcst0), .tap_d(tap_0_0), .tie_hi(), .tie_lo());    
+      |                                                                                                                                          ^~~~~~
+%Warning-PINCONNECTEMPTY: rtl/physical/q3h/qfd_c_b16_fabric.sv:204:129: Cell pin connected by name with empty reference: 'tie_hi'
+  204 |     qfd_xcst_n u_x_0_1 (.ck(ck), .rst_n(rstl_L_1), .sidx({far, far, far_n}), .b_d(dn0_rly3), .a_d(dn0_xcst1), .tap_d(tap_0_1), .tie_hi(), .tie_lo());    
+      |                                                                                                                                 ^~~~~~
+%Warning-PINCONNECTEMPTY: rtl/physical/q3h/qfd_c_b16_fabric.sv:204:140: Cell pin connected by name with empty reference: 'tie_lo'
+  204 |     qfd_xcst_n u_x_0_1 (.ck(ck), .rst_n(rstl_L_1), .sidx({far, far, far_n}), .b_d(dn0_rly3), .a_d(dn0_xcst1), .tap_d(tap_0_1), .tie_hi(), .tie_lo());    
+      |                                                                                                                                            ^~~~~~
+%Warning-PINCONNECTEMPTY: rtl/physical/q3h/qfd_c_b16_fabric.sv:209:129: Cell pin connected by name with empty reference: 'tie_hi'
+  209 |     qfd_xcst_n u_x_0_2 (.ck(ck), .rst_n(rstl_L_2), .sidx({far, far_n, far}), .b_d(dn0_rly6), .a_d(dn0_xcst2), .tap_d(tap_0_2), .tie_hi(), .tie_lo());    
+      |                                                                                                                                 ^~~~~~
+%Warning-PINCONNECTEMPTY: rtl/physical/q3h/qfd_c_b16_fabric.sv:209:140: Cell pin connected by name with empty reference: 'tie_lo'
+  209 |     qfd_xcst_n u_x_0_2 (.ck(ck), .rst_n(rstl_L_2), .sidx({far, far_n, far}), .b_d(dn0_rly6), .a_d(dn0_xcst2), .tap_d(tap_0_2), .tie_hi(), .tie_lo());    
+      |                                                                                                                                            ^~~~~~
+%Warning-PINCONNECTEMPTY: rtl/physical/q3h/qfd_c_b16_fabric.sv:214:131: Cell pin connected by name with empty reference: 'tie_hi'
+  214 |     qfd_xcst_n u_x_0_3 (.ck(ck), .rst_n(rstl_L_3), .sidx({far, far_n, far_n}), .b_d(dn0_rly9), .a_d(dn0_xcst3), .tap_d(tap_0_3), .tie_hi(), .tie_lo());    
+      |                                                                                                                                   ^~~~~~
+%Warning-PINCONNECTEMPTY: rtl/physical/q3h/qfd_c_b16_fabric.sv:214:142: Cell pin connected by name with empty reference: 'tie_lo'
+  214 |     qfd_xcst_n u_x_0_3 (.ck(ck), .rst_n(rstl_L_3), .sidx({far, far_n, far_n}), .b_d(dn0_rly9), .a_d(dn0_xcst3), .tap_d(tap_0_3), .tie_hi(), .tie_lo());    
+      |                                                                                                                                              ^~~~~~
+%Warning-PINCONNECTEMPTY: rtl/physical/q3h/qfd_c_b16_fabric.sv:222:127: Cell pin connected by name with empty reference: 'tie_hi'
+  222 |     qfd_xcst_n u_x_1_0 (.ck(ck), .rst_n(rstl_T_0), .sidx({far, far, far}), .b_d(dn1_rly0), .a_d(dn1_xcst0), .tap_d(tap_1_0), .tie_hi(), .tie_lo());    
+      |                                                                                                                               ^~~~~~
+%Warning-PINCONNECTEMPTY: rtl/physical/q3h/qfd_c_b16_fabric.sv:222:138: Cell pin connected by name with empty reference: 'tie_lo'
+  222 |     qfd_xcst_n u_x_1_0 (.ck(ck), .rst_n(rstl_T_0), .sidx({far, far, far}), .b_d(dn1_rly0), .a_d(dn1_xcst0), .tap_d(tap_1_0), .tie_hi(), .tie_lo());    
+      |                                                                                                                                          ^~~~~~
+%Warning-PINCONNECTEMPTY: rtl/physical/q3h/qfd_c_b16_fabric.sv:227:129: Cell pin connected by name with empty reference: 'tie_hi'
+  227 |     qfd_xcst_n u_x_1_1 (.ck(ck), .rst_n(rstl_T_1), .sidx({far, far, far_n}), .b_d(dn1_rly3), .a_d(dn1_xcst1), .tap_d(tap_1_1), .tie_hi(), .tie_lo());    
+      |                                                                                                                                 ^~~~~~
+%Warning-PINCONNECTEMPTY: rtl/physical/q3h/qfd_c_b16_fabric.sv:227:140: Cell pin connected by name with empty reference: 'tie_lo'
+  227 |     qfd_xcst_n u_x_1_1 (.ck(ck), .rst_n(rstl_T_1), .sidx({far, far, far_n}), .b_d(dn1_rly3), .a_d(dn1_xcst1), .tap_d(tap_1_1), .tie_hi(), .tie_lo());    
+      |                                                                                                                                            ^~~~~~
+%Warning-PINCONNECTEMPTY: rtl/physical/q3h/qfd_c_b16_fabric.sv:232:129: Cell pin connected by name with empty reference: 'tie_hi'
+  232 |     qfd_xcst_n u_x_1_2 (.ck(ck), .rst_n(rstl_T_2), .sidx({far, far_n, far}), .b_d(dn1_rly6), .a_d(dn1_xcst2), .tap_d(tap_1_2), .tie_hi(), .tie_lo());    
+      |                                                                                                                                 ^~~~~~
+%Warning-PINCONNECTEMPTY: rtl/physical/q3h/qfd_c_b16_fabric.sv:232:140: Cell pin connected by name with empty reference: 'tie_lo'
+  232 |     qfd_xcst_n u_x_1_2 (.ck(ck), .rst_n(rstl_T_2), .sidx({far, far_n, far}), .b_d(dn1_rly6), .a_d(dn1_xcst2), .tap_d(tap_1_2), .tie_hi(), .tie_lo());    
+      |                                                                                                                                            ^~~~~~
+%Warning-PINCONNECTEMPTY: rtl/physical/q3h/qfd_c_b16_fabric.sv:237:131: Cell pin connected by name with empty reference: 'tie_hi'
+  237 |     qfd_xcst_n u_x_1_3 (.ck(ck), .rst_n(rstl_T_3), .sidx({far, far_n, far_n}), .b_d(dn1_rly9), .a_d(dn1_xcst3), .tap_d(tap_1_3), .tie_hi(), .tie_lo());    
+      |                                                                                                                                   ^~~~~~
+%Warning-PINCONNECTEMPTY: rtl/physical/q3h/qfd_c_b16_fabric.sv:237:142: Cell pin connected by name with empty reference: 'tie_lo'
+  237 |     qfd_xcst_n u_x_1_3 (.ck(ck), .rst_n(rstl_T_3), .sidx({far, far_n, far_n}), .b_d(dn1_rly9), .a_d(dn1_xcst3), .tap_d(tap_1_3), .tie_hi(), .tie_lo());    
+      |                                                                                                                                              ^~~~~~
+%Warning-PINCONNECTEMPTY: rtl/physical/q3h/qfd_c_b16_fabric.sv:245:127: Cell pin connected by name with empty reference: 'tie_hi'
+  245 |     qfd_xcst_n u_x_2_0 (.ck(ck), .rst_n(rstl_T_0), .sidx({far, far, far}), .b_d(dn2_rly0), .a_d(dn2_xcst0), .tap_d(tap_2_0), .tie_hi(), .tie_lo());    
+      |                                                                                                                               ^~~~~~
+%Warning-PINCONNECTEMPTY: rtl/physical/q3h/qfd_c_b16_fabric.sv:245:138: Cell pin connected by name with empty reference: 'tie_lo'
+  245 |     qfd_xcst_n u_x_2_0 (.ck(ck), .rst_n(rstl_T_0), .sidx({far, far, far}), .b_d(dn2_rly0), .a_d(dn2_xcst0), .tap_d(tap_2_0), .tie_hi(), .tie_lo());    
+      |                                                                                                                                          ^~~~~~
+%Warning-PINCONNECTEMPTY: rtl/physical/q3h/qfd_c_b16_fabric.sv:251:126: Cell pin connected by name with empty reference: 'tie_hi'
+  251 |     qfd_xcst_n u_x_2_1 (.ck(ck), .rst_n(rstl_T_1), .sidx({far, far, far_n}), .b_d(dm3_2), .a_d(dn2_xcst1), .tap_d(tap_2_1), .tie_hi(), .tie_lo());    
+      |                                                                                                                              ^~~~~~
+%Warning-PINCONNECTEMPTY: rtl/physical/q3h/qfd_c_b16_fabric.sv:251:137: Cell pin connected by name with empty reference: 'tie_lo'
+  251 |     qfd_xcst_n u_x_2_1 (.ck(ck), .rst_n(rstl_T_1), .sidx({far, far, far_n}), .b_d(dm3_2), .a_d(dn2_xcst1), .tap_d(tap_2_1), .tie_hi(), .tie_lo());    
+      |                                                                                                                                         ^~~~~~
+%Warning-PINCONNECTEMPTY: rtl/physical/q3h/qfd_c_b16_fabric.sv:256:129: Cell pin connected by name with empty reference: 'tie_hi'
+  256 |     qfd_xcst_n u_x_2_2 (.ck(ck), .rst_n(rstl_T_2), .sidx({far, far_n, far}), .b_d(dn2_rly6), .a_d(dn2_xcst2), .tap_d(tap_2_2), .tie_hi(), .tie_lo());    
+      |                                                                                                                                 ^~~~~~
+%Warning-PINCONNECTEMPTY: rtl/physical/q3h/qfd_c_b16_fabric.sv:256:140: Cell pin connected by name with empty reference: 'tie_lo'
+  256 |     qfd_xcst_n u_x_2_2 (.ck(ck), .rst_n(rstl_T_2), .sidx({far, far_n, far}), .b_d(dn2_rly6), .a_d(dn2_xcst2), .tap_d(tap_2_2), .tie_hi(), .tie_lo());    
+      |                                                                                                                                            ^~~~~~
+%Warning-PINCONNECTEMPTY: rtl/physical/q3h/qfd_c_b16_fabric.sv:261:131: Cell pin connected by name with empty reference: 'tie_hi'
+  261 |     qfd_xcst_n u_x_2_3 (.ck(ck), .rst_n(rstl_T_3), .sidx({far, far_n, far_n}), .b_d(dn2_rly9), .a_d(dn2_xcst3), .tap_d(tap_2_3), .tie_hi(), .tie_lo());    
+      |                                                                                                                                   ^~~~~~
+%Warning-PINCONNECTEMPTY: rtl/physical/q3h/qfd_c_b16_fabric.sv:261:142: Cell pin connected by name with empty reference: 'tie_lo'
+  261 |     qfd_xcst_n u_x_2_3 (.ck(ck), .rst_n(rstl_T_3), .sidx({far, far_n, far_n}), .b_d(dn2_rly9), .a_d(dn2_xcst3), .tap_d(tap_2_3), .tie_hi(), .tie_lo());    
+      |                                                                                                                                              ^~~~~~
+%Warning-PINCONNECTEMPTY: rtl/physical/q3h/qfd_c_b16_fabric.sv:269:127: Cell pin connected by name with empty reference: 'tie_hi'
+  269 |     qfd_xcst_n u_x_3_0 (.ck(ck), .rst_n(rstl_R_0), .sidx({far, far, far}), .b_d(dn3_rly0), .a_d(dn3_xcst0), .tap_d(tap_3_0), .tie_hi(), .tie_lo());    
+      |                                                                                                                               ^~~~~~
+%Warning-PINCONNECTEMPTY: rtl/physical/q3h/qfd_c_b16_fabric.sv:269:138: Cell pin connected by name with empty reference: 'tie_lo'
+  269 |     qfd_xcst_n u_x_3_0 (.ck(ck), .rst_n(rstl_R_0), .sidx({far, far, far}), .b_d(dn3_rly0), .a_d(dn3_xcst0), .tap_d(tap_3_0), .tie_hi(), .tie_lo());    
+      |                                                                                                                                          ^~~~~~
+%Warning-PINCONNECTEMPTY: rtl/physical/q3h/qfd_c_b16_fabric.sv:274:129: Cell pin connected by name with empty reference: 'tie_hi'
+  274 |     qfd_xcst_n u_x_3_1 (.ck(ck), .rst_n(rstl_R_1), .sidx({far, far, far_n}), .b_d(dn3_rly3), .a_d(dn3_xcst1), .tap_d(tap_3_1), .tie_hi(), .tie_lo());    
+      |                                                                                                                                 ^~~~~~
+%Warning-PINCONNECTEMPTY: rtl/physical/q3h/qfd_c_b16_fabric.sv:274:140: Cell pin connected by name with empty reference: 'tie_lo'
+  274 |     qfd_xcst_n u_x_3_1 (.ck(ck), .rst_n(rstl_R_1), .sidx({far, far, far_n}), .b_d(dn3_rly3), .a_d(dn3_xcst1), .tap_d(tap_3_1), .tie_hi(), .tie_lo());    
+      |                                                                                                                                            ^~~~~~
+%Warning-PINCONNECTEMPTY: rtl/physical/q3h/qfd_c_b16_fabric.sv:279:129: Cell pin connected by name with empty reference: 'tie_hi'
+  279 |     qfd_xcst_n u_x_3_2 (.ck(ck), .rst_n(rstl_R_2), .sidx({far, far_n, far}), .b_d(dn3_rly6), .a_d(dn3_xcst2), .tap_d(tap_3_2), .tie_hi(), .tie_lo());    
+      |                                                                                                                                 ^~~~~~
+%Warning-PINCONNECTEMPTY: rtl/physical/q3h/qfd_c_b16_fabric.sv:279:140: Cell pin connected by name with empty reference: 'tie_lo'
+  279 |     qfd_xcst_n u_x_3_2 (.ck(ck), .rst_n(rstl_R_2), .sidx({far, far_n, far}), .b_d(dn3_rly6), .a_d(dn3_xcst2), .tap_d(tap_3_2), .tie_hi(), .tie_lo());    
+      |                                                                                                                                            ^~~~~~
+%Warning-PINCONNECTEMPTY: rtl/physical/q3h/qfd_c_b16_fabric.sv:284:131: Cell pin connected by name with empty reference: 'tie_hi'
+  284 |     qfd_xcst_n u_x_3_3 (.ck(ck), .rst_n(rstl_R_3), .sidx({far, far_n, far_n}), .b_d(dn3_rly9), .a_d(dn3_xcst3), .tap_d(tap_3_3), .tie_hi(), .tie_lo());    
+      |                                                                                                                                   ^~~~~~
+%Warning-PINCONNECTEMPTY: rtl/physical/q3h/qfd_c_b16_fabric.sv:284:142: Cell pin connected by name with empty reference: 'tie_lo'
+  284 |     qfd_xcst_n u_x_3_3 (.ck(ck), .rst_n(rstl_R_3), .sidx({far, far_n, far_n}), .b_d(dn3_rly9), .a_d(dn3_xcst3), .tap_d(tap_3_3), .tie_hi(), .tie_lo());    
+      |                                                                                                                                              ^~~~~~
+%Warning-WIDTHEXPAND: rtl/hdc/ot_qwen_w12_matvec.sv:329:24: Operator VAR 'PRUNE' expects 32 bits on the Initial value, but Initial value's GTS generates 1 bits.
+                                                          : ... note: In instance 'qfd_c_b16.u_t_3_0.u_g.u_tile.u_tile.u_logic.u_me'
+  329 |     localparam integer PRUNE = (SMIN > 0);
+      |                        ^~~~~
+%Warning-WIDTHTRUNC: rtl/hdc/ot_qwen_w12_matvec.sv:331:36: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'PRUNE' generates 32 bits.
+                                                         : ... note: In instance 'qfd_c_b16.u_t_3_0.u_g.u_tile.u_tile.u_logic.u_me'
+  331 |     localparam integer NPG = PRUNE ? (((GT >> SMIN) < G) ? (GT >> SMIN) : G) : G;
+      |                                    ^
+%Warning-WIDTHEXPAND: rtl/hdc/ot_qwen_w12_matvec.sv:333:24: Operator VAR 'LANES' expects 32 bits on the Initial value, but Initial value's NEQ generates 1 bits.
+                                                          : ... note: In instance 'qfd_c_b16.u_t_3_0.u_g.u_tile.u_tile.u_logic.u_me'
+  333 |     localparam integer LANES = (PART != 2);
+      |                        ^~~~~
+%Warning-WIDTHEXPAND: rtl/hdc/ot_qwen_w12_matvec.sv:334:24: Operator VAR 'PORTS' expects 32 bits on the Initial value, but Initial value's NEQ generates 1 bits.
+                                                          : ... note: In instance 'qfd_c_b16.u_t_3_0.u_g.u_tile.u_tile.u_logic.u_me'
+  334 |     localparam integer PORTS = (PART != 1);
+      |                        ^~~~~
+%Warning-WIDTHTRUNC: rtl/hdc/ot_qwen_w12_matvec.sv:337:35: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'LANES' generates 32 bits.
+                                                         : ... note: In instance 'qfd_c_b16.u_t_3_0.u_g.u_tile.u_tile.u_logic.u_me'
+  337 |     localparam integer GL = LANES ? G : 1;
+      |                                   ^
+%Warning-WIDTHTRUNC: rtl/hdc/ot_qwen_w12_matvec.sv:339:35: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'PRUNE' generates 32 bits.
+                                                         : ... note: In instance 'qfd_c_b16.u_t_3_0.u_g.u_tile.u_tile.u_logic.u_me'
+  339 |     localparam integer GR = PRUNE ? NPG : G;
+      |                                   ^
+%Warning-WIDTHTRUNC: rtl/hdc/ot_qwen_w12_matvec.sv:470:25: Operator VAR 'WNB' expects 19 bits on the Initial value, but Initial value's VARREF 'W' generates 32 bits.
+                                                         : ... note: In instance 'qfd_c_b16.u_t_3_0.u_g.u_tile.u_tile.u_logic.u_me'
+  470 |     localparam [NW:0]   WNB = W;
+      |                         ^~~
+%Warning-WIDTHTRUNC: rtl/hdc/ot_qwen_w12_matvec.sv:602:24: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'LANES' generates 32 bits.
+                                                         : ... note: In instance 'qfd_c_b16.u_t_3_0.u_g.u_tile.u_tile.u_logic.u_me'
+  602 |     generate if (LANES && KV_PREP == 0) begin : g_kv_addr
+      |                        ^~
+%Warning-WIDTHTRUNC: rtl/hdc/ot_qwen_w12_matvec.sv:608:14: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'LANES' generates 32 bits.
+                                                         : ... note: In instance 'qfd_c_b16.u_t_3_0.u_g.u_tile.u_tile.u_logic.u_me'
+  608 |     end else if (LANES) begin : g_kv_addr_prep
+      |              ^~
+%Warning-WIDTHTRUNC: rtl/hdc/ot_qwen_w12_matvec.sv:691:24: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'LANES' generates 32 bits.
+                                                         : ... note: In instance 'qfd_c_b16.u_t_3_0.u_g.u_tile.u_tile.u_logic.u_me'
+  691 |     generate if (LANES && FAST_ISSUE != 0 && KV_PREP >= 2) begin : g_gm_fast
+      |                        ^~
+%Warning-WIDTHTRUNC: rtl/hdc/ot_qwen_w12_matvec.sv:763:14: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'LANES' generates 32 bits.
+                                                         : ... note: In instance 'qfd_c_b16.u_t_3_0.u_g.u_tile.u_tile.u_logic.u_me'
+  763 |     generate if (LANES) begin : g_operand
+      |              ^~
+%Warning-WIDTHTRUNC: rtl/hdc/ot_qwen_w12_matvec.sv:785:14: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'PORTS' generates 32 bits.
+                                                         : ... note: In instance 'qfd_c_b16.u_t_3_0.u_g.u_tile.u_tile.u_logic.u_me'
+  785 |     generate if (PORTS) begin : g_atag
+      |              ^~
+%Warning-WIDTHTRUNC: rtl/hdc/ot_qwen_w12_matvec.sv:907:24: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'LANES' generates 32 bits.
+                                                         : ... note: In instance 'qfd_c_b16.u_t_3_0.u_g.u_tile.u_tile.u_logic.u_me'
+  907 |     generate if (LANES && HIER == 0) begin : g_lanes
+      |                        ^~
+%Warning-WIDTHTRUNC: rtl/hdc/ot_qwen_w12_matvec.sv:1054:35: Logical operator LOGAND expects 1 bit on the RHS, but RHS's VARREF 'PORTS' generates 32 bits.
+                                                          : ... note: In instance 'qfd_c_b16.u_t_3_0.u_g.u_tile.u_tile.u_logic.u_me'
+ 1054 |     generate if (INT8_WEIGHT != 0 && PORTS) begin : g_post_scale
+      |                                   ^~
+%Warning-WIDTHTRUNC: rtl/hdc/ot_hdc_fp32_add_lat_nr.sv:225:14: Logical operator GENIF expects 1 bit on the If, but If's VARREF 'CUT' generates 32 bits.
+                                                             : ... note: In instance 'qfd_c_b16.u_t_3_0.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[7].g_hd.u_lh.u_ls.g_lvl[2].g_add[1].u_add.g_l.u.g_nr.u.u_ca'
+  225 |     generate if (CUT) begin : g_r
+      |              ^~
+%Warning-WIDTHEXPAND: rtl/hdc/ot_qwen_w12_arith.sv:57:43: Operator SUB expects 10 bits on the LHS, but LHS's VARREF 'e' generates 8 bits.
+                                                        : ... note: In instance 'qfd_c_b16.u_t_3_0.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[7].g_hd.u_lh.u_ls.g_grp[3].g_lane[1].g_candidate_mul.u_mul'
+   57 |             if (e != 0) dec = {1'b1, m, e - 10'sd127};
+      |                                           ^
+%Warning-WIDTHEXPAND: rtl/hdc/ot_qwen_w12_matvec.sv:377:34: Operator EQ expects 32 bits on the LHS, but LHS's VARREF 'j' generates 3 bits.
+                                                          : ... note: In instance 'qfd_c_b16.u_t_3_0.u_g.u_tile.u_tile.u_logic.u_me'
+  377 |     wire             j_last = (j == IL - 1);
+      |                                  ^~
+%Warning-WIDTHEXPAND: rtl/hdc/ot_qwen_w12_matvec.sv:463:90: Operator SUB expects 32 bits on the RHS, but RHS's VARREF 'sh' generates 4 bits.
+                                                          : ... note: In instance 'qfd_c_b16.u_t_3_0.u_g.u_tile.u_tile.u_logic.u_me'
+  463 |                 if (((GT >> b) & 1) != 0 && b >= sh) acc = acc + ({{PRW{1'b0}}, x} << (b - sh));
+      |                                                                                          ^
+%Warning-WIDTHEXPAND: rtl/hdc/ot_qwen_w12_matvec.sv:484:94: Operator SUB expects 32 bits on the RHS, but RHS's VARREF 'split_r' generates 4 bits.
+                                                          : ... note: In instance 'qfd_c_b16.u_t_3_0.u_g.u_tile.u_tile.u_logic.u_me'
+  484 |             tsh[b] <= (((GT_TS >> b) & 1) != 0 && b >= split_r) ? ({{PRW{1'b0}}, ts_r} << (b - split_r)) : {(AW+PRW){1'b0}};
+      |                                                                                              ^
+%Warning-WIDTHEXPAND: rtl/hdc/ot_qwen_w12_matvec.sv:485:95: Operator SUB expects 32 bits on the RHS, but RHS's VARREF 'split_r' generates 4 bits.
+                                                          : ... note: In instance 'qfd_c_b16.u_t_3_0.u_g.u_tile.u_tile.u_logic.u_me'
+  485 |             osh[b] <= (((GT_TS >> b) & 1) != 0 && b >= split_r) ? ({{PRW{1'b0}}, ots_r} << (b - split_r)) : {(AW+PRW){1'b0}};
+      |                                                                                               ^
+%Warning-WIDTHTRUNC: rtl/hdc/ot_qwen_w12_matvec.sv:487:14: Operator ASSIGNDLY expects 13 bits on the Assign RHS, but Assign RHS's SHIFTR generates 32 bits.
+                                                         : ... note: In instance 'qfd_c_b16.u_t_3_0.u_g.u_tile.u_tile.u_logic.u_me'
+  487 |         pr_a <= GT >> split_r;
+      |              ^~
+%Warning-WIDTHTRUNC: rtl/hdc/ot_qwen_w12_matvec.sv:504:17: Operator ASSIGNDLY expects 19 bits on the Assign RHS, but Assign RHS's MUL generates 32 bits.
+                                                         : ... note: In instance 'qfd_c_b16.u_t_3_0.u_g.u_tile.u_tile.u_logic.u_me'
+  504 |         nb_step <= pr_a * (W * IL);
+      |                 ^~
+%Warning-WIDTHTRUNC: rtl/hdc/ot_qwen_w12_matvec.sv:505:17: Operator ASSIGNDLY expects 19 bits on the Assign RHS, but Assign RHS's MUL generates 32 bits.
+                                                         : ... note: In instance 'qfd_c_b16.u_t_3_0.u_g.u_tile.u_tile.u_logic.u_me'
+  505 |         lb_step <= pr_a * W;
+      |                 ^~
+%Warning-WIDTHTRUNC: rtl/hdc/ot_qwen_w12_matvec.sv:540:69: Operator ASSIGNDLY expects 4 bits on the Assign RHS, but Assign RHS's SUB generates 32 bits.
+                                                         : ... note: In instance 'qfd_c_b16.u_t_3_0.u_g.u_tile.u_tile.u_logic.u_me'
+  540 |                 if (KV_PREP > 0 && i_wsrc) begin pend <= 1'b1; pcnt <= KV_PREP - 1; end
+      |                                                                     ^~
+%Warning-WIDTHTRUNC: rtl/hdc/ot_qwen_w12_matvec.sv:542:27: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'PRUNE' generates 32 bits.
+                                                         : ... note: In instance 'qfd_c_b16.u_t_3_0.u_g.u_tile.u_tile.u_logic.u_me'
+  542 |                 if (PRUNE && i_split < SMIN) split_fault <= 1'b1;
+      |                           ^~
+%Warning-WIDTHEXPAND: rtl/hdc/ot_qwen_w12_matvec.sv:542:38: Operator LT expects 32 bits on the LHS, but LHS's VARREF 'i_split' generates 4 bits.
+                                                          : ... note: In instance 'qfd_c_b16.u_t_3_0.u_g.u_tile.u_tile.u_logic.u_me'
+  542 |                 if (PRUNE && i_split < SMIN) split_fault <= 1'b1;
+      |                                      ^
+%Warning-WIDTHEXPAND: rtl/hdc/ot_qwen_w12_matvec.sv:599:39: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'xc' generates 24 bits.
+                                                          : ... note: In instance 'qfd_c_b16.u_t_3_0.u_g.u_tile.u_tile.u_logic.u_me'
+  599 |             x_addr[gi*AW +: AW] <= xc + ((gb + gi) & ((1 << split_r) - 1)) * xcs_r;
+      |                                       ^
+%Warning-WIDTHTRUNC: rtl/hdc/ot_qwen_w12_matvec.sv:599:33: Operator ASSIGNDLY expects 24 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                         : ... note: In instance 'qfd_c_b16.u_t_3_0.u_g.u_tile.u_tile.u_logic.u_me'
+  599 |             x_addr[gi*AW +: AW] <= xc + ((gb + gi) & ((1 << split_r) - 1)) * xcs_r;
+      |                                 ^~
+%Warning-WIDTHTRUNC: rtl/hdc/ot_qwen_w12_matvec.sv:832:34: Logical operator LOGNOT expects 1 bit on the LHS, but LHS's VARREF 'LANES' generates 32 bits.
+                                                         : ... note: In instance 'qfd_c_b16.u_t_3_0.u_g.u_tile.u_tile.u_logic.u_me'
+  832 |         initial if (PART == 2 || !LANES || !(PRUNE && SMIN >= LG) || (W % HIER) != 0 || LG < 2) begin
+      |                                  ^
+%Warning-WIDTHTRUNC: rtl/hdc/ot_qwen_w12_matvec.sv:832:52: Logical operator LOGAND expects 1 bit on the LHS, but LHS's VARREF 'PRUNE' generates 32 bits.
+                                                         : ... note: In instance 'qfd_c_b16.u_t_3_0.u_g.u_tile.u_tile.u_logic.u_me'
+  832 |         initial if (PART == 2 || !LANES || !(PRUNE && SMIN >= LG) || (W % HIER) != 0 || LG < 2) begin
+      |                                                    ^~
+%Warning-WIDTHTRUNC: rtl/hdc/ot_qwen_w12_matvec.sv:891:41: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'CHILD_CLOCKS' generates 32 bits.
+                                                         : ... note: In instance 'qfd_c_b16.u_t_3_0.u_g.u_tile.u_tile.u_logic.u_me'
+  891 |                 u_lh (.clk(CHILD_CLOCKS ? ck_lsl[g] : clk), .rst_n(rst_l), .v_d(tx_q[XW-1]), .first_d(tx_q[XW-2]), .split_d(tx_q[XW-3 -: 4]),
+      |                                         ^
+%Warning-WIDTHTRUNC: rtl/hdc/ot_qwen_w12_matvec.sv:1136:33: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'PORTS' generates 32 bits.
+                                                          : ... note: In instance 'qfd_c_b16.u_t_3_0.u_g.u_tile.u_tile.u_logic.u_me'
+ 1136 |         assign result_v = PORTS ? raw_v : 1'b0;
+      |                                 ^
+%Warning-WIDTHTRUNC: rtl/hdc/ot_qwen_w12_matvec.sv:1168:33: Operator ASSIGNW expects 13 bits on the Assign RHS, but Assign RHS's SHIFTR generates 32 bits.
+                                                          : ... note: In instance 'qfd_c_b16.u_t_3_0.u_g.u_tile.u_tile.u_logic.u_me'
+ 1168 |     wire [$clog2(GT):0] r_ports = GT >> r_split;
+      |                                 ^
+%Warning-WIDTHEXPAND: rtl/hdc/ot_qwen_w12_matvec.sv:1176:38: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'r_lb' generates 19 bits.
+                                                           : ... note: In instance 'qfd_c_b16.u_t_3_0.u_g.u_tile.u_tile.u_logic.u_me'
+ 1176 |                     (r_mmode ? (r_lb + (gb + q) * W + ql < r_nout) : (r_nb + (gb + q) * (W * IL) + ql < r_nout));
+      |                                      ^
+%Warning-WIDTHEXPAND: rtl/hdc/ot_qwen_w12_matvec.sv:1176:76: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'r_nb' generates 19 bits.
+                                                           : ... note: In instance 'qfd_c_b16.u_t_3_0.u_g.u_tile.u_tile.u_logic.u_me'
+ 1176 |                     (r_mmode ? (r_lb + (gb + q) * W + ql < r_nout) : (r_nb + (gb + q) * (W * IL) + ql < r_nout));
+      |                                                                            ^
+%Warning-WIDTHEXPAND: rtl/hdc/ot_qwen_w12_matvec.sv:1189:41: Operator ADD expects 32 bits on the LHS, but LHS's VARREF 'r_oa' generates 24 bits.
+                                                           : ... note: In instance 'qfd_c_b16.u_t_3_0.u_g.u_tile.u_tile.u_logic.u_me'
+ 1189 |             o_addr1[q*AW +: AW] <= r_oa + (gb + q) * r_ots;
+      |                                         ^
+%Warning-WIDTHTRUNC: rtl/hdc/ot_qwen_w12_matvec.sv:1189:33: Operator ASSIGNDLY expects 24 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                          : ... note: In instance 'qfd_c_b16.u_t_3_0.u_g.u_tile.u_tile.u_logic.u_me'
+ 1189 |             o_addr1[q*AW +: AW] <= r_oa + (gb + q) * r_ots;
+      |                                 ^~
+%Warning-WIDTHEXPAND: rtl/hdc/ot_qwen_w12_matvec.sv:1262:46: Operator ADD expects 32 bits on the LHS, but LHS's SEL generates 18 bits.
+                                                           : ... note: In instance 'qfd_c_b16.u_t_3_0.u_g.u_tile.u_tile.u_logic.u_me'
+ 1262 |             wire [NW-1:0] row = r_nb[NW-1:0] + (gb + EQ) * (W * IL) + EL;
+      |                                              ^
+%Warning-WIDTHTRUNC: rtl/hdc/ot_qwen_w12_matvec.sv:1262:31: Operator ASSIGNW expects 18 bits on the Assign RHS, but Assign RHS's ADD generates 32 bits.
+                                                          : ... note: In instance 'qfd_c_b16.u_t_3_0.u_g.u_tile.u_tile.u_logic.u_me'
+ 1262 |             wire [NW-1:0] row = r_nb[NW-1:0] + (gb + EQ) * (W * IL) + EL;
+      |                               ^
+%Warning-WIDTHEXPAND: rtl/hdc/ot_qwen_w12_matvec.sv:1331:42: Operator ADD expects 32 bits on the LHS, but LHS's SEL generates 4 bits.
+                                                           : ... note: In instance 'qfd_c_b16.u_t_3_0.u_g.u_tile.u_tile.u_logic.u_me'
+ 1331 |                 mx_mask[(t_mbase[LW-1:0] + rj) % W] <= 1'b1;
+      |                                          ^
+%Warning-WIDTHEXPAND: rtl/hdc/ot_qwen_w12_matvec.sv:1332:46: Operator ADD expects 32 bits on the LHS, but LHS's SEL generates 4 bits.
+                                                           : ... note: In instance 'qfd_c_b16.u_t_3_0.u_g.u_tile.u_tile.u_logic.u_me'
+ 1332 |                 mx_data[32*((t_mbase[LW-1:0] + rj) % W) +: 32] <=
+      |                                              ^
+%Warning-WIDTHEXPAND: rtl/hdc/ot_qwen_w12_matvec.sv:1333:25: Operator EQ expects 32 bits on the RHS, but RHS's VARREF 't_j' generates 3 bits.
+                                                           : ... note: In instance 'qfd_c_b16.u_t_3_0.u_g.u_tile.u_tile.u_logic.u_me'
+ 1333 |                     (rj == t_j) ? (nk[31] ? {1'b0, nk[30:0]} : ~nk) : (rk[rj][31] ? {1'b0, rk[rj][30:0]} : ~rk[rj]);
+      |                         ^~
+%Warning-WIDTHTRUNC: rtl/hdc/ot_qwen_rom_tile_w12.sv:193:35: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'IREG' generates 32 bits.
+                                                           : ... note: In instance 'qfd_c_b16.u_t_3_0.u_g.u_tile.u_tile.u_logic'
+  193 |     wire             go_i  = IREG ? go_q : ib_go;
+      |                                   ^
+%Warning-WIDTHTRUNC: rtl/hdc/ot_qwen_rom_tile_w12.sv:194:35: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'IREG' generates 32 bits.
+                                                           : ... note: In instance 'qfd_c_b16.u_t_3_0.u_g.u_tile.u_tile.u_logic'
+  194 |     wire [IBW-1:0]   ib_i  = IREG ? ib_q : ib;
+      |                                   ^
+%Warning-WIDTHTRUNC: rtl/hdc/ot_qwen_rom_tile_w12.sv:195:35: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'IREG' generates 32 bits.
+                                                           : ... note: In instance 'qfd_c_b16.u_t_3_0.u_g.u_tile.u_tile.u_logic'
+  195 |     wire [TG*32-1:0] xl_r  = IREG ? xl_q : xl;
+      |                                   ^
+%Warning-WIDTHTRUNC: rtl/hdc/ot_qwen_rom_tile_w12.sv:503:55: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'CHILD_CLOCKS' generates 32 bits.
+                                                           : ... note: In instance 'qfd_c_b16.u_t_3_0.u_g.u_tile.u_tile.u_logic'
+  503 |                             u_leaf (.clk(CHILD_CLOCKS ? (col==0 ? ck_rpair[b] : ck_pair1[b]) : clk),.rst_n(rst_n),.ce_d(ce_pre[b]),
+      |                                                       ^
+%Warning-WIDTHTRUNC: rtl/hdc/ot_qwen_rom_tile_w12.sv:296:53: Logical operator COND expects 1 bit on the Conditional Test, but Conditional Test's VARREF 'CHILD_CLOCKS' generates 32 bits.
+                                                           : ... note: In instance 'qfd_c_b16.u_t_3_3.u_g.u_tile.u_tile.u_logic'
+  296 |         ot_qwen_tile_node u_node (.clk(CHILD_CLOCKS ? ck_node : clk), .rst_n(rst_n), .a(na_x), .b(n_b), .va(n_va),
+      |                                                     ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv:1163:36: Operator ASSIGNDLY expects 4 bits on the Assign RHS, but Assign RHS's SUB generates 32 bits.
+                                                                       : ... note: In instance 'qfd_c_b16.u_fab.u_x_3_3.u_st'
+ 1163 |         else if (b_q[0]) begin cnt <= XOFF - 2; run <= 1'b1; end
+      |                                    ^~
+%Warning-WIDTHEXPAND: rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv:1164:56: Operator SUB expects 32 bits on the LHS, but LHS's VARREF 'cnt' generates 4 bits.
+                                                                        : ... note: In instance 'qfd_c_b16.u_fab.u_x_3_3.u_st'
+ 1164 |         else if (run) cnt <= (cnt == 0) ? IL - 1 : cnt - 1'b1;
+      |                                                        ^
+%Warning-WIDTHTRUNC: rtl/qwen_sys/dvm_20261014/ot_qfd_xslice.sv:1164:27: Operator ASSIGNDLY expects 4 bits on the Assign RHS, but Assign RHS's COND generates 32 bits.
+                                                                       : ... note: In instance 'qfd_c_b16.u_fab.u_x_3_3.u_st'
+ 1164 |         else if (run) cnt <= (cnt == 0) ? IL - 1 : cnt - 1'b1;
+      |                           ^~
+%Warning-UNDRIVEN: rtl/hdc/ot_qwen_rom_tile_w12.sv:806:33: Signal is not driven: 'rom_rd'
+                                                         : ... note: In instance 'qfd_c_b16.u_t_3_3.u_g.u_tile.u_tile'
+  806 |     wire [2*CODE_BANKS*266-1:0] rom_rd;
+      |                                 ^~~~~~
+%Warning-SYMRSVDWORD: rtl/physical/q3h/qfd_c_b16.sv:12:17: Symbol matches C++ common word: 'far'
+   12 |     input  wire far,
+      |                 ^~~
+%Warning-MULTIDRIVEN: rtl/hdc/ot_qwen_w12_matvec.sv:1639:25: Signal has multiple driving blocks with different clocking: '__Vcellout__g_hier.g_sl[0].g_hd.g_tx.g_r[0].u_tx__q'
+                                                           : ... note: In instance 'qfd_c_b16.u_t_3_0.u_g.u_tile.u_tile.u_logic.u_me'
+                      rtl/hdc/ot_qwen_w12_matvec.sv:1641:77: ... Location of first driving block
+ 1641 |     always @(posedge clk or negedge rst_n) if (!rst_n) q[W-1] <= 1'b0; else q[W-1] <= d[W-1];
+      |                                                                             ^
+                      rtl/hdc/ot_qwen_w12_matvec.sv:1642:27: ... Location of other driving block
+ 1642 |     always @(posedge clk) q[W-2:0] <= d[W-2:0];
+      |                           ^
+%Warning-MULTIDRIVEN: rtl/hdc/ot_qwen_w12_matvec.sv:1639:25: Signal has multiple driving blocks with different clocking: '__Vcellout__g_hier.g_sl[0].g_hd.g_tx.g_r[1].u_tx__q'
+                                                           : ... note: In instance 'qfd_c_b16.u_t_3_0.u_g.u_tile.u_tile.u_logic.u_me'
+                      rtl/hdc/ot_qwen_w12_matvec.sv:1641:77: ... Location of first driving block
+ 1641 |     always @(posedge clk or negedge rst_n) if (!rst_n) q[W-1] <= 1'b0; else q[W-1] <= d[W-1];
+      |                                                                             ^
+                      rtl/hdc/ot_qwen_w12_matvec.sv:1642:27: ... Location of other driving block
+ 1642 |     always @(posedge clk) q[W-2:0] <= d[W-2:0];
+      |                           ^
+%Warning-MULTIDRIVEN: rtl/hdc/ot_qwen_w12_matvec.sv:1639:25: Signal has multiple driving blocks with different clocking: '__Vcellout__g_hier.g_sl[1].g_hd.g_tx.g_r[0].u_tx__q'
+                                                           : ... note: In instance 'qfd_c_b16.u_t_3_0.u_g.u_tile.u_tile.u_logic.u_me'
+                      rtl/hdc/ot_qwen_w12_matvec.sv:1641:77: ... Location of first driving block
+ 1641 |     always @(posedge clk or negedge rst_n) if (!rst_n) q[W-1] <= 1'b0; else q[W-1] <= d[W-1];
+      |                                                                             ^
+                      rtl/hdc/ot_qwen_w12_matvec.sv:1642:27: ... Location of other driving block
+ 1642 |     always @(posedge clk) q[W-2:0] <= d[W-2:0];
+      |                           ^
+%Warning-MULTIDRIVEN: rtl/hdc/ot_qwen_w12_matvec.sv:1639:25: Signal has multiple driving blocks with different clocking: '__Vcellout__g_hier.g_sl[1].g_hd.g_tx.g_r[1].u_tx__q'
+                                                           : ... note: In instance 'qfd_c_b16.u_t_3_0.u_g.u_tile.u_tile.u_logic.u_me'
+                      rtl/hdc/ot_qwen_w12_matvec.sv:1641:77: ... Location of first driving block
+ 1641 |     always @(posedge clk or negedge rst_n) if (!rst_n) q[W-1] <= 1'b0; else q[W-1] <= d[W-1];
+      |                                                                             ^
+                      rtl/hdc/ot_qwen_w12_matvec.sv:1642:27: ... Location of other driving block
+ 1642 |     always @(posedge clk) q[W-2:0] <= d[W-2:0];
+      |                           ^
+%Warning-MULTIDRIVEN: rtl/hdc/ot_qwen_w12_matvec.sv:1639:25: Signal has multiple driving blocks with different clocking: '__Vcellout__g_hier.g_sl[2].g_hd.g_tx.g_r[0].u_tx__q'
+                                                           : ... note: In instance 'qfd_c_b16.u_t_3_0.u_g.u_tile.u_tile.u_logic.u_me'
+                      rtl/hdc/ot_qwen_w12_matvec.sv:1641:77: ... Location of first driving block
+ 1641 |     always @(posedge clk or negedge rst_n) if (!rst_n) q[W-1] <= 1'b0; else q[W-1] <= d[W-1];
+      |                                                                             ^
+                      rtl/hdc/ot_qwen_w12_matvec.sv:1642:27: ... Location of other driving block
+ 1642 |     always @(posedge clk) q[W-2:0] <= d[W-2:0];
+      |                           ^
+%Warning-MULTIDRIVEN: rtl/hdc/ot_qwen_w12_matvec.sv:1639:25: Signal has multiple driving blocks with different clocking: '__Vcellout__g_hier.g_sl[2].g_hd.g_tx.g_r[1].u_tx__q'
+                                                           : ... note: In instance 'qfd_c_b16.u_t_3_0.u_g.u_tile.u_tile.u_logic.u_me'
+                      rtl/hdc/ot_qwen_w12_matvec.sv:1641:77: ... Location of first driving block
+ 1641 |     always @(posedge clk or negedge rst_n) if (!rst_n) q[W-1] <= 1'b0; else q[W-1] <= d[W-1];
+      |                                                                             ^
+                      rtl/hdc/ot_qwen_w12_matvec.sv:1642:27: ... Location of other driving block
+ 1642 |     always @(posedge clk) q[W-2:0] <= d[W-2:0];
+      |                           ^
+%Warning-MULTIDRIVEN: rtl/hdc/ot_qwen_w12_matvec.sv:1639:25: Signal has multiple driving blocks with different clocking: '__Vcellout__g_hier.g_sl[3].g_hd.g_tx.g_r[0].u_tx__q'
+                                                           : ... note: In instance 'qfd_c_b16.u_t_3_0.u_g.u_tile.u_tile.u_logic.u_me'
+                      rtl/hdc/ot_qwen_w12_matvec.sv:1641:77: ... Location of first driving block
+ 1641 |     always @(posedge clk or negedge rst_n) if (!rst_n) q[W-1] <= 1'b0; else q[W-1] <= d[W-1];
+      |                                                                             ^
+                      rtl/hdc/ot_qwen_w12_matvec.sv:1642:27: ... Location of other driving block
+ 1642 |     always @(posedge clk) q[W-2:0] <= d[W-2:0];
+      |                           ^
+%Warning-MULTIDRIVEN: rtl/hdc/ot_qwen_w12_matvec.sv:1639:25: Signal has multiple driving blocks with different clocking: '__Vcellout__g_hier.g_sl[3].g_hd.g_tx.g_r[1].u_tx__q'
+                                                           : ... note: In instance 'qfd_c_b16.u_t_3_0.u_g.u_tile.u_tile.u_logic.u_me'
+                      rtl/hdc/ot_qwen_w12_matvec.sv:1641:77: ... Location of first driving block
+ 1641 |     always @(posedge clk or negedge rst_n) if (!rst_n) q[W-1] <= 1'b0; else q[W-1] <= d[W-1];
+      |                                                                             ^
+                      rtl/hdc/ot_qwen_w12_matvec.sv:1642:27: ... Location of other driving block
+ 1642 |     always @(posedge clk) q[W-2:0] <= d[W-2:0];
+      |                           ^
+%Warning-MULTIDRIVEN: rtl/hdc/ot_qwen_w12_matvec.sv:1639:25: Signal has multiple driving blocks with different clocking: '__Vcellout__g_hier.g_sl[4].g_hd.g_tx.g_r[0].u_tx__q'
+                                                           : ... note: In instance 'qfd_c_b16.u_t_3_0.u_g.u_tile.u_tile.u_logic.u_me'
+                      rtl/hdc/ot_qwen_w12_matvec.sv:1641:77: ... Location of first driving block
+ 1641 |     always @(posedge clk or negedge rst_n) if (!rst_n) q[W-1] <= 1'b0; else q[W-1] <= d[W-1];
+      |                                                                             ^
+                      rtl/hdc/ot_qwen_w12_matvec.sv:1642:27: ... Location of other driving block
+ 1642 |     always @(posedge clk) q[W-2:0] <= d[W-2:0];
+      |                           ^
+%Warning-MULTIDRIVEN: rtl/hdc/ot_qwen_w12_matvec.sv:1639:25: Signal has multiple driving blocks with different clocking: '__Vcellout__g_hier.g_sl[4].g_hd.g_tx.g_r[1].u_tx__q'
+                                                           : ... note: In instance 'qfd_c_b16.u_t_3_0.u_g.u_tile.u_tile.u_logic.u_me'
+                      rtl/hdc/ot_qwen_w12_matvec.sv:1641:77: ... Location of first driving block
+ 1641 |     always @(posedge clk or negedge rst_n) if (!rst_n) q[W-1] <= 1'b0; else q[W-1] <= d[W-1];
+      |                                                                             ^
+                      rtl/hdc/ot_qwen_w12_matvec.sv:1642:27: ... Location of other driving block
+ 1642 |     always @(posedge clk) q[W-2:0] <= d[W-2:0];
+      |                           ^
+%Warning-MULTIDRIVEN: rtl/hdc/ot_qwen_w12_matvec.sv:1639:25: Signal has multiple driving blocks with different clocking: '__Vcellout__g_hier.g_sl[5].g_hd.g_tx.g_r[0].u_tx__q'
+                                                           : ... note: In instance 'qfd_c_b16.u_t_3_0.u_g.u_tile.u_tile.u_logic.u_me'
+                      rtl/hdc/ot_qwen_w12_matvec.sv:1641:77: ... Location of first driving block
+ 1641 |     always @(posedge clk or negedge rst_n) if (!rst_n) q[W-1] <= 1'b0; else q[W-1] <= d[W-1];
+      |                                                                             ^
+                      rtl/hdc/ot_qwen_w12_matvec.sv:1642:27: ... Location of other driving block
+ 1642 |     always @(posedge clk) q[W-2:0] <= d[W-2:0];
+      |                           ^
+%Warning-MULTIDRIVEN: rtl/hdc/ot_qwen_w12_matvec.sv:1639:25: Signal has multiple driving blocks with different clocking: '__Vcellout__g_hier.g_sl[5].g_hd.g_tx.g_r[1].u_tx__q'
+                                                           : ... note: In instance 'qfd_c_b16.u_t_3_0.u_g.u_tile.u_tile.u_logic.u_me'
+                      rtl/hdc/ot_qwen_w12_matvec.sv:1641:77: ... Location of first driving block
+ 1641 |     always @(posedge clk or negedge rst_n) if (!rst_n) q[W-1] <= 1'b0; else q[W-1] <= d[W-1];
+      |                                                                             ^
+                      rtl/hdc/ot_qwen_w12_matvec.sv:1642:27: ... Location of other driving block
+ 1642 |     always @(posedge clk) q[W-2:0] <= d[W-2:0];
+      |                           ^
+%Warning-MULTIDRIVEN: rtl/hdc/ot_qwen_w12_matvec.sv:1639:25: Signal has multiple driving blocks with different clocking: '__Vcellout__g_hier.g_sl[6].g_hd.g_tx.g_r[0].u_tx__q'
+                                                           : ... note: In instance 'qfd_c_b16.u_t_3_0.u_g.u_tile.u_tile.u_logic.u_me'
+                      rtl/hdc/ot_qwen_w12_matvec.sv:1641:77: ... Location of first driving block
+ 1641 |     always @(posedge clk or negedge rst_n) if (!rst_n) q[W-1] <= 1'b0; else q[W-1] <= d[W-1];
+      |                                                                             ^
+                      rtl/hdc/ot_qwen_w12_matvec.sv:1642:27: ... Location of other driving block
+ 1642 |     always @(posedge clk) q[W-2:0] <= d[W-2:0];
+      |                           ^
+%Warning-MULTIDRIVEN: rtl/hdc/ot_qwen_w12_matvec.sv:1639:25: Signal has multiple driving blocks with different clocking: '__Vcellout__g_hier.g_sl[6].g_hd.g_tx.g_r[1].u_tx__q'
+                                                           : ... note: In instance 'qfd_c_b16.u_t_3_0.u_g.u_tile.u_tile.u_logic.u_me'
+                      rtl/hdc/ot_qwen_w12_matvec.sv:1641:77: ... Location of first driving block
+ 1641 |     always @(posedge clk or negedge rst_n) if (!rst_n) q[W-1] <= 1'b0; else q[W-1] <= d[W-1];
+      |                                                                             ^
+                      rtl/hdc/ot_qwen_w12_matvec.sv:1642:27: ... Location of other driving block
+ 1642 |     always @(posedge clk) q[W-2:0] <= d[W-2:0];
+      |                           ^
+%Warning-MULTIDRIVEN: rtl/hdc/ot_qwen_w12_matvec.sv:1639:25: Signal has multiple driving blocks with different clocking: '__Vcellout__g_hier.g_sl[7].g_hd.g_tx.g_r[0].u_tx__q'
+                                                           : ... note: In instance 'qfd_c_b16.u_t_3_0.u_g.u_tile.u_tile.u_logic.u_me'
+                      rtl/hdc/ot_qwen_w12_matvec.sv:1641:77: ... Location of first driving block
+ 1641 |     always @(posedge clk or negedge rst_n) if (!rst_n) q[W-1] <= 1'b0; else q[W-1] <= d[W-1];
+      |                                                                             ^
+                      rtl/hdc/ot_qwen_w12_matvec.sv:1642:27: ... Location of other driving block
+ 1642 |     always @(posedge clk) q[W-2:0] <= d[W-2:0];
+      |                           ^
+%Warning-MULTIDRIVEN: rtl/hdc/ot_qwen_w12_matvec.sv:1639:25: Signal has multiple driving blocks with different clocking: '__Vcellout__g_hier.g_sl[7].g_hd.g_tx.g_r[1].u_tx__q'
+                                                           : ... note: In instance 'qfd_c_b16.u_t_3_0.u_g.u_tile.u_tile.u_logic.u_me'
+                      rtl/hdc/ot_qwen_w12_matvec.sv:1641:77: ... Location of first driving block
+ 1641 |     always @(posedge clk or negedge rst_n) if (!rst_n) q[W-1] <= 1'b0; else q[W-1] <= d[W-1];
+      |                                                                             ^
+                      rtl/hdc/ot_qwen_w12_matvec.sv:1642:27: ... Location of other driving block
+ 1642 |     always @(posedge clk) q[W-2:0] <= d[W-2:0];
+      |                           ^
+%Warning-MULTIDRIVEN: rtl/physical/ot_qwen_tile_romleaf.sv:45:31: Signal has multiple driving blocks with different clocking: 'req_m'
+                                                                : ... note: In instance 'qfd_c_b16.u_t_3_0.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.g_rb[4].g_single.g_col[1].u_leaf.u_lg'
+                      rtl/hdc/ot_qwen_rom_tile_w12.sv:895:76: ... Location of first driving block
+  895 |     always @(posedge clk or negedge rst_n) if (!rst_n) q[12] <= 1'b0; else q[12] <= d[12];
+      |                                                                            ^
+                      rtl/hdc/ot_qwen_rom_tile_w12.sv:896:27: ... Location of other driving block
+  896 |     always @(posedge clk) q[11:0] <= d[11:0];
+      |                           ^
+%Warning-UNOPTFLAT: rtl/hdc/ot_qwen_rom_tile_w12.sv:487:32: Signal unoptimizable: Circular combinational logic: 'qfd_c_b16.u_t_3_0.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.rw'
+  487 |             wire [2*2*PWB-1:0] rw [0:CODE_BANKS];
+      |                                ^~
+                    rtl/hdc/ot_qwen_rom_tile_w12.sv:487:32:      Example path: qfd_c_b16.u_t_3_0.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.rw
+                    rtl/hdc/ot_qwen_rom_tile_w12.sv:530:33:      Example path: ASSIGNW
+                    rtl/hdc/ot_qwen_rom_tile_w12.sv:487:32:      Example path: qfd_c_b16.u_t_3_0.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.rw
+%Warning-UNOPTFLAT: rtl/hdc/ot_qwen_rom_tile_w12.sv:488:32: Signal unoptimizable: Circular combinational logic: 'qfd_c_b16.u_t_3_0.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.rwn'
+  488 |             wire [2*2*PWB-1:0] rwn [0:CODE_BANKS];
+      |                                ^~~
+                    rtl/hdc/ot_qwen_rom_tile_w12.sv:488:32:      Example path: qfd_c_b16.u_t_3_0.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.rwn
+                    rtl/hdc/ot_qwen_rom_tile_w12.sv:531:33:      Example path: ASSIGNW
+                    rtl/hdc/ot_qwen_rom_tile_w12.sv:488:32:      Example path: qfd_c_b16.u_t_3_0.u_g.u_tile.u_tile.u_logic.g_rom_pipe.g_rph.rwn
+%Warning-UNOPTFLAT: rtl/hdc/ot_hdc_prefix.sv:24:27: Signal unoptimizable: Circular combinational logic: 'qfd_c_b16.u_t_0_0.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh.u_ls.g_grp[0].g_lane[0].g_ladd.u_add.g_nr.u.u_cmp.g'
+                                                  : ... note: In instance 'qfd_c_b16.u_t_0_0.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh.u_ls.g_grp[0].g_lane[0].g_ladd.u_add'
+   24 |     (* keep *) wire [W:0] g [0:L];
+      |                           ^
+                    rtl/hdc/ot_hdc_prefix.sv:24:27:      Example path: qfd_c_b16.u_t_0_0.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh.u_ls.g_grp[0].g_lane[0].g_ladd.u_add.g_nr.u.u_cmp.g
+                    rtl/hdc/ot_hdc_prefix.sv:36:40:      Example path: ASSIGNW
+                    rtl/hdc/ot_hdc_prefix.sv:24:27:      Example path: qfd_c_b16.u_t_0_0.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh.u_ls.g_grp[0].g_lane[0].g_ladd.u_add.g_nr.u.u_cmp.g
+%Warning-UNOPTFLAT: rtl/hdc/ot_hdc_prefix.sv:25:27: Signal unoptimizable: Circular combinational logic: 'qfd_c_b16.u_t_0_0.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh.u_ls.g_grp[0].g_lane[0].g_ladd.u_add.g_nr.u.u_cmp.p'
+                                                  : ... note: In instance 'qfd_c_b16.u_t_0_0.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh.u_ls.g_grp[0].g_lane[0].g_ladd.u_add'
+   25 |     (* keep *) wire [W:0] p [0:L];
+      |                           ^
+                    rtl/hdc/ot_hdc_prefix.sv:25:27:      Example path: qfd_c_b16.u_t_0_0.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh.u_ls.g_grp[0].g_lane[0].g_ladd.u_add.g_nr.u.u_cmp.p
+                    rtl/hdc/ot_hdc_prefix.sv:37:40:      Example path: ASSIGNW
+                    rtl/hdc/ot_hdc_prefix.sv:25:27:      Example path: qfd_c_b16.u_t_0_0.u_g.u_tile.u_tile.u_logic.u_me.g_hier.g_sl[0].g_hd.u_lh.u_ls.g_grp[0].g_lane[0].g_ladd.u_add.g_nr.u.u_cmp.p
+- V e r i l a t i o n   R e p o r t: Verilator 5.032 2025-01-01 rev (Debian 5.032-1)
+- Verilator: Built from 7.012 MB sources in 104 modules, into 602.589 MB in 797 C++ files needing 0.000 MB
+- Verilator: Walltime 542.126 s (elab=3.498, cvt=527.891, bld=0.000); cpu 537.201 s on 1 threads; alloced 29827.582 MB

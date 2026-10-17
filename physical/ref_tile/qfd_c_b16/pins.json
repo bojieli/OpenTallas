@@ -1,0 +1,190 @@
+{
+ "schema": "opentallas.q3h.cluster_pins.v1",
+ "outline": [
+  2090.88,
+  5184.0
+ ],
+ "rule": "<= 6 pins/um per face; N / S pins on M5 (cluster signals <= M6)",
+ "ports": [
+  {
+   "port": "bc0",
+   "bits": 516,
+   "face": "S",
+   "layer": "M5",
+   "range_um": [
+    4.32,
+    176.32
+   ],
+   "pins_per_um": 3.0,
+   "note": "column word of local column 0 (corridor L)"
+  },
+  {
+   "port": "bco0",
+   "bits": 516,
+   "face": "N",
+   "layer": "M5",
+   "range_um": [
+    4.32,
+    176.32
+   ],
+   "pins_per_um": 3.0,
+   "note": "feed-through of local column 0 to the far cluster"
+  },
+  {
+   "port": "bc1",
+   "bits": 516,
+   "face": "S",
+   "layer": "M5",
+   "range_um": [
+    847.24,
+    1019.24
+   ],
+   "pins_per_um": 3.0,
+   "note": "column word of local column 1 (corridor T)"
+  },
+  {
+   "port": "bco1",
+   "bits": 516,
+   "face": "N",
+   "layer": "M5",
+   "range_um": [
+    847.24,
+    1019.24
+   ],
+   "pins_per_um": 3.0,
+   "note": "feed-through of local column 1 to the far cluster"
+  },
+  {
+   "port": "bc2",
+   "bits": 516,
+   "face": "S",
+   "layer": "M5",
+   "range_um": [
+    1071.64,
+    1243.64
+   ],
+   "pins_per_um": 3.0,
+   "note": "column word of local column 2 (corridor T)"
+  },
+  {
+   "port": "bco2",
+   "bits": 516,
+   "face": "N",
+   "layer": "M5",
+   "range_um": [
+    1071.64,
+    1243.64
+   ],
+   "pins_per_um": 3.0,
+   "note": "feed-through of local column 2 to the far cluster"
+  },
+  {
+   "port": "bc3",
+   "bits": 516,
+   "face": "S",
+   "layer": "M5",
+   "range_um": [
+    1914.56,
+    2086.56
+   ],
+   "pins_per_um": 3.0,
+   "note": "column word of local column 3 (corridor R)"
+  },
+  {
+   "port": "bco3",
+   "bits": 516,
+   "face": "N",
+   "layer": "M5",
+   "range_um": [
+    1914.56,
+    2086.56
+   ],
+   "pins_per_um": 3.0,
+   "note": "feed-through of local column 3 to the far cluster"
+  },
+  {
+   "port": "rs",
+   "bits": 514,
+   "face": "S",
+   "layer": "M5",
+   "range_um": [
+    437.053,
+    608.387
+   ],
+   "pins_per_um": 3.0,
+   "note": "block word {fault, valid, 512} (was bword); S face (Q-DIEPLAN3 19:55)"
+  },
+  {
+   "port": "ck",
+   "bits": 1,
+   "face": "S",
+   "layer": "M5",
+   "range_um": [
+    1045.29,
+    1045.59
+   ],
+   "pins_per_um": 3.333,
+   "note": "regional clock root entry (die trunk, neighbour-matched / F1)"
+  },
+  {
+   "port": "rst_n",
+   "bits": 1,
+   "face": "S",
+   "layer": "M5",
+   "range_um": [
+    1047.44,
+    1047.74
+   ],
+   "pins_per_um": 3.333,
+   "note": ""
+  },
+  {
+   "port": "far",
+   "bits": 1,
+   "face": "S",
+   "layer": "M5",
+   "range_um": [
+    1048.44,
+    1048.74
+   ],
+   "pins_per_um": 3.333,
+   "note": "strap: 1 = far band (0 / 3)"
+  },
+  {
+   "port": "cid",
+   "bits": 12,
+   "face": "S",
+   "layer": "M5",
+   "range_um": [
+    1036.44,
+    1042.44
+   ],
+   "pins_per_um": 2.0,
+   "note": "strap: block index = tile_id[15:4]"
+  },
+  {
+   "port": "tie_hi",
+   "bits": 1,
+   "face": "S",
+   "layer": "M5",
+   "range_um": [
+    1049.44,
+    1049.74
+   ],
+   "pins_per_um": 3.333,
+   "note": ""
+  },
+  {
+   "port": "tie_lo",
+   "bits": 1,
+   "face": "S",
+   "layer": "M5",
+   "range_um": [
+    1050.44,
+    1050.74
+   ],
+   "pins_per_um": 3.333,
+   "note": ""
+  }
+ ]
+}
