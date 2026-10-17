@@ -6,6 +6,13 @@
 // actual boot CDC queues before reaching their independent HBM clock entries.
 // sink_applied is the actual terminal application acknowledgement from those
 // queues (including seal acceptance age), never a compiler prediction.
+// KVJ-A 10-17 successor (qkd_static_kv_boot_cdc join): front_last[g] marks the
+// last (6th, local address 5) target-5 word of front group g, so the front
+// calendar's HAS_SEAL=0 boot CDC seals its source and reaches applied (before,
+// a front CDC never applied and setup_ready never rose). controller_addr is the
+// CDC's 8-bit cfg_addr ({3'b0, local 0..31}). sink_applied order is
+// [31:0] = front group 8*stack+g, [159:32] = PC 32*(target-6)+pc; only the AND
+// is used. MUT4 = the pre-successor behaviour (front_last never asserted).
 module qkd_static_kv_boot_dispatch #(parameter integer MUT=0)(
  input wire ck,rst_n,input wire[142:0]boot_pr,input wire[3:0]boot_image_target,
  input wire boot_image_ready,boot_image_fault,input wire[15:0]boot_image_epoch,
@@ -15,8 +22,8 @@ module qkd_static_kv_boot_dispatch #(parameter integer MUT=0)(
  output reg writer_we,output reg[7:0]writer_addr,output reg[63:0]writer_data,
  output reg ownership_we,output reg[1:0]ownership_addr,output reg[31:0]ownership_data,
  output reg[31:0]landing_we,front_we,output reg[7:0]group_addr,output reg[63:0]group_data,
- output reg[127:0]controller_we,output reg[4:0]controller_addr,output reg[63:0]controller_data,
- output reg[127:0]controller_last,
+ output reg[127:0]controller_we,output reg[7:0]controller_addr,output reg[63:0]controller_data,
+ output reg[127:0]controller_last,output reg[31:0]front_last,
  output wire setup_ready,output reg fault,output reg[7:0]fault_code,
  output reg[15:0]installed_epoch,output reg[63:0]installed_isa_digest
 );
@@ -36,12 +43,12 @@ module qkd_static_kv_boot_dispatch #(parameter integer MUT=0)(
  if(!rst_n)begin
   expected_target<=1;next_word<=0;ready_q<=0;isa_seen<=0;installed<=0;have_epoch<=0;
   installed_epoch<=0;installed_isa_digest<=0;fault<=0;fault_code<=0;
-  layer_we<=0;writer_we<=0;ownership_we<=0;landing_we<=0;front_we<=0;controller_we<=0;controller_last<=0;
+  layer_we<=0;writer_we<=0;ownership_we<=0;landing_we<=0;front_we<=0;controller_we<=0;controller_last<=0;front_last<=0;
   layer_addr<=0;layer_data<=0;writer_addr<=0;writer_data<=0;ownership_addr<=0;ownership_data<=0;
   group_addr<=0;group_data<=0;controller_addr<=0;controller_data<=0;
  end else begin
   ready_q<=boot_image_ready;
-  layer_we<=0;writer_we<=0;ownership_we<=0;landing_we<=0;front_we<=0;controller_we<=0;controller_last<=0;
+  layer_we<=0;writer_we<=0;ownership_we<=0;landing_we<=0;front_we<=0;controller_we<=0;controller_last<=0;front_last<=0;
   if(boot_image_fault||sink_fault)begin fault<=1;fault_code[0]<=1;end
   if((boot_pr[74]||boot_pr[142])&&execution_active)begin fault<=1;fault_code[1]<=1;end
   if(boot_pr[142]&&boot_image_target!=0)begin fault<=1;fault_code[2]<=1;end
@@ -62,13 +69,16 @@ module qkd_static_kv_boot_dispatch #(parameter integer MUT=0)(
     4,5:begin
       group_index=int'(addr)/6;
       if(boot_image_target==4)landing_we<=32'b1<<group_index;
-      else front_we<=32'b1<<group_index;
+      else begin
+       front_we<=32'b1<<group_index;
+       if(MUT!=4&&int'(addr)%6==5)front_last<=32'b1<<group_index;
+      end
       group_addr<=8'(int'(addr)%6);group_data<=data;
     end
     6,7,8,9:begin
       pc_index=32*(int'(boot_image_target)-6)+int'(addr[9:5]);
       if(MUT==2)pc_index=pc_index^1;
-      controller_we<=128'b1<<pc_index;controller_addr<=addr[4:0];controller_data<=data;
+      controller_we<=128'b1<<pc_index;controller_addr<={3'b0,addr[4:0]};controller_data<=data;
       if(addr[4:0]==31)controller_last<=128'b1<<pc_index;
     end
     default:begin fault<=1;fault_code[3]<=1;end

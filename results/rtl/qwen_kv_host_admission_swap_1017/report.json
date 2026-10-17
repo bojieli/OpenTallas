@@ -1,0 +1,86 @@
+{
+ "schema": "opentallas.qwen-kvj-a.host-admission-swap.v1",
+ "status": "PASS_BIND_EQUIVALENCE_COMPONENT_ONLY",
+ "die_v": "ot-epyc4:/srv/opentallas-scratch/claude/qwen-kvsys/kvs13l4-pvclean/case_kv/die.v (case commit 6949bdd68, flags kv_flags.env)",
+ "die_sha256": "891b51e647e82e64d7de8a6ef8c0102043838681889a82c8e46e64948a2d6f34",
+ "method": "same die.v bound twice by kv_port_bind_v2.sh: kv_die.BINDINGS at 73d265953 (qkd_host_root_pt) vs this commit (qkd_host_root_admission)",
+ "base": {
+  "summary": {
+   "masters": 43,
+   "instances": 31281,
+   "unbound_masters": 1,
+   "stub_masters": 0,
+   "ambiguous_masters": 0,
+   "port_not_in_rtl": 0,
+   "width_mismatch": 0,
+   "input_unconnected": 21,
+   "input_tied": 0,
+   "unparsed_connections": 0,
+   "duplicate_port_connections": 0,
+   "undriven_net_bits": 1328,
+   "multi_driven_net_bits": 0,
+   "top_assigns": 0,
+   "params_not_in_rtl": 0,
+   "strap_ports": 22,
+   "pad_bits": 44508
+  },
+  "host": {
+   "input_unconnected": [
+    "ctrl_completion_fault"
+   ]
+  }
+ },
+ "admission": {
+  "summary": {
+   "masters": 43,
+   "instances": 31281,
+   "unbound_masters": 1,
+   "stub_masters": 0,
+   "ambiguous_masters": 0,
+   "port_not_in_rtl": 0,
+   "width_mismatch": 0,
+   "input_unconnected": 24,
+   "input_tied": 0,
+   "unparsed_connections": 0,
+   "duplicate_port_connections": 0,
+   "undriven_net_bits": 1328,
+   "multi_driven_net_bits": 0,
+   "top_assigns": 0,
+   "params_not_in_rtl": 0,
+   "strap_ports": 22,
+   "pad_bits": 44508
+  },
+  "host": {
+   "input_unconnected": [
+    "ctrl_completion_fault",
+    "native_reserved",
+    "ownership_valid",
+    "static_setup_ready"
+   ]
+  }
+ },
+ "delta": {
+  "other_masters_identical": 39,
+  "undriven_nets_identical": true,
+  "host_inputs_newly_open": [
+   "native_reserved",
+   "ownership_valid",
+   "static_setup_ready"
+  ],
+  "note": "host_drained_local die port binds host_interface_idle (connected, not in either open list); output_open lists are capped at 40 so their tails differ"
+ },
+ "static_join": "kv_static_boot_join.host_admission_join: dispatcher execution_active <- d2d.execution_active, local_configured <- ownership/wprg/layer_programme.configured; 9 width-checked die joins host<->boot/ownership (HOST_DIE_JOINS) for kv_die --split item 10",
+ "mutant": "host_admission_join against qkd_host_root_pt refused (no boot_pr port): test_pt_host_root_refused",
+ "open_after": [
+  "the 3 newly open host inputs and the boot_* outputs are wired only when kv_die --split instantiates the static subsystem (item 10)",
+  "the HOST root tile closure/view is for qkd_host_root_pt; a re-close of the admission root (same partition, +ports) is owed before a physical case"
+ ],
+ "sources": {
+  "tools/qwen_kv_die/kv_die.py": "4d04b8d4b3b56b32918ad514b482c2216f348e35bbab332b0aede8be8a283503",
+  "tools/qwen_kv_die/kv_static_boot_join.py": "0e3419aa031af9190e6036bdb5701933a5ba5754de5025dcc59b6994b7960f5f",
+  "tools/qwen_kv_die/test_kv_static_boot_join.py": "50b22396e563bfaa9dd339d7d4bf2dd1b4be5e59be44db4ce910ae3af68c8b32",
+  "rtl/qwen_sys/split_20261014/qkd_host_root_admission.sv": "6535e39944894bd60eb43fe67b2c62977736d626a90ef191e7bc42d353e5cd2c"
+ },
+ "production_qualified": false,
+ "physical_qualified": false
+}
