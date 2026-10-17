@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "opentallas.die_relay_stages.v1",
+  "title": "Per-bus die relay stages (die plan / die run export, or the table a compiled schedule used)",
+  "description": "Owner rule: static fixed-cycle schedule; every die bus relay stage count is a compile-time constant. Producer/consumer module: tools/die_relay_stages.py (validate() is authoritative, including the digest). Check: tools/die_relay_check.py.",
+  "type": "object",
+  "required": ["schema", "role", "design", "plan", "clock_period_ps", "reach_um", "coverage", "buses", "bus_count", "digest"],
+  "properties": {
+    "schema": {"const": "opentallas.die_relay_stages.v1"},
+    "role": {"enum": ["die_plan", "compiled_schedule"]},
+    "design": {"enum": ["hbm", "s81", "qwen_compute", "qwen_kv"]},
+    "plan": {
+      "type": "object",
+      "required": ["id"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "commit": {"type": ["string", "null"]},
+        "generator": {"type": ["string", "null"]},
+        "sources": {"type": "array", "items": {"type": "string"}}
+      }
+    },
+    "clock_period_ps": {"type": "number", "exclusiveMinimum": 0},
+    "reach_um": {"type": ["number", "null"], "exclusiveMinimum": 0},
+    "coverage": {"enum": ["complete", "relayed_only"]},
+    "stage_definition": {"type": "string"},
+    "buses": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "src", "dst", "width", "stages", "domain"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1, "description": "<src.inst>.<src.port> -> <dst.inst>.<dst.port>"},
+          "src": {"$ref": "#/$defs/pin"},
+          "dst": {"$ref": "#/$defs/pin"},
+          "width": {"type": "integer", "minimum": 1},
+          "stages": {"type": "integer", "minimum": 0, "description": "registered relay flops on the path (compile-time constant)"},
+          "domain": {"type": ["string", "null"]},
+          "eq_age_group": {"type": ["string", "null"]},
+          "direction": {"type": ["string", "null"]},
+          "bid": {"type": ["string", "null"]},
+          "span_um": {"type": ["number", "null"]},
+          "note": {"type": ["string", "null"]},
+          "stations": {
+            "type": "array",
+            "items": {"type": "object", "required": ["depth"], "properties": {"depth": {"type": "integer"}, "x": {"type": "number"}, "y": {"type": "number"}, "master": {"type": "string"}}}
+          }
+        }
+      }
+    },
+    "bus_count": {"type": "integer", "minimum": 0},
+    "digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "compiled": {
+      "type": "object",
+      "required": ["consumer", "loaded_digest"],
+      "properties": {
+        "consumer": {"type": "string"},
+        "loaded_from": {"type": ["string", "null"]},
+        "loaded_digest": {"type": "string"},
+        "overrides": {"type": "array"},
+        "used_by": {"type": "object"}
+      }
+    },
+    "problems": {"type": "array", "items": {"type": "string"}}
+  },
+  "if": {"properties": {"role": {"const": "compiled_schedule"}}},
+  "then": {"required": ["compiled"]},
+  "$defs": {
+    "pin": {
+      "type": "object",
+      "required": ["inst", "port"],
+      "properties": {"inst": {"type": "string", "minLength": 1}, "port": {"type": "string", "minLength": 1}, "master": {"type": ["string", "null"]}}
+    }
+  }
+}
