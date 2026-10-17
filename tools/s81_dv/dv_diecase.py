@@ -94,7 +94,7 @@ def main():
     ox = oy = 0.0
     if a.region:
         x0, y0, x1, y1 = a.region
-        keep = {i for i, b in enumerate(blocks) if x0 <= b['x'] + b['w'] / 2 <= x1 and y0 <= b['y'] + b['h'] / 2 <= y1}
+        keep = {i for i, b in enumerate(blocks) if x0 <= b['x'] and b['x'] + b['w'] <= x1 and y0 <= b['y'] and b['y'] + b['h'] <= y1}
         ox, oy = x0, y0
         W, H = x1 - x0, y1 - y0
     bidx = {blocks[i]['name']: i for i in keep}
@@ -282,7 +282,7 @@ puts OT_DONE
 D=$(cd $(dirname $0) && pwd); N=dvdie-$$
 docker run --rm --name $N --cpus=${CPUS:-8} --memory=${MEMG:-128}g -v $D:/work -w /work openroad/orfs:asap7lock \\
   bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; /usr/bin/time -v openroad -threads ${CPUS:-8} -no_init -exit /work/run.tcl > /work/out/run.log 2>&1; rc=\\$?; chmod -R a+rwX /work/out; exit \\$rc"
-echo $? > $D/out/run.exit
+rc=$?; echo $rc > $D/out/run.exit; exit $rc
 ''')
     kinds = collections.Counter(blocks[i]['kind'] for i in keep)
     area = W * H / 1e6
