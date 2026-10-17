@@ -29,10 +29,10 @@ def lane_regions(text):
     wire [3:0] rst_insert_n;
 `ifdef OT_SU_SYNC_RST
     for (genvar r = 0; r < 8; r = r + 1) begin : g_rst_stage
-        ot_rst_relay #(.REGIONS(1)) u_reset (.clk(clk_stage[r]), .rst_n_in(rst_n), .rst_n(rst_stage_n[r]));
+        ot_sync_rst_relay u_reset (.clk_sync(clk_stage[0]), .clk(clk_stage[r]), .rst_n_in(rst_n), .rst_n(rst_stage_n[r]));
     end
     for (genvar r = 0; r < 4; r = r + 1) begin : g_rst_insert
-        ot_rst_relay #(.REGIONS(1)) u_reset (.clk(clk_insert[r]), .rst_n_in(rst_n), .rst_n(rst_insert_n[r]));
+        ot_sync_rst_relay u_reset (.clk_sync(clk_stage[0]), .clk(clk_insert[r]), .rst_n_in(rst_n), .rst_n(rst_insert_n[r]));
     end
 `else
     assign rst_stage_n = {8{rst_n}};

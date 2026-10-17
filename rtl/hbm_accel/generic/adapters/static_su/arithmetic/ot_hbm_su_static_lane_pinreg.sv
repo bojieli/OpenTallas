@@ -97,8 +97,8 @@ module ot_hbm_su_static_lane_pinreg #(
     wire rst_out_n;
 `ifdef OT_SU_SYNC_RST
     wire rst_command_n;
-    ot_rst_relay #(.REGIONS(1)) u_reset_command (.clk(c0), .rst_n_in(rst_n), .rst_n(rst_command_n));
-    ot_rst_relay #(.REGIONS(1)) u_reset_output (.clk(c7), .rst_n_in(rst_n), .rst_n(rst_out_n));
+    ot_sync_rst_relay u_reset_command (.clk_sync(c0), .clk(c0), .rst_n_in(rst_n), .rst_n(rst_command_n));
+    ot_sync_rst_relay u_reset_output (.clk_sync(c0), .clk(c7), .rst_n_in(rst_n), .rst_n(rst_out_n));
     always @(posedge c0) s_q <= rst_command_n ? {ld, ld_bank, emit, bank} : 4'd0;
     assign rst_i = rst_n; // lane has one local synchronous reset relay per clock root
 `else
