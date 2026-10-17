@@ -91,10 +91,14 @@ def apply(model, path):
     overlap = _overlaps(rects)
     if outside or overlap:
         raise ValueError(f'OT_SPLIT_HOMES: outside={outside[:4]}, overlaps={overlap[:4]}')
+    from qwen_split.homes_metadata import prepare
+    metadata, metadata_receipt = prepare(model, proposed, reserve)
     for n, h in proposed.items():
         by[n].x, by[n].y, by[n].orient = h['x'], h['y'], h['o']
+    model.update(metadata)
     return dict(path=str(path), sha256=hashlib.sha256(raw).hexdigest(), source_model_sha256=digest,
                 candidate=d.get('candidate'), moved=len(moved), moved_names=moved,
                 reserve=reserve, qualified=False,
+                planning_metadata=metadata_receipt,
                 open=['actual pins and legal orientations', 'relay allocation and cut capacity',
                       'clock/reset delivery', 'compiler fixed-cycle calendar', 'GRT/TT/FF/DRC'])
