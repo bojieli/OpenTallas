@@ -38,9 +38,9 @@ def main(out, gap_h):
     # centre: tt_ctlm / sys_face / embed on the gap row, native59 beside d2d (top), clock / reset below the row
     cx = (xw1 + xe0) / 2
     I['tt_ctlm'].update(x=round(cx - I['tt_ctlm']['w'] / 2, 3), y=round(ym - I['tt_ctlm']['h'] / 2, 3))
-    I['sys_face'].update(x=round(I['io_collective']['x'] + I['io_collective']['w'] + 108, 3), y=round(I['io_collective']['y'] + 400, 3))
     I['embed_prov'].update(x=round(cx - 1200, 3), y=round(ym + 300, 3))
     I['native59'].update(x=round(I['d2d_rom']['x'] - 108 - I['native59']['w'], 3), y=round(I['d2d_rom']['y'] - 108, 3))
+    I['sys_face'].update(x=round(I['native59']['x'], 3), y=round(I['native59']['y'] - 108 - I['sys_face']['h'], 3))   # talks to d2d / native59
     I['rstseq_rom'].update(x=round(cx + 900, 3), y=round(ym - 500, 3))
     I['clk_rx'].update(x=round(cx + 600, 3), y=round(ym - 1400, 3))
     def relay(n, x, y):

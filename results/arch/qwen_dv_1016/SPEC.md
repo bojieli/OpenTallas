@@ -237,7 +237,7 @@ Full-path stages / layer; tok/s from `accepted_cost.py ... --node-delta`. SU-lan
 | q3h | 776 | 0 | ref | 1.435 | 1.077 M | 11,948 | 742 |
 | dv1 (partitioned centre, L8) | 759 | -17 | +0.25 % | 0.488 | 0.893 M | 5,175 | 742 |
 | dv2 single owner (L8) | 887 | +111 | about -1.6 % | (same geometry) | | | |
-| **dv2r8 (pick)** | 767 | -9 | +0.13 % | 0.416 | 0.889 M | 6,761 | 797 |
+| **dv2r8 (pick)** | 767 | -9 | +0.13 % | 0.416 | 0.857 M | 4,297 | 797 |
 | dv2r16 | 657 | -119 | +1.75 % | 0.439 | 0.924 M | 7,060 | 825 |
 
 Per-term values (R / P / QK / K / O / A / NORM / SILU / BCA / SEAM) are in `led_dv2r8.json` and `led_dv2r16.json`.
@@ -311,3 +311,16 @@ Two consequences for this plan:
 - Every slice and stream link, the centre crossing lane and the edge-endpoint lanes get die-level repeater buffering. That means buffered relay chains, with stage counts from the measured buffered reach once H-REACH publishes it.
 - Slice input pins get a robust first cell: a sized input flop or buffer at the pin, NOT a hold buffer. Hold belongs to the die-level budget on the relay stations (FLOW-HOLD).
 - The slice RTL helper has been told this. It applies to the qfd_dv_slice port list.
+
+## Deliverable 2 status (2026-10-17 ~00:20)
+
+- **sys_face moved** beside native59 at the N edge, since it talks to d2d/native59. In dv2r8 this brings:
+  - bit-mm 0.889 M -> 0.857 M;
+  - stages@405 6,761 -> 4,297, against q3h's 11,948.
+  - The cut (0.416) and the ledger (-9 / -90 cycles) are unchanged.
+- **Relay plan:** `relay_plan_dv2r8.json` gives every link's length and its stages at 405 and 200 um. Every stage is a repeater-buffered relay station.
+  - Remaining long nets are 1-b io_collective <-> sys_face control lines (about 20 mm, S edge to N edge). They get relay chains or move into the sys_face <-> collective calendar.
+- **Explorer:** `to_explorer.py` produced the records, and `dataflow_links.py import` put them in the live Dataflow Explorer as candidates of `qwen_r2h5`:
+  - `qwen_qdv_dv2r8` (pick);
+  - `qwen_qdv_dv1` (comparator).
+- **PNG:** `dv2r8.png` was re-rendered and viewed.

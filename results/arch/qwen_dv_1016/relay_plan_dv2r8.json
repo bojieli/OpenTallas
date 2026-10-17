@@ -1,0 +1,1014 @@
+{
+ "schema": "opentallas.qwen.qdv_relay_plan.v1",
+ "model": "dv2r8.json",
+ "hop_rule": "stages = ceil(L/hop)-1, face-projected Manhattan; every stage a repeater-buffered relay station (H-REACH caveat); slice input pins robust first cell, hold on relays (FLOW-HOLD)",
+ "totals": {
+  "links": 408,
+  "relay_bits405": 207691,
+  "relay_bits200": 436593
+ },
+ "dv_links": [
+  {
+   "bus": "dv_kv_W",
+   "cls": "dv_d2d",
+   "bits": 1068,
+   "src": "dvs_W0",
+   "dst": "dvk_W",
+   "L_um": 9644.2,
+   "stages405": 23,
+   "stages200": 48
+  },
+  {
+   "bus": "dv_kv_E",
+   "cls": "dv_d2d",
+   "bits": 1068,
+   "src": "dvs_E0",
+   "dst": "dvk_E",
+   "L_um": 9643.4,
+   "stages405": 23,
+   "stages200": 48
+  },
+  {
+   "bus": "dv_x1",
+   "cls": "dv_gather",
+   "bits": 2272,
+   "src": "dvx_w",
+   "dst": "dvx_e",
+   "L_um": 7844.8,
+   "stages405": 19,
+   "stages200": 39
+  },
+  {
+   "bus": "dv_ar_W",
+   "cls": "dv_coll",
+   "bits": 1064,
+   "src": "dvs_W0",
+   "dst": "dva_W",
+   "L_um": 7788.7,
+   "stages405": 19,
+   "stages200": 38
+  },
+  {
+   "bus": "dv_ar_E",
+   "cls": "dv_coll",
+   "bits": 1064,
+   "src": "dvs_E0",
+   "dst": "dva_E",
+   "L_um": 7787.9,
+   "stages405": 19,
+   "stages200": 38
+  },
+  {
+   "bus": "dv_kv2_W",
+   "cls": "dv_d2d",
+   "bits": 1068,
+   "src": "dvk_W",
+   "dst": "native59",
+   "L_um": 4088.7,
+   "stages405": 10,
+   "stages200": 20
+  },
+  {
+   "bus": "dv_kv2_E",
+   "cls": "dv_d2d",
+   "bits": 1068,
+   "src": "dvk_E",
+   "dst": "native59",
+   "L_um": 2429.3,
+   "stages405": 5,
+   "stages200": 12
+  },
+  {
+   "bus": "dv_ar2_W",
+   "cls": "dv_coll",
+   "bits": 1064,
+   "src": "dva_W",
+   "dst": "io_collective",
+   "L_um": 2335.2,
+   "stages405": 5,
+   "stages200": 11
+  },
+  {
+   "bus": "dv_ar2_E",
+   "cls": "dv_coll",
+   "bits": 1064,
+   "src": "dva_E",
+   "dst": "io_collective",
+   "L_um": 1007.6,
+   "stages405": 2,
+   "stages200": 5
+  },
+  {
+   "bus": "dv_rsi_W0_0",
+   "cls": "dv_reduce",
+   "bits": 514,
+   "src": "c16_W0_0",
+   "dst": "c16_W0_1",
+   "L_um": 129.6,
+   "stages405": 0,
+   "stages200": 0
+  },
+  {
+   "bus": "dv_rs_W0_1",
+   "cls": "dv_reduce",
+   "bits": 1028,
+   "src": "c16_W0_1",
+   "dst": "dvs_W0",
+   "L_um": 129.6,
+   "stages405": 0,
+   "stages200": 0
+  },
+  {
+   "bus": "dv_rsi_W0_3",
+   "cls": "dv_reduce",
+   "bits": 514,
+   "src": "c16_W0_3",
+   "dst": "c16_W0_2",
+   "L_um": 129.6,
+   "stages405": 0,
+   "stages200": 0
+  },
+  {
+   "bus": "dv_rs_W0_2",
+   "cls": "dv_reduce",
+   "bits": 1028,
+   "src": "c16_W0_2",
+   "dst": "dvs_W0",
+   "L_um": 129.6,
+   "stages405": 0,
+   "stages200": 0
+  },
+  {
+   "bus": "dv_rsi_W1_0",
+   "cls": "dv_reduce",
+   "bits": 514,
+   "src": "c16_W1_0",
+   "dst": "c16_W1_1",
+   "L_um": 129.6,
+   "stages405": 0,
+   "stages200": 0
+  },
+  {
+   "bus": "dv_rs_W1_1",
+   "cls": "dv_reduce",
+   "bits": 1028,
+   "src": "c16_W1_1",
+   "dst": "dvs_W1",
+   "L_um": 129.6,
+   "stages405": 0,
+   "stages200": 0
+  },
+  {
+   "bus": "dv_rsi_W1_3",
+   "cls": "dv_reduce",
+   "bits": 514,
+   "src": "c16_W1_3",
+   "dst": "c16_W1_2",
+   "L_um": 129.6,
+   "stages405": 0,
+   "stages200": 0
+  },
+  {
+   "bus": "dv_rs_W1_2",
+   "cls": "dv_reduce",
+   "bits": 1028,
+   "src": "c16_W1_2",
+   "dst": "dvs_W1",
+   "L_um": 129.6,
+   "stages405": 0,
+   "stages200": 0
+  },
+  {
+   "bus": "dv_rsi_W2_0",
+   "cls": "dv_reduce",
+   "bits": 514,
+   "src": "c16_W2_0",
+   "dst": "c16_W2_1",
+   "L_um": 129.6,
+   "stages405": 0,
+   "stages200": 0
+  },
+  {
+   "bus": "dv_rs_W2_1",
+   "cls": "dv_reduce",
+   "bits": 1028,
+   "src": "c16_W2_1",
+   "dst": "dvs_W2",
+   "L_um": 129.6,
+   "stages405": 0,
+   "stages200": 0
+  },
+  {
+   "bus": "dv_rsi_W2_3",
+   "cls": "dv_reduce",
+   "bits": 514,
+   "src": "c16_W2_3",
+   "dst": "c16_W2_2",
+   "L_um": 129.6,
+   "stages405": 0,
+   "stages200": 0
+  },
+  {
+   "bus": "dv_rs_W2_2",
+   "cls": "dv_reduce",
+   "bits": 1028,
+   "src": "c16_W2_2",
+   "dst": "dvs_W2",
+   "L_um": 129.6,
+   "stages405": 0,
+   "stages200": 0
+  },
+  {
+   "bus": "dv_rsi_W3_0",
+   "cls": "dv_reduce",
+   "bits": 514,
+   "src": "c16_W3_0",
+   "dst": "c16_W3_1",
+   "L_um": 129.6,
+   "stages405": 0,
+   "stages200": 0
+  },
+  {
+   "bus": "dv_rs_W3_1",
+   "cls": "dv_reduce",
+   "bits": 1028,
+   "src": "c16_W3_1",
+   "dst": "dvs_W3",
+   "L_um": 129.6,
+   "stages405": 0,
+   "stages200": 0
+  },
+  {
+   "bus": "dv_rsi_W3_3",
+   "cls": "dv_reduce",
+   "bits": 514,
+   "src": "c16_W3_3",
+   "dst": "c16_W3_2",
+   "L_um": 129.6,
+   "stages405": 0,
+   "stages200": 0
+  },
+  {
+   "bus": "dv_rs_W3_2",
+   "cls": "dv_reduce",
+   "bits": 1028,
+   "src": "c16_W3_2",
+   "dst": "dvs_W3",
+   "L_um": 129.6,
+   "stages405": 0,
+   "stages200": 0
+  },
+  {
+   "bus": "dv_rsi_W4_0",
+   "cls": "dv_reduce",
+   "bits": 514,
+   "src": "c16_W4_0",
+   "dst": "c16_W4_1",
+   "L_um": 129.6,
+   "stages405": 0,
+   "stages200": 0
+  },
+  {
+   "bus": "dv_rs_W4_1",
+   "cls": "dv_reduce",
+   "bits": 1028,
+   "src": "c16_W4_1",
+   "dst": "dvs_W4",
+   "L_um": 129.6,
+   "stages405": 0,
+   "stages200": 0
+  },
+  {
+   "bus": "dv_rsi_W4_3",
+   "cls": "dv_reduce",
+   "bits": 514,
+   "src": "c16_W4_3",
+   "dst": "c16_W4_2",
+   "L_um": 129.6,
+   "stages405": 0,
+   "stages200": 0
+  },
+  {
+   "bus": "dv_rs_W4_2",
+   "cls": "dv_reduce",
+   "bits": 1028,
+   "src": "c16_W4_2",
+   "dst": "dvs_W4",
+   "L_um": 129.6,
+   "stages405": 0,
+   "stages200": 0
+  },
+  {
+   "bus": "dv_rsi_W5_0",
+   "cls": "dv_reduce",
+   "bits": 514,
+   "src": "c16_W5_0",
+   "dst": "c16_W5_1",
+   "L_um": 129.6,
+   "stages405": 0,
+   "stages200": 0
+  },
+  {
+   "bus": "dv_rs_W5_1",
+   "cls": "dv_reduce",
+   "bits": 1028,
+   "src": "c16_W5_1",
+   "dst": "dvs_W5",
+   "L_um": 129.6,
+   "stages405": 0,
+   "stages200": 0
+  },
+  {
+   "bus": "dv_rsi_W5_3",
+   "cls": "dv_reduce",
+   "bits": 514,
+   "src": "c16_W5_3",
+   "dst": "c16_W5_2",
+   "L_um": 129.6,
+   "stages405": 0,
+   "stages200": 0
+  },
+  {
+   "bus": "dv_rs_W5_2",
+   "cls": "dv_reduce",
+   "bits": 1028,
+   "src": "c16_W5_2",
+   "dst": "dvs_W5",
+   "L_um": 129.6,
+   "stages405": 0,
+   "stages200": 0
+  },
+  {
+   "bus": "dv_rsi_E0_0",
+   "cls": "dv_reduce",
+   "bits": 514,
+   "src": "c16_E0_0",
+   "dst": "c16_E0_1",
+   "L_um": 129.6,
+   "stages405": 0,
+   "stages200": 0
+  },
+  {
+   "bus": "dv_rs_E0_1",
+   "cls": "dv_reduce",
+   "bits": 1028,
+   "src": "c16_E0_1",
+   "dst": "dvs_E0",
+   "L_um": 129.6,
+   "stages405": 0,
+   "stages200": 0
+  },
+  {
+   "bus": "dv_rsi_E0_3",
+   "cls": "dv_reduce",
+   "bits": 514,
+   "src": "c16_E0_3",
+   "dst": "c16_E0_2",
+   "L_um": 129.6,
+   "stages405": 0,
+   "stages200": 0
+  },
+  {
+   "bus": "dv_rs_E0_2",
+   "cls": "dv_reduce",
+   "bits": 1028,
+   "src": "c16_E0_2",
+   "dst": "dvs_E0",
+   "L_um": 129.6,
+   "stages405": 0,
+   "stages200": 0
+  },
+  {
+   "bus": "dv_rsi_E1_0",
+   "cls": "dv_reduce",
+   "bits": 514,
+   "src": "c16_E1_0",
+   "dst": "c16_E1_1",
+   "L_um": 129.6,
+   "stages405": 0,
+   "stages200": 0
+  },
+  {
+   "bus": "dv_rs_E1_1",
+   "cls": "dv_reduce",
+   "bits": 1028,
+   "src": "c16_E1_1",
+   "dst": "dvs_E1",
+   "L_um": 129.6,
+   "stages405": 0,
+   "stages200": 0
+  },
+  {
+   "bus": "dv_rsi_E1_3",
+   "cls": "dv_reduce",
+   "bits": 514,
+   "src": "c16_E1_3",
+   "dst": "c16_E1_2",
+   "L_um": 129.6,
+   "stages405": 0,
+   "stages200": 0
+  },
+  {
+   "bus": "dv_rs_E1_2",
+   "cls": "dv_reduce",
+   "bits": 1028,
+   "src": "c16_E1_2",
+   "dst": "dvs_E1",
+   "L_um": 129.6,
+   "stages405": 0,
+   "stages200": 0
+  },
+  {
+   "bus": "dv_rsi_E2_0",
+   "cls": "dv_reduce",
+   "bits": 514,
+   "src": "c16_E2_0",
+   "dst": "c16_E2_1",
+   "L_um": 129.6,
+   "stages405": 0,
+   "stages200": 0
+  },
+  {
+   "bus": "dv_rs_E2_1",
+   "cls": "dv_reduce",
+   "bits": 1028,
+   "src": "c16_E2_1",
+   "dst": "dvs_E2",
+   "L_um": 129.6,
+   "stages405": 0,
+   "stages200": 0
+  },
+  {
+   "bus": "dv_rsi_E2_3",
+   "cls": "dv_reduce",
+   "bits": 514,
+   "src": "c16_E2_3",
+   "dst": "c16_E2_2",
+   "L_um": 129.6,
+   "stages405": 0,
+   "stages200": 0
+  },
+  {
+   "bus": "dv_rs_E2_2",
+   "cls": "dv_reduce",
+   "bits": 1028,
+   "src": "c16_E2_2",
+   "dst": "dvs_E2",
+   "L_um": 129.6,
+   "stages405": 0,
+   "stages200": 0
+  },
+  {
+   "bus": "dv_rsi_E3_0",
+   "cls": "dv_reduce",
+   "bits": 514,
+   "src": "c16_E3_0",
+   "dst": "c16_E3_1",
+   "L_um": 129.6,
+   "stages405": 0,
+   "stages200": 0
+  },
+  {
+   "bus": "dv_rs_E3_1",
+   "cls": "dv_reduce",
+   "bits": 1028,
+   "src": "c16_E3_1",
+   "dst": "dvs_E3",
+   "L_um": 129.6,
+   "stages405": 0,
+   "stages200": 0
+  },
+  {
+   "bus": "dv_rsi_E3_3",
+   "cls": "dv_reduce",
+   "bits": 514,
+   "src": "c16_E3_3",
+   "dst": "c16_E3_2",
+   "L_um": 129.6,
+   "stages405": 0,
+   "stages200": 0
+  },
+  {
+   "bus": "dv_rs_E3_2",
+   "cls": "dv_reduce",
+   "bits": 1028,
+   "src": "c16_E3_2",
+   "dst": "dvs_E3",
+   "L_um": 129.6,
+   "stages405": 0,
+   "stages200": 0
+  },
+  {
+   "bus": "dv_rsi_E4_0",
+   "cls": "dv_reduce",
+   "bits": 514,
+   "src": "c16_E4_0",
+   "dst": "c16_E4_1",
+   "L_um": 129.6,
+   "stages405": 0,
+   "stages200": 0
+  },
+  {
+   "bus": "dv_rs_E4_1",
+   "cls": "dv_reduce",
+   "bits": 1028,
+   "src": "c16_E4_1",
+   "dst": "dvs_E4",
+   "L_um": 129.6,
+   "stages405": 0,
+   "stages200": 0
+  },
+  {
+   "bus": "dv_rsi_E4_3",
+   "cls": "dv_reduce",
+   "bits": 514,
+   "src": "c16_E4_3",
+   "dst": "c16_E4_2",
+   "L_um": 129.6,
+   "stages405": 0,
+   "stages200": 0
+  },
+  {
+   "bus": "dv_rs_E4_2",
+   "cls": "dv_reduce",
+   "bits": 1028,
+   "src": "c16_E4_2",
+   "dst": "dvs_E4",
+   "L_um": 129.6,
+   "stages405": 0,
+   "stages200": 0
+  },
+  {
+   "bus": "dv_rsi_E5_0",
+   "cls": "dv_reduce",
+   "bits": 514,
+   "src": "c16_E5_0",
+   "dst": "c16_E5_1",
+   "L_um": 129.6,
+   "stages405": 0,
+   "stages200": 0
+  },
+  {
+   "bus": "dv_rs_E5_1",
+   "cls": "dv_reduce",
+   "bits": 1028,
+   "src": "c16_E5_1",
+   "dst": "dvs_E5",
+   "L_um": 129.6,
+   "stages405": 0,
+   "stages200": 0
+  },
+  {
+   "bus": "dv_rsi_E5_3",
+   "cls": "dv_reduce",
+   "bits": 514,
+   "src": "c16_E5_3",
+   "dst": "c16_E5_2",
+   "L_um": 129.6,
+   "stages405": 0,
+   "stages200": 0
+  },
+  {
+   "bus": "dv_rs_E5_2",
+   "cls": "dv_reduce",
+   "bits": 1028,
+   "src": "c16_E5_2",
+   "dst": "dvs_E5",
+   "L_um": 129.6,
+   "stages405": 0,
+   "stages200": 0
+  },
+  {
+   "bus": "dv_x0",
+   "cls": "dv_gather",
+   "bits": 2272,
+   "src": "dvs_W0",
+   "dst": "dvx_w",
+   "L_um": 25.4,
+   "stages405": 0,
+   "stages200": 0
+  },
+  {
+   "bus": "dv_x2",
+   "cls": "dv_gather",
+   "bits": 2272,
+   "src": "dvx_e",
+   "dst": "dvs_E0",
+   "L_um": 24.6,
+   "stages405": 0,
+   "stages200": 0
+  },
+  {
+   "bus": "dv_l9_W0",
+   "cls": "dv_reduce",
+   "bits": 514,
+   "src": "dvs_W1",
+   "dst": "dvs_W0",
+   "L_um": 0.0,
+   "stages405": 0,
+   "stages200": 0
+  },
+  {
+   "bus": "dv_st_W0",
+   "cls": "dv_gather",
+   "bits": 2272,
+   "src": "dvs_W0",
+   "dst": "dvs_W1",
+   "L_um": 0.0,
+   "stages405": 0,
+   "stages200": 0
+  },
+  {
+   "bus": "dv_ch_W0",
+   "cls": "dv_ring",
+   "bits": 2132,
+   "src": "dvs_W1",
+   "dst": "dvs_W0",
+   "L_um": 0.0,
+   "stages405": 0,
+   "stages200": 0
+  },
+  {
+   "bus": "dv_st_W1",
+   "cls": "dv_gather",
+   "bits": 2272,
+   "src": "dvs_W1",
+   "dst": "dvs_W2",
+   "L_um": 0.0,
+   "stages405": 0,
+   "stages200": 0
+  },
+  {
+   "bus": "dv_ch_W1",
+   "cls": "dv_ring",
+   "bits": 2132,
+   "src": "dvs_W2",
+   "dst": "dvs_W1",
+   "L_um": 0.0,
+   "stages405": 0,
+   "stages200": 0
+  },
+  {
+   "bus": "dv_l9_W2",
+   "cls": "dv_reduce",
+   "bits": 514,
+   "src": "dvs_W3",
+   "dst": "dvs_W2",
+   "L_um": 0.0,
+   "stages405": 0,
+   "stages200": 0
+  },
+  {
+   "bus": "dv_st_W2",
+   "cls": "dv_gather",
+   "bits": 2272,
+   "src": "dvs_W2",
+   "dst": "dvs_W3",
+   "L_um": 0.0,
+   "stages405": 0,
+   "stages200": 0
+  },
+  {
+   "bus": "dv_ch_W2",
+   "cls": "dv_ring",
+   "bits": 2132,
+   "src": "dvs_W3",
+   "dst": "dvs_W2",
+   "L_um": 0.0,
+   "stages405": 0,
+   "stages200": 0
+  },
+  {
+   "bus": "dv_st_W3",
+   "cls": "dv_gather",
+   "bits": 2272,
+   "src": "dvs_W3",
+   "dst": "dvs_W4",
+   "L_um": 0.0,
+   "stages405": 0,
+   "stages200": 0
+  },
+  {
+   "bus": "dv_ch_W3",
+   "cls": "dv_ring",
+   "bits": 2132,
+   "src": "dvs_W4",
+   "dst": "dvs_W3",
+   "L_um": 0.0,
+   "stages405": 0,
+   "stages200": 0
+  },
+  {
+   "bus": "dv_l9_W4",
+   "cls": "dv_reduce",
+   "bits": 514,
+   "src": "dvs_W5",
+   "dst": "dvs_W4",
+   "L_um": 0.0,
+   "stages405": 0,
+   "stages200": 0
+  },
+  {
+   "bus": "dv_st_W4",
+   "cls": "dv_gather",
+   "bits": 2272,
+   "src": "dvs_W4",
+   "dst": "dvs_W5",
+   "L_um": 0.0,
+   "stages405": 0,
+   "stages200": 0
+  },
+  {
+   "bus": "dv_ch_W4",
+   "cls": "dv_ring",
+   "bits": 2132,
+   "src": "dvs_W5",
+   "dst": "dvs_W4",
+   "L_um": 0.0,
+   "stages405": 0,
+   "stages200": 0
+  },
+  {
+   "bus": "dv_l9_E0",
+   "cls": "dv_reduce",
+   "bits": 514,
+   "src": "dvs_E1",
+   "dst": "dvs_E0",
+   "L_um": 0.0,
+   "stages405": 0,
+   "stages200": 0
+  },
+  {
+   "bus": "dv_st_E0",
+   "cls": "dv_gather",
+   "bits": 2272,
+   "src": "dvs_E0",
+   "dst": "dvs_E1",
+   "L_um": 0.0,
+   "stages405": 0,
+   "stages200": 0
+  },
+  {
+   "bus": "dv_ch_E0",
+   "cls": "dv_ring",
+   "bits": 2132,
+   "src": "dvs_E1",
+   "dst": "dvs_E0",
+   "L_um": 0.0,
+   "stages405": 0,
+   "stages200": 0
+  },
+  {
+   "bus": "dv_st_E1",
+   "cls": "dv_gather",
+   "bits": 2272,
+   "src": "dvs_E1",
+   "dst": "dvs_E2",
+   "L_um": 0.0,
+   "stages405": 0,
+   "stages200": 0
+  },
+  {
+   "bus": "dv_ch_E1",
+   "cls": "dv_ring",
+   "bits": 2132,
+   "src": "dvs_E2",
+   "dst": "dvs_E1",
+   "L_um": 0.0,
+   "stages405": 0,
+   "stages200": 0
+  },
+  {
+   "bus": "dv_l9_E2",
+   "cls": "dv_reduce",
+   "bits": 514,
+   "src": "dvs_E3",
+   "dst": "dvs_E2",
+   "L_um": 0.0,
+   "stages405": 0,
+   "stages200": 0
+  },
+  {
+   "bus": "dv_st_E2",
+   "cls": "dv_gather",
+   "bits": 2272,
+   "src": "dvs_E2",
+   "dst": "dvs_E3",
+   "L_um": 0.0,
+   "stages405": 0,
+   "stages200": 0
+  },
+  {
+   "bus": "dv_ch_E2",
+   "cls": "dv_ring",
+   "bits": 2132,
+   "src": "dvs_E3",
+   "dst": "dvs_E2",
+   "L_um": 0.0,
+   "stages405": 0,
+   "stages200": 0
+  },
+  {
+   "bus": "dv_st_E3",
+   "cls": "dv_gather",
+   "bits": 2272,
+   "src": "dvs_E3",
+   "dst": "dvs_E4",
+   "L_um": 0.0,
+   "stages405": 0,
+   "stages200": 0
+  },
+  {
+   "bus": "dv_ch_E3",
+   "cls": "dv_ring",
+   "bits": 2132,
+   "src": "dvs_E4",
+   "dst": "dvs_E3",
+   "L_um": 0.0,
+   "stages405": 0,
+   "stages200": 0
+  },
+  {
+   "bus": "dv_l9_E4",
+   "cls": "dv_reduce",
+   "bits": 514,
+   "src": "dvs_E5",
+   "dst": "dvs_E4",
+   "L_um": 0.0,
+   "stages405": 0,
+   "stages200": 0
+  },
+  {
+   "bus": "dv_st_E4",
+   "cls": "dv_gather",
+   "bits": 2272,
+   "src": "dvs_E4",
+   "dst": "dvs_E5",
+   "L_um": 0.0,
+   "stages405": 0,
+   "stages200": 0
+  },
+  {
+   "bus": "dv_ch_E4",
+   "cls": "dv_ring",
+   "bits": 2132,
+   "src": "dvs_E5",
+   "dst": "dvs_E4",
+   "L_um": 0.0,
+   "stages405": 0,
+   "stages200": 0
+  }
+ ],
+ "longest": [
+  {
+   "bus": "ng_io_cmd_free_0",
+   "cls": "spine_local",
+   "bits": 1,
+   "src": "io_collective",
+   "dst": "sys_face",
+   "L_um": 19280.2,
+   "stages405": 47,
+   "stages200": 96
+  },
+  {
+   "bus": "sf_io_fault",
+   "cls": "spine_local",
+   "bits": 1,
+   "src": "io_collective",
+   "dst": "sys_face",
+   "L_um": 19280.2,
+   "stages405": 47,
+   "stages200": 96
+  },
+  {
+   "bus": "sf_io_shared_fault",
+   "cls": "spine_local",
+   "bits": 1,
+   "src": "io_collective",
+   "dst": "sys_face",
+   "L_um": 19280.2,
+   "stages405": 47,
+   "stages200": 96
+  },
+  {
+   "bus": "sf_emb_word_v",
+   "cls": "spine_local",
+   "bits": 1,
+   "src": "sys_face",
+   "dst": "embed_prov",
+   "L_um": 11176.7,
+   "stages405": 27,
+   "stages200": 55
+  },
+  {
+   "bus": "sf_emb_word_data",
+   "cls": "spine_local",
+   "bits": 512,
+   "src": "sys_face",
+   "dst": "embed_prov",
+   "L_um": 11176.7,
+   "stages405": 27,
+   "stages200": 55
+  },
+  {
+   "bus": "sf_emb_word_token",
+   "cls": "spine_local",
+   "bits": 18,
+   "src": "sys_face",
+   "dst": "embed_prov",
+   "L_um": 11176.7,
+   "stages405": 27,
+   "stages200": 55
+  },
+  {
+   "bus": "sf_emb_word_index",
+   "cls": "spine_local",
+   "bits": 6,
+   "src": "sys_face",
+   "dst": "embed_prov",
+   "L_um": 11176.7,
+   "stages405": 27,
+   "stages200": 55
+  },
+  {
+   "bus": "sf_emb_word_scale",
+   "cls": "spine_local",
+   "bits": 1,
+   "src": "sys_face",
+   "dst": "embed_prov",
+   "L_um": 11176.7,
+   "stages405": 27,
+   "stages200": 55
+  },
+  {
+   "bus": "sf_emb_word_epoch",
+   "cls": "spine_local",
+   "bits": 16,
+   "src": "sys_face",
+   "dst": "embed_prov",
+   "L_um": 11176.7,
+   "stages405": 27,
+   "stages200": 55
+  },
+  {
+   "bus": "sf_emb_expected_slot",
+   "cls": "spine_local",
+   "bits": 1,
+   "src": "sys_face",
+   "dst": "embed_prov",
+   "L_um": 11176.7,
+   "stages405": 27,
+   "stages200": 55
+  },
+  {
+   "bus": "sf_emb_expected_token",
+   "cls": "spine_local",
+   "bits": 18,
+   "src": "sys_face",
+   "dst": "embed_prov",
+   "L_um": 11176.7,
+   "stages405": 27,
+   "stages200": 55
+  },
+  {
+   "bus": "sf_emb_expected_word",
+   "cls": "spine_local",
+   "bits": 6,
+   "src": "sys_face",
+   "dst": "embed_prov",
+   "L_um": 11176.7,
+   "stages405": 27,
+   "stages200": 55
+  },
+  {
+   "bus": "sf_emb_expected_scale",
+   "cls": "spine_local",
+   "bits": 1,
+   "src": "sys_face",
+   "dst": "embed_prov",
+   "L_um": 11176.7,
+   "stages405": 27,
+   "stages200": 55
+  },
+  {
+   "bus": "sf_emb_expected_epoch",
+   "cls": "spine_local",
+   "bits": 16,
+   "src": "sys_face",
+   "dst": "embed_prov",
+   "L_um": 11176.7,
+   "stages405": 27,
+   "stages200": 55
+  },
+  {
+   "bus": "sf_emb_fill_begin",
+   "cls": "spine_local",
+   "bits": 1,
+   "src": "sys_face",
+   "dst": "embed_prov",
+   "L_um": 11176.7,
+   "stages405": 27,
+   "stages200": 55
+  }
+ ]
+}
