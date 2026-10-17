@@ -124,7 +124,8 @@
    "group_max": 1,
    "h": "M4",
    "v": "M3 M5"
-  }
+  },
+  "macro_halo_um": 10.8
  },
  "structural_change": "S81-TILES2 10-17 (coordinator-approved): aq12 x wait line (1024 b x 11 flops, the FF hold class u_aq.u_x.g_line.line[i]->line[i+1024]) becomes a fixed-pointer SRAM ring (AQ_XMEM=1: 4 x 128x256 macros, one abutted N-S bank at the E side, pins W facing one std-cell band); -11.3k flops; bit-exact vs the flop line (aq12_xmem bench + mutant).",
  "job": {
