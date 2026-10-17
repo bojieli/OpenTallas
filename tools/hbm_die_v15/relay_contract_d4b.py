@@ -180,12 +180,12 @@ def main():
         for s in sl:
             p0 = root if s['parent'] is None else pos[s['parent']]
             h = s['hop_um'] if router is not None else RP.md(p0, s['pt']); hops.append(h)
-            if h > R + 0.5: hop_viol.append(dict(bus=r['driver'], to=f"station {s['id']}", hop_um=round(h, 1)))
+            if h > R + 0.5: hop_viol.append(dict(bus=r['driver'], to=f"station {s['id']}", hop_um=round(h, 1), domain=r.get('domain'), cls=r['cls'], bits=r['bits'], depth=r.get('depth')))
             if h > worst[0]: worst = (h, f"{r['driver']} -> station {s['id']}")
         for i, s_ in enumerate(sinks):
             p0 = root if tail[i + 1] is None else pos[tail[i + 1]]
             h = RP.md(p0, spts[i]); hops.append(h)
-            if h > R + 0.5: hop_viol.append(dict(bus=r['driver'], to=f'sink {s_}', hop_um=round(h, 1)))
+            if h > R + 0.5: hop_viol.append(dict(bus=r['driver'], to=f'sink {s_}', hop_um=round(h, 1), domain=r.get('domain'), cls=r['cls'], bits=r['bits'], depth=r.get('depth')))
             if h > worst[0]: worst = (h, f"{r['driver']} -> sink {s_}")
     missing = [k for k in rows_by_key if k not in seen]
     for k in missing:

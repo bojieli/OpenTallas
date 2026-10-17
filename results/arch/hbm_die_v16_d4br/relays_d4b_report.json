@@ -30,757 +30,1361 @@
   {
    "bus": "smw_SW.wq",
    "to": "sink hb_vms_SW",
-   "hop_um": 452.7
+   "hop_um": 452.7,
+   "domain": "stream",
+   "cls": "p2p",
+   "bits": 2248,
+   "depth": 21
   },
   {
    "bus": "hb_vms_SW.ccw_out",
    "to": "station 0",
-   "hop_um": 540.0
+   "hop_um": 540.0,
+   "domain": "stream",
+   "cls": "p2p",
+   "bits": 2224,
+   "depth": 30
   },
   {
    "bus": "hb_vms_SE.ccw_out",
    "to": "sink hb_vms_SW",
-   "hop_um": 536.0
+   "hop_um": 536.0,
+   "domain": "stream",
+   "cls": "p2p",
+   "bits": 2224,
+   "depth": 54
   },
   {
    "bus": "sfup_NW.compiler_control+io_word",
    "to": "sink sfucore_NW",
-   "hop_um": 964.3
+   "hop_um": 964.3,
+   "domain": "stream",
+   "cls": "p2p",
+   "bits": 2213,
+   "depth": 4
   },
   {
    "bus": "sfup_SW.compiler_control+io_word",
    "to": "sink sfucore_SW",
-   "hop_um": 862.7
+   "hop_um": 862.7,
+   "domain": "stream",
+   "cls": "p2p",
+   "bits": 2213,
+   "depth": 7
   },
   {
    "bus": "xl_SE_ctl.xw_addr+xw_data+xw_en+xw_grp",
    "to": "station 122",
-   "hop_um": 460.0
+   "hop_um": 460.0,
+   "domain": "stream",
+   "cls": "equal_age_pad",
+   "bits": 2063,
+   "depth": 61
   },
   {
    "bus": "sfucore_NW.kv_waddr+kv_wdata+kv_we+vi_addr+vi_re",
    "to": "station 0",
-   "hop_um": 880.0
+   "hop_um": 880.0,
+   "domain": "stream",
+   "cls": "p2p",
+   "bits": 1312,
+   "depth": 7
   },
   {
    "bus": "sfucore_SW.kv_waddr+kv_wdata+kv_we+vi_addr+vi_re",
    "to": "station 0",
-   "hop_um": 800.0
+   "hop_um": 800.0,
+   "domain": "stream",
+   "cls": "p2p",
+   "bits": 1312,
+   "depth": 4
   },
   {
    "bus": "svg_SW7.sm_command+sm_packet",
    "to": "sink sm_SW7",
-   "hop_um": 451.3
+   "hop_um": 451.3,
+   "domain": "hbm",
+   "cls": "p2p",
+   "bits": 1182,
+   "depth": 37
   },
   {
    "bus": "xl_NE_ctl.c_d+c_mhi+c_mlo+c_wa+r_a+r_ce",
    "to": "sink xl_NE_bfq3",
-   "hop_um": 627.1
+   "hop_um": 627.1,
+   "domain": "stream",
+   "cls": "equal_age_pad",
+   "bits": 1048,
+   "depth": 3
   },
   {
    "bus": "xl_NW_ctl.c_d+c_mhi+c_mlo+c_wa+r_a+r_ce",
    "to": "sink xl_NW_bfq3",
-   "hop_um": 513.3
+   "hop_um": 513.3,
+   "domain": "stream",
+   "cls": "equal_age_pad",
+   "bits": 1048,
+   "depth": 4
   },
   {
    "bus": "sucx_NE.dw_d+dw_row+dw_v",
    "to": "sink su_NE0",
-   "hop_um": 840.3
+   "hop_um": 840.3,
+   "domain": "serial",
+   "cls": "p2p",
+   "bits": 1044,
+   "depth": 41
   },
   {
    "bus": "sucx_NE.dw_d+dw_row+dw_v",
    "to": "sink su_NE1",
-   "hop_um": 837.4
+   "hop_um": 837.4,
+   "domain": "serial",
+   "cls": "p2p",
+   "bits": 1044,
+   "depth": 35
   },
   {
    "bus": "sucx_NE.dw_d+dw_row+dw_v",
    "to": "sink su_NE2",
-   "hop_um": 859.7
+   "hop_um": 859.7,
+   "domain": "serial",
+   "cls": "p2p",
+   "bits": 1044,
+   "depth": 27
   },
   {
    "bus": "sucx_NE.dw_d+dw_row+dw_v",
    "to": "sink su_NE3",
-   "hop_um": 1056.6
+   "hop_um": 1056.6,
+   "domain": "serial",
+   "cls": "p2p",
+   "bits": 1044,
+   "depth": 16
   },
   {
    "bus": "sucx_NW.dw_d+dw_row+dw_v",
    "to": "sink su_NW0",
-   "hop_um": 853.8
+   "hop_um": 853.8,
+   "domain": "serial",
+   "cls": "p2p",
+   "bits": 1044,
+   "depth": 37
   },
   {
    "bus": "sucx_NW.dw_d+dw_row+dw_v",
    "to": "sink su_NW1",
-   "hop_um": 1042.2
+   "hop_um": 1042.2,
+   "domain": "serial",
+   "cls": "p2p",
+   "bits": 1044,
+   "depth": 28
   },
   {
    "bus": "sucx_NW.dw_d+dw_row+dw_v",
    "to": "sink su_NW2",
-   "hop_um": 845.4
+   "hop_um": 845.4,
+   "domain": "serial",
+   "cls": "p2p",
+   "bits": 1044,
+   "depth": 19
   },
   {
    "bus": "sucx_NW.dw_d+dw_row+dw_v",
    "to": "sink su_NW3",
-   "hop_um": 833.7
+   "hop_um": 833.7,
+   "domain": "serial",
+   "cls": "p2p",
+   "bits": 1044,
+   "depth": 3
   },
   {
    "bus": "su_NE0.inj_q",
    "to": "station 0",
-   "hop_um": 740.0
+   "hop_um": 740.0,
+   "domain": "serial",
+   "cls": "p2p",
+   "bits": 1024,
+   "depth": 41
   },
   {
    "bus": "su_NE1.inj_q",
    "to": "station 0",
-   "hop_um": 740.0
+   "hop_um": 740.0,
+   "domain": "serial",
+   "cls": "p2p",
+   "bits": 1024,
+   "depth": 35
   },
   {
    "bus": "su_NE2.inj_q",
    "to": "station 0",
-   "hop_um": 740.0
+   "hop_um": 740.0,
+   "domain": "serial",
+   "cls": "p2p",
+   "bits": 1024,
+   "depth": 27
   },
   {
    "bus": "su_NE3.inj_q",
    "to": "station 0",
-   "hop_um": 740.0
+   "hop_um": 740.0,
+   "domain": "serial",
+   "cls": "p2p",
+   "bits": 1024,
+   "depth": 17
   },
   {
    "bus": "su_NW0.inj_q",
    "to": "station 0",
-   "hop_um": 740.0
+   "hop_um": 740.0,
+   "domain": "serial",
+   "cls": "p2p",
+   "bits": 1024,
+   "depth": 37
   },
   {
    "bus": "su_NW1.inj_q",
    "to": "station 0",
-   "hop_um": 740.0
+   "hop_um": 740.0,
+   "domain": "serial",
+   "cls": "p2p",
+   "bits": 1024,
+   "depth": 29
   },
   {
    "bus": "su_NW2.inj_q",
    "to": "station 0",
-   "hop_um": 740.0
+   "hop_um": 740.0,
+   "domain": "serial",
+   "cls": "p2p",
+   "bits": 1024,
+   "depth": 19
   },
   {
    "bus": "su_NW3.inj_q",
    "to": "station 0",
-   "hop_um": 740.0
+   "hop_um": 740.0,
+   "domain": "serial",
+   "cls": "p2p",
+   "bits": 1024,
+   "depth": 4
   },
   {
    "bus": "sfr_SW1_b04.o",
    "to": "sink sfr_SW1_b05",
-   "hop_um": 456.8
+   "hop_um": 456.8,
+   "domain": "stream",
+   "cls": "p2p",
+   "bits": 624,
+   "depth": 19
   },
   {
    "bus": "ep_S0.phy_up+rx_pin_flit+rx_pin_v",
    "to": "sink hb_coll_SW",
-   "hop_um": 652.2
+   "hop_um": 652.2,
+   "domain": "stream",
+   "cls": "p2p",
+   "bits": 614,
+   "depth": 19
   },
   {
    "bus": "ep_S1.phy_up+rx_pin_flit+rx_pin_v",
    "to": "sink hb_coll_SW",
-   "hop_um": 613.6
+   "hop_um": 613.6,
+   "domain": "stream",
+   "cls": "p2p",
+   "bits": 614,
+   "depth": 20
   },
   {
    "bus": "sfucore_NE.local_rq+local_wq",
    "to": "station 0",
-   "hop_um": 780.0
+   "hop_um": 780.0,
+   "domain": "stream",
+   "cls": "p2p",
+   "bits": 596,
+   "depth": 1
   },
   {
    "bus": "sfucore_NE.local_rq+local_wq",
    "to": "station 0",
-   "hop_um": 780.0
+   "hop_um": 780.0,
+   "domain": "stream",
+   "cls": "p2p",
+   "bits": 596,
+   "depth": 1
   },
   {
    "bus": "sfucore_NE.local_rq+local_wq",
    "to": "station 0",
-   "hop_um": 780.0
+   "hop_um": 780.0,
+   "domain": "stream",
+   "cls": "p2p",
+   "bits": 596,
+   "depth": 2
   },
   {
    "bus": "sfucore_NE.local_rq+local_wq",
    "to": "station 0",
-   "hop_um": 780.0
+   "hop_um": 780.0,
+   "domain": "stream",
+   "cls": "p2p",
+   "bits": 596,
+   "depth": 1
   },
   {
    "bus": "sfucore_SE.local_rq+local_wq",
    "to": "station 0",
-   "hop_um": 780.0
+   "hop_um": 780.0,
+   "domain": "stream",
+   "cls": "p2p",
+   "bits": 596,
+   "depth": 1
   },
   {
    "bus": "sfucore_SE.local_rq+local_wq",
    "to": "station 0",
-   "hop_um": 780.0
+   "hop_um": 780.0,
+   "domain": "stream",
+   "cls": "p2p",
+   "bits": 596,
+   "depth": 1
   },
   {
    "bus": "sfucore_SE.local_rq+local_wq",
    "to": "station 0",
-   "hop_um": 720.0
+   "hop_um": 720.0,
+   "domain": "stream",
+   "cls": "p2p",
+   "bits": 596,
+   "depth": 8
   },
   {
    "bus": "sfucore_SE.local_rq+local_wq",
    "to": "station 0",
-   "hop_um": 680.0
+   "hop_um": 680.0,
+   "domain": "stream",
+   "cls": "p2p",
+   "bits": 596,
+   "depth": 8
   },
   {
    "bus": "sfucore_NE.ro_v+ro_x",
    "to": "station 0",
-   "hop_um": 780.0
+   "hop_um": 780.0,
+   "domain": "stream",
+   "cls": "p2p",
+   "bits": 528,
+   "depth": 24
   },
   {
    "bus": "sfucore_SE.ro_v+ro_x",
    "to": "station 0",
-   "hop_um": 600.0
+   "hop_um": 600.0,
+   "domain": "stream",
+   "cls": "p2p",
+   "bits": 528,
+   "depth": 25
   },
   {
    "bus": "sfr_NE0_b10.o",
    "to": "sink sfucore_NE",
-   "hop_um": 783.4
+   "hop_um": 783.4,
+   "domain": "stream",
+   "cls": "p2p",
+   "bits": 516,
+   "depth": 1
   },
   {
    "bus": "sfr_NE3_b10.o",
    "to": "sink sfucore_NE",
-   "hop_um": 955.6
+   "hop_um": 955.6,
+   "domain": "stream",
+   "cls": "p2p",
+   "bits": 516,
+   "depth": 1
   },
   {
    "bus": "sfr_SE0_b10.o",
    "to": "sink sfucore_SE",
-   "hop_um": 847.4
+   "hop_um": 847.4,
+   "domain": "stream",
+   "cls": "p2p",
+   "bits": 516,
+   "depth": 1
   },
   {
    "bus": "sfr_SE1_b10.o",
    "to": "sink sfucore_SE",
-   "hop_um": 790.0
+   "hop_um": 790.0,
+   "domain": "stream",
+   "cls": "p2p",
+   "bits": 516,
+   "depth": 1
   },
   {
    "bus": "sfr_SE2_b10.o",
    "to": "sink sfucore_SE",
-   "hop_um": 785.7
+   "hop_um": 785.7,
+   "domain": "stream",
+   "cls": "p2p",
+   "bits": 516,
+   "depth": 1
   },
   {
    "bus": "sfr_SE3_b10.o",
    "to": "sink sfucore_SE",
-   "hop_um": 791.7
+   "hop_um": 791.7,
+   "domain": "stream",
+   "cls": "p2p",
+   "bits": 516,
+   "depth": 1
   },
   {
    "bus": "sfus_NW.vi_q",
    "to": "sink sfucore_NW",
-   "hop_um": 1051.7
+   "hop_um": 1051.7,
+   "domain": "stream",
+   "cls": "p2p",
+   "bits": 512,
+   "depth": 6
   },
   {
    "bus": "sfus_SW.vi_q",
    "to": "sink sfucore_SW",
-   "hop_um": 796.9
+   "hop_um": 796.9,
+   "domain": "stream",
+   "cls": "p2p",
+   "bits": 512,
+   "depth": 4
   },
   {
    "bus": "sucore_NW.rf_bcmd+rf_bword+rf_dsec",
    "to": "station 33",
-   "hop_um": 1600.0
+   "hop_um": 1600.0,
+   "domain": "serial",
+   "cls": "equal_age_pad",
+   "bits": 420,
+   "depth": 53
   },
   {
    "bus": "sucore_NW.rf_bcmd+rf_bword+rf_dsec",
    "to": "sink su_NW1",
-   "hop_um": 808.9
+   "hop_um": 808.9,
+   "domain": "serial",
+   "cls": "equal_age_pad",
+   "bits": 420,
+   "depth": 53
   },
   {
    "bus": "sucore_SE.rf_bcmd+rf_bword+rf_dsec",
    "to": "station 22",
-   "hop_um": 820.0
+   "hop_um": 820.0,
+   "domain": "serial",
+   "cls": "equal_age_pad",
+   "bits": 420,
+   "depth": 53
   },
   {
    "bus": "sucore_SE.rf_bcmd+rf_bword+rf_dsec",
    "to": "sink su_SE2",
-   "hop_um": 520.7
+   "hop_um": 520.7,
+   "domain": "serial",
+   "cls": "equal_age_pad",
+   "bits": 420,
+   "depth": 53
   },
   {
    "bus": "sucore_SW.rf_bcmd+rf_bword+rf_dsec",
    "to": "station 32",
-   "hop_um": 1640.0
+   "hop_um": 1640.0,
+   "domain": "serial",
+   "cls": "equal_age_pad",
+   "bits": 420,
+   "depth": 51
   },
   {
    "bus": "sucore_SW.rf_bcmd+rf_bword+rf_dsec",
    "to": "sink su_SW1",
-   "hop_um": 814.6
+   "hop_um": 814.6,
+   "domain": "serial",
+   "cls": "equal_age_pad",
+   "bits": 420,
+   "depth": 51
   },
   {
    "bus": "lg_SE_0_b7.near_rq+near_wq",
    "to": "sink hb_vms_SE",
-   "hop_um": 453.0
+   "hop_um": 453.0,
+   "domain": "stream",
+   "cls": "p2p",
+   "bits": 298,
+   "depth": 19
   },
   {
    "bus": "lg_SE_0_b5.near_rq+near_wq",
    "to": "sink hb_vms_SE",
-   "hop_um": 458.2
+   "hop_um": 458.2,
+   "domain": "stream",
+   "cls": "p2p",
+   "bits": 298,
+   "depth": 11
   },
   {
    "bus": "lg_SW_0_b2.near_rq+near_wq",
    "to": "sink hb_vms_SW",
-   "hop_um": 453.3
+   "hop_um": 453.3,
+   "domain": "stream",
+   "cls": "p2p",
+   "bits": 298,
+   "depth": 17
   },
   {
    "bus": "su_NE1.lg_rq+lg_wq",
    "to": "station 0",
-   "hop_um": 800.0
+   "hop_um": 800.0,
+   "domain": "serial",
+   "cls": "p2p",
+   "bits": 298,
+   "depth": 17
   },
   {
    "bus": "su_NE1.lg_rq+lg_wq",
    "to": "station 0",
-   "hop_um": 800.0
+   "hop_um": 800.0,
+   "domain": "serial",
+   "cls": "p2p",
+   "bits": 298,
+   "depth": 17
   },
   {
    "bus": "lg_NW_1_b1.near_rq+near_wq",
    "to": "sink lg_NW_0_b1",
-   "hop_um": 455.0
+   "hop_um": 455.0,
+   "domain": "stream",
+   "cls": "p2p",
+   "bits": 298,
+   "depth": 11
   },
   {
    "bus": "su_SE1.lg_rq+lg_wq",
    "to": "station 0",
-   "hop_um": 800.0
+   "hop_um": 800.0,
+   "domain": "serial",
+   "cls": "p2p",
+   "bits": 298,
+   "depth": 16
   },
   {
    "bus": "su_SE1.lg_rq+lg_wq",
    "to": "station 0",
-   "hop_um": 800.0
+   "hop_um": 800.0,
+   "domain": "serial",
+   "cls": "p2p",
+   "bits": 298,
+   "depth": 17
   },
   {
    "bus": "vmdel_SE0.dq",
    "to": "sink hb_vms_SE",
-   "hop_um": 544.1
+   "hop_um": 544.1,
+   "domain": "stream",
+   "cls": "p2p",
+   "bits": 281,
+   "depth": 21
   },
   {
    "bus": "sm_NE3.fault+rdata+rrow+rv+schedule_fault",
    "to": "station 0",
-   "hop_um": 500.0
+   "hop_um": 500.0,
+   "domain": "stream",
+   "cls": "p2p",
+   "bits": 271,
+   "depth": 18
   },
   {
    "bus": "sm_NE6.fault+rdata+rrow+rv+schedule_fault",
    "to": "station 0",
-   "hop_um": 1780.0
+   "hop_um": 1780.0,
+   "domain": "stream",
+   "cls": "p2p",
+   "bits": 271,
+   "depth": 33
   },
   {
    "bus": "sm_NE7.fault+rdata+rrow+rv+schedule_fault",
    "to": "station 0",
-   "hop_um": 1780.0
+   "hop_um": 1780.0,
+   "domain": "stream",
+   "cls": "p2p",
+   "bits": 271,
+   "depth": 18
   },
   {
    "bus": "sm_NW6.fault+rdata+rrow+rv+schedule_fault",
    "to": "station 0",
-   "hop_um": 1780.0
+   "hop_um": 1780.0,
+   "domain": "stream",
+   "cls": "p2p",
+   "bits": 271,
+   "depth": 34
   },
   {
    "bus": "sm_NW7.fault+rdata+rrow+rv+schedule_fault",
    "to": "station 0",
-   "hop_um": 1780.0
+   "hop_um": 1780.0,
+   "domain": "stream",
+   "cls": "p2p",
+   "bits": 271,
+   "depth": 18
   },
   {
    "bus": "sm_SE3.fault+rdata+rrow+rv+schedule_fault",
    "to": "station 0",
-   "hop_um": 500.0
+   "hop_um": 500.0,
+   "domain": "stream",
+   "cls": "p2p",
+   "bits": 271,
+   "depth": 18
   },
   {
    "bus": "sm_SE6.fault+rdata+rrow+rv+schedule_fault",
    "to": "station 0",
-   "hop_um": 1780.0
+   "hop_um": 1780.0,
+   "domain": "stream",
+   "cls": "p2p",
+   "bits": 271,
+   "depth": 33
   },
   {
    "bus": "sm_SE7.fault+rdata+rrow+rv+schedule_fault",
    "to": "station 0",
-   "hop_um": 1780.0
+   "hop_um": 1780.0,
+   "domain": "stream",
+   "cls": "p2p",
+   "bits": 271,
+   "depth": 18
   },
   {
    "bus": "sm_SW3.fault+rdata+rrow+rv+schedule_fault",
    "to": "station 0",
-   "hop_um": 520.0
+   "hop_um": 520.0,
+   "domain": "stream",
+   "cls": "p2p",
+   "bits": 271,
+   "depth": 19
   },
   {
    "bus": "sm_SW6.fault+rdata+rrow+rv+schedule_fault",
    "to": "station 0",
-   "hop_um": 1780.0
+   "hop_um": 1780.0,
+   "domain": "stream",
+   "cls": "p2p",
+   "bits": 271,
+   "depth": 34
   },
   {
    "bus": "sm_SW7.fault+rdata+rrow+rv+schedule_fault",
    "to": "station 0",
-   "hop_um": 1780.0
+   "hop_um": 1780.0,
+   "domain": "stream",
+   "cls": "p2p",
+   "bits": 271,
+   "depth": 18
   },
   {
    "bus": "host_cp_ingress.cfg_addr+cfg_data",
    "to": "station 4",
-   "hop_um": 460.0
+   "hop_um": 460.0,
+   "domain": "stream",
+   "cls": "cfg_no_pad",
+   "bits": 268,
+   "depth": 97
   },
   {
    "bus": "host_cp_ingress.cfg_addr+cfg_data",
    "to": "station 22",
-   "hop_um": 460.0
+   "hop_um": 460.0,
+   "domain": "stream",
+   "cls": "cfg_no_pad",
+   "bits": 268,
+   "depth": 97
   },
   {
    "bus": "host_cp_ingress.cfg_addr+cfg_data",
    "to": "station 39",
-   "hop_um": 460.0
+   "hop_um": 460.0,
+   "domain": "stream",
+   "cls": "cfg_no_pad",
+   "bits": 268,
+   "depth": 97
   },
   {
    "bus": "host_cp_ingress.cfg_addr+cfg_data",
    "to": "station 40",
-   "hop_um": 460.0
+   "hop_um": 460.0,
+   "domain": "stream",
+   "cls": "cfg_no_pad",
+   "bits": 268,
+   "depth": 97
   },
   {
    "bus": "host_cp_ingress.cfg_addr+cfg_data",
    "to": "station 118",
-   "hop_um": 460.0
+   "hop_um": 460.0,
+   "domain": "stream",
+   "cls": "cfg_no_pad",
+   "bits": 268,
+   "depth": 97
   },
   {
    "bus": "host_cp_ingress.cfg_addr+cfg_data",
    "to": "station 126",
-   "hop_um": 460.0
+   "hop_um": 460.0,
+   "domain": "stream",
+   "cls": "cfg_no_pad",
+   "bits": 268,
+   "depth": 97
   },
   {
    "bus": "host_cp_ingress.cfg_addr+cfg_data",
    "to": "station 130",
-   "hop_um": 460.0
+   "hop_um": 460.0,
+   "domain": "stream",
+   "cls": "cfg_no_pad",
+   "bits": 268,
+   "depth": 97
   },
   {
    "bus": "host_cp_ingress.cfg_addr+cfg_data",
    "to": "station 135",
-   "hop_um": 460.0
+   "hop_um": 460.0,
+   "domain": "stream",
+   "cls": "cfg_no_pad",
+   "bits": 268,
+   "depth": 97
   },
   {
    "bus": "host_cp_ingress.cfg_addr+cfg_data",
    "to": "station 213",
-   "hop_um": 460.0
+   "hop_um": 460.0,
+   "domain": "stream",
+   "cls": "cfg_no_pad",
+   "bits": 268,
+   "depth": 97
   },
   {
    "bus": "host_cp_ingress.cfg_addr+cfg_data",
    "to": "station 217",
-   "hop_um": 460.0
+   "hop_um": 460.0,
+   "domain": "stream",
+   "cls": "cfg_no_pad",
+   "bits": 268,
+   "depth": 97
   },
   {
    "bus": "host_cp_ingress.cfg_addr+cfg_data",
    "to": "station 237",
-   "hop_um": 500.0
+   "hop_um": 500.0,
+   "domain": "stream",
+   "cls": "cfg_no_pad",
+   "bits": 268,
+   "depth": 97
   },
   {
    "bus": "host_cp_ingress.cfg_addr+cfg_data",
    "to": "station 238",
-   "hop_um": 500.0
+   "hop_um": 500.0,
+   "domain": "stream",
+   "cls": "cfg_no_pad",
+   "bits": 268,
+   "depth": 97
   },
   {
    "bus": "host_cp_ingress.cfg_addr+cfg_data",
    "to": "station 245",
-   "hop_um": 460.0
+   "hop_um": 460.0,
+   "domain": "stream",
+   "cls": "cfg_no_pad",
+   "bits": 268,
+   "depth": 97
   },
   {
    "bus": "host_cp_ingress.cfg_addr+cfg_data",
    "to": "station 281",
-   "hop_um": 460.0
+   "hop_um": 460.0,
+   "domain": "stream",
+   "cls": "cfg_no_pad",
+   "bits": 268,
+   "depth": 97
   },
   {
    "bus": "host_cp_ingress.cfg_addr+cfg_data",
    "to": "station 282",
-   "hop_um": 580.0
+   "hop_um": 580.0,
+   "domain": "stream",
+   "cls": "cfg_no_pad",
+   "bits": 268,
+   "depth": 97
   },
   {
    "bus": "host_cp_ingress.cfg_addr+cfg_data",
    "to": "station 334",
-   "hop_um": 540.0
+   "hop_um": 540.0,
+   "domain": "stream",
+   "cls": "cfg_no_pad",
+   "bits": 268,
+   "depth": 97
   },
   {
    "bus": "host_cp_ingress.cfg_addr+cfg_data",
    "to": "station 340",
-   "hop_um": 660.0
+   "hop_um": 660.0,
+   "domain": "stream",
+   "cls": "cfg_no_pad",
+   "bits": 268,
+   "depth": 97
   },
   {
    "bus": "host_cp_ingress.cfg_addr+cfg_data",
    "to": "station 347",
-   "hop_um": 620.0
+   "hop_um": 620.0,
+   "domain": "stream",
+   "cls": "cfg_no_pad",
+   "bits": 268,
+   "depth": 97
   },
   {
    "bus": "host_cp_ingress.cfg_addr+cfg_data",
    "to": "station 350",
-   "hop_um": 480.0
+   "hop_um": 480.0,
+   "domain": "stream",
+   "cls": "cfg_no_pad",
+   "bits": 268,
+   "depth": 97
   },
   {
    "bus": "host_cp_ingress.cfg_addr+cfg_data",
    "to": "sink cp_svg_NE5",
-   "hop_um": 475.3
+   "hop_um": 475.3,
+   "domain": "stream",
+   "cls": "cfg_no_pad",
+   "bits": 268,
+   "depth": 97
   },
   {
    "bus": "host_cp_ingress.cfg_addr+cfg_data",
    "to": "sink vmfc_SW",
-   "hop_um": 456.8
+   "hop_um": 456.8,
+   "domain": "stream",
+   "cls": "cfg_no_pad",
+   "bits": 268,
+   "depth": 97
   },
   {
    "bus": "lg_NE_0_b2.local_rr+local_w_done",
    "to": "sink su_NE1",
-   "hop_um": 1007.1
+   "hop_um": 1007.1,
+   "domain": "stream",
+   "cls": "p2p",
+   "bits": 258,
+   "depth": 16
   },
   {
    "bus": "lg_NE_0_b3.local_rr+local_w_done",
    "to": "sink su_NE1",
-   "hop_um": 811.7
+   "hop_um": 811.7,
+   "domain": "stream",
+   "cls": "p2p",
+   "bits": 258,
+   "depth": 17
   },
   {
    "bus": "lg_SE_0_b2.local_rr+local_w_done",
    "to": "sink su_SE1",
-   "hop_um": 812.8
+   "hop_um": 812.8,
+   "domain": "stream",
+   "cls": "p2p",
+   "bits": 258,
+   "depth": 16
   },
   {
    "bus": "lg_SE_0_b3.local_rr+local_w_done",
    "to": "sink su_SE1",
-   "hop_um": 849.5
+   "hop_um": 849.5,
+   "domain": "stream",
+   "cls": "p2p",
+   "bits": 258,
+   "depth": 16
   },
   {
    "bus": "lg_SW_0_b4.local_rr+local_w_done",
    "to": "sink su_SW2",
-   "hop_um": 522.6
+   "hop_um": 522.6,
+   "domain": "stream",
+   "cls": "p2p",
+   "bits": 258,
+   "depth": 11
   },
   {
    "bus": "xc_SE4.cmd_ext+kv_desc",
    "to": "sink sm_SE4",
-   "hop_um": 452.7
+   "hop_um": 452.7,
+   "domain": "stream",
+   "cls": "p2p",
+   "bits": 173,
+   "depth": 27
   },
   {
    "bus": "hb_coll_NE.hgi_inj_addr+inj_rd",
    "to": "station 3",
-   "hop_um": 1840.0
+   "hop_um": 1840.0,
+   "domain": "stream",
+   "cls": "equal_age_pad",
+   "bits": 162,
+   "depth": 76
   },
   {
    "bus": "hb_coll_NE.hgi_inj_addr+inj_rd",
    "to": "station 25",
-   "hop_um": 1840.0
+   "hop_um": 1840.0,
+   "domain": "stream",
+   "cls": "equal_age_pad",
+   "bits": 162,
+   "depth": 76
   },
   {
    "bus": "hb_coll_NE.hgi_inj_addr+inj_rd",
    "to": "station 49",
-   "hop_um": 1840.0
+   "hop_um": 1840.0,
+   "domain": "stream",
+   "cls": "equal_age_pad",
+   "bits": 162,
+   "depth": 76
   },
   {
    "bus": "hb_coll_NE.hgi_inj_addr+inj_rd",
    "to": "sink su_NE0",
-   "hop_um": 1137.2
+   "hop_um": 1137.2,
+   "domain": "stream",
+   "cls": "equal_age_pad",
+   "bits": 162,
+   "depth": 76
   },
   {
    "bus": "hb_coll_NE.hgi_inj_addr+inj_rd",
    "to": "sink su_NE1",
-   "hop_um": 920.3
+   "hop_um": 920.3,
+   "domain": "stream",
+   "cls": "equal_age_pad",
+   "bits": 162,
+   "depth": 76
   },
   {
    "bus": "hb_coll_NE.hgi_inj_addr+inj_rd",
    "to": "sink su_NE2",
-   "hop_um": 918.0
+   "hop_um": 918.0,
+   "domain": "stream",
+   "cls": "equal_age_pad",
+   "bits": 162,
+   "depth": 76
   },
   {
    "bus": "hb_coll_NE.hgi_inj_addr+inj_rd",
    "to": "sink su_NE3",
-   "hop_um": 920.9
+   "hop_um": 920.9,
+   "domain": "stream",
+   "cls": "equal_age_pad",
+   "bits": 162,
+   "depth": 76
   },
   {
    "bus": "hb_coll_NW.hgi_inj_addr+inj_rd",
    "to": "station 17",
-   "hop_um": 1840.0
+   "hop_um": 1840.0,
+   "domain": "stream",
+   "cls": "equal_age_pad",
+   "bits": 162,
+   "depth": 86
   },
   {
    "bus": "hb_coll_NW.hgi_inj_addr+inj_rd",
    "to": "station 39",
-   "hop_um": 2060.0
+   "hop_um": 2060.0,
+   "domain": "stream",
+   "cls": "equal_age_pad",
+   "bits": 162,
+   "depth": 86
   },
   {
    "bus": "hb_coll_NW.hgi_inj_addr+inj_rd",
    "to": "station 65",
-   "hop_um": 1900.0
+   "hop_um": 1900.0,
+   "domain": "stream",
+   "cls": "equal_age_pad",
+   "bits": 162,
+   "depth": 86
   },
   {
    "bus": "hb_coll_NW.hgi_inj_addr+inj_rd",
    "to": "sink su_NW0",
-   "hop_um": 923.9
+   "hop_um": 923.9,
+   "domain": "stream",
+   "cls": "equal_age_pad",
+   "bits": 162,
+   "depth": 86
   },
   {
    "bus": "hb_coll_NW.hgi_inj_addr+inj_rd",
    "to": "sink su_NW1",
-   "hop_um": 975.3
+   "hop_um": 975.3,
+   "domain": "stream",
+   "cls": "equal_age_pad",
+   "bits": 162,
+   "depth": 86
   },
   {
    "bus": "hb_coll_NW.hgi_inj_addr+inj_rd",
    "to": "sink su_NW2",
-   "hop_um": 1132.1
+   "hop_um": 1132.1,
+   "domain": "stream",
+   "cls": "equal_age_pad",
+   "bits": 162,
+   "depth": 86
   },
   {
    "bus": "hb_coll_NW.hgi_inj_addr+inj_rd",
    "to": "sink su_NW3",
-   "hop_um": 924.0
+   "hop_um": 924.0,
+   "domain": "stream",
+   "cls": "equal_age_pad",
+   "bits": 162,
+   "depth": 86
   },
   {
    "bus": "wbk_NE.wbw_base+wbw_total+wbw_v",
    "to": "station 30",
-   "hop_um": 460.0
+   "hop_um": 460.0,
+   "domain": "hbm",
+   "cls": "equal_age_pad",
+   "bits": 43,
+   "depth": 49
   },
   {
    "bus": "wbk_NE.wbw_base+wbw_total+wbw_v",
    "to": "station 37",
-   "hop_um": 460.0
+   "hop_um": 460.0,
+   "domain": "hbm",
+   "cls": "equal_age_pad",
+   "bits": 43,
+   "depth": 49
   },
   {
    "bus": "wbk_NW.wbw_base+wbw_total+wbw_v",
    "to": "station 24",
-   "hop_um": 460.0
+   "hop_um": 460.0,
+   "domain": "hbm",
+   "cls": "equal_age_pad",
+   "bits": 43,
+   "depth": 46
   },
   {
    "bus": "wbk_NW.wbw_base+wbw_total+wbw_v",
    "to": "station 29",
-   "hop_um": 480.0
+   "hop_um": 480.0,
+   "domain": "hbm",
+   "cls": "equal_age_pad",
+   "bits": 43,
+   "depth": 46
   },
   {
    "bus": "host_cp_ingress.desc_base+desc_limit+desc_loops",
    "to": "station 36",
-   "hop_um": 480.0
+   "hop_um": 480.0,
+   "domain": "stream",
+   "cls": "cfg_no_pad",
+   "bits": 41,
+   "depth": 89
   },
   {
    "bus": "host_cp_ingress.desc_base+desc_limit+desc_loops",
    "to": "station 167",
-   "hop_um": 460.0
+   "hop_um": 460.0,
+   "domain": "stream",
+   "cls": "cfg_no_pad",
+   "bits": 41,
+   "depth": 89
   },
   {
    "bus": "host_cp_ingress.desc_base+desc_limit+desc_loops",
    "to": "station 196",
-   "hop_um": 480.0
+   "hop_um": 480.0,
+   "domain": "stream",
+   "cls": "cfg_no_pad",
+   "bits": 41,
+   "depth": 89
   },
   {
    "bus": "host_cp_ingress.desc_base+desc_limit+desc_loops",
    "to": "station 260",
-   "hop_um": 460.0
+   "hop_um": 460.0,
+   "domain": "stream",
+   "cls": "cfg_no_pad",
+   "bits": 41,
+   "depth": 89
   },
   {
    "bus": "host_cp_ingress.desc_base+desc_limit+desc_loops",
    "to": "station 289",
-   "hop_um": 680.0
+   "hop_um": 680.0,
+   "domain": "stream",
+   "cls": "cfg_no_pad",
+   "bits": 41,
+   "depth": 89
   },
   {
    "bus": "host_cp_ingress.desc_base+desc_limit+desc_loops",
    "to": "station 299",
-   "hop_um": 540.0
+   "hop_um": 540.0,
+   "domain": "stream",
+   "cls": "cfg_no_pad",
+   "bits": 41,
+   "depth": 89
   },
   {
    "bus": "host_cp_ingress.desc_base+desc_limit+desc_loops",
    "to": "station 302",
-   "hop_um": 620.0
+   "hop_um": 620.0,
+   "domain": "stream",
+   "cls": "cfg_no_pad",
+   "bits": 41,
+   "depth": 89
   },
   {
    "bus": "host_cp_ingress.desc_base+desc_limit+desc_loops",
    "to": "station 321",
-   "hop_um": 460.0
+   "hop_um": 460.0,
+   "domain": "stream",
+   "cls": "cfg_no_pad",
+   "bits": 41,
+   "depth": 89
   },
   {
    "bus": "host_cp_ingress.desc_base+desc_limit+desc_loops",
    "to": "sink xc_NE3",
-   "hop_um": 452.9
+   "hop_um": 452.9,
+   "domain": "stream",
+   "cls": "cfg_no_pad",
+   "bits": 41,
+   "depth": 89
   },
   {
    "bus": "vmfc_NE.bank_client+hub_ring_client+hub_ring_enable+rslot+rslot_v+wslot_v",
    "to": "station 33",
-   "hop_um": 500.0
+   "hop_um": 500.0,
+   "domain": "stream",
+   "cls": "equal_age_pad",
+   "bits": 37,
+   "depth": 49
   },
   {
    "bus": "vmfc_NE.bank_client+hub_ring_client+hub_ring_enable+rslot+rslot_v+wslot_v",
    "to": "station 39",
-   "hop_um": 580.0
+   "hop_um": 580.0,
+   "domain": "stream",
+   "cls": "equal_age_pad",
+   "bits": 37,
+   "depth": 49
   },
   {
    "bus": "vmfc_NW.bank_client+hub_ring_client+hub_ring_enable+rslot+rslot_v+wslot_v",
    "to": "station 34",
-   "hop_um": 500.0
+   "hop_um": 500.0,
+   "domain": "stream",
+   "cls": "equal_age_pad",
+   "bits": 37,
+   "depth": 48
   },
   {
    "bus": "vmfc_SE.bank_client+hub_ring_client+hub_ring_enable+rslot+rslot_v+wslot_v",
    "to": "station 39",
-   "hop_um": 460.0
+   "hop_um": 460.0,
+   "domain": "stream",
+   "cls": "equal_age_pad",
+   "bits": 37,
+   "depth": 45
   },
   {
    "bus": "su_NW1.slice_x",
    "to": "station 0",
-   "hop_um": 800.0
+   "hop_um": 800.0,
+   "domain": "serial",
+   "cls": "p2p",
+   "bits": 32,
+   "depth": 19
   },
   {
    "bus": "su_SW1.slice_x",
    "to": "station 0",
-   "hop_um": 820.0
+   "hop_um": 820.0,
+   "domain": "serial",
+   "cls": "p2p",
+   "bits": 32,
+   "depth": 18
   },
   {
    "bus": "host_cp_ingress.cfg_target+cfg_v+desc_v+launch_v",
    "to": "station 156",
-   "hop_um": 460.0
+   "hop_um": 460.0,
+   "domain": "stream",
+   "cls": "cfg_no_pad",
+   "bits": 11,
+   "depth": 98
   },
   {
    "bus": "host_cp_ingress.cfg_target+cfg_v+desc_v+launch_v",
    "to": "station 177",
-   "hop_um": 480.0
+   "hop_um": 480.0,
+   "domain": "stream",
+   "cls": "cfg_no_pad",
+   "bits": 11,
+   "depth": 98
   },
   {
    "bus": "host_cp_ingress.cfg_target+cfg_v+desc_v+launch_v",
    "to": "station 282",
-   "hop_um": 540.0
+   "hop_um": 540.0,
+   "domain": "stream",
+   "cls": "cfg_no_pad",
+   "bits": 11,
+   "depth": 98
   },
   {
    "bus": "host_cp_ingress.cfg_target+cfg_v+desc_v+launch_v",
    "to": "station 321",
-   "hop_um": 460.0
+   "hop_um": 460.0,
+   "domain": "stream",
+   "cls": "cfg_no_pad",
+   "bits": 11,
+   "depth": 98
   },
   {
    "bus": "host_cp_ingress.cfg_target+cfg_v+desc_v+launch_v",
    "to": "station 339",
-   "hop_um": 540.0
+   "hop_um": 540.0,
+   "domain": "stream",
+   "cls": "cfg_no_pad",
+   "bits": 11,
+   "depth": 98
   },
   {
    "bus": "host_cp_ingress.cfg_target+cfg_v+desc_v+launch_v",
    "to": "station 345",
-   "hop_um": 620.0
+   "hop_um": 620.0,
+   "domain": "stream",
+   "cls": "cfg_no_pad",
+   "bits": 11,
+   "depth": 98
   },
   {
    "bus": "host_cp_ingress.cfg_target+cfg_v+desc_v+launch_v",
    "to": "station 348",
-   "hop_um": 460.0
+   "hop_um": 460.0,
+   "domain": "stream",
+   "cls": "cfg_no_pad",
+   "bits": 11,
+   "depth": 98
   },
   {
    "bus": "host_cp_ingress.cfg_target+cfg_v+desc_v+launch_v",
    "to": "station 355",
-   "hop_um": 460.0
+   "hop_um": 460.0,
+   "domain": "stream",
+   "cls": "cfg_no_pad",
+   "bits": 11,
+   "depth": 98
   },
   {
    "bus": "host_cp_ingress.cfg_target+cfg_v+desc_v+launch_v",
    "to": "sink epcal_SW",
-   "hop_um": 466.5
+   "hop_um": 466.5,
+   "domain": "stream",
+   "cls": "cfg_no_pad",
+   "bits": 11,
+   "depth": 98
   },
   {
    "bus": "vmdel_NE0.full0+full1+pcbad",
    "to": "station 2",
-   "hop_um": 460.0
+   "hop_um": 460.0,
+   "domain": "stream",
+   "cls": "equal_age_pad",
+   "bits": 3,
+   "depth": 3
   },
   {
    "bus": "vmdel_NE0.full0+full1+pcbad",
    "to": "station 3",
-   "hop_um": 460.0
+   "hop_um": 460.0,
+   "domain": "stream",
+   "cls": "equal_age_pad",
+   "bits": 3,
+   "depth": 3
   },
   {
    "bus": "vmdel_NE6.full0+full1+pcbad",
    "to": "station 1",
-   "hop_um": 460.0
+   "hop_um": 460.0,
+   "domain": "stream",
+   "cls": "equal_age_pad",
+   "bits": 3,
+   "depth": 4
   },
   {
    "bus": "vmdel_NW4.full0+full1+pcbad",
    "to": "station 2",
-   "hop_um": 460.0
+   "hop_um": 460.0,
+   "domain": "stream",
+   "cls": "equal_age_pad",
+   "bits": 3,
+   "depth": 4
   },
   {
    "bus": "vmdel_SE7.full0+full1+pcbad",
    "to": "station 3",
-   "hop_um": 460.0
+   "hop_um": 460.0,
+   "domain": "stream",
+   "cls": "equal_age_pad",
+   "bits": 3,
+   "depth": 4
   },
   {
    "bus": "xl_SE_aqhi.fault+vo",
    "to": "sink xl_SE_ctl",
-   "hop_um": 452.1
+   "hop_um": 452.1,
+   "domain": "stream",
+   "cls": "p2p",
+   "bits": 2,
+   "depth": 1
   },
   {
    "bus": "svg_SE1.fault",
    "to": "station 2",
-   "hop_um": 480.0
+   "hop_um": 480.0,
+   "domain": "hbm",
+   "cls": "equal_age_pad",
+   "bits": 1,
+   "depth": 5
   },
   {
    "bus": "xl_SE_ctl.rn_o",
    "to": "station 6",
-   "hop_um": 560.0
+   "hop_um": 560.0,
+   "domain": "stream",
+   "cls": "equal_age_pad",
+   "bits": 1,
+   "depth": 6
   }
  ],
  "hops": 35471,
