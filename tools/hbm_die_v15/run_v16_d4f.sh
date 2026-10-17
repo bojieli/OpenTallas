@@ -9,17 +9,20 @@ set -euo pipefail
 cd "$(dirname "$0")/../.."
 LAYER=${LAYER:-tools/hbm_die_v15/v16_relays/relays_d4f.json.gz} IDSTRAPS=1 PCH8=1 PCH9B=1 SOFT_IDX=${SOFT_IDX-results/arch/hbm_idx_soft_parent_1016/netmap_nq2_tp192.json} DROPSM=SE,NE \
 DROPI=ep_S2,lk_S2,ep_S4,lk_S4,ep_N1,lk_N1,ep_N3,lk_N3 \
-EXTRA_LAYERS="tools/hbm_die_v15/v16_layers/xql_d4f_bfqg.json tools/hbm_die_v15/v16_layers/sfu_split3_d4f.json tools/hbm_die_v15/v16_layers/vm_q2merge_d4f.json tools/hbm_die_v15/v16_layers/vm_hoist_d4f.json tools/hbm_die_v15/v16_layers/coll_hardv7_d4f.json tools/hbm_die_v15/v16_layers/su_rflocal_d4f.json tools/hbm_die_v15/v16_layers/vm_kshare_krl1_d4f.json tools/hbm_die_v15/v16_layers/wrq_lanes_d4f.json tools/hbm_die_v15/v16_layers/slots_r6_d4f.json tools/hbm_die_v15/v16_layers/xq_pegress_x6_clocks_d4f.json" \
+EXTRA_LAYERS="tools/hbm_die_v15/v16_layers/xql_d4f_bfqg.json tools/hbm_die_v15/v16_layers/sfu_split3_d4f.json tools/hbm_die_v15/v16_layers/vm_q2merge_d4f.json tools/hbm_die_v15/v16_layers/vm_hoist_d4f.json tools/hbm_die_v15/v16_layers/coll_hardv7_d4f.json tools/hbm_die_v15/v16_layers/su_rflocal_d4f.json tools/hbm_die_v15/v16_layers/vm_kshare_krl1_d4f.json tools/hbm_die_v15/v16_layers/wrq_lanes_d4f.json tools/hbm_die_v15/v16_layers/slots_r6_d4f.json tools/hbm_die_v15/v16_layers/xq_pegress_x6_clocks_d4f.json tools/hbm_die_v15/v16_layers/sfu_r14_d4f.json tools/hbm_die_v15/v16_layers/su_prog_part_d4f.json" \
 bash tools/hbm_die_v15/run_v16_d4b.sh "${1:-results/arch/hbm_die_v16_d4f}"
+# H-DIE-R8 10-17: + sfu_r14 (SFU LG chains R14, LG_PATH 15), su_prog_part (su_pgr root + pgp_<q> r4 slices), HBM-FAULT + cp_rx post-layers.
 # H-DIE-R7b 10-17 (coordinator 0da+): HBM-TIE layer (bc32a2e45) on the generated contract + die.v: top-k K from col_idx.prm,
 # 2 ot_hbm_pc_refresh_cfg (refcfg_SW/NW, PC reset held until loaded), xl_<q>_ctl -> ctlx. TIE=0 skips it.
 OUTD="${1:-results/arch/hbm_die_v16_d4f}"
 if [ "${TIE:-1}" = 1 ]; then
   T=$(mktemp -d)
-  zcat "$OUTD/contract.json.gz" > $T/c.json && python3 tools/hbm_die_v15/hbm_tie_1017.py contract $T/c.json $T/ct.json && gzip -c $T/ct.json > "$OUTD/contract.json.gz"
-  zcat "$OUTD/die.v.gz" > $T/d.v && python3 tools/hbm_die_v15/hbm_tie_1017.py die $T/d.v $T/dt.v && gzip -c $T/dt.v > "$OUTD/die.v.gz"
+  zcat "$OUTD/contract.json.gz" > $T/c.json && python3 tools/hbm_die_v15/hbm_tie_1017.py contract $T/c.json $T/ct.json \
+    && python3 tools/hbm_die_v16/hbm_fault_1017.py contract $T/ct.json $T/cf.json && python3 tools/hbm_die_v15/hbm_host_r8_1017.py contract $T/cf.json $T/ct.json && gzip -c $T/ct.json > "$OUTD/contract.json.gz"
+  zcat "$OUTD/die.v.gz" > $T/d.v && python3 tools/hbm_die_v15/hbm_tie_1017.py die $T/d.v $T/dt.v \
+    && python3 tools/hbm_die_v16/hbm_fault_1017.py die $T/dt.v $T/df.v && python3 tools/hbm_die_v15/hbm_host_r8_1017.py die $T/df.v $T/dt.v && gzip -c $T/dt.v > "$OUTD/die.v.gz"
   python3 -c "import json; c=json.load(open('$T/ct.json')); json.dump(dict(straps=sorted({(s['master'], s['port']) for s in c['straps']})), open('$OUTD/straps_tie.json','w'), indent=1)"
-  rm -rf $T; echo "HBM_TIE_LAYER APPLIED"
+  rm -rf $T; echo "HBM_TIE_LAYER APPLIED (+ H-DIE-R8: HBM-FAULT tree / status_join_fa, host cp_rx fold)"
 fi
 # H-NETLIST 2330 (fail-closed source inventory): every module the contract instantiates must resolve to a committed file.
 # In a git checkout this runs here; a non-git fleet copy must be checked from the checkout before the contract commit.
