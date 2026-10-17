@@ -3,7 +3,9 @@
 // Actual raw HOST F20 target plus native V4 quadrant. QID is physical identity,
 // not a programmable destination. Every clock has the same logical edge;
 // physical phi-R insertion is supplied independently at each clock entry.
-module ot_hfd_coll_q3_static_host_v4 #(parameter [1:0] QID=2'd0,parameter integer INJLAT=12)(
+// NLINK (H-NETLIST D4F 2026-10-16): SerDes link lanes of this engine (d4f: SW 2, SE/NW/NE 1); default = the
+// original count.  Lane k <-> tx/rx/phy_up slice k; the compiler programme uses lanes 0..NLINK-1 only (others fault).
+module ot_hfd_coll_q3_static_host_v4 #(parameter integer NLINK=3,parameter [1:0] QID=2'd0,parameter integer INJLAT=12)(
  input wire rst_n,
  input wire clk_program,
  input wire clk_control,
@@ -14,7 +16,7 @@ module ot_hfd_coll_q3_static_host_v4 #(parameter [1:0] QID=2'd0,parameter intege
  input wire clk_arg,
  input wire [33:0] clk_tkm,
  input wire clk_vmwrite,
- input wire [14:0] clk_link,
+ input wire [5*NLINK-1:0] clk_link,
  input wire cfg_v,
  input wire [7:0] cfg_target,
  input wire [11:0] cfg_addr,
@@ -39,12 +41,12 @@ module ot_hfd_coll_q3_static_host_v4 #(parameter [1:0] QID=2'd0,parameter intege
  output wire rr_v,
  output wire [2:0] rr_tag,
  output wire [255:0] rr_d,
- input wire [2:0] phy_up,
- output wire [2:0] tx_pin_v,
- output wire [1835:0] tx_pin_flit,
- input wire [2:0] rx_pin_v,
- input wire [1835:0] rx_pin_flit,
- output wire [2:0] retry_requested,
+ input wire [NLINK-1:0] phy_up,
+ output wire [NLINK-1:0] tx_pin_v,
+ output wire [NLINK*612-1:0] tx_pin_flit,
+ input wire [NLINK-1:0] rx_pin_v,
+ input wire [NLINK*612-1:0] rx_pin_flit,
+ output wire [NLINK-1:0] retry_requested,
  input wire [279:0] pr_cw_i,pr_ccw_i,
  output wire [279:0] pr_cw_o,pr_ccw_o,
  output wire [135:0] vm_rq,
@@ -75,7 +77,7 @@ module ot_hfd_coll_q3_static_host_v4 #(parameter [1:0] QID=2'd0,parameter intege
   if(!rst_n)fault<=0;
   else fault<=fault | program_fault | quad_fault;
  assign hgi_fault=fault;
- ot_hfd_coll_q3_static_v4 #(.INJLAT(INJLAT)) u_q(
+ ot_hfd_coll_q3_static_v4 #(.INJLAT(INJLAT),.NLINK(NLINK)) u_q(
   .rst_n(rst_n),.clk_control(clk_control),.clk_issue(clk_issue),
   .clk_qslots(clk_qslots),.clk_ring(clk_ring),.clk_reduce(clk_reduce),
   .clk_arg(clk_arg),.clk_tkm(clk_tkm),

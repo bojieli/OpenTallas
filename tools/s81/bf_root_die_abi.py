@@ -91,7 +91,9 @@ def rewrite_front(model):
                       for p in FRONT_CLOCK_PORTS}
         assert all(count==1 for count in clock_counts.values()), (name,clock_counts)
     assert all(set(c)==expected for c in coverage.values()), 'all1068 operand bits must have exact source joins'
-    model['buses']=rewritten
+    # S-DIE 1815 10-16: rewrite IN PLACE -- buses_r8 holds B = m['buses'] and keeps appending after this call;
+    # rebinding the key orphaned every later bus (capture/station ports lost: 'unbound capture external bits')
+    model['buses'][:]=rewritten
     model['bf_front_root_abi']=dict(source,instances=sorted(fronts),
                                     operand_joins={name:{f'{p}[{i}]':v for (p,i),v in c.items()}
                                                    for name,c in coverage.items()})
