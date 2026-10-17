@@ -1,3 +1,0 @@
-First read of actual SS libraries failed in consumer load_libraries:
-ValueError: could not convert string to float: '0.20412\n    pg_pin (VDD) {\n      pg_type : primary_power'
-Cause: some enrolled ASAP7 area attributes omit semicolons; scalar attribute parser corrected to stop at newline or semicolon. No mapping process or source changed.

@@ -1,4 +1,0 @@
-FAIL iload f 0 cnt 400: done 0 fault 0 ids 79
-[200024000] %Fatal: tb_hgi_dma_front_b2_epoch4.sv:225: Assertion failed in tb_hgi_dma_front_b2_epoch4.iload: FATAL front never ready (previous load stuck)
-%Error: rtl/hbm_accel/generic/peers/tb_hgi_dma_front_b2_epoch4.sv:225: Verilog $stop
-Aborting...

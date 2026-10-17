@@ -1,8 +1,0 @@
-{
-  "test": "test_literal_full_source_preparation",
-  "initial_PASS": 5,
-  "initial_FAIL": 1,
-  "failed_assumption": "literal .clk(leaf_clk[0]) expected",
-  "actual": "capture alwaysposedgegclk; assigngclk=leaf_clk[0]; ROMclocksleaf4..7",
-  "resolution": "source-correct test and explicit split clock branches; noRTLchange"
-}

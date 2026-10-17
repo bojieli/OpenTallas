@@ -1,9 +1,0 @@
-ot-run: ot-epyc4       admits   452 GB (avail 684, growth 184, headroom 48, waiters 0/0 GB) load 59/128 running 18 disk 941 GB 
-ot-run: -> ot-epyc4
-ot-heavy: admitted on regular-crane as oth-ubuntu-2293544-1791977781 after 0 s
-[1000] %Fatal: tb_dsfd_vm_fld_parallel_arb.sv:24: Assertion failed in tb_dsfd_vm_fld_parallel_arb: ARB_BAD ptr0 req00000000 got000/00/01 expected000/00/00
-%Error: rtl/dsrom_sys/s81_ph/test/tb_dsfd_vm_fld_parallel_arb.sv:24: Verilog $stop
-Aborting...
-
-ARB_MUTANT EXPECTED_FAIL True actual_exit 1
-ot-run: RAN on ot-epyc4 (unit oth-ubuntu-2293544-1791977781): exit 0

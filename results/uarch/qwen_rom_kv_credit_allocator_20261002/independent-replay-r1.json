@@ -1,7 +1,0 @@
-{
-  "verdict": "PASS_BYTE_IDENTICAL_ADDRESS_ONLY_CALENDAR",
-  "sha256": "0b2c886fec5f35b8a12aeabf184b5bcd55685bfbe234b787e119451d1d114c8b",
-  "command": "python3 tools/uarch_model_qwen_kv_credit_allocator.py --result <fresh>/model.json; cmp <fresh>/model.json results/uarch/qwen_rom_kv_credit_allocator_20261002/model-r4.json",
-  "production": false,
-  "physical": false
-}

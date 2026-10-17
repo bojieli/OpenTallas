@@ -1,5 +1,0 @@
-ORACLE phase=1 positions=1 active_segments=8 nseg=1 cumulative_public_rows=16 value_assertions=32
-ORACLE phase=2 positions=1 active_segments=8 nseg=1 cumulative_public_rows=32 value_assertions=64
-[7002616] %Fatal: tb_dsrom_actual_element_numerical.sv:74: Assertion failed in tb_bfcolumn.test.check_numerical: NUMERICAL value ph=3 macro=0 segment=0 pos=0 expected=cbfffffc ref=cbfffffc cand=cbfffffc referr=1 canderr=1
-%Error: tb_dsrom_actual_element_numerical.sv:74: Verilog $stop
-Aborting...

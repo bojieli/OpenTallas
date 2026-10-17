@@ -1,9 +1,0 @@
-Traceback (most recent call last):
-  File "<string>", line 59, in <module>
-  File "/tmp/kepler-ds-r50-current-main-20261002/tools/ds_hbm_checkpointed_prefix_r55.py", line 147, in verify_sealed
-    helper.verify_journal_inventory(json.loads(
-  File "/tmp/kepler-ds-r50-current-main-20261002/tools/ds_producer_checkpoint_resume_v3.py", line 448, in verify_journal_inventory
-    raise ValueError('historical journal drift')
-ValueError: historical journal drift
-
-Cause: test called old provider.restore after sealing; that real read appends to old journal. Successor takes comparison bytes before capture. Negative control keeps intentional old execution after seal.

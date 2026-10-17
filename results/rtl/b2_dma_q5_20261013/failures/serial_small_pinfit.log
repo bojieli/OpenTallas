@@ -1,6 +1,0 @@
-GATE WARN util: utilisation 40% outside 45%-60% (std 2003 + macro 0 in core 4964 um2)  -> FIX: resize the outline to util 0.50-0.55 (drop 'outline', set util)
-GATE INFO layer: tile: PG M5 stripes as pins, signals M2-M5, parent strap M6, cap M5 (contract)
-GATE FAIL pin_fit: the route's pin placement cannot place this plan (PPL-0093 / PPL-0111 / PPL-0086 at 3_2_place_iop; route OT_PIN_GROUP_MAX=1 + balanced place_pin, 2 track(s) a pin): E face 64.8 um (mv_v, mv, mv_rdy, mv_done, ...): 1448 balanced pins on 64.8 um = 0.0448 um a pin on one layer < the 0.048 um track pitch  -> FIX: give every bus its own disjoint pin_ranges and set route.pin_balance (place_pin, uniform over the range, no PPL groups), or a longer edge / a second pin layer
-GATE INFO oflop: E face 22.4 pins/um (mv_v, mv, mv_rdy): recipe-2 hold stages take 7.51 um behind the face, the pin flops need gap 9.6 um and 13 columns (derived in the flow)
-GATE INFO remote: skipped: local FAIL first
-PRE_ROUTE_GATE: FAIL (1 fail, 1 warn)

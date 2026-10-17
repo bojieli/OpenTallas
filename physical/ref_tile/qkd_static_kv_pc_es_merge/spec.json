@@ -1,0 +1,243 @@
+{
+ "kind": "tile",
+ "params": {},
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "layer_cap": "M5",
+ "recipe": 4,
+ "children": [],
+ "inter": [],
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 16,
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "pin_h": "M4",
+  "pin_v": "M5",
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  },
+  "io_hold_margin_ns": 0.0
+ },
+ "name": "qkd_static_kv_pc_es_merge",
+ "top": "qkd_static_kv_pc_es_merge",
+ "sources": [
+  "rtl/qwen_sys/static_embedding_20261014/qkd_embedding_static_map.sv",
+  "rtl/qwen_sys/static_embedding_20261014/qkd_static_kv_pc_es_merge.sv"
+ ],
+ "outline": {
+  "w": 86.4,
+  "h": 129.6,
+  "exact": true
+ },
+ "pins": {
+  "E": [
+   "es",
+   "er"
+  ],
+  "W": [
+   "wes"
+  ],
+  "N": [
+   "emb_boot_ready",
+   "emb_issue_v",
+   "emb_token",
+   "emb_word_index",
+   "emb_half",
+   "emb_scale",
+   "emb_epoch",
+   "emb_return_slot",
+   "pc",
+   "cfg_stack",
+   "ck",
+   "rst_n"
+  ],
+  "S": [
+   "beat_v",
+   "beat_data",
+   "beat_token",
+   "beat_word",
+   "beat_half",
+   "beat_scale",
+   "beat_epoch",
+   "corrected",
+   "emb_outstanding",
+   "fault"
+  ]
+ },
+ "pin_ranges": {
+  "es": [
+   4,
+   64
+  ],
+  "er": [
+   66,
+   125
+  ],
+  "wes": [
+   4,
+   125
+  ],
+  "emb_issue_v": [
+   4,
+   4.4
+  ],
+  "emb_token": [
+   6,
+   14
+  ],
+  "emb_word_index": [
+   15,
+   18
+  ],
+  "emb_half": [
+   19,
+   19.4
+  ],
+  "emb_scale": [
+   20,
+   20.4
+  ],
+  "emb_epoch": [
+   22,
+   30
+  ],
+  "emb_return_slot": [
+   32,
+   32.4
+  ],
+  "emb_boot_ready": [
+   34,
+   34.4
+  ],
+  "ck": [
+   44,
+   44.4
+  ],
+  "rst_n": [
+   48,
+   48.4
+  ],
+  "pc": [
+   56,
+   60
+  ],
+  "cfg_stack": [
+   62,
+   64
+  ],
+  "beat_v": [
+   4,
+   4.4
+  ],
+  "beat_data": [
+   6,
+   70
+  ],
+  "beat_token": [
+   71,
+   76
+  ],
+  "beat_word": [
+   77,
+   79
+  ],
+  "beat_half": [
+   80,
+   80.4
+  ],
+  "beat_scale": [
+   81,
+   81.4
+  ],
+  "beat_epoch": [
+   82,
+   84.4
+  ],
+  "corrected": [
+   1,
+   1.4
+  ],
+  "emb_outstanding": [
+   2,
+   2.4
+  ],
+  "fault": [
+   85,
+   85.4
+  ]
+ },
+ "slot_change_request": "KVJ-C2 10-17 (plan N3): new master, one per PC (x128, hardened once) inside the wires-only qkd_static_kv_pc_path_emb. E face = the controller es/er (qkd_ctrl_pc_host_static W face), W = the static writer wes, S = the retained beat toward the return-hop capture, N = compiled embedding issue + straps + clock.",
+ "job": {
+  "owner": "Claude:KVJ-C2 (Q-KVJOIN lane, kv_static_join_plan.md)",
+  "branch": "claude/kvj-c2-kits-1017",
+  "tag": "r1",
+  "purpose": "qkd_static_kv_pc_es_merge: per-PC embedding read endpoint (strapped) + registered 2:1 es slot select with the writer, conflict = fault",
+  "extra_paths": [
+   "rtl/test",
+   "rtl/qwen_sys/static_kv_20261014",
+   "rtl/qwen_sys/static_embedding_20261014",
+   "tools/qwen_kv_die"
+  ],
+  "benches": [
+   {
+    "name": "es_merge_exact",
+    "cmd": "bash tools/qwen_kv_die/kvjc_es_merge_gate.sh {RUN}/bench/exact",
+    "expect": "pass",
+    "pass_regex": "^PASS KVJC_ES_MERGE_EXACT",
+    "threads": 8,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "es_merge_mutant1",
+    "cmd": "bash tools/qwen_kv_die/kvjc_es_merge_gate.sh {RUN}/bench/mut1 1",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "es_merge_mutant2",
+    "cmd": "bash tools/qwen_kv_die/kvjc_es_merge_gate.sh {RUN}/bench/mut2 2",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "es_merge_mutant3",
+    "cmd": "bash tools/qwen_kv_die/kvjc_es_merge_gate.sh {RUN}/bench/mut3 3",
+    "expect": "fail",
+    "threads": 8,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ]
+ },
+ "macros": [],
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "pin_regs": {
+  "enable": true
+ },
+ "keep_pin_regs": true
+}

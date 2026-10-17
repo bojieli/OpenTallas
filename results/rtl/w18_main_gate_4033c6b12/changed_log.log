@@ -1,8 +1,0 @@
-Traceback (most recent call last):
-  File "/home/ubuntu/w18work/main_gate_4033c6b12_src/tools/w18/hash_parallel_gate.py", line 168, in <module>
-    raise SystemExit(main())
-  File "/home/ubuntu/w18work/main_gate_4033c6b12_src/tools/w18/hash_parallel_gate.py", line 115, in main
-    cached = validate_cached(a.exhaustive_record, a.exhaustive_log, expected) if a.exhaustive_log else None
-  File "/home/ubuntu/w18work/main_gate_4033c6b12_src/tools/w18/hash_parallel_gate.py", line 69, in validate_cached
-    raise ValueError('Exhaustive log digest mismatch')
-ValueError: Exhaustive log digest mismatch

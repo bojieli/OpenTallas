@@ -1,7 +1,0 @@
-ot-run: ot-epyc1tb     free  -433 GB (avail 539, growth 544, headroom 64, waiters 16/364 GB) running 26 disk 1110 GB 
-ot-run: -> ot-epyc1tb (will queue: -433 GB free < 48 GB)
-ot-heavy: waiting for memory on ot-epyc1tb: need 48+64 GB, available 539 GB minus 463 GB reserved growth (real floor 226 GB)
-ot-heavy: admitted on ot-epyc1tb as oth-ubuntu-1674601-1791920524 after 65 s
-QJOB qD_all_ml15 run rc=0
-QJOB qD_all_ml15 {'exact': True, 'stage_cycles': {'L0': 7163, 'L1': 6796, 'L2': 6796}, 'layer_x_mismatches': 0, 'kv_mismatches': 0, 'layer_x_checks': 12, 'kv_checks': 12}
-ot-run: RAN on ot-epyc1tb (unit oth-ubuntu-1674601-1791920524): exit 0

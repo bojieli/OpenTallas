@@ -1,3 +1,0 @@
-ARGV ["vvp", "-n", "/srv/opentallas-scratch/codex/dsrom-baseline-link-clock/exact-r2/board_rate.vvp", "+seed=81", "+case=board_rate", "+n=1500", "+gap=0", "+bpm=2"]
-LINKRT_SUMMARY case=board_rate result=PASS n=1500 sent=1500 rcvd=1500 mism=0 extra=0 stalled=0 fault=0 fault_code=0 cycles=2889 lat_first=163 lat_min=163 lat_max=163 lat_avg=163.00 rate=1.0000 credit_stalls=0 st_flits_tx=1500 st_flits_rx_ok=1500 st_crc_err=0 st_naks=0 st_replays=0 st_timeouts=0 st_retx_flits=0 st_max_replay_occ=320 ch=156 dyn=0 chsel=156 credits=512 seqw=10 efwd=0 erev=0 gap=0 bpm=2 seed=81
-/srv/opentallas-scratch/codex/dsrom-baseline-link-clock/exact-r2/board_rate.sv:179: $finish called at 5787000 (1ps)

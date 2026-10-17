@@ -1,6 +1,0 @@
-{
-  "status": "FAIL_AUX_AUDIT_SCRIPT_NOT_NUMERICAL",
-  "cause": "full-tensor reads declare rows:null; initial audit indexed null",
-  "fix": "only selected row reads used by successor audit",
-  "reference_generation_changed": false
-}

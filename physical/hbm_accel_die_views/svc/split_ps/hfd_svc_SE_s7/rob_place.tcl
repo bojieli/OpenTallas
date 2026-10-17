@@ -1,8 +1,0 @@
-# hfd_svc_SE_s7: per-PC ROB macro placement (gen_svc_seg.py, tputx-svc); halo = MACRO_PLACE_HALO
-set b [ord::get_db_block]
-set dbu [[ord::get_db_tech] getDbUnitsPerMicron]
-proc ot_rob_strip {n} { return [string map {\\ {}} $n] }
-set nrob 0
-set hit 0; foreach i [$b getInsts] { if {[[$i getMaster] getName] eq "ot_sram_1r1w_128x256_m1_r2c2" && [string match "*u_pc29?u_rob*" [ot_rob_strip [$i getName]]]} { $i setOrient R0; $i setLocation [expr {round(73.872 * $dbu)}] [expr {round(25.92 * $dbu)}]; $i setPlacementStatus FIRM; incr hit; incr nrob; puts "ROB place: [$i getName] at 73.872 25.92" } }; if {$hit != 1} { error "rob_place: u_pc29.u_rob matched $hit instances" }
-set hit 0; foreach i [$b getInsts] { if {[[$i getMaster] getName] eq "ot_sram_1r1w_128x256_m1_r2c2" && [string match "*u_pc30?u_rob*" [ot_rob_strip [$i getName]]]} { $i setOrient R0; $i setLocation [expr {round(339.552 * $dbu)}] [expr {round(25.92 * $dbu)}]; $i setPlacementStatus FIRM; incr hit; incr nrob; puts "ROB place: [$i getName] at 339.552 25.92" } }; if {$hit != 1} { error "rob_place: u_pc30.u_rob matched $hit instances" }
-set nm 0; foreach i [$b getInsts] { if {[[$i getMaster] isBlock]} { incr nm } }; if {$nm != 2} { error "rob_place: expected 2 macros, netlist has $nm" }

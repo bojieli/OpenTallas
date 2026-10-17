@@ -1,4 +1,0 @@
-PASS native FP32 Q transport / canonical BF16 rounding 128/128, tie/negative/subnormal probes
-Icarus -i suppresses unresolved arithmetic modules: capture storage only, not arithmetic proof. Expected hex generated via hdc_golden.to_bf16.
-PASS native HSUB FP32 Q transport / canonical BF16 rounding 128/128, tie/negative/subnormal probes
-PASS native HSUB orphan odd-half mutation rejected by sticky pack fault

@@ -1,4 +1,0 @@
-TOKEN 0 mode=0 go_cycle=3000 dut_ready=1
-DEBUG restores=0 valid=1111111111111111111111111 dirty=1111111111111111111111111 ready=1 drain=7f w_run=1 i1_v=0 n_run=1 bn_run=0 go_e=0 qlast=6 ref_qlast=1
-FATAL: /srv/opentallas/repos/einstein-dsrom-s81-upf-6847b30e0/rtl/test/tb_v41_rom_elem_pg.sv:87: FATAL public control mismatch cycle=5002 ref=1110 dut=0010
-       Time: 5006000  Scope: tb_v41_rom_elem_pg
