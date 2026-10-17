@@ -381,6 +381,8 @@ def fcf_spec(w: int, flow: str, n: int, owner: str, branch: str) -> dict:
         t = f"{RTL}/test/bench_rly_fcfr.sh"
         # recipe 4 (FLOW-HOLD 2026-10-16): no pin hold pads (already none here); the forwarded hop keeps its own in-tile hold
         # contract (fcf_clock.tcl separations), so the die-budget form "die" (needs ot_pin_regs) does not apply
+        s["reroute_reason"] = {"kind": "rtl_change", "why": "ff3 replicated stage register per branch (ot_hbm_rly_fcfr): the "
+                               "ff1/ff2 624 fork views fail native launch 236.5-307 ps (one flop driving all branch groups)"}
         s.update(recipe=4, hold_budget="tile",
                  hold_budget_reason="F1 forwarded-clock relay: the boundary is a forwarded hop (clk_out<k> beside o<k>, "
                                     "DIE-CLOCK F1) timed by fcf_clock.tcl min separations 85/55 ps; the pins ARE the stage "
