@@ -85,25 +85,40 @@ module ot_hgi_sm_xload_xq_pegress #(
             assign beats[gb] = {1024'd0, sh};
         end
     end endgenerate
+    // Local reset relay (x4 native audit, 10-16): the rn port drove the async clear of 308 control flops across the
+    // 369 um leaf (native capture/recovery 332 ps > 190).  rn now clears only NRR kept relay flops; each relay copy
+    // resets one quarter of the replicas.  Assert stays asynchronous; release is +1 edge (transaction-level: the
+    // controls are idle for many cycles after release, nothing counts cycles from it).
+    localparam integer NRR = 4;
+    (* keep = 1 *) reg [NRR-1:0] rnr;
+    always @(posedge clk or negedge rn) if (!rn) rnr <= '0; else rnr <= {NRR{1'b1}};
     reg [EW-1:0] e6;
-    always @(posedge clk or negedge rn) if (!rn) e6 <= '0; else e6 <= ede;
-    (* keep = 1 *) reg [7:0] e5r [0:NR-1];   // replicas kept (gate: merged bqvr drove 4,125 loads)
-    always @(posedge clk or negedge rn)
-        if (!rn) for (integer k = 0; k < NR; k = k + 1) e5r[k] <= 8'd0;
-        else for (integer k = 0; k < NR; k = k + 1) e5r[k] <= ed5;
+    always @(posedge clk or negedge rnr[0]) if (!rnr[0]) e6 <= '0; else e6 <= ede;
+    wire [7:0] e5r [0:NR-1];   // replicas kept (gate: merged bqvr drove 4,125 loads)
+    wire [NR-1:0] bqvr;
+    genvar gr;
+    generate for (gr = 0; gr < NR; gr = gr + 1) begin : g_rep
+        (* keep = 1 *) reg [7:0] e5q;
+        (* keep = 1 *) reg bqq;
+        always @(posedge clk or negedge rnr[gr * NRR / NR])
+            if (!rnr[gr * NRR / NR]) begin e5q <= 8'd0; bqq <= 1'b0; end
+            else begin e5q <= ed5; bqq <= bq_v; end
+        assign e5r[gr] = e5q;
+        assign bqvr[gr] = bqq;
+    end endgenerate
     reg [2047:0] xbeat;
     always @(posedge clk) for (integer k = 0; k < NR; k = k + 1) begin
         xbeat[k*RB +: RB] <= {RB{1'b0}};
         if (e5r[k][7]) for (integer x = 0; x < NBMAX; x = x + 1) if (e5r[k][6:0] == 7'(x)) xbeat[k*RB +: RB] <= beats[x][k*RB +: RB];
     end
-    reg bc_v, bc_last; reg [6:0] bc_addr, bc_b; reg [2047:0] bq_c; (* keep = 1 *) reg [NR-1:0] bqvr;
-    always @(posedge clk or negedge rn) begin
-        if (!rn) begin bc_v <= 1'b0; bc_last <= 1'b0; bqvr <= '0; end
-        else begin bc_v <= bq_v; bc_last <= bq_last; bqvr <= {NR{bq_v}}; end
+    reg bc_v, bc_last; reg [6:0] bc_addr, bc_b; reg [2047:0] bq_c;
+    always @(posedge clk or negedge rnr[1]) begin
+        if (!rnr[1]) begin bc_v <= 1'b0; bc_last <= 1'b0; end
+        else begin bc_v <= bq_v; bc_last <= bq_last; end
     end
     always @(posedge clk) begin bc_addr <= bq_addr; bc_b <= bq_b; bq_c <= bq_d; end
-    always @(posedge clk or negedge rn) begin
-        if (!rn) begin xw_en <= 1'b0; xw_last <= 1'b0; x_done <= 1'b0; end
+    always @(posedge clk or negedge rnr[2]) begin
+        if (!rnr[2]) begin xw_en <= 1'b0; xw_last <= 1'b0; x_done <= 1'b0; end
         else begin
             xw_en <= e6[EW-1] || bc_v; xw_last <= (e6[EW-1] && e6[EW-3]) || bc_last;
             x_done <= xw_en && xw_last;
