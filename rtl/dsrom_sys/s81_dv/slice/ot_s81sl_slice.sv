@@ -118,8 +118,11 @@ module ot_s81sl_slice #(
     // capture root: return lanes through DR relay stages
     wire [8*70-1:0] rt_q;
     ot_s81sl_rly #(.W(8 * 70), .D(DR)) u_rt (.clk(clk), .d(rt), .q(rt_q));
-    ot_s81sl_cap u_cap (.clk(clk), .rst_n(rst_n), .rt(rt_q), .cfg_v(cfg_v), .cfg_d(cfg_d),
-        .cw_v(cw_v_x), .cw_a(cw_a_x), .cw_d(cw_d_x), .fault(f_cap));
+    // leaf k's capture ports are bits [2k +: 2] / [24k +: 24] / [64k +: 64] of {N face (leaves 3, 4), S face (leaves 0..2)};
+    // rt lanes 0..3 = W frame column, 4..7 = E frame column (ot_s81sl_cap port contract)
+    ot_s81sl_cap u_cap (.clk(clk), .rst_n(rst_n), .rt_w(rt_q[279:0]), .rt_e(rt_q[559:280]), .cfg_v(cfg_v), .cfg_d(cfg_d),
+        .cw_s_v(cw_v_x[5:0]), .cw_s_a(cw_a_x[71:0]), .cw_s_d(cw_d_x[191:0]),
+        .cw_n_v(cw_v_x[9:6]), .cw_n_a(cw_a_x[119:72]), .cw_n_d(cw_d_x[319:192]), .fault(f_cap));
     // x chains: the frame cfifo ingress word (dsfd_cfifo_crs): xd = {record xw[564:0], marker} (566 b, lanes 0..2),
     // xd2 = {record xw[1100:565], valid copy xw[0], marker} (538 b); marker = the slice's released reset (the forwarded
     // epoch marker of ot_s81_static_column_ingress_hr), from a registered relay of rst_n
