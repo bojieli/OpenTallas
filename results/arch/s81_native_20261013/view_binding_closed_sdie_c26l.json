@@ -12050,33 +12050,6 @@
    "native": "native PASS (retcol_a4ef_native.json)",
    "gate": "S-DIE 1815 explicit native-PASS row; cluster-internal"
   },
-  "ot_v41_bf_lane4_cl": {
-   "verdict": "DIAGNOSTIC_CLOSED",
-   "export_dir": "physical/s81_die_views/bf_cl_1016/cl_lane4/ot_v41_bf_lane4_cl",
-   "job": "s81_bf_cl_lane4-ref-9dca24d12",
-   "files": {
-    "lef": {
-     "path": "physical/s81_die_views/bf_cl_1016/cl_lane4/ot_v41_bf_lane4_cl/ot_v41_bf_lane4_cl.lef",
-     "sha256": "6e7ae614ba29d4076e30a78c8b170bd94b9f7897a3e33f39691233883d24eb44"
-    },
-    "tt": {
-     "path": "physical/s81_die_views/bf_cl_1016/cl_lane4/ot_v41_bf_lane4_cl/ot_v41_bf_lane4_cl_tt.lib",
-     "sha256": "8d3b62f9426b433ae7aa9945b14722d3e53acd98c50e0902743c3b076f2ee956"
-    },
-    "ff": {
-     "path": "physical/s81_die_views/bf_cl_1016/cl_lane4/ot_v41_bf_lane4_cl/ot_v41_bf_lane4_cl_ff.lib",
-     "sha256": "410b79fb1b0f4b8e79ded11d0a40ab79c19fa4ad7bc3cb70a114dbc7581ba6f1"
-    },
-    "ss": {
-     "path": "physical/s81_die_views/bf_cl_1016/cl_lane4/ot_v41_bf_lane4_cl/ot_v41_bf_lane4_cl_ss.lib",
-     "sha256": "bd0e321daacb073b11969259ee0e7fa6b86a860f600efae580d4862965679a93"
-    }
-   },
-   "closure": "TT +81.61 / FF +22.87 ps DRC 0; SS sensitivity -276.22 ps",
-   "lineage": "EXACT_EXPORT",
-   "native": "native PASS (main 9071c755b)",
-   "gate": "S-DIE 1815 explicit native-PASS row; cluster-internal"
-  },
   "ot_v41_bf_seg_cl": {
    "verdict": "DIAGNOSTIC_CLOSED",
    "export_dir": "physical/s81_die_views/bf_cl_1016/cl_seg/ot_v41_bf_seg_cl",
@@ -12290,7 +12263,12 @@
   ],
   "ot_s81_cfg7_seq_bfp": [
    "physical/ref_tile/s81coll_cfg7_seq_bfp_pr/views/ot_s81_cfg7_seq_bfp"
-  ]
+  ],
+  "ot_v41_bf_lane4_cl": {
+   "job": "s81_bf_cl_lane4-ref-9dca24d12",
+   "export_dir": "physical/s81_die_views/bf_cl_1016/cl_lane4/ot_v41_bf_lane4_cl",
+   "reason": "S-ELEM 10-17: dsfd_bf_col 604.8 x 198.72 merges the 4 lane4_cl children into one 4-root lane child; old view replaced entirely, must not stay bound"
+  }
  },
  "excluded_masters": [],
  "scope": "CLOSED_ROUTE_DIAGNOSTIC_ONLY_NOT_NATIVE_QUALIFICATION",
@@ -13698,10 +13676,6 @@
    },
    "ot_s81_hc_ret_column_c1": {
     "job": "s81hc_retcol_c1f_ref-a4f-fb07f6915",
-    "replaced": null
-   },
-   "ot_v41_bf_lane4_cl": {
-    "job": "s81_bf_cl_lane4-ref-9dca24d12",
     "replaced": null
    },
    "ot_v41_bf_seg_cl": {
