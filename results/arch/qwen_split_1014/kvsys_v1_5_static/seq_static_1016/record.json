@@ -1,0 +1,25 @@
+{
+ "schema": "opentallas.qwen_kvsys.seq_static_record.v1",
+ "date": "2026-10-16",
+ "stream": "Q-KVSYS PVJOIN (lead-approved retirement of the credit/event qkd_seq on the static KV path)",
+ "rtl": ["rtl/qwen_sys/static_kv_20261014/qkd_seq_static.sv", "rtl/qwen_sys/static_kv_20261014/qkd_static_kv_layer_programme_rom.sv"],
+ "bench": "tools/qwen_static_kv/seq_static_bench.sh (tb_seq_static; PVE1, verilator 5.050)",
+ "golden": "tools/qwen_static_kv/seq_static_golden.py from tools/qwen_split/d2d_link_calendar.py --profile program: G_CMD 617, G_Q0 618, G_KV0 652, G_AQ 47",
+ "results": {
+  "pass": "SEQ_STATIC PASS layers=36 aq=1188 kvn=72 kc=72 errors=0 mut=0 aq_start_from_cmd=47 aq_start_vs_legacy=1..1 row_vs_legacy=0..0",
+  "mut1_q_beat_swap": "SEQ_STATIC FAIL layers=36 aq=1188 kvn=72 kc=72 errors=288 mut=1",
+  "mut2_row_t": "SEQ_STATIC FAIL layers=36 aq=1188 kvn=72 kc=72 errors=288 mut=2",
+  "mut3_start_late": "SEQ_STATIC FAIL layers=36 aq=1188 kvn=72 kc=72 errors=1 mut=3 aq_start_from_cmd=48",
+  "mut4_kvn_push_early": "SEQ_STATIC FAIL layers=36 aq=1188 kvn=72 kc=72 errors=1288 mut=4"
+ },
+ "bit_exact": "per quadrant the aq (start + 32 Q beats), kvn (2 rows) and kc (stream descriptor) word sequences of qkd_seq_static equal the legacy qkd_seq's on the same link-slotted traffic, 36 layers",
+ "latency_vs_qkd_seq": {
+  "aq_start": "+1 edge per layer (static: CMD + 47 at the quadrant face, fixed; legacy: launch on the 4th KVN word pop)",
+  "kvn_rows": "0 edges",
+  "kc": "same words; issue at the CMD slot (legacy: at the kvd launch)",
+  "hs": "+1 edge (aq start + 3, as qkd_seq)",
+  "removed": "x3 / RES / landing-row credit waits (legacy launch also waited for 64 RES credits: unbounded on the split die, where no VM returns them)"
+ },
+ "layer_programme_r2": "LAYER_ROM PASS tokens=2 stages=72 runs=70 events=504 run_ofs=1 errors=0 (start = DCAL tok_start, roots +1); mutants 1-4 FAIL",
+ "kits": {"qkd_seq_core_st_r1": "SUBMITTED qkd_seq_core_st_r1-r1-29f8e4774", "qkd_layer_prog_img_r2": "SUBMITTED qkd_layer_prog_img_r2-r2-f46684611"}
+}
