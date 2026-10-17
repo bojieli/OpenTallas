@@ -438,6 +438,18 @@ def a2p_remaster(insts, problems):
             i.update(master=r['master'], source=r['source'], rtl_deps=list(r['deps']),
                      note=i.get('note', '') + ' | A2P: SM-side client slots absent (no SM side in this quadrant)')
             rules[n] = {p: (w, k, {'rq': 4, 'rr': 4, 'wq': 2, 'wq_done': 2}[p]) for p, (w, k) in r['slots'].items()}
+        if i['master'] in ('ot_hfd_coll_q3_static_host_v4', 'ot_hfd_coll_q2_static_host_v4') and DROP_INST:
+            # Explicitly dropped SerDes peers remove whole physical links.  Keep every core quadrant;
+            # the surviving endpoints retain their ordered lanes and all on-die operations.
+            q = n.rsplit('_', 1)[-1]
+            peers = {'SW': ('S0', 'S1', 'S2'), 'SE': ('S3', 'S4'),
+                     'NW': ('N0', 'N1'), 'NE': ('N2', 'N3')}[q]
+            kept = tuple(k for k, peer in enumerate(peers) if 'ep_' + peer not in DROP_INST)
+            i['params'] = dict(i['params'], NLINK=len(kept))
+            i['note'] = i.get('note', '') + f' | A2P: NLINK={len(kept)} physical links, ordered lanes {kept}'
+            rules[n] = {p: (w, kept, len(peers)) for p, w in
+                        dict(phy_up=1, tx_pin_v=1, tx_pin_flit=612, rx_pin_v=1,
+                             rx_pin_flit=612, retry_requested=1, clk_link=5).items()}
         if i['master'] == 'ot_hbm_idx_client_static_sw' and DROP_SM_Q:
             i['params'] = dict(i['params'], N_Q=len(kept_sid))
             i['note'] = i.get('note', '') + f' | A2P: N_Q={len(kept_sid)} scorer slots = stacks {kept_sid}'
@@ -955,6 +967,8 @@ def build(specs_dir, out, extra=()):
                     continue        # programme pins internal to a folded calendar+target master (H-NETLIST 0600)
                 if KEEP_Q and i not in insts and (m_ := _QTAG.search(i)) and m_.group(1) not in KEEP_Q:
                     continue        # A2P: the gap's instance belongs to a dropped quadrant
+                if i in rm:
+                    continue        # A2P: accounting gaps for explicitly removed SM-side / link instances
                 if i not in ports or p not in ports[i]:
                     problems.append(f"gap {g['id']}: unknown {i}.{p}"); continue
                 ii, pp_, lo, hi = rng(a, ports)
