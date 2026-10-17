@@ -1,204 +1,151 @@
 `timescale 1ns/1ps
 // ---------------------------------------------------------------------------------------------------------------------
-// S81U-SVC (2026-10-17, S81-DV p4h regional service slice dsdv_svc_rs x16): dsdv_svc_sx, the SCORE EXCHANGE leaf of one
+// S81U-SVC (2026-10-17, S81-DV p4h regional service slice dsdv_svc_rs x16): dsdv_svc_sx, the SCORE EXCHANGE of one
 // slice.  One master for all 16 slices; the slice-id strap sid selects its row of the generated role ROM
 // (dsdv_svc_sx_roles.svh, tools/s81_dv/svc_rs/svc_rs_embed.py).
 //
 // Golden (dsfd_svc_c): the q.k score of a row is the BALANCED tree over the 16 TD = 32 head-dim tiles, in dim order
 // (D = 128 engine heap tree per quadrant, then ot_s81_svch_comb ((Q0 + Q1) + (Q2 + Q3))).  FP32 adds do not associate,
-// so the slices carry that tree, not a running chain sum: every slice injects its tile partial (its engine share's score
-// beat) and hosts at most ONE tree node (one bank of 64 ot_hdc_v41x_qaddf, the engine's lane-tree adder, flags =
-// delay(fa | fb) | adder fault exactly as ot_s81_svch_comb / the engine g_node).  Operands travel neighbour-only over
-// the N / E / S / W faces; each directed link carries at most one score lane (embedding: max load 1, 25 link hops).
-// The complete score beat appears at the root slice (rt_*) and is SCATTERED back down the same tree: a node of n heads
-// sends heads lo .. lo + n/2 - 1 to its left child and the rest to its right child; the leaf of tile t taps head t
-// (t_*: 4 rows x FP32 + flags of the slice's SM head) -- no star, no central hub.
+// so the slices carry that tree: every slice injects its tile partial and hosts at most ONE tree node (64 x
+// ot_hdc_v41x_qaddf); operands travel neighbour-only over N / E / S / W; each directed link carries at most one lane
+// (25 link hops).  The complete beat appears at the root slice (rt_*) and is SCATTERED back down the same tree; the leaf
+// of tile t taps head t (t_*).  Static schedule, no credit / ready; sticky fault on misalignment / tag / stray valid.
 //
-// Static schedule (owner rule, no credit / ready): every stage is a fixed-latency register.  The compiler starts each
-// slice's engine share at its role offset (sx_role_off, chosen so both operands of every node meet in the same cycle);
-// a node that sees one operand without the other, operands with different {row, mask} tags, or a valid on a face its
-// role does not use, raises a sticky fault (checks only; they never re-time anything).
-// Latency: face in pin flop + NR relays to the centre; centre crossbar register + NR relays + out pin flop; add FX.
-// Every input lands in a flop and every output leaves a flop.
+// S81U-SVCX (2026-10-17) SPLIT FORM.  The monolith (97c52bae0) was one tile with 6,420 lane pins per face (unkittable).
+// It is now:
+//   * 4 x dsdv_svc_sx_row, the hardened-once CENTRE LEAF: one score row each (16 qaddf + the gather / scatter
+//     crossbars), every pin registered; the 4 rows are independent (no lane mixes rows), so this is bit-identical;
+//   * closed relay stations dsfd_dvrly_276_<in><out> (S81-B: CLOSED, native PASS) on every face lane:
+//     per face and row, gather 534 b = 2 stations, scatter 270 b = 1 station; OUT lanes NR + 1 stations deep
+//     (A at ~1/4 of the hop, B at the slice edge), IN lanes NR deep (C at ~3/4).  NR = 1 keeps the monolith's
+//     5-cycle hop (centre reg, A, B | C, leaf pin flop): ZERO added cycles, the role ROM offsets are unchanged.
+//     Hop geometry (p4h 1,222 x 1,338 um slices): leaf pin -> A -> B -> C -> leaf pin spans at most one slice pitch
+//     (pins at the slice centre line, the inner faces of the 2 x 2 leaf cluster), 4 segments of <= 335 um <= 405.
+// The slice-face ports keep the monolith's lane format (pure wiring: row r = tag[5r +: 5], y lanes 16r .. 16r + 15,
+// flags 16r .. 16r + 15; scatter slot bits 128 + r and 32r); relay spare bits (18 per gather pair, 6 per scatter
+// station) are constant 0.
 // MUT (bench negative controls): bit 0 = the right operand's flags are not ORed in; bit 1 = right scatter split off by
 // one head slot.  DSDV_SX_MUT_ORDER (define) = role ROM of a tree whose tiles 0..3 sum as a chain (((t0+t1)+t2)+t3).
 // ---------------------------------------------------------------------------------------------------------------------
 module dsdv_svc_sx #(
     parameter integer MUT = 0,
-    parameter integer NR = 1,              // relay stages face <-> centre (each side)
-    parameter integer FX = 5,              // qaddf latency (the D = 128 engine / svch_comb default build: F12 LAT 5)
+    parameter integer NR = 1,              // relay stations per hop half (IN: NR, OUT: NR + 1)
+    parameter integer FX = 5,
     parameter integer F12 = 1
 ) (
     input  wire              ck,
-    input  wire              rst,          // async die reset, active low (synchronised here)
-    input  wire [3:0]        sid,          // slice-id strap (2 column + row)
-    // the slice's tile partial score beat {row 16, mask 4, y 4 x 16 x FP32, flags 64} (engine share)
+    input  wire              rst,
+    input  wire [3:0]        sid,
     input  wire              l_v,
     input  wire [2131:0]     l_d,
-    // gather lanes, faces {W, S, E, N} = [3:0]
     input  wire [3:0]        gi_v,
     input  wire [4*2132-1:0] gi_d,
     output wire [3:0]        go_v,
     output wire [4*2132-1:0] go_d,
-    // scatter lanes {tag 20, 8 head slots x {flags 4, y 4 x FP32}}
     input  wire [3:0]        si_v,
     input  wire [4*1076-1:0] si_d,
     output wire [3:0]        so_v,
     output wire [4*1076-1:0] so_d,
-    // complete score beat (root slice only)
-    output reg               rt_v,
-    output reg  [2131:0]     rt_d,
-    // this slice's SM head: 4 rows of scores
-    output reg               t_v,
-    output reg  [19:0]       t_tag,
-    output reg  [127:0]      t_y,
-    output reg  [3:0]        t_f,
-    output reg               fault
+    output wire              rt_v,
+    output wire [2131:0]     rt_d,
+    output wire              t_v,
+    output wire [19:0]       t_tag,
+    output wire [127:0]      t_y,
+    output wire [3:0]        t_f,
+    output wire              fault
 );
-`ifdef DSDV_SX_MUT_ORDER
-`include "dsdv_svc_sx_roles_mut_order.svh"
-`else
-`include "dsdv_svc_sx_roles.svh"
-`endif
-    localparam integer W = 2132, N = 64, SW = 1076, SL = 132;
-    reg [1:0] rs;
-    always @(posedge ck or negedge rst) if (!rst) rs <= 2'b00; else rs <= {rs[0], 1'b1};
-    wire rn = rs[1];
-    // role (static: the strap is constant after reset; registered once)
-    reg [43:0] role;
-    always @(posedge ck or negedge rn) if (!rn) role <= '0; else role <= sx_role(sid);
-    wire [2:0] r_ga = role[2:0], r_gb = role[5:3];
-    wire [2:0] r_go [0:3];
-    assign r_go[0] = role[8:6]; assign r_go[1] = role[11:9]; assign r_go[2] = role[14:12]; assign r_go[3] = role[17:15];
-    wire r_rt = role[18]; wire [2:0] r_ss = role[21:19]; wire [1:0] r_sh = role[23:22];
-    wire [2:0] r_so [0:3];
-    assign r_so[0] = role[26:24]; assign r_so[1] = role[29:27]; assign r_so[2] = role[32:30]; assign r_so[3] = role[35:33];
-    wire [2:0] r_ts = role[38:36];
-    genvar f, k, h;
-
-    // ---------------- faces in: pin flop + NR relays -> centre ----------------
-    wire [3:0] gc_v, sc_v; wire [W-1:0] gc_d [0:3]; wire [SW-1:0] sc_d [0:3];
-    generate for (f = 0; f < 4; f = f + 1) begin : g_in
-        reg [NR:0] gv, sv; reg [W-1:0] gd [0:NR]; reg [SW-1:0] sd [0:NR];
-        always @(posedge ck or negedge rn)
-            if (!rn) begin gv <= '0; sv <= '0; end
-            else begin gv <= {gv[NR-1:0], gi_v[f]}; sv <= {sv[NR-1:0], si_v[f]}; end
-        always @(posedge ck) begin
-            gd[0] <= gi_d[W*f +: W]; sd[0] <= si_d[SW*f +: SW];
-            for (int i = 1; i <= NR; i++) begin gd[i] <= gd[i-1]; sd[i] <= sd[i-1]; end
-        end
-        assign gc_v[f] = gv[NR]; assign gc_d[f] = gd[NR]; assign sc_v[f] = sv[NR]; assign sc_d[f] = sd[NR];
-    end endgenerate
-    reg lc_v; reg [W-1:0] lc_d;
-    always @(posedge ck or negedge rn) if (!rn) lc_v <= 1'b0; else lc_v <= l_v;
-    always @(posedge ck) lc_d <= l_d;
-
-    // ---------------- gather sources: 1 leaf, 2..5 face N/E/S/W, 6 adder ----------------
-    wire ad_v; wire [W-1:0] ad_d;
-    function automatic [W:0] gsrc(input [2:0] s, input lv, input [W-1:0] ld, input [3:0] cv,
-                                   input [W-1:0] c0, c1, c2, c3, input av, input [W-1:0] a);
-        case (s)
-            3'd1: gsrc = {lv, ld};
-            3'd2: gsrc = {cv[0], c0};
-            3'd3: gsrc = {cv[1], c1};
-            3'd4: gsrc = {cv[2], c2};
-            3'd5: gsrc = {cv[3], c3};
-            3'd6: gsrc = {av, a};
-            default: gsrc = '0;
-        endcase
+    localparam integer W = 2132, SW = 1076, RW = 533, RSW = 269;
+    genvar r, f, j;
+    // beat <-> row lane (pure wiring)
+    function automatic [RW-1:0] g_row(input [W-1:0] b, input integer rr);
+        g_row = {b[2112 + 5*rr +: 5], b[64 + 512*rr +: 512], b[16*rr +: 16]};
     endfunction
-    wire [W:0] opa = gsrc(r_ga, lc_v, lc_d, gc_v, gc_d[0], gc_d[1], gc_d[2], gc_d[3], 1'b0, '0);
-    wire [W:0] opb = gsrc(r_gb, lc_v, lc_d, gc_v, gc_d[0], gc_d[1], gc_d[2], gc_d[3], 1'b0, '0);
-    wire a_v = opa[W], b_v = opb[W]; wire [W-1:0] a_d = opa[W-1:0], b_d = opb[W-1:0];
-
-    // ---------------- the node: 64 x qaddf (engine lane-tree adder) ----------------
-    wire [N-1:0] fa = a_d[N-1:0], fb = (MUT[0]) ? '0 : b_d[N-1:0];
-    wire [N*32-1:0] y; wire [N-1:0] af, fd; wire [19:0] fd_tag; wire ov;
-    generate for (k = 0; k < N; k = k + 1) begin : g_a
-        ot_hdc_v41x_qaddf #(.LAT(FX), .F12(F12)) u_a (.clk(ck), .rst_n(rn), .v(1'b1), .a(a_d[N + 32*k +: 32]),
-            .b(b_d[N + 32*k +: 32]), .y(y[32*k +: 32]), .fault(af[k]));
-    end endgenerate
-    ot_hdc_v41x_dly #(.W(N + 20), .D(FX)) u_fd (.clk(ck), .d({a_d[W-1 -: 20], fa | fb}), .q({fd_tag, fd}));
-    ot_hdc_v41x_vdly #(.D(FX)) u_v (.clk(ck), .rst_n(rn), .d(a_v && r_ga != 3'd0), .q(ov));
-    assign ad_v = ov; assign ad_d = {fd_tag, y, fd | af};
-
-    // ---------------- gather out: centre register + NR relays + out pin flop ----------------
-    generate for (f = 0; f < 4; f = f + 1) begin : g_go
-        wire [W:0] s = gsrc(r_go[f], lc_v, lc_d, gc_v, gc_d[0], gc_d[1], gc_d[2], gc_d[3], ad_v, ad_d);
-        reg [NR+1:0] v; reg [W-1:0] d [0:NR+1];
-        always @(posedge ck or negedge rn) if (!rn) v <= '0; else v <= {v[NR:0], s[W]};
-        always @(posedge ck) begin d[0] <= s[W-1:0]; for (int i = 1; i <= NR + 1; i++) d[i] <= d[i-1]; end
-        assign go_v[f] = v[NR+1]; assign go_d[W*f +: W] = d[NR+1];
-    end endgenerate
-    always @(posedge ck or negedge rn) if (!rn) rt_v <= 1'b0; else rt_v <= r_rt && ad_v;
-    always @(posedge ck) rt_d <= ad_d;
-
-    // ---------------- scatter ----------------
-    // head slot h of a score beat: {flags of rows 3..0, y of rows 3..0}
-    function automatic [SL-1:0] slot(input [W-1:0] b, input integer hh);
-        for (int r = 0; r < 4; r++) begin
-            slot[128 + r] = b[r*16 + hh];
-            slot[32*r +: 32] = b[N + (r*16 + hh)*32 +: 32];
-        end
+    function automatic [RSW-1:0] s_row(input [SW-1:0] b, input integer rr);
+        s_row[RSW-1 -: 5] = b[1056 + 5*rr +: 5];
+        for (int h = 0; h < 8; h++) s_row[33*h +: 33] = {b[132*h + 128 + rr], b[132*h + 32*rr +: 32]};
     endfunction
-    // node input as 16 slots: from a face (8 slots, upper 8 zero) or the root's own complete beat
-    reg [19:0] sn_tag; reg sn_v; reg [16*SL-1:0] sn;
-    always @(*) begin
-        sn_v = 1'b0; sn_tag = '0; sn = '0;
-        case (r_ss)
-            3'd1, 3'd2, 3'd3, 3'd4: begin
-                sn_v = sc_v[r_ss - 3'd1]; sn_tag = sc_d[r_ss - 3'd1][SW-1 -: 20];
-                sn[0 +: 8*SL] = sc_d[r_ss - 3'd1][8*SL-1:0];
-            end
-            3'd7: begin
-                sn_v = r_rt && ad_v; sn_tag = ad_d[W-1 -: 20];
-                for (int hh = 0; hh < 16; hh++) sn[SL*hh +: SL] = slot(ad_d, hh);
-            end
-            default: ;
-        endcase
-    end
-    wire [4:0] hsh = (5'd1 << r_sh) + ((MUT[1]) ? 5'd1 : 5'd0);
-    wire [8*SL-1:0] sp_l = sn[0 +: 8*SL];
-    wire [16*SL-1:0] sp_rr = sn >> (SL * hsh);
-    wire [8*SL-1:0] sp_r = sp_rr[0 +: 8*SL];
-    function automatic [SW:0] ssrc(input [2:0] s, input [3:0] cv, input [SW-1:0] c0, c1, c2, c3,
-                                    input nv, input [19:0] nt, input [8*SL-1:0] l, r);
-        case (s)
-            3'd1: ssrc = {cv[0], c0};
-            3'd2: ssrc = {cv[1], c1};
-            3'd3: ssrc = {cv[2], c2};
-            3'd4: ssrc = {cv[3], c3};
-            3'd5: ssrc = {nv, nt, l};
-            3'd6: ssrc = {nv, nt, r};
-            default: ssrc = '0;
-        endcase
-    endfunction
-    generate for (f = 0; f < 4; f = f + 1) begin : g_so
-        wire [SW:0] s = ssrc(r_so[f], sc_v, sc_d[0], sc_d[1], sc_d[2], sc_d[3], sn_v, sn_tag, sp_l, sp_r);
-        reg [NR+1:0] v; reg [SW-1:0] d [0:NR+1];
-        always @(posedge ck or negedge rn) if (!rn) v <= '0; else v <= {v[NR:0], s[SW]};
-        always @(posedge ck) begin d[0] <= s[SW-1:0]; for (int i = 1; i <= NR + 1; i++) d[i] <= d[i-1]; end
-        assign so_v[f] = v[NR+1]; assign so_d[SW*f +: SW] = d[NR+1];
-    end endgenerate
-    wire [SW:0] ts = ssrc(r_ts, sc_v, sc_d[0], sc_d[1], sc_d[2], sc_d[3], sn_v, sn_tag, sp_l, sp_r);
-    always @(posedge ck or negedge rn) if (!rn) t_v <= 1'b0; else t_v <= ts[SW];
-    always @(posedge ck) begin t_tag <= ts[SW-1 -: 20]; t_f <= ts[128 +: 4]; t_y <= ts[127:0]; end
+    wire [3:0] rrt_v, rt_vv, rflt;
+    wire [RW:0] rrt [0:3]; wire [38:0] rt [0:3];
 
-    // ---------------- static-schedule checks (sticky; never re-time anything) ----------------
-    reg [3:0] g_used, s_used;
-    always @(*) begin
-        g_used = '0; s_used = '0;
-        for (int i = 0; i < 4; i++) begin
-            if (r_ga == 3'(2 + i) || r_gb == 3'(2 + i)) g_used[i] = 1'b1;
-            for (int j = 0; j < 4; j++) begin
-                if (r_go[j] == 3'(2 + i)) g_used[i] = 1'b1;
-                if (r_so[j] == 3'(1 + i)) s_used[i] = 1'b1;
+    generate for (r = 0; r < 4; r = r + 1) begin : g_r
+        wire [RW:0] lgi [0:3], lgo [0:3]; wire [RSW:0] lsi [0:3], lso [0:3];   // leaf face ports, f = N, E, S, W
+        for (f = 0; f < 4; f = f + 1) begin : g_f
+            // ---- IN stations (C): face f -> leaf; NR deep ----
+            wire [551:0] gin [0:NR]; wire [275:0] sin [0:NR];
+            assign gin[0] = {18'd0, gi_v[f], g_row(gi_d[W*f +: W], r)};
+            assign sin[0] = {6'd0, si_v[f], s_row(si_d[SW*f +: SW], r)};
+            for (j = 0; j < NR; j = j + 1) begin : g_c
+                dsdv_sx_rly_in #(.F(f)) u_g0 (.ck(ck), .rs(rst), .i(gin[j][275:0]),   .o(gin[j+1][275:0]));
+                dsdv_sx_rly_in #(.F(f)) u_g1 (.ck(ck), .rs(rst), .i(gin[j][551:276]), .o(gin[j+1][551:276]));
+                dsdv_sx_rly_in #(.F(f)) u_s  (.ck(ck), .rs(rst), .i(sin[j]),          .o(sin[j+1]));
             end
-            if (r_ss == 3'(1 + i) || r_ts == 3'(1 + i)) s_used[i] = 1'b1;
+            assign lgi[f] = gin[NR][RW:0]; assign lsi[f] = sin[NR][RSW:0];
+            // ---- OUT stations (A, B): leaf -> face f; NR + 1 deep ----
+            wire [551:0] gout [0:NR+1]; wire [275:0] sout [0:NR+1];
+            assign gout[0] = {18'd0, lgo[f]};
+            assign sout[0] = {6'd0, lso[f]};
+            for (j = 0; j <= NR; j = j + 1) begin : g_ab
+                dsdv_sx_rly_out #(.F(f)) u_g0 (.ck(ck), .rs(rst), .i(gout[j][275:0]),   .o(gout[j+1][275:0]));
+                dsdv_sx_rly_out #(.F(f)) u_g1 (.ck(ck), .rs(rst), .i(gout[j][551:276]), .o(gout[j+1][551:276]));
+                dsdv_sx_rly_out #(.F(f)) u_s  (.ck(ck), .rs(rst), .i(sout[j]),          .o(sout[j+1]));
+            end
         end
-    end
-    wire node = r_ga != 3'd0;
-    wire mis = node && (a_v != b_v || (a_v && a_d[W-1 -: 20] != b_d[W-1 -: 20]));
-    wire stray = |(gc_v & ~g_used) || |(sc_v & ~s_used);
-    always @(posedge ck or negedge rn) if (!rn) fault <= 1'b0; else if (mis || stray) fault <= 1'b1;
+        dsdv_svc_sx_row #(.MUT(MUT), .FX(FX), .F12(F12)) u_row (.ck(ck), .rst(rst), .sid(sid),
+            .l_i({l_v, g_row(l_d, r)}),
+            .gi_n(lgi[0]), .gi_e(lgi[1]), .gi_s(lgi[2]), .gi_w(lgi[3]),
+            .go_n(lgo[0]), .go_e(lgo[1]), .go_s(lgo[2]), .go_w(lgo[3]),
+            .si_n(lsi[0]), .si_e(lsi[1]), .si_s(lsi[2]), .si_w(lsi[3]),
+            .so_n(lso[0]), .so_e(lso[1]), .so_s(lso[2]), .so_w(lso[3]),
+            .rt_o(rrt[r]), .t_o(rt[r]), .fault(rflt[r]));
+        assign rrt_v[r] = rrt[r][RW]; assign rt_vv[r] = rt[r][38];
+        assign t_tag[5*r +: 5] = rt[r][37:33]; assign t_f[r] = rt[r][32]; assign t_y[32*r +: 32] = rt[r][31:0];
+        assign rt_d[2112 + 5*r +: 5] = rrt[r][RW-1 -: 5];
+        assign rt_d[64 + 512*r +: 512] = rrt[r][16 +: 512];
+        assign rt_d[16*r +: 16] = rrt[r][15:0];
+    end endgenerate
+    // slice-face lanes (pure wiring of the 4 rows' last OUT stations)
+    generate for (f = 0; f < 4; f = f + 1) begin : g_face
+        assign go_v[f] = g_r[0].g_f[f].gout[NR+1][RW] & g_r[1].g_f[f].gout[NR+1][RW] & g_r[2].g_f[f].gout[NR+1][RW]
+                         & g_r[3].g_f[f].gout[NR+1][RW];
+        assign so_v[f] = g_r[0].g_f[f].sout[NR+1][RSW] & g_r[1].g_f[f].sout[NR+1][RSW] & g_r[2].g_f[f].sout[NR+1][RSW]
+                         & g_r[3].g_f[f].sout[NR+1][RSW];
+        for (r = 0; r < 4; r = r + 1) begin : g_rr
+            wire [RW-1:0] gd = g_r[r].g_f[f].gout[NR+1][RW-1:0];
+            wire [RSW-1:0] sd = g_r[r].g_f[f].sout[NR+1][RSW-1:0];
+            assign go_d[W*f + 2112 + 5*r +: 5] = gd[RW-1 -: 5];
+            assign go_d[W*f + 64 + 512*r +: 512] = gd[16 +: 512];
+            assign go_d[W*f + 16*r +: 16] = gd[15:0];
+            assign so_d[SW*f + 1056 + 5*r +: 5] = sd[RSW-1 -: 5];
+            for (j = 0; j < 8; j = j + 1) begin : g_h
+                assign so_d[SW*f + 132*j + 128 + r] = sd[33*j + 32];
+                assign so_d[SW*f + 132*j + 32*r +: 32] = sd[33*j +: 32];
+            end
+        end
+    end endgenerate
+    // the 4 rows share the static schedule, so their valids are equal by construction.  The monolith-format ports carry
+    // ONE valid: it is the AND of the 4 rows' (a row that disagreed drops the beat and the bench counts it); physically
+    // each row lane keeps its own valid bit.
+    assign rt_v = &rrt_v;
+    assign t_v = &rt_vv;
+    assign fault = |rflt;
+endmodule
+
+// face f in {N, E, S, W} = 0..3 -> the closed dsfd_dvrly_276 master named by its lane direction <in face><out face>
+module dsdv_sx_rly_in #(parameter integer F = 0) (input wire ck, input wire rs, input wire [275:0] i, output wire [275:0] o);
+    // IN lane through face F travels away from face F: N in -> NS, E in -> EW, S in -> SN, W in -> WE
+    generate
+        if (F == 0) begin : g_ns dsfd_dvrly_276_NS u (.ck(ck), .rs(rs), .i(i), .o(o), .ck_o()); end
+        else if (F == 1) begin : g_ew dsfd_dvrly_276_EW u (.ck(ck), .rs(rs), .i(i), .o(o), .ck_o()); end
+        else if (F == 2) begin : g_sn dsfd_dvrly_276_SN u (.ck(ck), .rs(rs), .i(i), .o(o), .ck_o()); end
+        else begin : g_we dsfd_dvrly_276_WE u (.ck(ck), .rs(rs), .i(i), .o(o), .ck_o()); end
+    endgenerate
+endmodule
+module dsdv_sx_rly_out #(parameter integer F = 0) (input wire ck, input wire rs, input wire [275:0] i, output wire [275:0] o);
+    // OUT lane through face F travels toward face F: N out -> SN, E out -> WE, S out -> NS, W out -> EW
+    generate
+        if (F == 0) begin : g_sn dsfd_dvrly_276_SN u (.ck(ck), .rs(rs), .i(i), .o(o), .ck_o()); end
+        else if (F == 1) begin : g_we dsfd_dvrly_276_WE u (.ck(ck), .rs(rs), .i(i), .o(o), .ck_o()); end
+        else if (F == 2) begin : g_ns dsfd_dvrly_276_NS u (.ck(ck), .rs(rs), .i(i), .o(o), .ck_o()); end
+        else begin : g_ew dsfd_dvrly_276_EW u (.ck(ck), .rs(rs), .i(i), .o(o), .ck_o()); end
+    endgenerate
 endmodule

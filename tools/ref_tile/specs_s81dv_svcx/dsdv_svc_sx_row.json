@@ -1,0 +1,149 @@
+{
+ "name": "dsdv_svc_sx_row",
+ "top": "dsdv_svc_sx_row",
+ "kind": "tile",
+ "sources": [
+  "rtl/hdc/v41x/ot_hdc_v41x_attn_tile_s.sv",
+  "rtl/hdc/v41x/ot_hdc_v41x_attn_tile.sv",
+  "rtl/hdc/ot_hdc_fp32_f12.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/dsrom_sys/s81_dv/svc_rs/dsdv_svc_sx_row.sv"
+ ],
+ "params": {},
+ "orfs_vars": {
+  "VERILOG_INCLUDE_DIRS": "/src/rtl/dsrom_sys/s81_dv/svc_rs"
+ },
+ "clock_port": "ck",
+ "reset_ports": [
+  "rst"
+ ],
+ "macros": [],
+ "pins": {
+  "N": [
+   "ck",
+   "rst",
+   "gi_n",
+   "go_n",
+   "si_n",
+   "so_n"
+  ],
+  "E": [
+   "gi_e",
+   "go_e",
+   "si_e",
+   "so_e",
+   "rt_o"
+  ],
+  "S": [
+   "gi_s",
+   "go_s",
+   "si_s",
+   "so_s",
+   "t_o",
+   "sid",
+   "fault"
+  ],
+  "W": [
+   "gi_w",
+   "go_w",
+   "si_w",
+   "so_w",
+   "l_i"
+  ]
+ },
+ "recipe": 4,
+ "hold_budget": "die",
+ "inhold": false,
+ "outhold": false,
+ "clock": "cts",
+ "layer_cap": "M5",
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 24,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.0,
+  "macro_halo_um": 5.4
+ },
+ "structural_change": "S81U-SVCX (S81-DV p4h regional service slice, owner-approved DV plan): the score exchange dsdv_svc_sx (monolith 6,420 lane pins per face, unkittable) split into 4 x this hardened-once centre leaf (one score ROW: 16 qaddf node + gather/scatter crossbars, every pin registered) + closed dsfd_dvrly_276 relay stations on every face lane; bit-identical, zero added cycles.",
+ "job": {
+  "owner": "Claude:S81U-SVCX",
+  "branch": "claude/s81u-svcx-1017",
+  "tag": "dsdv_svc_sx_row",
+  "purpose": "S81-DV svc_rs score-exchange centre leaf dsdv_svc_sx_row to closure (TT setup / FF hold / DRC 0 + native audit).",
+  "extra_paths": [
+   "rtl/dsrom_sys/s81_dv/svc_rs",
+   "rtl/dsrom_sys/s81_glue/ot_s81_rly.sv",
+   "rtl/dsrom_sys/s81_glue/dsfd_rly_masters_dv276.sv",
+   "rtl/hdc/v41x/ot_dsrom_su_add6.sv",
+   "tools/s81_dv/svc_rs",
+   "results/rtl/s81_dv_1016/svc_rs_split"
+  ],
+  "benches": [
+   {
+    "name": "sx_exact",
+    "cmd": "bash tools/s81_dv/svc_rs/sx_bench.sh {RUN}/sx_exact base '1 2'",
+    "expect": "pass",
+    "threads": 16,
+    "peak_ram_gb": 28,
+    "pass_regex": "^SX_BENCH PASS$",
+    "min_count_regex": "^SX root 600/600 beats \\(err 0\\)  taps 9600/9600 "
+   },
+   {
+    "name": "sx_mutflag",
+    "cmd": "bash tools/s81_dv/svc_rs/sx_bench.sh {RUN}/sx_mutflag mut1 '1'",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 28,
+    "fail_regex": "^SX_BENCH FAIL$",
+    "fail_witness": "results/rtl/s81_dv_1016/svc_rs_split/mut1/run_s1.log"
+   },
+   {
+    "name": "sx_mutscatter",
+    "cmd": "bash tools/s81_dv/svc_rs/sx_bench.sh {RUN}/sx_mutscatter mut2 '1'",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 28,
+    "fail_regex": "^SX_BENCH FAIL$",
+    "fail_witness": "results/rtl/s81_dv_1016/svc_rs_split/mut2/run_s1.log"
+   },
+   {
+    "name": "sx_mutorder",
+    "cmd": "bash tools/s81_dv/svc_rs/sx_bench.sh {RUN}/sx_mutorder mutorder '1'",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 28,
+    "fail_regex": "^SX_BENCH FAIL$",
+    "fail_witness": "results/rtl/s81_dv_1016/svc_rs_split/mutorder/run_s1.log"
+   },
+   {
+    "name": "sx_mutskew",
+    "cmd": "bash tools/s81_dv/svc_rs/sx_bench.sh {RUN}/sx_mutskew mutskew '1'",
+    "expect": "fail",
+    "threads": 16,
+    "peak_ram_gb": 28,
+    "fail_regex": "^SX_BENCH FAIL$",
+    "fail_witness": "results/rtl/s81_dv_1016/svc_rs_split/mutskew/run_s1.log"
+   }
+  ],
+  "views_to": "physical/ref_tile/dsdv_svc_sx_row/views",
+  "record_to": "results/rtl/ref_tile/dsdv_svc_sx_row"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "Source-registered (dsdv_svc_sx_row header): every input lands in a flop at the pin and every output is a flop; recipe pin_regs would add a second unpriced stage on every lane (the role ROM offsets assume exactly the monolith's 5-cycle hop)."
+ },
+ "outline": {
+  "w": 388.8,
+  "h": 388.8
+ },
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true,
+ "children": [],
+ "inter": []
+}
