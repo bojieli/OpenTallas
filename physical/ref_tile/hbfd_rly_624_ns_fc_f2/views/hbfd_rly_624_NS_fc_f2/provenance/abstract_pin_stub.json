@@ -4,24 +4,24 @@
   "status": "PASS",
   "input": {
     "path": "provenance/raw/hbfd_rly_624_NS_fc_f2.lef",
-    "sha256": "628a8b265ba9e9ffe50eb4f02e5626994135c7bfdf2ba1620ea1029f6d150119"
+    "sha256": "f901f1b140e4a99e6a3c64107e200bfc5e21c60f427f7ec4c718ffb0ac2a9f66"
   },
   "environment": {
     "OT_OBS_CLOSE": null,
     "OT_OBS_CLOSE_UM": null
   },
   "helper": {
-    "path": "/srv/opentallas-scratch2/claude/closure-loop/hbfd_rly_624_ns_fc_f2-ff2-258cd0ced/src/tools/hier_contract/abstract_pin_stub.py",
+    "path": "/srv/opentallas-scratch/claude/closure-loop/hbfd_rly_624_ns_fc_f2-ff3-11c71f883/src/tools/hier_contract/abstract_pin_stub.py",
     "sha256": "c3cae85e3aa1a8da5374284fe57418b2230ceb208aa76eff4567c6993bbe0c05"
   },
   "command": [
     "/usr/bin/python3",
-    "/srv/opentallas-scratch2/claude/closure-loop/hbfd_rly_624_ns_fc_f2-ff2-258cd0ced/src/tools/hier_contract/abstract_pin_stub.py",
-    "/srv/opentallas-scratch2/claude/closure-loop/hbfd_rly_624_ns_fc_f2-ff2-258cd0ced/record/views/hbfd_rly_624_NS_fc_f2/provenance/raw/hbfd_rly_624_NS_fc_f2.lef",
-    "/srv/opentallas-scratch2/claude/closure-loop/hbfd_rly_624_ns_fc_f2-ff2-258cd0ced/record/views/hbfd_rly_624_NS_fc_f2/provenance/hbfd_rly_624_NS_fc_f2.candidate.lef"
+    "/srv/opentallas-scratch/claude/closure-loop/hbfd_rly_624_ns_fc_f2-ff3-11c71f883/src/tools/hier_contract/abstract_pin_stub.py",
+    "/srv/opentallas-scratch/claude/closure-loop/hbfd_rly_624_ns_fc_f2-ff3-11c71f883/record/views/hbfd_rly_624_NS_fc_f2/provenance/raw/hbfd_rly_624_NS_fc_f2.lef",
+    "/srv/opentallas-scratch/claude/closure-loop/hbfd_rly_624_ns_fc_f2-ff3-11c71f883/record/views/hbfd_rly_624_NS_fc_f2/provenance/hbfd_rly_624_NS_fc_f2.candidate.lef"
   ],
   "returncode": 0,
-  "stdout": "pinstub: 1 OBS rects moved into 1 pins: rs; pockets: 347 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
+  "stdout": "pinstub: 1 OBS rects moved into 1 pins: rs; pockets: 222 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
   "stderr": "",
   "invariants": {
     "macro_outline": "PASS",
@@ -30,11 +30,11 @@
   },
   "child_lint": {
     "schema": "opentallas.hier_contract.child_lint.v1",
-    "lef": "/srv/opentallas-scratch2/claude/closure-loop/hbfd_rly_624_ns_fc_f2-ff2-258cd0ced/record/views/hbfd_rly_624_NS_fc_f2/provenance/hbfd_rly_624_NS_fc_f2.candidate.lef",
+    "lef": "/srv/opentallas-scratch/claude/closure-loop/hbfd_rly_624_ns_fc_f2-ff3-11c71f883/record/views/hbfd_rly_624_NS_fc_f2/provenance/hbfd_rly_624_NS_fc_f2.candidate.lef",
     "verdict": "PASS",
     "fails": [],
     "warns": [],
-    "summary": "hbfd_rly_624_NS_fc_f2 218.16 x 25.92: PG M5 VDD 80 stripes (98% spread, 100% cov) / VSS 80 stripes (98% spread, 100% cov); strap M6; face pins 1876 blocked-above 0 blocked-same 0; clock clk_in insertion 128 ps; pockets M5 0 (closed)",
+    "summary": "hbfd_rly_624_NS_fc_f2 218.16 x 25.92: PG M5 VDD 80 stripes (98% spread, 100% cov) / VSS 80 stripes (98% spread, 100% cov); strap M6; face pins 1876 blocked-above 0 blocked-same 0; clock clk_in insertion 170 ps; pockets M5 0 (closed)",
     "info": {
       "cell": "hbfd_rly_624_NS_fc_f2",
       "W": 218.16,
@@ -68,7 +68,7 @@
       "face": {
         "face_pins": 1876,
         "blocked_above": 0,
-        "covered_below": 1046,
+        "covered_below": 25,
         "examples": [],
         "blocked_same": 0,
         "same_examples": [],
@@ -77,8 +77,8 @@
       },
       "clock_insertion": {
         "clk_in": {
-          "max_ps": 128.23,
-          "min_ps": 89.7
+          "max_ps": 170.15,
+          "min_ps": 118.49
         }
       },
       "pockets": {
@@ -87,7 +87,7 @@
         "marker": {
           "layer": "M5",
           "d_um": 1.536,
-          "added": 347
+          "added": 222
         },
         "count": 0,
         "area_um2": 0,
@@ -97,6 +97,6 @@
   },
   "output": {
     "path": "hbfd_rly_624_NS_fc_f2.lef",
-    "sha256": "fdfcef62c309d4cd91256fb57bd19da6768675222fe8eecd1cf507aaafef26db"
+    "sha256": "e6c2d71b1b0d19ec6ebb4bc8bf6720d68e7ec770b27f8fe2703e8ffda15bef15"
   }
 }
