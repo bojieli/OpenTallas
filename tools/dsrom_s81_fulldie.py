@@ -5193,6 +5193,9 @@ def build_r8(variant=None):
     if CANONICAL_LAYOUT is not None:
         m['canonical_layout'] = CANONICAL_LAYOUT
         variant['canonical_layout'] = dict(path=CANONICAL_LAYOUT['path'], sha256=CANONICAL_LAYOUT['sha256'], pair_count=PAIRS, bf_pairs=BF_PAIRS, root_count=128, wide_hub=CANONICAL_LAYOUT.get('wide_hub'), phase_width_by_stage=CANONICAL_LAYOUT['stages'], supplemental_homes_status='unbound reservations, not substituted native masters')
+        if CANONICAL_LAYOUT.get('bf_phase_fixed'):
+            variant['canonical_layout']['bf_phase_fixed'] = {k: v for k, v in CANONICAL_LAYOUT['bf_phase_fixed'].items()
+                                                             if k != 'moved_ids'}
         # Preserve exact supplemental HCP geometry against all station searches.
         for home in CANONICAL_LAYOUT['hcp_homes']:
             xx, yy = home['at_um']; oo = home['outline']
@@ -11821,6 +11824,11 @@ def _stn_lanes(m, it):
 
 def die_options(ap):
     """die-variant options shared by main and tools/die_top_lint.py (--s81-opts)"""
+    ap.add_argument('--bf-phase-fixed', action='store_true', help='H-C27 c27 (S-DIE 10-16, hierarchical S81): with '
+                    '--canonical-layout, every root keeps its pair range and BF count but its BF pairs sit at ONE fixed '
+                    'in-root position pattern per (pairs, BF) class (s81/cluster_extract.py bf_phase_pattern), so all '
+                    'frames of a height class pack identically (one column cluster master per class instead of 32 '
+                    'BF-phase signatures). The remapped stage map is written to the work dir (compiler input).')
     ap.add_argument('--canonical-layout', help='Source-pinned full2417 capacity JSON; exact519 BF IDs and128 root bounds, irregular local streets/RSC transit and per-root actual flight calendar')
     ap.add_argument('--die', default='layer', choices=['layer', 'layer1', 'layer1e', 'head'])
     ap.add_argument('--ctrl-rq', action='store_true', help='s81-gen 2026-10-09: every stack controller\'s request '
@@ -12609,6 +12617,13 @@ def apply_options(a):
         PAIRS, BF_PAIRS, NV_PAIRS = CANONICAL_LAYOUT['pair_count'], CANONICAL_LAYOUT['bf_pairs'], 0
         BF_PER_REGION = None
         BF_EXPLICIT_IDS = frozenset(CANONICAL_LAYOUT['bf_ids'])
+        if getattr(a, 'bf_phase_fixed', False):
+            # H-C27 c27: one in-root BF position pattern per (pairs, BF) class; counts per root unchanged
+            from s81.cluster_extract import bf_phase_fixed_ids
+            new_ids, receipt = bf_phase_fixed_ids(CANONICAL_LAYOUT)
+            CANONICAL_LAYOUT['bf_ids'] = set(new_ids)
+            CANONICAL_LAYOUT['bf_phase_fixed'] = receipt
+            BF_EXPLICIT_IDS = frozenset(new_ids)
         slot_geometry()
 
 
