@@ -1,0 +1,141 @@
+{
+ "name": "hbm_sfu_programme_store_r8_1017-r8-COMMIT",
+ "block": "ot_hgi_sfu_programme_store_r8",
+ "ref_tile": true,
+ "owner": "Claude:H-SU",
+ "purpose": "SFU programme store r8 (both fixed SFU calendars, 11 stripes x 2 pages = 22 ot_sram_1r1w_1024x256) for die slot sfus_<q> 820.8 x 734.4 (H-DIE grant 10-17 01:50): pure input pin flops for native capture (r7c4 cfg_we 222.0 ps), checklist-compliant square-ish floorplan, exact face pin plan.",
+ "threads": 8,
+ "peak_ram_gb": 8,
+ "source": {
+  "branch": "claude/hsu-store-r8",
+  "commit": "COMMIT",
+  "extra_paths": [
+   "results/arch/hbm_native_1013/sfu_native_quarter",
+   "results/rtl/hbm_hc_sfu_static_1015/qswiglu",
+   "rtl/test/hbm_accel/generic",
+   "rtl/hbm_accel/generic/vm/static",
+   "physical/asap7_memory_macros",
+   "rtl/hbm_accel/generic/peers",
+   "physical/ref_tile/sfu_lane_ring3_rt/src",
+   "tools/hbm_static"
+  ]
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hgi_sfu_programme_store_r8 #(.PAGE_AW(1)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/generic/peers/ot_hgi_sfu_program_stripe_rc.sv rtl/hbm_accel/generic/peers/ot_hgi_sfu_io_calendar_rc.sv rtl/hbm_accel/generic/peers/ot_hgi_sfu_calendar_paged_rc.sv physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2_bb.v rtl/hbm_accel/generic/peers/ot_hgi_sfu_programme_store_r8.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "split_equiv_exact",
+    "cmd": "OUT={RUN}/bench/pos SFU_LG_R=23 STORE8=1 bash tools/hbm_static/run_sfu_split_equiv.sh",
+    "expect": "pass",
+    "pass_regex": "SFU_SPLIT_GATE POSITIVE PASS",
+    "min_count_regex": "SFU_SPLIT_EQUIV PASS edges=(\\d+)",
+    "threads": 8,
+    "peak_ram_gb": 96,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "split_mutant_flip",
+    "cmd": "OUT={RUN}/bench/flip SFU_LG_R=23 STORE8=1 EQ_MUT=flip bash tools/hbm_static/run_sfu_split_equiv.sh; cat {RUN}/bench/flip/run.log; exit 1",
+    "expect": "fail",
+    "fail_regex": "SFU_SPLIT_EQUIV_MISMATCH|SFU_SPLIT_EQUIV FAIL|SFU_SPLIT_FAULT",
+    "threads": 8,
+    "peak_ram_gb": 96,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "split_mutant_skip_pinreg",
+    "cmd": "OUT={RUN}/bench/skip SFU_LG_R=23 STORE8=1 EQ_MUT=skip bash tools/hbm_static/run_sfu_split_equiv.sh; cat {RUN}/bench/skip/run.log; exit 1",
+    "expect": "fail",
+    "fail_regex": "SFU_SPLIT_EQUIV_MISMATCH|SFU_SPLIT_EQUIV FAIL|SFU_SPLIT_FAULT",
+    "threads": 8,
+    "peak_ram_gb": 96,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "split_mutant_early_cfg",
+    "cmd": "OUT={RUN}/bench/early SFU_LG_R=23 STORE8=1 EQ_MUT=early bash tools/hbm_static/run_sfu_split_equiv.sh; cat {RUN}/bench/early/run.log; exit 1",
+    "expect": "fail",
+    "fail_regex": "SFU_SPLIT_EQUIV_MISMATCH|SFU_SPLIT_EQUIV FAIL|SFU_SPLIT_FAULT",
+    "threads": 8,
+    "peak_ram_gb": 96,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl physical/common_flow/link_budget_hook.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/hbm_sfu_programme_store_r8_1017/signoff_ffrepair.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/hbm_sfu_programme_store_r8_1017/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 8,
+   "peak_ram_gb": 8
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/hbm_sfu_programme_store_r8_1017 --out {RUN}/record/views/ot_hgi_sfu_programme_store_r8 --macro-view physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2 > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/hbm_sfu_programme_store_r8_1017/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": [
+   "physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2"
+  ]
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/hbm_sfu_programme_store_1016/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/hbm_sfu_programme_store_1016/hbm_sfu_programme_store_r8_1017-r8-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "r8 (H-SU 2026-10-17; successor of r7c4 route hbm_sfu_programme_store_r7c4_1016-r7c4-a686d9aa7 CLOSED TT +30.58 / FF +7.18 but NATIVE FAIL capture 222.0 ps > 190 on cfg_we, results/arch/hbm_sfu_store_1016/native_audit_r7c4.json): RTL ot_hgi_sfu_programme_store_r8 = r7c with pure input pin flops (r7c reset-ANDed r_cfg_we / r_io_cfg_we / r_io_start_v in front of D); reset qualification on 3 kept relays BEHIND the pin flops, strobes bit-identical to r7c on every edge; 0 added cycles (io_word / compiler_control D = 4, status 2, host config >= 4 edges after rst_n release), +3 relay flops. Fully synchronous regional reset tree unchanged (2-flop sync -> 3 region -> 12 stripe/pin relays, no async clear, data regs unreset). Geometry: H-DIE granted slot 820.8 x 734.4 (d4f sfus_<q>, square-ish 1.12:1; r7c4 447.12 x 1023.84 was 2.3:1). 22 SRAMs in 3 columns x 2 abutted N-S stacks (stack origins on the 43.2 um lattice: x 129.6 / 345.6 / 604.8, y 43.2 / 388.8; in-stack pitch 70.512 = height + 0.042, on track): col A R0 = IO calendar (main pins face the W register band), col B MY + col C R0 = programme calendar pairs (main pins face one shared 84.5 um logic channel); one contiguous std-cell region = W band 129.6 um + channels 41.3 / 84.5 / 41.3 um joined by S 43.2 / mid 63.6 / N 63.6 um E-W corridors (the only E-W routing past the M1-M4 macro OBS). Pins (exact io_tcl, tools/hbm_static/sfu_store_r8_pins.py): W io_word + compiler_control evenly over 6..728 um (3.07/um, M4) with clk + rst_n at the W centre (y 366.9 / 367.2) next to the W register band; N west half programme cfg/start/status + fault, S west half IO cfg/start/status (M3, 0.87/um); E empty. Clock: one spine root (14.3k sinks, macros as spine leaves: r7c4 measured macro late <= 8.5 ps); no hybrid raw macro entries (direct_macro_clock_entries needs one exclusive port per SRAM = 22 ports > the 8 granted, and the measured macro skew needs none). Kit RECIPE 4 / hold_budget die (flop-first pins, no in/out hold pads)."
+}
