@@ -25,7 +25,7 @@ import os
 import re
 from pathlib import Path
 
-PITCH = 0.168          # >= 0.167 um: <= 6 pins / um / face (owner standard), on the 0.024 grid
+PITCH = 0.192          # 4 x the 0.048 M4/M5 track pitch: 5.2 pins / um / face (<= 6, owner standard)
 CMASTER = 'qfd_c_b16'
 HEAD_BITS = 1567
 RS_BITS = 514
@@ -44,6 +44,14 @@ PROVISIONAL_PORTS = {      # face is the MASTER face; bands 0-1 sit MX, so 'S' (
 
 def _snap(x, q=0.024):
     return round(round(x / q) * q, 3)
+
+
+def _trk(z):
+    """on an ASAP7 M4/M5 preferred track (offset 0.012, pitch 0.048), as b2_graph.snap"""
+    return round(.012 + round((z - .012) / .048) * .048, 4)
+
+
+SHAVE = 0.024           # frame -> abstract: = 0.024 mod 0.048, mirror-legal on M4/M5
 
 
 def _load(env):
@@ -83,9 +91,9 @@ def _master(v, w, h, ports):
         for p, d in items:
             if 'range' in d:
                 a, b = d['range']
-                ps = [_snap(a + (b - a) * k / max(1, d['bits'] - 1)) for k in range(d['bits'])]
+                ps = [_trk(a + (b - a) * k / max(1, d['bits'] - 1)) for k in range(d['bits'])]
             else:
-                ps = [_snap(cur + k * PITCH) for k in range(d['bits'])]
+                ps = [_trk(cur + k * PITCH) for k in range(d['bits'])]
             q.ports[p] = ('pins', d['bits'], f, d['layer'], ps, 1)
             q.order.append(p)
             cur = ps[-1] + 4.0
@@ -94,15 +102,15 @@ def _master(v, w, h, ports):
 
 def _station_master(v, name, w, h, nout, bits):
     q = v.Master(name, w, h, 3, f'q3h die-top broadcast station: one registered {bits}-b stage, {nout} children')
-    q.ports['d_in'] = ('pins', bits, 'W', 'M4', [_snap((h - (bits - 1) * PITCH) / 2 + k * PITCH) for k in range(bits)], 1)
+    q.ports['d_in'] = ('pins', bits, 'W', 'M4', [_trk((h - (bits - 1) * PITCH) / 2 + k * PITCH) for k in range(bits)], 1)
     q.order.append('d_in')
     for j in range(nout):
         f = 'ENS'[j % 3]
         L = h if f in 'EW' else w
         q.ports[f'd_out{j}'] = ('pins', bits, f, 'M4' if f in 'EW' else 'M5',
-                                [_snap((L - (bits - 1) * PITCH) / 2 + k * PITCH) for k in range(bits)], 1)
+                                [_trk((L - (bits - 1) * PITCH) / 2 + k * PITCH) for k in range(bits)], 1)
         q.order.append(f'd_out{j}')
-    q.ports['ck'] = ('pins', 1, 'W', 'M4', [_snap(4.0)], 1)
+    q.ports['ck'] = ('pins', 1, 'W', 'M4', [_trk(4.0)], 1)
     q.order.append('ck')
     return q
 
@@ -142,7 +150,7 @@ def apply(v, m):
           for k, ts in groups.items()}
     W0 = max(b[2] - b[0] for b in bb.values())
     H0 = max(b[3] - b[1] for b in bb.values())
-    w, h = contract.get('outline', [round(W0, 3), round(H0, 3)])
+    w, h = contract.get('outline', [round(W0 - SHAVE, 3), round(H0 - SHAVE, 3)])
     M = v.masters(m, 1)
     M[CMASTER] = _master(v, w, h, ports)
     names = {}
@@ -189,7 +197,8 @@ def apply(v, m):
     if miss:
         raise ValueError(f'q3h: clusters without ck/rst_n: {miss[:4]}')
     m['insts'] = [i for i in m['insts'] if i.name not in retired] + new
-    m['ties'] = [t for t in m.get('ties', []) if t[0] not in retired]
+    # in place: the generator's netlist writer holds this list object (as b2_graph notes)
+    m.setdefault('ties', [])[:] = [t for t in m['ties'] if t[0] not in retired]
     for k, n in sorted(names.items()):
         idx = sorted(names).index(k)
         m['ties'].append((n, 'cid', 6, idx))
@@ -218,7 +227,7 @@ def apply(v, m):
             cl = [n for k, n in names.items() if k[0] == side]
             gx = {g: [i for i in new if i.name in (names[(side, g, 1)], names[(side, g, 2)])] for g in range(6)}
             xs = {g: sum(i.cx for i in gx[g]) / 2 for g in range(6)}
-            SW, SH = 285.12, 285.12
+            SW, SH = 285.12 - SHAVE, 285.12 - SHAVE
             # root: inner edge of the array in the head gap
             rx = xs[0] + (1 if side == 'W' else -1) * (w / 2 + 400.0)
             rn = f'q3h_root_{side}'

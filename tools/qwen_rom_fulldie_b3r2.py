@@ -1197,6 +1197,12 @@ def _face_pack_final(v, m):
 SU_VM_A_BITS = 3 * (64 + 64 * 24) + (64 + 64 * 24 + 64 * 32)      # 8,448 SU -> VM
 SU_VM_Q_BITS = 3 * 64 * 32                                        # 6,144 VM -> SU
 SU_VM_ABUT_TOL_UM = 0.05                                          # the generator's SHAVE gap (0.024 um) + rounding
+# Q-DIEPLAN3 q3h (2026-10-16): OT_SU_VM_CHANNEL_UM = an open routing channel between the VM N face and the SU (q2o3:
+# ~1,300 VM N-face clock pins + rst_n were sealed under the abutted SU). The SU-VM words still run straight face to face
+# across it (one 43-um wire, far inside the measured reach); the gap must equal the channel exactly (+ the SHAVE).
+import os as _os_suvm
+if _os_suvm.environ.get('OT_SU_VM_CHANNEL_UM'):
+    SU_VM_ABUT_TOL_UM = float(_os_suvm.environ['OT_SU_VM_CHANNEL_UM']) + 0.05
 
 
 def _late_pin_grant(v):
