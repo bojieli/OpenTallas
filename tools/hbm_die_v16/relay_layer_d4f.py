@@ -92,7 +92,7 @@ def main():
             if not bits:
                 continue
         n = len(bits); dom = r['domain']; cls = r['cls']
-        sl = r['stations']
+        sl = [dict(x) for x in r['stations']]
         rd = region(di); rs_ = {s_: region(s_) for s_ in sinks}
         # DIE-CLOCK 10-17: same region or NEIGHBOUR regions (outlines within 600 um) = plain stations on the own region
         # root (neighbour-matched delivery is DIE-CLOCK's); only non-neighbour pairs get the F1 forwarded chain
@@ -117,6 +117,34 @@ def main():
         for s_ in sorted(sinks):
             cons[feed[s_]].append(('k', s_))
         fork = any(len(v) > 1 for k_, v in cons.items() if k_ is not None)
+        lane48 = inter and fork
+        # fork degree > 4 (lane48 buses): cascade at the same home -- an f4 keeps 3 consumers and its 4th branch feeds a
+        # co-located fork station holding the rest (+1 stage for those; equal-age targets below use the TREE depth)
+        for i in range(len(sl)):
+            while lane48 and len(cons[i]) > 4:
+                j = len(sl); s0 = sl[i]
+                sl.append(dict(depth=s0['depth'] + 1, x=s0['x'], y=s0['y'], toward=s0['toward'], master=s0['master'],
+                               tiles=s0.get('tiles'), parent=i, hop_um=0.0, cascade=True))
+                rest = cons[i][3:]; cons[i] = cons[i][:3] + [('s', j)]; cons[j] = rest
+                for kind_, x in rest:
+                    if kind_ == 's':
+                        sl[x]['parent'] = j
+                    else:
+                        feed[x] = j
+        def tdep(i):
+            d_ = 0
+            while i is not None:
+                d_ += 1; i = sl[i]['parent']
+            return d_
+        sdep0, sdep = sdep, {s_: tdep(feed[s_]) for s_ in sinks}
+        bad = [s_ for s_ in sinks if sdep[s_] != sdep0[s_] and not (feed[s_] is not None and sl[feed[s_]].get('cascade'))]
+        if bad:
+            problems.append(f'{r["driver"]}: list sink depth != tree depth for {bad[:3]}')
+        order, q = [], [i for i, x in enumerate(sl) if x['parent'] is None]
+        while q:
+            i = q.pop(0); order.append(i); q += [x for k_, x in cons[i] if k_ == 's']
+        if len(order) != len(sl):
+            problems.append(f'{r["driver"]}: station tree not connected ({len(order)}/{len(sl)})')
         # sink-root stages
         pads_list = {p['sink']: p['stages'] for p in r.get('pads', [])}
         if inter:
@@ -128,7 +156,7 @@ def main():
         else:
             stages = {s_: pads_list.get(s_, 0) for s_ in sinks}
         depth_eff = {s_: sdep[s_] + stages[s_] for s_ in sinks}
-        if inter and fork:
+        if lane48:
             W, T, kind = 48, math.ceil(n / 48), 'fc48lane'
         else:
             W = 48 if n <= 48 else 624
@@ -136,9 +164,9 @@ def main():
         tag = f'rf{bi:04d}'
         def dir_of(s):
             return s['master'].rsplit('_', 1)[1]
-        nodes = []
-        for i, s in enumerate(sl):
-            ncons = len(cons[i]); dr = dir_of(s)
+        nodes = {}
+        for i in order:
+            s = sl[i]; ncons = len(cons[i]); dr = dir_of(s)
             if kind == 'old':
                 m, src, deps = f'hbfd_rly_{W}_{dr}', SRC_OLD, DEPS_OLD; outs = ['o'] * max(1, ncons)
             elif kind == 'fc':
@@ -156,8 +184,8 @@ def main():
             pb = None
             if s['parent'] is not None:
                 pb = cons[s['parent']].index(('s', i))
-            nodes.append(dict(id=i, parent=s['parent'], pbranch=pb, names=names, outs=outs))
-            for t in range(T):
+            nodes[i] = dict(id=i, parent=s['parent'], pbranch=pb, names=names, outs=outs)
+            for t in range(T if m else 0):
                 insts.append(dict(name=names[t], master=m, source=src, rtl_deps=deps, params={}, slot=f'd4f_relay:{r["driver"]}',
                                   owner='H-DIE relay route / H-NETLIST',
                                   note=f'{kind} station depth {s["depth"]} lane/tile {t}/{T} toward {s["toward"]}; home ({s["x"]}, {s["y"]}) um'))
@@ -203,7 +231,7 @@ def main():
             sk[s_] = dict(src=[src, br], chain=chain)
         splice.append(dict(bus=tag, driver=di, cls=cls, domain=dom, width=W, tiles=T, bits=n,
                            driver_bits=[[p, k] for p, k, _ in bits], loads=[[list(x) for x in ls] for _, _, ls in bits],
-                           nodes=nodes, sinks=sk, kind=kind, inter_region=bool(inter)))
+                           nodes=[nodes[i] for i in order], sinks=sk, kind=kind, inter_region=bool(inter)))
         consts.append(dict(bus=tag, driver=r['driver'], cls=cls, domain=dom, bits=n, kind=kind, lanes=T, inter_region=bool(inter),
                            fork=fork, sink_edges=depth_eff))
     eq = collections.defaultdict(int)
