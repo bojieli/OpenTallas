@@ -150,7 +150,8 @@ if {[llength [get_ports -quiet clk_out]] && [llength [get_ports -quiet clk_in]]}
   if {![llength [get_clocks -quiet clk_out_fwd]]} {
     create_generated_clock -name clk_out_fwd -source [get_ports clk_in] -divide_by 1 [get_ports clk_out]
   }
-  set ot_fc_ck [lindex [get_clocks -of_objects [get_ports clk_in]] 0]
+  # the stage clock = the clock created on clk_in (ref_tile clock.sdc / signoff.sdc: core_clk)
+  set ot_fc_ck [expr {[llength [get_clocks -quiet core_clk]] ? "core_clk" : [get_object_name [lindex [all_clocks] 0]]}]
   set ot_fc_do [get_ports -quiet {o[*]}]
   set ot_fc_di [get_ports -quiet {i[*]}]
   if {[llength $ot_fc_do]} {
