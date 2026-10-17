@@ -196,7 +196,7 @@ module tb_hgi_coll_q_hard_v5;
    2:begin exp_delta=1;exp_bit=2;end
    3:begin exp_delta=0;exp_bit=13;code[20][718]=1;end
    4:begin exp_delta=1;exp_bit=3;code[20][2+NPT]=1;end
-   5:begin exp_delta=-1;exp_bit=12;code[20][9]=1;end
+   5:begin exp_delta=-1;exp_bit=12;code[20][NPT+7]=1;end   // q2 arg capture slot = NPT+7 (9 at NLINK 2)
    6:begin exp_delta=0;exp_bit=0;end
    default:;
   endcase
