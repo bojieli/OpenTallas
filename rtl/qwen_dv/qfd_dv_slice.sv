@@ -23,7 +23,8 @@
 // 6 root pairing, 7 argmax ties high, 8 column head wrong station, 9 head x operand LSB flipped).
 // =====================================================================================================================
 module qfd_dv_slice #(
-    parameter integer MUT = 0
+    parameter integer MUT = 0,
+    parameter integer SU_TLS = 1     // SU lanes' tapped line on their SRAM ring (qfd_dv_su8_entries TLS)
 ) (
     input  wire           ck,
     input  wire           rst_n,
@@ -101,7 +102,7 @@ module qfd_dv_slice #(
     wire [15:0]   su_prog, su_rows;
     wire [7:0]    su_infl;
     wire [7:0]    ck8 = {8{ck}};
-    ot_hdc_vstream_static_entries #(.SW(8), .LV(4), .WR(16), .AW(24), .NW(18), .KV_FP8(1), .ML(1)) u_su (
+    qfd_dv_su8_entries #(.TLS(SU_TLS), .SW(8), .LV(4), .WR(16), .AW(24), .NW(18), .KV_FP8(1), .ML(1)) u_su (
         .ck_head(ck8), .ck_exp(ck8), .ck_rcp(ck8), .ck_rsq(ck8), .ck_lane(ck8), .ck_red({9{ck}}),
         .clk(ck), .rst_n(rst), .go(su_go), .ready(su_ready), .idle(su_idle),
         .i_nout(si[18:1]), .i_nin(si[36:19]),

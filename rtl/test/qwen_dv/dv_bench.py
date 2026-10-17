@@ -27,7 +27,7 @@ F = np.float32
 EPS = F(1e-6)
 
 SRCS = """rtl/qwen_dv/qfd_dv_slice.sv rtl/qwen_dv/qfd_dv_redstn.sv rtl/qwen_dv/qfd_dv_vm.sv rtl/qwen_dv/qfd_dv_scalar.sv
-rtl/qwen_dv/qfd_dv_stream.sv rtl/qwen_sys/static_schedule_20261014/ot_hdc_vstream_static_entries.sv
+rtl/qwen_dv/qfd_dv_stream.sv rtl/qwen_dv/qfd_dv_su8_entries.sv
 rtl/hdc/ot_hdc_vstream_lane.sv rtl/hdc/ot_hdc_vreduce.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fp32_add_lat.sv
 rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_sfu.sv
 rtl/hdc/ot_hdc_sfu_q.sv rtl/physical/ot_hdc_vred_pending_guard.sv rtl/test/full_sm_service/sram_models.sv

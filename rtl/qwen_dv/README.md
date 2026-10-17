@@ -111,3 +111,62 @@ The slice is a recipe-4 tile with `"hold_budget": "die"`.
 - **No pads.** There are no inhold/outhold pads, and no hold buffer on input pins. Hold is budgeted on the die relay stations.
 - **Sign-off.** Input min = L_min + C + U and output min = U − (L_min + C), with C = 25 ps and U = 25 ps. Setup is unchanged.
 - **No opt-out.** The slice has a single clock domain and no CDC/async leaf.
+
+## Step 2 (2026-10-17)
+
+### Root combine (`qfd_dv_scalar`)
+- **Tree.** The sequential ~70-cycle combine is replaced by a pipelined 5-level pairwise tree of `ot_hdc_qadd`, the SU's adder: 16 + 8 + 4 + 2 + 1 adders over the 32 block slots.
+  - Slots past nb hold +0, and x + (+0) = x exactly, so the result equals the golden tree padded to p2ceil(nb).
+  - Trigger to total takes 15 edges.
+- **Fused r.** With ROOT `fuse` set, the root itself forms `r = rsqrt_q(qadd(qmul(total, 2^-k), eps))`, using the SU op's primitives and order. It then broadcasts r.
+  - Measured: last block sum out of a neighbour → r out of the root = **61 cycles** (ring 2 + trigger 1 + tree 15 + 1/n 3 + eps 3 + rsqrt 37). The old path was ~70 plus an SU rsqrt op (~60).
+  - The 3-step Newton rsqrt of the golden alone is 37 edges at LA = LM = 3, so the ~25-cycle target holds only for the tree to the total (15 + 3).
+- **Root cmd fields.** fuse `[35]`, rx `[59:36]`, eps `[91:60]`, k `[96:92]` (1/n = 2^-k), amnb `[102:97]`; slice2 adds rdir `[103]`.
+
+### LM-head argmax
+- Station results of an op armed with STN `amax` (cmd `[50]`) feed a 16-leaf, 4-level compare tree, then the running best per slice. The order is the `ot_qwen_me_spport_w12` key order, ties to the lower index.
+- AMAX cmd (kind 6): `[4]` clear, `[5]` emit the candidate.
+- The root merges amnb candidates and sends a TOK word.
+
+### Station skew
+`cw0` is the far port and `cw1` the near port. The near word passes a fixed `SKEW` (14) edge line, so the far word arriving 14 edges later meets it at level 7.
+
+### Column heads (`qfd_dv_heads`)
+- One existing `ot_qfd_xs_tap`, 4 `ot_qfd_xhead` and 32 `ot_qfd_xs_leaf`, all unchanged.
+- **Input.** The tap is fed from every x stream word the slice sees, as `{bf16, 0}`, plus `hr = {go, ib 379, xpf 72}`.
+- **Outputs.** 8 corridor words: n_d goes to the band-2 cluster, s_d to the band-1 cluster.
+- **Tile ids.** Column = 4·sid + i, using the die's TIDM-1 map.
+- **Bench.** `run_heads.sh` checks against the existing `ot_qfd_xdvm_fabric` (NCOL 48, tap fed the FP32 x).
+
+### SU delay line
+`qfd_dv_su8_entries` is `ot_hdc_vstream_static_entries` with one pass-through parameter, TLS (default 1): the lane's tapped line moves to its existing SRAM ring.
+
+### Benches
+- `run_all.sh`: positive (a)–(g), plus mutants 1–7.
+- `run_heads.sh`: the heads bench, plus mutants 8 and 9.
+
+## qfd_dv_slice2: the dv2r8f2 die port cut (bound by Q-DIEPLAN3)
+
+Children are the same apart from three:
+- `qfd_dv_redstn2`: both level-7 pairs arrive in parallel; the up block of gate/up waits in an 8-word buffer.
+- `qfd_dv_scalar2`: a 48-b scalar chain both ways, with a 2-beat argmax candidate and RB destination rx from the ROOT cfg.
+- The command and return chains.
+
+| port | bits | contract |
+|---|---|---|
+| `cmd_i` / `cmd_o` | 116 | Chain W5→E5, 2 edges a hop. `[115:112]` dst (15 = all). SETID (kind 7) latches id `[7:4]` and forwards id+1. |
+| `hr_i` / `hr_o` | 453 | `{go, ib 379, xpf 72, hr_v}`. `hr_o` is the pin register (1 edge a hop). |
+| `rs_s` / `rs_n` | 1,028 | `{far rs_o, near rs}` of the band-1 / band-2 cluster. Far words come 14 edges after near. |
+| `l9_i` / `l9_o` | 514 | level-9 neighbour word |
+| `st_up_*` / `st_dn_*` | 1,088 | stream toward E5 / toward W5 |
+| `sc_up_*` / `sc_dn_*` | 48 | `{v, kind 3, tag 12, value 32}`. Kinds: PSUM, RB, AMI, AMV, TOK. |
+| `ch_up_i` / `ch_dn_o` | 1,094 | outbound `{AR 546, D2D 548}` toward W5. At W5, AR goes to io_collective and D2D to native59. |
+| `ch_dn_i` / `ch_up_o` | 1,038 | return `{AR ret 518, D2D ret 520}`, 1 edge a hop. D2D ret `[518]`: 0 = attention (dd_base + 16·beat), 1 = embedding row (em_base + 16·k). |
+| `cw_n0..3` / `cw_s0..3` | 516 | corridor words |
+| `st` | 74 | status: `{sid, faults, ...}` |
+
+PORTS cmd: ar_base `[27:4]`, dd_base `[51:28]`, ar_en `[52]`, dd_en `[53]`, em_base `[77:54]`, em_en `[78]`.
+
+**Chain-end inputs take the idle word, all zero.** These are E5's `ch_up_i`, `st_dn_i` and `sc_dn_i`, and W5's `st_up_i` and `sc_up_i`. An all-zero word means "no word" on each of these ports, as with the outermost `fault_i` termini.
+
+**Benches.** `dv_bench2.py` runs (a)–(g) on the chain ports, plus (h): SETID enumeration of 12 slices. MUT 10, where the forward does not increment, must fail (h).

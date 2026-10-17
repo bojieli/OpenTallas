@@ -6,7 +6,7 @@ V=${VERILATOR:-$HOME/.local/opentallas-tools/verilator-5.050/bin/verilator}
 D=rtl/qwen_sys/dvm_20261014
 F="rtl/qwen_dv/qfd_dv_slice.sv rtl/qwen_dv/qfd_dv_redstn.sv rtl/qwen_dv/qfd_dv_vm.sv rtl/qwen_dv/qfd_dv_scalar.sv
    rtl/qwen_dv/qfd_dv_stream.sv rtl/qwen_dv/qfd_dv_heads.sv
-   rtl/qwen_sys/static_schedule_20261014/ot_hdc_vstream_static_entries.sv rtl/hdc/ot_hdc_vstream_lane.sv
+   rtl/qwen_dv/qfd_dv_su8_entries.sv rtl/hdc/ot_hdc_vstream_lane.sv
    rtl/hdc/ot_hdc_vreduce.sv rtl/physical/ot_hdc_vred_pending_guard.sv rtl/hdc/ot_hdc_sfu_q.sv
    rtl/test/full_sm_service/sram_models.sv rtl/test/hbm_rf_visibility/scale_sram_model.sv
    rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_sfu.sv
