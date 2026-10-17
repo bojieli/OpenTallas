@@ -45,7 +45,10 @@
    "physical/qwen_die_masters/repair_budget.tcl",
    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_slice_v7.sv",
    "rtl/hbm_accel/generic/collective/p2p/run_slice_v7.sh",
-   "rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_slice_v7.sv"
+   "rtl/hbm_accel/generic/collective/p2p/tb_hgi_coll_slice_v7.sv",
+   "physical/hbm_w2_rb_station_20261006/forwarded_subtree.tcl",
+   "physical/hgi_idx_hier/pdn_hier.tcl",
+   "physical/qwen_die_masters/hdly_dont_touch.tcl"
   ]
  },
  "stages": {
