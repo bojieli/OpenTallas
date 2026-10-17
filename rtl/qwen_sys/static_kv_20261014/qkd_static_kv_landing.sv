@@ -199,7 +199,10 @@ endmodule
 // register (+1 edge on BOTH K and V: VREQ=1 landing latency 6 / physical 8 edges).  The schedule is static: a K and a
 // V get on the same edge is a fault, never arbitrated.  A V get carries the epoch / layer the group was ARMED with
 // (arm / epoch / layer, latched here as in the PCs: a group with no K row at small T still serves V).  VREQ=0: unchanged.
-module qkd_static_kv_rowctl #(parameter integer VREQ=0)(
+// DATA (KVCTRL 1815, landing_seg_h): 1 = the 1024-b response data pipe (idata -> rsp_data) lives here (default, every
+// existing instance unchanged); 0 = the data pipe is NOT built here (rsp_data driven 0): the hierarchical seg keeps each
+// PC's 256-b lane pipe (hop -> idata -> rsp_data, the same three registers) beside that PC (qkd_static_kv_landing_lane).
+module qkd_static_kv_rowctl #(parameter integer VREQ=0,parameter integer DATA=1)(
     input wire ck,rst_n,
     input wire req_valid,input wire [13:0] req_t,input wire req_v,
     input wire [15:0] req_epoch,input wire [5:0] req_layer,
@@ -247,13 +250,18 @@ module qkd_static_kv_rowctl #(parameter integer VREQ=0)(
       assign pc_get_epoch={4{eq}};assign pc_get_layer={4{lq}};
     end endgenerate
     (* keep *) reg [3:0] iv,ivv,ifault;
-    (* keep *) reg [1023:0] idata;
     (* keep *) reg [55:0] it;
     (* keep *) reg [63:0] ie;
     (* keep *) reg [23:0] il;
+    generate if(DATA!=0)begin:g_data
+      (* keep *) reg [1023:0] idata;
+      always @(posedge ck)begin idata<=pc_data;rsp_data<=idata;end
+    end else begin:g_nodata
+      always @(*)rsp_data=1024'd0;
+    end endgenerate
     always @(posedge ck)begin
-      idata<=pc_data;it<=pc_t;ivv<=pc_v;ie<=pc_epoch;il<=pc_layer;
-      rsp_data<=idata;rsp_t<=it[13:0];rsp_v<=ivv[0];rsp_epoch<=ie[15:0];rsp_layer<=il[5:0];
+      it<=pc_t;ivv<=pc_v;ie<=pc_epoch;il<=pc_layer;
+      rsp_t<=it[13:0];rsp_v<=ivv[0];rsp_epoch<=ie[15:0];rsp_layer<=il[5:0];
     end
     always @(posedge ck or negedge rn)
       if(!rn)begin iv<=0;ifault<=0;rsp_valid<=0;fault<=0;end
