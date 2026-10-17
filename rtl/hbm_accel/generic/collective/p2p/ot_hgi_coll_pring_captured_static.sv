@@ -3,13 +3,16 @@
 // Distinct captured-state compiler-issued ring stop. Component successor to historical ot_hgi_coll_pring.
 // NO queue, arbitration, ready, credit or data-dependent issue. Every transfer,
 // transit, add and publication is explicitly reserved by the compiler each edge.
-// Physical order CW = 0,1,3,2. RX observes the input pin capture from the prior
+// Physical order CW = 0,1,3,2 (N_Q=4) or 0,2 (N_Q=2, A2P half die: SW <-> NW). RX observes the input pin capture from the prior
 // edge; TX is registered. Thus an adjacent TX -> RX reservation is two edges.
 // Relay edges must be added to the compiler trace. An invalid trace faults; it
 // never waits or repairs the timeline. This component is not a die qualification.
 module ot_hgi_coll_pring_captured_static #(
     parameter integer NT=8, LAT=8, SPLIT_CLOCKS=0,
-    parameter integer MUT_CARRY=0, MUT_TAG=0
+    parameter integer MUT_CARRY=0, MUT_TAG=0,
+    // N_Q (H-NETLIST A2P 2026-10-16): quadrants on the ring.  A RESULT flit is injected with TTL = N_Q-1 hops (every
+    // other stop receives it once); N_Q=4 is the original ring exactly (TTL 3), N_Q=2 the 2-stop ring (TTL 1).
+    parameter integer N_Q=4
 )(
     input wire clk, rst_n,
     input wire [7:0] clk_state, clk_add,
@@ -67,7 +70,7 @@ module ot_hgi_coll_pring_captured_static #(
     reg prep_add_rhs,prep_tx_acc;
     reg [LAT-1:0] pv;
     reg [2:0] pt[0:LAT-1];
-    generate if (NT!=8 || LAT<4 || LAT>8) begin:g_bad
+    generate if (NT!=8 || LAT<4 || LAT>8 || (N_Q!=2 && N_Q!=4)) begin:g_bad
         ot_hgi_static_ring_requires_NT8_LAT4_to_8 invalid_configuration();
     end endgenerate
     // Payload and arithmetic are actual leaf modules, with one clock entry per
@@ -95,7 +98,7 @@ module ot_hgi_coll_pring_captured_static #(
     end
     function automatic [279:0] flit(input [2:0] tag,input [255:0] data);
         flit={1'b1,tx_result?2'd2:2'd1,qid,tx_dst,
-              tx_result?2'd3:2'd0,MUT_TAG?(tag^3'd1):tag,1'b0,11'b0,data};
+              tx_result?2'(N_Q-1):2'd0,MUT_TAG?(tag^3'd1):tag,1'b0,11'b0,data};
     endfunction
     always @(posedge clk or negedge rst_n) begin:step
         reg [279:0] x,outx;

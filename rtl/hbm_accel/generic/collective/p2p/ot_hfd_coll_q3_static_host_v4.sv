@@ -3,7 +3,7 @@
 // Actual raw HOST F20 target plus native V4 quadrant. QID is physical identity,
 // not a programmable destination. Every clock has the same logical edge;
 // physical phi-R insertion is supplied independently at each clock entry.
-module ot_hfd_coll_q3_static_host_v4 #(parameter [1:0] QID=2'd0,parameter integer INJLAT=12)(
+module ot_hfd_coll_q3_static_host_v4 #(parameter [1:0] QID=2'd0,parameter integer INJLAT=12,parameter integer N_Q=4)(
  input wire rst_n,
  input wire clk_program,
  input wire clk_control,
@@ -75,7 +75,7 @@ module ot_hfd_coll_q3_static_host_v4 #(parameter [1:0] QID=2'd0,parameter intege
   if(!rst_n)fault<=0;
   else fault<=fault | program_fault | quad_fault;
  assign hgi_fault=fault;
- ot_hfd_coll_q3_static_v4 #(.INJLAT(INJLAT)) u_q(
+ ot_hfd_coll_q3_static_v4 #(.INJLAT(INJLAT),.N_Q(N_Q)) u_q(
   .rst_n(rst_n),.clk_control(clk_control),.clk_issue(clk_issue),
   .clk_qslots(clk_qslots),.clk_ring(clk_ring),.clk_reduce(clk_reduce),
   .clk_arg(clk_arg),.clk_tkm(clk_tkm),

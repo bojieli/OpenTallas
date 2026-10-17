@@ -9,6 +9,8 @@ module ot_hfd_coll_q_static_v4 #(
  // Default 12 = the closed behaviour; the die value is 10 + request relays + return relays (+2 in SW for the
  // cij_SW IDX join), sized from the H-DIE layout. Legal INJLAT >= 2.
  parameter integer NPT=3,SOLO=1,INJLAT=12,
+ // N_Q (H-NETLIST A2P): quadrants on the COLL ring (4 = full die, original; 2 = A2P half die SW <-> NW)
+ parameter integer N_Q=4,
  parameter integer NS=2+NPT+4+2,ND=NPT+12+1,SELW=$clog2(NS)
 )(
  input wire rst_n,
@@ -304,7 +306,7 @@ module ot_hfd_coll_q_static_v4 #(
  // COLL.STATE_CAPTURE). The production COLL compiler (tools/hbm_coll_static/g96_calendar.py) reserves no
  // ring operation (reductions run on u_reduce/AR; p_ring[57:0] stay 0), so no compiled trace changes; a ring
  // trace must use the captured lead or the ring faults (MUT_READ_LEAD, run_pring_captured_suite.sh).
- ot_hgi_coll_pring_captured_static #(.SPLIT_CLOCKS(1)) u_ring(
+ ot_hgi_coll_pring_captured_static #(.SPLIT_CLOCKS(1),.N_Q(N_Q)) u_ring(
   .clk(clk_ring[0]),.clk_state(clk_ring[8:1]),.clk_add(clk_ring[16:9]),.rst_n(rst_n),.qid(qid),
   .cw_i(pr_cw_i),.ccw_i(pr_ccw_i),.cw_o(pr_cw_o),.ccw_o(pr_ccw_o),
   .lp_data(rc_d),.rr_v(rr_v),.rr_tag(rr_tag),.rr_d(rr_d),.fault(ring_fault),
@@ -337,7 +339,7 @@ module ot_hfd_coll_q_static_v4 #(
   .rr_local_tag(r_rr_local_tag));
 endmodule
 
-module ot_hfd_coll_q3_static_v4 #(parameter integer INJLAT=12)(
+module ot_hfd_coll_q3_static_v4 #(parameter integer INJLAT=12,parameter integer N_Q=4)(
  input wire rst_n,
  input wire clk_control,
  input wire [3:0] clk_issue,
@@ -385,10 +387,10 @@ module ot_hfd_coll_q3_static_v4 #(parameter integer INJLAT=12)(
  output wire done,
  output wire [31:0] stat_cycles
 );
- ot_hfd_coll_q_static_v4 #(.NPT(3),.SOLO(1),.INJLAT(INJLAT)) u_q(.*);
+ ot_hfd_coll_q_static_v4 #(.NPT(3),.SOLO(1),.INJLAT(INJLAT),.N_Q(N_Q)) u_q(.*);
 endmodule
 
-module ot_hfd_coll_q2_static_v4 #(parameter integer INJLAT=12)(
+module ot_hfd_coll_q2_static_v4 #(parameter integer INJLAT=12,parameter integer N_Q=4)(
  input wire rst_n,
  input wire clk_control,
  input wire [3:0] clk_issue,
@@ -436,7 +438,7 @@ module ot_hfd_coll_q2_static_v4 #(parameter integer INJLAT=12)(
 );
  wire [33:0] clk_tkm=34'd0;
  wire clk_arg=1'b0;
- ot_hfd_coll_q_static_v4 #(.NPT(2),.SOLO(0),.INJLAT(INJLAT)) u_q(.*);
+ ot_hfd_coll_q_static_v4 #(.NPT(2),.SOLO(0),.INJLAT(INJLAT),.N_Q(N_Q)) u_q(.*);
 endmodule
 
 // Actual hardenable protocol leaf: all parent request/assembly/pipeline state.
