@@ -16,6 +16,12 @@
 # timing-driven GPL puts it between the launch flop and the pin.  Why: FIRM at the pin, s81_rly_536_en_od8 (E->N relay,
 # pin flops at the E input face) left an INVx1 driving the whole internal flop -> N-pin wire: native launch 256.3 ps (111
 # pins > 220); unbuffered 200.1.
+# OT_OUT_DRV_ABSORB=1 (r3): when the port net is driven by ONE single-load INV whose input is a DFF output (ASAP7
+# DFFASRHQN has only QN, so every relay/station output is QN -> INV -> port), that INV is swapped to OT_OUT_DRV (an INV
+# master, e.g. INVx8) and dont_touch -- the same stage count as the unbuffered view, a strong pin driver, no added
+# buffer.  r2 (free BUFx8 after the INV) measured native launch 267.1 vs unbuffered 200.1 (one more stage).  Ports
+# not of that shape get nothing (counted as skipped).
+set ot_od_absorb [expr {[info exists ::env(OT_OUT_DRV_ABSORB)] && $::env(OT_OUT_DRV_ABSORB) eq "1"}]
 set ot_od_free [expr {[info exists ::env(OT_OUT_DRV_FREE)] && $::env(OT_OUT_DRV_FREE) eq "1"}]
 if {![info exists ::env(OT_OUT_DRV)] || $::env(OT_OUT_DRV) eq ""} {
   puts "OUT_PIN_DRIVER: OT_OUT_DRV unset, nothing inserted"
@@ -23,9 +29,11 @@ if {![info exists ::env(OT_OUT_DRV)] || $::env(OT_OUT_DRV) eq ""} {
   set ot_od_blk [ord::get_db_block]
   set ot_od_m [[ord::get_db] findMaster $::env(OT_OUT_DRV)]
   if {$ot_od_m eq "NULL"} { error "OUT_PIN_DRIVER: master $::env(OT_OUT_DRV) missing" }
-  if {![string match "BUF*" [$ot_od_m getName]]} { error "OUT_PIN_DRIVER: OT_OUT_DRV must be a non-inverting BUF" }
+  if {$ot_od_absorb} {
+    if {![string match "INV*" [$ot_od_m getName]]} { error "OUT_PIN_DRIVER: OT_OUT_DRV_ABSORB needs an INV master" }
+  } elseif {![string match "BUF*" [$ot_od_m getName]]} { error "OUT_PIN_DRIVER: OT_OUT_DRV must be a non-inverting BUF" }
   set ot_od_ca [$ot_od_blk getCoreArea]
-  set ot_od_firm {}; set ot_od_n 0; set ot_od_skip 0
+  set ot_od_firm {}; set ot_od_abs {}; set ot_od_n 0; set ot_od_skip 0
   foreach bt [$ot_od_blk getBTerms] {
     if {[$bt getIoType] ne "OUTPUT"} continue
     set net [$bt getNet]; if {$net eq "NULL" || [$net getSigType] ne "SIGNAL"} continue
@@ -40,6 +48,19 @@ if {![info exists ::env(OT_OUT_DRV)] || $::env(OT_OUT_DRV) eq ""} {
       set cn [[$di findITerm A] getNet]; if {$cn eq "NULL"} break
     }
     if {!$ok} { incr ot_od_skip; continue }
+    if {$ot_od_absorb} {
+      set dv ""
+      foreach it [$net getITerms] { if {[$it isOutputSignal]} { set dv $it; break } }
+      set di [$dv getInst]
+      set src [[$di findITerm A] getNet]
+      set sdv ""
+      if {$src ne "NULL"} { foreach it [$src getITerms] { if {[$it isOutputSignal]} { set sdv $it; break } } }
+      if {![string match "INV*" [[$di getMaster] getName]] || [llength [$net getITerms]] != 1 || $sdv eq "" || ![string match "DFF*" [[[$sdv getInst] getMaster] getName]]} { incr ot_od_skip; continue }
+      $di swapMaster $ot_od_m
+      lappend ot_od_abs [$di getName]
+      incr ot_od_n
+      continue
+    }
     set x 0; set y 0
     foreach bp [$bt getBPins] { foreach bx [$bp getBoxes] {
       set x [expr {([$bx xMin] + [$bx xMax]) / 2}]; set y [expr {([$bx yMin] + [$bx yMax]) / 2}]; break }; break }
@@ -58,9 +79,9 @@ if {![info exists ::env(OT_OUT_DRV)] || $::env(OT_OUT_DRV) eq ""} {
     $pn setDoNotTouch 1
     incr ot_od_n
   }
-  if {$ot_od_n > 0} { set_dont_touch [get_cells ot_outdrv_*] }
+  if {[llength $ot_od_abs]} { foreach n $ot_od_abs { set_dont_touch [get_cells $n] } } elseif {$ot_od_n > 0} { set_dont_touch [get_cells ot_outdrv_*] }
   if {[info exists ::env(RESULTS_DIR)]} {
     set fh [open $::env(RESULTS_DIR)/ot_inhold_firm.txt a]; if {[llength $ot_od_firm]} { puts $fh [join $ot_od_firm "\n"] }; close $fh
   }
-  puts "OUT_PIN_DRIVER: $ot_od_n output ports driven by [$ot_od_m getName] [expr {$ot_od_free ? {PLACED (free, seeded at the pin)} : {FIRM at the pin}}] (dont_touch), $ot_od_skip outputs skipped (not flop-driven)"
+  puts "OUT_PIN_DRIVER: $ot_od_n output ports driven by [$ot_od_m getName] [expr {$ot_od_absorb ? {(absorbed: port INV swapped)} : {}}] [expr {$ot_od_free ? {PLACED (free, seeded at the pin)} : {FIRM at the pin}}] (dont_touch), $ot_od_skip outputs skipped (not flop-driven)"
 }
