@@ -1,0 +1,17 @@
+{
+ "schema": "opentallas.s81.die_lead_grant.v1",
+ "by": "coordinator (HANDOFF 0co REVIEW 10-17 ~09:35), recorded by ENGRAM-9",
+ "supersedes_in_part": "results/physical/die_iter_1012/s81/grants/sdie_0030_engram_mix4.json (master dsfd_engram_lkp_static14: 674 pins / 14 roots)",
+ "grants": [
+  {
+   "master": "dsfd_engram_lkp_static14",
+   "variant": "st9 (branch claude/s81-static14-st9); st8 (claude/s81-static14-0600) keeps the 674-pin / 14-root plan",
+   "pin_plan": "physical/s81_die_pins/v28_engram_static14_candidate/dsfd_engram_lkp_static14.tcl (branch claude/s81-static14-st9)",
+   "decision": "GRANTED +2 clock pins: ck_n N face M5 x 185.004 (y 215.958), ck_s S face M5 x 180.012 (y 0.042); 676 pins incl 16 clock roots (ck, ck_seed, 6 hash, 6 rows, ck_n, ck_s); the 674 existing rectangles unchanged; outline 324 x 216 unchanged",
+   "why": "st8 CTS gate: core root ck 8,638 sinks, TT insertion 298-412 ps (all-sink spread 114.3, boundary spread 80.7) because the N/S pin flops (~900 sinks along 300-um faces) share the core tree; st9 gives them regional face roots; 0 cycles",
+   "check": "ck_n between N ck_rows[5] 162.444 and o_d 194.84 (>= 9.8 um clear); ck_s between S hr_idx 116.75 and hr_d 192.16 (>= 12 um clear); same 0.048-um track residue (.25) as every N/S M5 pin",
+   "die_side": "the parent (MIX4 / S81-DV die) delivers ck_n and ck_s as phase-0 1:1 regional clocks of the same source as ck (neighbour-relative clocking, delivered phi - R_i from the tile's measured per-root insertion)",
+   "binding": "bind st8 or st9, whichever passes native first (coordinator)"
+  }
+ ]
+}
