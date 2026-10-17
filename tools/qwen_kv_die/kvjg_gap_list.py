@@ -22,6 +22,7 @@ sys.path.insert(0, str(HERE))
 import kv_static as K                                   # noqa: E402
 import kv_static_boot_join as B                         # noqa: E402
 import kv_static_kvjf_join as F                         # noqa: E402
+import kv_static_attn_join as A                         # noqa: E402
 
 CLOCK_RESET = {'ck', 'rst_n', 'hck', 'hrst_n', 'hrst', 'por_n', 'cal_hck', 'cal_rst_n', 'front_hck', 'return_hck',
                'return_ck', 'pll_hbm', 'pll_hbm_port', 'pll_hbm_ecc', 'pll_hbm_cdc', 'pll_hbm_obs'}
@@ -58,9 +59,14 @@ STATIC_OWNERS = {
     ('layer_programme', 'programme_'): ('DIE_JOIN', 'host root program_authorized_* / program_epoch / program_digest', 'KVJ-G2'),
     ('attention_programme', 'compiled_'): ('NEW_RTL', 'qkd_attn_cal_gen (N1, KVJ-B 58f9ebdbb, not pushed)', 'KVJ-B'),
     ('attention_programme', 'fused_program_capability'): ('COMPILER', 'boot image capability bit', 'item 9 compiler'),
-    ('attention_programme', 'request_ready'): ('DIE_JOIN', 'attention service (ahub / seq_static successor, D3)', 'KVE-2'),
-    ('attention_programme', 'result_'): ('DIE_JOIN', 'attention service result face (ahub / seq_static successor)', 'KVE-2'),
-    ('attention_programme', 'service_fault'): ('DIE_JOIN', 'attention service fault', 'KVE-2'),
+    # KVJ-SMALL (a) 10-17: request_ready / result_* / service_fault are joined (kv_static_attn_join: attn_root +
+    # attn_face); the face's own inputs from the PV final join and the unit faults are die joins
+    ('producer', 'f_valid'): ('DIE_JOIN', 'PV final join ot_qwen_tp8_pv256_finalize_static_cal out_valid -> attn_face', 'KVJ-G2'),
+    ('producer', 'f_data'): ('DIE_JOIN', 'PV final join out_data (16,384 b) -> attn_face', 'KVJ-G2'),
+    ('producer', 'f_epoch'): ('DIE_JOIN', 'PV final join out_epoch -> attn_face', 'KVJ-G2'),
+    ('producer', 'unit_fault'): ('DIE_JOIN', 'attention service unit sticky faults (stacks, hub, PV pairs, finalize, V req, '
+                                 'e-read, rz-late, K identity) -> attn_face', 'KVJ-G2'),
+    ('producer', 'fused_program_capability'): ('COMPILER', 'boot image capability bit (attn_root)', 'item 9 compiler'),
     ('ownership', ''): ('NEW_RTL', 'qkd_kv_ownership_obs go/host_quiet/upstream_quiet (not pushed)', 'KVJ-F'),
     ('drain_guard', 'upstream_'): ('NEW_RTL', 'pc_path ctrl faults / ownership_obs (grp_ctl kit KVJ-D merged)', 'KVJ-F'),
     ('link', 'emb_tx'): ('NEW_RTL', 'qkd_embedding_row_tx role in the graph', 'KVJ-C2'),
@@ -95,7 +101,8 @@ def owner(table, a, port):
 
 def static_gaps():
     # KV-INT 10-17: the full merged join (template + boot + 160 boot CDC + host admission + KVJ-F ownership_obs + die cfg)
-    graph, _ = F.build()
+    # KVJ-SMALL (a): + attention service root / result face (kv_static_attn_join)
+    graph, _ = A.build()
     rows, ck = defaultdict(lambda: dict(instances=0)), Counter()
     for i in graph['instances']:
         for p, v in i['inputs'].items():
