@@ -1,0 +1,140 @@
+{
+ "name": "hbm_su_static_kind1_l4_r1_1016-r1-COMMIT",
+ "block": "ot_hbm_su_static_kind1_lat4_leaf1_r1_physical",
+ "ref_tile": true,
+ "owner": "Claude:H-SU/PGSLICE",
+ "purpose": "KIND1 lane leaf, ONE regional clock root (H-ELEM/coordinator decision 10-16 option (a)): every pipeline stage and insertion register on clk, no internal cross-root hops (s2 EARLY_FAIL_HOLD: 24,819 cross-root endpoints with the 100 ps entry reserve, stuck -91.0 at u_d2). Input-cut LAT-4 multipliers (OT_QMUL4_INCUT, 0 edges, bit-exact). Sync regional reset. ",
+ "threads": 4,
+ "peak_ram_gb": 32,
+ "source": {
+  "branch": "claude/hsu-pgslice-d4c",
+  "commit": "COMMIT"
+ },
+ "stages": {
+  "bench": [
+   {
+    "name": "lint",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hbm_su_static_kind1_lat4_leaf1_r1_physical u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS -DOT_QMUL4_INCUT -DOT_SU_SYNC_RST --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_ins.sv rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_lane_pinreg.sv rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_lane.sv rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_arithmetic.sv rtl/hdc/v41x/ot_hdc_v41x_sfu.sv rtl/hdc/ot_hdc_delay.sv rtl/hdc/ot_hdc_fpu.sv rtl/hdc/ot_hdc_fp32_mul_pipe.sv rtl/proto/ot_fp32_add_rne_pipe.sv rtl/hdc/ot_hdc_sfu.sv rtl/hdc/ot_hdc_fastfp.sv rtl/hdc/ot_hdc_fastfp_lat.sv rtl/hdc/ot_hdc_fp32_mul_lat.sv rtl/hdc/ot_hdc_fp32_add_lat.sv rtl/hdc/ot_hdc_prefix.sv rtl/hdc/v41/ot_hdc_fsqrt.sv rtl/hdc/v41/ot_hdc_fdiv.sv rtl/hdc/v41/ot_hdc_softplus.sv rtl/lib/ot_rst_relay.sv rtl/lib/ot_sync_rst_relay.sv rtl/hbm_accel/generic/adapters/static_su/arithmetic/ot_hbm_su_static_kind1_lat4_leaf1_r1_physical.sv && echo lint-ok",
+    "expect": "pass",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "lane_exact",
+    "cmd": "SU_LANE_SYNC_RST=1 SU_LANE_QMUL4_INCUT=1 SU_PINREG=1 bash tools/hbm_static/su_lane_leaf_run.sh {RUN}/bench/lane ot_hbm_su_static_kind1_lat4_leaf1_r1_physical 4 3 1 133",
+    "expect": "pass",
+    "pass_regex": "SU_LANE PASS",
+    "min_count_regex": "outputs=(\\d+)",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "lane_mutant_addr",
+    "cmd": "SU_LANE_SYNC_RST=1 SU_LANE_QMUL4_INCUT=1 SU_PINREG=1 bash tools/hbm_static/su_lane_leaf_run.sh {RUN}/bench/lane_mut ot_hbm_su_static_kind1_lat4_leaf1_r1_physical 4 3 1 133 ADDR",
+    "expect": "fail",
+    "fail_regex": "SU_LANE FAIL",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "lane_mutant_data",
+    "cmd": "SU_LANE_SYNC_RST=1 SU_LANE_QMUL4_INCUT=1 SU_PINREG=1 bash tools/hbm_static/su_lane_leaf_run.sh {RUN}/bench/lane_mut_data ot_hbm_su_static_kind1_lat4_leaf1_r1_physical 4 3 1 133 DATA",
+    "expect": "fail",
+    "fail_regex": "SU_LANE FAIL",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "lane_mutant_phase",
+    "cmd": "SU_LANE_SYNC_RST=1 SU_LANE_QMUL4_INCUT=1 SU_PINREG=1 bash tools/hbm_static/su_lane_leaf_run.sh {RUN}/bench/lane_mut_phase ot_hbm_su_static_kind1_lat4_leaf1_r1_physical 4 3 1 133 PHASE",
+    "expect": "fail",
+    "fail_regex": "SU_LANE FAIL",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "lane_mutant_reset",
+    "cmd": "SU_LANE_SYNC_RST=1 SU_LANE_QMUL4_INCUT=1 SU_PINREG=1 bash tools/hbm_static/su_lane_leaf_run.sh {RUN}/bench/reset_mut ot_hbm_su_static_kind1_lat4_leaf1_r1_physical 4 3 1 133 RESET",
+    "expect": "fail",
+    "fail_regex": "SU_LANE FAIL",
+    "threads": 4,
+    "peak_ram_gb": 4,
+    "needs": [
+     "verilator"
+    ]
+   }
+  ],
+  "calibrate": {
+   "enabled": false,
+   "reason": "ref_tile: boundary referenced in-run to the propagated tree (io_ref_skew.sdc), as the Qwen die masters"
+  },
+  "route": {
+   "cmd": "export OT_TTB_CORNER_MARK={CL}/ttb_corner.txt && python3 tools/closure_loop/tt_overlay.py {SRC} && export OT_CTS_FIX_HOOKS='physical/common_flow/cg_pushdown.tcl physical/common_flow/clk_net_protect.tcl'; export OT_ORFS_CORNER_OVERRIDE=TC; HM=0.03 OT_MM_FF_SDC='physical/ref_tile/hbm_su_static_kind1_l4_r1_1016/signoff.sdc' SRC={SRC} OT_PIN_GROUP_MAX=32 bash tools/ref_tile/ref_route.sh physical/ref_tile/hbm_su_static_kind1_l4_r1_1016/kit.env {LABEL} {RUN}/routes",
+   "ok": "grep -q '^flow_rc=0' {RUN}/routes/{LABEL}/status && grep -q '^corner_rc=0' {RUN}/routes/{LABEL}/status",
+   "logs": [
+    "{RUN}/routes/{LABEL}/flow.log"
+   ],
+   "threads": 4,
+   "peak_ram_gb": 32
+  },
+  "collect": {
+   "cmd": "mkdir -p {RUN}/record/route {RUN}/record/views && cp {RUN}/routes/{LABEL}/corner_sta.json {RUN}/routes/{LABEL}/status {RUN}/routes/{LABEL}/STATUS {RUN}/routes/{LABEL}/signoff.sdc {RUN}/record/route/ && python3 tools/ref_tile/ref_tile.py export --orfs-dir {RUN}/routes/{LABEL}/work/orfs --kit physical/ref_tile/hbm_su_static_kind1_l4_r1_1016 --out {RUN}/record/views/ot_hbm_su_static_kind1_lat4_leaf1_r1_physical  > {RUN}/record/route/export.log 2>&1"
+  }
+ },
+ "verdict": {
+  "corner_sta": "{RUN}/routes/{LABEL}/corner_sta.json",
+  "drc_metrics": "{RUN}/routes/{LABEL}/work/orfs/logs/asap7/*/base/5_2_route.json",
+  "checks": [
+   {
+    "name": "ttb_routed_at_TC",
+    "cmd": "test -s {CL}/ttb_corner.txt && ! grep -qv '^TC ' {CL}/ttb_corner.txt"
+   }
+  ],
+  "post_sdc": [
+   "physical/ref_tile/hbm_su_static_kind1_l4_r1_1016/signoff.sdc",
+   "physical/common_flow/link_budget_consistent.sdc"
+  ],
+  "macros": []
+ },
+ "hold_eco": {
+  "enabled": true,
+  "session": "mm",
+  "reason": "ref_tile: corrected FF hold flow"
+ },
+ "budget": {
+  "enabled": false,
+  "reason": "ref_tile: boundary budget 0.2 T applied in-run"
+ },
+ "record": [
+  {
+   "from": "{RUN}/record/views",
+   "to": "physical/ref_tile/hbm_su_static_kind1_l4_r1_1016/views"
+  },
+  {
+   "from": "{RUN}/record/route",
+   "to": "results/rtl/ref_tile/hbm_su_static_kind1_l4_r1_1016/hbm_su_static_kind1_l4_r1_1016-r1-COMMIT"
+  }
+ ],
+ "cycles_added": 0,
+ "route_hold_corners": "mm",
+ "route_hold_margin_ns": 0.03,
+ "route_corner": "TC",
+ "notes": "generated by tools/ref_tile/ref_tile.py",
+ "merge_target": null,
+ "structural_change": "Two regional roots per lane leaf, meeting ONLY at the registered pins: clk_pin (every pin register) and clk (every pipeline stage + insertion register; lane_pinreg PIN_ROOT 1) (was 8 stage + 2-4 insertion entries): s2 bf6a1de70 EARLY_FAIL_HOLD at 4_1_cts (FF -113.9 -> stuck -91.0; 24,819 endpoints carried the 100 ps cross-root hold reserve on internal stage hops). Plus OT_QMUL4_INCUT (s2 gate TT -17.2 at u_e1m.s1_rows)."
+}

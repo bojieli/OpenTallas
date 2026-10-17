@@ -25,8 +25,13 @@ module ot_hbm_su_static_lane_pinreg #(
     // the command strobes s_q gate on rst_n synchronously (the first command after release is taken on the same edge),
     // and the lane plus the output valid registers reset from rst_q (one register, no pin-to-506-flop async fan-out:
     // the kind0 r1 gate counted 506 rst_n loads). Requires >= 2 command-root edges in reset.
-    parameter integer PIN_RST = 0
+    parameter integer PIN_RST = 0,
+    // PIN_ROOT 1 (H-SU 10-16, one-root lane leaves): every pin register (inputs, rst, fetch and write outputs) is on
+    // its own regional root clk_pin; the whole lane (all stages and insertions) is on the other root. The two roots meet
+    // ONLY at these registered pins (no internal cross-root stage hop). 0 = previous form (c0 = clk_stage[0], c7 = [7]).
+    parameter integer PIN_ROOT = 0
 ) (
+    input wire clk_pin,                 // PIN_ROOT 1 only
     input wire [7:0] clk_stage,
     input wire [3:0] clk_insert,
     input wire rst_n,
@@ -82,7 +87,7 @@ module ot_hbm_su_static_lane_pinreg #(
     output wire coll
 );
     /* verilator hier_block */
-    wire c0 = clk_stage[0], c7 = clk_stage[7];
+    wire c0 = PIN_ROOT ? clk_pin : clk_stage[0], c7 = PIN_ROOT ? clk_pin : clk_stage[7];
     // ---- input pin registers (command root): control strobes reset, data not
     localparam integer DW = 11 + 5*LN*AW + 4*CW + 8 + 5*AW + 3*AW + 2 + 5 + 1 + 2 + 8 + 32 + 128 + 8 + 4 + 32
                             + 3 + 32 + 3 + 2 + 3 + 32 + 3 + 32 + 3*3 + 32 + 2 + 32 + 1 + 2 + 32;

@@ -24,6 +24,7 @@ module tb_su_static_lane_leaf;
  always @(posedge clk or negedge rst_n) if(!rst_n) ctl<=0; else ctl<=control;   // the slice's broadcast register
  wire clk_stage_0=clk,clk_stage_1=clk,clk_stage_2=clk,clk_stage_3=clk,clk_stage_4=clk,clk_stage_5=clk,clk_stage_6=clk,clk_stage_7=clk;
  wire clk_insert_0=clk,clk_insert_1=clk,clk_insert_2=clk,clk_insert_3=clk;
+ wire clk_pin=clk;  // two-root (pin / lane) leaves
  wire [10:0] lane_id=11'(LOCAL);
  wire ld,ld_bank,emit,bank,cpair,cx_arnd,cx_arelu,cx_amin,cx_cclip,co_rnd;
  wire [1199:0] ld_c_full; wire [839:0] ld_c;
