@@ -3872,6 +3872,16 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
         if over and _os.environ.get('OT_RELAY_GATE') != 'warn':
             raise ValueError(f'relays: {len(over)} data nets over {RELAY_REACH_UM:.0f} um pin to pin, worst {over[:8]}; '
                              f'unrepaired {unrepaired[:8]}')
+    import os as _os2
+    if _os2.environ.get('OT_DIE_RELAY_STAGES_OUT'):   # ROOT RELAY-SCHEMA 10-16: additive per-bus stage export
+        sys.path.insert(0, str(ROOT / 'tools'))
+        from qwen_split import relay_stages_export as _rsx
+        import die_relay_stages as _drs
+        _doc = _rsx.export_model(m, _os2.environ.get('OT_DIE_RELAY_STAGES_PLAN_ID') or 'qwen_compute:' + str(m.get('variant', 'gen')),
+                                 sources=['tools/qwen_rom_fulldie_b3r2.py'],
+                                 design=_os2.environ.get('OT_DIE_RELAY_STAGES_DESIGN', 'qwen_compute'))
+        _drs.write(_os2.environ['OT_DIE_RELAY_STAGES_OUT'], _doc)
+        m['r21_relays']['relay_stages_export'] = dict(file=_os2.environ['OT_DIE_RELAY_STAGES_OUT'], digest=_doc['digest'])
     return m['r21_relays']
 
 

@@ -45,7 +45,7 @@ def fold(contract, root):
     cp = active = 0
     if copies:
         graph = _artifact(root, cfg['allocator_graph'], out)
-        stages = _artifact(root, cfg['allocator_stage_of'], out)
+        stages = _stage_of(_artifact(root, cfg['allocator_stage_of'], out))
         cp = _route(graph, stages, cfg['copy_command_bus'], 'cp', 'source')
         active = _route(graph, stages, cfg['copy_active_bus'], 'cp_active', 'sink')
         copy_resource = cfg['copy_resource']
@@ -114,6 +114,27 @@ def _artifact(root, rec, contract):
     if not p.is_file() or sha(p) != rec['sha256'] or contract['source_sha256'].get(rec['path']) != rec['sha256']:
         raise ScheduleError('actual B2 allocation artifact missing/changed/unpinned: '+rec['path'])
     return json.loads(p.read_text())
+
+
+def _stage_of(doc):
+    """allocator r21_stage_of {bid: edges}, or the die plan's opentallas.die_relay_stages.v1 table (ROOT RELAY-SCHEMA
+    10-16: relay flops per bus; edges = stages + 1, keyed by the generator bus id 'bid').  An invalid table fails."""
+    if not (isinstance(doc, dict) and doc.get('schema') == 'opentallas.die_relay_stages.v1'):
+        return doc
+    import sys
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+    import die_relay_stages as DRS
+    errs = DRS.validate(doc)
+    if errs:
+        raise ScheduleError('die relay stage table invalid: ' + '; '.join(errs[:3]))
+    out = {}
+    for b in doc['buses']:
+        for bid in (b.get('bid') or '').split('+'):
+            if bid:
+                if bid in out and out[bid] != b['stages'] + 1:
+                    raise ScheduleError('die relay stage table: generator bus with two stage counts: ' + bid)
+                out[bid] = b['stages'] + 1
+    return out
 
 
 def _route(graph, stages, bid, port, side):
