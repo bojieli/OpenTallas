@@ -457,3 +457,38 @@ That way no FDI crosses another block. A first stack, with the D2D group between
   - **Recommendation:** split `rs_i/rs_o` into 2 x 257 b, one half in corridor A and one in B. That gives about 0.2 per layer pair, and leaves T to `bc_o`.
 - **Hold.** Flop-first, recipe 4 (`hold_budget: die`). Robust first cell, no hold pads.
 - **Fallback if no corridor fits:** band-gap overflight relays on M8/M9.
+
+## Slice RTL step 1 result (claude/qdv-slice-1016 d54b67f56; helper Q-DV-RTL)
+
+**Benches.** Verilator, bit-exact against `tools/hdc_golden`. Every mutant FAILs as it should.
+
+| bench | function | positive | mutant (must FAIL) |
+|---|---|---|---|
+| a | 2-slice sum of squares + root combine + rsqrt + r broadcast | 9/9 | MUT1, sequential root fold: FAIL |
+| b | residual add + consumer-side norm + BF16 stream words | 8,192/8,192 | MUT2, BF16 truncation: FAIL |
+| c | L7 gate/up, L8 with and without scale, L9 across the slice pair | 640/640 | MUT3, scale word +1: FAIL |
+| d | QK-norm + RoPE (q FP32, K FP8) | 256/256 | MUT4, cos/sin swap: FAIL |
+| e | SiLU*up | 1,024/1,024 | MUT5, wrong B operand: FAIL |
+
+**Correction to this spec.** The Qwen ROM die's SU computes SiLU as `g * reciprocal(1 + exp(-g))`, with the reciprocal and rsqrt as Newton-Raphson from a bit seed (hdc_golden). It does NOT use the IEEE divide of the HBM r25 contract. The slice matches the ROM die; 440 of 1,024 SiLU values would differ under the IEEE form.
+
+**Area (pathfinding only).**
+- Yosys ASAP7 RVT: about 2.53 M cells, 395 k flops, 0.286 mm² of standard cells.
+- Plus 22 SRAM macros (10 x 1024x256, 8 x 128x256, 4 x 256x256).
+- About 128 k of the flops are SU lane delay lines; the existing SRAM option for them would cut that.
+- This fits the 5.4-mm² slice slot with margin.
+
+**Not built yet** (no tied ports):
+- the 4 column-corridor words (they need the existing column-head logic);
+- the LM-head argmax;
+- the gather-exit block;
+- a production-shape throughput bench.
+
+**Measured root combine: about 70 cycles for 32 block sums, plus the rsqrt pass.** The ledger did not charge this. The q3h SU pays its own in-unit tree, about 6 levels x the add latency, roughly 24 cycles. So the net added cost is about +46 per norm, +92 a layer:
+
+| | cycles / layer vs q3h | tok/s |
+|---|---:|---:|
+| dv2r8f as priced before | -66 | +0.96 % |
+| dv2r8f with the measured root | +26 | -0.37 % |
+
+**Step 2 fix:** a pipelined 5-level pairwise root (same order, exact), which should bring the root to about 20 cycles and return dv2r8f to about -66.
