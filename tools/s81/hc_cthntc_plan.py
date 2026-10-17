@@ -36,7 +36,7 @@ SL_ROW = 2 * SL_H if SPLIT else SL_H
 import os
 RET_H = round(float(os.environ.get('OT_CTHNTC_RET_H', '77.76')), 3)
 NS_SPREAD = float(os.environ.get('OT_CTHNTC_NS_SPREAD', '0.072'))   # a4e: min N/S pin spacing of the ret_column leaves (um)
-NS_SPREAD_COLS = {int(x) for x in os.environ.get('OT_CTHNTC_NS_SPREAD_COLS', '0,1').split(',') if x != ''}  # a4e: c0/c1 (c2/c3 a4d routing)
+NS_SPREAD_COLS = {int(x) for x in os.environ.get('OT_CTHNTC_NS_SPREAD_COLS', '0,1,2,3').split(',') if x != ''}  # a4e: all four columns (a4d c0-c3 all GRT-0116 at the S-face hrq band)
 SL_GROW, RET_GROW = round(SL_ROW - 25.92, 3), round(RET_H - 72.90, 3)
 H, W = round(874.26 + SL_GROW + RET_GROW, 3), 576.72
 CW, LW = 144.18, 144.72          # new-leaf column pitch / closed lane-tile pitch
