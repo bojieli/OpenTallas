@@ -2814,6 +2814,25 @@ def ship_helpers(host, run, job=None):
             modes = {f["path"]: f["mode"] for f in current["files"]}
             frozen = job.setdefault("route_overlay_plan", current)
             ok, why, sanctioned = HO.compare_plans_sanctioned(frozen, current, REPO, head=current.get("origin_main"))
+            if not ok and not why.startswith(("missing", "frozen helper plan digest", "malformed")):
+                # AUTO FROZEN-REPLAY (ROOT 2026-10-16, coordinator: fix helper drift generally): the gate validated the job
+                # with ONE consistent frozen helper set; main moved on (tools/textbook_lint.py 2c5779073, then
+                # tools/tt_views/view_export.py cdaf10fcb/a0de5e9ba under 8 queued jobs).  Run the job with exactly
+                # that frozen set (every byte verified against the plan) instead of stopping NEEDS_HUMAN; only an
+                # unrecoverable set still refuses.  A fresh gate is the way to adopt newer helpers.
+                try:
+                    payloads, src_ = HO.recover_frozen_payloads(REPO, HELPER_STORE, frozen)
+                except ValueError as ex:
+                    raise ValueError(f"FROZEN_HELPER_OVERLAY: {why}; frozen bytes not recoverable ({ex}); preserve "
+                                     f"original job and submit a fresh source-bound gate") from ex
+                modes = {f["path"]: f["mode"] for f in HO.frozen_rows(frozen)}
+                job.setdefault("helper_overlay_replays", []).append(dict(at=now_iso(), host=host, run=run, drift=why[:300],
+                                                                         content_sha256=frozen.get("content_sha256")))
+                event(job, f"FROZEN-REPLAY (auto): {why[:160]} -> shipping the gate-frozen helper set "
+                           f"{str(frozen.get('content_sha256'))[:12]} ({src_})")
+                HO.store_payloads(HELPER_STORE, frozen, payloads)
+                ok, sanctioned = True, []
+                current = frozen
             if not ok:
                 raise ValueError(f"FROZEN_HELPER_OVERLAY: {why}; preserve original job and submit a fresh source-bound gate")
             lint = [r for r in sanctioned if r.get("kind") == "lint_frozen"]
