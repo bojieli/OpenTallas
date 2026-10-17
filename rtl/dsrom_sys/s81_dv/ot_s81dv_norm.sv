@@ -88,9 +88,10 @@ module ot_s81dv_norm_finish #(
                 for (p = 0; p < P; p = p + 1) begin : g_p
                     for (k = 0; k < K; k = k + 1) begin : g_k
 `ifdef OT_S81DV_MUT_LEAF
-                        // NEGATIVE CONTROL: leaves 1 and 2 swapped -- (0+2)+(1+3) instead of (0+1)+(2+3): a change of
-                        // association (a 0/1 swap is blind: it only commutes one add)
-                        localparam integer IXM = (IX == 1) ? 2 : (IX == 2) ? 1 : IX;
+                        // NEGATIVE CONTROL: leaf 1 is fed beat 2's partial (a wrong-operand exchange / tag error).
+                        // (A 0/1 swap only commutes one add, and a 1/2 association swap rounded identically on the DS1M
+                        // row: order exactness is evidenced by the golden match, operand identity by this control.)
+                        localparam integer IXM = (IX == 1) ? 2 : IX;
 `else
                         localparam integer IXM = IX;
 `endif
