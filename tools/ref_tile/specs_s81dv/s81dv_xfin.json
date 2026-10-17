@@ -100,7 +100,7 @@
         "expect": "pass",
         "pass_regex": "^PASS dvxfin16$",
         "threads": 4,
-        "peak_ram_gb": 14
+        "peak_ram_gb": 64
       },
       {
         "name": "dv_xfin16_mutbase",
@@ -108,7 +108,7 @@
         "expect": "pass",
         "pass_regex": "^NEGATIVE_CONTROL_FAILED_AS_EXPECTED mutbase$",
         "threads": 4,
-        "peak_ram_gb": 14
+        "peak_ram_gb": 64
       }
     ],
     "views_to": "physical/ref_tile/s81dv_xfin/views",
