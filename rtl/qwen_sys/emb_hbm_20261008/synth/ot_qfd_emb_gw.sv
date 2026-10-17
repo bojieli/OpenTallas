@@ -24,6 +24,9 @@
 //   the two precomputed candidates rq'[rr] (no pop) and rq'[rr + 1] (pop), so the decision drives one 2:1 mux and the
 //   RQD:1 read mux runs from registered pointers only.  It equals rq[rr] on every cycle: the same requests, answers,
 //   faults and cycles (0 added cycles).  Default 0 = the unchanged gateway.
+//   HEADQ also (i) evaluates the four slot checks in parallel and selects 1 b by lk, and (ii) loads the answer data
+//   register eq_d every cycle from the selected slot (no load enable on 512 flops); eq_d is only meaningful with eq_v
+//   (the SU face is valid-qualified), so every valid answer word is bit-identical and on the same cycle.
 //   MUT = 6 (bench mutant, HEADQ only, must FAIL): the head register misses the pop (stale head -> sequence fault).
 module ot_qfd_emb_gw #(
     parameter integer RQD = 32,
@@ -38,7 +41,7 @@ module ot_qfd_emb_gw #(
     input  wire [23:0]       ea_addr,
     output reg               ea_cr,
     output reg               eq_v,
-    output reg  [511:0]      eq_d,
+    output wire [511:0]      eq_d,
     // link receive heads, EMB class (the caller pops with e_take)
     input  wire [3:0]        e_v,
     input  wire [4*523-1:0]  e_d,
@@ -202,7 +205,28 @@ module ot_qfd_emb_gw #(
     reg f_q;
     // rr advances exactly when the S_ROW branch below answers a word (f_q only redirects st, the answer still retires);
     // never in reset (st is S_IDLE there, rr held at 0: rh_q reloads rq'[0])
-    assign rpop = st == S_ROW && r_ne && hd_ok && sv[lk] && !(sd[lk][521:520] == K_STATUS) && !sl[519] && sl_ok;
+    reg [511:0] eq_dm;                                  // HEADQ 0: the answer register, loaded on the answer
+    generate if (HEADQ != 0) begin : g_rpop
+        // per-slot checks in parallel from registered state, then a 1-b select by lk (no 523-b mux before the compare)
+        wire w64 = (w == 7'd64);
+        wire [3:0] s_ans, s_bad;                        // slot holds an answerable / poisoned-or-misfit non-STATUS word
+        genvar gs;
+        for (gs = 0; gs < 4; gs = gs + 1) begin : g_s
+            wire ns = !(sd[gs][521:520] == K_STATUS);
+            wire ok = sd[gs][522] && sd[gs][521:520] == (w64 ? K_SCALE : K_CODE) && sd[gs][515:512] == seq && !sd[gs][519];
+            assign s_ans[gs] = sv[gs] && ns && ok;
+            assign s_bad[gs] = sv[gs] && ns && !ok;
+        end
+        assign rpop = st == S_ROW && r_ne && hd_ok && s_ans[lk];
+        // the answer data register runs free from the selected slot (no load enable: the 512 D pins do not wait for the
+        // serve decision); t_eq data is qualified by eq_v, so a valid word is the same word on the same cycle
+        reg [511:0] eq_dq;
+        always @(posedge ck) eq_dq <= w64 ? {496'd0, sl[15:0]} : sl[511:0];
+        assign eq_d = eq_dq;
+    end else begin : g_rpop0
+        assign rpop = st == S_ROW && r_ne && hd_ok && sv[lk] && !(sd[lk][521:520] == K_STATUS) && !sl[519] && sl_ok;
+        assign eq_d = eq_dm;
+    end endgenerate
     assign fault = f_q;
     always @(posedge ck) for (i = 0; i < 4; i = i + 1) if (e_take[i]) sd[i] <= e_d[i*523 +: 523];
     always @(posedge ck or negedge rn)
@@ -243,7 +267,7 @@ module ot_qfd_emb_gw #(
                         if (sl[519]) begin f_q <= 1'b1; fault_code[4] <= 1'b1; st <= S_DEAD; end
                         else if (!sl_ok) begin f_q <= 1'b1; fault_code[3] <= 1'b1; st <= S_DEAD; end
                         else begin
-                            eq_v <= 1'b1; eq_d <= (w == 7'd64) ? {496'd0, sl[15:0]} : sl[511:0];
+                            eq_v <= 1'b1; eq_dm <= (w == 7'd64) ? {496'd0, sl[15:0]} : sl[511:0];
                             sv[lk] <= 1'b0; rr <= rr + 1'b1; ea_cr <= 1'b1;
                             w <= w + 1'b1;
                             if (w == 7'd64) st <= S_IDLE;
