@@ -2226,8 +2226,10 @@ def _relays(m):
                 for g_ in range(8):
                     f_, yc_ = P_['face_pins']['vc'][f'vc{k_}_{g_}']
                     _PIN_HINT[(it_.name, f'vc{k_}_{g_}')] = die_xy_(0.0 if f_ == 'W' else it_.w, yc_ + ((k_ % 4) - 1.5) * 70.0)
-                _PIN_HINT[(it_.name, f'vh{k_}')] = die_xy_(P_['face_pins']['strip']['x'] - 400.0 + 40.0 * k_, it_.h)
-                _PIN_HINT[(it_.name, f'vrq{k_}')] = die_xy_(P_['face_pins']['strip']['x'] + 200.0 + 30.0 * k_, it_.h)
+                # header / request: on the port's side face next to the strip (the strip's top face abuts the hub)
+                yh_ = it_.h - 160.0 - 60.0 * (k_ % 4)
+                _PIN_HINT[(it_.name, f'vh{k_}')] = die_xy_(0.0 if k_ < 4 else it_.w, yh_)
+                _PIN_HINT[(it_.name, f'vrq{k_}')] = die_xy_(0.0 if k_ < 4 else it_.w, yh_ - 30.0)
     if HOST_V14.get('trees') and 'serdes_host' in by:
         # v1.4.2 (kvs7c TT -7.6 ns, 1,044 endpoints: rly_host_fdi_55 -> serdes_host tx_flit 2.2 mm): the hard SerDes PHY's
         # FDI pins are on its W face (LEF ot_qfd_serdes_112g_x12_phy: tx_flit y 600.19..650.21, rx_flit 650.30..700.32,
@@ -3160,11 +3162,15 @@ def _split_pins(M, m=None):
                 c_ = cells['u_ctl' if s_ == 32 else f'u_s{s_}_j']
                 if f'ck_c{s_}' in hm.ports:
                     hm.ports[f'ck_c{s_}'] = ('area', 1, round(c_[1] + c_[3] / 2, 3), round(c_[2] + c_[4] / 2, 3), 1)
-            top = dict(rst_n=-150.0, st=-120.0, ie=60.0, **{f'vh{k}': -400.0 + 40.0 * k for k in range(8)},
-                       **{f'vrq{k}': 200.0 + 30.0 * k for k in range(8)})
+            top = dict(rst_n=-150.0, st=-120.0, ie=60.0)
             for p_, dx_ in top.items():
                 if p_ in hm.ports:
                     hm.ports[p_] = ('face', hm.ports[p_][1], 'N', 'M5', round(ctx_ + dx_, 3), 1)
+            for k_ in range(8):          # header / request on the port's side face next to the strip
+                yh_ = fh_ - 160.0 - 60.0 * (k_ % 4)
+                for p_, y_ in ((f'vh{k_}', yh_), (f'vrq{k_}', yh_ - 30.0)):
+                    if p_ in hm.ports:
+                        hm.ports[p_] = ('face', hm.ports[p_][1], 'W' if k_ < 4 else 'E', 'M4', round(y_, 3), 1)
             for k_ in range(8):
                 for g_ in range(8):
                     p_ = f'vc{k_}_{g_}'
