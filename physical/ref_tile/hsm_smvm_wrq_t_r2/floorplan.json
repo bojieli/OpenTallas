@@ -1,6 +1,6 @@
 {
  "schema": "opentallas.ref_tile.floorplan.v1",
- "name": "hsm_smvm_wrq_t_r1",
+ "name": "hsm_smvm_wrq_t_r2",
  "top": "ot_hbm_sm_vm_wr_q_t",
  "kind": "tile",
  "die": [
@@ -32,10 +32,16 @@
   "W": [
    "rv",
    "rrow",
-   "rdata"
+   "rdata_lo",
+   "clk_in",
+   "sm_fault",
+   "sm_sched_fault",
+   "rdata_hi"
   ],
   "E": [
-   "wq"
+   "wq_lo",
+   "clk_out",
+   "wq_hi"
   ],
   "N": [
    "clk",
@@ -51,14 +57,17 @@
    "desc_limit",
    "desc_loops",
    "launch_v",
-   "sm_fault",
-   "sm_sched_fault",
    "configured",
    "fault",
    "active"
   ]
  },
  "clock_port": "clk",
+ "clock_ports": [
+  "clk",
+  "clk_in",
+  "clk_out"
+ ],
  "blocks": [
   {
    "kind": "macro",
@@ -80,18 +89,18 @@
   "rtl/hbm_accel/generic/vm/static/ot_hbm_sm_vm_wr_q.sv",
   "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
-  "physical/ref_tile/hsm_smvm_wrq_t_r1/kit.env",
-  "physical/ref_tile/hsm_smvm_wrq_t_r1/clock.sdc",
-  "physical/ref_tile/hsm_smvm_wrq_t_r1/signoff.sdc",
-  "physical/ref_tile/hsm_smvm_wrq_t_r1/pdn.tcl",
-  "physical/ref_tile/hsm_smvm_wrq_t_r1/pre_cts.tcl",
-  "physical/ref_tile/hsm_smvm_wrq_t_r1/post_cts.tcl",
-  "physical/ref_tile/hsm_smvm_wrq_t_r1/post_grt.tcl",
-  "physical/ref_tile/hsm_smvm_wrq_t_r1/pre_drt.tcl",
-  "physical/ref_tile/hsm_smvm_wrq_t_r1/pre_fill.tcl",
-  "physical/ref_tile/hsm_smvm_wrq_t_r1/post_fill.tcl",
-  "physical/ref_tile/hsm_smvm_wrq_t_r1/pre_grt.tcl",
-  "physical/ref_tile/hsm_smvm_wrq_t_r1/post_drt.tcl",
+  "physical/ref_tile/hsm_smvm_wrq_t_r2/kit.env",
+  "physical/ref_tile/hsm_smvm_wrq_t_r2/clock.sdc",
+  "physical/ref_tile/hsm_smvm_wrq_t_r2/signoff.sdc",
+  "physical/ref_tile/hsm_smvm_wrq_t_r2/pdn.tcl",
+  "physical/ref_tile/hsm_smvm_wrq_t_r2/pre_cts.tcl",
+  "physical/ref_tile/hsm_smvm_wrq_t_r2/post_cts.tcl",
+  "physical/ref_tile/hsm_smvm_wrq_t_r2/post_grt.tcl",
+  "physical/ref_tile/hsm_smvm_wrq_t_r2/pre_drt.tcl",
+  "physical/ref_tile/hsm_smvm_wrq_t_r2/pre_fill.tcl",
+  "physical/ref_tile/hsm_smvm_wrq_t_r2/post_fill.tcl",
+  "physical/ref_tile/hsm_smvm_wrq_t_r2/pre_grt.tcl",
+  "physical/ref_tile/hsm_smvm_wrq_t_r2/post_drt.tcl",
   "tools/ref_tile/ref_route.sh",
   "physical/qwen_die_masters/io_ref_skew.sdc",
   "physical/qwen_die_masters/io_plain.sdc",
@@ -109,13 +118,15 @@
   "physical/dsrom_window_source/leaf_inhold_release.tcl",
   "physical/dsrom_window_source/leaf_inhold.tcl",
   "physical/dsrom_window_source/leaf_inhold_release.tcl",
-  "physical/ref_tile/hsm_smvm_wrq_t_r1/pre_gpl.tcl",
-  "physical/ref_tile/hsm_smvm_wrq_t_r1/pre_dpl.tcl",
+  "physical/ref_tile/hsm_smvm_wrq_t_r2/pre_gpl.tcl",
+  "physical/ref_tile/hsm_smvm_wrq_t_r2/pre_dpl.tcl",
   "physical/common_flow/pin_reg_split.tcl",
+  "physical/common_flow/clock_entries.tcl",
+  "physical/ref_tile/hsm_smvm_wrq_t_r2/clock_entry.sdc",
   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.lef",
   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_ss.lib",
   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_ff.lib",
   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_tt.lib",
-  "physical/ref_tile/hsm_smvm_wrq_t_r1/place.tcl"
+  "physical/ref_tile/hsm_smvm_wrq_t_r2/place.tcl"
  ]
 }

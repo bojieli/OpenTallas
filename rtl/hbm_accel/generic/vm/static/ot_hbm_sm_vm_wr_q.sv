@@ -36,6 +36,13 @@ module ot_hbm_sm_vm_wr_q #(
     parameter integer MUT   = 0      // bench mutants: 1 wrong row (stride ignored), 2 wrong phase (one edge late), 3 quad strap ignored
 ) (
     input  wire          clk,
+    // H-SM 2026-10-16: separate CTS roots (same PLL output, phase 0; related_same_frequency) for the face flops: clk_in
+    // clocks the SM-side input pin flops (rv/rrow/rdata/sm_fault/sm_sched_fault, the W face), clk_out the wq output
+    // flops (E face), clk the descriptor / FIFO / control core.  Each root's boundary sinks sit along ONE face (gate
+    // hsm_smvm_wrq_t_r1: one root over two opposite 388.8 um faces measured all-sink spread 139 ps).  Benches tie all
+    // three to one clock; the die drives all three from pll_stream.
+    input  wire          clk_in,
+    input  wire          clk_out,
     input  wire          rst_n,
     input  wire [1:0]    quad,              // die strap (H-SM DEDUPE 2026-10-16, was parameter QUAD): quadrant id carried in
                                             // non-mirror sectors (SW0 SE1 NW2 NE3); one hardened master for all 4 instances
@@ -68,10 +75,13 @@ module ot_hbm_sm_vm_wr_q #(
     // ---------------- pin flops ----------------
     reg [7:0] rv_q; reg [95:0] rrow_q; reg [2047:0] rdata_q;
     reg cv_q; reg [25:0] cmd_q; reg [7:0] smf_q, sms_q; reg [1:0] quad_q;
-    always @(posedge clk) begin rrow_q <= rrow; rdata_q <= rdata; cmd_q <= cmd; quad_q <= quad; end
+    always @(posedge clk_in) begin rrow_q <= rrow; rdata_q <= rdata; end
+    always @(posedge clk) begin cmd_q <= cmd; quad_q <= quad; end
+    always @(posedge clk_in or negedge rst_q)
+        if (!rst_q) begin rv_q <= 8'd0; smf_q <= 8'd0; sms_q <= 8'd0; end
+        else begin rv_q <= rv; smf_q <= sm_fault; sms_q <= sm_sched_fault; end
     always @(posedge clk or negedge rst_q)
-        if (!rst_q) begin rv_q <= 8'd0; cv_q <= 1'b0; smf_q <= 8'd0; sms_q <= 8'd0; end
-        else begin rv_q <= rv; cv_q <= cmd_v; smf_q <= sm_fault; sms_q <= sm_sched_fault; end
+        if (!rst_q) cv_q <= 1'b0; else cv_q <= cmd_v;
     // ---------------- descriptor ----------------
     reg d_v, d_fmt, d_mir; reg [3:0] d_p; reg [9:0] d_base, d_stride;
     wire [7:0] sm_busy, lane_fault;
@@ -107,7 +117,7 @@ module ot_hbm_sm_vm_wr_q #(
         assign sm_busy[k] = emit || o_v;
         assign lane_fault[k] = flt;
         always @(posedge clk or negedge rst_q)
-            if (!rst_q) begin wp <= '0; rp <= '0; cnt <= '0; ps <= 4'd0; acc <= 11'd0; flt <= 1'b0; o_v <= 1'b0; l_v <= 1'b0; end
+            if (!rst_q) begin wp <= '0; rp <= '0; cnt <= '0; ps <= 4'd0; acc <= 11'd0; flt <= 1'b0; end
             else begin
                 if (push && !d_v) flt <= 1'b1;
                 if (push && full && !pop) flt <= 1'b1;
@@ -115,12 +125,14 @@ module ot_hbm_sm_vm_wr_q #(
                 if (pop) rp <= (rp == AW'(DEPTH-1)) ? '0 : rp + 1'b1;
                 cnt <= cnt + ((push && !(full && !pop)) ? 1'b1 : 1'b0) - (pop ? 1'b1 : 1'b0);
                 if (emit) begin ps <= last ? 4'd0 : ps + 4'd1; acc <= row + {1'b0, d_stride}; end
-                o_v <= emit && !row[10];
                 if (emit && row[10]) flt <= 1'b1;
-                l_v <= o_v;
             end
-        always @(posedge clk) begin
+        always @(posedge clk_out or negedge rst_q)
+            if (!rst_q) begin o_v <= 1'b0; l_v <= 1'b0; end
+            else begin o_v <= emit && !row[10]; l_v <= o_v; end
+        always @(posedge clk)
             if (push && !(full && !pop)) fq[wp] <= {rrow_q[12*k +: 12], rdata_q[256*k +: 256]};
+        always @(posedge clk_out) begin
             o_sec <= {d_mir, d_mir ? 2'b00 : ((MUT == 3) ? 2'b00 : quad_q), row[9:0], 3'(k)};
             o_w <= rb(col, d_fmt);
             o_m <= 8'd1 << hr[2:0];

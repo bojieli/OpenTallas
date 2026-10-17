@@ -16,6 +16,12 @@ module tb_hbm_sm_vm_wr_q_t;
 `ifndef MUT
 `define MUT 0
 `endif
+`ifndef VM_LAT
+`define VM_LAT 0
+`endif
+`ifndef NAT2_MUT
+`define NAT2_MUT 0
+`endif
     localparam integer Q = 2, NCYC = 6000, G_SM = 1, G_LG = 0;
     reg clk = 0, rst_n = 0;
     always #1 clk = ~clk;
@@ -34,10 +40,10 @@ module tb_hbm_sm_vm_wr_q_t;
         .program_fault(1'b0), .cfg_v(cfg_v), .cfg_target(cfg_target), .cfg_addr(cfg_addr), .cfg_data(cfg_data),
         .desc_v(desc_v), .desc_base(desc_base), .desc_limit(desc_limit), .desc_loops(desc_loops), .launch_v(launch_v),
         .fault(ing_fault));
-    ot_hbm_sm_vm_wr_q_t #(.DEPTH(4), .MUT(`MUT)) dut(.clk(clk), .rst_n(rst_n), .tgt(8'd160), .quad(2'(Q)),
+    ot_hbm_sm_vm_wr_q_t #(.DEPTH(4), .MUT(`MUT)) dut(.clk(clk), .clk_in(clk), .clk_out(clk), .rst_n(rst_n), .tgt(8'd160), .quad(2'(Q)),
         .cfg_v(cfg_v), .cfg_target(cfg_target), .cfg_addr(cfg_addr), .cfg_data(cfg_data), .desc_v(desc_v),
         .desc_base(desc_base), .desc_limit(desc_limit), .desc_loops(desc_loops), .launch_v(launch_v),
-        .rv(rv), .rrow(rrow), .rdata(rdata), .sm_fault(smf), .sm_sched_fault(8'd0), .wq(wq_sm),
+        .rv(rv), .rrow(rrow), .rdata_lo(rdata[1023:0]), .rdata_hi(rdata[2047:1024]), .sm_fault(smf), .sm_sched_fault(8'd0), .wq_lo(wq_sm[1123:0]), .wq_hi(wq_sm[2247:1124]),
         .configured(w_cfgd), .fault(wfault), .active(w_active));
     integer axerr = 0;
     task automatic axw(input [11:0] a, input [31:0] d);
@@ -72,9 +78,24 @@ module tb_hbm_sm_vm_wr_q_t;
     genvar b;
     generate for (b = 0; b < 8; b = b + 1) begin : g_b
         wire [275:0] eg; wire [265:0] pr; wire dd, kd, xd, x2d;
+        // VM_LAT=1 (H-SM 2026-10-16, nat2 VM bank masters): one pin-register edge on EVERY bank input (slots, rq, wq),
+        // as the nat2 bank views; the writer RTL and the compiler slot cycles are unchanged (slot and data move together).
+        // NAT2_MUT=1: only the SM writer's wq is delayed (slot not) -> must FAIL.
+        wire b_rsv, b_wsv; wire [0:0] b_rs; wire [2:0] b_ws; wire [16:0] b_rq; wire [280:0] b_wsm, b_wlg;
+        if (`VM_LAT == 1) begin : g_nat2
+            reg r_rsv, r_wsv; reg [0:0] r_rs; reg [2:0] r_ws; reg [16:0] r_rq; reg [280:0] r_wsm, r_wlg;
+            always @(posedge clk) begin r_rsv <= rslot_v[b]; r_wsv <= wslot_v[b]; r_rs <= rslot[b]; r_ws <= wslot[b];
+                r_rq <= rqb[b]; r_wsm <= wq_sm[b*281 +: 281]; r_wlg <= lgq[b]; end
+            assign b_rsv = r_rsv; assign b_wsv = (`NAT2_MUT == 1) ? wslot_v[b] : r_wsv; assign b_rs = r_rs;
+            assign b_ws = (`NAT2_MUT == 1) ? wslot[b] : r_ws; assign b_rq = r_rq; assign b_wsm = r_wsm;
+            assign b_wlg = (`NAT2_MUT == 1) ? lgq[b] : r_wlg;
+        end else begin : g_nat0
+            assign b_rsv = rslot_v[b]; assign b_wsv = wslot_v[b]; assign b_rs = rslot[b]; assign b_ws = wslot[b];
+            assign b_rq = rqb[b]; assign b_wsm = wq_sm[b*281 +: 281]; assign b_wlg = lgq[b];
+        end
         ot_vms_bank_static #(.RG(1), .WG(3)) u_bank(.clk(clk), .rst_n(rst_n), .bid(3'(b)), .sid(2'(Q)),
-            .rslot_v(rslot_v[b]), .rslot(rslot[b]), .wslot_v(wslot_v[b]), .wslot(wslot[b]),
-            .rq(rqb[b]), .rr(rrb[b]), .wq({281'd0, wq_sm[b*281 +: 281], lgq[b]}), .wq_done(wqd[b]),
+            .rslot_v(b_rsv), .rslot(b_rs), .wslot_v(b_wsv), .wslot(b_ws),
+            .rq(b_rq), .rr(rrb[b]), .wq({281'd0, b_wsm, b_wlg}), .wq_done(wqd[b]),
             .dq(281'd0), .dq_done(dd), .kq(281'd0), .kq_done(kd), .xq(276'd0), .xq_done(xd), .xq2(276'd0), .xq2_done(x2d),
             .eg(eg), .pq(285'd0), .pr(pr), .status(bst[b]));
     end endgenerate
@@ -222,13 +243,13 @@ module tb_hbm_sm_vm_wr_q_t;
     end
     always @(negedge clk) if (rst_n) begin
         for (k = 0; k < 8; k = k + 1) if (rrb[k][256]) begin
-            if (!pipe_v[k][6]) begin mism = mism + 1; $display("bank %0d unexpected response", k); end
+            if (!pipe_v[k][6+`VM_LAT]) begin mism = mism + 1; $display("bank %0d unexpected response", k); end
             else begin
                 nchk = nchk + 1;
                 for (j = 0; j < 8; j = j + 1)
-                    if (rrb[k][32*j +: 32] !== gold[k][pipe_row[k][6]][j] && !(gold[k][pipe_row[k][6]][j] === 32'bx && rrb[k][32*j +: 32] == 0)) begin
-                        if (mism < 10) $display("MISMATCH bank %0d row %0d word %0d: got %h want %h", k, pipe_row[k][6], j,
-                            rrb[k][32*j +: 32], gold[k][pipe_row[k][6]][j]);
+                    if (rrb[k][32*j +: 32] !== gold[k][pipe_row[k][6+`VM_LAT]][j] && !(gold[k][pipe_row[k][6+`VM_LAT]][j] === 32'bx && rrb[k][32*j +: 32] == 0)) begin
+                        if (mism < 10) $display("MISMATCH bank %0d row %0d word %0d: got %h want %h", k, pipe_row[k][6+`VM_LAT], j,
+                            rrb[k][32*j +: 32], gold[k][pipe_row[k][6+`VM_LAT]][j]);
                         mism = mism + 1;
                     end
             end

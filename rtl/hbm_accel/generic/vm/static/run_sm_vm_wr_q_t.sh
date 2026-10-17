@@ -11,5 +11,11 @@ for m in 0 1 2 3 4; do
   r=$(vvp -n $O/tb$m | tail -1); echo "$r"
   if [ $m = 0 ]; then [[ $r == *PASS* ]] || rc=1; else [[ $r == *FAIL* ]] || rc=1; fi
 done
+# nat2 VM banks (+1 input edge on every bank input): VM_LAT=1 positive PASS, NAT2_MUT=1 (wq late, slot not) FAIL
+for v in "1 0" "1 1"; do set -- $v
+  iverilog -g2012 -DMUT=0 -DVM_LAT=$1 -DNAT2_MUT=$2 -s tb_hbm_sm_vm_wr_q_t -o $O/tbn$1$2 $SRC || exit 2
+  r=$(vvp -n $O/tbn$1$2 | tail -1); echo "VM_LAT=$1 NAT2_MUT=$2 $r"
+  if [ $2 = 0 ]; then [[ $r == *PASS* ]] || rc=1; else [[ $r == *FAIL* ]] || rc=1; fi
+done
 [ $rc = 0 ] && echo "SM_VM_WR_Q_T BENCH PASS (positive PASS, mutants 1/2/3/4 FAIL)" || echo "SM_VM_WR_Q_T BENCH FAIL"
 exit $rc

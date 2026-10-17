@@ -1,5 +1,5 @@
 {
- "name": "hsm_smvm_wrq_t_r1",
+ "name": "hsm_smvm_wrq_t_r2",
  "top": "ot_hbm_sm_vm_wr_q_t",
  "kind": "tile",
  "sources": [
@@ -36,10 +36,16 @@
   "W": [
    "rv",
    "rrow",
-   "rdata"
+   "rdata_lo",
+   "clk_in",
+   "sm_fault",
+   "sm_sched_fault",
+   "rdata_hi"
   ],
   "E": [
-   "wq"
+   "wq_lo",
+   "clk_out",
+   "wq_hi"
   ],
   "N": [
    "clk",
@@ -55,8 +61,6 @@
    "desc_limit",
    "desc_loops",
    "launch_v",
-   "sm_fault",
-   "sm_sched_fault",
    "configured",
    "fault",
    "active"
@@ -72,6 +76,11 @@
    "group_max": 1,
    "h": "M4",
    "v": "M3 M5"
+  },
+  "cts_sink": {
+   "size": 16,
+   "diameter_um": 30,
+   "extra": "-balance_levels"
   }
  },
  "recipe": 3,
@@ -79,8 +88,8 @@
  "job": {
   "owner": "Claude:H-SM-svc-0630",
   "branch": "claude/hsm-svc-0630",
-  "tag": "r1",
-  "purpose": "new tile: ot_hbm_sm_vm_wr_q_t (4 instances; option A wrapper)",
+  "tag": "r2",
+  "purpose": "new tile: ot_hbm_sm_vm_wr_q_t (4 instances; option A wrapper), three related same-frequency CTS roots (one per pin face)",
   "benches": [
    {
     "name": "wrq_t_bench",
@@ -97,8 +106,8 @@
    "physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2",
    "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2"
   ],
-  "views_to": "physical/ref_tile/hsm_smvm_wrq_t_r1/views",
-  "record_to": "results/rtl/ref_tile/hsm_smvm_wrq_t_r1"
+  "views_to": "physical/ref_tile/hsm_smvm_wrq_t_r2/views",
+  "record_to": "results/rtl/ref_tile/hsm_smvm_wrq_t_r2"
  },
  "pin_regs": {
   "enable": false,
@@ -126,14 +135,6 @@
   "rrow": [
    7,
    30
-  ],
-  "rdata": [
-   32,
-   385
-  ],
-  "wq": [
-   3,
-   385
   ],
   "cfg_data": [
    4,
@@ -187,26 +188,127 @@
    133,
    134
   ],
-  "sm_fault": [
-   135,
-   137.4
-  ],
-  "sm_sched_fault": [
-   137.6,
-   139.4
-  ],
   "configured": [
-   139.6,
-   140
+   136,
+   136.6
   ],
   "fault": [
-   140.2,
-   140.6
+   137.5,
+   138.1
   ],
   "active": [
-   140.8,
-   141.2
+   139,
+   139.6
+  ],
+  "rdata_lo": [
+   32,
+   190
+  ],
+  "clk_in": [
+   192.4,
+   193.4
+  ],
+  "sm_fault": [
+   194.5,
+   195.5
+  ],
+  "sm_sched_fault": [
+   196,
+   197
+  ],
+  "rdata_hi": [
+   199,
+   385
+  ],
+  "wq_lo": [
+   3,
+   192
+  ],
+  "clk_out": [
+   193.4,
+   194.4
+  ],
+  "wq_hi": [
+   196,
+   385
   ]
  },
- "structural_change": "gate r1 (unsubmitted) PNG: W/E pins packed into the middle ~55% of the 388.8 um faces (~10 pins/um, red pin-flop columns) and an empty bottom fifth; now every bus spread over disjoint full-face ranges (W rdata 32..385, E wq 3..385, ~5.8 pins/um), clock at N mid-face."
+ "structural_change": "gate r1 (unsubmitted): one clk root over two opposite 388.8-um pin faces measured TT all-sink insertion 335..474 ps (spread 139 > 80; the xcal r1 analogue routed to boundary spread 109 and failed native capture). r2: three related phase-0 roots (same pll_stream), each with its boundary sinks along ONE face: clk_in = W input pin flops (rv/rrow/rdata/faults), clk_out = E wq output flops, clk = collar/descriptor/FIFO core with the N F20 face; balanced sink clustering. rdata/wq split into _lo/_hi ports so each face clock entry sits at its face centre.",
+ "clock": "multiple_cts_roots",
+ "clock_ports": [
+  "clk",
+  "clk_in",
+  "clk_out"
+ ],
+ "clock_relationship": {
+  "kind": "same_pll_fixed_phase",
+  "ratio": [
+   1,
+   1
+  ],
+  "phase_ps": 0
+ },
+ "clock_data_paths": "related_same_frequency",
+ "clock_entry_domains": {
+  "core": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk"
+   ],
+   "inputs": [
+    "rst_n",
+    "tgt",
+    "quad",
+    "cfg_v",
+    "cfg_target",
+    "cfg_addr",
+    "cfg_data",
+    "desc_v",
+    "desc_base",
+    "desc_limit",
+    "desc_loops",
+    "launch_v"
+   ],
+   "outputs": [
+    "configured",
+    "fault",
+    "active"
+   ]
+  },
+  "inp": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_in"
+   ],
+   "inputs": [
+    "rv",
+    "rrow",
+    "rdata_lo",
+    "rdata_hi",
+    "sm_fault",
+    "sm_sched_fault"
+   ],
+   "outputs": []
+  },
+  "outp": {
+   "ratio": [
+    1,
+    1
+   ],
+   "ports": [
+    "clk_out"
+   ],
+   "inputs": [],
+   "outputs": [
+    "wq_lo",
+    "wq_hi"
+   ]
+  }
+ }
 }

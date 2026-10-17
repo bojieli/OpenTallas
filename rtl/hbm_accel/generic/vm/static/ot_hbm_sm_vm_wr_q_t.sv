@@ -13,6 +13,8 @@
 // MUT: 1/2/3 pass to ot_hbm_sm_vm_wr_q (wrong row / late phase / quad strap ignored); 4 = calendar fires one edge late.
 module ot_hbm_sm_vm_wr_q_t #(parameter integer DEPTH = 4, parameter integer MUT = 0) (
     input  wire          clk,
+    input  wire          clk_in,            // W-face input flop root (see ot_hbm_sm_vm_wr_q)
+    input  wire          clk_out,           // E-face wq output flop root
     input  wire          rst_n,
     input  wire [7:0]    tgt,
     input  wire [1:0]    quad,
@@ -27,10 +29,12 @@ module ot_hbm_sm_vm_wr_q_t #(parameter integer DEPTH = 4, parameter integer MUT 
     input  wire          launch_v,
     input  wire [7:0]    rv,
     input  wire [95:0]   rrow,
-    input  wire [2047:0] rdata,
+    input  wire [1023:0] rdata_lo,          // SM 0..3 result columns (= rdata[1023:0] of ot_hbm_sm_vm_wr_q); split so the
+    input  wire [1023:0] rdata_hi,          // W-face clock entry clk_in sits at the face centre between the halves
     input  wire [7:0]    sm_fault,
     input  wire [7:0]    sm_sched_fault,
-    output wire [2247:0] wq,
+    output wire [1123:0] wq_lo,             // banks 0..3 write groups (= wq[1123:0]); split for the E-face clock entry
+    output wire [1123:0] wq_hi,             // banks 4..7 (= wq[2247:1124])
     output wire          configured,
     output wire          fault,
     output wire          active
@@ -49,7 +53,7 @@ module ot_hbm_sm_vm_wr_q_t #(parameter integer DEPTH = 4, parameter integer MUT 
         .a_we(), .a_addr(), .a_data(), .b_we(), .b_addr(), .b_data(), .run_v(), .run_base(), .run_count(),
         .cmd_v(cmd_v), .cmd(cmd), .cycle(), .configured(configured), .fault(fault), .active(active));
     ot_hbm_sm_vm_wr_q #(.DEPTH(DEPTH), .MUT((MUT >= 1 && MUT <= 3) ? MUT : 0)) u_wrq (
-        .clk(clk), .rst_n(rst_q), .quad(quad), .rv(rv), .rrow(rrow), .rdata(rdata), .cmd_v(cmd_v), .cmd(cmd),
-        .sm_fault(sm_fault), .sm_sched_fault(sm_sched_fault), .wq(wq), .busy(w_busy), .fault(w_fault));
+        .clk(clk), .clk_in(clk_in), .clk_out(clk_out), .rst_n(rst_q), .quad(quad), .rv(rv), .rrow(rrow), .rdata({rdata_hi, rdata_lo}), .cmd_v(cmd_v), .cmd(cmd),
+        .sm_fault(sm_fault), .sm_sched_fault(sm_sched_fault), .wq({wq_hi, wq_lo}), .busy(w_busy), .fault(w_fault));
 endmodule
 `default_nettype wire
