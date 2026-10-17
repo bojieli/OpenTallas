@@ -90,7 +90,7 @@ def main():
             r = run(exe, c); rec['cases'].append(r); ok &= r.get('result') == 'PASS'
             print(c, r.get('result'), r.get('cyc'), r.get('store_fault'), flush=True)
     if a.only != 'pos':
-        for d, c in MUT:
+        for d, c in MUT + ([('OT_HROW_MUT_HALFSWAP', 'pos_steady')] if HALF_BANKS else []):
             r = run(build(a.out, d), c); r['define'] = d; rec['mutants'].append(r); mut_ok &= r.get('result') == 'FAIL'
             print(d, c, r.get('result'), flush=True)
     rec['verdict'] = dict(positives_and_rejections=ok if a.only != 'mut' else None,

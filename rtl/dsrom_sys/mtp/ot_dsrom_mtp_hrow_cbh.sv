@@ -102,5 +102,9 @@ module dsfd_mtp_hrow_cbp (
 );
     assign t_w = {tw1[526:15], tw0[526:15], tw0[14:0]};
     assign t_r = tr0;
+`ifdef OT_HROW_MUT_HALFSWAP
+    assign t_d = {td0[512:1], td1[512:1], td0[0]};      // mutant: the die joins the two halves in the wrong order
+`else
     assign t_d = {td1[512:1], td0[512:1], td0[0]};
+`endif
 endmodule
