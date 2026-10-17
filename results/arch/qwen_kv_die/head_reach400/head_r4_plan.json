@@ -13,22 +13,22 @@
   "reach_method": "maximum Manhattan distance between every endpoint of the assigned pin regions",
   "reach_rule_um": 400.0,
   "lane_slot_perm": [
-    0,
-    3,
-    5,
-    2,
     1,
+    5,
     4,
+    2,
+    0,
     7,
     6,
+    3,
     9,
     8,
     13,
     10,
     15,
     12,
-    11,
-    14
+    14,
+    11
   ],
   "internal_worst_hop": {
     "name": "front3.pack_fault->score4",
@@ -102,29 +102,29 @@
       "lane": 0,
       "lane_xy_um": [
         43.2,
-        54.0
+        205.2
       ],
       "stin": [
-        75.6,
         5.4,
+        54.0,
         32.4,
         43.2
       ],
       "stk": [
-        421.2,
-        102.6,
+        351.0,
+        172.8,
         32.4,
         21.6
       ],
       "nb1": [
-        459.0,
-        64.8,
+        421.2,
+        189.0,
         32.4,
         10.8
       ],
       "nb2": [
-        831.6,
-        37.8,
+        799.2,
+        189.0,
         32.4,
         10.8
       ]
@@ -133,42 +133,11 @@
       "lane": 1,
       "lane_xy_um": [
         216.0,
-        54.0
-      ],
-      "stin": [
-        178.2,
-        5.4,
-        32.4,
-        43.2
-      ],
-      "stk": [
-        464.4,
-        129.6,
-        32.4,
-        21.6
-      ],
-      "nb1": [
-        572.4,
-        156.6,
-        32.4,
-        10.8
-      ],
-      "nb2": [
-        869.4,
-        135.0,
-        32.4,
-        10.8
-      ]
-    },
-    {
-      "lane": 2,
-      "lane_xy_um": [
-        216.0,
         356.4
       ],
       "stin": [
         178.2,
-        183.6,
+        199.8,
         32.4,
         43.2
       ],
@@ -186,7 +155,38 @@
       ],
       "nb2": [
         869.4,
-        313.2,
+        307.8,
+        32.4,
+        10.8
+      ]
+    },
+    {
+      "lane": 2,
+      "lane_xy_um": [
+        216.0,
+        205.2
+      ],
+      "stin": [
+        178.2,
+        108.0,
+        32.4,
+        43.2
+      ],
+      "stk": [
+        421.2,
+        156.6,
+        32.4,
+        21.6
+      ],
+      "nb1": [
+        529.2,
+        183.6,
+        32.4,
+        10.8
+      ],
+      "nb2": [
+        842.4,
+        189.0,
         32.4,
         10.8
       ]
@@ -199,7 +199,7 @@
       ],
       "stin": [
         178.2,
-        232.2,
+        248.4,
         32.4,
         43.2
       ],
@@ -226,66 +226,35 @@
       "lane": 4,
       "lane_xy_um": [
         43.2,
-        205.2
+        54.0
       ],
       "stin": [
         178.2,
-        135.0,
+        59.4,
         32.4,
         43.2
       ],
       "stk": [
-        351.0,
-        172.8,
+        410.4,
+        102.6,
         32.4,
         21.6
       ],
       "nb1": [
-        399.6,
-        189.0,
+        491.4,
+        124.2,
         32.4,
         10.8
       ],
       "nb2": [
-        756.0,
-        189.0,
+        869.4,
+        124.2,
         32.4,
         10.8
       ]
     },
     {
       "lane": 5,
-      "lane_xy_um": [
-        216.0,
-        205.2
-      ],
-      "stin": [
-        178.2,
-        54.0,
-        32.4,
-        43.2
-      ],
-      "stk": [
-        437.4,
-        172.8,
-        32.4,
-        21.6
-      ],
-      "nb1": [
-        529.2,
-        183.6,
-        32.4,
-        10.8
-      ],
-      "nb2": [
-        799.2,
-        189.0,
-        32.4,
-        10.8
-      ]
-    },
-    {
-      "lane": 6,
       "lane_xy_um": [
         388.8,
         356.4
@@ -316,14 +285,14 @@
       ]
     },
     {
-      "lane": 7,
+      "lane": 6,
       "lane_xy_um": [
         388.8,
         205.2
       ],
       "stin": [
-        383.4,
-        118.8,
+        372.6,
+        124.2,
         32.4,
         43.2
       ],
@@ -342,6 +311,37 @@
       "nb2": [
         869.4,
         243.0,
+        32.4,
+        10.8
+      ]
+    },
+    {
+      "lane": 7,
+      "lane_xy_um": [
+        216.0,
+        54.0
+      ],
+      "stin": [
+        351.0,
+        75.6,
+        32.4,
+        43.2
+      ],
+      "stk": [
+        491.4,
+        97.2,
+        32.4,
+        21.6
+      ],
+      "nb1": [
+        577.8,
+        167.4,
+        32.4,
+        10.8
+      ],
+      "nb2": [
+        869.4,
+        205.2,
         32.4,
         10.8
       ]
@@ -384,8 +384,8 @@
         205.2
       ],
       "stin": [
-        502.2,
-        108.0,
+        469.8,
+        156.6,
         32.4,
         43.2
       ],
@@ -396,14 +396,14 @@
         21.6
       ],
       "nb1": [
-        729.0,
-        340.2,
+        734.4,
+        189.0,
         32.4,
         10.8
       ],
       "nb2": [
-        869.4,
-        259.2,
+        934.2,
+        189.0,
         32.4,
         10.8
       ]
@@ -427,14 +427,14 @@
         21.6
       ],
       "nb1": [
-        869.4,
-        118.8,
+        950.4,
+        37.8,
         32.4,
         10.8
       ],
       "nb2": [
-        869.4,
-        210.6,
+        1036.8,
+        37.8,
         32.4,
         10.8
       ]
@@ -446,26 +446,26 @@
         54.0
       ],
       "stin": [
-        502.2,
-        59.4,
+        810.0,
+        5.4,
         32.4,
         43.2
       ],
       "stk": [
-        583.2,
-        172.8,
+        869.4,
+        97.2,
         32.4,
         21.6
       ],
       "nb1": [
-        869.4,
-        37.8,
+        853.2,
+        32.4,
         32.4,
         10.8
       ],
       "nb2": [
         1036.8,
-        37.8,
+        21.6,
         32.4,
         10.8
       ]
@@ -535,6 +535,37 @@
     {
       "lane": 14,
       "lane_xy_um": [
+        907.2,
+        205.2
+      ],
+      "stin": [
+        869.4,
+        48.6,
+        32.4,
+        43.2
+      ],
+      "stk": [
+        869.4,
+        151.2,
+        32.4,
+        21.6
+      ],
+      "nb1": [
+        869.4,
+        259.2,
+        32.4,
+        10.8
+      ],
+      "nb2": [
+        869.4,
+        226.8,
+        32.4,
+        10.8
+      ]
+    },
+    {
+      "lane": 15,
+      "lane_xy_um": [
         734.4000000000001,
         205.2
       ],
@@ -551,45 +582,14 @@
         21.6
       ],
       "nb1": [
-        864.0,
-        189.0,
-        32.4,
-        10.8
-      ],
-      "nb2": [
-        934.2,
-        189.0,
-        32.4,
-        10.8
-      ]
-    },
-    {
-      "lane": 15,
-      "lane_xy_um": [
-        907.2,
-        205.2
-      ],
-      "stin": [
-        869.4,
-        64.8,
-        32.4,
-        43.2
-      ],
-      "stk": [
-        869.4,
-        151.2,
-        32.4,
-        21.6
-      ],
-      "nb1": [
-        869.4,
-        226.8,
-        32.4,
-        10.8
-      ],
-      "nb2": [
-        891.0,
+        858.6,
         340.2,
+        32.4,
+        10.8
+      ],
+      "nb2": [
+        896.4,
+        189.0,
         32.4,
         10.8
       ]
@@ -632,31 +632,31 @@
       43.2,
       43.2
     ],
-    "stin2": [
+    "stin1": [
       178.2,
-      183.6,
+      199.8,
       32.4,
       43.2
     ],
-    "stk2": [
+    "stk1": [
       523.8,
       334.8,
       32.4,
       21.6
     ],
-    "nb1_2": [
+    "nb1_1": [
       561.6,
       340.2,
       32.4,
       10.8
     ],
-    "nb2_2": [
+    "nb2_1": [
       869.4,
-      313.2,
+      307.8,
       32.4,
       10.8
     ],
-    "lane2": [
+    "lane1": [
       216.0,
       356.4,
       129.6,
@@ -664,7 +664,7 @@
     ],
     "stin3": [
       178.2,
-      232.2,
+      248.4,
       32.4,
       43.2
     ],
@@ -692,31 +692,31 @@
       129.6,
       129.6
     ],
-    "stin6": [
+    "stin5": [
       351.0,
       199.8,
       32.4,
       43.2
     ],
-    "stk6": [
+    "stk5": [
       523.8,
       248.4,
       32.4,
       21.6
     ],
-    "nb1_6": [
+    "nb1_5": [
       658.8,
       340.2,
       32.4,
       10.8
     ],
-    "nb2_6": [
+    "nb2_5": [
       869.4,
       286.2,
       32.4,
       10.8
     ],
-    "lane6": [
+    "lane5": [
       388.8,
       356.4,
       129.6,
@@ -812,99 +812,99 @@
       129.6,
       129.6
     ],
-    "stin4": [
-      178.2,
-      135.0,
+    "stin0": [
+      5.4,
+      54.0,
       32.4,
       43.2
     ],
-    "stk4": [
+    "stk0": [
       351.0,
       172.8,
       32.4,
       21.6
     ],
-    "nb1_4": [
-      399.6,
+    "nb1_0": [
+      421.2,
       189.0,
       32.4,
       10.8
     ],
-    "nb2_4": [
-      756.0,
-      189.0,
-      32.4,
-      10.8
-    ],
-    "lane4": [
-      43.2,
-      205.2,
-      129.6,
-      129.6
-    ],
-    "stin5": [
-      178.2,
-      54.0,
-      32.4,
-      43.2
-    ],
-    "stk5": [
-      437.4,
-      172.8,
-      32.4,
-      21.6
-    ],
-    "nb1_5": [
-      529.2,
-      183.6,
-      32.4,
-      10.8
-    ],
-    "nb2_5": [
+    "nb2_0": [
       799.2,
       189.0,
       32.4,
       10.8
     ],
-    "lane5": [
+    "lane0": [
+      43.2,
+      205.2,
+      129.6,
+      129.6
+    ],
+    "stin2": [
+      178.2,
+      108.0,
+      32.4,
+      43.2
+    ],
+    "stk2": [
+      421.2,
+      156.6,
+      32.4,
+      21.6
+    ],
+    "nb1_2": [
+      529.2,
+      183.6,
+      32.4,
+      10.8
+    ],
+    "nb2_2": [
+      842.4,
+      189.0,
+      32.4,
+      10.8
+    ],
+    "lane2": [
       216.0,
       205.2,
       129.6,
       129.6
     ],
-    "stin7": [
-      383.4,
-      118.8,
+    "stin6": [
+      372.6,
+      124.2,
       32.4,
       43.2
     ],
-    "stk7": [
+    "stk6": [
       507.6,
       156.6,
       32.4,
       21.6
     ],
-    "nb1_7": [
+    "nb1_6": [
       696.6,
       248.4,
       32.4,
       10.8
     ],
-    "nb2_7": [
+    "nb2_6": [
       869.4,
       243.0,
       32.4,
       10.8
     ],
-    "lane7": [
+    "lane6": [
       388.8,
       205.2,
       129.6,
       129.6
     ],
     "stin9": [
-      502.2,
-      108.0,
+      469.8,
+      156.6,
       32.4,
       43.2
     ],
@@ -915,14 +915,14 @@
       21.6
     ],
     "nb1_9": [
-      729.0,
-      340.2,
+      734.4,
+      189.0,
       32.4,
       10.8
     ],
     "nb2_9": [
-      869.4,
-      259.2,
+      934.2,
+      189.0,
       32.4,
       10.8
     ],
@@ -933,120 +933,120 @@
       129.6
     ],
     "stin14": [
-      696.6,
-      118.8,
+      869.4,
+      48.6,
       32.4,
       43.2
     ],
     "stk14": [
-      621.0,
-      178.2,
-      32.4,
-      21.6
-    ],
-    "nb1_14": [
-      864.0,
-      189.0,
-      32.4,
-      10.8
-    ],
-    "nb2_14": [
-      934.2,
-      189.0,
-      32.4,
-      10.8
-    ],
-    "lane14": [
-      734.4000000000001,
-      205.2,
-      129.6,
-      129.6
-    ],
-    "stin15": [
-      869.4,
-      64.8,
-      32.4,
-      43.2
-    ],
-    "stk15": [
       869.4,
       151.2,
       32.4,
       21.6
     ],
-    "nb1_15": [
+    "nb1_14": [
+      869.4,
+      259.2,
+      32.4,
+      10.8
+    ],
+    "nb2_14": [
       869.4,
       226.8,
       32.4,
       10.8
     ],
-    "nb2_15": [
-      891.0,
-      340.2,
-      32.4,
-      10.8
-    ],
-    "lane15": [
+    "lane14": [
       907.2,
       205.2,
       129.6,
       129.6
     ],
-    "stin0": [
-      75.6,
-      5.4,
+    "stin15": [
+      696.6,
+      118.8,
       32.4,
       43.2
     ],
-    "stk0": [
-      421.2,
+    "stk15": [
+      621.0,
+      178.2,
+      32.4,
+      21.6
+    ],
+    "nb1_15": [
+      858.6,
+      340.2,
+      32.4,
+      10.8
+    ],
+    "nb2_15": [
+      896.4,
+      189.0,
+      32.4,
+      10.8
+    ],
+    "lane15": [
+      734.4000000000001,
+      205.2,
+      129.6,
+      129.6
+    ],
+    "stin4": [
+      178.2,
+      59.4,
+      32.4,
+      43.2
+    ],
+    "stk4": [
+      410.4,
       102.6,
       32.4,
       21.6
     ],
-    "nb1_0": [
-      459.0,
-      64.8,
+    "nb1_4": [
+      491.4,
+      124.2,
       32.4,
       10.8
     ],
-    "nb2_0": [
-      831.6,
-      37.8,
+    "nb2_4": [
+      869.4,
+      124.2,
       32.4,
       10.8
     ],
-    "lane0": [
+    "lane4": [
       43.2,
       54.0,
       129.6,
       129.6
     ],
-    "stin1": [
-      178.2,
-      5.4,
+    "stin7": [
+      351.0,
+      75.6,
       32.4,
       43.2
     ],
-    "stk1": [
-      464.4,
-      129.6,
+    "stk7": [
+      491.4,
+      97.2,
       32.4,
       21.6
     ],
-    "nb1_1": [
-      572.4,
-      156.6,
+    "nb1_7": [
+      577.8,
+      167.4,
       32.4,
       10.8
     ],
-    "nb2_1": [
+    "nb2_7": [
       869.4,
-      135.0,
+      205.2,
       32.4,
       10.8
     ],
-    "lane1": [
+    "lane7": [
       216.0,
       54.0,
       129.6,
@@ -1065,14 +1065,14 @@
       21.6
     ],
     "nb1_10": [
-      869.4,
-      118.8,
+      950.4,
+      37.8,
       32.4,
       10.8
     ],
     "nb2_10": [
-      869.4,
-      210.6,
+      1036.8,
+      37.8,
       32.4,
       10.8
     ],
@@ -1083,26 +1083,26 @@
       129.6
     ],
     "stin11": [
-      502.2,
-      59.4,
+      810.0,
+      5.4,
       32.4,
       43.2
     ],
     "stk11": [
-      583.2,
-      172.8,
+      869.4,
+      97.2,
       32.4,
       21.6
     ],
     "nb1_11": [
-      869.4,
-      37.8,
+      853.2,
+      32.4,
       32.4,
       10.8
     ],
     "nb2_11": [
       1036.8,
-      37.8,
+      21.6,
       32.4,
       10.8
     ],
@@ -1159,32 +1159,32 @@
       ]
     },
     {
-      "child": "stin2",
-      "rtl_clock": "ck_stin[2]",
+      "child": "stin1",
+      "rtl_clock": "ck_stin[1]",
       "child_clock_pin": "clk",
       "clock_pin_assignment": "actual leaf pin required at hardening"
     },
     {
-      "child": "stk2",
-      "rtl_clock": "ck_stk[2]",
+      "child": "stk1",
+      "rtl_clock": "ck_stk[1]",
       "child_clock_pin": "clk",
       "clock_pin_assignment": "actual leaf pin required at hardening"
     },
     {
-      "child": "nb1_2",
-      "rtl_clock": "ck_nb1[2]",
+      "child": "nb1_1",
+      "rtl_clock": "ck_nb1[1]",
       "child_clock_pin": "clk",
       "clock_pin_assignment": "actual leaf pin required at hardening"
     },
     {
-      "child": "nb2_2",
-      "rtl_clock": "ck_nb2[2]",
+      "child": "nb2_1",
+      "rtl_clock": "ck_nb2[1]",
       "child_clock_pin": "clk",
       "clock_pin_assignment": "actual leaf pin required at hardening"
     },
     {
-      "child": "lane2",
-      "rtl_clock": "ck_lane[2]",
+      "child": "lane1",
+      "rtl_clock": "ck_lane[1]",
       "child_clock_pin": "clk",
       "clock_pin_assignment": "exported closed-view pin",
       "slot_xy_um": [
@@ -1227,32 +1227,32 @@
       ]
     },
     {
-      "child": "stin6",
-      "rtl_clock": "ck_stin[6]",
+      "child": "stin5",
+      "rtl_clock": "ck_stin[5]",
       "child_clock_pin": "clk",
       "clock_pin_assignment": "actual leaf pin required at hardening"
     },
     {
-      "child": "stk6",
-      "rtl_clock": "ck_stk[6]",
+      "child": "stk5",
+      "rtl_clock": "ck_stk[5]",
       "child_clock_pin": "clk",
       "clock_pin_assignment": "actual leaf pin required at hardening"
     },
     {
-      "child": "nb1_6",
-      "rtl_clock": "ck_nb1[6]",
+      "child": "nb1_5",
+      "rtl_clock": "ck_nb1[5]",
       "child_clock_pin": "clk",
       "clock_pin_assignment": "actual leaf pin required at hardening"
     },
     {
-      "child": "nb2_6",
-      "rtl_clock": "ck_nb2[6]",
+      "child": "nb2_5",
+      "rtl_clock": "ck_nb2[5]",
       "child_clock_pin": "clk",
       "clock_pin_assignment": "actual leaf pin required at hardening"
     },
     {
-      "child": "lane6",
-      "rtl_clock": "ck_lane[6]",
+      "child": "lane5",
+      "rtl_clock": "ck_lane[5]",
       "child_clock_pin": "clk",
       "clock_pin_assignment": "exported closed-view pin",
       "slot_xy_um": [
@@ -1363,32 +1363,32 @@
       ]
     },
     {
-      "child": "stin4",
-      "rtl_clock": "ck_stin[4]",
+      "child": "stin0",
+      "rtl_clock": "ck_stin[0]",
       "child_clock_pin": "clk",
       "clock_pin_assignment": "actual leaf pin required at hardening"
     },
     {
-      "child": "stk4",
-      "rtl_clock": "ck_stk[4]",
+      "child": "stk0",
+      "rtl_clock": "ck_stk[0]",
       "child_clock_pin": "clk",
       "clock_pin_assignment": "actual leaf pin required at hardening"
     },
     {
-      "child": "nb1_4",
-      "rtl_clock": "ck_nb1[4]",
+      "child": "nb1_0",
+      "rtl_clock": "ck_nb1[0]",
       "child_clock_pin": "clk",
       "clock_pin_assignment": "actual leaf pin required at hardening"
     },
     {
-      "child": "nb2_4",
-      "rtl_clock": "ck_nb2[4]",
+      "child": "nb2_0",
+      "rtl_clock": "ck_nb2[0]",
       "child_clock_pin": "clk",
       "clock_pin_assignment": "actual leaf pin required at hardening"
     },
     {
-      "child": "lane4",
-      "rtl_clock": "ck_lane[4]",
+      "child": "lane0",
+      "rtl_clock": "ck_lane[0]",
       "child_clock_pin": "clk",
       "clock_pin_assignment": "exported closed-view pin",
       "slot_xy_um": [
@@ -1397,32 +1397,32 @@
       ]
     },
     {
-      "child": "stin5",
-      "rtl_clock": "ck_stin[5]",
+      "child": "stin2",
+      "rtl_clock": "ck_stin[2]",
       "child_clock_pin": "clk",
       "clock_pin_assignment": "actual leaf pin required at hardening"
     },
     {
-      "child": "stk5",
-      "rtl_clock": "ck_stk[5]",
+      "child": "stk2",
+      "rtl_clock": "ck_stk[2]",
       "child_clock_pin": "clk",
       "clock_pin_assignment": "actual leaf pin required at hardening"
     },
     {
-      "child": "nb1_5",
-      "rtl_clock": "ck_nb1[5]",
+      "child": "nb1_2",
+      "rtl_clock": "ck_nb1[2]",
       "child_clock_pin": "clk",
       "clock_pin_assignment": "actual leaf pin required at hardening"
     },
     {
-      "child": "nb2_5",
-      "rtl_clock": "ck_nb2[5]",
+      "child": "nb2_2",
+      "rtl_clock": "ck_nb2[2]",
       "child_clock_pin": "clk",
       "clock_pin_assignment": "actual leaf pin required at hardening"
     },
     {
-      "child": "lane5",
-      "rtl_clock": "ck_lane[5]",
+      "child": "lane2",
+      "rtl_clock": "ck_lane[2]",
       "child_clock_pin": "clk",
       "clock_pin_assignment": "exported closed-view pin",
       "slot_xy_um": [
@@ -1431,32 +1431,32 @@
       ]
     },
     {
-      "child": "stin7",
-      "rtl_clock": "ck_stin[7]",
+      "child": "stin6",
+      "rtl_clock": "ck_stin[6]",
       "child_clock_pin": "clk",
       "clock_pin_assignment": "actual leaf pin required at hardening"
     },
     {
-      "child": "stk7",
-      "rtl_clock": "ck_stk[7]",
+      "child": "stk6",
+      "rtl_clock": "ck_stk[6]",
       "child_clock_pin": "clk",
       "clock_pin_assignment": "actual leaf pin required at hardening"
     },
     {
-      "child": "nb1_7",
-      "rtl_clock": "ck_nb1[7]",
+      "child": "nb1_6",
+      "rtl_clock": "ck_nb1[6]",
       "child_clock_pin": "clk",
       "clock_pin_assignment": "actual leaf pin required at hardening"
     },
     {
-      "child": "nb2_7",
-      "rtl_clock": "ck_nb2[7]",
+      "child": "nb2_6",
+      "rtl_clock": "ck_nb2[6]",
       "child_clock_pin": "clk",
       "clock_pin_assignment": "actual leaf pin required at hardening"
     },
     {
-      "child": "lane7",
-      "rtl_clock": "ck_lane[7]",
+      "child": "lane6",
+      "rtl_clock": "ck_lane[6]",
       "child_clock_pin": "clk",
       "clock_pin_assignment": "exported closed-view pin",
       "slot_xy_um": [
@@ -1528,7 +1528,7 @@
       "child_clock_pin": "clk",
       "clock_pin_assignment": "exported closed-view pin",
       "slot_xy_um": [
-        734.442,
+        907.242,
         272.652
       ]
     },
@@ -1562,37 +1562,37 @@
       "child_clock_pin": "clk",
       "clock_pin_assignment": "exported closed-view pin",
       "slot_xy_um": [
-        907.242,
+        734.442,
         272.652
       ]
     },
     {
-      "child": "stin0",
-      "rtl_clock": "ck_stin[0]",
+      "child": "stin4",
+      "rtl_clock": "ck_stin[4]",
       "child_clock_pin": "clk",
       "clock_pin_assignment": "actual leaf pin required at hardening"
     },
     {
-      "child": "stk0",
-      "rtl_clock": "ck_stk[0]",
+      "child": "stk4",
+      "rtl_clock": "ck_stk[4]",
       "child_clock_pin": "clk",
       "clock_pin_assignment": "actual leaf pin required at hardening"
     },
     {
-      "child": "nb1_0",
-      "rtl_clock": "ck_nb1[0]",
+      "child": "nb1_4",
+      "rtl_clock": "ck_nb1[4]",
       "child_clock_pin": "clk",
       "clock_pin_assignment": "actual leaf pin required at hardening"
     },
     {
-      "child": "nb2_0",
-      "rtl_clock": "ck_nb2[0]",
+      "child": "nb2_4",
+      "rtl_clock": "ck_nb2[4]",
       "child_clock_pin": "clk",
       "clock_pin_assignment": "actual leaf pin required at hardening"
     },
     {
-      "child": "lane0",
-      "rtl_clock": "ck_lane[0]",
+      "child": "lane4",
+      "rtl_clock": "ck_lane[4]",
       "child_clock_pin": "clk",
       "clock_pin_assignment": "exported closed-view pin",
       "slot_xy_um": [
@@ -1601,32 +1601,32 @@
       ]
     },
     {
-      "child": "stin1",
-      "rtl_clock": "ck_stin[1]",
+      "child": "stin7",
+      "rtl_clock": "ck_stin[7]",
       "child_clock_pin": "clk",
       "clock_pin_assignment": "actual leaf pin required at hardening"
     },
     {
-      "child": "stk1",
-      "rtl_clock": "ck_stk[1]",
+      "child": "stk7",
+      "rtl_clock": "ck_stk[7]",
       "child_clock_pin": "clk",
       "clock_pin_assignment": "actual leaf pin required at hardening"
     },
     {
-      "child": "nb1_1",
-      "rtl_clock": "ck_nb1[1]",
+      "child": "nb1_7",
+      "rtl_clock": "ck_nb1[7]",
       "child_clock_pin": "clk",
       "clock_pin_assignment": "actual leaf pin required at hardening"
     },
     {
-      "child": "nb2_1",
-      "rtl_clock": "ck_nb2[1]",
+      "child": "nb2_7",
+      "rtl_clock": "ck_nb2[7]",
       "child_clock_pin": "clk",
       "clock_pin_assignment": "actual leaf pin required at hardening"
     },
     {
-      "child": "lane1",
-      "rtl_clock": "ck_lane[1]",
+      "child": "lane7",
+      "rtl_clock": "ck_lane[7]",
       "child_clock_pin": "clk",
       "clock_pin_assignment": "exported closed-view pin",
       "slot_xy_um": [
@@ -30805,48 +30805,48 @@
   },
   "hops": [
     {
-      "name": "front->stin2",
-      "um": 280.8
+      "name": "front->stin1",
+      "um": 264.6
     },
     {
-      "name": "stin2->lane2",
-      "um": 234.606
+      "name": "stin1->lane1",
+      "um": 218.406
     },
     {
-      "name": "stin2.reset->lane2",
-      "um": 278.19
+      "name": "stin1.reset->lane1",
+      "um": 261.99
     },
     {
-      "name": "lane2->stk2",
+      "name": "lane1->stk1",
       "um": 303.438
     },
     {
-      "name": "stk2->ktree",
-      "um": 299.838
+      "name": "stk1->ktree",
+      "um": 299.742
     },
     {
-      "name": "lane2->nb1_2",
+      "name": "lane1->nb1_1",
       "um": 321.966
     },
     {
-      "name": "nb1_2->nb2_2",
-      "um": 313.2
+      "name": "nb1_1->nb2_1",
+      "um": 318.6
     },
     {
-      "name": "nb2_2->die_nb",
-      "um": 292.788
+      "name": "nb2_1->die_nb",
+      "um": 293.532
     },
     {
       "name": "front->stin3",
-      "um": 361.8
+      "um": 378.0
     },
     {
       "name": "stin3->lane3",
-      "um": 290.91
+      "um": 274.71
     },
     {
       "name": "stin3.reset->lane3",
-      "um": 359.106
+      "um": 342.906
     },
     {
       "name": "lane3->stk3",
@@ -30869,36 +30869,36 @@
       "um": 362.244
     },
     {
-      "name": "front->stin6",
-      "um": 259.2
+      "name": "front->stin5",
+      "um": 226.8
     },
     {
-      "name": "stin6->lane6",
+      "name": "stin5->lane5",
       "um": 218.406
     },
     {
-      "name": "stin6.reset->lane6",
+      "name": "stin5.reset->lane5",
       "um": 261.99
     },
     {
-      "name": "lane6->stk6",
+      "name": "lane5->stk5",
       "um": 217.038
     },
     {
-      "name": "stk6->ktree",
-      "um": 213.822
+      "name": "stk5->ktree",
+      "um": 213.726
     },
     {
-      "name": "lane6->nb1_6",
+      "name": "lane5->nb1_5",
       "um": 246.366
     },
     {
-      "name": "nb1_6->nb2_6",
+      "name": "nb1_5->nb2_5",
       "um": 243.0
     },
     {
-      "name": "nb2_6->die_nb",
-      "um": 241.212
+      "name": "nb2_5->die_nb",
+      "um": 247.356
     },
     {
       "name": "front->stin8",
@@ -30930,7 +30930,7 @@
     },
     {
       "name": "nb2_8->die_nb",
-      "um": 180.324
+      "um": 186.42
     },
     {
       "name": "front->stin12",
@@ -30997,112 +30997,112 @@
       "um": 169.596
     },
     {
-      "name": "front->stin4",
-      "um": 302.4
+      "name": "front->stin0",
+      "um": 259.2
     },
     {
-      "name": "stin4->lane4",
-      "um": 236.91
-    },
-    {
-      "name": "stin4.reset->lane4",
-      "um": 305.106
-    },
-    {
-      "name": "lane4->stk4",
-      "um": 314.238
-    },
-    {
-      "name": "stk4->ktree",
-      "um": 310.83
-    },
-    {
-      "name": "lane4->nb1_4",
-      "um": 332.766
-    },
-    {
-      "name": "nb1_4->nb2_4",
-      "um": 334.8
-    },
-    {
-      "name": "nb2_4->die_nb",
-      "um": 330.3
-    },
-    {
-      "name": "front->stin5",
-      "um": 253.8
-    },
-    {
-      "name": "stin5->lane5",
+      "name": "stin0->lane0",
       "um": 213.006
     },
     {
-      "name": "stin5.reset->lane5",
+      "name": "stin0.reset->lane0",
       "um": 256.59
     },
     {
-      "name": "lane5->stk5",
+      "name": "lane0->stk0",
+      "um": 314.238
+    },
+    {
+      "name": "stk0->ktree",
+      "um": 313.422
+    },
+    {
+      "name": "lane0->nb1_0",
+      "um": 354.366
+    },
+    {
+      "name": "nb1_0->nb2_0",
+      "um": 356.4
+    },
+    {
+      "name": "nb2_0->die_nb",
+      "um": 354.732
+    },
+    {
+      "name": "front->stin2",
+      "um": 205.2
+    },
+    {
+      "name": "stin2->lane2",
+      "um": 159.006
+    },
+    {
+      "name": "stin2.reset->lane2",
+      "um": 202.59
+    },
+    {
+      "name": "lane2->stk2",
       "um": 227.838
     },
     {
-      "name": "stk5->ktree",
-      "um": 224.526
+      "name": "stk2->ktree",
+      "um": 224.238
     },
     {
-      "name": "lane5->nb1_5",
+      "name": "lane2->nb1_2",
       "um": 294.966
     },
     {
-      "name": "nb1_5->nb2_5",
-      "um": 253.8
+      "name": "nb1_2->nb2_2",
+      "um": 297.0
     },
     {
-      "name": "nb2_5->die_nb",
-      "um": 293.244
+      "name": "nb2_2->die_nb",
+      "um": 299.244
     },
     {
-      "name": "front->stin7",
-      "um": 178.2
+      "name": "front->stin6",
+      "um": 162.0
     },
     {
-      "name": "stin7->lane7",
-      "um": 115.806
+      "name": "stin6->lane6",
+      "um": 121.206
     },
     {
-      "name": "stin7.reset->lane7",
-      "um": 180.906
+      "name": "stin6.reset->lane6",
+      "um": 164.79
     },
     {
-      "name": "lane7->stk7",
+      "name": "lane6->stk6",
       "um": 141.438
     },
     {
-      "name": "stk7->ktree",
-      "um": 138.318
+      "name": "stk6->ktree",
+      "um": 138.222
     },
     {
-      "name": "lane7->nb1_7",
+      "name": "lane6->nb1_6",
       "um": 224.766
     },
     {
-      "name": "nb1_7->nb2_7",
+      "name": "nb1_6->nb2_6",
       "um": 156.6
     },
     {
-      "name": "nb2_7->die_nb",
-      "um": 191.868
+      "name": "nb2_6->die_nb",
+      "um": 198.012
     },
     {
       "name": "front->stin9",
-      "um": 118.8
+      "um": 199.8
     },
     {
       "name": "stin9->lane9",
-      "um": 180.606
+      "um": 164.406
     },
     {
       "name": "stin9.reset->lane9",
-      "um": 224.19
+      "um": 207.99
     },
     {
       "name": "lane9->stk9",
@@ -31114,143 +31114,143 @@
     },
     {
       "name": "lane9->nb1_9",
-      "um": 135.102
+      "um": 149.166
     },
     {
       "name": "nb1_9->nb2_9",
-      "um": 199.8
+      "um": 178.2
     },
     {
       "name": "nb2_9->die_nb",
-      "um": 195.78
+      "um": 182.82
     },
     {
       "name": "front->stin14",
-      "um": 156.6
+      "um": 259.2
     },
     {
       "name": "stin14->lane14",
-      "um": 148.206
+      "um": 218.406
     },
     {
       "name": "stin14.reset->lane14",
-      "um": 191.79
+      "um": 261.99
     },
     {
       "name": "lane14->stk14",
-      "um": 341.154
-    },
-    {
-      "name": "stk14->ktree",
-      "um": 136.638
-    },
-    {
-      "name": "lane14->nb1_14",
-      "um": 105.966
-    },
-    {
-      "name": "nb1_14->nb2_14",
-      "um": 48.6
-    },
-    {
-      "name": "nb2_14->die_nb",
-      "um": 213.54
-    },
-    {
-      "name": "front->stin15",
-      "um": 243.0
-    },
-    {
-      "name": "stin15->lane15",
-      "um": 202.206
-    },
-    {
-      "name": "stin15.reset->lane15",
-      "um": 245.79
-    },
-    {
-      "name": "lane15->stk15",
       "um": 292.554
     },
     {
-      "name": "stk15->ktree",
-      "um": 356.502
+      "name": "stk14->ktree",
+      "um": 358.038
     },
     {
-      "name": "lane15->nb1_15",
-      "um": 235.482
+      "name": "lane14->nb1_14",
+      "um": 203.082
     },
     {
-      "name": "nb1_15->nb2_15",
+      "name": "nb1_14->nb2_14",
+      "um": 75.6
+    },
+    {
+      "name": "nb2_14->die_nb",
+      "um": 240.54
+    },
+    {
+      "name": "front->stin15",
       "um": 135.0
     },
     {
+      "name": "stin15->lane15",
+      "um": 148.206
+    },
+    {
+      "name": "stin15.reset->lane15",
+      "um": 191.79
+    },
+    {
+      "name": "lane15->stk15",
+      "um": 341.154
+    },
+    {
+      "name": "stk15->ktree",
+      "um": 135.102
+    },
+    {
+      "name": "lane15->nb1_15",
+      "um": 102.618
+    },
+    {
+      "name": "nb1_15->nb2_15",
+      "um": 167.4
+    },
+    {
       "name": "nb2_15->die_nb",
-      "um": 218.316
+      "um": 257.484
     },
     {
-      "name": "front->stin0",
-      "um": 183.6
+      "name": "front->stin4",
+      "um": 226.8
     },
     {
-      "name": "stin0->lane0",
-      "um": 112.71
+      "name": "stin4->lane4",
+      "um": 172.026
     },
     {
-      "name": "stin0.reset->lane0",
-      "um": 180.906
+      "name": "stin4.reset->lane4",
+      "um": 229.506
     },
     {
-      "name": "lane0->stk0",
-      "um": 303.438
+      "name": "lane4->stk4",
+      "um": 292.638
     },
     {
-      "name": "stk0->ktree",
-      "um": 270.138
+      "name": "stk4->ktree",
+      "um": 278.346
     },
     {
-      "name": "lane0->nb1_0",
-      "um": 365.166
+      "name": "lane4->nb1_4",
+      "um": 351.102
     },
     {
-      "name": "nb1_0->nb2_0",
-      "um": 378.0
+      "name": "nb1_4->nb2_4",
+      "um": 356.4
     },
     {
-      "name": "nb2_0->die_nb",
-      "um": 381.324
+      "name": "nb2_4->die_nb",
+      "um": 324.756
     },
     {
-      "name": "front->stin1",
-      "um": 113.4
+      "name": "front->stin7",
+      "um": 167.4
     },
     {
-      "name": "stin1->lane1",
-      "um": 110.406
+      "name": "stin7->lane7",
+      "um": 188.226
     },
     {
-      "name": "stin1.reset->lane1",
-      "um": 153.99
+      "name": "stin7.reset->lane7",
+      "um": 213.306
     },
     {
-      "name": "lane1->stk1",
-      "um": 200.094
+      "name": "lane7->stk7",
+      "um": 206.238
     },
     {
-      "name": "stk1->ktree",
-      "um": 197.058
+      "name": "stk7->ktree",
+      "um": 203.034
     },
     {
-      "name": "lane1->nb1_1",
-      "um": 291.702
+      "name": "lane7->nb1_7",
+      "um": 307.902
     },
     {
-      "name": "nb1_1->nb2_1",
-      "um": 297.0
+      "name": "nb1_7->nb2_7",
+      "um": 307.8
     },
     {
-      "name": "nb2_1->die_nb",
-      "um": 252.468
+      "name": "nb2_7->die_nb",
+      "um": 225.324
     },
     {
       "name": "front->stin10",
@@ -31274,47 +31274,47 @@
     },
     {
       "name": "lane10->nb1_10",
-      "um": 194.418
+      "um": 192.282
     },
     {
       "name": "nb1_10->nb2_10",
-      "um": 135.0
+      "um": 64.8
     },
     {
       "name": "nb2_10->die_nb",
-      "um": 232.164
+      "um": 237.564
     },
     {
       "name": "front->stin11",
-      "um": 135.0
+      "um": 302.4
     },
     {
       "name": "stin11->lane11",
-      "um": 261.522
+      "um": 155.91
     },
     {
       "name": "stin11.reset->lane11",
-      "um": 294.39
+      "um": 224.106
     },
     {
       "name": "lane11->stk11",
-      "um": 372.81
+      "um": 65.838
     },
     {
       "name": "stk11->ktree",
-      "um": 79.302
+      "um": 385.074
     },
     {
       "name": "lane11->nb1_11",
-      "um": 111.366
+      "um": 122.082
     },
     {
       "name": "nb1_11->nb2_11",
-      "um": 145.8
+      "um": 172.8
     },
     {
       "name": "nb2_11->die_nb",
-      "um": 243.708
+      "um": 259.908
     },
     {
       "name": "die_ti[0]->front0.c_in[0]",

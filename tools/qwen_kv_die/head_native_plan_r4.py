@@ -126,6 +126,10 @@ def _plan(closed_pins=None, channel=None, perm=None, kt_x=388.8, score_x=550.8):
         hops.extend([(f'lane{t}->stk{t}',a),(f'stk{t}->ktree',b)])
         # v1.1 assigned nb E-face region: 197.100..295.308 at 0.096 um/bit.
         target=[(W,197.1+0.096*64*t),(W,197.1+0.096*(64*t+63))]
+        if perm:
+            # KVPLAN2: the die's ASTK f<e><h> word for this lane sits at y (R0 / R180 heads) or H - y (MX / MY heads:
+            # measured kvr2, lane 0 at 289..295 on h0): bound the last nb hop to both, so every orientation is short
+            target=target+[(W,H-y) for _,y in target]
         lc=centre(nb);tc=centre(target)
         ideal1=tuple(lc[k]+(tc[k]-lc[k])/3 for k in range(2))
         ideal2=tuple(lc[k]+2*(tc[k]-lc[k])/3 for k in range(2))
@@ -141,7 +145,9 @@ def _plan(closed_pins=None, channel=None, perm=None, kt_x=388.8, score_x=550.8):
             for r2 in c2:
                 if overlap(r1,r2):continue
                 b=bound(face(r1,'E'),face(r2,'W'));c=bound(face(r2,'E'),target)
-                trial=(max(a,b,c),a+b+c,r1,r2,a,b,c)
+                # KVPLAN2 (perm plans): of the max-equal pairs, the one whose nb2 is nearest the head E-face target --
+                # the die-level nb hop (nb2 -> ASTK f<e><h>) continues from there (kvr2: 472 um with the sum rule)
+                trial=(max(a,b,c),c if perm else a+b+c,r1,r2,a,b,c)
                 if best is None or trial<best:best=trial
         if best is None:raise ValueError('no NB pair placement')
         _,_,n1,n2,a,b,c=best;placed.extend([n1,n2]);children[f'nb1_{t}']=n1;children[f'nb2_{t}']=n2

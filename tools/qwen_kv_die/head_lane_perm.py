@@ -1,9 +1,9 @@
 """KVPLAN2 2215 (2026-10-16): bottleneck lane -> grid-slot assignment for the r4 head plan (head_native_plan_r4.py --perm).
 Cost of lane t in slot s = the worst per-hop pin-region bound of its chains: lane kp/kpv/gf -> stk -> ktree group (2 hops),
-front quarter -> stin -> lane inputs (2), lane nb -> nb1 -> nb2 -> head E face (3), front -> stin -> lane rst_n (2, + RW).
+front quarter -> stin -> lane inputs (2), lane nb -> nb1 -> nb2 -> head E face at y and H - y (3), front -> stin -> lane rst_n (2, + RW).
 The bottleneck assignment is found by threshold + bipartite matching, then pairwise swaps cut the sum.
-Run from the repo root:  RW=40 python3 tools/qwen_kv_die/head_lane_perm.py CHANNEL|- KTREE_X
-head_reach400 plans (RW=40, ktree x 540, score x 388.8, reach 400):
+Run from the repo root:  RW=50 python3 tools/qwen_kv_die/head_lane_perm.py CHANNEL|- KTREE_X
+head_reach400 plans (RW=50, ktree x 540, score x 388.8, reach 400):
   r4: head_native_plan_r4.py OUT --reach 400 --perm <PERM of '-'> --ktree-x 540 --score-x 388.8
   ft: head_native_plan_r4.py OUT --channel 16.2,351.0,712.8 --reach 400 --perm <PERM of '16.2,351.0,712.8'> --ktree-x 540 --score-x 388.8
 """
@@ -14,10 +14,11 @@ ch = tuple(map(float, sys.argv[1].split(','))) if len(sys.argv) > 1 and sys.argv
 lane = H.read_pins('physical/ref_tile/qkh_lane8_ref_b/views/ot_qkh_lane8/ot_qkh_lane8.lef')
 kt = H.read_pins('physical/ref_tile/qkh_ktree_ref/views/ot_qkh_ktree/ot_qkh_ktree.lef')
 dy = ch[0] if ch else 0.
+HH = H.H + dy                                       # slot outline height
 grid = [(43.2 + 172.8 * c, 54. + 151.2 * r + (dy if r >= 1 else 0.)) for c in range(6) for r in range(3) if not (r == 0 and c in (2, 3))]
 kx, ky = float(sys.argv[2]) if len(sys.argv) > 2 else 388.8, 54.
 W = H.W
-import os; RW = float(os.environ.get('RW', '40'))
+import os; RW = float(os.environ.get('RW', '50'))
 def reg(x, y, names): return H.region([(x + lane[n][0], y + lane[n][1]) for n in lane if n.split('[')[0] in names])
 def cost(t, s):
     x, y = grid[s]
@@ -26,6 +27,7 @@ def cost(t, s):
     fr = [(216 + 135 * (t // 4) + 32.4 * (t % 4), 48.6), (216 + 135 * (t // 4) + 32.4 * (t % 4 + 1), 48.6)]
     b = H.bound(fr, reg(x, y, ('c_in', 'row_in', 'e_in', 'lt_in', 'hid', 'q_valid_in', 'q_beat_in', 'q_data_in'))) + 43.2 + 32.4
     nbt = [(W, 197.1 + 0.096 * 64 * t), (W, 197.1 + 0.096 * (64 * t + 63))]
+    nbt += [(W, HH - y) for _, y in nbt]            # MX / MY heads: the ASTK word is y-mirrored
     c = H.bound(reg(x, y, ('nb',)), nbt) + 2 * 32.4
     r = H.bound(fr, reg(x, y, ('rst_n',))) + 43.2 + 32.4 + RW
     return max(a / 2, b / 2, c / 3, r / 2), (round(a / 2), round(b / 2), round(c / 3), round(r / 2))
