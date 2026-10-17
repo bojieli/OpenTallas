@@ -8,9 +8,7 @@
 // ---------------------------------------------------------------------------------------------------------------------
 module dsfd_su_t_smh #(
     parameter integer SRL = 2,
-    parameter integer DOP = SRL                        // the smq tap forwards its row registered WITH the valids (DV);
-                                                       // the slab's spine row is 2 cycles earlier: its -DSU_SMU_T
-                                                       // embedding adds those 2 stations outside the cluster
+    parameter integer DOP = SRL + 2
 ) (
     input  wire          clk,
     input  wire          rst_in,                       // the stop's reset (each leaf has its own two-flop relay)
