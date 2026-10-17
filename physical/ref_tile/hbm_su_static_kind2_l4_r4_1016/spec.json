@@ -129,7 +129,7 @@
   "owner": "Claude:H-SU/PGSLICE",
   "branch": "claude/hsu-pgslice-d4c",
   "tag": "r4",
-  "purpose": "r4: pin registers share the lane root (r3 gate with a separate pin root: 3,303 pin->lane hops under the cross-root hold reserve, FF hold -111.7 ps, repair stuck at -89.4 on x_b). Regional roots per lane leaf, meeting only at registered seams (r1 gate: one lane root of 32,978 sinks failed the measured >15k insertion/spread rule; s2 EARLY_FAIL_HOLD from per-stage roots): clk = pin registers + stages 0-3+5-7 (~13.2k), clk_sfu stage-4 SFU (~10.8k), clk_ins / clk_ins2 insertion regions 0-1 / 2-3 (21.8k in all), clk_side[5:0] the SIDE pipe six-root partition (41.8k in all); seams = stage-3 registers -> SFU/insertion inputs and their outputs -> stage-5 merge. OT_QMUL4_INCUT, recipe 4 (hold_budget die), sync regional reset (relays sample on the pin root). KIND2 carries the SIDE pipe inside (no side pins), outline 345.6 x 367.2 (87.6k flops, std ~63k um2; r3 first gate: clk_side 41,758 / clk_ins 21,784 sinks on one root each). Pins spread over the FULL W/E/S faces (pin_ranges proportional to bits, balanced placer, <= ~3.4/um); clock entries at the S-face centre beside the register mass (r3 KIND1 gate: N-corner entry, lane root TT insertion 455.9 / spread 131.1 ps). Geometry (coordinator review 1017 item 2): outline 345.6 x 367.2, pins over full faces ({'S': 1.67, 'W': 2.82, 'E': 0.79} pins/um), clock entries at the W-face centre beside the register mass.",
+  "purpose": "r4: pin registers share the lane root (r3 gate with a separate pin root: 3,303 pin->lane hops under the cross-root hold reserve, FF hold -111.7 ps, repair stuck at -89.4 on x_b). Regional roots per lane leaf, meeting only at registered seams (r1 gate: one lane root of 32,978 sinks failed the measured >15k insertion/spread rule; s2 EARLY_FAIL_HOLD from per-stage roots): clk = pin registers + stages 0-3+5-7 (~13.2k), clk_sfu stage-4 SFU (~10.8k), clk_ins / clk_ins2 insertion regions 0-1 / 2-3 (21.8k in all), clk_side[5:0] the SIDE pipe six-root partition (41.8k in all); seams = stage-3 registers -> SFU/insertion inputs and their outputs -> stage-5 merge. OT_QMUL4_INCUT, recipe 4 (hold_budget die), sync regional reset (relays sample on the pin root). KIND2 carries the SIDE pipe inside (no side pins), outline 280.8 x 453.6 (fits the heavy_full pgslice E service column beside square KIND1 rows) (87.6k flops, std ~63k um2; r3 first gate: clk_side 41,758 / clk_ins 21,784 sinks on one root each). Pins spread over the FULL W/E/S faces (pin_ranges proportional to bits, balanced placer, <= ~3.4/um); clock entries at the S-face centre beside the register mass (r3 KIND1 gate: N-corner entry, lane root TT insertion 455.9 / spread 131.1 ps). Geometry (coordinator review 1017 item 2): outline 280.8 x 453.6 (fits the heavy_full pgslice E service column beside square KIND1 rows), pins over full faces ({'S': 1.67, 'W': 2.82, 'E': 0.79} pins/um), clock entries at the W-face centre beside the register mass.",
   "extra_paths": [],
   "benches": [
    {
@@ -204,10 +204,10 @@
   "enable": false,
   "reason": "the RTL (ot_hbm_su_static_lane_pinreg, PIN_RST=1) already registers every data input, rst_n and every output at the pin; a kit-level flop stage would add a second, unscheduled boundary edge"
  },
- "structural_change": "r4: pin registers share the lane root (r3 gate with a separate pin root: 3,303 pin->lane hops under the cross-root hold reserve, FF hold -111.7 ps, repair stuck at -89.4 on x_b). Regional roots per lane leaf, meeting only at registered seams (r1 gate: one lane root of 32,978 sinks failed the measured >15k insertion/spread rule; s2 EARLY_FAIL_HOLD from per-stage roots): clk = pin registers + stages 0-3+5-7 (~13.2k), clk_sfu stage-4 SFU (~10.8k), clk_ins / clk_ins2 insertion regions 0-1 / 2-3 (21.8k in all), clk_side[5:0] the SIDE pipe six-root partition (41.8k in all); seams = stage-3 registers -> SFU/insertion inputs and their outputs -> stage-5 merge. OT_QMUL4_INCUT, recipe 4 (hold_budget die), sync regional reset (relays sample on the pin root). KIND2 carries the SIDE pipe inside (no side pins), outline 345.6 x 367.2 (87.6k flops, std ~63k um2; r3 first gate: clk_side 41,758 / clk_ins 21,784 sinks on one root each). Pins spread over the FULL W/E/S faces (pin_ranges proportional to bits, balanced placer, <= ~3.4/um); clock entries at the S-face centre beside the register mass (r3 KIND1 gate: N-corner entry, lane root TT insertion 455.9 / spread 131.1 ps). Geometry (coordinator review 1017 item 2): outline 345.6 x 367.2, pins over full faces ({'S': 1.67, 'W': 2.82, 'E': 0.79} pins/um), clock entries at the W-face centre beside the register mass.",
+ "structural_change": "r4: pin registers share the lane root (r3 gate with a separate pin root: 3,303 pin->lane hops under the cross-root hold reserve, FF hold -111.7 ps, repair stuck at -89.4 on x_b). Regional roots per lane leaf, meeting only at registered seams (r1 gate: one lane root of 32,978 sinks failed the measured >15k insertion/spread rule; s2 EARLY_FAIL_HOLD from per-stage roots): clk = pin registers + stages 0-3+5-7 (~13.2k), clk_sfu stage-4 SFU (~10.8k), clk_ins / clk_ins2 insertion regions 0-1 / 2-3 (21.8k in all), clk_side[5:0] the SIDE pipe six-root partition (41.8k in all); seams = stage-3 registers -> SFU/insertion inputs and their outputs -> stage-5 merge. OT_QMUL4_INCUT, recipe 4 (hold_budget die), sync regional reset (relays sample on the pin root). KIND2 carries the SIDE pipe inside (no side pins), outline 280.8 x 453.6 (fits the heavy_full pgslice E service column beside square KIND1 rows) (87.6k flops, std ~63k um2; r3 first gate: clk_side 41,758 / clk_ins 21,784 sinks on one root each). Pins spread over the FULL W/E/S faces (pin_ranges proportional to bits, balanced placer, <= ~3.4/um); clock entries at the S-face centre beside the register mass (r3 KIND1 gate: N-corner entry, lane root TT insertion 455.9 / spread 131.1 ps). Geometry (coordinator review 1017 item 2): outline 280.8 x 453.6 (fits the heavy_full pgslice E service column beside square KIND1 rows), pins over full faces ({'S': 1.67, 'W': 2.82, 'E': 0.79} pins/um), clock entries at the W-face centre beside the register mass.",
  "outline": {
-  "w": 345.6,
-  "h": 367.2
+  "w": 280.8,
+  "h": 453.6
  },
  "defines": [
   "OT_QMUL4_INCUT",
@@ -416,267 +416,267 @@
  "pin_ranges": {
   "rst_n": [
    4.32,
-   4.92
+   4.804
   ],
   "lane_id": [
-   4.92,
-   11.515
+   4.804,
+   10.131
   ],
   "ld": [
-   11.515,
-   12.114
+   10.131,
+   10.616
   ],
   "ld_bank": [
-   12.114,
-   12.714
+   10.616,
+   11.1
   ],
   "emit": [
-   12.714,
-   13.314
+   11.1,
+   11.584
   ],
   "bank": [
-   13.314,
-   13.913
+   11.584,
+   12.068
   ],
   "o_v": [
-   13.913,
-   28.303
+   12.068,
+   23.691
   ],
   "i_v": [
-   28.303,
-   42.693
+   23.691,
+   35.313
   ],
   "no": [
-   42.693,
-   57.082
+   35.313,
+   46.936
   ],
   "ni": [
-   57.082,
-   71.472
+   46.936,
+   58.558
   ],
   "ls": [
-   71.472,
-   73.87
+   58.558,
+   60.495
   ],
   "lvw": [
-   73.87,
-   76.269
+   60.495,
+   62.432
   ],
   "vb": [
-   76.269,
-   148.218
+   62.432,
+   120.545
   ],
   "krow": [
-   148.218,
-   162.607
+   120.545,
+   132.167
   ],
   "obase": [
-   162.607,
-   176.997
+   132.167,
+   143.79
   ],
   "aibase": [
-   176.997,
-   191.387
+   143.79,
+   155.412
   ],
   "aind": [
-   191.387,
-   192.586
+   155.412,
+   156.381
   ],
   "gsh": [
-   192.586,
-   195.584
+   156.381,
+   158.802
   ],
   "cpair": [
-   195.584,
-   196.183
+   158.802,
+   159.287
   ],
   "dst": [
-   196.183,
-   197.382
+   159.287,
+   160.255
   ],
   "srcs": [
-   197.382,
-   202.179
+   160.255,
+   164.129
   ],
   "cx_srcs": [
-   202.179,
-   206.976
+   164.129,
+   168.003
   ],
   "cx_arnd": [
-   206.976,
-   207.575
+   168.003,
+   168.488
   ],
   "cx_arelu": [
-   207.575,
-   208.175
+   168.488,
+   168.972
   ],
   "cx_amin": [
-   208.175,
-   208.774
+   168.972,
+   169.456
   ],
   "cx_cclip": [
-   208.774,
-   209.374
+   169.456,
+   169.94
   ],
   "cx_imm3": [
-   209.374,
-   228.56
+   169.94,
+   185.437
   ],
   "cp_m1": [
-   228.56,
-   230.359
+   185.437,
+   186.89
   ],
   "cp_imm1": [
-   230.359,
-   249.545
+   186.89,
+   202.387
   ],
   "cm_m1": [
-   249.545,
-   251.344
+   202.387,
+   203.839
   ],
   "cm_m2": [
-   251.344,
-   252.543
+   203.839,
+   204.808
   ],
   "cm_qm": [
-   252.543,
-   254.342
+   204.808,
+   206.261
   ],
   "cm_imm1": [
-   254.342,
-   273.528
+   206.261,
+   221.757
   ],
   "ca_ad": [
-   273.528,
-   275.327
+   221.757,
+   223.21
   ],
   "ca_imm2": [
-   275.327,
-   294.513
+   223.21,
+   238.707
   ],
   "ci_sfu": [
-   294.513,
-   296.312
+   238.707,
+   240.16
   ],
   "cs_sfu": [
-   296.312,
-   298.111
+   240.16,
+   241.613
   ],
   "cs_e1": [
-   298.111,
-   299.909
+   241.613,
+   243.065
   ],
   "cs_imm2": [
-   299.909,
-   319.096
+   243.065,
+   258.562
   ],
   "ce_e2": [
-   319.096,
-   320.295
+   258.562,
+   259.531
   ],
   "ce_imm1": [
-   320.295,
-   339.481
+   259.531,
+   275.027
   ],
   "co_rnd": [
-   339.481,
-   340.081
+   275.027,
+   275.511
   ],
   "co_dst": [
-   340.081,
-   341.28
+   275.511,
+   276.48
   ],
   "clk": [
-   179.28,
-   179.376
+   222.48,
+   222.576
   ],
   "clk_sfu": [
-   180.144,
-   180.24
+   223.344,
+   223.44
   ],
   "clk_ins": [
-   181.008,
-   181.104
+   224.208,
+   224.304
   ],
   "clk_ins2": [
-   181.872,
-   181.968
+   225.072,
+   225.168
   ],
   "clk_side": [
-   182.736,
-   187.152
+   225.936,
+   230.352
   ],
   "ld_c": [
    4.32,
-   177.12
+   220.32
   ],
   "rd_q": [
-   190.08,
-   328.32
+   233.28,
+   406.08
   ],
   "vi_q": [
-   328.32,
-   362.88
+   406.08,
+   449.28
   ],
   "coll": [
    4.32,
-   5.591
+   5.898
   ],
   "fault": [
-   5.591,
-   6.863
+   5.898,
+   7.476
   ],
   "kv_waddr": [
-   6.863,
-   37.379
+   7.476,
+   45.345
   ],
   "kv_wdata": [
-   37.379,
-   78.066
+   45.345,
+   95.837
   ],
   "kv_we": [
-   78.066,
-   79.338
+   95.837,
+   97.414
   ],
   "rd_addr": [
-   79.338,
-   201.401
+   97.414,
+   248.89
   ],
   "rd_re": [
-   201.401,
-   206.487
+   248.89,
+   255.202
   ],
   "rd_src": [
-   206.487,
-   216.659
+   255.202,
+   267.825
   ],
   "ro_v": [
-   216.659,
-   217.93
+   267.825,
+   269.403
   ],
   "ro_x": [
-   217.93,
-   258.618
+   269.403,
+   319.894
   ],
   "vi_addr": [
-   258.618,
-   289.134
+   319.894,
+   357.763
   ],
   "vi_re": [
-   289.134,
-   290.405
+   357.763,
+   359.341
   ],
   "vm_waddr": [
-   290.405,
-   320.921
+   359.341,
+   397.21
   ],
   "vm_wdata": [
-   320.921,
-   361.609
+   397.21,
+   447.702
   ],
   "vm_we": [
-   361.609,
-   362.88
+   447.702,
+   449.28
   ]
  }
 }
