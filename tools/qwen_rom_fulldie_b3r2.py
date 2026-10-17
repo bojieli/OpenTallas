@@ -1111,6 +1111,7 @@ def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=50
         try:
             if os.environ.get('OT_SPLIT_B2', '0') == '1':
                 from qwen_split.b2_graph import apply as apply_b2_graph
+                v._write_netlist_pre_b2 = v.write_netlist      # the dv die (no b2 graph) restores the plain writer
                 apply_b2_graph(v, m)
             if os.environ.get('OT_SPLIT_Q3H', '0') == '1':
                 # Q-DIEPLAN3 2026-10-16: q3h hierarchical die -- 48 x C_B16 clusters replace tiles/stations/heads,
@@ -1121,6 +1122,8 @@ def selected(enabled=False, band=False, area_pins=False, b3r3=False, widen_um=50
                     # Q-DIEPLAN3 2026-10-17: DIAGNOSTIC dv2r8f2 die case on the q3h model (tools/qwen_split/dv_case.py)
                     from qwen_split.dv_case import apply_dv
                     apply_dv(v, m)
+                    if getattr(v, '_write_netlist_pre_b2', None) is not None:
+                        v.write_netlist = v._write_netlist_pre_b2   # the b2 trial writer needs the retired b2 buses
             _late_pin_grant(v)
             _relays(v, m, relay_pitch)
         finally:
@@ -1300,6 +1303,9 @@ def _su_vm_bus(v, m, a_bits=None, q_bits=None):
     SU_VM_A_BITS = a_bits if a_bits is not None else globals()['SU_VM_A_BITS']   # noqa: N806
     SU_VM_Q_BITS = q_bits if q_bits is not None else globals()['SU_VM_Q_BITS']   # noqa: N806
     by = {i.name: i for i in m['insts']}
+    if os.environ.get('OT_SPLIT_DV', '').strip() and 'sp_su64_sfu' not in by and 'sp_vector_memory' not in by:
+        m['b3r2']['su_vm_bus'] = 'none: dv die (distributed vector slices, no central SU/VM)'
+        return
     su, vm = by['sp_su64_sfu'], by['sp_vector_memory']
     # contract v5 (r8): the bit-plane VM region sits N of the tree top; the SU abuts its N face (R0: an MX master's M8
     # clock pins are not mirror-legal): the SU takes va / vq on its S face, the VM sa / sq on N

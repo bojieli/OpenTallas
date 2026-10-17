@@ -2203,6 +2203,15 @@ def _wrap(v, m, G, peers):
                     V.append(f'  wire [{len(spare) - 1}:0] {onet};')
                     for j, bit in enumerate(spare):
                         vals[bit] = f'{onet}[{j}]'
+            if _os.environ.get('OT_SPLIT_DV', '').strip() and set(vals) != set(range(max(vals) + 1)):
+                # Q-DIEPLAN3 dv2r8f2 DIAGNOSTIC: a retained master's port whose q3h peer was removed is only partly
+                # re-homed (the re-partition is open in RTL): the missing bits go to one declared open net per port
+                # (undriven inputs / unloaded outputs, reported by the strict bind; the chain is DIAGNOSTIC_ONLY)
+                miss = [b for b in range(max(vals) + 1) if b not in vals]
+                onet = f'n_dvopen_{inst}_{real}'
+                V.append(f'  wire [{len(miss) - 1}:0] {onet};')
+                for j, bit in enumerate(miss):
+                    vals[bit] = f'{onet}[{j}]'
             assert set(vals) == set(range(max(vals) + 1)), (inst, real, 'incomplete join')
             conns[inst].append(f'.{real}({joined_expr(vals)})')
         tie_self = set(model.get('tie_self', []))

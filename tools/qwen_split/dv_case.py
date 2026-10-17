@@ -98,7 +98,30 @@ def apply_dv(v, m):
         ins = {i for i, _ in eps}
         if ins & removed and ins & set(WCOL) and not ins - removed - set(WCOL):
             rehome.append((bid, cl, bits, eps))
-            sp[f'r_{bid}'] = (bits, 'W')
+    # Q-DV role table: only the W5 chain ends are re-homed, at their bit widths (W5 ch_dn_o AR 546 -> collective,
+    # collective 518 -> W5; W5 D2D 548 -> native59, native59 520 -> W5; tt_ctlm hr 453 -> W5); every other q3h port of a
+    # retained W-column master whose peer was removed stays OPEN (the re-partition is not in RTL yet).  Budgets are
+    # filled with the largest q3h buses of that master and direction (diagnostic stand-ins for the role words).
+    budget = {('io_collective', 'in'): 546, ('io_collective', 'out'): 518, ('native59', 'in'): 548,
+              ('native59', 'out'): 520, ('tt_ctlm', 'out'): 453}
+    pick = []
+    for bid, cl, bits, eps in sorted(rehome, key=lambda t: -t[2]):
+        drv = eps[0][0]
+        key = (drv, 'out') if drv in WCOL else (next((i for i, _ in eps if i in WCOL), None), 'in')
+        if key in budget and budget[key] >= bits:
+            budget[key] -= bits
+            pick.append((bid, cl, bits, eps))
+    rehome = pick
+    # re-home ports fill the faces with room (W first: the W column is west), at the same 0.192 pitch
+    room = {f: (sw if f in 'NS' else sh) - 8.0 - sum((b_ - 1) * Q.PITCH + 4.0 for b_, f_ in sp.values() if f_ == f)
+            for f in 'WSNE'}
+    for bid, cl, bits, eps in sorted(rehome, key=lambda t: -t[2]):
+        need = (bits - 1) * Q.PITCH + 4.0
+        f = next((f for f in 'WSNE' if room[f] >= need), None)
+        if f is None:
+            raise ValueError(f'dv slice: no face room for the re-home port of {bid} ({bits} b): {room}')
+        sp[f'r_{bid}'] = (bits, f)
+        room[f] -= need
     qs = v.Master(SLICE, sw - Q.SHAVE, sh - Q.SHAVE, 9, 'Q-DV slice2 (SYNTHETIC role ports, RTL step 2 pending)')
     _place(qs, sp, sw - Q.SHAVE, sh - Q.SHAVE)
     M[SLICE] = qs
