@@ -91,6 +91,15 @@ def dv_deltas(doc, g, pinreg=8, su_scale=0.0, basis_scale=1.0):
             add(nid, 'attn_q_path', st(g['worst_slice_to_attention_um']) - HUB_VM_TO_SVC_STAGES)
         if op == 'ffn.top6_order':
             add(nid, 'router_tree', st(g['worst_slice_to_gunit_um']))
+        if g.get('slice_leaves'):
+            # p4: the slice is a cluster of `slice_leaves` leaves (one 64-lane beat each), ring stop + xfin in the
+            # middle leaf; registered leaf-to-leaf hops: lm = middle <-> outer leaf, ld = outer <-> outer
+            lh = g['leaf_um'][1]
+            lm = st((g['slice_leaves'] - 1) / 2 * lh); ld = st((g['slice_leaves'] - 1) * lh)
+            if m and cls == 'field':
+                add(nid, 'intra_slice_leaf', int(m.group(2)) * (ld + 2 * lm))   # return to owner + x to/from ring stop
+            if cls == 'su' and op in ('attn.quant', 'ffn.norm.scale', 'attn.q_quant', 'attn.kv_rope_qdq', 'eng.gate'):
+                add(nid, 'intra_slice_leaf', 2 * lm)                            # partial to xfin leaf, rstd back
         if re.search(r'(substage_hop\d+|head\.hop)$', nid):
             add(nid, 'h_xfer_ring', 2 * st(g['worst_slice_to_edge_um']))
     return d, rules

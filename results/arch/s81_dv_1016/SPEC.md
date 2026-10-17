@@ -5,7 +5,7 @@ Stream S81-DV (owner decision 0cj, 2026-10-16 ~22:00). Plan level: nothing in th
 **Status: COMPOSED_NOT_NATIVE.** Every rate below is composed from the token-path DAG and plan geometry. It becomes a
 measured rate only once the slice benches and the die trial report their latencies.
 
-**Current die-trial base: p1b** (10-17). It is p1's geometry plus two changes:
+**Current die-trial base: p4** (coordinator decision 10-17, option B; section 0a). The earlier base was p1b (10-17). It is p1's geometry plus two changes:
 - the row-0 frames are placed MX, so their cfifo x tap faces the slice;
 - each shared unit sits against the slice it talks to.
 
@@ -160,6 +160,46 @@ Physical rules carried into the die trial:
    - The reduce-scatter that would keep each slice's rows local across dies is not modelled as a gain.
    - The +3% stage count from the shorter frame columns is charged.
 
+
+## 0a. p4: bf_col-wide frames, 5-leaf slice clusters (coordinator decision 10-17, option B)
+
+Drivers:
+- bf_col (583.2 µm, S-ELEM) widens every frame from 1,139.6 to 1,393.6 µm, so p1/p1b would be 33.44 mm wide, over the 32.0 mm limit.
+- MX frames are not orientation-qualified, and the gain is only 0.4%, so all frames are **R0**.
+
+**Geometry:**
+- Slice columns are 1.00 mm wide.
+- Each slice is a **cluster of 5 near-square hardened leaves** of 0.95 × 0.92 mm, stacked to 0.95 × 4.6 mm. Each leaf has its own regional clock root.
+- Leaves are partitioned by vector index: leaf k owns beat k (64 elements), which is the G64 norm group. Elementwise SU work and act-quant stay inside a leaf.
+- The middle leaf holds the ring stop and xfin. Only the norm partial, the ring / x-chain traffic and returned rows cross leaves, over short registered links.
+- Shared units are 0.82 mm wide (0.545 mm in the end columns) and sit against their slice.
+- Inside the 1.00 mm column, each lane class has its own 260-µm cut window: L lanes, unit links, ring end link, R lanes.
+
+| p4 | |
+|---|---|
+| Die | **31.04 × 25.00 mm = 775.9 mm²**; under the 33 × 26 reticle by **0.98 mm per side** horizontally and **0.50 mm per side** vertically |
+| Frames | 128 (bf_col-wide), 1,184 slots, 92 stages |
+| Cut | **0.427**, 0 windows > 0.55 |
+| Over-reach | 0 |
+| Relays | 1,800 |
+| bit·mm | 0.40 M |
+| Phase path / scalar exchange | 118 / 95 stages |
+| White space | 17.4%; largest empty rectangle is the 0.35-mm die-top margin |
+
+**Intra-slice leaf hops** (rule `intra_slice_leaf`):
+- A returned row may land on a non-owning leaf: up to 4 leaves (3.68 mm), 10 stages.
+- x goes from the owning leaf to the ring stop and from the ring stop to the x-chain head: up to 2 leaves each, 5 + 5.
+- So each field phase pays +20, and each norm pays +10 (partial to the xfin leaf, rstd back).
+
+| Scenario (p4) | AR tok/s | MTP tok/s | vs today (MTP) |
+|---|---|---|---|
+| DV base | 1,412.8 | 4,157.8 | +25.4% |
+| Pin register 16 | 1,407.3 | 4,142.7 | +25.0% |
+| SU +25%, pin register 16 | 1,361.9 | 4,003.3 | +20.8% |
+| Keep SU/HC rows | 1,282.4 | 3,848.3 | +16.1% |
+| Keep SU/HC rows + SU +25% | 1,237.0 | 3,708.9 | +11.9% |
+
+The leaf hops cost about 1.5% against p1b. Routing returned rows straight to the owning leaf, along the column, would win part of that back.
 
 ## 1. Why
 

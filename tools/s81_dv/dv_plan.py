@@ -34,6 +34,7 @@ SLICE_W, SLICE_H = 1250.0, 3500.0   # 2.8:1, 4.375 mm2
 LAYOUT = 'p1'                     # p1/p2: 1.30-mm columns; p3 (cancelled 10-17): 0.95-mm columns
 ROW0_MX = False                   # p1b: row-0 frames placed MX so their cfifo x tap faces their slice
 SVC_W = 4250.0
+UNIT_W, UNIT_WE = 980.0, 680.0         # void unit width (end columns narrower: ring end link)
 HOP_UM = 405.0                    # plan hop (0.9 x measured S81 reach 455 um, rounded down to the 405 plan rule)
 XB = 1104                         # x stream beat: 64 FP8 codes + 2 exps (566 b) + second lane (538 b), as c26l cx+x2
 RET = 68                          # frame return lane (dsfd_m2l_vr_68x1x)
@@ -218,9 +219,12 @@ def build():
           else:
               y = (lo_ + hi_ - need) / 2
           for j, (nm, master, h) in enumerate(us):
-              wu = 680 if c in (0, NCOL - 1) else 980          # end columns leave window 3 to the ring end link
-              yy = y if y is not None else (lo_ if j == 0 else hi_ - h)
-              P.block(nm, master, 'unit', 'void', colx(c) + 160, yy, wu, h)
+              wu = UNIT_WE if c in (0, NCOL - 1) else UNIT_W    # end columns leave room to the ring end link
+              hh = h * (980.0 if c not in (0, NCOL - 1) else 680.0) / wu   # keep the unit area at the narrower width
+              yy = y if y is not None else (lo_ if j == 0 else hi_ - hh)
+              if y is not None and tier.get(nm) == 'N' and len(us) == 1:
+                  yy = hi_ - hh
+              P.block(nm, master, 'unit', 'void', colx(c) + (160 if LAYOUT != 'p4' else 75), yy, wu, hh)
               if y is not None:
                   y += h + 100
     ys, yn = streets[0] + STREET / 2, streets[1] + STREET / 2
@@ -243,7 +247,7 @@ def build():
                        [(p0[0], p0[1] + off), (p1[0], p1[1] + off)], 'x all-gather / collective / scalar exchange (TDM)')
     for c in (0, NCOL - 1):
         a, b = f's_{c}S', f's_{c}N'
-        xr = colx(c) + (900 if LAYOUT != 'p3' else 690)
+        xr = colx(c) + {'p3': 690, 'p4': 680}.get(LAYOUT, 900)
         for d, (u, v, dx) in (('N', (a, b, -30)), ('S', (b, a, 30))):
             p0, p1 = pin(u, 'N' if d == 'N' else 'S'), pin(v, 'S' if d == 'N' else 'N')
             P.link(f'xv{d}_{c}', 'xring', XB, (u, 'xv' + d, (xr + dx, p0[1])), (v, 'xv' + d, (xr + dx, p1[1])),
@@ -261,8 +265,9 @@ def build():
                     fx = F['x'] + F['w'] if side == 'L' else F['x']
                     fy = F['y'] + F['h'] - 400 if ((LAYOUT == 'p3' or ROW0_MX) and r == 0) else F['y'] + 400   # p3: row 0 MX
                     sxp = S['x'] if side == 'L' else S['x'] + S['w']
-                    vx = colx(c) + ((20 + 15 * r if side == 'L' else SCOL_W - 125 + 15 * r) if LAYOUT != 'p3'
-                                    else (8 + 9 * r if side == 'L' else SCOL_W - 78 + 9 * r))
+                    vx = colx(c) + {'p3': (8 + 9 * r if side == 'L' else SCOL_W - 78 + 9 * r),
+                                    'p4': (10 + 10 * r if side == 'L' else SCOL_W - 95 + 10 * r)}.get(
+                                    LAYOUT, 20 + 15 * r if side == 'L' else SCOL_W - 125 + 15 * r)
                     sy = S['y'] if fy < S['y'] else S['y'] + S['h']
                     if r in (1, 2):
                         if S['y'] + 100 <= fy <= S['y'] + S['h'] - 100:
@@ -287,6 +292,8 @@ def build():
         c = int(sn[2]); xa = colx(c) + 640 if c not in (0, NCOL - 1) else colx(c) + 520
         if LAYOUT == 'p3':
             xa = colx(c) + (300 if c in (0, NCOL - 1) else 420)
+        if LAYOUT == 'p4':
+            xa = colx(c) + (330 if c in (0, NCOL - 1) else 500)
         uy = U['y'] if t == 'S' else U['y'] + U['h']
         sy = S['y'] + S['h'] if t == 'S' else S['y']
         bits = 2 * COLL_LANE if u.startswith('coll') else XB
@@ -327,7 +334,7 @@ def build():
             face(f'smc{side}{k}', (A['x'] if side == 'W' else A['x'] + A['w'], 60), (A['x'] if side == 'W' else A['x'] + A['w'], 1000), 4096, 8, 'attn', 'SM chain (abutted)')
         sn = f's_{c}S'; Sl = P.blocks[P.idx[sn]]
         top = S['y'] + S['h']
-        qx, px = (colx(c) + 620, colx(c) + 690) if LAYOUT != 'p3' else (colx(c) + 400, colx(c) + 470)
+        qx, px = {'p3': (colx(c) + 400, colx(c) + 470), 'p4': (colx(c) + 460, colx(c) + 530)}.get(LAYOUT, (colx(c) + 620, colx(c) + 690))
         sxq = min(max(qx, S['x'] + 50), S['x'] + S['w'] - 150)
         P.link(f'q_{side}', 'attn', XB, (sn, 'q', (qx, Sl['y'])), (svc, 'q', (sxq, top)), [(qx, Sl['y']), (qx, top + 100), (sxq, top + 100), (sxq, top)], 'q heads from the ring')
         P.link(f'pv_{side}', 'attn', XB, (svc, 'pv', (sxq + 70, top)), (sn, 'pv', (px, Sl['y'])), [(sxq + 70, top), (sxq + 70, top + 170), (px, top + 170), (px, Sl['y'])], 'P.V rows into the all-gather')
@@ -450,14 +457,22 @@ def main():
     ap.add_argument('--revision', default='dv-p1')
     ap.add_argument('--hop-um', type=float, default=HOP_UM, help='plan hop (sensitivity: H-REACH unbuffered 200 um)')
     ap.add_argument('--fill', action='store_true', help='owner rule no-empty-regions-1017: fill slice-column stretches')
-    ap.add_argument('--layout', default='p1', choices=('p1', 'p3'))
+    ap.add_argument('--layout', default='p1', choices=('p1', 'p3', 'p4'))
     ap.add_argument('--row0-mx', action='store_true', help='p1b: row-0 frames MX (tap toward the slice)')
     a = ap.parse_args()
     HOP_UM = a.hop_um
     global ROW0_MX
     ROW0_MX = a.row0_mx
+    global LAYOUT, SCOL_W, SLICE_W, SLICE_H, PITCH, DIE_W, SVC_W, FRAME_W, FRAME_PITCH, UNIT_W, UNIT_WE
+    if a.layout == 'p4':
+        # coordinator decision 10-17: bf_col 583.2 um widens the frames to 1,393.632 um; 1.00-mm slice columns; the
+        # slice is a CLUSTER of 5 near-square hardened leaves (0.95 x 0.92 mm, one 64-lane beat each, own regional root)
+        LAYOUT, FRAME_W, SCOL_W, SLICE_W, SLICE_H = 'p4', 1393.632, 1000.0, 950.0, 4600.0
+        FRAME_PITCH = FRAME_W + 8.7
+        UNIT_W, UNIT_WE = 820.0, 545.0
+        PITCH = 2 * FRAME_PITCH + SCOL_W
+        DIE_W = 2 * EDGE + NCOL * PITCH
     if a.layout == 'p3':
-        global LAYOUT, SCOL_W, SLICE_W, SLICE_H, PITCH, DIE_W, SVC_W
         LAYOUT, SCOL_W, SLICE_W, SLICE_H, SVC_W = 'p3', 950.0, 900.0, 4900.0, 4000.0
         PITCH = 2 * FRAME_PITCH + SCOL_W
         DIE_W = 2 * EDGE + NCOL * PITCH
@@ -475,6 +490,8 @@ def main():
              for l in P.links]
     m = dl.metrics(dict(outline=[0, 0, DIE_W, DIE_H], reach_um=HOP_UM, stages_explicit=True), links)
     facts['hop_um'] = HOP_UM
+    if LAYOUT == 'p4':
+        facts.update(slice_leaves=5, leaf_um=[SLICE_W, SLICE_H / 5])
     facts.update(worst_cut=m['worst_cut'], over_reach_bits=m['over_reach_bits'], relays=m['relays'],
                  relay_bit_stages=m['relay_bit_stages'], bit_mm=round(m['sum_bit_um_hops'] / 1000),
                  cut_windows_over_limit=m['cut_windows_over_limit'],
