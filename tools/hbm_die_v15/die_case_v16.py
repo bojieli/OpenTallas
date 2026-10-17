@@ -257,6 +257,9 @@ def main():
     ap.add_argument('--compact-pins', action='store_true',
                     help='d4b (H-DIE 10-16): SYNTH abstracts pack each bus at 0.096 um centred toward its peers '
                          '(direction averaged over all instances of the master) instead of spreading over 90 percent of the face')
+    ap.add_argument('--outline-override', default='',
+                    help='H-DIE-R7: CELL=WxH[,CELL=WxH] coordinator tile outlines for SYNTH cells (overrides grant/kit/area; '
+                         'still grown if pin-bound)')
     ap.add_argument('--slot-map', default='',
                     help='inst=slot[,inst=slot..]: die-side contract slot retarget (H-DIE-R6; same as an H-NETLIST slot_override layer)')
     ap.add_argument('--replan-chains', default='',
@@ -372,6 +375,8 @@ def main():
     flags = {}
     pin_density_over = []
     kit = json.loads((ROOT / 'physical/ref_tile/hdie_pc_ctrl/floorplan.json').read_text())
+    oovr = {kv.split('=')[0]: tuple(float(x) for x in kv.split('=')[1].split('x'))
+            for kv in a.outline_override.split(',') if kv}
     for c in kinds:
         if kinds[c] != 'SYNTH':
             continue
@@ -390,6 +395,8 @@ def main():
             big = max([max(mw, mh) for n_, mw, mh in meta['macros'].values()] or [0])
             s_ = max(math.sqrt(A), big + 2 * HALO, 21.6)
             w, h = s_, s_; why = f"area {meta['std_area_um2']:.0f} um2 std / 0.60 + 1.3 x macros"
+        if c in oovr:
+            w, h = oovr[c]; why = f'coordinator outline override {w}x{h}'
         need = bits * 0.048 * 1.5 / 0.9           # perimeter (um) for one track per bit + 50 % margin (faces fill unevenly: pins face their peers)
         if 2 * (w + h) < need:
             k = need / (2 * (w + h)); w, h = w * k, h * k
@@ -869,6 +876,7 @@ def main():
                                                            max_wire_um=a.repeater_max_wire_um))
     manifest['pc_strip'] = strip
     manifest['slot_map'] = slot_map; manifest['replanned_chain_relays'] = dict(regex=a.replan_chains, n=len(replanned))
+    manifest['outline_override'] = a.outline_override
     manifest['d4b_homes'] = bool(a.d4b_homes)
     manifest['layout_image_status'] = 'DEFERRED' if a.no_plot else 'GENERATED'
     if not a.no_plot:

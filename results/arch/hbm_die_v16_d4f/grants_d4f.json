@@ -564,12 +564,12 @@
    "kind": "cluster",
    "parent": "die",
    "outline": {
-    "w": 560.0,
-    "h": 400.0
+    "w": 604.8,
+    "h": 540.0
    },
    "origin": {
-    "x": 15484.16,
-    "y": 9584.72,
+    "x": 15439.36,
+    "y": 9444.72,
     "orient": "MY"
    },
    "io_budget": {
@@ -1261,7 +1261,8 @@
    "fit_r2": {
     "reason": "d4f r2 shared-region fits (coordinator 10-17 run1 review: no squeezing): regions that hold more than one instance (or an",
     "moved_um": 550.0
-   }
+   },
+   "note_r7": "H-DIE-R7 10-17 coordinator 0dc+ 15:50: 604.8x540 (DMA collar leaf successor; grown toward SW, E/N edges kept)"
   },
   {
    "name": "hb_dbk_NW",
@@ -1269,12 +1270,12 @@
    "kind": "cluster",
    "parent": "die",
    "outline": {
-    "w": 560.0,
-    "h": 400.0
+    "w": 604.8,
+    "h": 540.0
    },
    "origin": {
-    "x": 15484.16,
-    "y": 22144.72,
+    "x": 15439.36,
+    "y": 22004.72,
     "orient": "MY"
    },
    "io_budget": {
@@ -1966,7 +1967,8 @@
    "fit_r2": {
     "reason": "d4f r2 shared-region fits (coordinator 10-17 run1 review: no squeezing): regions that hold more than one instance (or an",
     "moved_um": 430.0
-   }
+   },
+   "note_r7": "H-DIE-R7 10-17 coordinator 0dc+ 15:50: 604.8x540 (DMA collar leaf successor; grown toward SW, E/N edges kept)"
   },
   {
    "name": "svc_SW_s0",
@@ -35983,12 +35985,12 @@
    "kind": "tile",
    "parent": "die",
    "outline": {
-    "w": 3100.0,
-    "h": 3064.516
+    "w": 3369.6,
+    "h": 3369.6
    },
    "origin": {
-    "x": 19619.84,
-    "y": 14552.462,
+    "x": 19352.64,
+    "y": 14325.12,
     "orient": "R0"
    },
    "clock_entry": {
@@ -36092,7 +36094,8 @@
    ],
    "rtl_pending": "HC owner: HC engine",
    "plan_block": "hc_eng",
-   "source": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_eng_static.sv"
+   "source": "rtl/hbm_accel/generic/peers/static_hc/ot_hbm_hc_eng_static.sv",
+   "note_r7": "H-DIE-R7 10-17 coordinator 0dc+ 15:50: square for the 3x3 bank-tile ring (11.35 mm2 >= 10.4 measured min); 3.37 mm = the free height between the ep_S and ep_N SerDes endpoint rows (3.41 mm); full 3.5 mm needs those rows moved"
   },
   {
    "name": "lk_N0",
