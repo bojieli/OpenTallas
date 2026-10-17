@@ -1,0 +1,27 @@
+{
+ "cell": "ot_s81_hc_ret_column_c3",
+ "view": "physical/ref_tile/s81hc_retcol_c3f_ref/views/ot_s81_hc_ret_column_c3",
+ "lib_cell": "ot_s81_hc_ret_column_c3",
+ "insertion": true,
+ "ref_src": [
+  "insertion.json boundary mean"
+ ],
+ "R_ps": 178.3,
+ "spread_ps": 35.2,
+ "outputs": 903,
+ "inputs": 2382,
+ "launch_ps": 220.2,
+ "launch_pin": "rq_q[14]",
+ "capture_ps": 210.5,
+ "capture_pin": "nflt_col[0]",
+ "launch_over": 2,
+ "capture_over": 17,
+ "comb_pins": 0,
+ "comb_first": [],
+ "pass": false,
+ "fail_why": "launch 220.2434 > 220 (2 pins); capture 210.49361 > 190 (17 pins)",
+ "job": "s81hc_retcol_c3f_ref-a4f-943f43ffa",
+ "commit": "53ec97993c2c00799e199a94c34df690900506b8",
+ "verdict": "NATIVE FAIL: capture 210.5 at nflt_col[0] (17 pins), launch 220.2 rq_q (2 pins); route CLOSED TT +106.33 / FF +18.18 / DRC 0",
+ "fix": "a4g: pflt_n/pflt_s pins beside the nflt_col pins (per-face fault flop no longer straddles 106 um of face)"
+}
