@@ -49,6 +49,11 @@
   "pin_v": "M5",
   "hold_margin_ns": 0.03,
   "macro_halo_um": 5.4,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  },
   "io_hold_margin_ns": 0.0
  },
  "pin_regs": {
@@ -60,6 +65,44 @@
   "tag": "c1",
   "purpose": "HOST root cluster child qkd_hr_phy_pad (pre-route gate only; qkd_host_root CRITICAL: no REVIEW / no submit)",
   "no_bench_reason": "gate-only kit; the cluster composition lock-step bench (A1-A6) gates adoption"
+ },
+ "pin_ranges": {
+  "in_v": [
+   2,
+   3
+  ],
+  "in_d": [
+   4,
+   168
+  ],
+  "in_cr": [
+   169,
+   170
+  ],
+  "out_v": [
+   20,
+   21
+  ],
+  "out_d": [
+   22,
+   152
+  ],
+  "out_cr": [
+   153,
+   154
+  ],
+  "clk": [
+   42,
+   44
+  ],
+  "rst_n": [
+   30,
+   31
+  ],
+  "fault": [
+   55,
+   56
+  ]
  },
  "children": [],
  "inter": [],

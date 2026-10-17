@@ -37,12 +37,12 @@
    "c_v",
    "c_d",
    "c_cr",
+   "ck",
    "r_v",
    "r_d",
    "r_cr"
   ],
   "W": [
-   "ck",
    "rst_n",
    "fault"
   ],
@@ -63,6 +63,11 @@
   "pin_v": "M5",
   "hold_margin_ns": 0.03,
   "macro_halo_um": 5.4,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  },
   "io_hold_margin_ns": 0.0
  },
  "pin_regs": {
@@ -74,6 +79,64 @@
   "tag": "c1",
   "purpose": "HOST root cluster child qkd_hr_phy_adp (pre-route gate only; qkd_host_root CRITICAL: no REVIEW / no submit)",
   "no_bench_reason": "gate-only kit; the cluster composition lock-step bench (A1-A6) gates adoption"
+ },
+ "pin_ranges": {
+  "tx_up": [
+   4,
+   5
+  ],
+  "tx_v": [
+   6,
+   7
+  ],
+  "tx_flit": [
+   8,
+   115
+  ],
+  "rx_v": [
+   120,
+   121
+  ],
+  "rx_flit": [
+   122,
+   232
+  ],
+  "c_v": [
+   4,
+   5
+  ],
+  "c_d": [
+   6,
+   110
+  ],
+  "c_cr": [
+   111,
+   112
+  ],
+  "ck": [
+   117.5,
+   119.5
+  ],
+  "r_v": [
+   124,
+   125
+  ],
+  "r_d": [
+   126,
+   230
+  ],
+  "r_cr": [
+   231,
+   232
+  ],
+  "rst_n": [
+   40,
+   41
+  ],
+  "fault": [
+   45,
+   46
+  ]
  },
  "children": [],
  "inter": [],

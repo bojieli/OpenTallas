@@ -6,13 +6,13 @@
  "die": [
   0,
   0,
-  129.6,
+  151.2,
   129.6
  ],
  "core": [
   2.16,
   2.16,
-  127.44,
+  149.04,
   127.44
  ],
  "why": "spec outline",
@@ -39,17 +39,7 @@
    "ing_v",
    "ing_cls",
    "ing_d",
-   "ing_crn"
-  ],
-  "E": [
-   "host_v",
-   "host_d",
-   "host_cr",
-   "ctrl_v",
-   "ctrl_d",
-   "ctrl_cr"
-  ],
-  "W": [
+   "ing_crn",
    "ck",
    "rst_n",
    "native_reserved",
@@ -60,6 +50,16 @@
    "admission_open",
    "launch_quiet",
    "deferred"
+  ],
+  "E": [
+   "host_v",
+   "host_d",
+   "host_cr"
+  ],
+  "W": [
+   "ctrl_v",
+   "ctrl_d",
+   "ctrl_cr"
   ]
  },
  "clock_port": "ck",
