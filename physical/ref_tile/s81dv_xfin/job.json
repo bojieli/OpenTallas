@@ -1,5 +1,5 @@
 {
- "name": "s81dv_xfin-x2-8f492cbef",
+ "name": "s81dv_xfin-x3-COMMIT",
  "block": "ot_s81dv_xfin",
  "ref_tile": true,
  "owner": "Claude:S81-DV",
@@ -8,15 +8,15 @@
  "peak_ram_gb": 32,
  "source": {
   "branch": "claude/s81dv-1016",
-  "commit": "8f492cbef",
+  "commit": "COMMIT",
   "extra_paths": [
    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
    "physical/hbm_norm_split_20261008",
    "results/rtl/hbm_norm_engine_view_20261006",
-   "rtl/dsrom_sys/s81_dv",
-   "rtl/dsrom_sys/s81_dv/test",
+   "rtl/dsrom_sys/s81_dv/ot_s81dv_norm.sv",
+   "rtl/dsrom_sys/s81_dv/test/tb_s81dv_xfin16.sv",
    "rtl/hdc/v41x",
-   "tools/s81_dv"
+   "tools/s81_dv/norm16_bench.sh"
   ]
  },
  "stages": {
@@ -104,7 +104,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81dv_xfin/s81dv_xfin-x2-8f492cbef"
+   "to": "results/rtl/ref_tile/s81dv_xfin/s81dv_xfin-x3-COMMIT"
   }
  ],
  "cycles_added": 0,

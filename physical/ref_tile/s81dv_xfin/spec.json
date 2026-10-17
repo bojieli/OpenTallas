@@ -79,16 +79,16 @@
  "job": {
   "owner": "Claude:S81-DV",
   "branch": "claude/s81dv-1016",
-  "tag": "x2",
+  "tag": "x3",
   "purpose": "S81-DV deliverable 3: first new slice leaf to closure (TT setup / FF hold / DRC 0 + native audit).",
   "extra_paths": [
    "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
    "physical/hbm_norm_split_20261008",
    "results/rtl/hbm_norm_engine_view_20261006",
-   "rtl/dsrom_sys/s81_dv",
-   "rtl/dsrom_sys/s81_dv/test",
+   "rtl/dsrom_sys/s81_dv/ot_s81dv_norm.sv",
+   "rtl/dsrom_sys/s81_dv/test/tb_s81dv_xfin16.sv",
    "rtl/hdc/v41x",
-   "tools/s81_dv"
+   "tools/s81_dv/norm16_bench.sh"
   ],
   "benches": [
    {
