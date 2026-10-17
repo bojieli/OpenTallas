@@ -327,6 +327,19 @@ PVFORK_GAP = float(__import__('os').environ.get('OT_KV_PVFORK_GAP', '21.6'))   #
 # (one tap / fork height 58.32 + the 21.6-um clearance).
 PVT_PIN_DY = 80.0
 PVT_HDR_Y0 = 160.0
+PVT_SOFT_SLACK = int(__import__('os').environ.get('OT_KV_PVT_SOFT_SLACK', '1'))   # trunk runs aim this many stages under their share
+PVT_FORK_PITCH = float(__import__('os').environ.get('OT_KV_PVT_FORK_PITCH', '80'))   # fork k -> k + 1 at the strip end
+# KVPLAN2 2215 WIP (OT_KV_PVT_HDR_CTL=1, off by default: plan-only trials still fail in the fork / tap column): the header /
+# request words end on the control tile u_ctl (the kvs13l2 case measured 1.1-1.5-mm unrelayed hops from the side-face pins to
+# the tile inside the wires-only frame) through a PVT_HUB_CLEAR relay channel between the hub and the strip
+PVT_HDR_CTL = __import__('os').environ.get('OT_KV_PVT_HDR_CTL', '0') == '1'
+PVT_HUB_CLEAR = float(__import__('os').environ.get('OT_KV_PVT_HUB_CLEAR', '86.4')) if PVT_HDR_CTL else 21.6
+
+
+def pvt_hdr_pin(k):
+    """canonical (R0) frame point of port k's header / request word: the control tile's N edge, ports 17.28 um apart"""
+    c_ = pvt_plan()['cells']['u_ctl']
+    return (round(c_[1] + c_[3] / 2 + (k - 3.5) * 17.28, 3), round(c_[2] + c_[4], 3))
 PVT_XLANE = __import__('os').environ.get('OT_KV_PVT_XLANE', '1') == '1'   # S <-> N express words on outer side-channel lanes
 PVT_OFFS = int(__import__('os').environ.get('OT_KV_PVT_OFFS', '8'))   # PV trunk / chunk stage spot search radius (grid cells)
 PVT_A_LANE0 = int(__import__('os').environ.get('OT_KV_PVT_A_LANE0', '2'))   # trunk A's first lane
@@ -1540,8 +1553,9 @@ def _build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_w
             raise ValueError('v1.4.4 (OT_KV_V144=1) is defined on the v1.4.3c geometry: needs --v143 and OT_KV_V143C=1')
         byc = {i.name: i for i in ins}
         ah_, eg_, sd_ = byc['ahub'], byc['embgw'], byc['serdes_host']
-        n_lo, n_hi = ah_.y + ah_.h + PV_CLEAR, eg_.y - max(PV_CLEAR, V144_APRON)
-        s_lo, s_hi = (MARGIN if SERDES_N else sd_.y + sd_.h) + PV_CLEAR, ah_.y - PV_CLEAR
+        hc_ = PVT_HUB_CLEAR if PV_T else PV_CLEAR      # KVPLAN2 2215: a relay channel between the hub and each pair's strip
+        n_lo, n_hi = ah_.y + ah_.h + hc_, eg_.y - max(PV_CLEAR, V144_APRON)
+        s_lo, s_hi = (MARGIN if SERDES_N else sd_.y + sd_.h) + PV_CLEAR, ah_.y - hc_
         if not V144S['resolved']:
             # measured shortfall of the north home -> hub shift south (while the south envelope fits) + die growth
             short = PVW[1] - (n_hi - n_lo)
@@ -1603,7 +1617,7 @@ def _build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_w
                         fx_ = up(x_ - PVFORK_GAP - fw_, GX) if st[0] == 'W' else up(x_ + PVW[0] + PVFORK_GAP, GX)
                         # KVPLAN2 2215: fork k level with its header pin (strip end), the taps level with their group's
                         # face pins, all in one column PVFORK_GAP off the face
-                        yh_ = PVW[1] - PVT_HDR_Y0 - PVT_PIN_DY * k
+                        yh_ = PVW[1] - PVT_HDR_Y0 - PVT_FORK_PITCH * k
                         fy_ = py_ + (yh_ if por_ == 'R0' else PVW[1] - yh_) - fh_ / 2
                         add(f'pvfork_{st}_{k}', 'qkd_pvfork', fx_, up(fy_, GY), fw_ - SHAVE, fh_ - SHAVE, 'R0', 'relay', 'attn')
                         for g in PVT_TAPS:
@@ -2302,10 +2316,17 @@ def _relays(m):
                 for g_ in range(8):
                     f_, yc_ = P_['face_pins']['vc'][f'vc{k_}_{g_}']
                     _PIN_HINT[(it_.name, f'vc{k_}_{g_}')] = die_xy_(0.0 if f_ == 'W' else it_.w, yc_ + PVT_ORD * (1.5 - (k_ % 4)) * PVT_PIN_DY)
-                # header / request: on the port's side face next to the strip (the strip's top face abuts the hub)
-                yh_ = it_.h - PVT_HDR_Y0 - PVT_PIN_DY * (k_ % 4)
-                _PIN_HINT[(it_.name, f'vh{k_}')] = die_xy_(0.0 if k_ < 4 else it_.w, yh_)
-                _PIN_HINT[(it_.name, f'vrq{k_}')] = die_xy_(0.0 if k_ < 4 else it_.w, yh_ - 30.0)
+                # header / request: KVPLAN2 2215 -- they end on the control tile u_ctl at the strip (the frame is wires-only:
+                # a side-face pin left a 1.1-1.5-mm unrelayed hop to the tile); the chains reach it through the
+                # PVT_HUB_CLEAR channel between the hub and the strip
+                if PVT_HDR_CTL:
+                    hx_, hy_ = pvt_hdr_pin(k_)
+                    _PIN_HINT[(it_.name, f'vh{k_}')] = die_xy_(hx_, hy_)
+                    _PIN_HINT[(it_.name, f'vrq{k_}')] = die_xy_(hx_ + 8.64, hy_)
+                else:
+                    yh_ = it_.h - PVT_HDR_Y0 - PVT_PIN_DY * (k_ % 4)
+                    _PIN_HINT[(it_.name, f'vh{k_}')] = die_xy_(0.0 if k_ < 4 else it_.w, yh_)
+                    _PIN_HINT[(it_.name, f'vrq{k_}')] = die_xy_(0.0 if k_ < 4 else it_.w, yh_ - 30.0)
     if HOST_V14.get('trees') and 'serdes_host' in by:
         # v1.4.2 (kvs7c TT -7.6 ns, 1,044 endpoints: rly_host_fdi_55 -> serdes_host tx_flit 2.2 mm): the hard SerDes PHY's
         # FDI pins are on its W face (LEF ot_qfd_serdes_112g_x12_phy: tx_flit y 600.19..650.21, rx_flit 650.30..700.32,
@@ -2615,7 +2636,8 @@ def _relays(m):
                 sk_ = bid.split('_', 1)[1].rsplit('_', 1)[0]
                 own_ = (stages[f'pvh_{sk_}'] + int(D_[str(g_)]) - 1) if g_ in (3, 7) else \
                     (int(D_[str(g_)]) - int(D_[str(g_ + 1)]) - 1)
-                st_['soft_k'] = max(0, own_ - 1)
+                st_['soft_k'] = own_ - PVT_SOFT_SLACK
+                st_['max_k'] = own_          # more stages than its share: re-place with a longer pitch
             st_['wide'] = True
             if bid.startswith('pvta_') and bid.endswith('_3'):
                 st_['offmax'] = 2 * G   # the laned run: first try on its own lane (the retries widen to PIN_REACH / 2)
@@ -2772,9 +2794,14 @@ def _relays(m):
                 # KVPLAN2 2215: an exact-stage PV chain that landed one or two stages off re-places on the same route
                 # with a longer / shorter pitch (crowding shortens hops; the count is a static schedule constant)
                 for _ in range(6):
-                    if st_.get('exact_k') is None or st_['k'] == st_['exact_k']:
+                    if st_.get('max_k') is not None:
+                        if st_['k'] <= st_['max_k']:
+                            break
+                        sc_ = st_.get('pscale', 1.0) * 1.12
+                    elif st_.get('exact_k') is None or st_['k'] == st_['exact_k']:
                         break
-                    sc_ = st_.get('pscale', 1.0) * (1.12 if st_['k'] > st_['exact_k'] else 0.9)
+                    else:
+                        sc_ = st_.get('pscale', 1.0) * (1.12 if st_['k'] > st_['exact_k'] else 0.9)
                     rollback_()
                     st_['pscale'] = sc_
                     chain_()
@@ -3349,11 +3376,13 @@ def _split_pins(M, m=None):
             for p_, dx_ in top.items():
                 if p_ in hm.ports:
                     hm.ports[p_] = ('face', hm.ports[p_][1], 'N', 'M5', round(ctx_ + dx_, 3), 1)
-            for k_ in range(8):          # header / request on the port's side face next to the strip
+            for k_ in range(8):          # header / request: strip N face over the control tile (PVT_HDR_CTL) / side face
+                hx_ = pvt_hdr_pin(k_)[0]
                 yh_ = fh_ - PVT_HDR_Y0 - PVT_PIN_DY * (k_ % 4)
-                for p_, y_ in ((f'vh{k_}', yh_), (f'vrq{k_}', yh_ - 30.0)):
+                for p_, x_, y_ in ((f'vh{k_}', hx_, yh_), (f'vrq{k_}', hx_ + 8.64, yh_ - 30.0)):
                     if p_ in hm.ports:
-                        hm.ports[p_] = ('face', hm.ports[p_][1], 'W' if k_ < 4 else 'E', 'M4', round(y_, 3), 1)
+                        hm.ports[p_] = (('face', hm.ports[p_][1], 'N', 'M5', round(x_, 3), 1) if PVT_HDR_CTL else
+                                        ('face', hm.ports[p_][1], 'W' if k_ < 4 else 'E', 'M4', round(y_, 3), 1))
             for k_ in range(8):
                 for g_ in range(8):
                     p_ = f'vc{k_}_{g_}'
