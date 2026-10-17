@@ -776,6 +776,21 @@ def build(specs_dir, out, extra=(), soft_idx=None):
                             replaces_v15=prev['master'] if prev else None)
             if i.get('rtl_deps'):
                 insts[n]['rtl_deps'] = list(i['rtl_deps'])
+    # H-NETLIST/D4F-RELAY 10-17: layer key 'rehome' {inst: {home: [x, y], master?, why}}: a relay tile keeps its name, ports
+    # and stage position in its chain; only its planned home (die_case reads 'home (x, y) um' from the note) and its flow
+    # letter (same source file, same ports) change
+    for s_ in specs:
+        for n, h in s_.get('rehome', {}).items():
+            if n not in insts:
+                problems.append(f'rehome: {n} is not an instance'); continue
+            i = insts[n]
+            if h.get('master') and h['master'] != i['master']:
+                if not (i['master'].startswith('hbfd_rly_') and h['master'].rsplit('_', 1)[0] == i['master'].rsplit('_', 1)[0]):
+                    problems.append(f"rehome: {n} master {i['master']} -> {h['master']} is not a flow-letter change"); continue
+                i['master'] = h['master']
+            home = f"home ({h['home'][0]}, {h['home'][1]}) um"
+            note = re.sub(r'home \([-\d.]+, [-\d.]+\) um', home, i.get('note', ''))
+            i['note'] = (note if home in note else f'{note}; {home}') + f" | {s_['region']}: re-homed ({h.get('why', '')})"
     # H-NETLIST 0600 (H-DIE option A): a programme target whose only consumer is a universal VM calendar is FOLDED into
     # it (hfd_hgi_vm_calendar_f20 = target + calendar; a standalone ~630-pin collar is pin-bound as its own tile).
     folded = {}       # target instance -> consumer instance

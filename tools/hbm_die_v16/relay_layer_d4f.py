@@ -25,7 +25,7 @@ Output: layer json (instances, clocks, edges = clock chains, relay_splice_v2 = d
     relay_layer_d4f.py --stations S.json[.gz] --contract C.json[.gz] --manifest M.json --root-sites R.json
                        [--region-map MAP.json] --out L.json.gz --report REP.json
 """
-import argparse, collections, gzip, json, math
+import argparse, collections, gzip, json, math, re
 from pathlib import Path
 
 SRC_OLD = 'rtl/hbm_accel/die_glue/hbfd_rly_masters.sv'
@@ -45,6 +45,8 @@ def main():
     for k in ('--stations', '--contract', '--manifest', '--root-sites', '--out', '--report'):
         ap.add_argument(k, required=True)
     ap.add_argument('--region-map')
+    ap.add_argument('--exclude-re', help='rows whose driver or any sink instance matches are left to another layer '
+                    '(e.g. ^(rfr|sfr)_: the fixed-depth SU RF / SFU chains, su_chain_rehome_d4f.py)')
     a = ap.parse_args()
     st = load(a.stations); c = load(a.contract); man = load(a.manifest)
     R = st['reach_um']; pl = man['placement']; inst = c['instances']
@@ -84,6 +86,10 @@ def main():
     # bus bits per row: driver bits on the row's ports whose sink-instance set is the row's; a row whose ports no longer
     # exist (remastered driver, e.g. the writer per-SM port split) takes the UNCLAIMED driver bits with the same sink set
     rowbits, claimed, notes = {}, collections.defaultdict(set), []
+    if a.exclude_re:
+        xr = re.compile(a.exclude_re); n0 = len(st['rows'])
+        st['rows'] = [r for r in st['rows'] if not (xr.match(r['driver']) or any(xr.match(k) for k in r['sinks']))]
+        notes.append(f'excluded {n0 - len(st["rows"])} rows matching {a.exclude_re}')
     for bi, r in enumerate(st['rows']):
         di, ports = r['driver'].split('.', 1); ports = set(ports.split('+'))
         rowbits[bi] = sorted((p, k, ls) for p, k, ls in by_drv.get(di, []) if p in ports and {x[0] for x in ls} == set(r['sinks']))
@@ -142,6 +148,13 @@ def main():
             d_ = sdep[s_]
             if d_ == 0:
                 feed[s_] = None; continue
+            # the last station routed toward the sink feeds it (H-DIE hand re-homed rows: list sink depths are pre-split)
+            tw = [i for i, s in enumerate(sl) if s.get('toward') == s_]
+            if tw:
+                feed[s_] = max(tw, key=lambda i: sl[i]['depth'])
+                if sl[feed[s_]]['depth'] != d_ and not r.get('hand_rehomed'):
+                    problems.append(f'{r["driver"]}: sink {s_} list depth {d_} != last station toward it {sl[feed[s_]]["depth"]}')
+                continue
             cand = [i for i, s in enumerate(sl) if s['depth'] == d_]
             xy = cen(s_) or (0, 0)
             feed[s_] = min(cand, key=lambda i: abs(sl[i]['x'] - xy[0]) + abs(sl[i]['y'] - xy[1])) if cand else None
