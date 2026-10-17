@@ -101,7 +101,8 @@ module qkd_static_kv_pc_path_emb (
     output wire es_merge_fault
 );
     wire [287:0] es_merged;
-    qkd_static_kv_pc_es_merge #(.ROW0(24427), .MUT(0)) u_esm (
+    // hard child: no #() overrides (its defaults ROW0 24427 / MUT 0 are the production values; ref_tile rtl gate)
+    qkd_static_kv_pc_es_merge u_esm (
         .ck(ck), .rst_n(rsi), .pc(pc), .cfg_stack(cfg_stack), .wes(wes),
         .emb_boot_ready(emb_boot_ready), .emb_issue_v(emb_issue_v), .emb_token(emb_token),
         .emb_word_index(emb_word_index), .emb_half(emb_half), .emb_scale(emb_scale), .emb_epoch(emb_epoch),
