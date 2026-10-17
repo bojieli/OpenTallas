@@ -216,7 +216,9 @@ def main():
    counts[st]+=1
    for i,p,b,d in cs:
     if i>=0 and (st!='ONE_DRIVER' or any(e[0]<-1 for e in ds)):gaps[(leaves[i]['master'],p,st)]+=1
-   f.write(json.dumps(dict(status=st,drivers=ds,consumers=cs),separators=(',',':'))+'\n')
+   row=dict(status=st,drivers=ds,consumers=cs)
+   if st=='CONSTANT':row['constant_value']=0 if key==find(('CONST','0',0)) else 1
+   f.write(json.dumps(row,separators=(',',':'))+'\n')
  # Traverse variable-level operator dependencies from actual hard inputs / top outputs.
  # Procedural outputs are independent roots; a dead d bus does not make data feed a live valid/fault output.
  reverse=collections.defaultdict(set);live=set();toproles=collections.Counter()
