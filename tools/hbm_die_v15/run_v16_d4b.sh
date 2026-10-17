@@ -16,7 +16,7 @@ if [ $# -ge 3 ]; then
   gzip -c /tmp/relays_d4b.$$.json > $LAYER && rm -f /tmp/relays_d4b.$$.json
 fi
 XS=(); [ "$LAYER" = none ] || XS=(--extra-spec $LAYER); for L in ${EXTRA_LAYERS:-}; do XS+=(--extra-spec $L); done
-python3 tools/hbm_die_v15/full_die_v16.py --out $OUT "${XS[@]}" ${IDSTRAPS:+--identity-straps} ${PCH8:+--pc-h8} ${KEEPQ:+--keep-quadrants $KEEPQ} ${DROPSM:+--drop-sm-side $DROPSM} ${DROPI:+--drop-instances $DROPI} > $OUT/gen.log 2>&1 || { tail $OUT/gen.log; exit 2; }
+python3 tools/hbm_die_v15/full_die_v16.py --out $OUT "${XS[@]}" ${IDSTRAPS:+--identity-straps} ${PCH8:+--pc-h8} ${PCH9B:+--pc-h9b} ${KEEPQ:+--keep-quadrants $KEEPQ} ${DROPSM:+--drop-sm-side $DROPSM} ${DROPI:+--drop-instances $DROPI} > $OUT/gen.log 2>&1 || { tail $OUT/gen.log; exit 2; }
 EXTRA=$(python3 -c "
 import json; c=json.load(open('$OUT/contract.json'))
 print(' '.join(sorted({'--rtl-file '+f for i in c['instances'].values() for f in [i['source']]+i.get('rtl_deps',[])

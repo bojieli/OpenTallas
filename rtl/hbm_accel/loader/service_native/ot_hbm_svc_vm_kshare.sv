@@ -43,7 +43,13 @@
 // MUT: 1 = window does not wait for group responses (mis-steers a group beat), 2 = wrong PC hash in the VM address,
 //      3 = WB window does not wait for the group's outstanding writes (window overlap: completions mis-steered),
 //      4 = WB write sent to the wrong sector (addr bit 2 flipped), 5 = sm strap ignored (every leaf acts as SM 0).
-module ot_hbm_svc_vm_kshare #(parameter integer MUT=0) (
+// KRL1 (H-PC Claude 2026-10-16, with PC master ot_hbm_svc_pc_ctrl_leaf_cfg_h9b; default 0 = unchanged): the controller
+//   pin-registers kr_rdy (READY-LATENCY-1: a beat transfers at edge e when c_kr_v(e) && c_kr_rdy sampled at e-1).
+//   The controller-side response buffer C becomes a 3-entry ring (ot_hbm_svc_ring_h9b, no data movement on pop):
+//   c_kr_rdy is a register = (C occupancy after this edge <= 1); a beat is taken when c_kr_v && the c_kr_rdy value the
+//   controller sampled (kept here as c_rdy_seen); <= 2 beats can arrive after c_kr_rdy falls, so 3 entries never overflow
+//   and steady streaming stays at II=1. MUT 6 (bench, KRL1): C depth 2 -> overflow fault under back-pressure.
+module ot_hbm_svc_vm_kshare #(parameter integer MUT=0,KRL1=0) (
  input wire hbm_clk,hbm_rst_n,stream_clk,stream_rst_n,
  // die strap (H-SM DEDUPE 2026-10-16, was parameter SM): the SM group k of this leaf, PCs 4k..4k+3.  One hardened master
  // for all 32 instances; the strap lands in one pin flop per clock domain (static value, no CDC timing on it).
@@ -164,8 +170,21 @@ module ot_hbm_svc_vm_kshare #(parameter integer MUT=0) (
   wire b_pop_grp=b_pop&&!(st==ISSUE||st==WAIT||st==WB);
   // controller-side response pin skid (C) -> group response skid (D) or the VM CDC FIFO
   wire c_v,c_r;wire[RW-1:0]c_d;
-  ot_hbm_svc_pin_skid2 #(.WIDTH(RW)) u_c(.clk(hbm_clk),.rst_n(hrst_q),.in_v(c_kr_v[l]),.in_r(c_kr_rdy[l]),
-   .in_data({c_kr_tag[17*l+:17],c_kr_beat[4*l+:4],c_kr_data[256*l+:256]}),.out_v(c_v),.out_r(c_r),.out_data(c_d));
+  wire c_ring_fault;
+  if(KRL1!=0)begin:g_c_rl1
+   reg c_rdy_q,c_rdy_seen; wire[2:0]c_cnt,c_cnt_next;
+   ot_hbm_svc_ring_h9b #(.WIDTH(RW),.DEPTH((MUT==6)?2:3)) u_c(.clk(hbm_clk),.rst_n(hrst_q),.in_v(c_kr_v[l]&&c_rdy_seen),
+    .in_data({c_kr_tag[17*l+:17],c_kr_beat[4*l+:4],c_kr_data[256*l+:256]}),.out_v(c_v),.pop(c_v&&c_r),.out_data(c_d),
+    .cnt(c_cnt),.cnt_next(c_cnt_next),.fault(c_ring_fault));
+   always @(posedge hbm_clk)
+    if(!hrst_q)begin c_rdy_q<=1'b0;c_rdy_seen<=1'b0;end
+    else begin c_rdy_q<=c_cnt_next<=3'd1; c_rdy_seen<=c_rdy_q; end
+   assign c_kr_rdy[l]=c_rdy_q;
+  end else begin:g_c_rl0
+   assign c_ring_fault=1'b0;
+   ot_hbm_svc_pin_skid2 #(.WIDTH(RW)) u_c(.clk(hbm_clk),.rst_n(hrst_q),.in_v(c_kr_v[l]),.in_r(c_kr_rdy[l]),
+    .in_data({c_kr_tag[17*l+:17],c_kr_beat[4*l+:4],c_kr_data[256*l+:256]}),.out_v(c_v),.out_r(c_r),.out_data(c_d));
+  end
   wire vm_phase=(st==ISSUE||st==WAIT)^(MUT==1&&st==PEND);
   wire d_r,f_r;
   ot_hbm_svc_pin_skid2 #(.WIDTH(RW)) u_d(.clk(hbm_clk),.rst_n(hrst_q),.in_v(c_v&&!vm_phase),.in_r(d_r),.in_data(c_d),
@@ -213,7 +232,7 @@ module ot_hbm_svc_vm_kshare #(parameter integer MUT=0) (
   always @(posedge hbm_clk or negedge hrst_q)
    if(!hrst_q)begin g_k_wr_done[l]<=0;w_k_wr_done[l]<=0;end
    else begin g_k_wr_done[l]<=g_done;w_k_wr_done[l]<=c_k_wr_done[l]&&wb_st;end
-  assign norm_l[l]=st==NORM;assign hfault_l[l]=hf||f_ov;
+  assign norm_l[l]=st==NORM;assign hfault_l[l]=hf||f_ov||c_ring_fault;
  end endgenerate
  assign all_norm=&norm_l;
  // ---------------------------------------------------------------- stream side: fills + fault

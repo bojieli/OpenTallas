@@ -8,7 +8,7 @@
 // slots 0..63 of each PC exactly once with data = f(VM address of the slot), its bank/epoch; no fault.
 // Plusargs: +HBM_HALF=<ps> +STR_HALF=<ps> +WINDOWS=<n>.  Exit: "PASS" line, else "FAIL".
 module tb_hbm_svc_vm_kshare;
- parameter integer SM=2, MUT=0;
+ parameter integer SM=2, MUT=0, KRL1=0, TBL1=KRL1;   // TBL1: controller model ready-latency-1 (PC H9b)
  integer HBM_HALF=600, STR_HALF=500, WINDOWS=6;
  reg hbm_clk=0,stream_clk=0,hbm_rst_n=0,stream_rst_n=0;
  always #(HBM_HALF*1ps) hbm_clk=~hbm_clk;
@@ -19,7 +19,7 @@ module tb_hbm_svc_vm_kshare;
  wire[1023:0]c_k_wdata;wire[127:0]c_k_wstrb;reg[3:0]c_kr_v;wire[3:0]c_kr_rdy;reg[67:0]c_kr_tag;reg[15:0]c_kr_beat;reg[1023:0]c_kr_data;
  reg vm_v,vm_bank;reg[15:0]vm_epoch;reg[14:0]vm_row;reg[3:0]vm_col;
  wire[3:0]fill_v,fill_bank;wire[23:0]fill_slot;wire[63:0]fill_epoch;wire[1023:0]fill_data;wire fault;
- ot_hbm_svc_vm_kshare #(.MUT(MUT)) dut(.sm(3'(SM)),.hbm_clk(hbm_clk),.hbm_rst_n(hbm_rst_n),.stream_clk(stream_clk),.stream_rst_n(stream_rst_n),
+ ot_hbm_svc_vm_kshare #(.MUT(MUT),.KRL1(KRL1)) dut(.sm(3'(SM)),.hbm_clk(hbm_clk),.hbm_rst_n(hbm_rst_n),.stream_clk(stream_clk),.stream_rst_n(stream_rst_n),
   .g_k_v(g_k_v),.g_k_rdy(g_k_rdy),.g_k_addr(g_k_addr),.g_k_len(g_k_len),.g_k_tag(g_k_tag),.g_k_we(4'b0),.g_k_wdata(1024'b0),.g_k_wstrb(128'b0),
   .g_k_wr_done(g_k_wr_done),.g_kr_v(g_kr_v),.g_kr_rdy(g_kr_rdy),.g_kr_tag(g_kr_tag),.g_kr_beat(g_kr_beat),.g_kr_data(g_kr_data),
   .c_k_v(c_k_v),.c_k_rdy(c_k_rdy),.c_k_addr(c_k_addr),.c_k_len(c_k_len),.c_k_tag(c_k_tag),.c_k_we(c_k_we),.c_k_wdata(c_k_wdata),
@@ -36,11 +36,13 @@ module tb_hbm_svc_vm_kshare;
  reg[29:0]qa[0:3][0:QD-1];reg[16:0]qt[0:3][0:QD-1];reg[3:0]ql[0:3][0:QD-1];reg[3:0]qs[0:3][0:QD-1];reg qv[0:3][0:QD-1];
  integer l,i,k,n;
  integer pick[0:3];
+ reg[3:0] rdy_seen=0; wire[3:0] c_acc=TBL1?rdy_seen:c_kr_rdy;   // H9b: transfer on kr_rdy sampled one edge earlier
+ always @(posedge hbm_clk) rdy_seen<=hbm_rst_n?c_kr_rdy:4'b0;
  always @(posedge hbm_clk) if(hbm_rst_n) begin : ctlm
   integer l,i,k,n;
   for(l=0;l<4;l=l+1)begin
    // response handshake
-   if(c_kr_v[l]&&c_kr_rdy[l])begin
+   if(c_kr_v[l]&&c_acc[l])begin
     k=pick[l];qs[l][k]=qs[l][k]|(4'b1<<c_kr_beat[4*l+:4]);
     if(qs[l][k]==((4'b1<<ql[l][k])-1))qv[l][k]=0;
     c_kr_v[l]<=0;
@@ -57,7 +59,7 @@ module tb_hbm_svc_vm_kshare;
    n=0;for(i=0;i<QD;i=i+1)if(qv[l][i])n=n+1;
    c_k_rdy[l]<=($urandom%4)!=0&&n<16;
    // present a random beat of a random outstanding request
-   if(!(c_kr_v[l]&&!c_kr_rdy[l])&&($urandom%3)!=0)begin
+   if(!(c_kr_v[l]&&!c_acc[l])&&($urandom%3)!=0)begin
     n=0;for(i=0;i<QD;i=i+1)if(qv[l][i])n=n+1;
     if(n>0)begin
      k=$urandom%QD;while(!qv[l][k])k=(k+1)%QD;
