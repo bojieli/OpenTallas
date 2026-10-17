@@ -38,6 +38,9 @@ RST_NET = re.compile(r'^n_(rst_|hboot)')
 RELAY = re.compile(r'^(qkd_rly_|qkd_rlys_|qkd_rst_region$)')
 EXCLUDE = re.compile(os.environ.get('OT_KV_RST_EXCLUDE', r'^ot_qwen_tp8_pv_'))
 WIN = 240.0
+# a fan-out / chain hop already within the planning reach (0.9 x measured relay reach) is kept as planned: re-planning
+# every 360-400 um die chain hop doubled the HOST boot chain (kvt13k rr test: hboot depth 217 >= RELAY_FLUSH)
+KEEP_UM = float(os.environ.get('OT_KV_RST_KEEP_UM', '401'))
 STATION = 'qkd_rlys_1'
 CORNERS = ('tt', 'ff', 'ss')
 
@@ -203,7 +206,7 @@ def main(argv=None):
             continue
         dxy = drv[3]
         rad = max(abs(L[3][0] - dxy[0]) + abs(L[3][1] - dxy[1]) for L in mov)
-        if rad <= CR.HOP and len(mov) <= CR.FAN:
+        if rad <= KEEP_UM and len(mov) <= CR.FAN:
             rep['kept_nets'] += 1
             continue
         xs = [dxy[0]] + [L[3][0] for L in mov]
