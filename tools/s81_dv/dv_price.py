@@ -38,6 +38,10 @@ ANCHOR = {'ar': (1447.7, 1.0), 'mtp': (4238.4, 4.159)}
 DROP = re.compile(r'^(VM|SU|HC)\.|^CAPT\.CD_PINREG$')
 BASIS_PHASE = 138.0          # results/rtl/dsrom_field_reprice_r8_20261006 f183.60: farthest-frame round trip
 HUB_VM_TO_SVC_STAGES = 50    # c26l sp_vm centre -> svc_SW centre ~20 mm at 405 um
+# measured (tb_s81dv_xfin16, results/rtl/s81_dv_1016): last partial -> rstd 234 cycles with the sequenced dataflow finish
+# vs 171 with the parallel tree the hub's price already contains -> +63 on every full-h norm (rstd precedes the matvec:
+# norm-after-matvec is AGENTS level 6, excluded, so this latency is on the critical path)
+FINISH_SEQ_EXTRA = 234 - 171
 
 
 def hop_only(stages):
@@ -73,6 +77,7 @@ def dv_deltas(doc, g, pinreg=8, su_scale=0.0, basis_scale=1.0):
                 add(nid, 'hub_slab', -1 * k)
             if op in ('attn.quant', 'ffn.norm.scale', 'eng.gate') or op.endswith('hc.sumsq'):
                 add(nid, 'norm_tree_full', -18 + xchg)
+                add(nid, 'norm_finish_seq', FINISH_SEQ_EXTRA)
             elif op == 'attn.q_quant':
                 add(nid, 'norm_tree_q', -18 + st(3 * g['cluster_pitch_um']))
             elif op == 'attn.kv_rope_qdq':

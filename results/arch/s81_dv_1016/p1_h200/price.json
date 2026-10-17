@@ -65,12 +65,12 @@
    "workloads": {
     "ar": {
      "base_cycles": 828866.4,
-     "dv_cycles": 911858.6,
-     "dv_dag_loss_pct": 9.101,
+     "dv_cycles": 917024.6,
+     "dv_dag_loss_pct": 9.614,
      "hop_only": 1433.8,
      "current_tok_s": 1072.5,
-     "dv_tok_s": 1287.7,
-     "change_vs_current_pct": 20.07,
+     "dv_tok_s": 1280.3,
+     "change_vs_current_pct": 19.38,
      "rules": {
       "hub_in_out": {
        "nodes": 240,
@@ -79,6 +79,10 @@
       "norm_tree_full": {
        "nodes": 162,
        "cycles": 26892.0
+      },
+      "norm_finish_seq": {
+       "nodes": 162,
+       "cycles": 10206.0
       },
       "field_phase_wire": {
        "nodes": 324,
@@ -116,16 +120,20 @@
     },
     "mtp": {
      "base_cycles": 1177516.1,
-     "dv_cycles": 1272410.4,
-     "dv_dag_loss_pct": 7.458,
+     "dv_cycles": 1278584.4,
+     "dv_dag_loss_pct": 7.905,
      "hop_only": 4209.6,
      "current_tok_s": 3315.4,
-     "dv_tok_s": 3851.7,
-     "change_vs_current_pct": 16.17,
+     "dv_tok_s": 3832.9,
+     "change_vs_current_pct": 15.61,
      "rules": {
       "norm_tree_full": {
        "nodes": 88,
        "cycles": 14608.0
+      },
+      "norm_finish_seq": {
+       "nodes": 88,
+       "cycles": 5544.0
       },
       "norm_tree_q": {
        "nodes": 43,
@@ -329,12 +337,12 @@
    "workloads": {
     "ar": {
      "base_cycles": 828866.4,
-     "dv_cycles": 915058.6,
-     "dv_dag_loss_pct": 9.419,
+     "dv_cycles": 920224.6,
+     "dv_dag_loss_pct": 9.928,
      "hop_only": 1433.8,
      "current_tok_s": 1072.5,
-     "dv_tok_s": 1283.1,
-     "change_vs_current_pct": 19.64,
+     "dv_tok_s": 1275.9,
+     "change_vs_current_pct": 18.97,
      "rules": {
       "hub_in_out": {
        "nodes": 240,
@@ -343,6 +351,10 @@
       "norm_tree_full": {
        "nodes": 162,
        "cycles": 26892.0
+      },
+      "norm_finish_seq": {
+       "nodes": 162,
+       "cycles": 10206.0
       },
       "field_phase_wire": {
        "nodes": 324,
@@ -380,16 +392,20 @@
     },
     "mtp": {
      "base_cycles": 1177516.1,
-     "dv_cycles": 1276658.4,
-     "dv_dag_loss_pct": 7.766,
+     "dv_cycles": 1282832.4,
+     "dv_dag_loss_pct": 8.21,
      "hop_only": 4209.6,
      "current_tok_s": 3315.4,
-     "dv_tok_s": 3838.7,
-     "change_vs_current_pct": 15.78,
+     "dv_tok_s": 3820.1,
+     "change_vs_current_pct": 15.22,
      "rules": {
       "norm_tree_full": {
        "nodes": 88,
        "cycles": 14608.0
+      },
+      "norm_finish_seq": {
+       "nodes": 88,
+       "cycles": 5544.0
       },
       "norm_tree_q": {
        "nodes": 43,
@@ -593,12 +609,12 @@
    "workloads": {
     "ar": {
      "base_cycles": 828866.4,
-     "dv_cycles": 922394.5,
-     "dv_dag_loss_pct": 10.14,
+     "dv_cycles": 927560.5,
+     "dv_dag_loss_pct": 10.64,
      "hop_only": 1433.8,
      "current_tok_s": 1072.5,
-     "dv_tok_s": 1272.8,
-     "change_vs_current_pct": 18.68,
+     "dv_tok_s": 1265.7,
+     "change_vs_current_pct": 18.02,
      "rules": {
       "su_contingency": {
        "nodes": 1848,
@@ -611,6 +627,10 @@
       "norm_tree_full": {
        "nodes": 162,
        "cycles": 26892.0
+      },
+      "norm_finish_seq": {
+       "nodes": 162,
+       "cycles": 10206.0
       },
       "field_phase_wire": {
        "nodes": 324,
@@ -648,12 +668,12 @@
     },
     "mtp": {
      "base_cycles": 1177516.1,
-     "dv_cycles": 1288762.4,
-     "dv_dag_loss_pct": 8.632,
+     "dv_cycles": 1294936.4,
+     "dv_dag_loss_pct": 9.068,
      "hop_only": 4209.6,
      "current_tok_s": 3315.4,
-     "dv_tok_s": 3802.3,
-     "change_vs_current_pct": 14.69,
+     "dv_tok_s": 3784.1,
+     "change_vs_current_pct": 14.14,
      "rules": {
       "su_contingency": {
        "nodes": 1217,
@@ -662,6 +682,10 @@
       "norm_tree_full": {
        "nodes": 88,
        "cycles": 14608.0
+      },
+      "norm_finish_seq": {
+       "nodes": 88,
+       "cycles": 5544.0
       },
       "norm_tree_q": {
        "nodes": 43,
@@ -865,12 +889,12 @@
    "workloads": {
     "ar": {
      "base_cycles": 828866.4,
-     "dv_cycles": 942666.7,
-     "dv_dag_loss_pct": 12.072,
+     "dv_cycles": 947832.7,
+     "dv_dag_loss_pct": 12.551,
      "hop_only": 1433.8,
      "current_tok_s": 1072.5,
-     "dv_tok_s": 1245.2,
-     "change_vs_current_pct": 16.11,
+     "dv_tok_s": 1238.4,
+     "change_vs_current_pct": 15.47,
      "rules": {
       "su_contingency": {
        "nodes": 1848,
@@ -883,6 +907,10 @@
       "norm_tree_full": {
        "nodes": 162,
        "cycles": 26892.0
+      },
+      "norm_finish_seq": {
+       "nodes": 162,
+       "cycles": 10206.0
       },
       "field_phase_wire": {
        "nodes": 324,
@@ -920,12 +948,12 @@
     },
     "mtp": {
      "base_cycles": 1177516.1,
-     "dv_cycles": 1317538.2,
-     "dv_dag_loss_pct": 10.628,
+     "dv_cycles": 1323712.2,
+     "dv_dag_loss_pct": 11.044,
      "hop_only": 4209.6,
      "current_tok_s": 3315.4,
-     "dv_tok_s": 3718.6,
-     "change_vs_current_pct": 12.16,
+     "dv_tok_s": 3701.1,
+     "change_vs_current_pct": 11.63,
      "rules": {
       "su_contingency": {
        "nodes": 1217,
@@ -934,6 +962,10 @@
       "norm_tree_full": {
        "nodes": 88,
        "cycles": 14608.0
+      },
+      "norm_finish_seq": {
+       "nodes": 88,
+       "cycles": 5544.0
       },
       "norm_tree_q": {
        "nodes": 43,
@@ -1137,12 +1169,12 @@
    "workloads": {
     "ar": {
      "base_cycles": 828866.4,
-     "dv_cycles": 915058.6,
-     "dv_dag_loss_pct": 9.419,
+     "dv_cycles": 920224.6,
+     "dv_dag_loss_pct": 9.928,
      "hop_only": 1433.8,
      "current_tok_s": 1072.5,
-     "dv_tok_s": 1158.2,
-     "change_vs_current_pct": 7.99,
+     "dv_tok_s": 1150.9,
+     "change_vs_current_pct": 7.32,
      "rules": {
       "hub_in_out": {
        "nodes": 240,
@@ -1151,6 +1183,10 @@
       "norm_tree_full": {
        "nodes": 162,
        "cycles": 26892.0
+      },
+      "norm_finish_seq": {
+       "nodes": 162,
+       "cycles": 10206.0
       },
       "field_phase_wire": {
        "nodes": 324,
@@ -1188,16 +1224,20 @@
     },
     "mtp": {
      "base_cycles": 1177516.1,
-     "dv_cycles": 1276658.4,
-     "dv_dag_loss_pct": 7.766,
+     "dv_cycles": 1282832.4,
+     "dv_dag_loss_pct": 8.21,
      "hop_only": 4209.6,
      "current_tok_s": 3315.4,
-     "dv_tok_s": 3544.3,
-     "change_vs_current_pct": 6.9,
+     "dv_tok_s": 3525.7,
+     "change_vs_current_pct": 6.34,
      "rules": {
       "norm_tree_full": {
        "nodes": 88,
        "cycles": 14608.0
+      },
+      "norm_finish_seq": {
+       "nodes": 88,
+       "cycles": 5544.0
       },
       "norm_tree_q": {
        "nodes": 43,
@@ -1401,12 +1441,12 @@
    "workloads": {
     "ar": {
      "base_cycles": 828866.4,
-     "dv_cycles": 942666.7,
-     "dv_dag_loss_pct": 12.072,
+     "dv_cycles": 947832.7,
+     "dv_dag_loss_pct": 12.551,
      "hop_only": 1433.8,
      "current_tok_s": 1072.5,
-     "dv_tok_s": 1120.3,
-     "change_vs_current_pct": 4.46,
+     "dv_tok_s": 1113.4,
+     "change_vs_current_pct": 3.82,
      "rules": {
       "su_contingency": {
        "nodes": 1848,
@@ -1419,6 +1459,10 @@
       "norm_tree_full": {
        "nodes": 162,
        "cycles": 26892.0
+      },
+      "norm_finish_seq": {
+       "nodes": 162,
+       "cycles": 10206.0
       },
       "field_phase_wire": {
        "nodes": 324,
@@ -1456,12 +1500,12 @@
     },
     "mtp": {
      "base_cycles": 1177516.1,
-     "dv_cycles": 1317538.2,
-     "dv_dag_loss_pct": 10.628,
+     "dv_cycles": 1323712.2,
+     "dv_dag_loss_pct": 11.044,
      "hop_only": 4209.6,
      "current_tok_s": 3315.4,
-     "dv_tok_s": 3424.1,
-     "change_vs_current_pct": 3.28,
+     "dv_tok_s": 3406.6,
+     "change_vs_current_pct": 2.75,
      "rules": {
       "su_contingency": {
        "nodes": 1217,
@@ -1470,6 +1514,10 @@
       "norm_tree_full": {
        "nodes": 88,
        "cycles": 14608.0
+      },
+      "norm_finish_seq": {
+       "nodes": 88,
+       "cycles": 5544.0
       },
       "norm_tree_q": {
        "nodes": 43,
@@ -1673,12 +1721,12 @@
    "workloads": {
     "ar": {
      "base_cycles": 828866.4,
-     "dv_cycles": 827357.1,
-     "dv_dag_loss_pct": -0.182,
+     "dv_cycles": 832523.1,
+     "dv_dag_loss_pct": 0.439,
      "hop_only": 1433.8,
      "current_tok_s": 1072.5,
-     "dv_tok_s": 1420.3,
-     "change_vs_current_pct": 32.43,
+     "dv_tok_s": 1411.4,
+     "change_vs_current_pct": 31.61,
      "rules": {
       "hub_in_out": {
        "nodes": 240,
@@ -1687,6 +1735,10 @@
       "norm_tree_full": {
        "nodes": 162,
        "cycles": 26892.0
+      },
+      "norm_finish_seq": {
+       "nodes": 162,
+       "cycles": 10206.0
       },
       "field_phase_wire": {
        "nodes": 324,
@@ -1724,16 +1776,20 @@
     },
     "mtp": {
      "base_cycles": 1177516.1,
-     "dv_cycles": 1173966.7,
-     "dv_dag_loss_pct": -0.302,
+     "dv_cycles": 1180140.7,
+     "dv_dag_loss_pct": 0.222,
      "hop_only": 4209.6,
      "current_tok_s": 3315.4,
-     "dv_tok_s": 4177.5,
-     "change_vs_current_pct": 26.0,
+     "dv_tok_s": 4155.5,
+     "change_vs_current_pct": 25.34,
      "rules": {
       "norm_tree_full": {
        "nodes": 88,
        "cycles": 14608.0
+      },
+      "norm_finish_seq": {
+       "nodes": 88,
+       "cycles": 5544.0
       },
       "norm_tree_q": {
        "nodes": 43,

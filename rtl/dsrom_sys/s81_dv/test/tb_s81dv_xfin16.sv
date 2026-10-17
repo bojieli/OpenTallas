@@ -5,7 +5,7 @@
 // the plan's snake ring (street links LS stages, end-column links LE stages, both directions).  Slice g receives the
 // partials of beats 5g .. 5g+4 as its local s_i 0..4.  The group's scale takes slice 0's rstd.
 // Checks: all 16 slices produce the SAME rstd, no fault, the 80 y vectors equal the DS1M golden ey bit for bit.
-// Prints DVXFIN16 ... then PASS / FAIL.  Negative controls: +define+OT_S81DV_MUT_BASE / +define+OT_S81DV_MUT_LEAF.
+// Prints DVXFIN16 ... then PASS / FAIL.  Negative controls: +define+OT_S81DV_MUT_BASE / +define+OT_S81DV_MUT_LEAF (leaves 1/2 swapped: association change).
 module tb_s81dv_xfin16 #(parameter integer LS = 9, parameter integer LE = 29);
     localparam integer NS = 16, NVL = 5, D = 5120, N = 64, NV = D / N, KW = 1 + 4 + 8 + NVL * 32;
     reg clk = 1'b0;

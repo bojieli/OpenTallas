@@ -42,16 +42,31 @@ Why the column can be narrow:
 - Frame lanes run at the column edges (260-µm windows 0 and 4), and the units own the middle.
 - The x-tap pins of the frames facing the slice cross a 25-µm gap.
 
-**p1 price** (89 → 92 stages charged by `hop_only`):
+**p1 price** (89 → 92 stages charged by `hop_only`; includes the measured +63-cycle sequenced finish, see below):
 
 | Scenario | AR tok/s | MTP tok/s | vs today (MTP) |
 |---|---|---|---|
-| DV base | 1,450.0 | 4,248.3 | +28.1% |
-| Pin register 16 | 1,444.2 | 4,232.6 | +27.7% |
-| SU +10% | 1,431.2 | 4,188.5 | +26.3% |
-| SU +25%, pin register 16 | 1,396.5 | 4,087.2 | +23.3% |
-| Keep SU/HC rows | 1,319.3 | 3,938.2 | +18.8% |
-| Keep SU/HC rows + SU +25% | 1,271.5 | 3,792.8 | +14.4% |
+| DV base | 1,440.7 | 4,225.5 | +27.5% |
+| Pin register 16 | 1,435.0 | 4,210.0 | +27.0% |
+| SU +10% | 1,422.2 | 4,166.3 | +25.7% |
+| SU +25%, pin register 16 | 1,387.9 | 4,066.1 | +22.6% |
+| Keep SU/HC rows | 1,310.1 | 3,915.5 | +18.1% |
+| Keep SU/HC rows + SU +25% | 1,263.0 | 3,771.7 | +13.8% |
+
+### Where rstd is applied, and the finish latency (measured)
+
+- **rstd is applied before the matvec.** The slice scales x·rstd·gamma, quantises it, and only then streams it.
+- Norm-after-matvec (gamma folded into ROM, scale applied to the output) is AGENTS dataflow level 6: excluded, and only under the QC-NAM check.
+- The finish latency is therefore **on the per-layer critical path**: two full-h norms per layer, 80 per AR token.
+- Measured in `tb_s81dv_xfin16` (`results/rtl/s81_dv_1016`), last beat partial → rstd at every slice, which includes the ring exchange and the tail (/D, +eps, rsqrt):
+
+| Finish | Last partial → rstd | rstd spread across slices | Result |
+|---|---|---|---|
+| Parallel replicated tree (79 adders) | 171 cycles | 53 | PASS, but the gate refuses the leaf: 58,687 flops on one root |
+| Sequenced, dataflow issue (1 adder, two-level ready select) | 234 cycles | 13 | PASS, 16.7 k flops |
+
+- The +63 cycles are priced as the rule `norm_finish_seq` on every full-h norm: −0.55% MTP (4,248 → 4,226).
+- A 2–4 adder finish on independent subtrees, same operands and order, so still exact, could recover at most that 0.55%. It is not pursued (owner: only significant gains). The single-adder leaf keeps the flop count near the 15 k root guideline.
 
 ### Reach sensitivity (coordinator / H-REACH, 10-16)
 
@@ -61,14 +76,18 @@ H-REACH measured native S81 relay cells. UNBUFFERED die wires are slew-limited t
 
 | p1 at hop | Relays | Relay bit-stages | Phase path | Scalar exchange | DV base MTP | Worst stacked MTP | DV base with today's die on the same hop |
 |---|---|---|---|---|---|---|---|
-| 405 µm | 2,018 | 1.18 M | 117 stages | 91 stages | 4,248 (+28.1%) | 3,793 (+14.4%) | — |
-| 200 µm | 3,976 | 2.35 M | 235 stages | 184 stages | 3,852 (+16.2%) | 3,424 (+3.3%) | 4,178 (+26.0%) |
+| 405 µm | 2,018 | 1.18 M | 117 stages | 91 stages | 4,226 (+27.5%) | 3,772 (+13.8%) | — |
+| 200 µm | 3,976 | 2.35 M | 235 stages | 184 stages | 3,833 (+15.6%) | 3,407 (+2.8%) | 4,156 (+25.3%) |
 
 - Even with every DV die wire at 200 µm hops and today's die left at its 405-µm-era basis (the worst case for DV), every scenario stays a gain and above the MTP floor.
 - Cut and bit·mm do not change with the hop.
 
 Physical rules carried into the die trial:
 - **(b)** The ring/mesh links, end-column links, x chains, returns and the ctl tree are die nets with **repeater buffering at die level** (`repair_design` at `die_reach.reach_um('s81')`, or the measured buffered reach once H-REACH publishes it) between their relay flops. There are no long unbuffered hops: the plan's ≤405 µm segments are flop-to-flop distances, not unbuffered wire lengths.
+- H-REACH interim measurement, 10-16, native cells, real phase, TT 833 / FF hold / 260 ps slew:
+  - With die-level `repair_design` repeaters (BUFx8 about every 160 µm on M4/M5), measured repeated reach is rly_63_WE 650 µm, rly_66_SW 600, hstnv 750 and rly_2_WS 750, with setup the limiter. FF hold passes from 100 µm.
+  - Unbuffered hops reach only 100–200 µm.
+  - The 405 µm plan hop is therefore inside measured repeated reach, but **only** if the die flow runs `repair_design`. The DV die trial runs it; the current S81 GEN does not, and the owner ruling on planned repeaters is pending with the coordinator.
 - **(c)** Every slice input pin lands on a robust first cell: a sized buffer or flop at the pin. It does not land on a hold buffer. Hold is fixed in the die-level boundary hold budget at the relay stations (FLOW-HOLD), not by hold padding at tile inputs.
 
 ### The three biggest assumptions behind the price

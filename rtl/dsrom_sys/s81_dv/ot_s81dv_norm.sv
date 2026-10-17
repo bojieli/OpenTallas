@@ -36,10 +36,9 @@ module ot_s81dv_norm_finish #(
 );
     // SEQUENCED golden-order finish (gate 10-16: the replicated parallel tree was 58.7k flops on one root).  The tree is
     // ot_dsrom_su_norm's vector-level tree exactly (heap over NVP leaves; a node adds its two children when its right
-    // subtree holds a real beat, else it passes its left child): ONE pipelined adder walks the add nodes from the
-    // largest heap index down to the root (children always precede parents), issuing node n when both children are
-    // valid.  Same additions, same operands, same order of association -> bit-identical; arrival times are compiler
-    // static, so the walk is a fixed schedule (no flow control).
+    // subtree holds a real beat, else it passes its left child), evaluated by ONE pipelined adder with dataflow issue
+    // (highest-index ready node first).  Same additions, same operands, same order of association -> bit-identical;
+    // arrival times are compiler static, so the issue schedule is fixed (no flow control).
     localparam integer NVP = (NV <= 1) ? 1 : (1 << $clog2(NV));
     localparam integer HB  = $clog2(NVP);
     localparam integer LAV = (LA >= 5) ? LA : LA + 1;
@@ -58,19 +57,14 @@ module ot_s81dv_norm_finish #(
             isadd = (n >= 1 && n < NVP && ((((2 * n + 1) << (H - 1)) - NVP) < NV)) ? 1 : 0;
         end
     endfunction
-    function automatic integer nextadd(input integer n);  // largest add node < n (0: none)
-        integer m;
-        begin
-            nextadd = 0;
-            for (m = n - 1; m >= 1; m = m - 1) if (nextadd == 0 && isadd(m)) nextadd = m;
-        end
-    endfunction
-    localparam integer TOP = nextadd(NVP);
     localparam integer DK = tz(D);
     localparam integer DF = D >> DK;
+    localparam integer NRS = 8;         // reset relay copies (one per 16-node region; gate 10-16: 766 loads on one flop)
     reg [1:0] rs;
     always @(posedge clk or negedge rst_n) if (!rst_n) rs <= 2'b00; else rs <= {rs[0], 1'b1};
     wire rstn = rs[1];
+    (* keep = "true", dont_touch = "true" *) reg [NRS-1:0] rsr;
+    always @(posedge clk or negedge rst_n) if (!rst_n) rsr <= {NRS{1'b0}}; else rsr <= {NRS{rs[0]}};
     reg go_t;
     always @(posedge clk or negedge rstn) if (!rstn) go_t <= 1'b0; else go_t <= go;
     reg [P-1:0] iv; reg [P*8-1:0] ib; reg [P*K*32-1:0] id; reg [31:0] eps_c;
@@ -80,8 +74,6 @@ module ot_s81dv_norm_finish #(
     wire [31:0] V  [1:2*NVP-1];
     wire        VD [1:2*NVP-1];
     wire [NVP-1:0] dup;
-    reg  [7:0]  w;                      // walker: the add node to issue next
-    reg         run;
     wire        wr_v;                   // adder result write-back
     wire [7:0]  wr_n;
     wire [31:0] wr_d;
@@ -96,8 +88,9 @@ module ot_s81dv_norm_finish #(
                 for (p = 0; p < P; p = p + 1) begin : g_p
                     for (k = 0; k < K; k = k + 1) begin : g_k
 `ifdef OT_S81DV_MUT_LEAF
-                        // NEGATIVE CONTROL: leaves 0 and 1 swapped (finish fed out of golden order)
-                        localparam integer IXM = (IX == 0) ? 1 : (IX == 1) ? 0 : IX;
+                        // NEGATIVE CONTROL: leaves 1 and 2 swapped -- (0+2)+(1+3) instead of (0+1)+(2+3): a change of
+                        // association (a 0/1 swap is blind: it only commutes one add)
+                        localparam integer IXM = (IX == 1) ? 2 : (IX == 2) ? 1 : IX;
 `else
                         localparam integer IXM = IX;
 `endif
@@ -111,8 +104,8 @@ module ot_s81dv_norm_finish #(
                 end
                 wire hit = |m;
                 reg [31:0] val; reg vld;
-                always @(posedge clk or negedge rstn)
-                    if (!rstn) vld <= 1'b0; else if (go_t) vld <= 1'b0; else if (hit) vld <= 1'b1;
+                always @(posedge clk or negedge rsr[IX % NRS])
+                    if (!rsr[IX % NRS]) vld <= 1'b0; else if (go_t) vld <= 1'b0; else if (hit) vld <= 1'b1;
                 always @(posedge clk) if (hit) val <= mv[P * K];
                 assign dup[IX] = hit && (vld || ((m & (m - 1)) != 0));
                 assign V[n] = val; assign VD[n] = vld;
@@ -124,8 +117,8 @@ module ot_s81dv_norm_finish #(
         for (n = 1; n < NVP; n = n + 1) begin : g_node
             if (isadd(n)) begin : g_add
                 reg [31:0] val; reg vld;
-                always @(posedge clk or negedge rstn)
-                    if (!rstn) vld <= 1'b0; else if (go_t) vld <= 1'b0; else if (wr_v && wr_n == n) vld <= 1'b1;
+                always @(posedge clk or negedge rsr[n % NRS])
+                    if (!rsr[n % NRS]) vld <= 1'b0; else if (go_t) vld <= 1'b0; else if (wr_v && wr_n == n) vld <= 1'b1;
                 always @(posedge clk) if (wr_v && wr_n == n) val <= wr_d;
                 assign V[n] = val; assign VD[n] = vld;
             end else begin : g_pass
@@ -133,34 +126,63 @@ module ot_s81dv_norm_finish #(
             end
         end
     endgenerate
-    // ---------------------------------------------------------------- walker + the one adder
-    wire [NVP-1:0] sel;
-    wire [31:0] oa [0:NVP], ob [0:NVP];
-    wire [NVP:0] rd;
-    wire [7:0]  nx [0:NVP];
-    assign oa[0] = 32'd0; assign ob[0] = 32'd0; assign rd[0] = 1'b0; assign nx[0] = 8'd0;
+    // ---------------------------------------------------------------- dataflow issue + the one adder
+    // Ready add nodes (both children valid, not issued) are selected lowest heap index first in two registered
+    // levels (16 groups of 8: in-group one-hot, then the lowest non-empty group), re-masked by `iss` at the second
+    // level so a node never issues twice (a stale pick is a bubble).  Any fixed priority is exact: every node still adds
+    // its own two golden children exactly once; arrival times are compiler static, so the issue schedule is static.
+    localparam integer NG8 = NVP / 8;
+    wire [NVP-1:0] rdy, iss_v;
+    wire [NVP-1:0] oh1;                 // stage 1: in-group one-hot (lowest ready node of each group)
+    wire [NG8-1:0] ga1;                 // stage 1: group has a ready node
+    genvar q;
     generate
-        for (n = 1; n <= NVP; n = n + 1) begin : g_sel
-            if (n < NVP && isadd(n)) begin : g_s
-                localparam integer NX = nextadd(n);
-                wire s_ = (w == n);
-                assign oa[n] = oa[n - 1] | ({32{s_}} & V[2 * n]);
-                assign ob[n] = ob[n - 1] | ({32{s_}} & V[2 * n + 1]);
-                assign rd[n] = rd[n - 1] | (s_ && VD[2 * n] && VD[2 * n + 1]);
-                assign nx[n] = nx[n - 1] | ({8{s_}} & NX[7:0]);
+        for (n = 0; n < NVP; n = n + 1) begin : g_rdy
+            if (n >= 1 && isadd(n)) begin : g_a
+                reg iss;
+                always @(posedge clk or negedge rsr[(n + 3) % NRS])
+                    if (!rsr[(n + 3) % NRS]) iss <= 1'b0; else if (go_t) iss <= 1'b0; else if (win[n]) iss <= 1'b1;
+                assign iss_v[n] = iss;
+                assign rdy[n] = VD[2 * n] && VD[2 * n + 1] && !iss && !go_t;
+            end else begin : g_n
+                assign iss_v[n] = 1'b1; assign rdy[n] = 1'b0;
+            end
+        end
+        for (q = 0; q < NG8; q = q + 1) begin : g_grp
+            wire [7:0] r8 = rdy[q * 8 +: 8];
+            wire [7:0] o8 = r8 & ~(r8 - 8'd1);          // lowest set bit (8-bit)
+            reg [7:0] o_r; reg g_r;
+            always @(posedge clk or negedge rsr[q % NRS])
+                if (!rsr[q % NRS]) begin o_r <= 8'd0; g_r <= 1'b0; end
+                else begin o_r <= o8; g_r <= |r8; end
+            assign oh1[q * 8 +: 8] = o_r; assign ga1[q] = g_r;
+        end
+    endgenerate
+    wire [NG8-1:0] gs = ga1 & ~(ga1 - {{(NG8-1){1'b0}}, 1'b1});   // lowest non-empty group (16-bit)
+    wire [NVP-1:0] win;
+    generate
+        for (n = 0; n < NVP; n = n + 1) begin : g_win
+            assign win[n] = oh1[n] && gs[n / 8] && !iss_v[n] && !go_t;
+        end
+    endgenerate
+    wire fire = |win;
+    wire [31:0] oa [0:NVP], ob [0:NVP];
+    wire [7:0]  ot [0:NVP];
+    assign oa[0] = 32'd0; assign ob[0] = 32'd0; assign ot[0] = 8'd0;
+    generate
+        for (n = 1; n <= NVP; n = n + 1) begin : g_mux
+            if (n < NVP && isadd(n)) begin : g_m
+                assign oa[n] = oa[n - 1] | ({32{win[n]}} & V[2 * n]);
+                assign ob[n] = ob[n - 1] | ({32{win[n]}} & V[2 * n + 1]);
+                assign ot[n] = ot[n - 1] | ({8{win[n]}} & n[7:0]);
             end else begin : g_z
-                assign oa[n] = oa[n - 1]; assign ob[n] = ob[n - 1]; assign rd[n] = rd[n - 1]; assign nx[n] = nx[n - 1];
+                assign oa[n] = oa[n - 1]; assign ob[n] = ob[n - 1]; assign ot[n] = ot[n - 1];
             end
         end
     endgenerate
-    wire fire = run && rd[NVP] && !go_t;
-    reg  f_q; reg [31:0] a_q, b_q; reg [7:0] t_q;      // operand stage (registered: walker mux -> adder)
+    reg  f_q; reg [31:0] a_q, b_q; reg [7:0] t_q;      // operand stage (registered: issue mux -> adder)
     always @(posedge clk or negedge rstn) if (!rstn) f_q <= 1'b0; else f_q <= fire;
-    always @(posedge clk) begin a_q <= oa[NVP]; b_q <= ob[NVP]; t_q <= w; end
-    always @(posedge clk or negedge rstn)
-        if (!rstn) begin w <= 8'd0; run <= 1'b0; end
-        else if (go_t) begin w <= TOP[7:0]; run <= 1'b1; end
-        else if (fire) begin w <= nx[NVP]; if (nx[NVP] == 8'd0) run <= 1'b0; end
+    always @(posedge clk) begin a_q <= oa[NVP]; b_q <= ob[NVP]; t_q <= ot[NVP]; end
     wire [LAV:0] av;
     wire f_add;
     ot_hdc_vline #(.D(LAV)) u_v (.clk(clk), .rst_n(rstn), .v(f_q), .vd(av));

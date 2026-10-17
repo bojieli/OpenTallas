@@ -28,10 +28,6 @@
   "reset_ports": [
     "rst_n"
   ],
-  "outline": {
-    "w": 410.4,
-    "h": 410.4
-  },
   "macros": [],
   "pins": {
     "W": [
@@ -117,5 +113,7 @@
   "pin_regs": {
     "enable": false,
     "reason": "Source-registered: every input lands in a flop at the pin (ot_s81dv_xfin go/eps/s_* capture flops, ot_s81dv_xstop wi/ei input flops) and every output is a flop (eo/wo/rb/fault regs); recipe-3 pin_regs would add a second unpriced stage on every ring hop. io_flop_at_pins (recipe 2) anchors them at the faces."
-  }
+  },
+  "std_area_um2": 16108,
+  "util": 0.52
 }
