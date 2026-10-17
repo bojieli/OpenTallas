@@ -5,10 +5,10 @@ read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_IN
 read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_OA_RVT_FF_nldm_211120.lib.gz
 read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SEQ_RVT_FF_nldm_220123.lib
 read_liberty /OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM/asap7sc7p5t_SIMPLE_RVT_FF_nldm_211120.lib.gz
-read_db /work/results/asap7/opentallas_qkd_static_kv_return_slots_mc_asap7_ref_qkd_static_kv_return_slots_mc_r3_mc3b_d4c0e5fee/base/6_final.odb
+read_db /work/results/asap7/opentallas_qkd_static_kv_return_slots_mc_asap7_ref_qkd_static_kv_return_slots_mc_r3_mc3c_b1633f90c/base/6_final.odb
 set ::ot_ce_corner ff
-read_sdc /work/results/asap7/opentallas_qkd_static_kv_return_slots_mc_asap7_ref_qkd_static_kv_return_slots_mc_r3_mc3b_d4c0e5fee/base/6_final.sdc
-read_spef /work/results/asap7/opentallas_qkd_static_kv_return_slots_mc_asap7_ref_qkd_static_kv_return_slots_mc_r3_mc3b_d4c0e5fee/base/6_final.spef
+read_sdc /work/results/asap7/opentallas_qkd_static_kv_return_slots_mc_asap7_ref_qkd_static_kv_return_slots_mc_r3_mc3c_b1633f90c/base/6_final.sdc
+read_spef /work/results/asap7/opentallas_qkd_static_kv_return_slots_mc_asap7_ref_qkd_static_kv_return_slots_mc_r3_mc3c_b1633f90c/base/6_final.spef
 set_propagated_clock [all_clocks]
 read_sdc /src/physical/ref_tile/qkd_static_kv_return_slots_mc_r3/signoff.sdc
 read_sdc /src/physical/common_flow/io_ref_routed.sdc

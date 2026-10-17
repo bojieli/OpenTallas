@@ -4,24 +4,24 @@
   "status": "PASS",
   "input": {
     "path": "provenance/raw/qkd_static_kv_return_slots_mc.lef",
-    "sha256": "a7ae377b4b43fcd12559d496fea3d878e8c44439fb5b6fdaf6b466e8a30e0f4c"
+    "sha256": "692a43da3953ea7ac3a9a9889d8ba13a3eb424d9b05c5d244b26fc0268c3bf5f"
   },
   "environment": {
     "OT_OBS_CLOSE": null,
     "OT_OBS_CLOSE_UM": null
   },
   "helper": {
-    "path": "/srv/opentallas-scratch2/claude/closure-loop/qkd_static_kv_return_slots_mc_r3-mc3b-d4c0e5fee/src/tools/hier_contract/abstract_pin_stub.py",
+    "path": "/srv/opentallas-scratch/claude/closure-loop/qkd_static_kv_return_slots_mc_r3-mc3c-b1633f90c/src/tools/hier_contract/abstract_pin_stub.py",
     "sha256": "c3cae85e3aa1a8da5374284fe57418b2230ceb208aa76eff4567c6993bbe0c05"
   },
   "command": [
     "/usr/bin/python3",
-    "/srv/opentallas-scratch2/claude/closure-loop/qkd_static_kv_return_slots_mc_r3-mc3b-d4c0e5fee/src/tools/hier_contract/abstract_pin_stub.py",
-    "/srv/opentallas-scratch2/claude/closure-loop/qkd_static_kv_return_slots_mc_r3-mc3b-d4c0e5fee/record/views/qkd_static_kv_return_slots_mc/provenance/raw/qkd_static_kv_return_slots_mc.lef",
-    "/srv/opentallas-scratch2/claude/closure-loop/qkd_static_kv_return_slots_mc_r3-mc3b-d4c0e5fee/record/views/qkd_static_kv_return_slots_mc/provenance/qkd_static_kv_return_slots_mc.candidate.lef"
+    "/srv/opentallas-scratch/claude/closure-loop/qkd_static_kv_return_slots_mc_r3-mc3c-b1633f90c/src/tools/hier_contract/abstract_pin_stub.py",
+    "/srv/opentallas-scratch/claude/closure-loop/qkd_static_kv_return_slots_mc_r3-mc3c-b1633f90c/record/views/qkd_static_kv_return_slots_mc/provenance/raw/qkd_static_kv_return_slots_mc.lef",
+    "/srv/opentallas-scratch/claude/closure-loop/qkd_static_kv_return_slots_mc_r3-mc3c-b1633f90c/record/views/qkd_static_kv_return_slots_mc/provenance/qkd_static_kv_return_slots_mc.candidate.lef"
   ],
   "returncode": 0,
-  "stdout": "pinstub: 10 OBS rects moved into 10 pins: ck, hrst, idle_core, idle_hbm, pll_hbm, pll_hbm_data[0], pll_hbm_data[1], pll_hbm_data[2], pll_hbm_data[3], rsi; pockets: 5329 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
+  "stdout": "pinstub: 10 OBS rects moved into 10 pins: ck, hrst, idle_core, idle_hbm, pll_hbm, pll_hbm_data[0], pll_hbm_data[1], pll_hbm_data[2], pll_hbm_data[3], rsi; pockets: 5094 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
   "stderr": "",
   "invariants": {
     "macro_outline": "PASS",
@@ -30,11 +30,11 @@
   },
   "child_lint": {
     "schema": "opentallas.hier_contract.child_lint.v1",
-    "lef": "/srv/opentallas-scratch2/claude/closure-loop/qkd_static_kv_return_slots_mc_r3-mc3b-d4c0e5fee/record/views/qkd_static_kv_return_slots_mc/provenance/qkd_static_kv_return_slots_mc.candidate.lef",
+    "lef": "/srv/opentallas-scratch/claude/closure-loop/qkd_static_kv_return_slots_mc_r3-mc3c-b1633f90c/record/views/qkd_static_kv_return_slots_mc/provenance/qkd_static_kv_return_slots_mc.candidate.lef",
     "verdict": "PASS",
     "fails": [],
     "warns": [],
-    "summary": "qkd_static_kv_return_slots_mc 194.4 x 216.0: PG M5 VDD 36 stripes (97% spread, 100% cov) / VSS 36 stripes (97% spread, 100% cov); strap M6; face pins 645 blocked-above 0 blocked-same 0; clock ck insertion 256 ps; clock pll_hbm insertion 274 ps; clock pll_hbm_data[3] insertion 259 ps; clock pll_hbm_data[2] insertion 245 ps; clock pll_hbm_data[1] insertion 225 ps; clock pll_hbm_data[0] insertion 194 ps; pockets M5 0 (closed)",
+    "summary": "qkd_static_kv_return_slots_mc 194.4 x 216.0: PG M5 VDD 36 stripes (97% spread, 100% cov) / VSS 36 stripes (97% spread, 100% cov); strap M6; face pins 645 blocked-above 0 blocked-same 0; clock ck insertion 270 ps; clock pll_hbm insertion 253 ps; clock pll_hbm_data[3] insertion 269 ps; clock pll_hbm_data[2] insertion 222 ps; clock pll_hbm_data[1] insertion 192 ps; clock pll_hbm_data[0] insertion 171 ps; pockets M5 0 (closed)",
     "info": {
       "cell": "qkd_static_kv_return_slots_mc",
       "W": 194.4,
@@ -77,28 +77,28 @@
       },
       "clock_insertion": {
         "ck": {
-          "max_ps": 255.52,
-          "min_ps": 195.16
+          "max_ps": 269.65,
+          "min_ps": 198.97
         },
         "pll_hbm": {
-          "max_ps": 273.92,
-          "min_ps": 221.71
+          "max_ps": 253.1,
+          "min_ps": 182.85
         },
         "pll_hbm_data[3]": {
-          "max_ps": 258.97,
-          "min_ps": 192.41
+          "max_ps": 268.78,
+          "min_ps": 190.68
         },
         "pll_hbm_data[2]": {
-          "max_ps": 244.53,
-          "min_ps": 183.46
+          "max_ps": 221.89,
+          "min_ps": 165.98
         },
         "pll_hbm_data[1]": {
-          "max_ps": 224.57,
-          "min_ps": 178.81
+          "max_ps": 192.31,
+          "min_ps": 153.88
         },
         "pll_hbm_data[0]": {
-          "max_ps": 193.56,
-          "min_ps": 121.79
+          "max_ps": 171.03,
+          "min_ps": 126.94
         }
       },
       "pockets": {
@@ -107,7 +107,7 @@
         "marker": {
           "layer": "M5",
           "d_um": 1.536,
-          "added": 5329
+          "added": 5094
         },
         "count": 0,
         "area_um2": 0,
@@ -117,6 +117,6 @@
   },
   "output": {
     "path": "qkd_static_kv_return_slots_mc.lef",
-    "sha256": "277a69b83edcf4d4e83dfab2315aa6bec32804c39a254824d6da2858a0d1a108"
+    "sha256": "8cecb9575230ba5422bd3680a0ec19162864ac9fa5f222d339f3e346137fc65f"
   }
 }

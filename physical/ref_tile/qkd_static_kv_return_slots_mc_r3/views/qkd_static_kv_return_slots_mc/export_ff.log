@@ -26,10 +26,9 @@ Components of this program may be licensed under more restrictive licenses which
 [WARNING STA-0450] virtual clock ot_lb_v_hdata_1 can not be propagated.
 [WARNING STA-0450] virtual clock ot_lb_v_hdata_2 can not be propagated.
 [WARNING STA-0450] virtual clock ot_lb_v_hdata_3 can not be propagated.
-QDM PINFLOP reference: 64 input pin flops, median arrival 355.338867 (range 183.002136 .. 356.695496)
-QDM reference pin hd[186]$_DFF_P_/CLK clock arrival max 355.338867 min 180.807266 skew 90 hold 50
+QDM reference pin ot_prs_00276_ff/CLK clock arrival max 181.675690 min 171.910004 skew 90 hold 50
 OT_IO_INTER 0 inputs 0 outputs at 150 ps
-QKD_RETURN_SLOTS hclk reference hd[203]$_DFF_P_/CLK of 32 pin flops: clock arrival max 356.309814 min 181.540161 skew 90 hold 50
+QKD_RETURN_SLOTS hclk reference done_sync1[1]$_DFF_PN0_/CLK of 256 pin flops: clock arrival max 331.606171 min 157.984726 skew 90 hold 50
 [WARNING STA-0450] virtual clock ot_lb_v_core_clk can not be propagated.
 [WARNING STA-0450] virtual clock ot_lb_v_hclk can not be propagated.
 [WARNING STA-0450] virtual clock ot_lb_v_hdata_0 can not be propagated.
@@ -48,12 +47,12 @@ OT_IOREF_EDGE hdata_0 boundary 0 negedge 0 noarc 0 inverted 0
 OT_IOREF_EDGE hdata_1 boundary 0 negedge 0 noarc 0 inverted 0
 OT_IOREF_EDGE hdata_2 boundary 0 negedge 0 noarc 0 inverted 0
 OT_IOREF_EDGE hdata_3 boundary 0 negedge 0 noarc 0 inverted 0
-OT_IOREF ot_lb_v_core_clk core_clk mean 176.6 min 166.5 max 197.7 n 325 boundary
-OT_IOREF ot_lb_v_hclk hclk mean 196.7 min 188.7 max 209.9 n 293 boundary
-OT_IOREF ot_lb_v_hdata_0 hdata_0 mean 122.9 min 105.2 max 154.0 n 4608 all
-OT_IOREF ot_lb_v_hdata_1 hdata_1 mean 164.5 min 154.1 max 174.0 n 4608 all
-OT_IOREF ot_lb_v_hdata_2 hdata_2 mean 165.9 min 154.8 max 189.8 n 4608 all
-OT_IOREF ot_lb_v_hdata_3 hdata_3 mean 181.8 min 166.5 max 204.8 n 4608 all
+OT_IOREF ot_lb_v_core_clk core_clk mean 181.8 min 171.7 max 209.9 n 325 boundary
+OT_IOREF ot_lb_v_hclk hclk mean 173.5 min 157.7 max 199.0 n 293 boundary
+OT_IOREF ot_lb_v_hdata_0 hdata_0 mean 120.2 min 108.0 max 133.7 n 4608 all
+OT_IOREF ot_lb_v_hdata_1 hdata_1 mean 142.7 min 133.1 max 150.7 n 4608 all
+OT_IOREF ot_lb_v_hdata_2 hdata_2 mean 159.9 min 142.6 max 174.1 n 4608 all
+OT_IOREF ot_lb_v_hdata_3 hdata_3 mean 177.9 min 162.5 max 211.1 n 4608 all
 OT_IOREF clock-port ck (core_clk): data input delays dropped
 OT_IOREF clock-port pll_hbm (hclk): data input delays dropped
 OT_IOREF clock-port pll_hbm_data[0] (hdata_0): data input delays dropped
@@ -66,11 +65,11 @@ OT_IOREF_EDGE hdata_0 boundary 0 negedge 0 noarc 0 inverted 0
 OT_IOREF_EDGE hdata_1 boundary 0 negedge 0 noarc 0 inverted 0
 OT_IOREF_EDGE hdata_2 boundary 0 negedge 0 noarc 0 inverted 0
 OT_IOREF_EDGE hdata_3 boundary 0 negedge 0 noarc 0 inverted 0
-OT_IOREF ot_lb_v_core_clk core_clk mean 176.6 min 166.5 max 197.7 n 325 boundary
-OT_IOREF ot_lb_v_hclk hclk mean 196.7 min 188.7 max 209.9 n 293 boundary
-OT_IOREF ot_lb_v_hdata_0 hdata_0 mean 122.9 min 105.2 max 154.0 n 4608 all
-OT_IOREF ot_lb_v_hdata_1 hdata_1 mean 164.5 min 154.1 max 174.0 n 4608 all
-OT_IOREF ot_lb_v_hdata_2 hdata_2 mean 165.9 min 154.8 max 189.8 n 4608 all
-OT_IOREF ot_lb_v_hdata_3 hdata_3 mean 181.8 min 166.5 max 204.8 n 4608 all
-OT_WS max 1.4493406474969106e-10 min 2.5642293843830544e-11
+OT_IOREF ot_lb_v_core_clk core_clk mean 181.8 min 171.7 max 209.9 n 325 boundary
+OT_IOREF ot_lb_v_hclk hclk mean 173.5 min 157.7 max 199.0 n 293 boundary
+OT_IOREF ot_lb_v_hdata_0 hdata_0 mean 120.2 min 108.0 max 133.7 n 4608 all
+OT_IOREF ot_lb_v_hdata_1 hdata_1 mean 142.7 min 133.1 max 150.7 n 4608 all
+OT_IOREF ot_lb_v_hdata_2 hdata_2 mean 159.9 min 142.6 max 174.1 n 4608 all
+OT_IOREF ot_lb_v_hdata_3 hdata_3 mean 177.9 min 162.5 max 211.1 n 4608 all
+OT_WS max 2.3007429295063275e-10 min 1.300244634183656e-11
 OT_EXPORT_DONE
