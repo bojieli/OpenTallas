@@ -8,7 +8,7 @@ module ot_hfd_coll_q_static_v4 #(
  // INJLAT (H-NETLIST/coll 2026-10-16): SU inject answer latency, request launch P -> qslots capture P+INJLAT.
  // Default 12 = the closed behaviour; the die value is 10 + request relays + return relays (+2 in SW for the
  // cij_SW IDX join), sized from the H-DIE layout. Legal INJLAT >= 2.
- parameter integer NPT=3,SOLO=1,INJLAT=12,
+ parameter integer NPT=3,SOLO=1,INJLAT=12,TP=96,
  parameter integer NS=2+NPT+4+2,ND=NPT+12+1,SELW=$clog2(NS)
 )(
  input wire rst_n,
@@ -254,7 +254,7 @@ module ot_hfd_coll_q_static_v4 #(
   .pub_meta({1'b1,8'hff,a_pub_src,a_pub_index}),.pub_release(a_pub_release),.pub_issue(a_pub_issue),
   .out_v(reduce_out_v),.out_flit(reduce_out_data),.fault(reduce_fault),.fault_cause(reduce_fault_cause));
  generate if(SOLO!=0)begin:g_arg
-  ot_hgi_coll_argmax_static u_arg(.clk(clk_arg),.rst_n(rst_n),.start(a_arg_start),
+  ot_hgi_coll_argmax_static #(.MAX_GROUP(TP)) u_arg(.clk(clk_arg),.rst_n(rst_n),.start(a_arg_start),
    .cfg_g(p_tkm_cfg_g),.cfg_gbase(p_tkm_cfg_gbase),.cfg_rank(a_pub_src),
    .in_slot(a_arg_in_slot & {4{a_arg_mode}}),.in_v(dest_v[NPT+8+:4] & {4{a_arg_mode}}),
    .in_flit(dest_d[(NPT+8)*545+:2180]),.flush_slot(a_arg_flush),.publish_slot(a_arg_publish),
@@ -347,7 +347,7 @@ module ot_hfd_coll_q_static_v4 #(
   .rr_local_tag(r_rr_local_tag));
 endmodule
 
-module ot_hfd_coll_q3_static_v4 #(parameter integer INJLAT=12,parameter integer NLINK=3)(
+module ot_hfd_coll_q3_static_v4 #(parameter integer INJLAT=12,parameter integer NLINK=3,parameter integer TP=96)(
  input wire rst_n,
  input wire clk_control,
  input wire [3:0] clk_issue,
@@ -395,10 +395,10 @@ module ot_hfd_coll_q3_static_v4 #(parameter integer INJLAT=12,parameter integer 
  output wire done,
  output wire [31:0] stat_cycles
 );
- ot_hfd_coll_q_static_v4 #(.NPT(NLINK),.SOLO(1),.INJLAT(INJLAT)) u_q(.*);
+ ot_hfd_coll_q_static_v4 #(.NPT(NLINK),.TP(TP),.SOLO(1),.INJLAT(INJLAT)) u_q(.*);
 endmodule
 
-module ot_hfd_coll_q2_static_v4 #(parameter integer INJLAT=12,parameter integer NLINK=2)(
+module ot_hfd_coll_q2_static_v4 #(parameter integer INJLAT=12,parameter integer NLINK=2,parameter integer TP=96)(
  input wire rst_n,
  input wire clk_control,
  input wire [3:0] clk_issue,
@@ -446,7 +446,7 @@ module ot_hfd_coll_q2_static_v4 #(parameter integer INJLAT=12,parameter integer 
 );
  wire [33:0] clk_tkm=34'd0;
  wire clk_arg=1'b0;
- ot_hfd_coll_q_static_v4 #(.NPT(NLINK),.SOLO(0),.INJLAT(INJLAT)) u_q(.*);
+ ot_hfd_coll_q_static_v4 #(.NPT(NLINK),.TP(TP),.SOLO(0),.INJLAT(INJLAT)) u_q(.*);
 endmodule
 
 // Actual hardenable protocol leaf: all parent request/assembly/pipeline state.
