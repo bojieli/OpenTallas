@@ -31,10 +31,11 @@
     "expect": "pass",
     "threads": 2,
     "peak_ram_gb": 4,
-    "cmd": "bash rtl/hbm_accel/generic/adapters/tb/bfqg/run.sh {RUN}/bfqg_exact",
-    "pass_regex": "BFQG_SUITE_PASS positive=1 rejected_mutants=10",
-    "min_count_regex": "checks=([0-9]+)",
-    "min_count": 5136
+    "cmd": "bash rtl/hbm_accel/generic/adapters/tb/bfqg/run.sh {RUN}/bfqg_exact && grep -h '^BFQG_RESULT' {RUN}/bfqg_exact/positive.log",
+    "pass_regex": "^BFQG_SUITE_PASS positive=1 rejected_mutants=10$",
+    "min_count_regex": "^BFQG_RESULT cycles=[0-9]+ checks=([0-9]+) bank_writes=[0-9]+ bank_reads=[0-9]+ errors=0 mutant=-1 ",
+    "min_count": 5136,
+    "pass_witness": "results/hbm_sm_attention_1015/hsm_2013/bfqg-scalar/exact_bench_fixed.log"
    },
    {
     "name": "bfqg_mask_wrong_mutant",
