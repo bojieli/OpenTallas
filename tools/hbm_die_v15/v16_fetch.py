@@ -80,7 +80,10 @@ for m, f in mods.items():
         w, h = float(s.group(1)), float(s.group(2))
     mac[m] = [max(c), w, h]
 out = dict(std_area_um2=area, macros=mac, actual_top=tops[0], source_file_sha256=input_hashes,
-           synthesis_script_sha256=hashlib.sha256(ys.encode()).hexdigest(), etm_script_sha256=etm_scripts)
+           synthesis_script_sha256=hashlib.sha256(ys.encode()).hexdigest(), etm_script_sha256=etm_scripts,
+           actual_macro_declarations=fj['macros'],
+           actual_library_reads=[shlex.split(line)[-1] for line in ys.splitlines()
+                                 if line.startswith('read_verilog ') and '-lib' in shlex.split(line)])
 if direct:
     out.update(actual_elaboration_script=ys, expected_resolution=resolution,
                resolution_tool_sha256=resolution_tool_sha256, observed_synth_launcher_sha256=observed_synth_launcher_sha256)
@@ -95,12 +98,14 @@ def check_sources(meta, commit, views):
     data = subprocess.run(['git', '-C', str(Path(__file__).resolve().parents[2]), 'cat-file', '--batch'],
                           input=''.join(f'{commit}:{p}\n' for p in paths).encode(), capture_output=True, check=True).stdout
     offset = 0
+    source_blobs = {}
     for p in paths:
         end = data.index(b'\n', offset)
         header = data[offset:end].split()
         if len(header) != 3 or header[1] != b'blob':
             raise ValueError(f'Source absent from {commit}: {p}')
         size = int(header[2]); blob = data[end + 1:end + 1 + size]; offset = end + 2 + size
+        source_blobs[p] = blob
         if hashlib.sha256(blob).hexdigest() != hashes[p]:
             raise ValueError(f'Source differs from {commit}: {p}')
     for p in hashes:
@@ -108,6 +113,56 @@ def check_sources(meta, commit, views):
             local = Path(views) / 'wrap' / Path(p).name
             if hashlib.sha256(local.read_bytes()).hexdigest() != hashes[p]:
                 raise ValueError(f'Parameter wrapper mismatch: {p}')
+            source_blobs[p] = local.read_bytes()
+    return source_blobs
+
+
+def expected_memory_macros(commit):
+    """Resolve physical SRAM definitions from Git, never from a partial staged tree."""
+    root = Path(__file__).resolve().parents[2]
+    result = subprocess.run(['git', '-C', str(root), 'grep', '-n', '-E',
+                             r'module[[:space:]]+[A-Za-z_]', commit, '--',
+                             ':(glob)physical/asap7_memory_macros_v2/*/*_bb.v'],
+                            capture_output=True, text=True)
+    if result.returncode not in (0, 1):
+        raise ValueError('Cannot resolve expected mapped memory definitions from Git')
+    catalog = {}
+    for line in result.stdout.splitlines():
+        _, path, _, text = line.split(':', 3)
+        for module in re.findall(r'\bmodule\s+([A-Za-z_]\w*)', text):
+            # PHYs remain permitted external models; this gate is on-chip memory only.
+            if not module.startswith(('ot_sram_', 'ot_rom_')):
+                continue
+            previous = catalog.setdefault(module, path)
+            if previous != path:
+                raise ValueError(f'Ambiguous expected physical memory: {module}: {previous}, {path}')
+    return catalog
+
+
+def check_mapped_memory_resolution(meta, source_blobs, expected):
+    """Byte-identical SRAM simulation arrays cannot substitute a mapped macro."""
+    declared = {row['module']: row['file'] for row in meta['actual_macro_declarations']}
+    lib_reads = set(meta['actual_library_reads'])
+    selected = {}
+    for path, blob in source_blobs.items():
+        text = re.sub(r'/\*.*?\*/|//[^\n]*', '', blob.decode(), flags=re.S)
+        for module in re.findall(r'\bmodule\s+([A-Za-z_]\w*)', text):
+            if module not in expected:
+                continue
+            canonical = expected[module]
+            if path != canonical:
+                raise ValueError(f'Mapped memory {module} resolves to {path}; expected {canonical}')
+            if declared.get(module) != canonical or canonical not in lib_reads:
+                raise ValueError(f'Mapped memory {module} was not read as its physical blackbox library')
+            stem = canonical[:-len('_bb.v')]
+            sidecars = [stem + ext for ext in ('.lef', '_tt.lib', '_ff.lib')]
+            if any(path not in meta['source_file_sha256'] for path in sidecars):
+                raise ValueError(f'Mapped memory {module} missing consumed LEF/TT/FF source hashes')
+            selected[module] = canonical
+    for module, canonical in declared.items():
+        if module in expected and (canonical != expected[module] or module not in selected):
+            raise ValueError(f'Mapped memory declaration does not match exact expected source: {module}')
+    return selected
 
 
 def check_contract_entry(entry, contract):
@@ -175,6 +230,7 @@ def main():
         ['git', '-C', str(Path(__file__).resolve().parents[2]), 'show',
          f'{a.commit}:results/arch/hbm_die_v16/contract.json']))
     contract = json.loads(contract_bytes)
+    expected_memories = expected_memory_macros(a.commit)
     found = {}
     hosts = set(HOSTS)
     for receipt in (Path(a.views) / 'drive').glob('*.json'):
@@ -207,9 +263,10 @@ def main():
         if meta.returncode:
             raise ValueError(f'Cannot admit {c}: {meta.stderr[-1000:]}')
         m = json.loads(meta.stdout)
-        check_sources(m, build_commit, a.views)
+        blobs = check_sources(m, build_commit, a.views)
         if build_commit != a.commit:
-            check_sources(m, a.commit, a.views)
+            blobs = check_sources(m, a.commit, a.views)
+        m['mapped_memory_resolution'] = check_mapped_memory_resolution(m, blobs, expected_memories)
         dst = Path(a.views) / 'synth' / c
         dst.mkdir(parents=True, exist_ok=True)
         files = (f'{w}_synth_tt.lib', f'{w}_synth_ff.lib', 'etm_worst_tt.rpt', 'etm_worst_ff.rpt')
