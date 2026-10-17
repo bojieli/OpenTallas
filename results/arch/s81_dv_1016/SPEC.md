@@ -68,6 +68,26 @@ Why the column can be narrow:
 - The +63 cycles are priced as the rule `norm_finish_seq` on every full-h norm: −0.55% MTP (4,248 → 4,226).
 - A 2–4 adder finish on independent subtrees, same operands and order, so still exact, could recover at most that 0.55%. It is not pursued (owner: only significant gains). The single-adder leaf keeps the flop count near the 15 k root guideline.
 
+### White space (owner rule no-empty-regions-1017): p2 = p1 + fill
+
+Measured with `tools/s81_dv/whitespace.py`: a 50-µm raster; an empty rectangle wider and taller than 450 µm counts as over channel.
+
+| | White space | Over-channel empty | Largest empty rectangle |
+|---|---|---|---|
+| p1 | 25.2% (184.6 mm²) | 146.1 mm², 37 rectangles: slice-column ends and void leftovers, 4–6 mm² each | 29.35 × 0.35 mm die-top margin |
+| **p2** (`dv_plan.py --fill`) | **11.3% (83.2 mm²)** | **7.9 mm²** | the same 0.35-mm die-top margin (under channel size) |
+
+- **Fill:** 43 blocks, 93.9 mm².
+  - Slice-column stretches hold `dsdv_fill_dcap_rly`: PDN decap for the slices' SU/HC lanes, the relay and repeater site banks for the column and street die nets (`repair_design` places about 6 BUFx8 per mm per bit), and ECO spares.
+  - South-band corners hold `dsdv_fill_dcap_phy`: PHY-side decap.
+  - Fill is clipped 60 µm clear of every vertical die-link segment and the band edge, so no link crosses a fill block.
+- **Residual 7.9 mm²:**
+  - Column 0's strip between the coll-unit links and the ring end link (0.45 mm wide).
+  - Column 3's 16-link ctl bundle channel (0.55 mm wide, both sides of the G-unit).
+  - Two 0.5-mm band slivers over the SM tiles (1.5 mm²), to be filled with PHY decap at the die trial.
+- Links are unchanged from p1: cut 0.427, over-reach 0, relays 2,018, 0.47 M bit·mm. Price is unchanged.
+- **Alternative to fill (needs a coordinator decision):** turn the slice-column ends into ROM, one frame per column end per tier. That gives 9 frames per slice (144 frames, +12.5% ROM per die, about −10 stages, ≈ +1.2% tok/s). It needs the row-0/row-3 frames placed MX so their cfifo taps face the street, plus lane rework. It is not done: the owner prefers only significant gains, and the fill keeps p1's verified links.
+
 ### Reach sensitivity (coordinator / H-REACH, 10-16)
 
 H-REACH measured native S81 relay cells. UNBUFFERED die wires are slew-limited to 100–200 µm on M4/M5; timing alone would allow about 400–500 µm. Buffered reach (repeaters on the die net) is being measured.

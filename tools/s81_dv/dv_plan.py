@@ -302,6 +302,38 @@ def geometry_facts(P, facts):
     return facts
 
 
+def fill(P, facts, ws):
+    """Fill every over-channel empty rectangle inside a slice column with a designated fill block (PDN decap for
+    the slices' SU/HC lanes + relay / repeater site bank for the column and street die nets + ECO spares).  The
+    block keeps 130 um clear on both column edges: those are the frame x-chain / return lanes (routing channel)."""
+    colx = lambda c: EDGE + c * PITCH + FRAME_PITCH
+    r = ws.analyse(dict(facts=facts, blocks=P.blocks))
+    k = 0
+    for e in r['over_channel']:
+        for c in range(NCOL):
+            x0, x1 = colx(c), colx(c) + SCOL_W
+            if e['x'] >= x0 - 60 and e['x'] + e['w'] <= x1 + 60:
+                fx0, fx1 = max(float(e['x']), x0 + 130), min(float(e['x'] + e['w']), x1 - 130)
+                y0, y1 = max(float(e['y']) + 60, BAND + 300), float(e['y'] + e['h']) - 60   # band edge = channel
+                # split at every vertical die-link segment crossing this y-span (lanes stay routing channel)
+                cuts = sorted({h[0] for l in P.links for h in l['h'] if abs(h[0] - h[2]) < 1 and fx0 - 60 < h[0] < fx1 + 60
+                               and min(h[1], h[3]) < y1 and max(h[1], h[3]) > y0})
+                edges = [fx0] + [v for c_ in cuts for v in (c_ - 60, c_ + 60)] + [fx1]
+                for a_, b_ in zip(edges[0::2], edges[1::2]):
+                    if b_ - a_ > 300 and y1 - y0 > 300:
+                        P.block(f'fill_{c}_{k}', 'dsdv_fill_dcap_rly', 'fill', 'fill', a_, y0, b_ - a_, y1 - y0)
+                        k += 1
+                break
+        else:   # outside the slice columns (south band corners / above the SM tiles): PHY-side decap
+            if e['w'] > 420 and e['h'] > 420 and e['y'] + e['h'] <= BAND + 60:
+                P.block(f'fill_b_{k}', 'dsdv_fill_dcap_phy', 'fill', 'fill', float(e['x']) + 30, float(e['y']) + 30,
+                        float(e['w']) - 60, float(e['h']) - 60)
+                k += 1
+    facts['fill_blocks'] = k
+    facts['fill_mm2'] = round(sum(b['w'] * b['h'] for b in P.blocks if b['kind'] == 'fill') / 1e6, 1)
+    facts['whitespace_after'] = {kk: v for kk, v in ws.analyse(dict(facts=facts, blocks=P.blocks)).items() if kk != 'over_channel'}
+
+
 def record(P, facts, args):
     keys = ('name', 'master', 'kind', 'group', 'reg', 'x', 'y', 'w', 'h')
     blocks = {k: [b[k] for b in P.blocks] for k in keys}
@@ -317,7 +349,7 @@ def draw(P, facts, out):
     matplotlib.use('Agg')
     import matplotlib.pyplot as plt
     from matplotlib.patches import Rectangle
-    col = dict(frame='#d9d9d9', slice='#2b7bba', unit='#e6a23c', phy='#8c564b', ctrl='#8c564b', svc='#c49c94', link='#7f7f7f')
+    col = dict(frame='#d9d9d9', slice='#2b7bba', unit='#e6a23c', phy='#8c564b', ctrl='#8c564b', svc='#c49c94', link='#7f7f7f', fill='#c7e9c0')
     lc = dict(xring='#d62728', x_frame='#2ca02c', ret='#9467bd', ctl='#17becf', attn='#ff7f0e', hbm='#8c564b', coll='#e377c2')
     fig, ax = plt.subplots(figsize=(16.5, 13))
     for b in P.blocks:
@@ -349,11 +381,16 @@ def main():
     ap.add_argument('--label', default='S81-DV p1: 16 distributed vector slices, slice ring, narrow columns, 0.5 mm+ reticle margin (plan level)')
     ap.add_argument('--revision', default='dv-p1')
     ap.add_argument('--hop-um', type=float, default=HOP_UM, help='plan hop (sensitivity: H-REACH unbuffered 200 um)')
+    ap.add_argument('--fill', action='store_true', help='owner rule no-empty-regions-1017: fill slice-column stretches')
     a = ap.parse_args()
     HOP_UM = a.hop_um
     out = Path(a.out); out.mkdir(parents=True, exist_ok=True)
     P, facts = build()
     geometry_facts(P, facts)
+    import whitespace as ws
+    facts['whitespace_before'] = {k: v for k, v in ws.analyse(dict(facts=facts, blocks=P.blocks)).items() if k != 'over_channel'}
+    if a.fill:
+        fill(P, facts, ws)
     import sys
     sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'fleet_viz'))
     import dataflow_links as dl
