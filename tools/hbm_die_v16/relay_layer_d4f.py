@@ -95,6 +95,29 @@ def main():
             claimed[di] |= {(p, k) for p, k, _ in rowbits[bi]}
             if rowbits[bi]:
                 notes.append(f'{r["driver"]}: ports remastered -> {len(rowbits[bi])} bits on {sorted({p for p, _, _ in rowbits[bi]})[:6]}')
+    # remaining unclaimed bits of a listed driver whose sink set matches a row of it (port split into more face groups,
+    # e.g. sfu _w/_e -> _w/_n/_e/_s): join the row with the same port stem (else the first such row)
+    import re as _re0
+    stem = lambda p: _re0.sub(r'_[wnes]$', '', p)
+    rows_of = collections.defaultdict(list)
+    for bi, r in enumerate(st['rows']):
+        rows_of[r['driver'].split('.', 1)[0]].append(bi)
+    unmatched = collections.Counter()
+    for di, bis in rows_of.items():
+        for p, k, ls in by_drv.get(di, []):
+            if (p, k) in claimed[di]:
+                continue
+            ss = {x[0] for x in ls}
+            cand = [bi for bi in bis if set(st['rows'][bi]['sinks']) == ss]
+            if not cand:
+                unmatched[di] += 1; continue
+            pick = next((bi for bi in cand if stem(p) in {stem(q) for q in st['rows'][bi]['driver'].split('.', 1)[1].split('+')}), cand[0])
+            rowbits[pick].append((p, k, ls)); claimed[di].add((p, k))
+            notes.append(f'{st["rows"][pick]["driver"]}: +{p}[{k}] (new face port, same sinks)') if k == 0 else None
+    for bi in rowbits:
+        rowbits[bi].sort()
+    for di, v in unmatched.items():
+        notes.append(f'{di}: {v} driver bits with no list row of the same sink set (not relayed: local or new sink set)')
     for bi, r in enumerate(st['rows']):
         di, ports = r['driver'].split('.', 1); ports = set(ports.split('+'))
         sinks = list(r['sinks']); sset = set(sinks)
