@@ -30,13 +30,13 @@
  },
  "pins": {
   "W": [
-   "fclk",
-   "rst_pin",
-   "ze_d",
+   "t_p",
    "v_s",
+   "ze_d",
    "w_s",
-   "x_s",
-   "t_p"
+   "rst_pin",
+   "fclk",
+   "x_s"
   ],
   "E": [
    "cv",
@@ -102,6 +102,7 @@
   "physical/ref_tile/s81_bf_cl_lane4/kit.env",
   "physical/ref_tile/s81_bf_cl_lane4/clock.sdc",
   "physical/ref_tile/s81_bf_cl_lane4/signoff.sdc",
+  "physical/ref_tile/s81_bf_cl_lane4/signoff_ffrepair.sdc",
   "physical/ref_tile/s81_bf_cl_lane4/pdn.tcl",
   "physical/ref_tile/s81_bf_cl_lane4/pre_cts.tcl",
   "physical/ref_tile/s81_bf_cl_lane4/post_cts.tcl",
@@ -120,14 +121,8 @@
   "physical/qwen_die_masters/post_plain.tcl",
   "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
   "physical/common_flow/grt_macro_top_layer.tcl",
+  "physical/ref_tile_specs/s81_bf_native_1015/cl_lane4/pins.tcl",
   "physical/qwen_die_masters/io_flop_at_pins.tcl",
-  "physical/qwen_die_masters/out_flop_release.tcl",
-  "physical/dsrom_window_source/leaf_iohold.tcl",
-  "physical/dsrom_window_source/leaf_inhold_release.tcl",
-  "physical/dsrom_window_source/leaf_inhold.tcl",
-  "physical/dsrom_window_source/leaf_inhold_release.tcl",
-  "physical/ref_tile/s81_bf_cl_lane4/pre_gpl.tcl",
-  "physical/ref_tile/s81_bf_cl_lane4/pre_dpl.tcl",
-  "physical/common_flow/pin_reg_split.tcl"
+  "physical/qwen_die_masters/out_flop_release.tcl"
  ]
 }

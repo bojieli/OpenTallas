@@ -52,25 +52,22 @@
   "rtl/v41rom/ot_v41_bf_lane4_cl.sv"
  ],
  "layer_cap": "M5",
- "recipe": 2,
+ "recipe": 4,
  "route": {
   "pd": 0.6,
   "threads": 8,
   "peak_ram_gb": 16,
   "hold_margin_ns": 0.03,
-  "macro_halo_um": 5.4
+  "macro_halo_um": 5.4,
+  "io_hold_margin_ns": 0.0
  },
  "io_flop_at_pins": {
   "cols": 4,
   "allow_none": true
  },
- "inhold": true,
- "outhold": true,
+ "inhold": false,
+ "outhold": false,
  "keep_pin_regs": true,
- "pin_reg_split": true,
- "hold_pad": {
-  "cell": "HB2xp67_ASAP7_75t_R"
- },
  "name": "s81_bf_cl_lane4",
  "top": "ot_v41_bf_lane4_cl",
  "params": {
@@ -93,13 +90,13 @@
  },
  "pins": {
   "W": [
-   "fclk",
-   "rst_pin",
-   "ze_d",
+   "t_p",
    "v_s",
+   "ze_d",
    "w_s",
-   "x_s",
-   "t_p"
+   "rst_pin",
+   "fclk",
+   "x_s"
   ],
   "E": [
    "cv",
@@ -112,7 +109,7 @@
  "macros": [],
  "children": [],
  "inter": [],
- "structural_change": "S-ELEM BF column hardened cluster. lane4 r2 CTS gate native FAIL launch 238.2 (cs_p of lane 3, 6 pins > 220; R 191.7): lane chain registers sit behind per-lane ICGs deep in the tile. ot_v41_bf_lane4_cl adds a pin-side output register on its own local gated clock: +1 edge on the BF16 path (column BF16 +3, FP4 +1). r2 outline 86.4x95.04 (util ~0.56) for the 529.2-wide parent row; gate 80dc00520 at 95.04x95.04 native PASS L181.0/C160.7/sp8.1. r3 (parent 583.2 x 198.72, 20 um channel rule): 81x95.04 and ALL pins on W/E (clock/reset moved off N/S) so two lanes abut N-S (abutted_stack) in the parent; RTL unchanged. r3b: 82.08 wide (route r3 6fb20f457 FLOORPLAN_MARGIN 65.1% with hold allowance at 81.0).",
+ "structural_change": "S-ELEM BF column hardened cluster. lane4 r2 CTS gate native FAIL launch 238.2 (cs_p of lane 3, 6 pins > 220; R 191.7): lane chain registers sit behind per-lane ICGs deep in the tile. ot_v41_bf_lane4_cl adds a pin-side output register on its own local gated clock: +1 edge on the BF16 path (column BF16 +3, FP4 +1). r2 outline 86.4x95.04 (util ~0.56) for the 529.2-wide parent row; gate 80dc00520 at 95.04x95.04 native PASS L181.0/C160.7/sp8.1. r3 (parent 583.2 x 198.72, 20 um channel rule): 81x95.04 and ALL pins on W/E (clock/reset moved off N/S) so two lanes abut N-S (abutted_stack) in the parent; RTL unchanged. r3b: 82.08 wide (route r3 6fb20f457 FLOORPLAN_MARGIN 65.1% with hold allowance at 81.0). r3c (coordinator tile review): explicit full-face pin plan tools/s81/bf_cl_child_pins.py (neighbour-facing, <=6 pins/um), recipe 4 flop-first pins (hold_budget die; RTL registers every data pin).",
  "pin_regs": {
   "enable": false,
   "reason": "RTL registers every child input at the pin (gen_bf_column_cluster.py); outputs come from arithmetic pipeline registers."
@@ -172,5 +169,7 @@
   "views_to": "physical/s81_die_views/bf_cl_1016/cl_lane4",
   "record_to": "results/physical/s81_bf_cl_1016/cl_lane4",
   "branch": "claude/selem-bfcol-2020"
- }
+ },
+ "io_tcl": "physical/ref_tile_specs/s81_bf_native_1015/cl_lane4/pins.tcl",
+ "hold_budget": "die"
 }

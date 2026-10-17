@@ -51,25 +51,22 @@
   "rtl/v41rom/ot_v41_bf_cl_leaves.sv"
  ],
  "layer_cap": "M5",
- "recipe": 2,
+ "recipe": 4,
  "route": {
   "pd": 0.6,
   "threads": 8,
   "peak_ram_gb": 16,
   "hold_margin_ns": 0.03,
-  "macro_halo_um": 5.4
+  "macro_halo_um": 5.4,
+  "io_hold_margin_ns": 0.0
  },
  "io_flop_at_pins": {
   "cols": 4,
   "allow_none": true
  },
- "inhold": true,
- "outhold": true,
+ "inhold": false,
+ "outhold": false,
  "keep_pin_regs": true,
- "pin_reg_split": true,
- "hold_pad": {
-  "cell": "HB2xp67_ASAP7_75t_R"
- },
  "name": "s81_bf_cl_fp",
  "top": "ot_v41_bf_fp_cl",
  "params": {},
@@ -87,7 +84,6 @@
   "W": [
    "ze_d",
    "v0",
-   "v1",
    "tag",
    "xq0",
    "xe0",
@@ -95,13 +91,12 @@
    "we0"
   ],
   "S": [
+   "v1",
    "xq1",
    "xe1",
    "wq1",
    "we1",
-   "rst_pin"
-  ],
-  "E": [
+   "rst_pin",
    "q_v",
    "q_val",
    "q_err",
@@ -116,7 +111,7 @@
  "macros": [],
  "children": [],
  "inter": [],
- "structural_change": "S-ELEM BF column hardened cluster (hybrid12 ten-root CTS failed: 710 ps insertion, 100-390 ps spread, FF -314). FP4 chunk pair (fp0 pair leaf + fp1 chain) as one hardened single-root child; input register = last FXST relay stage moved from the parent (+0 cycles). r2: gate 7127751e2 native FAIL (R 257.2 on the 64.8x198.72 strip, launch 308.5 q_val mux, rst capture 204.3; std 7911 um2): compact 108x129.6 outline (util ~0.57) and a pin-side output register on a local gated clock (+1 FP4; column FP4 +2). r3: 120.96x108 (util ~0.60) so fp stacks over seg with a 20 um channel inside the 198.72 parent height; RTL unchanged (gate at 108x129.6 native PASS L196.4/C175.8). r3b: 126.36 wide (gate 6fb20f457 util 65% at 120.96; hold allowance).",
+ "structural_change": "S-ELEM BF column hardened cluster (hybrid12 ten-root CTS failed: 710 ps insertion, 100-390 ps spread, FF -314). FP4 chunk pair (fp0 pair leaf + fp1 chain) as one hardened single-root child; input register = last FXST relay stage moved from the parent (+0 cycles). r2: gate 7127751e2 native FAIL (R 257.2 on the 64.8x198.72 strip, launch 308.5 q_val mux, rst capture 204.3; std 7911 um2): compact 108x129.6 outline (util ~0.57) and a pin-side output register on a local gated clock (+1 FP4; column FP4 +2). r3: 120.96x108 (util ~0.60) so fp stacks over seg with a 20 um channel inside the 198.72 parent height; RTL unchanged (gate at 108x129.6 native PASS L196.4/C175.8). r3b: 126.36 wide (gate 6fb20f457 util 65% at 120.96; hold allowance). r3c (coordinator tile review): explicit full-face pin plan tools/s81/bf_cl_child_pins.py (neighbour-facing, <=6 pins/um), recipe 4 flop-first pins (hold_budget die; RTL registers every data pin).",
  "pin_regs": {
   "enable": false,
   "reason": "RTL registers every child input at the pin (gen_bf_column_cluster.py); outputs come from arithmetic pipeline registers."
@@ -175,5 +170,7 @@
   "views_to": "physical/s81_die_views/bf_cl_1016/cl_fp",
   "record_to": "results/physical/s81_bf_cl_1016/cl_fp",
   "branch": "claude/selem-bfcol-2020"
- }
+ },
+ "io_tcl": "physical/ref_tile_specs/s81_bf_native_1015/cl_fp/pins.tcl",
+ "hold_budget": "die"
 }
