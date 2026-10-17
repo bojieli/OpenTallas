@@ -8,19 +8,12 @@
  "straps": [],
  "gaps": [],
  "param_override": {
-  "hb_vms_SW": {
-   "STRAP_BANKS": 1
-  },
   "hb_vms_SE": {
    "STRAP_BANKS": 1
-  },
-  "hb_vms_NW": {
-   "STRAP_BANKS": 1,
-   "Q2_MERGE": 1
   },
   "hb_vms_NE": {
    "STRAP_BANKS": 1
   }
  },
- "notes": "hb_vms_NW: physical bank masters (STRAP_BANKS=1); each q2 bank = exact q0 master hfd_vms_bank_native_q0 (physical view hfd_vms_bank_native_q0_faces, native PASS) + hfd_vms_wq2_merge (wq1|wq2 -> bank wq1, +2 edges; done via fixed 5-edge shift; flt -> bank status[17] fault -> vmstat -> vm_status4). Compiler: NW write owner codes 2->1, k>=3 -> k-1, NW writes issued 2 edges earlier (H-SM). All four hubs STRAP_BANKS=1 (H-DIE 21:4x): SW banks = hfd_vms_bank_native_q0 (view q0C faces), SE/NE (core-only _core wrappers) = hfd_vms_bank_native_q1 (their native master; client-absent leaves the bank ports unchanged), NW = q0 + wq2_merge."
+ "notes": "hb_vms_NW: physical bank masters (STRAP_BANKS=1); each q2 bank = exact q0 master hfd_vms_bank_native_q0 (physical view hfd_vms_bank_native_q0_faces, native PASS) + hfd_vms_wq2_merge (wq1|wq2 -> bank wq1, +2 edges; done via fixed 5-edge shift; flt -> bank status[17] fault -> vmstat -> vm_status4). Compiler: NW write owner codes 2->1, k>=3 -> k-1, NW writes issued 2 edges earlier (H-SM). All four hubs STRAP_BANKS=1 (H-DIE 21:4x): SW banks = hfd_vms_bank_native_q0 (view q0C faces), SE/NE (core-only _core wrappers) = hfd_vms_bank_native_q1 (their native master; client-absent leaves the bank ports unchanged), NW = q0 + wq2_merge. | 22:00: SW/NW banks HOISTED to die instances by layer vm_hoist_d4f (q0 banks vmb_<Q>b, NW merges vmm_NWb); SE/NE keep in-hub q1 banks (STRAP_BANKS=1)."
 }
