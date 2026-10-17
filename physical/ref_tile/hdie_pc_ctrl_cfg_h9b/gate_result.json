@@ -2,13 +2,13 @@
  "schema": "opentallas.ref_tile.gate_result.v2",
  "kit": "hdie_pc_ctrl_cfg_h9b",
  "verdict": "WARN",
- "generated": "2026-10-17T07:01:16-0700",
+ "generated": "2026-10-17T07:19:37-0700",
  "host": "ot-agidock128",
  "cts": true,
  "commit": null,
  "source_binding": {
   "schema": "opentallas.ref_tile.source_snapshot.v1",
-  "start_commit": "14ef9d3e4571566722ffc79cf79e2056a5f35223",
+  "start_commit": "c9091c3460bd298266adaeef771e96a0f16dce84",
   "commit": null,
   "identity": "exact_content_snapshot",
   "daemon_tree": "/home/ubuntu/wt-claude-closure-daemon-1010",
@@ -21,8 +21,8 @@
    "tools/orfs_hold_mm.tcl",
    "tools/textbook_lint.py"
   ],
-  "archive_sha256": "9cb1c12babec74b18ab69488a715517338269b46ca002737f388e36b389a5e8d",
-  "manifest_sha256": "7f73a3340b17741704b9ca3160e61d620e1e3d08032e7d2e430efd7431a9d40c",
+  "archive_sha256": "736cc4498eefbc26c5df9dbf908fa7129b40672b4f8a69a09ffa7ef52a840d04",
+  "manifest_sha256": "8c4bfb0a65bc587536111f66cc8be1b14cb3ac43260ede167106fa90545ddafd",
   "files": [
    {
     "path": "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.json",
@@ -675,10 +675,10 @@
    {
     "path": "physical/qwen_die_masters/io_ref_skew.sdc",
     "kind": "file",
-    "sha256": "2afa78be67a72e9eacabcaeaebe1cb996e266e6fde2f4e9df91fd256a52b9aca",
-    "git_blob": "1874abb5989bea4649c9b4383cecd29dbd03b8ca",
+    "sha256": "0e4e78ccad5605082b178b8676e5b54bbb9b3629d351e7868dbb386f3d1b7b0e",
+    "git_blob": "3133f8887929af521be556b46ff49b9aa82b9dbf",
     "source": "working_tree",
-    "matches_provenance_commit": false
+    "matches_provenance_commit": true
    },
    {
     "path": "physical/qwen_die_masters/macro_grid_place.tcl",
@@ -150195,14 +150195,14 @@
   ],
   "disk_admission": {
    "reserve_gb": 20,
-   "archive_bytes": 75641537,
-   "unpacked_bytes": 409870336,
+   "archive_bytes": 75642239,
+   "unpacked_bytes": 409874432,
    "pick_gb": 22,
    "runtime_gb": 22
   },
   "route_overlay_plan": {
    "schema": "opentallas.closure_loop.helper_overlay_plan.v1",
-   "origin_main": "e87832e6bd1779ee6c3e5afada0ae5b0dd24fd70",
+   "origin_main": "53453f830d5840529d8ed55e4eaac324d5d372ea",
    "content_sha256": "4f2b695b26c78a1b5935dc7c649ac2be2da4be89f87a7422b51595af09f13760",
    "files": [
     {
@@ -150700,7 +150700,7 @@
     "physical/hbm_die_pins/pc_cfg_h9/pins.tcl": "2c3293b5567a78349ebf2601ab6b68426cb884460151123bf078cac48ccbbf3c",
     "physical/qwen_die_masters/io_flop_at_pins.tcl": "fd57e8617b08d7c039cabb63c4cdaf7a52fab5b9bd63717441d83bda888ef26a",
     "physical/qwen_die_masters/io_plain.sdc": "5d5ab3c62e5b7327a9479511f7ee25178a181fd51305b863f684f11c7b17f7db",
-    "physical/qwen_die_masters/io_ref_skew.sdc": "2afa78be67a72e9eacabcaeaebe1cb996e266e6fde2f4e9df91fd256a52b9aca",
+    "physical/qwen_die_masters/io_ref_skew.sdc": "0e4e78ccad5605082b178b8676e5b54bbb9b3629d351e7868dbb386f3d1b7b0e",
     "physical/qwen_die_masters/out_flop_release.tcl": "b7c6e0fa3168727ccf9347d1d2dbf2118c5f9519f8475b6630e22cf71fb6fd9c",
     "physical/qwen_die_masters/post_plain.tcl": "c8ebde4f473d11a305e98d05faf5a494ad3bc8ebfaad985dd21c5422a6b9a214",
     "physical/qwen_die_masters/pre_cts_skew.tcl": "e845548e8349af78b8865a971e034e8666ee720501ebe83d9c2a9bf54528f8f6",
@@ -150765,16 +150765,16 @@
    },
    "digest": "edc147d2cd7ced7da6858c87adade95abd885b0addf21ef75405c73cd9aa1f12"
   },
-  "captured": "2026-10-17T06:47:44-0700",
+  "captured": "2026-10-17T07:06:40-0700",
   "route_hold_context": {
    "HM": "0.03",
    "OT_ROUTE_HOLD_CORNERS": "mm",
    "OT_MM_FF_SDC": "physical/ref_tile/hdie_pc_ctrl_cfg_h9b/signoff_ffrepair.sdc"
   },
-  "remote_script_sha256": "732acc16aa578f97f2a04c4fccc6f41f84f9d22b7311b7a2a5068e4c82c058f9",
+  "remote_script_sha256": "7fa7c033f76d8f04bb9fe76e31a312216b41f5906a9290137c618ed4ca5c4f72",
   "tool_image_requested": "openroad/orfs:latest",
   "remote_host": "ot-agidock128",
-  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/hdie_pc_ctrl_cfg_h9b-20261017-064701",
+  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/hdie_pc_ctrl_cfg_h9b-20261017-070529",
   "remote_archive_verified": true,
   "runtime_tool_provenance": [
    "GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=[\"openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29\"]",
