@@ -15,7 +15,7 @@
  ],
  "outline": {
   "w": 140.4,
-  "h": 77.76,
+  "h": 86.4,
   "exact": true
  },
  "macros": [
@@ -25,7 +25,7 @@
    "inst": "*u_pc*u_rows",
    "at": [
     22.68,
-    8.64
+    22.68
    ],
    "orient": "R0"
   }
@@ -96,12 +96,12 @@
  },
  "std_area_um2": 980,
  "slot_change_request": "KVCTRL 1815: child of qkd_static_kv_landing_seg_h (hierarchical landing seg, 151.2 x 1,512 parent slot unchanged). Lane = one landing PC: E face = its return-slot word (actual_*/expected_*), W face = its 256-b rsp_data lane, N face = row/relay seam + arm/epoch/layer/cfg/reset/clock; placed 4 x (lanes 2/3 MX so N faces the centre).",
- "structural_change": "KVCTRL 1815 (lead Q-KV 2026-10-16): structural variant of qkd_static_kv_landing_seg. The flat ls5 tile (151.2 x 1,512 um) is 9 % utilised and its ONE ck root measured 722..753 ps TT insertion over 1,512 um (9,492 sinks): even a CLOSED flat view fails native launch (<= 220 ps). qkd_static_kv_landing_seg_h = wires-only parent of hardened children with short local roots: 4 x qkd_static_kv_landing_lane (one master: landing PC + SRAM + that PC's 256-b response data pipe, at the PC pitch; lanes 2/3 mirrored), qkd_static_kv_landing_row (rowctl DATA 0 + near-branch hops 1/2) at the centre, 2 x qkd_static_kv_landing_relay (far-branch 0/3 hops, half way). Same registers, same edges: cycle-identical to the flat seg (latency 8); cycles_added 0. Bench = the flat seg bench with seg_h as DUT (run_landing_seg_h.sh) + the flat bench logs compared. h2: lane h1 gate measured TT insertion 168.5..231.9 (spread 63.4) with logic in W/E pin bands + an N cluster and an empty S half (103.68 tall, 36% util): compact to 140.4 x 77.76 with the SRAM on the pin-free S face, so the clock tree spans less.",
+ "structural_change": "KVCTRL 1815 (lead Q-KV 2026-10-16): structural variant of qkd_static_kv_landing_seg. The flat ls5 tile (151.2 x 1,512 um) is 9 % utilised and its ONE ck root measured 722..753 ps TT insertion over 1,512 um (9,492 sinks): even a CLOSED flat view fails native launch (<= 220 ps). qkd_static_kv_landing_seg_h = wires-only parent of hardened children with short local roots: 4 x qkd_static_kv_landing_lane (one master: landing PC + SRAM + that PC's 256-b response data pipe, at the PC pitch; lanes 2/3 mirrored), qkd_static_kv_landing_row (rowctl DATA 0 + near-branch hops 1/2) at the centre, 2 x qkd_static_kv_landing_relay (far-branch 0/3 hops, half way). Same registers, same edges: cycle-identical to the flat seg (latency 8); cycles_added 0. Bench = the flat seg bench with seg_h as DUT (run_landing_seg_h.sh) + the flat bench logs compared. h2: lane h1 gate measured TT insertion 168.5..231.9 (spread 63.4) with logic in W/E pin bands + an N cluster and an empty S half (103.68 tall, 36% util): compact to 140.4 x 86.4 with the SRAM low (>= 20 um from every core edge), so the clock tree spans less.",
  "job": {
   "owner": "Claude:Q-KV KVCTRL-1815",
   "branch": "claude/kvctrl-lseg-1816",
   "tag": "h2",
-  "purpose": "KVCTRL 1815 (lead Q-KV 2026-10-16): structural variant of qkd_static_kv_landing_seg. The flat ls5 tile (151.2 x 1,512 um) is 9 % utilised and its ONE ck root measured 722..753 ps TT insertion over 1,512 um (9,492 sinks): even a CLOSED flat view fails native launch (<= 220 ps). qkd_static_kv_landing_seg_h = wires-only parent of hardened children with short local roots: 4 x qkd_static_kv_landing_lane (one master: landing PC + SRAM + that PC's 256-b response data pipe, at the PC pitch; lanes 2/3 mirrored), qkd_static_kv_landing_row (rowctl DATA 0 + near-branch hops 1/2) at the centre, 2 x qkd_static_kv_landing_relay (far-branch 0/3 hops, half way). Same registers, same edges: cycle-identical to the flat seg (latency 8); cycles_added 0. Bench = the flat seg bench with seg_h as DUT (run_landing_seg_h.sh) + the flat bench logs compared. Lane = one landing PC: E face = its return-slot word (actual_*/expected_*), W face = its 256-b rsp_data lane, N face = row/relay seam + arm/epoch/layer/cfg/reset/clock; placed 4 x (lanes 2/3 MX so N faces the centre). h2: lane h1 gate measured TT insertion 168.5..231.9 (spread 63.4) with logic in W/E pin bands + an N cluster and an empty S half (103.68 tall, 36% util): compact to 140.4 x 77.76 with the SRAM on the pin-free S face, so the clock tree spans less.",
+  "purpose": "KVCTRL 1815 (lead Q-KV 2026-10-16): structural variant of qkd_static_kv_landing_seg. The flat ls5 tile (151.2 x 1,512 um) is 9 % utilised and its ONE ck root measured 722..753 ps TT insertion over 1,512 um (9,492 sinks): even a CLOSED flat view fails native launch (<= 220 ps). qkd_static_kv_landing_seg_h = wires-only parent of hardened children with short local roots: 4 x qkd_static_kv_landing_lane (one master: landing PC + SRAM + that PC's 256-b response data pipe, at the PC pitch; lanes 2/3 mirrored), qkd_static_kv_landing_row (rowctl DATA 0 + near-branch hops 1/2) at the centre, 2 x qkd_static_kv_landing_relay (far-branch 0/3 hops, half way). Same registers, same edges: cycle-identical to the flat seg (latency 8); cycles_added 0. Bench = the flat seg bench with seg_h as DUT (run_landing_seg_h.sh) + the flat bench logs compared. Lane = one landing PC: E face = its return-slot word (actual_*/expected_*), W face = its 256-b rsp_data lane, N face = row/relay seam + arm/epoch/layer/cfg/reset/clock; placed 4 x (lanes 2/3 MX so N faces the centre). h2: lane h1 gate measured TT insertion 168.5..231.9 (spread 63.4) with logic in W/E pin bands + an N cluster and an empty S half (103.68 tall, 36% util): compact to 140.4 x 86.4 with the SRAM low (>= 20 um from every core edge), so the clock tree spans less.",
   "extra_paths": [
    "rtl/qwen_sys/static_kv_20261014",
    "rtl/test/qwen_static_kv",

@@ -7,13 +7,13 @@
   0,
   0,
   140.4,
-  77.76
+  86.4
  ],
  "core": [
   2.16,
   2.16,
   138.24,
-  75.60000000000001
+  84.24000000000001
  ],
  "why": "spec outline (exact: the closed view's sub-slot)",
  "std_area_um2": 980,
@@ -72,7 +72,7 @@
    "inst": "*u_pc*u_rows",
    "idx": 0,
    "x": 22.464,
-   "y": 8.64,
+   "y": 21.6,
    "w": 94.824,
    "h": 41.064,
    "orient": "R0",
@@ -83,8 +83,14 @@
   [
    "FAIL",
    "macro_edge",
-   "ot_sram_1r1w_128x256_m1_r2c2#0 6.5 um from the S core edge (< 20 um)",
+   "ot_sram_1r1w_128x256_m1_r2c2#0 19.4 um from the S core edge (< 20 um)",
    "move the macro inward / to a face without pins (sliver + pin-access blockage)"
+  ],
+  [
+   "WARN",
+   "util",
+   "utilisation 44% outside 45%-60% (std 980 + macro 3894 in core 11169 um2)",
+   "resize the outline to util 0.50-0.55 (drop 'outline', set util)"
   ]
  ],
  "referenced": [
