@@ -37,17 +37,26 @@ def _load(env):
     return json.loads(Path(p).read_text()) if p else None
 
 
-def _place(q, ports, w, h):
-    """synthetic pin frame: per face, groups packed at the 0.192 pitch (<= 6 pins/um), centred, on track"""
+def _place(q, ports, w, h, fixed=None):
+    """synthetic pin frame: ports with a fixed [lo, hi] range (mirrored abutting pins) spread over it; the rest per face
+    packed at the 0.192 pitch (<= 6 pins/um), centred, on track"""
+    fixed = fixed or {}
+    for p, (bits, face) in ports.items():
+        if p in fixed:
+            a_, b_ = fixed[p]
+            ps = [Q._trk(a_ + (b_ - a_) * k / max(1, bits - 1)) for k in range(bits)]
+            q.ports[p] = ('pins', bits, face, 'M5' if face in 'NS' else 'M4', ps, 1)
+            q.order.append(p)
     faces = {}
     for p, (bits, face) in ports.items():
-        faces.setdefault(face, []).append((p, bits))
+        if p not in fixed:
+            faces.setdefault(face, []).append((p, bits))
     for f, items in faces.items():
         L = w if f in 'NS' else h
         need = sum((b - 1) * Q.PITCH + 4.0 for _, b in items)
         if need > L - 8.0:
             raise ValueError(f'dv slice {f} face: {need:.0f} um of pins exceed {L:.0f}')
-        cur = (L - need) / 2
+        cur = (L - need) / 2 if f in 'NS' else 40.0     # W / E: one fixed start, so facing slots line up
         for p, b in items:
             ps = [Q._trk(cur + k * Q.PITCH) for k in range(b)]
             q.ports[p] = ('pins', b, f, 'M5' if f in 'NS' else 'M4', ps, 1)
@@ -61,7 +70,23 @@ def apply_dv(v, m):
     CWN = float(D.get('cluster_w', 2285.28))
     DI = {i['n']: i for i in D['insts'] if i['m'] != 'outline_marker'}
     by = {i.name: i for i in m['insts']}
+    # retained instances take the dv model's places BEFORE the masters are drawn (the collective / PHY frames follow
+    # their instance outline: OT_SPLIT_PHY_TALL edge variants, collective re-kitted tall; PHYs above it are MX)
+    tall = os.environ.get('OT_SPLIT_PHY_TALL') == '1'
+    coll = DI.get('io_collective')
+    for n, i in by.items():
+        if n in DI and not n.startswith('c16_'):
+            i.x, i.y = DI[n]['x'], DI[n]['y']
+            if tall and (n == 'io_collective' or n.startswith(('io_serdes', 'io_ucie'))):
+                i.w, i.h = DI[n]['w'], DI[n]['h']
+                if n != 'io_collective' and coll and DI[n]['y'] >= coll['y'] + coll['h'] - 1e-3:
+                    i.orient = 'MX'
     M = v.masters(m, 1)
+    if tall:
+        # the frozen master set (b2 / q3h wrappers) still holds the collective / PHY frames of the old outline
+        from qwen_split import native_static_io_bind as NB
+        m['dv_io_placed'] = True
+        NB.install_master(M, m, v.Master)
     # ---- cluster master: Q-CLUSTER's dv contract (OT_SPLIT_DV_CONTRACT, cluster_contract_dv.json: ports / faces /
     # ranges incl. rs_i / rs_o and the four quadrant clock entries); without it the CB contract scaled + rs_i / rs_o
     CD = _load('OT_SPLIT_DV_CONTRACT')
@@ -89,18 +114,31 @@ def apply_dv(v, m):
     M[CDV].name = CDV
     # ---- slice master (synthetic role ports)
     sw, sh = DI['dvs_W0']['w'], DI['dvs_W0']['h']
+    # slice ports (SYNTHETIC, Q-DV roles): N / S faces MIRROR the abutting clusters' S-face pins (bc<lc> -> cw_*<lc>,
+    # rs -> rs_*0, rs_o -> rs_*1 at the contract's exact x ranges: face to face, no die wire, Q-DV dv2r8f5 slice_abut);
+    # W / E faces are SYMMETRIC (each side has an in and an out of every lateral kind) so one master serves the W row
+    # (R0) and the E row (MY, mirroring the MY / R180 clusters): a link takes the ports on the die faces that face
     sp = {}
-    for k in range(4):
-        sp[f'cw_n{k}'] = (516, 'N')
-        sp[f'cw_s{k}'] = (516, 'S')
-    for k in range(2):
-        sp[f'rs_n{k}'] = (514, 'N')
-        sp[f'rs_s{k}'] = (514, 'S')
-    sp.update({'ck': (1, 'N'), 'rst_n': (1, 'N'),
-               'st_dn_o': (1136, 'W'), 'st_up_i': (1136, 'W'), 'ch_dn_o': (1094, 'W'), 'ch_dn_i': (1038, 'W'),
-               'l9_w_o': (514, 'W'), 'l9_w_i': (514, 'W'), 'hr_i': (453, 'W'), 'cmd_i': (116, 'W'),
-               'st_dn_i': (1136, 'E'), 'st_up_o': (1136, 'E'), 'ch_up_i': (1094, 'E'), 'ch_up_o': (1038, 'E'),
-               'l9_e_o': (514, 'E'), 'l9_e_i': (514, 'E'), 'hr_o': (453, 'E'), 'cmd_o': (116, 'E')})
+    fixed_rng = {}
+    rng = {p_['port']: p_['range_um'] for p_ in (CD['ports'] if CD else [])}
+    for f, tag in (('N', 'n'), ('S', 's')):
+        for k in range(4):
+            sp[f'cw_{tag}{k}'] = (516, f)
+            if f'bc{k}' in rng:
+                fixed_rng[f'cw_{tag}{k}'] = rng[f'bc{k}']
+        for k, src in ((0, 'rs'), (1, 'rs_o')):
+            sp[f'rs_{tag}{k}'] = (514, f)
+            if src in rng:
+                fixed_rng[f'rs_{tag}{k}'] = rng[src]
+    LAT = dict(st=1136, ch=1094, l9=514, hr=453, cmd=116)
+    # abutted neighbours face each other: W-face (in, out) slot k lines up with the E-face (out, in) slot k
+    for kind, bits in LAT.items():
+        sp[f'{kind}_wi'] = (bits, 'W')
+        sp[f'{kind}_wo'] = (bits, 'W')
+    for kind, bits in LAT.items():
+        sp[f'{kind}_eo'] = (bits, 'E')
+        sp[f'{kind}_ei'] = (bits, 'E')
+    sp.update({'ck': (1, 'W'), 'rst_n': (1, 'W')})
     # W5 re-home ports (one per re-homed q3h bus, same width) go on the W face too
     removed = {n for n in by if n not in DI}
     rehome = []
@@ -135,7 +173,7 @@ def apply_dv(v, m):
         sp[f'r_{bid}'] = (bits, f)
         room[f] -= need
     qs = v.Master(SLICE, sw - Q.SHAVE, sh - Q.SHAVE, 9, 'Q-DV slice2 (SYNTHETIC role ports, RTL step 2 pending)')
-    _place(qs, sp, sw - Q.SHAVE, sh - Q.SHAVE)
+    _place(qs, sp, sw - Q.SHAVE, sh - Q.SHAVE, fixed_rng)
     M[SLICE] = qs
     # ---- instances: retained / clusters / slices at the dv model's positions
     keep = []
@@ -151,15 +189,28 @@ def apply_dv(v, m):
     for n, d in DI.items():
         if n in have:
             continue
-        if d['m'] == SLICE:
-            keep.append(v.Inst(n, SLICE, d['x'], d['y'], sw - Q.SHAVE, sh - Q.SHAVE, orient='R0', kind='cluster',
-                               region='field', domain='stream_1p2'))
+        if d['m'] in (SLICE, 'qfd_dv_slice2'):
+            keep.append(v.Inst(n, SLICE, d['x'], d['y'], sw - Q.SHAVE, sh - Q.SHAVE,
+                               orient='MY' if n.startswith('dvs_E') else 'R0', kind='cluster', region='field',
+                               domain='stream_1p2'))
         elif d['m'] == 'qfd_dv_lane_relay':
             continue                       # the relay planner places the lane relays itself
         else:
             raise ValueError(f'dv: instance {n} ({d["m"]}) not in the q3h model')
     m['insts'][:] = keep
     names = {i.name for i in keep}
+    # final placement gate (fail closed): no two instances overlap
+    srt = sorted(keep, key=lambda i: i.x)
+    ovl = []
+    for a_ in range(len(srt)):
+        p_ = srt[a_]
+        for q_ in srt[a_ + 1:]:
+            if q_.x >= p_.x + p_.w - 1e-3:
+                break
+            if q_.y < p_.y + p_.h - 1e-3 and p_.y < q_.y + q_.h - 1e-3:
+                ovl.append((p_.name, q_.name))
+    if ovl:
+        raise ValueError(f'dv: {len(ovl)} overlapping instances {ovl[:8]}')
     # ---- buses
     out, dropped = [], {}
     slices = sorted(n for n in names if n.startswith('dvs_'))
@@ -207,22 +258,25 @@ def apply_dv(v, m):
             s = 's' if band == 1 else 'n'
             out.append((bid + '_a', 'tree_spine', 514, [(eps[0], 'rs'), (eps[1], f'rs_{s}0')]))
             out.append((bid + '_b', 'tree_spine', 514, [(eps[0], 'rs_o'), (eps[1], f'rs_{s}1')]))
-        elif bid.startswith('dv_l9_'):
-            src, dst = eps
-            if x_of[src] < x_of[dst]:
-                out.append((bid, 'tree_spine', 514, [(src, 'l9_e_o'), (dst, 'l9_w_i')]))
+        elif bid.startswith(('dv_l9_', 'dv_st_', 'dv_x0', 'dv_ch_')):
+            wst, est = sorted(eps, key=lambda n: x_of[n])
+            def lp(n, dieface, kind, d_):       # port on the die face of slice n (MY swaps the master W / E faces)
+                f_ = dieface if not n.startswith('dvs_E') else {'W': 'E', 'E': 'W'}[dieface]
+                return (n, f'{kind}_{f_.lower()}{d_}')
+            if bid.startswith('dv_l9_'):
+                src, dst = eps
+                if src == wst:
+                    out.append((bid, 'tree_spine', 514, [lp(src, 'E', 'l9', 'o'), lp(dst, 'W', 'l9', 'i')]))
+                else:
+                    out.append((bid, 'tree_spine', 514, [lp(src, 'W', 'l9', 'o'), lp(dst, 'E', 'l9', 'i')]))
+            elif bid.startswith('dv_ch_'):
+                out += [(bid + '_dn', 'tree_spine', 1094, [lp(est, 'W', 'ch', 'o'), lp(wst, 'E', 'ch', 'i')]),
+                        (bid + '_up', 'tree_spine', 1094, [lp(wst, 'E', 'ch', 'o'), lp(est, 'W', 'ch', 'i')])]
             else:
-                out.append((bid, 'tree_spine', 514, [(src, 'l9_w_o'), (dst, 'l9_e_i')]))
-        elif bid.startswith(('dv_st_', 'dv_x0')):
-            wst, est = sorted(eps, key=lambda n: x_of[n])
-            out += [(bid + '_dn', 'tree_spine', 1136, [(est, 'st_dn_o'), (wst, 'st_dn_i')]),
-                    (bid + '_up', 'tree_spine', 1136, [(wst, 'st_up_o'), (est, 'st_up_i')]),
-                    (bid + '_hr', 'tree_spine', 453, [(wst, 'hr_o'), (est, 'hr_i')]),
-                    (bid + '_cmd', 'tree_spine', 116, [(wst, 'cmd_o'), (est, 'cmd_i')])]   # Q-DV 665fce7f9 slice command chain
-        elif bid.startswith('dv_ch_'):
-            wst, est = sorted(eps, key=lambda n: x_of[n])
-            out += [(bid + '_dn', 'tree_spine', 1094, [(est, 'ch_dn_o'), (wst, 'ch_up_i')]),
-                    (bid + '_up', 'tree_spine', 1038, [(wst, 'ch_up_o'), (est, 'ch_dn_i')])]
+                out += [(bid + '_dn', 'tree_spine', 1136, [lp(est, 'W', 'st', 'o'), lp(wst, 'E', 'st', 'i')]),
+                        (bid + '_up', 'tree_spine', 1136, [lp(wst, 'E', 'st', 'o'), lp(est, 'W', 'st', 'i')]),
+                        (bid + '_hr', 'tree_spine', 453, [lp(wst, 'E', 'hr', 'o'), lp(est, 'W', 'hr', 'i')]),
+                        (bid + '_cmd', 'tree_spine', 116, [lp(wst, 'E', 'cmd', 'o'), lp(est, 'W', 'cmd', 'i')])]
         # dv_ar_W / dv_kv_* / dv_ib_W / dv_emb: the W-column re-partition is carried by the r_<bus> re-homes
     # far-band clusters: rs_i tied low (Q-CLUSTER: the far bands tie the feedthrough input)
     fed = {e[0] for b in out for e in b[3] if e[1] == 'rs_i'}

@@ -781,6 +781,12 @@ def apply(v, m, G):
                 ov.append((p.name, q.name))
     W, H = m['die']['w'], m['die']['h']
     out = [i.name for i in ins if i.x < -1e-3 or i.y < -1e-3 or i.x + i.w > W + 1e-3 or i.y + i.h > H + 1e-3]
+    if _os.environ.get('OT_SPLIT_PHY_TALL') == '1' and _os.environ.get('OT_SPLIT_DV', '').strip():
+        # Q-DIEPLAN3 10-17: the tall IO kit sits at its base home only until the dv die re-places the whole IO column
+        # (tools/qwen_split/dv_case.py, which re-checks the final placement); IO-vs-IO pairs are deferred to it
+        io_ = ('io_serdes', 'io_collective', 'io_ucie')
+        rec['deferred_io_overlaps'] = [o for o in ov if o[0].startswith(io_) and o[1].startswith(io_)]
+        ov = [o for o in ov if o not in rec['deferred_io_overlaps']]
     rec.update(n_overlaps=len(ov), overlaps=ov[:20], outside=out[:20])
     if ov or out:
         raise SystemExit(f'tp8b v5: {len(ov)} overlaps {ov[:8]}, {len(out)} outside {out[:6]}')

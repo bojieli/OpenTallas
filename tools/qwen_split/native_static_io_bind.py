@@ -38,10 +38,18 @@ PHY_NFACE = __import__('os').environ.get('OT_SPLIT_PHY_NFACE', '0') == '1'
 NFACE_ROOT = 'physical/qwen_missing_phy/nface_0030'
 SERDES = 'ot_qfd_serdes_112g_x12_phy_s597'
 SERDES_VIEW = 'physical/qwen_missing_phy/ot_qfd_serdes_112g_x12_phy_s597'
+# OT_SPLIT_PHY_TALL=1 (Q-DIEPLAN3 / coordinator 10-17, dv2r8f3 W column): the MODELED edge variants with the long side
+# vertical (tools/qwen_missing/link_phy_gen.py --nface --tall) and the collective re-kitted tall (1,563.816 x
+# 4,157.976): each PHY's FDI block faces the collective (PHYs below R0 -> collective S face, PHYs above MX -> N face),
+# the collective's core-side pins on its E face (toward the slice row)
+PHY_TALL = __import__('os').environ.get('OT_SPLIT_PHY_TALL', '0') == '1'
+if PHY_TALL:
+    PHY_NFACE = True
+    NFACE_ROOT = 'physical/qwen_missing_phy/nface_tall_1017'
 if PHY_NFACE:
     UCIE_VIEW = NFACE_ROOT + '/ot_qfd_ucie_x64_phy'
     SERDES_VIEW = NFACE_ROOT + '/ot_qfd_serdes_112g_x12_phy_s597'
-SERDES_WH = (2320.056, 1563.57)
+SERDES_WH = (2320.056, 1563.57) if not PHY_TALL else (1563.57, 2320.056)
 UCIE_WH = (777.6, 777.6)
 FW_U, FW_S = 1043, 597
 ORDER = ('io_serdes_2', 'io_serdes_1', 'io_collective', 'io_serdes', 'io_ucie')
@@ -106,8 +114,8 @@ def apply(model):
     for i in model['insts']:
         if i.name in ORDER:
             continue
-        if i.x < hi_x and lo_x < i.x + i.w and i.y < y0 + max(r.h for r in row) and y0 < i.y + i.h:
-            raise ValueError(f'static IO row overlaps {i.name}')
+        if i.x < hi_x and lo_x < i.x + i.w and i.y < y0 + max(r.h for r in row) and y0 < i.y + i.h and not PHY_TALL:
+            raise ValueError(f'static IO row overlaps {i.name}')   # (tall kit: the dv die places the IO column itself)
     io_old = set(need)
     removed, kept = [], []
     rst_bus = None
@@ -237,14 +245,26 @@ def install_master(M, model, Master):
         phys = {'io_serdes': phy_order(0), 'io_serdes_1': phy_order(1), 'io_serdes_2': phy_order(2), 'io_ucie': EU}
         for pn, items in phys.items():
             ph = by_[pn]
-            if ph.y + ph.h > inst.y + 1e-3 or ph.orient != 'R0':
+            above = PHY_TALL and ph.y >= inst.y + inst.h - 1e-3
+            # tall kit on a dv die: until the dv hook has placed the IO column (model['dv_io_placed']) this frame is
+            # provisional and is redrawn there; the geometry rule is enforced on the final placement only
+            prov = PHY_TALL and not model.get('dv_io_placed')
+            if above and ph.orient != 'MX' and not prov:
+                raise ValueError(f'{MASTER}: OT_SPLIT_PHY_TALL needs {pn} MX above the collective')
+            if not above and (ph.y + ph.h > inst.y + 1e-3 or ph.orient != 'R0') and not prov:
                 raise ValueError(f'{MASTER}: OT_SPLIT_PHY_NFACE needs {pn} R0 below the collective')
             nb = 2 + sum(len(list(b)) for _, b in items)
             x = ph.x + ph.w / 2 - nb * .048 / 2 - inst.x
             x = min(max(x, 4.0), inst.w - 4.0 - nb * .048) + 2 * .048
+            fc = 'N' if above else 'S'
+            if PHY_TALL:
+                # two PHYs on one face share the face width: each takes its own window (no overlap)
+                used = sorted(z for (_, _), (ff, _, z) in pos.items() if ff == fc)
+                if used:
+                    x = max(x, used[-1] + 4.0)
             for p, bits in items:
                 for b in bits:
-                    pos[(p, b)] = ('S', 'M5', round(.012 + round((x - .012) / .048) * .048, 4))
+                    pos[(p, b)] = (fc, 'M5', round(.012 + round((x - .012) / .048) * .048, 4))
                     x += .048
     elif 'io_ucie' in by_ and 'io_serdes' in by_ and by_['io_ucie'].x < by_['io_serdes'].x:
         # Q-COMPUTE-DIE r2h (00:30 10-16): the UCIe PHY abuts the E face (homes order collective|ucie|serdes0), so it
@@ -258,12 +278,13 @@ def install_master(M, model, Master):
     column('W', phy_order(2), end + 8.0)                 # SerDes2, over SerDes1
     placed = {p for p, _ in pos}
     north = [p for p in ports if p not in placed]
-    x = (q.w - sum(ports[p][0] * .096 + 2.0 for p in north)) / 2
+    cf, cl, cL = ('E', 'M4', q.h) if PHY_TALL else ('N', 'M5', q.w)    # core-side pins: E face on the tall kit
+    x = (cL - sum(ports[p][0] * .096 + 2.0 for p in north)) / 2
     if x < 4.0:
-        raise ValueError(f'{MASTER}: N-face pins exceed the outline')
+        raise ValueError(f'{MASTER}: {cf}-face pins exceed the outline')
     for p in north:
         for b in range(ports[p][0]):
-            pos[(p, b)] = ('N', 'M5', snap(x))
+            pos[(p, b)] = (cf, cl, snap(x))
             x += .096
         x += 2.0
     for f in 'NEWS':
