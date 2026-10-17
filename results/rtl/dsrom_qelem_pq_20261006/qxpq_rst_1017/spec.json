@@ -108,5 +108,6 @@
   "capture_ps": 239.2,
   "launch_ps": 212.4,
   "fix": "RTL pin flop on rst_n (RSTP=1: synchronous reset relay, D only, then local distribution through the element's rst_q and boundary clears); rst_n as H1 data input"
- }
+ },
+ "structural_change": "rst_n now enters through a dedicated pin reset-relay flop (RSTP=1); the internal reset releases 2 edges after the pin, and the die releases it one cycle earlier"
 }
