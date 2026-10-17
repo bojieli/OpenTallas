@@ -142,6 +142,7 @@
   "rtl/v41rom/ot_v41_bf_cl_leaves.sv",
   "rtl/v41rom/ot_v41_bf_lane4_cl.sv",
   "rtl/v41rom/ot_v41_bf_lane16_cl.sv",
+  "physical/ref_tile_specs/s81_bf_native_1015/cl_lane16/group_bands.tcl",
   "physical/ref_tile/s81_bf_cl_lane16/kit.env",
   "physical/ref_tile/s81_bf_cl_lane16/clock.sdc",
   "physical/ref_tile/s81_bf_cl_lane16/signoff.sdc",
@@ -166,6 +167,8 @@
   "physical/ref_tile_specs/s81_bf_native_1015/cl_lane16/pins.tcl",
   "physical/qwen_die_masters/io_flop_at_pins.tcl",
   "physical/qwen_die_masters/out_flop_release.tcl",
+  "physical/ref_tile/s81_bf_cl_lane16/pre_gpl.tcl",
+  "physical/ref_tile/s81_bf_cl_lane16/pre_dpl.tcl",
   "physical/common_flow/clock_entries.tcl",
   "physical/ref_tile/s81_bf_cl_lane16/clock_entry.sdc"
  ]
