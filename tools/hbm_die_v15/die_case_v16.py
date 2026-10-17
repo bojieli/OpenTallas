@@ -66,7 +66,7 @@ OWNER = [(r'hb_vms_(SW|SE|NW|NE)', lambda m: rf'(vmh|vmb)_{m.group(1)}\d*'),
          (r'hb_(idx|argmax)', lambda m: r'idx_\w+')]
 
 
-PIN_STEP = 0.096   # granted die pin pitch (10.417 pins/um, hbm_v15 grants)
+PIN_STEP0 = 0.096   # granted die pin pitch (10.417 pins/um, hbm_v15 grants)
 
 
 def snap(v, g):
@@ -229,6 +229,9 @@ def main():
     ap.add_argument('--diagnostic-param-alias', action='store_true',
                     help='DIAGNOSTIC ONLY: accept same-port parameter aliases (listed in manifest.param_aliases_diagnostic); '
                          'timing of those instances is not their own; the case never qualifies')
+    ap.add_argument('--max-pin-density', type=float, default=0.0,
+                    help='SYNTH abstracts: pins/um/face cap (coordinator standard: 6); compact runs use >= 1/cap pitch; '
+                         'faces whose bus total cannot fit are listed in manifest.pin_density_over (never hidden)')
     ap.add_argument('--no-plot', action='store_true', help='defer PNG rendering; manifest retains exact geometry for later rendering')
     ap.add_argument('--no-clock', action='store_true', help='placement/images only (skip die clock trees and run files)')
     ap.add_argument('--pc-strip', type=float, default=0.0,
@@ -333,6 +336,7 @@ def main():
         if s in slots:
             slot_users[s].append(n)
     flags = {}
+    pin_density_over = []
     kit = json.loads((ROOT / 'physical/ref_tile/hdie_pc_ctrl/floorplan.json').read_text())
     for c in kinds:
         if kinds[c] != 'SYNTH':
@@ -735,6 +739,10 @@ def main():
                 continue
             Lf = w if f in 'NS' else h
             tot = sum(k for _, _, _, k in L)
+            PIN_STEP = max(PIN_STEP0, 1.0 / a.max_pin_density) if a.max_pin_density else PIN_STEP0
+            if a.max_pin_density and tot / (0.9 * Lf) > a.max_pin_density:
+                pin_density_over.append(dict(cell=c, face=f, pins=tot, face_um=round(Lf, 2),
+                                             pins_per_um=round(tot / (0.9 * Lf), 2)))
             if a.compact_pins and tot * PIN_STEP <= 0.9 * Lf:
                 # d4b (H-DIE 10-16): each bus packed at the granted 0.096 um pitch, centred where it faces its peers
                 # (not spread over the whole face: the 5.7 mm SM xw_data spread was this abstract's artifact)
@@ -755,7 +763,8 @@ def main():
                 for st_, en_, p, base, k in runs:
                     pinlist.append((p, dirs[c][p], f, st_, en_, k, base, ports[c][p] > 1))
                 continue
-            step = max(0.048, (0.9 * Lf) / max(tot, 1))
+            step = max(0.048 if not a.max_pin_density else min(1.0 / a.max_pin_density, (0.9 * Lf) / max(tot, 1)),
+                       (0.9 * Lf) / max(tot, 1))
             x = 0.05 * Lf
             for _, p, base, k in sorted(L):
                 pinlist.append((p, dirs[c][p], f, x, x + k * step, k, base, ports[c][p] > 1)); x += k * step
@@ -794,6 +803,8 @@ def main():
                                         if p.suffix in ('.lef', '.lib')}
     manifest['native_complete'] = False
     manifest['param_aliases_diagnostic'] = param_aliases
+    manifest['max_pin_density'] = a.max_pin_density or None
+    manifest['pin_density_over'] = pin_density_over
     if param_aliases:
         manifest['label'] += f' PARAM_ALIAS_DIAGNOSTIC: {len(param_aliases)} instances use a different-parameter view'
     manifest['pc_strip'] = strip
