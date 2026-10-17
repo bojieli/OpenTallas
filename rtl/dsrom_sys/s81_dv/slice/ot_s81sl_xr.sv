@@ -20,6 +20,10 @@
 //   SC relay    SC beats (kind 5, router scores) delivered on the line at the relay slice (send config bit) leave on V.
 //   norm        the 5 beat partials (equal-latency glue: same edge) -> xfin s port in leaf order 0..4 (xfin injects on
 //               index 4); xfin's rstd -> the 5 vn rb ports.
+// Faults (sticky; checks only, they never reschedule): two CTLs / two RDs / two lo beats in a cycle, an RD or a row write into
+// a busy leaf unpacker, a partial set that is partial or overlaps the collection, two injections in one ci slot, an RD to
+// leaf > 4, a CTL target > 5, two relayed SC beats in a cycle, a lo beat in the send-config cycle (it would be dropped).
+// Bench: rtl/dsrom_sys/s81_dv/slice/test/tb_s81sl_xr.sv (tools/s81_slice/xr_bench.sh); mutants OT_S81SL_XR_MUT_*.
 // Every input lands in a flop; every output leaves a flop.  HB = 1 builds the C3 variant (band port B, attention).
 // ---------------------------------------------------------------------------------------------------------------------
 module ot_s81sl_xr #(
@@ -130,16 +134,20 @@ module ot_s81sl_xr #(
     // V-from-G-unit CTL re-injection on the tier line (both sides, hops 0 = line default), SC relay to V
     wire sc_rel = s_scv && (e_sc || w_sc);
     wire [V-1:0] sc_b = e_sc ? eb[V-1:0] : wb[V-1:0];
+    reg ci_v; reg [W-2:0] ci_r;
     always @(posedge clk or negedge rs_s)
         if (!rs_s) begin ci_dir <= 3'd0; ci_v <= 1'b0; end
         else begin
             ci_dir <= v_ctl ? 3'b011 : pk_go ? s_dir[2:0] : sc_rel ? 3'b100 : 3'b000;
             ci_v <= v_ctl || (pk_go && |s_dir[2:0]) || sc_rel;
         end
-    reg ci_v; reg [W-2:0] ci_r;
     assign ci_b = {ci_r, ci_v};
     always @(posedge clk)
+`ifdef OT_S81SL_XR_MUT_HOPS
+        ci_r <= v_ctl ? {{(W - V){1'b0}}, vb[V-1:1]} :                    // mutant: re-injected CTL keeps the V hops
+`else
         ci_r <= v_ctl ? {{(W - V){1'b0}}, vb[V-1:9], 5'd0, vb[3:1]} :
+`endif
                        pk_go ? snd[W-1:1] : {{(W - V){1'b0}}, sc_b[V-1:1]};
     generate if (HB != 0) begin : g_bo
         reg [W-1:0] bo_r;
@@ -172,7 +180,9 @@ module ot_s81sl_xr #(
                     if (un[k] == ul[k]) ub[k] <= 1'b0;
                 end
                 if (rdv && rl == k) begin
+`ifndef OT_S81SL_XR_MUT_NOCOL
                     if (ub[k] && un[k] != ul[k]) ucol <= 1'b1;
+`endif
                     ub[k] <= 1'b1; un[k] <= 2'd0;
                 end
                 if (cvld && tgt == 5'd5 && lmask[k]) begin
@@ -188,7 +198,11 @@ module ot_s81sl_xr #(
                 sw_a[10 * k +: 10] <= body[9:0]; sw_m[8 * k +: 8] <= {4'd0, body[13:10]};
                 sw_d[256 * k +: 256] <= {128'd0, body[141:14]};
             end else begin
+`ifdef OT_S81SL_XR_MUT_ROW
+                sw_a[10 * k +: 10] <= ur[k] + {8'd0, un[k]};          // mutant: row-pair stride 1 instead of 2
+`else
                 sw_a[10 * k +: 10] <= ur[k] + {7'd0, un[k], 1'b0};
+`endif
                 sw_m[8 * k +: 8] <= 8'hff;
                 sw_d[256 * k +: 256] <= ud[k][256 * un[k] +: 256];
             end
@@ -220,14 +234,19 @@ module ot_s81sl_xr #(
         end
     always @(posedge clk) begin
         for (k = 0; k < 5; k = k + 1) if (pv[k]) pq[k] <= pd[32 * k +: 32];
+`ifdef OT_S81SL_XR_MUT_PORDER
+        x_si <= {5'd0, pi}; x_s <= pq[3'd4 - pi];                    // mutant: partials handed to xfin in reverse order
+`else
         x_si <= {5'd0, pi}; x_s <= pq[pi];
+`endif
         rb_d <= {5{rbd}};
     end
     // ---------------------------------------------------------------- faults
     always @(posedge clk or negedge rs_o)
         if (!rs_o) fault <= 1'b0;
         else fault <= fault | (nctl > 3'd1) | (nrd > 3'd1) | ucol | (nlo > 3'd1) | ((|pv) && pv != 5'b11111) |
-                      ((|pv) && prun) | (v_ctl && (pk_go || sc_rel)) | (pk_go && sc_rel);
+                      ((|pv) && prun) | (v_ctl && (pk_go || sc_rel)) | (pk_go && sc_rel) |
+                      (rdv && rl > 3'd4) | (cvld && tgt > 5'd5) | (s_scv && e_sc && w_sc) | (cvld && tgt == 5'd4 && (|lov));
 endmodule
 
 // C1 (14 slices): ring E/W + V.  C3 (s_1S, s_6S): + band port B (attention q / P.V).  Hardened masters, no parameters.
