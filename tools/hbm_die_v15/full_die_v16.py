@@ -376,6 +376,13 @@ IDENTITY_MASTERS = {
         straps=[('id_stack', lambda p: int(p.get('STACK', 0))), ('id_sm', lambda p: int(p.get('SM', 0)))]),
 }
 IDENTITY_STRAPS = False   # main(): --identity-straps
+# --pc-h8 (with --identity-straps): the PC controller master is the H8 view (H-SU route hdie_pc_ctrl_cfg_h8, one view for
+# all 128 PCs); its six registered owner fault classes owner_fault_split[5:0] land in the quadrant stack fault leaf
+# (ot_hbm_svc_stack_fault OWN_W=6: the sticky owner bit is their OR) instead of the scalar owner_fault.
+PC_H8 = False
+PC_H8_MASTER = dict(master='ot_hbm_svc_pc_ctrl_leaf_cfg_h8', source=_SVC + 'ot_hbm_svc_pc_ctrl_leaf_cfg_h8.sv',
+                    deps=[_SVC + 'ot_hbm_svc_pc_ctrl_leaf.sv', 'rtl/model_ready_hbm_r14/ot_hbm_r14_stream_pc_strap_h7.sv'],
+                    keep=dict(OREG=1, KREG=1, KRREG=1, RREG=1, WPAY=1, QREG=1))
 # H-NETLIST 0600: logical array wrappers whose RTL is "physically N independently hardened leaves" are FLATTENED in the
 # die netlist into their N leaf instances <inst>_b<k> (one hardened leaf master, bit-sliced edges, same clock root bit).
 _VMS = 'rtl/hbm_accel/generic/vm/static/'
@@ -471,10 +478,14 @@ def build(specs_dir, out, extra=()):
                 tgt_straps.append(dict(inst=n, port=port, value=int(i['params'].pop(prm)),
                                        reason=f'identity: {prm} of this instance (was a parameter)'))
     if IDENTITY_STRAPS:
+        h8 = set()
         for n, i in insts.items():
             r = IDENTITY_MASTERS.get(i['master'])
             if not r:
                 continue
+            if PC_H8 and i['master'] == 'ot_hbm_svc_pc_ctrl_leaf':
+                r = dict(r, **PC_H8_MASTER)
+                h8.add(n)
             old = dict(i['params'])
             for port, fn in r['straps']:
                 tgt_straps.append(dict(inst=n, port=port, value=fn(old),
@@ -484,6 +495,21 @@ def build(specs_dir, out, extra=()):
                      note=i.get('note', '') + f" | H-NETLIST 1815 identity straps: one generic master (was {i['master']} {old})")
             if r['deps']:
                 i['rtl_deps'] = list(r['deps'])
+        if h8:
+            sf = set()
+            for s_ in specs:
+                for e in s_.get('edges', []):
+                    if e['src'][0] in h8 and e['src'][1] == 'owner_fault':
+                        d = list(e['dst']); lo, hi = (d[2], d[3]) if len(d) > 3 else (0, 1)
+                        e['src'] = [e['src'][0], 'owner_fault_split', 0, 6]
+                        e['dst'] = d[:2] + [6 * lo, 6 * hi]
+                        e['bits'] = 6 * (hi - lo)
+                        e['basis'] = e.get('basis', '') + ' | H8: six registered owner fault classes (OR in the stack fault leaf)'
+                        sf.add(d[0])
+            for n in sf:
+                if insts[n]['master'] != 'ot_hbm_svc_stack_fault':
+                    problems.append(f'H8 owner_fault sink {n} is not ot_hbm_svc_stack_fault')
+                insts[n]['params'] = dict(insts[n]['params'], OWN_W=6)
     specs.append(dict(region='target_id_straps', straps=tgt_straps, edges=[], instances=[], clocks=[], gaps=[]))
     # H-NETLIST 0600: fill calendars vmfc_<q> (ot_vms_calendar_static, W<=187) are the CLOSED universal VM calendar
     # master hfd_hgi_vm_calendar (native PASS): same programme ABI, calendar[W-1:0] = its low packed fields cycle for
@@ -956,9 +982,11 @@ def main():
                     help='revision layer spec (e.g. tools/hbm_die_v15/v16_relays/relays_d4b.json.gz: d4b relay stations)')
     ap.add_argument('--identity-straps', action='store_true',
                     help='IDENTITY_MASTERS: per-instance identity parameters -> strap pins of one generic master')
+    ap.add_argument('--pc-h8', action='store_true', help='with --identity-straps: PC controller = the H8 view (PC_H8_MASTER)')
     a = ap.parse_args()
-    global IDENTITY_STRAPS
+    global IDENTITY_STRAPS, PC_H8
     IDENTITY_STRAPS = a.identity_straps
+    PC_H8 = a.pc_h8
     c = build(a.specs, a.out, a.extra_spec)
     print(json.dumps(c['summary'], indent=1))
     for p in c['problems'][:40]:
