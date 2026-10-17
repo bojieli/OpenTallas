@@ -335,6 +335,7 @@ def write_batch(bd, its, stage, lay, adj, a):
     H = y + rowh
     insts, nets, sinks, place, masters = [], [], {}, [], set()
     clock_paths = []
+    fclk = {}
     v = ['module reach_top ();']
     for k, (b, ox, oy) in enumerate(placed):
         m, d, g, mod, bw, bh, mg = b
@@ -363,13 +364,21 @@ def write_batch(bd, its, stage, lay, adj, a):
                 sinks[f'{dst}/{ip}'] = dict(cls=m, d=d, bus=f'{p["out"]}->{p["inp"]}', dir=p['dir'],
                                             drv=f'{src}/{op}', L=round(abs(sx - tx) + abs(sy - ty), 3),
                                             faces=f'{p["out_face"]}>{p["in_face"]}')
+        if getattr(a, 'fwd_clock', False) and 'fo0[0]' in mod['pin_xy'] and 'fi0[0]' in mod['pin_xy']:
+            # --fwd-clock: route the die's forwarded clock A.fo0 -> B.fi0 (chain_nets fclk) for the native composed pair
+            # bench (relay_native_pair.py); the ETM STA here still defines its clock on each fi0 pin
+            v.append(f'  wire [0:0] n{k}_fck;')
+            conn[A].append(f'.fo0(n{k}_fck)')
+            conn[B].append(f'.fi0(n{k}_fck)')
+            fx = [pos[A][i] + mod['pin_xy']['fo0[0]'][i] - pos[B][i] - mod['pin_xy']['fi0[0]'][i] for i in (0, 1)]
+            fclk[f'n{k}_fck'] = dict(cls=m, d=d, drv=f'{A}/fo0[0]', sink=f'{B}/fi0[0]', L=round(abs(fx[0]) + abs(fx[1]), 3))
         for I in (A, B):
             clock_paths.extend(f'{I}/{c}' for c in mod['clocks'])
             v.append(f'  {m} {I} ({", ".join(conn[I])});')
         insts.append(dict(k=k, cls=m, d=d, A=pos[A], B=pos[B]))
     v.append('endmodule')
     (bd / 'reach.v').write_text('\n'.join(v) + '\n')
-    (bd / 'map.json').write_text(json.dumps(dict(sinks=sinks, insts=insts, die_um=[W, H])))
+    (bd / 'map.json').write_text(json.dumps(dict(sinks=sinks, insts=insts, die_um=[W, H], fclk=fclk)))
     vdir = '/stage/views'
     lefs = '\n'.join(f'read_lef {vdir}/{m}/{m}_lef.lef' for m in sorted(masters))
     libs = lambda c: '\n'.join(f'read_liberty {vdir}/{m}/{m}_{c}.lib' for m in sorted(masters))  # noqa: E731
@@ -677,6 +686,7 @@ def main(argv=None):
     p.add_argument('--step', type=float, default=25.0)
     p.add_argument('--net-budget', type=int, default=150000)
     p.add_argument('--classes', nargs='*')
+    p.add_argument('--fwd-clock', action='store_true', help='also route A.fo0 -> B.fi0 (forwarded clock) where both exist')
     c = sp.add_parser('collect')
     c.add_argument('--stage', required=True)
     c.add_argument('--run', action='append', required=True)
