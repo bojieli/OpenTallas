@@ -1,9 +1,9 @@
 {
- "name": "hsm_smvm_wrq_t_r4-f4db40-COMMIT",
+ "name": "hsm_smvm_wrq_t_r4-f4hc-COMMIT",
  "block": "ot_hbm_sm_vm_wr_q_t_faces4",
  "ref_tile": true,
  "owner": "Claude H-SM 1815",
- "purpose": "faces4 native-capture successor: core clk CTS inserts repeaters every 40 um (c8e94d78d NE N-face leaf clkbuf_leaf_528 98 ps on a ~110 um hop -> boundary TT 308..374, 164 late cfg/desc input flops got 6 BUFx2 hold pads, native capture 213.2).",
+ "purpose": "faces4 native-capture successor: N-face host pin flops (cfg/desc/launch/tgt, 320 flops) on their own clock entry clk_hcfg (7th entry, N face x 70.62) instead of the 9.8k-sink core root (c8e94d78d: NE end of that row 66 ps late on a 98 ps leaf -> 6 hold BUFx2 per input -> native capture 213.2). Same edges/latencies (core_pc copy differs only in the pin-flop clock). CTS repeaters alone (gate a8e5baecd: boundary 341..413) and unclustered (a730e2ae9: 350..433) did not help.",
  "threads": 8,
  "peak_ram_gb": 24,
  "source": {
@@ -20,7 +20,7 @@
   "bench": [
    {
     "name": "lint",
-    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hbm_sm_vm_wr_q_t_faces4 #(.DEPTH(4), .MUT(0)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/generic/vm/static/ot_hbm_sm_vm_wr_q_t_faces4.sv rtl/hbm_accel/generic/vm/static/ot_hbm_sm_vm_wr_q_faces4.sv rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v && echo lint-ok",
+    "cmd": "mkdir -p {RUN} && printf '%s\\n' 'module ot_lint_top; ot_hbm_sm_vm_wr_q_t_faces4 #(.DEPTH(4), .MUT(0)) u_top (); endmodule' > {RUN}/ot_lint_top.sv && verilator --lint-only -Wno-fatal -Wno-lint -Wno-style -Wno-TIMESCALEMOD -Wno-MULTIDRIVEN -Wno-MODMISSING -DSYNTHESIS --top-module ot_lint_top {RUN}/ot_lint_top.sv rtl/hbm_accel/generic/vm/static/ot_hbm_sm_vm_wr_q_t_faces4.sv rtl/hbm_accel/generic/vm/static/ot_hbm_sm_vm_wr_q_faces4.sv rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv rtl/hbm_accel/generic/vm/static/ot_static_cmd_target_core_pc.sv physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v && echo lint-ok",
     "expect": "pass",
     "threads": 1,
     "peak_ram_gb": 4,
@@ -38,7 +38,15 @@
    },
    {
     "name": "mut_face_clock_drop",
-    "cmd": "mkdir -p {RUN}/mut && iverilog -g2012 -DMUT=0 -DFACE_CLOCK_MUT=1 -s tb_hbm_sm_vm_wr_q_t_faces4 -o {RUN}/mut/tbc1 rtl/hbm_accel/generic/vm/static/tb_hbm_sm_vm_wr_q_t_faces4.sv rtl/hbm_accel/generic/vm/static/ot_hbm_sm_vm_wr_q_t_faces4.sv rtl/hbm_accel/generic/vm/static/ot_hbm_sm_vm_wr_q_faces4.sv rtl/hbm_accel/generic/vm/static/ot_vms_bank_static.sv rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv rtl/hbm_accel/host_static_20261015/ot_hbm_host_static_ingress.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v && vvp -n {RUN}/mut/tbc1 > {RUN}/mut/tbc1.log 2>&1 && cat {RUN}/mut/tbc1.log && grep -qx 'TB_HBM_SM_VM_WR_Q_T PASS MUT=0' {RUN}/mut/tbc1.log",
+    "cmd": "mkdir -p {RUN}/mut && iverilog -g2012 -DMUT=0 -DFACE_CLOCK_MUT=1 -s tb_hbm_sm_vm_wr_q_t_faces4 -o {RUN}/mut/tbc1 rtl/hbm_accel/generic/vm/static/tb_hbm_sm_vm_wr_q_t_faces4.sv rtl/hbm_accel/generic/vm/static/ot_hbm_sm_vm_wr_q_t_faces4.sv rtl/hbm_accel/generic/vm/static/ot_hbm_sm_vm_wr_q_faces4.sv rtl/hbm_accel/generic/vm/static/ot_vms_bank_static.sv rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv rtl/hbm_accel/generic/vm/static/ot_static_cmd_target_core_pc.sv rtl/hbm_accel/host_static_20261015/ot_hbm_host_static_ingress.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v && vvp -n {RUN}/mut/tbc1 > {RUN}/mut/tbc1.log 2>&1 && cat {RUN}/mut/tbc1.log && grep -qx 'TB_HBM_SM_VM_WR_Q_T PASS MUT=0' {RUN}/mut/tbc1.log",
+    "expect": "fail",
+    "threads": 1,
+    "peak_ram_gb": 4,
+    "fail_regex": "^TB_HBM_SM_VM_WR_Q_T FAIL MUT=0 mismatches[+]faults=[1-9][0-9]*$"
+   },
+   {
+    "name": "mut_hcfg_clock_drop",
+    "cmd": "mkdir -p {RUN}/mut && iverilog -g2012 -DMUT=0 -DFACE_CLOCK_MUT=3 -s tb_hbm_sm_vm_wr_q_t_faces4 -o {RUN}/mut/tbc3 rtl/hbm_accel/generic/vm/static/tb_hbm_sm_vm_wr_q_t_faces4.sv rtl/hbm_accel/generic/vm/static/ot_hbm_sm_vm_wr_q_t_faces4.sv rtl/hbm_accel/generic/vm/static/ot_hbm_sm_vm_wr_q_faces4.sv rtl/hbm_accel/generic/vm/static/ot_vms_bank_static.sv rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv rtl/hbm_accel/generic/vm/static/ot_static_cmd_target_core_pc.sv rtl/hbm_accel/host_static_20261015/ot_hbm_host_static_ingress.sv physical/asap7_memory_macros_v2/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v && vvp -n {RUN}/mut/tbc3 > {RUN}/mut/tbc3.log 2>&1 && cat {RUN}/mut/tbc3.log && grep -qx 'TB_HBM_SM_VM_WR_Q_T PASS MUT=0' {RUN}/mut/tbc3.log",
     "expect": "fail",
     "threads": 1,
     "peak_ram_gb": 4,
@@ -95,7 +103,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hsm_smvm_wrq_t_r4/hsm_smvm_wrq_t_r4-f4db40-COMMIT"
+   "to": "results/rtl/ref_tile/hsm_smvm_wrq_t_r4/hsm_smvm_wrq_t_r4-f4hc-COMMIT"
   }
  ],
  "cycles_added": 0,
@@ -104,5 +112,5 @@
  "route_corner": "TC",
  "notes": "generated by tools/ref_tile/ref_tile.py",
  "merge_target": null,
- "structural_change": "The compactr3 failed the authoritative0.096um/0.60 pin-capacity audit before adoption. r4 returns to original388.8um face, and partitions each face clock into two actual half-face roots. Input control fields split at4SMs to preserve unique source-clock ownership. Body/core and one raw calendar clock are separate. Literal windows reserve all six clock entries; every data window cut<=0.60. Zero ordinary data/calendar stages added. Physical/native/typed grant still pending. f4db40 (Claude H-SM 1815): core clk CTS -distance_between_buffers 40 so no clock net strings an unbuffered ~110 um hop to the N-face cfg/desc capture row (c8e94d78d: 98 ps leaf vs 32 ps elsewhere -> 66 ps late flops -> 6 hold BUFx2 per input -> native capture 213.2 > 190)."
+ "structural_change": "The compactr3 failed the authoritative0.096um/0.60 pin-capacity audit before adoption. r4 returns to original388.8um face, and partitions each face clock into two actual half-face roots. Input control fields split at4SMs to preserve unique source-clock ownership. Body/core and one raw calendar clock are separate. Literal windows reserve all six clock entries; every data window cut<=0.60. Zero ordinary data/calendar stages added. Physical/native/typed grant still pending. f4hc (Claude H-SM 1815): host pin-flop row moved to a 7th clock entry clk_hcfg (own short CTS root like the W/E face roots, R~122/spread~12 there); zero edges added (ot_static_cmd_target_core_pc = core with clk_pin on the pin-flop block only). Die delta: one more writer clock entry pin (N face M5 x 70.62)."
 }

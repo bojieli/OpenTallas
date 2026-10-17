@@ -52,6 +52,7 @@
   ],
   "N": [
    "clk",
+   "clk_hcfg",
    "rst_n",
    "tgt",
    "quad",
@@ -76,14 +77,16 @@
   "clk_in_hi",
   "clk_out_lo",
   "clk_out_hi",
-  "clk_cal"
+  "clk_cal",
+  "clk_hcfg"
  ],
  "clock_cts_roots": [
   "clk",
   "clk_in_lo",
   "clk_in_hi",
   "clk_out_lo",
-  "clk_out_hi"
+  "clk_out_hi",
+  "clk_hcfg"
  ],
  "blocks": [
   {
@@ -105,6 +108,7 @@
   "rtl/hbm_accel/generic/vm/static/ot_hbm_sm_vm_wr_q_t_faces4.sv",
   "rtl/hbm_accel/generic/vm/static/ot_hbm_sm_vm_wr_q_faces4.sv",
   "rtl/hbm_accel/host_static_20261015/ot_static_cmd_target.sv",
+  "rtl/hbm_accel/generic/vm/static/ot_static_cmd_target_core_pc.sv",
   "physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2_bb.v",
   "physical/ref_tile/hsm_smvm_wrq_t_r4/kit.env",
   "physical/ref_tile/hsm_smvm_wrq_t_r4/clock.sdc",

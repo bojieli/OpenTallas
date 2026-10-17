@@ -29,6 +29,7 @@ module tb_hbm_sm_vm_wr_q_t_faces4;
     reg clk = 0, rst_n = 0;
     wire clk_in_high=(`FACE_CLOCK_MUT==1)?1'b0:clk;
     wire clk_out_high=(`FACE_CLOCK_MUT==2)?1'b0:clk;
+    wire clk_hcfg_w=(`FACE_CLOCK_MUT==3)?1'b0:clk;
     always #1 clk = ~clk;
     localparam integer LEAD = 8;
     reg [7:0] rv, smf; reg [95:0] rrow; reg [2047:0] rdata;
@@ -45,7 +46,7 @@ module tb_hbm_sm_vm_wr_q_t_faces4;
         .program_fault(1'b0), .cfg_v(cfg_v), .cfg_target(cfg_target), .cfg_addr(cfg_addr), .cfg_data(cfg_data),
         .desc_v(desc_v), .desc_base(desc_base), .desc_limit(desc_limit), .desc_loops(desc_loops), .launch_v(launch_v),
         .fault(ing_fault));
-    ot_hbm_sm_vm_wr_q_t_faces4 #(.DEPTH(4), .MUT(`MUT)) dut(.clk(clk), .clk_in_lo(clk),.clk_in_hi(clk_in_high),.clk_out_lo(clk),.clk_out_hi(clk_out_high),.clk_cal(clk), .rst_n(rst_n), .tgt(8'd160), .quad(2'(Q)),
+    ot_hbm_sm_vm_wr_q_t_faces4 #(.DEPTH(4), .MUT(`MUT)) dut(.clk(clk), .clk_in_lo(clk),.clk_in_hi(clk_in_high),.clk_out_lo(clk),.clk_out_hi(clk_out_high),.clk_cal(clk), .clk_hcfg(clk_hcfg_w), .rst_n(rst_n), .tgt(8'd160), .quad(2'(Q)),
         .cfg_v(cfg_v), .cfg_target(cfg_target), .cfg_addr(cfg_addr), .cfg_data(cfg_data), .desc_v(desc_v),
         .desc_base(desc_base), .desc_limit(desc_limit), .desc_loops(desc_loops), .launch_v(launch_v),
         .rv_lo(rv[3:0]),.rv_hi(rv[7:4]),.rrow_lo(rrow[47:0]),.rrow_hi(rrow[95:48]), .rdata_lo(rdata[1023:0]), .rdata_hi(rdata[2047:1024]), .sm_fault_lo(smf[3:0]),.sm_fault_hi(smf[7:4]),.sm_sched_fault_lo(4'd0),.sm_sched_fault_hi(4'd0), .wq_lo(wq_sm[1123:0]), .wq_hi(wq_sm[2247:1124]),

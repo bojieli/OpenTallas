@@ -4750,6 +4750,7 @@ place_pin -pin_name {configured} -layer M5 -location {137.436 388.800} -pin_size
 place_pin -pin_name {fault} -layer M5 -location {137.820 388.800} -pin_size {0.024 0.084} -force_to_die_boundary
 place_pin -pin_name {active} -layer M5 -location {138.204 388.800} -pin_size {0.024 0.084} -force_to_die_boundary
 place_pin -pin_name {clk} -layer M5 -location {71.292 388.800} -pin_size {0.024 0.084} -force_to_die_boundary
+place_pin -pin_name {clk_hcfg} -layer M5 -location {70.620 388.800} -pin_size {0.024 0.084} -force_to_die_boundary
 place_pin -pin_name {clk_in_lo} -layer M4 -location {0.000 97.212} -pin_size {0.084 0.024} -force_to_die_boundary
 place_pin -pin_name {clk_in_hi} -layer M4 -location {0.000 291.612} -pin_size {0.084 0.024} -force_to_die_boundary
 place_pin -pin_name {clk_out_lo} -layer M4 -location {142.560 97.212} -pin_size {0.084 0.024} -force_to_die_boundary
@@ -9531,11 +9532,12 @@ writer_pin_check {configured} M5 X 137.436 {137.424 388.716 137.448 388.800}
 writer_pin_check {fault} M5 X 137.820 {137.808 388.716 137.832 388.800}
 writer_pin_check {active} M5 X 138.204 {138.192 388.716 138.216 388.800}
 writer_pin_check {clk} M5 X 71.292 {71.280 388.716 71.304 388.800}
+writer_pin_check {clk_hcfg} M5 X 70.620 {70.608 388.716 70.632 388.800}
 writer_pin_check {clk_in_lo} M4 Y 97.212 {0.000 97.200 0.084 97.224}
 writer_pin_check {clk_in_hi} M4 Y 291.612 {0.000 291.600 0.084 291.624}
 writer_pin_check {clk_out_lo} M4 Y 97.212 {142.476 97.200 142.560 97.224}
 writer_pin_check {clk_out_hi} M4 Y 291.612 {142.476 291.600 142.560 291.624}
 writer_pin_check {clk_cal} M4 Y 300.012 {0.000 300.000 0.084 300.024}
-if {$fp_checked != 4756} {incr fp_bad}
+if {$fp_checked != 4757} {incr fp_bad}
 puts "WRITER_FACE_PIN_READBACK checked=$fp_checked violations=$fp_bad"
 if {$fp_bad} {error "Writer literal pins violate actual track/location"}

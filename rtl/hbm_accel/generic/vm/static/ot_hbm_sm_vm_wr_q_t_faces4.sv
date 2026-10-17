@@ -15,6 +15,7 @@ module ot_hbm_sm_vm_wr_q_t_faces4 #(parameter integer DEPTH = 4, parameter integ
     input  wire          clk,
     input wire clk_in_lo,clk_in_hi,            // W-face input flop root (see ot_hbm_sm_vm_wr_q)
     input  wire          clk_cal,           // raw hard calendar SRAM clock entry
+    input  wire          clk_hcfg,          // N-face host pin-flop clock entry (cfg/desc/launch/tgt pin flops; H-SM 1815)
     input wire clk_out_lo,clk_out_hi,           // E-face wq output flop root
     input  wire          rst_n,
     input  wire [7:0]    tgt,
@@ -49,9 +50,9 @@ module ot_hbm_sm_vm_wr_q_t_faces4 #(parameter integer DEPTH = 4, parameter integ
     wire cmd_v, w_busy, w_fault;
     wire [25:0] cmd;
     wire t_rce;wire[6:0]t_ra,t_wa;wire[0:0]t_wce;wire[255:0]t_wd,t_rd;
-    ot_static_cmd_target_core #(.TARGET(8'hff), .MODE(1), .CW(26), .RELF(0), .NA(1), .NF(1),
+    ot_static_cmd_target_core_pc #(.TARGET(8'hff), .MODE(1), .CW(26), .RELF(0), .NA(1), .NF(1),
         .MUT((MUT == 4) ? 1 : 0), .TGT_PIN(1)) u_tgt (
-        .clk(clk), .rst_n(rst_q), .tgt(tgt), .cfg_v(cfg_v), .cfg_target(cfg_target), .cfg_addr(cfg_addr),
+        .clk(clk), .clk_pin(clk_hcfg), .rst_n(rst_q), .tgt(tgt), .cfg_v(cfg_v), .cfg_target(cfg_target), .cfg_addr(cfg_addr),
         .cfg_data(cfg_data), .desc_v(desc_v), .desc_base(desc_base), .desc_limit(desc_limit), .desc_loops(desc_loops),
         .launch_v(launch_v), .tgt_active(w_busy), .tgt_fault(w_fault),
         .a_we(), .a_addr(), .a_data(), .b_we(), .b_addr(), .b_data(), .run_v(), .run_base(), .run_count(),
