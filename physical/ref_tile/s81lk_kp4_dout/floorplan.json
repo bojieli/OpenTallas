@@ -7,13 +7,13 @@
   0,
   0,
   248.4,
-  146.88
+  233.28
  ],
  "core": [
   2.16,
   2.16,
   246.24,
-  144.72
+  231.12
  ],
  "why": "spec outline (exact: the closed view's sub-slot)",
  "std_area_um2": null,
@@ -34,14 +34,14 @@
   ],
   "S": [
    "cw",
+   "rst_n",
+   "clk",
    "apply",
    "o_unc",
    "o_ne",
    "fs"
   ],
   "E": [
-   "rst_n",
-   "clk",
    "q_v",
    "q_first",
    "q_unc",
@@ -59,7 +59,7 @@
    "inst": "*u_cmem",
    "idx": 0,
    "x": 43.2,
-   "y": 43.2,
+   "y": 129.6,
    "w": 177.768,
    "h": 81.0,
    "orient": "R0",
