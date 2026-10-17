@@ -1,0 +1,6 @@
+TB_S81_RATE_MATCH FAST=1 sent=24000 got=24000 bad=0 idle_sent=189 idle_seen=163 slip=26 fault=0 PASS
+ERR beat 869
+ERR beat 870
+ERR beat 871
+TB_S81_RATE_MATCH FAST=0 sent=24000 got=24026 bad=23157 idle_sent=189 idle_seen=189 slip=0 fault=0 FAIL
+RATE_MATCH_BENCH FAIL mode=mut_noidle dirs_failed=1
