@@ -3929,6 +3929,24 @@ def relay_dims(bits, horiz):
     return tuple(max(a, b) for a, b in zip(horizontal, vertical))
 
 
+def native_xstg_slot(w, h, requested_orientation):
+    """Reserve the literal crossing view and a proven transform before search.
+
+    The existing closed base R0 is preferred when a requested mirror is not
+    supported.  Its different absolute pin positions must pass subsequent
+    source-current join/reach checks; this does not waive those checks.
+    """
+    master = 'dsfd_xstg_515'
+    view = bound_views().get(master)
+    if view is None:
+        raise ValueError(f'native slot envelope requires source-pinned {master}')
+    orientation = bound_view_orientation_contract(view, master)
+    supported = orientation['supported']
+    if orientation['errors'] or 'R0' not in supported:
+        raise ValueError(f'{master}: invalid native orientation contract: {orientation}')
+    return max(w, view['w']), max(h, view['h']), (requested_orientation if requested_orientation in supported else 'R0')
+
+
 def stn70_across(lanes, horiz):
     """S-DIE r3 --stn70-across-fallback: the pre-70363dae1 envelope of a split 70xK group, K leaves stacked ACROSS the
     flow (used only where the along-flow envelope finds no spot, e.g. c21f crE2_W0_hub at the hub-W return entry)."""
@@ -9017,12 +9035,17 @@ def _svc_chains(m, CH8, P, cor, end_spec, hub_block):
         return P.add(Inst(name, master, pl[0], pl[1], w, h, 'R0', kind='hend', region='svc'))
 
     def beside_blk(name, master, w, h, blk, face, yfrac):
+        orient = 'R0' if face == 'E' else 'MY'
+        if NATIVE_SLOT_ENVELOPES and master == 'dsfd_xstg_515':
+            w, h, orient = native_xstg_slot(w, h, orient)
+            m.setdefault('native_slot_requests', {})[name] = dict(master=master, outline_um=[w,h],
+                orientation=orient, status='SOURCE_CURRENT_GEOMETRY_CANDIDATE_NOT_TIMING')
         y = blk.y + blk.h * yfrac
         x = blk.x - w / 2 - 6.0 if face == 'W' else blk.x + blk.w + w / 2 + 6.0
         gap = cor['gapS'] if blk.y < DIE[1] / 2 else cor['gapN']
         pl = P.near(x, y, w, h, [gap], horiz=False, span=300.0, rows=8)
         assert pl, name
-        return P.add(Inst(name, master, pl[0], pl[1], w, h, 'R0' if face == 'E' else 'MY', kind='hend', region='svc'))
+        return P.add(Inst(name, master, pl[0], pl[1], w, h, orient, kind='hend', region='svc'))
     for i, (st, sv) in enumerate(m['svcs'].items()):
         side = vm_side(st)
         sx = spine_x(side)

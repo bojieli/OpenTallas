@@ -39,3 +39,13 @@ def test_native_qbank_growth_preserves_registered_macro_gap_and_ports():
     assert north.y>=500+rq['h']+1.08-1e-6
     assert G.BANK_PORTS[south.name]==('S',['x0'])
     assert G.BANK_PORTS[north.name]==('N',['r0'])
+
+
+def test_native_crossing_uses_actual_envelope_and_only_supported_orientation():
+    view={'w':75.6,'h':92.88,'text':'MACRO dsfd_xstg_515\n SIZE 75.6 BY 92.88 ;\nEND dsfd_xstg_515\n'}
+    with patch.object(G,'bound_views',return_value={'dsfd_xstg_515':view}), \
+         patch.object(G,'orientation_qualification',return_value=None):
+        assert G.native_xstg_slot(17.256,30.216,'MY')==(75.6,92.88,'R0')
+        view['text']='MACRO wrong_name\nEND wrong_name\n'
+        with pytest.raises(ValueError,match='invalid native orientation'):
+            G.native_xstg_slot(17.256,30.216,'MY')
