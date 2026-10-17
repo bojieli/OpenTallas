@@ -1538,7 +1538,7 @@ def _build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_w
             # vport -> fork beside its pair's control strip, then the header and 8 GS chunks fan out from there
             fw_, fh_ = PVFORK
             for pi_, (pn_, py_, por_) in enumerate((('pvw_0', y_s, 'R0'), ('pvw_1', y_n, 'MX'))):
-                ystrip = py_ + PVW[1] - 400.0 if por_ == 'R0' else py_ + 400.0 - fh_
+                ystrip = py_ + PVW[1] - 1800.0 if por_ == 'R0' else py_ + 1800.0 - fh_    # clear of the hub corridor
                 sts_ = ('WS', 'ES') if pi_ == 0 else ('WN', 'EN')
                 for st in sts_:
                     for k in range(4):
