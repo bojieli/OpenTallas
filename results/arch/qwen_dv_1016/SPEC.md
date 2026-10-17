@@ -324,3 +324,17 @@ Two consequences for this plan:
   - `qwen_qdv_dv2r8` (pick);
   - `qwen_qdv_dv1` (comparator).
 - **PNG:** `dv2r8.png` was re-rendered and viewed.
+
+## Hold budget (FLOW-HOLD, coordinator-approved, 2026-10-17)
+
+- **Tiles under the rule:** the slice (`qfd_dv_slice2`) and any separate station or relay tiles are recipe-4 leaves with `"hold_budget": "die"`. The rule is `results/arch/boundary_hold_budget_1016/RULE.md`.
+  - Pins are flop-first and outputs are flop-driven.
+  - There are no inhold/outhold pads.
+  - Sign-off: input min = L_min+C+U, output min = U-(L_min+C), with C = 25 and U = 25. Setup is unchanged.
+- **Die STA:**
+  - It reads `ff_launch_min_ps` from each bound ETM and times every receiver on its hold arc.
+  - U = 25 is applied once per link.
+  - Neighbour |delta| must be <= 80 ps.
+  - It gates on FF hold >= 0.
+  - Any shortfall is fixed only in relay stations or die-net hold cells.
+- **Opt-outs:** none planned. The slice is single-domain.
