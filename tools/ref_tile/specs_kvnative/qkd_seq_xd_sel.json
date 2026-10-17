@@ -12,8 +12,8 @@
  "clock_port": "ck",
  "reset_ports": [],
  "outline": {
-  "w": 64.8,
-  "h": 43.2,
+  "w": 43.2,
+  "h": 21.6,
   "exact": true
  },
  "layer_cap": "M5",
@@ -58,7 +58,7 @@
  "hold_pad": {
   "cell": "HB2xp67_ASAP7_75t_R"
  },
- "structural_change": "first build: 128-b store-data select of qkd_seq_static_p (x4, hardened once), Q data from the attention programme or the KVN receiver word, one output register.",
+ "structural_change": "first build: 128-b store-data select of qkd_seq_static_p (x4, hardened once), Q data from the attention programme or the KVN receiver word, one output register. Pin-limited bridge sized to its faces: 43.2 x 21.6 (N 257 pins = 5.9/um, S 128 = 3/um); logic is 128 flops + 128 mux.",
  "job": {
   "owner": "Claude:KVE-2-SEQ",
   "branch": "claude/kve2-seq-1017",
