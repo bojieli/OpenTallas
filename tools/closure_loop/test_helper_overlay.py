@@ -263,6 +263,28 @@ class HelperOverlay(unittest.TestCase):
         CL.ship_helpers('local', str(run), fresh)
         self.assertEqual((run/'cl/orfs_hold_mm.tcl').read_bytes(), b'# new current helper\n')
 
+    def test_lint_only_drift_ships_frozen_bytes(self):
+        _, binding = self.gate()
+        frozen_plan = binding['route_overlay_plan']
+        self.commit_helper(b'# lint constants changed after the gate\n')
+        job = {'name': 'lint-t', 'events': [], 'freeze_helper_overlay': True, 'route_overlay_plan': frozen_plan}
+        run = Path(self.tmp.name)/'lintrun'
+        with patch.object(HO, 'LINT_ONLY', (self.rel,)), patch.object(CL, 'HELPER_STORE', Path(self.tmp.name)/'store'):
+            CL.ship_helpers('local', str(run), job)
+        self.assertEqual((run/'cl/orfs_hold_mm.tcl').read_bytes(), self.new)            # the frozen bytes, not main's
+        self.assertEqual(job['route_overlay_plan']['content_sha256'], frozen_plan['content_sha256'])
+        self.assertEqual(job['helper_overlay_sanctioned'][0]['kind'], 'lint_frozen')
+        self.assertEqual(HO.verify_installed_plan(run/'cl', job['route_overlay_plan'])['status'], 'verified_original')
+
+    def test_lint_only_foreign_blob_still_refuses(self):
+        _, binding = self.gate()
+        self.commit_helper(b'# later main\n')
+        (self.daemon/self.rel).write_bytes(b'# daemon-only edit\n')
+        job = {'freeze_helper_overlay': True, 'route_overlay_plan': binding['route_overlay_plan']}
+        with patch.object(HO, 'LINT_ONLY', (self.rel,)):
+            with self.assertRaisesRegex(ValueError, 'effective route helper drift'):
+                CL.ship_helpers('local', str(Path(self.tmp.name)/'lint2'), job)
+
     def test_negative_metrics_are_still_rejected_after_honest_recovery(self):
         job, run = self.installed_job()
         self.commit_helper(b'# unrelated later tool fix\n')

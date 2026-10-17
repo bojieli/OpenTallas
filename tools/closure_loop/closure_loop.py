@@ -2804,6 +2804,23 @@ def ship_helpers(host, run, job=None):
             ok, why, sanctioned = HO.compare_plans_sanctioned(frozen, current, REPO, head=current.get("origin_main"))
             if not ok:
                 raise ValueError(f"FROZEN_HELPER_OVERLAY: {why}; preserve original job and submit a fresh source-bound gate")
+            lint = [r for r in sanctioned if r.get("kind") == "lint_frozen"]
+            if lint:
+                # LINT-ONLY SANCTION (ROOT 2026-10-16): ship the FROZEN bytes of lint-only helpers (exact, from the plan's
+                # committed origin tree / store) so the route executes its original helper set; the plan rows stay frozen.
+                fpay, _src = HO.recover_frozen_payloads(REPO, HELPER_STORE, frozen)
+                frows = {f["path"]: f for f in frozen["files"]}
+                for r in lint:
+                    payloads[r["path"]] = fpay[r["path"]]
+                    modes[r["path"]] = frows[r["path"]]["mode"]
+                    event(job, f"LINT-ONLY SANCTION: {r['path']} frozen {r['frozen_git_blob'][:9]} kept (main now "
+                               f"{r['current_git_blob'][:9]}); lint constants only, route runs its frozen bytes")
+                job.setdefault("helper_overlay_sanctioned", []).extend(dict(r, at=now_iso(), host=host, run=run) for r in lint)
+                cur_files = [frows[f["path"]] if f["path"] in {r["path"] for r in lint} else f for f in current["files"]]
+                current = dict(current, files=cur_files, content_sha256=HO.digest(cur_files))
+                sanctioned = [r for r in sanctioned if r.get("kind") != "lint_frozen"]
+                if not sanctioned:
+                    current = frozen if HO.digest(frozen["files"]) == current["content_sha256"] else current
             if sanctioned:
                 # FLEET-RUN SANCTION (ROOT 2026-10-16): only fleet-run helpers (tt_overlay.py: the route executes the
                 # fleet copy kept at main, fleet-first since 00cbddaea) drifted, to exactly origin/main's blob.  Keep the
@@ -6249,6 +6266,13 @@ def eco_install_cmd(j):
     if j.get("eco_overlay_recovery"):
         lines.append(f"python3 {{CL}}/eco_recovery.py verify {shlex.quote(j['eco_overlay_recovery']['guard'])}")
     lines.append(f"EB=$(ls -d {out}/orfs/results/asap7/*/base)")
+    # ECO-DEF (ROOT 2026-10-16, qkd_static_kv_landing_seg ls5 / qkd_ctrl_pc_core s4): f181bfa99 made install copy
+    # 6_final.def, but a job whose FROZEN hold_eco.tcl predates it writes no DEF -> 'cp: cannot stat 6_final.def', rc=1
+    # after a PASSING ECO.  Write the DEF from the ECO's own 6_final.odb (same database, so the same geometry) first.
+    lines.append(f'[ -f $EB/6_final.def ] || docker run --rm -v $EB:/eb ${{ORFS_IMAGE:-openroad/orfs:asap7lock}} bash -lc '
+                 f'"printf \'read_db /eb/6_final.odb\\nwrite_def /eb/6_final.def\\n\' > /tmp/ot_wdef.tcl && '
+                 f'/OpenROAD-flow-scripts/tools/install/OpenROAD/bin/openroad -no_init -exit /tmp/ot_wdef.tcl" '
+                 f'> $EB/install_write_def.log 2>&1')
     for b in sorted({rb, ob}):
         for f in ("6_final.odb", "6_final.spef", "6_final.v", "6_final.def"):
             lines.append(f"[ -f {b}/{f} ] && [ ! -f {b}/{f}.pre_eco ] && mv {b}/{f} {b}/{f}.pre_eco; cp $EB/{f} {b}/{f}")
