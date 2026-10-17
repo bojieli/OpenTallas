@@ -69,7 +69,11 @@ def main():
         orfs_vars={"OT_SPINE_PORTS": "ck_sw,ck_se,ck_nw,ck_ne", "OT_SPINE_MACRO_LEAF": "1",
                    "PRE_GLOBAL_PLACE_TCL": "physical/qcluster/fabric_sites_place.tcl",
                    "PRE_DETAIL_PLACE_TCL": "physical/qcluster/fabric_sites_release.tcl",
-                   "OT_QC_SITES": "physical/qcluster/qfd_c_b16_dv_sites.tsv"},
+                   "OT_QC_SITES": "physical/qcluster/qfd_c_b16_dv_sites.tsv",
+                   # diag1 (10-17): timing-driven GPL inserted 142,847 buffers on the not-yet-placed station logic
+                   # (+279% area) and the step ran out of its 48 GB; the fabric is site-placed, so GPL only spreads the
+                   # remaining station / tie logic: no timing- or routability-driven passes
+                   "GPL_TIMING_DRIVEN": "0", "GPL_ROUTABILITY_DRIVEN": "0"},
         io_flop_at_pins=False,
         sdc_extra=["physical/qcluster/qfd_c_b16_dv_quadrants.sdc"],
         reset_ports=["rst_n"],

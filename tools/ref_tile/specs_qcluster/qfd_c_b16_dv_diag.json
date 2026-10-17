@@ -27,7 +27,9 @@
   "OT_SPINE_MACRO_LEAF": "1",
   "PRE_GLOBAL_PLACE_TCL": "physical/qcluster/fabric_sites_place.tcl",
   "PRE_DETAIL_PLACE_TCL": "physical/qcluster/fabric_sites_release.tcl",
-  "OT_QC_SITES": "physical/qcluster/qfd_c_b16_dv_sites.tsv"
+  "OT_QC_SITES": "physical/qcluster/qfd_c_b16_dv_sites.tsv",
+  "GPL_TIMING_DRIVEN": "0",
+  "GPL_ROUTABILITY_DRIVEN": "0"
  },
  "io_flop_at_pins": false,
  "sdc_extra": [
