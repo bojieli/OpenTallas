@@ -1,5 +1,5 @@
 {
- "name": "s81dv_rly_562_ew-w1-COMMIT",
+ "name": "s81dv_rly_562_ew-w1-a64b30c34",
  "block": "dsfd_dvrly_562_EW",
  "ref_tile": true,
  "owner": "Claude:S81-CTRL",
@@ -8,7 +8,7 @@
  "peak_ram_gb": 8,
  "source": {
   "branch": "claude/s81ctrl-1017",
-  "commit": "COMMIT",
+  "commit": "a64b30c34",
   "extra_paths": [
    "rtl/dsrom_sys/s81_glue",
    "physical/s81_die_pins/dvrly276"
@@ -99,7 +99,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/s81dv_rly_562_ew/s81dv_rly_562_ew-w1-COMMIT"
+   "to": "results/rtl/ref_tile/s81dv_rly_562_ew/s81dv_rly_562_ew-w1-a64b30c34"
   }
  ],
  "cycles_added": 0,
