@@ -45,7 +45,9 @@
    "actual_layer",
    "actual_data",
    "fault_hbm",
-   "fault_core"
+   "fault_core",
+   "idle_hbm",
+   "idle_core"
   ],
   "S": [
    "pll_hbm",
@@ -53,10 +55,6 @@
    "hrst",
    "rsi",
    "pll_hbm_data"
-  ],
-  "N": [
-   "idle_hbm",
-   "idle_core"
   ]
  },
  "clock_port": "ck",
