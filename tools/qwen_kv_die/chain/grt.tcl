@@ -35,28 +35,6 @@ step special {
   }
   puts "OT_SPECIAL clock_reset_nets=$n"
 }
-# OWNER 0cl (10-17 ~00:10): every die flow inserts repeaters on die nets between relay registers (repeated reach
-# 600-750 um, an unrepeated wire is slew-limited at ~175 um: one repeater from ~175 um). OT_DIE_REPEATERS=1 runs
-# repair_design -max_wire_length OT_DIE_REPEAT_UM (default 175) on the data nets on placement parasitics; clock /
-# forwarded-clock nets stay with the die clock tree (dont_touch). The repeaters are logged (OT_DIE_REPEATERS line) and
-# written into the GRT checkpoint, so STA times the buffered nets. Repeaters inside a registered hop add no cycle.
-if {[info exists ::env(OT_DIE_REPEATERS)] && $::env(OT_DIE_REPEATERS) == 1} {
-  step repeat {
-    set um [expr {[info exists ::env(OT_DIE_REPEAT_UM)] ? $::env(OT_DIE_REPEAT_UM) : 175}]
-    set n0 [llength [[ord::get_db_block] getInsts]]
-    # element views (TT): pin directions / caps of the die masters, so repair sees every driver and load
-    foreach f [glob -nocomplain /work/libs/*_tt.lib] { catch {read_liberty $f} }
-    estimate_parasitics -placement
-    set dt {}
-    foreach net [[ord::get_db_block] getNets] {
-      if {[regexp {^n_(clk_|fck_)} [$net getName]]} { lappend dt [$net getName] }
-    }
-    if {[llength $dt]} { set_dont_touch [get_nets $dt] }
-    repair_design -max_wire_length $um -buffer_gain 4.0
-    set n1 [llength [[ord::get_db_block] getInsts]]
-    puts "OT_DIE_REPEATERS max_wire_um=$um added=[expr {$n1 - $n0}] dont_touch_clock_nets=[llength $dt]"
-  }
-}
 step grt { global_route -congestion_iterations $::env(OT_ITERS) -allow_congestion -verbose -congestion_report_file /work/grt_congestion.rpt }
 # die readout (owner 10-16): GRT routing-usage heat map, 50 um bins, for tools/qwen_split/die_readout.py
 step heat { catch {gui::set_heatmap Routing GridX 50}; catch {gui::set_heatmap Routing GridY 50}; gui::dump_heatmap Routing /work/grt_heatmap.csv }
