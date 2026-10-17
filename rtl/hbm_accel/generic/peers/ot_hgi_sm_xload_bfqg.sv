@@ -12,12 +12,15 @@ module ot_hgi_sm_xload_cl2_bfqg (
     input wire rst_n,
     input wire [1023:0] c_d,
     input wire wce,
-    input wire [7:0] mhi, mlo,
+    input wire mhi0,mhi1,mhi2,mhi3,mhi4,mhi5,mhi6,mhi7,
+    input wire mlo0,mlo1,mlo2,mlo3,mlo4,mlo5,mlo6,mlo7,
     input wire [6:0] wa,
     input wire [7:0] r_ce,
     input wire [6:0] r_a,
     output reg [255:0] rwq
 );
+    wire [7:0] mhi={mhi7,mhi6,mhi5,mhi4,mhi3,mhi2,mhi1,mhi0};
+    wire [7:0] mlo={mlo7,mlo6,mlo5,mlo4,mlo3,mlo2,mlo1,mlo0};
     wire [7:0] cm = {clk_m7,clk_m6,clk_m5,clk_m4,clk_m3,clk_m2,clk_m1,clk_m0};
     wire [7:0] cl = {clk_l7,clk_l6,clk_l5,clk_l4,clk_l3,clk_l2,clk_l1,clk_l0};
     wire [0:0] rn_l;

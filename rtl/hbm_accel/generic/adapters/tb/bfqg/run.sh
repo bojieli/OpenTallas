@@ -10,6 +10,7 @@ verilator --binary --timing -Wno-fatal -Wno-lint -Wno-style -j 2 --top-module tb
   physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v \
   rtl/hbm_accel/generic/adapters/tb/bfqg/reference.sv \
   rtl/hbm_accel/generic/adapters/tb/bfqg/tb_bfqg.sv > "$OUT/build.log" 2>&1
+if [[ -n ${2:-} ]]; then exec "$OUT/obj/Vtb_bfqg" +MUT="$2"; fi
 "$OUT/obj/Vtb_bfqg" > "$OUT/positive.log" 2>&1
 grep 'BFQG_PASS' "$OUT/positive.log"
 for mutant in {0..9}; do
