@@ -170,3 +170,15 @@ PORTS cmd: ar_base `[27:4]`, dd_base `[51:28]`, ar_en `[52]`, dd_en `[53]`, em_b
 **Chain-end inputs take the idle word, all zero.** These are E5's `ch_up_i`, `st_dn_i` and `sc_dn_i`, and W5's `st_up_i` and `sc_up_i`. An all-zero word means "no word" on each of these ports, as with the outermost `fault_i` termini.
 
 **Benches.** `dv_bench2.py` runs (a)–(g) on the chain ports, plus (h): SETID enumeration of 12 slices. MUT 10, where the forward does not increment, must fail (h).
+
+## q3h SU reference latency (item 6, 2026-10-17)
+
+`run_q3h_lat.sh` / `tb_q3h_su_lat.sv` run the q3h SU64 core (`ot_hdc_vstream_static_entries` SW 64, LV 7, ML 15, LT 1, RED_ENTRIES 1) on a behavioural VM: residual + sum of squares over 4,096, then the r = rsqrt op. PASS (r matches hdc_golden). Verilator build ~30 GB, run on the fleet.
+
+| path | q3h SU64 | DV slice |
+|---|---:|---:|
+| last vector issue -> SSX / last PSUM | 142 | <= 67 (bench g) |
+| -> r | 2 + 117 (separate rsqrt op) + IS/OS 2 | 61 (fused root) |
+| **last vector issue -> r** | **263** | **<= 128** |
+
+Per RMSNorm the slice is 135 edges shorter; 2 norms a layer give -270 cycles/layer, which the dv2r8f5 ledger (-66, root compute assumed to cancel) did not count: **dv2r8f5 = -336 cycles/layer vs q3h**. Record: `results/arch/qwen_dv_slice_1017/q3h_su_lat.json`.
