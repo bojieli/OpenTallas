@@ -2,13 +2,13 @@
  "schema": "opentallas.ref_tile.gate_result.v2",
  "kit": "hbm_sfu_lg_pair_tap_leaf_1017",
  "verdict": "WARN",
- "generated": "2026-10-17T12:23:08-0700",
+ "generated": "2026-10-17T13:07:45-0700",
  "host": "ot-agidock128",
  "cts": true,
  "commit": null,
  "source_binding": {
   "schema": "opentallas.ref_tile.source_snapshot.v1",
-  "start_commit": "51f29cdbb9039e5b85079b29cbcd17d0fbd52d27",
+  "start_commit": "63a9d176da82d5d59b22b708fb0e30defc2f0445",
   "commit": null,
   "identity": "exact_content_snapshot",
   "daemon_tree": "/home/ubuntu/wt-claude-closure-daemon-1010",
@@ -21,8 +21,8 @@
    "tools/orfs_hold_mm.tcl",
    "tools/textbook_lint.py"
   ],
-  "archive_sha256": "eb73de0238de1a6a6bda1acd04afa7a266ba7291069f6070ffddc61b6645ab0e",
-  "manifest_sha256": "1face1d4a48aa5729f2a7a6b6b1eeba72c388c7ad070447ae80a8cba2ae83cd4",
+  "archive_sha256": "4f9fc449e92db0b1a1903a82e8c877f1c73d244b3a1ce307d27ca314c7d93bdf",
+  "manifest_sha256": "209f9e9d126572932374fb35760f3ff962f3dac0bc5ebc3fc436936344035820",
   "files": [
    {
     "path": "physical/common_flow/anchor_row_packing.tcl",
@@ -62739,8 +62739,8 @@
    {
     "path": "rtl/test/hbm_accel/generic/tb_hgi_lg_pair_tap_fold.sv",
     "kind": "file",
-    "sha256": "83251063f0ef7e97801356816ff16189df687f480ba3ecec94919c74205ad12c",
-    "git_blob": "b41685fb20083b3c4d3afe66a0945a14d75ee5e4",
+    "sha256": "12b657ce8e4333b26162c050d4b9a550e09c83f3ac280c01db518e01db693532",
+    "git_blob": "4da146103a6e66bc2504e352f990226b9c7ef390",
     "source": "working_tree",
     "matches_provenance_commit": true
    },
@@ -161891,14 +161891,14 @@
   ],
   "disk_admission": {
    "reserve_gb": 20,
-   "archive_bytes": 145563106,
+   "archive_bytes": 145563196,
    "unpacked_bytes": 909164544,
    "pick_gb": 22,
    "runtime_gb": 22
   },
   "route_overlay_plan": {
    "schema": "opentallas.closure_loop.helper_overlay_plan.v1",
-   "origin_main": "5b151b9eba3591ebd4bff59e17bf9e37cb336f87",
+   "origin_main": "dff436dd02a966b5373a20212f6554780f285ca0",
    "content_sha256": "46212c4a006d162487f2749d8e6001edbd7428d03a257e125b6e20e6b3202016",
    "files": [
     {
@@ -162394,7 +162394,7 @@
     "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank.sv": "8d2fd258929e0cb4e59ec46ff1c2679d756ea9b2fa86569d92f023dfdb42558a",
     "rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_bank_term.sv": "a531865c61e55476aef9b13ccbff4d8389ae33f6a836edc95d1e33f5502f1245",
     "rtl/hdc/ot_hdc_delay.sv": "7b37c18daacc0e2c592dc3acf1e65e2225a69697a39de9c1e4d2fc22421cb688",
-    "rtl/test/hbm_accel/generic/tb_hgi_lg_pair_tap_fold.sv": "83251063f0ef7e97801356816ff16189df687f480ba3ecec94919c74205ad12c",
+    "rtl/test/hbm_accel/generic/tb_hgi_lg_pair_tap_fold.sv": "12b657ce8e4333b26162c050d4b9a550e09c83f3ac280c01db518e01db693532",
     "tools/closure_loop/ck_insertion.py": "aa781a57409f054dfcbd54bca32e887dfbf6b199e16d48083450670b66d20e6a",
     "tools/dft/__init__.py": "fe1151f8253ee95b4a5ecd66d61b001e25ac8121d82ef94f52c49cf110523204",
     "tools/dft/check_scan_equivalence.py": "da840cd8cd54184a8d4e96d2e86360b621829f06d12dd84d89008c565e6b9b33",
@@ -162421,16 +162421,16 @@
    },
    "digest": "05c9f4aa0387b99797ba9870e9bc44710a4d31807ef5a744b281fbff05bf597d"
   },
-  "captured": "2026-10-17T12:19:45-0700",
+  "captured": "2026-10-17T13:04:25-0700",
   "route_hold_context": {
    "HM": "0.03",
    "OT_ROUTE_HOLD_CORNERS": "mm",
    "OT_MM_FF_SDC": "physical/ref_tile/hbm_sfu_lg_pair_tap_leaf_1017/signoff_ffrepair.sdc"
   },
-  "remote_script_sha256": "93b430986e97da33631bdccbf20d1963a516b4a1718fc2ade700b4cf486eabad",
+  "remote_script_sha256": "7cca2a8e00712b9a4c8d32703abbec3f5d951cfae14a757445610e01d1fdf94b",
   "tool_image_requested": "openroad/orfs:latest",
   "remote_host": "ot-agidock128",
-  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/hbm_sfu_lg_pair_tap_leaf_1017-20261017-121729",
+  "remote_run": "/srv/opentallas-scratch/claude/ref_gate/hbm_sfu_lg_pair_tap_leaf_1017-20261017-130151",
   "remote_archive_verified": true,
   "runtime_tool_provenance": [
    "GATE_TOOL_IMAGE_ID=sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29 GATE_TOOL_IMAGE_DIGESTS=[\"openroad/orfs@sha256:16470cea1d346bfa245e402108995a4f04a1e54fe7c7bb7441774d7f6a2ece29\"]",
