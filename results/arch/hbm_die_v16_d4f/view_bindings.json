@@ -56,6 +56,43 @@
    "faces": "W wq_m/done_m -> bank wq1/wq_done1; E wq1 in (smw_NW)/wq_done1 out; N wq2 in (hb_quant_NW)/wq_done2 out; S clk/rst_n/flt",
    "cost": "+2 fixed edges NW wq1/wq2 (done +1); compiler NW calendar owner codes 2->1, k>=3 -> k-1; <=0.20% AR",
    "die_home": "generated beside its bank (GEN rule 4, peers); needs H-NETLIST contract revision before it exists on the die"
+  },
+  "ot_hgi_coll_ctl_v5_q3": {
+   "kind": "REAL",
+   "route": "hcoll_v5_ctl3-v7-5a3e1fdbc",
+   "closed": "TT +28.13 / FF +10.58",
+   "native": "200.3/166.2/42.5 PASS",
+   "main": "8b01dec5a",
+   "receipts": "results/rtl/hbm_coll_native_1552/{slices_native_1815,ctl_v7_native_1815}.json"
+  },
+  "ot_hgi_coll_vmasm_slice16": {
+   "kind": "REAL",
+   "count": 16,
+   "route": "hcoll_vmasm16-s16-0be6140a3",
+   "closed": "TT +337 / FF +27.8",
+   "native": "178.7/130.9/6.8 PASS",
+   "main": "10803b11a"
+  },
+  "ot_hgi_coll_uop_slice96": {
+   "kind": "REAL",
+   "count": 16,
+   "route": "hcoll_upipe96-u96-084ca25c6",
+   "closed": "TT +342 / FF +29.3",
+   "native": "176.5/125.8/5.9 PASS",
+   "main": "143377e9d"
+  },
+  "ot_hgi_coll_inj_copy": {
+   "kind": "REAL",
+   "instances": "cic_<Q>",
+   "route": "hcoll_injcopy-ic1-cc77f11e3",
+   "native": "209.2/126.6/3.0 PASS",
+   "home": "d4f plan (d4c home void)"
+  },
+  "ot_hgi_coll_ctl_v5_q2": {
+   "status": "NOT BINDABLE: V7 native FAIL capture 197.3 (input hold-pad chain); successor in progress"
+  },
+  "coll_hard_v7_parent": {
+   "status": "bind slices against the next d4f contract (H-NETLIST): ctl no vm_sel out; clk_upipe/clk_vmasm 1 -> 16 entries; NLINK 2/1/1/1; TP192"
   }
  }
 }
