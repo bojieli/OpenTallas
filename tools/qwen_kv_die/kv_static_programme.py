@@ -104,6 +104,25 @@ def link_calendar(workdir):
     return json.loads((out / 'calendar.json').read_text())
 
 
+LINK_CFG_TARGET, LINK_CFG_WORDS = 11, 66
+
+
+def link_cfg_words(caldir, end='K', base_seg=2):
+    """KVJ-SMALL 10-17: boot dispatcher target 11 (qkd_static_kv_boot_dispatch LINKCFG=1) for the KV link end's cfg port.
+    Words in the calendar sequencer's init order (ot_qwen_d2d_cal_seq): TX entry i, RX entry i (i = 0..31), then the TX and
+    RX segment-1 bases.  The KV sequencer runs ADM=1, so its init bases are the admission segment (seg2); data[63:32] = 0."""
+    cd = Path(caldir)
+    rd = lambda f: [int(x, 16) for x in (cd / f).read_text().split()]
+    tx, rx = rd(f'cal_{end}_tx.memh'), rd(f'cal_{end}_rx.memh')
+    if len(tx) != 32 or len(rx) != 32:
+        raise ValueError('link calendar image must have 32 TX and 32 RX entries')
+    sfx = f'_seg{base_seg}'
+    words = [w for i in range(32) for w in (tx[i], rx[i])] + [rd(f'cal_{end}_tx{sfx}.memh')[0], rd(f'cal_{end}_rx{sfx}.memh')[0]]
+    if len(words) != LINK_CFG_WORDS or any(not 0 <= w < 1 << 32 for w in words):
+        raise ValueError('link cfg image: 66 words of 32 bits expected')
+    return words
+
+
 # ---- profile: every age the compile uses -----------------------------------------------------------------------------
 def profile(kind, ages=None):
     if kind == 'component':
@@ -440,6 +459,7 @@ def compile_all(pr, epoch=0x0b0b, program_words=None, workdir=None):
     digest = sfi.image_digest(prog)
     with tempfile.TemporaryDirectory(dir=workdir) as td:
         cal = link_calendar(td)
+        link_words = link_cfg_words(Path(td) / 'cal')
     prog_cal = cal['program']
     lay = prog_cal['layers']
     starts = [l['start'] for l in lay]
@@ -642,7 +662,10 @@ def compile_all(pr, epoch=0x0b0b, program_words=None, workdir=None):
                            events=img['events']),
                 writer=dict(slots=t, stop=stop, words=writer_words), ownership=dict(words=own, go='token start (assumed)'),
                 groups=group, landing_words=landing_words, front_words=front_words, controller=ctrl, controller_targets=ctrl_targets,
-                attention=att, phase=phase, images=images, bundle=bundle)
+                attention=att, phase=phase, images=images, bundle=bundle,
+                # dispatcher target 11 (LINKCFG=1, order 1..9, 11, 0); not in the HOST class-8 bundle yet: the HOST
+                # loader / program_target_frames accept targets 0..9 only (same as the DIECFG target 10)
+                link_cfg=dict(target=LINK_CFG_TARGET, program=link_words))
 
 
 # ---- operations on actual template ports (opentallas.qwen_kv_static.programme.v1) -------------------------------------
@@ -737,6 +760,7 @@ def write(r, out, root=ROOT):
     if r['profile']['kind'] == 'die':                   # the priced static-join template (coordinator 10-17 decision 1)
         priced = priced_template(r['profile'], root)
         (out / 'static_join.priced.json').write_text(json.dumps(priced.pop('graph'), indent=1) + '\n')
+    (out / f'target{LINK_CFG_TARGET}.hex').write_text(''.join(f'{w:016x}\n' for w in r['link_cfg']['program']))
     for im in r['images']:
         (out / f'target{im["target"]}.hex').write_text(''.join(f'{w:016x}\n' for w in im['program'] + im['descriptors']))
     vec = ''.join(f'{w:08x}' for w in reversed(r['layer']['words'][:324]))

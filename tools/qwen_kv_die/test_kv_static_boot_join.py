@@ -9,7 +9,9 @@ class BootJoin(unittest.TestCase):
     def test_core_cfg_bound_and_still_refused(self):
         g, _ = K.template()
         bound = B.boot_join(g)
-        self.assertEqual(len(bound), 3 * 3 + 32 * 3)
+        self.assertEqual(len(bound), 3 * 3 + 32 * 3 + 4)          # + the link end's 4 cfg ports (LINKCFG target 11)
+        self.assertEqual(ins_ := {i['name']: i for i in g['instances']}['d2d']['inputs']['cfg_addr'],
+                         [dict(instance='boot', port='link_cfg_addr', lo=0, width=6)])
         ins = {i['name']: i for i in g['instances']}
         self.assertEqual(ins['lcal_EN_7']['inputs']['cfg_we'], [dict(instance='boot', port='landing_we', lo=31, width=1)])
         self.assertEqual(ins['lcal_WS_0']['inputs']['cfg_we'][0]['lo'], 0)

@@ -49,6 +49,7 @@ HOST_DIE_JOINS = [   # (consumer instance, port, producer instance, port); 'host
     ('host', 'native_reserved', 'ownership', 'native_reserved'), ('host', 'ownership_valid', 'ownership', 'ownership_valid'),
 ]
 STACKS = ('WS', 'WN', 'ES', 'EN')
+LINK_CFG = {'cfg_tx_we': 'link_cfg_tx_we', 'cfg_rx_we': 'link_cfg_rx_we', 'cfg_addr': 'link_cfg_addr', 'cfg_data': 'link_cfg_data'}
 CORE_CFG = {   # sink instance -> (we source, we bit or None, addr source, data source)
     'layer_programme': ('layer_we', None, 'layer_addr', 'layer_data'),
     'wprg': ('writer_we', None, 'writer_addr', 'writer_data'),
@@ -61,7 +62,9 @@ def boot_join(graph, root=K.ROOT, name='boot'):
     spec = K.source(*BOOT, root)
     # KVJ-F 10-17: DIECFG=1 (pre-boot target 10 -> qkd_kv_die_cfg: ECTL cfg + regional reset delays, coordinator 0da (d));
     # its diecfg_* faces are joined by kv_static_kvjf_join.die_cfg_join
-    params = dict(MUT=0, DIECFG=1, NRST=DIE_CFG_NRST)
+    # KVJ-SMALL 10-17 (KV-INT gap item 12): LINKCFG=1 adds image target 11 (order 1..9, 11, 0) -> the static D2D link end's
+    # calendar cfg port (66 words, kv_static_programme.link_cfg_words; bench tools/qwen_static_kv/run_link_cfg_boot.sh)
+    params = dict(MUT=0, DIECFG=1, NRST=DIE_CFG_NRST, LINKCFG=1)
     pp = K.ports(spec, params)
     ins = {i['name']: i for i in graph['instances']}
     if name in ins:
@@ -89,6 +92,17 @@ def boot_join(graph, root=K.ROOT, name='boot'):
                 raise ValueError(f'{sink}.{port} already bound')
             i['inputs'][port] = [dict(instance=name, port=src, lo=lo, width=w)]
             bound.append(f'{sink}.{port}')
+    links = [i for i in graph['instances'] if i['role'] == 'link']
+    for li in links:                                     # the link end's calendar cfg port (core domain, pin-registered)
+        ls = K.source(li['source'], li['module'], root)
+        lp = K.ports(ls, {k: v for k, v in li['parameters'].items() if k in ls['parameters']})
+        for port, src in LINK_CFG.items():
+            if lp[port]['width'] != pp[src]['width'] or pp[src]['direction'] != 'output':
+                raise ValueError(f'{li["name"]}.{port}: dispatcher {src} width {pp[src]["width"]} != {lp[port]["width"]}')
+            if li['inputs'].get(port) is not None:
+                raise ValueError(f'{li["name"]}.{port} already bound')
+            li['inputs'][port] = [dict(instance=name, port=src, lo=0, width=lp[port]['width'])]
+            bound.append(f'{li["name"]}.{port}')
     graph.setdefault('joins_added', []).append(dict(producer=f'{name}:{BOOT[1]}', bound_inputs=len(bound),
         open_producer_inputs=sorted(inputs), owner_note='Q-KVJOIN 10-17: core-domain cfg only; HBM-domain cfg needs a '
         'boot_cdc-compatible dispatcher successor; dispatcher inputs need qkd_host_root_admission + boot_observe'))
