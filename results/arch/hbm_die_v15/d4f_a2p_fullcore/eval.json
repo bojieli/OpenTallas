@@ -1,0 +1,138 @@
+{
+ "tag": "A2PF_cc400",
+ "die_um": [
+  19502.24,
+  31694.24
+ ],
+ "die_mm2": 618.11,
+ "placed_mm2": 377.29,
+ "cut_lanes": {
+  "worst_v": {
+   "ratio": 0.646,
+   "x": 8200.0,
+   "y": [
+    8200.0,
+    9200.0
+   ]
+  },
+  "worst_h": {
+   "ratio": 0.626,
+   "y": 21600.0,
+   "x": [
+    14800.0,
+    15800.0
+   ]
+  },
+  "lines_over_060": 6,
+  "windows_over_060": 11
+ },
+ "cut_no_lanes": 1.222,
+ "faces_over_1": 12,
+ "stages_bw": 9.901,
+ "per_class": {
+  "HBM_K": {
+   "bits": 70784,
+   "stages_bw": 0.0
+  },
+  "SM_X": {
+   "bits": 69888,
+   "stages_bw": 15.14
+  },
+  "SM_HBM": {
+   "bits": 36224,
+   "stages_bw": 3.22
+  },
+  "LG_SU": {
+   "bits": 17792,
+   "stages_bw": 0.41
+  },
+  "LG_HC": {
+   "bits": 17792,
+   "stages_bw": 0.5
+  },
+  "LG_SFU": {
+   "bits": 17792,
+   "stages_bw": 0.5
+  },
+  "HC_CORE": {
+   "bits": 17792,
+   "stages_bw": 21.75
+  },
+  "VM_RING": {
+   "bits": 17792,
+   "stages_bw": 5.5
+  },
+  "COLL_VM": {
+   "bits": 17760,
+   "stages_bw": 19.0
+  },
+  "VM_HUB": {
+   "bits": 17216,
+   "stages_bw": 26.06
+  },
+  "HC_ENG": {
+   "bits": 11488,
+   "stages_bw": 7.87
+  },
+  "SM_OUT": {
+   "bits": 8640,
+   "stages_bw": 22.31
+  },
+  "HBM_VM": {
+   "bits": 8192,
+   "stages_bw": 33.56
+  },
+  "VM_HBM": {
+   "bits": 8192,
+   "stages_bw": 33.34
+  },
+  "COLL_RING": {
+   "bits": 6608,
+   "stages_bw": 14.0
+  },
+  "COLL_EP": {
+   "bits": 6120,
+   "stages_bw": 17.8
+  },
+  "EP_SERDES": {
+   "bits": 5280,
+   "stages_bw": 0.0
+  },
+  "QUANT_VM": {
+   "bits": 4440,
+   "stages_bw": 0.0
+  },
+  "SFU_CORE": {
+   "bits": 3072,
+   "stages_bw": 16.42
+  },
+  "SU_CORE": {
+   "bits": 3072,
+   "stages_bw": 13.75
+  },
+  "KV_DESC": {
+   "bits": 2048,
+   "stages_bw": 22.94
+  }
+ },
+ "relay_flops": 2891733.0,
+ "su_slice": [
+  1797.12,
+  2825.28
+ ],
+ "sm": [
+  1939.68,
+  6678.72
+ ],
+ "fits_reticle": true,
+ "reticle": {
+  "die_um": [
+   19502.24,
+   31694.24
+  ],
+  "long_margin_um": 1305.76,
+  "short_margin_um": 6497.76,
+  "margin_req_um": 500.0,
+  "ok": true
+ }
+}
