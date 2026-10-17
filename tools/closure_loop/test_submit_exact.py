@@ -85,6 +85,9 @@ class VisualReview(unittest.TestCase):
     def test_required_by_list_or_failed_routes(self):
         self.assertIn("critical", SE.review_required({"block": "ot_hot"}, "physical/ref_tile/k", self.jobs))
         self.assertIsNone(SE.review_required({"block": "ot_cold"}, "physical/ref_tile/k", self.jobs))
+        self.assertIn("matches 'ot_hot'", SE.review_required({"block": "ot_hot_v2"}, "physical/ref_tile/k", self.jobs))
+        self.assertIn("coordinator", "coordinator (msg 2026-10-17 07:05)")
+        self.assertIsNone(SE.reviewer_allowed("coordinator (msg 2026-10-17 07:05)"))
         for i, st in enumerate(("EARLY_FAIL_HOLD", "NEEDS_RTL", "CLOSED")):
             (self.jobs / f"j{i}.json").write_text(json.dumps({"name": f"j{i}", "status": st, "spec": {"block": "ot_cold"}}))
         self.assertIn("2 earlier", SE.review_required({"block": "ot_cold"}, "physical/ref_tile/k", self.jobs))

@@ -1,5 +1,5 @@
 {
- "name": "hcoll_v7_arg_tp192-d4f2-COMMIT",
+ "name": "hcoll_v7_arg_tp192-d4f3-COMMIT",
  "block": "ot_hgi_coll_argmax_m_tp192",
  "ref_tile": true,
  "owner": "Claude H-NETLIST/COLL 1815",
@@ -7,7 +7,7 @@
  "threads": 8,
  "peak_ram_gb": 16,
  "source": {
-  "branch": "claude/hnl-coll-tp192",
+  "branch": "claude/hnl-coll-arg3",
   "commit": "COMMIT",
   "extra_paths": [
    "rtl/hbm_accel/generic/collective",
@@ -47,6 +47,29 @@
     "cmd": "bash rtl/hbm_accel/generic/collective/p2p/run_argmax_static_bench.sh {RUN}/bench/rt -GG=192 -GRANK_TRUNC=1 || { cat {RUN}/bench/rt/run.log; exit 1; }",
     "expect": "fail",
     "fail_regex": "ARGMAX unexpected protocol fault",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "argmax_m_tp192_pos",
+    "cmd": "bash rtl/hbm_accel/generic/collective/p2p/run_argmax_m_bench.sh {RUN}/bench/am pos",
+    "expect": "pass",
+    "pass_regex": "ARGMAX_M_TP192 PASS G192 rounds5 exact5 start_reg1",
+    "min_count_regex": "ARGMAX_M_TP192 PASS G(192)",
+    "threads": 4,
+    "peak_ram_gb": 8,
+    "needs": [
+     "verilator"
+    ]
+   },
+   {
+    "name": "argmax_m_tp192_start_late",
+    "cmd": "bash rtl/hbm_accel/generic/collective/p2p/run_argmax_m_bench.sh {RUN}/bench/aml late",
+    "expect": "fail",
+    "fail_regex": "ARGMAX_M unexpected protocol fault",
     "threads": 4,
     "peak_ram_gb": 8,
     "needs": [
@@ -114,7 +137,7 @@
   },
   {
    "from": "{RUN}/record/route",
-   "to": "results/rtl/ref_tile/hcoll_v7_arg_tp192/hcoll_v7_arg_tp192-d4f2-COMMIT"
+   "to": "results/rtl/ref_tile/hcoll_v7_arg_tp192/hcoll_v7_arg_tp192-d4f3-COMMIT"
   }
  ],
  "cycles_added": 0,
@@ -125,6 +148,6 @@
  "merge_target": null,
  "reroute_reason": {
   "kind": "rtl_change",
-  "why": "closed hcoll_v7_arg_tp192-d4f-0377e2057 native FAIL capture 448.7 ps on rst_n (1,149 async reset loads): rst_n now loads one synchroniser flop (release +1 edge); same data edges"
+  "why": "argmax_m_tp192 d4f2 2390e32f8 native FAIL capture 278.1 on start (live into the 192-bit seen clear): START_REG=1 pin-registers start + cfg (ARGMAX start +1, compiler offset); 0377e2057 failed rst_n 448.7 (fixed by the reset synchroniser). Coordinator 0co APPROVED gate 0279e0fed."
  }
 }

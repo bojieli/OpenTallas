@@ -62,6 +62,7 @@ CHANNEL_UM = 20.0       # macro-macro and macro-core-edge channel
 PIN_EDGE_UM = 20.0      # no macro within this distance of a face that carries pins
 HALO_UM = 2.16          # placement halo around every macro (hard blockage)
 UTIL_LO, UTIL_HI = 0.45, 0.60
+FILL_MAX = 0.90         # sanity bound on total (cells + macros) / core of a kit with macros
 UTIL_TARGET = 0.52
 FACES = {"N": "top", "S": "bottom", "E": "right", "W": "left"}
 # Kit recipe = the generator DEFAULTS (owner 10-13 finishing recipe, el1013-finishing-recipe part B).
@@ -350,8 +351,13 @@ def macro_edge_guard(s: dict) -> bool:
 
 
 def pin_hook_wrapper(s: dict) -> bool:
-    """recipe 2: pin flops AND pin hold stages -> one kit-local PRE_GLOBAL_PLACE / PRE_DETAIL_PLACE hook"""
-    return bool(s.get("io_flop_at_pins") and (s.get("inhold") or s.get("outhold")) and s.get("recipe", 1) >= 2)
+    """recipe 2: pin flops AND pin hold stages -> one kit-local PRE_GLOBAL_PLACE / PRE_DETAIL_PLACE hook.
+    Q-LINK2 2026-10-17: a recipe-4 flop-first kit (hold_budget die: no inhold / outhold) that still needs pin_reg_split
+    or a pin_hook_before_flops (qfd_d2d_static r8c: reset-capture anchors) uses the same wrapper without the hold stage;
+    kits that were valid before regenerate byte-identically (the new cases used to raise SpecError)."""
+    if not (s.get("io_flop_at_pins") and s.get("recipe", 1) >= 2):
+        return False
+    return bool(s.get("inhold") or s.get("outhold") or s.get("pin_reg_split") or s.get("pin_hook_before_flops"))
 
 
 def gen_pin_hooks(s: dict) -> dict:
@@ -367,6 +373,11 @@ def gen_pin_hooks(s: dict) -> dict:
                "# one hook per step, so the two repo hooks are sourced from this kit file.",
                f"source /src/physical/dsrom_window_source/{hold}",
                f"source /src/{QDM}/io_flop_at_pins.tcl"]
+    if not (s.get("inhold") or s.get("outhold")):
+        # flop-first (hold_budget die): no pin hold stage, the wrapper only orders split / anchors / pin flops
+        pre_gpl[0:4] = ["# ref_tile PRE_GLOBAL_PLACE (flop-first, hold_budget die): no pin hold stages; every port's single",
+                        "# launch / capture flop is fixed at its pin.  ORFS takes one hook per step, so the repo hooks are",
+                        "# sourced from this kit file."]
     if s.get("pin_reg_split"):
         # one dedicated launch flop per output pin BEFORE the hold stages walk flop -> port (el1014-root-recipe2)
         pre_gpl.insert(3, f"source /src/{PIN_REG_SPLIT_TCL}")
@@ -971,6 +982,32 @@ def outline(s: dict, slot: dict | None, area_um2: float | None, blocks: list) ->
     return snap_up(w, og), snap_up(h, og), f"util {util} of std {area:.0f} + macros {mac:.0f} um2"
 
 
+def util_metrics(std_area, blocks, core, halo=HALO_UM):
+    """Utilisation of a kit.  Without macros: (std / core), exactly the old (std + 0) / core.  With macros the
+    gated number is the standard-cell DENSITY over the placeable area, std / (core - macro footprints - halos), because
+    macros never take standard cells; total fill (std + macros) / core is reported and bounded by FILL_MAX."""
+    mac = sum(b["w"] * b["h"] for b in blocks)
+    total = (std_area + mac) / core
+    if not blocks:
+        return {"util": total, "density": total, "total_fill": total, "macro_um2": 0.0, "placeable_um2": core}
+    keep = min(core, sum((b["w"] + 2 * halo) * (b["h"] + 2 * halo) for b in blocks))
+    placeable = max(core - keep, 1e-9)
+    dens = std_area / placeable
+    return {"util": dens, "density": dens, "total_fill": total, "macro_um2": mac, "placeable_um2": placeable}
+
+
+def util_severity(m):
+    """-> (severity, in_band).  Density gate: old band UTIL_LO..UTIL_HI+0.05, FAIL above 0.70 (kits without macros
+    unchanged); with macros only the upper side applies (a macro-dominated tile is placed sparsely by construction) plus
+    the total-fill sanity bound."""
+    u = m["density"]
+    if m["macro_um2"] > 0:
+        if m["total_fill"] > FILL_MAX:
+            return "FAIL", False
+        return ("INFO", True) if u <= UTIL_HI + 0.05 else ("FAIL" if u > 0.70 else "WARN", False)
+    return ("INFO", True) if UTIL_LO <= u <= UTIL_HI + 0.05 else ("FAIL" if u > 0.70 else "WARN", False)
+
+
 PG_MIN_STRIPES, PG_MIN_SPREAD = 2, 0.50     # child_lint (b): MIN_STRIPES per net, first..last stripe >= MIN_SPREAD of the span
 # PG-MARGIN (ROOT 2026-10-16, qkd_rlys_1 10.8 um at m5_pg_pitch 2.7): the model predicted exactly 0.500 and the routed
 # view measured just under it (stripe snapping / width), so the export failed after a clean route.  gen and the gate
@@ -1248,13 +1285,17 @@ def floorplan_checks(s: dict, W: float, H: float, blocks: list, std_area: float 
                     f"{ab_n['macro_edge']} tile-edge distances >= {edge_min:g} um admitted by abut_plan ({ab['why'][:160]})",
                     "the route measures the channel; a block that merges obeys the 20-um rule"))
     core = (x1c - x0c) * (y1c - y0c)
-    mac = sum(b["w"] * b["h"] for b in blocks)
     if std_area:
-        u = (std_area + mac) / core
-        if not (UTIL_LO <= u <= UTIL_HI + 0.05):
-            out.append(("FAIL" if u > 0.70 else "WARN", "util",
-                        f"utilisation {u:.0%} outside {UTIL_LO:.0%}-{UTIL_HI:.0%} (std {std_area:.0f} + macro {mac:.0f} "
-                        f"in core {core:.0f} um2)", "resize the outline to util 0.50-0.55 (drop 'outline', set util)"))
+        halo = float(s["route"].get("macro_halo_um", HALO_UM)) if s.get("recipe", 1) >= 2 else HALO_UM
+        um = util_metrics(std_area, blocks, core, halo)
+        sev, ok = util_severity(um)
+        if not ok:
+            msg = (f"utilisation: std-cell density {um['density']:.0%} of placeable {um['placeable_um2']:.0f} um2, total fill "
+                   f"{um['total_fill']:.0%} (limits {UTIL_HI + 0.05:.0%} density, {FILL_MAX:.0%} fill; std {std_area:.0f} + "
+                   f"macro {um['macro_um2']:.0f} in core {core:.0f} um2)") if um["macro_um2"] else \
+                (f"utilisation {um['util']:.0%} outside {UTIL_LO:.0%}-{UTIL_HI:.0%} (std {std_area:.0f} + macro 0 "
+                 f"in core {core:.0f} um2)")
+            out.append((sev, "util", msg, "resize the outline to util 0.50-0.55 (drop 'outline', set util)"))
     long_side = max(W, H)
     if long_side > 600 and s["kind"] == "tile":
         out.append(("WARN", "clock_span", f"{W} x {H} um: one clock root over > 600 um",
@@ -1449,6 +1490,21 @@ def child_insertions(s: dict) -> dict:
     out = {}
     for ch in s["children"]:
         v = ch["view"]
+        if s.get("child_clock_ref") == "pin":
+            # Q-CLUSTER 2026-10-17 (cluster of clusters): every clock entry pin of a multi-entry child is its own spine
+            # target: insertion.json clock_measurements[pin].tt.boundary.mean, else that pin's TT-lib clock-tree max
+            name = view_name(v)
+            ij = ROOT / v / "insertion.json"
+            cm = (json.loads(ij.read_text()).get("clock_measurements") or {}) if ij.exists() else {}
+            p = ROOT / v / f"{name}_tt.lib"
+            ins = child_lint.clock_insertion(p.read_text(errors="replace")) if p.exists() else {}
+            for pin in sorted(set(cm) | set(ins)):
+                b = (cm.get(pin) or {}).get("tt", {}).get("boundary", {})
+                if b.get("n") and b.get("mean") is not None:
+                    out[f"{name}/{pin}"] = round(float(b["mean"]), 1)
+                elif ins.get(pin):
+                    out[f"{name}/{pin}"] = round(float(ins[pin]["max_ps"]), 1)
+            continue
         # spec "child_clock_ref": "boundary" (s81 parents 2026-10-13, die clock delivery rule): the target is the child's
         # ROUTED boundary-register insertion R (views/<child>/insertion.json tt.boundary.mean, the sign-off reference of
         # every hop), not the lib's max_clock_tree_path (latest sink of the whole tree: dsfd_coll_cesc0 415 vs R 322 ps,
@@ -1483,7 +1539,7 @@ proc ot_sp_leaf_arrivals {{}} {{
       set c [get_cells -quiet -of_objects $pin]
       if {{[llength $c]}} {{
         set m [get_property $c ref_name]
-        if {{[dict exists $::ot_ref_child_ins $m]}} {{ set x [expr {{$x + [dict get $::ot_ref_child_ins $m]}}] }}
+{pinlookup}        if {{[dict exists $::ot_ref_child_ins $m]}} {{ set x [expr {{$x + [dict get $::ot_ref_child_ins $m]}}] }}
       }}
       if {{$x > $v}} {{ set v $x }}
     }}
@@ -1494,6 +1550,11 @@ proc ot_sp_leaf_arrivals {{}} {{
 puts "REF_TILE spine: child insertion targets $::ot_ref_child_ins"
 """
 
+
+# child_clock_ref "pin" (Q-CLUSTER 2026-10-17): per-entry-pin targets "master/pin" before the master's
+SPINE_PIN_LOOKUP = """        regexp {[^/]+$} [get_full_name $pin] pn
+        if {[dict exists $::ot_ref_child_ins "$m/$pn"]} { set m "$m/$pn" }
+"""
 
 HDLY_TCL = "physical/qwen_die_masters/hdly_dont_touch.tcl"
 
@@ -1520,7 +1581,11 @@ def gen_hooks(s: dict, kd: str) -> dict:
     if spine:
         pre_cts += ["source /src/physical/common_flow/clock_spine.tcl", f"source /src/{kd}/spine_ins.tcl"]
         ins = child_insertions(s)
-        files["spine_ins.tcl"] = SPINE_INS.format(ins=" ".join(f"{k} {v}" for k, v in sorted(ins.items())))
+        # ROOT review 10-17: a per-pin key with Tcl-special characters (bus-bit entry 'ckv[0]') is braced, else
+        # [dict create ...] would command-substitute '[0]'; plain keys stay unbraced (existing kits byte-identical)
+        tk = lambda k: "{" + k + "}" if re.search(r"[\[\]$\\{}\s;\"]", k) else k  # noqa: E731
+        files["spine_ins.tcl"] = SPINE_INS.format(ins=" ".join(f"{tk(k)} {v}" for k, v in sorted(ins.items())),
+                                                  pinlookup=SPINE_PIN_LOOKUP if s.get("child_clock_ref") == "pin" else "")
     # Explicit clock adapters must wrap the established spine before the IO boundary wrapper.
     # These are routed source dependencies, not post-generation hand edits.
     pre_cts += [f"source /src/{f}" for f in s.get("pre_cts_extra", [])]
@@ -1757,7 +1822,7 @@ def gen_env(s: dict, kd: str, W: float, H: float, lc: dict, blocks: list) -> str
     if s.get("keep_pin_regs"):
         extra.append("--orfs-var OT_KEEP_PIN_REGS=1")
     if s.get("pin_reg_split") and not wrap:
-        raise SpecError("spec: pin_reg_split runs inside the recipe-2 pin hook (io_flop_at_pins + inhold/outhold, recipe >= 2)")
+        raise SpecError("spec: pin_reg_split runs inside the recipe-2 pin hook (io_flop_at_pins, recipe >= 2)")
     refglob = s.get("refglob", "*")
     inter = ",".join(s["inter"]) or "none_*"
     return "\n".join([
