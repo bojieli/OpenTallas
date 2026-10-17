@@ -228,8 +228,11 @@ def patch_corridors(G, m, cor):
         gap = cols[i + 1]['x_um'] - (cols[i]['x_um'] + G.COL_W8)
         if 50.0 <= gap < 1000.0:
             cor[f'cfstreet_seam{i}'] = (cols[i]['x_um'] + G.COL_W8 + .432, 20.432, cols[i + 1]['x_um'] - .432, G.DIE[1] - 20.432)
+    import os as _os
     for r, f in m['frames'].items():
         bx = cluster_box(G, f)
+        if _os.environ.get('OT_C27_EXP_NORSV') == '1':
+            continue
         if (*bx, f'col_cluster:{r}') not in G.RSV_RECTS:
             G.RSV_RECTS.append((*bx, f'col_cluster:{r}'))
     m['cluster_boxes'] = {r: cluster_box(G, f) for r, f in m['frames'].items()}

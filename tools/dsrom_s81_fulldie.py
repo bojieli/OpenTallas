@@ -12731,7 +12731,7 @@ def apply_options(a):
             from s81.cluster_mode import cluster_layout
             CLUSTER_MODE = dict(cluster_layout(CANONICAL_LAYOUT, GY), reach_um=a.cluster_reach)
             w_ = wide_hub()
-            if w_:
+            if w_ and os.environ.get('OT_C27_EXP_NOS14CLIP') != '1':
                 # the W seam roads move the W hub-side column E: the S14W road keeps only the real gap to the hub
                 xs_ = sorted(c['x_um'] for c in CANONICAL_LAYOUT['columns'])
                 e_ = xs_[CLUSTER_MODE['west_columns'] - 1] + COL_W8 + 4.32
