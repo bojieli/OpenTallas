@@ -3,8 +3,8 @@
  "tile": "qkd_static_ectla_k3",
  "reviewer": "coordinator (2026-10-17 ~15:45)",
  "verdict": "APPROVED",
- "time": "2026-10-17T15:45:00-07:00",
- "gate_commit": "2026-10-17T12:39:12-0700",
+ "time": "2026-10-17T19:20:00-07:00",
+ "gate_commit": "2026-10-17T14:45:27-0700",
  "checklist": {
   "lattice": "PASS: 2 SRAMs on the 43.2 lattice in one column",
   "std_cell_band": "accepted: pin-limited (util 10%); W band plus pin-flop rings",
@@ -12,5 +12,5 @@
   "clock_entry": "PASS: N-face centre, insertion 279.1 / spread 31.1",
   "shape": "PASS 172.8x194.4"
  },
- "notes": "My earlier CHANGES_REQUESTED was based on the gate's estimate; the measured plan meets the rule."
+ "notes": "My earlier CHANGES_REQUESTED was based on the gate's estimate; the measured plan meets the rule. | Re-stamped 19:20 for gate 8856069e2: same layout; recipe 4 die hold budget; rst_n/rsp_valid/rsp_v flop-first (hold fix)."
 }
