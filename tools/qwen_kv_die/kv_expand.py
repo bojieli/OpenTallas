@@ -157,6 +157,7 @@ def frames():
                       straps=lambda inst: dict(cfg=(int(inst.split('_')[2]) << 2) | K.STACKS.index(inst.split('_')[1]))),
         qkd_ctrl=dict(plan=_ctrl_plan(True), straps=lambda inst: {}),
         qkd_ctrl_n=dict(plan=_ctrl_plan(False), straps=lambda inst: {}),
+        qkd_pvfork=dict(plan=lambda cell, fw, fh: (4.32 + 25.92 * int(cell.split('u_r')[1]), 5.4, 'R0'), straps=lambda inst: {}),
         qkd_pvw_s=dict(plan=_pvt_plan() if K.PV_T else _pv_plan(), straps=lambda inst: {}, open_inputs=PV_OPEN),
         qkd_pvw_n=dict(plan=_pvt_plan() if K.PV_T else _pv_plan(), straps=lambda inst: {}, open_inputs=PV_OPEN),
     )

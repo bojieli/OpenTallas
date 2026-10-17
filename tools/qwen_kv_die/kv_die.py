@@ -316,6 +316,7 @@ PVW = (PV_ARR[0], round(PV_ARR[1] + PV_GAP + PV_STRIP, 6))   # 1,144.8 x 9,547.2
 # entering the W (ports 0-3) / E (ports 4-7) face at its GS group's middle channel; chunk g must arrive DELTA_g die relay
 # edges after its header (padded here).  Frame size / face pins / leaf homes: the generator's plan.json.
 PV_T = __import__('os').environ.get('OT_KV_PV_T', '0') == '1'
+PVFORK = (108.0, 58.32)          # qkd_pvfork frame: 4 x qkd_rlys_296 in a row (+ 4.32-um halos)
 PV_T_PLAN = 'results/arch/qwen_kv_die/pv_trunk_t/plan.json'
 _PVT = {}
 
@@ -407,7 +408,8 @@ def pv_vport_timing(m):
     for st in STACKS:
         for k in range(4):
             vp = f'vport_{st}_{k}'
-            r_ = dict(WP=st_.get(f'pvrq_{st}_{k}'), O=st_.get(f'{"pvh" if PV_T else "pvin"}_{st}_{k}'))
+            r_ = dict(WP=st_.get(f'pvrq_{st}_{k}'),
+                      O=(st_.get(f'pvin_{st}_{k}', 0) + 1 + st_.get(f'pvh_{st}_{k}', 0)) if PV_T else st_.get(f'pvin_{st}_{k}'))
             if f'slg_{st}_{2 * k}' in names:
                 r_['RT'] = 8 + max(st_.get(f'pvvq_{st}_{k}_{g}', 0) + st_.get(f'pvrs_{st}_{k}_{g}', 0) for g in (0, 1))
             rows[vp] = r_
@@ -590,8 +592,9 @@ if V144_R6:
         ck=['ck'], rst_n=['rst_n'], pr=['pr_valid', 'pr_t'], vq0=['vq0_valid', 'vq0_t'], vq1=['vq1_valid', 'vq1_t'],
         i0=['in0_valid', 'in0_vflag', 'in0_t', 'in0_epoch', 'in0_d'], i1=['in1_valid', 'in1_vflag', 'in1_t', 'in1_epoch', 'in1_d'],
         vo=['out_valid', 'out_t', 'out_epoch', 'out_v_lo', 'out_v_hi'], f=['fault']))
-    if PV_T:      # KVPLAN 1815: vo = the 31-b header (base) + eight 128-b GS chunks vo_c0 .. vo_c7 (sliced, in order)
-        SPLIT_BINDINGS['qkd_pv16_vport']['sliced'] = {f'vo_c{g}': 'vo' for g in range(8)}
+    if PV_T:      # KVPLAN 1815: the V word fork (wires-only frame of 4 relay standards, expanded by kv_expand)
+        SPLIT_BINDINGS['qkd_pvfork'] = dict(module='qkd_pvfork', file='rtl/qwen_sys/split_20261014/qkd_pvfork.sv',
+            ports=dict(ck=['ck'], vi=['vi'], vh=['vh'], **{f'vc{g}': [f'vc{g}'] for g in range(8)}), classed={})
 SPLIT_BINDINGS['qkd_hss'] = dict(module='qkh_head_sstage', file='rtl/qwen_sys/split_20261014/qkh_head_stages.sv',
     ports=dict(s_a=['s_a'], s_b=['s_b'], ck=['ck']), classed={})
 SPLIT_PHY = 'qkd_hbm3e_phy_pc'
@@ -1530,6 +1533,18 @@ def _build(r=R, kv_wq_leaves=False, kv_wq_binary=False, kv_wq_leaf_s=False, kv_w
                       centre_column_um=[round(lft, 3), round(rgt, 3), round(rgt - lft, 3)],
                       side_channel_um=[round(x_ - lft, 3), round(rgt - x_ - PVW[0], 3)],
                       spare_over_259_2_um=[round(x_ - lft - 2 * CHAN, 3), round(rgt - x_ - PVW[0] - 2 * CHAN, 3)])
+        if PV_T:
+            # KVPLAN 1815: the 16 V word forks (qkd_pvfork, one register stage of 4 closed qkd_rlys_296): one 1055-b chain
+            # vport -> fork beside its pair's control strip, then the header and 8 GS chunks fan out from there
+            fw_, fh_ = PVFORK
+            for pi_, (pn_, py_, por_) in enumerate((('pvw_0', y_s, 'R0'), ('pvw_1', y_n, 'MX'))):
+                ystrip = py_ + PVW[1] - 400.0 if por_ == 'R0' else py_ + 400.0 - fh_
+                sts_ = ('WS', 'ES') if pi_ == 0 else ('WN', 'EN')
+                for st in sts_:
+                    for k in range(4):
+                        fx_ = up(x_ - 2 * GX - fw_, GX) if st[0] == 'W' else up(x_ + PVW[0] + 2 * GX, GX)
+                        fy_ = ystrip - (k * (fh_ + 2 * GY) if por_ == 'R0' else -k * (fh_ + 2 * GY))
+                        add(f'pvfork_{st}_{k}', 'qkd_pvfork', fx_, up(fy_, GY), fw_ - SHAVE, fh_ - SHAVE, 'R0', 'relay', 'attn')
         # the 16 V ports qkd_pv16_vport (Q-VMWB r5, the V issuer): port k of stack st serves landing groups {k, 0} / {k, 1}
         # (vport_wiring.txt: groups 2k / 2k + 1, adjacent strip slots, LAND_GROUP_ORDER) -> its home is the landing-inner
         # channel (landing | engine group) level with the middle of ITS two groups, so the V get / rsp words (RT) cross
@@ -1663,9 +1678,11 @@ def _pv144_buses(m, add):
             vp, wp = f'vport_{st}_{k}', k + (4 if st[0] == 'E' else 0)
             add((f'pvrq_{st}_{k}', 'kv_oneway', 15, [(pv_, f'vrq{wp}'), (vp, 'pr')]))
             if PV_T:
-                add((f'pvh_{st}_{k}', 'kv_oneway', 31, [(vp, 'vo'), (pv_, f'vh{wp}')]))
+                fk_ = f'pvfork_{st}_{k}'
+                add((f'pvin_{st}_{k}', 'kv_oneway', 1055, [(vp, 'vo'), (fk_, 'vi')]))
+                add((f'pvh_{st}_{k}', 'kv_oneway', 31, [(fk_, 'vh'), (pv_, f'vh{wp}')]))
                 for g in range(8):
-                    add((f'pvc_{st}_{k}_{g}', 'kv_oneway', 128, [(vp, f'vo_c{g}'), (pv_, f'vc{wp}_{g}')]))
+                    add((f'pvc_{st}_{k}_{g}', 'kv_oneway', 128, [(fk_, f'vc{g}'), (pv_, f'vc{wp}_{g}')]))
             else:
                 add((f'pvin_{st}_{k}', 'kv_oneway', 1055 if V144_R6 else 1039, [(vp, 'vo'), (pv_, f'vin{wp}')]))
             for g in (0, 1):
@@ -1716,7 +1733,8 @@ def _buses(m, T, r):
     add(('clk_core_c', 'clock_trunk', 1, [('pll', 'pll_c')] +
          [(n, c_) for n in cen for c_ in (AHUB_CLK if (n == 'ahub' and m['geo'].get('split')) else
                                          PVW_CLK if n.startswith('pvw_') else ['ck'])] +
-         [('ucie_rom', 'clk'), ('serdes_host', 'clk')]))
+         [('ucie_rom', 'clk'), ('serdes_host', 'clk')] +
+         [(i.name, 'ck') for i in m['insts'] if i.master == 'qkd_pvfork']))   # KVPLAN 1815: the V word forks (no reset)
     add(('rst_core_c', 'reset', 1, [('pll', 'rso_c')] + [(n, 'rst_n') for n in cen] +
          [('ucie_rom', 'rst_n'), ('serdes_host', 'rst_n')]))
     add(('pll_fwd', 'clock_trunk', 1, [('pll', 'pll_fwd'), ('ckb_kv', 'pll_ck')]))       # to the clock bump pair
@@ -2413,7 +2431,8 @@ def _relays(m):
         st_ = dict(prev_pt=None, prev_ep=(a, pa), k=0, idx0=0, path=path, wide=bid in tree_meta)
         if V144_R6 and bid.startswith('pvrq_'):
             # kvs13d: WP = PV_W - O; spread over the path (hop <= length / (WP + 1)), the rest padded at the V port end
-            st_['min_k'] = max(0, PV_W - stages.get(('pvh_' if PV_T else 'pvin_') + bid[5:], 0))
+            st_['min_k'] = max(0, PV_W - (stages.get('pvin_' + bid[5:], 0) + 1 + stages.get('pvh_' + bid[5:], 0) if PV_T
+                                          else stages.get('pvin_' + bid[5:], 0)))
             st_['wide'] = True
         if PV_T and bid.startswith('pvc_'):
             # the chunk lands DELTA_g edges after its header (the pair's in-array V path is 7 + NS stages shorter than
