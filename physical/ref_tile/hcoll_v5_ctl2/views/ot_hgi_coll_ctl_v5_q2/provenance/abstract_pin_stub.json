@@ -4,24 +4,24 @@
   "status": "PASS",
   "input": {
     "path": "provenance/raw/ot_hgi_coll_ctl_v5_q2.lef",
-    "sha256": "216b9a2d2cdf01a656d4916c73034c42c090e0c9f9c3863c938abf2fcb59074a"
+    "sha256": "0f529ed8a82fe2f6004e6e94e3a788183daf35a1671c13aa39d66ef565bf2917"
   },
   "environment": {
     "OT_OBS_CLOSE": null,
     "OT_OBS_CLOSE_UM": null
   },
   "helper": {
-    "path": "/srv/opentallas-scratch2/claude/closure-loop/hcoll_v5_ctl2-c1045-1ae51f9c3/src/tools/hier_contract/abstract_pin_stub.py",
+    "path": "/srv/opentallas-scratch2/claude/closure-loop/hcoll_v5_ctl2-v7-e11086804/src/tools/hier_contract/abstract_pin_stub.py",
     "sha256": "c3cae85e3aa1a8da5374284fe57418b2230ceb208aa76eff4567c6993bbe0c05"
   },
   "command": [
     "/usr/bin/python3",
-    "/srv/opentallas-scratch2/claude/closure-loop/hcoll_v5_ctl2-c1045-1ae51f9c3/src/tools/hier_contract/abstract_pin_stub.py",
-    "/srv/opentallas-scratch2/claude/closure-loop/hcoll_v5_ctl2-c1045-1ae51f9c3/record/views/ot_hgi_coll_ctl_v5_q2/provenance/raw/ot_hgi_coll_ctl_v5_q2.lef",
-    "/srv/opentallas-scratch2/claude/closure-loop/hcoll_v5_ctl2-c1045-1ae51f9c3/record/views/ot_hgi_coll_ctl_v5_q2/provenance/ot_hgi_coll_ctl_v5_q2.candidate.lef"
+    "/srv/opentallas-scratch2/claude/closure-loop/hcoll_v5_ctl2-v7-e11086804/src/tools/hier_contract/abstract_pin_stub.py",
+    "/srv/opentallas-scratch2/claude/closure-loop/hcoll_v5_ctl2-v7-e11086804/record/views/ot_hgi_coll_ctl_v5_q2/provenance/raw/ot_hgi_coll_ctl_v5_q2.lef",
+    "/srv/opentallas-scratch2/claude/closure-loop/hcoll_v5_ctl2-v7-e11086804/record/views/ot_hgi_coll_ctl_v5_q2/provenance/ot_hgi_coll_ctl_v5_q2.candidate.lef"
   ],
   "returncode": 0,
-  "stdout": "pinstub: 1 OBS rects moved into 1 pins: inst[25]; pockets: 729 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
+  "stdout": "pinstub: 0 OBS rects moved into 0 pins: ; pockets: 805 OBS rects added on M5 (gaps < 1.536 um between own-layer obstacles)\n",
   "stderr": "",
   "invariants": {
     "macro_outline": "PASS",
@@ -30,11 +30,11 @@
   },
   "child_lint": {
     "schema": "opentallas.hier_contract.child_lint.v1",
-    "lef": "/srv/opentallas-scratch2/claude/closure-loop/hcoll_v5_ctl2-c1045-1ae51f9c3/record/views/ot_hgi_coll_ctl_v5_q2/provenance/ot_hgi_coll_ctl_v5_q2.candidate.lef",
+    "lef": "/srv/opentallas-scratch2/claude/closure-loop/hcoll_v5_ctl2-v7-e11086804/record/views/ot_hgi_coll_ctl_v5_q2/provenance/ot_hgi_coll_ctl_v5_q2.candidate.lef",
     "verdict": "PASS",
     "fails": [],
     "warns": [],
-    "summary": "ot_hgi_coll_ctl_v5_q2 108.0 x 280.8: PG M5 VDD 20 stripes (95% spread, 100% cov) / VSS 20 stripes (95% spread, 100% cov); strap M6; face pins 2713 blocked-above 0 blocked-same 0; clock clk_control insertion 266 ps; pockets M5 0 (closed)",
+    "summary": "ot_hgi_coll_ctl_v5_q2 108.0 x 280.8: PG M5 VDD 20 stripes (95% spread, 100% cov) / VSS 20 stripes (95% spread, 100% cov); strap M6; face pins 2689 blocked-above 0 blocked-same 0; clock clk_control insertion 265 ps; pockets M5 0 (closed)",
     "info": {
       "cell": "ot_hgi_coll_ctl_v5_q2",
       "W": 108.0,
@@ -66,9 +66,9 @@
       "strap_layer": "M6",
       "cap": null,
       "face": {
-        "face_pins": 2713,
+        "face_pins": 2689,
         "blocked_above": 0,
-        "covered_below": 156,
+        "covered_below": 72,
         "examples": [],
         "blocked_same": 0,
         "same_examples": [],
@@ -77,8 +77,8 @@
       },
       "clock_insertion": {
         "clk_control": {
-          "max_ps": 265.73,
-          "min_ps": 189.92
+          "max_ps": 264.61,
+          "min_ps": 178.44
         }
       },
       "pockets": {
@@ -87,7 +87,7 @@
         "marker": {
           "layer": "M5",
           "d_um": 1.536,
-          "added": 729
+          "added": 805
         },
         "count": 0,
         "area_um2": 0,
@@ -97,6 +97,6 @@
   },
   "output": {
     "path": "ot_hgi_coll_ctl_v5_q2.lef",
-    "sha256": "2b93e247514ccf9d55177ce82f5bc390e862fa3ecd22aad9c1b544eda92ff3bf"
+    "sha256": "37edfc1fed1be3f72560a43bfffbd04f4f642661dffda79ac3aad76b47a084c9"
   }
 }

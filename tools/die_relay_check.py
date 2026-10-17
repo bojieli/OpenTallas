@@ -9,7 +9,7 @@ DIE_RUN_STAGES   opentallas.die_relay_stages.v1 exported from the die run (role 
 SCHEDULE_STAGES  the table the compiler / timing model scheduled with (role compiled_schedule, written by the
                  consumer's --compiled-out), or another die_plan export (plan vs relayed run)
 FAIL (exit 1) on: invalid file / bad digest, design mismatch, compiled table built from a different plan digest,
-any bus missing on either side, any bus whose stages / width / clock domain differ, any diagnostic override in the
+incomplete coverage or unresolved exports, unknown domains, any bus missing on either side, any bus whose stages / width / clock domain differ, any diagnostic override in the
 schedule.  eq_age_group differences are warnings.  PASS (exit 0) prints the shared digest.
 
 Die chains: run it as the last step after the die GEN export, e.g.
@@ -23,6 +23,14 @@ import die_relay_stages as DRS  # noqa: E402
 
 def check(run, sched, max_list=40):
     fails, warns = [], []
+    for label, doc in (('die run', run), ('schedule', sched)):
+        if doc.get('coverage') != 'complete':
+            fails.append(f"{label} coverage {doc.get('coverage')!r} is incomplete; direct and multicast buses required")
+        if doc.get('problem_count', 0) or doc.get('problems'):
+            fails.append(f"{label} reports unresolved export problems")
+        unknown = [b['id'] for b in doc['buses'] if not b.get('domain')]
+        if unknown:
+            fails.append(f"{label} has {len(unknown)} buses with unknown clock domains, e.g. {unknown[:3]}")
     if run['design'] != sched['design']:
         fails.append(f"design {run['design']} != {sched['design']}")
     if sched['role'] == 'compiled_schedule':
