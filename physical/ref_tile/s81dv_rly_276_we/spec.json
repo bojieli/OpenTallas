@@ -26,7 +26,8 @@
    "rs"
   ],
   "E": [
-   "o"
+   "o",
+   "ck_o"
   ],
   "W": [
    "i"
@@ -53,11 +54,11 @@
   "macro_halo_um": 5.4
  },
  "io_tcl": "physical/s81_die_pins/dvrly276/dsfd_dvrly_276_WE.tcl",
- "structural_change": "S81-DV p4c-lanes (claude/s81dv-1016 d5a2a52ca, S-ELEM 10-17): straight 276-b lane station W->E, one register stage (ot_s81_rly W=276 RSREG=1, rs1s56 form), ck = the lane's forwarded clock on N with rs; recipe 4 flop-first, hold_budget die (no inhold/outhold pads; boundary hold is the die's). Outline from 276 pins at 2 tracks on the data faces (spread_face_pins margin 2.16). 0 cycles vs the planned one stage per 405-um hop.",
+ "structural_change": "S81-DV p4c-lanes (claude/s81dv-1016 d5a2a52ca, S-ELEM 10-17): straight 276-b lane station W->E, one register stage (ot_s81_rly W=276 RSREG=1, rs1s56 form), ck = the lane's forwarded clock on N with rs; recipe 4 flop-first, hold_budget die (no inhold/outhold pads; boundary hold is the die's). Outline from 276 pins at 2 tracks on the data faces (spread_face_pins margin 2.16). 0 cycles vs the planned one stage per 405-um hop. | ck_o (S81-DV 10-17, DIE-CLOCK F1): forwarded-clock output = ck through two kept inverters (non-inverted, the stnv_566x1 fn0 form), at the centre of the o face; generated clock ck_o_fwd, no data budget (fwd_ck_o.tcl); CTS keeps the forwarding cells (forwarded_clock).",
  "job": {
   "owner": "Claude:S-ELEM ENGRAM-LKP 1815",
   "branch": "claude/s81-rly-en-1815",
-  "tag": "dv4",
+  "tag": "dv4c",
   "purpose": "S81-DV 276-b straight lane relay station dsfd_dvrly_276_WE (W in / E out, ck+rs N), recipe 4 flop-first",
   "benches": [
    {
@@ -102,6 +103,13 @@
    "physical/s81_die_pins/dvrly276"
   ]
  },
+ "forwarded_clock": true,
+ "sdc_extra": [
+  "physical/s81_die_pins/dvrly276/fwd_ck_o.tcl"
+ ],
+ "boundary_tcl": [
+  "physical/s81_die_pins/dvrly276/fwd_ck_o.tcl"
+ ],
  "children": [],
  "inter": []
 }
