@@ -1,0 +1,32 @@
+{
+ "schema": "opentallas.s81.regional_transit_contract.v1",
+ "status": "REQUEST_NOT_ADOPTED",
+ "source_sha256": "2275d00c9c7929c25aae7e72a8b4c4ce8955c29a1d3c933d59b616c169e26a6f",
+ "roots": 128,
+ "column_count": 17,
+ "core_width_um": 1092.096,
+ "transit_width_um": 109.728,
+ "requested_pitch_um": 1210.4640000000002,
+ "fixed_body_conflicts": [],
+ "outside_die": [],
+ "source_members": 56990,
+ "pending": [
+  "All existing displaced die-top stations must be replanned INSIDE the reserved channels",
+  "Use actual native leaf outlines and legal orientations; unknown views fail binding",
+  "Native growth inside cores needs a complete leaf-overlap and pin-density audit",
+  "Actual channel tracks/cuts, per-class reach and all changed incident joins are unmeasured",
+  "Literal clocks/reset/PHY and exact compiled latency must be conserved",
+  "No full native or GRT/TT/FF/SS timing claim"
+ ],
+ "promoted_local_leaves": 5016,
+ "promoted_incident_buses": 8532,
+ "literal_clock_reset_coverage": "All5016 promoted leaves retain exactly2 source memberships (clock plus reset)",
+ "fixed_instances_checked": 113,
+ "input": "c26l construction_pass0 source58867f133 diagnostic, not final routed layout",
+ "slot_blockers": [
+  "536SW424 instances require56.16sq rather than31.080x32.376",
+  "xstg515twoMY must use supportedR0/MX and75.6x92.88 native envelope",
+  "paired538station view absent from current131-class binding"
+ ],
+ "next": "Replan top stations inside channels; native core growth plus physical port/cut reach audits; then source-current GEN/GRT/TTsetup/FFhold/SS sensitivity"
+}

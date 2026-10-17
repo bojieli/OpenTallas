@@ -15,6 +15,7 @@ from cluster_extract import frame_members, load_plan
 
 
 def propose(plan, core_width=1092.096, transit_width=109.728, clearance=8.64):
+    assert core_width > 0 and transit_width > 0 and clearance > 0
     fm = frame_members(plan)
     old_columns = sorted({f['x'] for f in plan['frames'].values()})
     gaps = [b-a for a, b in zip(old_columns, old_columns[1:])]
@@ -47,7 +48,7 @@ def propose(plan, core_width=1092.096, transit_width=109.728, clearance=8.64):
     # Every fixed hub/PHY/link block is tested, rather than assuming that a
     # smaller aggregate field area means that all individual slots fit.
     fixed = [i for i in plan['insts'] if not i[8].startswith('frame_') and
-             (i[0].startswith('sp_') or i[7] in ('phy', 'link', 'ctrl', 'svc'))]
+             i[7] not in ('stn', 'hstn', 'hend', 'xstg')]
     conflicts = []
     for c in cores+channels:
         x0,y0,x1,y1 = c['box_um']
@@ -61,6 +62,15 @@ def propose(plan, core_width=1092.096, transit_width=109.728, clearance=8.64):
     names = {p['instance'] for p in promoted}
     buses = [dict(id=b[0], kind=b[1], width=b[2], terminals=b[3])
              for b in plan.get('buses', []) if any(p[0] in names for p in b[3])]
+    memberships = {name: [] for name in names}
+    for bus in buses:
+        if 'clock' in bus['kind'] or 'reset' in bus['kind']:
+            for inst, port in bus['terminals']:
+                if inst in memberships:
+                    memberships[inst].append(dict(bus=bus['id'], kind=bus['kind'],
+                                                  width=bus['width'], port=port))
+    for item in promoted:
+        item['literal_clock_reset_memberships'] = memberships[item['instance']]
     outside = [c for c in cores+channels if min(c['box_um'])<0 or
                c['box_um'][2]>plan['die'][0] or c['box_um'][3]>plan['die'][1]]
     return dict(schema='opentallas.s81.regional_transit_contract.v1', status='REQUEST_NOT_ADOPTED',
@@ -72,6 +82,7 @@ def propose(plan, core_width=1092.096, transit_width=109.728, clearance=8.64):
                 cores=cores, channels=channels, promoted_local_leaves=promoted,
                 promoted_incident_buses=buses,
                 fixed_body_conflicts=conflicts, outside_die=outside,
+                fixed_instances_checked=[i[0] for i in fixed],
                 source_members=len(affected),
                 pending=['All existing displaced die-top stations must be replanned INSIDE the reserved channels',
                          'Use actual native leaf outlines and legal orientations; unknown views fail binding',
