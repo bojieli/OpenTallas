@@ -1,0 +1,21 @@
+ERR cmd 20 BD beat 1 (k 0 b 0 a 1) at 36 grp 0 addr 28, model edge 35
+ERR cmd 20 BD beat 2 (k 0 b 1 a 0) at 39 grp 1 addr 27, model edge 38
+cmd 20 BD streaming: 336 beats on the model edges (336 off), last beat at command + 511
+cmd 20 fmt 1 P 4 K 5408 xb 27 done 1/1 beats 336 span 477
+ERR cmd 21 BD beat 0 (k 0 b 0 a 0) at 39 grp 0 addr 90, model edge 38
+ERR cmd 21 BD beat 1 (k 0 b 0 a 1) at 40 grp 0 addr 91, model edge 39
+ERR cmd 21 BD beat 2 (k 0 b 1 a 0) at 41 grp 1 addr 90, model edge 40
+cmd 21 BD streaming: 48 beats on the model edges (48 off), last beat at command + 174
+cmd 21 fmt 2 P 1 K 5536 xb 90 done 1/1 beats 48 span 136
+ERR cmd 22 BD beat 0 (k 0 b 0 a 0) at 35 grp 0 addr 86, model edge 34
+ERR cmd 22 BD beat 1 (k 0 b 0 a 1) at 36 grp 0 addr 87, model edge 35
+ERR cmd 22 BD beat 2 (k 0 b 1 a 0) at 39 grp 1 addr 86, model edge 38
+cmd 22 BD streaming: 208 beats on the model edges (208 off), last beat at command + 318
+cmd 22 fmt 1 P 8 K 1568 xb 86 done 1/1 beats 208 span 284
+ERR cmd 23 BD beat 0 (k 0 b 0 a 0) at 39 grp 0 addr 96, model edge 38
+ERR cmd 23 BD beat 1 (k 0 b 0 a 1) at 40 grp 0 addr 97, model edge 39
+ERR cmd 23 BD beat 2 (k 0 b 1 a 0) at 41 grp 1 addr 96, model edge 40
+cmd 23 BD streaming: 32 beats on the model edges (32 off), last beat at command + 126
+cmd 23 fmt 2 P 1 K 4064 xb 96 done 1/1 beats 32 span 88
+XLOAD_STATIC_LOCK FAIL 13
+rc=1
