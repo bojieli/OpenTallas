@@ -5989,6 +5989,7 @@ def _regions_from_placement(m):
     regs = m['clock_regions']
     by = {i.name: i for i in m['insts']}
     keep, root, sinks = [], None, []
+    seen_sinks, duplicates = set(), 0
     for bus in m['buses']:
         bid, cl, bits, eps = bus
         if re.fullmatch(r'clk_r\d+', bid):
@@ -5996,7 +5997,13 @@ def _regions_from_placement(m):
                 if p.startswith('pll_r'):
                     root = root or i
                 else:
-                    sinks.append((i, p))
+                    # Collapsing tile roots into a cluster can repeat the same physical pin.
+                    # A median split must never put copies of one pin on different roots.
+                    if (i, p) in seen_sinks:
+                        duplicates += 1
+                    else:
+                        seen_sinks.add((i, p))
+                        sinks.append((i, p))
         else:
             keep.append(bus)
     if root is None:
@@ -6036,7 +6043,7 @@ def _regions_from_placement(m):
                 for i, p in bus[3] if not p.startswith('pll_r')
                 and f'clk_r{region_at(regs, by[i].x + by[i].w / 2, by[i].y + by[i].h / 2)}' != bus[0])
     m['buses'] = keep + [(f'clk_r{k}', 'clock_trunk', 1, [(root, f'pll_r{k}')] + per[k]) for k in sorted(per)]
-    m['b3r2']['regions_from_placement'] = dict(sinks=len(sinks), refiled=moved, region_nets=len(per), split=split)
+    m['b3r2']['regions_from_placement'] = dict(sinks=len(sinks), duplicate_sinks_removed=duplicates, refiled=moved, region_nets=len(per), split=split)
 
 
 def region_spans(m):
