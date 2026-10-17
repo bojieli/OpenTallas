@@ -1,0 +1,13 @@
+{
+ "blocks": 52,
+ "buses": 18,
+ "bus_bits": 71820,
+ "max_stages": 20,
+ "grt": null,
+ "note": "S81 wide-hub plan + generator hub layout; buses = the c21h die's hub buses (bits), stages = reach model",
+ "stage_model": "ceil(manhattan/500 um) - 1 where the plan gives none",
+ "images": {
+  "floorplan": "results/physical/die_iter_1012/s81/canonical_widehub_1015/vmc_2240/plan/die_floorplan.png",
+  "buses": "results/physical/die_iter_1012/s81/canonical_widehub_1015/vmc_2240/plan/die_buses.png"
+ }
+}
