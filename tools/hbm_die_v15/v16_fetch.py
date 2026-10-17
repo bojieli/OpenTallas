@@ -147,6 +147,7 @@ def main():
     ap.add_argument('--views', required=True)
     ap.add_argument('--remote-root', default='/srv/opentallas-scratch/claude/hdie-v16case')
     ap.add_argument('--commit', default='8c3c2a340')
+    ap.add_argument('--contract', type=Path, help='exact generated contract to bind (source bytes still checked against --commit)')
     ap.add_argument('--build-commit', help='actual source snapshot used by a preserved build; all RTL/macro bytes must also match --commit')
     ap.add_argument('--allow-direct-master', action='store_true', help='strictly prove params{} real-master ETMs without changing their Liberty names')
     ap.add_argument('cells', nargs='*', help='only these cells (a same-named older build with other ports/params/source must not be fetched)')
@@ -155,8 +156,10 @@ def main():
     build_commit = a.build_commit or a.commit
     src = f'{a.remote_root}/src_{build_commit}'
     expected_src = f'{a.remote_root}/src_{a.commit}'
-    contract = json.loads(subprocess.check_output(['git', '-C', str(Path(__file__).resolve().parents[2]),
-                                                  'show', f'{a.commit}:results/arch/hbm_die_v16/contract.json']))
+    contract_bytes = (a.contract.read_bytes() if a.contract else subprocess.check_output(
+        ['git', '-C', str(Path(__file__).resolve().parents[2]), 'show',
+         f'{a.commit}:results/arch/hbm_die_v16/contract.json']))
+    contract = json.loads(contract_bytes)
     found = {}
     for h in HOSTS:
         out = subprocess.run(['ssh', h, f'cd {a.remote_root}/syn 2>/dev/null && ls -d */ | tr -d /'], capture_output=True,
@@ -214,7 +217,7 @@ def main():
             V[c]['synth_top'] = w
             V[c]['parameter_binding'] = 'EXACT_DIRECT_MASTER_PARAMS_EMPTY_NO_RENAME'
         m.update(host=h, remote=f'{a.remote_root}/syn/{c}', declared_source_snapshot=build_commit,
-                 compatible_source_snapshot=a.commit, parameter_binding=V[c].get('parameter_binding', 'EXACT_WRAPPER'),
+                 compatible_source_snapshot=a.commit, contract_sha256=hashlib.sha256(contract_bytes).hexdigest(), parameter_binding=V[c].get('parameter_binding', 'EXACT_WRAPPER'),
                  consumed_file_sha256={f: hashlib.sha256((dst / f).read_bytes()).hexdigest() for f in files})
         (dst / 'meta.json').write_text(json.dumps(m, indent=1))
         print(c, h, m.get('std_area_um2'), len(m.get('macros', {})))
