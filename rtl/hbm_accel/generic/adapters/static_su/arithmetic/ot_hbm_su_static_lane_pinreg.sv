@@ -133,8 +133,8 @@ module ot_hbm_su_static_lane_pinreg #(
     wire [AW-1:0] l_vi_addr, l_vm_waddr, l_kv_waddr; wire [4*AW-1:0] l_rd_addr; wire [3:0] l_rd_re; wire [7:0] l_rd_src;
     wire [31:0] l_vm_wdata, l_kv_wdata, l_ro_x, l_side_x;
     ot_hbm_su_static_lane #(.FETCH_EXTRA_EDGES(FETCH_EXTRA_EDGES + 2), .AW(AW), .CW(CW), .LN(LN), .KIND(KIND),
-                            .KVT_SH(KVT_SH), .LEAF(LEAF), .MLAT(MLAT), .ALAT(ALAT)) u_lane (
-        .clk_stage(clk_stage), .clk_insert(clk_insert), .rst_n(rst_i), .lane_id(q_lane_id),
+                            .KVT_SH(KVT_SH), .LEAF(LEAF), .MLAT(MLAT), .ALAT(ALAT), .RSYNC_EXT(PIN_ROOT)) u_lane (
+        .clk_rsync(c0), .clk_stage(clk_stage), .clk_insert(clk_insert), .rst_n(rst_i), .lane_id(q_lane_id),
         .ld(s_q[3]), .ld_bank(s_q[2]), .ld_c(q_ld_c), .emit(s_q[1]), .bank(s_q[0]), .o_v(q_o_v), .i_v(q_i_v), .no(q_no),
         .ni(q_ni), .ls(q_ls), .lvw(q_lvw), .vb(q_vb), .krow(q_krow), .obase(q_obase), .aibase(q_aibase), .aind(q_aind),
         .gsh(q_gsh), .cpair(q_cpair), .dst(q_dst), .srcs(q_srcs),

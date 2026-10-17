@@ -60,8 +60,12 @@ module ot_hbm_su_static_lane #(
     parameter integer KVT_SH = 9,
     parameter integer LEAF = 0,         // 1: the broadcast tree's LAST stage is this lane's own leaf register (below)
     parameter integer MLAT = 3,         // multiplier latency (ot_hdc_qmul_lat): 3, 4, or 5 (W11 serial domain, 0.9 GHz)
-    parameter integer ALAT = 3          // FP add latency (ot_hdc_qadd_lat): 3, or 4 (input cut); ALAT <= MLAT
+    parameter integer ALAT = 3,         // FP add latency (ot_hdc_qadd_lat): 3, or 4 (input cut); ALAT <= MLAT
+    // RSYNC_EXT 1 (H-SU 10-16, two-root leaves): the reset relays sample rst_n on clk_rsync (the pin-register root,
+    // rst_n's own domain) instead of clk_stage[0]; their destination stage stays on the lane's own root.
+    parameter integer RSYNC_EXT = 0
 ) (
+    input wire clk_rsync,               // RSYNC_EXT 1 only
     input wire [7:0] clk_stage,
     input wire [3:0] clk_insert,
     input  wire              rst_n,
@@ -134,12 +138,12 @@ module ot_hbm_su_static_lane #(
 `ifdef OT_SU_SYNC_RST
     for (genvar r = 0; r < 8; r = r + 1) begin : g_rst_stage
         if (KIND != 0 || r != 4) begin : g_active
-            ot_sync_rst_relay u_reset (.clk_sync(clk_stage[0]), .clk(clk_stage[r]), .rst_n_in(rst_n), .rst_n(rst_stage_n[r]));
+            ot_sync_rst_relay u_reset (.clk_sync(RSYNC_EXT ? clk_rsync : clk_stage[0]), .clk(clk_stage[r]), .rst_n_in(rst_n), .rst_n(rst_stage_n[r]));
         end else assign rst_stage_n[r] = rst_stage_n[0];
     end
     for (genvar r = 0; r < 4; r = r + 1) begin : g_rst_insert
         if (KIND == 2 || (KIND == 1 && r < 2)) begin : g_active
-            ot_sync_rst_relay u_reset (.clk_sync(clk_stage[0]), .clk(clk_insert[r]), .rst_n_in(rst_n), .rst_n(rst_insert_n[r]));
+            ot_sync_rst_relay u_reset (.clk_sync(RSYNC_EXT ? clk_rsync : clk_stage[0]), .clk(clk_insert[r]), .rst_n_in(rst_n), .rst_n(rst_insert_n[r]));
         end else assign rst_insert_n[r] = rst_stage_n[0];
     end
 `else
