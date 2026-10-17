@@ -1,0 +1,397 @@
+{
+ "schema": "opentallas.qwen.qdv_contract_deltas.v1",
+ "model": "/home/ubuntu/wt/qdv-1016/results/arch/qwen_dv_1016/dv2r8f2.json",
+ "date": "2026-10-17",
+ "remove_masters": [
+  "qfd_b2_word_status",
+  "qfd_band_upper_b2_l2_s4",
+  "qfd_crom_g",
+  "qfd_port_half_b2",
+  "qfd_res_train_half_b2_0",
+  "qfd_res_train_half_b2_1",
+  "qfd_res_train_half_b2_2",
+  "qfd_res_train_half_b2_3",
+  "qfd_res_train_half_b2_4",
+  "qfd_res_train_half_b2_5",
+  "qfd_res_train_issue_b2",
+  "qfd_seq_su_static",
+  "qfd_sp_halfband_lanes_b2_l2",
+  "qfd_sp_su64_sfu",
+  "qfd_sp_vector_memory_b2_partitioned_ro6_pin_e3",
+  "qfd_static_command_fork42",
+  "qfd_static_selector_fork4",
+  "qfd_su_cbuf_g",
+  "qfd_xcol_e",
+  "qfd_xcol_w",
+  "qfd_xs_tap"
+ ],
+ "add_masters": {
+  "qfd_dv_slice2": {
+   "n": 12,
+   "outline_um": [
+    2285.28,
+    2580.8
+   ],
+   "rtl": "claude/qdv-slice-1016 rtl/qwen_dv/qfd_dv_slice.sv (step 1 d54b67f56; step 2 adds 4 column heads + 32 x-leaves, hr_i/hr_o, pipelined root, argmax)",
+   "hold_budget": "die (recipe 4, flop-first pins, no opt-out)",
+   "ports_note": "per slice: rs from the b1 / b2 clusters (each 2 x 514: own rs + far-band rs_o); 8 x 516 corridor words (4 n_d -> band-2 bc, 4 s_d -> band-1 bc); W/E stream 2 x 1088 + scalar 96 + hr 453 (W->E); chain AR 546/518 and D2D 548/520 toward W5; L9 514 with the pair slice. W5 additionally: io_collective AR, native59 D2D 2 x 1068, tt_ctlm hr 453",
+   "ports_from_plan": {
+    "dvs_W5": [
+     {
+      "bus": "q3h_col_0_1",
+      "dir": "out",
+      "bits": 516,
+      "face": "S",
+      "peer": "c16_W5_1"
+     },
+     {
+      "bus": "q3h_col_0_2",
+      "dir": "out",
+      "bits": 516,
+      "face": "N",
+      "peer": "c16_W5_2"
+     },
+     {
+      "bus": "q3h_col_1_1",
+      "dir": "out",
+      "bits": 516,
+      "face": "S",
+      "peer": "c16_W5_1"
+     },
+     {
+      "bus": "q3h_col_1_2",
+      "dir": "out",
+      "bits": 516,
+      "face": "N",
+      "peer": "c16_W5_2"
+     },
+     {
+      "bus": "q3h_col_2_1",
+      "dir": "out",
+      "bits": 516,
+      "face": "S",
+      "peer": "c16_W5_1"
+     },
+     {
+      "bus": "q3h_col_2_2",
+      "dir": "out",
+      "bits": 516,
+      "face": "N",
+      "peer": "c16_W5_2"
+     },
+     {
+      "bus": "q3h_col_3_1",
+      "dir": "out",
+      "bits": 516,
+      "face": "S",
+      "peer": "c16_W5_1"
+     },
+     {
+      "bus": "q3h_col_3_2",
+      "dir": "out",
+      "bits": 516,
+      "face": "N",
+      "peer": "c16_W5_2"
+     },
+     {
+      "bus": "dv_l9_W4",
+      "dir": "out",
+      "bits": 514,
+      "face": "E",
+      "peer": "dvs_W4"
+     },
+     {
+      "bus": "dv_st_W4",
+      "dir": "in",
+      "bits": 2272,
+      "face": "E",
+      "peer": "dvs_W4"
+     },
+     {
+      "bus": "dv_ch_W4",
+      "dir": "out",
+      "bits": 2132,
+      "face": "E",
+      "peer": "dvs_W4"
+     },
+     {
+      "bus": "dv_rs_W5_1",
+      "dir": "in",
+      "bits": 1028,
+      "face": "S",
+      "peer": "c16_W5_1"
+     },
+     {
+      "bus": "dv_rs_W5_2",
+      "dir": "in",
+      "bits": 1028,
+      "face": "N",
+      "peer": "c16_W5_2"
+     },
+     {
+      "bus": "dv_ar_W",
+      "dir": "out",
+      "bits": 2128,
+      "face": "W",
+      "peer": "io_collective"
+     },
+     {
+      "bus": "dv_kv_W3",
+      "dir": "in",
+      "bits": 2136,
+      "face": "W",
+      "peer": "dvl_b"
+     }
+    ],
+    "dvs_W2": [
+     {
+      "bus": "q3h_col_12_1",
+      "dir": "out",
+      "bits": 516,
+      "face": "S",
+      "peer": "c16_W2_1"
+     },
+     {
+      "bus": "q3h_col_12_2",
+      "dir": "out",
+      "bits": 516,
+      "face": "N",
+      "peer": "c16_W2_2"
+     },
+     {
+      "bus": "q3h_col_13_1",
+      "dir": "out",
+      "bits": 516,
+      "face": "S",
+      "peer": "c16_W2_1"
+     },
+     {
+      "bus": "q3h_col_13_2",
+      "dir": "out",
+      "bits": 516,
+      "face": "N",
+      "peer": "c16_W2_2"
+     },
+     {
+      "bus": "q3h_col_14_1",
+      "dir": "out",
+      "bits": 516,
+      "face": "S",
+      "peer": "c16_W2_1"
+     },
+     {
+      "bus": "q3h_col_14_2",
+      "dir": "out",
+      "bits": 516,
+      "face": "N",
+      "peer": "c16_W2_2"
+     },
+     {
+      "bus": "q3h_col_15_1",
+      "dir": "out",
+      "bits": 516,
+      "face": "S",
+      "peer": "c16_W2_1"
+     },
+     {
+      "bus": "q3h_col_15_2",
+      "dir": "out",
+      "bits": 516,
+      "face": "N",
+      "peer": "c16_W2_2"
+     },
+     {
+      "bus": "dv_st_W1",
+      "dir": "in",
+      "bits": 2272,
+      "face": "E",
+      "peer": "dvs_W1"
+     },
+     {
+      "bus": "dv_ch_W1",
+      "dir": "out",
+      "bits": 2132,
+      "face": "E",
+      "peer": "dvs_W1"
+     },
+     {
+      "bus": "dv_rs_W2_1",
+      "dir": "in",
+      "bits": 1028,
+      "face": "S",
+      "peer": "c16_W2_1"
+     },
+     {
+      "bus": "dv_rs_W2_2",
+      "dir": "in",
+      "bits": 1028,
+      "face": "N",
+      "peer": "c16_W2_2"
+     },
+     {
+      "bus": "dv_l9_W2",
+      "dir": "in",
+      "bits": 514,
+      "face": "W",
+      "peer": "dvs_W3"
+     },
+     {
+      "bus": "dv_st_W2",
+      "dir": "out",
+      "bits": 2272,
+      "face": "W",
+      "peer": "dvs_W3"
+     },
+     {
+      "bus": "dv_ch_W2",
+      "dir": "in",
+      "bits": 2132,
+      "face": "W",
+      "peer": "dvs_W3"
+     }
+    ]
+   }
+  },
+  "qfd_c_b16_dv": {
+   "n": 48,
+   "base": "qfd_c_b16 (Q-CLUSTER claude/qcluster-1017 0131f6672: 2,285.28 x 5,184, corridors A/T/B 129.6)",
+   "add_ports": [
+    {
+     "port": "rs_i",
+     "dir": "input",
+     "bits": 514,
+     "face": "master N (band-gap side, beside bc_o)"
+    },
+    {
+     "port": "rs_o",
+     "dir": "output",
+     "bits": 514,
+     "face": "master S (beside rs)"
+    }
+   ],
+   "feedthrough": "registered rs_i -> rs_o in corridor T, 14 edges (Q-CLUSTER measured)",
+   "positions": "near bands (1, 2) carry the far cluster rs; far bands (0, 3) have no far neighbour: near/far master split or one master with a band strap is Q-CLUSTER's choice (OPEN)",
+   "ports_from_plan": {
+    "c16_W2_1": [
+     {
+      "bus": "q3h_col_12_1",
+      "dir": "in",
+      "bits": 516,
+      "face": "N",
+      "peer": "dvs_W2"
+     },
+     {
+      "bus": "q3h_col_13_1",
+      "dir": "in",
+      "bits": 516,
+      "face": "N",
+      "peer": "dvs_W2"
+     },
+     {
+      "bus": "q3h_col_14_1",
+      "dir": "in",
+      "bits": 516,
+      "face": "N",
+      "peer": "dvs_W2"
+     },
+     {
+      "bus": "q3h_col_15_1",
+      "dir": "in",
+      "bits": 516,
+      "face": "N",
+      "peer": "dvs_W2"
+     },
+     {
+      "bus": "q3h_far_W2_1_0",
+      "dir": "out",
+      "bits": 516,
+      "face": "S",
+      "peer": "c16_W2_0"
+     },
+     {
+      "bus": "q3h_far_W2_1_1",
+      "dir": "out",
+      "bits": 516,
+      "face": "S",
+      "peer": "c16_W2_0"
+     },
+     {
+      "bus": "q3h_far_W2_1_2",
+      "dir": "out",
+      "bits": 516,
+      "face": "S",
+      "peer": "c16_W2_0"
+     },
+     {
+      "bus": "q3h_far_W2_1_3",
+      "dir": "out",
+      "bits": 516,
+      "face": "S",
+      "peer": "c16_W2_0"
+     },
+     {
+      "bus": "dv_rsi_W2_0",
+      "dir": "in",
+      "bits": 514,
+      "face": "S",
+      "peer": "c16_W2_0"
+     },
+     {
+      "bus": "dv_rs_W2_1",
+      "dir": "out",
+      "bits": 1028,
+      "face": "N",
+      "peer": "dvs_W2"
+     }
+    ],
+    "c16_W2_0": [
+     {
+      "bus": "q3h_far_W2_1_0",
+      "dir": "in",
+      "bits": 516,
+      "face": "N",
+      "peer": "c16_W2_1"
+     },
+     {
+      "bus": "q3h_far_W2_1_1",
+      "dir": "in",
+      "bits": 516,
+      "face": "N",
+      "peer": "c16_W2_1"
+     },
+     {
+      "bus": "q3h_far_W2_1_2",
+      "dir": "in",
+      "bits": 516,
+      "face": "N",
+      "peer": "c16_W2_1"
+     },
+     {
+      "bus": "q3h_far_W2_1_3",
+      "dir": "in",
+      "bits": 516,
+      "face": "N",
+      "peer": "c16_W2_1"
+     },
+     {
+      "bus": "dv_rsi_W2_0",
+      "dir": "out",
+      "bits": 514,
+      "face": "N",
+      "peer": "c16_W2_1"
+     }
+    ]
+   }
+  }
+ },
+ "moved": {
+  "w_column": "W edge, S->N: io_serdes_2, io_serdes_1, io_collective (beside dvs_W5), io_ucie, io_serdes (rotated 90); N end: ucie_kv (N edge at the W corner), d2d_rom, native59 | sys_face, tt_ctlm | embed_prov / clk_rx / rstseq_rom; 216-um column channel for the native59 -> W5 lane",
+  "native59": "port re-partition: inputs from the dvs_W5 chain (2 x 1068) instead of SU kv_w* / VM q, ar, commit",
+  "tt_ctlm": "ib/go/xpf as hr 453 b into dvs_W5; VM mx/ld/mo/mee ports and the forks removed"
+ },
+ "open": [
+  "qfd_c_b16_dv far-position rs_i (Q-CLUSTER)",
+  "native59 / tt_ctlm port re-partition RTL",
+  "slice step 2 RTL (heads, hr, pipelined root, argmax)"
+ ]
+}
