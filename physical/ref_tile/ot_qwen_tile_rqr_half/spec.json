@@ -8,7 +8,7 @@
  "clock_port": "clk",
  "reset_ports": [],
  "outline": {
-  "w": 12.96,
+  "w": 21.6,
   "h": 129.6
  },
  "pins": {
@@ -33,7 +33,7 @@
  "recipe": 2,
  "keep_pin_regs": true,
  "io_flop_at_pins": {
-  "cols": 8
+  "cols": 2
  },
  "inhold": true,
  "outhold": true,
@@ -78,6 +78,10 @@
   ],
   "views_to": "physical/ref_tile/ot_qwen_tile_rqr_half/views",
   "record_to": "results/rtl/ref_tile/ot_qwen_tile_rqr_half"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "Every input terminates at an explicit existing register (operand mq/gm/wsrc or RQR word_q); every output is the explicit existing s2/word_q register. Hardening preserves these exact register stages. Additional auto pin registers would duplicate existing boundary stages and change the priced recurrence."
  },
  "params": {},
  "macros": [],
