@@ -199,6 +199,10 @@ def new_spec(a: dict, audit=AUDIT) -> dict:
     """the closed kit's spec with the recipe-2 output stage, the closed outline pinned, the native_launch reason"""
     s = json.loads(json.dumps(a["spec"]))
     s["recipe"] = RT.RECIPE_LATEST
+    if RT.RECIPE_LATEST >= 4 and s.get("kind") == "tile" and s.get("hold_budget", "die") == "die":
+        # recipe 4 (FLOW-HOLD): flop-first pins, boundary hold is the die's -- the closed kit's explicit pin pads go
+        for k in ("inhold", "outhold", "hold_pad", "inhold_drv"):
+            s.pop(k, None)
     if a["recipe"] < 2:
         # a recipe-1 kit keeps its routed geometry and hold settings; only the output / input pin stage is new
         s["route"].setdefault("macro_halo_um", RT.HALO_UM)
@@ -230,7 +234,12 @@ def new_spec(a: dict, audit=AUDIT) -> dict:
 
 
 def output_stage_ok(s: dict) -> str | None:
-    """None when the regenerated spec carries the full recipe-2 output stage, else what is missing"""
+    """None when the regenerated spec carries the full output stage, else what is missing.  Recipe 4 (FLOW-HOLD
+    hold_budget die): flop-first pins -- io_flop_at_pins + kept pin registers, no pin pads.  Otherwise recipe 2."""
+    if s.get("hold_budget") == "die":
+        miss = [k for k, ok in (("io_flop_at_pins", s.get("io_flop_at_pins")), ("keep_pin_regs", s.get("keep_pin_regs")),
+                                ("no pin pads", not (s.get("inhold") or s.get("outhold")))) if not ok]
+        return ", ".join(miss) or None
     miss = [k for k, ok in (("recipe 2 pin hook (io_flop_at_pins + inhold/outhold)", RT.pin_hook_wrapper(s)),
                             ("pin_reg_split", s.get("pin_reg_split")), ("keep_pin_regs", s.get("keep_pin_regs")),
                             ("hold_pad HB2", (s.get("hold_pad") or {}).get("cell", RT.RECIPE_HOLD_PAD) == RT.RECIPE_HOLD_PAD

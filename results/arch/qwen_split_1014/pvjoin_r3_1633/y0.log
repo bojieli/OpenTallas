@@ -1,0 +1,5 @@
+LAYER_ROM PASS tokens=2 stages=72 runs=70 events=504 run_ofs=1 errors=0 mut=0
+- rtl/test/qwen_static_kv/tb_layer_programme_rom.sv:96: Verilog $finish
+- S i m u l a t i o n   R e p o r t: Verilator 5.050 2026-07-01
+- Verilator: $finish at 498us; walltime 1.668 s; speed 298.618 us/s
+- Verilator: cpu 1.205 s on 1 threads; allocated 6 MB

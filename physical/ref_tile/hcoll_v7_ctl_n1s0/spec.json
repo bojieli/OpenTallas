@@ -56,7 +56,7 @@
   ]
  },
  "layer_cap": "M5",
- "recipe": 3,
+ "recipe": 4,
  "macros": [],
  "children": [],
  "route": {
@@ -64,8 +64,9 @@
   "period_ps": 833.333,
   "threads": 8,
   "peak_ram_gb": 32,
-  "hold_margin_ns": 0.01,
-  "macro_halo_um": 5.4
+  "hold_margin_ns": 0.03,
+  "macro_halo_um": 5.4,
+  "io_hold_margin_ns": 0.0
  },
  "pin_regs": {
   "enable": false,
@@ -73,9 +74,9 @@
  },
  "job": {
   "owner": "Claude H-NETLIST/COLL 1815",
-  "branch": "claude/hnl-coll-d4f-2130",
-  "tag": "d4f",
-  "purpose": "COLL hard_v7 d4f shape ot_hgi_coll_ctl_v5_n1s0 (NLINK 1, TP192 die): same leaf RTL as the closed ctl2 shape at the d4f link count",
+  "branch": "claude/hnl-coll-tp192",
+  "tag": "r4",
+  "purpose": "ctl_n1s0 recipe-4 successor (hcoll_v7_ctl_n1s0-d4f-b7d189f49 hold ECO MISS FF -9.79 with ECO goal 5): FLOW-HOLD die boundary hold budget, flop-first pins, no pads; RTL unchanged",
   "extra_paths": [
    "rtl/hbm_accel/generic/collective",
    "rtl/lib/ot_rst_relay.sv",
@@ -120,12 +121,8 @@
     ]
    }
   ],
-  "views_to": "physical/ref_tile/hcoll_v5_ctl2/views",
-  "record_to": "results/rtl/ref_tile/hcoll_v5_ctl2",
-  "hold_eco": {
-   "hold_margin_ps": 5.0,
-   "reason": "HEP w5f recipe (H-ELEM): no input hold pad, HB1 output pad, route hold margin 10 ps, post-route hold ECO goal 5 ps -- ctl2 V7 e11086804 native capture 197.3 was input hold padding"
-  }
+  "views_to": "physical/ref_tile/hcoll_v7_ctl_n1s0/views",
+  "record_to": "results/rtl/ref_tile/hcoll_v7_ctl_n1s0"
  },
  "params": {},
  "inter": [],
@@ -134,11 +131,8 @@
   "allow_none": true
  },
  "inhold": false,
- "outhold": true,
+ "outhold": false,
  "keep_pin_regs": true,
- "pin_reg_split": true,
- "hold_pad": {
-  "cell": "HB2xp67_ASAP7_75t_R",
-  "out_cell": "HB1xp67_ASAP7_75t_R"
- }
+ "pin_reg_split": false,
+ "hold_budget": "die"
 }

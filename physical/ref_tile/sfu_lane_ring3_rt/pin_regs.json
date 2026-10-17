@@ -1,0 +1,6 @@
+{
+ "schema": "opentallas.ref_tile.pin_regs.v1",
+ "top": "ot_su12_sfu",
+ "enable": false,
+ "reason": "FLOW-HOLD 2026-10-16: the RTL already registers the data pins (closed sfu_lane_ring3_rt-rt-ae5899467: input pin -> D paths carry only buffers, no logic; results/arch/boundary_hold_budget_1016/IMPACT.md); a synthesis pin stage would add schedule cycles. Flop-first via io_flop_at_pins."
+}

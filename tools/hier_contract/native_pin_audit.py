@@ -154,6 +154,22 @@ def audit_one(arg):
     rec.update(outputs=nout, inputs=nin, launch_ps=round(wl[1], 1) if wl else None, launch_pin=wl[0] if wl else None,
                capture_ps=round(wc[1], 1) if wc else None, capture_pin=wc[0] if wc else None, launch_over=nl, capture_over=nc,
                comb_pins=len(comb), comb_first=sorted(comb)[:3])
+    # DIE HOLD BUDGET inputs (FLOW-HOLD 2026-10-16, results/arch/boundary_hold_budget_1016/RULE.md): at FF, the
+    # sender's guaranteed launch (min over outputs of O_min - R) and the receiver's pin hold need (max over inputs of
+    # H - R; negative = data may arrive that long before the edge).  Die FF STA reads the same ETM arcs; reported here,
+    # never part of the native verdict.
+    ff_path = root / view / f"{cell}_ff.lib"
+    if not ff_path.exists():
+        ff_path = root / view / f"{cell}_ff.lib.gz"
+    if ff_path.exists():
+        try:
+            flib = PA.parse_lib(ff_path)
+            fm = PA.pin_metrics(flib, PA.clock_refs(flib, ins, "ff"))
+            lm = [m["lmin"] for m in fm.values() if m["dir"] == "output" and m["lmin"] is not None]
+            hn = [m["hold"] for m in fm.values() if m["dir"] == "input" and m["hold"] is not None]
+            rec.update(ff_launch_min_ps=round(min(lm), 1) if lm else None, ff_hold_need_ps=round(max(hn), 1) if hn else None)
+        except Exception as e:  # noqa: BLE001
+            rec["ff_error"] = f"{type(e).__name__}: {e}"
     why = []
     if wl and wl[1] > LAUNCH_PS:
         why.append(f"launch {wl[1]:.9g} > {LAUNCH_PS:.0f} ({nl} pins)")
