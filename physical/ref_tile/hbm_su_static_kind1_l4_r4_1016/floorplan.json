@@ -6,14 +6,14 @@
  "die": [
   0,
   0,
-  166.32,
-  330.48
+  233.28,
+  233.28
  ],
  "core": [
   2.16,
   2.16,
-  164.16,
-  328.32
+  231.12,
+  231.12
  ],
  "why": "spec outline",
  "std_area_um2": null,
@@ -31,9 +31,6 @@
  },
  "pins": {
   "S": [
-   "clk",
-   "clk_sfu",
-   "clk_ins",
    "rst_n",
    "lane_id",
    "ld",
@@ -79,6 +76,9 @@
    "co_dst"
   ],
   "W": [
+   "clk",
+   "clk_sfu",
+   "clk_ins",
    "ld_c",
    "rd_q",
    "side_y",

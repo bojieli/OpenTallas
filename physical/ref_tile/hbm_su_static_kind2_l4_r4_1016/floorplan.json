@@ -31,11 +31,6 @@
  },
  "pins": {
   "S": [
-   "clk",
-   "clk_sfu",
-   "clk_ins",
-   "clk_ins2",
-   "clk_side",
    "rst_n",
    "lane_id",
    "ld",
@@ -81,6 +76,11 @@
    "co_dst"
   ],
   "W": [
+   "clk",
+   "clk_sfu",
+   "clk_ins",
+   "clk_ins2",
+   "clk_side",
    "ld_c",
    "rd_q",
    "vi_q"
