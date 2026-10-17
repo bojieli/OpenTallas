@@ -352,9 +352,17 @@ def write_batch(bd, its, stage, lay, adj, a):
                 continue
             src, dst = (A, B) if p['dir'] == 'fwd' else (B, A)
             wn = f'n{k}_{p["out"]}'
-            v.append(f'  wire [{p["width"] - 1}:0] {wn};')
-            conn[src].append(f'.{p["out"]}({wn})')
-            conn[dst].append(f'.{p["inp"]}({wn})')
+            if p['width'] == 1:
+                # a 1-bit Liberty bus port connected by name crashes OpenSTA's VerilogReader::makeModuleInst
+                # (orfs:asap7lock, measured 2026-10-16 on dsfd_hstnh_1); connect the escaped bit port to a scalar net
+                (op1,), (ip1,) = p['out_pins'].values(), p['in_pins'].values()
+                v.append(f'  wire {wn};')
+                conn[src].append(f'.\\{op1} ({wn})')
+                conn[dst].append(f'.\\{ip1} ({wn})')
+            else:
+                v.append(f'  wire [{p["width"] - 1}:0] {wn};')
+                conn[src].append(f'.{p["out"]}({wn})')
+                conn[dst].append(f'.{p["inp"]}({wn})')
             for bit, op in p['out_pins'].items():
                 ip = p['in_pins'][bit]
                 sx = pos[src][0] + mod['pin_xy'][op][0]

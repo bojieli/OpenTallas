@@ -48,6 +48,10 @@ U_SETUP, U_HOLD, SKEW = 60.0, 25.0, 80.0
 CORNERS = (('tt833', 'tt', T_STREAM, 'max'), ('tt1111', 'tt', T_SERIAL, 'max'), ('ff_hold', 'ff', T_STREAM, 'min'),
            ('ss833', 'ss', T_STREAM, 'max'))
 CLOCK_PORTS = ('fi0', 'ck', 'cw')
+ASAP7_NLDM = '/OpenROAD-flow-scripts/flow/platforms/asap7/lib/NLDM'
+RVT_LIBS = ('asap7sc7p5t_AO_RVT_{C}_nldm_211120.lib.gz', 'asap7sc7p5t_INVBUF_RVT_{C}_nldm_220122.lib.gz',
+            'asap7sc7p5t_OA_RVT_{C}_nldm_211120.lib.gz', 'asap7sc7p5t_SEQ_RVT_{C}_nldm_220123.lib',
+            'asap7sc7p5t_SIMPLE_RVT_{C}_nldm_211120.lib.gz')
 CONST_RE = re.compile(r"^\d+'[bhd]")
 
 
@@ -71,8 +75,10 @@ def parse_verilog(text):
     for m in re.finditer(r'\b(input|output|inout)\s*(?:\[(\d+):(\d+)\])?\s*([^;]+);', body):
         for n in m.group(4).split(','):
             ports[n.strip()] = (m.group(1), int(m.group(2)) if m.group(2) else None, int(m.group(3)) if m.group(3) else None)
-    if re.search(r'\bassign\b', body):
-        raise ValueError('assign statements are not supported in a native flat netlist')
+    alias = {}
+    for m in re.finditer(r'\bassign\s+(\\\S+|[^=\s]+)\s*=\s*(\\\S+|[^;\s]+)\s*;', body):
+        alias[m.group(2).strip()] = m.group(1).strip()      # assign PORT = NET: NET is the port's net
+    body = re.sub(r'\bassign\b[^;]*;', '', body)
     cells = []
     stmts = body.split(';')
     for s in stmts:
@@ -86,6 +92,8 @@ def parse_verilog(text):
         if not conns:          # physical-only cells (fillers / decaps written from an ODB): no timing role
             continue
         cells.append((m.group(1), m.group(2).strip(), conns))
+    if alias:
+        cells = [(c, i, [(p, alias.get(n, n)) for p, n in conns]) for c, i, conns in cells]
     return mod, ports, cells
 
 
@@ -217,7 +225,7 @@ class Merged:
 
 
 # ------------------------------------------------------------------------------------------------ stage
-def extract_archive(archive, cell, binding_tt_sha):
+def extract_archive(archive, cell, binding_tt_sha, binding_job=None):
     man = json.loads((archive / 'manifest.json').read_text())
     got = {}
     for f in man['files']:
@@ -232,11 +240,26 @@ def extract_archive(archive, cell, binding_tt_sha):
         got[name] = (raw.decode(), f['sha256'])
     if len(got) != 3:
         raise ValueError(f'{archive}: 6_final spef/v/sdc incomplete ({sorted(got)})')
+    def rd(p):
+        if p.exists():
+            return p.read_bytes()
+        z = Path(str(p) + '.zst')
+        return subprocess.run(['zstd', '-dc', str(z)], check=True, stdout=subprocess.PIPE).stdout
     vdir = archive / 'run' / 'record' / 'views' / cell
-    tt = (vdir / f'{cell}_tt.lib').read_bytes()
+    if not vdir.is_dir():
+        # older closure-loop archives keep no record/views export: identity by the bound job id only (recorded),
+        # standard ASAP7 RVT NLDM libraries (the closure flow's set) for each corner
+        if man.get('job') != binding_job:
+            raise ValueError(f'{cell}: archive job {man.get("job")} != bound job {binding_job}')
+        heads = {c: ''.join(f'read_liberty {ASAP7_NLDM}/{f.format(C=c.upper())}\n' for f in RVT_LIBS)
+                 for c in ('tt', 'ff', 'ss')}
+        man['_identity'] = 'job id only (archive has no record/views ETM export to hash)'
+        return man, got, heads
+    tt = rd(vdir / f'{cell}_tt.lib')
     if sha(tt) != binding_tt_sha:
         raise ValueError(f'{cell}: archived ETM differs from the bound view (die binding sha256)')
-    heads = {c: (vdir / f'export_{c}.tcl').read_text().split('read_db ', 1)[0] for c in ('tt', 'ff', 'ss')}
+    heads = {c: rd(vdir / f'export_{c}.tcl').decode().split('read_db ', 1)[0] for c in ('tt', 'ff', 'ss')}
+    man['_identity'] = 'archived ETM sha256 == bound view sha256'
     return man, got, heads
 
 
@@ -245,7 +268,7 @@ def cmd_stage(a):
     out.mkdir(parents=True, exist_ok=True)
     srec = json.loads((Path(a.stage) / 'stage.json').read_text())['classes'][a.cls]
     model = json.loads((Path(a.stage) / 'views' / a.cls / 'model.json').read_text())
-    man, got, heads = extract_archive(Path(a.archive), a.cls, srec['files']['tt']['sha256'])
+    man, got, heads = extract_archive(Path(a.archive), a.cls, srec['files']['tt']['sha256'], srec.get('job'))
     spef_txt, spef_sha = got['6_final.spef']
     v_txt, v_sha = got['6_final.v']
     sdc_txt = got['6_final.sdc'][0]
@@ -280,7 +303,7 @@ def cmd_stage(a):
     clocks = [c for c in CLOCK_PORTS if any(p.split('[')[0] == c for p in port_bits(parse_verilog(v_txt)[1]))]
     rec = dict(schema='opentallas.s81.relay_native_pair_stage.v1', cls=a.cls, archive=str(a.archive), job=man['job'],
                consumed={'6_final.spef': spef_sha, '6_final.v': v_sha}, etm_tt_sha256=srec['files']['tt']['sha256'],
-               bench_run=str(bench), clock_mode='fwd' if fwd else 'tree', clock_ports=clocks, max_transition_ps=max_tr,
+               bench_run=str(bench), identity=man.get('_identity'), clock_mode='fwd' if fwd else 'tree', clock_ports=clocks, max_transition_ps=max_tr,
                variants={k: s for k, (_, s) in variants.items()}, points={})
     for vn, (vt, _) in variants.items():
         vd = out / vn
@@ -301,7 +324,7 @@ def cmd_stage(a):
                     jn = f'k{k}_w_{san(op)}'
                     joins[(src, op)] = jn
                     joins[(dst, ip)] = jn
-                    bn = f'n{k}_{p["out"]}' + ('' if bit == 'None' else f'[{bit}]')
+                    bn = f'n{k}_{p["out"]}' + ('' if bit == 'None' or p['width'] == 1 else f'[{bit}]')
                     jl.append((jn, bn, src, op, dst, ip))
             if fwd:
                 jn = f'k{k}_fck'
@@ -403,16 +426,11 @@ set_propagated_clock [all_clocks]
 set_clock_uncertainty -setup {unc_s} [all_clocks]
 set_clock_uncertainty -hold {unc_h} [all_clocks]
 {f'set_max_transition {max_tr} [current_design]' if max_tr else ''}
-set f [open /work/{name}.res w]
 foreach k {{{' '.join(map(str, ks))}}} {{
-  set nets [get_nets -quiet k${{k}}_w_*]
-  set ps [find_timing_paths -through $nets -path_delay {chk} -group_path_count 1 -endpoint_path_count 1]
-  if {{[llength $ps] == 0}} {{ puts $f "$k NOPATH"; continue }}
-  set p [lindex $ps 0]
-  set nf [llength [find_timing_paths -through $nets -path_delay {chk} -group_path_count 100000 -endpoint_path_count 1 -slack_max 0]]
-  puts $f "$k [get_property $p slack] [get_full_name [get_property $p endpoint]] [get_full_name [get_property $p startpoint]] $nf"
+  puts "OT_PAIR $k"
+  report_checks -through [get_nets -quiet k${{k}}_w_*] -path_delay {chk} -format end -group_path_count 100000 -endpoint_path_count 1 -digits 2
+  puts "OT_PAIR_END $k"
 }}
-close $f
 set mid [lindex {{{' '.join(map(str, ks))}}} [expr {{{len(ks)} / 2}}]]
 report_checks -through [get_nets k${{mid}}_w_*] -path_delay {chk} -format full_clock_expanded -fields {{slew cap}} -digits 1
 report_check_types -max_slew -max_capacitance -violators > /work/{name}.drv
@@ -424,6 +442,7 @@ puts OT_NATIVE_PAIR_DONE
 # relay_native_pair: one sta session per variant x corner (flat composed native pair, merged SPEF)
 set -u
 B=$(cd "$(dirname "$0")" && pwd)
+for v in {' '.join(variants)}; do [ -f $B/$v/pair.spef ] || gunzip -kf $B/$v/pair.spef.gz; done
 for v in {' '.join(variants)}; do for c in {' '.join(c[0] for c in CORNERS)}; do
   docker run --rm --name npair_$(basename $B)_${{v}}_$c --cpus=1 -v $B/$v:/work -w /work {IMAGE} \\
     bash -lc "source /OpenROAD-flow-scripts/env.sh >/dev/null 2>&1; sta -no_init -exit /work/sta_$c.tcl > /work/sta_$c.log 2>&1; chmod -R a+rwX /work" &
@@ -446,6 +465,24 @@ def _rekey(M, old, new):
 
 
 # ------------------------------------------------------------------------------------------------ collect
+def parse_end_report(text):
+    """OT_PAIR k / report_checks -format end blocks -> {k: dict(slack, end, fails, n)} (worst endpoint per pair)"""
+    out = {}
+    for m in re.finditer(r'OT_PAIR (\d+)\n(.*?)OT_PAIR_END \1', text, re.S):
+        rows = []
+        for line in m.group(2).splitlines():
+            s = [t for t in line.split() if not t.startswith('(')]
+            if len(s) >= 4 and re.match(r'^k\d+[ab]_', s[0]):
+                try:
+                    rows.append((float(s[-1]), s[0]))
+                except ValueError:
+                    pass
+        k = int(m.group(1))
+        out[k] = None if not rows else dict(slack=min(rows)[0], end=min(rows)[1], start=None,
+                                            fails=sum(1 for r in rows if r[0] < 0), n=len(rows))
+    return out
+
+
 def parse_drv(p):
     """report_check_types -violators -> {k: (count, worst slack)}"""
     out = collections.defaultdict(lambda: [0, 0.0])
@@ -473,15 +510,11 @@ def cmd_collect(a):
         vd = out / vn
         rows = {}
         for name, *_ in CORNERS:
-            f = vd / f'{name}.res'
-            if not f.exists() or 'OT_NATIVE_PAIR_DONE' not in (vd / f'sta_{name}.log').read_text(errors='ignore'):
+            log = vd / f'sta_{name}.log'
+            if not log.exists() or 'OT_NATIVE_PAIR_DONE' not in log.read_text(errors='ignore'):
                 rows[name] = None
                 continue
-            rows[name] = {}
-            for line in f.read_text().splitlines():
-                s = line.split()
-                rows[name][int(s[0])] = None if s[1] == 'NOPATH' else dict(
-                    slack=float(s[1]), end=s[2], start=s[3], fails=int(s[4]))
+            rows[name] = parse_end_report(log.read_text(errors='ignore'))
         drv = {name: parse_drv(vd / f'{name}.drv') for name, *_ in CORNERS}
         pts = []
         for k, pt in sorted(rec['points'].items(), key=lambda kv: kv[1]['d']):
@@ -528,6 +561,26 @@ def _why(p, key):
     return '; '.join(w)
 
 
+def cmd_stage_many(a):
+    """stage every class of the given bench batches whose bound job has a closed archive under --archive-root"""
+    srec = json.loads((Path(a.stage) / 'stage.json').read_text())['classes']
+    for b in a.bench_run:
+        cls = sorted({i['cls'] for i in json.loads((Path(b) / 'map.json').read_text())['insts']})
+        for m in cls:
+            if a.only and m not in a.only:
+                continue
+            out = Path(a.out_root) / m
+            arch = Path(a.archive_root) / m / str(srec[m].get('job'))
+            if not (arch / 'manifest.json').exists():
+                print(f'{m}: NOT STAGED (no closed archive {arch})')
+                continue
+            try:
+                cmd_stage(argparse.Namespace(cls=m, archive=str(arch), bench_run=b, stage=a.stage, out=str(out),
+                                             variant=None, d_max=a.d_max))
+            except (ValueError, KeyError, OSError, subprocess.CalledProcessError) as e:
+                print(f'{m}: NOT STAGED ({type(e).__name__}: {e})')
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     sp = ap.add_subparsers(dest='cmd', required=True)
@@ -539,10 +592,17 @@ def main(argv=None):
     s.add_argument('--out', required=True)
     s.add_argument('--variant', action='append', help='NAME=netlist.v (native netlist with swapped output drivers)')
     s.add_argument('--d-max', type=float)
+    s2 = sp.add_parser('stage-many')
+    s2.add_argument('--bench-run', action='append', required=True)
+    s2.add_argument('--stage', required=True)
+    s2.add_argument('--archive-root', default='/home/ubuntu/closed_archive')
+    s2.add_argument('--out-root', required=True)
+    s2.add_argument('--only', nargs='*')
+    s2.add_argument('--d-max', type=float)
     c = sp.add_parser('collect')
     c.add_argument('--out', required=True)
     a = ap.parse_args(argv)
-    dict(stage=cmd_stage, collect=cmd_collect)[a.cmd](a)
+    {'stage': cmd_stage, 'stage-many': cmd_stage_many, 'collect': cmd_collect}[a.cmd](a)
 
 
 if __name__ == '__main__':
