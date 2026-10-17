@@ -6,9 +6,14 @@ import argparse, json
 from pathlib import Path
 GAP, EDGE = 100.0, 42.4
 ap = argparse.ArgumentParser(); ap.add_argument('plan'); ap.add_argument('--phy-shift', type=float, default=0.0)
+ap.add_argument('--lk-sq', type=float, default=0.0, help='d4f r2 (coordinator: no long-thin blocks): SerDes lk tiles square of this side')
 a = ap.parse_args(); d = Path(a.plan)
 P = json.loads((d / 'compact.P.json').read_text()); W, H = json.loads((d / 'compact.metrics.json').read_text())['die_um']
 e = P['hc_eng']; c0 = e['x']; cr = W - EDGE
+if a.lk_sq:
+    for k in P:
+        if k.startswith('lk_'):
+            P[k].update(w=a.lk_sq, h=a.lk_sq)
 for side, sgn in (('S', -1), ('N', 1)):
     eps = sorted(k for k in P if k.startswith(f'ep_{side}')); lks = sorted(k for k in P if k.startswith(f'lk_{side}'))
     ew, eh = P[eps[0]]['w'], P[eps[0]]['h']; lw, lh = P[lks[0]]['w'], P[lks[0]]['h']

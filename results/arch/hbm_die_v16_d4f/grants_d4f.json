@@ -3,27 +3,27 @@
  "die": "hbm_v15",
  "version": 9,
  "owner": "H-DIE",
- "updated": "2026-10-16T23:48:14-07:00",
+ "updated": "2026-10-17T01:17:00-07:00",
  "clock_period_ps": 833.333,
  "floorplan": {
   "file": "results/arch/hbm_die_v15/d4f_a2p_fullcore/compact.P.json",
   "candidate": "d4f_a2p_fullcore",
   "adopted": "H-DIE d4f gate-2 (coordinator d4f; HBM-ARRAY TP-192), UNQUALIFIED until GEN+GRT",
   "die_um": [
-   21002.24,
+   19902.24,
    32169.44
   ],
   "metrics": {
-   "sum_bits_mm": 1124025.9734559986,
-   "traffic_mm_qwen": 1899880621.2669046,
-   "traffic_mm_ds": 2063407886.8046224,
-   "relay_flops": 2131929.0,
-   "bits_over_500": 159355.0,
+   "sum_bits_mm": 1117447.374639999,
+   "traffic_mm_qwen": 1899711190.7911894,
+   "traffic_mm_ds": 2059523719.2737026,
+   "relay_flops": 2122177.0,
+   "bits_over_500": 160411.0,
    "fixed_return_violation_bits": 17792,
    "fixed_return_violations": 32,
    "overlaps": 0,
    "outside": 0,
-   "J": 11.819036123373742,
+   "J": 11.810696972268268,
    "n_long_returns": 285
   },
   "previous": {
@@ -146,7 +146,7 @@
    "kind": "die",
    "parent": null,
    "outline": {
-    "w": 21002.24,
+    "w": 19902.24,
     "h": 32169.44
    },
    "origin": {
@@ -564,8 +564,8 @@
    "kind": "cluster",
    "parent": "die",
    "outline": {
-    "w": 511.92,
-    "h": 360.72
+    "w": 800.0,
+    "h": 560.0
    },
    "origin": {
     "x": 14877.0,
@@ -932,10 +932,6 @@
     "N": 0.534,
     "E": 0.093
    },
-   "placed_footprint": {
-    "w": 432.0,
-    "h": 360.72
-   },
    "shared_plan": {
     "reference": "hb_dbk_NE",
     "orient": "MY",
@@ -1262,7 +1258,11 @@
    "identity_straps": {
     "stk": 0
    },
-   "home_rule": "d4f: E of coll_SW (tkm_SW takes the N face)"
+   "home_rule": "d4f: E of coll_SW (tkm_SW takes the N face)",
+   "fit_r2": {
+    "reason": "d4f r2 shared-region fits (coordinator 10-17 run1 review: no squeezing): regions that hold more than one instance (or an",
+    "moved_um": 0.0
+   }
   },
   {
    "name": "hb_dbk_NW",
@@ -1270,12 +1270,12 @@
    "kind": "cluster",
    "parent": "die",
    "outline": {
-    "w": 511.92,
-    "h": 360.72
+    "w": 800.0,
+    "h": 560.0
    },
    "origin": {
     "x": 14595.312,
-    "y": 22030.96,
+    "y": 21830.96,
     "orient": "MY"
    },
    "io_budget": {
@@ -1638,10 +1638,6 @@
     "N": 0.534,
     "E": 0.093
    },
-   "placed_footprint": {
-    "w": 432.0,
-    "h": 360.72
-   },
    "shared_plan": {
     "reference": "hb_dbk_NE",
     "orient": "MY",
@@ -1967,6 +1963,10 @@
    "child_binding_refresh_2116": "Eight actual L[b].u_bank instances use geo1 CLOSED/native PASS 140.4x87.48 view. Parent size/child homes/ports preserved; parent packing and seams remain OPEN.",
    "identity_straps": {
     "stk": 2
+   },
+   "fit_r2": {
+    "reason": "d4f r2 shared-region fits (coordinator 10-17 run1 review: no squeezing): regions that hold more than one instance (or an",
+    "moved_um": 200.0
    }
   },
   {
@@ -33135,7 +33135,7 @@
    },
    "origin": {
     "x": 17859.840000000004,
-    "y": 13937.262,
+    "y": 13094.52,
     "orient": "R0"
    },
    "version": 2,
@@ -34146,8 +34146,8 @@
     "h": 515.2
    },
    "origin": {
-    "x": 20525.12,
-    "y": 17716.978,
+    "x": 19425.12,
+    "y": 18559.72,
     "orient": "R0"
    },
    "clock_entry": {
@@ -34181,7 +34181,7 @@
     {
      "face": "N",
      "layer": "M5",
-     "offset": 256.89,
+     "offset": 164.56,
      "span_um": 105.6,
      "bits": 1056,
      "peer": "lk_N0",
@@ -34202,8 +34202,8 @@
     "h": 515.2
    },
    "origin": {
-    "x": 20040.4,
-    "y": 17716.978,
+    "x": 18940.4,
+    "y": 18559.72,
     "orient": "R0"
    },
    "clock_entry": {
@@ -34227,7 +34227,7 @@
     {
      "face": "W",
      "layer": "M4",
-     "offset": 392.8,
+     "offset": 273.18,
      "span_um": 122.4,
      "bits": 1224,
      "peer": "coll_NE",
@@ -34237,7 +34237,7 @@
     {
      "face": "N",
      "layer": "M5",
-     "offset": 324.22,
+     "offset": 56.92,
      "span_um": 105.6,
      "bits": 1056,
      "peer": "lk_N2",
@@ -34258,8 +34258,8 @@
     "h": 515.2
    },
    "origin": {
-    "x": 20525.12,
-    "y": 13937.262,
+    "x": 19425.12,
+    "y": 13094.52,
     "orient": "R0"
    },
    "clock_entry": {
@@ -34293,7 +34293,7 @@
     {
      "face": "S",
      "layer": "M5",
-     "offset": 256.89,
+     "offset": 164.56,
      "span_um": 105.6,
      "bits": 1056,
      "peer": "lk_S0",
@@ -34314,8 +34314,8 @@
     "h": 515.2
    },
    "origin": {
-    "x": 20040.4,
-    "y": 13937.262,
+    "x": 18940.4,
+    "y": 13094.52,
     "orient": "R0"
    },
    "clock_entry": {
@@ -34349,7 +34349,7 @@
     {
      "face": "S",
      "layer": "M5",
-     "offset": 324.22,
+     "offset": 56.92,
      "span_um": 105.6,
      "bits": 1056,
      "peer": "lk_S1",
@@ -34370,8 +34370,8 @@
     "h": 515.2
    },
    "origin": {
-    "x": 19555.68,
-    "y": 13937.262,
+    "x": 18455.68,
+    "y": 13094.52,
     "orient": "R0"
    },
    "clock_entry": {
@@ -34395,7 +34395,7 @@
     {
      "face": "W",
      "layer": "M4",
-     "offset": 0.0,
+     "offset": 119.62,
      "span_um": 122.4,
      "bits": 1224,
      "peer": "coll_SE",
@@ -34405,7 +34405,7 @@
     {
      "face": "S",
      "layer": "M5",
-     "offset": 329.12,
+     "offset": 0.0,
      "span_um": 105.6,
      "bits": 1056,
      "peer": "lk_S3",
@@ -35622,12 +35622,12 @@
    "kind": "tile",
    "parent": "die",
    "outline": {
-    "w": 3100.0,
-    "h": 3064.516
+    "w": 2000.0,
+    "h": 4750.0
    },
    "origin": {
     "x": 17859.84,
-    "y": 14552.462,
+    "y": 13709.72,
     "orient": "R0"
    },
    "clock_entry": {
@@ -35649,8 +35649,8 @@
    "notes": "HC:ot_hbm_hc_eng_static (H-NETLIST 406a2d5f9, ~9.5 mm2 model hbm_hc_eng_0030) centre-column void; H-DIE-V790 centre-column home, pins from the plan pin windows (v16 widths)",
    "pin_windows": [
     {
-     "face": "S",
-     "layer": "M5",
+     "face": "W",
+     "layer": "M4",
      "offset": 0.0,
      "span_um": 210.0,
      "bits": 2100,
@@ -35659,8 +35659,8 @@
      "link": "hc_SW>hc_eng:HC_ENG"
     },
     {
-     "face": "S",
-     "layer": "M5",
+     "face": "W",
+     "layer": "M4",
      "offset": 210.0,
      "span_um": 77.2,
      "bits": 772,
@@ -35671,7 +35671,7 @@
     {
      "face": "W",
      "layer": "M4",
-     "offset": 0.0,
+     "offset": 600.48,
      "span_um": 210.0,
      "bits": 2100,
      "peer": "hc_SE",
@@ -35681,7 +35681,7 @@
     {
      "face": "W",
      "layer": "M4",
-     "offset": 210.0,
+     "offset": 810.48,
      "span_um": 77.2,
      "bits": 772,
      "peer": "hc_SE",
@@ -35691,7 +35691,7 @@
     {
      "face": "W",
      "layer": "M4",
-     "offset": 2777.32,
+     "offset": 3939.52,
      "span_um": 210.0,
      "bits": 2100,
      "peer": "hc_NE",
@@ -35701,7 +35701,7 @@
     {
      "face": "W",
      "layer": "M4",
-     "offset": 2987.32,
+     "offset": 4149.52,
      "span_um": 77.2,
      "bits": 772,
      "peer": "hc_NE",
@@ -35709,9 +35709,9 @@
      "link": "hc_eng>hc_NE:HC_ENG"
     },
     {
-     "face": "N",
-     "layer": "M5",
-     "offset": 0.0,
+     "face": "W",
+     "layer": "M4",
+     "offset": 4462.8,
      "span_um": 210.0,
      "bits": 2100,
      "peer": "hc_NW",
@@ -35719,9 +35719,9 @@
      "link": "hc_NW>hc_eng:HC_ENG"
     },
     {
-     "face": "N",
-     "layer": "M5",
-     "offset": 210.0,
+     "face": "W",
+     "layer": "M4",
+     "offset": 4672.8,
      "span_um": 77.2,
      "bits": 772,
      "peer": "hc_NW",
@@ -35739,12 +35739,12 @@
    "kind": "hard_macro",
    "parent": "die",
    "outline": {
-    "w": 250.056,
-    "h": 2250.216
+    "w": 600.0,
+    "h": 600.0
    },
    "origin": {
-    "x": 20709.784,
-    "y": 18332.178,
+    "x": 19259.84,
+    "y": 19174.92,
     "orient": "R0"
    },
    "clock_entry": null,
@@ -35764,7 +35764,7 @@
     {
      "face": "S",
      "layer": "M5",
-     "offset": 72.23,
+     "offset": 329.84,
      "span_um": 105.6,
      "bits": 1056,
      "peer": "ep_N0",
@@ -35787,12 +35787,12 @@
    "kind": "hard_macro",
    "parent": "die",
    "outline": {
-    "w": 250.056,
-    "h": 2250.216
+    "w": 600.0,
+    "h": 600.0
    },
    "origin": {
-    "x": 20359.728,
-    "y": 18332.178,
+    "x": 18559.84,
+    "y": 19174.92,
     "orient": "R0"
    },
    "clock_entry": null,
@@ -35812,7 +35812,7 @@
     {
      "face": "S",
      "layer": "M5",
-     "offset": 4.9,
+     "offset": 437.48,
      "span_um": 105.6,
      "bits": 1056,
      "peer": "ep_N2",
@@ -35835,12 +35835,12 @@
    "kind": "hard_macro",
    "parent": "die",
    "outline": {
-    "w": 250.056,
-    "h": 2250.216
+    "w": 600.0,
+    "h": 600.0
    },
    "origin": {
-    "x": 20709.784,
-    "y": 11587.046,
+    "x": 19259.84,
+    "y": 12394.52,
     "orient": "R0"
    },
    "clock_entry": null,
@@ -35860,7 +35860,7 @@
     {
      "face": "N",
      "layer": "M5",
-     "offset": 72.23,
+     "offset": 329.84,
      "span_um": 105.6,
      "bits": 1056,
      "peer": "ep_S0",
@@ -35883,12 +35883,12 @@
    "kind": "hard_macro",
    "parent": "die",
    "outline": {
-    "w": 250.056,
-    "h": 2250.216
+    "w": 600.0,
+    "h": 600.0
    },
    "origin": {
-    "x": 20359.728,
-    "y": 11587.046,
+    "x": 18559.84,
+    "y": 12394.52,
     "orient": "R0"
    },
    "clock_entry": null,
@@ -35908,7 +35908,7 @@
     {
      "face": "N",
      "layer": "M5",
-     "offset": 4.9,
+     "offset": 437.48,
      "span_um": 105.6,
      "bits": 1056,
      "peer": "ep_S1",
@@ -35931,12 +35931,12 @@
    "kind": "hard_macro",
    "parent": "die",
    "outline": {
-    "w": 250.056,
-    "h": 2250.216
+    "w": 600.0,
+    "h": 600.0
    },
    "origin": {
-    "x": 20009.672,
-    "y": 11587.046,
+    "x": 17859.84,
+    "y": 12394.52,
     "orient": "R0"
    },
    "clock_entry": null,
@@ -35954,9 +35954,9 @@
    "notes": "die-to-die SerDes link macro; off-die boundary: elastic/credit flow control allowed (owner 0az)",
    "pin_windows": [
     {
-     "face": "W",
-     "layer": "M4",
-     "offset": 2144.62,
+     "face": "N",
+     "layer": "M5",
+     "offset": 494.4,
      "span_um": 105.6,
      "bits": 1056,
      "peer": "ep_S3",
@@ -82333,7 +82333,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "e592c4825",
+   "source_prerequisite": "62426b713",
    "params": {
     "QID": 3,
     "G": 0,
@@ -82830,7 +82830,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "e592c4825",
+   "source_prerequisite": "62426b713",
    "params": {
     "QID": 3,
     "G": 1,
@@ -83327,7 +83327,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "e592c4825",
+   "source_prerequisite": "62426b713",
    "params": {
     "QID": 3,
     "G": 2,
@@ -83824,7 +83824,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "e592c4825",
+   "source_prerequisite": "62426b713",
    "params": {
     "QID": 3,
     "G": 3,
@@ -84341,7 +84341,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "e592c4825",
+   "source_prerequisite": "62426b713",
    "params": {
     "QID": 2,
     "G": 0,
@@ -84838,7 +84838,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "e592c4825",
+   "source_prerequisite": "62426b713",
    "params": {
     "QID": 2,
     "G": 1,
@@ -85335,7 +85335,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "e592c4825",
+   "source_prerequisite": "62426b713",
    "params": {
     "QID": 2,
     "G": 2,
@@ -85832,7 +85832,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "e592c4825",
+   "source_prerequisite": "62426b713",
    "params": {
     "QID": 2,
     "G": 3,
@@ -86349,7 +86349,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "e592c4825",
+   "source_prerequisite": "62426b713",
    "params": {
     "QID": 1,
     "G": 0,
@@ -86846,7 +86846,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "e592c4825",
+   "source_prerequisite": "62426b713",
    "params": {
     "QID": 1,
     "G": 1,
@@ -87343,7 +87343,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "e592c4825",
+   "source_prerequisite": "62426b713",
    "params": {
     "QID": 1,
     "G": 2,
@@ -87840,7 +87840,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "e592c4825",
+   "source_prerequisite": "62426b713",
    "params": {
     "QID": 1,
     "G": 3,
@@ -88357,7 +88357,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "e592c4825",
+   "source_prerequisite": "62426b713",
    "params": {
     "QID": 0,
     "G": 0,
@@ -88854,7 +88854,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "e592c4825",
+   "source_prerequisite": "62426b713",
    "params": {
     "QID": 0,
     "G": 1,
@@ -89351,7 +89351,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "e592c4825",
+   "source_prerequisite": "62426b713",
    "params": {
     "QID": 0,
     "G": 2,
@@ -89848,7 +89848,7 @@
    ],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_pgslice.sv",
    "source_sha256": "3ea2eaf9703393942ee893af752459bef4d6f57a7fb6de1eeaea633a5748f673",
-   "source_prerequisite": "e592c4825",
+   "source_prerequisite": "62426b713",
    "params": {
     "QID": 0,
     "G": 3,
@@ -90314,7 +90314,7 @@
    "pin_windows": [],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_qcore.sv",
    "source_sha256": "cb2d543c6577e2d7e5eed34d91b9fd685f1be5f2efdf65927186134b4d19ab15",
-   "source_prerequisite": "e592c4825",
+   "source_prerequisite": "62426b713",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -90615,7 +90615,7 @@
    "pin_windows": [],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_qcore.sv",
    "source_sha256": "cb2d543c6577e2d7e5eed34d91b9fd685f1be5f2efdf65927186134b4d19ab15",
-   "source_prerequisite": "e592c4825",
+   "source_prerequisite": "62426b713",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -90916,7 +90916,7 @@
    "pin_windows": [],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_qcore.sv",
    "source_sha256": "cb2d543c6577e2d7e5eed34d91b9fd685f1be5f2efdf65927186134b4d19ab15",
-   "source_prerequisite": "e592c4825",
+   "source_prerequisite": "62426b713",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -91217,7 +91217,7 @@
    "pin_windows": [],
    "source": "rtl/hbm_accel/generic/adapters/static_su/top/ot_hbm_su_static_qcore.sv",
    "source_sha256": "cb2d543c6577e2d7e5eed34d91b9fd685f1be5f2efdf65927186134b4d19ab15",
-   "source_prerequisite": "e592c4825",
+   "source_prerequisite": "62426b713",
    "params": {},
    "pin_status": "DIE_ASSIGNED_EXACT_FROM_RTL_PORTS (top-down; owner kit adopts unchanged, die re-pins only when die STA names the slot)",
    "rtl_pin_grant_1405": true,
@@ -91517,12 +91517,12 @@
    "kind": "tile",
    "parent": "die",
    "outline": {
-    "w": 432.0,
-    "h": 432.0
+    "w": 1300.0,
+    "h": 700.0
    },
    "origin": {
     "x": 18219.84,
-    "y": 31717.44,
+    "y": 31447.44,
     "orient": "R0"
    },
    "clock_entry": {
@@ -91548,7 +91548,11 @@
      "cls": "HOST_FLIT"
     }
    ],
-   "home_rule": "d4f: beside host_N at the N edge"
+   "home_rule": "d4f: beside host_N at the N edge",
+   "fit_r2": {
+    "reason": "d4f r2 shared-region fits (coordinator 10-17 run1 review: no squeezing): regions that hold more than one instance (or an",
+    "moved_um": 270.0
+   }
   },
   {
    "name": "phy_NW",
@@ -92854,7 +92858,7 @@
    },
    "origin": {
     "x": 17859.840000000004,
-    "y": 18332.178,
+    "y": 19174.92,
     "orient": "R0"
    },
    "version": 7,
@@ -95986,8 +95990,8 @@
    "kind": "tile",
    "parent": "die",
    "outline": {
-    "w": 1020.0,
-    "h": 1412.0
+    "w": 447.12,
+    "h": 1023.84
    },
    "origin": {
     "x": 7208.64,
@@ -96014,7 +96018,11 @@
    "qualified": false,
    "notes": "SU SFU store ot_hbm_su_static_sfustore (abuts sfucore, 0 relays); candidate outline, pins FACES_ONLY",
    "pins": [],
-   "pin_status": "FACES_ONLY"
+   "pin_status": "FACES_ONLY",
+   "fit_r2": {
+    "reason": "d4f r2 shared-region fits (coordinator 10-17 run1 review: no squeezing): regions that hold more than one instance (or an",
+    "moved_um": 0.0
+   }
   },
   {
    "name": "hc_SW",
@@ -96058,8 +96066,8 @@
    "kind": "tile",
    "parent": "die",
    "outline": {
-    "w": 1020.0,
-    "h": 1412.0
+    "w": 447.12,
+    "h": 1023.84
    },
    "origin": {
     "x": 7208.64,
@@ -96086,7 +96094,11 @@
    "qualified": false,
    "notes": "SU SFU store ot_hbm_su_static_sfustore (abuts sfucore, 0 relays); candidate outline, pins FACES_ONLY",
    "pins": [],
-   "pin_status": "FACES_ONLY"
+   "pin_status": "FACES_ONLY",
+   "fit_r2": {
+    "reason": "d4f r2 shared-region fits (coordinator 10-17 run1 review: no squeezing): regions that hold more than one instance (or an",
+    "moved_um": 0.0
+   }
   },
   {
    "name": "hc_SE",
@@ -96130,8 +96142,8 @@
    "kind": "tile",
    "parent": "die",
    "outline": {
-    "w": 1020.0,
-    "h": 1412.0
+    "w": 447.12,
+    "h": 1023.84
    },
    "origin": {
     "x": 7397.696,
@@ -96158,7 +96170,11 @@
    "qualified": false,
    "notes": "SU SFU store ot_hbm_su_static_sfustore (abuts sfucore, 0 relays); candidate outline, pins FACES_ONLY",
    "pins": [],
-   "pin_status": "FACES_ONLY"
+   "pin_status": "FACES_ONLY",
+   "fit_r2": {
+    "reason": "d4f r2 shared-region fits (coordinator 10-17 run1 review: no squeezing): regions that hold more than one instance (or an",
+    "moved_um": 0.0
+   }
   },
   {
    "name": "hc_NW",
@@ -96202,8 +96218,8 @@
    "kind": "tile",
    "parent": "die",
    "outline": {
-    "w": 1020.0,
-    "h": 1412.0
+    "w": 447.12,
+    "h": 1023.84
    },
    "origin": {
     "x": 7208.64,
@@ -96230,7 +96246,11 @@
    "qualified": false,
    "notes": "SU SFU store ot_hbm_su_static_sfustore (abuts sfucore, 0 relays); candidate outline, pins FACES_ONLY",
    "pins": [],
-   "pin_status": "FACES_ONLY"
+   "pin_status": "FACES_ONLY",
+   "fit_r2": {
+    "reason": "d4f r2 shared-region fits (coordinator 10-17 run1 review: no squeezing): regions that hold more than one instance (or an",
+    "moved_um": 0.0
+   }
   },
   {
    "name": "hc_NE",
@@ -96279,7 +96299,7 @@
    },
    "origin": {
     "x": 17859.840000000004,
-    "y": 17716.978,
+    "y": 18559.72,
     "orient": "R0"
    },
    "clock_entry": {
@@ -96316,7 +96336,7 @@
    },
    "origin": {
     "x": 18045.84,
-    "y": 17716.978,
+    "y": 18559.72,
     "orient": "R0"
    },
    "clock_entry": {
@@ -104034,8 +104054,63 @@
      "h": 3114.754
     },
     "new": {
-     "w": 3100.0,
-     "h": 3064.516
+     "w": 2000.0,
+     "h": 4750.0
+    }
+   },
+   {
+    "slot": "lk_N0",
+    "old": {
+     "w": 250.056,
+     "h": 2250.216
+    },
+    "new": {
+     "w": 600.0,
+     "h": 600.0
+    }
+   },
+   {
+    "slot": "lk_N2",
+    "old": {
+     "w": 250.056,
+     "h": 2250.216
+    },
+    "new": {
+     "w": 600.0,
+     "h": 600.0
+    }
+   },
+   {
+    "slot": "lk_S0",
+    "old": {
+     "w": 250.056,
+     "h": 2250.216
+    },
+    "new": {
+     "w": 600.0,
+     "h": 600.0
+    }
+   },
+   {
+    "slot": "lk_S1",
+    "old": {
+     "w": 250.056,
+     "h": 2250.216
+    },
+    "new": {
+     "w": 600.0,
+     "h": 600.0
+    }
+   },
+   {
+    "slot": "lk_S3",
+    "old": {
+     "w": 250.056,
+     "h": 2250.216
+    },
+    "new": {
+     "w": 600.0,
+     "h": 600.0
     }
    },
    {
@@ -104265,12 +104340,12 @@
     "slot": "vm_status4",
     "anchor": "hc_eng",
     "dx": 2889.84,
-    "dy": 4331.048
+    "dy": 5173.79
    },
    {
     "slot": "host_N",
     "anchor": "ep_N2",
-    "dx": 3990.176,
+    "dx": 2890.176,
     "dy": 7004.238,
     "edge_kept": [
      "N"
@@ -104279,7 +104354,7 @@
    {
     "slot": "host_cp",
     "anchor": "ep_N0",
-    "dx": 4474.896,
+    "dx": 3374.896,
     "dy": 7004.238,
     "edge_kept": [
      "N"
@@ -104288,8 +104363,8 @@
    {
     "slot": "hb_ckgen",
     "anchor": "hc_eng",
-    "dx": 2939.84,
-    "dy": 4331.048
+    "dx": 1839.84,
+    "dy": 5173.79
    },
    {
     "slot": "quant_NW_xp",
@@ -104407,11 +104482,11 @@
   "blockers": {
    "dropped": 70,
    "die": {
-    "w": 21002.24,
+    "w": 19902.24,
     "h": 32169.44
    },
    "mapped": 123,
-   "resized": 21,
+   "resized": 26,
    "new": [],
    "translated": 9,
    "regranted": 36,

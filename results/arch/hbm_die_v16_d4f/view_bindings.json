@@ -109,6 +109,18 @@
    "status": "NOT BINDABLE: x5 native FAIL (capture 337.5 ed5[7], spread 83.0); x3 FAIL",
    "next": "x6 structural (ed5 pin flop + in-tile replication recipe 4, 2-entry clock split); ed5 edge priced",
    "die": "SYNTH diagnostic until x6 native PASS"
+  },
+  "hfd_vms_bank_native_q1_core": {
+   "kind": "REAL (native PASS) - BINDING HELD",
+   "route": "vm_native_q1core_r4-r4-e019e6a14",
+   "record": "10f9578ac",
+   "native": "L127.8/C94.8/R604.3/sp71.1",
+   "outline": "270 x 270",
+   "hold": "H-NETLIST 10-17: view adds +1 edge on every input AND output (ot_pin_regs); bind only after confirming the pin flops are in the RTL (else literal-flop master + hoist equivalence + hub fixed-latency check). Same question for q0/q0C (+1 input). GEN geometry may use it, labelled diagnostic.",
+   "rejected": [
+    "vm_native_q1core_c-c-263e4d840 (native FAIL L243.8/C266.2)",
+    "n2 recipe-2 (capture 224.0)"
+   ]
   }
  }
 }

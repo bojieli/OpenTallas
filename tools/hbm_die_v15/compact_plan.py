@@ -43,6 +43,7 @@ SC_W, SC_H = 3008.88, 3840.48          # IDX scorer, rotated (w x h)
 COLUMN_W = 3100.0
 CHANNEL = 930.0
 EDGE = 120.0
+SUCX = (216.0, 194.4)                 # d4f r2: measured SYNTH cxport 264.6 square -> --sucx 270 270
 SC_GAP = 100.0                         # relay row between the two scorers of a die half (cross-column relay homes)
 
 
@@ -147,7 +148,7 @@ def build(G0, area_mm2, channel=CHANNEL, band=None, hub_w=0.0, su_w=None, su_h=N
         setn(f'coll_{q}', COLL_W, COLL_H, 'COLL v15 grant')
         put(f'coll_{q}', xc, y_band + GAP, q)
         yo = y_band + GAP + COLL_H + 21.6
-        setn(f'sucx_{q}', 216.0, 194.4, 'SU cross-port ot_hbm_su_static_cxport (~0.04 mm2, H-NETLIST suport)')
+        setn(f'sucx_{q}', SUCX[0], SUCX[1], 'SU cross-port ot_hbm_su_static_cxport (~0.04 mm2, H-NETLIST suport)')
         put(f'sucx_{q}', xc - 43.2 - 21.6 - 21.6 + 21.6, yo, q)       # west edge = sucore east edge + 21.6
         dw = 511.92 if carry else DBK_W
         setn(f'dbk_{q}', dw, DBK_H, 'DMA back (vp4 grant 2330 width when carried)')
@@ -556,6 +557,7 @@ def main():
     ap.add_argument('--fill', default='a', choices=('a', 'b'), help="--full-core E hubs: a = no SM side (VM ring only), b = cross-quadrant fill")
     ap.add_argument('--pc-h', type=float, default=399.6, help='PC band height (d4b GEN needed 399.6 + 237.6 strip = 637.2)')
     ap.add_argument('--serdes', type=int, default=0, help='with --half-die: keep this many lk/ep pairs (S gets the odd one)')
+    ap.add_argument('--sucx', type=float, nargs=2, help='SU cross-port block w h (d4f r2: 270 270)')
     ap.add_argument('--out', required=True)
     a = ap.parse_args()
     global EDGE, COLUMN_W
@@ -563,6 +565,8 @@ def main():
         EDGE = a.edge
     if a.column is not None:
         COLUMN_W = a.column
+    if a.sucx:
+        globals()['SUCX'] = tuple(a.sucx)
     SFU_DIM.update(core_h=a.sfucore_h, store_w=a.sfus_wh[0], store_h=a.sfus_wh[1], store_yoff=a.sfus_yoff)
     globals()['GAP'] = a.gap
     kw = dict(su_w=a.su_w, su_h=a.su_h, smw=a.smw, smh=a.smh, carry=a.carry, layout=a.layout, core_at=a.core_at, sfu_at_hub=a.sfu_at_hub, mirror_east=a.mirror_east,sfu_at_group=a.sfu_at_group,core_w=a.core_w,core_h=a.core_h,core_column_w=a.core_column_w,sfu_store_side=a.sfu_store_side,hc_eng_mm2=a.hc_eng_mm2,hc_links_v16=a.hc_links_v16,hc_x_beats=a.hc_x_beats,hc_client_inner=a.hc_client_inner,sm_columns=a.sm_columns,band_low=a.band_low,sm_portrait=a.sm_portrait,qw_extra=a.qw_extra,pocket=a.pocket,sfucore_w=a.sfucore_w,slim_column=a.slim_column,sm_rows=a.sm_rows,centre_strip=a.centre_strip,sm_col_real=a.sm_col_real,half_die=a.half_die,full_core=a.full_core,serdes=a.serdes,core_channel=a.core_channel,sm_band_channel=a.sm_band_channel,fill=a.fill,pc_h=a.pc_h)

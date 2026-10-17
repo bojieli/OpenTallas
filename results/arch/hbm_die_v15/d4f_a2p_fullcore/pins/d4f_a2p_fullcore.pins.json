@@ -1,8 +1,8 @@
 {
  "schema": "opentallas.hbm_globalfp.pins.v1",
- "candidate": "d4fw_f_pc637",
+ "candidate": "d4fw_r2a",
  "die_outline_um": [
-  21002.24,
+  19902.24,
   32169.44
  ],
  "pin_density_per_um": 10.0,
@@ -4310,8 +4310,8 @@
   "sucx_SW": {
    "x": 13701.0,
    "y": 9777.8,
-   "w": 216.0,
-   "h": 194.4,
+   "w": 270.0,
+   "h": 270.0,
    "kind": "SU cross-port ot_hbm_su_static_cxport (~0.04 mm2, H-NETLIST suport)",
    "orient": "R0",
    "faces": {}
@@ -6500,10 +6500,10 @@
        "peer": "ep_S3",
        "dir": "out",
        "bits": 1224,
-       "offset_um": 599.04,
+       "offset_um": 479.42,
        "span_um": 122.4,
        "x": 14729.1,
-       "y": 13395.0
+       "y": 13275.3
       }
      ]
     },
@@ -6570,8 +6570,8 @@
   "sucx_SE": {
    "x": 13701.0,
    "y": 13477.8,
-   "w": 216.0,
-   "h": 194.4,
+   "w": 270.0,
+   "h": 270.0,
    "kind": "SU cross-port ot_hbm_su_static_cxport (~0.04 mm2, H-NETLIST suport)",
    "orient": "R0",
    "faces": {}
@@ -6767,10 +6767,10 @@
        "peer": "hc_eng",
        "dir": "out",
        "bits": 2100,
-       "offset_um": 144.8,
+       "offset_um": 111.0,
        "span_um": 210.0,
        "x": 16514.2,
-       "y": 14449.0
+       "y": 14415.2
       },
       {
        "link": "hc_eng>hc_SE:HC_ENG",
@@ -6778,10 +6778,10 @@
        "peer": "hc_eng",
        "dir": "in",
        "bits": 772,
-       "offset_um": 354.8,
+       "offset_um": 321.0,
        "span_um": 77.2,
        "x": 16514.2,
-       "y": 14592.6
+       "y": 14558.8
       }
      ]
     },
@@ -11409,9 +11409,9 @@
   },
   "sucx_NW": {
    "x": 14079.1,
-   "y": 22197.3,
-   "w": 216.0,
-   "h": 194.4,
+   "y": 22121.7,
+   "w": 270.0,
+   "h": 270.0,
    "kind": "SU cross-port ot_hbm_su_static_cxport (~0.04 mm2, H-NETLIST suport)",
    "orient": "R0",
    "faces": {}
@@ -13600,10 +13600,10 @@
        "peer": "ep_N2",
        "dir": "out",
        "bits": 1224,
-       "offset_um": 0.0,
+       "offset_um": 119.62,
        "span_um": 122.4,
        "x": 14729.1,
-       "y": 18774.5
+       "y": 18894.1
       }
      ]
     },
@@ -13669,9 +13669,9 @@
   },
   "sucx_NE": {
    "x": 13701.0,
-   "y": 18497.3,
-   "w": 216.0,
-   "h": 194.4,
+   "y": 18421.7,
+   "w": 270.0,
+   "h": 270.0,
    "kind": "SU cross-port ot_hbm_su_static_cxport (~0.04 mm2, H-NETLIST suport)",
    "orient": "R0",
    "faces": {}
@@ -13867,10 +13867,10 @@
        "peer": "hc_eng",
        "dir": "out",
        "bits": 2100,
-       "offset_um": 0.0,
+       "offset_um": 111.0,
        "span_um": 210.0,
        "x": 16514.2,
-       "y": 17643.2
+       "y": 17754.2
       },
       {
        "link": "hc_eng>hc_NE:HC_ENG",
@@ -13878,10 +13878,10 @@
        "peer": "hc_eng",
        "dir": "in",
        "bits": 772,
-       "offset_um": 210.0,
+       "offset_um": 321.0,
        "span_um": 77.2,
        "x": 16514.2,
-       "y": 17786.8
+       "y": 17897.8
       }
      ]
     },
@@ -13984,16 +13984,16 @@
   },
   "hc_eng": {
    "x": 17859.8,
-   "y": 14552.5,
-   "w": 3100.0,
-   "h": 3064.516,
+   "y": 13709.7,
+   "w": 2000.0,
+   "h": 4750.0,
    "kind": "HC_ENGINE",
    "orient": "R0",
    "faces": {
-    "S": {
-     "face_len_um": 3100.0,
-     "bits": 2872,
-     "utilisation": 0.093,
+    "W": {
+     "face_len_um": 4750.0,
+     "bits": 11488,
+     "utilisation": 0.242,
      "pins": [
       {
        "link": "hc_SW>hc_eng:HC_ENG",
@@ -14003,8 +14003,8 @@
        "bits": 2100,
        "offset_um": 0.0,
        "span_um": 210.0,
-       "x": 17964.8,
-       "y": 14552.5
+       "x": 17859.8,
+       "y": 13814.7
       },
       {
        "link": "hc_eng>hc_SW:HC_ENG",
@@ -14014,26 +14014,19 @@
        "bits": 772,
        "offset_um": 210.0,
        "span_um": 77.2,
-       "x": 18108.4,
-       "y": 14552.5
-      }
-     ]
-    },
-    "W": {
-     "face_len_um": 3064.5,
-     "bits": 5744,
-     "utilisation": 0.187,
-     "pins": [
+       "x": 17859.8,
+       "y": 13958.3
+      },
       {
        "link": "hc_SE>hc_eng:HC_ENG",
        "cls": "HC_ENG",
        "peer": "hc_SE",
        "dir": "in",
        "bits": 2100,
-       "offset_um": 0.0,
+       "offset_um": 600.48,
        "span_um": 210.0,
        "x": 17859.8,
-       "y": 14657.5
+       "y": 14415.2
       },
       {
        "link": "hc_eng>hc_SE:HC_ENG",
@@ -14041,10 +14034,10 @@
        "peer": "hc_SE",
        "dir": "out",
        "bits": 772,
-       "offset_um": 210.0,
+       "offset_um": 810.48,
        "span_um": 77.2,
        "x": 17859.8,
-       "y": 14801.1
+       "y": 14558.8
       },
       {
        "link": "hc_NE>hc_eng:HC_ENG",
@@ -14052,10 +14045,10 @@
        "peer": "hc_NE",
        "dir": "in",
        "bits": 2100,
-       "offset_um": 2777.32,
+       "offset_um": 3939.52,
        "span_um": 210.0,
        "x": 17859.8,
-       "y": 17434.8
+       "y": 17754.2
       },
       {
        "link": "hc_eng>hc_NE:HC_ENG",
@@ -14063,28 +14056,21 @@
        "peer": "hc_NE",
        "dir": "out",
        "bits": 772,
-       "offset_um": 2987.32,
+       "offset_um": 4149.52,
        "span_um": 77.2,
        "x": 17859.8,
-       "y": 17578.4
-      }
-     ]
-    },
-    "N": {
-     "face_len_um": 3100.0,
-     "bits": 2872,
-     "utilisation": 0.093,
-     "pins": [
+       "y": 17897.8
+      },
       {
        "link": "hc_NW>hc_eng:HC_ENG",
        "cls": "HC_ENG",
        "peer": "hc_NW",
        "dir": "in",
        "bits": 2100,
-       "offset_um": 0.0,
+       "offset_um": 4462.8,
        "span_um": 210.0,
-       "x": 17964.8,
-       "y": 17617.0
+       "x": 17859.8,
+       "y": 18277.5
       },
       {
        "link": "hc_eng>hc_NW:HC_ENG",
@@ -14092,27 +14078,27 @@
        "peer": "hc_NW",
        "dir": "out",
        "bits": 772,
-       "offset_um": 210.0,
+       "offset_um": 4672.8,
        "span_um": 77.2,
-       "x": 18108.4,
-       "y": 17617.0
+       "x": 17859.8,
+       "y": 18421.1
       }
      ]
     }
    }
   },
   "lk_S0": {
-   "x": 20709.8,
-   "y": 11587.0,
-   "w": 250.056,
-   "h": 2250.216,
+   "x": 19259.8,
+   "y": 12394.5,
+   "w": 600.0,
+   "h": 600.0,
    "kind": "SERDES",
    "orient": "R0",
    "faces": {
     "N": {
-     "face_len_um": 250.1,
+     "face_len_um": 600.0,
      "bits": 1056,
-     "utilisation": 0.422,
+     "utilisation": 0.176,
      "pins": [
       {
        "link": "ep_S0>lk_S0:EP_SERDES",
@@ -14120,27 +14106,27 @@
        "peer": "ep_S0",
        "dir": "in",
        "bits": 1056,
-       "offset_um": 72.23,
+       "offset_um": 329.84,
        "span_um": 105.6,
-       "x": 20834.8,
-       "y": 13837.3
+       "x": 19642.5,
+       "y": 12994.5
       }
      ]
     }
    }
   },
   "lk_S1": {
-   "x": 20359.7,
-   "y": 11587.0,
-   "w": 250.056,
-   "h": 2250.216,
+   "x": 18559.8,
+   "y": 12394.5,
+   "w": 600.0,
+   "h": 600.0,
    "kind": "SERDES",
    "orient": "R0",
    "faces": {
     "N": {
-     "face_len_um": 250.1,
+     "face_len_um": 600.0,
      "bits": 1056,
-     "utilisation": 0.422,
+     "utilisation": 0.176,
      "pins": [
       {
        "link": "ep_S1>lk_S1:EP_SERDES",
@@ -14148,27 +14134,27 @@
        "peer": "ep_S1",
        "dir": "in",
        "bits": 1056,
-       "offset_um": 4.9,
+       "offset_um": 437.48,
        "span_um": 105.6,
-       "x": 20417.4,
-       "y": 13837.3
+       "x": 19050.1,
+       "y": 12994.5
       }
      ]
     }
    }
   },
   "lk_S3": {
-   "x": 20009.7,
-   "y": 11587.0,
-   "w": 250.056,
-   "h": 2250.216,
+   "x": 17859.8,
+   "y": 12394.5,
+   "w": 600.0,
+   "h": 600.0,
    "kind": "SERDES",
    "orient": "R0",
    "faces": {
-    "W": {
-     "face_len_um": 2250.2,
+    "N": {
+     "face_len_um": 600.0,
      "bits": 1056,
-     "utilisation": 0.047,
+     "utilisation": 0.176,
      "pins": [
       {
        "link": "ep_S3>lk_S3:EP_SERDES",
@@ -14176,18 +14162,18 @@
        "peer": "ep_S3",
        "dir": "in",
        "bits": 1056,
-       "offset_um": 2144.62,
+       "offset_um": 494.4,
        "span_um": 105.6,
-       "x": 20009.7,
-       "y": 13784.5
+       "x": 18407.0,
+       "y": 12994.5
       }
      ]
     }
    }
   },
   "ep_S0": {
-   "x": 20525.1,
-   "y": 13937.3,
+   "x": 19425.1,
+   "y": 13094.5,
    "w": 434.72,
    "h": 515.2,
    "kind": "ENDPOINT",
@@ -14206,8 +14192,8 @@
        "bits": 1224,
        "offset_um": 0.0,
        "span_um": 122.4,
-       "x": 20525.1,
-       "y": 13998.5
+       "x": 19425.1,
+       "y": 13155.7
       }
      ]
     },
@@ -14222,18 +14208,18 @@
        "peer": "lk_S0",
        "dir": "out",
        "bits": 1056,
-       "offset_um": 256.89,
+       "offset_um": 164.56,
        "span_um": 105.6,
-       "x": 20834.8,
-       "y": 13937.3
+       "x": 19642.5,
+       "y": 13094.5
       }
      ]
     }
    }
   },
   "ep_S1": {
-   "x": 20040.4,
-   "y": 13937.3,
+   "x": 18940.4,
+   "y": 13094.5,
    "w": 434.72,
    "h": 515.2,
    "kind": "ENDPOINT",
@@ -14252,8 +14238,8 @@
        "bits": 1224,
        "offset_um": 0.0,
        "span_um": 122.4,
-       "x": 20040.4,
-       "y": 13998.5
+       "x": 18940.4,
+       "y": 13155.7
       }
      ]
     },
@@ -14268,18 +14254,18 @@
        "peer": "lk_S1",
        "dir": "out",
        "bits": 1056,
-       "offset_um": 324.22,
+       "offset_um": 56.92,
        "span_um": 105.6,
-       "x": 20417.4,
-       "y": 13937.3
+       "x": 19050.1,
+       "y": 13094.5
       }
      ]
     }
    }
   },
   "ep_S3": {
-   "x": 19555.7,
-   "y": 13937.3,
+   "x": 18455.7,
+   "y": 13094.5,
    "w": 434.72,
    "h": 515.2,
    "kind": "ENDPOINT",
@@ -14296,10 +14282,10 @@
        "peer": "coll_SE",
        "dir": "in",
        "bits": 1224,
-       "offset_um": 0.0,
+       "offset_um": 119.62,
        "span_um": 122.4,
-       "x": 19555.7,
-       "y": 13998.5
+       "x": 18455.7,
+       "y": 13275.3
       }
      ]
     },
@@ -14314,27 +14300,27 @@
        "peer": "lk_S3",
        "dir": "out",
        "bits": 1056,
-       "offset_um": 329.12,
+       "offset_um": 0.0,
        "span_um": 105.6,
-       "x": 19937.6,
-       "y": 13937.3
+       "x": 18508.5,
+       "y": 13094.5
       }
      ]
     }
    }
   },
   "lk_N0": {
-   "x": 20709.8,
-   "y": 18332.2,
-   "w": 250.056,
-   "h": 2250.216,
+   "x": 19259.8,
+   "y": 19174.9,
+   "w": 600.0,
+   "h": 600.0,
    "kind": "SERDES",
    "orient": "R0",
    "faces": {
     "S": {
-     "face_len_um": 250.1,
+     "face_len_um": 600.0,
      "bits": 1056,
-     "utilisation": 0.422,
+     "utilisation": 0.176,
      "pins": [
       {
        "link": "ep_N0>lk_N0:EP_SERDES",
@@ -14342,27 +14328,27 @@
        "peer": "ep_N0",
        "dir": "in",
        "bits": 1056,
-       "offset_um": 72.23,
+       "offset_um": 329.84,
        "span_um": 105.6,
-       "x": 20834.8,
-       "y": 18332.2
+       "x": 19642.5,
+       "y": 19174.9
       }
      ]
     }
    }
   },
   "lk_N2": {
-   "x": 20359.7,
-   "y": 18332.2,
-   "w": 250.056,
-   "h": 2250.216,
+   "x": 18559.8,
+   "y": 19174.9,
+   "w": 600.0,
+   "h": 600.0,
    "kind": "SERDES",
    "orient": "R0",
    "faces": {
     "S": {
-     "face_len_um": 250.1,
+     "face_len_um": 600.0,
      "bits": 1056,
-     "utilisation": 0.422,
+     "utilisation": 0.176,
      "pins": [
       {
        "link": "ep_N2>lk_N2:EP_SERDES",
@@ -14370,18 +14356,18 @@
        "peer": "ep_N2",
        "dir": "in",
        "bits": 1056,
-       "offset_um": 4.9,
+       "offset_um": 437.48,
        "span_um": 105.6,
-       "x": 20417.4,
-       "y": 18332.2
+       "x": 19050.1,
+       "y": 19174.9
       }
      ]
     }
    }
   },
   "ep_N0": {
-   "x": 20525.1,
-   "y": 17717.0,
+   "x": 19425.1,
+   "y": 18559.7,
    "w": 434.72,
    "h": 515.2,
    "kind": "ENDPOINT",
@@ -14400,8 +14386,8 @@
        "bits": 1224,
        "offset_um": 392.8,
        "span_um": 122.4,
-       "x": 20525.1,
-       "y": 18171.0
+       "x": 19425.1,
+       "y": 19013.7
       }
      ]
     },
@@ -14416,18 +14402,18 @@
        "peer": "lk_N0",
        "dir": "out",
        "bits": 1056,
-       "offset_um": 256.89,
+       "offset_um": 164.56,
        "span_um": 105.6,
-       "x": 20834.8,
-       "y": 18232.2
+       "x": 19642.5,
+       "y": 19074.9
       }
      ]
     }
    }
   },
   "ep_N2": {
-   "x": 20040.4,
-   "y": 17717.0,
+   "x": 18940.4,
+   "y": 18559.7,
    "w": 434.72,
    "h": 515.2,
    "kind": "ENDPOINT",
@@ -14444,10 +14430,10 @@
        "peer": "coll_NE",
        "dir": "in",
        "bits": 1224,
-       "offset_um": 392.8,
+       "offset_um": 273.18,
        "span_um": 122.4,
-       "x": 20040.4,
-       "y": 18171.0
+       "x": 18940.4,
+       "y": 18894.1
       }
      ]
     },
@@ -14462,10 +14448,10 @@
        "peer": "lk_N2",
        "dir": "out",
        "bits": 1056,
-       "offset_um": 324.22,
+       "offset_um": 56.92,
        "span_um": 105.6,
-       "x": 20417.4,
-       "y": 18232.2
+       "x": 19050.1,
+       "y": 19074.9
       }
      ]
     }

@@ -18,3 +18,11 @@ overlaps in a 399.6 band), core channel 400 -> 300, SM->band channel 300 -> 200 
 SM_HBM 1,132 b) -- GRT is the arbiter. Grants rebuilt with tools/hbm_die_v15/d4f_grants_build.sh (0 outside / 0 overlaps,
 grants_audit.py); root sites regenerated with tools/die_clock/root_sites.py -> results/arch/hbm_die_v16_d4f/d4f_root_sites_pc637.json
 (36 sites, 0 failed, 0 slot collisions). compact_plan args: + --pc-h 637.2 --core-channel 300 --channel 600 --sm-band-channel 200.
+
+## Revision r2 (H-DIE 10-17 ~02:00, coordinator run1 review)
+E column 3.1 -> 2.0 mm (hc_eng 2,000 x 4,750, aspect 2.4), SerDes lk tiles 250 x 2,250 -> 600 x 600 (no long-thin blocks), sucx
+216 x 194 -> 270 x 270 (measured SYNTH 264.6 sq): 19,902.24 x 32,169.44 um = 640.2 mm2, margins 0.83 / 6.10 mm; core cuts 0.545 /
+0.6 lines only at the PHY-row lanes artefact (see pc637 note). Shared-region fits (tools/hbm_die_v15/d4f_fit_slots.py): hb_dbk_SW/NW
+800 x 560 (dbk + wb_kport), host_cp 1,300 x 700 (4 users), sfus_<Q> = SFU programme store r6 447.12 x 1,023.84; COLL v7 / tkm_SW
+grants unchanged. Grants rebuilt by d4f_grants_build.sh: 0 outside / 0 overlaps. Root sites regenerated -> d4f_root_sites_r2.json
+(36, 0 failed, 0 slot collisions). compact_plan: + --column 2000 --sucx 270 270; a2p_fix --lk-sq 600.

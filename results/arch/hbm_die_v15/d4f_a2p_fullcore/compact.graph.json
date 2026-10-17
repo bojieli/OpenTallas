@@ -1390,8 +1390,8 @@
    "id": "hc_eng",
    "kind": "HC_ENGINE",
    "quadrant": "NE",
-   "w": 3100.0,
-   "h": 3064.516,
+   "w": 2000.0,
+   "h": 4750.0,
    "area_mm2": 1.0,
    "area_src": "measured (H-DIE compact plan)",
    "fixed": false,
@@ -1546,9 +1546,9 @@
   "sucx_SW": {
    "id": "sucx_SW",
    "kind": "SU cross-port ot_hbm_su_static_cxport (~0.04 mm2, H-NETLIST suport)",
-   "w": 216.0,
-   "h": 194.4,
-   "area_mm2": 0.041990400000000004,
+   "w": 270.0,
+   "h": 270.0,
+   "area_mm2": 0.0729,
    "area_src": "measured",
    "provenance": "SU cross-port ot_hbm_su_static_cxport (~0.04 mm2, H-NETLIST suport)"
   },
@@ -1609,9 +1609,9 @@
   "sucx_SE": {
    "id": "sucx_SE",
    "kind": "SU cross-port ot_hbm_su_static_cxport (~0.04 mm2, H-NETLIST suport)",
-   "w": 216.0,
-   "h": 194.4,
-   "area_mm2": 0.041990400000000004,
+   "w": 270.0,
+   "h": 270.0,
+   "area_mm2": 0.0729,
    "area_src": "measured",
    "provenance": "SU cross-port ot_hbm_su_static_cxport (~0.04 mm2, H-NETLIST suport)"
   },
@@ -1672,9 +1672,9 @@
   "sucx_NW": {
    "id": "sucx_NW",
    "kind": "SU cross-port ot_hbm_su_static_cxport (~0.04 mm2, H-NETLIST suport)",
-   "w": 216.0,
-   "h": 194.4,
-   "area_mm2": 0.041990400000000004,
+   "w": 270.0,
+   "h": 270.0,
+   "area_mm2": 0.0729,
    "area_src": "measured",
    "provenance": "SU cross-port ot_hbm_su_static_cxport (~0.04 mm2, H-NETLIST suport)"
   },
@@ -1735,9 +1735,9 @@
   "sucx_NE": {
    "id": "sucx_NE",
    "kind": "SU cross-port ot_hbm_su_static_cxport (~0.04 mm2, H-NETLIST suport)",
-   "w": 216.0,
-   "h": 194.4,
-   "area_mm2": 0.041990400000000004,
+   "w": 270.0,
+   "h": 270.0,
+   "area_mm2": 0.0729,
    "area_src": "measured",
    "provenance": "SU cross-port ot_hbm_su_static_cxport (~0.04 mm2, H-NETLIST suport)"
   },
