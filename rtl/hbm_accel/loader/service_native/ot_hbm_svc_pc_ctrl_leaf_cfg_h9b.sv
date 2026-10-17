@@ -59,9 +59,16 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_h9b #(
     output wire col_v,col_we,output wire[4:0]col_bank,col_col,
     output wire[255:0]col_data,output wire[31:0]col_strb,
     input wire dram_rvalid,input wire[255:0]dram_rdata,
-    output wire pc_fault,
-    output reg [5:0] owner_fault_split
+    output reg pc_fault,
+    output reg [5:0] owner_fault_split   // H9b: pin copies, one edge after the internal sticky classes
 );
+    // H9b native launch: the sticky fault classes and the refresh fault fan out to i_rdy/j_v/queue enables; the pins get
+    // dedicated copy flops (one reporting edge later; sticky diagnostics, no traffic edge changes).
+    reg [5:0] ofs; wire pc_fault_i;
+    always @(posedge clk)
+        if(!reset_regions[0])begin owner_fault_split<=6'd0;pc_fault<=1'b0;end
+        else begin owner_fault_split<=ofs;pc_fault<=pc_fault_i;end
+
     localparam[1:0]IDLE=0,DESC=1,DRAIN=2,RUN=3;
     // the rst_n port drives only the registered reset relay (assert asynchronous, release after 3 clk edges)
     wire [7:0] reset_regions; wire lrst_n=reset_regions[0];
@@ -90,7 +97,7 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_h9b #(
     always @(posedge clk) pc_id_qq<=pc_id_q;
     wire i_v,i_we;wire[29:0]i_addr;wire[3:0]i_len;wire[16:0]i_tag;wire[255:0]i_wdata;wire[31:0]i_wstrb;
     wire i_rdy;
-    reg[1:0]state;wire sticky=|owner_fault_split;reg[18:0]active_row;reg[31:0]observed_open;
+    reg[1:0]state;wire sticky=|ofs;reg[18:0]active_row;reg[31:0]observed_open;
     reg[4:0]wp,rp,ep;reg[5:0]count,unposted;
     reg[63:0]queue[0:31];          // {we,bank[4:0],col[4:0],tag[16:0],beat[3:0],wstrb[31:0]} = bits 319:256
     wire[255:0]head_wdata;
@@ -121,10 +128,11 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_h9b #(
     wire j_v,j_rdy;
     wire response_take=j_v&&j_rdy;
     wire row_idle=count==0&&read_reserved==0;
-    assign i_rdy=!sticky&&!pc_fault&&legal&&count+length<=32&&
+    assign i_rdy=!sticky&&!pc_fault_i&&legal&&count+length<=32&&
         (state==IDLE || (state==RUN && (same_row || row_idle)));
     // ---- K pin boundary (H9b): pin flops, legality from flops, 3-entry ring, registered k_rdy
-    reg kp_v,k_rdy_q; reg kp_we; reg[29:0]kp_addr; reg[3:0]kp_len; reg[16:0]kp_tag; reg[31:0]kp_wstrb; reg[255:0]kp_wdata;
+    reg kp_v,k_rdy_q;   // kp_v: combinational from the kv_q/k_rdy_seen flops
+    reg kp_we; reg[29:0]kp_addr; reg[3:0]kp_len; reg[16:0]kp_tag; reg[31:0]kp_wstrb; reg[255:0]kp_wdata;
     always @(posedge clk)begin kp_we<=k_we;kp_addr<=k_addr;kp_len<=k_len;kp_tag<=k_tag;kp_wstrb<=k_wstrb;kp_wdata<=k_wdata;end
     wire kp_legal=kp_len>=1 && kp_len<=4 && (!kp_we || kp_len==1) &&
         {1'b0,kp_addr[1:0]}+kp_len<=4 &&
@@ -139,12 +147,16 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_h9b #(
         .cnt(kq_cnt),.cnt_next(kq_next),.fault(kq_fault));
     // credit: an accept at t lands in kp at t and in the ring at t+1; ring_next + kp_next <= 2 keeps it within 3 entries
     wire [2:0] k_lim=(RMUT==3)?3'd3:3'd2;
+    // k_v enters a pure pin flop; the accept is kv_q && the k_rdy the producer saw (k_rdy_seen). The credit assumes an
+    // accept on every ready edge (no pin in the k_rdy cone): ring_next + 1 <= 2 while ready, else <= 2.
+    reg kv_q,k_rdy_seen;
     always @(posedge clk)
-        if(!reset_regions[4])begin kp_v<=1'b0;k_rdy_q<=1'b0;end
-        else begin kp_v<=k_v&&k_rdy_q; k_rdy_q<=(k_v&&k_rdy_q)?(kq_next<k_lim):(kq_next<=k_lim); end
+        if(!reset_regions[4])begin kv_q<=1'b0;k_rdy_seen<=1'b0;k_rdy_q<=1'b0;end
+        else begin kv_q<=k_v; k_rdy_seen<=k_rdy_q; k_rdy_q<=k_rdy_q?(kq_next<k_lim):(kq_next<=k_lim); end
+    always @* kp_v=kv_q&&k_rdy_seen;
     assign k_rdy=k_rdy_q;
 
-    assign j_v=head_valid&&!sticky&&!pc_fault;
+    assign j_v=head_valid&&!sticky&&!pc_fault_i;
     // ---- KR pin boundary (H9b): kr_rdy pin-registered (ready-latency-1); the H9 per-64b skid keeps every KR output
     // pin on a flop (flop-first); its pop is kr_v && kr_rdy_q, so no pin reaches the 277-bit select.
     reg kr_rdy_q; wire krq_fault=1'b0;
@@ -192,7 +204,7 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_h9b #(
         .row_op(r_op),.row_bank(r_bank),.row_row(r_row),
         // desc_n=0 uses the actual access queue only. AQ reads never
         // consume the separate streaming-reader credit counter.
-        .col_v(cv),.col_bank(cb),.col_col(cc),.cred_ret(3'b0),.busy(),.ref_fault(pc_fault),
+        .col_v(cv),.col_bank(cb),.col_col(cc),.cred_ret(3'b0),.busy(),.ref_fault(pc_fault_i),
         .wr_v(enqueue),.wr_bank(push[318:314]),.wr_col(push[313:309]),.wr_r(wr),
         .col_we(cwe),.wr_rd(push_read),.col_aq(caq));
     // QREG: the four entries an accept at wp would write (beat b), the exact next push entry, both identity candidates
@@ -222,12 +234,12 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_h9b #(
     wire[20:0]rid_rp=response_identity[response_rp],rid_rp1=response_identity[response_rp1];
     always @(posedge clk)begin
         if(!reset_regions[3])begin
-            state<=IDLE;owner_fault_split<=0;active_row<=0;observed_open<=0;wp<=0;rp<=0;ep<=0;count<=0;unposted<=0;
+            state<=IDLE;ofs<=0;active_row<=0;observed_open<=0;wp<=0;rp<=0;ep<=0;count<=0;unposted<=0;
             read_reserved<=0;pending_count<=0;response_count<=0;pending_wp<=0;pending_rp<=0;response_wp<=0;response_rp<=0;
             head_identity<=0;head_valid<=0;k_wr_done<=0;fresh_v<=0;fresh_slot<=0;ep1<=5'd1;response_rp1<=5'd1;rp1<=5'd1;
         end else begin
             k_wr_done<=0;
-            if(i_v&&!legal)owner_fault_split[0]<=1;
+            if(i_v&&!legal)ofs[0]<=1;
             if(QREG!=0)begin
                 for(integer b=0;b<4;b=b+1)if(count+6'(b)<6'd32)queue[5'(wp+b)]<=qentry[b*64+:64];
                 if(cv)rp1<=rp1+1'b1;
@@ -258,27 +270,27 @@ module ot_hbm_svc_pc_ctrl_leaf_cfg_h9b #(
             if(state==DRAIN && observed_open==0)state<=RUN;
             fresh_v<=accepted&&i_we;fresh_slot<=wp;
             if(cv)begin
-                if(state!=RUN || count==0 || cwe!=head[319] || cb!=head[318:314] || cc!=head[313:309] || (!cwe&&!caq))owner_fault_split[1]<=1;
-                if(WPAY!=0 && cwe && fresh_v && fresh_slot==rp)owner_fault_split[2]<=1;
+                if(state!=RUN || count==0 || cwe!=head[319] || cb!=head[318:314] || cc!=head[313:309] || (!cwe&&!caq))ofs[1]<=1;
+                if(WPAY!=0 && cwe && fresh_v && fresh_slot==rp)ofs[2]<=1;
                 rp<=rp+1'b1;
                 if(cwe)k_wr_done<=1;
                 else begin
-                    if(pending_count>=32)owner_fault_split[3]<=1;
+                    if(pending_count>=32)ofs[3]<=1;
                     pending_wp<=pending_wp+1'b1;
                 end
             end
             if(ret_v)begin
-                if(pending_count==0 || (response_count>=32&&!response_take))owner_fault_split[3]<=1;
+                if(pending_count==0 || (response_count>=32&&!response_take))ofs[3]<=1;
                 else begin response_identity[response_wp]<=pending_identity[pending_rp];pending_rp<=pending_rp+1'b1;response_wp<=response_wp+1'b1;end
             end
             if(response_read)begin head_identity<=(QREG!=0)?(response_take?rid_rp1:rid_rp):response_identity[response_read_address];head_valid<=1;end
             else if(response_take)head_valid<=0;
             if(response_take)begin
-                if(read_reserved==0||response_count==0)owner_fault_split[4]<=1;
+                if(read_reserved==0||response_count==0)ofs[4]<=1;
                 response_rp<=response_rp+1'b1;
             end
-            if(read_reserved>32||pending_count>32||response_count>32)owner_fault_split[5]<=1;
-            if(kq_fault||krq_fault)owner_fault_split[5]<=1;   // H9b ring overflow/underflow
+            if(read_reserved>32||pending_count>32||response_count>32)ofs[5]<=1;
+            if(kq_fault||krq_fault)ofs[5]<=1;   // H9b ring overflow/underflow
         end
     end
 endmodule
