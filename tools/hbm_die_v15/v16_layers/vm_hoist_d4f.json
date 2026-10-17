@@ -5,84 +5,120 @@
  "instances": [
   {
    "name": "vmb_SW0",
-   "master": "hfd_vms_bank_native_q0",
-   "source": "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q0.sv",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/vm/static/faces_q0/ot_vms_bank_q0_faces_core.sv",
+    "rtl/hbm_accel/generic/vm/static/faces_q0/ot_vms_bank_q0_faces_body.sv"
+   ],
    "params": {},
    "slot": "vmb_SW0",
    "owner": "H-SM/H-DIE",
-   "note": "hb_vms_SW bank 0 hoisted (native q0 master; view q0C faces)"
+   "note": "hb_vms_SW bank 0 hoisted (q0C faces master, literal input pin flops)"
   },
   {
    "name": "vmb_SW1",
-   "master": "hfd_vms_bank_native_q0",
-   "source": "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q0.sv",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/vm/static/faces_q0/ot_vms_bank_q0_faces_core.sv",
+    "rtl/hbm_accel/generic/vm/static/faces_q0/ot_vms_bank_q0_faces_body.sv"
+   ],
    "params": {},
    "slot": "vmb_SW1",
    "owner": "H-SM/H-DIE",
-   "note": "hb_vms_SW bank 1 hoisted (native q0 master; view q0C faces)"
+   "note": "hb_vms_SW bank 1 hoisted (q0C faces master, literal input pin flops)"
   },
   {
    "name": "vmb_SW2",
-   "master": "hfd_vms_bank_native_q0",
-   "source": "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q0.sv",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/vm/static/faces_q0/ot_vms_bank_q0_faces_core.sv",
+    "rtl/hbm_accel/generic/vm/static/faces_q0/ot_vms_bank_q0_faces_body.sv"
+   ],
    "params": {},
    "slot": "vmb_SW2",
    "owner": "H-SM/H-DIE",
-   "note": "hb_vms_SW bank 2 hoisted (native q0 master; view q0C faces)"
+   "note": "hb_vms_SW bank 2 hoisted (q0C faces master, literal input pin flops)"
   },
   {
    "name": "vmb_SW3",
-   "master": "hfd_vms_bank_native_q0",
-   "source": "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q0.sv",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/vm/static/faces_q0/ot_vms_bank_q0_faces_core.sv",
+    "rtl/hbm_accel/generic/vm/static/faces_q0/ot_vms_bank_q0_faces_body.sv"
+   ],
    "params": {},
    "slot": "vmb_SW3",
    "owner": "H-SM/H-DIE",
-   "note": "hb_vms_SW bank 3 hoisted (native q0 master; view q0C faces)"
+   "note": "hb_vms_SW bank 3 hoisted (q0C faces master, literal input pin flops)"
   },
   {
    "name": "vmb_SW4",
-   "master": "hfd_vms_bank_native_q0",
-   "source": "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q0.sv",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/vm/static/faces_q0/ot_vms_bank_q0_faces_core.sv",
+    "rtl/hbm_accel/generic/vm/static/faces_q0/ot_vms_bank_q0_faces_body.sv"
+   ],
    "params": {},
    "slot": "vmb_SW4",
    "owner": "H-SM/H-DIE",
-   "note": "hb_vms_SW bank 4 hoisted (native q0 master; view q0C faces)"
+   "note": "hb_vms_SW bank 4 hoisted (q0C faces master, literal input pin flops)"
   },
   {
    "name": "vmb_SW5",
-   "master": "hfd_vms_bank_native_q0",
-   "source": "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q0.sv",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/vm/static/faces_q0/ot_vms_bank_q0_faces_core.sv",
+    "rtl/hbm_accel/generic/vm/static/faces_q0/ot_vms_bank_q0_faces_body.sv"
+   ],
    "params": {},
    "slot": "vmb_SW5",
    "owner": "H-SM/H-DIE",
-   "note": "hb_vms_SW bank 5 hoisted (native q0 master; view q0C faces)"
+   "note": "hb_vms_SW bank 5 hoisted (q0C faces master, literal input pin flops)"
   },
   {
    "name": "vmb_SW6",
-   "master": "hfd_vms_bank_native_q0",
-   "source": "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q0.sv",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/vm/static/faces_q0/ot_vms_bank_q0_faces_core.sv",
+    "rtl/hbm_accel/generic/vm/static/faces_q0/ot_vms_bank_q0_faces_body.sv"
+   ],
    "params": {},
    "slot": "vmb_SW6",
    "owner": "H-SM/H-DIE",
-   "note": "hb_vms_SW bank 6 hoisted (native q0 master; view q0C faces)"
+   "note": "hb_vms_SW bank 6 hoisted (q0C faces master, literal input pin flops)"
   },
   {
    "name": "vmb_SW7",
-   "master": "hfd_vms_bank_native_q0",
-   "source": "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q0.sv",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/vm/static/faces_q0/ot_vms_bank_q0_faces_core.sv",
+    "rtl/hbm_accel/generic/vm/static/faces_q0/ot_vms_bank_q0_faces_body.sv"
+   ],
    "params": {},
    "slot": "vmb_SW7",
    "owner": "H-SM/H-DIE",
-   "note": "hb_vms_SW bank 7 hoisted (native q0 master; view q0C faces)"
+   "note": "hb_vms_SW bank 7 hoisted (q0C faces master, literal input pin flops)"
   },
   {
    "name": "vmb_NW0",
-   "master": "hfd_vms_bank_native_q0",
-   "source": "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q0.sv",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/vm/static/faces_q0/ot_vms_bank_q0_faces_core.sv",
+    "rtl/hbm_accel/generic/vm/static/faces_q0/ot_vms_bank_q0_faces_body.sv"
+   ],
    "params": {},
    "slot": "vmb_NW0",
    "owner": "H-SM/H-DIE",
-   "note": "hb_vms_NW bank 0 hoisted (native q0 master; view q0C faces)"
+   "note": "hb_vms_NW bank 0 hoisted (q0C faces master, literal input pin flops)"
   },
   {
    "name": "vmm_NW0",
@@ -95,12 +131,16 @@
   },
   {
    "name": "vmb_NW1",
-   "master": "hfd_vms_bank_native_q0",
-   "source": "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q0.sv",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/vm/static/faces_q0/ot_vms_bank_q0_faces_core.sv",
+    "rtl/hbm_accel/generic/vm/static/faces_q0/ot_vms_bank_q0_faces_body.sv"
+   ],
    "params": {},
    "slot": "vmb_NW1",
    "owner": "H-SM/H-DIE",
-   "note": "hb_vms_NW bank 1 hoisted (native q0 master; view q0C faces)"
+   "note": "hb_vms_NW bank 1 hoisted (q0C faces master, literal input pin flops)"
   },
   {
    "name": "vmm_NW1",
@@ -113,12 +153,16 @@
   },
   {
    "name": "vmb_NW2",
-   "master": "hfd_vms_bank_native_q0",
-   "source": "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q0.sv",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/vm/static/faces_q0/ot_vms_bank_q0_faces_core.sv",
+    "rtl/hbm_accel/generic/vm/static/faces_q0/ot_vms_bank_q0_faces_body.sv"
+   ],
    "params": {},
    "slot": "vmb_NW2",
    "owner": "H-SM/H-DIE",
-   "note": "hb_vms_NW bank 2 hoisted (native q0 master; view q0C faces)"
+   "note": "hb_vms_NW bank 2 hoisted (q0C faces master, literal input pin flops)"
   },
   {
    "name": "vmm_NW2",
@@ -131,12 +175,16 @@
   },
   {
    "name": "vmb_NW3",
-   "master": "hfd_vms_bank_native_q0",
-   "source": "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q0.sv",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/vm/static/faces_q0/ot_vms_bank_q0_faces_core.sv",
+    "rtl/hbm_accel/generic/vm/static/faces_q0/ot_vms_bank_q0_faces_body.sv"
+   ],
    "params": {},
    "slot": "vmb_NW3",
    "owner": "H-SM/H-DIE",
-   "note": "hb_vms_NW bank 3 hoisted (native q0 master; view q0C faces)"
+   "note": "hb_vms_NW bank 3 hoisted (q0C faces master, literal input pin flops)"
   },
   {
    "name": "vmm_NW3",
@@ -149,12 +197,16 @@
   },
   {
    "name": "vmb_NW4",
-   "master": "hfd_vms_bank_native_q0",
-   "source": "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q0.sv",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/vm/static/faces_q0/ot_vms_bank_q0_faces_core.sv",
+    "rtl/hbm_accel/generic/vm/static/faces_q0/ot_vms_bank_q0_faces_body.sv"
+   ],
    "params": {},
    "slot": "vmb_NW4",
    "owner": "H-SM/H-DIE",
-   "note": "hb_vms_NW bank 4 hoisted (native q0 master; view q0C faces)"
+   "note": "hb_vms_NW bank 4 hoisted (q0C faces master, literal input pin flops)"
   },
   {
    "name": "vmm_NW4",
@@ -167,12 +219,16 @@
   },
   {
    "name": "vmb_NW5",
-   "master": "hfd_vms_bank_native_q0",
-   "source": "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q0.sv",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/vm/static/faces_q0/ot_vms_bank_q0_faces_core.sv",
+    "rtl/hbm_accel/generic/vm/static/faces_q0/ot_vms_bank_q0_faces_body.sv"
+   ],
    "params": {},
    "slot": "vmb_NW5",
    "owner": "H-SM/H-DIE",
-   "note": "hb_vms_NW bank 5 hoisted (native q0 master; view q0C faces)"
+   "note": "hb_vms_NW bank 5 hoisted (q0C faces master, literal input pin flops)"
   },
   {
    "name": "vmm_NW5",
@@ -185,12 +241,16 @@
   },
   {
    "name": "vmb_NW6",
-   "master": "hfd_vms_bank_native_q0",
-   "source": "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q0.sv",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/vm/static/faces_q0/ot_vms_bank_q0_faces_core.sv",
+    "rtl/hbm_accel/generic/vm/static/faces_q0/ot_vms_bank_q0_faces_body.sv"
+   ],
    "params": {},
    "slot": "vmb_NW6",
    "owner": "H-SM/H-DIE",
-   "note": "hb_vms_NW bank 6 hoisted (native q0 master; view q0C faces)"
+   "note": "hb_vms_NW bank 6 hoisted (q0C faces master, literal input pin flops)"
   },
   {
    "name": "vmm_NW6",
@@ -203,12 +263,16 @@
   },
   {
    "name": "vmb_NW7",
-   "master": "hfd_vms_bank_native_q0",
-   "source": "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q0.sv",
+   "master": "hfd_vms_bank_native_q0_faces",
+   "source": "rtl/hbm_accel/generic/vm/static/faces_q0/hfd_vms_bank_native_q0_faces.sv",
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/vm/static/faces_q0/ot_vms_bank_q0_faces_core.sv",
+    "rtl/hbm_accel/generic/vm/static/faces_q0/ot_vms_bank_q0_faces_body.sv"
+   ],
    "params": {},
    "slot": "vmb_NW7",
    "owner": "H-SM/H-DIE",
-   "note": "hb_vms_NW bank 7 hoisted (native q0 master; view q0C faces)"
+   "note": "hb_vms_NW bank 7 hoisted (q0C faces master, literal input pin flops)"
   },
   {
    "name": "vmm_NW7",
@@ -221,195 +285,211 @@
   },
   {
    "name": "vmb_SE0",
-   "master": "hfd_vms_bank_native_q1_core",
-   "source": "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q1_core.sv",
+   "master": "hfd_vms_bank_native_q1_core_pr",
+   "source": "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q1_core_pr.sv",
    "rtl_deps": [
+    "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q1_core.sv",
     "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q1.sv"
    ],
    "params": {},
    "slot": "vmb_SE0",
    "owner": "H-SM/H-DIE",
-   "note": "hb_vms_SE bank 0 hoisted (q1 core-only variant: SM-side client ports absent)"
+   "note": "hb_vms_SE bank 0 hoisted (q1 core-only, literal input pin flops; view vm_native_q1core_pr4)"
   },
   {
    "name": "vmb_SE1",
-   "master": "hfd_vms_bank_native_q1_core",
-   "source": "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q1_core.sv",
+   "master": "hfd_vms_bank_native_q1_core_pr",
+   "source": "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q1_core_pr.sv",
    "rtl_deps": [
+    "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q1_core.sv",
     "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q1.sv"
    ],
    "params": {},
    "slot": "vmb_SE1",
    "owner": "H-SM/H-DIE",
-   "note": "hb_vms_SE bank 1 hoisted (q1 core-only variant: SM-side client ports absent)"
+   "note": "hb_vms_SE bank 1 hoisted (q1 core-only, literal input pin flops; view vm_native_q1core_pr4)"
   },
   {
    "name": "vmb_SE2",
-   "master": "hfd_vms_bank_native_q1_core",
-   "source": "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q1_core.sv",
+   "master": "hfd_vms_bank_native_q1_core_pr",
+   "source": "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q1_core_pr.sv",
    "rtl_deps": [
+    "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q1_core.sv",
     "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q1.sv"
    ],
    "params": {},
    "slot": "vmb_SE2",
    "owner": "H-SM/H-DIE",
-   "note": "hb_vms_SE bank 2 hoisted (q1 core-only variant: SM-side client ports absent)"
+   "note": "hb_vms_SE bank 2 hoisted (q1 core-only, literal input pin flops; view vm_native_q1core_pr4)"
   },
   {
    "name": "vmb_SE3",
-   "master": "hfd_vms_bank_native_q1_core",
-   "source": "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q1_core.sv",
+   "master": "hfd_vms_bank_native_q1_core_pr",
+   "source": "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q1_core_pr.sv",
    "rtl_deps": [
+    "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q1_core.sv",
     "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q1.sv"
    ],
    "params": {},
    "slot": "vmb_SE3",
    "owner": "H-SM/H-DIE",
-   "note": "hb_vms_SE bank 3 hoisted (q1 core-only variant: SM-side client ports absent)"
+   "note": "hb_vms_SE bank 3 hoisted (q1 core-only, literal input pin flops; view vm_native_q1core_pr4)"
   },
   {
    "name": "vmb_SE4",
-   "master": "hfd_vms_bank_native_q1_core",
-   "source": "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q1_core.sv",
+   "master": "hfd_vms_bank_native_q1_core_pr",
+   "source": "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q1_core_pr.sv",
    "rtl_deps": [
+    "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q1_core.sv",
     "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q1.sv"
    ],
    "params": {},
    "slot": "vmb_SE4",
    "owner": "H-SM/H-DIE",
-   "note": "hb_vms_SE bank 4 hoisted (q1 core-only variant: SM-side client ports absent)"
+   "note": "hb_vms_SE bank 4 hoisted (q1 core-only, literal input pin flops; view vm_native_q1core_pr4)"
   },
   {
    "name": "vmb_SE5",
-   "master": "hfd_vms_bank_native_q1_core",
-   "source": "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q1_core.sv",
+   "master": "hfd_vms_bank_native_q1_core_pr",
+   "source": "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q1_core_pr.sv",
    "rtl_deps": [
+    "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q1_core.sv",
     "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q1.sv"
    ],
    "params": {},
    "slot": "vmb_SE5",
    "owner": "H-SM/H-DIE",
-   "note": "hb_vms_SE bank 5 hoisted (q1 core-only variant: SM-side client ports absent)"
+   "note": "hb_vms_SE bank 5 hoisted (q1 core-only, literal input pin flops; view vm_native_q1core_pr4)"
   },
   {
    "name": "vmb_SE6",
-   "master": "hfd_vms_bank_native_q1_core",
-   "source": "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q1_core.sv",
+   "master": "hfd_vms_bank_native_q1_core_pr",
+   "source": "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q1_core_pr.sv",
    "rtl_deps": [
+    "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q1_core.sv",
     "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q1.sv"
    ],
    "params": {},
    "slot": "vmb_SE6",
    "owner": "H-SM/H-DIE",
-   "note": "hb_vms_SE bank 6 hoisted (q1 core-only variant: SM-side client ports absent)"
+   "note": "hb_vms_SE bank 6 hoisted (q1 core-only, literal input pin flops; view vm_native_q1core_pr4)"
   },
   {
    "name": "vmb_SE7",
-   "master": "hfd_vms_bank_native_q1_core",
-   "source": "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q1_core.sv",
+   "master": "hfd_vms_bank_native_q1_core_pr",
+   "source": "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q1_core_pr.sv",
    "rtl_deps": [
+    "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q1_core.sv",
     "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q1.sv"
    ],
    "params": {},
    "slot": "vmb_SE7",
    "owner": "H-SM/H-DIE",
-   "note": "hb_vms_SE bank 7 hoisted (q1 core-only variant: SM-side client ports absent)"
+   "note": "hb_vms_SE bank 7 hoisted (q1 core-only, literal input pin flops; view vm_native_q1core_pr4)"
   },
   {
    "name": "vmb_NE0",
-   "master": "hfd_vms_bank_native_q1_core",
-   "source": "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q1_core.sv",
+   "master": "hfd_vms_bank_native_q1_core_pr",
+   "source": "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q1_core_pr.sv",
    "rtl_deps": [
+    "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q1_core.sv",
     "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q1.sv"
    ],
    "params": {},
    "slot": "vmb_NE0",
    "owner": "H-SM/H-DIE",
-   "note": "hb_vms_NE bank 0 hoisted (q1 core-only variant: SM-side client ports absent)"
+   "note": "hb_vms_NE bank 0 hoisted (q1 core-only, literal input pin flops; view vm_native_q1core_pr4)"
   },
   {
    "name": "vmb_NE1",
-   "master": "hfd_vms_bank_native_q1_core",
-   "source": "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q1_core.sv",
+   "master": "hfd_vms_bank_native_q1_core_pr",
+   "source": "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q1_core_pr.sv",
    "rtl_deps": [
+    "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q1_core.sv",
     "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q1.sv"
    ],
    "params": {},
    "slot": "vmb_NE1",
    "owner": "H-SM/H-DIE",
-   "note": "hb_vms_NE bank 1 hoisted (q1 core-only variant: SM-side client ports absent)"
+   "note": "hb_vms_NE bank 1 hoisted (q1 core-only, literal input pin flops; view vm_native_q1core_pr4)"
   },
   {
    "name": "vmb_NE2",
-   "master": "hfd_vms_bank_native_q1_core",
-   "source": "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q1_core.sv",
+   "master": "hfd_vms_bank_native_q1_core_pr",
+   "source": "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q1_core_pr.sv",
    "rtl_deps": [
+    "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q1_core.sv",
     "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q1.sv"
    ],
    "params": {},
    "slot": "vmb_NE2",
    "owner": "H-SM/H-DIE",
-   "note": "hb_vms_NE bank 2 hoisted (q1 core-only variant: SM-side client ports absent)"
+   "note": "hb_vms_NE bank 2 hoisted (q1 core-only, literal input pin flops; view vm_native_q1core_pr4)"
   },
   {
    "name": "vmb_NE3",
-   "master": "hfd_vms_bank_native_q1_core",
-   "source": "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q1_core.sv",
+   "master": "hfd_vms_bank_native_q1_core_pr",
+   "source": "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q1_core_pr.sv",
    "rtl_deps": [
+    "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q1_core.sv",
     "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q1.sv"
    ],
    "params": {},
    "slot": "vmb_NE3",
    "owner": "H-SM/H-DIE",
-   "note": "hb_vms_NE bank 3 hoisted (q1 core-only variant: SM-side client ports absent)"
+   "note": "hb_vms_NE bank 3 hoisted (q1 core-only, literal input pin flops; view vm_native_q1core_pr4)"
   },
   {
    "name": "vmb_NE4",
-   "master": "hfd_vms_bank_native_q1_core",
-   "source": "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q1_core.sv",
+   "master": "hfd_vms_bank_native_q1_core_pr",
+   "source": "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q1_core_pr.sv",
    "rtl_deps": [
+    "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q1_core.sv",
     "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q1.sv"
    ],
    "params": {},
    "slot": "vmb_NE4",
    "owner": "H-SM/H-DIE",
-   "note": "hb_vms_NE bank 4 hoisted (q1 core-only variant: SM-side client ports absent)"
+   "note": "hb_vms_NE bank 4 hoisted (q1 core-only, literal input pin flops; view vm_native_q1core_pr4)"
   },
   {
    "name": "vmb_NE5",
-   "master": "hfd_vms_bank_native_q1_core",
-   "source": "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q1_core.sv",
+   "master": "hfd_vms_bank_native_q1_core_pr",
+   "source": "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q1_core_pr.sv",
    "rtl_deps": [
+    "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q1_core.sv",
     "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q1.sv"
    ],
    "params": {},
    "slot": "vmb_NE5",
    "owner": "H-SM/H-DIE",
-   "note": "hb_vms_NE bank 5 hoisted (q1 core-only variant: SM-side client ports absent)"
+   "note": "hb_vms_NE bank 5 hoisted (q1 core-only, literal input pin flops; view vm_native_q1core_pr4)"
   },
   {
    "name": "vmb_NE6",
-   "master": "hfd_vms_bank_native_q1_core",
-   "source": "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q1_core.sv",
+   "master": "hfd_vms_bank_native_q1_core_pr",
+   "source": "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q1_core_pr.sv",
    "rtl_deps": [
+    "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q1_core.sv",
     "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q1.sv"
    ],
    "params": {},
    "slot": "vmb_NE6",
    "owner": "H-SM/H-DIE",
-   "note": "hb_vms_NE bank 6 hoisted (q1 core-only variant: SM-side client ports absent)"
+   "note": "hb_vms_NE bank 6 hoisted (q1 core-only, literal input pin flops; view vm_native_q1core_pr4)"
   },
   {
    "name": "vmb_NE7",
-   "master": "hfd_vms_bank_native_q1_core",
-   "source": "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q1_core.sv",
+   "master": "hfd_vms_bank_native_q1_core_pr",
+   "source": "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q1_core_pr.sv",
    "rtl_deps": [
+    "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q1_core.sv",
     "rtl/hbm_accel/generic/vm/static/physical/hfd_vms_bank_native_q1.sv"
    ],
    "params": {},
    "slot": "vmb_NE7",
    "owner": "H-SM/H-DIE",
-   "note": "hb_vms_NE bank 7 hoisted (q1 core-only variant: SM-side client ports absent)"
+   "note": "hb_vms_NE bank 7 hoisted (q1 core-only, literal input pin flops; view vm_native_q1core_pr4)"
   }
  ],
  "edges": [
@@ -4591,6 +4671,48 @@
   },
   {
    "inst": "vmb_SW0",
+   "port": "clk_n",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_SW0",
+   "port": "clk_s",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_SW0",
+   "port": "clk_e",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_SW0",
+   "port": "clk_w",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_SW0",
+   "port": "clk_macro0",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_SW0",
+   "port": "clk_macro1",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_SW0",
+   "port": "clk_macro2",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_SW0",
    "port": "rst_n",
    "domain": "stream",
    "kind": "reset"
@@ -4603,6 +4725,48 @@
   },
   {
    "inst": "vmb_SW1",
+   "port": "clk_n",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_SW1",
+   "port": "clk_s",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_SW1",
+   "port": "clk_e",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_SW1",
+   "port": "clk_w",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_SW1",
+   "port": "clk_macro0",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_SW1",
+   "port": "clk_macro1",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_SW1",
+   "port": "clk_macro2",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_SW1",
    "port": "rst_n",
    "domain": "stream",
    "kind": "reset"
@@ -4610,6 +4774,48 @@
   {
    "inst": "vmb_SW2",
    "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_SW2",
+   "port": "clk_n",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_SW2",
+   "port": "clk_s",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_SW2",
+   "port": "clk_e",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_SW2",
+   "port": "clk_w",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_SW2",
+   "port": "clk_macro0",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_SW2",
+   "port": "clk_macro1",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_SW2",
+   "port": "clk_macro2",
    "domain": "stream",
    "kind": "clock"
   },
@@ -4622,6 +4828,48 @@
   {
    "inst": "vmb_SW3",
    "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_SW3",
+   "port": "clk_n",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_SW3",
+   "port": "clk_s",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_SW3",
+   "port": "clk_e",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_SW3",
+   "port": "clk_w",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_SW3",
+   "port": "clk_macro0",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_SW3",
+   "port": "clk_macro1",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_SW3",
+   "port": "clk_macro2",
    "domain": "stream",
    "kind": "clock"
   },
@@ -4634,6 +4882,48 @@
   {
    "inst": "vmb_SW4",
    "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_SW4",
+   "port": "clk_n",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_SW4",
+   "port": "clk_s",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_SW4",
+   "port": "clk_e",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_SW4",
+   "port": "clk_w",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_SW4",
+   "port": "clk_macro0",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_SW4",
+   "port": "clk_macro1",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_SW4",
+   "port": "clk_macro2",
    "domain": "stream",
    "kind": "clock"
   },
@@ -4646,6 +4936,48 @@
   {
    "inst": "vmb_SW5",
    "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_SW5",
+   "port": "clk_n",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_SW5",
+   "port": "clk_s",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_SW5",
+   "port": "clk_e",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_SW5",
+   "port": "clk_w",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_SW5",
+   "port": "clk_macro0",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_SW5",
+   "port": "clk_macro1",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_SW5",
+   "port": "clk_macro2",
    "domain": "stream",
    "kind": "clock"
   },
@@ -4658,6 +4990,48 @@
   {
    "inst": "vmb_SW6",
    "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_SW6",
+   "port": "clk_n",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_SW6",
+   "port": "clk_s",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_SW6",
+   "port": "clk_e",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_SW6",
+   "port": "clk_w",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_SW6",
+   "port": "clk_macro0",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_SW6",
+   "port": "clk_macro1",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_SW6",
+   "port": "clk_macro2",
    "domain": "stream",
    "kind": "clock"
   },
@@ -4670,6 +5044,48 @@
   {
    "inst": "vmb_SW7",
    "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_SW7",
+   "port": "clk_n",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_SW7",
+   "port": "clk_s",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_SW7",
+   "port": "clk_e",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_SW7",
+   "port": "clk_w",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_SW7",
+   "port": "clk_macro0",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_SW7",
+   "port": "clk_macro1",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_SW7",
+   "port": "clk_macro2",
    "domain": "stream",
    "kind": "clock"
   },
@@ -4682,6 +5098,48 @@
   {
    "inst": "vmb_NW0",
    "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_NW0",
+   "port": "clk_n",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_NW0",
+   "port": "clk_s",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_NW0",
+   "port": "clk_e",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_NW0",
+   "port": "clk_w",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_NW0",
+   "port": "clk_macro0",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_NW0",
+   "port": "clk_macro1",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_NW0",
+   "port": "clk_macro2",
    "domain": "stream",
    "kind": "clock"
   },
@@ -4706,6 +5164,48 @@
   {
    "inst": "vmb_NW1",
    "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_NW1",
+   "port": "clk_n",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_NW1",
+   "port": "clk_s",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_NW1",
+   "port": "clk_e",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_NW1",
+   "port": "clk_w",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_NW1",
+   "port": "clk_macro0",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_NW1",
+   "port": "clk_macro1",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_NW1",
+   "port": "clk_macro2",
    "domain": "stream",
    "kind": "clock"
   },
@@ -4730,6 +5230,48 @@
   {
    "inst": "vmb_NW2",
    "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_NW2",
+   "port": "clk_n",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_NW2",
+   "port": "clk_s",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_NW2",
+   "port": "clk_e",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_NW2",
+   "port": "clk_w",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_NW2",
+   "port": "clk_macro0",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_NW2",
+   "port": "clk_macro1",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_NW2",
+   "port": "clk_macro2",
    "domain": "stream",
    "kind": "clock"
   },
@@ -4754,6 +5296,48 @@
   {
    "inst": "vmb_NW3",
    "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_NW3",
+   "port": "clk_n",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_NW3",
+   "port": "clk_s",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_NW3",
+   "port": "clk_e",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_NW3",
+   "port": "clk_w",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_NW3",
+   "port": "clk_macro0",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_NW3",
+   "port": "clk_macro1",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_NW3",
+   "port": "clk_macro2",
    "domain": "stream",
    "kind": "clock"
   },
@@ -4778,6 +5362,48 @@
   {
    "inst": "vmb_NW4",
    "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_NW4",
+   "port": "clk_n",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_NW4",
+   "port": "clk_s",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_NW4",
+   "port": "clk_e",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_NW4",
+   "port": "clk_w",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_NW4",
+   "port": "clk_macro0",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_NW4",
+   "port": "clk_macro1",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_NW4",
+   "port": "clk_macro2",
    "domain": "stream",
    "kind": "clock"
   },
@@ -4802,6 +5428,48 @@
   {
    "inst": "vmb_NW5",
    "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_NW5",
+   "port": "clk_n",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_NW5",
+   "port": "clk_s",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_NW5",
+   "port": "clk_e",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_NW5",
+   "port": "clk_w",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_NW5",
+   "port": "clk_macro0",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_NW5",
+   "port": "clk_macro1",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_NW5",
+   "port": "clk_macro2",
    "domain": "stream",
    "kind": "clock"
   },
@@ -4826,6 +5494,48 @@
   {
    "inst": "vmb_NW6",
    "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_NW6",
+   "port": "clk_n",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_NW6",
+   "port": "clk_s",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_NW6",
+   "port": "clk_e",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_NW6",
+   "port": "clk_w",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_NW6",
+   "port": "clk_macro0",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_NW6",
+   "port": "clk_macro1",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_NW6",
+   "port": "clk_macro2",
    "domain": "stream",
    "kind": "clock"
   },
@@ -4850,6 +5560,48 @@
   {
    "inst": "vmb_NW7",
    "port": "clk",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_NW7",
+   "port": "clk_n",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_NW7",
+   "port": "clk_s",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_NW7",
+   "port": "clk_e",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_NW7",
+   "port": "clk_w",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_NW7",
+   "port": "clk_macro0",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_NW7",
+   "port": "clk_macro1",
+   "domain": "stream",
+   "kind": "clock"
+  },
+  {
+   "inst": "vmb_NW7",
+   "port": "clk_macro2",
    "domain": "stream",
    "kind": "clock"
   },
