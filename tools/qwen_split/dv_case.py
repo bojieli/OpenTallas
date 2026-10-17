@@ -200,6 +200,29 @@ def apply_dv(v, m):
     for n, d in DI.items():                   # the model's own orientations (dv2r8f6+: 'o', e.g. the top cluster)
         if d.get('o') and not n.startswith(('c16_', 'dvs_')):
             orient.setdefault(n, d['o'])
+    # Q-DIEPLAN7 10-17 (HANDOFF 0de++++): explicit orientation overrides, e.g. "d2d_rom=MX,ucie_kv=MX". The closed
+    # qfd_d2d_static view has vertical pins on BOTH M3 and M5: under any y-axis mirror (MY / R180) the M3 and M5
+    # origin residues differ by 6 mod 12 nm, so no legal origin exists (ot_mts). MX keeps R180's vertical sense
+    # (N-face payload down to native59 / sys_face, FDI up to ucie_kv) but leaves the W / E faces unswapped;
+    # ucie_kv MX keeps FDI tx-over-tx (both tx halves on the W). FDI centres (local, MX = unmirrored x):
+    # d2d 238.0 (tx 10.2 .. rx 465.9), ucie_kv 389.1 (tx 277.2 .. rx 501.0). GEN re-plans every link from the
+    # oriented pins. OT_SPLIT_DV_D2D_DX (um) moves d2d_rom E, ucie_kv follows on its FDI centre, the bump row clears it.
+    for kv in filter(None, os.environ.get('OT_SPLIT_DV_ORIENT', '').split(',')):
+        k_, o_ = kv.split('=')
+        orient[k_.strip()] = o_.strip()
+    d2d_dx = float(os.environ.get('OT_SPLIT_DV_D2D_DX', '0') or 0)
+    if (d2d_dx or orient.get('d2d_rom') == 'MX') and 'd2d_rom' in DI and 'ucie_kv' in DI:
+        dd, uk = DI['d2d_rom'], DI['ucie_kv']
+        dd['x'] = round(round((dd['x'] + d2d_dx) / 0.216) * 0.216, 3)
+        fc = {'MX': (238.0, 389.1), 'R0': (238.0, 389.1)}.get(orient.get('d2d_rom'), (237.2, 388.5))
+        if orient.get('ucie_kv') in ('MX', 'R0'):
+            fc = (fc[0], 389.1)
+        uk['x'] = max(0.0, round(round((dd['x'] + fc[0] - fc[1]) / 0.216) * 0.216, 3))
+        bumps = [DI[b_] for b_ in ('ckb_rom', 'rs_bump', 'bump_fwd_epoch', 'bump_fwd_lrst') if b_ in DI]
+        if bumps:
+            sh = max(0.0, uk['x'] + uk['w'] + 21.6 - min(d['x'] for d in bumps))
+            for d in bumps:
+                d['x'] = round(d['x'] + sh, 3)
     by = {i.name: i for i in m['insts']}
     # retained instances take the dv model's places BEFORE the masters are drawn (the collective / PHY frames follow
     # their instance outline: OT_SPLIT_PHY_TALL edge variants, collective re-kitted tall; PHYs above it are MX)
