@@ -5,47 +5,51 @@
  "instances": [
   {
    "name": "hb_coll_SW",
-   "master": "ot_hfd_coll_q3_static_host_v4",
-   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q3_static_host_v4.sv",
-   "params": {
-    "QID": "2'd0"
-   },
+   "master": "ot_hfd_coll_q3_hard_v5",
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_hard_v5.sv",
+   "params": {},
    "slot": "coll_SW",
    "owner": "H-COLL+IDX",
-   "note": "v16 master CHANGE (was ot_hfd_coll_q3_static in v15): H-COLL production parent (tb_hgi_coll_sw_slice_parent.sv:3 \"WHOLE production COLL parent\"; slice-parent gate PASS el1014-hbm-p2p-coll.log 13:11) = program_target(52+QID) + ot_hfd_coll_q3_static_v4 (ALL-input-capture TX6/RX2 link endpoints ot_hgi_coll_static_link_capture x3 INSIDE, 612-b pin frame per link) ; QID is a parameter (no qid port)"
+   "note": "H-NETLIST/COLL 1045 hard-hierarchy parent (wires-only, one clock entry per hard-child clock pin; q2 hardened once, physical identity = strap qid). Replaces ot_hfd_coll_q3_static_host_v4: lockstep + fault-ABI gate tb_hgi_coll_q_hard_v5 (issue path +3, programme target +1, child faults +1; plan results/arch/hbm_coll_hard_v5_1045/plan.json).",
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_ctl_v5.sv"
+   ]
   },
   {
    "name": "hb_coll_SE",
-   "master": "ot_hfd_coll_q2_static_host_v4",
-   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q2_static_host_v4.sv",
-   "params": {
-    "QID": "2'd1"
-   },
+   "master": "ot_hfd_coll_q2_hard_v5",
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_hard_v5.sv",
+   "params": {},
    "slot": "coll_SE",
    "owner": "H-COLL+IDX",
-   "note": "v16 master CHANGE (was ot_hfd_coll_q2_static in v15): q2 host V4 parent, QID param 1 (q2 $fatal on QID 0), program_target TARGET 53; 2 link endpoints inside (612-b pin frame)"
+   "note": "H-NETLIST/COLL 1045 hard-hierarchy parent (wires-only, one clock entry per hard-child clock pin; q2 hardened once, physical identity = strap qid). Replaces ot_hfd_coll_q2_static_host_v4: lockstep + fault-ABI gate tb_hgi_coll_q_hard_v5 (issue path +3, programme target +1, child faults +1; plan results/arch/hbm_coll_hard_v5_1045/plan.json).",
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_ctl_v5.sv"
+   ]
   },
   {
    "name": "hb_coll_NW",
-   "master": "ot_hfd_coll_q2_static_host_v4",
-   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q2_static_host_v4.sv",
-   "params": {
-    "QID": "2'd2"
-   },
+   "master": "ot_hfd_coll_q2_hard_v5",
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_hard_v5.sv",
+   "params": {},
    "slot": "coll_NW",
    "owner": "H-COLL+IDX",
-   "note": "v16 master CHANGE (was ot_hfd_coll_q2_static in v15): q2 host V4 parent, QID param 2 (q2 $fatal on QID 0), program_target TARGET 54; 2 link endpoints inside (612-b pin frame)"
+   "note": "H-NETLIST/COLL 1045 hard-hierarchy parent (wires-only, one clock entry per hard-child clock pin; q2 hardened once, physical identity = strap qid). Replaces ot_hfd_coll_q2_static_host_v4: lockstep + fault-ABI gate tb_hgi_coll_q_hard_v5 (issue path +3, programme target +1, child faults +1; plan results/arch/hbm_coll_hard_v5_1045/plan.json).",
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_ctl_v5.sv"
+   ]
   },
   {
    "name": "hb_coll_NE",
-   "master": "ot_hfd_coll_q2_static_host_v4",
-   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q2_static_host_v4.sv",
-   "params": {
-    "QID": "2'd3"
-   },
+   "master": "ot_hfd_coll_q2_hard_v5",
+   "source": "rtl/hbm_accel/generic/collective/p2p/ot_hfd_coll_q_hard_v5.sv",
+   "params": {},
    "slot": "coll_NE",
    "owner": "H-COLL+IDX",
-   "note": "v16 master CHANGE (was ot_hfd_coll_q2_static in v15): q2 host V4 parent, QID param 3 (q2 $fatal on QID 0), program_target TARGET 55; 2 link endpoints inside (612-b pin frame)"
+   "note": "H-NETLIST/COLL 1045 hard-hierarchy parent (wires-only, one clock entry per hard-child clock pin; q2 hardened once, physical identity = strap qid). Replaces ot_hfd_coll_q2_static_host_v4: lockstep + fault-ABI gate tb_hgi_coll_q_hard_v5 (issue path +3, programme target +1, child faults +1; plan results/arch/hbm_coll_hard_v5_1045/plan.json).",
+   "rtl_deps": [
+    "rtl/hbm_accel/generic/collective/p2p/ot_hgi_coll_ctl_v5.sv"
+   ]
   },
   {
    "name": "hb_idx",
@@ -1119,7 +1123,40 @@
    "kind": "reset"
   }
  ],
- "straps": [],
+ "straps": [
+  {
+   "inst": "hb_coll_SW",
+   "port": "qid",
+   "value": 0,
+   "lo": 0,
+   "hi": 2,
+   "reason": "identity: COLL quadrant QID 0 (HOST target 52; ring cw SW>SE>NE>NW)"
+  },
+  {
+   "inst": "hb_coll_SE",
+   "port": "qid",
+   "value": 1,
+   "lo": 0,
+   "hi": 2,
+   "reason": "identity: COLL quadrant QID 1 (HOST target 53; ring cw SW>SE>NE>NW)"
+  },
+  {
+   "inst": "hb_coll_NW",
+   "port": "qid",
+   "value": 2,
+   "lo": 0,
+   "hi": 2,
+   "reason": "identity: COLL quadrant QID 2 (HOST target 54; ring cw SW>SE>NE>NW)"
+  },
+  {
+   "inst": "hb_coll_NE",
+   "port": "qid",
+   "value": 3,
+   "lo": 0,
+   "hi": 2,
+   "reason": "identity: COLL quadrant QID 3 (HOST target 55; ring cw SW>SE>NE>NW)"
+  }
+ ],
  "gaps": [
   {
    "id": "G-CIL-INJ",
@@ -1956,6 +1993,37 @@
     ]
    ],
    "note": "listed only for accounting; host_misc binds it"
+  },
+  {
+   "id": "G-COLL-FAULT-CAUSE",
+   "owner": "H-NETLIST host status packet (coordinator 10-16: closure first; per-bit field in a later host revision)",
+   "missing_rtl": "no host-visible consumer of hb_coll_<q>.fault_cause[15:0] (sticky per-child cause, fj leaf): ot_hbm_status_join only ORs t_fault; the aggregate fault already reaches host_status t_fault. Open output, never tied.",
+   "affects": [
+    [
+     "hb_coll_SW",
+     "fault_cause",
+     0,
+     16
+    ],
+    [
+     "hb_coll_SE",
+     "fault_cause",
+     0,
+     16
+    ],
+    [
+     "hb_coll_NW",
+     "fault_cause",
+     0,
+     16
+    ],
+    [
+     "hb_coll_NE",
+     "fault_cause",
+     0,
+     16
+    ]
+   ]
   }
  ],
  "die_pins": [
