@@ -1,0 +1,138 @@
+{
+ "name": "s81dv_xfin",
+ "top": "ot_s81dv_xfin",
+ "kind": "tile",
+ "sources": [
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "rtl/hdc/ot_hdc_fpu.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+  "rtl/proto/ot_fp32_add_rne_pipe.sv",
+  "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+  "rtl/hdc/v41x/ot_dsrom_divc.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_fp32_f12.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_norm.sv",
+  "rtl/dsrom_sys/s81_dv/ot_s81dv_norm.sv"
+ ],
+ "params": {
+  "SID": 0,
+  "NS": 16,
+  "NVL": 5
+ },
+ "clock_port": "clk",
+ "reset_ports": [
+  "rst_n"
+ ],
+ "macros": [],
+ "pins": {
+  "W": [
+   "wi_v",
+   "wi_h",
+   "wi_b",
+   "wi_d",
+   "wo_v",
+   "wo_h",
+   "wo_b",
+   "wo_d"
+  ],
+  "E": [
+   "ei_v",
+   "ei_h",
+   "ei_b",
+   "ei_d",
+   "eo_v",
+   "eo_h",
+   "eo_b",
+   "eo_d"
+  ],
+  "N": [
+   "s_v",
+   "s_i",
+   "s",
+   "rb_v",
+   "rb_d"
+  ],
+  "S": [
+   "clk",
+   "rst_n",
+   "go",
+   "eps",
+   "fault"
+  ]
+ },
+ "recipe": 4,
+ "clock": "cts",
+ "route": {
+  "pd": 0.5,
+  "threads": 8,
+  "peak_ram_gb": 32,
+  "hold_margin_ns": 0.03,
+  "io_hold_margin_ns": 0.0,
+  "macro_halo_um": 5.4
+ },
+ "structural_change": "S81-DV (owner 0cj 10-16): new leaf. Slice norm exchange: beat-partial collector, exchange ring stop (fixed hop counts, no flow control, collisions fault) and replicated golden-tree finish (ot_dsrom_su_norm vector levels verbatim, divide by D, + eps, rsqrt). Every input lands in a flop (robust first cell); no input/output hold padding (die-level hold budget at relay stations).",
+ "job": {
+  "owner": "Claude:S81-DV",
+  "branch": "claude/s81dv-1016",
+  "tag": "x2",
+  "purpose": "S81-DV deliverable 3: first new slice leaf to closure (TT setup / FF hold / DRC 0 + native audit).",
+  "extra_paths": [
+   "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
+   "physical/hbm_norm_split_20261008",
+   "results/rtl/hbm_norm_engine_view_20261006",
+   "rtl/dsrom_sys/s81_dv",
+   "rtl/dsrom_sys/s81_dv/test",
+   "rtl/hdc/v41x",
+   "tools/s81_dv"
+  ],
+  "benches": [
+   {
+    "name": "dv_xfin16_exact",
+    "cmd": "bash tools/s81_dv/norm16_bench.sh {RUN}/bench base xfin",
+    "expect": "pass",
+    "pass_regex": "^PASS dvxfin16$",
+    "threads": 4,
+    "peak_ram_gb": 64
+   },
+   {
+    "name": "dv_xfin16_mutbase",
+    "cmd": "bash tools/s81_dv/norm16_bench.sh {RUN}/mutb mutbase xfin",
+    "expect": "pass",
+    "pass_regex": "^NEGATIVE_CONTROL_FAILED_AS_EXPECTED mutbase$",
+    "threads": 4,
+    "peak_ram_gb": 64
+   },
+   {
+    "name": "dv_xfin16_mutleaf",
+    "cmd": "bash tools/s81_dv/norm16_bench.sh {RUN}/mutl mutleaf xfin",
+    "expect": "pass",
+    "pass_regex": "^NEGATIVE_CONTROL_FAILED_AS_EXPECTED mutleaf$",
+    "threads": 4,
+    "peak_ram_gb": 64
+   }
+  ],
+  "views_to": "physical/ref_tile/s81dv_xfin/views",
+  "record_to": "results/rtl/ref_tile/s81dv_xfin"
+ },
+ "pin_regs": {
+  "enable": false,
+  "reason": "Source-registered: every input lands in a flop at the pin (ot_s81dv_xfin go/eps/s_* capture flops, ot_s81dv_xstop wi/ei input flops) and every output is a flop (eo/wo/rb/fault regs); recipe-3 pin_regs would add a second unpriced stage on every ring hop. io_flop_at_pins (recipe 2) anchors them at the faces."
+ },
+ "std_area_um2": 16108,
+ "util": 0.52,
+ "hold_budget": "die",
+ "children": [],
+ "inter": [],
+ "inhold": false,
+ "outhold": false,
+ "io_flop_at_pins": {
+  "cols": 4,
+  "allow_none": true
+ },
+ "keep_pin_regs": true
+}

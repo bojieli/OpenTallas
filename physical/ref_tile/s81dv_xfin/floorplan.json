@@ -1,0 +1,111 @@
+{
+ "schema": "opentallas.ref_tile.floorplan.v1",
+ "name": "s81dv_xfin",
+ "top": "ot_s81dv_xfin",
+ "kind": "tile",
+ "die": [
+  0,
+  0,
+  181.44,
+  181.44
+ ],
+ "core": [
+  2.16,
+  2.16,
+  179.28,
+  179.28
+ ],
+ "why": "util 0.52 of std 16108 + macros 0 um2",
+ "std_area_um2": 16108,
+ "layer_contract": {
+  "children": {},
+  "pg_layer": "M5",
+  "rlayers": [
+   "M2",
+   "M5"
+  ],
+  "strap_layer": "M6",
+  "layer_cap": "M5",
+  "cap_basis": "contract"
+ },
+ "pins": {
+  "W": [
+   "wi_v",
+   "wi_h",
+   "wi_b",
+   "wi_d",
+   "wo_v",
+   "wo_h",
+   "wo_b",
+   "wo_d"
+  ],
+  "E": [
+   "ei_v",
+   "ei_h",
+   "ei_b",
+   "ei_d",
+   "eo_v",
+   "eo_h",
+   "eo_b",
+   "eo_d"
+  ],
+  "N": [
+   "s_v",
+   "s_i",
+   "s",
+   "rb_v",
+   "rb_d"
+  ],
+  "S": [
+   "clk",
+   "rst_n",
+   "go",
+   "eps",
+   "fault"
+  ]
+ },
+ "clock_port": "clk",
+ "blocks": [],
+ "findings": [],
+ "referenced": [
+  "rtl/hdc/ot_hdc_delay.sv",
+  "rtl/hdc/ot_hdc_sfu.sv",
+  "rtl/hdc/ot_hdc_fpu.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_pipe.sv",
+  "rtl/proto/ot_fp32_add_rne_pipe.sv",
+  "rtl/hdc/ot_hdc_fastfp_lat_f12.sv",
+  "rtl/hdc/v41x/ot_dsrom_divc.sv",
+  "rtl/hdc/ot_hdc_fastfp.sv",
+  "rtl/hdc/ot_hdc_fp32_f12.sv",
+  "rtl/hdc/ot_hdc_fp32_mul_lat.sv",
+  "rtl/hdc/ot_hdc_fp32_add_lat.sv",
+  "rtl/hdc/ot_hdc_prefix.sv",
+  "rtl/hdc/v41x/ot_dsrom_fp32_add_l6.sv",
+  "rtl/hdc/v41x/ot_dsrom_su_norm.sv",
+  "rtl/dsrom_sys/s81_dv/ot_s81dv_norm.sv",
+  "physical/ref_tile/s81dv_xfin/kit.env",
+  "physical/ref_tile/s81dv_xfin/clock.sdc",
+  "physical/ref_tile/s81dv_xfin/signoff.sdc",
+  "physical/ref_tile/s81dv_xfin/signoff_ffrepair.sdc",
+  "physical/ref_tile/s81dv_xfin/pdn.tcl",
+  "physical/ref_tile/s81dv_xfin/pre_cts.tcl",
+  "physical/ref_tile/s81dv_xfin/post_cts.tcl",
+  "physical/ref_tile/s81dv_xfin/post_grt.tcl",
+  "physical/ref_tile/s81dv_xfin/pre_drt.tcl",
+  "physical/ref_tile/s81dv_xfin/pre_fill.tcl",
+  "physical/ref_tile/s81dv_xfin/post_fill.tcl",
+  "physical/ref_tile/s81dv_xfin/pre_grt.tcl",
+  "physical/ref_tile/s81dv_xfin/post_drt.tcl",
+  "tools/ref_tile/ref_route.sh",
+  "physical/qwen_die_masters/io_ref_skew.sdc",
+  "physical/qwen_die_masters/io_plain.sdc",
+  "physical/qwen_die_masters/repair_budget.tcl",
+  "physical/qwen_die_masters/pre_cts_skew.tcl",
+  "physical/qwen_die_masters/pre_ref_skew.tcl",
+  "physical/qwen_die_masters/post_plain.tcl",
+  "physical/hbm_accel_die_views/stations/bench/stn_pin_keepout.tcl",
+  "physical/common_flow/grt_macro_top_layer.tcl",
+  "physical/qwen_die_masters/io_flop_at_pins.tcl",
+  "physical/qwen_die_masters/out_flop_release.tcl"
+ ]
+}
