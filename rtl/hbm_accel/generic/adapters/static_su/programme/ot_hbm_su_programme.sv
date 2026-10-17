@@ -57,7 +57,7 @@ endmodule
 //   is presented 3 edges later than PIPE 0 (start sampled at S -> consumer samples command 0 at S+7). The compiler
 //   issues start 3 edges earlier (the same start-advance mechanism as the partition DEPTH), so every command bit
 //   reaches its consumer on the same edge as from the PIPE 0 producer.
-//   Output busy rises 3 edges after the internal busy (busy & busy delayed 3) and falls with it, so busy/valid/done/
+//   Output busy (a register) rises 3 edges after the internal busy and falls with it, so busy/valid/done/
 //   edge_index/command are cycle-identical to a PIPE 0 producer started 3 edges later; fault is reported 3 edges
 //   later (sticky diagnostic). The command and internal data registers carry no reset (command clears the edge after
 //   reset reaches the valid chain; rst_n fans out to the ~30 control flops only).
@@ -108,6 +108,13 @@ module ot_hbm_su_programme #(
     always_ff @(posedge clk)if(issue)word_slot<=pc[INDEX_SHIFT-1:0];
     assign indices={240'd0,index_rows[16*word_slot+:16]};
   end endgenerate
+  // next internal busy (the busy_i register's D; PIPE 1 also forms the registered output busy from it)
+  logic nb;
+  always_comb begin
+    nb=busy_i;
+    if(start && !(busy_i || length==0 || length>EDGES)) nb=1;
+    if(c_v && c_e==count-1) nb=0;
+  end
   // dictionary read issue (d_ren), its edge number and address: PIPE 0 = v1/e1/indices (unchanged)
   logic d_ren; logic [15:0] d_e; logic [INDEX_GROUPS*256-1:0] d_addr;
   // command stage valid/edge/data: PIPE 0 = v2/e2/templates
@@ -139,11 +146,15 @@ module ot_hbm_su_programme #(
     always_ff @(posedge clk) if(!rst_n) begin va<=0; vi<=0; vd<=0; end else begin va<=v1; vi<=va; vd<=v2; end
     assign d_ren=vi; assign d_e=ei; assign d_addr=indices_r;
     assign c_v=vd; assign c_e=ed;
-    // outputs cycle-identical to a PIPE 0 producer started XP edges later
-    logic [XP-1:0] busy_d, fault_d;
-    always_ff @(posedge clk) if(!rst_n) begin busy_d<='0; fault_d<='0; end
-      else begin busy_d<={busy_d[XP-2:0],busy_i}; fault_d<={fault_d[XP-2:0],fault_i}; end
-    assign busy=(MUT==2)?busy_i:(busy_i && busy_d[XP-1]);
+    // outputs cycle-identical to a PIPE 0 producer started XP edges later, all register outputs:
+    // busy(t+1) = busy_i(t+1) && busy_i(t+1-XP) = nb(t) && busy_d[XP-2](t)
+    logic [XP-1:0] busy_d, fault_d; logic busy_q;
+    always_ff @(posedge clk) if(!rst_n) begin busy_d<='0; fault_d<='0; busy_q<=0; end
+      else begin
+        busy_d<={busy_d[XP-2:0],busy_i}; fault_d<={fault_d[XP-2:0],fault_i};
+        busy_q<=(MUT==2)?nb:(nb && busy_d[XP-2]);
+      end
+    assign busy=busy_q;
     assign fault=fault_d[XP-1];
   end endgenerate
   // Start sampled at S; first command/valid presented after S+3 (PIPE 1: S+6) and sampled
@@ -156,9 +167,10 @@ module ot_hbm_su_programme #(
     end else begin
       valid<=c_v; v1<=issue; v2<=d_ren; done<=0;
       if(cfg_we && (busy_i || cfg_bank>=TOTAL_BANKS)) fault_i<=1;
+      busy_i<=nb;
       if(start) begin
         if(busy_i || length==0 || length>EDGES) fault_i<=1;
-        else begin busy_i<=1; issue<=1; pc<=0; count<=length; end
+        else begin issue<=1; pc<=0; count<=length; end
       end
       if(issue) begin
         e1<=pc;
@@ -167,7 +179,7 @@ module ot_hbm_su_programme #(
       if(d_ren) e2<=d_e;
       if(c_v) begin
         edge_index<=c_e;
-        if(c_e==count-1) begin busy_i<=0; done<=1; end
+        if(c_e==count-1) done<=1;
       end
     end
   end
