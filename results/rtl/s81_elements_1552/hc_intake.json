@@ -1,0 +1,20 @@
+{
+ "source_commit": "01a7116c1",
+ "scope": "narrow current-main intake of additive HC RETCOL/a4b source, preserving current main CSEQ pr5srs",
+ "row_proof_exact_sources": {
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_return_columns.sv": "a8632e561b2e6099f6aadefd5f86c8e52de18cf011f9462c4b4f8cd9ccb1abdf",
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_cth_ntc.sv": "ee70103f4eff1dc85da36a1a2a4a8f65e3f3d980ebacea84358c235afa52e00c",
+  "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_cth.sv": "295ca2e09d326e597cd35fb6a001757fb41a06c017bd2c12ad50f7ec353d9855"
+ },
+ "row_proof": "positive PASS + 13 actual failing mutants, 3000 cycles; no unchanged rerun",
+ "historical_fullshape": {
+  "positive": "0/1940 rows x3;20 jobs;4835 cycles",
+  "mut1": "FAIL expected",
+  "current_source_delta": [
+   "rtl/dsrom_sys/s81_suhc/hier/ot_s81_hc_cseq.sv"
+  ],
+  "qualification": "current CSEQ reset adapter now receives relayed rs_n; composition run required; no current full-parent claim"
+ },
+ "physical": "gate10 retcol a4b x4 preserved; ctrnown_e a6 gate WARN0; no new CLOSED/native claim",
+ "calendar": "HQ+1 per return row, Y/CS+1 vs a3, fv0 from early ctfxs, hov flag sampling+1; centre pad RP+2"
+}

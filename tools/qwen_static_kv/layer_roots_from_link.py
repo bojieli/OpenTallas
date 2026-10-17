@@ -69,9 +69,25 @@ def main():
     ap.add_argument('caldir')
     ap.add_argument('out')
     ap.add_argument('--T', type=int, default=8192)
-    ap.add_argument('--digest', type=lambda s: int(s, 0), default=0x123456789abcdef0)
-    ap.add_argument('--epoch', type=int, default=3)
+    # The authorized programme the image binds (qkd_static_kv_layer_programme start check): digest64 = the HOST program
+    # loader's (qkd_host_program_loader: seed QHOSTPRG, rol7 ^ word ^ {desc, addr}) over the INSTALLED program image
+    # (PW1024 + DW8), computed here exactly as tools/qwen_split/sys_face_image.image_digest; epoch16 = the image epoch
+    # the HOST installs it under.  Default = the compute die system face's bench program (sys_face_image.bench_program,
+    # epoch 0x0b0b, tb_qfd_sys_face) until the deployment program image is committed; --program / --epoch override.
+    ap.add_argument('--program', help='installed program image hex (PW1024 + DW8 64-b words); default: the sys_face bench program')
+    ap.add_argument('--epoch', type=lambda s: int(s, 0), default=0x0b0b)
+    ap.add_argument('--digest', type=lambda s: int(s, 0), help='override the digest (component tests only)')
     a = ap.parse_args()
+    import importlib.util as _iu
+    _sp = _iu.spec_from_file_location('sys_face_image', ROOT / 'tools/qwen_split/sys_face_image.py')
+    SFI = _iu.module_from_spec(_sp)
+    _sp.loader.exec_module(SFI)
+    prog_words = ([int(x, 16) for x in Path(a.program).read_text().split()] if a.program else SFI.bench_program())
+    if len(prog_words) != SFI.PW + SFI.DW:
+        raise SystemExit('installed program image must be PW1024 + DW8 words')
+    if a.digest is None:
+        a.digest = SFI.image_digest(prog_words)
+    prog_src = a.program or 'tools/qwen_split/sys_face_image.py bench_program()'
     cal = json.loads((Path(a.caldir) / 'calendar.json').read_text())
     prog = cal['program']
     lay = prog['layers']
@@ -121,6 +137,7 @@ def main():
     (od / 'boot.hex').write_text(''.join(f'{w:016x}\n' for w in words))
     rec = dict(schema='opentallas.qwen_kv_static.layer_roots_from_link.v1', status='COMPONENT_TEST_NOT_PRODUCTION_INSTALLABLE',
                T=a.T, kv_qk_start_after_prefetch=lead, pv_start=pvs, layer_relative=rel, start_qk=start_qk,
+               programme=dict(source=prog_src, digest=f'{a.digest:016x}', epoch=a.epoch),
                constants=dict(START_LEAD=START_LEAD, D2D_OUT=D2D_OUT, RX_CMD=RX_CMD, Q_TO_START=Q_TO_START, ISSUE_TO_RUN=ISSUE_TO_RUN,
                               WRITER_T0=WRITER_T0, LINK_START=LINK_START),
                stage_end=ends, l0_base=starts[0], token_core_cycles=img['token_core_cycles'],

@@ -8,7 +8,8 @@
 // Checks: per quadrant the sequence of aq words (start + 32 Q beats), kvn rows and kc descriptors is IDENTICAL between
 // the two (bit-exact), counts = NL layers, static fault 0, and the static edges sit at ONE offset from the CMD slot in
 // every layer.  Prints SEQ_STATIC ... with the per-face latency delta static - legacy (edges) for the cost ledger.
-module tb_seq_static #(parameter integer MUT = 0, parameter integer NL = 36, parameter integer P = 6836) ();
+module tb_seq_static #(parameter integer MUT = 0, parameter integer NL = 36, parameter integer P = 6836,
+                      parameter integer ARR_MUT = 0) ();
 `include "seq_gold.svh"
     reg ck = 0;
     always #0.5 ck = ~ck;
@@ -40,7 +41,9 @@ module tb_seq_static #(parameter integer MUT = 0, parameter integer NL = 36, par
                 if (rel == G_CMD - G_LPRUN) s_lr = 1;
                 if (rel == G_CMD) begin s_av = 1; s_ak = 1; end
                 if (rel == G_CMD + 1) s_kd = {493'd0, 18'(T - 1), 1'b1};
-                if (rel >= G_Q0 && rel < G_Q0 + 32) begin s_av = 1; s_ak = 2; s_ab = 5'(rel - G_Q0); end
+                if (rel >= G_Q0 + ARR_MUT && rel < G_Q0 + 32 + ARR_MUT) begin
+                    s_av = 1; s_ak = 2; s_ab = 5'(rel - G_Q0 - ARR_MUT);
+                end
                 if (rel >= G_Q0 + 1 && rel < G_Q0 + 33) begin
                     s_kd = qword(L, rel - G_Q0 - 1);
                     l_x3 = {1'b1, 3'b001, 2'b00, 6'(rel - G_Q0 - 1), qword(L, rel - G_Q0 - 1)};

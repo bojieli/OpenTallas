@@ -1,0 +1,850 @@
+{
+  "collected_at": "2026-10-16T16:01:40.791860-07:00",
+  "runs": [
+    {
+      "name": "kvs12a-v143c",
+      "run": "/srv/opentallas-scratch/claude/qwen-kvsys/kvs12a-v143c",
+      "status_log": "2026-10-16 06:05:49 PDT prep start b153ec695d3807fe3944beeda75f105ecf461c5a\n2026-10-16 06:14:55 PDT prep done: prep done: b153ec695 }\n2026-10-16 06:14:56 PDT ASSUMED PHY PG access applied\n2026-10-16 06:14:56 PDT chain start die=kv src=b153ec695 from=case\n2026-10-16 06:14:57 PDT NATIVE PORT BIND FAIL (/srv/opentallas-scratch/claude/qwen-kvsys/kvs12a-v143c/bind_launch.log): DIAGNOSTIC PATHFINDING ONLY -- NOT A DIE RESULT, NOT RELEASE\n2026-10-16 06:16:20 PDT STRICT PORT BIND v2: DIE_PORT_BIND FAIL masters=53 instances=20605 unbound_masters=0 stub_masters=0 ambiguous_masters=0 port_not_in_rtl=0 width_mismatch=0 input_unconnected=23 input_tied=0 unparsed_connections=0 undriven_net_bits=0 multi_driven_net_bits=0 top_assigns=0 params_not_in_rtl=0 strap_ports=20 pad_bits=0\n2026-10-16 07:27:50 PDT real case: OT_LEGAL instances=29029 overlaps=0 outside=0 OT_ASSERT PASS OT_PA DONE \n2026-10-16 09:59:12 PDT PDN PASS OT_PGCHECK VDD PASS OT_PGCHECK VSS PASS \n2026-10-16 10:43:49 PDT full-die GRT exit=0 overflow=0 ([INFO GRT-0018] Total wirelength: 1013448931 um)\n2026-10-16 10:43:49 PDT STA tt clock: /srv/opentallas-scratch/claude/qwen-kvsys/kvs12a-v143c/libs/clocks_{corner}.tcl\n2026-10-16 10:55:04 PDT STA tt: tns max -141981.80 wns max -196.70 worst slack max -196.70 \n2026-10-16 10:55:05 PDT STA ff clock: /srv/opentallas-scratch/claude/qwen-kvsys/kvs12a-v143c/libs/clocks_{corner}.tcl\n2026-10-16 11:08:01 PDT STA ff: tns max -73.12 wns max -52.20 worst slack min -80.60 \n2026-10-16 11:08:02 PDT STA ss clock: /srv/opentallas-scratch/claude/qwen-kvsys/kvs12a-v143c/libs/clocks_{corner}.tcl\n2026-10-16 11:21:17 PDT STA ss: tns max -39994000.00 wns max -411.18 worst slack max -411.18 \n2026-10-16 11:21:17 PDT chain done\n",
+      "classify_sha256": "8163068b84a72f125d2bee39ae3155cf163ec6abd66e0643868b821e16ec783f",
+      "corners": {
+        "tt": {
+          "causes": {
+            "real -> relay": {
+              "endpoints": 3920,
+              "violators": 187,
+              "worst_ps": -196.7
+            },
+            "relay -> relay": {
+              "endpoints": 554411,
+              "violators": 299,
+              "worst_ps": -117.34
+            },
+            "real -> frame": {
+              "endpoints": 176791,
+              "violators": 869,
+              "worst_ps": -97.0
+            },
+            "real -> real": {
+              "endpoints": 2177911,
+              "violators": 6983,
+              "worst_ps": -72.45
+            },
+            "frame -> real": {
+              "endpoints": 52684,
+              "violators": 103,
+              "worst_ps": -38.14
+            },
+            "frame -> relay": {
+              "endpoints": 42098,
+              "violators": 0,
+              "worst_ps": 2.06
+            },
+            "relay -> phy": {
+              "endpoints": 761,
+              "violators": 0,
+              "worst_ps": 88.86
+            },
+            "reset -> real": {
+              "endpoints": 35040,
+              "violators": 0,
+              "worst_ps": 99.77
+            },
+            "relay -> frame": {
+              "endpoints": 4197,
+              "violators": 0,
+              "worst_ps": 159.57
+            },
+            "frame -> frame": {
+              "endpoints": 83,
+              "violators": 0,
+              "worst_ps": 179.32
+            },
+            "relay -> real": {
+              "endpoints": 1454,
+              "violators": 0,
+              "worst_ps": 183.47
+            },
+            "phy -> relay": {
+              "endpoints": 986,
+              "violators": 0,
+              "worst_ps": 238.34
+            }
+          },
+          "worst_rows": [
+            {
+              "cause": "real -> relay",
+              "launch": "qkd_ctrl_kc",
+              "capture": "qkd_rly_1.a",
+              "nearest_pin_um": 545.9,
+              "named_pin_manhattan_um": 558.33,
+              "named_pin_geometry": "REALIZED_DEF_ORIGINS; LEF first RECT centres; geometric diagnostic, not routed length",
+              "endpoints": 4,
+              "violators": 2,
+              "worst_ps": -196.7,
+              "example": {
+                "start": "ctrl_WS__u_kc/kf",
+                "end": "rly_lkf_WS_0/a[0]"
+              }
+            },
+            {
+              "cause": "relay -> relay",
+              "launch": "qkd_rly_1048",
+              "capture": "qkd_rly_1048.a",
+              "nearest_pin_um": 388.8,
+              "named_pin_manhattan_um": 441.264,
+              "named_pin_geometry": "REALIZED_DEF_ORIGINS; LEF first RECT centres; geometric diagnostic, not routed length",
+              "endpoints": 65338,
+              "violators": 103,
+              "worst_ps": -117.34,
+              "example": {
+                "start": "rly_kvn_WN_4/b[521]",
+                "end": "rly_kvn_WN_5/a[521]"
+              }
+            },
+            {
+              "cause": "real -> frame",
+              "launch": "qkd_ctrl_pc",
+              "capture": "qkd_hslice.ctrl_er",
+              "nearest_pin_um": 456.4,
+              "named_pin_manhattan_um": 510.93,
+              "named_pin_geometry": "REALIZED_DEF_ORIGINS; LEF first RECT centres; geometric diagnostic, not routed length",
+              "endpoints": 16704,
+              "violators": 869,
+              "worst_ps": -97.0,
+              "example": {
+                "start": "ctrl_ES__u_pc0/er[226]",
+                "end": "hsl_ES_0/ctrl_er[226]"
+              }
+            },
+            {
+              "cause": "relay -> relay",
+              "launch": "qkd_rly_1025",
+              "capture": "qkd_rly_1025.a",
+              "nearest_pin_um": 388.8,
+              "named_pin_manhattan_um": 441.264,
+              "named_pin_geometry": "REALIZED_DEF_ORIGINS; LEF first RECT centres; geometric diagnostic, not routed length",
+              "endpoints": 170773,
+              "violators": 73,
+              "worst_ps": -91.5,
+              "example": {
+                "start": "rly_krs_EN_7_4/b[323]",
+                "end": "rly_krs_EN_7_5/a[323]"
+              }
+            },
+            {
+              "cause": "real -> real",
+              "launch": "qkd_ectl_a_tp8_epoch_direct",
+              "capture": "qkd_hgs.ti_a",
+              "nearest_pin_um": 211.3,
+              "named_pin_manhattan_um": 290.25,
+              "named_pin_geometry": "REALIZED_DEF_ORIGINS; LEF first RECT centres; geometric diagnostic, not routed length",
+              "endpoints": 65536,
+              "violators": 206,
+              "worst_ps": -72.45,
+              "example": {
+                "start": "ectl_WS_4__u_a/t1_row[107]",
+                "end": "hst_WS_4_3_g/ti_a[111]"
+              }
+            }
+          ]
+        },
+        "ff": {
+          "causes": {
+            "reset -> phy": {
+              "endpoints": 2,
+              "violators": 2,
+              "worst_ps": -80.6
+            },
+            "frame -> phy": {
+              "endpoints": 584,
+              "violators": 584,
+              "worst_ps": -80.35
+            },
+            "reset -> frame": {
+              "endpoints": 12,
+              "violators": 12,
+              "worst_ps": -56.84
+            },
+            "relay -> frame": {
+              "endpoints": 16813,
+              "violators": 11701,
+              "worst_ps": -56.84
+            },
+            "frame -> frame": {
+              "endpoints": 131912,
+              "violators": 131720,
+              "worst_ps": -56.84
+            },
+            "relay -> relay": {
+              "endpoints": 671528,
+              "violators": 95650,
+              "worst_ps": -56.84
+            },
+            "frame -> relay": {
+              "endpoints": 49177,
+              "violators": 5320,
+              "worst_ps": -56.84
+            },
+            "phy -> frame": {
+              "endpoints": 585,
+              "violators": 565,
+              "worst_ps": -12.64
+            },
+            "reset -> real": {
+              "endpoints": 39811,
+              "violators": 0,
+              "worst_ps": 8.51
+            },
+            "relay -> phy": {
+              "endpoints": 811,
+              "violators": 0,
+              "worst_ps": 16.81
+            },
+            "real -> frame": {
+              "endpoints": 200816,
+              "violators": 0,
+              "worst_ps": 19.08
+            },
+            "relay -> real": {
+              "endpoints": 3329,
+              "violators": 0,
+              "worst_ps": 28.99
+            },
+            "phy -> relay": {
+              "endpoints": 1045,
+              "violators": 0,
+              "worst_ps": 31.44
+            },
+            "frame -> real": {
+              "endpoints": 32804,
+              "violators": 0,
+              "worst_ps": 41.87
+            },
+            "real -> real": {
+              "endpoints": 1897466,
+              "violators": 0,
+              "worst_ps": 62.22
+            },
+            "real -> relay": {
+              "endpoints": 3641,
+              "violators": 0,
+              "worst_ps": 69.43
+            }
+          },
+          "worst_rows": [
+            {
+              "cause": "reset -> phy",
+              "launch": "qkd_rst_region",
+              "capture": "ot_qfd_serdes_112g_x12_phy.rst_n",
+              "nearest_pin_um": 1244.6,
+              "named_pin_manhattan_um": 1260.18,
+              "named_pin_geometry": "REALIZED_DEF_ORIGINS; LEF first RECT centres; geometric diagnostic, not routed length",
+              "endpoints": 1,
+              "violators": 1,
+              "worst_ps": -80.6,
+              "example": {
+                "start": "rly_rst_link_t0_50/b[0]",
+                "end": "serdes_host/rst_n"
+              }
+            },
+            {
+              "cause": "reset -> phy",
+              "launch": "qkd_d2ds",
+              "capture": "ot_qkvd_ucie_x64_phy.rst_n",
+              "nearest_pin_um": 86.2,
+              "named_pin_manhattan_um": 501.048,
+              "named_pin_geometry": "REALIZED_DEF_ORIGINS; LEF first RECT centres; geometric diagnostic, not routed length",
+              "endpoints": 1,
+              "violators": 1,
+              "worst_ps": -80.6,
+              "example": {
+                "start": "d2d_kv/phy_rst_n[0]",
+                "end": "ucie_rom/rst_n"
+              }
+            },
+            {
+              "cause": "frame -> phy",
+              "launch": "qkd_d2ds",
+              "capture": "ot_qkvd_ucie_x64_phy.tx_flit",
+              "nearest_pin_um": 2.4,
+              "named_pin_manhattan_um": 3.24,
+              "named_pin_geometry": "REALIZED_DEF_ORIGINS; LEF first RECT centres; geometric diagnostic, not routed length",
+              "endpoints": 583,
+              "violators": 583,
+              "worst_ps": -80.35,
+              "example": {
+                "start": "d2d_kv/fdi[575]",
+                "end": "ucie_rom/tx_flit[573]"
+              }
+            },
+            {
+              "cause": "frame -> phy",
+              "launch": "qkd_d2ds",
+              "capture": "ot_qkvd_ucie_x64_phy.tx_v",
+              "nearest_pin_um": 85.8,
+              "named_pin_manhattan_um": 85.896,
+              "named_pin_geometry": "REALIZED_DEF_ORIGINS; LEF first RECT centres; geometric diagnostic, not routed length",
+              "endpoints": 1,
+              "violators": 1,
+              "worst_ps": -70.09,
+              "example": {
+                "start": "d2d_kv/fdi[1]",
+                "end": "ucie_rom/tx_v"
+              }
+            },
+            {
+              "cause": "reset -> frame",
+              "launch": "qkd_rly_t1",
+              "capture": "qkd_ahub.rst_n",
+              "nearest_pin_um": 799.6,
+              "named_pin_manhattan_um": 810.18,
+              "named_pin_geometry": "REALIZED_DEF_ORIGINS; LEF first RECT centres; geometric diagnostic, not routed length",
+              "endpoints": 1,
+              "violators": 1,
+              "worst_ps": -56.84,
+              "example": {
+                "start": "rly_rst_die_t8_1_0_3/b[0]",
+                "end": "ahub/rst_n[0]"
+              }
+            }
+          ]
+        },
+        "ss": {
+          "causes": {
+            "real -> relay": {
+              "endpoints": 3920,
+              "violators": 523,
+              "worst_ps": -411.18
+            },
+            "real -> real": {
+              "endpoints": 2393764,
+              "violators": 457359,
+              "worst_ps": -345.71
+            },
+            "real -> frame": {
+              "endpoints": 183159,
+              "violators": 28956,
+              "worst_ps": -301.62
+            },
+            "relay -> relay": {
+              "endpoints": 370104,
+              "violators": 299,
+              "worst_ps": -117.34
+            },
+            "frame -> real": {
+              "endpoints": 34099,
+              "violators": 1258,
+              "worst_ps": -88.74
+            },
+            "reset -> real": {
+              "endpoints": 35040,
+              "violators": 279,
+              "worst_ps": -44.56
+            },
+            "frame -> relay": {
+              "endpoints": 26097,
+              "violators": 0,
+              "worst_ps": 2.06
+            },
+            "relay -> phy": {
+              "endpoints": 673,
+              "violators": 0,
+              "worst_ps": 67.52
+            },
+            "relay -> real": {
+              "endpoints": 921,
+              "violators": 0,
+              "worst_ps": 126.99
+            },
+            "relay -> frame": {
+              "endpoints": 2085,
+              "violators": 0,
+              "worst_ps": 159.57
+            },
+            "frame -> frame": {
+              "endpoints": 8,
+              "violators": 0,
+              "worst_ps": 179.32
+            },
+            "phy -> relay": {
+              "endpoints": 466,
+              "violators": 0,
+              "worst_ps": 179.75
+            }
+          },
+          "worst_rows": [
+            {
+              "cause": "real -> relay",
+              "launch": "qkd_ctrl_kc",
+              "capture": "qkd_rly_1.a",
+              "nearest_pin_um": 545.9,
+              "named_pin_manhattan_um": 558.33,
+              "named_pin_geometry": "REALIZED_DEF_ORIGINS; LEF first RECT centres; geometric diagnostic, not routed length",
+              "endpoints": 4,
+              "violators": 4,
+              "worst_ps": -411.18,
+              "example": {
+                "start": "ctrl_WS__u_kc/kf",
+                "end": "rly_lkf_WS_0/a[0]"
+              }
+            },
+            {
+              "cause": "real -> real",
+              "launch": "qkd_ectl_a_tp8_epoch_direct",
+              "capture": "qkd_hgs.ti_a",
+              "nearest_pin_um": 211.3,
+              "named_pin_manhattan_um": 290.25,
+              "named_pin_geometry": "REALIZED_DEF_ORIGINS; LEF first RECT centres; geometric diagnostic, not routed length",
+              "endpoints": 65536,
+              "violators": 61349,
+              "worst_ps": -345.71,
+              "example": {
+                "start": "ectl_WS_4__u_a/t1_row[107]",
+                "end": "hst_WS_4_3_g/ti_a[111]"
+              }
+            },
+            {
+              "cause": "real -> real",
+              "launch": "qkd_ectl_b_tp8_direct",
+              "capture": "qkd_hgs.ti_a",
+              "nearest_pin_um": 118.7,
+              "named_pin_manhattan_um": 272.586,
+              "named_pin_geometry": "REALIZED_DEF_ORIGINS; LEF first RECT centres; geometric diagnostic, not routed length",
+              "endpoints": 67584,
+              "violators": 59856,
+              "worst_ps": -317.52,
+              "example": {
+                "start": "ectl_WS_2__u_b/t1_row[436]",
+                "end": "hst_WS_2_3_g/ti_a[952]"
+              }
+            },
+            {
+              "cause": "real -> frame",
+              "launch": "qkd_ctrl_pc",
+              "capture": "qkd_hslice.ctrl_er",
+              "nearest_pin_um": 456.4,
+              "named_pin_manhattan_um": 510.93,
+              "named_pin_geometry": "REALIZED_DEF_ORIGINS; LEF first RECT centres; geometric diagnostic, not routed length",
+              "endpoints": 16704,
+              "violators": 10782,
+              "worst_ps": -301.62,
+              "example": {
+                "start": "ctrl_ES__u_pc0/er[226]",
+                "end": "hsl_ES_0/ctrl_er[226]"
+              }
+            },
+            {
+              "cause": "real -> real",
+              "launch": "qkd_hgs",
+              "capture": "qkh_head_gather_stage.ti_a",
+              "nearest_pin_um": 287.0,
+              "named_pin_manhattan_um": 523.584,
+              "named_pin_geometry": "REALIZED_DEF_ORIGINS; LEF first RECT centres; geometric diagnostic, not routed length",
+              "endpoints": 99776,
+              "violators": 96642,
+              "worst_ps": -286.12,
+              "example": {
+                "start": "hst_WN_1_0_g/ti_b[1218]",
+                "end": "head_WN_1_1__u_ftg/ti_a[1218]"
+              }
+            }
+          ]
+        }
+      },
+      "rule": "TT setup + FF hold decide; SS sensitivity only. real = closed view (own ETM, phi - R clock); frame / relay = ASSUMED single-flop placeholders (ideal clock)",
+      "source_verified": {
+        "status": "PASS",
+        "actual_git_commit": "b153ec695d3807fe3944beeda75f105ecf461c5a",
+        "method": "clean detached worktree at the exact commit"
+      }
+    },
+    {
+      "name": "kvs12b-rly-dcal",
+      "run": "/srv/opentallas-scratch/claude/qwen-kvsys/kvs12b-rly-dcal",
+      "status_log": "2026-10-16 06:56:19 PDT prep start 7e733bc17094493fba1d9c7d81c44240c3e16e55\n2026-10-16 07:03:04 PDT prep done: prep done: 7e733bc17 }\n2026-10-16 07:03:05 PDT ASSUMED PHY PG access applied\n2026-10-16 07:03:05 PDT chain start die=kv src=7e733bc17 from=case\n2026-10-16 07:03:06 PDT NATIVE PORT BIND FAIL (/srv/opentallas-scratch/claude/qwen-kvsys/kvs12b-rly-dcal/bind_launch.log): DIAGNOSTIC PATHFINDING ONLY -- NOT A DIE RESULT, NOT RELEASE\n2026-10-16 07:04:31 PDT STRICT PORT BIND v2: DIE_PORT_BIND FAIL masters=37 instances=21333 unbound_masters=1 stub_masters=0 ambiguous_masters=0 port_not_in_rtl=0 width_mismatch=0 input_unconnected=23 input_tied=0 unparsed_connections=0 duplicate_port_connections=0 undriven_net_bits=0 multi_driven_net_bits=0 top_assigns=0 params_not_in_rtl=0 strap_ports=20 pad_bits=26814\n2026-10-16 07:09:38 PDT STRICT PORT BIND v2 re-run with DCAL bindings (lead, tools fix): DIE_PORT_BIND FAIL masters=37 instances=21333 unbound_masters=0 stub_masters=0 ambiguous_masters=0 port_not_in_rtl=0 width_mismatch=0 input_unconnected=17 input_tied=0 unparsed_connections=0 duplicate -> port_bind_v2_dcalfix/\n2026-10-16 08:17:41 PDT real case: OT_LEGAL instances=56571 overlaps=0 outside=0 OT_ASSERT PASS OT_PA DONE \n2026-10-16 13:11:31 PDT PDN PASS OT_PGCHECK VDD PASS OT_PGCHECK VSS PASS \n2026-10-16 13:53:24 PDT full-die GRT exit=0 overflow=0 ([INFO GRT-0018] Total wirelength: 1011811944 um)\n2026-10-16 13:53:24 PDT STA tt clock: /srv/opentallas-scratch/claude/qwen-kvsys/kvs12b-rly-dcal/libs/clocks_{corner}.tcl\n2026-10-16 14:02:25 PDT STA tt: tns max -792553.88 wns max -225.01 worst slack max -225.01 \n2026-10-16 14:02:26 PDT STA ff clock: /srv/opentallas-scratch/claude/qwen-kvsys/kvs12b-rly-dcal/libs/clocks_{corner}.tcl\n2026-10-16 14:12:53 PDT STA ff: tns max -8255.51 wns max -95.20 worst slack min -80.60 \n2026-10-16 14:12:53 PDT STA ss clock: /srv/opentallas-scratch/claude/qwen-kvsys/kvs12b-rly-dcal/libs/clocks_{corner}.tcl\n2026-10-16 14:24:24 PDT STA ss: tns max -81641456.00 wns max -474.82 worst slack max -474.82 \n2026-10-16 14:24:24 PDT chain done\n",
+      "classify_sha256": "39d3e28636ce156bde9f976dbfb4c7a3ee6b3f750e5b798793141b1ba8d868a1",
+      "corners": {
+        "tt": {
+          "causes": {
+            "real -> real": {
+              "endpoints": 2756539,
+              "violators": 23047,
+              "worst_ps": -225.01
+            },
+            "real -> phy": {
+              "endpoints": 1044,
+              "violators": 514,
+              "worst_ps": -211.63
+            },
+            "reset -> real": {
+              "endpoints": 39746,
+              "violators": 746,
+              "worst_ps": -154.02
+            },
+            "real -> frame": {
+              "endpoints": 171606,
+              "violators": 853,
+              "worst_ps": -97.0
+            },
+            "frame -> real": {
+              "endpoints": 80564,
+              "violators": 152,
+              "worst_ps": -38.6
+            },
+            "phy -> real": {
+              "endpoints": 837,
+              "violators": 0,
+              "worst_ps": 239.24
+            }
+          },
+          "worst_rows": [
+            {
+              "cause": "real -> real",
+              "launch": "qkd_rlys_528",
+              "capture": "qkd_rlys_528.a",
+              "nearest_pin_um": 475.7,
+              "named_pin_manhattan_um": 546.708,
+              "named_pin_geometry": "REALIZED_DEF_ORIGINS; LEF first RECT centres; geometric diagnostic, not routed length",
+              "endpoints": 551751,
+              "violators": 15373,
+              "worst_ps": -225.01,
+              "example": {
+                "start": "rly_krs_WN_6_2__s1/b[210]",
+                "end": "rly_krs_WN_6_3__s1/a[210]"
+              }
+            },
+            {
+              "cause": "real -> phy",
+              "launch": "qkd_rlys_528",
+              "capture": "ot_qfd_serdes_112g_x12_phy.tx_flit",
+              "nearest_pin_um": 417.8,
+              "named_pin_manhattan_um": 480.846,
+              "named_pin_geometry": "REALIZED_DEF_ORIGINS; LEF first RECT centres; geometric diagnostic, not routed length",
+              "endpoints": 1043,
+              "violators": 513,
+              "worst_ps": -211.63,
+              "example": {
+                "start": "rly_host_fdi_73__s0/b[454]",
+                "end": "serdes_host/tx_flit[453]"
+              }
+            },
+            {
+              "cause": "real -> phy",
+              "launch": "qkd_rlys_528",
+              "capture": "ot_qfd_serdes_112g_x12_phy.tx_v",
+              "nearest_pin_um": 439.6,
+              "named_pin_manhattan_um": 468.366,
+              "named_pin_geometry": "REALIZED_DEF_ORIGINS; LEF first RECT centres; geometric diagnostic, not routed length",
+              "endpoints": 1,
+              "violators": 1,
+              "worst_ps": -174.66,
+              "example": {
+                "start": "rly_host_fdi_73__s0/b[0]",
+                "end": "serdes_host/tx_v"
+              }
+            },
+            {
+              "cause": "reset -> real",
+              "launch": "qkd_rlys_528",
+              "capture": "qkd_ectl_a_tp8_epoch_direct.rs",
+              "nearest_pin_um": 410.4,
+              "named_pin_manhattan_um": 483.108,
+              "named_pin_geometry": "REALIZED_DEF_ORIGINS; LEF first RECT centres; geometric diagnostic, not routed length",
+              "endpoints": 32800,
+              "violators": 746,
+              "worst_ps": -154.02,
+              "example": {
+                "start": "rly_krs_ES_5_16__s1/b[198]",
+                "end": "ectl_ES_5__u_a/rs[726]"
+              }
+            },
+            {
+              "cause": "real -> frame",
+              "launch": "qkd_ctrl_pc",
+              "capture": "qkd_hslice.ctrl_er",
+              "nearest_pin_um": 456.4,
+              "named_pin_manhattan_um": 510.93,
+              "named_pin_geometry": "REALIZED_DEF_ORIGINS; LEF first RECT centres; geometric diagnostic, not routed length",
+              "endpoints": 16704,
+              "violators": 783,
+              "worst_ps": -97.0,
+              "example": {
+                "start": "ctrl_ES__u_pc20/er[226]",
+                "end": "hsl_ES_20/ctrl_er[226]"
+              }
+            }
+          ]
+        },
+        "ff": {
+          "causes": {
+            "reset -> phy": {
+              "endpoints": 2,
+              "violators": 2,
+              "worst_ps": -80.6
+            },
+            "frame -> phy": {
+              "endpoints": 584,
+              "violators": 584,
+              "worst_ps": -80.35
+            },
+            "frame -> frame": {
+              "endpoints": 131721,
+              "violators": 131721,
+              "worst_ps": -56.84
+            },
+            "phy -> frame": {
+              "endpoints": 585,
+              "violators": 564,
+              "worst_ps": -12.64
+            },
+            "frame -> real": {
+              "endpoints": 83007,
+              "violators": 0,
+              "worst_ps": 4.72
+            },
+            "reset -> real": {
+              "endpoints": 40073,
+              "violators": 0,
+              "worst_ps": 9.22
+            },
+            "real -> frame": {
+              "endpoints": 226362,
+              "violators": 0,
+              "worst_ps": 19.08
+            },
+            "reset -> frame": {
+              "endpoints": 12,
+              "violators": 0,
+              "worst_ps": 21.57
+            },
+            "real -> real": {
+              "endpoints": 2566819,
+              "violators": 0,
+              "worst_ps": 62.19
+            },
+            "phy -> real": {
+              "endpoints": 1045,
+              "violators": 0,
+              "worst_ps": 91.34
+            },
+            "real -> phy": {
+              "endpoints": 126,
+              "violators": 0,
+              "worst_ps": 157.12
+            }
+          },
+          "worst_rows": [
+            {
+              "cause": "reset -> phy",
+              "launch": "qkd_rst_region",
+              "capture": "ot_qfd_serdes_112g_x12_phy.rst_n",
+              "nearest_pin_um": 1025.2,
+              "named_pin_manhattan_um": 1044.54,
+              "named_pin_geometry": "REALIZED_DEF_ORIGINS; LEF first RECT centres; geometric diagnostic, not routed length",
+              "endpoints": 1,
+              "violators": 1,
+              "worst_ps": -80.6,
+              "example": {
+                "start": "rly_rst_link_t0_51/b[0]",
+                "end": "serdes_host/rst_n"
+              }
+            },
+            {
+              "cause": "reset -> phy",
+              "launch": "qkd_d2ds",
+              "capture": "ot_qkvd_ucie_x64_phy.rst_n",
+              "nearest_pin_um": 86.2,
+              "named_pin_manhattan_um": 501.048,
+              "named_pin_geometry": "REALIZED_DEF_ORIGINS; LEF first RECT centres; geometric diagnostic, not routed length",
+              "endpoints": 1,
+              "violators": 1,
+              "worst_ps": -80.6,
+              "example": {
+                "start": "d2d_kv/phy_rst_n[0]",
+                "end": "ucie_rom/rst_n"
+              }
+            },
+            {
+              "cause": "frame -> phy",
+              "launch": "qkd_d2ds",
+              "capture": "ot_qkvd_ucie_x64_phy.tx_flit",
+              "nearest_pin_um": 2.4,
+              "named_pin_manhattan_um": 3.24,
+              "named_pin_geometry": "REALIZED_DEF_ORIGINS; LEF first RECT centres; geometric diagnostic, not routed length",
+              "endpoints": 583,
+              "violators": 583,
+              "worst_ps": -80.35,
+              "example": {
+                "start": "d2d_kv/fdi[575]",
+                "end": "ucie_rom/tx_flit[573]"
+              }
+            },
+            {
+              "cause": "frame -> phy",
+              "launch": "qkd_d2ds",
+              "capture": "ot_qkvd_ucie_x64_phy.tx_v",
+              "nearest_pin_um": 85.8,
+              "named_pin_manhattan_um": 85.896,
+              "named_pin_geometry": "REALIZED_DEF_ORIGINS; LEF first RECT centres; geometric diagnostic, not routed length",
+              "endpoints": 1,
+              "violators": 1,
+              "worst_ps": -70.09,
+              "example": {
+                "start": "d2d_kv/fdi[1]",
+                "end": "ucie_rom/tx_v"
+              }
+            },
+            {
+              "cause": "frame -> frame",
+              "launch": "qkd_rst_region",
+              "capture": "qkd_hslice_dn.host_rst_n",
+              "nearest_pin_um": 55.9,
+              "named_pin_manhattan_um": 75.24,
+              "named_pin_geometry": "REALIZED_DEF_ORIGINS; LEF first RECT centres; geometric diagnostic, not routed length",
+              "endpoints": 6,
+              "violators": 6,
+              "worst_ps": -56.84,
+              "example": {
+                "start": "rly_rst_host_t11_12/b[0]",
+                "end": "hsl_EN_31/host_rst_n[0]"
+              }
+            }
+          ]
+        },
+        "ss": {
+          "causes": {
+            "real -> real": {
+              "endpoints": 2815206,
+              "violators": 872679,
+              "worst_ps": -474.82
+            },
+            "real -> phy": {
+              "endpoints": 1044,
+              "violators": 978,
+              "worst_ps": -439.94
+            },
+            "reset -> real": {
+              "endpoints": 39823,
+              "violators": 17755,
+              "worst_ps": -415.06
+            },
+            "real -> frame": {
+              "endpoints": 150241,
+              "violators": 31674,
+              "worst_ps": -301.62
+            },
+            "frame -> real": {
+              "endpoints": 43685,
+              "violators": 1222,
+              "worst_ps": -88.74
+            },
+            "phy -> real": {
+              "endpoints": 337,
+              "violators": 0,
+              "worst_ps": 133.04
+            }
+          },
+          "worst_rows": [
+            {
+              "cause": "real -> real",
+              "launch": "qkd_rlys_528",
+              "capture": "qkd_rlys_528.a",
+              "nearest_pin_um": 475.7,
+              "named_pin_manhattan_um": 546.708,
+              "named_pin_geometry": "REALIZED_DEF_ORIGINS; LEF first RECT centres; geometric diagnostic, not routed length",
+              "endpoints": 552647,
+              "violators": 299383,
+              "worst_ps": -474.82,
+              "example": {
+                "start": "rly_krs_WN_6_2__s1/b[210]",
+                "end": "rly_krs_WN_6_3__s1/a[210]"
+              }
+            },
+            {
+              "cause": "real -> phy",
+              "launch": "qkd_rlys_528",
+              "capture": "ot_qfd_serdes_112g_x12_phy.tx_flit",
+              "nearest_pin_um": 417.8,
+              "named_pin_manhattan_um": 480.846,
+              "named_pin_geometry": "REALIZED_DEF_ORIGINS; LEF first RECT centres; geometric diagnostic, not routed length",
+              "endpoints": 1043,
+              "violators": 977,
+              "worst_ps": -439.94,
+              "example": {
+                "start": "rly_host_fdi_73__s0/b[454]",
+                "end": "serdes_host/tx_flit[453]"
+              }
+            },
+            {
+              "cause": "reset -> real",
+              "launch": "qkd_rlys_528",
+              "capture": "qkd_ectl_a_tp8_epoch_direct.rs",
+              "nearest_pin_um": 410.4,
+              "named_pin_manhattan_um": 483.108,
+              "named_pin_geometry": "REALIZED_DEF_ORIGINS; LEF first RECT centres; geometric diagnostic, not routed length",
+              "endpoints": 32800,
+              "violators": 17366,
+              "worst_ps": -415.06,
+              "example": {
+                "start": "rly_krs_ES_5_16__s1/b[198]",
+                "end": "ectl_ES_5__u_a/rs[726]"
+              }
+            },
+            {
+              "cause": "real -> phy",
+              "launch": "qkd_rlys_528",
+              "capture": "ot_qfd_serdes_112g_x12_phy.tx_v",
+              "nearest_pin_um": 439.6,
+              "named_pin_manhattan_um": 468.366,
+              "named_pin_geometry": "REALIZED_DEF_ORIGINS; LEF first RECT centres; geometric diagnostic, not routed length",
+              "endpoints": 1,
+              "violators": 1,
+              "worst_ps": -398.7,
+              "example": {
+                "start": "rly_host_fdi_73__s0/b[0]",
+                "end": "serdes_host/tx_v"
+              }
+            },
+            {
+              "cause": "real -> real",
+              "launch": "qkd_rlys_296",
+              "capture": "qkd_rlys_296.a",
+              "nearest_pin_um": 388.8,
+              "named_pin_manhattan_um": 435.66,
+              "named_pin_geometry": "REALIZED_DEF_ORIGINS; LEF first RECT centres; geometric diagnostic, not routed length",
+              "endpoints": 97172,
+              "violators": 81409,
+              "worst_ps": -335.66,
+              "example": {
+                "start": "rly_emf_WN_5__s0/b[284]",
+                "end": "rly_emf_WN_6__s0/a[284]"
+              }
+            }
+          ]
+        }
+      },
+      "rule": "TT setup + FF hold decide; SS sensitivity only. real = closed view (own ETM, phi - R clock); frame / relay = ASSUMED single-flop placeholders (ideal clock)",
+      "source_verified": {
+        "status": "PASS",
+        "actual_git_commit": "7e733bc17094493fba1d9c7d81c44240c3e16e55",
+        "method": "clean detached worktree at the exact commit"
+      }
+    },
+    {
+      "name": "kvs13c2-hop-v143d",
+      "run": "/srv/opentallas-scratch/claude/qwen-kvsys/kvs13c2-hop-v143d",
+      "status_log": "2026-10-16 12:27:29 PDT prep start 978cdbc69892a4987c14d0bf1ebb6fce9ea79cde\n2026-10-16 12:40:04 PDT prep done: prep done: 978cdbc69 }\n2026-10-16 12:40:06 PDT ASSUMED PHY PG access applied\n2026-10-16 12:40:06 PDT chain start die=kv src=978cdbc69 from=case\n2026-10-16 12:40:06 PDT NATIVE PORT BIND FAIL (/srv/opentallas-scratch/claude/qwen-kvsys/kvs13c2-hop-v143d/bind_launch.log): DIAGNOSTIC PATHFINDING ONLY -- NOT A DIE RESULT, NOT RELEASE\n2026-10-16 12:41:35 PDT STRICT PORT BIND v2: DIE_PORT_BIND FAIL masters=37 instances=20399 unbound_masters=0 stub_masters=0 ambiguous_masters=0 port_not_in_rtl=0 width_mismatch=0 input_unconnected=17 input_tied=0 unparsed_connections=0 duplicate_port_connections=0 undriven_net_bits=0 multi_driven_net_bits=0 top_assigns=0 params_not_in_rtl=0 strap_ports=20 pad_bits=27976\n2026-10-16 13:51:43 PDT real case: OT_LEGAL instances=56863 overlaps=0 outside=0 OT_ASSERT PASS OT_PA DONE \n",
+      "source_verified": {
+        "status": "PASS",
+        "actual_git_commit": "978cdbc69892a4987c14d0bf1ebb6fce9ea79cde",
+        "method": "clean detached worktree at the exact commit"
+      }
+    },
+    {
+      "name": "kvs13h-pv16-kvnc",
+      "run": "/srv/opentallas-scratch/claude/qwen-kvsys/kvs13h-pv16-kvnc",
+      "status_log": "2026-10-16 15:58:00 PDT prep start 46e75547f979f406cbdd0ef39442fb8e04953614\n",
+      "source_verified": null
+    }
+  ]
+}

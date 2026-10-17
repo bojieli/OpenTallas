@@ -170,6 +170,39 @@
   },
   {
    "design": "qwen_rom",
+   "unit": "SU.COPY_PINREG",
+   "group": "SU.COPY_PINREG",
+   "measured": 9.0,
+   "price": 0.0,
+   "unit_of_measure": "cycles",
+   "unit_ratio": null,
+   "e2e_loss_pct": 0.13,
+   "binding_workload": "ar",
+   "per_workload": {
+    "ar": {
+     "model": "token-path longest path",
+     "base_cycles": 249431.0,
+     "cycles": 249755.0,
+     "added_cycles": 324.0,
+     "runs_per_token": 36,
+     "critical_runs": 36,
+     "overlapped_runs": 0,
+     "other_price_nodes_skipped": 0,
+     "naive_added_cycles": 324.0,
+     "wave_positions": 0,
+     "wave_added_cycles_per_position": 0.0,
+     "e2e_loss_pct": 0.13
+    }
+   },
+   "within_unit_limit": true,
+   "evidence": "results/rtl/qwen_su64_pinreg_1016/schedule_delta.json",
+   "evidence_grade": "interim_log",
+   "date": "2026-10-16",
+   "status": "proposed",
+   "note": "UPPER BOUND (Q-B2r 10-16): qfd_sp_su64_sfu PINREG=1 delays copy VM writes +3 edges and back-to-back copy spacing +2 controller edges (tools/qwen_static_schedule/su_pinreg.py, base windows RTL-measured). No native copy calendar exists yet (copy_issue events are fixtures), so the count is bounded at the issue_rom limit of 3 copy controls per stage, each serial before its consuming ME op: 9 cycles on each of 36 layer qkv nodes. SU op path itself +0 (measured). Re-price on the first real copy calendar."
+  },
+  {
+   "design": "qwen_rom",
    "unit": "TT.ROMCMD qfd_tt_head_static h4 rom_cmd output register (+1 ROM-tree command edge)",
    "group": "TT.ROMCMD",
    "measured": 2.0,
@@ -2058,11 +2091,11 @@
  "totals": {
   "qwen_rom": {
    "accepted_pct": 1.065,
-   "proposed_pct": 5.65,
-   "accepted_plus_proposed_pct": 6.715,
+   "proposed_pct": 5.78,
+   "accepted_plus_proposed_pct": 6.845,
    "limit_pct": 15.0,
    "accepted_rows": 4,
-   "proposed_rows": 8,
+   "proposed_rows": 9,
    "headroom_pct": 13.935,
    "owner_exception_rows": 0,
    "over_limit_by_owner_exception": false

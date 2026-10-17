@@ -721,7 +721,7 @@ RTL.update(qkd_kvnc=KVNC_FILE)
 # output faces aq_<q> / kvn_<q> / kc_<q> / hs / tk / kst are bit-identical to qkd_seq's; its inputs are the static D2D
 # end's attention RX + KVN receiver (one bus srx, so the Q push and its data keep one latency), the layer programme
 # (lprg: qkd_static_kv_layer_programme_img, compile-time image, start = DCAL tok_start, authority = HOST root) and the
-# end's svc word (tap at its source).  Gone: lx/lr (r_x3_d, r_sd, r_kvd, t_ar_cr, ...) and the host hc load.
+# end's svc word (a relayed fork branch of hsvc; the HOST cohort reaches lprg as a relayed fork branch of kvnc_cht / chg).  Gone: lx/lr (r_x3_d, r_sd, r_kvd, t_ar_cr, ...) and the host hc load.
 SEQST = __import__('os').environ.get('OT_KV_SEQ_STATIC', '0') == '1'
 SEQST_FILE = 'rtl/qwen_sys/static_kv_20261014/qkd_seq_static.sv'
 LPRG_FILE = 'rtl/qwen_sys/static_kv_20261014/qkd_static_kv_layer_programme_rom.sv'
@@ -1962,16 +1962,18 @@ def _d2ds_swap(m):
                 for i_, (bid, cl, bits, eps) in enumerate(B):
                     if bid == 'hc':
                         B[i_] = (bid, cl, bits, [e for e in eps if e != ('seq', 'hc')])
-                    if bid in ('kvnc_cht', 'kvnc_chg'):
-                        B[i_] = (bid, cl, bits, list(eps) + [('lprg', 'cht' if bid == 'kvnc_cht' else 'chg')])
                     if bid == 'clk_core_c':
                         B[i_] = (bid, cl, bits, list(B[i_][3]) + [('lprg', 'ck')])
+                # relayed fork branches (no long unrelayed fan-out): the HOST cohort to lprg, the D2D end's svc word to seq
+                fk_ = m.setdefault('forks', {})
+                fk_['kvnc_cht'] = [('lprg', 'cht')]
+                fk_['kvnc_chg'] = [('lprg', 'chg')]
+                fk_['hsvc'] = [('seq', 'svc')]
                 B[:] = [b_ for b_ in B if not (b_[0] == 'hc' and len(b_[3]) < 2)]     # host hc has no load left
                 add(('lprg_st', 'kv_oneway', 1, [('dcal', 'tks'), ('lprg', 'st')]))
                 add(('lprg_auth', 'spine_local', 1 + 1 + 16 + 64, [('host', 'auth_lp'), ('lprg', 'auth')]))
                 add(('seqst_lp', 'kv_oneway', 1 + 6 + 14, [('lprg', 'lp'), ('seq', 'lp')]))
                 add(('seqst_rx', 'kv_oneway', 1 + 4 + 5 + 1 + 11 + 512, [('d2d_kv', 'srx'), ('seq', 'srx')]))
-                m['extra_conns']['seq'] = ['.svc(n_hsvc)']
 
 
 def _centre(it, port=None):
@@ -2187,6 +2189,29 @@ def _relays(m):
                                         not any(b_[0].startswith(p_) for p_ in pri_)))
             if V144_R6:   # kvs13d: every V port's return word is planned first; its request word is then padded to W
                 order_.sort(key=lambda b_: (b_[0].startswith('pvrq_'),))
+    # Q-KVSYS PVJOIN 2026-10-16 (fork buses): m['forks'] = {bid: [load endpoints]} -- loads that leave a bus's driver as a
+    # RELAYED BRANCH of their own (bus f'{bid}__f{i}', class kv_oneway) instead of one long unrelayed fan-out wire.  The
+    # trunk keeps the bus's own class / relays; after planning, the branch's first segment joins the trunk's source net
+    # (the driver pin drives the trunk's first hop and every branch's first hop) and its stage count is recorded.
+    forks_ = {}
+    fork_names = {b_[0] for b_ in order_}
+    for bid_f, loads_f in (m.get('forks') or {}).items():
+        trunks_f = [e_ for e_ in order_ if e_[0] == bid_f]
+        if len(trunks_f) != 1:
+            raise ValueError(f'kv die fork {bid_f}: exactly one trunk required')
+        _, class_f, bits_f, ends_f = trunks_f[0]
+        if class_f in ('clock_trunk', 'reset', 'constant') or class_f in ABUT or len(ends_f) != 2:
+            raise ValueError(f'kv die fork {bid_f}: only point-to-point data trunks may fork')
+        src_f = ends_f[0]
+        if len(set(loads_f)) != len(loads_f) or any(e_ in ends_f for e_ in loads_f):
+            raise ValueError(f'kv die fork {bid_f}: duplicate load or driver alias')
+        for i_f, ld_f in enumerate(loads_f):
+            nm_f = f'{bid_f}__f{i_f}'
+            if nm_f in fork_names:
+                raise ValueError(f'kv die fork {nm_f}: bus name collision')
+            fork_names.add(nm_f)
+            forks_[nm_f] = bid_f
+            order_.append((nm_f, 'kv_oneway', bits_f, [src_f, ld_f]))
     for bid, cl, bits, eps in order_:
         if cl in ABUT or cl in ('clock_trunk', 'reset', 'constant') or len(eps) != 2:
             nb.append((bid, cl, bits, eps))
@@ -2538,6 +2563,23 @@ def _relays(m):
             m['reset_region_calendar'] = dict(D=dmax, release='host release + D + 2 + local depth', ignore=RST_REGION_IGNORE,
                 hold=RELAY_FLUSH, host_min_hold_cycles=RST_REGION_IGNORE + 4, regions=len(m['reset_regions']))
         m['tree_depth'] = {f'{r_}:{e[0]}.{e[1]}': d_ for (r_, e), d_ in sorted(m['tree_depth'].items())}
+    if forks_:
+        # a branch's first segment (named exactly f'{bid}__f{i}', driven by the trunk's driver) joins the trunk's source net
+        idx_ = {e_[0]: i_ for i_, e_ in enumerate(nb)}
+        drop_ = set()
+        for nm_f, bid_f in forks_.items():
+            if nm_f not in idx_ or bid_f not in idx_:
+                raise ValueError(f'kv die fork {nm_f}: segment or trunk {bid_f} missing')
+            bf_, cf_, wf_, ef_ = nb[idx_[nm_f]]
+            bt_, ct_, wt_, et_ = nb[idx_[bid_f]]
+            if wf_ != wt_:
+                raise ValueError(f'kv die fork {nm_f}: width {wf_} != trunk width {wt_}')
+            if ef_[0] != et_[0]:
+                raise ValueError(f'kv die fork {nm_f}: driver {ef_[0]} != trunk driver {et_[0]}')
+            nb[idx_[bid_f]] = (bt_, ct_, wt_, list(et_) + [e_ for e_ in ef_[1:] if e_ not in et_])
+            drop_.add(idx_[nm_f])
+        nb = [e_ for i_, e_ in enumerate(nb) if i_ not in drop_]
+        m['fork_stages'] = {nm_f: stages.get(nm_f, 0) for nm_f in forks_}
     trunk = {}
     for i, (bid_, cl_, _b, eps_) in enumerate(nb):
         if cl_ == 'clock_trunk' and bid_.startswith('clk_core_'):
@@ -2785,8 +2827,6 @@ def masters(m, k=1, port_bits=None):
         M['qkd_dcal'].face('ego', 1, 'W', 'M4', round(M['qkd_dcal'].h / 2, 3), 1)      # OT_KV_DCAL extra_conns tap
     if 'qkd_kvnc' in M and 'cs' not in M['qkd_kvnc'].ports:
         M['qkd_kvnc'].face('cs', 1, 'N', 'M5', round(M['qkd_kvnc'].w / 2, 3), 1)      # OT_KV_KVNC extra_conns tap (sequencer above)
-    if 'qkd_seq_st' in M and 'svc' not in M['qkd_seq_st'].ports:
-        M['qkd_seq_st'].face('svc', 174, 'N', 'M4', round(M['qkd_seq_st'].w / 2, 3), 1)  # OT_KV_SEQ_STATIC extra_conns tap (HOST above)
     for mst in list(M):
         if mst not in used and mst not in sizes:
             M.pop(mst)

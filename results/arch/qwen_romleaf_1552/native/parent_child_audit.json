@@ -1,0 +1,51 @@
+{
+  "state": "HOLD_PARENT_NATIVE_ADOPTION: old node launch exceeds220ps; CTS candidate diagnostic only",
+  "children": [
+    {
+      "cell": "ot_qwen_tile_node",
+      "view": "physical/ref_tile/ot_qwen_tile_node/views/ot_qwen_tile_node",
+      "lib_cell": "ot_qwen_tile_node",
+      "insertion": true,
+      "ref_src": [
+        "insertion.json boundary mean"
+      ],
+      "R_ps": 246.6,
+      "spread_ps": 27.2,
+      "outputs": 1027,
+      "inputs": 1539,
+      "launch_ps": 233.3,
+      "launch_pin": "t_out[229]",
+      "capture_ps": 170.7,
+      "capture_pin": "t_d[185]",
+      "launch_over": 90,
+      "capture_over": 0,
+      "comb_pins": 0,
+      "comb_first": [],
+      "pass": false,
+      "fail_why": "launch 233.27726 > 220 (90 pins)"
+    },
+    {
+      "cell": "ot_qwen_tile_lsl_fp1",
+      "view": "physical/ref_tile/qfd_tile_lsl_fp1/views/ot_qwen_tile_lsl_fp1",
+      "lib_cell": "ot_qwen_tile_lsl_fp1",
+      "insertion": true,
+      "ref_src": [
+        "insertion.json boundary mean"
+      ],
+      "R_ps": 165.7,
+      "spread_ps": 11.9,
+      "outputs": 73,
+      "inputs": 199,
+      "launch_ps": 187.5,
+      "launch_pin": "t_out[30]",
+      "capture_ps": 139.8,
+      "capture_pin": "w_d[51]",
+      "launch_over": 0,
+      "capture_over": 0,
+      "comb_pins": 0,
+      "comb_first": [],
+      "pass": true,
+      "fail_why": ""
+    }
+  ]
+}

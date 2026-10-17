@@ -17,7 +17,8 @@ module dsfd_sp_hc_c #(
     // pass-through of the slab's remaining structural parameters (defaults = dsfd_sp_hc's own: no change unless set)
     parameter integer HEAD_ROWS = 10, CNL_PIN = 0, CHAIN_STEP = 4,
     parameter integer PIPE = 1, PIPE_PD = 40,            // POST issue-order done (hierarchical slab; see ot_s81_hc_cseq)
-    parameter integer NTREE = 0, NT_K = 67               // NORM tree variant (dsfd_sp_hc NTREE; default 0 = unchanged)
+    parameter integer NTREE = 0, NT_K = 67,              // NORM tree variant (dsfd_sp_hc NTREE; default 0 = unchanged)
+    parameter integer RETCOL = 0                         // NTREE: four-column return rows (dsfd_sp_hc RETCOL; default 0 = unchanged)
 ) (
     output wire [TFW-1:0] t_tf0,t_tf1,t_tf2,
     input wire [TRW-1:0] f_tr0,f_tr1,f_tr2,
@@ -56,7 +57,7 @@ module dsfd_sp_hc_c #(
     wire dv, flt, onl;
     wire [7:0] dt;
     dsfd_sp_hc #(.NG(NG), .D(D), .S_RD(S_RD), .S_WR(S_WR), .MUT(MUT), .AMUT(AMUT),.S_RT(S_RT),.HIER(HIER),.HALF(HALF),.CSPLIT(CSPLIT),.TAIL_SPLIT(TAIL_SPLIT),
-                 .HEAD_ROWS(HEAD_ROWS),.CNL_PIN(CNL_PIN),.CHAIN_STEP(CHAIN_STEP),.PIPE(PIPE),.PIPE_PD(PIPE_PD),.NTREE(NTREE),.NT_K(NT_K)) u_hc (
+                 .HEAD_ROWS(HEAD_ROWS),.CNL_PIN(CNL_PIN),.CHAIN_STEP(CHAIN_STEP),.PIPE(PIPE),.PIPE_PD(PIPE_PD),.NTREE(NTREE),.NT_K(NT_K),.RETCOL(RETCOL)) u_hc (
         .t_tf0(t_tf0),.t_tf1(t_tf1),.t_tf2(t_tf2),.f_tr0(f_tr0),.f_tr1(f_tr1),.f_tr2(f_tr2),
         .cck(ck[0]), .crs(rn), .sk(ck[0]), .srs(rn), .c_cmd_v(cv_q), .c_cmd_d(cd_q), .c_done_v(dv), .c_done_tag(dt),
         .inp(`ifdef DSFD_SUHC_STATIC_ISSUE 1'b1 `else f_inp[0] `endif), .y_v(y_v), .y_rdy(y_rdy), .y_d(y_d), .rq_v(rq_v), .rq_row(rq_row), .rs_v(rs_v), .rs_d(rs_d),

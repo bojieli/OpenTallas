@@ -1,0 +1,349 @@
+{
+  "at": "2026-10-16T16:23:32.529737-07:00",
+  "native_qualified": false,
+  "native_limits_ps": {
+    "launch": 220,
+    "capture": 190,
+    "boundary_spread": 80
+  },
+  "cases": {
+    "hep5e_audit": {
+      "job": "hep_static_w5e_1016-w5e-314f4f068",
+      "sha256": {
+        "hfd_ep_static_tt.lib": "37afdc146a22ac5baa1d21858377bcc99efa4f5d68a0d03b965f2783258a6886",
+        "hfd_ep_static_ff.lib": "1d2a8f0d11b0a36c61331dc17c137a886057b9f5a59e7c8c40326f08e1b3862f",
+        "hfd_ep_static_ss.lib": "74b5e438ab95ba8e05906ef4dcf5acbe3a7c292186b6ab5bf6ade4ff2f2e166e",
+        "insertion.json": "d154b4738138c29832212ae3e02b004151dfe8acee35cfdfd6194dccec767488"
+      },
+      "corners": {
+        "tt": {
+          "refs": {
+            "clk": {
+              "rise": 390.4,
+              "fall": 424.27083999999996,
+              "min": 353.15405,
+              "max": 441.93942,
+              "src": "insertion.json boundary mean",
+              "bmin": 368.3,
+              "bmax": 421.9,
+              "n": 2290
+            }
+          },
+          "launch_max": [
+            186.21450000000004,
+            "sd_tx[149]"
+          ],
+          "capture_max": [
+            215.75964999999997,
+            "tx_frame[389]"
+          ],
+          "outputs": 1138,
+          "inputs": 1147,
+          "comb": [],
+          "launch_over_count": 0,
+          "capture_over_count": 234
+        },
+        "ff": {
+          "refs": {
+            "clk": {
+              "rise": 319.4,
+              "fall": 337.236715,
+              "min": 285.03647,
+              "max": 365.57297,
+              "src": "insertion.json boundary mean",
+              "bmin": 298.5,
+              "bmax": 347.7,
+              "n": 2290
+            }
+          },
+          "launch_max": [
+            130.38250000000005,
+            "rx_block_ready[1]"
+          ],
+          "capture_max": [
+            154.29693999999998,
+            "tx_frame[389]"
+          ],
+          "outputs": 1138,
+          "inputs": 1147,
+          "comb": [],
+          "launch_over_count": 0,
+          "capture_over_count": 0
+        },
+        "ss": {
+          "refs": {
+            "clk": {
+              "rise": 507.9,
+              "fall": 582.03818,
+              "min": 465.95734,
+              "max": 566.07593,
+              "src": "insertion.json boundary mean",
+              "bmin": 483.8,
+              "bmax": 543.5,
+              "n": 2290
+            }
+          },
+          "launch_max": [
+            285.70016,
+            "sd_tx[149]"
+          ],
+          "capture_max": [
+            314.74917999999997,
+            "tx_frame[389]"
+          ],
+          "outputs": 1138,
+          "inputs": 1147,
+          "comb": [],
+          "launch_over_count": 1118,
+          "capture_over_count": 1147
+        }
+      },
+      "all_port_metrics_file": "hep5e_audit.json.gz",
+      "all_port_metrics_sha256": "4c364a2790d98a255d0f43c0df793a6f5d77bcc05117508f43e61ae36dd617ac"
+    },
+    "writer_audit": {
+      "job": "hsm_smvm_wrq_t_r4-faces4-c8e94d78d",
+      "sha256": {
+        "ot_hbm_sm_vm_wr_q_t_faces4_tt.lib": "8a329cb9bf493f171876137b322490fa7432babe495959642da80c1e2fbdf75b",
+        "ot_hbm_sm_vm_wr_q_t_faces4_ff.lib": "60356b973d76533ee55fc749d2be40e5d0447f223da9ae15f384585a0baa15c7",
+        "ot_hbm_sm_vm_wr_q_t_faces4_ss.lib": "5eb11960716d47d66e3580ffec3242574f8867b0aa1703b8ff40358e2d711f33",
+        "insertion.json": "d04190ac8e36d3e561047661de0d01acfea17fc354b3e1b06a712dcd372536ed"
+      },
+      "corners": {
+        "tt": {
+          "refs": {
+            "clk": {
+              "rise": 346.6,
+              "fall": 372.8148450000001,
+              "min": 258.76703,
+              "max": 373.92996,
+              "src": "insertion.json boundary mean",
+              "bmin": 308.3,
+              "bmax": 373.9,
+              "n": 334
+            },
+            "clk_cal": {
+              "rise": 6.24051,
+              "fall": 6.24051,
+              "min": 6.24051,
+              "max": 6.24051,
+              "src": "lib midrange",
+              "bmin": 6.24051,
+              "bmax": 6.24051,
+              "n": null
+            },
+            "clk_in_hi": {
+              "rise": 123.8,
+              "fall": 133.04152499999998,
+              "min": 111.97202,
+              "max": 131.16837,
+              "src": "insertion.json boundary mean",
+              "bmin": 117.7,
+              "bmax": 131.2,
+              "n": 1084
+            },
+            "clk_in_lo": {
+              "rise": 121.1,
+              "fall": 130.34405499999997,
+              "min": 109.42487,
+              "max": 128.94406,
+              "src": "insertion.json boundary mean",
+              "bmin": 115.3,
+              "bmax": 128.9,
+              "n": 1084
+            },
+            "clk_out_hi": {
+              "rise": 123.2,
+              "fall": 132.33589999999998,
+              "min": 109.77303,
+              "max": 134.6053,
+              "src": "insertion.json boundary mean",
+              "bmin": 115.5,
+              "bmax": 134.6,
+              "n": 1112
+            },
+            "clk_out_lo": {
+              "rise": 123.9,
+              "fall": 133.211835,
+              "min": 110.92675,
+              "max": 133.35722,
+              "src": "insertion.json boundary mean",
+              "bmin": 117.0,
+              "bmax": 133.4,
+              "n": 1112
+            }
+          },
+          "launch_max": [
+            185.50051,
+            "wq_lo[638]"
+          ],
+          "capture_max": [
+            213.19741000000002,
+            "desc_base[7]"
+          ],
+          "outputs": 2227,
+          "inputs": 2499,
+          "comb": [],
+          "launch_over_count": 0,
+          "capture_over_count": 164
+        },
+        "ff": {
+          "refs": {
+            "clk": {
+              "rise": 288.5,
+              "fall": 303.23450499999996,
+              "min": 207.93239,
+              "max": 314.92007,
+              "src": "insertion.json boundary mean",
+              "bmin": 251.8,
+              "bmax": 314.9,
+              "n": 334
+            },
+            "clk_cal": {
+              "rise": 6.78994,
+              "fall": 6.78993,
+              "min": 6.78994,
+              "max": 6.78994,
+              "src": "lib midrange",
+              "bmin": 6.78994,
+              "bmax": 6.78994,
+              "n": null
+            },
+            "clk_in_hi": {
+              "rise": 99.0,
+              "fall": 103.13136,
+              "min": 88.6768,
+              "max": 106.11994,
+              "src": "insertion.json boundary mean",
+              "bmin": 93.3,
+              "bmax": 106.1,
+              "n": 1084
+            },
+            "clk_in_lo": {
+              "rise": 96.9,
+              "fall": 101.00969,
+              "min": 86.37341,
+              "max": 104.24715,
+              "src": "insertion.json boundary mean",
+              "bmin": 91.0,
+              "bmax": 104.2,
+              "n": 1084
+            },
+            "clk_out_hi": {
+              "rise": 98.6,
+              "fall": 102.57274,
+              "min": 86.67816,
+              "max": 109.31712,
+              "src": "insertion.json boundary mean",
+              "bmin": 91.2,
+              "bmax": 109.3,
+              "n": 1112
+            },
+            "clk_out_lo": {
+              "rise": 99.2,
+              "fall": 103.417985,
+              "min": 87.72798,
+              "max": 108.14512,
+              "src": "insertion.json boundary mean",
+              "bmin": 92.6,
+              "bmax": 108.1,
+              "n": 1112
+            }
+          },
+          "launch_max": [
+            132.95346999999998,
+            "wq_lo[638]"
+          ],
+          "capture_max": [
+            152.96292,
+            "cfg_data[241]"
+          ],
+          "outputs": 2227,
+          "inputs": 2499,
+          "comb": [],
+          "launch_over_count": 0,
+          "capture_over_count": 0
+        },
+        "ss": {
+          "refs": {
+            "clk": {
+              "rise": 441.9,
+              "fall": 497.028115,
+              "min": 344.10132,
+              "max": 469.86926,
+              "src": "insertion.json boundary mean",
+              "bmin": 402.4,
+              "bmax": 469.9,
+              "n": 334
+            },
+            "clk_cal": {
+              "rise": 5.88649,
+              "fall": 5.88649,
+              "min": 5.88649,
+              "max": 5.88649,
+              "src": "lib midrange",
+              "bmin": 5.88649,
+              "bmax": 5.88649,
+              "n": null
+            },
+            "clk_in_hi": {
+              "rise": 166.4,
+              "fall": 189.07856,
+              "min": 151.68224,
+              "max": 174.17447,
+              "src": "insertion.json boundary mean",
+              "bmin": 159.9,
+              "bmax": 174.2,
+              "n": 1084
+            },
+            "clk_in_lo": {
+              "rise": 163.0,
+              "fall": 185.82111999999998,
+              "min": 148.9238,
+              "max": 171.47833,
+              "src": "insertion.json boundary mean",
+              "bmin": 157.3,
+              "bmax": 171.5,
+              "n": 1084
+            },
+            "clk_out_hi": {
+              "rise": 165.8,
+              "fall": 188.357145,
+              "min": 149.51526,
+              "max": 178.30191,
+              "src": "insertion.json boundary mean",
+              "bmin": 157.5,
+              "bmax": 178.3,
+              "n": 1112
+            },
+            "clk_out_lo": {
+              "rise": 166.6,
+              "fall": 189.14997499999998,
+              "min": 150.86092,
+              "max": 176.8846,
+              "src": "insertion.json boundary mean",
+              "bmin": 159.2,
+              "bmax": 176.9,
+              "n": 1112
+            }
+          },
+          "launch_max": [
+            278.19559000000004,
+            "wq_lo[638]"
+          ],
+          "capture_max": [
+            311.90326999999996,
+            "desc_base[7]"
+          ],
+          "outputs": 2227,
+          "inputs": 2499,
+          "comb": [],
+          "launch_over_count": 2216,
+          "capture_over_count": 317
+        }
+      },
+      "all_port_metrics_file": "writer_audit.json.gz",
+      "all_port_metrics_sha256": "186ad8f9c1e78a62b50a1e8bdadbf5a1a208b3dd592dcebf44ae80608a4482df"
+    }
+  }
+}

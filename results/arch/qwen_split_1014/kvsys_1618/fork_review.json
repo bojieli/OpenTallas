@@ -1,0 +1,260 @@
+{
+  "schema": "opentallas.qwen_kv.fork_review.v1",
+  "collected": "2026-10-16T16:26:17.725274-07:00",
+  "reviewed_source": "40e1bc6f61abd23100f6df50b94d186e118c577f",
+  "tests": {
+    "passed": 8,
+    "actual_allocator": true,
+    "old_source_counterexamples": [
+      "clock fork accepted as kv_oneway",
+      "driver alias accepted",
+      "branch bus name collision accepted"
+    ],
+    "old_source_three_tests_fail": true,
+    "widths": [
+      174,
+      59,
+      2
+    ],
+    "coverage": [
+      "trunk and branch first-hop source shared",
+      "all segments retain exact width",
+      "physical relay instance count equals recorded stage count separately for every trunk/branch",
+      "zero-relay branch same source",
+      "literal driver clock root retained with two distinct roots",
+      "clock/reset/constant and abutment trunks refused",
+      "duplicate loads, driver aliases and name collisions refused"
+    ]
+  },
+  "relay_stages": {
+    "hsvc": 1,
+    "kvnc_cht": 1,
+    "kvnc_chg": 1,
+    "clk_core_c": 0,
+    "hsvc__f0": 1,
+    "kvnc_cht__f0": 1,
+    "kvnc_chg__f0": 1
+  },
+  "fork_stages": {
+    "hsvc__f0": 1,
+    "kvnc_cht__f0": 1,
+    "kvnc_chg__f0": 1
+  },
+  "generated_buses": [
+    [
+      "hsvc",
+      "spine_local",
+      174,
+      [
+        [
+          "d2d_kv",
+          "svc"
+        ],
+        [
+          "rly_hsvc_0",
+          "a"
+        ],
+        [
+          "rly_hsvc__f0_0",
+          "a"
+        ]
+      ]
+    ],
+    [
+      "hsvc__r1",
+      "spine_local",
+      174,
+      [
+        [
+          "rly_hsvc_0",
+          "b"
+        ],
+        [
+          "host",
+          "svc"
+        ]
+      ]
+    ],
+    [
+      "kvnc_cht",
+      "kv_oneway",
+      59,
+      [
+        [
+          "host",
+          "cohort_tag"
+        ],
+        [
+          "rly_kvnc_cht_0",
+          "a"
+        ],
+        [
+          "rly_kvnc_cht__f0_0",
+          "a"
+        ]
+      ]
+    ],
+    [
+      "kvnc_cht__r1",
+      "kv_oneway",
+      59,
+      [
+        [
+          "rly_kvnc_cht_0",
+          "b"
+        ],
+        [
+          "kvnc",
+          "cht"
+        ]
+      ]
+    ],
+    [
+      "kvnc_chg",
+      "kv_oneway",
+      2,
+      [
+        [
+          "host",
+          "cohort_gen"
+        ],
+        [
+          "rly_kvnc_chg_0",
+          "a"
+        ],
+        [
+          "rly_kvnc_chg__f0_0",
+          "a"
+        ]
+      ]
+    ],
+    [
+      "kvnc_chg__r1",
+      "kv_oneway",
+      2,
+      [
+        [
+          "rly_kvnc_chg_0",
+          "b"
+        ],
+        [
+          "kvnc",
+          "chg"
+        ]
+      ]
+    ],
+    [
+      "clk_core_c",
+      "clock_trunk",
+      1,
+      [
+        [
+          "host",
+          "cksrc"
+        ],
+        [
+          "d2d_kv",
+          "ck"
+        ],
+        [
+          "kvnc",
+          "ck"
+        ],
+        [
+          "seq",
+          "ck"
+        ],
+        [
+          "lprg",
+          "ck"
+        ],
+        [
+          "rly_hsvc_0",
+          "ck"
+        ],
+        [
+          "rly_kvnc_cht_0",
+          "ck"
+        ],
+        [
+          "rly_kvnc_chg_0",
+          "ck"
+        ],
+        [
+          "rly_hsvc__f0_0",
+          "ck"
+        ],
+        [
+          "rly_kvnc_cht__f0_0",
+          "ck"
+        ],
+        [
+          "rly_kvnc_chg__f0_0",
+          "ck"
+        ]
+      ]
+    ],
+    [
+      "hsvc__f0__r1",
+      "kv_oneway",
+      174,
+      [
+        [
+          "rly_hsvc__f0_0",
+          "b"
+        ],
+        [
+          "seq",
+          "svc"
+        ]
+      ]
+    ],
+    [
+      "kvnc_cht__f0__r1",
+      "kv_oneway",
+      59,
+      [
+        [
+          "rly_kvnc_cht__f0_0",
+          "b"
+        ],
+        [
+          "lprg",
+          "cht"
+        ]
+      ]
+    ],
+    [
+      "kvnc_chg__f0__r1",
+      "kv_oneway",
+      2,
+      [
+        [
+          "rly_kvnc_chg__f0_0",
+          "b"
+        ],
+        [
+          "lprg",
+          "chg"
+        ]
+      ]
+    ]
+  ],
+  "source_sha256": {
+    "tools/qwen_kv_die/kv_die.py": "3fb883212095a06dd688775c4db526c1ef881d5c108f73da8b18aab1012672c5",
+    "tools/qwen_kv_die/test_forks.py": "611ce33aa05cc412297ed6ac0f2772519bdc2b9bc4b3695c1797182c07837fe1"
+  },
+  "programme": {
+    "default_digest": "514bb0b28004c8e8",
+    "default_epoch": 2827,
+    "matches": "actual sys_face bench_program + HOST loader independent rotate7/XOR/address encoding",
+    "bitflip_negative": "word17 bit0 changes digest",
+    "evidence": "pvjoin_programme_existing_benches.json",
+    "positive": "2tokens/72stages/70runs/504events/0errors",
+    "writer_mutant_errors": 144,
+    "nextrow_mutant_errors": 482822,
+    "source_verified": "all8 compiled RTL/include sources match40e1bc6f6 SHA256 and compiler-recorded size/ctime/mtime; compiled C++ digest literal matches default; generated image and boot words match committed SVH",
+    "new_builds": 0
+  },
+  "scope": "component planner and programme proof; not actual die route/phase/reset/native/full-token qualification; leaf RTL unchanged by guard fix"
+}
