@@ -3754,6 +3754,7 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                 raise ValueError(f"relay occupancy: {pl['bid']} frame {fk} overlaps a surviving frame before inline pads")
             add_rect(rr)
     pad_done = {}
+    pad_hop_centre = {}
     if tpads:
         bidx = {bid: idx for idx, (bid, cl, bits, eps) in buses}
         for bid, npad in sorted(tpads.items()):
@@ -3777,13 +3778,22 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             Q = (fq[0] + fq[2] / 2, fq[1] + fq[3] / 2) if fq else pl['P0']
             px, py = x1 - v.CORR / 2, y1
             leg_c = None
+            # Q-DIEPLAN3 2026-10-16 (q2o2 GEN 'tree pads: no free spot for b2_status_f1 pad 17'): the corridor rule
+            # below is for sinks INSIDE a tile field (qfd_tile_nk area tree pins). A sink in the centre (b2 word
+            # status, 12-bus equal-age group, W of tt_ctlm) was snapped to the nearest ARRAY corridor ~4 mm away and
+            # its pads walked into the full array edge. A centre sink's pads take the nearest free centre site to the
+            # walk point (never over a tile body), so each pad hop stays a fraction of the sink -> last-relay segment.
+            sink_in_field = in_field(x1, y1)
+            cur_tight[0] = cur_gapok[0] = False
             for j in range(npad):
                 # a walk from the sink toward Q: each pad nearest the point 1 / (pads left + 1) of the way from the
                 # previous pad to Q (consecutive pads stay together; the walk ends next to Q)
                 fr = 1.0 / (npad - j + 1)
                 qx, qy = px + (Q[0] - px) * fr, py + (Q[1] - py) * fr
                 sp = place(qx, qy, w + v.SHAVE, h + v.SHAVE, cc, 150.0) if cc is not None else None
-                if sp is None and cc is None:
+                if sp is None and cc is None and not sink_in_field:
+                    sp = place(qx, qy, w + v.SHAVE, h + v.SHAVE, None)
+                if sp is None and cc is None and sink_in_field:
                     # contract v2: qfd_tile_nk's tree pins are area pins inside the body (x 10-223 um), so the sink
                     # is in no corridor: take the nearer of the two corridors flanking the walk point (y search
                     # +-400 um), never the row gap ~650 um away (it1: 1,226 hops over reach)
@@ -3803,6 +3813,20 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
                 if sp is None:
                     sp = pad_spot(qx, qy, w + v.SHAVE, h + v.SHAVE)
                 if sp is None:
+                    if _os.environ.get('OT_RELAY_SITE_FAILURE'):
+                        # immutable local failure receipt (what occupies the walk point's neighbourhood), never a relaxed gate
+                        near = set()
+                        for gx_ in range(int((qx - 1000) // BK), int((qx + 1000) // BK) + 1):
+                            for gy_ in range(int((qy - 1000) // BK), int((qy + 1000) // BK) + 1):
+                                near.update(grid.get((gx_, gy_), ()))
+                        named = {(it.x, it.y, it.x + it.w, it.y + it.h): it.name for it in m['insts']}
+                        for pn_, pl_ in plans.items():
+                            for fk_, f_ in enumerate(pl_['frames']):
+                                named[(f_[0], f_[1], f_[0] + f_[2] + v.SHAVE, f_[1] + f_[3] + v.SHAVE)] = f"{pl_.get('bid', pn_)}:{fk_}"
+                        json.dump(dict(kind='tree_pad', bid=bid, npad=npad, pad=j, sink=[x1, y1], sink_in_field=sink_in_field,
+                                       corridor=cc, leg_corridor=leg_c, walk=[qx, qy], Q=list(Q), frame=[w, h], got=got,
+                                       nearby=[dict(rect=r_, owner=named.get(r_, 'pad')) for r_ in sorted(near)]),
+                                  open(_os.environ['OT_RELAY_SITE_FAILURE'], 'w'), indent=1)
                     raise ValueError(f'tree pads: no free spot for {bid} pad {j}')
                 add_rect((sp[0], sp[1], sp[0] + w + v.SHAVE, sp[1] + h + v.SHAVE))
                 got.append((sp[0], sp[1], w, h))
@@ -3810,8 +3834,15 @@ def _relays(v, m, pitch=RELAY_PITCH_UM):
             got.reverse()          # chain order: the last pad placed (farthest along the walk) first, the sink's last
             pl['frames'] = list(pl['frames']) + got
             pad_done[bid] = npad
+            if not sink_in_field:
+                # pad hop audit (centre sinks): centre to centre along last relay -> pads -> sink
+                pts_ = [Q] + [(f_[0] + f_[2] / 2, f_[1] + f_[3] / 2) for f_ in got] + [(x1, y1)]
+                hop_ = max(abs(a_[0] - b_[0]) + abs(a_[1] - b_[1]) for a_, b_ in zip(pts_, pts_[1:]))
+                pad_hop_centre[bid] = round(hop_, 1)
     m['tp8_tree_pads'] = dict(buses=len(pad_done) + len(pre_pads), relays=sum(pad_done.values()) + sum(
-        len(f) for f in pre_pads.values()), reserved_columns=len(pre_pads), walked=len(pad_done))
+        len(f) for f in pre_pads.values()), reserved_columns=len(pre_pads), walked=len(pad_done),
+        centre_sink_buses=len(pad_hop_centre), centre_max_hop_um=max(pad_hop_centre.values(), default=None),
+        centre_hops_over_reach=sorted(b_ for b_, h_ in pad_hop_centre.items() if h_ > RELAY_REACH_OK))
     # ---- emit relays and hops
     from qwen_split.relay_clock import assigned_clock, collective_core_clock
     for idx, pl in sorted(plans.items()):
