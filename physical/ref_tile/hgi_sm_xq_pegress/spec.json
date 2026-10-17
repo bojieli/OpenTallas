@@ -3,7 +3,7 @@
   "pd": 0.5,
   "threads": 8,
   "peak_ram_gb": 16,
-  "hold_margin_ns": 0.03,
+  "hold_margin_ns": 0.01,
   "macro_halo_um": 5.4
  },
  "recipe": 2,
@@ -74,9 +74,9 @@
  "job": {
   "owner": "Claude H-SM 1830",
   "branch": "claude/hsm-xqb-1830",
-  "tag": "x3",
+  "tag": "x4",
   "purpose": "XQL pair-egress leaf: the ctl egress (rw capture, replicated beat select, BD beat capture, xw pins) per SM pair, beside the pair store",
-  "structural_change": "x3 supersedes x2 (hgi_sm_xq_pegress-x2-153565d5e): SM_X option (b) geometry + owner <= 6 pins/um per face: 369.36 x 369.36, N xw 5.72/um over a 360.72 um span (H-DIE window >= 360 um, target 5.73/um), W bq_d 5.68/um, S rwq 2.84/um, even spread (spread_face_pins.py). x1 hgi_sm_xq_pegress-x1-ee1d52825 GRT-0116 cause: auto pin regions packed 2,063 xw pins into a 210 um band (9.8/um) + 2 outhold pads/pin -> 29 top-row gcells M3 V cap+1. RTL, benches, pin faces unchanged.",
+  "structural_change": "x4 supersedes x3 (hgi_sm_xq_pegress-x3-d67bfd40c CLOSED TT+42.24/FF+7.97, native FAIL capture: rn 332.3 = async clear of 308 control flops across the leaf; ed5 196.4 = 32-replica fanout + input hold pads). RTL: rn now clears only 4 kept relay flops (each resets a quarter of the controls; release +1 edge, assert async). Physical: HEP w5f hold recipe (route hold margin 10 ps, hold ECO goal 5 ps). Outline/pins unchanged from x3 (369.36 sq, <= 5.73 pins/um, SM_X option (b)).",
   "extra_paths": [
    "physical/asap7_memory_macros",
    "physical/hbm_xp_aq_tree13_1014",
@@ -145,7 +145,11 @@
    }
   ],
   "views_to": "physical/ref_tile/hgi_sm_xq_pegress/views",
-  "record_to": "results/rtl/ref_tile/hgi_sm_xq_pegress"
+  "record_to": "results/rtl/ref_tile/hgi_sm_xq_pegress",
+  "hold_eco": {
+   "hold_margin_ps": 5.0,
+   "reason": "native capture (HEP w5f recipe, 00f041029 -> native PASS C183.3): x3 d67bfd40c CLOSED TT+42.24/FF+7.97 but native capture FAIL: rn 332.3 (fixed in RTL: local reset relay), ed5[6]/[7]/[2] 196.4/194.8/191.8 and ~188 on rwq/bq_v (input hold pads). Route hold margin 30 -> 10 ps, post-route hold ECO goal 5 ps; FF >= 0 sign-off unchanged."
+  }
  },
  "io_tcl": "physical/ref_tile/hgi_sm_xq_pegress/spread_pins.tcl"
 }
