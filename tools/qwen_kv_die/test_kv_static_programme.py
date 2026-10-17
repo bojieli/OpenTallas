@@ -100,6 +100,28 @@ class Programme(unittest.TestCase):
         self.assertLess(b['kgo'], a['kgo'])
         self.assertEqual(b['ctrl_go'], b['kgo'])
 
+    def test_token_period_is_padded_and_every_launch_is_legal(self):
+        ph = self.die['phase']
+        self.assertEqual(ph['token_period_core'] % 768, 0)
+        self.assertEqual(ph['token_period_core'] - self.die['link']['token_period_unpadded'], 169)
+        self.assertEqual((ph['token_phases'], ph['launches'], ph['outside_window'], ph['hold_conflicts']), (1, 108, [], []))
+        # the unpadded period visits all 768 phases: no compiled launch holds at every one of them
+        self.assertEqual(ph['unpadded_counterfactual']['token_phases'], 768)
+        self.assertEqual(len(ph['unpadded_counterfactual']['outside_window']), 108)
+        al = ph['alignment']
+        self.assertLessEqual(al['v_early_used'], al['v_ring_room_core'])
+        rows = self.die['layer']['rows']
+        for r in rows:
+            self.assertEqual(r['roots']['ctrl_go'], r['roots']['kgo'])
+        self.assertEqual(self.die['leads']['vgo_minus_kgo'], rows[1]['roots']['vgo'] - rows[1]['roots']['kgo'] + al['stage_advance'][1] - al['stage_advance'][1])
+
+    def test_ectla_qk_issue_age_and_attention_control(self):
+        pt = C.priced_template(self.die['profile'])
+        self.assertEqual((pt['ectla'], pt['QK_ISSUE_AGE'], pt['unpriced_left']), (32, 62, []))
+        ctl = self.die['attention']['control']
+        self.assertGreaterEqual(ctl['cal_gen']['first_issue_token_cycle'] - ctl['cal_gen']['go_token_cycle'], C.CAL_GEN_LAT)
+        self.assertGreater(ctl['service_root']['pv_start_min'], 0)
+
     def test_operations_bind_actual_ports(self):
         ops = C.operations(self.die)
         self.assertEqual(C.check_ports(ops), len(ops))

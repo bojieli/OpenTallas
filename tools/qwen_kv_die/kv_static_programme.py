@@ -116,7 +116,7 @@ def profile(kind, ages=None):
                 groups=L['programme_to_groups']['edges'], crossing=True,
                 qk_age=ages['qk']['QK_ISSUE_AGE'], qk_row_latency=ages['qk']['row_latency_for_calendar'],
                 v_rl=ages['pv']['RL'], d_rl=ages['pv']['RL'] - 19, d_qk=ages['qk']['QK_ISSUE_AGE'] - AC.QK_CONSUME,
-                phase=ages['phase_launch'], ld=L['return_to_landing_ld']['LD'], rc=3, landing_uncertainty=1,
+                phase=ages['phase_launch'], link_ages=L, ld=L['return_to_landing_ld']['LD'], rc=3, landing_uncertainty=1,
                 rd_shape=dict(K=RD_SHAPE_K, V=RD_SHAPE_V))
 
 
@@ -244,6 +244,9 @@ def law_offsets(n, p0, gap):
     return [i + (gap * (1 + (i - p0) // 8) if i >= p0 else 0) for i in range(n)]
 
 
+EARLY_MAX = 16                  # phase alignment: the most core edges a stage's launches may move earlier
+
+
 LAW_TS = sorted(set(list(range(1, 8193, 61)) + [x + d for x in (128, 256, 512, 1024, 2048, 4096, 4224, 4352, 4480, 8192)
                                                    for d in (-1, 0, 1) if 1 <= x + d <= 8192]))
 
@@ -279,17 +282,124 @@ def law_check(pr, plans, Ts=LAW_TS):
                 req = max(KC.hbm_to_core(x, P) + P['ring_cdc_core_edges'] - c for x, (_, c, _) in zip(put, st))
                 if kind == 'k':
                     need_k = max(need_k, req)
+                    L.setdefault('k_cases', []).append((put, [c for _, c, _ in st]))
                 else:
                     need_v = req if need_v is None else max(need_v, req)
                     L.setdefault('v_cases', []).append((T, put, [c for _, c, _ in st]))
+    v_slack, k_peak = None, [0] * (EARLY_MAX + 1)
     for (s, g), L in law.items():                            # V ring room at the one lead every T uses
         for T, put, cons in L.get('v_cases', []):
             for i in range(P['ring_depth'], len(put)):
-                if KC.hbm_to_core(put[i], P) < need_v + cons[i - P['ring_depth']] + 1:
+                sl = KC.hbm_to_core(put[i], P) - (need_v + cons[i - P['ring_depth']] + 1)
+                v_slack = sl if v_slack is None else min(v_slack, sl)
+                if sl < 0:
                     bad.append(dict(T=T, group=f'{s}{g}', kind='v', sector=i, why='put before its ring slot is consumed'))
                     break
+        for put, cons in L.get('k_cases', []):               # K ring occupancy if K is launched e edges earlier
+            vis = [KC.hbm_to_core(x, P) + P['ring_cdc_core_edges'] for x in put]
+            for e in range(EARLY_MAX + 1):
+                occ = peak = 0
+                for _, d in sorted([(v, 1) for v in vis] + [(need_k + e + c + 1, -1) for c in cons]):
+                    occ += d
+                    peak = max(peak, occ)
+                k_peak[e] = max(k_peak[e], peak)
         L.pop('v_cases', None)
-    return need_k, need_v, bad, len(Ts)
+        L.pop('k_cases', None)
+    margins = dict(v_ring_slack_core=v_slack, k_ring_peak_by_early_edges=k_peak, ring_depth=P['ring_depth'])
+    return need_k, need_v, bad, len(Ts), margins
+
+
+LAUNCH_ROOTS = ('ctrl_go', 'kgo', 'vgo')
+CAL_GEN_LAT = 10                # qkd_attn_cal_gen (KVJ-B): go -> done edges (10-edge pipeline, II 1)
+STAGE_START_EDGE = 1            # qkd_static_kv_layer_programme: stage_start registered one edge after the stage load
+TOKEN_START_PHASE_U = 0         # 625 x (token run start core edge) mod 768: the run start sits on the reset-release beat
+
+
+def token_phases(period, phi0=TOKEN_START_PHASE_U):
+    """the HBM-beat phases (625 u x start mod 768) every token run start of a run of tokens takes: one phase when the
+    period is a multiple of 768 core edges, else up to 768 (token n at phi0 + 625 n P)"""
+    return sorted({(phi0 + CORE_U * n * period) % HBM_U for n in range(HBM_U)})
+
+
+def launch_gap(cyc, pr, phi):
+    """qkd_static_kv_phase_launch next_gap (u) at the toggle edge of a root emitted at token cycle cyc: programme
+    internal start +1, lprg -> group tree, go_q capture at the group tile, toggle one edge later (phase_launch.launch)"""
+    c = cyc + 1 + pr['groups'] + 1
+    return (pr['phase']['PH0'] - phi - CORE_U * (c + 1)) % HBM_U or HBM_U
+
+
+def launch_legal(cyc, pr, phases):
+    lo, hi = pr['phase']['SAFE_LOW_U'], pr['phase']['SAFE_HIGH_U']
+    return all(lo <= launch_gap(cyc, pr, ph) <= hi for ph in phases)
+
+
+def phase_align(pr, rel, frame, period, law, lead_k, lead_v):
+    """Choose, once per compile, a V advance a (vgo and the controller V run move a core edges earlier than kgo + d_v)
+    and per stage s an advance d_s (ctrl_go / kgo / vgo of stage s all move d_s edges earlier) so that all 108 launches
+    sit inside the phase window at every token phase; minimise a + max d_s.  Moving a launch earlier only lengthens a
+    fetch lead: the V ring room (law margins) bounds a + d_s, the K ring occupancy bounds d_s.  A period that is not a
+    multiple of 768 core edges gives each launch every phase, so no choice holds and the compile refuses."""
+    phases = token_phases(period)
+    m = law['margins']
+    v_room = m['v_ring_slack_core'] + (lead_v - law['lead_v'])          # V may move this many core edges earlier
+    k_base = lead_k - law['lead_k']
+    # K: the law-wide K lead already over-fills the 64-slot return ring at short contexts (peak at d = 0 reported
+    # below, OPEN to the K ring owner); the alignment may only add the few sectors its advance lands early
+    k_ok = lambda d: d + k_base <= EARLY_MAX
+    best = None
+    for a in range(EARLY_MAX + 1):
+        adv = []
+        for s in range(36):
+            kc, vc = frame[s] + rel['kgo'], frame[s] + rel['vgo'] - a
+            d = next((d for d in range(EARLY_MAX + 1) if launch_legal(kc - d, pr, phases) and launch_legal(vc - d, pr, phases)), None)
+            if d is None:
+                break
+            adv.append(d)
+        if len(adv) != 36:
+            continue
+        dm = max(adv)
+        if a + dm + 1 > v_room or not k_ok(dm):          # +1: the HBM edge of an earlier launch may round one edge earlier
+            continue
+        if best is None or (a + dm, a) < (best['vgo_advance'] + max(best['stage_advance']), best['vgo_advance']):
+            best = dict(vgo_advance=a, stage_advance=adv)
+    if best is None:
+        raise ValueError(f'no launch alignment within {EARLY_MAX} edges holds at token phases {phases[:4]}.. '
+                         f'(token period {period}, mod 768 = {period % HBM_U}): pad the period to a multiple of 768')
+    dm = max(best['stage_advance'])
+    best.update(token_phases=phases, max_stage_advance=dm, v_ring_room_core=v_room, v_early_used=best['vgo_advance'] + dm + 1,
+                k_ring_peak=m['k_ring_peak_by_early_edges'][dm + k_base], k_ring_peak_unaligned=m['k_ring_peak_by_early_edges'][k_base],
+                ring_depth=m['ring_depth'],
+                k_ring_open='K return-ring peak exceeds ring_depth with the one law-wide K lead (all contexts), before any '
+                            'alignment: pre-existing, K ring / lead owner',
+                law='ctrl_go = kgo = layer root - d_s; vgo = kgo + d_v - a; e_v follows d_v - a (the controller V run)')
+    return best
+
+
+def phase_legality(pr, launches, period):
+    """compiler legality check: every launch inside [SAFE_LOW, SAFE_HIGH] at every token phase the period gives, and the
+    held-metadata / per-lane hold of qkd_static_kv_phase_launch (META_HOLD_CORE) between consecutive launches, across
+    the token boundary too"""
+    ph = pr['phase']
+    phases = token_phases(period)
+    bad, table = [], []
+    for l in launches:
+        gaps = sorted({launch_gap(l['token_cycle'], pr, p) for p in phases})
+        out = [g for g in gaps if not ph['SAFE_LOW_U'] <= g <= ph['SAFE_HIGH_U']]
+        table.append(dict(l, gap_u=gaps[0] if len(gaps) == 1 else [gaps[0], gaps[-1]]))
+        if out:
+            bad.append(dict(stage=l['stage'], root=l['root'], gaps_outside=len(out), phases=len(phases)))
+    hold = []
+    seq = sorted(launches, key=lambda l: l['token_cycle'])
+    seq2 = seq + [dict(l, token_cycle=l['token_cycle'] + period) for l in seq[:3]]
+    for x, y in zip(seq2, seq2[1:]):
+        dt = y['token_cycle'] - x['token_cycle']
+        if dt and dt <= ph['META_HOLD_CORE'] and (x['stage'] != y['stage'] or x['root'] == y['root']):
+            hold.append(dict(a=f'S{x["stage"]}.{x["root"]}', b=f'S{y["stage"]}.{y["root"]}', edges=dt))
+    return dict(assumption=f'first token run start at HBM-beat phase {TOKEN_START_PHASE_U} u (q = PH0 at the reset-release '
+                           'beat); later runs at start + n x token period',
+                token_period_core=period, token_period_mod_768=period % HBM_U, token_phases=len(phases),
+                launches=len(launches), checks=len(launches) * len(phases), outside_window=bad, hold_conflicts=hold,
+                window_u=[ph['SAFE_LOW_U'], ph['SAFE_HIGH_U']], launch_table=table)
 
 
 def runs_from_edges(edges, base, mask):
@@ -358,10 +468,10 @@ def compile_all(pr, epoch=0x0b0b, program_words=None, workdir=None):
     if pr['kind'] == 'component':                           # the bench-fed image used the capacity screen's lead
         lead_k = KC.screen_36_capacity(T_MAX, P)['layer']['qk_start_after_prefetch_core']
     else:
-        lk, lv, bad, nT = law_check(pr, plans)
+        lk, lv, bad, nT, margins = law_check(pr, plans)
         if bad:
             raise ValueError(f'one calendar law per group does not hold for every context: {bad[:5]}')
-        law = dict(contexts_checked=nT, lead_k_T8192=lead_k, lead_v_T8192=lead_v, lead_k=lk, lead_v=lv)
+        law = dict(contexts_checked=nT, lead_k_T8192=lead_k, lead_v_T8192=lead_v, lead_k=lk, lead_v=lv, margins=margins)
         lead_k, lead_v = max(lead_k, lk), max(lead_v, lv)
     att8192 = attention_calendar(T_MAX, pr)
     e_k = CMD_LEAD + 2
@@ -377,13 +487,26 @@ def compile_all(pr, epoch=0x0b0b, program_words=None, workdir=None):
     lead = LR.START_LEAD - pr['start_relays']
     rel = {k: (v + lead if k != 'link_start' else v) for k, v in rel.items()}
     ends = [starts[1]] + [lay[s]['start'] - lay[s - 1]['start'] for s in range(2, 36)] + [lay[35]['cycles']]
+    frame = [sum(ends[:s]) + (starts[0] if s == 0 else 0) for s in range(36)]   # token cycle of a stage's root 0
+    align = None
+    if pr['phase']:
+        align = phase_align(pr, rel, frame, prog_cal['token_period'], law, lead_k, lead_v)
+        d_v -= align['vgo_advance']
+        rel['vgo'] -= align['vgo_advance']
     rows = []
     for s in range(1, 37):
         base = starts[0] if s == 1 else 0
         roots = {k: (v + base if k != 'link_start' else v) for k, v in rel.items()}
+        if align:
+            for k in LAUNCH_ROOTS:
+                roots[k] -= align['stage_advance'][s - 1]
         roots['stage_end'] = ends[s - 1]
         rows.append(dict(stage=s, roots=roots))
     img = assemble_rows(rows, digest, epoch)
+    if align:
+        for e in img['events']:
+            if e['kind'] in LAUNCH_ROOTS and e['token_cycle'] != frame[e['stage'] - 1] + rel[e['kind']] - align['stage_advance'][e['stage'] - 1]:
+                raise ValueError(f'stage frame model differs from the layer image at S{e["stage"]}.{e["kind"]}')
     if img['token_core_cycles'] != prog_cal['token_cycles_through_L35']:
         raise ValueError('layer frames differ from the link token cycles')
     layer_words = img['words']
@@ -455,30 +578,48 @@ def compile_all(pr, epoch=0x0b0b, program_words=None, workdir=None):
             ctrl[pc] = dict(runs=len(runs), k_first=k0, v_first=v0, words=lo + hi)
     ctrl_targets = {6 + s: [w for pcl in range(32) for w in ctrl[32 * s + pcl]['words']] for s in range(4)}
 
-    # ---- phase legality of the launches (beat-aligned token run start) ----
+    # ---- phase legality of the launches at every token phase ----
     phase = None
     if pr['phase']:
-        ph = pr['phase']
-        bad = []
-        for e in img['events']:
-            if e['kind'] in ('ctrl_go', 'kgo', 'vgo'):
-                c = e['token_cycle'] + 1 + pr['groups'] + 1      # internal start +1, tree, go_q capture at the group tile
-                toggle_u = CORE_U * (c + 1)
-                gap = (ph['PH0'] - toggle_u) % HBM_U or HBM_U
-                if not ph['SAFE_LOW_U'] <= gap <= ph['SAFE_HIGH_U']:
-                    bad.append(dict(stage=e['stage'], root=e['kind'], gap_u=gap))
-        period = prog_cal.get('token_period')
-        phase = dict(assumption='token run start at HBM-beat phase 0 (q = PH0 at the reset-release beat)',
-                     launches=36 * 3, outside_window=bad, token_period_core=period,
-                     token_period_mod_768=None if period is None else period % 768,
-                     requirement='the token period (or each run start) must be a multiple of 768 core edges for one compiled '
-                                 'set of launch phases to hold every token; otherwise a phase-launch fault aborts some tokens')
+        period = prog_cal['token_period']
+        launches = [dict(stage=e['stage'], root=e['kind'], token_cycle=e['token_cycle']) for e in img['events']
+                    if e['kind'] in LAUNCH_ROOTS]
+        phase = phase_legality(pr, launches, period)
+        phase['unpadded_counterfactual'] = {k: v for k, v in phase_legality(
+            pr, launches, prog_cal.get('token_period_pad', {}).get('unpadded', period)).items() if k != 'launch_table'}
+        phase['alignment'] = align
+        if phase['outside_window'] or phase['hold_conflicts']:
+            raise ValueError(f'phase launches illegal: {phase["outside_window"][:5]} {phase["hold_conflicts"][:5]}')
+
+    # ---- attention control tile: N1 generator start and the service root's PV relay lead (KVJ-B note 10-17) ----
+    # qkd_attn_cal_gen (KVJ-B 58f9ebdbb) is a CAL_GEN_LAT-edge pipeline started by the layer programme's stage-1
+    # stage_start (registered: token cycle 1); the attention programme samples the calendar at its issue.  Both pulses
+    # ride the same lprg -> attention control tile relays (pr['att']), so the margin is the root difference.
+    issue1 = rows[0]['roots']['attention_issue']
+    gen_go = STAGE_START_EDGE
+    if issue1 - gen_go < CAL_GEN_LAT:
+        raise ValueError(f'attention calendar generator go at {gen_go} is not {CAL_GEN_LAT} edges before the issue {issue1}')
+    pv_starts = [attention_calendar(T, pr, service_end)['PV_START'] for T in sorted(set(LAW_TS) | {1, 2, 8192})]
+    link_ages = (pr.get('link_ages') or {})
+    pv_lead = link_ages.get('attention_to_pv', {}).get('edges')
+    if pv_lead is not None and not 0 <= pv_lead < min(pv_starts):
+        raise ValueError(f'service root PV_LEAD {pv_lead} must be below every PV_START (min {min(pv_starts)})')
+    att_ctl = dict(cal_gen=dict(go='layer_programme stage_start of stage 1', go_token_cycle=gen_go, latency=CAL_GEN_LAT,
+                                first_issue_token_cycle=issue1, margin=issue1 - gen_go - CAL_GEN_LAT,
+                                relays='go and issue both cross lprg -> attention tile (%d edges): margin unchanged' % pr['att']),
+                   service_root=dict(PV_LEAD=pv_lead, cls='MEASURED' if pv_lead is not None else 'PENDING',
+                                     source='die ages link.attention_to_pv (attention control tile -> pvw_0/1 st relay edges)',
+                                     pv_start_min=min(pv_starts), bound=f'0 <= PV_LEAD < {min(pv_starts)} (qkd_attn_service_root '
+                                     'local_fault when PV_START_AGE <= PV_LEAD); start_pv leaves PV_LEAD edges early, the '
+                                     'calendar words are unchanged',
+                                     open=None if pv_lead is not None else 'the kvs13 plan has no service-root -> pvw st bus yet: '
+                                     'price PV_LEAD from the static floorplan (KVJ-G) and recompile'))
 
     # ---- attention words ----
     att = dict(compiled_rx_cmd=LR.RX_CMD, compiled_tx_first=tx_first, compiled_end=tx_end, service_end=service_end,
                start_qk_run_age=start_qk - run_ev, law='calendar(T) = attention_calendar(T, profile, service_end): R stretched so '
                'PV_START + max(P0, P1, R) + 49 = service_end for every T in 1..8192',
-               samples={})
+               samples={}, control=att_ctl)
     for T in (1, 128, 1000, 2048, 4096, 6144, 8192):
         c = attention_calendar(T, pr, service_end)
         att['samples'][str(T)] = dict(cal=AC.hexcal(c), fields=c)
@@ -494,7 +635,8 @@ def compile_all(pr, epoch=0x0b0b, program_words=None, workdir=None):
     if int(bundle['images'][-1]['digest'], 16) != digest:
         raise ValueError('HOST ISA image digest differs from the layer programme LP_DIGEST')
     return dict(profile=pr, link=dict(cmd_event=cmd_ev, run_event=run_ev, start_qk=start_qk, result_first_slot=res[0]['cyc'],
-                                      token_cycles=prog_cal['token_cycles_through_L35'], token_period=prog_cal.get('token_period')),
+                                      token_cycles=prog_cal['token_cycles_through_L35'], token_period=prog_cal.get('token_period'),
+                                      token_period_unpadded=prog_cal.get('token_period_pad', {}).get('unpadded')),
                 leads=dict(k=lead_k, v=lead_v, kgo_event=kgo_ev, vgo_minus_kgo=d_v, e_k=e_k, e_v=e_v, start_lead=lead, law=law),
                 layer=dict(rows=rows, words=layer_words, digest=digest, epoch=epoch, token_core_cycles=img['token_core_cycles'],
                            events=img['events']),
@@ -555,6 +697,25 @@ def check_ports(ops, root=ROOT):
     return len(ops)
 
 
+def priced_template(pr, root=ROOT, ages_path=None):
+    """kv_static.template() with kv_static_ages.apply(die ages): every ECTL A takes QK_ISSUE_AGE = the die age (62, the
+    far groups' K response; the kit's 34 is too short) and ROW_RETURN_LAT = RESPONSE_LAT + 7 of its own issuer"""
+    import kv_static as K
+    import kv_static_ages as KA
+    ages = json.loads(Path(ages_path or root / AGES).read_text())
+    g, _ = K.template(root)
+    left = KA.apply(g, ages)
+    ect = [i for i in g['instances'] if i['role'] == 'ectla']
+    qk = sorted({i['parameters']['QK_ISSUE_AGE'] for i in ect})
+    if len(ect) != 32 or qk != [pr['qk_age']]:
+        raise ValueError(f'ECTL A QK_ISSUE_AGE {qk} on {len(ect)} instances, the compile used {pr["qk_age"]}')
+    for i in ect:
+        ki = next(j for j in g['instances'] if j['name'] == i['name'].replace('ectl_a_', 'ki_'))
+        if i['parameters']['ROW_RETURN_LAT'] != ki['parameters']['RESPONSE_LAT'] + 7:
+            raise ValueError(f'{i["name"]}: ROW_RETURN_LAT != RESPONSE_LAT + 7')
+    return dict(graph=g, ectla=len(ect), QK_ISSUE_AGE=qk[0], unpriced_left=left)
+
+
 def write(r, out, root=ROOT):
     out = Path(out)
     out.mkdir(parents=True, exist_ok=True)
@@ -572,6 +733,10 @@ def write(r, out, root=ROOT):
                      operations=ops, emitted_instruction_count=len(ops))
     (out / 'programme.json').write_text(json.dumps(programme, indent=1) + '\n')
     (out / 'boot_bundle.json').write_text(json.dumps(r['bundle'], indent=1) + '\n')
+    priced = None
+    if r['profile']['kind'] == 'die':                   # the priced static-join template (coordinator 10-17 decision 1)
+        priced = priced_template(r['profile'], root)
+        (out / 'static_join.priced.json').write_text(json.dumps(priced.pop('graph'), indent=1) + '\n')
     for im in r['images']:
         (out / f'target{im["target"]}.hex').write_text(''.join(f'{w:016x}\n' for w in im['program'] + im['descriptors']))
     vec = ''.join(f'{w:08x}' for w in reversed(r['layer']['words'][:324]))
@@ -586,7 +751,7 @@ def write(r, out, root=ROOT):
                   writer=dict(slots=r['writer']['slots'], stop=r['writer']['stop']), ownership=r['ownership'],
                   groups={k: {kk: vv for kk, vv in v.items() if kk not in ('landing_words', 'front_words')} for k, v in r['groups'].items()},
                   controller={str(pc): {k: v for k, v in c.items() if k != 'words'} for pc, c in r['controller'].items()},
-                  attention=r['attention'], phase=r['phase'],
+                  attention=r['attention'], phase=r['phase'], priced_template=priced,
                   boot=dict(target_order=r['bundle']['target_order'], frames=len(r['bundle']['frames528']),
                             words={str(im['target']): len(im['program']) + len(im['descriptors']) for im in r['images']},
                             digests={str(i['target']): i['digest'] for i in r['bundle']['images']}),

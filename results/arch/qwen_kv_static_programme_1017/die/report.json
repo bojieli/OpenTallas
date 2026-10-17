@@ -36,6 +36,62 @@
    },
    "open": "native CDC STA of the closed per-group control tile must confirm the window; token run starts must sit at a fixed HBM-beat phase or a launch can fall outside it (kv_static_programme reports)"
   },
+  "link_ages": {
+   "programme_start": {
+    "edges": 3,
+    "cls": "PLAN_RELAY",
+    "bus": "dcal.tks -> lprg.st",
+    "note": "dcal tok_start -> layer programme start pin: programme age a <-> KV run edge a - 1 + edges"
+   },
+   "programme_to_attention": {
+    "edges": 3,
+    "cls": "COLOCATED",
+    "note": "attention control tile abuts the d2d end as dcal does (dcal.cal -> d2d 0 stages), so it is the dcal -> lprg distance"
+   },
+   "d2d_to_attention_rx": {
+    "edges": 0,
+    "cls": "COLOCATED",
+    "note": "att_rx 548 b local at the d2d end (plan (b) attention control tile); the legacy sequencer home was 4 stages away (d2d_kv.srx -> seq.srx)"
+   },
+   "programme_to_writer": {
+    "edges": 3,
+    "cls": "COLOCATED",
+    "note": "writer programme beside the writer at the d2d KVN end (kvnc_kvi 0 stages)"
+   },
+   "d2d_to_writer": {
+    "edges": 0,
+    "cls": "COLOCATED",
+    "note": "KVN words local at the d2d end"
+   },
+   "programme_to_groups": {
+    "edges": 67,
+    "cls": "PLAN_ANALOG",
+    "buses": [
+     "lprg.lp -> seq.lp",
+     "seq.kvn_WS -> land_WS.kvn",
+     "seq.kvn_WN -> land_WN.kvn",
+     "seq.kvn_ES -> land_ES.kvn",
+     "seq.kvn_EN -> land_EN.kvn"
+    ],
+    "per_stack": {
+     "WS": 67,
+     "WN": 27,
+     "ES": 62,
+     "EN": 21
+    },
+    "note": "lprg -> per-group control tiles (phase launch, landing calendar, K issuer) along the legacy seq -> landing corridor; one equalised registered tree (the die pads the near stacks) so one root reaches all 32 groups on one edge"
+   },
+   "group_internal": {
+    "edges": 0,
+    "cls": "COLOCATED",
+    "note": "phase launch, front calendar and the four pc_path calendars share the per-group control tile / abut it; landing calendar beside its landing segment"
+   },
+   "return_to_landing_ld": {
+    "LD": 1,
+    "cls": "COLOCATED",
+    "note": "qkd_kv_landing_cal LD = return-slot output register + relays; pc_path children abut their landing group"
+   }
+  },
   "ld": 1,
   "rc": 3,
   "landing_uncertainty": 1,
@@ -56,28 +112,52 @@
   "start_qk": 619,
   "result_first_slot": 2364,
   "token_cycles": 246329,
-  "token_period": 249431
+  "token_period": 249600,
+  "token_period_unpadded": 249431
  },
  "leads": {
   "k": 161,
   "v": -6,
   "kgo_event": 233,
-  "vgo_minus_kgo": 1045,
+  "vgo_minus_kgo": 1043,
   "e_k": 120,
-  "e_v": 971,
+  "e_v": 969,
   "start_lead": -2,
   "law": {
    "contexts_checked": 164,
    "lead_k_T8192": 161,
    "lead_v_T8192": -6,
    "lead_k": 161,
-   "lead_v": -6
+   "lead_v": -6,
+   "margins": {
+    "v_ring_slack_core": 25,
+    "k_ring_peak_by_early_edges": [
+     89,
+     89,
+     90,
+     91,
+     92,
+     93,
+     93,
+     94,
+     95,
+     96,
+     96,
+     96,
+     96,
+     97,
+     98,
+     99,
+     100
+    ],
+    "ring_depth": 64
+   }
   }
  },
  "layer_relative_roots": {
   "ctrl_go": 231,
   "kgo": 231,
-  "vgo": 1276,
+  "vgo": 1274,
   "attention_issue": 606,
   "attention_run": 610,
   "writer_start": 642,
@@ -86,9 +166,9 @@
   "stage_end": 6836
  },
  "stage1_roots": {
-  "ctrl_go": 503,
-  "kgo": 503,
-  "vgo": 1548,
+  "ctrl_go": 502,
+  "kgo": 502,
+  "vgo": 1545,
   "attention_issue": 878,
   "attention_run": 882,
   "writer_start": 914,
@@ -824,642 +904,642 @@
   "0": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "1": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "2": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "3": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "4": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "5": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "6": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "7": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "8": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "9": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "10": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "11": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "12": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "13": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "14": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "15": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "16": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "17": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "18": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "19": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "20": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "21": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "22": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "23": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "24": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "25": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "26": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "27": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "28": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "29": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "30": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "31": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "32": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "33": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "34": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "35": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "36": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "37": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "38": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "39": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "40": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "41": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "42": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "43": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "44": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "45": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "46": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "47": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "48": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "49": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "50": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "51": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "52": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "53": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "54": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "55": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "56": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "57": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "58": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "59": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "60": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "61": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "62": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "63": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "64": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "65": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "66": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "67": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "68": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "69": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "70": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "71": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "72": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "73": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "74": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "75": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "76": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "77": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "78": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "79": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "80": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "81": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "82": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "83": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "84": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "85": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "86": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "87": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "88": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "89": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "90": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "91": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "92": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "93": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "94": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "95": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "96": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "97": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "98": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "99": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "100": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "101": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "102": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "103": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "104": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "105": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "106": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "107": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "108": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "109": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "110": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "111": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "112": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "113": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "114": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "115": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "116": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "117": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "118": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "119": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "120": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "121": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "122": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "123": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "124": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "125": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "126": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   },
   "127": {
    "runs": 6,
    "k_first": 120,
-   "v_first": 971
+   "v_first": 969
   }
  },
  "attention": {
@@ -1582,271 +1662,1409 @@
      "EXP": 454
     }
    }
+  },
+  "control": {
+   "cal_gen": {
+    "go": "layer_programme stage_start of stage 1",
+    "go_token_cycle": 1,
+    "latency": 10,
+    "first_issue_token_cycle": 878,
+    "margin": 867,
+    "relays": "go and issue both cross lprg -> attention tile (3 edges): margin unchanged"
+   },
+   "service_root": {
+    "PV_LEAD": null,
+    "cls": "PENDING",
+    "source": "die ages link.attention_to_pv (attention control tile -> pvw_0/1 st relay edges)",
+    "pv_start_min": 618,
+    "bound": "0 <= PV_LEAD < 618 (qkd_attn_service_root local_fault when PV_START_AGE <= PV_LEAD); start_pv leaves PV_LEAD edges early, the calendar words are unchanged",
+    "open": "the kvs13 plan has no service-root -> pvw st bus yet: price PV_LEAD from the static floorplan (KVJ-G) and recompile"
+   }
   }
  },
  "phase": {
-  "assumption": "token run start at HBM-beat phase 0 (q = PH0 at the reset-release beat)",
+  "assumption": "first token run start at HBM-beat phase 0 u (q = PH0 at the reset-release beat); later runs at start + n x token period",
+  "token_period_core": 249600,
+  "token_period_mod_768": 0,
+  "token_phases": 1,
   "launches": 108,
-  "outside_window": [
+  "checks": 108,
+  "outside_window": [],
+  "hold_conflicts": [],
+  "window_u": [
+   200,
+   600
+  ],
+  "launch_table": [
+   {
+    "stage": 1,
+    "root": "ctrl_go",
+    "token_cycle": 502,
+    "gap_u": 388
+   },
+   {
+    "stage": 1,
+    "root": "kgo",
+    "token_cycle": 502,
+    "gap_u": 388
+   },
+   {
+    "stage": 1,
+    "root": "vgo",
+    "token_cycle": 1545,
+    "gap_u": 545
+   },
+   {
+    "stage": 2,
+    "root": "ctrl_go",
+    "token_cycle": 7301,
+    "gap_u": 357
+   },
+   {
+    "stage": 2,
+    "root": "kgo",
+    "token_cycle": 7301,
+    "gap_u": 357
+   },
    {
     "stage": 2,
     "root": "vgo",
-    "gap_u": 32
+    "token_cycle": 8344,
+    "gap_u": 514
+   },
+   {
+    "stage": 3,
+    "root": "ctrl_go",
+    "token_cycle": 14137,
+    "gap_u": 241
+   },
+   {
+    "stage": 3,
+    "root": "kgo",
+    "token_cycle": 14137,
+    "gap_u": 241
    },
    {
     "stage": 3,
     "root": "vgo",
-    "gap_u": 684
+    "token_cycle": 15180,
+    "gap_u": 398
    },
    {
     "stage": 4,
     "root": "ctrl_go",
-    "gap_u": 125
+    "token_cycle": 20969,
+    "gap_u": 321
    },
    {
     "stage": 4,
     "root": "kgo",
-    "gap_u": 125
+    "token_cycle": 20969,
+    "gap_u": 321
+   },
+   {
+    "stage": 4,
+    "root": "vgo",
+    "token_cycle": 22012,
+    "gap_u": 478
    },
    {
     "stage": 5,
     "root": "ctrl_go",
-    "gap_u": 9
+    "token_cycle": 27806,
+    "gap_u": 348
    },
    {
     "stage": 5,
     "root": "kgo",
-    "gap_u": 9
+    "token_cycle": 27806,
+    "gap_u": 348
+   },
+   {
+    "stage": 5,
+    "root": "vgo",
+    "token_cycle": 28849,
+    "gap_u": 505
    },
    {
     "stage": 6,
     "root": "ctrl_go",
-    "gap_u": 661
+    "token_cycle": 34643,
+    "gap_u": 375
    },
    {
     "stage": 6,
     "root": "kgo",
-    "gap_u": 661
+    "token_cycle": 34643,
+    "gap_u": 375
+   },
+   {
+    "stage": 6,
+    "root": "vgo",
+    "token_cycle": 35686,
+    "gap_u": 532
+   },
+   {
+    "stage": 7,
+    "root": "ctrl_go",
+    "token_cycle": 41480,
+    "gap_u": 402
+   },
+   {
+    "stage": 7,
+    "root": "kgo",
+    "token_cycle": 41480,
+    "gap_u": 402
+   },
+   {
+    "stage": 7,
+    "root": "vgo",
+    "token_cycle": 42523,
+    "gap_u": 559
+   },
+   {
+    "stage": 8,
+    "root": "ctrl_go",
+    "token_cycle": 48317,
+    "gap_u": 429
+   },
+   {
+    "stage": 8,
+    "root": "kgo",
+    "token_cycle": 48317,
+    "gap_u": 429
    },
    {
     "stage": 8,
     "root": "vgo",
-    "gap_u": 104
+    "token_cycle": 49360,
+    "gap_u": 586
+   },
+   {
+    "stage": 9,
+    "root": "ctrl_go",
+    "token_cycle": 55153,
+    "gap_u": 313
+   },
+   {
+    "stage": 9,
+    "root": "kgo",
+    "token_cycle": 55153,
+    "gap_u": 313
    },
    {
     "stage": 9,
     "root": "vgo",
-    "gap_u": 756
+    "token_cycle": 56196,
+    "gap_u": 470
    },
    {
     "stage": 10,
     "root": "ctrl_go",
-    "gap_u": 197
+    "token_cycle": 61985,
+    "gap_u": 393
    },
    {
     "stage": 10,
     "root": "kgo",
-    "gap_u": 197
+    "token_cycle": 61985,
+    "gap_u": 393
    },
    {
     "stage": 10,
     "root": "vgo",
-    "gap_u": 640
+    "token_cycle": 63028,
+    "gap_u": 550
    },
    {
     "stage": 11,
     "root": "ctrl_go",
-    "gap_u": 81
+    "token_cycle": 68822,
+    "gap_u": 420
    },
    {
     "stage": 11,
     "root": "kgo",
-    "gap_u": 81
+    "token_cycle": 68822,
+    "gap_u": 420
+   },
+   {
+    "stage": 11,
+    "root": "vgo",
+    "token_cycle": 69865,
+    "gap_u": 577
    },
    {
     "stage": 12,
     "root": "ctrl_go",
-    "gap_u": 733
+    "token_cycle": 75658,
+    "gap_u": 304
    },
    {
     "stage": 12,
     "root": "kgo",
-    "gap_u": 733
+    "token_cycle": 75658,
+    "gap_u": 304
+   },
+   {
+    "stage": 12,
+    "root": "vgo",
+    "token_cycle": 76701,
+    "gap_u": 461
    },
    {
     "stage": 13,
     "root": "ctrl_go",
-    "gap_u": 617
+    "token_cycle": 82495,
+    "gap_u": 331
    },
    {
     "stage": 13,
     "root": "kgo",
-    "gap_u": 617
+    "token_cycle": 82495,
+    "gap_u": 331
+   },
+   {
+    "stage": 13,
+    "root": "vgo",
+    "token_cycle": 83538,
+    "gap_u": 488
+   },
+   {
+    "stage": 14,
+    "root": "ctrl_go",
+    "token_cycle": 89332,
+    "gap_u": 358
+   },
+   {
+    "stage": 14,
+    "root": "kgo",
+    "token_cycle": 89332,
+    "gap_u": 358
    },
    {
     "stage": 14,
     "root": "vgo",
-    "gap_u": 176
+    "token_cycle": 90375,
+    "gap_u": 515
+   },
+   {
+    "stage": 15,
+    "root": "ctrl_go",
+    "token_cycle": 96169,
+    "gap_u": 385
+   },
+   {
+    "stage": 15,
+    "root": "kgo",
+    "token_cycle": 96169,
+    "gap_u": 385
    },
    {
     "stage": 15,
     "root": "vgo",
-    "gap_u": 60
+    "token_cycle": 97212,
+    "gap_u": 542
+   },
+   {
+    "stage": 16,
+    "root": "ctrl_go",
+    "token_cycle": 103005,
+    "gap_u": 269
+   },
+   {
+    "stage": 16,
+    "root": "kgo",
+    "token_cycle": 103005,
+    "gap_u": 269
    },
    {
     "stage": 16,
     "root": "vgo",
-    "gap_u": 712
+    "token_cycle": 104048,
+    "gap_u": 426
    },
    {
     "stage": 17,
     "root": "ctrl_go",
-    "gap_u": 153
+    "token_cycle": 109837,
+    "gap_u": 349
    },
    {
     "stage": 17,
     "root": "kgo",
-    "gap_u": 153
+    "token_cycle": 109837,
+    "gap_u": 349
+   },
+   {
+    "stage": 17,
+    "root": "vgo",
+    "token_cycle": 110880,
+    "gap_u": 506
    },
    {
     "stage": 18,
     "root": "ctrl_go",
-    "gap_u": 37
+    "token_cycle": 116674,
+    "gap_u": 376
    },
    {
     "stage": 18,
     "root": "kgo",
-    "gap_u": 37
+    "token_cycle": 116674,
+    "gap_u": 376
+   },
+   {
+    "stage": 18,
+    "root": "vgo",
+    "token_cycle": 117717,
+    "gap_u": 533
    },
    {
     "stage": 19,
     "root": "ctrl_go",
-    "gap_u": 689
+    "token_cycle": 123511,
+    "gap_u": 403
    },
    {
     "stage": 19,
     "root": "kgo",
-    "gap_u": 689
+    "token_cycle": 123511,
+    "gap_u": 403
+   },
+   {
+    "stage": 19,
+    "root": "vgo",
+    "token_cycle": 124554,
+    "gap_u": 560
+   },
+   {
+    "stage": 20,
+    "root": "ctrl_go",
+    "token_cycle": 130348,
+    "gap_u": 430
+   },
+   {
+    "stage": 20,
+    "root": "kgo",
+    "token_cycle": 130348,
+    "gap_u": 430
+   },
+   {
+    "stage": 20,
+    "root": "vgo",
+    "token_cycle": 131391,
+    "gap_u": 587
+   },
+   {
+    "stage": 21,
+    "root": "ctrl_go",
+    "token_cycle": 137184,
+    "gap_u": 314
+   },
+   {
+    "stage": 21,
+    "root": "kgo",
+    "token_cycle": 137184,
+    "gap_u": 314
    },
    {
     "stage": 21,
     "root": "vgo",
-    "gap_u": 132
+    "token_cycle": 138227,
+    "gap_u": 471
+   },
+   {
+    "stage": 22,
+    "root": "ctrl_go",
+    "token_cycle": 144021,
+    "gap_u": 341
+   },
+   {
+    "stage": 22,
+    "root": "kgo",
+    "token_cycle": 144021,
+    "gap_u": 341
    },
    {
     "stage": 22,
     "root": "vgo",
-    "gap_u": 16
+    "token_cycle": 145064,
+    "gap_u": 498
+   },
+   {
+    "stage": 23,
+    "root": "ctrl_go",
+    "token_cycle": 150857,
+    "gap_u": 225
+   },
+   {
+    "stage": 23,
+    "root": "kgo",
+    "token_cycle": 150857,
+    "gap_u": 225
    },
    {
     "stage": 23,
     "root": "vgo",
-    "gap_u": 668
+    "token_cycle": 151900,
+    "gap_u": 382
    },
    {
     "stage": 24,
     "root": "ctrl_go",
-    "gap_u": 109
+    "token_cycle": 157689,
+    "gap_u": 305
    },
    {
     "stage": 24,
     "root": "kgo",
-    "gap_u": 109
+    "token_cycle": 157689,
+    "gap_u": 305
+   },
+   {
+    "stage": 24,
+    "root": "vgo",
+    "token_cycle": 158732,
+    "gap_u": 462
    },
    {
     "stage": 25,
     "root": "ctrl_go",
-    "gap_u": 761
+    "token_cycle": 164526,
+    "gap_u": 332
    },
    {
     "stage": 25,
     "root": "kgo",
-    "gap_u": 761
+    "token_cycle": 164526,
+    "gap_u": 332
+   },
+   {
+    "stage": 25,
+    "root": "vgo",
+    "token_cycle": 165569,
+    "gap_u": 489
    },
    {
     "stage": 26,
     "root": "ctrl_go",
-    "gap_u": 645
+    "token_cycle": 171363,
+    "gap_u": 359
    },
    {
     "stage": 26,
     "root": "kgo",
-    "gap_u": 645
+    "token_cycle": 171363,
+    "gap_u": 359
+   },
+   {
+    "stage": 26,
+    "root": "vgo",
+    "token_cycle": 172406,
+    "gap_u": 516
+   },
+   {
+    "stage": 27,
+    "root": "ctrl_go",
+    "token_cycle": 178200,
+    "gap_u": 386
+   },
+   {
+    "stage": 27,
+    "root": "kgo",
+    "token_cycle": 178200,
+    "gap_u": 386
+   },
+   {
+    "stage": 27,
+    "root": "vgo",
+    "token_cycle": 179243,
+    "gap_u": 543
+   },
+   {
+    "stage": 28,
+    "root": "ctrl_go",
+    "token_cycle": 185037,
+    "gap_u": 413
+   },
+   {
+    "stage": 28,
+    "root": "kgo",
+    "token_cycle": 185037,
+    "gap_u": 413
    },
    {
     "stage": 28,
     "root": "vgo",
-    "gap_u": 88
+    "token_cycle": 186080,
+    "gap_u": 570
+   },
+   {
+    "stage": 29,
+    "root": "ctrl_go",
+    "token_cycle": 191873,
+    "gap_u": 297
+   },
+   {
+    "stage": 29,
+    "root": "kgo",
+    "token_cycle": 191873,
+    "gap_u": 297
    },
    {
     "stage": 29,
     "root": "vgo",
-    "gap_u": 740
+    "token_cycle": 192916,
+    "gap_u": 454
    },
    {
     "stage": 30,
     "root": "ctrl_go",
-    "gap_u": 181
+    "token_cycle": 198705,
+    "gap_u": 377
    },
    {
     "stage": 30,
     "root": "kgo",
-    "gap_u": 181
+    "token_cycle": 198705,
+    "gap_u": 377
    },
    {
     "stage": 30,
     "root": "vgo",
-    "gap_u": 624
+    "token_cycle": 199748,
+    "gap_u": 534
    },
    {
     "stage": 31,
     "root": "ctrl_go",
-    "gap_u": 65
+    "token_cycle": 205542,
+    "gap_u": 404
    },
    {
     "stage": 31,
     "root": "kgo",
-    "gap_u": 65
+    "token_cycle": 205542,
+    "gap_u": 404
+   },
+   {
+    "stage": 31,
+    "root": "vgo",
+    "token_cycle": 206585,
+    "gap_u": 561
    },
    {
     "stage": 32,
     "root": "ctrl_go",
-    "gap_u": 717
+    "token_cycle": 212379,
+    "gap_u": 431
    },
    {
     "stage": 32,
     "root": "kgo",
-    "gap_u": 717
+    "token_cycle": 212379,
+    "gap_u": 431
+   },
+   {
+    "stage": 32,
+    "root": "vgo",
+    "token_cycle": 213422,
+    "gap_u": 588
    },
    {
     "stage": 33,
     "root": "ctrl_go",
-    "gap_u": 601
+    "token_cycle": 219215,
+    "gap_u": 315
    },
    {
     "stage": 33,
     "root": "kgo",
-    "gap_u": 601
+    "token_cycle": 219215,
+    "gap_u": 315
+   },
+   {
+    "stage": 33,
+    "root": "vgo",
+    "token_cycle": 220258,
+    "gap_u": 472
+   },
+   {
+    "stage": 34,
+    "root": "ctrl_go",
+    "token_cycle": 226052,
+    "gap_u": 342
+   },
+   {
+    "stage": 34,
+    "root": "kgo",
+    "token_cycle": 226052,
+    "gap_u": 342
    },
    {
     "stage": 34,
     "root": "vgo",
-    "gap_u": 160
+    "token_cycle": 227095,
+    "gap_u": 499
+   },
+   {
+    "stage": 35,
+    "root": "ctrl_go",
+    "token_cycle": 232889,
+    "gap_u": 369
+   },
+   {
+    "stage": 35,
+    "root": "kgo",
+    "token_cycle": 232889,
+    "gap_u": 369
    },
    {
     "stage": 35,
     "root": "vgo",
-    "gap_u": 44
+    "token_cycle": 233932,
+    "gap_u": 526
+   },
+   {
+    "stage": 36,
+    "root": "ctrl_go",
+    "token_cycle": 239725,
+    "gap_u": 253
+   },
+   {
+    "stage": 36,
+    "root": "kgo",
+    "token_cycle": 239725,
+    "gap_u": 253
    },
    {
     "stage": 36,
     "root": "vgo",
-    "gap_u": 696
+    "token_cycle": 240768,
+    "gap_u": 410
    }
   ],
-  "token_period_core": 249431,
-  "token_period_mod_768": 599,
-  "requirement": "the token period (or each run start) must be a multiple of 768 core edges for one compiled set of launch phases to hold every token; otherwise a phase-launch fault aborts some tokens"
+  "unpadded_counterfactual": {
+   "assumption": "first token run start at HBM-beat phase 0 u (q = PH0 at the reset-release beat); later runs at start + n x token period",
+   "token_period_core": 249431,
+   "token_period_mod_768": 599,
+   "token_phases": 768,
+   "launches": 108,
+   "checks": 82944,
+   "outside_window": [
+    {
+     "stage": 1,
+     "root": "ctrl_go",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 1,
+     "root": "kgo",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 1,
+     "root": "vgo",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 2,
+     "root": "ctrl_go",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 2,
+     "root": "kgo",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 2,
+     "root": "vgo",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 3,
+     "root": "ctrl_go",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 3,
+     "root": "kgo",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 3,
+     "root": "vgo",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 4,
+     "root": "ctrl_go",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 4,
+     "root": "kgo",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 4,
+     "root": "vgo",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 5,
+     "root": "ctrl_go",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 5,
+     "root": "kgo",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 5,
+     "root": "vgo",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 6,
+     "root": "ctrl_go",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 6,
+     "root": "kgo",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 6,
+     "root": "vgo",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 7,
+     "root": "ctrl_go",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 7,
+     "root": "kgo",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 7,
+     "root": "vgo",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 8,
+     "root": "ctrl_go",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 8,
+     "root": "kgo",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 8,
+     "root": "vgo",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 9,
+     "root": "ctrl_go",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 9,
+     "root": "kgo",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 9,
+     "root": "vgo",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 10,
+     "root": "ctrl_go",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 10,
+     "root": "kgo",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 10,
+     "root": "vgo",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 11,
+     "root": "ctrl_go",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 11,
+     "root": "kgo",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 11,
+     "root": "vgo",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 12,
+     "root": "ctrl_go",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 12,
+     "root": "kgo",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 12,
+     "root": "vgo",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 13,
+     "root": "ctrl_go",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 13,
+     "root": "kgo",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 13,
+     "root": "vgo",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 14,
+     "root": "ctrl_go",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 14,
+     "root": "kgo",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 14,
+     "root": "vgo",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 15,
+     "root": "ctrl_go",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 15,
+     "root": "kgo",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 15,
+     "root": "vgo",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 16,
+     "root": "ctrl_go",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 16,
+     "root": "kgo",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 16,
+     "root": "vgo",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 17,
+     "root": "ctrl_go",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 17,
+     "root": "kgo",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 17,
+     "root": "vgo",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 18,
+     "root": "ctrl_go",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 18,
+     "root": "kgo",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 18,
+     "root": "vgo",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 19,
+     "root": "ctrl_go",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 19,
+     "root": "kgo",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 19,
+     "root": "vgo",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 20,
+     "root": "ctrl_go",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 20,
+     "root": "kgo",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 20,
+     "root": "vgo",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 21,
+     "root": "ctrl_go",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 21,
+     "root": "kgo",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 21,
+     "root": "vgo",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 22,
+     "root": "ctrl_go",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 22,
+     "root": "kgo",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 22,
+     "root": "vgo",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 23,
+     "root": "ctrl_go",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 23,
+     "root": "kgo",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 23,
+     "root": "vgo",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 24,
+     "root": "ctrl_go",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 24,
+     "root": "kgo",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 24,
+     "root": "vgo",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 25,
+     "root": "ctrl_go",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 25,
+     "root": "kgo",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 25,
+     "root": "vgo",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 26,
+     "root": "ctrl_go",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 26,
+     "root": "kgo",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 26,
+     "root": "vgo",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 27,
+     "root": "ctrl_go",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 27,
+     "root": "kgo",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 27,
+     "root": "vgo",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 28,
+     "root": "ctrl_go",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 28,
+     "root": "kgo",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 28,
+     "root": "vgo",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 29,
+     "root": "ctrl_go",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 29,
+     "root": "kgo",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 29,
+     "root": "vgo",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 30,
+     "root": "ctrl_go",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 30,
+     "root": "kgo",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 30,
+     "root": "vgo",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 31,
+     "root": "ctrl_go",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 31,
+     "root": "kgo",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 31,
+     "root": "vgo",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 32,
+     "root": "ctrl_go",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 32,
+     "root": "kgo",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 32,
+     "root": "vgo",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 33,
+     "root": "ctrl_go",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 33,
+     "root": "kgo",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 33,
+     "root": "vgo",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 34,
+     "root": "ctrl_go",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 34,
+     "root": "kgo",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 34,
+     "root": "vgo",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 35,
+     "root": "ctrl_go",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 35,
+     "root": "kgo",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 35,
+     "root": "vgo",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 36,
+     "root": "ctrl_go",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 36,
+     "root": "kgo",
+     "gaps_outside": 367,
+     "phases": 768
+    },
+    {
+     "stage": 36,
+     "root": "vgo",
+     "gaps_outside": 367,
+     "phases": 768
+    }
+   ],
+   "hold_conflicts": [],
+   "window_u": [
+    200,
+    600
+   ]
+  },
+  "alignment": {
+   "vgo_advance": 2,
+   "stage_advance": [
+    1,
+    0,
+    0,
+    4,
+    3,
+    2,
+    1,
+    0,
+    0,
+    4,
+    3,
+    3,
+    2,
+    1,
+    0,
+    0,
+    4,
+    3,
+    2,
+    1,
+    1,
+    0,
+    0,
+    4,
+    3,
+    2,
+    1,
+    0,
+    0,
+    4,
+    3,
+    2,
+    2,
+    1,
+    0,
+    0
+   ],
+   "token_phases": [
+    0
+   ],
+   "max_stage_advance": 4,
+   "v_ring_room_core": 25,
+   "v_early_used": 7,
+   "k_ring_peak": 92,
+   "k_ring_peak_unaligned": 89,
+   "ring_depth": 64,
+   "k_ring_open": "K return-ring peak exceeds ring_depth with the one law-wide K lead (all contexts), before any alignment: pre-existing, K ring / lead owner",
+   "law": "ctrl_go = kgo = layer root - d_s; vgo = kgo + d_v - a; e_v follows d_v - a (the controller V run)"
+  }
+ },
+ "priced_template": {
+  "ectla": 32,
+  "QK_ISSUE_AGE": 62,
+  "unpriced_left": []
  },
  "boot": {
   "target_order": [
@@ -1875,7 +3093,7 @@
    "0": 1032
   },
   "digests": {
-   "1": "333ab06cd5c3d387",
+   "1": "0fe974a7c5c3d68b",
    "2": "abe7ba21416eb901",
    "3": "35450524f9e64f3b",
    "4": "ebfc8cfcbbb1c4b9",
@@ -1888,8 +3106,8 @@
   }
  },
  "operations": 288,
- "boot_bundle_sha256": "a43f9250fe8ba31cde820ae8b68c12ba2163dbf9e43dfe7259764b23f0d8c5e7",
- "programme_sha256": "24730b897b3e807267c188c5c2b64527f0f69bd170f0988ba66dece8836cd3de",
+ "boot_bundle_sha256": "4a4d9294da5adeb6783d98bc558f75bee74fa5826803a2ce2daaef63c6952c31",
+ "programme_sha256": "b39734bba58c2b6c1d5555d9f7954b67e0f8c6e54a478f451fd734bbe888ed63",
  "open": [
   "static floorplan (OT_KV_STATIC plan) to replace PLAN_ANALOG / COLOCATED ages, then recompile",
   "native benches of the boot-loaded images on the joined subsystem; TT/FF closure of every element",

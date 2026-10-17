@@ -2710,6 +2710,8 @@
   "rtl/lib/ot_reset_sync.sv": "489e493c19aa1260853031fee35c14ea3394ae62ff6853cf7ea407cb8fb78bbd",
   "rtl/test/qwen_static_kv/tb_controller_calendar_native.sv": "597d4287dde9205ff8763f1876fdd3c00c51ec8816c29360d9dc9cdc57527a35"
  },
- "binary_sha256": "0c819b78a781d558abf0e5ad9475ffa981560c457d9c7d182f891bafbed27871",
- "scope": "compiled per-PC controller calendar words on the actual controller + PROFILE0 JEDEC core bench (PHY modeled); not the joined subsystem, not physical"
+ "binary_sha256": "2bc31ef15ed1cda3451d1b915a287c57dfa2630709bb4966713af73b592a9d39",
+ "scope": "compiled per-PC controller calendar words on the actual controller + PROFILE0 JEDEC core bench (PHY modeled); not the joined subsystem, not physical",
+ "programme_sha256": "b39734bba58c2b6c1d5555d9f7954b67e0f8c6e54a478f451fd734bbe888ed63",
+ "run": "KVJ-E2 10-17 EPYC4 (ot-heavy), 16 shards on one build"
 }

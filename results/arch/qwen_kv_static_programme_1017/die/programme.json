@@ -5,7 +5,7 @@
  "compiler_sources": [
   {
    "path": "tools/qwen_kv_die/kv_static_programme.py",
-   "sha256": "d6b9cf4dbfedce93d14091ee8c5df32aae04b53c6ef255d2c5fd49021896d27c"
+   "sha256": "a00f03d01ed47b4ab550a4536ac327d9b0495b5a02a6cbddb510fc9a080d90a6"
   },
   {
    "path": "tools/qwen_kv_die/kv_static_ages.py",
@@ -13,7 +13,7 @@
   },
   {
    "path": "tools/qwen_split/d2d_link_calendar.py",
-   "sha256": "e9ecc441d61848dfc890d40bd47dc28fc025d6814d9850afa0e6fd020f49e57f"
+   "sha256": "283b2b22e30175529f02656868b8f01b19d9992956fa29e69d7648f25c7eb42c"
   },
   {
    "path": "tools/qwen_static_kv/layer_roots_from_link.py",
@@ -68,7 +68,7 @@
   {
    "id": "S1.ctrl_go",
    "kind": "hbm_command",
-   "cycle": 503,
+   "cycle": 502,
    "domain": "core",
    "results": [
     {
@@ -210,7 +210,7 @@
   {
    "id": "S1.kgo",
    "kind": "k_row",
-   "cycle": 503,
+   "cycle": 502,
    "domain": "core",
    "results": [
     {
@@ -608,7 +608,7 @@
   {
    "id": "S1.vgo",
    "kind": "v_row",
-   "cycle": 1548,
+   "cycle": 1545,
    "domain": "core",
    "results": [
     {
@@ -1508,7 +1508,7 @@
   {
    "id": "S2.vgo",
    "kind": "v_row",
-   "cycle": 8346,
+   "cycle": 8344,
    "domain": "core",
    "results": [
     {
@@ -2408,7 +2408,7 @@
   {
    "id": "S3.vgo",
    "kind": "v_row",
-   "cycle": 15182,
+   "cycle": 15180,
    "domain": "core",
    "results": [
     {
@@ -2768,7 +2768,7 @@
   {
    "id": "S4.ctrl_go",
    "kind": "hbm_command",
-   "cycle": 20973,
+   "cycle": 20969,
    "domain": "core",
    "results": [
     {
@@ -2910,7 +2910,7 @@
   {
    "id": "S4.kgo",
    "kind": "k_row",
-   "cycle": 20973,
+   "cycle": 20969,
    "domain": "core",
    "results": [
     {
@@ -3308,7 +3308,7 @@
   {
    "id": "S4.vgo",
    "kind": "v_row",
-   "cycle": 22018,
+   "cycle": 22012,
    "domain": "core",
    "results": [
     {
@@ -3668,7 +3668,7 @@
   {
    "id": "S5.ctrl_go",
    "kind": "hbm_command",
-   "cycle": 27809,
+   "cycle": 27806,
    "domain": "core",
    "results": [
     {
@@ -3810,7 +3810,7 @@
   {
    "id": "S5.kgo",
    "kind": "k_row",
-   "cycle": 27809,
+   "cycle": 27806,
    "domain": "core",
    "results": [
     {
@@ -4208,7 +4208,7 @@
   {
    "id": "S5.vgo",
    "kind": "v_row",
-   "cycle": 28854,
+   "cycle": 28849,
    "domain": "core",
    "results": [
     {
@@ -4568,7 +4568,7 @@
   {
    "id": "S6.ctrl_go",
    "kind": "hbm_command",
-   "cycle": 34645,
+   "cycle": 34643,
    "domain": "core",
    "results": [
     {
@@ -4710,7 +4710,7 @@
   {
    "id": "S6.kgo",
    "kind": "k_row",
-   "cycle": 34645,
+   "cycle": 34643,
    "domain": "core",
    "results": [
     {
@@ -5108,7 +5108,7 @@
   {
    "id": "S6.vgo",
    "kind": "v_row",
-   "cycle": 35690,
+   "cycle": 35686,
    "domain": "core",
    "results": [
     {
@@ -5468,7 +5468,7 @@
   {
    "id": "S7.ctrl_go",
    "kind": "hbm_command",
-   "cycle": 41481,
+   "cycle": 41480,
    "domain": "core",
    "results": [
     {
@@ -5610,7 +5610,7 @@
   {
    "id": "S7.kgo",
    "kind": "k_row",
-   "cycle": 41481,
+   "cycle": 41480,
    "domain": "core",
    "results": [
     {
@@ -6008,7 +6008,7 @@
   {
    "id": "S7.vgo",
    "kind": "v_row",
-   "cycle": 42526,
+   "cycle": 42523,
    "domain": "core",
    "results": [
     {
@@ -6908,7 +6908,7 @@
   {
    "id": "S8.vgo",
    "kind": "v_row",
-   "cycle": 49362,
+   "cycle": 49360,
    "domain": "core",
    "results": [
     {
@@ -7808,7 +7808,7 @@
   {
    "id": "S9.vgo",
    "kind": "v_row",
-   "cycle": 56198,
+   "cycle": 56196,
    "domain": "core",
    "results": [
     {
@@ -8168,7 +8168,7 @@
   {
    "id": "S10.ctrl_go",
    "kind": "hbm_command",
-   "cycle": 61989,
+   "cycle": 61985,
    "domain": "core",
    "results": [
     {
@@ -8310,7 +8310,7 @@
   {
    "id": "S10.kgo",
    "kind": "k_row",
-   "cycle": 61989,
+   "cycle": 61985,
    "domain": "core",
    "results": [
     {
@@ -8708,7 +8708,7 @@
   {
    "id": "S10.vgo",
    "kind": "v_row",
-   "cycle": 63034,
+   "cycle": 63028,
    "domain": "core",
    "results": [
     {
@@ -9068,7 +9068,7 @@
   {
    "id": "S11.ctrl_go",
    "kind": "hbm_command",
-   "cycle": 68825,
+   "cycle": 68822,
    "domain": "core",
    "results": [
     {
@@ -9210,7 +9210,7 @@
   {
    "id": "S11.kgo",
    "kind": "k_row",
-   "cycle": 68825,
+   "cycle": 68822,
    "domain": "core",
    "results": [
     {
@@ -9608,7 +9608,7 @@
   {
    "id": "S11.vgo",
    "kind": "v_row",
-   "cycle": 69870,
+   "cycle": 69865,
    "domain": "core",
    "results": [
     {
@@ -9968,7 +9968,7 @@
   {
    "id": "S12.ctrl_go",
    "kind": "hbm_command",
-   "cycle": 75661,
+   "cycle": 75658,
    "domain": "core",
    "results": [
     {
@@ -10110,7 +10110,7 @@
   {
    "id": "S12.kgo",
    "kind": "k_row",
-   "cycle": 75661,
+   "cycle": 75658,
    "domain": "core",
    "results": [
     {
@@ -10508,7 +10508,7 @@
   {
    "id": "S12.vgo",
    "kind": "v_row",
-   "cycle": 76706,
+   "cycle": 76701,
    "domain": "core",
    "results": [
     {
@@ -10868,7 +10868,7 @@
   {
    "id": "S13.ctrl_go",
    "kind": "hbm_command",
-   "cycle": 82497,
+   "cycle": 82495,
    "domain": "core",
    "results": [
     {
@@ -11010,7 +11010,7 @@
   {
    "id": "S13.kgo",
    "kind": "k_row",
-   "cycle": 82497,
+   "cycle": 82495,
    "domain": "core",
    "results": [
     {
@@ -11408,7 +11408,7 @@
   {
    "id": "S13.vgo",
    "kind": "v_row",
-   "cycle": 83542,
+   "cycle": 83538,
    "domain": "core",
    "results": [
     {
@@ -11768,7 +11768,7 @@
   {
    "id": "S14.ctrl_go",
    "kind": "hbm_command",
-   "cycle": 89333,
+   "cycle": 89332,
    "domain": "core",
    "results": [
     {
@@ -11910,7 +11910,7 @@
   {
    "id": "S14.kgo",
    "kind": "k_row",
-   "cycle": 89333,
+   "cycle": 89332,
    "domain": "core",
    "results": [
     {
@@ -12308,7 +12308,7 @@
   {
    "id": "S14.vgo",
    "kind": "v_row",
-   "cycle": 90378,
+   "cycle": 90375,
    "domain": "core",
    "results": [
     {
@@ -13208,7 +13208,7 @@
   {
    "id": "S15.vgo",
    "kind": "v_row",
-   "cycle": 97214,
+   "cycle": 97212,
    "domain": "core",
    "results": [
     {
@@ -14108,7 +14108,7 @@
   {
    "id": "S16.vgo",
    "kind": "v_row",
-   "cycle": 104050,
+   "cycle": 104048,
    "domain": "core",
    "results": [
     {
@@ -14468,7 +14468,7 @@
   {
    "id": "S17.ctrl_go",
    "kind": "hbm_command",
-   "cycle": 109841,
+   "cycle": 109837,
    "domain": "core",
    "results": [
     {
@@ -14610,7 +14610,7 @@
   {
    "id": "S17.kgo",
    "kind": "k_row",
-   "cycle": 109841,
+   "cycle": 109837,
    "domain": "core",
    "results": [
     {
@@ -15008,7 +15008,7 @@
   {
    "id": "S17.vgo",
    "kind": "v_row",
-   "cycle": 110886,
+   "cycle": 110880,
    "domain": "core",
    "results": [
     {
@@ -15368,7 +15368,7 @@
   {
    "id": "S18.ctrl_go",
    "kind": "hbm_command",
-   "cycle": 116677,
+   "cycle": 116674,
    "domain": "core",
    "results": [
     {
@@ -15510,7 +15510,7 @@
   {
    "id": "S18.kgo",
    "kind": "k_row",
-   "cycle": 116677,
+   "cycle": 116674,
    "domain": "core",
    "results": [
     {
@@ -15908,7 +15908,7 @@
   {
    "id": "S18.vgo",
    "kind": "v_row",
-   "cycle": 117722,
+   "cycle": 117717,
    "domain": "core",
    "results": [
     {
@@ -16268,7 +16268,7 @@
   {
    "id": "S19.ctrl_go",
    "kind": "hbm_command",
-   "cycle": 123513,
+   "cycle": 123511,
    "domain": "core",
    "results": [
     {
@@ -16410,7 +16410,7 @@
   {
    "id": "S19.kgo",
    "kind": "k_row",
-   "cycle": 123513,
+   "cycle": 123511,
    "domain": "core",
    "results": [
     {
@@ -16808,7 +16808,7 @@
   {
    "id": "S19.vgo",
    "kind": "v_row",
-   "cycle": 124558,
+   "cycle": 124554,
    "domain": "core",
    "results": [
     {
@@ -17168,7 +17168,7 @@
   {
    "id": "S20.ctrl_go",
    "kind": "hbm_command",
-   "cycle": 130349,
+   "cycle": 130348,
    "domain": "core",
    "results": [
     {
@@ -17310,7 +17310,7 @@
   {
    "id": "S20.kgo",
    "kind": "k_row",
-   "cycle": 130349,
+   "cycle": 130348,
    "domain": "core",
    "results": [
     {
@@ -17708,7 +17708,7 @@
   {
    "id": "S20.vgo",
    "kind": "v_row",
-   "cycle": 131394,
+   "cycle": 131391,
    "domain": "core",
    "results": [
     {
@@ -18068,7 +18068,7 @@
   {
    "id": "S21.ctrl_go",
    "kind": "hbm_command",
-   "cycle": 137185,
+   "cycle": 137184,
    "domain": "core",
    "results": [
     {
@@ -18210,7 +18210,7 @@
   {
    "id": "S21.kgo",
    "kind": "k_row",
-   "cycle": 137185,
+   "cycle": 137184,
    "domain": "core",
    "results": [
     {
@@ -18608,7 +18608,7 @@
   {
    "id": "S21.vgo",
    "kind": "v_row",
-   "cycle": 138230,
+   "cycle": 138227,
    "domain": "core",
    "results": [
     {
@@ -19508,7 +19508,7 @@
   {
    "id": "S22.vgo",
    "kind": "v_row",
-   "cycle": 145066,
+   "cycle": 145064,
    "domain": "core",
    "results": [
     {
@@ -20408,7 +20408,7 @@
   {
    "id": "S23.vgo",
    "kind": "v_row",
-   "cycle": 151902,
+   "cycle": 151900,
    "domain": "core",
    "results": [
     {
@@ -20768,7 +20768,7 @@
   {
    "id": "S24.ctrl_go",
    "kind": "hbm_command",
-   "cycle": 157693,
+   "cycle": 157689,
    "domain": "core",
    "results": [
     {
@@ -20910,7 +20910,7 @@
   {
    "id": "S24.kgo",
    "kind": "k_row",
-   "cycle": 157693,
+   "cycle": 157689,
    "domain": "core",
    "results": [
     {
@@ -21308,7 +21308,7 @@
   {
    "id": "S24.vgo",
    "kind": "v_row",
-   "cycle": 158738,
+   "cycle": 158732,
    "domain": "core",
    "results": [
     {
@@ -21668,7 +21668,7 @@
   {
    "id": "S25.ctrl_go",
    "kind": "hbm_command",
-   "cycle": 164529,
+   "cycle": 164526,
    "domain": "core",
    "results": [
     {
@@ -21810,7 +21810,7 @@
   {
    "id": "S25.kgo",
    "kind": "k_row",
-   "cycle": 164529,
+   "cycle": 164526,
    "domain": "core",
    "results": [
     {
@@ -22208,7 +22208,7 @@
   {
    "id": "S25.vgo",
    "kind": "v_row",
-   "cycle": 165574,
+   "cycle": 165569,
    "domain": "core",
    "results": [
     {
@@ -22568,7 +22568,7 @@
   {
    "id": "S26.ctrl_go",
    "kind": "hbm_command",
-   "cycle": 171365,
+   "cycle": 171363,
    "domain": "core",
    "results": [
     {
@@ -22710,7 +22710,7 @@
   {
    "id": "S26.kgo",
    "kind": "k_row",
-   "cycle": 171365,
+   "cycle": 171363,
    "domain": "core",
    "results": [
     {
@@ -23108,7 +23108,7 @@
   {
    "id": "S26.vgo",
    "kind": "v_row",
-   "cycle": 172410,
+   "cycle": 172406,
    "domain": "core",
    "results": [
     {
@@ -23468,7 +23468,7 @@
   {
    "id": "S27.ctrl_go",
    "kind": "hbm_command",
-   "cycle": 178201,
+   "cycle": 178200,
    "domain": "core",
    "results": [
     {
@@ -23610,7 +23610,7 @@
   {
    "id": "S27.kgo",
    "kind": "k_row",
-   "cycle": 178201,
+   "cycle": 178200,
    "domain": "core",
    "results": [
     {
@@ -24008,7 +24008,7 @@
   {
    "id": "S27.vgo",
    "kind": "v_row",
-   "cycle": 179246,
+   "cycle": 179243,
    "domain": "core",
    "results": [
     {
@@ -24908,7 +24908,7 @@
   {
    "id": "S28.vgo",
    "kind": "v_row",
-   "cycle": 186082,
+   "cycle": 186080,
    "domain": "core",
    "results": [
     {
@@ -25808,7 +25808,7 @@
   {
    "id": "S29.vgo",
    "kind": "v_row",
-   "cycle": 192918,
+   "cycle": 192916,
    "domain": "core",
    "results": [
     {
@@ -26168,7 +26168,7 @@
   {
    "id": "S30.ctrl_go",
    "kind": "hbm_command",
-   "cycle": 198709,
+   "cycle": 198705,
    "domain": "core",
    "results": [
     {
@@ -26310,7 +26310,7 @@
   {
    "id": "S30.kgo",
    "kind": "k_row",
-   "cycle": 198709,
+   "cycle": 198705,
    "domain": "core",
    "results": [
     {
@@ -26708,7 +26708,7 @@
   {
    "id": "S30.vgo",
    "kind": "v_row",
-   "cycle": 199754,
+   "cycle": 199748,
    "domain": "core",
    "results": [
     {
@@ -27068,7 +27068,7 @@
   {
    "id": "S31.ctrl_go",
    "kind": "hbm_command",
-   "cycle": 205545,
+   "cycle": 205542,
    "domain": "core",
    "results": [
     {
@@ -27210,7 +27210,7 @@
   {
    "id": "S31.kgo",
    "kind": "k_row",
-   "cycle": 205545,
+   "cycle": 205542,
    "domain": "core",
    "results": [
     {
@@ -27608,7 +27608,7 @@
   {
    "id": "S31.vgo",
    "kind": "v_row",
-   "cycle": 206590,
+   "cycle": 206585,
    "domain": "core",
    "results": [
     {
@@ -27968,7 +27968,7 @@
   {
    "id": "S32.ctrl_go",
    "kind": "hbm_command",
-   "cycle": 212381,
+   "cycle": 212379,
    "domain": "core",
    "results": [
     {
@@ -28110,7 +28110,7 @@
   {
    "id": "S32.kgo",
    "kind": "k_row",
-   "cycle": 212381,
+   "cycle": 212379,
    "domain": "core",
    "results": [
     {
@@ -28508,7 +28508,7 @@
   {
    "id": "S32.vgo",
    "kind": "v_row",
-   "cycle": 213426,
+   "cycle": 213422,
    "domain": "core",
    "results": [
     {
@@ -28868,7 +28868,7 @@
   {
    "id": "S33.ctrl_go",
    "kind": "hbm_command",
-   "cycle": 219217,
+   "cycle": 219215,
    "domain": "core",
    "results": [
     {
@@ -29010,7 +29010,7 @@
   {
    "id": "S33.kgo",
    "kind": "k_row",
-   "cycle": 219217,
+   "cycle": 219215,
    "domain": "core",
    "results": [
     {
@@ -29408,7 +29408,7 @@
   {
    "id": "S33.vgo",
    "kind": "v_row",
-   "cycle": 220262,
+   "cycle": 220258,
    "domain": "core",
    "results": [
     {
@@ -29768,7 +29768,7 @@
   {
    "id": "S34.ctrl_go",
    "kind": "hbm_command",
-   "cycle": 226053,
+   "cycle": 226052,
    "domain": "core",
    "results": [
     {
@@ -29910,7 +29910,7 @@
   {
    "id": "S34.kgo",
    "kind": "k_row",
-   "cycle": 226053,
+   "cycle": 226052,
    "domain": "core",
    "results": [
     {
@@ -30308,7 +30308,7 @@
   {
    "id": "S34.vgo",
    "kind": "v_row",
-   "cycle": 227098,
+   "cycle": 227095,
    "domain": "core",
    "results": [
     {
@@ -31208,7 +31208,7 @@
   {
    "id": "S35.vgo",
    "kind": "v_row",
-   "cycle": 233934,
+   "cycle": 233932,
    "domain": "core",
    "results": [
     {
@@ -32108,7 +32108,7 @@
   {
    "id": "S36.vgo",
    "kind": "v_row",
-   "cycle": 240770,
+   "cycle": 240768,
    "domain": "core",
    "results": [
     {
