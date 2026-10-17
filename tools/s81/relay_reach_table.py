@@ -61,6 +61,9 @@ def main(argv=None):
     ap.add_argument('--stage', required=True)
     ap.add_argument('--np', action='append', required=True, help='unbuffered native pair root(s): <root>/<class>/result.json')
     ap.add_argument('--repeated', action='append', default=[], help='repeated-wire native pair root(s), LAYER=ROOT')
+    ap.add_argument('--flop-first', action='append', default=[], help='flop-first native pair root(s) (variant flopfirst)')
+    ap.add_argument('--dv-keep', default=r'^dsfd_(rly_(63|66|2|15|54|1|283|266|276)_|sstn_|stn[hv]_(3|10|70|86|256|293)x1$|rstg$)',
+                    help='regex of the classes S81-DV keeps (ELEMENT_REUSE.md 10-17 + S81-DV: die-level stations now rly_276)')
     ap.add_argument('--flag-um', type=float, default=300.0)
     ap.add_argument('--out', required=True)
     a = ap.parse_args(argv)
@@ -84,6 +87,10 @@ def main(argv=None):
     for root in a.np:
         for f in Path(root).glob('*/result.json'):
             found.setdefault(f.parent.name, f)
+    ff = {}
+    for root in a.flop_first:
+        for f in Path(root).glob('*/result.json'):
+            ff.setdefault(f.parent.name, f)
     rep = {}
     for spec in a.repeated:
         lay, root = spec.split('=', 1)
@@ -115,9 +122,16 @@ def main(argv=None):
                     row['flag'] = 'SHORT-HOP-ONLY'
                     row['flag_note'] = ('unbuffered reach below 300 um: hops must be <= reach (more relays) or the die '
                                         'wire repeated / receiver input rebuilt (see repeated rows)')
+        row['dv_use'] = 'KEEP' if re.match(a.dv_keep, m) else 'DROPPED_FOR_DV (hub hstn*, die-level 566/512/514 stations, rly_536: replaced by rly_276 lanes)'
+        if m in ff:
+            res = json.loads(ff[m].read_text())
+            if 'flopfirst' in res['variants']:
+                stg = json.loads((ff[m].parent / 'stage.json').read_text())
+                row['flop_first'] = dict(result=str(ff[m]), pads_removed=stg.get('flopfirst_removed'),
+                                         **row_from(res, 'flopfirst'))
         if m in rep:
             row['repeated'] = {}
-                for lay, f in rep[m].items():
+            for lay, f in rep[m].items():
                 res = json.loads(f.read_text())
                 stg = json.loads((f.parent / 'stage.json').read_text())
                 row['repeated'][lay] = dict(result=str(f), **row_from(res), **repeated_summary(res, stg))
@@ -136,6 +150,10 @@ def main(argv=None):
         flagged_below_300=sorted([[m, r['reach_um'], r['instances_c26l'], r['flag']] for m, r in meas.items()
                                   if r.get('flag')], key=lambda x: x[1]),
         min_reach_um_used=min((r['reach_um'] for m, r in meas.items() if r['instances_c26l']), default=None),
+        dv_keep_table=[[m, r['instances_c26l'], r.get('reach_um'),
+                        (r.get('flop_first') or {}).get('reach_um'),
+                        {k: v.get('repeated_reach_L_um') for k, v in (r.get('repeated') or {}).items()}]
+                       for m, r in sorted(out['classes'].items()) if r['dv_use'] == 'KEEP'],
         instance_weighted_mean_reach_um=round(sum(r['reach_um'] * r['instances_c26l'] for r in meas.values()) /
                                               max(1, sum(r['instances_c26l'] for r in meas.values())), 1))
     Path(a.out).write_text(json.dumps(out, indent=1))
