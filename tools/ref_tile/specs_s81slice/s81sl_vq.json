@@ -90,24 +90,25 @@
     "tag": "s81sl_vq",
     "purpose": "S81-SLICE deliverable 3: beat-leaf sub-leaf to closure (TT setup / FF hold / DRC 0 + native audit).",
     "extra_paths": [
-      "rtl/dsrom_sys/s81_dv/slice",
-      "tools/s81_slice",
-      "tools/s81_suhc/hc_gate.py",
-      "tools/s81_suhc/fixtures/su_cases_v2_ildr.pkl",
-      "physical/hbm_norm_split_20261008",
-      "rtl/hdc/v41x",
       "physical/asap7_memory_macros_v2/ot_sram_1r1w_128x256_m1_r2c2",
       "physical/asap7_memory_macros_v2/ot_sram_1r1w_512x128_m4_r2c2",
+      "physical/hbm_norm_split_20261008",
       "results/rtl/hbm_norm_engine_view_20261006",
+      "results/rtl/s81_slice_1017/beat",
+      "rtl/dsrom_sys/s81_dv/slice",
+      "rtl/hdc/v41x",
+      "tools/dsrom_su_hcpost.py",
       "tools/hdc_golden.py",
       "tools/hdc_golden_v41.py",
       "tools/rtl_hdc_v41_blockdot_campaign.py",
-      "tools/dsrom_su_hcpost.py"
+      "tools/s81_slice",
+      "tools/s81_suhc/fixtures/su_cases_v2_ildr.pkl",
+      "tools/s81_suhc/hc_gate.py"
     ],
     "benches": [
       {
         "name": "slbeat_exact",
-        "cmd": "bash tools/s81_slice/beat_bench.sh {RUN}/slbeat_exact base 37",
+        "cmd": "bash tools/s81_slice/beat_bench.sh {RUN}/slbeat_exact base 37 L0",
         "expect": "pass",
         "pass_regex": "^PASS beat base B=37 L0$",
         "threads": 4,
@@ -115,17 +116,19 @@
       },
       {
         "name": "slbeat_muttree",
-        "cmd": "bash tools/s81_slice/beat_bench.sh {RUN}/slbeat_muttree muttree 37",
-        "expect": "pass",
-        "pass_regex": "^NEGATIVE_CONTROL_FAILED_AS_EXPECTED muttree$",
+        "cmd": "bash tools/s81_slice/beat_bench.sh {RUN}/slbeat_muttree muttree 37 L0 raw",
+        "expect": "fail",
+        "fail_regex": "^SLBEAT beat=37 .* err=[1-9][0-9]* ",
+        "fail_witness": "results/rtl/s81_slice_1017/beat/g_mt/run.log",
         "threads": 4,
         "peak_ram_gb": 6
       },
       {
         "name": "slbeat_mutcoef",
-        "cmd": "bash tools/s81_slice/beat_bench.sh {RUN}/slbeat_mutcoef mutcoef 37",
-        "expect": "pass",
-        "pass_regex": "^NEGATIVE_CONTROL_FAILED_AS_EXPECTED mutcoef$",
+        "cmd": "bash tools/s81_slice/beat_bench.sh {RUN}/slbeat_mutcoef mutcoef 37 L0 raw",
+        "expect": "fail",
+        "fail_regex": "^SLBEAT beat=37 .* err=[1-9][0-9]* ",
+        "fail_witness": "results/rtl/s81_slice_1017/beat/g_mc/run.log",
         "threads": 4,
         "peak_ram_gb": 6
       }

@@ -72,15 +72,16 @@
   "tag": "s81sl_hcpl",
   "purpose": "S81-SLICE deliverable 3: beat-leaf sub-leaf to closure (TT setup / FF hold / DRC 0 + native audit).",
   "extra_paths": [
-   "tools/s81_slice/hcpl_bench.sh",
-   "rtl/test/tb_hcpost_lane_pr.sv",
-   "rtl/hdc/ot_hdc_fp32_f12.sv",
-   "rtl/hdc/ot_hdc_fastfp.sv",
-   "rtl/hdc/ot_hdc_prefix.sv",
+   "results/rtl/s81_slice_1017/hcpl/mut.log",
    "rtl/hdc/ot_hdc_delay.sv",
+   "rtl/hdc/ot_hdc_fastfp.sv",
+   "rtl/hdc/ot_hdc_fp32_f12.sv",
+   "rtl/hdc/ot_hdc_prefix.sv",
    "rtl/hdc/v41x/ot_dsrom_su_add6.sv",
    "rtl/hdc/v41x/ot_dsrom_su_hcpost.sv",
-   "rtl/hdc/v41x/ot_dsrom_su_hcpost_lane_pr.sv"
+   "rtl/hdc/v41x/ot_dsrom_su_hcpost_lane_pr.sv",
+   "rtl/test/tb_hcpost_lane_pr.sv",
+   "tools/s81_slice/hcpl_bench.sh"
   ],
   "benches": [
    {
@@ -88,6 +89,15 @@
     "cmd": "bash tools/s81_slice/hcpl_bench.sh {RUN}/hcpl",
     "expect": "pass",
     "pass_regex": "^PASS hcpl$",
+    "threads": 2,
+    "peak_ram_gb": 4
+   },
+   {
+    "name": "hcpl_lane_pr_mut1",
+    "cmd": "bash tools/s81_slice/hcpl_bench.sh {RUN}/hcplm mut",
+    "expect": "fail",
+    "fail_regex": "^FAIL_HCPOST_LANE_PR mismatches=[1-9][0-9]* ",
+    "fail_witness": "results/rtl/s81_slice_1017/hcpl/mut.log",
     "threads": 2,
     "peak_ram_gb": 4
    }
