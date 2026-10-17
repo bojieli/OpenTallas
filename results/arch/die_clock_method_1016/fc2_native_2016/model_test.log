@@ -1,0 +1,11 @@
+model_tt_fixed=0
+model_tt_broken=1
+model_ff_fixed=0
+model_ff_broken=1
+ot-run: ot-epyc4       admits   -17 GB (avail 331, growth 300, headroom 48, waiters 31/1997 GB) load 67/128 running 44 disk 1728 GB 
+ot-run: ot-pve1        skipped: no /srv/opentallas-scratch2/claude/closure-loop/hbfd_rly_48_we_fc-fc2-f87700624/routes/hbfd_rly_48_we_fc_fc2_f87700624/work/orfs
+ot-run: ot-agidock128  skipped: no /srv/opentallas-scratch2/claude/closure-loop/hbfd_rly_48_we_fc-fc2-f87700624/routes/hbfd_rly_48_we_fc_fc2_f87700624/work/orfs
+ot-run: -> ot-epyc4 (will queue: admits -2014 GB < 4 GB)
+ot-heavy: waiting for memory on regular-crane: need 4 GB, admissible -17 GB: available 331 GB, growth charged 300 GB, young 182 GB, headroom 48 GB, real floor 227 GB
+ot-heavy: admitted on regular-crane as oth-ubuntu-287389-1792206755 after 60 s
+ot-run: RAN on ot-epyc4 (unit oth-ubuntu-287389-1792206755): exit 0

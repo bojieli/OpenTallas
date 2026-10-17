@@ -110,7 +110,7 @@ def region_of(nodes, anc):
     import re
     for a in anc:
         if nodes[a]["kind"] == "cell":
-            m = re.match(r"^dc_(.+?)_[LBRTP]\d+(?:_(?:tp|gp|hp)\d+)*$", a)
+            m = re.match(r"^dc_(.+?)_[LBRTP]\d+(?:_(?:tp|gp|hp|pp|wp)\d+)*(?:/\w+)?$", a)
             if m:
                 return m.group(1)
     return anc[-1]
@@ -127,10 +127,18 @@ def load_targets(path):
         r = km.get(master, {})
         v = r.get("insertion_per_clock_pin_ps", {}).get(port) or r.get("insertion_in_arcs_ps")
         return v[2] if v else 0.0
+    def R_ff(master, pin):
+        port = pin.rsplit("/", 1)[1]
+        port = port[:-3] if port.endswith("[0]") else port
+        r = km.get(master, {})
+        v = r.get("insertion_per_clock_pin_ps", {}).get(port) or r.get("insertion_in_arcs_ps")
+        return v[1] if v else 0.0
+    R.ff = R_ff
     return R
 
 
-def report(dump, pairs_file=None, top=20, targets=None, strict_entry_pairs=False):
+def report(dump, pairs_file=None, top=20, targets=None, strict_entry_pairs=False, budget=None, region_map=None,
+           families=None, ff_dump=None):
     nodes, pairs, summ = load(dump)
     model = model_arrivals(nodes)
     R = load_targets(targets)
@@ -184,6 +192,12 @@ def report(dump, pairs_file=None, top=20, targets=None, strict_entry_pairs=False
                 lca = next((k for k in aa if k in ab), None)
                 if lca is None:
                     rec = dict(entry_a=pa, entry_b=pb, lca=None)   # different clock roots: no common path at all
+                    sa, sb = nodes[pa]["sta_max"], nodes[pb]["sta_max"]
+                    if None not in (sa, sb):   # neighbour-relative: roots of one PLL family are still synchronous
+                        rec["sta_skew_ps"] = round(abs(sa - sb), 1)
+                        if R:
+                            rec["flop_skew_ps"] = round(abs(sa + R(nodes[pa]["cell"], pa) - sb - R(nodes[pb]["cell"], pb)), 1)
+                    rec["region_a"], rec["region_b"] = region_of(nodes, aa), region_of(nodes, anc_of(pb))
                 else:
                     ma, mb = model[pa] - model[lca], model[pb] - model[lca]
                     rec = dict(entry_a=pa, entry_b=pb, lca=lca,
@@ -237,7 +251,11 @@ def report(dump, pairs_file=None, top=20, targets=None, strict_entry_pairs=False
         k = "|".join(sorted((p["region_a"], p["region_b"])))
         inter_summary["by_pair"].setdefault(k, []).append(p.get("flop_skew_ps", p.get("sta_skew_ps")))
     inter_summary["by_pair"] = {k: stats(v) for k, v in sorted(inter_summary["by_pair"].items())}
+    neighbour = None
+    if budget is not None:
+        neighbour = neighbour_verdict(prs, budget, region_map, families, ff_dump, R, nodes)
     out = dict(
+        neighbour_check=neighbour,
         schema="opentallas.die_clock_check.v1", dump=os.path.abspath(dump), dump_summary=summ,
         model="tools/hbm_die_v15/die_clock_tree.stage_ps over Manhattan node-to-node wire, %g um/stage (H-DIE 9bcff2c0b)" % SPAN,
         threshold=None,
@@ -252,6 +270,74 @@ def report(dump, pairs_file=None, top=20, targets=None, strict_entry_pairs=False
         regions=regions, inter_region=inter_summary,
         tiles=tiles, pairs=prs, unmatched_pairs=missing[:200])
     return out
+
+
+def neighbour_verdict(prs, budget, region_map, families, ff_dump, R, nodes):
+    """OWNER 2026-10-16 neighbour-relative clocking: every COMMUNICATING pair (die netlist data nets / bus list) whose
+    two clock entries belong to one synchronous family must be within `budget` ps of flop-arrival skew at TT (this dump)
+    and FF (--ff-dump, the same die at the FF corner).  Pairs are classed by region pair (region = balance group of the
+    tile's tree when --region-map is a build spec, else the tree / root); pairs across families (async / meso / CDC)
+    are listed, never judged.  No die-wide spread is judged."""
+    ff = None
+    if ff_dump:
+        ffn, _, _ = load(ff_dump)
+        ff = {n: d["sta_min"] if d["sta_min"] is not None else d["sta_max"] for n, d in ffn.items()}
+    gmap = {}
+    if region_map:
+        sp = json.load(open(region_map))
+        for t in sp.get("trees", []):
+            gmap[t["name"]] = t.get("balance_group", t["name"])
+    fam = {}
+    if families:
+        for f, roots in json.load(open(families)).items():
+            for r_ in roots:
+                fam[r_] = f
+    def root_of(e):
+        n = e
+        while nodes[n]["parent"] in nodes:
+            n = nodes[n]["parent"]
+        return n
+    def Rf(e, ci):
+        if not R:
+            return 0.0
+        return R(nodes[e]["cell"], e) if ci == 2 else R_ff(nodes[e]["cell"], e)
+    R_ff = getattr(R, "ff", None) or (lambda m, p: 0.0)
+    classes = {}
+    worst = []
+    for p in prs:
+        ea, eb = p.get("entry_a"), p.get("entry_b")
+        if not ea or not eb:
+            continue
+        ra, rb = root_of(ea), root_of(eb)
+        fa, fb = fam.get(ra, ra if families else "one"), fam.get(rb, rb if families else "one")
+        ga = gmap.get(p.get("region_a"), p.get("region_a")); gb = gmap.get(p.get("region_b"), p.get("region_b"))
+        if fa != fb:
+            k = "async:" + "|".join(sorted((str(fa), str(fb))))
+            c = classes.setdefault(k, dict(pairs=0, judged=False))
+            c["pairs"] += 1
+            continue
+        k = ("intra:" + str(ga)) if ga == gb else ("neighbour:" + "|".join(sorted((str(ga), str(gb)))))
+        c = classes.setdefault(k, dict(pairs=0, judged=True, tt=[], ff=[], over=0))
+        c["pairs"] += 1
+        tt = p.get("flop_skew_ps", p.get("sta_skew_ps"))
+        f_ = None
+        if ff is not None and ff.get(ea) is not None and ff.get(eb) is not None:
+            f_ = abs(ff[ea] + Rf(ea, 1) - ff[eb] - Rf(eb, 1))
+        c["tt"].append(tt); c["ff"].append(f_)
+        bad = (tt is not None and tt > budget) or (f_ is not None and f_ > budget)
+        if bad:
+            c["over"] += 1
+            worst.append(dict(a=p["a"], b=p["b"], cls=k, tt_ps=tt, ff_ps=None if f_ is None else round(f_, 1)))
+    for k, c in classes.items():
+        if c.get("judged"):
+            c["tt_ps"] = stats(c.pop("tt")); c["ff_ps"] = stats(c.pop("ff"))
+    judged = [c for c in classes.values() if c.get("judged")]
+    worst.sort(key=lambda w: -max(w["tt_ps"] or 0, w["ff_ps"] or 0))
+    return dict(budget_ps=budget, ff_measured=ff is not None,
+                verdict=("PASS" if judged and all(c["over"] == 0 for c in judged) and ff is not None else
+                         "FAIL" if any(c["over"] for c in judged) else "INCOMPLETE"),
+                pairs_judged=sum(c["pairs"] for c in judged), pairs_over=sum(c["over"] for c in judged),
+                classes=dict(sorted(classes.items())), worst=worst[:200])
 
 
 def table(r, top=20):
@@ -277,6 +363,16 @@ def table(r, top=20):
                      f"{('n/a' if not x['noncommon_sta_ps'] else x['noncommon_sta_ps']['max'])} / "
                      f"{('n/a' if not x['skew_sta_ps'] else x['skew_sta_ps']['max'])}")
         L.append(f"inter-region pairs: {r['inter_region']['pairs']}")
+    nb = r.get("neighbour_check")
+    if nb:
+        L.append(f"NEIGHBOUR CHECK budget {nb['budget_ps']} ps (TT{' + FF' if nb['ff_measured'] else ', FF NOT MEASURED'}): "
+                 f"{nb['verdict']}  judged {nb['pairs_judged']} pairs, over {nb['pairs_over']}")
+        for k, c in nb["classes"].items():
+            if c.get("judged"):
+                L.append(f"  {k[:40]:40} pairs {c['pairs']:6} over {c['over']:5}  TT max {(c['tt_ps'] or {}).get('max')}  "
+                         f"FF max {(c['ff_ps'] or {}).get('max')}")
+            else:
+                L.append(f"  {k[:40]:40} pairs {c['pairs']:6} (async family crossing: CDC / FIFO, not judged)")
     L.append(f"worst {min(top, len(r['pairs']))} pairs (non-common = max side from the branch point):")
     L.append(f"  {'tile A':34} {'tile B':34} {'model':>8} {'STA':>8} {'skew':>8}  branch")
     for p in r["pairs"][:top]:
@@ -295,12 +391,16 @@ def main():
     r.add_argument("--strict-entry-pairs", action="store_true", help="refuse missing or ambiguous launch/capture clock entries")
     r.add_argument("--top", type=int, default=20)
     r.add_argument("--targets", help="die kit kit.json: per master clock pin in-arc insertion R -> flop arrival / skew")
+    r.add_argument("--budget-ps", type=float, help="neighbour-relative check: max flop-arrival skew of communicating pairs")
+    r.add_argument("--ff-dump", help="the same die dumped at the FF corner (hold side of the neighbour check)")
+    r.add_argument("--region-map", help="tools/die_clock build spec: tree name -> balance_group = region")
+    r.add_argument("--families", help='JSON {family: [root node, ...]}: synchronous families; pairs across are async')
     sub.add_parser("tcl")
     a = ap.parse_args()
     if a.cmd == "tcl":
         print(os.path.join(HERE, "die_clock_check.tcl"))
         return
-    res = report(a.dump, a.pairs, a.top, a.targets, a.strict_entry_pairs)
+    res = report(a.dump, a.pairs, a.top, a.targets, a.strict_entry_pairs, a.budget_ps, a.region_map, a.families, a.ff_dump)
     txt = table(res, a.top)
     if a.out:
         with open(a.out, "w") as fh:

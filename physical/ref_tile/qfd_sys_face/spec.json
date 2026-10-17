@@ -30,18 +30,15 @@
   {
    "view": "physical/asap7_memory_macros/ot_rom_4096x72_m8",
    "count": 1,
-   "inst": "u_rom",
    "at": [
-    241.92,
-    77.76
+    190.08,
+    129.6
    ],
    "orient": "R0"
   }
  ],
  "pins": {
   "N": [
-   "ck",
-   "rst_n",
    "fwd_epoch",
    "admit_ready",
    "cal_seg",
@@ -70,6 +67,8 @@
    "result_fault",
    "result_gen",
    "result_tag",
+   "ck",
+   "rst_n",
    "result_token",
    "result_v",
    "result_value",
@@ -136,11 +135,19 @@
   "pd": 0.5,
   "threads": 8,
   "peak_ram_gb": 24,
+  "pin_balance": {
+   "group_max": 1,
+   "h": "M4",
+   "v": "M5"
+  },
+  "cts_sink": {
+   "sink_clustering": false
+  },
   "hold_margin_ns": 0.03,
   "macro_halo_um": 5.4
  },
  "structural_change": "NEW leaf (ELEM-CENSUS 10-16, census class F, Q-COMPUTE-DIE go 10-16): compute-die system face qfd_sys_face (Q-NETLIST ab5f73bcc/c9415e73d/3effaa228: config ROM ot_rom_4096x72_m8 boot + program replay, static T/L/E calendars, qfd_d2d_cal_seq, record port, embedding row RX, STATUS/RESULT, fab), CONTRACT v1.4 frame 302.4 x 216 um, one ck root. Recipe 3: every data input and output registered at its pin (+1 edge in, +1 edge out, pin_regs.json; the compiled calendar offsets absorb it). Synthesis-only RTL guard: the ROM instance drops its VIAMAP/INSTANCE parameters under SYNTHESIS (OpenROAD's netlist reader rejects instance parameters; the hard macro is content-independent), simulation unchanged. Pin FACES = the die tool's top-down q2o1 assignment (N D2D/record/STATUS face, S sequencer/TT/native59 face, W embedding-provider + TT pw face); 'fault' (absent from the die file: unloaded at die level, folded into fab inside) on S. Ports spread over each face; q2o2 face moves are a re-kit only.",
- "slot_change_request": "none: CONTRACT.md v1.4 frame 302.4 x 216 (results/arch/qwen_split_compute_1014/CONTRACT.md:39); ROM macro against the pin-free E face.",
+ "slot_change_request": "none: CONTRACT.md v1.4 frame 302.4 x 216 (results/arch/qwen_split_compute_1014/CONTRACT.md:39); config ROM beside the N-face clock entry, over the boot/replay logic (gate 1: ROM at the E edge -> macro->reg -50 ps diagnostic).",
  "job": {
   "owner": "Claude:ELEM-CENSUS kit helper",
   "branch": "claude/census-qkit-1016",
@@ -191,6 +198,344 @@
      "iverilog"
     ]
    }
+  ]
+ },
+ "pin_ranges": {
+  "fwd_epoch": [
+   4.324,
+   5.404
+  ],
+  "admit_ready": [
+   6.276,
+   7.356
+  ],
+  "cal_seg": [
+   8.228,
+   9.308
+  ],
+  "cal_start": [
+   10.181,
+   11.261
+  ],
+  "cfg_addr": [
+   12.129,
+   13.217
+  ],
+  "cfg_data": [
+   14.081,
+   19.884
+  ],
+  "cfg_rx_we": [
+   20.753,
+   21.833
+  ],
+  "cfg_tx_we": [
+   22.705,
+   23.785
+  ],
+  "collective_busy": [
+   24.657,
+   25.737
+  ],
+  "collective_drained": [
+   26.609,
+   27.689
+  ],
+  "crom_fault": [
+   28.561,
+   29.641
+  ],
+  "d2d_epoch_abort": [
+   30.513,
+   31.593
+  ],
+  "d2d_fault": [
+   32.466,
+   33.546
+  ],
+  "emb_rx_slot": [
+   34.418,
+   35.498
+  ],
+  "emb_rx_v": [
+   36.37,
+   37.45
+  ],
+  "execution_active": [
+   38.322,
+   39.402
+  ],
+  "prog_auth_slot": [
+   40.274,
+   41.354
+  ],
+  "prog_context_slot": [
+   42.227,
+   43.307
+  ],
+  "prog_rx_v": [
+   44.179,
+   45.259
+  ],
+  "prog_tx_observed_v": [
+   46.131,
+   47.211
+  ],
+  "prog_tx_record": [
+   48.079,
+   147.466
+  ],
+  "prog_witness_slot": [
+   148.334,
+   149.414
+  ],
+  "result_cause": [
+   150.282,
+   151.37
+  ],
+  "result_cycles": [
+   152.234,
+   158.038
+  ],
+  "result_done": [
+   158.906,
+   159.986
+  ],
+  "result_fault": [
+   160.858,
+   161.938
+  ],
+  "result_gen": [
+   162.806,
+   163.894
+  ],
+  "result_tag": [
+   164.758,
+   175.459
+  ],
+  "ck": [
+   176.327,
+   177.407
+  ],
+  "rst_n": [
+   178.279,
+   179.359
+  ],
+  "result_token": [
+   180.227,
+   183.491
+  ],
+  "result_v": [
+   184.36,
+   185.44
+  ],
+  "result_value": [
+   186.308,
+   192.111
+  ],
+  "status_epoch16": [
+   192.975,
+   195.877
+  ],
+  "vm_drained": [
+   196.745,
+   197.825
+  ],
+  "rx_payload": [
+   198.693,
+   298.08
+  ],
+  "io_cmd_free": [
+   5.103,
+   6.183
+  ],
+  "io_fault": [
+   8.614,
+   9.694
+  ],
+  "io_shared_fault": [
+   12.125,
+   13.205
+  ],
+  "seq_cfg_image_ready": [
+   15.635,
+   16.715
+  ],
+  "seq_dc": [
+   18.362,
+   43.064
+  ],
+  "seq_descriptor_obs": [
+   43.928,
+   74.364
+  ],
+  "seq_dh": [
+   75.228,
+   157.714
+  ],
+  "seq_program_obs": [
+   158.578,
+   192.102
+  ],
+  "tt_command_stage": [
+   192.966,
+   195.613
+  ],
+  "tt_layer_context_v": [
+   197.26,
+   198.34
+  ],
+  "tt_native_pos": [
+   199.987,
+   207.927
+  ],
+  "tt_native_tok": [
+   208.791,
+   216.731
+  ],
+  "complete_slot": [
+   218.378,
+   219.458
+  ],
+  "crom_fault_code": [
+   221.106,
+   228.163
+  ],
+  "host_epoch": [
+   229.027,
+   236.085
+  ],
+  "host_epoch_valid": [
+   237.732,
+   238.812
+  ],
+  "host_fused_capability": [
+   241.243,
+   242.323
+  ],
+  "host_generation": [
+   243.97,
+   246.617
+  ],
+  "host_tag": [
+   247.481,
+   273.506
+  ],
+  "kv_word_index": [
+   274.37,
+   277.016
+  ],
+  "kv_word_slot": [
+   278.664,
+   279.744
+  ],
+  "native_fault": [
+   282.174,
+   283.254
+  ],
+  "q_slot": [
+   285.685,
+   286.765
+  ],
+  "q_slot_beat": [
+   288.412,
+   291.059
+  ],
+  "visibility_slot": [
+   292.706,
+   293.786
+  ],
+  "fault": [
+   296.217,
+   297.297
+  ],
+  "res_issue_fault": [
+   4.445,
+   5.525
+  ],
+  "tt_control_stores_ready": [
+   6.64,
+   7.72
+  ],
+  "tt_fab": [
+   8.835,
+   9.915
+  ],
+  "tt_kok": [
+   11.03,
+   12.11
+  ],
+  "tt_kwd": [
+   13.225,
+   14.305
+  ],
+  "tt_program_obs": [
+   15.295,
+   32.153
+  ],
+  "tt_pw": [
+   33.017,
+   49.654
+  ],
+  "emb_core_epoch": [
+   50.518,
+   54.067
+  ],
+  "emb_expected_epoch": [
+   54.931,
+   58.481
+  ],
+  "emb_expected_scale": [
+   59.47,
+   60.55
+  ],
+  "emb_expected_slot": [
+   61.665,
+   62.745
+  ],
+  "emb_expected_token": [
+   63.734,
+   67.727
+  ],
+  "emb_expected_word": [
+   68.591,
+   69.922
+  ],
+  "emb_fill_begin": [
+   70.912,
+   71.992
+  ],
+  "emb_fill_epoch": [
+   72.981,
+   76.53
+  ],
+  "emb_fill_token": [
+   77.394,
+   81.387
+  ],
+  "emb_word_data": [
+   82.251,
+   195.825
+  ],
+  "emb_word_epoch": [
+   196.689,
+   200.238
+  ],
+  "emb_word_index": [
+   201.102,
+   202.433
+  ],
+  "emb_word_scale": [
+   203.423,
+   204.503
+  ],
+  "emb_word_token": [
+   205.492,
+   209.485
+  ],
+  "emb_word_v": [
+   210.475,
+   211.555
   ]
  },
  "children": [],
