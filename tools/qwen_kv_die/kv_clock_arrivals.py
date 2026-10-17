@@ -72,7 +72,17 @@ def main(argv=None):
     if not matched:
         raise SystemExit('no stream pin of this run is in the arrival file')
     a0 = statistics.median(matched.values())
-    pos = def_origins(a.def_ or run / 'case_kv' / 'floorplan_placed.def')
+    dp_ = Path(a.def_) if a.def_ else run / 'case_kv' / 'floorplan_placed.def'
+    if dp_.exists():
+        pos = def_origins(dp_)
+    else:
+        # before the chain's real case: the planned origins of case_kv/place.tcl (ot_mts::place [... findInst N] x y O)
+        pos = {}
+        for ln in open(run / 'case_kv' / 'place.tcl'):
+            m_ = re.search(r'findInst (\S+)\]\s+(-?[\d.]+)\s+(-?[\d.]+)', ln)
+            if m_:
+                pos[m_.group(1)] = (float(m_.group(2)), float(m_.group(3)))
+        stat_src = 'place.tcl'
     # nearest matched instance on this run's placement: bucket grid
     G = 200.0
     grid = {}
