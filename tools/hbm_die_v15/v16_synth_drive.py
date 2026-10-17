@@ -63,11 +63,12 @@ def run(cell, row, a, idx, lock, summary):
         log = drive / f'{cell}.r{k}.log'
         with open(log, 'w') as f:
             rc = subprocess.run(['python3', '/home/ubuntu/bin/ot-run', '--mem', str(mem), '--threads', '4', '--dir', S,
-                                 '--hosts', ','.join(HOSTS.values()), '--priority', 'die', '--', 'bash', '-c', cmd],
+                                 '--priority', 'die', '--', 'bash', '-c', cmd],
                                 stdout=f, stderr=subprocess.STDOUT, stdin=subprocess.DEVNULL).returncode
         txt = log.read_text()
         hm = re.search(r'^HOST (\S+)', txt, re.M)
-        host = HOSTS.get(hm.group(1)) if hm else None
+        ran = re.search(r'ot-run: RAN on (\S+)', txt)
+        host = ran.group(1) if ran else (HOSTS.get(hm.group(1), hm.group(1)) if hm else None)
         rnd = dict(round=k, rc=rc, host=host, extra=list(extra), prefer=list(prefs))
         rec['rounds'].append(rnd)
         if rc == 0 and 'etm rc=0' in txt:
