@@ -114,7 +114,7 @@ module qkd_paced_v_landing_return_cell #(parameter integer PC=0, STACK=0, DISCOV
  reg slots[0:CYCLES-1],srslots[0:CYCLES-1],wrslots[0:CYCLES-1],rawslots[0:CYCLES-1];
  reg sr_read_reserved=0;reg rawslot=0;wire [15:0] out_epoch;
  qkd_ctrl_pc_host_static #(.PROFILE(DISCOVERY?2:0))dut(
-   .pll_hbm(ck),.hrst(rst),.ck(HOST_DUAL?core:ck),.rsi(rst),.pc(5'(PC)),.ci(319'b0),.co(co),
+   .pll_hbm(ck), .pll_hbm_port(ck), .pll_hbm_ecc(ck),.hrst(rst),.ck(HOST_DUAL?core:ck),.rsi(rst),.pc(5'(PC)),.ci(319'b0),.co(co),
    .es(es),.er(er),.po(po),.pi(pi),.ki(33'b0),.ko(),.fi(1'b0),.fo(fault),
    .static_cmd_owner(owner),.static_cmd(cmd),.reserved_rd(reserved),.reserved_static_col(sr_reserved),.reserved_write_col(wr_reserved),
    .static_epoch(16'd7),.expected_raw_valid(DISCOVERY ? rawslot : predicted_raw),.cfg_stack(2'(STACK)),.es_context(318'b0),.es_expected_valid(1'b0),.es_expected_identity(61'b0),.es_expected_address(29'b0),.es_expected_pc(5'b0),.es_expected_stack(2'b0),.native_commit_valid(),.native_commit_identity(),.native_commit_address(),.corrected_epoch(out_epoch),.completion_v(cv),.completion_we(cw),.completion_fault(cf));

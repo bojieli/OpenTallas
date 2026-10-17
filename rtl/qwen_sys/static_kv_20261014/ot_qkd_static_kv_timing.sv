@@ -106,6 +106,10 @@ module ot_qkd_static_kv_timing #(
     localparam AQ = (WR_EN != 0) && (AQ_RD != 0);
     reg hr;                                           // AQ_RD: the head entry is a read (registered)
     reg [WQW:0] wq_n; reg [WQW-1:0] wq_rp;
+    // KVCTRL core_s4 (2026-10-16): the next-head select is restructured, cycle-identical: each entry keeps its bank
+    // ONE-HOT from push time and wq_rp1 = wq_rp + 1 is a register, so both head candidates are read in parallel and
+    // the late wr_ok picks between them last (was: wr_ok -> wq_rp + 1 -> 4:1 read -> 5:32 decode, 18 levels).
+    reg [31:0] wq_oh [0:WQ-1]; reg [WQW-1:0] wq_rp1;
     reg [3:0] rtw_c, wtr_c;
     reg [31:0] wopen;                                 // banks opened by a write ACT (precharged after)
     reg c_w;                                          // the registered row command is a write ACT
@@ -120,9 +124,13 @@ module ot_qkd_static_kv_timing #(
     end
     reg [31:0] hold_n, hold;                          // banks a queued write needs (never precharged;
     integer hi;                                       // registered: one cycle behind the queue)
+    // KVCTRL core_s4: the same set (every queued entry's bank) from per-SLOT valid bits and the stored one-hots, with no
+    // wq_rp-relative index / decode (core_s1 routed TT: wq_rp -> wq_bq -> hold_n -> s_pre_ok -> s_pblk -> rd_ok -> rd_oh
+    // -20.54 ps, 24 levels; SS -525.84). Membership is order-free, so the OR is identical.
+    reg [WQ-1:0] wq_v;                                // physical slot holds a queued entry
     always @* begin
       hold_n = 0;
-      for (hi = 0; hi < WQ; hi = hi + 1) if (wq_in[hi]) hold_n = hold_n | (32'b1 << wq_bq[hi*5 +: 5]);
+      for (hi = 0; hi < WQ; hi = hi + 1) if (W && wq_v[hi]) hold_n = hold_n | wq_oh[hi];
     end
     always @(posedge clk or negedge rst_n) if (!rst_n) hold <= 0; else hold <= hold_n;
     wire wr_ok, wr_ok0, rd_ok0;
@@ -462,7 +470,7 @@ module ot_qkd_static_kv_timing #(
         sq_n <= 0; sq_rp <= 0; sb <= 0; sc <= 0; srw <= 0; swe <= 0; sb_oh <= 0; sfl <= 0; scm <= 0; swait <= 0;
         so_v <= 0; so_b <= 0; so_row <= 0;
         koh <= 8'b1; k1v <= 1'b0; rd_oh <= 32'b1; rd_bgoh <= 4'b1;
-        wq_n <= 0; wq_rp <= 0; rtw_c <= 0; wtr_c <= 0; wopen <= 0; c_w <= 0; hb <= 0; hc <= 0; hb_oh <= 0; hr <= 0;
+        wq_n <= 0; wq_rp <= 0; wq_rp1 <= WQW'(1); wq_v <= '0; rtw_c <= 0; wtr_c <= 0; wopen <= 0; c_w <= 0; hb <= 0; hc <= 0; hb_oh <= 0; hr <= 0;
         pin <= 0; ep <= 0; skip <= 0; sact <= 0; hwait <= 0;
       end else begin
         if (AQ) begin if (!wq_ne || !hr || wr_ok) hwait <= 0; else if (hwait != 8'hff) hwait <= hwait + 1'b1; end
@@ -471,17 +479,31 @@ module ot_qkd_static_kv_timing #(
           if ((wr_ok && !(AQ && hr)) || (s_go && swe)) wtr_c <= 4'(T_WTR - 1); else if (wtr_c != 0) wtr_c <= wtr_c - 1'b1;
           if (wr_v && wr_r) begin
             wq_bank[WQW'(wq_rp + wq_n)] <= wr_bank; wq_col[WQW'(wq_rp + wq_n)] <= wr_col;
+            wq_oh[WQW'(wq_rp + wq_n)] <= 32'b1 << wr_bank;
             if (AQ) wq_rd[WQW'(wq_rp + wq_n)] <= wr_rd;
           end
           wq_n <= wq_n + (wr_v && wr_r ? 1'b1 : 1'b0) - (wr_ok ? 1'b1 : 1'b0);
-          if (wr_ok) wq_rp <= WQW'(wq_rp + 1'b1);
+          begin : slotv
+            reg [WQ-1:0] v; v = wq_v;
+            if (wr_ok) v[wq_rp] = 1'b0;
+            if (wr_v && wr_r) v[WQW'(wq_rp + wq_n)] = 1'b1;
+            wq_v <= v;
+          end
+          if (wr_ok) begin wq_rp <= wq_rp1; wq_rp1 <= WQW'(wq_rp1 + 1'b1); end
           // next head: the entry after the popped one if it exists, else the entry pushed now
           begin : headn
-            reg [WQW-1:0] rpn; reg [4:0] nb, nc; reg nr;
-            rpn = wr_ok ? WQW'(wq_rp + 1'b1) : wq_rp;
-            if (wq_n - (wr_ok ? 1'b1 : 1'b0) != 0) begin nb = wq_bank[rpn]; nc = wq_col[rpn]; nr = AQ && wq_rd[rpn]; end
-            else begin nb = wr_bank; nc = wr_col; nr = AQ && wr_rd; end
-            hb <= nb; hc <= nc; hb_oh <= 32'b1 << nb; hr <= nr;
+            // identical to: rpn = wr_ok ? wq_rp + 1 : wq_rp; head = (wq_n - wr_ok != 0) ? q[rpn] : the pushed entry
+            reg [4:0] b0, c0, b1, c1; reg r0, r1, ne0, ne1; reg [31:0] o0, o1;
+            b0 = wq_bank[wq_rp];  c0 = wq_col[wq_rp];  r0 = AQ && wq_rd[wq_rp];  o0 = wq_oh[wq_rp];
+            b1 = wq_bank[wq_rp1]; c1 = wq_col[wq_rp1]; r1 = AQ && wq_rd[wq_rp1]; o1 = wq_oh[wq_rp1];
+            ne0 = wq_n != 0; ne1 = wq_n != 1;
+            if (wr_ok) begin
+              if (ne1) begin hb <= b1; hc <= c1; hb_oh <= o1; hr <= r1; end
+              else begin hb <= wr_bank; hc <= wr_col; hb_oh <= 32'b1 << wr_bank; hr <= AQ && wr_rd; end
+            end else begin
+              if (ne0) begin hb <= b0; hc <= c0; hb_oh <= o0; hr <= r0; end
+              else begin hb <= wr_bank; hc <= wr_col; hb_oh <= 32'b1 << wr_bank; hr <= AQ && wr_rd; end
+            end
           end
           // write-opened banks: set by a write ACT, cleared by PRE/PREALL or a stream RD (the stream owns it)
           wopen <= ((wopen | ((row_fire && c_op == ACT && c_w) ? c_oh : 32'b0))
