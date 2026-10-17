@@ -1,0 +1,26 @@
+{
+  "warnings": [
+    {
+      "type": "UNOPTFLAT",
+      "message": "frozen/rtl/hdc/ot_hdc_prefix.sv:24:27: Signal unoptimizable: Circular combinational logic: 'tb_hgi_hc_owned_p1_sys1_prepared.dut.engine.projection.bank[0].mac[0].lanes.g_lane[0].u_mul.u_pw.g'"
+    },
+    {
+      "type": "UNOPTFLAT",
+      "message": "frozen/rtl/hdc/ot_hdc_prefix.sv:25:27: Signal unoptimizable: Circular combinational logic: 'tb_hgi_hc_owned_p1_sys1_prepared.dut.engine.projection.bank[0].mac[0].lanes.g_lane[0].u_mul.u_pw.p'"
+    }
+  ],
+  "accepted_exact_prefix_DAG_only": [
+    {
+      "type": "UNOPTFLAT",
+      "message": "frozen/rtl/hdc/ot_hdc_prefix.sv:24:27: Signal unoptimizable: Circular combinational logic: 'tb_hgi_hc_owned_p1_sys1_prepared.dut.engine.projection.bank[0].mac[0].lanes.g_lane[0].u_mul.u_pw.g'",
+      "basis": "Exact98f indexedprefixsource: all arraylevel LHS=l+1, RHS=l only; level0 operands; finiteclog2 directedacyclicgraph, no hardware combinationalcycle"
+    },
+    {
+      "type": "UNOPTFLAT",
+      "message": "frozen/rtl/hdc/ot_hdc_prefix.sv:25:27: Signal unoptimizable: Circular combinational logic: 'tb_hgi_hc_owned_p1_sys1_prepared.dut.engine.projection.bank[0].mac[0].lanes.g_lane[0].u_mul.u_pw.p'",
+      "basis": "Exact98f indexedprefixsource: all arraylevel LHS=l+1, RHS=l only; level0 operands; finiteclog2 directedacyclicgraph, no hardware combinationalcycle"
+    }
+  ],
+  "unresolved": [],
+  "broad_latch_or_multidriver_waiver": false
+}

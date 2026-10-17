@@ -1,0 +1,49 @@
+{
+  "status": "TERMINAL_PASS_UNCOMMITTED_HANDBACK",
+  "terminal_verdict": {
+    "status": "PASS",
+    "verdicts": {
+      "positive": {
+        "exit_code": 0,
+        "expected_verdict_met": true,
+        "log_sha256": "34c157ac625290cf6c821ac32f4aafad43e1d45534a7ee9e73f5ebf6d276133e"
+      },
+      "owned_weight_mutant": {
+        "exit_code": 134,
+        "expected_verdict_met": true,
+        "log_sha256": "fb56834f94da92086346a98ae46ea29ac811cf9744f8f246c77f80e0b850afb7"
+      },
+      "VM_payload_mutant": {
+        "exit_code": 134,
+        "expected_verdict_met": true,
+        "log_sha256": "cbec81f6748d9b46a037195178f610d5be2dfdfe582c97af773dc6f2137b4815"
+      }
+    },
+    "all_frozen_dependency_hashes_verified": true,
+    "scope": "P1 ownedrow0 rank3,24 declaredpostcollectivemixes via24realVM,106generatedSRAM sourceinstances/equalphase92; not canonicalwholeprofile/actualHCOLL/physicalqualification",
+    "prepared_sha256": "469c6aa8d55c45c5afeb4e3c9273dc6e2a9b2862a21682005f53ea09760966bb",
+    "warning_audit_sha256": "bd48a9f0ba66af67109f53f0fcab80ab3234d98a5ea636e50b221bc63a4a5c40"
+  },
+  "host": "ot-epyc4",
+  "scope": "oth-ubuntu-2275353-1792065570",
+  "session": 6053,
+  "admission": {
+    "memory_GB": 24,
+    "threads": 4,
+    "launcher": "ot-run"
+  },
+  "remote_bundle": "/srv/opentallas-scratch/claude/codex-hc-owned-p1-106-1015",
+  "parent_actual92_receipt_commit": "a6f227c26",
+  "overlapping_source_hashes_exact": 22,
+  "elaboration_warning_audit_passed_before_make": true,
+  "qualification": "bounded P1 component only",
+  "scope_limits": [
+    "one owned row0 rank3 (G22 ownership formula)",
+    "all24 gathered mixes declared postcollective fixture at G25 P1 address",
+    "synthetic residual/bases/scales",
+    "component-local cycles only",
+    "not canonical wholeprofile, actual HCOLL producer, or physical qualification"
+  ],
+  "runner_sha256": "274633f8d5ec7357b23dc142ccbbd0484cc4f9e2d897b644ea6a73d4cef90a74",
+  "continuation_owner": "Claude; no push or relaunch after handback"
+}

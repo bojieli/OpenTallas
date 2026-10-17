@@ -1,0 +1,24 @@
+{
+  "status": "PASS",
+  "verdicts": {
+    "positive": {
+      "exit_code": 0,
+      "expected_verdict_met": true,
+      "log_sha256": "34c157ac625290cf6c821ac32f4aafad43e1d45534a7ee9e73f5ebf6d276133e"
+    },
+    "owned_weight_mutant": {
+      "exit_code": 134,
+      "expected_verdict_met": true,
+      "log_sha256": "fb56834f94da92086346a98ae46ea29ac811cf9744f8f246c77f80e0b850afb7"
+    },
+    "VM_payload_mutant": {
+      "exit_code": 134,
+      "expected_verdict_met": true,
+      "log_sha256": "cbec81f6748d9b46a037195178f610d5be2dfdfe582c97af773dc6f2137b4815"
+    }
+  },
+  "all_frozen_dependency_hashes_verified": true,
+  "scope": "P1 ownedrow0 rank3,24 declaredpostcollectivemixes via24realVM,106generatedSRAM sourceinstances/equalphase92; not canonicalwholeprofile/actualHCOLL/physicalqualification",
+  "prepared_sha256": "469c6aa8d55c45c5afeb4e3c9273dc6e2a9b2862a21682005f53ea09760966bb",
+  "warning_audit_sha256": "bd48a9f0ba66af67109f53f0fcab80ab3234d98a5ea636e50b221bc63a4a5c40"
+}

@@ -1,0 +1,23 @@
+	Command being timed: "verilator --cc --exe -O1 -Wno-fatal -Wno-WIDTH -Wno-TIMESCALEMOD --output-split 10000 --top-module tb_hgi_hc_owned_p1_sys1_prepared -Mdir obj frozen/rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_engine_sys1_split_mtp_static.sv frozen/rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_projection_sys1_split_static.sv frozen/rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_programmed_sys1_split_mtp_static.sv frozen/rtl/hbm_accel/generic/peers/static_hc/ot_hdc_v41x_hcp_sys1_static.sv frozen/rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_programme_mtp_static.sv frozen/rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_tail_static.sv frozen/rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_bank_control_static.sv frozen/rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_weight_quarter_static.sv frozen/rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_residual_half_static.sv frozen/rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_vm_gather_adapter_static.sv frozen/rtl/hbm_accel/generic/peers/static_hc/ot_hgi_hc_gathered_mix_reader_static.sv frozen/rtl/hbm_accel/generic/vm/static/ot_hbm_vm_lg_static_tap.sv frozen/rtl/hbm_accel/generic/vm/static/ot_vms_bank_static.sv frozen/rtl/hbm_accel/generic/peers/ot_hgi_sfu_program_stripe_static.sv frozen/physical/asap7_memory_macros/ot_sram_1r1w_128x256_m1_r2c2/ot_sram_1r1w_128x256_m1_r2c2.v frozen/physical/asap7_memory_macros/ot_sram_1r1w_1024x256_m2_r2c2/ot_sram_1r1w_1024x256_m2_r2c2.v frozen/rtl/hdc/ot_hdc_fastfp.sv frozen/rtl/hdc/ot_hdc_fastfp_lat.sv frozen/rtl/hdc/ot_hdc_delay.sv frozen/rtl/hdc/ot_hdc_fp32_add_lat.sv frozen/rtl/hdc/ot_hdc_fp32_mul_lat.sv frozen/rtl/hdc/ot_hdc_prefix.sv frozen/rtl/hdc/ot_hdc_sfu.sv frozen/rtl/hdc/v41x/ot_hdc_v41x_hcp.sv frozen/rtl/hdc/v41x/ot_hdc_v41x_sfu.sv frozen/rtl/hdc/v41/ot_hdc_fdiv.sv frozen/rtl/hdc/v41/ot_hdc_sinkhorn.sv frozen/rtl/hdc/v41/ot_hdc_sk_arith.sv frozen/rtl/hdc/v41/ot_hdc_sk_recip_rom.sv frozen/rtl/test/tb_hgi_hc_owned_p1_sys1_prepared.sv frozen/rtl/test/hgi_hc_owned_p1_sys1_prepared_harness.cpp"
+	User time (seconds): 88.50
+	System time (seconds): 1.76
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 1:30.27
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 7754496
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 1991162
+	Voluntary context switches: 5
+	Involuntary context switches: 155
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 750456
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0

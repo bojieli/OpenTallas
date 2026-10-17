@@ -88,7 +88,7 @@ module tb_hgi_hc_owned_p1_sys1_prepared(input wire clk,sink_clk);
     always @*begin
         integer i,b,q;
         reg [31:0] word_;
-        weight_ap=0;x_wave=0;
+        i=0;b=0;q=0;word_=0;weight_ap=0;x_wave=0;
         for(integer st=0;st<3;st=st+1)begin local_wq[st]=0;local_write[st]=0;end
         // All24 words are an explicitly DECLARED post-collective fixture,
         // not a local projection bypass or an implemented HCOLL producer.
