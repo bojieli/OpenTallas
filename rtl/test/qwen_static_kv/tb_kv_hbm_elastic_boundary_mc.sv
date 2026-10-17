@@ -93,7 +93,7 @@ module tb_kv_hbm_elastic_boundary_mc;
  genvar g;
  generate for(g=0;g<2;g++)begin:controllers
   qkd_ctrl_pc_host_static #(.PROFILE(g==0?1:0),.ELASTIC(g==1?CTRL_ELASTIC:1))dut(
-   .pll_hbm(ck),.hrst(rst[g]),.ck(ck),.rsi(rst[g]),.pc(5'd13),.ci(319'b0),.co(co[g]),
+   .pll_hbm(ck), .pll_hbm_port(ck), .pll_hbm_ecc(ck),.hrst(rst[g]),.ck(ck),.rsi(rst[g]),.pc(5'd13),.ci(319'b0),.co(co[g]),
    .es(es),.er(er[g]),.po(po[g]),.pi(pi),.ki(33'b0),.ko(),.fi(1'b0),.fo(fault[g]),
    .static_cmd_owner(owner),.static_cmd(cmd),.reserved_rd(reserved),.reserved_static_col(sr_reserved),.reserved_write_col(wr_reserved),
    .static_epoch(16'd7),.expected_raw_valid(g==1 ? predicted_raw : rawslot),.cfg_stack(2'b0),.es_context(318'b0),.es_expected_valid(1'b0),.es_expected_identity(61'b0),.es_expected_address(29'b0),.es_expected_pc(5'b0),.es_expected_stack(2'b0),.native_commit_valid(),.native_commit_identity(),.native_commit_address(),.corrected_epoch(out_epoch[g]),.completion_v(cv[g]),.completion_we(cw[g]),.completion_fault(cf[g]));
